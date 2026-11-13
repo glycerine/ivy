@@ -127,3 +127,14 @@ func TestMiniSatInterpolationStepIdentityTransition(t *testing.T) {
 		}
 	}
 }
+
+func TestMiniSatInterpolationStepReturnsSATWithoutInterpolant(t *testing.T) {
+	inter:=aig.NewGraph();x:=inter.NewInput();inter.AddOutput(x.Not())
+	trans:=aig.NewGraph();state:=trans.NewInput();trans.AddOutput(state);aig.Aig_ManSetRegNum(trans,1)
+	frames:=aig.NewGraph();next:=frames.NewInput();frames.AddOutput(next.Not())
+	p:=&Inter_Man_t{pInter:inter,pCnfInter:cnf.Cnf_Derive(inter,0),pAigTrans:trans,pCnfAig:cnf.Cnf_Derive(trans,1),pFrames:frames,pCnfFrames:cnf.Cnf_Derive(frames,0)}
+	for _,pudlak:=range []bool{false,true} {
+		got,err:=Inter_ManPerformOneStepM114p(p,&miniSat114pBackend{},pudlak)
+		if got!=0 || err!=nil || p.pInterNew!=nil { t.Fatalf("pudlak=%v got=%d err=%v interpolant=%v",pudlak,got,err,p.pInterNew) }
+	}
+}

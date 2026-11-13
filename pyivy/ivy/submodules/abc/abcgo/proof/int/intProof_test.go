@@ -94,3 +94,32 @@ func TestMiniSatLocalPivotOperators(t *testing.T) {
 		})
 	}
 }
+
+// In the source map, a shared SAT variable may be numbered after another
+// shared input even when the earlier input is unused by the refutation.
+func TestMiniSatSharedRootAnnotationUsesMappedInputOrder(t *testing.T) {
+	for _, negated := range []bool{false, true} {
+		first, second := int32(0), int32(1)
+		if negated {
+			first, second = second, first
+		}
+		proof := &fixtureM114p{roots: [][]int32{{first}, {second}}, chains: []M114pChain{{Clauses: []int32{0, 1}, Pivots: []int32{0}}}}
+		for _, pudlak := range []bool{false, true} {
+			g, err := InterpolateM114p(proof, []int32{0, 1}, []int32{1, 0}, pudlak)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if g.InputCount() != 2 {
+				t.Fatalf("inputs=%d, want 2", g.InputCount())
+			}
+			for mask := 0; mask < 4; mask++ {
+				input0, input1 := mask&1 != 0, mask&2 != 0
+				out, err := g.Evaluate([]bool{input0, input1})
+				want := input1 != negated
+				if err != nil || len(out) != 1 || out[0] != want {
+					t.Fatalf("negated=%v pudlak=%v input=%d output=%v err=%v", negated, pudlak, mask, out, err)
+				}
+			}
+		}
+	}
+}

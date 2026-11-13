@@ -1,13 +1,52 @@
 package int
 
 import (
+	"io"
+	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/aig/ioa"
 	"github.com/glycerine/abcgo/misc/vec"
 )
+
+func TestVerifyInterpolantContainmentDiagnostics(t *testing.T) {
+	graph := func(invert bool) *aig.Graph {
+		g := aig.NewGraph()
+		x := g.NewInput()
+		if invert {
+			x = x.Not()
+		}
+		g.AddOutput(x)
+		return g
+	}
+	for _, tc := range []struct {
+		name, want                   string
+		lowerNeg, upperNeg, interNeg bool
+	}{
+		{"correct", "I is correct.", false, true, false},
+		{"lower failure", "Property A => I fails.", true, true, false},
+		{"upper failure", "Property I => !B fails.", false, false, false},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			r, w, err := os.Pipe()
+			if err != nil {
+				t.Fatal(err)
+			}
+			old := os.Stdout
+			os.Stdout = w
+			defer func() { os.Stdout = old; r.Close() }()
+			verifyInterpolant(graph(tc.lowerNeg), graph(tc.upperNeg), graph(tc.interNeg), "I")
+			w.Close()
+			out, err := io.ReadAll(r)
+			if err != nil || !strings.Contains(string(out), tc.want) {
+				t.Fatalf("output %q, error %v; want %q", out, err, tc.want)
+			}
+		})
+	}
+}
 
 func TestInterpolantExpansionRetainsInputPositions(t *testing.T) {
 	inter := aig.NewGraph()
