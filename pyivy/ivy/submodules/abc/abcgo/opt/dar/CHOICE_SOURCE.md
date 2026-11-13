@@ -16,10 +16,16 @@ fixture; equivalent outputs alone do not establish equivalent DCH choices.
 
 Directly importing the existing GIA or CEC packages from DAR creates an import
 cycle: GIA's synthesis code imports DAR, and CEC's choice code imports DAR.
-Source-faithful integration requires moving the needed lower-level GIA/CEC
-operations behind an acyclic dependency boundary or providing an explicit
-source-path adapter from a higher layer. The GIA/CEC options must not silently
-fall back to the partitioned engine. `Dar_ManChoiceNewAig` does use the source's
+`proof/cec.Dar_ManChoiceNew` provides the source-named, typed Go entry point
+through a higher layer: it creates the actual GIA miter and selects the DCH,
+CEC, or Cec4 path. The lower-level `opt/dar.Dar_ManChoiceNew` still requires an
+explicit engine because it cannot import that higher layer without a cycle;
+it reports an error if none is provided. Neither path silently falls back to
+the partitioned engine. `Dar_ManChoiceNewAig` uses the source's
 `Dch_DeriveTotalAig`/DCH path by default. The explicit partitioned engine is a
 separate source operation and requires the actual FRAIG callback supplied by
 the higher layer.
+
+On success both source-named new-choice wrappers consume the input AIG, like
+the C entry point, and transfer its timing manager to the result before
+recomputing choice levels. On a Go error the input graph remains available.

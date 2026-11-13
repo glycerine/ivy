@@ -70,7 +70,8 @@ func Dar_NewChoiceSynthesis(g *aig.Graph, p *ChoiceOptions) ([]*aig.Graph, error
 	return []*aig.Graph{second, first, original}, nil
 }
 
-// Dar_ManChoiceNew runs the newer light-synthesis-aware version sequence.
+// Dar_ManChoiceNew runs the newer light-synthesis-aware version sequence and
+// consumes g on success, transferring its timing manager to the result.
 // The source's default DCH/GIA path is not yet wired across package boundaries;
 // callers must supply an engine explicitly until that integration is complete.
 func Dar_ManChoiceNew(g *aig.Graph, p *ChoiceOptions) (*aig.Graph, error) {
@@ -92,6 +93,18 @@ func runNewChoice(g *aig.Graph, p *ChoiceOptions, classicSynthesis bool) (*aig.G
 		params.Power = p.Power
 		engine = dch.Engine{Params: &params}
 	}
+	timing := g.Timing
+	if !classicSynthesis {
+		// The active C new-choice path removes timing before synthesis and
+		// transfers the original manager to the final AIG.
+		g.Timing = nil
+	}
+	consumed := false
+	defer func() {
+		if !consumed {
+			g.Timing = timing
+		}
+	}()
 	started := time.Now()
 	var versions []*aig.Graph
 	var err error
@@ -115,6 +128,11 @@ func runNewChoice(g *aig.Graph, p *ChoiceOptions, classicSynthesis bool) (*aig.G
 			return nil, err
 		}
 	}
+	defer func() {
+		for _, version := range versions {
+			aig.Aig_ManStop(version)
+		}
+	}()
 	p.SynthesisDuration = time.Since(started)
 	if p.Context != nil {
 		if err = p.Context.Err(); err != nil {
@@ -134,9 +152,17 @@ func runNewChoice(g *aig.Graph, p *ChoiceOptions, classicSynthesis bool) (*aig.G
 	if len(result.Inputs()) != len(g.Inputs()) || len(result.Outputs()) != len(g.Outputs()) {
 		return nil, fmt.Errorf("dar: choice engine changed the ordered interface size")
 	}
-	result = aig.Aig_ManDupDfsGuided(result, aig.Aig_ManOrderPios(result, g))
+	order := aig.Aig_ManOrderPios(result, g)
+	name, spec := g.Name, g.Spec
+	g.Timing = nil
+	aig.Aig_ManStop(g)
+	consumed = true
+	intermediate := result
+	result = aig.Aig_ManDupDfsGuided(intermediate, order)
+	aig.Aig_ManStop(intermediate)
+	result.Timing = timing
 	aig.Aig_ManChoiceLevel(result)
-	result.Name, result.Spec, result.Timing = g.Name, g.Spec, g.Timing
+	result.Name, result.Spec = name, spec
 	return result, result.Check()
 }
 

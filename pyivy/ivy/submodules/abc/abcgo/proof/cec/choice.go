@@ -5,7 +5,6 @@ import (
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/misc/vec"
-	"github.com/glycerine/abcgo/opt/dar"
 	"github.com/glycerine/abcgo/proof/cec/core"
 	"github.com/glycerine/abcgo/proof/dch"
 )
@@ -128,8 +127,8 @@ func Cec_ManChoiceComputationVec(graph *Gia_Man_t, snapshots int32, params *Cec_
 	return gia.Gia_ManEquivToChoices(graph, snapshots)
 }
 
-// Cec_ManChoiceComputation runs the original three-version DAR synthesis
-// sequence with the native DCH proof engine, then exports real choice links.
+// Cec_ManChoiceComputation runs the original DAR new-choice sequence with
+// GIA-based CEC refinement, then exports real choice links.
 func Cec_ManChoiceComputation(graph *Gia_Man_t, params *Cec_ParChc_t) *Gia_Man_t {
 	if params == nil {
 		params = new(Cec_ParChc_t)
@@ -143,13 +142,18 @@ func Cec_ManChoiceComputation(graph *Gia_Man_t, params *Cec_ParChc_t) *Gia_Man_t
 		params.Error = err
 		return nil
 	}
-	options := cecChoiceParams(params)
-	source := gia.Gia_ManToAigSimple(graph)
-	result, err := dar.Dar_ManChoiceNew(source, &dar.ChoiceOptions{UpdateLevel: true, Engine: dch.Engine{Params: &options}})
+	options := dch.DefaultParams()
+	options.UseGia = true
+	options.ConflictLimit = int(params.nBTLimit)
+	options.UseCSat = params.fUseCSat != 0
+	options.Verbose = params.fVerbose != 0
+	source := gia.Gia_ManToAig(graph, 0)
+	result, err := Dar_ManChoiceNew(source, nil, &options)
 	params.Error = err
 	if err != nil {
 		return nil
 	}
+	defer aig.Aig_ManStop(result)
 	return gia.Gia_ManFromAig(result)
 }
 func Cec_ComputeChoices(graph *Gia_Man_t, params *Dch_Pars_t) *Aig_Man_t {

@@ -5,8 +5,33 @@ import (
 
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/opt/dar"
 	"github.com/glycerine/abcgo/proof/dch"
 )
+
+// Dar_ManChoiceNew runs ABC's active DAR new-choice pipeline through this
+// higher package, where GIA, DCH and CEC are all available without an import
+// cycle. It consumes the input graph on success, as the C entry point does,
+// and returns errors when a Go operation fails. Nil options or parameters use
+// defaults.
+func Dar_ManChoiceNew(graph *aig.Graph, options *dar.ChoiceOptions, params *dch.Params) (*aig.Graph, error) {
+	if params == nil {
+		defaults := dch.DefaultParams()
+		params = &defaults
+	}
+	config := dar.DefaultChoiceOptions()
+	if options != nil {
+		config = *options
+	}
+	config.Power, config.Light = params.Power, params.LightSynth
+	config.Engine = DarSourceChoiceEngine{Params: params}
+	result, err := dar.Dar_ManChoiceNew(graph, &config)
+	params.SynthDuration = config.SynthesisDuration
+	if options != nil {
+		options.SynthesisDuration = config.SynthesisDuration
+	}
+	return result, err
+}
 
 // DarSourceChoiceEngine supplies the proof portion of the active C
 // Dar_ManChoiceNew path. DAR passes the three synthesized snapshots in the
