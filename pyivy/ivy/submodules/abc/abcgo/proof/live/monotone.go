@@ -154,6 +154,9 @@ func findNewMonotone(p *aig.Graph, indexes *aigPoIndices, vectors *monotoneVecto
 	return proved
 }
 func findRemainingMonotoneCandidates(known, hints []int32) []int32 {
+	if len(known) == 0 {
+		return hints
+	}
 	return vectorDifference(hints, known)
 }
 func FindMonotone(n *Network, options SafetyOptions, checker SafetyChecker) []int32 {

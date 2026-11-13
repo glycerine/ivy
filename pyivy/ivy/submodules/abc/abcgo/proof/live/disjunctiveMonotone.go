@@ -121,6 +121,9 @@ func vectorDifference(a, b []int32) []int32 {
 }
 func createSingletonIntVector(id int32) []int32 { return []int32{id} }
 func updateAnteConseVectors(vectors *antecedentConsequentVectorsStruct) []int32 {
+	if len(vectors.attrAntecedents) == 0 {
+		return vectors.attrConsequentCandidates
+	}
 	return vectorDifference(vectors.attrConsequentCandidates, vectors.attrAntecedents)
 }
 func Vec_IntPushUniqueLocal(values *[]int32, value int32) int32 {
