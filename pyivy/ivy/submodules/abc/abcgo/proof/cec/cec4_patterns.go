@@ -52,6 +52,7 @@ func (p *cec4Pattern) generate(id, value int32) bool {
 	a, ca := p.fan(id, 0)
 	b, cb := p.fan(id, 1)
 	if gia.Gia_ObjIsXor(obj) != 0 {
+		value ^= ca ^ cb
 		assignedA, assignedB := p.values[a] != -1, p.values[b] != -1
 		if assignedA && assignedB {
 			return value == int32(p.values[a])^int32(p.values[b])
