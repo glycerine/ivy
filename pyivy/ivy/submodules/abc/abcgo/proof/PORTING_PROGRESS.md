@@ -8,16 +8,14 @@ rather than silently substituting another algorithm.
 
 ## Current checkpoint (2026-11-13)
 
-Proof-package work remains under source-by-source audit. The most recent
-uncached `GOCACHE=/tmp/abcgo-final-proof-cache go test -race -count=1 -p 8 ./proof/...`
-gate passes for all proof packages, and `go vet ./proof/...` passes. The
-combined proof/GIA/BSAT race gate and `go vet ./proof/... ./aig/gia ./sat/bsat`
-also pass.
-The shared dependency gate passes for `./aig/...`, `./opt/dar/...`, and
-`./sat/cnf`. These gates do not establish complete source parity: INT2 has
-incomplete C routines, CEC's broader sweep/partition review remains partial,
-and SAIG retains the documented backward-driver caveat below. Continue the
-audit.
+Proof-package source audit remains in progress. The current uncached
+`GOCACHE=/tmp/abcgo-proof-final-gate go test -race -count=1 -p 8 ./proof/...`
+gate and `go vet ./proof/...` pass. `go build ./proof/...` also passes. The
+cover snapshot below was collected immediately after these changes. Passing
+build and test gates do not prove complete source parity: INT2 contains
+incomplete C routines, CEC's broader sweep/partition matrix is still selective,
+FRACOMB exposes a DAR `balance2` ordering difference, and SAIG retains the
+documented backward-driver caveat below.
 
 The uncached `go test -cover -count=1 -p 8 ./proof/...` snapshot below measures
 executed Go statements, not C fidelity or algorithm completeness. Use it to
@@ -25,21 +23,21 @@ find untested behavior, not as a completion threshold.
 
 | Package | Statements |
 | --- | ---: |
-| `abs` | 76.6% |
-| `acec` | 76.6% |
+| `abs` | 76.8% |
+| `acec` | 77.0% |
 | `cec` | 80.3% |
 | `cec/core` | 93.0% |
-| `dch` | 91.2% |
-| `fra` | 74.8% |
+| `dch` | 92.2% |
+| `fra` | 75.1% |
 | `fracomb` | 92.4% |
-| `fraig` | 77.6% |
-| `framgr` | 85.6% |
-| `int` | 87.2% |
+| `fraig` | 77.7% |
+| `framgr` | 85.7% |
+| `int` | 87.3% |
 | `int2` | 90.8% |
-| `live` | 87.0% |
-| `pdr` | 77.4% |
+| `live` | 87.4% |
+| `pdr` | 78.8% |
 | `ssc` | 88.8% |
-| `ssw` | 79.8% |
+| `ssw` | 79.9% |
 
 ## Source API inventory
 
@@ -67,24 +65,27 @@ and representation limits described in its package notes.
   Go graph helpers where those helpers accept native GIA nodes. The C
   cancellation behavior can expose a stale proof, and is documented. Full
   race tests and vet passed. Standalone VTA rejects native XOR/MUX graphs;
-  callers must lower them first. The old GLA `fUseFullProof` option does not
-  select a distinct proof-logging mode in Go, so resource behavior can differ.
+  callers must lower them first. The old GLA `fUseFullProof` option now selects
+  the source's incremental versus full proof-graph logging modes.
   Additional flop-transform tests cover word boundaries, non-Boolean initial
   values, duplicate selections and unchanged next-state functions. Bounded
   frame-limit, 257-label UNSAT-core and compiled-C conflict-budget exhaustion
-  tests were added; larger sequential resource-limit interactions and
-  memory-scale stress remain uncovered. Linux timeout handling now uses the
-  source thread-CPU clock and pins the solving goroutine; non-Linux still uses
-  wall time where C uses process CPU time. A broader audit remains underway.
+  tests were added; a compiled-C 1,500-row fixture now verifies proof-manager
+  growth and in-place compaction capacity. Large-scale resource limits remain
+  unproven. Timed paths use C's Linux thread-CPU clock, supported POSIX process
+  CPU clock, or Windows CRT elapsed clock; unsupported timed platforms fail
+  explicitly. Old GLA empty-PPI refinement preserves C's retry-until-timeout
+  behavior instead of switching algorithms.
 * `acec`: source flow and preconditions are restored. Compiled-ABC differential
   tests cover 76 circuit pairs, and checked-in test vectors exercise Booth
   normalization and tied XOR/MAJ cuts. Negative cut limits and single-output
   box production now match C. The C implementation has reproducible
   false-equivalence cases and a two-output assumption, documented and tested
   as source behavior. Package race tests and vet passed.
-  Added compiled-C recognition comparisons across 96 Booth pattern cases and a
-  source test inventory; end-to-end complex multiplier, timing-box and larger
-  graph differential coverage remain open.
+  Added compiled-C recognition comparisons across 96 Booth pattern cases,
+  exhaustive signed 4x4 operand tests, and timing shapes with 0, 2, 4, and 5
+  boxes. Larger/irregular signed designs and real-world multiplier graphs
+  remain open.
 * `cec`: the naive verifier now uses MF CNF/BSAT, with the C output-variable
   mapping. Compiled ABC comparisons confirm source-inherited false speculative
   equivalence pairs and a reordered-output misclassification; tests preserve
@@ -98,13 +99,15 @@ and representation limits described in its package notes.
   non-Linux timing retains a wall-clock fallback. Separately managed timed
   calls require creation and destruction on the same OS thread. New compiled-C
   tests cover CEC2/3 SAT and UNSAT witnesses, CEC4 sparse replay, conflict
-  limits, UNKNOWN candidate IDs, interleaved inputs, and timer behavior. The
-  CEC4 out-of-range failure-bitmap behavior still differs from C; the reviewed
-  source matrix remains selective. Package race tests and vet passed.
+  limits, UNKNOWN candidate IDs, interleaved inputs, and timer behavior. CEC4
+  out-of-range failure-bitmap behavior now follows C's assertion. A sweep
+  diagnostic omission was fixed and checked against compiled C. Tests record
+  C's native XOR-to-AND behavior in partition construction. The broader source
+  matrix remains selective; package race tests and vet pass.
   The sequential synthesis entry also preserves C's failure boundary for a
   missing clock-domain vector. Tests cover C's incomplete Cec4 builder return
   and partial construction failure instead of substituting a working builder.
-  Broader sweep/partition review remains partial.
+  Broader sweep/partition review remains selective.
   The lower `opt/dar` facade wires its source default through the CEC adapter,
   and the GIA default uses the GIA miter/skip-three/DCH path. CEC/Cec4 modes are
   exposed through a higher-layer wrapper to avoid an import cycle.
@@ -117,7 +120,8 @@ and representation limits described in its package notes.
   behavior. Non-TFO/TFO refinement scope, class counters, SAT-cone values, and
   random completion now match C. Shared RNG side effects and allocated-choice
   representative preconditions also match C. Tests cover support and metadata
-  boundaries; current statement coverage is 91.2%. Native XOR/buffer and
+  boundaries; current statement coverage is 92.2%. Negative SAT and recycle
+  thresholds now preserve C's signed-budget behavior. Native XOR/buffer and
   non-topological inputs outside the C source contract are rejected.
 * `fra`: SEC, clause and BMC paths follow the active source's timeout, budget,
   solver-reuse behavior, and native-EXOR-as-AND handling where C hardcodes
@@ -128,12 +132,18 @@ and representation limits described in its package notes.
   boundary. SEC status and witness transfer now match C, including its
   unvalidated witness behavior; callers needing replay use the separate
   `Fra_FraigSecVerified` API. Compiled-C SEC comparisons cover separate-output
-  interpolation. Broader behavioral audit remains in progress.
+  interpolation, global conflict limits, zero-frame behavior, and result-pointer
+  preservation. Deadline paths use the source CPU clock and preserve C's float32
+  timeout rounding. Broader option combinations remain open.
 * `fracomb`: AIG deadlines now propagate through DAR rewrite stages as in C.
   Its SAT path uses the source-mapped CNF writer and source Solver2
   simplification. A multi-sweep SAT fallback test replays witnesses on original
   and rewritten graphs. C's zero-model shortcut, raw flipped SAT model, and
   lack of final witness revalidation are now preserved and characterized.
+  Ordered C/Go stage fixtures cover XOR/factoring and MUX rewrites. One MUX
+  fixture still differs at `balance2`: C recursively rebuilds sharing-aware
+  cones while Go uses in-place pairwise balancing; node counts match, but the
+  structure and ordering do not. The final rewrite stage matches again.
 * `fraig`: source behavior has been restored for miter checks, external clauses,
   feedback compression, pointer-based hashing/order, and MSAT behavior. Several
   upstream limitations, including witnesses that violate external clauses,
@@ -142,20 +152,26 @@ and representation limits described in its package notes.
   `Fraig_NodeVecReadArray`. Opt-in compiled-C tests compare allocator behavior
   and compression over covering pairs, overlapping patterns, and partial words.
   Pool-accounting and real-workload differential gaps remain documented.
+  Tests also cover repeated simulation-buffer growth and public miter witness
+  replay; a ported ABC consumer and clock-timeout path remain untested.
 * `framgr`: duplicate BMC helpers were consolidated only where behavior was
   shown identical. Simulation, BMC callback reset, native-EXOR-as-AND behavior,
   output-ID witness layout, SAT root simplification, constant-implication
   behavior, and the uncomplemented-parent assertion follow C. Tests now cover
   class-copy/latch-correlation state, BMC adapters, sequential simulation,
   counterexample/model extraction and one-hot reporting/RNG behavior. The
-  current statement coverage is 85.6%. Remaining
+  current statement coverage is 85.7%. Remaining
   branches include some BMC/FRAIG sweep and SAT model paths; this is not a proof
   of complete algorithm coverage.
 * `int`: MiniSat 1.14p has exhaustive Craig-interpolant checks and option/error
   coverage. Proof-root validation now builds its annotation in one ordered
   pass, preserving clause order. Partition-assembly tests now cover restoration
   of variable/literal state on success and early failures, and C's stop behavior
-  after rejecting a B clause. Race tests and vet passed.
+  after rejecting a B clause. A finite enumeration checks multi-frame
+  induction for every two-register predicate across four transition relations.
+  INT deadlines share the C clock domain; deadlines are not injected into
+  source stages that do not receive them. The Go BMC witness builder remains a
+  reconstruction, not the C scalable-BMC path.
 * `int2`: the checked-in C interpolation driver is uncompilably incomplete, so
   the Go driver returns undecided and does not invent a bounded reachability
   fallback. Helper tests characterize source behavior. The suffix constructor
@@ -164,10 +180,10 @@ and representation limits described in its package notes.
   preimage helper also returns undecided because its C code refers to an
   undeclared manager and does not establish a reliable mapping contract.
   Refinement compares GIA priorities as unsigned values, matching C's `uint32`
-  field. The incremental frame builder reconstructs missing C operations and has no
-  unsupported status; it is not source-confirmed and callers must treat the
-  whole path as unsupported for source fidelity. `TEST_COVERAGE.md` maps the
-  implemented helpers to tests and lists timeout/CNF-error gaps.
+  field. Source-named APIs whose checked-in C is incomplete, including the
+  constructor and incremental frame builder, report unsupported; separate
+  `Int2_Go...` helpers retain explicitly Go-only reconstructions. The remaining
+  completed helpers are mapped to tests in `TEST_COVERAGE.md`.
 * `live`: Go-only reachability and fairness-parser substitutes were removed.
   Graph operations now use explicit AIG arguments as C does; network metadata
   remains sourced from the supplied network. Safe graph-copy and safety-model
@@ -178,11 +194,13 @@ and representation limits described in its package notes.
   now traverse all nodes in source order and set copy mappings, including for
   unused nodes. Compiled-C tests also cover source parser cursor semantics,
   usage ordering, incomplete-source boundaries and wrapper behavior. Race
-  tests and vet pass at 87.0% statement coverage. Compiled-C regressions now
+  tests and vet pass at 87.4% statement coverage. Compiled-C regressions now
   verify source builders include every PO and retain or clear constraint
   metadata according to the specific C constructor. Native Go convenience
-  paths preserve their separate constraint behavior. Command adaptation,
-  diagnostics and malformed-input behavior still differ; see `live/PORTING.md`.
+  paths preserve their separate constraint behavior. Command parsing now stops
+  at `--`, a lone `-`, or the first operand; tested diagnostics match C.
+  Simulation still differs because C inherits global getopt state; invalid
+  inputs that leave C's directive unset return a Go error. See `live/PORTING.md`.
 * `pdr`: source solver context, limits, helper edge cases and graph lifecycle
   are covered. Differential tests exercise 64 machines and source-matched
   option combinations, plus invariant-file output. Package race tests and vet
@@ -190,8 +208,9 @@ and representation limits described in its package notes.
   Incremental-restart handling preserves source edge cases, including an
   assertion on a first restart with no saved clauses and an interrupted push
   that can be treated as proof. SAT solvers now restart in place to preserve the
-  pointer identity exposed by the C API. Added solver-recycling threshold coverage;
-  further timeout/resource-limit combinations need coverage.
+  pointer identity exposed by the C API. Gap timeout now takes priority over
+  per-output drops as in C, with injected-clock boundary tests. Further timeout
+  combinations remain open.
 * `ssc`: evolving FRAIG substitutions, BSAT frontier encoding, source-style
   class refinement, native-input lowering, random stream, equivalence
   reduction, and CEC verification have source tests. Verbose mode performs the
@@ -204,7 +223,9 @@ and representation limits described in its package notes.
   characterized. A reachable invalid rarity witness is documented as an
   upstream C defect. Source CioId setup is restored in manager, BMC,
   latch-sweep, and dynamic-sweep paths. Gap and negative-timeout behavior now
-  match C; current race tests and vet passed.
+  match C. Pair-class transforms preserve C's duplicate self-pairs and
+  loop-index reuse, including its assertion on a bounded problematic sequence;
+  assertion-disabled behavior is undefined in C. Race tests and vet pass.
 
 ## Shared dependencies in progress
 
@@ -219,6 +240,12 @@ the GIA/CNF/CEC import cycle. The facade's default choice path uses the source
 GIA miter and DCH/CEC/Cec4 branches; the lower GIA API exposes CEC/Cec4 through
 an explicit higher-layer wrapper. Compiled ABC option-matrix checks pass.
 
+`Aig_ObjReplace` matches C's transplant-versus-buffer behavior: unused positive
+AND/XOR replacements move into the old object ID, while complemented, referenced,
+or terminal replacements retain a buffer. Compiled-C tests cover the branches,
+and the correction closes a FRACOMB MUX-rewrite divergence. A separate DAR
+`balance2` ordering difference remains, as recorded under `fracomb`.
+
 The shared AIG/SAIG migration stores C's true terminal counts and per-object
 CioIds instead of deriving them from current terminal slices. Duplication,
 retiming, and register hiding/exposure now follow source-specific count and ID
@@ -227,18 +254,17 @@ backward retiming driver's historical constraint-handling branches remain a
 documented fidelity limit. Initialized `Aig_ManFrames` with register outputs
 now follows C, including negative true-input counts when no CIs are created.
 
-Timeout accounting remains a cross-package fidelity gap. ABS now uses the C
-thread-CPU clock on Linux while pinning the solving goroutine, process CPU via
-`getrusage` on supported non-Linux POSIX systems, and elapsed time on Windows
-to match the Microsoft CRT; unsupported timed platforms fail explicitly. The
-Windows CRT clock's roughly 24.8-day overflow is not emulated. CEC timed
-sweeps and internal CEC2/3/4 timers pin their goroutine and use the source
-thread-CPU clock on Linux; non-Linux builds retain a wall-time fallback.
-Separately managed timed calls need create/destroy operations to stay on the
-same OS thread. PDR, INT, SSW, and FRA deadlines and solver contexts still need
-a call-site-by-call-site review. Switching the shared helper alone would be
-unsafe because goroutines can move between OS threads and SAT/context deadlines
-currently use wall time.
+Deadline paths in ABS, CEC, PDR, INT, SSW, and FRA now use package-specific
+clock domains matching the audited C call sites: Linux thread CPU where C uses
+`clock()`, supported POSIX process CPU, or the Windows CRT clock. CEC uses the
+platform C runtime on non-Linux cgo builds and reports timed operations as
+unsupported on non-Linux no-cgo builds. Linux timed solvers pin the goroutine;
+separately managed timed PDR/CEC calls must be created, run, and destroyed on
+the same OS thread. INT deadlines share the C clock domain through BSAT proof
+replay and are not injected into source stages that do not receive them. Some
+profiling/report counters still use Go elapsed time, the Windows CRT clock's
+roughly 24.8-day overflow is not emulated, and large-scale resource interactions
+remain unproven.
 
 FRA/AIG partitioned FRAIG and choice and SAIG timeframe bridges are implemented
 through explicit callback APIs, with FRA wrappers supplying the corresponding
