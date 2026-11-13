@@ -114,6 +114,18 @@ func cec4Sweep(graph *gia.Gia_Man_t, pars *Cec_ParFra_t, simOnly, finishGraph bo
 			gia.Gia_ObjSetProved(graph, id)
 			continue
 		}
+		// C indexes the original graph's failure bitmap using reduced IDs,
+		// before advancing the query count; Vec_BitEntry asserts out of range.
+		failure := func(object int32) bool {
+			if object < 0 || int(object) >= graph.ObjectCount() {
+				panic("cec4: failure bitmap index out of range")
+			}
+			return failed[object]
+		}
+		limit := pars.nBTLimit
+		if failure(copies[repr]>>1) || failure(copies[id]>>1) {
+			limit = max(int32(1), limit/10)
+		}
 		calls++
 		if manager != nil {
 			manager.nCallsSince = int32(calls)
@@ -127,10 +139,6 @@ func cec4Sweep(graph *gia.Gia_Man_t, pars *Cec_ParFra_t, simOnly, finishGraph bo
 			}
 			calls = 0
 			stats.recycles++
-		}
-		limit := pars.nBTLimit
-		if failed[copies[id]>>1] || failed[copies[repr]>>1] {
-			limit = max(int32(1), limit/10)
 		}
 		satStart := cecCPUClock()
 		cnfBefore := cnf.cnfTime

@@ -107,8 +107,9 @@ Passing the tests does not establish complete coverage of these source paths.
 On Linux CEC2, CEC3 and CEC4 sweep diagnostics use thread CPU time like ABC,
 and each sweep and timed helper is pinned to its OS thread. Callers using the
 separate manager creation and destruction APIs must keep them on one OS thread
-for comparable totals. Other platforms retain wall-clock diagnostics. Separately, Go expands the CEC4 failure bitmap when a reduced
-ID is out of range, while the source asserts.
+for comparable totals. Other platforms retain wall-clock diagnostics. CEC4
+preserves the source assertion when a reduced ID is outside the original
+graph's failure bitmap.
 The sparse CEC4 justification and the in-range UNKNOWN candidate-ID behavior
 have focused comparisons against compiled C; these are not a full mode audit.
 

@@ -46,6 +46,10 @@ func Cec4_ManSolveTwo(p *Cec4_Man_t, first, second, phase int32, easy *int32, ve
 	if easy == nil || first == second || phase < 0 || phase > 1 {
 		panic("cec4: invalid SAT comparison")
 	}
+	limit := p.pPars.nBTLimit
+	if p.vFails != nil && (vec.Vec_BitEntry(p.vFails, int(first)) != 0 || vec.Vec_BitEntry(p.vFails, int(second)) != 0) {
+		limit = max(int32(1), limit/10)
+	}
 	if first > second {
 		first, second = second, first
 	}
@@ -58,13 +62,6 @@ func Cec4_ManSolveTwo(p *Cec4_Man_t, first, second, phase int32, easy *int32, ve
 	if p.nCallsSince > p.pPars.nCallsRecycle && p.pPars.nSatVarMax != 0 && int32(len(c.ids)) > p.pPars.nSatVarMax {
 		Cec4_ManSatSolverRecycle(p)
 		c = p.cnf
-	}
-	limit := p.pPars.nBTLimit
-	if p.vFails != nil && (vec.Vec_BitGetEntry(p.vFails, int(first)) != 0 || vec.Vec_BitGetEntry(p.vFails, int(second)) != 0) {
-		limit /= 10
-		if limit < 1 {
-			limit = 1
-		}
 	}
 	start := cecCPUClock()
 	a := Cec4_ObjGetCnfVar(p, first)

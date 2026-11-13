@@ -3,7 +3,6 @@ package cec
 import (
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/misc/vec"
-	"github.com/glycerine/abcgo/sat/glucose2"
 	"testing"
 )
 
@@ -61,7 +60,8 @@ func TestCec4ManagerSweepResetsStampsAfterFullPatternBatch(t *testing.T) {
 	}
 }
 
-func TestCec4ManagerSweepGrowsFailureBitsForReducedGraph(t *testing.T) {
+// Cec4_ManSolveTwo reads Vec_BitEntry before SAT setup; C asserts on this graph.
+func TestCec4ManagerSweepRejectsOutOfRangeFailureBits(t *testing.T) {
 	g := gia.Gia_ManStart(10)
 	a, b := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
 	x := gia.Gia_ManAppendAnd(g, a, b)
@@ -85,21 +85,27 @@ func TestCec4ManagerSweepGrowsFailureBitsForReducedGraph(t *testing.T) {
 	p := Cec4_ManCreate(g, &Cec_ParFra_t{jType: 0, nBTLimit: 100, nWords: 1, nItersMax: 1})
 	p.pNew = reduced
 	Cec4_ManSimAlloc(p, 1)
-	if got := Cec4_ManSweepNode(p, y>>1, x>>1); got != 1 {
-		t.Fatalf("sweep result %d", got)
+	assertPanic := func(name string, f func()) {
+		t.Helper()
+		defer func() {
+			if recover() == nil {
+				t.Errorf("%s: expected source bitmap assertion", name)
+			}
+		}()
+		f()
 	}
-	if vec.Vec_BitSize(p.vFails) <= int(ry>>1) {
-		t.Fatal("failure flags did not grow with reduced IDs")
-	}
+	assertPanic("sweep", func() { Cec4_ManSweepNode(p, y>>1, x>>1) })
 	p2 := Cec4_ManCreate(g, &Cec_ParFra_t{jType: 0, nBTLimit: 100})
 	p2.pNew = reduced
 	var easy int32
-	if got := Cec4_ManSolveTwo(p2, rx>>1, ry>>1, 0, &easy, 0); got != glucose2.GLUCOSE_UNSAT {
-		t.Fatalf("direct SAT result %d", got)
-	}
-	if vec.Vec_BitSize(p2.vFails) <= int(ry>>1) {
-		t.Fatal("direct SAT failure flags did not grow")
-	}
+	assertPanic("solve", func() { Cec4_ManSolveTwo(p2, rx>>1, ry>>1, 0, &easy, 0) })
+
+	// C checks the first incoming ID before sorting, and its OR short-circuits.
+	p3 := Cec4_ManCreate(g, &Cec_ParFra_t{jType: 0, nBTLimit: 100})
+	p3.pNew = reduced
+	vec.Vec_BitWriteEntry(p3.vFails, int(ra>>1), 1)
+	Cec4_ManSolveTwo(p3, ra>>1, ry>>1, 0, &easy, 0)
+	assertPanic("first input before sorting", func() { Cec4_ManSolveTwo(p3, ry>>1, ra>>1, 0, &easy, 0) })
 }
 
 func TestCec4ManagerSweepReadsCopiesCreatedAfterFirstCall(t *testing.T) {
