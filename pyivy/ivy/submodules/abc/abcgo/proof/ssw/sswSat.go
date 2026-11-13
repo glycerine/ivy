@@ -1,292 +1,86 @@
 package ssw
 
-/**CFile****************************************************************
+// SAT equivalence checks and constraints, ported from sswSat.c.
+import (
+	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/sat/bsat"
+	"time"
+)
 
-  FileName    [sswSat.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Inductive prover with constraints.]
-
-  Synopsis    [Calls to the SAT solver.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - September 1, 2008.]
-
-  Revision    [$Id: sswSat.c,v 1.00 2008/09/01 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "sswInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Runs equivalence test for the two nodes.]
-
-  Description [Both nodes should be regular and different from each other.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ssw_NodesAreEquiv(p *Ssw_Man_t, pOld *Aig_Obj_t, pNew *Aig_Obj_t) int32 {
-    var nBTLimit int32  = p.pPars.nBTLimit;
-    var pLits [3]int32;
-    var nLits int32;
-    var RetValue int32;
-    var RetValue1 int32;
-    var clk abctime;//, status;
-    p.nSatCalls++;
-    p.pMSat.nSolverCalls++;
-
-    // sanity checks
-    assert(!Aig_IsComplement(pOld), "!Aig_IsComplement(pOld)");
-    assert(!Aig_IsComplement(pNew), "!Aig_IsComplement(pNew)");
-    assert(pOld != pNew, "pOld != pNew");
-    assert(p.pMSat != nil, "p.pMSat != nil");
-
-    // if the nodes do not have SAT variables, allocate them
-    Ssw_CnfNodeAddToSolver( p.pMSat, pOld );
-    Ssw_CnfNodeAddToSolver( p.pMSat, pNew );
-
-    // solve under assumptions
-    // A = 1; B = 0     OR     A = 1; B = 1 
-    nLits = 2;
-    pLits[0] = toLitCond( Ssw_ObjSatNum(p.pMSat,pOld), 0 );
-    pLits[1] = toLitCond( Ssw_ObjSatNum(p.pMSat,pNew), pOld.fPhase == pNew.fPhase );
-    if p.iOutputLit > -1 {
-        pLits[nLits++] = p.iOutputLit; }
-    if p.pPars.fPolarFlip {
-        if pOld.fPhase {  pLits[0] = lit_neg( pLits[0] ); }
-        if pNew.fPhase {  pLits[1] = lit_neg( pLits[1] ); }
-    }
-//Sat_SolverWriteDimacs( p->pSat, "temp.cnf", pLits, pLits + 2, 1 );
-
-    if p.pMSat.pSat.qtail != p.pMSat.pSat.qhead {
-        RetValue = sat_solver_simplify(p.pMSat.pSat);
-        //assert( RetValue != 0 );
-    }
-
-clk = Abc_Clock();
-    RetValue1 = sat_solver_solve( p.pMSat.pSat, pLits, pLits + nLits, 
-        (ABC_INT64_T)nBTLimit, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );
-p.timeSat += Abc_Clock() - clk;
-    if RetValue1 == l_False {
-p.timeSatUnsat += Abc_Clock() - clk;
-        if nLits == 2 {
-            pLits[0] = lit_neg( pLits[0] );
-            pLits[1] = lit_neg( pLits[1] );
-            RetValue = sat_solver_addclause( p.pMSat.pSat, pLits, pLits + 2 );
-            assert((RetValue != 0), "RetValue");
-/*
-            if ( p->pMSat->pSat->qtail != p->pMSat->pSat->qhead )
-            {
-                RetValue = sat_solver_simplify(p->pMSat->pSat);
-                assert( RetValue != 0 );
-            }
-*/
-        }
-        p.nSatCallsUnsat++;
-    
-    } else if RetValue1 == l_True {
-p.timeSatSat += Abc_Clock() - clk;
-        p.nSatCallsSat++;
-        return 0;
-    
-    } else { // if ( RetValue1 == l_Undef )
-    
-p.timeSatUndec += Abc_Clock() - clk;
-        p.nSatFailsReal++;
-        return -1;
-    }
-
-    // if the old node was constant 0, we already know the answer
-    if pOld == Aig_ManConst1(p.pFrames) {
-        p.nSatProof++;
-        return 1;
-    }
-
-    // solve under assumptions
-    // A = 0; B = 1     OR     A = 0; B = 0 
-    nLits = 2;
-    pLits[0] = toLitCond( Ssw_ObjSatNum(p.pMSat,pOld), 1 );
-    pLits[1] = toLitCond( Ssw_ObjSatNum(p.pMSat,pNew), pOld.fPhase ^ pNew.fPhase );
-    if p.iOutputLit > -1 {
-        pLits[nLits++] = p.iOutputLit; }
-    if p.pPars.fPolarFlip {
-        if pOld.fPhase {  pLits[0] = lit_neg( pLits[0] ); }
-        if pNew.fPhase {  pLits[1] = lit_neg( pLits[1] ); }
-    }
-
-    if p.pMSat.pSat.qtail != p.pMSat.pSat.qhead {
-        RetValue = sat_solver_simplify(p.pMSat.pSat);
-        //assert( RetValue != 0 );
-    }
-
-clk = Abc_Clock();
-    RetValue1 = sat_solver_solve( p.pMSat.pSat, pLits, pLits + nLits, 
-        (ABC_INT64_T)nBTLimit, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );
-p.timeSat += Abc_Clock() - clk;
-    if RetValue1 == l_False {
-p.timeSatUnsat += Abc_Clock() - clk;
-        if nLits == 2 {
-            pLits[0] = lit_neg( pLits[0] );
-            pLits[1] = lit_neg( pLits[1] );
-            RetValue = sat_solver_addclause( p.pMSat.pSat, pLits, pLits + 2 );
-            assert((RetValue != 0), "RetValue");
-/*
-            if ( p->pMSat->pSat->qtail != p->pMSat->pSat->qhead )
-            {
-                RetValue = sat_solver_simplify(p->pMSat->pSat);
-                assert( RetValue != 0 );
-            }
-*/
-        }
-        p.nSatCallsUnsat++;
-    
-    } else if RetValue1 == l_True {
-p.timeSatSat += Abc_Clock() - clk;
-        p.nSatCallsSat++;
-        return 0;
-    
-    } else { // if ( RetValue1 == l_Undef )
-    
-p.timeSatUndec += Abc_Clock() - clk;
-        p.nSatFailsReal++;
-        return -1;
-    }
-    // return SAT proof
-    p.nSatProof++;
-    return 1;
+func Ssw_NodesAreEquiv(p *Ssw_Man_t, old, node aig.Edge) int32 {
+	if p.pMSat == nil || old.Complemented() || node.Complemented() || old == node {
+		panic("ssw: invalid equivalence query")
+	}
+	p.nSatCalls++
+	p.pMSat.nSolverCalls++
+	sat := p.pMSat
+	Ssw_CnfNodeAddToSolver(sat, old)
+	Ssw_CnfNodeAddToSolver(sat, node)
+	samePhase := p.pFrames.Node(old).Phase == p.pFrames.Node(node).Phase
+	for direction := 0; direction < 2; direction++ {
+		if direction == 1 && old == p.pFrames.Const1() {
+			break
+		}
+		a := sswLit(sat, old, direction == 1)
+		b := sswLit(sat, node, samePhase != (direction == 1))
+		assumptions := []bsat.Literal{a, b}
+		if p.iOutputLit >= 0 {
+			assumptions = append(assumptions, p.iOutputLit)
+		}
+		sat.pSat.SetLimits(int64(p.pPars.nBTLimit), 0)
+		start := time.Now()
+		result := sat.pSat.Solve(assumptions...)
+		elapsed := time.Since(start)
+		p.timeSat += elapsed
+		switch result {
+		case bsat.Satisfiable:
+			p.timeSatSat += elapsed
+			p.nSatCallsSat++
+			return 0
+		case bsat.Unsatisfiable:
+			p.timeSatUnsat += elapsed
+			p.nSatCallsUnsat++
+			if len(assumptions) == 2 && !sat.pSat.AddClause(a^1, b^1) {
+				panic("ssw: cannot record proven equivalence clause")
+			}
+		default:
+			p.timeSatUndec += elapsed
+			p.nSatFailsReal++
+			return -1
+		}
+	}
+	p.nSatProof++
+	return 1
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Constrains two nodes to be equivalent in the SAT solver.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ssw_NodesAreConstrained(p *Ssw_Man_t, pOld *Aig_Obj_t, pNew *Aig_Obj_t) int32 {
-    var pLits [2]int32;
-    var RetValue int32;
-    var fComplNew int32;
-    var pTemp *Aig_Obj_t;
-
-    // sanity checks
-    assert(Aig_Regular(pOld) != Aig_Regular(pNew), "Aig_Regular(pOld) != Aig_Regular(pNew)");
-    assert(p.pPars.fConstrs || Aig_ObjPhaseReal(pOld) == Aig_ObjPhaseReal(pNew), "p.pPars.fConstrs || Aig_ObjPhaseReal(pOld) == Aig_ObjPhaseReal(pNew)");
-
-    // move constant to the old node
-    if Aig_Regular(pNew) == Aig_ManConst1(p.pFrames) {
-        assert(Aig_Regular(pOld) != Aig_ManConst1(p.pFrames), "Aig_Regular(pOld) != Aig_ManConst1(p.pFrames)");
-        pTemp = pOld;
-        pOld  = pNew;
-        pNew  = pTemp;
-    }
-
-    // move complement to the new node
-    if Aig_IsComplement(pOld) {
-        pOld = Aig_Regular(pOld);
-        pNew = Aig_Not(pNew);
-    }
-    assert(p.pMSat != nil, "p.pMSat != nil");
-
-    // if the nodes do not have SAT variables, allocate them
-    Ssw_CnfNodeAddToSolver( p.pMSat, pOld );
-    Ssw_CnfNodeAddToSolver( p.pMSat, Aig_Regular(pNew) );
-
-    // transform the new node
-    fComplNew = Aig_IsComplement( pNew );
-    pNew = Aig_Regular( pNew );
-
-    // consider the constant 1 case
-    if pOld == Aig_ManConst1(p.pFrames) {
-        // add constraint A = 1  ---->  A
-        pLits[0] = toLitCond( Ssw_ObjSatNum(p.pMSat,pNew), fComplNew );
-        if p.pPars.fPolarFlip {
-            if pNew.fPhase {  pLits[0] = lit_neg( pLits[0] ); }
-        }
-        RetValue = sat_solver_addclause( p.pMSat.pSat, pLits, pLits + 1 );
-        assert((RetValue != 0), "RetValue");
-    
-    } else {
-        // add constraint A = B  ---->  (A v !B)(!A v B)
-
-        // (A v !B)
-        pLits[0] = toLitCond( Ssw_ObjSatNum(p.pMSat,pOld), 0 );
-        pLits[1] = toLitCond( Ssw_ObjSatNum(p.pMSat,pNew), !fComplNew );
-        if p.pPars.fPolarFlip {
-            if pOld.fPhase {  pLits[0] = lit_neg( pLits[0] ); }
-            if pNew.fPhase {  pLits[1] = lit_neg( pLits[1] ); }
-        }
-        pLits[0] = lit_neg( pLits[0] );
-        pLits[1] = lit_neg( pLits[1] );
-        RetValue = sat_solver_addclause( p.pMSat.pSat, pLits, pLits + 2 );
-        assert((RetValue != 0), "RetValue");
-
-        // (!A v B)
-        pLits[0] = toLitCond( Ssw_ObjSatNum(p.pMSat,pOld), 1 );
-        pLits[1] = toLitCond( Ssw_ObjSatNum(p.pMSat,pNew), fComplNew);
-        if p.pPars.fPolarFlip {
-            if pOld.fPhase {  pLits[0] = lit_neg( pLits[0] ); }
-            if pNew.fPhase {  pLits[1] = lit_neg( pLits[1] ); }
-        }
-        pLits[0] = lit_neg( pLits[0] );
-        pLits[1] = lit_neg( pLits[1] );
-        RetValue = sat_solver_addclause( p.pMSat.pSat, pLits, pLits + 2 );
-        assert((RetValue != 0), "RetValue");
-    }
-    return 1;
+func Ssw_NodesAreConstrained(p *Ssw_Man_t, old, node aig.Edge) int32 {
+	if p.pMSat == nil || old.NodeID() == node.NodeID() {
+		panic("ssw: invalid equivalence constraint")
+	}
+	if p.pPars.fConstrs == 0 && aig.Aig_ObjPhaseReal(p.pFrames, old) != aig.Aig_ObjPhaseReal(p.pFrames, node) {
+		panic("ssw: inconsistent constraint phases")
+	}
+	if node.NodeID() == 0 {
+		old, node = node, old
+	}
+	if old.Complemented() {
+		old = old.Not()
+		node = node.Not()
+	}
+	sat := p.pMSat
+	Ssw_CnfNodeAddToSolver(sat, old)
+	Ssw_CnfNodeAddToSolver(sat, node&^1)
+	a, b := sswLit(sat, old, false), sswLit(sat, node, false)
+	if old == p.pFrames.Const1() {
+		sswAddClause(sat, b)
+	} else {
+		sswAddClause(sat, a, b^1)
+		sswAddClause(sat, a^1, b)
+	}
+	return 1
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Constrains one node in the SAT solver.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ssw_NodeIsConstrained(p *Ssw_Man_t, pPoObj *Aig_Obj_t) int32 {
-    var RetValue, Lit int32;
-    Ssw_CnfNodeAddToSolver( p.pMSat, Aig_ObjFanin0(pPoObj) );
-    // add constraint A = 1  ---->  A
-    Lit = toLitCond( Ssw_ObjSatNum(p.pMSat,Aig_ObjFanin0(pPoObj)), !Aig_ObjFaninC0(pPoObj) );
-    if p.pPars.fPolarFlip {
-        if Aig_ObjFanin0(pPoObj).fPhase {  Lit = lit_neg( Lit ); }
-    }
-    RetValue = sat_solver_addclause( p.pMSat.pSat, &Lit, &Lit + 1 );
-    assert((RetValue != 0), "RetValue");
-    return 1;
+func Ssw_NodeIsConstrained(p *Ssw_Man_t, out aig.Edge) int32 {
+	child := p.pFrames.Node(out).Fanins[0]
+	Ssw_CnfNodeAddToSolver(p.pMSat, child&^1)
+	sswAddClause(p.pMSat, sswLit(p.pMSat, child, true))
+	return 1
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
