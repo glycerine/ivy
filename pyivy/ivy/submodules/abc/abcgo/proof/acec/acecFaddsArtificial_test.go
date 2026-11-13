@@ -116,3 +116,17 @@ func TestAutomaticArtificialBoxes(t *testing.T) {
 		}
 	}
 }
+
+func TestArtificialPathRejectsExistingLevels(t *testing.T) {
+	g, _, _, _ := carryFixture(false)
+	gia.Gia_ManCleanLevels(g, gia.Gia_ManObjNum(g))
+	defer func() {
+		if recover() == nil {
+			t.Error("expected preexisting levels to be rejected")
+		}
+		if !gia.Gia_ManHasLevels(g) {
+			t.Error("preexisting levels were discarded")
+		}
+	}()
+	Gia_ManIteratePaths(g, 10, 1, 8, 1, 1, 0)
+}

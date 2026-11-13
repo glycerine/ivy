@@ -280,6 +280,9 @@ func Gia_ManFindPath(graph *gia.Gia_Man_t, carryDelay, minPath, maxPath int32, p
 	return int32(vec.Vec_IntSize(path))
 }
 func Gia_ManIteratePaths(graph *gia.Gia_Man_t, carryDelay, minPath, maxPath, limit, ignoreBoxes, verbose int32) int32 {
+	if gia.Gia_ManHasLevels(graph) {
+		panic("artificial paths require no preexisting levels")
+	}
 	gia.Gia_ManCleanLevels(graph, gia.Gia_ManObjNum(graph))
 	defer gia.Gia_ManClearLevels(graph)
 	gia.Gia_ManCleanMark01(graph)
