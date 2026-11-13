@@ -1,8 +1,6 @@
 package int2
 
 import (
-	"time"
-
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/misc/vec"
 )
@@ -320,15 +318,10 @@ func Int2_ManComputePreimage(pSuff *Gia_Man_t, pSatPref, pSatSuff *sat_solver, v
 
 **********************************************************************
 */
-func Int2_ManPerformInterpolation(pInit *Gia_Man_t, pPars *Int2_ManPars_t) int32 {
-	if pInit == nil || pPars == nil {
-		return INT2_TIME_OUT
-	}
-	var deadline time.Time
-	if pPars.nSecLimit > 0 {
-		deadline = time.Now().Add(time.Duration(pPars.nSecLimit) * time.Second)
-	}
-	return int2Reachability(pInit, pPars.nFramesMax, deadline)
+// Int2_ManPerformInterpolation returns undecided because the checked-in C
+// interpolation driver is incomplete. See SOURCE_FIDELITY.md for details.
+func Int2_ManPerformInterpolation(_ *Gia_Man_t, _ *Int2_ManPars_t) int32 {
+	return INT2_TIME_OUT
 }
 
 ////////////////////////////////////////////////////////////////////////

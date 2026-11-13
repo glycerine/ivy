@@ -191,6 +191,37 @@ func TestPrepareSuffixBlocksStateCubeUsingMappedVariable(t *testing.T) {
 	}
 }
 
+func TestPrepareSuffixBlocksMultipleCubes(t *testing.T) {
+	g := gia.Gia_ManStart(16)
+	gia.Gia_ManAppendCi(g) // unrelated primary input
+	x, y := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
+	gia.Gia_ManAppendCo(g, 1)
+	gia.Gia_ManAppendCo(g, x)
+	gia.Gia_ManAppendCo(g, y)
+	gia.Gia_ManSetRegNum(g, 2)
+	// Block x=1,y=0 and x=0,y=1. Their complement is x==y.
+	images := vec.Vec_IntAllocArrayCopy([]int32{0, 2, 0, 3, 2, 1, 2}, 7)
+	var coMap *Vec_Int_t
+	var suffix *Gia_Man_t
+	solver := Int2_ManPrepareSuffix(g, nil, images, &coMap, &suffix)
+	if solver == nil || coMap == nil || suffix == nil {
+		t.Fatal("suffix solver/graph/map missing")
+	}
+	defer gia.Gia_ManStop(suffix)
+	for xv := int32(0); xv < 2; xv++ {
+		for yv := int32(0); yv < 2; yv++ {
+			assumptions := []int32{
+				sat_literal(vec.Vec_IntEntry(coMap, 1), 1-xv),
+				sat_literal(vec.Vec_IntEntry(coMap, 2), 1-yv),
+			}
+			status := sat_solver_solve(solver, assumptions, 0, 0, 0, 0)
+			if (status == l_True) != (xv == yv) {
+				t.Fatalf("x=%d y=%d: status %d", xv, yv, status)
+			}
+		}
+	}
+}
+
 func TestCheckInitAgainstExhaustiveTransitions(t *testing.T) {
 	// Every pair of Boolean next-state functions over two registers.
 	for table0 := int32(0); table0 < 16; table0++ {

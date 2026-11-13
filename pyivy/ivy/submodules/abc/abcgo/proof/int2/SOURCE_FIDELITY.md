@@ -8,12 +8,10 @@ undeclared image/map variables, an invalid member-access token, a call with a
 different argument count from its definition, and a reference to a manager
 field that is not declared. It cannot be built as a C reference in this state.
 
-The Go package retains an exact, bounded reachable-state fallback in
-`Int2_ManPerformInterpolation`; it is not a port of the interpolation driver.
-It is limited to small transition systems and must not be taken as evidence of
-equivalent performance, resource handling, or an interpolation certificate.
-Reconstructing the missing driver requires a reliable source or a separately
-specified algorithm, rather than assuming its absent control flow.
+`Int2_ManPerformInterpolation` returns `INT2_TIME_OUT` (the existing undecided
+status) for every input: the driver is unsupported until a reliable source is
+available. The previously invented bounded reachability fallback was removed;
+this entry point reports neither a proof nor a counterexample.
 
 Source search: the other local ABC checkout has the same `int2Core.c` bytes
 (SHA-256 `99f3fa643b19dd3e65c317ed6f47ba8c845145be8091a34fe111c1ed03837272`).
@@ -45,6 +43,3 @@ The source's cube refinement asserts finite priority even for a constant-true
 suffix. The Go implementation handles that case with an empty justifying cube;
 both refinement and preimage behavior have regression tests.
 
-The bounded fallback evaluates native XOR, MUX and buffer nodes and treats
-constraint outputs as forbidden inputs rather than bad properties. These are
-soundness corrections to the fallback, not a reconstruction of the driver.

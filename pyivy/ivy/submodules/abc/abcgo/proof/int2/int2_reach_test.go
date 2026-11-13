@@ -2,7 +2,6 @@ package int2
 
 import (
 	"testing"
-	"time"
 
 	"github.com/glycerine/abcgo/aig/gia"
 )
@@ -38,68 +37,14 @@ func testInt2InputToBadMachine() *Gia_Man_t {
 	return p
 }
 
-func TestInt2ReachabilityProvesByExhaustiveClosure(t *testing.T) {
-	p := testInt2ToggleMachine()
-	defer gia.Gia_ManStop(p)
-	if got := int2Reachability(p, 0, time.Time{}); got != INT2_COMPUTED {
-		t.Fatalf("reachability status = %d, want proven", got)
+func TestPerformInterpolationReportsUnsupported(t *testing.T) {
+	for _, graph := range []*Gia_Man_t{testInt2ToggleMachine(), testInt2InputToBadMachine(), testInt2ThreeStateMachine()} {
+		if got := Int2_ManPerformInterpolation(graph, &Int2_ManPars_t{}); got != INT2_TIME_OUT {
+			t.Fatalf("incomplete interpolation driver returned %d, want undecided", got)
+		}
 	}
-}
-
-func TestInt2PerformInterpolationRunsPastInitialFrame(t *testing.T) {
-	p := testInt2ToggleMachine()
-	defer gia.Gia_ManStop(p)
-	// Both reachable states are safe; the driver must close the reachable set
-	// rather than returning after only checking the all-zero initial state.
-	if got := Int2_ManPerformInterpolation(p, &Int2_ManPars_t{}); got != INT2_COMPUTED {
-		t.Fatalf("verification status = %d, want proven", got)
-	}
-}
-
-func TestInt2ReachabilityFindsLaterCounterexample(t *testing.T) {
-	p := testInt2InputToBadMachine()
-	defer gia.Gia_ManStop(p)
-	if got := int2Reachability(p, 0, time.Time{}); got != INT2_FALSE_NEG {
-		t.Fatalf("reachability status = %d, want counterexample", got)
-	}
-}
-
-func TestInt2ReachabilityDepthLimitIsUndecided(t *testing.T) {
-	p := testInt2ThreeStateMachine()
-	defer gia.Gia_ManStop(p)
-	if got := int2Reachability(p, 1, time.Time{}); got != INT2_TIME_OUT {
-		t.Fatalf("bounded status = %d, want undecided", got)
-	}
-	if got := int2Reachability(p, 0, time.Time{}); got != INT2_COMPUTED {
-		t.Fatalf("complete status = %d, want proven", got)
-	}
-}
-
-func TestInt2ReachabilityNativeXor(t *testing.T) {
-	p := gia.Gia_ManStart(16)
-	a := gia.Gia_ManAppendCi(p)
-	b := gia.Gia_ManAppendCi(p)
-	state := gia.Gia_ManAppendCi(p)
-	x := gia.Gia_ManAppendXorReal(p, a, b)
-	gia.Gia_ManAppendCo(p, gia.Gia_ManAppendAnd(p, x, a^1))
-	gia.Gia_ManAppendCo(p, state)
-	gia.Gia_ManSetRegNum(p, 1)
-	if got := int2Reachability(p, 0, time.Time{}); got != INT2_FALSE_NEG {
-		t.Fatalf("native XOR reachability = %d, want counterexample", got)
-	}
-}
-
-func TestInt2ReachabilityIgnoresForbiddenInputs(t *testing.T) {
-	p := gia.Gia_ManStart(16)
-	x := gia.Gia_ManAppendCi(p)
-	state := gia.Gia_ManAppendCi(p)
-	gia.Gia_ManAppendCo(p, x)
-	gia.Gia_ManAppendCo(p, x) // constraint violation when x is true
-	gia.Gia_ManAppendCo(p, state)
-	gia.Gia_ManSetRegNum(p, 1)
-	gia.Gia_ManSetConstrNum(p, 1)
-	if got := int2Reachability(p, 0, time.Time{}); got != INT2_COMPUTED {
-		t.Fatalf("constrained reachability = %d, want proof", got)
+	if got := Int2_ManPerformInterpolation(nil, nil); got != INT2_TIME_OUT {
+		t.Fatalf("nil inputs returned %d, want undecided", got)
 	}
 }
 

@@ -37,21 +37,16 @@ GOCACHE=/tmp/abcgo-cache go -C abcgo vet ./proof/int2/sat_bridge.go ./proof/int2
 
 The checked-in C interpolation driver has unresolved names (`vImageOne`,
 `vImagesAll`, `vCiMap`, `vCoMap`, and `pGiaSuff`) and the preimage helper reads
-manager fields absent from its signature. Rather than return undecided after
-frame zero or claim an incomplete interpolant proof, `Int2_ManPerformInterpolation`
-currently uses exact reachable-state enumeration from the all-zero initial
-state. It proves only after the reachable set closes; the current limits are
-16 primary inputs, 262,144 distinct states, and 4,194,304 explored state/input
-pairs. A configured depth or time limit can also return undecided.
-Counterexamples are reported when a property output is true in a reached
-state. Small cyclic, counterexample, and depth-limited machines have focused
-regression tests.
+manager fields absent from its signature. `Int2_ManPerformInterpolation`
+therefore always returns the existing undecided status; it cannot produce a
+proof or a counterexample until a faithful driver is available. The previously
+invented bounded reachability substitute has been removed.
 
 The GIA dependency and the complete Go INT2 package now build. The original
 C source still contains unresolved identifiers and typos in interpolation
 setup; these need to be resolved against the intended algorithm, not
 mechanically copied. See [SOURCE_FIDELITY.md](SOURCE_FIDELITY.md) for the
-source search and the limits of the fallback.
+source search and the remaining fidelity gap.
 
 The full package passes `go test -race ./proof/int2` and `go vet ./proof/int2`
 from the `abcgo` module. Original-C fixtures for unrolling, initialization
