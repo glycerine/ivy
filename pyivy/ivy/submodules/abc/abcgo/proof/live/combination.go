@@ -67,8 +67,8 @@ func generateCombinatorialStabil(new, old *aig.Graph, candidates []int32, disjun
 	count := int32(0)
 	ForEachCombination(int(n), int(k), func(values []int) bool {
 		signals := []aig.Edge{}
-		for _, i := range values {
-			signals = append(signals, copiedDriver(old, int(candidates[i])))
+		for j := len(values) - 1; j >= 0; j-- {
+			signals = append(signals, copiedDriver(old, int(candidates[values[j]])))
 		}
 		*disjunctions = append(*disjunctions, disjoin(new, signals))
 		count++
@@ -83,8 +83,8 @@ func generateCombinatorialStabilExhaust(new, old *aig.Graph, disjunctions *[]aig
 	count := int32(0)
 	ForEachCombination(int(n), int(k), func(values []int) bool {
 		signals := []aig.Edge{}
-		for _, i := range values {
-			signals = append(signals, aig.Aig_ObjCopy(old, old.Inputs()[trueInputs(old)+i]))
+		for j := len(values) - 1; j >= 0; j-- {
+			signals = append(signals, aig.Aig_ObjCopy(old, old.Inputs()[trueInputs(old)+values[j]]))
 		}
 		*disjunctions = append(*disjunctions, disjoin(new, signals))
 		count++
