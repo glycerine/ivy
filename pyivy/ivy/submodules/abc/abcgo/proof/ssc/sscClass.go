@@ -7,6 +7,9 @@ import (
 )
 
 func Ssc_GiaClassesInit(p *gia.Gia_Man_t, pivot []bool) *Classes {
+	if p.HasRepresentatives() {
+		panic("ssc: representative storage already exists")
+	}
 	s := NewSimulation(p, 1)
 	Ssc_GiaSavePiPattern(s, pivot)
 	Ssc_GiaSimRound(s)

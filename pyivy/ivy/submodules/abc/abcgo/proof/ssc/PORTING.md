@@ -14,7 +14,9 @@ refined using the witness. Only
 UNSAT proofs permit substitution. UNKNOWN retains the original function; empty
 care produces a zero-output implementation with the same interface. Final
 representatives, proved flags, class links, and pivot phases are published on the
-source GIA. The rebuilt graph uses a local structural hash and preserves identity.
+source GIA. As in the C class initializer, sweeping requires the subject to
+have no existing representative storage once a valid care pivot is found.
+The rebuilt graph uses a local structural hash and preserves identity.
 
 The constraint wrapper extracts trailing constraint outputs separately from
 ordinary outputs and next-state functions. Append reinserts constraints before
