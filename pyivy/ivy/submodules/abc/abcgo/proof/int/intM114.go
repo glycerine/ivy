@@ -109,11 +109,8 @@ func Inter_ManPerformOneStep(p *Inter_Man_t, bias, backward int32, deadline abct
 	if bias != 0 {
 		solver.SetGlobalVariableBias(vec.Vec_IntArray(p.vVarsAB))
 	}
-	if p.nConfLimit > 0 {
-		solver.SetLimits(int64(p.nConfLimit), 0)
-	}
 	start := util.Abc_Clock()
-	status := solver.Solve()
+	status := solver.SolveWithSourceLimits(nil, int64(p.nConfLimit), 0, 0, 0)
 	p.nConfCur = int32(solver.ConflictCount())
 	p.timeSat += util.Abc_Clock() - start
 	if status == bsat.Satisfiable {
