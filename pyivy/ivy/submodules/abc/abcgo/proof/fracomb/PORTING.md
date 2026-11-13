@@ -21,12 +21,13 @@ manager operations remain in `proof/framgr`. This package requires a
 combinational graph for SAT and CEC. A caller must supply a non-nil sweep if
 CEC proceeds past the initial SAT attempt.
 
-The port validates an existing or all-zero CEC witness before returning it.
-If neither is valid, it asks the SAT solver for a witness. This corrects the C
-shortcut for a positive primary-input output. SAT models undo any transformed
-input phase; unconstrained inputs default to zero. Unknown solver results stay
-unknown. These are correctness fixes to witness handling, not alternate proof
-algorithms.
+The source-named entry points retain ABC's witness behavior. When the initial
+structural miter check reports failure, `Fra_FraigCec` replaces any model with
+an all-zero assignment without replaying it. For a direct positive input this
+assignment does not assert the output. `Fra_FraigSat` also returns raw SAT
+variable values after polarity transformation without undoing nonzero input
+phases. Callers requiring a replayable witness must account for these source
+limitations. Unknown solver results stay unknown.
 
 The package's full race suite covers both SAT solver variants, OR and AND
 output modes, all two-input single-output truth functions under all input

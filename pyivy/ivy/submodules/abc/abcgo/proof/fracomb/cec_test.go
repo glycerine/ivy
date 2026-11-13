@@ -40,7 +40,7 @@ func TestCecDriverTrivialProofAndCounterexample(t *testing.T) {
 	}
 }
 
-func TestCecDirectInputProducesValidWitness(t *testing.T) {
+func TestCecDirectInputUsesSourceZeroWitness(t *testing.T) {
 	g := aig.NewGraph()
 	x := g.NewInput()
 	g.AddOutput(x)
@@ -48,11 +48,11 @@ func TestCecDirectInputProducesValidWitness(t *testing.T) {
 		t.Fatalf("status %d", got)
 	}
 	model, ok := g.Data.([]int32)
-	if !ok || len(model) != 1 || model[0] != 1 {
-		t.Fatalf("invalid witness %v", g.Data)
+	if !ok || len(model) != 1 || model[0] != 0 {
+		t.Fatalf("source zero witness %v", g.Data)
 	}
 }
-func TestCecPreservesExistingWitness(t *testing.T) {
+func TestCecReplacesExistingWitnessWithSourceZeroWitness(t *testing.T) {
 	g := aig.NewGraph()
 	x := g.NewInput()
 	g.AddOutput(x)
@@ -61,8 +61,8 @@ func TestCecPreservesExistingWitness(t *testing.T) {
 		t.Fatal("lost known failing model")
 	}
 	model, ok := g.Data.([]int32)
-	if !ok || len(model) != 1 || model[0] != 1 {
-		t.Fatalf("invalid witness %v", g.Data)
+	if !ok || len(model) != 1 || model[0] != 0 {
+		t.Fatalf("source zero witness %v", g.Data)
 	}
 }
 
@@ -75,7 +75,7 @@ func TestCountXorsRecognizesNativeAndStructuralNodes(t *testing.T) {
 		t.Fatalf("got %d XORs, want 2", got)
 	}
 }
-func TestCecRejectsInvalidExistingWitness(t *testing.T) {
+func TestCecReplacesInvalidExistingWitness(t *testing.T) {
 	g := aig.NewGraph()
 	x := g.NewInput()
 	g.AddOutput(x)
@@ -84,8 +84,55 @@ func TestCecRejectsInvalidExistingWitness(t *testing.T) {
 		t.Fatalf("status %d", got)
 	}
 	model, ok := g.Data.([]int32)
-	if !ok || len(model) != 1 || model[0] != 1 {
-		t.Fatalf("invalid witness %v", g.Data)
+	if !ok || len(model) != 1 || model[0] != 0 {
+		t.Fatalf("source zero witness %v", g.Data)
+	}
+}
+
+func TestCecSourceDoesNotRevalidateSweepModel(t *testing.T) {
+	// The initial 600-conflict SAT call cannot solve this pigeonhole miter.
+	// A sweep callback supplies a deliberately invalid model to characterize
+	// ABC's handling of a later status-0 result.
+	const pigeons, holes = 8, 7
+	g := aig.NewGraph()
+	var inputs [pigeons][holes]aig.Edge
+	for i := range inputs {
+		for j := range inputs[i] {
+			inputs[i][j] = g.NewInput()
+		}
+	}
+	formula := g.Const1()
+	for i := range inputs {
+		clause := g.Const0()
+		for _, v := range inputs[i] {
+			clause = g.OR(clause, v)
+		}
+		formula = g.AND(formula, clause)
+	}
+	for h := 0; h < holes; h++ {
+		for i := 0; i < pigeons; i++ {
+			for j := 0; j < i; j++ {
+				formula = g.AND(formula, g.OR(inputs[i][h].Not(), inputs[j][h].Not()))
+			}
+		}
+	}
+	g.AddOutput(formula)
+	calls := 0
+	status := Fra_FraigCec(&g, 100000, 0, func(graph *aig.Graph, _, _ int32) *aig.Graph {
+		calls++
+		graph.Data = make([]int32, graph.InputCount())
+		return graph
+	})
+	if calls == 0 || status != 0 {
+		t.Fatalf("sweep calls=%d status=%d", calls, status)
+	}
+	model, ok := g.Data.([]int32)
+	if !ok || len(model) != pigeons*holes {
+		t.Fatalf("source model %v", g.Data)
+	}
+	outputs, err := g.Evaluate(make([]bool, g.InputCount()))
+	if err != nil || outputs[0] {
+		t.Fatalf("fixture unexpectedly validates: outputs=%v err=%v", outputs, err)
 	}
 }
 
@@ -115,16 +162,13 @@ func TestMiterStatusAndAssertedOutput(t *testing.T) {
 	}
 }
 
-func TestCecRejectsSequentialGraphs(t *testing.T) {
+func TestCecSourceShortcutPrecedesCombinationalCheck(t *testing.T) {
 	g := aig.NewGraph()
 	state := g.NewInput()
 	g.AddOutput(g.Const1())
 	g.AddOutput(state)
 	aig.Aig_ManSetRegNum(g, 1)
-	defer func() {
-		if recover() == nil {
-			t.Fatal("accepted a sequential miter")
-		}
-	}()
-	Fra_FraigCec(&g, 1000, 0, nil)
+	if got := Fra_FraigCec(&g, 1000, 0, nil); got != 0 {
+		t.Fatalf("source shortcut status %d", got)
+	}
 }

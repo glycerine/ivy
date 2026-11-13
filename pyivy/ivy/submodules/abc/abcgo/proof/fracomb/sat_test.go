@@ -86,7 +86,7 @@ func TestSATTwoOutputTruthTables(t *testing.T) {
 	}
 }
 
-func TestSATPolarityTransformPreservesInputWitness(t *testing.T) {
+func TestSATPolarityTransformReturnsSourceSolverModel(t *testing.T) {
 	for _, solver := range []int32{0, 1} {
 		g := aig.NewGraph()
 		x := g.NewInput()
@@ -96,8 +96,8 @@ func TestSATPolarityTransformPreservesInputWitness(t *testing.T) {
 			t.Fatalf("solver %d got %d", solver, got)
 		}
 		model, ok := g.Data.([]int32)
-		if !ok || len(model) != 1 || model[0] != 1 {
-			t.Fatalf("solver %d invalid model %v", solver, g.Data)
+		if !ok || len(model) != 1 || model[0] != 0 {
+			t.Fatalf("solver %d raw model %v", solver, g.Data)
 		}
 	}
 }
@@ -152,7 +152,15 @@ func TestSATAllTruthFunctionsWithInputPhases(t *testing.T) {
 						if !ok || len(m) != 2 {
 							t.Fatalf("bad model %v", g.Data)
 						}
-						o, err := g.Evaluate([]bool{m[0] != 0, m[1] != 0})
+						inputs := []bool{m[0] != 0, m[1] != 0}
+						if flip != 0 {
+							for i := range inputs {
+								if phases&(1<<i) != 0 {
+									inputs[i] = !inputs[i]
+								}
+							}
+						}
+						o, err := g.Evaluate(inputs)
 						if err != nil || !o[0] {
 							t.Fatalf("table=%x phases=%d solver=%d flip=%d model=%v", table, phases, solver, flip, m)
 						}

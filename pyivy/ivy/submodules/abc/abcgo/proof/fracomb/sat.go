@@ -89,9 +89,8 @@ func Fra_FraigSat(graph *aig.Graph, conflictLimit, propagationLimit int64, learn
 				// An input absent from all clauses is unconstrained.
 				continue
 			}
-			if flipBits != 0 && graph.Node(input).Phase {
-				value = !value
-			}
+			// ABC returns the solver's raw PI model after CNF phase
+			// transformation; it does not undo a nonzero PI phase.
 			if value {
 				model[i] = 1
 			}
