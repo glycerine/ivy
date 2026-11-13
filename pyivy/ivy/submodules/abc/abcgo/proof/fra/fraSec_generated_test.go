@@ -76,6 +76,11 @@ func TestSecSeparateInterpolationAgainstReachability(t *testing.T) {
 		pars.fReachability = 0
 		pars.fUsePdr = 0
 		status := Fra_FraigSec(g, &pars, nil)
+		// These deterministic fixtures reach separate-output interpolation and
+		// produce a verified witness, rather than only an unknown result.
+		if (trial == 1 || trial == 17 || trial == 24 || trial == 25) && status != 0 {
+			t.Fatalf("trial %d lost a separable interpolation witness: %d", trial, status)
+		}
 		switch status {
 		case 1:
 			decided++
