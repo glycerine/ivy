@@ -32,7 +32,6 @@ import "time"
 ///                        DECLARATIONS                              ///
 ////////////////////////////////////////////////////////////////////////
 
-const SAIG_WORDS =  16
 
 func Saig_ObjNext(ppNexts **Aig_Obj_t, pObj *Aig_Obj_t) *Aig_Obj_t { return ppNexts[pObj.Id];  }
 func Saig_ObjSetNext(ppNexts **Aig_Obj_t, pObj *Aig_Obj_t, pNext *Aig_Obj_t) { ppNexts[pObj.Id] = pNext; }
