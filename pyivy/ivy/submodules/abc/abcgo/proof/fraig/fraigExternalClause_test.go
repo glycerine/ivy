@@ -42,3 +42,14 @@ func TestExternalNonUnitClauseIncludesItsGateCone(t *testing.T) {
 		t.Fatalf("external (a AND b) OR c must imply a OR c: %d", got)
 	}
 }
+
+func TestExternalUnitPropagationIgnoresPreviousConeOrder(t *testing.T) {
+	p := Fraig_ManCreate(&Fraig_Params_t{NPatsRand: 128, NPatsDyna: 128, NBTLimit: -1})
+	defer Fraig_ManFree(p)
+	a, b, c := Fraig_ManReadIthVar(p, 0), Fraig_ManReadIthVar(p, 1), Fraig_ManReadIthVar(p, 2)
+	Fraig_ManAddClause(p, []*Fraig_Node_t{a}, 1)
+	Fraig_ManAddClause(p, []*Fraig_Node_t{b, Fraig_Not(a)}, 2)
+	if got := Fraig_ManCheckClauseUsingSat(p, b, c, -1); got != 1 {
+		t.Fatalf("external implication failed to preserve propagated unit: %d", got)
+	}
+}

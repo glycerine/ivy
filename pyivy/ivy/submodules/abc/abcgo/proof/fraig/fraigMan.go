@@ -187,6 +187,9 @@ func Fraig_ManAddClause(p *Fraig_Man_t, nodes []*Fraig_Node_t, n int32) {
 			Fraig_OrderVariables(p, p.pConst1, node)
 		}
 	}
+	// Clause simplification can enqueue a unit on any literal, not just
+	// nodes in the last cone visited above.
+	fraigSatEnableAllVariables(p)
 	msat.Msat_IntVecClear(p.vProj)
 	for _, edge := range edges {
 		if edge == Fraig_Not(p.pConst1) {
