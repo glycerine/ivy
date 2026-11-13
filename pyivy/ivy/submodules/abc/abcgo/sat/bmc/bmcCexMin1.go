@@ -1,79 +1,31 @@
 package bmc
 
-import "fmt"
+import (
+	"fmt"
 
-/**CFile****************************************************************
+	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/aig/ioa"
+	"github.com/glycerine/abcgo/misc/util"
+	"github.com/glycerine/abcgo/misc/vec"
+)
 
-  FileName    [bmcCexMin1.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [SAT-based bounded model checking.]
-
-  Synopsis    [CEX minimization.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: bmcCexMin1.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "aig/ioa/ioa.h"
-//#include "bmc.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_ManCexMinPerform(pAig *Aig_Man_t, pCex *Abc_Cex_t) *Abc_Cex_t {
-    var fReasonPi int32;
-
-    var pCexMin *Abc_Cex_t  = nil;
-    var pManNew *Aig_Man_t  = nil;
-    var vFrameReas *Vec_Vec_t;
-    vFrameReas = Saig_ManCexMinComputeReason( pAig, pCex, fReasonPi );
-    fmt.Printf("Reason size = %d.  Ave = %d.\n", Vec_VecSizeSize(vFrameReas), Vec_VecSizeSize(vFrameReas)/(pCex.iFrame + 1));
-
-    // try reducing the frames
-    if !(fReasonPi != 0) {
-        var pFileName string  = "aigcube.aig";
-        pManNew = Saig_ManCexMinDupWithCubes( pAig, vFrameReas );
-        Ioa_WriteAiger( pManNew, pFileName, 0, 0 );
-        Aig_ManStop( pManNew );
-        fmt.Printf("Intermediate AIG is written into file \"%s\".\n", pFileName);
-    }
-
-    // find reduced counter-example
-    Vec_VecFree( vFrameReas );
-    return pCexMin;
+// Saig_ManCexMinPerform derives register reasons and writes the intermediate
+// cube AIG. The original routine does not yet construct a reduced CEX.
+func Saig_ManCexMinPerform(g *aig.Graph, cex *util.Abc_Cex_t) *util.Abc_Cex_t {
+	reasons := Saig_ManCexMinComputeReason(g, cex, 0)
+	if reasons == nil {
+		return nil
+	}
+	size := vec.Vec_VecSizeSize(reasons)
+	fmt.Printf("Reason size = %d.  Ave = %d.\n", size, size/int(cex.IFrame+1))
+	graph := Saig_ManCexMinDupWithCubes(g, reasons)
+	if graph == nil {
+		return nil
+	}
+	if err := ioa.Ioa_WriteAiger(graph, "aigcube.aig", 0, 0); err != nil {
+		fmt.Printf("Could not write intermediate AIG: %v\n", err)
+	} else {
+		fmt.Println("Intermediate AIG is written into file \"aigcube.aig\".")
+	}
+	return nil
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
