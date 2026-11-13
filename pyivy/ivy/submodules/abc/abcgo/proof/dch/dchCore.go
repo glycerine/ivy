@@ -10,7 +10,8 @@ import (
 func (m *Manager) computeEquivalences() error {
 	started := time.Now()
 	simStart := time.Now()
-	m.classes = createClasses(m.graph, m.order, m.params.Words)
+	m.random = aig.NewAigRandomSource()
+	m.classes = createClasses(m.graph, m.order, m.params.Words, m.random)
 	m.stats.Simulation = time.Since(simStart)
 	m.stats.Candidates = Dch_ClassesLitNum(m.classes)
 	if err := m.sweep(); err != nil {

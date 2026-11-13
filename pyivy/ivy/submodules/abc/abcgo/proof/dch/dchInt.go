@@ -27,6 +27,7 @@ type Manager struct {
 	fanouts    map[int][]int
 	ranks      map[int]int
 	lastValues []bool
+	random     *aig.AigRandomSource
 	stats      Statistics
 }
 type Dch_Man_t = Manager

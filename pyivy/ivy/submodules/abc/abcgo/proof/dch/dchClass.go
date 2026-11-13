@@ -56,7 +56,7 @@ func signature(g *aig.Graph, node aig.Edge, sims [][]uint32) string {
 	}
 	return string(bytes)
 }
-func createClasses(g *aig.Graph, order []aig.Edge, words int) *Classes {
+func createClasses(g *aig.Graph, order []aig.Edge, words int, sources ...*aig.AigRandomSource) *Classes {
 	candidates := []aig.Edge{}
 	for _, node := range g.LiveEdges() {
 		kind := g.Node(node).Kind
@@ -66,6 +66,9 @@ func createClasses(g *aig.Graph, order []aig.Edge, words int) *Classes {
 	}
 	c := &Classes{groups: [][]aig.Edge{candidates}}
 	random := aig.NewAigRandomSource()
+	if len(sources) > 0 {
+		random = sources[0]
+	}
 	random.Uint32() // Aig_ManRandom(1) reset draw is discarded by dchCore.c.
 	for pass := 0; pass < 8; pass++ {
 		sims := simulateWords(g, order, words, random)
