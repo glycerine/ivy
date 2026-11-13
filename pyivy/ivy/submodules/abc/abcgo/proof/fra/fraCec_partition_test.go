@@ -69,3 +69,16 @@ func TestPartitionedCECMatchesTruthTables(t *testing.T) {
 		}
 	}
 }
+
+// fraCec.c compares each count to itself; an unused extra input on the
+// second graph does not prevent source partitioned equivalence checking.
+func TestCecTopSourceAcceptsUnusedExtraInput(t *testing.T) {
+	left, right := aig.NewGraph(), aig.NewGraph()
+	a, b := left.NewInput(), right.NewInput()
+	right.NewInput()
+	left.AddOutput(a)
+	right.AddOutput(b)
+	if status := Fra_FraigCecTop(left, right, 0, 0, 0, 0); status != 1 {
+		t.Fatalf("status %d", status)
+	}
+}

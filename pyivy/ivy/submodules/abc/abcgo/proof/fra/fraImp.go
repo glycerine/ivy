@@ -193,7 +193,6 @@ func Fra_ImpAddToSolver(p *Fra_Man_t, imps *vec.Vec_Int_t, satVarNums []int32) {
 	// Propagate and simplify without consuming a SAT search budget.
 	if !p.PSat.Simplify() {
 		p.PSat = nil
-		return
 	}
 	Fra_ImpCompactArray(imps)
 }

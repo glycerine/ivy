@@ -50,7 +50,7 @@ func Fra_FraigCecPartitioned(left, right *aig.Graph, conflictLimit, partSize, sm
 
 // Fra_FraigCecTop verifies two combinational AIGs, optionally partitioned.
 func Fra_FraigCecTop(left, right *aig.Graph, conflictLimit, partSize, smart, verbose int32) int32 {
-	if left == nil || right == nil || left.InputCount() != right.InputCount() || left.OutputCount() != right.OutputCount() {
+	if left == nil || right == nil {
 		return 0
 	}
 	if aig.Aig_ManNodeNum(left) < aig.Aig_ManNodeNum(right) {
