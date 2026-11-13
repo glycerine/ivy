@@ -65,14 +65,14 @@ func TestExpiredDeadlineMakesSatQueryUnknown(t *testing.T) {
 		t.Fatal("expired query did not return unknown")
 	}
 }
-func TestCecDelegationWithDeadlineReturnsUnknown(t *testing.T) {
+func TestCecDelegationWithFutureDeadlineCompletes(t *testing.T) {
 	g := sswDeadlineGraph()
 	p := new(Ssw_Pars_t)
 	Ssw_ManSetDefaultParams(p)
 	p.fScorrGia = 1
 	Ssw_ParsSetDeadline(p, time.Now().Add(time.Hour))
-	if result := Ssw_SignalCorrespondence(g, p); result != nil {
-		t.Fatal("deadline-unsupported CEC delegation returned a graph")
+	if result := Ssw_SignalCorrespondence(g, p); result == nil {
+		t.Fatal("CEC delegation failed with ample time")
 	}
 }
 

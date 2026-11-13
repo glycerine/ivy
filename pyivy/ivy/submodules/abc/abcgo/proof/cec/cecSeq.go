@@ -5,6 +5,7 @@ import (
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
+	"time"
 )
 
 func cecInfo(info *Vec_Ptr_t, index int32) []uint32 {
@@ -73,6 +74,9 @@ func Cec_ManSeqResimulate(p *Cec_ManSim_t, info *Vec_Ptr_t) int32 {
 	}
 	k := regs
 	for frame := int32(0); frame < p.pPars.nFrames; frame++ {
+		if !p.pPars.deadline.IsZero() && !time.Now().Before(p.pPars.deadline) {
+			return 0
+		}
 		for i := int32(0); i < pis; i++ {
 			copy(cecInfo(p.vCiSimInfo, i), cecInfo(info, k))
 			k++
@@ -82,6 +86,9 @@ func Cec_ManSeqResimulate(p *Cec_ManSim_t, info *Vec_Ptr_t) int32 {
 		}
 		if Cec_ManSimSimulateRound(p, p.vCiSimInfo, p.vCoSimInfo) != 0 {
 			return 1
+		}
+		if !p.pPars.deadline.IsZero() && !time.Now().Before(p.pPars.deadline) {
+			return 0
 		}
 	}
 	return 0

@@ -1,5 +1,7 @@
 package cec
 
+import "time"
+
 /**CFile****************************************************************
 
   FileName    [cec.h]
@@ -37,6 +39,7 @@ package cec
 // dynamic SAT parameters
 
 type Cec_ParSat_t struct {
+	deadline      time.Time
 	SolverType    int32 // SAT solver type
 	nBTLimit      int32 // conflict limit at a node
 	nSatVarMax    int32 // the max number of SAT variables
@@ -53,6 +56,7 @@ type Cec_ParSat_t struct {
 // simulation parameters
 
 type Cec_ParSim_t struct {
+	deadline    time.Time
 	nWords      int32 // the number of simulation words
 	nFrames     int32 // the number of simulation frames
 	nRounds     int32 // the number of simulation rounds
@@ -133,6 +137,7 @@ type Cec_ParCec_t struct {
 // sequential register correspodence parameters
 
 type Cec_ParCor_t struct {
+	deadline     time.Time
 	nWords       int32 // the number of simulation words
 	nRounds      int32 // the number of simulation rounds
 	nFrames      int32 // the number of time frames

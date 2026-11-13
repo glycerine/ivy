@@ -417,6 +417,9 @@ func Cec_ManResimulateCounterExamples(sim *Cec_ManSim_t, store *Vec_Int_t, frame
 	info := vec.Vec_PtrAllocSimInfo(int(gia.Gia_ManRegNum(sim.pAig)+gia.Gia_ManPiNum(sim.pAig)*frames), int(sim.pPars.nWords))
 	result := int32(0)
 	for start := int32(0); int(start) < vec.Vec_IntSize(store); {
+		if !sim.pPars.deadline.IsZero() && !time.Now().Before(sim.pPars.deadline) {
+			return result
+		}
 		Cec_ManStartSimInfo(info, gia.Gia_ManRegNum(sim.pAig))
 		next := Cec_ManLoadCounterExamples(info, store, start)
 		if next == start {
@@ -606,6 +609,9 @@ func Cec_ManRefinedClassPrintStats(p *Gia_Man_t, status *Vec_Str_t, iteration in
 	}
 	fmt.Printf("%3d : c=%8d cl=%7d lit=%8d p=%6d d=%6d f=%6d T=%d\n", iteration, constants, classes, literals-classes, proved, disproved, failed, elapsed)
 }
+func cecCorrDeadlineExpired(pars *Cec_ParCor_t) bool {
+	return !pars.deadline.IsZero() && !time.Now().Before(pars.deadline)
+}
 func cecCorrSim(p *Gia_Man_t, pars *Cec_ParCor_t) *Cec_ManSim_t {
 	var sim Cec_ParSim_t
 	Cec_ManSimSetDefaultParams(&sim)
@@ -615,6 +621,7 @@ func cecCorrSim(p *Gia_Man_t, pars *Cec_ParCor_t) *Cec_ManSim_t {
 	sim.fLatchCorr = pars.fLatchCorr
 	sim.fConstCorr = pars.fConstCorr
 	sim.fSeqSimulate = 1
+	sim.deadline = pars.deadline
 	return Cec_ManSimStart(p, &sim)
 }
 func cecCorrCallback(pars *Cec_ParCor_t) {
@@ -633,13 +640,27 @@ func cecCorrCallback(pars *Cec_ParCor_t) {
 	}
 }
 func Cec_ManLSCorrespondenceBmc(p *Gia_Man_t, pars *Cec_ParCor_t, prefix int32) {
+	// This legacy entry point has no status result. On interruption, discard
+	// candidates so a direct caller cannot mistake them for proved classes.
+	defer func() {
+		if cecCorrDeadlineExpired(pars) {
+			p.ClearRepresentatives()
+		}
+	}()
+	if cecCorrDeadlineExpired(pars) {
+		return
+	}
 	sim := cecCorrSim(p, pars)
 	defer Cec_ManSimStop(sim)
 	var sat Cec_ParSat_t
 	Cec_ManSatSetDefaultParams(&sat)
 	sat.nBTLimit = pars.nBTLimit
 	sat.fVerbose = pars.fVerbose
+	sat.deadline = pars.deadline
 	for {
+		if cecCorrDeadlineExpired(pars) {
+			return
+		}
 		var outputs *Vec_Int_t
 		model := Gia_ManCorrSpecReduceInit(p, pars.nFrames, prefix, 1-pars.fLatchCorr, &outputs, pars.fUseRings)
 		if gia.Gia_ManCoNum(model) == 0 {
@@ -650,11 +671,17 @@ func Cec_ManLSCorrespondenceBmc(p *Gia_Man_t, pars *Cec_ParCor_t, prefix int32) 
 		}
 		var status *Vec_Str_t
 		store := Cec_ManSatSolveMiter(model, &sat, &status)
+		if cecCorrDeadlineExpired(pars) {
+			return
+		}
 		if vec.Vec_IntSize(store) == 0 {
 			break
 		}
 		before := cecCorrClassSignature(p)
 		Cec_ManResimulateCounterExamples(sim, store, pars.nFrames+1+prefix)
+		if cecCorrDeadlineExpired(pars) {
+			return
+		}
 		Gia_ManCheckRefinements(p, status, outputs, sim, pars.fUseRings)
 		if slices.Equal(before, cecCorrClassSignature(p)) {
 			cecCorrDiscardDisproved(p, status, outputs, sim)
@@ -684,7 +711,15 @@ func cecCorrDiscardDisproved(p *Gia_Man_t, status *Vec_Str_t, outputs *Vec_Int_t
 		}
 	}
 }
-func Cec_ManLSCorrespondenceClasses(p *Gia_Man_t, pars *Cec_ParCor_t) int32 {
+func Cec_ManLSCorrespondenceClasses(p *Gia_Man_t, pars *Cec_ParCor_t) (result int32) {
+	if cecCorrDeadlineExpired(pars) {
+		return -1
+	}
+	defer func() {
+		if result < 0 {
+			p.ClearRepresentatives()
+		}
+	}()
 	if gia.Gia_ManRegNum(p) == 0 {
 		return 0
 	}
@@ -696,21 +731,37 @@ func Cec_ManLSCorrespondenceClasses(p *Gia_Man_t, pars *Cec_ParCor_t) int32 {
 	defer Cec_ManSimStop(sim)
 	if !p.HasRepresentatives() {
 		Cec_ManSimClassesPrepare(sim, pars.nLevelMax)
+		if cecCorrDeadlineExpired(pars) {
+			return -1
+		}
 		Cec_ManSimClassesRefine(sim)
+		if cecCorrDeadlineExpired(pars) {
+			return -1
+		}
 	}
 	var sat Cec_ParSat_t
 	Cec_ManSatSetDefaultParams(&sat)
 	sat.nBTLimit = pars.nBTLimit
 	sat.fVerbose = pars.fVerbose
+	sat.deadline = pars.deadline
 	if pars.fUseCSat != 0 {
 		sat.nBTLimit = min(sat.nBTLimit, 1000)
 	}
 	if pars.fLatchCorr == 0 || pars.nFrames > 1 {
 		Cec_ManLSCorrespondenceBmc(p, pars, 0)
+		if cecCorrDeadlineExpired(pars) {
+			return -1
+		}
 	}
 	cecCorrCallback(pars)
+	if cecCorrDeadlineExpired(pars) {
+		return -1
+	}
 	cecCorrCallback(pars)
 	for round := int32(0); round < 100000; round++ {
+		if cecCorrDeadlineExpired(pars) {
+			return -1
+		}
 		if pars.nStepsMax == round {
 			return 1
 		}
@@ -722,11 +773,17 @@ func Cec_ManLSCorrespondenceClasses(p *Gia_Man_t, pars *Cec_ParCor_t) int32 {
 		}
 		var status *Vec_Str_t
 		store := Cec_ManSatSolveMiter(model, &sat, &status)
+		if cecCorrDeadlineExpired(pars) {
+			return -1
+		}
 		if vec.Vec_IntSize(store) == 0 {
 			return 1
 		}
 		before := cecCorrClassSignature(p)
 		Cec_ManResimulateCounterExamples(sim, store, pars.nFrames+2)
+		if cecCorrDeadlineExpired(pars) {
+			return -1
+		}
 		Gia_ManCheckRefinements(p, status, outputs, sim, pars.fUseRings)
 		if slices.Equal(before, cecCorrClassSignature(p)) {
 			cecCorrDiscardDisproved(p, status, outputs, sim)
@@ -852,15 +909,26 @@ func Cec_ManPrintFlopEquivs(p *Gia_Man_t) {
 }
 
 func Cec_ManLSCorrespondence(p *Gia_Man_t, pars *Cec_ParCor_t) *Gia_Man_t {
+	if cecCorrDeadlineExpired(pars) {
+		return nil
+	}
 	p.ClearRepresentatives()
 	if pars.nPrefix == 0 {
-		if Cec_ManLSCorrespondenceClasses(p, pars) == 0 {
+		status := Cec_ManLSCorrespondenceClasses(p, pars)
+		if status < 0 || cecCorrDeadlineExpired(pars) {
+			p.ClearRepresentatives()
+			return nil
+		}
+		if status == 0 {
 			copy, _ := cecCorrDuplicate(p, false, false, nil)
 			return copy
 		}
 	} else {
 		shifted, mapping := cecCorrDuplicate(p, false, false, Cec_ManComputeInitState(p, pars.nPrefix))
-		Cec_ManLSCorrespondenceClasses(shifted, pars)
+		if Cec_ManLSCorrespondenceClasses(shifted, pars) < 0 || cecCorrDeadlineExpired(pars) {
+			p.ClearRepresentatives()
+			return nil
+		}
 		inverse := make([]int32, gia.Gia_ManObjNum(shifted))
 		for i := range inverse {
 			inverse[i] = -1
@@ -877,6 +945,10 @@ func Cec_ManLSCorrespondence(p *Gia_Man_t, pars *Cec_ParCor_t) *Gia_Man_t {
 		pars.fUseCSat = 0
 		pars.nBTLimit = max(pars.nBTLimit, 1000)
 		Cec_ManLSCorrespondenceBmc(p, pars, pars.nPrefix)
+		if cecCorrDeadlineExpired(pars) {
+			p.ClearRepresentatives()
+			return nil
+		}
 	}
 	if pars.fMakeChoices != 0 {
 		return cecCorrChoices(p)

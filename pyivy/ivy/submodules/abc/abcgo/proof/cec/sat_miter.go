@@ -5,6 +5,7 @@ import (
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/proof/cec/core"
+	"time"
 )
 
 func Cec_ManSatReadCex(p *Cec_ManSat_t) *Vec_Int_t { return p.vCex }
@@ -74,6 +75,11 @@ func Cec_ManSatSolveMiter(graph *Gia_Man_t, params *Cec_ParSat_t, statusOut **Ve
 	status := vec.Vec_StrAlloc(len(outputs))
 	store := vec.Vec_IntAlloc(16)
 	for i, lit := range outputs {
+		if !p.pPars.deadline.IsZero() && !time.Now().Before(p.pPars.deadline) {
+			vec.Vec_StrPush(status, byte(255))
+			Cec_ManSatAddToStore(store, nil, int32(i))
+			continue
+		}
 		result := p.query(lit, nil)
 		vec.Vec_StrPush(status, byte(result))
 		switch result {

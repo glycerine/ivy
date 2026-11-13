@@ -61,8 +61,8 @@ func TestCecDelegationRestoresConfiguredTimeout(t *testing.T) {
 		}
 		deadline := time.Now().Add(time.Hour)
 		Ssw_ParsSetDeadline(&pars, deadline)
-		if Ssw_SignalCorrespondence(g, &pars) != nil {
-			t.Fatalf("latch=%t accepted unsupported deadline", latch)
+		if Ssw_SignalCorrespondence(g, &pars) == nil {
+			t.Fatalf("latch=%t did not complete before deadline", latch)
 		}
 		if !pars.deadline.Equal(deadline) {
 			t.Fatal("caller deadline was not restored")

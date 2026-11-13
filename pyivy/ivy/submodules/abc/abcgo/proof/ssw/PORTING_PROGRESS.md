@@ -26,7 +26,8 @@ graph must all preserve representatives and phase through the buffers.
 The original semi-formal manager contains an unconditional assertion because
 its frame-array migration is unfinished; the port preserves it as a panic.
 Rarity permutation uses Go's PRNG, so its exact ordering differs from C's
-platform-dependent `rand()`. Deadline checks are cooperative, and the legacy
-CEC delegation returns unknown when a deadline is required because that API
-does not provide one. Broader differential testing against ABC, especially for
+platform-dependent `rand()`. Deadline checks are cooperative: CEC delegation
+passes the absolute deadline to SAT and checks it between simulation and
+correspondence stages. Graph conversion and some graph traversal stages remain
+non-interruptible. Broader differential testing against ABC, especially for
 partitioned and constrained modes, remains useful.

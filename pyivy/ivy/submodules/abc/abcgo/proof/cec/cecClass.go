@@ -8,6 +8,7 @@ import (
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"math/bits"
+	"time"
 )
 
 type Cec_ManSim_t struct {
@@ -374,6 +375,9 @@ func Cec_ManSimSimulateRound(p *Cec_ManSim_t, infoCis, infoCos *Vec_Ptr_t) int32
 	}
 	ci, co := 0, 0
 	for id := int32(1); id < gia.Gia_ManObjNum(p.pAig); id++ {
+		if id&255 == 0 && !p.pPars.deadline.IsZero() && !time.Now().Before(p.pPars.deadline) {
+			return 0
+		}
 		o := gia.Gia_ManObj(p.pAig, id)
 		if gia.Gia_ObjIsCo(o) != 0 {
 			r := Cec_ManSimSimDeref(p, gia.Gia_ObjFaninId0(o, id))
@@ -570,10 +574,16 @@ func Cec_ManSimClassesPrepare(p *Cec_ManSim_t, levelMax int32) int32 {
 		return Cec_ManSimSimulateRound(p, p.vCiSimInfo, p.vCoSimInfo)
 	}
 	for p.nWords = 1; p.nWords <= p.pPars.nWords; p.nWords = 2*p.nWords + 1 {
+		if !p.pPars.deadline.IsZero() && !time.Now().Before(p.pPars.deadline) {
+			return 0
+		}
 		if p.pPars.fVerbose != 0 {
 			cecSimClassPrint(p)
 		}
 		for i := 0; i < 4; i++ {
+			if !p.pPars.deadline.IsZero() && !time.Now().Before(p.pPars.deadline) {
+				return 0
+			}
 			Cec_ManSimCreateInfo(p, p.vCiSimInfo, p.vCoSimInfo)
 			if Cec_ManSimSimulateRound(p, p.vCiSimInfo, p.vCoSimInfo) != 0 {
 				return 1
@@ -588,6 +598,9 @@ func Cec_ManSimClassesRefine(p *Cec_ManSim_t) int32 {
 	cecSimEnsureInfo(p.vCiSimInfo, p.nWords)
 	cecSimEnsureInfo(p.vCoSimInfo, p.nWords)
 	for i := int32(0); i < p.pPars.nRounds; i++ {
+		if !p.pPars.deadline.IsZero() && !time.Now().Before(p.pPars.deadline) {
+			return 0
+		}
 		if p.pPars.fVerbose != 0 && i%max(1, p.pPars.nRounds/5) == 0 {
 			cecSimClassPrint(p)
 		}

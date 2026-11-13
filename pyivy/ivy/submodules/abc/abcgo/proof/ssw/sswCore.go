@@ -193,14 +193,10 @@ func Ssw_SignalCorrespondence(graph *aig.Graph, pars *Ssw_Pars_t) *aig.Graph {
 		}
 	}
 	if pars.fScorrGia != 0 {
-		// The legacy CEC correspondence entrypoints have no deadline API.
-		if !pars.deadline.IsZero() {
-			return nil
-		}
 		if pars.fLatchCorrOpt != 0 {
-			return cec.Cec_LatchCorrespondence(graph, pars.nBTLimit, pars.fUseCSat)
+			return cec.Cec_LatchCorrespondenceDeadline(graph, pars.nBTLimit, pars.fUseCSat, pars.deadline)
 		}
-		return cec.Cec_SignalCorrespondence(graph, pars.nBTLimit, pars.fUseCSat)
+		return cec.Cec_SignalCorrespondenceDeadline(graph, pars.nBTLimit, pars.fUseCSat, pars.deadline)
 	}
 	p := Ssw_ManCreate(graph, pars)
 	defer Ssw_ManStop(p)
