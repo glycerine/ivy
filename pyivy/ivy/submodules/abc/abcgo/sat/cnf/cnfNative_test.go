@@ -3,6 +3,7 @@ package cnf
 import (
 	"math/rand"
 	"os"
+	"reflect"
 	"testing"
 
 	"github.com/glycerine/abcgo/aig/aig"
@@ -118,6 +119,27 @@ func TestAlternateDerivationRecordsObjectClauses(t *testing.T) {
 				t.Fatalf("object %d clause %v lacks output literal first", id, clause)
 			}
 		}
+	}
+}
+
+func TestDeriveMappingArrayUsesObjectOffsets(t *testing.T) {
+	g := aig.NewGraph()
+	x, y := g.NewInput(), g.NewInput()
+	root := g.AND(x, y)
+	g.AddOutput(root)
+	mapping := vec.Vec_IntArray(Cnf_DeriveMappingArray(g))
+	if len(mapping) < len(g.Nodes()) {
+		t.Fatalf("short mapping %v", mapping)
+	}
+	offset := int(mapping[root.NodeID()])
+	if offset < len(g.Nodes()) || offset+5 > len(mapping) {
+		t.Fatalf("invalid root offset %d in %v", offset, mapping)
+	}
+	if uint32(mapping[offset])&15 != 8 {
+		t.Fatalf("wrong root truth %#x", mapping[offset])
+	}
+	if !reflect.DeepEqual(mapping[offset+1:offset+5], []int32{int32(x.NodeID()), int32(y.NodeID()), -1, -1}) {
+		t.Fatalf("wrong cut leaves %v", mapping[offset+1:offset+5])
 	}
 }
 

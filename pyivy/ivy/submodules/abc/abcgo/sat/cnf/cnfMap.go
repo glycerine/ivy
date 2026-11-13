@@ -72,7 +72,7 @@ func Cnf_DeriveMapping(manager *Cnf_Man_t) {
 	if manager.pCuts != nil {
 		aig.Aig_ManCutStop(manager.pCuts)
 	}
-	manager.pCuts = aig.Aig_ComputeCuts(manager.pManAig, 16, 6, 1, 0)
+	manager.pCuts = aig.Aig_ComputeCuts(manager.pManAig, 16, 4, 1, 0)
 	nodes := manager.pManAig.Nodes()
 	manager.selectedCuts = make([]*Cnf_Cut_t, len(nodes))
 	for id, node := range nodes {

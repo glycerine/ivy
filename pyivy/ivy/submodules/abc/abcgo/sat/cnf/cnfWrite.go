@@ -4,23 +4,25 @@ import (
 	"github.com/glycerine/abcgo/misc/vec"
 )
 
-func Cnf_ManWriteCnfMapping(manager *Cnf_Man_t, _ *Vec_Ptr_t) *Vec_Int_t {
-	result := vec.Vec_IntAllocExact(0)
-	if manager == nil {
-		return result
+func Cnf_ManWriteCnfMapping(manager *Cnf_Man_t, mapped *Vec_Ptr_t) *Vec_Int_t {
+	if manager == nil || manager.pManAig == nil {
+		return vec.Vec_IntAllocExact(0)
 	}
-	if len(manager.selectedCuts) == 0 {
-		Cnf_DeriveMapping(manager)
-	}
-	for id, cut := range manager.selectedCuts {
-		if cut == nil {
+	result := vec.Vec_IntStart(len(manager.pManAig.Nodes()))
+	for _, item := range vec.Vec_PtrArray(mapped) {
+		edge, ok := item.(Aig_Obj_t)
+		if !ok || edge.NodeID() >= len(manager.selectedCuts) {
 			continue
 		}
-		vec.Vec_IntPush(result, int32(id))
-		vec.Vec_IntPush(result, int32(len(cut.pFanins)))
+		cut := manager.selectedCuts[edge.NodeID()]
+		if cut == nil || len(cut.truth) == 0 || len(cut.pFanins) > 4 {
+			continue
+		}
+		vec.Vec_IntWriteEntry(result, edge.NodeID(), int32(vec.Vec_IntSize(result)))
+		vec.Vec_IntPush(result, int32(cut.truth[0]))
 		vec.Vec_IntPushArray(result, cut.pFanins, len(cut.pFanins))
-		if len(cut.truth) > 0 {
-			vec.Vec_IntPush(result, int32(cut.truth[0]))
+		for i := len(cut.pFanins); i < 4; i++ {
+			vec.Vec_IntPush(result, -1)
 		}
 	}
 	return result

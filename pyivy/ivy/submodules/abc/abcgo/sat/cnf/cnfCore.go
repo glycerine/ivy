@@ -1,10 +1,6 @@
 package cnf
 
-import (
-	"sync"
-
-	"github.com/glycerine/abcgo/misc/vec"
-)
+import "sync"
 
 var s_pManCnf *Cnf_Man_t
 var s_manCnfMu sync.Mutex
@@ -26,14 +22,18 @@ func Cnf_ManFree() {
 	}
 }
 
-// Cnf_DeriveMappingArray returns object-indexed SAT variable numbers for the
-// direct Tseitin encoding. Unrepresented constant objects contain -1.
+// Cnf_DeriveMappingArray returns object-indexed offsets into packed cut records.
 func Cnf_DeriveMappingArray(graph *Aig_Man_t) *Vec_Int_t {
-	data, err := EncodeAIG(graph, 0)
-	if err != nil {
+	if graph == nil {
 		return nil
 	}
-	return vec.Vec_IntAllocArrayCopy(data.VarNums, len(data.VarNums))
+	manager := Cnf_ManStart()
+	manager.pManAig = graph
+	Cnf_DeriveMapping(manager)
+	mapped := Cnf_ManScanMapping(manager, 1, 0)
+	result := Cnf_ManWriteCnfMapping(manager, mapped)
+	Cnf_ManStop(manager)
+	return result
 }
 
 func Cnf_DeriveWithMan(manager *Cnf_Man_t, graph *Aig_Man_t, nOutputs int32) *Cnf_Dat_t {
