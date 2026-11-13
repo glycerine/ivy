@@ -365,6 +365,36 @@ func TestDupInitMatchesMuxedStateTransitions(t *testing.T) {
 	}
 }
 
+func TestDupInitWithNoOriginalPrimaryInputs(t *testing.T) {
+	g := gia.Gia_ManStart(12)
+	x, y := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
+	gia.Gia_ManAppendCo(g, x^1)
+	gia.Gia_ManAppendCo(g, y^1)
+	gia.Gia_ManAppendCo(g, x)
+	gia.Gia_ManSetRegNum(g, 2)
+	dup := Int2_ManDupInit(g, 0)
+	defer gia.Gia_ManStop(dup)
+	if gia.Gia_ManPiNum(dup) != 1 || gia.Gia_ManRegNum(dup) != 2 {
+		t.Fatalf("duplicated interface: %d PIs, %d registers", gia.Gia_ManPiNum(dup), gia.Gia_ManRegNum(dup))
+	}
+	for mask := 0; mask < 8; mask++ {
+		ctrl, xval, yval := mask&1 != 0, mask&2 != 0, mask&4 != 0
+		got, err := dup.Evaluate([]bool{ctrl, xval, yval})
+		if err != nil {
+			t.Fatal(err)
+		}
+		want := []bool{!xval, !yval, xval}
+		if ctrl {
+			want[1], want[2] = xval, yval
+		}
+		for i := range want {
+			if got[i] != want[i] {
+				t.Fatalf("control=%t x=%t y=%t: got %v want %v", ctrl, xval, yval, got, want)
+			}
+		}
+	}
+}
+
 func TestPreparePrefixAtFrameZeroConstrainsInitialState(t *testing.T) {
 	g := gia.Gia_ManStart(8)
 	input, state := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
