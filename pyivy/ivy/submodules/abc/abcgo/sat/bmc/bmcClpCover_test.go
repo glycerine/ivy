@@ -75,3 +75,19 @@ func TestCollapseCoverXorAndLimit(t *testing.T) {
 		}
 	}
 }
+
+func TestCollapseChoosesSmallerOffset(t *testing.T) {
+	g := gia.Gia_ManStart(16)
+	a, b := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
+	gia.Gia_ManAppendCo(g, gia.Gia_ManAppendAnd(g, a^1, b^1)^1)
+	for _, driver := range []func(*gia.Gia_Man_t, int32, int32, int32, int32, int32) *vec.Vec_Str_t{Bmc_CollapseOne, Bmc_CollapseOneOld, Bmc_CollapseOneOld2, Bmc_CollapseOne3} {
+		sop := driver(g, 0, 0, 0, 0, 0)
+		if sop == nil || string(vec.Vec_StrArray(sop)) != "00 0\n\x00" {
+			t.Fatalf("cover %q", vec.Vec_StrArray(sop))
+		}
+		out, err := g.Evaluate([]bool{false, false})
+		if err != nil || out[0] {
+			t.Fatal("source output changed")
+		}
+	}
+}
