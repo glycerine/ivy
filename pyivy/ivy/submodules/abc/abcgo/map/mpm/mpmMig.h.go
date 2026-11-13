@@ -121,34 +121,26 @@ func Mig_ManRo(p *Mig_Man_t, v int32) *Mig_Obj_t { assert(v < Mig_ManRegNum(p), 
 func Mig_ManRi(p *Mig_Man_t, v int32) *Mig_Obj_t { assert(v < Mig_ManRegNum(p), "v < Mig_ManRegNum(p)"); return Mig_ManCo( p, Mig_ManPoNum(p)+v );  }
 func Mig_ManConst0(p *Mig_Man_t) *Mig_Obj_t { return Mig_ManObj(p, 0);                                                   }
 
-func Mig_FanCompl(p *Mig_Obj_t, i int32) int32 { return p.pFans[i].fCompl;                                 }
-func Mig_FanId(p *Mig_Obj_t, i int32) int32 { return p.pFans[i].Id;                                     }
-func Mig_FanIsNone(p *Mig_Obj_t, i int32) int32 { return p.pFans[i].Id == MIG_NONE;                         }
-func Mig_FanSetCompl(p *Mig_Obj_t, i int32, v int32) int32 { assert(!(v >> 1), "!(v >> 1)"); return p.pFans[i].fCompl = v;        }
-func Mig_FanSetId(p *Mig_Obj_t, i int32, v int32) int32 { assert(v >= 0 && v < MIG_NONE, "v >= 0 && v < MIG_NONE"); return p.pFans[i].Id = v; }
-
-func Mig_ObjIsNone(p *Mig_Obj_t) int32 { return Mig_FanIsNone( p, 3 );                              }
-func Mig_ObjIsConst0(p *Mig_Obj_t) int32 { return Mig_FanId( p, 3 ) == 0;                             } 
-func Mig_ObjIsTerm(p *Mig_Obj_t) int32 { return Mig_FanIsNone( p, 1 ) && !Mig_FanIsNone( p, 2 );    }
-func Mig_ObjIsCi(p *Mig_Obj_t) int32 { return Mig_ObjIsTerm(p) &&  Mig_FanIsNone( p, 0 );         } 
-func Mig_ObjIsCo(p *Mig_Obj_t) int32 { return Mig_ObjIsTerm(p) && !Mig_FanIsNone( p, 0 );         } 
-func Mig_ObjIsBuf(p *Mig_Obj_t) int32 { return Mig_FanIsNone( p, 1 ) && Mig_FanIsNone( p, 2 ) && !Mig_FanIsNone( p, 0 );     } 
-func Mig_ObjIsNode(p *Mig_Obj_t) int32 { return!Mig_FanIsNone( p, 1 );                              } 
-func Mig_ObjIsNode2(p *Mig_Obj_t) int32 { return Mig_ObjIsNode( p ) &&  Mig_FanIsNone( p, 2 );       } 
-func Mig_ObjIsNode3(p *Mig_Obj_t) int32 { return Mig_ObjIsNode( p ) && !Mig_FanIsNone( p, 2 );       } 
-func Mig_ObjIsAnd(p *Mig_Obj_t) int32 { return Mig_ObjIsNode2( p ) && Mig_FanId(p, 0) < Mig_FanId(p, 1); } 
-func Mig_ObjIsXor(p *Mig_Obj_t) int32 { return Mig_ObjIsNode2( p ) && Mig_FanId(p, 0) > Mig_FanId(p, 1); } 
-func Mig_ObjIsMux(p *Mig_Obj_t) int32 { return Mig_ObjIsNode3( p );                                } 
-func Mig_ObjIsCand(p *Mig_Obj_t) int32 { return Mig_ObjIsNode(p) || Mig_ObjIsCi(p);                 } 
-func Mig_ObjNodeType(p *Mig_Obj_t) int32 { if Mig_ObjIsAnd(p) != 0 {
-    return 1;
-} else {
-    if Mig_ObjIsXor(p) != 0 {
-        return 2;
-    } else {
-        return 3;
-    }
-}    } 
+func migBool(v bool) int32 { if v { return 1 }; return 0 }
+func Mig_FanCompl(p *Mig_Obj_t, i int32) int32 { return int32(p.pFans[i].fCompl) }
+func Mig_FanId(p *Mig_Obj_t, i int32) int32 { return int32(p.pFans[i].Id) }
+func Mig_FanIsNone(p *Mig_Obj_t, i int32) int32 { return migBool(p.pFans[i].Id == MIG_NONE) }
+func Mig_FanSetCompl(p *Mig_Obj_t, i, v int32) int32 { assert(v >= 0 && v <= 1, "one-bit complement"); p.pFans[i].fCompl=uint32(v); return v }
+func Mig_FanSetId(p *Mig_Obj_t, i, v int32) int32 { assert(v >= 0 && v < MIG_NONE, "valid fanin id"); p.pFans[i].Id=uint32(v); return v }
+func Mig_ObjIsNone(p *Mig_Obj_t) int32 { return Mig_FanIsNone(p,3) }
+func Mig_ObjIsConst0(p *Mig_Obj_t) int32 { return migBool(Mig_FanId(p,3)==0) }
+func Mig_ObjIsTerm(p *Mig_Obj_t) int32 { return migBool(Mig_FanIsNone(p,1)!=0 && Mig_FanIsNone(p,2)==0) }
+func Mig_ObjIsCi(p *Mig_Obj_t) int32 { return migBool(Mig_ObjIsTerm(p)!=0 && Mig_FanIsNone(p,0)!=0) }
+func Mig_ObjIsCo(p *Mig_Obj_t) int32 { return migBool(Mig_ObjIsTerm(p)!=0 && Mig_FanIsNone(p,0)==0) }
+func Mig_ObjIsBuf(p *Mig_Obj_t) int32 { return migBool(Mig_FanIsNone(p,1)!=0 && Mig_FanIsNone(p,2)!=0 && Mig_FanIsNone(p,0)==0) }
+func Mig_ObjIsNode(p *Mig_Obj_t) int32 { return migBool(Mig_FanIsNone(p,1)==0) }
+func Mig_ObjIsNode2(p *Mig_Obj_t) int32 { return migBool(Mig_ObjIsNode(p)!=0 && Mig_FanIsNone(p,2)!=0) }
+func Mig_ObjIsNode3(p *Mig_Obj_t) int32 { return migBool(Mig_ObjIsNode(p)!=0 && Mig_FanIsNone(p,2)==0) }
+func Mig_ObjIsAnd(p *Mig_Obj_t) int32 { return migBool(Mig_ObjIsNode2(p)!=0 && Mig_FanId(p,0)<Mig_FanId(p,1)) }
+func Mig_ObjIsXor(p *Mig_Obj_t) int32 { return migBool(Mig_ObjIsNode2(p)!=0 && Mig_FanId(p,0)>Mig_FanId(p,1)) }
+func Mig_ObjIsMux(p *Mig_Obj_t) int32 { return Mig_ObjIsNode3(p) }
+func Mig_ObjIsCand(p *Mig_Obj_t) int32 { return migBool(Mig_ObjIsNode(p)!=0 || Mig_ObjIsCi(p)!=0) }
+func Mig_ObjNodeType(p *Mig_Obj_t) int32 { if Mig_ObjIsAnd(p)!=0 { return 1 }; if Mig_ObjIsXor(p)!=0 { return 2 }; return 3 }
 
 func Mig_ObjId(p *Mig_Obj_t) int32 { return Mig_FanId( p, 3 );                                  }
 func Mig_ObjSetId(p *Mig_Obj_t, v int32) { Mig_FanSetId( p, 3, v );                                   }
