@@ -1,425 +1,172 @@
 package ssw
 
-/**CFile****************************************************************
+// Incremental SAT encoding for SSW, ported from sswCnf.c.
+import (
+	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/misc/vec"
+	"github.com/glycerine/abcgo/sat/bsat"
+)
 
-  FileName    [sswCnf.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Inductive prover with constraints.]
-
-  Synopsis    [Computation of CNF.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - September 1, 2008.]
-
-  Revision    [$Id: sswCnf.c,v 1.00 2008/09/01 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "sswInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Starts the SAT manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Ssw_SatStart(fPolarFlip int32) *Ssw_Sat_t {
-    var p *Ssw_Sat_t;
-    var Lit int32;
-    // inlining of macro ABC_ALLOC
-    p = ((Ssw_Sat_t *) malloc(sizeof(Ssw_Sat_t) * (size_t)(1)));
-    memset( p, 0, sizeof(Ssw_Sat_t) );
-    p.pAig          = nil;
-    p.fPolarFlip    = fPolarFlip;
-    p.vSatVars      = Vec_IntStart( 10000 );
-    p.vFanins       = Vec_PtrAlloc( 100 );
-    p.vUsedPis      = Vec_PtrAlloc( 100 );
-    p.pSat          = sat_solver_new();
-    sat_solver_setnvars( p.pSat, 1000 );
-    // var 0 is not used
-    // var 1 is reserved for const1 node - add the clause
-    p.nSatVars = 1;
-    Lit = toLit( p.nSatVars );
-    if fPolarFlip != 0 {
-        Lit = lit_neg( Lit ); }
-    sat_solver_addclause( p.pSat, &Lit, &Lit + 1 );
-//    Ssw_ObjSetSatNum( p, Aig_ManConst1(p->pAig), p->nSatVars++ );
-    Vec_IntWriteEntry( p.vSatVars, 0, p.nSatVars++ );
-    return p;
+	p := &Ssw_Sat_t{fPolarFlip: fPolarFlip, vSatVars: vec.Vec_IntStart(10000), vFanins: vec.Vec_PtrAlloc(100), vUsedPis: vec.Vec_PtrAlloc(100), pSat: bsat.NewSolver(), nSatVars: 2}
+	lit := int32(2)
+	if fPolarFlip != 0 {
+		lit ^= 1
+	}
+	if !p.pSat.AddClause(lit) {
+		panic("ssw: cannot initialize constant SAT variable")
+	}
+	vec.Vec_IntWriteEntry(p.vSatVars, 0, 1)
+	return p
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Stop the SAT manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Ssw_SatStop(p *Ssw_Sat_t) {
-//    Abc_Print( 1, "Recycling SAT solver with %d vars and %d restarts.\n", 
-//        p->pSat->size, p->pSat->stats.starts );
-    if p.pSat {
-        sat_solver_delete( p.pSat ); }
-    Vec_IntFree( p.vSatVars );
-    Vec_PtrFree( p.vFanins );
-    Vec_PtrFree( p.vUsedPis );
-    p = nil;
+	if p != nil {
+		*p = Ssw_Sat_t{}
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Addes clauses to the solver.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ssw_AddClausesMux(p *Ssw_Sat_t, pNode *Aig_Obj_t) {
-    var pNodeI, pNodeT, pNodeE *Aig_Obj_t;
-    var pLits [4]int32;
-    var RetValue int32;
-    var VarF int32;
-    var VarI int32;
-    var VarT int32;
-    var VarE int32;
-    var fCompT int32;
-    var fCompE int32;
-
-    assert(!Aig_IsComplement( pNode ), "!Aig_IsComplement( pNode )");
-    assert(Aig_ObjIsMuxType( pNode ), "Aig_ObjIsMuxType( pNode )");
-    // get nodes (I = if, T = then, E = else)
-    pNodeI = Aig_ObjRecognizeMux( pNode, &pNodeT, &pNodeE );
-    // get the variable numbers
-    VarF = Ssw_ObjSatNum(p,pNode);
-    VarI = Ssw_ObjSatNum(p,pNodeI);
-    VarT = Ssw_ObjSatNum(p,Aig_Regular(pNodeT));
-    VarE = Ssw_ObjSatNum(p,Aig_Regular(pNodeE));
-    // get the complementation flags
-    fCompT = Aig_IsComplement(pNodeT);
-    fCompE = Aig_IsComplement(pNodeE);
-
-    // f = ITE(i, t, e)
-
-    // i' + t' + f
-    // i' + t  + f'
-    // i  + e' + f
-    // i  + e  + f'
-
-    // create four clauses
-    pLits[0] = toLitCond(VarI, 1);
-    pLits[1] = toLitCond(VarT, 1^fCompT);
-    pLits[2] = toLitCond(VarF, 0);
-    if p.fPolarFlip {
-        if pNodeI.fPhase {               pLits[0] = lit_neg( pLits[0] ); }
-        if Aig_Regular(pNodeT).fPhase {  pLits[1] = lit_neg( pLits[1] ); }
-        if pNode.fPhase {                pLits[2] = lit_neg( pLits[2] ); }
-    }
-    RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 3 );
-    assert((RetValue != 0), "RetValue");
-    pLits[0] = toLitCond(VarI, 1);
-    pLits[1] = toLitCond(VarT, 0^fCompT);
-    pLits[2] = toLitCond(VarF, 1);
-    if p.fPolarFlip {
-        if pNodeI.fPhase {               pLits[0] = lit_neg( pLits[0] ); }
-        if Aig_Regular(pNodeT).fPhase {  pLits[1] = lit_neg( pLits[1] ); }
-        if pNode.fPhase {                pLits[2] = lit_neg( pLits[2] ); }
-    }
-    RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 3 );
-    assert((RetValue != 0), "RetValue");
-    pLits[0] = toLitCond(VarI, 0);
-    pLits[1] = toLitCond(VarE, 1^fCompE);
-    pLits[2] = toLitCond(VarF, 0);
-    if p.fPolarFlip {
-        if pNodeI.fPhase {               pLits[0] = lit_neg( pLits[0] ); }
-        if Aig_Regular(pNodeE).fPhase {  pLits[1] = lit_neg( pLits[1] ); }
-        if pNode.fPhase {                pLits[2] = lit_neg( pLits[2] ); }
-    }
-    RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 3 );
-    assert((RetValue != 0), "RetValue");
-    pLits[0] = toLitCond(VarI, 0);
-    pLits[1] = toLitCond(VarE, 0^fCompE);
-    pLits[2] = toLitCond(VarF, 1);
-    if p.fPolarFlip {
-        if pNodeI.fPhase {               pLits[0] = lit_neg( pLits[0] ); }
-        if Aig_Regular(pNodeE).fPhase {  pLits[1] = lit_neg( pLits[1] ); }
-        if pNode.fPhase {                pLits[2] = lit_neg( pLits[2] ); }
-    }
-    RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 3 );
-    assert((RetValue != 0), "RetValue");
-
-    // two additional clauses
-    // t' & e' -> f'
-    // t  & e  -> f
-
-    // t  + e   + f'
-    // t' + e'  + f
-
-    if VarT == VarE {
-//        assert( fCompT == !fCompE );
-        return;
-    }
-
-    pLits[0] = toLitCond(VarT, 0^fCompT);
-    pLits[1] = toLitCond(VarE, 0^fCompE);
-    pLits[2] = toLitCond(VarF, 1);
-    if p.fPolarFlip {
-        if Aig_Regular(pNodeT).fPhase {  pLits[0] = lit_neg( pLits[0] ); }
-        if Aig_Regular(pNodeE).fPhase {  pLits[1] = lit_neg( pLits[1] ); }
-        if pNode.fPhase {                pLits[2] = lit_neg( pLits[2] ); }
-    }
-    RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 3 );
-    assert((RetValue != 0), "RetValue");
-    pLits[0] = toLitCond(VarT, 1^fCompT);
-    pLits[1] = toLitCond(VarE, 1^fCompE);
-    pLits[2] = toLitCond(VarF, 0);
-    if p.fPolarFlip {
-        if Aig_Regular(pNodeT).fPhase {  pLits[0] = lit_neg( pLits[0] ); }
-        if Aig_Regular(pNodeE).fPhase {  pLits[1] = lit_neg( pLits[1] ); }
-        if pNode.fPhase {                pLits[2] = lit_neg( pLits[2] ); }
-    }
-    RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 3 );
-    assert((RetValue != 0), "RetValue");
+// sswLit translates an edge's Boolean value to the solver's possibly phase-flipped polarity.
+func sswLit(p *Ssw_Sat_t, e aig.Edge, neg bool) int32 {
+	regular := aig.Aig_Regular(e)
+	lit := Ssw_ObjSatNum(p, regular) << 1
+	if e.Complemented() != neg {
+		lit ^= 1
+	}
+	if p.fPolarFlip != 0 && aig.Aig_ObjPhase(p.pAig, regular) {
+		lit ^= 1
+	}
+	return lit
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Addes clauses to the solver.]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ssw_AddClausesSuper(p *Ssw_Sat_t, pNode *Aig_Obj_t, vSuper *Vec_Ptr_t) {
-    var pFanin *Aig_Obj_t;
-    var pLits *int32;
-    var nLits int32;
-    var RetValue int32;
-    var i int32;
-    assert(!Aig_IsComplement(pNode), "!Aig_IsComplement(pNode)");
-    assert(Aig_ObjIsNode( pNode ), "Aig_ObjIsNode( pNode )");
-    // create storage for literals
-    nLits = Vec_PtrSize(vSuper) + 1;
-    // inlining of macro ABC_ALLOC
-    pLits = ((int *) malloc(sizeof(int) * (size_t)(nLits)));
-    // suppose AND-gate is A & B = C
-    // add !A => !C   or   A + !C
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vSuper)) && (((pFanin) = (Aig_Obj_t *)Vec_PtrEntry(vSuper, i)), 1); i++  {
-        pLits[0] = toLitCond(Ssw_ObjSatNum(p,Aig_Regular(pFanin)), Aig_IsComplement(pFanin));
-        pLits[1] = toLitCond(Ssw_ObjSatNum(p,pNode), 1);
-        if p.fPolarFlip {
-            if Aig_Regular(pFanin).fPhase {  pLits[0] = lit_neg( pLits[0] ); }
-            if pNode.fPhase {                pLits[1] = lit_neg( pLits[1] ); }
-        }
-        RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 2 );
-        assert((RetValue != 0), "RetValue");
-    }
-    // add A & B => C   or   !A + !B + C
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vSuper)) && (((pFanin) = (Aig_Obj_t *)Vec_PtrEntry(vSuper, i)), 1); i++  {
-        pLits[i] = toLitCond(Ssw_ObjSatNum(p,Aig_Regular(pFanin)), !Aig_IsComplement(pFanin));
-        if p.fPolarFlip {
-            if Aig_Regular(pFanin).fPhase {  pLits[i] = lit_neg( pLits[i] ); }
-        }
-    }
-    pLits[nLits-1] = toLitCond(Ssw_ObjSatNum(p,pNode), 0);
-    if p.fPolarFlip {
-        if pNode.fPhase {  pLits[nLits-1] = lit_neg( pLits[nLits-1] ); }
-    }
-    RetValue = sat_solver_addclause( p.pSat, pLits, pLits + nLits );
-    assert((RetValue != 0), "RetValue");
-    pLits = nil;
+func sswAddClause(p *Ssw_Sat_t, lits ...int32) {
+	if !p.pSat.AddClause(lits...) {
+		panic("ssw: inconsistent CNF encoding")
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Collects the supergate.]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ssw_CollectSuper_rec(pObj *Aig_Obj_t, vSuper *Vec_Ptr_t, fFirst int32, fUseMuxes int32) {
-    // if the new node is complemented or a PI, another gate begins
-    if Aig_IsComplement(pObj) || Aig_ObjIsCi(pObj) ||
-         (!(fFirst != 0) && Aig_ObjRefs(pObj) > 1) ||
-         ((fUseMuxes != 0) && Aig_ObjIsMuxType(pObj)) {
-        Vec_PtrPushUnique( vSuper, pObj );
-        return;
-    }
-//    pObj->fMarkA = 1;
-    // go through the branches
-    Ssw_CollectSuper_rec( Aig_ObjChild0(pObj), vSuper, 0, fUseMuxes );
-    Ssw_CollectSuper_rec( Aig_ObjChild1(pObj), vSuper, 0, fUseMuxes );
+func Ssw_AddClausesMux(p *Ssw_Sat_t, node aig.Edge) {
+	control, yes, no := aig.Aig_ObjRecognizeMux(p.pAig, node)
+	sswAddClause(p, sswLit(p, control, true), sswLit(p, yes, true), sswLit(p, node, false))
+	sswAddClause(p, sswLit(p, control, true), sswLit(p, yes, false), sswLit(p, node, true))
+	sswAddClause(p, sswLit(p, control, false), sswLit(p, no, true), sswLit(p, node, false))
+	sswAddClause(p, sswLit(p, control, false), sswLit(p, no, false), sswLit(p, node, true))
+	if yes.NodeID() != no.NodeID() {
+		sswAddClause(p, sswLit(p, yes, false), sswLit(p, no, false), sswLit(p, node, true))
+		sswAddClause(p, sswLit(p, yes, true), sswLit(p, no, true), sswLit(p, node, false))
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Collects the supergate.]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ssw_CollectSuper(pObj *Aig_Obj_t, fUseMuxes int32, vSuper *Vec_Ptr_t) {
-    assert(!Aig_IsComplement(pObj), "!Aig_IsComplement(pObj)");
-    assert(!Aig_ObjIsCi(pObj), "!Aig_ObjIsCi(pObj)");
-    Vec_PtrClear( vSuper );
-    Ssw_CollectSuper_rec( pObj, vSuper, 1, fUseMuxes );
+func Ssw_AddClausesSuper(p *Ssw_Sat_t, node aig.Edge, super *vec.Vec_Ptr_t) {
+	var large []int32
+	for _, item := range vec.Vec_PtrArray(super) {
+		fanin := item.(aig.Edge)
+		sswAddClause(p, sswLit(p, fanin, false), sswLit(p, node, true))
+		large = append(large, sswLit(p, fanin, true))
+	}
+	large = append(large, sswLit(p, node, false))
+	sswAddClause(p, large...)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Updates the solver clause database.]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ssw_ObjAddToFrontier(p *Ssw_Sat_t, pObj *Aig_Obj_t, vFrontier *Vec_Ptr_t) {
-    assert(!Aig_IsComplement(pObj), "!Aig_IsComplement(pObj)");
-    if Ssw_ObjSatNum(p,pObj) {
-        return; }
-    assert(Ssw_ObjSatNum(p,pObj) == 0, "Ssw_ObjSatNum(p,pObj) == 0");
-    if Aig_ObjIsConst1(pObj) {
-        return; }
-//    pObj->fMarkA = 1;
-    // save PIs (used by register correspondence)
-    if Aig_ObjIsCi(pObj) {
-        Vec_PtrPush( p.vUsedPis, pObj ); }
-    Ssw_ObjSetSatNum( p, pObj, p.nSatVars++ );
-    sat_solver_setnvars( p.pSat, 100 * (1 + p.nSatVars / 100) );
-    if Aig_ObjIsNode(pObj) {
-        Vec_PtrPush( vFrontier, pObj ); }
+func Ssw_CollectSuper_rec(g *aig.Graph, obj aig.Edge, super *vec.Vec_Ptr_t, first, useMuxes int32) {
+	if obj.Complemented() || aig.Aig_ObjIsCi(g, obj) || (first == 0 && aig.Aig_ObjRefs(g, obj) > 1) || (useMuxes != 0 && aig.Aig_ObjIsMuxType(g, obj)) || g.Node(obj).Kind != aig.And {
+		vec.Vec_PtrPushUnique(super, obj)
+		return
+	}
+	Ssw_CollectSuper_rec(g, aig.Aig_ObjChild0(g, obj), super, 0, useMuxes)
+	Ssw_CollectSuper_rec(g, aig.Aig_ObjChild1(g, obj), super, 0, useMuxes)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Updates the solver clause database.]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ssw_CnfNodeAddToSolver(p *Ssw_Sat_t, pObj *Aig_Obj_t) {
-    var vFrontier *Vec_Ptr_t;
-    var pNode, pFanin *Aig_Obj_t;
-    var i int32;
-    var k int32;
-    var fUseMuxes int32 = 1;
-    // quit if CNF is ready
-    if Ssw_ObjSatNum(p,pObj) {
-        return; }
-    // start the frontier
-    vFrontier = Vec_PtrAlloc( 100 );
-    Ssw_ObjAddToFrontier( p, pObj, vFrontier );
-    // explore nodes in the frontier
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vFrontier)) && (((pNode) = (Aig_Obj_t *)Vec_PtrEntry(vFrontier, i)), 1); i++  {
-        // create the supergate
-        assert(Ssw_ObjSatNum(p,pNode), "Ssw_ObjSatNum(p,pNode)");
-        if (fUseMuxes != 0) && Aig_ObjIsMuxType(pNode) {
-            Vec_PtrClear( p.vFanins );
-            Vec_PtrPushUnique( p.vFanins, Aig_ObjFanin0( Aig_ObjFanin0(pNode) ) );
-            Vec_PtrPushUnique( p.vFanins, Aig_ObjFanin0( Aig_ObjFanin1(pNode) ) );
-            Vec_PtrPushUnique( p.vFanins, Aig_ObjFanin1( Aig_ObjFanin0(pNode) ) );
-            Vec_PtrPushUnique( p.vFanins, Aig_ObjFanin1( Aig_ObjFanin1(pNode) ) );
-            // inlining of macro Vec_PtrForEachEntry
-            for  k = 0; (k < Vec_PtrSize(p.vFanins)) && (((pFanin) = (Aig_Obj_t *)Vec_PtrEntry(p.vFanins, k)), 1); k++  {
-                Ssw_ObjAddToFrontier( p, Aig_Regular(pFanin), vFrontier );
-            }
-            Ssw_AddClausesMux( p, pNode );
-        
-        } else {
-            Ssw_CollectSuper( pNode, fUseMuxes, p.vFanins );
-            // inlining of macro Vec_PtrForEachEntry
-            for  k = 0; (k < Vec_PtrSize(p.vFanins)) && (((pFanin) = (Aig_Obj_t *)Vec_PtrEntry(p.vFanins, k)), 1); k++  {
-                Ssw_ObjAddToFrontier( p, Aig_Regular(pFanin), vFrontier );
-            }
-            Ssw_AddClausesSuper( p, pNode, p.vFanins );
-        }
-        assert(Vec_PtrSize(p.vFanins) > 1, "Vec_PtrSize(p.vFanins) > 1");
-    }
-    Vec_PtrFree( vFrontier );
+func Ssw_CollectSuper(g *aig.Graph, obj aig.Edge, useMuxes int32, super *vec.Vec_Ptr_t) {
+	vec.Vec_PtrClear(super)
+	Ssw_CollectSuper_rec(g, obj, super, 1, useMuxes)
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    [Copy pattern from the solver into the internal storage.]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ssw_CnfGetNodeValue(p *Ssw_Sat_t, pObj *Aig_Obj_t) int32 {
-    var Value0, Value1, nVarNum int32;
-    assert(!Aig_IsComplement(pObj), "!Aig_IsComplement(pObj)");
-    nVarNum = Ssw_ObjSatNum( p, pObj );
-    if nVarNum > 0 {
-        return sat_solver_var_value( p.pSat, nVarNum ); }
-//    if ( pObj->fMarkA == 1 )
-//        return 0;
-    if Aig_ObjIsCi(pObj) {
-        return 0; }
-    assert(Aig_ObjIsNode(pObj), "Aig_ObjIsNode(pObj)");
-    Value0 = Ssw_CnfGetNodeValue( p, Aig_ObjFanin0(pObj) );
-    Value0 ^= Aig_ObjFaninC0(pObj);
-    Value1 = Ssw_CnfGetNodeValue( p, Aig_ObjFanin1(pObj) );
-    Value1 ^= Aig_ObjFaninC1(pObj);
-    return Value0 & Value1;
+func Ssw_ObjAddToFrontier(p *Ssw_Sat_t, obj aig.Edge, frontier *vec.Vec_Ptr_t) {
+	if obj.Complemented() {
+		panic("ssw: complemented frontier object")
+	}
+	if Ssw_ObjSatNum(p, obj) != 0 {
+		return
+	}
+	if aig.Aig_ObjIsConst1(p.pAig, obj) {
+		return
+	}
+	if aig.Aig_ObjIsCi(p.pAig, obj) {
+		vec.Vec_PtrPush(p.vUsedPis, obj)
+	}
+	Ssw_ObjSetSatNum(p, obj, p.nSatVars)
+	p.nSatVars++
+	for p.pSat.NumVars() < p.nSatVars {
+		p.pSat.NewVariable()
+	}
+	if aig.Aig_ObjIsNode(p.pAig, obj) {
+		vec.Vec_PtrPush(frontier, obj)
+	}
 }
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
+func Ssw_CnfNodeAddToSolver(p *Ssw_Sat_t, obj aig.Edge) {
+	if p.pAig == nil || obj.Complemented() {
+		panic("ssw: invalid CNF graph or object")
+	}
+	if Ssw_ObjSatNum(p, obj) != 0 {
+		return
+	}
+	frontier := vec.Vec_PtrAlloc(100)
+	Ssw_ObjAddToFrontier(p, obj, frontier)
+	for i := 0; i < vec.Vec_PtrSize(frontier); i++ {
+		node := vec.Vec_PtrEntry(frontier, i).(aig.Edge)
+		if p.pAig.Node(node).Kind == aig.ExclusiveOr {
+			a, b := aig.Aig_ObjChild0(p.pAig, node), aig.Aig_ObjChild1(p.pAig, node)
+			Ssw_ObjAddToFrontier(p, aig.Aig_Regular(a), frontier)
+			Ssw_ObjAddToFrontier(p, aig.Aig_Regular(b), frontier)
+			sswAddClause(p, sswLit(p, a, false), sswLit(p, b, false), sswLit(p, node, true))
+			sswAddClause(p, sswLit(p, a, true), sswLit(p, b, true), sswLit(p, node, true))
+			sswAddClause(p, sswLit(p, a, false), sswLit(p, b, true), sswLit(p, node, false))
+			sswAddClause(p, sswLit(p, a, true), sswLit(p, b, false), sswLit(p, node, false))
+			continue
+		}
+		if aig.Aig_ObjIsMuxType(p.pAig, node) {
+			c, y, n := aig.Aig_ObjRecognizeMux(p.pAig, node)
+			vec.Vec_PtrClear(p.vFanins)
+			for _, e := range []aig.Edge{c, y, n} {
+				vec.Vec_PtrPushUnique(p.vFanins, aig.Aig_Regular(e))
+			}
+			for _, item := range vec.Vec_PtrArray(p.vFanins) {
+				Ssw_ObjAddToFrontier(p, item.(aig.Edge), frontier)
+			}
+			Ssw_AddClausesMux(p, node)
+		} else {
+			Ssw_CollectSuper(p.pAig, node, 1, p.vFanins)
+			for _, item := range vec.Vec_PtrArray(p.vFanins) {
+				Ssw_ObjAddToFrontier(p, aig.Aig_Regular(item.(aig.Edge)), frontier)
+			}
+			Ssw_AddClausesSuper(p, node, p.vFanins)
+		}
+	}
+}
+func Ssw_CnfGetNodeValue(p *Ssw_Sat_t, obj aig.Edge) int32 {
+	if obj.Complemented() {
+		panic("ssw: complemented model object")
+	}
+	if v := Ssw_ObjSatNum(p, obj); v > 0 {
+		value, ok := p.pSat.Value(v)
+		if !ok {
+			panic("ssw: SAT model unavailable")
+		}
+		if value {
+			return 1
+		}
+		return 0
+	}
+	if aig.Aig_ObjIsCi(p.pAig, obj) {
+		return 0
+	}
+	if !aig.Aig_ObjIsNode(p.pAig, obj) {
+		panic("ssw: unsupported model object")
+	}
+	a, b := aig.Aig_ObjChild0(p.pAig, obj), aig.Aig_ObjChild1(p.pAig, obj)
+	x, y := Ssw_CnfGetNodeValue(p, aig.Aig_Regular(a)), Ssw_CnfGetNodeValue(p, aig.Aig_Regular(b))
+	if a.Complemented() {
+		x ^= 1
+	}
+	if b.Complemented() {
+		y ^= 1
+	}
+	if p.pAig.Node(obj).Kind == aig.ExclusiveOr {
+		return x ^ y
+	}
+	return x & y
+}
