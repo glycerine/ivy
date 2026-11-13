@@ -123,7 +123,7 @@ func Cec3_ManPerformSweeping(p *Gia_Man_t, pPars *Cec3_Par_t, ppNew **Gia_Man_t)
 	if ppNew != nil && reduced != nil {
 		*ppNew = reduced
 	}
-	if cex != nil {
+	if cex != nil || p.SequentialCounterexample() != nil {
 		return 0
 	}
 	return 1
