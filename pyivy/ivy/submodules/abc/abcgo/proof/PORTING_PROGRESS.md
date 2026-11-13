@@ -4,13 +4,15 @@ The goal is a source-faithful Go port of every proof package, followed by
 correctness review, simplification, and comprehensive tests. A successful
 component test is not evidence that its whole package builds.
 
-All proof packages now build and pass `go test -race -count=1 -p 2 ./proof/...`.
+All proof packages now build and pass `go test -race -count=1 -p 8 ./proof/...`
+and `go vet ./proof/...` from the `abcgo` module.
 Correctness review, end-to-end coverage, and the fidelity gaps below remain
 in progress; passing tests do not establish that those gaps are resolved.
 
 * `acec` builds and passes its full race suite and vet. Arithmetic detector,
-  adder-box reconstruction, and polynomial tests are in place. Independent
-  correctness review and broader end-to-end equivalence coverage continue.
+  adder-box reconstruction, and polynomial tests are in place. Results from
+  normalized boxes are checked against the original circuits because the
+  normalization can alter individual outputs. Broader coverage remains useful.
 
 * `cec` builds and passes its full race suite and vet. Its top-level verifier
   now uses the source-style sweep and FRAIG fallback pipeline, with original-C
@@ -27,9 +29,10 @@ in progress; passing tests do not establish that those gaps are resolved.
   permutation uses Go's PRNG, so its sequence differs from C's `rand()`.
   Review fixed uniqueness polarity, constant-candidate counts and polarity
   of unassigned edges; partitioned and constrained traces now have tests.
-* `abs` builds and passes its full race suite and vet. The old GLA driver
-  lowers native XOR/MUX nodes to ANDs and maps results back to the original
-  graph; full integration review remains in progress.
+* `abs` builds and passes its full race suite and vet. Both GLA drivers lower
+  native XOR/MUX nodes and map results back; old GLA also transfers VTA seeds.
+  Its `fUseFullProof` resource behavior differs from C because Go always uses
+  a proof graph. See `abs/PORTING_REVIEW.md`.
 * `fra` builds and passes its full race suite and vet. SEC has small-machine
   reachability and witness-replay tests with correspondence enabled; those
   tests do not establish which cases enter every internal SSW stage.
@@ -48,8 +51,10 @@ in progress; passing tests do not establish that those gaps are resolved.
 * `live` uses the ported PDR solver by default. Its safety engines and
   monitor reductions preserve constraints; the bounded image checker is
   retained for an explicit state limit. See `live/PORTING.md`.
-* `dch`, `ssc`, and `cec/core` build. Their existing review and
-  package-specific documentation describe coverage and any fidelity gaps.
+* `dch`, `ssc`, `cec/core`, `fracomb`, and `framgr` build and pass the same
+  checks. DCH now uses the source-style incremental working FRAIG; its Satoko
+  backend can differ from C in heuristic and resource behavior. FRA helper
+  consolidation is incomplete; see `framgr/README.md`.
 
 Run full-package checks from `abcgo`, for example `go test -race ./proof/pdr`.
 Do not include experimental draft directories in Go test runs.
