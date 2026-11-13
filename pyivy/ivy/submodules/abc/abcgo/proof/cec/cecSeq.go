@@ -98,7 +98,12 @@ func Cec_ManSeqResimulateInfo(p *Gia_Man_t, info *Vec_Ptr_t, state *Abc_Cex_t, c
 	if pis != 0 {
 		pars.nFrames = remaining / pis
 	}
-	pars.nWords = int32(vec.Vec_PtrReadWordsSimInfo(info))
+	// The vector may contain only a register state (or be empty when the
+	// graph has no inputs). In Go each entry carries its own word length.
+	pars.nWords = 1
+	if vec.Vec_PtrSize(info) > 0 {
+		pars.nWords = int32(len(cecInfo(info, 0)))
+	}
 	pars.fCheckMiter = check
 	cecSimRefs(p)
 	sim := Cec_ManSimStart(p, &pars)

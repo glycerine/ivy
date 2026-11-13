@@ -7,6 +7,7 @@ import (
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
+	"math/bits"
 )
 
 type Cec_ManSim_t struct {
@@ -285,12 +286,21 @@ func Cec_ManSimAnalyzeOutputs(p *Cec_ManSim_t) int32 {
 	}
 	for i := int32(0); i < n; i += step {
 		a := vec.Vec_PtrEntry(p.vCoSimInfo, int(i)).([]uint32)
-		var bit int32
+		// A miter fails on an actual one (or an actual difference for a
+		// dual-output miter), independent of the all-zero pattern's phase.
+		var b []uint32
 		if step == 2 {
-			b := vec.Vec_PtrEntry(p.vCoSimInfo, int(i+1)).([]uint32)
-			bit = Cec_ManSimCompareEqualFirstBit(a, b, p.nWords)
-		} else {
-			bit = Cec_ManSimCompareConstFirstBit(a, p.nWords)
+			b = vec.Vec_PtrEntry(p.vCoSimInfo, int(i+1)).([]uint32)
+		}
+		bit := int32(-1)
+		for w, value := range a[:p.nWords] {
+			if step == 2 {
+				value ^= b[w]
+			}
+			if value != 0 {
+				bit = int32(32*w + bits.TrailingZeros32(value))
+				break
+			}
 		}
 		if bit < 0 {
 			continue

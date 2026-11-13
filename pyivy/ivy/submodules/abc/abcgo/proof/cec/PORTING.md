@@ -23,3 +23,26 @@ builder returns constant zero. This is inherited from the original C routine
 returns zero. The Go code preserves that behavior; a correct choice builder
 requires an implementation and independent equivalence tests. A build or a
 passing test of other Cec4 paths does not establish correctness of this path.
+
+## Sequential and miter review
+
+Sequential resimulation tests cover frame-major counterexample packing, register
+state initialization, and register propagation across frames. A one-register
+circuit with no primary inputs previously panicked while inferring the packed
+word count; the Go implementation now reads the first entry's length (or uses
+one word for an empty vector). With no primary inputs the layout cannot encode
+a frame count, so this API performs one frame. The original C path divides by the primary-input
+count and assumes at least two vector entries, so this is an intentional Go
+extension for a valid input rather than a C differential match.
+
+Miter output detection now checks actual one bits, or actual output differences
+for dual-output miters. Phase-normalizing these results could hide a constant
+one or a pair of permanently opposite outputs. The C implementation performs
+that phase-normalized comparison; the Go correction is intentional and covered
+by regressions. Signature comparison for equivalence-class refinement remains
+phase-normalized and continues to have separate C-oracle coverage.
+
+An end-to-end classic SAT sweep test also verifies transfer and replay of
+CO-indexed counterexamples and proved-output sentinels through graph cleanup,
+including a register-input CO. These checks supplement the full package suite;
+they do not establish complete coverage of all sequential algorithms.
