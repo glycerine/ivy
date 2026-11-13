@@ -69,6 +69,48 @@ func TestSATProvenAssociativeChoices(t *testing.T) {
 		}
 	}
 }
+
+func TestConcurrentIndependentChoiceNetworks(t *testing.T) {
+	const workers = 12
+	errors := make(chan error, workers)
+	for worker := 0; worker < workers; worker++ {
+		go func() {
+			variants, _, _ := associativeSnapshots()
+			total, err := DeriveTotalAig(variants)
+			if err != nil {
+				errors <- err
+				return
+			}
+			result, err := ComputeChoices(total, nil)
+			if err != nil {
+				errors <- err
+				return
+			}
+			if err := CheckChoices(result, false); err != nil {
+				errors <- err
+				return
+			}
+			for mask := 0; mask < 8; mask++ {
+				inputs := []bool{mask&1 != 0, mask&2 != 0, mask&4 != 0}
+				got, err := result.Evaluate(inputs)
+				if err != nil {
+					errors <- err
+					return
+				}
+				if len(got) != 1 || got[0] != (inputs[0] && inputs[1] && inputs[2]) {
+					errors <- fmt.Errorf("input %v produced %v", inputs, got)
+					return
+				}
+			}
+			errors <- nil
+		}()
+	}
+	for i := 0; i < workers; i++ {
+		if err := <-errors; err != nil {
+			t.Fatal(err)
+		}
+	}
+}
 func TestRareMintermRequiresSATCounterexample(t *testing.T) {
 	g := aig.NewGraph()
 	root := g.Const1()
