@@ -133,3 +133,41 @@ func TestSourceSignedGlobalCapsOverrideZeroLocalSentinel(t *testing.T) {
 		}
 	}
 }
+
+func TestSourceSignedBudgetsDoNotMaskEarlyRootConflict(t *testing.T) {
+	for _, proof := range []bool{false, true} {
+		for position := 0; position < 4; position++ {
+			var solver sourceBudgetSolver
+			var add func(...Literal) bool
+			if proof {
+				p := NewSolver2()
+				solver, add = p, p.AddClause
+			} else {
+				p := NewSolver()
+				solver, add = p, p.AddClause
+			}
+			x, y := solver.NewVariable(), solver.NewVariable()
+			if !add(Positive(x), Positive(y)) || !add(Negative(x)) || !add(Negative(y)) {
+				t.Fatal("fixture unexpectedly rejected during clause insertion")
+			}
+			limits := [4]int64{}
+			limits[position] = -1
+			if got := solver.SolveWithSourceLimits([]Literal{Positive(x)}, limits[0], limits[1], limits[2], limits[3]); got != Unsatisfiable {
+				t.Fatalf("proof=%t position=%d early root conflict returned %v", proof, position, got)
+			}
+		}
+	}
+}
+
+func TestSolver2PublicLimitsRejectNegativeBudgets(t *testing.T) {
+	for _, limits := range [][2]int64{{-1, 0}, {0, -1}} {
+		func() {
+			defer func() {
+				if recover() == nil {
+					t.Errorf("SetLimits(%d, %d) did not reject negative budget", limits[0], limits[1])
+				}
+			}()
+			NewSolver2().SetLimits(limits[0], limits[1])
+		}()
+	}
+}

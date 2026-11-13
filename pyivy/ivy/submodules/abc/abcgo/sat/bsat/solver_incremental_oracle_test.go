@@ -98,6 +98,36 @@ func TestRootConflictBeforeAssumptionsMatchesC(t *testing.T) {
 	}
 }
 
+func TestInheritedFalseSATModelContradictsOriginalClauses(t *testing.T) {
+	s := NewSolver()
+	x, y := s.NewVariable(), s.NewVariable()
+	clauses := [][]Literal{{Positive(x), Positive(y)}, {Negative(x)}, {Negative(y)}}
+	for _, clause := range clauses {
+		if !s.AddClause(clause...) {
+			t.Fatal("unexpected early contradiction")
+		}
+	}
+	if s.Solve(Positive(x)) != Unsatisfiable || s.Solve(Negative(x)) != Satisfiable {
+		t.Fatal("source root-conflict behavior changed")
+	}
+	model := s.Model()
+	if len(model) != 2 {
+		t.Fatalf("false-SAT result exposed model %v", model)
+	}
+	for _, clause := range clauses {
+		satisfied := false
+		for _, lit := range clause {
+			if model[int(lit)>>1] != (lit&1 != 0) {
+				satisfied = true
+			}
+		}
+		if !satisfied {
+			return
+		}
+	}
+	t.Fatalf("unsatisfiable original clauses unexpectedly satisfy model %v", model)
+}
+
 func TestProofSolverRootConflictBeforeAssumptionsPersists(t *testing.T) {
 	s := NewSolver2()
 	x, y := s.NewVariable(), s.NewVariable()
