@@ -134,7 +134,7 @@ func Gia_ManDupWithArtificalFaddBoxesTest(graph *gia.Gia_Man_t) *gia.Gia_Man_t {
 		if gia.Gia_ObjIsAnd(obj) == 0 {
 			continue
 		}
-		a, b := id%5, id%7
+		a, b := (id%5)&1, (id%7)&1
 		if a != 0 && b != 0 {
 			a, b = 0, 0
 		}
