@@ -191,3 +191,24 @@ func TestMiniSatBackwardInterpolationIsUnsupported(t *testing.T) {
 		t.Fatalf("unsupported combination returned %d, frame %d", got, frame)
 	}
 }
+
+// C's optional MiniSat entry point accepts fUseOther but never reads it.
+func TestMiniSatOtherFlagDoesNotChangeInterpolation(t *testing.T) {
+	for _, pudlak := range []int32{0, 1} {
+		for _, other := range []int32{0, 1} {
+			g := aig.NewGraph()
+			g.NewInput()
+			state := g.NewInput()
+			g.AddOutput(state)
+			g.AddOutput(g.Const0())
+			aig.Aig_ManSetRegNum(g, 1)
+			var p Inter_ManParams_t
+			Inter_ManSetDefaultParams(&p)
+			p.FUseMiniSat, p.FUsePudlak, p.FUseOther, p.NFramesMax = 1, pudlak, other, 5
+			var frame int32
+			if got := Inter_ManPerformInterpolation(g, &p, &frame); got != 1 {
+				t.Fatalf("pudlak=%d other=%d got=%d frame=%d", pudlak, other, got, frame)
+			}
+		}
+	}
+}

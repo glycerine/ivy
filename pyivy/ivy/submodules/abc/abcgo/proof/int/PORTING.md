@@ -65,6 +65,10 @@ sequential systems; its backward combination returns unknown because the C
 implementation explicitly disallows it. `fUseOther` is passed by C to the
 optional MiniSat step but is not used there. Multi-output/separate-output
 dispatch is outside this single-property entry point, as in the C routine.
+The C `int` command and multi-output driver are in `base/abci`; the current
+`abcgo/base/abci` files remain untranslated drafts, so they do not yet provide
+a working Go command for this package. `proof/int` exposes the library entry
+point used by ported Go callers.
 
 The deadline is propagated into SAT solving, rewriting, proof reconstruction,
 and witness solving. Some individual graph traversals and CNF generation are
