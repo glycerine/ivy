@@ -372,7 +372,7 @@ func commandTransform(frame *Frame, argv []string, ltl, simulation, abstraction 
 				}
 				onlySafety = true
 			case "-1":
-				if oneStep {
+				if oneStep && !onlySafety {
 					panic("live: repeated -1 option")
 				}
 				oneStep = true

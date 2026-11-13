@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"strings"
 	"testing"
+
+	"github.com/glycerine/abcgo/aig/aig"
 )
 
 func TestNChooseKReadsWidthFromInput(t *testing.T) {
@@ -18,6 +20,23 @@ func TestNChooseKReadsWidthFromInput(t *testing.T) {
 	}
 	if !strings.Contains(out.String(), "Enter parameterizedCombK") {
 		t.Fatalf("missing prompt: %q", out.String())
+	}
+}
+
+// kliveness.c uses absorberCount < 500; the 500th safety query is never run.
+func TestKLiveSourceDefaultAbsorberBound(t *testing.T) {
+	n := liveFixture(false)
+	n.OutputNames[0] = "csLiveTarget_signal"
+	calls := 0
+	result := KLive(n, KLiveOptions{Checker: func(_ *aig.Graph, _ int, _ SafetyOptions) SafetyResult {
+		calls++
+		if calls == 500 {
+			return SafetyResult{Status: 1}
+		}
+		return SafetyResult{Status: -1}
+	}})
+	if calls != 499 || result.Absorbers != 499 || result.Status != -1 {
+		t.Fatalf("calls %d result %+v", calls, result)
 	}
 }
 
@@ -64,4 +83,16 @@ func TestL2SRepeatedOptionsFollowSource(t *testing.T) {
 		}
 	}()
 	Abc_CommandAbcLivenessToSafety(&Frame{Network: liveFixture(false)}, 3, []string{"l2s", "-1", "-1"})
+}
+
+func TestL2SSafetyOnlyAllowsRepeatedOneStep(t *testing.T) {
+	for _, args := range [][]string{{"l2s", "-l", "-1", "-1"}, {"l2s", "-1", "-l", "-1"}} {
+		frame := &Frame{Network: liveFixture(false)}
+		if got := Abc_CommandAbcLivenessToSafety(frame, int32(len(args)), args); got != 0 {
+			t.Fatalf("source accepts %v: %d", args, got)
+		}
+		if registers(frame.Network.Graph) != 1 || trueInputs(frame.Network.Graph) != 0 {
+			t.Fatalf("safety-only mode was altered for %v", args)
+		}
+	}
 }

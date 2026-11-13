@@ -143,7 +143,8 @@ func KLive(n *Network, options KLiveOptions) KLiveResult {
 	}
 	limit := options.MaxAbsorbers
 	if limit <= 0 {
-		limit = 500
+		// kliveness.c tests absorberCount < 500, starting at one.
+		limit = 499
 	}
 	barriers := options.Barriers
 	if options.Directive == 2 || options.Directive == 3 {
