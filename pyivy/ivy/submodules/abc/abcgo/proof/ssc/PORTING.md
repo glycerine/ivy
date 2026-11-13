@@ -21,8 +21,9 @@ The rebuilt graph uses a local structural hash and preserves identity.
 The constraint wrapper extracts trailing constraint outputs separately from
 ordinary outputs and next-state functions. Append reinserts constraints before
 the trailing register inputs. As in C, Append on an unconstrained graph appends
-one trivial false constraint. Containment dropping checks primary outputs with
-successive SAT implication queries. If an output is removed from a sequential
+one trivial false constraint. Containment dropping derives the source CNF directly and checks primary outputs
+with successive SAT implication queries, leaving input representative classes
+untouched. If an output is removed from a sequential
 graph, its result retains the registers and next-state cones reachable from the
 remaining primary outputs. Ring optimization minimizes each output under the
 others being false, preserving the disjunction of outputs.

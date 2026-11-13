@@ -30,6 +30,7 @@ type Simulation struct {
 	Words, Patterns int
 }
 type Classes struct {
+	owner  *gia.Gia_Man_t // source GIA whose class links mirror this partition
 	Groups [][]int32
 	Repr   []int32
 	Phase  []bool

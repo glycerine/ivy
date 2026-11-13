@@ -191,7 +191,6 @@ func Ssc_PerformSweepingInt(subject, care *gia.Gia_Man_t, params *Ssc_Pars_t) *g
 		Ssc_GiaResetPiPattern(p.Sim, int(p.Params.NWords))
 		Ssc_GiaSavePiPattern(p.Sim, p.Pivot)
 	}
-	subject.StartRepresentatives()
 	for id := int32(1); int(id) < subject.ObjectCount(); id++ {
 		a, b, c, kind := subject.Gate(id)
 		if kind < 1 || kind > 5 {
@@ -240,21 +239,8 @@ func Ssc_PerformSweepingInt(subject, care *gia.Gia_Man_t, params *Ssc_Pars_t) *g
 	if p.Sim.Patterns > 1 {
 		flushPatterns()
 	}
-	// The C class links include candidates that remain unproved; proved flags
-	// separately control which links the equivalence reducer may use. Constant
-	// candidates have representative zero but are not a linked class.
-	for id := int32(1); int(id) < subject.ObjectCount(); id++ {
-		gia.Gia_ObjUnsetRepr(subject, id)
-		gia.Gia_ObjSetNext(subject, id, 0)
-	}
-	for _, group := range p.Classes.Groups {
-		for i := 1; i < len(group); i++ {
-			gia.Gia_ObjSetRepr(subject, group[i], group[0])
-			if group[0] != 0 {
-				gia.Gia_ObjSetNext(subject, group[i-1], group[i])
-			}
-		}
-	}
+	// Class links are kept synchronized during refinement; proved flags
+	// separately control which links the equivalence reducer may use.
 	// C derives the final graph from the proved representative classes and
 	// then removes dangling nodes, rather than rebuilding directly from the SAT
 	// query mappings.

@@ -16,8 +16,8 @@ validates both source networks using the native circuit-model validator.
 
 Containment retains a sufficient output union as outputs are removed. Ring
 constraints are temporary and preserve union rather than each individual output
-outside its care set. Concurrent independent-manager tests exercise local random,
-class, and solver state under the race detector. Simultaneous mutation of one
+outside its care set. Concurrent independent-manager tests exercise synchronized shared random,
+and independent class and solver state under the race detector. Simultaneous mutation of one
 source GIA remains outside the graph API's concurrency contract.
 
 Normal/race focused suites and vet pass with the real native GIA dependency set.

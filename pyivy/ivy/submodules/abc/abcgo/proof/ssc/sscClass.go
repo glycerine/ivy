@@ -13,7 +13,8 @@ func Ssc_GiaClassesInit(p *gia.Gia_Man_t, pivot []bool) *Classes {
 	s := NewSimulation(p, 1)
 	Ssc_GiaSavePiPattern(s, pivot)
 	Ssc_GiaSimRound(s)
-	c := &Classes{Repr: make([]int32, p.ObjectCount()), Phase: make([]bool, p.ObjectCount())}
+	p.StartRepresentatives()
+	c := &Classes{owner: p, Repr: make([]int32, p.ObjectCount()), Phase: make([]bool, p.ObjectCount())}
 	group := []int32{0}
 	for id := 0; id < p.ObjectCount(); id++ {
 		c.Repr[id] = -1
@@ -40,6 +41,7 @@ func (c *Classes) reindex() {
 			c.Repr[id] = g[0]
 		}
 	}
+	c.publish()
 }
 func Ssc_GiaSimAreEqual(s *Simulation, a, b int32) bool {
 	x, y := s.Values[a], s.Values[b]

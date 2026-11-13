@@ -3,7 +3,7 @@ package ssc
 import (
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/sat/bsat"
-	"github.com/glycerine/abcgo/sat/satoko"
+	"github.com/glycerine/abcgo/sat/cnf"
 )
 
 // builder owns structural hashing; no GIA-global scratch table is borrowed.
@@ -143,46 +143,56 @@ func copyOutputs(src *gia.Gia_Man_t, outputs []int32, zero bool) *gia.Gia_Man_t 
 	return copyMapped(src, outputs, nil)
 }
 func Gia_ManDropContained(p *gia.Gia_Man_t) *gia.Gia_Man_t {
-	m, status := Ssc_ManStart(p, emptyCare(p), nil)
-	if status != satoko.SATOKO_SAT {
+	// C uses an independent CNF for the original output interface. Native
+	// gates are lowered at the Go boundary before invoking the C-style path.
+	nOutputs := gia.Gia_ManPoNum(p)
+	graph := p
+	if hasNativeGates(graph) {
+		graph = gia.Gia_ManDupNoMuxes(graph, 1)
+	}
+	if graph.RegisterCount() != 0 {
+		// For the Go sequential extension, treat state bits as free inputs and
+		// expose all COs to CNF, while testing containment only on true POs.
+		graph = copyWithRegs(graph, graph.OutputLiterals(), nil, 0)
+	}
+	aig := gia.Gia_ManToAigSimple(graph)
+	formula := cnf.Cnf_Derive(aig, gia.Gia_ManCoNum(graph))
+	solver := bsat.NewSolver()
+	for solver.NumVars() < int32(formula.Variables) {
+		solver.NewVariable()
+	}
+	for _, clause := range formula.Clauses {
+		if !solver.AddClause(clause...) {
+			return nil
+		}
+	}
+	if !solver.Simplify() {
 		return nil
 	}
-	mapping := copySubjectIntoFraig(m)
-	// Only primary outputs participate in containment. Register inputs are
-	// transition functions, not members of the output union.
-	outputs := p.OutputLiterals()[:int(gia.Gia_ManPoNum(p))]
-	keep := make([]bool, len(outputs))
-	for i := range keep {
-		keep[i] = true
+	assumptions := make([]bsat.Literal, nOutputs)
+	for i := range assumptions {
+		obj := gia.Gia_ManPo(graph, int32(i))
+		aigLit := gia.Gia_ObjValue(obj)
+		assumptions[i] = 2*formula.VarNums[aigLit>>1] + 1
 	}
-	for i := range outputs {
-		var assumptions []bsat.Literal
-		for j, l := range outputs {
-			if !keep[j] {
-				continue
-			}
-			v := m.encode(0, mapping[l>>1]^(l&1))
-			if j != i {
-				v ^= 1
-			}
-			assumptions = append(assumptions, bsat.Literal(v))
-		}
-		m.sat.SetLimits(0, 0)
-		if sscStatus(m.sat.Solve(assumptions...)) == satoko.SATOKO_UNSAT {
-			keep[i] = false
-		}
-	}
-	selected := make([]int32, 0, len(outputs))
-	for i := range outputs {
-		if keep[i] {
+	constLit := 2 * formula.VarNums[0]
+	selected := make([]int32, 0, nOutputs)
+	for i := range assumptions {
+		assumptions[i] ^= 1
+		status := solver.SolveWithSourceLimits(assumptions, 0, 0, 0, 0)
+		assumptions[i] ^= 1
+		switch status {
+		case bsat.Unsatisfiable:
+			assumptions[i] = constLit
+		case bsat.Satisfiable:
 			selected = append(selected, int32(i))
+		default:
+			panic("ssc: unlimited containment query undecided")
 		}
 	}
-	if len(selected) == len(outputs) {
+	if len(selected) == int(nOutputs) {
 		return gia.Gia_ManDup(p)
 	}
-	// Following the selected PO cones also retains the transitive register
-	// dependencies and their corresponding next-state functions.
 	return gia.Gia_ManDupCones(p, selected, int32(len(selected)), 0)
 }
 func Gia_ManOptimizeRing(p *gia.Gia_Man_t) *gia.Gia_Man_t {
