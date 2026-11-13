@@ -20,6 +20,12 @@ result for three XOR cuts and two majority cuts with the same leaf tuple.
 Because C does not guarantee stable ordering for equal sort keys, the recorded
 ordering is for the library/platform used to build ABC.
 
+`acec_single_output.c` uses the same compile and link commands with its own
+filename. It records `box=1`: source box detection can succeed on a graph with
+one output. This does not establish that the later `Acec_Solve` path is safe
+for that graph; the source unconditionally patches its last two outputs after
+matching boxes.
+
 `abc_acec_results.txt` records the ABC CLI differential cases; set
 `go test -run TestABCDifferential ./proof/acec` always compares Go against the
 recorded results. Set `ABC_BINARY` to the absolute path of the compiled ABC
