@@ -8,7 +8,7 @@ The complete `proof/live` package builds using Go and existing native `aig`/`bsa
 
 The main APIs are `LivenessToSafety`, `ParseFormula`, `CheckSafety`, `KLive`, `FindMonotone`, `FindDisjunctiveMonotone`, and streaming `ForEachCombination`. AIG edge zero is true; complemented edge one is false. Graph registers are zero-initialized, with true PIs/POs preceding latch interfaces.
 
-`TransformOptions` selects full, safety-only, liveness-only, or one-step construction, optional shadow-state abstraction, restartable SAVE, and Boolean combinations of GF formulas. One-step mode checks self-loops only. Partial shadow sets are abstractions: they may introduce spurious counterexamples. General full-shadow mode records a saved state and event history to detect recurrent counterexamples.
+`TransformOptions` selects full, safety-only, liveness-only, or one-step construction, optional shadow-state abstraction, restartable SAVE, and Boolean combinations of GF formulas. One-step mode checks self-loops only. The C LTL command routes one-step mode to the ordinary liveness construction and ignores LTL formulas. Partial shadow sets are abstractions: they may introduce spurious counterexamples. General full-shadow mode records a saved state and event history to detect recurrent counterexamples.
 
 The formula syntax retains source prefix notation (`&`, `+`, `!`, `:G`, `:F`, `:X`, `:U`). Native `>` additionally implements the source enum's implication operation. Parsing recognizes all these temporal operators; circuit compilation explicitly accepts only Boolean combinations of GF with combinational operands, matching the source supported fragment. Boolean names refer to named true POs, with `true`/`false` constants. Trailing operands and malformed formulas are errors.
 

@@ -419,7 +419,7 @@ func commandTransform(frame *Frame, argv []string, ltl, simulation, abstraction 
 	options.SafetyAssertions = populateSafetyAssertionVector(n, n.Graph)
 	options.SafetyAssumptions = populateSafetyAssumptionVector(n, n.Graph)
 	options.Restartable = simulation
-	if ltl {
+	if ltl && !oneStep {
 		options.LTL = append([]string(nil), frame.LTLProperties...)
 		if len(options.LTL) == 0 {
 			options.LTL = n.LTLProperties
