@@ -14,14 +14,12 @@ In particular, work is in progress to match the source's detailed per-round
 statistics and timings. The focused harnesses are supplemental, not a
 replacement for the full-package test.
 
-The top-level `Cec_ManVerify` currently uses the direct SAT implementation
-instead of the source's default normalization, iterative SAT-sweeping, and
-old-engine fallback pipeline. Likewise, the current `Cec_ManSatSweeping`
-delegates to a different sweep, and `Cec_ManVerifyOld` delegates back to the
-current top-level implementation rather than the original FRAIG fallback
-(which uses SSW witness resimulation).
-These are substantive source-fidelity and option-behavior gaps; passing tests
-of their Boolean outcomes does not establish equivalence of the algorithms.
+The top-level `Cec_ManVerify` now uses the source-style special cases,
+normalization, iterative sweep, and FRAIG fallback; `Cec_ManVerifyOld` calls
+the FRAIG fallback as well. The separate public `Cec_ManSatSweeping` entry
+point still delegates to a different sweep, which is a source-fidelity and
+option-behavior gap under review. Passing Boolean outcome tests alone does not
+establish equivalence of these algorithms.
 
 ## Upstream Cec4 choice limitation
 
