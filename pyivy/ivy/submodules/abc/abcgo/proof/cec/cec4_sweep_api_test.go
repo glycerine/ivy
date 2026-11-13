@@ -127,3 +127,33 @@ func TestCec4ManagerSweepReadsCopiesCreatedAfterFirstCall(t *testing.T) {
 		t.Fatalf("second sweep result %d", got)
 	}
 }
+
+func TestCec4ManagerPatternGenerationRefinesCandidates(t *testing.T) {
+	g := gia.Gia_ManStart(12)
+	a, b, c := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
+	x, y := gia.Gia_ManAppendAnd(g, a, b), gia.Gia_ManAppendAnd(g, a, c)
+	gia.Gia_ManAppendCo(g, y)
+	gia.Gia_ManSetPhase(g)
+	p := Cec4_ManCreate(g, &Cec_ParFra_t{nWords: 1, nItersMax: 2000})
+	Cec4_ManSimAlloc(p, 1)
+	// Keep the inputs in distinct simulation classes while making the two ANDs equal.
+	p.simState.sim.object(a >> 1)[0] = 14
+	p.simState.sim.object(b >> 1)[0] = 22
+	p.simState.sim.object(c >> 1)[0] = 38
+	Cec4_ManSimulate(p)
+	if gia.Gia_ObjRepr(g, y>>1) == gia.GIA_VOID {
+		t.Fatal("candidate was not placed in a class")
+	}
+	if Cec4_ManFindRepr(g, p, y>>1) == nil {
+		t.Fatal("matching representative was not found")
+	}
+	Cec4_ManCandIterStart(p)
+	if Cec4_ManCandIterNext(p) == 0 {
+		t.Fatal("candidate iteration empty")
+	}
+	Cec4_ManGeneratePatterns(p)
+	Cec4_ManSimulate(p)
+	if p.simState.sim.equivalent(x>>1, y>>1) {
+		t.Fatal("generated patterns did not distinguish nodes")
+	}
+}
