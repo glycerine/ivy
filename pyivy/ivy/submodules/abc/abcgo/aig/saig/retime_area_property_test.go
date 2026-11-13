@@ -227,7 +227,7 @@ func TestForwardRetimePreservesOutputMetadata(t *testing.T) {
 	checkRetimeTraces(t, g, out, 1, 2)
 }
 
-func TestBackwardRetimeSkipsOverlappingAssertedConstraints(t *testing.T) {
+func TestBackwardRetimeRestoresOverlappingAssertedConstraints(t *testing.T) {
 	g := aig.NewGraph()
 	x, y := g.NewInput(), g.NewInput()
 	a, b, c, d := g.NewInput(), g.NewInput(), g.NewInput(), g.NewInput()
@@ -238,8 +238,8 @@ func TestBackwardRetimeSkipsOverlappingAssertedConstraints(t *testing.T) {
 	aig.Aig_ManSetConstrNum(g, 1)
 	g.Assertions = 4
 	out := Saig_ManRetimeMinArea(g, 4, 0, 1, 1, 0)
-	if out.RegisterCount() != 4 || aig.Aig_ManConstrNum(out) != 1 || out.Assertions != 4 {
-		t.Fatal("unsupported overlap changed interface")
+	if out.RegisterCount() != 3 || aig.Aig_ManConstrNum(out) != 1 || out.Assertions != 4 {
+		t.Fatal("retiming changed output metadata")
 	}
 	checkRetimeTraces(t, g, out, 2, 4)
 }

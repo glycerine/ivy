@@ -13,11 +13,12 @@ an unsatisfiable cut using the initial-state SAT core, and restores the hidden
 interface. The source's backward-only and no-initial-state paths are included;
 the latter retains ABC's warning that its result need not preserve the initial
 state. A duplication-order bug and an invalid heuristic-cut panic were fixed.
-Constraint and assertion output metadata are preserved. Hidden-register
-outputs are reordered around trailing constraint outputs and restored afterward.
-If assertions overlap the trailing constraints, backward retiming still skips
-cases requiring hidden registers because the two output sets cannot both stay
-contiguous during the transformation.
+Constraint and assertion output metadata are preserved. The top-level pass
+keeps hidden-register outputs private until their registers are restored,
+including when asserted outputs overlap constraints. The separately exported
+backward helper reorders hidden outputs around constraints; if assertions
+overlap constraints, that helper conservatively skips hidden registers because
+its intermediate public interface cannot represent both roles.
 
 Validation includes exhaustive cut-subset comparisons on small graphs; cut
 sizes compared against the existing NWK port on 200 cleaned graphs in both
@@ -37,8 +38,8 @@ results. This network command is a useful reference but is not a direct call
 to the original SAIG function.
 
 Remaining review: compare cut tie-breaking and end-to-end behavior directly
-with the original SAIG function on larger designs. Address the remaining
-overlapping asserted-constraint case if a representation for noncontiguous
-output roles is added. The Go NWK converter
+with the original SAIG function on larger designs. Address the exported
+backward helper's remaining overlapping asserted-constraint case if a
+representation for noncontiguous output roles is added. The Go NWK converter
 currently omits dangling nodes, whereas the C converter iterates all nodes;
 the SAIG implementation retains the source's all-node behavior.

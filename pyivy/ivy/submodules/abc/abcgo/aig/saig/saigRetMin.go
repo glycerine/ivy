@@ -346,6 +346,12 @@ func Saig_ManExposeBadRegs(graph *aig.Graph, count int32) {
 // Saig_ManRetimeMinAreaBackward derives the source minimum cut and retries
 // after excluding registers whose initial constraints have no solution.
 func Saig_ManRetimeMinAreaBackward(graph *aig.Graph, verbose int32) *aig.Graph {
+	return saigRetimeMinAreaBackward(graph, verbose, false)
+}
+
+// restoreHidden keeps the intermediate hidden-output interface private and
+// restores those registers before returning to the top-level retiming pass.
+func saigRetimeMinAreaBackward(graph *aig.Graph, verbose int32, restoreHidden bool) *aig.Graph {
 	if graph == nil || aig.Aig_ManRegNum(graph) == 0 {
 		return nil
 	}
@@ -355,7 +361,7 @@ func Saig_ManRetimeMinAreaBackward(graph *aig.Graph, verbose int32) *aig.Graph {
 	// Assertions denote a prefix, so overlapping asserted constraints cannot
 	// be moved around hidden POs without changing that representation.
 	canHide := constraints == 0 || int(graph.Assertions) <= originalPOs-constraints
-	if !canHide && vec.Vec_PtrSize(bad) != 0 {
+	if !restoreHidden && !canHide && vec.Vec_PtrSize(bad) != 0 {
 		return nil
 	}
 	if verbose != 0 && vec.Vec_PtrSize(bad) > 0 {
@@ -375,6 +381,14 @@ func Saig_ManRetimeMinAreaBackward(graph *aig.Graph, verbose int32) *aig.Graph {
 		initial := Saig_ManRetimeInitState(initialGraph)
 		if initial != nil {
 			result := Saig_ManRetimeDupBackward(graph, cut, initial)
+			if result != nil && restoreHidden {
+				hidden := Saig_ManPoNum(result) - int32(originalPOs)
+				if hidden < 0 {
+					panic("saig: invalid hidden output count")
+				}
+				aig.Aig_ManSetRegNum(result, result.RegisterCount()+hidden)
+				return result
+			}
 			if result != nil && constraints != 0 {
 				outputs := result.Outputs()
 				pos := int(Saig_ManPoNum(result))
@@ -399,7 +413,7 @@ func Saig_ManRetimeMinAreaBackward(graph *aig.Graph, verbose int32) *aig.Graph {
 		if badReg < 0 || badReg >= graph.RegisterCount() {
 			return nil
 		}
-		if !canHide {
+		if !restoreHidden && !canHide {
 			return nil
 		}
 		if verbose != 0 {
@@ -451,10 +465,7 @@ func Saig_ManRetimeMinArea(graph *aig.Graph, maxIterations, forwardOnly, backwar
 				}
 				next = Saig_ManRetimeDupBackward(current, cut, nil)
 			} else {
-				next = Saig_ManRetimeMinAreaBackward(aig.Aig_ManDupSimple(current), verbose)
-				if next != nil {
-					Saig_ManExposeBadRegs(next, Saig_ManPoNum(next)-Saig_ManPoNum(current))
-				}
+				next = saigRetimeMinAreaBackward(aig.Aig_ManDupSimple(current), verbose, true)
 			}
 			if next == nil {
 				break
