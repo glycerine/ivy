@@ -68,6 +68,10 @@ Remaining review and coverage gaps:
   exits the CTG loop and continues to the predecessor intersection rather
   than immediately returning unknown. Both behaviors are source-derived and
   should be considered when interpreting interrupted generalization.
+- In later CTG processing, C treats an inconclusive frame-push query as
+  nonzero and continues. It then asserts if MIC or the post-CTG cube query
+  returns unknown; the Go port likewise panics in those cases. Two bounded
+  pigeonhole fixtures exercise these distinct interruption paths.
 - As in the source, `ZPdr_SetIntersection` does not check required literals
   in the unmatched tail after either sorted input ends. Also,
   `Pdr_SetPrintStr` appends no pattern characters when its flop filter is

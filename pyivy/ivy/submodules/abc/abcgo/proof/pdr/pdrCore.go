@@ -353,19 +353,12 @@ func ZPdr_ManDown(p *Pdr_Man_t, k int32, cube **Pdr_Set_t, pred *Pdr_Set_t, keep
 			frame := k
 			for ; frame < last; frame++ {
 				status = Pdr_ManCheckCube(p, frame, minimum, nil, 0, 0, 1)
-				if status == -1 {
-					Pdr_SetDeref(minimum)
-					Pdr_SetDeref(ctg)
-					return -1
-				}
 				if status == 0 {
 					break
 				}
 			}
 			if ZPdr_ManSimpleMic(p, frame-1, &minimum) == -1 {
-				Pdr_SetDeref(minimum)
-				Pdr_SetDeref(ctg)
-				return -1
+				panic("pdr: CTG MIC returned unknown")
 			}
 			if p.pPars.fVeryVerbose != 0 {
 				fmt.Fprint(os.Stdout, "Adding cube ")
@@ -390,10 +383,10 @@ func ZPdr_ManDown(p *Pdr_Man_t, k int32, cube **Pdr_Set_t, pred *Pdr_Set_t, keep
 			Pdr_SetDeref(pred)
 			pred = nil
 			status = Pdr_ManCheckCube(p, k, *cube, &pred, p.pPars.nConfLimit, 0, 1)
-			Pdr_SetDeref(ctg)
 			if status == -1 {
-				return -1
+				panic("pdr: post-CTG cube query returned unknown")
 			}
+			Pdr_SetDeref(ctg)
 			if status == 1 {
 				return 1
 			}
