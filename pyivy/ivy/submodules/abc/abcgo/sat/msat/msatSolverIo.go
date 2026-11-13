@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"time"
 )
 
 func Msat_SolverPrintStats(p *Msat_Solver_t) {
@@ -61,7 +62,28 @@ func Msat_SolverWriteDimacs(p *Msat_Solver_t, path string) {
 		panic(err)
 	}
 	defer f.Close()
-	if err = p.WriteDIMACS(f); err != nil {
-		panic(err)
+	count := len(p.vClauses.data) + len(p.vLearned.data)
+	for i := 0; i < p.nVars; i++ {
+		if p.pLevel[i] == 0 {
+			count++
+		}
 	}
+	fmt.Fprintf(f, "c Produced by Msat_SolverWriteDimacs() on %s\n", time.Now().Format(time.ANSIC))
+	fmt.Fprintf(f, "p cnf %d %d\n", p.nVars, count)
+	for _, c := range p.vClauses.data {
+		Msat_ClauseWriteDimacs(f, c, 1)
+	}
+	for _, c := range p.vLearned.data {
+		Msat_ClauseWriteDimacs(f, c, 1)
+	}
+	for i := 0; i < p.nVars; i++ {
+		if p.pLevel[i] == 0 {
+			sign := ""
+			if p.pAssigns[i]&1 != 0 {
+				sign = "-"
+			}
+			fmt.Fprintf(f, "%s%d 0\n", sign, i+1)
+		}
+	}
+	fmt.Fprintln(f)
 }
