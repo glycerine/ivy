@@ -213,52 +213,6 @@ func Ga2_ManAddToAbs(p *Ga2_Man_t, vToAdd *Vec_Int_t) {
 //    sat_solver2_simplify( p->pSat );
 }
 
-func Ga2_ManShrinkAbs(p *Ga2_Man_t, nAbs int32, nValues int32, nSatVars int32) {
-    var vMap *Vec_Int_t;
-    var pObj *Gia_Obj_t;
-    var i, k, Entry int32;
-    assert(nAbs > 0, "nAbs > 0");
-    assert(nValues > 0, "nValues > 0");
-    assert(nSatVars > 0, "nSatVars > 0");
-    // shrink abstraction
-    Gia_ManForEachObjVec( p.vAbs, p.pGia, pObj, i )
-    {
-        if !(i != 0) { continue; }
-        assert(Ga2_ObjCnf0(p, pObj) != nil, "Ga2_ObjCnf0(p, pObj) != nil");
-        assert(Ga2_ObjCnf1(p, pObj) != nil, "Ga2_ObjCnf1(p, pObj) != nil");
-        if i < nAbs {
-            continue; }
-        Vec_IntFree( Ga2_ObjCnf0(p, pObj) );
-        Vec_IntFree( Ga2_ObjCnf1(p, pObj) );
-        Vec_PtrWriteEntry( p.vCnfs, 2 * Ga2_ObjId(p,pObj),     nil );    
-        Vec_PtrWriteEntry( p.vCnfs, 2 * Ga2_ObjId(p,pObj) + 1, nil );
-    }
-    Vec_IntShrink( p.vAbs, nAbs );
-    // shrink values
-    Gia_ManForEachObjVec( p.vValues, p.pGia, pObj, i )
-    {
-        assert(Ga2_ObjId(p,pObj) >= 0, "Ga2_ObjId(p,pObj) >= 0");
-        if i < nValues {
-            continue; }
-        Ga2_ObjSetId( p, pObj, -1 );
-    }
-    Vec_IntShrink( p.vValues, nValues );
-    Vec_PtrShrink( p.vCnfs, 2 * nValues );
-    // hack to clear constant
-    if nValues == 1 {
-        nValues = 0; }
-    // clean mapping for each timeframe
-    Vec_PtrForEachEntry( Vec_Int_t *, p.vId2Lit, vMap, i )
-    {
-        Vec_IntShrink( vMap, nValues );
-        Vec_IntForEachEntryStart( vMap, Entry, k, p.LimAbs )
-            if ( Entry >= 2*nSatVars )
-                Vec_IntWriteEntry( vMap, k, -1 );
-    }
-    // shrink SAT variables
-    p.nSatVars = nSatVars;
-}
-
 /**Function*************************************************************
 
   Synopsis    []
