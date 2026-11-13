@@ -99,8 +99,14 @@ func Ssw_ManSweepNode(p *Ssw_Man_t, obj aig.Edge, frame, bmc int32, pairs *vec.V
 		return 0
 	}
 	nodeFrame, reprFrame := Ssw_ObjFrame(p, obj, frame), Ssw_ObjFrame(p, repr, frame)
-	if nodeFrame == aig.InvalidEdge || reprFrame == aig.InvalidEdge {
-		panic("ssw: missing frame mapping")
+	if nodeFrame == aig.InvalidEdge {
+		panic("ssw: missing candidate frame mapping")
+	}
+	if reprFrame == aig.InvalidEdge {
+		// Rewired Go AIGs need not have topological node IDs. The earlier-ID
+		// representative may not exist yet; conservatively discard the pair.
+		Ssw_ClassesRemoveNode(p.ppClasses, obj)
+		return 1
 	}
 	if (aig.Aig_ObjPhase(p.pAig, obj) == aig.Aig_ObjPhase(p.pAig, repr)) != (aig.Aig_ObjPhaseReal(p.pFrames, nodeFrame) == aig.Aig_ObjPhaseReal(p.pFrames, reprFrame)) {
 		panic("ssw: inconsistent candidate phase")
@@ -249,21 +255,22 @@ func Ssw_ManSweep(p *Ssw_Man_t) int32 {
 	if p.pPars.fEquivDump != 0 || p.pPars.fEquivDump2 != 0 {
 		pairs = vec.Vec_IntAlloc(1000)
 	}
-	latches := make(map[int]bool)
-	for _, lo := range inputs[pis:] {
-		latches[lo.NodeID()] = true
-	}
-	for _, obj := range p.pAig.LiveEdges() {
+	for _, obj := range inputs[pis:] {
 		if sswDeadlineExpired(p.pPars) {
 			return p.fRefined
 		}
-		if latches[obj.NodeID()] {
-			p.fRefined |= Ssw_ManSweepNode(p, obj, frame, 0, pairs)
-		} else if aig.Aig_ObjIsNode(p.pAig, obj) {
-			Ssw_ObjSetFrame(p, obj, frame, sswMakeNode(p, p.pFrames, obj, frame))
+		p.fRefined |= Ssw_ManSweepNode(p, obj, frame, 0, pairs)
+	}
+	for _, obj := range sswFrameNodes(p.pAig) {
+		if sswDeadlineExpired(p.pPars) {
+			return p.fRefined
+		}
+		Ssw_ObjSetFrame(p, obj, frame, sswMakeNode(p, p.pFrames, obj, frame))
+		if aig.Aig_ObjIsNode(p.pAig, obj) {
 			p.fRefined |= Ssw_ManSweepNode(p, obj, frame, 0, pairs)
 		}
 	}
+
 	if p.pPars.fEquivDump != 0 {
 		Ssw_ManDumpEquivMiter(p.pAig, pairs, sswEquivDumpCounter, 1)
 		sswEquivDumpCounter++

@@ -11,8 +11,12 @@ func Ssw_ManSweepNodeConstr(p *Ssw_Man_t, obj aig.Edge, frame, _ int32) int32 {
 		return 0
 	}
 	candidate, representative := Ssw_ObjFrame(p, obj, frame), Ssw_ObjFrame(p, repr, frame)
-	if candidate == aig.InvalidEdge || representative == aig.InvalidEdge {
-		panic("ssw: missing framed class node")
+	if candidate == aig.InvalidEdge {
+		panic("ssw: missing candidate frame mapping")
+	}
+	if representative == aig.InvalidEdge {
+		Ssw_ClassesRemoveNode(p.ppClasses, obj)
+		return 1
 	}
 	expectedSamePhase := p.pAig.Node(obj).Phase == p.pAig.Node(repr).Phase
 	if expectedSamePhase != (aig.Aig_ObjPhaseReal(p.pFrames, candidate) == aig.Aig_ObjPhaseReal(p.pFrames, representative)) {

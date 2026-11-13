@@ -241,9 +241,14 @@ func Ssw_ManSweepDyn(p *Ssw_Man_t) int32 {
 		}
 		if saig.Saig_ObjIsLo(p.pAig, obj) {
 			p.fRefined |= Ssw_ManSweepNode(p, obj, f, 0, nil)
-		} else if aig.Aig_ObjIsNode(p.pAig, obj) {
+		} else if aig.Aig_ObjIsNode(p.pAig, obj) || p.pAig.Node(obj).Kind == aig.Buffer {
+			// Rewired graphs may contain fanins with later IDs. Build their
+			// cones before processing this node's normal ID-ordered sweep.
+			Ssw_FramesWithClasses_rec(p, obj, f)
 			Ssw_ObjSetFrame(p, obj, f, sswMakeNode(p, p.pFrames, obj, f))
-			p.fRefined |= Ssw_ManSweepNode(p, obj, f, 0, nil)
+			if aig.Aig_ObjIsNode(p.pAig, obj) {
+				p.fRefined |= Ssw_ManSweepNode(p, obj, f, 0, nil)
+			}
 		}
 		if p.pMSat.pSat == nil || (p.pPars.nSatVarMax2 != 0 && p.pMSat.nSatVars > p.pPars.nSatVarMax2 && p.nRecycleCalls > p.pPars.nRecycleCalls2) {
 			if p.nPatterns > 0 {

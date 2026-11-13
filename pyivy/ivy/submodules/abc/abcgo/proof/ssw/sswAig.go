@@ -31,6 +31,19 @@ func Ssw_FramesConstrainNode(p *Ssw_Man_t, frames, graph *aig.Graph, obj aig.Edg
 		panic("ssw: representative is not earlier than object")
 	}
 	actual, representative := Ssw_ObjFrame(p, obj, frame), Ssw_ObjFrame(p, repr, frame)
+	if actual == aig.InvalidEdge {
+		panic("ssw: missing candidate frame mapping")
+	}
+	if representative == aig.InvalidEdge {
+		// ID order in a rewired graph can precede its representative's
+		// topological position; do not assume the candidate is equivalent.
+		if p.ppClasses != nil {
+			Ssw_ClassesRemoveNode(p.ppClasses, obj)
+		} else {
+			aig.Aig_ObjClearRepr(graph, obj)
+		}
+		return
+	}
 	differentPhase := aig.Aig_ObjPhase(graph, obj) != aig.Aig_ObjPhase(graph, repr)
 	reduced := representative
 	if differentPhase {
