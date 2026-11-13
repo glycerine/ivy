@@ -50,6 +50,7 @@ func TestNativeSATVariableValueUsesSourcePolarity(t *testing.T) {
 		g := gia.Gia_ManStart(8)
 		a, b := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
 		n := gia.Gia_ManAppendAnd(g, a^1, b^1)
+		gia.Gia_ManSetPhase(g)
 		pars := new(Cec_ParSat_t)
 		Cec_ManSatSetDefaultParams(pars)
 		pars.fPolarFlip = flip

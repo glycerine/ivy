@@ -8,7 +8,10 @@ import (
 	"time"
 )
 
-func Cec_ManSatSolverRecycle(p *Cec_ManSat_t) { p.restart() }
+func Cec_ManSatSolverRecycle(p *Cec_ManSat_t) {
+	p.source.reset()
+	p.values = nil
+}
 func (p *Cec_ManSat_t) query(a int32, b *int32) int32 {
 	p.values = nil
 	if p.vCex != nil {

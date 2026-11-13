@@ -2,6 +2,7 @@ package cec
 
 import (
 	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/sat/bsat"
 	"testing"
 )
@@ -82,5 +83,49 @@ func TestSourceSATRecognizedMuxClauses(t *testing.T) {
 				t.Fatalf("flip=%d mask=%d result=%v", flip, mask, got)
 			}
 		}
+	}
+}
+
+// Cec_ManSatSolverRecycle only clears the solver and its variable map; it does
+// not clear the collected counterexample vector or cumulative query counters.
+func TestSourceSATRecycleRetainsCounterexampleAndCounters(t *testing.T) {
+	g := gia.Gia_ManStart(8)
+	x := gia.Gia_ManAppendCi(g)
+	p := Cec_ManSatCreate(g, nil)
+	if Cec_ManSatCheckNode(p, gia.Gia_ManObj(g, x>>1)) != 0 {
+		t.Fatal("expected SAT")
+	}
+	vec.Vec_IntPush(p.vCex, 17)
+	calls := p.source.calls
+	Cec_ManSatSolverRecycle(p)
+	if p.source.calls != calls || p.source.ids[x>>1] != 0 || vec.Vec_IntSize(p.vCex) != 1 || vec.Vec_IntEntry(p.vCex, 0) != 17 {
+		t.Fatalf("recycle lost state: calls=%d ids=%v cex=%v", p.source.calls, p.source.ids, vec.Vec_IntArray(p.vCex))
+	}
+}
+
+// C reads the SAT variable's physical model bit, including variable zero for
+// nodes omitted from a supergate, rather than evaluating the graph logically.
+func TestSourceSATValueReadsPhysicalVariable(t *testing.T) {
+	g := gia.Gia_ManStart(16)
+	a, b, c := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
+	mid := gia.Gia_ManAppendAnd(g, a, b)
+	root := gia.Gia_ManAppendAnd(g, mid, c)
+	p := Cec_ManSatCreate(g, nil)
+	if Cec_ManSatCheckNode(p, gia.Gia_ManObj(g, root>>1)) != 0 {
+		t.Fatal("expected SAT")
+	}
+	if p.source.ids[mid>>1] != 0 {
+		t.Fatal("intermediate should not have a SAT variable")
+	}
+	v, ok := p.source.sat.Value(0)
+	if !ok {
+		t.Fatal("missing model")
+	}
+	want := int32(0)
+	if v {
+		want = 1
+	}
+	if got := Cec_ObjSatVarValue(p, gia.Gia_ManObj(g, mid>>1)); got != want {
+		t.Fatalf("physical variable zero got %d want %d", got, want)
 	}
 }
