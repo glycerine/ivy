@@ -10,10 +10,11 @@ rather than silently substituting another algorithm.
 
 Proof-package work is under parallel source-by-source audit. Recent green
 checkpoints cover CEC, FRA/framgr, ACEC, DCH, ABS, INT2, live, SSW, PDR, BSAT,
-MSAT, MiniSat-p, DAR, and SSC. The integrating thread is committing green
-package-sized checkpoints on the current branch. A repository-wide race/vet
-gate has not yet been rerun after the latest changes; several focused audits
-remain active, so do not treat this checkpoint as completion.
+MSAT, MiniSat-p, DAR, and SSC. The lower DAR facade and GIA default choice path
+now call their source pipelines. Several package race/vet gates passed after
+their latest changes, but the repository-wide proof gate has not been rerun
+after ongoing terminal-count/CioId propagation fixes. Those shared AIG and
+SAIG changes remain under review, so this checkpoint is not completion.
 
 ## Source API inventory
 
@@ -56,8 +57,9 @@ and representation limits described in its package notes.
   duplication behavior or reject unsupported input at the source boundary.
   Isomorphism preconditions and constant-miter handling match C. Package race
   tests and vet passed. Cec4's upstream choice builder remains incomplete.
-  `cec.Dar_ManChoiceNew` supplies a source-choice adapter for DAR's GIA miter
-  and DCH/CEC proof paths; direct DAR callback wiring remains a boundary below.
+  The lower `opt/dar` facade wires its source default through the CEC adapter,
+  and the GIA default uses the GIA miter/skip-three/DCH path. CEC/Cec4 modes are
+  exposed through a higher-layer wrapper to avoid an import cycle.
 * `cec/core`: this is a separate Satoko-based Go convenience adapter, not the
   source CEC SAT backend. Source-named node checks and SAT-value accessors now
   use the separate BSAT backend in `cec`. Mixed-gate truth-table, witness,
@@ -85,7 +87,8 @@ and representation limits described in its package notes.
   and output-ID witness layout follow C; broader manager audit remains
   incomplete.
 * `int`: MiniSat 1.14p has exhaustive Craig-interpolant checks and option/error
-  coverage. Race tests and vet passed.
+  coverage. Proof-root validation now builds its annotation in one ordered
+  pass, preserving clause order. Race tests and vet passed.
 * `int2`: the checked-in C interpolation driver is uncompilably incomplete, so
   the Go driver returns undecided and does not invent a bounded reachability
   fallback. Helper tests characterize source behavior. The suffix constructor
@@ -93,12 +96,14 @@ and representation limits described in its package notes.
   from a different graph than the one into which it derives clauses. The
   preimage helper also returns undecided because its C code refers to an
   undeclared manager and does not establish a reliable mapping contract.
-  The incremental frame builder reconstructs missing C operations and has no
+  Refinement compares GIA priorities as unsigned values, matching C's `uint32`
+  field. The incremental frame builder reconstructs missing C operations and has no
   unsupported status; it is not source-confirmed and callers must treat the
   whole path as unsupported for source fidelity.
 * `live`: Go-only reachability and fairness-parser substitutes were removed.
-  Command and option behavior follows the source, including empty-arena and
-  zero-register one-step behavior. Package race tests and vet passed.
+  Graph operations now use explicit AIG arguments as C does; network metadata
+  remains sourced from the supplied network. Safe graph-copy and safety-model
+  simplifications preserve source order. Package race tests and vet passed.
 * `pdr`: source solver context, limits, helper edge cases and graph lifecycle
   are covered. Differential tests exercise 64 machines and source-matched
   option combinations, plus invariant-file output. Package race tests and vet
@@ -108,14 +113,16 @@ and representation limits described in its package notes.
   that can be treated as proof. Further resource-limit coverage is needed.
 * `ssc`: evolving FRAIG substitutions, BSAT frontier encoding, source-style
   class refinement, native-input lowering, random stream, equivalence
-  reduction, and CEC verification have source tests. The constrained sweep
-  wrapper now levelizes its subject as C does, and simulation snapshots and
-  counters match source behavior. Complete option parity remains under review.
+  reduction, and CEC verification have source tests. Verbose mode performs the
+  source's five-word care estimate and advances the shared RNG. Care-pattern
+  transfer uses the source helpers, with tests for simulation, classes, and
+  later RNG state. Complete option parity remains under review.
 * `ssw`: source rarity, SAT polarity, prefix, class-count, manager-lifecycle,
   reduction accounting, stop behavior, and timeout behavior is restored and
   characterized. A reachable invalid
-  rarity witness is documented as an upstream C defect. Package race tests and
-  vet passed.
+  rarity witness is documented as an upstream C defect. Source CioId setup is
+  restored in manager, BMC, latch-sweep, and dynamic-sweep paths; race tests and
+  vet passed. Further shared retiming metadata fixes are still in progress.
 
 ## Shared dependencies in progress
 
@@ -124,10 +131,17 @@ dominance/eviction, area-flow mapping, mapped CNF writer, and variable
 numbering. Direct compiled-C comparisons matched exact ordered DIMACS output
 for 345 generated asserted, free-output, and sequential cases; exhaustive
 three-input truth-function checks also pass. `abcgo/opt/dar` cut enumeration
-follows C's slot ordering and eviction behavior. The CEC source-choice adapter
-provides DAR's new-choice GIA miter and proof path, but direct
-`opt/dar.Dar_ManChoiceNew` still requires an explicitly supplied source-faithful
-engine; it does not wire one by default.
+follows C's slot ordering and eviction behavior. Its former implementation now
+lives in `opt/dar/core`, with `opt/dar` as a compatibility facade that avoids
+the GIA/CNF/CEC import cycle. The facade's default choice path uses the source
+GIA miter and DCH/CEC/Cec4 branches; the lower GIA API exposes CEC/Cec4 through
+an explicit higher-layer wrapper. Compiled ABC option-matrix checks pass.
+
+The shared AIG/SAIG migration now stores C's true terminal counts and per-object
+CioIds instead of deriving them from current terminal slices. Source review
+continues across duplication, retiming, and register hiding/exposure: C
+intentionally leaves stale or zero metadata on some paths, so each call site
+must follow the exact source operation rather than normalize the graph.
 
 FRA/AIG partitioned FRAIG and choice and SAIG timeframe bridges are implemented
 through explicit callback APIs, with FRA wrappers supplying the corresponding
