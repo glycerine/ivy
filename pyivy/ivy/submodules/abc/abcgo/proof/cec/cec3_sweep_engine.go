@@ -47,6 +47,11 @@ func cec3SweepEquivalences(g *gia.Gia_Man_t, opts cec3SweepSettings) (*gia.Gia_M
 	}
 	gia.Gia_ManRandomW(1)
 	gia.Gia_ManSetPhase(g)
+	if opts.isMiter {
+		if cex := cec2ZeroPhaseWitness(g); cex != nil {
+			return nil, nil, cex
+		}
+	}
 	sim := newCec3Simulation(g.ObjectCount(), opts.words)
 	telemetry := &cecSweepTiming{start: time.Now()}
 	defer telemetry.print(opts.verbose)

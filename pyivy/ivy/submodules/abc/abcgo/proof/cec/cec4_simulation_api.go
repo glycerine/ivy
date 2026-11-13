@@ -155,6 +155,9 @@ func Cec4_ManSimulateCos(p *Cec4_Man_t) int32 {
 	for i := int32(0); i < gia.Gia_ManCoNum(g); i++ {
 		id := gia.Gia_ObjId(g, gia.Gia_ManCo(g, i))
 		Cec4_ObjSimCo(p, id)
+		if Cec4_ObjSimEqual(p, id, 0) != 0 {
+			continue
+		}
 		for w, v := range Cec4_ObjSim(p, id) {
 			if v != 0 {
 				cex := Cec4_ManDeriveCex(p, i, int32(w*64+bits.TrailingZeros64(v)))

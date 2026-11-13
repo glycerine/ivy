@@ -96,21 +96,13 @@ func Cec_ManSeqResimulate(p *Cec_ManSim_t, info *Vec_Ptr_t) int32 {
 func Cec_ManSeqResimulateInfo(p *Gia_Man_t, info *Vec_Ptr_t, state *Abc_Cex_t, check int32) int32 {
 	regs, pis := gia.Gia_ManRegNum(p), gia.Gia_ManPiNum(p)
 	remaining := int32(vec.Vec_PtrSize(info)) - regs
-	if remaining < 0 || pis == 0 && remaining != 0 || pis != 0 && remaining%pis != 0 {
+	if remaining < 0 || pis == 0 || remaining%pis != 0 {
 		panic("cec: invalid sequential simulation layout")
 	}
 	var pars Cec_ParSim_t
 	Cec_ManSimSetDefaultParams(&pars)
-	pars.nFrames = 1
-	if pis != 0 {
-		pars.nFrames = remaining / pis
-	}
-	// The vector may contain only a register state (or be empty when the
-	// graph has no inputs). In Go each entry carries its own word length.
-	pars.nWords = 1
-	if vec.Vec_PtrSize(info) > 0 {
-		pars.nWords = int32(len(cecInfo(info, 0)))
-	}
+	pars.nFrames = remaining / pis
+	pars.nWords = int32(vec.Vec_PtrReadWordsSimInfo(info))
 	pars.fCheckMiter = check
 	cecSimRefs(p)
 	sim := Cec_ManSimStart(p, &pars)

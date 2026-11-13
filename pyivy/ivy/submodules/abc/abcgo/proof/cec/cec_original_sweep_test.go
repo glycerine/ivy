@@ -10,14 +10,14 @@ import (
 	"testing"
 )
 
-func TestOriginalSweepTrivialMiterWitness(t *testing.T) {
+func TestOriginalSweepPreservesSourcePhaseNormalizedMiter(t *testing.T) {
 	g := gia.Gia_ManStart(8)
 	x := gia.Gia_ManAppendCi(g)
 	gia.Gia_ManAppendCo(g, x)
 	gia.Gia_ManAppendCo(g, x^1)
 	p := Cec_ParFra_t{nWords: 1, nRounds: 1, nItersMax: 2, nBTLimit: 100, fCheckMiter: 1, fDualOut: 1}
 	out, err := cecOriginalSweep(g, &p)
-	if err != nil || out != nil || p.iOutFail != 0 || g.CombinationalCounterexample() == nil {
+	if err != nil || out == nil || p.iOutFail != -1 || g.CombinationalCounterexample() != nil {
 		t.Fatalf("out %v error %v failed output %d witness %+v", out, err, p.iOutFail, g.CombinationalCounterexample())
 	}
 }

@@ -21,11 +21,14 @@ func cec4SimulateGraph(s *cec3Simulation, graph *gia.Gia_Man_t) {
 	}
 }
 
-// cec4FirstFailingOutput returns the first output with a simulated one,
+// cec4FirstFailingOutput checks output signatures modulo complement, as C does,
 // together with a combinational counterexample for that output.
 func cec4FirstFailingOutput(s *cec3Simulation, graph *gia.Gia_Man_t) (int32, *util.Abc_Cex_t) {
 	for i := int32(0); i < gia.Gia_ManCoNum(graph); i++ {
 		id := gia.Gia_ObjId(graph, gia.Gia_ManCo(graph, i))
+		if s.equivalent(id, 0) {
+			continue
+		}
 		for word, values := range s.object(id) {
 			if values == 0 {
 				continue

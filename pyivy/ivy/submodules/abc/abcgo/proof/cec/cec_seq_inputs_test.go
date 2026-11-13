@@ -61,29 +61,17 @@ func TestSequentialResimulationPropagatesRegisterAcrossFrames(t *testing.T) {
 	}
 }
 
-func TestSequentialResimulationWithoutPrimaryInputs(t *testing.T) {
+func TestSequentialResimulationRejectsZeroPrimaryInputs(t *testing.T) {
 	g := gia.Gia_ManStart(8)
 	ro := gia.Gia_ManAppendCi(g)
 	gia.Gia_ManAppendCo(g, ro)
 	gia.Gia_ManAppendCo(g, ro)
 	gia.Gia_ManSetRegNum(g, 1)
 	g.StartRepresentatives()
-	info := vec.Vec_PtrAllocSimInfo(1, 1)
-	cecInfo(info, 0)[0] = 2
-	if got := Cec_ManSeqResimulateInfo(g, info, nil, 1); got != 1 {
-		t.Fatalf("zero-input miter status %d", got)
-	}
-}
-
-func TestSequentialResimulationDetectsConstantOneMiter(t *testing.T) {
-	g := gia.Gia_ManStart(8)
-	ro := gia.Gia_ManAppendCi(g)
-	gia.Gia_ManAppendCo(g, ro^1)
-	gia.Gia_ManAppendCo(g, ro)
-	gia.Gia_ManSetRegNum(g, 1)
-	g.StartRepresentatives()
-	info := vec.Vec_PtrAllocSimInfo(1, 1)
-	if got := Cec_ManSeqResimulateInfo(g, info, nil, 1); got != 1 {
-		t.Fatalf("constant-one miter status %d", got)
-	}
+	defer func() {
+		if recover() == nil {
+			t.Fatal("expected unsupported zero-primary-input layout to panic")
+		}
+	}()
+	Cec_ManSeqResimulateInfo(g, vec.Vec_PtrAllocSimInfo(1, 1), nil, 1)
 }

@@ -17,10 +17,10 @@ replacement for the full-package test.
 The top-level `Cec_ManVerify` now uses the source-style special cases,
 normalization, iterative sweep, and FRAIG fallback; `Cec_ManVerifyOld` calls
 the FRAIG fallback as well. The public `Cec_ManSatSweeping` entry point now
-also uses the source-style sweep. Its direct interface currently rejects native
-XOR/MUX/buffer nodes and rejects original-ID tracking with deeper speculation
-or circuit SAT; those combinations need further work. Passing Boolean outcome
-tests alone does not establish equivalence of these algorithms.
+also uses the source-style sweep. It lowers native XOR/MUX/buffer nodes and
+independently checks original-ID proof pairs, including for deeper speculation
+and circuit SAT. Passing Boolean outcome tests alone does not establish full
+equivalence of these algorithms.
 
 ## Upstream Cec4 choice limitation
 
@@ -43,22 +43,19 @@ correctness of this path.
 ## Sequential and miter review
 
 Sequential resimulation tests cover frame-major counterexample packing, register
-state initialization, and register propagation across frames. A one-register
-circuit with no primary inputs previously panicked while inferring the packed
-word count; the Go implementation now reads the first entry's length (or uses
-one word for an empty vector). With no primary inputs the layout cannot encode
-a frame count, so this API performs one frame. The original C path divides by the primary-input
-count and assumes at least two vector entries, so this is an intentional Go
-extension for a valid input rather than a C differential match.
+state initialization, and register propagation across frames. The source
+requires at least one primary input and a simulation vector with two entries;
+its zero-input path divides by zero and cannot infer a packed word size.
 
-Miter output detection now checks actual one bits, or actual output differences
-for dual-output miters. Phase-normalizing these results could hide a constant
-one or a pair of permanently opposite outputs. The C implementation performs
-that phase-normalized comparison; the Go correction is intentional and covered
-by regressions. Signature comparison for equivalence-class refinement remains
-phase-normalized and continues to have separate C-oracle coverage.
+The source miter output analysis compares signatures modulo complement. This
+can suppress reports for a constant-one output or permanently opposite paired
+outputs. The Go port preserves that source behavior, with a regression test;
+the signature comparison also has separate C-oracle coverage.
+Cec2, Cec3 and Cec4 direct output-simulation routines likewise preserve the
+source phase-normalized comparison. Their top-level sweepers perform the
+source all-zero-input phase check before entering simulation.
 
-An end-to-end classic SAT sweep test also verifies transfer and replay of
+An end-to-end classic SAT sweep test verifies transfer and replay of
 CO-indexed counterexamples and proved-output sentinels through graph cleanup,
 including a register-input CO. These checks supplement the full package suite;
 they do not establish complete coverage of all sequential algorithms.
@@ -100,3 +97,27 @@ uses the vector path and the source's circuit-SAT conflict cap.
 then independently checks retained classes before constructing choices. The
 internal `Cec_ManChoiceComputation_int` entry point requires AND-inverter
 inputs; the public vector driver lowers native gates first.
+
+## Remaining fidelity and coverage limits
+
+The naive verification route uses the Go `core.VerifyPairs` cone-CNF/Satoko
+adapter, rather than ABC's mapped MF CNF and bsat loop; its conflict behavior,
+logging and per-output progress are therefore not exact C reproductions.
+Choice candidate validation also deliberately adds independent SAT checks that
+ABC does not perform. The `ChoiceSnapshots` and `SatSweep` convenience APIs
+remain separate Go algorithms; the source-named vector choice and SAT-sweep
+entry points use the source-based paths described above. `Cec_ManChoiceComputation`
+uses the DAR/DCH engine; the current DCH port documents that its `UseGia` and
+`UseCSat` configuration fields do not switch the old DCH backend.
+
+Original-ABC comparisons cover selected small networks and options, not a broad
+real-world corpus or every resource-exhaustion path. In particular, the source
+loop's exact verbose timing/statistics, choice-refinement overflow behavior,
+and behavior under timeouts and sparse initial classes need further comparison.
+Independent original-graph replay and proof checks reduce the risk of an
+incorrect published witness or choice but do not establish complete coverage.
+
+`Cec_ManFraSpecReduction` preserves the source level-limit behavior that
+indexes the original graph using the representative's reduced-copy ID. If
+structural hashing changes IDs, this can suppress an otherwise eligible
+query; a regression records this inherited C behavior.

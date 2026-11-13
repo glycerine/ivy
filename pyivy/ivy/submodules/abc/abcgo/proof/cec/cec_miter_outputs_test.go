@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestMiterOutputAnalysisDoesNotNormalizeAwayFailure(t *testing.T) {
+func TestMiterOutputAnalysisMatchesSourcePhaseNormalization(t *testing.T) {
 	for _, dual := range []bool{false, true} {
 		g := gia.Gia_ManStart(4)
 		gia.Gia_ManAppendCo(g, 0)
@@ -22,7 +22,7 @@ func TestMiterOutputAnalysisDoesNotNormalizeAwayFailure(t *testing.T) {
 		} else {
 			cecInfo(sim.vCoSimInfo, 0)[0] = ^uint32(0)
 		}
-		if got := Cec_ManSimAnalyzeOutputs(sim); got != 1 || sim.pCexComb == nil || sim.pCexComb.IPo != 0 {
+		if got := Cec_ManSimAnalyzeOutputs(sim); got != 0 || sim.pCexComb != nil {
 			t.Fatalf("dual %v: got %d witness %+v", dual, got, sim.pCexComb)
 		}
 	}

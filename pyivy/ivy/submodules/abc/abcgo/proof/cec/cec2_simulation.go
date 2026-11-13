@@ -2,6 +2,7 @@ package cec
 
 import (
 	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/sat/satoko"
 	"math/bits"
 	"time"
@@ -56,6 +57,9 @@ func cec2FailingOutput(sim *cec3Simulation, graph *gia.Gia_Man_t) (int32, int) {
 	for i := int32(0); i < gia.Gia_ManCoNum(graph); i++ {
 		id := gia.Gia_ObjId(graph, gia.Gia_ManCo(graph, i))
 		sim.simulateOutput(graph, id)
+		if sim.equivalent(id, 0) {
+			continue
+		}
 		for w, word := range sim.object(id) {
 			if word != 0 {
 				return i, w*64 + bits.TrailingZeros64(word)
@@ -71,4 +75,20 @@ func cec2ReplayModel(sim *cec3Simulation, graph *gia.Gia_Man_t, solver *satoko.S
 	for index, v := range inputs {
 		sim.setInputBit(gia.Gia_ManCiIdToId(graph, index), pattern, solver.ModelValue(v) == 1)
 	}
+}
+
+// cec2ZeroPhaseWitness implements the all-zero miter check before simulation.
+func cec2ZeroPhaseWitness(g *gia.Gia_Man_t) *util.Abc_Cex_t {
+	for i := int32(0); i < gia.Gia_ManCoNum(g); i++ {
+		if gia.Gia_ObjPhase(gia.Gia_ManCo(g, i)) == 0 {
+			continue
+		}
+		cex := util.Abc_CexAlloc(0, gia.Gia_ManCiNum(g), 1)
+		cex.IPo = i
+		if err := g.SetCecCombinationalWitness(cex); err != nil {
+			panic(err)
+		}
+		return cex
+	}
+	return nil
 }

@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestCec2AndCec3DirectOutputSimulationDetectsConstantOne(t *testing.T) {
+func TestCec2AndCec3DirectOutputSimulationMatchesSourcePhase(t *testing.T) {
 	for _, engine := range []int{2, 3} {
 		g := gia.Gia_ManStart(4)
 		gia.Gia_ManAppendCo(g, 1)
@@ -16,8 +16,8 @@ func TestCec2AndCec3DirectOutputSimulationDetectsConstantOne(t *testing.T) {
 		} else {
 			result = Cec3_ManSimulateCos(g)
 		}
-		if result != 0 || g.SequentialCounterexample() == nil {
-			t.Fatalf("engine %d missed constant-one output", engine)
+		if result != 1 || g.SequentialCounterexample() != nil {
+			t.Fatalf("engine %d did not preserve source phase normalization", engine)
 		}
 	}
 }
