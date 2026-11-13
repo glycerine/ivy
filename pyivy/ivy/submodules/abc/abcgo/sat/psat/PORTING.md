@@ -64,6 +64,10 @@ No proof or SAT result is fabricated to conceal missing implementation source.
   mode, budgets/resumption, ownership and destruction are tested.
 - A header-contract audit checks all fifteen API names; a source-header fixture
   keeps module-only tests independent of the original repository layout.
+- A follow-up 3,000-query incremental oracle checks SAT models and validates
+  each UNSAT certificate against the current roots and assumptions. The package
+  passes `go test -race -count=1 ./sat/psat` and `go vet ./sat/psat` with
+  `GOCACHE=/tmp/abcgo-cache`; finite cases do not prove all proof workloads.
 
 There is no package build blocker. Original MiniSat algorithm/search-statistic
 and binary-proof-format parity cannot be proved without the missing library;
