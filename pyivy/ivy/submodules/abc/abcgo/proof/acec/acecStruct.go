@@ -1,293 +1,168 @@
 package acec
 
-import "fmt"
+// XOR-tree structural analysis, ported from src/proof/acec/acecStruct.c.
+import (
+	"fmt"
+	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/misc/vec"
+)
 
-/**CFile****************************************************************
-
-  FileName    [acecStruct.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [CEC for arithmetic circuits.]
-
-  Synopsis    [Core procedures.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: acecStruct.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "acecInt.h"
-//#include "misc/vec/vecWec.h"
-//#include "misc/extra/extra.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Acec_StructDetectXorRoots(p *Gia_Man_t) *Vec_Int_t {
-    var vXors *Vec_Int_t  = Vec_IntAlloc( 100 );
-    var vXorIns *Vec_Bit_t  = Vec_BitStart( Gia_ManObjNum(p) );
-    var pFan0, pFan1, pObj *Gia_Obj_t; 
-    var i, k, Entry int32;
-    // inlining of macro Gia_ManForEachAnd
-    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {
-        if !Gia_ObjRecognizeExor(pObj, &pFan0, &pFan1) {
-            continue; }
-        Vec_IntPush( vXors, i );
-        Vec_BitWriteEntry( vXorIns, Gia_ObjId(p, Gia_Regular(pFan0)), 1 );
-        Vec_BitWriteEntry( vXorIns, Gia_ObjId(p, Gia_Regular(pFan1)), 1 );
-    }
-    }
-    // collect XORs that not inputs of other XORs
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vXors)) && (((Entry) = Vec_IntEntry(vXors, i)), 1); i++  {
-        if !Vec_BitEntry(vXorIns, Entry) {
-            Vec_IntWriteEntry( vXors, k++, Entry ); }
-    }
-    Vec_IntShrink( vXors, k );
-    Vec_BitFree( vXorIns );
-    return vXors;
+	roots := vec.Vec_IntAlloc(100)
+	ins := make([]bool, gia.Gia_ManObjNum(p))
+	for id := int32(1); id < gia.Gia_ManObjNum(p); id++ {
+		o := gia.Gia_ManObj(p, id)
+		if gia.Gia_ObjIsAnd(o) == 0 {
+			continue
+		}
+		var a, b *Gia_Obj_t
+		if gia.Gia_ObjRecognizeExor(o, &a, &b) == 0 {
+			continue
+		}
+		vec.Vec_IntPush(roots, id)
+		ins[gia.Gia_ObjId(p, gia.Gia_Regular(a))] = true
+		ins[gia.Gia_ObjId(p, gia.Gia_Regular(b))] = true
+	}
+	k := 0
+	for i := 0; i < vec.Vec_IntSize(roots); i++ {
+		id := vec.Vec_IntEntry(roots, i)
+		if !ins[id] {
+			vec.Vec_IntWriteEntry(roots, k, id)
+			k++
+		}
+	}
+	vec.Vec_IntShrink(roots, k)
+	return roots
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Acec_StructAssignRanks(p *Gia_Man_t, vXorRoots *Vec_Int_t) *Vec_Int_t {
-    var vDoubles *Vec_Int_t  = Vec_IntAlloc( 100 );
-    var pFan0, pFan1, pObj *Gia_Obj_t; 
-    var i int32;
-    var k int32;
-    var Fanins [2]int32;
-    var Entry int32;
-    var Rank int32;
-    // map roots into their ranks
-    var vRanks *Vec_Int_t  = Vec_IntStartFull( Gia_ManObjNum(p) ); 
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vXorRoots)) && (((Entry) = Vec_IntEntry(vXorRoots, i)), 1); i++  {
-        Vec_IntWriteEntry( vRanks, Entry, i );
-    }
-    // map nodes into their ranks
-    // inlining of macro Gia_ManForEachAndReverse
-    for  i = p.nObjs - 1; (i > 0) && ((pObj) = Gia_ManObj(p, i)); i--  {  if !Gia_ObjIsAnd(pObj) {} else {
-        if !Gia_ObjRecognizeExor(pObj, &pFan0, &pFan1) {
-            continue; }
-        Rank = Vec_IntEntry( vRanks, i );
-        // skip XORs that are not part of any tree
-        if Rank == -1 {
-            continue; }
-        // iterate through XOR inputs
-        Fanins[0] = Gia_ObjId(p, Gia_Regular(pFan0));
-        Fanins[1] = Gia_ObjId(p, Gia_Regular(pFan1));
-        for  k = 0; k < 2; k++  {
-            Entry = Vec_IntEntry( vRanks, Fanins[k] );
-            if Entry == Rank { // the same tree -- allow fanout in this tree
-                continue; }
-            if Entry == -1 {
-                Vec_IntWriteEntry( vRanks, Fanins[k], Rank );
-            } else {
-                Vec_IntPush( vDoubles, Fanins[k] ); }
-            if Entry != -1 && Gia_ObjIsAnd(Gia_ManObj(p, Fanins[k])) {
-            fmt.Printf("Xor node %d belongs to Tree %d and Tree %d.\n", Fanins[k], Entry, Rank); }
-        }
-    }
-    }
-    // remove duplicated entries
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vDoubles)) && (((Entry) = Vec_IntEntry(vDoubles, i)), 1); i++  {
-        Vec_IntWriteEntry( vRanks, Entry, -1 );
-    }
-    Vec_IntFree( vDoubles );
-    return vRanks;
+func Acec_StructAssignRanks(p *Gia_Man_t, roots *Vec_Int_t) *Vec_Int_t {
+	ranks := vec.Vec_IntStartFull(int(gia.Gia_ManObjNum(p)))
+	doubles := vec.Vec_IntAlloc(100)
+	for i := 0; i < vec.Vec_IntSize(roots); i++ {
+		vec.Vec_IntWriteEntry(ranks, int(vec.Vec_IntEntry(roots, i)), int32(i))
+	}
+	for id := gia.Gia_ManObjNum(p) - 1; id > 0; id-- {
+		o := gia.Gia_ManObj(p, id)
+		if gia.Gia_ObjIsAnd(o) == 0 {
+			continue
+		}
+		var a, b *Gia_Obj_t
+		if gia.Gia_ObjRecognizeExor(o, &a, &b) == 0 {
+			continue
+		}
+		rank := vec.Vec_IntEntry(ranks, int(id))
+		if rank == -1 {
+			continue
+		}
+		for _, f := range []int32{gia.Gia_ObjId(p, gia.Gia_Regular(a)), gia.Gia_ObjId(p, gia.Gia_Regular(b))} {
+			old := vec.Vec_IntEntry(ranks, int(f))
+			if old == rank {
+				continue
+			}
+			if old == -1 {
+				vec.Vec_IntWriteEntry(ranks, int(f), rank)
+			} else {
+				vec.Vec_IntPush(doubles, f)
+			}
+			if old != -1 && gia.Gia_ObjIsAnd(gia.Gia_ManObj(p, f)) != 0 {
+				fmt.Printf("Xor node %d belongs to Tree %d and Tree %d.\n", f, old, rank)
+			}
+		}
+	}
+	for i := 0; i < vec.Vec_IntSize(doubles); i++ {
+		vec.Vec_IntWriteEntry(ranks, int(vec.Vec_IntEntry(doubles, i)), -1)
+	}
+	return ranks
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Acec_FindTreeLeaves(p *Gia_Man_t, vXorRoots *Vec_Int_t, vRanks *Vec_Int_t) *Vec_Wec_t {
-    var vMapXors *Vec_Bit_t  = Vec_BitStart( Gia_ManObjNum(p) );
-    var vTreeLeaves *Vec_Wec_t  = Vec_WecStart( Vec_IntSize(vXorRoots) );
-    var pFan0, pFan1, pObj *Gia_Obj_t; 
-    var i int32;
-    var k int32;
-    var Fanins [2]int32;
-    var Rank int32;
-    // inlining of macro Gia_ManForEachAnd
-    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {
-        if !Gia_ObjRecognizeExor(pObj, &pFan0, &pFan1) {
-            continue; }
-        Vec_BitWriteEntry( vMapXors, i, 1 );
-        Rank = Vec_IntEntry( vRanks, i );
-        // skip XORs that are not part of any tree
-        if Rank == -1 {
-            continue; }
-        // iterate through XOR inputs
-        Fanins[0] = Gia_ObjId(p, Gia_Regular(pFan0));
-        Fanins[1] = Gia_ObjId(p, Gia_Regular(pFan1));
-        for  k = 0; k < 2; k++  {
-            if Vec_BitEntry(vMapXors, Fanins[k]) {
-                assert(Rank == Vec_IntEntry(vRanks, Fanins[k]), "Rank == Vec_IntEntry(vRanks, Fanins[k])");
-                continue;
-            }
-            Vec_WecPush( vTreeLeaves, Rank, Fanins[k] );
-        }
-    }
-    }
-    Vec_BitFree( vMapXors );
-    return vTreeLeaves;
+func Acec_FindTreeLeaves(p *Gia_Man_t, roots, ranks *Vec_Int_t) *Vec_Wec_t {
+	seen := make([]bool, gia.Gia_ManObjNum(p))
+	leaves := vec.Vec_WecStart(vec.Vec_IntSize(roots))
+	for id := int32(1); id < gia.Gia_ManObjNum(p); id++ {
+		o := gia.Gia_ManObj(p, id)
+		if gia.Gia_ObjIsAnd(o) == 0 {
+			continue
+		}
+		var a, b *Gia_Obj_t
+		if gia.Gia_ObjRecognizeExor(o, &a, &b) == 0 {
+			continue
+		}
+		seen[id] = true
+		rank := vec.Vec_IntEntry(ranks, int(id))
+		if rank == -1 {
+			continue
+		}
+		for _, f := range []int32{gia.Gia_ObjId(p, gia.Gia_Regular(a)), gia.Gia_ObjId(p, gia.Gia_Regular(b))} {
+			if seen[f] {
+				if rank != vec.Vec_IntEntry(ranks, int(f)) {
+					panic("acec: XOR tree rank mismatch")
+				}
+				continue
+			}
+			vec.Vec_WecPush(leaves, int(rank), f)
+		}
+	}
+	return leaves
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Acec_FindShadows(p *Gia_Man_t, vRanks *Vec_Int_t) *Vec_Int_t {
-    var vShadows *Vec_Int_t  = Vec_IntDup( vRanks );
-    var pObj *Gia_Obj_t; var i, Shad0, Shad1 int32;
-    // inlining of macro Gia_ManForEachCi
-    for  i = 0; (i < Vec_IntSize(p.vCis)) && ((pObj) = Gia_ManCi(p, i)); i++  {
-        Vec_IntWriteEntry( vShadows, Gia_ObjId(p, pObj), -1 );
-    }
-    // inlining of macro Gia_ManForEachAnd
-    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {
-        if Vec_IntEntry(vShadows, i) >= 0 {
-            continue; }
-        Shad0 = Vec_IntEntry(vShadows, Gia_ObjFaninId0(pObj, i));
-        Shad1 = Vec_IntEntry(vShadows, Gia_ObjFaninId1(pObj, i));
-        if Shad0 == Shad1 && Shad0 != -1 {
-            Vec_IntWriteEntry(vShadows, i, Shad0); }
-    }
-    }
-    return vShadows;
+func Acec_FindShadows(p *Gia_Man_t, ranks *Vec_Int_t) *Vec_Int_t {
+	s := vec.Vec_IntDup(ranks)
+	for i := int32(0); i < gia.Gia_ManCiNum(p); i++ {
+		vec.Vec_IntWriteEntry(s, int(gia.Gia_ObjId(p, gia.Gia_ManCi(p, i))), -1)
+	}
+	for id := int32(1); id < gia.Gia_ManObjNum(p); id++ {
+		o := gia.Gia_ManObj(p, id)
+		if gia.Gia_ObjIsAnd(o) == 0 || vec.Vec_IntEntry(s, int(id)) >= 0 {
+			continue
+		}
+		a := vec.Vec_IntEntry(s, int(gia.Gia_ObjFaninId0(o, id)))
+		b := vec.Vec_IntEntry(s, int(gia.Gia_ObjFaninId1(o, id)))
+		if a == b && a != -1 {
+			vec.Vec_IntWriteEntry(s, int(id), a)
+		}
+	}
+	return s
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Acec_CollectSupp_rec(p *Gia_Man_t, iNode int32, Rank int32, vRanks *Vec_Int_t) int32 {
-    var pObj *Gia_Obj_t;
-    var nSize int32;
-    if Gia_ObjIsTravIdCurrentId(p, iNode) {
-        return 0; }
-    Gia_ObjSetTravIdCurrentId(p, iNode);
-    pObj = Gia_ManObj(p, iNode);
-    assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-    if Vec_IntEntry(vRanks, iNode) == Rank {
-        return 1; }
-    nSize = Acec_CollectSupp_rec( p, Gia_ObjFaninId0(pObj, iNode), Rank, vRanks );
-    nSize += Acec_CollectSupp_rec( p, Gia_ObjFaninId1(pObj, iNode), Rank, vRanks );
-    return nSize;
+func Acec_CollectSupp_rec(p *Gia_Man_t, node, rank int32, ranks *Vec_Int_t) int32 {
+	if gia.Gia_ObjIsTravIdCurrentId(p, node) != 0 {
+		return 0
+	}
+	gia.Gia_ObjSetTravIdCurrentId(p, node)
+	o := gia.Gia_ManObj(p, node)
+	if gia.Gia_ObjIsAnd(o) == 0 {
+		panic("acec: expected AND in support")
+	}
+	if vec.Vec_IntEntry(ranks, int(node)) == rank {
+		return 1
+	}
+	return Acec_CollectSupp_rec(p, gia.Gia_ObjFaninId0(o, node), rank, ranks) + Acec_CollectSupp_rec(p, gia.Gia_ObjFaninId1(o, node), rank, ranks)
 }
-func Acec_FindNexts(p *Gia_Man_t, vRanks *Vec_Int_t, vShadows *Vec_Int_t, vTreeLeaves *Vec_Wec_t) *Vec_Wec_t {
-    var vNexts *Vec_Wec_t  = Vec_WecStart( Vec_WecSize(vTreeLeaves) );
-    var vTree *Vec_Int_t;
-    var i int32;
-    var k int32;
-    var Node int32;
-    var Fanins [2]int32;
-    var Shad0 int32;
-    var Shad1 int32;
-    var Rank int32;
-    var nSupp int32;
-    // inlining of macro Vec_WecForEachLevel
-    for  i = 0; (i < Vec_WecSize(vTreeLeaves)) && (((vTree) = Vec_WecEntry(vTreeLeaves, i)), 1); i++  {
-        // inlining of macro Vec_IntForEachEntry
-        for  k = 0; (k < Vec_IntSize(vTree)) && (((Node) = Vec_IntEntry(vTree, k)), 1); k++  {
-            var pObj *Gia_Obj_t  = Gia_ManObj(p, Node);
-            if !Gia_ObjIsAnd(pObj) {
-                continue; }
-            Fanins[0] = Gia_ObjFaninId0(pObj, Node);
-            Fanins[1] = Gia_ObjFaninId1(pObj, Node);
-            Shad0 = Vec_IntEntry(vShadows, Fanins[0]);
-            Shad1 = Vec_IntEntry(vShadows, Fanins[1]);
-            if Shad0 != Shad1 || Shad0 == -1 {
-                continue; }
-            // check support size of Node in terms of the shadow of its fanins
-            Rank = Vec_IntEntry( vRanks, Node );
-            assert(Rank != Shad0, "Rank != Shad0");
-            Gia_ManIncrementTravId( p );
-            nSupp = Acec_CollectSupp_rec( p, Node, Shad0, vRanks );
-            assert(nSupp > 1, "nSupp > 1");
-            if nSupp > 3 {
-                continue; }
-            Vec_IntPushUniqueOrder( Vec_WecEntry(vNexts, Shad0), Rank );
-        }
-    }
-    return vNexts;
+func Acec_FindNexts(p *Gia_Man_t, ranks, shadows *Vec_Int_t, leaves *Vec_Wec_t) *Vec_Wec_t {
+	nexts := vec.Vec_WecStart(vec.Vec_WecSize(leaves))
+	for i := 0; i < vec.Vec_WecSize(leaves); i++ {
+		tree := vec.Vec_WecEntry(leaves, i)
+		for j := 0; j < vec.Vec_IntSize(tree); j++ {
+			node := vec.Vec_IntEntry(tree, j)
+			o := gia.Gia_ManObj(p, node)
+			if gia.Gia_ObjIsAnd(o) == 0 {
+				continue
+			}
+			a := vec.Vec_IntEntry(shadows, int(gia.Gia_ObjFaninId0(o, node)))
+			b := vec.Vec_IntEntry(shadows, int(gia.Gia_ObjFaninId1(o, node)))
+			if a != b || a == -1 {
+				continue
+			}
+			rank := vec.Vec_IntEntry(ranks, int(node))
+			if rank == a {
+				panic("acec: unexpected shadow rank")
+			}
+			gia.Gia_ManIncrementTravId(p)
+			n := Acec_CollectSupp_rec(p, node, a, ranks)
+			if n <= 1 {
+				panic("acec: invalid support size")
+			}
+			if n <= 3 {
+				vec.Vec_IntPushUniqueOrder(vec.Vec_WecEntry(nexts, int(a)), rank)
+			}
+		}
+	}
+	return nexts
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Acec_StructTest(p *Gia_Man_t) {
-}
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func Acec_StructTest(p *Gia_Man_t) {}
