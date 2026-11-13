@@ -371,6 +371,11 @@ func testAdditionalPdrModes(t *testing.T, incremental bool, trials int) {
 		pars.fUseAbs = int32((trial / 4) % 2)
 		pars.fUseSimpleRef = 0
 		pars.fShortest = int32((trial / 8) % 2)
+		pars.fFlopPrio = int32((trial / 16) % 2)
+		pars.fShiftStart = int32((trial / 32) % 2)
+		pars.fReuseProofOblig = int32((trial / 64) % 2)
+		pars.fSkipDown = int32((trial / 128) % 2)
+		pars.fCtgs = int32((trial / 256) % 2)
 		var got int32
 		if incremental {
 			pars.nFrameMax = 1

@@ -9,8 +9,10 @@ import (
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/aig/saig"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/sat/bsat"
+	"github.com/glycerine/abcgo/sat/cnf"
 )
 
 type Txs3_Man_t_ struct {
@@ -22,6 +24,7 @@ type Txs3_Man_t_ struct {
 	pMan                               *Pdr_Man_t
 	nPiLits                            int32
 	giaToAig                           []int32
+	justificationCNF                   *cnf.Cnf_Dat_t
 }
 
 func Txs3_ManStart(manager *Pdr_Man_t, graph *aig.Graph, priorities *vec.Vec_Int_t) *Txs3_Man_t {
@@ -147,19 +150,36 @@ func Txs3_ManTernarySim(p *Txs3_Man_t, k int32, cube *Pdr_Set_t) *Pdr_Set_t {
 	}
 	Pdr_ManCollectValues(p.pMan, k, mapObjects(p.vCiObjs), p.vCiVals)
 	Pdr_ManCollectValues(p.pMan, k, mapObjects(p.vCoObjs), p.vCoVals)
-	solver := Pdr_ManFetchSolver(p.pMan, k)
-	aux := Pdr_ManFreeVar(p.pMan, k) << 1
-	var lits *vec.Vec_Int_t
-	if cube == nil {
-		lits = p.pMan.vLits
-		output := aig.Aig_ManCo(p.pMan.pAig, p.pMan.iOutCur)
-		lit := Pdr_ObjSatVar(p.pMan, k, 2, output)<<1 | 1
-		vec.Vec_IntFill(lits, 1, lit)
-	} else {
-		lits = Pdr_ManCubeToLits(p.pMan, k, cube, 1, 1)
+	deadline := Pdr_ManTimeLimit(p.pMan)
+	if deadline != 0 && util.Abc_Clock() >= deadline || p.pMan.pPars.pFuncStop != nil && p.pMan.pPars.pFuncStop(p.pMan.pPars.RunId) != 0 {
+		return nil
 	}
-	vec.Vec_IntPush(lits, aux)
-	if !solver.AddClause(vec.Vec_IntArray(lits)...) {
+	// Frame solvers contain learned reachability clauses. A justification
+	// derived under those clauses need not describe the actual transition
+	// relation, so minimize against an independent, unconstrained CNF.
+	if p.justificationCNF == nil {
+		p.justificationCNF = cnf.Cnf_DeriveWithMan(p.pMan.pCnfMan, p.pMan.pAig, aig.Aig_ManCoNum(p.pMan.pAig))
+	}
+	solver := cnf.Cnf_DataWriteIntoSolver(p.justificationCNF, 1, 0)
+	if solver == nil {
+		panic("pdr: cannot build justification solver")
+	}
+	pdrConfigureSolver(solver, p.pMan)
+	aux := solver.NewVariable() << 1
+	lits := make([]int32, 0, vec.Vec_IntSize(p.vCoObjs)+1)
+	for i, id := range vec.Vec_IntArray(p.vCoObjs) {
+		variable := p.justificationCNF.VarNums[p.giaToAig[id]]
+		if variable < 0 {
+			panic("pdr: output missing from justification CNF")
+		}
+		lit := variable << 1
+		if vec.Vec_IntEntry(p.vCoVals, i) != 0 {
+			lit |= 1
+		}
+		lits = append(lits, lit)
+	}
+	lits = append(lits, aux)
+	if !solver.AddClause(lits...) {
 		panic("pdr: activation clause rejected")
 	}
 	solver.Compress()
@@ -172,7 +192,7 @@ func Txs3_ManTernarySim(p *Txs3_Man_t, k int32, cube *Pdr_Set_t) *Pdr_Set_t {
 	}
 	for i, id := range ids {
 		obj := aig.Aig_ManObj(p.pMan.pAig, p.giaToAig[id])
-		variable := Pdr_ObjSatVar(p.pMan, k, 3, obj)
+		variable := p.justificationCNF.VarNums[obj.NodeID()]
 		if variable < 0 || !aig.Aig_ObjIsCi(p.pMan.pAig, obj) {
 			panic("pdr: invalid cone input")
 		}
@@ -183,7 +203,11 @@ func Txs3_ManTernarySim(p *Txs3_Man_t, k int32, cube *Pdr_Set_t) *Pdr_Set_t {
 		}
 		vec.Vec_IntPush(p.vTemp, variable<<1|sign)
 	}
-	if solver.Solve(vec.Vec_IntArray(p.vTemp)...) != bsat.Unsatisfiable {
+	status := pdrSolve(p.pMan, solver, vec.Vec_IntArray(p.vTemp), 0)
+	if status == bsat.Unknown {
+		return nil
+	}
+	if status != bsat.Unsatisfiable {
 		panic("pdr: justification is not unsatisfiable")
 	}
 	core := solver.UnsatCore()

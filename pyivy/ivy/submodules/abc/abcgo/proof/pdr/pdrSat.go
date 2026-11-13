@@ -269,6 +269,9 @@ func Pdr_ManCheckCube(p *Pdr_Man_t, k int32, cube *Pdr_Set_t, predecessor **Pdr_
 			*predecessor = Pdr_ManTernarySim(p, k, cube)
 		}
 		p.tTsim += util.Abc_Clock() - start
+		if *predecessor == nil {
+			return -1
+		}
 		p.nXsimLits += (*predecessor).nLits
 		p.nXsimRuns++
 	}
