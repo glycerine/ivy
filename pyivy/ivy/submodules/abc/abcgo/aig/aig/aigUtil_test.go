@@ -291,8 +291,8 @@ func TestUtilCioSnapshotsAndZeroRandomSource(t *testing.T) {
 	if len(ids) != 2 || ids[input] != 0 || ids[output] != 0 {
 		t.Fatal(ids)
 	}
-	Aig_ManCleanCioIds(ids)
-	if len(ids) != 0 || Aig_ObjCioId(p, input) != 0 {
+	Aig_ManCleanCioIds(p)
+	if Aig_ObjCioId(p, input) != 0 {
 		t.Fatal("derived Cio IDs changed")
 	}
 	var zero AigRandomSource

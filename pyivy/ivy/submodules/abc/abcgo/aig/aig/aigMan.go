@@ -156,6 +156,9 @@ func Aig_ManCiCleanup(p *Graph) int32 {
 		}
 	}
 	p.inputs = keep
+	if p.nRegs != 0 {
+		p.nTruePis = int32(len(p.inputs)) - p.nRegs
+	}
 	p.refreshFanouts()
 	return int32(old - len(keep))
 }
@@ -181,6 +184,9 @@ func Aig_ManCoCleanup(p *Graph) int32 {
 		p.deleted[id] = true
 	}
 	p.outputs = keep
+	if p.nRegs != 0 {
+		p.nTruePos = int32(len(p.outputs)) - p.nRegs
+	}
 	p.recountReferences()
 	p.refreshFanouts()
 	return int32(old - len(keep))
@@ -208,6 +214,9 @@ func Aig_ManSetRegNum(p *Graph, n int32) {
 		panic("aig: invalid register count")
 	}
 	p.nRegs = n
+	p.nTruePis = int32(len(p.inputs)) - n
+	p.nTruePos = int32(len(p.outputs)) - n
+	Aig_ManSetCioIds(p)
 }
 func Aig_ManFlipFirstPo(p *Graph) {
 	if len(p.outputs) == 0 {

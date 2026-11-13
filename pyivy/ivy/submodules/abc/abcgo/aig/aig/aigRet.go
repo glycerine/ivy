@@ -281,11 +281,10 @@ func Rtm_ManToAig(p *Rtm_Man_t) *Graph {
 			}
 		}
 	}
-	g.nRegs = n - int32(len(p.vPis))
 	if p.source != nil {
 		dupMetadata(g, p.source)
-		g.nRegs = n - int32(len(p.vPis))
 	}
+	Aig_ManSetRegNum(g, n-int32(len(p.vPis)))
 	return g
 }
 

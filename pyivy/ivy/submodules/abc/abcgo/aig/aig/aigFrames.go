@@ -139,7 +139,7 @@ func Aig_ManFrames(p *Graph, frames, init, outs, regs, enlarge int32, returnedMa
 		// Initialized expansions have no state CIs and are combinational BMC
 		// managers; do not label ordinary PIs as register terminals.
 		if init == 0 {
-			q.nRegs = p.nRegs
+			Aig_ManSetRegNum(q, p.nRegs)
 		}
 	}
 	Aig_ManCleanup(q)

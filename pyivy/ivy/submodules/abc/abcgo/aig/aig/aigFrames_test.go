@@ -43,6 +43,9 @@ func TestFrameExpansionFreeStateAndEnlarge(t *testing.T) {
 	if q.InputCount() != 3 || q.OutputCount() != 2 || q.nRegs != 1 {
 		t.Fatal("wrong enlarged terminals")
 	}
+	if q.TruePiCount() != 2 || q.TruePoCount() != 1 || Aig_ObjCioId(q, q.inputs[1]) != 1 || Aig_ObjCioId(q, q.outputs[1]) != 1 {
+		t.Fatal("frame expansion did not finalize terminal metadata")
+	}
 	for mask := 0; mask < 8; mask++ {
 		a, b, s := mask&1 != 0, mask&2 != 0, mask&4 != 0
 		out, err := q.Evaluate([]bool{a, b, s})

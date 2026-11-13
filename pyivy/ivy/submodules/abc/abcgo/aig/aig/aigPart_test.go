@@ -19,6 +19,7 @@ func TestPartitionSupportsAndCoverage(t *testing.T) {
 	var partitionSupports [][]int32
 	parts := Aig_ManPartitionSmart(p, 2, 0, &partitionSupports)
 	seen := map[int32]bool{}
+	Aig_ManSetCioIds(p)
 	for i, part := range parts {
 		var expected []int32
 		for _, id := range part {
@@ -133,12 +134,58 @@ func TestPartitionedMiterAndInputMaps(t *testing.T) {
 	}
 }
 func TestPartitionExactFraigingAndChoices(t *testing.T) {
+	// Test-only oracle for these three-input fixtures. Production callers
+	// must supply the FRA backend; this checks partition transfer itself.
+	backend := func(g *Graph, _, _ int32) *Graph {
+		Aig_ManReprStart(g, int32(len(g.nodes)))
+		classes := map[uint8]Edge{}
+		inputPos := map[int]int{}
+		for i, input := range g.inputs {
+			inputPos[input.NodeID()] = i
+		}
+		for _, edge := range g.LiveEdges() {
+			n := g.Node(edge)
+			if n.Kind == Output {
+				continue
+			}
+			var truth uint8
+			for bits := 0; bits < 8; bits++ {
+				var value func(Edge) bool
+				value = func(e Edge) bool {
+					x := g.Node(e)
+					var v bool
+					switch x.Kind {
+					case Constant:
+						v = true
+					case Input:
+						v = bits&(1<<inputPos[e.NodeID()]) != 0
+					case And:
+						v = value(x.Fanins[0]) && value(x.Fanins[1])
+					case ExclusiveOr:
+						v = value(x.Fanins[0]) != value(x.Fanins[1])
+					case Buffer:
+						v = value(x.Fanins[0])
+					}
+					return v != e.Complemented()
+				}
+				if value(edge) != n.Phase {
+					truth |= 1 << uint(bits)
+				}
+			}
+			if repr, ok := classes[truth]; ok {
+				Aig_ObjSetRepr_(g, repr, edge)
+			} else {
+				classes[truth] = edge
+			}
+		}
+		return g
+	}
 	p := NewGraph()
 	a, b, c := p.NewInput(), p.NewInput(), p.NewInput()
 	simple := p.AND(a, b)
 	redundant := p.AND(simple, p.OR(a, c))
 	p.AddOutput(redundant)
-	reduced := Aig_ManFraigPartitioned(p, 1, 0, 0, 0)
+	reduced := Aig_ManFraigPartitioned(p, 1, 0, 0, 0, backend)
 	if err := reduced.Check(); err != nil {
 		t.Fatal(err)
 	}
@@ -166,7 +213,7 @@ func TestPartitionExactFraigingAndChoices(t *testing.T) {
 		q.AddOutput(root)
 		versions[i] = q
 	}
-	for _, result := range []*Graph{Aig_ManChoiceConstructive(versions, 0), Aig_ManChoicePartitioned(versions, 2, 0, 0, 0)} {
+	for _, result := range []*Graph{Aig_ManChoiceConstructive(versions, 0), Aig_ManChoicePartitioned(versions, 2, 0, 0, 0, backend)} {
 		if err := result.Check(); err != nil {
 			t.Fatal(err)
 		}
@@ -179,5 +226,41 @@ func TestPartitionExactFraigingAndChoices(t *testing.T) {
 				t.Fatal(out, err)
 			}
 		}
+	}
+}
+
+func TestPartitionFraigRestoresCopiesAndForwardsLimits(t *testing.T) {
+	g := NewGraph()
+	a := g.NewInput()
+	g.copies = map[int]Edge{0: 0, a.NodeID(): 42}
+	called := false
+	runPartitionFraig(g, 17, 9, func(part *Graph, conflicts, level int32) *Graph {
+		called = true
+		if part != g || conflicts != 17 || level != 9 {
+			t.Fatalf("backend arguments: %p %d %d", part, conflicts, level)
+		}
+		part.copies = map[int]Edge{a.NodeID(): 100}
+		return part
+	})
+	if !called || g.copies[a.NodeID()] != 42 || g.copies[0] != 0 {
+		t.Fatalf("partition copy map not restored: %v", g.copies)
+	}
+}
+
+// ABC transfers source representatives in object-ID order. When multiple
+// partition objects map to one destination, the later source entry wins.
+func TestPartitionRepresentativeTransferCollisionOrder(t *testing.T) {
+	dst := NewGraph()
+	a, b, shared := dst.NewInput(), dst.NewInput(), dst.NewInput()
+	Aig_ManReprStart(dst, int32(len(dst.nodes)))
+	fragment := NewGraph()
+	x, y, first, last := fragment.NewInput(), fragment.NewInput(), fragment.NewInput(), fragment.NewInput()
+	Aig_ManReprStart(fragment, int32(len(fragment.nodes)))
+	Aig_ObjSetRepr_(fragment, x, first)
+	Aig_ObjSetRepr_(fragment, y, last)
+	fragment.copies = map[int]Edge{x.NodeID(): a, y.NodeID(): b, first.NodeID(): shared, last.NodeID(): shared}
+	Aig_ManTransferRepr(dst, fragment)
+	if got := Aig_ObjRepr(dst, shared); got != b {
+		t.Fatalf("collision representative %v, want later source mapping %v", got, b)
 	}
 }

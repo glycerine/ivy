@@ -257,17 +257,10 @@ func Aig_ObjIsChoice(p *Graph, e Edge) bool {
 }
 func Aig_ObjIsCand(p *Graph, e Edge) bool { return p.node(e).Kind == Input || Aig_ObjIsNode(p, e) }
 func Aig_ObjCioId(p *Graph, e Edge) int32 {
-	for i, x := range p.inputs {
-		if x == e {
-			return int32(i)
-		}
+	if Aig_ObjIsNode(p, e) {
+		panic("aig: internal node has no CioId")
 	}
-	for i, x := range p.outputs {
-		if x == e {
-			return int32(i)
-		}
-	}
-	panic("aig: not a terminal")
+	return p.node(e).CioID
 }
 func Aig_ObjId(e Edge) int32 { return int32(e.NodeID()) }
 
@@ -1066,4 +1059,3 @@ func Aig_ManSetConstrNum(p *Graph, count int32) {
 	}
 	p.nConstrs = count
 }
-

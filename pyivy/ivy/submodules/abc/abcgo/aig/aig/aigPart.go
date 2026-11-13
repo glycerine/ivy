@@ -143,6 +143,8 @@ func partOutputSupport(p *Graph, output Edge) []int32 {
 // Aig_ManSupports appends the output index to each sorted support row, then
 // sorts rows by decreasing support size as in ABC's support propagation pass.
 func Aig_ManSupports(p *Graph) [][]int32 {
+	Aig_ManSetCioIds(p)
+	defer Aig_ManCleanCioIds(p)
 	rows := make([][]int32, len(p.outputs))
 	for i, e := range p.outputs {
 		rows[i] = append(partOutputSupport(p, e), int32(i))
@@ -510,6 +512,8 @@ func Aig_ManSupportNodes_rec(p *Graph, e Edge, support *[]int32) {
 	}
 }
 func Aig_ManSupportNodes(p *Graph, parts [][]int32) [][]int32 {
+	Aig_ManSetCioIds(p)
+	defer Aig_ManCleanCioIds(p)
 	supports := make([][]int32, len(parts))
 	for i, part := range parts {
 		for _, index := range part {
@@ -547,66 +551,45 @@ func Aig_ManMiterPartitioned(a, b *Graph, size, smart int32) []*Graph {
 	return result
 }
 
-// partExactClasses proves equivalence by exact Shannon reduction in separate
-// scratch storage. It does not pollute the manager with auxiliary decision gates.
-// The conflict bound is retained for the source API; this backend produces no
-// SAT conflicts. The source's level bound still filters candidate nodes.
-func partExactClasses(p *Graph, conflicts, levelLimit int32) {
-	if conflicts < 0 || levelLimit < 0 {
-		panic("aig: negative equivalence-analysis budget")
+// PartitionFraigFunc runs FRA choicing on a partition and records proven
+// representatives on the input graph, as Fra_FraigChoice does in ABC.
+type PartitionFraigFunc func(*Graph, int32, int32) *Graph
+
+// runPartitionFraig preserves the partition-to-parent copy map because FRA
+// uses that same scratch storage during its sweep.
+func runPartitionFraig(fragment *Graph, conflicts, levelLimit int32, fraig PartitionFraigFunc) {
+	if fraig == nil {
+		panic("aig: partitioned FRAIG requires an explicit FRA backend")
 	}
-	if p.reprs == nil {
-		Aig_ManReprStart(p, int32(len(p.nodes)))
+	copies := make(map[int]Edge, len(fragment.copies))
+	for id, edge := range fragment.copies {
+		copies[id] = edge
 	}
-	decisions := NewGraph()
-	mapping := map[int]Edge{0: 0}
-	for _, input := range p.inputs {
-		mapping[input.NodeID()] = decisions.NewInput()
+	if fraig(fragment, conflicts, levelLimit) == nil {
+		panic("aig: partition FRAIG backend returned nil")
 	}
-	memo := make(map[Edge]Edge)
-	classes := map[Edge]Edge{decisions.Const0(): p.Const1()}
-	for id, n := range p.nodes {
-		if p.deleted[id] || n.Kind == Constant || n.Kind == Output {
-			continue
-		}
-		if n.Kind != Input && n.Kind != And && n.Kind != ExclusiveOr {
-			panic("aig: equivalence analysis requires propagated buffers")
-		}
-		e := Edge(id) << 1
-		function := partClone(decisions, p, e, mapping, nil)
-		if n.Phase {
-			function = function.Not()
-		}
-		key := splitReduce(decisions, function, memo)
-		representative, exists := classes[key]
-		if !exists {
-			classes[key] = e
-			continue
-		}
-		if representative.NodeID() == id {
-			continue
-		}
-		if levelLimit > 0 && n.Level > int(levelLimit) {
-			continue
-		}
-		if representative.NodeID() < id && Aig_ObjCheckTfi(p, representative, e) == 0 {
-			Aig_ObjSetRepr_(p, representative, e)
-		}
-	}
+	fragment.copies = copies
 }
-func Aig_ManFraigPartitioned(p *Graph, size, conflicts, levelLimit, verbose int32) *Graph {
+
+// Aig_ManFraigPartitioned takes the FRA backend explicitly because the FRA
+// package imports AIG. proof/fra exposes the original five-argument API.
+func Aig_ManFraigPartitioned(p *Graph, size, conflicts, levelLimit, verbose int32, fraig PartitionFraigFunc) *Graph {
+	return Aig_ManFraigPartitionedWithFraig(p, size, conflicts, levelLimit, verbose, fraig)
+}
+
+func Aig_ManFraigPartitionedWithFraig(p *Graph, size, conflicts, levelLimit, verbose int32, fraig PartitionFraigFunc) *Graph {
+	if fraig == nil {
+		panic("aig: partitioned FRAIG requires an explicit FRA backend")
+	}
 	parts := Aig_ManPartitionNaive(p, size)
-	p.reprs = nil
 	Aig_ManReprStart(p, int32(len(p.nodes)))
+	Aig_ManSetCioIds(p)
+	defer Aig_ManCleanCioIds(p)
 	for i, part := range parts {
 		fragment := Aig_ManDupPartAll(p, part)
-		partExactClasses(fragment, conflicts, levelLimit)
-		for id, representative := range fragment.reprs {
-			a, okA := fragment.copies[id]
-			b, okB := fragment.copies[representative.NodeID()]
-			if okA && okB && a != b {
-				Aig_ObjSetRepr_(p, Aig_Regular(a), Aig_Regular(b))
-			}
+		runPartitionFraig(fragment, conflicts, levelLimit, fraig)
+		if fragment.reprs != nil {
+			Aig_ManTransferRepr(p, fragment)
 		}
 		if verbose != 0 {
 			fmt.Printf("Part %d/%d: inputs=%d outputs=%d nodes=%d\n", i+1, len(parts), len(fragment.inputs), len(fragment.outputs), Aig_ManNodeNum(fragment))
@@ -614,7 +597,16 @@ func Aig_ManFraigPartitioned(p *Graph, size, conflicts, levelLimit, verbose int3
 	}
 	return Aig_ManDupRepr(p, 0)
 }
-func Aig_ManChoicePartitioned(versions []*Graph, size, conflicts, levelLimit, verbose int32) *Graph {
+
+// Aig_ManChoicePartitioned takes FRA explicitly to avoid an import cycle.
+func Aig_ManChoicePartitioned(versions []*Graph, size, conflicts, levelLimit, verbose int32, fraig PartitionFraigFunc) *Graph {
+	return Aig_ManChoicePartitionedWithFraig(versions, size, conflicts, levelLimit, verbose, fraig)
+}
+
+func Aig_ManChoicePartitionedWithFraig(versions []*Graph, size, conflicts, levelLimit, verbose int32, fraig PartitionFraigFunc) *Graph {
+	if fraig == nil {
+		panic("aig: partitioned choicing requires an explicit FRA backend")
+	}
 	if len(versions) < 2 {
 		panic("aig: choice partitioning needs at least two graphs")
 	}
@@ -625,6 +617,18 @@ func Aig_ManChoicePartitioned(versions []*Graph, size, conflicts, levelLimit, ve
 		}
 	}
 	parts := Aig_ManPartitionSmart(base, size, 0, nil)
+	for _, g := range versions {
+		for i, e := range g.inputs {
+			g.node(e).CioID = int32(i)
+		}
+	}
+	defer func() {
+		for _, g := range versions {
+			for _, e := range g.inputs {
+				g.node(e).CioID = 0
+			}
+		}
+	}()
 	total := Aig_ManStartFrom(base)
 	Aig_ManReprStart(total, int32(len(base.nodes)))
 	outputs := make([]Edge, len(base.outputs))
@@ -647,14 +651,10 @@ func Aig_ManChoicePartitioned(versions []*Graph, size, conflicts, levelLimit, ve
 			outputs[part[j]] = e
 		}
 		// The inverse transfer establishes fragment.copies before classification;
-		// classification's scratch graph does not overwrite those source mappings.
-		partExactClasses(fragment, conflicts, levelLimit)
-		for id, representative := range fragment.reprs {
-			a, okA := fragment.copies[id]
-			b, okB := fragment.copies[representative.NodeID()]
-			if okA && okB && a != b {
-				Aig_ObjSetRepr_(total, Aig_Regular(a), Aig_Regular(b))
-			}
+		// runPartitionFraig restores the source mappings after FRA uses them.
+		runPartitionFraig(fragment, conflicts, levelLimit, fraig)
+		if fragment.reprs != nil {
+			Aig_ManTransferRepr(total, fragment)
 		}
 		if verbose != 0 {
 			fmt.Printf("Part %d/%d: inputs=%d outputs=%d nodes=%d\n", i+1, len(parts), len(fragment.inputs), len(fragment.outputs), Aig_ManNodeNum(fragment))

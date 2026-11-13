@@ -7,6 +7,7 @@ func TestGreedyJustificationWitnesses(t *testing.T) {
 	a, b := p.NewInput(), p.NewInput()
 	roots := []Edge{p.AND(a, b), p.OR(a, b), p.NewXor(a, b), p.Const0(), p.Const1()}
 	roots = append(roots, p.AddOutput(roots[2].Not()))
+	Aig_ManSetCioIds(p)
 	for _, root := range roots {
 		for target := int32(0); target < 2; target++ {
 			var support []int32

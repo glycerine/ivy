@@ -507,14 +507,25 @@ func WriteVerilog(w io.Writer, p *Graph) error {
 func Aig_ManSetCioIds(p *Graph) map[Edge]int32 {
 	ids := map[Edge]int32{}
 	for i, e := range p.inputs {
+		p.node(e).CioID = int32(i)
 		ids[e] = int32(i)
 	}
 	for i, e := range p.outputs {
+		p.node(e).CioID = int32(i)
 		ids[e] = int32(i)
 	}
 	return ids
 }
-func Aig_ManCleanCioIds(ids map[Edge]int32) { clear(ids) }
+
+// Aig_ManCleanCioIds clears the terminal pNext/CioId union, as in ABC.
+func Aig_ManCleanCioIds(p *Graph) {
+	for _, e := range p.inputs {
+		p.node(e).CioID = 0
+	}
+	for _, e := range p.outputs {
+		p.node(e).CioID = 0
+	}
+}
 func Aig_ManChoiceNum(p *Graph) int32 {
 	var count int32
 	for i, n := range p.nodes {

@@ -97,7 +97,7 @@ func Aig_ManRemap(p *Graph, mapping []Edge) *Graph {
 	for _, output := range p.outputs {
 		q.AddOutput(dupVisit(q, p, p.outputDriver(output), false, false, active))
 	}
-	q.nRegs = p.nRegs
+	Aig_ManSetRegNum(q, p.nRegs)
 	if err := q.Check(); err != nil {
 		panic(fmt.Sprintf("aig: invalid sequential remap: %v", err))
 	}
@@ -237,6 +237,8 @@ func Aig_ManSeqCleanup(p *Graph) int32 {
 	}
 	p.inputs, p.outputs = inputs, outputs
 	p.nRegs = int32(len(inputs) - pis)
+	p.nTruePis = int32(pis)
+	p.nTruePos = int32(len(outputs)) - p.nRegs
 	p.FlopNumbers = numbers
 	return sclCleanupLogic(p)
 }

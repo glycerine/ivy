@@ -36,6 +36,7 @@ type Node struct {
 	MarkA  bool
 	MarkB  bool
 	TravID int32
+	CioID  int32 // C stores this in the terminal pNext/CioId union.
 	Xsim   int32
 	Phase  bool
 }
@@ -57,33 +58,33 @@ type Graph struct {
 	// OneHotGroups contains register indices known to be mutually exclusive.
 	OneHotGroups [][]int32
 	// OneHotInputGroups contains projected partition input indices.
-	OneHotInputGroups                 [][]int32
-	FlopReprs                         []int32
-	cutManager                        *Aig_ManCut_t
-	reverseLevels                     []int32
-	maxRequiredLevel                  int32
-	order                             []orderLinks
-	iPrev, iNext, nAndTotal, nAndPrev int32
-	objectData                        map[int]any
-	cexValues                         [][]bool
-	inductionCex                      *util.Abc_Cex_t
-	editDepth                         int
-	fanouts                           *FanoutIndex
-	Assertions, BarrierBuffers        int32
-	RetimingChanged                   bool
-	FlopNumbers                       []int32
-	Timing, History                   any
-	Name, Spec                        string
-	Data                              any
-	nodes                             []Node
-	inputs                            []Edge
-	outputs                           []Edge
-	hash                              map[edgePair]Edge
-	xorHash                           map[edgePair]Edge
-	nRegs, nConstrs, travID           int32
-	ghost                             Node
-	copies, equivs, reprs, next       map[int]Edge
-	deleted                           map[int]bool
+	OneHotInputGroups                           [][]int32
+	FlopReprs                                   []int32
+	cutManager                                  *Aig_ManCut_t
+	reverseLevels                               []int32
+	maxRequiredLevel                            int32
+	order                                       []orderLinks
+	iPrev, iNext, nAndTotal, nAndPrev           int32
+	objectData                                  map[int]any
+	cexValues                                   [][]bool
+	inductionCex                                *util.Abc_Cex_t
+	editDepth                                   int
+	fanouts                                     *FanoutIndex
+	Assertions, BarrierBuffers                  int32
+	RetimingChanged                             bool
+	FlopNumbers                                 []int32
+	Timing, History                             any
+	Name, Spec                                  string
+	Data                                        any
+	nodes                                       []Node
+	inputs                                      []Edge
+	outputs                                     []Edge
+	hash                                        map[edgePair]Edge
+	xorHash                                     map[edgePair]Edge
+	nRegs, nTruePis, nTruePos, nConstrs, travID int32
+	ghost                                       Node
+	copies, equivs, reprs, next                 map[int]Edge
+	deleted                                     map[int]bool
 }
 
 func NewGraph() *Graph {
@@ -95,10 +96,34 @@ func (g *Graph) InputCount() int      { return len(g.inputs) }
 func (g *Graph) OutputCount() int     { return len(g.outputs) }
 func (g *Graph) NodeCount() int       { return len(g.nodes) - len(g.deleted) }
 func (g *Graph) RegisterCount() int32 { return g.nRegs }
-func (g *Graph) Nodes() []Node        { return append([]Node(nil), g.nodes...) }
-func (g *Graph) Inputs() []Edge       { return append([]Edge(nil), g.inputs...) }
-func (g *Graph) Outputs() []Edge      { return append([]Edge(nil), g.outputs...) }
-func (g *Graph) valid(e Edge) bool    { return e.NodeID() < len(g.nodes) && !g.deleted[e.NodeID()] }
+
+func (g *Graph) updateTrueTerminalCounts() {
+	g.nTruePis = int32(len(g.inputs)) - g.nRegs
+	g.nTruePos = int32(len(g.outputs)) - g.nRegs
+	Aig_ManSetCioIds(g)
+}
+
+// TruePiCount is the explicitly recorded C nTruePis metadata.
+func (g *Graph) TruePiCount() int32 { return g.nTruePis }
+
+// TruePoCount is the explicitly recorded C nTruePos metadata.
+func (g *Graph) TruePoCount() int32 { return g.nTruePos }
+
+// SetTruePiCount records source-provided true-input metadata.
+func (g *Graph) SetTruePiCount(n int32) { g.nTruePis = n }
+
+// SetTruePoCount records source-provided true-output metadata.
+func (g *Graph) SetTruePoCount(n int32) { g.nTruePos = n }
+
+// CopyTruePiCount preserves the source metadata in source-style transformations.
+func (g *Graph) CopyTruePiCount(src *Graph) { g.nTruePis = src.nTruePis }
+
+// CopyTruePoCount preserves the source output metadata.
+func (g *Graph) CopyTruePoCount(src *Graph) { g.nTruePos = src.nTruePos }
+func (g *Graph) Nodes() []Node              { return append([]Node(nil), g.nodes...) }
+func (g *Graph) Inputs() []Edge             { return append([]Edge(nil), g.inputs...) }
+func (g *Graph) Outputs() []Edge            { return append([]Edge(nil), g.outputs...) }
+func (g *Graph) valid(e Edge) bool          { return e.NodeID() < len(g.nodes) && !g.deleted[e.NodeID()] }
 func (g *Graph) NewInput() Edge {
 	e := Edge(len(g.nodes)) << 1
 	g.nodes = append(g.nodes, Node{Kind: Input})

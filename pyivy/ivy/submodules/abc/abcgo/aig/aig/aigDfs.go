@@ -146,6 +146,8 @@ func Aig_ManLevelNum(p *Graph) int32 {
 }
 func Aig_ManChoiceLevel_rec(p *Graph, e Edge) { p.choiceLevels([]Edge{e}) }
 func Aig_ManChoiceLevel(p *Graph) int32 {
+	Aig_ManSetCioIds(p)
+	defer Aig_ManCleanCioIds(p)
 	for i := range p.nodes {
 		p.nodes[i].Level = 0
 	}

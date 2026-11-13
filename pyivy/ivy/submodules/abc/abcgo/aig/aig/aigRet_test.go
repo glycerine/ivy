@@ -67,6 +67,18 @@ func TestEdgeRetimingForwardTrace(t *testing.T) {
 	}
 }
 
+func TestRetimeManagerFinalizesTerminalMetadata(t *testing.T) {
+	g := NewGraph()
+	a, b := g.NewInput(), g.NewInput()
+	g.AddOutput(g.AND(a, b))
+	g.AddOutput(b)
+	Aig_ManSetRegNum(g, 0)
+	q := Rtm_ManToAig(Rtm_ManFromAig(g))
+	if q.TruePiCount() != 2 || q.TruePoCount() != 2 || Aig_ObjCioId(q, q.inputs[1]) != 1 || Aig_ObjCioId(q, q.outputs[1]) != 1 {
+		t.Fatal("retiming manager did not finalize terminal metadata")
+	}
+}
+
 func TestEdgeRetimingFeedbackAndXor(t *testing.T) {
 	for _, xor := range []bool{false, true} {
 		g := NewGraph()
