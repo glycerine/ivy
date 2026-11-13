@@ -311,37 +311,58 @@ func Cnf_DataWriteIntoSolver2(cnf *Cnf_Dat_t, frames int32, init int32) *bsat.So
 	return Cnf_DataWriteIntoSolver(cnf, frames, init)
 }
 func Cnf_DataWriteOrClause(solver *bsat.Solver, cnf *Cnf_Dat_t) int32 {
-	return Cnf_DataWriteAndClauses(solver, cnf)
-}
-func Cnf_DataWriteOrClause2(solver *bsat.Solver, cnf *Cnf_Dat_t) int32 {
-	return Cnf_DataWriteAndClauses(solver, cnf)
-}
-func Cnf_DataWriteAndClauses(sat *bsat.Solver, cnf *Cnf_Dat_t) int32 {
-	if sat == nil || cnf == nil {
+	outputs, ok := cnfOutputLiterals(solver, cnf)
+	if !ok || !solver.AddClause(outputs...) {
 		return 0
 	}
-	for _, clause := range cnf.Clauses {
-		lits := make([]bsat.Literal, len(clause))
-		for i, lit := range clause {
-			if lit&1 != 0 {
-				lits[i] = bsat.Negative(lit >> 1)
-			} else {
-				lits[i] = bsat.Positive(lit >> 1)
-			}
+	return 1
+}
+func Cnf_DataWriteOrClause2(solver *bsat.Solver, cnf *Cnf_Dat_t) int32 {
+	return Cnf_DataWriteOrClause(solver, cnf)
+}
+func cnfOutputLiterals(solver *bsat.Solver, cnf *Cnf_Dat_t) ([]bsat.Literal, bool) {
+	if solver == nil || cnf == nil || cnf.pMan == nil {
+		return nil, false
+	}
+	outputs := cnf.pMan.Outputs()
+	literals := make([]bsat.Literal, 0, len(outputs))
+	for _, output := range outputs {
+		id := output.NodeID()
+		if id >= len(cnf.VarNums) || cnf.VarNums[id] < 0 {
+			return nil, false
 		}
-		if !sat.AddClause(lits...) {
+		literals = append(literals, bsat.Positive(cnf.VarNums[id]))
+	}
+	return literals, true
+}
+func Cnf_DataWriteAndClauses(solver *bsat.Solver, cnf *Cnf_Dat_t) int32 {
+	outputs, ok := cnfOutputLiterals(solver, cnf)
+	if !ok {
+		return 0
+	}
+	for _, output := range outputs {
+		if !solver.AddClause(output) {
 			return 0
 		}
 	}
-	return int32(len(cnf.Clauses))
+	return 1
 }
 func Cnf_DataTranformPolarity(cnf *Cnf_Dat_t, transform int32) {
-	if cnf == nil || transform == 0 {
+	if cnf == nil || cnf.pMan == nil {
 		return
+	}
+	phases := make(map[int32]bool)
+	for id, node := range cnf.pMan.Nodes() {
+		if id >= len(cnf.VarNums) || cnf.VarNums[id] < 0 || (transform == 0 && node.Kind == aig.Output) {
+			continue
+		}
+		phases[cnf.VarNums[id]] = node.Phase
 	}
 	for i := range cnf.Clauses {
 		for j := range cnf.Clauses[i] {
-			cnf.Clauses[i][j] ^= 1
+			if phases[cnf.Clauses[i][j]>>1] {
+				cnf.Clauses[i][j] ^= 1
+			}
 		}
 	}
 	cnf.pClauses = cloneClauses(cnf.Clauses)
