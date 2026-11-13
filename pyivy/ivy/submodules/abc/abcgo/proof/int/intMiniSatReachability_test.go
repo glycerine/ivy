@@ -119,3 +119,33 @@ func TestMiniSatTwoRegisterReachabilityAndWitness(t *testing.T) {
 	}
 	t.Logf("two-register results: safe=%d unsafe=%d bounded-unknown=%d", decidedSafe, decidedUnsafe, boundedUnknown)
 }
+
+// Both backends can alternate between valid but inconclusive interpolants on
+// this safe machine. Bounded exhaustion must stay unknown, never unsafe.
+func TestInterpolationSafeMachineWithSpuriousCounterexamples(t *testing.T) {
+	const bad, next0, next1 = uint8(0x10), uint8(0x63), uint8(0x47)
+	if miniSatReachableBad(bad, next0, next1) {
+		t.Fatal("machine should be safe")
+	}
+	for _, mini := range []int32{0, 1} {
+		for _, pudlak := range []int32{0, 1} {
+			g := aig.NewGraph()
+			inputs := []aig.Edge{g.NewInput(), g.NewInput(), g.NewInput()}
+			g.AddOutput(miniSatTruth(g, inputs, bad))
+			g.AddOutput(miniSatTruth(g, inputs, next0))
+			g.AddOutput(miniSatTruth(g, inputs, next1))
+			aig.Aig_ManSetRegNum(g, 2)
+			var p Inter_ManParams_t
+			Inter_ManSetDefaultParams(&p)
+			p.FUseMiniSat, p.FUsePudlak, p.NFramesMax = mini, pudlak, 8
+			var frame int32
+			got := Inter_ManPerformInterpolation(g, &p, &frame)
+			if got != 1 && got != -1 {
+				t.Fatalf("mini=%d pudlak=%d incorrectly reports unsafe: %d frame %d", mini, pudlak, got, frame)
+			}
+			if got == -1 && g.SequentialCounterexample() != nil {
+				t.Fatalf("mini=%d pudlak=%d: unknown produced a witness", mini, pudlak)
+			}
+		}
+	}
+}
