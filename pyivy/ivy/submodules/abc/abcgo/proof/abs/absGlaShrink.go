@@ -22,8 +22,14 @@ func Ga2_ManShrinkAbs(p *Ga2_Man_t, nAbs, nValues, nSatVars int32) {
 		}
 	}
 	vec.Vec_IntShrink(p.vAbs, int(nAbs))
-	for i := int(nValues); i < vec.Vec_IntSize(p.vValues); i++ {
+	for i := 0; i < vec.Vec_IntSize(p.vValues); i++ {
 		obj := gia.Gia_ManObj(p.pGia, vec.Vec_IntEntry(p.vValues, i))
+		if Ga2_ObjId(p, obj) < 0 {
+			panic("abs: rollback value has no ID")
+		}
+		if i < int(nValues) {
+			continue
+		}
 		Ga2_ObjSetId(p, obj, -1)
 	}
 	vec.Vec_IntShrink(p.vValues, int(nValues))
