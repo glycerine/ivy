@@ -254,3 +254,7 @@ Reset also clears pending learned units and variable-indexed user and pivot
 state from the old formula. The learned-unit regression creates an actual
 learned unit before reset, then verifies it is not returned for the new formula.
 The full race-enabled BSAT suite passes.
+
+An additional proof-store reuse regression checks that an unconditionally UNSAT
+formula stays UNSAT through subsequent assumption queries and rejects further
+clauses. The race-enabled BSAT suite passes; this covers a small instance only.

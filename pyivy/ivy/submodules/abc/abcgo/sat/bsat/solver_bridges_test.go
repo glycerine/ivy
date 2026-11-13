@@ -220,3 +220,28 @@ func TestResetClearsVariableSpecificState(t *testing.T) {
 		t.Fatal("reused solver should be satisfiable")
 	}
 }
+
+func TestUnconditionalUnsatPersistsAcrossAssumptionQueries(t *testing.T) {
+	s := NewSolver()
+	s.EnableClauseStore()
+	x, y := s.NewVariable(), s.NewVariable()
+	for _, a := range []Literal{Positive(x), Negative(x)} {
+		for _, b := range []Literal{Positive(y), Negative(y)} {
+			if !s.AddClause(a, b) {
+				t.Fatal("premature UNSAT")
+			}
+		}
+	}
+	s.MarkClauseStoreRoots()
+	if got := s.Solve(); got != Unsatisfiable {
+		t.Fatalf("first solve %v", got)
+	}
+	for _, assumption := range []Literal{Positive(x), Negative(x), Positive(y), Negative(y)} {
+		if got := s.Solve(assumption); got != Unsatisfiable {
+			t.Fatalf("assumption %d produced %v", assumption, got)
+		}
+	}
+	if s.AddClause(Positive(x)) {
+		t.Fatal("addition to globally UNSAT solver should fail")
+	}
+}
