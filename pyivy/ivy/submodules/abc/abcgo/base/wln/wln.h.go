@@ -1,5 +1,12 @@
 package wln
 
+func wlnBool(v bool) int32 {
+	if v {
+		return 1
+	}
+	return 0
+}
+
 /**CFile****************************************************************
 
   FileName    [wlc.h]
@@ -82,20 +89,20 @@ func Wln_NtkCo(p *Wln_Ntk_t, i int32) int32 { return Vec_IntEntry(&p.vCos, i) }
 func Wln_NtkFf(p *Wln_Ntk_t, i int32) int32 { return Vec_IntEntry(&p.vFfs, i) }
 
 func Wln_ObjType(p *Wln_Ntk_t, i int32) int32   { return Vec_IntEntry(&p.vTypes, i) }
-func Wln_ObjIsNone(p *Wln_Ntk_t, i int32) int32 { return Wln_ObjType(p, i) == ABC_OPER_NONE }
-func Wln_ObjIsCi(p *Wln_Ntk_t, i int32) int32   { return Wln_ObjType(p, i) == ABC_OPER_CI }
-func Wln_ObjIsCo(p *Wln_Ntk_t, i int32) int32   { return Wln_ObjType(p, i) == ABC_OPER_CO }
+func Wln_ObjIsNone(p *Wln_Ntk_t, i int32) int32 { return wlnBool(Wln_ObjType(p, i) == ABC_OPER_NONE) }
+func Wln_ObjIsCi(p *Wln_Ntk_t, i int32) int32   { return wlnBool(Wln_ObjType(p, i) == ABC_OPER_CI) }
+func Wln_ObjIsCo(p *Wln_Ntk_t, i int32) int32   { return wlnBool(Wln_ObjType(p, i) == ABC_OPER_CO) }
 func Wln_ObjIsCio(p *Wln_Ntk_t, i int32) int32 {
-	return Wln_ObjType(p, i) == ABC_OPER_CI || Wln_ObjType(p, i) == ABC_OPER_CO
+	return wlnBool(Wln_ObjType(p, i) == ABC_OPER_CI || Wln_ObjType(p, i) == ABC_OPER_CO)
 }
-func Wln_ObjIsFon(p *Wln_Ntk_t, i int32) int32   { return Wln_ObjType(p, i) == ABC_OPER_FON }
-func Wln_ObjIsFf(p *Wln_Ntk_t, i int32) int32    { return Wln_ObjType(p, i) == ABC_OPER_DFFRSE }
-func Wln_ObjIsConst(p *Wln_Ntk_t, i int32) int32 { return Wln_ObjType(p, i) == ABC_OPER_CONST }
-func Wln_ObjIsSlice(p *Wln_Ntk_t, i int32) int32 { return Wln_ObjType(p, i) == ABC_OPER_SLICE }
+func Wln_ObjIsFon(p *Wln_Ntk_t, i int32) int32   { return wlnBool(Wln_ObjType(p, i) == ABC_OPER_FON) }
+func Wln_ObjIsFf(p *Wln_Ntk_t, i int32) int32    { return wlnBool(Wln_ObjType(p, i) == ABC_OPER_DFFRSE) }
+func Wln_ObjIsConst(p *Wln_Ntk_t, i int32) int32 { return wlnBool(Wln_ObjType(p, i) == ABC_OPER_CONST) }
+func Wln_ObjIsSlice(p *Wln_Ntk_t, i int32) int32 { return wlnBool(Wln_ObjType(p, i) == ABC_OPER_SLICE) }
 func Wln_ObjIsRotate(p *Wln_Ntk_t, i int32) int32 {
-	return Wln_ObjType(p, i) == ABC_OPER_SHIFT_ROTL || Wln_ObjType(p, i) == ABC_OPER_SHIFT_ROTR
+	return wlnBool(Wln_ObjType(p, i) == ABC_OPER_SHIFT_ROTL || Wln_ObjType(p, i) == ABC_OPER_SHIFT_ROTR)
 }
-func Wln_ObjIsTable(p *Wln_Ntk_t, i int32) int32 { return Wln_ObjType(p, i) == ABC_OPER_TABLE }
+func Wln_ObjIsTable(p *Wln_Ntk_t, i int32) int32 { return wlnBool(Wln_ObjType(p, i) == ABC_OPER_TABLE) }
 
 func Wln_ObjFaninNum(p *Wln_Ntk_t, i int32) int32 { return p.vFanins[i].nSize }
 func Wln_ObjFanins(p *Wln_Ntk_t, i int32) []int32 { return p.vFanins[i].fanins() }
@@ -113,7 +120,7 @@ func Wln_ObjRangeBeg(p *Wln_Ntk_t, i int32) int32 {
 	return Hash_IntObjData1(p.pRanges, Wln_ObjRangeId(p, i))
 }
 func Wln_ObjRangeIsReversed(p *Wln_Ntk_t, i int32) int32 {
-	return Wln_ObjRangeEnd(p, i) < Wln_ObjRangeBeg(p, i)
+	return wlnBool(Wln_ObjRangeEnd(p, i) < Wln_ObjRangeBeg(p, i))
 }
 func Wln_ObjRange(p *Wln_Ntk_t, i int32) int32 {
 	return 1 + Abc_AbsInt(Wln_ObjRangeEnd(p, i)-Wln_ObjRangeBeg(p, i))
@@ -134,34 +141,34 @@ func Wln_ObjIsSignedFanin1(p *Wln_Ntk_t, i int32) int32 {
 	return Wln_ObjIsSigned(p, Wln_ObjFanin1(p, i))
 }
 func Wln_ObjIsSignedFanin01(p *Wln_Ntk_t, i int32) int32 {
-	return Wln_ObjIsSignedFanin0(p, i) && Wln_ObjIsSignedFanin1(p, i)
+	return wlnBool(Wln_ObjIsSignedFanin0(p, i) != 0 && Wln_ObjIsSignedFanin1(p, i) != 0)
 }
 func Wln_ObjSign(p *Wln_Ntk_t, i int32) int32 {
 	return Abc_Var2Lit(Wln_ObjRange(p, i), Wln_ObjIsSigned(p, i))
 }
 
 func Wln_NtkCleanCopy(p *Wln_Ntk_t)                 { Vec_IntFill(&p.vCopies, Vec_IntCap(&p.vTypes), 0) }
-func Wln_NtkHasCopy(p *Wln_Ntk_t) int32             { return Vec_IntSize(&p.vCopies) > 0 }
+func Wln_NtkHasCopy(p *Wln_Ntk_t) int32             { return wlnBool(Vec_IntSize(&p.vCopies) > 0) }
 func Wln_ObjSetCopy(p *Wln_Ntk_t, i int32, c int32) { Vec_IntWriteEntry(&p.vCopies, i, c) }
 func Wln_ObjCopy(p *Wln_Ntk_t, i int32) int32       { return Vec_IntEntry(&p.vCopies, i) }
 
 func Wln_NtkCleanLevel(p *Wln_Ntk_t)                 { Vec_IntFill(&p.vLevels, Vec_IntCap(&p.vTypes), 0) }
-func Wln_NtkHasLevel(p *Wln_Ntk_t) int32             { return Vec_IntSize(&p.vLevels) > 0 }
+func Wln_NtkHasLevel(p *Wln_Ntk_t) int32             { return wlnBool(Vec_IntSize(&p.vLevels) > 0) }
 func Wln_ObjSetLevel(p *Wln_Ntk_t, i int32, l int32) { Vec_IntWriteEntry(&p.vLevels, i, l) }
 func Wln_ObjLevel(p *Wln_Ntk_t, i int32) int32       { return Vec_IntEntry(&p.vLevels, i) }
 
 func Wln_NtkCleanNameId(p *Wln_Ntk_t)                 { Vec_IntFill(&p.vNameIds, Vec_IntCap(&p.vTypes), 0) }
-func Wln_NtkHasNameId(p *Wln_Ntk_t) int32             { return Vec_IntSize(&p.vNameIds) > 0 }
+func Wln_NtkHasNameId(p *Wln_Ntk_t) int32             { return wlnBool(Vec_IntSize(&p.vNameIds) > 0) }
 func Wln_ObjSetNameId(p *Wln_Ntk_t, i int32, n int32) { Vec_IntWriteEntry(&p.vNameIds, i, n) }
 func Wln_ObjNameId(p *Wln_Ntk_t, i int32) int32       { return Vec_IntEntry(&p.vNameIds, i) }
 
 func Wln_NtkCleanInstId(p *Wln_Ntk_t)                 { Vec_IntFill(&p.vInstIds, Vec_IntCap(&p.vTypes), 0) }
-func Wln_NtkHasInstId(p *Wln_Ntk_t) int32             { return Vec_IntSize(&p.vInstIds) > 0 }
+func Wln_NtkHasInstId(p *Wln_Ntk_t) int32             { return wlnBool(Vec_IntSize(&p.vInstIds) > 0) }
 func Wln_ObjSetInstId(p *Wln_Ntk_t, i int32, n int32) { Vec_IntWriteEntry(&p.vInstIds, i, n) }
 func Wln_ObjInstId(p *Wln_Ntk_t, i int32) int32       { return Vec_IntEntry(&p.vInstIds, i) }
 
 func Wln_NtkCleanRefs(p *Wln_Ntk_t)                 { Vec_IntFill(&p.vRefs, Vec_IntCap(&p.vTypes), 0) }
-func Wln_NtkHasRefs(p *Wln_Ntk_t) int32             { return Vec_IntSize(&p.vRefs) > 0 }
+func Wln_NtkHasRefs(p *Wln_Ntk_t) int32             { return wlnBool(Vec_IntSize(&p.vRefs) > 0) }
 func Wln_ObjSetRefs(p *Wln_Ntk_t, i int32, n int32) { Vec_IntWriteEntry(&p.vRefs, i, n) }
 func Wln_ObjRefs(p *Wln_Ntk_t, i int32) int32       { return Vec_IntEntry(&p.vRefs, i) }
 func Wln_ObjRefsInc(p *Wln_Ntk_t, i int32) int32 {
@@ -191,10 +198,10 @@ func Wln_NtkIncrementTravId(p *Wln_Ntk_t) {
 func Wln_ObjSetTravIdCurrent(p *Wln_Ntk_t, i int32)  { Vec_IntWriteEntry(&p.vTravIds, i, p.nTravIds) }
 func Wln_ObjSetTravIdPrevious(p *Wln_Ntk_t, i int32) { Vec_IntWriteEntry(&p.vTravIds, i, p.nTravIds-1) }
 func Wln_ObjIsTravIdCurrent(p *Wln_Ntk_t, i int32) int32 {
-	return (Vec_IntEntry(&p.vTravIds, i) == p.nTravIds)
+	return wlnBool((Vec_IntEntry(&p.vTravIds, i) == p.nTravIds))
 }
 func Wln_ObjIsTravIdPrevious(p *Wln_Ntk_t, i int32) int32 {
-	return (Vec_IntEntry(&p.vTravIds, i) == p.nTravIds-1)
+	return wlnBool((Vec_IntEntry(&p.vTravIds, i) == p.nTravIds-1))
 }
 func Wln_ObjCheckTravId(p *Wln_Ntk_t, i int32) int32 {
 	if Wln_ObjIsTravIdCurrent(p, i) != 0 {
@@ -209,16 +216,16 @@ func Wln_ObjCioId(p *Wln_Ntk_t, i int32) int32 {
 	return Wln_ObjFanin1(p, i)
 }
 func Wln_ObjIsPi(p *Wln_Ntk_t, i int32) int32 {
-	return Wln_ObjIsCi(p, i) && Wln_ObjCioId(p, i) < Wln_NtkPiNum(p)
+	return wlnBool(Wln_ObjIsCi(p, i) != 0 && Wln_ObjCioId(p, i) < Wln_NtkPiNum(p))
 }
 func Wln_ObjIsPo(p *Wln_Ntk_t, i int32) int32 {
-	return Wln_ObjIsCo(p, i) && Wln_ObjCioId(p, i) < Wln_NtkPoNum(p)
+	return wlnBool(Wln_ObjIsCo(p, i) != 0 && Wln_ObjCioId(p, i) < Wln_NtkPoNum(p))
 }
 func Wln_ObjIsRo(p *Wln_Ntk_t, i int32) int32 {
-	return Wln_ObjIsCi(p, i) && Wln_ObjCioId(p, i) >= Wln_NtkPiNum(p)
+	return wlnBool(Wln_ObjIsCi(p, i) != 0 && Wln_ObjCioId(p, i) >= Wln_NtkPiNum(p))
 }
 func Wln_ObjIsRi(p *Wln_Ntk_t, i int32) int32 {
-	return Wln_ObjIsCo(p, i) && Wln_ObjCioId(p, i) >= Wln_NtkPoNum(p)
+	return wlnBool(Wln_ObjIsCo(p, i) != 0 && Wln_ObjCioId(p, i) >= Wln_NtkPoNum(p))
 }
 func Wln_ObjRoToRi(p *Wln_Ntk_t, i int32) int32 {
 	assert((Wln_ObjIsRo(p, i) != 0), "Wln_ObjIsRo(p, i)")
