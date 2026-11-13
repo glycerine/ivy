@@ -99,11 +99,17 @@ func secTrivialWitness(g *aig.Graph) bool {
 // Fra_FraigSec returns 1 for equivalent, 0 for a verified counterexample,
 // and -1 when the configured procedures cannot decide the miter.
 func Fra_FraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph) int32 {
+	return fraFraigSec(original, pars, result, time.Now)
+}
+
+// The clock is passed explicitly so time-limit behavior can be tested without
+// sleeping or changing process-global state.
+func fraFraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph, now func() time.Time) int32 {
 	if original == nil || pars == nil {
 		panic("invalid sequential equivalence arguments")
 	}
 	pars.nSMnumber = -1
-	started := time.Now()
+	started := now()
 	graph := aig.Aig_ManDupSimple(original)
 	status := Fra_FraigMiterStatus(graph)
 	timedOut := false
@@ -262,7 +268,7 @@ func Fra_FraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph) int3
 					return finish()
 				}
 			}
-			if pars.TimeLimit > 0 && time.Since(started) >= time.Duration(pars.TimeLimit)*time.Second {
+			if pars.TimeLimit > 0 && now().Sub(started) >= time.Duration(pars.TimeLimit)*time.Second {
 				timedOut = true
 				break
 			}
