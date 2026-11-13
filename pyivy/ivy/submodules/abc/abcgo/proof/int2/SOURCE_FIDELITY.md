@@ -47,11 +47,13 @@ nil without a map or graph: its clause loop references undeclared `k` and
 does not provide a reliable clause or CNF contract to port. No suffix,
 preimage, or interpolation claim is made.
 
-Other reconstructed helpers also have limits. `Int2_ManUnroll` uses the
+Other source helpers also have limits. `Int2_ManUnroll` uses the
 undeclared name `pAig` throughout its C body; `Int2_ManPreparePrefix` reads
 the CNF from `pPref` despite deriving it into `pNew`, and refers to undeclared
-locals. The Go versions resolve those errors by inference, so their tests
-establish behavior of the Go implementation, not equivalence to executable C.
+locals. The source-named Go entry points now return nil and produce no graph
+or solver; prefix also clears its optional output map. The separately named
+`Int2_GoUnroll` and `Int2_GoPreparePrefix` retain the inferred Go convenience
+implementations, whose tests do not establish equivalence to executable C.
 `Int2_ManCreateFrames` in `int2Bmc.c` likewise refers to undeclared `f`,
 `iObj`, and `pFrames` and has inconsistent SAT-manager arguments. Its Go
 implementation is reconstructed and has no executable C oracle.
@@ -75,13 +77,13 @@ Other operations cannot be established from the C body: its constant setup
 tests undeclared `f`, writes an undeclared `iObj`, and passes a GIA pointer to
 `sat_solver_addclause`; its PI and AND branches use absent `pFrames` state;
 and its SAT AND call also passes the GIA pointer rather than a SAT solver.
-The Go code instead initializes constant zero in every new frame map, asserts
+The separately named `Int2_GoCreateFrames` instead initializes constant zero in every new frame map, asserts
 the SAT constant unit on each call, allocates SAT variables for appended PIs,
 and uses `pGiaPref` and `pSatPref`. Those choices are reconstructions, not
-source-confirmed behavior. The current Go entry point does not return an
-unsupported status, so callers must treat the whole incremental frame builder
-as unsupported for source-fidelity purposes until a complete C contract is
-available; individual matching branches do not validate the full operation.
+source-confirmed behavior. The source-named `Int2_ManCreateFrames` has a void
+signature, so it explicitly panics before changing state to report that its
+source contract is unsupported. Individual matching branches in the Go-only
+helper do not validate the full operation against C.
 
 The Go `Int2_ManCheckFrames` returns -1 for missing frame/object mappings,
 whereas the C helper directly indexes the vectors. The Go `Int2_ManCheckBmc`
@@ -100,6 +102,7 @@ semantics. A compiled C probe (`test_vectors/native_xor_copy.c`) confirms a
 native XOR of two inputs copies as their AND; a Go regression checks the same
 result across all input assignments. `Int2_ManCreateFrames` has an incomplete
 C body as noted above, so the analogous incremental behavior remains inferred.
-Zero-frame unrolling and frame
-initialization also explicitly return the all-zero initial state in Go;
-the C bodies read values not initialized by a zero-iteration loop.
+The Go-only zero-frame unroller returns the all-zero initial state. The
+source-named frame initializer instead reads each register-input fanin's
+existing `Value` when no frames are visited, as the C body does; callers must
+not assume that stale or uninitialized source values describe an initial state.

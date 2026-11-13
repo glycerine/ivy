@@ -153,7 +153,6 @@ func Int2_ManCheckInit(p *Gia_Man_t) int32 {
 **********************************************************************
 */
 func Int2_ManFrameInit(p *Gia_Man_t, nFrames int32, fVerbose int32) *Gia_Man_t {
-	assert(nFrames >= 0, "frame count is nonnegative")
 	pFrames := gia.Gia_ManStart(gia.Gia_ManObjNum(p))
 	pFrames.CopyIdentityFrom(p)
 	gia.Gia_ObjSetValue(gia.Gia_ManConst0(p), 0)
@@ -186,10 +185,9 @@ func Int2_ManFrameInit(p *Gia_Man_t, nFrames int32, fVerbose int32) *Gia_Man_t {
 	gia.Gia_ManHashStop(pFrames)
 	for i := int32(0); i < gia.Gia_ManRegNum(p); i++ {
 		ri := gia.Gia_ManRi(p, i)
-		value := int32(0)
-		if nFrames > 0 {
-			value = gia.Gia_ObjFanin0Copy(ri)
-		}
+		// The C loop reads the fanin's existing Value even when no frame was
+		// visited; it does not replace that state with a zero initial value.
+		value := gia.Gia_ObjFanin0Copy(ri)
 		gia.Gia_ObjSetValue(ri, gia.Gia_ManAppendCo(pFrames, value))
 	}
 	pTemp := pFrames
@@ -258,7 +256,16 @@ func Int2_ManWriteFrames(p *Int2_Man_t, iFrame int32, iObj int32, iRes int32) {
 	assert(vec.Vec_IntEntry(frame, int(iObj)) == -1, "frame entry is unwritten")
 	vec.Vec_IntWriteEntry(frame, int(iObj), iRes)
 }
-func Int2_ManCreateFrames(p *Int2_Man_t, iFrame int32, vPrefCos *Vec_Int_t) {
+
+// Int2_ManCreateFrames is unsupported: the source has undeclared objects and
+// inconsistent GIA/SAT-manager arguments. The void API reports this before
+// mutating the manager.
+func Int2_ManCreateFrames(_ *Int2_Man_t, _ int32, _ *Vec_Int_t) {
+	panic("int2: source frame construction is unsupported")
+}
+
+// Int2_GoCreateFrames retains the separately identified Go reconstruction.
+func Int2_GoCreateFrames(p *Int2_Man_t, iFrame int32, vPrefCos *Vec_Int_t) {
 	assert(p != nil && p.pGia != nil && p.pGiaPref != nil && p.pSatPref != nil, "manager and prefix state exist")
 	assert(iFrame >= 0, "frame index is nonnegative")
 	for i := int32(vec.Vec_PtrSize(p.vMapFrames)); i <= iFrame; i++ {

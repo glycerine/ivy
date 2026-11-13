@@ -20,7 +20,7 @@ func TestCreateFramesPreservesComplementedAndFanins(t *testing.T) {
 	m.pSatPref = sat_solver_new()
 	cos := vec.Vec_IntAlloc(1)
 	vec.Vec_IntPush(cos, 0)
-	Int2_ManCreateFrames(m, 0, cos)
+	Int2_GoCreateFrames(m, 0, cos)
 	av := Int2_ManCheckFrames(m, 0, a>>1)
 	bv := Int2_ManCheckFrames(m, 0, b>>1)
 	output := Int2_ManCheckFrames(m, 0, gia.Gia_ObjId(g, gia.Gia_ManPo(g, 0)))
@@ -49,7 +49,7 @@ func TestCreateFramesMapsConstantAtEveryFrame(t *testing.T) {
 	cos := vec.Vec_IntAlloc(1)
 	vec.Vec_IntPush(cos, 0)
 	for frame := int32(0); frame < 2; frame++ {
-		Int2_ManCreateFrames(m, frame, cos)
+		Int2_GoCreateFrames(m, frame, cos)
 		if got := Int2_ManCheckFrames(m, frame, gia.Gia_ObjId(g, gia.Gia_ManPo(g, 0))); got != 0 {
 			t.Fatalf("frame %d constant output = %d", frame, got)
 		}
@@ -67,7 +67,7 @@ func TestCreateFramesAllocatesDirectInputSATVariable(t *testing.T) {
 	m.pSatPref = sat_solver_new()
 	cos := vec.Vec_IntAlloc(1)
 	vec.Vec_IntPush(cos, 0)
-	Int2_ManCreateFrames(m, 0, cos)
+	Int2_GoCreateFrames(m, 0, cos)
 	if got := Int2_ManCheckBmc(m, nil); got != 0 {
 		t.Fatalf("input-driven bad output: status %d, want counterexample", got)
 	}
@@ -98,7 +98,7 @@ func TestFrameUnrollingTracksLatestInput(t *testing.T) {
 		fn   func(*Gia_Man_t, int32) *Gia_Man_t
 	}{
 		{"frame", func(g *Gia_Man_t, n int32) *Gia_Man_t { return Int2_ManFrameInit(g, n, 0) }},
-		{"unroll", Int2_ManUnroll},
+		{"unroll", Int2_GoUnroll},
 	} {
 		t.Run(build.name, func(t *testing.T) {
 			out := build.fn(g, 2)
@@ -263,7 +263,7 @@ func TestCreateFramesCanStartAtLaterFrame(t *testing.T) {
 	defer Int2_ManStop(m)
 	m.pSatPref = sat_solver_new()
 	cos := vec.Vec_IntAllocArrayCopy([]int32{0}, 1)
-	Int2_ManCreateFrames(m, 2, cos)
+	Int2_GoCreateFrames(m, 2, cos)
 	if got := sat_solver_solve(m.pSatPref, []int32{0}, 0, 0, 0, 0); got != l_False {
 		t.Fatalf("constant-zero SAT variable may be true: status %d", got)
 	}
@@ -280,7 +280,7 @@ func TestCheckBmcHandlesUnconstructedOutputs(t *testing.T) {
 	defer Int2_ManStop(m)
 	m.pSatPref = sat_solver_new()
 	cos := vec.Vec_IntAllocArrayCopy([]int32{0}, 1)
-	Int2_ManCreateFrames(m, 0, cos)
+	Int2_GoCreateFrames(m, 0, cos)
 	if got := Int2_ManCheckBmc(m, nil); got != -1 {
 		t.Fatalf("unconstructed output result %d, want undecided", got)
 	}
@@ -297,7 +297,7 @@ func TestCheckBmcFindsFailureAfterUnconstructedOutput(t *testing.T) {
 	defer Int2_ManStop(m)
 	m.pSatPref = sat_solver_new()
 	cos := vec.Vec_IntAllocArrayCopy([]int32{1}, 1)
-	Int2_ManCreateFrames(m, 0, cos)
+	Int2_GoCreateFrames(m, 0, cos)
 	if got := Int2_ManCheckBmc(m, nil); got != 0 {
 		t.Fatalf("known failing output result %d, want failure", got)
 	}
@@ -340,7 +340,7 @@ func TestZeroFrameBuildersReturnInitialState(t *testing.T) {
 		name string
 		run  func(*Gia_Man_t) *Gia_Man_t
 	}{
-		{"unroll", func(p *Gia_Man_t) *Gia_Man_t { return Int2_ManUnroll(p, 0) }},
+		{"unroll", func(p *Gia_Man_t) *Gia_Man_t { return Int2_GoUnroll(p, 0) }},
 		{"frame init", func(p *Gia_Man_t) *Gia_Man_t { return Int2_ManFrameInit(p, 0, 0) }},
 	} {
 		out := builder.run(g)
@@ -427,7 +427,7 @@ func TestPreparePrefixAtFrameZeroConstrainsInitialState(t *testing.T) {
 	gia.Gia_ManAppendCo(g, input)
 	gia.Gia_ManSetRegNum(g, 1)
 	var mapping *Vec_Int_t
-	s := Int2_ManPreparePrefix(g, 0, &mapping)
+	s := Int2_GoPreparePrefix(g, 0, &mapping)
 	if s == nil || mapping == nil || vec.Vec_IntSize(mapping) != 1 {
 		t.Fatal("missing prefix or state map")
 	}
@@ -465,7 +465,7 @@ func TestCheckBmcReturnsUndecidedOnExpiredDeadline(t *testing.T) {
 	defer Int2_ManStop(m)
 	m.pSatPref = sat_solver_new()
 	cos := vec.Vec_IntAllocArrayCopy([]int32{0}, 1)
-	Int2_ManCreateFrames(m, 0, cos)
+	Int2_GoCreateFrames(m, 0, cos)
 	lit := Int2_ManCheckFrames(m, 0, gia.Gia_ObjId(g, gia.Gia_ManPo(g, 0)))
 	// Leave an unconstrained variable so the solver reaches a search boundary
 	// after applying the property assumption.

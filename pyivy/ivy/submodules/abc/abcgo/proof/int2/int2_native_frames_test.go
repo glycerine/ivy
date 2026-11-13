@@ -21,7 +21,7 @@ func TestSourceCopiesNativeXorAsAnd(t *testing.T) {
 	m := Int2_ManCreate(g, &Int2_ManPars_t{})
 	defer Int2_ManStop(m)
 	m.pSatPref = sat_solver_new()
-	Int2_ManCreateFrames(m, 0, vec.Vec_IntAllocArrayCopy([]int32{0}, 1))
+	Int2_GoCreateFrames(m, 0, vec.Vec_IntAllocArrayCopy([]int32{0}, 1))
 	output := Int2_ManCheckFrames(m, 0, gia.Gia_ObjId(g, gia.Gia_ManPo(g, 0)))
 	for mask := int32(0); mask < 4; mask++ {
 		x, y := mask&1 != 0, mask&2 != 0

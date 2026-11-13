@@ -59,7 +59,12 @@ import (
   SeeAlso     []
 
 ***********************************************************************/
-func Int2_ManUnroll(p *Gia_Man_t, nFrames int32) *Gia_Man_t {
+// Int2_ManUnroll is unsupported: the checked-in C body refers to an
+// undeclared AIG throughout. It does not establish an executable contract.
+func Int2_ManUnroll(_ *Gia_Man_t, _ int32) *Gia_Man_t { return nil }
+
+// Int2_GoUnroll is the Go-only reconstruction; it is not a C source port.
+func Int2_GoUnroll(p *Gia_Man_t, nFrames int32) *Gia_Man_t {
 	assert(p != nil && gia.Gia_ManRegNum(p) > 0, "GIA has registers")
 	assert(nFrames >= 0, "frame count is nonnegative")
 	pFrames := gia.Gia_ManStart(gia.Gia_ManObjNum(p))
@@ -105,9 +110,20 @@ func Int2_ManUnroll(p *Gia_Man_t, nFrames int32) *Gia_Man_t {
 	gia.Gia_ManStop(temp)
 	return pFrames
 }
-func Int2_ManPreparePrefix(p *Gia_Man_t, f int32, pvCiMap **Vec_Int_t) *sat_solver {
+
+// Int2_ManPreparePrefix is unsupported because the C body has undeclared
+// locals and reads CNF from a different manager than the one it constructs.
+func Int2_ManPreparePrefix(_ *Gia_Man_t, _ int32, pvCiMap **Vec_Int_t) *sat_solver {
+	if pvCiMap != nil {
+		*pvCiMap = nil
+	}
+	return nil
+}
+
+// Int2_GoPreparePrefix uses the Go-only unrolling reconstruction.
+func Int2_GoPreparePrefix(p *Gia_Man_t, f int32, pvCiMap **Vec_Int_t) *sat_solver {
 	assert(pvCiMap != nil, "CI map output is provided")
-	pPref := Int2_ManUnroll(p, f)
+	pPref := Int2_GoUnroll(p, f)
 	pNew := gia.Jf_ManDeriveCnf(pPref, 0)
 	cnf, ok := pNew.TakeData().(*Cnf_Dat_t)
 	gia.Gia_ManStop(pPref)
