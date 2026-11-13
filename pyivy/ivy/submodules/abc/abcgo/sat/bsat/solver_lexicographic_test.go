@@ -1,6 +1,7 @@
 package bsat
 
 import (
+	"math/rand"
 	"testing"
 	"time"
 )
@@ -65,5 +66,56 @@ func TestLexicographicRootConflictPersists(t *testing.T) {
 	}
 	if status := s.Solve(); status != Unsatisfiable {
 		t.Fatalf("base formula should be inconsistent: %v", status)
+	}
+}
+
+func TestLexicographicFirstModelAgainstExhaustiveOracle(t *testing.T) {
+	rng := rand.New(rand.NewSource(92318))
+	for trial := 0; trial < 500; trial++ {
+		s := NewSolver()
+		for i := 0; i < 4; i++ {
+			s.NewVariable()
+		}
+		var clauses [][]lit
+		for k := 0; k < rng.Intn(12); k++ {
+			c := make([]lit, 1+rng.Intn(3))
+			for i := range c {
+				c[i] = lit(rng.Intn(8))
+			}
+			clauses = append(clauses, c)
+			s.AddClause(c...)
+		}
+		order := []Literal{Negative(0), Negative(1), Negative(2), Negative(3)}
+		want := -1
+		for mask := 0; mask < 16; mask++ {
+			ass := make([]lit, 4)
+			for i := range ass {
+				ass[i] = Negative(int32(i))
+				if mask&(1<<uint(3-i)) != 0 {
+					ass[i] = Positive(int32(i))
+				}
+			}
+			if formulaHasModel(clauses, ass, 4) {
+				want = mask
+				break
+			}
+		}
+		got := s.SolveLexicographic(order)
+		if want < 0 {
+			if got != Unsatisfiable {
+				t.Fatalf("trial=%d want UNSAT got=%v", trial, got)
+			}
+			continue
+		}
+		if got != Satisfiable {
+			t.Fatalf("trial=%d got=%v want SAT", trial, got)
+		}
+		model := s.Model()
+		for i, l := range order {
+			expected := want&(1<<uint(3-i)) != 0
+			if model[i] != expected || (l&1 == 0) != expected {
+				t.Fatalf("trial=%d want=%04b order=%v model=%v clauses=%v", trial, want, order, model, clauses)
+			}
+		}
 	}
 }

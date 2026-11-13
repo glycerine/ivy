@@ -224,3 +224,8 @@ formula with pending root units could lose its conflict across a later ordinary
 solve. Both entry points now share root-propagation handling, and a regression
 checks repeated lexicographic and ordinary solves. The full race-enabled BSAT
 suite passes after this simplification.
+
+Lexicographic solving is also checked against exhaustive enumeration for 500
+seeded four-variable formulas, including SAT model and UNSAT results. The full
+`go test -race -count=1 ./sat/bsat` and `go vet ./sat/bsat` pass. This checks
+small instances and does not prove every solver option or proof path.
