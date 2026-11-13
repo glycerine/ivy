@@ -215,18 +215,6 @@ func Acec_ComputeEquivClasses(pOne *Gia_Man_t, pTwo *Gia_Man_t, pvMap1 **Vec_Int
     fmt.Printf("Finished computing equivalent nodes.  ");
     Abc_PrintTime( 1, "Time", Abc_Clock() - clk );
 }
-func Acec_MatchBoxesSort(pArray *int32, nSize int32, pCostLits *int32) {
-    var i, j, best_i int32;
-    for  i = 0; i < nSize-1; i++  {
-        best_i = i;
-        for  j = i+1; j < nSize; j++  {
-            if Abc_Lit2LitL(pCostLits, pArray[j]) > Abc_Lit2LitL(pCostLits, pArray[best_i]) {
-                best_i = j; }
-        }
-        // inlining of macro ABC_SWAP
-        { var t int32  = pArray[i]; pArray[i] = pArray[best_i]; pArray[best_i] = t; };
-    }
-}
 func Acec_MatchPrintEquivLits(p *Gia_Man_t, vLits *Vec_Wec_t, pCostLits *int32, fVerbose int32) {
     var vSupp *Vec_Int_t;
     var vTemp *Vec_Wrd_t;
@@ -287,111 +275,6 @@ func Acec_MatchPrintEquivLits(p *Gia_Man_t, vLits *Vec_Wec_t, pCostLits *int32, 
     }
     Vec_IntFree( vSupp );
     Vec_WrdFree( vTemp );
-}
-func Acec_MatchCopy(vLits *Vec_Wec_t, vMap *Vec_Int_t) *Vec_Wec_t {
-    var vRes *Vec_Wec_t  = Vec_WecStart( Vec_WecSize(vLits) );
-    var vLevel *Vec_Int_t; var i, k, iLit int32;
-    // inlining of macro Vec_WecForEachLevel
-    for  i = 0; (i < Vec_WecSize(vLits)) && (((vLevel) = Vec_WecEntry(vLits, i)), 1); i++  {
-        // inlining of macro Vec_IntForEachEntry
-        for  k = 0; (k < Vec_IntSize(vLevel)) && (((iLit) = Vec_IntEntry(vLevel, k)), 1); k++  {
-            Vec_WecPush( vRes, i, Abc_Lit2LitL(Vec_IntArray(vMap), iLit) );
-        }
-    }
-    return vRes;
-}
-func Acec_MatchCountCommon(vLits1 *Vec_Wec_t, vLits2 *Vec_Wec_t, Shift int32) int32 {
-    var vRes *Vec_Int_t  = Vec_IntAlloc( 100 );
-    var vLevel1, vLevel2 *Vec_Int_t; 
-    var i, nCommon int32;
-    // inlining of macro Vec_WecForEachLevel
-    for  i = 0; (i < Vec_WecSize(vLits1)) && (((vLevel1) = Vec_WecEntry(vLits1, i)), 1); i++  {
-        if i+Shift < 0 || i+Shift >= Vec_WecSize(vLits2) {
-            continue; }
-        vLevel2 = Vec_WecEntry( vLits2, i+Shift );
-        nCommon += Vec_IntTwoFindCommonReverse( vLevel1, vLevel2, vRes );
-    }
-    Vec_IntFree( vRes );
-    return nCommon;
-}
-func Vec_IntInsertOrder(vLits *Vec_Int_t, vClasses *Vec_Int_t, Lit int32, Class int32) {
-    var i int32;
-    for  i = Vec_IntSize(vClasses)-1; i >= 0; i--  {
-        if Vec_IntEntry(vClasses,i) >= Class {
-            break; }
-    }
-    Vec_IntInsert( vLits, i+1, Lit );
-    Vec_IntInsert( vClasses, i+1, Class );
-}
-func Acec_MoveDuplicates(vLits *Vec_Wec_t, vClasses *Vec_Wec_t) {
-    var vLevel1, vLevel2 *Vec_Int_t; 
-    var i, k, Prev, This, Entry, Counter int32;
-    // inlining of macro Vec_WecForEachLevel
-    for  i = 0; (i < Vec_WecSize(vLits)) && (((vLevel1) = Vec_WecEntry(vLits, i)), 1); i++  {
-        if i == Vec_WecSize(vLits) - 1 {
-            break; }
-        vLevel2 = Vec_WecEntry(vClasses, i);
-        assert(Vec_IntSize(vLevel1) == Vec_IntSize(vLevel2), "Vec_IntSize(vLevel1) == Vec_IntSize(vLevel2)");
-        Prev = -1;
-        // inlining of macro Vec_IntForEachEntry
-        for  k = 0; (k < Vec_IntSize(vLevel2)) && (((This) = Vec_IntEntry(vLevel2, k)), 1); k++  {
-            if Prev != This {
-                Prev = This;
-                continue;
-            }
-            Prev = -1;
-            Entry = Vec_IntEntry( vLevel1, k );
-
-            Vec_IntDrop( vLevel1, k );
-            Vec_IntDrop( vLevel2, k-- );
-
-            Vec_IntDrop( vLevel1, k );
-            Vec_IntDrop( vLevel2, k-- );
-
-            Vec_IntInsertOrder( Vec_WecEntry(vLits, i+1), Vec_WecEntry(vClasses, i+1), Entry, This );
-
-            assert(Vec_IntSize(vLevel1)                  == Vec_IntSize(vLevel2), "Vec_IntSize(vLevel1)                  == Vec_IntSize(vLevel2)");
-            assert(Vec_IntSize(Vec_WecEntry(vLits, i+1)) == Vec_IntSize(Vec_WecEntry(vClasses, i+1)), "Vec_IntSize(Vec_WecEntry(vLits, i+1)) == Vec_IntSize(Vec_WecEntry(vClasses, i+1))");
-            Counter++;
-        }
-    }
-    fmt.Printf("Moved %d pairs of PPs to normalize the matrix.\n", Counter);
-}
-
-func Acec_MatchCheckShift(pGia0 *Gia_Man_t, pGia1 *Gia_Man_t, vLits0 *Vec_Wec_t, vLits1 *Vec_Wec_t, vMap0 *Vec_Int_t, vMap1 *Vec_Int_t, vRoots0 *Vec_Wec_t, vRoots1 *Vec_Wec_t) {
-    var vRes0 *Vec_Wec_t  = Acec_MatchCopy( vLits0, vMap0 );
-    var vRes1 *Vec_Wec_t  = Acec_MatchCopy( vLits1, vMap1 );
-    var nCommon int32       = Acec_MatchCountCommon( vRes0, vRes1,  0 );
-    var nCommonPlus int32   = Acec_MatchCountCommon( vRes0, vRes1,  1 );
-    var nCommonMinus int32  = Acec_MatchCountCommon( vRes0, vRes1, -1 );
-    if nCommonPlus >= nCommonMinus && nCommonPlus > nCommon {
-        Vec_WecInsertLevel( vLits0, 0 );
-        Vec_WecInsertLevel( vRoots0, 0 );
-        Vec_WecInsertLevel( vRes0, 0 );
-        fmt.Printf("Shifted one level up.\n");
-    
-    } else if nCommonMinus > nCommonPlus && nCommonMinus > nCommon {
-        Vec_WecInsertLevel( vLits1, 0 );
-        Vec_WecInsertLevel( vRoots1, 0 );
-        Vec_WecInsertLevel( vRes1, 0 );
-        fmt.Printf("Shifted one level down.\n");
-    }
-    Acec_MoveDuplicates( vLits0, vRes0 );
-    Acec_MoveDuplicates( vLits1, vRes1 );
-
-    //Vec_WecPrintLits( vLits1 );
-    //printf( "Input literals:\n" );
-    //Vec_WecPrintLits( vLits0 );
-    //printf( "Equiv classes:\n" );
-    //Vec_WecPrintLits( vRes0 );
-    //printf( "Input literals:\n" );
-    //Vec_WecPrintLits( vLits1 );
-    //printf( "Equiv classes:\n" );
-    //Vec_WecPrintLits( vRes1 );
-    //Acec_VerifyClasses( pGia0, vLits0, vRes0 );
-    //Acec_VerifyClasses( pGia1, vLits1, vRes1 );
-    Vec_WecFree( vRes0 );
-    Vec_WecFree( vRes1 );
 }
 func Acec_MatchBoxes(pBox0 *Acec_Box_t, pBox1 *Acec_Box_t) int32 {
     var vMap0, vMap1, vLevel *Vec_Int_t; 
