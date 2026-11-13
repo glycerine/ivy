@@ -29,6 +29,13 @@ func RegisterCexServices(value CexServices) {
 	cexServices.Unlock()
 }
 
+// RegisterCexExtension installs the trace expander independently of other services.
+func RegisterCexExtension(extend func(*aig.Graph, *util.Abc_Cex_t) *util.Abc_Cex_t) {
+	cexServices.Lock()
+	cexServices.value.Extend = extend
+	cexServices.Unlock()
+}
+
 func Abc_NtkCheckSpecialPi(n *abc.Network) int32 {
 	for _, pi := range n.ObjectsOfKind(abc.ObjectPI) {
 		if abc.Abc_ObjName(pi) == "_abc_190121_abc_" {
