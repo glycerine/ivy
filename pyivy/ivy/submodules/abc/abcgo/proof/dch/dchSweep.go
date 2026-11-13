@@ -44,10 +44,6 @@ func (m *Manager) sweep() error {
 		if representative == aig.InvalidEdge {
 			continue
 		}
-		if aig.Aig_ObjCheckTfi(m.graph, representative, node) != 0 {
-			m.classes.remove(node)
-			continue
-		}
 		rep := m.mapped[representative.NodeID()]
 		if rep == aig.InvalidEdge {
 			continue
