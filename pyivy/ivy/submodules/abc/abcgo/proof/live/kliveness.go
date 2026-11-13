@@ -190,7 +190,11 @@ func kLive(n *Network, options KLiveOptions, source bool) KLiveResult {
 	}
 	barriers := options.Barriers
 	if options.Directive == 2 || options.Directive == 3 {
-		barriers = FindDisjunctiveMonotone(n, options.Safety, checker)
+		if source {
+			barriers = findDisjunctiveMonotoneSignals(n)
+		} else {
+			barriers = FindDisjunctiveMonotone(n, options.Safety, checker)
+		}
 	} else if options.Directive == 4 && barriers == nil {
 		barriers = collectUserGivenDisjunctiveMonotoneSignals(n)
 	}
@@ -229,8 +233,12 @@ func kLive(n *Network, options KLiveOptions, source bool) KLiveResult {
 		if !options.Safety.Deadline.IsZero() && time.Now().After(options.Safety.Deadline) {
 			return result
 		}
-		proofModel := kLiveProofModelMode(current, options.Directive, index, invariant, source)
-		result.LastSafety = checker(proofModel, int(index), options.Safety)
+		if source && options.Checker == nil {
+			result.LastSafety = SafetyResult{Status: flipConePdr(current, options.Directive, index, invariant, int32(depth))}
+		} else {
+			proofModel := kLiveProofModelMode(current, options.Directive, index, invariant, source)
+			result.LastSafety = checker(proofModel, int(index), options.Safety)
+		}
 		result.Absorbers = depth
 		result.Graph = current
 		if result.LastSafety.Status == 1 {
