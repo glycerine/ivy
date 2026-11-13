@@ -36,3 +36,7 @@ unavailable full interpolation algorithm has been restored.
 The source's cube refinement asserts finite priority even for a constant-true
 suffix. The Go implementation handles that case with an empty justifying cube;
 both refinement and preimage behavior have regression tests.
+
+The bounded fallback evaluates native XOR, MUX and buffer nodes and treats
+constraint outputs as forbidden inputs rather than bad properties. These are
+soundness corrections to the fallback, not a reconstruction of the driver.

@@ -33,6 +33,13 @@ func int2StateKey(bits []bool) string {
 }
 
 func int2EvalGraph(p *Gia_Man_t, inputs, state, values, next []bool) bool {
+	bad, _ := int2EvalFrame(p, inputs, state, values, next)
+	return bad
+}
+
+// int2EvalFrame reports whether a property fails and whether the input is
+// legal. Constraint outputs are violation signals, following ABC's convention.
+func int2EvalFrame(p *Gia_Man_t, inputs, state, values, next []bool) (bool, bool) {
 	clear(values)
 	for i, bit := range inputs {
 		obj := gia.Gia_ManPi(p, int32(i))
@@ -43,33 +50,50 @@ func int2EvalGraph(p *Gia_Man_t, inputs, state, values, next []bool) bool {
 		values[gia.Gia_ObjId(p, obj)] = bit
 	}
 	for id := 1; id < len(values); id++ {
-		obj := gia.Gia_ManObj(p, int32(id))
-		if gia.Gia_ObjIsAnd(obj) == 0 {
-			continue
+		a, b, c, kind := p.Gate(int32(id))
+		read := func(lit int32) bool { return values[lit>>1] != (lit&1 != 0) }
+		switch kind {
+		case 2:
+			values[id] = read(a) && read(b)
+		case 3:
+			values[id] = read(a) != read(b)
+		case 4:
+			if read(a) {
+				values[id] = read(b)
+			} else {
+				values[id] = read(c)
+			}
+		case 5, 6:
+			values[id] = read(a)
 		}
-		left := values[gia.Gia_ObjId(p, gia.Gia_ObjFanin0(obj))] != (gia.Gia_ObjFaninC0(obj) != 0)
-		right := values[gia.Gia_ObjId(p, gia.Gia_ObjFanin1(obj))] != (gia.Gia_ObjFaninC1(obj) != 0)
-		values[id] = left && right
 	}
-	for i := int32(0); i < gia.Gia_ManPoNum(p); i++ {
+	nPos := gia.Gia_ManPoNum(p)
+	nConstraints := gia.Gia_ManConstrNum(p)
+	for i := nPos - nConstraints; i < nPos; i++ {
+		co := gia.Gia_ManPo(p, i)
+		if values[gia.Gia_ObjId(p, gia.Gia_ObjFanin0(co))] != (gia.Gia_ObjFaninC0(co) != 0) {
+			return false, false
+		}
+	}
+	for i := int32(0); i < nPos-nConstraints; i++ {
 		co := gia.Gia_ManPo(p, i)
 		bad := values[gia.Gia_ObjId(p, gia.Gia_ObjFanin0(co))] != (gia.Gia_ObjFaninC0(co) != 0)
 		if bad {
-			return true
+			return true, true
 		}
 	}
 	for i := range next {
 		co := gia.Gia_ManRi(p, int32(i))
 		next[i] = values[gia.Gia_ObjId(p, gia.Gia_ObjFanin0(co))] != (gia.Gia_ObjFaninC0(co) != 0)
 	}
-	return false
+	return false, true
 }
 
 // int2Reachability checks the transition system from the all-zero initial
 // state. It returns proven, counterexample, or undecided. A depth or resource
 // limit can only produce undecided; it never produces a proof.
 func int2Reachability(p *Gia_Man_t, maxDepth int32, deadline time.Time) int32 {
-	if p == nil || maxDepth < 0 || gia.Gia_ManRegNum(p) <= 0 || gia.Gia_ManPoNum(p) <= 0 {
+	if p == nil || maxDepth < 0 || gia.Gia_ManRegNum(p) <= 0 || gia.Gia_ManConstrNum(p) < 0 || gia.Gia_ManPoNum(p) <= gia.Gia_ManConstrNum(p) {
 		return INT2_TIME_OUT
 	}
 	nPis := gia.Gia_ManPiNum(p)
@@ -100,7 +124,11 @@ func int2Reachability(p *Gia_Man_t, maxDepth int32, deadline time.Time) int32 {
 			for i := range inputs {
 				inputs[i] = inputMask&(1<<uint(i)) != 0
 			}
-			if int2EvalGraph(p, inputs, current.bits, values, next) {
+			bad, legal := int2EvalFrame(p, inputs, current.bits, values, next)
+			if !legal {
+				continue
+			}
+			if bad {
 				return INT2_FALSE_NEG
 			}
 			key := int2StateKey(next)
