@@ -15,3 +15,11 @@ paths over multiple frame windows; the earlier implementations also shared the
 same mapped sweep, and the temporary callback state contained the exact fields
 read by the filter. The C-to-Go review is not yet a complete proof of source
 fidelity across every manager option and rare timeout or error path.
+
+As in ABC's `Fra_FraigPerform`, a graph with no internal nodes is copied and
+returned before its implication callback runs. Consequently, BMC implication
+filtering can leave an invalid implication in this case; callers must not treat
+that retained candidate as independently proved. The same fast path can leave
+simple BMC without a witness for a direct-input output: this was confirmed by
+running `Fra_BmcPerformSimple` from compiled C on a two-frame, single-latch
+fixture whose output is the latch and whose next state is the primary input.

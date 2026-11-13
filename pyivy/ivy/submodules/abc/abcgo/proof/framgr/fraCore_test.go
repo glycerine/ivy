@@ -63,7 +63,11 @@ func TestFraFraigMappedNoInternalNodes(t *testing.T) {
 	g := aig.NewGraph()
 	x := g.NewInput()
 	g.AddOutput(x.Not())
-	result, mapping := Fra_FraigEquivenceMapped(g, 100, 0, nil)
+	called := false
+	result, mapping := Fra_FraigEquivenceMapped(g, 100, 0, func(*Fra_Man_t) { called = true })
+	if called {
+		t.Fatal("ABC's no-node fast path returns before the callback")
+	}
 	if mapping[x.NodeID()] == aig.InvalidEdge {
 		t.Fatal("input was not mapped")
 	}

@@ -147,7 +147,8 @@ func fraFraigPerformMapped(g *aig.Graph, pars *Fra_Par_t, callback func(*Fra_Man
 	if g == nil || pars == nil {
 		panic("fra: nil FRAIG input")
 	}
-	if aig.Aig_ManNodeNum(g) == 0 && callback == nil {
+	// ABC returns before invoking the implication callback on this path.
+	if aig.Aig_ManNodeNum(g) == 0 {
 		result := aig.Aig_ManDupOrdered(g)
 		mapping := make([]aig.Edge, len(g.Nodes()))
 		for i := range mapping {

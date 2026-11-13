@@ -179,39 +179,16 @@ func Fra_BmcPerformSimple(g *aig.Graph, frames, limit, rewrite, verbose int32) {
 	if output >= 0 {
 		cex = util.Abc_CexMakeTriv(g.RegisterCount(), int32(g.InputCount())-g.RegisterCount(), int32(g.OutputCount())-g.RegisterCount(), output)
 	} else {
-		// A positive input output needs a witness even when FRAIG returns
-		// early for a graph without internal nodes.
-		inputs := b.PAigFrames.Inputs()
-		for _, out := range b.PAigFrames.Outputs() {
-			child := b.PAigFrames.Node(out).Fanins[0]
-			if child.Complemented() || b.PAigFrames.Node(child).Kind != aig.Input {
-				continue
-			}
-			model := make([]int32, len(inputs)+1)
-			for i, in := range inputs {
-				if in.NodeID() == child.NodeID() {
-					model[i] = 1
-					break
-				}
-			}
-			model[len(inputs)] = int32(out.NodeID())
-			cex = Fra_SmlCopyCounterExample(g, b.PAigFrames, model)
-			if cex != nil {
-				break
-			}
+		b.PAigFraig, _ = Fra_FraigEquivenceMapped(b.PAigFrames, limit, 1, nil)
+		if b.PAigFraig == nil {
+			panic("fra: BMC frame FRAIG failed")
 		}
-		if cex == nil {
-			b.PAigFraig, _ = Fra_FraigEquivenceMapped(b.PAigFrames, limit, 1, nil)
-			if b.PAigFraig == nil {
-				panic("fra: BMC frame FRAIG failed")
-			}
-			output = Fra_FraigMiterAssertedOutput(b.PAigFraig)
-			if model, ok := b.PAigFraig.Data.([]int32); ok {
-				cex = Fra_SmlCopyCounterExample(g, b.PAigFrames, model)
-				b.PAigFraig.Data = nil
-			} else if output >= 0 {
-				cex = util.Abc_CexMakeTriv(g.RegisterCount(), int32(g.InputCount())-g.RegisterCount(), int32(g.OutputCount())-g.RegisterCount(), output)
-			}
+		output = Fra_FraigMiterAssertedOutput(b.PAigFraig)
+		if model, ok := b.PAigFraig.Data.([]int32); ok {
+			cex = Fra_SmlCopyCounterExample(g, b.PAigFrames, model)
+			b.PAigFraig.Data = nil
+		} else if output >= 0 {
+			cex = util.Abc_CexMakeTriv(g.RegisterCount(), int32(g.InputCount())-g.RegisterCount(), int32(g.OutputCount())-g.RegisterCount(), output)
 		}
 	}
 	if cex != nil {
