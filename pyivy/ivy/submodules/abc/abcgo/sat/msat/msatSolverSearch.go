@@ -2,6 +2,7 @@
 package msat
 
 func Msat_SolverAssume(p *Msat_Solver_t, lit int) int {
+	assert(Msat_QueueReadSize(p.pQueue) == 0, "propagation queue is empty")
 	Msat_IntVecPush(p.vTrailLim, len(p.vTrail.data))
 	return Msat_SolverEnqueue(p, lit, nil)
 }
@@ -22,8 +23,8 @@ func Msat_SolverEnqueue(p *Msat_Solver_t, lit int, reason *Msat_Clause_t) int {
 	return 1
 }
 func Msat_SolverCancelUntil(p *Msat_Solver_t, level int) {
-	Msat_QueueClear(p.pQueue)
 	for len(p.vTrailLim.data) > level {
+		assert(Msat_QueueReadSize(p.pQueue) == 0, "propagation queue is empty")
 		at := Msat_IntVecPop(p.vTrailLim)
 		for len(p.vTrail.data) > at {
 			lit := Msat_IntVecPop(p.vTrail)
@@ -221,11 +222,13 @@ func Msat_SolverSearch(p *Msat_Solver_t, conflictLimit, learnedLimit, backtrackL
 		variable := Msat_OrderVarSelect(p.pOrder)
 		if variable == MSAT_ORDER_UNKNOWN {
 			copy(p.pModel, p.pAssigns)
+			Msat_QueueClear(p.pQueue)
 			Msat_SolverCancelUntil(p, p.nLevelRoot)
 			return MSAT_TRUE
 		}
 		if conflictLimit > 0 && conflicts > conflictLimit || backtrackLimit > 0 && p.Stats.nConflicts-int64(p.nBackTracks) > int64(backtrackLimit) {
 			p.dProgress = Msat_SolverProgressEstimate(p)
+			Msat_QueueClear(p.pQueue)
 			Msat_SolverCancelUntil(p, p.nLevelRoot)
 			return MSAT_UNKNOWN
 		}
