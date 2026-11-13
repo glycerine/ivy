@@ -4,6 +4,7 @@ package int
 import (
 	"context"
 	"fmt"
+	"os"
 	"time"
 
 	"github.com/glycerine/abcgo/aig/aig"
@@ -39,6 +40,11 @@ func Inter_ManSetDefaultParams(p *Inter_ManParams_t) {
 func Inter_ManPerformInterpolation(graph *aig.Graph, pars *Inter_ManParams_t, frame *int32) int32 {
 	if graph == nil || pars == nil || frame == nil {
 		panic("invalid interpolation arguments")
+	}
+	if pars.FUseMiniSat != 0 {
+		*frame = -1
+		fmt.Fprintln(os.Stderr, ErrMiniSat114pUnavailable)
+		return -1
 	}
 	start := util.Abc_Clock()
 	var deadline int64

@@ -126,3 +126,19 @@ func TestInterpolationAgainstExplicitReachability(t *testing.T) {
 		}
 	}
 }
+
+func TestRequestedMiniSatBackendIsUnavailable(t *testing.T) {
+	g := aig.NewGraph()
+	x := g.NewInput()
+	g.NewInput()
+	g.AddOutput(x)
+	g.AddOutput(g.Const0())
+	aig.Aig_ManSetRegNum(g, 1)
+	var pars Inter_ManParams_t
+	Inter_ManSetDefaultParams(&pars)
+	pars.FUseMiniSat = 1
+	frame := int32(42)
+	if got := Inter_ManPerformInterpolation(g, &pars, &frame); got != -1 || frame != -1 || g.SequentialCounterexample() != nil {
+		t.Fatalf("unavailable backend should not run BSAT: result %d frame %d", got, frame)
+	}
+}
