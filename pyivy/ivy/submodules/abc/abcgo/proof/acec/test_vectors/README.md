@@ -60,6 +60,12 @@ recorded ABC timing results and exhaustively simulate the collapsed large
 path. The multiplier oracle supports widths through six; set
 `ACEC_MULTIPLIER_ORACLE` to its executable to replay the C comparison.
 
+`acec_signed_multiplier_oracle.c` builds the sign-extended 4×4 multiplier
+used by the Go signed-product tests. Set `ACEC_SIGNED_MULTIPLIER_ORACLE` to
+its executable to replay the C status and counterexample comparisons.
+`acec_timing_shapes.c` prints compiled-C box offsets, dimensions and negative
+delay entries for the 2×1, 4×3, 5×4 and zero-box cases.
+
 `acec_missing_box.c` invokes normalization on a graph with no arithmetic box;
 the C implementation dereferences the missing box. `acec_large_coefficients.c`
 checks signed exponent carries and cancellations without overflowing C `int`.
