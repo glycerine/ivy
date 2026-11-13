@@ -1,6 +1,7 @@
 package ssw
 
 import (
+	"fmt"
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/misc/vec"
 )
@@ -119,5 +120,77 @@ func Ssw_ClassesPreparePairsSimple(g *aig.Graph, pairs *vec.Vec_Int_t) *Ssw_Cla_
 		aig.Aig_ObjSetRepr(g, obj, repr)
 		Ssw_ObjAddClass(p, repr, []aig.Edge{repr, obj}, 2)
 	}
+	return p
+}
+
+// Ssw_ClassesPrepare derives candidate classes through sequential simulation.
+func Ssw_ClassesPrepare(g *aig.Graph, framesK, latchOnly, constOnly, outputOnly, maxLevels, verbose int32) *Ssw_Cla_t {
+	p := Ssw_ClassesStart(g)
+	p.fConstCorr = constOnly
+	nFrames := max(framesK, 4)
+	sml := Ssw_SmlSimulateSeq(g, 0, nFrames, 2)
+	Ssw_ClassesSetData(p, sml,
+		func(data any, obj aig.Edge) uint32 { return Ssw_SmlObjHashWord(data.(*Ssw_Sml_t), obj) },
+		func(data any, obj aig.Edge) int32 { return Ssw_SmlObjIsConstWord(data.(*Ssw_Sml_t), obj) },
+		func(data any, a, b aig.Edge) int32 { return Ssw_SmlObjsAreEqualWord(data.(*Ssw_Sml_t), a, b) })
+	candidates := vec.Vec_PtrAlloc(1000)
+	inputs := g.Inputs()
+	nRegs := int(g.RegisterCount())
+	latches := make(map[int]bool, nRegs)
+	for _, obj := range inputs[len(inputs)-nRegs:] {
+		latches[obj.NodeID()] = true
+	}
+	selected := map[int]bool{}
+	if outputOnly != 0 {
+		outputs := g.Outputs()
+		for _, out := range outputs[:len(outputs)-nRegs] {
+			driver := g.Node(out).Fanins[0] &^ 1
+			if aig.Aig_ObjIsCand(g, driver) {
+				selected[driver.NodeID()] = true
+			}
+		}
+	}
+	for _, obj := range g.LiveEdges() {
+		node := g.Node(obj)
+		if outputOnly != 0 {
+			if !selected[obj.NodeID()] {
+				continue
+			}
+		} else if latchOnly != 0 {
+			if !latches[obj.NodeID()] {
+				continue
+			}
+		} else {
+			if !aig.Aig_ObjIsNode(g, obj) && node.Kind != aig.Input {
+				continue
+			}
+			if maxLevels != 0 && int32(node.Level) > maxLevels {
+				continue
+			}
+		}
+		vec.Vec_PtrPush(candidates, obj)
+	}
+	Ssw_ClassesPrepareRehash(p, candidates, constOnly)
+	rounds := int32(1)
+	for ; rounds < 16; rounds++ {
+		vec.Vec_PtrClear(candidates)
+		for _, obj := range g.LiveEdges() {
+			if Ssw_ObjIsConst1Cand(g, obj) != 0 {
+				vec.Vec_PtrPush(candidates, obj)
+			}
+		}
+		if int32(vec.Vec_PtrSize(candidates)) != p.nCands1 {
+			panic("ssw: inconsistent constant candidates")
+		}
+		Ssw_SmlResimulateSeq(sml)
+		if Ssw_ClassesPrepareRehash(p, candidates, constOnly) == 0 {
+			break
+		}
+	}
+	if verbose != 0 {
+		fmt.Printf("Simulation of %d frames with 2 words (%d rounds).\n", nFrames, rounds-1)
+	}
+	Ssw_SmlStop(sml)
+	Ssw_ClassesCheck(p)
 	return p
 }

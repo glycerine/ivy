@@ -49,3 +49,17 @@ func TestPrepareClassesFromPairs(t *testing.T) {
 		t.Fatal("wrong classes")
 	}
 }
+
+func TestPrepareSequentialSimulationClasses(t *testing.T) {
+	g := aig.NewGraph()
+	pi, lo := g.NewInput(), g.NewInput()
+	gate := g.AND(pi, lo)
+	g.AddOutput(gate)
+	g.AddOutput(pi)
+	aig.Aig_ManSetRegNum(g, 1)
+	p := Ssw_ClassesPrepare(g, 1, 1, 0, 0, 0, 0)
+	Ssw_ClassesCheck(p)
+	if p.pAig != g {
+		t.Fatal("graph not retained")
+	}
+}
