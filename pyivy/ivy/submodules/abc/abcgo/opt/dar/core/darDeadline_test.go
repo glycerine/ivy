@@ -1,4 +1,5 @@
 package core
+
 import (
 	"context"
 	"errors"
@@ -58,6 +59,16 @@ func TestDarManRwsatUsesAIGTime2Quit(t *testing.T) {
 	}
 	if !got.Time2Quit.Equal(g.Time2Quit) {
 		t.Fatal("rewrite lost graph deadline")
+	}
+}
+
+func TestDarManRewriteDefaultUsesAIGTime2Quit(t *testing.T) {
+	g := aig.NewGraph()
+	a, b := g.NewInput(), g.NewInput()
+	g.AddOutput(g.AND(a, b))
+	g.Time2Quit = time.Now().Add(-time.Second)
+	if got, err := Dar_ManRewriteDefault(g); got != nil || !errors.Is(err, context.DeadlineExceeded) {
+		t.Fatalf("expired default rewrite got %v err %v", got, err)
 	}
 }
 

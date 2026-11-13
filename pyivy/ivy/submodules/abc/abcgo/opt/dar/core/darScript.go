@@ -1,4 +1,5 @@
 package core
+
 import (
 	"context"
 	"fmt"
@@ -112,8 +113,16 @@ func Dar_ManRewriteDefault(g *aig.Graph) (*aig.Graph, error) {
 	if g == nil {
 		return nil, fmt.Errorf("dar: nil graph")
 	}
+	ctx := context.Background()
+	if !g.Time2Quit.IsZero() {
+		var cancel context.CancelFunc
+		ctx, cancel = context.WithDeadline(ctx, g.Time2Quit)
+		defer cancel()
+	}
 	result := aig.Aig_ManDupDfs(g)
-	if err := Dar_ManRewrite(result, nil); err != nil {
+	params := DefaultRewriteParams()
+	params.Context = ctx
+	if err := Dar_ManRewrite(result, &params); err != nil {
 		return nil, err
 	}
 	return aig.Aig_ManDupDfs(result), nil
