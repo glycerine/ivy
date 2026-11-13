@@ -81,16 +81,7 @@ func Ssw_SmlObjsAreEqualBit(p any, pObj0 *Aig_Obj_t, pObj1 *Aig_Obj_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_SmlNodeNotEquWeight(p *Ssw_Sml_t, Left int32, Right int32) int32 {
-    var pSimL, pSimR *uint32;
-    var k, Counter int32;
-    pSimL = Ssw_ObjSim( p, Left );
-    pSimR = Ssw_ObjSim( p, Right );
-    for  k = p.nWordsPref; k < p.nWordsTotal; k++  {
-        Counter += Aig_WordCountOnes( pSimL[k] ^ pSimR[k] );
-    }
-    return Counter;
-}
+
 
 /**Function*************************************************************
 
@@ -169,18 +160,7 @@ func Ssw_SmlCountXorImplication(p *Ssw_Sml_t, pObjLi *Aig_Obj_t, pObjLo *Aig_Obj
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_SmlCountEqual(p *Ssw_Sml_t, pObjLi *Aig_Obj_t, pObjLo *Aig_Obj_t) int32 {
-    var pSimLi, pSimLo *uint32;
-    var k, Counter int32;
-    assert(pObjLo.fPhase == 0, "pObjLo.fPhase == 0");
-    // pObjLi->fPhase may be 1, but the LI simulation data is not complemented!
-    pSimLi   = Ssw_ObjSim( p, pObjLi.Id );
-    pSimLo   = Ssw_ObjSim( p, pObjLo.Id );
-    for  k = p.nWordsPref; k < p.nWordsTotal; k++  {
-        Counter += Aig_WordCountOnes( ~(pSimLi[k] ^ pSimLo[k]) );
-    }
-    return Counter;
-}
+
 
 /**Function*************************************************************
 
@@ -193,16 +173,7 @@ func Ssw_SmlCountEqual(p *Ssw_Sml_t, pObjLi *Aig_Obj_t, pObjLo *Aig_Obj_t) int32
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_SmlNodeIsZero(p *Ssw_Sml_t, pObj *Aig_Obj_t) int32 {
-    var pSims *uint32;
-    var i int32;
-    pSims = Ssw_ObjSim(p, pObj.Id);
-    for  i = p.nWordsPref; i < p.nWordsTotal; i++  {
-        if pSims[i] {
-            return 0; }
-    }
-    return 1;
-}
+
 
 /**Function*************************************************************
 
@@ -215,10 +186,7 @@ func Ssw_SmlNodeIsZero(p *Ssw_Sml_t, pObj *Aig_Obj_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_SmlNodeIsZeroFrame(p *Ssw_Sml_t, pObj *Aig_Obj_t, f int32) int32 {
-    var pSims *uint32  = Ssw_ObjSim(p, pObj.Id);
-    return pSims[f] == 0;
-}
+
 
 /**Function*************************************************************
 
@@ -231,22 +199,7 @@ func Ssw_SmlNodeIsZeroFrame(p *Ssw_Sml_t, pObj *Aig_Obj_t, f int32) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_SmlNodeCountOnesReal(p *Ssw_Sml_t, pObj *Aig_Obj_t) int32 {
-    var pSims *uint32;
-    var i, Counter int32;
-    pSims = Ssw_ObjSim(p, Aig_Regular(pObj).Id);
-    if Aig_Regular(pObj).fPhase ^ Aig_IsComplement(pObj) {
-        for  i = 0; i < p.nWordsTotal; i++  {
-            Counter += Aig_WordCountOnes( ~pSims[i] );
-        }
-    
-    } else {
-        for  i = 0; i < p.nWordsTotal; i++  {
-            Counter += Aig_WordCountOnes( pSims[i] );
-        }
-    }
-    return Counter;
-}
+
 
 /**Function*************************************************************
 
