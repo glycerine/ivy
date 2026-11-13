@@ -21,9 +21,11 @@ additional 1,000 deterministic mixed-DAG stress run over all input assignments.
 Review identified several correctness bugs, including discarded final outputs in
 matched ACEC. Other changes addressed scratch cleanup failures, native XOR/MUX/buffer
 copying errors, missing arithmetic-box handling, polarity ambiguity, signed
-signature multiplication, and polynomial handling of XOR, MUX, and constants.
+signature parsing, and polynomial handling of XOR, MUX, and constants.
 
 Intentional conservative paths and limits:
+
+- `Acec_ParseDistribute` preserves C's `left + right - 1` arithmetic on signed encoded exponents. Negative factors can therefore produce a coefficient encoding that does not represent their mathematical product.
 
 - **Known source defect:** after matching arithmetic boxes, `Acec_Solve`
   replaces the final two outputs with constant zero before verification, as
@@ -31,6 +33,9 @@ Intentional conservative paths and limits:
   discarded outputs differ. The returned witness belongs to this modified
   miter and may not describe a difference in the original circuits. Do not use
   this result as a proof of the original circuit interfaces.
+- The C CLA output rewrite copies every internal node as a two-input AND and
+  starts its output manager with zero registers. Native XOR/MUX inputs or
+  sequential metadata therefore do not survive this source path unchanged.
 - The C cut detectors process two-fanin logic and do not check for native MUX
   or buffer nodes. The Go port retains that behavior; these routines can omit
   native gate inputs and their results are not reliable for such graphs.

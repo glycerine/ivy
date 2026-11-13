@@ -73,12 +73,9 @@ func Acec_ParseDistribute(a, b, add *vec.Vec_Wec_t) *vec.Vec_Wec_t {
 			row := vec.Vec_WecPushLevel(out)
 			vec.Vec_IntPushArray(row, x, len(x)-1)
 			vec.Vec_IntPushArray(row, y, len(y)-1)
-			left, right := x[len(x)-1], y[len(y)-1]
-			coefficient := abs32(left) + abs32(right) - 1
-			if (left < 0) != (right < 0) {
-				coefficient = -coefficient
-			}
-			vec.Vec_IntPush(row, coefficient)
+			// Preserve the source's signed encoded-exponent arithmetic, even
+			// though negative factors do not multiply mathematically.
+			vec.Vec_IntPush(row, x[len(x)-1]+y[len(y)-1]-1)
 		}
 	}
 	if add != nil {
