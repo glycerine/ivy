@@ -94,11 +94,12 @@ func Cnf_IsopWriteCube(cube int32, variables int32, vars, literals []int32) int3
 	return count
 }
 
-func Cnf_ManWriteCnf(manager *Cnf_Man_t, _ *Vec_Ptr_t, outputs int32) *Cnf_Dat_t {
-	if manager == nil {
+func Cnf_ManWriteCnf(manager *Cnf_Man_t, mapped *Vec_Ptr_t, outputs int32) *Cnf_Dat_t {
+	result, err := cnfWriteMapped(manager, mapped, outputs)
+	if err != nil {
 		return nil
 	}
-	return deriveLegacyAIG(manager.pManAig, outputs)
+	return result
 }
 func Cnf_ManWriteCnfOther(manager *Cnf_Man_t, _ *Vec_Ptr_t) *Cnf_Dat_t {
 	if manager == nil {
