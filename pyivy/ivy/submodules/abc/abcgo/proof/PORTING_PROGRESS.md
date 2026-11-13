@@ -12,10 +12,10 @@ in progress; passing tests do not establish that those gaps are resolved.
   adder-box reconstruction, and polynomial tests are in place. Independent
   correctness review and broader end-to-end equivalence coverage continue.
 
-* `cec` builds and passes its full race suite and vet. Cec4 has been
-  integrated, but its source-fidelity review continues; the upstream GIA
-  choices implementation is itself incomplete, as documented in
-  `cec/PORTING.md`.
+* `cec` builds and passes its full race suite and vet. Its top-level verifier
+  and sweeping path currently use a different implementation from the original
+  C default pipeline; restoring that pipeline is in progress. Cec4's upstream
+  GIA choices implementation is itself incomplete. See `cec/PORTING.md`.
 * `pdr` builds and passes its full race suite and vet. It has exhaustive
   small-state reachability and witness tests, incremental-solving tests,
   and a Go-facing options API. Invariant publication uses synchronized
