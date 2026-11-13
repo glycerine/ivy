@@ -1,12 +1,35 @@
 package cnf
 
 import (
+	"math/rand"
 	"reflect"
 	"testing"
 
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/misc/vec"
 )
+
+func TestCutComposeOverlappingSupports(t *testing.T) {
+	rng := rand.New(rand.NewSource(58910))
+	for trial := 0; trial < 1000; trial++ {
+		topTruth, fanTruth := rng.Uint32(), rng.Uint32()
+		top := Cnf_CutFromTruth([]int32{1, 2, 3}, []uint32{topTruth})
+		fan := Cnf_CutFromTruth([]int32{1, 4}, []uint32{fanTruth})
+		result := Cnf_CutCompose(nil, top, fan, 2)
+		if result == nil || !reflect.DeepEqual(result.pFanins, []int32{1, 3, 4}) {
+			t.Fatalf("trial %d: unexpected composed support %v", trial, result)
+		}
+		for assignment := 0; assignment < 8; assignment++ {
+			x, z, w := assignment&1, assignment>>1&1, assignment>>2&1
+			fanValue := int(fanTruth >> uint(x|(w<<1)) & 1)
+			want := topTruth >> uint(x|(fanValue<<1)|(z<<2)) & 1
+			got := result.truth[0] >> uint(assignment) & 1
+			if got != want {
+				t.Fatalf("trial=%d assignment=%03b got=%d want=%d", trial, assignment, got, want)
+			}
+		}
+	}
+}
 
 func TestCollectLeavesEntryPointsAgree(t *testing.T) {
 	g := aig.NewGraph()
