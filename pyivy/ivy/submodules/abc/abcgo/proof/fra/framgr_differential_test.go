@@ -40,7 +40,7 @@ func TestSharedCECSweepMatchesOriginalManager(t *testing.T) {
 		Fra_ParamsDefault(&pars)
 		pars.fDontShowBar, pars.fProve = 1, 1
 		pars.nBTLimitNode, pars.nBTLimitMiter = 2, 300
-		old := Fra_FraigPerform(original, &pars)
+		old, _ := fraFraigPerformMapped(original, &pars, nil)
 		got := framgr.SweepForCEC(shared, 2, 300)
 		if old == nil || got == nil {
 			t.Fatalf("trial %d missing reduced result", trial)
@@ -87,7 +87,7 @@ func TestSharedCECSweepSparseSatAndUnsat(t *testing.T) {
 		Fra_ParamsDefault(&pars)
 		pars.fDontShowBar, pars.fProve = 1, 1
 		pars.nBTLimitNode, pars.nBTLimitMiter = 2, 300
-		old := Fra_FraigPerform(original, &pars)
+		old, _ := fraFraigPerformMapped(original, &pars, nil)
 		got := framgr.SweepForCEC(shared, 2, 300)
 		if old == nil || got == nil || old.InputCount() != 4 || got.InputCount() != 4 {
 			t.Fatalf("sat=%t incorrect input retention", sat)
@@ -111,6 +111,115 @@ func TestSharedCECSweepSparseSatAndUnsat(t *testing.T) {
 		}
 		if oldSat != sat || newSat != sat {
 			t.Fatalf("sat=%t old=%t new=%t", sat, oldSat, newSat)
+		}
+	}
+}
+
+func TestGeneralSharedSweepMatchesOriginalOptions(t *testing.T) {
+	rng := rand.New(rand.NewSource(113209))
+	for trial := 0; trial < 20; trial++ {
+		source := aig.NewGraph()
+		nodes := []aig.Edge{source.NewInput(), source.NewInput(), source.NewInput()}
+		for i := 0; i < 15; i++ {
+			a, b := nodes[rng.Intn(len(nodes))], nodes[rng.Intn(len(nodes))]
+			if rng.Intn(2) == 0 {
+				a = a.Not()
+			}
+			if rng.Intn(2) == 0 {
+				b = b.Not()
+			}
+			nodes = append(nodes, source.AND(a, b))
+		}
+		for i := 0; i < 2; i++ {
+			source.AddOutput(nodes[3+rng.Intn(15)])
+		}
+		for mode := 0; mode < 4; mode++ {
+			a, b := aig.Aig_ManDupSimple(source), aig.Aig_ManDupSimple(source)
+			var p Fra_Par_t
+			Fra_ParamsDefault(&p)
+			p.nSimWords = 2
+			p.nBTLimitNode = 10
+			p.nLevelMax = 3
+			p.fDontShowBar = 1
+			if mode&1 != 0 {
+				p.fChoicing = 1
+			}
+			if mode&2 != 0 {
+				p.fDoSparse = 0
+			}
+			q := p
+			old, _ := fraFraigPerformMapped(a, &p, nil)
+			shared := Fra_FraigPerform(b, &q)
+			if old == nil || shared == nil || old.InputCount() != shared.InputCount() || old.OutputCount() != shared.OutputCount() {
+				t.Fatalf("trial %d mode %d interface mismatch", trial, mode)
+			}
+			for mask := 0; mask < 8; mask++ {
+				inputs := []bool{mask&1 != 0, mask&2 != 0, mask&4 != 0}
+				left, e := old.Evaluate(inputs)
+				if e != nil {
+					t.Fatal(e)
+				}
+				right, e := shared.Evaluate(inputs)
+				if e != nil {
+					t.Fatal(e)
+				}
+				for i := range left {
+					if left[i] != right[i] {
+						t.Fatalf("trial %d mode %d input %v: %v != %v", trial, mode, inputs, left, right)
+					}
+				}
+			}
+			if p != q {
+				t.Fatalf("trial %d mode %d altered caller options differently", trial, mode)
+			}
+		}
+	}
+}
+
+func TestSharedMappedSweepPreservesSourceMapping(t *testing.T) {
+	source := aig.NewGraph()
+	a, b, c := source.NewInput(), source.NewInput(), source.NewInput()
+	x := source.AND(a, b.Not())
+	y := source.AND(x, c)
+	source.AddOutput(y)
+	source.AddOutput(x.Not())
+	oldSource, newSource := aig.Aig_ManDupSimple(source), aig.Aig_ManDupSimple(source)
+	var pars Fra_Par_t
+	Fra_ParamsDefault(&pars)
+	pars.nBTLimitNode = 100
+	pars.fDoSparse = 1
+	pars.fDontShowBar = 1
+	old, oldMap := fraFraigPerformMapped(oldSource, &pars, nil)
+	shared, newMap := Fra_FraigEquivenceMapped(newSource, 100, 0, nil)
+	if len(oldMap) != len(newMap) {
+		t.Fatal("mapping size changed")
+	}
+	for i := range oldMap {
+		if (oldMap[i] == aig.InvalidEdge) != (newMap[i] == aig.InvalidEdge) {
+			t.Fatalf("mapping presence differs for %d", i)
+		}
+		if oldMap[i] != aig.InvalidEdge {
+			old.AddOutput(oldMap[i])
+			shared.AddOutput(newMap[i])
+		}
+	}
+	for mask := 0; mask < 8; mask++ {
+		in := []bool{mask&1 != 0, mask&2 != 0, mask&4 != 0}
+		a, e := old.Evaluate(in)
+		if e != nil {
+			t.Fatal(e)
+		}
+		b, e := shared.Evaluate(in)
+		if e != nil {
+			t.Fatal(e)
+		}
+		if len(a) != len(b) {
+			t.Fatal("output size")
+		}
+		for i := range a {
+			if a[i] != b[i] {
+				t.Fatalf("input %v mapped outputs %v != %v", in, a, b)
+			}
 		}
 	}
 }

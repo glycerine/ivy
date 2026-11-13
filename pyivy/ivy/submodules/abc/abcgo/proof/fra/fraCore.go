@@ -8,6 +8,7 @@ import (
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/proof/fracomb"
+	"github.com/glycerine/abcgo/proof/framgr"
 )
 
 func Fra_FraigMiterStatus(g *aig.Graph) int32         { return fracomb.Fra_FraigMiterStatus(g) }
@@ -193,8 +194,40 @@ func fraFraigPerformMapped(g *aig.Graph, pars *Fra_Par_t, callback func(*Fra_Man
 	return result, mapping
 }
 func Fra_FraigPerform(g *aig.Graph, pars *Fra_Par_t) *aig.Graph {
-	result, _ := fraFraigPerformMapped(g, pars, nil)
-	return result
+	if g == nil || pars == nil {
+		panic("fra: nil FRAIG input")
+	}
+	return framgr.Sweep(g, fraCombOptions(pars))
+}
+
+func fraCombOptions(pars *Fra_Par_t) framgr.CombOptions {
+	return framgr.CombOptions{
+		NSimWords:       pars.nSimWords,
+		FPatScores:      pars.fPatScores,
+		MaxScore:        pars.MaxScore,
+		DSimSatur:       pars.dSimSatur,
+		DActConeRatio:   pars.dActConeRatio,
+		DActConeBumpMax: pars.dActConeBumpMax,
+		FChoicing:       pars.fChoicing,
+		FSpeculate:      pars.fSpeculate,
+		FProve:          pars.fProve,
+		FVerbose:        pars.fVerbose,
+		FDoSparse:       pars.fDoSparse,
+		FConeBias:       pars.fConeBias,
+		NBTLimitNode:    pars.nBTLimitNode,
+		NBTLimitMiter:   pars.nBTLimitMiter,
+		NLevelMax:       pars.nLevelMax,
+		NFramesP:        pars.nFramesP,
+		NFramesK:        pars.nFramesK,
+		NMaxImps:        pars.nMaxImps,
+		NMaxLevs:        pars.nMaxLevs,
+		FRewrite:        pars.fRewrite,
+		FLatchCorr:      pars.fLatchCorr,
+		FUseImps:        pars.fUseImps,
+		FUse1Hot:        pars.fUse1Hot,
+		FWriteImps:      pars.fWriteImps,
+		FDontShowBar:    pars.fDontShowBar,
+	}
 }
 func Fra_FraigChoice(g *aig.Graph, limit, level int32) *aig.Graph {
 	var pars Fra_Par_t
@@ -213,7 +246,10 @@ func Fra_FraigEquivenceMapped(g *aig.Graph, limit, prove int32, callback func(*F
 	pars.fDoSparse = 1
 	pars.fProve = prove
 	pars.fDontShowBar = 1
-	return fraFraigPerformMapped(g, &pars, callback)
+	if callback != nil {
+		return fraFraigPerformMapped(g, &pars, callback)
+	}
+	return framgr.SweepMapped(g, fraCombOptions(&pars))
 }
 func Fra_FraigEquivence(g *aig.Graph, limit, prove int32) *aig.Graph {
 	result, _ := Fra_FraigEquivenceMapped(g, limit, prove, nil)
