@@ -55,3 +55,33 @@ func TestSecTransfersCombinationalMixedModel(t *testing.T) {
 		t.Fatal("accepted nonfailing combinational model")
 	}
 }
+
+func TestSecTransferWitnessRemapsOutputAndRegisters(t *testing.T) {
+	original := aig.NewGraph()
+	input := original.NewInput()
+	original.NewInput()
+	original.NewInput()
+	original.AddOutput(original.Const0())
+	original.AddOutput(input)
+	original.AddOutput(original.Const0())
+	original.AddOutput(original.Const0())
+	aig.Aig_ManSetRegNum(original, 2)
+	reduced := aig.NewGraph()
+	reducedInput := reduced.NewInput()
+	reduced.NewInput()
+	reduced.AddOutput(reducedInput)
+	reduced.AddOutput(reduced.Const0())
+	aig.Aig_ManSetRegNum(reduced, 1)
+	cex := util.Abc_CexAlloc(1, 1, 1)
+	util.Abc_InfoSetBit(cex.PData, 1)
+	if err := reduced.SetSequentialCounterexample(cex); err != nil {
+		t.Fatal(err)
+	}
+	if !secTransferWitness(original, reduced) {
+		t.Fatal("failed to replay reduced witness")
+	}
+	got := original.SequentialCounterexample()
+	if got == nil || got.IPo != 1 || got.NRegs != 2 {
+		t.Fatalf("wrong remapped witness: %+v", got)
+	}
+}

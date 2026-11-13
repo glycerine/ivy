@@ -57,10 +57,24 @@ func secTransferWitness(original, reduced *aig.Graph) bool {
 	if cex == nil {
 		return false
 	}
-	copy := util.Abc_CexDup(cex, original.RegisterCount())
-	if copy == nil || saig.Saig_ManVerifyCex(original, copy) == 0 {
+	return secTransferCex(original, cex)
+}
+
+// Replaying the input trace on the original also recovers the original PO
+// index after output compaction or single-output interpolation.
+func secTransferCex(original *aig.Graph, cex *util.Abc_Cex_t) bool {
+	if cex == nil || cex.NPis != int32(original.InputCount())-original.RegisterCount() {
 		return false
 	}
+	copy := util.Abc_CexDup(cex, original.RegisterCount())
+	if copy == nil {
+		return false
+	}
+	output := saig.Saig_ManFindFailedPoCex(original, copy)
+	if output < 0 {
+		return false
+	}
+	copy.IPo = output
 	return original.SetSequentialCounterexample(copy) == nil
 }
 func secTrivialWitness(g *aig.Graph) bool {
@@ -94,8 +108,14 @@ func Fra_FraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph) int3
 	status := Fra_FraigMiterStatus(graph)
 	timedOut := false
 	finish := func() int32 {
-		if status == 0 && !secTransferWitness(original, graph) && !secTrivialWitness(original) {
-			status = -1
+		if status == 0 {
+			verified := secTransferWitness(original, graph)
+			if !verified && original.SequentialCounterexample() != nil {
+				verified = secTransferCex(original, original.SequentialCounterexample())
+			}
+			if !verified && !secTrivialWitness(original) {
+				status = -1
+			}
 		}
 		if status == -1 {
 			secSaveUnsolved(graph)
@@ -160,6 +180,9 @@ func Fra_FraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph) int3
 		ssw.Ssw_ManSetDefaultParamsLcorr(&sw)
 		previous := graph
 		graph = ssw.Ssw_LatchCorrespondence(previous, &sw)
+		if previous.SequentialCounterexample() != nil {
+			secTransferWitness(original, previous)
+		}
 		if graph == nil {
 			graph = previous
 			if secTransferWitness(original, previous) {
@@ -204,6 +227,10 @@ func Fra_FraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph) int3
 			}
 			if graph == nil {
 				graph = previous
+				if secTransferWitness(original, previous) {
+					status = 0
+					return finish()
+				}
 				timedOut = true
 				break
 			}
@@ -270,6 +297,7 @@ func Fra_FraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph) int3
 				}
 				one := interp.Inter_ManPerformInterpolation(single, &options, &depth)
 				if cex := single.SequentialCounterexample(); cex != nil {
+					secTransferCex(original, cex)
 					cex.IPo = int32(i)
 					_ = graph.SetSequentialCounterexample(cex)
 					status = 0
