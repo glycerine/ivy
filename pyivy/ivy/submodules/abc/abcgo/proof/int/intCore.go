@@ -2,15 +2,33 @@ package int
 
 // Top-level interpolation loop from proof/int/intCore.c.
 import (
+	"context"
 	"fmt"
 	"time"
 
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
+	"github.com/glycerine/abcgo/opt/dar"
 	"github.com/glycerine/abcgo/sat/bmc"
 	"github.com/glycerine/abcgo/sat/cnf"
 )
+
+// rewriteForInterpolation applies DAR's original rwsat sequence under the
+// interpolation deadline. A nil result signals a stopped or failed rewrite.
+func rewriteForInterpolation(graph *aig.Graph, deadline int64) *aig.Graph {
+	ctx := context.Background()
+	cancel := func() {}
+	if deadline != 0 {
+		ctx, cancel = context.WithTimeout(ctx, time.Duration(deadline-util.Abc_Clock()))
+	}
+	defer cancel()
+	result, err := dar.RewriteForSAT(ctx, graph, true, nil)
+	if err != nil {
+		return nil
+	}
+	return result
+}
 
 func Inter_ManSetDefaultParams(p *Inter_ManParams_t) {
 	*p = Inter_ManParams_t{nFramesK: 1, fCheckKstep: 1, iFrameMax: -1}
@@ -63,7 +81,10 @@ func Inter_ManPerformInterpolation(graph *aig.Graph, pars *Inter_ManParams_t, fr
 		p.pCnfInter = cnf.Cnf_Derive(p.pInter, 0)
 		p.pFrames = Inter_ManFramesInter(graph, p.nFrames, pars.fUseBackward, pars.fUseTwoFrames)
 		if pars.fRewrite != 0 {
-			p.pFrames = Dar_ManRwsat(p.pFrames, 1, 0, deadline)
+			p.pFrames = rewriteForInterpolation(p.pFrames, deadline)
+			if p.pFrames == nil {
+				return finish(-1, 0)
+			}
 		}
 		if pars.fUseBackward != 0 {
 			p.pCnfFrames = cnf.Cnf_Derive(p.pFrames, int32(p.pFrames.OutputCount()))
@@ -110,7 +131,7 @@ func Inter_ManPerformInterpolation(graph *aig.Graph, pars *Inter_ManParams_t, fr
 				panic("invalid interpolation result")
 			}
 			if p.pInterNew != nil {
-				p.pInterNew = Dar_ManRwsat(p.pInterNew, 1, 0, deadline)
+				p.pInterNew = rewriteForInterpolation(p.pInterNew, deadline)
 				if p.pInterNew == nil {
 					return finish(-1, 1)
 				}
@@ -145,7 +166,7 @@ func Inter_ManPerformInterpolation(graph *aig.Graph, pars *Inter_ManParams_t, fr
 			}
 			if pars.fUseBackward != 0 && pars.fTransLoop == 0 {
 				p.pInter = aig.Aig_ManCreateMiter(p.pInter, p.pInterNew, 2)
-				p.pInter = Dar_ManRwsat(p.pInter, 1, 0, deadline)
+				p.pInter = rewriteForInterpolation(p.pInter, deadline)
 				if p.pInter == nil {
 					return finish(-1, 1)
 				}
