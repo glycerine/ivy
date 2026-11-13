@@ -223,6 +223,24 @@ func TestClassPartitionSequentialInternalMiter(t *testing.T) {
 	}
 }
 
+func TestClassPartitionSequentialNativeXorUsesSourceAnd(t *testing.T) {
+	g := aig.NewGraph()
+	x, state := g.NewInput(), g.NewInput()
+	gate := g.NewXor(x, state)
+	g.AddOutput(x)
+	aig.Aig_ManSetRegNum(g, 1)
+	p := newClassPartition(len(g.Nodes()))
+	p.Reprs[gate.NodeID()] = x.NodeID()
+	unrolled := p.DeriveSequentialAIG(g, 1)
+	for mask := 0; mask < 8; mask++ {
+		values := []bool{mask&1 != 0, mask&2 != 0, mask&4 != 0}
+		outputs, err := unrolled.Evaluate(values)
+		if err != nil || outputs[0] != (!values[1] || values[0]) || outputs[1] != (!values[2] || values[1]) {
+			t.Fatalf("inputs=%v outputs=%v error=%v", values, outputs, err)
+		}
+	}
+}
+
 func TestSimulationDrivesCandidateRefinement(t *testing.T) {
 	g := aig.NewGraph()
 	x, y := g.NewInput(), g.NewInput()

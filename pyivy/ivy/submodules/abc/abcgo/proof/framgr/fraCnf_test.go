@@ -34,8 +34,11 @@ func TestStructuralCNFTruthTables(t *testing.T) {
 				switch kind {
 				case "and":
 					expected = !av && bv
-				case "xor", "native-xor":
+				case "xor":
 					expected = !av != bv
+				case "native-xor":
+					fanins := g.Node(out).Fanins
+					expected = ((av != fanins[0].Complemented()) && (bv != fanins[1].Complemented())) != out.Complemented()
 				case "mux":
 					expected = !((av && bv) || (!av && cv))
 				}

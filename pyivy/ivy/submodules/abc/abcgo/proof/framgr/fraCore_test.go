@@ -79,7 +79,7 @@ func TestFraFraigMappedNoInternalNodes(t *testing.T) {
 	}
 }
 
-func TestFraFraigProvesEquivalentXorForms(t *testing.T) {
+func TestFraFraigNativeXorFollowsSourceAnd(t *testing.T) {
 	g := aig.NewGraph()
 	x, y := g.NewInput(), g.NewInput()
 	structural := g.XOR(x, y)
@@ -87,13 +87,13 @@ func TestFraFraigProvesEquivalentXorForms(t *testing.T) {
 	g.AddOutput(structural)
 	g.AddOutput(explicit)
 	reduced, mapping := Fra_FraigEquivenceMapped(g, 1000, 0, nil)
-	if aig.Aig_Regular(mapping[structural.NodeID()]) != aig.Aig_Regular(mapping[explicit.NodeID()]) {
-		t.Fatalf("equivalent XOR nodes were not merged: %v", mapping)
+	if aig.Aig_Regular(mapping[structural.NodeID()]) == aig.Aig_Regular(mapping[explicit.NodeID()]) {
+		t.Fatalf("native XOR unexpectedly merged with expanded XOR: %v", mapping)
 	}
 	for i := 0; i < 4; i++ {
 		input := []bool{i&1 != 0, i&2 != 0}
 		got, err := reduced.Evaluate(input)
-		if err != nil || got[0] != (input[0] != input[1]) || got[1] != got[0] {
+		if err != nil || got[0] != (input[0] != input[1]) || got[1] != (input[0] && input[1]) {
 			t.Fatalf("inputs %v outputs %v error %v", input, got, err)
 		}
 	}

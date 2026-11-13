@@ -10,7 +10,7 @@ func TestFraSimulationCombinationalTruthAndClasses(t *testing.T) {
 	g := aig.NewGraph()
 	x, y := g.NewInput(), g.NewInput()
 	and := g.AND(x.Not(), y.Not())
-	xor := g.NewXor(x, y)
+	xor := g.XOR(x, y)
 	g.AddOutput(and)
 	g.AddOutput(xor)
 	s := newFraSimulation(g, 0, 1, 1)
@@ -95,8 +95,21 @@ func TestFraSimulationDrivesClassPartition(t *testing.T) {
 	s.SimulateOne()
 	classes := newClassPartition(len(g.Nodes()))
 	classes.PrepareGraph(g, false, 0, s.Hash, s.IsConstant, s.Equal)
-	if classes.Reprs[structural.NodeID()] != explicit.NodeID() {
-		t.Fatalf("equivalent XOR forms not grouped: %v", classes.Reprs)
+	if classes.Reprs[structural.NodeID()] == explicit.NodeID() {
+		t.Fatalf("source simulates native XOR as AND, not expanded XOR: %v", classes.Reprs)
+	}
+}
+
+func TestFraSimulationNativeXorFollowsSourceAnd(t *testing.T) {
+	g := aig.NewGraph()
+	x, y := g.NewInput(), g.NewInput()
+	output := g.AddOutput(g.NewXor(x, y))
+	s := newFraSimulation(g, 0, 1, 1)
+	s.FrameWords(x.NodeID(), 0)[0] = 0xaaaaaaaa
+	s.FrameWords(y.NodeID(), 0)[0] = 0xcccccccc
+	s.SimulateOne()
+	if got := s.FrameWords(output.NodeID(), 0)[0]; got != 0x88888888 {
+		t.Fatalf("native XOR source simulation got %#x, want AND pattern", got)
 	}
 }
 

@@ -46,7 +46,7 @@ func Fra_AddClausesSuper(p *Fra_Man_t, node aig.Edge, fanins []aig.Edge) {
 }
 
 func Fra_CollectSuper(graph *aig.Graph, root aig.Edge, useMuxes bool) []aig.Edge {
-	if root.Complemented() || graph.Node(root).Kind != aig.And {
+	if root.Complemented() || (graph.Node(root).Kind != aig.And && graph.Node(root).Kind != aig.ExclusiveOr) {
 		panic("fra: invalid supergate root")
 	}
 	var result []aig.Edge
@@ -54,7 +54,7 @@ func Fra_CollectSuper(graph *aig.Graph, root aig.Edge, useMuxes bool) []aig.Edge
 	var collect func(aig.Edge, bool)
 	collect = func(edge aig.Edge, first bool) {
 		node := graph.Node(edge)
-		if edge.Complemented() || node.Kind != aig.And || (!first && node.Refs > 1) || (useMuxes && aig.Aig_ObjIsMuxType(graph, edge)) {
+		if edge.Complemented() || (node.Kind != aig.And && node.Kind != aig.ExclusiveOr) || (!first && node.Refs > 1) || (useMuxes && aig.Aig_ObjIsMuxType(graph, edge)) {
 			if !seen[edge] {
 				seen[edge] = true
 				result = append(result, edge)
@@ -108,8 +108,6 @@ func Fra_CnfNodeAddToSolver(p *Fra_Man_t, old, new aig.Edge) {
 		switch {
 		case n.Kind == aig.Buffer:
 			fanins = append(fanins, n.Fanins[0])
-		case n.Kind == aig.ExclusiveOr:
-			fanins = append(fanins, n.Fanins[:]...)
 		case aig.Aig_ObjIsMuxType(graph, node):
 			a, b := graph.Node(n.Fanins[0]), graph.Node(n.Fanins[1])
 			seen := make(map[aig.Edge]bool)
@@ -127,16 +125,6 @@ func Fra_CnfNodeAddToSolver(p *Fra_Man_t, old, new aig.Edge) {
 			Fra_ObjAddToFrontier(p, aig.Aig_Regular(edge), &frontier)
 		}
 		switch {
-		case n.Kind == aig.ExclusiveOr:
-			a, b := n.Fanins[0], n.Fanins[1]
-			av, bv, f := Fra_ObjSatNum(p, a), Fra_ObjSatNum(p, b), Fra_ObjSatNum(p, node)
-			for x := 0; x < 2; x++ {
-				for y := 0; y < 2; y++ {
-					// Exclude each assignment where the result is not x XOR y.
-					wrong := (x ^ y) == 0
-					fraClause(p, fraLit(av, (x != 0) != a.Complemented()), fraLit(bv, (y != 0) != b.Complemented()), fraLit(f, wrong))
-				}
-			}
 		case aig.Aig_ObjIsMuxType(graph, node):
 			Fra_AddClausesMux(p, node)
 		default:

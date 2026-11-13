@@ -9,7 +9,7 @@ import (
 )
 
 // Exhaustively compare small mixed AIGs with their swept versions. This checks
-// all outputs together, including complemented edges and native XOR nodes.
+// all outputs together, including complemented edges and expanded XOR nodes.
 func TestSweepPreservesMixedGraphTruthTables(t *testing.T) {
 	r := rand.New(rand.NewSource(20261113))
 	for graphNo := 0; graphNo < 40; graphNo++ {
@@ -33,7 +33,7 @@ func TestSweepPreservesMixedGraphTruthTables(t *testing.T) {
 			case 1:
 				edges = append(edges, g.XOR(a, b))
 			case 2:
-				edges = append(edges, g.NewXor(a, b))
+				edges = append(edges, g.XOR(a, b))
 			}
 		}
 		for i := 0; i < 5; i++ {

@@ -257,11 +257,7 @@ func (s *fraSimulation) SimulateNode(edge aig.Edge, frame int) {
 			if nodes[node.Fanins[1].NodeID()].Phase != node.Fanins[1].Complemented() {
 				right = ^right
 			}
-			if node.Kind == aig.And {
-				value = left & right
-			} else {
-				value = left ^ right
-			}
+			value = left & right
 		}
 		if node.Phase {
 			value = ^value

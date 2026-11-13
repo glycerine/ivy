@@ -365,11 +365,7 @@ func (p *classPartition) DeriveSequentialAIG(graph *aig.Graph, frames int) *aig.
 				return value
 			}
 			a, b := mappedFanin(node.Fanins[0]), mappedFanin(node.Fanins[1])
-			if node.Kind == aig.And {
-				mapping[id] = out.AND(a, b)
-			} else {
-				mapping[id] = out.XOR(a, b)
-			}
+			mapping[id] = out.AND(a, b)
 			deriveCandidate(id)
 		}
 		if frame == frames {

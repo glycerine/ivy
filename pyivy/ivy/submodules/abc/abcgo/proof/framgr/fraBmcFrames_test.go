@@ -46,7 +46,8 @@ func TestInitializedTimeframesNativeXor(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		want := []bool{false, values[0], values[0] != values[1]}
+		// C Fra_BmcFrames builds an AND even for a native EXOR node.
+		want := []bool{false, false, false}
 		for i := range want {
 			if got[i] != want[i] {
 				t.Fatalf("input %v output %d = %v, want %v", values, i, got[i], want[i])
@@ -59,8 +60,8 @@ func TestInitializedTimeframesTwoRegisterOracle(t *testing.T) {
 	source := aig.NewGraph()
 	x, y, q, r := source.NewInput(), source.NewInput(), source.NewInput(), source.NewInput()
 	source.AddOutput(source.AND(q.Not(), x))
-	source.AddOutput(source.NewXor(r, y))
-	source.AddOutput(source.NewXor(q, y))
+	source.AddOutput(source.XOR(r, y))
+	source.AddOutput(source.XOR(q, y))
 	source.AddOutput(source.AND(r.Not(), x))
 	aig.Aig_ManSetRegNum(source, 2)
 	graph, _ := fraUnrollInitialized(source, 4, true)

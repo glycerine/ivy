@@ -30,10 +30,8 @@ func Fra_FraigVerifyCounterEx(p *Fra_Man_t, cex *vec.Vec_Int_t) {
 	for _, e := range g.LiveEdges() {
 		n := g.Node(e)
 		switch n.Kind {
-		case aig.And:
+		case aig.And, aig.ExclusiveOr:
 			values[e.NodeID()] = value(n.Fanins[0]) && value(n.Fanins[1])
-		case aig.ExclusiveOr:
-			values[e.NodeID()] = value(n.Fanins[0]) != value(n.Fanins[1])
 		case aig.Buffer, aig.Output:
 			values[e.NodeID()] = value(n.Fanins[0])
 		}
@@ -115,10 +113,8 @@ func Fra_FraigSweep(p *Fra_Man_t) {
 		n := p.PManAig.Node(obj)
 		var mapped aig.Edge
 		switch n.Kind {
-		case aig.And:
+		case aig.And, aig.ExclusiveOr:
 			mapped = p.PManFraig.AND(Fra_ObjChild0Fra(p, obj, p.PPars.NFramesK), Fra_ObjChild1Fra(p, obj, p.PPars.NFramesK))
-		case aig.ExclusiveOr:
-			mapped = p.PManFraig.NewXor(Fra_ObjChild0Fra(p, obj, p.PPars.NFramesK), Fra_ObjChild1Fra(p, obj, p.PPars.NFramesK))
 		case aig.Buffer:
 			mapped = Fra_ObjChild0Fra(p, obj, p.PPars.NFramesK)
 		default:

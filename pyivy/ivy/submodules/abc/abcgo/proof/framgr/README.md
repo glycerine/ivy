@@ -23,3 +23,8 @@ that retained candidate as independently proved. The same fast path can leave
 simple BMC without a witness for a direct-input output: this was confirmed by
 running `Fra_BmcPerformSimple` from compiled C on a two-frame, single-latch
 fixture whose output is the latch and whose next state is the primary input.
+
+ABC's FRA simulation, FRAIG sweep, BMC unrolling, and class-derived unrolling
+treat native EXOR nodes as AND nodes. A compiled C FRAIG fixture confirms this
+behavior. Consequently these paths do not preserve native EXOR truth tables;
+normal AIGs can represent XOR using AND/inverter nodes instead.

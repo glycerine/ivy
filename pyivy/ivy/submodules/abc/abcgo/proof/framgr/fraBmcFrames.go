@@ -46,10 +46,8 @@ func fraUnrollInitialized(original *aig.Graph, frames int, keepOutputs bool) (*a
 		for _, edge := range original.LiveEdges() {
 			node := nodes[edge.NodeID()]
 			switch node.Kind {
-			case aig.And:
+			case aig.And, aig.ExclusiveOr:
 				set(edge, f, graph.AND(get(node.Fanins[0], f), get(node.Fanins[1], f)))
-			case aig.ExclusiveOr:
-				set(edge, f, graph.XOR(get(node.Fanins[0], f), get(node.Fanins[1], f)))
 			case aig.Buffer:
 				set(edge, f, get(node.Fanins[0], f))
 			}
