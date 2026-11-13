@@ -174,6 +174,11 @@ original C dereferences a nil vector; the Go entry point rejects that invalid
 input with a panic rather than reporting successful synthesis. A compiled-C
 subprocess regression characterizes the source behavior.
 
+`Gia_ManRegCreatePart` copies native GIA XOR objects using `Gia_ManAppendAnd`,
+so the partition computes AND where the source graph computes XOR. This is an
+inherited C behavior, confirmed against compiled ABC; it can change partition
+semantics and therefore must not be treated as a faithful XOR reduction.
+
 The source circuit-SAT output solver checks that its entire counterexample
 store was consumed even when `fCheckMiter` stops after the first SAT output.
 With multiple SAT outputs, the original asserts on trailing records; the Go

@@ -56,3 +56,29 @@ func TestRegisterPartitionAdvancesTraversalTwice(t *testing.T) {
 		t.Fatal("unvisited mark remains in previous epoch")
 	}
 }
+
+// cecSynth.c duplicates every Gia_ObjIsAnd node with Gia_ManAppendAnd,
+// including the GIA encoding of native XOR. This inherits C's loss of XOR.
+func TestRegisterPartitionNativeXorSourceBehavior(t *testing.T) {
+	g := gia.Gia_ManStart(10)
+	a, b := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
+	gia.Gia_ManAppendCi(g)
+	x := gia.Gia_ManAppendXorReal(g, a, b)
+	gia.Gia_ManAppendCo(g, x)
+	gia.Gia_ManSetRegNum(g, 1)
+	part := vec.Vec_IntAlloc(1)
+	vec.Vec_IntPush(part, 0)
+	out := Gia_ManRegCreatePart(g, part, nil, nil, nil)
+	co := gia.Gia_ManCo(out, 1)
+	driver := gia.Gia_ObjFanin0(co)
+	if gia.Gia_ObjIsXor(driver) != 0 {
+		t.Fatal("C duplicates native XOR as AND")
+	}
+	got, err := out.Evaluate([]bool{true, false, false})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(got) != 2 || got[1] {
+		t.Fatalf("source AND output: %v", got)
+	}
+}
