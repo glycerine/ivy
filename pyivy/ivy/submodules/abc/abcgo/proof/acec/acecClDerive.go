@@ -12,6 +12,11 @@ func Acec_ManDerive_rec(dst, p *Gia_Man_t, node int32, mirrors *Vec_Int_t) {
 	mirror := vec.Vec_IntEntry(mirrors, int(node))
 	if mirror >= 0 {
 		objID = mirror >> 1
+		if objID != node {
+			// A replacement cone may itself reference the original node.
+			vec.Vec_IntWriteEntry(mirrors, int(node), -1)
+			defer vec.Vec_IntWriteEntry(mirrors, int(node), mirror)
+		}
 	}
 	obj := gia.Gia_ManObj(p, objID)
 	if obj.Value == ^uint32(0) {

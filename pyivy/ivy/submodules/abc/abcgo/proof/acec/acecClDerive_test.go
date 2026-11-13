@@ -42,3 +42,24 @@ func TestLiteralPolarityStopsAtUnrelatedPrimaryInput(t *testing.T) {
 		t.Fatalf("a polarity = %d, want %d", got, a^1)
 	}
 }
+
+func TestMirrorReplacementMayReferToOriginalNode(t *testing.T) {
+	p := gia.Gia_ManStart(16)
+	a, b, c := gia.Gia_ManAppendCi(p), gia.Gia_ManAppendCi(p), gia.Gia_ManAppendCi(p)
+	ab := gia.Gia_ManAppendAnd(p, a, b)
+	replacement := gia.Gia_ManAppendOr(p, ab, c)
+	gia.Gia_ManAppendCo(p, ab)
+	mirrors := vec.Vec_IntStartFull(int(gia.Gia_ManObjNum(p)))
+	vec.Vec_IntWriteEntry(mirrors, int(ab>>1), replacement)
+	dst := Acec_ManDerive(p, mirrors)
+	for x := 0; x < 8; x++ {
+		in := []bool{x&1 != 0, x&2 != 0, x&4 != 0}
+		out, err := dst.Evaluate(in)
+		if err != nil || out[0] != (in[0] && in[1] || in[2]) {
+			t.Fatalf("input %v output %v error %v", in, out, err)
+		}
+	}
+	if got := vec.Vec_IntEntry(mirrors, int(ab>>1)); got != replacement {
+		t.Fatalf("mirror changed to %d", got)
+	}
+}
