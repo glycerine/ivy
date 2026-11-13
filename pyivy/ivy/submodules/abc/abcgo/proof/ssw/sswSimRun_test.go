@@ -48,3 +48,30 @@ func TestUnnormalizeConvertsFirstFrameConstant(t *testing.T) {
 		t.Fatalf("got %x", words)
 	}
 }
+
+func TestUnnormalizeChangesOnlyFirstFrameOfPhaseOneNodes(t *testing.T) {
+	g := aig.NewGraph()
+	a, b := g.NewInput(), g.NewInput()
+	one := g.AND(a, b)
+	zero := g.AND(a, b.Not())
+	out := g.AddOutput(one)
+	aig.Aig_ObjSetPhase(g, one, true)
+	aig.Aig_ObjSetPhase(g, zero, false)
+	p := Ssw_SmlStart(g, 0, 2, 1)
+	defer Ssw_SmlStop(p)
+	for _, obj := range []aig.Edge{g.Const1(), a, b, one, zero, out} {
+		words := Ssw_SmlSimInfo(p, obj)
+		words[0], words[1] = 0x12345678, 0xabcdef01
+	}
+	Ssw_SmlUnnormalize(p)
+	for _, obj := range []aig.Edge{g.Const1(), a, b, one, zero, out} {
+		want := uint32(0x12345678)
+		if obj == g.Const1() || obj == one {
+			want = ^want
+		}
+		words := Ssw_SmlSimInfo(p, obj)
+		if words[0] != want || words[1] != 0xabcdef01 {
+			t.Fatalf("node %d words = %x, want %08x abcdef01", obj.NodeID(), words, want)
+		}
+	}
+}
