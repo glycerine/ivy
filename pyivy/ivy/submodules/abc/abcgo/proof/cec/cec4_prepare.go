@@ -79,8 +79,10 @@ func cec4PrepareSimulation(graph *gia.Gia_Man_t, pars *Cec_ParFra_t, simOnly boo
 		generatedRounds++
 		cec4RandomInputs(pack.values, graph)
 		start := time.Now()
-		_, keepGenerating = cec4GeneratePatterns(graph, pack, candidates, pars.nItersMax)
+		count, more := cec4GeneratePatterns(graph, pack, candidates, pars.nItersMax)
+		keepGenerating = more
 		if manager != nil {
+			manager.nSatSat += int32(count)
 			manager.timeGenPats += time.Since(start).Nanoseconds()
 		}
 		simulate(pack.values, true)

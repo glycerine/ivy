@@ -22,6 +22,9 @@ func cec4Sweep(graph *gia.Gia_Man_t, pars *Cec_ParFra_t, simOnly, finishGraph bo
 	if witness != nil || simOnly {
 		return nil, witness, stats
 	}
+	if manager != nil {
+		manager.nSatSat = 0
+	}
 	sim := pack.values
 	clear(pack.reserved.data)
 	if manager != nil {

@@ -41,3 +41,46 @@ func TestCec4EntryVerboseReportsSimulationAndSAT(t *testing.T) {
 		}
 	}
 }
+
+func TestCec4GeneratedPatternsCountedBeforeEarlyMiterExit(t *testing.T) {
+	g := gia.Gia_ManStart(40)
+	inputs := make([]int32, 12)
+	for i := range inputs {
+		inputs[i] = gia.Gia_ManAppendCi(g)
+	}
+	root := inputs[0]
+	for _, lit := range inputs[1:] {
+		root = gia.Gia_ManAppendAnd(g, root, lit)
+	}
+	gia.Gia_ManAppendCo(g, root)
+	pars := Cec_ParFra_t{jType: 0, nWords: 1, nRounds: 0, nGenIters: 1, nItersMax: 2000, fCheckMiter: 1}
+	manager := Cec4_ManCreate(g, &pars)
+	defer Cec4_ManDestroy(manager)
+	_, witness := cec4PrepareSimulation(g, &pars, false, manager)
+	if witness == nil {
+		t.Fatal("expected generated miter counterexample")
+	}
+	if manager.nSatSat <= 0 {
+		t.Fatal("generated pattern count was not recorded before miter exit")
+	}
+}
+
+func TestCec4GeneratedPatternCountResetBeforeSAT(t *testing.T) {
+	g := gia.Gia_ManStart(40)
+	inputs := make([]int32, 12)
+	for i := range inputs {
+		inputs[i] = gia.Gia_ManAppendCi(g)
+	}
+	root := inputs[0]
+	for _, lit := range inputs[1:] {
+		root = gia.Gia_ManAppendAnd(g, root, lit)
+	}
+	gia.Gia_ManAppendCo(g, root)
+	pars := Cec_ParFra_t{jType: 0, nWords: 1, nRounds: 0, nGenIters: 1, nItersMax: 2000, nBTLimit: 1000}
+	manager := Cec4_ManCreate(g, &pars)
+	defer Cec4_ManDestroy(manager)
+	_, witness, stats := cec4Sweep(g, &pars, false, false, manager)
+	if witness != nil || manager.nSatSat != int32(stats.sat) {
+		t.Fatalf("generated patterns leaked into SAT count: manager %d SAT %d", manager.nSatSat, stats.sat)
+	}
+}

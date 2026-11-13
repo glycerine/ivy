@@ -13,11 +13,7 @@ func Cec4_ManPerformSweeping(graph *Gia_Man_t, pars *Cec_ParFra_t, out **Gia_Man
 	if pars.fVerbose != 0 {
 		fmt.Printf("Solver type = %d. Simulate %d words in %d rounds. SAT with %d confs. Recycle after %d SAT calls.\n", pars.jType, pars.nWords, pars.nRounds, pars.nBTLimit, pars.nCallsRecycle)
 	}
-	result, witness, stats := cec4Sweep(graph, pars, simOnly != 0, out != nil, manager)
-	manager.nSatSat = int32(stats.sat)
-	manager.nSatUnsat = int32(stats.unsat)
-	manager.nSatUndec = int32(stats.unknown)
-	manager.nRecycles = int32(stats.recycles)
+	result, witness, _ := cec4Sweep(graph, pars, simOnly != 0, out != nil, manager)
 	if pars.fVerbose != 0 {
 		proofs, disproofs := manager.nSatUnsat, manager.nSatSat
 		pctXor := 100 * float64(manager.nGates[1]) / float64(max(int32(1), manager.nGates[0]+manager.nGates[1]))
