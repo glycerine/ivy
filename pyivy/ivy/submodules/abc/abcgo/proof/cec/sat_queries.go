@@ -35,7 +35,11 @@ func (p *Cec_ManSat_t) query(a int32, b *int32) int32 {
 	return int32(p.result.Status)
 }
 func Cec_ManSatCheckNode(p *Cec_ManSat_t, obj *Gia_Obj_t) int32 {
-	return p.query(cecObjectLiteral(p, obj), nil)
+	lit := cecObjectLiteral(p, obj)
+	if lit == 1 {
+		panic("cec: constant-one node query")
+	}
+	return p.query(lit, nil)
 }
 func Cec_ManSatCheckNodeTwo(p *Cec_ManSat_t, a, b *Gia_Obj_t) int32 {
 	lit := cecObjectLiteral(p, b)

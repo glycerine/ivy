@@ -376,3 +376,42 @@ func TestConjunctionUnsatThenRecycleAndWitness(t *testing.T) {
 		}
 	}
 }
+
+func TestCheckLiteralUsesSATForNonconstantPhaseOne(t *testing.T) {
+	for _, flip := range []bool{false, true} {
+		c := newCircuit(1)
+		m, err := NewManager(c, Options{PolarFlip: flip})
+		if err != nil {
+			t.Fatal(err)
+		}
+		before := m.Statistics()
+		r, err := m.CheckLiteral(c.inputs[0] ^ 1)
+		after := m.Statistics()
+		if err != nil || r.Status != Different || r.Counterexample == nil || r.Counterexample.Inputs[0] {
+			t.Fatalf("flip=%v result=%+v err=%v", flip, r, err)
+		}
+		if after.SATCalls != before.SATCalls+1 || after.Variables != before.Variables+1 {
+			t.Fatalf("flip=%v before=%+v after=%+v", flip, before, after)
+		}
+	}
+}
+
+func TestCheckLiteralConstantSourceCases(t *testing.T) {
+	m, err := NewManager(newCircuit(1), Options{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	before := m.Statistics()
+	r, err := m.CheckLiteral(0)
+	if err != nil || r.Status != Equivalent {
+		t.Fatalf("zero: %+v %v", r, err)
+	}
+	after := m.Statistics()
+	if after.Queries != before.Queries || after.SATCalls != before.SATCalls {
+		t.Fatalf("constant zero used solver: %+v", after)
+	}
+	r, err = m.CheckLiteral(1)
+	if err != nil || r.Status != Different || r.Counterexample == nil {
+		t.Fatalf("one: %+v %v", r, err)
+	}
+}

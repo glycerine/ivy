@@ -257,13 +257,18 @@ func (m *Manager) CheckLiteral(lit int32) (Result, error) {
 	if !m.models[0].valid(lit) {
 		return Result{}, fmt.Errorf("cec: invalid query literal")
 	}
+	// Cec_ManSatCheckNode handles the two constant pointers before updating
+	// counters or allocating a cone. The C assert on constant one is represented
+	// as a direct witness so the general-purpose core remains usable by its callers.
+	if lit == 0 {
+		return Result{Status: Equivalent}, nil
+	}
+	if lit == 1 {
+		return m.witness(make([]bool, len(m.inputs)), 0, lit, 0, 0, -1)
+	}
 	m.begin()
 	if m.interrupted() {
 		return Result{Status: Undecided}, nil
-	}
-	// The original CEC driver checks the all-zero phase before SAT.
-	if m.models[0].phase[lit>>1] != (lit&1 != 0) {
-		return m.witness(make([]bool, len(m.inputs)), 0, lit, 0, 0, -1)
 	}
 	a := m.encode(0, lit)
 	status := m.solve(a)

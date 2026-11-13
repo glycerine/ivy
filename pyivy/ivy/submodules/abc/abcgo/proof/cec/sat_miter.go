@@ -75,6 +75,16 @@ func Cec_ManSatSolveMiter(graph *Gia_Man_t, params *Cec_ParSat_t, statusOut **Ve
 	status := vec.Vec_StrAlloc(len(outputs))
 	store := vec.Vec_IntAlloc(16)
 	for i, lit := range outputs {
+		// C handles constant outputs before calling Cec_ManSatCheckNode.
+		if lit <= 1 {
+			if lit == 0 {
+				vec.Vec_StrPush(status, 1)
+			} else {
+				vec.Vec_StrPush(status, 0)
+				Cec_ManSatAddToStore(store, vec.Vec_IntAlloc(0), int32(i))
+			}
+			continue
+		}
 		if !p.pPars.deadline.IsZero() && !time.Now().Before(p.pPars.deadline) {
 			vec.Vec_StrPush(status, byte(255))
 			Cec_ManSatAddToStore(store, nil, int32(i))

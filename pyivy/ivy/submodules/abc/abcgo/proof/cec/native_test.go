@@ -162,3 +162,26 @@ func TestPublicFraigActuallyReduces(t *testing.T) {
 		t.Fatalf("public fraig changed outputs %d", got)
 	}
 }
+
+func TestSourceNodeConstantOneAssertionAndMiterShortcut(t *testing.T) {
+	graph := gia.Gia_ManStart(8)
+	gia.Gia_ManAppendCi(graph)
+	gia.Gia_ManAppendCo(graph, 0)
+	gia.Gia_ManAppendCo(graph, 1)
+	var status *Vec_Str_t
+	store := Cec_ManSatSolveMiter(graph, nil, &status)
+	if got := vec.Vec_StrArray(status); !reflect.DeepEqual(got, []byte{1, 0}) {
+		t.Fatalf("statuses %v", got)
+	}
+	if got := vec.Vec_IntArray(store); !reflect.DeepEqual(got, []int32{1, 0}) {
+		t.Fatalf("store %v", got)
+	}
+	p := Cec_ManSatCreate(graph, nil)
+	defer Cec_ManSatStop(p)
+	defer func() {
+		if recover() == nil {
+			t.Fatal("constant-one source node check must assert")
+		}
+	}()
+	Cec_ManSatCheckNode(p, gia.Gia_Not(gia.Gia_ManConst0(graph)))
+}
