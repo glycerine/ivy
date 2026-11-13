@@ -1,488 +1,315 @@
+// Ternary simulation and cube generalization, ported from ABC pdrTsim.c.
 package pdr
 
-import "os"
+import (
+	"fmt"
+	"os"
 
-/**CFile****************************************************************
+	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/aig/saig"
+	"github.com/glycerine/abcgo/misc/vec"
+)
 
-  FileName    [pdrTsim.c]
+const (
+	PDR_ZER int32 = 1
+	PDR_ONE int32 = 2
+	PDR_UND int32 = 3
+)
 
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Property driven reachability.]
-
-  Synopsis    [Ternary simulation.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - November 20, 2010.]
-
-  Revision    [$Id: pdrTsim.c,v 1.00 2010/11/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "pdrInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-const PDR_ZER = 1
-const PDR_ONE = 2
-const PDR_UND = 3
-
-func Pdr_ManSimInfoNot(Value int32) int32 {
-    if Value == PDR_ZER {
-        return PDR_ONE; }
-    if Value == PDR_ONE {
-        return PDR_ZER; }
-    return PDR_UND;
+func Pdr_ManSimInfoNot(v int32) int32 {
+	if v == PDR_ZER {
+		return PDR_ONE
+	}
+	if v == PDR_ONE {
+		return PDR_ZER
+	}
+	return PDR_UND
+}
+func Pdr_ManSimInfoAnd(a, b int32) int32 {
+	if a == PDR_ZER || b == PDR_ZER {
+		return PDR_ZER
+	}
+	if a == PDR_ONE && b == PDR_ONE {
+		return PDR_ONE
+	}
+	return PDR_UND
 }
 
-func Pdr_ManSimInfoAnd(Value0 int32, Value1 int32) int32 {
-    if Value0 == PDR_ZER || Value1 == PDR_ZER {
-        return PDR_ZER; }
-    if Value0 == PDR_ONE && Value1 == PDR_ONE {
-        return PDR_ONE; }
-    return PDR_UND;
+// Like ABC's pTerSimData, Xsim is temporary per-object simulation storage.
+// Other ternary simulations must not be interleaved on the same graph.
+func Pdr_ManSimInfoGet(g *aig.Graph, e aig.Edge) int32    { return aig.Aig_ObjGetXsim(g, e) }
+func Pdr_ManSimInfoSet(g *aig.Graph, e aig.Edge, v int32) { aig.Aig_ObjSetXsim(g, e, v) }
+
+func Pdr_ManCollectCone_rec(g *aig.Graph, e aig.Edge, cis, nodes *vec.Vec_Int_t) {
+	if aig.Aig_ObjIsTravIdCurrent(g, e) {
+		return
+	}
+	aig.Aig_ObjSetTravIdCurrent(g, e)
+	if aig.Aig_ObjIsCi(g, e) {
+		vec.Vec_IntPush(cis, int32(e.NodeID()))
+		return
+	}
+	Pdr_ManCollectCone_rec(g, aig.Aig_ObjFanin0(g, e), cis, nodes)
+	if aig.Aig_ObjIsCo(g, e) {
+		return
+	}
+	if g.Node(e).Kind == aig.Buffer {
+		vec.Vec_IntPush(nodes, int32(e.NodeID()))
+		return
+	}
+	Pdr_ManCollectCone_rec(g, aig.Aig_ObjFanin1(g, e), cis, nodes)
+	vec.Vec_IntPush(nodes, int32(e.NodeID()))
+}
+func Pdr_ManCollectCone(g *aig.Graph, cos, cis, nodes *vec.Vec_Int_t) {
+	vec.Vec_IntClear(cis)
+	vec.Vec_IntClear(nodes)
+	aig.Aig_ManIncrementTravId(g)
+	aig.Aig_ObjSetTravIdCurrent(g, g.Const1())
+	for _, id := range vec.Vec_IntArray(cos) {
+		Pdr_ManCollectCone_rec(g, aig.Aig_ManObj(g, id), cis, nodes)
+	}
+}
+func Pdr_ManExtendOneEval(g *aig.Graph, e aig.Edge) int32 {
+	a := Pdr_ManSimInfoGet(g, aig.Aig_ObjFanin0(g, e))
+	if aig.Aig_ObjFaninC0(g, e) != 0 {
+		a = Pdr_ManSimInfoNot(a)
+	}
+	if aig.Aig_ObjIsCo(g, e) || g.Node(e).Kind == aig.Buffer {
+		Pdr_ManSimInfoSet(g, e, a)
+		return a
+	}
+	b := Pdr_ManSimInfoGet(g, aig.Aig_ObjFanin1(g, e))
+	if aig.Aig_ObjFaninC1(g, e) != 0 {
+		b = Pdr_ManSimInfoNot(b)
+	}
+	v := Pdr_ManSimInfoAnd(a, b)
+	if g.Node(e).Kind == aig.ExclusiveOr {
+		if a == PDR_UND || b == PDR_UND {
+			v = PDR_UND
+		} else if a == b {
+			v = PDR_ZER
+		} else {
+			v = PDR_ONE
+		}
+	}
+	Pdr_ManSimInfoSet(g, e, v)
+	return v
+}
+func Pdr_ManSimDataInit(g *aig.Graph, cis, vals, nodes, cos, outvals, removed *vec.Vec_Int_t) int32 {
+	Pdr_ManSimInfoSet(g, g.Const1(), PDR_ONE)
+	for i, id := range vec.Vec_IntArray(cis) {
+		v := PDR_ZER
+		if vec.Vec_IntEntry(vals, i) != 0 {
+			v = PDR_ONE
+		}
+		Pdr_ManSimInfoSet(g, aig.Aig_ManObj(g, id), v)
+	}
+	if removed != nil {
+		for _, id := range vec.Vec_IntArray(removed) {
+			Pdr_ManSimInfoSet(g, aig.Aig_ManObj(g, id), PDR_UND)
+		}
+	}
+	for _, id := range vec.Vec_IntArray(nodes) {
+		Pdr_ManExtendOneEval(g, aig.Aig_ManObj(g, id))
+	}
+	for _, id := range vec.Vec_IntArray(cos) {
+		Pdr_ManExtendOneEval(g, aig.Aig_ManObj(g, id))
+	}
+	for i, id := range vec.Vec_IntArray(cos) {
+		v := Pdr_ManSimInfoGet(g, aig.Aig_ManObj(g, id))
+		expected := PDR_ZER
+		if vec.Vec_IntEntry(outvals, i) != 0 {
+			expected = PDR_ONE
+		}
+		if v != expected {
+			return 0
+		}
+	}
+	return 1
+}
+func Pdr_ManExtendOne(g *aig.Graph, e aig.Edge, undo, vis *vec.Vec_Int_t) int32 {
+	if !saig.Saig_ObjIsLo(g, e) || !aig.Aig_ObjIsTravIdCurrent(g, e) {
+		panic("pdr: expected a marked latch output")
+	}
+	old := Pdr_ManSimInfoGet(g, e)
+	if old != PDR_ZER && old != PDR_ONE {
+		panic("pdr: expected known latch value")
+	}
+	vec.Vec_IntPush(undo, int32(e.NodeID()))
+	vec.Vec_IntPush(undo, old)
+	Pdr_ManSimInfoSet(g, e, PDR_UND)
+	vec.Vec_IntClear(vis)
+	vec.Vec_IntPush(vis, int32(e.NodeID()))
+	for i := 0; i < vec.Vec_IntSize(vis); i++ {
+		id := vec.Vec_IntEntry(vis, i)
+		for handle := aig.Aig_ObjFanout0Int(g, id); handle != 0; handle = aig.Aig_ObjFanoutNext(g, handle) {
+			f := aig.Aig_ManObj(g, handle/2)
+			if !aig.Aig_ObjIsTravIdCurrent(g, f) {
+				continue
+			}
+			old = Pdr_ManSimInfoGet(g, f)
+			if old == PDR_UND {
+				continue
+			}
+			now := Pdr_ManExtendOneEval(g, f)
+			if now == old {
+				continue
+			}
+			if now != PDR_UND {
+				panic("pdr: non-monotone ternary propagation")
+			}
+			vec.Vec_IntPush(undo, int32(f.NodeID()))
+			vec.Vec_IntPush(undo, old)
+			if aig.Aig_ObjIsCo(g, f) {
+				return 0
+			}
+			vec.Vec_IntPushOrder(vis, int32(f.NodeID()))
+		}
+	}
+	return 1
+}
+func Pdr_ManExtendUndo(g *aig.Graph, undo *vec.Vec_Int_t) {
+	a := vec.Vec_IntArray(undo)
+	for i := 0; i < len(a); i += 2 {
+		e := aig.Aig_ManObj(g, a[i])
+		if Pdr_ManSimInfoGet(g, e) != PDR_UND {
+			panic("pdr: invalid undo")
+		}
+		Pdr_ManSimInfoSet(g, e, a[i+1])
+	}
+}
+func Pdr_ManDeriveResult(g *aig.Graph, cis, vals, removed, res, pis *vec.Vec_Int_t) {
+	aig.Aig_ManIncrementTravId(g)
+	for _, id := range vec.Vec_IntArray(removed) {
+		aig.Aig_ObjSetTravIdCurrent(g, aig.Aig_ManObj(g, id))
+	}
+	vec.Vec_IntClear(res)
+	vec.Vec_IntClear(pis)
+	for i, id := range vec.Vec_IntArray(cis) {
+		e := aig.Aig_ManObj(g, id)
+		lit := 2 * aig.Aig_ObjCioId(g, e)
+		if vec.Vec_IntEntry(vals, i) == 0 {
+			lit++
+		}
+		if saig.Saig_ObjIsPi(g, e) {
+			vec.Vec_IntPush(pis, lit)
+		} else if !aig.Aig_ObjIsTravIdCurrent(g, e) {
+			vec.Vec_IntPush(res, lit-2*saig.Saig_ManPiNum(g))
+		}
+	}
+	if vec.Vec_IntSize(res) == 0 {
+		vec.Vec_IntPush(res, 0)
+	}
+}
+func Pdr_ManPrintCex(g *aig.Graph, cis, vals, removed *vec.Vec_Int_t) {
+	b := make([]byte, len(g.Inputs()))
+	for i := range b {
+		b[i] = '-'
+	}
+	for i, id := range vec.Vec_IntArray(cis) {
+		c := byte('0')
+		if vec.Vec_IntEntry(vals, i) != 0 {
+			c = '1'
+		}
+		b[aig.Aig_ObjCioId(g, aig.Aig_ManObj(g, id))] = c
+	}
+	if removed != nil {
+		for _, id := range vec.Vec_IntArray(removed) {
+			b[aig.Aig_ObjCioId(g, aig.Aig_ManObj(g, id))] = 'x'
+		}
+	}
+	fmt.Println(string(b))
 }
 
-func Pdr_ManSimInfoGet(p *Aig_Man_t, pObj *Aig_Obj_t) int32 {
-    return 3 & (p.pTerSimData[Aig_ObjId(pObj) >> 4] >> ((Aig_ObjId(pObj) & 15) << 1));
+// Pdr_ManTernarySim generalizes the SAT assignment while retaining the
+// selected output values. Removing a latch is rolled back if it changes a CO.
+func Pdr_ManTernarySim(p *Pdr_Man_t, k int32, cube *Pdr_Set_t) *Pdr_Set_t {
+	g := p.pAig
+	cos, cis, nodes := p.vCoObjs, p.vCiObjs, p.vNodes
+	vals, outvals, removed := p.vCiVals, p.vCoVals, p.vCi2Rem
+	vec.Vec_IntClear(cos)
+	if cube == nil {
+		vec.Vec_IntPush(cos, int32(aig.Aig_ManCo(g, p.iOutCur).NodeID()))
+	} else {
+		for _, lit := range cube.Lits[:cube.nLits] {
+			if lit != -1 {
+				vec.Vec_IntPush(cos, int32(saig.Saig_ManLi(g, lit>>1).NodeID()))
+			}
+		}
+	}
+	if p.pPars.fVeryVerbose != 0 {
+		fmt.Print("Trying to justify cube ")
+		if cube != nil {
+			Pdr_SetPrint(os.Stdout, cube, aig.Aig_ManRegNum(g), nil)
+		} else {
+			fmt.Print("<prop=fail>")
+		}
+		fmt.Printf(" in frame %d.\n", k)
+	}
+	Pdr_ManCollectCone(g, cos, cis, nodes)
+	Pdr_ManCollectValues(p, k, cis, vals)
+	Pdr_ManCollectValues(p, k, cos, outvals)
+	if p.pPars.fVeryVerbose != 0 {
+		Pdr_ManPrintCex(g, cis, vals, nil)
+	}
+	if Pdr_ManSimDataInit(g, cis, vals, nodes, cos, outvals, nil) == 0 {
+		panic("pdr: SAT assignment fails ternary simulation")
+	}
+	vec.Vec_IntClear(removed)
+	try := func(e aig.Edge) {
+		vec.Vec_IntClear(p.vUndo)
+		if Pdr_ManExtendOne(g, e, p.vUndo, p.vVisits) != 0 {
+			vec.Vec_IntPush(removed, int32(e.NodeID()))
+		} else {
+			Pdr_ManExtendUndo(g, p.vUndo)
+		}
+	}
+	if p.pPars.fFlopPrio != 0 {
+		vec.Vec_IntClear(p.vRes)
+		for _, id := range vec.Vec_IntArray(cis) {
+			e := aig.Aig_ManObj(g, id)
+			if saig.Saig_ObjIsLo(g, e) {
+				vec.Vec_IntPush(p.vRes, aig.Aig_ObjCioId(g, e)-saig.Saig_ManPiNum(g))
+			}
+		}
+		vec.Vec_IntSelectSortCost(vec.Vec_IntArray(p.vRes), vec.Vec_IntSize(p.vRes), p.vPrio)
+		for _, index := range vec.Vec_IntArray(p.vRes) {
+			try(aig.Aig_ManCi(g, saig.Saig_ManPiNum(g)+index))
+		}
+	} else {
+		for pass := 0; pass < 2; pass++ {
+			for _, id := range vec.Vec_IntArray(cis) {
+				e := aig.Aig_ManObj(g, id)
+				if !saig.Saig_ObjIsLo(g, e) {
+					continue
+				}
+				index := aig.Aig_ObjCioId(g, e) - saig.Saig_ManPiNum(g)
+				high := vec.Vec_IntEntry(p.vPrio, int(index)) != 0
+				if high != (pass == 1) {
+					continue
+				}
+				try(e)
+			}
+		}
+	}
+	if p.pPars.fVeryVerbose != 0 {
+		Pdr_ManPrintCex(g, cis, vals, removed)
+	}
+	if Pdr_ManSimDataInit(g, cis, vals, nodes, cos, outvals, removed) == 0 {
+		panic("pdr: generalized cube fails ternary simulation")
+	}
+	Pdr_ManDeriveResult(g, cis, vals, removed, p.vRes, p.vLits)
+	if p.pPars.fUseAbs != 0 && p.vAbsFlops != nil {
+		n := 0
+		for _, lit := range vec.Vec_IntArray(p.vRes) {
+			if vec.Vec_IntEntry(p.vAbsFlops, int(lit>>1)) != 0 {
+				vec.Vec_IntWriteEntry(p.vRes, n, lit)
+				n++
+			} else {
+				vec.Vec_IntPush(p.vLits, 2*saig.Saig_ManPiNum(g)+lit)
+			}
+		}
+		vec.Vec_IntShrink(p.vRes, n)
+	}
+	return Pdr_SetCreate(p.vRes, p.vLits)
 }
-
-func Pdr_ManSimInfoSet(p *Aig_Man_t, pObj *Aig_Obj_t, Value int32) {
-    assert(Value >= PDR_ZER && Value <= PDR_UND, "Value >= PDR_ZER && Value <= PDR_UND");
-    Value ^= Pdr_ManSimInfoGet( p, pObj );
-    p.pTerSimData[Aig_ObjId(pObj) >> 4] ^= (Value << ((Aig_ObjId(pObj) & 15) << 1));
-}
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Marks the TFI cone and collects CIs and nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Pdr_ManCollectCone_rec(pAig *Aig_Man_t, pObj *Aig_Obj_t, vCiObjs *Vec_Int_t, vNodes *Vec_Int_t) {
-    assert(!Aig_IsComplement(pObj), "!Aig_IsComplement(pObj)");
-    if Aig_ObjIsTravIdCurrent(pAig, pObj) {
-        return; }
-    Aig_ObjSetTravIdCurrent(pAig, pObj);
-    if Aig_ObjIsCi(pObj) {
-        Vec_IntPush( vCiObjs, Aig_ObjId(pObj) );
-        return;
-    }
-    Pdr_ManCollectCone_rec( pAig, Aig_ObjFanin0(pObj), vCiObjs, vNodes );
-    if Aig_ObjIsCo(pObj) {
-        return; }
-    Pdr_ManCollectCone_rec( pAig, Aig_ObjFanin1(pObj), vCiObjs, vNodes );
-    Vec_IntPush( vNodes, Aig_ObjId(pObj) );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Marks the TFI cone and collects CIs and nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Pdr_ManCollectCone(pAig *Aig_Man_t, vCoObjs *Vec_Int_t, vCiObjs *Vec_Int_t, vNodes *Vec_Int_t) {
-    var pObj *Aig_Obj_t;
-    var i int32;
-    Vec_IntClear( vCiObjs );
-    Vec_IntClear( vNodes );
-    Aig_ManIncrementTravId( pAig );
-    Aig_ObjSetTravIdCurrent( pAig, Aig_ManConst1(pAig) );
-    Aig_ManForEachObjVec( vCoObjs, pAig, pObj, i )
-        Pdr_ManCollectCone_rec( pAig, pObj, vCiObjs, vNodes );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Performs ternary simulation for one node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Pdr_ManExtendOneEval(pAig *Aig_Man_t, pObj *Aig_Obj_t) int32 {
-    var Value0, Value1, Value int32;
-    Value0 = Pdr_ManSimInfoGet( pAig, Aig_ObjFanin0(pObj) );
-    if Aig_ObjFaninC0(pObj) {
-        Value0 = Pdr_ManSimInfoNot( Value0 ); }
-    if Aig_ObjIsCo(pObj) {
-        Pdr_ManSimInfoSet( pAig, pObj, Value0 );
-        return Value0;
-    }
-    assert(Aig_ObjIsNode(pObj), "Aig_ObjIsNode(pObj)");
-    Value1 = Pdr_ManSimInfoGet( pAig, Aig_ObjFanin1(pObj) );
-    if Aig_ObjFaninC1(pObj) {
-        Value1 = Pdr_ManSimInfoNot( Value1 ); }
-    Value = Pdr_ManSimInfoAnd( Value0, Value1 );
-    Pdr_ManSimInfoSet( pAig, pObj, Value );
-    return Value;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Performs ternary simulation for one design.]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Pdr_ManSimDataInit(pAig *Aig_Man_t, vCiObjs *Vec_Int_t, vCiVals *Vec_Int_t, vNodes *Vec_Int_t, vCoObjs *Vec_Int_t, vCoVals *Vec_Int_t, vCi2Rem *Vec_Int_t) int32 {
-    var pObj *Aig_Obj_t;
-    var i int32;
-    // set the CI values
-    Pdr_ManSimInfoSet( pAig, Aig_ManConst1(pAig), PDR_ONE );
-    Aig_ManForEachObjVec( vCiObjs, pAig, pObj, i )
-        Pdr_ManSimInfoSet( pAig, pObj, (Vec_IntEntry(vCiVals, i)?PDR_ONE:PDR_ZER) );
-    // set the FOs to remove
-    if vCi2Rem != nil {
-    Aig_ManForEachObjVec( vCi2Rem, pAig, pObj, i )
-        Pdr_ManSimInfoSet( pAig, pObj, PDR_UND ); }
-    // perform ternary simulation
-    Aig_ManForEachObjVec( vNodes, pAig, pObj, i )
-        Pdr_ManExtendOneEval( pAig, pObj );
-    // transfer results to the output
-    Aig_ManForEachObjVec( vCoObjs, pAig, pObj, i )
-        Pdr_ManExtendOneEval( pAig, pObj );
-    // check the results
-    Aig_ManForEachObjVec( vCoObjs, pAig, pObj, i )
-        if ( Pdr_ManSimInfoGet( pAig, pObj ) != (Vec_IntEntry(vCoVals, i)?PDR_ONE:PDR_ZER) )
-            return 0;
-    return 1;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Tries to assign ternary value to one of the CIs.]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Pdr_ManExtendOne(pAig *Aig_Man_t, pObj *Aig_Obj_t, vUndo *Vec_Int_t, vVis *Vec_Int_t) int32 {
-    var pFanout *Aig_Obj_t;
-    var i int32;
-    var k int32;
-    var iFanout int32 = -1;
-    var Value int32;
-    var Value2 int32;
-    assert(Saig_ObjIsLo(pAig, pObj), "Saig_ObjIsLo(pAig, pObj)");
-    assert(Aig_ObjIsTravIdCurrent(pAig, pObj), "Aig_ObjIsTravIdCurrent(pAig, pObj)");
-    // save original value
-    Value = Pdr_ManSimInfoGet( pAig, pObj );
-    assert(Value == PDR_ZER || Value == PDR_ONE, "Value == PDR_ZER || Value == PDR_ONE");
-    Vec_IntPush( vUndo, Aig_ObjId(pObj) );
-    Vec_IntPush( vUndo, Value );
-    // update original value
-    Pdr_ManSimInfoSet( pAig, pObj, PDR_UND );
-    // traverse
-    Vec_IntClear( vVis );
-    Vec_IntPush( vVis, Aig_ObjId(pObj) );
-    Aig_ManForEachObjVec( vVis, pAig, pObj, i )
-    {
-        Aig_ObjForEachFanout( pAig, pObj, pFanout, iFanout, k )
-        {
-            if !Aig_ObjIsTravIdCurrent(pAig, pFanout) {
-                continue; }
-            assert(Aig_ObjId(pObj) < Aig_ObjId(pFanout), "Aig_ObjId(pObj) < Aig_ObjId(pFanout)");
-            Value = Pdr_ManSimInfoGet( pAig, pFanout );
-            if Value == PDR_UND {
-                continue; }
-            Value2 = Pdr_ManExtendOneEval( pAig, pFanout );
-            if Value2 == Value {
-                continue; }
-            assert(Value2 == PDR_UND, "Value2 == PDR_UND");
-            Vec_IntPush( vUndo, Aig_ObjId(pFanout) );
-            Vec_IntPush( vUndo, Value );
-            if Aig_ObjIsCo(pFanout) {
-                return 0; }
-            assert(Aig_ObjIsNode(pFanout), "Aig_ObjIsNode(pFanout)");
-            Vec_IntPushOrder( vVis, Aig_ObjId(pFanout) );
-        }
-    }
-    return 1;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Undoes the partial results of ternary simulation.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Pdr_ManExtendUndo(pAig *Aig_Man_t, vUndo *Vec_Int_t) {
-    var pObj *Aig_Obj_t;
-    var i, Value int32;
-    Aig_ManForEachObjVec( vUndo, pAig, pObj, i )
-    {
-        Value  = Vec_IntEntry(vUndo, ++i);
-        assert(Pdr_ManSimInfoGet(pAig, pObj) == PDR_UND, "Pdr_ManSimInfoGet(pAig, pObj) == PDR_UND");
-        Pdr_ManSimInfoSet( pAig, pObj, Value );
-    }
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Derives the resulting cube.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Pdr_ManDeriveResult(pAig *Aig_Man_t, vCiObjs *Vec_Int_t, vCiVals *Vec_Int_t, vCi2Rem *Vec_Int_t, vRes *Vec_Int_t, vPiLits *Vec_Int_t) {
-    var pObj *Aig_Obj_t;
-    var i, Lit int32;
-    // mark removed flop outputs
-    Aig_ManIncrementTravId( pAig );
-    Aig_ManForEachObjVec( vCi2Rem, pAig, pObj, i )
-    {
-        assert(Saig_ObjIsLo( pAig, pObj ), "Saig_ObjIsLo( pAig, pObj )");
-        Aig_ObjSetTravIdCurrent(pAig, pObj);
-    }
-    // collect flop outputs that are not marked
-    Vec_IntClear( vRes );
-    Vec_IntClear( vPiLits );
-    Aig_ManForEachObjVec( vCiObjs, pAig, pObj, i )
-    {
-        if Saig_ObjIsPi(pAig, pObj) {
-            Lit = Abc_Var2Lit( Aig_ObjCioId(pObj), (Vec_IntEntry(vCiVals, i) == 0) );
-            Vec_IntPush( vPiLits, Lit );
-            continue;
-        }
-        assert(Saig_ObjIsLo(pAig, pObj), "Saig_ObjIsLo(pAig, pObj)");
-        if Aig_ObjIsTravIdCurrent(pAig, pObj) {
-            continue; }
-        Lit = Abc_Var2Lit( Aig_ObjCioId(pObj) - Saig_ManPiNum(pAig), (Vec_IntEntry(vCiVals, i) == 0) );
-        Vec_IntPush( vRes, Lit );
-    }
-    if Vec_IntSize(vRes) == 0 {
-        Vec_IntPush(vRes, 0); }
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Derives the resulting cube.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Pdr_ManPrintCex(pAig *Aig_Man_t, vCiObjs *Vec_Int_t, vCiVals *Vec_Int_t, vCi2Rem *Vec_Int_t) {
-    var pObj *Aig_Obj_t;
-    var i int32;
-    var pBuff string  = ABC_ALLOC( char, Aig_ManCiNum(pAig)+1 );
-    for  i = 0; i < Aig_ManCiNum(pAig); i++  {
-        pBuff[i] = '-';
-    }
-    pBuff[i] = 0;
-    Aig_ManForEachObjVec( vCiObjs, pAig, pObj, i )
-        pBuff[Aig_ObjCioId(pObj)] = (Vec_IntEntry(vCiVals, i)? '1':'0');
-    if vCi2Rem != nil {
-    Aig_ManForEachObjVec( vCi2Rem, pAig, pObj, i )
-        pBuff[Aig_ObjCioId(pObj)] = 'x'; }
-    Abc_Print( 1, "%s\n", pBuff );
-    ABC_FREE( pBuff );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Shrinks values using ternary simulation.]
-
-  Description [The cube contains the set of flop index literals which,
-  when converted into a clause and applied to the combinational outputs, 
-  led to a satisfiable SAT run in frame k (values stored in the SAT solver).
-  If the cube is NULL, it is assumed that the first property output was
-  asserted and failed.
-  The resulting array is a set of flop index literals that asserts the COs.
-  Priority contains 0 for i-th entry if the i-th FF is desirable to remove.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Pdr_ManTernarySim(p *Pdr_Man_t, k int32, pCube *Pdr_Set_t) *Pdr_Set_t {
-    var pRes *Pdr_Set_t;
-    var vPrio *Vec_Int_t    = p.vPrio;    // priority flops (flop indices)
-    var vPiLits *Vec_Int_t  = p.vLits;    // array of literals (0/1 PI values)
-    var vCiObjs *Vec_Int_t  = p.vCiObjs;  // cone leaves (CI obj IDs)
-    var vCoObjs *Vec_Int_t  = p.vCoObjs;  // cone roots (CO obj IDs)
-    var vCiVals *Vec_Int_t  = p.vCiVals;  // cone leaf values (0/1 CI values)
-    var vCoVals *Vec_Int_t  = p.vCoVals;  // cone root values (0/1 CO values)
-    var vNodes *Vec_Int_t   = p.vNodes;   // cone nodes (node obj IDs)
-    var vUndo *Vec_Int_t    = p.vUndo;    // cone undos (node obj IDs)
-    var vVisits *Vec_Int_t  = p.vVisits;  // intermediate (obj IDs)
-    var vCi2Rem *Vec_Int_t  = p.vCi2Rem;  // CIs to be removed (CI obj IDs)
-    var vRes *Vec_Int_t     = p.vRes;     // final result (flop literals)
-    var pObj *Aig_Obj_t;
-    var i, Entry, RetValue int32;
-    //abctime clk = Abc_Clock();
-
-    // collect CO objects
-    Vec_IntClear( vCoObjs );
-    if pCube == nil { // the target is the property output
-    
-//        Vec_IntPush( vCoObjs, Aig_ObjId(Aig_ManCo(p->pAig, (p->pPars->iOutput==-1)?0:p->pPars->iOutput)) );
-        Vec_IntPush( vCoObjs, Aig_ObjId(Aig_ManCo(p.pAig, p.iOutCur)) );
-    
-    } else { // the target is the cube
-    
-        for  i = 0; i < pCube.nLits; i++  {
-            if pCube.Lits[i] == -1 {
-                continue; }
-            pObj = Saig_ManLi(p.pAig, (pCube.Lits[i] >> 1));
-            Vec_IntPush( vCoObjs, Aig_ObjId(pObj) );
-        }
-    }
-if p.pPars.fVeryVerbose {
-Abc_Print( 1, "Trying to justify cube " );
-if pCube != nil {
-    Pdr_SetPrint( os.Stdout, pCube, Aig_ManRegNum(p.pAig), nil );
-} else {
-    Abc_Print( 1, "<prop=fail>" ); }
-Abc_Print( 1, " in frame %d.\n", k );
-}
-
-    // collect CI objects
-    Pdr_ManCollectCone( p.pAig, vCoObjs, vCiObjs, vNodes );
-    // collect values
-    Pdr_ManCollectValues( p, k, vCiObjs, vCiVals );
-    Pdr_ManCollectValues( p, k, vCoObjs, vCoVals );
-    // simulate for the first time
-if p.pPars.fVeryVerbose {
-Pdr_ManPrintCex( p.pAig, vCiObjs, vCiVals, nil ); }
-    RetValue = Pdr_ManSimDataInit( p.pAig, vCiObjs, vCiVals, vNodes, vCoObjs, vCoVals, nil );
-    assert((RetValue != 0), "RetValue");
-
-    // iteratively remove flops
-    if p.pPars.fFlopPrio {
-        // collect flops and sort them by priority
-        Vec_IntClear( vRes );
-        Aig_ManForEachObjVec( vCiObjs, p.pAig, pObj, i )
-        {
-            if !Saig_ObjIsLo( p.pAig, pObj ) {
-                continue; }
-            Entry = Aig_ObjCioId(pObj) - Saig_ManPiNum(p.pAig);
-            Vec_IntPush( vRes, Entry );
-        }
-        Vec_IntSelectSortCost( Vec_IntArray(vRes), Vec_IntSize(vRes), vPrio );
-
-        // try removing flops starting from low-priority to high-priority
-        Vec_IntClear( vCi2Rem );
-        Vec_IntForEachEntry( vRes, Entry, i )
-        {
-            pObj = Aig_ManCi( p.pAig, Saig_ManPiNum(p.pAig) + Entry );
-            assert(Saig_ObjIsLo( p.pAig, pObj ), "Saig_ObjIsLo( p.pAig, pObj )");
-            Vec_IntClear( vUndo );
-            if Pdr_ManExtendOne( p.pAig, pObj, vUndo, vVisits ) != 0 {
-                Vec_IntPush( vCi2Rem, Aig_ObjId(pObj) );
-            } else {
-                Pdr_ManExtendUndo( p.pAig, vUndo ); }
-        }
-    
-    } else {
-        // try removing low-priority flops first
-        Vec_IntClear( vCi2Rem );
-        Aig_ManForEachObjVec( vCiObjs, p.pAig, pObj, i )
-        {
-            if !Saig_ObjIsLo( p.pAig, pObj ) {
-                continue; }
-            Entry = Aig_ObjCioId(pObj) - Saig_ManPiNum(p.pAig);
-            if Vec_IntEntry(vPrio, Entry) {
-                continue; }
-            Vec_IntClear( vUndo );
-            if Pdr_ManExtendOne( p.pAig, pObj, vUndo, vVisits ) != 0 {
-                Vec_IntPush( vCi2Rem, Aig_ObjId(pObj) );
-            } else {
-                Pdr_ManExtendUndo( p.pAig, vUndo ); }
-        }
-        // try removing high-priority flops next
-        Aig_ManForEachObjVec( vCiObjs, p.pAig, pObj, i )
-        {
-            if !Saig_ObjIsLo( p.pAig, pObj ) {
-                continue; }
-            Entry = Aig_ObjCioId(pObj) - Saig_ManPiNum(p.pAig);
-            if !Vec_IntEntry(vPrio, Entry) {
-                continue; }
-            Vec_IntClear( vUndo );
-            if Pdr_ManExtendOne( p.pAig, pObj, vUndo, vVisits ) != 0 {
-                Vec_IntPush( vCi2Rem, Aig_ObjId(pObj) );
-            } else {
-                Pdr_ManExtendUndo( p.pAig, vUndo ); }
-        }
-    }
-
-if p.pPars.fVeryVerbose {
-Pdr_ManPrintCex( p.pAig, vCiObjs, vCiVals, vCi2Rem ); }
-    RetValue = Pdr_ManSimDataInit( p.pAig, vCiObjs, vCiVals, vNodes, vCoObjs, vCoVals, vCi2Rem );
-    assert((RetValue != 0), "RetValue");
-
-    // derive the set of resulting registers
-    Pdr_ManDeriveResult( p.pAig, vCiObjs, vCiVals, vCi2Rem, vRes, vPiLits );
-    assert(Vec_IntSize(vRes) > 0, "Vec_IntSize(vRes) > 0");
-    //p->tTsim += Abc_Clock() - clk;
-
-    // move abstracted literals from flops to inputs
-    if p.pPars.fUseAbs && p.vAbsFlops {
-        var i, iLit, k int32;
-        Vec_IntForEachEntry( vRes, iLit, i )
-        {
-            if Vec_IntEntry(p.vAbsFlops, Abc_Lit2Var(iLit)) { // used flop
-                Vec_IntWriteEntry( vRes, k++, iLit );
-            } else {
-                Vec_IntPush( vPiLits, 2*Saig_ManPiNum(p.pAig) + iLit ); }
-        }
-        Vec_IntShrink( vRes, k );
-    }
-    pRes = Pdr_SetCreate( vRes, vPiLits );
-    //ZH: Disabled assertion because this invariant doesn't hold with down
-    //because of the join operation which can bring in initial states
-    //assert( k == 0 || !Pdr_SetIsInit(pRes, -1) );
-    return pRes;
-}
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
