@@ -6,6 +6,11 @@ encoding, simulation, constrained and dynamic sweeping, and rarity simulation.
 Sequential trace and counterexample tests exercise these paths; passing tests
 are not evidence of exhaustive correctness.
 
+Similarity and pair-driver tests cover equivalent and inequivalent sequential
+graphs and deadline handling. Rarity tests cover bin widths 1 through 16,
+including word-boundary crossings, and replay multi-round witnesses. A
+connected-components oracle checks candidate pair classes across 500 graphs.
+
 ABC's `Aig_ManReprStart` explicitly asserts `Aig_ManBufNum(p) == 0` in
 `src/aig/aig/aigRepr.c:47`. The Go `aig.Aig_ManReprStart` preserves this
 precondition, and `Ssw_ClassesStart` calls it if the graph does not already
