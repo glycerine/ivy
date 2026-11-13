@@ -206,11 +206,13 @@ func (s *Solver) Reset() {
 	s.stop, s.stopFunc, s.runID, s.deadline = stop, stopFunc, runID, deadline
 }
 func (s *Solver) MarkCone(vars []int, marked bool) {
-	s.coneActive = true
 	for _, v := range vars {
 		if v < 0 || v >= len(s.marks) {
 			panic("cone variable out of range")
 		}
+	}
+	s.coneActive = true
+	for _, v := range vars {
 		s.marks[v] = marked
 		if marked {
 			s.activity.Set(uint32(v), 0)

@@ -6,6 +6,22 @@ import (
 	"testing"
 )
 
+func TestInvalidConeDoesNotPartiallyMark(t *testing.T) {
+	s := New()
+	s.SetVariables(2)
+	func() {
+		defer func() {
+			if recover() == nil {
+				t.Error("invalid cone accepted")
+			}
+		}()
+		s.MarkCone([]int{0, 2}, true)
+	}()
+	if s.coneActive || s.marks[0] || s.marks[1] {
+		t.Fatal("invalid cone changed selection")
+	}
+}
+
 func TestInvalidAssumptionsPreserveContext(t *testing.T) {
 	s := New()
 	s.SetVariables(1)
