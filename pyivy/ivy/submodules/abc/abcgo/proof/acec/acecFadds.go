@@ -98,59 +98,6 @@ func Gia_ManIllustrateBoxes(p *Gia_Man_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManGenerateDelayTableFloat(nIns int32, nOuts int32) *float32 {
-    var i int32;
-    var Total int32 = nIns * nOuts;
-    // inlining of macro ABC_ALLOC
-    var pDelayTable *float32  = ((float *) malloc(sizeof(float) * (size_t)(Total + 3)));
-    pDelayTable[0] = 0;
-    pDelayTable[1] = nIns;
-    pDelayTable[2] = nOuts;
-    for  i = 0; i < Total; i++  {
-        pDelayTable[i+3] = 1;
-    }
-    pDelayTable[i+3 - nIns] = -ABC_INFINITY;
-    return pDelayTable;
-}
-func Gia_ManGenerateTim(nPis int32, nPos int32, nBoxes int32, nIns int32, nOuts int32) *Tim_Man_t {
-    var pMan *Tim_Man_t;
-    var i, curPi, curPo int32;
-    var vDelayTables *Vec_Ptr_t  = Vec_PtrAlloc( 1 );
-    Vec_PtrPush( vDelayTables, Gia_ManGenerateDelayTableFloat(nIns, nOuts) );
-    pMan = Tim_ManStart( nPis + nOuts * nBoxes, nPos + nIns * nBoxes );
-    Tim_ManSetDelayTables( pMan, vDelayTables );
-    curPi = nPis;
-    curPo = 0;
-    for  i = 0; i < nBoxes; i++  {
-        Tim_ManCreateBox( pMan, curPo, nIns, curPi, nOuts, 0, 0 );
-        curPi += nOuts;
-        curPo += nIns;
-    }
-    curPo += nPos;
-    assert(curPi == Tim_ManCiNum(pMan), "curPi == Tim_ManCiNum(pMan)");
-    assert(curPo == Tim_ManCoNum(pMan), "curPo == Tim_ManCoNum(pMan)");
-    //Tim_ManPrint( pMan );
-    return pMan;
-}
-func Gia_ManGenerateExtraAig(nBoxes int32, nIns int32, nOuts int32) *Gia_Man_t {
-    var pNew *Gia_Man_t  = Gia_ManStart( nBoxes * 20 );
-    var i int32;
-    var k int32;
-    var pInLits [16]int32;
-    var pOutLits [16]int32;
-    assert(nIns < 16 && nOuts < 16, "nIns < 16 && nOuts < 16");
-    for  i = 0; i < nIns; i++  {
-        pInLits[i] = Gia_ManAppendCi( pNew );
-    }
-    pOutLits[0] = Gia_ManAppendXor( pNew, Gia_ManAppendXor(pNew, pInLits[0], pInLits[1]), pInLits[2] );
-    pOutLits[1] = Gia_ManAppendMaj( pNew, pInLits[0], pInLits[1], pInLits[2] );
-    for  i = 0; i < nBoxes; i++  {
-        for  k = 0; k < nOuts; k++  {
-            Gia_ManAppendCo( pNew, pOutLits[k] );
-        }
-    }
-    return pNew;
-}
 func Gia_ManDupFadd(pNew *Gia_Man_t, p *Gia_Man_t, vChain *Vec_Int_t, vFadds *Vec_Int_t, vMap *Vec_Int_t, vChains *Vec_Wec_t, vMap2Chain *Vec_Int_t, vTruths *Vec_Int_t) {
     extern void Gia_ManDupWithFaddBoxes_rec( Gia_Man_t * pNew, Gia_Man_t * p, Gia_Obj_t * pObj, Vec_Int_t * vFadds, Vec_Int_t * vMap, Vec_Wec_t * vChains, Vec_Int_t * vMap2Chain, Vec_Int_t * vTruths );
     var i int32;
