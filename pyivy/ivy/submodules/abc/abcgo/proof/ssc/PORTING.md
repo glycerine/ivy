@@ -18,9 +18,11 @@ source GIA. The rebuilt graph uses a local structural hash and preserves identit
 The constraint wrapper extracts trailing constraint outputs separately from
 ordinary outputs and next-state functions. Append reinserts constraints before
 the trailing register inputs. As in C, Append on an unconstrained graph appends
-one trivial false constraint. Containment dropping uses sequential SAT implication
-queries; ring optimization minimizes each output under the others being false,
-preserving the disjunction of outputs.
+one trivial false constraint. Containment dropping checks primary outputs with
+successive SAT implication queries. If an output is removed from a sequential
+graph, its result retains the registers and next-state cones reachable from the
+remaining primary outputs. Ring optimization minimizes each output under the
+others being false, preserving the disjunction of outputs.
 
 ## Native interfaces and implementation boundaries
 
@@ -66,6 +68,12 @@ GOCACHE=/tmp/abcgo-cache go -C abcgo test ./proof/ssc
 GOCACHE=/tmp/abcgo-cache go -C abcgo test -race ./proof/ssc
 GOCACHE=/tmp/abcgo-cache go -C abcgo vet ./proof/ssc
 ```
+
+Further randomized checks exercise actual native XOR, MUX and buffer nodes,
+including care logic and both output-union utilities. Eighty sequential graphs
+with up to two constraints are exhaustively checked with and without Append,
+including next-state outputs. Separate containment regressions cover transitive
+register dependencies and the case where no primary output is dropped.
 
 The earlier dependency blocker involving malformed GIA drafts has been resolved;
 all three commands now pass against the complete package. `test_native.sh` uses

@@ -132,3 +132,77 @@ func TestDropContainedKeepsRegistersWhenNoPrimaryOutputDrops(t *testing.T) {
 		t.Fatalf("all distinct POs and the register must survive: %d outputs, %d registers", len(result.OutputLiterals()), result.RegisterCount())
 	}
 }
+
+func TestRandomSequentialConstraintSweeps(t *testing.T) {
+	rng := rand.New(rand.NewSource(38122))
+	for trial := 0; trial < 80; trial++ {
+		g := gia.Gia_ManStart(50)
+		g.EnableMuxes()
+		var nodes []int32
+		for i := 0; i < 4; i++ {
+			nodes = append(nodes, gia.Gia_ManAppendCi(g))
+		}
+		for i := 0; i < 12; i++ {
+			p := rng.Perm(len(nodes))
+			a := nodes[p[0]] ^ int32(rng.Intn(2))
+			b := nodes[p[1]] ^ int32(rng.Intn(2))
+			c := nodes[p[2]] ^ int32(rng.Intn(2))
+			switch i % 3 {
+			case 0:
+				nodes = append(nodes, gia.Gia_ManAppendAnd(g, a, b))
+			case 1:
+				nodes = append(nodes, gia.Gia_ManAppendXorReal(g, a, b))
+			case 2:
+				nodes = append(nodes, gia.Gia_ManAppendMuxReal(g, a, b, c))
+			}
+		}
+		constraints := trial % 3
+		for i := 0; i < 4+constraints; i++ {
+			gia.Gia_ManAppendCo(g, nodes[rng.Intn(len(nodes))]^int32(rng.Intn(2)))
+		}
+		gia.Gia_ManSetRegNum(g, 2)
+		gia.Gia_ManSetConstrNum(g, int32(constraints))
+		for _, appendCare := range []bool{false, true} {
+			params := DefaultParams()
+			params.Append = appendCare
+			params.Verify = true
+			result := Ssc_PerformSweepingConstr(g, &params)
+			nCare := 0
+			if appendCare {
+				nCare = constraints
+				if nCare == 0 {
+					nCare = 1
+				}
+			}
+			if result.RegisterCount() != 2 || int(gia.Gia_ManConstrNum(result)) != nCare || len(result.OutputLiterals()) != 4+nCare {
+				t.Fatalf("trial %d append %v: unexpected interface", trial, appendCare)
+			}
+			for mask := 0; mask < 16; mask++ {
+				in := []bool{mask&1 != 0, mask&2 != 0, mask&4 != 0, mask&8 != 0}
+				before, err := g.Evaluate(in)
+				if err != nil {
+					t.Fatal(err)
+				}
+				after, err := result.Evaluate(in)
+				if err != nil {
+					t.Fatal(err)
+				}
+				allowed := true
+				for i := 0; i < constraints; i++ {
+					if before[2+i] {
+						allowed = false
+					}
+					if appendCare && after[2+i] != before[2+i] {
+						t.Fatalf("trial %d mask %d constraint changed", trial, mask)
+					}
+				}
+				if !allowed {
+					continue
+				}
+				if before[0] != after[0] || before[1] != after[1] || before[2+constraints] != after[2+nCare] || before[3+constraints] != after[3+nCare] {
+					t.Fatalf("trial %d append %v mask %d: PO or next state changed", trial, appendCare, mask)
+				}
+			}
+		}
+	}
+}
