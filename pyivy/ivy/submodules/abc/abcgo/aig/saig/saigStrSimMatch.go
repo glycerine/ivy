@@ -99,3 +99,115 @@ func (m *strSimMatcher) detectUnique() int {
 	}
 	return count
 }
+
+// pruneInconsistent removes pairs whose immediate structural predecessors do
+// not correspond. The decision is simultaneous, matching the original pass.
+func (m *strSimMatcher) pruneInconsistent() int {
+	var remove []aig.Edge
+	for a, b := range m.pair[0] {
+		ga, gb := m.sim[0].graph, m.sim[1].graph
+		na, nb := ga.Node(a), gb.Node(b)
+		if na.Kind == aig.And || na.Kind == aig.ExclusiveOr {
+			if na.Kind != nb.Kind {
+				remove = append(remove, a)
+				continue
+			}
+			for i := 0; i < 2; i++ {
+				match, ok := m.pair[0][aig.Aig_Regular(na.Fanins[i])]
+				if !ok || match != aig.Aig_Regular(nb.Fanins[i]) {
+					remove = append(remove, a)
+					break
+				}
+			}
+		} else if Saig_ObjIsLo(ga, a) {
+			if !Saig_ObjIsLo(gb, b) {
+				remove = append(remove, a)
+				continue
+			}
+			fa := aig.Aig_ObjFanin0(ga, Saig_ObjLoToLi(ga, a))
+			fb := aig.Aig_ObjFanin0(gb, Saig_ObjLoToLi(gb, b))
+			match, ok := m.pair[0][fa]
+			if !ok || match != fb {
+				remove = append(remove, a)
+			}
+		}
+	}
+	for _, a := range remove {
+		b := m.pair[0][a]
+		delete(m.pair[0], a)
+		delete(m.pair[1], b)
+	}
+	return len(remove)
+}
+
+// boundary returns matched objects adjacent to an unmatched object, treating
+// each latch input and its corresponding output as adjacent.
+func (m *strSimMatcher) boundary(side int) map[aig.Edge]bool {
+	g, pairs := m.sim[side].graph, m.pair[side]
+	fanouts := make(map[aig.Edge][]aig.Edge)
+	for _, e := range g.LiveEdges() {
+		n := g.Node(e)
+		var count int
+		switch n.Kind {
+		case aig.And, aig.ExclusiveOr:
+			count = 2
+		case aig.Buffer, aig.Output:
+			count = 1
+		}
+		for i := 0; i < count; i++ {
+			f := aig.Aig_Regular(n.Fanins[i])
+			fanouts[f] = append(fanouts[f], e)
+		}
+	}
+	result := make(map[aig.Edge]bool)
+	add := func(e aig.Edge) {
+		if _, ok := pairs[e]; ok {
+			result[e] = true
+		}
+	}
+	for _, e := range g.LiveEdges() {
+		n := g.Node(e)
+		if n.Kind != aig.Input && n.Kind != aig.And && n.Kind != aig.ExclusiveOr {
+			continue
+		}
+		if _, ok := pairs[e]; ok {
+			continue
+		}
+		if Saig_ObjIsLo(g, e) {
+			f := aig.Aig_ObjFanin0(g, Saig_ObjLoToLi(g, e))
+			if f != g.Const1() {
+				add(f)
+			}
+		}
+		if n.Kind == aig.And || n.Kind == aig.ExclusiveOr {
+			add(aig.Aig_Regular(n.Fanins[0]))
+			add(aig.Aig_Regular(n.Fanins[1]))
+		}
+		for _, f := range fanouts[e] {
+			if Saig_ObjIsPo(g, f) {
+				continue
+			}
+			if Saig_ObjIsLi(g, f) {
+				f = Saig_ObjLiToLo(g, f)
+			}
+			add(f)
+		}
+	}
+	return result
+}
+
+func (m *strSimMatcher) extend(distance int) {
+	for i := 0; i < distance; i++ {
+		boundary := [2]map[aig.Edge]bool{m.boundary(0), m.boundary(1)}
+		for side := 0; side < 2; side++ {
+			for edge := range boundary[side] {
+				other, ok := m.pair[side][edge]
+				if !ok || Saig_ObjIsPi(m.sim[1-side].graph, other) {
+					continue
+				}
+				delete(m.pair[side], edge)
+				delete(m.pair[1-side], other)
+			}
+		}
+	}
+}
