@@ -32,6 +32,11 @@ func (p *Solver2) Simplify() bool {
 	return sat_solver2_simplify(p.solver) != 0
 }
 func (p *Solver2) AddClause(literals ...Literal) bool {
+	id := p.nextID
+	return p.addClause(id, literals)
+}
+
+func (p *Solver2) addClause(id int32, literals []Literal) bool {
 	s := p.solver
 	s.lastStatus = Unknown
 	if s.fSolved != 0 {
@@ -59,7 +64,6 @@ func (p *Solver2) AddClause(literals ...Literal) bool {
 			unassigned = true
 		}
 	}
-	id := p.nextID
 	p.nextID++
 	if satisfied || unassigned {
 		sat_solver2_addclause(s, literals, id)

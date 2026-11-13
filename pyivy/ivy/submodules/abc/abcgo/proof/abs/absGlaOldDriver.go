@@ -77,6 +77,7 @@ func Gia_ManPerformGlaOld(graph *gia.Gia_Man_t, pars *Abs_Par_t, startVta int32)
 		}
 	}
 	p := Gla_ManStart(graph, pars)
+	defer p.pSat.StopIncrementalProof()
 	p.timeInit = time.Since(start)
 	var deadline int64
 	if pars.nTimeOut != 0 {
@@ -100,10 +101,12 @@ func Gia_ManPerformGlaOld(graph *gia.Gia_Man_t, pars *Abs_Par_t, startVta int32)
 			clock := time.Now()
 			core = Gla_ManUnsatCore(p, frame, p.pSat, pars.nConfLimit, pars.fVerbose, &status, &conflicts)
 			if status == -1 || deadline != 0 && absCPUClock() > deadline {
+				p.pSat.StopIncrementalProof()
 				stopped = true
 				break
 			}
 			if status == 1 {
+				p.pSat.StopIncrementalProof()
 				p.timeUnsat += time.Since(clock)
 				break
 			}
@@ -125,6 +128,7 @@ func Gia_ManPerformGlaOld(graph *gia.Gia_Man_t, pars *Abs_Par_t, startVta int32)
 				ppis = Gla_ManRefinement(p)
 			}
 			if ppis == nil {
+				p.pSat.StopIncrementalProof()
 				witness = p.pGia.TakeSequentialCounterexample()
 				break
 			}
@@ -134,6 +138,11 @@ func Gia_ManPerformGlaOld(graph *gia.Gia_Man_t, pars *Abs_Par_t, startVta int32)
 				vec.Vec_IntClear(p.vAddedNew)
 				p.nAbsOld = int32(vec.Vec_IntSize(p.vAbs))
 				savedVars = p.nSatVars
+				if pars.fUseFullProof == 0 {
+					p.pSat.StartIncrementalProof(p.nObjs, int32(vec.Vec_IntSize(ppis)))
+				}
+			} else if p.pSat.IncrementalProofActive() {
+				p.pSat.GrowIncrementalProof(int32(vec.Vec_IntSize(ppis)))
 			}
 			Gia_GlaAddToAbs(p, ppis, 1)
 			Gia_GlaAddOneSlice(p, frame, ppis)

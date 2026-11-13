@@ -204,7 +204,7 @@ func Gla_ManStart(original *gia.Gia_Man_t, pars *Abs_Par_t) *Gla_Man_t {
 			vec.Vec_IntPush(p.vAbs, i)
 		}
 	}
-	p.pSat = bsat.NewLabeledSolver2()
+	p.pSat = bsat.NewLabeledSolver2ProofMode(pars.fUseFullProof != 0)
 	p.pSat.SetLearnedPolicy(pars.nLearnedStart, pars.nLearnedDelta, pars.nLearnedPerce)
 	p.nSatVars = 1
 	p.pRnm = Rnm_ManStart(work)

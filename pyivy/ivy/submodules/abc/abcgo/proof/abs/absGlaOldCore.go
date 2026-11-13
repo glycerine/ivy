@@ -17,6 +17,9 @@ func Gia_GlaAddToAbs(p *Gla_Man_t, add *vec.Vec_Int_t, check int32) {
 		if check != 0 && obj.fAbs != 0 {
 			panic("old GLA object already abstracted")
 		}
+		if check != 0 && p.pSat.IncrementalProofActive() {
+			p.pSat.RegisterIncrementalProofID(id)
+		}
 		if obj.fAbs != 0 {
 			continue
 		}
@@ -100,6 +103,9 @@ func Gla_ManUnsatCore(p *Gla_Man_t, frame int32, solver *bsat.LabeledSolver2, co
 		if status != nil {
 			*status = 0
 		}
+		return nil
+	}
+	if !solver.HasProofManager() {
 		return nil
 	}
 	ids := solver.ProofCore()

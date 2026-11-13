@@ -13,8 +13,8 @@ type Options struct {
 	UseTerminalVariables, UseRollback        bool
 	PropagateFanout, AddLayer, NewRefinement bool
 	SkipIntermediate, SimpleCNF, SkipHash    bool
-	// UseFullProof requests ABC's full proof mode. The Go solver currently
-	// always records a proof graph; see PORTING_REVIEW.md.
+	// UseFullProof selects old GLA's full proof graph instead of its default
+	// incremental proof manager.
 	UseFullProof                                   bool
 	DumpVariableAbstraction, DumpMappedAbstraction bool
 	CallProver, SimplifyBeforeProver               bool

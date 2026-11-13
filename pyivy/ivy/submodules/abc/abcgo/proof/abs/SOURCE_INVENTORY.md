@@ -38,9 +38,9 @@ refinement prototype and its SAT-variable helpers in `absRef.c` are under
 `#if 0` and are not compiled.
 
 The C `ABC_USE_PTHREADS` conditional has a no-op prover branch when pthreads
-are disabled; the Go implementation provides the concurrent PDR path. GLA
-uses a labeled full proof graph for core extraction, including when C selects
-its alternate proof mode. Standalone VTA requires an AND-inverter graph; its
+are disabled; the Go implementation provides the concurrent PDR path. Old GLA
+uses the source full and incremental proof modes for core extraction.
+Standalone VTA requires an AND-inverter graph; its
 native XOR/MUX guard returns unknown without changing object classes. See
 `PORTING_REVIEW.md` for the source VTA mask assertion and retained-witness
 boundary behavior.
@@ -52,7 +52,7 @@ proof mode, dumping, concurrent prover and verbosity. `LegacyOptions` exposes
 the corresponding legacy abstraction parameters. Mapping an option into a
 record does not by itself prove equivalent runtime behavior: source C itself
 initializes some legacy fields without using them in this package, and the
-full-proof mode difference above remains open.
+proof-mode behavior is tested on small source-derived examples.
 
 A declaration-name scan of `abs.h` found 29 public declarations. After the
 collection and bounded-shrink tests, every non-diagnostic declaration is named

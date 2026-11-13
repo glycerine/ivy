@@ -9,14 +9,32 @@ import (
 // ID. Multiple clauses may share an ID; -1 marks a background clause that is
 // omitted from the reported core. Resolution proofs remain in Solver2's graph.
 type LabeledSolver2 struct {
-	solver     *Solver2
-	labels     map[int32]int32
-	bookmarkID int32
-	bookmarked bool
+	solver      *Solver2
+	labels      map[int32]int32
+	bookmarkID  int32
+	bookmarked  bool
+	sourceMode  bool
+	incremental bool
+	proofIDs    []int32
+	proofCount  int32
 }
 
 func NewLabeledSolver2() *LabeledSolver2 {
 	return &LabeledSolver2{solver: NewSolver2(), labels: make(map[int32]int32)}
+}
+
+// NewLabeledSolver2ProofMode uses the two proof modes of ABC's old GLA.
+// In incremental mode, proof logging starts only when explicitly requested.
+func NewLabeledSolver2ProofMode(full bool) *LabeledSolver2 {
+	if full {
+		p := NewLabeledSolver2()
+		p.sourceMode = true
+		return p
+	}
+	return &LabeledSolver2{
+		solver: &Solver2{solver: sat_solver2_new(), nextID: 1},
+		labels: make(map[int32]int32), sourceMode: true, incremental: true,
+	}
 }
 
 func (p *LabeledSolver2) NewVariable() int32 { return p.solver.NewVariable() }
@@ -29,8 +47,13 @@ func (p *LabeledSolver2) AddClause(id int32, literals ...Literal) bool {
 		panic("invalid labeled clause ID")
 	}
 	root := p.solver.nextID
-	result := p.solver.AddClause(literals...)
-	if p.solver.nextID != root {
+	var result bool
+	if p.incremental {
+		result = p.solver.addClause(id, literals)
+	} else {
+		result = p.solver.AddClause(literals...)
+	}
+	if !p.incremental && p.solver.nextID != root {
 		p.labels[root] = id
 	}
 	return result
@@ -55,10 +78,13 @@ func (p *LabeledSolver2) SetRuntimeDeadline(clock func() int64, deadline int64) 
 // bookmark, only clauses added since that bookmark are reported; earlier
 // clauses form the fixed background, as in ABC's restarted bitset logger.
 func (p *LabeledSolver2) ProofCore() []int32 {
+	if p.incremental {
+		return p.solver.ProofCore()
+	}
 	seen := make(map[int32]bool)
 	var result []int32
 	for _, root := range p.solver.ProofCore() {
-		if p.bookmarked && root < p.bookmarkID {
+		if !p.sourceMode && p.bookmarked && root < p.bookmarkID {
 			continue
 		}
 		id, ok := p.labels[root]
@@ -70,6 +96,44 @@ func (p *LabeledSolver2) ProofCore() []int32 {
 	slices.Sort(result)
 	slices.Reverse(result)
 	return result
+}
+
+// StartIncrementalProof begins ABC's pPrf2 logger after the first bookmark.
+func (p *LabeledSolver2) StartIncrementalProof(objectCount, width int32) {
+	if !p.incremental || p.solver.solver.pPrf2 != nil || objectCount < 0 {
+		panic("invalid incremental proof start")
+	}
+	p.proofIDs = make([]int32, objectCount)
+	for i := range p.proofIDs {
+		p.proofIDs[i] = -1
+	}
+	p.proofCount = 0
+	m := Prf_ManAlloc()
+	Prf_ManRestart(m, &p.proofIDs, int32(p.solver.solver.stats.learnts), width)
+	p.solver.solver.pPrf2 = m
+}
+
+func (p *LabeledSolver2) GrowIncrementalProof(additional int32) {
+	if p.solver.solver.pPrf2 == nil {
+		panic("incremental proof is not active")
+	}
+	Prf_ManGrow(p.solver.solver.pPrf2, p.proofCount+additional)
+}
+
+func (p *LabeledSolver2) RegisterIncrementalProofID(id int32) {
+	if p.solver.solver.pPrf2 == nil || id < 0 || int(id) >= len(p.proofIDs) || p.proofIDs[id] != -1 {
+		panic("invalid incremental proof object")
+	}
+	p.proofIDs[id] = p.proofCount
+	p.proofCount++
+}
+
+func (p *LabeledSolver2) IncrementalProofActive() bool { return p.solver.solver.pPrf2 != nil }
+func (p *LabeledSolver2) HasProofManager() bool {
+	return p.solver.solver.pPrf1 != nil || p.solver.solver.pPrf2 != nil
+}
+func (p *LabeledSolver2) StopIncrementalProof() {
+	Prf_ManStopP(&p.solver.solver.pPrf2)
 }
 
 // Bookmark requires root-level propagation to have completed, matching ABC.
@@ -99,6 +163,11 @@ func (p *LabeledSolver2) Rollback() {
 
 func (p *LabeledSolver2) Reset() {
 	p.solver.Reset()
+	if p.incremental {
+		p.solver.solver.pPrf1 = nil
+	}
+	p.proofIDs = nil
+	p.proofCount = 0
 	clear(p.labels)
 	p.bookmarked = false
 	p.bookmarkID = 0

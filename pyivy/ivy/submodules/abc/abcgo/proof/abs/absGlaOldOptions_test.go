@@ -37,8 +37,8 @@ func TestOldGlaProofOptionPreservesResults(t *testing.T) {
 }
 
 // Both source proof modes must handle a spurious abstract witness and retain
-// a sound abstraction after core-driven rollback. The Go port currently uses
-// the same full graph in both cases; this tests outcomes, not memory parity.
+// a sound abstraction after core-driven rollback. This tests outcomes, not
+// memory parity between the two proof managers.
 func TestOldGlaProofModesRefineAndRollback(t *testing.T) {
 	for _, full := range []int32{0, 1} {
 		g := gia.Gia_ManStart(20)

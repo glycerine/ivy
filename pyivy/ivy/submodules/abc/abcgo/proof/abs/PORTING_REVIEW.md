@@ -41,17 +41,14 @@ of native MUX nodes; a regression covers the previously omitted control cone.
 External callers can configure them through `Options` and `LegacyOptions`,
 using the corresponding default, setter, and progress methods.
 
-The old GLA `fUseFullProof` option does not select a separate proof-logging
-mode in the Go port. In C, full mode allocates `pPrf1` at manager creation;
-default mode starts the incremental `pPrf2` manager after the first spurious
-counterexample, registers each newly added abstraction object, grows the
-manager for further refinements, and stops it when the solve ends. Go's
-`LabeledSolver2` always creates `pPrf1` and filters its root labels at the
-bookmark. Both Go option settings are tested through spurious refinement and
-rollback, but this does not establish identical C proof cores, abstraction
-classes, memory use, runtime, or resource-limit outcomes. Implementing the
-default mode requires the incremental manager lifecycle and object-ID mapping
-to be wired through the solver and old GLA; the difference remains open.
+Old GLA's `fUseFullProof` selects the source proof modes: full mode allocates
+`pPrf1` at manager creation, while default mode starts the incremental
+`pPrf2` manager after the first spurious counterexample, registers added
+abstraction objects, grows the manager for further refinements, and stops it
+when the solve ends. A compiled-C fixture checks the different treatment of
+pre-bookmark roots, and Go tests exercise refinement and rollback in both
+modes. These small cases do not establish identical memory use, runtime, or
+resource-limit outcomes for large proofs.
 
 Standalone VTA retains the C algorithm's AND-inverter representation
 assumption. Native XOR/MUX nodes are explicitly rejected with an unknown
