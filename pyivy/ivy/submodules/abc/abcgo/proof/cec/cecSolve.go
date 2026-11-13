@@ -167,7 +167,7 @@ func cecManSatSolveCSat(patterns *Cec_ManPat_t, graph *Gia_Man_t, pars *Cec_ParS
 			break
 		}
 	}
-	if start != int32(vec.Vec_IntSize(store)) && pars.fCheckMiter == 0 {
+	if start != int32(vec.Vec_IntSize(store)) {
 		panic("cec: CBS counterexample store has trailing entries")
 	}
 }

@@ -160,3 +160,13 @@ behaviors to Go. The C multi-output driver also reads a temporary manager after
 freeing it; Go safely takes ownership of its witness before stopping it, while
 retaining the defined output traversal and result behavior. Native XOR, MUX,
 and buffer graphs are rejected by the split entry points.
+
+`Cec_SequentialSynthesisPart` requires an attached clock-domain vector. The
+original C dereferences a nil vector; the Go entry point rejects that invalid
+input with a panic rather than reporting successful synthesis. A compiled-C
+subprocess regression characterizes the source behavior.
+
+The source circuit-SAT output solver checks that its entire counterexample
+store was consumed even when `fCheckMiter` stops after the first SAT output.
+With multiple SAT outputs, the original asserts on trailing records; the Go
+entry point preserves that assertion. A compiled-C subprocess test covers it.
