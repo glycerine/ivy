@@ -36,19 +36,7 @@ import (
 
 // local manager
    
-type Saig_ManCba_t struct {
-    // user data
-    pAig  *Aig_Man_t;       // user's AIG
-    pCex  *Abc_Cex_t;       // user's CEX
-    nInputs         int32;    // the number of first inputs to skip
-    fVerbose         int32;   // verbose flag
-    // unrolling
-    pFrames  *Aig_Man_t;    // unrolled timeframes
-    vMapPiF2A  *Vec_Int_t;  // mapping of frame PIs into real PIs
-    // additional information
-    vReg2Frame  *Vec_Vec_t; // register to frame mapping
-    vReg2Value  *Vec_Vec_t; // register to value mapping
-}
+
 
 ////////////////////////////////////////////////////////////////////////
 ///                     FUNCTION DEFINITIONS                         ///
@@ -82,50 +70,7 @@ type Saig_ManCba_t struct {
   SeeAlso     []
 
 ***********************************************************************/
-func Saig_ManDupWithCubes(pAig *Aig_Man_t, vReg2Value *Vec_Vec_t) *Aig_Man_t {
-    var vLevel *Vec_Int_t;
-    var pAigNew *Aig_Man_t;
-    var pObj, pMiter *Aig_Obj_t;
-    var i, k, Lit int32;
-    assert(pAig.nConstrs == 0, "pAig.nConstrs == 0");
-    // start the new manager
-    pAigNew = Aig_ManStart( Aig_ManNodeNum(pAig) + Vec_VecSizeSize(vReg2Value) );
-    pAigNew.pName = Abc_UtilStrsav( pAig.pName );
-    // map the constant node
-    Aig_ManConst1(pAig).pData = Aig_ManConst1( pAigNew );
-    // create variables for PIs
-    // inlining of macro Aig_ManForEachCi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(pAig.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {
-        pObj.pData = Aig_ObjCreateCi( pAigNew );
-    }
-    // add internal nodes of this frame
-    // inlining of macro Aig_ManForEachNode
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(pAig.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-        pObj.pData = Aig_And( pAigNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }
-    }
-    // create POs for cubes
-    // inlining of macro Vec_VecForEachLevelInt
-    for  i = 0; (i < Vec_VecSize(vReg2Value)) && (((vLevel) = Vec_VecEntryInt(vReg2Value, i)), 1); i++  {
-        pMiter = Aig_ManConst1( pAigNew );
-        // inlining of macro Vec_IntForEachEntry
-        for  k = 0; (k < Vec_IntSize(vLevel)) && (((Lit) = Vec_IntEntry(vLevel, k)), 1); k++  {
-            pObj = Saig_ManLi( pAig, Abc_Lit2Var(Lit) );
-            pMiter = Aig_And( pAigNew, pMiter, Aig_NotCond(Aig_ObjChild0Copy(pObj), Abc_LitIsCompl(Lit)) );
-        }
-        Aig_ObjCreateCo( pAigNew, pMiter );
-    }
-    // transfer to register outputs
-    // inlining of macro Saig_ManForEachLi
-    for  i = 0; (i < Saig_ManRegNum(pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i+Saig_ManPoNum(pAig))), 1); i++  {
-        Aig_ObjCreateCo( pAigNew, Aig_ObjChild0Copy(pObj) );
-    }
-    // finalize
-    Aig_ManCleanup( pAigNew );
-    Aig_ManSetRegNum( pAigNew, Aig_ManRegNum(pAig) );
-    return pAigNew;
-}
+
 
 /**Function*************************************************************
 
@@ -138,58 +83,7 @@ func Saig_ManDupWithCubes(pAig *Aig_Man_t, vReg2Value *Vec_Vec_t) *Aig_Man_t {
   SeeAlso     []
 
 ***********************************************************************/
-func Saig_ManCbaReason2Inputs(p *Saig_ManCba_t, vReasons *Vec_Int_t) *Vec_Int_t {
-    var vOriginal, vVisited *Vec_Int_t;
-    var i, Entry int32;
-    vOriginal = Vec_IntAlloc( Saig_ManPiNum(p.pAig) ); 
-    vVisited = Vec_IntStart( Saig_ManPiNum(p.pAig) );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vReasons)) && (((Entry) = Vec_IntEntry(vReasons, i)), 1); i++  {
-        var iInput int32  = Vec_IntEntry( p.vMapPiF2A, 2*Entry );
-        assert(iInput >= p.nInputs && iInput < Aig_ManCiNum(p.pAig), "iInput >= p.nInputs && iInput < Aig_ManCiNum(p.pAig)");
-        if Vec_IntEntry(vVisited, iInput) == 0 {
-            Vec_IntPush( vOriginal, iInput - p.nInputs ); }
-        Vec_IntAddToEntry( vVisited, iInput, 1 );
-    }
-    Vec_IntFree( vVisited );
-    return vOriginal;
-}
 
-/**Function*************************************************************
-
-  Synopsis    [Creates the counter-example.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_ManCbaReason2Cex(p *Saig_ManCba_t, vReasons *Vec_Int_t) *Abc_Cex_t {
-    var pCare *Abc_Cex_t;
-    var i, Entry, iInput, iFrame int32;
-    pCare = Abc_CexDup( p.pCex, p.pCex.nRegs );
-    memset( pCare.pData, 0, sizeof(unsigned) * Abc_BitWordNum(pCare.nBits) );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vReasons)) && (((Entry) = Vec_IntEntry(vReasons, i)), 1); i++  {
-        assert(Entry >= 0 && Entry < Aig_ManCiNum(p.pFrames), "Entry >= 0 && Entry < Aig_ManCiNum(p.pFrames)");
-        iInput = Vec_IntEntry( p.vMapPiF2A, 2*Entry );
-        iFrame = Vec_IntEntry( p.vMapPiF2A, 2*Entry+1 );
-        Abc_InfoSetBit( pCare.pData, pCare.nRegs + pCare.nPis * iFrame + iInput );
-    }
-/*
-    for ( iFrame = 0; iFrame <= pCare->iFrame; iFrame++ )
-    {
-        int Count = 0;
-        for ( i = 0; i < pCare->nPis; i++ )
-            Count +=  Abc_InfoHasBit(pCare->pData, pCare->nRegs + pCare->nPis * iFrame + i);
-        printf( "%d ", Count );
-    }
-printf( "\n" );
-*/
-    return pCare;
-}
 
 /**Function*************************************************************
 
