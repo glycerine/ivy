@@ -2,11 +2,12 @@ package fraig
 
 import (
 	"fmt"
-	"github.com/glycerine/abcgo/aig/aig"
-	"github.com/glycerine/abcgo/sat/msat"
 	"io"
 	"os"
 	"unsafe"
+
+	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/sat/msat"
 )
 
 // Prove_ParamsSetDefault initializes the equivalence-checking engine settings.
@@ -80,7 +81,21 @@ func Fraig_ManCreate(params *Fraig_Params_t) *Fraig_Man_t {
 		params.NPatsRand = 128
 		params.NPatsDyna = 128
 	}
-	p := &Fraig_Man_t{nWordsRand: (params.NPatsRand + 31) / 32, nWordsDyna: (params.NPatsDyna + 31) / 32, nBTLimit: params.NBTLimit, nSeconds: params.NSeconds, fFuncRed: params.FFuncRed, fFeedBack: params.FFeedBack, fDist1Pats: params.FDist1Pats, fDoSparse: params.FDoSparse, fChoicing: params.FChoicing, fTryProve: params.FTryProve, fVerbose: params.FVerbose, fVerboseP: params.FVerboseP, nInspLimit: params.NInspLimit}
+	p := &Fraig_Man_t{
+		nWordsRand: (params.NPatsRand + 31) / 32,
+		nWordsDyna: (params.NPatsDyna + 31) / 32,
+		nBTLimit:   params.NBTLimit,
+		nSeconds:   params.NSeconds,
+		fFuncRed:   params.FFuncRed,
+		fFeedBack:  params.FFeedBack,
+		fDist1Pats: params.FDist1Pats,
+		fDoSparse:  params.FDoSparse,
+		fChoicing:  params.FChoicing,
+		fTryProve:  params.FTryProve,
+		fVerbose:   params.FVerbose,
+		fVerboseP:  params.FVerboseP,
+		nInspLimit: params.NInspLimit,
+	}
 	p.mmNodes = Fraig_MemFixedStart(int32(unsafe.Sizeof(Fraig_Node_t{})))
 	p.mmSims = Fraig_MemFixedStart(4 * (p.nWordsRand + p.nWordsDyna))
 	p.vInputs = Fraig_NodeVecAlloc(1000)

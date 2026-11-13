@@ -1,9 +1,10 @@
 package fraig
 
 import (
+	"math"
+
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/sat/msat"
-	"math"
 )
 
 func Fraig_NodesAreEqual(p *Fraig_Man_t, a, b *Fraig_Node_t, limit, seconds int32) int32 {
@@ -55,7 +56,6 @@ func fraigSatEnsureVariables(p *Fraig_Man_t) {
 	for i := first; i < len(p.vNodes.pArray); i++ {
 		msat.Msat_SolverAddVar(p.pSat, int(p.vNodes.pArray[i].Level))
 	}
-
 	p.vAdjacents = msat.Msat_SolverReadAdjacents(p.pSat)
 }
 func fraigLit(node *Fraig_Node_t, neg bool) int {
