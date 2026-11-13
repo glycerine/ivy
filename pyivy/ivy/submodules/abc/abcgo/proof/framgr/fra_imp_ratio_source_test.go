@@ -14,7 +14,8 @@ func TestImpStateSpaceRatioCountsUnionOfViolations(t *testing.T) {
 	if got := Fra_ImpComputeStateSpaceRatio(p); got != 0 {
 		t.Fatalf("no implications = %g", got)
 	}
-	p.PCla.VImps = vec.Vec_IntAlloc(2)
+	p.PCla.VImps = vec.Vec_IntAlloc(3)
+	vec.Vec_IntPush(p.PCla.VImps, Fra_ImpCreate(int32(x.NodeID()), 0))
 	vec.Vec_IntPush(p.PCla.VImps, Fra_ImpCreate(int32(x.NodeID()), 0))
 	vec.Vec_IntPush(p.PCla.VImps, Fra_ImpCreate(int32(x.NodeID()), int32(x.NodeID())))
 	seed := aig.NewAigRandomSource()
