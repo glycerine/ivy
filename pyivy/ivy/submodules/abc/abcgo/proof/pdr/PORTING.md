@@ -9,9 +9,12 @@ The package tests include exhaustive one-register transition/property pairs,
 and seeded two-register machines checked against explicit reachability. The
 latter exercise monolithic and dynamic CNF, both ternary simulators,
 abstraction refinement, shortest-trace mode and incremental restarts. Failing
-results are checked with the AIG counterexample verifier. Other tests cover
-multi-output outcomes, solver cancellation, invariant checks, and SAT core
-handling. The full package has passed `go test -race ./proof/pdr` and
+results are checked with the AIG counterexample verifier. An additional 64
+two-register, multi-output native-XOR machines with complemented edges are
+checked against explicit reachability and their witnesses are replayed. Other
+tests cover frame limits, SAT conflict limits, expired global and per-output
+deadlines, solver reuse, invariant checks, and SAT core handling. The full
+package has passed `go test -race ./proof/pdr` and
 `go vet ./proof/pdr`.
 
 Remaining review and coverage gaps:
