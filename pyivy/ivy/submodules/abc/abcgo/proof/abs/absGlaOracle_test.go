@@ -111,3 +111,47 @@ func TestGlaSequentialTruthOracle(t *testing.T) {
 		}
 	}
 }
+
+// Exercise the non-default refinement and CNF options through the public
+// driver, checking both results and witnesses against the transition table.
+func TestGlaSequentialOracleWithAlternateOptions(t *testing.T) {
+	for _, transition := range []int{0x0, 0x3, 0x6, 0xa, 0xc, 0xf} {
+		for _, property := range []int{0x0, 0x2, 0x8, 0xe} {
+			g := gia.Gia_ManStart(128)
+			x, q := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
+			out := glaOracleTruth2(g, x, q, property)
+			next := glaOracleTruth2(g, x, q, transition)
+			gia.Gia_ManAppendCo(g, out)
+			gia.Gia_ManAppendCo(g, next)
+			gia.Gia_ManSetRegNum(g, 1)
+			expected := false
+			for trace := 0; trace < 8; trace++ {
+				state := 0
+				for frame := 0; frame < 3; frame++ {
+					index := ((trace >> frame) & 1) | state<<1
+					if property&(1<<index) != 0 {
+						expected = true
+						break
+					}
+					state = (transition >> index) & 1
+				}
+			}
+			pars := NewParameters()
+			options := pars.Options()
+			options.FramesMax = 3
+			options.FramesNoChangeLimit = 100
+			options.RatioMin, options.RatioMinRefine = 0, 0
+			options.NewRefinement, options.SkipHash = true, true
+			options.PropagateFanout = false
+			pars.SetOptions(options)
+			result := Gia_ManPerformGla(g, pars)
+			if expected {
+				if result != 0 || g.SequentialCounterexample() == nil || gia.Gia_ManVerifyCex(g, g.SequentialCounterexample(), 0) != 1 {
+					t.Fatalf("transition=%x property=%x result=%d witness=%+v", transition, property, result, g.SequentialCounterexample())
+				}
+			} else if result == 0 {
+				t.Fatalf("transition=%x property=%x: false SAT", transition, property)
+			}
+		}
+	}
+}
