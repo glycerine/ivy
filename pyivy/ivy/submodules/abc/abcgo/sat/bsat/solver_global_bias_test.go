@@ -28,3 +28,17 @@ func TestGlobalVariableBiasOwnershipAndValidation(t *testing.T) {
 		t.Fatal("bias not disabled")
 	}
 }
+
+func TestGlobalVariableBiasGrowsWithVariables(t *testing.T) {
+	s := NewSolver()
+	x := s.NewVariable()
+	s.SetGlobalVariableBias([]int32{x})
+	y := s.NewVariable()
+	s.SetActivityFactor(y, 1)
+	if s.Solve() != Satisfiable {
+		t.Fatal("expected satisfiable formula")
+	}
+	if len(s.pGlobalVars) != 2 || s.pGlobalVars[x] != 1 || s.pGlobalVars[y] != 0 {
+		t.Fatalf("bias after growth: %v", s.pGlobalVars)
+	}
+}

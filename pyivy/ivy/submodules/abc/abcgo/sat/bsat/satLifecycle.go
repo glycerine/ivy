@@ -77,6 +77,11 @@ func sat_solver_setnvars(s *sat_solver, n int32) {
 	if s.factors != nil {
 		s.factors = satResize(s.factors, length, capacity)
 	}
+	if s.pGlobalVars != nil && len(s.pGlobalVars) < length {
+		oldLen := len(s.pGlobalVars)
+		s.pGlobalVars = satResize(s.pGlobalVars, length, capacity)
+		clear(s.pGlobalVars[oldLen:])
+	}
 	for v := s.size; v < n; v++ {
 		for _, w := range []*veci{&s.wlists[2*v], &s.wlists[2*v+1]} {
 			if w.size != 0 {
