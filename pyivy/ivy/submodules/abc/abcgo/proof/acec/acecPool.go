@@ -49,55 +49,6 @@ import "fmt"
   SeeAlso     []
 
 ***********************************************************************/
-func Acec_ManCreateCarryMap(p *Gia_Man_t, vAdds *Vec_Int_t) *Vec_Int_t {
-    // map carries into their boxes
-    var vCarryMap *Vec_Int_t  = Vec_IntStartFull( Gia_ManObjNum(p) );  var i int32;
-    for  i = 0; 6*i < Vec_IntSize(vAdds); i++  {
-        Vec_IntWriteEntry( vCarryMap, Vec_IntEntry(vAdds, 6*i+4), i );
-    }
-    return vCarryMap;
-}
-func Acec_ManCheckCarryMap(p *Gia_Man_t, Carry int32, vAdds *Vec_Int_t, vCarryMap *Vec_Int_t) int32 {
-    var iBox int32  = Vec_IntEntry( vCarryMap, Carry );
-    assert(iBox >= 0, "iBox >= 0");
-    return Vec_IntEntry( vCarryMap, Vec_IntEntry(vAdds, 6*iBox+0) ) >= 0 ||
-           Vec_IntEntry( vCarryMap, Vec_IntEntry(vAdds, 6*iBox+1) ) >= 0 ||
-           Vec_IntEntry( vCarryMap, Vec_IntEntry(vAdds, 6*iBox+2) ) >= 0;
-}
-func Acec_ManCollectCarryRoots(p *Gia_Man_t, vAdds *Vec_Int_t) *Vec_Int_t {
-    var vCarryRoots *Vec_Int_t  = Vec_IntAlloc( 100 );
-    var vIns *Vec_Bit_t  = Vec_BitStart( Gia_ManObjNum(p) );  var i int32;
-    // marks box inputs
-    for  i = 0; 6*i < Vec_IntSize(vAdds); i++  {
-        Vec_BitWriteEntry( vIns, Vec_IntEntry(vAdds, 6*i+0), 1 );
-        Vec_BitWriteEntry( vIns, Vec_IntEntry(vAdds, 6*i+1), 1 );
-        Vec_BitWriteEntry( vIns, Vec_IntEntry(vAdds, 6*i+2), 1 );
-    }
-    // collect roots
-    for  i = 0; 6*i < Vec_IntSize(vAdds); i++  {
-        if !Vec_BitEntry(vIns, Vec_IntEntry(vAdds, 6*i+4)) {
-            Vec_IntPush( vCarryRoots, Vec_IntEntry(vAdds, 6*i+4) ); }
-    }
-    Vec_BitFree( vIns );
-    return vCarryRoots;
-}
-func Acec_ManCollectXorRoots(p *Gia_Man_t, vXors *Vec_Int_t) *Vec_Int_t {
-    var vXorRoots *Vec_Int_t  = Vec_IntAlloc( 100 );
-    var vIns *Vec_Bit_t  = Vec_BitStart( Gia_ManObjNum(p) );  var i int32;
-    // marks box inputs
-    for  i = 0; 4*i < Vec_IntSize(vXors); i++  {
-        Vec_BitWriteEntry( vIns, Vec_IntEntry(vXors, 4*i+1), 1 );
-        Vec_BitWriteEntry( vIns, Vec_IntEntry(vXors, 4*i+2), 1 );
-        Vec_BitWriteEntry( vIns, Vec_IntEntry(vXors, 4*i+3), 1 );
-    }
-    // collect roots
-    for  i = 0; 4*i < Vec_IntSize(vXors); i++  {
-        if !Vec_BitEntry(vIns, Vec_IntEntry(vXors, 4*i)) {
-            Vec_IntPush( vXorRoots, Vec_IntEntry(vXors, 4*i) ); }
-    }
-    Vec_BitFree( vIns );
-    return vXorRoots;
-}
 func Acec_ManCountXorTreeInputs_rec(p *Gia_Man_t, Node int32, vXors *Vec_Int_t, vXorMap *Vec_Int_t, vIsCarryRoot *Vec_Bit_t, vCarryRootSet *Vec_Int_t, vXorSet *Vec_Int_t) {
     var k, iXorBox int32;
     if Node == 0 || Gia_ObjIsTravIdCurrentId(p, Node) {
@@ -363,45 +314,6 @@ func Acec_ManProfile(p *Gia_Man_t, fVerbose int32) {
   SeeAlso     []
 
 ***********************************************************************/
-func Acec_ManPoolGetPointed(p *Gia_Man_t, vAdds *Vec_Int_t) *Vec_Bit_t {
-    var vMarks *Vec_Bit_t  = Vec_BitStart( Gia_ManObjNum(p) );
-    var i, k int32;
-    for  i = 0; 6*i < Vec_IntSize(vAdds); i++  {
-        for  k = 0; k < 3; k++  {
-            Vec_BitWriteEntry( vMarks, Vec_IntEntry(vAdds, 6*i+k), 1 );
-        }
-    }
-    return vMarks;
-}
-
-func Acec_ManPoolTopMost(p *Gia_Man_t, vAdds *Vec_Int_t) *Vec_Int_t {
-    var i, k, iTop, fVerbose int32;
-    var vTops *Vec_Int_t  = Vec_IntAlloc( 1000 );
-    var vMarks *Vec_Bit_t  = Acec_ManPoolGetPointed( p, vAdds );
-
-    for  i = 0; 6*i < Vec_IntSize(vAdds); i++  {
-        if !Vec_BitEntry(vMarks, Vec_IntEntry(vAdds, 6*i+3)) && 
-             !Vec_BitEntry(vMarks, Vec_IntEntry(vAdds, 6*i+4)) {
-            Vec_IntPush( vTops, i ); }
-    }
-
-    if fVerbose != 0 {
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vTops)) && (((iTop) = Vec_IntEntry(vTops, i)), 1); i++  {
-        fmt.Printf("%4d : ", iTop);
-        for  k = 0; k < 3; k++  {
-            fmt.Printf("%4d ", Vec_IntEntry(vAdds, 6*iTop+k));
-        }
-        fmt.Printf(" -> ");
-        for  k = 3; k < 5; k++  {
-            fmt.Printf("%4d ", Vec_IntEntry(vAdds, 6*iTop+k));
-        }
-        fmt.Printf("\n");
-    } }
-
-    Vec_BitFree( vMarks );
-    return vTops;
-}
 func Acec_ManPool(p *Gia_Man_t) {
     var vTops, vTree *Vec_Int_t;
     var vTrees *Vec_Wec_t;
