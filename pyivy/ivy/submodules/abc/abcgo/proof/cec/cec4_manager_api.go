@@ -68,6 +68,11 @@ func Cec4_ManDestroy(p *Cec4_Man_t) {
 	p.vRefNodes = nil
 	p.vRefBins = nil
 	p.pTable = nil
+	p.simState = nil
+	p.packer = nil
+	p.cnf = nil
+	p.candidates = nil
+	p.copies = nil
 }
 
 var cec4StatsClock struct {
