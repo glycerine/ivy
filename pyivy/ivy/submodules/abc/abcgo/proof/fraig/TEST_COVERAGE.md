@@ -1,6 +1,6 @@
 # FRAIG coverage notes
 
-The FRAIG package reached 78.3% statement coverage with
+The FRAIG package reached 78.7% statement coverage with
 `FRAIG_C_DIFFERENTIAL=1 go test -race -coverprofile=... ./proof/fraig`.
 The percentage includes opt-in compiled-C rehash, compression, and allocator
 comparisons. It is not a completeness or correctness guarantee.
@@ -16,6 +16,13 @@ exercise bounded depth and compression stress. An eight-bit ripple adder is
 checked against integer addition for 1,024 deterministic input pairs.
 The public API tests also replay a miter counterexample, and two successive
 simulation-buffer resizes check preserved PI words, internal hashes and masks.
+
+Manager allocator accounting checks typed node-pool and pooled simulation
+storage through initial allocation, chunk growth, and a simulation resize. The
+8-bit and 16-bit ripple adders check arithmetic graphs against integer addition
+for deterministic input sets. The 16-bit case exercises larger pooled node and
+simulation storage, but these workloads do not replace end-to-end execution
+through an ABC consumer or compiled-C workload comparisons.
 
 Still missing are representative end-to-end workloads through a ported ABC
 consumer; wall-clock timeout outcomes during real search; broader sparse and

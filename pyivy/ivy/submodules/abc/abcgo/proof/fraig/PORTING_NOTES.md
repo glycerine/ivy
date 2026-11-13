@@ -53,26 +53,22 @@ are declared in the header but have no implementations in the C checkout;
 they are not supplied as invented replacements.
 
 The fixed-size allocator is implemented through the shared Go `misc/mem` pool,
-not C's intrusive free list. It preserves entry allocation and recycling for
-valid callers, but newly allocated byte contents and verbose statistics are not
-byte-for-byte reproductions of C's pointer links and output. Go vector backing
-arrays retain removed pointers until overwritten or released, matching the C
-array visible through `Fraig_NodeVecReadArray` but potentially retaining Go
-objects longer.
+not C's intrusive free list. Simulation words are typed views over pool entries;
+covering columns recycle their entries after selection. Node records use a
+FRAIG-local typed chunk pool so the garbage collector can see pointer fields.
+This preserves the C allocation lifetime and chunk policy while keeping Go
+pointer storage safe. The node pool's byte usage reflects Go's `Fraig_Node_t`
+layout, which can differ from C's layout. Byte contents and verbose allocator
+statistics are not pointer-link-for-pointer-link reproductions. Go vector
+backing arrays retain removed pointers until overwritten or released, matching
+the C array visible through `Fraig_NodeVecReadArray` but potentially retaining
+Go objects longer.
 
-Simulation vectors and covering columns are allocated as Go slices rather than
-from `mmSims`, so that pool’s byte count does not include those allocations as
-it does in C. Restarting an untouched pool is a no-op in Go; the C function
-assumes that a first chunk exists. There is no interpolation implementation in
-`src/proof/fraig`; interpolation in other packages needs a separate audit.
-
-The C manager obtains one pool entry per simulation vector, three feedback
-buffers, and temporary covering column, recycling covering columns after use
-(`fraigNode.c`, `fraigFeed.c`). The Go pool exposes byte slices while FRAIG
-exposes word slices. Directly sharing that backing storage requires unsafe
-byte-to-word conversion and suitable alignment; reserving unused byte entries
-would instead double-allocate and produce misleading memory accounting. A
-typed pool or allocator API change would need separate design and validation,
-including active slice lifetime across resize and temporary-column recycling.
-The standalone fixed pool is compared with compiled C for chunk usage, LIFO
-recycling, and restart with `FRAIG_C_DIFFERENTIAL=1`.
+The manager accounting regression checks one pool entry per node, the three
+feedback buffers, chunk-boundary growth, and a full simulation-pool replacement
+during resize. 8-bit and 16-bit ripple-addition workloads exercise ordinary
+arithmetic graph construction and simulation. The standalone fixed pool is compared with compiled C for chunk
+usage, LIFO recycling, and restart with `FRAIG_C_DIFFERENTIAL=1`. Restarting an
+untouched pool is a no-op in Go; the C function assumes that a first chunk
+exists. There is no interpolation implementation in `src/proof/fraig`;
+interpolation in other packages needs a separate audit.

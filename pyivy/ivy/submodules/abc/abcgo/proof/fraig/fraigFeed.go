@@ -13,9 +13,9 @@ func fraigSetBit(a []uint32, i int32)   { a[i/32] |= uint32(1) << uint(i%32) }
 func Fraig_FeedBackInit(p *Fraig_Man_t) {
 	p.vCones = Fraig_NodeVecAlloc(500)
 	p.vPatsReal = msat.Msat_IntVecAlloc(1000)
-	p.pSimsReal = make([]uint32, p.nWordsDyna)
-	p.pSimsTemp = make([]uint32, p.nWordsDyna)
-	p.pSimsDiff = make([]uint32, p.nWordsDyna)
+	p.pSimsReal = fraigMemFixedEntryWords(p.mmSims, p.nWordsDyna)
+	p.pSimsTemp = fraigMemFixedEntryWords(p.mmSims, p.nWordsDyna)
+	p.pSimsDiff = fraigMemFixedEntryWords(p.mmSims, p.nWordsDyna)
 }
 func Fraig_FeedBack(p *Fraig_Man_t, model []int, vars *msat.Msat_IntVec_t, old, node *Fraig_Node_t) {
 	start := util.Abc_Clock()
@@ -176,6 +176,9 @@ func Fraig_FeedBackCovering(p *Fraig_Man_t, pats *msat.Msat_IntVec_t) {
 		Fraig_CancelCoveredColumns(columns, hits, pat)
 		msat.Msat_IntVecPush(pats, int(pat))
 	}
+	for _, col := range columns {
+		fraigMemFixedRecycleWords(p.mmSims, col)
+	}
 }
 func Fraig_FeedBackCoveringStart(p *Fraig_Man_t) [][]uint32 {
 	var columns [][]uint32
@@ -192,7 +195,7 @@ func Fraig_FeedBackCoveringStart(p *Fraig_Man_t) [][]uint32 {
 				if limit && Fraig_CompareSimInfoUnderMask(a, b, p.iWordStart, 0, p.pSimsReal) == 0 {
 					continue
 				}
-				col := make([]uint32, p.iWordStart)
+				col := fraigMemFixedEntryWords(p.mmSims, p.nWordsRand+p.nWordsDyna)[:p.iWordStart]
 				for w := int32(0); w < p.iWordStart; w++ {
 					col[w] = (a.puSimD[w] ^ b.puSimD[w]) & ^p.pSimsReal[w]
 				}
@@ -277,7 +280,8 @@ func Fraig_FeedBackCheckTableF0(p *Fraig_Man_t) {
 }
 func Fraig_ReallocateSimulationInfo(p *Fraig_Man_t) {
 	p.nWordsDyna *= 2
-	mem := Fraig_MemFixedStart(4 * (p.nWordsRand + p.nWordsDyna))
+	oldMem := p.mmSims
+	p.mmSims = Fraig_MemFixedStart(4 * (p.nWordsRand + p.nWordsDyna))
 	fraigNodeSimulationStorage(p, p.pConst1)
 	for _, node := range p.vInputs.pArray {
 		oldR, oldD := node.puSimR, node.puSimD
@@ -285,8 +289,7 @@ func Fraig_ReallocateSimulationInfo(p *Fraig_Man_t) {
 		copy(node.puSimR, oldR)
 		copy(node.puSimD, oldD[:p.iWordStart])
 	}
-	Fraig_MemFixedStop(p.mmSims, 0)
-	p.mmSims = mem
+	Fraig_MemFixedStop(oldMem, 0)
 	for _, node := range p.vNodes.pArray[1:] {
 		if Fraig_NodeIsAnd(node) == 0 {
 			continue
@@ -301,9 +304,9 @@ func Fraig_ReallocateSimulationInfo(p *Fraig_Man_t) {
 		Fraig_NodeSimulate(node, 0, p.iWordStart, 0)
 		assert(old == node.uHashD, "dynamic signature preserved")
 	}
-	p.pSimsReal = make([]uint32, p.nWordsDyna)
-	p.pSimsTemp = make([]uint32, p.nWordsDyna)
-	p.pSimsDiff = make([]uint32, p.nWordsDyna)
+	p.pSimsReal = fraigMemFixedEntryWords(p.mmSims, p.nWordsDyna)
+	p.pSimsTemp = fraigMemFixedEntryWords(p.mmSims, p.nWordsDyna)
+	p.pSimsDiff = fraigMemFixedEntryWords(p.mmSims, p.nWordsDyna)
 }
 func Fraig_ManAllocCounterExample(p *Fraig_Man_t) []int32 {
 	return make([]int32, len(p.vInputs.pArray))

@@ -96,7 +96,7 @@ func Fraig_ManCreate(params *Fraig_Params_t) *Fraig_Man_t {
 		fVerboseP:  params.FVerboseP,
 		nInspLimit: params.NInspLimit,
 	}
-	p.mmNodes = Fraig_MemFixedStart(int32(unsafe.Sizeof(Fraig_Node_t{})))
+	p.mmNodes = fraigNodePoolStart()
 	p.mmSims = Fraig_MemFixedStart(4 * (p.nWordsRand + p.nWordsDyna))
 	p.vInputs = Fraig_NodeVecAlloc(1000)
 	p.vOutputs = Fraig_NodeVecAlloc(1000)
@@ -154,7 +154,7 @@ func Fraig_ManFree(p *Fraig_Man_t) {
 	if p.vPatsReal != nil {
 		msat.Msat_IntVecFree(p.vPatsReal)
 	}
-	Fraig_MemFixedStop(p.mmNodes, 0)
+	fraigNodePoolStop(p.mmNodes)
 	Fraig_MemFixedStop(p.mmSims, 0)
 	*p = Fraig_Man_t{}
 }

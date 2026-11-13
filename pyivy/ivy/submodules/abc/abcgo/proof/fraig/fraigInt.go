@@ -169,7 +169,7 @@ type Fraig_ManStruct_t_ struct {
 	pSuppF     [][]uint32
 
 	// the memory managers
-	mmNodes *Fraig_MemFixed_t // the memory manager for nodes
+	mmNodes *fraigNodePool    // typed chunks for pointer-bearing Go nodes
 	mmSims  *Fraig_MemFixed_t // the memory manager for simulation info
 
 	// solving the SAT problem

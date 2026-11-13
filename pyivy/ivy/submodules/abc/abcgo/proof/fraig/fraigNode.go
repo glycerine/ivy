@@ -18,13 +18,14 @@ func fraigNodeSimComplement(node *Fraig_Node_t) bool {
 }
 
 func fraigNodeSimulationStorage(p *Fraig_Man_t, node *Fraig_Node_t) {
-	storage := make([]uint32, p.nWordsRand+p.nWordsDyna)
+	storage := fraigMemFixedEntryWords(p.mmSims, p.nWordsRand+p.nWordsDyna)
 	node.puSimR = storage[:p.nWordsRand]
 	node.puSimD = storage[p.nWordsRand:]
 }
 
 func Fraig_NodeCreateConst(p *Fraig_Man_t) *Fraig_Node_t {
-	node := &Fraig_Node_t{Num: Fraig_NodeVecReadSize(p.vNodes), NumPi: -1, nRefs: 1, fInv: 1}
+	node := fraigNodePoolFetch(p.mmNodes)
+	*node = Fraig_Node_t{Num: Fraig_NodeVecReadSize(p.vNodes), NumPi: -1, nRefs: 1, fInv: 1}
 	Fraig_NodeVecPush(p.vNodes, node)
 	fraigNodeSimulationStorage(p, node)
 	node.nOnes = uint32(p.nWordsRand) * 32
@@ -33,7 +34,8 @@ func Fraig_NodeCreateConst(p *Fraig_Man_t) *Fraig_Node_t {
 }
 
 func Fraig_NodeCreatePi(p *Fraig_Man_t) *Fraig_Node_t {
-	node := &Fraig_Node_t{Num: Fraig_NodeVecReadSize(p.vNodes), NumPi: Fraig_NodeVecReadSize(p.vInputs), nRefs: 1}
+	node := fraigNodePoolFetch(p.mmNodes)
+	*node = Fraig_Node_t{Num: Fraig_NodeVecReadSize(p.vNodes), NumPi: Fraig_NodeVecReadSize(p.vInputs), nRefs: 1}
 	fraigNodeSimulationStorage(p, node)
 	Fraig_NodeVecPush(p.vNodes, node)
 	Fraig_NodeVecPush(p.vInputs, node)
@@ -57,7 +59,8 @@ func Fraig_NodeCreatePi(p *Fraig_Man_t) *Fraig_Node_t {
 
 func Fraig_NodeCreate(p *Fraig_Man_t, p1, p2 *Fraig_Node_t) *Fraig_Node_t {
 	n1, n2 := Fraig_Regular(p1), Fraig_Regular(p2)
-	node := &Fraig_Node_t{p1: p1, p2: p2, Num: Fraig_NodeVecReadSize(p.vNodes), NumPi: -1}
+	node := fraigNodePoolFetch(p.mmNodes)
+	*node = Fraig_Node_t{p1: p1, p2: p2, Num: Fraig_NodeVecReadSize(p.vNodes), NumPi: -1}
 	n1.nRefs++
 	n2.nRefs++
 	Fraig_NodeVecPush(p.vNodes, node)
