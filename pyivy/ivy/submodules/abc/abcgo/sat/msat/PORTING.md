@@ -51,12 +51,13 @@ C's casts between unrelated clause and integer-vector pointers.
   Prepare, which would discard the parser's root unit assignments. Production
   code has no C compiler or cgo requirement.
 
-The C source explicitly documents a tautology-normalization bug. A minimized
-case `(1 OR -6 OR 6 OR -2 OR -3), (1 OR 3 OR 6), (-1)` under assumptions
-`-6, 2` is SAT, but the C implementation reports UNSAT. The Go normalization
-keeps the correct tautology semantics, independently regression-tested against
-exhaustive enumeration; this is why C parity cases use distinct-variable 3-SAT
-clauses. General unrestricted formulas remain covered by exhaustive tests.
+The C source explicitly documents a tautology-normalization bug. The Go clause
+normalization now follows that original in-place algorithm, including its
+handling of repeated and opposite literals. A minimized case `(1 OR -6 OR 6 OR
+-2 OR -3), (1 OR 3 OR 6), (-1)` under assumptions `-6, 2` is SAT, but the C
+implementation reports UNSAT; a source-derived regression retains that result.
+Randomized exhaustive formula tests use distinct-variable clauses to avoid
+mischaracterizing this known source limitation.
 
 Follow-up review added exhaustive incremental and marked-rollback oracles.
 Clause and assumption inputs are now validated fully before normalizing or

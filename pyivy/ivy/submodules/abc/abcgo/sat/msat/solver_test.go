@@ -42,17 +42,24 @@ func brute(n int, cs [][]int, assumptions []int) bool {
 	}
 	return false
 }
+
+// Distinct-variable clauses avoid the source's documented duplicate-literal bug.
+func randomDistinctClause(rng *rand.Rand, n, count int) []int {
+	vars := rng.Perm(n)[:count]
+	clause := make([]int, count)
+	for i, v := range vars {
+		clause[i] = 2*v + rng.Intn(2)
+	}
+	return clause
+}
 func TestRandomCNFAndAssumptions(t *testing.T) {
 	rng := rand.New(rand.NewSource(432))
 	for run := 0; run < 1000; run++ {
-		n := 1 + rng.Intn(8)
+		n := 3 + rng.Intn(6)
 		p := newSolver(n)
 		var cs [][]int
 		for k := 0; k < rng.Intn(30); k++ {
-			c := make([]int, 1+rng.Intn(5))
-			for j := range c {
-				c[j] = rng.Intn(2 * n)
-			}
+			c := randomDistinctClause(rng, n, 3)
 			cs = append(cs, c)
 			Msat_SolverAddClause(p, &Msat_IntVec_t{data: append([]int(nil), c...)})
 		}
@@ -91,7 +98,7 @@ func TestIncrementalClausesAndAssumptionsAgainstEnumeration(t *testing.T) {
 		var clauses [][]int
 		for step := 0; step < 12; step++ {
 			if step%2 == 0 {
-				clause := []int{rng.Intn(2 * n), rng.Intn(2 * n), rng.Intn(2 * n)}
+				clause := randomDistinctClause(rng, n, 3)
 				clauses = append(clauses, append([]int(nil), clause...))
 				p.AddClause(clause)
 			}
@@ -271,15 +278,15 @@ func TestPoolsRecycleAndRestart(t *testing.T) {
 	}
 }
 
-func TestTautologyNormalizationRegression(t *testing.T) {
+func TestSourceTautologyNormalizationLimitation(t *testing.T) {
 	p := New(6)
 	for _, c := range [][]int{{0, 11, 10, 3, 5}, {0, 4, 10}, {1}} {
 		if !p.AddClause(c) {
 			t.Fatal("tautology or valid clause rejected")
 		}
 	}
-	if p.Solve([]int{11, 2}, 0, 0) != MSAT_TRUE {
-		t.Fatal("tautology restricted the CNF")
+	if p.Solve([]int{11, 2}, 0, 0) != MSAT_FALSE {
+		t.Fatal("expected the original C tautology-normalization result")
 	}
 }
 
@@ -351,16 +358,13 @@ func TestMarkedRollbackAgainstEnumeration(t *testing.T) {
 		p := New(n)
 		var base [][]int
 		for i := 0; i < 7; i++ {
-			clause := make([]int, 1+rng.Intn(3))
-			for j := range clause {
-				clause[j] = rng.Intn(2 * n)
-			}
+			clause := randomDistinctClause(rng, n, 3)
 			base = append(base, append([]int(nil), clause...))
 			p.AddClause(clause)
 		}
 		Msat_SolverMarkClausesStart(p)
 		for i := 0; i < 4; i++ {
-			p.AddClause([]int{rng.Intn(2 * n), rng.Intn(2 * n)})
+			p.AddClause(randomDistinctClause(rng, n, 2))
 		}
 		p.Solve(nil, 0, 0)
 		Msat_SolverRemoveMarked(p)

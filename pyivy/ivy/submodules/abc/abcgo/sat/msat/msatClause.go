@@ -23,27 +23,32 @@ func Msat_ClauseCreate(p *Msat_Solver_t, v *Msat_IntVec_t, learnt int, out **Msa
 				panic("literal variable out of range")
 			}
 		}
-		sort.Ints(lits)
-		filtered := lits[:0]
-		previous := -2
-		for _, lit := range lits {
-			if lit == previous {
-				continue
-			}
-			if lit == previous^1 {
+		// The C implementation sorts the caller's vector and compacts it in place.
+		sort.Ints(v.data)
+		Msat_SolverIncrementSeenId(p)
+		seenID := Msat_SolverIncrementSeenId(p)
+		j := 0
+		for i := range v.data {
+			lit := v.data[i]
+			variable, sign := lit>>1, lit&1
+			if p.pSeen[variable] >= seenID-1 {
+				if (p.pSeen[variable] != seenID) == (sign != 0) {
+					continue
+				}
 				return 1
 			}
-			previous = lit
-			if p.pAssigns[lit>>1] >= 0 {
-				if p.pAssigns[lit>>1] == lit {
+			p.pSeen[variable] = seenID - (1 - sign)
+			if p.pAssigns[variable] >= 0 {
+				if p.pAssigns[variable] == lit {
 					return 1
 				}
 				continue
 			}
-			filtered = append(filtered, lit)
+			v.data[j] = lit
+			j++
 		}
-		lits = filtered
-		v.data = append(v.data[:0], lits...)
+		v.data = v.data[:j]
+		lits = append(lits[:0], v.data...)
 	}
 	if len(lits) == 0 {
 		p.okay = false
