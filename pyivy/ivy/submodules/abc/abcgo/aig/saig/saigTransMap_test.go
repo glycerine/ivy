@@ -31,3 +31,25 @@ func TestFrameMappingsLifecycle(t *testing.T) {
 		t.Fatal("data not released")
 	}
 }
+
+func TestCreateFrameMappingUsesFirstEquivalentObject(t *testing.T) {
+	g := aig.NewGraph()
+	a, b := g.NewInput(), g.NewInput()
+	Saig_ManStartMap1(g, 2)
+	defer Saig_ManStopMap1(g)
+	frames := aig.NewGraph()
+	x, y := frames.NewInput(), frames.NewInput()
+	aig.Aig_ManReprStart(frames, int32(len(frames.Nodes())))
+	aig.Aig_ObjCreateRepr(frames, x, y)
+	Saig_ManSetMap1(g, a, 0, x)
+	Saig_ManSetMap1(g, b, 1, y)
+	Saig_ManCreateMapping(g, frames, 2)
+	defer Saig_ManStopMap2(g)
+	var frame int32
+	if got := Saig_ManGetMap2(g, b, 1, &frame); got != int32(a.NodeID()) || frame != 0 {
+		t.Fatalf("got object %d frame %d", got, frame)
+	}
+	if got := Saig_ManGetMap2(g, b, 0, &frame); got != int32(b.NodeID()) || frame != 0 {
+		t.Fatalf("unmapped got object %d frame %d", got, frame)
+	}
+}

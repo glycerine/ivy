@@ -120,3 +120,38 @@ func Saig_ManGetMap2(g *aig.Graph, old aig.Edge, frame int32, newFrame *int32) i
 	*newFrame = m.two[i+1]
 	return m.two[i]
 }
+
+// Saig_ManCreateMapping records the earliest original object and frame for
+// each equivalence class in the unrolled graph.
+func Saig_ManCreateMapping(g, frames *aig.Graph, nFrames int32) {
+	if g == nil || frames == nil || nFrames <= 0 || Saig_ManHasMap1(g) == 0 {
+		panic("saig: missing initial frame mapping")
+	}
+	Saig_ManStartMap2(g, nFrames)
+	first := make(map[aig.Edge]struct {
+		object aig.Edge
+		frame  int32
+	})
+	for f := int32(0); f < nFrames; f++ {
+		for _, object := range g.LiveEdges() {
+			id := Saig_ManGetMap1(g, object, f)
+			if id < 0 || !frames.ValidEdge(aig.Edge(id)<<1) {
+				Saig_ManSetMap2(g, object, f, object, f)
+				continue
+			}
+			repr := aig.Edge(id) << 1
+			if r := aig.Aig_ObjFindRepr(frames, repr); r != aig.InvalidEdge {
+				repr = r
+			}
+			entry, ok := first[repr]
+			if !ok {
+				entry = struct {
+					object aig.Edge
+					frame  int32
+				}{object, f}
+				first[repr] = entry
+			}
+			Saig_ManSetMap2(g, object, f, entry.object, entry.frame)
+		}
+	}
+}
