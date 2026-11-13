@@ -56,7 +56,7 @@ func signature(g *aig.Graph, node aig.Edge, sims [][]uint32) string {
 	}
 	return string(bytes)
 }
-func createClasses(g *aig.Graph, order []aig.Edge, words int, sources ...*aig.AigRandomSource) *Classes {
+func createClasses(g *aig.Graph, order []aig.Edge, words int, sources ...randomSource) *Classes {
 	candidates := []aig.Edge{}
 	for _, node := range g.LiveEdges() {
 		kind := g.Node(node).Kind
@@ -65,7 +65,7 @@ func createClasses(g *aig.Graph, order []aig.Edge, words int, sources ...*aig.Ai
 		}
 	}
 	c := &Classes{groups: [][]aig.Edge{candidates}}
-	var random *aig.AigRandomSource
+	var random randomSource
 	if len(sources) > 0 {
 		random = sources[0]
 	} else {

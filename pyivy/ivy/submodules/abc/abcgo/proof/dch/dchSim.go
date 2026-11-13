@@ -2,7 +2,21 @@ package dch
 
 import aig "github.com/glycerine/abcgo/aig/aig"
 
-func simulateWords(g *aig.Graph, order []aig.Edge, words int, random *aig.AigRandomSource) [][]uint32 {
+type randomSource interface{ Uint32() uint32 }
+
+// dchCore.c resets the process-wide AIG stream before simulation. The first
+// draw is discarded; subsequent draws continue that same shared stream.
+type globalRandomSource struct{ reset bool }
+
+func (r *globalRandomSource) Uint32() uint32 {
+	if r.reset {
+		r.reset = false
+		return aig.Aig_ManRandom(1)
+	}
+	return aig.Aig_ManRandom(0)
+}
+
+func simulateWords(g *aig.Graph, order []aig.Edge, words int, random randomSource) [][]uint32 {
 	count := int(aig.Aig_ManObjNumMax(g))
 	sims := make([][]uint32, count)
 	storage := make([]uint32, count*words)

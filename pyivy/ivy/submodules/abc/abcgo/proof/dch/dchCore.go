@@ -15,7 +15,7 @@ func (m *Manager) computeEquivalences() error {
 	}
 	started := time.Now()
 	simStart := time.Now()
-	m.random = aig.NewAigRandomSource()
+	m.random = &globalRandomSource{reset: true}
 	m.classes = createClasses(m.graph, m.order, m.params.Words, m.random)
 	m.stats.Simulation = time.Since(simStart)
 	m.stats.Candidates = Dch_ClassesLitNum(m.classes)

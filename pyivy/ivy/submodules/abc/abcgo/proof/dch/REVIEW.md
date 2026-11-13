@@ -9,8 +9,8 @@ choice modules as separate responsibilities before the bug audit.
   graph edges, local maps, slices and errors. The public adapter depends only on
   AIG and ported BSAT; DAR/CEC remain upstream and introduce no cycle.
 - Keep the source's eight 32-bit simulation rounds and random stream, including
-  the discarded reset draw and all-zero assignment bit. Use an independent RNG
-  instance instead of resetting process-global random state.
+  the discarded reset draw, all-zero assignment bit, and observable
+  process-global reset and advancement.
 - Normalize phase consistently in signatures, CNF, SAT miters and rebuilt
   choices. Explicit proof-result values distinguish a refutation from a timeout.
 - Build clauses lazily by actual cones. Retain source soft recycling thresholds;

@@ -26,7 +26,7 @@ A nonnil Params value is explicit; use DefaultParams before changing one field.
 
 ## Implementation
 
-Eight rounds of ABC's independent multiply-with-carry stream produce 32-bit
+Eight rounds of ABC's process-global multiply-with-carry stream produce 32-bit
 simulation signatures, normalized by all-zero-input phase. Classes only split;
 these signatures propose candidates and never certify equivalence.
 
