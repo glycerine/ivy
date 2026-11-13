@@ -164,9 +164,8 @@ func Cnf_DataLiftAndFlipLits(cnf *Cnf_Dat_t, variables int32, flips *Vec_Int_t) 
 	for ci := range cnf.Clauses {
 		for li, lit := range cnf.Clauses[ci] {
 			if indices[index] {
-				lit ^= 1
+				cnf.Clauses[ci][li] = (lit ^ 1) + variables<<1
 			}
-			cnf.Clauses[ci][li] = lit + variables<<1
 			index++
 		}
 	}

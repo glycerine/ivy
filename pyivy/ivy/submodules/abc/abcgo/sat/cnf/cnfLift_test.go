@@ -3,6 +3,8 @@ package cnf
 import (
 	"reflect"
 	"testing"
+
+	"github.com/glycerine/abcgo/misc/vec"
 )
 
 func TestLiftVariableOffsetsPreservesLocalVariableCount(t *testing.T) {
@@ -24,5 +26,17 @@ func TestLiftVariableOffsetsPreservesLocalVariableCount(t *testing.T) {
 	wantClauses := [][]int32{{8, 11}}
 	if !reflect.DeepEqual(data.Clauses, wantClauses) || !reflect.DeepEqual(data.pClauses, wantClauses) {
 		t.Fatalf("clauses = %v / %v, want %v", data.Clauses, data.pClauses, wantClauses)
+	}
+}
+
+func TestLiftAndFlipOnlySelectedLiterals(t *testing.T) {
+	data := &CNF{Clauses: [][]int32{{0, 3}, {4, 7}}}
+	flips := vec.Vec_IntAlloc(2)
+	vec.Vec_IntPush(flips, 1)
+	vec.Vec_IntPush(flips, 2)
+	Cnf_DataLiftAndFlipLits(data, 3, flips)
+	want := [][]int32{{0, 8}, {11, 7}}
+	if !reflect.DeepEqual(data.Clauses, want) || !reflect.DeepEqual(data.pClauses, want) {
+		t.Fatalf("clauses = %v / %v, want %v", data.Clauses, data.pClauses, want)
 	}
 }
