@@ -21,8 +21,8 @@ Its available git history has one commit for that path,
 `b910cba3e2e065d444d4a7b1bcbf81227417fc11` (2014-01-28,
 "Initial new interpolation code"). The current workspace's available history
 has only the vendoring commit for that path. No complete driver was found in
-these local histories. Attempts to inspect the Berkeley ABC upstream driver and
-its history through the web tool failed, so those sources remain unverified;
+these local histories. The current [Berkeley ABC upstream driver](https://github.com/berkeley-abc/abc/blob/master/src/proof/int2/int2Core.c)
+has the same SHA-256 as the local file. Upstream history has not been checked;
 this search does not establish that no complete implementation exists elsewhere.
 
 Independent components have source-based repairs and tests: timeframe
