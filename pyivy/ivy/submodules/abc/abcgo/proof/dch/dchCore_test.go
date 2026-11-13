@@ -319,8 +319,11 @@ func TestSequentialInterfaceMetadataAndTrailingRegisters(t *testing.T) {
 		aig.Aig_ManSetRegNum(g, 1)
 		g.Name = "machine"
 		g.Spec = "source.blif"
+		g.InputNumbers = []int32{2, 7}
 		g.FlopNumbers = []int32{17}
 		g.ClockDomains = [][]int32{{0}}
+		g.OneHotGroups = [][]int32{{0, 1}}
+		g.OneHotInputGroups = [][]int32{{1, 3}}
 		variants[i] = g
 	}
 	total, err := DeriveTotalAig(variants)
@@ -332,12 +335,16 @@ func TestSequentialInterfaceMetadataAndTrailingRegisters(t *testing.T) {
 		t.Fatal(err)
 	}
 	checkAllOutputs(t, variants[0], result)
-	if aig.Aig_ManRegNum(total) != 1 || aig.Aig_ManRegNum(result) != 1 || result.Name != "machine" || result.Spec != "source.blif" || result.FlopNumbers[0] != 17 {
+	if aig.Aig_ManRegNum(total) != 1 || aig.Aig_ManRegNum(result) != 1 || result.Name != "machine" || result.Spec != "source.blif" ||
+		result.FlopNumbers[0] != 17 || !reflect.DeepEqual(result.InputNumbers, []int32{2, 7}) ||
+		!reflect.DeepEqual(result.OneHotGroups, [][]int32{{0, 1}}) || !reflect.DeepEqual(result.OneHotInputGroups, [][]int32{{1, 3}}) {
 		t.Fatal("lost register metadata")
 	}
 	result.FlopNumbers[0] = 99
 	result.ClockDomains[0][0] = 99
-	if variants[0].FlopNumbers[0] != 17 || variants[0].ClockDomains[0][0] != 0 {
+	result.OneHotGroups[0][0] = 99
+	result.OneHotInputGroups[0][0] = 99
+	if variants[0].FlopNumbers[0] != 17 || variants[0].ClockDomains[0][0] != 0 || variants[0].OneHotGroups[0][0] != 0 || variants[0].OneHotInputGroups[0][0] != 1 {
 		t.Fatal("shared mutable metadata")
 	}
 	aig.Aig_ManSetRegNum(variants[1], 0)

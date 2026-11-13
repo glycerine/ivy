@@ -94,7 +94,10 @@ compared exhaustively against C. Statement coverage does not establish source
 fidelity or correctness for all AIGs.
 
 `Dch_DeriveTotalAig` uses Go-local copy maps rather than clearing and updating
-the source graphs' C `pData` scratch pointers. `Dch_DeriveChoiceAig` currently
-preserves more source metadata than C's fresh manager, and its typed API may
-return errors for unsupported metadata clone contracts; this remains a source
-contract difference requiring resolution.
+the source graphs' C `pData` scratch pointers. `Dch_DeriveChoiceAig` preserves
+the richer Go AIG metadata fields (partition, clock-domain, one-hot, and
+history metadata) in addition to the C fields copied by `Aig_ManDupDfs`. This
+is an intentional Go-side extension so DCH does not silently discard
+annotations used by Go callers. Timing and history metadata require explicit
+clone contracts; the typed API returns an error when those contracts are
+unavailable.

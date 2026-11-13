@@ -3,6 +3,7 @@ package dch
 import (
 	"reflect"
 	"testing"
+	"time"
 
 	aig "github.com/glycerine/abcgo/aig/aig"
 )
@@ -47,6 +48,10 @@ func TestSnapshotMetadataCloneAndInvalidHistory(t *testing.T) {
 	history := &testHistory{values: []int{2, 3}}
 	g.History = history
 	g.ClockDomains = [][]int32{{1, 2}}
+	g.InputNumbers = []int32{4}
+	g.OneHotGroups = [][]int32{{3, 5}}
+	g.OneHotInputGroups = [][]int32{{2, 6}}
+	g.Time2Quit = time.Unix(123, 456)
 	got, err := DeriveTotalAig([]*aig.Graph{g})
 	if err != nil {
 		t.Fatal(err)
@@ -59,6 +64,15 @@ func TestSnapshotMetadataCloneAndInvalidHistory(t *testing.T) {
 	got.ClockDomains[0][0] = 8
 	if history.values[0] != 2 || g.ClockDomains[0][0] != 1 {
 		t.Fatal("snapshot metadata aliases its source")
+	}
+	if got.InputNumbers[0] != 4 || got.OneHotGroups[0][0] != 3 || got.OneHotInputGroups[0][0] != 2 || !got.Time2Quit.Equal(g.Time2Quit) {
+		t.Fatal("snapshot omitted AIG interface metadata")
+	}
+	got.InputNumbers[0] = 9
+	got.OneHotGroups[0][0] = 9
+	got.OneHotInputGroups[0][0] = 9
+	if g.InputNumbers[0] != 4 || g.OneHotGroups[0][0] != 3 || g.OneHotInputGroups[0][0] != 2 {
+		t.Fatal("snapshot metadata arrays alias their source")
 	}
 	g.History = struct{}{}
 	if _, err := DeriveTotalAig([]*aig.Graph{g}); err == nil {

@@ -7,16 +7,21 @@ import (
 	aig "github.com/glycerine/abcgo/aig/aig"
 )
 
-// Match the AIG duplicator's interface metadata policy without sharing mutable
-// terminal arrays. Timing/history objects use the same explicit clone contracts.
+// Preserve public graph metadata without sharing mutable interface arrays.
+// Timing/history objects use explicit clone contracts because their shape is
+// owned by callers.
 func copyMetadata(destination, source *aig.Graph) error {
 	destination.Name, destination.Spec = source.Name, source.Spec
+	destination.Time2Quit = source.Time2Quit
 	destination.RetimingChanged = source.RetimingChanged
 	destination.Assertions, destination.BarrierBuffers = source.Assertions, source.BarrierBuffers
+	destination.InputNumbers = slices.Clone(source.InputNumbers)
 	destination.PartitionInputs = slices.Clone(source.PartitionInputs)
 	destination.PartitionOutputs = slices.Clone(source.PartitionOutputs)
 	destination.FlopNumbers = slices.Clone(source.FlopNumbers)
 	destination.FlopReprs = slices.Clone(source.FlopReprs)
+	destination.OneHotGroups = cloneIntGroups(source.OneHotGroups)
+	destination.OneHotInputGroups = cloneIntGroups(source.OneHotInputGroups)
 	destination.ClockDomains = slices.Clone(source.ClockDomains)
 	for i, domain := range source.ClockDomains {
 		destination.ClockDomains[i] = slices.Clone(domain)
@@ -38,4 +43,15 @@ func copyMetadata(destination, source *aig.Graph) error {
 	aig.Aig_ManSetRegNum(destination, aig.Aig_ManRegNum(source))
 	aig.Aig_ManSetConstrNum(destination, aig.Aig_ManConstrNum(source))
 	return nil
+}
+
+func cloneIntGroups(groups [][]int32) [][]int32 {
+	if groups == nil {
+		return nil
+	}
+	result := make([][]int32, len(groups))
+	for i, group := range groups {
+		result[i] = slices.Clone(group)
+	}
+	return result
 }

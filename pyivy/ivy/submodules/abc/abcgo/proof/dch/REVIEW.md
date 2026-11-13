@@ -52,6 +52,10 @@ choice modules as separate responsibilities before the bug audit.
    families. Check outputs, chain acyclicity and graph invariants independently.
 9. Cover empty/constant/direct-input interfaces, constant/CI aliases, rejection of native XOR and
    non-topological IDs, parameter errors and unchanged input copies.
+10. Expose the remaining public source spellings through tests: verbosity,
+    total-AIG derivation, equivalence sweeping, choice derivation/checking, and
+    choice computation. Extend metadata cloning checks to input mappings and
+    nested one-hot annotations so all mutable interface arrays are independent.
 
 ## Independent source oracle
 
@@ -68,6 +72,16 @@ synthesis/GIA/new-engine selection flags remain upstream controls as in old DCH.
 
 Validated with DCH vet and full-package race tests for DCH, AIG and BSAT.
 No stubs, excluded source files, parser-only success claims or Git operations.
+
+## Coverage follow-up
+
+The public API review added source-entry-point tests and AIG metadata-array
+copy checks. The final DCH package run measured 93.3% statement coverage.
+Remaining uncovered statements are concentrated in invalid-input guards,
+impossible SAT status branches, and source API error paths. Coverage is used to
+find untested paths, not as a correctness claim. The native C source oracle
+remains the evidence for exact choice ordering and output behavior on its
+fixture family.
 
 ## Follow-up class and SAT review
 
