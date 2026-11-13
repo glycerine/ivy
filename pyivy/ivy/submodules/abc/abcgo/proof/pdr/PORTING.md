@@ -76,6 +76,10 @@ Remaining review and coverage gaps:
   in the unmatched tail after either sorted input ends. Also,
   `Pdr_SetPrintStr` appends no pattern characters when its flop filter is
   nil. Tests record these source behaviors; they are not corrections to ABC.
+- The source's unused `Pdr_NtkFindSatAssign_rec` helper returns success for
+  the constant-one node even when asked to assign zero, and writes the
+  assigned register value as the literal sign. Its direct regression records
+  these behaviors; it is not a general SAT assignment oracle.
 - Incremental clause restoration remaps literals without sorting them or
   recomputing their membership signature, matching ABC. A non-order-preserving
   map can therefore leave the restored cube's ordering and signature stale.

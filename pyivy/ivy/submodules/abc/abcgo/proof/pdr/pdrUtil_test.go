@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"testing"
 
+	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/misc/hash"
 	"github.com/glycerine/abcgo/misc/vec"
 )
@@ -36,6 +37,56 @@ func TestPdrSetPrintingAndIntersection(t *testing.T) {
 	hash.Hash_IntWriteEntry(keep, 3, 1)
 	if ZPdr_SetIntersection(testPdrSet([]int32{1, 3, 4}, nil), b, keep) != nil {
 		t.Fatal("matched-range required literal was dropped")
+	}
+}
+
+// The C recursive justification stores the assigned value itself as the
+// literal sign. This source convention is intentionally tested directly.
+func TestFindSatAssignmentPropagationAndDecision(t *testing.T) {
+	g := aig.NewGraph()
+	q, r := g.NewInput(), g.NewInput()
+	root := g.AND(q, r.Not())
+	g.AddOutput(root)
+	g.AddOutput(q)
+	g.AddOutput(r)
+	aig.Aig_ManSetRegNum(g, 2)
+	aig.Aig_ManSetCioIds(g)
+	defer aig.Aig_ManCleanCioIds(g)
+	aig.Aig_ManIncrementTravId(g)
+	cube := Pdr_SetAlloc(2)
+	// The C routine returns success for the constant node regardless of Value.
+	if Pdr_NtkFindSatAssign_rec(g, g.Const1(), 0, cube, 0) != 1 {
+		t.Fatal("constant-zero request differs from C")
+	}
+	if got := Pdr_NtkFindSatAssign_rec(g, root, 1, cube, 0); got != 1 {
+		t.Fatalf("true AND justification = %d", got)
+	}
+	if cube.nLits != 2 || cube.Lits[0] != 1 || cube.Lits[1] != 2 {
+		t.Fatalf("propagated literals = %v", cube.Lits[:cube.nLits])
+	}
+	if Pdr_ObjSatValue(g, q, 0) != PDR_VAL1 || Pdr_ObjSatValue(g, r, 0) != PDR_VAL0 || Pdr_ObjSatValue(g, r, 1) != PDR_VAL1 {
+		t.Fatal("propagated values or complement handling differ from C")
+	}
+	if Pdr_NtkFindSatAssign_rec(g, q, 0, cube, 0) != 0 {
+		t.Fatal("conflicting assignment accepted")
+	}
+	for _, second := range []bool{false, true} {
+		aig.Aig_ManIncrementTravId(g)
+		cube := Pdr_SetAlloc(2)
+		heuristic := (int32(root.NodeID()) + 1) % 4
+		if second {
+			heuristic = int32(root.NodeID()) % 4
+		}
+		if Pdr_NtkFindSatAssign_rec(g, root, 0, cube, heuristic) != 1 || cube.nLits != 1 {
+			t.Fatalf("second=%v: failed to choose a fanin", second)
+		}
+		want := int32(0)
+		if second {
+			want = 3 // r must be true to make its complemented edge false.
+		}
+		if cube.Lits[0] != want {
+			t.Fatalf("second=%v: literal=%d want=%d", second, cube.Lits[0], want)
+		}
 	}
 }
 
