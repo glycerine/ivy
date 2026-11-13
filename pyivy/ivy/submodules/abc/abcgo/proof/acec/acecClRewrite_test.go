@@ -48,3 +48,25 @@ func TestRewriteReplaceSourceLeavesRegisterCountZero(t *testing.T) {
 		t.Fatalf("registers=%d, want source result 0", got)
 	}
 }
+
+// acecCl.c copies every internal node with Gia_ManAppendAnd, including native
+// XOR nodes; its subsequent phase correction only flips output polarity.
+func TestRewriteReplaceSourceCopiesNativeXorAsAnd(t *testing.T) {
+	p := gia.Gia_ManStart(8)
+	a, b := gia.Gia_ManAppendCi(p), gia.Gia_ManAppendCi(p)
+	x := gia.Gia_ManAppendXorReal(p, a, b)
+	gia.Gia_ManAppendCo(p, x)
+	roots := vec.Vec_IntAlloc(1)
+	vec.Vec_IntPush(roots, x)
+	dst := Acec_RewriteReplace(p, roots)
+	for bits := 0; bits < 4; bits++ {
+		in := []bool{bits&1 != 0, bits&2 != 0}
+		out, err := dst.Evaluate(in)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if out[0] != (in[0] && in[1]) {
+			t.Fatalf("input %v got %v, want source AND", in, out)
+		}
+	}
+}
