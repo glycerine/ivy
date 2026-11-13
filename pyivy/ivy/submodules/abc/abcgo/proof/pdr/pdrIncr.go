@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 	"time"
+
+ "github.com/glycerine/abcgo/misc/vec"
 )
 
 /**CFile****************************************************************
@@ -54,61 +56,37 @@ import (
 ////////////////////////////////////////////////////////////////////////
 
 func IPdr_ManPushClausesK(p *Pdr_Man_t, k int32) *Vec_Ptr_t {
-    var pTemp, pCubeK, pCubeK1 *Pdr_Set_t;
-    var vArrayK, vArrayK1 *Vec_Ptr_t;
-    var i, j, m, RetValue int32;
-
-    assert(Vec_VecSize(p.vClauses) == k + 1, "Vec_VecSize(p.vClauses) == k + 1");
-    vArrayK = Vec_VecEntry( p.vClauses, k );
-    Vec_PtrSort( vArrayK, (int (*)(void))Pdr_SetCompare );
-    vArrayK1 = Vec_PtrAlloc( 100 );
-    Vec_PtrForEachEntry( Pdr_Set_t *, vArrayK, pCubeK, j )
-    {
-        // remove cubes in the same frame that are contained by pCubeK
-        Vec_PtrForEachEntryStart( Pdr_Set_t *, vArrayK, pTemp, m, j+1 )
-        {
-            if !Pdr_SetContains( pTemp, pCubeK ) { // pCubeK contains pTemp
-                continue; }
-            Pdr_SetDeref( pTemp );
-            Vec_PtrWriteEntry( vArrayK, m, Vec_PtrEntryLast(vArrayK) );
-            Vec_PtrPop(vArrayK);
-            m--;
-        }
-
-        // check if the clause can be moved to the next frame
-        RetValue = Pdr_ManCheckCube( p, k, pCubeK, nil, 0, 0, 1 );
-        assert(RetValue != -1, "RetValue != -1");
-        if !(RetValue != 0) {
-            continue; }
-
-        {
-            var pCubeMin *Pdr_Set_t;
-            pCubeMin = Pdr_ManReduceClause( p, k, pCubeK );
-            if pCubeMin != nil {
-                //                Abc_Print( 1, "%d ", pCubeK->nLits - pCubeMin->nLits );
-                Pdr_SetDeref( pCubeK );
-                pCubeK = pCubeMin;
-            }
-        }
-
-        // check if the clause subsumes others
-        Vec_PtrForEachEntry( Pdr_Set_t *, vArrayK1, pCubeK1, i )
-        {
-            if !Pdr_SetContains( pCubeK1, pCubeK ) { // pCubeK contains pCubeK1
-                continue; }
-            Pdr_SetDeref( pCubeK1 );
-            Vec_PtrWriteEntry( vArrayK1, i, Vec_PtrEntryLast(vArrayK1) );
-            Vec_PtrPop(vArrayK1);
-            i--;
-        }
-        // add the last clause
-        Vec_PtrPush( vArrayK1, pCubeK );
-        Vec_PtrWriteEntry( vArrayK, j, Vec_PtrEntryLast(vArrayK) );
-        Vec_PtrPop(vArrayK);
-        j--;
-    }
-
-    return vArrayK1;
+ if vec.Vec_VecSize(p.vClauses) != int(k)+1 { panic("pdr: unexpected final frame") }
+ current := vec.Vec_VecEntry(p.vClauses, int(k))
+ vec.Vec_PtrSort(current, func(a, b *any) int {
+  left, right := (*a).(*Pdr_Set_t), (*b).(*Pdr_Set_t)
+  return int(Pdr_SetCompare(&left, &right))
+ })
+ next := vec.Vec_PtrAlloc(100)
+ remove := func(frame *Vec_Ptr_t, index int) {
+  Pdr_SetDeref(vec.Vec_PtrEntry(frame, index).(*Pdr_Set_t))
+  vec.Vec_PtrWriteEntry(frame, index, vec.Vec_PtrEntryLast(frame))
+  vec.Vec_PtrPop(frame)
+ }
+ for j := 0; j < vec.Vec_PtrSize(current); {
+  cube := vec.Vec_PtrEntry(current, j).(*Pdr_Set_t)
+  for m := j+1; m < vec.Vec_PtrSize(current); {
+   if Pdr_SetContains(vec.Vec_PtrEntry(current, m).(*Pdr_Set_t), cube) == 0 { m++; continue }
+   remove(current, m)
+  }
+  result := Pdr_ManCheckCube(p, k, cube, nil, 0, 0, 1)
+  if result == -1 { panic("pdr: incremental clause push returned unknown") }
+  if result == 0 { j++; continue }
+  if reduced := Pdr_ManReduceClause(p, k, cube); reduced != nil { Pdr_SetDeref(cube); cube = reduced }
+  for i := 0; i < vec.Vec_PtrSize(next); {
+   if Pdr_SetContains(vec.Vec_PtrEntry(next, i).(*Pdr_Set_t), cube) == 0 { i++; continue }
+   remove(next, i)
+  }
+  vec.Vec_PtrPush(next, cube)
+  vec.Vec_PtrWriteEntry(current, j, vec.Vec_PtrEntryLast(current))
+  vec.Vec_PtrPop(current)
+ }
+ return next
 }
 
 /**Function*************************************************************
@@ -122,22 +100,23 @@ func IPdr_ManPushClausesK(p *Pdr_Man_t, k int32) *Vec_Ptr_t {
   SeeAlso     []
 
 ***********************************************************************/
-func IPdr_ManPrintClauses(vClauses *Vec_Vec_t, kStart int32, nRegs int32) {
-    var vArrayK *Vec_Ptr_t;
-    var pCube *Pdr_Set_t;
-    var i, k, Counter int32;
-    Vec_VecForEachLevelStart( vClauses, vArrayK, k, kStart )
-    {
-        Vec_PtrSort( vArrayK, (int (*)(void))Pdr_SetCompare );
-        Vec_PtrForEachEntry( Pdr_Set_t *, vArrayK, pCube, i )
-        {
-            Abc_Print( 1, "Frame[%4d]Cube[%4d] = ", k, Counter++ );
-            // Pdr_SetPrint( stdout, pCube, nRegs, NULL );  
-            ZPdr_SetPrint( pCube );  
-            Abc_Print( 1, "\n" ); 
-        }
-    }
+func IPdr_ManPrintClauses(clauses *Vec_Vec_t, start, nRegs int32) {
+ var count int
+ for frame := int(start); frame < vec.Vec_VecSize(clauses); frame++ {
+  cubes := vec.Vec_VecEntry(clauses, frame)
+  vec.Vec_PtrSort(cubes, func(a, b *any) int {
+   left, right := (*a).(*Pdr_Set_t), (*b).(*Pdr_Set_t)
+   return int(Pdr_SetCompare(&left, &right))
+  })
+  for _, item := range vec.Vec_PtrArray(cubes) {
+   fmt.Printf("Frame[%4d]Cube[%4d] = ", frame, count)
+   ZPdr_SetPrint(item.(*Pdr_Set_t))
+   fmt.Println()
+   count++
+  }
+ }
 }
+
 
 /**Function*************************************************************
 
@@ -153,32 +132,14 @@ func IPdr_ManPrintClauses(vClauses *Vec_Vec_t, kStart int32, nRegs int32) {
 
 ***********************************************************************/
 func IPdr_ManCheckClauses(p *Pdr_Man_t) int32 {
-    var pCubeK *Pdr_Set_t;
-    var vArrayK *Vec_Ptr_t;
-    var j int32;
-    var k int32;
-    var RetValue int32;
-    var kMax int32 = Vec_PtrSize(p.vSolvers);
-    var iStartFrame int32  = 1;
-    var counter int32;
-
-    Vec_VecForEachLevelStartStop( p.vClauses, vArrayK, k, iStartFrame, kMax )
-    {
-        Vec_PtrForEachEntry( Pdr_Set_t *, vArrayK, pCubeK, j )
-        {
-            ++counter;
-            RetValue = Pdr_ManCheckCube( p, k - 1, pCubeK, nil, 0, 0, 1 );
-
-            if !(RetValue != 0) {
-                fmt.Printf("Cube[%d][%d] not inductive!\n", k, j);
-            }
-
-            if RetValue == -1 {
-                return -1; }
-        }
-    }
-
-    return 1;
+ for frame := 1; frame < len(p.vSolvers); frame++ {
+  for i, item := range vec.Vec_PtrArray(vec.Vec_VecEntry(p.vClauses, frame)) {
+   result := Pdr_ManCheckCube(p, int32(frame-1), item.(*Pdr_Set_t), nil, 0, 0, 1)
+   if result == 0 { fmt.Printf("Cube[%d][%d] not inductive!\n", frame, i) }
+   if result == -1 { return -1 }
+  }
+ }
+ return 1
 }
 
 /**Function*************************************************************
@@ -192,27 +153,18 @@ func IPdr_ManCheckClauses(p *Pdr_Man_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func IPdr_ManSaveClauses(p *Pdr_Man_t, fDropLast int32) *Vec_Vec_t {
-    var i, k int32;
-    var vClausesSaved *Vec_Vec_t;
-    var pCla *Pdr_Set_t;
-
-    if Vec_VecSize( p.vClauses ) == 1 {
-        return nil; }
-    if Vec_VecSize( p.vClauses ) == 2 && (fDropLast != 0) {
-        return nil; }
-
-    if fDropLast != 0 {
-        vClausesSaved = Vec_VecStart( Vec_VecSize(p.vClauses)-1 );
-    } else { 
-        vClausesSaved = Vec_VecStart( Vec_VecSize(p.vClauses) ); }
-
-    Vec_VecForEachEntryStartStop( Pdr_Set_t *, p.vClauses, pCla, i, k, 0, Vec_VecSize(vClausesSaved) )
-        Vec_VecPush(vClausesSaved, i, Pdr_SetDup(pCla));
- 
-    return vClausesSaved;
+func IPdr_ManSaveClauses(p *Pdr_Man_t, dropLast int32) *Vec_Vec_t {
+ n := vec.Vec_VecSize(p.vClauses)
+ if n == 1 || (n == 2 && dropLast != 0) { return nil }
+ if dropLast != 0 { n-- }
+ saved := vec.Vec_VecStart(n)
+ for frame := 0; frame < n; frame++ {
+  for _, item := range vec.Vec_PtrArray(vec.Vec_VecEntry(p.vClauses, frame)) {
+   vec.Vec_VecPush(saved, frame, Pdr_SetDup(item.(*Pdr_Set_t)))
+  }
+ }
+ return saved
 }
-
 
 /**Function*************************************************************
 
@@ -331,38 +283,36 @@ func IPdr_ManRebuildClauses(p *Pdr_Man_t, vClauses *Vec_Vec_t) int32 {
 }
 
 func IPdr_ManRestoreAbsFlops(p *Pdr_Man_t) int32 {
-    var pSet *Pdr_Set_t; var i, j, k int32;   
-
-    Vec_VecForEachEntry( Pdr_Set_t *, p.vClauses, pSet, i, j )
-    {
-        for  k = 0; k < pSet.nLits; k++  {
-            Vec_IntWriteEntry( p.vAbsFlops, Abc_Lit2Var(pSet.Lits[k]), 1 );
-        }
-    }
-    return 0;
+ for frame := 0; frame < vec.Vec_VecSize(p.vClauses); frame++ {
+  for _, item := range vec.Vec_PtrArray(vec.Vec_VecEntry(p.vClauses, frame)) {
+   cube := item.(*Pdr_Set_t)
+   for _, lit := range cube.Lits[:cube.nLits] { vec.Vec_IntWriteEntry(p.vAbsFlops, int(lit>>1), 1) }
+  }
+ }
+ return 0
 }
 
-func IPdr_ManRestoreClauses(p *Pdr_Man_t, vClauses *Vec_Vec_t, vMap *Vec_Int_t) int32 {
-    var i int32;
-
-    assert(vClauses, "vClauses");
-
-    Vec_VecFree(p.vClauses);
-    p.vClauses = vClauses;
-
-    // remap clause literals using mapping (old flop -> new flop) found in array vMap
-    if vMap != nil {
-        var pSet *Pdr_Set_t; var j, k int32;   
-        Vec_VecForEachEntry( Pdr_Set_t *, vClauses, pSet, i, j )
-            for ( k = 0; k < pSet.nLits; k++ )
-                pSet.Lits[k] = Abc_Lit2LitV( Vec_IntArray(vMap), pSet.Lits[k] );
+func IPdr_ManRestoreClauses(p *Pdr_Man_t, clauses *Vec_Vec_t, mapping *Vec_Int_t) int32 {
+ if clauses == nil { panic("pdr: nil saved clauses") }
+ vec.Vec_VecFree(p.vClauses)
+ p.vClauses = clauses
+ if mapping != nil {
+  for frame := 0; frame < vec.Vec_VecSize(clauses); frame++ {
+   for _, item := range vec.Vec_PtrArray(vec.Vec_VecEntry(clauses, frame)) {
+    cube := item.(*Pdr_Set_t)
+    for i := int32(0); i < cube.nLits; i++ {
+     lit := cube.Lits[i]
+     cube.Lits[i] = 2*vec.Vec_IntEntry(mapping, int(lit>>1)) + (lit & 1)
     }
-
-    for  i = 0; i < Vec_VecSize(p.vClauses); ++i  {
-        IPdr_ManSetSolver( p, i, i < Vec_VecSize( p.vClauses ) - 1 );
-    }
-
-    return 0;
+   }
+  }
+ }
+ for frame := 0; frame < vec.Vec_VecSize(clauses); frame++ {
+  property := int32(0)
+  if frame < vec.Vec_VecSize(clauses)-1 { property = 1 }
+  IPdr_ManSetSolver(p, int32(frame), property)
+ }
+ return 0
 }
 
 /**Function*************************************************************
