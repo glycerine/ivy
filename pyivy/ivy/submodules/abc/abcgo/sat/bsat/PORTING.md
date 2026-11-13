@@ -243,3 +243,9 @@ Input clauses are now deduplicated before logging and tautologies are omitted;
 this preserves the solver's formula and avoids invalid proof-store records. A
 regression checks incremental SAT/UNSAT behavior with both forms, and the full
 race-enabled BSAT and BMC suites pass.
+
+The public solver reset now starts a fresh proof store when logging is enabled.
+Previously, records from the old formula remained in the store and could be
+mistaken for roots of the new formula. Callers that need the old proof can
+release the store before reset. A regression checks the new store's contents;
+the full race-enabled BSAT suite passes.

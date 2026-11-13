@@ -162,3 +162,26 @@ func TestClauseStoreAcceptsDuplicateAndTautologicalInputs(t *testing.T) {
 		t.Fatalf("base formula status=%v", got)
 	}
 }
+
+func TestResetStartsFreshClauseStore(t *testing.T) {
+	s := NewSolver()
+	s.EnableClauseStore()
+	x := s.NewVariable()
+	s.AddClause(Positive(x))
+	s.MarkClauseStoreRoots()
+	if s.Solve() != Satisfiable {
+		t.Fatal("first formula")
+	}
+	s.Reset()
+	y := s.NewVariable()
+	s.AddClause(Negative(y))
+	s.MarkClauseStoreRoots()
+	store := s.ReleaseClauseStore()
+	rows := store.Clauses()
+	if len(rows) != 1 || len(rows[0].Literals) != 1 || rows[0].Literals[0] != Negative(y) {
+		t.Fatalf("reset retained old proof data: %+v", rows)
+	}
+	if store.NumRoots() != 1 || s.Solve() != Satisfiable {
+		t.Fatalf("reset store roots=%d", store.NumRoots())
+	}
+}

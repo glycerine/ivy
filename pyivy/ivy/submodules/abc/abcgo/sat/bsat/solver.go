@@ -84,7 +84,13 @@ func (s *sat_solver_t) SetDeadline(deadline time.Time) {
 		s.nRuntimeLimit = deadline.UnixNano()
 	}
 }
+
+// Reset discards the formula and its proof records while leaving proof logging
+// enabled if it was enabled before. Release the store first to retain it.
 func (s *sat_solver_t) Reset() {
+	if s.pStore != nil {
+		s.pStore = Sto_ManAlloc()
+	}
 	sat_solver_restart(s)
 	s.fSolved = 0
 	s.lastStatus = Unknown
