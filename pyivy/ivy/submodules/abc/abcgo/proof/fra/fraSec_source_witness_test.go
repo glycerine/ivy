@@ -1,6 +1,7 @@
 package fra
 
 import (
+	"math/rand"
 	"testing"
 
 	"github.com/glycerine/abcgo/aig/aig"
@@ -18,6 +19,47 @@ func TestSecSourceDirectInputDoesNotTransferWitness(t *testing.T) {
 	pars.fSilent = 1
 	if status := Fra_FraigSec(g, &pars, nil); status != 0 || g.SequentialCounterexample() != nil {
 		t.Fatalf("status=%d model=%+v", status, g.SequentialCounterexample())
+	}
+}
+
+// A checked-in-C Fra_FraigSec run on trial 1 of this generated fixture reaches
+// separate interpolation and reports status=0, model output/frame 0/0, and a
+// reduced graph with one register and three total outputs.
+func TestSecSeparateInterpolationMatchesSourceWitness(t *testing.T) {
+	random := rand.New(rand.NewSource(7411))
+	var g *aig.Graph
+	for trial := 0; trial < 2; trial++ {
+		g = aig.NewGraph()
+		edges := []aig.Edge{g.NewInput(), g.NewInput(), g.NewInput()}
+		for i := 0; i < 7; i++ {
+			a, b := edges[random.Intn(len(edges))], edges[random.Intn(len(edges))]
+			if random.Intn(2) == 0 {
+				a = a.Not()
+			}
+			if random.Intn(2) == 0 {
+				b = b.Not()
+			}
+			edges = append(edges, g.AND(a, b))
+		}
+		for i := 0; i < 4; i++ {
+			e := edges[random.Intn(len(edges))]
+			if random.Intn(2) == 0 {
+				e = e.Not()
+			}
+			g.AddOutput(e)
+		}
+		aig.Aig_ManSetRegNum(g, 2)
+	}
+	var pars Fra_Sec_t
+	Fra_SecSetDefaultParams(&pars)
+	pars.fSilent, pars.fInterSeparate = 1, 1
+	pars.fRetimeFirst, pars.fRetimeRegs, pars.fInduction, pars.fFraiging = 0, 0, 0, 0
+	pars.fReachability, pars.fUsePdr = 0, 0
+	var reduced *aig.Graph
+	status := Fra_FraigSec(g, &pars, &reduced)
+	cex := g.SequentialCounterexample()
+	if status != 0 || cex == nil || cex.IPo != 0 || cex.IFrame != 0 || reduced == nil || reduced.RegisterCount() != 1 || reduced.OutputCount() != 3 {
+		t.Fatalf("status=%d model=%+v reduced=%v", status, cex, reduced)
 	}
 }
 

@@ -96,11 +96,12 @@ func secCopySourceCex(original, reduced *aig.Graph) {
 // If SEC reports failure but no valid one-frame or recorded witness can be
 // replayed on the original graph, it returns undecided instead.
 func Fra_FraigSecVerified(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph) int32 {
-	status := Fra_FraigSec(original, pars, result)
+	var saved *util.Abc_Cex_t
+	status := fraFraigSec(original, pars, result, &saved)
 	if status != 0 {
 		return status
 	}
-	if secTransferCex(original, original.SequentialCounterexample()) {
+	if saved != nil && secTransferCex(original, saved) || secTransferCex(original, original.SequentialCounterexample()) {
 		return 0
 	}
 	inputs := int32(original.InputCount()) - original.RegisterCount()
@@ -124,6 +125,10 @@ func Fra_FraigSecVerified(original *aig.Graph, pars *Fra_Sec_t, result **aig.Gra
 // Fra_FraigSec returns 1 for equivalent, 0 for a reported counterexample,
 // and -1 when the configured procedures cannot decide the miter.
 func Fra_FraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph) int32 {
+	return fraFraigSec(original, pars, result, nil)
+}
+
+func fraFraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph, verifiedCex **util.Abc_Cex_t) int32 {
 	if original == nil || pars == nil {
 		panic("invalid sequential equivalence arguments")
 	}
@@ -297,6 +302,7 @@ func Fra_FraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph) int3
 	status = Fra_FraigMiterStatus(graph)
 	aig.Aig_ManSetRegNum(graph, graph.RegisterCount())
 	if pars.fInterpolation != 0 && status == -1 && graph.RegisterCount() > 0 {
+		graph.ClearSequentialCounterexample()
 		var options interp.Inter_ManParams_t
 		interp.Inter_ManSetDefaultParams(&options)
 		options.NBTLimit = pars.nBTLimitInter
@@ -307,7 +313,7 @@ func Fra_FraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph) int3
 			status = interp.Inter_ManPerformInterpolation(graph, &options, &depth)
 		} else if pars.fInterSeparate != 0 {
 			remaining := 0
-			status = 1
+			foundCex := false
 			for i, out := range graph.Outputs()[:outputs] {
 				if graph.Node(out).Fanins[0].NodeID() == 0 {
 					continue
@@ -318,30 +324,29 @@ func Fra_FraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph) int3
 					remaining++
 					continue
 				}
-				one := interp.Inter_ManPerformInterpolation(single, &options, &depth)
+				status = interp.Inter_ManPerformInterpolation(single, &options, &depth)
 				if cex := single.SequentialCounterexample(); cex != nil {
-					secTransferCex(original, cex)
-					cex.IPo = int32(i)
-					_ = graph.SetSequentialCounterexample(cex)
-					status = 0
+					if verifiedCex != nil && secTransferCex(original, cex) {
+						*verifiedCex = util.Abc_CexDup(original.SequentialCounterexample(), original.RegisterCount())
+					}
+					copy := util.Abc_CexDup(cex, original.RegisterCount())
+					copy.IPo = int32(i)
+					_ = original.SetSequentialCounterexample(copy)
+					foundCex = true
 					break
 				}
-				if one == 1 {
+				if status == 1 {
 					aig.Aig_ObjPatchFanin0(graph, out, graph.Const0())
 				} else {
 					remaining++
 				}
 			}
-			if status != 0 && remaining > 0 {
+			aig.Aig_ManCleanup(graph)
+			if !foundCex && remaining > 0 {
 				status = -1
 			}
-			if timedOut {
-				return finish()
-			}
-			if status != 0 {
-				graph = aig.Aig_ManDupUnsolvedOutputs(graph, 1)
-				graph = aig.Aig_ManScl(graph, 1, 1, 0, -1, -1, 0, 0)
-			}
+			graph = aig.Aig_ManDupUnsolvedOutputs(graph, 1)
+			graph = aig.Aig_ManScl(graph, 1, 1, 0, -1, -1, 0, 0)
 		} else {
 			merged := saig.Saig_ManDupOrpos(graph)
 			status = interp.Inter_ManPerformInterpolation(merged, &options, &depth)
