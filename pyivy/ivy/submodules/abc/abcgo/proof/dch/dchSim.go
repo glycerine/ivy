@@ -6,6 +6,14 @@ func simulateWords(g *aig.Graph, order []aig.Edge, words int, random *aig.AigRan
 	count := int(aig.Aig_ManObjNumMax(g))
 	sims := make([][]uint32, count)
 	storage := make([]uint32, count*words)
+	for _, input := range g.Inputs() {
+		row := storage[input.NodeID()*words : (input.NodeID()+1)*words]
+		sims[input.NodeID()] = row
+		for k := range row {
+			row[k] = random.Uint32()
+		}
+		row[0] <<= 1
+	}
 	for _, edge := range order {
 		node := g.Node(edge)
 		row := storage[edge.NodeID()*words : (edge.NodeID()+1)*words]
@@ -16,10 +24,7 @@ func simulateWords(g *aig.Graph, order []aig.Edge, words int, random *aig.AigRan
 				row[k] = ^uint32(0)
 			}
 		case aig.Input:
-			for k := range row {
-				row[k] = random.Uint32()
-			}
-			row[0] <<= 1
+			// CI patterns were drawn in interface order above.
 		default:
 			first := node.Fanins[0]
 			for k := range row {
