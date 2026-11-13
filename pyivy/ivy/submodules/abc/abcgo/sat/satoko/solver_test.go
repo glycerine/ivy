@@ -101,6 +101,40 @@ func TestIncrementalAndRollback(t *testing.T) {
 		t.Fatal("reset")
 	}
 }
+
+func TestRandomRollbackAgainstEnumeration(t *testing.T) {
+	rng := rand.New(rand.NewSource(684901))
+	for trial := 0; trial < 300; trial++ {
+		const n = 5
+		s := New()
+		s.SetVariables(n)
+		var base [][]int
+		for i := 0; i < 8; i++ {
+			clause := make([]int, 1+rng.Intn(3))
+			for j := range clause {
+				clause[j] = rng.Intn(2 * n)
+			}
+			base = append(base, append([]int(nil), clause...))
+			s.AddClause(clause)
+		}
+		s.Bookmark()
+		for i := 0; i < 4; i++ {
+			s.AddClause([]int{rng.Intn(2 * n), rng.Intn(2 * n)})
+		}
+		s.Solve()
+		s.Rollback()
+		for query := 0; query < 8; query++ {
+			var assumptions []int
+			for i := 0; i < rng.Intn(4); i++ {
+				assumptions = append(assumptions, rng.Intn(2*n))
+			}
+			want, got := brute(n, base, assumptions), s.SolveAssumptions(assumptions)
+			if (got == SATOKO_SAT) != want || got == SATOKO_UNDEC {
+				t.Fatalf("trial=%d query=%d got=%d want=%v base=%v assumptions=%v", trial, query, got, want, base, assumptions)
+			}
+		}
+	}
+}
 func TestAssumptionCoreAndLimits(t *testing.T) {
 	s := New()
 	s.SetVariables(2)
