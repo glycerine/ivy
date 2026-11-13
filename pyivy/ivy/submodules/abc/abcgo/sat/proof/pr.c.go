@@ -249,6 +249,10 @@ func Pr_ManAddClause(p *Pr_Man_t, literals []Lit, fRoot, fClauseA int32) int32 {
 		return 0
 	}
 	p.lastError = nil
+	if p.pEmpty != nil {
+		p.lastError = errors.New("proof: clause follows terminal empty clause")
+		return 0
+	}
 	if fRoot < 0 || fRoot > 1 || fClauseA < 0 || fClauseA > 1 || (fClauseA != 0 && fRoot == 0) {
 		p.lastError = errors.New("proof: invalid root/A flags")
 		return 0
@@ -292,9 +296,6 @@ func Pr_ManAddClause(p *Pr_Man_t, literals []Lit, fRoot, fClauseA int32) int32 {
 		p.pLearnt = c
 	}
 	if len(clause) == 0 {
-		if p.pEmpty != nil {
-			p.lastError = errors.New("proof: multiple empty clauses")
-		}
 		p.pEmpty = c
 	}
 	p.clauses = append(p.clauses, c)

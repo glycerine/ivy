@@ -144,6 +144,23 @@ func TestRejectsInvalidClauseAndInvalidProof(t *testing.T) {
 	Pr_ManFree(p)
 }
 
+func TestRejectsClausesAfterEmptyWithoutMutation(t *testing.T) {
+	p := Pr_ManAlloc(1)
+	add(t, p, true, false, 1)
+	add(t, p, false, false)
+	_, _, before := p.Counts()
+	if Pr_ManAddClause(p, nil, 0, 0) != 0 || p.LastError() == nil {
+		t.Fatal("accepted a second empty clause")
+	}
+	if Pr_ManAddClause(p, []Lit{ToLit(0)}, 0, 0) != 0 || p.LastError() == nil {
+		t.Fatal("accepted a clause after the terminal empty clause")
+	}
+	_, _, after := p.Counts()
+	if before != after {
+		t.Fatalf("rejected additions changed count from %d to %d", before, after)
+	}
+}
+
 func TestInterpolantPartitionAndBound(t *testing.T) {
 	p := Pr_ManAlloc(1)
 	add(t, p, true, true, 1)
