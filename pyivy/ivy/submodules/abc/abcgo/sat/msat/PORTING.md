@@ -58,6 +58,13 @@ keeps the correct tautology semantics, independently regression-tested against
 exhaustive enumeration; this is why C parity cases use distinct-variable 3-SAT
 clauses. General unrestricted formulas remain covered by exhaustive tests.
 
+Follow-up review added exhaustive incremental and marked-rollback oracles.
+Clause and assumption inputs are now validated fully before normalizing or
+mutating solver state, including satisfied-clause and mixed-assumption cases.
+`GOCACHE=/tmp/abcgo-cache go test -race -count=1 ./sat/msat` and
+`GOCACHE=/tmp/abcgo-cache go vet ./sat/msat` pass. These finite tests do not
+prove every heuristic or resource-limit path.
+
 ## Legacy header declarations
 
 The following public declarations have no definition anywhere in the original
