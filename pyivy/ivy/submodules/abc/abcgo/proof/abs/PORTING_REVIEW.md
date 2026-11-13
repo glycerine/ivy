@@ -22,7 +22,11 @@ and consumes them when VTA starts. Gate abstraction reconstruction preserves
 native XOR and MUX nodes.
 The lower-level `Gla_ManStart` and `Gla_ManStart2` interfaces still require an
 AND-only graph; replacing only their SAT clauses would leave refinement unsound.
-The port also supports reordered inputs, duplicate AND nodes, and buffers.
+Old GLA's source `Gia_ManToAigSimple` conversion asserts object-ID identity;
+duplicate or simplified AND nodes can violate that assertion. The Go path
+preserves the assertion rather than substituting local cuts. The optional
+native-gate lowering can itself create a graph that violates this boundary;
+lowering therefore does not guarantee that old GLA accepts every native graph.
 Flop-to-gate class conversion visits the control as well as both data inputs
 of native MUX nodes; a regression covers the previously omitted control cone.
 
@@ -42,6 +46,12 @@ result and the existing object-class map unchanged; callers can lower those
 nodes first. Direct VTA frame-map projection through special-gate lowering is
 not yet established, so this guard avoids producing classes under incorrect
 AND semantics.
+
+The legacy ternary counterexample verifier retains a separate C boundary
+behavior: its initial-state assertion repeatedly checks bit zero, rather than
+checking each register bit. Later nonzero initial bits can therefore pass that
+assertion, although the verifier initializes every register to zero. A
+source-derived test records this limitation.
 
 Support and dominator analysis visits all three operands of native MUX nodes;
 flop-to-gate class conversion likewise includes the MUX control cone. Other

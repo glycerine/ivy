@@ -13,6 +13,7 @@ func TestOldSimulationAndSensitization(t *testing.T) {
 	g := aig.NewGraph()
 	x, y := g.NewInput(), g.NewInput()
 	g.AddOutput(g.AND(x, y))
+	aig.Aig_ManSetRegNum(g, 0)
 	cex := util.Abc_CexAlloc(0, 2, 1)
 	util.Abc_InfoSetBit(cex.PData, 0)
 	util.Abc_InfoSetBit(cex.PData, 1)
@@ -75,6 +76,7 @@ func TestOldSensitizationPreservesAllTwoInputFunctions(t *testing.T) {
 				root = g.OR(root, g.AND(a, b))
 			}
 			g.AddOutput(root)
+			aig.Aig_ManSetRegNum(g, 0)
 			cex := util.Abc_CexAlloc(0, 2, 1)
 			if assignment&1 != 0 {
 				util.Abc_InfoSetBit(cex.PData, 0)

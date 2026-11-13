@@ -14,8 +14,27 @@ func TestOldGlaSequentialTruthOracle(t *testing.T) {
 				g := gia.Gia_ManStart(128)
 				x := gia.Gia_ManAppendCi(g)
 				q := gia.Gia_ManAppendCi(g)
-				out := glaOracleTruth2(g, x, q, property)
-				next := glaOracleTruth2(g, x, q, transition)
+				gia.Gia_ManHashAlloc(g)
+				makeTruth := func(truth int) int32 {
+					out := int32(0)
+					for bits := 0; bits < 4; bits++ {
+						if truth&(1<<bits) == 0 {
+							continue
+						}
+						a, b := x, q
+						if bits&1 == 0 {
+							a ^= 1
+						}
+						if bits&2 == 0 {
+							b ^= 1
+						}
+						out = gia.Gia_ManHashOr(g, out, gia.Gia_ManHashAnd(g, a, b))
+					}
+					return out
+				}
+				out := makeTruth(property)
+				next := makeTruth(transition)
+				gia.Gia_ManHashStop(g)
 				gia.Gia_ManAppendCo(g, out)
 				gia.Gia_ManAppendCo(g, next)
 				gia.Gia_ManSetRegNum(g, 1)

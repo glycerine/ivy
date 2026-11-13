@@ -49,7 +49,7 @@ func TestShrinkGlaRemovesIrrelevantLatch(t *testing.T) {
 	g := gia.Gia_ManStart(10)
 	x := gia.Gia_ManAppendCi(g)
 	q := gia.Gia_ManAppendCi(g)
-	out := gia.Gia_ManAppendAnd(g, q, 0)
+	out := int32(0)
 	gia.Gia_ManAppendCo(g, out)
 	gia.Gia_ManAppendCo(g, x)
 	gia.Gia_ManSetRegNum(g, 1)

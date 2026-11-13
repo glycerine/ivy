@@ -12,6 +12,7 @@ func TestOldRefinementAPISelectsCounterexampleReasons(t *testing.T) {
 	g := aig.NewGraph()
 	x, y := g.NewInput(), g.NewInput()
 	g.AddOutput(g.OR(x, y))
+	aig.Aig_ManSetRegNum(g, 0)
 	c := util.Abc_CexAlloc(0, 2, 1)
 	util.Abc_InfoSetBit(c.PData, 0)
 	util.Abc_InfoSetBit(c.PData, 1)

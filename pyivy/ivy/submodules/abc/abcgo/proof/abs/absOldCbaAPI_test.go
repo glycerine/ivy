@@ -13,6 +13,7 @@ func TestOldCbaAPISelectsPseudoInputs(t *testing.T) {
 	g := aig.NewGraph()
 	real, pseudo := g.NewInput(), g.NewInput()
 	g.AddOutput(g.AND(real, pseudo))
+	aig.Aig_ManSetRegNum(g, 0)
 	c := util.Abc_CexAlloc(0, 2, 1)
 	util.Abc_InfoSetBit(c.PData, 0)
 	util.Abc_InfoSetBit(c.PData, 1)
@@ -28,6 +29,7 @@ func TestOldCbaPerformFindsPseudoInput(t *testing.T) {
 	g := aig.NewGraph()
 	x := g.NewInput()
 	g.AddOutput(x)
+	aig.Aig_ManSetRegNum(g, 0)
 	var params bmc.Saig_ParBmc_t
 	bmc.Saig_ParBmcSetDefaultParams(&params)
 	if got := vec.Vec_IntArray(Saig_ManCbaPerform(g, 0, &params)); !reflect.DeepEqual(got, []int32{0}) {

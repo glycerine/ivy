@@ -15,7 +15,9 @@ func Saig_ManCexVerifyUsingTernary(g *aig.Graph, cex, care *util.Abc_Cex_t) int3
 	values := make([]int32, len(g.Nodes()))
 	values[g.Const1().NodeID()] = SAIG_ONE
 	for i := int32(0); i < saig.Saig_ManRegNum(g); i++ {
-		if util.Abc_InfoHasBit(cex.PData, i) || util.Abc_InfoHasBit(care.PData, i) {
+		// The source does not increment iBit in this loop, so its assertion
+		// repeatedly checks the first initial-state bit.
+		if util.Abc_InfoHasBit(cex.PData, 0) || util.Abc_InfoHasBit(care.PData, 0) {
 			panic("counterexample must start in the zero state")
 		}
 		values[saig.Saig_ManLo(g, i).NodeID()] = SAIG_ZER

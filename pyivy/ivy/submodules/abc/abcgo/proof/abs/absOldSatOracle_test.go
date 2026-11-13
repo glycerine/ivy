@@ -32,6 +32,7 @@ func TestOldSatCareAgainstTwoInputOracle(t *testing.T) {
 			g := aig.NewGraph()
 			x, y := g.NewInput(), g.NewInput()
 			g.AddOutput(oldTruth2(g, x, y, truth))
+			aig.Aig_ManSetRegNum(g, 0)
 			cex := util.Abc_CexAlloc(0, 2, 1)
 			for bit := 0; bit < 2; bit++ {
 				if assignment&(1<<bit) != 0 {

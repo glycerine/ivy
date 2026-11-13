@@ -163,47 +163,27 @@ func TestOldGlaMuxAbstractionIncludesControlBoundary(t *testing.T) {
 	}
 }
 
-func TestOldGlaNativeGateClassProjection(t *testing.T) {
+// The optional native lowering can create duplicate/simplified ANDs. Old GLA
+// must retain the C simple-export object-ID assertion on such a graph.
+func TestOldGlaNativeLoweringPreservesExportAssertion(t *testing.T) {
 	for _, mux := range []bool{false, true} {
-		g := gia.Gia_ManStart(16)
-		a, b, c := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
-		var x int32
-		if mux {
-			g.EnableMuxes()
-			x = gia.Gia_ManAppendMuxReal(g, c, a, b)
-		} else {
-			x = gia.Gia_ManAppendXorReal(g, a, b)
-		}
-		buffer := gia.Gia_ManAppendBuf(g, x)
-		root := gia.Gia_ManAppendAnd(g, x, buffer^1)
-		gia.Gia_ManAppendCo(g, root)
-		var pars Abs_Par_t
-		Abs_ParSetDefaults(&pars)
-		pars.nFramesMax = 1
-		pars.nRatioMin = 0
-		if got := Gia_ManPerformGlaOld(g, &pars, 0); got != -1 {
-			t.Fatalf("mux=%t result=%d", mux, got)
-		}
-		classes := gia.Gia_ManGateClasses(g)
-		if classes == nil || vec.Vec_IntSize(classes) != int(gia.Gia_ManObjNum(g)) {
-			t.Fatalf("mux=%t missing original gate map", mux)
-		}
-		abs := Gia_ManDupAbsGates(g, classes)
-		if n := len(abs.InputLiterals()); n > 8 {
-			t.Fatalf("too many abstract inputs: %d", n)
-		}
-		for bits := 0; bits < 1<<len(abs.InputLiterals()); bits++ {
-			in := make([]bool, len(abs.InputLiterals()))
-			for i := range in {
-				in[i] = bits&(1<<i) != 0
+		t.Run(map[bool]string{false: "xor", true: "mux"}[mux], func(t *testing.T) {
+			g := gia.Gia_ManStart(16)
+			a, b, c := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
+			var x int32
+			if mux {
+				g.EnableMuxes()
+				x = gia.Gia_ManAppendMuxReal(g, c, a, b)
+			} else {
+				x = gia.Gia_ManAppendXorReal(g, a, b)
 			}
-			got, err := abs.Evaluate(in)
-			if err != nil {
-				t.Fatal(err)
-			}
-			if got[0] {
-				t.Fatalf("mux=%t projected abstraction has spurious frame-zero failure on %v", mux, in)
-			}
-		}
+			buffer := gia.Gia_ManAppendBuf(g, x)
+			gia.Gia_ManAppendCo(g, gia.Gia_ManAppendAnd(g, x, buffer^1))
+			var pars Abs_Par_t
+			Abs_ParSetDefaults(&pars)
+			pars.nFramesMax = 1
+			defer assertSimpleExportPanic(t)
+			Gia_ManPerformGlaOld(g, &pars, 0)
+		})
 	}
 }
