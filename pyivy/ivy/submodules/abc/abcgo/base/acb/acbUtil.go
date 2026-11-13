@@ -54,86 +54,54 @@ import "os"
   SeeAlso     []
 
 ***********************************************************************/
-func Acb_ObjCollectTfi_rec(p *Acb_Ntk_t, iObj int32, fTerm int32) {
-    var pFanin *int32;
-    var iFanin int32;
-    var i int32;
-    if Acb_ObjSetTravIdCur(p, iObj) {
-        return; }
-    if !(fTerm != 0) && Acb_ObjIsCi(p, iObj) {
-        return; }
-    // inlining of macro Acb_ObjForEachFaninFast
-    for  i = 0, pFanin = Acb_ObjFanins(p, iObj); i < pFanin[0] && ((iFanin = pFanin[i+1]), 1); i++  {
-        Acb_ObjCollectTfi_rec( p, iFanin, fTerm );
+func Acb_ObjCollectTfi_rec(p *Acb_Ntk_t, iObj, fTerm int32) {
+    if Acb_ObjSetTravIdCur(p, iObj) != 0 { return }
+    if fTerm == 0 && Acb_ObjIsCi(p, iObj) != 0 { return }
+    fanins := Acb_ObjFanins(p, iObj)
+    for i := int32(0); i < fanins[0]; i++ {
+        Acb_ObjCollectTfi_rec(p, fanins[i+1], fTerm)
     }
-    Vec_IntPush( &p.vArray0, iObj );
+    Vec_IntPush(&p.vArray0, iObj)
 }
-func Acb_ObjCollectTfi(p *Acb_Ntk_t, iObj int32, fTerm int32) *Vec_Int_t {
-    var i, Node int32;
-    Vec_IntClear( &p.vArray0 );
-    Acb_NtkIncTravId( p );
+func Acb_ObjCollectTfi(p *Acb_Ntk_t, iObj, fTerm int32) *Vec_Int_t {
+    Vec_IntClear(&p.vArray0)
+    Acb_NtkIncTravId(p)
     if iObj > 0 {
-        // inlining of macro Vec_IntForEachEntry
-        for  i = 0; (i < Vec_IntSize(&p.vSuppOld)) && (((Node) = Vec_IntEntry(&p.vSuppOld, i)), 1); i++  {
-            Acb_ObjCollectTfi_rec( p, Node, fTerm );
-        }
-        Acb_ObjCollectTfi_rec( p, iObj, fTerm );
-    
+        for _, node := range Vec_IntArray(&p.vSuppOld) { Acb_ObjCollectTfi_rec(p, node, fTerm) }
+        Acb_ObjCollectTfi_rec(p, iObj, fTerm)
     } else {
-        // inlining of macro Acb_NtkForEachCo
-        for  i = 0; (i < Acb_NtkCoNum(p))  && (((iObj) = Acb_NtkCo(p, i)), 1); i++  { 
-            Acb_ObjCollectTfi_rec( p, iObj, fTerm );
-        } }
-    return &p.vArray0;
-}
-func Acb_ObjCollectTfiVec(p *Acb_Ntk_t, vObjs *Vec_Int_t) *Vec_Int_t {
-    var i, iObj int32;
-    Vec_IntClear( &p.vArray0 );
-    Acb_NtkIncTravId( p );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vObjs)) && (((iObj) = Vec_IntEntry(vObjs, i)), 1); i++  {
-        Acb_ObjCollectTfi_rec( p, iObj, 0 );
+        for i := int32(0); i < Acb_NtkCoNum(p); i++ { Acb_ObjCollectTfi_rec(p, Acb_NtkCo(p, i), fTerm) }
     }
-    return &p.vArray0;
+    return &p.vArray0
 }
-
-func Acb_ObjCollectTfo_rec(p *Acb_Ntk_t, iObj int32, fTerm int32) {
-    var iFanout, i int32;
-    if Acb_ObjSetTravIdCur(p, iObj) {
-        return; }
-    if !(fTerm != 0) && Acb_ObjIsCo(p, iObj) {
-        return; }
-    // inlining of macro Acb_ObjForEachFanout
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(Vec_WecEntry(&p.vFanouts, iObj))) && (((iFanout) = Vec_IntEntry(Vec_WecEntry(&p.vFanouts, iObj), i)), 1); i++  { if !Acb_ObjType(p, iFanout) {} else { 
-        Acb_ObjCollectTfo_rec( p, iFanout, fTerm ); }
+func Acb_ObjCollectTfiVec(p *Acb_Ntk_t, objects *Vec_Int_t) *Vec_Int_t {
+    Vec_IntClear(&p.vArray0)
+    Acb_NtkIncTravId(p)
+    for _, obj := range Vec_IntArray(objects) { Acb_ObjCollectTfi_rec(p, obj, 0) }
+    return &p.vArray0
+}
+func Acb_ObjCollectTfo_rec(p *Acb_Ntk_t, iObj, fTerm int32) {
+    if Acb_ObjSetTravIdCur(p, iObj) != 0 { return }
+    if fTerm == 0 && Acb_ObjIsCo(p, iObj) != 0 { return }
+    for _, fanout := range Vec_IntArray(Vec_WecEntry(&p.vFanouts, int(iObj))) {
+        if Acb_ObjType(p, fanout) != 0 { Acb_ObjCollectTfo_rec(p, fanout, fTerm) }
     }
-    Vec_IntPush( &p.vArray1, iObj );
+    Vec_IntPush(&p.vArray1, iObj)
 }
-func Acb_ObjCollectTfo(p *Acb_Ntk_t, iObj int32, fTerm int32) *Vec_Int_t {
-    var i int32;
-    Vec_IntClear( &p.vArray1 );
-    Acb_NtkIncTravId( p );
-    if iObj > 0 {
-        Acb_ObjCollectTfo_rec( p, iObj, fTerm );
-    } else {
-        // inlining of macro Acb_NtkForEachCi
-        for  i = 0; (i < Acb_NtkCiNum(p))  && (((iObj) = Acb_NtkCi(p, i)), 1); i++  { 
-            Acb_ObjCollectTfo_rec( p, iObj, fTerm );
-        } }
-    return &p.vArray1;
-}
-func Acb_ObjCollectTfoVec(p *Acb_Ntk_t, vObjs *Vec_Int_t) *Vec_Int_t {
-    var i, iObj int32;
-    if !Acb_NtkHasObjFanout(p) {
-        Acb_NtkCreateFanout( p ); }
-    Vec_IntClear( &p.vArray1 );
-    Acb_NtkIncTravId( p );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vObjs)) && (((iObj) = Vec_IntEntry(vObjs, i)), 1); i++  {
-        Acb_ObjCollectTfo_rec( p, iObj, 0 );
+func Acb_ObjCollectTfo(p *Acb_Ntk_t, iObj, fTerm int32) *Vec_Int_t {
+    Vec_IntClear(&p.vArray1)
+    Acb_NtkIncTravId(p)
+    if iObj > 0 { Acb_ObjCollectTfo_rec(p, iObj, fTerm) } else {
+        for i := int32(0); i < Acb_NtkCiNum(p); i++ { Acb_ObjCollectTfo_rec(p, Acb_NtkCi(p, i), fTerm) }
     }
-    return &p.vArray1;
+    return &p.vArray1
+}
+func Acb_ObjCollectTfoVec(p *Acb_Ntk_t, objects *Vec_Int_t) *Vec_Int_t {
+    if Acb_NtkHasObjFanout(p) == 0 { Acb_NtkCreateFanout(p) }
+    Vec_IntClear(&p.vArray1)
+    Acb_NtkIncTravId(p)
+    for _, obj := range Vec_IntArray(objects) { Acb_ObjCollectTfo_rec(p, obj, 0) }
+    return &p.vArray1
 }
 
 /**Function*************************************************************
