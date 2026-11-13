@@ -117,6 +117,7 @@ func Msat_SolverRemoveMarked(p *Msat_Solver_t) {
 		Msat_ClauseFree(p, clause, 1)
 	}
 	p.vLearned.data = p.vLearned.data[:0]
+	p.nClauses = len(p.vClauses.data)
 }
 func Msat_SolverAnalyze(p *Msat_Solver_t, c *Msat_Clause_t, out *Msat_IntVec_t, back *int) {
 	p.nSeenId++

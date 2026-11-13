@@ -20,3 +20,18 @@ func TestSimplifyResetsClauseNumberCounter(t *testing.T) {
 		t.Fatalf("new clause number = %d", got)
 	}
 }
+
+func TestRemoveMarkedResetsClauseNumberCounter(t *testing.T) {
+	p := New(4)
+	if !p.AddClause([]int{0, 2}) {
+		t.Fatal("base clause")
+	}
+	Msat_SolverMarkClausesStart(p)
+	if !p.AddClause([]int{4, 6}) {
+		t.Fatal("later clause")
+	}
+	Msat_SolverRemoveMarked(p)
+	if got := Msat_SolverReadClauseNum(p); got != 1 {
+		t.Fatalf("clause counter after removal = %d", got)
+	}
+}
