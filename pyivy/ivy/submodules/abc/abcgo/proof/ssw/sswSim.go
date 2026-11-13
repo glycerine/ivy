@@ -574,64 +574,7 @@ func Ssw_SmlAssignDist1Plus(p *Ssw_Sml_t, pPat *uint32) {
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_SmlNodeSimulate(p *Ssw_Sml_t, pObj *Aig_Obj_t, iFrame int32) {
-    var pSims, pSims0, pSims1 *uint32;
-    var fCompl, fCompl0, fCompl1, i int32;
-    assert(iFrame < p.nFrames, "iFrame < p.nFrames");
-    assert(!Aig_IsComplement(pObj), "!Aig_IsComplement(pObj)");
-    assert(Aig_ObjIsNode(pObj), "Aig_ObjIsNode(pObj)");
-    assert(iFrame == 0 || p.nWordsFrame < p.nWordsTotal, "iFrame == 0 || p.nWordsFrame < p.nWordsTotal");
-    // get hold of the simulation information
-    pSims  = Ssw_ObjSim(p, pObj.Id) + p.nWordsFrame * iFrame;
-    pSims0 = Ssw_ObjSim(p, Aig_ObjFanin0(pObj).Id) + p.nWordsFrame * iFrame;
-    pSims1 = Ssw_ObjSim(p, Aig_ObjFanin1(pObj).Id) + p.nWordsFrame * iFrame;
-    // get complemented attributes of the children using their random info
-    fCompl  = pObj.fPhase;
-    fCompl0 = Aig_ObjPhaseReal(Aig_ObjChild0(pObj));
-    fCompl1 = Aig_ObjPhaseReal(Aig_ObjChild1(pObj));
-    // simulate
-    if fCompl0 && fCompl1 {
-        if fCompl {
-            for  i = 0; i < p.nWordsFrame; i++  {
-                pSims[i] = (pSims0[i] | pSims1[i]);
-            }
-        } else {
-            for  i = 0; i < p.nWordsFrame; i++  {
-                pSims[i] = ~(pSims0[i] | pSims1[i]);
-            } }
-    
-    } else if fCompl0 && !fCompl1 {
-        if fCompl {
-            for  i = 0; i < p.nWordsFrame; i++  {
-                pSims[i] = (pSims0[i] | ~pSims1[i]);
-            }
-        } else {
-            for  i = 0; i < p.nWordsFrame; i++  {
-                pSims[i] = (~pSims0[i] & pSims1[i]);
-            } }
-    
-    } else if !fCompl0 && fCompl1 {
-        if fCompl {
-            for  i = 0; i < p.nWordsFrame; i++  {
-                pSims[i] = (~pSims0[i] | pSims1[i]);
-            }
-        } else {
-            for  i = 0; i < p.nWordsFrame; i++  {
-                pSims[i] = (pSims0[i] & ~pSims1[i]);
-            } }
-    
-    } else { // if ( !fCompl0 && !fCompl1 )
-    
-        if fCompl {
-            for  i = 0; i < p.nWordsFrame; i++  {
-                pSims[i] = ~(pSims0[i] & pSims1[i]);
-            }
-        } else {
-            for  i = 0; i < p.nWordsFrame; i++  {
-                pSims[i] = (pSims0[i] & pSims1[i]);
-            } }
-    }
-}
+
 
 /**Function*************************************************************
 

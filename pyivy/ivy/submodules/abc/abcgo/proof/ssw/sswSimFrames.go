@@ -46,3 +46,30 @@ func Ssw_SmlNodeTransferFirst(p *Ssw_Sml_t, out, in aig.Edge) {
 	}
 	copy(sswFrameWords(p, in, 0), sswFrameWords(p, out, p.nFrames-1))
 }
+
+// Ssw_SmlNodeSimulate stores each AND's simulation relative to its phase.
+func Ssw_SmlNodeSimulate(p *Ssw_Sml_t, obj aig.Edge, frame int32) {
+	node := p.pAig.Node(obj)
+	if node.Kind != aig.And {
+		panic("ssw: expected AND node")
+	}
+	a, b := node.Fanins[0], node.Fanins[1]
+	x, y := sswFrameWords(p, a&^1, frame), sswFrameWords(p, b&^1, frame)
+	dst := sswFrameWords(p, obj, frame)
+	invertA := p.pAig.Node(a).Phase != a.Complemented()
+	invertB := p.pAig.Node(b).Phase != b.Complemented()
+	for i := range dst {
+		left, right := x[i], y[i]
+		if invertA {
+			left = ^left
+		}
+		if invertB {
+			right = ^right
+		}
+		value := left & right
+		if node.Phase {
+			value = ^value
+		}
+		dst[i] = value
+	}
+}

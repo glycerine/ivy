@@ -27,3 +27,16 @@ func TestFrameCopyAndTransfer(t *testing.T) {
 		t.Fatal("wraparound transfer failed")
 	}
 }
+
+func TestFrameAndSimulationMatchesBitwiseLogic(t *testing.T) {
+	g := aig.NewGraph()
+	a, b := g.NewInput(), g.NewInput()
+	gate := g.AND(a.Not(), b)
+	p := Ssw_SmlStart(g, 0, 1, 1)
+	Ssw_SmlSimInfo(p, a)[0] = 0xf0f0
+	Ssw_SmlSimInfo(p, b)[0] = 0xcc00
+	Ssw_SmlNodeSimulate(p, gate, 0)
+	if got, want := Ssw_SmlSimInfo(p, gate)[0], ^uint32(0xf0f0)&uint32(0xcc00); got != want {
+		t.Fatalf("got %x want %x", got, want)
+	}
+}
