@@ -57,3 +57,10 @@ func TestBitSimulatorDoesNotHandleConstantRoot(t *testing.T) {
 	}()
 	Fraig_ManSimulateBitNode(p, p.pConst1, nil)
 }
+
+func TestSmallestColumnIncludesNegativeNonzeroCounts(t *testing.T) {
+	// C skips only zero counts; all other values take part in its minimum.
+	if got := Fraig_GetSmallestColumn([]int32{4, -2, 0}, 3); got != 1 {
+		t.Fatalf("minimum nonzero column = %d, want 1", got)
+	}
+}

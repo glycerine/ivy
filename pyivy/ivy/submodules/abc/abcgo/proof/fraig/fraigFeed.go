@@ -230,7 +230,7 @@ func Fraig_GetSmallestColumn(hits []int32, n int32) int32 {
 		if h == 1 {
 			return int32(i)
 		}
-		if h > 0 && h < smallest {
+		if h != 0 && h < smallest {
 			best, smallest = int32(i), h
 		}
 	}
