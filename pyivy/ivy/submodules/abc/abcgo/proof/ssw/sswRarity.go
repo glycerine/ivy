@@ -736,7 +736,7 @@ func Ssw_RarSimulate(g *aig.Graph, pars *Ssw_RarPars_t) int32 {
 	defer Ssw_RarManStop(p)
 	p.vInits = vec.Vec_IntStart(int(g.RegisterCount() * pars.nWords))
 	pars.nSolved = 0
-	lastSolved := start
+	var lastSolved time.Time
 	restarts := int32(0)
 	result := int32(-1)
 outer:
@@ -763,7 +763,7 @@ outer:
 				}
 				lastSolved = time.Now()
 			}
-			if (pars.TimeOut != 0 && time.Since(start) > time.Duration(pars.TimeOut)*time.Second) || (pars.TimeOutGap != 0 && time.Since(lastSolved) > time.Duration(pars.TimeOutGap)*time.Second) {
+			if (pars.TimeOut != 0 && time.Since(start) > time.Duration(pars.TimeOut)*time.Second) || (pars.TimeOutGap != 0 && !lastSolved.IsZero() && time.Since(lastSolved) > time.Duration(pars.TimeOutGap)*time.Second) {
 				break outer
 			}
 			if pars.fSolveAll != 0 && p.vCexes != nil && vec.Vec_PtrCountZero(p.vCexes) == 0 {

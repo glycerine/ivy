@@ -182,7 +182,7 @@ func sswRar2Run(g *aig.Graph, frames, words, bin, rounds, timeout int32, cex *ut
 		p.updateCounters()
 		p.transferPatterns()
 		Ssw_SmlInitializeSpecial(p.sim, p.inits)
-		if timeout > 0 && time.Since(started) > time.Duration(timeout)*time.Second {
+		if timeout != 0 && time.Since(started) > time.Duration(timeout)*time.Second {
 			fmt.Printf("Reached timeout (%d seconds).\n", timeout)
 			break
 		}
