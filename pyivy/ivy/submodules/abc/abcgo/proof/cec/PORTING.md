@@ -24,9 +24,13 @@ returns zero. The Go entry point now explicitly panics when independent choices
 need reconstruction instead of returning a potentially corrupt graph; it still
 duplicates the swept graph when no independent choices exist. The recursive AND
 entry point also panics. There are no in-tree Go production callers of this
-choice builder. A correct implementation requires independent equivalence
-tests. A build or a
-passing test of other Cec4 paths does not establish correctness of this path.
+choice builder. ABC's separate `Gia_ManEquivToChoices` workflow is ported in
+`aig/gia/equiv_choices.go`, but it operates on one graph's representative
+classes, whereas this unfinished entry point accepts original and swept graphs
+and produces sibling choices. It is not a drop-in implementation. A correct
+adapter would require a source-backed contract and independent equivalence
+tests. A build or a passing test of other Cec4 paths does not establish
+correctness of this path.
 
 ## Sequential and miter review
 
