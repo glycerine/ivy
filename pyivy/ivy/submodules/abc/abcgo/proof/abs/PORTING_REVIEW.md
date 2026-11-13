@@ -42,3 +42,8 @@ result and the existing object-class map unchanged; callers can lower those
 nodes first. Direct VTA frame-map projection through special-gate lowering is
 not yet established, so this guard avoids producing classes under incorrect
 AND semantics.
+
+Support and dominator analysis visits all three operands of native MUX nodes;
+flop-to-gate class conversion likewise includes the MUX control cone. Other
+reparameterization routines inherited from the C AND-inverter implementation
+have not been established as native XOR/MUX aware and require separate review.

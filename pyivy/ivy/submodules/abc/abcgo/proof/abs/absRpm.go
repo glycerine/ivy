@@ -34,8 +34,14 @@ func Gia_ManComputeDoms(p *gia.Gia_Man_t) {
 		if gia.Gia_ObjIsAnd(obj) == 0 {
 			panic("abs: expected AND in dominator traversal")
 		}
-		Gia_ManAddDom(p, gia.Gia_ObjFanin0(obj), id)
-		Gia_ManAddDom(p, gia.Gia_ObjFanin1(obj), id)
+		a, b, c, kind := p.Gate(id)
+		Gia_ManAddDom(p, gia.Gia_ManObj(p, a>>1), id)
+		if kind == 2 || kind == 3 || kind == 4 {
+			Gia_ManAddDom(p, gia.Gia_ManObj(p, b>>1), id)
+		}
+		if kind == 4 {
+			Gia_ManAddDom(p, gia.Gia_ManObj(p, c>>1), id)
+		}
 	}
 }
 
@@ -46,12 +52,21 @@ func Gia_ManCreateSupps(p *gia.Gia_Man_t, verbose int32) *vec.Vec_Wec_t {
 		id := gia.Gia_ObjId(p, gia.Gia_ManCi(p, i))
 		vec.Vec_IntPush(vec.Vec_WecEntry(supports, int(id)), i)
 	}
+	scratch := vec.Vec_IntAlloc(16)
 	for id := int32(1); id < gia.Gia_ManObjNum(p); id++ {
 		obj := gia.Gia_ManObj(p, id)
 		if gia.Gia_ObjIsAnd(obj) == 0 {
 			continue
 		}
-		vec.Vec_IntTwoMerge2(vec.Vec_WecEntry(supports, int(gia.Gia_ObjFaninId0(obj, id))), vec.Vec_WecEntry(supports, int(gia.Gia_ObjFaninId1(obj, id))), vec.Vec_WecEntry(supports, int(id)))
+		a, b, c, kind := p.Gate(id)
+		if kind == 5 {
+			vec.Vec_IntTwoMerge2(vec.Vec_WecEntry(supports, int(a>>1)), vec.Vec_WecEntry(supports, 0), vec.Vec_WecEntry(supports, int(id)))
+		} else if kind == 4 {
+			vec.Vec_IntTwoMerge2(vec.Vec_WecEntry(supports, int(a>>1)), vec.Vec_WecEntry(supports, int(b>>1)), scratch)
+			vec.Vec_IntTwoMerge2(scratch, vec.Vec_WecEntry(supports, int(c>>1)), vec.Vec_WecEntry(supports, int(id)))
+		} else {
+			vec.Vec_IntTwoMerge2(vec.Vec_WecEntry(supports, int(a>>1)), vec.Vec_WecEntry(supports, int(b>>1)), vec.Vec_WecEntry(supports, int(id)))
+		}
 	}
 	if verbose != 0 {
 		fmt.Printf("Support computation: %v\n", time.Since(start))
