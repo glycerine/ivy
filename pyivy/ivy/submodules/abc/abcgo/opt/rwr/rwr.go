@@ -27,6 +27,7 @@ type Rwr_Man_t struct {
 	nScores                                                                [222]int32
 	nCutsGood, nCutsBad, nSubgraphs                                        int32
 	timeStart, timeCut, timeRes, timeEval, timeMffc, timeUpdate, timeTotal int64
+	rewriteLibrary                                                         *rwrLibrary
 }
 
 // Rwr_NodeRef carries the bit C stores in the low bit of a node pointer.

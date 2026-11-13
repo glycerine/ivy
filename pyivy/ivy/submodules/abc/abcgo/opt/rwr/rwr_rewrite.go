@@ -8,7 +8,10 @@ import (
 // rwrNetwork is the portion of the ABC network used by Rwr_NodeRewrite.
 // MarkBoundary must increment or decrement each regular leaf's fanout count;
 // LabelMFFC increments the network traversal ID and labels the root's cone.
-type rwrNetwork interface {
+// Rwr_Network is the concrete-network boundary used by the ordered rewrite
+// pass. Implementations adapt node lookup, fanouts, MFFC labeling, and graph
+// counting without introducing a dependency from opt/rwr to a network package.
+type Rwr_Network interface {
 	Lookup(id int32) (any, bool)
 	Complement(any) any
 	FanoutCount(any) int
@@ -17,10 +20,14 @@ type rwrNetwork interface {
 	CountGraph(root any, graph *dec.Dec_Graph_t, saved, levelMax int32) int32
 }
 
-type rwrCut struct {
-	truth  uint16
-	leaves []int32
+// Rwr_Cut describes one four-input cut. Leaves are network object IDs.
+type Rwr_Cut struct {
+	Truth  uint16
+	Leaves []int32
 }
+
+type rwrNetwork = Rwr_Network
+type rwrCut = Rwr_Cut
 
 type rwrChoice struct {
 	graph      *dec.Dec_Graph_t
@@ -37,18 +44,18 @@ func (p *rwrLibrary) rwrRewriteCuts(net rwrNetwork, root any, cuts []rwrCut, req
 	var bestTruth uint16
 	perms := npn.Permutations()
 	for _, cut := range cuts {
-		if len(cut.leaves) < 4 {
+		if len(cut.Leaves) < 4 {
 			continue
 		}
-		if len(cut.leaves) != 4 {
+		if len(cut.Leaves) != 4 {
 			panic("rwr: expected four-leaf cut")
 		}
-		phase := p.phases[cut.truth]
-		perm := perms[p.permutations[cut.truth]]
+		phase := p.phases[cut.Truth]
+		perm := perms[p.permutations[cut.Truth]]
 		fanins := make([]any, 4)
 		valid, single := true, 0
 		for i := range fanins {
-			fanin, ok := net.Lookup(cut.leaves[perm[i]])
+			fanin, ok := net.Lookup(cut.Leaves[perm[i]])
 			if !ok {
 				valid = false
 				break
@@ -72,12 +79,12 @@ func (p *rwrLibrary) rwrRewriteCuts(net rwrNetwork, root any, cuts []rwrCut, req
 		net.MarkBoundary(fanins, 1)
 		saved := net.LabelMFFC(root)
 		net.MarkBoundary(fanins, -1)
-		graph, gain := p.rwrEvaluateCut(cut.truth, fanins, saved, func(graph *dec.Dec_Graph_t) int32 {
+		graph, gain := p.rwrEvaluateCut(cut.Truth, fanins, saved, func(graph *dec.Dec_Graph_t) int32 {
 			return net.CountGraph(root, graph, saved, required)
 		})
 		if graph != nil && gain > result.gain {
 			result = rwrChoice{graph, append([]any(nil), fanins...), phase&16 != 0, gain}
-			bestTruth = cut.truth
+			bestTruth = cut.Truth
 		}
 	}
 	if result.graph != nil {

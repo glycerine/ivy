@@ -1,255 +1,100 @@
 package rwr
 
-import "fmt"
+// Rewrite library diagnostics from rwrPrint.c.
+import (
+	"fmt"
+	"io"
+	"os"
+)
 
-import "os"
-
-/**CFile****************************************************************
-
-  FileName    [rwrCut.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [DAG-aware AIG rewriting package.]
-
-  Synopsis    [Cut computation.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: rwrCut.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "rwr.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
- 
-/**Function*************************************************************
-
-  Synopsis    [Adds one node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Rwr_Trav2_rec(p *Rwr_Man_t, pNode *Rwr_Node_t, pVolume *int32) {
-    if pNode.fUsed || pNode.TravId == p.nTravIds {
-        return; }
-    pNode.TravId = p.nTravIds;
-    (*pVolume)++;
-    Rwr_Trav2_rec( p, Rwr_Regular(pNode.p0), pVolume );
-    Rwr_Trav2_rec( p, Rwr_Regular(pNode.p1), pVolume );
+func Rwr_Trav2_rec(p *Rwr_Man_t, node *Rwr_Node_t, volume *int32) {
+	if node.fUsed || node.TravId == p.nTravIds {
+		return
+	}
+	node.TravId = p.nTravIds
+	*volume++
+	Rwr_Trav2_rec(p, node.p0.node, volume)
+	Rwr_Trav2_rec(p, node.p1.node, volume)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Adds the node to the end of the list.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Rwr_GetBushVolume(p *Rwr_Man_t, Entry int32, pVolume *int32, pnFuncs *int32) {
-    var pNode *Rwr_Node_t;
-    var Volume int32;
-    var nFuncs int32;
-    Rwr_ManIncTravId( p );
-    for  pNode = p.pTable[Entry]; (pNode != nil); pNode = pNode.pNext  {
-        if pNode.uTruth != p.puCanons[pNode.uTruth] {
-            continue; }
-        nFuncs++;
-        Rwr_Trav2_rec( p, pNode, &Volume );
-    }
-    *pVolume = Volume;
-    *pnFuncs = nFuncs;
+func Rwr_GetBushVolume(p *Rwr_Man_t, entry int32, volume, functions *int32) {
+	var v, n int32
+	Rwr_ManIncTravId(p)
+	for node := p.pTable[entry]; node != nil; node = node.pNext {
+		if node.uTruth != p.puCanons[node.uTruth] {
+			continue
+		}
+		n++
+		Rwr_Trav2_rec(p, node, &v)
+	}
+	*volume, *functions = v, n
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Adds the node to the end of the list.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Rwr_GetBushSumOfVolumes(p *Rwr_Man_t, Entry int32) int32 {
-    var pNode *Rwr_Node_t;
-    var Volume, VolumeTotal int32;
-    for  pNode = p.pTable[Entry]; (pNode != nil); pNode = pNode.pNext  {
-        if pNode.uTruth != p.puCanons[pNode.uTruth] {
-            continue; }
-        Volume = 0;
-        Rwr_ManIncTravId( p );
-        Rwr_Trav2_rec( p, pNode, &Volume );
-        VolumeTotal += Volume;
-    }
-    return VolumeTotal;
+func Rwr_GetBushSumOfVolumes(p *Rwr_Man_t, entry int32) int32 {
+	var total int32
+	for node := p.pTable[entry]; node != nil; node = node.pNext {
+		if node.uTruth != p.puCanons[node.uTruth] {
+			continue
+		}
+		var v int32
+		Rwr_ManIncTravId(p)
+		Rwr_Trav2_rec(p, node, &v)
+		total += v
+	}
+	return total
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Prints one rwr node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Rwr_NodePrint_rec(pFile *os.File, pNode *Rwr_Node_t) {
-    assert(!Rwr_IsComplement(pNode), "!Rwr_IsComplement(pNode)");
-
-    if pNode.Id == 0 {
-        fmt.Fprintf(pFile, "Const1");
-        return;
-    }
-
-    if pNode.Id < 5 {
-        fmt.Fprintf(pFile, "%c", 'a' + pNode.Id - 1);
-        return;
-    }
-
-    if Rwr_IsComplement(pNode.p0) {
-        if Rwr_Regular(pNode.p0).Id < 5 {
-            Rwr_NodePrint_rec( pFile, Rwr_Regular(pNode.p0) );
-            fmt.Fprintf(pFile, "\'");
-        
-        } else {
-            fmt.Fprintf(pFile, "(");
-            Rwr_NodePrint_rec( pFile, Rwr_Regular(pNode.p0) );
-            fmt.Fprintf(pFile, ")\'");
-        }
-    
-    } else {
-        if Rwr_Regular(pNode.p0).Id < 5 {
-            Rwr_NodePrint_rec( pFile, Rwr_Regular(pNode.p0) );
-        
-        } else {
-            fmt.Fprintf(pFile, "(");
-            Rwr_NodePrint_rec( pFile, Rwr_Regular(pNode.p0) );
-            fmt.Fprintf(pFile, ")");
-        }
-    }
-
-    if pNode.fExor {
-        fmt.Fprintf(pFile, "+"); }
-
-    if Rwr_IsComplement(pNode.p1) {
-        if Rwr_Regular(pNode.p1).Id < 5 {
-            Rwr_NodePrint_rec( pFile, Rwr_Regular(pNode.p1) );
-            fmt.Fprintf(pFile, "\'");
-        
-        } else {
-            fmt.Fprintf(pFile, "(");
-            Rwr_NodePrint_rec( pFile, Rwr_Regular(pNode.p1) );
-            fmt.Fprintf(pFile, ")\'");
-        }
-    
-    } else {
-        if Rwr_Regular(pNode.p1).Id < 5 {
-            Rwr_NodePrint_rec( pFile, Rwr_Regular(pNode.p1) );
-        
-        } else {
-            fmt.Fprintf(pFile, "(");
-            Rwr_NodePrint_rec( pFile, Rwr_Regular(pNode.p1) );
-            fmt.Fprintf(pFile, ")");
-        }
-    }
+func Rwr_NodePrint_rec(w io.Writer, node *Rwr_Node_t) {
+	if node.Id == 0 {
+		fmt.Fprint(w, "Const1")
+		return
+	}
+	if node.Id < 5 {
+		fmt.Fprintf(w, "%c", 'a'+node.Id-1)
+		return
+	}
+	child := func(ref Rwr_NodeRef) {
+		if ref.node.Id >= 5 {
+			fmt.Fprint(w, "(")
+		}
+		Rwr_NodePrint_rec(w, ref.node)
+		if ref.node.Id >= 5 {
+			fmt.Fprint(w, ")")
+		}
+		if ref.complemented {
+			fmt.Fprint(w, "'")
+		}
+	}
+	child(node.p0)
+	if node.fExor {
+		fmt.Fprint(w, "+")
+	}
+	child(node.p1)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Prints one rwr node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Rwr_NodePrint(pFile *os.File, p *Rwr_Man_t, pNode *Rwr_Node_t) {
-    var uTruth uint32;
-    fmt.Fprintf(pFile, "%5d : ", pNode.Id);
-    uTruth = pNode.uTruth;
-    Extra_PrintHex( pFile, &uTruth, 4 );
-    fmt.Fprintf(pFile, " tt=");
-    Extra_PrintBinary( pFile, &uTruth, 16 );
-//    fprintf( pFile, " cn=", pNode->Id );
-//    uTruth = p->puCanons[pNode->uTruth];
-//    Extra_PrintBinary( pFile, &uTruth, 16 );
-    fmt.Fprintf(pFile, " lev=%d", pNode.Level);
-    fmt.Fprintf(pFile, " vol=%d", pNode.Volume);
-    fmt.Fprintf(pFile, "  ");
-    Rwr_NodePrint_rec( pFile, pNode );
-    fmt.Fprintf(pFile, "\n");
+func Rwr_NodePrint(w io.Writer, p *Rwr_Man_t, node *Rwr_Node_t) {
+	fmt.Fprintf(w, "%5d : 0x%04X tt=%016b lev=%d vol=%d  ", node.Id, node.uTruth, node.uTruth, node.Level, node.Volume)
+	Rwr_NodePrint_rec(w, node)
+	fmt.Fprintln(w)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Prints one rwr node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Rwr_ManPrint(p *Rwr_Man_t) {
-    var pFile *os.File;
-    var pNode *Rwr_Node_t;
-    var uTruth uint32;
-    var Limit, Counter, Volume, nFuncs, i int32;
-    pFile = os.OpenFile("graph_lib.txt", os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);
-    Counter = 0;
-    Limit = (1 << 16);
-    for  i = 0; i < Limit; i++  {
-        if p.pTable[i] == nil {
-            continue; }
-        if i != p.puCanons[i] {
-            continue; }
-        fmt.Fprintf(pFile, "\nClass %3d. Func %6d.  ", p.pMap[i], Counter++);
-        Rwr_GetBushVolume( p, i, &Volume, &nFuncs );
-        fmt.Fprintf(pFile, "Roots = %3d. Vol = %3d. Sum = %3d.  ", nFuncs, Volume, Rwr_GetBushSumOfVolumes(p, i));
-        uTruth = i;
-        Extra_PrintBinary( pFile, &uTruth, 16 );
-        fmt.Fprintf(pFile, "\n");
-        for  pNode = p.pTable[i]; (pNode != nil); pNode = pNode.pNext  {
-            if pNode.uTruth == p.puCanons[pNode.uTruth] {
-                Rwr_NodePrint( pFile, p, pNode ); }
-        }
-    }
-    _ = (pFile).Close();
+	f, err := os.Create("graph_lib.txt")
+	if err != nil {
+		panic(err)
+	}
+	counter := 0
+	for i := 0; i < 1<<16; i++ {
+		if p.pTable[i] == nil || int(p.puCanons[i]) != i {
+			continue
+		}
+		fmt.Fprintf(f, "\nClass %3d. Func %6d.  ", p.pMap[i], counter)
+		counter++
+		var volume, functions int32
+		Rwr_GetBushVolume(p, int32(i), &volume, &functions)
+		fmt.Fprintf(f, "Roots = %3d. Vol = %3d. Sum = %3d.  %016b\n", functions, volume, Rwr_GetBushSumOfVolumes(p, int32(i)), i)
+		for node := p.pTable[i]; node != nil; node = node.pNext {
+			if node.uTruth == p.puCanons[node.uTruth] {
+				Rwr_NodePrint(f, p, node)
+			}
+		}
+	}
+	if err = f.Close(); err != nil {
+		panic(err)
+	}
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

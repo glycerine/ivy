@@ -45,3 +45,20 @@ func TestRewriteCutsChoosesLibraryImplementation(t *testing.T) {
 		}
 	}
 }
+
+func TestRewriteCutsKeepsFirstEqualGainCut(t *testing.T) {
+	p := rwrStartLibrary()
+	n := &rewriteTestNetwork{}
+	truth := uint16(0x6996)
+	first := rwrCut{truth, []int32{0, 1, 2, 3}}
+	second := rwrCut{truth, []int32{4, 5, 6, 7}}
+	choice := p.rwrRewriteCuts(n, nil, []rwrCut{first, second}, 12, false)
+	if choice.gain != 2 {
+		t.Fatalf("gain=%d, want 2", choice.gain)
+	}
+	for i, want := range []any{int32(0), int32(1), int32(2), int32(3)} {
+		if choice.fanins[i] != want {
+			t.Fatalf("fanins=%v; equal-gain second cut replaced first at index %d", choice.fanins, i)
+		}
+	}
+}
