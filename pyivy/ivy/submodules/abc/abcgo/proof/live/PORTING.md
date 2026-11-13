@@ -38,6 +38,8 @@ Monotonicity discovery retains only proved candidates. Unknown results never bec
 - Source allocation/free helpers disappear under Go ownership. Graph interface counts update automatically; Biere compatibility counter helpers compute the source count difference without manual counter repair.
 - Source debug prints and unconditional dumps are not part of library computation. Explicit printing helpers still write when called. The unfinished, unused fairness-file reader from C is omitted.
 
+Source-shaped graph builders reproduce the C loops that copy native EXOR nodes with `Aig_And`; this changes their truth function. The native `LivenessToSafety`, `KLive`, and monotonicity discovery convenience APIs preserve XOR semantics.
+
 Graph construction uses source-compatible copy bookkeeping on its input graph. Concurrent transformations of the same graph require caller synchronization; independent graphs and the local parser do not share scratch state.
 
 ## Verification

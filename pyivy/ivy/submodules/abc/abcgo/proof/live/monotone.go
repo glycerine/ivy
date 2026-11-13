@@ -48,6 +48,9 @@ func createMonotoneTesterMode(p *aig.Graph, indexes *aigPoIndices, vectors *mono
 		checkSanityOfKnownMonotone(vectors.attrKnownMonotone, vectors.attrCandMonotone, vectors.attrHintMonotone)
 	}
 	c := newGraphCopy(p, "_monotone")
+	if source {
+		c = newSourceGraphCopy(p, "_monotone")
+	}
 	c.copyInputs()
 	pendingOld := aig.Aig_ObjCreateCi(c.destination)
 	delayed := make(map[int32]aig.Edge)

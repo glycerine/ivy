@@ -66,6 +66,9 @@ func livenessToSafety(network *Network, options TransformOptions, source, source
 	doLive := options.Mode != 1
 	doSafety := options.Mode == 0 || options.Mode == 1 || options.Mode == 4
 	copyGraph := newGraphCopy(p, "_l2s")
+	if source {
+		copyGraph = newSourceGraphCopy(p, "_l2s")
+	}
 	dst := copyGraph.destination
 	names := []string{}
 	next := []aig.Edge{}
@@ -241,14 +244,14 @@ func sourceNetwork(n *Network, p *aig.Graph) *Network {
 }
 
 func LivenessToSafetyTransformation(mode int32, n *Network, p *aig.Graph, live, fair, assertions, assumptions []aig.Edge) *aig.Graph {
-	result, err := LivenessToSafety(sourceNetwork(n, p), TransformOptions{Mode: mode, Liveness: live, Fairness: fair, SafetyAssertions: assertions, SafetyAssumptions: assumptions})
+	result, err := livenessToSafety(sourceNetwork(n, p), TransformOptions{Mode: mode, Liveness: live, Fairness: fair, SafetyAssertions: assertions, SafetyAssumptions: assumptions}, true, false)
 	if err != nil {
 		panic(err)
 	}
 	return result.Graph
 }
 func LivenessToSafetyTransformationAbs(mode int32, n *Network, p *aig.Graph, flops []int32, live, fair, assertions, assumptions []aig.Edge) *aig.Graph {
-	result, err := LivenessToSafety(sourceNetwork(n, p), TransformOptions{Mode: mode, ShadowRegisters: flops, Liveness: live, Fairness: fair, SafetyAssertions: assertions, SafetyAssumptions: assumptions})
+	result, err := livenessToSafety(sourceNetwork(n, p), TransformOptions{Mode: mode, ShadowRegisters: flops, Liveness: live, Fairness: fair, SafetyAssertions: assertions, SafetyAssumptions: assumptions}, true, false)
 	if err != nil {
 		panic(err)
 	}

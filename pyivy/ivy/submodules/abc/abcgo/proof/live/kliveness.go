@@ -21,10 +21,16 @@ const (
 func readLiveSignal_0(p *aig.Graph, index int32) aig.Edge { return outputDriver(p, int(index)) }
 func readLiveSignal_k(p *aig.Graph, index int32) aig.Edge { return outputDriver(p, int(index)) }
 func introduceAbsorberLogic(p *aig.Graph, zero, index *int32, nonFirst int32) *aig.Graph {
+	return introduceAbsorberLogicMode(p, zero, index, nonFirst, true)
+}
+func introduceAbsorberLogicMode(p *aig.Graph, zero, index *int32, nonFirst int32, source bool) *aig.Graph {
 	if zero == nil || index == nil || *zero < 0 || int(*zero) >= propertyOutputs(p) || nonFirst != 0 && *index < 0 {
 		panic("live: invalid absorber indexes")
 	}
 	c := newGraphCopy(p, "_kCS")
+	if source {
+		c = newSourceGraphCopy(p, "_kCS")
+	}
 	c.copyInputs()
 	state := aig.Aig_ObjCreateCi(c.destination)
 	input := c.signal(p.Outputs()[*zero])
@@ -61,7 +67,13 @@ func modifyAigToApplySafetyInvar(p *aig.Graph, target, invariant int32) {
 	aig.Aig_ObjPatchFanin0(p, p.Outputs()[target], property)
 }
 func kLiveProofModel(p *aig.Graph, directive, target, invariant int32) *aig.Graph {
+	return kLiveProofModelMode(p, directive, target, invariant, false)
+}
+func kLiveProofModelMode(p *aig.Graph, directive, target, invariant int32, source bool) *aig.Graph {
 	c := newGraphCopy(p, "_proof")
+	if source {
+		c = newSourceGraphCopy(p, "_proof")
+	}
 	c.copyInputs()
 	for i := 0; i < propertyOutputs(p); i++ {
 		property := c.signal(p.Outputs()[i])
@@ -89,7 +101,7 @@ func flipConePdr(p *aig.Graph, directive, target, invariant, absorbers int32) in
 		}
 		modifyAigToApplySafetyInvar(p, target, invariant)
 	}
-	model := kLiveProofModel(p, SIMPLE_kCS, target, invariant)
+	model := kLiveProofModelMode(p, SIMPLE_kCS, target, invariant, true)
 	options := pdr.DefaultOptions()
 	options.SolveAll = true
 	options.Verbose = true
@@ -147,6 +159,9 @@ type KLiveResult struct {
 // safe. Failure at a finite depth is not a liveness disproof; exhaustion returns
 // unknown and retains that depth's concrete safety counterexample.
 func KLive(n *Network, options KLiveOptions) KLiveResult {
+	return kLive(n, options, false)
+}
+func kLive(n *Network, options KLiveOptions, source bool) KLiveResult {
 	if n == nil || n.Graph == nil {
 		return KLiveResult{Status: -1, Error: fmt.Errorf("live: missing k-liveness network")}
 	}
@@ -202,17 +217,17 @@ func KLive(n *Network, options KLiveOptions) KLiveResult {
 	zero, index := int32(-1), int32(-1)
 	var working *aig.Graph
 	if options.Directive == 3 || options.Directive == 4 {
-		working = generateWorkingAigWithDSC(n.Graph, n, &zero, barriers)
+		working = createNewAigWith0LivePoWithDSCMode(n.Graph, collectCSSignalsWithDSC(n, n.Graph), &zero, collectWindowBeginSignalWithDSC(n, n.Graph), collectWithinWindowSignalWithDSC(n, n.Graph), collectPendingSignalWithDSC(n, n.Graph), barriers, source)
 	} else {
-		working = generateWorkingAig(n.Graph, n, &zero)
+		working = createNewAigWith0LivePoMode(n.Graph, collectCSSignals(n, n.Graph), &zero, source)
 	}
-	current := introduceAbsorberLogic(working, &zero, &index, 0)
+	current := introduceAbsorberLogicMode(working, &zero, &index, 0, source)
 	result := KLiveResult{Status: -1, Graph: current, Barriers: barriers}
 	for depth := 1; depth <= limit; depth++ {
 		if !options.Safety.Deadline.IsZero() && time.Now().After(options.Safety.Deadline) {
 			return result
 		}
-		proofModel := kLiveProofModel(current, options.Directive, index, invariant)
+		proofModel := kLiveProofModelMode(current, options.Directive, index, invariant, source)
 		result.LastSafety = checker(proofModel, int(index), options.Safety)
 		result.Absorbers = depth
 		result.Graph = current
@@ -225,7 +240,7 @@ func KLive(n *Network, options KLiveOptions) KLiveResult {
 			return result
 		}
 		if depth < limit {
-			current = introduceAbsorberLogic(current, &zero, &index, int32(depth))
+			current = introduceAbsorberLogicMode(current, &zero, &index, int32(depth), source)
 		}
 	}
 	return result
@@ -259,7 +274,7 @@ func Abc_CommandCS_kLiveness(frame *Frame, argc int32, argv []string) int32 {
 			return 1
 		}
 	}
-	result := KLive(frame.Network, options)
+	result := kLive(frame.Network, options, true)
 	out, errors := frame.writers()
 	if result.Error != nil {
 		fmt.Fprintln(errors, result.Error)

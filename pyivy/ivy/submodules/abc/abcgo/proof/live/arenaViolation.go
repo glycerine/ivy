@@ -90,10 +90,16 @@ func createMonotoneBarriers(p *aig.Graph, signals, previous []aig.Edge, pending,
 	return result
 }
 func createNewAigWith0LivePoWithDSC(p *aig.Graph, signals []aig.Edge, index *int32, windowBegin, withinWindow, pendingIndex int32, barriers [][]int32) *aig.Graph {
+	return createNewAigWith0LivePoWithDSCMode(p, signals, index, windowBegin, withinWindow, pendingIndex, barriers, true)
+}
+func createNewAigWith0LivePoWithDSCMode(p *aig.Graph, signals []aig.Edge, index *int32, windowBegin, withinWindow, pendingIndex int32, barriers [][]int32, source bool) *aig.Graph {
 	if windowBegin < 0 || withinWindow < 0 || pendingIndex < 0 {
 		panic("live: arena window/pending output missing")
 	}
 	c := newGraphCopy(p, "_0Live")
+	if source {
+		c = newSourceGraphCopy(p, "_0Live")
+	}
 	c.copyInputs()
 	arenaLatches := createArenaLO(c.destination, barriers)
 	violationOld := aig.Aig_ObjCreateCi(c.destination)

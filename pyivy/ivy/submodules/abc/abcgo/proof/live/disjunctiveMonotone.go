@@ -16,10 +16,16 @@ func allocAntecedentConsequentVectorsStruct() *antecedentConsequentVectorsStruct
 	return new(antecedentConsequentVectorsStruct)
 }
 func createDisjunctiveMonotoneTester(p *aig.Graph, indexes *aigPoIndices, vectors *antecedentConsequentVectorsStruct, start *int32) *aig.Graph {
+	return createDisjunctiveMonotoneTesterMode(p, indexes, vectors, start, true)
+}
+func createDisjunctiveMonotoneTesterMode(p *aig.Graph, indexes *aigPoIndices, vectors *antecedentConsequentVectorsStruct, start *int32, source bool) *aig.Graph {
 	if indexes.attrPendingSignalIndex < 0 {
 		panic("live: pending signal missing")
 	}
 	c := newGraphCopy(p, "_monotone")
+	if source {
+		c = newSourceGraphCopy(p, "_monotone")
+	}
 	c.copyInputs()
 	previousPending := aig.Aig_ObjCreateCi(c.destination)
 	delayed := make([]aig.Edge, len(vectors.attrConsequentCandidates))
@@ -70,7 +76,7 @@ func findNewDisjunctiveWith(p *aig.Graph, indexes *aigPoIndices, vectors *antece
 		return nil
 	}
 	var start int32
-	tester := negateOutputs(createDisjunctiveMonotoneTester(p, indexes, vectors, &start), propertyOutputs(p))
+	tester := negateOutputs(createDisjunctiveMonotoneTesterMode(p, indexes, vectors, &start, false), propertyOutputs(p))
 	result := []int32{}
 	for i, id := range vectors.attrConsequentCandidates {
 		if checker(tester, int(start)+i, options).Status == 1 {

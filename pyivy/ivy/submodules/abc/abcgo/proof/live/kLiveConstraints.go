@@ -38,7 +38,13 @@ func collectCSSignals(n *Network, p *aig.Graph) []aig.Edge {
 	return append(signals, target)
 }
 func createNewAigWith0LivePo(p *aig.Graph, signals []aig.Edge, index *int32) *aig.Graph {
+	return createNewAigWith0LivePoMode(p, signals, index, true)
+}
+func createNewAigWith0LivePoMode(p *aig.Graph, signals []aig.Edge, index *int32, source bool) *aig.Graph {
 	c := newGraphCopy(p, "_0Live")
+	if source {
+		c = newSourceGraphCopy(p, "_0Live")
+	}
 	c.copyInputs()
 	for _, e := range signals {
 		c.signal(e)

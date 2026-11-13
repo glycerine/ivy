@@ -104,7 +104,7 @@ func disjunctiveTester(p *aig.Graph, candidates []aig.Edge, k int32) *aig.Graph 
 	if k <= 0 || int(k) > len(candidates) {
 		panic("live: invalid maximum combination width")
 	}
-	c := newGraphCopy(p, "_nCk")
+	c := newSourceGraphCopy(p, "_nCk")
 	c.copyInputs()
 	groups := [][]int{}
 	for width := 1; width <= int(k); width++ {

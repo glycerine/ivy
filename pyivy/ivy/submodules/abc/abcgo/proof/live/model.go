@@ -92,6 +92,7 @@ type graphCopy struct {
 	source, destination *aig.Graph
 	mapping             map[int]aig.Edge
 	nodes               []aig.Node
+	sourceNodes         bool
 }
 
 func newGraphCopy(p *aig.Graph, suffix string) *graphCopy {
@@ -99,7 +100,15 @@ func newGraphCopy(p *aig.Graph, suffix string) *graphCopy {
 	result := aig.Aig_ManStart(int32(len(nodes)))
 	result.Name = p.Name + suffix
 	aig.Aig_ObjSetCopy(p, 0, 0)
-	return &graphCopy{p, result, map[int]aig.Edge{0: 0}, nodes}
+	return &graphCopy{source: p, destination: result, mapping: map[int]aig.Edge{0: 0}, nodes: nodes}
+}
+
+// newSourceGraphCopy mirrors source loops that recreate every AIG node with
+// Aig_And, including native EXOR nodes.
+func newSourceGraphCopy(p *aig.Graph, suffix string) *graphCopy {
+	c := newGraphCopy(p, suffix)
+	c.sourceNodes = true
+	return c
 }
 func (c *graphCopy) mapEdge(e aig.Edge) aig.Edge { return c.visit(e.NodeID()) ^ aig.Edge(e&1) }
 func (c *graphCopy) visit(id int) aig.Edge {
@@ -112,7 +121,11 @@ func (c *graphCopy) visit(id int) aig.Edge {
 	case aig.And:
 		result = aig.Aig_And(c.destination, c.mapEdge(n.Fanins[0]), c.mapEdge(n.Fanins[1]))
 	case aig.ExclusiveOr:
-		result = aig.Aig_Exor(c.destination, c.mapEdge(n.Fanins[0]), c.mapEdge(n.Fanins[1]))
+		if c.sourceNodes {
+			result = aig.Aig_And(c.destination, c.mapEdge(n.Fanins[0]), c.mapEdge(n.Fanins[1]))
+		} else {
+			result = aig.Aig_Exor(c.destination, c.mapEdge(n.Fanins[0]), c.mapEdge(n.Fanins[1]))
+		}
 	case aig.Buffer, aig.Output:
 		result = c.mapEdge(n.Fanins[0])
 	default:
