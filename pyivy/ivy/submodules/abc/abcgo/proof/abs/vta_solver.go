@@ -9,7 +9,10 @@ func vtaLit(variable, complement int32) bsat.Literal {
 }
 func vtaSolverValue(s *bsat.LabeledSolver2, variable int32) bool {
 	value, ok := s.Value(variable)
-	return ok && value
+	if !ok {
+		panic("VTA SAT value requested without a model or for an invalid variable")
+	}
+	return value
 }
 func vtaSolverAddConst(s *bsat.LabeledSolver2, v, complement, mark, id int32) {
 	s.AddClause(id, vtaLit(v, complement))

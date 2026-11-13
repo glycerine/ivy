@@ -27,3 +27,13 @@ func TestVtaConstAndConstraintClauses(t *testing.T) {
 		}
 	}
 }
+
+func TestVtaSolverValueRequiresModel(t *testing.T) {
+	s := bsat.NewLabeledSolver2()
+	defer func() {
+		if recover() == nil {
+			t.Fatal("missing SAT model did not panic")
+		}
+	}()
+	vtaSolverValue(s, 1)
+}

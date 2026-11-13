@@ -45,3 +45,29 @@ func TestVtaUnsatCoreUnderAssumption(t *testing.T) {
 		t.Fatalf("missing proof labels: %v", got)
 	}
 }
+
+func TestVtaPreservesAnUnsatisfiableAbstraction(t *testing.T) {
+	p := gia.Gia_ManStart(20)
+	pi := gia.Gia_ManAppendCi(p)
+	extra := gia.Gia_ManAppendCi(p)
+	reg := gia.Gia_ManAppendCi(p)
+	unused := extra
+	for i := 0; i < 10; i++ {
+		unused = gia.Gia_ManAppendAnd(p, unused, pi)
+	}
+	partial := gia.Gia_ManAppendAnd(p, pi, extra)
+	impossible := gia.Gia_ManAppendAnd(p, partial, pi^1)
+	gia.Gia_ManAppendCo(p, impossible)
+	gia.Gia_ManAppendCo(p, reg)
+	gia.Gia_ManSetRegNum(p, 1)
+	if got := Gia_VtaPerform(p, &Abs_Par_t{nFramesMax: 2, nFramesPast: 1}); got != -1 {
+		t.Fatalf("status %d, expected bounded unknown", got)
+	}
+	if p.SequentialCounterexample() != nil {
+		t.Fatal("unexpected counterexample")
+	}
+	abs := gia.Gia_ManObjClasses(p)
+	if abs == nil || vec.Vec_IntEntry(abs, 0) != 2 {
+		t.Fatal("expected two-frame abstraction")
+	}
+}
