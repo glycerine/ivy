@@ -33,7 +33,9 @@ Intentional conservative paths and limits:
 - Arithmetic-box detection assumes two-input AND/XOR cuts. For native MUX or
   buffer graphs, `Acec_ProduceBox` declines the optimization and `Acec_Solve`
   uses ordinary CEC; `Acec_DeriveBox` similarly returns no box. Normalization
-  duplicates the graph when no box can be derived.
+  duplicates the graph when no box can be derived. Direct calls to the Ree and
+  DTC cut detectors reject these unsupported native nodes with a panic rather
+  than silently omitting their fanins.
 - The original CLA carry rewrite requires a unique polarity along every path to
   each XOR input. Reconvergent XORs commonly violate that assumption. The Go
   port returns an unchanged duplicate when preflight finds ambiguous polarity;
