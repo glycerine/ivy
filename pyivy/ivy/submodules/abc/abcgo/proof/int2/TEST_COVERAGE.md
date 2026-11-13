@@ -7,7 +7,7 @@ for undeclared C variables, inferred helpers, and retained source defects.
 | Helper | Focused coverage |
 | --- | --- |
 | `Int2_ManSetDefaultParams` | `TestSetDefaultParamsResetsAllFields`, `TestSetDefaultParamsRejectsNil` |
-| `Int2_ManCreate`, `Int2_ManStop` | Manager setup and teardown in the frame-construction tests; the C constructor contains undeclared `pFrames`. |
+| `Int2_ManCreate`, `Int2_GoCreate`, `Int2_ManStop` | `TestSourceManagerConstructorUnsupported`; Go-only setup and teardown in frame-construction tests. The C constructor contains undeclared `pFrames`. |
 | `Int2_ManDupInit` | `TestDupInitMatchesMuxedStateTransitions`, `TestDupInitWithNoOriginalPrimaryInputs` |
 | `Int2_ManCheckInit` | `TestCheckInitConstantTransitions`, `TestCheckInitAgainstExhaustiveTransitions`, `TestCheckInitIgnoresPropertyOutput` |
 | `Int2_ManFrameInit` | `TestFrameUnrollingTracksLatestInput`, `TestFrameInitMatchesSequentialSimulation`, `TestSourceCopiesNativeXorAsAnd`, `TestZeroFrameBuildersReturnInitialState` |

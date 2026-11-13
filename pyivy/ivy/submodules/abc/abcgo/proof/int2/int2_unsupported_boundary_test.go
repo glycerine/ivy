@@ -63,7 +63,7 @@ func TestSourceUnrollAndPrefixReturnUnsupported(t *testing.T) {
 
 func TestSourceFrameBuilderReportsUnsupportedBeforeMutation(t *testing.T) {
 	graph := testInt2InputToBadMachine()
-	m := Int2_ManCreate(graph, &Int2_ManPars_t{})
+	m := Int2_GoCreate(graph, &Int2_ManPars_t{})
 	defer Int2_ManStop(m)
 	m.pSatPref = sat_solver_new()
 	frames, objects := vec.Vec_PtrSize(m.vMapFrames), m.pGiaPref.ObjectCount()

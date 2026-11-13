@@ -86,7 +86,11 @@ type Int2_Man_t struct {
 	timeTotal   abctime
 }
 
-func Int2_ManCreate(pGia *Gia_Man_t, pPars *Int2_ManPars_t) *Int2_Man_t {
+// Int2_ManCreate is unsupported because the C constructor references an undeclared manager.
+func Int2_ManCreate(_ *Gia_Man_t, _ *Int2_ManPars_t) *Int2_Man_t { return nil }
+
+// Int2_GoCreate is a Go-only reconstruction, not an executable C port.
+func Int2_GoCreate(pGia *Gia_Man_t, pPars *Int2_ManPars_t) *Int2_Man_t {
 	if pGia == nil || pPars == nil {
 		panic("int2: nil manager or parameter block")
 	}

@@ -58,7 +58,8 @@ implementations, whose tests do not establish equivalence to executable C.
 `iObj`, and `pFrames` and has inconsistent SAT-manager arguments. Its Go
 implementation is reconstructed and has no executable C oracle.
 The manager constructor in `int2Int.h` calls `Gia_ManHashAlloc(pFrames)`
-without declaring `pFrames`; the Go constructor infers `pGiaPref` there.
+without declaring `pFrames`; `Int2_ManCreate` returns nil as unsupported.
+The separately named `Int2_GoCreate` infers `pGiaPref` there.
 In particular, the C AND branch passes the two mapped fanin literals to
 `Gia_ManHashAnd` without applying the source fanin complement bits; the Go
 implementation currently applies those bits. This is a difference in the
