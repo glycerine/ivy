@@ -15,10 +15,8 @@ func Ssw_SmlSimulateOne(p *Ssw_Sml_t) {
 	for frame := int32(0); frame < p.nFrames; frame++ {
 		for _, obj := range nodes {
 			switch p.pAig.Node(obj).Kind {
-			case aig.And:
+			case aig.And, aig.ExclusiveOr, aig.Buffer:
 				Ssw_SmlNodeSimulate(p, obj, frame)
-			case aig.ExclusiveOr, aig.Buffer:
-				panic("ssw: unsupported simulation node")
 			}
 		}
 		for _, obj := range outputs {

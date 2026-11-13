@@ -47,26 +47,39 @@ func Ssw_SmlNodeTransferFirst(p *Ssw_Sml_t, out, in aig.Edge) {
 	copy(sswFrameWords(p, in, 0), sswFrameWords(p, out, p.nFrames-1))
 }
 
-// Ssw_SmlNodeSimulate stores each AND's simulation relative to its phase.
+// Ssw_SmlNodeSimulate stores each node's simulation relative to its phase.
 func Ssw_SmlNodeSimulate(p *Ssw_Sml_t, obj aig.Edge, frame int32) {
 	node := p.pAig.Node(obj)
-	if node.Kind != aig.And {
-		panic("ssw: expected AND node")
+	if node.Kind != aig.And && node.Kind != aig.ExclusiveOr && node.Kind != aig.Buffer {
+		panic("ssw: expected internal node")
 	}
-	a, b := node.Fanins[0], node.Fanins[1]
-	x, y := sswFrameWords(p, a&^1, frame), sswFrameWords(p, b&^1, frame)
+	a := node.Fanins[0]
+	x := sswFrameWords(p, a&^1, frame)
 	dst := sswFrameWords(p, obj, frame)
 	invertA := p.pAig.Node(a).Phase != a.Complemented()
-	invertB := p.pAig.Node(b).Phase != b.Complemented()
+	var y []uint32
+	var invertB bool
+	if node.Kind != aig.Buffer {
+		b := node.Fanins[1]
+		y = sswFrameWords(p, b&^1, frame)
+		invertB = p.pAig.Node(b).Phase != b.Complemented()
+	}
 	for i := range dst {
-		left, right := x[i], y[i]
+		value := x[i]
 		if invertA {
-			left = ^left
+			value = ^value
 		}
-		if invertB {
-			right = ^right
+		if node.Kind != aig.Buffer {
+			right := y[i]
+			if invertB {
+				right = ^right
+			}
+			if node.Kind == aig.ExclusiveOr {
+				value ^= right
+			} else {
+				value &= right
+			}
 		}
-		value := left & right
 		if node.Phase {
 			value = ^value
 		}

@@ -24,3 +24,17 @@ func TestSequentialSimulationTransfersState(t *testing.T) {
 		t.Fatal("incorrect state transfer")
 	}
 }
+
+func TestSimulationExplicitXor(t *testing.T) {
+	g := aig.NewGraph()
+	a, b := g.NewInput(), g.NewInput()
+	x := g.NewXor(a, b.Not())
+	out := g.AddOutput(x)
+	p := Ssw_SmlStart(g, 0, 1, 1)
+	Ssw_SmlSimInfo(p, a)[0] = 0xf0
+	Ssw_SmlSimInfo(p, b)[0] = 0x33
+	Ssw_SmlSimulateOne(p)
+	if got, want := Ssw_SmlSimInfo(p, out)[0], uint32(0xf0)^^uint32(0x33); got != want {
+		t.Fatalf("got %x want %x", got, want)
+	}
+}
