@@ -647,41 +647,7 @@ func Ssw_SmlCheckNonConstOutputs(p *Ssw_Sml_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_SmlSimulateOne(p *Ssw_Sml_t) {
-    var pObj, pObjLi, pObjLo *Aig_Obj_t;
-    var f, i int32;
-    var clk abctime;
-clk = Abc_Clock();
-    for  f = 0; f < p.nFrames; f++  {
-        // simulate the nodes
-        // inlining of macro Aig_ManForEachNode
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(p.pAig.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-            Ssw_SmlNodeSimulate( p, pObj, f ); }
-        }
-        // copy simulation info into outputs
-        // inlining of macro Saig_ManForEachPo
-        // inlining of macro Vec_PtrForEachEntryStop
-        for  i = 0; (i < Saig_ManPoNum(p.pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, i)), 1); i++  {
-            Ssw_SmlNodeCopyFanin( p, pObj, f );
-        }
-        // copy simulation info into outputs
-        // inlining of macro Saig_ManForEachLi
-        for  i = 0; (i < Saig_ManRegNum(p.pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, i+Saig_ManPoNum(p.pAig))), 1); i++  {
-            Ssw_SmlNodeCopyFanin( p, pObj, f );
-        }
-        // quit if this is the last timeframe
-        if f == p.nFrames - 1 {
-            break; }
-        // copy simulation info into the inputs
-        // inlining of macro Saig_ManForEachLiLo
-        for  i = 0; (i < Saig_ManRegNum(p.pAig)) && (((pObjLi) = Saig_ManLi(p.pAig, i)), 1)            && (((pObjLo)=Saig_ManLo(p.pAig, i)), 1); i++  {
-            Ssw_SmlNodeTransferNext( p, pObjLi, pObjLo, f );
-        }
-    }
-p.timeSim += Abc_Clock() - clk;
-p.nSimRounds++;
-}
+
 
 /**Function*************************************************************
 
