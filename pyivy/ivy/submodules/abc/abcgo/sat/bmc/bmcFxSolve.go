@@ -17,8 +17,9 @@ func Bmc_FxSolve(s *bsat.Solver, out, auxVar int32, vars *vec.Vec_Int_t, dumpPLA
 	if dumpPLA != 0 {
 		fmt.Printf(".i %d\n.o 1\n", len(variables))
 	}
+	conflicts, propagations := s.Limits()
 	s.SetLimits(1000000, 0)
-	defer s.SetLimits(0, 0)
+	defer s.SetLimits(conflicts, propagations)
 	count, reduced, total := int32(0), 0, 0
 	result := int32(1)
 	for {

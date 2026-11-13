@@ -26,3 +26,18 @@ func TestFxSolveAnd(t *testing.T) {
 		t.Fatalf("cube %v", cube)
 	}
 }
+
+func TestFxSolvePreservesSolverLimits(t *testing.T) {
+	s := bsat.NewSolver()
+	for i := 0; i < 3; i++ {
+		s.NewVariable()
+	}
+	s.SetLimits(7, 11)
+	s.AddClause(bsat.Negative(1))
+	if Bmc_FxSolve(s, 0, 2, vec.Vec_IntAlloc(0), 0, 0, nil, nil) != 1 {
+		t.Fatal("expected empty onset")
+	}
+	if conflicts, propagations := s.Limits(); conflicts != 7 || propagations != 11 {
+		t.Fatalf("limits = (%d,%d), want (7,11)", conflicts, propagations)
+	}
+}

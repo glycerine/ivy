@@ -24,8 +24,9 @@ func Gia_ManFaultAnalyze(s *bsat.Solver, params, enabled, scratch *vec.Vec_Int_t
 	pending := vec.Vec_IntArray(scratch)
 	start := time.Now()
 	runs, unsat := 0, int32(0)
+	conflicts, propagations := s.Limits()
 	s.SetLimits(100, 0)
-	defer s.SetLimits(0, 0)
+	defer s.SetLimits(conflicts, propagations)
 	for i, variable := range p {
 		if pending[i] == 0 {
 			continue

@@ -64,6 +64,11 @@ func (s *sat_solver_t) UnsatCore() []Literal {
 	return append([]Literal(nil), veci_begin(&s.conf_final)...)
 }
 
+// Limits returns the conflict and propagation budgets used by Solve.
+func (s *sat_solver_t) Limits() (conflicts, propagations int64) {
+	return s.limitConflicts, s.limitPropagations
+}
+
 // SetLimits sets per-call conflict and propagation budgets; zero is unlimited.
 func (s *sat_solver_t) SetLimits(conflicts, propagations int64) {
 	if conflicts < 0 || propagations < 0 {

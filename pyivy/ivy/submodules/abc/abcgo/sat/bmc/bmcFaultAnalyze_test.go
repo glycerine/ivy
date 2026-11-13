@@ -24,3 +24,15 @@ func TestFaultAnalyze(t *testing.T) {
 		t.Fatalf("fault map %v", m)
 	}
 }
+
+func TestFaultAnalyzePreservesSolverLimits(t *testing.T) {
+	s := bsat.NewSolver()
+	v := s.NewVariable()
+	s.SetLimits(7, 11)
+	params := vec.Vec_IntAllocArrayCopy([]int32{v}, 1)
+	enabled := vec.Vec_IntAllocArrayCopy([]int32{1}, 1)
+	Gia_ManFaultAnalyze(s, params, enabled, vec.Vec_IntAlloc(1), 0)
+	if conflicts, propagations := s.Limits(); conflicts != 7 || propagations != 11 {
+		t.Fatalf("limits = (%d,%d), want (7,11)", conflicts, propagations)
+	}
+}
