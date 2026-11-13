@@ -49,64 +49,6 @@ import "fmt"
   SeeAlso     []
 
 ***********************************************************************/
-func Acec_ManDerive_rec(pNew *Gia_Man_t, p *Gia_Man_t, Node int32, vMirrors *Vec_Int_t) {
-    var pObj *Gia_Obj_t;
-    var Obj int32  = Node;
-    if Vec_IntEntry(vMirrors, Node) >= 0 {
-        Obj = Abc_Lit2Var( Vec_IntEntry(vMirrors, Node) ); }
-    pObj = Gia_ManObj( p, Obj );
-    if !~pObj.Value {
-        assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-        Acec_ManDerive_rec( pNew, p, Gia_ObjFaninId0(pObj, Obj), vMirrors );
-        Acec_ManDerive_rec( pNew, p, Gia_ObjFaninId1(pObj, Obj), vMirrors );
-        if Gia_ObjIsXor(pObj) {
-            pObj.Value = Gia_ManAppendXorReal( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );
-        } else {
-            pObj.Value = Gia_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }
-    }
-    // set the original node as well
-    if Obj != Node {
-        Gia_ManObj(p, Node).Value = Abc_LitNotCond( pObj.Value, Abc_LitIsCompl(Vec_IntEntry(vMirrors, Node)) ); }
-} 
-func Acec_ManDerive(p *Gia_Man_t, vMirrors *Vec_Int_t) *Gia_Man_t {
-    var pNew *Gia_Man_t;
-    var pObj *Gia_Obj_t;
-    var i int32;
-    assert(p.pMuxes == nil, "p.pMuxes == nil");
-    Gia_ManFillValue( p );
-    pNew = Gia_ManStart( Gia_ManObjNum(p) );
-    pNew.pName = Abc_UtilStrsav( p.pName );
-    pNew.pSpec = Abc_UtilStrsav( p.pSpec );
-    Gia_ManConst0(p).Value = 0;
-    Gia_ManHashAlloc( pNew );
-    // inlining of macro Gia_ManForEachCi
-    for  i = 0; (i < Vec_IntSize(p.vCis)) && ((pObj) = Gia_ManCi(p, i)); i++  {
-        pObj.Value = Gia_ManAppendCi(pNew);
-    }
-    // inlining of macro Gia_ManForEachCo
-    for  i = 0; (i < Vec_IntSize(p.vCos)) && ((pObj) = Gia_ManCo(p, i)); i++  {
-        Acec_ManDerive_rec( pNew, p, Gia_ObjFaninId0p(p, pObj), vMirrors );
-    }
-    // inlining of macro Gia_ManForEachCo
-    for  i = 0; (i < Vec_IntSize(p.vCos)) && ((pObj) = Gia_ManCo(p, i)); i++  {
-        pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );
-    }
-    Gia_ManHashStop( pNew );
-    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );
-    return pNew;
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Acec_CollectXorTops(p *Gia_Man_t) *Vec_Int_t {
     var vRootXorSet *Vec_Int_t  = Vec_IntAlloc( Gia_ManCoNum(p) );
     var pObj, pFan0, pFan1, pFan00, pFan01, pFan10, pFan11 *Gia_Obj_t;
@@ -143,52 +85,6 @@ func Acec_CollectXorTops(p *Gia_Man_t) *Vec_Int_t {
         fmt.Printf("\n");
     }
     return vRootXorSet;
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Acec_DetectLitPolarity(p *Gia_Man_t, Node int32, Leaf int32) int32 {
-    var pNode *Gia_Obj_t;
-    var Lit0, Lit1 int32;
-    if Node < Leaf {
-        return -1; }
-    if Node == Leaf {
-        return Abc_Var2Lit(Node, 0); }
-    pNode = Gia_ManObj( p, Node );
-    Lit0 = Acec_DetectLitPolarity( p, Gia_ObjFaninId0(pNode, Node), Leaf );
-    Lit1 = Acec_DetectLitPolarity( p, Gia_ObjFaninId1(pNode, Node), Leaf );
-    if Lit0 == -1 {
-        Lit0 = Lit0;
-    } else {
-        Lit0 = Abc_LitNotCond( Lit0, Gia_ObjFaninC0(pNode) );
-    }
-    if Lit1 == -1 {
-        Lit1 = Lit1;
-    } else {
-        Lit1 = Abc_LitNotCond( Lit1, Gia_ObjFaninC1(pNode) );
-    }
-    if Lit0 == -1 && Lit1 == -1 {
-        return -1; }
-    assert(Lit0 != -1 || Lit1 != -1, "Lit0 != -1 || Lit1 != -1");
-    if Lit0 != -1 && Lit1 != -1 {
-        assert(Lit0 == Lit1, "Lit0 == Lit1");
-        fmt.Printf("Problem for leaf %d\n", Leaf);
-        return Lit0;
-    }
-    if Lit0 != -1 {
-        return Lit0;
-    } else {
-        return Lit1;
-    }
 }
 
 /**Function*************************************************************
