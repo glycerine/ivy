@@ -77,6 +77,9 @@ stage-boundary limit. Tests compare selected
 cases with the original ABC executable and force the unresolved sweep branch
 through the genuine FRA fallback. They do not establish equivalence for every
 network or exercise every internal FRAIG path.
+An end-to-end, preloaded dual-output failure also compares the source's
+failing-output diagnostic, output index, and witness presence with compiled C;
+the diagnostic is suppressed when the caller requests silent operation.
 
 ## Choice computation
 

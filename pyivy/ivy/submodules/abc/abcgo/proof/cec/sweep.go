@@ -165,6 +165,8 @@ func Cec_ManSatSweeping(graph *Gia_Man_t, params *Cec_ParFra_t, silent int32) *G
 	params.Error = err
 	if err != nil && silent == 0 {
 		fmt.Printf("CEC sweeping: %v\n", err)
+	} else if err == nil && result == nil && params.iOutFail >= 0 && silent == 0 {
+		fmt.Printf("Disproved at least one output of the miter (zero-based number %d).\n", params.iOutFail)
 	}
 	return result
 }
