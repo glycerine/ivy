@@ -15,9 +15,7 @@ func Msat_SolverAddVar(p *Msat_Solver_t, level int) int {
 		Msat_SolverResize(p, n)
 	}
 	p.pLevel[p.nVars] = level
-	p.vConeVars.data = append(p.vConeVars.data, p.nVars)
 	p.nVars++
-	Msat_OrderClean(p.pOrder, p.vConeVars)
 	return 1
 }
 func Msat_SolverAddClause(p *Msat_Solver_t, lits *Msat_IntVec_t) int {

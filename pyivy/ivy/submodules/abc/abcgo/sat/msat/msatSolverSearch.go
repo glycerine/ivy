@@ -1,8 +1,6 @@
 // Go port of msatSolverSearch.c by Alan Mishchenko, UC Berkeley (2004).
 package msat
 
-import "time"
-
 func Msat_SolverAssume(p *Msat_Solver_t, lit int) int {
 	Msat_IntVecPush(p.vTrailLim, len(p.vTrail.data))
 	return Msat_SolverEnqueue(p, lit, nil)
@@ -201,10 +199,6 @@ func Msat_SolverSearch(p *Msat_Solver_t, conflictLimit, learnedLimit, backtrackL
 	Msat_OrderClean(p.pOrder, p.vConeVars)
 	conflicts := 0
 	for {
-		if !p.deadline.IsZero() && time.Now().After(p.deadline) {
-			Msat_SolverCancelUntil(p, p.nLevelRoot)
-			return MSAT_UNKNOWN
-		}
 		c := Msat_SolverPropagate(p)
 		if c != nil {
 			p.Stats.nConflicts++

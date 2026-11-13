@@ -69,14 +69,15 @@ func (p *Msat_Order_t) pop() int {
 func Msat_OrderClean(p *Msat_Order_t, cone *Msat_IntVec_t) {
 	Msat_OrderSetBounds(p, len(p.pSat.pAssigns))
 	for _, v := range cone.data {
-		p.insert(v)
+		p.index[v] = len(p.heap)
+		p.heap = append(p.heap, v)
 	}
 }
 func Msat_OrderFree(p *Msat_Order_t) { p.heap = nil; p.index = nil; p.pSat = nil }
 func Msat_OrderVarSelect(p *Msat_Order_t) int {
 	for len(p.heap) > 0 {
 		v := p.pop()
-		if v < p.pSat.nVars && p.pSat.pAssigns[v] < 0 && p.pSat.vVarsUsed.data[v] != 0 {
+		if p.pSat.pAssigns[v] < 0 {
 			return v
 		}
 	}
@@ -85,9 +86,7 @@ func Msat_OrderVarSelect(p *Msat_Order_t) int {
 func Msat_OrderVarAssigned(p *Msat_Order_t, v int) { /* assigned entries are skipped lazily by selection */
 }
 func Msat_OrderVarUnassigned(p *Msat_Order_t, v int) {
-	if p.pSat.vVarsUsed.data[v] != 0 {
-		p.insert(v)
-	}
+	p.insert(v)
 }
 func Msat_OrderUpdate(p *Msat_Order_t, v int) {
 	if v < len(p.index) && p.index[v] >= 0 {
