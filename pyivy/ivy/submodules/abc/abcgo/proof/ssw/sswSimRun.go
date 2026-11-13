@@ -31,3 +31,20 @@ func Ssw_SmlSimulateOne(p *Ssw_Sml_t) {
 	p.timeSim += time.Since(start)
 	p.nSimRounds++
 }
+
+// Ssw_SmlUnnormalize converts the first frame's normalized internal words.
+func Ssw_SmlUnnormalize(p *Ssw_Sml_t) {
+	words := sswFrameWords(p, p.pAig.Const1(), 0)
+	for i := range words {
+		words[i] = ^words[i]
+	}
+	for _, obj := range p.pAig.LiveEdges() {
+		node := p.pAig.Node(obj)
+		if (node.Kind == aig.And || node.Kind == aig.ExclusiveOr || node.Kind == aig.Buffer) && node.Phase {
+			words = sswFrameWords(p, obj, 0)
+			for i := range words {
+				words[i] = ^words[i]
+			}
+		}
+	}
+}

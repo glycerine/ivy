@@ -38,3 +38,13 @@ func TestSimulationExplicitXor(t *testing.T) {
 		t.Fatalf("got %x want %x", got, want)
 	}
 }
+
+func TestUnnormalizeConvertsFirstFrameConstant(t *testing.T) {
+	g := aig.NewGraph()
+	p := Ssw_SmlStart(g, 0, 2, 1)
+	Ssw_SmlUnnormalize(p)
+	words := Ssw_SmlSimInfo(p, g.Const1())
+	if words[0] != ^uint32(0) || words[1] != 0 {
+		t.Fatalf("got %x", words)
+	}
+}

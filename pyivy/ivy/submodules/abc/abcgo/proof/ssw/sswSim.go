@@ -589,29 +589,7 @@ func Ssw_SmlCheckOutput(p *Ssw_Sml_t) *int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_SmlUnnormalize(p *Ssw_Sml_t) {
-    var pObj *Aig_Obj_t;
-    var pSims *uint32;
-    var i, k int32;
-    // convert constant 1
-    pSims  = Ssw_ObjSim( p, 0 );
-    for  i = 0; i < p.nWordsFrame; i++  {
-        pSims[i] = ~pSims[i];
-    }
-    // convert internal nodes
-    // inlining of macro Aig_ManForEachNode
-    // inlining of macro Vec_PtrForEachEntry
-    for  k = 0; (k < Vec_PtrSize(p.pAig.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, k)), 1); k++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-        if pObj.fPhase == 0 {
-            continue; }
-        pSims  = Ssw_ObjSim( p, pObj.Id );
-        for  i = 0; i < p.nWordsFrame; i++  {
-            pSims[i] = ~pSims[i];
-        }
-    }
-    }
-    // PIs/POs are always stored in their natural state
-}
+
 
 /**Function*************************************************************
 
