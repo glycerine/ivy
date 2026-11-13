@@ -97,6 +97,14 @@ func miterCompatible(a, b *aig.Graph, sequential bool) {
 	}
 }
 func Saig_ManCreateMiter(p0, p1 *aig.Graph, oper int32) *aig.Graph {
+	result, _, _ := Saig_ManCreateMiterWithCopies(p0, p1, oper)
+	return result
+}
+
+// Saig_ManCreateMiterWithCopies additionally returns the literal mapping of
+// each source object to its copy in the miter. A mapped literal retains phase;
+// an unavailable object is aig.InvalidEdge.
+func Saig_ManCreateMiterWithCopies(p0, p1 *aig.Graph, oper int32) (*aig.Graph, []aig.Edge, []aig.Edge) {
 	miterCompatible(p0, p1, true)
 	dst := aig.NewGraph()
 	dst.Name = "miter"
@@ -128,7 +136,7 @@ func Saig_ManCreateMiter(p0, p1 *aig.Graph, oper int32) *aig.Graph {
 		dst.AddOutput(miterMapped(c1, e))
 	}
 	aig.Aig_ManSetRegNum(dst, Saig_ManRegNum(p0)+Saig_ManRegNum(p1))
-	return dst
+	return dst, c0, c1
 }
 func Saig_ManCreateMiterComb(p0, p1 *aig.Graph, oper int32) *aig.Graph {
 	miterCompatible(p0, p1, false)
