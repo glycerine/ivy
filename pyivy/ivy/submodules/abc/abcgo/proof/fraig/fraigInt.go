@@ -118,7 +118,6 @@ const FRAIG_WORDS_STORE =           5
 ///                    STRUCTURE DEFINITIONS                         ///
 ////////////////////////////////////////////////////////////////////////
 
-type Fraig_MemFixed_t =    Fraig_MemFixed_t_;    
 
 // the mapping manager
 type Fraig_ManStruct_t_ struct {
@@ -224,6 +223,10 @@ type Fraig_ManStruct_t_ struct {
 
 // the mapping node
 type Fraig_NodeStruct_t_ struct {
+	// Complemented C pointers become canonical paired Go objects. Only the
+	// regular node owns graph data; a complemented handle points back to it.
+	complementOf *Fraig_Node_t
+	complement   *Fraig_Node_t
     // various numbers associated with the node
     Num                   int32;           // the unique number (SAT var number) of this node 
     NumPi                   int32;         // if the node is a PI, this is its variable number
@@ -279,9 +282,8 @@ type Fraig_NodeStruct_t_ struct {
 
 // the vector of nodes
 type Fraig_NodeVecStruct_t_ struct {
-    nCap                   int32;          // the number of allocated entries
-    nSize                   int32;         // the number of entries in the array
-    pArray        **Fraig_Node_t;        // the array of nodes
+	// The slice is authoritative for both size and capacity.
+	pArray []*Fraig_Node_t
 }
 
 // the hash table 

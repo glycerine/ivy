@@ -1,558 +1,163 @@
 package fraig
 
-/**CFile****************************************************************
+// Node-vector operations adapted from fraigVec.c by Alan Mishchenko.
+import "sort"
 
-  FileName    [fraigVec.c]
-
-  PackageName [FRAIG: Functionally reduced AND-INV graphs.]
-
-  Synopsis    [Vector of FRAIG nodes.]
-
-  Author      [Alan Mishchenko <alanmi@eecs.berkeley.edu>]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 2.0. Started - October 1, 2004]
-
-  Revision    [$Id: fraigVec.c,v 1.7 2005/07/08 01:01:34 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "fraigInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Allocates a vector with the given capacity.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_NodeVecAlloc(nCap int32) *Fraig_NodeVec_t {
-    var p *Fraig_NodeVec_t;
-    // inlining of macro ABC_ALLOC
-    p = ((Fraig_NodeVec_t *) malloc(sizeof(Fraig_NodeVec_t) * (size_t)(1)));
-    if nCap > 0 && nCap < 8 {
-        nCap = 8; }
-    p.nSize  = 0;
-    p.nCap   = nCap;
-    if p.nCap {
-        // inlining of macro ABC_ALLOC
-        p.pArray = ((Fraig_Node_t * *) malloc(sizeof(Fraig_Node_t *) * (size_t)(p.nCap)));
-    } else {
-        p.pArray = nil;
-    }
-    return p;
+func Fraig_NodeVecAlloc(capacity int32) *Fraig_NodeVec_t {
+	if capacity < 0 {
+		panic("fraig: negative vector capacity")
+	}
+	if capacity > 0 && capacity < 8 {
+		capacity = 8
+	}
+	return &Fraig_NodeVec_t{pArray: make([]*Fraig_Node_t, 0, capacity)}
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Fraig_NodeVecFree(p *Fraig_NodeVec_t) {
-    p.pArray = nil;
-    p = nil;
+	if p != nil {
+		p.pArray = nil
+	}
+}
+func Fraig_NodeVecDup(p *Fraig_NodeVec_t) *Fraig_NodeVec_t {
+	q := &Fraig_NodeVec_t{pArray: make([]*Fraig_Node_t, len(p.pArray), cap(p.pArray))}
+	copy(q.pArray, p.pArray)
+	return q
+}
+func Fraig_NodeVecReadArray(p *Fraig_NodeVec_t) []*Fraig_Node_t { return p.pArray }
+func Fraig_NodeVecReadSize(p *Fraig_NodeVec_t) int32            { return int32(len(p.pArray)) }
+func Fraig_NodeVecGrow(p *Fraig_NodeVec_t, capacity int32) {
+	if capacity < 0 {
+		panic("fraig: negative vector capacity")
+	}
+	if int(capacity) <= cap(p.pArray) {
+		return
+	}
+	entries := make([]*Fraig_Node_t, len(p.pArray), capacity)
+	copy(entries, p.pArray)
+	p.pArray = entries
+}
+func Fraig_NodeVecShrink(p *Fraig_NodeVec_t, size int32) {
+	if size < 0 || int(size) > len(p.pArray) {
+		panic("fraig: invalid vector size")
+	}
+	clear(p.pArray[size:])
+	p.pArray = p.pArray[:size]
+}
+func Fraig_NodeVecClear(p *Fraig_NodeVec_t)                    { Fraig_NodeVecShrink(p, 0) }
+func Fraig_NodeVecPush(p *Fraig_NodeVec_t, node *Fraig_Node_t) { p.pArray = append(p.pArray, node) }
+func Fraig_NodeVecPushUnique(p *Fraig_NodeVec_t, node *Fraig_Node_t) int32 {
+	for _, old := range p.pArray {
+		if old == node {
+			return 1
+		}
+	}
+	Fraig_NodeVecPush(p, node)
+	return 0
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Duplicates the integer array.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_NodeVecDup(pVec *Fraig_NodeVec_t) *Fraig_NodeVec_t {
-    var p *Fraig_NodeVec_t;
-    // inlining of macro ABC_ALLOC
-    p = ((Fraig_NodeVec_t *) malloc(sizeof(Fraig_NodeVec_t) * (size_t)(1)));
-    p.nSize  = pVec.nSize;
-    p.nCap   = pVec.nCap;
-    if p.nCap {
-        // inlining of macro ABC_ALLOC
-        p.pArray = ((Fraig_Node_t * *) malloc(sizeof(Fraig_Node_t *) * (size_t)(p.nCap)));
-    } else {
-        p.pArray = nil;
-    }
-    memcpy( p.pArray, pVec.pArray, sizeof(Fraig_Node_t *) * pVec.nSize );
-    return p;
+// Node numbers are unique within a FRAIG manager. Ordering by number and edge
+// polarity supplies the total order that C obtained from tagged addresses.
+func fraigEdgeLess(a, b *Fraig_Node_t) bool {
+	x, y := Fraig_Regular(a), Fraig_Regular(b)
+	if x.Num != y.Num {
+		return x.Num < y.Num
+	}
+	return !Fraig_IsComplement(a) && Fraig_IsComplement(b)
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_NodeVecReadArray(p *Fraig_NodeVec_t) **Fraig_Node_t {
-    return p.pArray;
+func fraigInsertOrdered(p *Fraig_NodeVec_t, node *Fraig_Node_t, less func(*Fraig_Node_t, *Fraig_Node_t) bool) {
+	Fraig_NodeVecPush(p, node)
+	for i := len(p.pArray) - 1; i > 0 && less(p.pArray[i], p.pArray[i-1]); i-- {
+		p.pArray[i], p.pArray[i-1] = p.pArray[i-1], p.pArray[i]
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_NodeVecReadSize(p *Fraig_NodeVec_t) int32 {
-    return p.nSize;
+func Fraig_NodeVecPushOrder(p *Fraig_NodeVec_t, node *Fraig_Node_t) {
+	fraigInsertOrdered(p, node, fraigEdgeLess)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Resizes the vector to the given capacity.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_NodeVecGrow(p *Fraig_NodeVec_t, nCapMin int32) {
-    if p.nCap >= nCapMin {
-        return; }
-    // inlining of macro ABC_REALLOC
-    
-    if p.pArray {
-        p.pArray = ((Fraig_Node_t * *) realloc((char *)(p.pArray), sizeof(Fraig_Node_t *) * (size_t)(nCapMin)));
-    } else {
-        p.pArray = ((Fraig_Node_t * *) malloc(sizeof(Fraig_Node_t *) * (size_t)(nCapMin)));
-    } 
-    p.nCap   = nCapMin;
+func Fraig_NodeVecPushUniqueOrder(p *Fraig_NodeVec_t, node *Fraig_Node_t) int32 {
+	for _, old := range p.pArray {
+		if old == node {
+			return 1
+		}
+	}
+	Fraig_NodeVecPushOrder(p, node)
+	return 0
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_NodeVecShrink(p *Fraig_NodeVec_t, nSizeNew int32) {
-    assert(p.nSize >= nSizeNew, "p.nSize >= nSizeNew");
-    p.nSize = nSizeNew;
+func Fraig_NodeVecPushOrderByLevel(p *Fraig_NodeVec_t, node *Fraig_Node_t) {
+	fraigInsertOrdered(p, node, func(a, b *Fraig_Node_t) bool { return Fraig_Regular(a).Level > Fraig_Regular(b).Level })
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_NodeVecClear(p *Fraig_NodeVec_t) {
-    p.nSize = 0;
+func Fraig_NodeVecPushUniqueOrderByLevel(p *Fraig_NodeVec_t, node *Fraig_Node_t) int32 {
+	for _, old := range p.pArray {
+		if old == node {
+			return 1
+		}
+	}
+	Fraig_NodeVecPushOrderByLevel(p, node)
+	return 0
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_NodeVecPush(p *Fraig_NodeVec_t, Entry *Fraig_Node_t) {
-    if p.nSize == p.nCap {
-        if p.nCap < 16 {
-            Fraig_NodeVecGrow( p, 16 );
-        } else {
-            Fraig_NodeVecGrow( p, 2 * p.nCap ); }
-    }
-    p.pArray[p.nSize++] = Entry;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Add the element while ensuring uniqueness.]
-
-  Description [Returns 1 if the element was found, and 0 if it was new. ]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_NodeVecPushUnique(p *Fraig_NodeVec_t, Entry *Fraig_Node_t) int32 {
-    var i int32;
-    for  i = 0; i < p.nSize; i++  {
-        if p.pArray[i] == Entry {
-            return 1; }
-    }
-    Fraig_NodeVecPush( p, Entry );
-    return 0;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Inserts a new node in the order by arrival times.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_NodeVecPushOrder(p *Fraig_NodeVec_t, pNode *Fraig_Node_t) {
-    var pNode1, pNode2 *Fraig_Node_t;
-    var i int32;
-    Fraig_NodeVecPush( p, pNode );
-    // find the p of the node
-    for  i = p.nSize-1; i > 0; i--  {
-        pNode1 = p.pArray[i  ];
-        pNode2 = p.pArray[i-1];
-        if pNode1 >= pNode2 {
-            break; }
-        p.pArray[i  ] = pNode2;
-        p.pArray[i-1] = pNode1;
-    }
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Add the element while ensuring uniqueness in the order.]
-
-  Description [Returns 1 if the element was found, and 0 if it was new. ]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_NodeVecPushUniqueOrder(p *Fraig_NodeVec_t, pNode *Fraig_Node_t) int32 {
-    var i int32;
-    for  i = 0; i < p.nSize; i++  {
-        if p.pArray[i] == pNode {
-            return 1; }
-    }
-    Fraig_NodeVecPushOrder( p, pNode );
-    return 0;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Inserts a new node in the order by arrival times.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_NodeVecPushOrderByLevel(p *Fraig_NodeVec_t, pNode *Fraig_Node_t) {
-    var pNode1, pNode2 *Fraig_Node_t;
-    var i int32;
-    Fraig_NodeVecPush( p, pNode );
-    // find the p of the node
-    for  i = p.nSize-1; i > 0; i--  {
-        pNode1 = p.pArray[i  ];
-        pNode2 = p.pArray[i-1];
-        // inlining of macro Fraig_Regular
-        if  ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode1) & ~01)) .Level <= ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2) & ~01)) .Level {
-            break; }
-        p.pArray[i  ] = pNode2;
-        p.pArray[i-1] = pNode1;
-    }
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Add the element while ensuring uniqueness in the order.]
-
-  Description [Returns 1 if the element was found, and 0 if it was new. ]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_NodeVecPushUniqueOrderByLevel(p *Fraig_NodeVec_t, pNode *Fraig_Node_t) int32 {
-    var i int32;
-    for  i = 0; i < p.nSize; i++  {
-        if p.pArray[i] == pNode {
-            return 1; }
-    }
-    Fraig_NodeVecPushOrderByLevel( p, pNode );
-    return 0;
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Fraig_NodeVecPop(p *Fraig_NodeVec_t) *Fraig_Node_t {
-    return p.pArray[--p.nSize];
+	i := len(p.pArray) - 1
+	if i < 0 {
+		panic("fraig: pop from empty vector")
+	}
+	node := p.pArray[i]
+	p.pArray[i] = nil
+	p.pArray = p.pArray[:i]
+	return node
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_NodeVecRemove(p *Fraig_NodeVec_t, Entry *Fraig_Node_t) {
-    var i int32;
-    for  i = 0; i < p.nSize; i++  {
-        if p.pArray[i] == Entry {
-            break; }
-    }
-    assert(i < p.nSize, "i < p.nSize");
-    for  i++; i < p.nSize; i++  {
-        p.pArray[i-1] = p.pArray[i];
-    }
-    p.nSize--;
+func Fraig_NodeVecRemove(p *Fraig_NodeVec_t, node *Fraig_Node_t) {
+	for i, old := range p.pArray {
+		if old == node {
+			copy(p.pArray[i:], p.pArray[i+1:])
+			Fraig_NodeVecShrink(p, int32(len(p.pArray)-1))
+			return
+		}
+	}
+	panic("fraig: node not found in vector")
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_NodeVecWriteEntry(p *Fraig_NodeVec_t, i int32, Entry *Fraig_Node_t) {
-    assert(i >= 0 && i < p.nSize, "i >= 0 && i < p.nSize");
-    p.pArray[i] = Entry;
+func Fraig_NodeVecWriteEntry(p *Fraig_NodeVec_t, i int32, node *Fraig_Node_t) { p.pArray[i] = node }
+func Fraig_NodeVecReadEntry(p *Fraig_NodeVec_t, i int32) *Fraig_Node_t        { return p.pArray[i] }
+func fraigCompare(a, b int32) int32 {
+	if a < b {
+		return -1
+	}
+	if a > b {
+		return 1
+	}
+	return 0
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_NodeVecReadEntry(p *Fraig_NodeVec_t, i int32) *Fraig_Node_t {
-    assert(i >= 0 && i < p.nSize, "i >= 0 && i < p.nSize");
-    return p.pArray[i];
+func Fraig_NodeVecCompareLevelsIncreasing(a, b **Fraig_Node_t) int32 {
+	return fraigCompare(Fraig_Regular(*a).Level, Fraig_Regular(*b).Level)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Comparison procedure for two clauses.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_NodeVecCompareLevelsIncreasing(pp1 **Fraig_Node_t, pp2 **Fraig_Node_t) int32 {
-    // inlining of macro Fraig_Regular
-    var Level1 int32  = ((Fraig_Node_t *)((ABC_PTRUINT_T)(*pp1) & ~01)) .Level;
-    // inlining of macro Fraig_Regular
-    var Level2 int32  = ((Fraig_Node_t *)((ABC_PTRUINT_T)(*pp2) & ~01)) .Level;
-    if Level1 < Level2 {
-        return -1; }
-    if Level1 > Level2 {
-        return 1; }
-    return 0; 
+func Fraig_NodeVecCompareLevelsDecreasing(a, b **Fraig_Node_t) int32 {
+	return -Fraig_NodeVecCompareLevelsIncreasing(a, b)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Comparison procedure for two clauses.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_NodeVecCompareLevelsDecreasing(pp1 **Fraig_Node_t, pp2 **Fraig_Node_t) int32 {
-    // inlining of macro Fraig_Regular
-    var Level1 int32  = ((Fraig_Node_t *)((ABC_PTRUINT_T)(*pp1) & ~01)) .Level;
-    // inlining of macro Fraig_Regular
-    var Level2 int32  = ((Fraig_Node_t *)((ABC_PTRUINT_T)(*pp2) & ~01)) .Level;
-    if Level1 > Level2 {
-        return -1; }
-    if Level1 < Level2 {
-        return 1; }
-    return 0; 
+func Fraig_NodeVecCompareNumbers(a, b **Fraig_Node_t) int32 {
+	return fraigCompare(Fraig_Regular(*a).Num, Fraig_Regular(*b).Num)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Comparison procedure for two clauses.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_NodeVecCompareNumbers(pp1 **Fraig_Node_t, pp2 **Fraig_Node_t) int32 {
-    // inlining of macro Fraig_Regular
-    var Num1 int32  = ((Fraig_Node_t *)((ABC_PTRUINT_T)(*pp1) & ~01)) .Num;
-    // inlining of macro Fraig_Regular
-    var Num2 int32  = ((Fraig_Node_t *)((ABC_PTRUINT_T)(*pp2) & ~01)) .Num;
-    if Num1 < Num2 {
-        return -1; }
-    if Num1 > Num2 {
-        return 1; }
-    return 0; 
+func Fraig_NodeVecCompareRefCounts(a, b **Fraig_Node_t) int32 {
+	x, y := Fraig_Regular(*a), Fraig_Regular(*b)
+	if c := fraigCompare(x.nRefs, y.nRefs); c != 0 {
+		return c
+	}
+	return fraigCompare(x.Level, y.Level)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Comparison procedure for two clauses.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_NodeVecCompareRefCounts(pp1 **Fraig_Node_t, pp2 **Fraig_Node_t) int32 {
-    // inlining of macro Fraig_Regular
-    var nRefs1 int32  = ((Fraig_Node_t *)((ABC_PTRUINT_T)(*pp1) & ~01)) .nRefs;
-    // inlining of macro Fraig_Regular
-    var nRefs2 int32  = ((Fraig_Node_t *)((ABC_PTRUINT_T)(*pp2) & ~01)) .nRefs;
-
-    if nRefs1 < nRefs2 {
-        return -1; }
-    if nRefs1 > nRefs2 {
-        return 1; }
-
-    // inlining of macro Fraig_Regular
-    nRefs1 = ((Fraig_Node_t *)((ABC_PTRUINT_T)(*pp1) & ~01)) .Level;
-    // inlining of macro Fraig_Regular
-    nRefs2 = ((Fraig_Node_t *)((ABC_PTRUINT_T)(*pp2) & ~01)) .Level;
-
-    if nRefs1 < nRefs2 {
-        return -1; }
-    if nRefs1 > nRefs2 {
-        return 1; }
-    return 0; 
+func Fraig_NodeVecSortByLevel(p *Fraig_NodeVec_t, increasing int32) {
+	sort.Slice(p.pArray, func(i, j int) bool {
+		a, b := Fraig_Regular(p.pArray[i]).Level, Fraig_Regular(p.pArray[j]).Level
+		if increasing != 0 {
+			return a < b
+		}
+		return a > b
+	})
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Sorting the entries by their integer value.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_NodeVecSortByLevel(p *Fraig_NodeVec_t, fIncreasing int32) {
-    if fIncreasing != 0 {
-        qsort( (void *)p.pArray, (size_t)p.nSize, sizeof(Fraig_Node_t *), 
-                        (int (*)(void *, void *)) Fraig_NodeVecCompareLevelsIncreasing );
-    } else { 
-        qsort( (void *)p.pArray, (size_t)p.nSize, sizeof(Fraig_Node_t *), 
-                        (int (*)(void *, void *)) Fraig_NodeVecCompareLevelsDecreasing ); }
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Sorting the entries by their integer value.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Fraig_NodeVecSortByNumber(p *Fraig_NodeVec_t) {
-    qsort( (void *)p.pArray, (size_t)p.nSize, sizeof(Fraig_Node_t *), 
-                (int (*)(void *, void *)) Fraig_NodeVecCompareNumbers );
+	sort.Slice(p.pArray, func(i, j int) bool { return Fraig_Regular(p.pArray[i]).Num < Fraig_Regular(p.pArray[j]).Num })
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Sorting the entries by their integer value.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Fraig_NodeVecSortByRefCount(p *Fraig_NodeVec_t) {
-    qsort( (void *)p.pArray, (size_t)p.nSize, sizeof(Fraig_Node_t *), 
-                (int (*)(void *, void *)) Fraig_NodeVecCompareRefCounts );
+	sort.Slice(p.pArray, func(i, j int) bool {
+		a, b := Fraig_Regular(p.pArray[i]), Fraig_Regular(p.pArray[j])
+		if a.nRefs != b.nRefs {
+			return a.nRefs < b.nRefs
+		}
+		return a.Level < b.Level
+	})
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-//ABC_NAMESPACE_IMPL_END
-
