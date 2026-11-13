@@ -185,25 +185,6 @@ var spStatic_Saig_ManBmcHashKey_s_Primes [5]int32 = [5]int32{ 12582917, 25165843
   SeeAlso     []
 
 ***********************************************************************/
-func Ga2_ManAddAbsClauses(p *Ga2_Man_t, f int32) {
-    var fSimple int32;
-    var pObj *Gia_Obj_t;
-    var i int32;
-    Gia_ManForEachObjVec( p.vValues, p.pGia, pObj, i )
-    {
-        if i == p.LimAbs {
-            break; }
-        if fSimple != 0 {
-            Ga2_ManAddToAbsOneStatic( p, pObj, f, 0 );
-        } else {
-            Ga2_ManAddToAbsOneDynamic( p, pObj, f ); }
-    }
-    Gia_ManForEachObjVec( p.vAbs, p.pGia, pObj, i )
-        if ( i >= p.LimAbs )
-            Ga2_ManAddToAbsOneStatic( p, pObj, f, 1 );
-//    sat_solver2_simplify( p->pSat );
-}
-
 func Ga2_ManAddToAbs(p *Ga2_Man_t, vToAdd *Vec_Int_t) {
     var vLeaves *Vec_Int_t;
     var pObj, pFanin *Gia_Obj_t;

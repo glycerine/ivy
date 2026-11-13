@@ -158,3 +158,15 @@ func Ga2_ManAddToAbsOneDynamic(p *Ga2_Man_t, obj *gia.Gia_Obj_t, frame int32) {
 		Ga2_ManCnfAddDynamic(p, int32(truth&0xffff), vec.Vec_IntArray(p.vLits), lit, -1)
 	}
 }
+
+// Ga2_ManAddAbsClauses encodes the original abstraction followed by additions.
+func Ga2_ManAddAbsClauses(p *Ga2_Man_t, frame int32) {
+	for i := 0; i < vec.Vec_IntSize(p.vValues) && i < int(p.LimAbs); i++ {
+		obj := gia.Gia_ManObj(p.pGia, vec.Vec_IntEntry(p.vValues, i))
+		Ga2_ManAddToAbsOneDynamic(p, obj, frame)
+	}
+	for i := int(p.LimAbs); i < vec.Vec_IntSize(p.vAbs); i++ {
+		obj := gia.Gia_ManObj(p.pGia, vec.Vec_IntEntry(p.vAbs, i))
+		Ga2_ManAddToAbsOneStatic(p, obj, frame, 1)
+	}
+}
