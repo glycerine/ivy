@@ -47,3 +47,30 @@ interpolants, resource limits, and small sequential systems. The solver tests
 compare randomized formulas with exhaustive assignments and replay UNSAT proofs;
 an optional test compares results with the official MiniSat-p executable.
 Broader original-C comparisons and larger proof workloads remain useful.
+
+## Active source and option inventory
+
+The active functions in `intCore.c`, `intMan.c`, `intDup.c`, `intFrames.c`,
+`intContain.c`, `intCheck.c`, `intCtrex.c`, `intUtil.c`, and `intInter.c` have
+Go counterparts. `intM114.c` uses BSAT, and the optional `intM114p.c` path
+uses the MiniSat-p port. The original multi-frame uniqueness routine asserts
+before its unfinished implementation; the Go counterpart preserves that limit.
+
+Default parameters, forward interpolation, backward interpolation with a
+transition loop, two-frame properties, transition loops, rewriting, global
+variable bias, inductive and combinational containment, invariant dumping,
+frame limits, and constraints have focused or reachability-oracle tests.
+MiniSat's McMillan and Pudlak modes are checked on partitioned formulas and
+sequential systems; its backward combination returns unknown because the C
+implementation explicitly disallows it. `fUseOther` is passed by C to the
+optional MiniSat step but is not used there. Multi-output/separate-output
+dispatch is outside this single-property entry point, as in the C routine.
+
+The deadline is propagated into SAT solving, rewriting, proof reconstruction,
+and witness solving. Some individual graph traversals and CNF generation are
+not interruptible; the initial-state check also has no SAT deadline in the C
+routine or this port. Solver interruption and a failed witness reconstruction
+are reported as unknown. Tests cover expired deadlines, an exhausted MiniSat
+conflict budget, and explicit backend-unknown and cleanup behavior. Exhaustive
+tests are limited to small formulas and state spaces; they do not establish
+performance or completion on large instances.

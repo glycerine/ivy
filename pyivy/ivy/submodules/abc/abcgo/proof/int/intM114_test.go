@@ -1,12 +1,41 @@
 package int
 
 import (
+	"errors"
 	"testing"
 
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/sat/cnf"
 )
+
+type stoppedBackend struct {
+	fixtureM114p
+	closed bool
+}
+
+func (s *stoppedBackend) Close() { s.closed = true }
+
+func TestMiniSatInterpolationStepPropagatesUnknownAndCloses(t *testing.T) {
+	inter := aig.NewGraph()
+	x := inter.NewInput()
+	inter.AddOutput(x.Not())
+	trans := aig.NewGraph()
+	state := trans.NewInput()
+	trans.AddOutput(state)
+	aig.Aig_ManSetRegNum(trans, 1)
+	frames := aig.NewGraph()
+	next := frames.NewInput()
+	frames.AddOutput(next)
+	p := &Inter_Man_t{pInter: inter, pCnfInter: cnf.Cnf_Derive(inter, 0), pAigTrans: trans, pCnfAig: cnf.Cnf_Derive(trans, 1), pFrames: frames, pCnfFrames: cnf.Cnf_Derive(frames, 0)}
+	if got, err := Inter_ManPerformOneStepM114p(p, nil, false); got != -1 || !errors.Is(err, ErrMiniSat114pUnavailable) {
+		t.Fatalf("nil backend got %d err %v", got, err)
+	}
+	s := &stoppedBackend{}
+	if got, err := Inter_ManPerformOneStepM114p(p, s, false); got != -1 || err != nil || !s.closed || p.pInterNew != nil {
+		t.Fatalf("stopped backend got %d err %v closed=%v", got, err, s.closed)
+	}
+}
 
 func TestInterpolantStepIdentityTransition(t *testing.T) {
 	inter := aig.NewGraph()
@@ -48,5 +77,43 @@ func TestInterpolantStepIdentityTransition(t *testing.T) {
 	p.pFrames, p.pCnfFrames, p.pInterNew = satFrames, cnf.Cnf_Derive(satFrames, 0), nil
 	if result := Inter_ManPerformOneStep(p, 1, 0, 0); result != 0 || p.pInterNew != nil {
 		t.Fatalf("expected satisfiable interpolation query, got %d graph=%v", result, p.pInterNew)
+	}
+}
+
+func TestMiniSatInterpolationStepIdentityTransition(t *testing.T) {
+	for _, pudlak := range []bool{false, true} {
+		inter := aig.NewGraph()
+		x := inter.NewInput()
+		inter.AddOutput(x.Not())
+		trans := aig.NewGraph()
+		state := trans.NewInput()
+		trans.AddOutput(state)
+		aig.Aig_ManSetRegNum(trans, 1)
+		frames := aig.NewGraph()
+		next := frames.NewInput()
+		frames.AddOutput(next)
+		p := &Inter_Man_t{pInter: inter, pCnfInter: cnf.Cnf_Derive(inter, 0), pAigTrans: trans, pCnfAig: cnf.Cnf_Derive(trans, 1), pFrames: frames, pCnfFrames: cnf.Cnf_Derive(frames, 0)}
+		beforeInter := append([]int32(nil), p.pCnfInter.VarNums...)
+		beforeTrans := append([]int32(nil), p.pCnfAig.VarNums...)
+		got, err := Inter_ManPerformOneStepM114p(p, &miniSat114pBackend{}, pudlak)
+		if err != nil || got != 1 || p.pInterNew == nil {
+			t.Fatalf("pudlak=%v got=%d err=%v graph=%v", pudlak, got, err, p.pInterNew)
+		}
+		for i, want := range beforeInter {
+			if p.pCnfInter.VarNums[i] != want {
+				t.Fatalf("pudlak=%v inter CNF not restored", pudlak)
+			}
+		}
+		for i, want := range beforeTrans {
+			if p.pCnfAig.VarNums[i] != want {
+				t.Fatalf("pudlak=%v transition CNF not restored", pudlak)
+			}
+		}
+		for x := 0; x < 2; x++ {
+			out, e := p.pInterNew.Evaluate([]bool{x != 0})
+			if e != nil || out[0] != (x == 0) {
+				t.Fatalf("pudlak=%v x=%d out=%v err=%v", pudlak, x, out, e)
+			}
+		}
 	}
 }
