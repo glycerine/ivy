@@ -107,20 +107,23 @@ func Fraig_FeedBackCompress(p *Fraig_Man_t) int32 {
 	pats := msat.Msat_IntVecReadArray(p.vPatsReal)
 	count := int32(len(pats))
 	p.iWordStart = (p.iPatsPerm + count + 31) / 32
+	values := make([]bool, len(pats))
 	for _, node := range p.vInputs.pArray {
 		sims := node.puSimD
-		clear(p.pSimsTemp[p.iWordPerm:p.iWordStart])
-		for t, pat := range pats {
-			if fraigBit(sims, int32(pat)) {
-				target := p.iPatsPerm + int32(t)
-				if target < p.iWordPerm*32 {
-					fraigSetBit(sims, target)
-				} else {
-					fraigSetBit(p.pSimsTemp, target)
-				}
+		// Read every source before writing: retained patterns may overlap
+		// their destinations in the previous partial word.
+		for i, pat := range pats {
+			values[i] = fraigBit(sims, int32(pat))
+		}
+		for i, value := range values {
+			target := p.iPatsPerm + int32(i)
+			mask := uint32(1) << uint(target%32)
+			if value {
+				sims[target/32] |= mask
+			} else {
+				sims[target/32] &^= mask
 			}
 		}
-		copy(sims[p.iWordPerm:p.iWordStart], p.pSimsTemp[p.iWordPerm:p.iWordStart])
 		node.uHashD = 0
 		for w := int32(0); w < p.iWordStart; w++ {
 			node.uHashD ^= sims[w] * fraigSimulationPrime(w)
