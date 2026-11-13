@@ -37,6 +37,9 @@ func Gia_ManDupWithArtificalFaddBoxes(graph *gia.Gia_Man_t, useFanout, xorTrick 
 		if m0 != 0 && m1 != 0 {
 			panic("overlapping carry annotations")
 		}
+		if (m0 != 0 || m1 != 0) && (gia.Gia_ObjIsXor(obj) != 0 || gia.Gia_ObjIsMux(graph, obj) != 0 || gia.Gia_ObjIsBuf(obj) != 0) {
+			panic("carry annotation requires an AND gate")
+		}
 		if m0 != 0 || m1 != 0 {
 			fan := gia.Gia_ObjFanin0(obj)
 			if m1 != 0 {
@@ -79,7 +82,18 @@ func Gia_ManDupWithArtificalFaddBoxes(graph *gia.Gia_Man_t, useFanout, xorTrick 
 		case gia.Gia_ObjIsCo(obj) != 0:
 			gia.Gia_ObjSetValue(obj, gia.Gia_ManAppendCo(dst, gia.Gia_ObjFanin0Copy(obj)))
 		case gia.Gia_ObjMark0(obj) == 0 && gia.Gia_ObjMark1(obj) == 0:
-			gia.Gia_ObjSetValue(obj, gia.Gia_ManAppendAnd(dst, gia.Gia_ObjFanin0Copy(obj), gia.Gia_ObjFanin1Copy(obj)))
+			a, b := gia.Gia_ObjFanin0Copy(obj), gia.Gia_ObjFanin1Copy(obj)
+			var value int32
+			if gia.Gia_ObjIsBuf(obj) != 0 {
+				value = a
+			} else if gia.Gia_ObjIsXor(obj) != 0 {
+				value = gia.Gia_ManAppendXor(dst, a, b)
+			} else if gia.Gia_ObjIsMux(graph, obj) != 0 {
+				value = gia.Gia_ManAppendMux(dst, gia.Gia_ObjFanin2Copy(graph, obj), b, a)
+			} else {
+				value = gia.Gia_ManAppendAnd(dst, a, b)
+			}
+			gia.Gia_ObjSetValue(obj, value)
 		default:
 			var carry, other int32
 			if gia.Gia_ObjMark0(obj) != 0 {
@@ -204,6 +218,13 @@ func Gia_ManFindAnnotatedDelay(graph *gia.Gia_Man_t, carryDelay int32, nBoxes *i
 			count++
 		} else {
 			delay = max(a+100, b+100)
+			if gia.Gia_ObjIsBuf(obj) != 0 {
+				delay = a
+			}
+			if gia.Gia_ObjIsMux(graph, obj) != 0 {
+				control := gia.Gia_ObjFaninLit2(graph, id) >> 1
+				delay = max(delay, gia.Gia_ObjLevelId(graph, control)+100)
+			}
 		}
 		gia.Gia_ObjSetLevelId(graph, id, delay)
 	}
@@ -219,7 +240,7 @@ func Gia_ManFindChainStart(graph *gia.Gia_Man_t) int32 {
 	best, delay := int32(-1), int32(0)
 	for id := int32(1); id < gia.Gia_ManObjNum(graph); id++ {
 		obj := gia.Gia_ManObj(graph, id)
-		if gia.Gia_ObjIsAnd(obj) == 0 || giaArtificialUsed(obj) || delay > gia.Gia_ObjLevelId(graph, id) {
+		if gia.Gia_ObjIsAnd(obj) == 0 || gia.Gia_ObjIsXor(obj) != 0 || gia.Gia_ObjIsMux(graph, obj) != 0 || gia.Gia_ObjIsBuf(obj) != 0 || giaArtificialUsed(obj) || delay > gia.Gia_ObjLevelId(graph, id) {
 			continue
 		}
 		best = id
@@ -234,7 +255,7 @@ func Gia_ManFindPath(graph *gia.Gia_Man_t, carryDelay, minPath, maxPath int32, p
 	}
 	start := id
 	vec.Vec_IntClear(path)
-	for gia.Gia_ObjIsAnd(gia.Gia_ManObj(graph, id)) != 0 {
+	for gia.Gia_ObjIsAnd(gia.Gia_ManObj(graph, id)) != 0 && gia.Gia_ObjIsXor(gia.Gia_ManObj(graph, id)) == 0 && gia.Gia_ObjIsMux(graph, gia.Gia_ManObj(graph, id)) == 0 && gia.Gia_ObjIsBuf(gia.Gia_ManObj(graph, id)) == 0 {
 		obj := gia.Gia_ManObj(graph, id)
 		if giaArtificialUsed(obj) {
 			panic("carry path touches used node")

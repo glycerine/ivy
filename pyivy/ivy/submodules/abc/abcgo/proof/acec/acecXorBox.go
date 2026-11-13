@@ -138,7 +138,7 @@ func Acec_FindBox(p *Gia_Man_t, adds *Vec_Int_t, boxes, leaves *Vec_Wec_t, xorRo
 }
 func Acec_ProduceBox(p *Gia_Man_t, verbose int32) *Acec_Box_t {
 	start := time.Now()
-	if gia.Gia_ManCoNum(p) < 2 {
+	if gia.Gia_ManCoNum(p) < 2 || !acecCanDetectArithmetic(p) {
 		return nil
 	}
 	var xors *Vec_Int_t

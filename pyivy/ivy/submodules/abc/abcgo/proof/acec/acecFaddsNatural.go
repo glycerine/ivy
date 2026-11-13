@@ -127,7 +127,10 @@ func Gia_ManDupWithFaddBoxes_rec(dst, p *Gia_Man_t, o *Gia_Obj_t, adds, m *Vec_I
 	}
 	Gia_ManDupWithFaddBoxes_rec(dst, p, gia.Gia_ObjFanin0(o), adds, m, chains, mapChain, truths)
 	Gia_ManDupWithFaddBoxes_rec(dst, p, gia.Gia_ObjFanin1(o), adds, m, chains, mapChain, truths)
-	o.Value = uint32(gia.Gia_ManAppendAnd(dst, gia.Gia_ObjFanin0Copy(o), gia.Gia_ObjFanin1Copy(o)))
+	if gia.Gia_ObjIsMux(p, o) != 0 {
+		Gia_ManDupWithFaddBoxes_rec(dst, p, gia.Gia_ObjFanin2(p, o), adds, m, chains, mapChain, truths)
+	}
+	o.Value = uint32(acecCopyLogic(dst, p, o))
 }
 func Gia_ManDupWithNaturalBoxes(p *Gia_Man_t, min, verbose int32) *Gia_Man_t {
 	start := time.Now()

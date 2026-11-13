@@ -24,11 +24,19 @@ func Acec_ManDerive_rec(dst, p *Gia_Man_t, node int32, mirrors *Vec_Int_t) {
 			panic("acec: expected AND in mirrored cone")
 		}
 		Acec_ManDerive_rec(dst, p, gia.Gia_ObjFaninId0(obj, objID), mirrors)
-		Acec_ManDerive_rec(dst, p, gia.Gia_ObjFaninId1(obj, objID), mirrors)
-		if gia.Gia_ObjIsXor(obj) != 0 {
-			obj.Value = uint32(gia.Gia_ManAppendXorReal(dst, gia.Gia_ObjFanin0Copy(obj), gia.Gia_ObjFanin1Copy(obj)))
+		if gia.Gia_ObjIsBuf(obj) != 0 {
+			obj.Value = uint32(gia.Gia_ObjFanin0Copy(obj))
 		} else {
-			obj.Value = uint32(gia.Gia_ManAppendAnd(dst, gia.Gia_ObjFanin0Copy(obj), gia.Gia_ObjFanin1Copy(obj)))
+			Acec_ManDerive_rec(dst, p, gia.Gia_ObjFaninId1(obj, objID), mirrors)
+			a, b := gia.Gia_ObjFanin0Copy(obj), gia.Gia_ObjFanin1Copy(obj)
+			if gia.Gia_ObjIsXor(obj) != 0 {
+				obj.Value = uint32(gia.Gia_ManHashXor(dst, a, b))
+			} else if gia.Gia_ObjIsMux(p, obj) != 0 {
+				Acec_ManDerive_rec(dst, p, gia.Gia_ObjFaninId2(p, objID), mirrors)
+				obj.Value = uint32(gia.Gia_ManHashMux(dst, gia.Gia_ObjFanin2Copy(p, obj), b, a))
+			} else {
+				obj.Value = uint32(gia.Gia_ManHashAnd(dst, a, b))
+			}
 		}
 	}
 	if objID != node {
@@ -36,9 +44,6 @@ func Acec_ManDerive_rec(dst, p *Gia_Man_t, node int32, mirrors *Vec_Int_t) {
 	}
 }
 func Acec_ManDerive(p *Gia_Man_t, mirrors *Vec_Int_t) *Gia_Man_t {
-	if gia.Gia_ManHasMuxData(p) {
-		panic("acec: mirror derivation requires no mux data")
-	}
 	gia.Gia_ManFillValue(p)
 	dst := gia.Gia_ManStart(gia.Gia_ManObjNum(p))
 	dst.CopyIdentityFrom(p)

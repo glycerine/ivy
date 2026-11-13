@@ -60,7 +60,10 @@ func Acec_InsertBox_rec(dst, src *gia.Gia_Man_t, obj *gia.Gia_Obj_t) int32 {
 	}
 	Acec_InsertBox_rec(dst, src, gia.Gia_ObjFanin0(obj))
 	Acec_InsertBox_rec(dst, src, gia.Gia_ObjFanin1(obj))
-	lit := gia.Gia_ManAppendAnd2(dst, gia.Gia_ObjFanin0Copy(obj), gia.Gia_ObjFanin1Copy(obj))
+	if gia.Gia_ObjIsMux(src, obj) != 0 {
+		Acec_InsertBox_rec(dst, src, gia.Gia_ObjFanin2(src, obj))
+	}
+	lit := acecCopyLogic(dst, src, obj)
 	obj.Value = uint32(lit)
 	return lit
 }

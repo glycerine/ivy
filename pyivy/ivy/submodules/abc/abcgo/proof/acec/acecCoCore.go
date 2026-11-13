@@ -71,7 +71,10 @@ func Gia_PolynCoreDupTreePlus_rec(dst, p *Gia_Man_t, o *Gia_Obj_t) int32 {
 	}
 	Gia_PolynCoreDupTreePlus_rec(dst, p, gia.Gia_ObjFanin0(o))
 	Gia_PolynCoreDupTreePlus_rec(dst, p, gia.Gia_ObjFanin1(o))
-	o.Value = uint32(gia.Gia_ManAppendAnd(dst, gia.Gia_ObjFanin0Copy(o), gia.Gia_ObjFanin1Copy(o)))
+	if gia.Gia_ObjIsMux(p, o) != 0 {
+		Gia_PolynCoreDupTreePlus_rec(dst, p, gia.Gia_ObjFanin2(p, o))
+	}
+	o.Value = uint32(acecCopyLogic(dst, p, o))
 	return int32(o.Value)
 }
 func Gia_PolynCoreDupTree(p *Gia_Man_t, extra, leaves, nodes *Vec_Int_t, cones int32) *Gia_Man_t {
@@ -97,7 +100,7 @@ func Gia_PolynCoreDupTree(p *Gia_Man_t, extra, leaves, nodes *Vec_Int_t, cones i
 	}
 	for _, id := range vec.Vec_IntArray(nodes) {
 		o := gia.Gia_ManObj(p, id)
-		o.Value = uint32(gia.Gia_ManAppendAnd(dst, gia.Gia_ObjFanin0Copy(o), gia.Gia_ObjFanin1Copy(o)))
+		o.Value = uint32(acecCopyLogic(dst, p, o))
 	}
 	for i := int32(0); i < gia.Gia_ManCoNum(p); i++ {
 		gia.Gia_ManAppendCo(dst, gia.Gia_ObjFanin0Copy(gia.Gia_ManCo(p, i)))

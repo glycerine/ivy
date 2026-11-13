@@ -65,7 +65,7 @@ func Acec_RewriteReplace(p *Gia_Man_t, result *Vec_Int_t) *Gia_Man_t {
 	for id := int32(1); id < gia.Gia_ManObjNum(p); id++ {
 		o := gia.Gia_ManObj(p, id)
 		if gia.Gia_ObjIsAnd(o) != 0 {
-			o.Value = uint32(gia.Gia_ManAppendAnd(dst, gia.Gia_ObjFanin0Copy(o), gia.Gia_ObjFanin1Copy(o)))
+			o.Value = uint32(acecCopyLogic(dst, p, o))
 		}
 	}
 	for i := int32(0); i < gia.Gia_ManCoNum(p); i++ {

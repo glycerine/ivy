@@ -28,7 +28,16 @@ func Acec_CommonStart(base, add *Gia_Man_t) *Gia_Man_t {
 	for id := int32(1); id < gia.Gia_ManObjNum(add); id++ {
 		o := gia.Gia_ManObj(add, id)
 		if gia.Gia_ObjIsAnd(o) != 0 {
-			o.Value = uint32(gia.Gia_ManHashAnd(base, gia.Gia_ObjFanin0Copy(o), gia.Gia_ObjFanin1Copy(o)))
+			a := gia.Gia_ObjFanin0Copy(o)
+			if gia.Gia_ObjIsBuf(o) != 0 {
+				o.Value = uint32(a)
+			} else if gia.Gia_ObjIsMux(add, o) != 0 {
+				o.Value = uint32(gia.Gia_ManHashMux(base, gia.Gia_ObjFanin2Copy(add, o), gia.Gia_ObjFanin1Copy(o), a))
+			} else if gia.Gia_ObjIsXor(o) != 0 {
+				o.Value = uint32(gia.Gia_ManHashXor(base, a, gia.Gia_ObjFanin1Copy(o)))
+			} else {
+				o.Value = uint32(gia.Gia_ManHashAnd(base, a, gia.Gia_ObjFanin1Copy(o)))
+			}
 		}
 	}
 	return base

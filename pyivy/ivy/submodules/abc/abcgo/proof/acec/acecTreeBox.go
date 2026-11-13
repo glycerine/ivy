@@ -120,6 +120,9 @@ func Acec_CreateBoxTest(p *Gia_Man_t) {
 	}
 }
 func Acec_DeriveBox(p *Gia_Man_t, ignore *Vec_Bit_t, filterIn, filterOut, verbose int32) *Acec_Box_t {
+	if !acecCanDetectArithmetic(p) {
+		return nil
+	}
 	adds := Ree_ManComputeCuts(p, nil, verbose)
 	trees := Acec_TreeFindTrees(p, adds, ignore, filterIn, filterOut)
 	var box *Acec_Box_t
