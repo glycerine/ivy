@@ -10,6 +10,11 @@ func TestFrameMappingPreservesComplementAndMissing(t *testing.T) {
 	original := aig.NewGraph()
 	a, b := original.NewInput(), original.NewInput()
 	node := original.AND(a.Not(), b)
+	buffer := aig.Aig_ObjCreate(original, &aig.Node{
+		Kind:   aig.Buffer,
+		Fanins: [2]aig.Edge{a.Not(), aig.InvalidEdge},
+		Phase:  true,
+	})
 	target := aig.NewGraph()
 	mappedA := target.NewInput()
 	mappedB := target.NewInput()
@@ -27,5 +32,8 @@ func TestFrameMappingPreservesComplementAndMissing(t *testing.T) {
 	}
 	if got := Fra_ObjChild0Fra(m, node, 0); got != aig.InvalidEdge {
 		t.Fatalf("unmapped complemented fanin = %v", got)
+	}
+	if got := Fra_ObjChild1Fra(m, buffer, 0); got != aig.InvalidEdge {
+		t.Fatalf("missing child mapping = %v, want InvalidEdge", got)
 	}
 }

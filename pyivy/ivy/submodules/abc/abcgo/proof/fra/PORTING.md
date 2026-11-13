@@ -15,6 +15,28 @@ finish even after the nominal deadline, as in C.
 
 ## Correctness and validation
 
+### Source comparison and coverage review
+
+- Rechecked implication candidate ordering, cost-threshold selection, the
+  zero-use-limit tie behavior, SAT clause polarity, missing frame mappings, and
+  solver simplification against `src/proof/fra/fraImp.c`. The zero-limit path
+  intentionally returns the maximum-cost tie group, matching the C loop's
+  append-before-limit-check order.
+- Rechecked initialized BMC frame construction and implication filtering
+  against `src/proof/fra/fraBmc.c`. The Go path retains zero-initialized
+  latches, frame-by-frame transfer, C's native EXOR-as-AND behavior, and the
+  source's direct-input fast-path limitation.
+- Added a regression to `fra_test.go` for mapped-child complement propagation
+  and the missing second fanin of a buffer, corresponding to the child helpers
+  in `fra.h`.
+- The FRA package gates pass with `GOCACHE=/tmp/abcgo-gocache`: build, tests,
+  vet, and race tests. The test suite reports 75.2% statement coverage.
+  Coverage includes compiled-C source fixtures; optional full-source ABC
+  differential modes remain opt-in because of their build cost.
+- This pass found no verified implementation discrepancy in these reviewed
+  paths. The review and package coverage do not establish equivalence across
+  every FRA algorithm, graph shape, or parameter combination.
+
 - Bounded model checking is compared with exhaustive input traces on generated
   sequential graphs, with and without rewriting. Latch correspondence is
   likewise checked across generated graphs and multiple prefix settings.
