@@ -32,3 +32,17 @@ func TestSimulationOutputPattern(t *testing.T) {
 		t.Fatalf("model %v", model)
 	}
 }
+
+func TestSimulationOutputPatternSkipsPrefix(t *testing.T) {
+	g := aig.NewGraph()
+	a, b := g.NewInput(), g.NewInput()
+	g.AddOutput(a)
+	p := Ssw_SmlStart(g, 1, 1, 1)
+	Ssw_SmlSimInfo(p, a)[0] = 1
+	Ssw_SmlSimInfo(p, a)[1] = 2
+	Ssw_SmlSimInfo(p, b)[1] = 2
+	model := Ssw_SmlCheckOutput(p)
+	if len(model) != 3 || model[0] != 1 || model[1] != 1 {
+		t.Fatalf("expected suffix pattern, got %v", model)
+	}
+}
