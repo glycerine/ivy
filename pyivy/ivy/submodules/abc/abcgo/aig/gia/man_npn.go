@@ -3,7 +3,7 @@ package gia
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/bool/kit"
-	"github.com/glycerine/abcgo/opt/dar"
+	dar "github.com/glycerine/abcgo/opt/dar/core"
 )
 
 func Gia_ManPrintNpnClasses(p *Gia_Man_t) {

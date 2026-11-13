@@ -6,22 +6,16 @@ func Gia_ManChoiceMiter_rec(dst, src *Gia_Man_t, obj *Gia_Obj_t) int32 {
 	if obj.Value != ^uint32(0) {
 		return int32(obj.Value)
 	}
-	a, b, c, kind := src.Gate(Gia_ObjId(src, obj))
+	id := Gia_ObjId(src, obj)
+	_, _, _, kind := src.Gate(id)
 	copyLit := func(lit int32) int32 { return Gia_ManChoiceMiter_rec(dst, src, Gia_ManObj(src, lit>>1)) ^ (lit & 1) }
 	var result int32
 	switch kind {
-	case 2:
+	case 2, 3, 4, 5:
+		a, b := Gia_ObjFaninLit0(obj, id), Gia_ObjFaninLit1(obj, id)
 		result = dst.AndLiteral(copyLit(a), copyLit(b), true)
-	case 3:
-		x, y := copyLit(a), copyLit(b)
-		result = dst.AndLiteral(dst.AndLiteral(x, y^1, true)^1, dst.AndLiteral(x^1, y, true)^1, true) ^ 1
-	case 4:
-		control, then, otherwise := copyLit(a), copyLit(b), copyLit(c)
-		result = dst.AndLiteral(dst.AndLiteral(control, then, true)^1, dst.AndLiteral(control^1, otherwise, true)^1, true) ^ 1
-	case 5:
-		result = copyLit(a)
 	case 6:
-		result = Gia_ManAppendCo(dst, copyLit(a))
+		result = Gia_ManAppendCo(dst, copyLit(Gia_ObjFaninLit0(obj, id)))
 	default:
 		panic("gia: uninitialized choice-miter input or invalid node")
 	}

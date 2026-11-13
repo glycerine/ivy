@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/glycerine/abcgo/aig/aig"
-	"github.com/glycerine/abcgo/opt/dar"
+	dar "github.com/glycerine/abcgo/opt/dar/core"
 )
 
 type Hcd_Pars_t struct {
