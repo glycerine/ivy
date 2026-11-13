@@ -63,3 +63,25 @@ func TestAbsProverCancelInvalidatesRun(t *testing.T) {
 	}
 	close(release)
 }
+
+func TestAbsProverCancelDiscardsPublishedProof(t *testing.T) {
+	var c absProverControl
+	c.start(func(int32) int32 { return 1 })
+	deadline := time.Now().Add(time.Second)
+	for {
+		c.mu.Lock()
+		proved := c.proved
+		c.mu.Unlock()
+		if proved {
+			break
+		}
+		if time.Now().After(deadline) {
+			t.Fatal("proof was not published")
+		}
+		runtime.Gosched()
+	}
+	c.cancel()
+	if c.check() != 0 {
+		t.Fatal("cancel left stale proof available")
+	}
+}

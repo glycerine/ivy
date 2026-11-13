@@ -30,6 +30,7 @@ func (c *absProverControl) start(solve func(int32) int32) int32 {
 func (c *absProverControl) cancel() {
 	c.mu.Lock()
 	c.runID++
+	c.proved = false
 	c.mu.Unlock()
 }
 
