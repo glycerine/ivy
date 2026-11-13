@@ -46,35 +46,7 @@ import "time"
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_ManCreate(pAig *Aig_Man_t, pPars *Ssw_Pars_t) *Ssw_Man_t {
-    var p *Ssw_Man_t;
-    // prepare the sequential AIG
-    assert(Saig_ManRegNum(pAig) > 0, "Saig_ManRegNum(pAig) > 0");
-    Aig_ManFanoutStart( pAig );
-    Aig_ManSetCioIds( pAig );
-    // create interpolation manager
-    // inlining of macro ABC_ALLOC
-    p = ((Ssw_Man_t *) malloc(sizeof(Ssw_Man_t) * (size_t)(1)));
-    memset( p, 0, sizeof(Ssw_Man_t) );
-    p.pPars         = pPars;
-    p.pAig          = pAig;
-    p.nFrames       = pPars.nFramesK + 1;
-    // inlining of macro ABC_CALLOC
-    p.pNodeToFrames = ((Aig_Obj_t * *) calloc((size_t)(Aig_ManObjNumMax(p.pAig) * p.nFrames), sizeof(Aig_Obj_t *)));
-    p.vCommon       = Vec_PtrAlloc( 100 );
-    p.iOutputLit    = -1;
-    // allocate storage for sim pattern
-    p.nPatWords     = Abc_BitWordNum( Saig_ManPiNum(pAig) * p.nFrames + Saig_ManRegNum(pAig) );
-    // inlining of macro ABC_CALLOC
-    p.pPatWords     = ((unsigned *) calloc((size_t)(p.nPatWords), sizeof(unsigned)));
-    // other
-    p.vNewLos       = Vec_PtrAlloc( 100 );
-    p.vNewPos       = Vec_IntAlloc( 100 );
-    p.vResimConsts  = Vec_PtrAlloc( 100 );
-    p.vResimClasses = Vec_PtrAlloc( 100 );
-//    p->pPars->fVerbose = 1;
-    return p;
-}
+
 
 /**Function*************************************************************
 
@@ -87,16 +59,7 @@ func Ssw_ManCreate(pAig *Aig_Man_t, pPars *Ssw_Pars_t) *Ssw_Man_t {
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_ManCountEquivs(p *Ssw_Man_t) int32 {
-    var pObj *Aig_Obj_t;
-    var i, nEquivs int32;
-    // inlining of macro Aig_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.pAig.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {
-        nEquivs += ( Aig_ObjRepr(p.pAig, pObj) != nil ); }
-    }
-    return nEquivs;
-}
+
 
 /**Function*************************************************************
 
