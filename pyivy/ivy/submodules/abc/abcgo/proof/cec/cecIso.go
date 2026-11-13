@@ -1,380 +1,189 @@
 package cec
 
-/**CFile****************************************************************
+// Structural-isomorphism simulation and matching, ported from cecIso.c by
+// Alan Mishchenko (UC Berkeley, 2005).
+import (
+	"fmt"
 
-  FileName    [cecIso.c]
+	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/misc/util"
+	"github.com/glycerine/abcgo/misc/vec"
+)
 
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Combinational equivalence checking.]
-
-  Synopsis    [Detection of structural isomorphism.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: cecIso.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "cecInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-func Cec_ManIsoInfo(pStore *uint32, nWords int32, Id int32) *uint32 { return pStore + nWords * Id; }
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Computes simulation info for one node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManIsoSimulate(pObj *Gia_Obj_t, Id int32, pStore *uint32, nWords int32) {
-    var pInfo *uint32   = Cec_ManIsoInfo( pStore, nWords, Id );
-    var pInfo0 *uint32  = Cec_ManIsoInfo( pStore, nWords, Gia_ObjFaninId0(pObj, Id) );
-    var pInfo1 *uint32  = Cec_ManIsoInfo( pStore, nWords, Gia_ObjFaninId1(pObj, Id) );
-    var w int32;
-    if Gia_ObjFaninC0(pObj) {
-        if Gia_ObjFaninC1(pObj) {
-            for  w = 0; w < nWords; w++  {
-                pInfo[w] = ~(pInfo0[w] | pInfo1[w]);
-            }
-        } else { 
-            for  w = 0; w < nWords; w++  {
-                pInfo[w] = ~pInfo0[w] & pInfo1[w];
-            } }
-    
-    } else {
-        if Gia_ObjFaninC1(pObj) {
-            for  w = 0; w < nWords; w++  {
-                pInfo[w] = pInfo0[w] & ~pInfo1[w];
-            }
-        } else { 
-            for  w = 0; w < nWords; w++  {
-                pInfo[w] = pInfo0[w] & pInfo1[w];
-            } }
-    }
+func Cec_ManIsoInfo(store []uint32, words, id int32) []uint32 {
+	return store[int(words*id):int(words*(id+1))]
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Copies simulation info.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManIsoCopy(IdDest int32, IdSour int32, pStore *uint32, nWords int32) {
-    var pInfo0 *uint32  = Cec_ManIsoInfo( pStore, nWords, IdDest );
-    var pInfo1 *uint32  = Cec_ManIsoInfo( pStore, nWords, IdSour );
-    var w int32;
-    for  w = 0; w < nWords; w++  {
-        pInfo0[w] = pInfo1[w];
-    }
+func Gia_ManIsoSimulate(obj *gia.Gia_Obj_t, id int32, store []uint32, words int32) {
+	out := Cec_ManIsoInfo(store, words, id)
+	a := Cec_ManIsoInfo(store, words, gia.Gia_ObjFaninId0(obj, id))
+	b := Cec_ManIsoInfo(store, words, gia.Gia_ObjFaninId1(obj, id))
+	for i := range out {
+		x, y := a[i], b[i]
+		if gia.Gia_ObjFaninC0(obj) != 0 {
+			x = ^x
+		}
+		if gia.Gia_ObjFaninC1(obj) != 0 {
+			y = ^y
+		}
+		out[i] = x & y
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Compares simulation info of two nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManIsoEqual(Id0 int32, Id1 int32, pStore *uint32, nWords int32) int32 {
-    var pInfo0 *uint32  = Cec_ManIsoInfo( pStore, nWords, Id0 );
-    var pInfo1 *uint32  = Cec_ManIsoInfo( pStore, nWords, Id1 );
-    var w int32;
-    for  w = 0; w < nWords; w++  {
-        if pInfo0[w] != pInfo1[w] {
-            return 0; }
-    }
-    return 1;
+func Gia_ManIsoCopy(dst, src int32, store []uint32, words int32) {
+	copy(Cec_ManIsoInfo(store, words, dst), Cec_ManIsoInfo(store, words, src))
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Generates random simulation info.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManIsoRandom(Id int32, pStore *uint32, nWords int32) {
-    var pInfo0 *uint32  = Cec_ManIsoInfo( pStore, nWords, Id );
-    var w int32;
-    for  w = 0; w < nWords; w++  {
-        pInfo0[w] = Gia_ManRandom( 0 );
-    }
+func Gia_ManIsoEqual(a, b int32, store []uint32, words int32) int32 {
+	x, y := Cec_ManIsoInfo(store, words, a), Cec_ManIsoInfo(store, words, b)
+	for i := range x {
+		if x[i] != y[i] {
+			return 0
+		}
+	}
+	return 1
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Computes hash key of the simuation info.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-var spStatic_Gia_ManIsoHashKey_s_Primes [16]int32 = [16]int32{ 
-        1291, 1699, 1999, 2357, 2953, 3313, 3907, 4177, 
-        4831, 5147, 5647, 6343, 6899, 7103, 7873, 8147 };
-func Gia_ManIsoHashKey(Id int32, pStore *uint32, nWords int32, nTableSize int32) int32 {
-    
-    var pInfo0 *uint32  = Cec_ManIsoInfo( pStore, nWords, Id );
-    var uHash uint32;
-    var i int32;
-    for  i = 0; i < nWords; i++  {
-        uHash ^= pInfo0[i] * spStatic_Gia_ManIsoHashKey_s_Primes[i & 0xf];
-    }
-    return int32((uHash % nTableSize));
-
+func Gia_ManIsoRandom(id int32, store []uint32, words int32) {
+	for i := range Cec_ManIsoInfo(store, words, id) {
+		Cec_ManIsoInfo(store, words, id)[i] = gia.Gia_ManRandom(0)
+	}
 }
 
-/**Function*************************************************************
+var isoHashPrimes = [...]uint32{1291, 1699, 1999, 2357, 2953, 3313, 3907, 4177, 4831, 5147, 5647, 6343, 6899, 7103, 7873, 8147}
 
-  Synopsis    [Adds node to the hash table.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManIsoTableAdd(p *Gia_Man_t, Id int32, pStore *uint32, nWords int32, pTable *int32, nTableSize int32) {
-    var pTemp *Gia_Obj_t;
-    var Key int32;
-    var Ent int32;
-    var Color int32 = Gia_ObjColors( p, Id );
-    assert(Color == 1 || Color == 2, "Color == 1 || Color == 2");
-    Key = Gia_ManIsoHashKey( Id, pStore, nWords, nTableSize );
-    for  Ent = pTable[Key],  pTemp = (Ent ?  Gia_ManObj(p, Ent) : nil);  (pTemp != nil);
-          Ent = pTemp.Value, pTemp = (Ent ?  Gia_ManObj(p, Ent) : nil)  {
-        if Gia_ObjColors( p, Ent ) != Color {
-            continue; }
-        if !(Gia_ManIsoEqual( Id, Ent, pStore, nWords ) != 0) {
-            continue; }
-        // found node with the same color and signature - mark it and do not add new node
-        pTemp.fMark0 = 1;
-        return;
-    }
-    // did not find the node with the same color and signature - add new node
-    pTemp = Gia_ManObj( p, Id );
-    assert(pTemp.Value == 0, "pTemp.Value == 0");
-    assert(pTemp.fMark0 == 0, "pTemp.fMark0 == 0");
-    pTemp.Value = pTable[Key];
-    pTable[Key] = Id;
+func Gia_ManIsoHashKey(id int32, store []uint32, words, tableSize int32) int32 {
+	var hash uint32
+	for i, word := range Cec_ManIsoInfo(store, words, id) {
+		hash ^= word * isoHashPrimes[i&15]
+	}
+	return int32(hash % uint32(tableSize))
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Extracts equivalence class candidates from one bin.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManIsoExtractClasses(p *Gia_Man_t, Bin int32, pStore *uint32, nWords int32, vNodesA *Vec_Int_t, vNodesB *Vec_Int_t) int32 {
-    var pTemp *Gia_Obj_t;
-    var Ent int32;
-    Vec_IntClear( vNodesA );
-    Vec_IntClear( vNodesB );
-    for  Ent = Bin,          pTemp = (Ent ?  Gia_ManObj(p, Ent) : nil);  (pTemp != nil);
-          Ent = pTemp.Value, pTemp = (Ent ?  Gia_ManObj(p, Ent) : nil)  {
-        if pTemp.fMark0 {
-            pTemp.fMark0 = 0;
-            continue;
-        }
-        if Gia_ObjColors( p, Ent ) == 1 {
-            Vec_IntPush( vNodesA, Ent );
-        } else {
-            Vec_IntPush( vNodesB, Ent ); }
-    }
-    return Vec_IntSize(vNodesA) > 0 && Vec_IntSize(vNodesB) > 0;    
+func Gia_ManIsoTableAdd(p *gia.Gia_Man_t, id int32, store []uint32, words int32, table []int32, tableSize int32) {
+	color := gia.Gia_ObjColors(p, id)
+	if color != 1 && color != 2 {
+		panic("cec: invalid isomorphism color")
+	}
+	key := Gia_ManIsoHashKey(id, store, words, tableSize)
+	for entry := table[key]; entry != 0; entry = gia.Gia_ObjValue(gia.Gia_ManObj(p, entry)) {
+		obj := gia.Gia_ManObj(p, entry)
+		if gia.Gia_ObjColors(p, entry) == color && Gia_ManIsoEqual(id, entry, store, words) != 0 {
+			gia.Gia_ObjSetMark0(obj, 1)
+			return
+		}
+	}
+	obj := gia.Gia_ManObj(p, id)
+	if gia.Gia_ObjValue(obj) != 0 || gia.Gia_ObjMark0(obj) != 0 {
+		panic("cec: dirty isomorphism table node")
+	}
+	gia.Gia_ObjSetValue(obj, table[key])
+	table[key] = id
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Matches nodes in the extacted classes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManIsoMatchNodes(pIso *int32, pStore *uint32, nWords int32, vNodesA *Vec_Int_t, vNodesB *Vec_Int_t) {
-    var k0, k1, IdA, IdB int32;
-    // inlining of macro Vec_IntForEachEntry
-    for  k0 = 0; (k0 < Vec_IntSize(vNodesA)) && (((IdA) = Vec_IntEntry(vNodesA, k0)), 1); k0++  {
-    // inlining of macro Vec_IntForEachEntry
-    for  k1 = 0; (k1 < Vec_IntSize(vNodesB)) && (((IdB) = Vec_IntEntry(vNodesB, k1)), 1); k1++  {
-        if Gia_ManIsoEqual( IdA, IdB, pStore, nWords ) != 0 {
-            assert(pIso[IdA] == 0, "pIso[IdA] == 0");
-            assert(pIso[IdB] == 0, "pIso[IdB] == 0");
-            assert(IdA != IdB, "IdA != IdB");
-            pIso[IdA] = IdB;
-            pIso[IdB] = IdA;
-            continue;
-        }
-    }
-    }
+func Gia_ManIsoExtractClasses(p *gia.Gia_Man_t, bin int32, store []uint32, words int32, a, b *vec.Vec_Int_t) int32 {
+	vec.Vec_IntClear(a)
+	vec.Vec_IntClear(b)
+	for entry := bin; entry != 0; entry = gia.Gia_ObjValue(gia.Gia_ManObj(p, entry)) {
+		obj := gia.Gia_ManObj(p, entry)
+		if gia.Gia_ObjMark0(obj) != 0 {
+			gia.Gia_ObjSetMark0(obj, 0)
+			continue
+		}
+		if gia.Gia_ObjColors(p, entry) == 1 {
+			vec.Vec_IntPush(a, entry)
+		} else {
+			vec.Vec_IntPush(b, entry)
+		}
+	}
+	if vec.Vec_IntSize(a) > 0 && vec.Vec_IntSize(b) > 0 {
+		return 1
+	}
+	return 0
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Transforms iso into equivalence classes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cec_ManTransformClasses(p *Gia_Man_t) {
-    var pObj *Gia_Obj_t;
-    var i int32;
-    assert(p.pReprs && p.pNexts && p.pIso, "p.pReprs && p.pNexts && p.pIso");
-    memset( p.pReprs, 0, sizeof(int) * Gia_ManObjNum(p) );
-    memset( p.pNexts, 0, sizeof(int) * Gia_ManObjNum(p) );
-    // inlining of macro Gia_ManForEachObj
-    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {
-        p.pReprs[i].iRepr = GIA_VOID;
-        if p.pIso[i] && p.pIso[i] < i {
-            p.pReprs[i].iRepr = p.pIso[i];
-            p.pNexts[p.pIso[i]] = i;
-        }
-    }
+func Gia_ManIsoMatchNodes(iso []int32, store []uint32, words int32, a, b *vec.Vec_Int_t) {
+	for _, idA := range vec.Vec_IntArray(a) {
+		for _, idB := range vec.Vec_IntArray(b) {
+			if Gia_ManIsoEqual(idA, idB, store, words) == 0 {
+				continue
+			}
+			if iso[idA] != 0 || iso[idB] != 0 || idA == idB {
+				panic("cec: ambiguous isomorphism pair")
+			}
+			iso[idA], iso[idB] = idB, idA
+		}
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Finds node correspondences in the miter.]
-
-  Description [Assumes that the colors are assigned.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cec_ManDetectIsomorphism(p *Gia_Man_t) *int32 {
-    var nWords int32  = 2;
-    var pObj *Gia_Obj_t;
-    var vNodesA, vNodesB *Vec_Int_t;
-    var pStore *uint32;
-    var Counter uint32;
-    var i int32;
-    var pIso *int32;
-    var pTable *int32;
-    var nTableSize int32;
-    // start equivalence classes
-    // inlining of macro ABC_CALLOC
-    pIso = ((int *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(int)));
-    // inlining of macro Gia_ManForEachObj
-    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {
-        if Gia_ObjIsCo(pObj) {
-            assert(Gia_ObjColors(p, i) == 0, "Gia_ObjColors(p, i) == 0");
-            continue;
-        }
-        assert(Gia_ObjColors(p, i), "Gia_ObjColors(p, i)");
-        if Gia_ObjColors(p, i) == 3 {
-            pIso[i] = i; }
-    }
-    // start simulation info
-    // inlining of macro ABC_ALLOC
-    pStore = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(Gia_ManObjNum(p) * nWords)));
-    // simulate and create table
-    nTableSize = Abc_PrimeCudd( 100 + Gia_ManObjNum(p)/2 );
-    // inlining of macro ABC_CALLOC
-    pTable = ((int *) calloc((size_t)(nTableSize), sizeof(int)));
-    Gia_ManCleanValue( p );
-    // inlining of macro Gia_ManForEachObj1
-    for  i = 1; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {
-        if Gia_ObjIsCo(pObj) {
-            continue; }
-        if pIso[i] == 0 { // simulate
-            Gia_ManIsoSimulate( pObj, i, pStore, nWords );
-        } else if pIso[i] < i { // copy
-            Gia_ManIsoCopy( i, pIso[i], pStore, nWords );
-        } else { // generate
-            Gia_ManIsoRandom( i, pStore, nWords ); }
-        if pIso[i] == 0 {
-            Gia_ManIsoTableAdd( p, i, pStore, nWords, pTable, nTableSize ); }
-    }
-    // create equivalence classes
-    vNodesA = Vec_IntAlloc( 100 );
-    vNodesB = Vec_IntAlloc( 100 );
-    for  i = 0; i < nTableSize; i++  {
-        if Gia_ManIsoExtractClasses( p, pTable[i], pStore, nWords, vNodesA, vNodesB ) != 0 {
-            Gia_ManIsoMatchNodes( pIso, pStore, nWords, vNodesA, vNodesB ); }
-    }
-    Vec_IntFree( vNodesA );
-    Vec_IntFree( vNodesB );
-    // collect info
-    Counter = 0;
-    // inlining of macro Gia_ManForEachObj1
-    for  i = 1; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {
-        Counter += (pIso[i] && pIso[i] < i);
-/*
-        if ( pIso[i] && pIso[i] < i )
-        {
-            if ( (Gia_ObjIsHead(p,pIso[i]) && Gia_ObjRepr(p,i)==pIso[i]) || 
-                 (Gia_ObjIsClass(p,pIso[i]) && Gia_ObjRepr(p,i)==Gia_ObjRepr(p,pIso[i])) )
-                 Abc_Print( 1, "1" );
-            else
-                Abc_Print( 1, "0" );
-        }
-*/
-    }
-    Abc_Print( 1, "Computed %d pairs of structurally equivalent nodes.\n", Counter );
-//    p->pIso = pIso;
-//    Cec_ManTransformClasses( p );
-
-    pTable = nil;
-    pStore = nil;
-    return pIso;
+func Cec_ManTransformClasses(p *gia.Gia_Man_t) {
+	iso := p.Isomorphism()
+	if len(iso) != int(gia.Gia_ManObjNum(p)) {
+		panic("cec: missing isomorphism pairs")
+	}
+	p.StartRepresentatives()
+	for id, partner := range iso {
+		if partner != 0 && partner < int32(id) {
+			gia.Gia_ObjSetRepr(p, int32(id), partner)
+			gia.Gia_ObjSetNext(p, partner, int32(id))
+		}
+	}
 }
 
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+// Cec_ManDetectIsomorphism assigns matching IDs for colored nodes with unique
+// simulation signatures. Shared-color nodes map to themselves.
+func Cec_ManDetectIsomorphism(p *gia.Gia_Man_t) []int32 {
+	const words int32 = 2
+	n := gia.Gia_ManObjNum(p)
+	iso := make([]int32, n)
+	for id := int32(0); id < n; id++ {
+		obj := gia.Gia_ManObj(p, id)
+		color := gia.Gia_ObjColors(p, id)
+		if gia.Gia_ObjIsCo(obj) != 0 {
+			if color != 0 {
+				panic("cec: colored output in isomorphism input")
+			}
+			continue
+		}
+		if color == 0 {
+			panic("cec: uncolored isomorphism input")
+		}
+		if color == 3 {
+			iso[id] = id
+		}
+	}
+	store := make([]uint32, n*words)
+	tableSize := util.Abc_PrimeCudd(uint32(100 + n/2))
+	table := make([]int32, tableSize)
+	gia.Gia_ManCleanValue(p)
+	for id := int32(1); id < n; id++ {
+		obj := gia.Gia_ManObj(p, id)
+		if gia.Gia_ObjIsCo(obj) != 0 {
+			continue
+		}
+		if iso[id] == 0 {
+			Gia_ManIsoSimulate(obj, id, store, words)
+		} else if iso[id] < id {
+			Gia_ManIsoCopy(id, iso[id], store, words)
+		} else {
+			Gia_ManIsoRandom(id, store, words)
+		}
+		if iso[id] == 0 {
+			Gia_ManIsoTableAdd(p, id, store, words, table, tableSize)
+		}
+	}
+	a, b := vec.Vec_IntAlloc(100), vec.Vec_IntAlloc(100)
+	for _, bin := range table {
+		if Gia_ManIsoExtractClasses(p, bin, store, words, a, b) != 0 {
+			Gia_ManIsoMatchNodes(iso, store, words, a, b)
+		}
+	}
+	var count int
+	for id, partner := range iso {
+		if partner != 0 && partner < int32(id) {
+			count++
+		}
+	}
+	fmt.Printf("Computed %d pairs of structurally equivalent nodes.\n", count)
+	return iso
+}
