@@ -63,3 +63,20 @@ func TestPrepareSequentialSimulationClasses(t *testing.T) {
 		t.Fatal("graph not retained")
 	}
 }
+
+func TestOutputOnlyClassPreparationExcludesOtherNodes(t *testing.T) {
+	g := aig.NewGraph()
+	pi, lo := g.NewInput(), g.NewInput()
+	gate := g.AND(pi, lo)
+	g.AddOutput(gate)
+	g.AddOutput(g.Const0())
+	aig.Aig_ManSetRegNum(g, 1)
+	classes := Ssw_ClassesPrepare(g, 1, 0, 0, 1, 0, 0)
+	defer Ssw_ClassesStop(classes)
+	if aig.Aig_ObjRepr(g, gate) != g.Const1() {
+		t.Fatal("constant output driver not selected")
+	}
+	if aig.Aig_ObjRepr(g, lo) != aig.InvalidEdge || aig.Aig_ObjRepr(g, pi) != aig.InvalidEdge {
+		t.Fatal("non-output input selected")
+	}
+}
