@@ -13,7 +13,11 @@ func Fraig_NodesAreEqual(p *Fraig_Man_t, a, b *Fraig_Node_t, limit, seconds int3
 	if a == Fraig_Not(b) {
 		return 0
 	}
-	return Fraig_NodeIsEquivalent(p, Fraig_Regular(a), Fraig_Regular(b), limit, seconds)
+	left, right := Fraig_Regular(a), Fraig_Regular(b)
+	if (Fraig_IsComplement(a) != Fraig_IsComplement(b)) != (Fraig_NodeComparePhase(left, right) != 0) {
+		return 0
+	}
+	return Fraig_NodeIsEquivalent(p, left, right, limit, seconds)
 }
 func Fraig_ManProveMiter(p *Fraig_Man_t) {
 	if p.fTryProve == 0 {
