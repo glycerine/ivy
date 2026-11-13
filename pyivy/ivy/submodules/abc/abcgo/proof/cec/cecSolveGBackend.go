@@ -9,12 +9,14 @@ import (
 // cecGeneralSolver follows cecSolveG.c's Glucose2 modes: mode 0 uses CNF,
 // mode 1 uses CNF plus justification, and mode 2 uses circuit justification.
 type cecGeneralSolver struct {
-	graph  *Gia_Man_t
-	pars   *Cec_ParSat_t
-	sat    *glucose2.SimpSolver
-	vars   []int32 // object id -> SAT literal, or -1 when not encoded
-	phases []bool
-	since  int32
+	graph                                             *Gia_Man_t
+	pars                                              *Cec_ParSat_t
+	sat                                               *glucose2.SimpSolver
+	vars                                              []int32 // object id -> SAT literal, or -1 when not encoded
+	phases                                            []bool
+	since                                             int32
+	recycles, calls, satCount, unsatCount, undecCount int32
+	totalConflicts                                    int64
 }
 
 func newCecGeneralSolver(graph *Gia_Man_t, pars *Cec_ParSat_t) *cecGeneralSolver {
@@ -26,6 +28,9 @@ func newCecGeneralSolver(graph *Gia_Man_t, pars *Cec_ParSat_t) *cecGeneralSolver
 	return s
 }
 func (s *cecGeneralSolver) reset() {
+	if s.sat != nil {
+		s.totalConflicts += s.sat.Conflicts
+	}
 	s.sat = glucose2.NewABCSolver()
 	s.sat.JustificationMode = int(s.pars.SolverType)
 	s.vars = make([]int32, s.graph.ObjectCount())
@@ -38,6 +43,7 @@ func (s *cecGeneralSolver) reset() {
 		panic("cec: constant-zero clause failed")
 	}
 	s.since = 0
+	s.recycles++
 }
 func (s *cecGeneralSolver) binary(a, b int32, xor, phase bool) int32 {
 	if a == b {
@@ -117,6 +123,7 @@ func (s *cecGeneralSolver) check(lit int32) int32 {
 		return 0
 	}
 	s.since++
+	s.calls++
 	if s.pars.nSatVarMax > 0 && s.sat.NVars() > int(s.pars.nSatVarMax) && s.since > s.pars.nCallsRecycle {
 		s.reset()
 	}
@@ -132,13 +139,20 @@ func (s *cecGeneralSolver) check(lit int32) int32 {
 	}
 	switch s.sat.SolveLimited([]glucose2.Lit{glucose2.Lit(encoded)}, false) {
 	case glucose2.LFalse:
+		s.unsatCount++
 		if !s.sat.AddClause([]glucose2.Lit{glucose2.Lit(encoded ^ 1)}) {
 			panic("cec: failed to retain proved clause")
 		}
 		return 1
 	case glucose2.LTrue:
+		s.satCount++
 		return 0
 	default:
+		s.undecCount++
 		return -1
 	}
+}
+
+func (s *cecGeneralSolver) printStats() {
+	fmt.Printf("CEC Glucose2: %d queries, %d SAT, %d UNSAT, %d undecided, %d conflicts, %d recycles\n", s.calls, s.satCount, s.unsatCount, s.undecCount, s.totalConflicts+s.sat.Conflicts, s.recycles)
 }

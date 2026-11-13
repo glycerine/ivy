@@ -1,18 +1,21 @@
 package cec
 
 import (
+	"fmt"
 	"github.com/glycerine/abcgo/proof/cec/core"
 	"github.com/glycerine/abcgo/sat/bsat"
 )
 
 // cecClassicSolver uses ABC's bsat package for the default SolverType -1.
 type cecClassicSolver struct {
-	graph  *Gia_Man_t
-	pars   *Cec_ParSat_t
-	sat    *bsat.Solver
-	vars   []int32
-	phases []bool
-	since  int32
+	graph                                             *Gia_Man_t
+	pars                                              *Cec_ParSat_t
+	sat                                               *bsat.Solver
+	vars                                              []int32
+	phases                                            []bool
+	since                                             int32
+	recycles, calls, satCount, unsatCount, undecCount int32
+	totalConflicts                                    int64
 }
 
 func newCecClassicSolver(g *Gia_Man_t, pars *Cec_ParSat_t) *cecClassicSolver {
@@ -21,6 +24,9 @@ func newCecClassicSolver(g *Gia_Man_t, pars *Cec_ParSat_t) *cecClassicSolver {
 	return s
 }
 func (s *cecClassicSolver) reset() {
+	if s.sat != nil {
+		s.totalConflicts += s.sat.Statistics().Conflicts
+	}
 	s.sat = bsat.NewSolver()
 	s.vars = make([]int32, s.graph.ObjectCount())
 	for i := range s.vars {
@@ -31,6 +37,7 @@ func (s *cecClassicSolver) reset() {
 		panic("cec: constant-zero SAT clause failed")
 	}
 	s.since = 0
+	s.recycles++
 }
 func (s *cecClassicSolver) binary(a, b int32, xor, phase bool) int32 {
 	if a == b {
@@ -99,6 +106,7 @@ func (s *cecClassicSolver) check(lit int32) int32 {
 		return -1
 	}
 	s.since++
+	s.calls++
 	if s.pars.nSatVarMax > 0 && s.sat.NumVars() > s.pars.nSatVarMax && s.since > s.pars.nCallsRecycle {
 		s.reset()
 	}
@@ -106,13 +114,16 @@ func (s *cecClassicSolver) check(lit int32) int32 {
 	s.sat.SetLimits(int64(s.pars.nBTLimit), 0)
 	switch s.sat.Solve(encoded) {
 	case bsat.Unsatisfiable:
+		s.unsatCount++
 		if !s.sat.AddClause(encoded ^ 1) {
 			panic("cec: failed to retain proved clause")
 		}
 		return 1
 	case bsat.Satisfiable:
+		s.satCount++
 		return 0
 	default:
+		s.undecCount++
 		return -1
 	}
 }
@@ -148,4 +159,9 @@ func cecSolverPhases(graph *Gia_Man_t, enabled bool) []bool {
 	}
 	copy(phases, values)
 	return phases
+}
+
+func (s *cecClassicSolver) printStats() {
+	stats := s.sat.Statistics()
+	fmt.Printf("CEC SAT: %d queries, %d SAT, %d UNSAT, %d undecided, %d conflicts, %d recycles\n", s.calls, s.satCount, s.unsatCount, s.undecCount, s.totalConflicts+stats.Conflicts, s.recycles)
 }

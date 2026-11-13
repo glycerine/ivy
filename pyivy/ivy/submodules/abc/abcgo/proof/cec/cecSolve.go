@@ -103,7 +103,7 @@ func Cec_ManSatSolve(patterns *Cec_ManPat_t, graph *Gia_Man_t, pars *Cec_ParSat_
 		}
 	}
 	if pars.fVerbose != 0 {
-		Cec_ManSatPrintStats(sat)
+		classic.printStats()
 	}
 }
 

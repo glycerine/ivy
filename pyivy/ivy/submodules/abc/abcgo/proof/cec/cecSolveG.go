@@ -1,6 +1,9 @@
 package cec
 
-import "github.com/glycerine/abcgo/aig/gia"
+import (
+	"fmt"
+	"github.com/glycerine/abcgo/aig/gia"
+)
 
 // CecG_ManSatSolve uses the Glucose2 modes selected by SolverType.
 func CecG_ManSatSolve(patterns *Cec_ManPat_t, graph *Gia_Man_t, pars *Cec_ParSat_t, proveZero int32) {
@@ -31,4 +34,8 @@ func CecG_ManSatSolve(patterns *Cec_ManPat_t, graph *Gia_Man_t, pars *Cec_ParSat
 		}
 	}
 
+	fmt.Printf("Recycles %d\n", sat.recycles)
+	if pars.fVerbose != 0 {
+		sat.printStats()
+	}
 }
