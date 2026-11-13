@@ -18,9 +18,10 @@ func cecOriginalSweepMapped(graph, original *Gia_Man_t, sourceIDs []int32, alias
 	defer release()
 	if now == nil {
 		if pars.TimeLimit > 0 {
-			return nil, fmt.Errorf("cec: source CPU timeout clock unavailable on this platform")
+			return nil, fmt.Errorf("cec: source timeout clock unavailable on this platform")
 		}
-		now = time.Now
+		// Untimed sweeps never inspect the reading after initialization.
+		now = func() time.Time { return time.Time{} }
 	}
 	return cecOriginalSweepMappedClock(graph, original, sourceIDs, aliases, pars, now)
 }

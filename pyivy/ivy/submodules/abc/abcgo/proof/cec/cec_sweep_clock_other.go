@@ -1,8 +1,8 @@
-//go:build !linux
+//go:build !linux && !cgo
 
 package cec
 
 import "time"
 
-// A source-compatible CPU clock is not yet implemented on this platform.
+// The source C clock is unavailable without cgo on non-Linux targets.
 func cecSweepSourceClock() (func() time.Time, func()) { return nil, func() {} }

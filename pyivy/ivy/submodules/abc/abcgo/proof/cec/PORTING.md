@@ -70,8 +70,9 @@ original-ID pairs when requested, without independently rechecking them. The pub
 for original AIG nodes. As in the C
 pipeline, the sweep time limit is checked after each completed reduction, and
 individual simulation or SAT calls can run beyond it, as in C. Linux uses the
-source thread-CPU clock; timed sweeps on other platforms report unsupported
-until their source CPU clock is implemented. The FRA fallback has its own
+source thread-CPU clock. On other targets, cgo calls the same C runtime
+`clock()` used by ABC: process CPU time on POSIX and CRT elapsed time on
+Windows. A non-Linux build without cgo reports timed sweeps as unsupported. The FRA fallback has its own
 stage-boundary limit. Tests compare selected
 cases with the original ABC executable and force the unresolved sweep branch
 through the genuine FRA fallback. They do not establish equivalence for every
@@ -107,7 +108,11 @@ Passing the tests does not establish complete coverage of these source paths.
 On Linux CEC2, CEC3 and CEC4 sweep diagnostics use thread CPU time like ABC,
 and each sweep and timed helper is pinned to its OS thread. Callers using the
 separate manager creation and destruction APIs must keep them on one OS thread
-for comparable totals. Other platforms retain wall-clock diagnostics. CEC4
+for comparable totals. On non-Linux targets with cgo, diagnostics call the
+platform C runtime `clock()`, which measures process CPU time on POSIX and CRT
+elapsed time on Windows; matching ABC requires using the same C runtime. Without
+cgo, non-Linux CEC2/3/4 timing calls explicitly panic rather than silently
+substitute wall time. CEC4
 preserves the source assertion when a reduced ID is outside the original
 graph's failure bitmap.
 The sparse CEC4 justification and the in-range UNKNOWN candidate-ID behavior
