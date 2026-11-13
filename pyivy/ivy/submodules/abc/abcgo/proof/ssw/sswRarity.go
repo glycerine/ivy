@@ -846,29 +846,9 @@ func Ssw_RarSimulateGia(g *gia.Gia_Man_t, pars *Ssw_RarPars_t) int32 {
 	graph := gia.Gia_ManToAigSimple(src)
 	defer aig.Aig_ManStop(graph)
 	result := Ssw_RarSimulate(graph, pars)
-	g.ClearSequentialCounterexample()
-	cex := graph.SequentialCounterexample()
-	if cex != nil {
-		if perm != nil {
-			out := util.Abc_CexAlloc(gia.Gia_ManRegNum(g), gia.Gia_ManPiNum(g), cex.IFrame+1)
-			out.IPo = cex.IPo
-			out.IFrame = cex.IFrame
-			for i, old := range vec.Vec_IntArray(perm) {
-				if old >= 0 && util.Abc_InfoHasBit(cex.PData, int32(i)) {
-					util.Abc_InfoSetBit(out.PData, old)
-				}
-			}
-			for i := int32(0); i < (cex.IFrame+1)*cex.NPis; i++ {
-				if util.Abc_InfoHasBit(cex.PData, cex.NRegs+i) {
-					util.Abc_InfoSetBit(out.PData, out.NRegs+i)
-				}
-			}
-			cex = out
-		}
-		if err := g.SetSequentialCounterexample(cex); err != nil {
-			panic(err)
-		}
-	}
+	// ABC transfers the grouped AIG witness unchanged. When grouping inserts
+	// registers, its dimensions consequently do not match the original GIA.
+	g.TransferSequentialCounterexampleSource(graph.TakeSequentialCounterexample())
 	return result
 }
 

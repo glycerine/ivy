@@ -101,25 +101,18 @@ func sswRar2StartingState(g *aig.Graph, cex *util.Abc_Cex_t) *vec.Vec_Int_t {
 		panic("ssw: invalid rarity counterexample")
 	}
 	bit := func(i int) bool { return cex.PData[i/32]&(uint32(1)<<uint(i%32)) != 0 }
-	state := make([]bool, regs)
-	for i := range state {
-		state[i] = bit(i)
+	outputs := g.Outputs()
+	for i, li := range outputs[len(outputs)-regs:] {
+		sswSetMark(g, li, bit(i))
 	}
-	for f := 0; f < int(cex.IFrame); f++ {
-		in := make([]bool, pis+regs)
-		for i := 0; i < pis; i++ {
-			in[i] = bit(regs + f*pis + i)
-		}
-		copy(in[pis:], state)
-		out, err := g.Evaluate(in)
-		if err != nil {
-			panic(err)
-		}
-		copy(state, out[len(out)-regs:])
+	man := &Ssw_Man_t{pAig: g}
+	for f := 0; f <= int(cex.IFrame); f++ {
+		frame := f
+		sswFilterSimulateFrame(man, func(i int) bool { return bit(regs + frame*pis + i) })
 	}
 	result := vec.Vec_IntAlloc(regs)
-	for _, v := range state {
-		if v {
+	for _, lo := range g.Inputs()[pis:] {
+		if g.Node(lo).MarkB {
 			vec.Vec_IntPush(result, 1)
 		} else {
 			vec.Vec_IntPush(result, 0)
@@ -128,6 +121,7 @@ func sswRar2StartingState(g *aig.Graph, cex *util.Abc_Cex_t) *vec.Vec_Int_t {
 	return result
 }
 func sswRar2Run(g *aig.Graph, frames, words, bin, rounds, timeout int32, cex *util.Abc_Cex_t, latchOnly, verbose int32, filter bool) int32 {
+	started := time.Now()
 	if g == nil || g.RegisterCount() <= 0 || aig.Aig_ManConstrNum(g) != 0 {
 		panic("ssw: rarity requires an unconstrained sequential AIG")
 	}
@@ -137,7 +131,8 @@ func sswRar2Run(g *aig.Graph, frames, words, bin, rounds, timeout int32, cex *ut
 	aig.Aig_ManRandom(1)
 	p := sswRar2Start(g, words, frames, bin, verbose != 0)
 	if p == nil {
-		return -1
+		// ABC immediately dereferences the null manager on this path.
+		panic("ssw: rarity manager was not created")
 	}
 	defer Ssw_SmlStop(p.sim)
 	p.inits = vec.Vec_IntStart(int(g.RegisterCount()))
@@ -160,7 +155,6 @@ func sswRar2Run(g *aig.Graph, frames, words, bin, rounds, timeout int32, cex *ut
 		defer Ssw_ClassesStop(p.classes)
 		Ssw_ClassesSetData(p.classes, p.sim, nil, func(data any, e aig.Edge) int32 { return Ssw_SmlObjIsConstWord(data.(*Ssw_Sml_t), e) }, func(data any, a, b aig.Edge) int32 { return Ssw_SmlObjsAreEqualWord(data.(*Ssw_Sml_t), a, b) })
 	}
-	started := time.Now()
 	for r := int32(0); r < rounds; r++ {
 		if filter && Ssw_ClassesCand1Num(p.classes) == 0 && Ssw_ClassesClassNum(p.classes) == 0 {
 			fmt.Println("All equivalences are refined away.")

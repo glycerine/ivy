@@ -41,6 +41,10 @@ func TestRarity2StartingStateReplaysPriorFrames(t *testing.T) {
 	if vec.Vec_IntSize(got) != 1 || vec.Vec_IntEntry(got, 0) != 1 {
 		t.Fatalf("incorrect final-frame state %v", vec.Vec_IntArray(got))
 	}
+	outputs := g.Outputs()
+	if !g.Node(g.Const1()).MarkB || g.Node(x).MarkB || !g.Node(state).MarkB || !g.Node(outputs[0]).MarkB || g.Node(outputs[1]).MarkB {
+		t.Fatal("source leaves marks from the final simulated frame")
+	}
 }
 func TestRarity2SimulationFindsReachableFailure(t *testing.T) {
 	g := aig.NewGraph()
@@ -50,6 +54,30 @@ func TestRarity2SimulationFindsReachableFailure(t *testing.T) {
 	aig.Aig_ManSetRegNum(g, 1)
 	if got := Ssw_RarSimulate2(g, 2, 1, 1, 1, 0, 0); got != 0 {
 		t.Fatalf("expected reachable failure, got %d", got)
+	}
+}
+
+func TestRarity2InvalidBinRetainsSourceFailure(t *testing.T) {
+	for _, bin := range []int32{0, 2} {
+		for _, filter := range []bool{false, true} {
+			func() {
+				g := aig.NewGraph()
+				x, state := g.NewInput(), g.NewInput()
+				g.AddOutput(g.AND(x, state))
+				g.AddOutput(x)
+				aig.Aig_ManSetRegNum(g, 1)
+				defer func() {
+					if recover() == nil {
+						t.Errorf("filter=%t bin=%d: source dereferences a nil manager", filter, bin)
+					}
+				}()
+				if filter {
+					Ssw_RarSignalFilter2(g, 1, 1, bin, 1, 0, nil, 0, 0)
+				} else {
+					Ssw_RarSimulate2(g, 1, 1, bin, 1, 0, 0)
+				}
+			}()
+		}
 	}
 }
 func TestRarity2FilterKeepsReachableConstant(t *testing.T) {

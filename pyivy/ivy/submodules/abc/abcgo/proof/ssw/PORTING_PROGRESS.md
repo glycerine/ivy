@@ -14,6 +14,10 @@ An original-C latch fixture checks dynamic correspondence with both local and
 global simulation and aggressive solver-recycling thresholds. Both C runs
 retain one latch, one PI and one PO; the Go tests also compare all four-frame
 input traces for the fixture. The C probe is in `test_vectors/`.
+Another compiled-C fixture covers target preparation and simple pair classes.
+Targets use regular output fanins, so two outputs driven by the same node
+trigger the source's duplicate-candidate assertion even if their polarities
+differ; the Go entry point preserves this behavior.
 
 ABC's `Aig_ManReprStart` explicitly asserts `Aig_ManBufNum(p) == 0` in
 `src/aig/aig/aigRepr.c:47`. The Go `aig.Aig_ManReprStart` preserves this
