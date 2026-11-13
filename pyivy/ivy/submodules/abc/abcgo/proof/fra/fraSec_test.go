@@ -3,6 +3,7 @@ package fra
 import (
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/aig/saig"
+	"github.com/glycerine/abcgo/misc/util"
 	"math/rand"
 	"testing"
 	"time"
@@ -194,4 +195,85 @@ func TestSecWallTimeLimitReturnsUnknown(t *testing.T) {
 		}
 	}
 	t.Fatal("no fixture reached the time-limit check")
+}
+
+func TestSecDefinitiveTrivialResultBeforeDeadlineCheck(t *testing.T) {
+	g := aig.NewGraph()
+	g.AddOutput(g.Const0())
+	var pars Fra_Sec_t
+	Fra_SecSetDefaultParams(&pars)
+	pars.fSilent = 1
+	pars.TimeLimit = 1
+	start := time.Unix(0, 0)
+	calls := 0
+	now := func() time.Time {
+		calls++
+		if calls == 1 {
+			return start
+		}
+		return start.Add(2 * time.Second)
+	}
+	if got := fraFraigSec(g, &pars, nil, now); got != 1 {
+		t.Fatalf("trivial proof lost to timeout: %d", got)
+	}
+	if calls != 1 {
+		t.Fatalf("clock read after definitive proof: %d", calls)
+	}
+}
+
+func TestSecDeadlineRetainsVerifiedExistingWitness(t *testing.T) {
+	g := aig.NewGraph()
+	input, latch := g.NewInput(), g.NewInput()
+	g.AddOutput(g.AND(input, latch))
+	g.AddOutput(input)
+	aig.Aig_ManSetRegNum(g, 1)
+	cex := util.Abc_CexAlloc(1, 1, 2)
+	util.Abc_InfoSetBit(cex.PData, 1)
+	util.Abc_InfoSetBit(cex.PData, 2)
+	cex.IFrame = 1
+	if err := g.SetSequentialCounterexample(cex); err != nil {
+		t.Fatal(err)
+	}
+	var pars Fra_Sec_t
+	Fra_SecSetDefaultParams(&pars)
+	pars.fSilent = 1
+	pars.TimeLimit = 1
+	start := time.Unix(0, 0)
+	calls := 0
+	now := func() time.Time {
+		calls++
+		if calls == 1 {
+			return start
+		}
+		return start.Add(2 * time.Second)
+	}
+	if got := fraFraigSec(g, &pars, nil, now); got != 0 {
+		t.Fatalf("verified witness lost at deadline: %d", got)
+	}
+}
+
+func TestSecPropagatesAbsoluteDeadlineToCorrespondence(t *testing.T) {
+	g := aig.NewGraph()
+	input, a, b := g.NewInput(), g.NewInput(), g.NewInput()
+	g.AddOutput(g.AND(a, b))
+	g.AddOutput(input)
+	g.AddOutput(input.Not())
+	aig.Aig_ManSetRegNum(g, 2)
+	var pars Fra_Sec_t
+	Fra_SecSetDefaultParams(&pars)
+	pars.fSilent = 1
+	pars.fRetimeFirst = 0
+	pars.fRetimeRegs = 0
+	pars.fFraiging = 0
+	pars.TimeLimit = 1
+	// SEC's injected clock has not advanced, but the absolute time supplied
+	// to SSW is already expired; SSW must stop without returning a reduction.
+	past := time.Now().Add(-2 * time.Second)
+	var reduced *aig.Graph
+	if got := fraFraigSec(g, &pars, &reduced, func() time.Time { return past }); got != -1 {
+		t.Fatalf("status=%d, want unknown", got)
+	}
+	if reduced == nil {
+		t.Fatal("deadline lost the current miter")
+	}
 }
