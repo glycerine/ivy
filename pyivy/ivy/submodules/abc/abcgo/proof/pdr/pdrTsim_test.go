@@ -1,8 +1,10 @@
 package pdr
 
 import (
+	"fmt"
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/misc/vec"
+	"github.com/glycerine/abcgo/sat/bsat"
 	"testing"
 )
 
@@ -67,5 +69,42 @@ func TestPdrTsimPropagationAndUndo(t *testing.T) {
 	Pdr_ManExtendUndo(g, undo)
 	if Pdr_ManSimInfoGet(g, lo) != PDR_ONE || Pdr_ManSimInfoGet(g, po) != PDR_ONE {
 		t.Fatal("undo did not restore values")
+	}
+}
+
+// Exercise generalization against actual frame SAT models and both CNF modes.
+func TestPdrTsimSATModelGeneralization(t *testing.T) {
+	for _, mono := range []int32{0, 1} {
+		for _, priority := range []int32{0, 1} {
+			t.Run(fmt.Sprintf("mono=%d/priority=%d", mono, priority), func(t *testing.T) {
+				g := aig.NewGraph()
+				input := g.NewInput()
+				required := g.NewInput()
+				removable := g.NewInput()
+				property := g.AddOutput(g.AND(required, g.OR(input, removable)))
+				g.AddOutput(required)
+				g.AddOutput(removable)
+				aig.Aig_ManSetRegNum(g, 2)
+				p := Pdr_ManStart(g, &Pdr_Par_t{fMonoCnf: mono, fFlopPrio: priority}, nil)
+				defer Pdr_ManStop(p)
+				Pdr_ManCreateSolver(p, 0)
+				solver := Pdr_ManCreateSolver(p, 1)
+				pdrPrepareModel(p, 1, nil)
+				outvar := Pdr_ObjSatVar(p, 1, 3, property)
+				ivar := Pdr_ObjSatVar(p, 1, 3, input)
+				rvar := Pdr_ObjSatVar(p, 1, 3, required)
+				xvar := Pdr_ObjSatVar(p, 1, 3, removable)
+				if got := solver.Solve(bsat.Positive(outvar), bsat.Positive(ivar), bsat.Positive(rvar), bsat.Negative(xvar)); got != bsat.Satisfiable {
+					t.Fatalf("SAT solver returned %v", got)
+				}
+				cube := Pdr_ManTernarySim(p, 1, nil)
+				if cube.nLits != 1 || cube.Lits[0] != 0 {
+					t.Fatalf("flop literals %v, want required latch 0 only", cube.Lits[:cube.nLits])
+				}
+				if cube.nTotal != 2 || cube.Lits[1] != 0 {
+					t.Fatalf("input literals %v, want positive input 0", cube.Lits[cube.nLits:cube.nTotal])
+				}
+			})
+		}
 	}
 }
