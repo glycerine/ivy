@@ -1470,6 +1470,14 @@ func Gia_VtaPerformInt(pAig *gia.Gia_Man_t, pPars *Abs_Par_t) int32 {
 	// preconditions
 	assert(gia.Gia_ManPoNum(pAig) == 1, "gia.Gia_ManPoNum(pAig) == 1")
 	assert(pPars.nFramesMax == 0 || pPars.nFramesStart <= pPars.nFramesMax, "pPars.nFramesMax == 0 || pPars.nFramesStart <= pPars.nFramesMax")
+	// The source VTA propagation and refinement operate on AND-inverter
+	// graphs. Treat native XOR/MUX nodes as unsupported rather than deriving
+	// frame classes using the wrong gate semantics.
+	if glaOldHasSpecialGates(pAig) {
+		pAig.ClearSequentialCounterexample()
+		fmt.Println("VTA requires XOR/MUX nodes to be lowered to ANDs.")
+		return -1
+	}
 	if gia.Gia_ObjIsConst0(gia.Gia_ObjFanin0(gia.Gia_ManPo(pAig, 0))) != 0 {
 		if gia.Gia_ObjFaninC0(gia.Gia_ManPo(pAig, 0)) == 0 {
 			fmt.Printf("Sequential miter is trivially UNSAT.\n")

@@ -23,6 +23,8 @@ native XOR and MUX nodes.
 The lower-level `Gla_ManStart` and `Gla_ManStart2` interfaces still require an
 AND-only graph; replacing only their SAT clauses would leave refinement unsound.
 The port also supports reordered inputs, duplicate AND nodes, and buffers.
+Flop-to-gate class conversion visits the control as well as both data inputs
+of native MUX nodes; a regression covers the previously omitted control cone.
 
 `Abs_Par_t` and `Gia_ParAbs_t` retain private source-style option fields.
 External callers can configure them through `Options` and `LegacyOptions`,
@@ -33,3 +35,10 @@ mode in the Go port: `LabeledSolver2` always creates a proof graph. The
 resulting proof cores are tested, but memory and runtime behavior can differ
 from the C default. Alternate proof modes and their resource behavior remain
 an open fidelity and coverage item.
+
+Standalone VTA retains the C algorithm's AND-inverter representation
+assumption. Native XOR/MUX nodes are explicitly rejected with an unknown
+result and the existing object-class map unchanged; callers can lower those
+nodes first. Direct VTA frame-map projection through special-gate lowering is
+not yet established, so this guard avoids producing classes under incorrect
+AND semantics.

@@ -79,8 +79,18 @@ func Gia_FlaConvertToGla_rec(p *gia.Gia_Man_t, obj *gia.Gia_Obj_t, out *vec.Vec_
 	if gia.Gia_ObjIsAnd(obj) == 0 {
 		panic("abs: expected AND or register output")
 	}
-	Gia_FlaConvertToGla_rec(p, gia.Gia_ObjFanin0(obj), out)
-	Gia_FlaConvertToGla_rec(p, gia.Gia_ObjFanin1(obj), out)
+	id := gia.Gia_ObjId(p, obj)
+	a, b, c, kind := p.Gate(id)
+	if kind != 2 && kind != 3 && kind != 4 && kind != 5 {
+		panic("abs: unsupported gate in flop abstraction")
+	}
+	Gia_FlaConvertToGla_rec(p, gia.Gia_ManObj(p, a>>1), out)
+	if kind == 2 || kind == 3 || kind == 4 {
+		Gia_FlaConvertToGla_rec(p, gia.Gia_ManObj(p, b>>1), out)
+	}
+	if kind == 4 {
+		Gia_FlaConvertToGla_rec(p, gia.Gia_ManObj(p, c>>1), out)
+	}
 }
 
 func Gia_FlaConvertToGla(p *gia.Gia_Man_t, fla *vec.Vec_Int_t) *vec.Vec_Int_t {

@@ -45,3 +45,19 @@ func TestAbstractionFrameAndFlopConversions(t *testing.T) {
 		t.Fatalf("expanded GLA=%v", vec.Vec_IntArray(out))
 	}
 }
+
+func TestFlopToGateClassesIncludesNativeMuxControl(t *testing.T) {
+	g := gia.Gia_ManStart(16)
+	a := gia.Gia_ManAppendCi(g)
+	b := gia.Gia_ManAppendCi(g)
+	c := gia.Gia_ManAppendCi(g)
+	d := gia.Gia_ManAppendCi(g)
+	control := gia.Gia_ManAppendAnd(g, c, d)
+	g.EnableMuxes()
+	mux := gia.Gia_ManAppendMuxReal(g, control, a, b)
+	gia.Gia_ManAppendCo(g, mux)
+	result := Gia_FlaConvertToGla(g, vec.Vec_IntStart(0))
+	if vec.Vec_IntEntry(result, int(mux>>1)) != 1 || vec.Vec_IntEntry(result, int(control>>1)) != 1 {
+		t.Fatalf("MUX or control cone missing from gate classes")
+	}
+}
