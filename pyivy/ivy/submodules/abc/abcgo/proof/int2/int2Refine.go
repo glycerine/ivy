@@ -52,6 +52,9 @@ import (
 **********************************************************************
 */
 func Int2_ManJustify_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vSelect *Vec_Int_t) {
+	if gia.Gia_ObjIsConst0(pObj) != 0 {
+		return
+	}
 	if gia.Gia_ObjMark1(pObj) != 0 {
 		return
 	}
@@ -142,7 +145,9 @@ func Int2_ManRefineCube(p *Gia_Man_t, vAssign *Vec_Int_t, vPrio *Vec_Int_t) *Vec
 	constant := gia.Gia_ManConst0(p)
 	gia.Gia_ObjSetMark0(constant, 0)
 	gia.Gia_ObjSetMark1(constant, 0)
-	gia.Gia_ObjSetValue(constant, util.ABC_INFINITY)
+	// Constants require no state assignment, so they have zero cost in
+	// controlling-input choices and never make a justification infinite.
+	gia.Gia_ObjSetValue(constant, 0)
 	for i := int32(0); i < gia.Gia_ManCiNum(p); i++ {
 		obj := gia.Gia_ManCi(p, i)
 		gia.Gia_ObjSetMark0(obj, vec.Vec_IntEntry(vAssign, int(i)))

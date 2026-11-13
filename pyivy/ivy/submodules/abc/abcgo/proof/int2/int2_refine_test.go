@@ -244,3 +244,38 @@ func TestRefineCubeNativeGateSoundness(t *testing.T) {
 		}
 	}
 }
+
+func TestRefineCubeHandlesConstantGateFanins(t *testing.T) {
+	for constant := int32(0); constant < 2; constant++ {
+		for phase := int32(0); phase < 2; phase++ {
+			g := gia.Gia_ManStart(8)
+			state := gia.Gia_ManAppendCi(g)
+			gate := gia.Gia_ManAppendAnd(g, state, constant)
+			gia.Gia_ManAppendCo(g, gate^phase)
+			gia.Gia_ManAppendCo(g, state)
+			gia.Gia_ManSetRegNum(g, 1)
+			for value := int32(0); value < 2; value++ {
+				original, _ := g.Evaluate([]bool{value != 0})
+				if !original[0] {
+					continue
+				}
+				selected := Int2_ManRefineCube(g, vec.Vec_IntAllocArrayCopy([]int32{value}, 1), vec.Vec_IntAllocArrayCopy([]int32{1}, 1))
+				for candidate := int32(0); candidate < 2; candidate++ {
+					matches := true
+					for _, ci := range vec.Vec_IntArray(selected) {
+						if ci == 0 && candidate != value {
+							matches = false
+						}
+					}
+					if !matches {
+						continue
+					}
+					result, _ := g.Evaluate([]bool{candidate != 0})
+					if !result[0] {
+						t.Fatalf("constant=%d phase=%d value=%d cube=%v candidate=%d", constant, phase, value, vec.Vec_IntArray(selected), candidate)
+					}
+				}
+			}
+		}
+	}
+}
