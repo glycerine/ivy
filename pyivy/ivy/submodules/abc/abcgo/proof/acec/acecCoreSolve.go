@@ -13,7 +13,7 @@ func Acec_ComputeEquivClasses(a, b *Gia_Man_t, mapA, mapB **Vec_Int_t) {
 }
 
 // acecComputeEquivClasses allows the SAT sweep to be exercised in tests.
-func acecComputeEquivClasses(a, b *Gia_Man_t, mapA, mapB **Vec_Int_t, compute func(*gia.Gia_Man_t, int32, int32) *gia.Gia_Man_t) bool {
+func acecComputeEquivClasses(a, b *Gia_Man_t, mapA, mapB **Vec_Int_t, compute func(*gia.Gia_Man_t, int32, int32) *gia.Gia_Man_t) {
 	start := time.Now()
 	base := Acec_CommonStart(nil, a)
 	defer gia.Gia_ManStop(base)
@@ -27,7 +27,6 @@ func acecComputeEquivClasses(a, b *Gia_Man_t, mapA, mapB **Vec_Int_t, compute fu
 	}
 	defer gia.Gia_ManStop(repr)
 	fmt.Printf("Finished computing equivalent nodes. Time = %v\n", time.Since(start))
-	return true
 }
 func Acec_Solve(a, b *Gia_Man_t, pars *Acec_ParCec_t) int32 {
 	start := time.Now()
