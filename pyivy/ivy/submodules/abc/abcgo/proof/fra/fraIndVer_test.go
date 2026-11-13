@@ -1,0 +1,45 @@
+package fra
+
+import (
+	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/misc/vec"
+	"github.com/glycerine/abcgo/sat/cnf"
+	"testing"
+)
+
+func TestInvariantVerifyBaseAndInduction(t *testing.T) {
+	for _, tc := range []struct {
+		name                      string
+		updateFromInput, positive bool
+		want                      int32
+	}{
+		{"held-zero", false, false, 1},
+		{"fails-base", false, true, 0},
+		{"fails-induction", true, false, 0},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			graph := aig.NewGraph()
+			input, latch := graph.NewInput(), graph.NewInput()
+			update := latch
+			if tc.updateFromInput {
+				update = input
+			}
+			graph.AddOutput(update)
+			aig.Aig_ManSetRegNum(graph, 1)
+			data := cnf.Cnf_DeriveSimple(graph, int32(graph.OutputCount()))
+			literal := data.VarNums[latch.NodeID()] * 2
+			if !tc.positive {
+				literal ^= 1
+			}
+			ends, lits := vec.Vec_IntAlloc(1), vec.Vec_IntAlloc(1)
+			vec.Vec_IntPush(ends, 1)
+			vec.Vec_IntPush(lits, literal)
+			if got := Fra_InvariantVerify(graph, 1, ends, lits); got != tc.want {
+				t.Fatalf("got %d, want %d", got, tc.want)
+			}
+			if vec.Vec_IntEntry(lits, 0) != literal {
+				t.Fatal("invariant literals modified")
+			}
+		})
+	}
+}
