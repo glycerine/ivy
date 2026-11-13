@@ -280,9 +280,18 @@ func TestPdrSolveTwoRegisterReachability(t *testing.T) {
 }
 
 func TestPdrSolveAdditionalModesAgainstReachability(t *testing.T) {
+	testAdditionalPdrModes(t, false, 512)
+}
+
+func TestIncrementalPdrAdditionalModesAgainstReachability(t *testing.T) {
+	testAdditionalPdrModes(t, true, 128)
+}
+
+func testAdditionalPdrModes(t *testing.T, incremental bool, trials int) {
+	t.Helper()
 	seed := uint32(0x31415926)
 	nextRandom := func() int { seed ^= seed << 13; seed ^= seed >> 17; seed ^= seed << 5; return int(seed & 255) }
-	for trial := 0; trial < 512; trial++ {
+	for trial := 0; trial < trials; trial++ {
 		tables := [3]int{nextRandom(), nextRandom(), nextRandom()}
 		g := aig.NewGraph()
 		vars := [3]aig.Edge{g.NewInput(), g.NewInput(), g.NewInput()}
@@ -336,7 +345,13 @@ func TestPdrSolveAdditionalModesAgainstReachability(t *testing.T) {
 		pars.fUseAbs = int32((trial / 4) % 2)
 		pars.fUseSimpleRef = 0
 		pars.fShortest = int32((trial / 8) % 2)
-		got := Pdr_ManSolve(g, &pars)
+		var got int32
+		if incremental {
+			pars.nFrameMax = 1
+			got = IPdr_ManSolve(g, &pars)
+		} else {
+			got = Pdr_ManSolve(g, &pars)
+		}
 		want := int32(1)
 		if bad {
 			want = 0
