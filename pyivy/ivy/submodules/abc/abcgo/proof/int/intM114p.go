@@ -1,445 +1,276 @@
 package int
 
-/**CFile****************************************************************
+// The optional MiniSat 1.14p proof interface in intM114p.c. ABC's ordinary
+// build excludes it; abcgo does not yet provide the MiniSat 1.14p backend.
+import (
+	"errors"
+	"fmt"
+	"time"
 
-  FileName    [intM114p.c]
+	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/sat/cnf"
+)
 
-  SystemName  [ABC: Logic synthesis and verification system.]
+// ErrMiniSat114pUnavailable means that no original MiniSat 1.14p proof
+// backend has been supplied. No alternative solver is selected implicitly.
+var ErrMiniSat114pUnavailable = errors.New("MiniSat 1.14p proof backend is unavailable")
 
-  PackageName [Interpolation engine.]
+// M114pChain represents one resolution chain; Clauses has one more entry
+// than Pivots, and indexes roots followed by earlier chains.
+type M114pChain struct{ Clauses, Pivots []int32 }
 
-  Synopsis    [Intepolation using interfaced to MiniSat-1.14p.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 24, 2008.]
-
-  Revision    [$Id: intM114p.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "intInt.h"
-//#include "sat/psat/m114p.h"
-
-#ifdef ABC_USE_LIBRARIES
-
-ABC_NAMESPACE_IMPL_START
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Returns the SAT solver for one interpolation run.]
-
-  Description [pInter is the previous interpolant. pAig is one time frame.
-  pFrames is the unrolled time frames.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-M114p_Solver_t Inter_ManDeriveSatSolverM114p( 
-    Aig_Man_t * pInter, Cnf_Dat_t * pCnfInter, 
-    Aig_Man_t * pAig, Cnf_Dat_t * pCnfAig, 
-    Aig_Man_t * pFrames, Cnf_Dat_t * pCnfFrames, 
-    Vec_Int_t ** pvMapRoots, Vec_Int_t ** pvMapVars )
-{
-    M114p_Solver_t pSat;
-    Aig_Obj_t * pObj, * pObj2;
-    int i, Lits[2];
-
-    // sanity checks
-    assert( Aig_ManRegNum(pInter) == 0 );
-    assert( Aig_ManRegNum(pAig) > 0 );
-    assert( Aig_ManRegNum(pFrames) == 0 );
-    assert( Aig_ManCoNum(pInter) == 1 );
-    assert( Aig_ManCoNum(pFrames) == 1 );
-    assert( Aig_ManCiNum(pInter) == Aig_ManRegNum(pAig) );
-//    assert( (Aig_ManCiNum(pFrames) - Aig_ManRegNum(pAig)) % Saig_ManPiNum(pAig) == 0 );
-
-    // prepare CNFs
-    Cnf_DataLift( pCnfAig,   pCnfFrames->nVars );
-    Cnf_DataLift( pCnfInter, pCnfFrames->nVars + pCnfAig->nVars );
-
-    *pvMapRoots = Vec_IntAlloc( 10000 );
-    *pvMapVars = Vec_IntAlloc( 0 );
-    Vec_IntFill( *pvMapVars, pCnfInter->nVars + pCnfAig->nVars + pCnfFrames->nVars, -1 );
-    for ( i = 0; i < pCnfFrames->nVars; i++ )
-        Vec_IntWriteEntry( *pvMapVars, i, -2 );
-
-    // start the solver
-    pSat = M114p_SolverNew( 1 );
-    M114p_SolverSetVarNum( pSat, pCnfInter->nVars + pCnfAig->nVars + pCnfFrames->nVars );
-
-    // add clauses of A
-    // interpolant
-    for ( i = 0; i < pCnfInter->nClauses; i++ )
-    {
-        Vec_IntPush( *pvMapRoots, 0 );
-        if ( !M114p_SolverAddClause( pSat, pCnfInter->pClauses[i], pCnfInter->pClauses[i+1] ) )
-            assert( 0 );
-    }
-    // connector clauses
-    Aig_ManForEachCi( pInter, pObj, i )
-    {
-        pObj2 = Saig_ManLo( pAig, i );
-        Lits[0] = toLitCond( pCnfInter->pVarNums[pObj->Id], 0 );
-        Lits[1] = toLitCond( pCnfAig->pVarNums[pObj2->Id], 1 );
-        Vec_IntPush( *pvMapRoots, 0 );
-        if ( !M114p_SolverAddClause( pSat, Lits, Lits+2 ) )
-            assert( 0 );
-        Lits[0] = toLitCond( pCnfInter->pVarNums[pObj->Id], 1 );
-        Lits[1] = toLitCond( pCnfAig->pVarNums[pObj2->Id], 0 );
-        Vec_IntPush( *pvMapRoots, 0 );
-        if ( !M114p_SolverAddClause( pSat, Lits, Lits+2 ) )
-            assert( 0 );
-    }
-    // one timeframe
-    for ( i = 0; i < pCnfAig->nClauses; i++ )
-    {
-        Vec_IntPush( *pvMapRoots, 0 );
-        if ( !M114p_SolverAddClause( pSat, pCnfAig->pClauses[i], pCnfAig->pClauses[i+1] ) )
-            assert( 0 );
-    }
-    // connector clauses
-    Aig_ManForEachCi( pFrames, pObj, i )
-    { 
-        if ( i == Aig_ManRegNum(pAig) )
-            break;
-//        Vec_IntPush( vVarsAB, pCnfFrames->pVarNums[pObj->Id] );
-        Vec_IntWriteEntry( *pvMapVars, pCnfFrames->pVarNums[pObj->Id], i );
-
-        pObj2 = Saig_ManLi( pAig, i );
-        Lits[0] = toLitCond( pCnfFrames->pVarNums[pObj->Id], 0 );
-        Lits[1] = toLitCond( pCnfAig->pVarNums[pObj2->Id], 1 );
-        Vec_IntPush( *pvMapRoots, 0 );
-        if ( !M114p_SolverAddClause( pSat, Lits, Lits+2 ) )
-            assert( 0 );
-        Lits[0] = toLitCond( pCnfFrames->pVarNums[pObj->Id], 1 );
-        Lits[1] = toLitCond( pCnfAig->pVarNums[pObj2->Id], 0 );
-        Vec_IntPush( *pvMapRoots, 0 );
-        if ( !M114p_SolverAddClause( pSat, Lits, Lits+2 ) )
-            assert( 0 );
-    }
-    // add clauses of B
-    for ( i = 0; i < pCnfFrames->nClauses; i++ )
-    {
-        Vec_IntPush( *pvMapRoots, 1 );
-        if ( !M114p_SolverAddClause( pSat, pCnfFrames->pClauses[i], pCnfFrames->pClauses[i+1] ) )
-        {
-//            assert( 0 );
-            break;
-        }
-    }
-    // return clauses to the original state
-    Cnf_DataLift( pCnfAig, -pCnfFrames->nVars );
-    Cnf_DataLift( pCnfInter, -pCnfFrames->nVars -pCnfAig->nVars );
-    return pSat;
+// M114pBackend is the proof-producing interface required by the optional
+// ABC path. Literals use ABC's var*2+sign encoding. Solve returns 0 for
+// UNSAT, 1 for SAT and -1 for unknown, as in m114p.h.
+type M114pBackend interface {
+	SetVarNum(int32)
+	AddClause([]int32) bool
+	Solve() int32
+	ConflictNum() int32
+	Roots() [][]int32
+	Chains() []M114pChain
+	Close()
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Performs one resolution step.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-int Inter_ManResolveM114p( Vec_Int_t * vResolvent, int * pLits, int nLits, int iVar )
-{
-    int i, k, iLit = -1, fFound = 0;
-    // find the variable in the clause
-    for ( i = 0; i < vResolvent->nSize; i++ )
-        if ( lit_var(vResolvent->pArray[i]) == iVar )
-        {
-            iLit = vResolvent->pArray[i];
-            vResolvent->pArray[i] = vResolvent->pArray[--vResolvent->nSize];
-            break;
-        }
-    assert( iLit != -1 );
-    // add other variables
-    for ( i = 0; i < nLits; i++ )
-    {
-        if ( lit_var(pLits[i]) == iVar )
-        {
-            assert( iLit == lit_neg(pLits[i]) );
-            fFound = 1;
-            continue;
-        }
-        // check if this literal appears
-        for ( k = 0; k < vResolvent->nSize; k++ )
-            if ( vResolvent->pArray[k] == pLits[i] )
-                break;
-        if ( k < vResolvent->nSize )
-            continue;
-        // add this literal
-        Vec_IntPush( vResolvent, pLits[i] );
-    }
-    assert( fFound );
-    return 1;
+// Inter_ManDeriveSatSolverM114p assembles the original A and B partitions.
+// A backend must be supplied explicitly; nil reports the unavailable port.
+func Inter_ManDeriveSatSolverM114p(s M114pBackend, inter *aig.Graph, interCNF *cnf.Cnf_Dat_t, trans *aig.Graph, transCNF *cnf.Cnf_Dat_t, frames *aig.Graph, framesCNF *cnf.Cnf_Dat_t) ([]int32, []int32, error) {
+	if s == nil {
+		return nil, nil, ErrMiniSat114pUnavailable
+	}
+	if inter == nil || trans == nil || frames == nil || interCNF == nil || transCNF == nil || framesCNF == nil {
+		return nil, nil, errors.New("invalid MiniSat interpolation input")
+	}
+	regs := int(trans.RegisterCount())
+	if regs == 0 || inter.RegisterCount() != 0 || frames.RegisterCount() != 0 || inter.OutputCount() != 1 || frames.OutputCount() != 1 || inter.InputCount() != regs || frames.InputCount() < regs {
+		return nil, nil, errors.New("incompatible MiniSat interpolation graphs")
+	}
+	fv, tv := int32(framesCNF.Variables), int32(transCNF.Variables)
+	cnf.Cnf_DataLift(transCNF, fv)
+	cnf.Cnf_DataLift(interCNF, fv+tv)
+	defer cnf.Cnf_DataLift(transCNF, -fv)
+	defer cnf.Cnf_DataLift(interCNF, -fv-tv)
+	vars := make([]int32, framesCNF.Variables+transCNF.Variables+interCNF.Variables)
+	for i := range vars {
+		vars[i] = -1
+		if i < framesCNF.Variables {
+			vars[i] = -2
+		}
+	}
+	s.SetVarNum(int32(len(vars)))
+	var roots []int32
+	add := func(clause []int32, part int32) bool { roots = append(roots, part); return s.AddClause(clause) }
+	for _, clause := range interCNF.Clauses {
+		if !add(clause, 0) {
+			return nil, nil, errors.New("inconsistent A interpolant clauses")
+		}
+	}
+	ti, to := trans.Inputs(), trans.Outputs()
+	lo, li := ti[len(ti)-regs:], to[len(to)-regs:]
+	equal := func(a, b int32) bool { return add([]int32{a * 2, b*2 + 1}, 0) && add([]int32{a*2 + 1, b * 2}, 0) }
+	for i, input := range inter.Inputs() {
+		if !equal(interCNF.VarNums[input.NodeID()], transCNF.VarNums[lo[i].NodeID()]) {
+			return nil, nil, errors.New("inconsistent A connector")
+		}
+	}
+	for _, clause := range transCNF.Clauses {
+		if !add(clause, 0) {
+			return nil, nil, errors.New("inconsistent A transition clauses")
+		}
+	}
+	for i, input := range frames.Inputs()[:regs] {
+		v := framesCNF.VarNums[input.NodeID()]
+		vars[v] = int32(i)
+		if !equal(v, transCNF.VarNums[li[i].NodeID()]) {
+			return nil, nil, errors.New("inconsistent partition connector")
+		}
+	}
+	for _, clause := range framesCNF.Clauses {
+		if !add(clause, 1) {
+			break
+		}
+	}
+	return roots, vars, nil
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Computes interpolant using MiniSat-1.14p.]
-
-  Description [Assumes that the solver returned UNSAT and proof
-  logging was enabled. Array vMapRoots maps number of each root clause 
-  into 0 (clause of A) or 1 (clause of B). Array vMapVars maps each SAT
-  solver variable into -1 (var of A), -2 (var of B), and <num> (var of C),
-  where <num> is the var's 0-based number in the ordering of C variables.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-Aig_Man_t * Inter_ManInterpolateM114pPudlak( M114p_Solver_t s, Vec_Int_t * vMapRoots, Vec_Int_t * vMapVars )
-{
-    Aig_Man_t * p;
-    Aig_Obj_t * pInter, * pInter2, * pVar;
-    Vec_Ptr_t * vInters;
-    Vec_Int_t * vLiterals, * vClauses, * vResolvent;
-    int * pLitsNext, nLitsNext, nOffset, iLit;
-    int * pLits, * pClauses, * pVars;
-    int nLits, nVars, i, k, v, iVar;
-    assert( M114p_SolverProofIsReady(s) );
-    vInters = Vec_PtrAlloc( 1000 );
-
-    vLiterals = Vec_IntAlloc( 10000 );
-    vClauses = Vec_IntAlloc( 1000 );
-    vResolvent = Vec_IntAlloc( 100 );
-
-    // create elementary variables
-    p = Aig_ManStart( 10000 );
-    Vec_IntForEachEntry( vMapVars, iVar, i )
-        if ( iVar >= 0 )
-            Aig_IthVar(p, iVar);
-    // process root clauses
-    M114p_SolverForEachRoot( s, &pLits, nLits, i )
-    {
-        if ( Vec_IntEntry(vMapRoots, i) == 1 ) // clause of B
-            pInter = Aig_ManConst1(p);
-        else // clause of A
-            pInter = Aig_ManConst0(p);
-        Vec_PtrPush( vInters, pInter );
-
-        // save the root clause
-        Vec_IntPush( vClauses, Vec_IntSize(vLiterals) );
-        Vec_IntPush( vLiterals, nLits );
-        for ( v = 0; v < nLits; v++ )
-            Vec_IntPush( vLiterals, pLits[v] );
-    }
-    assert( Vec_PtrSize(vInters) == Vec_IntSize(vMapRoots) );
-
-    // process learned clauses
-    M114p_SolverForEachChain( s, &pClauses, &pVars, nVars, i )
-    {
-        pInter = Vec_PtrEntry( vInters, pClauses[0] );
-
-        // initialize the resolvent
-        nOffset = Vec_IntEntry( vClauses, pClauses[0] );
-        nLitsNext = Vec_IntEntry( vLiterals, nOffset );
-        pLitsNext = Vec_IntArray(vLiterals) + nOffset + 1;
-        Vec_IntClear( vResolvent );
-        for ( v = 0; v < nLitsNext; v++ )
-            Vec_IntPush( vResolvent, pLitsNext[v] );
-
-        for ( k = 0; k < nVars; k++ )
-        {
-            iVar = Vec_IntEntry( vMapVars, pVars[k] );
-            pInter2 = Vec_PtrEntry( vInters, pClauses[k+1] );
-
-            // resolve it with the next clause
-            nOffset = Vec_IntEntry( vClauses, pClauses[k+1] );
-            nLitsNext = Vec_IntEntry( vLiterals, nOffset );
-            pLitsNext = Vec_IntArray(vLiterals) + nOffset + 1;
-            Inter_ManResolveM114p( vResolvent, pLitsNext, nLitsNext, pVars[k] );
-
-            if ( iVar == -1 ) // var of A
-                pInter = Aig_Or( p, pInter, pInter2 );
-            else if ( iVar == -2 ) // var of B
-                pInter = Aig_And( p, pInter, pInter2 );
-            else // var of C
-            {
-                // check polarity of the pivot variable in the clause
-                for ( v = 0; v < nLitsNext; v++ )
-                    if ( lit_var(pLitsNext[v]) == pVars[k] )
-                        break;
-                assert( v < nLitsNext );
-                pVar = Aig_NotCond( Aig_IthVar(p, iVar), lit_sign(pLitsNext[v]) );
-                pInter = Aig_Mux( p, pVar, pInter, pInter2 );
-            }
-        }
-        Vec_PtrPush( vInters, pInter );
-
-        // store the resulting clause
-        Vec_IntPush( vClauses, Vec_IntSize(vLiterals) );
-        Vec_IntPush( vLiterals, Vec_IntSize(vResolvent) );
-        Vec_IntForEachEntry( vResolvent, iLit, v )
-            Vec_IntPush( vLiterals, iLit );
-    }
-    assert( Vec_PtrSize(vInters) == M114p_SolverProofClauseNum(s) );
-    assert( Vec_IntSize(vResolvent) == 0 ); // the empty clause
-    Vec_PtrFree( vInters );
-    Vec_IntFree( vLiterals );
-    Vec_IntFree( vClauses );
-    Vec_IntFree( vResolvent );
-    Aig_ObjCreateCo( p, pInter );
-    Aig_ManCleanup( p );
-    return p;
+// Inter_ManResolveM114p resolves a clause against a pivot, as in ABC.
+func Inter_ManResolveM114p(resolvent, clause []int32, pivot int32) ([]int32, error) {
+	index := -1
+	for i, lit := range resolvent {
+		if lit>>1 == pivot {
+			index = i
+			break
+		}
+	}
+	if index < 0 {
+		return nil, errors.New("resolution pivot absent")
+	}
+	old := resolvent[index]
+	resolvent[index] = resolvent[len(resolvent)-1]
+	resolvent = resolvent[:len(resolvent)-1]
+	found := false
+	for _, lit := range clause {
+		if lit>>1 == pivot {
+			if lit != old^1 {
+				return nil, errors.New("resolution pivot has wrong polarity")
+			}
+			found = true
+			continue
+		}
+		exists := false
+		for _, x := range resolvent {
+			if x == lit {
+				exists = true
+				break
+			}
+		}
+		if !exists {
+			resolvent = append(resolvent, lit)
+		}
+	}
+	if !found {
+		return nil, errors.New("resolution pivot absent from second clause")
+	}
+	return resolvent, nil
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Computes interpolant using MiniSat-1.14p.]
-
-  Description [Assumes that the solver returned UNSAT and proof
-  logging was enabled. Array vMapRoots maps number of each root clause 
-  into 0 (clause of A) or 1 (clause of B). Array vMapVars maps each SAT
-  solver variable into -1 (var of A), -2 (var of B), and <num> (var of C),
-  where <num> is the var's 0-based number in the ordering of C variables.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-Aig_Man_t * Inter_ManpInterpolateM114( M114p_Solver_t s, Vec_Int_t * vMapRoots, Vec_Int_t * vMapVars )
-{
-    Aig_Man_t * p;
-    Aig_Obj_t * pInter, * pInter2, * pVar;
-    Vec_Ptr_t * vInters;
-    int * pLits, * pClauses, * pVars;
-    int nLits, nVars, i, k, iVar;
-    int nClauses;
-
-    nClauses = M114p_SolverProofClauseNum(s);
-
-    assert( M114p_SolverProofIsReady(s) );
-
-    vInters = Vec_PtrAlloc( 1000 );
-    // process root clauses
-    p = Aig_ManStart( 10000 );
-    M114p_SolverForEachRoot( s, &pLits, nLits, i )
-    {
-        if ( Vec_IntEntry(vMapRoots, i) == 1 ) // clause of B
-            pInter = Aig_ManConst1(p);
-        else // clause of A
-        {
-            pInter = Aig_ManConst0(p);
-            for ( k = 0; k < nLits; k++ )
-            {
-                iVar = Vec_IntEntry( vMapVars, lit_var(pLits[k]) );
-                if ( iVar < 0 ) // var of A or B
-                    continue;
-                // this is a variable of C
-                pVar = Aig_NotCond( Aig_IthVar(p, iVar), lit_sign(pLits[k]) );
-                pInter = Aig_Or( p, pInter, pVar );
-            }
-        }
-        Vec_PtrPush( vInters, pInter );
-    } 
-//    assert( Vec_PtrSize(vInters) == Vec_IntSize(vMapRoots) );
-
-    // process learned clauses
-    M114p_SolverForEachChain( s, &pClauses, &pVars, nVars, i )
-    {
-        pInter = Vec_PtrEntry( vInters, pClauses[0] );
-        for ( k = 0; k < nVars; k++ )
-        {
-            iVar = Vec_IntEntry( vMapVars, pVars[k] );
-            pInter2 = Vec_PtrEntry( vInters, pClauses[k+1] );
-            if ( iVar == -1 ) // var of A
-                pInter = Aig_Or( p, pInter, pInter2 );
-            else // var of B or C
-                pInter = Aig_And( p, pInter, pInter2 );
-        }
-        Vec_PtrPush( vInters, pInter );
-    }
-
-    assert( Vec_PtrSize(vInters) == M114p_SolverProofClauseNum(s) );
-    Vec_PtrFree( vInters );
-    Aig_ObjCreateCo( p, pInter );
-    Aig_ManCleanup( p );
-    assert( Aig_ManCheck(p) );
-    return p;
+// InterpolateM114p reconstructs either original proof interpolation algorithm.
+func InterpolateM114p(s M114pBackend, rootParts, varClasses []int32, pudlak bool) (*aig.Graph, error) {
+	if s == nil {
+		return nil, ErrMiniSat114pUnavailable
+	}
+	roots, chains := s.Roots(), s.Chains()
+	if len(roots) == 0 || len(roots) != len(rootParts) {
+		return nil, errors.New("invalid proof roots")
+	}
+	g := aig.NewGraph()
+	max := int32(-1)
+	for _, class := range varClasses {
+		if class > max {
+			max = class
+		}
+	}
+	inputs := make([]aig.Edge, max+1)
+	for i := range inputs {
+		inputs[i] = g.NewInput()
+	}
+	outputs := make([]aig.Edge, 0, len(roots)+len(chains))
+	clauses := make([][]int32, 0, len(roots)+len(chains))
+	classOf := func(lit int32) (int32, error) {
+		v := lit >> 1
+		if lit < 0 || int(v) >= len(varClasses) {
+			return 0, errors.New("proof literal out of bounds")
+		}
+		return varClasses[v], nil
+	}
+	for i, clause := range roots {
+		edge := g.Const0()
+		if rootParts[i] == 1 {
+			edge = g.Const1()
+		} else if rootParts[i] != 0 {
+			return nil, errors.New("invalid root partition")
+		} else if !pudlak {
+			for _, lit := range clause {
+				c, err := classOf(lit)
+				if err != nil {
+					return nil, err
+				}
+				if c >= 0 {
+					e := inputs[c]
+					if lit&1 != 0 {
+						e = e.Not()
+					}
+					edge = g.OR(edge, e)
+				}
+			}
+		}
+		outputs = append(outputs, edge)
+		clauses = append(clauses, append([]int32(nil), clause...))
+	}
+	for _, chain := range chains {
+		if len(chain.Clauses) != len(chain.Pivots)+1 || len(chain.Clauses) == 0 {
+			return nil, errors.New("invalid proof chain")
+		}
+		first := int(chain.Clauses[0])
+		if first < 0 || first >= len(outputs) {
+			return nil, errors.New("invalid proof antecedent")
+		}
+		edge := outputs[first]
+		resolvent := append([]int32(nil), clauses[first]...)
+		for j, pivot := range chain.Pivots {
+			next := int(chain.Clauses[j+1])
+			if next < 0 || next >= len(outputs) || pivot < 0 || int(pivot) >= len(varClasses) {
+				return nil, errors.New("invalid proof pivot or antecedent")
+			}
+			other := outputs[next]
+			class := varClasses[pivot]
+			if pudlak {
+				var err error
+				resolvent, err = Inter_ManResolveM114p(resolvent, clauses[next], pivot)
+				if err != nil {
+					return nil, err
+				}
+			}
+			if class == -1 {
+				edge = g.OR(edge, other)
+			} else if !pudlak || class == -2 {
+				edge = g.AND(edge, other)
+			} else if class >= 0 {
+				var lit int32 = -1
+				for _, x := range clauses[next] {
+					if x>>1 == pivot {
+						lit = x
+						break
+					}
+				}
+				if lit < 0 {
+					return nil, errors.New("proof pivot absent")
+				}
+				control := inputs[class]
+				if lit&1 != 0 {
+					control = control.Not()
+				}
+				edge = g.Mux(control, edge, other)
+			} else {
+				return nil, fmt.Errorf("invalid variable class %d", class)
+			}
+		}
+		outputs = append(outputs, edge)
+		clauses = append(clauses, resolvent)
+	}
+	if pudlak && len(clauses[len(clauses)-1]) != 0 {
+		return nil, errors.New("proof does not end with empty clause")
+	}
+	g.AddOutput(outputs[len(outputs)-1])
+	return g, nil
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Performs one SAT run with interpolation.]
-
-  Description [Returns 1 if proven. 0 if failed. -1 if undecided.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-int Inter_ManPerformOneStepM114p( Inter_Man_t * p, int fUsePudlak, int fUseOther )
-{
-    M114p_Solver_t pSat;
-    Vec_Int_t * vMapRoots, * vMapVars;
-    clock_t clk;
-    int status, RetValue;
-    assert( p->pInterNew == NULL );
-    // derive the SAT solver
-    pSat = Inter_ManDeriveSatSolverM114p( p->pInter, p->pCnfInter, 
-        p->pAigTrans, p->pCnfAig, p->pFrames, p->pCnfFrames, 
-        &vMapRoots, &vMapVars );
-    // solve the problem
-clk = clock();
-    status = M114p_SolverSolve( pSat, NULL, NULL, 0 );
-    p->nConfCur = M114p_SolverGetConflictNum( pSat );
-p->timeSat += clock() - clk;
-    if ( status == 0 )
-    {
-        RetValue = 1;
-//        Inter_ManpInterpolateM114Report( pSat, vMapRoots, vMapVars );
-
-clk = clock();
-        if ( fUsePudlak )
-            p->pInterNew = Inter_ManInterpolateM114pPudlak( pSat, vMapRoots, vMapVars );
-        else
-            p->pInterNew = Inter_ManpInterpolateM114( pSat, vMapRoots, vMapVars );
-p->timeInt += clock() - clk;
-    }
-    else if ( status == 1 )
-    {
-        RetValue = 0;
-    }
-    else
-    {
-        RetValue = -1;
-    }
-    M114p_SolverDelete( pSat );
-    Vec_IntFree( vMapRoots );
-    Vec_IntFree( vMapVars );
-    return RetValue;
+// Inter_ManPerformOneStepM114p runs the optional solver supplied by the caller.
+func Inter_ManPerformOneStepM114p(p *Inter_Man_t, s M114pBackend, pudlak bool) (int32, error) {
+	if s == nil {
+		return -1, ErrMiniSat114pUnavailable
+	}
+	defer s.Close()
+	roots, vars, err := Inter_ManDeriveSatSolverM114p(s, p.pInter, p.pCnfInter, p.pAigTrans, p.pCnfAig, p.pFrames, p.pCnfFrames)
+	if err != nil {
+		return -1, err
+	}
+	start := time.Now()
+	status := s.Solve()
+	p.timeSat += int64(time.Since(start))
+	p.nConfCur = s.ConflictNum()
+	switch status {
+	case 0:
+		start = time.Now()
+		p.pInterNew, err = InterpolateM114p(s, roots, vars, pudlak)
+		p.timeInt += int64(time.Since(start))
+		if err != nil {
+			return -1, err
+		}
+		return 1, nil
+	case 1:
+		return 0, nil
+	default:
+		return -1, nil
+	}
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-ABC_NAMESPACE_IMPL_END
-
-#endif
-
-
