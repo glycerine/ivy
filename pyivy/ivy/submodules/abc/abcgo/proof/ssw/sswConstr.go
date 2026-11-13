@@ -87,16 +87,7 @@ import "os"
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_ManPrintPolarity(p *Aig_Man_t) {
-    var pObj *Aig_Obj_t;
-    var i int32;
-    // inlining of macro Aig_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {
-        Abc_Print( 1, "%d", pObj.fPhase ); }
-    }
-    Abc_Print( 1, "\n" );
-}
+
 
 /**Function*************************************************************
 
@@ -109,71 +100,7 @@ func Ssw_ManPrintPolarity(p *Aig_Man_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_ManRefineByConstrSim(p *Ssw_Man_t) {
-    var pObj, pObjLi *Aig_Obj_t;
-    var f, i, iLits, RetValue1, RetValue2 int32;
-    var nFrames int32  = Vec_IntSize(p.vInits) / Saig_ManPiNum(p.pAig);
-    assert(Vec_IntSize(p.vInits) % Saig_ManPiNum(p.pAig) == 0, "Vec_IntSize(p.vInits) % Saig_ManPiNum(p.pAig) == 0");
-    // assign register outputs
-    // inlining of macro Saig_ManForEachLi
-    for  i = 0; (i < Saig_ManRegNum(p.pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, i+Saig_ManPoNum(p.pAig))), 1); i++  {
-        pObj.fMarkB = 0;
-    }
-    // simulate the timeframes
-    iLits = 0;
-    for  f = 0; f < nFrames; f++  {
-        // set the PI simulation information
-        Aig_ManConst1(p.pAig).fMarkB = 1;
-        // inlining of macro Saig_ManForEachPi
-        // inlining of macro Vec_PtrForEachEntryStop
-        for  i = 0; (i < Saig_ManPiNum(p.pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {
-            pObj.fMarkB = Vec_IntEntry( p.vInits, iLits++ );
-        }
-        // inlining of macro Saig_ManForEachLiLo
-        for  i = 0; (i < Saig_ManRegNum(p.pAig)) && (((pObjLi) = Saig_ManLi(p.pAig, i)), 1)            && (((pObj)=Saig_ManLo(p.pAig, i)), 1); i++  {
-            pObj.fMarkB = pObjLi.fMarkB;
-        }
-        // simulate internal nodes
-        // inlining of macro Aig_ManForEachNode
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(p.pAig.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-            pObj.fMarkB = ( Aig_ObjFanin0(pObj).fMarkB ^ Aig_ObjFaninC0(pObj) )
-                         & ( Aig_ObjFanin1(pObj).fMarkB ^ Aig_ObjFaninC1(pObj) ); }
-        }
-        // assign the COs
-        // inlining of macro Aig_ManForEachCo
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(p.pAig.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, i)), 1); i++  {
-            pObj.fMarkB = ( Aig_ObjFanin0(pObj).fMarkB ^ Aig_ObjFaninC0(pObj) );
-        }
-        // check the outputs
-        // inlining of macro Saig_ManForEachPo
-        // inlining of macro Vec_PtrForEachEntryStop
-        for  i = 0; (i < Saig_ManPoNum(p.pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, i)), 1); i++  {
-            if i < Saig_ManPoNum(p.pAig) - Saig_ManConstrNum(p.pAig) {
-                if pObj.fMarkB && Saig_ManConstrNum(p.pAig) {
-                    Abc_Print( 1, "output %d failed in frame %d.\n", i, f ); }
-            
-            } else {
-                if pObj.fMarkB && Saig_ManConstrNum(p.pAig) {
-                    Abc_Print( 1, "constraint %d failed in frame %d.\n", i, f ); }
-            }
-        }
-        // transfer
-        if f == 0 { // copy markB into phase
-            // inlining of macro Aig_ManForEachObj
-            // inlining of macro Vec_PtrForEachEntry
-            for  i = 0; (i < Vec_PtrSize(p.pAig.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {
-                pObj.fPhase = pObj.fMarkB; }
-            }
-        
-        } else { // refine classes
-            RetValue1 = Ssw_ClassesRefineConst1( p.ppClasses, 0 );
-            RetValue2 = Ssw_ClassesRefine( p.ppClasses, 0 );
-        }
-    }
-    assert(iLits == Vec_IntSize(p.vInits), "iLits == Vec_IntSize(p.vInits)");
-}
+
 
 
 /**Function*************************************************************
