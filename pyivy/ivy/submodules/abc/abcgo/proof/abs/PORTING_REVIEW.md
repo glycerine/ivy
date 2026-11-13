@@ -22,10 +22,9 @@ The lower-level `Gla_ManStart` and `Gla_ManStart2` interfaces still require an
 AND-only graph; replacing only their SAT clauses would leave refinement unsound.
 The port also supports reordered inputs, duplicate AND nodes, and buffers.
 
-`Abs_Par_t` retains private source-style option fields, so callers outside this
-package cannot currently configure most options directly. The C-style exported
-entry points remain usable with default parameters; a Go-facing configuration
-API remains future work.
+`Abs_Par_t` and `Gia_ParAbs_t` retain private source-style option fields.
+External callers can configure them through `Options` and `LegacyOptions`,
+using the corresponding default, setter, and progress methods.
 
 The old GLA `fUseFullProof` option does not select a separate proof-logging
 mode in the Go port: `LabeledSolver2` always creates a proof graph. The
