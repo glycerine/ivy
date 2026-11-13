@@ -1671,16 +1671,21 @@ finish:
 		if p.pPars.fVerbose != 0 {
 			fmt.Printf("\n")
 		}
-		if err := p.pGia.SetSequentialCounterexample(pCex); err != nil {
-			panic(err)
-		}
+		// ABC's C implementation reports SAT even when this replay fails. In
+		// particular, optional terminal variables can yield a spurious initial
+		// state. Never publish that witness as a property violation.
 		if gia.Gia_ManVerifyCex(p.pGia, pCex, 0) == 0 {
+			p.pGia.ClearSequentialCounterexample()
 			util.Abc_Print(1, "    Gia_VtaPerform(): CEX verification has failed!\n")
+		} else {
+			if err := p.pGia.SetSequentialCounterexample(pCex); err != nil {
+				panic(err)
+			}
+			util.Abc_Print(1, "Counter-example detected in frame %d.  ", f)
+			p.pPars.iFrame = pCex.IFrame - 1
+			gia.Gia_ManSetObjClasses(pAig, nil)
+			RetValue = 0
 		}
-		util.Abc_Print(1, "Counter-example detected in frame %d.  ", f)
-		p.pPars.iFrame = pCex.IFrame - 1
-		gia.Gia_ManSetObjClasses(pAig, nil)
-		RetValue = 0
 	}
 	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk)
 
