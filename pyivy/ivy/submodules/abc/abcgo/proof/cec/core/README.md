@@ -2,9 +2,9 @@
 
 This is the dependency-neutral Go implementation of the model and incremental
 SAT proof group used by ABC's CEC engine. It performs real cone CNF construction,
-CDCL solving, equivalence checks and counterexample validation. The legacy parent
-`proof/cec` package still contains generated algorithms under conversion; this
-subpackage does not hide or build-exclude those files.
+CDCL solving, equivalence checks and counterexample validation. The parent
+`proof/cec` package uses this core for combinational proofs. This is a Go SAT
+adapter, rather than a line-by-line port of ABC's CEC SAT implementation.
 
 `Network` exposes GIA-compatible `id<<1|complement` literals with zero false,
 ordered input/output interfaces, and constant/input/AND/XOR/MUX/buffer/output
@@ -54,9 +54,10 @@ Regression findings addressed:
   queries and recycled solver history rather than its per-solve counter.
 - Recycling rebuilds all SAT-literal caches and shared input bindings.
 
-Actual commands `go test -race -cover ./proof/cec/core` and
-`go vet ./proof/cec/core` pass. Statement coverage is 85.4%. Tests compare 960
+Tests compare 960
 random circuit-node equivalence queries against exhaustive assignment enumeration,
+and cross-network queries against independent exhaustive truth tables with
+different input-use orders and solver recycling. They also
 check every gate's CNF under both phase policies, exercise incremental proofs,
 recycling/cancellation and model validation, and compare defaults with original
 CEC source when that optional reference tree is available.
