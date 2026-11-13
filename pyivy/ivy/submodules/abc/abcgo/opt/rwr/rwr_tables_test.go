@@ -3,6 +3,7 @@ package rwr
 import (
 	"testing"
 
+	"github.com/glycerine/abcgo/bool/dec"
 	"github.com/glycerine/abcgo/misc/extra/npn"
 )
 
@@ -25,6 +26,20 @@ func TestPrecomputedForestReferencesEarlierNodes(t *testing.T) {
 		}
 	}
 	t.Fatal("missing forest terminator")
+}
+
+func TestCanonicalDecompositionsPreserveTruth(t *testing.T) {
+	forest := rwrLoadForest(s_RwtAigSubgraphs)
+	canonical, _, _, classMap := npn.Extra_Truth4VarNPN()
+	classes, _ := rwrClassifyForest(forest, canonical, classMap)
+	for _, nodes := range classes {
+		for _, id := range nodes {
+			graph := rwrDecomposition(forest, id)
+			if got := uint16(dec.Dec_GraphDeriveTruth(graph)); got != forest[id].truth {
+				t.Fatalf("node %d: decomposition %#x, want %#x", id, got, forest[id].truth)
+			}
+		}
+	}
 }
 
 func TestPracticalClassesSentinel(t *testing.T) {
