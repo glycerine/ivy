@@ -248,6 +248,23 @@ func TestPdrSolveTwoRegisterReachability(t *testing.T) {
 		var pars Pdr_Par_t
 		Pdr_ManSetDefaultParams(&pars)
 		pars.fSilent = 1
+		if trial%2 == 0 {
+			pars.fSkipDown = 0
+			pars.fCtgs = 1
+		}
+		if trial%3 == 0 {
+			pars.fTwoRounds = 1
+		}
+		if trial%5 == 0 {
+			pars.fFlopOrder = 1
+		}
+		if trial%7 == 0 {
+			pars.fUseAbs = 1
+			pars.fUseSimpleRef = 1
+		}
+		if trial%11 == 0 {
+			pars.fSimpleGeneral = 1
+		}
 		got := Pdr_ManSolve(g, &pars)
 		want := int32(1)
 		if bad {
@@ -259,5 +276,32 @@ func TestPdrSolveTwoRegisterReachability(t *testing.T) {
 		if got == 0 && (g.SequentialCounterexample() == nil || saig.Saig_ManVerifyCex(g, g.SequentialCounterexample()) != 1) {
 			t.Fatalf("trial %d tables %v: invalid counterexample", trial, tables)
 		}
+	}
+}
+
+func TestPdrHonorsStopCallback(t *testing.T) {
+	g := aig.NewGraph()
+	in := g.NewInput()
+	latch := g.NewInput()
+	g.AddOutput(latch)
+	g.AddOutput(in)
+	aig.Aig_ManSetRegNum(g, 1)
+	var pars Pdr_Par_t
+	Pdr_ManSetDefaultParams(&pars)
+	pars.fSilent = 1
+	calls := 0
+	pars.RunId = 42
+	pars.pFuncStop = func(id int32) int32 {
+		if id != 42 {
+			t.Fatalf("callback id %d", id)
+		}
+		calls++
+		return 1
+	}
+	if got := Pdr_ManSolve(g, &pars); got != -1 {
+		t.Fatalf("got %d, want unknown", got)
+	}
+	if calls == 0 {
+		t.Fatal("stop callback was not invoked")
 	}
 }
