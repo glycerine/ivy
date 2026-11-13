@@ -26,6 +26,9 @@ func sswManSetConstrPhases(g *aig.Graph, frames int32, inits **vec.Vec_Int_t, de
 		panic("ssw: cannot derive constraint CNF")
 	}
 	solver := cnf.Cnf_DataWriteIntoSolver(data, 1, 0)
+	if !deadline.IsZero() && !time.Now().Before(deadline) {
+		return -1
+	}
 	if solver == nil {
 		return 1
 	}

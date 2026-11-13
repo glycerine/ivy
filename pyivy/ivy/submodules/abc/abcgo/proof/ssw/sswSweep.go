@@ -148,6 +148,9 @@ func Ssw_ManSweepNode(p *Ssw_Man_t, obj aig.Edge, frame, bmc int32, pairs *vec.V
 	} else {
 		Ssw_ManResimulateBit(p, obj, repr)
 	}
+	if sswDeadlineExpired(p.pPars) {
+		return 0
+	}
 	if aig.Aig_ObjRepr(p.pAig, obj) == repr {
 		panic("ssw: counterexample failed to refine representative")
 	}
