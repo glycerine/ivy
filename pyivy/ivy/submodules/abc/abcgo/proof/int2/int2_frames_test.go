@@ -302,6 +302,30 @@ func TestCheckBmcFindsFailureAfterUnconstructedOutput(t *testing.T) {
 	}
 }
 
+func TestCheckBmcCubeAssumptionsMatchSourceStatus(t *testing.T) {
+	g := gia.Gia_ManStart(8)
+	state := gia.Gia_ManAppendCi(g)
+	gia.Gia_ManAppendCo(g, 0)
+	gia.Gia_ManAppendCo(g, state)
+	gia.Gia_ManSetRegNum(g, 1)
+	m := Int2_ManCreate(g, &Int2_ManPars_t{})
+	defer Int2_ManStop(m)
+	m.pSatPref = sat_solver_new()
+	sat_solver_setnvars(m.pSatPref, 1)
+	if sat_solver_addclause(m.pSatPref, []int32{0}) == 0 {
+		t.Fatal("could not set up SAT unit")
+	}
+	for _, tc := range []struct {
+		literal int32
+		want    int32
+	}{{0, 0}, {1, 1}} {
+		cube := vec.Vec_IntAllocArrayCopy([]int32{tc.literal}, 1)
+		if got := Int2_ManCheckBmc(m, cube); got != tc.want {
+			t.Fatalf("cube literal %d: got %d, want %d", tc.literal, got, tc.want)
+		}
+	}
+}
+
 func TestZeroFrameBuildersReturnInitialState(t *testing.T) {
 	g := gia.Gia_ManStart(12)
 	pi, state := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
