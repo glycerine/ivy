@@ -1,316 +1,134 @@
 package int
 
-/**CFile****************************************************************
+// Incremental inductive containment checking from proof/int/intCheck.c.
+import (
+	"time"
 
-  FileName    [intCheck.c]
+	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/misc/util"
+	"github.com/glycerine/abcgo/sat/bsat"
+	"github.com/glycerine/abcgo/sat/cnf"
+)
 
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Interpolation engine.]
-
-  Synopsis    [Procedures to perform incremental inductive check.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 24, 2008.]
-
-  Revision    [$Id: intCheck.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "intInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-// checking manager
-type Inter_Check_t_ struct {
-    nFramesK           int32;     // the number of timeframes (K=1 for simple induction)
-    nVars           int32;        // the current number of variables in the solver
-    pFrames    *Aig_Man_t;      // unrolled timeframes
-    pCnf    *Cnf_Dat_t;         // CNF of unrolled timeframes 
-    pSat   *sat_solver;         // SAT solver 
-    vOrLits    *Vec_Int_t;      // OR vars in each time frame (total number is the number nFrames)
-    vAndLits    *Vec_Int_t;     // AND vars in the last timeframe (total number is the number of interpolants)
-    vAssLits    *Vec_Int_t;     // assumptions (the union of the two)
+type Inter_Check_t struct {
+	nFramesK, nVars   int32
+	pFrames           *aig.Graph
+	pCnf              *cnf.Cnf_Dat_t
+	pSat              *bsat.Solver
+	vOrLits, vAndLits []int32
 }
 
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Create timeframes of the manager for interpolation.]
-
-  Description [The resulting manager is combinational. The primary inputs
-  corresponding to register outputs are ordered first.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Inter_ManUnrollFrames(pAig *Aig_Man_t, nFrames int32) *Aig_Man_t {
-    var pFrames *Aig_Man_t;
-    var pObj, pObjLi, pObjLo *Aig_Obj_t;
-    var i, f int32;
-    assert(Saig_ManRegNum(pAig) > 0, "Saig_ManRegNum(pAig) > 0");
-    pFrames = Aig_ManStart( Aig_ManNodeNum(pAig) * nFrames );
-    // map the constant node
-    Aig_ManConst1(pAig).pData = Aig_ManConst1( pFrames );
-    // create variables for register outputs
-    // inlining of macro Saig_ManForEachLo
-    for  i = 0; (i < Saig_ManRegNum(pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i+Saig_ManPiNum(pAig))), 1); i++  {
-        pObj.pData = Aig_ObjCreateCi( pFrames );
-    }
-    // add timeframes
-    for  f = 0; f < nFrames; f++  {
-        // create PI nodes for this frame
-        // inlining of macro Saig_ManForEachPi
-        // inlining of macro Vec_PtrForEachEntryStop
-        for  i = 0; (i < Saig_ManPiNum(pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {
-            pObj.pData = Aig_ObjCreateCi( pFrames );
-        }
-        // add internal nodes of this frame
-        // inlining of macro Aig_ManForEachNode
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(pAig.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-            pObj.pData = Aig_And( pFrames, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }
-        }
-        // save register inputs
-        // inlining of macro Saig_ManForEachLi
-        for  i = 0; (i < Saig_ManRegNum(pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i+Saig_ManPoNum(pAig))), 1); i++  {
-            pObj.pData = Aig_ObjChild0Copy(pObj);
-        }
-        // transfer to register outputs
-        // inlining of macro Saig_ManForEachLiLo
-        for  i = 0; (i < Saig_ManRegNum(pAig)) && (((pObjLi) = Saig_ManLi(pAig, i)), 1)            && (((pObjLo)=Saig_ManLo(pAig, i)), 1); i++  {
-            pObjLo.pData = pObjLi.pData;
-            Aig_ObjCreateCo( pFrames, (Aig_Obj_t *)pObjLo.pData );
-        }
-    }
-    Aig_ManCleanup( pFrames );
-    return pFrames;
+// Inter_ManUnrollFrames creates register inputs followed by each frame's PIs,
+// and emits the register inputs at the end of each frame as outputs.
+func Inter_ManUnrollFrames(trans *aig.Graph, nFrames int32) *aig.Graph {
+	var mapping []aig.Edge
+	frames := Inter_ManFramesLatches(trans, nFrames, &mapping)
+	for _, edge := range mapping[int(trans.RegisterCount()):] {
+		frames.AddOutput(edge)
+	}
+	return frames
 }
 
-/**Function*************************************************************
-
-  Synopsis    [This procedure sets default values of interpolation parameters.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Inter_CheckStart(pTrans *Aig_Man_t, nFramesK int32) *Inter_Check_t {
-    
-    // create solver
-    // inlining of macro ABC_CALLOC
-    p := &Inter_Check_t{};
-    p.vOrLits  = Vec_IntAlloc( 100 );
-    p.vAndLits = Vec_IntAlloc( 100 );
-    p.vAssLits = Vec_IntAlloc( 100 );
-    // generate the timeframes 
-    p.pFrames = Inter_ManUnrollFrames( pTrans, nFramesK );
-    assert(Aig_ManCiNum(p.pFrames) == nFramesK * Saig_ManPiNum(pTrans) + Saig_ManRegNum(pTrans), "Aig_ManCiNum(p.pFrames) == nFramesK * Saig_ManPiNum(pTrans) + Saig_ManRegNum(pTrans)");
-    assert(Aig_ManCoNum(p.pFrames) == nFramesK * Saig_ManRegNum(pTrans), "Aig_ManCoNum(p.pFrames) == nFramesK * Saig_ManRegNum(pTrans)");
-    // convert to CNF
-    p.pCnf = Cnf_Derive( p.pFrames, Aig_ManCoNum(p.pFrames) ); 
-    p.pSat = (sat_solver *)Cnf_DataWriteIntoSolver( p.pCnf, 1, 0 );
-    // assign parameters
-    p.nFramesK = nFramesK;
-    p.nVars    = p.pCnf.nVars;
-    return p;
+func Inter_CheckStart(trans *aig.Graph, nFrames int32) *Inter_Check_t {
+	if trans == nil || trans.RegisterCount() <= 0 || nFrames <= 0 {
+		panic("invalid induction frame count")
+	}
+	frames := Inter_ManUnrollFrames(trans, nFrames)
+	data := cnf.Cnf_Derive(frames, int32(frames.OutputCount()))
+	if data == nil {
+		return nil
+	}
+	solver := cnf.Cnf_DataWriteIntoSolver(data, 1, 0)
+	if solver == nil {
+		return nil
+	}
+	return &Inter_Check_t{nFramesK: nFrames, nVars: int32(data.Variables), pFrames: frames, pCnf: data, pSat: solver}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [This procedure sets default values of interpolation parameters.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Inter_CheckStop(p *Inter_Check_t) {
-    if p == nil {
-        return; }
-    Vec_IntFree( p.vOrLits );
-    Vec_IntFree( p.vAndLits );
-    Vec_IntFree( p.vAssLits );
-    Cnf_DataFree( p.pCnf );
-    Aig_ManStop( p.pFrames );
-    sat_solver_delete( p.pSat );
-    p = nil;
+	if p == nil {
+		return
+	}
+	if p.pCnf != nil {
+		cnf.Cnf_DataFree(p.pCnf)
+	}
+	*p = Inter_Check_t{}
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Creates one OR-gate: A + B = C.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Inter_CheckAddOrGate(p *Inter_Check_t, iVarA int32, iVarB int32, iVarC int32) {
-    var RetValue int32;
-    var pLits [3]int32;
-    // add A => C   or   !A + C
-    pLits[0] = toLitCond(iVarA, 1);
-    pLits[1] = toLitCond(iVarC, 0);
-    RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 2 );
-    assert((RetValue != 0), "RetValue");
-    // add B => C   or   !B + C
-    pLits[0] = toLitCond(iVarB, 1);
-    pLits[1] = toLitCond(iVarC, 0);
-    RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 2 );
-    assert((RetValue != 0), "RetValue");
-    // add !A & !B => !C  or A + B + !C
-    pLits[0] = toLitCond(iVarA, 0);
-    pLits[1] = toLitCond(iVarB, 0);
-    pLits[2] = toLitCond(iVarC, 1);
-    RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 3 );
-    assert((RetValue != 0), "RetValue");
+func Inter_CheckAddOrGate(p *Inter_Check_t, a, b, c int32) {
+	if !p.pSat.AddClause(bsat.Negative(a), bsat.Positive(c)) ||
+		!p.pSat.AddClause(bsat.Negative(b), bsat.Positive(c)) ||
+		!p.pSat.AddClause(bsat.Positive(a), bsat.Positive(b), bsat.Negative(c)) {
+		panic("could not add interpolation OR gate")
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Creates equality: A = B.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Inter_CheckAddEqual(p *Inter_Check_t, iVarA int32, iVarB int32) {
-    var RetValue int32;
-    var pLits [3]int32;
-    // add A => B   or   !A + B
-    pLits[0] = toLitCond(iVarA, 1);
-    pLits[1] = toLitCond(iVarB, 0);
-    RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 2 );
-    assert((RetValue != 0), "RetValue");
-    // add B => A   or   !B + A
-    pLits[0] = toLitCond(iVarB, 1);
-    pLits[1] = toLitCond(iVarA, 0);
-    RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 2 );
-    assert((RetValue != 0), "RetValue");
+func Inter_CheckAddEqual(p *Inter_Check_t, a, b int32) {
+	if !p.pSat.AddClause(bsat.Negative(a), bsat.Positive(b)) ||
+		!p.pSat.AddClause(bsat.Positive(a), bsat.Negative(b)) {
+		panic("could not add interpolation equality")
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Perform the checking.]
-
-  Description [Returns 1 if the check has passed.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Inter_CheckPerform(p *Inter_Check_t, pCnfInt *Cnf_Dat_t, nTimeNewOut abctime) int32 {
-    var pObj, pObj2 *Aig_Obj_t;
-    var i, f, VarA, VarB, RetValue, Entry, status int32;
-    var nRegs int32  = Aig_ManCiNum(pCnfInt.pMan);
-    assert(Aig_ManCoNum(p.pCnf.pMan) == p.nFramesK * nRegs, "Aig_ManCoNum(p.pCnf.pMan) == p.nFramesK * nRegs");
-    assert(Aig_ManCoNum(pCnfInt.pMan) == 1, "Aig_ManCoNum(pCnfInt.pMan) == 1");
-
-    // set runtime limit
-    if nTimeNewOut {
-        sat_solver_set_runtime_limit( p.pSat, nTimeNewOut ); }
-
-    // add clauses to the SAT solver
-    Cnf_DataLift( pCnfInt, p.nVars );
-    for  f = 0; f <= p.nFramesK; f++  {
-        // add clauses to the solver
-        for  i = 0; i < pCnfInt.nClauses; i++  {
-            RetValue = sat_solver_addclause( p.pSat, pCnfInt.pClauses[i], pCnfInt.pClauses[i+1] );
-            assert((RetValue != 0), "RetValue");
-        }
-        // add equality clauses for the flop variables
-        // inlining of macro Aig_ManForEachCi
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(pCnfInt.pMan.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pCnfInt.pMan.vCis, i)), 1); i++  {
-            if f != 0 {
-                pObj2 = Aig_ManCo(p.pFrames, i + (f-1) * nRegs);
-            } else {
-                pObj2 = Aig_ManCi(p.pFrames, i);
-            }
-            Inter_CheckAddEqual( p, pCnfInt.pVarNums[pObj.Id], p.pCnf.pVarNums[pObj2.Id] );
-        }
-        // add final clauses
-        if f < p.nFramesK {
-            if f == Vec_IntSize(p.vOrLits) { // find time here
-            
-                // add literal to this frame
-                VarB = pCnfInt.pVarNums[ Aig_ManCo(pCnfInt.pMan, 0).Id ];
-                Vec_IntPush( p.vOrLits, VarB );
-            
-            } else {
-                // add OR gate for this frame
-                VarA = Vec_IntEntry( p.vOrLits, f );
-                VarB = pCnfInt.pVarNums[ Aig_ManCo(pCnfInt.pMan, 0).Id ];
-                Inter_CheckAddOrGate( p, VarA, VarB, p.nVars + pCnfInt.nVars );
-                Vec_IntWriteEntry( p.vOrLits, f, p.nVars + pCnfInt.nVars ); // using var ID!
-            }
-        
-        } else {
-            // add AND gate for this frame
-            VarB = pCnfInt.pVarNums[ Aig_ManCo(pCnfInt.pMan, 0).Id ];
-            Vec_IntPush( p.vAndLits, VarB );
-        }
-        // update variable IDs
-        Cnf_DataLift( pCnfInt, pCnfInt.nVars + 1 );
-        p.nVars += pCnfInt.nVars + 1;
-    }
-    Cnf_DataLift( pCnfInt, -p.nVars );
-    assert(Vec_IntSize(p.vOrLits) == p.nFramesK, "Vec_IntSize(p.vOrLits) == p.nFramesK");
-
-    // collect the assumption literals
-    Vec_IntClear( p.vAssLits );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(p.vOrLits)) && (((Entry) = Vec_IntEntry(p.vOrLits, i)), 1); i++  {
-        Vec_IntPush( p.vAssLits, toLitCond(Entry, 0) );
-    }
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(p.vAndLits)) && (((Entry) = Vec_IntEntry(p.vAndLits, i)), 1); i++  {
-        Vec_IntPush( p.vAssLits, toLitCond(Entry, 1) );
-    }
-/*
-    if ( pCnfInt->nLiterals == 3635 )
-    {
-        int s = 0;
-    }
-*/
-    // call the SAT solver
-    status = sat_solver_solve( p.pSat, Vec_IntArray(p.vAssLits), 
-        Vec_IntArray(p.vAssLits) + Vec_IntSize(p.vAssLits), 
-        (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );
-
-    return status == l_False;
+// Inter_CheckPerform adds one interpolant to the existing k-induction query.
+// It returns 1 only when the resulting assumptions are proven UNSAT.
+func Inter_CheckPerform(p *Inter_Check_t, data *cnf.Cnf_Dat_t, deadline abctime) int32 {
+	if p == nil || p.pSat == nil || data == nil || data.SourceGraph() == nil {
+		panic("invalid interpolant CNF")
+	}
+	graph := data.SourceGraph()
+	regs := graph.InputCount()
+	if graph.OutputCount() != 1 || p.pFrames.OutputCount() != int(p.nFramesK)*regs {
+		panic("interpolant dimensions do not match frames")
+	}
+	if deadline != 0 {
+		p.pSat.SetDeadline(time.Now().Add(time.Duration(deadline - util.Abc_Clock())))
+	}
+	base := p.nVars
+	cnf.Cnf_DataLift(data, base)
+	offset := base
+	defer func() { cnf.Cnf_DataLift(data, -offset) }()
+	for frame := int32(0); frame <= p.nFramesK; frame++ {
+		for _, clause := range data.Clauses {
+			if !p.pSat.AddClause(clause...) {
+				panic("inconsistent interpolation clauses")
+			}
+		}
+		for i, input := range graph.Inputs() {
+			var frameNode aig.Edge
+			if frame == 0 {
+				frameNode = p.pFrames.Inputs()[i]
+			} else {
+				frameNode = p.pFrames.Outputs()[i+int(frame-1)*regs]
+			}
+			Inter_CheckAddEqual(p, data.VarNums[input.NodeID()], p.pCnf.VarNums[frameNode.NodeID()])
+		}
+		output := data.VarNums[graph.Outputs()[0].NodeID()]
+		if frame < p.nFramesK {
+			if int(frame) == len(p.vOrLits) {
+				p.vOrLits = append(p.vOrLits, output)
+			} else {
+				combined := p.nVars + int32(data.Variables)
+				Inter_CheckAddOrGate(p, p.vOrLits[frame], output, combined)
+				p.vOrLits[frame] = combined
+			}
+		} else {
+			p.vAndLits = append(p.vAndLits, output)
+		}
+		step := int32(data.Variables) + 1
+		cnf.Cnf_DataLift(data, step)
+		offset += step
+		p.nVars += step
+	}
+	assumptions := make([]bsat.Literal, 0, len(p.vOrLits)+len(p.vAndLits))
+	for _, v := range p.vOrLits {
+		assumptions = append(assumptions, bsat.Positive(v))
+	}
+	for _, v := range p.vAndLits {
+		assumptions = append(assumptions, bsat.Negative(v))
+	}
+	if p.pSat.Solve(assumptions...) == bsat.Unsatisfiable {
+		return 1
+	}
+	return 0
 }
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-//ABC_NAMESPACE_IMPL_END
-
