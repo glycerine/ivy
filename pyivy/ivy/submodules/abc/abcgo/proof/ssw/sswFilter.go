@@ -7,7 +7,6 @@ import (
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/aig/saig"
 	"github.com/glycerine/abcgo/misc/util"
-	"time"
 )
 
 func sswFilterSimulateFrame(p *Ssw_Man_t, piValue func(int) bool) {
@@ -189,7 +188,11 @@ func sswFilterGrowFrames(p *Ssw_Man_t) {
 	p.nFrames = next
 }
 func Ssw_ManSweepBmcFilter(p *Ssw_Man_t, timeLimit int32) int32 {
-	started := time.Now()
+	var started int64
+	if timeLimit != 0 {
+		defer sswPinClock()()
+		started = sswCPUClock()
+	}
 	g := p.pAig
 	pis := saig.Saig_ManPiNum(g)
 	pos := saig.Saig_ManPoNum(g)
@@ -222,7 +225,7 @@ func Ssw_ManSweepBmcFilter(p *Ssw_Man_t, timeLimit int32) int32 {
 			fmt.Printf("Frame %4d : ", f)
 			Ssw_ClassesPrint(p.ppClasses, 0)
 		}
-		if timedOut || f == p.pPars.nFramesK-1 || (timeLimit != 0 && time.Since(started) >= time.Duration(timeLimit)*time.Second) {
+		if timedOut || f == p.pPars.nFramesK-1 || (timeLimit != 0 && float32(timeLimit) <= float32(sswCPUClock()-started)/float32(sswTicksPerSecond)) {
 			break
 		}
 		for _, out := range g.Outputs() {
@@ -239,9 +242,15 @@ func Ssw_ManSweepBmcFilter(p *Ssw_Man_t, timeLimit int32) int32 {
 
 // Ssw_SignalFilter retains ABC's integer-second time budget behavior: a
 // remaining fraction of a second rounds to zero, which means no per-sweep
-// limit, and that wall-clock limit is not passed to individual SAT calls.
+// limit, and that CPU-time limit is not passed to individual SAT calls.
 func Ssw_SignalFilter(g *aig.Graph, frames, conflicts, rounds, timeLimit, timeLimit2 int32, cex *util.Abc_Cex_t, latchOnly, verbose int32) {
-	deadline := time.Now().Add(time.Duration(timeLimit) * time.Second)
+	var deadline int64
+	if timeLimit != 0 || timeLimit2 != 0 {
+		defer sswPinClock()()
+	}
+	if timeLimit != 0 {
+		deadline = int64(timeLimit)*sswTicksPerSecond + sswCPUClock()
+	}
 	if aig.Aig_ManRegNum(g) <= 0 || aig.Aig_ManConstrNum(g) != 0 {
 		panic("ssw: invalid signal filter graph")
 	}
@@ -283,23 +292,13 @@ func Ssw_SignalFilter(g *aig.Graph, frames, conflicts, rounds, timeLimit, timeLi
 			Ssw_ClassesPrint(p.ppClasses, 0)
 		}
 		p.pMSat = Ssw_SatStart(0)
-		part := int32(0)
-		if timeLimit != 0 {
-			part = int32(time.Until(deadline) / time.Second)
-		}
-		if timeLimit2 != 0 {
-			if part != 0 {
-				part = min(part, timeLimit2)
-			} else {
-				part = timeLimit2
-			}
-		}
+		part := sswFilterPartLimit(timeLimit, timeLimit2, deadline, sswCPUClockIfTimed(timeLimit))
 		Ssw_ManSweepBmcFilter(p, part)
 		Ssw_SatStop(p.pMSat)
 		p.pMSat = nil
 		Ssw_ManCleanup(p)
 		Ssw_ManRollForward(p, frames)
-		if timeLimit != 0 && time.Now().After(deadline) {
+		if timeLimit != 0 && sswCPUClock() > deadline {
 			fmt.Printf("Reached timeout (%d seconds).\n", timeLimit)
 			break
 		}
@@ -308,6 +307,29 @@ func Ssw_SignalFilter(g *aig.Graph, frames, conflicts, rounds, timeLimit, timeLi
 	aig.Aig_ManCleanMarkB(g)
 	pars.fVerbose = 0
 	Ssw_ManStop(p)
+}
+
+func sswCPUClockIfTimed(limit int32) int64 {
+	if limit == 0 {
+		return 0
+	}
+	return sswCPUClock()
+}
+
+// sswFilterPartLimit retains C's signed integer truncation and zero handling.
+func sswFilterPartLimit(limit, limit2 int32, deadline, now int64) int32 {
+	part := int32(0)
+	if limit != 0 {
+		part = int32((deadline - now) / sswTicksPerSecond)
+	}
+	if limit2 != 0 {
+		if part != 0 {
+			part = min(part, limit2)
+		} else {
+			part = limit2
+		}
+	}
+	return part
 }
 func Ssw_SignalFilterGia(g *gia.Gia_Man_t, frames, conflicts, rounds, timeLimit, timeLimit2 int32, cex *util.Abc_Cex_t, latchOnly, verbose int32) {
 	graph := gia.Gia_ManToAigSimple(g)

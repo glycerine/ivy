@@ -4,7 +4,6 @@ package ssw
 import (
 	"fmt"
 	"math"
-	"time"
 
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/aig/gia"
@@ -121,7 +120,11 @@ func sswRar2StartingState(g *aig.Graph, cex *util.Abc_Cex_t) *vec.Vec_Int_t {
 	return result
 }
 func sswRar2Run(g *aig.Graph, frames, words, bin, rounds, timeout int32, cex *util.Abc_Cex_t, latchOnly, verbose int32, filter bool) int32 {
-	started := time.Now()
+	var deadline int64
+	if timeout != 0 {
+		defer sswPinClock()()
+		deadline = sswCPUClock() + int64(timeout)*sswTicksPerSecond
+	}
 	if g == nil || g.RegisterCount() <= 0 || aig.Aig_ManConstrNum(g) != 0 {
 		panic("ssw: rarity requires an unconstrained sequential AIG")
 	}
@@ -176,7 +179,7 @@ func sswRar2Run(g *aig.Graph, frames, words, bin, rounds, timeout int32, cex *ut
 		p.updateCounters()
 		p.transferPatterns()
 		Ssw_SmlInitializeSpecial(p.sim, p.inits)
-		if timeout != 0 && time.Since(started) > time.Duration(timeout)*time.Second {
+		if timeout != 0 && sswCPUClock() > deadline {
 			fmt.Printf("Reached timeout (%d seconds).\n", timeout)
 			break
 		}

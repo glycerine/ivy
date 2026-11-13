@@ -40,6 +40,13 @@ correspondence stages. Graph conversion and some graph traversal stages remain
 non-interruptible. Broader differential testing against ABC, especially for
 partitioned and constrained modes, remains useful.
 
+Timed signal-filter and rarity simulation/filter loops now use ABC's calling
+thread CPU clock on Linux, pinning their goroutine during the timed operation;
+other supported Unix targets use process CPU time and Windows uses CRT-style
+elapsed time. Signal filtering preserves C's signed whole-second truncation,
+zero-budget convention, and frame-boundary checks. CEC delegation's separate
+deadline path has not yet been converted to this clock domain.
+
 With flop grouping enabled, ABC transfers the grouped AIG's counterexample
 directly to the original GIA without undoing the permutation or inserted gap
 registers. The compiled `test_vectors/ssw_group_witness.c` fixture produces

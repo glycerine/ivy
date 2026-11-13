@@ -726,6 +726,13 @@ func Ssw_RarCheckTrivial(g *aig.Graph, verbose int32) int32 {
 */
 func Ssw_RarSimulate(g *aig.Graph, pars *Ssw_RarPars_t) int32 {
 	start := time.Now()
+	var deadline int64
+	if pars.TimeOut != 0 || pars.TimeOutGap != 0 {
+		defer sswPinClock()()
+		if pars.TimeOut != 0 {
+			deadline = sswCPUClock() + int64(pars.TimeOut)*sswTicksPerSecond
+		}
+	}
 	if g.RegisterCount() <= 0 || aig.Aig_ManConstrNum(g) != 0 {
 		panic("ssw: invalid rarity graph")
 	}
@@ -736,7 +743,7 @@ func Ssw_RarSimulate(g *aig.Graph, pars *Ssw_RarPars_t) int32 {
 	defer Ssw_RarManStop(p)
 	p.vInits = vec.Vec_IntStart(int(g.RegisterCount() * pars.nWords))
 	pars.nSolved = 0
-	var lastSolved time.Time
+	var lastSolved int64
 	restarts := int32(0)
 	result := int32(-1)
 outer:
@@ -761,9 +768,11 @@ outer:
 					}
 					break outer
 				}
-				lastSolved = time.Now()
+				if pars.TimeOutGap != 0 {
+					lastSolved = sswCPUClock()
+				}
 			}
-			if (pars.TimeOut != 0 && time.Since(start) > time.Duration(pars.TimeOut)*time.Second) || (pars.TimeOutGap != 0 && !lastSolved.IsZero() && time.Since(lastSolved) > time.Duration(pars.TimeOutGap)*time.Second) {
+			if pars.TimeOut != 0 && sswCPUClock() > deadline || pars.TimeOutGap != 0 && lastSolved != 0 && sswCPUClock() > lastSolved+int64(pars.TimeOutGap)*sswTicksPerSecond {
 				break outer
 			}
 			if pars.fSolveAll != 0 && p.vCexes != nil && vec.Vec_PtrCountZero(p.vCexes) == 0 {
@@ -866,7 +875,11 @@ func Ssw_RarSimulateGia(g *gia.Gia_Man_t, pars *Ssw_RarPars_t) int32 {
 **********************************************************************
 */
 func Ssw_RarSignalFilter(g *aig.Graph, pars *Ssw_RarPars_t) int32 {
-	start := time.Now()
+	var deadline int64
+	if pars.TimeOut != 0 {
+		defer sswPinClock()()
+		deadline = sswCPUClock() + int64(pars.TimeOut)*sswTicksPerSecond
+	}
 	if g.RegisterCount() <= 0 || aig.Aig_ManConstrNum(g) != 0 {
 		panic("ssw: invalid rarity filter graph")
 	}
@@ -919,7 +932,7 @@ func Ssw_RarSignalFilter(g *aig.Graph, pars *Ssw_RarPars_t) int32 {
 				}
 				return 0
 			}
-			if pars.TimeOut != 0 && time.Since(start) > time.Duration(pars.TimeOut)*time.Second {
+			if pars.TimeOut != 0 && sswCPUClock() > deadline {
 				return -1
 			}
 		}
