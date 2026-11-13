@@ -288,23 +288,7 @@ func Acb_NtkFromNdr(pFileName string, pModule any, pNames *Abc_Nam_t, vWeights *
   SeeAlso     []
 
 ***********************************************************************/
-func Acb_ParSetDefault(pPars *Acb_Par_t) {
-    memset( pPars, 0, sizeof(Acb_Par_t) );
-    pPars.nLutSize     =    4;    // LUT size
-    pPars.nTfoLevMax   =    2;    // the maximum fanout levels
-    pPars.nTfiLevMax   =    3;    // the maximum fanin levels
-    pPars.nFanoutMax   =   20;    // the maximum number of fanouts
-    pPars.nWinNodeMax  =  100;    // the maximum number of nodes in the window
-    pPars.nGrowthLevel =    0;    // the maximum allowed growth in level
-    pPars.nBTLimit     =    0;    // the maximum number of conflicts in one SAT run
-    pPars.nNodesMax    =    0;    // the maximum number of nodes to try
-    pPars.iNodeOne     =    0;    // one particular node to try
-    pPars.fArea        =    1;    // performs optimization for area
-    pPars.fUseAshen    =    0;    // use Ashenhurst decomposition
-    pPars.fMoreEffort  =    0;    // enables using more effort
-    pPars.fVerbose     =    0;    // enable basic stats
-    pPars.fVeryVerbose =    0;    // enable detailed stats
-}
+
 
 /**Function*************************************************************
 
