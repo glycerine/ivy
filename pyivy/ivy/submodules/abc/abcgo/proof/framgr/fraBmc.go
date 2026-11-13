@@ -145,12 +145,12 @@ func Fra_BmcPerform(p *Fra_Man_t, prefix, depth int32) {
 	if p.PPars.FVerbose != 0 {
 		fmt.Printf("Original AIG = %d. Init %d frames = %d. Fraig = %d. Time = %s.\nBefore BMC: Const = %d. Class = %d. Lit = %d. Imp = %d.\n", aig.Aig_ManNodeNum(b.PAig), b.NFramesAll, aig.Aig_ManNodeNum(b.PAigFrames), aig.Aig_ManNodeNum(b.PAigFraig), time.Since(start), len(p.PCla.Constants), len(p.PCla.Classes), Fra_ClassesCountLits(p.PCla), oldImps)
 	}
-	prevConst, prevEqual := p.PCla.NodeIsConst, p.PCla.NodesEqual
 	p.PCla.NodeIsConst = func(id int) bool { return Fra_BmcNodeIsConst(p, aig.Edge(id<<1)) != 0 }
 	p.PCla.NodesEqual = func(a, b int) bool { return Fra_BmcNodesAreEqual(p, aig.Edge(a<<1), aig.Edge(b<<1)) != 0 }
-	defer func() { p.PCla.NodeIsConst, p.PCla.NodesEqual = prevConst, prevEqual }()
 	Fra_ClassesRefine(p.PCla)
 	Fra_ClassesRefine1(p.PCla, 1, nil)
+	// Nil selects the ordinary simulation callbacks, as the C driver does.
+	p.PCla.NodeIsConst, p.PCla.NodesEqual = nil, nil
 	if p.PPars.FVerbose != 0 {
 		n := 0
 		if b.VImps != nil {

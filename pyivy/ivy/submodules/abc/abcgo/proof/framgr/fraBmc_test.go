@@ -98,6 +98,21 @@ func TestFraBmcPerformRefinesInitializedClasses(t *testing.T) {
 	}
 }
 
+func TestFraBmcRestoresSimulationCallbacks(t *testing.T) {
+	g := aig.NewGraph()
+	x, state := g.NewInput(), g.NewInput()
+	g.AddOutput(state)
+	g.AddOutput(x)
+	aig.Aig_ManSetRegNum(g, 1)
+	p := &Fra_Man_t{PManAig: g, PPars: &Fra_Par_t{}, PCla: Fra_ClassesStart(g)}
+	p.PCla.NodeIsConst = func(int) bool { return true }
+	p.PCla.NodesEqual = func(int, int) bool { return true }
+	Fra_BmcPerform(p, 0, 1)
+	if p.PCla.NodeIsConst != nil || p.PCla.NodesEqual != nil {
+		t.Fatal("BMC did not restore ABC's simulation predicates")
+	}
+}
+
 func TestFraBmcPerformSimpleFindsSequentialWitness(t *testing.T) {
 	g := aig.NewGraph()
 	x, y, state := g.NewInput(), g.NewInput(), g.NewInput()
