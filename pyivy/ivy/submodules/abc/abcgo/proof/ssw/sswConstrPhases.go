@@ -14,11 +14,11 @@ func Ssw_ManSetConstrPhases(g *aig.Graph, frames int32, inits **vec.Vec_Int_t) i
 	return sswManSetConstrPhases(g, frames, inits, time.Time{})
 }
 func sswManSetConstrPhases(g *aig.Graph, frames int32, inits **vec.Vec_Int_t, deadline time.Time) int32 {
-	if !deadline.IsZero() && !time.Now().Before(deadline) {
-		return -1
-	}
 	if inits != nil {
 		*inits = nil
+	}
+	if !deadline.IsZero() && !time.Now().Before(deadline) {
+		return -1
 	}
 	unrolled := Ssw_FramesWithConstraints(g, frames)
 	data := cnf.Cnf_Derive(unrolled, 0)
