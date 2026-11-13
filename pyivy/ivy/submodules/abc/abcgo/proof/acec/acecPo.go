@@ -316,6 +316,47 @@ func (p *polynomial) replaceXor(id, left, right int32, literalMode bool) {
 	}
 }
 
+// addLiteralProduct expands complemented object literals before adding a term.
+func (p *polynomial) addLiteralProduct(vars, coef, factors []int32, literalMode bool) {
+	if len(factors) == 0 {
+		p.add(vars, coef)
+		return
+	}
+	lit := factors[0]
+	if literalMode {
+		p.addLiteralProduct(insertUnique(vars, lit), coef, factors[1:], true)
+		return
+	}
+	if lit&1 != 0 {
+		p.addLiteralProduct(append([]int32(nil), vars...), coef, factors[1:], false)
+		p.addLiteralProduct(insertUnique(append([]int32(nil), vars...), lit>>1), negCoefficients(coef), factors[1:], false)
+		return
+	}
+	p.addLiteralProduct(insertUnique(vars, lit>>1), coef, factors[1:], false)
+}
+
+// replaceMux applies s*t+(1-s)*e to every term containing id.
+func (p *polynomial) replaceMux(id, sel, then, otherwise int32, literalMode bool) {
+	count := len(p.terms)
+	for i := 0; i < count; i++ {
+		term := p.terms[i]
+		if len(term.coef) == 0 {
+			continue
+		}
+		at := sort.Search(len(term.vars), func(j int) bool { return term.vars[j] >= id })
+		if at == len(term.vars) || term.vars[at] != id {
+			continue
+		}
+		vars := append([]int32(nil), term.vars...)
+		vars = append(vars[:at], vars[at+1:]...)
+		coef := append([]int32(nil), term.coef...)
+		term.coef = nil
+		p.addLiteralProduct(append([]int32(nil), vars...), coef, []int32{otherwise}, literalMode)
+		p.addLiteralProduct(append([]int32(nil), vars...), coef, []int32{sel, then}, literalMode)
+		p.addLiteralProduct(append([]int32(nil), vars...), negCoefficients(coef), []int32{sel, otherwise}, literalMode)
+	}
+}
+
 func negCoefficients(in []int32) []int32 {
 	out := make([]int32, len(in))
 	for i, v := range in {
@@ -417,7 +458,9 @@ func Gia_PolynBuildNew2(graph *gia.Gia_Man_t, roots *vec.Vec_Int_t, extra int32,
 		id := values[i]
 		obj := gia.Gia_ManObj(graph, id)
 		p.replace(2*id+1, -1, 2*id, true)
-		if gia.Gia_ObjIsXor(obj) != 0 {
+		if gia.Gia_ObjIsMux(graph, obj) != 0 {
+			p.replaceMux(2*id, gia.Gia_ObjFaninLit2(graph, id), gia.Gia_ObjFaninLit1(obj, id), gia.Gia_ObjFaninLit0(obj, id), true)
+		} else if gia.Gia_ObjIsXor(obj) != 0 {
 			p.replaceXor(2*id, gia.Gia_ObjFaninLit0(obj, id), gia.Gia_ObjFaninLit1(obj, id), true)
 		} else {
 			p.replace(2*id, gia.Gia_ObjFaninLit0(obj, id), gia.Gia_ObjFaninLit1(obj, id), true)
@@ -486,7 +529,9 @@ func Gia_PolynBuildNew(graph *gia.Gia_Man_t, sign *vec.Vec_Wec_t, roots *vec.Vec
 	for i := len(values) - 1; i >= 0; i-- {
 		id := values[i]
 		obj := gia.Gia_ManObj(graph, id)
-		if gia.Gia_ObjIsXor(obj) != 0 {
+		if gia.Gia_ObjIsMux(graph, obj) != 0 {
+			p.replaceMux(id, gia.Gia_ObjFaninLit2(graph, id), gia.Gia_ObjFaninLit1(obj, id), gia.Gia_ObjFaninLit0(obj, id), false)
+		} else if gia.Gia_ObjIsXor(obj) != 0 {
 			p.replaceXor(id, gia.Gia_ObjFaninLit0(obj, id), gia.Gia_ObjFaninLit1(obj, id), false)
 		} else {
 			p.replace(id, gia.Gia_ObjFaninLit0(obj, id), gia.Gia_ObjFaninLit1(obj, id), false)

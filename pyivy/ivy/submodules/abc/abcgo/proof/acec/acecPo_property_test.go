@@ -11,6 +11,7 @@ func TestPolynomialBuildersMixedDagAgainstSimulation(t *testing.T) {
 	rng := rand.New(rand.NewSource(17))
 	for graph := 0; graph < 30; graph++ {
 		p := gia.Gia_ManStart(64)
+		p.EnableMuxes()
 		lits := make([]int32, 4)
 		leaves := vec.Vec_IntAlloc(4)
 		for i := range lits {
@@ -26,10 +27,17 @@ func TestPolynomialBuildersMixedDagAgainstSimulation(t *testing.T) {
 			}
 			x, y := lits[a]^int32(rng.Intn(2)), lits[b]^int32(rng.Intn(2))
 			var lit int32
-			if rng.Intn(2) == 0 {
+			switch rng.Intn(3) {
+			case 0:
 				lit = gia.Gia_ManAppendAnd(p, x, y)
-			} else {
+			case 1:
 				lit = gia.Gia_ManAppendXorReal(p, x, y)
+			default:
+				c := rng.Intn(len(lits))
+				for c == a || c == b {
+					c = rng.Intn(len(lits))
+				}
+				lit = gia.Gia_ManAppendMuxReal(p, x, y, lits[c]^int32(rng.Intn(2)))
 			}
 			lits = append(lits, lit)
 			vec.Vec_IntPush(nodes, lit>>1)
