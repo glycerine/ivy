@@ -210,43 +210,7 @@ var spStatic_Gla_ManRefinement2_Sign int32;
   SeeAlso     []
 
 ***********************************************************************/
-func Gla_ManStop(p *Gla_Man_t) {
-    var pGla *Gla_Obj_t;
-    var i int32;
 
-    if p.pPars.fVerbose {
-        Abc_Print( 1, "SAT solver:  Var = %d  Cla = %d  Conf = %d  Lrn = %d  Reduce = %d  Cex = %d  Objs+ = %d\n", 
-            sat_solver2_nvars(p.pSat), sat_solver2_nclauses(p.pSat), sat_solver2_nconflicts(p.pSat), 
-            sat_solver2_nlearnts(p.pSat), p.pSat.nDBreduces, p.nCexes, p.nObjAdded ); }
-
-    // stop the refinement manager
-//    Gia_ManStopP( &p->pGia2 );
-    Rnm_ManStop( p.pRnm, 0 );
-
-    if p.pvRefis {
-    for  i = 0; i < Gia_ManObjNum(p.pGia); i++  {
-        p.pvRefis[i].pArray = nil;
-    } }
-    // inlining of macro Gla_ManForEachObj
-    for  pGla = p.pObjs + 1; pGla < p.pObjs + p.nObjs; pGla++  { 
-        pGla.vFrames.pArray = nil;
-    }
-    Cnf_DataFree( p.pCnf );
-    if p.pGia0 != nil {
-        Gia_ManStop( p.pGia ); }
-//    Gia_ManStaticFanoutStart( p->pGia0 );
-    sat_solver2_delete( p.pSat );
-    Vec_IntFreeP( &p.vObjCounts );
-    Vec_IntFreeP( &p.vAddedNew );
-    Vec_IntFreeP( &p.vCoreCounts );
-    Vec_IntFreeP( &p.vProofIds );
-    Vec_IntFreeP( &p.vTemp );
-    Vec_IntFreeP( &p.vAbs );
-    p.pvRefis = nil;
-    p.pObj2Obj = nil;
-    p.pObjs = nil;
-    p = nil;
-}
 
 /**Function*************************************************************
 
@@ -314,71 +278,8 @@ func Gla_ManStop(p *Gla_Man_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gla_ManAbsPrintFrame(p *Gla_Man_t, nCoreSize int32, nFrames int32, nConfls int32, nCexes int32, Time abctime) {
-    if Abc_FrameIsBatchMode() && nCoreSize <= 0 {
-        return; }
-    Abc_Print( 1, "%4d :", nFrames-1 );
-    Abc_Print( 1, "%4d", Abc_MinInt(100, 100 * Gia_GlaAbsCount(p, 0, 0) / (p.nObjs - Gia_ManPoNum(p.pGia) + Gia_ManCoNum(p.pGia) + 1)) ); 
-    Abc_Print( 1, "%6d", Gia_GlaAbsCount(p, 0, 0) );
-    Abc_Print( 1, "%5d", Gla_ManCountPPis(p) );
-    Abc_Print( 1, "%5d", Gia_GlaAbsCount(p, 1, 0) );
-    Abc_Print( 1, "%6d", Gia_GlaAbsCount(p, 0, 1) );
-    Abc_Print( 1, "%8d", nConfls );
-    if nCexes == 0 {
-        Abc_Print( 1, "%5c", '-' ); 
-    } else {
-        Abc_Print( 1, "%5d", nCexes ); } 
-//    Abc_Print( 1, " %9d", sat_solver2_nvars(p->pSat) ); 
-    Abc_PrintInt( sat_solver2_nvars(p.pSat) );
-    Abc_PrintInt( sat_solver2_nclauses(p.pSat) );
-    Abc_PrintInt( sat_solver2_nlearnts(p.pSat) );
-//    Abc_Print( 1, " %6d", nCoreSize > 0 ? nCoreSize : 0 ); 
-    Abc_Print( 1, "%9.2f sec", 1.0*Time/int64(time.Second) );
-    Abc_Print( 1, "%5.0f MB", (sat_solver2_memory_proof(p.pSat) + sat_solver2_memory(p.pSat, 0)) / (1<<20) );
-//    Abc_PrintInt( p->nAbsNew );
-//    Abc_PrintInt( p->nLrnNew );
-//    Abc_Print( 1, "%4.1f MB", 4.0 * p->nLrnNew * Abc_BitWordNum(p->nAbsNew) / (1<<20) );
-    Abc_Print( 1, "%s", (nCoreSize > 0 && nCexes > 0) ? "\n" : "\r" );
-    fflush( os.Stdout );
-}
-func Gla_ManReportMemory(p *Gla_Man_t) {
-    var pGla *Gla_Obj_t;
-    var memTot float64;
-    var memAig float64  = Gia_ManObjNum(p.pGia) * sizeof(Gia_Obj_t);
-    var memSat float64  = sat_solver2_memory( p.pSat, 1 );
-    var memPro float64  = sat_solver2_memory_proof( p.pSat );
-    var memMap float64  = p.nObjs * sizeof(Gla_Obj_t) + Gia_ManObjNum(p.pGia) * sizeof(int);
-    var memRef float64  = Rnm_ManMemoryUsage( p.pRnm );
-    var memOth float64  = sizeof(Gla_Man_t);
-    for  pGla = p.pObjs; pGla < p.pObjs + p.nObjs; pGla++  {
-        memMap += Vec_IntCap(&pGla.vFrames) * sizeof(int);
-    }
-    memOth += Vec_IntCap(p.vAddedNew) * sizeof(int);
-    memOth += Vec_IntCap(p.vTemp) * sizeof(int);
-    memOth += Vec_IntCap(p.vAbs) * sizeof(int);
-    memTot = memAig + memSat + memPro + memMap + memRef + memOth;
-    // inlining of macro ABC_PRMP
-    Abc_Print(1, "%s =", ("Memory: AIG      "));
-Abc_Print(1, "%10.3f MB (%6.2f %%)\n",  (1.0*(float64((memAig)))/(1<<20)), ((float64((memTot)))? 100.0*(float64((memAig)))/(float64((memTot))) : 0.0) );;
-    // inlining of macro ABC_PRMP
-    Abc_Print(1, "%s =", ("Memory: SAT      "));
-Abc_Print(1, "%10.3f MB (%6.2f %%)\n",  (1.0*(float64((memSat)))/(1<<20)), ((float64((memTot)))? 100.0*(float64((memSat)))/(float64((memTot))) : 0.0) );;
-    // inlining of macro ABC_PRMP
-    Abc_Print(1, "%s =", ("Memory: Proof    "));
-Abc_Print(1, "%10.3f MB (%6.2f %%)\n",  (1.0*(float64((memPro)))/(1<<20)), ((float64((memTot)))? 100.0*(float64((memPro)))/(float64((memTot))) : 0.0) );;
-    // inlining of macro ABC_PRMP
-    Abc_Print(1, "%s =", ("Memory: Map      "));
-Abc_Print(1, "%10.3f MB (%6.2f %%)\n",  (1.0*(float64((memMap)))/(1<<20)), ((float64((memTot)))? 100.0*(float64((memMap)))/(float64((memTot))) : 0.0) );;
-    // inlining of macro ABC_PRMP
-    Abc_Print(1, "%s =", ("Memory: Refine   "));
-Abc_Print(1, "%10.3f MB (%6.2f %%)\n",  (1.0*(float64((memRef)))/(1<<20)), ((float64((memTot)))? 100.0*(float64((memRef)))/(float64((memTot))) : 0.0) );;
-    // inlining of macro ABC_PRMP
-    Abc_Print(1, "%s =", ("Memory: Other    "));
-Abc_Print(1, "%10.3f MB (%6.2f %%)\n",  (1.0*(float64((memOth)))/(1<<20)), ((float64((memTot)))? 100.0*(float64((memOth)))/(float64((memTot))) : 0.0) );;
-    // inlining of macro ABC_PRMP
-    Abc_Print(1, "%s =", ("Memory: TOTAL    "));
-Abc_Print(1, "%10.3f MB (%6.2f %%)\n",  (1.0*(float64((memTot)))/(1<<20)), ((float64((memTot)))? 100.0*(float64((memTot)))/(float64((memTot))) : 0.0) );;
-}
+
+
 
 
 /**Function*************************************************************
@@ -392,27 +293,8 @@ Abc_Print(1, "%10.3f MB (%6.2f %%)\n",  (1.0*(float64((memTot)))/(1<<20)), ((flo
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_GlaSendAbsracted(p *Gla_Man_t, fVerbose int32) {
-    var pAbs *Gia_Man_t;
-    var vGateClasses *Vec_Int_t;
-    assert(Abc_FrameIsBridgeMode(), "Abc_FrameIsBridgeMode()");
-//    if ( fVerbose )
-//        Abc_Print( 1, "Sending abstracted model...\n" );
-    // create abstraction (value of p->pGia is not used here)
-    vGateClasses = Gla_ManTranslate( p );
-    pAbs = Gia_ManDupAbsGates( p.pGia0, vGateClasses );
-    Vec_IntFreeP( &vGateClasses );
-    // send it out
-    Gia_ManToBridgeAbsNetlist( os.Stdout, pAbs, BRIDGE_ABS_NETLIST );
-    Gia_ManStop( pAbs );
-}
-func Gia_GlaSendCancel(p *Gla_Man_t, fVerbose int32) {
-    extern int Gia_ManToBridgeBadAbs( FILE * pFile );
-    assert(Abc_FrameIsBridgeMode(), "Abc_FrameIsBridgeMode()");
-//    if ( fVerbose )
-//        Abc_Print( 1, "Cancelling previously sent model...\n" );
-    Gia_ManToBridgeBadAbs( os.Stdout );
-}
+
+
 
 /**Function*************************************************************
 
@@ -425,26 +307,7 @@ func Gia_GlaSendCancel(p *Gla_Man_t, fVerbose int32) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_GlaDumpAbsracted(p *Gla_Man_t, fVerbose int32) {
-    var pFileNameDef string  = "glabs.aig";
-    var pFileName string;
-    if p.pPars.pFileVabs {
-        pFileName = p.pPars.pFileVabs;
-    } else {
-        pFileName = pFileNameDef;
-    }
-    var pAbs *Gia_Man_t;
-    var vGateClasses *Vec_Int_t;
-    if fVerbose != 0 {
-        Abc_Print( 1, "Dumping abstracted model into file \"%s\"...\n", pFileName ); }
-    // create abstraction
-    vGateClasses = Gla_ManTranslate( p );
-    pAbs = Gia_ManDupAbsGates( p.pGia0, vGateClasses );
-    Vec_IntFreeP( &vGateClasses );
-    // write into file
-    Gia_AigerWrite( pAbs, pFileName, 0, 0, 0 );
-    Gia_ManStop( pAbs );
-}
+
 
 
 /**Function*************************************************************
