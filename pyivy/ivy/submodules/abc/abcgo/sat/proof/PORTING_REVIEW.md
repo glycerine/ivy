@@ -34,6 +34,13 @@ combination. A simple unsatisfiable proof is independently checked against
 - Proof file ownership and manager cleanup are explicit; input/output paths are
   test-local and no `testdata` directory is used.
 
+Follow-up review rejects any clause after a terminal empty clause without
+mutating the proof, records root-level contradictions (including interpolants),
+and accepts learned clauses already implied by root assignments. Regressions
+exercise repeated recording and direct and propagated root reasons. The full
+package passes `go test -race -count=1 ./sat/proof` and `go vet ./sat/proof`
+with `GOCACHE=/tmp/abcgo-cache`; finite examples do not prove all proof logs.
+
 ## Limits
 
 - The parser intentionally follows the custom ABC header, not the broader
