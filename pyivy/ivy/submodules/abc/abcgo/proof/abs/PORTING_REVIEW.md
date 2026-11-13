@@ -100,3 +100,13 @@ The GLA boundary fixtures are `test_vectors/gla_true_root_oracle.c` and
 in the Go tests. The checked results above used a freshly compiled
 `src/proof/abs/absGla.c` linked with the remaining ABC object files; those
 support objects must match the checkout.
+
+Old GLA's `fAddLayer` path can repeatedly find a SAT abstraction with no
+remaining non-PI pseudo-inputs. The C loop does not construct a counterexample
+or advance in that case; with a runtime limit it eventually returns unknown.
+The six-input AND source fixture `test_vectors/gla_old_empty_layer_oracle.c`
+reaches this state in both proof modes. With no time or resource limit, this
+source path can run indefinitely. If the first refinement has an empty set,
+the incremental proof logger starts with zero bitset words; a subsequent grow
+can divide by zero in C, so that boundary has undefined source behavior. The
+Go proof logger rejects a zero-width start with a panic instead.

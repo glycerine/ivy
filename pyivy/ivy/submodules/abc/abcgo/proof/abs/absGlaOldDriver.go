@@ -120,10 +120,6 @@ func Gia_ManPerformGlaOld(graph *gia.Gia_Man_t, pars *Abs_Par_t, startVta int32)
 			var ppis *vec.Vec_Int_t
 			if pars.fAddLayer != 0 {
 				ppis = Gla_ManCollectPPis(p, nil)
-				// No pseudo-inputs means another layer cannot make progress.
-				if vec.Vec_IntSize(ppis) == 0 {
-					ppis = Gla_ManRefinement(p)
-				}
 			} else {
 				ppis = Gla_ManRefinement(p)
 			}

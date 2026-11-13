@@ -287,6 +287,9 @@ func Abs_ManSupport1_rec(p *gia.Gia_Man_t, obj *gia.Gia_Obj_t, supp *vec.Vec_Int
 	Abs_ManSupport1_rec(p, gia.Gia_ObjFanin1(obj), supp)
 }
 func Abs_ManSupport1(p *gia.Gia_Man_t, obj *gia.Gia_Obj_t, supp *vec.Vec_Int_t) int32 {
+	if gia.Gia_ObjIsAnd(obj) == 0 {
+		panic("abs: expected AND for support")
+	}
 	vec.Vec_IntClear(supp)
 	gia.Gia_ManIncrementTravId(p)
 	Abs_ManSupport1_rec(p, obj, supp)

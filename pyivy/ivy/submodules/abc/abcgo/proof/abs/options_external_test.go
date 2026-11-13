@@ -24,6 +24,10 @@ func TestOptionsDefaultsAndRealOldGLARun(t *testing.T) {
 	if got := p.Options(); got != o {
 		t.Fatalf("options round trip: %+v", got)
 	}
+	// The C layer-refinement path can stall on an empty PPI set. Exercise the
+	// public driver with normal refinement; the layer case has its own test.
+	o.AddLayer = false
+	p.SetOptions(o)
 	g := gia.Gia_ManStart(8)
 	x := gia.Gia_ManAppendCi(g)
 	state := gia.Gia_ManAppendCi(g)
