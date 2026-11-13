@@ -45,7 +45,6 @@ func Pdr_ManStart(graph *aig.Graph, pars *Pdr_Par_t, initialPriority *vec.Vec_In
 	}
 	if !aig.Aig_ManHasFanout(graph) {
 		aig.Aig_ManFanoutStart(graph)
-		p.ownsFanout = true
 	}
 	outputs := saig.Saig_ManPoNum(graph)
 	if pars.nTimeOutOne > 0 {
@@ -85,7 +84,7 @@ func Pdr_ManStop(p *Pdr_Man_t) {
 	if p.pCnfMan != nil {
 		cnf.Cnf_ManStop(p.pCnfMan)
 	}
-	if p.ownsFanout && p.pAig != nil {
+	if p.pAig != nil && aig.Aig_ManHasFanout(p.pAig) {
 		aig.Aig_ManFanoutStop(p.pAig)
 	}
 	*p = Pdr_Man_t{}

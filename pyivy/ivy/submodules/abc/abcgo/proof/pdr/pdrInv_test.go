@@ -48,6 +48,26 @@ func TestInvariantManagerCollectionAndFlopCounts(t *testing.T) {
 	}
 }
 
+func TestInvariantReductionReleasesMarkedCube(t *testing.T) {
+	g := aig.NewGraph()
+	_ = g.NewInput() // register output
+	g.AddOutput(g.Const0())
+	g.AddOutput(g.Const1()) // the initially false register becomes true
+	aig.Aig_ManSetRegNum(g, 1)
+	var pars Pdr_Par_t
+	Pdr_ManSetDefaultParams(&pars)
+	p := Pdr_ManStart(g, &pars, nil)
+	Pdr_ManCreateSolver(p, 0)
+	Pdr_ManCreateSolver(p, 1)
+	cube := Pdr_SetCreate(pdrInvVector(0), pdrInvVector())
+	vec.Vec_VecPush(p.vClauses, 1, cube)
+	packed := Pdr_ManDeriveInfinityClauses(p, 1)
+	if cube.nRefs != -1 || !reflect.DeepEqual(vec.Vec_IntArray(packed), []int32{0, 1}) {
+		t.Fatalf("noninductive cube not removed: refs=%d invariant=%v", cube.nRefs, vec.Vec_IntArray(packed))
+	}
+	Pdr_ManStop(p) // C decrements the sentinel when it releases the cube.
+}
+
 func TestInvariantCountsAndCover(t *testing.T) {
 	// Two cubes, (flop0=1, flop2=0) and (flop2=1), among four flops.
 	inv := pdrInvVector(2, 2, 0, 5, 1, 4, 4)

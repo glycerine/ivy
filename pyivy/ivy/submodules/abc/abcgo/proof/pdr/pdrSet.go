@@ -73,9 +73,8 @@ func Pdr_SetDup(set *Pdr_Set_t) *Pdr_Set_t {
 
 func Pdr_SetRef(set *Pdr_Set_t) *Pdr_Set_t { set.nRefs++; return set }
 func Pdr_SetDeref(set *Pdr_Set_t) {
-	if set == nil || set.nRefs <= 0 {
-		panic("pdr: invalid cube reference count")
-	}
+	// ABC also uses -1 to mark noninductive invariant cubes. Its dereference
+	// decrements that sentinel rather than treating it as an assertion failure.
 	set.nRefs--
 }
 

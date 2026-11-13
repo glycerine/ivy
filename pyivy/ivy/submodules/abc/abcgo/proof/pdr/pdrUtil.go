@@ -55,22 +55,25 @@ func ZPdr_SetPrint(p *Pdr_Set_t) {
 }
 func Pdr_SetPrintStr(out *vec.Vec_Str_t, p *Pdr_Set_t, nRegs int32, counts *vec.Vec_Int_t) {
 	pattern := pdrSetPattern(p, nRegs, counts)
-	vec.Vec_StrPushBuffer(out, pattern, len(pattern))
+	// In the C implementation k stays zero when the filter is absent.
+	if counts != nil {
+		vec.Vec_StrPushBuffer(out, pattern, len(pattern))
+	}
 	vec.Vec_StrPushBuffer(out, []byte(" 1\n"), 3)
 }
 
 func ZPdr_SetIntersection(a, b *Pdr_Set_t, keep *hash.Hash_Int_t) *Pdr_Set_t {
 	common := vec.Vec_IntAlloc(int(min(a.nLits, b.nLits)))
 	i, j := 0, 0
-	for i < int(a.nLits) || j < int(b.nLits) {
-		if i < int(a.nLits) && j < int(b.nLits) && a.Lits[i] == b.Lits[j] {
+	for i < int(a.nLits) && j < int(b.nLits) {
+		if a.Lits[i] == b.Lits[j] {
 			vec.Vec_IntPush(common, a.Lits[i])
 			i++
 			j++
 			continue
 		}
 		var dropped int32
-		if j == int(b.nLits) || i < int(a.nLits) && a.Lits[i] < b.Lits[j] {
+		if a.Lits[i] < b.Lits[j] {
 			dropped = a.Lits[i]
 			i++
 		} else {

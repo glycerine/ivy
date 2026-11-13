@@ -46,6 +46,10 @@ Remaining review and coverage gaps:
   `#if 0`; when enabled for a multi-literal cube, its active caller discards
   the reduced cube. The Go port preserves this source behavior, which can lead
   to a nil-cube failure. The public Go API does not expose this option.
+- As in the source, `ZPdr_SetIntersection` does not check required literals
+  in the unmatched tail after either sorted input ends. Also,
+  `Pdr_SetPrintStr` appends no pattern characters when its flop filter is
+  nil. Tests record these source behaviors; they are not corrections to ABC.
 - Bridge output, invariant file output, and rare options such as proof
   obligation reuse and shifting the starting frame are not covered end to end.
 - Successful `Pdr_ManSolve` and `IPdr_ManSolve` runs publish their invariant
