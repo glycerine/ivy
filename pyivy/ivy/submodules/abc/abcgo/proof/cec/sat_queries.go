@@ -42,8 +42,15 @@ func Cec_ManSatCheckNode(p *Cec_ManSat_t, obj *Gia_Obj_t) int32 {
 	return p.query(lit, nil)
 }
 func Cec_ManSatCheckNodeTwo(p *Cec_ManSat_t, a, b *Gia_Obj_t) int32 {
-	lit := cecObjectLiteral(p, b)
-	return p.query(cecObjectLiteral(p, a), &lit)
+	first, second := cecObjectLiteral(p, a), cecObjectLiteral(p, b)
+	// These trivial cases precede SAT manager allocation and counters in C.
+	if first == 0 || second == 0 || first == second^1 {
+		return 1
+	}
+	if first == 1 && second == 1 {
+		panic("cec: constant-one conjunction query")
+	}
+	return p.query(first, &second)
 }
 
 func cecObjectLiteral(p *Cec_ManSat_t, obj *Gia_Obj_t) int32 {

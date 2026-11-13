@@ -35,8 +35,9 @@ func TestNativeSATWitnessAndComplement(t *testing.T) {
 	if got := Cec_ManSatCheckNodeTwo(p, obj, gia.Gia_Not(obj)); got != 1 {
 		t.Fatalf("complementary pair status %d", got)
 	}
-	if p.values != nil {
-		t.Fatal("UNSAT query retained stale SAT witness")
+	// The source returns from this trivial case without touching the previous model.
+	if p.values == nil || Cec_ObjSatVarValue(p, obj) != 1 {
+		t.Fatal("trivial query unexpectedly changed the previous SAT witness")
 	}
 	p.pPars.nBTLimit = -1
 	if got := Cec_ManSatCheckNode(p, obj); got != -1 || p.Error == nil {
@@ -184,4 +185,28 @@ func TestSourceNodeConstantOneAssertionAndMiterShortcut(t *testing.T) {
 		}
 	}()
 	Cec_ManSatCheckNode(p, gia.Gia_Not(gia.Gia_ManConst0(graph)))
+}
+
+func TestSourceConjunctionTrivialCasesAndConstantAssertion(t *testing.T) {
+	g := gia.Gia_ManStart(8)
+	a := gia.Gia_ManAppendCi(g)
+	p := Cec_ManSatCreate(g, nil)
+	defer Cec_ManSatStop(p)
+	zero := gia.Gia_ManConst0(g)
+	one := gia.Gia_Not(zero)
+	x := gia.Gia_ManObj(g, a>>1)
+	for _, pair := range [][2]*Gia_Obj_t{{zero, x}, {x, zero}, {x, gia.Gia_Not(x)}, {zero, one}} {
+		if got := Cec_ManSatCheckNodeTwo(p, pair[0], pair[1]); got != 1 {
+			t.Fatalf("trivial result %d", got)
+		}
+	}
+	if got := p.proof.Statistics().Queries; got != 0 {
+		t.Fatalf("trivial queries reached solver: %d", got)
+	}
+	defer func() {
+		if recover() == nil {
+			t.Fatal("two constant-one inputs must assert")
+		}
+	}()
+	Cec_ManSatCheckNodeTwo(p, one, one)
 }
