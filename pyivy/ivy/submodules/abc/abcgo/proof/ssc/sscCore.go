@@ -25,7 +25,11 @@ func Ssc_ManStart(subject, care *gia.Gia_Man_t, params *Ssc_Pars_t) (*Ssc_Man_t,
 	if v.NWords < 1 || v.BTLimit < 0 || v.SatVarMax < 0 || v.CallsRecycle < 0 {
 		panic("ssc: invalid parameters")
 	}
-	p := &Ssc_Man_t{Params: v, Aig: subject, Care: care}
+	fraig := newBuilder(len(subject.InputLiterals()), subject.ObjectCount()+care.ObjectCount())
+	for _, lit := range copyInto(fraig, care, nil) {
+		gia.Gia_ManAppendCo(fraig.graph, lit^1)
+	}
+	p := &Ssc_Man_t{Params: v, Aig: fraig.graph, Original: subject, Care: care, fraig: fraig}
 	Ssc_ManStartSolver(p)
 	pivot, status := Ssc_ManFindPivotSat(p)
 	if status != satoko.SATOKO_SAT {
@@ -48,12 +52,49 @@ func Ssc_GiaResimulateOneClass(p *Ssc_Man_t, head, node int32) int32 {
 	if node < 0 || int(node) >= len(p.Classes.Repr) || p.Classes.Repr[node] != head {
 		panic("ssc: resimulation pair is not in the same class")
 	}
-	s := NewSimulation(p.Aig, 1)
+	s := NewSimulation(p.Original, 1)
 	Ssc_GiaSavePiPattern(s, p.Pattern)
 	Ssc_GiaSimRound(s)
 	values := make([]bool, len(s.Values))
 	for i := range values {
 		values[i] = s.Values[i][0]&1 != 0
+	}
+	if p.mapping != nil {
+		f := NewSimulation(p.Aig, 1)
+		Ssc_GiaSavePiPattern(f, p.Pattern)
+		Ssc_GiaSimRound(f)
+		done := make([]bool, len(values))
+		var visit func(int32) bool
+		visit = func(id int32) bool {
+			if done[id] {
+				return values[id]
+			}
+			done[id] = true
+			if lit := p.mapping[id]; lit >= 0 {
+				values[id] = (f.Values[lit>>1][0]&1 != 0) != (lit&1 != 0)
+				return values[id]
+			}
+			a, b, c, kind := p.Original.Gate(id)
+			read := func(lit int32) bool { return visit(lit>>1) != (lit&1 != 0) }
+			switch kind {
+			case 2:
+				values[id] = read(a) && read(b)
+			case 3:
+				values[id] = read(a) != read(b)
+			case 4:
+				if read(a) {
+					values[id] = read(b)
+				} else {
+					values[id] = read(c)
+				}
+			case 5, 6:
+				values[id] = read(a)
+			}
+			return values[id]
+		}
+		for id := range values {
+			visit(int32(id))
+		}
 	}
 	refined := Ssc_GiaSimClassRefineOneBit(p.Classes, values, head)
 	if p.Classes.Repr[node] == head {
@@ -63,7 +104,7 @@ func Ssc_GiaResimulateOneClass(p *Ssc_Man_t, head, node int32) int32 {
 }
 func carePatterns(p *Ssc_Man_t) {
 	care := NewSimulation(p.Care, 5)
-	candidateCount := gia.Gia_ManCiNum(p.Aig) + gia.Gia_ManAndNum(p.Aig)
+	candidateCount := gia.Gia_ManCiNum(p.Original) + gia.Gia_ManAndNum(p.Original)
 	for {
 		Ssc_GiaRandomPiPattern(care, 5, nil)
 		Ssc_GiaSimRound(care)
@@ -110,34 +151,83 @@ func Ssc_PerformSweepingInt(subject, care *gia.Gia_Man_t, params *Ssc_Pars_t) *g
 		return copyOutputs(subject, nil, false)
 	}
 	carePatterns(p)
+	// The original solver's working graph starts with the care cone and grows
+	// as subject candidates are visited. Later SAT queries must see earlier
+	// proved substitutions, not the unreduced subject graph.
+	fraig := p.fraig
 	mapping := make([]int32, subject.ObjectCount())
 	for i := range mapping {
-		mapping[i] = int32(i) << 1
+		mapping[i] = -1
+	}
+	mapping[0] = 0
+	for i, lit := range subject.InputLiterals() {
+		mapping[lit>>1] = fraig.graph.InputLiterals()[i]
+	}
+	p.mapping = mapping
+	// The C sweep saves a pivot and batches counterexamples until a simulation
+	// word is full, refining any remaining candidates at the end of the pass.
+	Ssc_GiaResetPiPattern(p.Sim, int(p.Params.NWords))
+	Ssc_GiaSavePiPattern(p.Sim, p.Pivot)
+	flushPatterns := func() {
+		for p.Sim.Patterns < 64*p.Sim.Words {
+			Ssc_GiaSavePiPattern(p.Sim, p.Pivot)
+		}
+		Ssc_GiaSimRound(p.Sim)
+		Ssc_GiaClassesRefine(p.Classes, p.Sim)
+		Ssc_GiaResetPiPattern(p.Sim, int(p.Params.NWords))
+		Ssc_GiaSavePiPattern(p.Sim, p.Pivot)
 	}
 	subject.StartRepresentatives()
 	for id := int32(1); int(id) < subject.ObjectCount(); id++ {
-		_, _, _, kind := subject.Gate(id)
+		a, b, c, kind := subject.Gate(id)
 		if kind < 1 || kind > 5 {
 			continue
 		}
-		for p.Classes.Repr[id] >= 0 {
+		read := func(lit int32) int32 { return mapping[lit>>1] ^ (lit & 1) }
+		switch kind {
+		case 2:
+			mapping[id] = fraig.and(read(a), read(b))
+		case 3:
+			mapping[id] = fraig.xor(read(a), read(b))
+		case 4:
+			mapping[id] = fraig.mux(read(a), read(b), read(c))
+		case 5:
+			mapping[id] = read(a)
+		}
+		if p.Sim.Patterns == 64*p.Sim.Words {
+			flushPatterns()
+		}
+		if p.Classes.Repr[id] >= 0 {
 			repr := p.Classes.Repr[id]
 			complement := int32(0)
 			if p.Classes.Phase[id] != p.Classes.Phase[repr] {
 				complement = 1
 			}
-			result := Ssc_ManCheckEquivalence(p, repr, id, complement)
+			mappedRepr, mappedNode := mapping[repr], mapping[id]
+			if mappedRepr == mappedNode^complement {
+				gia.Gia_ObjSetRepr(subject, id, repr)
+				gia.Gia_ObjSetProved(subject, id)
+				continue
+			}
+			if mappedRepr>>1 > mappedNode>>1 || mappedRepr>>1 == mappedNode>>1 {
+				continue
+			}
+			fraigComplement := complement ^ (mappedRepr & 1) ^ (mappedNode & 1)
+			result := Ssc_ManCheckEquivalence(p, mappedRepr>>1, mappedNode>>1, fraigComplement)
 			if result == satoko.SATOKO_UNSAT {
 				mapping[id] = mapping[repr] ^ complement
 				gia.Gia_ObjSetRepr(subject, id, repr)
 				gia.Gia_ObjSetProved(subject, id)
-				break
+			} else if result == satoko.SATOKO_SAT {
+				Ssc_GiaSavePiPattern(p.Sim, p.Pattern)
+				if repr > 0 {
+					Ssc_GiaResimulateOneClass(p, repr, id)
+				}
 			}
-			if result != satoko.SATOKO_SAT {
-				break
-			}
-			Ssc_GiaResimulateOneClass(p, repr, id)
 		}
+	}
+	if p.Sim.Patterns > 1 {
+		flushPatterns()
 	}
 	// Publish canonical proved-class links, including phase metadata from Pivot.
 	tails := make(map[int32]int32)
@@ -157,7 +247,42 @@ func Ssc_PerformSweepingInt(subject, care *gia.Gia_Man_t, params *Ssc_Pars_t) *g
 		gia.Gia_ObjSetNext(subject, previous, id)
 		tails[root] = id
 	}
-	result := copyMapped(subject, subject.OutputLiterals(), mapping)
+	// C derives the final graph from the proved representative classes and
+	// then removes dangling nodes, rather than rebuilding directly from the SAT
+	// query mappings.
+	var result *gia.Gia_Man_t
+	native := false
+	for id := int32(0); int(id) < subject.ObjectCount(); id++ {
+		_, _, _, kind := subject.Gate(id)
+		if kind >= 3 && kind <= 5 {
+			native = true
+			break
+		}
+	}
+	if native {
+		// Gia_ManEquivReduce currently treats native XOR, MUX and buffer
+		// nodes as ANDs. Preserve their semantics until that dependency is
+		// ported for native nodes.
+		replacements := make([]int32, subject.ObjectCount())
+		for id := range replacements {
+			replacements[id] = int32(id) << 1
+			if gia.Gia_ObjHasRepr(subject, int32(id)) != 0 {
+				repr := gia.Gia_ObjRepr(subject, int32(id))
+				phase := int32(0)
+				if p.Classes.Phase[id] != p.Classes.Phase[repr] {
+					phase = 1
+				}
+				replacements[id] = replacements[repr] ^ phase
+			}
+		}
+		result = copyMapped(subject, subject.OutputLiterals(), replacements)
+	} else {
+		result = gia.Gia_ManEquivReduce(subject, 0, 0, 1, 0)
+		if result == nil {
+			result = gia.Gia_ManDup(subject)
+		}
+		result = gia.Gia_ManCleanup(result)
+	}
 	if p.Params.Verbose {
 		Ssc_ManPrintStats(p)
 	}
@@ -188,7 +313,16 @@ func Ssc_PerformVerification(a, b, care *gia.Gia_Man_t) int32 {
 	}
 	gia.Gia_ManAppendCo(q.graph, q.and(allowed, difference))
 	m, _ := Ssc_ManStart(q.graph, emptyCare(q.graph), nil)
-	status := Ssc_ManCheckEquivalence(m, 0, q.graph.OutputLiterals()[0]>>1, q.graph.OutputLiterals()[0]&1)
+	mapping := copySubjectIntoFraig(m)
+	output := q.graph.OutputLiterals()[0]
+	lit := mapping[output>>1] ^ (output & 1)
+	if lit == 0 {
+		return 1
+	}
+	if lit == 1 {
+		return 0
+	}
+	status := Ssc_ManCheckEquivalence(m, 0, lit>>1, lit&1)
 	if status == satoko.SATOKO_UNSAT {
 		return 1
 	}

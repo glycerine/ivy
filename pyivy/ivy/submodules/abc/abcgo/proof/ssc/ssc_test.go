@@ -200,7 +200,7 @@ func TestConstraintAppendAndSequentialOrdering(t *testing.T) {
 	}
 }
 
-func TestRecyclingAndIndependentManagers(t *testing.T) {
+func TestIndependentManagersDoNotRecycle(t *testing.T) {
 	for run := 0; run < 8; run++ {
 		t.Run(fmt.Sprint(run), func(t *testing.T) {
 			t.Parallel()
@@ -215,8 +215,8 @@ func TestRecyclingAndIndependentManagers(t *testing.T) {
 			in := a.InputLiterals()
 			Ssc_ManCheckEquivalence(p, in[0]>>1, in[2]>>1, 0)
 			Ssc_ManCheckEquivalence(p, in[0]>>1, in[1]>>1, 0)
-			if p.Stats.Recycles == 0 {
-				t.Fatal("configured solver was not recycled")
+			if p.Stats.Recycles != 0 {
+				t.Fatal("C SSC does not recycle its solver")
 			}
 		})
 	}

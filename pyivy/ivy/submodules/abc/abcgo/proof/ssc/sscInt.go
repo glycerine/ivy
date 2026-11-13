@@ -2,7 +2,7 @@ package ssc
 
 import (
 	"github.com/glycerine/abcgo/aig/gia"
-	"github.com/glycerine/abcgo/sat/satoko"
+	"github.com/glycerine/abcgo/sat/bsat"
 	"math/rand"
 )
 
@@ -11,14 +11,17 @@ import (
 type Ssc_Man_t struct {
 	Params         Ssc_Pars_t
 	Aig, Care      *gia.Gia_Man_t
+	Original       *gia.Gia_Man_t
+	fraig          *builder
+	mapping        []int32
 	Sim            *Simulation
 	Classes        *Classes
 	Pivot, Pattern []bool
-	solver         *satoko.Solver
-	caches         [2][]int
-	inputs         []int
+	sat            *bsat.Solver
+	satVars        [2][]int32
+	satInputs      []int32
+	satNext        int32
 	inconsistent   bool
-	callsSince     int
 	Stats          Statistics
 }
 type Statistics struct{ Calls, Proofs, Counterexamples, Undecided, Recycles, SimulationRounds int }

@@ -103,7 +103,9 @@ func Ssc_GiaRandomPiPattern(s *Simulation, words int, pivot []bool) {
 	if pivot != nil && len(pivot) != len(s.Inputs) {
 		panic("ssc: pivot size mismatch")
 	}
-	for i := range s.Inputs {
+	// The C routine fills primary inputs, not register outputs. The latter
+	// retain the zero words installed by Ssc_GiaResetPiPattern.
+	for i := 0; i < int(gia.Gia_ManPiNum(s.Graph)); i++ {
 		for w := range s.Inputs[i] {
 			s.Inputs[i][w] = s.random.Uint64()
 		}

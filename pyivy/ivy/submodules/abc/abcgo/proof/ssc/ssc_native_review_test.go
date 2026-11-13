@@ -133,6 +133,37 @@ func TestDropContainedKeepsRegistersWhenNoPrimaryOutputDrops(t *testing.T) {
 	}
 }
 
+// Ssc_GiaRandomPiPattern in sscSim.c iterates PIs rather than all CIs.
+func TestRandomPatternLeavesRegisterOutputsZero(t *testing.T) {
+	g := gia.Gia_ManStart(8)
+	gia.Gia_ManAppendCi(g)
+	gia.Gia_ManAppendCi(g)
+	gia.Gia_ManAppendCo(g, 0)
+	gia.Gia_ManSetRegNum(g, 1)
+	sim := NewSimulation(g, 2)
+	Ssc_GiaRandomPiPattern(sim, 2, []bool{true, true})
+	if sim.Inputs[0][0]&1 == 0 {
+		t.Fatal("primary input did not receive pivot bit")
+	}
+	for _, word := range sim.Inputs[1] {
+		if word != 0 {
+			t.Fatal("register output was randomized")
+		}
+	}
+}
+
+func TestClassWordRefinementNormalizesCurrentFirstBit(t *testing.T) {
+	g := gia.Gia_ManStart(4)
+	gia.Gia_ManAppendCi(g)
+	s := NewSimulation(g, 1)
+	Ssc_GiaResetSimInfo(s)
+	s.Values[1][0] = ^uint64(0)
+	c := &Classes{Groups: [][]int32{{0, 1}}, Repr: []int32{-1, 0}, Phase: []bool{false, false}}
+	if n := Ssc_GiaClassesRefine(c, s); n != 0 || c.Repr[1] != 0 {
+		t.Fatal("complementary simulation words should remain in the same class")
+	}
+}
+
 func TestRandomSequentialConstraintSweeps(t *testing.T) {
 	rng := rand.New(rand.NewSource(38122))
 	for trial := 0; trial < 80; trial++ {

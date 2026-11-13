@@ -110,6 +110,7 @@ func TestSATEquivalenceAllNodesAndPolarities(t *testing.T) {
 	if status != satoko.SATOKO_SAT {
 		t.Fatalf("pivot status %d", status)
 	}
+	mapping := copySubjectIntoFraig(manager)
 	sim := NewSimulation(subject, 1)
 	for mask := 0; mask < 8; mask++ {
 		Ssc_GiaSavePiPattern(sim, []bool{mask&1 != 0, mask&2 != 0, mask&4 != 0})
@@ -135,7 +136,19 @@ func TestSATEquivalenceAllNodesAndPolarities(t *testing.T) {
 						break
 					}
 				}
-				got := Ssc_ManCheckEquivalence(manager, a, b, complement)
+				la, lb := mapping[a], mapping[b]
+				phase := complement ^ (la & 1) ^ (lb & 1)
+				if la>>1 > lb>>1 {
+					la, lb = lb, la
+				}
+				got := satoko.SATOKO_UNSAT
+				if la>>1 == lb>>1 {
+					if phase != 0 {
+						got = satoko.SATOKO_SAT
+					}
+				} else {
+					got = Ssc_ManCheckEquivalence(manager, la>>1, lb>>1, phase)
+				}
 				want := satoko.SATOKO_UNSAT
 				if distinguishable {
 					want = satoko.SATOKO_SAT
@@ -143,7 +156,7 @@ func TestSATEquivalenceAllNodesAndPolarities(t *testing.T) {
 				if got != want {
 					t.Fatalf("nodes %d,%d complement %d: status %d want %d", a, b, complement, got, want)
 				}
-				if got == satoko.SATOKO_SAT {
+				if got == satoko.SATOKO_SAT && la>>1 != lb>>1 {
 					violations, err := care.Evaluate(manager.Pattern)
 					if err != nil || violations[0] {
 						t.Fatalf("invalid care witness %v: %v", manager.Pattern, err)

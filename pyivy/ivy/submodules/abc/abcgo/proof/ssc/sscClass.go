@@ -60,8 +60,9 @@ func Ssc_GiaClassesRefine(c *Classes, s *Simulation) int32 {
 		var parts [][]int32
 		for _, id := range g {
 			buf := make([]byte, 8*s.Words)
+			flip := s.Values[id][0]&1 != 0
 			for w, x := range s.Values[id] {
-				if c.Phase[id] {
+				if flip {
 					x = ^x
 				}
 				binary.LittleEndian.PutUint64(buf[w*8:], x)

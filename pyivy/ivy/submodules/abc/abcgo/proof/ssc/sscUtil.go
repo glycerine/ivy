@@ -2,6 +2,7 @@ package ssc
 
 import (
 	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/sat/bsat"
 	"github.com/glycerine/abcgo/sat/satoko"
 )
 
@@ -86,6 +87,25 @@ func copySelected(dst *builder, src *gia.Gia_Man_t, outputs, mapping []int32) []
 func copyInto(dst *builder, src *gia.Gia_Man_t, mapping []int32) []int32 {
 	return copySelected(dst, src, src.OutputLiterals(), mapping)
 }
+
+// copySubjectIntoFraig creates mappings for subject objects when a caller
+// needs SAT queries outside the incremental sweep.
+func copySubjectIntoFraig(p *Ssc_Man_t) []int32 {
+	literals := make([]int32, 0, p.Original.ObjectCount())
+	ids := make([]int32, 0, p.Original.ObjectCount())
+	for id := int32(0); int(id) < p.Original.ObjectCount(); id++ {
+		_, _, _, kind := p.Original.Gate(id)
+		if id == 0 || kind >= 1 && kind <= 6 {
+			ids = append(ids, id)
+			literals = append(literals, id<<1)
+		}
+	}
+	result := make([]int32, p.Original.ObjectCount())
+	for i, lit := range copySelected(p.fraig, p.Original, literals, nil) {
+		result[ids[i]] = lit
+	}
+	return result
+}
 func copyMapped(src *gia.Gia_Man_t, outputs, mapping []int32) *gia.Gia_Man_t {
 	return copyWithRegs(src, outputs, mapping, src.RegisterCount())
 }
@@ -115,6 +135,7 @@ func Gia_ManDropContained(p *gia.Gia_Man_t) *gia.Gia_Man_t {
 	if status != satoko.SATOKO_SAT {
 		return nil
 	}
+	mapping := copySubjectIntoFraig(m)
 	// Only primary outputs participate in containment. Register inputs are
 	// transition functions, not members of the output union.
 	outputs := p.OutputLiterals()[:int(gia.Gia_ManPoNum(p))]
@@ -123,18 +144,19 @@ func Gia_ManDropContained(p *gia.Gia_Man_t) *gia.Gia_Man_t {
 		keep[i] = true
 	}
 	for i := range outputs {
-		var assumptions []int
+		var assumptions []bsat.Literal
 		for j, l := range outputs {
 			if !keep[j] {
 				continue
 			}
-			v := m.encode(0, l)
+			v := m.encode(0, mapping[l>>1]^(l&1))
 			if j != i {
 				v ^= 1
 			}
-			assumptions = append(assumptions, v)
+			assumptions = append(assumptions, bsat.Literal(v))
 		}
-		if m.solver.SolveAssumptionsLimit(assumptions, 0) == satoko.SATOKO_UNSAT {
+		m.sat.SetLimits(0, 0)
+		if sscStatus(m.sat.Solve(assumptions...)) == satoko.SATOKO_UNSAT {
 			keep[i] = false
 		}
 	}
