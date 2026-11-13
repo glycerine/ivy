@@ -9,6 +9,7 @@ import (
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/aig/ioa"
 	"github.com/glycerine/abcgo/aig/saig"
+	abcmain "github.com/glycerine/abcgo/base/main"
 	"github.com/glycerine/abcgo/bdd/bbr"
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/opt/dar"
@@ -18,6 +19,10 @@ import (
 )
 
 var secUnsolvedNumber atomic.Int32
+
+func secSaveUnsolved(graph *aig.Graph) {
+	abcmain.Abc_FrameSetSave1(aig.Aig_ManDupSimple(graph))
+}
 
 func Fra_SecSetDefaultParams(p *Fra_Sec_t) {
 	*p = Fra_Sec_t{fTryComb: 1, fTryBmc: 1, nFramesMax: 4, nBTLimit: 1000, nBTLimitGlobal: 5000000, nBTLimitInter: 10000, nBddVarsMax: 150, nBddMax: 50000, nBddIterMax: 1000000, fRetimeFirst: 1, fRetimeRegs: 1, fFraiging: 1, fInduction: 1, fInterpolation: 1, fReachability: 1, fReorderImage: 1, fStopOnFirstFail: 1, fUsePdr: 1, nPdrTimeout: 60}
@@ -69,6 +74,9 @@ func Fra_FraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph) int3
 	finish := func() int32 {
 		if status == 0 && !secTransferWitness(original, graph) && !secTrivialWitness(original) {
 			status = -1
+		}
+		if status == -1 {
+			secSaveUnsolved(graph)
 		}
 		if pars.fReportSolution != 0 && pars.fRecursive == 0 {
 			switch status {
