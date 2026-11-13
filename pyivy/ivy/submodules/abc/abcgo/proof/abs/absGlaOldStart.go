@@ -87,6 +87,38 @@ func Gla_ManStart(original *gia.Gia_Man_t, pars *Abs_Par_t) *Gla_Man_t {
 			}
 		}
 	}
+	// Refinement's cut filter reads GIA mapping records (count, leaves,
+	// truth, reference count), while CNF uses truth followed by four leaves.
+	// Derive both views from the same selected cuts.
+	cutRecords := vec.Vec_IntStart(n)
+	for id := 0; id < n; id++ {
+		vec.Vec_IntWriteEntry(cutRecords, id, int32(vec.Vec_IntSize(cutRecords)))
+		off := vec.Vec_IntEntry(mapped, id)
+		count := int32(0)
+		if off != 0 {
+			for k := 1; k <= 4; k++ {
+				if vec.Vec_IntEntry(mapped, int(off)+k) >= 0 {
+					count++
+				}
+			}
+		}
+		vec.Vec_IntPush(cutRecords, count)
+		if off != 0 {
+			for k := 1; k <= 4; k++ {
+				leaf := vec.Vec_IntEntry(mapped, int(off)+k)
+				if leaf >= 0 {
+					vec.Vec_IntPush(cutRecords, leaf)
+				}
+			}
+		}
+		truth := int32(0)
+		if off != 0 {
+			truth = vec.Vec_IntEntry(mapped, int(off))
+		}
+		vec.Vec_IntPush(cutRecords, truth)
+		vec.Vec_IntPush(cutRecords, 0)
+	}
+	gia.Gia_ManSetMapping(work, cutRecords)
 	p.nObjs = 1
 	for i := int32(0); i < gia.Gia_ManObjNum(work); i++ {
 		obj := gia.Gia_ManObj(work, i)
