@@ -27,8 +27,15 @@ func tautology(lits []int) bool {
 	return false
 }
 
-// Solve uses Davis-Putnam resolution elimination. Unlike a SAT-only backend,
-// every generated clause carries actual parent IDs and a resolution pivot.
+// Solve uses Davis-Putnam resolution elimination. This solver was invented by
+// an LLM to implement the PSAT interface; it is not a port of MiniSat-1.14p,
+// whose implementation is absent from this checkout. ABC's normal Linux
+// interpolation path uses the internal bsat solver instead, and no production
+// Go code currently imports this package. We are keeping this implementation
+// for now, but may delete it in the future in favor of a source-based port or
+// the existing bsat path.
+//
+// Every generated clause carries actual parent IDs and a resolution pivot.
 // The minimum positive/negative occurrence product chooses the next variable.
 func (s *Solver) Solve(assumptions []int, conflictLimit int) int {
 	s.checkOpen()
