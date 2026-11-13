@@ -13,8 +13,8 @@ in progress; passing tests do not establish that those gaps are resolved.
   correctness review and broader end-to-end equivalence coverage continue.
 
 * `cec` builds and passes its full race suite and vet. Its top-level verifier
-  and sweeping path currently use a different implementation from the original
-  C default pipeline; restoring that pipeline is in progress. Cec4's upstream
+  now uses the source-style sweep and FRAIG fallback pipeline, with original-C
+  comparisons and witness replay; further validation remains. Cec4's upstream
   GIA choices implementation is itself incomplete. See `cec/PORTING.md`.
 * `pdr` builds and passes its full race suite and vet. It has exhaustive
   small-state reachability and witness tests, incremental-solving tests,
