@@ -26,6 +26,11 @@ func Acec_ComputeEquivClasses(a, b *Gia_Man_t, mapA, mapB **Vec_Int_t) {
 func Acec_Solve(a, b *Gia_Man_t, pars *Acec_ParCec_t) int32 {
 	start := time.Now()
 	a.ClearCombinationalCounterexample()
+	// Box matching assumes identical interfaces. Reject a mismatch before
+	// building arithmetic boxes, just as the combinational miter does.
+	if gia.Gia_ManCiNum(a) != gia.Gia_ManCiNum(b) || gia.Gia_ManCoNum(a) != gia.Gia_ManCoNum(b) {
+		return -1
+	}
 	left, right := a, b
 	boxA, boxB := Acec_ProduceBox(a, pars.fVerbose), Acec_ProduceBox(b, pars.fVerbose)
 	if boxA == nil || boxB == nil {
