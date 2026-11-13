@@ -41,9 +41,9 @@ Remaining validation work:
   on deep cone traversal and large feedback/simulation workloads.
 - Broaden compiled-C compression comparisons beyond the deterministic normal
   and sparse covering fixtures, including larger collision classes, repeated
-  compression, and resize workloads with internal nodes. The current oracle
-  exercises sparse-class selection, one resize, overlapping patterns, and a
-  partial permanent word.
+  compression, and deeper internal-node cones. The current oracles exercise
+  sparse-class selection, resizing, an internal complemented-fanin node,
+  overlapping patterns, and a partial permanent word.
 - Integrate FRAIG with a ported ABC consumer and verify end-to-end results; the
   separate-package test exercises the public API but is not such a consumer.
 
