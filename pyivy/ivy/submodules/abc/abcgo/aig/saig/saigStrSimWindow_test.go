@@ -14,6 +14,7 @@ func TestStrSimWindowMiterComparesUnmatchedCones(t *testing.T) {
 			b = b.Not()
 		}
 		g.AddOutput(g.AND(a, b))
+		aig.Aig_ManSetRegNum(g, 0)
 		return g
 	}
 	a, b := makeGraph(false), makeGraph(true)

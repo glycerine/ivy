@@ -19,6 +19,7 @@ func glaContradictoryProperty() *aig.Graph {
 	}
 	bad := aig.Aig_And(g, aig.Aig_And(g, clauses[0], clauses[1]), aig.Aig_And(g, clauses[2], clauses[3]))
 	aig.Aig_ObjCreateCo(g, bad)
+	aig.Aig_ManSetRegNum(g, 0)
 	return g
 }
 
@@ -58,6 +59,7 @@ func TestGlaPbaSatPropertyReturnsNil(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			g := aig.Aig_ManStart(4)
 			aig.Aig_ObjCreateCo(g, aig.Aig_ManConst1(g))
+			aig.Aig_ManSetRegNum(g, 0)
 			defer aig.Aig_ManStop(g)
 			if got := perform(g, 0, 1, 0, 0, 0, 0); got != nil {
 				t.Fatalf("SAT property returned abstraction %v", got)

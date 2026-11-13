@@ -34,9 +34,11 @@ func TestWindowInsertReplacement(t *testing.T) {
 	a, b := g.NewInput(), g.NewInput()
 	gate := g.AND(a, b)
 	g.AddOutput(gate)
+	aig.Aig_ManSetRegNum(g, 0)
 	w := aig.NewGraph()
 	x, y := w.NewInput(), w.NewInput()
 	w.AddOutput(w.OR(x, y))
+	aig.Aig_ManSetRegNum(w, 0)
 	q := Saig_ManWindowInsert(g, gate, 2, w)
 	if q == nil {
 		t.Fatal("replacement rejected")
@@ -54,6 +56,7 @@ func TestWindowInsertReplacement(t *testing.T) {
 	bad := aig.NewGraph()
 	bad.NewInput()
 	bad.AddOutput(bad.Const1())
+	aig.Aig_ManSetRegNum(bad, 0)
 	if Saig_ManWindowInsert(g, gate, 2, bad) != nil {
 		t.Fatal("accepted mismatched window")
 	}

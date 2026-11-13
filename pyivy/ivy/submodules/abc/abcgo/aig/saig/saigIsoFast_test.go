@@ -14,6 +14,7 @@ func TestSaigIsoDetectFastGroupsStructurallyEqualOutputs(t *testing.T) {
 	g.AddOutput(x)
 	g.AddOutput(x)
 	g.AddOutput(x.Not())
+	aig.Aig_ManSetRegNum(g, 0)
 
 	classes := Saig_IsoDetectFast(g)
 	if got := vec.Vec_VecSize(classes); got != 2 {
@@ -38,6 +39,7 @@ func TestIsoStoCollectInfoUsesCompactSourceBitWidths(t *testing.T) {
 	a, b := g.NewInput(), g.NewInput()
 	root := g.AND(a, b.Not())
 	output := g.AddOutput(root)
+	aig.Aig_ManSetRegNum(g, 0)
 	manager := Iso_StoStart(g)
 	defer Iso_StoStop(manager)
 	info := Iso_StoCollectInfo(manager, output)

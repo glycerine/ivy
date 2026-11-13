@@ -151,6 +151,7 @@ func TestSpecialProofAndResimulation(t *testing.T) {
 	g.AddOutput(x)
 	g.AddOutput(x.Not())
 	g.AddOutput(g.Const1())
+	aig.Aig_ManSetRegNum(g, 0)
 	var count int32
 	if first := Ssw_SecCexResimulate(g, []int32{0}, &count); first != 1 || count != 2 {
 		t.Fatalf("first%d count%d", first, count)

@@ -14,6 +14,7 @@ func TestWindowExtractMiterFromRepresentatives(t *testing.T) {
 			b = b.Not()
 		}
 		g.AddOutput(g.AND(a, b))
+		aig.Aig_ManSetRegNum(g, 0)
 		return g
 	}
 	a, b := build(false), build(true)
@@ -43,6 +44,8 @@ func TestWindowCollectedDiffNodes(t *testing.T) {
 	x, y := a.NewInput(), b.NewInput()
 	a.AddOutput(x)
 	b.AddOutput(y)
+	aig.Aig_ManSetRegNum(a, 0)
+	aig.Aig_ManSetRegNum(b, 0)
 	aig.Aig_ObjSetRepr(a, a.Const1(), b.Const1())
 	aig.Aig_ObjSetRepr(b, b.Const1(), a.Const1())
 	v := Saig_ManCollectedDiffNodes(a, b)

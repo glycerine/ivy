@@ -15,6 +15,7 @@ func TestStrSimMatchingRound(t *testing.T) {
 		}
 		n := g.AND(a, b.Not())
 		g.AddOutput(n)
+		aig.Aig_ManSetRegNum(g, 0)
 		return g, n
 	}
 	a, aGate := makeGraph(false)
@@ -46,6 +47,7 @@ func TestStrSimMatchingRejectsAmbiguousAndConstantSignatures(t *testing.T) {
 		x, y := g.AND(a, b), g.AND(a, c)
 		g.AddOutput(x)
 		g.AddOutput(y)
+		aig.Aig_ManSetRegNum(g, 0)
 		return g, x, y
 	}
 	a, ax, ay := makeGraph()
@@ -73,6 +75,7 @@ func TestStrSimPruneInconsistent(t *testing.T) {
 		x, y := g.AND(a, b), g.AND(a, c)
 		g.AddOutput(x)
 		g.AddOutput(y)
+		aig.Aig_ManSetRegNum(g, 0)
 		return g, x, y
 	}
 	a, ax, ay := makeGraph()
@@ -97,11 +100,13 @@ func TestStrSimExtendPreservesPrimaryInputs(t *testing.T) {
 	x := g.AND(a, b)
 	y := g.AND(x, c)
 	g.AddOutput(y)
+	aig.Aig_ManSetRegNum(g, 0)
 	h := aig.NewGraph()
 	aa, bb, cc := h.NewInput(), h.NewInput(), h.NewInput()
 	xx := h.AND(aa, bb)
 	yy := h.AND(xx, cc)
 	h.AddOutput(yy)
+	aig.Aig_ManSetRegNum(h, 0)
 	m := newStrSimMatcher(g, h)
 	m.link(x, xx)
 	m.extend(1)

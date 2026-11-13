@@ -36,6 +36,7 @@ func TestWindowExtractCombinational(t *testing.T) {
 	a, b := g.NewInput(), g.NewInput()
 	gate := g.AND(a, b)
 	g.AddOutput(gate)
+	aig.Aig_ManSetRegNum(g, 0)
 	q := Saig_ManWindowExtract(g, gate, 2)
 	if q.InputCount() != 2 || q.OutputCount() != 1 || q.RegisterCount() != 0 {
 		t.Fatal("incorrect interface")

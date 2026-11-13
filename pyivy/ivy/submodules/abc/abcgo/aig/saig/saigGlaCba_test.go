@@ -30,6 +30,7 @@ func TestAigGla1BoundedCheckFindsReachableFailure(t *testing.T) {
 	g := aig.NewGraph()
 	input := g.NewInput()
 	g.AddOutput(input)
+	aig.Aig_ManSetRegNum(g, 0)
 	var frame int32 = -1
 	classes := Aig_Gla1ManPerform(g, nil, 0, 3, 0, 0, 1, 0, &frame)
 	if classes != nil || frame != 0 {
@@ -40,6 +41,7 @@ func TestAigGla1BoundedCheckFindsReachableFailure(t *testing.T) {
 func TestAigGla1BoundedCheckProvesConstantSafeBound(t *testing.T) {
 	g := aig.NewGraph()
 	g.AddOutput(g.Const0())
+	aig.Aig_ManSetRegNum(g, 0)
 	var frame int32 = -1
 	classes := Aig_Gla1ManPerform(g, nil, 0, 3, 0, 0, 1, 0, &frame)
 	if classes == nil || frame != 3 {
@@ -92,6 +94,7 @@ func TestSaigManCbaFilterInputsKeepsReasonTraversalOrder(t *testing.T) {
 	a, b, c := g.NewInput(), g.NewInput(), g.NewInput()
 	left := g.AND(a, b)
 	g.AddOutput(g.AND(c, left))
+	aig.Aig_ManSetRegNum(g, 0)
 	cex := util.Abc_CexAlloc(0, 3, 1)
 	cex.IPo, cex.IFrame = 0, 0
 	for i := int32(0); i < 3; i++ {

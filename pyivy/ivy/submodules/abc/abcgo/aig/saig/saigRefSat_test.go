@@ -12,6 +12,7 @@ func TestSaigManExtendCounterExampleTest3ReturnsOnlyReasonPIs(t *testing.T) {
 	g := aig.NewGraph()
 	a, b := g.NewInput(), g.NewInput()
 	g.AddOutput(g.AND(a, b))
+	aig.Aig_ManSetRegNum(g, 0)
 	cex := util.Abc_CexAlloc(0, 2, 1)
 	cex.IPo, cex.IFrame = 0, 0
 	util.Abc_InfoSetBit(cex.PData, 0)
@@ -27,6 +28,7 @@ func TestSaigManFindCexCareBitsPreservesFrameSpecificReason(t *testing.T) {
 	g := aig.NewGraph()
 	a, b := g.NewInput(), g.NewInput()
 	g.AddOutput(g.AND(a, b))
+	aig.Aig_ManSetRegNum(g, 0)
 	cex := util.Abc_CexAlloc(0, 2, 2)
 	cex.IPo, cex.IFrame = 0, 1
 	util.Abc_InfoSetBit(cex.PData, 1) // fixed input a is true in frame zero

@@ -80,6 +80,7 @@ func TestDupAbstractionAndTrim(t *testing.T) {
 	x := q.NewInput()
 	q.NewInput()
 	q.AddOutput(x)
+	aig.Aig_ManSetRegNum(q, 0)
 	q.InputNumbers = []int32{7, 9}
 	r := Saig_ManTrimPis(q)
 	if len(r.Inputs()) != 1 || r.InputNumbers[0] != 7 {
@@ -89,6 +90,7 @@ func TestDupAbstractionAndTrim(t *testing.T) {
 	s.NewInput()
 	s.NewInput()
 	s.AddOutput(s.Const0())
+	aig.Aig_ManSetRegNum(s, 0)
 	if len(Saig_ManTrimPis(s).Inputs()) != 2 {
 		t.Fatal("all-unused source special case")
 	}
@@ -200,6 +202,7 @@ func TestDupOrMultipleOutputsAndMiterTruth(t *testing.T) {
 	a, b := p.NewInput(), p.NewInput()
 	p.AddOutput(a)
 	p.AddOutput(b.Not())
+	aig.Aig_ManSetRegNum(p, 0)
 	q := Saig_ManDupOrpos(p)
 	m := Saig_ManCreateEquivMiter(p, dupInts(int32(a.NodeID()), int32(b.NodeID())), 0)
 	for mask := 0; mask < 4; mask++ {

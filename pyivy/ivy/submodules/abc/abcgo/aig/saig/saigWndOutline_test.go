@@ -34,6 +34,7 @@ func TestWindowOutlinePrimaryInputStopsTraversal(t *testing.T) {
 	g := aig.NewGraph()
 	a, b := g.NewInput(), g.NewInput()
 	g.AddOutput(g.AND(a, b))
+	aig.Aig_ManSetRegNum(g, 0)
 	nodes := Saig_ManWindowOutline(g, a, 3)
 	if vec.Vec_PtrSize(nodes) != 1 || vec.Vec_PtrEntry(nodes, 0).(aig.Edge) != a {
 		t.Fatalf("nodes %v", vec.Vec_PtrArray(nodes))

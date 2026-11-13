@@ -13,12 +13,12 @@ an unsatisfiable cut using the initial-state SAT core, and restores the hidden
 interface. The source's backward-only and no-initial-state paths are included;
 the latter retains ABC's warning that its result need not preserve the initial
 state. A duplication-order bug and an invalid heuristic-cut panic were fixed.
-Constraint and assertion output metadata are preserved. The top-level pass
-keeps hidden-register outputs private until their registers are restored,
-including when asserted outputs overlap constraints. The separately exported
-backward helper reorders hidden outputs around constraints; when assertions
-overlap constraints, it instead returns the already-restored interface because
-its intermediate public interface cannot represent both roles.
+The C forward and backward duplication routines do not copy constraint or
+assertion metadata to their results; the Go routines preserve that source
+limitation. `Saig_ManExposeBadRegs` also changes stored counts without
+reordering outputs, as in C. The Go backward driver still contains historical
+constraint-handling branches for hidden-register interfaces; their full
+source equivalence remains unverified.
 
 Validation includes exhaustive cut-subset comparisons on small graphs; cut
 sizes compared against the existing NWK port on 200 cleaned graphs in both

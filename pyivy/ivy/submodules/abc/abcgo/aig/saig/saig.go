@@ -27,14 +27,14 @@ type Saig_ParBbr_t struct {
 	IFrame                              int32
 }
 
-func Saig_ManPiNum(p *aig.Graph) int32          { return int32(len(p.Inputs())) - aig.Aig_ManRegNum(p) }
-func Saig_ManPoNum(p *aig.Graph) int32          { return int32(len(p.Outputs())) - aig.Aig_ManRegNum(p) }
-func Saig_ManCiNum(p *aig.Graph) int32          { return int32(len(p.Inputs())) }
-func Saig_ManCoNum(p *aig.Graph) int32          { return int32(len(p.Outputs())) }
+func Saig_ManPiNum(p *aig.Graph) int32          { return p.TruePiCount() }
+func Saig_ManPoNum(p *aig.Graph) int32          { return p.TruePoCount() }
+func Saig_ManCiNum(p *aig.Graph) int32          { return p.TruePiCount() + p.RegisterCount() }
+func Saig_ManCoNum(p *aig.Graph) int32          { return p.TruePoCount() + p.RegisterCount() }
 func Saig_ManRegNum(p *aig.Graph) int32         { return aig.Aig_ManRegNum(p) }
 func Saig_ManConstrNum(p *aig.Graph) int32      { return aig.Aig_ManConstrNum(p) }
-func Saig_ManLo(p *aig.Graph, i int32) aig.Edge { return aig.Aig_ManLo(p, i) }
-func Saig_ManLi(p *aig.Graph, i int32) aig.Edge { return aig.Aig_ManLi(p, i) }
+func Saig_ManLo(p *aig.Graph, i int32) aig.Edge { return aig.Aig_ManCi(p, p.TruePiCount()+i) }
+func Saig_ManLi(p *aig.Graph, i int32) aig.Edge { return aig.Aig_ManCo(p, p.TruePoCount()+i) }
 
 func Saig_ObjIsPi(p *aig.Graph, e aig.Edge) bool {
 	e = aig.Aig_Regular(e)
@@ -72,5 +72,5 @@ func Saig_ObjRegId(p *aig.Graph, e aig.Edge) int32 {
 	if Saig_ObjIsLi(p, e) {
 		return aig.Aig_ObjCioId(p, e) - Saig_ManPoNum(p)
 	}
-	return -1
+	panic("saig: object is not a register terminal")
 }

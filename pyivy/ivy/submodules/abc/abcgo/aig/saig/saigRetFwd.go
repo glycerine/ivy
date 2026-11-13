@@ -203,17 +203,17 @@ func Saig_ManRetimeDupForward(graph *aig.Graph, cut *vec.Vec_Ptr_t) *aig.Graph {
 	}
 	outputs := graph.Outputs()
 	regCount := int(aig.Aig_ManRegNum(graph))
-	poCount := len(outputs) - regCount
+	poCount := int(Saig_ManPoNum(graph))
 	for _, output := range outputs[:poCount] {
 		dst.AddOutput(copyEdge(aig.Aig_ObjChild0(graph, output)))
 	}
 	nextState := make([]aig.Edge, regCount)
 	for reg := 0; reg < regCount; reg++ {
-		li := aig.Aig_ManLi(graph, int32(reg))
+		li := Saig_ManLi(graph, int32(reg))
 		nextState[reg] = copyEdge(aig.Aig_ObjChild0(graph, li))
 	}
 	for reg := 0; reg < regCount; reg++ {
-		lo := aig.Aig_ManLo(graph, int32(reg))
+		lo := Saig_ManLo(graph, int32(reg))
 		mapped[lo.NodeID()], known[lo.NodeID()] = nextState[reg], true
 	}
 	for i := 0; i < vec.Vec_PtrSize(cut); i++ {
@@ -230,9 +230,9 @@ func Saig_ManRetimeDupForward(graph *aig.Graph, cut *vec.Vec_Ptr_t) *aig.Graph {
 		}
 		dst.AddOutput(stateValue)
 	}
-	aig.Aig_ManSetRegNum(dst, int32(vec.Vec_PtrSize(cut)))
-	aig.Aig_ManSetConstrNum(dst, aig.Aig_ManConstrNum(graph))
-	dst.Assertions = graph.Assertions
+	aig.Aig_ManSetRegNumForConstruction(dst, int32(vec.Vec_PtrSize(cut)))
+	dst.CopyTruePiCount(graph)
+	dst.CopyTruePoCount(graph)
 	aig.Aig_ManCleanup(dst)
 	return dst
 }

@@ -123,7 +123,7 @@ func Saig_ManRetimeDupBackward(src *aig.Graph, cut *vec.Vec_Ptr_t, initial *vec.
 	}
 	inputs, outputs, nodes := src.Inputs(), src.Outputs(), src.Nodes()
 	regs, piCount := int(aig.Aig_ManRegNum(src)), int(Saig_ManPiNum(src))
-	poCount := len(outputs) - regs
+	poCount := int(Saig_ManPoNum(src))
 	dst := aig.NewGraph()
 	dst.Name, dst.Spec = src.Name, src.Spec
 	mapped := make([]aig.Edge, len(nodes))
@@ -201,9 +201,9 @@ func Saig_ManRetimeDupBackward(src *aig.Graph, cut *vec.Vec_Ptr_t, initial *vec.
 		}
 		dst.AddOutput(edgeNotIf(copyEdge(edge), phase))
 	}
-	aig.Aig_ManSetRegNum(dst, int32(len(cutEdges)))
-	aig.Aig_ManSetConstrNum(dst, aig.Aig_ManConstrNum(src))
-	dst.Assertions = src.Assertions
+	aig.Aig_ManSetRegNumForConstruction(dst, int32(len(cutEdges)))
+	dst.CopyTruePiCount(src)
+	dst.CopyTruePoCount(src)
 	return dst
 }
 
@@ -284,24 +284,34 @@ func Saig_ManHideBadRegs(graph *aig.Graph, bad *vec.Vec_Ptr_t) int32 {
 	inputs, outputs := graph.Inputs(), graph.Outputs()
 	regs := int(aig.Aig_ManRegNum(graph))
 	piCount, poCount := len(inputs)-regs, len(outputs)-regs
+	if int(graph.TruePiCount()) != piCount || int(graph.TruePoCount()) != poCount {
+		panic("saig: stored terminal counts do not match interface")
+	}
 	selected := make(map[int]bool)
+	var selectedOrder []int
 	for _, item := range vec.Vec_PtrArray(bad) {
 		edge, ok := item.(aig.Edge)
 		if !ok {
-			continue
+			panic("saig: bad register must be a latch input")
 		}
-		reg := int(Saig_ObjRegId(graph, edge))
-		if reg >= 0 && reg < regs {
-			selected[reg] = true
+		reg := -1
+		for i, li := range outputs[poCount:] {
+			if edge == li {
+				reg = i
+				break
+			}
 		}
+		if reg < 0 || selected[reg] {
+			panic("saig: invalid or duplicate bad latch input")
+		}
+		selected[reg] = true
+		selectedOrder = append(selectedOrder, reg)
 	}
 	newInputs := append([]aig.Edge(nil), inputs[:piCount]...)
 	newOutputs := append([]aig.Edge(nil), outputs[:poCount]...)
-	for reg := 0; reg < regs; reg++ {
-		if selected[reg] {
-			newInputs = append(newInputs, inputs[piCount+reg])
-			newOutputs = append(newOutputs, outputs[poCount+reg])
-		}
+	for _, reg := range selectedOrder {
+		newInputs = append(newInputs, inputs[piCount+reg])
+		newOutputs = append(newOutputs, outputs[poCount+reg])
 	}
 	for reg := 0; reg < regs; reg++ {
 		if !selected[reg] {
@@ -316,31 +326,20 @@ func Saig_ManHideBadRegs(graph *aig.Graph, bad *vec.Vec_Ptr_t) int32 {
 	if err := aig.Aig_ManReorderCisCos(graph, newInputs, newOutputs, int32(regs)-count); err != nil {
 		panic(err)
 	}
+	graph.SetTruePiCount(graph.TruePiCount() + count)
+	graph.SetTruePoCount(graph.TruePoCount() + count)
 	return count
 }
 
 func Saig_ManExposeBadRegs(graph *aig.Graph, count int32) {
-	if graph == nil || count < 0 || count > Saig_ManPiNum(graph) || count > Saig_ManPoNum(graph) {
-		panic("saig: invalid exposed register count")
+	if graph == nil {
+		panic("saig: nil graph")
 	}
-	constraints := int(aig.Aig_ManConstrNum(graph))
-	if count == 0 || constraints == 0 {
-		aig.Aig_ManSetRegNum(graph, aig.Aig_ManRegNum(graph)+count)
-		return
-	}
-	outputs := graph.Outputs()
-	pos := len(outputs) - int(graph.RegisterCount())
-	hidden := pos - constraints - int(count)
-	if hidden < 0 {
-		panic("saig: invalid hidden constraint interface")
-	}
-	reordered := append([]aig.Edge(nil), outputs[:hidden]...)
-	reordered = append(reordered, outputs[pos-constraints:pos]...)
-	reordered = append(reordered, outputs[hidden:pos-constraints]...)
-	reordered = append(reordered, outputs[pos:]...)
-	if err := aig.Aig_ManReorderCisCos(graph, graph.Inputs(), reordered, graph.RegisterCount()+count); err != nil {
-		panic(err)
-	}
+	// ABC exposes registers by changing the three stored counts only.
+	truePis, truePos := graph.TruePiCount(), graph.TruePoCount()
+	aig.Aig_ManSetRegNumForConstruction(graph, graph.RegisterCount()+count)
+	graph.SetTruePiCount(truePis - count)
+	graph.SetTruePoCount(truePos - count)
 }
 
 // Saig_ManRetimeMinAreaBackward derives the source minimum cut and retries

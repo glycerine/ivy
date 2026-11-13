@@ -176,7 +176,7 @@ func TestBackwardRetimeWithoutInitialState(t *testing.T) {
 	}
 }
 
-func TestRetimePreservesOutputMetadata(t *testing.T) {
+func TestRetimeDropsOutputMetadataAsSource(t *testing.T) {
 	g := aig.NewGraph()
 	x, y, a, b := g.NewInput(), g.NewInput(), g.NewInput(), g.NewInput()
 	gate := g.AND(x, y)
@@ -188,7 +188,7 @@ func TestRetimePreservesOutputMetadata(t *testing.T) {
 	aig.Aig_ManSetConstrNum(g, 1)
 	g.Assertions = 1
 	out := Saig_ManRetimeMinArea(g, 4, 0, 1, 1, 0)
-	if out.RegisterCount() != 1 || aig.Aig_ManConstrNum(out) != 1 || out.Assertions != 1 {
+	if out.RegisterCount() != 1 || aig.Aig_ManConstrNum(out) != 0 || out.Assertions != 0 {
 		t.Fatalf("registers=%d constraints=%d assertions=%d", out.RegisterCount(), aig.Aig_ManConstrNum(out), out.Assertions)
 	}
 	checkRetimeTraces(t, g, out, 2, 2)
@@ -204,13 +204,13 @@ func TestBackwardRetimeRestoresConstrainedHiddenRegisters(t *testing.T) {
 	aig.Aig_ManSetRegNum(g, 4)
 	aig.Aig_ManSetConstrNum(g, 1)
 	out := Saig_ManRetimeMinArea(g, 4, 0, 1, 1, 0)
-	if out.RegisterCount() != 3 || aig.Aig_ManConstrNum(out) != 1 {
+	if out.RegisterCount() != 3 || aig.Aig_ManConstrNum(out) != 0 {
 		t.Fatalf("registers=%d constraints=%d", out.RegisterCount(), aig.Aig_ManConstrNum(out))
 	}
 	checkRetimeTraces(t, g, out, 2, 4)
 }
 
-func TestForwardRetimePreservesOutputMetadata(t *testing.T) {
+func TestForwardRetimeDropsOutputMetadataAsSource(t *testing.T) {
 	g := aig.NewGraph()
 	x, a, b := g.NewInput(), g.NewInput(), g.NewInput()
 	g.AddOutput(g.AND(a, b))
@@ -221,7 +221,7 @@ func TestForwardRetimePreservesOutputMetadata(t *testing.T) {
 	aig.Aig_ManSetConstrNum(g, 1)
 	g.Assertions = 1
 	out := Saig_ManRetimeMinArea(g, 4, 1, 0, 1, 0)
-	if out.RegisterCount() != 1 || aig.Aig_ManConstrNum(out) != 1 || out.Assertions != 1 {
+	if out.RegisterCount() != 1 || aig.Aig_ManConstrNum(out) != 0 || out.Assertions != 0 {
 		t.Fatalf("registers=%d constraints=%d assertions=%d", out.RegisterCount(), aig.Aig_ManConstrNum(out), out.Assertions)
 	}
 	checkRetimeTraces(t, g, out, 1, 2)
@@ -238,12 +238,12 @@ func TestBackwardRetimeRestoresOverlappingAssertedConstraints(t *testing.T) {
 	aig.Aig_ManSetConstrNum(g, 1)
 	g.Assertions = 4
 	direct := Saig_ManRetimeMinAreaBackward(aig.Aig_ManDupSimple(g), 0)
-	if direct == nil || direct.RegisterCount() != 3 || aig.Aig_ManConstrNum(direct) != 1 || direct.Assertions != 4 {
+	if direct == nil || direct.RegisterCount() != 3 || aig.Aig_ManConstrNum(direct) != 0 || direct.Assertions != 0 {
 		t.Fatal("backward helper did not restore overlapping output metadata")
 	}
 	checkRetimeTraces(t, g, direct, 2, 4)
 	out := Saig_ManRetimeMinArea(g, 4, 0, 1, 1, 0)
-	if out.RegisterCount() != 3 || aig.Aig_ManConstrNum(out) != 1 || out.Assertions != 4 {
+	if out.RegisterCount() != 3 || aig.Aig_ManConstrNum(out) != 0 || out.Assertions != 0 {
 		t.Fatal("retiming changed output metadata")
 	}
 	checkRetimeTraces(t, g, out, 2, 4)
