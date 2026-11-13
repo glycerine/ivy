@@ -98,6 +98,29 @@ func TestEncodeExplicitXorOfConstants(t *testing.T) {
 	}
 }
 
+func TestAlternateDerivationRecordsObjectClauses(t *testing.T) {
+	g := aig.NewGraph()
+	a, b := g.NewInput(), g.NewInput()
+	x := g.NewXor(a, b)
+	out := g.AddOutput(x)
+	data := Cnf_DeriveOther(g, 0)
+	if data == nil || len(data.Obj2Clause) != len(g.Nodes()) || len(data.Obj2Count) != len(g.Nodes()) {
+		t.Fatalf("missing object clause metadata: %+v", data)
+	}
+	for _, edge := range []aig.Edge{x, out} {
+		id := edge.NodeID()
+		start, count := data.Obj2Clause[id], data.Obj2Count[id]
+		if start < 0 || count == 0 || int(start+count) > len(data.Clauses) {
+			t.Fatalf("object %d range %d+%d", id, start, count)
+		}
+		for _, clause := range data.Clauses[start : start+count] {
+			if len(clause) == 0 || clause[0]>>1 != data.VarNums[id] {
+				t.Fatalf("object %d clause %v lacks output literal first", id, clause)
+			}
+		}
+	}
+}
+
 func cnfSatisfiableWithInputs(cnf *CNF, inputs map[int]bool) bool {
 	for assignment := 0; assignment < 1<<cnf.Variables; assignment++ {
 		matches := true

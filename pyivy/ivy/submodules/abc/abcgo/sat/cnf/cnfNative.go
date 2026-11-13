@@ -33,8 +33,11 @@ func EncodeAIG(graph *aig.Graph, nOutputs int) (*CNF, error) {
 	}
 	nodes := graph.Nodes()
 	result := &CNF{pMan: graph, VarNums: make([]int32, len(nodes))}
+	result.Obj2Clause = make([]int32, len(nodes))
+	result.Obj2Count = make([]int32, len(nodes))
 	for i := range result.VarNums {
 		result.VarNums[i] = -1
+		result.Obj2Clause[i] = -1
 	}
 	for id, node := range nodes {
 		if id == 0 || node.Kind == aig.Constant {
@@ -79,6 +82,7 @@ func EncodeAIG(graph *aig.Graph, nOutputs int) (*CNF, error) {
 			continue
 		}
 		out := result.VarNums[id]
+		start := len(result.Clauses)
 		a, b := get(node.Fanins[0]), get(node.Fanins[1])
 		switch node.Kind {
 		case aig.Input:
@@ -127,10 +131,14 @@ func EncodeAIG(graph *aig.Graph, nOutputs int) (*CNF, error) {
 				appendEquiv(out, a)
 				break
 			}
-			appendClause(a.lit^1, b.lit^1, out<<1|1)
-			appendClause(a.lit, b.lit, out<<1|1)
-			appendClause(a.lit, b.lit^1, out<<1)
-			appendClause(a.lit^1, b.lit, out<<1)
+			appendClause(out<<1|1, a.lit^1, b.lit^1)
+			appendClause(out<<1|1, a.lit, b.lit)
+			appendClause(out<<1, a.lit, b.lit^1)
+			appendClause(out<<1, a.lit^1, b.lit)
+		}
+		if len(result.Clauses) > start {
+			result.Obj2Clause[id] = int32(start)
+			result.Obj2Count[id] = int32(len(result.Clauses) - start)
 		}
 	}
 	outputs := graph.Outputs()
@@ -149,6 +157,8 @@ func EncodeAIG(graph *aig.Graph, nOutputs int) (*CNF, error) {
 		appendClause(driver.lit)
 	}
 	result.pClauses = cloneClauses(result.Clauses)
+	result.pObj2Clause = append([]int32(nil), result.Obj2Clause...)
+	result.pObj2Count = append([]int32(nil), result.Obj2Count...)
 	result.nClauses = int32(len(result.Clauses))
 	result.nLiterals = 0
 	for _, clause := range result.Clauses {
