@@ -67,8 +67,10 @@ func TestDarManRewriteDefaultUsesAIGTime2Quit(t *testing.T) {
 	a, b := g.NewInput(), g.NewInput()
 	g.AddOutput(g.AND(a, b))
 	g.Time2Quit = time.Now().Add(-time.Second)
-	if got, err := Dar_ManRewriteDefault(g); got != nil || !errors.Is(err, context.DeadlineExceeded) {
+	if got, err := Dar_ManRewriteDefault(g); err != nil || got == nil {
 		t.Fatalf("expired default rewrite got %v err %v", got, err)
+	} else if !got.Time2Quit.Equal(g.Time2Quit) {
+		t.Fatal("default rewrite lost graph deadline")
 	}
 }
 

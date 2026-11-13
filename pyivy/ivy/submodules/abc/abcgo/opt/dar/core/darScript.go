@@ -2,6 +2,7 @@ package core
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"github.com/glycerine/abcgo/aig/aig"
 	"io"
@@ -122,7 +123,7 @@ func Dar_ManRewriteDefault(g *aig.Graph) (*aig.Graph, error) {
 	result := aig.Aig_ManDupDfs(g)
 	params := DefaultRewriteParams()
 	params.Context = ctx
-	if err := Dar_ManRewrite(result, &params); err != nil {
+	if err := Dar_ManRewrite(result, &params); err != nil && !errors.Is(err, context.DeadlineExceeded) {
 		return nil, err
 	}
 	return aig.Aig_ManDupDfs(result), nil

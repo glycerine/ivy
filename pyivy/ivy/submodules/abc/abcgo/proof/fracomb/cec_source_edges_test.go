@@ -108,16 +108,16 @@ func TestSourceCecExpiredRewriteFails(t *testing.T) {
 	Fra_FraigCec(&g, 1000, 0, func(graph *aig.Graph, _, _ int32) *aig.Graph { return graph })
 }
 
-func TestSourceCecExpiredPerSweepRewriteFails(t *testing.T) {
+func TestSourceCecExpiredPerSweepRewriteContinues(t *testing.T) {
 	g := cecPigeonholeMiter()
-	defer func() {
-		if recover() != "fra: source dereferences failed rewrite" {
-			t.Fatal("C dereferences a failed per-sweep rewrite")
-		}
-	}()
-	Fra_FraigCec(&g, 1000, 0, func(input *aig.Graph, _, _ int32) *aig.Graph {
+	calls := 0
+	status := Fra_FraigCec(&g, 1, 0, func(input *aig.Graph, _, _ int32) *aig.Graph {
+		calls++
 		result := aig.Aig_ManDupDfs(input)
 		result.Time2Quit = time.Now().Add(-time.Second)
 		return result
 	})
+	if calls != 6 || status != -1 || g.Time2Quit.IsZero() || time.Now().Before(g.Time2Quit) {
+		t.Fatalf("sweeps=%d status=%d deadline=%v, want six partial rewrites then undecided SAT", calls, status, g.Time2Quit)
+	}
 }

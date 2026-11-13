@@ -66,10 +66,11 @@ free-output CNF fixture checks the exact variable and clause order
 against C. Independent direct comparisons with the original C implementation
 also matched 100 generated all-free and 100 mixed asserted/free output graphs;
 the source oracle cases use AND/inverter graphs, not Go's native XOR extension.
-The current statement coverage is 94.7% (CEC: 95.7%, SAT: 87.2%). A source
-deadline regression covers failure during the per-sweep rewrite, while the
-direct and larger C-backed stage oracles exercise both early and repeated
-rewrite paths.
+The current statement coverage is 93.9% (CEC: 95.7%, SAT: 87.2%). A deadline
+regression checks that a per-sweep rewrite stops at the graph deadline while
+`Dar_ManRewriteDefault` returns the partial result, matching C's void rewrite
+wrapper. The direct and larger C-backed stage oracles exercise early and
+repeated rewrite paths.
 
 `Dar_ManRwsat` has an exact ordered-graph C regression for a two-XOR chain
 and a reducible factoring example, with and without initial balancing where
