@@ -44,6 +44,7 @@ func TestCecDirectInputUsesSourceZeroWitness(t *testing.T) {
 	g := aig.NewGraph()
 	x := g.NewInput()
 	g.AddOutput(x)
+	aig.Aig_ManSetRegNum(g, 0)
 	if got := Fra_FraigCec(&g, 1000, 0, nil); got != 0 {
 		t.Fatalf("status %d", got)
 	}
@@ -176,6 +177,7 @@ func TestMiterStatusAndAssertedOutput(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			g := aig.NewGraph()
 			g.AddOutput(tc.output(g))
+			aig.Aig_ManSetRegNum(g, 0)
 			if got := Fra_FraigMiterStatus(g); got != tc.status {
 				t.Fatalf("status=%d", got)
 			}
@@ -183,6 +185,25 @@ func TestMiterStatusAndAssertedOutput(t *testing.T) {
 				t.Fatalf("asserted=%d", got)
 			}
 		})
+	}
+}
+
+// ABC uses the recorded nTruePis field rather than deriving the true-input
+// count. A compiled C graph with one CI and PO confirms -1 before setting
+// that field and 0 afterward for a direct positive input.
+func TestMiterStatusUsesRecordedTrueInputCount(t *testing.T) {
+	g := aig.NewGraph()
+	x := g.NewInput()
+	g.AddOutput(x)
+	if g.TruePiCount() != 0 || Fra_FraigMiterStatus(g) != -1 {
+		t.Fatal("uninitialized true-input metadata should leave the miter undecided")
+	}
+	g.SetTruePiCount(1)
+	if Fra_FraigMiterStatus(g) != 0 {
+		t.Fatal("recorded true input should make the miter structurally satisfiable")
+	}
+	if Fra_FraigMiterAssertedOutput(g) != -1 {
+		t.Fatal("asserted-output check must not treat a positive input as asserted")
 	}
 }
 

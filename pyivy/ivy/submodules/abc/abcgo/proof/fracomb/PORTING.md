@@ -30,6 +30,11 @@ variable values after polarity transformation without undoing nonzero input
 phases. Callers requiring a replayable witness must account for these source
 limitations. Unknown solver results stay unknown.
 
+If the initial bounded SAT attempt is undecided and `Dar_ManRwsat` returns
+NULL (for example, when the graph deadline has expired), ABC dereferences the
+failed rewrite and crashes. The Go CEC entry point preserves the failure as a
+panic instead of reporting an undecided result.
+
 ABC's `fNewSolver` path passes clause ID zero into `sat_solver2_addclause`
 while loading CNF (`src/sat/cnf/cnfMan.c:486–488`); assertion-enabled ABC
 aborts because `src/sat/bsat/satSolver2.c:1294` requires a nonzero ID. The

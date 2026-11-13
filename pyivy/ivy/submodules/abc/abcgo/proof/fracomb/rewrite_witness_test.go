@@ -2,7 +2,7 @@ package fracomb
 
 import (
 	"github.com/glycerine/abcgo/aig/aig"
-	"github.com/glycerine/abcgo/opt/dar"
+	dar "github.com/glycerine/abcgo/opt/dar/core"
 	"testing"
 )
 
