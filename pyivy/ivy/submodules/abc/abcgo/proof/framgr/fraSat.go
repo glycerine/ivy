@@ -143,6 +143,8 @@ func Fra_NodeIsConst(p *Fra_Man_t, node aig.Edge) int32 {
 }
 
 func Fra_SetActivityFactors_rec(p *Fra_Man_t, node aig.Edge, min, max int32, seen map[int]bool) int32 {
+	assert(!node.Complemented(), "!Aig_IsComplement(pObj)")
+	assert(Fra_ObjSatNum(p, node) != 0, "Fra_ObjSatNum(pObj)")
 	id := node.NodeID()
 	if seen[id] {
 		return 0

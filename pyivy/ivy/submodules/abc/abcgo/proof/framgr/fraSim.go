@@ -96,6 +96,9 @@ func Fra_SmlCheckOutputSavePattern(p *Fra_Man_t, output aig.Edge) {
 	p.PManFraig.Data = model
 }
 func Fra_SmlCheckOutput(p *Fra_Man_t) int32 {
+	first := p.PManAig.Outputs()[0]
+	fanin := p.PManAig.Node(first).Fanins[0]
+	assert(p.PManAig.Node(fanin).Phase == fanin.Complemented(), "Aig_ObjFanin0(pObj)->fPhase == Aig_ObjFaninC0(pObj)")
 	for _, output := range p.PManAig.Outputs() {
 		fanin := p.PManAig.Node(output).Fanins[0]
 		if !p.PSml.IsConstant(fanin.NodeID()) {
@@ -107,8 +110,9 @@ func Fra_SmlCheckOutput(p *Fra_Man_t) int32 {
 }
 func Fra_SmlAssignRandom(s *Fra_Sml_t, obj aig.Edge) {
 	assert(aig.Aig_ObjIsCi(s.Graph, obj), "Aig_ObjIsCi(pObj)")
-	for i := range s.NodeWords(obj.NodeID()) {
-		s.NodeWords(obj.NodeID())[i] = aig.Aig_ManRandom(0)
+	words := s.NodeWords(obj.NodeID())
+	for i := range words {
+		words[i] = aig.Aig_ManRandom(0)
 	}
 }
 func Fra_SmlAssignConst(s *Fra_Sml_t, obj aig.Edge, value, frame int32) {

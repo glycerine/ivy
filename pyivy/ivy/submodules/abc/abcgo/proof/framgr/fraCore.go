@@ -57,6 +57,7 @@ func Fra_FraigVerifyCounterEx(p *Fra_Man_t, cex *vec.Vec_Int_t) {
 }
 
 func Fra_FraigNode(p *Fra_Man_t, obj aig.Edge) {
+	assert(!obj.Complemented(), "!Aig_IsComplement(pObj)")
 	repr := Fra_ClassObjRepr(p, obj)
 	if repr == aig.InvalidEdge || (p.PPars.FDoSparse == 0 && repr == p.PManAig.Const1()) {
 		return
@@ -70,6 +71,7 @@ func Fra_FraigNode(p *Fra_Man_t, obj aig.Edge) {
 		p.NSatCallsSkipped++
 		return
 	}
+	assert(p.PPars.NFramesK != 0 || aig.Aig_Regular(node) != p.PManFraig.Const1(), "nFramesK || Aig_Regular(pObjFraig) != pConst1")
 	result := Fra_NodesAreEquiv(p, aig.Aig_Regular(repNode), aig.Aig_Regular(node))
 	if result == 1 {
 		if p.PManAig.Node(obj).Phase != p.PManAig.Node(repr).Phase {
