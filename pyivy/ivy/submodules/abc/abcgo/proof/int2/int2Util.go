@@ -6,16 +6,14 @@ import (
 )
 
 // Int2_ManComputeCoPres returns CO indices needed by the SOP. A nil SOP
-// denotes the initial-state cube, which uses the first register output.
+// denotes the initial property, which uses the first primary output.
 func Int2_ManComputeCoPres(vSop *Vec_Int_t, nRegs int32) *Vec_Int_t {
 	if nRegs < 0 {
 		panic("int2: negative register count")
 	}
 	out := vec.Vec_IntAlloc(100)
 	if vSop == nil {
-		if nRegs > 0 {
-			vec.Vec_IntPush(out, 0)
-		}
+		vec.Vec_IntPush(out, 0)
 		return out
 	}
 	used := make([]bool, nRegs)

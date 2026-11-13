@@ -342,3 +342,58 @@ func TestZeroFrameBuildersReturnInitialState(t *testing.T) {
 		gia.Gia_ManStop(out)
 	}
 }
+
+func TestDupInitMatchesMuxedStateTransitions(t *testing.T) {
+	g := gia.Gia_ManStart(24)
+	a, b := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
+	x, y := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
+	g.EnableMuxes()
+	gate := gia.Gia_ManAppendMuxReal(g, a, b^1, x)
+	next := gia.Gia_ManAppendXorReal(g, y, gate)
+	gia.Gia_ManAppendCo(g, gate^1)
+	gia.Gia_ManAppendCo(g, next)
+	gia.Gia_ManAppendCo(g, gia.Gia_ManAppendBuf(g, b^1))
+	gia.Gia_ManSetRegNum(g, 2)
+	dup := Int2_ManDupInit(g, 0)
+	defer gia.Gia_ManStop(dup)
+	for mask := 0; mask < 32; mask++ {
+		a0, b0, ctrl, x0, y0 := mask&1 != 0, mask&2 != 0, mask&4 != 0, mask&8 != 0, mask&16 != 0
+		old, err := g.Evaluate([]bool{a0, b0, x0, y0})
+		if err != nil {
+			t.Fatal(err)
+		}
+		got, err := dup.Evaluate([]bool{a0, b0, ctrl, x0, y0})
+		if err != nil {
+			t.Fatal(err)
+		}
+		want := []bool{old[0], old[1], old[2]}
+		if ctrl {
+			want[1], want[2] = x0, y0
+		}
+		for i := range want {
+			if got[i] != want[i] {
+				t.Fatalf("mask %d got %v want %v", mask, got, want)
+			}
+		}
+	}
+}
+
+func TestPreparePrefixAtFrameZeroConstrainsInitialState(t *testing.T) {
+	g := gia.Gia_ManStart(8)
+	input, state := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
+	gia.Gia_ManAppendCo(g, state)
+	gia.Gia_ManAppendCo(g, input)
+	gia.Gia_ManSetRegNum(g, 1)
+	var mapping *Vec_Int_t
+	s := Int2_ManPreparePrefix(g, 0, &mapping)
+	if s == nil || mapping == nil || vec.Vec_IntSize(mapping) != 1 {
+		t.Fatal("missing prefix or state map")
+	}
+	v := vec.Vec_IntEntry(mapping, 0)
+	for value := int32(0); value < 2; value++ {
+		status := sat_solver_solve(s, []int32{sat_literal(v, 1-value)}, 0, 0, 0, 0)
+		if (status == l_True) != (value == 0) {
+			t.Fatalf("state %d returned %d", value, status)
+		}
+	}
+}

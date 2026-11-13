@@ -125,3 +125,20 @@ func TestProbToGiaNativeGateCones(t *testing.T) {
 		}
 	}
 }
+
+func TestProbToGiaInitialCombinationalProperty(t *testing.T) {
+	g := gia.Gia_ManStart(8)
+	a := gia.Gia_ManAppendCi(g)
+	gia.Gia_ManAppendCo(g, a)
+	out := Int2_ManProbToGia(g, nil)
+	defer gia.Gia_ManStop(out)
+	for _, value := range []bool{false, true} {
+		got, err := out.Evaluate([]bool{value})
+		if err != nil {
+			t.Fatal(err)
+		}
+		if got[0] != value {
+			t.Fatalf("input %v: got %v", value, got[0])
+		}
+	}
+}
