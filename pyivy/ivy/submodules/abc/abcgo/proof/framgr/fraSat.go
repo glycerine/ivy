@@ -36,9 +36,8 @@ func fraPrepareSAT(p *Fra_Man_t, old, new aig.Edge) {
 // learns their negation, and returns 1 for a proof, 0 for a counterexample,
 // or -1 when the solver exhausts a resource budget.
 func fraSATQuery(p *Fra_Man_t, old, new aig.Edge, limit int32, assumptions ...bsat.Literal) int32 {
-	p.PSat.SetLimits(int64(limit), 0)
 	start := time.Now()
-	status := p.PSat.SolveWithGlobalLimits(assumptions, p.NBTLimitGlobal, p.NInsLimitGlobal)
+	status := p.PSat.SolveWithSourceLimits(assumptions, int64(limit), 0, p.NBTLimitGlobal, p.NInsLimitGlobal)
 	elapsed := time.Since(start)
 	p.TimeSat += elapsed
 	switch status {

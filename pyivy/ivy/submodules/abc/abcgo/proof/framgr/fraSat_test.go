@@ -30,6 +30,17 @@ func TestSATImplicationProofAndWitness(t *testing.T) {
 	}
 }
 
+func TestSATImplicationAcceptsSourceSignedLimits(t *testing.T) {
+	g := aig.NewGraph()
+	a, b := g.NewInput(), g.NewInput()
+	both := g.AND(a, b)
+	p := satTestManager(g)
+	p.PPars.NBTLimitNode = -1
+	if got := Fra_NodesAreImp(p, both, a, 0, 0); got != 1 {
+		t.Fatalf("source's immediately contradictory assumptions result = %d, want proof", got)
+	}
+}
+
 func TestSATEquivalenceAndClause(t *testing.T) {
 	g := aig.NewGraph()
 	a, b := g.NewInput(), g.NewInput()
