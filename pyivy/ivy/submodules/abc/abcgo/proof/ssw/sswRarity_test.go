@@ -74,3 +74,48 @@ func TestSswRarityBinCountersAndObjectComparison(t *testing.T) {
 		t.Fatal("simulation comparison")
 	}
 }
+
+func TestSswRarityFindsSequentialCounterexample(t *testing.T) {
+	g := aig.NewGraph()
+	pi, lo := g.NewInput(), g.NewInput()
+	g.AddOutput(lo)
+	g.AddOutput(pi)
+	aig.Aig_ManSetRegNum(g, 1)
+	pars := &Ssw_RarPars_t{nWords: 1, nFrames: 2, nBinSize: 8, nRounds: 1}
+	if got := Ssw_RarSimulate(g, pars); got != 0 {
+		t.Fatalf("result=%d", got)
+	}
+	cex := g.SequentialCounterexample()
+	if cex == nil || cex.IFrame != 1 {
+		t.Fatalf("counterexample: %+v", cex)
+	}
+}
+func TestSswRarityTransferPreservesRegisterPatterns(t *testing.T) {
+	g := aig.NewGraph()
+	g.NewInput()
+	for i := 0; i < 8; i++ {
+		g.NewInput()
+	}
+	g.AddOutput(g.Const0())
+	for i := 0; i < 8; i++ {
+		g.AddOutput(g.Const0())
+	}
+	aig.Aig_ManSetRegNum(g, 8)
+	p := Ssw_RarManStart(g, &Ssw_RarPars_t{nWords: 1, nFrames: 1, nBinSize: 8})
+	defer Ssw_RarManStop(p)
+	for i, li := range g.Outputs()[1:] {
+		Ssw_RarObjSim(p, int32(li.NodeID()))[0] = uint64(i + 1)
+	}
+	init := vec.Vec_IntAlloc(8)
+	Ssw_RarTransferPatterns(p, init)
+	if vec.Vec_IntSize(init) != 8 || vec.Vec_IntSize(p.vPatBests) != 1 {
+		t.Fatal("incorrect selected pattern size")
+	}
+	idx := vec.Vec_IntEntry(p.vPatBests, 0)
+	for i, li := range g.Outputs()[1:] {
+		want := int32(Ssw_RarObjSim(p, int32(li.NodeID()))[0] >> uint(idx) & 1)
+		if vec.Vec_IntEntry(init, i) != want {
+			t.Fatalf("reg=%d selected bit mismatch", i)
+		}
+	}
+}
