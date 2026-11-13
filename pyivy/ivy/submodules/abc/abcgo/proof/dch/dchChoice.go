@@ -109,6 +109,9 @@ func DeriveChoiceAig(source *aig.Graph, skipRedundantSupport bool) (*aig.Graph, 
 	if err := source.Check(); err != nil {
 		return nil, fmt.Errorf("dch: %w", err)
 	}
+	if !aig.Aig_ManHasReprs(source) {
+		return nil, fmt.Errorf("dch: representative storage is required")
+	}
 	result := aig.NewGraph()
 	aig.Aig_ManReprStart(result, int32(source.NodeCount()))
 	copies := map[int]aig.Edge{0: result.Const1()}

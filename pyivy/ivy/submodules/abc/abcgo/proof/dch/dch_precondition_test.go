@@ -35,3 +35,18 @@ func TestEquivalencesCreatesEmptyRepresentativeStorage(t *testing.T) {
 		t.Fatal("representative storage was not initialized")
 	}
 }
+
+// Dch_DeriveChoiceAigInt asserts that source representative storage exists,
+// including when the graph has no candidate equivalences.
+func TestDeriveChoicesRequiresRepresentativeStorage(t *testing.T) {
+	g := aig.NewGraph()
+	a := g.NewInput()
+	g.AddOutput(a)
+	if _, err := DeriveChoiceAig(g, false); err == nil {
+		t.Fatal("accepted a graph without representative storage")
+	}
+	aig.Aig_ManReprStart(g, int32(g.NodeCount()))
+	if _, err := DeriveChoiceAig(g, false); err != nil {
+		t.Fatalf("empty representative storage should be valid: %v", err)
+	}
+}
