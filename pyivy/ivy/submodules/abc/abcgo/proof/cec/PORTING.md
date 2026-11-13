@@ -71,8 +71,13 @@ FRA witnesses are replayed against the original paired outputs before they are
 returned. Native GIA XOR, MUX and buffer nodes are lowered through the existing
 AIG conversion before the AND-inverter sweep.
 
-The original sweep's optional original-ID tracking remains unsupported by the
-private implementation; `Cec_ManVerify` does not request it. As in the C
+`Cec_ManSatSweeping` uses the original speculative sweep and records the SAT-
+proved original-ID pairs when requested. Original-ID tracking requires depth 1
+and the ordinary SAT backend; deeper speculative dependencies and the circuit
+SAT backend cannot currently supply independently validated original-ID pairs.
+Its direct entry point requires an
+AND-inverter graph and reports an error for native XOR, MUX, or buffer nodes;
+`Cec_ManVerify` lowers those nodes before invoking the sweep. As in the C
 pipeline, the overall time limit is checked between stages and iterations; an
 individual SAT or FRAIG call can run beyond that limit. Tests compare selected
 cases with the original ABC executable and force the unresolved sweep branch

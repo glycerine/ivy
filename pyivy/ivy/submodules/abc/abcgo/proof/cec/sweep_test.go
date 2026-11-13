@@ -18,15 +18,15 @@ func sweepFixture() (*Gia_Man_t, int32, int32) {
 	return p, xyz >> 1, same >> 1
 }
 func TestNativeSATSuitedSweep(t *testing.T) {
-	p, a, b := sweepFixture()
+	p, _, _ := sweepFixture()
 	params := new(Cec_ParFra_t)
 	Cec_ManFraSetDefaultParams(params)
 	reduced := Cec_ManSatSweeping(p, params, 1)
 	if params.Error != nil || reduced == nil {
 		t.Fatalf("sweep failed: %v", params.Error)
 	}
-	if gia.Gia_ObjRepr(p, b) != a {
-		t.Fatalf("equivalent associativity cone not merged: %d", gia.Gia_ObjRepr(p, b))
+	if p.HasRepresentatives() {
+		t.Fatal("source sweep left temporary equivalence classes on the input")
 	}
 	if gia.Gia_ManAndNum(reduced) >= gia.Gia_ManAndNum(p) {
 		t.Fatal("sweep did not reduce redundant cones")

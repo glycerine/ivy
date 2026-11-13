@@ -9,6 +9,7 @@ func Cec_FraigCombinational(graph *Aig_Man_t, conflicts, verbose int32) *Aig_Man
 	params := new(Cec_ParFra_t)
 	Cec_ManFraSetDefaultParams(params)
 	params.fSatSweeping = 1
+	params.fUseOrigIds = 1
 	params.nBTLimit = conflicts
 	params.nItersMax = 20
 	params.fVerbose = verbose
@@ -21,6 +22,10 @@ func Cec_FraigCombinational(graph *Aig_Man_t, conflicts, verbose int32) *Aig_Man
 	if params.Error != nil {
 		return nil
 	}
+	// The source sweep records proved pairs separately; reconstruct the input
+	// representatives before transferring them to the AIG manager.
+	rebuilt := gia.Gia_ManOrigIdsReduce(converted, gia.Gia_ManOrigEquivPairs(converted))
+	gia.Gia_ManStop(rebuilt)
 	gia.Gia_ManReprToAigRepr(graph, converted)
 	return aig.Aig_ManDupRepr(graph, 0)
 }

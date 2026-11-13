@@ -151,9 +151,9 @@ func TestOriginalSweepABC(t *testing.T) {
 		t.Fatal(err)
 	}
 	p := Cec_ParFra_t{nWords: 1, nRounds: 1, nItersMax: 10, nBTLimit: 100, nDepthMax: 1}
-	got, err := cecOriginalSweep(g, &p)
-	if err != nil || got == nil {
-		t.Fatalf("sweep: %v", err)
+	got := Cec_ManSatSweeping(g, &p, 1)
+	if p.Error != nil || got == nil {
+		t.Fatalf("sweep: %v", p.Error)
 	}
 	for bits := 0; bits < 8; bits++ {
 		inputs := []bool{bits&1 != 0, bits&2 != 0, bits&4 != 0}

@@ -161,7 +161,7 @@ func Cec_ManSatSweeping(graph *Gia_Man_t, params *Cec_ParFra_t, silent int32) *G
 		params = new(Cec_ParFra_t)
 		Cec_ManFraSetDefaultParams(params)
 	}
-	result, err := SatSweep(graph, params)
+	result, err := cecOriginalSweep(graph, params)
 	params.Error = err
 	if err != nil && silent == 0 {
 		fmt.Printf("CEC sweeping: %v\n", err)

@@ -7,18 +7,28 @@ import (
 	"github.com/glycerine/abcgo/aig/gia"
 )
 
-// cecOriginalSweep is the speculative-reduction loop from cecCore.c. It is
-// deliberately separate from the public sweep entry until the full source
-// interface, including original-ID transfer, is ported.
+// cecOriginalSweep is the speculative-reduction loop from cecCore.c.
 func cecOriginalSweep(graph *Gia_Man_t, pars *Cec_ParFra_t) (*Gia_Man_t, error) {
-	if pars.fUseOrigIds != 0 {
-		return nil, fmt.Errorf("cec: original sweep metadata transfer is not implemented")
+	if graph == nil {
+		return nil, fmt.Errorf("cec: nil sweep graph")
 	}
 	if words := graph.SimulationWordCount(); words > 0 && len(graph.SimulationInputs()) != int(gia.Gia_ManCiNum(graph)*words) {
 		return nil, fmt.Errorf("cec: invalid original sweep input simulation size")
 	}
 	if pars.nWords <= 0 || pars.nRounds < 0 || pars.nItersMax < 0 || pars.nBTLimit < 0 || pars.TimeLimit < 0 {
 		return nil, fmt.Errorf("cec: invalid original sweep parameters")
+	}
+	// Pairs are recorded as each query is solved, before downstream filtering
+	// of speculative dependencies. At depth greater than one an UNSAT query
+	// may rely on a failed prior assumption, so do not publish those pairs.
+	if pars.fUseOrigIds != 0 && pars.nDepthMax != 1 {
+		return nil, fmt.Errorf("cec: original-ID proof collection requires speculative depth 1")
+	}
+	if pars.fUseOrigIds != 0 && pars.fRunCSat != 0 {
+		return nil, fmt.Errorf("cec: circuit SAT does not collect original-ID proofs")
+	}
+	if pars.fDualOut != 0 && gia.Gia_ManPoNum(graph)&1 != 0 {
+		return nil, fmt.Errorf("cec: dual-output sweep requires output pairs")
 	}
 	for id := int32(0); int(id) < graph.ObjectCount(); id++ {
 		_, _, _, kind := graph.Gate(id)
@@ -35,6 +45,10 @@ func cecOriginalSweep(graph *Gia_Man_t, pars *Cec_ParFra_t) (*Gia_Man_t, error) 
 	}
 	gia.Gia_ManRandom(1)
 	initial := gia.Gia_ManDup(graph)
+	if pars.fUseOrigIds != 0 {
+		gia.Gia_ManOrigIdsInit(initial)
+		gia.Gia_ManOrigEquivPairsReset(graph)
+	}
 	if words := graph.SimulationWordCount(); words > 0 {
 		gia.Gia_ManCecSimAlloc(initial, words)
 		for _, word := range graph.SimulationInputs() {
@@ -43,6 +57,7 @@ func cecOriginalSweep(graph *Gia_Man_t, pars *Cec_ParFra_t) (*Gia_Man_t, error) 
 	}
 	if graph.HasRepresentatives() {
 		gia.Gia_ManTransferEquivs(graph, initial)
+		graph.ClearRepresentatives()
 	}
 	fra := Cec_ManFraStart(initial, pars)
 	defer Cec_ManFraStop(fra)
@@ -92,7 +107,7 @@ func cecOriginalSweep(graph *Gia_Man_t, pars *Cec_ParFra_t) (*Gia_Man_t, error) 
 		if pars.fRunCSat != 0 {
 			Cec_ManSatSolveCSat(pat, queries, &satPars)
 		} else {
-			Cec_ManSatSolve(pat, queries, &satPars, nil, fra.vXorNodes, nil, 0)
+			Cec_ManSatSolve(pat, queries, &satPars, gia.Gia_ManOrigIds(fra.pAig), fra.vXorNodes, gia.Gia_ManOrigEquivPairs(graph), 0)
 		}
 		failure = Cec_ManFraClassesUpdate(fra, sim, pat, queries) != 0
 		gia.Gia_ManStop(queries)

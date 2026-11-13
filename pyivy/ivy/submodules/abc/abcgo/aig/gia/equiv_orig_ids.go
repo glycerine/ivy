@@ -4,6 +4,15 @@ import "github.com/glycerine/abcgo/misc/vec"
 
 func Gia_ManOrigIdsInit(p *Gia_Man_t)  { p.vIdsOrig = vec.Vec_IntStartNatural(int(p.nObjs)) }
 func Gia_ManOrigIdsStart(p *Gia_Man_t) { p.vIdsOrig = vec.Vec_IntStartFull(int(p.nObjs)) }
+
+// Gia_ManOrigIds returns the current object's original-ID mapping.
+func Gia_ManOrigIds(p *Gia_Man_t) *Vec_Int_t { return p.vIdsOrig }
+
+// Gia_ManOrigEquivPairs returns the original-ID pairs proved by SAT sweeping.
+func Gia_ManOrigEquivPairs(p *Gia_Man_t) *Vec_Int_t { return p.vIdsEquiv }
+func Gia_ManOrigEquivPairsReset(p *Gia_Man_t) {
+	p.vIdsEquiv = vec.Vec_IntAlloc(1000)
+}
 func Gia_ManOrigIdsRemap(p, q *Gia_Man_t) {
 	if p.vIdsOrig == nil {
 		return
