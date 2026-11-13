@@ -29,3 +29,20 @@ func TestCec4SimulationRoundRefinesWithoutMerging(t *testing.T) {
 		t.Fatal("different signatures remained in one class")
 	}
 }
+
+func TestCec4RoundLeavesStandaloneInputClassesUnscheduled(t *testing.T) {
+	g := gia.Gia_ManStart(8)
+	a, b := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
+	s := newCec3Simulation(int(gia.Gia_ManObjNum(g)), 1)
+	s.object(a >> 1)[0] = 2
+	s.object(b >> 1)[0] = 2
+	cec4SimulationRound(s, g, 0, false)
+	if gia.Gia_ObjRepr(g, b>>1) != a>>1 {
+		t.Fatal("inputs did not share initial class")
+	}
+	s.object(b >> 1)[0] = 4
+	cec4SimulationRound(s, g, 0, true)
+	if gia.Gia_ObjRepr(g, b>>1) != a>>1 {
+		t.Fatal("standalone input class was unexpectedly refined")
+	}
+}

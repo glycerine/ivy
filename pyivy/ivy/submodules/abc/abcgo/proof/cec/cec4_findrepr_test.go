@@ -33,3 +33,26 @@ func TestCec4FindReprSelectsEarlierLiveMatch(t *testing.T) {
 		t.Fatalf("expected no representative, got %d", got)
 	}
 }
+
+func TestCec4FindReprResimulatesExaminedMembers(t *testing.T) {
+	g := gia.Gia_ManStart(12)
+	a, b := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
+	x := gia.Gia_ManAppendAnd(g, a, b)
+	y := gia.Gia_ManAppendAnd(g, a, b^1)
+	z := gia.Gia_ManAppendAnd(g, a, b^1)
+	g.StartRepresentatives()
+	gia.Gia_ObjSetRepr(g, y>>1, x>>1)
+	gia.Gia_ObjSetRepr(g, z>>1, x>>1)
+	gia.Gia_ObjSetNext(g, x>>1, y>>1)
+	gia.Gia_ObjSetNext(g, y>>1, z>>1)
+	gia.Gia_ObjSetNext(g, z>>1, -1)
+	sim := newCec3Simulation(int(gia.Gia_ManObjNum(g)), 1)
+	sim.setInputBit(a>>1, 1, true)
+	stamps := make([]int32, gia.Gia_ManObjNum(g))
+	if got := cec4FindReprAtPattern(sim, g, z>>1, 1, stamps); got != y>>1 {
+		t.Fatalf("representative %d want %d", got, y>>1)
+	}
+	if stamps[x>>1] != 1 || stamps[y>>1] != 1 || stamps[z>>1] != 1 {
+		t.Fatalf("cone stamps %v", stamps)
+	}
+}

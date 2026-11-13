@@ -60,8 +60,7 @@ func Cec4_ManFindRepr(graph *Gia_Man_t, p *Cec4_Man_t, id int32) *Gia_Obj_t {
 		panic("cec4: simulation is not allocated")
 	}
 	start := time.Now()
-	cec4SimulateGraph(p.simState.sim, graph)
-	repr := cec4FindRepr(p.simState.sim, graph, id)
+	repr := cec4FindReprAtPattern(p.simState.sim, graph, id, int32(p.pattern), vec.Vec_IntArray(p.vCexStamps))
 	p.timeResimLoc += time.Since(start).Nanoseconds()
 	if repr < 0 {
 		return nil
@@ -100,6 +99,7 @@ func Cec4_ManSweepNode(p *Cec4_Man_t, id, repr int32) int32 {
 		p.nPatterns++
 		if p.pattern == 64*p.simState.sim.words-2 {
 			cec4SimulationRound(p.simState.sim, p.pAig, p.pPars.nLevelMax, true)
+			vec.Vec_IntFill(p.vCexStamps, int(gia.Gia_ManObjNum(p.pAig)), 0)
 			p.pattern = 0
 			if p.packer != nil {
 				clear(p.packer.reserved.data)

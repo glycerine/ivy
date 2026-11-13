@@ -20,3 +20,27 @@ func cec4FindRepr(sim *cec3Simulation, graph *gia.Gia_Man_t, id int32) int32 {
 	}
 	return -1
 }
+
+// cec4FindReprAtPattern updates only the candidate and members it examines,
+// using the source's per-pattern stamps to avoid repeatedly traversing cones.
+func cec4FindReprAtPattern(sim *cec3Simulation, graph *gia.Gia_Man_t, id, pattern int32, stamps []int32) int32 {
+	repr := gia.Gia_ObjRepr(graph, id)
+	if repr == gia.GIA_VOID || gia.Gia_ObjProved(graph, id) != 0 || gia.Gia_ObjProved(graph, repr) != 0 {
+		panic("cec4: invalid representative lookup")
+	}
+	cec4ResimulateNode(sim, graph, id, pattern, stamps)
+	cec4ResimulateNode(sim, graph, repr, pattern, stamps)
+	if sim.equivalent(id, repr) {
+		return repr
+	}
+	for member := gia.Gia_ObjNext(graph, repr); member > 0 && member != id; member = gia.Gia_ObjNext(graph, member) {
+		if gia.Gia_ObjProved(graph, member) != 0 || gia.Gia_ObjFailed(graph, member) != 0 {
+			continue
+		}
+		cec4ResimulateNode(sim, graph, member, pattern, stamps)
+		if sim.equivalent(id, member) {
+			return member
+		}
+	}
+	return -1
+}
