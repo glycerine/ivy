@@ -109,10 +109,7 @@ func Ssw_ManSweepNodeFilter(p *Ssw_Man_t, obj aig.Edge, frame int32) int32 {
 		panic("ssw: missing framed candidate")
 	}
 	if rep == aig.InvalidEdge {
-		// A valid rewired graph can visit the lower-ID representative later.
-		// Drop the candidate rather than assuming an unframed equivalence.
-		Ssw_ClassesRemoveNode(p.ppClasses, obj)
-		return 0
+		panic("ssw: missing framed representative")
 	}
 	phase := aig.Aig_ObjPhase(p.pAig, obj) != aig.Aig_ObjPhase(p.pAig, repr)
 	if (aig.Aig_ObjPhaseReal(p.pFrames, node) != aig.Aig_ObjPhaseReal(p.pFrames, rep)) != phase {

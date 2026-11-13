@@ -62,3 +62,13 @@ C fixture confirms the duplicate, bounded merge and re-root outputs, and a valid
 ordered pair sequence that triggers a C vector bounds assertion after index
 reuse. Go panics on that sequence. If C assertions are disabled, out-of-bounds
 access has undefined behavior, which the Go port does not emulate.
+
+The recursive BMC-filter frame helper has direct source-derived tests for
+cached frames, complemented latch-input transitions, node construction across
+frames, and the missing-input assertion. These tests cover the helper itself;
+they do not establish exhaustive coverage of the SAT filtering driver.
+The directly callable filter node helper also preserves the source assertion
+when a candidate has a framed image but its representative does not; it no
+longer removes that candidate silently. The source filter driver visits nodes
+in object-ID order, so this direct-helper precondition test does not show that
+the same state is reachable through the complete source driver.

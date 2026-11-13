@@ -95,7 +95,7 @@ func TestSswSignalFilterRunsAndRestoresMarks(t *testing.T) {
 	}
 }
 
-func TestSignalFilterDiscardsUnframedRepresentative(t *testing.T) {
+func TestSignalFilterRejectsUnframedRepresentative(t *testing.T) {
 	g := aig.NewGraph()
 	a, b, q := g.NewInput(), g.NewInput(), g.NewInput()
 	early, late := g.AND(a, q), g.AND(b, q)
@@ -113,7 +113,13 @@ func TestSignalFilterDiscardsUnframedRepresentative(t *testing.T) {
 		p.pNodeToFrames[i] = aig.InvalidEdge
 	}
 	Ssw_ObjSetFrame(p, late, 0, frames.NewInput())
-	if Ssw_ManSweepNodeFilter(p, late, 0) != 0 || classes.nClasses != 0 || aig.Aig_ObjRepr(g, late) != aig.InvalidEdge {
-		t.Fatal("unframed representative was not discarded")
-	}
+	defer func() {
+		if recover() == nil {
+			t.Fatal("source asserts for an unframed representative")
+		}
+		if aig.Aig_ObjRepr(g, late) != early {
+			t.Fatal("assertion changed representative")
+		}
+	}()
+	Ssw_ManSweepNodeFilter(p, late, 0)
 }
