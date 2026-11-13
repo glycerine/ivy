@@ -1,6 +1,7 @@
 package live
 
 import (
+	"fmt"
 	"github.com/glycerine/abcgo/aig/aig"
 	"slices"
 	"strings"
@@ -14,7 +15,7 @@ type monotoneVectorsStruct struct{ attrKnownMonotone, attrCandMonotone, attrHint
 
 func allocPointersToMonotoneVectors() *monotoneVectorsStruct { return new(monotoneVectorsStruct) }
 func findHintOutputs(n *Network) []int32 {
-	result := []int32{}
+	var result []int32
 	for i := 0; i < propertyOutputs(n.Graph); i++ {
 		if strings.Contains(outputName(n, i), "hint_") {
 			result = append(result, int32(i))
@@ -23,19 +24,18 @@ func findHintOutputs(n *Network) []int32 {
 	return result
 }
 func findPendingSignal(n *Network) int32 { return findOutput(n, "pendingSignal") }
+
+// The C helper only prints its inputs and always returns success.
 func checkSanityOfKnownMonotone(known, candidates, hints []int32) int32 {
-	for _, id := range known {
-		if !slices.Contains(hints, id) {
-			return 0
+	for _, values := range [][]int32{known, candidates, hints} {
+		for _, value := range values {
+			fmt.Printf("%d ", value)
 		}
-	}
-	for _, id := range candidates {
-		if !slices.Contains(hints, id) {
-			return 0
-		}
+		fmt.Println()
 	}
 	return 1
 }
+
 func createMonotoneTester(p *aig.Graph, indexes *aigPoIndices, vectors *monotoneVectorsStruct, start *int32) *aig.Graph {
 	if indexes.attrPendingSignalIndex < 0 {
 		panic("live: pending signal missing")
