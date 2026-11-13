@@ -66,6 +66,10 @@ its executable to replay the C status and counterexample comparisons.
 `acec_timing_shapes.c` prints compiled-C box offsets, dimensions and negative
 delay entries for the 2×1, 4×3, 5×4 and zero-box cases.
 
+`acec_rect_multiplier_oracle.c` builds the irregular 3×5 multiplier. Set
+`ACEC_RECT_MULTIPLIER_ORACLE` to its executable to replay equivalence,
+output-inversion, and partial-product mutation results and witnesses.
+
 `acec_missing_box.c` invokes normalization on a graph with no arithmetic box;
 the C implementation dereferences the missing box. `acec_large_coefficients.c`
 checks signed exponent carries and cancellations without overflowing C `int`.

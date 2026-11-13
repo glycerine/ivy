@@ -21,6 +21,10 @@ multipliers through 6×6 bits in both operand orders and 64 polarity variants
 of a two-adder chain. A sign-extended 4×4 two's-complement multiplier is
 exhaustively checked for all 256 operand pairs in both operand orders;
 compiled ABC and Go agree on equivalence and three output-inversion cases.
+An irregular 3×5 unsigned multiplier is also exhausted over all 256 operand
+pairs in both operand orders. Its source comparison covers equivalence, three
+output inversions, and a partial-product mutation that needs a nontrivial SAT
+witness; C and Go witnesses are replayed on the original graphs.
 Timing table shapes of 2×1, 4×3, and 5×4, plus a zero-box manager, are also
 compared with compiled C. Compiled ABC is also compared on equivalent 6×6 graphs
 and three output inversions; returned mismatch witnesses are replayed on the
@@ -76,7 +80,7 @@ Intentional conservative paths and limits:
   `acecPo.go` do support native MUXes.
 - `Acec_StructTest` is empty in C. `Gia_PolynBuild2` only allocates and frees
   temporary hash tables there; its Go body has no algorithmic effect either.
-- Booth partial-product detection, larger signed and irregular multiplier
+- Booth partial-product detection, larger signed and other irregular multiplier
   layouts, other timing-box shapes, and equivalence proofs across a large real-world
   corpus need further differential testing against ABC. Passing the exhaustive
   small cases does not cover all topologies or resource-limit behavior.
