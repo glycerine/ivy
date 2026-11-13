@@ -851,20 +851,6 @@ func Ga2_ManAbsTranslate(p *Ga2_Man_t) *Vec_Int_t {
     return vGateClasses;
 }
 
-func Ga2_ManAbsDerive(p *Gia_Man_t) *Vec_Int_t {
-    var vToAdd *Vec_Int_t;
-    var pObj *Gia_Obj_t;
-    var i int32;
-    vToAdd = Vec_IntAlloc( 1000 );
-    Gia_ManForEachRo( p, pObj, i )
-        if ( pObj.fPhase && Vec_IntEntry(p.vGateClasses, Gia_ObjId(p, pObj)) )
-            Vec_IntPush( vToAdd, Gia_ObjId(p, pObj) );
-    Gia_ManForEachAnd( p, pObj, i )
-        if ( pObj.fPhase && Vec_IntEntry(p.vGateClasses, i) )
-            Vec_IntPush( vToAdd, i );
-    return vToAdd;
-}
-
 func Ga2_ManRestart(p *Ga2_Man_t) {
     var vToAdd *Vec_Int_t;
     var Lit int32  = 1;
