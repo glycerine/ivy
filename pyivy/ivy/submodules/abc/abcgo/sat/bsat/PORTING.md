@@ -291,3 +291,7 @@ Lexicographic solving now clears the previous assumption core before checking
 for a pending root conflict. Previously an unconditional root contradiction
 could expose a core from an earlier, unrelated assumption query. A regression
 covers the sequence; the race-enabled BSAT suite passes.
+
+Proof-reconstruction coverage now includes a formula whose sole root is an
+empty clause. The reconstructed output is checked by the independent resolution
+proof checker; the full race-enabled BSAT suite passes.

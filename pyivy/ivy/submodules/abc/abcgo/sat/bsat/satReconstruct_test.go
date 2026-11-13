@@ -59,3 +59,19 @@ func TestResolutionReconstructionRejectsInvalidProof(t *testing.T) {
 		t.Fatal("deadline ignored")
 	}
 }
+
+func TestResolutionReconstructionEmptyRoot(t *testing.T) {
+	p := Sto_ManAlloc()
+	if Sto_ManAddClause(p, nil) != 1 {
+		t.Fatal("add empty root")
+	}
+	Sto_ManMarkRoots(p)
+	var proof bytes.Buffer
+	if _, err := reconstructResolution(p, nil, &proof, 0); err != nil {
+		t.Fatal(err)
+	}
+	summary, err := CheckResolutionProof(&proof)
+	if err != nil || !summary.EmptyDerived || summary.Roots != 1 {
+		t.Fatalf("summary=%+v err=%v", summary, err)
+	}
+}
