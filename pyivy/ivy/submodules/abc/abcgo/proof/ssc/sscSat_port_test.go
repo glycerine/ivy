@@ -4,6 +4,7 @@ import (
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/sat/bsat"
 	"github.com/glycerine/abcgo/sat/satoko"
+	"reflect"
 	"testing"
 )
 
@@ -150,6 +151,24 @@ func TestSatPortProvesBothImplicationsUnderCare(t *testing.T) {
 	}
 	if p.Stats.Calls != 0 || p.Stats.Proofs != 0 {
 		t.Fatalf("direct SAT helper must not change sweep counters: %+v", p.Stats)
+	}
+}
+
+func TestSatProofDoesNotOverwriteLastCounterexample(t *testing.T) {
+	p, in := sscSatFixture()
+	if got := Ssc_ManCheckEquivalence(p, in[0]>>1, in[1]>>1, 0); got != satoko.SATOKO_SAT {
+		t.Fatalf("expected counterexample, got %d", got)
+	}
+	witness := append([]bool(nil), p.Pattern...)
+	a, b := p.satLit(in[0]), p.satLit(in[1])
+	if !p.sat.AddClause(a^1, b) || !p.sat.AddClause(a, b^1) {
+		t.Fatal("cannot add equivalence")
+	}
+	if got := Ssc_ManCheckEquivalence(p, in[0]>>1, in[1]>>1, 0); got != satoko.SATOKO_UNSAT {
+		t.Fatalf("expected proof, got %d", got)
+	}
+	if !reflect.DeepEqual(p.Pattern, witness) {
+		t.Fatalf("proof overwrote previous SAT pattern: %v -> %v", witness, p.Pattern)
 	}
 }
 func TestSatPortConstantLiteralMapping(t *testing.T) {

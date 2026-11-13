@@ -171,10 +171,10 @@ func Ssc_PerformSweepingInt(subject, care *gia.Gia_Man_t, params *Ssc_Pars_t) *g
 	gia.Gia_ManRandom(1)
 	p, status := Ssc_ManStart(subject, care, params)
 	if status == satoko.SATOKO_UNSAT {
-		return copyOutputs(subject, nil, true)
+		return gia.Gia_ManDupZero(subject)
 	}
 	if status != satoko.SATOKO_SAT {
-		return copyOutputs(subject, nil, false)
+		return gia.Gia_ManDup(subject)
 	}
 	carePatterns(p)
 	// The original solver's working graph starts with the care cone and grows

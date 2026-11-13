@@ -300,6 +300,53 @@ func TestStartUnsatisfiableCareDoesNotReturnManager(t *testing.T) {
 	}
 }
 
+func TestPivotBudgetExhaustionLeavesSubjectUnchanged(t *testing.T) {
+	// Four pigeons in three holes requires search beyond one conflict. Care
+	// violation is the negation of the pigeonhole formula.
+	care := newBuilder(12, 200)
+	in := care.graph.InputLiterals()
+	formula := int32(1)
+	for pigeon := 0; pigeon < 4; pigeon++ {
+		row := int32(0)
+		for hole := 0; hole < 3; hole++ {
+			row = care.or(row, in[pigeon*3+hole])
+		}
+		formula = care.and(formula, row)
+	}
+	for hole := 0; hole < 3; hole++ {
+		for a := 0; a < 4; a++ {
+			for b := a + 1; b < 4; b++ {
+				formula = care.and(formula, care.or(in[a*3+hole]^1, in[b*3+hole]^1))
+			}
+		}
+	}
+	gia.Gia_ManAppendCo(care.graph, formula^1)
+	subject := newBuilder(12, 30)
+	subject.and(subject.graph.InputLiterals()[1], subject.graph.InputLiterals()[2]) // dangling node survives C Gia_ManDup
+	gia.Gia_ManAppendCo(subject.graph, subject.graph.InputLiterals()[0])
+	params := DefaultParams()
+	params.BTLimit = 1
+	p, status := Ssc_ManStart(subject.graph, care.graph, &params)
+	if status != satoko.SATOKO_UNDEC || p != nil {
+		t.Fatalf("one-conflict pivot: status %d manager %v", status, p)
+	}
+	result := Ssc_PerformSweeping(subject.graph, care.graph, &params)
+	if result.ObjectCount() != subject.graph.ObjectCount() {
+		t.Fatal("inconclusive pivot must duplicate even dangling objects")
+	}
+	if subject.graph.HasRepresentatives() {
+		t.Fatal("inconclusive pivot must not initialize classes")
+	}
+	for _, value := range []bool{false, true} {
+		inputs := make([]bool, 12)
+		inputs[0] = value
+		got, err := result.Evaluate(inputs)
+		if err != nil || len(got) != 1 || got[0] != value {
+			t.Fatalf("fallback output %v error %v", got, err)
+		}
+	}
+}
+
 func TestConstraintWrapperUsesLevelizedSubject(t *testing.T) {
 	build := func() *gia.Gia_Man_t {
 		g := gia.Gia_ManStart(20)
