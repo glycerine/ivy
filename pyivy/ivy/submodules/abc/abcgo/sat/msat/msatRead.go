@@ -30,7 +30,7 @@ func parseDIMACS(r io.Reader, initializeOrder bool) (*Msat_Solver_t, error) {
 			}
 			var kind string
 			var n int
-			if _, err := fmt.Sscanf(line, "p %s %d %d", &kind, &n, &declared); err != nil || kind != "cnf" || n < 0 || declared < 0 {
+			if _, err := fmt.Sscanf(line, "p %s %d %d", &kind, &n, &declared); err != nil || initializeOrder && kind != "cnf" || n < 0 || declared < 0 {
 				return nil, fmt.Errorf("invalid DIMACS header")
 			}
 			p = Msat_SolverAlloc(n, 1, 1, 1, 1, 0)

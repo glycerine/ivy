@@ -47,3 +47,14 @@ func TestSourceDIMACSParserDoesNotRequireDeclaredClauseCount(t *testing.T) {
 		t.Fatal("C reads but does not enforce declared clause count")
 	}
 }
+
+func TestSourceDIMACSParserDoesNotValidateProblemKind(t *testing.T) {
+	text := "p other 2 1\n1 2 0\n"
+	var p *Msat_Solver_t
+	if Msat_SolverParseDimacs(strings.NewReader(text), &p, 0) != 1 {
+		t.Fatal("C skips the problem-kind token")
+	}
+	if _, err := ParseDIMACS(strings.NewReader(text)); err == nil {
+		t.Fatal("Go convenience parser should remain strict")
+	}
+}
