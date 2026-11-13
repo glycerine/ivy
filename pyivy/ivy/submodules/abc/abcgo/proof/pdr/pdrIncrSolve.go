@@ -148,7 +148,7 @@ func IPdr_ManSolveInt(p *Pdr_Man_t, checkClauses, pushClauses int32) int32 {
 					status = Pdr_ManBlockCube(p, cube)
 				}
 				if status == -1 {
-					if p.timeToStopOne != 0 && pdrNow(p) > p.timeToStopOne && (p.timeToStop == 0 || pdrNow(p) <= p.timeToStop) {
+					if pdrOnlyOutputTimedOut(p, pdrNow(p)) {
 						Pdr_QueueClean(p)
 						break
 					}
