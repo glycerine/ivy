@@ -45,6 +45,22 @@ func TestSimpRejectsInvalidSubstitutionBeforeMutation(t *testing.T) {
 	}
 }
 
+func TestSimpClearsModelOnPreprocessingFailure(t *testing.T) {
+	s := NewSimpSolver()
+	s.NewVar(true, true)
+	s.SetFrozen(0, true)
+	if s.SolveLimited(nil) != LTrue || len(s.Model) == 0 {
+		t.Fatal("expected initial model")
+	}
+	s.AddEmptyClause()
+	if s.SolveLimited(nil) != LFalse {
+		t.Fatal("expected unsatisfiable result")
+	}
+	if len(s.Model) != 0 || len(s.Conflict) != 0 {
+		t.Fatalf("stale result model=%v conflict=%v", s.Model, s.Conflict)
+	}
+}
+
 func TestSimpSolverRandomCNF(t *testing.T) {
 	rng := rand.New(rand.NewSource(8231))
 	for trial := 0; trial < 1500; trial++ {

@@ -214,6 +214,8 @@ func (s *SimpSolver) SolveLimited(assumptions []Lit, options ...bool) LBool {
 			panic("assumption variable already eliminated")
 		}
 	}
+	s.Model = nil
+	s.Conflict = nil
 	doSimp, turnOff := true, false
 	if len(options) > 0 {
 		doSimp = options[0]
