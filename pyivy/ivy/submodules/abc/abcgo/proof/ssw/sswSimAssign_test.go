@@ -21,3 +21,27 @@ func TestSimulationInputAssignment(t *testing.T) {
 		t.Fatal("first pattern in each frame is not zero")
 	}
 }
+
+func TestRandomFrameAssignmentMatchesSourceDrawsAndIsolation(t *testing.T) {
+	g := aig.NewGraph()
+	in := g.NewInput()
+	p := Ssw_SmlStart(g, 0, 3, 2)
+	defer Ssw_SmlStop(p)
+	words := Ssw_SmlSimInfo(p, in)
+	for i := range words {
+		words[i] = 0xdeadbeef
+	}
+	aig.Aig_ManRandom(1)
+	want := [2]uint32{Ssw_ObjRandomSim(), Ssw_ObjRandomSim()}
+	aig.Aig_ManRandom(1)
+	Ssw_SmlAssignRandomFrame(p, in, 1)
+	for i, got := range words {
+		expected := uint32(0xdeadbeef)
+		if i >= 2 && i < 4 {
+			expected = want[i-2]
+		}
+		if got != expected {
+			t.Fatalf("word %d = %08x, want %08x", i, got, expected)
+		}
+	}
+}
