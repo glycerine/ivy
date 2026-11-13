@@ -113,14 +113,15 @@ func createNewAigWith0LivePoWithDSC(p *aig.Graph, signals []aig.Edge, index *int
 	violation := createArenaViolation(p, c.destination, begin, within, barriers, arenaLatches, &barrierNext, &barrierSignals)
 	pending := c.signal(p.Outputs()[pendingIndex])
 	monotone := createMonotoneBarriers(c.destination, barrierSignals, monotoneOld, pending, pendingOld)
-	for i := 0; i < trueOutputs(p); i++ {
+	for i := 0; i < propertyOutputs(p); i++ {
 		aig.Aig_ObjCreateCo(c.destination, c.signal(p.Outputs()[i]))
 	}
 	property := aig.Aig_And(c.destination, aig.Aig_Or(c.destination, createConstrained0LiveConeWithDSC(c.destination, mapped), violationOld), monotone)
 	if index != nil {
-		*index = int32(trueOutputs(p))
+		*index = int32(propertyOutputs(p))
 	}
 	aig.Aig_ObjCreateCo(c.destination, property)
+	c.appendConstraints()
 	for r := 0; r < registers(p); r++ {
 		aig.Aig_ObjCreateCo(c.destination, c.signal(p.Outputs()[trueOutputs(p)+r]))
 	}
@@ -131,6 +132,7 @@ func createNewAigWith0LivePoWithDSC(p *aig.Graph, signals []aig.Edge, index *int
 		aig.Aig_ObjCreateCo(c.destination, e)
 	}
 	aig.Aig_ManSetRegNum(c.destination, int32(registers(p)+2*len(barriers)+2))
+	c.setConstraints()
 	return c.destination
 }
 func generateWorkingAigWithDSC(p *aig.Graph, n *Network, index *int32, barriers [][]int32) *aig.Graph {

@@ -122,12 +122,13 @@ func disjunctiveTester(p *aig.Graph, candidates []aig.Edge, k int32) *aig.Graph 
 		}
 		properties[i] = aig.Aig_Or(c.destination, disjoin(c.destination, signals).Not(), states[i])
 	}
-	for i := 0; i < trueOutputs(p); i++ {
+	for i := 0; i < propertyOutputs(p); i++ {
 		aig.Aig_ObjCreateCo(c.destination, c.signal(p.Outputs()[i]))
 	}
 	for _, e := range properties {
 		aig.Aig_ObjCreateCo(c.destination, e)
 	}
+	c.appendConstraints()
 	for r := 0; r < registers(p); r++ {
 		aig.Aig_ObjCreateCo(c.destination, c.signal(p.Outputs()[trueOutputs(p)+r]))
 	}
@@ -135,6 +136,7 @@ func disjunctiveTester(p *aig.Graph, candidates []aig.Edge, k int32) *aig.Graph 
 		aig.Aig_ObjCreateCo(c.destination, e)
 	}
 	aig.Aig_ManSetRegNum(c.destination, int32(registers(p)+len(states)))
+	c.setConstraints()
 	return c.destination
 }
 func generateDisjunctiveTester(n *Network, p *aig.Graph, combN, combK int32) *aig.Graph {
@@ -148,6 +150,7 @@ func generateDisjunctiveTester(n *Network, p *aig.Graph, combN, combK int32) *ai
 		c.copyInputs()
 		c.copyOutputs()
 		aig.Aig_ManSetRegNum(c.destination, int32(registers(p)))
+		c.setConstraints()
 		return c.destination
 	}
 	return disjunctiveTester(p, signals, combK)

@@ -15,7 +15,7 @@ type monotoneVectorsStruct struct{ attrKnownMonotone, attrCandMonotone, attrHint
 func allocPointersToMonotoneVectors() *monotoneVectorsStruct { return new(monotoneVectorsStruct) }
 func findHintOutputs(n *Network) []int32 {
 	result := []int32{}
-	for i := 0; i < trueOutputs(n.Graph); i++ {
+	for i := 0; i < propertyOutputs(n.Graph); i++ {
 		if strings.Contains(outputName(n, i), "hint_") {
 			result = append(result, int32(i))
 		}
@@ -63,15 +63,16 @@ func createMonotoneTester(p *aig.Graph, indexes *aigPoIndices, vectors *monotone
 		property := aig.Aig_Or(c.destination, aig.Aig_And(c.destination, guard, delayed[id]).Not(), c.signal(p.Outputs()[id]))
 		properties = append(properties, property)
 	}
-	for i := 0; i < trueOutputs(p); i++ {
+	for i := 0; i < propertyOutputs(p); i++ {
 		aig.Aig_ObjCreateCo(c.destination, c.signal(p.Outputs()[i]))
 	}
 	if start != nil {
-		*start = int32(trueOutputs(p))
+		*start = int32(propertyOutputs(p))
 	}
 	for _, e := range properties {
 		aig.Aig_ObjCreateCo(c.destination, e)
 	}
+	c.appendConstraints()
 	for r := 0; r < registers(p); r++ {
 		aig.Aig_ObjCreateCo(c.destination, c.signal(p.Outputs()[trueOutputs(p)+r]))
 	}
@@ -80,27 +81,30 @@ func createMonotoneTester(p *aig.Graph, indexes *aigPoIndices, vectors *monotone
 		aig.Aig_ObjCreateCo(c.destination, c.signal(p.Outputs()[id]))
 	}
 	aig.Aig_ManSetRegNum(c.destination, int32(registers(p)+1+len(vectors.attrHintMonotone)))
+	c.setConstraints()
 	return c.destination
 }
 func negateOutputs(p *aig.Graph, first int) *aig.Graph {
 	c := newGraphCopy(p, "_check")
 	c.copyInputs()
-	for i := 0; i < trueOutputs(p); i++ {
+	for i := 0; i < propertyOutputs(p); i++ {
 		driver := c.signal(p.Outputs()[i])
 		if i >= first {
 			driver = driver.Not()
 		}
 		aig.Aig_ObjCreateCo(c.destination, driver)
 	}
+	c.appendConstraints()
 	for r := 0; r < registers(p); r++ {
 		aig.Aig_ObjCreateCo(c.destination, c.signal(p.Outputs()[trueOutputs(p)+r]))
 	}
 	aig.Aig_ManSetRegNum(c.destination, int32(registers(p)))
+	c.setConstraints()
 	return c.destination
 }
 func findNewMonotoneWith(p *aig.Graph, indexes *aigPoIndices, vectors *monotoneVectorsStruct, options SafetyOptions, checker SafetyChecker) []int32 {
 	var start int32
-	tester := negateOutputs(createMonotoneTester(p, indexes, vectors, &start), trueOutputs(p))
+	tester := negateOutputs(createMonotoneTester(p, indexes, vectors, &start), propertyOutputs(p))
 	result := []int32{}
 	serial := int(start)
 	for _, id := range vectors.attrHintMonotone {

@@ -21,7 +21,7 @@ const (
 func readLiveSignal_0(p *aig.Graph, index int32) aig.Edge { return outputDriver(p, int(index)) }
 func readLiveSignal_k(p *aig.Graph, index int32) aig.Edge { return outputDriver(p, int(index)) }
 func introduceAbsorberLogic(p *aig.Graph, zero, index *int32, nonFirst int32) *aig.Graph {
-	if zero == nil || index == nil || *zero < 0 || int(*zero) >= trueOutputs(p) || nonFirst != 0 && *index < 0 {
+	if zero == nil || index == nil || *zero < 0 || int(*zero) >= propertyOutputs(p) || nonFirst != 0 && *index < 0 {
 		panic("live: invalid absorber indexes")
 	}
 	c := newGraphCopy(p, "_kCS")
@@ -35,9 +35,9 @@ func introduceAbsorberLogic(p *aig.Graph, zero, index *int32, nonFirst int32) *a
 	next := aig.Aig_Or(c.destination, previous.Not(), state)
 	property := aig.Aig_Or(c.destination, input, state.Not())
 	if nonFirst == 0 {
-		*index = int32(trueOutputs(p))
+		*index = int32(propertyOutputs(p))
 	}
-	for i := 0; i < trueOutputs(p); i++ {
+	for i := 0; i < propertyOutputs(p); i++ {
 		driver := c.signal(p.Outputs()[i])
 		if int32(i) == *index {
 			driver = property
@@ -47,11 +47,13 @@ func introduceAbsorberLogic(p *aig.Graph, zero, index *int32, nonFirst int32) *a
 	if nonFirst == 0 {
 		aig.Aig_ObjCreateCo(c.destination, property)
 	}
+	c.appendConstraints()
 	for r := 0; r < registers(p); r++ {
 		aig.Aig_ObjCreateCo(c.destination, c.signal(p.Outputs()[trueOutputs(p)+r]))
 	}
 	aig.Aig_ObjCreateCo(c.destination, next)
 	aig.Aig_ManSetRegNum(c.destination, int32(registers(p)+1))
+	c.setConstraints()
 	return c.destination
 }
 func modifyAigToApplySafetyInvar(p *aig.Graph, target, invariant int32) {
@@ -61,7 +63,7 @@ func modifyAigToApplySafetyInvar(p *aig.Graph, target, invariant int32) {
 func kLiveProofModel(p *aig.Graph, directive, target, invariant int32) *aig.Graph {
 	c := newGraphCopy(p, "_proof")
 	c.copyInputs()
-	for i := 0; i < trueOutputs(p); i++ {
+	for i := 0; i < propertyOutputs(p); i++ {
 		property := c.signal(p.Outputs()[i])
 		if int32(i) == target && (directive == 1 || directive == 3 || directive == 4) {
 			if invariant < 0 {
@@ -71,10 +73,12 @@ func kLiveProofModel(p *aig.Graph, directive, target, invariant int32) *aig.Grap
 		}
 		aig.Aig_ObjCreateCo(c.destination, property.Not())
 	}
+	c.appendConstraints()
 	for r := 0; r < registers(p); r++ {
 		aig.Aig_ObjCreateCo(c.destination, c.signal(p.Outputs()[trueOutputs(p)+r]))
 	}
 	aig.Aig_ManSetRegNum(c.destination, int32(registers(p)))
+	c.setConstraints()
 	return c.destination
 }
 func flipConePdr(p *aig.Graph, directive, target, invariant, absorbers int32) int32 {
@@ -82,7 +86,7 @@ func flipConePdr(p *aig.Graph, directive, target, invariant, absorbers int32) in
 }
 
 func findOutput(n *Network, marker string) int32 {
-	for i := 0; i < trueOutputs(n.Graph); i++ {
+	for i := 0; i < propertyOutputs(n.Graph); i++ {
 		if strings.Contains(outputName(n, i), marker) {
 			return int32(i)
 		}
@@ -92,7 +96,7 @@ func findOutput(n *Network, marker string) int32 {
 func collectSafetyInvariantPOIndex(n *Network) int32 { return findOutput(n, "csSafetyInvar_") }
 func collectUserGivenDisjunctiveMonotoneSignals(n *Network) [][]int32 {
 	result := [][]int32{}
-	for i := 0; i < trueOutputs(n.Graph); i++ {
+	for i := 0; i < propertyOutputs(n.Graph); i++ {
 		if strings.Contains(outputName(n, i), "csLevel1Stabil_") {
 			result = append(result, []int32{int32(i)})
 		}
@@ -191,7 +195,7 @@ func KLive(n *Network, options KLiveOptions) KLiveResult {
 				return KLiveResult{Status: -1, Error: fmt.Errorf("live: empty barrier group")}
 			}
 			for _, index := range group {
-				if index < 0 || int(index) >= trueOutputs(n.Graph) {
+				if index < 0 || int(index) >= propertyOutputs(n.Graph) {
 					return KLiveResult{Status: -1, Error: fmt.Errorf("live: barrier output index out of range")}
 				}
 			}

@@ -42,15 +42,16 @@ func createDisjunctiveMonotoneTester(p *aig.Graph, indexes *aigPoIndices, vector
 		property := aig.Aig_Or(c.destination, aig.Aig_And(c.destination, guard, delayed[i]).Not(), candidate)
 		properties[i] = aig.Aig_And(c.destination, property, invariant)
 	}
-	for i := 0; i < trueOutputs(p); i++ {
+	for i := 0; i < propertyOutputs(p); i++ {
 		aig.Aig_ObjCreateCo(c.destination, c.signal(p.Outputs()[i]))
 	}
 	if start != nil {
-		*start = int32(trueOutputs(p))
+		*start = int32(propertyOutputs(p))
 	}
 	for _, e := range properties {
 		aig.Aig_ObjCreateCo(c.destination, e)
 	}
+	c.appendConstraints()
 	for r := 0; r < registers(p); r++ {
 		aig.Aig_ObjCreateCo(c.destination, c.signal(p.Outputs()[trueOutputs(p)+r]))
 	}
@@ -59,6 +60,7 @@ func createDisjunctiveMonotoneTester(p *aig.Graph, indexes *aigPoIndices, vector
 		aig.Aig_ObjCreateCo(c.destination, e)
 	}
 	aig.Aig_ManSetRegNum(c.destination, int32(registers(p)+1+len(delayed)))
+	c.setConstraints()
 	return c.destination
 }
 func findNewDisjunctiveWith(p *aig.Graph, indexes *aigPoIndices, vectors *antecedentConsequentVectorsStruct, options SafetyOptions, checker SafetyChecker) []int32 {
@@ -66,7 +68,7 @@ func findNewDisjunctiveWith(p *aig.Graph, indexes *aigPoIndices, vectors *antece
 		return nil
 	}
 	var start int32
-	tester := negateOutputs(createDisjunctiveMonotoneTester(p, indexes, vectors, &start), trueOutputs(p))
+	tester := negateOutputs(createDisjunctiveMonotoneTester(p, indexes, vectors, &start), propertyOutputs(p))
 	result := []int32{}
 	for i, id := range vectors.attrConsequentCandidates {
 		if checker(tester, int(start)+i, options).Status == 1 {

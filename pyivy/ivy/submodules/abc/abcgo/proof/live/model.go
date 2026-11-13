@@ -53,6 +53,18 @@ func NewNetwork(graph *aig.Graph, inputNames, outputNames []string) (*Network, e
 func registers(p *aig.Graph) int   { return int(aig.Aig_ManRegNum(p)) }
 func trueInputs(p *aig.Graph) int  { return len(p.Inputs()) - registers(p) }
 func trueOutputs(p *aig.Graph) int { return len(p.Outputs()) - registers(p) }
+
+// propertyOutputs excludes trailing native constraint-violation outputs.
+func propertyOutputs(p *aig.Graph) int { return trueOutputs(p) - int(aig.Aig_ManConstrNum(p)) }
+func (c *graphCopy) appendConstraints() {
+	for i := propertyOutputs(c.source); i < trueOutputs(c.source); i++ {
+		aig.Aig_ObjCreateCo(c.destination, c.signal(c.source.Outputs()[i]))
+	}
+}
+func (c *graphCopy) setConstraints() {
+	aig.Aig_ManSetConstrNum(c.destination, aig.Aig_ManConstrNum(c.source))
+}
+
 func outputDriver(p *aig.Graph, index int) aig.Edge {
 	e := p.Outputs()[index]
 	nodes := p.Nodes()

@@ -14,7 +14,7 @@ func createConstrained0LiveCone(p *aig.Graph, signals []aig.Edge) aig.Edge {
 func collectCSSignals(n *Network, p *aig.Graph) []aig.Edge {
 	signals := []aig.Edge{}
 	target := aig.InvalidEdge
-	for i := 0; i < trueOutputs(p); i++ {
+	for i := 0; i < propertyOutputs(p); i++ {
 		name := outputName(n, i)
 		if strings.Contains(name, "csLiveConst_") {
 			signals = append(signals, outputDriver(p, i))
@@ -34,17 +34,19 @@ func createNewAigWith0LivePo(p *aig.Graph, signals []aig.Edge, index *int32) *ai
 	for i, e := range signals {
 		mapped[i] = c.signal(e)
 	}
-	for i := 0; i < trueOutputs(p); i++ {
+	for i := 0; i < propertyOutputs(p); i++ {
 		aig.Aig_ObjCreateCo(c.destination, c.signal(p.Outputs()[i]))
 	}
 	if index != nil {
-		*index = int32(trueOutputs(p))
+		*index = int32(propertyOutputs(p))
 	}
 	aig.Aig_ObjCreateCo(c.destination, createConstrained0LiveCone(c.destination, mapped))
+	c.appendConstraints()
 	for r := 0; r < registers(p); r++ {
 		aig.Aig_ObjCreateCo(c.destination, c.signal(p.Outputs()[trueOutputs(p)+r]))
 	}
 	aig.Aig_ManSetRegNum(c.destination, int32(registers(p)))
+	c.setConstraints()
 	return c.destination
 }
 func generateWorkingAig(p *aig.Graph, n *Network, index *int32) *aig.Graph {
