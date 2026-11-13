@@ -46,7 +46,56 @@ func Sdb_CutSetCheckArray(cuts []*Sdb_Cut_t, n int32) int32 {
 	return 1
 }
 func Sdb_CutMergeOrder(a, b, out *Sdb_Cut_t, limit int32) int32 {
-	// Both inputs are sorted sets. A failed merge leaves the cut metadata untouched.
+	if int32(a.nLeaves) == limit && int32(b.nLeaves) == limit {
+		for i := uint32(0); i < a.nLeaves; i++ {
+			if a.pLeaves[i] != b.pLeaves[i] {
+				return 0
+			}
+			out.pLeaves[i] = a.pLeaves[i]
+		}
+		out.nLeaves = a.nLeaves
+		out.iFunc = -1
+		out.Sign = a.Sign | b.Sign
+		return 1
+	}
+	i, j, k := uint32(0), uint32(0), uint32(0)
+	for i < a.nLeaves && j < b.nLeaves {
+		if int32(k) == limit {
+			return 0
+		}
+		if a.pLeaves[i] < b.pLeaves[j] {
+			out.pLeaves[k] = a.pLeaves[i]
+			i++
+		} else if a.pLeaves[i] > b.pLeaves[j] {
+			out.pLeaves[k] = b.pLeaves[j]
+			j++
+		} else {
+			out.pLeaves[k] = a.pLeaves[i]
+			i++
+			j++
+		}
+		k++
+	}
+	// C checks the remaining length before copying either tail.
+	if int32(k+a.nLeaves-i+b.nLeaves-j) > limit {
+		return 0
+	}
+	for i < a.nLeaves {
+		out.pLeaves[k] = a.pLeaves[i]
+		k++
+		i++
+	}
+	for j < b.nLeaves {
+		out.pLeaves[k] = b.pLeaves[j]
+		k++
+		j++
+	}
+	out.nLeaves = k
+	out.iFunc = -1
+	out.Sign = a.Sign | b.Sign
+	return 1
+}
+func Sdb_CutMergeOrder2(a, b, out *Sdb_Cut_t, limit int32) int32 {
 	i, j, k := uint32(0), uint32(0), uint32(0)
 	for i < a.nLeaves || j < b.nLeaves {
 		if int32(k) == limit {
@@ -77,9 +126,7 @@ func Sdb_CutMergeOrder(a, b, out *Sdb_Cut_t, limit int32) int32 {
 	out.Sign = a.Sign | b.Sign
 	return 1
 }
-func Sdb_CutMergeOrder2(a, b, out *Sdb_Cut_t, limit int32) int32 {
-	return Sdb_CutMergeOrder(a, b, out, limit)
-}
+
 func Sdb_CutSetCutIsContainedOrder(base, cut *Sdb_Cut_t) int32 {
 	if base.nLeaves < cut.nLeaves {
 		panic("acec: invalid containment order")

@@ -65,3 +65,28 @@ func TestCutSetPrunesSupersetsAndSorts(t *testing.T) {
 		t.Fatal("failed to reject superset")
 	}
 }
+
+// acec2Mult.c compares full-size cuts before copying each matching leaf.
+// A mismatch at the first leaf returns without modifying the destination.
+func TestCutMergeFullSizeMismatchPreservesDestination(t *testing.T) {
+	a, b := testCut(5), testCut(6)
+	out := Sdb_Cut_t{pLeaves: [SDB_MAX_CUTSIZE]int32{91, 92}, iFunc: 42, Sign: 17}
+	if got := Sdb_CutMergeOrder(a, b, &out, 2); got != 0 {
+		t.Fatalf("merge returned %d", got)
+	}
+	if out.pLeaves[0] != 91 || out.pLeaves[1] != 92 || out.iFunc != 42 || out.Sign != 17 {
+		t.Fatalf("failed merge changed destination: %+v", out)
+	}
+}
+
+func TestCutMergeFailedTailAndAlternateBehavior(t *testing.T) {
+	a, b := testCut(1), testCut(14)
+	out := Sdb_Cut_t{pLeaves: [SDB_MAX_CUTSIZE]int32{91, 92, 93}}
+	if Sdb_CutMergeOrder(a, b, &out, 2) != 0 || out.pLeaves[0] != 0 || out.pLeaves[1] != 92 {
+		t.Fatalf("optimized tail should remain untouched: %+v", out)
+	}
+	out = Sdb_Cut_t{pLeaves: [SDB_MAX_CUTSIZE]int32{91, 92, 93}}
+	if Sdb_CutMergeOrder2(a, b, &out, 2) != 0 || out.pLeaves[0] != 0 || out.pLeaves[1] != 1 || out.pLeaves[2] != 93 {
+		t.Fatalf("alternate merge should copy up to limit: %+v", out)
+	}
+}
