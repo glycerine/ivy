@@ -59,6 +59,9 @@ func Int2_ManCollectInternal_rec(p *Gia_Man_t, obj *Gia_Obj_t, nodes *Vec_Int_t,
 	}
 	Int2_ManCollectInternal_rec(p, gia.Gia_ObjFanin0(obj), nodes, seen)
 	Int2_ManCollectInternal_rec(p, gia.Gia_ObjFanin1(obj), nodes, seen)
+	if gia.Gia_ObjIsMux(p, obj) != 0 {
+		Int2_ManCollectInternal_rec(p, gia.Gia_ObjFanin2(p, obj), nodes, seen)
+	}
 	vec.Vec_IntPush(nodes, id)
 }
 
@@ -105,7 +108,7 @@ func Int2_ManProbToGia(p *Gia_Man_t, vSop *Vec_Int_t) *Gia_Man_t {
 	gia.Gia_ManHashAlloc(out)
 	for i := 0; i < vec.Vec_IntSize(nodes); i++ {
 		obj := gia.Gia_ManObj(p, vec.Vec_IntEntry(nodes, i))
-		lit := gia.Gia_ManHashAnd(out, gia.Gia_ObjFanin0Copy(obj), gia.Gia_ObjFanin1Copy(obj))
+		lit := int2HashCopyGate(out, p, gia.Gia_ObjId(p, obj))
 		gia.Gia_ObjSetValue(obj, lit)
 	}
 	for i := 0; i < vec.Vec_IntSize(coPres); i++ {

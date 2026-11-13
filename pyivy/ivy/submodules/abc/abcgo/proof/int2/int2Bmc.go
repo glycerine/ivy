@@ -71,7 +71,7 @@ func Int2_ManDupInit(p *Gia_Man_t, fVerbose int32) *Gia_Man_t {
 	for i := int32(0); i < gia.Gia_ManObjNum(p); i++ {
 		obj := gia.Gia_ManObj(p, i)
 		if gia.Gia_ObjIsAnd(obj) != 0 {
-			lit := gia.Gia_ManHashAnd(pNew, gia.Gia_ObjFanin0Copy(obj), gia.Gia_ObjFanin1Copy(obj))
+			lit := int2HashCopyGate(pNew, p, i)
 			gia.Gia_ObjSetValue(obj, lit)
 		}
 	}
@@ -173,7 +173,7 @@ func Int2_ManFrameInit(p *Gia_Man_t, nFrames int32, fVerbose int32) *Gia_Man_t {
 		for i := int32(0); i < gia.Gia_ManObjNum(p); i++ {
 			obj := gia.Gia_ManObj(p, i)
 			if gia.Gia_ObjIsAnd(obj) != 0 {
-				value := gia.Gia_ManHashAnd(pFrames, gia.Gia_ObjFanin0Copy(obj), gia.Gia_ObjFanin1Copy(obj))
+				value := int2HashCopyGate(pFrames, p, i)
 				gia.Gia_ObjSetValue(obj, value)
 			}
 		}
@@ -268,6 +268,19 @@ func Int2_ManCreateFrames(p *Int2_Man_t, iFrame int32, vPrefCos *Vec_Int_t) {
 		}
 	}
 	vec.Vec_IntClear(p.vStack)
+	// Keep the SAT prefix synchronized with every AND created while lowering
+	// native XOR and MUX nodes. Hashing may return an existing or constant lit.
+	hashAnd := func(a, b int32) int32 {
+		before := gia.Gia_ManObjNum(p.pGiaPref)
+		lit := gia.Gia_ManHashAnd(p.pGiaPref, a, b)
+		if gia.Gia_ManObjNum(p.pGiaPref) > before {
+			assert(lit&1 == 0, "new AND literal is regular")
+			if sat_solver_add_and(p.pSatPref, lit>>1, a>>1, b>>1, a&1, b&1, 0) == 0 {
+				panic("int2: SAT solver rejected an AND constraint")
+			}
+		}
+		return lit
+	}
 	for i := 0; i < vec.Vec_IntSize(vPrefCos); i++ {
 		coID := vec.Vec_IntEntry(vPrefCos, i)
 		co := gia.Gia_ManCo(p.pGia, coID)
@@ -311,34 +324,53 @@ func Int2_ManCreateFrames(p *Int2_Man_t, iFrame int32, vPrefCos *Vec_Int_t) {
 				vec.Vec_IntPush(p.vStack, faninID)
 			}
 		case gia.Gia_ObjIsAnd(obj) != 0:
-			fanin0ID := gia.Gia_ObjFaninId0p(p.pGia, obj)
-			fanin1ID := gia.Gia_ObjFaninId1p(p.pGia, obj)
-			lit0 := Int2_ManCheckFrames(p, frame, fanin0ID)
-			lit1 := Int2_ManCheckFrames(p, frame, fanin1ID)
-			if lit0 >= 0 && lit1 >= 0 {
-				lit0 ^= gia.Gia_ObjFaninC0(obj)
-				lit1 ^= gia.Gia_ObjFaninC1(obj)
-				before := gia.Gia_ManObjNum(p.pGiaPref)
-				lit := gia.Gia_ManHashAnd(p.pGiaPref, lit0, lit1)
-				Int2_ManWriteFrames(p, frame, iObj, lit)
-				if gia.Gia_ManObjNum(p.pGiaPref) > before {
-					assert(lit&1 == 0, "new AND literal is regular")
-					if sat_solver_add_and(p.pSatPref, lit>>1, lit0>>1, lit1>>1, lit0&1, lit1&1, 0) == 0 {
-						panic("int2: SAT solver rejected an AND constraint")
-					}
-				}
-			} else {
-				vec.Vec_IntPush(p.vStack, frame)
-				vec.Vec_IntPush(p.vStack, iObj)
-				if lit0 < 0 {
-					vec.Vec_IntPush(p.vStack, frame)
-					vec.Vec_IntPush(p.vStack, fanin0ID)
-				}
-				if lit1 < 0 {
-					vec.Vec_IntPush(p.vStack, frame)
-					vec.Vec_IntPush(p.vStack, fanin1ID)
+			a, b, c, kind := p.pGia.Gate(iObj)
+			fanins := []int32{a, b}
+			if kind == 4 {
+				fanins = append(fanins, c)
+			}
+			if kind == 5 {
+				fanins = fanins[:1]
+			}
+			mapped := make([]int32, len(fanins))
+			ready := true
+			for i, fanin := range fanins {
+				mapped[i] = Int2_ManCheckFrames(p, frame, fanin>>1)
+				if mapped[i] < 0 {
+					ready = false
+				} else {
+					mapped[i] ^= fanin & 1
 				}
 			}
+			if !ready {
+				vec.Vec_IntPush(p.vStack, frame)
+				vec.Vec_IntPush(p.vStack, iObj)
+				for i, fanin := range fanins {
+					if mapped[i] < 0 {
+						vec.Vec_IntPush(p.vStack, frame)
+						vec.Vec_IntPush(p.vStack, fanin>>1)
+					}
+				}
+				continue
+			}
+			var lit int32
+			switch kind {
+			case 2:
+				lit = hashAnd(mapped[0], mapped[1])
+			case 3:
+				x := hashAnd(mapped[0], mapped[1]^1)
+				y := hashAnd(mapped[0]^1, mapped[1])
+				lit = hashAnd(x^1, y^1) ^ 1
+			case 4:
+				x := hashAnd(mapped[0], mapped[1])
+				y := hashAnd(mapped[0]^1, mapped[2])
+				lit = hashAnd(x^1, y^1) ^ 1
+			case 5:
+				lit = mapped[0]
+			default:
+				panic("int2: unsupported internal GIA object")
+			}
+			Int2_ManWriteFrames(p, frame, iObj, lit)
 		default:
 			panic("int2: unsupported GIA object in frame construction")
 		}

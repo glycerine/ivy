@@ -84,7 +84,7 @@ func Int2_ManUnroll(p *Gia_Man_t, nFrames int32) *Gia_Man_t {
 		for i := int32(0); i < gia.Gia_ManObjNum(p); i++ {
 			obj := gia.Gia_ManObj(p, i)
 			if gia.Gia_ObjIsAnd(obj) != 0 {
-				lit := gia.Gia_ManHashAnd(pFrames, gia.Gia_ObjFanin0Copy(obj), gia.Gia_ObjFanin1Copy(obj))
+				lit := int2HashCopyGate(pFrames, p, i)
 				gia.Gia_ObjSetValue(obj, lit)
 			}
 		}
