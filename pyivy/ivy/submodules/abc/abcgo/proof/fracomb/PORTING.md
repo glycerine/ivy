@@ -4,7 +4,8 @@
 `src/proof/fra/fraCore.c` and `src/proof/fra/fraCec.c`:
 
 - `Fra_FraigMiterStatus` and `Fra_FraigMiterAssertedOutput` inspect the miter
-  using ABC's graph phase conventions.
+  using ABC's graph phase conventions. The status check uses each CI's stored
+  `CioId` together with `nTruePis`; stale terminal metadata can affect it.
 - `Fra_FraigSat` translates a combinational miter to CNF and runs ABC's SAT
   solver. It supports polarity transformation, OR or AND of outputs, resource
   limits, and the original solver's learned-clause settings.
@@ -59,6 +60,8 @@ representations. `proof/framgr` contains an integration test that forces the
 initial CEC SAT attempt to exhaust its budget and exercises the real FRAIG
 sweep; a second satisfiable fixture exercises repeated real sweeps and replays
 the resulting witness against both the rewritten and original miter. A
+separate XOR-heavy fixture forces balancing before the first sweep, and a
+failed-sweep test checks the source's manager disposal and failure path. A
 free-output CNF fixture checks the exact variable and clause order
 against C. Independent direct comparisons with the original C implementation
 also matched 100 generated all-free and 100 mixed asserted/free output graphs;

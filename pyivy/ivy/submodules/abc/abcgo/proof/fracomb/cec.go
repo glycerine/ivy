@@ -14,14 +14,7 @@ func Fra_FraigMiterStatus(g *aig.Graph) int32 {
 	if g.Data != nil {
 		return 0
 	}
-	inputs := g.Inputs()
 	regs := int(g.RegisterCount())
-	pis := make(map[int]bool, len(inputs))
-	for i, e := range inputs {
-		if int32(i) < g.TruePiCount() {
-			pis[e.NodeID()] = true
-		}
-	}
 	outputs := g.Outputs()
 	undecided := false
 	for _, out := range outputs[:len(outputs)-regs] {
@@ -29,7 +22,7 @@ func Fra_FraigMiterStatus(g *aig.Graph) int32 {
 		if child == g.Const0() {
 			continue
 		}
-		if child == g.Const1() || pis[child.NodeID()] || g.Node(child).Phase != child.Complemented() {
+		if child == g.Const1() || aig.Aig_ObjIsCi(g, child) && aig.Aig_ObjCioId(g, child) < g.TruePiCount() || g.Node(child).Phase != child.Complemented() {
 			return 0
 		}
 		undecided = true

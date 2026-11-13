@@ -6,7 +6,9 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
+	"syscall"
 	"testing"
+	"time"
 
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/proof/fracomb"
@@ -55,7 +57,7 @@ func TestCecFallbackAgainstCompiledABC(t *testing.T) {
 	const program = `#include "proof/fra/fra.h"
 #include "base/main/main.h"
 #include <stdio.h>
-int main(void) {
+int main(int argc, char **argv) {
   Aig_Man_t *g; Aig_Obj_t *v[8][7], *f, *c;
   int i,j,h,first,result;
   Abc_Start(); g=Aig_ManStart(1000); f=Aig_ManConst1(g);
@@ -63,7 +65,9 @@ int main(void) {
   for(i=0;i<8;i++) { c=Aig_ManConst0(g); for(h=0;h<7;h++) c=Aig_Or(g,c,v[i][h]); f=Aig_And(g,f,c); }
   for(h=0;h<7;h++) for(i=0;i<8;i++) for(j=0;j<i;j++) f=Aig_And(g,f,Aig_Or(g,Aig_Not(v[i][h]),Aig_Not(v[j][h])));
   Aig_ObjCreateCo(g,f);
-  first=Fra_FraigSat(g,600,0,0,0,0,1,0,0,0); result=Fra_FraigCec(&g,100000,0);
+  first=Fra_FraigSat(g,600,0,0,0,0,1,0,0,0);
+  if (argc > 1) { printf("initial:%d\n",first); fflush(stdout); g->Time2Quit=Abc_Clock()-1; }
+  result=Fra_FraigCec(&g,100000,0);
   printf("oracle:%d,%d\n",first,result); Aig_ManStop(g);
   g=Aig_ManStart(10); v[0][0]=Aig_ObjCreateCi(g); v[0][1]=Aig_ObjCreateCi(g);
   Aig_ObjCreateCo(g,Aig_And(g,v[0][0],v[0][1]));
@@ -87,6 +91,13 @@ int main(void) {
 	}
 	if !strings.Contains(string(out), "direct:-1,0,1,1") {
 		t.Fatalf("unexpected ABC direct SAT result: %s", out)
+	}
+	cmd := exec.Command(binary, "expired")
+	cmd.Dir = dir
+	expiredOut, expiredErr := cmd.CombinedOutput()
+	exitErr, ok := expiredErr.(*exec.ExitError)
+	if !ok || !exitErr.Sys().(syscall.WaitStatus).Signaled() || !strings.Contains(string(expiredOut), "initial:-1") {
+		t.Fatalf("ABC expired rewrite: error=%v output=%s", expiredErr, expiredOut)
 	}
 	direct := aig.NewGraph()
 	x, y := direct.NewInput(), direct.NewInput()
@@ -126,6 +137,19 @@ int main(void) {
 		}
 	}
 	g.AddOutput(f)
+	expiredGraph := aig.Aig_ManDupDfs(g)
+	expiredGraph.Time2Quit = time.Now().Add(-time.Second)
+	func() {
+		defer func() {
+			if recover() == nil {
+				t.Fatal("expired rewrite should panic, matching ABC's failure path")
+			}
+		}()
+		fracomb.Fra_FraigCec(&expiredGraph, 100000, 0, func(*aig.Graph, int32, int32) *aig.Graph {
+			t.Fatal("sweep reached after expired rewrite")
+			return nil
+		})
+	}()
 	if got := fracomb.Fra_FraigSat(g, 600, 0, 0, 0, 0, 1, 0, 0, 0); got != -1 {
 		t.Fatalf("initial SAT = %d, want -1", got)
 	}
