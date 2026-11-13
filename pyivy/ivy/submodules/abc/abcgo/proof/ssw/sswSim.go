@@ -210,42 +210,7 @@ package ssw
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_SmlCheckOutputSavePattern(p *Ssw_Sml_t, pObjPo *Aig_Obj_t) *int32 {
-    var pFanin, pObjPi *Aig_Obj_t;
-    var pSims *uint32;
-    var i int32;
-    var k int32;
-    var BestPat int32;
-    var pModel *int32;
-    // find the word of the pattern
-    pFanin = Aig_ObjFanin0(pObjPo);
-    pSims = Ssw_ObjSim(p, pFanin.Id);
-    for  i = 0; i < p.nWordsTotal; i++  {
-        if pSims[i] {
-            break; }
-    }
-    assert(i < p.nWordsTotal, "i < p.nWordsTotal");
-    // find the bit of the pattern
-    for  k = 0; k < 32; k++  {
-        if pSims[i] & (1 << k) {
-            break; }
-    }
-    assert(k < 32, "k < 32");
-    // determine the best pattern
-    BestPat = i * 32 + k;
-    // fill in the counter-example data
-    // inlining of macro ABC_ALLOC
-    pModel = ((int *) malloc(sizeof(int) * (size_t)(Aig_ManCiNum(p.pAig)+1)));
-    // inlining of macro Aig_ManForEachCi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.pAig.vCis)) && (((pObjPi) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {
-        pModel[i] = Abc_InfoHasBit(Ssw_ObjSim(p, pObjPi.Id), BestPat);
-//        Abc_Print( 1, "%d", pModel[i] );
-    }
-    pModel[Aig_ManCiNum(p.pAig)] = pObjPo.Id;
-//    Abc_Print( 1, "\n" );
-    return pModel;
-}
+
 
 /**Function*************************************************************
 
@@ -258,22 +223,7 @@ func Ssw_SmlCheckOutputSavePattern(p *Ssw_Sml_t, pObjPo *Aig_Obj_t) *int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_SmlCheckOutput(p *Ssw_Sml_t) *int32 {
-    var pObj *Aig_Obj_t;
-    var i int32;
-    // make sure the reference simulation pattern does not detect the bug
-    pObj = Aig_ManCo( p.pAig, 0 );
-    assert(Aig_ObjFanin0(pObj).fPhase == uint32(Aig_ObjFaninC0(pObj)), "Aig_ObjFanin0(pObj).fPhase == uint32(Aig_ObjFaninC0(pObj))");
-    // inlining of macro Aig_ManForEachCo
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.pAig.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, i)), 1); i++  {
-        if !(Ssw_SmlObjIsConstWord( p, Aig_ObjFanin0(pObj) ) != 0) {
-            // create the counter-example from this pattern
-            return Ssw_SmlCheckOutputSavePattern( p, pObj );
-        }
-    }
-    return nil;
-}
+
 
 
 
@@ -638,67 +588,7 @@ p.nSimRounds++;
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_SmlGetCounterExample(p *Ssw_Sml_t) *Abc_Cex_t {
-    var pCex *Abc_Cex_t;
-    var pObj *Aig_Obj_t;
-    var pSims *uint32;
-    var iPo, iFrame, iBit, i, k int32;
 
-    // make sure the simulation manager has it
-    assert(p.fNonConstOut, "p.fNonConstOut");
-
-    // find the first output that failed
-    iPo = -1;
-    iBit = -1;
-    iFrame = -1;
-    // inlining of macro Saig_ManForEachPo
-    // inlining of macro Vec_PtrForEachEntryStop
-    for  iPo = 0; (iPo < Saig_ManPoNum(p.pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, iPo)), 1); iPo++  {
-        if Ssw_SmlNodeIsZero(p, pObj) != 0 {
-            continue; }
-        pSims = Ssw_ObjSim( p, pObj.Id );
-        for  i = p.nWordsPref; i < p.nWordsTotal; i++  {
-            if pSims[i] {
-                iFrame = i / p.nWordsFrame;
-                iBit = 32 * (i % p.nWordsFrame) + Aig_WordFindFirstBit( pSims[i] );
-                break;
-            }
-        }
-        break;
-    }
-    assert(iPo < Aig_ManCoNum(p.pAig)-Aig_ManRegNum(p.pAig), "iPo < Aig_ManCoNum(p.pAig)-Aig_ManRegNum(p.pAig)");
-    assert(iFrame < p.nFrames, "iFrame < p.nFrames");
-    assert(iBit < 32 * p.nWordsFrame, "iBit < 32 * p.nWordsFrame");
-
-    // allocate the counter example
-    pCex = Abc_CexAlloc( Aig_ManRegNum(p.pAig), Aig_ManCiNum(p.pAig) - Aig_ManRegNum(p.pAig), iFrame + 1 );
-    pCex.iPo    = iPo;
-    pCex.iFrame = iFrame;
-
-    // copy the bit data
-    // inlining of macro Saig_ManForEachLo
-    for  k = 0; (k < Saig_ManRegNum(p.pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, k+Saig_ManPiNum(p.pAig))), 1); k++  {
-        pSims = Ssw_ObjSim( p, pObj.Id );
-        if Abc_InfoHasBit( pSims, iBit ) {
-            Abc_InfoSetBit( pCex.pData, k ); }
-    }
-    for  i = 0; i <= iFrame; i++  {
-        // inlining of macro Saig_ManForEachPi
-        // inlining of macro Vec_PtrForEachEntryStop
-        for  k = 0; (k < Saig_ManPiNum(p.pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, k)), 1); k++  {
-            pSims = Ssw_ObjSim( p, pObj.Id );
-            if Abc_InfoHasBit( pSims, 32 * p.nWordsFrame * i + iBit ) {
-                Abc_InfoSetBit( pCex.pData, pCex.nRegs + pCex.nPis * i + k ); }
-        }
-    }
-    // verify the counter example
-    if !Saig_ManVerifyCex( p.pAig, pCex ) {
-        Abc_Print( 1, "Ssw_SmlGetCounterExample(): Counter-example is invalid.\n" );
-        Abc_CexFree( pCex );
-        pCex = nil;
-    }
-    return pCex;
-}
 
 ////////////////////////////////////////////////////////////////////////
 ///                       END OF FILE                                ///
