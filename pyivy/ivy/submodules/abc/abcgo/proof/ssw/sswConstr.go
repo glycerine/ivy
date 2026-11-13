@@ -168,28 +168,7 @@ func Ssw_ManSweepNodeConstr(p *Ssw_Man_t, pObj *Aig_Obj_t, f int32, fBmc int32) 
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_ManSweepBmcConstr_rec(p *Ssw_Man_t, pObj *Aig_Obj_t, f int32) *Aig_Obj_t {
-    var pObjNew, pObjLi *Aig_Obj_t;
-    pObjNew = Ssw_ObjFrame( p, pObj, f );
-    if pObjNew != nil {
-        return pObjNew; }
-    assert(!Saig_ObjIsPi(p.pAig, pObj), "!Saig_ObjIsPi(p.pAig, pObj)");
-    if Saig_ObjIsLo(p.pAig, pObj) {
-        assert(f > 0, "f > 0");
-        pObjLi  = Saig_ObjLoToLi( p.pAig, pObj );
-        pObjNew = Ssw_ManSweepBmcConstr_rec( p, Aig_ObjFanin0(pObjLi), f-1 );
-        pObjNew = Aig_NotCond( pObjNew, Aig_ObjFaninC0(pObjLi) );
-    
-    } else {
-        assert(Aig_ObjIsNode(pObj), "Aig_ObjIsNode(pObj)");
-        Ssw_ManSweepBmcConstr_rec( p, Aig_ObjFanin0(pObj), f );
-        Ssw_ManSweepBmcConstr_rec( p, Aig_ObjFanin1(pObj), f );
-        pObjNew = Aig_And( p.pFrames, Ssw_ObjChild0Fra(p, pObj, f), Ssw_ObjChild1Fra(p, pObj, f) );
-    }
-    Ssw_ObjSetFrame( p, pObj, f, pObjNew );
-    assert(pObjNew != nil, "pObjNew != nil");
-    return pObjNew;
-}
+
 
 /**Function*************************************************************
 
@@ -391,28 +370,7 @@ p.timeBmc += Abc_Clock() - clk;
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_FramesWithClasses_rec(p *Ssw_Man_t, pObj *Aig_Obj_t, f int32) *Aig_Obj_t {
-    var pObjNew, pObjLi *Aig_Obj_t;
-    pObjNew = Ssw_ObjFrame( p, pObj, f );
-    if pObjNew != nil {
-        return pObjNew; }
-    assert(!Saig_ObjIsPi(p.pAig, pObj), "!Saig_ObjIsPi(p.pAig, pObj)");
-    if Saig_ObjIsLo(p.pAig, pObj) {
-        assert(f > 0, "f > 0");
-        pObjLi  = Saig_ObjLoToLi( p.pAig, pObj );
-        pObjNew = Ssw_FramesWithClasses_rec( p, Aig_ObjFanin0(pObjLi), f-1 );
-        pObjNew = Aig_NotCond( pObjNew, Aig_ObjFaninC0(pObjLi) );
-    
-    } else {
-        assert(Aig_ObjIsNode(pObj), "Aig_ObjIsNode(pObj)");
-        Ssw_FramesWithClasses_rec( p, Aig_ObjFanin0(pObj), f );
-        Ssw_FramesWithClasses_rec( p, Aig_ObjFanin1(pObj), f );
-        pObjNew = Aig_And( p.pFrames, Ssw_ObjChild0Fra(p, pObj, f), Ssw_ObjChild1Fra(p, pObj, f) );
-    }
-    Ssw_ObjSetFrame( p, pObj, f, pObjNew );
-    assert(pObjNew != nil, "pObjNew != nil");
-    return pObjNew;
-}
+
 
 
 /**Function*************************************************************
