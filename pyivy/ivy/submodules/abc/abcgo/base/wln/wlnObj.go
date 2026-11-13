@@ -73,27 +73,8 @@ func Wln_ObjSetSlice(p *Wln_Ntk_t, iObj int32, SliceId int32) {
     assert(Wln_ObjIsSlice(p, iObj), "Wln_ObjIsSlice(p, iObj)");
     Wln_ObjSetFanin( p, iObj, 1, SliceId );
 }
-func Wln_ObjAddFanin(p *Wln_Ntk_t, iObj int32, i int32) { 
-    var pVec *Wln_Vec_t  = p.vFanins + iObj;
-    if Wln_ObjFaninNum(p, iObj) < 2 {
-        pVec.Array[pVec.nSize++] = i;
-    } else if Wln_ObjFaninNum(p, iObj) == 2 {
-        // inlining of macro ABC_ALLOC
-        var pArray *int32  = ((int *) malloc(sizeof(int) * (size_t)(4)));
-        pArray[0] = pVec.Array[0];
-        pArray[1] = pVec.Array[1];
-        pArray[2] = i;
-        pVec.pArray[0] = pArray;
-        pVec.nSize     = 3;
-        pVec.nCap      = 4;
-    
-    } else {
-        if pVec.nSize == pVec.nCap {
-            // inlining of macro ABC_REALLOC
-            pVec.pArray[0] = ((pVec.pArray[0]) ? ((int *) realloc((char *)(pVec.pArray[0]), sizeof(int) * (size_t)((pVec.nCap = 2*pVec.nSize)))) :          ((int *) malloc(sizeof(int) * (size_t)((pVec.nCap = 2*pVec.nSize))))); } 
-        assert(pVec.nSize < pVec.nCap, "pVec.nSize < pVec.nCap");
-        pVec.pArray[0][pVec.nSize++] = i;
-    }
+func Wln_ObjAddFanin(p *Wln_Ntk_t, iObj, i int32) {
+    p.vFanins[iObj].appendFanin(i)
 }
 func Wln_ObjAddFanins(p *Wln_Ntk_t, iObj int32, vFanins *Vec_Int_t) int32 {
     var i, iFanin int32;

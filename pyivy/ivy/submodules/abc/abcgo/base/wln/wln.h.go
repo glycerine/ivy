@@ -46,14 +46,6 @@ package wln
 ////////////////////////////////////////////////////////////////////////
 
     
-type Wln_Vec_t struct {
-    nCap                    int32;
-    nSize                    int32;
-    union { int            Array[2];  
-            int *          pArray[1]; };
-}
-
-    
 type Wln_Ntk_t struct {
     pName                  string;                // model name
     pSpec                  string;                // input file name
@@ -62,7 +54,7 @@ type Wln_Ntk_t struct {
     vCos              Vec_Int_t;                 // combinational outputs
     vFfs              Vec_Int_t;                 // flops
     vTypes              Vec_Int_t;               // object types   
-    vFanins             *Wln_Vec_t;              // object fanins (exceptions: const, select)
+    vFanins             []Wln_Vec_t;              // object fanins (exceptions: const, select)
     vRanges              Vec_Int_t;              // object ranges
     pRanges         *Hash_IntMan_t;              // object ranges
     vNameIds              Vec_Int_t;             // object name IDs
@@ -107,17 +99,9 @@ func Wln_ObjIsRotate(p *Wln_Ntk_t, i int32) int32 { return Wln_ObjType(p, i) == 
 func Wln_ObjIsTable(p *Wln_Ntk_t, i int32) int32 { return Wln_ObjType(p, i) == ABC_OPER_TABLE;                                }
 
 func Wln_ObjFaninNum(p *Wln_Ntk_t, i int32) int32 { return p.vFanins[i].nSize;                                                }
-func Wln_ObjFanins(p *Wln_Ntk_t, i int32) *int32 { if Wln_ObjFaninNum(p, i) > 2 {
-    return p.vFanins[i].pArray[0];
-} else {
-    return p.vFanins[i].Array;
-}    }
-func Wln_ObjFanin(p *Wln_Ntk_t, i int32, f int32) int32 { if Wln_ObjFaninNum(p, i) > 2 {
-    return p.vFanins[i].pArray[0][f];
-} else {
-    return p.vFanins[i].Array[f];
-} }
-func Wln_ObjSetFanin(p *Wln_Ntk_t, i int32, f int32, v int32) { Wln_ObjFanins( p, i )[f] = v;                                              }
+func Wln_ObjFanins(p *Wln_Ntk_t, i int32) []int32 { return p.vFanins[i].fanins() }
+func Wln_ObjFanin(p *Wln_Ntk_t, i, f int32) int32 { return Wln_ObjFanins(p, i)[f] }
+func Wln_ObjSetFanin(p *Wln_Ntk_t, i, f, v int32) { Wln_ObjFanins(p, i)[f] = v }
 func Wln_ObjFanin0(p *Wln_Ntk_t, i int32) int32 { return Wln_ObjFanin( p, i, 0 );                                            }
 func Wln_ObjFanin1(p *Wln_Ntk_t, i int32) int32 { return Wln_ObjFanin( p, i, 1 );                                            }
 func Wln_ObjFanin2(p *Wln_Ntk_t, i int32) int32 { return Wln_ObjFanin( p, i, 2 );                                            }
