@@ -241,31 +241,22 @@ func interpolateM114p(s M114pBackend, rootParts, varClasses []int32, pudlak bool
 			if expired() {
 				return nil, errors.New("MiniSat interpolation deadline reached")
 			}
-			if _, err := classOf(lit); err != nil {
+			c, err := classOf(lit)
+			if err != nil {
 				return nil, err
+			}
+			if rootParts[i] == 0 && !pudlak && c >= 0 {
+				e := input(c)
+				if lit&1 != 0 {
+					e = e.Not()
+				}
+				edge = g.OR(edge, e)
 			}
 		}
 		if rootParts[i] == 1 {
 			edge = g.Const1()
 		} else if rootParts[i] != 0 {
 			return nil, errors.New("invalid root partition")
-		} else if !pudlak {
-			for _, lit := range clause {
-				if expired() {
-					return nil, errors.New("MiniSat interpolation deadline reached")
-				}
-				c, err := classOf(lit)
-				if err != nil {
-					return nil, err
-				}
-				if c >= 0 {
-					e := input(c)
-					if lit&1 != 0 {
-						e = e.Not()
-					}
-					edge = g.OR(edge, e)
-				}
-			}
 		}
 		outputs = append(outputs, edge)
 		clauses = append(clauses, append([]int32(nil), clause...))
