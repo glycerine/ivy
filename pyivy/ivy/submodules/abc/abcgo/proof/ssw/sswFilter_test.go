@@ -27,6 +27,28 @@ func TestSswFilterStartingState(t *testing.T) {
 		t.Fatal("counterexample state was not updated")
 	}
 }
+
+func TestFilterRollForwardStoresStateAfterRequestedFrames(t *testing.T) {
+	g := aig.NewGraph()
+	latch := g.NewInput()
+	g.AddOutput(latch)
+	g.AddOutput(latch.Not())
+	aig.Aig_ManSetRegNum(g, 1)
+	p := &Ssw_Man_t{pAig: g, pPatWords: []uint32{0}}
+	// The C roll-forward stores the latch input after the final frame.
+	Ssw_ManRollForward(p, 1)
+	if !util.Abc_InfoHasBit(p.pPatWords, 0) {
+		t.Fatal("one transition should set the latch")
+	}
+	Ssw_ManRollForward(p, 2)
+	if !util.Abc_InfoHasBit(p.pPatWords, 0) {
+		t.Fatal("two further transitions should preserve the set state")
+	}
+	Ssw_ManRollForward(p, 1)
+	if util.Abc_InfoHasBit(p.pPatWords, 0) {
+		t.Fatal("one further transition should clear the latch")
+	}
+}
 func TestSswFilterGrowPreservesMappings(t *testing.T) {
 	g := aig.NewGraph()
 	x := g.NewInput()
