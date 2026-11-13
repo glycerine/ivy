@@ -26,7 +26,7 @@ func TestPdrAgainstLocalABC(t *testing.T) {
 	}
 	seed := uint32(0x9ac71423)
 	next := func() uint8 { seed ^= seed << 13; seed ^= seed >> 17; seed ^= seed << 5; return uint8(seed) }
-	for trial := 0; trial < 32; trial++ {
+	for trial := 0; trial < 64; trial++ {
 		tables := [3]uint8{next(), next(), next()}
 		var blif strings.Builder
 		blif.WriteString(".model pdr_compare\n.inputs i\n.outputs o\n.latch n0 q0 0\n.latch n1 q1 0\n")
@@ -43,7 +43,40 @@ func TestPdrAgainstLocalABC(t *testing.T) {
 		if err := os.WriteFile(path, []byte(blif.String()), 0600); err != nil {
 			t.Fatal(err)
 		}
-		output, err := exec.Command(abc, "-c", "read_blif "+path+"; strash; pdr").CombinedOutput()
+		var pars Pdr_Par_t
+		Pdr_ManSetDefaultParams(&pars)
+		pars.fSilent = 1
+		var switches strings.Builder
+		for bit, option := range []struct {
+			flag  string
+			field *int32
+		}{
+			{" -m", &pars.fMonoCnf}, {" -t", &pars.fUseAbs},
+			{" -i", &pars.fShiftStart}, {" -p", &pars.fReuseProofOblig},
+			{" -q", &pars.fShortest}, {" -f", &pars.fFlopOrder},
+		} {
+			if trial&(1<<bit) != 0 {
+				switches.WriteString(option.flag)
+				*option.field = 1
+			}
+		}
+		if trial%3 == 0 {
+			switches.WriteString(" -n -c")
+			pars.fSkipDown, pars.fCtgs = 0, 1
+		}
+		if trial%5 == 0 {
+			switches.WriteString(" -r")
+			pars.fTwoRounds = 1
+		}
+		if trial%7 == 0 {
+			switches.WriteString(" -o -g")
+			pars.fUsePropOut, pars.fSkipGeneral = 0, 1
+		}
+		if trial%11 == 0 {
+			switches.WriteString(" -y -e")
+			pars.fFlopPrio, pars.fUseSupp = 1, 0
+		}
+		output, err := exec.Command(abc, "-c", "read_blif "+path+"; strash; pdr"+switches.String()).CombinedOutput()
 		if err != nil {
 			t.Fatalf("trial %d: ABC failed: %v\n%s", trial, err, output)
 		}
@@ -75,14 +108,6 @@ func TestPdrAgainstLocalABC(t *testing.T) {
 		g.AddOutput(truth(tables[0]))
 		g.AddOutput(truth(tables[1]))
 		aig.Aig_ManSetRegNum(g, 2)
-		var pars Pdr_Par_t
-		Pdr_ManSetDefaultParams(&pars)
-		pars.fSilent = 1
-		pars.fNewXSim = int32(trial & 1)
-		pars.fMonoCnf = int32((trial >> 1) & 1)
-		if pars.fMonoCnf != 0 {
-			pars.fNewXSim = 0
-		}
 		result := Pdr_ManSolve(g, &pars)
 		if (result == 0) != failed || result < 0 {
 			t.Fatalf("trial %d tables %v: ABC %s Go %d", trial, tables, text, result)

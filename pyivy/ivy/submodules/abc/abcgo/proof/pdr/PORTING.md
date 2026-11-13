@@ -15,7 +15,11 @@ checked against explicit reachability and their witnesses are replayed. A
 further 160 sampled three-register machines exercise proof-obligation reuse,
 shifted frame starts, both CNF modes, abstraction, and incremental restarts
 against an eight-state reachability oracle. A local ABC executable, when
-available, also checks 32 generated two-register machines. Other
+available, also checks 64 generated two-register machines with matching C and
+Go CNF, abstraction, priority, generalization and frame-management options.
+A safe-latch fixture compares the invariant PLA cover with ABC. Bridge tests
+check the framed proved/failed-output messages and final abort message for
+ordinary and incremental runs. Other
 tests cover frame limits, SAT conflict limits, expired global and per-output
 deadlines, solver reuse, invariant checks, and SAT core handling. The full
 package has passed `go test -race ./proof/pdr` and
@@ -53,7 +57,9 @@ Remaining review and coverage gaps:
 - As in ABC, stopping a PDR manager stops the graph's fanout index even if
   that index existed before the manager started. A caller that needs fanout
   data afterward must rebuild it.
-- Bridge output and invariant file output need broader end-to-end coverage.
+- Bridge output beyond trivial properties and invariant files beyond the
+  safe-latch fixture need broader end-to-end coverage. ABC can interleave
+  ordinary progress text with bridge frames unless `fNotVerbose` is set.
   Proof-obligation reuse and shifted starting frames are varied in the sampled
   state-space tests, but those tests do not establish that every branch is hit.
 - Successful `Pdr_ManSolve` and `IPdr_ManSolve` runs publish their invariant
