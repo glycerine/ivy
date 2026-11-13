@@ -85,9 +85,19 @@ func sswMakeNode(p *Ssw_Man_t, frames *aig.Graph, obj aig.Edge, frame int32) aig
 	return frames.AND(a, b)
 }
 func Ssw_FramesWithClasses(p *Ssw_Man_t) *aig.Graph {
+	if sswDeadlineExpired(p.pPars) {
+		return nil
+	}
 	sswCheckFrames(p)
 	graph := p.pAig
 	frames := aig.Aig_ManStart(aig.Aig_ManObjNumMax(graph) * p.nFrames)
+	abort := func() *aig.Graph {
+		aig.Aig_ManStop(frames)
+		for i := range p.pNodeToFrames {
+			p.pNodeToFrames[i] = aig.InvalidEdge
+		}
+		return nil
+	}
 	inputs, outputs := graph.Inputs(), graph.Outputs()
 	regs := int(aig.Aig_ManRegNum(graph))
 	pis := len(inputs) - regs
@@ -98,6 +108,9 @@ func Ssw_FramesWithClasses(p *Ssw_Man_t) *aig.Graph {
 	nodes := sswFrameNodes(graph)
 	iLits := 0
 	for f := int32(0); f < p.pPars.nFramesK; f++ {
+		if sswDeadlineExpired(p.pPars) {
+			return abort()
+		}
 		Ssw_ObjSetFrame(p, graph.Const1(), f, frames.Const1())
 		for _, pi := range inputs[:pis] {
 			next := frames.NewInput()
@@ -110,7 +123,10 @@ func Ssw_FramesWithClasses(p *Ssw_Man_t) *aig.Graph {
 		for _, lo := range inputs[pis:] {
 			Ssw_FramesConstrainNode(p, frames, graph, lo, f, 1)
 		}
-		for _, obj := range nodes {
+		for i, obj := range nodes {
+			if i&255 == 0 && sswDeadlineExpired(p.pPars) {
+				return abort()
+			}
 			Ssw_ObjSetFrame(p, obj, f, sswMakeNode(p, frames, obj, f))
 			Ssw_FramesConstrainNode(p, frames, graph, obj, f, 1)
 		}

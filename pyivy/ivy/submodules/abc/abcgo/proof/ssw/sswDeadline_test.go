@@ -2,6 +2,7 @@ package ssw
 
 import (
 	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/misc/vec"
 	"testing"
 	"time"
 )
@@ -100,5 +101,27 @@ func TestExpiredDeadlineStopsSimulationAndClassPreparation(t *testing.T) {
 	}
 	if classes := sswClassesPrepare(g, 1, 0, 0, 0, 0, 0, p); classes != nil {
 		t.Fatal("expired class preparation returned classes")
+	}
+}
+
+func TestExpiredFrameConstructionReturnsUnknown(t *testing.T) {
+	g := sswDeadlineGraph()
+	p := Ssw_ManCreate(g, &Ssw_Pars_t{nFramesK: 1, deadline: time.Now().Add(-time.Second)})
+	defer Ssw_ManStop(p)
+	if result := Ssw_FramesWithClasses(p); result != nil {
+		t.Fatal("expired frame builder returned a graph")
+	}
+	for _, entry := range p.pNodeToFrames {
+		if entry != aig.InvalidEdge {
+			t.Fatal("expired frame builder left a mapping")
+		}
+	}
+}
+
+func TestExpiredConstraintSearchClearsOldAssignment(t *testing.T) {
+	old := vec.Vec_IntAlloc(1)
+	vec.Vec_IntPush(old, 1)
+	if status := sswManSetConstrPhases(sswDeadlineGraph(), 1, &old, time.Now().Add(-time.Second)); status != -1 || old != nil {
+		t.Fatalf("status %d assignment %v", status, old)
 	}
 }

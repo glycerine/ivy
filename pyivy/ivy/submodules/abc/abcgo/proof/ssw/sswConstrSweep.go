@@ -126,6 +126,9 @@ func Ssw_ManSweepBmcConstr_old(p *Ssw_Man_t) int32 {
 func Ssw_ManSweepConstr(p *Ssw_Man_t) int32 {
 	start := time.Now()
 	p.pFrames = Ssw_FramesWithClasses(p)
+	if p.pFrames == nil {
+		return p.fRefined
+	}
 	p.pMSat.pAig = p.pFrames
 	graph := p.pAig
 	inputs, outputs := graph.Inputs(), graph.Outputs()

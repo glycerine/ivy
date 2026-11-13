@@ -216,6 +216,9 @@ func Ssw_ManDumpEquivMiter(g *aig.Graph, pairs *vec.Vec_Int_t, num, addOutputs i
 func Ssw_ManSweep(p *Ssw_Man_t) int32 {
 	start := time.Now()
 	p.pFrames = Ssw_FramesWithClasses(p)
+	if p.pFrames == nil {
+		return p.fRefined
+	}
 	p.pMSat.pAig = p.pFrames
 	n := aig.Aig_ManCoNum(p.pFrames) - aig.Aig_ManRegNum(p.pAig)
 	if n&1 != 0 {

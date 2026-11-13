@@ -198,6 +198,9 @@ func Ssw_ManSweepResimulateDynLocal(p *Ssw_Man_t, f int32) int32 {
 func Ssw_ManSweepDyn(p *Ssw_Man_t) int32 {
 	start := time.Now()
 	p.pFrames = Ssw_FramesWithClasses(p)
+	if p.pFrames == nil {
+		return p.fRefined
+	}
 	p.pMSat.pAig = p.pFrames
 	aig.Aig_ManFanoutStart(p.pFrames)
 	p.nSRMiterMaxId = aig.Aig_ManObjNumMax(p.pFrames)
