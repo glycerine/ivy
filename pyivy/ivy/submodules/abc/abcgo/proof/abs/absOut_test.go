@@ -40,6 +40,33 @@ func TestGlaRefineRealAndSpuriousCounterexamples(t *testing.T) {
 		}
 	}
 }
+
+func TestGlaRefineRejectsMissingClassesAndInputMismatch(t *testing.T) {
+	g := gia.Gia_ManStart(8)
+	a, b := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
+	gate := gia.Gia_ManAppendAnd(g, a, b)
+	gia.Gia_ManAppendCo(g, gate)
+	cex := util.Abc_CexAlloc(0, 1, 1)
+	if got := Gia_ManGlaRefine(g, cex, 0, 0); got != -1 {
+		t.Fatalf("missing classes returned %d", got)
+	}
+	classes := vec.Vec_IntStart(int(gia.Gia_ManObjNum(g)))
+	vec.Vec_IntWriteEntry(classes, 0, 1)
+	vec.Vec_IntWriteEntry(classes, int(gate>>1), 1)
+	gia.Gia_ManSetGateClasses(g, classes)
+	before := append([]int32(nil), vec.Vec_IntArray(classes)...)
+	if got := Gia_ManGlaRefine(g, cex, 0, 0); got != -1 {
+		t.Fatalf("mismatched inputs returned %d", got)
+	}
+	for i, want := range before {
+		if got := vec.Vec_IntEntry(classes, i); got != want {
+			t.Fatalf("class %d changed from %d to %d", i, want, got)
+		}
+	}
+	if g.SequentialCounterexample() != nil {
+		t.Fatal("mismatched input witness was installed")
+	}
+}
 func TestNewRefineRequiresGateClasses(t *testing.T) {
 	g := gia.Gia_ManStart(4)
 	a := gia.Gia_ManAppendCi(g)
