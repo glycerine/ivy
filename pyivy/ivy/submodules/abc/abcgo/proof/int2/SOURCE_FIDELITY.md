@@ -61,6 +61,26 @@ implementation currently applies those bits. This is a difference in the
 source text, not an executable comparison, because the C function does not
 compile as written.
 
+The source text does specify a work stack of `(frame, object)` pairs, skips
+already mapped objects, maps a frame-zero register output to zero, follows a
+later register output to the previous frame's register input, and applies the
+CO complement when copying its fanin. These individual branches can be
+compared mechanically with the Go code. It also describes hashing two mapped
+fanin literals and adding a SAT AND when a new node is created; as written, it
+does not apply the original AND fanin complement bits.
+
+Other operations cannot be established from the C body: its constant setup
+tests undeclared `f`, writes an undeclared `iObj`, and passes a GIA pointer to
+`sat_solver_addclause`; its PI and AND branches use absent `pFrames` state;
+and its SAT AND call also passes the GIA pointer rather than a SAT solver.
+The Go code instead initializes constant zero in every new frame map, asserts
+the SAT constant unit on each call, allocates SAT variables for appended PIs,
+and uses `pGiaPref` and `pSatPref`. Those choices are reconstructions, not
+source-confirmed behavior. The current Go entry point does not return an
+unsupported status, so callers must treat the whole incremental frame builder
+as unsupported for source-fidelity purposes until a complete C contract is
+available; individual matching branches do not validate the full operation.
+
 The graph-copy and frame helpers follow the checked-in C loop, which treats
 all `Gia_ManForEachAnd` nodes as ordinary ANDs. This changes native XOR/MUX
 semantics. A compiled C probe (`test_vectors/native_xor_copy.c`) confirms a
