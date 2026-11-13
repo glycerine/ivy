@@ -16,10 +16,11 @@ replacement for the full-package test.
 
 The top-level `Cec_ManVerify` now uses the source-style special cases,
 normalization, iterative sweep, and FRAIG fallback; `Cec_ManVerifyOld` calls
-the FRAIG fallback as well. The separate public `Cec_ManSatSweeping` entry
-point still delegates to a different sweep, which is a source-fidelity and
-option-behavior gap under review. Passing Boolean outcome tests alone does not
-establish equivalence of these algorithms.
+the FRAIG fallback as well. The public `Cec_ManSatSweeping` entry point now
+also uses the source-style sweep. Its direct interface currently rejects native
+XOR/MUX/buffer nodes and rejects original-ID tracking with deeper speculation
+or circuit SAT; those combinations need further work. Passing Boolean outcome
+tests alone does not establish equivalence of these algorithms.
 
 ## Upstream Cec4 choice limitation
 
