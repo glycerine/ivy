@@ -136,3 +136,29 @@ func TestSATReachableImagesAgainstEnumeration(t *testing.T) {
 		}
 	}
 }
+
+func TestCheckSafetySelectsOutputAndReplaysLatchTrace(t *testing.T) {
+	g := aig.NewGraph()
+	state := g.NewInput()
+	g.AddOutput(state)
+	g.AddOutput(state.Not())
+	g.AddOutput(state.Not())
+	aig.Aig_ManSetRegNum(g, 1)
+	for _, tc := range []struct{ output, frames int }{{0, 2}, {1, 1}} {
+		result := CheckSafety(g, tc.output, SafetyOptions{})
+		if result.Status != 0 || len(result.States) != tc.frames || len(result.Inputs) != tc.frames {
+			t.Fatalf("output=%d status=%d frames=%d/%d", tc.output, result.Status, len(result.States), len(result.Inputs))
+		}
+		current := []bool{false}
+		for i, inputs := range result.Inputs {
+			if len(inputs) != 0 || len(result.States[i]) != 1 || result.States[i][0] != current[0] {
+				t.Fatalf("output=%d frame=%d inputs=%v state=%v", tc.output, i, inputs, result.States[i])
+			}
+			outputs, next := evaluateStep(g, current, inputs)
+			if (i == tc.frames-1) != outputs[tc.output] {
+				t.Fatalf("output=%d frame=%d values=%v", tc.output, i, outputs)
+			}
+			current = next
+		}
+	}
+}
