@@ -598,44 +598,6 @@ func Rf2_ManPrintVector(p *Vec_Int_t, Num int32) {
   SeeAlso     []
 
 ***********************************************************************/
-func Rf2_ManProcessVector(p *Vec_Int_t, Limit int32) {
-//    int Start = Vec_IntSize(p);
-    var Start int32;
-    var i, j, k, Entry, Entry2 int32;
-//    printf( "%d", Vec_IntSize(p) );
-    if Start > 5 {
-        fmt.Printf("Before: \n");
-        Rf2_ManPrintVector( p, 31 );
-    }
-
-    k = 0;
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(p)) && (((Entry) = Vec_IntEntry(p, i)), 1); i++  {
-        if Gia_WordCountOnes(uint32(Entry)) <= Limit {
-            Vec_IntWriteEntry( p, k++, Entry ); }
-    }
-    Vec_IntShrink( p, k );            
-    Vec_IntSort( p, 0 );
-    k = 0;
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(p)) && (((Entry) = Vec_IntEntry(p, i)), 1); i++  {
-        // inlining of macro Vec_IntForEachEntryStop
-        for  j = 0; (j < i) && (((Entry2) = Vec_IntEntry(p, j)), 1); j++  {
-            if (Entry2 & Entry) == Entry2 { // Entry2 is a subset of Entry
-                break; }
-        } 
-        if j == i { // Entry is not contained in any Entry2
-            Vec_IntWriteEntry( p, k++, Entry ); }
-    }
-    Vec_IntShrink( p, k );            
-//    printf( "->%d ", Vec_IntSize(p) );
-    if Start > 5 {
-        fmt.Printf("After: \n");
-        Rf2_ManPrintVector( p, 31 );
-        k = 0;
-    }
-}
-
 /**Function*************************************************************
 
   Synopsis    [Assigns a unique justifification ID for each PPI.]
