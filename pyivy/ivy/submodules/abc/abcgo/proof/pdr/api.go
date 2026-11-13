@@ -101,8 +101,11 @@ func pdrFlag(v bool) int32 {
 // Solve checks graph's sequential outputs using PDR. A result of Failed
 // includes a counterexample unless SolveAll is set without witness storage.
 // The graph's sequential counterexample storage is replaced by the run.
-// Concurrent PDR solves are not established safe because the ABC invariant
-// frame is global; callers should serialize Solve calls.
+// Successful runs publish their invariant to ABC's shared global frame.
+// Concurrent publications are synchronized but last-writer-wins; callers
+// needing to associate an invariant with a run must serialize those runs
+// and read the invariant before starting another publisher. General concurrent
+// solver safety beyond independently owned inputs is not established.
 func Solve(graph *aig.Graph, opts *Options) (Result, error) {
 	if graph == nil {
 		return Result{}, fmt.Errorf("pdr: nil graph")

@@ -27,7 +27,10 @@ Remaining review and coverage gaps:
   and interruption combinations warrant further tests.
 - Bridge output, invariant file output, and rare options such as proof
   obligation reuse and shifting the starting frame are not covered end to end.
-- Solving concurrently is not established safe: successful runs can update
-  ABC's global invariant frame. The race-enabled tests do not establish
-  concurrent solver safety. Callers should serialize solves until global state
-  is removed or protected across all entry points.
+- Successful `Pdr_ManSolve` and `IPdr_ManSolve` runs publish their invariant
+  in ABC's shared global frame. The frame synchronizes and copies each update,
+  but the most recent publication replaces the previous invariant. Callers
+  needing the invariant for a particular run must serialize all publishers and
+  read it before the next publication. A race test exercises both direct solve
+  entry points on independent graphs; it does not establish safety for shared
+  graphs, parameters, other global-frame users, or every solver option.
