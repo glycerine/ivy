@@ -9,9 +9,6 @@ import (
 func Acec_MatchBoxes(a, b *Acec_Box_t) int32 {
 	var m0, m1 *Vec_Int_t
 	Acec_ComputeEquivClasses(a.pGia, b.pGia, &m0, &m1)
-	if m0 == nil || m1 == nil {
-		return 0
-	}
 	for _, pair := range []struct {
 		levels  *Vec_Wec_t
 		mapping *Vec_Int_t

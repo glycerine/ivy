@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestSolveMismatchedArithmeticInterfacesReturnsUnknown(t *testing.T) {
+func TestSolveMismatchedArithmeticInterfaces(t *testing.T) {
 	for _, extraInput := range []bool{true, false} {
 		a, b := reviewAdderChain(-1), reviewAdderChain(-1)
 		if extraInput {
@@ -15,6 +15,17 @@ func TestSolveMismatchedArithmeticInterfacesReturnsUnknown(t *testing.T) {
 		}
 		var opts Acec_ParCec_t
 		Acec_ManCecSetDefaultParams(&opts)
+		if extraInput {
+			func() {
+				defer func() {
+					if recover() == nil {
+						t.Error("expected input count precondition")
+					}
+				}()
+				Acec_Solve(a, b, &opts)
+			}()
+			continue
+		}
 		if got := Acec_Solve(a, b, &opts); got != -1 {
 			t.Fatalf("extra input %v: got %d, want unknown", extraInput, got)
 		}

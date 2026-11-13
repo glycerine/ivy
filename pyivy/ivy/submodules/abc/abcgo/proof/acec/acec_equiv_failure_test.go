@@ -2,11 +2,10 @@ package acec
 
 import (
 	"github.com/glycerine/abcgo/aig/gia"
-	"github.com/glycerine/abcgo/misc/vec"
 	"testing"
 )
 
-func TestEquivalenceFailureDoesNotPublishMaps(t *testing.T) {
+func TestEquivalenceSweepRequiresResult(t *testing.T) {
 	makeGraph := func() *Gia_Man_t {
 		p := gia.Gia_ManStart(8)
 		a := gia.Gia_ManAppendCi(p)
@@ -14,10 +13,12 @@ func TestEquivalenceFailureDoesNotPublishMaps(t *testing.T) {
 		return p
 	}
 	a, b := makeGraph(), makeGraph()
-	m0, m1 := vec.Vec_IntAlloc(1), vec.Vec_IntAlloc(1)
+	var m0, m1 *Vec_Int_t
 	called := false
-	ok := acecComputeEquivClasses(a, b, &m0, &m1, func(*gia.Gia_Man_t, int32, int32) *gia.Gia_Man_t { called = true; return nil })
-	if ok || !called || m0 != nil || m1 != nil {
-		t.Fatalf("ok=%v called=%v maps=%v,%v", ok, called, m0, m1)
-	}
+	defer func() {
+		if recover() == nil || !called || m0 == nil || m1 == nil {
+			t.Fatalf("expected source sweep precondition after maps, called=%v maps=%v,%v", called, m0, m1)
+		}
+	}()
+	acecComputeEquivClasses(a, b, &m0, &m1, func(*gia.Gia_Man_t, int32, int32) *gia.Gia_Man_t { called = true; return nil })
 }
