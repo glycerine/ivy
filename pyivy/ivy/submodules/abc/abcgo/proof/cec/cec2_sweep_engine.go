@@ -2,6 +2,7 @@ package cec
 
 import (
 	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/sat/satoko"
 )
 
@@ -10,24 +11,36 @@ type cec2SweepSettings struct {
 	words, rounds, iterations int
 	conflictLimit             int64
 	useCones                  bool
+	isMiter                   bool
 }
 
 // cec2SweepEquivalences performs Cec2's simulation-guided SAT sweeping and
 // constructs the reduced graph. The returned simulation is also used for
 // source-style miter counterexample handling by the caller.
-func cec2SweepEquivalences(g *gia.Gia_Man_t, opts cec2SweepSettings) (*gia.Gia_Man_t, *cec3Simulation) {
+func cec2SweepEquivalences(g *gia.Gia_Man_t, opts cec2SweepSettings) (*gia.Gia_Man_t, *cec3Simulation, *util.Abc_Cex_t) {
 	if opts.words < 1 || opts.rounds < 0 || opts.iterations < 0 {
 		panic("cec: invalid Cec2 settings")
 	}
+	defer gia.Gia_ManCleanMark01(g)
 	gia.Gia_ManRandomW(1)
 	gia.Gia_ManSetPhase(g)
 	sim := newCec3Simulation(g.ObjectCount(), opts.words)
 	cec2RandomizeCIs(sim, g)
 	cec2SimulateAnds(sim, g)
+	if opts.isMiter {
+		if cex := cec2CaptureMiterFailure(sim, g); cex != nil {
+			return nil, sim, cex
+		}
+	}
 	sim.createClasses(g)
 	for i := 0; i < opts.rounds; i++ {
 		cec2RandomizeCIs(sim, g)
 		cec2SimulateAnds(sim, g)
+		if opts.isMiter {
+			if cex := cec2CaptureMiterFailure(sim, g); cex != nil {
+				return nil, sim, cex
+			}
+		}
 	}
 	n := g.ObjectCount()
 	copies := make([]int32, n)
@@ -46,6 +59,7 @@ func cec2SweepEquivalences(g *gia.Gia_Man_t, opts cec2SweepSettings) (*gia.Gia_M
 	}
 	cnf := newCec2CNF(reduced, solver)
 	pattern := 0
+	var failure *util.Abc_Cex_t
 	for iter := 0; iter < opts.iterations; iter++ {
 		disproved := false
 		cec2RandomizeCIs(sim, g)
@@ -98,6 +112,12 @@ func cec2SweepEquivalences(g *gia.Gia_Man_t, opts cec2SweepSettings) (*gia.Gia_M
 			break
 		}
 		cec2SimulateAnds(sim, g)
+		if opts.isMiter {
+			failure = cec2CaptureMiterFailure(sim, g)
+			if failure != nil {
+				break
+			}
+		}
 	}
 	for id := int32(1); int(id) < n; id++ {
 		a, b, _, kind := g.Gate(id)
@@ -109,5 +129,26 @@ func cec2SweepEquivalences(g *gia.Gia_Man_t, opts cec2SweepSettings) (*gia.Gia_M
 		}
 	}
 	gia.Gia_ManHashStop(reduced)
-	return gia.Gia_ManCleanup(reduced), sim
+	cleaned := gia.Gia_ManCleanup(reduced)
+	gia.Gia_ManCopyNameSpec(cleaned, g)
+	return cleaned, sim, failure
+}
+
+func cec2CaptureMiterFailure(sim *cec3Simulation, g *gia.Gia_Man_t) *util.Abc_Cex_t {
+	output, pattern := cec2FailingOutput(sim, g)
+	if output < 0 {
+		return nil
+	}
+	cex := util.Abc_CexAlloc(0, gia.Gia_ManCiNum(g), 1)
+	cex.IPo = output
+	for i := int32(0); i < gia.Gia_ManCiNum(g); i++ {
+		id := gia.Gia_ManCiIdToId(g, i)
+		if sim.object(id)[pattern/64]&(uint64(1)<<uint(pattern%64)) != 0 {
+			util.Abc_InfoSetBit(cex.PData, i)
+		}
+	}
+	if err := g.SetCecCombinationalWitness(cex); err != nil {
+		panic(err)
+	}
+	return cex
 }

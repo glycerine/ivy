@@ -23,7 +23,7 @@ func TestCec2SweepPreservesOutputs(t *testing.T) {
 			for i := 0; i < 5; i++ {
 				gia.Gia_ManAppendCo(g, lits[4+r.Intn(14)]^int32(r.Intn(2)))
 			}
-			reduced, _ := cec2SweepEquivalences(g, cec2SweepSettings{words: 2, rounds: 1, iterations: 5, conflictLimit: 1000, useCones: cones})
+			reduced, _, _ := cec2SweepEquivalences(g, cec2SweepSettings{words: 2, rounds: 1, iterations: 5, conflictLimit: 1000, useCones: cones})
 			for mask := 0; mask < 16; mask++ {
 				in := make([]bool, 4)
 				for i := range in {
@@ -57,11 +57,29 @@ func TestCec2SweepMergesAssociativeAnds(t *testing.T) {
 		b := gia.Gia_ManAppendAnd(g, x, yz)
 		gia.Gia_ManAppendCo(g, a)
 		gia.Gia_ManAppendCo(g, b)
-		out, _ := cec2SweepEquivalences(g, cec2SweepSettings{words: 2, rounds: 1, iterations: 4, conflictLimit: 1000, useCones: cones})
+		out, _, _ := cec2SweepEquivalences(g, cec2SweepSettings{words: 2, rounds: 1, iterations: 4, conflictLimit: 1000, useCones: cones})
 		left, _, _, _ := out.Gate(gia.Gia_ObjId(out, gia.Gia_ManCo(out, 0)))
 		right, _, _, _ := out.Gate(gia.Gia_ObjId(out, gia.Gia_ManCo(out, 1)))
 		if left != right {
 			t.Fatalf("cones=%v equivalent nodes were not merged", cones)
+		}
+	}
+}
+
+func TestCec2SweepMiterWitness(t *testing.T) {
+	for _, cones := range []bool{false, true} {
+		g := gia.Gia_ManStart(16)
+		x, y := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
+		root := gia.Gia_ManAppendAnd(g, x, y)
+		gia.Gia_ManAppendCo(g, root)
+		_, _, cex := cec2SweepEquivalences(g, cec2SweepSettings{words: 2, rounds: 1, iterations: 4, conflictLimit: 1000, useCones: cones, isMiter: true})
+		if cex == nil || g.SequentialCounterexample() == nil {
+			t.Fatal("missing miter witness")
+		}
+		in := []bool{cex.PData[0]&1 != 0, cex.PData[0]&2 != 0}
+		out, err := g.Evaluate(in)
+		if err != nil || !out[cex.IPo] {
+			t.Fatalf("invalid witness %v: %v", in, err)
 		}
 	}
 }
