@@ -347,45 +347,6 @@ func Ga2_ManCnfAddDynamic(p *Ga2_Man_t, uTruth int32, Lits []int32, iLitOut int3
         }
     }
 }
-func Ga2_ManCnfAddStatic(pSat *sat_solver2, vCnf0 *Vec_Int_t, vCnf1 *Vec_Int_t, Lits []int32, iLitOut int32, ProofId int32) {
-    var vCnf *Vec_Int_t;
-    var i int32;
-    var k int32;
-    var b int32;
-    var Cube int32;
-    var Literal int32;
-    var nClaLits int32;
-    var ClaLits [6]int32;
-    for  i = 0; i < 2; i++  {
-        if i != 0 {
-            vCnf = vCnf1;
-        } else {
-            vCnf = vCnf0;
-        }
-        Vec_IntForEachEntry( vCnf, Cube, k )
-        {
-            nClaLits = 0;
-            ClaLits[nClaLits++] = i ? lit_neg(iLitOut) : iLitOut;
-            for  b = 0; b < 5; b++  {
-                Literal = 3 & (Cube >> (b << 1));
-                if Literal == 1 { // value 0 --> add positive literal
-                
-//                    assert( Lits[b] > 1 );
-                    ClaLits[nClaLits++] = Lits[b];
-                
-                } else if Literal == 2 { // value 1 --> add negative literal
-                
-//                    assert( Lits[b] > 1 );
-                    ClaLits[nClaLits++] = lit_neg(Lits[b]);
-                
-                } else if Literal != 0 {
-                    assert(false, "0"); }
-            }
-            sat_solver2_addclause( pSat, ClaLits, ClaLits+nClaLits, ProofId );
-        }
-    }
-}
-
 /**Function*************************************************************
 
   Synopsis    []
