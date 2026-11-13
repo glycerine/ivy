@@ -7,6 +7,7 @@ import (
 
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/proof/fracomb"
+	"github.com/glycerine/abcgo/proof/framgr"
 )
 
 // Fra_FraigSat checks a combinational miter with the shared FRA SAT implementation.
@@ -19,13 +20,7 @@ func Aig_ManCountXors(graph *aig.Graph) int32 { return fracomb.Aig_ManCountXors(
 
 // Fra_FraigCec runs ABC's SAT, rewriting and FRAIG sequence.
 func Fra_FraigCec(graph **aig.Graph, conflictLimit, verbose int32) int32 {
-	var params Fra_Par_t
-	Fra_ParamsDefault(&params)
-	params.fDontShowBar, params.fProve = 1, 1
-	return fracomb.Fra_FraigCec(graph, conflictLimit, verbose, func(g *aig.Graph, nodeLimit, miterLimit int32) *aig.Graph {
-		params.nBTLimitNode, params.nBTLimitMiter = nodeLimit, miterLimit
-		return Fra_FraigPerform(g, &params)
-	})
+	return fracomb.Fra_FraigCec(graph, conflictLimit, verbose, framgr.SweepForCEC)
 }
 
 // Fra_FraigCecPartitioned checks matching output partitions of two networks.
