@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/opt/dar"
 	"github.com/glycerine/abcgo/proof/cec/core"
 	"github.com/glycerine/abcgo/proof/dch"
@@ -56,18 +57,86 @@ func Cec_ManChoiceComputation_int(graph *Gia_Man_t, params *Cec_ParChc_t) int32 
 		params = new(Cec_ParChc_t)
 		Cec_ManChcSetDefaultParams(params)
 	}
-	sweep := new(Cec_ParFra_t)
-	Cec_ManFraSetDefaultParams(sweep)
-	sweep.nWords = params.nWords
-	sweep.nRounds = params.nRounds
-	sweep.nBTLimit = params.nBTLimit
-	reduced, err := SatSweep(graph, sweep)
-	params.Error = err
-	if reduced != nil {
-		gia.Gia_ManStop(reduced)
-	}
-	if err != nil {
+	params.Error = nil
+	if _, err := core.NewModel(graph); err != nil {
+		params.Error = err
 		return -1
+	}
+	if params.nWords <= 0 || params.nRounds < 0 || params.nBTLimit < 0 {
+		params.Error = fmt.Errorf("cec: invalid choice computation parameters")
+		return -1
+	}
+	for id := int32(0); int(id) < graph.ObjectCount(); id++ {
+		_, _, _, kind := graph.Gate(id)
+		if kind != core.Constant && kind != core.Input && kind != core.And && kind != core.Output {
+			params.Error = fmt.Errorf("cec: choice refinement requires an AND-inverter graph")
+			return -1
+		}
+	}
+	graph.ClearRepresentatives()
+	gia.Gia_ManRandom(1)
+	var simPars Cec_ParSim_t
+	Cec_ManSimSetDefaultParams(&simPars)
+	simPars.nWords, simPars.nFrames, simPars.fVerbose = params.nWords, params.nRounds, params.fVerbose
+	sim := Cec_ManSimStart(graph, &simPars)
+	defer Cec_ManSimStop(sim)
+	Cec_ManSimClassesPrepare(sim, -1)
+	Cec_ManSimClassesRefine(sim)
+	var satPars Cec_ParSat_t
+	Cec_ManSatSetDefaultParams(&satPars)
+	satPars.nBTLimit, satPars.fVerbose = params.nBTLimit, params.fVerbose
+	for round := 0; round < 1000; round++ {
+		var outputs *Vec_Int_t
+		query := Cec_ManCombSpecReduce(graph, &outputs, params.fUseRings)
+		if gia.Gia_ManCoNum(query) == 0 {
+			gia.Gia_ManStop(query)
+			break
+		}
+		var status *Vec_Str_t
+		var store *Vec_Int_t
+		if params.fUseCSat != 0 {
+			store = gia.Cbs_ManSolveMiterNc(query, params.nBTLimit, &status, 0, 0)
+		} else {
+			store = Cec_ManSatSolveMiter(query, &satPars, &status)
+		}
+		gia.Gia_ManStop(query)
+		if vec.Vec_IntSize(store) == 0 {
+			break
+		}
+		Cec_ManResimulateCounterExamplesComb(sim, store)
+		Gia_ManCheckRefinements(graph, status, outputs, sim, params.fUseRings)
+	}
+	// Speculative proofs may depend on earlier assumptions. Verify every
+	// surviving class on the original graph; discard false or unknown pairs.
+	opts := core.DefaultSATOptions()
+	opts.ConflictLimit, opts.TreatRegistersAsInputs = int64(params.nBTLimit), true
+	manager, err := core.NewManager(graph, opts)
+	if err != nil {
+		params.Error = err
+		return -1
+	}
+	phases, err := manager.Model().Values(make([]bool, len(graph.InputLiterals())))
+	if err != nil {
+		params.Error = err
+		return -1
+	}
+	for id := int32(1); int(id) < graph.ObjectCount(); id++ {
+		repr := gia.Gia_ObjRepr(graph, id)
+		if repr == gia.GIA_VOID {
+			continue
+		}
+		a, b := repr<<1, id<<1
+		if phases[repr] != phases[id] {
+			b ^= 1
+		}
+		result, e := manager.CheckPair(a, b)
+		if e != nil {
+			params.Error = e
+			return -1
+		}
+		if result.Status != core.Equivalent {
+			Cec_ManSimClassRemoveOne(sim, id)
+		}
 	}
 	return 0
 }
@@ -76,13 +145,35 @@ func Cec_ManChoiceComputationVec(graph *Gia_Man_t, snapshots int32, params *Cec_
 		params = new(Cec_ParChc_t)
 		Cec_ManChcSetDefaultParams(params)
 	}
-	options := cecChoiceParams(params)
-	result, err := ChoiceSnapshots(graph, int(snapshots), &options)
-	params.Error = err
-	if err != nil {
+	if graph == nil || snapshots <= 0 || gia.Gia_ManCoNum(graph)%snapshots != 0 || gia.Gia_ManRegNum(graph) > gia.Gia_ManCoNum(graph)/snapshots {
+		params.Error = fmt.Errorf("cec: invalid choice snapshot dimensions")
 		return nil
 	}
-	return gia.Gia_ManFromAig(result)
+	work := graph
+	var sourceIDs []int32
+	for id := int32(0); int(id) < graph.ObjectCount(); id++ {
+		_, _, _, kind := graph.Gate(id)
+		if kind == core.Xor || kind == core.Mux || kind == core.Buffer {
+			var err error
+			work, sourceIDs, _, err = cecLowerSweepGraph(graph)
+			if err != nil {
+				params.Error = err
+				return nil
+			}
+			defer gia.Gia_ManStop(work)
+			break
+		}
+	}
+	if Cec_ManChoiceComputation_int(work, params) != 0 {
+		return nil
+	}
+	if sourceIDs != nil {
+		if err := graph.TransferRepresentativesFrom(work, sourceIDs); err != nil {
+			params.Error = err
+			return nil
+		}
+	}
+	return gia.Gia_ManEquivToChoices(work, snapshots)
 }
 
 // Cec_ManChoiceComputation runs the original three-version DAR synthesis
@@ -106,14 +197,31 @@ func Cec_ManChoiceComputation(graph *Gia_Man_t, params *Cec_ParChc_t) *Gia_Man_t
 	return gia.Gia_ManFromAig(result)
 }
 func Cec_ComputeChoices(graph *Gia_Man_t, params *Dch_Pars_t) *Aig_Man_t {
-	result, err := ChoiceSnapshots(graph, 3, params)
-	if err != nil {
-		if params != nil && params.Verbose {
-			fmt.Printf("CEC choices: %v\n", err)
+	if params == nil {
+		defaults := dch.DefaultParams()
+		params = &defaults
+	}
+	var choice Cec_ParChc_t
+	Cec_ManChcSetDefaultParams(&choice)
+	choice.nBTLimit = int32(params.ConflictLimit)
+	if params.UseCSat {
+		choice.fUseCSat = 1
+		if choice.nBTLimit > 100 {
+			choice.nBTLimit = 100
+		}
+	}
+	if params.Verbose {
+		choice.fVerbose = 1
+	}
+	result := Cec_ManChoiceComputationVec(graph, 3, &choice)
+	if result == nil {
+		if params.Verbose {
+			fmt.Printf("CEC choices: %v\n", choice.Error)
 		}
 		return nil
 	}
-	return result
+	defer gia.Gia_ManStop(result)
+	return gia.Gia_ManToAig(result, 1)
 }
 func Cec_ComputeChoicesNew(graph *Gia_Man_t, verbose int32) *Aig_Man_t {
 	params := dch.DefaultParams()

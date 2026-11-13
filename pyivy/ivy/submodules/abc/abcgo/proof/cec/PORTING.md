@@ -85,3 +85,18 @@ individual SAT or FRAIG call can run beyond that limit. Tests compare selected
 cases with the original ABC executable and force the unresolved sweep branch
 through the genuine FRA fallback. They do not establish equivalence for every
 network or exercise every internal FRAIG path.
+
+## Choice computation
+
+The vector choice driver now follows `cecChoice.c`: simulation, ring or direct
+speculative queries, the selected SAT or circuit-SAT backend, counterexample
+resimulation, and equivalence-to-choice reconstruction. Each remaining class
+is independently checked against the original graph before reconstruction;
+unknown or false pairs are removed. Native gates are lowered for this path and
+validated classes are mapped back to the input graph. `Cec_ComputeChoices`
+uses the vector path and the source's circuit-SAT conflict cap.
+
+`Cec_ComputeChoicesNew` still delegates to the vector driver rather than the
+Cec4-specific source path. The internal `Cec_ManChoiceComputation_int` entry
+point requires AND-inverter inputs; the public vector driver lowers native
+gates first.
