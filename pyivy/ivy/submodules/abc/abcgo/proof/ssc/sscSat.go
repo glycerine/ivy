@@ -218,8 +218,7 @@ func Ssc_ManFindPivotSat(p *Ssc_Man_t) ([]bool, int) {
 	if p.inconsistent {
 		return nil, satoko.SATOKO_UNSAT
 	}
-	p.sat.SetLimits(int64(p.Params.BTLimit), 0)
-	status := sscStatus(p.sat.Solve())
+	status := sscStatus(p.sat.SolveWithSourceLimits(nil, int64(p.Params.BTLimit), 0, 0, 0))
 	if status != satoko.SATOKO_SAT {
 		return nil, status
 	}
@@ -244,9 +243,8 @@ func Ssc_ManCheckEquivalence(p *Ssc_Man_t, repr, node, complement int32) int {
 		sign ^= 1
 	}
 	literals := [2]bsat.Literal{2 * p.satVar(repr), 2*p.satVar(node) + sign}
-	p.sat.SetLimits(int64(p.Params.BTLimit), 0)
 	for phase := 0; phase < 2; phase++ {
-		status := sscStatus(p.sat.Solve(literals[:]...))
+		status := sscStatus(p.sat.SolveWithSourceLimits(literals[:], int64(p.Params.BTLimit), 0, 0, 0))
 		switch status {
 		case satoko.SATOKO_SAT:
 			p.Pattern = p.pattern()

@@ -325,6 +325,40 @@ func TestStartAcceptsInactiveRecycleOptions(t *testing.T) {
 	}
 }
 
+// The original sat_solver_solve accepts signed limits. A compiled C SSC
+// oracle returns unknown for this satisfiable care when nBTLimit is -1.
+func TestNegativeConflictLimitReturnsSourceUnknown(t *testing.T) {
+	subject := newBuilder(1, 5)
+	gia.Gia_ManAppendCo(subject.graph, subject.graph.InputLiterals()[0])
+	care := newBuilder(1, 5)
+	gia.Gia_ManAppendCo(care.graph, 0)
+	params := DefaultParams()
+	params.BTLimit = -1
+	p, status := Ssc_ManStart(subject.graph, care.graph, &params)
+	if p != nil || status != satoko.SATOKO_UNDEC {
+		t.Fatalf("manager=%v status=%d; want source unknown", p, status)
+	}
+	result := Ssc_PerformSweeping(subject.graph, care.graph, &params)
+	for _, value := range []bool{false, true} {
+		out, err := result.Evaluate([]bool{value})
+		if err != nil || len(out) != 1 || out[0] != value {
+			t.Fatalf("input=%v output=%v err=%v", value, out, err)
+		}
+	}
+}
+
+func TestNegativeConflictLimitStillDetectsRootUnsatCare(t *testing.T) {
+	subject := newBuilder(1, 5)
+	care := newBuilder(1, 5)
+	gia.Gia_ManAppendCo(care.graph, 1)
+	params := DefaultParams()
+	params.BTLimit = -1
+	p, status := Ssc_ManStart(subject.graph, care.graph, &params)
+	if p != nil || status != satoko.SATOKO_UNSAT {
+		t.Fatalf("manager=%v status=%d; want UNSAT", p, status)
+	}
+}
+
 func TestStartUnsatisfiableCareDoesNotReturnManager(t *testing.T) {
 	subject := newBuilder(1, 5)
 	care := newBuilder(1, 5)

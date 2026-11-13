@@ -26,7 +26,7 @@ func Ssc_ManStart(subject, care *gia.Gia_Man_t, params *Ssc_Pars_t) (*Ssc_Man_t,
 	}
 	// SatVarMax and CallsRecycle are printed by the compiled C implementation
 	// but do not control its solver or have validity checks.
-	if v.NWords < 1 || v.BTLimit < 0 {
+	if v.NWords < 1 {
 		panic("ssc: invalid parameters")
 	}
 	fraig := &builder{graph: gia.Gia_ManDupDfs(care), sourceHash: true}
