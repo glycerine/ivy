@@ -8,10 +8,11 @@ import (
 )
 
 func sswReduction(before, after int32) float64 {
-	if before == 0 {
-		return 0
+	denominator := before
+	if denominator == 0 {
+		denominator = 1
 	}
-	return 100 * float64(before-after) / float64(before)
+	return 100 * float64(before-after) / float64(denominator)
 }
 func Ssw_ManPrintStats(p *Ssw_Man_t) {
 	memory := float64(len(p.pAig.Nodes())) * float64(p.nFrames) * (2*4 + 2*strconv.IntSize/8) / (1 << 20)
