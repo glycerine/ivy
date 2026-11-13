@@ -1,8 +1,13 @@
 package core
+
 import (
 	"context"
-	"github.com/glycerine/abcgo/aig/aig"
+	"errors"
 	"testing"
+	"time"
+
+	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/misc/tim"
 )
 
 func TestBalanceDeepCone(t *testing.T) {
@@ -38,6 +43,109 @@ func TestBalanceDeepCone(t *testing.T) {
 	}
 	if g.Node(root).Level != before {
 		t.Fatal("input mutated")
+	}
+}
+
+func TestBalanceTimingMetadataIsCopiedAndUpdatedOnDestination(t *testing.T) {
+	g := aig.NewGraph()
+	a, b, c := g.NewInput(), g.NewInput(), g.NewInput()
+	root := g.AND(g.AND(a, b), c)
+	g.AddOutput(root)
+	manager := tim.Tim_ManStart(3, 1)
+	tim.Tim_ManInitPiArrival(manager, 0, 4)
+	tim.Tim_ManInitPiArrival(manager, 1, 1)
+	tim.Tim_ManInitPiArrival(manager, 2, 0)
+	tim.Tim_ManIncrementTravId(manager)
+	tim.Tim_ManSetCoArrival(manager, 0, 99)
+	g.Timing = manager
+
+	balanced, err := Balance(context.Background(), g, false)
+	if err != nil {
+		t.Fatal(err)
+	}
+	got, ok := balanced.Timing.(*tim.Tim_Man_t)
+	if !ok || got == manager {
+		t.Fatalf("timing manager was not duplicated: %T", balanced.Timing)
+	}
+	for i, want := range []int{4, 1, 0} {
+		if level := balanced.Node(balanced.Inputs()[i]).Level; level != want {
+			t.Fatalf("timed CI %d level=%d want %d", i, level, want)
+		}
+	}
+	if gotTime := tim.Tim_ManGetCoArrival(got, 0); gotTime != float32(balanced.Node(balanced.Node(balanced.Outputs()[0]).Fanins[0]).Level) {
+		t.Fatalf("destination CO arrival=%v", gotTime)
+	}
+	if sourceTime := tim.Tim_ManGetCoArrival(manager, 0); sourceTime != 99 {
+		t.Fatalf("source timing metadata mutated: %v", sourceTime)
+	}
+}
+
+func TestBalanceBarrierOrderAndInputLevel(t *testing.T) {
+	g := aig.NewGraph()
+	a, b, c := g.NewInput(), g.NewInput(), g.NewInput()
+	g.NewInput()
+	g.AddOutput(g.AND(a, b))
+	g.AddOutput(g.AND(g.AND(a, b), c))
+	g.BarrierBuffers = 1
+	balanced, err := Balance(context.Background(), g, false)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := balanced.Node(balanced.Inputs()[3]).Level; got != 2 {
+		t.Fatalf("barrier CI level=%d want %d", got, 2)
+	}
+	for mask := 0; mask < 16; mask++ {
+		values := make([]bool, 4)
+		for i := range values {
+			values[i] = mask&(1<<i) != 0
+		}
+		before, _ := g.Evaluate(values)
+		after, _ := balanced.Evaluate(values)
+		if before[0] != after[0] || before[1] != after[1] {
+			t.Fatalf("barrier output order/function changed for input mask %04b", mask)
+		}
+	}
+}
+
+func TestBalanceReusesPreviouslyBuiltSharedPair(t *testing.T) {
+	g := aig.NewGraph()
+	a, b, c, d := g.NewInput(), g.NewInput(), g.NewInput(), g.NewInput()
+	g.AddOutput(g.AND(a, b))
+	g.AddOutput(g.AND(g.AND(a, c), g.AND(b, d)))
+
+	balanced, err := Balance(context.Background(), g, false)
+	if err != nil {
+		t.Fatal(err)
+	}
+	shared := balanced.Node(balanced.Outputs()[0]).Fanins[0]
+	var containsShared func(aig.Edge) bool
+	containsShared = func(edge aig.Edge) bool {
+		if edge.NodeID() == shared.NodeID() {
+			return true
+		}
+		n := balanced.Node(edge)
+		return (n.Kind == aig.And || n.Kind == aig.ExclusiveOr) && (containsShared(n.Fanins[0]) || containsShared(n.Fanins[1]))
+	}
+	second := balanced.Node(balanced.Outputs()[1]).Fanins[0]
+	if !containsShared(second) {
+		t.Fatal("balanced second cone did not reuse the first output's pair")
+	}
+}
+
+func TestBalanceChecksDeadlineDuringLargeTraversal(t *testing.T) {
+	g := aig.NewGraph()
+	inputs := make([]aig.Edge, 260)
+	for i := range inputs {
+		inputs[i] = g.NewInput()
+	}
+	root := inputs[0]
+	for _, e := range inputs[1:] {
+		root = g.AND(root, e)
+	}
+	g.AddOutput(root)
+	g.Time2Quit = time.Now().Add(-time.Second)
+	if _, err := Balance(context.Background(), g, false); !errors.Is(err, context.DeadlineExceeded) {
+		t.Fatalf("deadline error=%v", err)
 	}
 }
 func TestBalanceLiterals(t *testing.T) {

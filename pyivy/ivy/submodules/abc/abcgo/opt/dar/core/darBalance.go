@@ -1,4 +1,5 @@
 package core
+
 import (
 	"context"
 	"fmt"
@@ -18,33 +19,7 @@ func Balance(ctx context.Context, g *aig.Graph, updateLevel bool) (*aig.Graph, e
 	if err := g.Check(); err != nil {
 		return nil, err
 	}
-	result := aig.Aig_ManDupDfs(g)
-	for _, root := range result.LiveEdges() {
-		if ctx != nil {
-			if err := ctx.Err(); err != nil {
-				return nil, err
-			}
-		}
-		if !result.ValidEdge(root) || result.Node(root).Kind != aig.And && result.Node(root).Kind != aig.ExclusiveOr {
-			continue
-		}
-		kind := result.Node(root).Kind
-		leaves := balanceConeKind(result, root, kind)
-		if len(leaves) < 3 {
-			continue
-		}
-		replacement := balanceBuildKind(result, leaves, kind)
-		if replacement.NodeID() == root.NodeID() || graphDependsOn(result, replacement, root) {
-			continue
-		}
-		if updateLevel && result.Node(replacement).Level > result.Node(root).Level {
-			continue
-		}
-		aig.Aig_ObjReplace(result, root, replacement, 0)
-		aig.Aig_ManCleanup(result)
-	}
-	result = aig.Aig_ManDupDfs(result)
-	return result, result.Check()
+	return balanceRecursive(ctx, g, updateLevel)
 }
 func Dar_ManBalance(g *aig.Graph, updateLevel bool) *aig.Graph {
 	balanced, err := Balance(context.Background(), g, updateLevel)
