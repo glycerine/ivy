@@ -5,6 +5,46 @@ import (
 	"testing"
 )
 
+func TestSimpRejectsEliminatedAssumptionWithoutPreprocessing(t *testing.T) {
+	for _, turnOff := range []bool{false, true} {
+		s := NewSimpSolver()
+		s.NewVar(true, true)
+		s.NewVar(true, true)
+		s.SetFrozen(1, true)
+		s.AddClause([]Lit{0, 2})
+		if !s.Eliminate(turnOff) || !s.IsEliminated(0) {
+			t.Fatal("expected eliminated variable")
+		}
+		func() {
+			defer func() {
+				if recover() == nil {
+					t.Errorf("turnOff=%v: eliminated assumption accepted", turnOff)
+				}
+			}()
+			s.SolveLimited([]Lit{1}, false, false)
+		}()
+		if s.SolveLimited([]Lit{2}, false, false) != LTrue {
+			t.Fatal("solver unusable after rejected assumption")
+		}
+	}
+}
+
+func TestSimpRejectsInvalidSubstitutionBeforeMutation(t *testing.T) {
+	s := NewSimpSolver()
+	s.NewVar(true, true)
+	func() {
+		defer func() {
+			if recover() == nil {
+				t.Error("invalid replacement accepted")
+			}
+		}()
+		s.Substitute(0, MkLit(5, false))
+	}()
+	if s.IsEliminated(0) {
+		t.Fatal("invalid substitution modified solver")
+	}
+}
+
 func TestSimpSolverRandomCNF(t *testing.T) {
 	rng := rand.New(rand.NewSource(8231))
 	for trial := 0; trial < 1500; trial++ {

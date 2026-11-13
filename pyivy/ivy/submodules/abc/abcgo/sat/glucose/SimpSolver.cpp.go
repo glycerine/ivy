@@ -231,6 +231,9 @@ func (s *SimpSolver) Substitute(v Var, x Lit) bool {
 	if !s.ok {
 		return false
 	}
+	if !s.useSimplification || v < 0 || int(v) >= s.NVars() || x < 0 || int(x.Var()) >= s.NVars() || s.eliminated[x.Var()] {
+		panic("invalid substitution")
+	}
 	if s.frozen[v] || s.eliminated[v] || !s.ValueVar(v).IsUndef() || x.Var() == v {
 		panic("invalid substitution")
 	}

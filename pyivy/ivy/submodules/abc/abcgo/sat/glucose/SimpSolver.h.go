@@ -206,6 +206,14 @@ func (s *SimpSolver) Solve(assumptions []Lit) bool {
 
 // SolveLimited optionally runs preprocessing and can permanently turn it off.
 func (s *SimpSolver) SolveLimited(assumptions []Lit, options ...bool) LBool {
+	for _, p := range assumptions {
+		if p < 0 || int(p.Var()) >= s.NVars() {
+			panic("assumption variable out of range")
+		}
+		if s.eliminated[p.Var()] {
+			panic("assumption variable already eliminated")
+		}
+	}
 	doSimp, turnOff := true, false
 	if len(options) > 0 {
 		doSimp = options[0]
@@ -218,9 +226,6 @@ func (s *SimpSolver) SolveLimited(assumptions []Lit, options ...bool) LBool {
 	if doSimp {
 		for _, p := range assumptions {
 			v := p.Var()
-			if s.eliminated[v] {
-				panic("assumption variable already eliminated")
-			}
 			if !s.frozen[v] {
 				s.SetFrozen(v, true)
 				extraFrozen = append(extraFrozen, v)
