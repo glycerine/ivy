@@ -15,14 +15,11 @@ func Msat_QueueAlloc(n int) *Msat_Queue_t {
 func Msat_QueueFree(p *Msat_Queue_t)         { p.data = nil; p.head = 0 }
 func Msat_QueueReadSize(p *Msat_Queue_t) int { return len(p.data) - p.head }
 func Msat_QueueInsert(p *Msat_Queue_t, lit int) {
-	if lit < 0 {
-		panic("negative literal")
-	}
+	assert(len(p.data) < cap(p.data), "queue has space")
 	p.data = append(p.data, lit)
 }
 func Msat_QueueExtract(p *Msat_Queue_t) int {
 	if p.head == len(p.data) {
-		Msat_QueueClear(p)
 		return -1
 	}
 	lit := p.data[p.head]
