@@ -31,7 +31,7 @@ func Acec_OrderTreeRoots(p *Gia_Man_t, adds, roots, ranks *Vec_Int_t) *Vec_Int_t
 	n := vec.Vec_IntSize(roots)
 	order := vec.Vec_IntAlloc(n)
 	if n == 0 {
-		return order
+		panic("acec: root ordering requires an XOR chain")
 	}
 	move := vec.Vec_IntStartFull(n)
 	for i := 0; 6*i < vec.Vec_IntSize(adds); i++ {

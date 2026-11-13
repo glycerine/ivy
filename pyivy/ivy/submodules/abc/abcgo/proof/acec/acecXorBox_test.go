@@ -9,9 +9,12 @@ func TestProduceBoxWithoutXors(t *testing.T) {
 	p := gia.Gia_ManStart(8)
 	a := gia.Gia_ManAppendCi(p)
 	gia.Gia_ManAppendCo(p, a)
-	if box := Acec_ProduceBox(p, 0); box != nil {
-		t.Fatal("unexpected box")
-	}
+	defer func() {
+		if recover() == nil {
+			t.Fatal("expected C zero-root assertion")
+		}
+	}()
+	Acec_ProduceBox(p, 0)
 }
 
 func TestProduceBoxReconstruction(t *testing.T) {

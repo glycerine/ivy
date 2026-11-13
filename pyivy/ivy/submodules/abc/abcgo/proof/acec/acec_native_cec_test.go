@@ -18,18 +18,14 @@ func nativeMuxFixture(invert bool) *Gia_Man_t {
 	gia.Gia_ManAppendCo(p, m)
 	return p
 }
-func TestSolveNativeMuxFallback(t *testing.T) {
-	for _, invert := range []bool{false, true} {
-		a, b := nativeMuxFixture(false), nativeMuxFixture(invert)
-		pars := &Acec_ParCec_t{}
-		Acec_ManCecSetDefaultParams(pars)
-		got := Acec_Solve(a, b, pars)
-		want := int32(1)
-		if invert {
-			want = 0
+func TestSolveNativeMuxWithoutXorRootsViolatesSourcePrecondition(t *testing.T) {
+	a, b := nativeMuxFixture(false), nativeMuxFixture(true)
+	var pars Acec_ParCec_t
+	Acec_ManCecSetDefaultParams(&pars)
+	defer func() {
+		if recover() == nil {
+			t.Fatal("missing source root-ordering assertion")
 		}
-		if got != want {
-			t.Fatalf("invert %v: got %d want %d", invert, got, want)
-		}
-	}
+	}()
+	Acec_Solve(a, b, &pars)
 }

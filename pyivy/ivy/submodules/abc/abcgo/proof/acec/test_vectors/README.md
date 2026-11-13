@@ -31,6 +31,11 @@ matching boxes.
 polarity, matching the precondition enforced by the Go port. Build it with the
 same commands, substituting its filename.
 
+`acec_zero_roots.c` invokes `Acec_ProduceBox` on a single-input buffer graph.
+With assertions enabled, ABC aborts in `Acec_OrderTreeRoots` because no XOR
+root exists; the Go test checks the corresponding panic. Build it with the
+same commands, substituting its filename.
+
 `abc_acec_results.txt` records the ABC CLI differential cases; set
 `go test -run TestABCDifferential ./proof/acec` always compares Go against the
 recorded results. Set `ABC_BINARY` to the absolute path of the compiled ABC

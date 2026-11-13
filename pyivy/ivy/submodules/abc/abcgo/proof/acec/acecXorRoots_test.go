@@ -30,8 +30,10 @@ func TestXorRootRankingAndSmallOrders(t *testing.T) {
 	if vec.Vec_IntSize(order) != 1 || vec.Vec_IntEntry(order, 0) != 8 {
 		t.Fatalf("single root order %v", vec.Vec_IntArray(order))
 	}
-	empty := Acec_OrderTreeRoots(p, adds, vec.Vec_IntAlloc(0), ranks)
-	if vec.Vec_IntSize(empty) != 0 {
-		t.Fatal("nonempty empty order")
-	}
+	defer func() {
+		if recover() == nil {
+			t.Fatal("empty roots must violate C source assertion")
+		}
+	}()
+	Acec_OrderTreeRoots(p, adds, vec.Vec_IntAlloc(0), ranks)
 }

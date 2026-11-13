@@ -3,8 +3,6 @@ package acec
 import (
 	"reflect"
 	"testing"
-
-	"github.com/glycerine/abcgo/aig/gia"
 )
 
 // The source initializer overwrites every field, not just the conflict limit.
@@ -32,17 +30,11 @@ func TestSourceSolveIgnoresInactiveOptions(t *testing.T) {
 		{"very_verbose", func(p *Acec_ParCec_t) { p.fVeryVerbose = 1 }},
 	} {
 		t.Run(mutate.name, func(t *testing.T) {
-			makeGraph := func() *Gia_Man_t {
-				g := gia.Gia_ManStart(4)
-				x := gia.Gia_ManAppendCi(g)
-				gia.Gia_ManAppendCo(g, x)
-				return g
-			}
 			var pars Acec_ParCec_t
 			Acec_ManCecSetDefaultParams(&pars)
 			mutate.set(&pars)
 			before := pars
-			if got := Acec_Solve(makeGraph(), makeGraph(), &pars); got != 1 {
+			if got := Acec_Solve(reviewAdderChain(-1), reviewAdderChain(-1), &pars); got != 1 {
 				t.Fatalf("identical graphs: status %d", got)
 			}
 			if pars != before {

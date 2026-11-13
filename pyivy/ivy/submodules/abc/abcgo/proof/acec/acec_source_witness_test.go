@@ -8,18 +8,12 @@ import (
 // Acec_Solve swaps the old witness with the miter's witness only when miter
 // construction succeeds; ABC leaves it untouched when construction fails.
 func TestSourceSolveWitnessOnMiterFailureAndProof(t *testing.T) {
-	graph := func(extraOutput bool) *Gia_Man_t {
-		g := gia.Gia_ManStart(8)
-		x := gia.Gia_ManAppendCi(g)
-		gia.Gia_ManAppendCo(g, x)
-		if extraOutput {
-			gia.Gia_ManAppendCo(g, x)
-		}
-		return g
-	}
 	for _, mismatch := range []bool{true, false} {
-		a, b := graph(false), graph(mismatch)
-		if err := a.SetCombinationalCounterexample([]bool{true}, 0); err != nil {
+		a, b := reviewAdderChain(-1), reviewAdderChain(-1)
+		if mismatch {
+			gia.Gia_ManAppendCo(b, 0)
+		}
+		if err := a.SetCombinationalCounterexample([]bool{true, false, false, false, false}, 0); err != nil {
 			t.Fatal(err)
 		}
 		old := a.CombinationalCounterexample()

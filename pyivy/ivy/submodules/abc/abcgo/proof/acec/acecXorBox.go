@@ -141,9 +141,6 @@ func Acec_ProduceBox(p *Gia_Man_t, verbose int32) *Acec_Box_t {
 	var xors *Vec_Int_t
 	adds := Ree_ManComputeCuts(p, &xors, 0)
 	roots := Acec_FindXorRoots(p, xors)
-	if vec.Vec_IntSize(roots) == 0 {
-		return nil
-	}
 	ranks := Acec_RankTrees(p, xors, roots)
 	gia.Gia_ManLevelNum(p)
 	if verbose != 0 {
