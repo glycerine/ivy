@@ -17,6 +17,9 @@ func Gia_ManPerformGla(g *gia.Gia_Man_t, pars *Abs_Par_t) int32 {
 	if g == nil || pars == nil || gia.Gia_ManPoNum(g) != 1 {
 		panic("abs: GLA requires one output")
 	}
+	if pars.nTimeOut != 0 {
+		defer absPinClockThread()()
+	}
 	if glaOldHasSpecialGates(g) {
 		return glaPerformLowered(g, pars, false, func(lowered *gia.Gia_Man_t) int32 {
 			return Gia_ManPerformGla(lowered, pars)
@@ -80,7 +83,7 @@ func Gia_ManPerformGla(g *gia.Gia_Man_t, pars *Abs_Par_t) int32 {
 		}
 	}
 	for !stopped {
-		if pars.nTimeOut > 0 && time.Since(start) >= time.Duration(pars.nTimeOut)*time.Second {
+		if p.cpuDeadline != 0 && absCPUClock() > p.cpuDeadline {
 			break
 		}
 		pars.iFrame = -1
@@ -88,7 +91,7 @@ func Gia_ManPerformGla(g *gia.Gia_Man_t, pars *Abs_Par_t) int32 {
 		oldAbs := vec.Vec_IntSize(p.vAbs)
 		restart := false
 		for frame := int32(0); pars.nFramesMax == 0 || frame < pars.nFramesMax; frame++ {
-			if pars.nTimeOut > 0 && time.Since(start) >= time.Duration(pars.nTimeOut)*time.Second {
+			if p.cpuDeadline != 0 && absCPUClock() > p.cpuDeadline {
 				stopped = true
 				break
 			}

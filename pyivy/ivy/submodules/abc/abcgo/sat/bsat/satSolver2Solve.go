@@ -1,7 +1,5 @@
 package bsat
 
-import "time"
-
 func sat_solver2_solve(s *sat_solver2, assumptions []lit, conflicts, propagations, globalConflicts, globalPropagations int64) int32 {
 	for _, l := range assumptions {
 		if lit_check(l, s.size) == 0 {
@@ -69,7 +67,7 @@ func sat_solver2_solve(s *sat_solver2, assumptions []lit, conflicts, propagation
 		if status != l_Undef {
 			break
 		}
-		if s.nConfLimit != 0 && s.stats.conflicts > s.nConfLimit || s.nInsLimit != 0 && s.stats.propagations > s.nInsLimit || s.nRuntimeLimit != 0 && time.Now().UnixNano() > s.nRuntimeLimit {
+		if s.nConfLimit != 0 && s.stats.conflicts > s.nConfLimit || s.nInsLimit != 0 && s.stats.propagations > s.nInsLimit || s.runtimeExpired() {
 			break
 		}
 	}

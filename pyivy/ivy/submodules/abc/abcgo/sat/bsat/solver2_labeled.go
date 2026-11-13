@@ -47,6 +47,9 @@ func (p *LabeledSolver2) SetLimits(conflicts, propagations int64) {
 	p.solver.SetLimits(conflicts, propagations)
 }
 func (p *LabeledSolver2) SetDeadline(deadline time.Time) { p.solver.SetDeadline(deadline) }
+func (p *LabeledSolver2) SetRuntimeDeadline(clock func() int64, deadline int64) {
+	p.solver.SetRuntimeDeadline(clock, deadline)
+}
 
 // ProofCore returns caller IDs that contributed to the UNSAT result. After a
 // bookmark, only clauses added since that bookmark are reported; earlier

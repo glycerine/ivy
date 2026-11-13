@@ -4,7 +4,6 @@ import (
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/sat/bsat"
-	"time"
 )
 
 // Ga2_ManRestart reinitializes the solver around the current abstraction map.
@@ -24,8 +23,8 @@ func Ga2_ManRestart(p *Ga2_Man_t) {
 	Ga2_ManAddToAbs(p, add)
 	p.LimAbs = int32(vec.Vec_IntSize(p.vAbs))
 	p.LimPpi = int32(vec.Vec_IntSize(p.vValues))
-	if p.pPars.nTimeOut != 0 {
-		p.pSat.SetDeadline(time.Unix(0, p.timeStart).Add(time.Duration(p.pPars.nTimeOut) * time.Second))
+	if p.cpuDeadline != 0 {
+		p.pSat.SetRuntimeDeadline(absCPUClock, p.cpuDeadline)
 	}
 	clear(p.pTable)
 }

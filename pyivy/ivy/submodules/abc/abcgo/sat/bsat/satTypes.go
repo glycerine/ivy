@@ -83,9 +83,10 @@ type sat_solver_t struct {
 	nLearntRatio int32 // ratio percentage of learned clauses
 	nDBreduces   int32 // number of DB reductions
 
-	nConfLimit    ABC_INT64_T // external limit on the number of conflicts
-	nInsLimit     ABC_INT64_T // external limit on the number of implications
-	nRuntimeLimit abctime     // external limit on runtime
+	nConfLimit    ABC_INT64_T  // external limit on the number of conflicts
+	nInsLimit     ABC_INT64_T  // external limit on the number of implications
+	nRuntimeLimit abctime      // external limit on runtime
+	runtimeClock  func() int64 // nil selects the existing wall clock
 
 	act_vars             veci      // variables whose activity has changed
 	factors              []float64 // the activity factors

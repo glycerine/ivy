@@ -14,6 +14,9 @@ func Ga2_ManStart(g *gia.Gia_Man_t, pars *Abs_Par_t) *Ga2_Man_t {
 		panic("abs: missing GLA inputs")
 	}
 	p := &Ga2_Man_t{pGia: g, pPars: pars, timeStart: time.Now().UnixNano(), fUseNewLine: 1}
+	if pars.nTimeOut != 0 {
+		p.cpuDeadline = absCPUClock() + int64(pars.nTimeOut)*int64(time.Second)
+	}
 	p.nMarked = Ga2_ManMarkup(g, 5, pars.fUseSimple)
 	p.vCnfs = []*vec.Vec_Int_t{vec.Vec_IntAlloc(0), vec.Vec_IntAlloc(0)}
 	p.vIds = vec.Vec_IntStartFull(int(gia.Gia_ManObjNum(g)))

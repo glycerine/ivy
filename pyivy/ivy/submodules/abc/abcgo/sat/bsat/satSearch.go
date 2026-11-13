@@ -3,7 +3,6 @@ package bsat
 import (
 	"fmt"
 	"math"
-	"time"
 )
 
 func sat_solver_count_assigned(s *sat_solver) int32 {
@@ -96,7 +95,7 @@ func sat_solver_search(s *sat_solver, budget int64) int32 {
 			act_clause_decay(s)
 			continue
 		}
-		runtimeReached := s.nRuntimeLimit != 0 && s.stats.conflicts&63 == 0 && time.Now().UnixNano() > s.nRuntimeLimit
+		runtimeReached := s.stats.conflicts&63 == 0 && s.runtimeExpired()
 		if s.fNoRestarts == 0 && budget >= 0 && conflictCount >= budget || runtimeReached || s.nConfLimit != 0 && s.stats.conflicts > s.nConfLimit || s.nInsLimit != 0 && s.stats.propagations > s.nInsLimit {
 			s.progress_estimate = sat_solver_progress(s)
 			sat_solver_canceluntil(s, s.root_level)
@@ -137,7 +136,7 @@ func sat_solver_solve_internal(s *sat_solver) int32 {
 		fmt.Println("==============================[MINISAT]==============================")
 	}
 	for status == l_Undef {
-		if s.nRuntimeLimit != 0 && time.Now().UnixNano() > s.nRuntimeLimit {
+		if s.runtimeExpired() {
 			break
 		}
 		if s.verbosity >= 1 {
@@ -146,7 +145,7 @@ func sat_solver_solve_internal(s *sat_solver) int32 {
 		budget := int64(100 * luby(2, restart))
 		restart++
 		status = sat_solver_search(s, budget)
-		if s.nConfLimit != 0 && s.stats.conflicts > s.nConfLimit || s.nInsLimit != 0 && s.stats.propagations > s.nInsLimit || s.nRuntimeLimit != 0 && time.Now().UnixNano() > s.nRuntimeLimit || s.pFuncStop != nil && s.pFuncStop(s.RunId) != 0 {
+		if s.nConfLimit != 0 && s.stats.conflicts > s.nConfLimit || s.nInsLimit != 0 && s.stats.propagations > s.nInsLimit || s.runtimeExpired() || s.pFuncStop != nil && s.pFuncStop(s.RunId) != 0 {
 			break
 		}
 	}

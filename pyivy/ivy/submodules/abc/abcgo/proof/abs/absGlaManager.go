@@ -26,6 +26,7 @@ type Ga2_Man_t struct {
 	pSopSizes                                                   []byte
 	pSops                                                       [][]byte
 	timeStart, timeInit, timeSat, timeUnsat, timeCex, timeOther int64
+	cpuDeadline                                                 int64
 }
 
 func Ga2_ObjId(p *Ga2_Man_t, o *gia.Gia_Obj_t) int32 {

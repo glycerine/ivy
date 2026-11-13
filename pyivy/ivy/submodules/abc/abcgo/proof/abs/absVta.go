@@ -71,7 +71,7 @@ type Vta_Man_t struct {
 	nSeenAll  int32          // seen objects in all frames
 	// other data
 	vCores    *vec.Vec_Ptr_t // unsat core for each frame
-	deadline  time.Time
+	deadline  int64
 	pSat      *bsat.LabeledSolver2 // incremental SAT solver
 	vAddedNew *vec.Vec_Int_t       // the IDs of variables added to the solver
 	// statistics
@@ -1454,6 +1454,9 @@ func Gia_VtaPrintMemory(p *Vta_Man_t) {
 **********************************************************************
 */
 func Gia_VtaPerformInt(pAig *gia.Gia_Man_t, pPars *Abs_Par_t) int32 {
+	if pPars.nTimeOut != 0 {
+		defer absPinClockThread()()
+	}
 	var p *Vta_Man_t
 	var vCore *vec.Vec_Int_t
 	var pCex *util.Abc_Cex_t = nil
@@ -1502,8 +1505,8 @@ func Gia_VtaPerformInt(pAig *gia.Gia_Man_t, pPars *Abs_Par_t) int32 {
 	p = Vga_ManStart(pAig, pPars)
 	// set runtime limit
 	if p.pPars.nTimeOut != 0 {
-		p.deadline = time.Now().Add(time.Duration(p.pPars.nTimeOut) * time.Second)
-		p.pSat.SetDeadline(p.deadline)
+		p.deadline = absCPUClock() + int64(p.pPars.nTimeOut)*int64(time.Second)
+		p.pSat.SetRuntimeDeadline(absCPUClock, p.deadline)
 	}
 	// perform initial abstraction
 	if p.pPars.fVerbose != 0 {
@@ -1551,7 +1554,7 @@ func Gia_VtaPerformInt(pAig *gia.Gia_Man_t, pPars *Abs_Par_t) int32 {
 				goto finish
 			}
 			// check timeout
-			if !p.deadline.IsZero() && time.Now().After(p.deadline) {
+			if p.deadline != 0 && absCPUClock() > p.deadline {
 				Vga_ManRollBack(p, nObjOld)
 				goto finish
 			}
@@ -1659,7 +1662,7 @@ finish:
 			gia.Gia_ManSetObjClasses(pAig, nil)
 			gia.Gia_ManSetObjClasses(pAig, Gia_VtaFramesToAbs(p.vCores))
 			if Status == -1 {
-				if !p.deadline.IsZero() && !time.Now().Before(p.deadline) {
+				if p.deadline != 0 && absCPUClock() >= p.deadline {
 					util.Abc_Print(1, "Timeout %d sec in frame %d with a %d-stable abstraction.    ", p.pPars.nTimeOut, f, p.pPars.nFramesNoChange)
 				} else if pPars.nConfLimit != 0 && int32(p.pSat.Statistics().Conflicts) >= pPars.nConfLimit {
 					util.Abc_Print(1, "Exceeded %d conflicts in frame %d with a %d-stable abstraction.  ", pPars.nConfLimit, f, p.pPars.nFramesNoChange)

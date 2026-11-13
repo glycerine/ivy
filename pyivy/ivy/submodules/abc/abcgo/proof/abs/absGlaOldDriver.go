@@ -20,6 +20,9 @@ func Gia_ManPerformGlaOld(graph *gia.Gia_Man_t, pars *Abs_Par_t, startVta int32)
 	if graph == nil || pars == nil || gia.Gia_ManPoNum(graph) != 1 || pars.nFramesMax != 0 && pars.nFramesStart > pars.nFramesMax {
 		panic("invalid old GLA arguments")
 	}
+	if pars.nTimeOut != 0 {
+		defer absPinClockThread()()
+	}
 	// A previous result must not survive a new verification run.
 	graph.ClearSequentialCounterexample()
 	po := gia.Gia_ManPo(graph, 0)
@@ -75,10 +78,10 @@ func Gia_ManPerformGlaOld(graph *gia.Gia_Man_t, pars *Abs_Par_t, startVta int32)
 	}
 	p := Gla_ManStart(graph, pars)
 	p.timeInit = time.Since(start)
-	var deadline time.Time
+	var deadline int64
 	if pars.nTimeOut != 0 {
-		deadline = time.Now().Add(time.Duration(pars.nTimeOut) * time.Second)
-		p.pSat.SetDeadline(deadline)
+		deadline = absCPUClock() + int64(pars.nTimeOut)*int64(time.Second)
+		p.pSat.SetRuntimeDeadline(absCPUClock, deadline)
 	}
 	if pars.fVerbose != 0 {
 		fmt.Printf("Running gate-level abstraction: FrameMax = %d ConfMax = %d Timeout = %d RatioMin = %d%%.\n", pars.nFramesMax, pars.nConfLimit, pars.nTimeOut, pars.nRatioMin)
@@ -96,7 +99,7 @@ func Gia_ManPerformGlaOld(graph *gia.Gia_Man_t, pars *Abs_Par_t, startVta int32)
 		for i = 0; ; i++ {
 			clock := time.Now()
 			core = Gla_ManUnsatCore(p, frame, p.pSat, pars.nConfLimit, pars.fVerbose, &status, &conflicts)
-			if status == -1 || !deadline.IsZero() && time.Now().After(deadline) {
+			if status == -1 || deadline != 0 && absCPUClock() > deadline {
 				stopped = true
 				break
 			}

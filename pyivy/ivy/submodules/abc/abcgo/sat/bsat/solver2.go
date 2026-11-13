@@ -103,4 +103,7 @@ func (p *Solver2) SetLimits(conflicts, propagations int64) {
 	p.solver.sat_solver_t.SetLimits(conflicts, propagations)
 }
 func (p *Solver2) SetDeadline(deadline time.Time) { p.solver.sat_solver_t.SetDeadline(deadline) }
-func (p *Solver2) Reset()                         { *p = *NewSolver2() }
+func (p *Solver2) SetRuntimeDeadline(clock func() int64, deadline int64) {
+	p.solver.sat_solver_t.SetRuntimeDeadline(clock, deadline)
+}
+func (p *Solver2) Reset() { *p = *NewSolver2() }

@@ -102,11 +102,30 @@ func (s *sat_solver_t) Deadline() time.Time {
 }
 
 func (s *sat_solver_t) SetDeadline(deadline time.Time) {
+	s.runtimeClock = nil
 	if deadline.IsZero() {
 		s.nRuntimeLimit = 0
 	} else {
 		s.nRuntimeLimit = deadline.UnixNano()
 	}
+}
+
+// SetRuntimeDeadline selects an absolute deadline in the supplied clock's
+// units. The caller must ensure that every reading uses the same clock domain.
+// A nil clock restores the wall-clock interpretation of existing deadlines.
+func (s *sat_solver_t) SetRuntimeDeadline(clock func() int64, deadline int64) {
+	s.runtimeClock = clock
+	s.nRuntimeLimit = deadline
+}
+
+func (s *sat_solver_t) runtimeExpired() bool {
+	if s.nRuntimeLimit == 0 {
+		return false
+	}
+	if s.runtimeClock != nil {
+		return s.runtimeClock() > s.nRuntimeLimit
+	}
+	return time.Now().UnixNano() > s.nRuntimeLimit
 }
 
 // Reset discards the formula and its proof records while leaving proof logging

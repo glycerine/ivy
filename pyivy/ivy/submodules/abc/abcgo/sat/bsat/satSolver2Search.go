@@ -1,7 +1,5 @@
 package bsat
 
-import "time"
-
 func solver2_analyze_final(s *sat_solver2, conflict *clause, skip int32) int32 {
 	veci_resize(&s.conf_final, 0)
 	if s.root_level == 0 {
@@ -94,7 +92,7 @@ func solver2_search(s *sat_solver2, budget int64) lbool {
 			continue
 		}
 		exhausted := budget >= 0 && conflicts >= budget
-		expired := s.nRuntimeLimit != 0 && s.stats.conflicts&63 == 0 && time.Now().UnixNano() > s.nRuntimeLimit
+		expired := s.stats.conflicts&63 == 0 && s.runtimeExpired()
 		limited := s.nConfLimit != 0 && s.stats.conflicts > s.nConfLimit || s.nInsLimit != 0 && s.stats.propagations > s.nInsLimit
 		if exhausted || expired || limited {
 			s.progress_estimate = sat_solver_progress(&s.sat_solver_t)

@@ -21,6 +21,23 @@ func TestVtaUnsatCoreReportsDeadlineAndRecovers(t *testing.T) {
 	}
 }
 
+// The Linux C oracle in test_vectors/vta_timeout_clock_oracle.c returns SAT
+// here: its deadline counts thread CPU time, so sleep does not consume it.
+// This test records the current Go behavior until a shared CPU-clock deadline
+// API is available; it deliberately exposes the difference rather than
+// treating the two clock domains as equivalent.
+func TestVtaDeadlineCurrentlyCountsElapsedSleep(t *testing.T) {
+	s := bsat.NewLabeledSolver2()
+	s.NewVariable()
+	s.SetDeadline(time.Now().Add(100 * time.Millisecond))
+	time.Sleep(250 * time.Millisecond)
+	var status int32
+	core := Vta_ManUnsatCore(int32(bsat.Positive(0)), s, 0, 0, &status, nil)
+	if status != -1 || core != nil {
+		t.Fatalf("expired wall deadline: status=%d core=%v", status, core)
+	}
+}
+
 // An implication chain yields a source-style labeled proof whose core must
 // retain every link. It also crosses common small-vector allocation sizes.
 func TestVtaUnsatCoreLongLabeledChain(t *testing.T) {
