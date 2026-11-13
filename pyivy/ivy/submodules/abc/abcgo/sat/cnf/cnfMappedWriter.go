@@ -19,7 +19,9 @@ func cnfWriteMapped(manager *Cnf_Man_t, mapped *vec.Vec_Ptr_t, freeOutputs int32
 	if freeOutputs < 0 || int(freeOutputs) > len(outputs) {
 		return nil, fmt.Errorf("cnf: invalid free output count")
 	}
-	if freeOutputs != 0 && ((graph.RegisterCount() == 0 && int(freeOutputs) != len(outputs)) || (graph.RegisterCount() != 0 && freeOutputs != graph.RegisterCount())) {
+	// ABC's PDR caller temporarily sets nRegs to the CO count to leave all
+	// outputs free. Accept that form without mutating the caller's graph.
+	if freeOutputs != 0 && int(freeOutputs) != len(outputs) && (graph.RegisterCount() == 0 || freeOutputs != graph.RegisterCount()) {
 		return nil, fmt.Errorf("cnf: free output count must match outputs or registers")
 	}
 	result := &Cnf_Dat_t{pMan: graph, VarNums: make([]int32, len(nodes)), Obj2Clause: make([]int32, len(nodes)), Obj2Count: make([]int32, len(nodes))}

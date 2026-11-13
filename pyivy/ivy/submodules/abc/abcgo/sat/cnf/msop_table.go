@@ -5,9 +5,8 @@ import "sync"
 var msopOnce sync.Once
 var msopCovers [][]byte
 
-// Cnf_ReadMsops returns ABC's immutable minimum SOP covers indexed by the
-// 16-bit truth table. Each cube is encoded in four base-3 digits.
-func Cnf_ReadMsops() [][]byte {
+// cnfMsopCovers decodes ABC's shared internal cover table once.
+func cnfMsopCovers() [][]byte {
 	msopOnce.Do(func() {
 		var alphabet [256]int16
 		for i := range alphabet {
@@ -44,4 +43,15 @@ func Cnf_ReadMsops() [][]byte {
 		}
 	})
 	return msopCovers
+}
+
+// Cnf_ReadMsops returns owned covers indexed by 16-bit truth table. Each cube
+// is encoded in four base-3 digits, matching ABC's independently owned data.
+func Cnf_ReadMsops() [][]byte {
+	shared := cnfMsopCovers()
+	result := make([][]byte, len(shared))
+	for i, cover := range shared {
+		result[i] = append([]byte(nil), cover...)
+	}
+	return result
 }

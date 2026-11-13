@@ -63,39 +63,16 @@ func cutCNFCost(cut *aig.Aig_Cut_t) int {
 	return leaves + 1
 }
 
-// Cnf_DeriveMapping computes native AIG cuts and picks a small support cut for
-// each logic node. It stores copies in the manager, not in the graph's nodes.
+// Cnf_DeriveMapping selects DAR cuts using the C area-flow cost and tie order.
 func Cnf_DeriveMapping(manager *Cnf_Man_t) {
 	if manager == nil || manager.pManAig == nil {
 		return
 	}
 	if manager.pCuts != nil {
 		aig.Aig_ManCutStop(manager.pCuts)
+		manager.pCuts = nil
 	}
-	manager.pCuts = aig.Aig_ComputeCuts(manager.pManAig, 16, 4, 1, 0)
-	nodes := manager.pManAig.Nodes()
-	manager.selectedCuts = make([]*Cnf_Cut_t, len(nodes))
-	for id, node := range nodes {
-		if node.Kind != aig.And && node.Kind != aig.ExclusiveOr && node.Kind != aig.Buffer && node.Kind != aig.Output {
-			continue
-		}
-		var best *aig.Aig_Cut_t
-		for cut := aig.Aig_ObjCuts(manager.pCuts, aig.Edge(id)<<1); cut != nil; cut = aig.Aig_CutNext(cut) {
-			leaves := aig.Aig_CutLeaves(cut)
-			if len(leaves) == 0 || len(leaves) == 1 && leaves[0] == int32(id) || len(aig.Aig_CutTruth(cut)) == 0 {
-				continue
-			}
-			if best == nil || cutCNFCost(cut) < cutCNFCost(best) {
-				best = cut
-			}
-		}
-		if best == nil {
-			continue
-		}
-		leaves := append([]int32(nil), aig.Aig_CutLeaves(best)...)
-		truth := append([]uint32(nil), aig.Aig_CutTruth(best)...)
-		cnfCut := Cnf_CutFromTruth(leaves, truth)
-		cnfCut.Cost = byte(cutCNFCost(best))
-		manager.selectedCuts[id] = cnfCut
+	if err := cnfApplyDarMapping(manager); err != nil {
+		panic(err)
 	}
 }

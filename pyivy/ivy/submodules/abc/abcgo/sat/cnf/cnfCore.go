@@ -37,10 +37,17 @@ func Cnf_DeriveMappingArray(graph *Aig_Man_t) *Vec_Int_t {
 }
 
 func Cnf_DeriveWithMan(manager *Cnf_Man_t, graph *Aig_Man_t, nOutputs int32) *Cnf_Dat_t {
-	if manager != nil {
-		manager.pManAig = graph
+	if graph == nil {
+		return nil
 	}
-	return deriveLegacyAIG(graph, nOutputs)
+	if manager == nil {
+		manager = Cnf_ManStart()
+		defer Cnf_ManStop(manager)
+	}
+	manager.pManAig = graph
+	Cnf_DeriveMapping(manager)
+	mapped := Cnf_ManScanMapping(manager, 1, 1)
+	return Cnf_ManWriteCnf(manager, mapped, nOutputs)
 }
 func Cnf_Derive(graph *Aig_Man_t, nOutputs int32) *Cnf_Dat_t {
 	return Cnf_DeriveWithMan(nil, graph, nOutputs)

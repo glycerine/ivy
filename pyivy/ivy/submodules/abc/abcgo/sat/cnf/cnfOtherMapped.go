@@ -19,7 +19,7 @@ func deriveOtherMapped(manager *Cnf_Man_t, graph *aig.Graph, skipTruthMin bool) 
 	nodes := graph.Nodes()
 	manager.selectedCuts = make([]*Cnf_Cut_t, len(nodes))
 	areas := make([]int, len(nodes))
-	covers := Cnf_ReadMsops()
+	covers := cnfMsopCovers()
 	var visit func(aig.Edge) error
 	visit = func(edge aig.Edge) error {
 		id := edge.NodeID()

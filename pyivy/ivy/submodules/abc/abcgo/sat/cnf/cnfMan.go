@@ -26,7 +26,8 @@ func Cnf_Lit2Var2(lit int32) int32 {
 }
 
 func Cnf_ManStart() *Cnf_Man_t {
-	return &Cnf_Man_t_{pSopSizes: make([]byte, 1<<16), pSops: make([]string, 1<<16), nMergeLimit: 10, vMemory: vec.Vec_IntAlloc(1024)}
+	sizes, sops := cnfReadMsops()
+	return &Cnf_Man_t_{pSopSizes: sizes, pSops: sops, nMergeLimit: 10, vMemory: vec.Vec_IntAlloc(1024)}
 }
 func Cnf_ManStop(p *Cnf_Man_t) {
 	if p == nil {

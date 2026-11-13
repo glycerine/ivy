@@ -132,7 +132,7 @@ func TestMappedWriterSourceFreeOutputRestrictions(t *testing.T) {
 	if data == nil || data.VarNums[g.Outputs()[0].NodeID()] != -1 || data.VarNums[g.Outputs()[1].NodeID()] != 1 {
 		t.Fatal("last register output was not assigned first")
 	}
-	if Cnf_ManWriteCnf(m, mapped, 2) != nil {
-		t.Fatal("wrong register output count accepted")
+	if Cnf_ManWriteCnf(m, mapped, 2) == nil {
+		t.Fatal("PDR all-output request rejected")
 	}
 }
