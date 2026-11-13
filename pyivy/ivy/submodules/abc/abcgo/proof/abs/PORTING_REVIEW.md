@@ -13,15 +13,14 @@ complemented edges, duplicate nodes, interleaved inputs, VTA startup, and
 counterexample handling. These checks cover small examples; they are not a
 proof of correctness for arbitrary networks or all resource-limit settings.
 
-Old GLA currently rejects unlowered native XOR and MUX GIA nodes. The C
-implementation's simple GIA-to-AIG conversion assumes AND-only internal nodes
-and asserts object-ID correspondence. This Go port supports reordered inputs,
-duplicate AND nodes, and buffers while preserving object mappings. Supporting
-native XOR/MUX safely requires lowering those gates and translating both the
-incoming and resulting gate-class maps back to the original objects, or
-extending the refinement simulation and justification algorithms. Replacing
-only the SAT clauses would leave refinement unsound. Callers must currently
-supply an AND-lowered GIA to old GLA.
+The `Gia_ManPerformGlaOld` entry point lowers native XOR and MUX nodes into
+AND-inverter cones before running the original AND-only refinement. It maps
+incoming gate classes to the lowered graph, conservatively maps selected cones
+back to original gate classes, and verifies any witness against the original
+graph. Gate abstraction reconstruction also preserves native XOR and MUX nodes.
+The lower-level `Gla_ManStart` and `Gla_ManStart2` interfaces still require an
+AND-only graph; replacing only their SAT clauses would leave refinement unsound.
+The port also supports reordered inputs, duplicate AND nodes, and buffers.
 
 `Abs_Par_t` retains private source-style option fields, so callers outside this
 package cannot currently configure most options directly. The C-style exported

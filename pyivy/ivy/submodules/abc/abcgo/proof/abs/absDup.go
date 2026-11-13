@@ -107,7 +107,23 @@ func Gia_ManDupAbsGates(p *Gia_Man_t, classes *Vec_Int_t) *Gia_Man_t {
 	}
 	for _, id := range vec.Vec_IntArray(nodes) {
 		obj := gia.Gia_ManObj(p, id)
-		obj.Value = uint32(gia.Gia_ManAppendAnd(dst, gia.Gia_ObjFanin0Copy(obj), gia.Gia_ObjFanin1Copy(obj)))
+		a, b, c, kind := p.Gate(id)
+		copyLit := func(lit int32) int32 {
+			return int32(gia.Gia_ManObj(p, lit>>1).Value) ^ (lit & 1)
+		}
+		switch kind {
+		case 2:
+			obj.Value = uint32(gia.Gia_ManAppendAnd(dst, copyLit(a), copyLit(b)))
+		case 3:
+			obj.Value = uint32(gia.Gia_ManAppendXorReal(dst, copyLit(a), copyLit(b)))
+		case 4:
+			dst.EnableMuxes()
+			obj.Value = uint32(gia.Gia_ManAppendMuxReal(dst, copyLit(a), copyLit(b), copyLit(c)))
+		case 5:
+			obj.Value = uint32(gia.Gia_ManAppendBuf(dst, copyLit(a)))
+		default:
+			panic("abs: invalid gate abstraction node")
+		}
 	}
 	for i := int32(0); i < gia.Gia_ManPoNum(p); i++ {
 		obj := gia.Gia_ManPo(p, i)
