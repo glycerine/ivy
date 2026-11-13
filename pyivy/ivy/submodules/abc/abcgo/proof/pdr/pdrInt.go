@@ -78,10 +78,9 @@ type Pdr_Obl_t struct {
 
 type Pdr_Man_t struct {
 	// input problem
-	pPars      *Pdr_Par_t // parameters
-	pAig       *Aig_Man_t // user's AIG
-	pGia       *Gia_Man_t // user's AIG
-	ownsFanout bool       // whether this manager created the AIG fanout index
+	pPars *Pdr_Par_t // parameters
+	pAig  *Aig_Man_t // user's AIG
+	pGia  *Gia_Man_t // user's AIG
 	// static CNF representation
 	pCnfMan  *Cnf_Man_t // CNF manager
 	pCnf1    *Cnf_Dat_t // CNF for this AIG

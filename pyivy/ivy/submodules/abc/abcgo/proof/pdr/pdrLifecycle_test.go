@@ -52,22 +52,19 @@ func TestAbstractCounterexampleUsesCareMinimization(t *testing.T) {
 	Pdr_ManStop(p)
 }
 
-func TestManagerFanoutOwnership(t *testing.T) {
+func TestManagerStopsFanoutAsInC(t *testing.T) {
 	for _, existing := range []bool{false, true} {
 		g := lifecycleGraph()
 		if existing {
 			aig.Aig_ManFanoutStart(g)
 		}
 		p := Pdr_ManStart(g, &Pdr_Par_t{}, nil)
-		if !aig.Aig_ManHasFanout(g) || p.ownsFanout == existing {
-			t.Fatalf("existing=%v: incorrect fanout ownership", existing)
+		if !aig.Aig_ManHasFanout(g) {
+			t.Fatalf("existing=%v: missing fanout index", existing)
 		}
 		Pdr_ManStop(p)
-		if aig.Aig_ManHasFanout(g) != existing {
-			t.Fatalf("existing=%v: manager changed caller's fanout ownership", existing)
-		}
-		if existing {
-			aig.Aig_ManFanoutStop(g)
+		if aig.Aig_ManHasFanout(g) {
+			t.Fatalf("existing=%v: manager retained fanout index", existing)
 		}
 	}
 }

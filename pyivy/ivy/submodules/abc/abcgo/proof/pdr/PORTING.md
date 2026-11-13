@@ -50,8 +50,12 @@ Remaining review and coverage gaps:
   in the unmatched tail after either sorted input ends. Also,
   `Pdr_SetPrintStr` appends no pattern characters when its flop filter is
   nil. Tests record these source behaviors; they are not corrections to ABC.
-- Bridge output, invariant file output, and rare options such as proof
-  obligation reuse and shifting the starting frame are not covered end to end.
+- As in ABC, stopping a PDR manager stops the graph's fanout index even if
+  that index existed before the manager started. A caller that needs fanout
+  data afterward must rebuild it.
+- Bridge output and invariant file output need broader end-to-end coverage.
+  Proof-obligation reuse and shifted starting frames are varied in the sampled
+  state-space tests, but those tests do not establish that every branch is hit.
 - Successful `Pdr_ManSolve` and `IPdr_ManSolve` runs publish their invariant
   in ABC's shared global frame. The frame synchronizes and copies each update,
   but the most recent publication replaces the previous invariant. Callers
