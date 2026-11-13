@@ -49,26 +49,6 @@ import "fmt"
   SeeAlso     []
 
 ***********************************************************************/
-func Wln_ConstFromBits(pBits *int32, nBits int32) string {
-    var pBuffer string  = ABC_ALLOC( char, nBits+100 ); var i, Len int32;
-    pBuffer = fmt.Sprintf("%d\'b", nBits);
-    Len = len(pBuffer);
-    for  i = nBits-1; i >= 0; i--  {
-        pBuffer[Len++] = '0' + Abc_InfoHasBit((unsigned *)pBits, i);
-    }
-    pBuffer[Len] = 0;
-    return pBuffer;
-}
-func Wln_ConstFromStr(pBits string, nBits int32) string {
-    var pBuffer string  = ABC_ALLOC( char, nBits+100 ); var i, Len int32;
-    pBuffer = fmt.Sprintf("%d\'b", nBits);
-    Len = len(pBuffer);
-    for  i = 0; i < nBits; i++  {
-        pBuffer[Len++] = pBits[i];
-    }
-    pBuffer[Len] = 0;
-    return pBuffer;
-}
 func Wln_TrasformNameId(pNew *Wln_Ntk_t, p *Wlc_Ntk_t, pObj *Wlc_Obj_t) int32 {
     return Abc_NamStrFindOrAdd( pNew.pManName, Wlc_ObjName(p, Wlc_ObjId(p, pObj)), nil );
 }
