@@ -24,10 +24,11 @@ for undeclared C variables, inferred helpers, and retained source defects.
 | `Int2_ManCollectInternal`, `_rec` | `TestSourceCollectInternalVisitsSharedConesOnce` |
 | `Int2_ManProbToGia` | `TestSourceNilSOPPanics`, `TestSourceEmptySOPProducesFalse`, `TestProbToGiaSingleLiteralCubesMatchSourceTransitions` |
 | `int2HashCopyGate` | Used by frame tests; `TestSourceCopiesNativeXorAsAnd` records the C AND-copy behavior. |
-| SAT bridge allocation, literals, clauses and solver | `TestSATBridgeLoadsClausesAndDetectsContradiction`, `TestSATBridgeClauseExpandsVariableRange`, `TestSATBridgeCumulativeGlobalLimits` |
-| SAT bridge AND, buffer, model and final core | `TestSATBridgeAndGateAllInputPolarities`, `TestSATBridgeBufferComplement`, `TestSATBridgeModelValueUsesBooleanConvention`, `TestSATBridgeFinalReturnsNegatedAssumptions` |
+| SAT bridge allocation, literals, clauses and solver | `TestSATBridgeLoadsClausesAndDetectsContradiction`, `TestSATBridgeClauseExpandsVariableRange`, `TestSATBridgeCumulativeGlobalLimits`, `TestSATBridgeExpiredGlobalBudgetReturnsUnknown` |
+| SAT bridge AND, buffer, model and final core | `TestSATBridgeAndGateAllInputPolarities`, `TestSATBridgeBufferComplement`, `TestSATBridgeRejectsInconsistentGateClauses`, `TestSATBridgeModelValueUsesBooleanConvention`, `TestSATBridgeFinalReturnsNegatedAssumptions` |
 
-Failure/timeout paths dependent on JF CNF derivation or SAT resource exhaustion
-are not exhaustively exercised. In particular, reaching the bodies of the
+The SAT bridge tests exercise an exhausted global propagation budget and
+contradictory gate clauses. Failure paths dependent on JF CNF derivation and
+all SAT timeout modes are not exhaustively exercised. In particular, reaching the bodies of the
 unsupported suffix/preimage stubs does not validate those algorithms. The
 zero-frame behavior and incremental builder have no executable C oracle.

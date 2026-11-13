@@ -128,3 +128,54 @@ func TestSATBridgeFinalReturnsNegatedAssumptions(t *testing.T) {
 		t.Fatalf("conflict literals %v", core)
 	}
 }
+
+func TestSATBridgeExpiredGlobalBudgetReturnsUnknown(t *testing.T) {
+	s := sat_solver_new()
+	sat_solver_setnvars(s, 3)
+	if got := sat_solver_solve(s, nil, 0, 0, 0, 0); got != l_True {
+		t.Fatalf("initial solve %d", got)
+	}
+	used := s.PropagationCount()
+	if used < 2 {
+		t.Fatalf("fixture used only %d propagations", used)
+	}
+	if got := sat_solver_solve(s, nil, 0, 100, 0, used-1); got != l_Undef {
+		t.Fatalf("exhausted global budget result %d", got)
+	}
+	if _, ok := s.Value(0); ok {
+		t.Fatal("unknown result exposed stale SAT model")
+	}
+	if got := sat_solver_solve(s, nil, 0, 0, 0, 0); got != l_True {
+		t.Fatalf("unlimited retry %d", got)
+	}
+}
+
+func TestSATBridgeRejectsInconsistentGateClauses(t *testing.T) {
+	t.Run("buffer", func(t *testing.T) {
+		s := sat_solver_from_clauses(2, [][]int32{{sat_literal(0, 1)}, {sat_literal(1, 0)}})
+		if s == nil {
+			t.Fatal("fixture inconsistent")
+		}
+		if got := sat_solver_add_buffer(s, 1, 0, 0); got != 0 {
+			t.Fatalf("contradictory buffer accepted: %d", got)
+		}
+	})
+	for _, tc := range []struct {
+		name    string
+		x, y, z int32
+	}{
+		{"false first", 0, 1, 1},
+		{"false second", 1, 0, 1},
+		{"true inputs", 1, 1, 0},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			s := sat_solver_from_clauses(3, [][]int32{{sat_literal(0, 1^tc.x)}, {sat_literal(1, 1^tc.y)}, {sat_literal(2, 1^tc.z)}})
+			if s == nil {
+				t.Fatal("fixture inconsistent")
+			}
+			if got := sat_solver_add_and(s, 2, 0, 1, 0, 0, 0); got != 0 {
+				t.Fatalf("contradictory AND accepted: %d", got)
+			}
+		})
+	}
+}
