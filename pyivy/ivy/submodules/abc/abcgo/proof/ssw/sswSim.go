@@ -524,32 +524,7 @@ func Ssw_SmlCheckOutput(p *Ssw_Sml_t) *int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_SmlInitialize(p *Ssw_Sml_t, fInit int32) {
-    var pObj *Aig_Obj_t;
-    var i int32;
-    if fInit != 0 {
-        assert(Aig_ManRegNum(p.pAig) > 0, "Aig_ManRegNum(p.pAig) > 0");
-        assert(Aig_ManRegNum(p.pAig) <= Aig_ManCiNum(p.pAig), "Aig_ManRegNum(p.pAig) <= Aig_ManCiNum(p.pAig)");
-        // assign random info for primary inputs
-        // inlining of macro Saig_ManForEachPi
-        // inlining of macro Vec_PtrForEachEntryStop
-        for  i = 0; (i < Saig_ManPiNum(p.pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {
-            Ssw_SmlAssignRandom( p, pObj );
-        }
-        // assign the initial state for the latches
-        // inlining of macro Saig_ManForEachLo
-        for  i = 0; (i < Saig_ManRegNum(p.pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i+Saig_ManPiNum(p.pAig))), 1); i++  {
-            Ssw_SmlObjAssignConst( p, pObj, 0, 0 );
-        }
-    
-    } else {
-        // inlining of macro Aig_ManForEachCi
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(p.pAig.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {
-            Ssw_SmlAssignRandom( p, pObj );
-        }
-    }
-}
+
 
 /**Function*************************************************************
 
@@ -562,25 +537,7 @@ func Ssw_SmlInitialize(p *Ssw_Sml_t, fInit int32) {
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_SmlInitializeSpecial(p *Ssw_Sml_t, vInit *Vec_Int_t) {
-    var pObj *Aig_Obj_t;
-    var Entry, i, nRegs int32;
-    nRegs = Aig_ManRegNum(p.pAig);
-    assert(nRegs > 0, "nRegs > 0");
-    assert(nRegs <= Aig_ManCiNum(p.pAig), "nRegs <= Aig_ManCiNum(p.pAig)");
-    assert(Vec_IntSize(vInit) == nRegs * p.nWordsFrame, "Vec_IntSize(vInit) == nRegs * p.nWordsFrame");
-    // assign random info for primary inputs
-    // inlining of macro Saig_ManForEachPi
-    // inlining of macro Vec_PtrForEachEntryStop
-    for  i = 0; (i < Saig_ManPiNum(p.pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {
-        Ssw_SmlAssignRandom( p, pObj );
-    }
-    // assign the initial state for the latches
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vInit)) && (((Entry) = Vec_IntEntry(vInit, i)), 1); i++  {
-        Ssw_SmlObjAssignConstWord( p, Saig_ManLo(p.pAig, i % nRegs), Entry, 0, i / nRegs );
-    }
-}
+
 
 /**Function*************************************************************
 
@@ -593,23 +550,7 @@ func Ssw_SmlInitializeSpecial(p *Ssw_Sml_t, vInit *Vec_Int_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_SmlReinitialize(p *Ssw_Sml_t) {
-    var pObj, pObjLi, pObjLo *Aig_Obj_t;
-    var i int32;
-    assert(Aig_ManRegNum(p.pAig) > 0, "Aig_ManRegNum(p.pAig) > 0");
-    assert(Aig_ManRegNum(p.pAig) < Aig_ManCiNum(p.pAig), "Aig_ManRegNum(p.pAig) < Aig_ManCiNum(p.pAig)");
-    // assign random info for primary inputs
-    // inlining of macro Saig_ManForEachPi
-    // inlining of macro Vec_PtrForEachEntryStop
-    for  i = 0; (i < Saig_ManPiNum(p.pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {
-        Ssw_SmlAssignRandom( p, pObj );
-    }
-    // copy simulation info into the inputs
-    // inlining of macro Saig_ManForEachLiLo
-    for  i = 0; (i < Saig_ManRegNum(p.pAig)) && (((pObjLi) = Saig_ManLi(p.pAig, i)), 1)            && (((pObjLo)=Saig_ManLo(p.pAig, i)), 1); i++  {
-        Ssw_SmlNodeTransferFirst( p, pObjLi, pObjLo );
-    }
-}
+
 
 /**Function*************************************************************
 
