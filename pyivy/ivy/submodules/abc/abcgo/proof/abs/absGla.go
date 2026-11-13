@@ -235,19 +235,6 @@ func Ga2_ManRefinePrintPPis(p *Ga2_Man_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Ga2_GlaAbsCount(p *Ga2_Man_t, fRo int32, fAnd int32) int32 {
-    var pObj *Gia_Obj_t;
-    var i, Counter int32;
-    if fRo != 0 {
-        Gia_ManForEachObjVec( p.vAbs, p.pGia, pObj, i )
-            Counter += Gia_ObjIsRo(p.pGia, pObj);
-    } else if fAnd != 0 {
-        Gia_ManForEachObjVec( p.vAbs, p.pGia, pObj, i )
-            Counter += Gia_ObjIsAnd(pObj);
-    } else { assert(false, "0"); }
-    return Counter;
-}
-
 /**Function*************************************************************
 
   Synopsis    []
