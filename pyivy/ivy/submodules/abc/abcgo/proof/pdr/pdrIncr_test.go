@@ -3,6 +3,7 @@ package pdr
 import (
 	"testing"
 
+	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/misc/vec"
 )
 
@@ -20,6 +21,29 @@ func TestIncrementalSaveClausesCopiesCubes(t *testing.T) {
 	if original.Lits[0] != 2 {
 		t.Fatal("saved cube aliases original")
 	}
+}
+
+func TestIncrementalRestoreRemapsCubeOrderingAndSignature(t *testing.T) {
+	g := aig.NewGraph()
+	for i := 0; i < 3; i++ {
+		g.NewInput()
+	}
+	g.AddOutput(g.Const0())
+	for i := 0; i < 3; i++ {
+		g.AddOutput(g.Const0())
+	}
+	aig.Aig_ManSetRegNum(g, 3)
+	p := Pdr_ManStart(g, &Pdr_Par_t{}, nil)
+	clauses := vec.Vec_VecStart(2)
+	cube := testPdrSet([]int32{0, 3}, nil)
+	vec.Vec_VecPush(clauses, 1, cube)
+	mapping := vec.Vec_IntAllocArrayCopy([]int32{2, 0, 1}, 3)
+	IPdr_ManRestoreClauses(p, clauses, mapping)
+	want := testPdrSet([]int32{1, 4}, nil)
+	if Pdr_SetContains(cube, want) != 1 || Pdr_SetContains(want, cube) != 1 {
+		t.Fatalf("remapped cube has stale order or signature: %+v", cube)
+	}
+	Pdr_ManStop(p)
 }
 
 func TestIncrementalRestoreAbstractFlops(t *testing.T) {
