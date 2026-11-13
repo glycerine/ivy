@@ -169,6 +169,7 @@ func dupOutputs(dst, src *Graph, outputs []Edge, choices, reps bool) {
 }
 func Aig_ManDupSimple(src *Graph) *Graph {
 	dst := dupStart(src)
+	defer dst.updateTrueTerminalCounts()
 	for id, n := range src.nodes {
 		if !src.deleted[id] && (n.Kind == And || n.Kind == ExclusiveOr || n.Kind == Buffer) {
 			dupEdge(dst, src, Edge(id)<<1)
@@ -179,6 +180,7 @@ func Aig_ManDupSimple(src *Graph) *Graph {
 }
 func Aig_ManDupSimpleWithHints(src *Graph, hints []int32) *Graph {
 	dst := dupStart(src)
+	defer dst.updateTrueTerminalCounts()
 	for id, n := range src.nodes {
 		if src.deleted[id] || n.Kind == Constant || n.Kind == Output {
 			continue
@@ -197,11 +199,13 @@ func Aig_ManDupSimpleWithHints(src *Graph, hints []int32) *Graph {
 func Aig_ManDupSimpleDfs_rec(dst, src *Graph, e Edge) Edge { return dupEdge(dst, src, e) }
 func Aig_ManDupSimpleDfs(src *Graph) *Graph {
 	dst := dupStart(src)
+	defer dst.updateTrueTerminalCounts()
 	dupOutputs(dst, src, src.outputs, false, false)
 	return dst
 }
 func Aig_ManDupSimpleDfsPart(src *Graph, inputs, outputs []Edge) *Graph {
 	dst := NewGraph()
+	defer dst.updateTrueTerminalCounts()
 	src.copies = map[int]Edge{0: 0}
 	seenInputs := map[int]bool{}
 	for _, e := range inputs {
@@ -219,6 +223,7 @@ func Aig_ManDupSimpleDfsPart(src *Graph, inputs, outputs []Edge) *Graph {
 }
 func Aig_ManDupOrdered(src *Graph) *Graph {
 	dst := dupStart(src)
+	defer dst.updateTrueTerminalCounts()
 	for id, n := range src.nodes {
 		if src.deleted[id] {
 			continue
@@ -249,6 +254,7 @@ func Aig_ManDupCof(src *Graph, index, value int32) *Graph {
 		panic("aig: invalid cofactor")
 	}
 	dst := NewGraph()
+	defer dst.updateTrueTerminalCounts()
 	dupMetadata(dst, src)
 	src.copies = map[int]Edge{0: 0}
 	for i, e := range src.inputs {
@@ -266,6 +272,7 @@ func Aig_ManDupCof(src *Graph, index, value int32) *Graph {
 }
 func Aig_ManDupTrim(src *Graph) *Graph {
 	dst := NewGraph()
+	defer dst.updateTrueTerminalCounts()
 	dupMetadata(dst, src)
 	src.copies = map[int]Edge{0: 0}
 	for i, e := range src.inputs {
@@ -286,6 +293,7 @@ func Aig_ManDupTrim(src *Graph) *Graph {
 }
 func Aig_ManDupExor(src *Graph) *Graph {
 	dst := dupStart(src)
+	defer dst.updateTrueTerminalCounts()
 	for id, n := range src.nodes {
 		if src.deleted[id] || (n.Kind != And && n.Kind != ExclusiveOr && n.Kind != Buffer) {
 			continue
@@ -308,6 +316,7 @@ func Aig_ManDupDfs_rec(dst, src *Graph, e Edge) Edge {
 }
 func Aig_ManDupDfs(src *Graph) *Graph {
 	dst := dupStart(src)
+	defer dst.updateTrueTerminalCounts()
 	dupOutputs(dst, src, src.outputs, true, false)
 	if len(src.equivs) == 0 && len(src.reprs) == 0 {
 		Aig_ManCleanup(dst)
@@ -390,6 +399,7 @@ func Aig_ManDupDfsGuided_rec(dst, src *Graph, e Edge) Edge {
 }
 func Aig_ManDupDfsGuided(src *Graph, order []PIO) *Graph {
 	dst := NewGraph()
+	defer dst.updateTrueTerminalCounts()
 	dupMetadata(dst, src)
 	src.copies = map[int]Edge{0: 0}
 	seenInputs, seenOutputs := map[int]bool{}, map[int]bool{}
@@ -422,6 +432,7 @@ func Aig_ManDupDfsGuided(src *Graph, order []PIO) *Graph {
 }
 func Aig_ManDupLevelized(src *Graph) *Graph {
 	dst := dupStart(src)
+	defer dst.updateTrueTerminalCounts()
 	var nodes []int
 	for id, n := range src.nodes {
 		if !src.deleted[id] && (n.Kind == And || n.Kind == ExclusiveOr || n.Kind == Buffer) {
@@ -448,6 +459,7 @@ func Aig_ManDupWithoutPos(src *Graph) *Graph {
 }
 func Aig_ManDupFlopsOnly(src *Graph) *Graph {
 	dst := Aig_ManDupWithoutPos(src)
+	defer dst.updateTrueTerminalCounts()
 	dupOutputs(dst, src, src.outputs[len(src.outputs)-int(src.nRegs):], false, false)
 	dst.nRegs = src.nRegs
 	Aig_ManCleanup(dst)
@@ -476,6 +488,7 @@ func Aig_ObjChild1Repres(src *Graph, e Edge) Edge {
 }
 func Aig_ManDupRepres(src *Graph) *Graph {
 	dst := dupStart(src)
+	defer dst.updateTrueTerminalCounts()
 	for id, n := range src.nodes {
 		if !src.deleted[id] && (n.Kind == Input || n.Kind == And || n.Kind == ExclusiveOr || n.Kind == Buffer) {
 			dupVisit(dst, src, Edge(id)<<1, false, true, map[int]bool{})
@@ -489,6 +502,7 @@ func Aig_ManDupRepres_rec(dst, src *Graph, e Edge) Edge {
 }
 func Aig_ManDupRepresDfs(src *Graph) *Graph {
 	dst := dupStart(src)
+	defer dst.updateTrueTerminalCounts()
 	dupOutputs(dst, src, src.outputs, false, true)
 	return dst
 }
@@ -522,6 +536,11 @@ func Aig_ManCreateMiter(a, b *Graph, operation int32) *Graph {
 }
 func dupSequentialOutputs(src *Graph, outputs []Edge, addRegs int32) *Graph {
 	dst := dupStart(src)
+	dst.nTruePis = src.nTruePis
+	dst.nTruePos = int32(len(outputs))
+	if addRegs == 0 {
+		dst.nTruePis += src.nRegs
+	}
 	dst.nConstrs = 0
 	if addRegs == 0 {
 		dst.nRegs = 0
@@ -538,6 +557,11 @@ func Aig_ManDupOrpos(src *Graph, addRegs int32) *Graph {
 		return nil
 	}
 	dst := dupStart(src)
+	dst.nTruePis = src.nTruePis
+	dst.nTruePos = 1
+	if addRegs == 0 {
+		dst.nTruePis += src.nRegs
+	}
 	dst.nConstrs = 0
 	if addRegs == 0 {
 		dst.nRegs = 0
@@ -576,6 +600,7 @@ func Aig_ManDupArray(graphs []*Graph) *Graph {
 		return nil
 	}
 	dst := NewGraph()
+	defer dst.updateTrueTerminalCounts()
 	dst.Name = graphs[0].Name
 	for range graphs[0].inputs {
 		dst.NewInput()
@@ -597,6 +622,7 @@ func Aig_ManDupNodes(src *Graph, roots []Edge) *Graph {
 		return nil
 	}
 	dst := NewGraph()
+	defer dst.updateTrueTerminalCounts()
 	dst.Name = src.Name
 	src.copies = map[int]Edge{0: 0}
 	visited := map[int]bool{}

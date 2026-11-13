@@ -164,6 +164,7 @@ func Aig_ManDupRepr(src *Graph, ordered int32) *Graph {
 		panic("aig: representative storage not started")
 	}
 	dst := dupStart(src)
+	defer dst.updateTrueTerminalCounts()
 	if ordered != 0 {
 		for id, n := range src.nodes {
 			if src.deleted[id] {
