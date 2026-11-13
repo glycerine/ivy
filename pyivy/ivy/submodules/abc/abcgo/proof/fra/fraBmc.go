@@ -9,6 +9,7 @@ import (
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/opt/dar"
+	"github.com/glycerine/abcgo/proof/framgr"
 )
 
 type Fra_Bmc_t_ struct {
@@ -131,14 +132,16 @@ func Fra_BmcPerform(p *Fra_Man_t, prefix, depth int32) {
 	p.pBmc = b
 	defer func() { Fra_BmcStop(b); p.pBmc = nil }()
 	b.pAigFrames = Fra_BmcFrames(b, 0)
-	var callback func(*Fra_Man_t)
 	oldImps := 0
 	if p.pCla.vImps != nil {
 		b.vImps = p.pCla.vImps
 		oldImps = vec.Vec_IntSize(b.vImps)
-		callback = func(comb *Fra_Man_t) { Fra_BmcFilterImplications(comb, b) }
 	}
-	b.pAigFraig, b.pObjToFraig = Fra_FraigEquivenceMapped(b.pAigFrames, 1000000, 0, callback)
+	if b.vImps != nil {
+		b.pAigFraig, b.pObjToFraig = framgr.SweepBMCImplications(b.pAigFrames, b.pAig, b.nPref, b.nDepth, b.pObjToFrames, b.vImps, 1000000)
+	} else {
+		b.pAigFraig, b.pObjToFraig = Fra_FraigEquivenceMapped(b.pAigFrames, 1000000, 0, nil)
+	}
 	if b.pAigFraig == nil {
 		panic("fra: BMC frame FRAIG failed")
 	}

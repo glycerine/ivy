@@ -2,8 +2,10 @@ package fra
 
 import (
 	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/proof/framgr"
 	"math/rand"
+	"slices"
 	"testing"
 )
 
@@ -221,5 +223,40 @@ func TestSharedMappedSweepPreservesSourceMapping(t *testing.T) {
 				t.Fatalf("input %v mapped outputs %v != %v", in, a, b)
 			}
 		}
+	}
+}
+
+func TestSharedBMCImplicationCallbackMatchesLegacy(t *testing.T) {
+	makeBmc := func() *Fra_Bmc_t {
+		g := aig.NewGraph()
+		x, y, q := g.NewInput(), g.NewInput(), g.NewInput()
+		n := g.AND(x, y)
+		g.AddOutput(q)
+		g.AddOutput(n)
+		aig.Aig_ManSetRegNum(g, 1)
+		b := Fra_BmcStart(g, 0, 2)
+		b.pAigFrames = Fra_BmcFrames(b, 0)
+		b.vImps = vec.Vec_IntAlloc(4)
+		for _, pair := range [][2]aig.Edge{{x, q}, {q, x}, {x, n}, {n, x}} {
+			vec.Vec_IntPush(b.vImps, Fra_ImpCreate(int32(pair[0].NodeID()), int32(pair[1].NodeID())))
+		}
+		return b
+	}
+	oldB, newB := makeBmc(), makeBmc()
+	var pars Fra_Par_t
+	Fra_ParamsDefault(&pars)
+	pars.nBTLimitNode = 1000000
+	pars.fDoSparse = 1
+	pars.fDontShowBar = 1
+	old, mapping := fraFraigPerformMapped(oldB.pAigFrames, &pars, func(m *Fra_Man_t) { Fra_BmcFilterImplications(m, oldB) })
+	shared, sharedMapping := framgr.SweepBMCImplications(newB.pAigFrames, newB.pAig, newB.nPref, newB.nDepth, newB.pObjToFrames, newB.vImps, 1000000)
+	if old == nil || shared == nil {
+		t.Fatal("nil result")
+	}
+	if !slices.Equal(vec.Vec_IntArray(oldB.vImps), vec.Vec_IntArray(newB.vImps)) {
+		t.Fatalf("implications differ: %v != %v", vec.Vec_IntArray(oldB.vImps), vec.Vec_IntArray(newB.vImps))
+	}
+	if !slices.Equal(mapping, sharedMapping) {
+		t.Fatalf("frame mappings differ: %v != %v", mapping, sharedMapping)
 	}
 }
