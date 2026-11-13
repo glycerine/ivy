@@ -203,6 +203,7 @@ func clausFinishSelection(p *Clu_Man_t, filterProven bool) int32 {
 	return 1
 }
 func Fra_ClausProcessClauses2(p *Clu_Man_t, refs int32) int32 {
+	p.nCuts = 0
 	if p.nLutSize >= 13 {
 		panic("fra: cut size exceeds source limit")
 	}
@@ -241,6 +242,7 @@ func Fra_ClausProcessClauses2(p *Clu_Man_t, refs int32) int32 {
 	return clausFinishSelection(p, true)
 }
 func Fra_ClausProcessClauses(p *Clu_Man_t, refs int32) int32 {
+	p.nCuts = 0
 	seq, comb := clausSimulations(p)
 	if seq == nil {
 		return 0
