@@ -14,13 +14,14 @@ type Fra_Lcr_t struct {
 	classes                *classPartition
 	parts                  [][]int32
 	inputPart, inputOutput []int
+	inputIndices           map[int]int
 	fraigs                 []*aig.Graph
 	marked                 map[int]bool
 	nIters                 int32
 }
 
 func Lcr_ManAlloc(g *aig.Graph) *Fra_Lcr_t {
-	return &Fra_Lcr_t{graph: g, inputPart: make([]int, g.InputCount()), inputOutput: make([]int, g.InputCount()), marked: make(map[int]bool)}
+	return &Fra_Lcr_t{graph: g, inputPart: make([]int, g.InputCount()), inputOutput: make([]int, g.InputCount()), inputIndices: lcrInputIndices(g), marked: make(map[int]bool)}
 }
 func Lcr_ManFree(p *Fra_Lcr_t) {
 	if p != nil {
@@ -70,7 +71,7 @@ func lcrStartCopies(src *aig.Graph) (*aig.Graph, map[int]aig.Edge) {
 	return dst, copies
 }
 func (p *Fra_Lcr_t) outputForInput(id int) int {
-	index, ok := lcrInputIndices(p.graph)[id]
+	index, ok := p.inputIndices[id]
 	if !ok {
 		panic("latch class contains non-input")
 	}
@@ -99,7 +100,7 @@ func Fra_LcrDeriveAigForPartitioning(p *Fra_Lcr_t) *aig.Graph {
 	return dst
 }
 func Fra_LcrRemapPartitions(p *Fra_Lcr_t, parts [][]int32) [][]int32 {
-	indices := lcrInputIndices(p.graph)
+	indices := p.inputIndices
 	out := make([][]int32, len(parts))
 	for part, group := range parts {
 		for _, index := range group {
@@ -185,7 +186,7 @@ func Fra_LcrCreatePart(p *Fra_Lcr_t, outputs []int32) *aig.Graph {
 	return dst
 }
 func (p *Fra_Lcr_t) outputForNode(id int) (aig.Edge, *aig.Graph) {
-	index, ok := lcrInputIndices(p.graph)[id]
+	index, ok := p.inputIndices[id]
 	if !ok {
 		panic("invalid latch input")
 	}
@@ -194,7 +195,7 @@ func (p *Fra_Lcr_t) outputForNode(id int) (aig.Edge, *aig.Graph) {
 	return g.Node(g.Outputs()[p.inputOutput[index]]).Fanins[0], g
 }
 func (p *Fra_Lcr_t) nodesEqual(a, b int) bool {
-	ia, ib := lcrInputIndices(p.graph)[a], lcrInputIndices(p.graph)[b]
+	ia, ib := p.inputIndices[a], p.inputIndices[b]
 	if p.inputPart[ia] != p.inputPart[ib] {
 		panic("equivalent latch candidates in different partitions")
 	}
