@@ -19,7 +19,11 @@ func Llb_ManPrintAig(p *Llb_Man_t) {
 	if p == nil || p.pAig == nil {
 		return
 	}
-	fmt.Printf("pi=%d po=%d ff=%d vars=%d and=%d\n", saig.Saig_ManPiNum(p.pAig), saig.Saig_ManPoNum(p.pAig), saig.Saig_ManRegNum(p.pAig), vec.Vec_IntSize(p.vVar2Obj), aig.Aig_ManNodeNum(p.pAig))
+	vars := vec.Vec_IntSize(p.vVar2Obj)
+	fmt.Printf("pi =%3d  po =%3d  ff =%3d  int =%5d  var =%5d  part =%5d  and =%5d  lev =%4d  \n",
+		saig.Saig_ManPiNum(p.pAig), saig.Saig_ManPoNum(p.pAig), saig.Saig_ManRegNum(p.pAig),
+		vars-int(aig.Aig_ManCiNum(p.pAig))-int(saig.Saig_ManRegNum(p.pAig)), vars,
+		vec.Vec_PtrSize(p.vGroups)-2, aig.Aig_ManNodeNum(p.pAig), aig.Aig_ManLevelNum(p.pAig))
 }
 
 // Llb_ManModelCheckAig creates an independent working graph and runs exact

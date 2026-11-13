@@ -3,6 +3,7 @@ package llb
 import (
 	"fmt"
 
+	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/bdd/cudd/core"
 	"github.com/glycerine/abcgo/misc/vec"
 )
@@ -36,7 +37,18 @@ func Llb4_Nonlin4SweepBadMonitor(g *Aig_Man_t, order *Vec_Int_t, dd *DdManager) 
 	return Llb_Nonlin4ComputeBad(dd, g, order)
 }
 func Llb_Nonlin4SweepVars2Q(g *Aig_Man_t, order *Vec_Int_t, addLis int32) *Vec_Int_t {
-	return Llb_Nonlin4FindVars2Q(nil, g, order)
+	mask := vec.Vec_IntAlloc(0)
+	vec.Vec_IntFill(mask, int(aig.Aig_ManObjNumMax(g)), 1)
+	regs := int(g.RegisterCount())
+	for _, edge := range g.Inputs()[len(g.Inputs())-regs:] {
+		vec.Vec_IntWriteEntry(mask, int(vec.Vec_IntEntry(order, edge.NodeID())), 0)
+	}
+	if addLis != 0 {
+		for _, edge := range g.Outputs()[len(g.Outputs())-regs:] {
+			vec.Vec_IntWriteEntry(mask, int(vec.Vec_IntEntry(order, edge.NodeID())), 0)
+		}
+	}
+	return mask
 }
 func Llb_Nonlin4SweepDeref(dd *DdManager, parts *Vec_Ptr_t) {
 	if parts != nil {
