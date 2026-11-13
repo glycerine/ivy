@@ -232,11 +232,46 @@ func Cec_GiaSplitTestInt(p *gia.Gia_Man_t, procs, timeout, maxIter, lookAhead, v
 func Cec_GiaSplitTest2(p *gia.Gia_Man_t, procs, timeout, maxIter, lookAhead, verbose, veryVerbose, silent int32) int32 {
 	return Cec_GiaSplitTestInt(p, 1, timeout, maxIter, lookAhead, verbose, veryVerbose, silent)
 }
+
+// splitOutput retains all CIs in their original order: the SAT assignment must
+// remain meaningful in the original graph even when the output cone omits or
+// visits some inputs in a different order. Register outputs are combinational
+// inputs for this single-output SAT query.
+func splitOutput(p *gia.Gia_Man_t, output int32) *gia.Gia_Man_t {
+	q := gia.Gia_ManStart(gia.Gia_ManObjNum(p))
+	if gia.Gia_ManHasMuxData(p) {
+		q.EnableMuxes()
+	}
+	copies := make([]int32, gia.Gia_ManObjNum(p))
+	for _, lit := range p.InputLiterals() {
+		copies[lit>>1] = gia.Gia_ManAppendCi(q)
+	}
+	copyLit := func(lit int32) int32 { return copies[lit>>1] ^ (lit & 1) }
+	for id := int32(1); id < gia.Gia_ManObjNum(p); id++ {
+		a, b, c, kind := p.Gate(id)
+		switch kind {
+		case 1, 6:
+		case 2:
+			copies[id] = gia.Gia_ManAppendAnd(q, copyLit(a), copyLit(b))
+		case 3:
+			copies[id] = gia.Gia_ManAppendXorReal(q, copyLit(a), copyLit(b))
+		case 4:
+			copies[id] = gia.Gia_ManAppendMuxReal(q, copyLit(a), copyLit(b), copyLit(c))
+		case 5:
+			copies[id] = gia.Gia_ManAppendBuf(q, copyLit(a))
+		default:
+			panic("cec: invalid gate in split output")
+		}
+	}
+	gia.Gia_ManAppendCo(q, copyLit(p.OutputLiterals()[output]))
+	return q
+}
+
 func Cec_GiaSplitTest(p *gia.Gia_Man_t, procs, timeout, maxIter, lookAhead, verbose, veryVerbose, silent int32) int32 {
 	p.ClearCombinationalCounterexample()
 	unknown := false
 	for output := int32(0); output < gia.Gia_ManPoNum(p); output++ {
-		one := gia.Gia_ManDupOutputGroup(p, output, output+1)
+		one := splitOutput(p, output)
 		workers := procs
 		if workers > 1 {
 			workers--
@@ -280,15 +315,20 @@ func Cec_GiaSplitPrintRefs(p *gia.Gia_Man_t) {
 
 // Cec_GiaSplitExplore prints reference counts around recognized XORs.
 func Cec_GiaSplitExplore(p *gia.Gia_Man_t) {
-	if gia.Gia_ManHasMuxData(p) {
-		panic("cec: explicit mux data is unsupported")
-	}
 	p.Refs = nil
 	gia.Gia_ManCreateRefs(p)
 	count := 0
 	for id := int32(1); id < gia.Gia_ManObjNum(p); id++ {
 		obj := gia.Gia_ManObj(p, id)
-		if gia.Gia_ObjIsAnd(obj) == 0 {
+		_, _, _, kind := p.Gate(id)
+		// Structural XOR recognition assumes an AND-inverter cone. Native
+		// MUX, XOR and buffer nodes are not such cones.
+		if kind != 2 {
+			continue
+		}
+		_, _, _, k0 := p.Gate(gia.Gia_ObjId(p, gia.Gia_ObjFanin0(obj)))
+		_, _, _, k1 := p.Gate(gia.Gia_ObjId(p, gia.Gia_ObjFanin1(obj)))
+		if k0 != 2 || k1 != 2 {
 			continue
 		}
 		var a, b *gia.Gia_Obj_t
