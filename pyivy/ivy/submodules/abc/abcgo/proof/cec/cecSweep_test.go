@@ -8,6 +8,7 @@ import (
 
 func TestCecSpeculativeReductionAndUpdate(t *testing.T) {
 	g := gia.Gia_ManStart(16)
+	g.SetIdentity("source", "other-spec")
 	x, y, z := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
 	xy, yz := gia.Gia_ManAppendAnd(g, x, y), gia.Gia_ManAppendAnd(g, y, z)
 	a, b := gia.Gia_ManAppendAnd(g, xy, z), gia.Gia_ManAppendAnd(g, x, yz)
@@ -19,6 +20,9 @@ func TestCecSpeculativeReductionAndUpdate(t *testing.T) {
 	gia.Gia_ObjSetNext(g, b>>1, -1)
 	p := Cec_ManFraStart(g, &Cec_ParFra_t{nDepthMax: 1})
 	queries := Cec_ManFraSpecReduction(p)
+	if name, spec := queries.Identity(); name != "source" || spec != "source" {
+		t.Fatalf("unexpected source metadata: %q %q", name, spec)
+	}
 	if gia.Gia_ManCoNum(queries) != 1 || vec.Vec_IntSize(p.vXorNodes) != 2 {
 		t.Fatalf("missing query: %d", gia.Gia_ManCoNum(queries))
 	}

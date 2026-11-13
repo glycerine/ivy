@@ -17,7 +17,8 @@ func Cec_ManFraSpecReduction(p *Cec_ManFra_t) *Gia_Man_t {
 		gia.Gia_ManLevelNum(g)
 	}
 	out := gia.Gia_ManStart(gia.Gia_ManObjNum(g))
-	gia.Gia_ManCopyNameSpec(out, g)
+	name, _ := g.Identity()
+	out.SetIdentity(name, name)
 	gia.Gia_ManHashAlloc(out)
 	copies := make([]int32, g.ObjectCount())
 	depths := make([]int32, g.ObjectCount())
