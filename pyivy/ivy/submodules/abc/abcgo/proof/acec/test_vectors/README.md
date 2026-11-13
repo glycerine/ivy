@@ -69,12 +69,20 @@ slots, including their values on failure. Intermediate AND calls are sequenced
 explicitly to avoid C's unspecified argument evaluation order changing node
 IDs. The Go regression builds the same GIA operations and compares every row.
 
-`acec_multiplier3_oracle.c` compares deterministic 3×3 multiplier graphs
-through C `Acec_Solve`. Invoke it with `-1` (equivalent), `0` (invert output
+`acec_multiplier_oracle.c` compares deterministic 3×3 and 4×4 multiplier graphs
+through C `Acec_Solve`. For 3×3, invoke it with `-1` (equivalent), `0` (invert output
 0), or `4` (invert output 4). Freshly compiled `src/proof/acec/*.c` routines,
 linked with the remaining ABC object files, return statuses `1`, `0`, and `1`
 respectively. The last result is the documented source false equivalence: the
 matched path discards the final two outputs. The Go test exhaustively checks
 the fixture's multiplier truth table and compares those statuses; set
-`ACEC_MULTIPLIER3_ORACLE` to a compiled oracle path to rerun C during the test.
+`ACEC_MULTIPLIER_ORACLE` to a compiled oracle path to rerun C during the test.
 The non-ACEC object files used for this comparison must also match the checkout.
+
+The same fixture accepts a second argument `4` for a 4×4 product. With flip
+arguments `-1`, `0`, and `6`, the checked-in C ACEC sources return `1`, `0`,
+and `1` respectively; the output-0 case also emits `SOURCE_WITNESS=00000000`.
+The last case is again the source's discarded-output false equivalence. The Go
+test checks all 256 operand pairs and replays both C and Go witnesses against
+the original circuit pair. Regenerate the oracle after changing its C fixture;
+the earlier 3×3-only binary does not accept the width argument.
