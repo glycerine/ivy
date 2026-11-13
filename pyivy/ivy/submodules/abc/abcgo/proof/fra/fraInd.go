@@ -54,43 +54,7 @@ import "os"
   SeeAlso     []
 
 ***********************************************************************/
-func Fra_FraigInductionRewrite(p *Fra_Man_t) {
-    var pTemp *Aig_Man_t;
-    var pObj, pObjPo *Aig_Obj_t;
-    var nTruePis, k, i int32;
-    var clk abctime  = Abc_Clock();
-    // perform AIG rewriting on the speculated frames
-//    pTemp = Dar_ManRwsat( pTemp, 1, 0 );
-    pTemp = Dar_ManRewriteDefault( p.pManFraig );
-//    printf( "Before = %6d.  After = %6d.\n", Aig_ManNodeNum(p->pManFraig), Aig_ManNodeNum(pTemp) ); 
-//Aig_ManDumpBlif( p->pManFraig, "1.blif", NULL, NULL );
-//Aig_ManDumpBlif( pTemp, "2.blif", NULL, NULL );
-//    Fra_FramesWriteCone( pTemp );
-//    Aig_ManStop( pTemp );
-    // transfer PI/register pointers
-    assert(p.pManFraig.nRegs == pTemp.nRegs, "p.pManFraig.nRegs == pTemp.nRegs");
-    assert(p.pManFraig.nAsserts == pTemp.nAsserts, "p.pManFraig.nAsserts == pTemp.nAsserts");
-    nTruePis = Aig_ManCiNum(p.pManAig) - Aig_ManRegNum(p.pManAig);
-    memset( p.pMemFraig, 0, sizeof(Aig_Obj_t *) * p.nSizeAlloc * p.nFramesAll );
-    Fra_ObjSetFraig( Aig_ManConst1(p.pManAig), p.pPars.nFramesK, Aig_ManConst1(pTemp) );
-    // inlining of macro Aig_ManForEachPiSeq
-    // inlining of macro Vec_PtrForEachEntryStop
-    for  i = 0; (i < Aig_ManCiNum(p.pManAig)-Aig_ManRegNum(p.pManAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vCis, i)), 1); i++  {
-        Fra_ObjSetFraig( pObj, p.pPars.nFramesK, Aig_ManCi(pTemp,nTruePis*p.pPars.nFramesK+i) );
-    }
-    k = 0;
-    assert(Aig_ManRegNum(p.pManAig) == Aig_ManCoNum(pTemp) - pTemp.nAsserts, "Aig_ManRegNum(p.pManAig) == Aig_ManCoNum(pTemp) - pTemp.nAsserts");
-    // inlining of macro Aig_ManForEachLoSeq
-    // inlining of macro Vec_PtrForEachEntryStart
-    for  i = Aig_ManCiNum(p.pManAig)-Aig_ManRegNum(p.pManAig); (i < Vec_PtrSize(p.pManAig.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vCis, i)), 1); i++  {
-        pObjPo = Aig_ManCo(pTemp, pTemp.nAsserts + k++);
-        Fra_ObjSetFraig( pObj, p.pPars.nFramesK, Aig_ObjChild0(pObjPo) );
-    }
-    // exchange
-    Aig_ManStop( p.pManFraig );
-    p.pManFraig = pTemp;
-p.timeRwr += Abc_Clock() - clk;
-}
+
 
 /**Function*************************************************************
 
@@ -129,64 +93,7 @@ p.timeRwr += Abc_Clock() - clk;
   SeeAlso     []
 
 ***********************************************************************/
-func Fra_FramesAddMore(p *Aig_Man_t, nFrames int32) {
-    var pObj *Aig_Obj_t;
-    var pLatches **Aig_Obj_t;
-    var i, k, f, nNodesOld int32;
-    // set copy pointer of each object to point to itself
-    // inlining of macro Aig_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {
-        pObj.pData = pObj; }
-    }
-    // iterate and add objects
-    nNodesOld = Aig_ManObjNumMax(p);
-    // inlining of macro ABC_ALLOC
-    pLatches = ((Aig_Obj_t * *) malloc(sizeof(Aig_Obj_t *) * (size_t)(Aig_ManRegNum(p))));
-    for  f = 0; f < nFrames; f++  {
-        // clean latch inputs and outputs
-        // inlining of macro Aig_ManForEachLiSeq
-        // inlining of macro Vec_PtrForEachEntryStart
-        for  i = Aig_ManCoNum(p)-Aig_ManRegNum(p); (i < Vec_PtrSize(p.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-            pObj.pData = nil;
-        }
-        // inlining of macro Aig_ManForEachLoSeq
-        // inlining of macro Vec_PtrForEachEntryStart
-        for  i = Aig_ManCiNum(p)-Aig_ManRegNum(p); (i < Vec_PtrSize(p.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {
-            pObj.pData = nil;
-        }
-        // save the latch input values
-        k = 0;
-        // inlining of macro Aig_ManForEachLiSeq
-        // inlining of macro Vec_PtrForEachEntryStart
-        for  i = Aig_ManCoNum(p)-Aig_ManRegNum(p); (i < Vec_PtrSize(p.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-            if Aig_ObjFanin0(pObj).pData {
-                pLatches[k++] = Aig_ObjChild0Copy(pObj);
-            } else {
-                pLatches[k++] = nil; }
-        }
-        // insert them as the latch output values
-        k = 0;
-        // inlining of macro Aig_ManForEachLoSeq
-        // inlining of macro Vec_PtrForEachEntryStart
-        for  i = Aig_ManCiNum(p)-Aig_ManRegNum(p); (i < Vec_PtrSize(p.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {
-            pObj.pData = pLatches[k]; k++;
-        }
-        // create the next time frame of nodes
-        // inlining of macro Aig_ManForEachNode
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-            if i > nNodesOld {
-                break; }
-            if Aig_ObjFanin0(pObj).pData && Aig_ObjFanin1(pObj).pData {
-                pObj.pData = Aig_And( p, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );
-            } else {
-                pObj.pData = nil; }
-        }
-        }
-    }
-    pLatches = nil;
-}
+
 
 
 /**Function*************************************************************
