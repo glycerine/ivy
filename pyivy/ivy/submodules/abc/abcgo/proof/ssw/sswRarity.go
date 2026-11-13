@@ -142,6 +142,7 @@ func Ssw_RarDeriveCex(p *Ssw_RarMan_t, frame, po, pattern, verbose int32) *util.
 	}
 	if saig.Saig_ManVerifyCex(p.pAig, cex) == 0 {
 		fmt.Println("Ssw_RarDeriveCex(): Counter-example is invalid.")
+		return nil
 	}
 	return cex
 }
@@ -755,6 +756,10 @@ outer:
 				if pars.fSolveAll == 0 {
 					Ssw_RarManPrepareRandom(seed)
 					cex := Ssw_RarDeriveCex(p, r*pars.nFrames+f, p.iFailPo, p.iFailPat, pars.fVerbose)
+					if cex == nil {
+						result = -1
+						break outer
+					}
 					if err := g.SetSequentialCounterexample(cex); err != nil {
 						panic(err)
 					}
@@ -933,6 +938,9 @@ func Ssw_RarSignalFilter(g *aig.Graph, pars *Ssw_RarPars_t) int32 {
 			if pars.fMiter != 0 && Ssw_RarManCheckNonConstOutputs(p, -1, 0) != 0 {
 				Ssw_RarManPrepareRandom(seed)
 				cex := Ssw_RarDeriveCex(p, r*pars.nFrames+f, p.iFailPo, p.iFailPat, 1)
+				if cex == nil {
+					return -1
+				}
 				if err := g.SetSequentialCounterexample(cex); err != nil {
 					panic(err)
 				}
