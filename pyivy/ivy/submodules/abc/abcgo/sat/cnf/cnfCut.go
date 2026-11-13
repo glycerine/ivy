@@ -193,7 +193,19 @@ func Cnf_CutCompose(manager *Cnf_Man_t, cut, fan *Cnf_Cut_t, leaf int32) *Cnf_Cu
 		}
 		setTruthBit(result.truth, assignment, cutValue(cut, cutAssignment))
 	}
-	result.Cost = uint8(cutSopCost(result.truth, len(resultLeaves)))
+	cost, covers := cutSopCovers(result.truth, len(resultLeaves))
+	result.Cost = uint8(cost)
+	if len(resultLeaves) >= 5 {
+		for polarity, cover := range covers {
+			if cover == nil {
+				continue
+			}
+			result.vIsop[polarity] = vec.Vec_IntAlloc(len(cover))
+			for _, cube := range cover {
+				vec.Vec_IntPush(result.vIsop[polarity], int32(cube))
+			}
+		}
+	}
 	return result
 }
 func containsLeaf(leaves []int32, id int32) bool {
@@ -205,6 +217,11 @@ func containsLeaf(leaves []int32, id int32) bool {
 	return false
 }
 func cutSopCost(truth []uint32, variables int) int {
+	cost, _ := cutSopCovers(truth, variables)
+	return cost
+}
+func cutSopCovers(truth []uint32, variables int) (int, [2][]uint32) {
+	var covers [2][]uint32
 	words := append([]uint32(nil), truth...)
 	if variables < 5 {
 		period := 1 << variables
@@ -216,18 +233,20 @@ func cutSopCost(truth []uint32, variables int) int {
 	}
 	var cover []uint32
 	if kit.Kit_TruthIsop(words, int32(variables), &cover, 0) < 0 {
-		return 127
+		return 127, covers
 	}
+	covers[1] = append([]uint32{}, cover...)
 	cost := len(cover)
 	for i := range words {
 		words[i] = ^words[i]
 	}
 	if kit.Kit_TruthIsop(words, int32(variables), &cover, 0) < 0 {
-		return 127
+		return 127, covers
 	}
+	covers[0] = append([]uint32{}, cover...)
 	cost += len(cover)
 	if cost > 127 {
-		return 127
+		return 127, covers
 	}
-	return cost
+	return cost, covers
 }

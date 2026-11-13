@@ -63,6 +63,18 @@ func TestCutCompositionCostReflectsCover(t *testing.T) {
 	}
 }
 
+func TestCutCompositionRetainsLargeCovers(t *testing.T) {
+	top := Cnf_CutFromTruth([]int32{1, 2, 3}, []uint32{0x80})
+	fan := Cnf_CutFromTruth([]int32{4, 5, 6}, []uint32{0x80})
+	result := Cnf_CutCompose(nil, top, fan, 2)
+	if result == nil || result.Cost != 6 || result.vIsop[0] == nil || result.vIsop[1] == nil {
+		t.Fatalf("missing five-input AND covers: %+v", result)
+	}
+	if vec.Vec_IntSize(result.vIsop[0]) != 5 || vec.Vec_IntSize(result.vIsop[1]) != 1 {
+		t.Fatalf("cover sizes %d, %d", vec.Vec_IntSize(result.vIsop[0]), vec.Vec_IntSize(result.vIsop[1]))
+	}
+}
+
 func TestCutCompositionHonorsMergeLimit(t *testing.T) {
 	manager := Cnf_ManStart()
 	manager.nMergeLimit = 3
