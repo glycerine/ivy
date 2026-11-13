@@ -695,12 +695,7 @@ func (s *Solver) SolveLimited(assumptions []Lit) LBool {
 			}
 			s.JustModel[0] = Lit(len(s.JustModel) - 1)
 		}
-		s.Model = make([]LBool, len(s.assigns))
-		for v, value := range s.assigns {
-			if !value.IsUndef() {
-				s.Model[v] = value
-			}
-		}
+		s.Model = append(s.Model[:0], s.assigns...)
 	} else if status == LFalse && len(s.Conflict) == 0 {
 		s.ok = false
 		s.proofClause(nil, false)
@@ -737,6 +732,17 @@ func (s *Solver) ToDimacs(w io.Writer, assumptions []Lit) error {
 		_, err := io.WriteString(w, "p cnf 1 2\n1 0\n-1 0\n")
 		return err
 	}
+	// Root unit clauses are omitted from the simplified export. An assumption
+	// contradicting a root assignment therefore needs an explicit UNSAT CNF.
+	for _, p := range assumptions {
+		if p < 0 || int(p.Var()) >= s.NVars() {
+			return fmt.Errorf("DIMACS assumption variable out of range: %d", p)
+		}
+		if s.ValueLit(p) == LFalse {
+			_, err := io.WriteString(w, "p cnf 1 2\n1 0\n-1 0\n")
+			return err
+		}
+	}
 	mapped := make(map[Var]int)
 	next := 1
 	mapVar := func(v Var) int {
@@ -763,9 +769,6 @@ func (s *Solver) ToDimacs(w io.Writer, assumptions []Lit) error {
 		clauses = append(clauses, row)
 	}
 	for _, p := range assumptions {
-		if p < 0 || int(p.Var()) >= s.NVars() {
-			return fmt.Errorf("DIMACS assumption variable out of range: %d", p)
-		}
 		mapVar(p.Var())
 	}
 	if _, err := fmt.Fprintf(w, "p cnf %d %d\n", len(mapped), len(clauses)+len(assumptions)); err != nil {

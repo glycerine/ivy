@@ -305,3 +305,18 @@ func TestSolverVisibleDRUPProof(t *testing.T) {
 		t.Fatal("proof did not conclude with empty clause")
 	}
 }
+
+func TestSolvePreservesUndefinedNonDecisionVariables(t *testing.T) {
+	s := NewSolver()
+	x := s.NewVar(true, false)
+	y := s.NewVar(true, false)
+	if !s.AddClause([]Lit{MkLit(x, false), MkLit(y, false)}) || !s.AddClause([]Lit{MkLit(x, true), MkLit(y, true)}) {
+		t.Fatal("unexpected inconsistency")
+	}
+	if got := s.SolveLimited(nil); got != LTrue {
+		t.Fatalf("got %v", got)
+	}
+	if len(s.Model) != 2 || !s.Model[0].IsUndef() || !s.Model[1].IsUndef() {
+		t.Fatalf("unassigned variables should remain undefined: %v", s.Model)
+	}
+}
