@@ -925,42 +925,7 @@ func Ssw_ClassesPreparePairsSimple(pMiter *Aig_Man_t, vPairs *Vec_Int_t) *Ssw_Cl
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_ClassesRefineConst1Group(p *Ssw_Cla_t, vRoots *Vec_Ptr_t, fRecursive int32) int32 {
-    var pObj *Aig_Obj_t;
-    var pReprNew *Aig_Obj_t;
-    var ppClassNew **Aig_Obj_t;
-    var i int32;
-    if Vec_PtrSize(vRoots) == 0 {
-        return 0; }
-    // collect the nodes to be refined
-    Vec_PtrClear( p.vClassNew );
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vRoots)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vRoots, i)), 1); i++  {
-        if !p.pFuncNodeIsConst( p.pManData, pObj ) {
-            Vec_PtrPush( p.vClassNew, pObj ); }
-    }
-    // check if there is a new class
-    if Vec_PtrSize(p.vClassNew) == 0 {
-        return 0; }
-    p.nCands1 -= Vec_PtrSize(p.vClassNew);
-    pReprNew = (Aig_Obj_t *)Vec_PtrEntry( p.vClassNew, 0 );
-    Aig_ObjSetRepr( p.pAig, pReprNew, nil );
-    if Vec_PtrSize(p.vClassNew) == 1 {
-        return 1; }
-    // create a new class composed of these nodes
-    ppClassNew = p.pMemClassesFree;
-    p.pMemClassesFree += Vec_PtrSize(p.vClassNew);
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vClassNew)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vClassNew, i)), 1); i++  {
-        ppClassNew[i] = pObj;
-        Aig_ObjSetRepr( p.pAig, pObj, i? pReprNew : nil );
-    }
-    Ssw_ObjAddClass( p, pReprNew, ppClassNew, Vec_PtrSize(p.vClassNew) );
-    // refine them recursively
-    if fRecursive != 0 {
-        return 1 + Ssw_ClassesRefineOneClass( p, pReprNew, 1 ); }
-    return 1;
-}
+
 
 /**Function*************************************************************
 
@@ -973,51 +938,7 @@ func Ssw_ClassesRefineConst1Group(p *Ssw_Cla_t, vRoots *Vec_Ptr_t, fRecursive in
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_ClassesRefineConst1(p *Ssw_Cla_t, fRecursive int32) int32 {
-    var pObj *Aig_Obj_t;
-    var pReprNew *Aig_Obj_t;
-    var ppClassNew **Aig_Obj_t;
-    var i int32;
-    // collect the nodes to be refined
-    Vec_PtrClear( p.vClassNew );
-    for  i = 0; i < Vec_PtrSize(p.pAig.vObjs); i++  {
-        if p.pAig.pReprs[i] == Aig_ManConst1(p.pAig) {
-            pObj = Aig_ManObj( p.pAig, i );
-            if !p.pFuncNodeIsConst( p.pManData, pObj ) {
-                Vec_PtrPush( p.vClassNew, pObj );
-//                Vec_PtrPush( p->vRefined, pObj );
-            }
-        }
-    }
-    // check if there is a new class
-    if Vec_PtrSize(p.vClassNew) == 0 {
-        return 0; }
-    if p.fConstCorr {
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(p.vClassNew)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vClassNew, i)), 1); i++  {
-            Aig_ObjSetRepr( p.pAig, pObj, nil );
-        }
-        return 1;
-    }
-    p.nCands1 -= Vec_PtrSize(p.vClassNew);
-    pReprNew = (Aig_Obj_t *)Vec_PtrEntry( p.vClassNew, 0 );
-    Aig_ObjSetRepr( p.pAig, pReprNew, nil );
-    if Vec_PtrSize(p.vClassNew) == 1 {
-        return 1; }
-    // create a new class composed of these nodes
-    ppClassNew = p.pMemClassesFree;
-    p.pMemClassesFree += Vec_PtrSize(p.vClassNew);
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vClassNew)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vClassNew, i)), 1); i++  {
-        ppClassNew[i] = pObj;
-        Aig_ObjSetRepr( p.pAig, pObj, i? pReprNew : nil );
-    }
-    Ssw_ObjAddClass( p, pReprNew, ppClassNew, Vec_PtrSize(p.vClassNew) );
-    // refine them recursively
-    if fRecursive != 0 {
-        return 1 + Ssw_ClassesRefineOneClass( p, pReprNew, 1 ); }
-    return 1;
-}
+
 
 
 ////////////////////////////////////////////////////////////////////////

@@ -30,3 +30,22 @@ func TestRecursiveClassRefinement(t *testing.T) {
 		t.Fatal("wrong representatives")
 	}
 }
+
+func TestRefineConstantCandidates(t *testing.T) {
+	g := aig.NewGraph()
+	a, b, c := g.NewInput(), g.NewInput(), g.NewInput()
+	p := Ssw_ClassesStart(g)
+	for _, x := range []aig.Edge{a, b, c} {
+		aig.Aig_ObjSetRepr(g, x, g.Const1())
+	}
+	p.nCands1 = 3
+	p.pFuncNodeIsConst = func(_ any, x aig.Edge) int32 {
+		if x == a {
+			return 1
+		}
+		return 0
+	}
+	if Ssw_ClassesRefineConst1(p, 0) != 1 || p.nCands1 != 1 || p.nClasses != 1 || aig.Aig_ObjRepr(g, c) != b || aig.Aig_ObjRepr(g, b) != aig.InvalidEdge {
+		t.Fatal("constant candidates incorrectly refined")
+	}
+}
