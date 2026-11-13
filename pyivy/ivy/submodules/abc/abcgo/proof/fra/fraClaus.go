@@ -4,8 +4,6 @@ package fra
 import (
 	"fmt"
 	"math/bits"
-	"path/filepath"
-	"strings"
 
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/aig/ioa"
@@ -259,7 +257,7 @@ func Fra_ClausWriteIndClauses(p *Clu_Man_t) {
 		}
 		dst.AddOutput(out)
 	}
-	name := strings.TrimSuffix(src.Name, filepath.Ext(src.Name)) + "_care.aig"
+	name := ioa.Ioa_FileNameGenericAppend(src.Name, "_care.aig")
 	if err := ioa.Ioa_WriteAiger(dst, name, 0, 1); err != nil {
 		fmt.Println("Could not write care clauses:", err)
 	}
