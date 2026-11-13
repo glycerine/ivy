@@ -1,6 +1,9 @@
 package fraig
 
-import "testing"
+import (
+	"testing"
+	"unsafe"
+)
 
 func TestSimulationCompareAndFirstDifference(t *testing.T) {
 	a := &Fraig_Node_t{puSimR: []uint32{0, 4}, uHashR: 7}
@@ -44,5 +47,27 @@ func TestFunctionalTableLookupAndRehash(t *testing.T) {
 	b.uHashD = 2
 	if Fraig_TableRehashF0(m, 1) != 1 || a.pNextD != b && b.pNextD != a {
 		t.Fatal("rehash did not group matching hashes")
+	}
+}
+
+func TestStructuralHashUsesTaggedPointerFormula(t *testing.T) {
+	p := Fraig_ManCreate(&Fraig_Params_t{NPatsRand: 128, NPatsDyna: 128})
+	defer Fraig_ManFree(p)
+	a, b := Fraig_ManReadIthVar(p, 0), Fraig_ManReadIthVar(p, 1)
+	for _, x := range []*Fraig_Node_t{a, Fraig_Not(a)} {
+		for _, y := range []*Fraig_Node_t{b, Fraig_Not(b)} {
+			xp, yp := uintptr(unsafe.Pointer(Fraig_Regular(x))), uintptr(unsafe.Pointer(Fraig_Regular(y)))
+			if Fraig_IsComplement(x) {
+				xp |= 1
+			}
+			if Fraig_IsComplement(y) {
+				yp |= 1
+			}
+			const bins = 1009
+			want := uint32((xp + yp*12582917) % bins)
+			if got := fraigStructuralKey(x, y, bins); got != want {
+				t.Fatalf("tagged pointer hash = %d, want %d", got, want)
+			}
+		}
 	}
 }

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/glycerine/abcgo/misc/util"
 	"math/bits"
+	"unsafe"
 )
 
 func Fraig_HashTableCreate(size int32) *Fraig_HashTable_t {
@@ -12,14 +13,15 @@ func Fraig_HashTableCreate(size int32) *Fraig_HashTable_t {
 }
 func Fraig_HashTableFree(p *Fraig_HashTable_t) { p.pBins = nil; p.nBins = 0; p.nEntries = 0 }
 func fraigStructuralKey(a, b *Fraig_Node_t, n int32) uint32 {
-	x, y := uint32(Fraig_Regular(a).Num)*2, uint32(Fraig_Regular(b).Num)*2
+	x := uintptr(unsafe.Pointer(Fraig_Regular(a)))
+	y := uintptr(unsafe.Pointer(Fraig_Regular(b)))
 	if Fraig_IsComplement(a) {
-		x++
+		x |= 1
 	}
 	if Fraig_IsComplement(b) {
-		y++
+		y |= 1
 	}
-	return (x*19 ^ y*1999) % uint32(n)
+	return uint32((x + y*12582917) % uintptr(n))
 }
 func Fraig_HashTableLookupS(m *Fraig_Man_t, a, b *Fraig_Node_t, result **Fraig_Node_t) int32 {
 	p := m.pTableS
