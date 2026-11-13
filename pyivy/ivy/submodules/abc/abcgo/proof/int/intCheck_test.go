@@ -61,3 +61,27 @@ func TestIncrementalInduction(t *testing.T) {
 		Inter_CheckStop(check)
 	}
 }
+
+// Adding the complementary interpolant makes the union of learned state sets
+// the entire state space, which is inductive even for a toggling latch.
+func TestIncrementalInductionCombinesInterpolants(t *testing.T) {
+	trans := aig.NewGraph()
+	state := trans.NewInput()
+	trans.AddOutput(state.Not())
+	aig.Aig_ManSetRegNum(trans, 1)
+	check := Inter_CheckStart(trans, 1)
+	defer Inter_CheckStop(check)
+	for i, invert := range []bool{false, true} {
+		inter := aig.NewGraph()
+		x := inter.NewInput()
+		if invert {
+			x = x.Not()
+		}
+		inter.AddOutput(x)
+		data := cnf.Cnf_Derive(inter, 1)
+		got := Inter_CheckPerform(check, data, 0)
+		if got != int32(i) {
+			t.Fatalf("interpolant %d: got %d want %d", i, got, i)
+		}
+	}
+}
