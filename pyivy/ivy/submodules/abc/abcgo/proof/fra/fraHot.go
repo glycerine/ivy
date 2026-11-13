@@ -34,17 +34,9 @@ import (
 ///                        DECLARATIONS                              ///
 ////////////////////////////////////////////////////////////////////////
 
-func Fra_RegToLit(n int32, c int32) int32 { if c != 0 {
-    return -n-1;
-} else {
-    return n+1;
-}       }
-func Fra_LitReg(n int32) int32 { if n>0 {
-    return n-1;
-} else {
-    return -n-1;
-}   }
-func Fra_LitSign(n int32) int32 { return (n<0);               }
+
+
+
 
 ////////////////////////////////////////////////////////////////////////
 ///                     FUNCTION DEFINITIONS                         ///
@@ -61,16 +53,7 @@ func Fra_LitSign(n int32) int32 { return (n<0);               }
   SeeAlso     []
 
 ***********************************************************************/
-func Fra_OneHotNodeIsConst(pSeq *Fra_Sml_t, pObj *Aig_Obj_t) int32 {
-    var pSims *uint32;
-    var i int32;
-    pSims = Fra_ObjSim(pSeq, pObj.Id);
-    for  i = pSeq.nWordsPref; i < pSeq.nWordsTotal; i++  {
-        if pSims[i] {
-            return 0; }
-    }
-    return 1;
-}
+
 
 /**Function*************************************************************
 
@@ -83,17 +66,7 @@ func Fra_OneHotNodeIsConst(pSeq *Fra_Sml_t, pObj *Aig_Obj_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Fra_OneHotNodesAreEqual(pSeq *Fra_Sml_t, pObj0 *Aig_Obj_t, pObj1 *Aig_Obj_t) int32 {
-    var pSims0, pSims1 *uint32;
-    var i int32;
-    pSims0 = Fra_ObjSim(pSeq, pObj0.Id);
-    pSims1 = Fra_ObjSim(pSeq, pObj1.Id);
-    for  i = pSeq.nWordsPref; i < pSeq.nWordsTotal; i++  {
-        if pSims0[i] != pSims1[i] {
-            return 0; }
-    }
-    return 1;
-}
+
 
 /**Function*************************************************************
 
@@ -106,33 +79,7 @@ func Fra_OneHotNodesAreEqual(pSeq *Fra_Sml_t, pObj0 *Aig_Obj_t, pObj1 *Aig_Obj_t
   SeeAlso     []
 
 ***********************************************************************/
-func Fra_OneHotNodesAreClause(pSeq *Fra_Sml_t, pObj1 *Aig_Obj_t, pObj2 *Aig_Obj_t, fCompl1 int32, fCompl2 int32) int32 {
-    var pSim1, pSim2 *uint32;
-    var k int32;
-    pSim1 = Fra_ObjSim(pSeq, pObj1.Id);
-    pSim2 = Fra_ObjSim(pSeq, pObj2.Id);
-    if (fCompl1 != 0) && (fCompl2 != 0) {
-        for  k = pSeq.nWordsPref; k < pSeq.nWordsTotal; k++  {
-            if pSim1[k] & pSim2[k] {
-                return 0; }
-        }
-    
-    } else if fCompl1 != 0 {
-        for  k = pSeq.nWordsPref; k < pSeq.nWordsTotal; k++  {
-            if pSim1[k] & ~pSim2[k] {
-                return 0; }
-        }
-    
-    } else if fCompl2 != 0 {
-        for  k = pSeq.nWordsPref; k < pSeq.nWordsTotal; k++  {
-            if ~pSim1[k] & pSim2[k] {
-                return 0; }
-        }
-    
-    } else {
-        assert(false, "0"); }
-    return 1;
-}
+
 
 /**Function*************************************************************
 
@@ -271,28 +218,7 @@ func Fra_OneHotCheck(p *Fra_Man_t, vOneHots *Vec_Int_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Fra_OneHotRefineUsingCex(p *Fra_Man_t, vOneHots *Vec_Int_t) int32 {
-    var pObj1, pObj2 *Aig_Obj_t;
-    var i, Out1, Out2, RetValue int32;
-    var nPiNum int32  = Aig_ManCiNum(p.pManAig) - Aig_ManRegNum(p.pManAig);
-    assert(p.pSml.pAig == p.pManAig, "p.pSml.pAig == p.pManAig");
-    for  i = 0; i < Vec_IntSize(vOneHots); i += 2  {
-        Out1 = Vec_IntEntry( vOneHots, i );
-        Out2 = Vec_IntEntry( vOneHots, i+1 );
-        if Out1 == 0 && Out2 == 0 {
-            continue; }
-        // get the corresponding nodes
-        pObj1 = Aig_ManCi( p.pManAig, nPiNum + Fra_LitReg(Out1) );
-        pObj2 = Aig_ManCi( p.pManAig, nPiNum + Fra_LitReg(Out2) );
-        // check if implication holds using this simulation info
-        if !(Fra_OneHotNodesAreClause( p.pSml, pObj1, pObj2, Fra_LitSign(Out1), Fra_LitSign(Out2) ) != 0) {
-            Vec_IntWriteEntry( vOneHots, i, 0 );
-            Vec_IntWriteEntry( vOneHots, i+1, 0 );
-            RetValue = 1;
-        }
-    }
-    return RetValue;
-}
+
 
 /**Function*************************************************************
 
@@ -305,17 +231,7 @@ func Fra_OneHotRefineUsingCex(p *Fra_Man_t, vOneHots *Vec_Int_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Fra_OneHotCount(p *Fra_Man_t, vOneHots *Vec_Int_t) int32 {
-    var i, Out1, Out2, Counter int32;
-    for  i = 0; i < Vec_IntSize(vOneHots); i += 2  {
-        Out1 = Vec_IntEntry( vOneHots, i );
-        Out2 = Vec_IntEntry( vOneHots, i+1 );
-        if Out1 == 0 && Out2 == 0 {
-            continue; }
-        Counter++;
-    }
-    return Counter;
-}
+
 
 /**Function*************************************************************
 
@@ -328,68 +244,7 @@ func Fra_OneHotCount(p *Fra_Man_t, vOneHots *Vec_Int_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Fra_OneHotEstimateCoverage(p *Fra_Man_t, vOneHots *Vec_Int_t) {
-    var nSimWords int32  = (1<<14);
-    var nRegs int32  = Aig_ManRegNum(p.pManAig);
-    var vSimInfo *Vec_Ptr_t;
-    var pSim1, pSim2, pSimTot *uint32;
-    var i, w, Out1, Out2, nCovered, Counter int32;
-    var clk abctime  = Abc_Clock();
 
-    // generate random sim-info at register outputs
-    vSimInfo = Vec_PtrAllocSimInfo( nRegs + 1, nSimWords );
-//    srand( 0xAABBAABB );
-    Aig_ManRandom(1);
-    for  i = 0; i < nRegs; i++  {
-        pSim1 = (unsigned *)Vec_PtrEntry( vSimInfo, i );
-        for  w = 0; w < nSimWords; w++  {
-            pSim1[w] = Fra_ObjRandomSim();
-        }
-    }
-    pSimTot = (unsigned *)Vec_PtrEntry( vSimInfo, nRegs );
-
-    // collect simulation info
-    memset( pSimTot, 0, sizeof(unsigned) * nSimWords );
-    for  i = 0; i < Vec_IntSize(vOneHots); i += 2  {
-        Out1 = Vec_IntEntry( vOneHots, i );
-        Out2 = Vec_IntEntry( vOneHots, i+1 );
-        if Out1 == 0 && Out2 == 0 {
-            continue; }
-//printf( "(%c%d,%c%d) ", 
-//Fra_LitSign(Out1)? '-': '+', Fra_LitReg(Out1), 
-//Fra_LitSign(Out2)? '-': '+', Fra_LitReg(Out2) ); 
-        Counter++;
-        pSim1 = (unsigned *)Vec_PtrEntry( vSimInfo, Fra_LitReg(Out1) );
-        pSim2 = (unsigned *)Vec_PtrEntry( vSimInfo, Fra_LitReg(Out2) );
-        if (Fra_LitSign(Out1) != 0) && (Fra_LitSign(Out2) != 0) {
-            for  w = 0; w < nSimWords; w++  {
-                pSimTot[w] |=  pSim1[w] &  pSim2[w];
-            }
-        } else if Fra_LitSign(Out1) != 0 {
-            for  w = 0; w < nSimWords; w++  {
-                pSimTot[w] |=  pSim1[w] & ~pSim2[w];
-            }
-        } else if Fra_LitSign(Out2) != 0 {
-            for  w = 0; w < nSimWords; w++  {
-                pSimTot[w] |= ~pSim1[w] &  pSim2[w];
-            }
-        } else {
-            assert(false, "0"); }
-    }
-//printf( "\n" );
-    // count the total number of patterns contained in the don't-care
-    nCovered = 0;
-    for  w = 0; w < nSimWords; w++  {
-        nCovered += Aig_WordCountOnes( pSimTot[w] );
-    }
-    Vec_PtrFree( vSimInfo );
-    // print the result
-    fmt.Printf("Care states ratio = %f. ", 1.0 * (nSimWords * 32 - nCovered) / (nSimWords * 32));
-    fmt.Printf("(%d out of %d patterns)  ", nSimWords * 32 - nCovered, nSimWords * 32);
-    // inlining of macro ABC_PRT
-    Abc_Print(1, "%s =", ("Time"));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;
-}
 
 /**Function*************************************************************
 
