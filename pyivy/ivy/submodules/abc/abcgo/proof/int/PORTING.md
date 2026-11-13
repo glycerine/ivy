@@ -15,12 +15,11 @@ and both optional interpolation algorithms. Larger state spaces, interrupted
 SAT solving, resource limits during rewriting, and independent validation of
 more proof structures remain useful areas for additional coverage.
 
-The optional MiniSat 1.14p interface from `intM114p.c` has been translated
-against an explicit proof-producing backend interface, but the original
-MiniSat 1.14p backend has not been ported. Explicitly selecting that missing
-backend reports `ErrMiniSat114pUnavailable` and returns unknown; no unrelated
-solver is selected in its place. ABC's normal C build excludes this optional
-source. The ordinary Go path uses the internal BSAT proof engine.
+The optional MiniSat 1.14p interface from `intM114p.c` uses the Go port of
+the original proof-producing solver in `sat/minisatp`. ABC's normal C build
+excludes this optional source; the ordinary Go path uses the internal BSAT
+proof engine. The MiniSat path observes conflict and time limits, and returns
+unknown when interrupted. Interrupted MiniSat solver instances are terminal.
 
 ## MiniSat 1.14p source and remaining work
 
@@ -36,12 +35,11 @@ It includes the solver, proof implementation, headers and MIT license. The
 [emina/minisatp tree](https://github.com/emina/minisatp) describes a patched
 and extended version; its compatibility with ABC has not been verified.
 
-Remaining work is to port the selected solver and its proof recording faithfully,
-preserving source attribution, and adapt its resolution roots and chains to
-`M114pBackend`. ABC's `src/sat/psat/m114p.h` declares a C wrapper, but the
-wrapper implementation is absent from this checkout, so its proof enumeration
-and root numbering must be reconstructed and checked against the interpolation
-consumers. Test SAT, UNSAT, contradictory roots, multi-step resolution, root
-ordering, and conflict counts against the original implementation, and validate
-each proof and both interpolants independently. Until that work is complete,
-the explicit unavailable result remains intentional.
+ABC's `src/sat/psat/m114p.h` declares a C wrapper, but the wrapper
+implementation is absent from this checkout. The Go adapter tracks input root
+indices and reconstructs a root-first proof, retaining the final contradiction.
+Tests check skipped roots, interleaved derivations, terminal empty roots, both
+interpolants, resource limits, and small sequential systems. The solver tests
+compare randomized formulas with exhaustive assignments and replay UNSAT proofs;
+an optional test compares results with the official MiniSat-p executable.
+Broader original-C comparisons and larger proof workloads remain useful.
