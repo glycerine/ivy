@@ -148,6 +148,14 @@ backward retiming driver's historical constraint-handling branches remain a
 documented fidelity limit. Initialized `Aig_ManFrames` with register outputs
 now follows C, including negative true-input counts when no CIs are created.
 
+Timeout accounting remains a cross-package fidelity gap. On Linux, C
+`Abc_Clock` measures current-thread CPU time; Go's shared `util.Abc_Clock` and
+several direct deadline checks use wall time. CEC's original sweep now pins its
+goroutine and uses the source CPU clock on Linux, but PDR, INT, ABS, SSW, and
+FRA deadlines and solver contexts still need a call-site-by-call-site review.
+Switching the shared helper alone would be unsafe because goroutines can move
+between OS threads and SAT/context deadlines currently use wall time.
+
 FRA/AIG partitioned FRAIG and choice and SAIG timeframe bridges are implemented
 through explicit callback APIs, with FRA wrappers supplying the corresponding
 source backends. Remaining `base/abci` callers are out-of-scope drafts and
