@@ -2,13 +2,17 @@
 
 ## Current status
 
+Last updated: 2026-11-13. The expanded test coverage was committed in
+`aa7a0ee8c`.
+
 The `abcgo/sat/bmc` package builds and its Go test suite passes. The remaining
 C-derived syntax in the package was translated, including the bounded-core,
 induction, fault-analysis, mesh, majority and exact-synthesis engines. This is
 package-level progress; it does not establish that the rest of `abcgo` builds or
 that every ABC feature and option is behaviorally identical to C.
 
-The most recent uncached verification from the `abcgo` directory was:
+An uncached verification from the `abcgo` directory passed before the latest
+test expansion:
 
 ```sh
 GOCACHE=/tmp/abcgo-cache go test -count=1 ./sat/bmc ./sat/bsat
@@ -47,7 +51,8 @@ The suite includes the following independent or end-to-end checks:
   executable is available. The fixtures passed against the local executable.
   `bmcDifferentialExpanded_test.go` adds five fixtures for multi-input and
   multi-register circuits, complemented logic, multiple outputs, and delayed
-  failures; an explicit-state oracle checks frames and replays witnesses.
+  failures; an explicit-state oracle checks frames and replays witnesses. All
+  eight fixtures passed against the local C ABC executable.
 - `bmcICheckOracle_test.go` compares induction SAT results against explicit
   state-pair exploration for 1,024 small cases.
 - `bmcCexCareOracle_test.go` replays completions of reported care sets and
@@ -65,6 +70,7 @@ The suite includes the following independent or end-to-end checks:
   placement witnesses from both solver backends and impossible small layouts.
   `bmcMeshFanoutOracle_test.go` adds reconvergent fanout and internal buffering;
   the existing mesh test oracle was corrected to allow valid gate buffers.
+  The expanded cases found no implementation bugs.
 
 Other focused tests cover packed two-bit fields, formula fault unfolding,
 SAT cardinality constraints, GIA simulation, bounded-core proof output, and
