@@ -28,7 +28,18 @@ func Fra_ClassesCopyReprs(p *Fra_Cla_t, failed *vec.Vec_Ptr_t) {
 			ids = append(ids, edge.NodeID())
 		}
 	}
-	p.CopyRepresentatives(p.Graph, ids)
+	p.CopyRepresentatives(p.Graph, nil)
+	if len(p.Constants) == 0 && len(p.Classes) == 0 {
+		for _, edge := range p.Graph.LiveEdges() {
+			if aig.Aig_ObjRepr(p.Graph, edge) != aig.InvalidEdge {
+				fmt.Println("Classes are not cleared!")
+				assert(false, "pReprs[i] == NULL")
+			}
+		}
+	}
+	for _, id := range ids {
+		aig.Aig_ObjSetRepr(p.Graph, aig.Edge(id<<1), aig.InvalidEdge)
+	}
 }
 
 func Fra_ClassCount(class []int) int32         { return int32(len(class)) }
