@@ -159,7 +159,7 @@ func KLive(n *Network, options KLiveOptions) KLiveResult {
 	if (options.Directive == 1 || options.Directive == 3 || options.Directive == 4) && invariant < 0 {
 		return KLiveResult{Status: -1, Error: fmt.Errorf("live: csSafetyInvar_ output missing")}
 	}
-	if (options.Directive == 3 || options.Directive == 4) && len(barriers) > 0 {
+	if options.Directive == 3 || options.Directive == 4 {
 		if collectWindowBeginSignalWithDSC(n, n.Graph) < 0 || collectWithinWindowSignalWithDSC(n, n.Graph) < 0 || findPendingSignal(n) < 0 {
 			return KLiveResult{Status: -1, Error: fmt.Errorf("live: barrier window/pending outputs missing")}
 		}

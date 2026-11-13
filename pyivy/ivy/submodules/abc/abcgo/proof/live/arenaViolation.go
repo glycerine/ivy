@@ -88,9 +88,6 @@ func createMonotoneBarriers(p *aig.Graph, signals, previous []aig.Edge, pending,
 	return result
 }
 func createNewAigWith0LivePoWithDSC(p *aig.Graph, signals []aig.Edge, index *int32, windowBegin, withinWindow, pendingIndex int32, barriers [][]int32) *aig.Graph {
-	if len(barriers) == 0 {
-		return createNewAigWith0LivePo(p, signals, index)
-	}
 	if windowBegin < 0 || withinWindow < 0 || pendingIndex < 0 {
 		panic("live: arena window/pending output missing")
 	}
