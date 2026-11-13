@@ -35,3 +35,23 @@ func TestSecTransferRequiresOriginalReplay(t *testing.T) {
 	}
 
 }
+
+func TestSecTransfersCombinationalMixedModel(t *testing.T) {
+	original := aig.NewGraph()
+	a, b := original.NewInput(), original.NewInput()
+	original.AddOutput(original.XOR(a, b))
+	reduced := aig.Aig_ManDupSimple(original)
+	reduced.Data = []int32{1, 0}
+	if !secTransferWitness(original, reduced) {
+		t.Fatal("mixed combinational witness not transferred")
+	}
+	cex := original.SequentialCounterexample()
+	if cex == nil || !util.Abc_InfoHasBit(cex.PData, 0) || util.Abc_InfoHasBit(cex.PData, 1) {
+		t.Fatalf("wrong witness: %+v", cex)
+	}
+	reduced.Data = []int32{1, 1}
+	original.ClearSequentialCounterexample()
+	if secTransferWitness(original, reduced) {
+		t.Fatal("accepted nonfailing combinational model")
+	}
+}

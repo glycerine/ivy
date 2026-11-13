@@ -31,8 +31,30 @@ func Fra_SecSetDefaultParams(p *Fra_Sec_t) {
 // secTransferWitness copies only a counterexample that replays on the original
 // graph. Transformations that alter inputs or state may invalidate a trace.
 func secTransferWitness(original, reduced *aig.Graph) bool {
+	pis := original.InputCount() - int(original.RegisterCount())
+	if pis != reduced.InputCount()-int(reduced.RegisterCount()) {
+		return false
+	}
 	cex := reduced.SequentialCounterexample()
-	if cex == nil || original.InputCount()-int(original.RegisterCount()) != reduced.InputCount()-int(reduced.RegisterCount()) {
+	if cex == nil && reduced.RegisterCount() == 0 {
+		model, ok := reduced.Data.([]int32)
+		if !ok || len(model) != pis {
+			return false
+		}
+		copy := util.Abc_CexAlloc(original.RegisterCount(), int32(pis), 1)
+		for i, value := range model {
+			if value != 0 {
+				util.Abc_InfoSetBit(copy.PData, original.RegisterCount()+int32(i))
+			}
+		}
+		output := saig.Saig_ManFindFailedPoCex(original, copy)
+		if output < 0 {
+			return false
+		}
+		copy.IPo = output
+		return original.SetSequentialCounterexample(copy) == nil
+	}
+	if cex == nil {
 		return false
 	}
 	copy := util.Abc_CexDup(cex, original.RegisterCount())
