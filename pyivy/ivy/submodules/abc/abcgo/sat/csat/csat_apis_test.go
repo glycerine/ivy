@@ -328,10 +328,22 @@ func TestLimitsAndBenchDump(t *testing.T) {
 		t.Fatal(err)
 	}
 	text := string(data)
-	for _, want := range []string{"INPUT(x)", "one = 1", "nx = NOT(x)", "OUTPUT(nx)"} {
+	for _, want := range []string{"INPUT(x)", "one = 1", "nx = NOT(x)", "OUTPUT(out)", "out = BUFF(nx)"} {
 		if !strings.Contains(text, want) {
 			t.Errorf("BENCH output lacks %q:\n%s", want, text)
 		}
+	}
+}
+
+func TestTargetResultAllocationIsIndexable(t *testing.T) {
+	result := ABC_TargetResAlloc(3)
+	if result.NoSig != 3 || len(result.Names) != 3 || len(result.Values) != 3 {
+		t.Fatalf("inconsistent result allocation: %+v", result)
+	}
+	result.Names[2], result.Values[2] = "third", 1
+	ABC_TargetResFree(result)
+	if result.Names != nil || result.Values != nil {
+		t.Fatal("result storage not released")
 	}
 }
 

@@ -503,7 +503,7 @@ func ABC_TargetResAlloc(nVars int32) *CSAT_Target_ResultT {
 	if nVars < 0 {
 		nVars = 0
 	}
-	return &CSAT_Target_ResultT{NoSig: nVars, Names: make([]string, 0, nVars), Values: make([]int32, 0, nVars)}
+	return &CSAT_Target_ResultT{NoSig: nVars, Names: make([]string, nVars), Values: make([]int32, nVars)}
 }
 func ABC_TargetResFree(p *CSAT_Target_ResultT) {
 	if p == nil {
@@ -535,7 +535,7 @@ func dumpBENCH(s *managerState, file string) error {
 		case CSAT_BPI, CSAT_BPPI:
 			_, err = fmt.Fprintf(w, "INPUT(%s)\n", g.name)
 		case CSAT_BPO, CSAT_BPPO:
-			_, err = fmt.Fprintf(w, "OUTPUT(%s)\n", g.inputs[0])
+			_, err = fmt.Fprintf(w, "OUTPUT(%s)\n%s = BUFF(%s)\n", g.name, g.name, g.inputs[0])
 		case CSAT_CONST:
 			_, err = fmt.Fprintf(w, "%s = 1\n", g.name)
 		default:
