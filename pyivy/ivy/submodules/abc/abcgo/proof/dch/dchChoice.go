@@ -224,7 +224,8 @@ func Dch_DeriveChoiceAig(g *aig.Graph, skip int) (*aig.Graph, error) {
 func Dch_DeriveChoiceCountReprs(g *aig.Graph) int {
 	n := 0
 	for _, edge := range g.LiveEdges() {
-		if aig.Aig_ObjRepr(g, edge) != aig.InvalidEdge {
+		if repr := aig.Aig_ObjRepr(g, edge); repr != aig.InvalidEdge {
+			assert(repr.NodeID() < edge.NodeID(), "representative precedes node")
 			n++
 		}
 	}
@@ -233,7 +234,8 @@ func Dch_DeriveChoiceCountReprs(g *aig.Graph) int {
 func Dch_DeriveChoiceCountEquivs(g *aig.Graph) int {
 	n := 0
 	for _, edge := range g.LiveEdges() {
-		if aig.Aig_ObjEquiv(g, edge) != aig.InvalidEdge {
+		if equiv := aig.Aig_ObjEquiv(g, edge); equiv != aig.InvalidEdge {
+			assert(equiv.NodeID() < edge.NodeID(), "equivalent node precedes node")
 			n++
 		}
 	}
