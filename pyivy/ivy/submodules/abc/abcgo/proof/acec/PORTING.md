@@ -38,6 +38,9 @@ Intentional conservative paths and limits:
   box to the insertion routine rather than returning a duplicate input graph.
 - Box matching requires equal input counts and a successful equivalence sweep;
   like the C implementation, it does not fall back when either fails.
+- `Acec_Solve` reads only the conflict limit and verbose fields of
+  `Acec_ParCec_t`. The other flags, including Booth and the time limit, are
+  unused in this C entry point and remain unused in its Go translation.
 - The original CLA carry rewrite requires a unique polarity along every path to
   each XOR input. Reconvergent XORs commonly violate that assumption. The Go
   port returns an unchanged duplicate when preflight finds ambiguous polarity;

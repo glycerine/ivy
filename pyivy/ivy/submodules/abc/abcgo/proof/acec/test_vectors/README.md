@@ -6,17 +6,21 @@ its object files, regenerate the source output with:
 
 ```sh
 gcc -c -DABC_USE_STDINT_H=1 -I../src proof/acec/test_vectors/acec_source_harness.c -o /tmp/acec_harness.o
-g++ -o /tmp/acec_harness /tmp/acec_harness.o $(find ../src -name '*.o' ! -path '*/base/main/main.o') -lm -ldl -lpthread -lz -lreadline
+gcc -c -DABC_USE_STDINT_H=1 -I../src ../src/misc/st/st.c -o /tmp/acec_st.o
+g++ -o /tmp/acec_harness /tmp/acec_harness.o /tmp/acec_st.o $(find ../src -name '*.o' ! -path '*/base/main/main.o' ! -path '*/misc/st/st.o') -lm -ldl -lpthread -lz -lreadline
 /tmp/acec_harness
 ```
 
 The mask is the set of marked object IDs. The normalized result records its
-input/output counts; the Go test additionally exhaustively checks the seven
-input Boolean function. The tied-cut case records the C `qsort` and matching
+input/output counts; the Go test additionally exhaustively checks that its own
+seven-input function is preserved. The harness does not compare C and Go
+normalized truth tables, so it does not establish their functional equality.
+The tied-cut case records the C `qsort` and matching
 result for three XOR cuts and two majority cuts with the same leaf tuple.
 Because C does not guarantee stable ordering for equal sort keys, the recorded
 ordering is for the library/platform used to build ABC.
 
 `abc_acec_results.txt` records the ABC CLI differential cases; set
-`ABC_BINARY` to the absolute path of the compiled ABC executable when running
-`go test -run TestABCDifferential ./proof/acec` to replay those cases.
+`go test -run TestABCDifferential ./proof/acec` always compares Go against the
+recorded results. Set `ABC_BINARY` to the absolute path of the compiled ABC
+executable to also rerun ABC against the generated AIGs.

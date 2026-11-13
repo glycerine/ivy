@@ -15,12 +15,12 @@ import (
 // checked-in results. The same graph generators drive the ordinary Go tests.
 func TestABCDifferential(t *testing.T) {
 	abc := os.Getenv("ABC_BINARY")
-	if abc == "" {
-		t.Skip("set ABC_BINARY to replay ABC source results")
-	}
-	abc, err := filepath.Abs(abc)
-	if err != nil {
-		t.Fatal(err)
+	if abc != "" {
+		var err error
+		abc, err = filepath.Abs(abc)
+		if err != nil {
+			t.Fatal(err)
+		}
 	}
 	data, err := os.ReadFile("test_vectors/abc_acec_results.txt")
 	if err != nil {
@@ -54,6 +54,15 @@ func TestABCDifferential(t *testing.T) {
 				t.Fatal(err)
 			}
 			for i := 0; i < c.count; i++ {
+				var params Acec_ParCec_t
+				Acec_ManCecSetDefaultParams(&params)
+				status := Acec_Solve(c.graph(c.base), c.graph(i), &params)
+				if status != int32(expected[i]-'0') {
+					t.Fatalf("case %d: Go returned %d, recorded ABC returned %c", i, status, expected[i])
+				}
+				if abc == "" {
+					continue
+				}
 				path := filepath.Join(dir, fmt.Sprintf("case%d.aig", i))
 				if err := gia.Gia_AigerWrite(c.graph(i), path, 0, 0, 0); err != nil {
 					t.Fatal(err)
