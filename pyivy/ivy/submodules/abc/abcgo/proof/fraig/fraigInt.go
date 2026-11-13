@@ -440,7 +440,6 @@ type Fraig_HashTableStruct_t_ struct {
 // extern void                Fraig_NodeSimulate( Fraig_Node_t * pNode, int iWordStart, int iWordStop, int fUseRand );
 
 /*=== fraigPrime.c =============================================================*/
-var s_FraigPrimes [FRAIG_MAX_PRIMES]int32
 
 /*=== fraigSat.c ===============================================================*/
 // extern int                 Fraig_NodeIsImplication( Fraig_Man_t * p, Fraig_Node_t * pOld, Fraig_Node_t * pNew, int nBTLimit );
