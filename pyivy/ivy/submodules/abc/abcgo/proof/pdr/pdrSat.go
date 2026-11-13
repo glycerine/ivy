@@ -37,9 +37,8 @@ func Pdr_ManFetchSolver(p *Pdr_Man_t, k int32) *bsat.Solver {
 		panic("pdr: cannot recycle last frame solver")
 	}
 	p.nStarts++
-	// ABC restarts this frame with the configured random seed. Reset() uses
-	// the fixed default seed, so construct the equivalent seeded solver.
-	solver = bsat.NewSolverSeed(float64(p.pPars.nRandomSeed))
+	// ABC restarts the existing solver, preserving its identity and controls.
+	solver.RestartSeed(float64(p.pPars.nRandomSeed))
 	solver = Pdr_ManNewSolver(solver, p, k, pdrBool(k == 0))
 	if solver == nil {
 		return nil

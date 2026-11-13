@@ -18,7 +18,7 @@ func TestRecycleLimitBoundaryAndLastFrameAssertion(t *testing.T) {
 		t.Fatal("solver was recycled below the limit")
 	}
 	vec.Vec_IntWriteEntry(p.vActVars, 0, 2)
-	if got := Pdr_ManFetchSolver(p, 0); got == nil || got == original || p.nStarts != 1 {
+	if got := Pdr_ManFetchSolver(p, 0); got != original || p.nStarts != 1 || vec.Vec_IntEntry(p.vActVars, 0) != 0 {
 		t.Fatal("solver was not recycled at the limit")
 	}
 	vec.Vec_IntWriteEntry(p.vActVars, 1, 2)

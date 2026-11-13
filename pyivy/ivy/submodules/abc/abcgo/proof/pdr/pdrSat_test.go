@@ -69,6 +69,47 @@ func TestPdrSATRecyclesAndRestoresFrameClauses(t *testing.T) {
 	}
 }
 
+// C's Pdr_ManFetchSolver rebuilds property constraints and clauses from the
+// recycled frame onward, but does not import clauses from earlier frames.
+func TestPdrRecycleRestoresPropertyAndCurrentAndLaterFrames(t *testing.T) {
+	for _, mono := range []bool{false, true} {
+		g := aig.NewGraph()
+		input := g.NewInput()
+		for i := 0; i < 3; i++ {
+			g.NewInput()
+		}
+		g.AddOutput(input)
+		for i := 0; i < 3; i++ {
+			g.AddOutput(g.Const0())
+		}
+		aig.Aig_ManSetRegNum(g, 3)
+		var pars Pdr_Par_t
+		Pdr_ManSetDefaultParams(&pars)
+		pars.nRecycle, pars.fMonoCnf = 1, pdrBool(mono)
+		p := Pdr_ManStart(g, &pars, nil)
+		for frame := int32(0); frame < 3; frame++ {
+			if Pdr_ManCreateSolver(p, frame) == nil {
+				t.Fatal("could not create frame")
+			}
+			vec.Vec_VecPush(p.vClauses, int(frame), testPdrSet([]int32{2 * frame}, nil))
+		}
+		old := p.vSolvers[1]
+		vec.Vec_IntWriteEntry(p.vActVars, 1, 1)
+		if Pdr_ManFetchSolver(p, 1) != old || p.nStarts != 1 || vec.Vec_IntEntry(p.vActVars, 1) != 0 {
+			t.Fatalf("mono=%v solver was not recycled", mono)
+		}
+		if got := Pdr_ManCheckCube(p, 1, nil, nil, 0, 0, 0); got != 1 {
+			t.Fatalf("mono=%v property constraint was not restored: %d", mono, got)
+		}
+		for i, want := range []int32{0, 1, 1} {
+			if got := Pdr_ManCheckCubeCs(p, 1, testPdrSet([]int32{int32(2 * i)}, nil)); got != want {
+				t.Fatalf("mono=%v cube %d result=%d want=%d", mono, i, got, want)
+			}
+		}
+		Pdr_ManStop(p)
+	}
+}
+
 func TestPdrSATCubeLiteralConversion(t *testing.T) {
 	for _, mono := range []bool{false, true} {
 		p, _ := pdrTestSATManager(t, mono)
