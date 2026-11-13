@@ -14,6 +14,16 @@ type stoppedBackend struct {
 	closed bool
 }
 
+func TestMiniSatInterpolationStepRejectsPendingInterpolant(t *testing.T) {
+	p := &Inter_Man_t{pInterNew: aig.NewGraph()}
+	defer func() {
+		if recover() == nil {
+			t.Fatal("pending interpolant accepted")
+		}
+	}()
+	Inter_ManPerformOneStepM114p(p, &stoppedBackend{}, false)
+}
+
 func (s *stoppedBackend) Close() { s.closed = true }
 
 func TestMiniSatInterpolationStepPropagatesUnknownAndCloses(t *testing.T) {

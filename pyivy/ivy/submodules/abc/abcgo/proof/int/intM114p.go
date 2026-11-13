@@ -335,6 +335,7 @@ func interManPerformOneStepM114p(p *Inter_Man_t, s M114pBackend, pudlak bool, de
 	if s == nil {
 		return -1, ErrMiniSat114pUnavailable
 	}
+	assert(p.pInterNew == nil, "p.pInterNew == nil")
 	defer s.Close()
 	roots, vars, err := Inter_ManDeriveSatSolverM114p(s, p.pInter, p.pCnfInter, p.pAigTrans, p.pCnfAig, p.pFrames, p.pCnfFrames)
 	if err != nil {
