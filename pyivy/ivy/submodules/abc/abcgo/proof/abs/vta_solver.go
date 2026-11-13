@@ -26,3 +26,8 @@ func vtaSolverAddAnd(s *bsat.LabeledSolver2, v, a, b, ca, cb, mark, id int32) {
 func vtaSolverAddConstraint(s *bsat.LabeledSolver2, v, w, complement, mark, id int32) {
 	s.AddClause(id, vtaLit(v, complement), vtaLit(w, 0))
 }
+
+func vtaSolverMemory(s *bsat.LabeledSolver2) float64 {
+	solver, proof := s.Memory(false)
+	return solver + proof
+}
