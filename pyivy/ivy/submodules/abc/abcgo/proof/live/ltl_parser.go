@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/aig"
 	"strings"
-	"unicode"
 )
 
 type tokenType int32
@@ -39,7 +38,7 @@ func ParseFormula(text string) (*LTLNode, error) {
 	position := 0
 	var parse func() (*ltlNode, error)
 	skip := func() {
-		for position < len(text) && unicode.IsSpace(rune(text[position])) {
+		for position < len(text) && strings.ContainsRune(" \t\n\r\v\f", rune(text[position])) {
 			position++
 		}
 	}
@@ -81,7 +80,10 @@ func ParseFormula(text string) (*LTLNode, error) {
 		node := generateTypedNode(kind)
 		if kind == BOOL {
 			start := position - 1
-			for position < len(text) && !unicode.IsSpace(rune(text[position])) && text[position] != ':' {
+			// getVarName in ltl_parser.c stops at exactly these four
+			// delimiters; CR, vertical tab and form feed inside a name are
+			// retained even though the parser skips them between tokens.
+			for position < len(text) && !strings.ContainsRune(" \t\n:", rune(text[position])) {
 				position++
 			}
 			node.Name = text[start:position]
