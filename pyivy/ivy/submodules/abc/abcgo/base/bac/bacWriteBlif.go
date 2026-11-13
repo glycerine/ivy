@@ -53,7 +53,8 @@ import "os"
 func Psr_ManWriteBlifArray(pFile *os.File, p *Psr_Ntk_t, vFanins *Vec_Int_t) {
     var i, NameId int32;
     // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vFanins)) && (((NameId) = Vec_IntEntry(vFanins, i)), 1); i++  {
+    for i = 0; i < Vec_IntSize(vFanins); i++ {
+        NameId = Vec_IntEntry(vFanins, i)
         fmt.Fprintf(pFile, " %s", Psr_NtkStr(p, NameId));
     }
     fmt.Fprintf(pFile, "\n");
@@ -62,7 +63,9 @@ func Psr_ManWriteBlifLines(pFile *os.File, p *Psr_Ntk_t) {
     var vBox *Vec_Int_t; 
     var i, k, FormId, ActId int32;
     // inlining of macro Psr_NtkForEachBox
-    for  i = 0; i < Psr_NtkBoxNum(p) && ((vBox) = Psr_BoxSignals(p, i)); i++  {
+    for i = 0; i < Psr_NtkBoxNum(p); i++ {
+        vBox = Psr_BoxSignals(p, i)
+        if vBox == nil { break }
         var NtkId int32  = Psr_BoxNtk(p, i);
         assert(Psr_BoxIONum(p, i) > 0, "Psr_BoxIONum(p, i) > 0");
         assert(Vec_IntSize(vBox) % 2 == 0, "Vec_IntSize(vBox) % 2 == 0");
@@ -77,7 +80,9 @@ func Psr_ManWriteBlifLines(pFile *os.File, p *Psr_Ntk_t) {
         
             fmt.Fprintf(pFile, ".names");
             // inlining of macro Vec_IntForEachEntryDouble
-            for  k = 0; (k+1 < Vec_IntSize(vBox)) && (((FormId) = Vec_IntEntry(vBox, k)), 1) && (((ActId) = Vec_IntEntry(vBox, k+1)), 1); k += 2  {
+            for k = 0; k+1 < Vec_IntSize(vBox); k += 2 {
+                FormId = Vec_IntEntry(vBox, k)
+                ActId = Vec_IntEntry(vBox, k+1)
                 fmt.Fprintf(pFile, " %s", Psr_NtkStr(p, ActId));
             }
             fmt.Fprintf(pFile, "\n%s", Psr_NtkStr(p, NtkId));
@@ -87,7 +92,9 @@ func Psr_ManWriteBlifLines(pFile *os.File, p *Psr_Ntk_t) {
             fmt.Fprintf(pFile, ".subckt");
             fmt.Fprintf(pFile, " %s", Psr_NtkStr(p, NtkId));
             // inlining of macro Vec_IntForEachEntryDouble
-            for  k = 0; (k+1 < Vec_IntSize(vBox)) && (((FormId) = Vec_IntEntry(vBox, k)), 1) && (((ActId) = Vec_IntEntry(vBox, k+1)), 1); k += 2  {
+            for k = 0; k+1 < Vec_IntSize(vBox); k += 2 {
+                FormId = Vec_IntEntry(vBox, k)
+                ActId = Vec_IntEntry(vBox, k+1)
                 fmt.Fprintf(pFile, " %s=%s", Psr_NtkStr(p, FormId), Psr_NtkStr(p, ActId));
             }
             fmt.Fprintf(pFile, "\n");
@@ -118,7 +125,8 @@ func Psr_ManWriteBlif(pFileName string, vPrs *Vec_Ptr_t) {
     }
     fmt.Fprintf(pFile, "# Design \"%s\" written by ABC on %s\n\n", Psr_NtkStr(pNtk, pNtk.iModuleName), Extra_TimeStamp());
     // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vPrs)) && (((pNtk) = (Psr_Ntk_t *)Vec_PtrEntry(vPrs, i)), 1); i++  {
+    for i = 0; i < Vec_PtrSize(vPrs); i++ {
+        pNtk, _ = Vec_PtrEntry(vPrs, i).(*Psr_Ntk_t)
         Psr_ManWriteBlifNtk( pFile, pNtk );
     }
     _ = (pFile).Close();
@@ -140,7 +148,8 @@ func Psr_ManWriteBlif(pFileName string, vPrs *Vec_Ptr_t) {
 func Bac_ManWriteBlifGate(pFile *os.File, p *Bac_Ntk_t, pGate *Mio_Gate_t, vFanins *Vec_Int_t, iObj int32) {
     var iFanin, i int32;
     // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vFanins)) && (((iFanin) = Vec_IntEntry(vFanins, i)), 1); i++  {
+    for i = 0; i < Vec_IntSize(vFanins); i++ {
+        iFanin = Vec_IntEntry(vFanins, i)
         fmt.Fprintf(pFile, " %s=%s", Mio_GateReadPinName(pGate, i), Bac_ObjNameStr(p, iFanin));
     }
     fmt.Fprintf(pFile, " %s=%s", Mio_GateReadOutName(pGate), Bac_ObjNameStr(p, iObj));
@@ -149,7 +158,8 @@ func Bac_ManWriteBlifGate(pFile *os.File, p *Bac_Ntk_t, pGate *Mio_Gate_t, vFani
 func Bac_ManWriteBlifArray(pFile *os.File, p *Bac_Ntk_t, vFanins *Vec_Int_t, iObj int32) {
     var iFanin, i int32;
     // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vFanins)) && (((iFanin) = Vec_IntEntry(vFanins, i)), 1); i++  {
+    for i = 0; i < Vec_IntSize(vFanins); i++ {
+        iFanin = Vec_IntEntry(vFanins, i)
         fmt.Fprintf(pFile, " %s", Bac_ObjNameStr(p, iFanin));
     }
     if iObj >= 0 {
@@ -160,11 +170,13 @@ func Bac_ManWriteBlifArray2(pFile *os.File, p *Bac_Ntk_t, iObj int32) {
     var iTerm, i int32;
     var pModel *Bac_Ntk_t  = Bac_BoxNtk( p, iObj );
     // inlining of macro Bac_NtkForEachPi
-    for  i = 0; (i < Bac_NtkPiNum(pModel))  && (((iTerm) = Bac_NtkPi(pModel, i)), 1); i++  { 
+    for i = 0; i < Bac_NtkPiNum(pModel); i++ {
+        iTerm = Bac_NtkPi(pModel, i) 
         fmt.Fprintf(pFile, " %s=%s", Bac_ObjNameStr(pModel, iTerm), Bac_ObjNameStr(p, Bac_BoxBi(p, iObj, i)));
     }
     // inlining of macro Bac_NtkForEachPo
-    for  i = 0; (i < Bac_NtkPoNum(pModel))  && (((iTerm) = Bac_NtkPo(pModel, i)), 1); i++  { 
+    for i = 0; i < Bac_NtkPoNum(pModel); i++ {
+        iTerm = Bac_NtkPo(pModel, i) 
         fmt.Fprintf(pFile, " %s=%s", Bac_ObjNameStr(pModel, iTerm), Bac_ObjNameStr(p, Bac_BoxBo(p, iObj, i)));
     }
     fmt.Fprintf(pFile, "\n");
@@ -180,7 +192,7 @@ func Bac_ManWriteBlifLines(pFile *os.File, p *Bac_Ntk_t) {
         
         } else if Bac_ObjIsGate(p, i) {
             var pGateName string  = Abc_NamStr(p.pDesign.pMods, Bac_BoxNtkId(p, i));
-            var pLib *Mio_Library_t  = (Mio_Library_t *)Abc_FrameReadLibGen();
+            pLib, _ := Abc_FrameReadLibGen().(*Mio_Library_t)
             var pGate *Mio_Gate_t  = Mio_LibraryReadGateByName( pLib, pGateName, nil );
             fmt.Fprintf(pFile, ".gate %s", pGateName);
             // inlining of macro Bac_BoxForEachBi
@@ -237,7 +249,8 @@ func Bac_ManWriteBlif(pFileName string, p *Bac_Man_t) {
     fmt.Fprintf(pFile, "# Design \"%s\" written via CBA package in ABC on %s\n\n", Bac_ManName(p), Extra_TimeStamp());
     Bac_ManAssignInternWordNames( p );
     // inlining of macro Bac_ManForEachNtk
-    for  i = 1; (i <= Bac_ManNtkNum(p)) && (((pNtk) = Bac_ManNtk(p, i)), 1); i++  { 
+    for i = 1; i <= Bac_ManNtkNum(p); i++ {
+        pNtk = Bac_ManNtk(p, i) 
         Bac_ManWriteBlifNtk( pFile, pNtk );
     }
     _ = (pFile).Close();
