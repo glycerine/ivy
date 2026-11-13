@@ -18,8 +18,9 @@ in progress; passing tests do not establish that those gaps are resolved.
   `cec/PORTING.md`.
 * `pdr` builds and passes its full race suite and vet. It has exhaustive
   small-state reachability and witness tests, incremental-solving tests,
-  and a Go-facing options API. Concurrent solves must be externally
-  serialized because ABC invariant storage is global.
+  and a Go-facing options API. Invariant publication uses synchronized
+  global storage with last-writer-wins semantics; callers needing a specific
+  run's invariant must serialize publishers and read it before the next one.
 * `ssw` builds and passes its full race suite and vet. The original
   semi-formal implementation asserts because its frame migration is
   unfinished; representative storage requires a buffer-free graph. Rarity
