@@ -162,6 +162,21 @@ func TestCecSourceSweepLimitsAndFinalSAT(t *testing.T) {
 	}
 }
 
+func TestCecRechecksMiterStatusAfterSweepRewrite(t *testing.T) {
+	g := cecPigeonholeMiter()
+	calls := 0
+	status := Fra_FraigCec(&g, 1000, 0, func(_ *aig.Graph, _, _ int32) *aig.Graph {
+		calls++
+		result := aig.NewGraph()
+		x, y := result.NewInput(), result.NewInput()
+		result.AddOutput(result.AND(result.AND(x, y), x.Not()))
+		return result
+	})
+	if calls != 1 || status != 1 {
+		t.Fatalf("sweeps=%d status=%d, want 1 sweep and an UNSAT miter", calls, status)
+	}
+}
+
 func TestMiterStatusAndAssertedOutput(t *testing.T) {
 	cases := []struct {
 		name             string
