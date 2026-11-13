@@ -343,6 +343,43 @@ func Saig_ManRetimeMinAreaBackward(graph *aig.Graph, verbose int32) *aig.Graph {
 	if vec.Vec_PtrSize(cut) >= int(Saig_ManRegNum(graph)) {
 		return nil
 	}
+	// This heuristic is not the original network-cut algorithm. A candidate
+	// is usable only if it intercepts every latch-input cone; otherwise the
+	// initial-state duplication cannot define the missing primary inputs.
+	covered := make(map[int]bool, vec.Vec_PtrSize(cut))
+	for _, item := range vec.Vec_PtrArray(cut) {
+		covered[item.(aig.Edge).NodeID()] = true
+	}
+	checked := make(map[int]bool)
+	var covers func(aig.Edge) bool
+	covers = func(edge aig.Edge) bool {
+		if edge.NodeID() == 0 || covered[edge.NodeID()] {
+			return true
+		}
+		if checked[edge.NodeID()] {
+			return false
+		}
+		checked[edge.NodeID()] = true
+		node := graph.Node(edge)
+		switch node.Kind {
+		case aig.And, aig.ExclusiveOr:
+			if covers(node.Fanins[0]) && covers(node.Fanins[1]) {
+				covered[edge.NodeID()] = true
+				return true
+			}
+		case aig.Buffer, aig.Output:
+			if covers(node.Fanins[0]) {
+				covered[edge.NodeID()] = true
+				return true
+			}
+		}
+		return false
+	}
+	for reg := int32(0); reg < Saig_ManRegNum(graph); reg++ {
+		if !covers(aig.Aig_ObjChild0(graph, Saig_ManLi(graph, reg))) {
+			return nil
+		}
+	}
 	initialGraph := Saig_ManRetimeDupInitState(graph, cut)
 	initial := Saig_ManRetimeInitState(initialGraph)
 	if initial == nil {
