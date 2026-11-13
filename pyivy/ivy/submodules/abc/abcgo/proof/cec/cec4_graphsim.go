@@ -11,8 +11,12 @@ import (
 func cec4SimulateGraph(s *cec3Simulation, graph *gia.Gia_Man_t) {
 	for id := int32(1); id < gia.Gia_ManObjNum(graph); id++ {
 		_, _, _, kind := graph.Gate(id)
-		if kind == 2 || kind == 3 || kind == 6 {
+		switch kind {
+		case 0, 1:
+		case 2, 3, 4, 6:
 			cec4SimulateNode(s, graph, id)
+		default:
+			panic("cec4: unsupported graph node")
 		}
 	}
 }

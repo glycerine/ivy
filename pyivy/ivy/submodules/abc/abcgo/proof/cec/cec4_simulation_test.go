@@ -30,3 +30,26 @@ func TestCec4SimulateXORComplements(t *testing.T) {
 		}
 	}
 }
+
+func TestCec4SimulateMuxComplements(t *testing.T) {
+	for mask := int32(0); mask < 8; mask++ {
+		g := gia.Gia_ManStart(10)
+		g.EnableMuxes()
+		c, a, b := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
+		m := gia.Gia_ManAppendMuxReal(g, c^(mask&1), a^((mask>>1)&1), b^((mask>>2)&1))
+		sim := newCec3Simulation(int(gia.Gia_ManObjNum(g)), 1)
+		sim.object(c >> 1)[0] = 0xaaaaaaaaaaaaaaaa
+		sim.object(a >> 1)[0] = 0xcccccccccccccccc
+		sim.object(b >> 1)[0] = 0xf0f0f0f0f0f0f0f0
+		cec4SimulateNode(sim, g, m>>1)
+		for bit := 0; bit < 64; bit++ {
+			control := (bit&1 != 0) != (mask&1 != 0)
+			yes := (bit&2 != 0) != (mask&2 != 0)
+			no := (bit&4 != 0) != (mask&4 != 0)
+			want := control && yes || !control && no
+			if got := sim.object(m >> 1)[0]>>uint(bit)&1 != 0; got != want {
+				t.Fatalf("mask %d bit %d got %v want %v", mask, bit, got, want)
+			}
+		}
+	}
+}
