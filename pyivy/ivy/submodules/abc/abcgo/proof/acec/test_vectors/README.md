@@ -68,3 +68,13 @@ valid Booth-two shape. The fixture records both return values and all output
 slots, including their values on failure. Intermediate AND calls are sequenced
 explicitly to avoid C's unspecified argument evaluation order changing node
 IDs. The Go regression builds the same GIA operations and compares every row.
+
+`acec_multiplier3_oracle.c` compares deterministic 3×3 multiplier graphs
+through C `Acec_Solve`. Invoke it with `-1` (equivalent), `0` (invert output
+0), or `4` (invert output 4). Freshly compiled `src/proof/acec/*.c` routines,
+linked with the remaining ABC object files, return statuses `1`, `0`, and `1`
+respectively. The last result is the documented source false equivalence: the
+matched path discards the final two outputs. The Go test exhaustively checks
+the fixture's multiplier truth table and compares those statuses; set
+`ACEC_MULTIPLIER3_ORACLE` to a compiled oracle path to rerun C during the test.
+The non-ACEC object files used for this comparison must also match the checkout.
