@@ -12,22 +12,29 @@ type clause struct {
 }
 
 type solver struct {
-	ok       bool
-	proof    proof
-	clauses  []*clause
-	watches  [][]*clause
-	assign   []int8 // -1 false, 0 undefined, 1 true
-	level    []int
-	reason   []*clause
-	unitID   []ClauseID
-	trail    []int32
-	limits   []int
-	qhead    int
-	trailPos []int
-	seen     []bool
-	activity []float64
-	varInc   float64
-	claInc   float64
+	ok          bool
+	proof       proof
+	clauses     []*clause
+	watches     [][]*clause
+	assign      []int8 // -1 false, 0 undefined, 1 true
+	level       []int
+	reason      []*clause
+	unitID      []ClauseID
+	trail       []int32
+	limits      []int
+	qhead       int
+	trailPos    []int
+	seen        []bool
+	activity    []float64
+	varInc      float64
+	claInc      float64
+	order       varOrder
+	learnts     []*clause
+	conflicts   int32
+	inputCount  int
+	rootInputs  []int
+	simpAssigns int
+	simpProps   int64
 }
 
 func newSolver(n int) *solver {
@@ -35,6 +42,7 @@ func newSolver(n int) *solver {
 	for i := range s.unitID {
 		s.unitID[i] = -1
 	}
+	s.order = newVarOrder(s)
 	return s
 }
 
@@ -68,6 +76,8 @@ func (s *solver) addClause(input []int32) bool {
 	if !s.ok {
 		return false
 	}
+	inputIndex := s.inputCount
+	s.inputCount++
 	q := append([]int32(nil), input...)
 	sort.Slice(q, func(i, j int) bool { return q[i] < q[j] })
 	n := 0
@@ -83,6 +93,7 @@ func (s *solver) addClause(input []int32) bool {
 			return true
 		}
 	}
+	s.rootInputs = append(s.rootInputs, inputIndex)
 	s.proof.beginChain(s.proof.addRoot(q))
 	kept := q[:0]
 	for _, lit := range q {
@@ -114,6 +125,7 @@ func (s *solver) propagate() *clause {
 	for s.qhead < len(s.trail) {
 		p := s.trail[s.qhead]
 		s.qhead++
+		s.simpProps--
 		watches := s.watches[p]
 		kept := watches[:0]
 		for i, c := range watches {

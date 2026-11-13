@@ -13,6 +13,12 @@ func (s *solver) analyze(conflict *clause) ([]int32, int) {
 	for {
 		if conflict.learnt {
 			conflict.activity += s.claInc
+			if conflict.activity > 1e20 {
+				for _, c := range s.learnts {
+					c.activity *= 1e-20
+				}
+				s.claInc *= 1e-20
+			}
 		}
 		start := 0
 		if p >= 0 {
@@ -25,6 +31,15 @@ func (s *solver) analyze(conflict *clause) ([]int32, int) {
 			}
 			if s.level[v] > 0 {
 				s.activity[v] += s.varInc
+				if s.activity[v] > 1e100 {
+					for i := range s.activity {
+						s.activity[i] *= 1e-100
+					}
+					s.varInc *= 1e-100
+				}
+				if s.order.index[v] != 0 {
+					s.order.up(s.order.index[v])
+				}
 				s.seen[v] = true
 				if s.level[v] == len(s.limits) {
 					pathCount++
