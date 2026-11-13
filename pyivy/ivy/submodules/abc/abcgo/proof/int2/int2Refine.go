@@ -56,17 +56,17 @@ func Int2_ManJustify_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vSelect *Vec_Int_t) {
 		return
 	}
 	gia.Gia_ObjSetMark1(pObj, 1)
-	if gia.Gia_ObjIsPi(p, pObj) != 0 {
+	if gia.Gia_ManRegNum(p) > 0 && gia.Gia_ObjIsPi(p, pObj) != 0 {
 		return
 	}
-	if gia.Gia_ObjIsCo(pObj) != 0 {
+	if gia.Gia_ObjIsCi(pObj) != 0 {
 		vec.Vec_IntPush(vSelect, gia.Gia_ObjCioId(pObj))
 		return
 	}
 	assert(gia.Gia_ObjIsAnd(pObj) != 0, "Gia_ObjIsAnd(pObj)")
 	fanin0 := gia.Gia_ObjFanin0(pObj)
 	fanin1 := gia.Gia_ObjFanin1(pObj)
-	if gia.Gia_ObjValue(pObj) == 1 {
+	if gia.Gia_ObjMark0(pObj) == 1 {
 		if gia.Gia_ObjValue(fanin0) < util.ABC_INFINITY {
 			Int2_ManJustify_rec(p, fanin0, vSelect)
 		}
@@ -81,7 +81,7 @@ func Int2_ManJustify_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vSelect *Vec_Int_t) {
 	need1 := mark1 ^ gia.Gia_ObjFaninC1(pObj)
 	switch {
 	case need0 == 0 && need1 == 0:
-		if mark0 <= mark1 {
+		if gia.Gia_ObjValue(fanin0) <= gia.Gia_ObjValue(fanin1) {
 			if gia.Gia_ObjValue(fanin0) < util.ABC_INFINITY {
 				Int2_ManJustify_rec(p, fanin0, vSelect)
 			}
@@ -117,8 +117,8 @@ func Int2_ManJustify_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vSelect *Vec_Int_t) {
 */
 func Int2_ManRefineCube(p *Gia_Man_t, vAssign *Vec_Int_t, vPrio *Vec_Int_t) *Vec_Int_t {
 	// set values and prios
-	assert(gia.Gia_ManRegNum(p) > 0, "Gia_ManRegNum(p) > 0")
 	assert(vec.Vec_IntSize(vAssign) == vec.Vec_IntSize(vPrio), "assignment and priority sizes match")
+	assert(vec.Vec_IntSize(vAssign) == int(gia.Gia_ManCiNum(p)), "assignment covers every CI")
 	constant := gia.Gia_ManConst0(p)
 	gia.Gia_ObjSetMark0(constant, 0)
 	gia.Gia_ObjSetMark1(constant, 0)
