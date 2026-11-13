@@ -92,6 +92,15 @@ func (s *sat_solver_t) SetLimits(conflicts, propagations int64) {
 	s.limitConflicts = conflicts
 	s.limitPropagations = propagations
 }
+
+// Deadline returns the configured absolute runtime deadline, or zero if unset.
+func (s *sat_solver_t) Deadline() time.Time {
+	if s.nRuntimeLimit == 0 {
+		return time.Time{}
+	}
+	return time.Unix(0, s.nRuntimeLimit)
+}
+
 func (s *sat_solver_t) SetDeadline(deadline time.Time) {
 	if deadline.IsZero() {
 		s.nRuntimeLimit = 0

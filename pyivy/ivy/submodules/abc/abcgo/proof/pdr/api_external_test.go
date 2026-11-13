@@ -109,17 +109,35 @@ func TestPublicSolveRejectsInvalidOptions(t *testing.T) {
 	}
 }
 func TestPublicSolveAllCancellation(t *testing.T) {
-	g := publicGraph()
-	o := pdr.DefaultOptions()
-	o.SolveAll = true
-	o.Silent = true
-	o.OnFailure = func(int32, *util.Abc_Cex_t) bool { return true }
-	result, err := pdr.Solve(g, &o)
-	if err != nil || result.Status != pdr.Unknown {
-		t.Fatalf("result %+v: %v", result, err)
-	}
-	if result.Outputs[0].Status != pdr.Proved || result.Outputs[1].Status != pdr.Failed || result.Outputs[2].Status != pdr.Unknown {
-		t.Fatalf("outcomes %+v", result.Outputs)
+	for _, store := range []bool{false, true} {
+		g := publicGraph()
+		o := pdr.DefaultOptions()
+		o.SolveAll = true
+		o.Silent = true
+		o.StoreCounterexamples = store
+		var callbackWitness *util.Abc_Cex_t
+		calls := 0
+		o.OnFailure = func(index int32, witness *util.Abc_Cex_t) bool {
+			calls++
+			if index != 1 {
+				t.Errorf("callback output = %d, want 1", index)
+			}
+			callbackWitness = witness
+			return true
+		}
+		result, err := pdr.Solve(g, &o)
+		if err != nil || result.Status != pdr.Unknown || calls != 1 || result.FailedCount != 1 {
+			t.Fatalf("store=%v result %+v calls %d: %v", store, result, calls, err)
+		}
+		if result.Outputs[0].Status != pdr.Proved || result.Outputs[1].Status != pdr.Failed || result.Outputs[2].Status != pdr.Unknown {
+			t.Fatalf("store=%v outcomes %+v", store, result.Outputs)
+		}
+		if (callbackWitness != nil) != store || result.Outputs[1].Witness != callbackWitness {
+			t.Fatalf("store=%v callback=%v result=%v", store, callbackWitness, result.Outputs[1].Witness)
+		}
+		if store && saig.Saig_ManVerifyCex(g, callbackWitness) != 1 {
+			t.Fatal("invalid callback counterexample")
+		}
 	}
 }
 func TestPublicSolveNoOutputs(t *testing.T) {

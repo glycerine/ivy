@@ -98,3 +98,17 @@ func TestPdrSatDeadlineAndLimitRestoration(t *testing.T) {
 		}
 	}
 }
+
+// pdrSat.c restores the value returned by sat_solver_set_runtime_limit,
+// which may differ from the PDR manager's global deadline.
+func TestPdrSolveRestoresPreviousSolverDeadline(t *testing.T) {
+	solver := bsat.NewSolver()
+	solver.SetDeadline(time.Now().Add(-time.Second))
+	p := &Pdr_Man_t{pPars: &Pdr_Par_t{}}
+	if got := pdrSolve(p, solver, nil, 0); got != bsat.Satisfiable {
+		t.Fatalf("temporary unlimited query = %v", got)
+	}
+	if got := solver.Solve(); got != bsat.Unknown {
+		t.Fatalf("previous expired deadline was not restored: %v", got)
+	}
+}
