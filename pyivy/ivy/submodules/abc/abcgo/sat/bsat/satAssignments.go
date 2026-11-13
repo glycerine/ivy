@@ -80,7 +80,7 @@ func (a *satAssignments) cancelUntil(level int32) []int32 {
 	return restore
 }
 func (a *satAssignments) rollback(bound int32) []int32 {
-	if a.trail_lim.size != 0 || a.qhead != a.qtail || bound < 0 || bound > a.qtail {
+	if a.trail_lim.size != 0 || bound < 0 || bound > a.qhead || a.qhead > a.qtail {
 		panic("invalid top-level rollback")
 	}
 	var restore []int32
@@ -88,7 +88,10 @@ func (a *satAssignments) rollback(bound int32) []int32 {
 		v := lit_var(a.trail[i])
 		a.assigns[v] = satUnassigned
 		a.reasons[v] = 0
-		restore = append(restore, v)
+		// Only propagated assignments have been removed from the heap.
+		if i < a.qhead {
+			restore = append(restore, v)
+		}
 	}
 	a.qhead = bound
 	a.qtail = bound
