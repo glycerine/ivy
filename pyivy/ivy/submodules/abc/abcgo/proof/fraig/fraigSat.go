@@ -10,6 +10,9 @@ func Fraig_MarkTfi_rec(p *Fraig_Man_t, n *Fraig_Node_t) int32 {
 		return 0
 	}
 	n.TravId = p.nTravIds
+	if Fraig_NodeIsConst(n) != 0 {
+		return 0
+	}
 	if n.NumPi >= 0 {
 		return 1
 	}
@@ -24,6 +27,9 @@ func Fraig_MarkTfi2_rec(p *Fraig_Man_t, n *Fraig_Node_t) int32 {
 		return 1
 	}
 	n.TravId = p.nTravIds
+	if Fraig_NodeIsConst(n) != 0 {
+		return 0
+	}
 	if n.NumPi >= 0 {
 		return 1
 	}
@@ -38,6 +44,9 @@ func Fraig_MarkTfi3_rec(p *Fraig_Man_t, n *Fraig_Node_t) int32 {
 		return 1
 	}
 	n.TravId = p.nTravIds
+	if Fraig_NodeIsConst(n) != 0 {
+		return 1
+	}
 	if n.NumPi >= 0 {
 		return 0
 	}
