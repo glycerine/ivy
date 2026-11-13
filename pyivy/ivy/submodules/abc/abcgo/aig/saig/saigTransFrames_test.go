@@ -32,3 +32,63 @@ func TestFramesNonInitial(t *testing.T) {
 		}
 	}
 }
+
+func TestFramesInitialMapped(t *testing.T) {
+	for _, init := range []int32{0, 1} {
+		for _, mapped := range []bool{false, true} {
+			g := aig.NewGraph()
+			pi, lo := g.NewInput(), g.NewInput()
+			g.AddOutput(lo)
+			g.AddOutput(g.XOR(pi, lo))
+			aig.Aig_ManSetRegNum(g, 1)
+			if mapped {
+				Saig_ManStartMap2(g, 2)
+				for f := int32(0); f < 2; f++ {
+					for _, e := range g.LiveEdges() {
+						Saig_ManSetMap2(g, e, f, e, f)
+					}
+				}
+			}
+			q := Saig_ManFramesInitialMapped(g, 2, 3, init)
+			if mapped {
+				Saig_ManStopMap2(g)
+			}
+			if q == nil {
+				t.Fatal("missing graph")
+			}
+			if err := q.Check(); err != nil {
+				t.Fatal(err)
+			}
+			wantInputs, wantOutputs, wantRegs := 3, 3, int32(0)
+			if init == 0 {
+				wantInputs, wantOutputs, wantRegs = 4, 4, 1
+			}
+			if q.InputCount() != wantInputs || q.OutputCount() != wantOutputs || q.RegisterCount() != wantRegs {
+				t.Fatalf("init=%d mapped=%v inputs=%d outputs=%d regs=%d", init, mapped, q.InputCount(), q.OutputCount(), q.RegisterCount())
+			}
+			for bits := 0; bits < (1 << wantInputs); bits++ {
+				in := make([]bool, wantInputs)
+				for i := range in {
+					in[i] = bits&(1<<i) != 0
+				}
+				out, err := q.Evaluate(in)
+				if err != nil {
+					t.Fatal(err)
+				}
+				state := false
+				if init == 0 {
+					state = in[3]
+				}
+				for f := 0; f < 3; f++ {
+					if out[f] != state {
+						t.Fatalf("init=%d mapped=%v in=%v out=%v", init, mapped, in, out)
+					}
+					state = state != in[f]
+				}
+				if init == 0 && out[3] != state {
+					t.Fatalf("incorrect next state: %v", out)
+				}
+			}
+		}
+	}
+}
