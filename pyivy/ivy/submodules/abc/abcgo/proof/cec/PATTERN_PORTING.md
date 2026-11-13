@@ -10,7 +10,7 @@ Forward simulation retains the original reference-counted recyclable word arena 
 
 Backward pattern minimization and implication propagation consume normalized AND-based graphs, as the original algorithms assume. Explicit XOR/MUX nodes are rejected at traversal boundaries rather than silently evaluated as ANDs. High-level CEC proof drivers use the separate full-gate `core.Model` path. Backward greedy justification has no backtracking: a failed attempt does not prove UNSAT. Word-parallel implication retains both the one-word split and the multiple-word split, random justification choices, contradiction masks, level scheduling, and cleanup.
 
-The unfinished C `Cec_ManCheckSat2` wrapper returned zero without running its recursive routine. The Go wrapper performs an initialized Boolean greedy justification attempt, with constant zero treated as fixed. The recursive API retains existing traversal state.
+The unfinished C `Cec_ManCheckSat2` wrapper returns zero without running its recursive routine; the Go wrapper preserves that behavior. The separate recursive API retains traversal state, including assignments left by a failed greedy attempt.
 
 ## Correctness fixes retained as regressions
 

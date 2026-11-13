@@ -229,3 +229,27 @@ func TestBackwardWordSourceStoresOnlyMarkBit(t *testing.T) {
 		t.Fatal("source compares full word with stored bit")
 	}
 }
+
+// cecSimBack.c:88-94 mutates traversal marks before a conflicting second
+// visit and does not roll them back when the recursive check fails.
+func TestBackwardWordConflictRetainsAssignments(t *testing.T) {
+	g := gia.Gia_ManStart(8)
+	x := gia.Gia_ManAppendCi(g)
+	y := gia.Gia_ManAppendCi(g)
+	z := gia.Gia_ManAppendCi(g)
+	left := gia.Gia_ManAppendAnd(g, x, y)
+	right := gia.Gia_ManAppendAnd(g, x^1, z)
+	root := gia.Gia_ManAppendAnd(g, left, right)
+	input := gia.Gia_ManObj(g, x>>1)
+	node := gia.Gia_ManObj(g, root>>1)
+	gia.Gia_ManIncrementTravId(g)
+	if got := Cec_ManCheckSat2_rec(g, node, 1, nil); got != 0 {
+		t.Fatalf("contradictory cone returned %d", got)
+	}
+	if gia.Gia_ObjIsTravIdCurrent(g, node) == 0 || gia.Gia_ObjMark0(node) != 1 || gia.Gia_ObjIsTravIdCurrent(g, input) == 0 || gia.Gia_ObjMark0(input) != 1 {
+		t.Fatal("failed recursive check discarded source traversal assignments")
+	}
+	if got := Cec_ManCheckSat2_rec(g, node, 1, nil); got != 1 {
+		t.Fatalf("revisit returned %d", got)
+	}
+}
