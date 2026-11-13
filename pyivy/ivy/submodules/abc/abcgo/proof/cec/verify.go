@@ -55,7 +55,7 @@ func Cec_ManVerifySimple(graph *Gia_Man_t) int32 {
 	return Cec_ManVerify(graph, params)
 }
 func Cec_ManVerifyTwo(left, right *Gia_Man_t, verbose int32) int32 {
-	if left == nil || right == nil {
+	if left == nil || right == nil || cecRequireAIG(left) != nil || cecRequireAIG(right) != nil {
 		return -1
 	}
 	miter := gia.Gia_ManMiter(left, right, 0, 1, 0, 0, verbose)
@@ -109,6 +109,7 @@ func Cec_ManHandleSpecialCases(graph *Gia_Man_t, params *Cec_ParCec_t) int32 {
 		params.Error = fmt.Errorf("cec: nil network")
 		return -1
 	}
+	gia.Gia_ManSetPhase(graph)
 	model, err := core.NewModel(graph)
 	if err != nil {
 		params.Error = err

@@ -33,10 +33,10 @@ func TestVerifyTwoUsesCombinationalRegisterInterface(t *testing.T) {
 		t.Fatalf("AIG status %d", status)
 	}
 	wa := leftAig.CombinationalCounterexample()
-	if wa == nil || wa.NRegs != 1 || wa.IPo != 1 {
+	if wa == nil || wa.NRegs != 0 || wa.NPis != 2 || wa.IPo != 1 {
 		t.Fatalf("AIG witness %+v", wa)
 	}
-	inputs = []bool{wa.PData[0]&2 != 0, wa.PData[0]&1 != 0}
+	inputs = []bool{wa.PData[0]&1 != 0, wa.PData[0]&2 != 0}
 	aa, e1 := leftAig.Evaluate(inputs)
 	bb, e2 := rightAig.Evaluate(inputs)
 	if e1 != nil || e2 != nil || aa[1] == bb[1] {
@@ -82,20 +82,8 @@ func TestVerifyTwoNativeGatesAndAigBridge(t *testing.T) {
 		if flip {
 			want = 0
 		}
-		if status := Cec_ManVerifyTwo(left, right, 0); status != want {
-			t.Fatalf("flip %v GIA status %d", flip, status)
-		}
-		if flip {
-			w := left.CombinationalCounterexample()
-			if w == nil {
-				t.Fatal("missing native witness")
-			}
-			inputs := []bool{w.PData[0]&1 != 0, w.PData[0]&2 != 0, w.PData[0]&4 != 0}
-			a, e1 := left.Evaluate(inputs)
-			b, e2 := right.Evaluate(inputs)
-			if e1 != nil || e2 != nil || a[0] == b[0] {
-				t.Fatalf("native witness %v outputs %v %v errors %v %v", inputs, a, b, e1, e2)
-			}
+		if status := Cec_ManVerifyTwo(left, right, 0); status != -1 {
+			t.Fatalf("native input should be rejected, got %d", status)
 		}
 		la, ra := gia.Gia_ManToAig(left, 0), gia.Gia_ManToAig(right, 0)
 		if status := Cec_ManVerifyTwoAigs(la, ra, 0); status != want {
@@ -159,5 +147,27 @@ func TestSpecialCasesEquivalentKeepsCallerState(t *testing.T) {
 	p := Cec_ParCec_t{iOutFail: 17, fSilent: 1}
 	if got := Cec_ManHandleSpecialCases(g, &p); got != 1 || p.iOutFail != 17 || g.CombinationalCounterexample() != before {
 		t.Fatalf("status %d output %d witness %p", got, p.iOutFail, g.CombinationalCounterexample())
+	}
+}
+
+func TestSpecialCasesUpdatesPhaseMetadata(t *testing.T) {
+	g := gia.Gia_ManStart(8)
+	a := gia.Gia_ManAppendCi(g)
+	b := gia.Gia_ManAppendCi(g)
+	node := gia.Gia_ManAppendAnd(g, a^1, b^1)
+	gia.Gia_ManAppendCo(g, node)
+	gia.Gia_ManAppendCo(g, node)
+	gia.Gia_ObjSetPhaseValue(gia.Gia_ManObj(g, node>>1), 0)
+	var p Cec_ParCec_t
+	Cec_ManCecSetDefaultParams(&p)
+	p.fSilent = 1
+	if got := Cec_ManHandleSpecialCases(g, &p); got != -1 {
+		t.Fatalf("status %d", got)
+	}
+	if got := gia.Gia_ObjPhase(gia.Gia_ManObj(g, node>>1)); got != 1 {
+		t.Fatalf("node phase %d", got)
+	}
+	if got := gia.Gia_ObjPhase(gia.Gia_ManCo(g, 0)); got != 1 {
+		t.Fatalf("output phase %d", got)
 	}
 }

@@ -50,11 +50,13 @@ func TestCECDriverFallbackSATWitness(t *testing.T) {
 		t.Fatalf("status=%d sweeps=%d", status, calls)
 	}
 	model, ok := g.Data.([]int32)
-	if !ok || len(model) != len(vars) {
+	// FRAIG simulation stores the source PO object ID after the PI values,
+	// as ABC's Fra_SmlCheckOutputSavePattern does.
+	if !ok || len(model) < len(vars) {
 		t.Fatalf("invalid witness %v", g.Data)
 	}
-	inputs := make([]bool, len(model))
-	for i, bit := range model {
+	inputs := make([]bool, len(vars))
+	for i, bit := range model[:len(vars)] {
 		inputs[i] = bit != 0
 	}
 	outputs, err := g.Evaluate(inputs)

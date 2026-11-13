@@ -1,6 +1,7 @@
 package cec
 
 import (
+	"fmt"
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/misc/vec"
@@ -54,7 +55,7 @@ func TestNativeSweepOriginalIDsAndWitnesses(t *testing.T) {
 		Cec_ManFraSetDefaultParams(&p)
 		p.fUseOrigIds = 1
 		p.nDepthMax = depth
-		q := Cec_ManSatSweeping(g, &p, 1)
+		q := cecTestSweepLowered(g, &p)
 		if p.Error != nil || q == nil {
 			t.Fatalf("depth %d: %v", depth, p.Error)
 		}
@@ -97,24 +98,13 @@ func TestNativeSweepOriginalIDsAndWitnesses(t *testing.T) {
 	}
 }
 
-func TestNativeOriginalEquivalenceConsumerPreservesFunction(t *testing.T) {
-	g := gia.Gia_ManStart(16)
-	g.EnableMuxes()
-	a, b, c := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
+func TestNativeOriginalEquivalenceConsumerRejectsUnsupportedInput(t *testing.T) {
+	g := gia.Gia_ManStart(8)
+	a, b := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
 	x := gia.Gia_ManAppendXorReal(g, a, b)
-	m := gia.Gia_ManAppendMuxReal(g, c, x, a)
-	gia.Gia_ManAppendCo(g, m)
-	result := Gia_ManComputeGiaEquivs(g, 100, 0)
-	if result == nil {
-		t.Fatal("nil result")
-	}
-	for bits := 0; bits < 8; bits++ {
-		in := []bool{bits&1 != 0, bits&2 != 0, bits&4 != 0}
-		want, e1 := g.Evaluate(in)
-		got, e2 := result.Evaluate(in)
-		if e1 != nil || e2 != nil || got[0] != want[0] {
-			t.Fatalf("bits %d want %v got %v errors %v %v", bits, want, got, e1, e2)
-		}
+	gia.Gia_ManAppendCo(g, x)
+	if got := Gia_ManComputeGiaEquivs(g, 100, 0); got != nil {
+		t.Fatal("unsupported native XOR accepted")
 	}
 }
 
@@ -135,16 +125,12 @@ func TestNativeSweepPreservesSequentialInterface(t *testing.T) {
 	Cec_ManFraSetDefaultParams(&p)
 	p.fUseOrigIds = 1
 	p.nDepthMax = 2
-	q := Cec_ManSatSweeping(g, &p, 1)
+	q := cecTestSweepLowered(g, &p)
 	if p.Error != nil || q == nil {
 		t.Fatalf("sweep: %v", p.Error)
 	}
 	if gia.Gia_ManRegNum(q) != 1 || gia.Gia_ManConstrNum(q) != 1 || len(q.InputLiterals()) != 35 {
 		t.Fatal("lost input, register or constraint interface")
-	}
-	consumer := Gia_ManComputeGiaEquivs(g, 100, 0)
-	if consumer == nil || gia.Gia_ManRegNum(consumer) != 1 || gia.Gia_ManConstrNum(consumer) != 1 || len(consumer.InputLiterals()) != 35 {
-		t.Fatal("original-ID consumer lost sequential interface")
 	}
 	for bits := 0; bits < 16; bits++ {
 		inputs := make([]bool, 35)
@@ -154,8 +140,7 @@ func TestNativeSweepPreservesSequentialInterface(t *testing.T) {
 		inputs[34] = bits&8 != 0
 		want, e1 := g.Evaluate(inputs)
 		got, e2 := q.Evaluate(inputs)
-		gotConsumer, e3 := consumer.Evaluate(inputs)
-		if e1 != nil || e2 != nil || e3 != nil || len(got) != 2 || got[0] != want[0] || got[1] != want[1] || len(gotConsumer) != 2 || gotConsumer[0] != want[0] || gotConsumer[1] != want[1] {
+		if e1 != nil || e2 != nil || len(got) != 2 || got[0] != want[0] || got[1] != want[1] {
 			t.Fatalf("bits %d want %v got %v errors %v %v", bits, want, got, e1, e2)
 		}
 	}
@@ -174,7 +159,7 @@ func TestNativeSweepTransfersExistingClasses(t *testing.T) {
 	var p Cec_ParFra_t
 	Cec_ManFraSetDefaultParams(&p)
 	p.fUseOrigIds = 1
-	q := Cec_ManSatSweeping(g, &p, 1)
+	q := cecTestSweepLowered(g, &p)
 	if q == nil || p.Error != nil {
 		t.Fatalf("result %v error %v", q, p.Error)
 	}
@@ -214,7 +199,7 @@ func TestNativeSweepRejectsFalseSeedClass(t *testing.T) {
 		Cec_ManFraSetDefaultParams(&p)
 		p.fUseOrigIds = 1
 		p.fRunCSat = circuit
-		q := Cec_ManSatSweeping(g, &p, 1)
+		q := cecTestSweepLowered(g, &p)
 		if q == nil || p.Error != nil {
 			t.Fatalf("circuit %d: %v", circuit, p.Error)
 		}
@@ -249,7 +234,7 @@ func TestNativeSweepComplementedSeedAlias(t *testing.T) {
 		var p Cec_ParFra_t
 		Cec_ManFraSetDefaultParams(&p)
 		p.fUseOrigIds = track
-		q := Cec_ManSatSweeping(g, &p, 1)
+		q := cecTestSweepLowered(g, &p)
 		if q == nil || p.Error != nil {
 			t.Fatalf("track %d: %v", track, p.Error)
 		}
@@ -331,7 +316,7 @@ func TestNativeSweepConflictLimitedSeed(t *testing.T) {
 	pars.nItersMax = 1
 	pars.fSatSweeping = 1
 	pars.fUseOrigIds = 1
-	result := Cec_ManSatSweeping(g, &pars, 1)
+	result := cecTestSweepLowered(g, &pars)
 	if result == nil || pars.Error != nil {
 		t.Fatalf("sweep: %v", pars.Error)
 	}
@@ -354,4 +339,32 @@ func TestNativeSweepConflictLimitedSeed(t *testing.T) {
 			t.Fatalf("sample %d want %v got %v errors %v %v", sample, want, got, e1, e2)
 		}
 	}
+}
+
+// This test-only helper exercises the standalone lowering utilities; source
+// Cec_ManSatSweeping does not lower native nodes.
+func cecTestSweepLowered(graph *Gia_Man_t, params *Cec_ParFra_t) *Gia_Man_t {
+	lowered, mapping, aliases, err := cecLowerSweepGraph(graph)
+	if err != nil {
+		params.Error = err
+		return nil
+	}
+	defer gia.Gia_ManStop(lowered)
+	if words := graph.SimulationWordCount(); words > 0 {
+		data := graph.SimulationInputs()
+		if len(data) != int(gia.Gia_ManCiNum(graph)*words) {
+			params.Error = fmt.Errorf("invalid simulation size")
+			return nil
+		}
+		gia.Gia_ManCecSimAlloc(lowered, words)
+		for _, word := range data {
+			gia.Gia_ManCecSaveCIWord(lowered, word)
+		}
+	}
+	result, err := cecOriginalSweepMapped(lowered, graph, mapping, aliases, params)
+	params.Error = err
+	if err == nil && graph.HasRepresentatives() {
+		graph.ClearRepresentatives()
+	}
+	return result
 }

@@ -19,18 +19,11 @@ func cecVerifyPipeline(graph *Gia_Man_t, pars *Cec_ParCec_t, sweep cecSweepRunne
 		pars.Error = fmt.Errorf("cec: verification requires a combinational miter")
 		return -1
 	}
-	work := gia.Gia_ManDup(graph)
-	// The source sweep works on AND-inverter graphs. Lower native GIA nodes
-	// through ABC's existing AIG conversion, preserving the CI/CO interface.
-	for id := int32(0); int(id) < work.ObjectCount(); id++ {
-		_, _, _, kind := work.Gate(id)
-		if kind == 3 || kind == 4 || kind == 5 {
-			lowered := gia.Gia_ManFromAig(gia.Gia_ManToAig(work, 0))
-			gia.Gia_ManStop(work)
-			work = lowered
-			break
-		}
+	if err := cecRequireAIG(graph); err != nil {
+		pars.Error = err
+		return -1
 	}
+	work := gia.Gia_ManDup(graph)
 	gia.Gia_ManEquivFixOutputPairs(work)
 	clean := gia.Gia_ManCleanup(work)
 	gia.Gia_ManStop(work)
@@ -101,4 +94,19 @@ func cecVerifyPipeline(graph *Gia_Man_t, pars *Cec_ParCec_t, sweep cecSweepRunne
 		fmt.Println("Counter-example simulation has failed.")
 	}
 	return status
+}
+
+// cecRequireAIG rejects native nodes that the source pipeline does not
+// preserve and that the current sweep port cannot process faithfully.
+func cecRequireAIG(graph *Gia_Man_t) error {
+	if graph == nil {
+		return fmt.Errorf("cec: nil graph")
+	}
+	for id := int32(0); int(id) < graph.ObjectCount(); id++ {
+		_, _, _, kind := graph.Gate(id)
+		if kind == 3 || kind == 4 || kind == 5 {
+			return fmt.Errorf("cec: unsupported native gate kind %d at object %d", kind, id)
+		}
+	}
+	return nil
 }

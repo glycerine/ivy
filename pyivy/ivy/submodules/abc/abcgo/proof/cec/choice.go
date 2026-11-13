@@ -118,31 +118,14 @@ func Cec_ManChoiceComputationVec(graph *Gia_Man_t, snapshots int32, params *Cec_
 		params.Error = fmt.Errorf("cec: invalid choice snapshot dimensions")
 		return nil
 	}
-	work := graph
-	var sourceIDs []int32
-	for id := int32(0); int(id) < graph.ObjectCount(); id++ {
-		_, _, _, kind := graph.Gate(id)
-		if kind == core.Xor || kind == core.Mux || kind == core.Buffer {
-			var err error
-			work, sourceIDs, _, err = cecLowerSweepGraph(graph)
-			if err != nil {
-				params.Error = err
-				return nil
-			}
-			defer gia.Gia_ManStop(work)
-			break
-		}
-	}
-	if Cec_ManChoiceComputation_int(work, params) != 0 {
+	if err := cecRequireAIG(graph); err != nil {
+		params.Error = err
 		return nil
 	}
-	if sourceIDs != nil {
-		if err := graph.TransferRepresentativesFrom(work, sourceIDs); err != nil {
-			params.Error = err
-			return nil
-		}
+	if Cec_ManChoiceComputation_int(graph, params) != 0 {
+		return nil
 	}
-	return gia.Gia_ManEquivToChoices(work, snapshots)
+	return gia.Gia_ManEquivToChoices(graph, snapshots)
 }
 
 // Cec_ManChoiceComputation runs the original three-version DAR synthesis
@@ -151,6 +134,10 @@ func Cec_ManChoiceComputation(graph *Gia_Man_t, params *Cec_ParChc_t) *Gia_Man_t
 	if params == nil {
 		params = new(Cec_ParChc_t)
 		Cec_ManChcSetDefaultParams(params)
+	}
+	if err := cecRequireAIG(graph); err != nil {
+		params.Error = err
+		return nil
 	}
 	if _, err := core.NewModel(graph); err != nil {
 		params.Error = err

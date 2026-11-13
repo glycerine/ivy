@@ -126,41 +126,27 @@ func TestVerifyPipelineNaiveSkipsSweep(t *testing.T) {
 	}
 }
 
-func TestVerifyPipelineNativeNodes(t *testing.T) {
-	for _, equivalent := range []bool{false, true} {
-		g := gia.Gia_ManStart(24)
+func TestVerifyPipelineRejectsUnsupportedNativeNodes(t *testing.T) {
+	for _, kind := range []int{3, 4, 5} {
+		g := gia.Gia_ManStart(16)
 		g.EnableMuxes()
 		a, b, c := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
-		x := gia.Gia_ManAppendXorReal(g, a, b)
-		mux := gia.Gia_ManAppendMuxReal(g, c, x, a)
-		buffer := gia.Gia_ManAppendBuf(g, mux)
-		gia.Gia_ManAppendCo(g, buffer)
-		if equivalent {
-			gia.Gia_ManAppendCo(g, mux)
-		} else {
-			gia.Gia_ManAppendCo(g, 0)
+		var node int32
+		switch kind {
+		case 3:
+			node = gia.Gia_ManAppendXorReal(g, a, b)
+		case 4:
+			node = gia.Gia_ManAppendMuxReal(g, c, a, b)
+		case 5:
+			node = gia.Gia_ManAppendBuf(g, a)
 		}
-		var pars Cec_ParCec_t
-		Cec_ManCecSetDefaultParams(&pars)
-		pars.fSilent = 1
-		status := Cec_ManVerify(g, &pars)
-		want := int32(0)
-		if equivalent {
-			want = 1
-		}
-		if status != want || pars.Error != nil {
-			t.Fatalf("equivalent %v status %d error %v", equivalent, status, pars.Error)
-		}
-		if !equivalent {
-			w := g.CombinationalCounterexample()
-			if w == nil {
-				t.Fatal("missing witness")
-			}
-			in := []bool{w.PData[0]&1 != 0, w.PData[0]&2 != 0, w.PData[0]&4 != 0}
-			out, err := g.Evaluate(in)
-			if err != nil || out[0] == out[1] {
-				t.Fatalf("invalid witness %v outputs %v err %v", in, out, err)
-			}
+		gia.Gia_ManAppendCo(g, node)
+		gia.Gia_ManAppendCo(g, 0)
+		var p Cec_ParCec_t
+		Cec_ManCecSetDefaultParams(&p)
+		status := cecVerifyPipeline(g, &p, nil, nil)
+		if status != -1 || p.Error == nil {
+			t.Fatalf("kind %d status %d error %v", kind, status, p.Error)
 		}
 	}
 }

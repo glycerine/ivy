@@ -73,58 +73,16 @@ func TestSourceChoiceRefinementOptionsAndSoundness(t *testing.T) {
 	}
 }
 
-func TestSourceChoicesLowerNativeGates(t *testing.T) {
-	g := gia.Gia_ManStart(24)
-	g.EnableMuxes()
-	a, b, c := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
-	x := gia.Gia_ManAppendXorReal(g, gia.Gia_ManAppendXorReal(g, a, b), c)
-	y := gia.Gia_ManAppendXorReal(g, a, gia.Gia_ManAppendXorReal(g, b, c))
-	m := gia.Gia_ManAppendMuxReal(g, c, x, a)
-	buffer := gia.Gia_ManAppendBuf(g, m)
-	gia.Gia_ManAppendCo(g, y)
+func TestSourceChoicesRejectNativeGates(t *testing.T) {
+	g := gia.Gia_ManStart(8)
+	a, b := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
+	x := gia.Gia_ManAppendXorReal(g, a, b)
 	gia.Gia_ManAppendCo(g, x)
-	gia.Gia_ManAppendCo(g, buffer)
-	gia.Gia_ManAppendCo(g, m)
+	gia.Gia_ManAppendCo(g, x)
 	var p Cec_ParChc_t
 	Cec_ManChcSetDefaultParams(&p)
-	q := Cec_ManChoiceComputationVec(g, 2, &p)
-	if q == nil || p.Error != nil {
-		t.Fatalf("choice: %v", p.Error)
-	}
-	if gia.Gia_ManCountChoices(q) == 0 {
-		t.Fatal("missing native associative choice")
-	}
-	if !g.HasRepresentatives() {
-		t.Fatal("native input classes were not transferred")
-	}
-	qmodel, err := core.NewModel(q)
-	if err != nil {
-		t.Fatal(err)
-	}
-	phases, err := qmodel.Values(make([]bool, 3))
-	if err != nil {
-		t.Fatal(err)
-	}
-	for bits := 0; bits < 8; bits++ {
-		in := []bool{bits&1 != 0, bits&2 != 0, bits&4 != 0}
-		want, e1 := g.Evaluate(in)
-		got, e2 := q.Evaluate(in)
-		if e1 != nil || e2 != nil || len(got) != 2 || got[0] != want[0] || got[1] != want[2] {
-			t.Fatalf("bits %d want %v got %v errors %v %v", bits, want, got, e1, e2)
-		}
-		values, err := qmodel.Values(in)
-		if err != nil {
-			t.Fatal(err)
-		}
-		for id := int32(1); int(id) < q.ObjectCount(); id++ {
-			repr := gia.Gia_ObjRepr(q, id)
-			if repr != gia.GIA_VOID && (values[id] != values[repr]) != (phases[id] != phases[repr]) {
-				t.Fatalf("bits %d invalid choice %d -> %d", bits, id, repr)
-			}
-			if next := gia.Gia_ObjNext(q, id); next != 0 && next <= id {
-				t.Fatalf("cyclic or noncanonical choice %d -> %d", id, next)
-			}
-		}
+	if q := Cec_ManChoiceComputationVec(g, 2, &p); q != nil || p.Error == nil {
+		t.Fatalf("result %v error %v", q, p.Error)
 	}
 }
 

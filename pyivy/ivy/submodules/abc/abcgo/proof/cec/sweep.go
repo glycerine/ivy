@@ -161,46 +161,7 @@ func Cec_ManSatSweeping(graph *Gia_Man_t, params *Cec_ParFra_t, silent int32) *G
 		params = new(Cec_ParFra_t)
 		Cec_ManFraSetDefaultParams(params)
 	}
-	var result *Gia_Man_t
-	var err error
-	native := false
-	if graph != nil {
-		for id := int32(0); int(id) < graph.ObjectCount(); id++ {
-			_, _, _, kind := graph.Gate(id)
-			if kind == core.Xor || kind == core.Mux || kind == core.Buffer {
-				native = true
-				break
-			}
-		}
-	}
-	if !native {
-		result, err = cecOriginalSweep(graph, params)
-	} else {
-		var lowered *Gia_Man_t
-		var mapping []int32
-		var aliases *Vec_Int_t
-		lowered, mapping, aliases, err = cecLowerSweepGraph(graph)
-		if err == nil {
-			defer gia.Gia_ManStop(lowered)
-			if words := graph.SimulationWordCount(); words > 0 {
-				data := graph.SimulationInputs()
-				if len(data) != int(gia.Gia_ManCiNum(graph)*words) {
-					err = fmt.Errorf("cec: invalid original sweep input simulation size")
-				} else {
-					gia.Gia_ManCecSimAlloc(lowered, words)
-					for _, word := range data {
-						gia.Gia_ManCecSaveCIWord(lowered, word)
-					}
-				}
-			}
-			if err == nil {
-				result, err = cecOriginalSweepMapped(lowered, graph, mapping, aliases, params)
-				if err == nil && graph.HasRepresentatives() {
-					graph.ClearRepresentatives()
-				}
-			}
-		}
-	}
+	result, err := cecOriginalSweep(graph, params)
 	params.Error = err
 	if err != nil && silent == 0 {
 		fmt.Printf("CEC sweeping: %v\n", err)

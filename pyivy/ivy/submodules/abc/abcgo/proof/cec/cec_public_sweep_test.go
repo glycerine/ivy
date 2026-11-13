@@ -107,8 +107,8 @@ func TestPublicSweepRejectsInvalidInputs(t *testing.T) {
 	x := gia.Gia_ManAppendXorReal(g, a, b)
 	gia.Gia_ManAppendCo(g, x)
 	Cec_ManFraSetDefaultParams(&p)
-	if got := Cec_ManSatSweeping(g, &p, 1); got == nil || p.Error != nil {
-		t.Fatalf("native XOR: %v %v", got, p.Error)
+	if got := Cec_ManSatSweeping(g, &p, 1); got != nil || p.Error == nil {
+		t.Fatalf("native XOR must be rejected: %v %v", got, p.Error)
 	}
 }
 

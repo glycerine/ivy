@@ -17,8 +17,8 @@ replacement for the full-package test.
 The top-level `Cec_ManVerify` now uses the source-style special cases,
 normalization, iterative sweep, and FRAIG fallback; `Cec_ManVerifyOld` calls
 the FRAIG fallback as well. The public `Cec_ManSatSweeping` entry point now
-also uses the source-style sweep. It lowers native XOR/MUX/buffer nodes and
-records original-ID proof pairs, including for deeper speculation and circuit SAT,
+also uses the source-style sweep. It rejects unsupported native XOR/MUX/buffer
+nodes and records original-ID proof pairs, including for deeper speculation and circuit SAT,
 without adding independent verification absent from the C implementation. Passing Boolean outcome tests alone does not establish full
 equivalence of these algorithms.
 
@@ -67,13 +67,12 @@ normalization, iterative simulation/speculative SAT sweeping, and the original
 FRAIG fallback. The explicit naive option generates MF CNF and uses the BSAT implication loop,
 matching `cecCec.c`. The naive routine does not store a counterexample. The
 classic pipeline follows the source witness transfer and diagnostic behavior.
-Native GIA XOR, MUX and buffer nodes are lowered through the existing AIG
-conversion before the AND-inverter sweep.
+The nontrivial source path explicitly rejects native GIA XOR, MUX and buffer
+nodes that the current Go sweep cannot handle source faithfully.
 
 `Cec_ManSatSweeping` uses the original speculative sweep and records the
-original-ID pairs when requested, without independently rechecking them. The
-public sweep lowers native XOR, MUX, and buffer nodes to AND-inverter logic,
-retains source IDs for original nodes, and remaps existing equivalence classes. As in the C
+original-ID pairs when requested, without independently rechecking them. The public sweep rejects those unsupported native nodes and retains source IDs
+for original AIG nodes. As in the C
 pipeline, the overall time limit is checked between stages and iterations; an
 individual SAT or FRAIG call can run beyond that limit. Tests compare selected
 cases with the original ABC executable and force the unresolved sweep branch
@@ -84,14 +83,14 @@ network or exercise every internal FRAIG path.
 
 The vector choice driver now follows `cecChoice.c`: simulation, ring or direct
 speculative queries, the selected SAT or circuit-SAT backend, counterexample
-resimulation, and equivalence-to-choice reconstruction. Native gates are lowered for this path and classes are mapped back to the input
-graph; no extra independent class verification is added. `Cec_ComputeChoices`
+resimulation, and equivalence-to-choice reconstruction. These source-named paths reject unsupported native gates; no extra independent
+class verification is added. `Cec_ComputeChoices`
 uses the vector path and the source's circuit-SAT conflict cap.
 
 `Cec_ComputeChoicesNew` uses the separate Cec4 simulation and sweep path,
 then constructs choices from the retained classes. The
 internal `Cec_ManChoiceComputation_int` entry point requires AND-inverter
-inputs; the public vector driver lowers native gates first.
+inputs; the public vector driver rejects unsupported native gates.
 
 ## Remaining fidelity and coverage limits
 
@@ -130,12 +129,10 @@ adapter preserves this source behavior, covered by a reordered-output test and
 the optional compiled ABC oracle. Reordered CO vectors are therefore unsafe for
 this verification path.
 
-The public CEC wrappers still have known source-fidelity gaps. The Go
-`Cec_ManVerify` pipeline lowers native XOR, MUX and buffer objects before
-sweeping; C performs duplication, output-pair normalization and cleanup without
-this added lowering. `Cec_ManVerifyTwoAigs` does not yet mirror C's explicit
-GIA cleanup and direct transfer of the miter's witness into the AIG model
-slot; its Go adapter reconstructs a model. `Cec_ManHandleSpecialCases` uses a
-Go evaluator for phase values rather than updating GIA's stored phase fields
-as `Gia_ManSetPhase` does in C. These differences can affect supported graph
-shapes or caller-visible state and need source-backed porting and tests.
+The public CEC sweep, choice, and nontrivial verification paths reject native
+XOR, MUX and buffer nodes rather than silently lowering them. ABC's original
+`Gia_ManDup` preserves buffers but copies native XOR and MUX objects as ANDs,
+losing their native semantics; a compiled-C regression characterizes that
+behavior. A buffer is also rejected where the current Go sweep requires a
+strict AND-inverter graph. Phase metadata and the AIG wrapper's GIA cleanup
+and witness ownership now follow their C entry points.

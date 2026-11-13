@@ -16,27 +16,11 @@ func cecComputeChoicesCec4(graph *Gia_Man_t, verbose int32) (*aig.Graph, error) 
 	if _, err := core.NewModel(graph); err != nil {
 		return nil, err
 	}
-	work := graph
-	var sourceIDs []int32
-	for id := int32(0); int(id) < graph.ObjectCount(); id++ {
-		_, _, _, kind := graph.Gate(id)
-		if kind == core.Xor || kind == core.Mux || kind == core.Buffer {
-			var err error
-			work, sourceIDs, _, err = cecLowerSweepGraph(graph)
-			if err != nil {
-				return nil, err
-			}
-			defer gia.Gia_ManStop(work)
-			break
-		}
+	if err := cecRequireAIG(graph); err != nil {
+		return nil, err
 	}
-	Cec4_ManSimulateTest2(work, verbose)
-	if sourceIDs != nil {
-		if err := graph.TransferRepresentativesFrom(work, sourceIDs); err != nil {
-			return nil, err
-		}
-	}
-	choices := gia.Gia_ManEquivToChoices(work, 3)
+	Cec4_ManSimulateTest2(graph, verbose)
+	choices := gia.Gia_ManEquivToChoices(graph, 3)
 	defer gia.Gia_ManStop(choices)
 	return gia.Gia_ManToAig(choices, 1), nil
 }

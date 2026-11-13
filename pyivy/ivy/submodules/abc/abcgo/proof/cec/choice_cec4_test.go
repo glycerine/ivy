@@ -23,6 +23,12 @@ func TestCec4ChoiceSourcePathPreservesSnapshots(t *testing.T) {
 		gia.Gia_ManAppendCo(g, y)
 		gia.Gia_ManAppendCo(g, x)
 		out := Cec_ComputeChoicesNew(g, 0)
+		if native {
+			if out != nil {
+				t.Fatal("native graph should be rejected")
+			}
+			continue
+		}
 		if out == nil {
 			t.Fatalf("native %v: no result", native)
 		}
@@ -130,6 +136,12 @@ func TestCec4ChoicesPreserveSequentialSnapshotInterface(t *testing.T) {
 		}
 		gia.Gia_ManSetRegNum(g, 1)
 		q := Cec_ComputeChoicesNew(g, 0)
+		if native {
+			if q != nil {
+				t.Fatal("native graph should be rejected")
+			}
+			continue
+		}
 		if q == nil || q.RegisterCount() != 1 {
 			t.Fatalf("native %v: invalid register interface", native)
 		}

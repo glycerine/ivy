@@ -41,6 +41,13 @@ func (p *Graph) TakeCombinationalCounterexample() *util.Abc_Cex_t {
 	return model
 }
 
+// SetCecCounterexample transfers ownership of the CEC miter witness to the
+// AIG pSeqModel slot. CEC witnesses describe all combinational inputs even
+// when the original graph has registers; nil clears the slot.
+func (p *Graph) SetCecCounterexample(model *util.Abc_Cex_t) {
+	p.combinationalCex = model
+}
+
 // SetSequentialCounterexample validates and copies a complete multi-frame
 // witness. It shares the original pSeqModel storage with one-frame witnesses.
 // A rejected model leaves the previous witness intact.
