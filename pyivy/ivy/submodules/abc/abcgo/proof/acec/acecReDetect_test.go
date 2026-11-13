@@ -34,3 +34,27 @@ func TestDetectFullAdderCutsEndToEnd(t *testing.T) {
 		t.Fatalf("failed to detect full adder: %v", vec.Vec_IntArray(adds))
 	}
 }
+
+func TestDetectFullAdderAcrossInputPolarities(t *testing.T) {
+	for signs := 0; signs < 8; signs++ {
+		p := gia.Gia_ManStart(64)
+		var in [3]int32
+		for i := range in {
+			in[i] = gia.Gia_ManAppendCi(p) ^ int32(signs>>i&1)
+		}
+		var out [2]int32
+		Acec_InsertFadd(p, in[:], out[:])
+		gia.Gia_ManAppendCo(p, out[0])
+		gia.Gia_ManAppendCo(p, out[1])
+		adds := Ree_ManComputeCuts(p, nil, 0)
+		found := false
+		for i := 0; i+5 < vec.Vec_IntSize(adds); i += 6 {
+			if vec.Vec_IntEntry(adds, i+2) != 0 && vec.Vec_IntEntry(adds, i+3) == out[0]>>1 && vec.Vec_IntEntry(adds, i+4) == out[1]>>1 {
+				found = true
+			}
+		}
+		if !found {
+			t.Fatalf("input signs %03b not detected: %v", signs, vec.Vec_IntArray(adds))
+		}
+	}
+}
