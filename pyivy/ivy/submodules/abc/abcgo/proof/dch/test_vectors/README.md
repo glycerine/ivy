@@ -20,3 +20,10 @@ g++ /tmp/abcgo-dch-oracle.o @/tmp/abcgo-dch-objects.rsp \
 ```
 
 Go tests only read the fixture; the resulting port has no C runtime dependency.
+
+`dch_choice_order.c` builds three associative implementations of a four-input
+AND and derives their choice chain. Its output is `11(4,10) 9(5,8) 7(1,6)`
+both with no arguments and with one argument (enabling redundant-support
+filtering). Reproduce it with the same compile/link steps, substituting its
+filename, and run the resulting executable both ways. The Go regression checks
+the full ordered chain, including the DFS-renumbered fanins.
