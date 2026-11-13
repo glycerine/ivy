@@ -326,6 +326,40 @@ func TestRemoveMarkedRestoresUnitAndSimplifiedFormula(t *testing.T) {
 	}
 }
 
+func TestMarkedRollbackAgainstEnumeration(t *testing.T) {
+	rng := rand.New(rand.NewSource(93932))
+	for trial := 0; trial < 250; trial++ {
+		const n = 5
+		p := New(n)
+		var base [][]int
+		for i := 0; i < 7; i++ {
+			clause := make([]int, 1+rng.Intn(3))
+			for j := range clause {
+				clause[j] = rng.Intn(2 * n)
+			}
+			base = append(base, append([]int(nil), clause...))
+			p.AddClause(clause)
+		}
+		Msat_SolverMarkClausesStart(p)
+		for i := 0; i < 4; i++ {
+			p.AddClause([]int{rng.Intn(2 * n), rng.Intn(2 * n)})
+		}
+		p.Solve(nil, 0, 0)
+		Msat_SolverRemoveMarked(p)
+		for query := 0; query < 8; query++ {
+			var assumptions []int
+			for i := 0; i < rng.Intn(4); i++ {
+				assumptions = append(assumptions, rng.Intn(2*n))
+			}
+			want := brute(n, base, assumptions)
+			got := p.Solve(assumptions, 0, 0)
+			if (got == MSAT_TRUE) != want || got == MSAT_UNKNOWN {
+				t.Fatalf("trial=%d query=%d got=%v want=%v base=%v assumptions=%v", trial, query, got, want, base, assumptions)
+			}
+		}
+	}
+}
+
 func TestActivityRescaleBeforeNewClauseInsertion(t *testing.T) {
 	p := New(1)
 	p.dVarInc = 1e101
