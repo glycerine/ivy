@@ -43,8 +43,8 @@ import "time"
 ///                        DECLARATIONS                              ///
 ////////////////////////////////////////////////////////////////////////
 
-func Ssw_ObjNext(ppNexts **Aig_Obj_t, pObj *Aig_Obj_t) *Aig_Obj_t { return ppNexts[pObj.Id];  }
-func Ssw_ObjSetNext(ppNexts **Aig_Obj_t, pObj *Aig_Obj_t, pNext *Aig_Obj_t) { ppNexts[pObj.Id] = pNext; }
+
+
 
 // iterator through the equivalence classes
 // Original macro:
@@ -74,16 +74,7 @@ func Ssw_ObjSetNext(ppNexts **Aig_Obj_t, pObj *Aig_Obj_t, pNext *Aig_Obj_t) { pp
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_ObjAddClass(p *Ssw_Cla_t, pRepr *Aig_Obj_t, pClass **Aig_Obj_t, nSize int32) {
-    assert(p.pId2Class[pRepr.Id] == nil, "p.pId2Class[pRepr.Id] == nil");
-    assert(pClass[0] == pRepr, "pClass[0] == pRepr");
-    p.pId2Class[pRepr.Id] = pClass;
-    assert(p.pClassSizes[pRepr.Id] == 0, "p.pClassSizes[pRepr.Id] == 0");
-    assert(nSize > 1, "nSize > 1");
-    p.pClassSizes[pRepr.Id] = nSize;
-    p.nClasses++;
-    p.nLits += nSize - 1;
-}
+
 
 /**Function*************************************************************
 
@@ -96,18 +87,7 @@ func Ssw_ObjAddClass(p *Ssw_Cla_t, pRepr *Aig_Obj_t, pClass **Aig_Obj_t, nSize i
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_ObjRemoveClass(p *Ssw_Cla_t, pRepr *Aig_Obj_t) **Aig_Obj_t {
-    var pClass **Aig_Obj_t  = p.pId2Class[pRepr.Id];
-    var nSize int32;
-    assert(pClass != nil, "pClass != nil");
-    p.pId2Class[pRepr.Id] = nil;
-    nSize = p.pClassSizes[pRepr.Id];
-    assert(nSize > 1, "nSize > 1");
-    p.nClasses--;
-    p.nLits -= nSize - 1;
-    p.pClassSizes[pRepr.Id] = 0;
-    return pClass;
-}
+
 
 /**Function*************************************************************
 
@@ -237,14 +217,7 @@ func Ssw_ObjRemoveClass(p *Ssw_Cla_t, pRepr *Aig_Obj_t) **Aig_Obj_t {
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_ClassesReadClass(p *Ssw_Cla_t, pRepr *Aig_Obj_t, pnSize *int32) **Aig_Obj_t {
-    if p.pId2Class[pRepr.Id] == nil {
-        return nil; }
-    assert(p.pId2Class[pRepr.Id] != nil, "p.pId2Class[pRepr.Id] != nil");
-    assert(p.pClassSizes[pRepr.Id] > 1, "p.pClassSizes[pRepr.Id] > 1");
-    *pnSize = p.pClassSizes[pRepr.Id];
-    return p.pId2Class[pRepr.Id];
-}
+
 
 /**Function*************************************************************
 
@@ -257,16 +230,7 @@ func Ssw_ClassesReadClass(p *Ssw_Cla_t, pRepr *Aig_Obj_t, pnSize *int32) **Aig_O
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_ClassesCollectClass(p *Ssw_Cla_t, pRepr *Aig_Obj_t, vClass *Vec_Ptr_t) {
-    var i int32;
-    Vec_PtrClear( vClass );
-    if p.pId2Class[pRepr.Id] == nil {
-        return; }
-    assert(p.pClassSizes[pRepr.Id] > 1, "p.pClassSizes[pRepr.Id] > 1");
-    for  i = 1; i < p.pClassSizes[pRepr.Id]; i++  {
-        Vec_PtrPush( vClass, p.pId2Class[pRepr.Id][i] );
-    }
-}
+
 
 /**Function*************************************************************
 
