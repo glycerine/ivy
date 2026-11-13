@@ -2,6 +2,7 @@ package cec
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/proof/cec/core"
 	"time"
 )
@@ -64,24 +65,56 @@ func Cec_ManVerifySimple(graph *Gia_Man_t) int32 {
 	return Cec_ManVerify(graph, params)
 }
 func Cec_ManVerifyTwo(left, right *Gia_Man_t, verbose int32) int32 {
-	left.ClearCombinationalCounterexample()
-	result, err := core.VerifyTwo(left, right)
-	if err != nil {
-		if verbose != 0 {
-			fmt.Printf("CEC: %v\n", err)
-		}
+	if left == nil || right == nil {
 		return -1
 	}
-	if result.Counterexample != nil {
-		cex := result.Counterexample
-		if err = left.SetCombinationalCounterexample(cex.Inputs, cex.Output); err != nil {
-			if verbose != 0 {
-				fmt.Printf("CEC: %v\n", err)
+	left.ClearCombinationalCounterexample()
+	if _, err := core.NewModel(left); err != nil {
+		return -1
+	}
+	if _, err := core.NewModel(right); err != nil {
+		return -1
+	}
+	if len(left.InputLiterals()) != len(right.InputLiterals()) || len(left.OutputLiterals()) != len(right.OutputLiterals()) {
+		return -1
+	}
+	if left == right {
+		return 1
+	}
+	miter := gia.Gia_ManMiter(left, right, 0, 1, 0, 0, verbose)
+	if miter == nil {
+		return -1
+	}
+	defer gia.Gia_ManStop(miter)
+	var params Cec_ParCec_t
+	Cec_ManCecSetDefaultParams(&params)
+	params.fVerbose = verbose
+	status := Cec_ManVerify(miter, &params)
+	if status != 0 {
+		return status
+	}
+	witness := miter.CombinationalCounterexample()
+	if witness == nil || int(witness.NPis) != len(left.InputLiterals()) || int64(len(witness.PData))*32 < int64(witness.NPis) {
+		return -1
+	}
+	inputs := make([]bool, witness.NPis)
+	for i := range inputs {
+		inputs[i] = witness.PData[i>>5]&(uint32(1)<<uint(i&31)) != 0
+	}
+	a, errA := left.Evaluate(inputs)
+	b, errB := right.Evaluate(inputs)
+	if errA != nil || errB != nil || len(a) != len(b) {
+		return -1
+	}
+	for i := range a {
+		if a[i] != b[i] {
+			if left.SetCombinationalCounterexample(inputs, i) != nil {
+				return -1
 			}
-			return -1
+			return 0
 		}
 	}
-	return int32(result.Status)
+	return -1
 }
 
 // Cec_ManTransformPattern copies a source-style 0/1 input vector into the

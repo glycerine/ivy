@@ -5,6 +5,9 @@ import "github.com/glycerine/abcgo/aig/gia"
 // Cec_ManVerifyTwoAigs compares ordered input/output interfaces and stores a
 // validated mismatch in the first graph, following the original ownership rule.
 func Cec_ManVerifyTwoAigs(left, right *Aig_Man_t, verbose int32) int32 {
+	if left == nil || right == nil {
+		return -1
+	}
 	left.ClearCombinationalCounterexample()
 	first, second := gia.Gia_ManFromAig(left), gia.Gia_ManFromAig(right)
 	defer gia.Gia_ManStop(first)
@@ -12,10 +15,16 @@ func Cec_ManVerifyTwoAigs(left, right *Aig_Man_t, verbose int32) int32 {
 	status := Cec_ManVerifyTwo(first, second, verbose)
 	if witness := first.CombinationalCounterexample(); witness != nil {
 		inputs := make([]bool, left.InputCount())
-		// Combinational verification rejects registers, so the input frame starts
-		// at bit zero; the attached utility model owns its own bit storage.
+		// The witness stores register outputs first, followed by primary inputs;
+		// the graph interface lists primary inputs before register outputs.
+		regs := int(witness.NRegs)
+		pis := len(inputs) - regs
 		for i := range inputs {
-			inputs[i] = witness.PData[i>>5]&(uint32(1)<<uint(i&31)) != 0
+			bit := regs + i
+			if i >= pis {
+				bit = i - pis
+			}
+			inputs[i] = witness.PData[bit>>5]&(uint32(1)<<uint(bit&31)) != 0
 		}
 		if err := left.SetCombinationalCounterexample(inputs, int(witness.IPo)); err != nil {
 			return -1
