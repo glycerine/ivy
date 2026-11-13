@@ -10,7 +10,6 @@ import (
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/opt/dar"
-	"github.com/glycerine/abcgo/sat/bmc"
 	"github.com/glycerine/abcgo/sat/cnf"
 )
 
@@ -39,6 +38,10 @@ func Inter_ManSetDefaultParams(p *Inter_ManParams_t) {
 func Inter_ManPerformInterpolation(graph *aig.Graph, pars *Inter_ManParams_t, frame *int32) int32 {
 	if graph == nil || pars == nil || frame == nil {
 		panic("invalid interpolation arguments")
+	}
+	if pars.FUseMiniSat != 0 && pars.FUseBackward != 0 {
+		*frame = -1
+		return -1
 	}
 	start := util.Abc_Clock()
 	var deadline int64
@@ -123,22 +126,10 @@ func Inter_ManPerformInterpolation(graph *aig.Graph, pars *Inter_ManParams_t, fr
 			if result == 0 {
 				if i == 0 {
 					*frame = p.nFrames
-					if aig.Aig_ManConstrNum(graph) != 0 {
-						cex := interManGetCounterExample(graph, p.nFrames+1, pars.FVerbose, deadline)
-						if cex == nil || graph.SetSequentialCounterexample(cex) != nil {
-							*frame = -1
-							return finish(-1, 0)
-						}
-						return finish(0, 0)
-					}
-					var opts bmc.Saig_ParBmc_t
-					bmc.Saig_ParBmcSetDefaultParams(&opts)
-					opts.SetInterpolationOptions(p.nFrames, 100000000, pars.FVerbose)
-					status := bmc.Saig_ManBmcScalable(graph, &opts)
-					if status == 1 {
-						fmt.Println("Error: The problem should be SAT but it is UNSAT.")
-					} else if status == -1 {
-						fmt.Println("Error: The problem timed out.")
+					cex := interManGetCounterExample(graph, p.nFrames+1, pars.FVerbose, deadline)
+					if cex == nil || graph.SetSequentialCounterexample(cex) != nil {
+						*frame = -1
+						return finish(-1, 0)
 					}
 					return finish(0, 0)
 				}

@@ -130,8 +130,16 @@ func Inter_ManDeriveSatSolverM114p(s M114pBackend, inter *aig.Graph, interCNF *c
 
 // Inter_ManResolveM114p resolves a clause against a pivot, as in ABC.
 func Inter_ManResolveM114p(resolvent, clause []int32, pivot int32) ([]int32, error) {
+	return resolveM114p(resolvent, clause, pivot, time.Time{})
+}
+
+func resolveM114p(resolvent, clause []int32, pivot int32, deadline time.Time) ([]int32, error) {
+	expired := func() bool { return !deadline.IsZero() && !time.Now().Before(deadline) }
 	index := -1
 	for i, lit := range resolvent {
+		if expired() {
+			return nil, errors.New("MiniSat interpolation deadline reached")
+		}
 		if lit>>1 == pivot {
 			index = i
 			break
@@ -145,6 +153,9 @@ func Inter_ManResolveM114p(resolvent, clause []int32, pivot int32) ([]int32, err
 	resolvent = resolvent[:len(resolvent)-1]
 	found := false
 	for _, lit := range clause {
+		if expired() {
+			return nil, errors.New("MiniSat interpolation deadline reached")
+		}
 		if lit>>1 == pivot {
 			if lit != old^1 {
 				return nil, errors.New("resolution pivot has wrong polarity")
@@ -154,6 +165,9 @@ func Inter_ManResolveM114p(resolvent, clause []int32, pivot int32) ([]int32, err
 		}
 		exists := false
 		for _, x := range resolvent {
+			if expired() {
+				return nil, errors.New("MiniSat interpolation deadline reached")
+			}
 			if x == lit {
 				exists = true
 				break
@@ -192,6 +206,9 @@ func interpolateM114p(s M114pBackend, rootParts, varClasses []int32, pudlak bool
 		if expired() {
 			return nil, errors.New("MiniSat interpolation deadline reached")
 		}
+		if class < -2 {
+			return nil, fmt.Errorf("invalid variable class %d", class)
+		}
 		if class > max {
 			max = class
 		}
@@ -220,6 +237,14 @@ func interpolateM114p(s M114pBackend, rootParts, varClasses []int32, pudlak bool
 			return nil, errors.New("MiniSat interpolation deadline reached")
 		}
 		edge := g.Const0()
+		for _, lit := range clause {
+			if expired() {
+				return nil, errors.New("MiniSat interpolation deadline reached")
+			}
+			if _, err := classOf(lit); err != nil {
+				return nil, err
+			}
+		}
 		if rootParts[i] == 1 {
 			edge = g.Const1()
 		} else if rootParts[i] != 0 {
@@ -268,12 +293,10 @@ func interpolateM114p(s M114pBackend, rootParts, varClasses []int32, pudlak bool
 			}
 			other := outputs[next]
 			class := varClasses[pivot]
-			if pudlak {
-				var err error
-				resolvent, err = Inter_ManResolveM114p(resolvent, clauses[next], pivot)
-				if err != nil {
-					return nil, err
-				}
+			var err error
+			resolvent, err = resolveM114p(resolvent, clauses[next], pivot, deadline)
+			if err != nil {
+				return nil, err
 			}
 			if class == -1 {
 				edge = g.OR(edge, other)
@@ -305,7 +328,7 @@ func interpolateM114p(s M114pBackend, rootParts, varClasses []int32, pudlak bool
 		outputs = append(outputs, edge)
 		clauses = append(clauses, resolvent)
 	}
-	if pudlak && len(clauses[len(clauses)-1]) != 0 {
+	if len(clauses[len(clauses)-1]) != 0 {
 		return nil, errors.New("proof does not end with empty clause")
 	}
 	g.AddOutput(outputs[len(outputs)-1])

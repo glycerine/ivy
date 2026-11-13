@@ -175,3 +175,19 @@ func TestMiniSatInterpolationExpiredDeadline(t *testing.T) {
 		t.Fatalf("expired deadline returned %d", got)
 	}
 }
+
+func TestMiniSatBackwardInterpolationIsUnsupported(t *testing.T) {
+	g := aig.NewGraph()
+	g.NewInput()
+	state := g.NewInput()
+	g.AddOutput(state)
+	g.AddOutput(g.Const0())
+	aig.Aig_ManSetRegNum(g, 1)
+	var pars Inter_ManParams_t
+	Inter_ManSetDefaultParams(&pars)
+	pars.FUseMiniSat, pars.FUseBackward, pars.FTransLoop = 1, 1, 1
+	frame := int32(42)
+	if got := Inter_ManPerformInterpolation(g, &pars, &frame); got != -1 || frame != -1 {
+		t.Fatalf("unsupported combination returned %d, frame %d", got, frame)
+	}
+}

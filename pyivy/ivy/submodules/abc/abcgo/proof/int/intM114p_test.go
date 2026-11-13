@@ -123,3 +123,25 @@ func TestMiniSatEmptyRootAfterDerivedUnit(t *testing.T) {
 		}
 	}
 }
+
+func TestMiniSatRejectsInvalidResolutionProofs(t *testing.T) {
+	cases := []struct {
+		name    string
+		roots   [][]int32
+		chains  []M114pChain
+		classes []int32
+	}{
+		{"wrong polarity", [][]int32{{0}, {0}}, []M114pChain{{Clauses: []int32{0, 1}, Pivots: []int32{0}}}, []int32{0}},
+		{"nonempty conclusion", [][]int32{{0, 2}, {1}}, []M114pChain{{Clauses: []int32{0, 1}, Pivots: []int32{0}}}, []int32{0, -1}},
+		{"invalid class", [][]int32{{0}, {1}}, []M114pChain{{Clauses: []int32{0, 1}, Pivots: []int32{0}}}, []int32{-3}},
+		{"invalid root literal", [][]int32{{0}, {3}}, []M114pChain{{Clauses: []int32{0, 1}, Pivots: []int32{0}}}, []int32{0}},
+	}
+	for _, tc := range cases {
+		for _, pudlak := range []bool{false, true} {
+			p := &fixtureM114p{roots: tc.roots, chains: tc.chains}
+			if g, err := InterpolateM114p(p, []int32{0, 1}, tc.classes, pudlak); err == nil {
+				t.Fatalf("%s pudlak=%v accepted proof: %v", tc.name, pudlak, g)
+			}
+		}
+	}
+}
