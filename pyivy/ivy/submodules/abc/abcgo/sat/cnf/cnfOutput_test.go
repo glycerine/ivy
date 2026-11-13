@@ -65,3 +65,33 @@ func TestTransformPolarityUsesNodePhases(t *testing.T) {
 		}
 	}
 }
+
+func TestSolverLoadingFramesAndInitialization(t *testing.T) {
+	g := aig.NewGraph()
+	lo := g.NewInput()
+	g.AddOutput(lo)
+	aig.Aig_ManSetRegNum(g, 1)
+	data, err := EncodeAIG(g, 0)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, frames := range []int32{1, 2} {
+		s := Cnf_DataWriteIntoSolver(data, frames, 1)
+		if s == nil {
+			t.Fatalf("frames=%d: failed to load", frames)
+		}
+		if s.Solve(bsat.Positive(data.VarNums[lo.NodeID()])) != bsat.Unsatisfiable {
+			t.Fatalf("frames=%d: initial latch is not constrained to zero", frames)
+		}
+	}
+	combinational := aig.NewGraph()
+	x := combinational.NewInput()
+	combinational.AddOutput(x)
+	plain, err := EncodeAIG(combinational, 0)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if Cnf_DataWriteIntoSolver(plain, 2, 0) == nil {
+		t.Fatal("combinational frames rejected")
+	}
+}

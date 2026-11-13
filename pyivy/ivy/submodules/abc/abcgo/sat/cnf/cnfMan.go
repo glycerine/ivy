@@ -276,7 +276,7 @@ func Cnf_DataWriteIntoSolverInt(sat *bsat.Solver, cnf *Cnf_Dat_t, frames int32, 
 		}
 	}
 	if frames > 1 {
-		if cnf.pMan == nil || aig.Aig_ManRegNum(cnf.pMan) == 0 {
+		if cnf.pMan == nil {
 			return nil
 		}
 		stride := int32(cnf.Variables)
@@ -294,13 +294,13 @@ func Cnf_DataWriteIntoSolverInt(sat *bsat.Solver, cnf *Cnf_Dat_t, frames int32, 
 				}
 			}
 		}
-		if init != 0 {
-			for i := int32(0); i < aig.Aig_ManRegNum(cnf.pMan); i++ {
-				lo := aig.Aig_ManLo(cnf.pMan, i)
-				variable := cnf.VarNums[lo.NodeID()]
-				if variable < 0 || !sat.AddClause(bsat.Negative(variable)) {
-					return nil
-				}
+	}
+	if init != 0 && cnf.pMan != nil {
+		for i := int32(0); i < aig.Aig_ManRegNum(cnf.pMan); i++ {
+			lo := aig.Aig_ManLo(cnf.pMan, i)
+			variable := cnf.VarNums[lo.NodeID()]
+			if variable < 0 || !sat.AddClause(bsat.Negative(variable)) {
+				return nil
 			}
 		}
 	}
