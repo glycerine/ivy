@@ -8,8 +8,8 @@ for undeclared C variables, inferred helpers, and retained source defects.
 | --- | --- |
 | `Int2_ManSetDefaultParams` | `TestSetDefaultParamsResetsAllFields`, `TestSetDefaultParamsRejectsNil` |
 | `Int2_ManCreate`, `Int2_GoCreate`, `Int2_ManStop` | `TestSourceManagerConstructorUnsupported`; Go-only setup and teardown in frame-construction tests. The C constructor contains undeclared `pFrames`. |
-| `Int2_ManDupInit` | `TestDupInitMatchesMuxedStateTransitions`, `TestDupInitWithNoOriginalPrimaryInputs` |
-| `Int2_ManCheckInit` | `TestCheckInitConstantTransitions`, `TestCheckInitAgainstExhaustiveTransitions`, `TestCheckInitIgnoresPropertyOutput` |
+| `Int2_ManDupInit` | `TestDupInitMatchesMuxedStateTransitions`, `TestDupInitWithNoOriginalPrimaryInputs`, `TestSourceInitHelpersRejectCombinationalGraph` |
+| `Int2_ManCheckInit` | `TestCheckInitConstantTransitions`, `TestCheckInitAgainstExhaustiveTransitions`, `TestCheckInitIgnoresPropertyOutput`, `TestSourceInitHelpersRejectCombinationalGraph` |
 | `Int2_ManFrameInit` | `TestFrameUnrollingTracksLatestInput`, `TestFrameInitMatchesSequentialSimulation`, `TestSourceCopiesNativeXorAsAnd`, `TestZeroFrameBuildersReturnInitialState` |
 | `Int2_ManSetupBmcSolver` | `TestSetupBmcSolverConstrainsFinalState` |
 | `Int2_ManCheckFrames`, `Int2_ManWriteFrames`, `Int2_GoCreateFrames` | `TestCreateFramesPreservesComplementedAndFanins`, `TestCreateFramesMapsConstantAtEveryFrame`, `TestCreateFramesAllocatesDirectInputSATVariable`, `TestCreateFramesCanStartAtLaterFrame`, `TestSourceCopiesNativeXorAsAnd`. The C builder is incomplete; these tests establish Go-only behavior. `TestSourceFrameBuilderReportsUnsupportedBeforeMutation` checks the source-named entry point. |
@@ -21,7 +21,7 @@ for undeclared C variables, inferred helpers, and retained source defects.
 | `Int2_ManRefineCube` | `TestRefineCubeSourceRejectsRegisterCI`, `TestSourceRefineCubeVisitsControllingPrimaryInput`, `TestSourceRefineCubeTrueAndWithUnitPriority`; these check source behavior, not correct cube minimization. |
 | `Int2_ManComputeCoPres` | `TestInt2ManComputeCoPresRejectsMalformedSOP`, `TestSourceSOPIndexSkipsSecondContiguousLiteral`, `TestSourceCoPresDeduplicatesAndOrdersSingleLiteralCubes` |
 | `Int2_ManCollectInternal`, `_rec` | `TestSourceCollectInternalVisitsSharedConesOnce` |
-| `Int2_ManProbToGia` | `TestSourceNilSOPPanics`, `TestSourceEmptySOPProducesFalse`, `TestProbToGiaSingleLiteralCubesMatchSourceTransitions` |
+| `Int2_ManProbToGia` | `TestSourceNilSOPPanics`, `TestSourceEmptySOPProducesFalse`, `TestProbToGiaSingleLiteralCubesMatchSourceTransitions`, `TestSourceEmptyCubeMakesSOPTrue` |
 | `int2HashCopyGate` | Used by frame tests; `TestSourceCopiesNativeXorAsAnd` records the C AND-copy behavior. |
 | SAT bridge allocation, literals, clauses and solver | `TestSATBridgeLoadsClausesAndDetectsContradiction`, `TestSATBridgeClauseExpandsVariableRange`, `TestSATBridgeCumulativeGlobalLimits`, `TestSATBridgeExpiredGlobalBudgetReturnsUnknown` |
 | SAT bridge AND, buffer, model and final core | `TestSATBridgeAndGateAllInputPolarities`, `TestSATBridgeBufferComplement`, `TestSATBridgeRejectsInconsistentGateClauses`, `TestSATBridgeModelValueUsesBooleanConvention`, `TestSATBridgeFinalReturnsNegatedAssumptions` |
