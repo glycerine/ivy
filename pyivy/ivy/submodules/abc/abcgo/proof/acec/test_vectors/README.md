@@ -45,6 +45,12 @@ complete `Gia_PolynReorder` result. The Go regression checks those source
 values, including entries for the output objects. Use the same C build commands
 with this filename to regenerate it.
 
+`acec_missing_box.c` invokes normalization on a graph with no arithmetic box;
+the C implementation dereferences the missing box. `acec_large_coefficients.c`
+checks signed exponent carries and cancellations without overflowing C `int`.
+It includes `acecPolyn.c` to reach a static helper, so use the same build
+commands but additionally exclude `*/proof/acec/acecPolyn.o` at link time.
+
 `abc_acec_results.txt` records the ABC CLI differential cases; set
 `go test -run TestABCDifferential ./proof/acec` always compares Go against the
 recorded results. Set `ABC_BINARY` to the absolute path of the compiled ABC
