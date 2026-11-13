@@ -35,3 +35,44 @@ func TestPreimageReportsUnsupportedForPrimaryInput(t *testing.T) {
 		t.Fatalf("image %v status %d", image, status)
 	}
 }
+
+func TestSourceJustificationUsesPriorityAsBoolean(t *testing.T) {
+	g := gia.Gia_ManStart(8)
+	x, y, state := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
+	gate := gia.Gia_ManAppendAnd(g, x, y)
+	gia.Gia_ManAppendCo(g, gate)
+	gia.Gia_ManAppendCo(g, state)
+	gia.Gia_ManSetRegNum(g, 1)
+	a, b, node := gia.Gia_ManObj(g, x>>1), gia.Gia_ManObj(g, y>>1), gia.Gia_ManObj(g, gate>>1)
+	gia.Gia_ObjSetMark0(a, 0)
+	gia.Gia_ObjSetMark0(b, 0)
+	gia.Gia_ObjSetMark0(node, 0)
+	gia.Gia_ObjSetValue(a, 2)
+	gia.Gia_ObjSetValue(b, 3)
+	gia.Gia_ObjSetValue(node, 1)
+	selected := vec.Vec_IntAlloc(0)
+	Int2_ManJustify_rec(g, node, selected)
+	if gia.Gia_ObjMark1(a) != 1 || gia.Gia_ObjMark1(b) != 1 {
+		t.Fatal("source Value==1 branch must visit both inputs despite false mark")
+	}
+}
+
+func TestSourceJustificationChoosesByMarks(t *testing.T) {
+	g := gia.Gia_ManStart(8)
+	x, y, state := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
+	gate := gia.Gia_ManAppendAnd(g, x, y^1)
+	gia.Gia_ManAppendCo(g, gate)
+	gia.Gia_ManAppendCo(g, state)
+	gia.Gia_ManSetRegNum(g, 1)
+	a, b, node := gia.Gia_ManObj(g, x>>1), gia.Gia_ManObj(g, y>>1), gia.Gia_ManObj(g, gate>>1)
+	gia.Gia_ObjSetMark0(a, 0)
+	gia.Gia_ObjSetMark0(b, 1)
+	gia.Gia_ObjSetMark0(node, 0)
+	gia.Gia_ObjSetValue(a, 9)
+	gia.Gia_ObjSetValue(b, 2)
+	gia.Gia_ObjSetValue(node, 9)
+	Int2_ManJustify_rec(g, node, vec.Vec_IntAlloc(0))
+	if gia.Gia_ObjMark1(a) != 1 || gia.Gia_ObjMark1(b) != 0 {
+		t.Fatal("source must visit lower-mark input despite its higher priority")
+	}
+}
