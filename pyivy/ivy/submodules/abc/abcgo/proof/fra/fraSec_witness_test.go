@@ -28,4 +28,10 @@ func TestSecTransferRequiresOriginalReplay(t *testing.T) {
 	if !secTransferWitness(original, reduced) || original.SequentialCounterexample() == nil {
 		t.Fatal("failed to transfer valid witness")
 	}
+	for _, edge := range original.LiveEdges() {
+		if aig.Aig_ObjIsMarkB(original, edge) {
+			t.Fatalf("witness replay left mark on %v", edge)
+		}
+	}
+
 }

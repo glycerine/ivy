@@ -31,7 +31,7 @@ func secTransferWitness(original, reduced *aig.Graph) bool {
 		return false
 	}
 	copy := util.Abc_CexDup(cex, original.RegisterCount())
-	if copy == nil || saig.Saig_ManVerifyCexNoClear(original, copy) == 0 {
+	if copy == nil || saig.Saig_ManVerifyCex(original, copy) == 0 {
 		return false
 	}
 	return original.SetSequentialCounterexample(copy) == nil
