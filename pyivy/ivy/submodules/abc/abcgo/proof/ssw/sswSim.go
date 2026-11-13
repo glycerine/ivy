@@ -50,9 +50,7 @@ package ssw
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_SmlObjIsConstBit(p any, pObj *Aig_Obj_t) int32 {
-    return pObj.fPhase == pObj.fMarkB;
-}
+
 
 /**Function*************************************************************
 
@@ -65,9 +63,7 @@ func Ssw_SmlObjIsConstBit(p any, pObj *Aig_Obj_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_SmlObjsAreEqualBit(p any, pObj0 *Aig_Obj_t, pObj1 *Aig_Obj_t) int32 {
-    return (pObj0.fPhase == pObj1.fPhase) == (pObj0.fMarkB == pObj1.fMarkB);
-}
+
 
 
 /**Function*************************************************************
@@ -187,9 +183,7 @@ func Ssw_SmlObjsAreEqualBit(p any, pObj0 *Aig_Obj_t, pObj1 *Aig_Obj_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_SmlSavePattern0(p *Ssw_Man_t, fInit int32) {
-    memset( p.pPatWords, 0, sizeof(unsigned) * p.nPatWords );
-}
+
 
 /**Function*************************************************************
 
@@ -202,20 +196,7 @@ func Ssw_SmlSavePattern0(p *Ssw_Man_t, fInit int32) {
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_SmlSavePattern1(p *Ssw_Man_t, fInit int32) {
-    var pObj *Aig_Obj_t;
-    var i, k, nTruePis int32;
-    memset( p.pPatWords, 0xff, sizeof(unsigned) * p.nPatWords );
-    if !(fInit != 0) {
-        return; }
-    // clear the state bits to correspond to all-0 initial state
-    nTruePis = Saig_ManPiNum(p.pAig);
-    k = 0;
-    // inlining of macro Saig_ManForEachLo
-    for  i = 0; (i < Saig_ManRegNum(p.pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i+Saig_ManPiNum(p.pAig))), 1); i++  {
-        Abc_InfoXorBit( p.pPatWords, nTruePis * p.nFrames + k++ );
-    }
-}
+
 
 
 /**Function*************************************************************
