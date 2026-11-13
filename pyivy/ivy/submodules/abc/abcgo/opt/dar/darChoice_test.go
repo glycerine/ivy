@@ -3,10 +3,11 @@ package dar
 import (
 	"errors"
 	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/proof/dch"
 	"testing"
 )
 
-func TestNewChoiceNativeEngine(t *testing.T) {
+func TestNewChoiceWithExplicitOrSourceAIGEngine(t *testing.T) {
 	for _, classic := range []bool{false, true} {
 		g := aig.NewGraph()
 		g.Name = "choices"
@@ -19,6 +20,8 @@ func TestNewChoiceNativeEngine(t *testing.T) {
 		if classic {
 			result, err = Dar_ManChoiceNewAig(g, &p)
 		} else {
+			params := dch.DefaultParams()
+			p.Engine = dch.Engine{Params: &params}
 			result, err = Dar_ManChoiceNew(g, &p)
 		}
 		if err != nil {
@@ -35,6 +38,18 @@ func TestNewChoiceNativeEngine(t *testing.T) {
 				t.Fatal(classic, n, out, err)
 			}
 		}
+	}
+}
+
+func TestNewChoiceRequiresUnwiredSourcePathOrExplicitEngine(t *testing.T) {
+	g := aig.NewGraph()
+	g.AddOutput(g.NewInput())
+	p := DefaultChoiceOptions()
+	if _, err := Dar_ManChoiceNew(g, &p); err == nil {
+		t.Fatal("unwired source choice path did not report an error")
+	}
+	if _, err := (PartitionedChoiceEngine{}).ComputeChoices([]*aig.Graph{g}); err == nil {
+		t.Fatal("partitioned choice without FRAIG backend did not report an error")
 	}
 }
 

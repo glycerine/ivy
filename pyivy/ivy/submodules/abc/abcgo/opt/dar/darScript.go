@@ -32,8 +32,9 @@ func RewriteForSAT(ctx context.Context, g *aig.Graph, balance bool, progress io.
 	result := aig.Aig_ManDupDfs(g)
 	report := func(stage string) error {
 		if progress != nil {
-			err := writeProgress(progress, "%s: %d nodes\n", stage, result.NodeCount())
-			return err
+			if err := writeProgress(progress, "%s: %d nodes\n", stage, result.NodeCount()); err != nil {
+				return err
+			}
 		}
 		if ctx != nil {
 			return ctx.Err()
@@ -249,6 +250,15 @@ func Dar_ManChoiceSynthesis(g *aig.Graph, balance, updateLevel, power, verbose b
 	return []*aig.Graph{original, first, second}, nil
 }
 func Dar_ManChoice(g *aig.Graph, balance, updateLevel, construct bool, conflictMax, levelMax int32, verbose bool) (*aig.Graph, error) {
+	return Dar_ManChoiceWithFraig(g, balance, updateLevel, construct, conflictMax, levelMax, verbose, nil)
+}
+
+// Dar_ManChoiceWithFraig supplies the FRA implementation required by ABC's
+// partitioned non-constructive choice path.
+func Dar_ManChoiceWithFraig(g *aig.Graph, balance, updateLevel, construct bool, conflictMax, levelMax int32, verbose bool, fraig aig.PartitionFraigFunc) (*aig.Graph, error) {
+	if !construct && fraig == nil {
+		return nil, fmt.Errorf("dar: partitioned choices require a FRAIG backend")
+	}
 	versions, err := Dar_ManChoiceSynthesis(g, balance, updateLevel, false, verbose)
 	if err != nil {
 		return nil, err
@@ -262,7 +272,7 @@ func Dar_ManChoice(g *aig.Graph, balance, updateLevel, construct bool, conflictM
 		result = aig.Aig_ManChoiceConstructive(versions, verbosity)
 	} else {
 		versions[0], versions[len(versions)-1] = versions[len(versions)-1], versions[0]
-		result = aig.Aig_ManChoicePartitioned(versions, 300, conflictMax, levelMax, verbosity)
+		result = aig.Aig_ManChoicePartitionedWithFraig(versions, 300, conflictMax, levelMax, verbosity, fraig)
 	}
 	if err := result.Check(); err != nil {
 		return nil, err

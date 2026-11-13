@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/proof/dch"
 	"io"
 	"time"
 )
@@ -15,16 +16,20 @@ type ChoiceEngine interface {
 	ComputeChoices([]*aig.Graph) (*aig.Graph, error)
 }
 
-// PartitionedChoiceEngine uses the native AIG exact equivalence engine.
-// Limits retain the original AIG partition interface; they are not SAT counters.
+// PartitionedChoiceEngine uses ABC's partitioned choice driver with the
+// supplied FRAIG backend. This is distinct from Dar_ManChoiceNew's C path.
 type PartitionedChoiceEngine struct {
 	PartitionSize, ConflictLimit, LevelLimit int32
 	Verbose                                  bool
+	Backend                                  aig.PartitionFraigFunc
 }
 
 func (e PartitionedChoiceEngine) ComputeChoices(versions []*aig.Graph) (*aig.Graph, error) {
-	if len(versions) == 0 {
-		return nil, fmt.Errorf("dar: no choice versions")
+	if len(versions) < 2 {
+		return nil, fmt.Errorf("dar: partitioned choices require at least two versions")
+	}
+	if e.Backend == nil {
+		return nil, fmt.Errorf("dar: partitioned choices require a FRAIG backend")
 	}
 	size := e.PartitionSize
 	if size == 0 {
@@ -34,7 +39,7 @@ func (e PartitionedChoiceEngine) ComputeChoices(versions []*aig.Graph) (*aig.Gra
 	if e.Verbose {
 		verbose = 1
 	}
-	result := aig.Aig_ManChoicePartitioned(versions, size, e.ConflictLimit, e.LevelLimit, verbose)
+	result := aig.Aig_ManChoicePartitionedWithFraig(versions, size, e.ConflictLimit, e.LevelLimit, verbose, e.Backend)
 	return result, result.Check()
 }
 
@@ -66,8 +71,8 @@ func Dar_NewChoiceSynthesis(g *aig.Graph, p *ChoiceOptions) ([]*aig.Graph, error
 }
 
 // Dar_ManChoiceNew runs the newer light-synthesis-aware version sequence.
-// Supplying a DCH or CEC engine selects that proof implementation explicitly;
-// otherwise exact native partitioned equivalence is used.
+// The source's default DCH/GIA path is not yet wired across package boundaries;
+// callers must supply an engine explicitly until that integration is complete.
 func Dar_ManChoiceNew(g *aig.Graph, p *ChoiceOptions) (*aig.Graph, error) {
 	return runNewChoice(g, p, false)
 }
@@ -78,11 +83,20 @@ func runNewChoice(g *aig.Graph, p *ChoiceOptions, classicSynthesis bool) (*aig.G
 	if g == nil || p == nil {
 		return nil, fmt.Errorf("dar: missing graph or choice options")
 	}
+	engine := p.Engine
+	if engine == nil {
+		if !classicSynthesis {
+			return nil, fmt.Errorf("dar: source DCH/CEC choice path is not wired; supply an explicit engine")
+		}
+		params := dch.DefaultParams()
+		params.Power = p.Power
+		engine = dch.Engine{Params: &params}
+	}
 	started := time.Now()
 	var versions []*aig.Graph
 	var err error
 	if classicSynthesis {
-		options := CompressOptions{Context: p.Context, Balance: p.Balance, UpdateLevel: p.UpdateLevel, Power: p.Power, Fanout: true, Progress: p.Progress}
+		options := CompressOptions{Context: p.Context, Balance: true, UpdateLevel: true, Power: p.Power, Fanout: true, Progress: p.Progress}
 		original := aig.Aig_ManDupDfs(g)
 		first, e := Compress(original, options)
 		if e != nil {
@@ -94,7 +108,9 @@ func runNewChoice(g *aig.Graph, p *ChoiceOptions, classicSynthesis bool) (*aig.G
 		}
 		versions = []*aig.Graph{second, first, original}
 	} else {
-		versions, err = Dar_NewChoiceSynthesis(g, p)
+		options := *p
+		options.Balance, options.UpdateLevel = true, true
+		versions, err = Dar_NewChoiceSynthesis(g, &options)
 		if err != nil {
 			return nil, err
 		}
@@ -104,10 +120,6 @@ func runNewChoice(g *aig.Graph, p *ChoiceOptions, classicSynthesis bool) (*aig.G
 		if err = p.Context.Err(); err != nil {
 			return nil, err
 		}
-	}
-	engine := p.Engine
-	if engine == nil {
-		engine = PartitionedChoiceEngine{}
 	}
 	result, err := engine.ComputeChoices(versions)
 	if err != nil {

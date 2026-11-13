@@ -2,6 +2,7 @@ package dar
 
 import (
 	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/bool/kit"
 	"testing"
 )
 
@@ -10,7 +11,15 @@ func TestRefactorTruthAndBuild(t *testing.T) {
 	leaves := []aig.Edge{g.NewInput(), g.NewInput(), g.NewInput(), g.NewInput(), g.NewInput()}
 	root := g.Mux(leaves[0], g.XOR(leaves[1], leaves[2]), g.AND(leaves[3], leaves[4].Not()))
 	truth := refactorTruth(g, root, leaves)
-	rebuilt := refactorBuild(g, leaves, truth)
+	words := []uint32{0}
+	for i, bit := range truth {
+		if bit {
+			words[0] |= 1 << uint(i)
+		}
+	}
+	var cover []uint32
+	kit.Kit_TruthIsop(words, 5, &cover, 0)
+	rebuilt := refactorBuildKit(g, leaves, kit.Kit_SopFactor(cover, 0, 5, &cover))
 	g.AddOutput(root)
 	g.AddOutput(rebuilt)
 	for n := 0; n < 32; n++ {
@@ -63,20 +72,56 @@ func TestRefactorBoundaryExtension(t *testing.T) {
 	root := g.AND(shared, c)
 	g.AddOutput(shared)
 	g.AddOutput(root)
-	bounded, ok := refactorBoundary(g, root, 4, false)
-	if !ok || len(bounded) != 2 {
-		t.Fatal(bounded, ok)
+	var bounded, extended []aig.Edge
+	aig.Aig_NodeMffcSupp(g, root, 0, &bounded)
+	if len(bounded) != 2 {
+		t.Fatal(bounded)
 	}
-	extended, ok := refactorBoundary(g, root, 4, true)
-	if !ok || len(extended) != 3 {
-		t.Fatal(extended, ok)
-	}
-	if _, ok := refactorBoundary(g, root, 2, true); ok {
-		t.Fatal("exceeded support limit")
+	if !aig.Aig_NodeMffcExtendCut(g, root, bounded, &extended) || len(extended) != 3 {
+		t.Fatal(extended)
 	}
 	p := DefaultRefactorParams()
 	p.Extend = true
 	if err := Dar_ManRefactor(g, &p); err != nil {
 		t.Fatal(err)
+	}
+}
+
+func TestRefactorConstantsAndMaximumLeafLimit(t *testing.T) {
+	for _, negate := range []bool{false, true} {
+		g := aig.NewGraph()
+		a, b, c := g.NewInput(), g.NewInput(), g.NewInput()
+		root := g.AND(g.AND(a, b), g.AND(a.Not(), c))
+		if negate {
+			root = root.Not()
+		}
+		g.AddOutput(root)
+		if err := Dar_ManRefactor(g, nil); err != nil {
+			t.Fatal(err)
+		}
+		for mask := 0; mask < 8; mask++ {
+			out, err := g.Evaluate([]bool{mask&1 != 0, mask&2 != 0, mask&4 != 0})
+			if err != nil || out[0] != negate {
+				t.Fatalf("negate=%v mask=%d output=%v err=%v", negate, mask, out, err)
+			}
+		}
+		if compact := aig.Aig_ManDupDfs(g); compact.NodeCount() != compact.InputCount()+compact.OutputCount()+1 {
+			t.Fatalf("constant cone retained gates; total nodes %d", compact.NodeCount())
+		}
+	}
+	g := aig.NewGraph()
+	e := g.NewInput()
+	for i := 1; i < 15; i++ {
+		e = g.AND(e, g.NewInput())
+	}
+	g.AddOutput(e)
+	p := DefaultRefactorParams()
+	p.LeafMax = 15
+	if err := Dar_ManRefactor(g, &p); err != nil {
+		t.Fatalf("source Kit supports 15 leaves: %v", err)
+	}
+	p.LeafMax = 16
+	if err := Dar_ManRefactor(g, &p); err == nil {
+		t.Fatal("Kit source rejects 16 leaves")
 	}
 }

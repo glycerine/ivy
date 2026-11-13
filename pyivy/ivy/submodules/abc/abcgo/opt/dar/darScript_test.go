@@ -53,6 +53,12 @@ func TestChoiceOrchestration(t *testing.T) {
 		a, b, c, d := g.NewInput(), g.NewInput(), g.NewInput(), g.NewInput()
 		g.AddOutput(g.AND(g.OR(g.AND(a, c), g.AND(b, c)), d))
 		result, err := Dar_ManChoice(g, true, true, construct, 1000, 0, false)
+		if !construct {
+			if err == nil {
+				t.Fatal("partitioned path accepted a missing FRAIG backend")
+			}
+			continue
+		}
 		if err != nil {
 			t.Fatal(err)
 		}

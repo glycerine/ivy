@@ -61,3 +61,29 @@ func TestDarManRwsatUsesAIGTime2Quit(t *testing.T) {
 		t.Fatal("rewrite lost graph deadline")
 	}
 }
+
+type cancelFinalRewriteWriter struct {
+	cancel   context.CancelFunc
+	rewrites int
+}
+
+func (w *cancelFinalRewriteWriter) Write(p []byte) (int, error) {
+	if strings.HasPrefix(string(p), "Rewrite:") {
+		w.rewrites++
+		if w.rewrites == 2 {
+			w.cancel()
+		}
+	}
+	return len(p), nil
+}
+func TestRewriteForSATChecksCancellationAfterFinalRewrite(t *testing.T) {
+	g := aig.NewGraph()
+	a, b := g.NewInput(), g.NewInput()
+	g.AddOutput(g.AND(a, b))
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	out, err := RewriteForSAT(ctx, g, false, &cancelFinalRewriteWriter{cancel: cancel})
+	if out != nil || !errors.Is(err, context.Canceled) {
+		t.Fatalf("final stage cancellation: graph=%v err=%v", out, err)
+	}
+}
