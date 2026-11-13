@@ -32,3 +32,23 @@ func TestGlaDumpWritesAbstractedAiger(t *testing.T) {
 		}
 	}
 }
+
+func TestGlaInitialDumpRestoresGateClasses(t *testing.T) {
+	g := gia.Gia_ManStart(8)
+	x := gia.Gia_ManAppendCi(g)
+	y := gia.Gia_ManAppendCi(g)
+	gate := gia.Gia_ManAppendAnd(g, x, y)
+	gia.Gia_ManAppendCo(g, gate)
+	classes := vec.Vec_IntStart(int(gia.Gia_ManObjNum(g)))
+	vec.Vec_IntWriteEntry(classes, 0, 1)
+	gia.Gia_ManSetGateClasses(g, classes)
+	pars := &Abs_Par_t{pFileVabs: filepath.Join(t.TempDir(), "initial.aig")}
+	p := &Ga2_Man_t{pGia: g, pPars: pars}
+	Ga2_ManDumpInitialMap(p)
+	if gia.Gia_ManGateClasses(g) != classes || vec.Vec_IntEntry(classes, int(gate>>1)) != 0 {
+		t.Fatal("original gate classes not restored")
+	}
+	if _, err := gia.Gia_AigerRead(pars.pFileVabs, 0, 0, 1); err != nil {
+		t.Fatal(err)
+	}
+}

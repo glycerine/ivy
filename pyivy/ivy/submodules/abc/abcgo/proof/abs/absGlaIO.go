@@ -101,3 +101,36 @@ func Gia_Ga2SendCancel(p *Ga2_Man_t, verbose int32) {
 	}
 	util.Gia_ManToBridgeBadAbs(os.Stdout)
 }
+
+func Ga2_ManWriteStatus(p *Ga2_Man_t, frames int32) {
+	abcmain.Abc_FrameSetStatus(-1)
+	abcmain.Abc_FrameSetCex(nil)
+	abcmain.Abc_FrameSetNFrames(frames)
+	name := p.pPars.pFileVabs
+	if name == "" {
+		name = "glabs.aig"
+	}
+	command := fmt.Sprintf("write_status %s", extra.Extra_FileNameGenericAppend(name, ".status"))
+	abcmain.Cmd_CommandExecute(abcmain.Abc_FrameGetGlobalFrame(), command)
+}
+
+func Ga2_ManDumpInitialMap(p *Ga2_Man_t) {
+	previous := gia.Gia_ManGateClasses(p.pGia)
+	classes := vec.Vec_IntStart(int(gia.Gia_ManObjNum(p.pGia)))
+	vec.Vec_IntWriteEntry(classes, 0, 1)
+	for id := int32(0); id < gia.Gia_ManObjNum(p.pGia); id++ {
+		obj := gia.Gia_ManObj(p.pGia, id)
+		if gia.Gia_ObjIsAnd(obj) != 0 || gia.Gia_ObjIsRo(p.pGia, obj) != 0 {
+			vec.Vec_IntWriteEntry(classes, int(id), 1)
+		}
+	}
+	gia.Gia_ManSetGateClasses(p.pGia, classes)
+	name := Ga2_GlaGetFileName(p, 0)
+	if err := gia.Gia_AigerWrite(p.pGia, name, 0, 0, 0); err != nil {
+		fmt.Printf("Cannot write %s: %v\n", name, err)
+	}
+	gia.Gia_ManSetGateClasses(p.pGia, previous)
+	if p.pPars.fVerbose != 0 {
+		fmt.Printf("Dumping miter with abstraction map into file %q...\n", name)
+	}
+}

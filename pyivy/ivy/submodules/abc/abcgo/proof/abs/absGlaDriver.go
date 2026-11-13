@@ -69,6 +69,10 @@ func Gia_ManPerformGla(g *gia.Gia_Man_t, pars *Abs_Par_t) int32 {
 	}()
 	if pars.fVerbose != 0 {
 		fmt.Printf("Running gate-level abstraction: FrameMax = %d ConfMax = %d Timeout = %d\n", pars.nFramesMax, pars.nConfLimit, pars.nTimeOut)
+		if pars.fDumpMabs != 0 {
+			Ga2_ManWriteStatus(p, -1)
+			Ga2_ManDumpInitialMap(p)
+		}
 	}
 	for !stopped {
 		if pars.nTimeOut > 0 && time.Since(start) >= time.Duration(pars.nTimeOut)*time.Second {
@@ -239,6 +243,7 @@ func Gia_ManPerformGla(g *gia.Gia_Man_t, pars *Abs_Par_t) int32 {
 			}
 			if pars.nFramesNoChange == pars.nFramesNoChangeLim {
 				if pars.fDumpVabs != 0 || pars.fDumpMabs != 0 {
+					Ga2_ManWriteStatus(p, frame)
 					Ga2_GlaDumpAbsracted(p, pars.fVerbose)
 				}
 				if pars.fCallProver != 0 {
