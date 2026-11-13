@@ -143,3 +143,27 @@ func TestConstrainedSafetyAgainstReachability(t *testing.T) {
 		}
 	}
 }
+
+func TestLivenessReductionPreservesConstraints(t *testing.T) {
+	g := aig.NewGraph()
+	x, state := g.NewInput(), g.NewInput()
+	g.AddOutput(state)
+	g.AddOutput(x)
+	g.AddOutput(x)
+	aig.Aig_ManSetRegNum(g, 1)
+	aig.Aig_ManSetConstrNum(g, 1)
+	network, err := NewNetwork(g, nil, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	reduced, err := LivenessToSafety(network, TransformOptions{Mode: IGNORE_LIVENESS_KEEP_SAFETY_MODE, SafetyAssertions: []aig.Edge{state.Not()}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if aig.Aig_ManConstrNum(reduced.Graph) != 1 {
+		t.Fatal("constraint was dropped")
+	}
+	if got := CheckSafety(reduced.Graph, 0, SafetyOptions{}); got.Status != 1 {
+		t.Fatalf("constrained reduction status %d error %v", got.Status, got.Error)
+	}
+}

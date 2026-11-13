@@ -201,11 +201,18 @@ func LivenessToSafety(network *Network, options TransformOptions) (*Network, err
 	for _, e := range badOutputs {
 		aig.Aig_ObjCreateCo(dst, e)
 	}
+	// Native constraints denote forbidden behavior and must follow properties.
+	constraints := int(aig.Aig_ManConstrNum(p))
+	for i := pos - constraints; i < pos; i++ {
+		aig.Aig_ObjCreateCo(dst, copyGraph.signal(p.Outputs()[i]))
+		outputNames = append(outputNames, outputName(network, i))
+	}
 	for i, e := range next {
 		aig.Aig_ObjCreateCo(dst, e)
 		outputNames = append(outputNames, registerNames[i]+"__next")
 	}
 	aig.Aig_ManSetRegNum(dst, int32(len(next)))
+	aig.Aig_ManSetConstrNum(dst, int32(constraints))
 	names = append(names, registerNames...)
 	return &Network{Graph: dst, InputNames: names, OutputNames: outputNames}, nil
 }
