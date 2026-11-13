@@ -81,6 +81,8 @@ func Inter_ManStartDuplicated(src *aig.Graph) *aig.Graph {
 		dst.AddOutput(duplicateTransitionEdge(src, dst, copies, src.Node(output).Fanins[0]))
 	}
 	aig.Aig_ManSetRegNum(dst, src.RegisterCount())
+	dst.CopyTruePiCount(src)
+	dst.SetTruePoCount(aig.Aig_ManConstrNum(src))
 	return dst
 }
 
@@ -95,6 +97,8 @@ func Inter_ManStartOneOutput(src *aig.Graph, addFirstPO int32) *aig.Graph {
 			panic("interpolation graph has no ordinary output")
 		}
 		dst.AddOutput(duplicateTransitionEdge(src, dst, copies, src.Node(outputs[0]).Fanins[0]))
+		dst.SetTruePiCount(int32(src.InputCount()) + 1)
+		dst.SetTruePoCount(addFirstPO + aig.Aig_ManConstrNum(src))
 		return dst
 	}
 	inputs := src.Inputs()
@@ -106,5 +110,7 @@ func Inter_ManStartOneOutput(src *aig.Graph, addFirstPO int32) *aig.Graph {
 		dst.AddOutput(dst.Mux(control, lo, li))
 	}
 	aig.Aig_ManSetRegNum(dst, src.RegisterCount())
+	dst.SetTruePiCount(src.TruePiCount() + 1)
+	dst.SetTruePoCount(aig.Aig_ManConstrNum(src))
 	return dst
 }

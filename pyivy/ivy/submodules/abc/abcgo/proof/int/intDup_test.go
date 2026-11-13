@@ -66,3 +66,29 @@ func TestTransitionDuplication(t *testing.T) {
 		}
 	}
 }
+
+func TestTransitionConstructorsPreserveSourceTrueTerminalMetadata(t *testing.T) {
+	for _, sourceCount := range []int32{0, 1, 7} {
+		src := aig.NewGraph()
+		x, state := src.NewInput(), src.NewInput()
+		src.AddOutput(x)
+		src.AddOutput(x.Not())
+		src.AddOutput(state)
+		aig.Aig_ManSetRegNum(src, 1)
+		aig.Aig_ManSetConstrNum(src, 1)
+		src.SetTruePiCount(sourceCount)
+		for _, tc := range []struct {
+			name     string
+			graph    *aig.Graph
+			pis, pos int32
+		}{
+			{"duplicated", Inter_ManStartDuplicated(src), sourceCount, 1},
+			{"transition loop", Inter_ManStartOneOutput(src, 0), sourceCount + 1, 1},
+			{"first output", Inter_ManStartOneOutput(src, 1), int32(src.InputCount() + 1), 2},
+		} {
+			if tc.graph.TruePiCount() != tc.pis || tc.graph.TruePoCount() != tc.pos {
+				t.Fatalf("source=%d mode=%s got truePI/PO=%d/%d want=%d/%d", sourceCount, tc.name, tc.graph.TruePiCount(), tc.graph.TruePoCount(), tc.pis, tc.pos)
+			}
+		}
+	}
+}
