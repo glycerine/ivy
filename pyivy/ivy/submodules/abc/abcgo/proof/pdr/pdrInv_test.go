@@ -256,6 +256,31 @@ func TestInvariantMinimization(t *testing.T) {
 	})
 }
 
+// q' = r and r' = r, with bad output q. The invariant excludes q=1 and
+// r=1: q is needed for coverage and r is needed to make q inductive.
+func TestInvariantMinimizeRetainsCoverageAndInductionClauses(t *testing.T) {
+	g := gia.Gia_ManStart(16)
+	q := gia.Gia_ManAppendCi(g)
+	r := gia.Gia_ManAppendCi(g)
+	gia.Gia_ManAppendCo(g, q)
+	gia.Gia_ManAppendCo(g, r)
+	gia.Gia_ManAppendCo(g, r)
+	gia.Gia_ManSetRegNum(g, 2)
+	full := pdrInvVector(2, 1, 0, 1, 2, 2)
+	if got := Pdr_InvCheck(g, full, 0); got != 0 {
+		t.Fatalf("full invariant has %d failures", got)
+	}
+	for _, cube := range []int32{0, 2} {
+		if got := Pdr_InvCheck(g, pdrInvVector(1, 1, cube, 2), 0); got == 0 {
+			t.Fatalf("single cube %d unexpectedly passes", cube)
+		}
+	}
+	before := append([]int32(nil), vec.Vec_IntArray(full)...)
+	if got := Pdr_InvMinimize(g, full, 0); got != nil || !reflect.DeepEqual(vec.Vec_IntArray(full), before) {
+		t.Fatalf("necessary clause removed: result=%v input=%v", got, vec.Vec_IntArray(full))
+	}
+}
+
 func TestInvariantDumpWithoutGlobalFrame(t *testing.T) {
 	g := aig.NewGraph()
 	for i := 0; i < 2; i++ {
