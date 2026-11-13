@@ -130,6 +130,8 @@ func Cec4_ManGeneratePatternOne(g *gia.Gia_Man_t, repr, reprValue, candidate, ca
 	for i := range p.values {
 		p.values[i] = -1
 	}
+	// GIA object zero is the constant false node, not an unassigned input.
+	p.values[0] = 0
 	ok := (repr == 0 || p.generate(repr, reprValue))
 	if ok {
 		if p.values[candidate] != -1 {
@@ -142,7 +144,7 @@ func Cec4_ManGeneratePatternOne(g *gia.Gia_Man_t, repr, reprValue, candidate, ca
 		vec.Vec_IntPush(pattern, lit)
 	}
 	for id, value := range p.values {
-		if value != -1 {
+		if id != 0 && value != -1 {
 			vec.Vec_IntPush(visited, int32(id))
 		}
 	}
