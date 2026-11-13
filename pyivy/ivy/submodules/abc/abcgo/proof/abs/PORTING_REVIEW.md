@@ -27,3 +27,9 @@ supply an AND-lowered GIA to old GLA.
 package cannot currently configure most options directly. The C-style exported
 entry points remain usable with default parameters; a Go-facing configuration
 API remains future work.
+
+The old GLA `fUseFullProof` option does not select a separate proof-logging
+mode in the Go port: `LabeledSolver2` always creates a proof graph. The
+resulting proof cores are tested, but memory and runtime behavior can differ
+from the C default. Alternate proof modes and their resource behavior remain
+an open fidelity and coverage item.
