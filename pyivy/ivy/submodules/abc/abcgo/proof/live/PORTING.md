@@ -67,3 +67,11 @@ Embedded fixtures and reproducible generators live in `test_vectors/`; ordinary 
 - `combination.c`: combination counts/enumeration and both monitor constructors are implemented. `nck` reads its width from standard input, as the C command does.
 
 The source command flags are `l2s`/abstraction `-1`, `-s`, `-l`, `-h`; `l2ssim` checks only the first option for `-1` and otherwise uses full simulation; and k-liveness and `nck` accept `-c`, `-m`, `-C`, `-g`, `-h`. The LTL command additionally recognizes C's `-f`, which deliberately aborts in C and is rejected by Go. Combined short flags such as `-1s` are accepted. The Go command adapter does not reproduce C's statistics/debug output or strashing side effects.
+
+For commands with a selected directive, option parsing stops at `--`, a lone
+`-`, or the first non-option, as in `Extra_UtilGetopt`; `nck` also ignores the
+remaining arguments before reading its width. Unknown options emit the C-style
+diagnostic through the adapter's error writer. The C simulation command does not
+reset getopt's process-global cursor; the Go adapter instead examines the first
+option of each call. Inputs that leave C's liveness directive unset can lead to
+invalid C state; the Go adapter returns an error for those cases.

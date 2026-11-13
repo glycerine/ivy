@@ -463,6 +463,14 @@ func printLivenessUsage(frame *Frame, ltl bool) int32 {
 	fmt.Fprint(out, "\t         performs Armin Biere's live-to-safe transformation\n\t-1 : no shadow logic, presume all loops are self loops\n\t-l : ignore liveness and fairness outputs\n\t-s : ignore safety assertions and assumptions\n\t-h : print command usage\n")
 	return 1
 }
+func reportUnknownOption(frame *Frame, argv []string, flag rune) {
+	_, errors := frame.writers()
+	name := ""
+	if len(argv) != 0 {
+		name = argv[0]
+	}
+	fmt.Fprintf(errors, "%s: unknown option %c\n", name, flag)
+}
 func commandTransform(frame *Frame, argv []string, ltl, simulation, abstraction bool) int32 {
 	if simulation && frame.Network == nil {
 		_, err := frame.writers()
@@ -478,11 +486,17 @@ func commandTransform(frame *Frame, argv []string, ltl, simulation, abstraction 
 	if simulation {
 		// The C simulation command calls getopt only once.
 		oneStep = len(args) > 0 && strings.HasPrefix(args[0], "-1")
+		if len(args) > 0 && len(args[0]) > 1 && args[0][0] == '-' && args[0] != "--" && args[0][1] != '1' {
+			reportUnknownOption(frame, argv, rune(args[0][1]))
+		}
 	} else {
 		flags := []string{}
 		for _, arg := range args {
-			if !strings.HasPrefix(arg, "-") || len(arg) < 2 {
-				return 1
+			if arg == "--" || arg == "-" || !strings.HasPrefix(arg, "-") {
+				if len(flags) == 0 {
+					return 1
+				}
+				break
 			}
 			for _, flag := range arg[1:] {
 				flags = append(flags, "-"+string(flag))
@@ -508,6 +522,9 @@ func commandTransform(frame *Frame, argv []string, ltl, simulation, abstraction 
 			case "-h":
 				return printLivenessUsage(frame, ltl)
 			default:
+				if !(ltl && flag == "-f") {
+					reportUnknownOption(frame, argv, rune(flag[1]))
+				}
 				return printLivenessUsage(frame, ltl)
 			}
 		}

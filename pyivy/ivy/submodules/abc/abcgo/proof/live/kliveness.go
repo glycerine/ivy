@@ -288,8 +288,11 @@ func Abc_CommandCS_kLiveness(frame *Frame, argc int32, argv []string) int32 {
 	}
 	flags := []string{}
 	for _, arg := range args {
-		if !strings.HasPrefix(arg, "-") || len(arg) < 2 {
-			return 1
+		if arg == "--" || arg == "-" || !strings.HasPrefix(arg, "-") {
+			if len(flags) == 0 {
+				return 1
+			}
+			break
 		}
 		for _, flag := range arg[1:] {
 			flags = append(flags, "-"+string(flag))
@@ -305,7 +308,10 @@ func Abc_CommandCS_kLiveness(frame *Frame, argc int32, argv []string) int32 {
 			options.Directive = 3
 		case "-g":
 			options.Directive = 4
+		case "-h":
+			return printKLiveUsage(frame, false)
 		default:
+			reportUnknownOption(frame, argv, rune(flag[1]))
 			return printKLiveUsage(frame, false)
 		}
 	}
@@ -327,11 +333,15 @@ func Abc_CommandNChooseK(frame *Frame, argc int32, argv []string) int32 {
 		args = args[1:]
 	}
 	for _, arg := range args {
-		if !strings.HasPrefix(arg, "-") {
-			return 1
+		if arg == "--" || arg == "-" || !strings.HasPrefix(arg, "-") {
+			break
 		}
 		for _, flag := range arg[1:] {
+			if flag == 'h' {
+				return printKLiveUsage(frame, true)
+			}
 			if !strings.ContainsRune("cmCg", flag) {
+				reportUnknownOption(frame, argv, flag)
 				return printKLiveUsage(frame, true)
 			}
 		}
@@ -347,6 +357,7 @@ func Abc_CommandNChooseK(frame *Frame, argc int32, argv []string) int32 {
 		fmt.Fprintln(out, "\nFailed to read integer!")
 		return 0
 	}
+	fmt.Fprintln(out)
 	if k < 0 || int(k) > registers(frame.Network.Graph) {
 		return 1
 	}
