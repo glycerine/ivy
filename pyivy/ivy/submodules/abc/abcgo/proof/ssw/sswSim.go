@@ -432,53 +432,7 @@ func Ssw_SmlCheckOutput(p *Ssw_Sml_t) *int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_SmlAssignDist1(p *Ssw_Sml_t, pPat *uint32) {
-    var pObj *Aig_Obj_t;
-    var f, i, k, Limit, nTruePis int32;
-    assert(p.nFrames > 0, "p.nFrames > 0");
-    if p.nFrames == 1 {
-        // copy the PI info
-        // inlining of macro Aig_ManForEachCi
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(p.pAig.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {
-            Ssw_SmlObjAssignConst( p, pObj, Abc_InfoHasBit(pPat, i), 0 );
-        }
-        // flip one bit
-        Limit = Abc_MinInt( Aig_ManCiNum(p.pAig), p.nWordsTotal * 32 - 1 );
-        for  i = 0; i < Limit; i++  {
-            Abc_InfoXorBit( Ssw_ObjSim( p, Aig_ManCi(p.pAig,i).Id ), i+1 );
-        }
-    
-    } else {
-        var fUseDist1 int32;
 
-        // copy the PI info for each frame
-        nTruePis = Aig_ManCiNum(p.pAig) - Aig_ManRegNum(p.pAig);
-        for  f = 0; f < p.nFrames; f++  {
-            // inlining of macro Saig_ManForEachPi
-            // inlining of macro Vec_PtrForEachEntryStop
-            for  i = 0; (i < Saig_ManPiNum(p.pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {
-                Ssw_SmlObjAssignConst( p, pObj, Abc_InfoHasBit(pPat, nTruePis * f + i), f );
-            }
-        }
-        // copy the latch info
-        k = 0;
-        // inlining of macro Saig_ManForEachLo
-        for  i = 0; (i < Saig_ManRegNum(p.pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i+Saig_ManPiNum(p.pAig))), 1); i++  {
-            Ssw_SmlObjAssignConst( p, pObj, Abc_InfoHasBit(pPat, nTruePis * p.nFrames + k++), 0 );
-        }
-//        assert( p->pFrames == NULL || nTruePis * p->nFrames + k == Aig_ManCiNum(p->pFrames) );
-
-        // flip one bit of the last frame
-        if fUseDist1 != 0 { //&& p->nFrames == 2 )
-        
-            Limit = Abc_MinInt( nTruePis, p.nWordsFrame * 32 - 1 );
-            for  i = 0; i < Limit; i++  {
-                Abc_InfoXorBit( Ssw_ObjSim( p, Aig_ManCi(p.pAig, i).Id ) + p.nWordsFrame*(p.nFrames-1), i+1 );
-            }
-        }
-    }
-}
 
 /**Function*************************************************************
 
@@ -491,33 +445,7 @@ func Ssw_SmlAssignDist1(p *Ssw_Sml_t, pPat *uint32) {
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_SmlAssignDist1Plus(p *Ssw_Sml_t, pPat *uint32) {
-    var pObj *Aig_Obj_t;
-    var f, i, Limit int32;
-    assert(p.nFrames > 0, "p.nFrames > 0");
 
-    // copy the pattern into the primary inputs
-    // inlining of macro Aig_ManForEachCi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.pAig.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {
-        Ssw_SmlObjAssignConst( p, pObj, Abc_InfoHasBit(pPat, i), 0 );
-    }
-
-    // set distance one PIs for the first frame
-    Limit = Abc_MinInt( Saig_ManPiNum(p.pAig), p.nWordsFrame * 32 - 1 );
-    for  i = 0; i < Limit; i++  {
-        Abc_InfoXorBit( Ssw_ObjSim( p, Aig_ManCi(p.pAig, i).Id ), i+1 );
-    }
-
-    // create random info for the remaining timeframes
-    for  f = 1; f < p.nFrames; f++  {
-        // inlining of macro Saig_ManForEachPi
-        // inlining of macro Vec_PtrForEachEntryStop
-        for  i = 0; (i < Saig_ManPiNum(p.pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {
-            Ssw_SmlAssignRandomFrame( p, pObj, f );
-        }
-    }
-}
 
 /**Function*************************************************************
 
