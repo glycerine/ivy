@@ -44,7 +44,7 @@ package rwr
 ///                         BASIC TYPES                              ///
 ////////////////////////////////////////////////////////////////////////
  
-#define RWR_LIMIT  1048576/4  // ((1 << 20) 
+const RWR_LIMIT = 1048576 / 4
 
 type Rwr_Man_t =   Rwr_Man_t_;
 type Rwr_Node_t =  Rwr_Node_t_;
