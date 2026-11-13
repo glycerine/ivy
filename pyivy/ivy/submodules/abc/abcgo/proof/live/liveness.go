@@ -366,8 +366,8 @@ func populateSafetyAssertionVector(n *Network, p *aig.Graph) []aig.Edge {
 func populateSafetyAssumptionVector(n *Network, p *aig.Graph) []aig.Edge {
 	return selectOutputAliases(sourceNetwork(n, p), "assume_safety", "Assume")
 }
-func prepareFlopVector(p *aig.Graph, length int32) []int32 {
-	if length < 0 || int(length) > registers(p) {
+func prepareFlopVector(_ *aig.Graph, length int32) []int32 {
+	if length < 0 {
 		panic("live: abstraction flop count")
 	}
 	result := make([]int32, length)

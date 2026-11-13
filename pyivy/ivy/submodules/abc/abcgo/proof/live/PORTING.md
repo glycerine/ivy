@@ -29,6 +29,10 @@ Monotonicity discovery retains only proved candidates. Unknown results never bec
 - The native `LivenessToSafety` convenience API guards LTL violations with fairness assumptions. The source-shaped LTL wrapper and command match the C branch, which omits the guard and can report unfair loops.
 - The source one-step constructor emits a safety output only when assertions are present; the native convenience API also emits a constant-false safety output when none are present.
 - `l2ssim` remains liveness-only, independently of the one-step safety-output behavior. CLI `-s` ignores safety and `-l` ignores liveness; option order does not change their meaning. Default abstraction shadows the first half of original registers, matching source preparation.
+- The source `prepareFlopVector` builds the requested sequence without checking
+  the graph's register count; later transformation paths still validate indices.
+  A source-shaped trace test covers a partial shadow set and its resulting
+  abstract loop on an unshadowed toggling latch.
 - Safety-name aliases `Assert`/`Assume` are retained alongside `assert_safety`/`assume_safety`.
 - Convenience discovery uses actual hint indexes. The source-shaped monotone tester retains C's arithmetic for known hints; its delayed-flop index can be negative and is rejected by Go bounds checks where C asserts or reads invalid memory.
 - The convenience discovery APIs query each monotonicity obligation explicitly. The source-named `findNewMonotone` instead flips one obligation and runs PDR on the entire graph, including unrelated outputs, matching C.
