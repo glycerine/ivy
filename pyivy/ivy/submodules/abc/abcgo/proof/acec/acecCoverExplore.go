@@ -15,10 +15,6 @@ func Gia_AcecExplore(p *Gia_Man_t, verbose int32) {
 	mapping := vec.Vec_BitStart(int(gia.Gia_ManObjNum(p)))
 	fadds := Gia_ManDetectFullAdders(p, verbose, nil)
 	hadds := Gia_ManDetectHalfAdders(p, verbose)
-	o := gia.Gia_ManObj(p, 352)
-	fmt.Printf("Xor = %d.\nFanin0 = %d.  Fanin1 = %d.\n", gia.Gia_ObjIsXor(o), gia.Gia_ObjFaninId0(o, 352), gia.Gia_ObjFaninId1(o, 352))
-	f0, f1 := gia.Gia_ObjFaninId0(o, 352), gia.Gia_ObjFaninId1(o, 352)
-	fmt.Printf("Fan00 = %d.  Fan01 = %d.   Fan10 = %d.  Fan11 = %d.\n", gia.Gia_ObjFaninId0(gia.Gia_ObjFanin0(o), f0), gia.Gia_ObjFaninId1(gia.Gia_ObjFanin0(o), f0), gia.Gia_ObjFaninId0(gia.Gia_ObjFanin1(o), f1), gia.Gia_ObjFaninId1(gia.Gia_ObjFanin1(o), f1))
 	for i := 0; i < vec.Vec_IntSize(hadds); i += 2 {
 		vec.Vec_BitWriteEntry(mapping, int(vec.Vec_IntEntry(hadds, i)), 1)
 		vec.Vec_BitWriteEntry(mapping, int(vec.Vec_IntEntry(hadds, i+1)), 1)

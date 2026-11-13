@@ -20,3 +20,12 @@ func TestCoverClearsAdderMarks(t *testing.T) {
 		}
 	}
 }
+
+func TestExploreSmallXorGraph(t *testing.T) {
+	p := gia.Gia_ManStart(16)
+	p.EnableMuxes()
+	a, b := gia.Gia_ManAppendCi(p), gia.Gia_ManAppendCi(p)
+	x := gia.Gia_ManAppendXorReal(p, a, b)
+	gia.Gia_ManAppendCo(p, x)
+	Gia_AcecExplore(p, 0)
+}
