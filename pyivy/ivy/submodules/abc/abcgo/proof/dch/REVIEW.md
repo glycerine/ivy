@@ -7,7 +7,7 @@ choice modules as separate responsibilities before the bug audit.
 
 - Replace scratch `pData` casts, pointer arrays and tagged addresses with typed
   graph edges, local maps, slices and errors. The public adapter depends only on
-  AIG and native-Go Satoko; DAR/CEC remain upstream and introduce no cycle.
+  AIG and ported BSAT; DAR/CEC remain upstream and introduce no cycle.
 - Keep the source's eight 32-bit simulation rounds and random stream, including
   the discarded reset draw and all-zero assignment bit. Use an independent RNG
   instance instead of resetting process-global random state.
@@ -19,8 +19,8 @@ choice modules as separate responsibilities before the bug audit.
   once after final DFS, rather than once before and again during duplication.
 - Avoid copying Graph.Nodes just to determine array sizes. Simulation words use
   one contiguous allocation; singleton classes avoid redundant signature hashing.
-- TFO counterexamples use a standard-library priority queue and topological ranks,
-  including valid rewritten graphs whose IDs no longer follow topological order.
+- TFO counterexamples use a standard-library priority queue and source-order
+  ranks. Graphs whose object IDs are not topological are explicitly rejected.
 
 ## Independent bug review and fixes
 
@@ -50,8 +50,8 @@ choice modules as separate responsibilities before the bug audit.
 8. Exhaustively verify every published representative and every choice edge,
    including complemented phases, in 25 deterministic random five-input snapshot
    families. Check outputs, chain acyclicity and graph invariants independently.
-9. Cover empty/constant/direct-input interfaces, explicit XOR, constant/CI aliases,
-   earlier/later non-topological IDs, parameter errors and unchanged input copies.
+9. Cover empty/constant/direct-input interfaces, constant/CI aliases, rejection of native XOR and
+   non-topological IDs, parameter errors and unchanged input copies.
 
 ## Independent source oracle
 
@@ -61,10 +61,10 @@ redundant-support alternatives with the filter disabled/enabled. Exact total and
 result AND counts, choice counts and every output assignment match Go. No C
 compiler/runtime is involved in the ordinary Go tests.
 
-The SAT backend is pure-Go Satoko rather than the source BSAT implementation.
-Conflict counts and hard-instance heuristic choices can differ; equivalence is
-always certified by actual UNSAT, with the requested budget semantics. Upstream
+The SAT backend uses the ported BSAT solver from the original DCH path.
+Source-style supergate and MUX clauses, incremental proved implications, and
+the conflict budget are retained. Upstream
 synthesis/GIA/new-engine selection flags remain upstream controls as in old DCH.
 
-Validated with DCH vet and full-package race tests for DCH, AIG and Satoko.
+Validated with DCH vet and full-package race tests for DCH, AIG and BSAT.
 No stubs, excluded source files, parser-only success claims or Git operations.

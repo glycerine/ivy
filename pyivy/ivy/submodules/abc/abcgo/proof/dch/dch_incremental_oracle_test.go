@@ -28,7 +28,7 @@ func TestIncrementalSweepTruthTableOracle(t *testing.T) {
 		for i := 0; i < 40; i++ {
 			a, b := pick(), pick()
 			if i%3 == 0 {
-				edges = append(edges, g.NewXor(a, b))
+				edges = append(edges, g.XOR(a, b))
 			} else {
 				edges = append(edges, g.AND(a, b))
 			}

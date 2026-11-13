@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	aig "github.com/glycerine/abcgo/aig/aig"
-	"github.com/glycerine/abcgo/sat/satoko"
+	"github.com/glycerine/abcgo/sat/bsat"
 )
 
 func newManager(g *aig.Graph, parameters *Params) (*Manager, error) {
@@ -54,8 +54,22 @@ func newManager(g *aig.Graph, parameters *Params) (*Manager, error) {
 	return m, nil
 }
 func (m *Manager) recycleSolver() {
-	m.solver = satoko.New()
-	m.variables = map[int]int{}
+	m.solver = bsat.NewSolver()
+	m.solver.SetLimits(int64(m.params.ConflictLimit), 0)
+	// Dch_ManSatSolverRecycle reserves SAT variable zero and assigns one
+	// to the constant-one node, with an initial capacity of 1000 variables.
+	for i := 0; i < 1000; i++ {
+		m.solver.NewVariable()
+	}
+	m.nextVar = 2
+	m.variables = map[int]int32{0: 1}
+	constant := int32(2)
+	if m.params.PolarFlip {
+		constant ^= 1
+	}
+	if !m.solver.AddClause(constant) {
+		panic("dch: inconsistent constant")
+	}
 	m.callsSince = 0
 	m.stats.Recycles++
 }
@@ -76,12 +90,18 @@ func graphOrder(g *aig.Graph) ([]aig.Edge, error) {
 		n := g.Node(node)
 		switch n.Kind {
 		case aig.Constant, aig.Input:
-		case aig.Buffer, aig.Output:
+		case aig.Output:
+			if n.Fanins[0].NodeID() >= id {
+				return fmt.Errorf("dch: non-topological AIG node %d", id)
+			}
 			if err := visit(n.Fanins[0]); err != nil {
 				return err
 			}
-		case aig.And, aig.ExclusiveOr:
+		case aig.And:
 			for _, child := range n.Fanins {
+				if child.NodeID() >= id {
+					return fmt.Errorf("dch: non-topological AIG node %d", id)
+				}
 				if err := visit(child); err != nil {
 					return err
 				}

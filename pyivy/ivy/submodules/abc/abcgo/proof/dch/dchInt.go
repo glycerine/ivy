@@ -4,7 +4,7 @@ import (
 	"time"
 
 	aig "github.com/glycerine/abcgo/aig/aig"
-	"github.com/glycerine/abcgo/sat/satoko"
+	"github.com/glycerine/abcgo/sat/bsat"
 )
 
 type Statistics struct {
@@ -18,8 +18,9 @@ type Manager struct {
 	params     Params
 	order      []aig.Edge
 	classes    *Classes
-	solver     *satoko.Solver
-	variables  map[int]int
+	solver     *bsat.Solver
+	variables  map[int]int32
+	nextVar    int32
 	callsSince int
 	proven     map[int]aig.Edge
 	blocked    map[int]bool

@@ -138,9 +138,10 @@ func TestRareMintermRequiresSATCounterexample(t *testing.T) {
 }
 func TestComplementAndConstantRepresentatives(t *testing.T) {
 	g := aig.NewGraph()
-	x, y := g.NewInput(), g.NewInput()
+	x, y, z := g.NewInput(), g.NewInput(), g.NewInput()
 	and := g.AND(x, y)
-	inverse := aig.Aig_ObjCreate(g, &aig.Node{Kind: aig.ExclusiveOr, Fanins: [2]aig.Edge{g.Const1(), and}})
+	notAnd := g.OR(x.Not(), y.Not())
+	inverse := g.AND(g.OR(notAnd, z), g.OR(notAnd, z.Not()))
 	zero := g.AND(g.AND(x, y), g.AND(x, y.Not()))
 	g.AddOutput(and)
 	g.AddOutput(inverse)
@@ -212,7 +213,7 @@ func TestConflictLimitUnknownNeverCreatesChoice(t *testing.T) {
 	}
 	x := a[0]
 	for _, next := range a[1:] {
-		x = left.NewXor(x, next)
+		x = left.XOR(x, next)
 	}
 	left.AddOutput(x)
 	var parity func([]aig.Edge) aig.Edge
@@ -221,7 +222,7 @@ func TestConflictLimitUnknownNeverCreatesChoice(t *testing.T) {
 			return nodes[0]
 		}
 		mid := len(nodes) / 2
-		return right.NewXor(parity(nodes[:mid]), parity(nodes[mid:]))
+		return right.XOR(parity(nodes[:mid]), parity(nodes[mid:]))
 	}
 	right.AddOutput(parity(b))
 	total := Dch_DeriveTotalAig([]*aig.Graph{left, right})
@@ -452,7 +453,7 @@ func TestRandomVariantsEveryChoiceIsSemanticallyValid(t *testing.T) {
 			negX, negY := random.Intn(2) == 0, random.Intn(2) == 0
 			ax, ay, bx, by := phaseEdge(a[x], negX), phaseEdge(a[y], negY), phaseEdge(b[x], negX), phaseEdge(b[y], negY)
 			if random.Intn(3) == 0 {
-				a = append(a, first.NewXor(ax, ay))
+				a = append(a, first.XOR(ax, ay))
 				b = append(b, second.XOR(bx, by))
 			} else {
 				t := b[random.Intn(5)]
@@ -527,7 +528,7 @@ func TestChoiceCheckerRejectsCombinedCycles(t *testing.T) {
 	}
 }
 
-func TestNonTopologicalNodeIDsRemainSound(t *testing.T) {
+func TestNonTopologicalNodeIDsAreRejected(t *testing.T) {
 	g := aig.NewGraph()
 	a, b, c := g.NewInput(), g.NewInput(), g.NewInput()
 	early := g.AND(a, b)
@@ -537,13 +538,8 @@ func TestNonTopologicalNodeIDsRemainSound(t *testing.T) {
 	alternative := g.AND(g.AND(a, b), c)
 	g.AddOutput(early)
 	g.AddOutput(alternative.Not())
-	result, _, err := ComputeChoicesWithStats(g, nil)
-	if err != nil {
-		t.Fatal(err)
-	}
-	checkAllOutputs(t, g, result)
-	if err := CheckChoices(result, false); err != nil {
-		t.Fatal(err)
+	if result, _, err := ComputeChoicesWithStats(g, nil); err == nil || result != nil {
+		t.Fatalf("non-topological graph accepted: result=%v error=%v", result, err)
 	}
 }
 
@@ -560,7 +556,7 @@ func TestIncrementalTFOSimulationMatchesFullValues(t *testing.T) {
 			a = a.Not()
 		}
 		if random.Intn(3) == 0 {
-			nodes = append(nodes, g.NewXor(a, b))
+			nodes = append(nodes, g.XOR(a, b))
 		} else {
 			nodes = append(nodes, g.AND(a, b))
 		}

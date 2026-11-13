@@ -32,9 +32,10 @@ these signatures propose candidates and never certify equivalence.
 
 The source sweep builds an incremental working FRAIG: proved nodes are
 substituted before later cones are constructed, structural matches need no SAT
-query, and unknown nodes block their fanouts. Lazy Tseitin CNF includes
-complemented AND/XOR/buffer logic. Polarity adjustment
-changes SAT variables consistently. Incremental pure-Go Satoko proves both miter
+query, and unknown nodes block their fanouts. Breadth-first supergate and MUX CNF follows Dch_CnfNodeAddToSolver.
+As required by the source sweep, inputs must contain AND/inverter logic with
+topologically ordered object IDs; native XOR and buffer nodes are rejected. Polarity adjustment
+changes SAT variables consistently. The ported BSAT solver proves both miter
 directions; only UNSAT in both directions certifies a pair. Each UNSAT
 query adds its proved implication to the incremental solver, and a constant-one
 representative needs only the first query. SAT counterexamples
@@ -55,7 +56,7 @@ claim is made. Mutable graph operations require ordinary external serialization.
 
 ## Validation
 
-`go -C abcgo test ./proof/dch ./aig/aig ./sat/satoko -race -count=1` and DCH vet
+`go -C abcgo test ./proof/dch ./aig/aig ./sat/bsat -race -count=1` and DCH vet
 pass. Separate compactness and correctness reviews are in REVIEW.md. A genuine
 original-C oracle covers associative snapshots and redundant-support filtering,
 matching exact total/result AND counts, choice counts and output truth tables.

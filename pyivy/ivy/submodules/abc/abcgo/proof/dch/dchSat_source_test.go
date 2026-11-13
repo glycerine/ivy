@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/sat/bsat"
 )
 
 func TestDchProvedImplicationsAndConstantShortcut(t *testing.T) {
@@ -29,13 +30,13 @@ func TestDchProvedImplicationsAndConstantShortcut(t *testing.T) {
 		if _, err := m.satLiteral(right); err != nil {
 			t.Fatal(err)
 		}
-		before := m.solver.ClauseCount()
+		before := m.solver.Statistics().Clauses
 		result, _, err := m.provePair(left, right)
 		if err != nil || result != proofEquivalent {
 			t.Fatalf("flip %v: result %v error %v", flip, result, err)
 		}
-		if m.solver.ClauseCount() < before+2 {
-			t.Fatalf("flip %v: proved implications absent: before=%d after=%d", flip, before, m.solver.ClauseCount())
+		if m.solver.Statistics().Clauses < before+2 {
+			t.Fatalf("flip %v: proved implications absent: before=%d after=%d", flip, before, m.solver.Statistics().Clauses)
 		}
 		beforeCalls := m.stats.SATCalls
 		result, _, err = m.provePair(g.Const1(), zero)
@@ -82,6 +83,88 @@ func TestDchSweepSubstitutesProvedNodesBeforeLaterCones(t *testing.T) {
 			if work[i] != values[n.NodeID()] {
 				t.Fatalf("bits %d node %d changed", bits, n.NodeID())
 			}
+		}
+	}
+}
+
+// Exercise source-style supergate and MUX clauses against direct truth tables.
+func TestDchSourceCNFTruthTables(t *testing.T) {
+	for _, flip := range []bool{false, true} {
+		for _, mux := range []bool{false, true} {
+			g := aig.NewGraph()
+			a, b, c, d := g.NewInput(), g.NewInput(), g.NewInput(), g.NewInput()
+			var output aig.Edge
+			if mux {
+				output = g.Mux(a, b.Not(), c)
+			} else {
+				output = g.AND(g.AND(g.AND(a, b), c), d)
+			}
+			g.AddOutput(output)
+			pars := DefaultParams()
+			pars.PolarFlip = flip
+			m, err := newManager(g, &pars)
+			if err != nil {
+				t.Fatal(err)
+			}
+			m.recycleSolver()
+			out, err := m.satLiteral(output)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if !mux && len(m.variables) != 6 {
+				t.Fatalf("supergate introduced interior SAT variables: %v", m.variables)
+			}
+			for bits := 0; bits < 16; bits++ {
+				in := []bool{bits&1 != 0, bits&2 != 0, bits&4 != 0, bits&8 != 0}
+				expected, err := g.Evaluate(in)
+				if err != nil {
+					t.Fatal(err)
+				}
+				assumptions := make([]int32, 0, 5)
+				for i, edge := range g.Inputs() {
+					if _, used := m.variables[edge.NodeID()]; !used {
+						continue
+					}
+					lit, err := m.satLiteral(edge)
+					if err != nil {
+						t.Fatal(err)
+					}
+					if !in[i] {
+						lit ^= 1
+					}
+					assumptions = append(assumptions, lit)
+				}
+				target := out
+				if !expected[0] {
+					target ^= 1
+				}
+				if got := m.solver.Solve(append(assumptions, target)...); got != bsat.Satisfiable {
+					t.Fatalf("flip=%v mux=%v bits=%d expected SAT got %v", flip, mux, bits, got)
+				}
+				if got := m.solver.Solve(append(assumptions, target^1)...); got != bsat.Unsatisfiable {
+					t.Fatalf("flip=%v mux=%v bits=%d expected UNSAT got %v", flip, mux, bits, got)
+				}
+			}
+		}
+	}
+}
+
+func TestDchRejectsNativeNodesOutsideSourceContract(t *testing.T) {
+	for _, kind := range []aig.NodeKind{aig.ExclusiveOr, aig.Buffer} {
+		g := aig.NewGraph()
+		a, b := g.NewInput(), g.NewInput()
+		var node aig.Edge
+		if kind == aig.ExclusiveOr {
+			node = g.NewXor(a, b)
+		} else {
+			node = aig.Aig_ObjCreate(g, &aig.Node{Kind: aig.Buffer, Fanins: [2]aig.Edge{a, aig.InvalidEdge}})
+		}
+		g.AddOutput(node)
+		if result, _, err := ComputeChoicesWithStats(g, nil); err == nil || result != nil {
+			t.Fatalf("node kind %v accepted: result=%v error=%v", kind, result, err)
+		}
+		if result, err := DeriveTotalAig([]*aig.Graph{g}); err == nil || result != nil {
+			t.Fatalf("node kind %v accepted in snapshot: result=%v error=%v", kind, result, err)
 		}
 	}
 }

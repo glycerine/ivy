@@ -22,6 +22,9 @@ func DeriveTotalAig(variants []*aig.Graph) (*aig.Graph, error) {
 		if err := g.Check(); err != nil {
 			return nil, fmt.Errorf("dch: snapshot %d: %w", i, err)
 		}
+		if _, err := graphOrder(g); err != nil {
+			return nil, fmt.Errorf("dch: snapshot %d: %w", i, err)
+		}
 		if g.InputCount() != first.InputCount() || g.OutputCount() != first.OutputCount() || aig.Aig_ManRegNum(g) != aig.Aig_ManRegNum(first) || aig.Aig_ManConstrNum(g) != aig.Aig_ManConstrNum(first) {
 			return nil, fmt.Errorf("dch: snapshot %d has a different interface", i)
 		}
@@ -54,18 +57,14 @@ func DeriveTotalAig(variants []*aig.Graph) (*aig.Graph, error) {
 		}
 		var value aig.Edge
 		switch node.Kind {
-		case aig.Buffer, aig.Output:
+		case aig.Output:
 			value = a
-		case aig.And, aig.ExclusiveOr:
+		case aig.And:
 			b, err := copyEdge(i, node.Fanins[1])
 			if err != nil {
 				return aig.InvalidEdge, err
 			}
-			if node.Kind == aig.And {
-				value = result.AND(a, b)
-			} else {
-				value = result.NewXor(a, b)
-			}
+			value = result.AND(a, b)
 		default:
 			return aig.InvalidEdge, fmt.Errorf("dch: unsupported snapshot node %d", e.NodeID())
 		}

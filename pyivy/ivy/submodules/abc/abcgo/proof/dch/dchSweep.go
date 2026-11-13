@@ -30,14 +30,7 @@ func (m *Manager) sweep() error {
 	}
 	for _, node := range m.order {
 		n := m.graph.Node(node)
-		if n.Kind == aig.Buffer {
-			m.mapped[node.NodeID()] = mappedEdge(n.Fanins[0])
-			if m.mapped[node.NodeID()] == aig.InvalidEdge {
-				m.blocked[node.NodeID()] = true
-			}
-			continue
-		}
-		if n.Kind != aig.And && n.Kind != aig.ExclusiveOr {
+		if n.Kind != aig.And {
 			continue
 		}
 		left, right := mappedEdge(n.Fanins[0]), mappedEdge(n.Fanins[1])
@@ -46,11 +39,7 @@ func (m *Manager) sweep() error {
 			m.stats.Blocked++
 			continue
 		}
-		if n.Kind == aig.And {
-			m.mapped[node.NodeID()] = m.satGraph.AND(left, right)
-		} else {
-			m.mapped[node.NodeID()] = m.satGraph.NewXor(left, right)
-		}
+		m.mapped[node.NodeID()] = m.satGraph.AND(left, right)
 		representative := m.classes.representative(node)
 		if representative == aig.InvalidEdge {
 			continue
@@ -85,7 +74,6 @@ func (m *Manager) sweep() error {
 		if status == proofUnknown {
 			m.blocked[node.NodeID()] = true
 			m.mapped[node.NodeID()] = aig.InvalidEdge
-			m.classes.remove(node)
 			continue
 		}
 		m.refineCounterexample(assignment)
