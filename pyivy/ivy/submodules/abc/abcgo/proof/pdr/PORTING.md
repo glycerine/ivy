@@ -29,6 +29,8 @@ package has passed `go test -race ./proof/pdr` and
 Ordinary and incremental solves also test simultaneous gap and per-output
 expiry during a SAT query: as in C, the gap timeout ends the solve before an
 output can be dropped. Global expiry takes the same precedence.
+Incremental last-frame clause pushing is checked for subsumption, inductive
+and noninductive cubes, and the source assertion on an unknown SAT result.
 
 Timed ordinary and incremental solves use the calling thread CPU clock on
 Linux, with the solve goroutine pinned; supported non-Linux Unix targets use
