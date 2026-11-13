@@ -886,59 +886,7 @@ func Ssw_ClassesPreparePairsSimple(pMiter *Aig_Man_t, vPairs *Vec_Int_t) *Ssw_Cl
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_ClassesRefineOneClass(p *Ssw_Cla_t, pReprOld *Aig_Obj_t, fRecursive int32) int32 {
-    var pClassOld, pClassNew **Aig_Obj_t;
-    var pObj, pReprNew *Aig_Obj_t;
-    var i int32;
 
-    // split the class
-    Vec_PtrClear( p.vClassOld );
-    Vec_PtrClear( p.vClassNew );
-    // inlining of macro Ssw_ClassForEachNode
-    for  i = 0; i < p.pClassSizes[pReprOld.Id]; i++  {                if ((pObj) = p.pId2Class[pReprOld.Id][i]) == nil {} else
-        if p.pFuncNodesAreEqual(p.pManData, pReprOld, pObj) {
-            Vec_PtrPush( p.vClassOld, pObj );
-        } else {
-            Vec_PtrPush( p.vClassNew, pObj ); }
-    }
-    // check if splitting happened
-    if Vec_PtrSize(p.vClassNew) == 0 {
-        return 0; }
-    // remember that this class is refined
-//    Ssw_ClassForEachNode( p, pReprOld, pObj, i )
-//        Vec_PtrPush( p->vRefined, pObj );
-
-    // get the new representative
-    pReprNew = (Aig_Obj_t *)Vec_PtrEntry( p.vClassNew, 0 );
-    assert(Vec_PtrSize(p.vClassOld) > 0, "Vec_PtrSize(p.vClassOld) > 0");
-    assert(Vec_PtrSize(p.vClassNew) > 0, "Vec_PtrSize(p.vClassNew) > 0");
-
-    // create old class
-    pClassOld = Ssw_ObjRemoveClass( p, pReprOld );
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vClassOld)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vClassOld, i)), 1); i++  {
-        pClassOld[i] = pObj;
-        Aig_ObjSetRepr( p.pAig, pObj, i? pReprOld : nil );
-    }
-    // create new class
-    pClassNew = pClassOld + i;
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vClassNew)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vClassNew, i)), 1); i++  {
-        pClassNew[i] = pObj;
-        Aig_ObjSetRepr( p.pAig, pObj, i? pReprNew : nil );
-    }
-
-    // put classes back
-    if Vec_PtrSize(p.vClassOld) > 1 {
-        Ssw_ObjAddClass( p, pReprOld, pClassOld, Vec_PtrSize(p.vClassOld) ); }
-    if Vec_PtrSize(p.vClassNew) > 1 {
-        Ssw_ObjAddClass( p, pReprNew, pClassNew, Vec_PtrSize(p.vClassNew) ); }
-
-    // check if the class should be recursively refined
-    if (fRecursive != 0) && Vec_PtrSize(p.vClassNew) > 1 {
-        return 1 + Ssw_ClassesRefineOneClass( p, pReprNew, 1 ); }
-    return 1;
-}
 
 /**Function*************************************************************
 
@@ -951,15 +899,7 @@ func Ssw_ClassesRefineOneClass(p *Ssw_Cla_t, pReprOld *Aig_Obj_t, fRecursive int
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_ClassesRefine(p *Ssw_Cla_t, fRecursive int32) int32 {
-    var ppClass **Aig_Obj_t;
-    var i, nRefis int32;
-    // inlining of macro Ssw_ManForEachClass
-    for  i = 0; i < Aig_ManObjNumMax(p.pAig); i++  {                if ((ppClass) = p.pId2Class[i]) == nil {} else {
-        nRefis += Ssw_ClassesRefineOneClass( p, ppClass[0], fRecursive ); }
-    }
-    return nRefis;
-}
+
 
 /**Function*************************************************************
 
@@ -972,15 +912,7 @@ func Ssw_ClassesRefine(p *Ssw_Cla_t, fRecursive int32) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_ClassesRefineGroup(p *Ssw_Cla_t, vReprs *Vec_Ptr_t, fRecursive int32) int32 {
-    var pObj *Aig_Obj_t;
-    var i, nRefis int32;
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vReprs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vReprs, i)), 1); i++  {
-        nRefis += Ssw_ClassesRefineOneClass( p, pObj, fRecursive );
-    }
-    return nRefis;
-}
+
 
 /**Function*************************************************************
 
