@@ -31,6 +31,7 @@ const (
 
 type clause struct {
 	lrn, mark, partA, lbd, size int32
+	allocWords                  int32
 	lits                        []lit
 }
 type Sat_Mem_t struct {
@@ -172,7 +173,7 @@ func Sat_MemAppend(p *Sat_Mem_t, data []int32, size, lrn, plus int32) int32 {
 		p.iPage[lrn] = page
 		offset = 2
 	}
-	c := &clause{size: size, lrn: lrn, lits: make([]lit, size+1)}
+	c := &clause{size: size, lrn: lrn, allocWords: words, lits: make([]lit, size+1)}
 	copy(c.lits[:size], data)
 	if lrn|plus != 0 {
 		c.lits[size] = p.nEntries[lrn]
@@ -206,7 +207,7 @@ func (p *Sat_Mem_t) handles(lrn int32) []cla {
 				panic("missing clause in page")
 			}
 			out = append(out, h)
-			k += Sat_MemClauseSize(c)
+			k += c.allocWords
 		}
 	}
 	return out

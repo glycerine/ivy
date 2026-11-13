@@ -2,6 +2,42 @@ package bsat
 
 import "testing"
 
+func TestClauseIterationAccountsForPlusOneStorage(t *testing.T) {
+	m := Sat_MemAlloc(9)
+	first := Sat_MemAppend(m, []int32{0, 2, 4}, 3, 0, 1)
+	second := Sat_MemAppend(m, []int32{1, 3, 5}, 3, 0, 1)
+	got := m.handles(0)
+	if len(got) != 2 || got[0] != first || got[1] != second {
+		t.Fatalf("handles=%v, want [%d %d]", got, first, second)
+	}
+}
+
+func TestClauseIterationMixedLayoutsAcrossPagesAndRollback(t *testing.T) {
+	m := Sat_MemAlloc(9)
+	var before []cla
+	for i := 0; i < 100; i++ {
+		plus := int32(i % 2)
+		before = append(before, Sat_MemAppend(m, []int32{0, 2, 4}, 3, 0, plus))
+	}
+	Sat_MemBookMark(m)
+	for i := 0; i < 60; i++ {
+		Sat_MemAppend(m, []int32{1, 3, 5}, 3, 0, int32(i%2))
+	}
+	if got := m.handles(0); len(got) != 160 {
+		t.Fatalf("before rollback: %d handles", len(got))
+	}
+	Sat_MemRollBack(m)
+	got := m.handles(0)
+	if len(got) != len(before) {
+		t.Fatalf("after rollback: %d handles", len(got))
+	}
+	for i := range before {
+		if got[i] != before[i] {
+			t.Fatalf("handle %d=%d, want %d", i, got[i], before[i])
+		}
+	}
+}
+
 func TestClauseStorageHandles(t *testing.T) {
 	p := Sat_MemAlloc(9)
 	var hs []cla
