@@ -117,6 +117,53 @@ func TestSolverIncrementalAndBudget(t *testing.T) {
 	}
 }
 
+func TestSolverAssumptionCoresAgainstExhaustive(t *testing.T) {
+	rng := rand.New(rand.NewSource(76021))
+	for trial := 0; trial < 500; trial++ {
+		s := NewSolver()
+		for i := 0; i < 5; i++ {
+			s.NewVar(true, true)
+		}
+		var clauses [][]Lit
+		for i := 0; i < 8; i++ {
+			clause := []Lit{MkLit(Var(rng.Intn(5)), rng.Intn(2) != 0), MkLit(Var(rng.Intn(5)), rng.Intn(2) != 0), MkLit(Var(rng.Intn(5)), rng.Intn(2) != 0)}
+			clauses = append(clauses, append([]Lit(nil), clause...))
+			s.AddClause(clause)
+		}
+		for query := 0; query < 8; query++ {
+			var assumptions []Lit
+			for i := 0; i < rng.Intn(5); i++ {
+				assumptions = append(assumptions, MkLit(Var(rng.Intn(5)), rng.Intn(2) != 0))
+			}
+			want := bruteCNF(5, clauses, assumptions)
+			got := s.Solve(assumptions)
+			if got != want {
+				t.Fatalf("trial=%d query=%d got=%v want=%v", trial, query, got, want)
+			}
+			if got {
+				continue
+			}
+			var core []Lit
+			for _, p := range s.Conflict {
+				found := false
+				for _, assumption := range assumptions {
+					if assumption == p.Not() {
+						found = true
+						break
+					}
+				}
+				if !found {
+					t.Fatalf("conflict %v does not come from assumptions %v", s.Conflict, assumptions)
+				}
+				core = append(core, p.Not())
+			}
+			if bruteCNF(5, clauses, core) {
+				t.Fatalf("trial=%d query=%d satisfiable core %v", trial, query, core)
+			}
+		}
+	}
+}
+
 // Golden statuses from the unchanged C++ Solver compiled with Glucose.cpp,
 // Options.cpp and System.cpp. The LCG and complete request sequence are kept
 // here so repeated assumptions and formula reuse are covered by the comparison.
