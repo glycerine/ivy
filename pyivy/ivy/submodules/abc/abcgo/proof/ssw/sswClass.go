@@ -350,44 +350,7 @@ func Ssw_ClassesPrint(p *Ssw_Cla_t, fVeryVerbose int32) {
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_ClassesRemoveNode(p *Ssw_Cla_t, pObj *Aig_Obj_t) {
-    var pRepr, pTemp *Aig_Obj_t;
-    assert(p.pClassSizes[pObj.Id] == 0, "p.pClassSizes[pObj.Id] == 0");
-    assert(p.pId2Class[pObj.Id] == nil, "p.pId2Class[pObj.Id] == nil");
-    pRepr = Aig_ObjRepr( p.pAig, pObj );
-    assert(pRepr != nil, "pRepr != nil");
-//    Vec_PtrPush( p->vRefined, pObj );
-    if Ssw_ObjIsConst1Cand( p.pAig, pObj ) {
-        assert(p.pClassSizes[pRepr.Id] == 0, "p.pClassSizes[pRepr.Id] == 0");
-        assert(p.pId2Class[pRepr.Id] == nil, "p.pId2Class[pRepr.Id] == nil");
-        Aig_ObjSetRepr( p.pAig, pObj, nil );
-        p.nCands1--;
-        return;
-    }
-//    Vec_PtrPush( p->vRefined, pRepr );
-    Aig_ObjSetRepr( p.pAig, pObj, nil );
-    assert(p.pId2Class[pRepr.Id][0] == pRepr, "p.pId2Class[pRepr.Id][0] == pRepr");
-    assert(p.pClassSizes[pRepr.Id] >= 2, "p.pClassSizes[pRepr.Id] >= 2");
-    if p.pClassSizes[pRepr.Id] == 2 {
-        p.pId2Class[pRepr.Id] = nil;
-        p.nClasses--;
-        p.pClassSizes[pRepr.Id] = 0;
-        p.nLits--;
-    
-    } else {
-        var i, k int32;
-        // remove the entry from the class
-        // inlining of macro Ssw_ClassForEachNode
-        for  i = 0; i < p.pClassSizes[pRepr.Id]; i++  {                if ((pTemp) = p.pId2Class[pRepr.Id][i]) == nil {} else
-            if pTemp != pObj {
-                p.pId2Class[pRepr.Id][k++] = pTemp; }
-        }
-        assert(k + 1 == p.pClassSizes[pRepr.Id], "k + 1 == p.pClassSizes[pRepr.Id]");
-        // reduce the class
-        p.pClassSizes[pRepr.Id]--;
-        p.nLits--;
-    }
-}
+
 
 /**Function*************************************************************
 

@@ -55,3 +55,45 @@ func Ssw_ClassesCollectClass(p *Ssw_Cla_t, repr aig.Edge, out *vec.Vec_Ptr_t) {
 		vec.Vec_PtrPush(out, obj)
 	}
 }
+
+func Ssw_ClassesRemoveNode(p *Ssw_Cla_t, obj aig.Edge) {
+	if p.pClassSizes[obj.NodeID()] != 0 || p.pId2Class[obj.NodeID()] != nil {
+		panic("ssw: cannot remove class representative")
+	}
+	repr := aig.Aig_ObjRepr(p.pAig, obj)
+	if repr == aig.InvalidEdge {
+		panic("ssw: node has no representative")
+	}
+	if repr == p.pAig.Const1() {
+		aig.Aig_ObjClearRepr(p.pAig, obj)
+		p.nCands1--
+		return
+	}
+	id := repr.NodeID()
+	class := p.pId2Class[id]
+	if len(class) < 2 || class[0] != repr {
+		panic("ssw: invalid class")
+	}
+	index := -1
+	for i, x := range class {
+		if x == obj {
+			index = i
+			break
+		}
+	}
+	if index < 1 {
+		panic("ssw: node not in class")
+	}
+	aig.Aig_ObjClearRepr(p.pAig, obj)
+	if len(class) == 2 {
+		p.pId2Class[id] = nil
+		p.pClassSizes[id] = 0
+		p.nClasses--
+	} else {
+		copy(class[index:], class[index+1:])
+		class = class[:len(class)-1]
+		p.pId2Class[id] = class
+		p.pClassSizes[id] = int32(len(class))
+	}
+	p.nLits--
+}
