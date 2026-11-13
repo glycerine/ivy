@@ -18,8 +18,9 @@ The top-level `Cec_ManVerify` now uses the source-style special cases,
 normalization, iterative sweep, and FRAIG fallback; `Cec_ManVerifyOld` calls
 the FRAIG fallback as well. The public `Cec_ManSatSweeping` entry point now
 also uses the source-style sweep. It rejects unsupported native XOR/MUX/buffer
-nodes and records original-ID proof pairs, including for deeper speculation and circuit SAT,
-without adding independent verification absent from the C implementation. Passing Boolean outcome tests alone does not establish full
+nodes and records original-ID proof pairs for the classic SAT backend, including
+deeper speculation, without adding independent verification absent from C.
+The circuit-SAT backend does not publish original-ID pairs, matching C. Passing Boolean outcome tests alone does not establish full
 equivalence of these algorithms.
 
 ## Upstream Cec4 choice limitation

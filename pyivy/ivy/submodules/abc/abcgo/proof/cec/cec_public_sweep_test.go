@@ -130,7 +130,7 @@ func TestPublicSweepDeepOriginalIDProofs(t *testing.T) {
 			t.Fatalf("depth %d missing equivalent pair: %v", depth, pairs)
 		}
 	}
-	g, a, b := sweepFixture()
+	g, _, _ := sweepFixture()
 	var p Cec_ParFra_t
 	Cec_ManFraSetDefaultParams(&p)
 	p.fUseOrigIds, p.fRunCSat = 1, 1
@@ -138,11 +138,7 @@ func TestPublicSweepDeepOriginalIDProofs(t *testing.T) {
 		t.Fatalf("circuit SAT: graph %v error %v", got, p.Error)
 	}
 	pairs := vec.Vec_IntArray(gia.Gia_ManOrigEquivPairs(g))
-	found := false
-	for i := 0; i+1 < len(pairs); i += 2 {
-		found = found || pairs[i] == a && pairs[i+1] == b || pairs[i] == b && pairs[i+1] == a
-	}
-	if !found {
-		t.Fatalf("circuit SAT missing equivalent pair: %v", pairs)
+	if len(pairs) != 0 {
+		t.Fatalf("source circuit SAT does not publish original-ID pairs: %v", pairs)
 	}
 }

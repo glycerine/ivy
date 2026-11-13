@@ -36,7 +36,6 @@ func cecOriginalSweepMapped(graph, original *Gia_Man_t, sourceIDs []int32, alias
 	if original != graph {
 		original.ClearCombinationalCounterexample()
 	}
-	pars.iOutFail = -1
 	started := time.Now()
 	deadline := time.Time{}
 	if pars.TimeLimit > 0 {
@@ -115,7 +114,7 @@ func cecOriginalSweepMapped(graph, original *Gia_Man_t, sourceIDs []int32, alias
 			break
 		}
 		if pars.fRunCSat != 0 {
-			cecManSatSolveCSat(pat, queries, &satPars, gia.Gia_ManOrigIds(fra.pAig), fra.vXorNodes, candidates)
+			Cec_ManSatSolveCSat(pat, queries, &satPars)
 		} else {
 			Cec_ManSatSolve(pat, queries, &satPars, gia.Gia_ManOrigIds(fra.pAig), fra.vXorNodes, candidates, 0)
 		}
