@@ -61,6 +61,64 @@ func TestSimpClearsModelOnPreprocessingFailure(t *testing.T) {
 	}
 }
 
+func TestSimpIncrementalClausesAndModels(t *testing.T) {
+	rng := rand.New(rand.NewSource(723489))
+	for trial := 0; trial < 300; trial++ {
+		const n = 6
+		s := NewSimpSolver()
+		s.UseAsymm, s.UseRCheck = trial%3 == 0, trial%5 == 0
+		for i := 0; i < n; i++ {
+			s.NewVar(true, true)
+			if i < 3 {
+				s.SetFrozen(Var(i), true)
+			}
+		}
+		var formula [][]Lit
+		for i := 0; i < 3+rng.Intn(16); i++ {
+			clause := make([]Lit, 1+rng.Intn(4))
+			for j := range clause {
+				clause[j] = MkLit(Var(rng.Intn(n)), rng.Intn(2) != 0)
+			}
+			formula = append(formula, append([]Lit(nil), clause...))
+			s.AddClause(clause)
+		}
+		for step := 0; step < 8; step++ {
+			var assumptions []Lit
+			for i := 0; i < rng.Intn(4); i++ {
+				assumptions = append(assumptions, MkLit(Var(rng.Intn(3)), rng.Intn(2) != 0))
+			}
+			want := bruteCNF(n, formula, assumptions)
+			if got := s.Solve(assumptions); got != want {
+				t.Fatalf("trial=%d step=%d got=%v want=%v formula=%v assumptions=%v", trial, step, got, want, formula, assumptions)
+			}
+			if want {
+				for _, clause := range formula {
+					satisfied := false
+					for _, lit := range clause {
+						if s.ModelValue(lit) == LTrue {
+							satisfied = true
+							break
+						}
+					}
+					if !satisfied {
+						t.Fatalf("trial=%d step=%d invalid model %v clause %v", trial, step, s.Model, clause)
+					}
+				}
+				for _, lit := range assumptions {
+					if s.ModelValue(lit) != LTrue {
+						t.Fatalf("trial=%d step=%d assumption %v model=%v", trial, step, lit, s.Model)
+					}
+				}
+			}
+			if step%2 == 1 {
+				clause := []Lit{MkLit(Var(rng.Intn(3)), rng.Intn(2) != 0), MkLit(Var(rng.Intn(3)), rng.Intn(2) != 0)}
+				formula = append(formula, append([]Lit(nil), clause...))
+				s.AddClause(clause)
+			}
+		}
+	}
+}
+
 func TestSimpSolverRandomCNF(t *testing.T) {
 	rng := rand.New(rand.NewSource(8231))
 	for trial := 0; trial < 1500; trial++ {
