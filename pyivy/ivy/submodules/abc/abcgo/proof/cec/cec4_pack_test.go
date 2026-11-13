@@ -42,3 +42,18 @@ func TestCec4PatternPackingFillsAllUsableSlots(t *testing.T) {
 		}
 	}
 }
+
+func TestCec4PatternExtensionPreservesReservedBits(t *testing.T) {
+	p := newCec4PatternPacker(4, 1)
+	if !p.try(2, []int32{3}) {
+		t.Fatal("initial reservation failed")
+	}
+	p.extend(1, []int32{2, 5})
+	if !p.bit(p.values, 1, 2) || !p.bit(p.reserved, 1, 2) {
+		t.Fatal("extension overwrote a reserved input")
+	}
+	// The first neighboring pattern flips its corresponding unreserved literal.
+	if !p.bit(p.values, 1, 1) || p.bit(p.values, 2, 2) {
+		t.Fatal("extension did not flip the selected literal")
+	}
+}
