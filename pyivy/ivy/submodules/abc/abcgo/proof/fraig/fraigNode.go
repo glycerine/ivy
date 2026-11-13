@@ -6,6 +6,12 @@ import (
 	"math/bits"
 )
 
+// Reuse coefficients when feedback expands past the original C prime table.
+// Equal simulations still have equal hashes, including after a resize.
+func fraigSimulationPrime(index int32) uint32 {
+	return uint32(s_FraigPrimes[index%int32(len(s_FraigPrimes))])
+}
+
 // fraigNodeSimComplement reports the phase in which an edge's simulation is stored.
 func fraigNodeSimComplement(node *Fraig_Node_t) bool {
 	return (Fraig_Regular(node).fInv != 0) != Fraig_IsComplement(node)
@@ -37,12 +43,12 @@ func Fraig_NodeCreatePi(p *Fraig_Man_t) *Fraig_Node_t {
 		if i == 0 {
 			node.puSimR[i] <<= 1
 		}
-		node.uHashR ^= node.puSimR[i] * uint32(s_FraigPrimes[i])
+		node.uHashR ^= node.puSimR[i] * fraigSimulationPrime(i)
 		node.nOnes += uint32(bits.OnesCount32(node.puSimR[i]))
 	}
 	for i := int32(0); i < p.iWordStart; i++ {
 		node.puSimD[i] = aig.Aig_ManRandom(0)
-		node.uHashD ^= node.puSimD[i] * uint32(s_FraigPrimes[i])
+		node.uHashD ^= node.puSimD[i] * fraigSimulationPrime(i)
 	}
 	p.timeSims += util.Abc_Clock() - start
 	assert(Fraig_HashTableLookupF(p, node) == nil, "new primary input has a unique simulation")
@@ -103,7 +109,7 @@ func Fraig_NodeSimulate(node *Fraig_Node_t, start, stop, useRand int32) {
 			value = ^value
 		}
 		dst[i] = value
-		hash ^= value * uint32(s_FraigPrimes[i])
+		hash ^= value * fraigSimulationPrime(i)
 	}
 	if useRand != 0 {
 		node.uHashR ^= hash

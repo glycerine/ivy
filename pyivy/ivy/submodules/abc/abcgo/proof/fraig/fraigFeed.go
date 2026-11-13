@@ -86,7 +86,7 @@ func Fraig_FeedBackInsert(p *Fraig_Man_t, nVars int32) int32 {
 		}
 		node.fFeedUse = 0
 		for w := p.iWordStart; w < p.iWordStart+words; w++ {
-			node.uHashD ^= node.puSimD[w] * uint32(s_FraigPrimes[w])
+			node.uHashD ^= node.puSimD[w] * fraigSimulationPrime(w)
 		}
 	}
 	return words
@@ -123,7 +123,7 @@ func Fraig_FeedBackCompress(p *Fraig_Man_t) int32 {
 		copy(sims[p.iWordPerm:p.iWordStart], p.pSimsTemp[p.iWordPerm:p.iWordStart])
 		node.uHashD = 0
 		for w := int32(0); w < p.iWordStart; w++ {
-			node.uHashD ^= sims[w] * uint32(s_FraigPrimes[w])
+			node.uHashD ^= sims[w] * fraigSimulationPrime(w)
 		}
 	}
 	p.iWordPerm = p.iWordStart
@@ -208,7 +208,7 @@ func Fraig_FeedBackCoveringStart(p *Fraig_Man_t) [][]uint32 {
 		for e := head; e != nil; e = e.pNextF {
 			e.uHashD = 0
 			for w := int32(0); w < p.iWordStart; w++ {
-				e.uHashD ^= (e.puSimD[w] & p.pSimsReal[w]) * uint32(s_FraigPrimes[w])
+				e.uHashD ^= (e.puSimD[w] & p.pSimsReal[w]) * fraigSimulationPrime(w)
 			}
 		}
 	}
