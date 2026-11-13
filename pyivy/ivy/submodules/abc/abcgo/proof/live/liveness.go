@@ -346,35 +346,46 @@ func commandTransform(frame *Frame, argv []string, ltl, simulation, abstraction 
 	if len(args) > 0 && !strings.HasPrefix(args[0], "-") {
 		args = args[1:]
 	}
-	flags := []string{}
-	for _, arg := range args {
-		if !strings.HasPrefix(arg, "-") || len(arg) < 2 {
-			return 1
+	if simulation {
+		// The C simulation command calls getopt only once.
+		oneStep = len(args) > 0 && strings.HasPrefix(args[0], "-1")
+	} else {
+		flags := []string{}
+		for _, arg := range args {
+			if !strings.HasPrefix(arg, "-") || len(arg) < 2 {
+				return 1
+			}
+			for _, flag := range arg[1:] {
+				flags = append(flags, "-"+string(flag))
+			}
 		}
-		for _, flag := range arg[1:] {
-			flags = append(flags, "-"+string(flag))
+		for _, flag := range flags {
+			switch flag {
+			case "-s":
+				if onlyLiveness || onlySafety {
+					return 1
+				}
+				onlyLiveness = true
+			case "-l":
+				if onlyLiveness || onlySafety {
+					return 1
+				}
+				onlySafety = true
+			case "-1":
+				if oneStep {
+					panic("live: repeated -1 option")
+				}
+				oneStep = true
+			case "-h":
+				out, _ := frame.writers()
+				fmt.Fprintln(out, "l2s [-s|-l] [-1]")
+				return 1
+			default:
+				return 1
+			}
 		}
 	}
-	for _, flag := range flags {
-		if simulation && flag != "-1" {
-			return 1
-		}
-		switch flag {
-		case "-s":
-			onlyLiveness = true
-		case "-l":
-			onlySafety = true
-		case "-1":
-			oneStep = true
 
-		case "-h":
-			out, _ := frame.writers()
-			fmt.Fprintln(out, "l2s [-s|-l] [-1]")
-			return 1
-		default:
-			return 1
-		}
-	}
 	if simulation {
 		onlyLiveness = true
 	}

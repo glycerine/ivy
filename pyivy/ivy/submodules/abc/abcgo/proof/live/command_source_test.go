@@ -46,7 +46,22 @@ func TestCombinedSourceFlagsAndSimulationOptions(t *testing.T) {
 		t.Fatalf("combined flags rejected: %d", got)
 	}
 	frame.Network = liveFixture(false)
-	if got := Abc_CommandAbcLivenessToSafetySim(frame, 2, []string{"l2ssim", "-s"}); got != 1 {
-		t.Fatalf("simulation accepted unsupported flag: %d", got)
+	if got := Abc_CommandAbcLivenessToSafetySim(frame, 2, []string{"l2ssim", "-s"}); got != 0 || registers(frame.Network.Graph) <= 1 {
+		t.Fatalf("simulation did not select full mode for unknown flag: %d", got)
 	}
+}
+
+func TestL2SRepeatedOptionsFollowSource(t *testing.T) {
+	for _, flag := range []string{"-s", "-l"} {
+		frame := &Frame{Network: liveFixture(false)}
+		if got := Abc_CommandAbcLivenessToSafety(frame, 3, []string{"l2s", flag, flag}); got != 1 {
+			t.Fatalf("repeated %s accepted", flag)
+		}
+	}
+	defer func() {
+		if recover() == nil {
+			t.Error("repeated -1 did not assert")
+		}
+	}()
+	Abc_CommandAbcLivenessToSafety(&Frame{Network: liveFixture(false)}, 3, []string{"l2s", "-1", "-1"})
 }
