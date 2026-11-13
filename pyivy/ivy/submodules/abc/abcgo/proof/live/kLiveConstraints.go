@@ -5,11 +5,21 @@ import (
 	"strings"
 )
 
-func createConstrained0LiveCone(p *aig.Graph, signals []aig.Edge) aig.Edge {
+// Signal edges belong to old; their source pData copies have been populated
+// in new before this helper is called, as in createConstrained0LiveCone C.
+func createConstrained0LiveCone(old, new *aig.Graph, signals []aig.Edge) aig.Edge {
 	if len(signals) == 0 {
 		panic("live: missing constrained-liveness target")
 	}
-	return aig.Aig_Or(p, all(p, signals[:len(signals)-1]).Not(), signals[len(signals)-1])
+	mapped := make([]aig.Edge, len(signals))
+	for i, e := range signals {
+		image := aig.Aig_ObjCopy(old, aig.Aig_Regular(e))
+		if image == aig.InvalidEdge {
+			panic("live: missing constrained-liveness signal copy")
+		}
+		mapped[i] = image ^ aig.Edge(e&1)
+	}
+	return aig.Aig_Or(new, all(new, mapped[:len(mapped)-1]).Not(), mapped[len(mapped)-1])
 }
 func collectCSSignals(n *Network, p *aig.Graph) []aig.Edge {
 	signals := []aig.Edge{}
@@ -30,9 +40,8 @@ func collectCSSignals(n *Network, p *aig.Graph) []aig.Edge {
 func createNewAigWith0LivePo(p *aig.Graph, signals []aig.Edge, index *int32) *aig.Graph {
 	c := newGraphCopy(p, "_0Live")
 	c.copyInputs()
-	mapped := make([]aig.Edge, len(signals))
-	for i, e := range signals {
-		mapped[i] = c.signal(e)
+	for _, e := range signals {
+		c.signal(e)
 	}
 	for i := 0; i < propertyOutputs(p); i++ {
 		aig.Aig_ObjCreateCo(c.destination, c.signal(p.Outputs()[i]))
@@ -40,7 +49,7 @@ func createNewAigWith0LivePo(p *aig.Graph, signals []aig.Edge, index *int32) *ai
 	if index != nil {
 		*index = int32(propertyOutputs(p))
 	}
-	aig.Aig_ObjCreateCo(c.destination, createConstrained0LiveCone(c.destination, mapped))
+	aig.Aig_ObjCreateCo(c.destination, createConstrained0LiveCone(p, c.destination, signals))
 	c.appendConstraints()
 	for r := 0; r < registers(p); r++ {
 		aig.Aig_ObjCreateCo(c.destination, c.signal(p.Outputs()[trueOutputs(p)+r]))
