@@ -119,3 +119,21 @@ func TestLexicographicFirstModelAgainstExhaustiveOracle(t *testing.T) {
 		}
 	}
 }
+
+func TestLexicographicRootConflictClearsPreviousCore(t *testing.T) {
+	s := NewSolver()
+	x, y := s.NewVariable(), s.NewVariable()
+	if s.Solve(Positive(x), Negative(x)) != Unsatisfiable || len(s.UnsatCore()) == 0 {
+		t.Fatal("missing initial assumption core")
+	}
+	s.AddClause(Positive(x), Positive(y))
+	s.AddClause(Negative(x))
+	s.AddClause(Negative(y))
+	order := []Literal{Negative(x), Negative(y)}
+	if got := s.SolveLexicographic(order); got != Unsatisfiable {
+		t.Fatalf("expected UNSAT, got %v", got)
+	}
+	if core := s.UnsatCore(); len(core) != 0 {
+		t.Fatalf("root conflict retained stale core: %v", core)
+	}
+}

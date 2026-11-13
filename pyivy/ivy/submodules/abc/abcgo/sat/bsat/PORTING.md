@@ -286,3 +286,8 @@ Solver2 clause input validation now scans the complete clause before growing
 its variable arrays, and grows them once. An invalid later literal previously
 left the variable count changed after the panic. A regression checks the
 recovered solver's count and usability; the race-enabled BSAT suite passes.
+
+Lexicographic solving now clears the previous assumption core before checking
+for a pending root conflict. Previously an unconditional root contradiction
+could expose a core from an earlier, unrelated assumption query. A regression
+covers the sequence; the race-enabled BSAT suite passes.

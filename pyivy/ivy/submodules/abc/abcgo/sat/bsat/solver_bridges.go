@@ -149,12 +149,12 @@ func (s *sat_solver_t) SolveLexicographic(literals []Literal) Status {
 	if s.root_level != 0 || s.trail_lim.size != 0 {
 		panic("lexicographic search with pending assumptions")
 	}
+	veci_resize(&s.conf_final, 0)
 	if !satSolverPropagateRoot(s) {
 		s.lastStatus = Unsatisfiable
 		return Unsatisfiable
 	}
 	sat_solver_set_resource_limits(s, s.limitConflicts, s.limitPropagations, 0, 0)
-	veci_resize(&s.conf_final, 0)
 	s.lastStatus = Status(sat_solver_solve_lexsat(s, literals, int32(len(literals))))
 	return s.lastStatus
 }
