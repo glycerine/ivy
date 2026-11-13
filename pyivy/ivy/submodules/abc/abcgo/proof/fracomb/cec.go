@@ -52,6 +52,10 @@ func Fra_FraigMiterAssertedOutput(g *aig.Graph) int32 {
 func Aig_ManCountXors(graph *aig.Graph) int32 {
 	var count int32
 	for _, edge := range graph.LiveEdges() {
+		if graph.Node(edge).Kind == aig.ExclusiveOr {
+			count++
+			continue
+		}
 		if aig.Aig_ObjIsMuxType(graph, edge) {
 			if _, _, ok := aig.Aig_ObjRecognizeExor(graph, edge); ok {
 				count++
@@ -61,20 +65,56 @@ func Aig_ManCountXors(graph *aig.Graph) int32 {
 	return count
 }
 
+// fraCecWitness validates a saved model or the all-zero assignment. A
+// direct positive input can fail even when the all-zero assignment does not.
+func fraCecWitness(g *aig.Graph) bool {
+	valid := func(model []int32) bool {
+		if len(model) != g.InputCount() {
+			return false
+		}
+		inputs := make([]bool, len(model))
+		for i, v := range model {
+			inputs[i] = v != 0
+		}
+		outputs, err := g.Evaluate(inputs)
+		if err != nil {
+			return false
+		}
+		for _, value := range outputs {
+			if value {
+				return true
+			}
+		}
+		return false
+	}
+	if model, ok := g.Data.([]int32); ok && valid(model) {
+		return true
+	}
+	model := make([]int32, g.InputCount())
+	if valid(model) {
+		g.Data = model
+		return true
+	}
+	g.Data = nil
+	return false
+}
+
 // Fra_FraigCec applies the original sequence of SAT, rewriting, and FRAIG
-// attempts to the given miter. Rewrites replace the caller's graph.
+// attempts to the given combinational miter. Rewrites replace the caller's graph.
 func Fra_FraigCec(graph **aig.Graph, conflictLimit, verbose int32, sweep Sweep) int32 {
 	if graph == nil || *graph == nil {
 		panic("fra: nil CEC miter")
+	}
+	if (*graph).RegisterCount() != 0 {
+		panic("fra: CEC miter must be combinational")
 	}
 	miter := *graph
 	if verbose != 0 {
 		fmt.Printf("Original miter:   Nodes = %6d.\n", aig.Aig_ManNodeNum(miter))
 	}
 	status := Fra_FraigMiterStatus(miter)
-	if status == 0 {
-		miter.Data = make([]int32, miter.InputCount())
-		return status
+	if status == 0 && fraCecWitness(miter) {
+		return 0
 	}
 	status = Fra_FraigSat(miter, 600, 0, 0, 0, 0, 1, 0, 0, 0)
 	if status >= 0 {
@@ -110,6 +150,9 @@ func Fra_FraigCec(graph **aig.Graph, conflictLimit, verbose int32, sweep Sweep) 
 		miterLimit *= 2
 	}
 	if status == -1 {
+		status = Fra_FraigSat(miter, int64(conflictLimit), 0, 0, 0, 0, 1, 0, 0, 0)
+	}
+	if status == 0 && !fraCecWitness(miter) {
 		status = Fra_FraigSat(miter, int64(conflictLimit), 0, 0, 0, 0, 1, 0, 0, 0)
 	}
 	*graph = miter

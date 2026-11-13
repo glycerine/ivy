@@ -77,7 +77,11 @@ func Fra_FraigSat(graph *aig.Graph, conflictLimit, propagationLimit int64, learn
 		for i, input := range graph.Inputs() {
 			value, ok := solver.Value(formula.VarNums[input.NodeID()])
 			if !ok {
-				return -1
+				// An input absent from all clauses is unconstrained.
+				continue
+			}
+			if flipBits != 0 && graph.Node(input).Phase {
+				value = !value
 			}
 			if value {
 				model[i] = 1
