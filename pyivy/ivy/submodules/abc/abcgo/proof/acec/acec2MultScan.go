@@ -79,6 +79,9 @@ func Sdb_StoFindInputs(cuts *Vec_Wec_t, front int32) *Vec_Int_t {
 			}
 		}
 	}
+	if front < 0 || front > max {
+		return res
+	}
 	counts := vec.Vec_IntStart(int(max + 1))
 	for i := 0; i < vec.Vec_WecSize(cuts); i++ {
 		for _, id := range vec.Vec_IntArray(vec.Vec_WecEntry(cuts, i)) {
@@ -106,6 +109,9 @@ func Sdb_StoFindInputs(cuts *Vec_Wec_t, front int32) *Vec_Int_t {
 		}
 	}
 	min = vec.Vec_IntEntry(counts, int(front))
+	if min == 0 {
+		return res
+	}
 	vec.Vec_IntPush(second, front)
 	vec.Vec_IntWriteEntry(counts, int(front), 0)
 	for i := 0; i < vec.Vec_IntSize(counts); i++ {
