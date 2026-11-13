@@ -243,13 +243,6 @@ func Fra_FraigLatchCorrespondence(graph *aig.Graph, prefix, conflicts, prove, ve
 	p.classes.NodesEqual = p.nodesEqual
 	p.repartition()
 	for {
-		if !deadline.IsZero() && time.Now().After(deadline) {
-			if iterations != nil {
-				*iterations = p.nIters
-			}
-			fmt.Println("Fra_FraigLatchCorrespondence: runtime limit exceeded.")
-			return nil
-		}
 		Fra_ClassNodesMark(p)
 		p.fraigs = nil
 		for _, part := range p.parts {
