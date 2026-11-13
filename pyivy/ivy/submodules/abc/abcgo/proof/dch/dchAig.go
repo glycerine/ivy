@@ -11,6 +11,11 @@ import (
 // snapshot's output is connected. Secondary alternatives deliberately remain
 // dangling: cleaning them would destroy the structures used for choice finding.
 func DeriveTotalAig(variants []*aig.Graph) (*aig.Graph, error) {
+	return deriveTotalAig(variants, true)
+}
+
+// C checks only terminal counts and leaves the new manager metadata unset.
+func deriveTotalAig(variants []*aig.Graph, preserveMetadata bool) (*aig.Graph, error) {
 	if len(variants) == 0 || variants[0] == nil {
 		return nil, fmt.Errorf("dch: no input snapshots")
 	}
@@ -25,7 +30,8 @@ func DeriveTotalAig(variants []*aig.Graph) (*aig.Graph, error) {
 		if _, err := graphOrder(g); err != nil {
 			return nil, fmt.Errorf("dch: snapshot %d: %w", i, err)
 		}
-		if g.InputCount() != first.InputCount() || g.OutputCount() != first.OutputCount() || aig.Aig_ManRegNum(g) != aig.Aig_ManRegNum(first) || aig.Aig_ManConstrNum(g) != aig.Aig_ManConstrNum(first) {
+		if g.InputCount() != first.InputCount() || g.OutputCount() != first.OutputCount() ||
+			(preserveMetadata && (aig.Aig_ManRegNum(g) != aig.Aig_ManRegNum(first) || aig.Aig_ManConstrNum(g) != aig.Aig_ManConstrNum(first))) {
 			return nil, fmt.Errorf("dch: snapshot %d has a different interface", i)
 		}
 	}
@@ -85,13 +91,15 @@ func DeriveTotalAig(variants []*aig.Graph) (*aig.Graph, error) {
 		}
 		result.AddOutput(driver)
 	}
-	if err := copyMetadata(result, first); err != nil {
-		return nil, err
+	if preserveMetadata {
+		if err := copyMetadata(result, first); err != nil {
+			return nil, err
+		}
 	}
 	return result, nil
 }
 func Dch_DeriveTotalAig(variants []*aig.Graph) *aig.Graph {
-	result, err := DeriveTotalAig(variants)
+	result, err := deriveTotalAig(variants, false)
 	if err != nil {
 		panic(err)
 	}
