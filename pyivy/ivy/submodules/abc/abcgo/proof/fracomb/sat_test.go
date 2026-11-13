@@ -1,12 +1,31 @@
 package fracomb
 
 import (
+	"fmt"
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/sat/bsat"
 	"github.com/glycerine/abcgo/sat/cnf"
 	"reflect"
 	"testing"
 )
+
+// ABC's Cnf_DataWriteIntoSolver2 passes clause ID zero, which violates
+// sat_solver2_addclause's assertion before either output mode is added.
+func TestSATSourceSolver2RejectsZeroClauseID(t *testing.T) {
+	for _, andOutputs := range []int32{0, 1} {
+		t.Run(fmt.Sprintf("and=%d", andOutputs), func(t *testing.T) {
+			g := aig.NewGraph()
+			x := g.NewInput()
+			g.AddOutput(x)
+			defer func() {
+				if recover() == nil {
+					t.Fatal("C solver2 asserts on zero clause ID")
+				}
+			}()
+			Fra_FraigSat(g, 0, 0, 0, 0, 0, 0, andOutputs, 1, 0)
+		})
+	}
+}
 
 // The expected variable and clause order was produced by C Cnf_Derive with
 // both output variables free, as used by Fra_FraigSat.
@@ -33,7 +52,7 @@ func TestSATTwoOutputTruthTables(t *testing.T) {
 	for aTable := 0; aTable < 16; aTable++ {
 		for bTable := 0; bTable < 16; bTable++ {
 			for _, andOutputs := range []int32{0, 1} {
-				for _, solver := range []int32{0, 1} {
+				for _, solver := range []int32{0} {
 					g := aig.NewGraph()
 					x, y := g.NewInput(), g.NewInput()
 					mk := func(table int) aig.Edge {
@@ -87,7 +106,7 @@ func TestSATTwoOutputTruthTables(t *testing.T) {
 }
 
 func TestSATPolarityTransformReturnsSourceSolverModel(t *testing.T) {
-	for _, solver := range []int32{0, 1} {
+	for _, solver := range []int32{0} {
 		g := aig.NewGraph()
 		x := g.NewInput()
 		g.AddOutput(x)
@@ -104,7 +123,7 @@ func TestSATPolarityTransformReturnsSourceSolverModel(t *testing.T) {
 
 func TestSATEmptyOutputCombination(t *testing.T) {
 	for _, andOutputs := range []int32{0, 1} {
-		for _, solver := range []int32{0, 1} {
+		for _, solver := range []int32{0} {
 			g := aig.NewGraph()
 			g.NewInput()
 			got := Fra_FraigSat(g, 0, 0, 0, 0, 0, 1, andOutputs, solver, 0)
@@ -122,7 +141,7 @@ func TestSATEmptyOutputCombination(t *testing.T) {
 func TestSATAllTruthFunctionsWithInputPhases(t *testing.T) {
 	for table := 0; table < 16; table++ {
 		for phases := 0; phases < 4; phases++ {
-			for _, solver := range []int32{0, 1} {
+			for _, solver := range []int32{0} {
 				for _, flip := range []int32{0, 1} {
 					g := aig.NewGraph()
 					x, y := g.NewInput(), g.NewInput()

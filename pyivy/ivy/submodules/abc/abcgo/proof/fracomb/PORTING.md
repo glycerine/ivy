@@ -5,12 +5,12 @@
 
 - `Fra_FraigMiterStatus` and `Fra_FraigMiterAssertedOutput` inspect the miter
   using ABC's graph phase conventions.
-- `Fra_FraigSat` translates a combinational miter to CNF and runs either ABC
-  solver implementation. It supports polarity transformation, OR or AND of
-  outputs, resource limits, and the original solver's learned-clause settings.
+- `Fra_FraigSat` translates a combinational miter to CNF and runs ABC's SAT
+  solver. It supports polarity transformation, OR or AND of outputs, resource
+  limits, and the original solver's learned-clause settings.
   `cnf.Cnf_Derive` uses the source cut mapping and CNF writer, including the
-  free-output encoding needed here. Both solver paths simplify at the root
-  before the bounded search, as in the C implementation.
+  free-output encoding needed here. The solver simplifies at the root before
+  bounded search, as in the C implementation.
 - `Aig_ManCountXors` recognizes structural and native Go AIG XOR nodes.
 - `Fra_FraigCec` runs the initial SAT attempt, rewriting, FRAIG sweeps, and a
   final SAT attempt. The caller supplies the actual FRAIG sweep to keep this
@@ -29,7 +29,13 @@ variable values after polarity transformation without undoing nonzero input
 phases. Callers requiring a replayable witness must account for these source
 limitations. Unknown solver results stay unknown.
 
-The package's full race suite covers both SAT solver variants, OR and AND
+ABC's `fNewSolver` path passes clause ID zero into `sat_solver2_addclause`
+while loading CNF (`src/sat/cnf/cnfMan.c:486–488`); assertion-enabled ABC
+aborts because `src/sat/bsat/satSolver2.c:1294` requires a nonzero ID. The
+source-named Go entry point likewise panics when this path loads its first
+clause. This affects both OR and AND output modes.
+
+The package's full race suite covers the SAT solver, OR and AND
 output modes, all two-input single-output truth functions under all input
 phases, all pairs of two-input output functions, empty outputs, and witness
 replay. It also checks miter status, direct-input CEC witnesses, and both XOR

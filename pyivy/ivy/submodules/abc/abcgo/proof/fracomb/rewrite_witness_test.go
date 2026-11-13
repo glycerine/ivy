@@ -9,7 +9,7 @@ import (
 // ABC's CEC fallback rewrites the miter before its later SAT queries. The
 // returned PI-order model must remain a witness on the original graph.
 func TestRewrittenMiterSATWitnessReplaysOriginalInputs(t *testing.T) {
-	for _, solver := range []int32{0, 1} {
+	for _, solver := range []int32{0} {
 		for _, flip := range []int32{0, 1} {
 			original := aig.NewGraph()
 			original.NewInput()

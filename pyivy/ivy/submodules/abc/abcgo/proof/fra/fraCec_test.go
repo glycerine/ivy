@@ -7,7 +7,7 @@ import (
 )
 
 func TestFraigSatOutputModesAndWitness(t *testing.T) {
-	for _, newSolver := range []int32{0, 1} {
+	for _, newSolver := range []int32{0} {
 		for _, flipBits := range []int32{0, 1} {
 			for _, andOutputs := range []int32{0, 1} {
 				g := aig.NewGraph()
@@ -48,7 +48,7 @@ func TestAigManCountXors(t *testing.T) {
 
 func TestFraigSatAllTwoInputFunctions(t *testing.T) {
 	for table := 0; table < 16; table++ {
-		for solver := int32(0); solver < 2; solver++ {
+		for solver := int32(0); solver < 1; solver++ {
 			for flip := int32(0); flip < 2; flip++ {
 				g := aig.NewGraph()
 				x, y := g.NewInput(), g.NewInput()
@@ -81,4 +81,15 @@ func TestFraigSatAllTwoInputFunctions(t *testing.T) {
 			}
 		}
 	}
+}
+
+func TestFraigSatSolver2PreservesSourceAssertion(t *testing.T) {
+	g := aig.NewGraph()
+	g.AddOutput(g.NewInput())
+	defer func() {
+		if recover() == nil {
+			t.Fatal("source solver2 must reject zero clause ID")
+		}
+	}()
+	Fra_FraigSat(g, 0, 0, 0, 0, 0, 0, 0, 1, 0)
 }

@@ -89,10 +89,7 @@ func TestCecReplacesInvalidExistingWitness(t *testing.T) {
 	}
 }
 
-func TestCecSourceDoesNotRevalidateSweepModel(t *testing.T) {
-	// The initial 600-conflict SAT call cannot solve this pigeonhole miter.
-	// A sweep callback supplies a deliberately invalid model to characterize
-	// ABC's handling of a later status-0 result.
+func cecPigeonholeMiter() *aig.Graph {
 	const pigeons, holes = 8, 7
 	g := aig.NewGraph()
 	var inputs [pigeons][holes]aig.Edge
@@ -117,6 +114,14 @@ func TestCecSourceDoesNotRevalidateSweepModel(t *testing.T) {
 		}
 	}
 	g.AddOutput(formula)
+	return g
+}
+
+func TestCecSourceDoesNotRevalidateSweepModel(t *testing.T) {
+	// The initial 600-conflict SAT call cannot solve this pigeonhole miter.
+	// A sweep callback supplies a deliberately invalid model to characterize
+	// ABC's handling of a later status-0 result.
+	g := cecPigeonholeMiter()
 	calls := 0
 	status := Fra_FraigCec(&g, 100000, 0, func(graph *aig.Graph, _, _ int32) *aig.Graph {
 		calls++
@@ -127,12 +132,31 @@ func TestCecSourceDoesNotRevalidateSweepModel(t *testing.T) {
 		t.Fatalf("sweep calls=%d status=%d", calls, status)
 	}
 	model, ok := g.Data.([]int32)
-	if !ok || len(model) != pigeons*holes {
+	if !ok || len(model) != g.InputCount() {
 		t.Fatalf("source model %v", g.Data)
 	}
 	outputs, err := g.Evaluate(make([]bool, g.InputCount()))
 	if err != nil || outputs[0] {
 		t.Fatalf("fixture unexpectedly validates: outputs=%v err=%v", outputs, err)
+	}
+}
+
+func TestCecSourceSweepLimitsAndFinalSAT(t *testing.T) {
+	for _, tc := range []struct{ limit, want int32 }{{1, -1}, {100000, 1}} {
+		g := cecPigeonholeMiter()
+		calls := 0
+		status := Fra_FraigCec(&g, tc.limit, 0, func(graph *aig.Graph, nodeLimit, miterLimit int32) *aig.Graph {
+			wantNode := int32(2) << uint(3*calls)
+			wantMiter := int32(300) << uint(calls)
+			if nodeLimit != wantNode || miterLimit != wantMiter {
+				t.Fatalf("sweep %d limits=(%d,%d), want (%d,%d)", calls, nodeLimit, miterLimit, wantNode, wantMiter)
+			}
+			calls++
+			return graph
+		})
+		if calls != 6 || status != tc.want {
+			t.Fatalf("limit=%d calls=%d status=%d want=%d", tc.limit, calls, status, tc.want)
+		}
 	}
 }
 

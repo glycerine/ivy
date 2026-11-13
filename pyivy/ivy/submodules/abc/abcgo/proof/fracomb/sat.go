@@ -48,6 +48,11 @@ func Fra_FraigSat(graph *aig.Graph, conflictLimit, propagationLimit int64, learn
 		solver.NewVariable()
 	}
 	for _, row := range formula.Clauses {
+		if newSolver != 0 {
+			// Cnf_DataWriteIntoSolver2 passes ID zero, rejected by the
+			// assertion in ABC's sat_solver2_addclause.
+			panic("fra: source solver2 rejects clause ID zero")
+		}
 		if !solver.AddClause(row...) {
 			return 1
 		}
