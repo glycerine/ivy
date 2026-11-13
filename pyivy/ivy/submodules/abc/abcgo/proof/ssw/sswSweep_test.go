@@ -2,6 +2,7 @@ package ssw
 
 import (
 	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/sat/bsat"
 	"testing"
 )
 
@@ -63,5 +64,24 @@ func TestUnassignedComplementedFrameUsesConsistentDefault(t *testing.T) {
 	Ssw_ObjSetFrame(p, b, 0, x.Not())
 	if Ssw_ManGetSatVarValue(p, a, 0) != 0 || Ssw_ManGetSatVarValue(p, b, 0) != 1 {
 		t.Fatal("complementary unassigned frame edges received inconsistent defaults")
+	}
+}
+
+func TestSatPatternUsesSolverPolarity(t *testing.T) {
+	source := aig.NewGraph()
+	obj := source.NewInput()
+	frames := aig.NewGraph()
+	frame := frames.NewInput()
+	aig.Aig_ObjSetPhase(frames, frame, true)
+	sat := Ssw_SatStart(0)
+	sat.pAig = frames
+	Ssw_CnfNodeAddToSolver(sat, frame)
+	p := &Ssw_Man_t{pAig: source, pFrames: frames, pMSat: sat, pPars: &Ssw_Pars_t{fPolarFlip: 1}, nFrames: 1, pNodeToFrames: make([]aig.Edge, len(source.Nodes()))}
+	Ssw_ObjSetFrame(p, obj, 0, frame)
+	if sat.pSat.Solve(sswLit(sat, frame, false)) != bsat.Satisfiable {
+		t.Fatal("expected SAT")
+	}
+	if Ssw_ManGetSatVarValue(p, obj, 0) != 1 {
+		t.Fatal("pattern interpreted using parameter instead of SAT solver polarity")
 	}
 }

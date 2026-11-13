@@ -29,7 +29,8 @@ func Ssw_ManGetSatVarValue(p *Ssw_Man_t, obj aig.Edge, frame int32) int32 {
 			value ^= 1
 		}
 	}
-	if p.pPars.fPolarFlip != 0 && aig.Aig_ObjPhase(p.pFrames, aig.Aig_Regular(edge)) {
+	// The solver owns its encoding polarity; it may differ from the parameters.
+	if p.pMSat.fPolarFlip != 0 && aig.Aig_ObjPhase(p.pFrames, aig.Aig_Regular(edge)) {
 		value ^= 1
 	}
 	return value
