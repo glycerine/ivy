@@ -236,6 +236,7 @@ type Bac_Man_t = Bac_Man_t_;
 // network
 type Bac_Ntk_t_ struct {
     pDesign   *Bac_Man_t;  // design
+    ntkID     int32       // index in the design network array
     NameId          int32;   // name ID
     iCopy          int32;    // copy module
     iBoxNtk          int32;  // instance network ID
@@ -268,7 +269,7 @@ type Bac_Man_t_ struct {
     // internal data
     iRoot          int32;    // root network
     nNtks          int32;    // number of current networks
-    pNtks   *Bac_Ntk_t;    // networks
+    pNtks   []Bac_Ntk_t;    // networks
     // user data
     vOut   *Vec_Str_t;     
     vOut2   *Vec_Str_t;     
@@ -289,7 +290,7 @@ func Bac_ManNtkNum(p *Bac_Man_t) int32 { return p.nNtks;                        
 func Bac_ManPrimNum(p *Bac_Man_t) int32 { return Abc_NamObjNumMax(p.pMods) - Bac_ManNtkNum(p);                                       }
 func Bac_ManNtkIsOk(p *Bac_Man_t, i int32) int32 { return i > 0 && i <= Bac_ManNtkNum(p);                                                      }
 func Bac_ManNtk(p *Bac_Man_t, i int32) *Bac_Ntk_t { if Bac_ManNtkIsOk(p, i) != 0 {
-    return p.pNtks + i;
+    return &p.pNtks[i];
 } else {
     return nil;
 }                                          }
@@ -301,7 +302,11 @@ func Bac_ManStrId(p *Bac_Man_t, pStr string) int32 { return Abc_NamStrFind(p.pSt
 func Bac_ManPrimName(p *Bac_Man_t, Type Bac_ObjType_t) string { return p.pPrimNames[Type];                                                            }
 func Bac_ManPrimSymb(p *Bac_Man_t, Type Bac_ObjType_t) string { return p.pPrimSymbs[Type];                                                            }
 
-func Bac_NtkId(p *Bac_Ntk_t) int32 { var i int32  = p - p.pDesign.pNtks; assert((Bac_ManNtkIsOk(p.pDesign, i) != 0), "Bac_ManNtkIsOk(p.pDesign, i)"); return i;             }
+func Bac_NtkId(p *Bac_Ntk_t) int32 {
+    i := p.ntkID
+    assert(Bac_ManNtkIsOk(p.pDesign, i) != 0 && &p.pDesign.pNtks[i] == p, "network belongs to design")
+    return i
+}
 func Bac_NtkMan(p *Bac_Ntk_t) *Bac_Man_t { return p.pDesign;                                                                          }
 func Bac_NtkNameId(p *Bac_Ntk_t) int32 { return p.NameId;                                                                           }
 func Bac_NtkName(p *Bac_Ntk_t) string { return Bac_ManStr(p.pDesign, Bac_NtkNameId(p));                                            }
@@ -958,11 +963,12 @@ func Bac_ManAlloc(pFileName string, nNtks int32) *Bac_Man_t {
     pNew.iRoot = 1;
     pNew.nNtks = nNtks;
     // inlining of macro ABC_CALLOC
-    pNew.pNtks = ((Bac_Ntk_t *) calloc((size_t)(pNew.nNtks + 1), sizeof(Bac_Ntk_t)));
+    pNew.pNtks = make([]Bac_Ntk_t, pNew.nNtks+1)
     // inlining of macro Bac_ManForEachNtk
     for i = 1; i <= Bac_ManNtkNum(pNew); i++ {
         pNtk = Bac_ManNtk(pNew, i) 
         pNtk.pDesign = pNew;
+        pNtk.ntkID = i
     }
     Bac_ManSetupTypes( pNew.pPrimNames, pNew.pPrimSymbs );
     return pNew;
@@ -978,11 +984,12 @@ func Bac_ManStart(p *Bac_Man_t, nNtks int32) *Bac_Man_t {
     pNew.iRoot = 1;
     pNew.nNtks = nNtks;
     // inlining of macro ABC_CALLOC
-    pNew.pNtks = ((Bac_Ntk_t *) calloc((size_t)(nNtks + 1), sizeof(Bac_Ntk_t)));
+    pNew.pNtks = make([]Bac_Ntk_t, nNtks+1)
     // inlining of macro Bac_ManForEachNtk
     for i = 1; i <= Bac_ManNtkNum(pNew); i++ {
         pNtk = Bac_ManNtk(pNew, i) 
         pNtk.pDesign = pNew;
+        pNtk.ntkID = i
     }
     return pNew;
 }
