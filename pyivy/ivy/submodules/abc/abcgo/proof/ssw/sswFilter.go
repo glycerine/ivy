@@ -1,533 +1,311 @@
 package ssw
 
-import "time"
+// Signal filtering with sequential simulation and SAT sweeping, from sswFilter.c.
+import (
+	"fmt"
+	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/aig/saig"
+	"github.com/glycerine/abcgo/misc/util"
+	"time"
+)
 
-/**CFile****************************************************************
-
-  FileName    [sswConstr.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Inductive prover with constraints.]
-
-  Synopsis    [One round of SAT sweeping.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - September 1, 2008.]
-
-  Revision    [$Id: sswConstr.c,v 1.00 2008/09/01 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "sswInt.h"
-//#include "aig/gia/giaAig.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Performs fraiging for one node.]
-
-  Description [Returns the fraiged node.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ssw_ManRefineByFilterSim(p *Ssw_Man_t, nFrames int32) {
-    var pObj, pObjLi *Aig_Obj_t;
-    var f, i, RetValue1, RetValue2 int32;
-    assert(nFrames > 0, "nFrames > 0");
-    // assign register outputs
-    // inlining of macro Saig_ManForEachLi
-    for  i = 0; (i < Saig_ManRegNum(p.pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, i+Saig_ManPoNum(p.pAig))), 1); i++  {
-        pObj.fMarkB = Abc_InfoHasBit( p.pPatWords, Saig_ManPiNum(p.pAig) + i );
-    }
-    // simulate the timeframes
-    for  f = 0; f < nFrames; f++  {
-        // set the PI simulation information
-        Aig_ManConst1(p.pAig).fMarkB = 1;
-        // inlining of macro Saig_ManForEachPi
-        // inlining of macro Vec_PtrForEachEntryStop
-        for  i = 0; (i < Saig_ManPiNum(p.pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {
-            pObj.fMarkB = 0;
-        }
-        // inlining of macro Saig_ManForEachLiLo
-        for  i = 0; (i < Saig_ManRegNum(p.pAig)) && (((pObjLi) = Saig_ManLi(p.pAig, i)), 1)            && (((pObj)=Saig_ManLo(p.pAig, i)), 1); i++  {
-            pObj.fMarkB = pObjLi.fMarkB;
-        }
-        // simulate internal nodes
-        // inlining of macro Aig_ManForEachNode
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(p.pAig.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-            pObj.fMarkB = ( Aig_ObjFanin0(pObj).fMarkB ^ Aig_ObjFaninC0(pObj) )
-                         & ( Aig_ObjFanin1(pObj).fMarkB ^ Aig_ObjFaninC1(pObj) ); }
-        }
-        // assign the COs
-        // inlining of macro Aig_ManForEachCo
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(p.pAig.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, i)), 1); i++  {
-            pObj.fMarkB = ( Aig_ObjFanin0(pObj).fMarkB ^ Aig_ObjFaninC0(pObj) );
-        }
-        // transfer
-        if f == 0 { // copy markB into phase
-            // inlining of macro Aig_ManForEachObj
-            // inlining of macro Vec_PtrForEachEntry
-            for  i = 0; (i < Vec_PtrSize(p.pAig.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {
-                pObj.fPhase = pObj.fMarkB; }
-            }
-        
-        } else { // refine classes
-            RetValue1 = Ssw_ClassesRefineConst1( p.ppClasses, 0 );
-            RetValue2 = Ssw_ClassesRefine( p.ppClasses, 0 );
-        }
-    }
+func sswFilterSimulateFrame(p *Ssw_Man_t, piValue func(int) bool) {
+	g := p.pAig
+	pis := int(saig.Saig_ManPiNum(g))
+	pos := int(saig.Saig_ManPoNum(g))
+	inputs, outputs := g.Inputs(), g.Outputs()
+	sswSetMark(g, g.Const1(), true)
+	for i, pi := range inputs[:pis] {
+		sswSetMark(g, pi, piValue(i))
+	}
+	for i, lo := range inputs[pis:] {
+		sswSetMark(g, lo, g.Node(outputs[pos+i]).MarkB)
+	}
+	for _, obj := range aig.Aig_ManDfsAll(g) {
+		n := g.Node(obj)
+		switch n.Kind {
+		case aig.And:
+			sswSetMark(g, obj, sswMarkValue(g, n.Fanins[0]) && sswMarkValue(g, n.Fanins[1]))
+		case aig.ExclusiveOr:
+			sswSetMark(g, obj, sswMarkValue(g, n.Fanins[0]) != sswMarkValue(g, n.Fanins[1]))
+		case aig.Buffer:
+			sswSetMark(g, obj, sswMarkValue(g, n.Fanins[0]))
+		}
+	}
+	for _, out := range outputs {
+		sswSetMark(g, out, sswMarkValue(g, g.Node(out).Fanins[0]))
+	}
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    [Performs fraiging for one node.]
-
-  Description [Returns the fraiged node.]
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ssw_ManRollForward(p *Ssw_Man_t, nFrames int32) {
-    var pObj, pObjLi *Aig_Obj_t;
-    var f, i int32;
-    assert(nFrames > 0, "nFrames > 0");
-    // assign register outputs
-    // inlining of macro Saig_ManForEachLi
-    for  i = 0; (i < Saig_ManRegNum(p.pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, i+Saig_ManPoNum(p.pAig))), 1); i++  {
-        pObj.fMarkB = Abc_InfoHasBit( p.pPatWords, Saig_ManPiNum(p.pAig) + i );
-    }
-    // simulate the timeframes
-    for  f = 0; f < nFrames; f++  {
-        // set the PI simulation information
-        Aig_ManConst1(p.pAig).fMarkB = 1;
-        // inlining of macro Saig_ManForEachPi
-        // inlining of macro Vec_PtrForEachEntryStop
-        for  i = 0; (i < Saig_ManPiNum(p.pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {
-            pObj.fMarkB = Aig_ManRandom(0) & 1;
-        }
-        // inlining of macro Saig_ManForEachLiLo
-        for  i = 0; (i < Saig_ManRegNum(p.pAig)) && (((pObjLi) = Saig_ManLi(p.pAig, i)), 1)            && (((pObj)=Saig_ManLo(p.pAig, i)), 1); i++  {
-            pObj.fMarkB = pObjLi.fMarkB;
-        }
-        // simulate internal nodes
-        // inlining of macro Aig_ManForEachNode
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(p.pAig.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-            pObj.fMarkB = ( Aig_ObjFanin0(pObj).fMarkB ^ Aig_ObjFaninC0(pObj) )
-                         & ( Aig_ObjFanin1(pObj).fMarkB ^ Aig_ObjFaninC1(pObj) ); }
-        }
-        // assign the COs
-        // inlining of macro Aig_ManForEachCo
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(p.pAig.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, i)), 1); i++  {
-            pObj.fMarkB = ( Aig_ObjFanin0(pObj).fMarkB ^ Aig_ObjFaninC0(pObj) );
-        }
-    }
-    // record the new pattern
-    // inlining of macro Saig_ManForEachLi
-    for  i = 0; (i < Saig_ManRegNum(p.pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, i+Saig_ManPoNum(p.pAig))), 1); i++  {
-        if pObj.fMarkB ^ Abc_InfoHasBit(p.pPatWords, Saig_ManPiNum(p.pAig) + i) {
-            Abc_InfoXorBit( p.pPatWords, Saig_ManPiNum(p.pAig) + i ); }
-    }
+func sswFilterInitState(p *Ssw_Man_t) {
+	g := p.pAig
+	pis := saig.Saig_ManPiNum(g)
+	pos := saig.Saig_ManPoNum(g)
+	for i, li := range g.Outputs()[pos:] {
+		sswSetMark(g, li, util.Abc_InfoHasBit(p.pPatWords, pis+int32(i)))
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Performs fraiging for one node.]
-
-  Description [Returns the fraiged node.]
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ssw_ManFindStartingState(p *Ssw_Man_t, pCex *Abc_Cex_t) {
-    var pObj, pObjLi *Aig_Obj_t;
-    var f, i, iBit int32;
-    // assign register outputs
-    // inlining of macro Saig_ManForEachLi
-    for  i = 0; (i < Saig_ManRegNum(p.pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, i+Saig_ManPoNum(p.pAig))), 1); i++  {
-        pObj.fMarkB = 0;
-    }
-    // simulate the timeframes
-    iBit = pCex.nRegs;
-    for  f = 0; f <= pCex.iFrame; f++  {
-        // set the PI simulation information
-        Aig_ManConst1(p.pAig).fMarkB = 1;
-        // inlining of macro Saig_ManForEachPi
-        // inlining of macro Vec_PtrForEachEntryStop
-        for  i = 0; (i < Saig_ManPiNum(p.pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {
-            pObj.fMarkB = Abc_InfoHasBit( pCex.pData, iBit++ );
-        }
-        // inlining of macro Saig_ManForEachLiLo
-        for  i = 0; (i < Saig_ManRegNum(p.pAig)) && (((pObjLi) = Saig_ManLi(p.pAig, i)), 1)            && (((pObj)=Saig_ManLo(p.pAig, i)), 1); i++  {
-            pObj.fMarkB = pObjLi.fMarkB;
-        }
-        // simulate internal nodes
-        // inlining of macro Aig_ManForEachNode
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(p.pAig.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-            pObj.fMarkB = ( Aig_ObjFanin0(pObj).fMarkB ^ Aig_ObjFaninC0(pObj) )
-                         & ( Aig_ObjFanin1(pObj).fMarkB ^ Aig_ObjFaninC1(pObj) ); }
-        }
-        // assign the COs
-        // inlining of macro Aig_ManForEachCo
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(p.pAig.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, i)), 1); i++  {
-            pObj.fMarkB = ( Aig_ObjFanin0(pObj).fMarkB ^ Aig_ObjFaninC0(pObj) );
-        }
-    }
-    assert(iBit == pCex.nBits, "iBit == pCex.nBits");
-    // check that the output failed as expected -- cannot check because it is not an SRM!
-//    pObj = Aig_ManCo( p->pAig, pCex->iPo );
-//    if ( pObj->fMarkB != 1 )
-//        Abc_Print( 1, "The counter-example does not refine the output.\n" );
-    // record the new pattern
-    // inlining of macro Saig_ManForEachLo
-    for  i = 0; (i < Saig_ManRegNum(p.pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i+Saig_ManPiNum(p.pAig))), 1); i++  {
-        if pObj.fMarkB ^ Abc_InfoHasBit(p.pPatWords, Saig_ManPiNum(p.pAig) + i) {
-            Abc_InfoXorBit( p.pPatWords, Saig_ManPiNum(p.pAig) + i ); }
-    }
+func Ssw_ManRefineByFilterSim(p *Ssw_Man_t, frames int32) {
+	if frames <= 0 {
+		panic("ssw: invalid filter frame count")
+	}
+	sswFilterInitState(p)
+	for f := int32(0); f < frames; f++ {
+		sswFilterSimulateFrame(p, func(int) bool { return false })
+		if f == 0 {
+			for _, obj := range p.pAig.LiveEdges() {
+				aig.Aig_ObjSetPhase(p.pAig, obj, p.pAig.Node(obj).MarkB)
+			}
+		} else {
+			Ssw_ClassesRefineConst1(p.ppClasses, 0)
+			Ssw_ClassesRefine(p.ppClasses, 0)
+		}
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Performs fraiging for one node.]
-
-  Description [Returns the fraiged node.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ssw_ManSweepNodeFilter(p *Ssw_Man_t, pObj *Aig_Obj_t, f int32) int32 {
-    var pObjRepr, pObjFraig, pObjFraig2, pObjReprFraig *Aig_Obj_t;
-    var RetValue int32;
-    // get representative of this class
-    pObjRepr = Aig_ObjRepr( p.pAig, pObj );
-    if pObjRepr == nil {
-        return 0; }
-    // get the fraiged node
-    pObjFraig = Ssw_ObjFrame( p, pObj, f );
-    // get the fraiged representative
-    pObjReprFraig = Ssw_ObjFrame( p, pObjRepr, f );
-    // check if constant 0 pattern distinquishes these nodes
-    assert(pObjFraig != nil && pObjReprFraig != nil, "pObjFraig != nil && pObjReprFraig != nil");
-    assert((pObj.fPhase == pObjRepr.fPhase) == (Aig_ObjPhaseReal(pObjFraig) == Aig_ObjPhaseReal(pObjReprFraig)), "(pObj.fPhase == pObjRepr.fPhase) == (Aig_ObjPhaseReal(pObjFraig) == Aig_ObjPhaseReal(pObjReprFraig))");
-    // if the fraiged nodes are the same, return
-    if Aig_Regular(pObjFraig) == Aig_Regular(pObjReprFraig) {
-        return 0; }
-    // call equivalence checking
-    if Aig_Regular(pObjFraig) != Aig_ManConst1(p.pFrames) {
-        RetValue = Ssw_NodesAreEquiv( p, Aig_Regular(pObjReprFraig), Aig_Regular(pObjFraig) );
-    } else {
-        RetValue = Ssw_NodesAreEquiv( p, Aig_Regular(pObjFraig), Aig_Regular(pObjReprFraig) ); }
-    if RetValue == 1 {  // proved equivalent
-    
-        pObjFraig2 = Aig_NotCond( pObjReprFraig, pObj.fPhase ^ pObjRepr.fPhase );
-        Ssw_ObjSetFrame( p, pObj, f, pObjFraig2 );
-        return 0;
-    }
-    if RetValue == -1 { // timed out
-    
-//        Ssw_ClassesRemoveNode( p->ppClasses, pObj );
-        return 1;
-    }
-    // disproved equivalence
-    Ssw_SmlSavePatternAig( p, f );
-    Ssw_ManResimulateBit( p, pObj, pObjRepr );
-    assert(Aig_ObjRepr( p.pAig, pObj ) != pObjRepr, "Aig_ObjRepr( p.pAig, pObj ) != pObjRepr");
-    if Aig_ObjRepr( p.pAig, pObj ) == pObjRepr {
-        Abc_Print( 1, "Ssw_ManSweepNodeFilter(): Failed to refine representative.\n" );
-    }
-    return 0;
+func Ssw_ManRollForward(p *Ssw_Man_t, frames int32) {
+	if frames <= 0 {
+		panic("ssw: invalid filter frame count")
+	}
+	sswFilterInitState(p)
+	for f := int32(0); f < frames; f++ {
+		sswFilterSimulateFrame(p, func(int) bool { return aig.Aig_ManRandom(0)&1 != 0 })
+	}
+	pis := saig.Saig_ManPiNum(p.pAig)
+	pos := saig.Saig_ManPoNum(p.pAig)
+	for i, li := range p.pAig.Outputs()[pos:] {
+		idx := pis + int32(i)
+		if p.pAig.Node(li).MarkB != util.Abc_InfoHasBit(p.pPatWords, idx) {
+			util.Abc_InfoXorBit(p.pPatWords, idx)
+		}
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Performs fraiging for the internal nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ssw_ManSweepBmcFilter_rec(p *Ssw_Man_t, pObj *Aig_Obj_t, f int32) *Aig_Obj_t {
-    var pObjNew, pObjLi *Aig_Obj_t;
-    pObjNew = Ssw_ObjFrame( p, pObj, f );
-    if pObjNew {
-        return pObjNew; }
-    assert(!Saig_ObjIsPi(p.pAig, pObj), "!Saig_ObjIsPi(p.pAig, pObj)");
-    if Saig_ObjIsLo(p.pAig, pObj) {
-        assert(f > 0, "f > 0");
-        pObjLi  = Saig_ObjLoToLi( p.pAig, pObj );
-        pObjNew = Ssw_ManSweepBmcFilter_rec( p, Aig_ObjFanin0(pObjLi), f-1 );
-        pObjNew = Aig_NotCond( pObjNew, Aig_ObjFaninC0(pObjLi) );
-    
-    } else {
-        assert(Aig_ObjIsNode(pObj), "Aig_ObjIsNode(pObj)");
-        Ssw_ManSweepBmcFilter_rec( p, Aig_ObjFanin0(pObj), f );
-        Ssw_ManSweepBmcFilter_rec( p, Aig_ObjFanin1(pObj), f );
-        pObjNew = Aig_And( p.pFrames, Ssw_ObjChild0Fra(p, pObj, f), Ssw_ObjChild1Fra(p, pObj, f) );
-    }
-    Ssw_ObjSetFrame( p, pObj, f, pObjNew );
-    assert(pObjNew != nil, "pObjNew != nil");
-    return pObjNew;
+func Ssw_ManFindStartingState(p *Ssw_Man_t, cex *util.Abc_Cex_t) {
+	g := p.pAig
+	pis := saig.Saig_ManPiNum(g)
+	pos := saig.Saig_ManPoNum(g)
+	for _, li := range g.Outputs()[pos:] {
+		sswSetMark(g, li, false)
+	}
+	bit := cex.NRegs
+	for f := int32(0); f <= cex.IFrame; f++ {
+		sswFilterSimulateFrame(p, func(int) bool { v := util.Abc_InfoHasBit(cex.PData, bit); bit++; return v })
+	}
+	if bit != cex.NBits {
+		panic("ssw: invalid counterexample dimensions")
+	}
+	for i, lo := range g.Inputs()[pis:] {
+		idx := pis + int32(i)
+		if g.Node(lo).MarkB != util.Abc_InfoHasBit(p.pPatWords, idx) {
+			util.Abc_InfoXorBit(p.pPatWords, idx)
+		}
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Filter equivalence classes of nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ssw_ManSweepBmcFilter(p *Ssw_Man_t, TimeLimit int32) int32 {
-    var pObj, pObjNew, pObjLi, pObjLo *Aig_Obj_t;
-    var f, f1, i int32;
-    var clkTotal abctime  = Abc_Clock();
-    // start initialized timeframes
-    p.pFrames = Aig_ManStart( Aig_ManObjNumMax(p.pAig) * p.pPars.nFramesK );
-    // inlining of macro Saig_ManForEachLo
-    for  i = 0; (i < Saig_ManRegNum(p.pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i+Saig_ManPiNum(p.pAig))), 1); i++  {
-        if Abc_InfoHasBit( p.pPatWords, Saig_ManPiNum(p.pAig) + i ) {
-            Ssw_ObjSetFrame( p, pObj, 0, Aig_ManConst1(p.pFrames) );
-//Abc_Print( 1, "1" );
-        
-        } else {
-            Ssw_ObjSetFrame( p, pObj, 0, Aig_ManConst0(p.pFrames) );
-//Abc_Print( 1, "0" );
-        }
-    }
-//Abc_Print( 1, "\n" );
-
-    // sweep internal nodes
-    for  f = 0; f < p.pPars.nFramesK; f++  {
-        // realloc mapping of timeframes
-        if f == p.nFrames-1 {
-            var pNodeToFrames **Aig_Obj_t;
-            // inlining of macro ABC_CALLOC
-            pNodeToFrames = ((Aig_Obj_t * *) calloc((size_t)(Aig_ManObjNumMax(p.pAig) * 2 * p.nFrames), sizeof(Aig_Obj_t *)));
-            for  f1 = 0; f1 < p.nFrames; f1++  {
-                // inlining of macro Aig_ManForEachObj
-                // inlining of macro Vec_PtrForEachEntry
-                for  i = 0; (i < Vec_PtrSize(p.pAig.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {
-                    pNodeToFrames[2*p.nFrames*pObj.Id + f1] = Ssw_ObjFrame( p, pObj, f1 ); }
-                }
-            }
-            p.pNodeToFrames = nil;
-            p.pNodeToFrames = pNodeToFrames;
-            p.nFrames *= 2;
-        }
-        // map constants and PIs
-        Ssw_ObjSetFrame( p, Aig_ManConst1(p.pAig), f, Aig_ManConst1(p.pFrames) );
-        // inlining of macro Saig_ManForEachPi
-        // inlining of macro Vec_PtrForEachEntryStop
-        for  i = 0; (i < Saig_ManPiNum(p.pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {
-            pObjNew = Aig_ObjCreateCi(p.pFrames);
-            Ssw_ObjSetFrame( p, pObj, f, pObjNew );
-        }
-        // sweep internal nodes
-        // inlining of macro Aig_ManForEachNode
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(p.pAig.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-            pObjNew = Aig_And( p.pFrames, Ssw_ObjChild0Fra(p, pObj, f), Ssw_ObjChild1Fra(p, pObj, f) );
-            Ssw_ObjSetFrame( p, pObj, f, pObjNew );
-            if Ssw_ManSweepNodeFilter( p, pObj, f ) != 0 {
-                break; }
-        }
-        }
-        // printout
-        if p.pPars.fVerbose {
-            Abc_Print( 1, "Frame %4d : ", f );
-            Ssw_ClassesPrint( p.ppClasses, 0 );
-        }
-        if i < Vec_PtrSize(p.pAig.vObjs) {
-            if p.pPars.fVerbose {
-                Abc_Print( 1, "Exceeded the resource limits (%d conflicts). Quitting...\n", p.pPars.nBTLimit ); }
-            break;
-        }
-        // quit if this is the last timeframe
-        if f == p.pPars.nFramesK - 1 {
-            if p.pPars.fVerbose {
-                Abc_Print( 1, "Exceeded the time frame limit (%d time frames). Quitting...\n", p.pPars.nFramesK ); }
-            break;
-        }
-        // check timeout
-        if TimeLimit && (float32(TimeLimit) <= float32((Abc_Clock()-clkTotal))/float32((int64(time.Second)))) {
-            break; }
-        // transfer latch input to the latch outputs 
-        // inlining of macro Aig_ManForEachCo
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(p.pAig.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, i)), 1); i++  {
-            Ssw_ObjSetFrame( p, pObj, f, Ssw_ObjChild0Fra(p, pObj, f) );
-        }
-        // build logic cones for register outputs
-        // inlining of macro Saig_ManForEachLiLo
-        for  i = 0; (i < Saig_ManRegNum(p.pAig)) && (((pObjLi) = Saig_ManLi(p.pAig, i)), 1)            && (((pObjLo)=Saig_ManLo(p.pAig, i)), 1); i++  {
-            pObjNew = Ssw_ObjFrame( p, pObjLi, f );
-            Ssw_ObjSetFrame( p, pObjLo, f+1, pObjNew );
-            Ssw_CnfNodeAddToSolver( p.pMSat, Aig_Regular(pObjNew) );//
-        }
-    }
-    // verify
-//    Ssw_ClassesCheck( p->ppClasses );
-    return 1;
+func Ssw_ManSweepNodeFilter(p *Ssw_Man_t, obj aig.Edge, frame int32) int32 {
+	repr := aig.Aig_ObjRepr(p.pAig, obj)
+	if repr == aig.InvalidEdge {
+		return 0
+	}
+	node, rep := Ssw_ObjFrame(p, obj, frame), Ssw_ObjFrame(p, repr, frame)
+	if node == aig.InvalidEdge || rep == aig.InvalidEdge {
+		panic("ssw: missing framed representative")
+	}
+	phase := aig.Aig_ObjPhase(p.pAig, obj) != aig.Aig_ObjPhase(p.pAig, repr)
+	if (aig.Aig_ObjPhaseReal(p.pFrames, node) != aig.Aig_ObjPhaseReal(p.pFrames, rep)) != phase {
+		panic("ssw: representative phase mismatch")
+	}
+	if aig.Aig_Regular(node) == aig.Aig_Regular(rep) {
+		return 0
+	}
+	a, b := aig.Aig_Regular(rep), aig.Aig_Regular(node)
+	if b == p.pFrames.Const1() {
+		a, b = b, a
+	}
+	status := Ssw_NodesAreEquiv(p, a, b)
+	if status == 1 {
+		if phase {
+			rep = rep.Not()
+		}
+		Ssw_ObjSetFrame(p, obj, frame, rep)
+		return 0
+	}
+	if status == -1 {
+		return 1
+	}
+	Ssw_SmlSavePatternAig(p, frame)
+	Ssw_ManResimulateBit(p, obj, repr)
+	if aig.Aig_ObjRepr(p.pAig, obj) == repr {
+		panic("ssw: failed to refine representative")
+	}
+	return 0
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Filter equivalence classes of nodes.]
-
-  Description [Unrolls at most nFramesMax frames. Works with nConfMax
-  conflicts until the first undefined SAT call. Verbose prints the message.]
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ssw_SignalFilter(pAig *Aig_Man_t, nFramesMax int32, nConfMax int32, nRounds int32, TimeLimit int32, TimeLimit2 int32, pCex *Abc_Cex_t, fLatchOnly int32, fVerbose int32) {
-    var Pars Ssw_Pars_t;
-    var pPars *Ssw_Pars_t = &Pars;
-    var p *Ssw_Man_t;
-    var r, TimeLimitPart int32;//, clkTotal = Abc_Clock();
-    var nTimeToStop abctime;
-    if TimeLimit {
-        nTimeToStop = TimeLimit * int64(time.Second) + Abc_Clock();
-    } else {
-        nTimeToStop = 0;
-    }
-    assert(Aig_ManRegNum(pAig) > 0, "Aig_ManRegNum(pAig) > 0");
-    assert(Aig_ManConstrNum(pAig) == 0, "Aig_ManConstrNum(pAig) == 0");
-    // consider the case of empty AIG
-    if Aig_ManNodeNum(pAig) == 0 {
-        return; }
-    // reset random numbers
-    Aig_ManRandom( 1 );
-    // if parameters are not given, create them
-    Ssw_ManSetDefaultParams( pPars = &Pars );
-    pPars.nFramesK  = 3; //nFramesMax;
-    pPars.nBTLimit  = nConfMax;
-    pPars.TimeLimit = TimeLimit;
-    pPars.fVerbose  = fVerbose;
-    // start the induction manager
-    p = Ssw_ManCreate( pAig, pPars );
-    pPars.nFramesK  = nFramesMax;
-    // create trivial equivalence classes with all nodes being candidates for constant 1
-    if pAig.pReprs == nil {
-        p.ppClasses = Ssw_ClassesPrepareSimple( pAig, fLatchOnly, 0 );
-    } else {
-        p.ppClasses = Ssw_ClassesPrepareFromReprs( pAig ); }
-    Ssw_ClassesSetData( p.ppClasses, nil, nil, Ssw_SmlObjIsConstBit, Ssw_SmlObjsAreEqualBit );
-    assert(p.vInits == nil, "p.vInits == nil");
-    // compute starting state if needed
-    if pCex != nil {
-        Ssw_ManFindStartingState( p, pCex ); }
-    // refine classes using BMC
-    for  r = 0; r < nRounds; r++  {
-        if p.pPars.fVerbose {
-            Abc_Print( 1, "Round %3d:\n", r ); }
-        // start filtering equivalence classes
-        Ssw_ManRefineByFilterSim( p, p.pPars.nFramesK );
-        if Ssw_ClassesCand1Num(p.ppClasses) == 0 && Ssw_ClassesClassNum(p.ppClasses) == 0 {
-            Abc_Print( 1, "All equivalences are refined away.\n" );
-            break;
-        }
-        // printout
-        if p.pPars.fVerbose {
-            Abc_Print( 1, "Initial    : " );
-            Ssw_ClassesPrint( p.ppClasses, 0 );
-        }
-        p.pMSat = Ssw_SatStart( 0 );
-        if TimeLimit {
-            TimeLimitPart = (nTimeToStop - Abc_Clock()) / int64(time.Second);
-        } else {
-            TimeLimitPart = 0;
-        }
-        if TimeLimit2 != 0 {
-            if TimeLimitPart != 0 {
-                TimeLimitPart = Abc_MinInt( TimeLimitPart, TimeLimit2 );
-            } else {
-                TimeLimitPart = TimeLimit2; }
-        }
-        Ssw_ManSweepBmcFilter( p, TimeLimitPart );
-        Ssw_SatStop( p.pMSat );
-        p.pMSat = nil;
-        Ssw_ManCleanup( p );
-        // simulate pattern forward
-        Ssw_ManRollForward( p, p.pPars.nFramesK );
-        // check timeout
-        if TimeLimit && Abc_Clock() > nTimeToStop {
-            Abc_Print( 1, "Reached timeout (%d seconds).\n",  TimeLimit );
-            break;
-        }
-    }
-    // cleanup
-    Aig_ManSetPhase( p.pAig );
-    Aig_ManCleanMarkB( p.pAig );
-    // cleanup
-    pPars.fVerbose = 0;
-    Ssw_ManStop( p );
+func Ssw_ManSweepBmcFilter_rec(p *Ssw_Man_t, obj aig.Edge, frame int32) aig.Edge {
+	if x := Ssw_ObjFrame(p, obj, frame); x != aig.InvalidEdge {
+		return x
+	}
+	var result aig.Edge
+	if saig.Saig_ObjIsLo(p.pAig, obj) {
+		if frame <= 0 {
+			panic("ssw: missing initial latch value")
+		}
+		li := saig.Saig_ObjLoToLi(p.pAig, obj)
+		child := aig.Aig_ObjChild0(p.pAig, li)
+		result = Ssw_ManSweepBmcFilter_rec(p, aig.Aig_Regular(child), frame-1)
+		if child.Complemented() {
+			result = result.Not()
+		}
+	} else {
+		if !aig.Aig_ObjIsNode(p.pAig, obj) {
+			panic("ssw: unexpected filter object")
+		}
+		Ssw_ManSweepBmcFilter_rec(p, aig.Aig_ObjFanin0(p.pAig, obj), frame)
+		Ssw_ManSweepBmcFilter_rec(p, aig.Aig_ObjFanin1(p.pAig, obj), frame)
+		result = sswMakeNode(p, p.pFrames, obj, frame)
+	}
+	Ssw_ObjSetFrame(p, obj, frame, result)
+	return result
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Filter equivalence classes of nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ssw_SignalFilterGia(p *Gia_Man_t, nFramesMax int32, nConfMax int32, nRounds int32, TimeLimit int32, TimeLimit2 int32, pCex *Abc_Cex_t, fLatchOnly int32, fVerbose int32) {
-    var pAig *Aig_Man_t;
-    pAig = Gia_ManToAigSimple( p );
-    if p.pReprs != nil {
-        Gia_ManReprToAigRepr2( pAig, p );
-        p.pReprs = nil;
-        p.pNexts = nil;
-    }
-    Ssw_SignalFilter( pAig, nFramesMax, nConfMax, nRounds, TimeLimit, TimeLimit2, pCex, fLatchOnly, fVerbose );
-    Gia_ManReprFromAigRepr( pAig, p );
-    Aig_ManStop( pAig );
+func sswFilterGrowFrames(p *Ssw_Man_t) {
+	old := p.nFrames
+	next := old * 2
+	if next <= old {
+		panic("ssw: invalid frame mapping capacity")
+	}
+	mapping := make([]aig.Edge, int(aig.Aig_ManObjNumMax(p.pAig))*int(next))
+	for i := range mapping {
+		mapping[i] = aig.InvalidEdge
+	}
+	for _, obj := range p.pAig.LiveEdges() {
+		for f := int32(0); f < old; f++ {
+			mapping[obj.NodeID()*int(next)+int(f)] = Ssw_ObjFrame(p, obj, f)
+		}
+	}
+	p.pNodeToFrames = mapping
+	p.nFrames = next
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
+func Ssw_ManSweepBmcFilter(p *Ssw_Man_t, timeLimit int32) int32 {
+	started := time.Now()
+	g := p.pAig
+	pis := saig.Saig_ManPiNum(g)
+	pos := saig.Saig_ManPoNum(g)
+	p.pFrames = aig.Aig_ManStart(aig.Aig_ManObjNumMax(g) * p.pPars.nFramesK)
+	p.pMSat.pAig = p.pFrames
+	for i, lo := range g.Inputs()[pis:] {
+		v := p.pFrames.Const0()
+		if util.Abc_InfoHasBit(p.pPatWords, pis+int32(i)) {
+			v = p.pFrames.Const1()
+		}
+		Ssw_ObjSetFrame(p, lo, 0, v)
+	}
+	for f := int32(0); f < p.pPars.nFramesK; f++ {
+		if f == p.nFrames-1 {
+			sswFilterGrowFrames(p)
+		}
+		Ssw_ObjSetFrame(p, g.Const1(), f, p.pFrames.Const1())
+		for _, pi := range g.Inputs()[:pis] {
+			Ssw_ObjSetFrame(p, pi, f, p.pFrames.NewInput())
+		}
+		timedOut := false
+		for _, obj := range sswFrameNodes(g) {
+			Ssw_ObjSetFrame(p, obj, f, sswMakeNode(p, p.pFrames, obj, f))
+			if Ssw_ManSweepNodeFilter(p, obj, f) != 0 {
+				timedOut = true
+				break
+			}
+		}
+		if p.pPars.fVerbose != 0 {
+			fmt.Printf("Frame %4d : ", f)
+			Ssw_ClassesPrint(p.ppClasses, 0)
+		}
+		if timedOut || f == p.pPars.nFramesK-1 || (timeLimit != 0 && time.Since(started) >= time.Duration(timeLimit)*time.Second) {
+			break
+		}
+		for _, out := range g.Outputs() {
+			Ssw_ObjSetFrame(p, out, f, Ssw_ObjChild0Fra(p, out, f))
+		}
+		for i, lo := range g.Inputs()[pis:] {
+			next := Ssw_ObjFrame(p, g.Outputs()[int(pos)+i], f)
+			Ssw_ObjSetFrame(p, lo, f+1, next)
+			Ssw_CnfNodeAddToSolver(p.pMSat, aig.Aig_Regular(next))
+		}
+	}
+	return 1
+}
+func Ssw_SignalFilter(g *aig.Graph, frames, conflicts, rounds, timeLimit, timeLimit2 int32, cex *util.Abc_Cex_t, latchOnly, verbose int32) {
+	if aig.Aig_ManRegNum(g) <= 0 || aig.Aig_ManConstrNum(g) != 0 {
+		panic("ssw: invalid signal filter graph")
+	}
+	if aig.Aig_ManNodeNum(g) == 0 {
+		return
+	}
+	aig.Aig_ManRandom(1)
+	pars := &Ssw_Pars_t{}
+	Ssw_ManSetDefaultParams(pars)
+	pars.nFramesK = 3
+	pars.nBTLimit = conflicts
+	pars.TimeLimit = timeLimit
+	pars.fVerbose = verbose
+	p := Ssw_ManCreate(g, pars)
+	pars.nFramesK = frames
+	if aig.Aig_ManHasReprs(g) {
+		p.ppClasses = Ssw_ClassesPrepareFromReprs(g)
+	} else {
+		p.ppClasses = Ssw_ClassesPrepareSimple(g, latchOnly, 0)
+	}
+	Ssw_ClassesSetData(p.ppClasses, g, nil, Ssw_SmlObjIsConstBit, Ssw_SmlObjsAreEqualBit)
+	if p.vInits != nil {
+		panic("ssw: unexpected filter initial values")
+	}
+	if cex != nil {
+		Ssw_ManFindStartingState(p, cex)
+	}
+	deadline := time.Now().Add(time.Duration(timeLimit) * time.Second)
+	for r := int32(0); r < rounds; r++ {
+		if verbose != 0 {
+			fmt.Printf("Round %3d:\n", r)
+		}
+		Ssw_ManRefineByFilterSim(p, frames)
+		if Ssw_ClassesCand1Num(p.ppClasses) == 0 && Ssw_ClassesClassNum(p.ppClasses) == 0 {
+			fmt.Println("All equivalences are refined away.")
+			break
+		}
+		if verbose != 0 {
+			fmt.Print("Initial    : ")
+			Ssw_ClassesPrint(p.ppClasses, 0)
+		}
+		p.pMSat = Ssw_SatStart(0)
+		part := int32(0)
+		if timeLimit != 0 {
+			part = int32(time.Until(deadline) / time.Second)
+		}
+		if timeLimit2 != 0 {
+			if part != 0 {
+				part = min(part, timeLimit2)
+			} else {
+				part = timeLimit2
+			}
+		}
+		Ssw_ManSweepBmcFilter(p, part)
+		Ssw_SatStop(p.pMSat)
+		p.pMSat = nil
+		Ssw_ManCleanup(p)
+		Ssw_ManRollForward(p, frames)
+		if timeLimit != 0 && time.Now().After(deadline) {
+			fmt.Printf("Reached timeout (%d seconds).\n", timeLimit)
+			break
+		}
+	}
+	aig.Aig_ManSetPhase(g)
+	aig.Aig_ManCleanMarkB(g)
+	pars.fVerbose = 0
+	Ssw_ManStop(p)
+}
+func Ssw_SignalFilterGia(g *gia.Gia_Man_t, frames, conflicts, rounds, timeLimit, timeLimit2 int32, cex *util.Abc_Cex_t, latchOnly, verbose int32) {
+	graph := gia.Gia_ManToAigSimple(g)
+	if g.HasRepresentatives() {
+		gia.Gia_ManReprToAigRepr2(graph, g)
+		g.ClearRepresentatives()
+	}
+	Ssw_SignalFilter(graph, frames, conflicts, rounds, timeLimit, timeLimit2, cex, latchOnly, verbose)
+	gia.Gia_ManReprFromAigRepr(graph, g)
+	aig.Aig_ManStop(graph)
+}
