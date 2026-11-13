@@ -1,0 +1,27 @@
+# SSC source branch and coverage review
+
+Compared the Go package with `src/proof/ssc/sscCore.c`, `sscSat.c`,
+`sscSim.c`, `sscClass.c`, and `sscUtil.c`. The tests listed below are in this
+package; the optional C oracle is the only test that depends on an explicit
+environment variable.
+
+| Source area / decision | Go behavior | Coverage |
+|---|---|---|
+| `Ssc_ManStart`: incompatible interfaces, existing class storage, satisfiable, contradictory care, and pivot timeout | Validates graph interfaces; returns SAT/UNSAT/UNKNOWN status distinctly; initializes source phase and classes after a care-valid pivot | `TestConstraintSetterBounds`, `TestStartUnsatisfiableCareDoesNotReturnManager`, `TestPivotBudgetExhaustionLeavesSubjectUnchanged`, `TestSweepRejectsExistingRepresentatives`, `TestStartSetsCarePhasesFromPivot`, `TestStartCopiesAndInvertsSourceCareGraph`, SAT-start checks in `sscSat_port_test.go` |
+| Simulation primitives and source RNG (`sscSim.c`) | Packed AND/duplicate/constant/OR, random and pivot patterns, register-input zeroing, care masks, input-pattern transfer, word growth | `TestPackedPrimitiveOperations`, `TestCareMaskAndPatternTransfer`, `TestCareMaskIgnoresRegisterInputs`, `TestRandomPatternLeavesRegisterOutputsZero`, `TestRandomPatternUsesGiaRandomWords`, `TestRandomPiPatternsMatchCSequence`, `TestSimulationPivotMatchesSourceRandomSequence`, `TestVerboseSweepConsumesCareEstimateRandomPatterns` |
+| Care-pattern initialization and stopping | Keeps drawing from the shared GIA random stream until transfer ends or refinement falls below one percent | `TestCarePatternsMatchesSourceTransferAndRandomOrder`, `TestClassRefinementCountsConstantCandidates`, `TestInitialSimulationDoesNotIncrementSourceCounters` |
+| Class initialization/refinement and metadata | Rejects pre-existing reps; splits constant buckets and phase-aware classes; publishes representative/next links while retaining proved flags | `ssc_class_precondition_test.go`, `ssc_class_metadata_source_test.go`, `TestClassWordRefinementNormalizesCurrentFirstBit`, `TestClassRefinementSplitsConstantHashCollision`, `TestClassRefinementAndComplementedSimulation` |
+| SAT frontier construction | Handles AND supergates and structural muxes, constants, node order, and reserved source-variable capacity | `TestSatStartReservesSourceVariableCapacity`, `TestSatPortSupergateFrontier`, `TestSatPortStructuralMuxFrontier`, `TestSatPortConstantComparison`, `TestSatPortConstantLiteralMapping` |
+| Pivot and equivalence query outcomes | Distinguishes SAT, UNSAT, and UNKNOWN; checks both implication directions; reverse node order is undecided; counterexample is retained | `TestFindPivotAfterAddingRootClause`, `TestNegativeConflictLimitReturnsSourceUnknown`, `TestNegativeConflictLimitStillDetectsRootUnsatCare`, `TestSatPortOrderedImplicationAndReverseWitness`, `TestSatPortProvesBothImplicationsUnderCare`, `TestSatProofDoesNotOverwriteLastCounterexample`, `TestSignedBudgetEquivalenceAfterPivot` |
+| Sweep candidate decisions | Structurally identical mappings prove without a query; UNSAT candidates are substituted; SAT candidates record and replay a witness; UNKNOWN candidates remain unchanged | `TestMappedCandidateSourceOrderAndPhase`, `TestSATEquivalenceAllNodesAndPolarities`, `ssc_witness_test.go`, `TestConstrainedSweeping`, `TestRandomSweeps` |
+| Full and final partial counterexample batches | Flushes a full `64*NWords` batch during traversal and flushes remaining saved patterns at end | `TestSweepFlushesFullWitnessBatch` uses 66 independent rare cones with one word, exercising both flush points and exhaustively checks fixture assignments |
+| Result rebuilding, verification, native gate lowering | Rebuilds through the GIA equivalence reducer; handles no-op fallback; optionally verifies under care; lowers XOR/MUX/buffer at the boundary | `TestVerificationChecksDifferenceUnderCare`, `TestFailedOptionalVerificationStillReturnsResult`, `TestRandomNativeGateTransformations`, `TestOriginalCConstrainedSweeps` (optional source oracle) |
+| Constraint wrapper and options | Extracts ordinary outputs/care outputs, levelizes the subject, preserves trailing register interface, and optionally appends constraints | `TestConstraintAppendAndSequentialOrdering`, `TestConstraintWrapperUsesLevelizedSubject`, `TestRandomSequentialConstraintSweeps`, `TestRandomSweeps` |
+| Containment and ring optimization | Checks outputs left-to-right by implication; retains the last equivalent output; ring pass preserves output union | `TestContainedAndRing`, `TestDropContainedKeepsLastEquivalentOutput`, `TestDropContainedKeepsRegistersWhenNoPrimaryOutputDrops`, `TestDropContainedSequentialCones`, `TestRingPreservesOutputUnion` |
+| Parameter branches | `NWords` must be positive; `BTLimit` controls SAT UNKNOWN; `Append`, `Verbose`, and `Verify` are active. `SatVarMax` and `CallsRecycle` are accepted but source-inactive. | `TestConstraintSetterBounds`, negative-budget and append tests above, `TestVerboseSweepConsumesCareEstimateRandomPatterns`, `TestStartAcceptsInactiveRecycleOptions`, `TestFailedOptionalVerificationStillReturnsResult` |
+
+The `TestOriginalCConstrainedSweeps` oracle skips unless `SSC_BUILD_ORACLE=1`;
+the focused package run in this review therefore did not exercise its C build.
+The batch fixture checks observable semantics rather than an internal flush
+counter; its 66 rare candidate cones are intentionally selected to cross the
+full-word threshold and leave candidates for the terminal partial flush.
