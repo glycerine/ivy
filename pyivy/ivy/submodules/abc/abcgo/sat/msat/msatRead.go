@@ -41,6 +41,9 @@ func parseDIMACS(r io.Reader, initializeOrder bool) (*Msat_Solver_t, error) {
 			return nil, fmt.Errorf("missing DIMACS header")
 		}
 		for _, s := range strings.Fields(line) {
+			if len(clause) == 0 && strings.HasPrefix(s, "c") {
+				break
+			}
 			n, err := strconv.Atoi(s)
 			if err != nil {
 				return nil, err
