@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/aig/saig"
 	"github.com/glycerine/abcgo/bdd/cudd/core"
 	"github.com/glycerine/abcgo/misc/vec"
 )
@@ -18,7 +19,7 @@ func Llb_ManPrintAig(p *Llb_Man_t) {
 	if p == nil || p.pAig == nil {
 		return
 	}
-	fmt.Printf("pi=%d po=%d ff=%d vars=%d and=%d\n", aig.Saig_ManPiNum(p.pAig), aig.Saig_ManPoNum(p.pAig), aig.Saig_ManRegNum(p.pAig), vec.Vec_IntSize(p.vVar2Obj), aig.Aig_ManNodeNum(p.pAig))
+	fmt.Printf("pi=%d po=%d ff=%d vars=%d and=%d\n", saig.Saig_ManPiNum(p.pAig), saig.Saig_ManPoNum(p.pAig), saig.Saig_ManRegNum(p.pAig), vec.Vec_IntSize(p.vVar2Obj), aig.Aig_ManNodeNum(p.pAig))
 }
 
 // Llb_ManModelCheckAig creates an independent working graph and runs exact
