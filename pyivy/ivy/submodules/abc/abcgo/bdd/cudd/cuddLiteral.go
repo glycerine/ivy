@@ -54,262 +54,85 @@ package cudd
 
 ******************************************************************************/
 
-//#include "misc/util/util_hack.h"
-//#include "cuddInt.h"
+import (
+	"math"
+	"reflect"
 
-//ABC_NAMESPACE_IMPL_START
+	"github.com/glycerine/abcgo/bdd/cudd/core"
+)
 
+// Cudd_bddLiteralSetIntersection returns the cube containing the literals
+// common to f and g with the same phase, following cuddLiteral.c.
+func Cudd_bddLiteralSetIntersection(dd *DdManager, f, g *DdNode) *DdNode {
+	return cuddBddLiteralSetIntersectionRecur(dd, f, g)
+}
 
+func cuddLiteralLevel(dd *DdManager, n *DdNode) int {
+	r := Cudd_Regular(n)
+	if Cudd_IsConstant(r) {
+		return math.MaxInt
+	}
+	return dd.Perm[r.Index]
+}
 
+// cuddLiteralNext follows the nonzero child of a cube and reports its phase.
+func cuddLiteralNext(dd *DdManager, n *DdNode) (*DdNode, bool) {
+	r := Cudd_Regular(n)
+	complement := Cudd_IsComplement(n)
+	child := Cudd_NotCond(Cudd_T(r), complement)
+	if child != dd.LogicZero {
+		return child, true
+	}
+	return Cudd_NotCond(Cudd_E(r), complement), false
+}
 
-/*---------------------------------------------------------------------------*/
-/* Constant declarations                                                     */
-/*---------------------------------------------------------------------------*/
-
-/*---------------------------------------------------------------------------*/
-/* Stucture declarations                                                     */
-/*---------------------------------------------------------------------------*/
-
-/*---------------------------------------------------------------------------*/
-/* Type declarations                                                         */
-/*---------------------------------------------------------------------------*/
-
-/*---------------------------------------------------------------------------*/
-/* Variable declarations                                                     */
-/*---------------------------------------------------------------------------*/
-
-#ifndef lint
-static char rcsid[] DD_UNUSED = "$Id: cuddLiteral.c,v 1.8 2004/08/13 18:04:50 fabio Exp $";
-#endif
-
-/*---------------------------------------------------------------------------*/
-/* Macro declarations                                                        */
-/*---------------------------------------------------------------------------*/
-
-/**AutomaticStart*************************************************************/
-
-/*---------------------------------------------------------------------------*/
-/* Static function prototypes                                                */
-/*---------------------------------------------------------------------------*/
-
-
-/**AutomaticEnd***************************************************************/
-
-
-/*---------------------------------------------------------------------------*/
-/* Definition of exported functions                                          */
-/*---------------------------------------------------------------------------*/
-
-
-/**Function********************************************************************
-
-  Synopsis    [Computes the intesection of two sets of literals
-  represented as BDDs.]
-
-  Description [Computes the intesection of two sets of literals
-  represented as BDDs. Each set is represented as a cube of the
-  literals in the set. The empty set is represented by the constant 1.
-  No variable can be simultaneously present in both phases in a set.
-  Returns a pointer to the BDD representing the intersected sets, if
-  successful; NULL otherwise.]
-
-  SideEffects [None]
-
-******************************************************************************/
-func Cudd_bddLiteralSetIntersection(dd *DdManager, f *DdNode, g *DdNode) *DdNode {
-    var res *DdNode;
-
-    for {
-        dd.reordered = 0;
-        res = cuddBddLiteralSetIntersectionRecur(dd,f,g);
-    
-if !(dd.reordered == 1) { break }
-} 
-    return(res);
-
-} /* end of Cudd_bddLiteralSetIntersection */
-
-
-/*---------------------------------------------------------------------------*/
-/* Definition of internal functions                                          */
-/*---------------------------------------------------------------------------*/
-
-
-/**Function********************************************************************
-
-  Synopsis    [Performs the recursive step of
-  Cudd_bddLiteralSetIntersection.]
-
-  Description [Performs the recursive step of
-  Cudd_bddLiteralSetIntersection. Scans the cubes for common variables,
-  and checks whether they agree in phase.  Returns a pointer to the
-  resulting cube if successful; NULL otherwise.]
-
-  SideEffects [None]
-
-******************************************************************************/
-func cuddBddLiteralSetIntersectionRecur(dd *DdManager, f *DdNode, g *DdNode) *DdNode {
-    var res, tmp *DdNode;
-    var F, G *DdNode;
-    var fc, gc *DdNode;
-    var one *DdNode;
-    var zero *DdNode;
-    unsigned int topf, topg, comple;
-    var phasef, phaseg int32;
-
-    statLine(dd);
-    if f == g { return(f); }
-
-    // inlining of macro Cudd_Regular
-    F = ((DdNode *)((ptruint)(f) & ~01));
-    // inlining of macro Cudd_Regular
-    G = ((DdNode *)((ptruint)(g) & ~01));
-    // inlining of macro DD_ONE
-    one = ((dd).one);
-
-    /* Here f != g. If F == G, then f and g are complementary.
-    ** Since they are two cubes, this case only occurs when f == v,
-    ** g == v', and v is a variable or its complement.
-    */
-    if F == G { return(one); }
-
-    // inlining of macro Cudd_Not
-    zero = ((DdNode *)((ptrint)(one) ^ 01));
-    // inlining of macro cuddI
-    
-    if (F.index)==CUDD_CONST_INDEX {
-        topf = int32((F.index));
-    } else {
-        topf = (dd).perm[(F.index)];
-    }
-    // inlining of macro cuddI
-    
-    if (G.index)==CUDD_CONST_INDEX {
-        topg = int32((G.index));
-    } else {
-        topg = (dd).perm[(G.index)];
-    }
-    /* Look for a variable common to both cubes. If there are none, this
-    ** loop will stop when the constant node is reached in both cubes.
-    */
-    for topf != topg {
-        if topf < topg {      /* move down on f */
-            comple = f != F;
-            // inlining of macro cuddT
-            f = ((F).type.kids.T);
-            // inlining of macro Cudd_Not
-            if comple { f = ((DdNode *)((ptrint)(f) ^ 01)); }
-            if f == zero {
-                // inlining of macro cuddE
-                f = ((F).type.kids.E);
-                // inlining of macro Cudd_Not
-                if comple { f = ((DdNode *)((ptrint)(f) ^ 01)); }
-            }
-            // inlining of macro Cudd_Regular
-            F = ((DdNode *)((ptruint)(f) & ~01));
-            // inlining of macro cuddI
-            
-            if (F.index)==CUDD_CONST_INDEX {
-                topf = int32((F.index));
-            } else {
-                topf = (dd).perm[(F.index)];
-            }
-        } else if topg < topf {
-            comple = g != G;
-            // inlining of macro cuddT
-            g = ((G).type.kids.T);
-            // inlining of macro Cudd_Not
-            if comple { g = ((DdNode *)((ptrint)(g) ^ 01)); }
-            if g == zero {
-                // inlining of macro cuddE
-                g = ((G).type.kids.E);
-                // inlining of macro Cudd_Not
-                if comple { g = ((DdNode *)((ptrint)(g) ^ 01)); }
-            }
-            // inlining of macro Cudd_Regular
-            G = ((DdNode *)((ptruint)(g) & ~01));
-            // inlining of macro cuddI
-            
-            if (G.index)==CUDD_CONST_INDEX {
-                topg = int32((G.index));
-            } else {
-                topg = (dd).perm[(G.index)];
-            }
-        }
-    }
-
-    /* At this point, f == one <=> g == 1. It suffices to test one of them. */
-    if f == one { return(one); }
-
-    res = cuddCacheLookup2(dd,Cudd_bddLiteralSetIntersection,f,g);
-    if res != nil {
-        return(res);
-    }
-
-    /* Here f and g are both non constant and have the same top variable. */
-    comple = f != F;
-    // inlining of macro cuddT
-    fc = ((F).type.kids.T);
-    phasef = 1;
-    // inlining of macro Cudd_Not
-    if comple { fc = ((DdNode *)((ptrint)(fc) ^ 01)); }
-    if fc == zero {
-        // inlining of macro cuddE
-        fc = ((F).type.kids.E);
-        phasef = 0;
-        // inlining of macro Cudd_Not
-        if comple { fc = ((DdNode *)((ptrint)(fc) ^ 01)); }
-    }
-    comple = g != G;
-    // inlining of macro cuddT
-    gc = ((G).type.kids.T);
-    phaseg = 1;
-    // inlining of macro Cudd_Not
-    if comple { gc = ((DdNode *)((ptrint)(gc) ^ 01)); }
-    if gc == zero {
-        // inlining of macro cuddE
-        gc = ((G).type.kids.E);
-        phaseg = 0;
-        // inlining of macro Cudd_Not
-        if comple { gc = ((DdNode *)((ptrint)(gc) ^ 01)); }
-    }
-
-    tmp = cuddBddLiteralSetIntersectionRecur(dd,fc,gc);
-    if tmp == nil {
-        return(nil);
-    }
-
-    if phasef != phaseg {
-        res = tmp;
-    } else {
-        // inlining of macro cuddRef
-        cuddSatInc(Cudd_Regular(tmp).ref);
-        if phasef == 0 {
-            // inlining of macro Cudd_Not
-            res = cuddBddAndRecur(dd,((DdNode *)((ptrint)(dd.vars[F.index]) ^ 01)),tmp);
-        } else {
-            res = cuddBddAndRecur(dd,dd.vars[F.index],tmp);
-        }
-        if res == nil {
-            Cudd_RecursiveDeref(dd,tmp);
-            return(nil);
-        }
-        // inlining of macro cuddDeref
-        cuddSatDec(Cudd_Regular(tmp).ref); /* Just cuddDeref, because it is included in result */
-    }
-
-    cuddCacheInsert2(dd,Cudd_bddLiteralSetIntersection,f,g,res);
-
-    return(res);
-
-} /* end of cuddBddLiteralSetIntersectionRecur */
-
-
-/*---------------------------------------------------------------------------*/
-/* Definition of static functions                                            */
-/*---------------------------------------------------------------------------*/
-
-
-//ABC_NAMESPACE_IMPL_END
-
-
+func cuddBddLiteralSetIntersectionRecur(dd *DdManager, f, g *DdNode) *DdNode {
+	if f == g {
+		return f
+	}
+	F, G := Cudd_Regular(f), Cudd_Regular(g)
+	if F == G {
+		return dd.One
+	}
+	topf, topg := cuddLiteralLevel(dd, f), cuddLiteralLevel(dd, g)
+	for topf != topg {
+		if topf < topg {
+			f, _ = cuddLiteralNext(dd, f)
+			F = Cudd_Regular(f)
+			topf = cuddLiteralLevel(dd, f)
+		} else {
+			g, _ = cuddLiteralNext(dd, g)
+			G = Cudd_Regular(g)
+			topg = cuddLiteralLevel(dd, g)
+		}
+	}
+	if f == dd.One {
+		return dd.One
+	}
+	op := reflect.ValueOf(Cudd_bddLiteralSetIntersection).Pointer()
+	if cached := core.Cudd_CacheLookup(dd, op, f, g, nil, 0); cached != nil {
+		return cached
+	}
+	fc, phasef := cuddLiteralNext(dd, f)
+	gc, phaseg := cuddLiteralNext(dd, g)
+	tmp := cuddBddLiteralSetIntersectionRecur(dd, fc, gc)
+	if tmp == nil {
+		return nil
+	}
+	result := tmp
+	if phasef == phaseg {
+		Cudd_Ref(tmp)
+		literal := dd.Vars[F.Index]
+		if !phasef {
+			literal = Cudd_Not(literal)
+		}
+		result = core.Cudd_bddAnd(dd, literal, tmp)
+		if result == nil {
+			Cudd_RecursiveDeref(dd, tmp)
+			return nil
+		}
+		Cudd_Deref(tmp)
+	}
+	core.Cudd_CacheInsert(dd, op, f, g, nil, result, 0)
+	return result
+}
