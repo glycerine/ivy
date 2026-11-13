@@ -287,6 +287,32 @@ func TestIncrementalPdrAdditionalModesAgainstReachability(t *testing.T) {
 	testAdditionalPdrModes(t, true, 128)
 }
 
+func TestPdrShortestTraceForLatchChain(t *testing.T) {
+	for _, incremental := range []bool{false, true} {
+		g := aig.NewGraph()
+		first := g.NewInput()
+		second := g.NewInput()
+		g.AddOutput(second)
+		g.AddOutput(g.Const1())
+		g.AddOutput(first)
+		aig.Aig_ManSetRegNum(g, 2)
+		var pars Pdr_Par_t
+		Pdr_ManSetDefaultParams(&pars)
+		pars.fSilent, pars.fShortest = 1, 1
+		var status int32
+		if incremental {
+			pars.nFrameMax = 1
+			status = IPdr_ManSolve(g, &pars)
+		} else {
+			status = Pdr_ManSolve(g, &pars)
+		}
+		cex := g.SequentialCounterexample()
+		if status != 0 || cex == nil || cex.IFrame != 2 || saig.Saig_ManVerifyCex(g, cex) != 1 {
+			t.Fatalf("incremental=%v: status %d counterexample %+v", incremental, status, cex)
+		}
+	}
+}
+
 func testAdditionalPdrModes(t *testing.T, incremental bool, trials int) {
 	t.Helper()
 	seed := uint32(0x31415926)
