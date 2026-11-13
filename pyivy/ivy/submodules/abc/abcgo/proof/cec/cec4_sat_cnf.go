@@ -3,19 +3,22 @@ package cec
 import (
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/sat/glucose2"
+	"time"
 )
 
 // cec4CNF owns the SAT IDs and the incremental Glucose2 instance used for
 // Cec4's simple on-demand CNF. IDs and models never use the GIA scratch fields.
 type cec4CNF struct {
-	graph         *gia.Gia_Man_t
-	solver        *glucose2.SimpSolver
-	jType         int32
-	ids           map[int32]int32
-	objects       []int32 // SAT variable to object ID, or -1 for an auxiliary
-	inputs        map[int32]int32
-	needsFullCone bool
-	gates         [2]int32
+	graph                           *gia.Gia_Man_t
+	solver                          *glucose2.SimpSolver
+	jType                           int32
+	ids                             map[int32]int32
+	objects                         []int32 // SAT variable to object ID, or -1 for an auxiliary
+	inputs                          map[int32]int32
+	needsFullCone                   bool
+	gates                           [2]int32
+	cnfTime                         int64
+	lastConflicts, lastMaxConflicts int64
 }
 
 func newCec4CNF(graph *gia.Gia_Man_t, jType int32) *cec4CNF {
@@ -134,6 +137,7 @@ func (c *cec4CNF) solveTwo(first, second, phase, limit int32) int32 {
 	if first < 0 || first == second || phase < 0 || phase > 1 {
 		panic("cec4: invalid SAT comparison")
 	}
+	start := time.Now()
 	a, b := c.variable(first), c.variable(second)
 	if c.jType > 0 {
 		c.solver.SetNewRound()
@@ -145,6 +149,7 @@ func (c *cec4CNF) solveTwo(first, second, phase, limit int32) int32 {
 			}
 		}
 	}
+	c.cnfTime += time.Since(start).Nanoseconds()
 	solve := func(x, y int32) int32 {
 		if limit > 0 {
 			c.solver.SetConfBudget(int64(limit))
@@ -153,9 +158,21 @@ func (c *cec4CNF) solveTwo(first, second, phase, limit int32) int32 {
 		}
 		return c.solver.SolveABCLiterals([]int32{x, y})
 	}
+	before := c.solver.Conflicts
 	status := solve(a<<1|1, b<<1|phase)
+	firstConflicts := c.solver.Conflicts - before
+	c.lastConflicts, c.lastMaxConflicts = firstConflicts, firstConflicts
 	if status == glucose2.GLUCOSE_UNSAT && first != 0 {
+		before = c.solver.Conflicts
 		status = solve(a<<1, b<<1|(phase^1))
+		secondConflicts := c.solver.Conflicts - before
+		if status == glucose2.GLUCOSE_UNSAT {
+			c.lastConflicts = firstConflicts + secondConflicts
+			c.lastMaxConflicts = max(firstConflicts, secondConflicts)
+		} else {
+			c.lastConflicts = secondConflicts
+			c.lastMaxConflicts = secondConflicts
+		}
 	}
 	return status
 }
