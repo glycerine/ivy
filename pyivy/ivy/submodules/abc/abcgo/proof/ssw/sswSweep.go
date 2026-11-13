@@ -213,9 +213,9 @@ func Ssw_ManSweep(p *Ssw_Man_t) int32 {
 		out := aig.Aig_ManCo(p.pFrames, n+i)
 		Ssw_CnfNodeAddToSolver(p.pMSat, aig.Aig_ObjFanin0(p.pFrames, out))
 	}
-	if !p.pMSat.pSat.Simplify() {
-		panic("ssw: inconsistent induction constraints")
-	}
+	// The C driver does not abort when simplification finds a contradiction;
+	// subsequent SAT queries observe the resulting UNSAT solver state.
+	p.pMSat.pSat.Simplify()
 	frame := p.pPars.nFramesK
 	Ssw_ObjSetFrame(p, p.pAig.Const1(), frame, p.pFrames.Const1())
 	inputs := p.pAig.Inputs()
