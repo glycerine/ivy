@@ -21,6 +21,23 @@ func TestSimulationCounterexampleReplays(t *testing.T) {
 		t.Fatal("counterexample failed replay")
 	}
 }
+
+func TestSimulationCounterexampleRejectsFailedReplay(t *testing.T) {
+	g := aig.NewGraph()
+	pi, lo := g.NewInput(), g.NewInput()
+	out := g.AddOutput(pi)
+	g.AddOutput(lo)
+	aig.Aig_ManSetRegNum(g, 1)
+	p := Ssw_SmlStart(g, 0, 1, 1)
+	defer Ssw_SmlStop(p)
+	// Simulate inconsistent output data: ABC verifies the reconstructed witness
+	// against the graph, frees it on failed replay, and returns NULL.
+	Ssw_SmlSimInfo(p, out)[0] = 1
+	p.fNonConstOut = 1
+	if cex := Ssw_SmlGetCounterExample(p); cex != nil {
+		t.Fatal("expected a rejected witness when replay does not fail the output")
+	}
+}
 func TestSimulationOutputPattern(t *testing.T) {
 	g := aig.NewGraph()
 	a := g.NewInput()
