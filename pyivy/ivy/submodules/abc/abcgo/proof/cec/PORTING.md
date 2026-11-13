@@ -75,8 +75,8 @@ AIG conversion before the AND-inverter sweep.
 `Cec_ManSatSweeping` uses the original speculative sweep and records the SAT-
 proved original-ID pairs when requested. Speculative pairs are independently
 checked against the original graph, so a failed earlier assumption cannot turn
-into a published proof. Original-ID tracking currently requires the ordinary
-SAT backend; the circuit SAT path does not collect these pairs.
+into a published proof. The ordinary and circuit SAT backends both collect
+candidate pairs for that independent validation.
 The public sweep lowers native XOR, MUX, and buffer nodes to AND-inverter
 logic, retains source IDs for original nodes, and independently validates alias
 proofs. Native graphs with existing equivalence classes are rejected until

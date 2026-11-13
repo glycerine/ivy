@@ -127,6 +127,10 @@ func Cec_ManSatSolveExractPattern(store *Vec_Int_t, start int32, pat *Vec_Int_t)
 	return start
 }
 func Cec_ManSatSolveCSat(patterns *Cec_ManPat_t, graph *Gia_Man_t, pars *Cec_ParSat_t) {
+	cecManSatSolveCSat(patterns, graph, pars, nil, nil, nil)
+}
+
+func cecManSatSolveCSat(patterns *Cec_ManPat_t, graph *Gia_Man_t, pars *Cec_ParSat_t, orig, pairs, equiv *Vec_Int_t) {
 	var statuses *Vec_Str_t
 	store := gia.Cbs_ManSolveMiterNc(graph, pars.nBTLimit, &statuses, 0, 0)
 	pat := vec.Vec_IntAlloc(1000)
@@ -138,6 +142,16 @@ func Cec_ManSatSolveCSat(patterns *Cec_ManPat_t, graph *Gia_Man_t, pars *Cec_Par
 	for i := 0; i < vec.Vec_StrSize(statuses); i++ {
 		status := int32(int8(vec.Vec_StrEntry(statuses, i)))
 		cecSetOutputStatus(gia.Gia_ManCo(graph, int32(i)), status)
+		if status == 1 && orig != nil {
+			if pairs == nil || equiv == nil || vec.Vec_IntSize(pairs) < 2*(i+1) {
+				panic("cec: missing circuit SAT original equivalence pair vectors")
+			}
+			a, b := vec.Vec_IntEntry(pairs, 2*i), vec.Vec_IntEntry(pairs, 2*i+1)
+			x, y := vec.Vec_IntEntry(orig, int(a)), vec.Vec_IntEntry(orig, int(b))
+			if x >= 0 && y >= 0 {
+				vec.Vec_IntPushTwo(equiv, x, y)
+			}
+		}
 		if vec.Vec_IntSize(store) > 0 && status != 1 {
 			start = Cec_ManSatSolveExractPattern(store, start, pat)
 		}

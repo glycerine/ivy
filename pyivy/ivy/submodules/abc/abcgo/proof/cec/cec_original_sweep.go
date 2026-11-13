@@ -24,9 +24,6 @@ func cecOriginalSweepMapped(graph, original *Gia_Man_t, sourceIDs []int32, alias
 	if pars.nWords <= 0 || pars.nRounds < 0 || pars.nItersMax < 0 || pars.nBTLimit < 0 || pars.TimeLimit < 0 {
 		return nil, fmt.Errorf("cec: invalid original sweep parameters")
 	}
-	if pars.fUseOrigIds != 0 && pars.fRunCSat != 0 {
-		return nil, fmt.Errorf("cec: circuit SAT does not collect original-ID proofs")
-	}
 	if pars.fDualOut != 0 && gia.Gia_ManPoNum(graph)&1 != 0 {
 		return nil, fmt.Errorf("cec: dual-output sweep requires output pairs")
 	}
@@ -119,7 +116,7 @@ func cecOriginalSweepMapped(graph, original *Gia_Man_t, sourceIDs []int32, alias
 			break
 		}
 		if pars.fRunCSat != 0 {
-			Cec_ManSatSolveCSat(pat, queries, &satPars)
+			cecManSatSolveCSat(pat, queries, &satPars, gia.Gia_ManOrigIds(fra.pAig), fra.vXorNodes, candidates)
 		} else {
 			Cec_ManSatSolve(pat, queries, &satPars, gia.Gia_ManOrigIds(fra.pAig), fra.vXorNodes, candidates, 0)
 		}
