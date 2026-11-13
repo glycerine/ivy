@@ -150,9 +150,15 @@ func InterpolateM114p(s M114pBackend, rootParts, varClasses []int32, pudlak bool
 			max = class
 		}
 	}
-	inputs := make([]aig.Edge, max+1)
-	for i := range inputs {
-		inputs[i] = g.NewInput()
+	inputs := make([]aig.Edge, 0, max+1)
+	input := func(index int32) aig.Edge {
+		for len(inputs) <= int(index) {
+			inputs = append(inputs, g.NewInput())
+		}
+		return inputs[index]
+	}
+	if pudlak && max >= 0 {
+		input(max)
 	}
 	outputs := make([]aig.Edge, 0, len(roots)+len(chains))
 	clauses := make([][]int32, 0, len(roots)+len(chains))
@@ -176,7 +182,7 @@ func InterpolateM114p(s M114pBackend, rootParts, varClasses []int32, pudlak bool
 					return nil, err
 				}
 				if c >= 0 {
-					e := inputs[c]
+					e := input(c)
 					if lit&1 != 0 {
 						e = e.Not()
 					}
@@ -226,7 +232,7 @@ func InterpolateM114p(s M114pBackend, rootParts, varClasses []int32, pudlak bool
 				if lit < 0 {
 					return nil, errors.New("proof pivot absent")
 				}
-				control := inputs[class]
+				control := input(class)
 				if lit&1 != 0 {
 					control = control.Not()
 				}
