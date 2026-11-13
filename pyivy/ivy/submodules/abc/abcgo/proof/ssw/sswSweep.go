@@ -84,6 +84,9 @@ func Ssw_SmlAddPatternDyn(p *Ssw_Man_t) {
 		if !ok {
 			panic("ssw: SAT model unavailable")
 		}
+		if p.pMSat.fPolarFlip != 0 && aig.Aig_ObjPhase(p.pFrames, obj) {
+			value = !value
+		}
 		if value {
 			words := vec.Vec_PtrEntry(p.vSimInfo, int(aig.Aig_ObjCioId(p.pFrames, obj))).([]uint32)
 			words[p.nPatterns/32] |= uint32(1) << uint(p.nPatterns%32)

@@ -48,6 +48,9 @@ func Ssw_SmlAddPattern(p *Ssw_Man_t, _, _ aig.Edge) {
 		if !ok {
 			panic("ssw: SAT model unavailable")
 		}
+		if p.pMSat.fPolarFlip != 0 && aig.Aig_ObjPhase(p.pFrames, obj) {
+			value = !value
+		}
 		if value {
 			info := vec.Vec_PtrEntry(p.vSimInfo, int(aig.Aig_ObjCioId(p.pFrames, obj))).([]uint32)
 			util.Abc_InfoSetBit(info, p.nPatterns)
@@ -173,7 +176,7 @@ func Ssw_ManSweepLatch(p *Ssw_Man_t) int32 {
 			p.nVarsMax = max(p.nVarsMax, p.pMSat.nSatVars)
 			p.nCallsMax = max(p.nCallsMax, p.pMSat.nSolverCalls)
 			Ssw_SatStop(p.pMSat)
-			p.pMSat = Ssw_SatStart(0)
+			p.pMSat = Ssw_SatStart(p.pPars.fPolarFlip)
 			p.pMSat.pAig = p.pFrames
 			p.nRecycles++
 			p.nRecycleCalls = 0

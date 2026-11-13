@@ -272,7 +272,7 @@ func Ssw_SignalFilter(g *aig.Graph, frames, conflicts, rounds, timeLimit, timeLi
 			fmt.Print("Initial    : ")
 			Ssw_ClassesPrint(p.ppClasses, 0)
 		}
-		p.pMSat = Ssw_SatStart(0)
+		p.pMSat = Ssw_SatStart(p.pPars.fPolarFlip)
 		part := int32(0)
 		if timeLimit != 0 {
 			part = int32(time.Until(deadline) / time.Second)

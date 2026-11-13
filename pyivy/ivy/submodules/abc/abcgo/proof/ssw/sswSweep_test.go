@@ -2,6 +2,7 @@ package ssw
 
 import (
 	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/sat/bsat"
 	"testing"
 )
@@ -83,5 +84,30 @@ func TestSatPatternUsesSolverPolarity(t *testing.T) {
 	}
 	if Ssw_ManGetSatVarValue(p, obj, 0) != 1 {
 		t.Fatal("pattern interpreted using parameter instead of SAT solver polarity")
+	}
+}
+
+func TestPhaseFlippedSatPatternCollectorsUseActualValues(t *testing.T) {
+	frames := aig.NewGraph()
+	input := frames.NewInput()
+	aig.Aig_ObjSetPhase(frames, input, true)
+	sat := Ssw_SatStart(1)
+	sat.pAig = frames
+	Ssw_CnfNodeAddToSolver(sat, input)
+	if sat.pSat.Solve(sswLit(sat, input, false)) != bsat.Satisfiable {
+		t.Fatal("expected SAT")
+	}
+	p := &Ssw_Man_t{pFrames: frames, pMSat: sat, vSimInfo: vec.Vec_PtrAllocSimInfo(1, 1)}
+	Ssw_SmlAddPatternDyn(p)
+	if vec.Vec_PtrEntry(p.vSimInfo, 0).([]uint32)[0] != 1 {
+		t.Fatal("dynamic pattern lost phase flip")
+	}
+	vec.Vec_PtrCleanSimInfo(p.vSimInfo, 0, 1)
+	Ssw_SmlAddPattern(p, 0, 0)
+	if vec.Vec_PtrEntry(p.vSimInfo, 0).([]uint32)[0] != 1 {
+		t.Fatal("latch pattern lost phase flip")
+	}
+	if Ssw_CnfGetNodeValue(sat, input) != 1 {
+		t.Fatal("CNF model value lost phase flip")
 	}
 }

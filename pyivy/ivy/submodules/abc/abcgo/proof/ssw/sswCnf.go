@@ -153,6 +153,9 @@ func Ssw_CnfGetNodeValue(p *Ssw_Sat_t, obj aig.Edge) int32 {
 		if !ok {
 			panic("ssw: SAT model unavailable")
 		}
+		if p.fPolarFlip != 0 && aig.Aig_ObjPhase(p.pAig, obj) {
+			value = !value
+		}
 		if value {
 			return 1
 		}

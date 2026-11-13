@@ -253,7 +253,7 @@ func Ssw_ManSweepDyn(p *Ssw_Man_t) int32 {
 				p.nRecyclesTotal++
 				p.nRecycleCalls = 0
 			}
-			p.pMSat = Ssw_SatStart(0)
+			p.pMSat = Ssw_SatStart(p.pPars.fPolarFlip)
 			p.pMSat.pAig = p.pFrames
 			if p.nPatterns != 0 {
 				panic("ssw: pending simulation patterns")

@@ -34,7 +34,7 @@ func Ssw_SignalCorrespondenceRefine(p *Ssw_Man_t) *aig.Graph {
 		Ssw_ClassesPrint(p.ppClasses, 0)
 	}
 	if p.pPars.fLatchCorr == 0 || p.pPars.nFramesK > 1 {
-		p.pMSat = Ssw_SatStart(0)
+		p.pMSat = Ssw_SatStart(p.pPars.fPolarFlip)
 		if p.pPars.fConstrs != 0 {
 			Ssw_ManSweepBmcConstr(p)
 		} else {
@@ -69,7 +69,7 @@ func Ssw_SignalCorrespondenceRefine(p *Ssw_Man_t) *aig.Graph {
 				break
 			}
 			start := time.Now()
-			p.pMSat = Ssw_SatStart(0)
+			p.pMSat = Ssw_SatStart(p.pPars.fPolarFlip)
 			var changed int32
 			if p.pPars.fLatchCorrOpt != 0 {
 				changed = Ssw_ManSweepLatch(p)
