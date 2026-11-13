@@ -9,6 +9,35 @@ import (
 	"github.com/glycerine/abcgo/sat/satoko"
 )
 
+// A compiled ABC oracle, with Gia_ManRandom(1), returns (0,1) as the first
+// satisfying bit for the two-input XOR care graph.
+func TestSimulationPivotMatchesSourceRandomSequence(t *testing.T) {
+	for _, enabled := range []bool{false, true} {
+		b := newBuilder(2, 12)
+		inputs := b.graph.InputLiterals()
+		output := int32(0)
+		if enabled {
+			output = b.xor(inputs[0], inputs[1])
+		}
+		gia.Gia_ManAppendCo(b.graph, output)
+		gia.Gia_ManRandom(1)
+		pivot := Ssc_GiaFindPivotSim(NewSimulation(b.graph, 1))
+		if !enabled {
+			if pivot != nil {
+				t.Fatalf("empty care produced pivot %v", pivot)
+			}
+			continue
+		}
+		if len(pivot) != 2 || pivot[0] || !pivot[1] {
+			t.Fatalf("pivot=%v, want [false true]", pivot)
+		}
+		out, err := b.graph.Evaluate(pivot)
+		if err != nil || !out[0] {
+			t.Fatalf("pivot violates care: output=%v err=%v", out, err)
+		}
+	}
+}
+
 func TestPackedPrimitiveOperations(t *testing.T) {
 	a := []uint64{0x123456789abcdef0, 0xffff0000ffff0000}
 	b := []uint64{0x0f0ff0f00f0ff0f0, 0xaaaaaaaaaaaaaaaa}

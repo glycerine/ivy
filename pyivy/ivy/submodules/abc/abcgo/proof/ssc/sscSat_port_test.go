@@ -129,6 +129,37 @@ func TestSatPortRejectsReverseNodeOrder(t *testing.T) {
 	}
 }
 
+// In the C oracle, care requires x=0. Adding y=1 after the first pivot and
+// solving again returns the new pivot (0,1).
+func TestFindPivotAfterAddingRootClause(t *testing.T) {
+	subject := newBuilder(2, 8)
+	for _, input := range subject.graph.InputLiterals() {
+		gia.Gia_ManAppendCo(subject.graph, input)
+	}
+	care := newBuilder(2, 8)
+	gia.Gia_ManAppendCo(care.graph, care.graph.InputLiterals()[0])
+	p, status := Ssc_ManStart(subject.graph, care.graph, nil)
+	if status != satoko.SATOKO_SAT || p == nil {
+		t.Fatalf("start status=%d", status)
+	}
+	defer Ssc_ManStop(p)
+	if !p.sat.AddClause(p.satLit(p.Aig.InputLiterals()[1])) {
+		t.Fatal("consistent root clause rejected")
+	}
+	pivot, status := Ssc_ManFindPivotSat(p)
+	if status != satoko.SATOKO_SAT || !reflect.DeepEqual(pivot, []bool{false, true}) {
+		t.Fatalf("pivot=%v status=%d", pivot, status)
+	}
+	collected := Ssc_ManCollectSatPattern(p)
+	if !reflect.DeepEqual(collected, pivot) {
+		t.Fatalf("collected=%v pivot=%v", collected, pivot)
+	}
+	collected[0] = true
+	if pivot[0] {
+		t.Fatal("collected model aliases prior pivot")
+	}
+}
+
 // A compiled C SSC oracle returns UNKNOWN for unrelated inputs with a -1
 // conflict limit, but proves equality when care makes both assumption pairs
 // contradictory before search checks the limit.
