@@ -71,11 +71,18 @@ func Gia_ManPerformGla(g *gia.Gia_Man_t, pars *Abs_Par_t) int32 {
 		fmt.Printf("Running gate-level abstraction: FrameMax = %d ConfMax = %d Timeout = %d\n", pars.nFramesMax, pars.nConfLimit, pars.nTimeOut)
 	}
 	for !stopped {
+		if pars.nTimeOut > 0 && time.Since(start) >= time.Duration(pars.nTimeOut)*time.Second {
+			break
+		}
 		pars.iFrame = -1
 		Ga2_ManRestart(p)
 		oldAbs := vec.Vec_IntSize(p.vAbs)
 		restart := false
 		for frame := int32(0); pars.nFramesMax == 0 || frame < pars.nFramesMax; frame++ {
+			if pars.nTimeOut > 0 && time.Since(start) >= time.Duration(pars.nTimeOut)*time.Second {
+				stopped = true
+				break
+			}
 			conflictsBegin := p.pSat.Statistics().Conflicts
 			nAbs := int32(vec.Vec_IntSize(p.vAbs))
 			nValues := int32(vec.Vec_IntSize(p.vValues))
@@ -96,16 +103,14 @@ func Gia_ManPerformGla(g *gia.Gia_Man_t, pars *Abs_Par_t) int32 {
 			if lit == 0 {
 				continue
 			}
-			if lit <= 1 {
-				panic("abs: unexpected constant-one GLA output")
-			}
+
 			for p.pSat.NumVars() < p.nSatVars {
 				p.pSat.NewVariable()
 			}
 			oldVars := p.nSatVars
 			refinements := int32(0)
 			for {
-				if p.pSat.RootAssigned(lit >> 1) {
+				if value, assigned := p.pSat.RootValue(lit >> 1); assigned && value == (lit&1 != 0) {
 					break
 				}
 				p.pSat.SetLimits(int64(pars.nConfLimit), 0)
@@ -134,6 +139,20 @@ func Gia_ManPerformGla(g *gia.Gia_Man_t, pars *Abs_Par_t) int32 {
 							break
 						}
 						result = 0
+						stopped = true
+						break
+					}
+					if vec.Vec_IntSize(add) == 0 {
+						var abstractCex *util.Abc_Cex_t
+						var mapping *vec.Vec_Int_t
+						Ga2_GlaPrepareCexAndMap(p, &abstractCex, &mapping)
+						actual := Ga2_ManDeriveCex(p, mapping)
+						if gia.Gia_ManVerifyCex(g, actual, 0) != 0 {
+							if err := g.SetSequentialCounterexample(actual); err != nil {
+								panic(err)
+							}
+							result = 0
+						}
 						stopped = true
 						break
 					}

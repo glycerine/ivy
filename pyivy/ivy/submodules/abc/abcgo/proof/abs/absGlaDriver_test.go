@@ -84,3 +84,55 @@ func TestGlaDriverSequentialCounterexample(t *testing.T) {
 		t.Fatalf("result %d, witness %+v", result, g.SequentialCounterexample())
 	}
 }
+
+func TestGlaDriverConstantTrueAtLaterFrame(t *testing.T) {
+	g := gia.Gia_ManStart(6)
+	q := gia.Gia_ManAppendCi(g)
+	gia.Gia_ManAppendCo(g, q)
+	gia.Gia_ManAppendCo(g, 1)
+	gia.Gia_ManSetRegNum(g, 1)
+	pars := &Abs_Par_t{}
+	Abs_ParSetDefaults(pars)
+	pars.nFramesMax = 3
+	pars.nRatioMin = 0
+	pars.nRatioMin2 = 0
+	pars.nFramesNoChangeLim = 100
+	if result := Gia_ManPerformGla(g, pars); result != 0 || g.SequentialCounterexample() == nil || g.SequentialCounterexample().IFrame != 1 || gia.Gia_ManVerifyCex(g, g.SequentialCounterexample(), 0) != 1 {
+		t.Fatalf("result %d witness %+v", result, g.SequentialCounterexample())
+	}
+}
+
+func TestGlaDriverLayerModeTerminatesWithRealWitness(t *testing.T) {
+	g := gia.Gia_ManStart(8)
+	x := gia.Gia_ManAppendCi(g)
+	y := gia.Gia_ManAppendCi(g)
+	out := gia.Gia_ManAppendAnd(g, x, y)
+	gia.Gia_ManAppendCo(g, out)
+	pars := &Abs_Par_t{}
+	Abs_ParSetDefaults(pars)
+	pars.fAddLayer = 1
+	pars.nFramesMax = 1
+	pars.nRatioMin = 0
+	pars.nRatioMin2 = 0
+	if result := Gia_ManPerformGla(g, pars); result != 0 || g.SequentialCounterexample() == nil || gia.Gia_ManVerifyCex(g, g.SequentialCounterexample(), 0) != 1 {
+		t.Fatalf("result %d witness %+v", result, g.SequentialCounterexample())
+	}
+}
+
+func TestGlaDriverTimesOutOnConstantFalseFrames(t *testing.T) {
+	g := gia.Gia_ManStart(6)
+	q := gia.Gia_ManAppendCi(g)
+	gia.Gia_ManAppendCo(g, q)
+	gia.Gia_ManAppendCo(g, 0)
+	gia.Gia_ManSetRegNum(g, 1)
+	pars := &Abs_Par_t{}
+	Abs_ParSetDefaults(pars)
+	pars.nFramesMax = 0
+	pars.nTimeOut = 1
+	pars.nRatioMin = 0
+	pars.nRatioMin2 = 0
+	pars.nFramesNoChangeLim = 100
+	if result := Gia_ManPerformGla(g, pars); result != -1 || g.SequentialCounterexample() != nil {
+		t.Fatalf("result %d witness %+v", result, g.SequentialCounterexample())
+	}
+}
