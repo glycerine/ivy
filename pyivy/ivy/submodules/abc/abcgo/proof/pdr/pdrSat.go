@@ -1,382 +1,237 @@
+// Go port of pdrSat.c by Alan Mishchenko, UC Berkeley (2010).
 package pdr
 
-/**CFile****************************************************************
+import (
+	"time"
 
-  FileName    [pdrSat.c]
+	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/aig/saig"
+	"github.com/glycerine/abcgo/misc/util"
+	"github.com/glycerine/abcgo/misc/vec"
+	"github.com/glycerine/abcgo/sat/bsat"
+)
 
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Property driven reachability.]
-
-  Synopsis    [SAT solver procedures.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - November 20, 2010.]
-
-  Revision    [$Id: pdrSat.c,v 1.00 2010/11/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "pdrInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Creates new SAT solver.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Pdr_ManCreateSolver(p *Pdr_Man_t, k int32) *sat_solver {
-    var pSat *sat_solver;
-    var pObj *Aig_Obj_t;
-    var i int32;
-    assert(Vec_PtrSize(p.vSolvers) == k, "Vec_PtrSize(p.vSolvers) == k");
-    assert(Vec_VecSize(p.vClauses) == k, "Vec_VecSize(p.vClauses) == k");
-    assert(Vec_IntSize(p.vActVars) == k, "Vec_IntSize(p.vActVars) == k");
-    // create new solver
-//    pSat = sat_solver_new();
-    pSat = zsat_solver_new_seed(p.pPars.nRandomSeed);
-    pSat = Pdr_ManNewSolver( pSat, p, k, int32((k == 0)) );
-    Vec_PtrPush( p.vSolvers, pSat );
-    Vec_VecExpand( p.vClauses, k );
-    Vec_IntPush( p.vActVars, 0 );
-    // add property cone
-    Saig_ManForEachPo( p.pAig, pObj, i )
-        Pdr_ObjSatVar( p, k, 1, pObj );
-    return pSat;
+func Pdr_ManCreateSolver(p *Pdr_Man_t, k int32) *bsat.Solver {
+	if int(k) != len(p.vSolvers) || int(k) != vec.Vec_VecSize(p.vClauses) || int(k) != vec.Vec_IntSize(p.vActVars) {
+		panic("pdr: inconsistent solver frame count")
+	}
+	solver := Pdr_ManNewSolver(bsat.NewSolver(), p, k, pdrBool(k == 0))
+	if solver == nil {
+		return nil
+	}
+	p.vSolvers = append(p.vSolvers, solver)
+	vec.Vec_VecExpand(p.vClauses, int(k))
+	vec.Vec_IntPush(p.vActVars, 0)
+	for i := int32(0); i < saig.Saig_ManPoNum(p.pAig); i++ {
+		Pdr_ObjSatVar(p, k, 1, aig.Aig_ManCo(p.pAig, i))
+	}
+	return solver
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Returns old or restarted solver.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Pdr_ManFetchSolver(p *Pdr_Man_t, k int32) *sat_solver {
-    var pSat *sat_solver;
-    var vArrayK *Vec_Ptr_t;
-    var pCube *Pdr_Set_t;
-    var i, j int32;
-    pSat = Pdr_ManSolver(p, k);
-    if Vec_IntEntry(p.vActVars, k) < p.pPars.nRecycle {
-        return pSat; }
-    assert(k < Vec_PtrSize(p.vSolvers) - 1, "k < Vec_PtrSize(p.vSolvers) - 1");
-    p.nStarts++;
-//    sat_solver_delete( pSat );
-//    pSat = sat_solver_new();
-//    sat_solver_restart( pSat );
-    zsat_solver_restart_seed( pSat, p.pPars.nRandomSeed );
-    // create new SAT solver
-    pSat = Pdr_ManNewSolver( pSat, p, k, int32((k == 0)) );
-    // write new SAT solver
-    Vec_PtrWriteEntry( p.vSolvers, k, pSat );
-    Vec_IntWriteEntry( p.vActVars, k, 0 );
-    // set the property output
-    Pdr_ManSetPropertyOutput( p, k );
-    // add the clauses
-    Vec_VecForEachLevelStart( p.vClauses, vArrayK, i, k )
-        Vec_PtrForEachEntry( Pdr_Set_t *, vArrayK, pCube, j )
-            Pdr_ManSolverAddClause( p, k, pCube );
-    return pSat;
+func Pdr_ManFetchSolver(p *Pdr_Man_t, k int32) *bsat.Solver {
+	solver := Pdr_ManSolver(p, k)
+	if vec.Vec_IntEntry(p.vActVars, int(k)) < p.pPars.nRecycle {
+		return solver
+	}
+	if int(k) >= len(p.vSolvers)-1 {
+		panic("pdr: cannot recycle last frame solver")
+	}
+	p.nStarts++
+	solver.Reset()
+	solver = Pdr_ManNewSolver(solver, p, k, pdrBool(k == 0))
+	if solver == nil {
+		return nil
+	}
+	p.vSolvers[k] = solver
+	vec.Vec_IntWriteEntry(p.vActVars, int(k), 0)
+	Pdr_ManSetPropertyOutput(p, k)
+	for frame := int(k); frame < vec.Vec_VecSize(p.vClauses); frame++ {
+		for _, item := range vec.Vec_PtrArray(vec.Vec_VecEntry(p.vClauses, frame)) {
+			Pdr_ManSolverAddClause(p, k, item.(*Pdr_Set_t))
+		}
+	}
+	return solver
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Converts SAT variables into register IDs.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Pdr_ManLitsToCube(p *Pdr_Man_t, k int32, pArray *int32, nArray int32) *Vec_Int_t {
-    var i, RegId int32;
-    Vec_IntClear( p.vLits );
-    for  i = 0; i < nArray; i++  {
-        RegId = Pdr_ObjRegNum( p, k, Abc_Lit2Var(pArray[i]) );
-        if RegId == -1 {
-            continue; }
-        assert(RegId >= 0 && RegId < Aig_ManRegNum(p.pAig), "RegId >= 0 && RegId < Aig_ManRegNum(p.pAig)");
-        Vec_IntPush( p.vLits, Abc_Var2Lit(RegId, !Abc_LitIsCompl(pArray[i])) );
-    }
-    assert(Vec_IntSize(p.vLits) >= 0 && Vec_IntSize(p.vLits) <= nArray, "Vec_IntSize(p.vLits) >= 0 && Vec_IntSize(p.vLits) <= nArray");
-    return p.vLits;
+func Pdr_ManLitsToCube(p *Pdr_Man_t, k int32, lits []int32, count int32) *vec.Vec_Int_t {
+	if count < 0 || int(count) > len(lits) {
+		panic("pdr: invalid literal count")
+	}
+	vec.Vec_IntClear(p.vLits)
+	for _, lit := range lits[:count] {
+		reg := Pdr_ObjRegNum(p, k, lit>>1)
+		if reg == -1 {
+			continue
+		}
+		if reg < 0 || reg >= aig.Aig_ManRegNum(p.pAig) {
+			panic("pdr: SAT variable mapped to invalid register")
+		}
+		vec.Vec_IntPush(p.vLits, reg<<1|(lit&1)^1)
+	}
+	return p.vLits
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Converts the cube in terms of RO numbers into array of CNF literals.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Pdr_ManCubeToLits(p *Pdr_Man_t, k int32, pCube *Pdr_Set_t, fCompl int32, fNext int32) *Vec_Int_t {
-    var pObj *Aig_Obj_t;
-    var i, iVar, iVarMax int32;
-    var clk abctime  = Abc_Clock();
-    Vec_IntClear( p.vLits );
-//    assert( !(fNext && fCompl) );
-    for  i = 0; i < pCube.nLits; i++  {
-        if pCube.Lits[i] == -1 {
-            continue; }
-        if fNext != 0 {
-            pObj = Saig_ManLi( p.pAig, Abc_Lit2Var(pCube.Lits[i]) );
-        } else {
-            pObj = Saig_ManLo( p.pAig, Abc_Lit2Var(pCube.Lits[i]) ); }
-        iVar = Pdr_ObjSatVar( p, k, fNext ? 2 - Abc_LitIsCompl(pCube.Lits[i]) : 3, pObj ); assert(iVar >= 0, "iVar >= 0");
-        iVarMax = Abc_MaxInt( iVarMax, iVar );
-        Vec_IntPush( p.vLits, Abc_Var2Lit( iVar, fCompl ^ Abc_LitIsCompl(pCube.Lits[i]) ) );
-    }
-//    sat_solver_setnvars( Pdr_ManSolver(p, k), iVarMax + 1 );
-    p.tCnf += Abc_Clock() - clk;
-    return p.vLits;
+func Pdr_ManCubeToLits(p *Pdr_Man_t, k int32, cube *Pdr_Set_t, complement, next int32) *vec.Vec_Int_t {
+	start := util.Abc_Clock()
+	vec.Vec_IntClear(p.vLits)
+	for _, lit := range cube.Lits[:cube.nLits] {
+		if lit == -1 {
+			continue
+		}
+		reg := lit >> 1
+		if reg < 0 || reg >= aig.Aig_ManRegNum(p.pAig) {
+			panic("pdr: cube register out of range")
+		}
+		object := saig.Saig_ManLo(p.pAig, reg)
+		polarity := int32(3)
+		if next != 0 {
+			object, polarity = saig.Saig_ManLi(p.pAig, reg), 2-(lit&1)
+		}
+		variable := Pdr_ObjSatVar(p, k, polarity, object)
+		if variable < 0 {
+			panic("pdr: cube object lacks SAT variable")
+		}
+		vec.Vec_IntPush(p.vLits, variable<<1|(complement^(lit&1))&1)
+	}
+	p.tCnf += util.Abc_Clock() - start
+	return p.vLits
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Sets the property output to 0 (sat) forever.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Pdr_ManSetPropertyOutput(p *Pdr_Man_t, k int32) {
-    var pSat *sat_solver;
-    var pObj *Aig_Obj_t;
-    var Lit, RetValue, i int32;
-    if !p.pPars.fUsePropOut {
-        return; }
-    pSat = Pdr_ManSolver(p, k);
-    Saig_ManForEachPo( p.pAig, pObj, i )
-    {
-        // skip solved outputs
-        if p.vCexes && Vec_PtrEntry(p.vCexes, i) {
-            continue; }
-        // skip timedout outputs
-        if p.pPars.vOutMap && Vec_IntEntry(p.pPars.vOutMap, i) == -1 {
-            continue; }
-        Lit = Abc_Var2Lit( Pdr_ObjSatVar(p, k, 1, pObj), 1 ); // neg literal
-        RetValue = sat_solver_addclause( pSat, &Lit, &Lit + 1 );
-        assert(RetValue == 1, "RetValue == 1");
-    }
-    sat_solver_compress( pSat );
+	if p.pPars.fUsePropOut == 0 {
+		return
+	}
+	solver := Pdr_ManSolver(p, k)
+	for i := int32(0); i < saig.Saig_ManPoNum(p.pAig); i++ {
+		if p.vCexes != nil && vec.Vec_PtrEntry(p.vCexes, int(i)) != nil {
+			continue
+		}
+		if p.pPars.vOutMap != nil && vec.Vec_IntEntry(p.pPars.vOutMap, int(i)) == -1 {
+			continue
+		}
+		variable := Pdr_ObjSatVar(p, k, 1, aig.Aig_ManCo(p.pAig, i))
+		if !solver.AddClause(bsat.Negative(variable)) {
+			panic("pdr: inconsistent property output")
+		}
+	}
+	solver.Compress()
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Adds one clause in terms of ROs to the k-th SAT solver.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Pdr_ManSolverAddClause(p *Pdr_Man_t, k int32, pCube *Pdr_Set_t) {
-    var pSat *sat_solver;
-    var vLits *Vec_Int_t;
-    var RetValue int32;
-    pSat  = Pdr_ManSolver(p, k);
-    vLits = Pdr_ManCubeToLits( p, k, pCube, 1, 0 );
-    RetValue = sat_solver_addclause( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits) );
-    assert(RetValue == 1, "RetValue == 1");
-    sat_solver_compress( pSat );
+func pdrLiterals(v *vec.Vec_Int_t) []bsat.Literal {
+	return vec.Vec_IntArray(v)
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Collects values of the RO/RI variables in k-th SAT solver.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Pdr_ManCollectValues(p *Pdr_Man_t, k int32, vObjIds *Vec_Int_t, vValues *Vec_Int_t) {
-    var pSat *sat_solver;
-    var pObj *Aig_Obj_t;
-    var iVar, i int32;
-    Vec_IntClear( vValues );
-    pSat = Pdr_ManSolver(p, k);
-    Aig_ManForEachObjVec( vObjIds, p.pAig, pObj, i )
-    {
-        iVar = Pdr_ObjSatVar( p, k, 3, pObj ); assert(iVar >= 0, "iVar >= 0");
-        Vec_IntPush( vValues, sat_solver_var_value(pSat, iVar) );
-    }
+func Pdr_ManSolverAddClause(p *Pdr_Man_t, k int32, cube *Pdr_Set_t) {
+	solver := Pdr_ManSolver(p, k)
+	if !solver.AddClause(pdrLiterals(Pdr_ManCubeToLits(p, k, cube, 1, 0))...) {
+		panic("pdr: inconsistent frame clause")
+	}
+	solver.Compress()
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Checks if the cube holds (UNSAT) in the given timeframe.]
- 
-  Description [Return 1/0 if cube or property are proved to hold/fail
-  in k-th timeframe.  Returns the predecessor bad state in ppPred.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Pdr_ManCheckCubeCs(p *Pdr_Man_t, k int32, pCube *Pdr_Set_t) int32 { 
-    var pSat *sat_solver;
-    var vLits *Vec_Int_t;
-    var Limit abctime;
-    var RetValue int32;
-    pSat = Pdr_ManFetchSolver( p, k );
-    vLits = Pdr_ManCubeToLits( p, k, pCube, 0, 0 );
-    Limit = sat_solver_set_runtime_limit( pSat, Pdr_ManTimeLimit(p) );
-    RetValue = sat_solver_solve( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits), 0, 0, 0, 0 );
-    sat_solver_set_runtime_limit( pSat, Limit );
-    if RetValue == l_Undef {
-        return -1; }
-    return (RetValue == l_False);
+func Pdr_ManCollectValues(p *Pdr_Man_t, k int32, objects, values *vec.Vec_Int_t) {
+	vec.Vec_IntClear(values)
+	solver := Pdr_ManSolver(p, k)
+	for _, id := range vec.Vec_IntArray(objects) {
+		variable := Pdr_ObjSatVar(p, k, 3, aig.Edge(uint32(id)<<1))
+		value, ok := solver.Value(variable)
+		if !ok {
+			panic("pdr: SAT model unavailable")
+		}
+		vec.Vec_IntPush(values, pdrBool(value))
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Checks if the cube holds (UNSAT) in the given timeframe.]
- 
-  Description [Return 1/0 if cube or property are proved to hold/fail
-  in k-th timeframe.  Returns the predecessor bad state in ppPred.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Pdr_ManCheckCube(p *Pdr_Man_t, k int32, pCube *Pdr_Set_t, ppPred **Pdr_Set_t, nConfLimit int32, fTryConf int32, fUseLit int32) int32 { 
-    //int fUseLit = 0;
-    var fLitUsed int32;
-    var pSat *sat_solver;
-    var vLits *Vec_Int_t;
-    var Lit, RetValue int32;
-    var clk, Limit abctime;
-    p.nCalls++;
-    pSat = Pdr_ManFetchSolver( p, k );
-    if pCube == nil { // solve the property
-    
-        clk = Abc_Clock();
-        Lit = Abc_Var2Lit( Pdr_ObjSatVar(p, k, 2, Aig_ManCo(p.pAig, p.iOutCur)), 0 ); // pos literal (property fails)
-        Limit = sat_solver_set_runtime_limit( pSat, Pdr_ManTimeLimit(p) );
-        RetValue = sat_solver_solve( pSat, &Lit, &Lit + 1, nConfLimit, 0, 0, 0 );
-        sat_solver_set_runtime_limit( pSat, Limit );
-        if RetValue == l_Undef {
-            return -1; }
-    
-    } else { // check relative containment in terms of next states
-    
-        if fUseLit != 0 {
-            fLitUsed = 1;
-            Vec_IntAddToEntry( p.vActVars, k, 1 );
-            // add the cube in terms of current state variables
-            vLits = Pdr_ManCubeToLits( p, k, pCube, 1, 0 );
-            // add activation literal
-            Lit = Abc_Var2Lit( Pdr_ManFreeVar(p, k), 0 );
-            // add activation literal
-            Vec_IntPush( vLits, Lit );
-            RetValue = sat_solver_addclause( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits) );
-            assert(RetValue == 1, "RetValue == 1");
-            sat_solver_compress( pSat );
-            // create assumptions
-            vLits = Pdr_ManCubeToLits( p, k, pCube, 0, 1 );
-            // add activation literal
-            Vec_IntPush( vLits, Abc_LitNot(Lit) );
-        
-        } else {
-            vLits = Pdr_ManCubeToLits( p, k, pCube, 0, 1 ); }
-
-        // solve 
-        clk = Abc_Clock();
-        Limit = sat_solver_set_runtime_limit( pSat, Pdr_ManTimeLimit(p) );
-        RetValue = sat_solver_solve( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits), fTryConf ? p.pPars.nConfGenLimit : nConfLimit, 0, 0, 0 );
-        sat_solver_set_runtime_limit( pSat, Limit );
-        if RetValue == l_Undef {
-            if (fTryConf != 0) && p.pPars.nConfGenLimit {
-                RetValue = l_True;
-            } else {
-                return -1; }
-        }
-    }
-    clk = Abc_Clock() - clk;
-    p.tSat += clk;
-    assert(RetValue != l_Undef, "RetValue != l_Undef");
-    if RetValue == l_False {
-        p.tSatUnsat += clk;
-        p.nCallsU++;
-        if ppPred {
-            *ppPred = nil; }
-        RetValue = 1;
-    
-    } else { // if ( RetValue == l_True )
-    
-        p.tSatSat += clk;
-        p.nCallsS++;
-        if ppPred {
-            var clk abctime  = Abc_Clock();
-            if p.pPars.fNewXSim {
-                *ppPred = Txs3_ManTernarySim( p.pTxs3, k, pCube );
-            } else {
-                *ppPred = Pdr_ManTernarySim( p, k, pCube ); }
-            p.tTsim += Abc_Clock() - clk;
-            p.nXsimLits += (*ppPred).nLits;
-            p.nXsimRuns++;
-        }
-        RetValue = 0;
-    }
-
-/* // for some reason, it does not work...
-    if ( fLitUsed )
-    {
-        int RetValue;
-        Lit = Abc_LitNot(Lit);
-        RetValue = sat_solver_addclause( pSat, &Lit, &Lit + 1 );
-        assert( RetValue == 1 );
-        sat_solver_compress( pSat );
-    }
-*/
-    return RetValue;
+// pdrSolve temporarily applies the current global/per-output time limit and
+// the caller's conflict limit, then restores the solver's prior limits.
+func pdrSolve(p *Pdr_Man_t, solver *bsat.Solver, assumptions []bsat.Literal, limit int32) bsat.Status {
+	oldConflicts, oldPropagations := solver.Limits()
+	solver.SetLimits(int64(limit), 0)
+	deadline := Pdr_ManTimeLimit(p)
+	if deadline == 0 {
+		solver.SetDeadline(time.Time{})
+	} else {
+		solver.SetDeadline(time.Now().Add(time.Duration(deadline - util.Abc_Clock())))
+	}
+	defer func() { solver.SetLimits(oldConflicts, oldPropagations); pdrConfigureSolver(solver, p) }()
+	return solver.Solve(assumptions...)
 }
 
+func Pdr_ManCheckCubeCs(p *Pdr_Man_t, k int32, cube *Pdr_Set_t) int32 {
+	solver := Pdr_ManFetchSolver(p, k)
+	status := pdrSolve(p, solver, pdrLiterals(Pdr_ManCubeToLits(p, k, cube, 0, 0)), 0)
+	if status == bsat.Unknown {
+		return -1
+	}
+	return pdrBool(status == bsat.Unsatisfiable)
+}
 
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
+func Pdr_ManCheckCube(p *Pdr_Man_t, k int32, cube *Pdr_Set_t, predecessor **Pdr_Set_t, conflictLimit, tryConf, useLit int32) int32 {
+	p.nCalls++
+	solver := Pdr_ManFetchSolver(p, k)
+	var assumptions []bsat.Literal
+	limit := conflictLimit
+	if cube == nil {
+		variable := Pdr_ObjSatVar(p, k, 2, aig.Aig_ManCo(p.pAig, p.iOutCur))
+		assumptions = []bsat.Literal{bsat.Positive(variable)}
+	} else {
+		var activation bsat.Literal
+		if useLit != 0 {
+			vec.Vec_IntAddToEntry(p.vActVars, int(k), 1)
+			clause := pdrLiterals(Pdr_ManCubeToLits(p, k, cube, 1, 0))
+			activation = bsat.Positive(Pdr_ManFreeVar(p, k))
+			clause = append(clause, activation)
+			if !solver.AddClause(clause...) {
+				panic("pdr: activation clause is inconsistent")
+			}
+			solver.Compress()
+		}
+		assumptions = pdrLiterals(Pdr_ManCubeToLits(p, k, cube, 0, 1))
+		if useLit != 0 {
+			assumptions = append(assumptions, activation^1)
+		}
+		if tryConf != 0 {
+			limit = p.pPars.nConfGenLimit
+		}
+	}
+	start := util.Abc_Clock()
+	status := pdrSolve(p, solver, assumptions, limit)
+	if status == bsat.Unknown {
+		if cube != nil && tryConf != 0 && p.pPars.nConfGenLimit != 0 {
+			status = bsat.Satisfiable
+		} else {
+			return -1
+		}
+	}
+	elapsed := util.Abc_Clock() - start
+	p.tSat += elapsed
+	if status == bsat.Unsatisfiable {
+		p.tSatUnsat += elapsed
+		p.nCallsU++
+		if predecessor != nil {
+			*predecessor = nil
+		}
+		return 1
+	}
+	p.tSatSat += elapsed
+	p.nCallsS++
+	if predecessor != nil {
+		start = util.Abc_Clock()
+		if p.pPars.fNewXSim != 0 {
+			*predecessor = Txs3_ManTernarySim(p.pTxs3, k, cube)
+		} else {
+			*predecessor = Pdr_ManTernarySim(p, k, cube)
+		}
+		p.tTsim += util.Abc_Clock() - start
+		p.nXsimLits += (*predecessor).nLits
+		p.nXsimRuns++
+	}
+	return 0
+}
 
-
-//ABC_NAMESPACE_IMPL_END
-
+func pdrBool(value bool) int32 {
+	if value {
+		return 1
+	}
+	return 0
+}
