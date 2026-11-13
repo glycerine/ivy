@@ -154,6 +154,7 @@ func TestComplementAndConstantRepresentatives(t *testing.T) {
 	if stats.Proofs == 0 {
 		t.Fatal("no constant/complement proofs", stats)
 	}
+	aig.Aig_ManReprStop(g)
 	if err := ComputeEquivalences(g, nil); err != nil {
 		t.Fatal(err)
 	}

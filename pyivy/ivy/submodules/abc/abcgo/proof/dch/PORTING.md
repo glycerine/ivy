@@ -34,7 +34,9 @@ The source sweep builds an incremental working FRAIG: proved nodes are
 substituted before later cones are constructed, structural matches need no SAT
 query, and unknown nodes block their fanouts. Breadth-first supergate and MUX CNF follows Dch_CnfNodeAddToSolver.
 As required by the source sweep, inputs must contain AND/inverter logic with
-topologically ordered object IDs; native XOR and buffer nodes are rejected. Polarity adjustment
+topologically ordered object IDs; native XOR and buffer nodes are rejected.
+Representative storage must not already exist on the input graph; the sweep
+creates it even when no equivalences are proved. Polarity adjustment
 changes SAT variables consistently. The ported BSAT solver proves both miter
 directions; only UNSAT in both directions certifies a pair. Each UNSAT
 query adds its proved implication to the incremental solver, and a constant-one
@@ -43,8 +45,10 @@ refine classes, while budget exhaustion blocks unproved nodes/fanouts. Solver
 recycling follows the source's soft variable/count thresholds. There is no input
 truth-table bound or small-circuit production fallback.
 
-Counterexamples either run full simulation or update changed TFO values through
-a topological priority queue, stopping at controlling values. Choices replace
+Counterexamples resimulate the queried cones using SAT values and complete
+other selected cones using the continued source random stream. TFO mode
+refines candidate classes reached through fanouts; non-TFO mode refines the
+queried class or the source's 500-ID constant-candidate window. Choices replace
 proved constant/CI aliases, redirect fanins through representatives, preserve
 phase and reject referenced alternatives, redundant support (when enabled),
 overlapping chains and combined logic/choice cycles. DFS finalizes choice order.

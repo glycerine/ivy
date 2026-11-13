@@ -8,6 +8,11 @@ import (
 )
 
 func (m *Manager) computeEquivalences() error {
+	// Dch_ClassesStart requires unallocated representative storage; otherwise
+	// starting a new sweep would silently discard the caller's existing links.
+	if aig.Aig_ManHasReprs(m.graph) {
+		panic("dch: representative storage already exists")
+	}
 	started := time.Now()
 	simStart := time.Now()
 	m.random = aig.NewAigRandomSource()
@@ -18,11 +23,7 @@ func (m *Manager) computeEquivalences() error {
 		return err
 	}
 	// Only proved links survive. Never publish simulation-only candidates.
-	for _, node := range m.graph.LiveEdges() {
-		if aig.Aig_ObjRepr(m.graph, node) != aig.InvalidEdge {
-			aig.Aig_ObjSetRepr(m.graph, node, aig.InvalidEdge)
-		}
-	}
+	aig.Aig_ManReprStart(m.graph, int32(m.graph.NodeCount()))
 	for id, representative := range m.proven {
 		aig.Aig_ObjSetRepr(m.graph, aig.Edge(id)<<1, representative)
 	}

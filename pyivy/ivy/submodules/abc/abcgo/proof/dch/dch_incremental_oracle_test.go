@@ -94,6 +94,7 @@ func TestIncrementalSweepTruthTableOracle(t *testing.T) {
 					}
 				}
 			}
+			aig.Aig_ManReprStop(g)
 		}
 	}
 	if proofs == 0 || calls == 0 {
