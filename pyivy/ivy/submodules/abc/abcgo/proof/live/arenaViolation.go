@@ -147,12 +147,12 @@ func createNewAigWith0LivePoWithDSCMode(p *aig.Graph, signals []aig.Edge, index 
 	violation := createArenaViolationMode(p, c.destination, begin, within, barriers, arenaLatches, &barrierNext, &barrierSignals, source)
 	pending := c.signal(p.Outputs()[pendingIndex])
 	monotone := createMonotoneBarriers(c.destination, barrierSignals, monotoneOld, pending, pendingOld)
-	for i := 0; i < propertyOutputs(p); i++ {
+	for i := 0; i < c.outputCount(); i++ {
 		aig.Aig_ObjCreateCo(c.destination, c.signal(p.Outputs()[i]))
 	}
 	property := aig.Aig_And(c.destination, aig.Aig_Or(c.destination, createConstrained0LiveConeWithDSC(p, c.destination, signals), violationOld), monotone)
 	if index != nil {
-		*index = int32(propertyOutputs(p))
+		*index = int32(c.outputCount())
 	}
 	aig.Aig_ObjCreateCo(c.destination, property)
 	c.appendConstraints()

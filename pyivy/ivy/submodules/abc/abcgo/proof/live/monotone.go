@@ -15,9 +15,10 @@ func allocAigPoIndices() *aigPoIndices { return &aigPoIndices{-1, -1, -1, -1} }
 type monotoneVectorsStruct struct{ attrKnownMonotone, attrCandMonotone, attrHintMonotone []int32 }
 
 func allocPointersToMonotoneVectors() *monotoneVectorsStruct { return new(monotoneVectorsStruct) }
-func findHintOutputs(n *Network) []int32 {
+func findHintOutputs(n *Network) []int32                     { return findHintOutputsMode(n, true) }
+func findHintOutputsMode(n *Network, source bool) []int32 {
 	var result []int32
-	for i := 0; i < propertyOutputs(n.Graph); i++ {
+	for i := 0; i < outputCount(n.Graph, source); i++ {
 		if strings.Contains(outputName(n, i), "hint_") {
 			result = append(result, int32(i))
 		}
@@ -67,7 +68,7 @@ func createMonotoneTesterMode(p *aig.Graph, indexes *aigPoIndices, vectors *mono
 		driverID, previous := id, delayed[id]
 		if source {
 			driverID = id - indexes.attrHintSingalBeginningMarker + 1 + indexes.attrPendingSignalIndex
-			previous = delayedInOrder[int(driverID)-propertyOutputs(p)]
+			previous = delayedInOrder[int(driverID)-c.outputCount()]
 		}
 		guard = aig.Aig_And(c.destination, guard, aig.Aig_Exor(c.destination, c.signal(p.Outputs()[driverID]), previous).Not())
 	}
@@ -79,11 +80,11 @@ func createMonotoneTesterMode(p *aig.Graph, indexes *aigPoIndices, vectors *mono
 		property := aig.Aig_Or(c.destination, aig.Aig_And(c.destination, guard, delayed[id]).Not(), c.signal(p.Outputs()[id]))
 		properties = append(properties, property)
 	}
-	for i := 0; i < propertyOutputs(p); i++ {
+	for i := 0; i < c.outputCount(); i++ {
 		aig.Aig_ObjCreateCo(c.destination, c.signal(p.Outputs()[i]))
 	}
 	if start != nil {
-		*start = int32(propertyOutputs(p))
+		*start = int32(c.outputCount())
 	}
 	for _, e := range properties {
 		aig.Aig_ObjCreateCo(c.destination, e)
@@ -163,7 +164,7 @@ func FindMonotone(n *Network, options SafetyOptions, checker SafetyChecker) []in
 	if checker == nil {
 		checker = CheckSafety
 	}
-	pending, hints := findPendingSignal(n), findHintOutputs(n)
+	pending, hints := findOutputMode(n, "pendingSignal", false), findHintOutputsMode(n, false)
 	if pending < 0 || len(hints) == 0 {
 		return nil
 	}

@@ -51,11 +51,11 @@ func createDisjunctiveMonotoneTesterMode(p *aig.Graph, indexes *aigPoIndices, ve
 		property := aig.Aig_Or(c.destination, aig.Aig_And(c.destination, guard, delayed[i]).Not(), candidate)
 		properties[i] = aig.Aig_And(c.destination, property, invariant)
 	}
-	for i := 0; i < propertyOutputs(p); i++ {
+	for i := 0; i < c.outputCount(); i++ {
 		aig.Aig_ObjCreateCo(c.destination, c.signal(p.Outputs()[i]))
 	}
 	if start != nil {
-		*start = int32(propertyOutputs(p))
+		*start = int32(c.outputCount())
 	}
 	for _, e := range properties {
 		aig.Aig_ObjCreateCo(c.destination, e)
@@ -171,11 +171,11 @@ func FindDisjunctiveMonotone(n *Network, options SafetyOptions, checker SafetyCh
 	if checker == nil {
 		checker = CheckSafety
 	}
-	pending, hints := findPendingSignal(n), findHintOutputs(n)
+	pending, hints := findOutputMode(n, "pendingSignal", false), findHintOutputsMode(n, false)
 	if pending < 0 || len(hints) == 0 {
 		return nil
 	}
-	indexes := &aigPoIndices{pending, hints[0], hints[len(hints)-1], collectSafetyInvariantPOIndex(n)}
+	indexes := &aigPoIndices{pending, hints[0], hints[len(hints)-1], findOutputMode(n, "csSafetyInvar_", false)}
 	vectors := &antecedentConsequentVectorsStruct{attrConsequentCandidates: hints}
 	level1 := [][]int32{}
 	for _, id := range findNewDisjunctiveWith(n.Graph, indexes, vectors, options, checker) {

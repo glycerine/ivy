@@ -25,7 +25,7 @@ func introduceAbsorberLogic(p *aig.Graph, zero, index *int32, nonFirst int32) *a
 	return introduceAbsorberLogicMode(p, zero, index, nonFirst, true)
 }
 func introduceAbsorberLogicMode(p *aig.Graph, zero, index *int32, nonFirst int32, source bool) *aig.Graph {
-	if zero == nil || index == nil || *zero < 0 || int(*zero) >= propertyOutputs(p) || nonFirst != 0 && *index < 0 {
+	if zero == nil || index == nil || *zero < 0 || int(*zero) >= outputCount(p, source) || nonFirst != 0 && *index < 0 {
 		panic("live: invalid absorber indexes")
 	}
 	c := newGraphCopy(p, "_kCS")
@@ -43,9 +43,9 @@ func introduceAbsorberLogicMode(p *aig.Graph, zero, index *int32, nonFirst int32
 	next := aig.Aig_Or(c.destination, previous.Not(), state)
 	property := aig.Aig_Or(c.destination, input, state.Not())
 	if nonFirst == 0 {
-		*index = int32(propertyOutputs(p))
+		*index = int32(c.outputCount())
 	}
-	for i := 0; i < propertyOutputs(p); i++ {
+	for i := 0; i < c.outputCount(); i++ {
 		driver := c.signal(p.Outputs()[i])
 		if int32(i) == *index {
 			driver = property
@@ -78,7 +78,7 @@ func kLiveProofModelMode(p *aig.Graph, directive, target, invariant int32, sourc
 	}
 	c.copyInputs()
 	c.copySourceNodes()
-	for i := 0; i < propertyOutputs(p); i++ {
+	for i := 0; i < c.outputCount(); i++ {
 		property := c.signal(p.Outputs()[i])
 		if int32(i) == target && (directive == 1 || directive == 3 || directive == 4) {
 			if invariant < 0 {
@@ -93,7 +93,12 @@ func kLiveProofModelMode(p *aig.Graph, directive, target, invariant int32, sourc
 		aig.Aig_ObjCreateCo(c.destination, c.signal(p.Outputs()[trueOutputs(p)+r]))
 	}
 	aig.Aig_ManSetRegNum(c.destination, int32(registers(p)))
-	c.setConstraints()
+	// Aig_ManDupSimple, unlike the new source constructors, copies nConstrs.
+	if source {
+		aig.Aig_ManSetConstrNum(c.destination, aig.Aig_ManConstrNum(p))
+	} else {
+		c.setConstraints()
+	}
 	return c.destination
 }
 func flipConePdr(p *aig.Graph, directive, target, invariant, absorbers int32) int32 {
@@ -123,8 +128,9 @@ func flipConePdr(p *aig.Graph, directive, target, invariant, absorbers int32) in
 	return 1
 }
 
-func findOutput(n *Network, marker string) int32 {
-	for i := 0; i < propertyOutputs(n.Graph); i++ {
+func findOutput(n *Network, marker string) int32 { return findOutputMode(n, marker, true) }
+func findOutputMode(n *Network, marker string, source bool) int32 {
+	for i := 0; i < outputCount(n.Graph, source); i++ {
 		if strings.Contains(outputName(n, i), marker) {
 			return int32(i)
 		}
@@ -133,8 +139,11 @@ func findOutput(n *Network, marker string) int32 {
 }
 func collectSafetyInvariantPOIndex(n *Network) int32 { return findOutput(n, "csSafetyInvar_") }
 func collectUserGivenDisjunctiveMonotoneSignals(n *Network) [][]int32 {
+	return collectUserGivenDisjunctiveMonotoneSignalsMode(n, true)
+}
+func collectUserGivenDisjunctiveMonotoneSignalsMode(n *Network, source bool) [][]int32 {
 	result := [][]int32{}
-	for i := 0; i < propertyOutputs(n.Graph); i++ {
+	for i := 0; i < outputCount(n.Graph, source); i++ {
 		if strings.Contains(outputName(n, i), "csLevel1Stabil_") {
 			result = append(result, []int32{int32(i)})
 		}
@@ -174,7 +183,7 @@ func kLive(n *Network, options KLiveOptions, source bool) KLiveResult {
 	if options.Directive < 0 || options.Directive > 4 {
 		return KLiveResult{Status: -1, Error: fmt.Errorf("live: invalid k-liveness directive")}
 	}
-	if findOutput(n, "csLiveTarget_") < 0 && options.Directive != 2 {
+	if findOutputMode(n, "csLiveTarget_", source) < 0 && options.Directive != 2 {
 		return KLiveResult{Status: -1, Error: fmt.Errorf("live: csLiveTarget_ output missing")}
 	}
 	if !options.Safety.Deadline.IsZero() && time.Now().After(options.Safety.Deadline) {
@@ -197,12 +206,12 @@ func kLive(n *Network, options KLiveOptions, source bool) KLiveResult {
 			barriers = FindDisjunctiveMonotone(n, options.Safety, checker)
 		}
 	} else if options.Directive == 4 && barriers == nil {
-		barriers = collectUserGivenDisjunctiveMonotoneSignals(n)
+		barriers = collectUserGivenDisjunctiveMonotoneSignalsMode(n, source)
 	}
 	if options.Directive == 2 {
 		return KLiveResult{Status: -1, Barriers: barriers, Graph: n.Graph}
 	}
-	invariant := collectSafetyInvariantPOIndex(n)
+	invariant := findOutputMode(n, "csSafetyInvar_", source)
 	if (options.Directive == 1 || options.Directive == 3 || options.Directive == 4) && invariant < 0 {
 		if source {
 			panic("live: source requires safety invariant")
@@ -213,7 +222,7 @@ func kLive(n *Network, options KLiveOptions, source bool) KLiveResult {
 		panic("live: source requires nonempty barriers")
 	}
 	if options.Directive == 3 || options.Directive == 4 {
-		if collectWindowBeginSignalWithDSC(n, n.Graph) < 0 || collectWithinWindowSignalWithDSC(n, n.Graph) < 0 || findPendingSignal(n) < 0 {
+		if findOutputMode(n, "windowBegins_", source) < 0 || findOutputMode(n, "withinWindow_", source) < 0 || findOutputMode(n, "pendingSignal", source) < 0 {
 			return KLiveResult{Status: -1, Error: fmt.Errorf("live: barrier window/pending outputs missing")}
 		}
 		for _, group := range barriers {
@@ -221,7 +230,7 @@ func kLive(n *Network, options KLiveOptions, source bool) KLiveResult {
 				return KLiveResult{Status: -1, Error: fmt.Errorf("live: empty barrier group")}
 			}
 			for _, index := range group {
-				if index < 0 || int(index) >= propertyOutputs(n.Graph) {
+				if index < 0 || int(index) >= outputCount(n.Graph, source) {
 					return KLiveResult{Status: -1, Error: fmt.Errorf("live: barrier output index out of range")}
 				}
 			}
@@ -230,9 +239,9 @@ func kLive(n *Network, options KLiveOptions, source bool) KLiveResult {
 	zero, index := int32(-1), int32(-1)
 	var working *aig.Graph
 	if options.Directive == 3 || options.Directive == 4 {
-		working = createNewAigWith0LivePoWithDSCMode(n.Graph, collectCSSignalsWithDSC(n, n.Graph), &zero, collectWindowBeginSignalWithDSC(n, n.Graph), collectWithinWindowSignalWithDSC(n, n.Graph), collectPendingSignalWithDSC(n, n.Graph), barriers, source)
+		working = createNewAigWith0LivePoWithDSCMode(n.Graph, collectCSSignalsMode(n, n.Graph, source), &zero, findOutputMode(n, "windowBegins_", source), findOutputMode(n, "withinWindow_", source), findOutputMode(n, "pendingSignal", source), barriers, source)
 	} else {
-		working = createNewAigWith0LivePoMode(n.Graph, collectCSSignals(n, n.Graph), &zero, source)
+		working = createNewAigWith0LivePoMode(n.Graph, collectCSSignalsMode(n, n.Graph, source), &zero, source)
 	}
 	current := introduceAbsorberLogicMode(working, &zero, &index, 0, source)
 	result := KLiveResult{Status: -1, Graph: current, Barriers: barriers}

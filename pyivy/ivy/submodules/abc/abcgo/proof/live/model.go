@@ -58,12 +58,25 @@ func trueOutputs(p *aig.Graph) int { return p.OutputCount() - registers(p) }
 
 // propertyOutputs excludes trailing native constraint-violation outputs.
 func propertyOutputs(p *aig.Graph) int { return trueOutputs(p) - int(aig.Aig_ManConstrNum(p)) }
+func outputCount(p *aig.Graph, source bool) int {
+	if source {
+		return trueOutputs(p)
+	}
+	return propertyOutputs(p)
+}
+func (c *graphCopy) outputCount() int { return outputCount(c.source, c.sourceNodes) }
 func (c *graphCopy) appendConstraints() {
+	if c.sourceNodes {
+		return
+	}
 	for i := propertyOutputs(c.source); i < trueOutputs(c.source); i++ {
 		aig.Aig_ObjCreateCo(c.destination, c.signal(aig.Aig_ManCo(c.source, int32(i))))
 	}
 }
 func (c *graphCopy) setConstraints() {
+	if c.sourceNodes {
+		return
+	}
 	aig.Aig_ManSetConstrNum(c.destination, aig.Aig_ManConstrNum(c.source))
 }
 

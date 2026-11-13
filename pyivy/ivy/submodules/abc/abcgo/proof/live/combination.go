@@ -101,10 +101,16 @@ func copiedDriver(old *aig.Graph, index int) aig.Edge {
 	return copy ^ aig.Edge(driver&1)
 }
 func disjunctiveTester(p *aig.Graph, candidates []aig.Edge, k int32) *aig.Graph {
+	return disjunctiveTesterMode(p, candidates, k, true)
+}
+func disjunctiveTesterMode(p *aig.Graph, candidates []aig.Edge, k int32, source bool) *aig.Graph {
 	if k <= 0 || int(k) > len(candidates) {
 		panic("live: invalid maximum combination width")
 	}
-	c := newSourceGraphCopy(p, "_nCk")
+	c := newGraphCopy(p, "_nCk")
+	if source {
+		c = newSourceGraphCopy(p, "_nCk")
+	}
 	c.copyInputs()
 	groups := [][]int{}
 	for width := 1; width <= int(k); width++ {
@@ -123,7 +129,7 @@ func disjunctiveTester(p *aig.Graph, candidates []aig.Edge, k int32) *aig.Graph 
 		}
 		properties[i] = aig.Aig_Or(c.destination, disjoin(c.destination, signals).Not(), states[i])
 	}
-	for i := 0; i < propertyOutputs(p); i++ {
+	for i := 0; i < c.outputCount(); i++ {
 		aig.Aig_ObjCreateCo(c.destination, c.signal(p.Outputs()[i]))
 	}
 	for _, e := range properties {

@@ -44,34 +44,34 @@ func TestConstraintMetadataThroughMonitorBuilders(t *testing.T) {
 	g := n.Graph
 	indexes := &aigPoIndices{attrPendingSignalIndex: 0, attrSafetyInvarIndex: 3}
 	var start int32
-	mono := createMonotoneTester(g, indexes, &monotoneVectorsStruct{attrCandMonotone: []int32{1}, attrHintMonotone: []int32{1}}, &start)
+	mono := createMonotoneTesterMode(g, indexes, &monotoneVectorsStruct{attrCandMonotone: []int32{1}, attrHintMonotone: []int32{1}}, &start, false)
 	if start != 4 {
 		t.Fatalf("monotone start %d", start)
 	}
 	checkMonitorConstraint(t, mono)
 	checkMonitorConstraint(t, negateOutputs(mono, int(start)))
-	disj := createDisjunctiveMonotoneTester(g, indexes, &antecedentConsequentVectorsStruct{attrConsequentCandidates: []int32{1}}, &start)
+	disj := createDisjunctiveMonotoneTesterMode(g, indexes, &antecedentConsequentVectorsStruct{attrConsequentCandidates: []int32{1}}, &start, false)
 	if start != 4 {
 		t.Fatalf("disjunctive start %d", start)
 	}
 	checkMonitorConstraint(t, disj)
 	checkMonitorConstraint(t, negateOutputs(disj, int(start)))
-	checkMonitorConstraint(t, disjunctiveTester(g, []aig.Edge{g.Outputs()[1]}, 1))
+	checkMonitorConstraint(t, disjunctiveTesterMode(g, []aig.Edge{g.Outputs()[1]}, 1, false))
 	zero := int32(-1)
-	working := createNewAigWith0LivePo(g, []aig.Edge{outputDriver(g, 2)}, &zero)
+	working := createNewAigWith0LivePoMode(g, []aig.Edge{outputDriver(g, 2)}, &zero, false)
 	if zero != 4 {
 		t.Fatalf("zero-live index %d", zero)
 	}
 	checkMonitorConstraint(t, working)
 	target := int32(-1)
-	first := introduceAbsorberLogic(working, &zero, &target, 0)
+	first := introduceAbsorberLogicMode(working, &zero, &target, 0, false)
 	checkMonitorConstraint(t, first)
-	second := introduceAbsorberLogic(first, &zero, &target, 1)
+	second := introduceAbsorberLogicMode(first, &zero, &target, 1, false)
 	checkMonitorConstraint(t, second)
 	checkMonitorConstraint(t, kLiveProofModel(second, 0, target, -1))
-	arena := createNewAigWith0LivePoWithDSC(g, []aig.Edge{outputDriver(g, 2)}, nil, 0, 0, 0, [][]int32{{1}})
+	arena := createNewAigWith0LivePoWithDSCMode(g, []aig.Edge{outputDriver(g, 2)}, nil, 0, 0, 0, [][]int32{{1}}, false)
 	checkMonitorConstraint(t, arena)
-	if hints := findHintOutputs(n); len(hints) != 1 || hints[0] != 1 {
+	if hints := findHintOutputsMode(n, false); len(hints) != 1 || hints[0] != 1 {
 		t.Fatalf("constraint selected as hint: %v", hints)
 	}
 }
@@ -91,7 +91,7 @@ func TestKLiveUsesNativeConstraints(t *testing.T) {
 	}
 }
 
-func TestNamedPropertySelectionExcludesNativeConstraints(t *testing.T) {
+func TestSourceAndNativeNamedPropertySelection(t *testing.T) {
 	for _, name := range []string{"assert_fair_constraint", "assume_fair_constraint", "assert_safety_constraint", "assume_safety_constraint"} {
 		t.Run(name, func(t *testing.T) {
 			g := aig.NewGraph()
@@ -103,9 +103,18 @@ func TestNamedPropertySelectionExcludesNativeConstraints(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			for _, selectSignals := range []func(*Network, *aig.Graph) []aig.Edge{populateLivenessVector, populateFairnessVector, populateSafetyAssertionVector, populateSafetyAssumptionVector} {
-				if got := selectSignals(n, g); len(got) != 0 {
-					t.Fatalf("constraint %q selected as a property: %v", name, got)
+			source := [][]aig.Edge{populateLivenessVector(n, g), populateFairnessVector(n, g), populateSafetyAssertionVector(n, g), populateSafetyAssumptionVector(n, g)}
+			count := 0
+			for _, v := range source {
+				count += len(v)
+			}
+			if count != 1 {
+				t.Fatalf("source must inspect all POs: %v", source)
+			}
+			native := [][]aig.Edge{selectOutputsMode(n, "assert_fair", false), selectOutputsMode(n, "assume_fair", false), selectOutputAliasesMode(n, false, "assert_safety", "Assert"), selectOutputAliasesMode(n, false, "assume_safety", "Assume")}
+			for _, v := range native {
+				if len(v) != 0 {
+					t.Fatalf("native selected constraint %q", name)
 				}
 			}
 		})

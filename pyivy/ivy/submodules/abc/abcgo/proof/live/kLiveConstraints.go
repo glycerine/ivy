@@ -22,10 +22,11 @@ func createConstrained0LiveCone(old, new *aig.Graph, signals []aig.Edge) aig.Edg
 	}
 	return aig.Aig_Or(new, all(new, mapped[:len(mapped)-1]).Not(), mapped[len(mapped)-1])
 }
-func collectCSSignals(n *Network, p *aig.Graph) []aig.Edge {
+func collectCSSignals(n *Network, p *aig.Graph) []aig.Edge { return collectCSSignalsMode(n, p, true) }
+func collectCSSignalsMode(n *Network, p *aig.Graph, source bool) []aig.Edge {
 	signals := []aig.Edge{}
 	target := aig.InvalidEdge
-	for i := 0; i < propertyOutputs(p); i++ {
+	for i := 0; i < outputCount(p, source); i++ {
 		name := outputName(n, i)
 		if strings.Contains(name, "csLiveConst_") {
 			signals = append(signals, outputDriver(p, i))
@@ -51,11 +52,11 @@ func createNewAigWith0LivePoMode(p *aig.Graph, signals []aig.Edge, index *int32,
 	for _, e := range signals {
 		c.signal(e)
 	}
-	for i := 0; i < propertyOutputs(p); i++ {
+	for i := 0; i < c.outputCount(); i++ {
 		aig.Aig_ObjCreateCo(c.destination, c.signal(p.Outputs()[i]))
 	}
 	if index != nil {
-		*index = int32(propertyOutputs(p))
+		*index = int32(c.outputCount())
 	}
 	aig.Aig_ObjCreateCo(c.destination, createConstrained0LiveCone(p, c.destination, signals))
 	c.appendConstraints()

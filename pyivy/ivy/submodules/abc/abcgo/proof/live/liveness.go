@@ -240,6 +240,9 @@ func livenessToSafety(network *Network, options TransformOptions, source, source
 	}
 	// Native constraints denote forbidden behavior and must follow properties.
 	constraints := int(aig.Aig_ManConstrNum(p))
+	if source {
+		constraints = 0
+	}
 	for i := pos - constraints; i < pos; i++ {
 		aig.Aig_ObjCreateCo(dst, copyGraph.signal(p.Outputs()[i]))
 		outputNames = append(outputNames, outputName(network, i))
@@ -326,9 +329,10 @@ func LivenessToSafetyTransformationWithLTL(mode int32, n *Network, p *aig.Graph,
 	}
 	return result.Graph
 }
-func selectOutputs(n *Network, prefix string) []aig.Edge {
+func selectOutputs(n *Network, prefix string) []aig.Edge { return selectOutputsMode(n, prefix, true) }
+func selectOutputsMode(n *Network, prefix string, source bool) []aig.Edge {
 	signals := []aig.Edge{}
-	for i := 0; i < propertyOutputs(n.Graph); i++ {
+	for i := 0; i < outputCount(n.Graph, source); i++ {
 		if strings.HasPrefix(outputName(n, i), prefix) {
 			signals = append(signals, n.Graph.Outputs()[i])
 		}
@@ -342,8 +346,11 @@ func populateFairnessVector(n *Network, p *aig.Graph) []aig.Edge {
 	return selectOutputs(sourceNetwork(n, p), "assume_fair")
 }
 func selectOutputAliases(n *Network, prefixes ...string) []aig.Edge {
+	return selectOutputAliasesMode(n, true, prefixes...)
+}
+func selectOutputAliasesMode(n *Network, source bool, prefixes ...string) []aig.Edge {
 	result := []aig.Edge{}
-	for i := 0; i < propertyOutputs(n.Graph); i++ {
+	for i := 0; i < outputCount(n.Graph, source); i++ {
 		for _, prefix := range prefixes {
 			if strings.HasPrefix(outputName(n, i), prefix) {
 				result = append(result, n.Graph.Outputs()[i])
