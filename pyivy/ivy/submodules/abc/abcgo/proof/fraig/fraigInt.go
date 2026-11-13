@@ -178,9 +178,9 @@ type Fraig_ManStruct_t_ struct {
 	nSatNums int32          // the counter of SAT variables
 	pModel   []int32        // the assignment, which satisfies the miter
 	// these arrays belong to the solver
-	vVarsInt   *Msat_IntVec_t    // the temporary array of variables
-	vAdjacents *Msat_ClauseVec_t // the temporary storage for connectivity
-	vVarsUsed  *Msat_IntVec_t    // the array marking vars appearing in the cone
+	vVarsInt   *Msat_IntVec_t   // the temporary array of variables
+	vAdjacents []*Msat_IntVec_t // the temporary storage for connectivity
+	vVarsUsed  *Msat_IntVec_t   // the array marking vars appearing in the cone
 
 	// various statistic variables
 	nSatCalls     int32 // the number of times equivalence checking was called
