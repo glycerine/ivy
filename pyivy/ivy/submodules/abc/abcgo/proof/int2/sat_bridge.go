@@ -36,18 +36,11 @@ func sat_solver_setnvars(s *sat_solver, count int32) {
 func sat_solver_nvars(s *sat_solver) int32 { return s.NumVars() }
 
 func sat_solver_solve(s *sat_solver, assumptions []int32, conflicts, propagations, globalConflicts, globalPropagations int64) int32 {
-	if globalConflicts > 0 && (conflicts == 0 || globalConflicts < conflicts) {
-		conflicts = globalConflicts
-	}
-	if globalPropagations > 0 && (propagations == 0 || globalPropagations < propagations) {
-		propagations = globalPropagations
-	}
-	s.SetLimits(conflicts, propagations)
 	literals := make([]bsat.Literal, len(assumptions))
 	for i, literal := range assumptions {
 		literals[i] = bsat.Literal(literal)
 	}
-	return int32(s.Solve(literals...))
+	return int32(s.SolveWithResourceLimits(literals, conflicts, propagations, globalConflicts, globalPropagations))
 }
 
 func sat_solver_addclause(s *sat_solver, literals []int32) int32 {

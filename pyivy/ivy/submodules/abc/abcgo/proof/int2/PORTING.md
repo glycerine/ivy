@@ -9,8 +9,8 @@ The C-object access in `Int2_ManDupInit`, `Int2_ManFrameInit`, and
 `Int2_ManRefineCube` has been rewritten to use the public GIA accessors. This
 removes invalid C-style assignment expressions from the first two construction
 paths and preserves the source algorithms for initialization muxing,
-timeframe unrolling, and priority-guided cube justification. Package tests
-exercise these paths, including native XOR, MUX, and buffer nodes.
+timeframe unrolling, and the source cube-justification behavior, including
+its documented defects.
 
 `sat_bridge.go` adapts INT2's local SAT calls to the public `bsat.Solver`
 interface. Exhaustive assumption tests cover all input and output phases for
@@ -18,12 +18,9 @@ AND and buffer constraints. CNF loading also preserves the source literal
 encoding, including immediate contradiction detection. The bridge component
 passes its explicit-file race test and vet gate.
 
-`int2Util.go` now uses public GIA/vector APIs to collect support cones and
-construct the suffix graph. SOP parsing checks cube lengths and register
-indices, and `int2_util_test.go` covers initial-state and multi-cube CO
-selection plus malformed input. The preimage loop now uses distinct suffix
-CI and prefix-state maps, and releases each temporary assignment/cube before
-continuing.
+`int2Util.go` retains the source SOP indexing, including its skipped-literal
+behavior and nil-SOP dereference. The incomplete preimage helper returns
+undecided. See SOURCE_FIDELITY.md for the exact known defects.
 
 Focused verification for this completed component (run from the repository
 root):

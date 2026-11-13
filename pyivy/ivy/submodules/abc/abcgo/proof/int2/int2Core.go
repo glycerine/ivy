@@ -207,7 +207,12 @@ func Int2_ManPrepareSuffix(p *Gia_Man_t, vImageOne *Vec_Int_t, vImagesAll *Vec_I
 			return nil
 		}
 	}
-	*pvCoMap = coMap
+	// The C selector returns register-output variables only, after the PIs.
+	*pvCoMap = vec.Vec_IntAlloc(int(gia.Gia_ManRegNum(p)))
+	for i := gia.Gia_ManPiNum(p); i < gia.Gia_ManCiNum(p); i++ {
+		ci := gia.Gia_ManCi(pNew, i)
+		vec.Vec_IntPush(*pvCoMap, cnf.VarNums[gia.Gia_ObjId(pNew, ci)])
+	}
 	if ppSuff != nil {
 		*ppSuff = pNew
 	} else {
@@ -228,81 +233,10 @@ func Int2_ManPrepareSuffix(p *Gia_Man_t, vImageOne *Vec_Int_t, vImagesAll *Vec_I
 
 ***********************************************************************/
 
-func Int2_ManComputePreimage(pSuff *Gia_Man_t, pSatPref, pSatSuff *sat_solver, vCiMap, vCoMap, vPrio *Vec_Int_t) (*Vec_Int_t, int32) {
-	assert(pSuff != nil && pSatPref != nil && pSatSuff != nil, "preimage managers are initialized")
-	assert(vCiMap != nil && vCoMap != nil && vPrio != nil, "preimage maps and priorities are initialized")
-	assert(vec.Vec_IntSize(vCoMap) == vec.Vec_IntSize(vPrio), "suffix CI map and priority sizes match")
-	assert(vec.Vec_IntSize(vCiMap) <= int(gia.Gia_ManCiNum(pSuff)), "prefix map fits suffix state variables")
-	firstStateCI := gia.Gia_ManCiNum(pSuff) - int32(vec.Vec_IntSize(vCiMap))
-	image := vec.Vec_IntAlloc(1000)
-	vec.Vec_IntPush(image, 0) // reserved SOP header
-	for {
-		status := sat_solver_solve(pSatSuff, nil, 0, 0, 0, 0)
-		if status == l_Undef {
-			return nil, INT2_TIME_OUT
-		}
-		if status == l_False {
-			return image, INT2_COMPUTED
-		}
-		assert(status == l_True, "suffix SAT result is recognized")
-
-		assignment := vec.Vec_IntAlloc(vec.Vec_IntSize(vCoMap))
-		for i := 0; i < vec.Vec_IntSize(vCoMap); i++ {
-			variable := vec.Vec_IntEntry(vCoMap, i)
-			value := sat_solver_var_value(pSatSuff, variable)
-			// An unassigned model variable is a don't-care; zero is a valid
-			// deterministic completion for cube minimization.
-			if value == l_True {
-				vec.Vec_IntPush(assignment, 1)
-			} else {
-				vec.Vec_IntPush(assignment, 0)
-			}
-		}
-		prioritized := Int2_ManRefineCube(pSuff, assignment, vPrio)
-
-		assumptions := make([]int32, 0, vec.Vec_IntSize(prioritized))
-		for i := 0; i < vec.Vec_IntSize(prioritized); i++ {
-			ci := vec.Vec_IntEntry(prioritized, i)
-			assert(ci >= firstStateCI && ci < int32(vec.Vec_IntSize(vCoMap)), "selected CI is a state variable")
-			stateIndex := ci - firstStateCI
-			variable := vec.Vec_IntEntry(vCiMap, int(stateIndex))
-			value := vec.Vec_IntEntry(assignment, int(ci))
-			assumptions = append(assumptions, sat_literal(variable, 1-value))
-		}
-		vec.Vec_IntFree(prioritized)
-		vec.Vec_IntFree(assignment)
-		status = sat_solver_solve(pSatPref, assumptions, 0, 0, 0, 0)
-		if status == l_False {
-			var core []int32
-			sat_solver_final(pSatPref, &core)
-			clause := make([]int32, 0, len(core))
-			vec.Vec_IntPush(image, int32(len(core)))
-			for _, literal := range core {
-				stateIndex := -1
-				for i := 0; i < vec.Vec_IntSize(vCiMap); i++ {
-					if vec.Vec_IntEntry(vCiMap, i) == literal>>1 {
-						stateIndex = i
-						break
-					}
-				}
-				assert(stateIndex >= 0, "core literal maps to a state variable")
-				suffixVariable := vec.Vec_IntEntry(vCoMap, int(firstStateCI)+stateIndex)
-				clause = append(clause, sat_literal(suffixVariable, literal&1))
-				vec.Vec_IntPush(image, sat_literal(int32(stateIndex), (literal&1)^1))
-			}
-			if sat_solver_addclause(pSatSuff, clause) == 0 {
-				return image, INT2_COMPUTED
-			}
-			continue
-		}
-		if status == l_Undef {
-			return nil, INT2_TIME_OUT
-		}
-		if status == l_True {
-			return nil, INT2_FALSE_NEG
-		}
-		assert(false, "prefix SAT result is recognized")
-	}
+// Int2_ManComputePreimage is unavailable: the C implementation references
+// an undeclared manager and cannot establish a reliable mapping contract.
+func Int2_ManComputePreimage(_ *Gia_Man_t, _, _ *sat_solver, _, _, _ *Vec_Int_t) (*Vec_Int_t, int32) {
+	return nil, INT2_TIME_OUT
 }
 
 /*

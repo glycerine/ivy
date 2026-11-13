@@ -25,7 +25,7 @@ func Int2_ManComputeCoPres(vSop *Vec_Int_t, nRegs int32) *Vec_Int_t {
 			panic("int2: malformed SOP cube")
 		}
 		for k := 0; k < count; k++ {
-			lit := vec.Vec_IntEntry(vSop, pos+k)
+			lit := vec.Vec_IntEntry(vSop, pos+2*k)
 			reg := lit >> 1
 			if reg < 0 || reg >= nRegs {
 				vec.Vec_IntFree(out)
@@ -114,11 +114,7 @@ func Int2_ManProbToGia(p *Gia_Man_t, vSop *Vec_Int_t) *Gia_Man_t {
 		gia.Gia_ObjSetValue(co, gia.Gia_ObjFanin0Copy(co))
 	}
 	sop := int32(0)
-	if vSop == nil {
-		// The initial suffix is the property's output. Subsequent suffixes
-		// use the SOP over next-state outputs below.
-		sop = gia.Gia_ObjValue(gia.Gia_ManPo(p, 0))
-	} else {
+	{
 		for pos := 1; pos < vec.Vec_IntSize(vSop); {
 			count := int(vec.Vec_IntEntry(vSop, pos))
 			pos++
@@ -129,7 +125,7 @@ func Int2_ManProbToGia(p *Gia_Man_t, vSop *Vec_Int_t) *Gia_Man_t {
 			}
 			cube := int32(1)
 			for k := 0; k < count; k++ {
-				lit := vec.Vec_IntEntry(vSop, pos+k)
+				lit := vec.Vec_IntEntry(vSop, pos+2*k)
 				reg := lit >> 1
 				if reg < 0 || reg >= nRegs {
 					gia.Gia_ManHashStop(out)

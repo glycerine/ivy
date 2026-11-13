@@ -52,44 +52,21 @@ import (
 **********************************************************************
 */
 func Int2_ManJustify_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vSelect *Vec_Int_t) {
-	if gia.Gia_ObjIsConst0(pObj) != 0 {
-		return
-	}
 	if gia.Gia_ObjMark1(pObj) != 0 {
 		return
 	}
 	gia.Gia_ObjSetMark1(pObj, 1)
-	if gia.Gia_ManRegNum(p) > 0 && gia.Gia_ObjIsPi(p, pObj) != 0 {
+	if gia.Gia_ObjIsPi(p, pObj) != 0 {
 		return
 	}
-	if gia.Gia_ObjIsCi(pObj) != 0 {
+	if gia.Gia_ObjIsCo(pObj) != 0 {
 		vec.Vec_IntPush(vSelect, gia.Gia_ObjCioId(pObj))
-		return
-	}
-	a, b, c, kind := p.Gate(gia.Gia_ObjId(p, pObj))
-	if kind == 3 || kind == 4 || kind == 5 {
-		visit := func(lit int32) {
-			obj := gia.Gia_ManObj(p, lit>>1)
-			if gia.Gia_ObjValue(obj) < util.ABC_INFINITY {
-				Int2_ManJustify_rec(p, obj, vSelect)
-			}
-		}
-		visit(a)
-		if kind == 3 {
-			visit(b)
-		} else if kind == 4 {
-			if gia.Gia_ObjMark0(gia.Gia_ManObj(p, a>>1))^(a&1) != 0 {
-				visit(b)
-			} else {
-				visit(c)
-			}
-		}
 		return
 	}
 	assert(gia.Gia_ObjIsAnd(pObj) != 0, "Gia_ObjIsAnd(pObj)")
 	fanin0 := gia.Gia_ObjFanin0(pObj)
 	fanin1 := gia.Gia_ObjFanin1(pObj)
-	if gia.Gia_ObjMark0(pObj) == 1 {
+	if gia.Gia_ObjValue(pObj) == 1 {
 		if gia.Gia_ObjValue(fanin0) < util.ABC_INFINITY {
 			Int2_ManJustify_rec(p, fanin0, vSelect)
 		}
@@ -104,7 +81,7 @@ func Int2_ManJustify_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vSelect *Vec_Int_t) {
 	need1 := mark1 ^ gia.Gia_ObjFaninC1(pObj)
 	switch {
 	case need0 == 0 && need1 == 0:
-		if gia.Gia_ObjValue(fanin0) <= gia.Gia_ObjValue(fanin1) {
+		if gia.Gia_ObjMark0(fanin0) <= gia.Gia_ObjMark0(fanin1) {
 			if gia.Gia_ObjValue(fanin0) < util.ABC_INFINITY {
 				Int2_ManJustify_rec(p, fanin0, vSelect)
 			}
@@ -140,14 +117,13 @@ func Int2_ManJustify_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vSelect *Vec_Int_t) {
 */
 func Int2_ManRefineCube(p *Gia_Man_t, vAssign *Vec_Int_t, vPrio *Vec_Int_t) *Vec_Int_t {
 	// set values and prios
+	assert(gia.Gia_ManRegNum(p) > 0, "Gia_ManRegNum(p) > 0")
 	assert(vec.Vec_IntSize(vAssign) == vec.Vec_IntSize(vPrio), "assignment and priority sizes match")
 	assert(vec.Vec_IntSize(vAssign) == int(gia.Gia_ManCiNum(p)), "assignment covers every CI")
 	constant := gia.Gia_ManConst0(p)
 	gia.Gia_ObjSetMark0(constant, 0)
 	gia.Gia_ObjSetMark1(constant, 0)
-	// Constants require no state assignment, so they have zero cost in
-	// controlling-input choices and never make a justification infinite.
-	gia.Gia_ObjSetValue(constant, 0)
+	gia.Gia_ObjSetValue(constant, util.ABC_INFINITY)
 	for i := int32(0); i < gia.Gia_ManCiNum(p); i++ {
 		obj := gia.Gia_ManCi(p, i)
 		gia.Gia_ObjSetMark0(obj, vec.Vec_IntEntry(vAssign, int(i)))
@@ -156,34 +132,6 @@ func Int2_ManRefineCube(p *Gia_Man_t, vAssign *Vec_Int_t, vPrio *Vec_Int_t) *Vec
 	}
 	for i := int32(0); i < gia.Gia_ManObjNum(p); i++ {
 		obj := gia.Gia_ManObj(p, i)
-		a, b, c, kind := p.Gate(i)
-		if kind == 3 || kind == 4 || kind == 5 {
-			read := func(lit int32) (int32, int32) {
-				fanin := gia.Gia_ManObj(p, lit>>1)
-				if lit>>1 == 0 {
-					return lit & 1, 0
-				}
-				return gia.Gia_ObjMark0(fanin) ^ (lit & 1), gia.Gia_ObjValue(fanin)
-			}
-			value, priority := read(a)
-			if kind == 3 {
-				other, otherPriority := read(b)
-				value ^= other
-				priority = util.Abc_MaxInt(priority, otherPriority)
-			} else if kind == 4 {
-				selected := c
-				if value != 0 {
-					selected = b
-				}
-				var selectedPriority int32
-				value, selectedPriority = read(selected)
-				priority = util.Abc_MaxInt(priority, selectedPriority)
-			}
-			gia.Gia_ObjSetMark0(obj, value)
-			gia.Gia_ObjSetMark1(obj, 0)
-			gia.Gia_ObjSetValue(obj, priority)
-			continue
-		}
 		if gia.Gia_ObjIsAnd(obj) == 0 {
 			continue
 		}
@@ -210,10 +158,6 @@ func Int2_ManRefineCube(p *Gia_Man_t, vAssign *Vec_Int_t, vPrio *Vec_Int_t) *Vec
 	gia.Gia_ObjSetMark1(obj, 0)
 	gia.Gia_ObjSetValue(obj, gia.Gia_ObjValue(fanin))
 	assert(gia.Gia_ObjMark0(obj) == 1, "output is asserted by the assignment")
-	// A constant-true output is justified by the empty cube.
-	if fanin == constant {
-		return vec.Vec_IntAlloc(0)
-	}
 	assert(gia.Gia_ObjValue(obj) < util.ABC_INFINITY, "output has finite priority")
 	// select subset
 	vSubset := vec.Vec_IntAlloc(100)

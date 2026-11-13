@@ -31,15 +31,15 @@ and [OpenROAD fork](https://raw.githubusercontent.com/The-OpenROAD-Project/abc/m
 match. This sample does not cover every fork, non-default branch, or independent
 repository; no complete alternative was found in the sampled default branches.
 
-Independent components have source-based repairs and tests: timeframe
-construction preserves complemented edges and maps constants and SAT
-variables; JF CNF results use their actual Go type; refinement selects
-justifying CIs using their values and priorities; suffix construction uses
-the property for the initial image; and preimage blocking translates between
-prefix and suffix SAT variable maps. These repairs do not establish that the
-unavailable full interpolation algorithm has been restored.
+The C refinement code tests whether a register CI is a CO, treats priority
+`Value == 1` as the true-AND test, compares Boolean marks when choosing a
+fanin, and assigns infinite priority to the constant. These behaviors are
+retained and can panic or choose a wrong cube; they are not correctness claims.
+The C SOP loops increment the index and then read `i+k`, skipping some literals;
+the Go helpers retain that indexing. A nil SOP is dereferenced by the source
+loop and the Go helper also panics; a non-nil empty SOP produces false.
 
-The source's cube refinement asserts finite priority even for a constant-true
-suffix. The Go implementation handles that case with an empty justifying cube;
-both refinement and preimage behavior have regression tests.
-
+The C preimage helper refers to an undeclared manager and has no reliable
+prefix/suffix mapping contract. `Int2_ManComputePreimage` therefore returns
+nil with the existing undecided status. Suffix CO maps select only register
+variables, as in the C selector. No preimage or interpolation claim is made.

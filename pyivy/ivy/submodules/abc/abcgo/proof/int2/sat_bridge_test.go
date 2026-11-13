@@ -1,6 +1,26 @@
 package int2
 
-import "testing"
+import (
+	"github.com/glycerine/abcgo/sat/bsat"
+	"testing"
+)
+
+func TestSATBridgeCumulativeGlobalLimits(t *testing.T) {
+	a, b := sat_solver_new(), sat_solver_new()
+	for _, s := range []*sat_solver{a, b} {
+		sat_solver_setnvars(s, 3)
+		sat_solver_addclause(s, []int32{1, 2})
+		sat_solver_addclause(s, []int32{3, 4})
+	}
+	for _, assumption := range []int32{0, 1, 0} {
+		global := int64(1)
+		got := sat_solver_solve(a, []int32{assumption}, 0, 0, 0, global)
+		want := b.SolveWithResourceLimits([]bsat.Literal{bsat.Literal(assumption)}, 0, 0, 0, global)
+		if got != int32(want) || a.PropagationCount() != b.PropagationCount() {
+			t.Fatalf("assumption %d: bridge %d/%d, direct %d/%d", assumption, got, a.PropagationCount(), want, b.PropagationCount())
+		}
+	}
+}
 
 func TestSATBridgeAndGateAllInputPolarities(t *testing.T) {
 	for complement0 := int32(0); complement0 <= 1; complement0++ {
