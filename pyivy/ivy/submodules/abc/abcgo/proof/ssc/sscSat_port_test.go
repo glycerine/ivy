@@ -128,6 +128,53 @@ func TestSatPortRejectsReverseNodeOrder(t *testing.T) {
 		t.Fatalf("reverse order result %d", got)
 	}
 }
+
+// A compiled C SSC oracle returns UNKNOWN for unrelated inputs with a -1
+// conflict limit, but proves equality when care makes both assumption pairs
+// contradictory before search checks the limit.
+func TestSignedBudgetEquivalenceAfterPivot(t *testing.T) {
+	for _, equalCare := range []bool{false, true} {
+		subject := newBuilder(2, 16)
+		for _, input := range subject.graph.InputLiterals() {
+			gia.Gia_ManAppendCo(subject.graph, input)
+		}
+		care := newBuilder(2, 16)
+		ci := care.graph.InputLiterals()
+		violation := int32(0)
+		if equalCare {
+			violation = care.xor(ci[0], ci[1])
+		}
+		gia.Gia_ManAppendCo(care.graph, violation)
+		params := DefaultParams()
+		p, status := Ssc_ManStart(subject.graph, care.graph, &params)
+		if status != satoko.SATOKO_SAT || p == nil {
+			t.Fatalf("equalCare=%v start=%d", equalCare, status)
+		}
+		p.Params.BTLimit = -1
+		inputs := p.Aig.InputLiterals()
+		got := Ssc_ManCheckEquivalence(p, inputs[0]>>1, inputs[1]>>1, 0)
+		want := satoko.SATOKO_UNDEC
+		if equalCare {
+			want = satoko.SATOKO_UNSAT
+		}
+		if got != want {
+			t.Fatalf("equalCare=%v got=%d want=%d", equalCare, got, want)
+		}
+		p.Params.BTLimit = 0
+		got = Ssc_ManCheckEquivalence(p, inputs[0]>>1, inputs[1]>>1, 0)
+		want = satoko.SATOKO_SAT
+		if equalCare {
+			want = satoko.SATOKO_UNSAT
+		}
+		if got != want {
+			t.Fatalf("equalCare=%v unlimited retry=%d want=%d", equalCare, got, want)
+		}
+		if !equalCare && (len(p.Pattern) != 2 || p.Pattern[0] == p.Pattern[1]) {
+			t.Fatalf("bad retry witness %v", p.Pattern)
+		}
+		Ssc_ManStop(p)
+	}
+}
 func TestSatPortConstantComparison(t *testing.T) {
 	p, in := sscSatFixture()
 	n := gia.Gia_ManAppendAnd(p.Aig, in[0], in[1])
