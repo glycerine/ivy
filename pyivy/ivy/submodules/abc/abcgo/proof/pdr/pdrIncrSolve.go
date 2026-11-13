@@ -14,8 +14,8 @@ import (
 func IPdr_ManSolveInt(p *Pdr_Man_t, checkClauses, pushClauses int32) int32 {
 	pars := p.pPars
 	graph := p.pAig
-	outputs := int32(len(graph.Outputs())) - aig.Aig_ManRegNum(graph)
-	inputs := int32(len(graph.Inputs())) - aig.Aig_ManRegNum(graph)
+	outputs := graph.TruePoCount()
+	inputs := graph.TruePiCount()
 	started := util.Abc_Clock()
 	if pars.nTimeOut != 0 {
 		p.timeToStop = started + int64(pars.nTimeOut)*int64(time.Second)
@@ -305,7 +305,7 @@ func IPdr_ManSolve(graph *aig.Graph, pars *Pdr_Par_t) int32 {
 		return -1
 	}
 	started := util.Abc_Clock()
-	outputs := int32(len(graph.Outputs())) - aig.Aig_ManRegNum(graph)
+	outputs := graph.TruePoCount()
 	if pars.nTimeOutOne != 0 && pars.fSolveAll == 0 {
 		pars.nTimeOutOne = 0
 	}

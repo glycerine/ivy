@@ -145,7 +145,7 @@ func Solve(graph *aig.Graph, opts *Options) (Result, error) {
 	pars.nTimeOutGap = gap
 	pars.nTimeOutOne = each
 	if each != 0 && timeout == 0 {
-		outputs := int64(len(graph.Outputs())) - int64(aig.Aig_ManRegNum(graph))
+		outputs := int64(graph.TruePoCount())
 		total := (int64(each)*outputs + 999) / 1000
 		if total > math.MaxInt32 {
 			return Result{}, fmt.Errorf("pdr: combined output timeout too large")
@@ -173,7 +173,7 @@ func Solve(graph *aig.Graph, opts *Options) (Result, error) {
 	}
 	graph.SetSequentialCounterexamples(nil)
 	status := Status(Pdr_ManSolve(graph, &pars))
-	n := len(graph.Outputs()) - int(aig.Aig_ManRegNum(graph))
+	n := int(graph.TruePoCount())
 	results := make([]OutputResult, n)
 	for i := range results {
 		results[i].Status = Unknown

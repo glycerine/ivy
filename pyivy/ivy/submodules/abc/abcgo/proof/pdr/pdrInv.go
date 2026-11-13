@@ -326,7 +326,7 @@ func Pdr_ManDumpClauses(p *Pdr_Man_t, fileName string, proved int32) {
 	}
 	if network != nil {
 		names := abc.Abc_NtkCollectCioNames(network, 0)
-		offset := len(p.pAig.Inputs()) - int(aig.Aig_ManRegNum(p.pAig))
+		offset := int(p.pAig.TruePiCount())
 		if len(names) >= offset+int(aig.Aig_ManRegNum(p.pAig)) {
 			fmt.Fprint(file, ".ilb")
 			for i := 0; i < int(aig.Aig_ManRegNum(p.pAig)); i++ {
