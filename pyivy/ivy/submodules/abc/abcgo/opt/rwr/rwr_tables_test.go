@@ -42,6 +42,29 @@ func TestCanonicalDecompositionsPreserveTruth(t *testing.T) {
 	}
 }
 
+func TestStartedLibraryCanReconstructFunctions(t *testing.T) {
+	p := rwrStartLibrary()
+	permutations := npn.Permutations()
+	count := 0
+	for class, nodes := range p.classes {
+		for _, id := range nodes {
+			if p.graphs[id] == nil || p.inverse[class] != p.forest[id].truth {
+				t.Fatalf("missing graph or inverse mapping for node %d", id)
+			}
+			count++
+		}
+	}
+	if count == 0 {
+		t.Fatal("library has no canonical implementations")
+	}
+	for truth := 0; truth < 1<<16; truth++ {
+		got := npn.Transform(p.canonical[truth], p.phases[truth], permutations[p.permutations[truth]])
+		if got != uint16(truth) {
+			t.Fatalf("truth %#x reconstructed as %#x", truth, got)
+		}
+	}
+}
+
 func TestPracticalClassesSentinel(t *testing.T) {
 	if len(s_RwrPracticalClasses) != 136 || s_RwrPracticalClasses[135] != 0 {
 		t.Fatalf("practical classes length or terminator changed: %d", len(s_RwrPracticalClasses))
