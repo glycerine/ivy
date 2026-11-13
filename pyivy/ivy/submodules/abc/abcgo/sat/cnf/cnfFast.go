@@ -61,30 +61,16 @@ func CollectAIGLeaves(graph *aig.Graph, root aig.Edge, stopComplement bool) []ai
 	if graph == nil {
 		return nil
 	}
-	leaves := make([]aig.Edge, 0)
-	seen := make(map[aig.Edge]bool)
-	var visit func(aig.Edge)
-	var add func(aig.Edge)
-	add = func(edge aig.Edge) {
-		if !seen[edge] {
-			seen[edge] = true
-			leaves = append(leaves, edge)
-		}
+	var stop int32
+	if stopComplement {
+		stop = 1
 	}
-	visit = func(edge aig.Edge) {
-		node := graph.Node(aig.Aig_Regular(edge))
-		if edge != root && (node.MarkA || stopComplement && edge.Complemented()) {
-			add(edge)
-			return
-		}
-		if node.Kind != aig.And {
-			add(aig.Aig_Regular(edge))
-			return
-		}
-		visit(node.Fanins[0])
-		visit(node.Fanins[1])
+	collected := vec.Vec_PtrAlloc(0)
+	Cnf_CollectLeaves(graph, &root, collected, stop)
+	leaves := make([]aig.Edge, 0, vec.Vec_PtrSize(collected))
+	for _, leaf := range vec.Vec_PtrArray(collected) {
+		leaves = append(leaves, leaf.(aig.Edge))
 	}
-	visit(root)
 	return leaves
 }
 

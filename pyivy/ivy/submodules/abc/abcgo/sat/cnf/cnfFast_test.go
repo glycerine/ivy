@@ -1,11 +1,35 @@
 package cnf
 
 import (
+	"reflect"
 	"testing"
 
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/misc/vec"
 )
+
+func TestCollectLeavesEntryPointsAgree(t *testing.T) {
+	g := aig.NewGraph()
+	x, y, z := g.NewInput(), g.NewInput(), g.NewInput()
+	shared := g.AND(x, y)
+	aig.Aig_ObjSetMarkA(g, shared)
+	root := g.AND(shared.Not(), z)
+	for _, stop := range []bool{false, true} {
+		leaves := vec.Vec_PtrAlloc(0)
+		var flag int32
+		if stop {
+			flag = 1
+		}
+		Cnf_CollectLeaves(g, &root, leaves, flag)
+		var want []aig.Edge
+		for _, item := range vec.Vec_PtrArray(leaves) {
+			want = append(want, item.(aig.Edge))
+		}
+		if got := CollectAIGLeaves(g, root, stop); !reflect.DeepEqual(got, want) {
+			t.Fatalf("stop=%v got=%v want=%v", stop, got, want)
+		}
+	}
+}
 
 func TestCutDeriveTruthRepeatsAcrossWord(t *testing.T) {
 	g := aig.NewGraph()
