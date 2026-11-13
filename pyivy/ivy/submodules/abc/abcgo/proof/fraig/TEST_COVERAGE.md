@@ -14,6 +14,8 @@ five-pigeon/four-hole instance exercises a real conflict-budget unknown and is
 compared with compiled C. A 4,096-node cone and repeated mixed-cone feedback
 exercise bounded depth and compression stress. An eight-bit ripple adder is
 checked against integer addition for 1,024 deterministic input pairs.
+The public API tests also replay a miter counterexample, and two successive
+simulation-buffer resizes check preserved PI words, internal hashes and masks.
 
 Still missing are representative end-to-end workloads through a ported ABC
 consumer; wall-clock timeout outcomes during real search; broader sparse and
