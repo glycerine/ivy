@@ -24,6 +24,14 @@ func sat_solver_addclause(s *sat_solver, input []lit) int32 {
 		}
 		sat_solver_setnvars(s, lit_var(data[len(data)-1])+1)
 	}
+	// Proof stores require normalized clauses. Deduplicate before logging and
+	// omit tautologies, which impose no constraint on the formula.
+	data = slices.Compact(data)
+	for i := 1; i < len(data); i++ {
+		if data[i] == lit_neg(data[i-1]) {
+			return 1
+		}
+	}
 	if p := solverClauseStore(s); p != nil {
 		if Sto_ManAddClause(p, data) == 0 {
 			panic("invalid clause for proof store")

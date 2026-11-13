@@ -236,3 +236,10 @@ that global refutation only for an unconditional UNSAT solve (or a discovered
 root conflict). A regression exercises a satisfiable four-clause formula made
 UNSAT by an assumption and checks that no empty clause is logged. The full
 race-enabled BSAT and BMC package tests pass.
+
+Proof-store input review also found that otherwise valid clauses with duplicate
+literals or complementary literals caused a panic when logging was enabled.
+Input clauses are now deduplicated before logging and tautologies are omitted;
+this preserves the solver's formula and avoids invalid proof-store records. A
+regression checks incremental SAT/UNSAT behavior with both forms, and the full
+race-enabled BSAT and BMC suites pass.

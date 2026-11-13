@@ -144,3 +144,21 @@ func TestClauseStoreDoesNotClaimGlobalUnsatForAssumptions(t *testing.T) {
 		t.Fatalf("base formula=%v", got)
 	}
 }
+
+func TestClauseStoreAcceptsDuplicateAndTautologicalInputs(t *testing.T) {
+	s := NewSolver()
+	s.EnableClauseStore()
+	x, y := s.NewVariable(), s.NewVariable()
+	if !s.AddClause(Positive(x), Positive(x), Positive(y)) {
+		t.Fatal("duplicate clause rejected")
+	}
+	if !s.AddClause(Positive(x), Negative(x)) {
+		t.Fatal("tautology rejected")
+	}
+	if got := s.Solve(Negative(x), Negative(y)); got != Unsatisfiable {
+		t.Fatalf("expected UNSAT under assumptions, got %v", got)
+	}
+	if got := s.Solve(); got != Satisfiable {
+		t.Fatalf("base formula status=%v", got)
+	}
+}
