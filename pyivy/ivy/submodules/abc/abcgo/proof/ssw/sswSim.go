@@ -367,20 +367,7 @@ func Ssw_SmlCheckOutput(p *Ssw_Sml_t) *int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_SmlAssignRandom(p *Ssw_Sml_t, pObj *Aig_Obj_t) {
-    var pSims *uint32;
-    var i, f int32;
-    assert(Aig_ObjIsCi(pObj), "Aig_ObjIsCi(pObj)");
-    pSims = Ssw_ObjSim( p, pObj.Id );
-    for  i = 0; i < p.nWordsTotal; i++  {
-        pSims[i] = Ssw_ObjRandomSim();
-    }
-    // set the first bit 0 in each frame
-    assert(p.nWordsFrame * p.nFrames == p.nWordsTotal, "p.nWordsFrame * p.nFrames == p.nWordsTotal");
-    for  f = 0; f < p.nFrames; f++  {
-        pSims[p.nWordsFrame*f] <<= 1;
-    }
-}
+
 
 /**Function*************************************************************
 
@@ -393,16 +380,7 @@ func Ssw_SmlAssignRandom(p *Ssw_Sml_t, pObj *Aig_Obj_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_SmlAssignRandomFrame(p *Ssw_Sml_t, pObj *Aig_Obj_t, iFrame int32) {
-    var pSims *uint32;
-    var i int32;
-    assert(iFrame < p.nFrames, "iFrame < p.nFrames");
-    assert(Aig_ObjIsCi(pObj), "Aig_ObjIsCi(pObj)");
-    pSims = Ssw_ObjSim( p, pObj.Id ) + p.nWordsFrame * iFrame;
-    for  i = 0; i < p.nWordsFrame; i++  {
-        pSims[i] = Ssw_ObjRandomSim();
-    }
-}
+
 
 /**Function*************************************************************
 
@@ -415,16 +393,7 @@ func Ssw_SmlAssignRandomFrame(p *Ssw_Sml_t, pObj *Aig_Obj_t, iFrame int32) {
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_SmlObjAssignConst(p *Ssw_Sml_t, pObj *Aig_Obj_t, fConst1 int32, iFrame int32) {
-    var pSims *uint32;
-    var i int32;
-    assert(iFrame < p.nFrames, "iFrame < p.nFrames");
-    assert(Aig_ObjIsCi(pObj), "Aig_ObjIsCi(pObj)");
-    pSims = Ssw_ObjSim( p, pObj.Id ) + p.nWordsFrame * iFrame;
-    for  i = 0; i < p.nWordsFrame; i++  {
-        pSims[i] = fConst1? ~uint32(0) : 0;
-    }
-}
+
 
 /**Function*************************************************************
 
@@ -437,14 +406,7 @@ func Ssw_SmlObjAssignConst(p *Ssw_Sml_t, pObj *Aig_Obj_t, fConst1 int32, iFrame 
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_SmlObjAssignConstWord(p *Ssw_Sml_t, pObj *Aig_Obj_t, fConst1 int32, iFrame int32, iWord int32) {
-    var pSims *uint32;
-    assert(iFrame < p.nFrames, "iFrame < p.nFrames");
-    assert(iWord < p.nWordsFrame, "iWord < p.nWordsFrame");
-    assert(Aig_ObjIsCi(pObj), "Aig_ObjIsCi(pObj)");
-    pSims = Ssw_ObjSim( p, pObj.Id ) + p.nWordsFrame * iFrame;
-    pSims[iWord] = fConst1? ~uint32(0) : 0;
-}
+
 
 /**Function*************************************************************
 
@@ -457,13 +419,7 @@ func Ssw_SmlObjAssignConstWord(p *Ssw_Sml_t, pObj *Aig_Obj_t, fConst1 int32, iFr
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_SmlObjSetWord(p *Ssw_Sml_t, pObj *Aig_Obj_t, Word uint32, iWord int32, iFrame int32) {
-    var pSims *uint32;
-    assert(iFrame < p.nFrames, "iFrame < p.nFrames");
-    assert(Aig_ObjIsCi(pObj), "Aig_ObjIsCi(pObj)");
-    pSims = Ssw_ObjSim( p, pObj.Id ) + p.nWordsFrame * iFrame;
-    pSims[iWord] = Word;
-}
+
 
 /**Function*************************************************************
 
