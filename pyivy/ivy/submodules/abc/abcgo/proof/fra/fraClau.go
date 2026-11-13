@@ -128,14 +128,20 @@ func Fra_ClauPrintClause(vars, clause *vec.Vec_Int_t) {
 func Fra_Clau(graph *aig.Graph, nIters, verbose, veryVerbose int32) int32 {
 	p := Fra_ClauStart(graph)
 	if p == nil {
-		if verbose != 0 {
-			fmt.Println("The property is trivially inductive.")
-		}
+		fmt.Println("The property is trivially inductive.")
 		return 1
 	}
 	defer Fra_ClauStop(p)
-	for iter := int32(0); iter < nIters; iter++ {
+	for iter := int32(0); ; iter++ {
 		status, main0 := p.checkProperty()
+		// ABC evaluates the property before the bound and tests equality
+		// when reporting the result, including for negative bounds.
+		if iter >= nIters {
+			if iter == nIters {
+				return 0
+			}
+			return 1
+		}
 		if status == 1 {
 			return 1
 		}
@@ -180,9 +186,10 @@ func Fra_Clau(graph *aig.Graph, nIters, verbose, veryVerbose int32) int32 {
 		}
 		clause := clauRemap(p.testToMain, main, true)
 		if !p.main.AddClause(vec.Vec_IntArray(clause)...) {
+			if iter+1 == nIters {
+				return 0
+			}
 			return 1
 		}
 	}
-	// Reaching the iteration limit is reported as not proved in the C code.
-	return 0
 }
