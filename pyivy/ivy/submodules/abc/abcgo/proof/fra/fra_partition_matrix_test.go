@@ -3,6 +3,7 @@ package fra
 import (
 	"bufio"
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -12,52 +13,88 @@ import (
 	"github.com/glycerine/abcgo/aig/aig"
 )
 
-// This is a direct comparison with the source C partition driver and FRA
-// engine, using prebuilt ABC objects. It covers multiple output partitions
-// with overlapping support, complemented edges and repeated representatives.
+// TestPartitionMatrixAgainstCompiledABC builds the checked-in C sources in
+// an isolated directory when FRA_BUILD_ORACLE=1; no checkout objects are used.
 func TestPartitionMatrixAgainstCompiledABC(t *testing.T) {
+	if os.Getenv("FRA_BUILD_ORACLE") != "1" {
+		t.Skip("set FRA_BUILD_ORACLE=1 to build the C oracle from source")
+	}
 	cc, err := exec.LookPath("gcc")
 	if err != nil {
 		t.Skip("C compiler unavailable")
 	}
-	ar, err := exec.LookPath("ar")
-	if err != nil {
-		t.Skip("ar unavailable")
+	if _, err = exec.LookPath("g++"); err != nil {
+		t.Skip("C++ compiler unavailable")
+	}
+	if _, err = exec.LookPath("make"); err != nil {
+		t.Skip("make unavailable")
 	}
 	src, err := filepath.Abs("../../../src")
 	if err != nil {
 		t.Fatal(err)
 	}
-	if _, err = os.Stat(filepath.Join(src, "aig/aig/aigPart.o")); err != nil {
-		t.Skip("prebuilt ABC objects unavailable")
+	root := filepath.Dir(src)
+	dir := t.TempDir()
+	build := filepath.Join(dir, "abc")
+	if err = os.MkdirAll(build, 0755); err != nil {
+		t.Fatal(err)
 	}
-	var objects []string
-	err = filepath.WalkDir(src, func(path string, d os.DirEntry, err error) error {
-		if err != nil {
-			return err
+	copyFile := func(from, to string) error {
+		in, e := os.Open(from)
+		if e != nil {
+			return e
 		}
-		if !d.IsDir() && strings.HasSuffix(path, ".o") && path != filepath.Join(src, "misc/st/st.o") {
-			objects = append(objects, path)
+		defer in.Close()
+		out, e := os.Create(to)
+		if e != nil {
+			return e
 		}
-		return nil
+		_, e = io.Copy(out, in)
+		closeErr := out.Close()
+		if e != nil {
+			return e
+		}
+		return closeErr
+	}
+	for _, name := range []string{"Makefile", "arch_flags.c", "depends.sh"} {
+		if err = copyFile(filepath.Join(root, name), filepath.Join(build, name)); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if err = os.Chmod(filepath.Join(build, "depends.sh"), 0755); err != nil {
+		t.Fatal(err)
+	}
+	err = filepath.WalkDir(src, func(path string, d os.DirEntry, walkErr error) error {
+		if walkErr != nil {
+			return walkErr
+		}
+		rel, e := filepath.Rel(src, path)
+		if e != nil {
+			return e
+		}
+		target := filepath.Join(build, "src", rel)
+		if d.IsDir() {
+			return os.MkdirAll(target, 0755)
+		}
+		if !d.Type().IsRegular() || strings.HasSuffix(path, ".o") || strings.HasSuffix(path, ".d") {
+			return nil
+		}
+		return copyFile(path, target)
 	})
 	if err != nil {
 		t.Fatal(err)
 	}
-	dir := t.TempDir()
-	st := filepath.Join(dir, "st.o")
-	if out, err := exec.Command(cc, "-DABC_USE_STDINT_H", "-I", src, "-c", filepath.Join(src, "misc/st/st.c"), "-o", st).CombinedOutput(); err != nil {
-		t.Fatalf("compile st: %v: %s", err, out)
+	buildCmd := exec.Command("make", "-j4", "ABC_MAKE_NO_DEPS=1", "ABC_USE_STDINT_H=1", "ABC_USE_NO_READLINE=1", "ABC_USE_NO_PTHREADS=1", "OPTFLAGS=-O0", "libabc.a")
+	buildCmd.Dir = build
+	if out, e := buildCmd.CombinedOutput(); e != nil {
+		t.Fatalf("build checked-in ABC sources: %v\n%s", e, out)
 	}
-	objects = append(objects, st)
-	archive := filepath.Join(dir, "abc.a")
-	if out, err := exec.Command(ar, append([]string{"qcs", archive}, objects...)...).CombinedOutput(); err != nil {
-		t.Fatalf("archive: %v: %s", err, out)
-	}
+	src = filepath.Join(build, "src")
+	archive := filepath.Join(build, "libabc.a")
 	exe := filepath.Join(dir, "oracle")
-	args := []string{"-DABC_USE_STDINT_H", "-I", src, "test_vectors/partition_matrix_oracle.c", archive, "-lstdc++", "-lm", "-ldl", "-lpthread", "-lreadline", "-o", exe}
-	if out, err := exec.Command(cc, args...).CombinedOutput(); err != nil {
-		t.Fatalf("link: %v: %s", err, out)
+	args := []string{"-DABC_USE_STDINT_H=1", "-DABC_USE_CUDD=1", "-I", src, "test_vectors/partition_matrix_oracle.c", archive, "-lstdc++", "-lm", "-ldl", "-lz", "-o", exe}
+	if out, e := exec.Command(cc, args...).CombinedOutput(); e != nil {
+		t.Fatalf("link C oracle: %v: %s", e, out)
 	}
 	data, err := exec.Command(exe).CombinedOutput()
 	if err != nil {

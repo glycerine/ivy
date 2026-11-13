@@ -58,3 +58,28 @@ AND/inverter graphs and does not cover native EXOR.
 it still returns all candidates tied at the maximum cost because the C loop
 checks the limit after appending. Normal implication derivation requires a
 positive limit, but direct callers can observe this behavior.
+# Partitioned AIG and timeframe entry points
+
+Partitioned FRAIG and choicing use `fra.Aig_ManFraigPartitioned` and
+`fra.Aig_ManChoicePartitioned`; both pass the original `Fra_FraigChoice`
+backend and its conflict and level limits to the AIG partition code. The
+lower-level AIG package cannot import FRA without an import cycle, so its
+source-named and `WithFraig` variants require an explicit callback at
+compile time. `fra.Saig_ManTimeframeSimplify` similarly
+supplies `Fra_FraigEquivence` to the SAIG timeframe helper. No alternative
+equivalence algorithm is selected when a backend is missing.
+
+
+The partition bridge matrix has an independent checked-in-C build mode. From
+`abcgo`, run:
+
+```sh
+FRA_BUILD_ORACLE=1 go test -race ./proof/fra -run TestPartitionMatrixAgainstCompiledABC -count=1 -v
+```
+
+This mode requires GCC, G++, make, ar, zlib headers and libraries, and the
+full checked-in ABC source tree. It copies the sources to a temporary build,
+excludes existing `.o` and `.d` files, and builds the archive there. The test
+skips by default because compiling ABC is comparatively expensive. The older
+`TestPartitionFraigAgainstCompiledABC` uses checkout object files and does not
+independently establish their freshness.
