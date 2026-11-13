@@ -1,296 +1,121 @@
 package fra
 
+// Support-overlap diagnostics from ABC's fraPart.c.
 import (
 	"fmt"
 	"time"
+
+	"github.com/glycerine/abcgo/aig/aig"
 )
 
-/**CFile****************************************************************
-
-  FileName    [fraPart.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [New FRAIG package.]
-
-  Synopsis    [Partitioning for induction.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 30, 2007.]
-
-  Revision    [$Id: fraPart.c,v 1.00 2007/06/30 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "fra.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fra_ManPartitionTest(p *Aig_Man_t, nComLim int32) {
-//    Bar_Progress_t * pProgress;
-    var vSupps, vSuppsIn *Vec_Vec_t;
-    var vSuppsNew *Vec_Ptr_t;
-    var vSupNew, vSup, vSup2, vTemp *Vec_Int_t;//, * vSupIn;
-    var vOverNew, vQuantNew *Vec_Int_t;
-    var pObj *Aig_Obj_t;
-    var i, k, nCommon, CountOver, CountQuant int32;
-    var nTotalSupp, nTotalSupp2, Entry, Largest int32;//, iVar;
-    var Ratio, R float64;
-    var clk abctime;
-
-    nTotalSupp = 0;
-    nTotalSupp2 = 0;
-    Ratio = 0.0;
- 
-    // compute supports
-clk = Abc_Clock();
-    vSupps = (Vec_Vec_t *)Aig_ManSupports( p );
-// inlining of macro ABC_PRT
-Abc_Print(1, "%s =", ("Supports"));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;
-    // remove last entry
-    // inlining of macro Aig_ManForEachCo
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-        vSup = Vec_VecEntryInt( vSupps, i );
-        Vec_IntPop( vSup );
-        // remember support
-//        pObj->pNext = (Aig_Obj_t *)vSup;
-    }
-
-    // create reverse supports
-clk = Abc_Clock();
-    vSuppsIn = Vec_VecStart( Aig_ManCiNum(p) );
-    // inlining of macro Aig_ManForEachCo
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-        vSup = Vec_VecEntryInt( vSupps, i );
-        // inlining of macro Vec_IntForEachEntry
-        for  k = 0; (k < Vec_IntSize(vSup)) && (((Entry) = Vec_IntEntry(vSup, k)), 1); k++  {
-            Vec_VecPush( vSuppsIn, Entry, (void *)(ABC_PTRUINT_T)i );
-        }
-    }
-// inlining of macro ABC_PRT
-Abc_Print(1, "%s =", ("Inverse "));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;
-
-clk = Abc_Clock();
-    // compute extended supports
-    Largest = 0;
-    vSuppsNew = Vec_PtrAlloc( Aig_ManCoNum(p) );
-    vOverNew  = Vec_IntAlloc( Aig_ManCoNum(p) );
-    vQuantNew = Vec_IntAlloc( Aig_ManCoNum(p) );
-//    pProgress = Bar_ProgressStart( stdout, Aig_ManCoNum(p) );
-    // inlining of macro Aig_ManForEachCo
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-//        Bar_ProgressUpdate( pProgress, i, NULL );
-        // get old supports
-        vSup = Vec_VecEntryInt( vSupps, i );
-        if Vec_IntSize(vSup) < 2 {
-            continue; }
-        // compute new supports
-        CountOver = CountQuant = 0;
-        vSupNew = Vec_IntDup( vSup );
-        // go through the nodes where the first var appears
-        // inlining of macro Aig_ManForEachCo
-        // inlining of macro Vec_PtrForEachEntry
-        for  k = 0; (k < Vec_PtrSize(p.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, k)), 1); k++  {
-//        iVar = Vec_IntEntry( vSup, 0 );
-//        vSupIn = Vec_VecEntry( vSuppsIn, iVar );
-//        Vec_IntForEachEntry( vSupIn, Entry, k )
-        
-//            pObj = Aig_ManObj( p, Entry );
-            // get support of this output
-//            vSup2 = (Vec_Int_t *)pObj->pNext;
-            vSup2 = Vec_VecEntryInt( vSupps, k );
-            // count the number of common vars
-            nCommon = Vec_IntTwoCountCommon(vSup, vSup2);
-            if nCommon < 2 {
-                continue; }
-            if nCommon > nComLim {
-                vSupNew = Vec_IntTwoMerge( vTemp = vSupNew, vSup2 );
-                Vec_IntFree( vTemp );
-                CountOver++;
-            
-            } else {
-                CountQuant++; }
-        }
-        // save the results
-        Vec_PtrPush( vSuppsNew, vSupNew );
-        Vec_IntPush( vOverNew, CountOver );
-        Vec_IntPush( vQuantNew, CountQuant );
-
-        if Largest < Vec_IntSize(vSupNew) {
-            Largest = Vec_IntSize(vSupNew); }
-
-        nTotalSupp  += Vec_IntSize(vSup);
-        nTotalSupp2 += Vec_IntSize(vSupNew);
-        if Vec_IntSize(vSup) {
-            R = Vec_IntSize(vSupNew) / Vec_IntSize(vSup);
-        } else {
-            R = 0; }
-        Ratio += R;
-
-        if R < 5.0 {
-            continue; }
-
-        fmt.Printf("%6d : ", i);
-        fmt.Printf("S = %5d. ", Vec_IntSize(vSup));
-        fmt.Printf("SNew = %5d. ", Vec_IntSize(vSupNew));
-        fmt.Printf("R = %7.2f. ", R);
-        fmt.Printf("Over = %5d. ", CountOver);
-        fmt.Printf("Quant = %5d. ", CountQuant);
-        fmt.Printf("\n");
-/*
-        Vec_IntForEachEntry( vSupNew, Entry, k )
-            printf( "%d ", Entry );
-        printf( "\n" );
-*/
-    }
-//    Bar_ProgressStop( pProgress );
-// inlining of macro ABC_PRT
-Abc_Print(1, "%s =", ("Scanning"));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;
-
-    // print cumulative statistics
-    fmt.Printf("PIs = %6d. POs = %6d. Lim = %3d.   AveS = %3d. SN = %3d. R = %4.2f Max = %5d.\n", Aig_ManCiNum(p), Aig_ManCoNum(p), nComLim, nTotalSupp/Aig_ManCoNum(p), nTotalSupp2/Aig_ManCoNum(p), Ratio/Aig_ManCoNum(p), Largest);
-
-    Vec_VecFree( vSupps );
-    Vec_VecFree( vSuppsIn );
-    Vec_VecFree( (Vec_Vec_t *)vSuppsNew );
-    Vec_IntFree( vOverNew );
-    Vec_IntFree( vQuantNew );
+func fraOutputSupports(graph *aig.Graph) [][]int {
+	indices := make(map[int]int, graph.InputCount())
+	for i, edge := range graph.Inputs() {
+		indices[edge.NodeID()] = i
+	}
+	result := make([][]int, graph.OutputCount())
+	for i, output := range graph.Outputs() {
+		for _, edge := range aig.Aig_Support(graph, output) {
+			result[i] = append(result[i], indices[edge.NodeID()])
+		}
+	}
+	return result
 }
 
-
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fra_ManPartitionTest2(p *Aig_Man_t) {
-    var vSupps, vSuppsIn *Vec_Vec_t;
-    var vSup, vSup2, vSup3 *Vec_Int_t;
-    var pObj *Aig_Obj_t;
-    var Entry, Entry2, Entry3, Counter int32;
-    var i, k, m, n int32;
-    var clk abctime;
-    var pSupp string;
- 
-    // compute supports
-clk = Abc_Clock();
-    vSupps = (Vec_Vec_t *)Aig_ManSupports( p );
-// inlining of macro ABC_PRT
-Abc_Print(1, "%s =", ("Supports"));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;
-    // remove last entry
-    // inlining of macro Aig_ManForEachCo
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-        vSup = Vec_VecEntryInt( vSupps, i );
-        Vec_IntPop( vSup );
-        // remember support
-//        pObj->pNext = (Aig_Obj_t *)vSup;
-    }
-
-    // create reverse supports
-clk = Abc_Clock();
-    vSuppsIn = Vec_VecStart( Aig_ManCiNum(p) );
-    // inlining of macro Aig_ManForEachCo
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-        if i == p.nAsserts {
-            break; }
-        vSup = Vec_VecEntryInt( vSupps, i );
-        // inlining of macro Vec_IntForEachEntry
-        for  k = 0; (k < Vec_IntSize(vSup)) && (((Entry) = Vec_IntEntry(vSup, k)), 1); k++  {
-            Vec_VecPush( vSuppsIn, Entry, (void *)(ABC_PTRUINT_T)i );
-        }
-    }
-// inlining of macro ABC_PRT
-Abc_Print(1, "%s =", ("Inverse "));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;
-
-    // create affective supports
-clk = Abc_Clock();
-    // inlining of macro ABC_ALLOC
-    pSupp = ((char *) malloc(sizeof(char) * (size_t)(Aig_ManCiNum(p))));
-    // inlining of macro Aig_ManForEachCo
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-        if i % 50 != 0 {
-            continue; }
-        vSup = Vec_VecEntryInt( vSupps, i );
-        memset( pSupp, 0, sizeof(char) * Aig_ManCiNum(p) );
-        // go through each input of this output
-        // inlining of macro Vec_IntForEachEntry
-        for  k = 0; (k < Vec_IntSize(vSup)) && (((Entry) = Vec_IntEntry(vSup, k)), 1); k++  {
-            pSupp[Entry] = 1;
-            vSup2 = Vec_VecEntryInt( vSuppsIn, Entry );
-            // go though each assert of this input
-            // inlining of macro Vec_IntForEachEntry
-            for  m = 0; (m < Vec_IntSize(vSup2)) && (((Entry2) = Vec_IntEntry(vSup2, m)), 1); m++  {
-                vSup3 = Vec_VecEntryInt( vSupps, Entry2 );
-                // go through each input of this assert
-                // inlining of macro Vec_IntForEachEntry
-                for  n = 0; (n < Vec_IntSize(vSup3)) && (((Entry3) = Vec_IntEntry(vSup3, n)), 1); n++  {
-                    pSupp[Entry3] = 1;
-                }
-            }
-        }
-        // count the entries
-        Counter = 0;
-        for  m = 0; m < Aig_ManCiNum(p); m++  {
-            Counter += pSupp[m];
-        }
-        fmt.Printf("%d(%d) ", Vec_IntSize(vSup), Counter);
-    }
-    fmt.Printf("\n");
-// inlining of macro ABC_PRT
-Abc_Print(1, "%s =", ("Extension "));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;
-
-    pSupp = nil;
-    Vec_VecFree( vSupps );
-    Vec_VecFree( vSuppsIn );
+func fraSupportOverlap(a, b []int) int {
+	entries := make(map[int]bool, len(a))
+	for _, id := range a {
+		entries[id] = true
+	}
+	count := 0
+	for _, id := range b {
+		if entries[id] {
+			count++
+		}
+	}
+	return count
 }
 
+func Fra_ManPartitionTest(graph *aig.Graph, commonLimit int32) {
+	started := time.Now()
+	supports := fraOutputSupports(graph)
+	fmt.Printf("Supports = %.2f sec\n", time.Since(started).Seconds())
+	started = time.Now()
+	total, totalNew, largest := 0, 0, 0
+	ratio := 0.0
+	for i, support := range supports {
+		if len(support) < 2 {
+			continue
+		}
+		union := make(map[int]bool)
+		for _, id := range support {
+			union[id] = true
+		}
+		over, quant := 0, 0
+		for _, other := range supports {
+			common := fraSupportOverlap(support, other)
+			if common < 2 {
+				continue
+			}
+			if common > int(commonLimit) {
+				for _, id := range other {
+					union[id] = true
+				}
+				over++
+			} else {
+				quant++
+			}
+		}
+		size := len(union)
+		if size > largest {
+			largest = size
+		}
+		total += len(support)
+		totalNew += size
+		r := float64(size / len(support)) // C's integer division occurs before conversion.
+		ratio += r
+		if r >= 5 {
+			fmt.Printf("%6d : S = %5d. SNew = %5d. R = %7.2f. Over = %5d. Quant = %5d. \n", i, len(support), size, r, over, quant)
+		}
+	}
+	fmt.Printf("Scanning = %.2f sec\n", time.Since(started).Seconds())
+	outputs := len(supports)
+	if outputs == 0 {
+		return
+	}
+	fmt.Printf("PIs = %6d. POs = %6d. Lim = %3d.   AveS = %3d. SN = %3d. R = %4.2f Max = %5d.\n", graph.InputCount(), outputs, commonLimit, total/outputs, totalNew/outputs, ratio/float64(outputs), largest)
+}
 
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func Fra_ManPartitionTest2(graph *aig.Graph) {
+	started := time.Now()
+	supports := fraOutputSupports(graph)
+	fmt.Printf("Supports = %.2f sec\n", time.Since(started).Seconds())
+	started = time.Now()
+	inverse := make([][]int, graph.InputCount())
+	for i, support := range supports {
+		if i >= int(graph.Assertions) {
+			break
+		}
+		for _, id := range support {
+			inverse[id] = append(inverse[id], i)
+		}
+	}
+	fmt.Printf("Inverse = %.2f sec\n", time.Since(started).Seconds())
+	started = time.Now()
+	for i, support := range supports {
+		if i%50 != 0 {
+			continue
+		}
+		extension := make(map[int]bool)
+		for _, id := range support {
+			extension[id] = true
+			for _, output := range inverse[id] {
+				for _, dependent := range supports[output] {
+					extension[dependent] = true
+				}
+			}
+		}
+		fmt.Printf("%d(%d) ", len(support), len(extension))
+	}
+	fmt.Printf("\nExtension = %.2f sec\n", time.Since(started).Seconds())
+}
