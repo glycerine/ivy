@@ -1,363 +1,232 @@
 package pdr
 
+// Improved justification-based ternary simulation, ported from pdrTsim3.c
+// by Alan Mishchenko (UC Berkeley, 2010).
 import (
 	"fmt"
-	"os"
+	"slices"
+
+	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/aig/saig"
+	"github.com/glycerine/abcgo/misc/vec"
+	"github.com/glycerine/abcgo/sat/bsat"
 )
 
-/**CFile****************************************************************
-
-  FileName    [pdrTsim3.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Property driven reachability.]
-
-  Synopsis    [Improved ternary simulation.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - November 20, 2010.]
-
-  Revision    [$Id: pdrTsim3.c,v 1.00 2010/11/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "pdrInt.h"
-//#include "aig/gia/giaAig.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
 type Txs3_Man_t_ struct {
-    pGia  *Gia_Man_t;      // user's AIG
-    vPrio  *Vec_Int_t;     // priority of each flop
-    vCiObjs  *Vec_Int_t;   // cone leaves (CI obj IDs)
-    vFosPre  *Vec_Int_t;   // cone leaves (CI obj IDs)
-    vFosAbs  *Vec_Int_t;   // cone leaves (CI obj IDs)
-    vCoObjs  *Vec_Int_t;   // cone roots (CO obj IDs)
-    vCiVals  *Vec_Int_t;   // cone leaf values (0/1 CI values)
-    vCoVals  *Vec_Int_t;   // cone root values (0/1 CO values)
-    vNodes  *Vec_Int_t;    // cone nodes (node obj IDs)
-    vTemp  *Vec_Int_t;     // cone nodes (node obj IDs)
-    vPiLits  *Vec_Int_t;   // resulting array of PI literals
-    vFfLits  *Vec_Int_t;   // resulting array of flop literals
-    pMan  *Pdr_Man_t;      // calling manager
-    nPiLits         int32;   // the number of PI literals
+	pGia                               *gia.Gia_Man_t
+	vPrio                              *vec.Vec_Int_t
+	vCiObjs, vFosPre, vFosAbs, vCoObjs *vec.Vec_Int_t
+	vCiVals, vCoVals, vNodes, vTemp    *vec.Vec_Int_t
+	vPiLits, vFfLits                   *vec.Vec_Int_t
+	pMan                               *Pdr_Man_t
+	nPiLits                            int32
+	giaToAig                           []int32
 }
 
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Start and stop the ternary simulation engine.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Txs3_ManStart(pMan *Pdr_Man_t, pAig *Aig_Man_t, vPrio *Vec_Int_t) *Txs3_Man_t {
-    var p *Txs3_Man_t;
-//    Aig_Obj_t * pObj;
-//    int i;
-    assert(Vec_IntSize(vPrio) == Aig_ManRegNum(pAig), "Vec_IntSize(vPrio) == Aig_ManRegNum(pAig)");
-    p = new(Txs3_Man_t);
-    p.pGia    = Gia_ManFromAigSimple(pAig); // user's AIG
-//    Aig_ManForEachObj( pAig, pObj, i )
-//        assert( i == 0 || pObj->iData == Abc_Var2Lit(i, 0) );
-    p.vPrio   = vPrio;                // priority of each flop
-    p.vCiObjs = Vec_IntAlloc( 100 );  // cone leaves (CI obj IDs)
-    p.vFosPre = Vec_IntAlloc( 100 );  // present flop outputs
-    p.vFosAbs = Vec_IntAlloc( 100 );  // absracted flop outputs
-    p.vCoObjs = Vec_IntAlloc( 100 );  // cone roots (CO obj IDs)
-    p.vCiVals = Vec_IntAlloc( 100 );  // cone leaf values (0/1 CI values)
-    p.vCoVals = Vec_IntAlloc( 100 );  // cone root values (0/1 CO values)
-    p.vNodes  = Vec_IntAlloc( 100 );  // cone nodes (node obj IDs)
-    p.vTemp   = Vec_IntAlloc( 100 );  // cone nodes (node obj IDs)
-    p.vPiLits = Vec_IntAlloc( 100 );  // resulting array of PI literals
-    p.vFfLits = Vec_IntAlloc( 100 );  // resulting array of flop literals
-    p.pMan    = pMan;                 // calling manager
-    return p;
+func Txs3_ManStart(manager *Pdr_Man_t, graph *aig.Graph, priorities *vec.Vec_Int_t) *Txs3_Man_t {
+	if vec.Vec_IntSize(priorities) != int(aig.Aig_ManRegNum(graph)) {
+		panic("pdr: ternary simulator priority count differs from register count")
+	}
+	converted := gia.Gia_ManFromAigSimple(graph)
+	p := &Txs3_Man_t_{
+		pGia: converted, vPrio: priorities,
+		vCiObjs: vec.Vec_IntAlloc(100), vFosPre: vec.Vec_IntAlloc(100),
+		vFosAbs: vec.Vec_IntAlloc(100), vCoObjs: vec.Vec_IntAlloc(100),
+		vCiVals: vec.Vec_IntAlloc(100), vCoVals: vec.Vec_IntAlloc(100),
+		vNodes: vec.Vec_IntAlloc(100), vTemp: vec.Vec_IntAlloc(100),
+		vPiLits: vec.Vec_IntAlloc(100), vFfLits: vec.Vec_IntAlloc(100), pMan: manager,
+	}
+	// GIA conversion may reorder nodes, but preserves input/output order.
+	p.giaToAig = make([]int32, gia.Gia_ManObjNum(converted))
+	for i := range p.giaToAig {
+		p.giaToAig[i] = -1
+	}
+	for i, edge := range graph.Inputs() {
+		p.giaToAig[gia.Gia_ObjId(converted, gia.Gia_ManCi(converted, int32(i)))] = int32(edge.NodeID())
+	}
+	for i, edge := range graph.Outputs() {
+		p.giaToAig[gia.Gia_ObjId(converted, gia.Gia_ManCo(converted, int32(i)))] = int32(edge.NodeID())
+	}
+	return p
 }
+
 func Txs3_ManStop(p *Txs3_Man_t) {
-    Gia_ManStop( p.pGia );
-    Vec_IntFree( p.vCiObjs );
-    Vec_IntFree( p.vFosPre );
-    Vec_IntFree( p.vFosAbs );
-    Vec_IntFree( p.vCoObjs );
-    Vec_IntFree( p.vCiVals );
-    Vec_IntFree( p.vCoVals );
-    Vec_IntFree( p.vNodes );
-    Vec_IntFree( p.vTemp );
-    Vec_IntFree( p.vPiLits );
-    Vec_IntFree( p.vFfLits );
-    ABC_FREE( p );
+	if p == nil {
+		return
+	}
+	gia.Gia_ManStop(p.pGia)
+	*p = Txs3_Man_t_{}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Marks the TFI cone and collects CIs and nodes.]
-
-  Description [For this procedure to work Value should not be ~0 
-  at the beginning.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Txs3_ManCollectCone_rec(p *Txs3_Man_t, pObj *Gia_Obj_t) {
-    if !~pObj.Value {
-        return; }
-    pObj.Value = ~0;
-    if Gia_ObjIsCi(pObj) {
-        var Entry int32;
-        if Gia_ObjIsPi(p.pGia, pObj) {
-            Vec_IntPush( p.vCiObjs, Gia_ObjId(p.pGia, pObj) );
-            return;
-        }
-        Entry = Gia_ObjCioId(pObj) - Gia_ManPiNum(p.pGia);
-        if Vec_IntEntry(p.vPrio, Entry) { // present flop
-            Vec_IntPush( p.vFosPre, Gia_ObjId(p.pGia, pObj) );
-        } else { // asbstracted flop
-            Vec_IntPush( p.vFosAbs, Gia_ObjId(p.pGia, pObj) ); }
-        return;
-    }
-    assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-    Txs3_ManCollectCone_rec( p, Gia_ObjFanin0(pObj) );
-    Txs3_ManCollectCone_rec( p, Gia_ObjFanin1(pObj) );
-    Vec_IntPush( p.vNodes, Gia_ObjId(p.pGia, pObj) );
-}
-func Txs3_ManCollectCone(p *Txs3_Man_t, fVerbose int32) {
-    var pObj *Gia_Obj_t; var i, Entry int32;
-//    printf( "Collecting cones for clause with %d literals.\n", Vec_IntSize(vCoObjs) );
-    Vec_IntClear( p.vCiObjs );
-    Vec_IntClear( p.vFosPre );
-    Vec_IntClear( p.vFosAbs );
-    Vec_IntClear( p.vNodes );
-    Gia_ManConst0(p.pGia).Value = ~0;
-    Gia_ManForEachObjVec( p.vCoObjs, p.pGia, pObj, i )
-        Txs3_ManCollectCone_rec( p, Gia_ObjFanin0(pObj) );
-if fVerbose != 0 {
-fmt.Printf("%d %d %d \n", Vec_IntSize(p.vCiObjs), Vec_IntSize(p.vFosPre), Vec_IntSize(p.vFosAbs)); }
-    p.nPiLits = Vec_IntSize(p.vCiObjs);
-    // sort primary inputs
-    Vec_IntSelectSort( Vec_IntArray(p.vCiObjs), Vec_IntSize(p.vCiObjs) );
-    // sort and add present flop variables
-    Vec_IntSelectSortReverse( Vec_IntArray(p.vFosPre), Vec_IntSize(p.vFosPre) );
-    Vec_IntForEachEntry( p.vFosPre, Entry, i )
-        Vec_IntPush( p.vCiObjs, Entry );
-    // sort and add absent flop variables
-    Vec_IntSelectSortReverse( Vec_IntArray(p.vFosAbs), Vec_IntSize(p.vFosAbs) );
-    Vec_IntForEachEntry( p.vFosAbs, Entry, i )
-        Vec_IntPush( p.vCiObjs, Entry );
-    // cleanup
-    Gia_ManForEachObjVec( p.vCiObjs, p.pGia, pObj, i )
-        pObj.Value = 0;
-    Gia_ManForEachObjVec( p.vNodes, p.pGia, pObj, i )
-        pObj.Value = 0;
+// Txs3_ManCollectCone_rec visits each fanin once, separating primary inputs,
+// present flops, and abstract flops as in the C implementation.
+func Txs3_ManCollectCone_rec(p *Txs3_Man_t, obj *gia.Gia_Obj_t) {
+	if obj.Value == ^uint32(0) {
+		return
+	}
+	obj.Value = ^uint32(0)
+	if gia.Gia_ObjIsCi(obj) != 0 {
+		id := gia.Gia_ObjId(p.pGia, obj)
+		if gia.Gia_ObjIsPi(p.pGia, obj) != 0 {
+			vec.Vec_IntPush(p.vCiObjs, id)
+			return
+		}
+		index := gia.Gia_ObjCioId(obj) - gia.Gia_ManPiNum(p.pGia)
+		if vec.Vec_IntEntry(p.vPrio, int(index)) != 0 {
+			vec.Vec_IntPush(p.vFosPre, id)
+		} else {
+			vec.Vec_IntPush(p.vFosAbs, id)
+		}
+		return
+	}
+	if gia.Gia_ObjIsAnd(obj) == 0 {
+		panic("pdr: unexpected object in ternary simulation cone")
+	}
+	Txs3_ManCollectCone_rec(p, gia.Gia_ObjFanin0(obj))
+	Txs3_ManCollectCone_rec(p, gia.Gia_ObjFanin1(obj))
+	vec.Vec_IntPush(p.vNodes, gia.Gia_ObjId(p.pGia, obj))
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Shrinks values using ternary simulation.]
-
-  Description [The cube contains the set of flop index literals which,
-  when converted into a clause and applied to the combinational outputs, 
-  led to a satisfiable SAT run in frame k (values stored in the SAT solver).
-  If the cube is NULL, it is assumed that the first property output was
-  asserted and failed.
-  The resulting array is a set of flop index literals that asserts the COs.
-  Priority contains 0 for i-th entry if the i-th FF is desirable to remove.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Txs3_ManTernarySim(p *Txs3_Man_t, k int32, pCube *Pdr_Set_t) *Pdr_Set_t {
-//    int fTryNew = 1;
-//    int fUseLit = 1;
-    var fVerbose int32;
-    var pSat *sat_solver;
-    var pRes *Pdr_Set_t;
-    var pObj *Gia_Obj_t;
-    var vVar2Ids, vLits *Vec_Int_t;
-    var i int32;
-    var Lit int32;
-    var LitAux int32;
-    var Var int32;
-    var Value int32;
-    var RetValue int32;
-    var nCoreLits int32;
-    var pCoreLits *int32;//, nLits;
-//    if ( k == 0 )
-//        fVerbose = 1;
-    // collect CO objects
-    Vec_IntClear( p.vCoObjs );
-    if pCube == nil { // the target is the property output
-    
-        pObj = Gia_ManCo(p.pGia, p.pMan.iOutCur);
-        Vec_IntPush( p.vCoObjs, Gia_ObjId(p.pGia, pObj) );
-    
-    } else { // the target is the cube
-    
-        var i int32;
-        for  i = 0; i < pCube.nLits; i++  {
-            if pCube.Lits[i] == -1 {
-                continue; }
-            pObj = Gia_ManCo(p.pGia, Gia_ManPoNum(p.pGia) + Abc_Lit2Var(pCube.Lits[i]));
-            Vec_IntPush( p.vCoObjs, Gia_ObjId(p.pGia, pObj) );
-        }
-    }
-if false {
-Abc_Print( 1, "Trying to justify cube " );
-if pCube != nil {
-    Pdr_SetPrint( os.Stdout, pCube, Gia_ManRegNum(p.pGia), nil );
-} else {
-    Abc_Print( 1, "<prop=fail>" ); }
-Abc_Print( 1, " in frame %d.\n", k );
+func Txs3_ManCollectCone(p *Txs3_Man_t, verbose int32) {
+	vec.Vec_IntClear(p.vCiObjs)
+	vec.Vec_IntClear(p.vFosPre)
+	vec.Vec_IntClear(p.vFosAbs)
+	vec.Vec_IntClear(p.vNodes)
+	gia.Gia_ManConst0(p.pGia).Value = ^uint32(0)
+	for _, id := range vec.Vec_IntArray(p.vCoObjs) {
+		Txs3_ManCollectCone_rec(p, gia.Gia_ObjFanin0(gia.Gia_ManObj(p.pGia, id)))
+	}
+	if verbose != 0 {
+		fmt.Printf("%d %d %d\n", vec.Vec_IntSize(p.vCiObjs), vec.Vec_IntSize(p.vFosPre), vec.Vec_IntSize(p.vFosAbs))
+	}
+	p.nPiLits = int32(vec.Vec_IntSize(p.vCiObjs))
+	slices.Sort(vec.Vec_IntArray(p.vCiObjs))
+	slices.Sort(vec.Vec_IntArray(p.vFosPre))
+	slices.Reverse(vec.Vec_IntArray(p.vFosPre))
+	slices.Sort(vec.Vec_IntArray(p.vFosAbs))
+	slices.Reverse(vec.Vec_IntArray(p.vFosAbs))
+	for _, id := range vec.Vec_IntArray(p.vFosPre) {
+		vec.Vec_IntPush(p.vCiObjs, id)
+	}
+	for _, id := range vec.Vec_IntArray(p.vFosAbs) {
+		vec.Vec_IntPush(p.vCiObjs, id)
+	}
+	for _, id := range vec.Vec_IntArray(p.vCiObjs) {
+		gia.Gia_ManObj(p.pGia, id).Value = 0
+	}
+	for _, id := range vec.Vec_IntArray(p.vNodes) {
+		gia.Gia_ManObj(p.pGia, id).Value = 0
+	}
 }
 
-    // collect CI objects
-    Txs3_ManCollectCone( p, fVerbose );
-    // collect values
-    Pdr_ManCollectValues( p.pMan, k, p.vCiObjs, p.vCiVals );
-    Pdr_ManCollectValues( p.pMan, k, p.vCoObjs, p.vCoVals );
-
-    // read solver
-    pSat = Pdr_ManFetchSolver( p.pMan, k );
-    LitAux = Abc_Var2Lit( Pdr_ManFreeVar(p.pMan, k), 0 );
-    // add the clause (complemented cube) in terms of next state variables
-    if pCube == nil { // the target is the property output
-    
-        vLits = p.pMan.vLits;
-        Lit = Abc_Var2Lit( Pdr_ObjSatVar(p.pMan, k, 2, Aig_ManCo(p.pMan.pAig, p.pMan.iOutCur)), 1 ); // neg literal (property holds)
-        Vec_IntFill( vLits, 1, Lit );
-    
-    } else {
-        vLits = Pdr_ManCubeToLits( p.pMan, k, pCube, 1, 1 ); }
-    // add activation literal
-    Vec_IntPush( vLits, LitAux );
-    RetValue = sat_solver_addclause( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits) );
-    assert(RetValue == 1, "RetValue == 1");
-    sat_solver_compress( pSat );
-
-    // collect assumptions 
-    Vec_IntClear( p.vTemp );
-    Vec_IntPush( p.vTemp, Abc_LitNot(LitAux) );
-    // iterate through the values of the CI variables
-    Vec_IntForEachEntryTwo( p.vCiObjs, p.vCiVals, Var, Value, i )
-    {
-        var pObj *Aig_Obj_t  = Aig_ManObj( p.pMan.pAig, Var );
-//        iVar = Pdr_ObjSatVar( p->pMan, k, fNext ? 2 - lit_sign(pCube->Lits[i]) : 3, pObj ); assert( iVar >= 0 );
-        var iVar int32  = Pdr_ObjSatVar( p.pMan, k, 3, pObj ); assert(iVar >= 0, "iVar >= 0");
-        assert(Aig_ObjIsCi(pObj), "Aig_ObjIsCi(pObj)");
-        Vec_IntPush( p.vTemp, Abc_Var2Lit(iVar, !Value) );
-    }
-    if fVerbose != 0 {
-        fmt.Printf("Clause with %d lits on lev %d\n", pCube ? pCube.nLits : 0, k);
-        Vec_IntPrint( p.vTemp );
-    }
-
-/*
-    // solve with assumptions
-//printf( "%d -> ", Vec_IntSize(p->vTemp) );
-{
-abctime clk = Abc_Clock();
-// assume all except flops
-    Vec_IntForEachEntryStop( p->vTemp, Lit, i, p->nPiLits + 1 )
-        if ( !sat_solver_push(pSat, Lit) )
-        {
-            assert( 0 );
-        }
-    nLits = sat_solver_minimize_assumptions( pSat, Vec_IntArray(p->vTemp) + p->nPiLits + 1, Vec_IntSize(p->vTemp) - p->nPiLits - 1, p->pMan->pPars->nConfLimit );
-    Vec_IntShrink( p->vTemp, p->nPiLits + 1 + nLits );
-
-p->pMan->tAbs += Abc_Clock() - clk;
-    for ( i = 0; i <= p->nPiLits; i++ )
-        sat_solver_pop(pSat);
+func Txs3_ManTernarySim(p *Txs3_Man_t, k int32, cube *Pdr_Set_t) *Pdr_Set_t {
+	vec.Vec_IntClear(p.vCoObjs)
+	if cube == nil {
+		obj := gia.Gia_ManCo(p.pGia, p.pMan.iOutCur)
+		vec.Vec_IntPush(p.vCoObjs, gia.Gia_ObjId(p.pGia, obj))
+	} else {
+		for _, lit := range cube.Lits[:cube.nLits] {
+			if lit < 0 {
+				continue
+			}
+			obj := gia.Gia_ManCo(p.pGia, gia.Gia_ManPoNum(p.pGia)+(lit>>1))
+			vec.Vec_IntPush(p.vCoObjs, gia.Gia_ObjId(p.pGia, obj))
+		}
+	}
+	Txs3_ManCollectCone(p, 0)
+	mapObjects := func(objects *vec.Vec_Int_t) *vec.Vec_Int_t {
+		mapped := vec.Vec_IntAlloc(vec.Vec_IntSize(objects))
+		for _, id := range vec.Vec_IntArray(objects) {
+			if id < 0 || int(id) >= len(p.giaToAig) || p.giaToAig[id] < 0 {
+				panic("pdr: GIA interface object lacks an AIG counterpart")
+			}
+			vec.Vec_IntPush(mapped, p.giaToAig[id])
+		}
+		return mapped
+	}
+	Pdr_ManCollectValues(p.pMan, k, mapObjects(p.vCiObjs), p.vCiVals)
+	Pdr_ManCollectValues(p.pMan, k, mapObjects(p.vCoObjs), p.vCoVals)
+	solver := Pdr_ManFetchSolver(p.pMan, k)
+	aux := Pdr_ManFreeVar(p.pMan, k) << 1
+	var lits *vec.Vec_Int_t
+	if cube == nil {
+		lits = p.pMan.vLits
+		output := aig.Aig_ManCo(p.pMan.pAig, p.pMan.iOutCur)
+		lit := Pdr_ObjSatVar(p.pMan, k, 2, output)<<1 | 1
+		vec.Vec_IntFill(lits, 1, lit)
+	} else {
+		lits = Pdr_ManCubeToLits(p.pMan, k, cube, 1, 1)
+	}
+	vec.Vec_IntPush(lits, aux)
+	if !solver.AddClause(vec.Vec_IntArray(lits)...) {
+		panic("pdr: activation clause rejected")
+	}
+	solver.Compress()
+	vec.Vec_IntClear(p.vTemp)
+	vec.Vec_IntPush(p.vTemp, aux^1)
+	ids, values := vec.Vec_IntArray(p.vCiObjs), vec.Vec_IntArray(p.vCiVals)
+	if len(ids) != len(values) {
+		panic("pdr: inconsistent cone values")
+	}
+	for i, id := range ids {
+		obj := aig.Aig_ManObj(p.pMan.pAig, p.giaToAig[id])
+		variable := Pdr_ObjSatVar(p.pMan, k, 3, obj)
+		if variable < 0 || !aig.Aig_ObjIsCi(p.pMan.pAig, obj) {
+			panic("pdr: invalid cone input")
+		}
+		sign := int32(0)
+		if values[i] == 0 {
+			sign = 1
+		}
+		vec.Vec_IntPush(p.vTemp, variable<<1|sign)
+	}
+	if solver.Solve(vec.Vec_IntArray(p.vTemp)...) != bsat.Unsatisfiable {
+		panic("pdr: justification is not unsatisfiable")
+	}
+	core := solver.UnsatCore()
+	vec.Vec_IntClear(p.vTemp)
+	for _, lit := range core {
+		vec.Vec_IntPush(p.vTemp, lit^1)
+	}
+	slices.Sort(vec.Vec_IntArray(p.vTemp))
+	vec.Vec_IntClear(p.vPiLits)
+	vec.Vec_IntClear(p.vFfLits)
+	varToID := p.pMan.vVar2Ids[k]
+	for _, lit := range vec.Vec_IntArray(p.vTemp) {
+		if lit == aux^1 {
+			continue
+		}
+		id := vec.Vec_IntEntry(varToID, int(lit>>1))
+		obj := aig.Aig_ManObj(p.pMan.pAig, id)
+		if !aig.Aig_ObjIsCi(p.pMan.pAig, obj) {
+			panic("pdr: core literal is not a CI")
+		}
+		cio := aig.Aig_ObjCioId(p.pMan.pAig, obj)
+		if saig.Saig_ObjIsPi(p.pMan.pAig, obj) {
+			vec.Vec_IntPush(p.vPiLits, cio<<1|lit&1)
+		} else {
+			vec.Vec_IntPush(p.vFfLits, (cio-saig.Saig_ManPiNum(p.pMan.pAig))<<1|lit&1)
+		}
+	}
+	if vec.Vec_IntSize(p.vTemp) != vec.Vec_IntSize(p.vPiLits)+vec.Vec_IntSize(p.vFfLits)+1 {
+		panic("pdr: missing activation assumption in core")
+	}
+	if p.pMan.pPars.fUseAbs != 0 && p.pMan.vAbsFlops != nil {
+		kept := 0
+		for _, lit := range vec.Vec_IntArray(p.vFfLits) {
+			if vec.Vec_IntEntry(p.pMan.vAbsFlops, int(lit>>1)) != 0 {
+				vec.Vec_IntWriteEntry(p.vFfLits, kept, lit)
+				kept++
+			} else {
+				vec.Vec_IntPush(p.vPiLits, 2*saig.Saig_ManPiNum(p.pMan.pAig)+lit)
+			}
+		}
+		vec.Vec_IntShrink(p.vFfLits, kept)
+	}
+	result := Pdr_SetCreate(p.vFfLits, p.vPiLits)
+	if k != 0 && Pdr_SetIsInit(result, -1) != 0 {
+		panic("pdr: justification intersects initial state")
+	}
+	return result
 }
-//printf( "%d    ", nLits );
-*/
-
-
-    //check one last time
-    RetValue = sat_solver_solve( pSat, Vec_IntArray(p.vTemp), Vec_IntLimit(p.vTemp), 0, 0, 0, 0 );
-    assert(RetValue == l_False, "RetValue == l_False");
-
-    // use analyze final
-    nCoreLits = sat_solver_final(pSat, &pCoreLits);
-    //assert( Vec_IntSize(p->vTemp) <= nCoreLits );
-
-    Vec_IntClear( p.vTemp );
-    for  i = 0; i < nCoreLits; i++  {
-        Vec_IntPush( p.vTemp, Abc_LitNot(pCoreLits[i]) );
-    }
-    Vec_IntSelectSort( Vec_IntArray(p.vTemp), Vec_IntSize(p.vTemp) );
-
-    if fVerbose != 0 {
-        Vec_IntPrint( p.vTemp ); }
-
-    // collect the resulting sets
-    Vec_IntClear( p.vPiLits );
-    Vec_IntClear( p.vFfLits );
-    vVar2Ids = (Vec_Int_t *)Vec_PtrGetEntry( &p.pMan.vVar2Ids, k );
-    Vec_IntForEachEntry( p.vTemp, Lit, i )
-    {
-        if Lit != Abc_LitNot(LitAux) {
-            var Id int32  = Vec_IntEntry( vVar2Ids, Abc_Lit2Var(Lit) );
-            var pObj *Aig_Obj_t  = Aig_ManObj( p.pMan.pAig, Id );
-            assert(Aig_ObjIsCi(pObj), "Aig_ObjIsCi(pObj)");
-            if Saig_ObjIsPi(p.pMan.pAig, pObj) {
-                Vec_IntPush( p.vPiLits, Abc_Var2Lit(Aig_ObjCioId(pObj), Abc_LitIsCompl(Lit)) );
-            } else {
-                Vec_IntPush( p.vFfLits, Abc_Var2Lit(Aig_ObjCioId(pObj) - Saig_ManPiNum(p.pMan.pAig), Abc_LitIsCompl(Lit)) ); }
-        }
-    }
-    assert(Vec_IntSize(p.vTemp) == Vec_IntSize(p.vPiLits) + Vec_IntSize(p.vFfLits) + 1, "Vec_IntSize(p.vTemp) == Vec_IntSize(p.vPiLits) + Vec_IntSize(p.vFfLits) + 1");
-
-    // move abstracted literals from flops to inputs
-    if p.pMan.pPars.fUseAbs && p.pMan.vAbsFlops {
-        var i, iLit, k int32;
-        Vec_IntForEachEntry( p.vFfLits, iLit, i )
-        {
-            if Vec_IntEntry(p.pMan.vAbsFlops, Abc_Lit2Var(iLit)) { // used flop
-                Vec_IntWriteEntry( p.vFfLits, k++, iLit );
-            } else {
-                Vec_IntPush( p.vPiLits, 2*Saig_ManPiNum(p.pMan.pAig) + iLit ); }
-        }
-        Vec_IntShrink( p.vFfLits, k );
-    }
-
-    if fVerbose != 0 {
-        Vec_IntPrint( p.vPiLits ); }
-    if fVerbose != 0 {
-        Vec_IntPrint( p.vFfLits ); }
-    if fVerbose != 0 {
-        fmt.Printf("\n"); }
-
-    // derive the final set
-    pRes = Pdr_SetCreate( p.vFfLits, p.vPiLits );
-    //ZH: Disabled assertion because this invariant doesn't hold with down
-    //because of the join operation which can bring in initial states
-    assert(k == 0 || !Pdr_SetIsInit(pRes, -1), "k == 0 || !Pdr_SetIsInit(pRes, -1)");
-    return pRes;
-}
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
