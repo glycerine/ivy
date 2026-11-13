@@ -32,6 +32,45 @@ func TestPrepareLatchCandidates(t *testing.T) {
 	}
 }
 
+func TestPrepareSimpleRespectsSourceLevelAndLatchOptions(t *testing.T) {
+	for _, tc := range []struct {
+		name      string
+		latchOnly int32
+		wantGate  bool
+	}{
+		{"all candidates limited by level", 0, true},
+		{"latch only ignores level", 1, false},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			g := aig.NewGraph()
+			x, y, latch := g.NewInput(), g.NewInput(), g.NewInput()
+			level1 := g.AND(x, latch)
+			level2 := g.AND(level1, y)
+			g.AddOutput(level2)
+			g.AddOutput(x)
+			aig.Aig_ManSetRegNum(g, 1)
+			p := Ssw_ClassesPrepareSimple(g, tc.latchOnly, 1)
+			defer Ssw_ClassesStop(p)
+			if aig.Aig_ObjRepr(g, latch) != g.Const1() {
+				t.Fatal("latch was not selected")
+			}
+			if (aig.Aig_ObjRepr(g, level1) == g.Const1()) != tc.wantGate {
+				t.Fatal("level-one gate selection disagrees with C")
+			}
+			if aig.Aig_ObjRepr(g, level2) != aig.InvalidEdge || aig.Aig_ObjRepr(g, x) != aig.InvalidEdge {
+				t.Fatal("deep gate or primary input was selected")
+			}
+			want := int32(1)
+			if tc.wantGate {
+				want++
+			}
+			if p.nCands1 != want {
+				t.Fatalf("candidate count = %d, want %d", p.nCands1, want)
+			}
+		})
+	}
+}
+
 func TestPrepareClassesFromPairs(t *testing.T) {
 	g := aig.NewGraph()
 	a, b, c := g.NewInput(), g.NewInput(), g.NewInput()
