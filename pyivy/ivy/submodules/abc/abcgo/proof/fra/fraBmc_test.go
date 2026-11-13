@@ -80,3 +80,61 @@ func TestFraBmcFilterImplicationsSameRepresentative(t *testing.T) {
 		t.Fatal("complementary implication retained")
 	}
 }
+
+func TestFraBmcPerformRefinesInitializedClasses(t *testing.T) {
+	g := aig.NewGraph()
+	x, state := g.NewInput(), g.NewInput()
+	g.AddOutput(state)
+	g.AddOutput(x)
+	aig.Aig_ManSetRegNum(g, 1)
+	p := &Fra_Man_t{pManAig: g, pPars: &Fra_Par_t{}, pCla: Fra_ClassesStart(g)}
+	Fra_ClassesTest(p.pCla, int32(x.NodeID()), int32(state.NodeID()))
+	Fra_BmcPerform(p, 0, 1)
+	if p.pBmc != nil {
+		t.Fatal("BMC manager not cleared")
+	}
+	if p.pCla.reprs[state.NodeID()] >= 0 {
+		t.Fatalf("invalid equivalence survived: %v", p.pCla.reprs)
+	}
+}
+
+func TestFraBmcPerformSimpleFindsSequentialWitness(t *testing.T) {
+	g := aig.NewGraph()
+	x, y, state := g.NewInput(), g.NewInput(), g.NewInput()
+	g.AddOutput(state)
+	g.AddOutput(g.AND(x, y))
+	aig.Aig_ManSetRegNum(g, 1)
+	Fra_BmcPerformSimple(g, 2, 1000, 0, 0)
+	cex := g.SequentialCounterexample()
+	if cex == nil || cex.IPo != 0 || cex.IFrame != 1 {
+		t.Fatalf("missing sequential witness: %+v", cex)
+	}
+}
+
+func TestFraBmcSimpleFindsDirectInputWitness(t *testing.T) {
+	g := aig.NewGraph()
+	input, state := g.NewInput(), g.NewInput()
+	g.AddOutput(state)
+	g.AddOutput(input)
+	aig.Aig_ManSetRegNum(g, 1)
+	Fra_BmcPerformSimple(g, 2, 1000, 0, 0)
+	cex := g.SequentialCounterexample()
+	if cex == nil || cex.IPo != 0 || cex.IFrame != 1 {
+		t.Fatalf("missing direct-input witness: %+v", cex)
+	}
+}
+
+func TestFraBmcFiltersImplicationsWithNoInternalNodes(t *testing.T) {
+	g := aig.NewGraph()
+	x, state := g.NewInput(), g.NewInput()
+	g.AddOutput(state)
+	g.AddOutput(x)
+	aig.Aig_ManSetRegNum(g, 1)
+	p := &Fra_Man_t{pManAig: g, pPars: &Fra_Par_t{}, pCla: Fra_ClassesStart(g)}
+	p.pCla.vImps = vec.Vec_IntAlloc(1)
+	vec.Vec_IntPush(p.pCla.vImps, Fra_ImpCreate(int32(x.NodeID()), int32(state.NodeID())))
+	Fra_BmcPerform(p, 0, 1)
+	if vec.Vec_IntSize(p.pCla.vImps) != 0 {
+		t.Fatal("invalid implication survived BMC")
+	}
+}
