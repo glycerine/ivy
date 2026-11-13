@@ -43,3 +43,13 @@ func Saig_ManCbaReason2Cex(p *Saig_ManCba_t, reasons *vec.Vec_Int_t) *util.Abc_C
 	}
 	return care
 }
+
+func Saig_ManCbaStart(g *aig.Graph, cex *util.Abc_Cex_t, nInputs, verbose int32) *Saig_ManCba_t {
+	return &Saig_ManCba_t{pAig: g, pCex: cex, nInputs: nInputs, fVerbose: verbose}
+}
+func Saig_ManCbaStop(p *Saig_ManCba_t) {
+	p.pFrames = nil
+	p.vMapPiF2A = nil
+	p.vReg2Frame = nil
+	p.vReg2Value = nil
+}

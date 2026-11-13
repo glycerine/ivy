@@ -11,8 +11,12 @@ import (
 // The first nInputs primary inputs are fixed to the counterexample; each
 // remaining frame input is mapped to its original input and frame in mapping.
 func Saig_ManUnrollWithCex(g *aig.Graph, cex *util.Abc_Cex_t, nInputs int32, mapping **vec.Vec_Int_t) *aig.Graph {
+	return oldUnrollWithCex(g, cex, nInputs, mapping, nil, false)
+}
+
+func oldUnrollWithCex(g *aig.Graph, cex *util.Abc_Cex_t, nInputs int32, mapping **vec.Vec_Int_t, regFrames **vec.Vec_Vec_t, allowRegMismatch bool) *aig.Graph {
 	piCount, regCount := saig.Saig_ManPiNum(g), saig.Saig_ManRegNum(g)
-	if cex.NPis != piCount || cex.NRegs != regCount || cex.IPo < 0 || cex.IPo >= saig.Saig_ManPoNum(g) {
+	if cex.NPis != piCount || (!allowRegMismatch && cex.NRegs != regCount) || cex.IPo < 0 || cex.IPo >= saig.Saig_ManPoNum(g) {
 		panic("invalid unrolling counterexample")
 	}
 	nFrames := int(cex.IFrame) + 1
@@ -65,7 +69,7 @@ func Saig_ManUnrollWithCex(g *aig.Graph, cex *util.Abc_Cex_t, nInputs int32, map
 	copies[g.Const1().NodeID()] = result.Const1()
 	for i := int32(0); i < regCount; i++ {
 		v := result.Const0()
-		if util.Abc_InfoHasBit(cex.PData, i) {
+		if cex.NRegs == regCount && util.Abc_InfoHasBit(cex.PData, i) {
 			v = result.Const1()
 		}
 		copies[saig.Saig_ManLo(g, i).NodeID()] = v
@@ -107,6 +111,10 @@ func Saig_ManUnrollWithCex(g *aig.Graph, cex *util.Abc_Cex_t, nInputs int32, map
 			for _, li := range roots[frame] {
 				lo := saig.Saig_ObjLiToLo(g, li)
 				copies[lo.NodeID()] = copies[li.NodeID()]
+				if regFrames != nil && *regFrames != nil {
+					vec.Vec_VecPushInt(*regFrames, frame, int32(li.NodeID()))
+					vec.Vec_VecPushInt(*regFrames, frame, int32(copies[li.NodeID()]))
+				}
 			}
 		}
 	}
