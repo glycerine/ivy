@@ -73,3 +73,43 @@ func TestUniqueOneRequiresFeasibleEqualLatchValues(t *testing.T) {
 		}
 	}
 }
+
+func TestUniqueOneIndexesLatchSupportAfterPrimaryInputs(t *testing.T) {
+	original := aig.NewGraph()
+	pi0, pi1 := original.NewInput(), original.NewInput()
+	lo0, lo1 := original.NewInput(), original.NewInput()
+	repr := original.AND(pi0, lo1)
+	candidate := original.AND(pi1, lo1)
+	original.AddOutput(original.Const0())
+	original.AddOutput(original.Const0())
+	aig.Aig_ManSetRegNum(original, 2)
+	aig.Aig_ManSetCioIds(original)
+
+	frames := aig.NewGraph()
+	a, b := frames.NewInput(), frames.NewInput()
+	sat := Ssw_SatStart(0)
+	defer Ssw_SatStop(sat)
+	sat.pAig = frames
+	p := &Ssw_Man_t{
+		pAig: original, pFrames: frames, pMSat: sat,
+		pPars: &Ssw_Pars_t{nFramesK: 2}, nFrames: 2, iOutputLit: -1,
+		pNodeToFrames: make([]aig.Edge, len(original.Nodes())*2),
+		vDiffPairs:    vec.Vec_IntAllocArrayCopy([]int32{0, 1}, 2),
+		vCommon:       vec.Vec_PtrAlloc(2),
+	}
+	for i := range p.pNodeToFrames {
+		p.pNodeToFrames[i] = aig.InvalidEdge
+	}
+	Ssw_ObjSetFrame(p, lo0, 0, frames.NewInput())
+	Ssw_ObjSetFrame(p, lo0, 1, frames.NewInput())
+	Ssw_ObjSetFrame(p, lo1, 0, a)
+	Ssw_ObjSetFrame(p, lo1, 1, b)
+	Ssw_CnfNodeAddToSolver(sat, a)
+	Ssw_CnfNodeAddToSolver(sat, b)
+	if sat.pSat.Solve(sswLit(sat, a, false), sswLit(sat, b, false)) != bsat.Satisfiable {
+		t.Fatal("expected equal latch values to be feasible")
+	}
+	if got := Ssw_ManUniqueOne(p, repr, candidate, 0); got != 1 {
+		t.Fatalf("latch at CioId 3 must index vDiffPairs[1], got %d", got)
+	}
+}

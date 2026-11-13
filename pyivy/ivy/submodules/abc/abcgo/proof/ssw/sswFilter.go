@@ -295,7 +295,7 @@ func Ssw_SignalFilter(g *aig.Graph, frames, conflicts, rounds, timeLimit, timeLi
 		p.pMSat = nil
 		Ssw_ManCleanup(p)
 		Ssw_ManRollForward(p, frames)
-		if timeLimit != 0 && sswCPUClock() > deadline {
+		if sswDeadlineExceeded(timeLimit, sswCPUClock(), deadline) {
 			fmt.Printf("Reached timeout (%d seconds).\n", timeLimit)
 			break
 		}
@@ -311,6 +311,12 @@ func sswCPUClockIfTimed(limit int32) int64 {
 		return 0
 	}
 	return sswCPUClock()
+}
+
+// sswDeadlineExceeded retains ABC's strict `clock > deadline` check and its
+// convention that zero disables the deadline while any other value enables it.
+func sswDeadlineExceeded(limit int32, now, deadline int64) bool {
+	return limit != 0 && now > deadline
 }
 
 // sswFilterPartLimit retains C's signed integer truncation and zero handling.

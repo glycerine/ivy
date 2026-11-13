@@ -72,3 +72,24 @@ when a candidate has a framed image but its representative does not; it no
 longer removes that candidate silently. The source filter driver visits nodes
 in object-ID order, so this direct-helper precondition test does not show that
 the same state is reachable through the complete source driver.
+
+## Source review and test inventory
+
+The implementation paths and their focused regression coverage are:
+
+| Path | Main options or behavior | Focused evidence |
+| --- | --- | --- |
+| Signal correspondence | static and dynamic constraints, local/global simulation, polarity flip, stop-when-gone | `sswCore*`, `sswDyn*`, `sswPolarOracle_test.go`, `sswStopWhenGone_test.go` |
+| Latch correspondence | default and optimized entry points, solver recycling, trace preservation | `ssw_latch_c_oracle_test.go`, `ssw_dynamic_c_oracle_test.go`, `sswLcorrIntegration_test.go` |
+| SAT and CNF | complemented edges, phase-flipped solver, limits, BMC frame construction | `sswSat_test.go`, `sswConstrPhases_test.go`, `sswCnf_test.go`, `sswBmcOracle_test.go` |
+| Class preparation and transforms | representative/simple/pair classes, ordered pair transfer, duplicate/self-pair source behavior | `sswClassPrepare_test.go`, `ssw_classes_c_oracle_test.go`, `sswPairsTransfer_source_test.go`, `sswPairComponentsOracle_test.go` |
+| Rarity simulation and filtering | pattern layout, word boundaries, selection, replay, timeout and phase behavior | `sswRarity*test.go`, `sswTranspose_test.go`, `sswRarityGapSource_test.go`, `ssw_pattern_phase_test.go` |
+| Signal filtering | per-frame SAT budget, global remaining budget, strict deadline boundary, CPU-clock behavior | `ssw_filter_clock_test.go`, `ssw_filter_clock_linux_test.go`, `sswFilter_test.go` |
+
+The source CioId arithmetic for uniqueness support now has an explicit case
+with multiple primary inputs and multiple latches: a latch at CioId 3 must map
+to the second latch-difference entry. Deadline checks share a small predicate
+whose tests lock down ABC's strict `now > deadline` boundary, zero-disabled
+convention, and nonzero negative-limit behavior. These are regression checks
+for specific source contracts; the table is an inventory, not a claim that
+every option combination has been exhaustively tested.

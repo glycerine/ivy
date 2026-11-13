@@ -18,3 +18,23 @@ func TestSignalFilterSourceRemainingLimits(t *testing.T) {
 		}
 	}
 }
+
+func TestSourceDeadlineStrictBoundaryAndZeroConvention(t *testing.T) {
+	for _, tc := range []struct {
+		name     string
+		limit    int32
+		now, end int64
+		want     bool
+	}{
+		{"disabled", 0, 100, 0, false},
+		{"exact boundary", 1, 10, 10, false},
+		{"one tick over", 1, 11, 10, true},
+		{"negative nonzero limit", -1, 0, -1, true},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			if got := sswDeadlineExceeded(tc.limit, tc.now, tc.end); got != tc.want {
+				t.Fatalf("deadline result %t, want %t", got, tc.want)
+			}
+		})
+	}
+}

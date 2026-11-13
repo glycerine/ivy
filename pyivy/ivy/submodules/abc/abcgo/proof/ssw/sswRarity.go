@@ -772,7 +772,7 @@ outer:
 					lastSolved = sswCPUClock()
 				}
 			}
-			if pars.TimeOut != 0 && sswCPUClock() > deadline || pars.TimeOutGap != 0 && lastSolved != 0 && sswCPUClock() > lastSolved+int64(pars.TimeOutGap)*sswTicksPerSecond {
+			if sswDeadlineExceeded(pars.TimeOut, sswCPUClock(), deadline) || pars.TimeOutGap != 0 && lastSolved != 0 && sswCPUClock() > lastSolved+int64(pars.TimeOutGap)*sswTicksPerSecond {
 				break outer
 			}
 			if pars.fSolveAll != 0 && p.vCexes != nil && vec.Vec_PtrCountZero(p.vCexes) == 0 {
@@ -932,7 +932,7 @@ func Ssw_RarSignalFilter(g *aig.Graph, pars *Ssw_RarPars_t) int32 {
 				}
 				return 0
 			}
-			if pars.TimeOut != 0 && sswCPUClock() > deadline {
+			if sswDeadlineExceeded(pars.TimeOut, sswCPUClock(), deadline) {
 				return -1
 			}
 		}
