@@ -40,34 +40,44 @@ func Msat_SolverClean(p *Msat_Solver_t, n int) {
 		panic("invalid variable count")
 	}
 	p.nVars = n
+	p.nClauses = 0
+	for _, c := range p.vClauses.data {
+		Msat_ClauseFree(p, c, 0)
+	}
+	for _, c := range p.vLearned.data {
+		Msat_ClauseFree(p, c, 0)
+	}
 	p.vClauses.data = p.vClauses.data[:0]
 	p.vLearned.data = p.vLearned.data[:0]
-	p.vTrail.data = p.vTrail.data[:0]
-	p.vTrailLim.data = p.vTrailLim.data[:0]
-	p.vConeVars.data = p.vConeVars.data[:0]
-	for i := range p.pAssigns {
+	for i := 0; i < n; i++ {
+		p.pdActivity[i] = 0
 		p.pAssigns[i] = -1
-		p.pModel[i] = -1
 		p.pReasons[i] = nil
 		p.pLevel[i] = -1
-		p.pdActivity[i] = 0
 		p.pSeen[i] = 0
-		p.vVarsUsed.data[i] = 1
-		p.vAdjacents[i].data = p.vAdjacents[i].data[:0]
 	}
-	for _, w := range p.pvWatched {
-		w.data = w.data[:0]
-	}
-	for i := 0; i < n; i++ {
-		p.vConeVars.data = append(p.vConeVars.data, i)
+	Msat_OrderSetBounds(p.pOrder, n)
+	for i := 0; i < 2*n; i++ {
+		p.pvWatched[i].data = p.pvWatched[i].data[:0]
 	}
 	Msat_QueueClear(p.pQueue)
-	Msat_OrderClean(p.pOrder, p.vConeVars)
-	p.nLevelRoot = 0
-	p.nClausesStart = 0
-	p.nClauses = 0
+	p.vTrail.data = p.vTrail.data[:0]
+	p.vTrailLim.data = p.vTrailLim.data[:0]
+	p.dProgress = 0
+	p.nSeenId = 1
+	p.vReason.data = p.vReason.data[:0]
+	p.vTemp.data = p.vTemp.data[:0]
 	p.okay = true
-	p.Stats = Msat_SolverStats_t{}
+}
+
+// msatInitializeOrder is for Go convenience entry points. The C Clean API
+// leaves the order empty and expects its caller to select a cone.
+func msatInitializeOrder(p *Msat_Solver_t) {
+	p.vConeVars.data = p.vConeVars.data[:0]
+	for i := 0; i < p.nVars; i++ {
+		p.vConeVars.data = append(p.vConeVars.data, i)
+	}
+	Msat_OrderClean(p.pOrder, p.vConeVars)
 }
 
 // Msat_SolverPrepare discards current bindings while retaining the database,

@@ -10,6 +10,10 @@ import (
 )
 
 func ParseDIMACS(r io.Reader) (*Msat_Solver_t, error) {
+	return parseDIMACS(r, true)
+}
+
+func parseDIMACS(r io.Reader, initializeOrder bool) (*Msat_Solver_t, error) {
 	scanner := bufio.NewScanner(r)
 	scanner.Buffer(make([]byte, 4096), 16<<20)
 	var p *Msat_Solver_t
@@ -69,10 +73,13 @@ func ParseDIMACS(r io.Reader) (*Msat_Solver_t, error) {
 	if p == nil || len(clause) > 0 || count != declared {
 		return nil, fmt.Errorf("incomplete DIMACS input")
 	}
+	if initializeOrder {
+		msatInitializeOrder(p)
+	}
 	return p, nil
 }
 func Msat_SolverParseDimacs(r io.Reader, out **Msat_Solver_t, verbose int) int {
-	p, err := ParseDIMACS(r)
+	p, err := parseDIMACS(r, false)
 	if err != nil {
 		return 0
 	}

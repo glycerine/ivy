@@ -7,6 +7,7 @@ type Solver = Msat_Solver_t
 func New(variables int) *Solver {
 	p := Msat_SolverAlloc(variables, 1, 1, 1, 1, 0)
 	Msat_SolverClean(p, variables)
+	msatInitializeOrder(p)
 	return p
 }
 func (p *Msat_Solver_t) AddClause(literals []int) bool {

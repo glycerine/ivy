@@ -10,6 +10,7 @@ import (
 func newSolver(n int) *Msat_Solver_t {
 	p := Msat_SolverAlloc(n, 1, 1, 1, 1, 0)
 	Msat_SolverClean(p, n)
+	msatInitializeOrder(p)
 	return p
 }
 func brute(n int, cs [][]int, assumptions []int) bool {
