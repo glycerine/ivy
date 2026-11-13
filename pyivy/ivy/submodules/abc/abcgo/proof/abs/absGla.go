@@ -243,30 +243,6 @@ var spStatic_Ga2_ObjComputeTruthSpecial_uTruth5 [5]uint32 = [5]uint32{ 0xAAAAAAA
 
 ***********************************************************************/
 var spStatic_Saig_ManBmcHashKey_s_Primes [5]int32 = [5]int32{ 12582917, 25165843, 50331653, 100663319, 201326611 };
-func Saig_ManBmcHashKey(pArray *int32) uint32 {
-    
-    var i, Key uint32;
-    for  i = 0; i < 5; i++  {
-        Key += pArray[i] * spStatic_Saig_ManBmcHashKey_s_Primes[i];
-    }
-    return Key;
-}
-func Saig_ManBmcLookup(p *Ga2_Man_t, pArray *int32) *int32 {
-    var pTable *int32  = p.pTable + 6 * (Saig_ManBmcHashKey(pArray) % p.nTable);
-    if memcmp( pTable, pArray, 20 ) {
-        if pTable[0] == 0 {
-            p.nHashMiss++;
-        } else {
-            p.nHashOver++; }
-        memcpy( pTable, pArray, 20 );
-        pTable[5] = 0;
-    
-    } else {
-        p.nHashHit++; }
-    assert(pTable + 5 < pTable + 6 * p.nTable, "pTable + 5 < pTable + 6 * p.nTable");
-    return pTable + 5;
-}
-
 /**Function*************************************************************
 
   Synopsis    []
