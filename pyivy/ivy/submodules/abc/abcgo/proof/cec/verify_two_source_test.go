@@ -19,10 +19,10 @@ func TestVerifyTwoUsesCombinationalRegisterInterface(t *testing.T) {
 		t.Fatalf("status %d", status)
 	}
 	w := left.CombinationalCounterexample()
-	if w == nil || w.NRegs != 1 || w.IPo != 1 {
+	if w == nil || w.NRegs != 0 || w.NPis != 2 || w.IPo != 1 {
 		t.Fatalf("witness %+v", w)
 	}
-	inputs := []bool{w.PData[0]&2 != 0, w.PData[0]&1 != 0}
+	inputs := []bool{w.PData[0]&1 != 0, w.PData[0]&2 != 0}
 	a, e1 := left.Evaluate(inputs)
 	b, e2 := right.Evaluate(inputs)
 	if e1 != nil || e2 != nil || a[1] == b[1] {
@@ -113,5 +113,51 @@ func TestVerifyTwoNativeGatesAndAigBridge(t *testing.T) {
 				t.Fatalf("AIG witness %v outputs %v %v errors %v %v", inputs, a, b, e1, e2)
 			}
 		}
+	}
+}
+
+// C transfers the miter witness slot even when no counterexample exists.
+func TestVerifyTwoReplacesExistingWitnessOnEquivalentResult(t *testing.T) {
+	left, right := gia.Gia_ManStart(8), gia.Gia_ManStart(8)
+	a, b := gia.Gia_ManAppendCi(left), gia.Gia_ManAppendCi(right)
+	gia.Gia_ManAppendCo(left, a)
+	gia.Gia_ManAppendCo(right, b)
+	if err := left.SetCombinationalCounterexample([]bool{true}, 0); err != nil {
+		t.Fatal(err)
+	}
+	if got := Cec_ManVerifyTwo(left, right, 0); got != 1 {
+		t.Fatalf("status %d", got)
+	}
+	if left.CombinationalCounterexample() != nil {
+		t.Fatal("source replaces old witness with nil")
+	}
+}
+
+func TestSpecialCasesBufferNodeRequiresFurtherVerification(t *testing.T) {
+	g := gia.Gia_ManStart(8)
+	a := gia.Gia_ManAppendCi(g)
+	b := gia.Gia_ManAppendBuf(g, a)
+	gia.Gia_ManAppendCo(g, a)
+	gia.Gia_ManAppendCo(g, b)
+	var p Cec_ParCec_t
+	Cec_ManCecSetDefaultParams(&p)
+	p.fSilent = 1
+	if got := Cec_ManHandleSpecialCases(g, &p); got != -1 {
+		t.Fatalf("got %d, want source undecided", got)
+	}
+}
+
+func TestSpecialCasesEquivalentKeepsCallerState(t *testing.T) {
+	g := gia.Gia_ManStart(8)
+	a := gia.Gia_ManAppendCi(g)
+	gia.Gia_ManAppendCo(g, a)
+	gia.Gia_ManAppendCo(g, a)
+	if err := g.SetCombinationalCounterexample([]bool{true}, 0); err != nil {
+		t.Fatal(err)
+	}
+	before := g.CombinationalCounterexample()
+	p := Cec_ParCec_t{iOutFail: 17, fSilent: 1}
+	if got := Cec_ManHandleSpecialCases(g, &p); got != 1 || p.iOutFail != 17 || g.CombinationalCounterexample() != before {
+		t.Fatalf("status %d output %d witness %p", got, p.iOutFail, g.CombinationalCounterexample())
 	}
 }

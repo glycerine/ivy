@@ -92,7 +92,7 @@ func TestSourceSweepPairsAgainstABC(t *testing.T) {
 		if err != nil {
 			return err
 		}
-		if !d.IsDir() && strings.HasSuffix(path, ".o") {
+		if !d.IsDir() && strings.HasSuffix(path, ".o") && path != filepath.Join(src, "misc/st/st.o") {
 			objects = append(objects, path)
 		}
 		return nil
@@ -101,8 +101,15 @@ func TestSourceSweepPairsAgainstABC(t *testing.T) {
 		t.Fatal(err)
 	}
 	dir := t.TempDir()
+	// Some checkouts contain a stale st.o missing symbols in the current st.c.
+	// Compile this one source into the temporary oracle archive.
+	stObject := filepath.Join(dir, "abc_st.o")
+	if out, err := exec.Command(cc, "-DABC_USE_STDINT_H", "-I", src, "-c", filepath.Join(src, "misc/st/st.c"), "-o", stObject).CombinedOutput(); err != nil {
+		t.Fatalf("compile ABC st: %v %s", err, out)
+	}
+	objects = append(objects, stObject)
 	archive := filepath.Join(dir, "libabc.a")
-	args := append([]string{"rcs", archive}, objects...)
+	args := append([]string{"qcs", archive}, objects...)
 	if out, err := exec.Command(ar, args...).CombinedOutput(); err != nil {
 		t.Fatalf("archive ABC objects: %v %s", err, out)
 	}
@@ -121,6 +128,18 @@ int main(void) {
  Gia_ManAppendCo(g,0);Gia_ManAppendCo(g,0);Gia_ManAppendCo(g,x);Gia_ManAppendCo(g,x);
  a=Vec_IntEntry(g->vCos,1);b=Vec_IntEntry(g->vCos,2);Vec_IntWriteEntry(g->vCos,1,b);Vec_IntWriteEntry(g->vCos,2,a);
  Cec_ManCecSetDefaultParams(&c); printf("reordered:%d\n",Cec_ManVerifyNaive(g,&c)); Gia_ManStop(g); }
+ { Gia_Man_t *l=Gia_ManStart(8),*r=Gia_ManStart(8); int la=Gia_ManAppendCi(l),ra=Gia_ManAppendCi(r), result;
+ Gia_ManAppendCo(l,la);Gia_ManAppendCo(r,ra);l->pCexComb=Abc_CexAlloc(0,1,1);
+ result=Cec_ManVerifyTwo(l,r,0); printf("verifytwo:%d,%d\n",result,l->pCexComb != NULL);
+ Gia_ManStop(l);Gia_ManStop(r); }
+ { Gia_Man_t *l=Gia_ManStart(16),*r=Gia_ManStart(16); int la=Gia_ManAppendCi(l),lr=Gia_ManAppendCi(l),ra=Gia_ManAppendCi(r),rr=Gia_ManAppendCi(r),result;
+ Gia_ManAppendCo(l,Gia_ManAppendAnd(l,la,lr));Gia_ManAppendCo(l,la);Gia_ManSetRegNum(l,1);
+ Gia_ManAppendCo(r,Gia_ManAppendAnd(r,ra,rr));Gia_ManAppendCo(r,ra^1);Gia_ManSetRegNum(r,1);
+ result=Cec_ManVerifyTwo(l,r,0); printf("verifytworeg:%d,%d,%d,%d\n", result,l->pCexComb->nRegs,l->pCexComb->nPis,l->pCexComb->iPo);
+ Gia_ManStop(l);Gia_ManStop(r); }
+ { Gia_Man_t *g=Gia_ManStart(8); Cec_ParCec_t c; int a=Gia_ManAppendCi(g), b=Gia_ManAppendBuf(g,a);
+ Gia_ManAppendCo(g,a);Gia_ManAppendCo(g,b);Cec_ManCecSetDefaultParams(&c);c.fSilent=1;
+ printf("specialbuffer:%d\n",Cec_ManHandleSpecialCases(g,&c)); Gia_ManStop(g); }
  return 0;
 }`
 	if err = os.WriteFile(cfile, []byte(program), 0600); err != nil {
@@ -136,6 +155,9 @@ int main(void) {
 	}
 	if !strings.Contains(string(out), "reordered:1") {
 		t.Fatalf("ABC reordered CO result: %s", out)
+	}
+	if !strings.Contains(string(out), "specialbuffer:-1") || !strings.Contains(string(out), "verifytwo:1,0") || !strings.Contains(string(out), "verifytworeg:0,0,2,1") {
+		t.Fatalf("ABC verify-two source behavior: %s", out)
 	}
 	var original []int32
 	for _, line := range strings.Split(string(out), "\n") {

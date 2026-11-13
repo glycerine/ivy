@@ -129,3 +129,13 @@ swapped, the original reports both unequal logical pairs equivalent. The Go
 adapter preserves this source behavior, covered by a reordered-output test and
 the optional compiled ABC oracle. Reordered CO vectors are therefore unsafe for
 this verification path.
+
+The public CEC wrappers still have known source-fidelity gaps. The Go
+`Cec_ManVerify` pipeline lowers native XOR, MUX and buffer objects before
+sweeping; C performs duplication, output-pair normalization and cleanup without
+this added lowering. `Cec_ManVerifyTwoAigs` does not yet mirror C's explicit
+GIA cleanup and direct transfer of the miter's witness into the AIG model
+slot; its Go adapter reconstructs a model. `Cec_ManHandleSpecialCases` uses a
+Go evaluator for phase values rather than updating GIA's stored phase fields
+as `Gia_ManSetPhase` does in C. These differences can affect supported graph
+shapes or caller-visible state and need source-backed porting and tests.

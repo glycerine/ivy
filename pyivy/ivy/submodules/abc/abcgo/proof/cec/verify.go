@@ -48,6 +48,7 @@ func Cec_ManVerify(graph *Gia_Man_t, params *Cec_ParCec_t) int32 {
 func Cec_ManVerifySimple(graph *Gia_Man_t) int32 {
 	params := new(Cec_ParCec_t)
 	Cec_ManCecSetDefaultParams(params)
+	params.fSilent = 1
 	if graph.RegisterCount() != 0 || len(graph.OutputLiterals()) != 2 {
 		return -1
 	}
@@ -56,19 +57,6 @@ func Cec_ManVerifySimple(graph *Gia_Man_t) int32 {
 func Cec_ManVerifyTwo(left, right *Gia_Man_t, verbose int32) int32 {
 	if left == nil || right == nil {
 		return -1
-	}
-	left.ClearCombinationalCounterexample()
-	if _, err := core.NewModel(left); err != nil {
-		return -1
-	}
-	if _, err := core.NewModel(right); err != nil {
-		return -1
-	}
-	if len(left.InputLiterals()) != len(right.InputLiterals()) || len(left.OutputLiterals()) != len(right.OutputLiterals()) {
-		return -1
-	}
-	if left == right {
-		return 1
 	}
 	miter := gia.Gia_ManMiter(left, right, 0, 1, 0, 0, verbose)
 	if miter == nil {
@@ -79,31 +67,9 @@ func Cec_ManVerifyTwo(left, right *Gia_Man_t, verbose int32) int32 {
 	Cec_ManCecSetDefaultParams(&params)
 	params.fVerbose = verbose
 	status := Cec_ManVerify(miter, &params)
-	if status != 0 {
-		return status
-	}
-	witness := miter.CombinationalCounterexample()
-	if witness == nil || int(witness.NPis) != len(left.InputLiterals()) || int64(len(witness.PData))*32 < int64(witness.NPis) {
-		return -1
-	}
-	inputs := make([]bool, witness.NPis)
-	for i := range inputs {
-		inputs[i] = witness.PData[i>>5]&(uint32(1)<<uint(i&31)) != 0
-	}
-	a, errA := left.Evaluate(inputs)
-	b, errB := right.Evaluate(inputs)
-	if errA != nil || errB != nil || len(a) != len(b) {
-		return -1
-	}
-	for i := range a {
-		if a[i] != b[i] {
-			if left.SetCombinationalCounterexample(inputs, i) != nil {
-				return -1
-			}
-			return 0
-		}
-	}
-	return -1
+	// C transfers the miter witness slot even when it is nil.
+	gia.SwapCombinationalCounterexamples(left, miter)
+	return status
 }
 
 // Cec_ManTransformPattern copies a source-style 0/1 input vector into the
@@ -139,12 +105,10 @@ func Cec_ManVerifyOld(graph *Gia_Man_t, verbose int32, failed *int32, started ab
 // differences without invoking SAT. -1 means that a nontrivial proof remains.
 func Cec_ManHandleSpecialCases(graph *Gia_Man_t, params *Cec_ParCec_t) int32 {
 	params.Error = nil
-	params.iOutFail = -1
 	if graph == nil {
 		params.Error = fmt.Errorf("cec: nil network")
 		return -1
 	}
-	graph.ClearCombinationalCounterexample()
 	model, err := core.NewModel(graph)
 	if err != nil {
 		params.Error = err
@@ -186,32 +150,8 @@ func Cec_ManHandleSpecialCases(graph *Gia_Man_t, params *Cec_ParCec_t) int32 {
 			return 0
 		}
 	}
-	for id := 1; id < graph.ObjectCount(); id++ {
-		_, _, _, kind := graph.Gate(int32(id))
-		if kind == core.And || kind == core.Xor || kind == core.Mux {
-			return -1
-		}
+	if gia.Gia_ManAndNum(graph) == 0 {
+		return 1
 	}
-	// With only constants, inputs and unary aliases, zero plus the input basis
-	// exhaustively distinguishes all possible output functions.
-	for bit := range inputs {
-		inputs[bit] = true
-		values, err = model.Evaluate(inputs)
-		if err != nil {
-			params.Error = err
-			return -1
-		}
-		for i := 0; i < len(outputs); i += 2 {
-			if values[i] != values[i+1] {
-				params.iOutFail = int32(i / 2)
-				params.Error = graph.SetCombinationalCounterexample(inputs, i/2)
-				if params.Error != nil {
-					return -1
-				}
-				return 0
-			}
-		}
-		inputs[bit] = false
-	}
-	return 1
+	return -1
 }
