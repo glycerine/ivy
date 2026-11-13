@@ -1,5 +1,7 @@
 package mapper
 
+import "github.com/glycerine/abcgo/misc/extra"
+
 /**CFile****************************************************************
 
   FileName    [mapperCanon.c]
@@ -57,7 +59,7 @@ func Map_CanonComputeSlow(uTruths [6][2]uint32, nVarsMax, nVarsReal int32, uTrut
 	nMints = (1 << nVarsReal)
 	if nVarsMax < 6 {
 		// inlining of macro MAP_MASK
-		uTruthRes[0] = ((~(uint32(0))) >> (32 - (32)))
+		uTruthRes[0] = ((^(uint32(0))) >> (32 - (32)))
 		for m = 0; m < nMints; m++ {
 			uTruthPerm[0] = Map_CanonComputePhase(uTruths, nVarsMax, uTruth[0], m)
 			if uTruthRes[0] > uTruthPerm[0] {
@@ -77,11 +79,11 @@ func Map_CanonComputeSlow(uTruths [6][2]uint32, nVarsMax, nVarsReal int32, uTrut
 
 	} else {
 		// inlining of macro MAP_MASK
-		uTruthRes[0] = ((~(uint32(0))) >> (32 - (32)))
+		uTruthRes[0] = ((^(uint32(0))) >> (32 - (32)))
 		// inlining of macro MAP_MASK
-		uTruthRes[1] = ((~(uint32(0))) >> (32 - (32)))
+		uTruthRes[1] = ((^(uint32(0))) >> (32 - (32)))
 		for m = 0; m < nMints; m++ {
-			Map_CanonComputePhase6(uTruths, nVarsMax, uTruth, m, uTruthPerm)
+			Map_CanonComputePhase6(uTruths, nVarsMax, uTruth, m, uTruthPerm[:])
 			if uTruthRes[1] > uTruthPerm[1] || (uTruthRes[1] == uTruthPerm[1] && uTruthRes[0] > uTruthPerm[0]) {
 				uTruthRes[0] = uTruthPerm[0]
 				uTruthRes[1] = uTruthPerm[1]
@@ -118,8 +120,8 @@ func Map_CanonComputeSlow(uTruths [6][2]uint32, nVarsMax, nVarsReal int32, uTrut
 func Map_CanonComputePhase(uTruths [6][2]uint32, nVars int32, uTruth uint32, uPhase int32) uint32 {
 	var v, Shift int32
 	for v, Shift = int32(0), int32(1); v < nVars; v, Shift = v+1, Shift<<1 {
-		if uPhase&uint32(Shift) != 0 {
-			uTruth = (((uTruth & ~uTruths[v][0]) << Shift) | ((uTruth & uTruths[v][0]) >> Shift))
+		if uPhase&Shift != 0 {
+			uTruth = (((uTruth & ^uTruths[v][0]) << Shift) | ((uTruth & uTruths[v][0]) >> Shift))
 		}
 	}
 	return uTruth
@@ -150,10 +152,10 @@ func Map_CanonComputePhase6(uTruths [6][2]uint32, nVars int32, uTruth []uint32, 
 	}
 	// compute the phase
 	for v, Shift = int32(0), int32(1); v < nVars; v, Shift = v+1, Shift<<1 {
-		if uPhase&uint32(Shift) != 0 {
+		if uPhase&Shift != 0 {
 			if Shift < 32 {
-				uTruthRes[0] = (((uTruthRes[0] & ~uTruths[v][0]) << Shift) | ((uTruthRes[0] & uTruths[v][0]) >> Shift))
-				uTruthRes[1] = (((uTruthRes[1] & ~uTruths[v][1]) << Shift) | ((uTruthRes[1] & uTruths[v][1]) >> Shift))
+				uTruthRes[0] = (((uTruthRes[0] & ^uTruths[v][0]) << Shift) | ((uTruthRes[0] & uTruths[v][0]) >> Shift))
+				uTruthRes[1] = (((uTruthRes[1] & ^uTruths[v][1]) << Shift) | ((uTruthRes[1] & uTruths[v][1]) >> Shift))
 
 			} else {
 				uTemp = uTruthRes[0]
@@ -194,7 +196,7 @@ func Map_CanonComputeFast(p *Map_Man_t, nVarsMax, nVarsReal int32, uTruth []uint
 
 		uTruth0 = uTruth[0] & 0xFFFF
 		assert(p.pCounters[uTruth0] > 0, "p.pCounters[uTruth0] > 0")
-		uTruthRes[0] = (p.uCanons[uTruth0] << 16) | p.uCanons[uTruth0]
+		uTruthRes[0] = (uint32(p.uCanons[uTruth0]) << 16) | uint32(p.uCanons[uTruth0])
 		uTruthRes[1] = uTruthRes[0]
 		puPhases[0] = p.uPhases[uTruth0][0]
 		return 1
@@ -205,12 +207,12 @@ func Map_CanonComputeFast(p *Map_Man_t, nVarsMax, nVarsReal int32, uTruth []uint
 	uTruth0 = uTruth[0] & 0xFFFF
 	uTruth1 = (uTruth[0] >> 16)
 	if uTruth1 == 0 {
-		uTruthRes[0] = p.uCanons[uTruth0]
+		uTruthRes[0] = uint32(p.uCanons[uTruth0])
 		uTruthRes[1] = uTruthRes[0]
 		if p.pCounters[uTruth0] > 4 {
 			Limit = 4
 		} else {
-			Limit = p.pCounters[uTruth0]
+			Limit = int32(p.pCounters[uTruth0])
 		}
 		for i = 0; i < Limit; i++ {
 			puPhases[i] = p.uPhases[uTruth0][i]
@@ -218,12 +220,12 @@ func Map_CanonComputeFast(p *Map_Man_t, nVarsMax, nVarsReal int32, uTruth []uint
 		return Limit
 
 	} else if uTruth0 == 0 {
-		uTruthRes[0] = p.uCanons[uTruth1]
+		uTruthRes[0] = uint32(p.uCanons[uTruth1])
 		uTruthRes[1] = uTruthRes[0]
 		if p.pCounters[uTruth1] > 4 {
 			Limit = 4
 		} else {
-			Limit = p.pCounters[uTruth1]
+			Limit = int32(p.pCounters[uTruth1])
 		}
 		for i = 0; i < Limit; i++ {
 			puPhases[i] = p.uPhases[uTruth1][i]
@@ -231,39 +233,39 @@ func Map_CanonComputeFast(p *Map_Man_t, nVarsMax, nVarsReal int32, uTruth []uint
 		}
 		return Limit
 	}
-	uCanon0 = p.uCanons[uTruth0]
-	uCanon1 = p.uCanons[uTruth1]
+	uCanon0 = uint32(p.uCanons[uTruth0])
+	uCanon1 = uint32(p.uCanons[uTruth1])
 	if uCanon0 >= uCanon1 { // using nCanon1 as the main one
 
 		assert(p.pCounters[uTruth1] > 0, "p.pCounters[uTruth1] > 0")
 		uCanonBest = 0xFFFFFFFF
-		for i = 0; i < p.pCounters[uTruth1]; i++ {
-			uCanon0 = Extra_TruthPolarize(uTruth0, p.uPhases[uTruth1][i], 4)
+		for i = 0; i < int32(p.pCounters[uTruth1]); i++ {
+			uCanon0 = extra.Extra_TruthPolarize(uTruth0, int32(p.uPhases[uTruth1][i]), 4)
 			if uCanonBest > uCanon0 {
 				uCanonBest = uCanon0
-				uPhaseBest = p.uPhases[uTruth1][i]
+				uPhaseBest = uint32(p.uPhases[uTruth1][i])
 				assert(uPhaseBest < 16, "uPhaseBest < 16")
 			}
 		}
 		uTruthRes[0] = (uCanon1 << 16) | uCanonBest
 		uTruthRes[1] = uTruthRes[0]
-		puPhases[0] = uPhaseBest
+		puPhases[0] = uint8(uPhaseBest)
 		return 1
 
 	} else if uCanon0 < uCanon1 {
 		assert(p.pCounters[uTruth0] > 0, "p.pCounters[uTruth0] > 0")
 		uCanonBest = 0xFFFFFFFF
-		for i = 0; i < p.pCounters[uTruth0]; i++ {
-			uCanon1 = Extra_TruthPolarize(uTruth1, p.uPhases[uTruth0][i], 4)
+		for i = 0; i < int32(p.pCounters[uTruth0]); i++ {
+			uCanon1 = extra.Extra_TruthPolarize(uTruth1, int32(p.uPhases[uTruth0][i]), 4)
 			if uCanonBest > uCanon1 {
 				uCanonBest = uCanon1
-				uPhaseBest = p.uPhases[uTruth0][i]
+				uPhaseBest = uint32(p.uPhases[uTruth0][i])
 				assert(uPhaseBest < 16, "uPhaseBest < 16")
 			}
 		}
 		uTruthRes[0] = (uCanon0 << 16) | uCanonBest
 		uTruthRes[1] = uTruthRes[0]
-		puPhases[0] = uPhaseBest | (1 << 4)
+		puPhases[0] = uint8(uPhaseBest | (1 << 4))
 		return 1
 
 	} else {

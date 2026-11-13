@@ -45,11 +45,11 @@ package mapper
 */
 func Map_NodeReadRefPhaseAct(pNode *Map_Node_t, fPhase int32) int32 {
 	// inlining of macro Map_IsComplement
-	assert(!(int32(((ABC_PTRUINT_T)(pNode) & 01)) != 0), "!/*__starting_point_inline_macro:Map_IsComplement__*/((int32(((ABC_PTRUINT_T) (pNode) & 01))))")
+	assert(!Map_IsComplement(pNode), "node is regular")
 	if pNode.pCutBest[0] != nil && pNode.pCutBest[1] != nil { // both assigned
 		return pNode.nRefAct[fPhase]
 	}
-	assert(pNode.pCutBest[0] != nil || pNode.pCutBest[1], "pNode.pCutBest[0] != nil || pNode.pCutBest[1]") // at least one assigned
+	assert(pNode.pCutBest[0] != nil || pNode.pCutBest[1] != nil, "pNode.pCutBest[0] != nil || pNode.pCutBest[1]") // at least one assigned
 	return pNode.nRefAct[2]
 }
 
@@ -68,11 +68,11 @@ func Map_NodeReadRefPhaseAct(pNode *Map_Node_t, fPhase int32) int32 {
 */
 func Map_NodeReadRefPhaseEst(pNode *Map_Node_t, fPhase int32) float32 {
 	// inlining of macro Map_IsComplement
-	assert(!(int32(((ABC_PTRUINT_T)(pNode) & 01)) != 0), "!/*__starting_point_inline_macro:Map_IsComplement__*/((int32(((ABC_PTRUINT_T) (pNode) & 01))))")
-	if pNode.pCutBest[0] != nil && pNode.pCutBest[1] { // both assigned
+	assert(!Map_IsComplement(pNode), "node is regular")
+	if pNode.pCutBest[0] != nil && pNode.pCutBest[1] != nil { // both assigned
 		return pNode.nRefEst[fPhase]
 	}
-	assert(pNode.pCutBest[0] != nil || pNode.pCutBest[1], "pNode.pCutBest[0] != nil || pNode.pCutBest[1]") // at least one assigned
+	assert(pNode.pCutBest[0] != nil || pNode.pCutBest[1] != nil, "pNode.pCutBest[0] != nil || pNode.pCutBest[1]") // at least one assigned
 	//    return pNode->nRefEst[0] + pNode->nRefEst[1];
 	return pNode.nRefEst[2]
 }
@@ -92,11 +92,11 @@ func Map_NodeReadRefPhaseEst(pNode *Map_Node_t, fPhase int32) float32 {
 */
 func Map_NodeIncRefPhaseAct(pNode *Map_Node_t, fPhase int32) int32 {
 	// inlining of macro Map_IsComplement
-	assert(!(int32(((ABC_PTRUINT_T)(pNode) & 01)) != 0), "!/*__starting_point_inline_macro:Map_IsComplement__*/((int32(((ABC_PTRUINT_T) (pNode) & 01))))")
-	if pNode.pCutBest[0] != nil && pNode.pCutBest[1] { // both assigned
+	assert(!Map_IsComplement(pNode), "node is regular")
+	if pNode.pCutBest[0] != nil && pNode.pCutBest[1] != nil { // both assigned
 		return incInt(&pNode.nRefAct[fPhase])
 	}
-	assert(pNode.pCutBest[0] != nil || pNode.pCutBest[1], "pNode.pCutBest[0] != nil || pNode.pCutBest[1]") // at least one assigned
+	assert(pNode.pCutBest[0] != nil || pNode.pCutBest[1] != nil, "pNode.pCutBest[0] != nil || pNode.pCutBest[1]") // at least one assigned
 	return incInt(&pNode.nRefAct[2])
 }
 
@@ -115,11 +115,11 @@ func Map_NodeIncRefPhaseAct(pNode *Map_Node_t, fPhase int32) int32 {
 */
 func Map_NodeDecRefPhaseAct(pNode *Map_Node_t, fPhase int32) int32 {
 	// inlining of macro Map_IsComplement
-	assert(!(int32(((ABC_PTRUINT_T)(pNode) & 01)) != 0), "!/*__starting_point_inline_macro:Map_IsComplement__*/((int32(((ABC_PTRUINT_T) (pNode) & 01))))")
+	assert(!Map_IsComplement(pNode), "node is regular")
 	if pNode.pCutBest[0] != nil && pNode.pCutBest[1] != nil { // both assigned
 		return decInt(&pNode.nRefAct[fPhase])
 	}
-	assert(pNode.pCutBest[0] != nil || pNode.pCutBest[1], "pNode.pCutBest[0] != nil || pNode.pCutBest[1]") // at least one assigned
+	assert(pNode.pCutBest[0] != nil || pNode.pCutBest[1] != nil, "pNode.pCutBest[0] != nil || pNode.pCutBest[1]") // at least one assigned
 	return decInt(&pNode.nRefAct[2])
 }
 
@@ -169,9 +169,9 @@ func Map_MappingEstimateRefs(p *Map_Man_t) {
 		//        pNode->nRefEst[0] = (float)((2.0 * pNode->nRefEst[0] + 1.0 * pNode->nRefAct[0]) / 3.0);
 		//        pNode->nRefEst[1] = (float)((2.0 * pNode->nRefEst[1] + 1.0 * pNode->nRefAct[1]) / 3.0);
 		//        pNode->nRefEst[2] = (float)((2.0 * pNode->nRefEst[2] + 1.0 * pNode->nRefAct[2]) / 3.0);
-		pNode.nRefEst[0] = float32(((3.0*pNode.nRefEst[0] + 1.0*pNode.nRefAct[0]) / 4.0))
-		pNode.nRefEst[1] = float32(((3.0*pNode.nRefEst[1] + 1.0*pNode.nRefAct[1]) / 4.0))
-		pNode.nRefEst[2] = float32(((3.0*pNode.nRefEst[2] + 1.0*pNode.nRefAct[2]) / 4.0))
+		pNode.nRefEst[0] = float32(((3.0*pNode.nRefEst[0] + float32(pNode.nRefAct[0])) / 4.0))
+		pNode.nRefEst[1] = float32(((3.0*pNode.nRefEst[1] + float32(pNode.nRefAct[1])) / 4.0))
+		pNode.nRefEst[2] = float32(((3.0*pNode.nRefEst[2] + float32(pNode.nRefAct[2])) / 4.0))
 	}
 }
 
@@ -190,7 +190,7 @@ func Map_MappingEstimateRefs(p *Map_Man_t) {
 **********************************************************************
 */
 func Map_CutGetAreaFlow(pCut *Map_Cut_t, fPhase int32) float32 {
-	var pM *Map_Match_t = pCut.M + fPhase
+	var pM *Map_Match_t = &pCut.M[fPhase]
 	var pSuper *Map_Super_t = pM.pSuperBest
 	var uPhaseTot uint32 = pM.uPhaseBest
 	var pCutFanin *Map_Cut_t
@@ -202,12 +202,12 @@ func Map_CutGetAreaFlow(pCut *Map_Cut_t, fPhase int32) float32 {
 	// iterate through the leaves
 	for i = 0; i < pCut.nLeaves; i++ {
 		// get the phase of this fanin
-		fPinPhasePos = ((uPhaseTot & (1 << i)) == 0)
+		fPinPhasePos = boolToInt((uPhaseTot & (1 << i)) == 0)
 		// get the cut implementing this phase of the fanin
 		pCutFanin = pCut.ppLeaves[i].pCutBest[fPinPhasePos]
 		// if the cut is not available, we have to use the opposite phase
 		if pCutFanin == nil {
-			fPinPhasePos = !fPinPhasePos
+			fPinPhasePos = 1 - fPinPhasePos
 			pCutFanin = pCut.ppLeaves[i].pCutBest[fPinPhasePos]
 		}
 		aFlowFanin = pCutFanin.M[fPinPhasePos].AreaFlow // ignores the area of the interter
@@ -277,7 +277,7 @@ func Map_CutRefDeref(pCut *Map_Cut_t, fPhase int32, fReference int32, fUpdatePro
 		*/
 
 		if fReference != 0 {
-			if pNodeChild.pCutBest[0] != nil && pNodeChild.pCutBest[1] { // both phases are present
+			if pNodeChild.pCutBest[0] != nil && pNodeChild.pCutBest[1] != nil { // both phases are present
 
 				// if this phase of the node is referenced, there is no recursive call
 				pNodeChild.nRefAct[2]++
@@ -299,7 +299,7 @@ func Map_CutRefDeref(pCut *Map_Cut_t, fPhase int32, fReference int32, fUpdatePro
 			}
 
 		} else {
-			if pNodeChild.pCutBest[0] != nil && pNodeChild.pCutBest[1] { // both phases are present
+			if pNodeChild.pCutBest[0] != nil && pNodeChild.pCutBest[1] != nil { // both phases are present
 
 				// if this phase of the node is referenced, there is no recursive call
 				decInt(&pNodeChild.nRefAct[2])
@@ -349,9 +349,9 @@ func Map_CutRefDeref(pCut *Map_Cut_t, fPhase int32, fReference int32, fUpdatePro
 **********************************************************************
 */
 func Map_CutGetAreaRefed(pCut *Map_Cut_t, fPhase int32) float32 {
-	var aResult, aResult2 float32
-	aResult2 = Map_CutRefDeref(pCut, fPhase, 0, 0) // dereference
-	aResult = Map_CutRefDeref(pCut, fPhase, 1, 0)  // reference
+	var aResult float32
+	_ = Map_CutRefDeref(pCut, fPhase, 0, 0)       // dereference
+	aResult = Map_CutRefDeref(pCut, fPhase, 1, 0) // reference
 	//    assert( aResult == aResult2 );
 	return aResult
 }
@@ -370,9 +370,9 @@ func Map_CutGetAreaRefed(pCut *Map_Cut_t, fPhase int32) float32 {
 **********************************************************************
 */
 func Map_CutGetAreaDerefed(pCut *Map_Cut_t, fPhase int32) float32 {
-	var aResult, aResult2 float32
-	aResult2 = Map_CutRefDeref(pCut, fPhase, 1, 0) // reference
-	aResult = Map_CutRefDeref(pCut, fPhase, 0, 0)  // dereference
+	var aResult float32
+	_ = Map_CutRefDeref(pCut, fPhase, 1, 0)       // reference
+	aResult = Map_CutRefDeref(pCut, fPhase, 0, 0) // dereference
 	//    assert( aResult == aResult2 );
 	return aResult
 }
@@ -486,7 +486,7 @@ func Map_MappingSetRefs(pMan *Map_Man_t) {
 	// visit nodes reachable from POs in the DFS order through the best cuts
 	for i = 0; i < pMan.nOutputs; i++ {
 		pNode = pMan.pOutputs[i]
-		if !Map_NodeIsConst(pNode) {
+		if Map_NodeIsConst(pNode) == 0 {
 			Map_MappingSetRefs_rec(pMan, pNode)
 		}
 	}
@@ -517,7 +517,7 @@ func Map_MappingGetArea(pMan *Map_Man_t) float32 {
 		if pNode.nRefAct[2] == 0 {
 			continue
 		}
-		if Map_NodeIsBuf(pNode) {
+		if Map_NodeIsBuf(pNode) != 0 {
 			continue
 		}
 		// at least one phase has the best cut assigned
@@ -550,7 +550,7 @@ func Map_MappingGetArea(pMan *Map_Man_t) float32 {
 	// add buffers for each CO driven by a CI
 	for i = 0; i < pMan.nOutputs; i++ {
 		// inlining of macro Map_IsComplement
-		if Map_NodeIsVar(pMan.pOutputs[i]) && !(int32(((ABC_PTRUINT_T)(pMan.pOutputs[i]) & 01)) != 0) {
+		if Map_NodeIsVar(Map_Regular(pMan.pOutputs[i])) != 0 && !Map_IsComplement(pMan.pOutputs[i]) {
 			Area += pMan.pSuperLib.AreaBuf
 		}
 	}

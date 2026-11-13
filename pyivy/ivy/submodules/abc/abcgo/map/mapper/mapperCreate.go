@@ -232,11 +232,11 @@ func Map_SuperReadFormula(p *Map_Super_t) string        { return p.pFormula }
 func Map_SuperReadRoot(p *Map_Super_t) *Mio_Gate_t      { return p.pRoot }
 func Map_SuperReadNum(p *Map_Super_t) int32             { return p.Num }
 func Map_SuperReadFanins(p *Map_Super_t) []*Map_Super_t { return p.pFanins[:] }
-func Map_SuperReadFaninNum(p *Map_Super_t) int32        { return p.nFanins }
+func Map_SuperReadFaninNum(p *Map_Super_t) int32        { return int32(p.nFanins) }
 func Map_SuperReadNext(p *Map_Super_t) *Map_Super_t     { return p.pNext }
-func Map_SuperReadNumPhases(p *Map_Super_t) int32       { return p.nPhases }
+func Map_SuperReadNumPhases(p *Map_Super_t) int32       { return int32(p.nPhases) }
 func Map_SuperReadPhases(p *Map_Super_t) []uint8        { return p.uPhases[:] }
-func Map_SuperReadFanoutLimit(p *Map_Super_t) int32     { return p.nFanLimit }
+func Map_SuperReadFanoutLimit(p *Map_Super_t) int32     { return int32(p.nFanLimit) }
 
 func Map_SuperLibReadGenLib(p *Map_SuperLib_t) *mio.Mio_Library_t { return p.pGenlib }
 func Map_SuperLibReadAreaInv(p *Map_SuperLib_t) float32           { return p.AreaInv }

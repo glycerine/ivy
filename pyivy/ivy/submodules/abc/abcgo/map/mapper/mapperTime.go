@@ -54,7 +54,7 @@ func Map_TimeComputeArrivalMax(p *Map_Man_t) float32 {
 	// get the critical PO arrival time
 	tReqMax = -MAP_FLOAT_LARGE
 	for i = 0; i < p.nOutputs; i++ {
-		if Map_NodeIsConst(p.pOutputs[i]) {
+		if Map_NodeIsConst(p.pOutputs[i]) != 0 {
 			continue
 		}
 		// inlining of macro Map_IsComplement
@@ -185,12 +185,12 @@ func Map_TimePropagateRequiredPhase(p *Map_Man_t, pNode *Map_Node_t, fPhase int3
 	pSuper = pCut.M[fPhase].pSuperBest
 	uPhase = pCut.M[fPhase].uPhaseBest
 	// get the required time of the output of the supergate
-	ptReqOut = pNode.tRequired + fPhase
+	ptReqOut = &pNode.tRequired[fPhase]
 	// set the required time of the children
 	for i = 0; i < pCut.nLeaves; i++ {
 		// get the phase of the given pin of the supergate
-		fPinPhase = ((uPhase & (1 << i)) == 0)
-		ptReqIn = pCut.ppLeaves[i].tRequired + fPinPhase
+		fPinPhase = boolToInt((uPhase & (1 << i)) == 0)
+		ptReqIn = &pCut.ppLeaves[i].tRequired[fPinPhase]
 		assert(pCut.ppLeaves[i].nRefAct[2] > 0, "pCut.ppLeaves[i].nRefAct[2] > 0")
 
 		// get the rise of the output due to rise of the inputs
@@ -270,7 +270,7 @@ func Map_MatchComputeReqTimes(pCut *Map_Cut_t, fPhase int32, ptArrRes *Map_Time_
 	for i = 0; i < pCut.nLeaves; i++ {
 		// get the phase of the given pin
 		fPinPhase = boolToInt((uPhaseTot & (1 << i)) == 0)
-		ptArrIn = pCut.ppLeaves[i].tRequired + fPinPhase
+		ptArrIn = &pCut.ppLeaves[i].tRequired[fPinPhase]
 		//        assert( ptArrIn->Worst < MAP_FLOAT_LARGE );
 
 		// get the rise of the output due to rise of the inputs
@@ -351,7 +351,7 @@ func Map_TimePropagateRequired(p *Map_Man_t) {
 
 		// this computation works for regular nodes only
 		// inlining of macro Map_IsComplement
-		assert(!(int32(((ABC_PTRUINT_T)(pNode) & 01)) != 0), "!/*__starting_point_inline_macro:Map_IsComplement__*/((int32(((ABC_PTRUINT_T) (pNode) & 01))))")
+		assert(!Map_IsComplement(pNode), "node is regular")
 		// at least one phase should be mapped
 		assert(pNode.pCutBest[0] != nil || pNode.pCutBest[1] != nil, "pNode.pCutBest[0] != nil || pNode.pCutBest[1] != nil")
 		// the node should be used in the currently assigned mapping
@@ -397,7 +397,7 @@ func Map_TimePropagateRequired(p *Map_Man_t) {
 		if pNode.pCutBest[0] != nil && pNode.tRequired[0].Worst < MAP_FLOAT_LARGE {
 			Map_TimePropagateRequiredPhase(p, pNode, 0)
 		}
-		if pNode.pCutBest[1] && pNode.tRequired[1].Worst < MAP_FLOAT_LARGE {
+		if pNode.pCutBest[1] != nil && pNode.tRequired[1].Worst < MAP_FLOAT_LARGE {
 			Map_TimePropagateRequiredPhase(p, pNode, 1)
 		}
 	}
@@ -440,7 +440,7 @@ func Map_TimePropagateRequired(p *Map_Man_t) {
 	*/
 }
 func Map_TimeComputeRequiredGlobal(p *Map_Man_t) {
-	var fUseConMan int32 = Scl_ConIsRunning() && Scl_ConHasOutReqs()
+	var fUseConMan int32 = boolToInt(Scl_ConIsRunning() && Scl_ConHasOutReqs())
 	var ptTime, ptTimeA *Map_Time_t
 	var fPhase, i int32
 	// update the required times according to the target
@@ -452,7 +452,7 @@ func Map_TimeComputeRequiredGlobal(p *Map_Man_t) {
 			}
 
 		} else if p.fRequiredGlo < p.DelayTarget-p.fEpsilon {
-			if p.fMappingMode == 1 && p.fVerbose {
+			if p.fMappingMode == 1 && p.fVerbose != 0 {
 				fmt.Printf("Relaxing the required times from (%4.2f) to the target (%4.2f).\n", p.fRequiredGlo, p.DelayTarget)
 			}
 			p.fRequiredGlo = p.DelayTarget

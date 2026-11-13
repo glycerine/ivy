@@ -191,7 +191,7 @@ func Map_MappingCountAllCuts(pMan *Map_Man_t) int32 {
 */
 func Map_MappingCutsInput(p *Map_Man_t, pNode *Map_Node_t) {
 	var pCut *Map_Cut_t
-	assert(Map_NodeIsVar(pNode) || Map_NodeIsBuf(pNode), "Map_NodeIsVar(pNode) || Map_NodeIsBuf(pNode)")
+	assert(Map_NodeIsVar(pNode) != 0 || Map_NodeIsBuf(pNode) != 0, "Map_NodeIsVar(pNode) || Map_NodeIsBuf(pNode)")
 	pCut = Map_CutAlloc(p)
 	pCut.nLeaves = 1
 	pCut.ppLeaves[0] = pNode
@@ -220,9 +220,9 @@ func Map_MappingCuts(p *Map_Man_t) {
 	pTable = Map_CutTableStart(p)
 	for i = 0; i < nNodes; i++ {
 		pNode = p.vMapObjs.pArray[i]
-		if Map_NodeIsBuf(pNode) {
+		if Map_NodeIsBuf(pNode) != 0 {
 			Map_MappingCutsInput(p, pNode)
-		} else if Map_NodeIsAnd(pNode) {
+		} else if Map_NodeIsAnd(pNode) != 0 {
 			Map_CutCompute(p, pTable, pNode)
 		} else {
 			continue
@@ -233,9 +233,9 @@ func Map_MappingCuts(p *Map_Man_t) {
 	Map_CutTableStop(pTable)
 
 	// report the stats
-	if p.fVerbose {
+	if p.fVerbose != 0 {
 		nCuts = Map_MappingCountAllCuts(p)
-		fmt.Printf("Nodes = %6d.  Total %d-feasible cuts = %10d.  Per node = %.1f. ", p.nNodes, p.nVarsMax, nCuts, (float32(nCuts))/p.nNodes)
+		fmt.Printf("Nodes = %6d.  Total %d-feasible cuts = %10d.  Per node = %.1f. ", p.nNodes, p.nVarsMax, nCuts, float32(nCuts)/float32(p.nNodes))
 		// inlining of macro ABC_PRT
 		Abc_Print(1, "%s =", ("Time"))
 		Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))))
@@ -281,7 +281,7 @@ func Map_CutCompute(p *Map_Man_t, pTable *Map_CutTable_t, pNode *Map_Node_t) *Ma
 	assert(pList != nil, "pList")
 	// only add to the list of cuts if the node is a representative one
 	if pNode.pRepr == nil {
-		for pTemp = pNode.pNextE; pTemp; pTemp = pTemp.pNextE {
+		for pTemp = pNode.pNextE; pTemp != nil; pTemp = pTemp.pNextE {
 			assert(pTemp.pCuts != nil, "pTemp.pCuts")
 			pList = Map_CutUnionLists(pList, pTemp.pCuts)
 			assert(pTemp.pCuts != nil, "pTemp.pCuts")
@@ -309,7 +309,7 @@ func Map_CutCompute(p *Map_Man_t, pTable *Map_CutTable_t, pNode *Map_Node_t) *Ma
 	/*
 	       {
 	           int i, Counter = 0;;
-	           for ( pCut = pNode->pCuts->pNext; pCut; pCut = pCut->pNext )
+	           for ( pCut = pNode->pCuts->pNext; pCut != nil; pCut = pCut->pNext )
 	               for ( i = 0; i < pCut->nLeaves; i++ )
 	                   Counter += (pCut->ppLeaves[i]->Level >= pNode->Level);
 	   //        if ( Counter )
@@ -394,7 +394,7 @@ func Map_CutMergeLists(p *Map_Man_t, pTable *Map_CutTable_t, pList1 *Map_Cut_t, 
 	var pLists [7]*Map_Cut_t = [7]*Map_Cut_t{nil}
 	var pCut, pPrev, pTemp1, pTemp2 *Map_Cut_t
 	var nNodes, Counter, i int32
-	var ppArray1, ppArray2, ppArray3 **Map_Cut_t
+	var ppArray1, ppArray2, ppArray3 []*Map_Cut_t
 	var nCuts1, nCuts2, nCuts3, k, fComp3 int32
 
 	ppArray1 = pTable.pCuts1
@@ -438,12 +438,12 @@ func Map_CutMergeLists(p *Map_Man_t, pTable *Map_CutTable_t, pList1 *Map_Cut_t, 
 			}
 
 			// check if k-feasible cut exists
-			nNodes = Map_CutMergeTwo(pTemp1, pTemp2, ppNodes, p.nVarsMax)
+			nNodes = Map_CutMergeTwo(pTemp1, pTemp2, ppNodes[:], p.nVarsMax)
 			if nNodes == 0 {
 				continue
 			}
 			// consider the cut for possible addition to the set of new cuts
-			pCut = Map_CutTableConsider(p, pTable, ppNodes, nNodes)
+			pCut = Map_CutTableConsider(p, pTable, ppNodes[:], nNodes)
 			if pCut == nil {
 				continue
 			}
@@ -477,12 +477,12 @@ func Map_CutMergeLists(p *Map_Man_t, pTable *Map_CutTable_t, pList1 *Map_Cut_t, 
 			}
 
 			// check if k-feasible cut exists
-			nNodes = Map_CutMergeTwo(pTemp1, pTemp2, ppNodes, p.nVarsMax)
+			nNodes = Map_CutMergeTwo(pTemp1, pTemp2, ppNodes[:], p.nVarsMax)
 			if nNodes == 0 {
 				continue
 			}
 			// consider the cut for possible addition to the set of new cuts
-			pCut = Map_CutTableConsider(p, pTable, ppNodes, nNodes)
+			pCut = Map_CutTableConsider(p, pTable, ppNodes[:], nNodes)
 			if pCut == nil {
 				continue
 			}
@@ -519,12 +519,12 @@ func Map_CutMergeLists(p *Map_Man_t, pTable *Map_CutTable_t, pList1 *Map_Cut_t, 
 			}
 
 			// check if k-feasible cut exists
-			nNodes = Map_CutMergeTwo(pTemp1, pTemp2, ppNodes, p.nVarsMax)
+			nNodes = Map_CutMergeTwo(pTemp1, pTemp2, ppNodes[:], p.nVarsMax)
 			if nNodes == 0 {
 				continue
 			}
 			// consider the cut for possible addition to the set of new cuts
-			pCut = Map_CutTableConsider(p, pTable, ppNodes, nNodes)
+			pCut = Map_CutTableConsider(p, pTable, ppNodes[:], nNodes)
 			if pCut == nil {
 				continue
 			}
@@ -596,12 +596,12 @@ func Map_CutMergeLists2(p *Map_Man_t, pTable *Map_CutTable_t, pList1 *Map_Cut_t,
 	for pTemp1 = pList1; pTemp1 != nil; pTemp1 = pTemp1.pNext {
 		for pTemp2 = pList2; pTemp2 != nil; pTemp2 = pTemp2.pNext {
 			// check if k-feasible cut exists
-			nNodes = Map_CutMergeTwo(pTemp1, pTemp2, ppNodes, p.nVarsMax)
+			nNodes = Map_CutMergeTwo(pTemp1, pTemp2, ppNodes[:], p.nVarsMax)
 			if nNodes == 0 {
 				continue
 			}
 			// consider the cut for possible addition to the set of new cuts
-			pCut = Map_CutTableConsider(p, pTable, ppNodes, nNodes)
+			pCut = Map_CutTableConsider(p, pTable, ppNodes[:], nNodes)
 			if pCut == nil {
 				continue
 			}
@@ -773,7 +773,7 @@ func Map_CutUnionLists(pList1 *Map_Cut_t, pList2 *Map_Cut_t) *Map_Cut_t {
 	// find the last cut in the first list
 	pRoot = pList1
 	// inlining of macro Map_ListForEachCut
-	for pTemp = pList1; pTemp; pTemp = pTemp.pNext {
+	for pTemp = pList1; pTemp != nil; pTemp = pTemp.pNext {
 		pRoot = pTemp
 	}
 	// attach the non-trival part of the second cut to the end of the first
@@ -800,7 +800,7 @@ func Map_CutUnionLists(pList1 *Map_Cut_t, pList2 *Map_Cut_t) *Map_Cut_t {
 func Map_CutBelongsToList(pList *Map_Cut_t, ppNodes []*Map_Node_t, nNodes int32) int32 {
 	var pTemp *Map_Cut_t
 	var i int32
-	for pTemp = pList; pTemp; pTemp = pTemp.pNext {
+	for pTemp = pList; pTemp != nil; pTemp = pTemp.pNext {
 		for i = 0; i < nNodes; i++ {
 			if pTemp.ppLeaves[i] != ppNodes[i] {
 				break
@@ -829,7 +829,7 @@ func Map_CutBelongsToList(pList *Map_Cut_t, ppNodes []*Map_Node_t, nNodes int32)
 func Map_CutListPrint(pMan *Map_Man_t, pRoot *Map_Node_t) {
 	var pTemp *Map_Cut_t
 	var Counter int32
-	for Counter, pTemp = 0, pRoot.pCuts; pTemp; pTemp, Counter = pTemp.pNext, Counter+1 {
+	for Counter, pTemp = 0, pRoot.pCuts; pTemp != nil; pTemp, Counter = pTemp.pNext, Counter+1 {
 		fmt.Printf("%2d : ", Counter+1)
 		Map_CutPrint_(pMan, pTemp, pRoot)
 	}
@@ -851,7 +851,7 @@ func Map_CutListPrint(pMan *Map_Man_t, pRoot *Map_Node_t) {
 func Map_CutListPrint2(pMan *Map_Man_t, pRoot *Map_Node_t) {
 	var pTemp *Map_Cut_t
 	var Counter int32
-	for Counter, pTemp = 0, pRoot.pCuts; pTemp; pTemp, Counter = pTemp.pNext, Counter+1 {
+	for Counter, pTemp = 0, pRoot.pCuts; pTemp != nil; pTemp, Counter = pTemp.pNext, Counter+1 {
 		fmt.Printf("%2d : ", Counter+1)
 		Map_CutPrint_(pMan, pTemp, pRoot)
 	}
@@ -874,7 +874,7 @@ func Map_CutPrint_(pMan *Map_Man_t, pCut *Map_Cut_t, pRoot *Map_Node_t) {
 	var i int32
 	fmt.Printf("(%3d)  {", pRoot.Num)
 	for i = 0; i < pMan.nVarsMax; i++ {
-		if pCut.ppLeaves[i] {
+		if pCut.ppLeaves[i] != nil {
 			fmt.Printf(" %3d", pCut.ppLeaves[i].Num)
 		}
 	}
@@ -940,7 +940,7 @@ func Map_CutTableHash(ppNodes []*Map_Node_t, nNodes int32) uint32 {
 	var i int32
 	uRes = 0
 	for i = 0; i < nNodes; i++ {
-		uRes += s_HashPrimes[i] * ppNodes[i].Num
+		uRes += uint32(s_HashPrimes[i]) * uint32(ppNodes[i].Num)
 	}
 	return uRes
 }
@@ -964,8 +964,8 @@ func Map_CutTableLookup(p *Map_CutTable_t, ppNodes []*Map_Node_t, nNodes int32) 
 	var Key uint32
 	var b, i int32
 
-	Key = Map_CutTableHash(ppNodes, nNodes) % p.nBins
-	for b = Key; p.pBins[b]; b = (b + 1) % p.nBins {
+	Key = Map_CutTableHash(ppNodes, nNodes) % uint32(p.nBins)
+	for b = int32(Key); p.pBins[b] != nil; b = (b + 1) % p.nBins {
 		pCut = p.pBins[b]
 		if pCut.nLeaves != nNodes {
 			continue
@@ -1039,7 +1039,7 @@ func Map_CutTableConsider(pMan *Map_Man_t, p *Map_CutTable_t, ppNodes []*Map_Nod
 func Map_CutTableRestart(p *Map_CutTable_t) {
 	var i int32
 	for i = 0; i < p.nCuts; i++ {
-		assert(p.pBins[p.pCuts[i]], "p.pBins[ p.pCuts[i] ]")
+		assert(p.pBins[p.pCuts[i]] != nil, "p.pBins[ p.pCuts[i] ]")
 		p.pBins[p.pCuts[i]] = nil
 	}
 	p.nCuts = 0
@@ -1217,9 +1217,7 @@ func Map_CutComputeTruth(p *Map_Man_t, pCut *Map_Cut_t, pTemp0 *Map_Cut_t, pTemp
 		}
 	}
 	if fComp0 != 0 {
-		uTruth0 = ~uTruth0
-	} else {
-		uTruth0 = uTruth0
+		uTruth0 = ^uTruth0
 	}
 
 	// find the mapping from the old nodes to the new
@@ -1257,9 +1255,7 @@ func Map_CutComputeTruth(p *Map_Man_t, pCut *Map_Cut_t, pTemp0 *Map_Cut_t, pTemp
 		}
 	}
 	if fComp1 != 0 {
-		uTruth1 = ~uTruth1
-	} else {
-		uTruth1 = uTruth1
+		uTruth1 = ^uTruth1
 	}
 	uTruth = uTruth0 & uTruth1
 	return uTruth

@@ -3,11 +3,15 @@ package mapper
 import (
 	"github.com/glycerine/abcgo/map/mio"
 	"github.com/glycerine/abcgo/misc/extra"
+	"github.com/glycerine/abcgo/misc/st"
+	"github.com/glycerine/abcgo/misc/vec"
 )
 
 // Map_Time_t is the rise/fall arrival or required time of a signal.
-type Map_Time_t struct{ Rise, Fall, Worst float32 }
+
 type abctime = int64
+type Vec_Str_t = vec.Vec_Str_t
+type st__table = st.Table
 
 type Mio_Library_t = mio.Mio_Library_t
 type Mio_Gate_t = mio.Mio_Gate_t
@@ -93,14 +97,15 @@ type Map_MatchStruct_t_ struct {
 }
 
 type Map_CutStruct_t_ struct {
-	pNext, pOne, pTwo              *Map_Cut_t
-	ppLeaves                       [6]*Map_Node_t
-	uTruth                         uint32
-	nLeaves, nVolume, fMark, Phase uint8
-	M                              [2]Map_Match_t
-	complemented                   bool
-	regular                        *Map_Cut_t
-	neg                            *Map_Cut_t
+	pNext, pOne, pTwo *Map_Cut_t
+	ppLeaves          [6]*Map_Node_t
+	uTruth            uint32
+	nLeaves, nVolume  int32
+	fMark, Phase      uint8
+	M                 [2]Map_Match_t
+	complemented      bool
+	regular           *Map_Cut_t
+	neg               *Map_Cut_t
 }
 
 type Map_SuperStruct_t_ struct {

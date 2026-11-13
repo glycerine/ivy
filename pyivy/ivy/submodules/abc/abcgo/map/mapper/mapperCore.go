@@ -58,13 +58,13 @@ import (
 func Map_Mapping(p *Map_Man_t) int32 {
 	var fShowSwitching int32
 	var fUseAreaFlow int32 = 1
-	var fUseExactArea int32 = !p.fSwitching
-	var fUseExactAreaWithPhase int32 = !p.fSwitching
+	var fUseExactArea int32 = boolToInt(p.fSwitching == 0)
+	var fUseExactAreaWithPhase int32 = boolToInt(p.fSwitching == 0)
 	var clk abctime
 
 	//////////////////////////////////////////////////////////////////////
 	// perform pre-mapping computations
-	if p.fVerbose {
+	if p.fVerbose != 0 {
 		Map_MappingReportChoices(p)
 	}
 	Map_MappingSetChoiceLevels(p) // should always be called before mapping!
@@ -85,14 +85,14 @@ func Map_Mapping(p *Map_Man_t) int32 {
 	// compute the minimum-delay mapping
 	clk = Abc_Clock()
 	p.fMappingMode = 0
-	if !Map_MappingMatches(p) {
+	if Map_MappingMatches(p) == 0 {
 		return 0
 	}
 	p.timeMatch = Abc_Clock() - clk
 	// compute the references and collect the nodes used in the mapping
 	Map_MappingSetRefs(p)
 	p.AreaBase = Map_MappingGetArea(p)
-	if p.fVerbose {
+	if p.fVerbose != 0 {
 		fmt.Printf("Delay    : %s = %8.2f  Flow = %11.1f  Area = %11.1f  %4.1f %%   ", mapMetricLabel(fShowSwitching), mapMetricValue(p, fShowSwitching), Map_MappingGetAreaFlow(p), p.AreaBase, 0.0)
 		// inlining of macro ABC_PRT
 		Abc_Print(1, "%s =", ("Time"))
@@ -100,8 +100,8 @@ func Map_Mapping(p *Map_Man_t) int32 {
 	}
 	//////////////////////////////////////////////////////////////////////
 
-	if !p.fAreaRecovery {
-		if p.fVerbose {
+	if p.fAreaRecovery == 0 {
+		if p.fVerbose != 0 {
 			Map_MappingPrintOutputArrivals(p)
 		}
 		return 1
@@ -119,7 +119,7 @@ func Map_Mapping(p *Map_Man_t) int32 {
 		// compute the references and collect the nodes used in the mapping
 		Map_MappingSetRefs(p)
 		p.AreaFinal = Map_MappingGetArea(p)
-		if p.fVerbose {
+		if p.fVerbose != 0 {
 			fmt.Printf("AreaFlow : %s = %8.2f  Flow = %11.1f  Area = %11.1f  %4.1f %%   ", mapMetricLabel(fShowSwitching), mapMetricValue(p, fShowSwitching), Map_MappingGetAreaFlow(p), p.AreaFinal, 100.0*(p.AreaBase-p.AreaFinal)/p.AreaBase)
 			// inlining of macro ABC_PRT
 			Abc_Print(1, "%s =", ("Time"))
@@ -141,7 +141,7 @@ func Map_Mapping(p *Map_Man_t) int32 {
 		// compute the references and collect the nodes used in the mapping
 		Map_MappingSetRefs(p)
 		p.AreaFinal = Map_MappingGetArea(p)
-		if p.fVerbose {
+		if p.fVerbose != 0 {
 			fmt.Printf("Area     : %s = %8.2f  Flow = %11.1f  Area = %11.1f  %4.1f %%   ", mapMetricLabel(fShowSwitching), mapMetricValue(p, fShowSwitching), 0.0, p.AreaFinal, 100.0*(p.AreaBase-p.AreaFinal)/p.AreaBase)
 			// inlining of macro ABC_PRT
 			Abc_Print(1, "%s =", ("Time"))
@@ -163,7 +163,7 @@ func Map_Mapping(p *Map_Man_t) int32 {
 		// compute the references and collect the nodes used in the mapping
 		Map_MappingSetRefs(p)
 		p.AreaFinal = Map_MappingGetArea(p)
-		if p.fVerbose {
+		if p.fVerbose != 0 {
 			fmt.Printf("Area     : %s = %8.2f  Flow = %11.1f  Area = %11.1f  %4.1f %%   ", mapMetricLabel(fShowSwitching), mapMetricValue(p, fShowSwitching), 0.0, p.AreaFinal, 100.0*(p.AreaBase-p.AreaFinal)/p.AreaBase)
 			// inlining of macro ABC_PRT
 			Abc_Print(1, "%s =", ("Time"))
@@ -176,7 +176,7 @@ func Map_Mapping(p *Map_Man_t) int32 {
 	//////////////////////////////////////////////////////////////////////
 	// perform area recovery using exact area
 	clk = Abc_Clock()
-	if p.fSwitching {
+	if p.fSwitching != 0 {
 		// compute the required times
 		Map_TimeComputeRequiredGlobal(p)
 		// recover switching activity
@@ -185,7 +185,7 @@ func Map_Mapping(p *Map_Man_t) int32 {
 		// compute the references and collect the nodes used in the mapping
 		Map_MappingSetRefs(p)
 		p.AreaFinal = Map_MappingGetArea(p)
-		if p.fVerbose {
+		if p.fVerbose != 0 {
 			fmt.Printf("Switching: %s = %8.2f  Flow = %11.1f  Area = %11.1f  %4.1f %%   ", mapMetricLabel(fShowSwitching), mapMetricValue(p, fShowSwitching), 0.0, p.AreaFinal, 100.0*(p.AreaBase-p.AreaFinal)/p.AreaBase)
 			// inlining of macro ABC_PRT
 			Abc_Print(1, "%s =", ("Time"))
@@ -200,7 +200,7 @@ func Map_Mapping(p *Map_Man_t) int32 {
 		// compute the references and collect the nodes used in the mapping
 		Map_MappingSetRefs(p)
 		p.AreaFinal = Map_MappingGetArea(p)
-		if p.fVerbose {
+		if p.fVerbose != 0 {
 			fmt.Printf("Switching: %s = %8.2f  Flow = %11.1f  Area = %11.1f  %4.1f %%   ", mapMetricLabel(fShowSwitching), mapMetricValue(p, fShowSwitching), 0.0, p.AreaFinal, 100.0*(p.AreaBase-p.AreaFinal)/p.AreaBase)
 			// inlining of macro ABC_PRT
 			Abc_Print(1, "%s =", ("Time"))
@@ -211,7 +211,7 @@ func Map_Mapping(p *Map_Man_t) int32 {
 	//////////////////////////////////////////////////////////////////////
 
 	// print the arrival times of the latest outputs
-	if p.fVerbose {
+	if p.fVerbose != 0 {
 		Map_MappingPrintOutputArrivals(p)
 	}
 	return 1

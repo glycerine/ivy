@@ -1,319 +1,94 @@
 package mapper
 
-import "os"
+import (
+	"github.com/glycerine/abcgo/misc/extra"
+	"os"
+)
 
-/**CFile****************************************************************
-
-  FileName    [mapperTruth.c]
-
-  PackageName [MVSIS 1.3: Multi-valued logic synthesis system.]
-
-  Synopsis    [Generic technology mapping engine.]
-
-  Author      [MVSIS Group]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 2.0. Started - June 1, 2004.]
-
-  Revision    [$Id: mapperTruth.c,v 1.8 2005/01/23 06:59:45 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "mapperInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-// static void Map_TruthsCut( Map_Man_t * pMan, Map_Cut_t * pCut );
-
-// extern void Map_TruthsCutOne( Map_Man_t * p, Map_Cut_t * pCut, unsigned uTruth[] );
-
-// static void Map_CutsCollect_rec( Map_Cut_t * pCut, Map_NodeVec_t * vVisited );
-
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Derives truth tables for each cut.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Map_MappingTruths(pMan *Map_Man_t) {
-    var pProgress *ProgressBar;
-    var pNode *Map_Node_t;
-    var pCut *Map_Cut_t;
-    var nNodes, i int32;
-    // compute the cuts for the POs
-    nNodes = pMan.vMapObjs.nSize;
-    pProgress = Extra_ProgressBarStart( os.Stdout, nNodes );
-    for  i = 0; i < nNodes; i++  {
-        pNode = pMan.vMapObjs.pArray[i];
-        if !Map_NodeIsAnd( pNode ) {
-            continue; }
-        assert(pNode.pCuts, "pNode.pCuts");
-        assert(pNode.pCuts.nLeaves == 1, "pNode.pCuts.nLeaves == 1");
-
-        // match the simple cut
-        pNode.pCuts.M[0].uPhase     = 0;
-        pNode.pCuts.M[0].pSupers    = pMan.pSuperLib.pSuperInv;
-        pNode.pCuts.M[0].uPhaseBest = 0;
-        pNode.pCuts.M[0].pSuperBest = pMan.pSuperLib.pSuperInv;
-
-        pNode.pCuts.M[1].uPhase     = 0;
-        pNode.pCuts.M[1].pSupers    = pMan.pSuperLib.pSuperInv;
-        pNode.pCuts.M[1].uPhaseBest = 1;
-        pNode.pCuts.M[1].pSuperBest = pMan.pSuperLib.pSuperInv;
-
-        // match the rest of the cuts
-        for  pCut = pNode.pCuts.pNext; (pCut != nil); pCut = pCut.pNext  {
-             Map_TruthsCut( pMan, pCut );
-        }
-        Extra_ProgressBarUpdate( pProgress, i, "Tables ..." );
-    }
-    Extra_ProgressBarStop( pProgress );
+// Map_MappingTruths derives the source mapper's canonical cut matches.
+func Map_MappingTruths(p *Map_Man_t) {
+	progress := extra.Extra_ProgressBarStart(os.Stdout, p.vMapObjs.nSize)
+	for i := int32(0); i < p.vMapObjs.nSize; i++ {
+		node := p.vMapObjs.pArray[i]
+		if Map_NodeIsAnd(node) == 0 {
+			continue
+		}
+		assert(node.pCuts != nil && node.pCuts.nLeaves == 1, "node has trivial cut")
+		for phase := 0; phase < 2; phase++ {
+			match := &node.pCuts.M[phase]
+			match.uPhase = 0
+			match.pSupers = p.pSuperLib.pSuperInv
+			match.uPhaseBest = uint32(phase)
+			match.pSuperBest = p.pSuperLib.pSuperInv
+		}
+		for cut := node.pCuts.pNext; cut != nil; cut = cut.pNext {
+			Map_TruthsCut(p, cut)
+		}
+		extra.Extra_ProgressBarUpdate(progress, i, "Tables ...")
+	}
+	extra.Extra_ProgressBarStop(progress)
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Derives the truth table for one cut.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Map_TruthsCut(p *Map_Man_t, pCut *Map_Cut_t) { 
-//    unsigned uCanon1, uCanon2;
-    var uTruth, uCanon [2]uint32;
-    unsigned char uPhases[16];
-    var uCanon2 *uint32;
-    var pPhases2 string;
-    var fUseFast int32  = 1;
-    var fUseSlow int32;
-    var fUseRec int32; // this does not work for Solaris
-
-    extern int Map_CanonCompute( int nVarsMax, int nVarsReal, unsigned * pt, unsigned ** pptRes, char ** ppfRes );
- 
-    // generally speaking, 1-input cut can be matched into a wire!
-    if pCut.nLeaves == 1 {
-        return; }
-/*
-    if ( p->nVarsMax == 5 )
-    {
-        uTruth[0] = pCut->uTruth;
-        uTruth[1] = pCut->uTruth;
-    }
-    else
-*/
-    Map_TruthsCutOne( p, pCut, uTruth );
-
-
-    // compute the canonical form for the positive phase
-    if fUseFast != 0 {
-        Map_CanonComputeFast( p, p.nVarsMax, pCut.nLeaves, uTruth, uPhases, uCanon );
-    } else if fUseSlow != 0 {
-        Map_CanonComputeSlow( p.uTruths, p.nVarsMax, pCut.nLeaves, uTruth, uPhases, uCanon );
-    } else if fUseRec != 0 {
-//        Map_CanonComputeSlow( p->uTruths, p->nVarsMax, pCut->nLeaves, uTruth, uPhases, uCanon );
-        Extra_TruthCanonFastN( p.nVarsMax, pCut.nLeaves, uTruth, &uCanon2, &pPhases2 );
-/*
-        if ( uCanon[0] != uCanon2[0] || uPhases[0] != pPhases2[0] )
-        {
-            int k = 0;
-            Map_CanonCompute( p->nVarsMax, pCut->nLeaves, uTruth, &uCanon2, &pPhases2 );
-        }
-*/
-        uCanon[0] = uCanon2[0];
-        uCanon[1] = (p.nVarsMax == 6)? uCanon2[1] : uCanon2[0];
-        uPhases[0] = pPhases2[0];
-    
-    } else {
-        Map_CanonComputeSlow( p.uTruths, p.nVarsMax, pCut.nLeaves, uTruth, uPhases, uCanon ); }
-    pCut.M[1].pSupers = Map_SuperTableLookupC( p.pSuperLib, uCanon );
-    pCut.M[1].uPhase  = uPhases[0];
-    p.nCanons++;
-
-//uCanon1 = uCanon[0] & 0xFFFF;
-
-    // compute the canonical form for the negative phase
-    uTruth[0] = ~uTruth[0];
-    uTruth[1] = ~uTruth[1];
-    if fUseFast != 0 {
-        Map_CanonComputeFast( p, p.nVarsMax, pCut.nLeaves, uTruth, uPhases, uCanon );
-    } else if fUseSlow != 0 {
-        Map_CanonComputeSlow( p.uTruths, p.nVarsMax, pCut.nLeaves, uTruth, uPhases, uCanon );
-    } else if fUseRec != 0 {
-//        Map_CanonComputeSlow( p->uTruths, p->nVarsMax, pCut->nLeaves, uTruth, uPhases, uCanon );
-        Extra_TruthCanonFastN( p.nVarsMax, pCut.nLeaves, uTruth, &uCanon2, &pPhases2 );
-/*
-        if ( uCanon[0] != uCanon2[0] || uPhases[0] != pPhases2[0] )
-        {
-            int k = 0;
-            Map_CanonCompute( p->nVarsMax, pCut->nLeaves, uTruth, &uCanon2, &pPhases2 );
-        }
-*/
-        uCanon[0] = uCanon2[0];
-        uCanon[1] = (p.nVarsMax == 6)? uCanon2[1] : uCanon2[0];
-        uPhases[0] = pPhases2[0];
-    
-    } else {
-        Map_CanonComputeSlow( p.uTruths, p.nVarsMax, pCut.nLeaves, uTruth, uPhases, uCanon ); }
-    pCut.M[0].pSupers = Map_SuperTableLookupC( p.pSuperLib, uCanon );
-    pCut.M[0].uPhase  = uPhases[0];
-    p.nCanons++;
-
-//uCanon2 = uCanon[0] & 0xFFFF;
-//assert( p->nVarsMax == 4 );
-//Rwt_Man4ExploreCount( uCanon1 < uCanon2 ? uCanon1 : uCanon2 );
-
-    // restore the truth table
-    uTruth[0] = ~uTruth[0];
-    uTruth[1] = ~uTruth[1];
+func Map_TruthsCut(p *Map_Man_t, cut *Map_Cut_t) {
+	if cut.nLeaves == 1 {
+		return
+	}
+	var truth, canon [2]uint32
+	var phases [16]uint8
+	Map_TruthsCutOne(p, cut, truth[:])
+	for phase := 1; phase >= 0; phase-- {
+		Map_CanonComputeFast(p, p.nVarsMax, int32(cut.nLeaves), truth[:], phases[:], canon[:])
+		cut.M[phase].pSupers = Map_SuperTableLookupC(p.pSuperLib, canon[:])
+		cut.M[phase].uPhase = uint32(phases[0])
+		p.nCanons++
+		truth[0], truth[1] = ^truth[0], ^truth[1]
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Computes the truth table of one cut.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Map_TruthsCutOne(p *Map_Man_t, pCut *Map_Cut_t, uTruth []uint32) {
-    var uTruth1, uTruth2 [2]uint32;
-    var pTemp *Map_Cut_t  = nil; // Suppress "might be used uninitialized"
-    var i int32;
-    // mark the cut leaves
-    for  i = 0; i < pCut.nLeaves; i++  {
-        pTemp = pCut.ppLeaves[i].pCuts;
-        pTemp.fMark = 1;
-        pTemp.M[0].uPhaseBest = p.uTruths[i][0];
-        pTemp.M[1].uPhaseBest = p.uTruths[i][1];
-    }
-    assert(pCut.fMark == 0, "pCut.fMark == 0");
-
-    // collect the cuts in the cut cone
-    p.vVisited.nSize = 0;
-    Map_CutsCollect_rec( pCut, p.vVisited );
-    assert(p.vVisited.nSize > 0, "p.vVisited.nSize > 0");
-    pCut.nVolume = p.vVisited.nSize;
-
-    // compute the tables and unmark
-    for  i = 0; i < pCut.nLeaves; i++  {
-        pTemp = pCut.ppLeaves[i].pCuts;
-        pTemp.fMark = 0;
-    }
-    for  i = 0; i < p.vVisited.nSize; i++  {
-        // get the cut
-        pTemp = (Map_Cut_t *)p.vVisited.pArray[i];
-        pTemp.fMark = 0;
-        // get truth table of the first branch
-        // inlining of macro Map_CutIsComplement
-        if  (int32(((ABC_PTRUINT_T) (pTemp.pOne) & 01)) != 0) {
-            // inlining of macro Map_CutRegular
-            uTruth1[0] = ~((Map_Cut_t *)((ABC_PTRUINT_T)(pTemp.pOne) & ~01)) .M[0].uPhaseBest;
-            // inlining of macro Map_CutRegular
-            uTruth1[1] = ~((Map_Cut_t *)((ABC_PTRUINT_T)(pTemp.pOne) & ~01)) .M[1].uPhaseBest;
-        
-        } else {
-            // inlining of macro Map_CutRegular
-            uTruth1[0] = ((Map_Cut_t *)((ABC_PTRUINT_T)(pTemp.pOne) & ~01)) .M[0].uPhaseBest;
-            // inlining of macro Map_CutRegular
-            uTruth1[1] = ((Map_Cut_t *)((ABC_PTRUINT_T)(pTemp.pOne) & ~01)) .M[1].uPhaseBest;
-        }
-        // get truth table of the second branch
-        // inlining of macro Map_CutIsComplement
-        if  (int32(((ABC_PTRUINT_T) (pTemp.pTwo) & 01)) != 0) {
-            // inlining of macro Map_CutRegular
-            uTruth2[0] = ~((Map_Cut_t *)((ABC_PTRUINT_T)(pTemp.pTwo) & ~01)) .M[0].uPhaseBest;
-            // inlining of macro Map_CutRegular
-            uTruth2[1] = ~((Map_Cut_t *)((ABC_PTRUINT_T)(pTemp.pTwo) & ~01)) .M[1].uPhaseBest;
-        
-        } else {
-            // inlining of macro Map_CutRegular
-            uTruth2[0] = ((Map_Cut_t *)((ABC_PTRUINT_T)(pTemp.pTwo) & ~01)) .M[0].uPhaseBest;
-            // inlining of macro Map_CutRegular
-            uTruth2[1] = ((Map_Cut_t *)((ABC_PTRUINT_T)(pTemp.pTwo) & ~01)) .M[1].uPhaseBest;
-        }
-        // get the truth table of the output
-        if !pTemp.Phase {
-            pTemp.M[0].uPhaseBest = uTruth1[0] & uTruth2[0];
-            pTemp.M[1].uPhaseBest = uTruth1[1] & uTruth2[1];
-        
-        } else {
-            pTemp.M[0].uPhaseBest = ~(uTruth1[0] & uTruth2[0]);
-            pTemp.M[1].uPhaseBest = ~(uTruth1[1] & uTruth2[1]);
-        }
-    }
-    uTruth[0] = pTemp.M[0].uPhaseBest;
-    uTruth[1] = pTemp.M[1].uPhaseBest;
+// Map_TruthsCutOne evaluates the cut cone in source postorder.
+func Map_TruthsCutOne(p *Map_Man_t, cut *Map_Cut_t, truth []uint32) {
+	for i := 0; i < int(cut.nLeaves); i++ {
+		leaf := cut.ppLeaves[i].pCuts
+		leaf.fMark = 1
+		leaf.M[0].uPhaseBest = p.uTruths[i][0]
+		leaf.M[1].uPhaseBest = p.uTruths[i][1]
+	}
+	assert(cut.fMark == 0, "cut is not a leaf")
+	var visited []*Map_Cut_t
+	var collect func(*Map_Cut_t)
+	collect = func(c *Map_Cut_t) {
+		c = Map_CutRegular(c)
+		if c.fMark != 0 {
+			return
+		}
+		collect(c.pOne)
+		collect(c.pTwo)
+		c.fMark = 1
+		visited = append(visited, c)
+	}
+	collect(cut)
+	assert(len(visited) > 0, "nontrivial cut")
+	cut.nVolume = int32(len(visited))
+	for i := 0; i < int(cut.nLeaves); i++ {
+		cut.ppLeaves[i].pCuts.fMark = 0
+	}
+	for _, c := range visited {
+		c.fMark = 0
+		a, b := Map_CutRegular(c.pOne), Map_CutRegular(c.pTwo)
+		for i := 0; i < 2; i++ {
+			x, y := a.M[i].uPhaseBest, b.M[i].uPhaseBest
+			if Map_CutIsComplement(c.pOne) {
+				x = ^x
+			}
+			if Map_CutIsComplement(c.pTwo) {
+				y = ^y
+			}
+			value := x & y
+			if c.Phase != 0 {
+				value = ^value
+			}
+			c.M[i].uPhaseBest = value
+		}
+	}
+	truth[0], truth[1] = cut.M[0].uPhaseBest, cut.M[1].uPhaseBest
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Recursively collect the cuts.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Map_CutsCollect_rec(pCut *Map_Cut_t, vVisited *Map_NodeVec_t) {
-    if pCut.fMark {
-        return; }
-    // inlining of macro Map_CutRegular
-    Map_CutsCollect_rec( ((Map_Cut_t *)((ABC_PTRUINT_T)(pCut.pOne) & ~01)) , vVisited );
-    // inlining of macro Map_CutRegular
-    Map_CutsCollect_rec( ((Map_Cut_t *)((ABC_PTRUINT_T)(pCut.pTwo) & ~01)) , vVisited );
-    assert(pCut.fMark == 0, "pCut.fMark == 0");
-    pCut.fMark = 1;
-    Map_NodeVecPush( vVisited, (Map_Node_t *)pCut );
-}
-
-/*
-    {
-        unsigned * uCanon2;
-        char * pPhases2;
-
-        Map_CanonComputeSlow( p->uTruths, p->nVarsMax, pCut->nLeaves, uTruth, uPhases, uCanon );
-        Map_CanonCompute( p->nVarsMax, pCut->nLeaves, uTruth, &uCanon2, &pPhases2 );
-        if ( uCanon2[0] != uCanon[0] )
-        {
-            int v = 0;
-            Map_CanonCompute( p->nVarsMax, pCut->nLeaves, uTruth, &uCanon2, &pPhases2 );
-            Map_CanonComputeFast( p, p->nVarsMax, pCut->nLeaves, uTruth, uPhases, uCanon );
-        }
-//        else
-//        {
-//            printf( "Correct.\n" );
-//        }
-    }
-*/
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

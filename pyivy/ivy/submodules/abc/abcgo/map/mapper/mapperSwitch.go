@@ -46,10 +46,10 @@ package mapper
 **********************************************************************
 */
 func Map_SwitchCutGetDerefed(pNode *Map_Node_t, pCut *Map_Cut_t, fPhase int32) float32 {
-	var aResult, aResult2 float32
+	var aResult float32
 	//    assert( pNode->Switching > 0 );
-	aResult2 = Map_SwitchCutRefDeref(pNode, pCut, fPhase, 1) // reference
-	aResult = Map_SwitchCutRefDeref(pNode, pCut, fPhase, 0)  // dereference
+	_ = Map_SwitchCutRefDeref(pNode, pCut, fPhase, 1)       // reference
+	aResult = Map_SwitchCutRefDeref(pNode, pCut, fPhase, 0) // dereference
 	//    assert( aResult == aResult2 );
 	return aResult
 }
@@ -208,13 +208,13 @@ func Map_MappingGetSwitching(pMan *Map_Man_t) float32 {
 		// at least one phase is used in the mapping
 		assert(pNode.nRefAct[0] > 0 || pNode.nRefAct[1] > 0, "pNode.nRefAct[0] > 0 || pNode.nRefAct[1] > 0")
 		// compute the array due to the supergate
-		if Map_NodeIsAnd(pNode) {
+		if Map_NodeIsAnd(pNode) != 0 {
 			// count switching of the negative phase
-			if pNode.pCutBest[0] && (pNode.nRefAct[0] > 0 || pNode.pCutBest[1] == nil) {
+			if pNode.pCutBest[0] != nil && (pNode.nRefAct[0] > 0 || pNode.pCutBest[1] == nil) {
 				Switch += pNode.Switching
 			}
 			// count switching of the positive phase
-			if pNode.pCutBest[1] && (pNode.nRefAct[1] > 0 || pNode.pCutBest[0] == nil) {
+			if pNode.pCutBest[1] != nil && (pNode.nRefAct[1] > 0 || pNode.pCutBest[0] == nil) {
 				Switch += pNode.Switching
 			}
 		}
@@ -227,7 +227,7 @@ func Map_MappingGetSwitching(pMan *Map_Man_t) float32 {
 	// add buffers for each CO driven by a CI
 	for i = 0; i < pMan.nOutputs; i++ {
 		// inlining of macro Map_IsComplement
-		if Map_NodeIsVar(pMan.pOutputs[i]) && !(int32(((ABC_PTRUINT_T)(pMan.pOutputs[i]) & 01)) != 0) {
+		if Map_NodeIsVar(Map_Regular(pMan.pOutputs[i])) != 0 && !Map_IsComplement(pMan.pOutputs[i]) {
 			Switch += pMan.pOutputs[i].Switching
 		}
 	}

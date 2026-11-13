@@ -63,7 +63,7 @@ import (
 **********************************************************************
 */
 func Map_MatchClean(pMatch *Map_Match_t) {
-	memset(pMatch, 0, sizeof(Map_Match_t))
+	*pMatch = Map_Match_t{}
 	pMatch.AreaFlow = MAP_FLOAT_LARGE      // unassigned
 	pMatch.tArrive.Rise = MAP_FLOAT_LARGE  // unassigned
 	pMatch.tArrive.Fall = MAP_FLOAT_LARGE  // unassigned
@@ -128,7 +128,7 @@ func Map_MatchCompare(pMan *Map_Man_t, pM1 *Map_Match_t, pM2 *Map_Match_t, fDoin
 		}
 
 		// make decision based on cell profile
-		if pMan.fUseProfile && pM1.pSuperBest && pM1.pSuperBest {
+		if pMan.fUseProfile != 0 && pM1.pSuperBest != nil {
 			var M1req int32 = Mio_GateReadProfile(pM1.pSuperBest.pRoot)
 			var M2req int32 = Mio_GateReadProfile(pM2.pSuperBest.pRoot)
 			var M1act int32 = Mio_GateReadProfile2(pM1.pSuperBest.pRoot)
@@ -208,7 +208,7 @@ func Map_MatchNodeCut(p *Map_Man_t, pNode *Map_Node_t, pCut *Map_Cut_t, fPhase i
 		for i = 0; i < int32(pSuper.nPhases); i++ {
 			p.nPhases++
 			// find the overall phase of this match
-			pMatch.uPhaseBest = pMatch.uPhase ^ pSuper.uPhases[i]
+			pMatch.uPhaseBest = pMatch.uPhase ^ uint32(pSuper.uPhases[i])
 			if p.fMappingMode == 0 {
 				// get the arrival time
 				Map_TimeCutComputeArrival(pNode, pCut, fPhase, fWorstLimit)
@@ -254,7 +254,7 @@ func Map_MatchNodeCut(p *Map_Man_t, pNode *Map_Node_t, pCut *Map_Cut_t, fPhase i
 	*pMatch = MatchBest
 
 	// recompute the arrival time and area (area flow) of this cut
-	if pMatch.pSuperBest {
+	if pMatch.pSuperBest != nil {
 		Map_TimeCutComputeArrival(pNode, pCut, fPhase, MAP_FLOAT_LARGE)
 		if p.fMappingMode == 2 || p.fMappingMode == 3 {
 			pMatch.AreaFlow = Map_CutGetAreaDerefed(pCut, fPhase)
@@ -285,7 +285,7 @@ func Map_MatchNodePhase(p *Map_Man_t, pNode *Map_Node_t, fPhase int32) int32 {
 	var pMatch *Map_Match_t
 	var pCut, pCutBest *Map_Cut_t
 	var Area1 float32 = 0.0 // Suppress "might be used uninitialized
-	var Area2, fWorstLimit float32
+	var fWorstLimit float32
 
 	// skip the cuts that have been unassigned during area recovery
 	pCutBest = pNode.pCutBest[fPhase]
@@ -378,9 +378,9 @@ func Map_MatchNodePhase(p *Map_Man_t, pNode *Map_Node_t, fPhase int32) int32 {
 		(pNode.nRefAct[fPhase] > 0 ||
 			(pNode.pCutBest[1-fPhase] == nil && pNode.nRefAct[1-fPhase] > 0)) {
 		if p.fMappingMode == 2 || p.fMappingMode == 3 {
-			Area2 = Map_CutRef(pNode.pCutBest[fPhase], fPhase, p.fUseProfile)
+			_ = Map_CutRef(pNode.pCutBest[fPhase], fPhase, p.fUseProfile)
 		} else if p.fMappingMode == 4 {
-			Area2 = Map_SwitchCutRef(pNode, pNode.pCutBest[fPhase], fPhase)
+			_ = Map_SwitchCutRef(pNode, pNode.pCutBest[fPhase], fPhase)
 		} else {
 			assert(false, "0")
 		}
@@ -516,19 +516,19 @@ func Map_NodeTryDroppingOnePhase(p *Map_Man_t, pNode *Map_Node_t) {
 	// check if replacement of each phase is possible using required times
 	fUsePhase0, fUsePhase1 = 0, 0
 	if p.fMappingMode == 2 {
-		fUsePhase0 = (pNode.tRequired[1].Worst > tWorst1Using0+3*p.pSuperLib.tDelayInv.Worst+p.fEpsilon)
-		fUsePhase1 = (pNode.tRequired[0].Worst > tWorst0Using1+3*p.pSuperLib.tDelayInv.Worst+p.fEpsilon)
+		fUsePhase0 = boolToInt(pNode.tRequired[1].Worst > tWorst1Using0+3*p.pSuperLib.tDelayInv.Worst+p.fEpsilon)
+		fUsePhase1 = boolToInt(pNode.tRequired[0].Worst > tWorst0Using1+3*p.pSuperLib.tDelayInv.Worst+p.fEpsilon)
 
 	} else if p.fMappingMode == 3 || p.fMappingMode == 4 {
-		fUsePhase0 = (pNode.tRequired[1].Worst > tWorst1Using0+p.fEpsilon)
-		fUsePhase1 = (pNode.tRequired[0].Worst > tWorst0Using1+p.fEpsilon)
+		fUsePhase0 = boolToInt(pNode.tRequired[1].Worst > tWorst1Using0+p.fEpsilon)
+		fUsePhase1 = boolToInt(pNode.tRequired[0].Worst > tWorst0Using1+p.fEpsilon)
 	}
-	if !(fUsePhase0 != 0) && !fUsePhase1 {
+	if !(fUsePhase0 != 0) && fUsePhase1 == 0 {
 		return
 	}
 
 	// if replacement is possible both ways, use the one that works better
-	if (fUsePhase0 != 0) && fUsePhase1 {
+	if (fUsePhase0 != 0) && fUsePhase1 != 0 {
 		if pMatchBest0.AreaFlow < pMatchBest1.AreaFlow {
 			fUsePhase1 = 0
 		} else {
@@ -536,7 +536,7 @@ func Map_NodeTryDroppingOnePhase(p *Map_Man_t, pNode *Map_Node_t) {
 		}
 	}
 	// only one phase should be used
-	assert(fUsePhase0^fUsePhase1, "fUsePhase0 ^ fUsePhase1")
+	assert(fUsePhase0^fUsePhase1 != 0, "fUsePhase0 ^ fUsePhase1")
 
 	// set the corresponding cut to NULL
 	if fUsePhase0 != 0 {
@@ -651,7 +651,7 @@ func Map_MappingMatches(p *Map_Man_t) int32 {
 	pProgress = Extra_ProgressBarStart(os.Stdout, p.vMapObjs.nSize)
 	for i = 0; i < p.vMapObjs.nSize; i++ {
 		pNode = p.vMapObjs.pArray[i]
-		if Map_NodeIsBuf(pNode) {
+		if Map_NodeIsBuf(pNode) != 0 {
 			assert(pNode.p2 == nil, "pNode.p2 == nil")
 			// inlining of macro Map_Regular
 			// inlining of macro Map_IsComplement
