@@ -45,6 +45,9 @@ func Ssc_ManPrintStats(p *Ssc_Man_t) {
 	fmt.Printf("SSC: %d queries, %d proofs, %d counterexamples, %d undecided, %d recycles, %d simulation rounds\n", p.Stats.Calls, p.Stats.Proofs, p.Stats.Counterexamples, p.Stats.Undecided, p.Stats.Recycles, p.Stats.SimulationRounds)
 }
 func Ssc_GiaResimulateOneClass(p *Ssc_Man_t, head, node int32) int32 {
+	if node < 0 || int(node) >= len(p.Classes.Repr) || p.Classes.Repr[node] != head {
+		panic("ssc: resimulation pair is not in the same class")
+	}
 	s := NewSimulation(p.Aig, 1)
 	Ssc_GiaSavePiPattern(s, p.Pattern)
 	Ssc_GiaSimRound(s)
@@ -52,7 +55,11 @@ func Ssc_GiaResimulateOneClass(p *Ssc_Man_t, head, node int32) int32 {
 	for i := range values {
 		values[i] = s.Values[i][0]&1 != 0
 	}
-	return Ssc_GiaSimClassRefineOneBit(p.Classes, values, head)
+	refined := Ssc_GiaSimClassRefineOneBit(p.Classes, values, head)
+	if p.Classes.Repr[node] == head {
+		panic("ssc: SAT witness did not separate candidate pair")
+	}
+	return refined
 }
 func carePatterns(p *Ssc_Man_t) {
 	care := NewSimulation(p.Care, 5)
