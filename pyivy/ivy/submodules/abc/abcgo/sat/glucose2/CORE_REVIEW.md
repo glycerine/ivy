@@ -56,3 +56,32 @@ g++ -O2 -ffunction-sections -fdata-sections -DABC_USE_STDINT_H -I src \
   src/sat/glucose2/System2.cpp -Wl,--gc-sections -o /tmp/glucose2-native-oracle
 /tmp/glucose2-native-oracle
 ```
+
+## Follow-up correctness and simplification review
+
+A later package-wide review fixed the following issues:
+
+- SAT models now retain `LUndef` for unassigned non-decision variables rather
+  than interpreting Go's zero value as `LTrue`.
+- DIMACS export emits an unsatisfiable instance when an assumption contradicts
+  a root assignment. Tests include 300 deterministic small-formula round trips.
+- The simplifier rejects assumptions on eliminated variables even after
+  simplification is disabled, and rejects invalid or eliminated substitution
+  targets, preventing invalid model reconstruction.
+- AIG-to-solver conversion no longer registers preprocessing occurrences a
+  second time. Interrupted equivalence checks no longer claim equivalence;
+  interrupted quantification uses exact cofactoring when no divisor list is
+  needed and otherwise returns `-1`. Cube generation rejects interrupted or
+  overlapping cases rather than producing an unproved cover.
+- Assumption minimization now checks whether its final removable literal can
+  be dropped. The model copy and AIG clause bookkeeping were also simplified.
+
+Regression tests cover these cases. The following checks passed after the review:
+
+```
+GOCACHE=/tmp/abcgo-cache go test -race -count=1 ./sat/glucose2 ./sat/bmc
+GOCACHE=/tmp/abcgo-cache go vet ./sat/glucose2 ./sat/bmc
+```
+
+These checks do not establish correctness for all solver workloads or prove
+that every C++ option has identical behavior.

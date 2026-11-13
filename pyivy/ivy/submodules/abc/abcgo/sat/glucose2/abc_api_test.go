@@ -1,6 +1,9 @@
 package glucose2
 
-import "testing"
+import (
+	"github.com/glycerine/abcgo/aig/aig"
+	"testing"
+)
 
 func TestABCAndEncodingTruthTable(t *testing.T) {
 	for _, phases := range []struct{ a, b, out bool }{
@@ -100,4 +103,107 @@ func equalABCInts(a, b []int32) bool {
 		}
 	}
 	return true
+}
+
+func TestMinimizeABCAssumptionsRemovesFinalRedundantLiteral(t *testing.T) {
+	s := NewABCSolver()
+	s.EnsureABCVariables(2)
+	if !s.AddABCClause([]int32{1}) {
+		t.Fatal("unexpected contradiction")
+	}
+	// Fixed x contradicts the permanent clause; y is unnecessary even when it
+	// is the sole removable assumption.
+	got := s.MinimizeABCAssumptions([]int32{0, 2}, 1)
+	if len(got) != 1 || got[0] != 0 {
+		t.Fatalf("got %v; want fixed assumption only", got)
+	}
+}
+
+// Graph loading must register each clause exactly once with the simplifier.
+func TestSolverFromAigRegistersOccurrencesOnce(t *testing.T) {
+	graph := aig.NewGraph()
+	a, b := graph.NewInput(), graph.NewInput()
+	graph.AddOutput(graph.AND(a, b))
+	s := NewSimpSolver()
+	Glucose2_SolverFromAig(graph, s)
+	counts := make([]int, len(s.literalOccurrences))
+	perVar := make([]int, s.NVars())
+	for _, c := range s.clauses {
+		for _, lit := range c.Lits {
+			counts[lit]++
+			perVar[lit.Var()]++
+		}
+	}
+	for lit, want := range counts {
+		if got := s.literalOccurrences[lit]; got != want {
+			t.Fatalf("literal %d: occurrences = %d, want %d", lit, got, want)
+		}
+	}
+	for v, want := range perVar {
+		if got := len(s.occurs[v]); got != want {
+			t.Fatalf("variable %d: occurrence list = %d, want %d", v, got, want)
+		}
+	}
+	if !s.Eliminate(true) || s.SolveLimited(nil, false) != LTrue {
+		t.Fatal("satisfiable AND graph lost during preprocessing")
+	}
+	model := make([]bool, graph.InputCount())
+	for i, input := range graph.Inputs() {
+		model[i] = s.Model[input.NodeID()] == LTrue
+	}
+	if !model[0] || !model[1] {
+		t.Fatalf("bad AND model %v", model)
+	}
+}
+
+func TestInterruptedEquivalenceDoesNotProveEquality(t *testing.T) {
+	graph := aig.NewGraph()
+	a, b := graph.NewInput(), graph.NewInput()
+	s := NewABCSolver()
+	s.Stop = func() bool { return true }
+	if got := bmcg2_sat_solver_equiv_overlap_check(s, graph, int32(a), int32(b), 1); got != 0 {
+		t.Fatalf("interrupted check incorrectly proved equality: %d", got)
+	}
+}
+
+func TestInterruptedQuantificationIsNotAConstant(t *testing.T) {
+	graph := aig.NewGraph()
+	a, b := graph.NewInput(), graph.NewInput()
+	root := graph.AND(a, b)
+	solvers := [2]*SimpSolver{NewABCSolver(), NewABCSolver()}
+	solvers[0].Stop = func() bool { return true }
+	keep := func(_ any, i int32) int32 {
+		if i == 0 {
+			return 1
+		}
+		return 0
+	}
+	result := bmcg2_sat_solver_quantify(solvers, graph, int32(root), 0, keep, nil, nil)
+	// Exists b: a AND b equals a, not constant one.
+	if result != int32(a) {
+		t.Fatalf("quantified result=%d, want input %d", result, a)
+	}
+	var divisors []int32
+	if got := bmcg2_sat_solver_quantify(solvers, graph, int32(root), 0, keep, nil, &divisors); got != -1 {
+		t.Fatalf("interrupted divisor request returned %d, want failure", got)
+	}
+}
+
+func TestGenerateCubesRejectsOverlapAndInterruptedOffset(t *testing.T) {
+	for _, interrupted := range []bool{false, true} {
+		offset, onset := NewABCSolver(), NewABCSolver()
+		offset.EnsureABCVariables(1)
+		onset.EnsureABCVariables(1)
+		if interrupted {
+			offset.Stop = func() bool { return true }
+		}
+		func() {
+			defer func() {
+				if recover() == nil {
+					t.Errorf("interrupted=%v: expected rejection", interrupted)
+				}
+			}()
+			Glucose2_GenerateCubes([2]*SimpSolver{offset, onset}, []int32{0}, []int32{0}, 0)
+		}()
+	}
 }

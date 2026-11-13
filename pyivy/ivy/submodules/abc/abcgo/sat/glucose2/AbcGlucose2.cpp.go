@@ -344,28 +344,7 @@ func graphCNF(p *aig.Graph, s *SimpSolver, roots []aig.Edge, assertRoots bool) [
 	return ids
 }
 func Glucose2_SolverFromAig(p *aig.Graph, s *SimpSolver) []int32 {
-	// Load through the core first, then rebuild preprocessing occurrences once.
-	before := len(s.clauses)
 	ids := graphCNF(p, s, p.Outputs(), true)
-	if s.useSimplification {
-		for s.NVars() > len(s.frozen) {
-			s.frozen = append(s.frozen, false)
-			s.eliminated = append(s.eliminated, false)
-			s.literalOccurrences = append(s.literalOccurrences, 0, 0)
-			s.occurs = append(s.occurs, nil)
-			s.touched = append(s.touched, false)
-			s.elimHeap.Insert(len(s.frozen) - 1)
-		}
-		for _, c := range s.clauses[before:] {
-			s.subsumptionQueue = append(s.subsumptionQueue, c)
-			for _, lit := range c.Lits {
-				s.occurs[lit.Var()] = append(s.occurs[lit.Var()], c)
-				s.literalOccurrences[lit]++
-				s.touched[lit.Var()] = true
-				s.updateElimHeap(lit.Var())
-			}
-		}
-	}
 	return ids
 }
 func Glucose2_SolverFromAig2(p *aig.Graph, s *SimpSolver) []int32 {
@@ -387,11 +366,21 @@ func Glucose2_GenerateCubes(solvers [2]*SimpSolver, ciVars, varToIndex []int32, 
 			assumptions[i] = int32(MkLit(Var(v), solvers[1].Model[v] != LTrue))
 		}
 		kept := int32(0)
-		if bmcg2_sat_solver_solve(solvers[0], nil, 0) != GLUCOSE_UNSAT {
-			if len(assumptions) == 0 {
+		offsetStatus := bmcg2_sat_solver_solve(solvers[0], nil, 0)
+		if offsetStatus == GLUCOSE_UNDEC {
+			panic("cube enumeration exhausted solver budget")
+		}
+		if offsetStatus == GLUCOSE_SAT {
+			status = bmcg2_sat_solver_solve(solvers[0], assumptions, int32(len(assumptions)))
+			if status == GLUCOSE_UNDEC {
+				panic("cube enumeration exhausted solver budget")
+			}
+			if status == GLUCOSE_SAT {
 				panic("overlapping cube on/off sets")
 			}
-			kept = bmcg2_sat_solver_minimize_assumptions(solvers[0], assumptions, int32(len(assumptions)), 0)
+			if len(assumptions) > 0 {
+				kept = bmcg2_sat_solver_minimize_assumptions(solvers[0], assumptions, int32(len(assumptions)), 0)
+			}
 		}
 		cube := []byte(strings.Repeat("-", len(ciVars)))
 		var block []int32
@@ -627,11 +616,21 @@ func bmcg2_sat_solver_quantify(solvers [2]*SimpSolver, p *aig.Graph, lit, hash i
 		}
 		s.AddClause([]Lit{Lit(unit)})
 	}
-	if bmcg2_sat_solver_solve(solvers[0], nil, 0) != GLUCOSE_SAT {
-		return int32(p.Const1())
-	}
-	if bmcg2_sat_solver_solve(solvers[1], nil, 0) != GLUCOSE_SAT {
-		return int32(p.Const0())
+	for i, solver := range solvers {
+		switch bmcg2_sat_solver_solve(solver, nil, 0) {
+		case GLUCOSE_UNSAT:
+			if i == 0 {
+				return int32(p.Const1())
+			}
+			return int32(p.Const0())
+		case GLUCOSE_UNDEC:
+			// The SAT route cannot establish the constant or compute divisors.
+			// Direct cofactoring is exact when no divisor list is requested.
+			if divisors == nil {
+				return bmcg2_sat_solver_quantify2(p, lit, hash, keep, data, nil)
+			}
+			return -1
+		}
 	}
 	if kept == 0 {
 		return int32(p.Const1())
@@ -706,7 +705,7 @@ func bmcg2_sat_solver_equiv_overlap_check(s *SimpSolver, p *aig.Graph, a, b, equ
 	graphCNF(p, s, []aig.Edge{aig.Edge(a), aig.Edge(b)}, false)
 	if equivalence != 0 {
 		for _, as := range [][]int32{{a, int32(Lit(b).Not())}, {int32(Lit(a).Not()), b}} {
-			if bmcg2_sat_solver_solve(s, as, int32(len(as))) == GLUCOSE_SAT {
+			if bmcg2_sat_solver_solve(s, as, int32(len(as))) != GLUCOSE_UNSAT {
 				return 0
 			}
 		}

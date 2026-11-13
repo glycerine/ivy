@@ -191,5 +191,8 @@ func (s *SimpSolver) MinimizeABCAssumptions(encoded []int32, fixedPrefix int) []
 		}
 		break
 	}
+	if len(candidates) == 1 && s.SolveABCLiterals(fixed) == GLUCOSE_UNSAT {
+		candidates = nil
+	}
 	return append(fixed, candidates...)
 }
