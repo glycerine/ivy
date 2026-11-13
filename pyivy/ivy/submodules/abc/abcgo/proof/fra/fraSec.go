@@ -3,9 +3,11 @@ package fra
 // Sequential equivalence orchestration from fraSec.c.
 import (
 	"fmt"
+	"sync/atomic"
 	"time"
 
 	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/aig/ioa"
 	"github.com/glycerine/abcgo/aig/saig"
 	"github.com/glycerine/abcgo/bdd/bbr"
 	"github.com/glycerine/abcgo/misc/util"
@@ -14,6 +16,8 @@ import (
 	"github.com/glycerine/abcgo/proof/pdr"
 	"github.com/glycerine/abcgo/proof/ssw"
 )
+
+var secUnsolvedNumber atomic.Int32
 
 func Fra_SecSetDefaultParams(p *Fra_Sec_t) {
 	*p = Fra_Sec_t{fTryComb: 1, fTryBmc: 1, nFramesMax: 4, nBTLimit: 1000, nBTLimitGlobal: 5000000, nBTLimitInter: 10000, nBddVarsMax: 150, nBddMax: 50000, nBddIterMax: 1000000, fRetimeFirst: 1, fRetimeRegs: 1, fFraiging: 1, fInduction: 1, fInterpolation: 1, fReachability: 1, fReorderImage: 1, fStopOnFirstFail: 1, fUsePdr: 1, nPdrTimeout: 60}
@@ -65,6 +69,26 @@ func Fra_FraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph) int3
 	finish := func() int32 {
 		if status == 0 && !secTransferWitness(original, graph) && !secTrivialWitness(original) {
 			status = -1
+		}
+		if pars.fReportSolution != 0 && pars.fRecursive == 0 {
+			switch status {
+			case 1:
+				fmt.Println("SOLUTION: PASS")
+			case 0:
+				fmt.Println("SOLUTION: FAIL")
+			default:
+				fmt.Println("SOLUTION: UNDECIDED")
+			}
+		}
+		if status == -1 && !timedOut && pars.fSilent == 0 {
+			number := secUnsolvedNumber.Add(1)
+			pars.nSMnumber = number
+			name := fmt.Sprintf("sm%02d.aig", number)
+			if err := ioa.Ioa_WriteAiger(graph, name, 0, 0); err != nil {
+				fmt.Printf("Could not write unsolved reduced miter %q: %v\n", name, err)
+			} else {
+				fmt.Printf("The unsolved reduced miter is written into file %q.\n", name)
+			}
 		}
 		if result != nil {
 			*result = aig.Aig_ManDupSimpleDfs(graph)
