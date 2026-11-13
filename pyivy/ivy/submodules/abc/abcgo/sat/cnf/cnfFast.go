@@ -182,6 +182,9 @@ func Cnf_ComputeClauses(graph *Aig_Man_t, root *Aig_Obj_t, leaves, nodes *Vec_Pt
 	if graph == nil || root == nil {
 		return
 	}
+	if vec.Vec_PtrSize(leaves) > 6 {
+		panic("cnf: truth-table clause generation supports at most six leaves")
+	}
 	truth := Cnf_CutDeriveTruth(graph, leaves, nodes)
 	out := Cnf_ObjGetLit(mapping, root, 0)
 	n := vec.Vec_PtrSize(leaves)
@@ -221,7 +224,11 @@ func Cnf_CutCountClauses(graph *Aig_Man_t, leaves, nodes *Vec_Ptr_t, _ *Vec_Int_
 	if graph == nil {
 		return 0
 	}
-	return int32(2 + vec.Vec_PtrSize(leaves))
+	n := vec.Vec_PtrSize(leaves)
+	if n > 6 {
+		panic("cnf: truth-table clause generation supports at most six leaves")
+	}
+	return int32(1 << n)
 }
 func Cnf_CountCnfSize(graph *Aig_Man_t) int32 {
 	if graph == nil {
