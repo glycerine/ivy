@@ -120,8 +120,8 @@ func TestComputePreimageBlocksUnreachableSuffixState(t *testing.T) {
 	if status != INT2_COMPUTED || image == nil {
 		t.Fatalf("preimage status %d image %v", status, image)
 	}
-	if got := vec.Vec_IntArray(image); len(got) != 2 || got[0] != 1 || got[1] != 1 {
-		t.Fatalf("blocked cube %v, want [1 1]", got)
+	if got := vec.Vec_IntArray(image); len(got) != 3 || got[0] != 0 || got[1] != 1 || got[2] != 0 {
+		t.Fatalf("unreachable state cube %v, want [0 1 0]", got)
 	}
 }
 
@@ -142,7 +142,7 @@ func TestComputePreimageTranslatesSATVariableMappings(t *testing.T) {
 	if status != INT2_COMPUTED || image == nil {
 		t.Fatalf("status %d image %v", status, image)
 	}
-	if got := vec.Vec_IntArray(image); len(got) != 2 || got[0] != 1 || got[1] != 1 {
-		t.Fatalf("blocked state cube %v, want [1 1]", got)
+	if got := vec.Vec_IntArray(image); len(got) != 3 || got[0] != 0 || got[1] != 1 || got[2] != 0 {
+		t.Fatalf("unreachable state cube %v, want [0 1 0]", got)
 	}
 }

@@ -161,7 +161,28 @@ func Int2_ManPrepareSuffix(p *Gia_Man_t, vImageOne *Vec_Int_t, vImagesAll *Vec_I
 		*pvCoMap = nil
 		return nil
 	}
-	for cursor := 0; cursor < vec.Vec_IntSize(vImagesAll); {
+	// JF encodes each CO but does not assert it; the suffix query asks for
+	// assignments satisfying its single property/image output.
+	output := gia.Gia_ManPo(pNew, 0)
+	outputVar := cnf.VarNums[gia.Gia_ObjId(pNew, output)]
+	if outputVar < 0 || sat_solver_addclause(solver, []int32{sat_literal(outputVar, 0)}) == 0 {
+		gia.Gia_ManStop(pNew)
+		*pvCoMap = nil
+		return nil
+	}
+	coMap := vec.Vec_IntAlloc(int(gia.Gia_ManCiNum(pNew)))
+	for i := int32(0); i < gia.Gia_ManCiNum(pNew); i++ {
+		pi := gia.Gia_ManCi(pNew, i)
+		variable := cnf.VarNums[gia.Gia_ObjId(pNew, pi)]
+		if variable < 0 {
+			variable = sat_solver_nvars(solver)
+			sat_solver_setnvars(solver, variable+1)
+		}
+		vec.Vec_IntPush(coMap, variable)
+	}
+	// Image covers reserve entry zero; each subsequent cube contains state
+	// literals, which must be translated to this solver's CI variables.
+	for cursor := 1; cursor < vec.Vec_IntSize(vImagesAll); {
 		count := vec.Vec_IntEntry(vImagesAll, cursor)
 		cursor++
 		if count < 0 || cursor+int(count) > vec.Vec_IntSize(vImagesAll) {
@@ -169,7 +190,13 @@ func Int2_ManPrepareSuffix(p *Gia_Man_t, vImageOne *Vec_Int_t, vImagesAll *Vec_I
 		}
 		clause := make([]int32, count)
 		for k := range clause {
-			clause[k] = vec.Vec_IntEntry(vImagesAll, cursor) ^ 1
+			lit := vec.Vec_IntEntry(vImagesAll, cursor)
+			state := lit >> 1
+			if lit < 0 || state >= gia.Gia_ManRegNum(p) {
+				panic("int2: image cube state index out of range")
+			}
+			variable := vec.Vec_IntEntry(coMap, int(gia.Gia_ManPiNum(p)+state))
+			clause[k] = sat_literal(variable, (lit&1)^1)
 			cursor++
 		}
 		if sat_solver_addclause(solver, clause) == 0 {
@@ -177,11 +204,6 @@ func Int2_ManPrepareSuffix(p *Gia_Man_t, vImageOne *Vec_Int_t, vImagesAll *Vec_I
 			*pvCoMap = nil
 			return nil
 		}
-	}
-	coMap := vec.Vec_IntAlloc(int(gia.Gia_ManCiNum(pNew)))
-	for i := int32(0); i < gia.Gia_ManCiNum(pNew); i++ {
-		pi := gia.Gia_ManCi(pNew, i)
-		vec.Vec_IntPush(coMap, cnf.VarNums[gia.Gia_ObjId(pNew, pi)])
 	}
 	*pvCoMap = coMap
 	if ppSuff != nil {
@@ -211,6 +233,7 @@ func Int2_ManComputePreimage(pSuff *Gia_Man_t, pSatPref, pSatSuff *sat_solver, v
 	assert(vec.Vec_IntSize(vCiMap) <= int(gia.Gia_ManCiNum(pSuff)), "prefix map fits suffix state variables")
 	firstStateCI := gia.Gia_ManCiNum(pSuff) - int32(vec.Vec_IntSize(vCiMap))
 	image := vec.Vec_IntAlloc(1000)
+	vec.Vec_IntPush(image, 0) // reserved SOP header
 	for {
 		status := sat_solver_solve(pSatSuff, nil, 0, 0, 0, 0)
 		if status == l_Undef {
@@ -263,7 +286,7 @@ func Int2_ManComputePreimage(pSuff *Gia_Man_t, pSatPref, pSatSuff *sat_solver, v
 				assert(stateIndex >= 0, "core literal maps to a state variable")
 				suffixVariable := vec.Vec_IntEntry(vCoMap, int(firstStateCI)+stateIndex)
 				clause = append(clause, sat_literal(suffixVariable, literal&1))
-				vec.Vec_IntPush(image, sat_literal(int32(stateIndex), literal&1))
+				vec.Vec_IntPush(image, sat_literal(int32(stateIndex), (literal&1)^1))
 			}
 			if sat_solver_addclause(pSatSuff, clause) == 0 {
 				return image, INT2_COMPUTED

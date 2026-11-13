@@ -115,3 +115,78 @@ func TestFrameUnrollingTracksLatestInput(t *testing.T) {
 		})
 	}
 }
+
+func TestSetupBmcSolverConstrainsFinalState(t *testing.T) {
+	for _, next := range []int32{0, 1} {
+		g := gia.Gia_ManStart(8)
+		gia.Gia_ManAppendCi(g)
+		gia.Gia_ManAppendCo(g, 0)
+		gia.Gia_ManAppendCo(g, next)
+		gia.Gia_ManSetRegNum(g, 1)
+		solver := Int2_ManSetupBmcSolver(g, 1)
+		if solver == nil {
+			t.Fatalf("constant %d: no solver", next)
+		}
+		out := sat_solver_nvars(solver) - 1
+		for value := int32(0); value < 2; value++ {
+			got := sat_solver_solve(solver, []int32{sat_literal(out, 1-value)}, 0, 0, 0, 0)
+			if (got == l_True) != (value == next) {
+				t.Fatalf("next=%d value=%d status=%d", next, value, got)
+			}
+		}
+	}
+}
+
+func TestPreparePrefixAndSuffixUseMappedCNF(t *testing.T) {
+	g := testInt2InputToBadMachine()
+	var prefixMap *Vec_Int_t
+	prefix := Int2_ManPreparePrefix(g, 1, &prefixMap)
+	if prefix == nil || prefixMap == nil || vec.Vec_IntSize(prefixMap) != 1 {
+		t.Fatal("prefix solver/map missing")
+	}
+	variable := vec.Vec_IntEntry(prefixMap, 0)
+	for value := int32(0); value < 2; value++ {
+		if sat_solver_solve(prefix, []int32{sat_literal(variable, 1-value)}, 0, 0, 0, 0) != l_True {
+			t.Fatalf("prefix should allow next-state value %d", value)
+		}
+	}
+	var suffixMap *Vec_Int_t
+	var suffix *Gia_Man_t
+	images := vec.Vec_IntAlloc(0)
+	suffixSAT := Int2_ManPrepareSuffix(g, nil, images, &suffixMap, &suffix)
+	if suffixSAT == nil || suffix == nil || suffixMap == nil || vec.Vec_IntSize(suffixMap) != 2 {
+		t.Fatal("suffix solver/graph/map missing")
+	}
+	defer gia.Gia_ManStop(suffix)
+	stateVariable := vec.Vec_IntEntry(suffixMap, 1)
+	if sat_solver_solve(suffixSAT, []int32{sat_literal(stateVariable, 0)}, 0, 0, 0, 0) != l_True {
+		t.Fatal("bad state should satisfy suffix")
+	}
+	if sat_solver_solve(suffixSAT, []int32{sat_literal(stateVariable, 1)}, 0, 0, 0, 0) != l_False {
+		t.Fatal("safe state should not satisfy suffix")
+	}
+}
+
+func TestPrepareSuffixBlocksStateCubeUsingMappedVariable(t *testing.T) {
+	g := gia.Gia_ManStart(8)
+	gia.Gia_ManAppendCi(g) // primary input precedes the register output
+	state := gia.Gia_ManAppendCi(g)
+	gia.Gia_ManAppendCo(g, 1) // property is true for either state
+	gia.Gia_ManAppendCo(g, state)
+	gia.Gia_ManSetRegNum(g, 1)
+	images := vec.Vec_IntAllocArrayCopy([]int32{0, 1, 0}, 3) // block state=1
+	var coMap *Vec_Int_t
+	var suffix *Gia_Man_t
+	solver := Int2_ManPrepareSuffix(g, nil, images, &coMap, &suffix)
+	if solver == nil || suffix == nil || coMap == nil {
+		t.Fatal("suffix solver/graph/map missing")
+	}
+	defer gia.Gia_ManStop(suffix)
+	variable := vec.Vec_IntEntry(coMap, 1)
+	for value := int32(0); value < 2; value++ {
+		status := sat_solver_solve(solver, []int32{sat_literal(variable, 1-value)}, 0, 0, 0, 0)
+		if (status == l_True) != (value == 0) {
+			t.Fatalf("state=%d: status %d", value, status)
+		}
+	}
+}
