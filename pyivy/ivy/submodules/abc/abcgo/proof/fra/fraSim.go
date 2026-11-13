@@ -30,45 +30,45 @@ func Fra_SmlNodeNotEquWeight(s *Fra_Sml_t, a, b int32) int32 {
 }
 func Fra_SmlNodeIsZero(s *Fra_Sml_t, obj aig.Edge) int32    { return fraBool(s.IsConstant(obj.NodeID())) }
 func Fra_SmlNodeCountOnes(s *Fra_Sml_t, obj aig.Edge) int32 { return int32(s.CountOnes(obj.NodeID())) }
-func Fra_SmlSavePattern0(p *Fra_Man_t, _ int32)             { clear(p.pPatWords) }
+func Fra_SmlSavePattern0(p *Fra_Man_t, _ int32)             { clear(p.PPatWords) }
 func Fra_SmlSavePattern1(p *Fra_Man_t, init int32) {
-	for i := range p.pPatWords {
-		p.pPatWords[i] = ^uint32(0)
+	for i := range p.PPatWords {
+		p.PPatWords[i] = ^uint32(0)
 	}
 	if init != 0 {
-		regs := int(aig.Aig_ManRegNum(p.pManAig))
-		pis := len(p.pManAig.Inputs()) - regs
+		regs := int(aig.Aig_ManRegNum(p.PManAig))
+		pis := len(p.PManAig.Inputs()) - regs
 		for i := 0; i < regs; i++ {
-			bit := pis*int(p.nFramesAll) + i
-			p.pPatWords[bit/32] &^= uint32(1) << uint(bit%32)
+			bit := pis*int(p.NFramesAll) + i
+			p.PPatWords[bit/32] &^= uint32(1) << uint(bit%32)
 		}
 	}
 }
 func Fra_SmlSavePattern(p *Fra_Man_t) {
-	clear(p.pPatWords)
-	for i, input := range p.pManFraig.Inputs() {
-		value, _ := p.pSat.Value(Fra_ObjSatNum(p, input))
+	clear(p.PPatWords)
+	for i, input := range p.PManFraig.Inputs() {
+		value, _ := p.PSat.Value(Fra_ObjSatNum(p, input))
 		if value {
-			util.Abc_InfoSetBit(p.pPatWords, int32(i))
+			util.Abc_InfoSetBit(p.PPatWords, int32(i))
 		}
 	}
-	if p.vCex != nil {
-		vec.Vec_IntClear(p.vCex)
-		pis := len(p.pManAig.Inputs()) - int(aig.Aig_ManRegNum(p.pManAig))
-		push := func(i int) { vec.Vec_IntPush(p.vCex, int32((p.pPatWords[i/32]>>uint(i%32))&1)) }
+	if p.VCex != nil {
+		vec.Vec_IntClear(p.VCex)
+		pis := len(p.PManAig.Inputs()) - int(aig.Aig_ManRegNum(p.PManAig))
+		push := func(i int) { vec.Vec_IntPush(p.VCex, int32((p.PPatWords[i/32]>>uint(i%32))&1)) }
 		for i := 0; i < pis; i++ {
 			push(i)
 		}
-		inputs := len(p.pManFraig.Inputs())
-		regs := int(aig.Aig_ManRegNum(p.pManFraig))
+		inputs := len(p.PManFraig.Inputs())
+		regs := int(aig.Aig_ManRegNum(p.PManFraig))
 		for i := inputs - regs; i < inputs; i++ {
 			push(i)
 		}
 	}
 }
 func Fra_SmlCheckOutputSavePattern(p *Fra_Man_t, output aig.Edge) {
-	s := p.pSml
-	fanin := p.pManAig.Node(output).Fanins[0]
+	s := p.PSml
+	fanin := p.PManAig.Node(output).Fanins[0]
 	words := s.NodeWords(fanin.NodeID())
 	word := -1
 	for i, value := range words {
@@ -81,8 +81,8 @@ func Fra_SmlCheckOutputSavePattern(p *Fra_Man_t, output aig.Edge) {
 		panic("fra: no failing simulation pattern")
 	}
 	bit := 32*word + bits.TrailingZeros32(words[word])
-	inputs := p.pManAig.Inputs()
-	model := make([]int32, len(p.pManFraig.Inputs())+1)
+	inputs := p.PManAig.Inputs()
+	model := make([]int32, len(p.PManFraig.Inputs())+1)
 	if len(model) <= len(inputs) {
 		panic("fra: model has too few inputs")
 	}
@@ -90,15 +90,15 @@ func Fra_SmlCheckOutputSavePattern(p *Fra_Man_t, output aig.Edge) {
 		model[i] = int32((s.NodeWords(input.NodeID())[bit/32] >> uint(bit%32)) & 1)
 	}
 	model[len(inputs)] = int32(output.NodeID())
-	if p.pManFraig.Data != nil {
+	if p.PManFraig.Data != nil {
 		panic("fra: output model already exists")
 	}
-	p.pManFraig.Data = model
+	p.PManFraig.Data = model
 }
 func Fra_SmlCheckOutput(p *Fra_Man_t) int32 {
-	for _, output := range p.pManAig.Outputs() {
-		fanin := p.pManAig.Node(output).Fanins[0]
-		if !p.pSml.IsConstant(fanin.NodeID()) {
+	for _, output := range p.PManAig.Outputs() {
+		fanin := p.PManAig.Node(output).Fanins[0]
+		if !p.PSml.IsConstant(fanin.NodeID()) {
 			Fra_SmlCheckOutputSavePattern(p, output)
 			return 1
 		}
@@ -143,59 +143,59 @@ func Fra_SmlNodeTransferNext(s *Fra_Sml_t, out, in aig.Edge, frame int32) {
 func Fra_SmlCheckNonConstOutputs(s *Fra_Sml_t) int32 { return fraBool(s.HasNonconstantOutput()) }
 func Fra_SmlSimulateOne(s *Fra_Sml_t)                { s.SimulateOne() }
 func Fra_SmlResimulate(p *Fra_Man_t) {
-	p.pCla.Simulation = p.pSml
-	p.pSml.AssignDistance1(p.pPatWords)
-	p.pSml.SimulateOne()
-	if p.pPars.FProve != 0 && Fra_SmlCheckOutput(p) != 0 {
+	p.PCla.Simulation = p.PSml
+	p.PSml.AssignDistance1(p.PPatWords)
+	p.PSml.SimulateOne()
+	if p.PPars.FProve != 0 && Fra_SmlCheckOutput(p) != 0 {
 		return
 	}
 	start := time.Now()
-	changes := Fra_ClassesRefine(p.pCla) + Fra_ClassesRefine1(p.pCla, 1, nil)
-	if p.pCla.VImps != nil {
-		changes += Fra_ImpRefineUsingCex(p, p.pCla.VImps)
+	changes := Fra_ClassesRefine(p.PCla) + Fra_ClassesRefine1(p.PCla, 1, nil)
+	if p.PCla.VImps != nil {
+		changes += Fra_ImpRefineUsingCex(p, p.PCla.VImps)
 	}
-	if p.vOneHots != nil {
-		changes += Fra_OneHotRefineUsingCex(p, p.vOneHots)
+	if p.VOneHots != nil {
+		changes += Fra_OneHotRefineUsingCex(p, p.VOneHots)
 	}
-	p.timeRef += time.Since(start)
-	if p.pPars.NFramesK == 0 && changes < 1 {
+	p.TimeRef += time.Since(start)
+	if p.PPars.NFramesK == 0 && changes < 1 {
 		fmt.Println("Error: A counter-example did not refine classes!")
 	}
 }
 func Fra_SmlSimulate(p *Fra_Man_t, init int32) {
-	p.pCla.Simulation = p.pSml
-	run := func() bool { p.pSml.SimulateOne(); return p.pPars.FProve != 0 && Fra_SmlCheckOutput(p) != 0 }
+	p.PCla.Simulation = p.PSml
+	run := func() bool { p.PSml.SimulateOne(); return p.PPars.FProve != 0 && Fra_SmlCheckOutput(p) != 0 }
 	refine := func() int32 {
 		start := time.Now()
-		n := Fra_ClassesRefine(p.pCla) + Fra_ClassesRefine1(p.pCla, 1, nil)
-		p.timeRef += time.Since(start)
+		n := Fra_ClassesRefine(p.PCla) + Fra_ClassesRefine1(p.PCla, 1, nil)
+		p.TimeRef += time.Since(start)
 		return n
 	}
-	p.pSml.Initialize(init != 0)
+	p.PSml.Initialize(init != 0)
 	if run() {
 		return
 	}
-	Fra_ClassesPrepare(p.pCla, p.pPars.FLatchCorr, 0)
+	Fra_ClassesPrepare(p.PCla, p.PPars.FLatchCorr, 0)
 	for _, one := range []bool{false, true} {
 		if one {
 			Fra_SmlSavePattern1(p, init)
 		} else {
 			Fra_SmlSavePattern0(p, init)
 		}
-		p.pSml.AssignDistance1(p.pPatWords)
+		p.PSml.AssignDistance1(p.PPatWords)
 		if run() {
 			return
 		}
 		refine()
 	}
 	for {
-		p.pSml.Initialize(init != 0)
+		p.PSml.Initialize(init != 0)
 		if run() {
 			return
 		}
-		count := len(p.pCla.Classes)
+		count := len(p.PCla.Classes)
 		changes := refine()
-		if count == 0 || float64(changes)/float64(count) <= p.pPars.DSimSatur {
+		if count == 0 || float64(changes)/float64(count) <= p.PPars.DSimSatur {
 			return
 		}
 	}

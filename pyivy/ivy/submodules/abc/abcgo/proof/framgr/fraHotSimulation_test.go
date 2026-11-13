@@ -22,7 +22,7 @@ func TestOneHotRefinesCounterexample(t *testing.T) {
 	vec.Vec_IntPush(clauses, Fra_RegToLit(1, 1))
 	vec.Vec_IntPush(clauses, Fra_RegToLit(1, 1))
 	vec.Vec_IntPush(clauses, Fra_RegToLit(0, 0))
-	p := &Fra_Man_t{pManAig: graph, pSml: sim}
+	p := &Fra_Man_t{PManAig: graph, PSml: sim}
 	if Fra_OneHotRefineUsingCex(p, clauses) != 1 {
 		t.Fatal("expected disproved clause")
 	}

@@ -35,7 +35,7 @@ func TestInductionFramesEmitClassConstraint(t *testing.T) {
 	original.AddOutput(input)
 	aig.Aig_ManSetRegNum(original, 1)
 	p := Fra_ManStart(original, &Fra_Par_t{NFramesK: 1})
-	p.pCla.Reprs[latch.NodeID()] = 0
+	p.PCla.Reprs[latch.NodeID()] = 0
 	graph := Fra_FramesWithClasses(p)
 	if graph.Assertions != 1 || graph.OutputCount() != 2 {
 		t.Fatalf("assertions=%d outputs=%d", graph.Assertions, graph.OutputCount())

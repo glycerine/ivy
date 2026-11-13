@@ -22,9 +22,9 @@ func TestSelectHighestCostImplications(t *testing.T) {
 func TestImplicationConstraintsAcrossFrames(t *testing.T) {
 	g := aig.NewGraph()
 	left, right := g.NewInput(), g.NewInput()
-	p := &Fra_Man_t{pManAig: g, pPars: &Fra_Par_t{NFramesK: 1}, nFramesAll: 2, nSatVars: 3, pSat: bsat.NewSolver(), pMemFraig: make([]aig.Edge, len(g.Nodes())*2)}
-	for i := range p.pMemFraig {
-		p.pMemFraig[i] = aig.InvalidEdge
+	p := &Fra_Man_t{PManAig: g, PPars: &Fra_Par_t{NFramesK: 1}, NFramesAll: 2, NSatVars: 3, PSat: bsat.NewSolver(), PMemFraig: make([]aig.Edge, len(g.Nodes())*2)}
+	for i := range p.PMemFraig {
+		p.PMemFraig[i] = aig.InvalidEdge
 	}
 	Fra_ObjSetFraig(p, left, 0, left)
 	Fra_ObjSetFraig(p, right, 0, right)
@@ -34,13 +34,13 @@ func TestImplicationConstraintsAcrossFrames(t *testing.T) {
 	imps := vec.Vec_IntAlloc(1)
 	vec.Vec_IntPush(imps, Fra_ImpCreate(int32(left.NodeID()), int32(right.NodeID())))
 	Fra_ImpAddToSolver(p, imps, vars)
-	if p.pSat == nil {
+	if p.PSat == nil {
 		t.Fatal("consistent implication rejected")
 	}
-	if got := p.pSat.Solve(bsat.Positive(1), bsat.Negative(2)); got != bsat.Unsatisfiable {
+	if got := p.PSat.Solve(bsat.Positive(1), bsat.Negative(2)); got != bsat.Unsatisfiable {
 		t.Fatalf("counterexample status = %v", got)
 	}
-	if got := p.pSat.Solve(bsat.Negative(1), bsat.Negative(2)); got != bsat.Satisfiable {
+	if got := p.PSat.Solve(bsat.Negative(1), bsat.Negative(2)); got != bsat.Satisfiable {
 		t.Fatalf("valid state status = %v", got)
 	}
 }
@@ -48,9 +48,9 @@ func TestImplicationConstraintsAcrossFrames(t *testing.T) {
 func TestImplicationConstraintAllowsSATVariableZero(t *testing.T) {
 	g := aig.NewGraph()
 	left, right := g.NewInput(), g.NewInput()
-	p := &Fra_Man_t{pManAig: g, pPars: &Fra_Par_t{NFramesK: 1}, nFramesAll: 2, nSatVars: 2, pSat: bsat.NewSolver(), pMemFraig: make([]aig.Edge, len(g.Nodes())*2)}
-	for i := range p.pMemFraig {
-		p.pMemFraig[i] = aig.InvalidEdge
+	p := &Fra_Man_t{PManAig: g, PPars: &Fra_Par_t{NFramesK: 1}, NFramesAll: 2, NSatVars: 2, PSat: bsat.NewSolver(), PMemFraig: make([]aig.Edge, len(g.Nodes())*2)}
+	for i := range p.PMemFraig {
+		p.PMemFraig[i] = aig.InvalidEdge
 	}
 	Fra_ObjSetFraig(p, left, 0, left)
 	Fra_ObjSetFraig(p, right, 0, right)
@@ -60,10 +60,10 @@ func TestImplicationConstraintAllowsSATVariableZero(t *testing.T) {
 	imps := vec.Vec_IntAlloc(1)
 	vec.Vec_IntPush(imps, Fra_ImpCreate(int32(left.NodeID()), int32(right.NodeID())))
 	Fra_ImpAddToSolver(p, imps, vars)
-	if p.pSat == nil {
+	if p.PSat == nil {
 		t.Fatal("consistent implication rejected")
 	}
-	if got := p.pSat.Solve(bsat.Positive(0), bsat.Negative(1)); got != bsat.Unsatisfiable {
+	if got := p.PSat.Solve(bsat.Positive(0), bsat.Negative(1)); got != bsat.Unsatisfiable {
 		t.Fatalf("counterexample status = %v", got)
 	}
 }

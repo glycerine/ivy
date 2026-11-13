@@ -8,7 +8,7 @@ import (
 
 func Fra_FraigInductionRewrite(p *Fra_Man_t) {
 	started := time.Now()
-	old := p.pManFraig
+	old := p.PManFraig
 	rewritten, err := dar.Dar_ManRewriteDefault(old)
 	if err != nil {
 		panic(err)
@@ -16,13 +16,13 @@ func Fra_FraigInductionRewrite(p *Fra_Man_t) {
 	if old.RegisterCount() != rewritten.RegisterCount() || old.Assertions != rewritten.Assertions {
 		panic("fra: rewriting changed induction interface")
 	}
-	for i := range p.pMemFraig {
-		p.pMemFraig[i] = aig.InvalidEdge
+	for i := range p.PMemFraig {
+		p.PMemFraig[i] = aig.InvalidEdge
 	}
-	frame := p.pPars.NFramesK
-	Fra_ObjSetFraig(p, p.pManAig.Const1(), frame, rewritten.Const1())
-	inputs := p.pManAig.Inputs()
-	regs := int(p.pManAig.RegisterCount())
+	frame := p.PPars.NFramesK
+	Fra_ObjSetFraig(p, p.PManAig.Const1(), frame, rewritten.Const1())
+	inputs := p.PManAig.Inputs()
+	regs := int(p.PManAig.RegisterCount())
 	trueInputs := len(inputs) - regs
 	rewrittenInputs := rewritten.Inputs()
 	for i, input := range inputs[:trueInputs] {
@@ -35,8 +35,8 @@ func Fra_FraigInductionRewrite(p *Fra_Man_t) {
 	for i, latch := range inputs[trueInputs:] {
 		Fra_ObjSetFraig(p, latch, frame, rewritten.Node(outputs[int(rewritten.Assertions)+i]).Fanins[0])
 	}
-	p.pManFraig = rewritten
-	p.timeRwr += time.Since(started)
+	p.PManFraig = rewritten
+	p.TimeRwr += time.Since(started)
 }
 
 // Fra_FramesAddMore extends the graph's object-copy mapping in place, as in

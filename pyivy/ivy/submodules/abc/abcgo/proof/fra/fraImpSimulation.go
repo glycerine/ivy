@@ -19,7 +19,7 @@ func Sml_NodeCheckImp(s *Fra_Sml_t, left, right int32) int32 {
 func Fra_ImpRefineUsingCex(p *Fra_Man_t, imps *vec.Vec_Int_t) int32 {
 	var changed int32
 	for i, imp := range vec.Vec_IntArray(imps) {
-		if imp != 0 && Sml_NodeCheckImp(p.pSml, Fra_ImpLeft(imp), Fra_ImpRight(imp)) == 0 {
+		if imp != 0 && Sml_NodeCheckImp(p.PSml, Fra_ImpLeft(imp), Fra_ImpRight(imp)) == 0 {
 			vec.Vec_IntWriteEntry(imps, i, 0)
 			changed = 1
 		}
@@ -39,12 +39,12 @@ func Fra_ImpCompactArray(imps *vec.Vec_Int_t) {
 }
 
 func Fra_ImpComputeStateSpaceRatio(p *Fra_Man_t) float64 {
-	if p.pCla.VImps == nil || vec.Vec_IntSize(p.pCla.VImps) == 0 {
+	if p.PCla.VImps == nil || vec.Vec_IntSize(p.PCla.VImps) == 0 {
 		return 0
 	}
-	sim := Fra_SmlSimulateComb(p.pManAig, 64, 0)
+	sim := Fra_SmlSimulateComb(p.PManAig, 64, 0)
 	violations := make([]uint32, sim.WordsTotal)
-	for _, imp := range vec.Vec_IntArray(p.pCla.VImps) {
+	for _, imp := range vec.Vec_IntArray(p.PCla.VImps) {
 		left, right := sim.NodeWords(int(Fra_ImpLeft(imp))), sim.NodeWords(int(Fra_ImpRight(imp)))
 		for i := sim.PrefixWords; i < sim.WordsTotal; i++ {
 			violations[i] |= left[i] &^ right[i]

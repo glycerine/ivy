@@ -11,9 +11,9 @@ func TestInductionRewritePreservesFrameInterface(t *testing.T) {
 	source.AddOutput(input)
 	aig.Aig_ManSetRegNum(source, 1)
 	p := Fra_ManStart(source, &Fra_Par_t{NFramesK: 1})
-	p.pManFraig = Fra_FramesWithClasses(p)
+	p.PManFraig = Fra_FramesWithClasses(p)
 	Fra_FraigInductionRewrite(p)
-	if p.pManFraig.RegisterCount() != 1 || p.pManFraig.OutputCount() != 1 {
+	if p.PManFraig.RegisterCount() != 1 || p.PManFraig.OutputCount() != 1 {
 		t.Fatal("rewritten interface changed")
 	}
 	if Fra_ObjFraig(p, input, 1) == aig.InvalidEdge || Fra_ObjFraig(p, latch, 1) == aig.InvalidEdge {

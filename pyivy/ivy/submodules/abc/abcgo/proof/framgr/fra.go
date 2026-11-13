@@ -41,50 +41,50 @@ type Fra_Sml_t = fraSimulation
 type Fra_Bmc_t = Fra_Bmc_t_
 
 type Fra_Man_t struct {
-	pPars                                                                 *Fra_Par_t
-	pManAig, pManFraig                                                    *aig.Graph
-	nFramesAll, nSizeAlloc                                                int32
-	pMemFraig                                                             []aig.Edge
-	pCla                                                                  *classPartition
-	pSml                                                                  *fraSimulation
-	pBmc                                                                  *Fra_Bmc_t
-	nPatWords                                                             int32
-	pPatWords                                                             []uint32
-	vCex, vOneHots                                                        *vec.Vec_Int_t
-	pSat                                                                  *bsat.Solver
-	nSatVars                                                              int32
-	vPiVars                                                               *vec.Vec_Ptr_t
-	nBTLimitGlobal, nInsLimitGlobal                                       int64
-	pMemFanins                                                            [][]aig.Edge
-	pMemSatNums                                                           []int32
-	nMemAlloc                                                             int32
-	vTimeouts                                                             *vec.Vec_Ptr_t
-	nSimRounds, nNodesMiter, nLitsBeg, nLitsEnd, nNodesBeg, nNodesEnd     int32
-	nRegsBeg, nRegsEnd, nSatCalls, nSatCallsSat, nSatCallsUnsat           int32
-	nSatProof, nSatFails, nSatFailsReal, nSpeculs, nChoices, nChoicesFake int32
-	nSatCallsRecent, nSatCallsSkipped                                     int32
-	timeSim, timeTrav, timeRwr, timeSat, timeSatUnsat, timeSatSat         abctime
-	timeSatFail, timeRef, timeTotal, time1, time2                         abctime
+	PPars                                                                 *Fra_Par_t
+	PManAig, PManFraig                                                    *aig.Graph
+	NFramesAll, NSizeAlloc                                                int32
+	PMemFraig                                                             []aig.Edge
+	PCla                                                                  *classPartition
+	PSml                                                                  *fraSimulation
+	PBmc                                                                  *Fra_Bmc_t
+	NPatWords                                                             int32
+	PPatWords                                                             []uint32
+	VCex, VOneHots                                                        *vec.Vec_Int_t
+	PSat                                                                  *bsat.Solver
+	NSatVars                                                              int32
+	VPiVars                                                               *vec.Vec_Ptr_t
+	NBTLimitGlobal, NInsLimitGlobal                                       int64
+	PMemFanins                                                            [][]aig.Edge
+	PMemSatNums                                                           []int32
+	NMemAlloc                                                             int32
+	VTimeouts                                                             *vec.Vec_Ptr_t
+	NSimRounds, NNodesMiter, NLitsBeg, NLitsEnd, NNodesBeg, NNodesEnd     int32
+	NRegsBeg, NRegsEnd, NSatCalls, NSatCallsSat, NSatCallsUnsat           int32
+	NSatProof, NSatFails, NSatFailsReal, NSpeculs, NChoices, NChoicesFake int32
+	NSatCallsRecent, NSatCallsSkipped                                     int32
+	TimeSim, TimeTrav, TimeRwr, TimeSat, TimeSatUnsat, TimeSatSat         abctime
+	TimeSatFail, TimeRef, TimeTotal, Time1, Time2                         abctime
 }
 
 func Fra_ObjSim(s *Fra_Sml_t, id int32) []uint32 { return s.NodeWords(int(id)) }
 func Fra_ObjRandomSim() uint32                   { return aig.Aig_ManRandom(0) }
 func Fra_ObjFraig(m *Fra_Man_t, object aig.Edge, frame int32) aig.Edge {
-	return m.pMemFraig[int32(object.NodeID())*m.nFramesAll+frame]
+	return m.PMemFraig[int32(object.NodeID())*m.NFramesAll+frame]
 }
 func Fra_ObjSetFraig(m *Fra_Man_t, object aig.Edge, frame int32, value aig.Edge) {
-	m.pMemFraig[int32(object.NodeID())*m.nFramesAll+frame] = value
+	m.PMemFraig[int32(object.NodeID())*m.NFramesAll+frame] = value
 }
-func Fra_ObjFaninVec(m *Fra_Man_t, object aig.Edge) []aig.Edge { return m.pMemFanins[object.NodeID()] }
+func Fra_ObjFaninVec(m *Fra_Man_t, object aig.Edge) []aig.Edge { return m.PMemFanins[object.NodeID()] }
 func Fra_ObjSetFaninVec(m *Fra_Man_t, object aig.Edge, fanins []aig.Edge) {
-	m.pMemFanins[object.NodeID()] = fanins
+	m.PMemFanins[object.NodeID()] = fanins
 }
-func Fra_ObjSatNum(m *Fra_Man_t, object aig.Edge) int32 { return m.pMemSatNums[object.NodeID()] }
+func Fra_ObjSatNum(m *Fra_Man_t, object aig.Edge) int32 { return m.PMemSatNums[object.NodeID()] }
 func Fra_ObjSetSatNum(m *Fra_Man_t, object aig.Edge, number int32) {
-	m.pMemSatNums[object.NodeID()] = number
+	m.PMemSatNums[object.NodeID()] = number
 }
 func Fra_ClassObjRepr(m *Fra_Man_t, object aig.Edge) aig.Edge {
-	repr := m.pCla.Reprs[object.NodeID()]
+	repr := m.PCla.Reprs[object.NodeID()]
 	if repr < 0 {
 		return aig.InvalidEdge
 	}
@@ -92,16 +92,16 @@ func Fra_ClassObjRepr(m *Fra_Man_t, object aig.Edge) aig.Edge {
 }
 func Fra_ClassObjSetRepr(m *Fra_Man_t, object, repr aig.Edge) {
 	if repr == aig.InvalidEdge {
-		m.pCla.Reprs[object.NodeID()] = -1
+		m.PCla.Reprs[object.NodeID()] = -1
 	} else {
-		m.pCla.Reprs[object.NodeID()] = repr.NodeID()
+		m.PCla.Reprs[object.NodeID()] = repr.NodeID()
 	}
 }
 func Fra_ObjChild0Fra(m *Fra_Man_t, object aig.Edge, frame int32) aig.Edge {
-	return fraMappedChild(m, m.pManAig.Node(object).Fanins[0], frame)
+	return fraMappedChild(m, m.PManAig.Node(object).Fanins[0], frame)
 }
 func Fra_ObjChild1Fra(m *Fra_Man_t, object aig.Edge, frame int32) aig.Edge {
-	return fraMappedChild(m, m.pManAig.Node(object).Fanins[1], frame)
+	return fraMappedChild(m, m.PManAig.Node(object).Fanins[1], frame)
 }
 func fraMappedChild(m *Fra_Man_t, child aig.Edge, frame int32) aig.Edge {
 	if child == aig.InvalidEdge {

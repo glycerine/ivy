@@ -15,18 +15,18 @@ func TestManagerLifecycleRetainsFrameMapping(t *testing.T) {
 	var pars Fra_Par_t
 	Fra_ParamsDefaultSeq(&pars)
 	p := Fra_ManStart(graph, &pars)
-	if p.nFramesAll != 2 || p.nPatWords != 1 {
-		t.Fatalf("frames, words = %d, %d", p.nFramesAll, p.nPatWords)
+	if p.NFramesAll != 2 || p.NPatWords != 1 {
+		t.Fatalf("frames, words = %d, %d", p.NFramesAll, p.NPatWords)
 	}
 	if Fra_ObjFraig(p, input, 1) != aig.InvalidEdge {
 		t.Fatal("unmapped frame is not invalid")
 	}
-	p.pManFraig = Fra_ManPrepareComb(p)
-	if p.pManFraig.RegisterCount() != 1 || p.pManFraig.OutputCount() != 0 {
+	p.PManFraig = Fra_ManPrepareComb(p)
+	if p.PManFraig.RegisterCount() != 1 || p.PManFraig.OutputCount() != 0 {
 		t.Fatal("register metadata was not set during construction")
 	}
 	Fra_ManFinalizeComb(p)
-	if p.pManFraig.OutputCount() != graph.OutputCount() || p.pManFraig.RegisterCount() != 1 {
+	if p.PManFraig.OutputCount() != graph.OutputCount() || p.PManFraig.RegisterCount() != 1 {
 		t.Fatal("invalid completed interface")
 	}
 	copied := Fra_ObjFraig(p, input, 0)
@@ -40,11 +40,11 @@ func TestManagerLifecycleRetainsFrameMapping(t *testing.T) {
 func TestManagerCleanResetsSATMaps(t *testing.T) {
 	p := &Fra_Man_t{}
 	Fra_ManClean(p, 2)
-	p.pMemFanins[1] = []aig.Edge{2}
-	p.pMemSatNums[1] = 4
-	capacity := p.nMemAlloc
+	p.PMemFanins[1] = []aig.Edge{2}
+	p.PMemSatNums[1] = 4
+	capacity := p.NMemAlloc
 	Fra_ManClean(p, 1)
-	if p.nMemAlloc != capacity || p.pMemFanins[1] != nil || p.pMemSatNums[1] != 0 {
+	if p.NMemAlloc != capacity || p.PMemFanins[1] != nil || p.PMemSatNums[1] != 0 {
 		t.Fatal("manager maps not cleared")
 	}
 }

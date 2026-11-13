@@ -26,23 +26,23 @@ func Fra_ImpCheckForNode(p *Fra_Man_t, imps *vec.Vec_Int_t, node aig.Edge, pos i
 			return int32(i)
 		}
 		left, right := aig.Edge(leftID<<1), aig.Edge(rightID<<1)
-		mappedLeft, mappedRight := Fra_ObjFraig(p, left, p.pPars.NFramesK), Fra_ObjFraig(p, right, p.pPars.NFramesK)
+		mappedLeft, mappedRight := Fra_ObjFraig(p, left, p.PPars.NFramesK), Fra_ObjFraig(p, right, p.PPars.NFramesK)
 		if mappedLeft == aig.InvalidEdge || mappedRight == aig.InvalidEdge {
 			panic("fra: missing implication mapping")
 		}
-		negLeft := p.pManAig.Node(left).Phase != mappedLeft.Complemented()
-		negRight := p.pManAig.Node(right).Phase != mappedRight.Complemented()
+		negLeft := p.PManAig.Node(left).Phase != mappedLeft.Complemented()
+		negRight := p.PManAig.Node(right).Phase != mappedRight.Complemented()
 		if aig.Aig_Regular(mappedLeft) == aig.Aig_Regular(mappedRight) {
 			if negLeft == negRight || (mappedLeft.NodeID() == 0 && negLeft) {
 				continue
 			}
-			p.pCla.FRefinement = 1
+			p.PCla.FRefinement = 1
 			vec.Vec_IntWriteEntry(imps, i, 0)
 			continue
 		}
 		result := Fra_NodesAreImp(p, aig.Aig_Regular(mappedLeft), aig.Aig_Regular(mappedRight), fraBool(negLeft), fraBool(negRight))
 		if result != 1 {
-			p.pCla.FRefinement = 1
+			p.PCla.FRefinement = 1
 			if result == 0 {
 				Fra_SmlResimulate(p)
 			}

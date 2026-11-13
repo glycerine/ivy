@@ -218,7 +218,7 @@ func TestInductionWithNontrivialOneHotCandidate(t *testing.T) {
 	g.AddOutput(input.Not())
 	aig.Aig_ManSetRegNum(g, 2)
 	sim := Fra_SmlSimulateSeq(g, 0, 32, 1, 1)
-	probe := &Fra_Man_t{pManAig: g}
+	probe := &Fra_Man_t{PManAig: g}
 	if Fra_OneHotCount(probe, Fra_OneHotCompute(probe, sim)) == 0 {
 		t.Fatal("fixture produced no one-hot candidate")
 	}

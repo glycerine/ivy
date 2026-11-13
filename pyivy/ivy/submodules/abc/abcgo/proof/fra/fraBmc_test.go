@@ -19,7 +19,7 @@ func TestFraBmcRefinementRespectsFramesAndFraig(t *testing.T) {
 	for i := range b.PObjToFraig {
 		b.PObjToFraig[i] = aig.Edge(i << 1)
 	}
-	p := &Fra_Man_t{pManAig: g, pBmc: b}
+	p := &Fra_Man_t{PManAig: g, PBmc: b}
 	if Fra_BmcNodeIsConst(p, state) != 0 {
 		t.Fatal("second frame state is not constant")
 	}
@@ -67,7 +67,7 @@ func TestFraBmcFilterImplicationsSameRepresentative(t *testing.T) {
 	b.VImps = vec.Vec_IntAlloc(4)
 	imp := Fra_ImpCreate(int32(x.NodeID()), int32(y.NodeID()))
 	vec.Vec_IntPush(b.VImps, imp)
-	p := &Fra_Man_t{pManAig: frames, pManFraig: reduced, nFramesAll: 1, pMemFraig: make([]aig.Edge, len(frames.Nodes()))}
+	p := &Fra_Man_t{PManAig: frames, PManFraig: reduced, NFramesAll: 1, PMemFraig: make([]aig.Edge, len(frames.Nodes()))}
 	Fra_ObjSetFraig(p, fx, 0, rep)
 	Fra_ObjSetFraig(p, fy, 0, rep)
 	Fra_BmcFilterImplications(p, b)
@@ -87,14 +87,14 @@ func TestFraBmcPerformRefinesInitializedClasses(t *testing.T) {
 	g.AddOutput(state)
 	g.AddOutput(x)
 	aig.Aig_ManSetRegNum(g, 1)
-	p := &Fra_Man_t{pManAig: g, pPars: &Fra_Par_t{}, pCla: Fra_ClassesStart(g)}
-	Fra_ClassesTest(p.pCla, int32(x.NodeID()), int32(state.NodeID()))
+	p := &Fra_Man_t{PManAig: g, PPars: &Fra_Par_t{}, PCla: Fra_ClassesStart(g)}
+	Fra_ClassesTest(p.PCla, int32(x.NodeID()), int32(state.NodeID()))
 	Fra_BmcPerform(p, 0, 1)
-	if p.pBmc != nil {
+	if p.PBmc != nil {
 		t.Fatal("BMC manager not cleared")
 	}
-	if p.pCla.Reprs[state.NodeID()] >= 0 {
-		t.Fatalf("invalid equivalence survived: %v", p.pCla.Reprs)
+	if p.PCla.Reprs[state.NodeID()] >= 0 {
+		t.Fatalf("invalid equivalence survived: %v", p.PCla.Reprs)
 	}
 }
 
@@ -130,11 +130,11 @@ func TestFraBmcFiltersImplicationsWithNoInternalNodes(t *testing.T) {
 	g.AddOutput(state)
 	g.AddOutput(x)
 	aig.Aig_ManSetRegNum(g, 1)
-	p := &Fra_Man_t{pManAig: g, pPars: &Fra_Par_t{}, pCla: Fra_ClassesStart(g)}
-	p.pCla.VImps = vec.Vec_IntAlloc(1)
-	vec.Vec_IntPush(p.pCla.VImps, Fra_ImpCreate(int32(x.NodeID()), int32(state.NodeID())))
+	p := &Fra_Man_t{PManAig: g, PPars: &Fra_Par_t{}, PCla: Fra_ClassesStart(g)}
+	p.PCla.VImps = vec.Vec_IntAlloc(1)
+	vec.Vec_IntPush(p.PCla.VImps, Fra_ImpCreate(int32(x.NodeID()), int32(state.NodeID())))
 	Fra_BmcPerform(p, 0, 1)
-	if vec.Vec_IntSize(p.pCla.VImps) != 0 {
+	if vec.Vec_IntSize(p.PCla.VImps) != 0 {
 		t.Fatal("invalid implication survived BMC")
 	}
 }

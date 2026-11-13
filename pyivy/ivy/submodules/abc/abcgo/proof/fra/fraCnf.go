@@ -13,13 +13,13 @@ func fraLit(variable int32, negative bool) bsat.Literal {
 	return bsat.Positive(variable)
 }
 func fraClause(p *Fra_Man_t, lits ...bsat.Literal) {
-	if !p.pSat.AddClause(lits...) {
+	if !p.PSat.AddClause(lits...) {
 		panic("fra: generated inconsistent structural CNF")
 	}
 }
 
 func Fra_AddClausesMux(p *Fra_Man_t, node aig.Edge) {
-	control, yes, no := aig.Aig_ObjRecognizeMux(p.pManFraig, node)
+	control, yes, no := aig.Aig_ObjRecognizeMux(p.PManFraig, node)
 	f, i := Fra_ObjSatNum(p, node), Fra_ObjSatNum(p, control)
 	t, e := Fra_ObjSatNum(p, yes), Fra_ObjSatNum(p, no)
 	ct, ce := yes.Complemented(), no.Complemented()
@@ -77,9 +77,9 @@ func Fra_ObjAddToFrontier(p *Fra_Man_t, node aig.Edge, frontier *[]aig.Edge) {
 	if Fra_ObjSatNum(p, node) != 0 || Fra_ObjFaninVec(p, node) != nil || node.NodeID() == 0 {
 		return
 	}
-	Fra_ObjSetSatNum(p, node, p.nSatVars)
-	p.nSatVars++
-	kind := p.pManFraig.Node(node).Kind
+	Fra_ObjSetSatNum(p, node, p.NSatVars)
+	p.NSatVars++
+	kind := p.PManFraig.Node(node).Kind
 	if kind == aig.And || kind == aig.ExclusiveOr || kind == aig.Buffer {
 		*frontier = append(*frontier, node)
 	}
@@ -100,7 +100,7 @@ func Fra_CnfNodeAddToSolver(p *Fra_Man_t, old, new aig.Edge) {
 	if new != aig.InvalidEdge {
 		Fra_ObjAddToFrontier(p, new, &frontier)
 	}
-	graph := p.pManFraig
+	graph := p.PManFraig
 	for index := 0; index < len(frontier); index++ {
 		node := frontier[index]
 		n := graph.Node(node)

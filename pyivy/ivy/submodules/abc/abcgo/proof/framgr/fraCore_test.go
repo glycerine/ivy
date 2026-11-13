@@ -43,7 +43,7 @@ func TestFraFraigMappedCallbackAndTruth(t *testing.T) {
 	called := false
 	reduced, mapping := Fra_FraigEquivenceMapped(g, 100, 0, func(m *Fra_Man_t) {
 		called = true
-		if m.pManAig != g || m.pManFraig == nil || Fra_ObjFraig(m, n, 0) == aig.InvalidEdge {
+		if m.PManAig != g || m.PManFraig == nil || Fra_ObjFraig(m, n, 0) == aig.InvalidEdge {
 			t.Fatal("callback ran without mapping")
 		}
 	})

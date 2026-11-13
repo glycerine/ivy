@@ -17,7 +17,7 @@ func Fra_FraigMiterAssertedOutput(g *aig.Graph) int32 { return fracomb.Fra_Fraig
 // Fra_FraigVerifyCounterEx reports candidate classes disproved by a pattern.
 // The original used shared object mark bits; local values avoid mutating the AIG.
 func Fra_FraigVerifyCounterEx(p *Fra_Man_t, cex *vec.Vec_Int_t) {
-	g := p.pManAig
+	g := p.PManAig
 	inputs := g.Inputs()
 	if vec.Vec_IntSize(cex) != len(inputs) {
 		panic("fra: incorrect counterexample input count")
@@ -39,12 +39,12 @@ func Fra_FraigVerifyCounterEx(p *Fra_Man_t, cex *vec.Vec_Int_t) {
 			values[e.NodeID()] = value(n.Fanins[0])
 		}
 	}
-	for _, id := range p.pCla.Constants {
+	for _, id := range p.PCla.Constants {
 		if g.Node(aig.Edge(id<<1)).Phase != values[id] {
 			fmt.Printf("The node %d is not constant under cex!\n", id)
 		}
 	}
-	for _, class := range p.pCla.Classes {
+	for _, class := range p.PCla.Classes {
 		for _, id := range class[1:] {
 			first := class[0]
 			if (g.Node(aig.Edge(first<<1)).Phase != g.Node(aig.Edge(id<<1)).Phase) != (values[first] != values[id]) {
@@ -56,91 +56,91 @@ func Fra_FraigVerifyCounterEx(p *Fra_Man_t, cex *vec.Vec_Int_t) {
 
 func Fra_FraigNode(p *Fra_Man_t, obj aig.Edge) {
 	repr := Fra_ClassObjRepr(p, obj)
-	if repr == aig.InvalidEdge || (p.pPars.FDoSparse == 0 && repr == p.pManAig.Const1()) {
+	if repr == aig.InvalidEdge || (p.PPars.FDoSparse == 0 && repr == p.PManAig.Const1()) {
 		return
 	}
-	frame := p.pPars.NFramesK
+	frame := p.PPars.NFramesK
 	node, repNode := Fra_ObjFraig(p, obj, frame), Fra_ObjFraig(p, repr, frame)
 	if node == aig.InvalidEdge || repNode == aig.InvalidEdge {
 		panic("fra: missing FRAIG node mapping")
 	}
 	if aig.Aig_Regular(node) == aig.Aig_Regular(repNode) {
-		p.nSatCallsSkipped++
+		p.NSatCallsSkipped++
 		return
 	}
 	result := Fra_NodesAreEquiv(p, aig.Aig_Regular(repNode), aig.Aig_Regular(node))
 	if result == 1 {
-		if p.pManAig.Node(obj).Phase != p.pManAig.Node(repr).Phase {
+		if p.PManAig.Node(obj).Phase != p.PManAig.Node(repr).Phase {
 			repNode = repNode.Not()
 		}
 		Fra_ObjSetFraig(p, obj, frame, repNode)
 		return
 	}
 	if result == -1 {
-		if p.vTimeouts == nil {
-			p.vTimeouts = vec.Vec_PtrAlloc(100)
+		if p.VTimeouts == nil {
+			p.VTimeouts = vec.Vec_PtrAlloc(100)
 		}
-		vec.Vec_PtrPush(p.vTimeouts, obj)
-		if p.pPars.FSpeculate != 0 {
+		vec.Vec_PtrPush(p.VTimeouts, obj)
+		if p.PPars.FSpeculate != 0 {
 			panic("fra: speculation after SAT timeout is unsupported by the original assertion")
 		}
 		return
 	}
-	p.pCla.FRefinement = 1
-	if p.vTimeouts != nil {
-		vec.Vec_PtrPush(p.vTimeouts, obj)
+	p.PCla.FRefinement = 1
+	if p.VTimeouts != nil {
+		vec.Vec_PtrPush(p.VTimeouts, obj)
 	}
 	Fra_SmlResimulate(p)
-	if p.pManFraig.Data != nil {
+	if p.PManFraig.Data != nil {
 		return
 	}
-	if p.pPars.NFramesK == 0 && Fra_ClassObjRepr(p, obj) == repr {
+	if p.PPars.NFramesK == 0 && Fra_ClassObjRepr(p, obj) == repr {
 		panic("fra: counterexample did not refine node class")
 	}
 }
 func Fra_FraigSweep(p *Fra_Man_t) {
 	pos := int32(0)
-	inputs := p.pManAig.Inputs()
-	regs := int(p.pManAig.RegisterCount())
+	inputs := p.PManAig.Inputs()
+	regs := int(p.PManAig.RegisterCount())
 	for _, obj := range inputs[len(inputs)-regs:] {
 		Fra_FraigNode(p, obj)
-		if p.pPars.FUseImps != 0 {
-			pos = Fra_ImpCheckForNode(p, p.pCla.VImps, obj, pos)
+		if p.PPars.FUseImps != 0 {
+			pos = Fra_ImpCheckForNode(p, p.PCla.VImps, obj, pos)
 		}
 	}
-	if p.pPars.FLatchCorr != 0 {
+	if p.PPars.FLatchCorr != 0 {
 		return
 	}
-	limit := p.pPars.NBTLimitNode
-	for _, obj := range p.pManAig.LiveEdges() {
-		n := p.pManAig.Node(obj)
+	limit := p.PPars.NBTLimitNode
+	for _, obj := range p.PManAig.LiveEdges() {
+		n := p.PManAig.Node(obj)
 		var mapped aig.Edge
 		switch n.Kind {
 		case aig.And:
-			mapped = p.pManFraig.AND(Fra_ObjChild0Fra(p, obj, p.pPars.NFramesK), Fra_ObjChild1Fra(p, obj, p.pPars.NFramesK))
+			mapped = p.PManFraig.AND(Fra_ObjChild0Fra(p, obj, p.PPars.NFramesK), Fra_ObjChild1Fra(p, obj, p.PPars.NFramesK))
 		case aig.ExclusiveOr:
-			mapped = p.pManFraig.NewXor(Fra_ObjChild0Fra(p, obj, p.pPars.NFramesK), Fra_ObjChild1Fra(p, obj, p.pPars.NFramesK))
+			mapped = p.PManFraig.NewXor(Fra_ObjChild0Fra(p, obj, p.PPars.NFramesK), Fra_ObjChild1Fra(p, obj, p.PPars.NFramesK))
 		case aig.Buffer:
-			mapped = Fra_ObjChild0Fra(p, obj, p.pPars.NFramesK)
+			mapped = Fra_ObjChild0Fra(p, obj, p.PPars.NFramesK)
 		default:
 			continue
 		}
-		Fra_ObjSetFraig(p, obj, p.pPars.NFramesK, mapped)
-		if p.pManFraig.Data != nil {
+		Fra_ObjSetFraig(p, obj, p.PPars.NFramesK, mapped)
+		if p.PManFraig.Data != nil {
 			continue
 		}
-		if p.pPars.NLevelMax != 0 && int32(n.Level) > p.pPars.NLevelMax {
-			p.pPars.NBTLimitNode = 5
+		if p.PPars.NLevelMax != 0 && int32(n.Level) > p.PPars.NLevelMax {
+			p.PPars.NBTLimitNode = 5
 		}
 		Fra_FraigNode(p, obj)
-		p.pPars.NBTLimitNode = limit
-		if p.pPars.FUseImps != 0 {
-			pos = Fra_ImpCheckForNode(p, p.pCla.VImps, obj, pos)
+		p.PPars.NBTLimitNode = limit
+		if p.PPars.FUseImps != 0 {
+			pos = Fra_ImpCheckForNode(p, p.PCla.VImps, obj, pos)
 		}
 	}
-	p.nNodesMiter = aig.Aig_ManNodeNum(p.pManFraig)
-	if p.pPars.FUseImps != 0 {
-		Fra_ImpCompactArray(p.pCla.VImps)
+	p.NNodesMiter = aig.Aig_ManNodeNum(p.PManFraig)
+	if p.PPars.FUseImps != 0 {
+		Fra_ImpCompactArray(p.PCla.VImps)
 	}
 }
 
@@ -158,21 +158,21 @@ func fraFraigPerformMapped(g *aig.Graph, pars *Fra_Par_t, callback func(*Fra_Man
 	}
 	start := time.Now()
 	p := Fra_ManStart(g, pars)
-	p.pManFraig = Fra_ManPrepareComb(p)
-	p.pSml = Fra_SmlStart(g, 0, 1, pars.NSimWords)
+	p.PManFraig = Fra_ManPrepareComb(p)
+	p.PSml = Fra_SmlStart(g, 0, 1, pars.NSimWords)
 	Fra_SmlSimulate(p, 0)
-	p.nLitsBeg = Fra_ClassesCountLits(p.pCla)
-	p.nNodesBeg = aig.Aig_ManNodeNum(g)
-	p.nRegsBeg = g.RegisterCount()
+	p.NLitsBeg = Fra_ClassesCountLits(p.PCla)
+	p.NNodesBeg = aig.Aig_ManNodeNum(g)
+	p.NRegsBeg = g.RegisterCount()
 	if pars.FVerbose != 0 {
-		Fra_ClassesPrint(p.pCla, 1)
+		Fra_ClassesPrint(p.PCla, 1)
 	}
 	Fra_FraigSweep(p)
 	if callback != nil {
 		callback(p)
 	}
 	Fra_ManFinalizeComb(p)
-	Fra_ClassesCopyReprs(p.pCla, p.vTimeouts)
+	Fra_ClassesCopyReprs(p.PCla, p.VTimeouts)
 	var result *aig.Graph
 	if pars.FChoicing != 0 {
 		traversal := time.Now()
@@ -180,16 +180,16 @@ func fraFraigPerformMapped(g *aig.Graph, pars *Fra_Par_t, callback func(*Fra_Man
 		aig.Aig_ManReprStart(result, int32(len(result.Nodes())))
 		aig.Aig_ManTransferRepr(result, g)
 		aig.Aig_ManMarkValidChoices(result)
-		p.timeTrav += time.Since(traversal)
+		p.TimeTrav += time.Since(traversal)
 	} else {
-		result = p.pManFraig
+		result = p.PManFraig
 		aig.Aig_ManCleanup(result)
 	}
-	p.pManFraig = nil
-	p.timeTotal = time.Since(start)
-	p.nLitsEnd = Fra_ClassesCountLits(p.pCla)
-	p.nNodesEnd = aig.Aig_ManNodeNum(result)
-	p.nRegsEnd = result.RegisterCount()
+	p.PManFraig = nil
+	p.TimeTotal = time.Since(start)
+	p.NLitsEnd = Fra_ClassesCountLits(p.PCla)
+	p.NNodesEnd = aig.Aig_ManNodeNum(result)
+	p.NRegsEnd = result.RegisterCount()
 	mapping := Fra_ManStop(p)
 	return result, mapping
 }
@@ -217,10 +217,7 @@ func Fra_FraigEquivenceMapped(g *aig.Graph, limit, prove int32, callback func(*F
 	pars.FDoSparse = 1
 	pars.FProve = prove
 	pars.FDontShowBar = 1
-	if callback != nil {
-		return fraFraigPerformMapped(g, &pars, callback)
-	}
-	return framgr.SweepMapped(g, pars)
+	return framgr.SweepMappedCallback(g, pars, callback)
 }
 func Fra_FraigEquivence(g *aig.Graph, limit, prove int32) *aig.Graph {
 	result, _ := Fra_FraigEquivenceMapped(g, limit, prove, nil)

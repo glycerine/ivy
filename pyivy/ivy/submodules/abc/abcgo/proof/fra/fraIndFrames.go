@@ -20,7 +20,7 @@ func Fra_FramesConstrainNode(p *Fra_Man_t, graph *aig.Graph, obj aig.Edge, frame
 		return
 	}
 	reduced := representative
-	if p.pManAig.Node(obj).Phase != p.pManAig.Node(repr).Phase {
+	if p.PManAig.Node(obj).Phase != p.PManAig.Node(repr).Phase {
 		reduced = reduced.Not()
 	}
 	Fra_ObjSetFraig(p, obj, frame, reduced)
@@ -32,8 +32,8 @@ func Fra_FramesConstrainNode(p *Fra_Man_t, graph *aig.Graph, obj aig.Edge, frame
 }
 
 func Fra_FramesWithClasses(p *Fra_Man_t) *aig.Graph {
-	source := p.pManAig
-	if p.pManFraig != nil || source.RegisterCount() <= 0 || int(source.RegisterCount()) >= source.InputCount() {
+	source := p.PManAig
+	if p.PManFraig != nil || source.RegisterCount() <= 0 || int(source.RegisterCount()) >= source.InputCount() {
 		panic("fra: invalid induction frame manager")
 	}
 	graph := aig.NewGraph()
@@ -41,7 +41,7 @@ func Fra_FramesWithClasses(p *Fra_Man_t) *aig.Graph {
 	inputs, outputs := source.Inputs(), source.Outputs()
 	regs := int(source.RegisterCount())
 	trueInputs := len(inputs) - regs
-	for f := int32(0); f < p.nFramesAll; f++ {
+	for f := int32(0); f < p.NFramesAll; f++ {
 		Fra_ObjSetFraig(p, source.Const1(), f, graph.Const1())
 		for _, input := range inputs[:trueInputs] {
 			Fra_ObjSetFraig(p, input, f, graph.NewInput())
@@ -51,7 +51,7 @@ func Fra_FramesWithClasses(p *Fra_Man_t) *aig.Graph {
 		Fra_ObjSetFraig(p, latch, 0, graph.NewInput())
 	}
 	aig.Aig_ManSetRegNumForConstruction(graph, source.RegisterCount())
-	for f := int32(0); f < p.nFramesAll-1; f++ {
+	for f := int32(0); f < p.NFramesAll-1; f++ {
 		for _, latch := range inputs[trueInputs:] {
 			Fra_FramesConstrainNode(p, graph, latch, f)
 		}
@@ -77,15 +77,15 @@ func Fra_FramesWithClasses(p *Fra_Man_t) *aig.Graph {
 	}
 	graph.Assertions = int32(graph.OutputCount())
 	for _, latch := range inputs[trueInputs:] {
-		graph.AddOutput(Fra_ObjFraig(p, latch, p.nFramesAll-1))
+		graph.AddOutput(Fra_ObjFraig(p, latch, p.NFramesAll-1))
 	}
 	aig.Aig_ManSetRegNum(graph, source.RegisterCount())
 	aig.Aig_ManCleanup(graph)
 	// Cleanup can remove a frame node that was mapped before it became
 	// dangling. C leaves an AIG_OBJ_NONE marker; clear the Go mapping.
-	for i, edge := range p.pMemFraig {
+	for i, edge := range p.PMemFraig {
 		if edge != aig.InvalidEdge && aig.Aig_ObjIsNone(graph, edge) {
-			p.pMemFraig[i] = aig.InvalidEdge
+			p.PMemFraig[i] = aig.InvalidEdge
 		}
 	}
 	return graph

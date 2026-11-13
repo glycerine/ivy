@@ -37,7 +37,7 @@ func TestSATBinaryQueriesAgainstTruthTables(t *testing.T) {
 					t.Fatalf("clause=%v signs=%d/%d got=%d valid=%v", clause, negLeft, negRight, result, valid)
 				}
 				if result == 0 {
-					bits := p.pPatWords[0]
+					bits := p.PPatWords[0]
 					av, bv := bits&1 != 0, bits&2 != 0
 					leftValue := av != (negLeft != 0)
 					rightValue := (av && bv) != (negRight != 0)

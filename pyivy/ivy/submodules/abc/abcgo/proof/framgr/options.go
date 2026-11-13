@@ -39,6 +39,11 @@ func Sweep(graph *aig.Graph, options CombOptions) *aig.Graph {
 
 // SweepMapped additionally returns the source-to-result node mapping.
 func SweepMapped(graph *aig.Graph, options CombOptions) (*aig.Graph, []aig.Edge) {
+	return SweepMappedCallback(graph, options, nil)
+}
 
-	return fraFraigPerformMapped(graph, &options, nil)
+// SweepMappedCallback invokes callback on the live manager before finalizing
+// the sweep. Mutations to the manager are visible to the remaining work.
+func SweepMappedCallback(graph *aig.Graph, options CombOptions, callback func(*Manager)) (*aig.Graph, []aig.Edge) {
+	return fraFraigPerformMapped(graph, &options, callback)
 }

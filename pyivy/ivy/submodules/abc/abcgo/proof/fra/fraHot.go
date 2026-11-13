@@ -8,7 +8,7 @@ import (
 )
 
 func Fra_OneHotCompute(p *Fra_Man_t, sim *Fra_Sml_t) *vec.Vec_Int_t {
-	if sim.Graph != p.pManAig {
+	if sim.Graph != p.PManAig {
 		panic("fra: wrong one-hot simulation graph")
 	}
 	inputs := sim.Graph.Inputs()
@@ -36,27 +36,27 @@ func Fra_OneHotCompute(p *Fra_Man_t, sim *Fra_Sml_t) *vec.Vec_Int_t {
 	return out
 }
 func Fra_OneHotAssume(p *Fra_Man_t, clauses *vec.Vec_Int_t) {
-	if p.pPars.NFramesK != 1 {
+	if p.PPars.NFramesK != 1 {
 		panic("fra: one-hot constraints require one frame")
 	}
-	inputs := p.pManFraig.Inputs()
-	first := len(inputs) - int(p.pManFraig.RegisterCount())
+	inputs := p.PManFraig.Inputs()
+	first := len(inputs) - int(p.PManFraig.RegisterCount())
 	for i := 0; i < vec.Vec_IntSize(clauses); i += 2 {
 		a, b := vec.Vec_IntEntry(clauses, i), vec.Vec_IntEntry(clauses, i+1)
 		if a == 0 && b == 0 {
 			continue
 		}
 		left, right := inputs[first+int(Fra_LitReg(a))], inputs[first+int(Fra_LitReg(b))]
-		if !p.pSat.AddClause(fraLit(Fra_ObjSatNum(p, left), a < 0), fraLit(Fra_ObjSatNum(p, right), b < 0)) {
+		if !p.PSat.AddClause(fraLit(Fra_ObjSatNum(p, left), a < 0), fraLit(Fra_ObjSatNum(p, right), b < 0)) {
 			fmt.Println("Fra_OneHotAssume(): Adding clause makes SAT solver unsat.")
-			p.pSat = nil
+			p.PSat = nil
 			return
 		}
 	}
 }
 func Fra_OneHotCheck(p *Fra_Man_t, clauses *vec.Vec_Int_t) {
-	outputs := p.pManFraig.Outputs()
-	first := len(outputs) - int(p.pManFraig.RegisterCount())
+	outputs := p.PManFraig.Outputs()
+	first := len(outputs) - int(p.PManFraig.RegisterCount())
 	for i := 0; i < vec.Vec_IntSize(clauses); i += 2 {
 		a, b := vec.Vec_IntEntry(clauses, i), vec.Vec_IntEntry(clauses, i+1)
 		if a == 0 && b == 0 {
@@ -65,7 +65,7 @@ func Fra_OneHotCheck(p *Fra_Man_t, clauses *vec.Vec_Int_t) {
 		left, right := outputs[first+int(Fra_LitReg(a))], outputs[first+int(Fra_LitReg(b))]
 		result := Fra_NodesAreClause(p, left, right, Fra_LitSign(a), Fra_LitSign(b))
 		if result != 1 {
-			p.pCla.FRefinement = 1
+			p.PCla.FRefinement = 1
 			if result == 0 {
 				Fra_SmlResimulate(p)
 			}
@@ -78,11 +78,11 @@ func Fra_OneHotCheck(p *Fra_Man_t, clauses *vec.Vec_Int_t) {
 }
 func Fra_OneHotCreateExdc(p *Fra_Man_t, clauses *vec.Vec_Int_t) *aig.Graph {
 	graph := aig.NewGraph()
-	for range p.pManAig.Inputs() {
+	for range p.PManAig.Inputs() {
 		graph.NewInput()
 	}
 	inputs := graph.Inputs()
-	first := len(inputs) - int(p.pManAig.RegisterCount())
+	first := len(inputs) - int(p.PManAig.RegisterCount())
 	for i := 0; i < vec.Vec_IntSize(clauses); i += 2 {
 		a, b := vec.Vec_IntEntry(clauses, i), vec.Vec_IntEntry(clauses, i+1)
 		if a == 0 && b == 0 {
@@ -101,7 +101,7 @@ func Fra_OneHotCreateExdc(p *Fra_Man_t, clauses *vec.Vec_Int_t) *aig.Graph {
 	return graph
 }
 func Fra_OneHotAddKnownConstraint(p *Fra_Man_t, groups *vec.Vec_Ptr_t) {
-	inputs := p.pManFraig.Inputs()
+	inputs := p.PManFraig.Inputs()
 	for k := 0; k < vec.Vec_PtrSize(groups); k++ {
 		group, ok := vec.Vec_PtrEntry(groups, k).(*vec.Vec_Int_t)
 		if !ok {
@@ -110,9 +110,9 @@ func Fra_OneHotAddKnownConstraint(p *Fra_Man_t, groups *vec.Vec_Ptr_t) {
 		values := vec.Vec_IntArray(group)
 		for i, a := range values {
 			for _, b := range values[i+1:] {
-				if !p.pSat.AddClause(fraLit(Fra_ObjSatNum(p, inputs[a]), true), fraLit(Fra_ObjSatNum(p, inputs[b]), true)) {
+				if !p.PSat.AddClause(fraLit(Fra_ObjSatNum(p, inputs[a]), true), fraLit(Fra_ObjSatNum(p, inputs[b]), true)) {
 					fmt.Println("Fra_OneHotAddKnownConstraint(): Adding clause makes SAT solver unsat.")
-					p.pSat = nil
+					p.PSat = nil
 					return
 				}
 			}

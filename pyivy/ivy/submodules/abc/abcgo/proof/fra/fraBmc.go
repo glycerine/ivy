@@ -58,7 +58,7 @@ func Bmc_ObjChild1Frames(b *Fra_Bmc_t, obj aig.Edge, frame int32) aig.Edge {
 }
 
 func Fra_BmcNodesAreEqual(p *Fra_Man_t, a, b aig.Edge) int32 {
-	m := p.pBmc
+	m := p.PBmc
 	for frame := m.NPref; frame < m.NFramesAll; frame++ {
 		left, right := aig.Aig_Regular(Bmc_ObjFrames(m, a, frame)), aig.Aig_Regular(Bmc_ObjFrames(m, b, frame))
 		if left != right && aig.Aig_Regular(Bmc_ObjFraig(m, left)) != aig.Aig_Regular(Bmc_ObjFraig(m, right)) {
@@ -68,11 +68,11 @@ func Fra_BmcNodesAreEqual(p *Fra_Man_t, a, b aig.Edge) int32 {
 	return 1
 }
 func Fra_BmcNodeIsConst(p *Fra_Man_t, obj aig.Edge) int32 {
-	return Fra_BmcNodesAreEqual(p, obj, p.pManAig.Const1())
+	return Fra_BmcNodesAreEqual(p, obj, p.PManAig.Const1())
 }
 
 func Fra_BmcFilterImplications(p *Fra_Man_t, b *Fra_Bmc_t) {
-	if p.nFramesAll != 1 || p.pManAig != b.PAigFrames {
+	if p.NFramesAll != 1 || p.PManAig != b.PAigFrames {
 		panic("fra: invalid BMC implication manager")
 	}
 	for i := 0; i < vec.Vec_IntSize(b.VImps); i++ {
@@ -120,17 +120,17 @@ func Fra_BmcFrames(b *Fra_Bmc_t, keepOutputs int32) *aig.Graph {
 	return graph
 }
 func Fra_BmcPerform(p *Fra_Man_t, prefix, depth int32) {
-	if p.pBmc != nil {
+	if p.PBmc != nil {
 		panic("fra: BMC already in progress")
 	}
 	start := time.Now()
-	b := Fra_BmcStart(p.pManAig, prefix, depth)
-	p.pBmc = b
-	defer func() { Fra_BmcStop(b); p.pBmc = nil }()
+	b := Fra_BmcStart(p.PManAig, prefix, depth)
+	p.PBmc = b
+	defer func() { Fra_BmcStop(b); p.PBmc = nil }()
 	b.PAigFrames = Fra_BmcFrames(b, 0)
 	oldImps := 0
-	if p.pCla.VImps != nil {
-		b.VImps = p.pCla.VImps
+	if p.PCla.VImps != nil {
+		b.VImps = p.PCla.VImps
 		oldImps = vec.Vec_IntSize(b.VImps)
 	}
 	if b.VImps != nil {
@@ -141,21 +141,21 @@ func Fra_BmcPerform(p *Fra_Man_t, prefix, depth int32) {
 	if b.PAigFraig == nil {
 		panic("fra: BMC frame FRAIG failed")
 	}
-	if p.pPars.FVerbose != 0 {
-		fmt.Printf("Original AIG = %d. Init %d frames = %d. Fraig = %d. Time = %s.\nBefore BMC: Const = %d. Class = %d. Lit = %d. Imp = %d.\n", aig.Aig_ManNodeNum(b.PAig), b.NFramesAll, aig.Aig_ManNodeNum(b.PAigFrames), aig.Aig_ManNodeNum(b.PAigFraig), time.Since(start), len(p.pCla.Constants), len(p.pCla.Classes), Fra_ClassesCountLits(p.pCla), oldImps)
+	if p.PPars.FVerbose != 0 {
+		fmt.Printf("Original AIG = %d. Init %d frames = %d. Fraig = %d. Time = %s.\nBefore BMC: Const = %d. Class = %d. Lit = %d. Imp = %d.\n", aig.Aig_ManNodeNum(b.PAig), b.NFramesAll, aig.Aig_ManNodeNum(b.PAigFrames), aig.Aig_ManNodeNum(b.PAigFraig), time.Since(start), len(p.PCla.Constants), len(p.PCla.Classes), Fra_ClassesCountLits(p.PCla), oldImps)
 	}
-	prevConst, prevEqual := p.pCla.NodeIsConst, p.pCla.NodesEqual
-	p.pCla.NodeIsConst = func(id int) bool { return Fra_BmcNodeIsConst(p, aig.Edge(id<<1)) != 0 }
-	p.pCla.NodesEqual = func(a, b int) bool { return Fra_BmcNodesAreEqual(p, aig.Edge(a<<1), aig.Edge(b<<1)) != 0 }
-	defer func() { p.pCla.NodeIsConst, p.pCla.NodesEqual = prevConst, prevEqual }()
-	Fra_ClassesRefine(p.pCla)
-	Fra_ClassesRefine1(p.pCla, 1, nil)
-	if p.pPars.FVerbose != 0 {
+	prevConst, prevEqual := p.PCla.NodeIsConst, p.PCla.NodesEqual
+	p.PCla.NodeIsConst = func(id int) bool { return Fra_BmcNodeIsConst(p, aig.Edge(id<<1)) != 0 }
+	p.PCla.NodesEqual = func(a, b int) bool { return Fra_BmcNodesAreEqual(p, aig.Edge(a<<1), aig.Edge(b<<1)) != 0 }
+	defer func() { p.PCla.NodeIsConst, p.PCla.NodesEqual = prevConst, prevEqual }()
+	Fra_ClassesRefine(p.PCla)
+	Fra_ClassesRefine1(p.PCla, 1, nil)
+	if p.PPars.FVerbose != 0 {
 		n := 0
 		if b.VImps != nil {
 			n = vec.Vec_IntSize(b.VImps)
 		}
-		fmt.Printf("After BMC: Const = %d. Class = %d. Lit = %d. Imp = %d.\n", len(p.pCla.Constants), len(p.pCla.Classes), Fra_ClassesCountLits(p.pCla), n)
+		fmt.Printf("After BMC: Const = %d. Class = %d. Lit = %d. Imp = %d.\n", len(p.PCla.Constants), len(p.PCla.Classes), Fra_ClassesCountLits(p.PCla), n)
 	}
 }
 func Fra_BmcPerformSimple(g *aig.Graph, frames, limit, rewrite, verbose int32) {

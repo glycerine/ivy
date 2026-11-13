@@ -9,7 +9,7 @@ func satTestManager(graph *aig.Graph) *Fra_Man_t {
 	var pars Fra_Par_t
 	Fra_ParamsDefault(&pars)
 	p := Fra_ManStart(graph, &pars)
-	p.pManFraig = graph
+	p.PManFraig = graph
 	Fra_ManClean(p, int32(len(graph.Nodes())))
 	return p
 }
@@ -25,8 +25,8 @@ func TestSATImplicationProofAndWitness(t *testing.T) {
 	if got := Fra_NodesAreImp(p, a, both, 0, 0); got != 0 {
 		t.Fatalf("a => (a and b): %d", got)
 	}
-	if p.pPatWords[0]&1 == 0 || p.pPatWords[0]&2 != 0 {
-		t.Fatalf("unexpected counterexample bits: %b", p.pPatWords[0])
+	if p.PPatWords[0]&1 == 0 || p.PPatWords[0]&2 != 0 {
+		t.Fatalf("unexpected counterexample bits: %b", p.PPatWords[0])
 	}
 }
 

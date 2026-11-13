@@ -17,7 +17,7 @@ func TestImplicationRefinementIgnoresPrefix(t *testing.T) {
 	vec.Vec_IntPush(imps, Fra_ImpCreate(int32(a.NodeID()), int32(b.NodeID())))
 	keep := Fra_ImpCreate(int32(a.NodeID()), int32(c.NodeID()))
 	vec.Vec_IntPush(imps, keep)
-	p := &Fra_Man_t{pManAig: graph, pSml: sim}
+	p := &Fra_Man_t{PManAig: graph, PSml: sim}
 	if got := Fra_ImpRefineUsingCex(p, imps); got != 1 {
 		t.Fatalf("changed = %d", got)
 	}

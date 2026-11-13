@@ -15,6 +15,7 @@ var _ *framgr.CombOptions = (*Fra_Par_t)(nil)
 var _ *framgr.Simulation = (*fraSimulation)(nil)
 var _ *framgr.ClassPartition = (*classPartition)(nil)
 var _ *framgr.BMC = (*Fra_Bmc_t)(nil)
+var _ *framgr.Manager = (*Fra_Man_t)(nil)
 
 // The extracted manager must preserve the original manager's combinational
 // behavior under the exact configuration used by the legacy CEC fallback.

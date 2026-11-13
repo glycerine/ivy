@@ -15,7 +15,7 @@ func TestOneHotComputeAndConstraints(t *testing.T) {
 	sim := newFraSimulation(g, 0, 1, 1)
 	sim.NodeWords(a.NodeID())[0] = 0x55555555
 	sim.NodeWords(b.NodeID())[0] = 0xaaaaaaaa
-	p := &Fra_Man_t{pManAig: g, pManFraig: g, pPars: &Fra_Par_t{NFramesK: 1}, pSml: sim, pSat: bsat.NewSolver(), pMemSatNums: make([]int32, len(g.Nodes()))}
+	p := &Fra_Man_t{PManAig: g, PManFraig: g, PPars: &Fra_Par_t{NFramesK: 1}, PSml: sim, PSat: bsat.NewSolver(), PMemSatNums: make([]int32, len(g.Nodes()))}
 	clauses := Fra_OneHotCompute(p, sim)
 	if Fra_OneHotCount(p, clauses) != 1 {
 		t.Fatal("expected one candidate")
@@ -31,13 +31,13 @@ func TestOneHotComputeAndConstraints(t *testing.T) {
 			t.Fatalf("mask %d output %v", mask, got)
 		}
 	}
-	p.pMemSatNums[a.NodeID()] = 1
-	p.pMemSatNums[b.NodeID()] = 2
+	p.PMemSatNums[a.NodeID()] = 1
+	p.PMemSatNums[b.NodeID()] = 2
 	Fra_OneHotAssume(p, clauses)
-	if p.pSat.Solve(bsat.Positive(1), bsat.Positive(2)) != bsat.Unsatisfiable {
+	if p.PSat.Solve(bsat.Positive(1), bsat.Positive(2)) != bsat.Unsatisfiable {
 		t.Fatal("one-hot constraint not enforced")
 	}
-	if p.pSat.Solve(bsat.Positive(1), bsat.Negative(2)) != bsat.Satisfiable {
+	if p.PSat.Solve(bsat.Positive(1), bsat.Negative(2)) != bsat.Satisfiable {
 		t.Fatal("valid one-hot assignment rejected")
 	}
 }

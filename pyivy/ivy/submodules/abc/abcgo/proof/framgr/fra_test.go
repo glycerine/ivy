@@ -13,9 +13,9 @@ func TestFrameMappingPreservesComplementAndMissing(t *testing.T) {
 	target := aig.NewGraph()
 	mappedA := target.NewInput()
 	mappedB := target.NewInput()
-	m := &Fra_Man_t{pManAig: original, nFramesAll: 2, pMemFraig: make([]aig.Edge, len(original.Nodes())*2)}
-	for i := range m.pMemFraig {
-		m.pMemFraig[i] = aig.InvalidEdge
+	m := &Fra_Man_t{PManAig: original, NFramesAll: 2, PMemFraig: make([]aig.Edge, len(original.Nodes())*2)}
+	for i := range m.PMemFraig {
+		m.PMemFraig[i] = aig.InvalidEdge
 	}
 	Fra_ObjSetFraig(m, a, 1, mappedA)
 	Fra_ObjSetFraig(m, b, 1, mappedB)

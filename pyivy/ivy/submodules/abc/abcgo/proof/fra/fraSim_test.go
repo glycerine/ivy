@@ -12,17 +12,17 @@ func TestFraSmlManagerSimulationAndRefinement(t *testing.T) {
 	g := aig.NewGraph()
 	x, y := g.NewInput(), g.NewInput()
 	g.AddOutput(g.AND(x, y))
-	m := &Fra_Man_t{pManAig: g, pPars: &Fra_Par_t{DSimSatur: 0.1}, pCla: Fra_ClassesStart(g), pSml: Fra_SmlStart(g, 0, 1, 1), pPatWords: make([]uint32, 1), nFramesAll: 1}
+	m := &Fra_Man_t{PManAig: g, PPars: &Fra_Par_t{DSimSatur: 0.1}, PCla: Fra_ClassesStart(g), PSml: Fra_SmlStart(g, 0, 1, 1), PPatWords: make([]uint32, 1), NFramesAll: 1}
 	Fra_SmlSimulate(m, 0)
-	if m.pCla.Simulation != m.pSml || m.pSml.Rounds < 4 {
-		t.Fatalf("manager did not run simulation and attach class partition: rounds %d", m.pSml.Rounds)
+	if m.PCla.Simulation != m.PSml || m.PSml.Rounds < 4 {
+		t.Fatalf("manager did not run simulation and attach class partition: rounds %d", m.PSml.Rounds)
 	}
 	Fra_SmlSavePattern1(m, 0)
-	if m.pPatWords[0] != ^uint32(0) {
+	if m.PPatWords[0] != ^uint32(0) {
 		t.Fatal("all-one pattern not set")
 	}
 	Fra_SmlSavePattern0(m, 0)
-	if m.pPatWords[0] != 0 {
+	if m.PPatWords[0] != 0 {
 		t.Fatal("all-zero pattern not set")
 	}
 }
@@ -57,7 +57,7 @@ func TestFraSmlCheckOutputSavesWitness(t *testing.T) {
 	s := Fra_SmlStart(g, 0, 1, 1)
 	s.FrameWords(x.NodeID(), 0)[0] = 2
 	s.SimulateOne()
-	m := &Fra_Man_t{pManAig: g, pManFraig: g, pSml: s}
+	m := &Fra_Man_t{PManAig: g, PManFraig: g, PSml: s}
 	if Fra_SmlCheckOutput(m) != 1 {
 		t.Fatal("failed to find output witness")
 	}
@@ -74,9 +74,9 @@ func TestFraSmlSavePatternOneClearsInitialRegisters(t *testing.T) {
 	g.AddOutput(g.Const0())
 	g.AddOutput(g.Const0())
 	aig.Aig_ManSetRegNum(g, 1)
-	m := &Fra_Man_t{pManAig: g, nFramesAll: 3, pPatWords: make([]uint32, 1)}
+	m := &Fra_Man_t{PManAig: g, NFramesAll: 3, PPatWords: make([]uint32, 1)}
 	Fra_SmlSavePattern1(m, 1)
-	if m.pPatWords[0] != ^uint32(8) {
-		t.Fatalf("initial latch bit not cleared: %08x", m.pPatWords[0])
+	if m.PPatWords[0] != ^uint32(8) {
+		t.Fatalf("initial latch bit not cleared: %08x", m.PPatWords[0])
 	}
 }

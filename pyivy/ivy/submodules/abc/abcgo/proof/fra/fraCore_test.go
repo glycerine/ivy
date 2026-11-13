@@ -43,7 +43,7 @@ func TestFraFraigMappedCallbackAndTruth(t *testing.T) {
 	called := false
 	reduced, mapping := Fra_FraigEquivenceMapped(g, 100, 0, func(m *Fra_Man_t) {
 		called = true
-		if m.pManAig != g || m.pManFraig == nil || Fra_ObjFraig(m, n, 0) == aig.InvalidEdge {
+		if m.PManAig != g || m.PManFraig == nil || Fra_ObjFraig(m, n, 0) == aig.InvalidEdge {
 			t.Fatal("callback ran without mapping")
 		}
 	})
@@ -135,7 +135,7 @@ func TestFraMappedCallbackCanReplaceLiveNodeMapping(t *testing.T) {
 	var calls int
 	reduced, mapping := Fra_FraigEquivenceMapped(g, 100, 0, func(m *Fra_Man_t) {
 		calls++
-		Fra_ObjSetFraig(m, gate, 0, m.pManFraig.Const0())
+		Fra_ObjSetFraig(m, gate, 0, m.PManFraig.Const0())
 	})
 	if calls != 1 || reduced == nil || mapping[gate.NodeID()] != reduced.Const0() {
 		t.Fatalf("callback=%d mapping=%v", calls, mapping)

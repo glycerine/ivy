@@ -86,15 +86,15 @@ func Fra_FraigInduction(g *aig.Graph, params *Fra_Ssw_t) *aig.Graph {
 	}
 	p := Fra_ManStart(g, &pars)
 	pars.NBTLimitNode = 0
-	p.pSml = Fra_SmlSimulateSeq(g, pars.NFramesP, 32, 1, 1)
-	p.pCla.Simulation = p.pSml
-	Fra_ClassesPrepare(p.pCla, pars.FLatchCorr, pars.NMaxLevs)
+	p.PSml = Fra_SmlSimulateSeq(g, pars.NFramesP, 32, 1, 1)
+	p.PCla.Simulation = p.PSml
+	Fra_ClassesPrepare(p.PCla, pars.FLatchCorr, pars.NMaxLevs)
 	if pars.FUse1Hot != 0 {
-		p.vOneHots = Fra_OneHotCompute(p, p.pSml)
+		p.VOneHots = Fra_OneHotCompute(p, p.PSml)
 	}
-	p.pSml = Fra_SmlStart(g, 0, pars.NFramesK+1, pars.NSimWords)
+	p.PSml = Fra_SmlStart(g, 0, pars.NFramesK+1, pars.NSimWords)
 	if pars.FUseImps != 0 {
-		p.pCla.VImps = Fra_ImpDerive(p, 5000000, pars.NMaxImps, pars.FLatchCorr)
+		p.PCla.VImps = Fra_ImpDerive(p, 5000000, pars.NMaxImps, pars.FLatchCorr)
 	}
 	timedOut := func() bool {
 		return params.TimeLimit != 0 && time.Since(started) > time.Duration(float64(params.TimeLimit)*float64(time.Second))
@@ -108,19 +108,19 @@ func Fra_FraigInduction(g *aig.Graph, params *Fra_Ssw_t) *aig.Graph {
 		return nil
 	}
 	Fra_BmcPerform(p, pars.NFramesP, pars.NFramesK+1)
-	p.nLitsBeg = Fra_ClassesCountLits(p.pCla)
-	p.nNodesBeg = aig.Aig_ManNodeNum(g)
-	p.nRegsBeg = g.RegisterCount()
-	p.pCla.FRefinement = 1
+	p.NLitsBeg = Fra_ClassesCountLits(p.PCla)
+	p.NNodesBeg = aig.Aig_ManNodeNum(g)
+	p.NRegsBeg = g.RegisterCount()
+	p.PCla.FRefinement = 1
 	iteration := int32(0)
-	for ; p.pCla.FRefinement != 0; iteration++ {
-		oldLits := Fra_ClassesCountLits(p.pCla)
+	for ; p.PCla.FRefinement != 0; iteration++ {
+		oldLits := Fra_ClassesCountLits(p.PCla)
 		oldImps, oldHots := 0, int32(0)
-		if p.pCla.VImps != nil {
-			oldImps = vec.Vec_IntSize(p.pCla.VImps)
+		if p.PCla.VImps != nil {
+			oldImps = vec.Vec_IntSize(p.PCla.VImps)
 		}
-		if p.vOneHots != nil {
-			oldHots = Fra_OneHotCount(p, p.vOneHots)
+		if p.VOneHots != nil {
+			oldHots = Fra_OneHotCount(p, p.VOneHots)
 		}
 		if timedOut() {
 			if params.fSilent == 0 {
@@ -130,32 +130,32 @@ func Fra_FraigInduction(g *aig.Graph, params *Fra_Ssw_t) *aig.Graph {
 			Fra_ManStop(p)
 			return nil
 		}
-		p.pCla.FRefinement = 0
+		p.PCla.FRefinement = 0
 		traversal := time.Now()
-		p.pManFraig = Fra_FramesWithClasses(p)
-		p.timeTrav += time.Since(traversal)
+		p.PManFraig = Fra_FramesWithClasses(p)
+		p.TimeTrav += time.Since(traversal)
 		if pars.FRewrite != 0 {
 			Fra_FraigInductionRewrite(p)
 		}
 		var data *cnf.Cnf_Dat_t
 		if pars.FUseImps != 0 {
-			data = cnf.Cnf_DeriveSimple(p.pManFraig, p.pManFraig.RegisterCount())
+			data = cnf.Cnf_DeriveSimple(p.PManFraig, p.PManFraig.RegisterCount())
 		} else {
-			data = cnf.Cnf_Derive(p.pManFraig, p.pManFraig.RegisterCount())
+			data = cnf.Cnf_Derive(p.PManFraig, p.PManFraig.RegisterCount())
 		}
-		p.pSat = cnf.Cnf_DataWriteIntoSolver(data, 1, 0)
-		p.nSatVars = int32(data.Variables)
-		if p.pSat == nil {
+		p.PSat = cnf.Cnf_DataWriteIntoSolver(data, 1, 0)
+		p.NSatVars = int32(data.Variables)
+		if p.PSat == nil {
 			panic("fra: induction CNF is inconsistent")
 		}
 		if pars.FUseImps != 0 {
-			Fra_ImpAddToSolver(p, p.pCla.VImps, data.VarNums)
-			if p.pSat == nil {
+			Fra_ImpAddToSolver(p, p.PCla.VImps, data.VarNums)
+			if p.PSat == nil {
 				panic("fra: implication constraints contradict induction CNF")
 			}
 		}
-		Fra_ManClean(p, int32(len(p.pManFraig.Nodes()))+aig.Aig_ManNodeNum(g))
-		for _, edge := range p.pManFraig.LiveEdges() {
+		Fra_ManClean(p, int32(len(p.PManFraig.Nodes()))+aig.Aig_ManNodeNum(g))
+		for _, edge := range p.PManFraig.LiveEdges() {
 			number := data.VarNums[edge.NodeID()]
 			if number >= 0 {
 				Fra_ObjSetSatNum(p, edge, number)
@@ -164,31 +164,31 @@ func Fra_FraigInduction(g *aig.Graph, params *Fra_Ssw_t) *aig.Graph {
 		}
 		cnf.Cnf_DataFree(data)
 		if pars.FUse1Hot != 0 {
-			Fra_OneHotAssume(p, p.vOneHots)
-			if p.pSat == nil {
+			Fra_OneHotAssume(p, p.VOneHots)
+			if p.PSat == nil {
 				panic("fra: one-hot constraints contradict induction CNF")
 			}
 		}
-		p.nSatCallsRecent, p.nSatCallsSkipped = 0, 0
+		p.NSatCallsRecent, p.NSatCallsSkipped = 0, 0
 		if pars.FUse1Hot != 0 {
-			Fra_OneHotCheck(p, p.vOneHots)
+			Fra_OneHotCheck(p, p.VOneHots)
 		}
 		Fra_FraigSweep(p)
-		p.pManFraig, p.pSat = nil, nil
-		for i := range p.pMemFraig {
-			p.pMemFraig[i] = aig.InvalidEdge
+		p.PManFraig, p.PSat = nil, nil
+		for i := range p.PMemFraig {
+			p.PMemFraig[i] = aig.InvalidEdge
 		}
-		if p.vTimeouts != nil {
+		if p.VTimeouts != nil {
 			panic("fra: SAT solver timed out during induction")
 		}
 		imps, hots := 0, int32(0)
-		if p.pCla.VImps != nil {
-			imps = vec.Vec_IntSize(p.pCla.VImps)
+		if p.PCla.VImps != nil {
+			imps = vec.Vec_IntSize(p.PCla.VImps)
 		}
-		if p.vOneHots != nil {
-			hots = Fra_OneHotCount(p, p.vOneHots)
+		if p.VOneHots != nil {
+			hots = Fra_OneHotCount(p, p.VOneHots)
 		}
-		if p.pCla.FRefinement != 0 && oldLits == Fra_ClassesCountLits(p.pCla) && oldImps == imps && oldHots == hots {
+		if p.PCla.FRefinement != 0 && oldLits == Fra_ClassesCountLits(p.PCla) && oldImps == imps && oldHots == hots {
 			fmt.Println("Fra_FraigInduction(): Internal error. The result may not verify.")
 			// Do not return a potentially unsound reduction after the
 			// refinement loop has failed to make observable progress.
@@ -199,25 +199,25 @@ func Fra_FraigInduction(g *aig.Graph, params *Fra_Ssw_t) *aig.Graph {
 	}
 	traversal := time.Now()
 	var result *aig.Graph
-	if pars.FWriteImps != 0 && p.vOneHots != nil && Fra_OneHotCount(p, p.vOneHots) != 0 {
+	if pars.FWriteImps != 0 && p.VOneHots != nil && Fra_OneHotCount(p, p.VOneHots) != 0 {
 		name := ioa.Ioa_FileNameGenericAppend(g.Name, "_care.aig")
 		fmt.Printf("Care one-hotness clauses will be written into file %q.\n", name)
 		result = aig.Aig_ManDupOrdered(g)
-		care := Fra_OneHotCreateExdc(p, p.vOneHots)
+		care := Fra_OneHotCreateExdc(p, p.VOneHots)
 		if err := ioa.Ioa_WriteAiger(care, name, 0, 1); err != nil {
 			panic(err)
 		}
 	} else {
-		Fra_ClassesSelectRepr(p.pCla)
-		Fra_ClassesCopyReprs(p.pCla, p.vTimeouts)
+		Fra_ClassesSelectRepr(p.PCla)
+		Fra_ClassesCopyReprs(p.PCla, p.VTimeouts)
 		result = aig.Aig_ManDupRepr(g, 0)
 	}
 	aig.Aig_ManSeqCleanup(result)
-	p.timeTrav += time.Since(traversal)
-	p.timeTotal = time.Since(started)
-	p.nLitsEnd = Fra_ClassesCountLits(p.pCla)
-	p.nNodesEnd = aig.Aig_ManNodeNum(result)
-	p.nRegsEnd = result.RegisterCount()
+	p.TimeTrav += time.Since(traversal)
+	p.TimeTotal = time.Since(started)
+	p.NLitsEnd = Fra_ClassesCountLits(p.PCla)
+	p.NNodesEnd = aig.Aig_ManNodeNum(result)
+	p.NRegsEnd = result.RegisterCount()
 	params.nIters = iteration
 	Fra_ManStop(p)
 	return result

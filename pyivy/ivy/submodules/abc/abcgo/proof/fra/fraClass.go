@@ -91,7 +91,7 @@ func Fra_ClassesTest(p *Fra_Cla_t, id1, id2 int32) {
 	p.Reprs[id2] = int(id1)
 }
 
-func Fra_ClassesLatchCorr(p *Fra_Man_t) { p.pCla.LatchCorrespondence(p.pManAig) }
+func Fra_ClassesLatchCorr(p *Fra_Man_t) { p.PCla.LatchCorrespondence(p.PManAig) }
 
 func Fra_ClassesPostprocess(p *Fra_Cla_t) {
 	sim := newFraSimulation(p.Graph, 0, 1, 32)

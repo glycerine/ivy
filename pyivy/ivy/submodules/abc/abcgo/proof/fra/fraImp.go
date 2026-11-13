@@ -96,12 +96,12 @@ func fraImpMaxID(imp int32) int32 {
 }
 
 func Fra_ImpDerive(p *Fra_Man_t, maxLimit, useLimit, latchCorr int32) *vec.Vec_Int_t {
-	if len(p.pManAig.Nodes()) >= 1<<15 || maxLimit <= 0 || useLimit <= 0 || useLimit > maxLimit {
+	if len(p.PManAig.Nodes()) >= 1<<15 || maxLimit <= 0 || useLimit <= 0 || useLimit > maxLimit {
 		panic("fra: invalid implication derivation limits")
 	}
 	started := time.Now()
-	comb := Fra_SmlSimulateComb(p.pManAig, 64, 0)
-	seq := Fra_SmlSimulateSeq(p.pManAig, p.pPars.NFramesP, 64, 1, 1)
+	comb := Fra_SmlSimulateComb(p.PManAig, 64, 0)
+	seq := Fra_SmlSimulateSeq(p.PManAig, p.PPars.NFramesP, 64, 1, 1)
 	buckets := Fra_SmlSortUsingOnes(seq, latchCorr)
 	imps := vec.Vec_IntAlloc(int(maxLimit))
 	costs := make([]int32, 0, maxLimit)
@@ -151,7 +151,7 @@ func Fra_ImpDerive(p *Fra_Man_t, maxLimit, useLimit, latchCorr int32) *vec.Vec_I
 	}
 	values := vec.Vec_IntArray(imps)
 	sort.SliceStable(values, func(i, j int) bool { return fraImpMaxID(values[i]) < fraImpMaxID(values[j]) })
-	if p.pPars.FVerbose != 0 {
+	if p.PPars.FVerbose != 0 {
 		fmt.Printf("Implications: All = %d. Try = %d. NonSeq = %d. Comb = %d. Res = %d.\n", total, tried, nonSeq, combTrue, collected)
 		fmt.Printf("Implication weight: Min = %d. Pivot = %d. Max = %d. Time = %.2f sec\n", minCost, pivot, maxCost, time.Since(started).Seconds())
 	}
@@ -162,7 +162,7 @@ func Fra_ImpAddToSolver(p *Fra_Man_t, imps *vec.Vec_Int_t, satVarNums []int32) {
 	for i, imp := range vec.Vec_IntArray(imps) {
 		left, right := aig.Edge(Fra_ImpLeft(imp)<<1), aig.Edge(Fra_ImpRight(imp)<<1)
 		missing := false
-		for f := int32(0); f < p.pPars.NFramesK; f++ {
+		for f := int32(0); f < p.PPars.NFramesK; f++ {
 			if Fra_ObjFraig(p, left, f) == aig.InvalidEdge || Fra_ObjFraig(p, right, f) == aig.InvalidEdge {
 				missing = true
 				break
@@ -172,36 +172,36 @@ func Fra_ImpAddToSolver(p *Fra_Man_t, imps *vec.Vec_Int_t, satVarNums []int32) {
 			vec.Vec_IntWriteEntry(imps, i, 0)
 			continue
 		}
-		for f := int32(0); f < p.pPars.NFramesK; f++ {
+		for f := int32(0); f < p.PPars.NFramesK; f++ {
 			a, b := Fra_ObjFraig(p, left, f), Fra_ObjFraig(p, right, f)
 			av, bv := satVarNums[a.NodeID()], satVarNums[b.NodeID()]
 			// Go CNF numbering may assign zero to a real input variable.
-			if av < 0 || av >= p.nSatVars || bv < 0 || bv >= p.nSatVars {
+			if av < 0 || av >= p.NSatVars || bv < 0 || bv >= p.NSatVars {
 				panic("fra: invalid implication SAT variable")
 			}
-			negA := p.pManAig.Node(left).Phase != a.Complemented()
-			negB := p.pManAig.Node(right).Phase != b.Complemented()
-			if !p.pSat.AddClause(fraLit(av, !negA), fraLit(bv, negB)) {
-				p.pSat = nil
+			negA := p.PManAig.Node(left).Phase != a.Complemented()
+			negB := p.PManAig.Node(right).Phase != b.Complemented()
+			if !p.PSat.AddClause(fraLit(av, !negA), fraLit(bv, negB)) {
+				p.PSat = nil
 				return
 			}
 		}
 	}
 	// Propagate and simplify without consuming a SAT search budget.
-	if !p.pSat.Simplify() {
-		p.pSat = nil
+	if !p.PSat.Simplify() {
+		p.PSat = nil
 		return
 	}
 	Fra_ImpCompactArray(imps)
 }
 
 func Fra_ImpVerifyUsingSimulation(p *Fra_Man_t) int32 {
-	if p.pCla.VImps == nil || vec.Vec_IntSize(p.pCla.VImps) == 0 {
+	if p.PCla.VImps == nil || vec.Vec_IntSize(p.PCla.VImps) == 0 {
 		return 0
 	}
-	seq := Fra_SmlSimulateSeq(p.pManAig, p.pPars.NFramesP, 2000, 8, 1)
+	seq := Fra_SmlSimulateSeq(p.PManAig, p.PPars.NFramesP, 2000, 8, 1)
 	var failed int32
-	for _, imp := range vec.Vec_IntArray(p.pCla.VImps) {
+	for _, imp := range vec.Vec_IntArray(p.PCla.VImps) {
 		if Sml_NodeCheckImp(seq, Fra_ImpLeft(imp), Fra_ImpRight(imp)) == 0 {
 			failed++
 		}
@@ -209,20 +209,20 @@ func Fra_ImpVerifyUsingSimulation(p *Fra_Man_t) int32 {
 	return failed
 }
 func Fra_ImpRecordInManager(p *Fra_Man_t, graph *aig.Graph) {
-	if p.pCla.VImps == nil || vec.Vec_IntSize(p.pCla.VImps) == 0 {
+	if p.PCla.VImps == nil || vec.Vec_IntSize(p.PCla.VImps) == 0 {
 		return
 	}
 	initial := graph.OutputCount()
-	for _, imp := range vec.Vec_IntArray(p.pCla.VImps) {
+	for _, imp := range vec.Vec_IntArray(p.PCla.VImps) {
 		left, right := aig.Edge(Fra_ImpLeft(imp)<<1), aig.Edge(Fra_ImpRight(imp)<<1)
-		a, b := aig.Aig_ObjCopy(p.pManAig, left), aig.Aig_ObjCopy(p.pManAig, right)
+		a, b := aig.Aig_ObjCopy(p.PManAig, left), aig.Aig_ObjCopy(p.PManAig, right)
 		if a == aig.InvalidEdge || b == aig.InvalidEdge {
 			panic("fra: missing implication output mapping")
 		}
-		if !p.pManAig.Node(left).Phase {
+		if !p.PManAig.Node(left).Phase {
 			a = a.Not()
 		}
-		if p.pManAig.Node(right).Phase {
+		if p.PManAig.Node(right).Phase {
 			b = b.Not()
 		}
 		graph.AddOutput(graph.OR(a, b))

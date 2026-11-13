@@ -55,18 +55,18 @@ func Fra_OneHotNodesAreClause(s *Fra_Sml_t, a, b aig.Edge, negA, negB int32) int
 	return 1
 }
 func Fra_OneHotRefineUsingCex(p *Fra_Man_t, clauses *vec.Vec_Int_t) int32 {
-	if p.pSml.Graph != p.pManAig {
+	if p.PSml.Graph != p.PManAig {
 		panic("fra: wrong one-hot simulation graph")
 	}
-	inputs := p.pManAig.Inputs()
-	first := len(inputs) - int(p.pManAig.RegisterCount())
+	inputs := p.PManAig.Inputs()
+	first := len(inputs) - int(p.PManAig.RegisterCount())
 	var changed int32
 	for i := 0; i < vec.Vec_IntSize(clauses); i += 2 {
 		x, y := vec.Vec_IntEntry(clauses, i), vec.Vec_IntEntry(clauses, i+1)
 		if x == 0 && y == 0 {
 			continue
 		}
-		if Fra_OneHotNodesAreClause(p.pSml, inputs[first+int(Fra_LitReg(x))], inputs[first+int(Fra_LitReg(y))], Fra_LitSign(x), Fra_LitSign(y)) == 0 {
+		if Fra_OneHotNodesAreClause(p.PSml, inputs[first+int(Fra_LitReg(x))], inputs[first+int(Fra_LitReg(y))], Fra_LitSign(x), Fra_LitSign(y)) == 0 {
 			vec.Vec_IntWriteEntry(clauses, i, 0)
 			vec.Vec_IntWriteEntry(clauses, i+1, 0)
 			changed = 1
@@ -86,7 +86,7 @@ func Fra_OneHotCount(_ *Fra_Man_t, clauses *vec.Vec_Int_t) int32 {
 func Fra_OneHotEstimateCoverage(p *Fra_Man_t, clauses *vec.Vec_Int_t) {
 	started := time.Now()
 	const words = 1 << 14
-	registers := make([][]uint32, p.pManAig.RegisterCount())
+	registers := make([][]uint32, p.PManAig.RegisterCount())
 	aig.Aig_ManRandom(1)
 	for i := range registers {
 		registers[i] = make([]uint32, words)
