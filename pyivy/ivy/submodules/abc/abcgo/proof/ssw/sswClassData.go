@@ -21,6 +21,8 @@ type Ssw_Cla_t_ struct {
 	pFuncNodesAreEqual             func(any, aig.Edge, aig.Edge) int32
 }
 
+// Ssw_ClassesStart requires a buffer-free graph when starting representative
+// storage, as required by aig.Aig_ManReprStart.
 func Ssw_ClassesStart(g *aig.Graph) *Ssw_Cla_t {
 	n := len(g.Nodes())
 	if !aig.Aig_ManHasReprs(g) {

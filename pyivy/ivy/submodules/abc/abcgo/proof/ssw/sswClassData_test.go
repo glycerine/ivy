@@ -32,3 +32,15 @@ func TestClassManagerStartsRepresentatives(t *testing.T) {
 		t.Fatal("incorrect initial state")
 	}
 }
+
+func TestClassManagerRejectsBuffersWithoutReprStorage(t *testing.T) {
+	g := aig.NewGraph()
+	in := g.NewInput()
+	aig.Aig_ObjCreate(g, &aig.Node{Kind: aig.Buffer, Fanins: [2]aig.Edge{in, aig.InvalidEdge}})
+	defer func() {
+		if recover() == nil {
+			t.Fatal("expected representative-storage buffer precondition")
+		}
+	}()
+	Ssw_ClassesStart(g)
+}
