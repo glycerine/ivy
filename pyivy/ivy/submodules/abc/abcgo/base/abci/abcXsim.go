@@ -39,40 +39,7 @@ import "os"
 
 func Abc_ObjSetXsim(pObj *Abc_Obj_t, Value int32) { pObj.pCopy = (Abc_Obj_t *)(ABC_PTRINT_T)Value;  }
 func Abc_ObjGetXsim(pObj *Abc_Obj_t) int32 { return int32((ABC_PTRINT_T))pObj.pCopy;           }
-func Abc_XsimInv(Value int32) int32 { 
-    if Value == XVS0 {
-        return XVS1; }
-    if Value == XVS1 {
-        return XVS0; }
-    assert(Value == XVSX, "Value == XVSX");       
-    return XVSX;
-}
-func Abc_XsimAnd(Value0 int32, Value1 int32) int32 { 
-    if Value0 == XVS0 || Value1 == XVS0 {
-        return XVS0; }
-    if Value0 == XVSX || Value1 == XVSX {
-        return XVSX; }
-    assert(Value0 == XVS1 && Value1 == XVS1, "Value0 == XVS1 && Value1 == XVS1");
-    return XVS1;
-}
-func Abc_XsimRand2() int32 {
-//    return (rand() & 1) ? XVS1 : XVS0;
-    if Gia_ManRandom(0) & 1 {
-        return XVS1;
-    } else {
-        return XVS0;
-    }
-}
-func Abc_XsimRand3() int32 {
-    var RetValue int32;
-    for { 
-//        RetValue = rand() & 3; 
-        RetValue = Gia_ManRandom(0) & 3; 
-    
-if !( RetValue == 0 ) { break }
-} 
-    return RetValue;
-}
+// Three-valued helpers are translated in xsim_value.go.
 func Abc_ObjGetXsimFanin0(pObj *Abc_Obj_t) int32 { 
     var RetValue int32;
     RetValue = Abc_ObjGetXsim(Abc_ObjFanin0(pObj));
