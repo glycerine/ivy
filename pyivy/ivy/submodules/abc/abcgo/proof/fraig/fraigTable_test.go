@@ -71,3 +71,40 @@ func TestStructuralHashUsesTaggedPointerFormula(t *testing.T) {
 		}
 	}
 }
+
+// fraigTable.c:604-655 groups equal dynamic hashes for covering even when
+// the simulation words differ, and a later non-linking rehash separates them.
+func TestSparseRehashRepeatedRealHashCollisionAndSplit(t *testing.T) {
+	m := &Fraig_Man_t{pTableF0: Fraig_HashTableCreate(2), iWordStart: 2}
+	a := &Fraig_Node_t{puSimD: []uint32{0, 2}, uHashD: 6}
+	b := &Fraig_Node_t{puSimD: []uint32{3, 0}, uHashD: 6}
+	c := &Fraig_Node_t{puSimD: []uint32{0, 0}, uHashD: 0}
+	for _, n := range []*Fraig_Node_t{a, b, c} {
+		Fraig_HashTableInsertF0(m, n)
+	}
+	for cycle := 0; cycle < 3; cycle++ {
+		b.puSimD[1] = 0
+		b.uHashD = 6
+		if Fraig_TableRehashF0(m, 1) != 1 {
+			t.Fatalf("cycle %d did not link hash collision", cycle)
+		}
+		if a.pNextD != b && b.pNextD != a {
+			t.Fatalf("cycle %d collision class absent", cycle)
+		}
+		b.puSimD[1] = 1
+		b.uHashD = 5 // 3*2 XOR 1*3
+		Fraig_TableRehashF0(m, 0)
+		if a.pNextD != nil || b.pNextD != nil || c.pNextD != nil {
+			t.Fatalf("cycle %d left a linked collision", cycle)
+		}
+		for _, n := range []*Fraig_Node_t{a, b, c} {
+			query := &Fraig_Node_t{puSimD: append([]uint32(nil), n.puSimD...), uHashD: n.uHashD}
+			if got := Fraig_HashTableLookupF0(m, query); got != n {
+				t.Fatalf("cycle %d did not retrieve separated node", cycle)
+			}
+		}
+		if m.pTableF0.nEntries != 3 {
+			t.Fatalf("cycle %d changed entry count: %d", cycle, m.pTableF0.nEntries)
+		}
+	}
+}

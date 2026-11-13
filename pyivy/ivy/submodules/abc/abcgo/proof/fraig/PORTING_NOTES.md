@@ -11,7 +11,9 @@ clause checks, SAT comparisons against exhaustive truth tables for small circuit
 normal and sparse feedback compression, pattern overlap and partial-word cases,
 resource bounds, and choice and fanout handling. Additional exhaustive tests
 check sparse SAT reduction, choice-cycle prevention, miter proof polarity,
-randomized functional reduction, and source-specific external-clause behavior.
+randomized functional reduction, repeated normal and sparse feedback compression
+across permanent-word boundaries, choice-class simulation during compression,
+and source-specific external-clause behavior.
 
 The source APIs deliberately retain several C limitations: distinct edge
 arguments to `Fraig_NodesAreEqual` are compared after removing complements;
@@ -36,8 +38,8 @@ Remaining validation work:
   implementation, including solver feedback and sparse functional reduction.
 - Exercise SAT timeout and unknown outcomes during real search, and assess limits
   on deep cone traversal and large feedback/simulation workloads.
-- Test difficult interactions among choice classes, sparse hash collisions, and
-  compression, including repeated compression over multiple word boundaries.
+- Exercise deliberate sparse hash collisions during repeated compression and
+  compare resulting classes against the original C implementation.
 - Integrate FRAIG with a ported ABC consumer and verify end-to-end results; the
   separate-package test exercises the public API but is not such a consumer.
 

@@ -170,6 +170,7 @@ func Fraig_FindFirstDiff(a, b *Fraig_Node_t, compl, last, random int32) int32 {
 	return -1
 }
 func Fraig_CompareSimInfoUnderMask(a, b *Fraig_Node_t, last, random int32, mask []uint32) int32 {
+	assert(!Fraig_IsComplement(a) && !Fraig_IsComplement(b), "simulation nodes are regular")
 	x, y := fraigSimWords(a, b, random)
 	for i := int32(0); i < last; i++ {
 		if (x[i]^y[i])&mask[i] != 0 {
@@ -179,6 +180,7 @@ func Fraig_CompareSimInfoUnderMask(a, b *Fraig_Node_t, last, random int32, mask 
 	return 1
 }
 func Fraig_CollectXors(a, b *Fraig_Node_t, last, random int32, mask []uint32) {
+	assert(!Fraig_IsComplement(a) && !Fraig_IsComplement(b), "simulation nodes are regular")
 	x, y := fraigSimWords(a, b, random)
 	for i := int32(0); i < last; i++ {
 		mask[i] = x[i] ^ y[i]
