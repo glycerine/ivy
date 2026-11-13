@@ -20,7 +20,7 @@ func TestLatchCorrespondencePreservesEquivalentLatches(t *testing.T) {
 		t.Fatalf("no reduction or iterations %d", iterations)
 	}
 	regs := int(reduced.RegisterCount())
-	if regs > 2 {
+	if regs > 1 {
 		t.Fatalf("increased latch count: %d", regs)
 	}
 	for mask := 0; mask < 16; mask++ {
