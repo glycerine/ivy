@@ -1,1081 +1,332 @@
 package fraig
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/glycerine/abcgo/sat/msat"
+	"io"
+	"math/bits"
+	"os"
+)
 
-import "os"
-
-/**CFile****************************************************************
-
-  FileName    [fraigUtil.c]
-
-  PackageName [FRAIG: Functionally reduced AND-INV graphs.]
-
-  Synopsis    [Various utilities.]
-
-  Author      [Alan Mishchenko <alanmi@eecs.berkeley.edu>]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 2.0. Started - October 1, 2004]
-
-  Revision    [$Id: fraigUtil.c,v 1.15 2005/07/08 01:01:34 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "fraigInt.h"
-//#include <limits.h>
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-var bit_count [256]int32 = [256]int32{
-  0,1,1,2,1,2,2,3,1,2,2,3,2,3,3,4,1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5,
-  1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5,2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,
-  1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5,2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,
-  2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,3,4,4,5,4,5,5,6,4,5,5,6,5,6,6,7,
-  1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5,2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,
-  2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,3,4,4,5,4,5,5,6,4,5,5,6,5,6,6,7,
-  2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,3,4,4,5,4,5,5,6,4,5,5,6,5,6,6,7,
-  3,4,4,5,4,5,5,6,4,5,5,6,5,6,6,7,4,5,5,6,5,6,6,7,5,6,6,7,6,7,7,8,
-};
-
-// static void Fraig_Dfs_rec( Fraig_Man_t * pMan, Fraig_Node_t * pNode, Fraig_NodeVec_t * vNodes, int fEquiv );
-
-// static int  Fraig_CheckTfi_rec( Fraig_Man_t * pMan, Fraig_Node_t * pNode, Fraig_Node_t * pOld );
-
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Computes the DFS ordering of the nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_Dfs(pMan *Fraig_Man_t, fEquiv int32) *Fraig_NodeVec_t {
-    var vNodes *Fraig_NodeVec_t;
-    var i int32;
-    pMan.nTravIds++;
-    vNodes = Fraig_NodeVecAlloc( 100 );
-    for  i = 0; i < pMan.vOutputs.nSize; i++  {
-        // inlining of macro Fraig_Regular
-        Fraig_Dfs_rec( pMan, ((Fraig_Node_t *)((ABC_PTRUINT_T)(pMan.vOutputs.pArray[i]) & ~01)) , vNodes, fEquiv );
-    }
-    return vNodes;
+func Fraig_Dfs(p *Fraig_Man_t, equiv int32) *Fraig_NodeVec_t {
+	p.nTravIds++
+	v := Fraig_NodeVecAlloc(100)
+	for _, n := range p.vOutputs.pArray {
+		Fraig_Dfs_rec(p, Fraig_Regular(n), v, equiv)
+	}
+	return v
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Computes the DFS ordering of the nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_DfsOne(pMan *Fraig_Man_t, pNode *Fraig_Node_t, fEquiv int32) *Fraig_NodeVec_t {
-    var vNodes *Fraig_NodeVec_t;
-    pMan.nTravIds++;
-    vNodes = Fraig_NodeVecAlloc( 100 );
-    // inlining of macro Fraig_Regular
-    Fraig_Dfs_rec( pMan, ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode) & ~01)) , vNodes, fEquiv );
-    return vNodes;
+func Fraig_DfsOne(p *Fraig_Man_t, n *Fraig_Node_t, equiv int32) *Fraig_NodeVec_t {
+	p.nTravIds++
+	v := Fraig_NodeVecAlloc(100)
+	Fraig_Dfs_rec(p, Fraig_Regular(n), v, equiv)
+	return v
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Computes the DFS ordering of the nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_DfsNodes(pMan *Fraig_Man_t, ppNodes **Fraig_Node_t, nNodes int32, fEquiv int32) *Fraig_NodeVec_t {
-    var vNodes *Fraig_NodeVec_t;
-    var i int32;
-    pMan.nTravIds++;
-    vNodes = Fraig_NodeVecAlloc( 100 );
-    for  i = 0; i < nNodes; i++  {
-        // inlining of macro Fraig_Regular
-        Fraig_Dfs_rec( pMan, ((Fraig_Node_t *)((ABC_PTRUINT_T)(ppNodes[i]) & ~01)) , vNodes, fEquiv );
-    }
-    return vNodes;
+func Fraig_DfsNodes(p *Fraig_Man_t, nodes []*Fraig_Node_t, count, equiv int32) *Fraig_NodeVec_t {
+	p.nTravIds++
+	v := Fraig_NodeVecAlloc(100)
+	for _, n := range nodes[:count] {
+		Fraig_Dfs_rec(p, Fraig_Regular(n), v, equiv)
+	}
+	return v
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Recursively computes the DFS ordering of the nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_Dfs_rec(pMan *Fraig_Man_t, pNode *Fraig_Node_t, vNodes *Fraig_NodeVec_t, fEquiv int32) {
-    // inlining of macro Fraig_IsComplement
-    assert(!(((int32(((ABC_PTRUINT_T) (pNode) & 01)) != 0))), "!/*__starting_point_inline_macro:Fraig_IsComplement__*/((int32(((ABC_PTRUINT_T) (pNode) & 01))))");
-    // skip the visited node
-    if pNode.TravId == pMan.nTravIds {
-        return; }
-    pNode.TravId = pMan.nTravIds;
-    // visit the transitive fanin
-    if Fraig_NodeIsAnd(pNode) {
-        // inlining of macro Fraig_Regular
-        Fraig_Dfs_rec( pMan, ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p1) & ~01)) , vNodes, fEquiv );
-        // inlining of macro Fraig_Regular
-        Fraig_Dfs_rec( pMan, ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p2) & ~01)) , vNodes, fEquiv );
-    }
-    if (fEquiv != 0) && pNode.pNextE {
-        Fraig_Dfs_rec( pMan, pNode.pNextE, vNodes, fEquiv ); }
-    // save the node
-    Fraig_NodeVecPush( vNodes, pNode );
+func Fraig_Dfs_rec(p *Fraig_Man_t, n *Fraig_Node_t, v *Fraig_NodeVec_t, equiv int32) {
+	assert(!Fraig_IsComplement(n), "DFS node is regular")
+	if n.TravId == p.nTravIds {
+		return
+	}
+	n.TravId = p.nTravIds
+	if Fraig_NodeIsAnd(n) != 0 {
+		Fraig_Dfs_rec(p, Fraig_Regular(n.p1), v, equiv)
+		Fraig_Dfs_rec(p, Fraig_Regular(n.p2), v, equiv)
+	}
+	if equiv != 0 && n.pNextE != nil {
+		Fraig_Dfs_rec(p, n.pNextE, v, equiv)
+	}
+	Fraig_NodeVecPush(v, n)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Computes the DFS ordering of the nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_CountNodes(pMan *Fraig_Man_t, fEquiv int32) int32 {
-    var vNodes *Fraig_NodeVec_t;
-    var RetValue int32;
-    vNodes = Fraig_Dfs( pMan, fEquiv );
-    RetValue = vNodes.nSize;
-    Fraig_NodeVecFree( vNodes );
-    return RetValue;
+func Fraig_CountNodes(p *Fraig_Man_t, equiv int32) int32 {
+	return Fraig_NodeVecReadSize(Fraig_Dfs(p, equiv))
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Returns 1 if pOld is in the TFI of pNew.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_CheckTfi(pMan *Fraig_Man_t, pOld *Fraig_Node_t, pNew *Fraig_Node_t) int32 {
-    // inlining of macro Fraig_IsComplement
-    assert(!(((int32(((ABC_PTRUINT_T) (pOld) & 01)) != 0))), "!/*__starting_point_inline_macro:Fraig_IsComplement__*/((int32(((ABC_PTRUINT_T) (pOld) & 01))))");
-    // inlining of macro Fraig_IsComplement
-    assert(!(((int32(((ABC_PTRUINT_T) (pNew) & 01)) != 0))), "!/*__starting_point_inline_macro:Fraig_IsComplement__*/((int32(((ABC_PTRUINT_T) (pNew) & 01))))");
-    pMan.nTravIds++;
-    return Fraig_CheckTfi_rec( pMan, pNew, pOld );
+func Fraig_CheckTfi(p *Fraig_Man_t, old, node *Fraig_Node_t) int32 {
+	assert(!Fraig_IsComplement(old) && !Fraig_IsComplement(node), "TFI nodes are regular")
+	p.nTravIds++
+	return Fraig_CheckTfi_rec(p, node, old)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Returns 1 if pOld is in the TFI of pNew.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_CheckTfi_rec(pMan *Fraig_Man_t, pNode *Fraig_Node_t, pOld *Fraig_Node_t) int32 {
-    // check the trivial cases
-    if pNode == nil {
-        return 0; }
-    if pNode.Num < pOld.Num && !pMan.fChoicing {
-        return 0; }
-    if pNode == pOld {
-        return 1; }
-    // skip the visited node
-    if pNode.TravId == pMan.nTravIds {
-        return 0; }
-    pNode.TravId = pMan.nTravIds;
-    // check the children
-    // inlining of macro Fraig_Regular
-    if Fraig_CheckTfi_rec( pMan, ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p1) & ~01)) , pOld ) {
-        return 1; }
-    // inlining of macro Fraig_Regular
-    if Fraig_CheckTfi_rec( pMan, ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p2) & ~01)) , pOld ) {
-        return 1; }
-    // check equivalent nodes
-    return Fraig_CheckTfi_rec( pMan, pNode.pNextE, pOld );
+func Fraig_CheckTfi_rec(p *Fraig_Man_t, n, old *Fraig_Node_t) int32 {
+	if n == nil || n.Num < old.Num && p.fChoicing == 0 {
+		return 0
+	}
+	if n == old {
+		return 1
+	}
+	if n.TravId == p.nTravIds {
+		return 0
+	}
+	n.TravId = p.nTravIds
+	if Fraig_CheckTfi_rec(p, Fraig_Regular(n.p1), old) != 0 || Fraig_CheckTfi_rec(p, Fraig_Regular(n.p2), old) != 0 {
+		return 1
+	}
+	return Fraig_CheckTfi_rec(p, n.pNextE, old)
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    [Returns 1 if pOld is in the TFI of pNew.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_CheckTfi2(pMan *Fraig_Man_t, pOld *Fraig_Node_t, pNew *Fraig_Node_t) int32 {
-    var vNodes *Fraig_NodeVec_t;
-    var RetValue int32;
-    vNodes = Fraig_DfsOne( pMan, pNew, 1 );
-    RetValue = (pOld.TravId == pMan.nTravIds);
-    Fraig_NodeVecFree( vNodes );
-    return RetValue;
+func Fraig_CheckTfi2(p *Fraig_Man_t, old, node *Fraig_Node_t) int32 {
+	Fraig_DfsOne(p, node, 1)
+	return fraigBool(old.TravId == p.nTravIds)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Sets the number of fanouts (none, one, or many).]
-
-  Description [This procedure collects the nodes reachable from
-  the POs of the AIG and sets the type of fanout counter (none, one,
-  or many) for each node. This procedure is useful to determine
-  fanout-free cones of AND-nodes, which is helpful for rebalancing
-  the AIG (see procedure Fraig_ManRebalance, or something like that).]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Fraig_ManMarkRealFanouts(p *Fraig_Man_t) {
-    var vNodes *Fraig_NodeVec_t;
-    var pNodeR *Fraig_Node_t;
-    var i int32;
-    // collect the nodes reachable
-    vNodes = Fraig_Dfs( p, 0 );
-    // clean the fanouts field
-    for  i = 0; i < vNodes.nSize; i++  {
-        vNodes.pArray[i].nFanouts = 0;
-        vNodes.pArray[i].pData0 = nil;
-    }
-    // mark reachable nodes by setting the two-bit counter pNode->nFans
-    for  i = 0; i < vNodes.nSize; i++  {
-        // inlining of macro Fraig_Regular
-        pNodeR = ((Fraig_Node_t *)((ABC_PTRUINT_T)(vNodes.pArray[i].p1) & ~01)) ;
-        if pNodeR && ++pNodeR.nFanouts == 3 {
-            pNodeR.nFanouts = 2; }
-        // inlining of macro Fraig_Regular
-        pNodeR = ((Fraig_Node_t *)((ABC_PTRUINT_T)(vNodes.pArray[i].p2) & ~01)) ;
-        if pNodeR && ++pNodeR.nFanouts == 3 {
-            pNodeR.nFanouts = 2; }
-    }
-    Fraig_NodeVecFree( vNodes );
+	nodes := Fraig_Dfs(p, 0)
+	for _, n := range nodes.pArray {
+		n.nFanouts = 0
+		n.pData0 = nil
+	}
+	for _, n := range nodes.pArray {
+		for _, edge := range []*Fraig_Node_t{n.p1, n.p2} {
+			child := Fraig_Regular(edge)
+			if child != nil && child.nFanouts < 2 {
+				child.nFanouts++
+			}
+		}
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Creates the constant 1 node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_BitStringCountOnes(pString *uint32, nWords int32) int32 {
-    unsigned char * pSuppBytes = (unsigned char *)pString;
-    var i int32;
-    var nOnes int32;
-    var nBytes int32 = sizeof(unsigned) * nWords;
-    // count the number of ones in the simulation vector
-    for  i = nOnes = 0; i < nBytes; i++  {
-        nOnes += bit_count[pSuppBytes[i]];
-    }
-    return nOnes;
+func Fraig_BitStringCountOnes(words []uint32, count int32) int32 {
+	var n int32
+	for _, w := range words[:count] {
+		n += int32(bits.OnesCount32(w))
+	}
+	return n
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Verify one useful property.]
-
-  Description [This procedure verifies one useful property. After 
-  the FRAIG construction with choice nodes is over, each primary node 
-  should have fanins that are primary nodes. The primary nodes is the 
-  one that does not have pNode->pRepr set to point to another node.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Fraig_ManCheckConsistency(p *Fraig_Man_t) int32 {
-    var pNode *Fraig_Node_t;
-    var pVec *Fraig_NodeVec_t;
-    var i int32;
-    pVec = Fraig_Dfs( p, 0 );
-    for  i = 0; i < pVec.nSize; i++  {
-        pNode = pVec.pArray[i];
-        if Fraig_NodeIsVar(pNode) {
-            if pNode.pRepr {
-                fmt.Printf("Primary input %d is a secondary node.\n", pNode.Num); }
-        
-        } else if Fraig_NodeIsConst(pNode) {
-            if pNode.pRepr {
-                fmt.Printf("Constant 1 %d is a secondary node.\n", pNode.Num); }
-        
-        } else {
-            if pNode.pRepr {
-                fmt.Printf("Internal node %d is a secondary node.\n", pNode.Num); }
-            // inlining of macro Fraig_Regular
-            if  ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p1) & ~01)) .pRepr {
-                // inlining of macro Fraig_Regular
-                fmt.Printf("Internal node %d has first fanin %d that is a secondary node.\n", pNode.Num, ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p1) & ~01)) .Num); }
-            // inlining of macro Fraig_Regular
-            if  ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p2) & ~01)) .pRepr {
-                // inlining of macro Fraig_Regular
-                fmt.Printf("Internal node %d has second fanin %d that is a secondary node.\n", pNode.Num, ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p2) & ~01)) .Num); }
-        }
-    }
-    Fraig_NodeVecFree( pVec );
-    return 1;
+	for _, n := range Fraig_Dfs(p, 0).pArray {
+		if n.pRepr != nil {
+			fmt.Printf("Node %d is a secondary node.\n", n.Num)
+		}
+		if Fraig_NodeIsAnd(n) != 0 {
+			for i, child := range []*Fraig_Node_t{n.p1, n.p2} {
+				if Fraig_Regular(child).pRepr != nil {
+					fmt.Printf("Internal node %d has fanin %d (%d) that is a secondary node.\n", n.Num, i+1, Fraig_Regular(child).Num)
+				}
+			}
+		}
+	}
+	return 1
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Prints the node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_PrintNode(p *Fraig_Man_t, pNode *Fraig_Node_t) {
-    var vNodes *Fraig_NodeVec_t;
-    var pTemp *Fraig_Node_t;
-    var fCompl1, fCompl2, i int32;
-
-    vNodes = Fraig_DfsOne( p, pNode, 0 );
-    for  i = 0; i < vNodes.nSize; i++  {
-        pTemp = vNodes.pArray[i];
-        if Fraig_NodeIsVar(pTemp) {
-            fmt.Printf("%3d : PI          ", pTemp.Num);
-            Fraig_PrintBinary( os.Stdout, (unsigned *)&pTemp.puSimR, 20 );
-            fmt.Printf("   ");
-            Fraig_PrintBinary( os.Stdout, (unsigned *)&pTemp.puSimD, 20 );
-            fmt.Printf("  %d\n", pTemp.fInv);
-            continue;
-        }
-
-        // inlining of macro Fraig_IsComplement
-        fCompl1 = ((int32(((ABC_PTRUINT_T) (pTemp.p1) & 01))));
-        // inlining of macro Fraig_IsComplement
-        fCompl2 = ((int32(((ABC_PTRUINT_T) (pTemp.p2) & 01))));
-        // inlining of macro Fraig_Regular
-        fmt.Printf("%3d : %c%3d %c%3d   ", pTemp.Num, (fCompl1? '-':'+'), ((Fraig_Node_t *)((ABC_PTRUINT_T)(pTemp.p1) & ~01)) .Num, (fCompl2? '-':'+'), ((Fraig_Node_t *)((ABC_PTRUINT_T)(pTemp.p2) & ~01)) .Num);
-        Fraig_PrintBinary( os.Stdout, (unsigned *)&pTemp.puSimR, 20 );
-        fmt.Printf("   ");
-        Fraig_PrintBinary( os.Stdout, (unsigned *)&pTemp.puSimD, 20 );
-        fmt.Printf("  %d\n", pTemp.fInv);
-    }
-    Fraig_NodeVecFree( vNodes );
+func Fraig_PrintBinary(w io.Writer, words []uint32, nBits int32) {
+	for i := nBits - 1; i >= 0; i-- {
+		fmt.Fprintf(w, "%d", (words[i/32]>>uint(i%32))&1)
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Prints the bit string.]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_PrintBinary(pFile *os.File, pSign *uint32, nBits int32) {
-    var Remainder, nWords int32;
-    var w, i int32;
-
-    Remainder = (nBits%(sizeof(unsigned)*8));
-    nWords    = (nBits/(sizeof(unsigned)*8)) + (Remainder>0);
-
-    for  w = nWords-1; w >= 0; w--  {
-        for  i = ((w == nWords-1 && Remainder)? Remainder-1: 31); i >= 0; i--  {
-            fmt.Fprintf(pFile, "%c", '0' + int32(((pSign[w] & (1<<i)) > 0)));
-        }
-    }
-
-//  fprintf( pFile, "\n" );
+func Fraig_PrintNode(p *Fraig_Man_t, node *Fraig_Node_t) {
+	for _, n := range Fraig_DfsOne(p, node, 0).pArray {
+		if Fraig_NodeIsVar(n) != 0 {
+			fmt.Printf("%3d : PI          ", n.Num)
+		} else if Fraig_NodeIsConst(n) != 0 {
+			fmt.Printf("%3d : CONST       ", n.Num)
+		} else {
+			fmt.Printf("%3d : %t%3d %t%3d   ", n.Num, Fraig_IsComplement(n.p1), Fraig_Regular(n.p1).Num, Fraig_IsComplement(n.p2), Fraig_Regular(n.p2).Num)
+		}
+		Fraig_PrintBinary(os.Stdout, n.puSimR, 20)
+		fmt.Print("   ")
+		Fraig_PrintBinary(os.Stdout, n.puSimD, 20)
+		fmt.Printf("  %d\n", n.fInv)
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Sets up the mask.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_GetMaxLevel(pMan *Fraig_Man_t) int32 {
-    var nLevelMax, i int32;
-    nLevelMax = 0;
-    for  i = 0; i < pMan.vOutputs.nSize; i++  {
-        // inlining of macro Fraig_Regular
-        if nLevelMax > ((Fraig_Node_t *)((ABC_PTRUINT_T)(pMan.vOutputs.pArray[i]) & ~01)) .Level {
-            nLevelMax = nLevelMax;
-        } else {
-            // inlining of macro Fraig_Regular
-            nLevelMax = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pMan.vOutputs.pArray[i]) & ~01)) .Level;
-        }
-    }
-    return nLevelMax;
+func Fraig_GetMaxLevel(p *Fraig_Man_t) int32 {
+	var level int32
+	for _, edge := range p.vOutputs.pArray {
+		if n := Fraig_Regular(edge).Level; n > level {
+			level = n
+		}
+	}
+	return level
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Analyses choice nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_MappingUpdateLevel_rec(pMan *Fraig_Man_t, pNode *Fraig_Node_t, fMaximum int32) int32 {
-    var pTemp *Fraig_Node_t;
-    var Level1, Level2, LevelE int32;
-    // inlining of macro Fraig_IsComplement
-    assert(!(((int32(((ABC_PTRUINT_T) (pNode) & 01)) != 0))), "!/*__starting_point_inline_macro:Fraig_IsComplement__*/((int32(((ABC_PTRUINT_T) (pNode) & 01))))");
-    if !Fraig_NodeIsAnd(pNode) {
-        return pNode.Level; }
-    // skip the visited node
-    if pNode.TravId == pMan.nTravIds {
-        return pNode.Level; }
-    pNode.TravId = pMan.nTravIds;
-    // compute levels of the children nodes
-    // inlining of macro Fraig_Regular
-    Level1 = Fraig_MappingUpdateLevel_rec( pMan, ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p1) & ~01)) , fMaximum );
-    // inlining of macro Fraig_Regular
-    Level2 = Fraig_MappingUpdateLevel_rec( pMan, ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p2) & ~01)) , fMaximum );
-    pNode.Level = 1 + Abc_MaxInt( Level1, Level2 );
-    if pNode.pNextE {
-        LevelE = Fraig_MappingUpdateLevel_rec( pMan, pNode.pNextE, fMaximum );
-        if fMaximum != 0 {
-            if pNode.Level < LevelE {
-                pNode.Level = LevelE; }
-        
-        } else {
-            if pNode.Level > LevelE {
-                pNode.Level = LevelE; }
-        }
-        // set the level of all equivalent nodes to be the same minimum
-        if pNode.pRepr == nil { // the primary node
-            for  pTemp = pNode.pNextE; (pTemp != nil); pTemp = pTemp.pNextE  {
-                pTemp.Level = pNode.Level;
-            } }
-    }
-    return pNode.Level;
+func Fraig_MappingUpdateLevel_rec(p *Fraig_Man_t, n *Fraig_Node_t, maximum int32) int32 {
+	assert(!Fraig_IsComplement(n), "level node is regular")
+	if Fraig_NodeIsAnd(n) == 0 || n.TravId == p.nTravIds {
+		return n.Level
+	}
+	n.TravId = p.nTravIds
+	a, b := Fraig_MappingUpdateLevel_rec(p, Fraig_Regular(n.p1), maximum), Fraig_MappingUpdateLevel_rec(p, Fraig_Regular(n.p2), maximum)
+	n.Level = a + 1
+	if b > a {
+		n.Level = b + 1
+	}
+	if n.pNextE != nil {
+		level := Fraig_MappingUpdateLevel_rec(p, n.pNextE, maximum)
+		if maximum != 0 && n.Level < level || maximum == 0 && n.Level > level {
+			n.Level = level
+		}
+		if n.pRepr == nil {
+			for other := n.pNextE; other != nil; other = other.pNextE {
+				other.Level = n.Level
+			}
+		}
+	}
+	return n.Level
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Resets the levels of the nodes in the choice graph.]
-
-  Description [Makes the level of the choice nodes to be equal to the
-  maximum of the level of the nodes in the equivalence class. This way
-  sorting by level leads to the reverse topological order, which is
-  needed for the required time computation.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_MappingSetChoiceLevels(pMan *Fraig_Man_t, fMaximum int32) {
-    var i int32;
-    pMan.nTravIds++;
-    for  i = 0; i < pMan.vOutputs.nSize; i++  {
-        // inlining of macro Fraig_Regular
-        Fraig_MappingUpdateLevel_rec( pMan, ((Fraig_Node_t *)((ABC_PTRUINT_T)(pMan.vOutputs.pArray[i]) & ~01)) , fMaximum );
-    }
+func Fraig_MappingSetChoiceLevels(p *Fraig_Man_t, maximum int32) {
+	p.nTravIds++
+	for _, edge := range p.vOutputs.pArray {
+		Fraig_MappingUpdateLevel_rec(p, Fraig_Regular(edge), maximum)
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Reports statistics on choice nodes.]
-
-  Description [The number of choice nodes is the number of primary nodes,
-  which has pNextE set to a pointer. The number of choices is the number
-  of entries in the equivalent-node lists of the primary nodes.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_ManReportChoices(pMan *Fraig_Man_t) {
-    var pNode, pTemp *Fraig_Node_t;
-    var nChoiceNodes, nChoices int32;
-    var i, LevelMax1, LevelMax2 int32;
-
-    // report the number of levels
-    LevelMax1 = Fraig_GetMaxLevel( pMan );
-    Fraig_MappingSetChoiceLevels( pMan, 0 );
-    LevelMax2 = Fraig_GetMaxLevel( pMan );
-
-    // report statistics about choices
-    nChoiceNodes = nChoices = 0;
-    for  i = 0; i < pMan.vNodes.nSize; i++  {
-        pNode = pMan.vNodes.pArray[i];
-        if pNode.pRepr == nil && pNode.pNextE != nil { // this is a choice node = the primary node that has equivalent nodes
-            nChoiceNodes++;
-            for  pTemp = pNode; (pTemp != nil); pTemp = pTemp.pNextE  {
-                nChoices++;
-            }
-        }
-    }
-    fmt.Printf("Maximum level: Original = %d. Reduced due to choices = %d.\n", LevelMax1, LevelMax2);
-    fmt.Printf("Choice stats:  Choice nodes = %d. Total choices = %d.\n", nChoiceNodes, nChoices);
+func Fraig_ManReportChoices(p *Fraig_Man_t) {
+	before := Fraig_GetMaxLevel(p)
+	Fraig_MappingSetChoiceLevels(p, 0)
+	after := Fraig_GetMaxLevel(p)
+	nodes, choices := 0, 0
+	for _, n := range p.vNodes.pArray {
+		if n.pRepr == nil && n.pNextE != nil {
+			nodes++
+			for e := n; e != nil; e = e.pNextE {
+				choices++
+			}
+		}
+	}
+	fmt.Printf("Maximum level: Original = %d. Reduced due to choices = %d.\nChoice stats:  Choice nodes = %d. Total choices = %d.\n", before, after, nodes, choices)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Returns 1 if the node is the root of EXOR/NEXOR gate.]
-
-  Description [The node can be complemented.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_NodeIsExorType(pNode *Fraig_Node_t) int32 {
-    var pNode1, pNode2 *Fraig_Node_t;
-    // make the node regular (it does not matter for EXOR/NEXOR)
-    // inlining of macro Fraig_Regular
-    pNode = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode) & ~01)) ;
-    // if the node or its children are not ANDs or not compl, this cannot be EXOR type
-    if !Fraig_NodeIsAnd(pNode) {
-        return 0; }
-    // inlining of macro Fraig_IsComplement
-    if !Fraig_NodeIsAnd(pNode.p1) || !(((int32(((ABC_PTRUINT_T) (pNode.p1) & 01)) != 0))) {
-        return 0; }
-    // inlining of macro Fraig_IsComplement
-    if !Fraig_NodeIsAnd(pNode.p2) || !(((int32(((ABC_PTRUINT_T) (pNode.p2) & 01)) != 0))) {
-        return 0; }
-
-    // get children
-    // inlining of macro Fraig_Regular
-    pNode1 = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p1) & ~01)) ;
-    // inlining of macro Fraig_Regular
-    pNode2 = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p2) & ~01)) ;
-    assert(pNode1.Num < pNode2.Num, "pNode1.Num < pNode2.Num");
-
-    // compare grandchildren
-    // inlining of macro Fraig_Not
-    return pNode1.p1 == ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p1) ^ 01))  && pNode1.p2 == ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p2) ^ 01)) ;
+func fraigMuxChildren(node *Fraig_Node_t) (*Fraig_Node_t, *Fraig_Node_t) {
+	n := Fraig_Regular(node)
+	if Fraig_NodeIsAnd(n) == 0 || Fraig_NodeIsAnd(n.p1) == 0 || !Fraig_IsComplement(n.p1) || Fraig_NodeIsAnd(n.p2) == 0 || !Fraig_IsComplement(n.p2) {
+		return nil, nil
+	}
+	a, b := Fraig_Regular(n.p1), Fraig_Regular(n.p2)
+	assert(a.Num < b.Num, "ordered fanins")
+	return a, b
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Returns 1 if the node is the root of MUX or EXOR/NEXOR.]
-
-  Description [The node can be complemented.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_NodeIsMuxType(pNode *Fraig_Node_t) int32 {
-    var pNode1, pNode2 *Fraig_Node_t;
-
-    // make the node regular (it does not matter for EXOR/NEXOR)
-    // inlining of macro Fraig_Regular
-    pNode = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode) & ~01)) ;
-    // if the node or its children are not ANDs or not compl, this cannot be EXOR type
-    if !Fraig_NodeIsAnd(pNode) {
-        return 0; }
-    // inlining of macro Fraig_IsComplement
-    if !Fraig_NodeIsAnd(pNode.p1) || !(((int32(((ABC_PTRUINT_T) (pNode.p1) & 01)) != 0))) {
-        return 0; }
-    // inlining of macro Fraig_IsComplement
-    if !Fraig_NodeIsAnd(pNode.p2) || !(((int32(((ABC_PTRUINT_T) (pNode.p2) & 01)) != 0))) {
-        return 0; }
-
-    // get children
-    // inlining of macro Fraig_Regular
-    pNode1 = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p1) & ~01)) ;
-    // inlining of macro Fraig_Regular
-    pNode2 = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p2) & ~01)) ;
-    assert(pNode1.Num < pNode2.Num, "pNode1.Num < pNode2.Num");
-
-    // compare grandchildren
-    // node is an EXOR/NEXOR
-    // inlining of macro Fraig_Not
-    if pNode1.p1 == ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p1) ^ 01))  && pNode1.p2 == ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p2) ^ 01)) {
-        return 1; } 
-
-    // otherwise the node is MUX iff it has a pair of equal grandchildren
-    // inlining of macro Fraig_Not
-    return pNode1.p1 == ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p1) ^ 01))  || 
-           // inlining of macro Fraig_Not
-           pNode1.p1 == ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p2) ^ 01))  ||
-           // inlining of macro Fraig_Not
-           pNode1.p2 == ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p1) ^ 01))  ||
-           // inlining of macro Fraig_Not
-           pNode1.p2 == ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p2) ^ 01)) ;
+func Fraig_NodeIsExorType(n *Fraig_Node_t) int32 {
+	a, b := fraigMuxChildren(n)
+	if a == nil {
+		return 0
+	}
+	return fraigBool(a.p1 == Fraig_Not(b.p1) && a.p2 == Fraig_Not(b.p2))
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Returns 1 if the node is EXOR, 0 if it is NEXOR.]
-
-  Description [The node should be EXOR type and not complemented.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_NodeIsExor(pNode *Fraig_Node_t) int32 {
-    var pNode1 *Fraig_Node_t;
-    // inlining of macro Fraig_IsComplement
-    assert(!(((int32(((ABC_PTRUINT_T) (pNode) & 01)) != 0))), "!/*__starting_point_inline_macro:Fraig_IsComplement__*/((int32(((ABC_PTRUINT_T) (pNode) & 01))))");
-    assert((Fraig_NodeIsExorType(pNode) != 0), "Fraig_NodeIsExorType(pNode)");
-    // inlining of macro Fraig_IsComplement
-    assert((((int32(((ABC_PTRUINT_T) (pNode.p1) & 01)) != 0))), "/*__starting_point_inline_macro:Fraig_IsComplement__*/((int32(((ABC_PTRUINT_T) (pNode.p1) & 01))))");
-    // get children
-    // inlining of macro Fraig_Regular
-    pNode1 = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p1) & ~01)) ;
-    // inlining of macro Fraig_IsComplement
-    return ((int32(((ABC_PTRUINT_T) (pNode1.p1) & 01)))) == ((int32(((ABC_PTRUINT_T) (pNode1.p2) & 01))));
+func Fraig_NodeIsMuxType(n *Fraig_Node_t) int32 {
+	a, b := fraigMuxChildren(n)
+	if a == nil {
+		return 0
+	}
+	return fraigBool(a.p1 == Fraig_Not(b.p1) || a.p1 == Fraig_Not(b.p2) || a.p2 == Fraig_Not(b.p1) || a.p2 == Fraig_Not(b.p2))
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Recognizes what nodes are control and data inputs of a MUX.]
-
-  Description [If the node is a MUX, returns the control variable C.
-  Assigns nodes T and E to be the then and else variables of the MUX. 
-  Node C is never complemented. Nodes T and E can be complemented.
-  This function also recognizes EXOR/NEXOR gates as MUXes.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_NodeRecognizeMux(pNode *Fraig_Node_t, ppNodeT **Fraig_Node_t, ppNodeE **Fraig_Node_t) *Fraig_Node_t {
-    var pNode1, pNode2 *Fraig_Node_t;
-    // inlining of macro Fraig_IsComplement
-    assert(!(((int32(((ABC_PTRUINT_T) (pNode) & 01)) != 0))), "!/*__starting_point_inline_macro:Fraig_IsComplement__*/((int32(((ABC_PTRUINT_T) (pNode) & 01))))");
-    assert((Fraig_NodeIsMuxType(pNode) != 0), "Fraig_NodeIsMuxType(pNode)");
-    // get children
-    // inlining of macro Fraig_Regular
-    pNode1 = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p1) & ~01)) ;
-    // inlining of macro Fraig_Regular
-    pNode2 = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p2) & ~01)) ;
-    // find the control variable
-    // inlining of macro Fraig_Not
-    if pNode1.p1 == ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p1) ^ 01)) {
-        // inlining of macro Fraig_IsComplement
-        if  (int32(((ABC_PTRUINT_T) (pNode1.p1) & 01)) != 0) { // pNode2->p1 is positive phase of C
-            // inlining of macro Fraig_Not
-            *ppNodeT = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p2) ^ 01)) ;
-            // inlining of macro Fraig_Not
-            *ppNodeE = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode1.p2) ^ 01)) ;
-            return pNode2.p1;
-        
-        } else { // pNode1->p1 is positive phase of C
-            // inlining of macro Fraig_Not
-            *ppNodeT = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode1.p2) ^ 01)) ;
-            // inlining of macro Fraig_Not
-            *ppNodeE = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p2) ^ 01)) ;
-            return pNode1.p1;
-        }
-    
-    // inlining of macro Fraig_Not
-    } else if pNode1.p1 == ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p2) ^ 01)) {
-        // inlining of macro Fraig_IsComplement
-        if  (int32(((ABC_PTRUINT_T) (pNode1.p1) & 01)) != 0) { // pNode2->p2 is positive phase of C
-            // inlining of macro Fraig_Not
-            *ppNodeT = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p1) ^ 01)) ;
-            // inlining of macro Fraig_Not
-            *ppNodeE = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode1.p2) ^ 01)) ;
-            return pNode2.p2;
-        
-        } else { // pNode1->p1 is positive phase of C
-            // inlining of macro Fraig_Not
-            *ppNodeT = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode1.p2) ^ 01)) ;
-            // inlining of macro Fraig_Not
-            *ppNodeE = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p1) ^ 01)) ;
-            return pNode1.p1;
-        }
-    
-    // inlining of macro Fraig_Not
-    } else if pNode1.p2 == ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p1) ^ 01)) {
-        // inlining of macro Fraig_IsComplement
-        if  (int32(((ABC_PTRUINT_T) (pNode1.p2) & 01)) != 0) { // pNode2->p1 is positive phase of C
-            // inlining of macro Fraig_Not
-            *ppNodeT = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p2) ^ 01)) ;
-            // inlining of macro Fraig_Not
-            *ppNodeE = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode1.p1) ^ 01)) ;
-            return pNode2.p1;
-        
-        } else { // pNode1->p2 is positive phase of C
-            // inlining of macro Fraig_Not
-            *ppNodeT = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode1.p1) ^ 01)) ;
-            // inlining of macro Fraig_Not
-            *ppNodeE = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p2) ^ 01)) ;
-            return pNode1.p2;
-        }
-    
-    // inlining of macro Fraig_Not
-    } else if pNode1.p2 == ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p2) ^ 01)) {
-        // inlining of macro Fraig_IsComplement
-        if  (int32(((ABC_PTRUINT_T) (pNode1.p2) & 01)) != 0) { // pNode2->p2 is positive phase of C
-            // inlining of macro Fraig_Not
-            *ppNodeT = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p1) ^ 01)) ;
-            // inlining of macro Fraig_Not
-            *ppNodeE = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode1.p1) ^ 01)) ;
-            return pNode2.p2;
-        
-        } else { // pNode1->p2 is positive phase of C
-            // inlining of macro Fraig_Not
-            *ppNodeT = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode1.p1) ^ 01)) ;
-            // inlining of macro Fraig_Not
-            *ppNodeE = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode2.p1) ^ 01)) ;
-            return pNode1.p2;
-        }
-    }
-    assert(false, "0"); // this is not MUX
-    return nil;
+func Fraig_NodeIsExor(n *Fraig_Node_t) int32 {
+	assert(!Fraig_IsComplement(n) && Fraig_NodeIsExorType(n) != 0, "regular XOR node")
+	a := Fraig_Regular(n.p1)
+	return fraigBool(Fraig_IsComplement(a.p1) == Fraig_IsComplement(a.p2))
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Counts the number of EXOR type nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_ManCountExors(pMan *Fraig_Man_t) int32 {
-    var i, nExors int32;
-    nExors = 0;
-    for  i = 0; i < pMan.vNodes.nSize; i++  {
-        nExors += Fraig_NodeIsExorType( pMan.vNodes.pArray[i] );
-    }
-    return nExors;
-
+func Fraig_NodeRecognizeMux(n *Fraig_Node_t, t, e **Fraig_Node_t) *Fraig_Node_t {
+	assert(!Fraig_IsComplement(n) && Fraig_NodeIsMuxType(n) != 0, "regular MUX node")
+	a, b := Fraig_Regular(n.p1), Fraig_Regular(n.p2)
+	for _, pair := range []struct{ controlA, dataA, controlB, dataB *Fraig_Node_t }{{a.p1, a.p2, b.p1, b.p2}, {a.p1, a.p2, b.p2, b.p1}, {a.p2, a.p1, b.p1, b.p2}, {a.p2, a.p1, b.p2, b.p1}} {
+		if pair.controlA == Fraig_Not(pair.controlB) {
+			if Fraig_IsComplement(pair.controlA) {
+				*t = Fraig_Not(pair.dataB)
+				*e = Fraig_Not(pair.dataA)
+				return pair.controlB
+			}
+			*t = Fraig_Not(pair.dataA)
+			*e = Fraig_Not(pair.dataB)
+			return pair.controlA
+		}
+	}
+	panic("invalid MUX")
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Counts the number of EXOR type nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_ManCountMuxes(pMan *Fraig_Man_t) int32 {
-    var i, nMuxes int32;
-    nMuxes = 0;
-    for  i = 0; i < pMan.vNodes.nSize; i++  {
-        nMuxes += Fraig_NodeIsMuxType( pMan.vNodes.pArray[i] );
-    }
-    return nMuxes;
-
+func Fraig_ManCountExors(p *Fraig_Man_t) int32 {
+	var count int32
+	for _, n := range p.vNodes.pArray {
+		count += Fraig_NodeIsExorType(n)
+	}
+	return count
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Returns 1 if siminfo of Node1 is contained in siminfo of Node2.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_NodeSimsContained(pMan *Fraig_Man_t, pNode1 *Fraig_Node_t, pNode2 *Fraig_Node_t) int32 {
-    var pUnsigned1, pUnsigned2 *uint32;
-    var i int32;
-
-    // compare random siminfo
-    pUnsigned1 = pNode1.puSimR;
-    pUnsigned2 = pNode2.puSimR;
-    for  i = 0; i < pMan.nWordsRand; i++  {
-        if pUnsigned1[i] & ~pUnsigned2[i] {
-            return 0; }
-    }
-
-    // compare systematic siminfo
-    pUnsigned1 = pNode1.puSimD;
-    pUnsigned2 = pNode2.puSimD;
-    for  i = 0; i < pMan.iWordStart; i++  {
-        if pUnsigned1[i] & ~pUnsigned2[i] {
-            return 0; }
-    }
-
-    return 1;
+func Fraig_ManCountMuxes(p *Fraig_Man_t) int32 {
+	var count int32
+	for _, n := range p.vNodes.pArray {
+		count += Fraig_NodeIsMuxType(n)
+	}
+	return count
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Count the number of PI variables.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_CountPis(p *Fraig_Man_t, vVarNums *Msat_IntVec_t) int32 {
-    var pVars *int32;
-    var nVars int32;
-    var i int32;
-    var Counter int32;
-
-    nVars = Msat_IntVecReadSize(vVarNums);
-    pVars = Msat_IntVecReadArray(vVarNums);
-    Counter = 0;
-    for  i = 0; i < nVars; i++  {
-        Counter += Fraig_NodeIsVar( p.vNodes.pArray[pVars[i]] );
-    }
-    return Counter;
+func Fraig_NodeSimsContained(p *Fraig_Man_t, a, b *Fraig_Node_t) int32 {
+	for _, v := range []struct {
+		x, y []uint32
+		n    int32
+	}{{a.puSimR, b.puSimR, p.nWordsRand}, {a.puSimD, b.puSimD, p.iWordStart}} {
+		for i := int32(0); i < v.n; i++ {
+			if v.x[i]&^v.y[i] != 0 {
+				return 0
+			}
+		}
+	}
+	return 1
 }
-
-
-
-/**Function*************************************************************
-
-  Synopsis    [Counts the number of EXOR type nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_ManPrintRefs(pMan *Fraig_Man_t) int32 {
-    var vPivots *Fraig_NodeVec_t;
-    var pNode, pNode2 *Fraig_Node_t;
-    var i, k, Counter, nProved int32;
-    var clk abctime;
-
-    vPivots = Fraig_NodeVecAlloc( 1000 );
-    for  i = 0; i < pMan.vNodes.nSize; i++  {
-        pNode = pMan.vNodes.pArray[i];
-
-        if pNode.nOnes == 0 || pNode.nOnes == uint32(pMan.nWordsRand) * 32 {
-            continue; }
-
-        if pNode.nRefs > 5 {
-            Fraig_NodeVecPush( vPivots, pNode );
-//            printf( "Node %6d : nRefs = %2d   Level = %3d.\n", pNode->Num, pNode->nRefs, pNode->Level );
-        }
-    }
-    fmt.Printf("Total nodes = %d. Referenced nodes = %d.\n", pMan.vNodes.nSize, vPivots.nSize);
-
-clk = Abc_Clock();
-    // count implications
-    Counter = nProved = 0;
-    for  i = 0; i < vPivots.nSize; i++  {
-        for  k = i+1; k < vPivots.nSize; k++  {
-            pNode  = vPivots.pArray[i];
-            pNode2 = vPivots.pArray[k];
-            if Fraig_NodeSimsContained( pMan, pNode, pNode2 ) != 0 {
-                if Fraig_NodeIsImplication( pMan, pNode, pNode2, -1 ) {
-                    nProved++; }
-                Counter++;
-            
-            } else if Fraig_NodeSimsContained( pMan, pNode2, pNode ) != 0 {
-                if Fraig_NodeIsImplication( pMan, pNode2, pNode, -1 ) {
-                    nProved++; }
-                Counter++;
-            }
-        }
-    }
-    fmt.Printf("Number of candidate pairs = %d.  Proved = %d.\n", Counter, nProved);
-//ABC_PRT( "Time", Abc_Clock() - clk );
-    return 0;
+func Fraig_CountPis(p *Fraig_Man_t, vars *msat.Msat_IntVec_t) int32 {
+	var count int32
+	for _, i := range msat.Msat_IntVecReadArray(vars) {
+		count += Fraig_NodeIsVar(p.vNodes.pArray[i])
+	}
+	return count
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    [Checks if pNew exists among the implication fanins of pOld.]
-
-  Description [If pNew is an implication fanin of pOld, returns 1. 
-  If Fraig_Not(pNew) is an implication fanin of pOld, return -1.
-  Otherwise returns 0.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_NodeIsInSupergate(pOld *Fraig_Node_t, pNew *Fraig_Node_t) int32 {
-    var RetValue1, RetValue2 int32;
-    // inlining of macro Fraig_Regular
-    if  ((Fraig_Node_t *)((ABC_PTRUINT_T)(pOld) & ~01))  == ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNew) & ~01)) {
-        if pOld == pNew {
-            return 1;
-        } else {
-            return -1;
-        } }
-    // inlining of macro Fraig_IsComplement
-    if  (((int32(((ABC_PTRUINT_T) (pOld) & 01)) != 0))) || Fraig_NodeIsVar(pOld) {
-        return 0; }
-    RetValue1 = Fraig_NodeIsInSupergate( pOld.p1, pNew );
-    RetValue2 = Fraig_NodeIsInSupergate( pOld.p2, pNew );
-    if RetValue1 == -1 || RetValue2 == -1 {
-        return -1; }
-    if RetValue1 ==  1 || RetValue2 ==  1 {
-        return 1; }
-    return 0;
+func Fraig_ManPrintRefs(p *Fraig_Man_t) int32 {
+	var pivots []*Fraig_Node_t
+	for _, n := range p.vNodes.pArray {
+		if n.nOnes != 0 && n.nOnes != uint32(p.nWordsRand)*32 && n.nRefs > 5 {
+			pivots = append(pivots, n)
+		}
+	}
+	fmt.Printf("Total nodes = %d. Referenced nodes = %d.\n", len(p.vNodes.pArray), len(pivots))
+	count, proved := 0, 0
+	for i, a := range pivots {
+		for _, b := range pivots[i+1:] {
+			if Fraig_NodeSimsContained(p, a, b) != 0 {
+				count++
+				if Fraig_NodeIsImplication(p, a, b, -1) != 0 {
+					proved++
+				}
+			} else if Fraig_NodeSimsContained(p, b, a) != 0 {
+				count++
+				if Fraig_NodeIsImplication(p, b, a, -1) != 0 {
+					proved++
+				}
+			}
+		}
+	}
+	fmt.Printf("Number of candidate pairs = %d.  Proved = %d.\n", count, proved)
+	return 0
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    [Returns the array of nodes to be combined into one multi-input AND-gate.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_CollectSupergate_rec(pNode *Fraig_Node_t, vSuper *Fraig_NodeVec_t, fFirst int32, fStopAtMux int32) {
-    // if the new node is complemented or a PI, another gate begins
-//    if ( Fraig_IsComplement(pNode) || Fraig_NodeIsVar(pNode) || Fraig_NodeIsMuxType(pNode) )
-    // inlining of macro Fraig_Regular
-    if (!fFirst && ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode) & ~01)) .nRefs > 1) || 
-          // inlining of macro Fraig_IsComplement
-          ((int32(((ABC_PTRUINT_T) (pNode) & 01)))) || Fraig_NodeIsVar(pNode) || 
-          (fStopAtMux && Fraig_NodeIsMuxType(pNode)) {
-        Fraig_NodeVecPushUnique( vSuper, pNode );
-        return;
-    }
-    // go through the branches
-    Fraig_CollectSupergate_rec( pNode.p1, vSuper, 0, fStopAtMux );
-    Fraig_CollectSupergate_rec( pNode.p2, vSuper, 0, fStopAtMux );
+func Fraig_NodeIsInSupergate(old, node *Fraig_Node_t) int32 {
+	if Fraig_Regular(old) == Fraig_Regular(node) {
+		if old == node {
+			return 1
+		}
+		return -1
+	}
+	if Fraig_IsComplement(old) || Fraig_NodeIsVar(old) != 0 {
+		return 0
+	}
+	a, b := Fraig_NodeIsInSupergate(old.p1, node), Fraig_NodeIsInSupergate(old.p2, node)
+	if a == -1 || b == -1 {
+		return -1
+	}
+	if a == 1 || b == 1 {
+		return 1
+	}
+	return 0
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Returns the array of nodes to be combined into one multi-input AND-gate.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_CollectSupergate(pNode *Fraig_Node_t, fStopAtMux int32) *Fraig_NodeVec_t {
-    var vSuper *Fraig_NodeVec_t;
-    vSuper = Fraig_NodeVecAlloc( 8 );
-    Fraig_CollectSupergate_rec( pNode, vSuper, 1, fStopAtMux );
-    return vSuper;
+func Fraig_CollectSupergate_rec(n *Fraig_Node_t, v *Fraig_NodeVec_t, first, stopMux int32) {
+	if first == 0 && Fraig_Regular(n).nRefs > 1 || Fraig_IsComplement(n) || Fraig_NodeIsVar(n) != 0 || stopMux != 0 && Fraig_NodeIsMuxType(n) != 0 {
+		Fraig_NodeVecPushUnique(v, n)
+		return
+	}
+	Fraig_CollectSupergate_rec(n.p1, v, 0, stopMux)
+	Fraig_CollectSupergate_rec(n.p2, v, 0, stopMux)
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_ManIncrementTravId(pMan *Fraig_Man_t) {
-    pMan.nTravIds2++;
+func Fraig_CollectSupergate(n *Fraig_Node_t, stopMux int32) *Fraig_NodeVec_t {
+	v := Fraig_NodeVecAlloc(8)
+	Fraig_CollectSupergate_rec(n, v, 1, stopMux)
+	return v
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_NodeSetTravIdCurrent(pMan *Fraig_Man_t, pNode *Fraig_Node_t) {
-    pNode.TravId2 = pMan.nTravIds2;
+func Fraig_ManIncrementTravId(p *Fraig_Man_t)                    { p.nTravIds2++ }
+func Fraig_NodeSetTravIdCurrent(p *Fraig_Man_t, n *Fraig_Node_t) { n.TravId2 = p.nTravIds2 }
+func Fraig_NodeIsTravIdCurrent(p *Fraig_Man_t, n *Fraig_Node_t) int32 {
+	return fraigBool(n.TravId2 == p.nTravIds2)
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_NodeIsTravIdCurrent(pMan *Fraig_Man_t, pNode *Fraig_Node_t) int32 {
-    return pNode.TravId2 == pMan.nTravIds2;
+func Fraig_NodeIsTravIdPrevious(p *Fraig_Man_t, n *Fraig_Node_t) int32 {
+	return fraigBool(n.TravId2 == p.nTravIds2-1)
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_NodeIsTravIdPrevious(pMan *Fraig_Man_t, pNode *Fraig_Node_t) int32 {
-    return pNode.TravId2 == pMan.nTravIds2 - 1;
-}
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
