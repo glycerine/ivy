@@ -583,26 +583,7 @@ Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(ti
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_ClassesPrepareTargets(pAig *Aig_Man_t) *Ssw_Cla_t {
-    var p *Ssw_Cla_t;
-    var pObj *Aig_Obj_t;
-    var i int32;
-    // start the classes
-    p = Ssw_ClassesStart( pAig );
-    // go through the nodes
-    p.nCands1 = 0;
-    // inlining of macro Saig_ManForEachPo
-    // inlining of macro Vec_PtrForEachEntryStop
-    for  i = 0; (i < Saig_ManPoNum(pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {
-        Ssw_ObjSetConst1Cand( pAig, Aig_ObjFanin0(pObj) );
-        p.nCands1++;
-    }
-    // allocate room for classes
-    // inlining of macro ABC_ALLOC
-    p.pMemClassesFree = p.pMemClasses = ((Aig_Obj_t * *) malloc(sizeof(Aig_Obj_t *) * (size_t)(p.nCands1)));
-//    Ssw_ClassesPrint( p, 0 );
-    return p;
-}
+
 
 /**Function*************************************************************
 
@@ -615,60 +596,7 @@ func Ssw_ClassesPrepareTargets(pAig *Aig_Man_t) *Ssw_Cla_t {
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_ClassesPreparePairs(pAig *Aig_Man_t, pvClasses **Vec_Int_t) *Ssw_Cla_t {
-    var p *Ssw_Cla_t;
-    var ppClassNew **Aig_Obj_t;
-    var pObj, pRepr, pPrev *Aig_Obj_t;
-    var i, k, nTotalObjs, nEntries, Entry int32;
-    // start the classes
-    p = Ssw_ClassesStart( pAig );
-    // count the number of entries in the classes
-    nTotalObjs = 0;
-    for  i = 0; i < Aig_ManObjNumMax(pAig); i++  {
-        nTotalObjs += pvClasses[i] ? Vec_IntSize(pvClasses[i]) : 0;
-    }
-    // allocate memory for classes
-    // inlining of macro ABC_ALLOC
-    p.pMemClasses = ((Aig_Obj_t * *) malloc(sizeof(Aig_Obj_t *) * (size_t)(nTotalObjs)));
-    // create constant-1 class
-    if pvClasses[0] {
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(pvClasses[0])) && (((Entry) = Vec_IntEntry(pvClasses[0], i)), 1); i++  {
-        assert((i == 0) == (Entry == 0), "(i == 0) == (Entry == 0)");
-        if i == 0 {
-            continue; }
-        pObj = Aig_ManObj( pAig, Entry );
-        Ssw_ObjSetConst1Cand( pAig, pObj );
-        p.nCands1++;
-    } }
-    // create classes
-    nEntries = 0;
-    for  i = 1; i < Aig_ManObjNumMax(pAig); i++  {
-        if pvClasses[i] == nil {
-            continue; }
-        // get room for storing the class
-        ppClassNew = p.pMemClasses + nEntries;
-        nEntries  += Vec_IntSize( pvClasses[i] );
-        // store the nodes of the class
-        pPrev = pRepr = Aig_ManObj( pAig, Vec_IntEntry(pvClasses[i],0) );
-        ppClassNew[0] = pRepr;
-        // inlining of macro Vec_IntForEachEntryStart
-        for  k = 1; (k < Vec_IntSize(pvClasses[i])) && (((Entry) = Vec_IntEntry(pvClasses[i], k)), 1); k++  {
-            pObj = Aig_ManObj( pAig, Entry );
-            assert(pPrev.Id < pObj.Id, "pPrev.Id < pObj.Id");
-            pPrev = pObj;
-            ppClassNew[k] = pObj;
-            Aig_ObjSetRepr( pAig, pObj, pRepr );
-        }
-        // create new class
-        Ssw_ObjAddClass( p, pRepr, ppClassNew, Vec_IntSize(pvClasses[i]) );
-    }
-    // prepare room for new classes
-    p.pMemClassesFree = p.pMemClasses + nEntries;
-    Ssw_ClassesCheck( p );
-//    Ssw_ClassesPrint( p, 0 );
-    return p;
-}
+
 
 /**Function*************************************************************
 
@@ -681,35 +609,7 @@ func Ssw_ClassesPreparePairs(pAig *Aig_Man_t, pvClasses **Vec_Int_t) *Ssw_Cla_t 
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_ClassesPreparePairsSimple(pMiter *Aig_Man_t, vPairs *Vec_Int_t) *Ssw_Cla_t {
-    var p *Ssw_Cla_t;
-    var ppClassNew **Aig_Obj_t;
-    var pObj, pRepr *Aig_Obj_t;
-    var i int32;
-    // start the classes
-    p = Ssw_ClassesStart( pMiter );
-    // allocate memory for classes
-    // inlining of macro ABC_ALLOC
-    p.pMemClasses = ((Aig_Obj_t * *) malloc(sizeof(Aig_Obj_t *) * (size_t)(Vec_IntSize(vPairs))));
-    // create classes
-    for  i = 0; i < Vec_IntSize(vPairs); i += 2  {
-        pRepr = Aig_ManObj( pMiter, Vec_IntEntry(vPairs, i) );
-        pObj  = Aig_ManObj( pMiter, Vec_IntEntry(vPairs, i+1) );
-        assert(Aig_ObjId(pRepr) < Aig_ObjId(pObj), "Aig_ObjId(pRepr) < Aig_ObjId(pObj)");
-        Aig_ObjSetRepr( pMiter, pObj, pRepr );
-        // get room for storing the class
-        ppClassNew = p.pMemClasses + i;
-        ppClassNew[0] = pRepr;
-        ppClassNew[1] = pObj;
-        // create new class
-        Ssw_ObjAddClass( p, pRepr, ppClassNew, 2 );
-    }
-    // prepare room for new classes
-    p.pMemClassesFree = nil;
-    Ssw_ClassesCheck( p );
-//    Ssw_ClassesPrint( p, 0 );
-    return p;
-}
+
 
 /**Function*************************************************************
 
