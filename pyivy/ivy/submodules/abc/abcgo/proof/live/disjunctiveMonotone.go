@@ -3,6 +3,8 @@ package live
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/misc/vec"
+	"github.com/glycerine/abcgo/proof/pdr"
 	"os"
 	"slices"
 	"strings"
@@ -78,7 +80,28 @@ func findNewDisjunctiveWith(p *aig.Graph, indexes *aigPoIndices, vectors *antece
 	return result
 }
 func findNewDisjunctiveMonotone(p *aig.Graph, indexes *aigPoIndices, vectors *antecedentConsequentVectorsStruct) []int32 {
-	return findNewDisjunctiveWith(p, indexes, vectors, SafetyOptions{}, CheckSafety)
+	var start int32
+	tester := createDisjunctiveMonotoneTester(p, indexes, vectors, &start)
+	for i := 0; i < trueOutputs(tester); i++ {
+		out := tester.Outputs()[i]
+		aig.Aig_ObjPatchFanin0(tester, out, outputDriver(tester, i).Not())
+	}
+	opts := pdr.DefaultOptions()
+	opts.SolveAll = true
+	opts.Silent = true
+	if _, err := pdr.Solve(tester, &opts); err != nil {
+		panic(err)
+	}
+	models := tester.SequentialCounterexamples()
+	var result []int32
+	if models != nil {
+		for i := 0; i < trueOutputs(tester); i++ {
+			if vec.Vec_PtrEntry(models, i) == nil && i >= int(indexes.attrPendingSignalIndex)+1 {
+				result = append(result, vectors.attrConsequentCandidates[i-int(indexes.attrPendingSignalIndex)-1])
+			}
+		}
+	}
+	return result
 }
 func vectorDifference(a, b []int32) []int32 {
 	result := []int32{}
@@ -118,7 +141,21 @@ func nextDisjunctiveLevel(p *aig.Graph, indexes *aigPoIndices, vectors *antecede
 	return result
 }
 func findNextLevelDisjunctiveMonotone(p *aig.Graph, indexes *aigPoIndices, vectors *antecedentConsequentVectorsStruct, previous [][]int32) [][]int32 {
-	return nextDisjunctiveLevel(p, indexes, vectors, previous, SafetyOptions{}, CheckSafety)
+	union := []int32{}
+	for _, group := range previous {
+		for _, id := range group {
+			Vec_IntPushUniqueLocal(&union, id)
+		}
+	}
+	candidates := vectorDifference(vectors.attrConsequentCandidates, union)
+	result := [][]int32{}
+	for _, group := range previous {
+		local := &antecedentConsequentVectorsStruct{attrAntecedents: group, attrConsequentCandidates: candidates}
+		for _, id := range findNewDisjunctiveMonotone(p, indexes, local) {
+			result = append(result, append(append([]int32(nil), group...), id))
+		}
+	}
+	return result
 }
 func FindDisjunctiveMonotone(n *Network, options SafetyOptions, checker SafetyChecker) [][]int32 {
 	if checker == nil {
@@ -138,7 +175,17 @@ func FindDisjunctiveMonotone(n *Network, options SafetyOptions, checker SafetyCh
 	return append(level1, level2...)
 }
 func findDisjunctiveMonotoneSignals(n *Network) [][]int32 {
-	return FindDisjunctiveMonotone(n, SafetyOptions{}, CheckSafety)
+	pending, hints := findPendingSignal(n), findHintOutputs(n)
+	if pending < 0 || len(hints) == 0 {
+		return nil
+	}
+	indexes := &aigPoIndices{pending, hints[0], hints[len(hints)-1], collectSafetyInvariantPOIndex(n)}
+	vectors := &antecedentConsequentVectorsStruct{attrConsequentCandidates: hints}
+	level1 := [][]int32{}
+	for _, id := range findNewDisjunctiveMonotone(n.Graph, indexes, vectors) {
+		level1 = append(level1, []int32{id})
+	}
+	return append(level1, findNextLevelDisjunctiveMonotone(n.Graph, indexes, vectors, level1)...)
 }
 func appendVecToMasterVecInt(master *[][]int32, candidates [][]int32) {
 	for _, group := range candidates {
