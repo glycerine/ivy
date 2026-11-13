@@ -119,3 +119,36 @@ func TestSswRarityTransferPreservesRegisterPatterns(t *testing.T) {
 		}
 	}
 }
+
+func TestRarityHashMatchesPhaseNormalizedEquality(t *testing.T) {
+	g := aig.NewGraph()
+	a, b := g.NewInput(), g.NewInput()
+	g.AddOutput(a)
+	g.AddOutput(b)
+	aig.Aig_ManSetRegNum(g, 1)
+	aig.Aig_ObjSetPhase(g, b, true)
+	p := Ssw_RarManStart(g, &Ssw_RarPars_t{nWords: 1, nFrames: 1, nBinSize: 1})
+	defer Ssw_RarManStop(p)
+	Ssw_RarObjSim(p, int32(a.NodeID()))[0] = 0x0123456789abcdef
+	Ssw_RarObjSim(p, int32(b.NodeID()))[0] = ^uint64(0x0123456789abcdef)
+	if Ssw_RarManObjsAreEqual(p, a, b) != 1 {
+		t.Fatal("test patterns should be phase-normalized equal")
+	}
+	if x, y := Ssw_RarManObjHashWord(p, a), Ssw_RarManObjHashWord(p, b); x != y {
+		t.Fatalf("equal patterns have different hashes: %x != %x", x, y)
+	}
+}
+
+func TestRarityRejectsInvalidCounterexample(t *testing.T) {
+	g := aig.NewGraph()
+	pi := g.NewInput()
+	g.NewInput()
+	g.AddOutput(g.Const0())
+	g.AddOutput(pi)
+	aig.Aig_ManSetRegNum(g, 1)
+	p := Ssw_RarManStart(g, &Ssw_RarPars_t{nWords: 1, nFrames: 1, nBinSize: 1})
+	defer Ssw_RarManStop(p)
+	if cex := Ssw_RarDeriveCex(p, 0, 0, 0, 0); cex != nil {
+		t.Fatal("invalid rarity counterexample must not be returned")
+	}
+}
