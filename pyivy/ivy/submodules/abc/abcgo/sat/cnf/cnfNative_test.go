@@ -143,6 +143,26 @@ func TestDeriveMappingArrayUsesObjectOffsets(t *testing.T) {
 	}
 }
 
+func TestCreateSelectedCutCopiesMapping(t *testing.T) {
+	g := aig.NewGraph()
+	a, b := g.NewInput(), g.NewInput()
+	root := g.AND(a, b)
+	g.AddOutput(root)
+	manager := Cnf_ManStart()
+	manager.pManAig = g
+	Cnf_DeriveMapping(manager)
+	selected := Cnf_ObjBestCut(manager, &root)
+	created := Cnf_CutCreate(manager, &root)
+	if selected == nil || created == nil || created == selected || !reflect.DeepEqual(created.pFanins, selected.pFanins) || !reflect.DeepEqual(created.truth, selected.truth) {
+		t.Fatalf("selected=%v created=%v", selected, created)
+	}
+	created.pFanins[0] = -1
+	created.truth[0] = 0
+	if selected.pFanins[0] < 0 || selected.truth[0] == 0 {
+		t.Fatal("created cut aliases selected mapping")
+	}
+}
+
 func cnfSatisfiableWithInputs(cnf *CNF, inputs map[int]bool) bool {
 	for assignment := 0; assignment < 1<<cnf.Variables; assignment++ {
 		matches := true

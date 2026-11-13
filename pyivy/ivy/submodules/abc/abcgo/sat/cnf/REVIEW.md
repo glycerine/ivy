@@ -11,9 +11,8 @@ the shared ISOP implementation for cut costs. The encoder uses a direct
 Tseitin representation; its internal cut mapping and clause optimization are
 not a claim of byte-for-byte or size equivalence with ABC's mapped encoder.
 
-Known limitations needing further work: `Cnf_CutCreate` does not implement
-ABC's DAR-selected-cut interface; fast cuts with more than six leaves support
-AND supergates but reject other cones. Some retained compatibility helpers
+Known limitations needing further work: fast cuts with more than six leaves
+support AND supergates but reject other cones. Some retained compatibility helpers
 remain lightly exercised. The current tests are finite and do not prove all
 graph representations or optimization paths correct.
 

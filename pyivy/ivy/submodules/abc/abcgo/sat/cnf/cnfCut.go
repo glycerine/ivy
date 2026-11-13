@@ -43,8 +43,25 @@ func Cnf_CutFromTruth(leaves []int32, truth []uint32) *Cnf_Cut_t {
 	return cut
 }
 
-func Cnf_CutCreate(_ *Cnf_Man_t, _ *Aig_Obj_t) *Cnf_Cut_t {
-	panic("cnf: selected mapping cut must be provided as Cnf_CutFromTruth")
+func Cnf_CutCreate(manager *Cnf_Man_t, object *Aig_Obj_t) *Cnf_Cut_t {
+	if manager == nil || manager.pManAig == nil || object == nil {
+		return nil
+	}
+	if len(manager.selectedCuts) == 0 {
+		Cnf_DeriveMapping(manager)
+	}
+	selected := Cnf_ObjBestCut(manager, object)
+	if selected == nil {
+		return nil
+	}
+	cut := Cnf_CutFromTruth(selected.pFanins, selected.truth)
+	cut.Cost = selected.Cost
+	for i, cover := range selected.vIsop {
+		if cover != nil {
+			cut.vIsop[i] = vec.Vec_IntDup(cover)
+		}
+	}
+	return cut
 }
 
 func Cnf_CutPrint(cut *Cnf_Cut_t) {
