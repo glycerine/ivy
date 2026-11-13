@@ -26,7 +26,9 @@ func Abc_CexAllocFull(regs, pis, frames int32) *Abc_Cex_t {
 	return p
 }
 func Abc_CexMakeTriv(regs, pis, pos, frameOut int32) *Abc_Cex_t {
-	assert(regs > 0 && pos > 0, "trivial CEX dimensions")
+	// A combinational graph has no registers but still has a valid frame-zero
+	// counterexample; the C helper's nRegs > 0 assertion excludes that case.
+	assert(regs >= 0 && pos > 0 && frameOut >= 0, "trivial CEX dimensions")
 	p := Abc_CexAlloc(regs, pis, frameOut/pos+1)
 	p.IPo = frameOut % pos
 	p.IFrame = frameOut / pos

@@ -2,6 +2,13 @@ package util
 
 import "testing"
 
+func TestCexMakeTrivCombinational(t *testing.T) {
+	p := Abc_CexMakeTriv(0, 2, 1, 0)
+	if p.NRegs != 0 || p.NPis != 2 || p.NBits != 2 || p.IPo != 0 || p.IFrame != 0 {
+		t.Fatalf("unexpected combinational witness: %+v", p)
+	}
+}
+
 func TestCounterexampleBitsAndDup(t *testing.T) {
 	p := Abc_CexCreate(2, 3, []int32{1, 0, 1, 0, 0, 0, 1, 1}, 1, 4, 0)
 	if p.NBits != 8 || Abc_CexCountOnes(p) != 4 {
