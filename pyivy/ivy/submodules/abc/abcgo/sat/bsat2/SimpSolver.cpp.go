@@ -408,15 +408,20 @@ func (p *SimpSolver) Eliminate(turnOff bool) bool {
 	return p.ok
 }
 func (p *SimpSolver) SolveSimplified(assumptions []Lit, doSimplify, turnOff bool) LBool {
+	for _, l := range assumptions {
+		if l < 0 || int(l.Var()) >= p.NumVars() {
+			panic("assumption outside solver")
+		}
+		if p.eliminated[l.Var()] {
+			panic("assumption references eliminated variable")
+		}
+	}
 	p.Model = nil
 	p.Conflict = nil
 	extraFrozen := []Var{}
 	if doSimplify && p.simplifying {
 		for _, l := range assumptions {
 			v := l.Var()
-			if p.eliminated[v] {
-				panic("assumption references eliminated variable")
-			}
 			if !p.frozen[v] {
 				p.SetFrozen(v, true)
 				extraFrozen = append(extraFrozen, v)

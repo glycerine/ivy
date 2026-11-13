@@ -5,6 +5,29 @@ import (
 	"testing"
 )
 
+func TestSimplifierRejectsEliminatedAssumptionsAfterPreprocessing(t *testing.T) {
+	for _, turnOff := range []bool{false, true} {
+		s := NewSimpSolver()
+		s.NewVariable()
+		s.NewVariable()
+		s.SetFrozen(1, true)
+		if !s.AddClause(MakeLit(0, false), MakeLit(1, false)) || !s.Eliminate(turnOff) || !s.IsEliminated(0) {
+			t.Fatal("could not prepare eliminated variable")
+		}
+		func() {
+			defer func() {
+				if recover() == nil {
+					t.Errorf("turnOff=%v: eliminated assumption accepted", turnOff)
+				}
+			}()
+			s.SolveSimplified([]Lit{MakeLit(0, true)}, false, false)
+		}()
+		if s.SolveSimplified([]Lit{MakeLit(1, false)}, false, false) != True {
+			t.Fatal("solver unusable after rejected assumption")
+		}
+	}
+}
+
 func TestSimplifyingSolverAgainstExhaustiveEnumeration(t *testing.T) {
 	rng := rand.New(rand.NewSource(431))
 	for trial := 0; trial < 500; trial++ {
