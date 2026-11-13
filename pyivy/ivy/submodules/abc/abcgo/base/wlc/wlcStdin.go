@@ -49,55 +49,6 @@ import (
   SeeAlso     []
 
 ***********************************************************************/
-func Wlc_ComputeSum(pRes string, pAdd string, nBits int32, Radix int32) {
-    var Carry byte;  var i int32; 
-    for  i = 0; i < nBits; i++  {
-        var Sum byte  = pRes[i] + pAdd[i] + Carry;
-        if Sum >= Radix {
-            Sum -= Radix;
-            Carry = 1;
-        
-        } else { 
-            Carry = 0; }
-        assert(Sum >= 0 && Sum < Radix, "Sum >= 0 && Sum < Radix");
-        pRes[i] = Sum;
-    }
-    assert(Carry == 0, "Carry == 0");
-}
-func Wlc_ConvertToRadix(pBits *uint32, Start int32, nBits int32, Radix int32) *Vec_Str_t {
-    var vRes *Vec_Str_t  = Vec_StrStart( nBits );
-    var vSum *Vec_Str_t  = Vec_StrStart( nBits );
-    var pRes string  = Vec_StrArray( vRes );
-    var pSum string  = Vec_StrArray( vSum );  var i int32;
-    assert(Radix >= 2 && Radix < 36, "Radix >= 2 && Radix < 36");
-    pSum[0] = 1;
-    // compute number
-    for  i = 0; i < nBits; i++  {
-        if Abc_InfoHasBit(pBits, Start + i) {
-            Wlc_ComputeSum( pRes, pSum, nBits, Radix ); }
-        if i < nBits - 1 {
-            Wlc_ComputeSum( pSum, pSum, nBits, Radix ); }
-    }
-    Vec_StrFree( vSum );
-    // remove zeros
-    for  i = nBits - 1; i >= 0; i--  {
-        if pRes[i] {
-            break; }
-    }
-    Vec_StrShrink( vRes, i+1 );
-    // convert to chars
-    for  ; i >= 0; i--  {
-        if pRes[i] < 10 {
-            pRes[i] += '0';
-        } else {
-            pRes[i] += 'a' - 10; }
-    }
-    Vec_StrReverseOrder( vRes );
-    if Vec_StrSize(vRes) == 0 {
-        Vec_StrPush( vRes, '0' ); }
-    Vec_StrPush( vRes, '\0' );
-    return vRes;
-}
 
 /**Function*************************************************************
 
