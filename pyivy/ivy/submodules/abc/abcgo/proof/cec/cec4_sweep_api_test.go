@@ -101,3 +101,29 @@ func TestCec4ManagerSweepGrowsFailureBitsForReducedGraph(t *testing.T) {
 		t.Fatal("direct SAT failure flags did not grow")
 	}
 }
+
+func TestCec4ManagerSweepReadsCopiesCreatedAfterFirstCall(t *testing.T) {
+	g := gia.Gia_ManStart(12)
+	a, b := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
+	x := gia.Gia_ManAppendAnd(g, a, b)
+	y := gia.Gia_ManAppendAnd(g, x, a)
+	z := gia.Gia_ManAppendAnd(g, x, b)
+	gia.Gia_ManSetPhase(g)
+	g.StartRepresentatives()
+	gia.Gia_ObjSetRepr(g, y>>1, x>>1)
+	gia.Gia_ObjSetRepr(g, z>>1, x>>1)
+	gia.Gia_ManFillValue(g)
+	for _, lit := range []int32{0, a, b, x, y} {
+		gia.Gia_ObjSetValue(gia.Gia_ManObj(g, lit>>1), lit)
+	}
+	p := Cec4_ManCreate(g, &Cec_ParFra_t{jType: 0, nBTLimit: 100, nWords: 1, nItersMax: 1})
+	p.pNew = g
+	Cec4_ManSimAlloc(p, 1)
+	if got := Cec4_ManSweepNode(p, y>>1, x>>1); got != 1 {
+		t.Fatalf("first sweep result %d", got)
+	}
+	gia.Gia_ObjSetValue(gia.Gia_ManObj(g, z>>1), z)
+	if got := Cec4_ManSweepNode(p, z>>1, x>>1); got != 1 {
+		t.Fatalf("second sweep result %d", got)
+	}
+}

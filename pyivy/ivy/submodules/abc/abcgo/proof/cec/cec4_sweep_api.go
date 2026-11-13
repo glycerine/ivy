@@ -81,6 +81,9 @@ func Cec4_ManSweepNode(p *Cec4_Man_t, id, repr int32) int32 {
 			p.copies[i] = gia.Gia_ObjValue(gia.Gia_ManObj(p.pAig, int32(i)))
 		}
 	}
+	// The reduced graph is built incrementally between calls.
+	p.copies[id] = gia.Gia_ObjValue(gia.Gia_ManObj(p.pAig, id))
+	p.copies[repr] = gia.Gia_ObjValue(gia.Gia_ManObj(p.pAig, repr))
 	p.nCallsSince++
 	if p.pPars.nSatVarMax != 0 && p.nCallsSince > p.pPars.nCallsRecycle && int32(len(p.cnf.ids)) > p.pPars.nSatVarMax {
 		p.cnf.recycle()
