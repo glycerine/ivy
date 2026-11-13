@@ -72,3 +72,20 @@ func TestGateAbstractionDirectPrimaryInputOutput(t *testing.T) {
 		}
 	}
 }
+
+func TestAbstractionDuplicationPreservesConstraintMetadata(t *testing.T) {
+	g := gia.Gia_ManStart(6)
+	x := gia.Gia_ManAppendCi(g)
+	gia.Gia_ManAppendCo(g, x)
+	gia.Gia_ManSetConstrNum(g, 1)
+	gateClasses := vec.Vec_IntStart(int(gia.Gia_ManObjNum(g)))
+	vec.Vec_IntWriteEntry(gateClasses, 0, 1)
+	gates := Gia_ManDupAbsGates(g, gateClasses)
+	if got := gia.Gia_ManConstrNum(gates); got != 1 {
+		t.Fatalf("gate abstraction constraints=%d, want 1", got)
+	}
+	flops := Gia_ManDupAbsFlops(g, vec.Vec_IntStart(0))
+	if got := gia.Gia_ManConstrNum(flops); got != 1 {
+		t.Fatalf("flop abstraction constraints=%d, want 1", got)
+	}
+}

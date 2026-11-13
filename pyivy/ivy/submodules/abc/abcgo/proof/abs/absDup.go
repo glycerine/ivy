@@ -57,6 +57,7 @@ func Gia_ManDupAbsFlops(p *Gia_Man_t, classes *Vec_Int_t) *Gia_Man_t {
 	}
 	gia.Gia_ManHashStop(dst)
 	gia.Gia_ManSetRegNum(dst, flops)
+	gia.Gia_ManSetConstrNum(dst, gia.Gia_ManConstrNum(p))
 	result := gia.Gia_ManSeqCleanup(dst)
 	gia.Gia_ManStop(dst)
 	return result
@@ -134,6 +135,7 @@ func Gia_ManDupAbsGates(p *Gia_Man_t, classes *Vec_Int_t) *Gia_Man_t {
 		ri.Value = uint32(gia.Gia_ManAppendCo(dst, gia.Gia_ObjFanin0Copy(ri)))
 	}
 	gia.Gia_ManSetRegNum(dst, int32(vec.Vec_IntSize(flops)))
+	gia.Gia_ManSetConstrNum(dst, gia.Gia_ManConstrNum(p))
 	result := gia.Gia_ManSeqCleanup(dst)
 	if gia.Gia_ManObjNum(dst) != gia.Gia_ManObjNum(result) {
 		for id := int32(0); id < gia.Gia_ManObjNum(p); id++ {
