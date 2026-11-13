@@ -142,29 +142,6 @@ func Ga2_ObjFindOrAddLit(p *Ga2_Man_t, pObj *Gia_Obj_t, f int32) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Ga2_ObjComputeTruth_rec(p *Gia_Man_t, pObj *Gia_Obj_t, fFirst int32) uint32 {
-    var Val0, Val1 uint32;
-    if pObj.fPhase && !(fFirst != 0) {
-        return pObj.Value; }
-    assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-    Val0 = Ga2_ObjComputeTruth_rec( p, Gia_ObjFanin0(pObj), 0 );
-    Val1 = Ga2_ObjComputeTruth_rec( p, Gia_ObjFanin1(pObj), 0 );
-    return (Gia_ObjFaninC0(pObj) ? ~Val0 : Val0) & (Gia_ObjFaninC1(pObj) ? ~Val1 : Val1);
-}
-var spStatic_Ga2_ManComputeTruth_uTruth5 [5]uint32 = [5]uint32{ 0xAAAAAAAA, 0xCCCCCCCC, 0xF0F0F0F0, 0xFF00FF00, 0xFFFF0000 };
-func Ga2_ManComputeTruth(p *Gia_Man_t, pRoot *Gia_Obj_t, vLeaves *Vec_Int_t) uint32 {
-    
-    var pObj *Gia_Obj_t;
-    var Res uint32;
-    var i int32;
-    Gia_ManForEachObjVec( vLeaves, p, pObj, i )
-        pObj.Value = spStatic_Ga2_ManComputeTruth_uTruth5[i];
-    Res = Ga2_ObjComputeTruth_rec( p, pRoot, 1 );
-    Gia_ManForEachObjVec( vLeaves, p, pObj, i )
-        pObj.Value = 0;
-    return Res;
-}
-
 /**Function*************************************************************
 
   Synopsis    [Returns AIG marked for CNF generation.]

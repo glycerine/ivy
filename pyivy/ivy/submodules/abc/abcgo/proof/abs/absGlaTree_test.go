@@ -28,3 +28,22 @@ func TestGlaTreeBreakAndCollect(t *testing.T) {
 		t.Fatalf("nodes %d leaves %d", vec.Vec_IntSize(nodes), vec.Vec_IntSize(leaves))
 	}
 }
+
+func TestGlaTreeTruthWithComplementedInput(t *testing.T) {
+	p := gia.Gia_ManStart(8)
+	a := gia.Gia_ManAppendCi(p)
+	b := gia.Gia_ManAppendCi(p)
+	root := gia.Gia_ManAppendAnd(p, a^1, b)
+	leaves := vec.Vec_IntAlloc(2)
+	for _, lit := range []int32{a, b} {
+		obj := gia.Gia_ManObj(p, lit>>1)
+		gia.Gia_ObjSetPhaseValue(obj, 1)
+		vec.Vec_IntPush(leaves, lit>>1)
+	}
+	if got := Ga2_ManComputeTruth(p, gia.Gia_ManObj(p, root>>1), leaves); got != 0x44444444 {
+		t.Fatalf("truth=%08x", got)
+	}
+	if gia.Gia_ManObj(p, a>>1).Value != 0 || gia.Gia_ManObj(p, b>>1).Value != 0 {
+		t.Fatal("scratch values not cleared")
+	}
+}
