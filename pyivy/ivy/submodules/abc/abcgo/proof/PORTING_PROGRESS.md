@@ -36,7 +36,7 @@ find untested behavior, not as a completion threshold.
 | `framgr` | 85.6% |
 | `int` | 87.2% |
 | `int2` | 90.8% |
-| `live` | 86.8% |
+| `live` | 87.0% |
 | `pdr` | 77.4% |
 | `ssc` | 88.8% |
 | `ssw` | 79.8% |
@@ -178,11 +178,11 @@ and representation limits described in its package notes.
   now traverse all nodes in source order and set copy mappings, including for
   unused nodes. Compiled-C tests also cover source parser cursor semantics,
   usage ordering, incomplete-source boundaries and wrapper behavior. Race
-  tests and vet pass at 86.8% statement coverage. A confirmed fidelity gap
-  remains for native constraint outputs: C's source builder includes every PO
-  and clears the constraint count, while Go's source-shaped builders filter
-  and preserve native constraints. Command adaptation, diagnostics and
-  malformed-input behavior also differ; see `live/PORTING.md`.
+  tests and vet pass at 87.0% statement coverage. Compiled-C regressions now
+  verify source builders include every PO and retain or clear constraint
+  metadata according to the specific C constructor. Native Go convenience
+  paths preserve their separate constraint behavior. Command adaptation,
+  diagnostics and malformed-input behavior still differ; see `live/PORTING.md`.
 * `pdr`: source solver context, limits, helper edge cases and graph lifecycle
   are covered. Differential tests exercise 64 machines and source-matched
   option combinations, plus invariant-file output. Package race tests and vet
