@@ -98,9 +98,15 @@ func Fra_ClassObjSetRepr(m *Fra_Man_t, object, repr aig.Edge) {
 	}
 }
 func Fra_ObjChild0Fra(m *Fra_Man_t, object aig.Edge, frame int32) aig.Edge {
+	if object.Complemented() {
+		panic("fra: complemented parent object")
+	}
 	return fraMappedChild(m, m.PManAig.Node(object).Fanins[0], frame)
 }
 func Fra_ObjChild1Fra(m *Fra_Man_t, object aig.Edge, frame int32) aig.Edge {
+	if object.Complemented() {
+		panic("fra: complemented parent object")
+	}
 	return fraMappedChild(m, m.PManAig.Node(object).Fanins[1], frame)
 }
 func fraMappedChild(m *Fra_Man_t, child aig.Edge, frame int32) aig.Edge {
