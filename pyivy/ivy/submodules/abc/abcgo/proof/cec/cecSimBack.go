@@ -10,15 +10,6 @@ import (
 )
 
 func Cec_ManCheckSat_rec(p *Gia_Man_t, o *Gia_Obj_t, value int32) int32 {
-	if value != 0 && value != 1 {
-		panic("CEC backward simulation needs a Boolean value")
-	}
-	if gia.Gia_ObjIsConst0(o) != 0 {
-		if value == 0 {
-			return 1
-		}
-		return 0
-	}
 	if gia.Gia_ObjIsTravIdCurrent(p, o) != 0 {
 		if value == gia.Gia_ObjMark0(o) {
 			return 1
@@ -54,17 +45,45 @@ func Cec_ManCheckSat_rec(p *Gia_Man_t, o *Gia_Obj_t, value int32) int32 {
 	return Cec_ManCheckSat_rec(p, a, ca)
 }
 func Cec_ManCheckSat2_rec(p *Gia_Man_t, o *Gia_Obj_t, value uint64, values *Vec_Wrd_t) uint64 {
-	if value > 1 {
-		panic("CEC backward scalar value exceeds one bit")
+	if gia.Gia_ObjIsTravIdCurrent(p, o) != 0 {
+		if value == uint64(gia.Gia_ObjMark0(o)) {
+			return 1
+		}
+		return 0
 	}
-	return uint64(Cec_ManCheckSat_rec(p, o, int32(value)))
+	gia.Gia_ObjSetTravIdCurrent(p, o)
+	gia.Gia_ObjSetMark0(o, int32(value))
+	if gia.Gia_ObjIsAnd(o) == 0 {
+		return 1
+	}
+	cecRequireAndGraph(p, o)
+	a, b := gia.Gia_ObjFanin0(o), gia.Gia_ObjFanin1(o)
+	ca, cb := gia.Gia_ObjFaninC0(o), gia.Gia_ObjFaninC1(o)
+	if value != 0 {
+		if Cec_ManCheckSat2_rec(p, a, uint64(ca^1), values) == 0 {
+			return 0
+		}
+		return Cec_ManCheckSat2_rec(p, b, uint64(cb^1), values)
+	}
+	if gia.Gia_ObjIsTravIdCurrent(p, a) != 0 {
+		if ca == gia.Gia_ObjMark0(a) {
+			return 1
+		}
+		return Cec_ManCheckSat2_rec(p, b, uint64(cb), values)
+	}
+	if gia.Gia_ObjIsTravIdCurrent(p, b) != 0 {
+		if cb == gia.Gia_ObjMark0(b) {
+			return 1
+		}
+		return Cec_ManCheckSat2_rec(p, a, uint64(ca), values)
+	}
+	return Cec_ManCheckSat2_rec(p, a, uint64(ca), values)
 }
 
-// The C wrapper was unfinished (always zero). Initialize a real justification
-// attempt instead; the recursive variant retains its existing traversal state.
+// The original wrapper is unfinished and always returns zero without
+// modifying the graph or the caller's value vector.
 func Cec_ManCheckSat2(p *Gia_Man_t, o *Gia_Obj_t, value int32, values *Vec_Wrd_t) uint64 {
-	gia.Gia_ManIncrementTravId(p)
-	return Cec_ManCheckSat2_rec(p, o, uint64(value), values)
+	return 0
 }
 func Cec_ObjSatVerify(p *Gia_Man_t, root *Gia_Obj_t, value int32) int32 {
 	fmt.Printf("Obj = %4d Value = %d ", gia.Gia_ObjId(p, root), value)

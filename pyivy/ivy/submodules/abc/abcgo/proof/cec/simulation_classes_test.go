@@ -197,3 +197,35 @@ func TestForwardSimulationSpecialGates(t *testing.T) {
 		t.Fatal("special-gate record leak")
 	}
 }
+
+// cecSimBack.c leaves Cec_ManCheckSat2 as a zero-returning stub, while its
+// separate recursive heuristic treats a fresh constant as an assignable leaf.
+func TestBackwardCheckSourceStubAndConstantBehavior(t *testing.T) {
+	g := gia.Gia_ManStart(8)
+	x := gia.Gia_ManAppendCi(g)
+	obj := gia.Gia_ManObj(g, x>>1)
+	gia.Gia_ManIncrementTravId(g)
+	if Cec_ManCheckSat2(g, obj, 1, nil) != 0 || gia.Gia_ObjIsTravIdCurrent(g, obj) != 0 {
+		t.Fatal("stub changed traversal state")
+	}
+	zero := gia.Gia_ManConst0(g)
+	if Cec_ManCheckSat_rec(g, zero, 1) != 1 || gia.Gia_ObjMark0(zero) != 1 {
+		t.Fatal("source heuristic must assign fresh constant like a leaf")
+	}
+	if Cec_ManCheckSat_rec(g, zero, 0) != 0 {
+		t.Fatal("source heuristic must reject conflicting assigned value")
+	}
+}
+
+func TestBackwardWordSourceStoresOnlyMarkBit(t *testing.T) {
+	g := gia.Gia_ManStart(4)
+	id := gia.Gia_ManAppendCi(g)
+	o := gia.Gia_ManObj(g, id>>1)
+	gia.Gia_ManIncrementTravId(g)
+	if Cec_ManCheckSat2_rec(g, o, 2, nil) != 1 || gia.Gia_ObjMark0(o) != 0 {
+		t.Fatal("source mark bit truncation")
+	}
+	if Cec_ManCheckSat2_rec(g, o, 2, nil) != 0 {
+		t.Fatal("source compares full word with stored bit")
+	}
+}

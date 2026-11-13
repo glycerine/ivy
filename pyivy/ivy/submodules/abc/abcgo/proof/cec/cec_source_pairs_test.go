@@ -92,7 +92,7 @@ func TestSourceSweepPairsAgainstABC(t *testing.T) {
 		if err != nil {
 			return err
 		}
-		if !d.IsDir() && strings.HasSuffix(path, ".o") && path != filepath.Join(src, "misc/st/st.o") {
+		if !d.IsDir() && strings.HasSuffix(path, ".o") && path != filepath.Join(src, "misc/st/st.o") && path != filepath.Join(src, "proof/cec/cecSimBack.o") {
 			objects = append(objects, path)
 		}
 		return nil
@@ -108,6 +108,11 @@ func TestSourceSweepPairsAgainstABC(t *testing.T) {
 		t.Fatalf("compile ABC st: %v %s", err, out)
 	}
 	objects = append(objects, stObject)
+	simObject := filepath.Join(dir, "cecSimBack.o")
+	if out, err := exec.Command(cc, "-DABC_USE_STDINT_H", "-I", src, "-c", filepath.Join(src, "proof/cec/cecSimBack.c"), "-o", simObject).CombinedOutput(); err != nil {
+		t.Fatalf("compile ABC backward simulation: %v %s", err, out)
+	}
+	objects = append(objects, simObject)
 	archive := filepath.Join(dir, "libabc.a")
 	args := append([]string{"qcs", archive}, objects...)
 	if out, err := exec.Command(ar, args...).CombinedOutput(); err != nil {
@@ -118,6 +123,9 @@ func TestSourceSweepPairsAgainstABC(t *testing.T) {
 	const program = `#include "aig/gia/gia.h"
 #include "proof/cec/cec.h"
 #include <stdio.h>
+extern int Cec_ManCheckSat_rec(Gia_Man_t *, Gia_Obj_t *, int);
+extern word Cec_ManCheckSat2(Gia_Man_t *, Gia_Obj_t *, int, Vec_Wrd_t *);
+extern word Cec_ManCheckSat2_rec(Gia_Man_t *, Gia_Obj_t *, word, Vec_Wrd_t *);
 int main(void) {
  int in[13],i,x,y; Gia_Man_t *g=Gia_ManStart(100),*q; Cec_ParFra_t p;
  Cec_ManFraSetDefaultParams(&p); p.nWords=1;p.nRounds=1;p.nItersMax=10;p.nBTLimit=1000;p.nDepthMax=0;p.fUseOrigIds=1;
@@ -140,6 +148,12 @@ int main(void) {
  { Gia_Man_t *g=Gia_ManStart(8); Cec_ParCec_t c; int a=Gia_ManAppendCi(g), b=Gia_ManAppendBuf(g,a);
  Gia_ManAppendCo(g,a);Gia_ManAppendCo(g,b);Cec_ManCecSetDefaultParams(&c);c.fSilent=1;
  printf("specialbuffer:%d\n",Cec_ManHandleSpecialCases(g,&c)); Gia_ManStop(g); }
+ { Gia_Man_t *g=Gia_ManStart(8); int x=Gia_ManAppendCi(g), stub, fresh, conflict;
+ Gia_ManIncrementTravId(g); stub=(int)Cec_ManCheckSat2(g,Gia_ManObj(g,x>>1),1,NULL);
+ fresh=Cec_ManCheckSat_rec(g,Gia_ManConst0(g),1); conflict=Cec_ManCheckSat_rec(g,Gia_ManConst0(g),0);
+ printf("backward:%d,%d,%d\n",stub,fresh,conflict);
+ Gia_ManIncrementTravId(g); fresh=(int)Cec_ManCheckSat2_rec(g,Gia_ManObj(g,x>>1),2,NULL); conflict=(int)Cec_ManCheckSat2_rec(g,Gia_ManObj(g,x>>1),2,NULL);
+ printf("backword:%d,%d\n",fresh,conflict); Gia_ManStop(g); }
  return 0;
 }`
 	if err = os.WriteFile(cfile, []byte(program), 0600); err != nil {
@@ -156,7 +170,7 @@ int main(void) {
 	if !strings.Contains(string(out), "reordered:1") {
 		t.Fatalf("ABC reordered CO result: %s", out)
 	}
-	if !strings.Contains(string(out), "specialbuffer:-1") || !strings.Contains(string(out), "verifytwo:1,0") || !strings.Contains(string(out), "verifytworeg:0,0,2,1") {
+	if !strings.Contains(string(out), "backword:1,0") || !strings.Contains(string(out), "backward:0,1,0") || !strings.Contains(string(out), "specialbuffer:-1") || !strings.Contains(string(out), "verifytwo:1,0") || !strings.Contains(string(out), "verifytworeg:0,0,2,1") {
 		t.Fatalf("ABC verify-two source behavior: %s", out)
 	}
 	var original []int32
