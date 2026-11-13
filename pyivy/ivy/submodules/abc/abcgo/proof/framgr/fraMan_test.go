@@ -48,3 +48,25 @@ func TestManagerCleanResetsSATMaps(t *testing.T) {
 		t.Fatal("manager maps not cleared")
 	}
 }
+
+// Fra_ManClean in fraMan.c reallocates with 5000 spare slots when the
+// requested node count grows, and zeroes both old and newly allocated slots.
+func TestManagerCleanGrowthDiscardsAllOldMappings(t *testing.T) {
+	p := &Fra_Man_t{}
+	Fra_ManClean(p, 2)
+	oldCapacity := p.NMemAlloc
+	p.PMemFanins[0] = []aig.Edge{aig.Edge(2)}
+	p.PMemSatNums[0] = 7
+	p.PMemFanins[oldCapacity-1] = []aig.Edge{aig.Edge(4)}
+	p.PMemSatNums[oldCapacity-1] = 9
+	wantSize := oldCapacity + 1
+	Fra_ManClean(p, wantSize)
+	if p.NMemAlloc != wantSize+5000 || int32(len(p.PMemFanins)) != p.NMemAlloc || int32(len(p.PMemSatNums)) != p.NMemAlloc {
+		t.Fatalf("unexpected grown mapping capacity %d", p.NMemAlloc)
+	}
+	for _, i := range []int32{0, oldCapacity - 1, oldCapacity, p.NMemAlloc - 1} {
+		if p.PMemFanins[i] != nil || p.PMemSatNums[i] != 0 {
+			t.Fatalf("mapping slot %d retained old data", i)
+		}
+	}
+}
