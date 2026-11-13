@@ -24,6 +24,13 @@ type SafetyResult struct {
 }
 type SafetyChecker func(*aig.Graph, int, SafetyOptions) SafetyResult
 
+func constraintLatchCount(n int) int32 {
+	if n > 0 {
+		return 1
+	}
+	return 0
+}
+
 // CheckSafety uses ABC's PDR engine. An explicit state budget selects the
 // bounded reachable-image checker, because PDR has no equivalent state limit.
 func CheckSafety(graph *aig.Graph, output int, options SafetyOptions) SafetyResult {
@@ -35,7 +42,7 @@ func CheckSafety(graph *aig.Graph, output int, options SafetyOptions) SafetyResu
 
 // CheckSafetyPDR checks a single output using ABC's PDR engine.
 func CheckSafetyPDR(graph *aig.Graph, output int, options SafetyOptions) SafetyResult {
-	if graph == nil || output < 0 || output >= trueOutputs(graph) {
+	if graph == nil || output < 0 || output >= trueOutputs(graph)-int(aig.Aig_ManConstrNum(graph)) {
 		return SafetyResult{Status: -1, Error: fmt.Errorf("live: invalid safety output")}
 	}
 	if err := graph.Check(); err != nil {
@@ -49,11 +56,30 @@ func CheckSafetyPDR(graph *aig.Graph, output int, options SafetyOptions) SafetyR
 	}
 	c := newGraphCopy(graph, "_pdr")
 	c.copyInputs()
-	aig.Aig_ObjCreateCo(c.destination, c.mapEdge(outputDriver(graph, output)))
-	for i := trueOutputs(graph); i < len(graph.Outputs()); i++ {
-		aig.Aig_ObjCreateCo(c.destination, c.mapEdge(outputDriver(graph, i)))
+	constraints := int(aig.Aig_ManConstrNum(graph))
+	var invalid aig.Edge
+	bad := c.mapEdge(outputDriver(graph, output))
+	if constraints > 0 {
+		// Constraint outputs are asserted for forbidden inputs. Once a
+		// violation occurs, an invalid-history latch disables future bads.
+		invalid = c.destination.NewInput()
+		invalidNow := invalid
+		for i := trueOutputs(graph) - constraints; i < trueOutputs(graph); i++ {
+			invalidNow = c.destination.OR(invalidNow, c.mapEdge(outputDriver(graph, i)))
+		}
+		bad = c.destination.AND(bad, invalidNow.Not())
+		aig.Aig_ObjCreateCo(c.destination, bad)
+		for i := trueOutputs(graph); i < len(graph.Outputs()); i++ {
+			aig.Aig_ObjCreateCo(c.destination, c.mapEdge(outputDriver(graph, i)))
+		}
+		aig.Aig_ObjCreateCo(c.destination, invalidNow)
+	} else {
+		aig.Aig_ObjCreateCo(c.destination, bad)
+		for i := trueOutputs(graph); i < len(graph.Outputs()); i++ {
+			aig.Aig_ObjCreateCo(c.destination, c.mapEdge(outputDriver(graph, i)))
+		}
 	}
-	aig.Aig_ManSetRegNum(c.destination, int32(registers(graph)))
+	aig.Aig_ManSetRegNum(c.destination, int32(registers(graph))+constraintLatchCount(constraints))
 	opts := pdr.DefaultOptions()
 	opts.Silent = true
 	opts.ConflictLimit = int32(options.ConflictLimit)
@@ -68,7 +94,7 @@ func CheckSafetyPDR(graph *aig.Graph, output int, options SafetyOptions) SafetyR
 		return SafetyResult{Status: int32(result.Status)}
 	}
 	cex := result.Outputs[0].Witness
-	if cex == nil || cex.IFrame < 0 || cex.NRegs != int32(registers(graph)) || cex.NPis != int32(trueInputs(graph)) {
+	if cex == nil || cex.IFrame < 0 || cex.NRegs != int32(registers(graph))+constraintLatchCount(constraints) || cex.NPis != int32(trueInputs(graph)) {
 		return SafetyResult{Status: -1, Error: fmt.Errorf("live: invalid PDR witness")}
 	}
 	states, inputs := make([][]bool, 0, int(cex.IFrame)+1), make([][]bool, 0, int(cex.IFrame)+1)
@@ -84,6 +110,11 @@ func CheckSafetyPDR(graph *aig.Graph, output int, options SafetyOptions) SafetyR
 		if err != nil {
 			return SafetyResult{Status: -1, Error: err}
 		}
+		for i := trueOutputs(graph) - constraints; i < trueOutputs(graph); i++ {
+			if outputs[i] {
+				return SafetyResult{Status: -1, Error: fmt.Errorf("live: PDR witness violates a constraint")}
+			}
+		}
 		if frame == cex.IFrame && !outputs[output] {
 			return SafetyResult{Status: -1, Error: fmt.Errorf("live: PDR witness does not fail selected output")}
 		}
@@ -96,7 +127,7 @@ func CheckSafetyPDR(graph *aig.Graph, output int, options SafetyOptions) SafetyR
 // CNF. SAT blocks complete next-state images, rather than enumerating inputs.
 // A completed frontier proves safety; resource limits explicitly return unknown.
 func checkSafetyImages(graph *aig.Graph, output int, options SafetyOptions) SafetyResult {
-	if graph == nil || output < 0 || output >= trueOutputs(graph) {
+	if graph == nil || output < 0 || output >= trueOutputs(graph)-int(aig.Aig_ManConstrNum(graph)) {
 		return SafetyResult{Status: -1, Error: fmt.Errorf("live: invalid safety output")}
 	}
 	if err := graph.Check(); err != nil {
@@ -183,6 +214,9 @@ func checkSafetyImages(graph *aig.Graph, output int, options SafetyOptions) Safe
 				lit ^= 1
 			}
 			assumptions = append(assumptions, lit)
+		}
+		for i := pos - int(aig.Aig_ManConstrNum(graph)); i < pos; i++ {
+			assumptions = append(assumptions, literal(outputDriver(graph, i))^1)
 		}
 		query := append(append([]bsat.Literal(nil), assumptions...), literal(outputDriver(graph, output)))
 		status := solver.Solve(query...)
