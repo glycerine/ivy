@@ -72,3 +72,9 @@ conflict/propagation/deadline limits and returns undecided instead of repeatedly
 restarting under an exhausted limit; the original search does not consult those
 configuration fields. Empty clauses and repeated root-inconsistent solves have
 defined UNSAT behavior. No known package build blockers remain.
+
+Follow-up lifecycle coverage compares 400 seeded incremental formulas with
+exhaustive assignments while repeatedly simplifying and collecting clauses.
+The full package passes `go test -race -count=1 ./sat/xsat` and
+`go vet ./sat/xsat` with `GOCACHE=/tmp/abcgo-cache`. This does not prove all
+search heuristics, memory pressure, or resource-limit interactions.
