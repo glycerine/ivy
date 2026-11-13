@@ -6,6 +6,7 @@ import (
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/aig/saig"
 	"github.com/glycerine/abcgo/misc/util"
+	"github.com/glycerine/abcgo/misc/vec"
 )
 
 func lifecycleGraph() *aig.Graph {
@@ -16,6 +17,39 @@ func lifecycleGraph() *aig.Graph {
 	g.AddOutput(latch)
 	aig.Aig_ManSetRegNum(g, 1)
 	return g
+}
+
+func TestAbstractCounterexampleRefinesUsedFlop(t *testing.T) {
+	g := lifecycleGraph()
+	p := Pdr_ManStart(g, &Pdr_Par_t{fUseAbs: 1, fUseSimpleRef: 1}, nil)
+	p.vMapPpi2Ff = vec.Vec_IntAlloc(1)
+	p.vMapFf2Ppi = vec.Vec_IntStart(1)
+	vec.Vec_IntWriteEntry(p.vMapFf2Ppi, 0, -1)
+	p.vAbsFlops = vec.Vec_IntStart(1)
+	Pdr_QueuePush(p, Pdr_OblStart(0, 0, testPdrSet(nil, []int32{2}), nil))
+	if Pdr_ManDeriveCexAbs(p) != nil || vec.Vec_IntEntry(p.vAbsFlops, 0) != 1 || p.nCexes != 1 {
+		t.Fatal("abstract input did not refine its flop")
+	}
+	Pdr_ManStop(p)
+}
+
+func TestAbstractCounterexampleUsesCareMinimization(t *testing.T) {
+	g := aig.NewGraph()
+	_ = g.NewInput()
+	latch := g.NewInput()
+	g.AddOutput(latch)
+	g.AddOutput(latch)
+	aig.Aig_ManSetRegNum(g, 1)
+	p := Pdr_ManStart(g, &Pdr_Par_t{fUseAbs: 1}, nil)
+	p.vMapPpi2Ff = vec.Vec_IntAlloc(1)
+	p.vMapFf2Ppi = vec.Vec_IntStart(1)
+	vec.Vec_IntWriteEntry(p.vMapFf2Ppi, 0, -1)
+	p.vAbsFlops = vec.Vec_IntStart(1)
+	Pdr_QueuePush(p, Pdr_OblStart(0, 0, testPdrSet(nil, []int32{2}), nil))
+	if Pdr_ManDeriveCexAbs(p) != nil || vec.Vec_IntEntry(p.vAbsFlops, 0) != 1 {
+		t.Fatal("care minimization did not refine the necessary flop")
+	}
+	Pdr_ManStop(p)
 }
 
 func TestManagerFanoutOwnership(t *testing.T) {
