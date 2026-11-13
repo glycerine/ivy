@@ -29,8 +29,9 @@ in progress; passing tests do not establish that those gaps are resolved.
 * `abs` builds and passes its full race suite and vet. The old GLA driver
   lowers native XOR/MUX nodes to ANDs and maps results back to the original
   graph; full integration review remains in progress.
-* `fra` builds and passes its full race suite and vet. SEC's nontrivial
-  SSW and proof integrations still need end-to-end validation.
+* `fra` builds and passes its full race suite and vet. SEC has small-machine
+  reachability and witness-replay tests with correspondence enabled; those
+  tests do not establish which cases enter every internal SSW stage.
 * `fraig` builds and passes its full race suite. Review has fixed constant
   traversal, equivalence polarity, and multi-output miter bugs; SAT truth
   tables, feedback, compression, and external options have tests. Review
