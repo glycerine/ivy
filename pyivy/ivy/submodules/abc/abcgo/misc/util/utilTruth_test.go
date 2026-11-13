@@ -227,3 +227,13 @@ func TestTruthBiDecompositionSharedHighVariables(t *testing.T) {
 		}
 	}
 }
+
+func TestTruthWordBitMatches32BitHalves(t *testing.T) {
+	words := []uint64{0x8000000180000002, 0x8000000180000001}
+	halves := []uint32{uint32(words[0]), uint32(words[0] >> 32), uint32(words[1]), uint32(words[1] >> 32)}
+	for i := int32(0); i < 128; i++ {
+		if got, want := Abc_TtGetBit(words, i) != 0, Abc_InfoHasBit(halves, i); got != want {
+			t.Fatalf("bit %d: 64-bit accessor = %v, 32-bit halves = %v", i, got, want)
+		}
+	}
+}
