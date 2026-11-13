@@ -143,6 +143,24 @@ func TestClauseValidationDoesNotSkipSatisfiedPrefix(t *testing.T) {
 		t.Fatal("invalid clause changed formula")
 	}
 }
+
+func TestInvalidAssumptionsDoNotDiscardModel(t *testing.T) {
+	p := New(2)
+	if !p.AddClause([]int{0}) || p.Solve(nil, 0, 0) != MSAT_TRUE {
+		t.Fatal("initial solve")
+	}
+	func() {
+		defer func() {
+			if recover() == nil {
+				t.Error("invalid assumption accepted")
+			}
+		}()
+		p.Solve([]int{2, 4}, 0, 0)
+	}()
+	if p.ModelValue(0) != 1 || p.Solve(nil, 0, 0) != MSAT_TRUE {
+		t.Fatal("invalid assumptions changed solver state")
+	}
+}
 func TestPigeonholeLearning(t *testing.T) {
 	const pigeons = 5
 	const holes = 4

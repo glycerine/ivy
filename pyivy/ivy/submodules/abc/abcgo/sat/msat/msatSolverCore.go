@@ -56,6 +56,13 @@ func Msat_SolverProgressEstimate(p *Msat_Solver_t) float64 {
 	return sum / float64(p.nVars)
 }
 func Msat_SolverSolve(p *Msat_Solver_t, assumptions *Msat_IntVec_t, backtrackLimit, timeLimit int) int {
+	if assumptions != nil {
+		for _, lit := range assumptions.data {
+			if lit < 0 || lit>>1 >= p.nVars {
+				panic("assumption variable out of range")
+			}
+		}
+	}
 	if !p.okay {
 		return int(MSAT_FALSE)
 	}
@@ -73,9 +80,6 @@ func Msat_SolverSolve(p *Msat_Solver_t, assumptions *Msat_IntVec_t, backtrackLim
 	}
 	if assumptions != nil {
 		for _, lit := range assumptions.data {
-			if lit < 0 || lit>>1 >= p.nVars {
-				panic("assumption variable out of range")
-			}
 			if Msat_SolverAssume(p, lit) == 0 || Msat_SolverPropagate(p) != nil {
 				Msat_QueueClear(p.pQueue)
 				return int(MSAT_FALSE)
