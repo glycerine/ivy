@@ -11,11 +11,15 @@ import (
 // clock-domain partition and transfers them back to the original graph.
 func Cec_SequentialSynthesisPart(p *gia.Gia_Man_t, pars *Cec_ParSeq_t) int32 {
 	start := time.Now()
+	domains := p.ClockDomains()
+	if domains == nil {
+		panic("cec: missing clock-domain partitions")
+	}
 	reprs := make([]int32, gia.Gia_ManObjNum(p))
 	for i := range reprs {
 		reprs[i] = -1
 	}
-	for index, part := range p.ClockDomains() {
+	for index, part := range domains {
 		var nPIs, nRegs int32
 		var mapping []int32
 		sub := Gia_ManRegCreatePart(p, part, &nPIs, &nRegs, &mapping)
