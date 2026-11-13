@@ -109,3 +109,22 @@ func TestSATBridgeModelValueUsesBooleanConvention(t *testing.T) {
 		t.Fatalf("false model value %d, want 0", got)
 	}
 }
+
+func TestSATBridgeFinalReturnsNegatedAssumptions(t *testing.T) {
+	s := sat_solver_from_clauses(2, [][]int32{{sat_literal(0, 0), sat_literal(1, 0)}})
+	assumptions := []int32{sat_literal(0, 1), sat_literal(1, 1)}
+	if got := sat_solver_solve(s, assumptions, 0, 0, 0, 0); got != l_False {
+		t.Fatalf("status %d", got)
+	}
+	var core []int32
+	if got := sat_solver_final(s, &core); got != 2 {
+		t.Fatalf("core size %d: %v", got, core)
+	}
+	seen := map[int32]bool{}
+	for _, lit := range core {
+		seen[lit] = true
+	}
+	if !seen[sat_literal(0, 0)] || !seen[sat_literal(1, 0)] {
+		t.Fatalf("conflict literals %v", core)
+	}
+}
