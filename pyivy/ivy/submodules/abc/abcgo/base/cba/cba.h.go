@@ -230,10 +230,6 @@ func Cba_NtkFreeFinObjs(p *Cba_Ntk_t) { Vec_IntErase(&p.vFinObj);    }
 
 func Cba_ObjType(p *Cba_Ntk_t, i int32) Cba_ObjType_t { assert(i>0, "i>0"); return (Cba_ObjType_t)int32((unsigned char))Vec_StrEntry(&p.vObjType, i);       }
 func Cba_ObjCleanType(p *Cba_Ntk_t, i int32) { assert(i>0, "i>0"); Vec_StrWriteEntry( &p.vObjType, i, byte(CBA_OBJ_NONE) );                      }
-func Cba_TypeIsBox(Type Cba_ObjType_t) int32 { return Type >= CBA_OBJ_BOX && Type < CBA_BOX_LAST;                                          }
-func Cba_TypeIsSeq(Type Cba_ObjType_t) int32 { return Type >= CBA_BOX_RAM && Type <= CBA_BOX_DFFRS;                                        }
-func Cba_TypeIsUnary(Type Cba_ObjType_t) int32 { return Type == CBA_BOX_BUF || Type == CBA_BOX_INV || Type == CBA_BOX_LNOT || Type == CBA_BOX_MIN || Type == CBA_BOX_SQRT || Type == CBA_BOX_ABS || (Type >= CBA_BOX_RAND && Type <= CBA_BOX_RXNOR);  }
-func Cba_TypeIsMux(Type Cba_ObjType_t) int32 { return Type == CBA_BOX_MUX || Type == CBA_BOX_NMUX || Type == CBA_BOX_SEL || Type == CBA_BOX_PSEL;  }
 
 func Cba_ObjIsPi(p *Cba_Ntk_t, i int32) int32 { return Cba_ObjType(p, i) == CBA_OBJ_PI;                                                     }
 func Cba_ObjIsPo(p *Cba_Ntk_t, i int32) int32 { return Cba_ObjType(p, i) == CBA_OBJ_PO;                                                     }
