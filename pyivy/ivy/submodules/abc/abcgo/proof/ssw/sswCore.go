@@ -143,9 +143,7 @@ func Ssw_SignalCorrespondence(graph *aig.Graph, pars *Ssw_Pars_t) *aig.Graph {
 	// ABC's correspondence entrypoint does not consult TimeLimit.
 	if aig.Aig_ManNodeNum(graph) == 0 {
 		pars.nIters = 0
-		if !aig.Aig_ManHasReprs(graph) {
-			aig.Aig_ManReprStart(graph, aig.Aig_ManObjNumMax(graph))
-		}
+		aig.Aig_ManReprStart(graph, aig.Aig_ManObjNumMax(graph))
 		return aig.Aig_ManDupOrdered(graph)
 	}
 	if pars.fLatchCorrOpt != 0 {
