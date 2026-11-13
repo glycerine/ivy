@@ -223,8 +223,13 @@ func Msat_SolverSearch(p *Msat_Solver_t, conflictLimit, learnedLimit, backtrackL
 			Msat_SolverCancelUntil(p, p.nLevelRoot)
 			return MSAT_TRUE
 		}
-		if conflictLimit > 0 && conflicts > conflictLimit || backtrackLimit > 0 && p.Stats.nConflicts-int64(p.nBackTracks) > int64(backtrackLimit) {
+		if conflictLimit > 0 && conflicts > conflictLimit {
 			p.dProgress = Msat_SolverProgressEstimate(p)
+			Msat_QueueClear(p.pQueue)
+			Msat_SolverCancelUntil(p, p.nLevelRoot)
+			return MSAT_UNKNOWN
+		}
+		if backtrackLimit > 0 && p.Stats.nConflicts-int64(p.nBackTracks) > int64(backtrackLimit) {
 			Msat_QueueClear(p.pQueue)
 			Msat_SolverCancelUntil(p, p.nLevelRoot)
 			return MSAT_UNKNOWN

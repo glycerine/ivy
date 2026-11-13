@@ -45,3 +45,14 @@ func TestSearchUsesSuppliedDecayValuesEvenWhenZero(t *testing.T) {
 		t.Fatalf("C reciprocal decay values: %v %v", p.dVarDecay, p.dClaDecay)
 	}
 }
+
+func TestBacktrackLimitDoesNotUpdateProgress(t *testing.T) {
+	p := New(1)
+	p.Stats.nConflicts = 2
+	p.nBackTracks = 0
+	p.dProgress = .75
+	got := Msat_SolverSearch(p, 0, 10, 1, &Msat_SearchParams_t{.95, .999})
+	if got != MSAT_UNKNOWN || p.dProgress != .75 {
+		t.Fatalf("C backtrack-limit branch leaves progress unchanged: result=%d progress=%v", got, p.dProgress)
+	}
+}
