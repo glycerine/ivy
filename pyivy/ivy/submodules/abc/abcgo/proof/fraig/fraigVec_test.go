@@ -1,6 +1,9 @@
 package fraig
 
-import "testing"
+import (
+	"testing"
+	"unsafe"
+)
 
 func TestNodeVectorOwnershipAndOrdering(t *testing.T) {
 	a := &Fraig_Node_t{Num: 3, Level: 1, nRefs: 2}
@@ -15,10 +18,17 @@ func TestNodeVectorOwnershipAndOrdering(t *testing.T) {
 	if Fraig_NodeVecPushUniqueOrder(v, b) != 1 {
 		t.Fatal("duplicate not detected")
 	}
-	want := []*Fraig_Node_t{b, Fraig_Not(b), c, a}
-	for i, node := range want {
-		if v.pArray[i] != node {
-			t.Fatalf("ordering = %v", v.pArray)
+	for i := 1; i < len(v.pArray); i++ {
+		left, right := v.pArray[i-1], v.pArray[i]
+		lp, rp := uintptr(unsafe.Pointer(Fraig_Regular(left))), uintptr(unsafe.Pointer(Fraig_Regular(right)))
+		if Fraig_IsComplement(left) {
+			lp |= 1
+		}
+		if Fraig_IsComplement(right) {
+			rp |= 1
+		}
+		if lp > rp {
+			t.Fatalf("tagged pointer order violated: %x > %x", lp, rp)
 		}
 	}
 	copy := Fraig_NodeVecDup(v)

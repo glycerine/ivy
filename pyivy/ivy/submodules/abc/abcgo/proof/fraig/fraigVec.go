@@ -1,7 +1,10 @@
 package fraig
 
 // Node-vector operations adapted from fraigVec.c by Alan Mishchenko.
-import "sort"
+import (
+	"sort"
+	"unsafe"
+)
 
 func Fraig_NodeVecAlloc(capacity int32) *Fraig_NodeVec_t {
 	if capacity < 0 {
@@ -54,14 +57,16 @@ func Fraig_NodeVecPushUnique(p *Fraig_NodeVec_t, node *Fraig_Node_t) int32 {
 	return 0
 }
 
-// Node numbers are unique within a FRAIG manager. Ordering by number and edge
-// polarity supplies the total order that C obtained from tagged addresses.
+// C orders the tagged pointer values, including the complement bit.
 func fraigEdgeLess(a, b *Fraig_Node_t) bool {
-	x, y := Fraig_Regular(a), Fraig_Regular(b)
-	if x.Num != y.Num {
-		return x.Num < y.Num
+	x, y := uintptr(unsafe.Pointer(Fraig_Regular(a))), uintptr(unsafe.Pointer(Fraig_Regular(b)))
+	if Fraig_IsComplement(a) {
+		x |= 1
 	}
-	return !Fraig_IsComplement(a) && Fraig_IsComplement(b)
+	if Fraig_IsComplement(b) {
+		y |= 1
+	}
+	return x < y
 }
 func fraigInsertOrdered(p *Fraig_NodeVec_t, node *Fraig_Node_t, less func(*Fraig_Node_t, *Fraig_Node_t) bool) {
 	Fraig_NodeVecPush(p, node)
