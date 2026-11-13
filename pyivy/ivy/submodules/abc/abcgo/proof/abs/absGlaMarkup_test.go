@@ -31,3 +31,30 @@ func TestGlaMarkupRecordsTruthAndRegisterCut(t *testing.T) {
 		})
 	}
 }
+
+func TestGlaMarkupSplitsLongCone(t *testing.T) {
+	p := gia.Gia_ManStart(20)
+	a := gia.Gia_ManAppendCi(p)
+	b := gia.Gia_ManAppendCi(p)
+	c := gia.Gia_ManAppendCi(p)
+	d := gia.Gia_ManAppendCi(p)
+	ab := gia.Gia_ManAppendAnd(p, a, b)
+	abc := gia.Gia_ManAppendAnd(p, ab, c)
+	root := gia.Gia_ManAppendAnd(p, abc, d)
+	gia.Gia_ManAppendCo(p, root)
+	if count := Ga2_ManMarkup(p, 3, 0); count != 2 {
+		t.Fatalf("expected two marked cuts, got %d", count)
+	}
+	mapping := gia.Gia_ManMapping(p)
+	for id := int32(0); id < gia.Gia_ManObjNum(p); id++ {
+		obj := gia.Gia_ManObj(p, id)
+		if gia.Gia_ObjIsAnd(obj) == 0 || gia.Gia_ObjPhase(obj) == 0 {
+			continue
+		}
+		off := int(vec.Vec_IntEntry(mapping, int(id)))
+		size := vec.Vec_IntEntry(mapping, off)
+		if size < 1 || size > 3 {
+			t.Fatalf("node %d has %d leaves", id, size)
+		}
+	}
+}
