@@ -29,7 +29,7 @@ func Fra_FraigVerifyCounterEx(p *Fra_Man_t, cex *vec.Vec_Int_t) {
 	values := make([]bool, len(g.Nodes()))
 	values[0] = true
 	for i, e := range inputs {
-		values[e.NodeID()] = vec.Vec_IntEntry(cex, i) != 0
+		values[e.NodeID()] = vec.Vec_IntEntry(cex, i)&1 != 0
 	}
 	value := func(e aig.Edge) bool { return values[e.NodeID()] != e.Complemented() }
 	for _, e := range g.LiveEdges() {
