@@ -41,3 +41,32 @@ func TestSatEquivalenceConstraint(t *testing.T) {
 		t.Fatal("constraint rejects opposite inputs")
 	}
 }
+
+func TestOutputConstraintUsesSourceFaninPolarity(t *testing.T) {
+	// sswSat.c adds a unit with !fanin-complement, i.e. output=false.
+	for _, flip := range []int32{0, 1} {
+		for _, complemented := range []bool{false, true} {
+			for _, inputValue := range []bool{false, true} {
+				g := aig.NewGraph()
+				x := g.NewInput()
+				driver := x
+				if complemented {
+					driver = driver.Not()
+				}
+				out := g.AddOutput(driver)
+				sat := Ssw_SatStart(flip)
+				sat.pAig = g
+				p := &Ssw_Man_t{pPars: &Ssw_Pars_t{fPolarFlip: flip}, pFrames: g, pMSat: sat, iOutputLit: -1}
+				if Ssw_NodeIsConstrained(p, out) != 1 {
+					t.Fatal("constraint rejected")
+				}
+				lit := sswQueryLit(p, x, !inputValue)
+				status := sat.pSat.Solve(lit)
+				if (status == bsat.Satisfiable) != (inputValue == complemented) {
+					t.Fatalf("flip=%d complement=%t input=%t status=%v", flip, complemented, inputValue, status)
+				}
+				Ssw_SatStop(sat)
+			}
+		}
+	}
+}
