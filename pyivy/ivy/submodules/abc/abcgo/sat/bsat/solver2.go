@@ -21,6 +21,16 @@ func (p *Solver2) NewVariable() int32 {
 	return v
 }
 func (p *Solver2) NumVars() int32 { return p.solver.size }
+
+// Simplify propagates root-level assignments before search. As with the C
+// solver, a false result ends the current solve: do not call Solve afterward.
+func (p *Solver2) Simplify() bool {
+	p.solver.lastStatus = Unknown
+	if p.solver.fSolved != 0 {
+		return false
+	}
+	return sat_solver2_simplify(p.solver) != 0
+}
 func (p *Solver2) AddClause(literals ...Literal) bool {
 	s := p.solver
 	s.lastStatus = Unknown

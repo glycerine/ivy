@@ -38,6 +38,21 @@ func (s *sat_solver_t) Solve(assumptions ...Literal) Status {
 	s.lastStatus = Status(sat_solver_solve(s, assumptions, s.limitConflicts, s.limitPropagations, 0, 0))
 	return s.lastStatus
 }
+
+// SolveWithResourceLimits uses per-call conflict and propagation budgets and
+// absolute cumulative conflict and propagation caps, as in ABC's
+// sat_solver_solve. Zero means unlimited; the tighter nonzero limit applies.
+// The original nInsLimit arguments count propagations, not inspections.
+// ABC checks limits using > at search boundaries, so a decisive result may
+// precede a limit check and a counter can exceed its limit. These arguments
+// apply only to this call and do not change the limits configured by SetLimits.
+func (s *sat_solver_t) SolveWithResourceLimits(assumptions []Literal, conflicts, propagations, globalConflicts, globalPropagations int64) Status {
+	if conflicts < 0 || propagations < 0 || globalConflicts < 0 || globalPropagations < 0 {
+		panic("negative SAT resource budget")
+	}
+	s.lastStatus = Status(sat_solver_solve(s, assumptions, conflicts, propagations, globalConflicts, globalPropagations))
+	return s.lastStatus
+}
 func (s *sat_solver_t) Value(variable int32) (bool, bool) {
 	if s.lastStatus != Satisfiable || variable < 0 || variable >= s.size {
 		return false, false
