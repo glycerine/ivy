@@ -295,3 +295,13 @@ covers the sequence; the race-enabled BSAT suite passes.
 Proof-reconstruction coverage now includes a formula whose sole root is an
 empty clause. The reconstructed output is checked by the independent resolution
 proof checker; the full race-enabled BSAT suite passes.
+
+### Follow-up review completion
+
+The follow-up correctness and simplicity pass covered incremental root and
+assumption handling, proof storage and reconstruction, reset, lexicographic
+solving, input validation, and gate encodings. The tests above and exhaustive
+truth tables for enabled buffers, XOR-AND gates, and half-sorters close the
+identified coverage gaps. The earlier statement that review was in progress
+describes that point in this chronological log. Finite tests do not prove all
+heuristic, resource-limit, or proof workloads.
