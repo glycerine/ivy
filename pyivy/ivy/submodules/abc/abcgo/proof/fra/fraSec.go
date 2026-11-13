@@ -84,26 +84,44 @@ func secTransferCex(original *aig.Graph, cex *util.Abc_Cex_t) bool {
 	copy.IPo = output
 	return original.SetSequentialCounterexample(copy) == nil
 }
-func secTrivialWitness(g *aig.Graph) bool {
-	inputs := int32(g.InputCount()) - g.RegisterCount()
+
+// secCopySourceCex mirrors SEC's unchecked transfer after its true-PI check.
+func secCopySourceCex(original, reduced *aig.Graph) {
+	if cex := reduced.SequentialCounterexample(); cex != nil && original.TruePiCount() == reduced.TruePiCount() {
+		_ = original.SetSequentialCounterexample(util.Abc_CexDup(cex, original.RegisterCount()))
+	}
+}
+
+// Fra_FraigSecVerified adds witness replay to the source-compatible SEC entry.
+// If SEC reports failure but no valid one-frame or recorded witness can be
+// replayed on the original graph, it returns undecided instead.
+func Fra_FraigSecVerified(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph) int32 {
+	status := Fra_FraigSec(original, pars, result)
+	if status != 0 {
+		return status
+	}
+	if secTransferCex(original, original.SequentialCounterexample()) {
+		return 0
+	}
+	inputs := int32(original.InputCount()) - original.RegisterCount()
 	for allOne := 0; allOne < 2; allOne++ {
-		cex := util.Abc_CexAlloc(g.RegisterCount(), inputs, 1)
+		cex := util.Abc_CexAlloc(original.RegisterCount(), inputs, 1)
 		if allOne != 0 {
 			for i := int32(0); i < inputs; i++ {
-				util.Abc_InfoSetBit(cex.PData, g.RegisterCount()+i)
+				util.Abc_InfoSetBit(cex.PData, original.RegisterCount()+i)
 			}
 		}
-		if output := saig.Saig_ManFindFailedPoCex(g, cex); output >= 0 {
+		if output := saig.Saig_ManFindFailedPoCex(original, cex); output >= 0 {
 			cex.IPo = output
-			if g.SetSequentialCounterexample(cex) == nil {
-				return true
+			if original.SetSequentialCounterexample(cex) == nil {
+				return 0
 			}
 		}
 	}
-	return false
+	return -1
 }
 
-// Fra_FraigSec returns 1 for equivalent, 0 for a verified counterexample,
+// Fra_FraigSec returns 1 for equivalent, 0 for a reported counterexample,
 // and -1 when the configured procedures cannot decide the miter.
 func Fra_FraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph) int32 {
 	if original == nil || pars == nil {
@@ -114,18 +132,19 @@ func Fra_FraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph) int3
 	status := Fra_FraigMiterStatus(graph)
 	timedOut := false
 	finish := func() int32 {
-		if status == -1 && timedOut && original.SequentialCounterexample() != nil &&
-			secTransferCex(original, original.SequentialCounterexample()) {
-			status = 0
-		}
+		cex := graph.SequentialCounterexample()
 		if status == 0 {
-			verified := secTransferWitness(original, graph)
-			if !verified && original.SequentialCounterexample() != nil {
-				verified = secTransferCex(original, original.SequentialCounterexample())
+			if cex == nil {
+				cex = util.Abc_CexAlloc(graph.RegisterCount(), graph.TruePiCount(), 1)
+				if saig.Saig_ManFindFailedPoCex(graph, cex) == -1 {
+					for i := int32(0); i < graph.TruePiCount(); i++ {
+						util.Abc_InfoSetBit(cex.PData, i)
+					}
+				}
 			}
-			if !verified && !secTrivialWitness(original) {
-				status = -1
-			}
+		}
+		if cex != nil && original.TruePiCount() == graph.TruePiCount() {
+			_ = original.SetSequentialCounterexample(util.Abc_CexDup(cex, original.RegisterCount()))
 		}
 		if status == -1 {
 			secSaveUnsolved(graph)
@@ -191,17 +210,14 @@ func Fra_FraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph) int3
 		ssw.Ssw_ManSetDefaultParamsLcorr(&sw)
 		previous := graph
 		graph = ssw.Ssw_LatchCorrespondence(previous, &sw)
-		if previous.SequentialCounterexample() != nil {
-			secTransferWitness(original, previous)
-		}
+		secCopySourceCex(original, previous)
 		if graph == nil {
 			graph = previous
-			if secTransferWitness(original, previous) {
-				status = 0
-			} else {
-				status = -1
-				timedOut = true
+			if original.SequentialCounterexample() != nil {
+				return 0
 			}
+			status = -1
+			timedOut = true
 			return finish()
 		}
 	}
@@ -240,10 +256,6 @@ func Fra_FraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph) int3
 			}
 			if graph == nil {
 				graph = previous
-				if secTransferWitness(original, previous) {
-					status = 0
-					return finish()
-				}
 				timedOut = true
 				break
 			}
@@ -272,8 +284,8 @@ func Fra_FraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph) int3
 					if cex := Fra_SmlGetCounterExample(sim); cex != nil {
 						_ = graph.SetSequentialCounterexample(cex)
 					}
-					status = 0
-					return finish()
+					secCopySourceCex(original, graph)
+					return 0
 				}
 			}
 		}

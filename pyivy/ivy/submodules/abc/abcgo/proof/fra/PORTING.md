@@ -12,8 +12,9 @@ suite does not establish full equivalence to ABC on every circuit or option.
   sequential graphs, with and without rewriting. Latch correspondence is
   likewise checked across generated graphs and multiple prefix settings.
 - Induction and sequential equivalence have generated-circuit tests and
-  counterexample replay tests. SEC replays witnesses on the original graph and
-  reports an undecided result when a witness cannot be validated.
+  counterexample replay tests. Source-compatible `Fra_FraigSec` preserves
+  ABC's status and unchecked witness behavior; callers needing replay may use
+  `Fra_FraigSecVerified`, which returns undecided if no witness can be validated.
 - Invariant verification only supports one induction frame. As in the C
   routine, other depths return success without any check; callers must not
   interpret that return as a proof. Malformed clause encodings are rejected

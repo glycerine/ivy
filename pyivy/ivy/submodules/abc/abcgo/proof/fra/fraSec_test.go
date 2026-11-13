@@ -25,7 +25,7 @@ func TestSecDefaultsAndTrivialMiter(t *testing.T) {
 		g.AddOutput(g.Const0())
 		aig.Aig_ManSetRegNum(g, 1)
 		opts.fSilent = 1
-		got := Fra_FraigSec(g, &opts, nil)
+		got := Fra_FraigSecVerified(g, &opts, nil)
 		want := int32(1)
 		if fails {
 			want = 0
