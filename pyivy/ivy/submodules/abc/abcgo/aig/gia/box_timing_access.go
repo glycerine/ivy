@@ -26,3 +26,6 @@ func (p *Gia_Man_t) SetBoxTiming(timing *tim.Tim_Man_t, extra *Gia_Man_t) {
 
 // Gia_ManClearLevels releases the cached level vector.
 func Gia_ManClearLevels(p *Gia_Man_t) { p.vLevels = nil }
+
+// Gia_ManHasLevels reports whether a manager owns a cached level vector.
+func Gia_ManHasLevels(p *Gia_Man_t) bool { return p.vLevels != nil }

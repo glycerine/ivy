@@ -31,3 +31,18 @@ func TestClearLevels(t *testing.T) {
 		t.Fatal("levels retained")
 	}
 }
+
+func TestHasLevels(t *testing.T) {
+	p := Gia_ManStart(4)
+	if Gia_ManHasLevels(p) {
+		t.Fatal("unexpected levels")
+	}
+	Gia_ManCleanLevels(p, 1)
+	if !Gia_ManHasLevels(p) {
+		t.Fatal("missing levels")
+	}
+	Gia_ManClearLevels(p)
+	if Gia_ManHasLevels(p) {
+		t.Fatal("levels retained")
+	}
+}
