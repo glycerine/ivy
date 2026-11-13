@@ -41,6 +41,8 @@ loop and the Go helper also panics; a non-nil empty SOP produces false.
 
 The C preimage helper refers to an undeclared manager and has no reliable
 prefix/suffix mapping contract. `Int2_ManComputePreimage` therefore returns
-nil with the existing undecided status. The suffix constructor also returns nil without a map or graph because the C
-clause loop references undeclared `vSop`. No suffix, preimage, or interpolation
-claim is made.
+nil with the existing undecided status. The suffix constructor also returns
+nil without a map or graph: its clause loop references undeclared `k` and
+`vSop`, and CNF is derived into `pNew` but read from `pSuff`. The C code
+does not provide a reliable clause or CNF contract to port. No suffix,
+preimage, or interpolation claim is made.

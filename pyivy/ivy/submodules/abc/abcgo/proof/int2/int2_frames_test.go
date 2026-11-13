@@ -148,6 +148,36 @@ func TestPrepareSuffixReportsUnsupported(t *testing.T) {
 	}
 }
 
+func TestPrepareSuffixUnsupportedWithOptionalOutputs(t *testing.T) {
+	g := testInt2InputToBadMachine()
+	for _, tc := range []struct {
+		name             string
+		mapOut, graphOut bool
+	}{
+		{"neither", false, false},
+		{"map only", true, false},
+		{"graph only", false, true},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			coMap, suffix := vec.Vec_IntAlloc(1), g
+			var mapOut **Vec_Int_t
+			var graphOut **Gia_Man_t
+			if tc.mapOut {
+				mapOut = &coMap
+			}
+			if tc.graphOut {
+				graphOut = &suffix
+			}
+			if solver := Int2_ManPrepareSuffix(g, nil, nil, mapOut, graphOut); solver != nil {
+				t.Fatal("unsupported suffix produced a solver")
+			}
+			if tc.mapOut && coMap != nil || tc.graphOut && suffix != nil {
+				t.Fatal("unsupported suffix left an output populated")
+			}
+		})
+	}
+}
+
 func TestCheckInitAgainstExhaustiveTransitions(t *testing.T) {
 	// Every pair of Boolean next-state functions over two registers.
 	for table0 := int32(0); table0 < 16; table0++ {
