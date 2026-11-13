@@ -46,3 +46,15 @@ func TestWriteQuantifiedCNFPlainAndGzip(t *testing.T) {
 		}
 	}
 }
+
+func TestReadRejectsIncorrectClauseCount(t *testing.T) {
+	for _, input := range []string{"p cnf 1 2\n1 0\n", "p cnf 1 0\n1 0\n"} {
+		name := filepath.Join(t.TempDir(), "invalid.cnf")
+		if err := os.WriteFile(name, []byte(input), 0600); err != nil {
+			t.Fatal(err)
+		}
+		if Cnf_DataReadFromFile(name) != nil {
+			t.Fatalf("accepted inconsistent header: %q", input)
+		}
+	}
+}

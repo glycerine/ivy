@@ -232,15 +232,13 @@ func Cnf_DataReadFromFile(filename string) *Cnf_Dat_t {
 			current = append(current, lit)
 		}
 	}
-	if scanner.Err() != nil || variables < 0 || len(current) != 0 {
+	if scanner.Err() != nil || variables < 0 || len(current) != 0 || declaredClauses != len(clauses) {
 		return nil
 	}
 	result := &Cnf_Dat_t_{Variables: variables, nVars: int32(variables), Clauses: clauses, pClauses: cloneClauses(clauses), VarNums: make([]int32, 0)}
 	result.nClauses = int32(len(clauses))
 	for _, clause := range clauses {
 		result.nLiterals += int32(len(clause))
-	}
-	if declaredClauses != len(clauses) { /* DIMACS permits diagnostics; actual count is authoritative. */
 	}
 	return result
 }
