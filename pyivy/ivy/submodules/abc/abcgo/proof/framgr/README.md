@@ -9,11 +9,9 @@ implication callback. The manager, parameters, simulation, class, and BMC
 state have shared type identity. The initialized BMC frame unroller and
 counterexample reconstruction are also shared with `proof/fra`.
 
-The BMC drivers remain duplicated in `proof/fra`.
-In particular, `Fra_BmcPerform` takes different routes to the shared mapped
-sweep and implication callback; the existing differential test exercises the
-callback, but does not establish equivalence for every BMC option or state.
-Consolidation of that driver still needs broader behavioral tests. The C-to-Go
-review is not yet a complete proof of source fidelity across every manager
-option and rare timeout or error path; fixes should be checked against both
-active BMC copies until they are consolidated.
+The BMC accessors, implication filter and drivers now use the shared manager.
+Before consolidating the main driver, differential tests covered both callback
+paths over multiple frame windows; the earlier implementations also shared the
+same mapped sweep, and the temporary callback state contained the exact fields
+read by the filter. The C-to-Go review is not yet a complete proof of source
+fidelity across every manager option and rare timeout or error path.

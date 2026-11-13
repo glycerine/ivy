@@ -1,15 +1,13 @@
 package fra
 
 import (
-	"slices"
 	"testing"
 
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/misc/vec"
-	"github.com/glycerine/abcgo/proof/framgr"
 )
 
-func TestBmcDriverMatchesSharedManager(t *testing.T) {
+func TestBmcDriverRefinesAcrossFrameWindows(t *testing.T) {
 	makeManager := func(imp bool) *Fra_Man_t {
 		g := aig.NewGraph()
 		x, y, state := g.NewInput(), g.NewInput(), g.NewInput()
@@ -27,16 +25,18 @@ func TestBmcDriverMatchesSharedManager(t *testing.T) {
 	for _, imp := range []bool{false, true} {
 		for prefix := int32(0); prefix < 2; prefix++ {
 			for depth := int32(1); depth <= 3; depth++ {
-				old, shared := makeManager(imp), makeManager(imp)
-				Fra_BmcPerform(old, prefix, depth)
-				framgr.Fra_BmcPerform(shared, prefix, depth)
-				if !slices.Equal(old.PCla.Reprs, shared.PCla.Reprs) || !slices.Equal(old.PCla.Constants, shared.PCla.Constants) {
-					t.Fatalf("imp=%v prefix=%d depth=%d: class results differ", imp, prefix, depth)
+				p := makeManager(imp)
+				Fra_BmcPerform(p, prefix, depth)
+				state := p.PManAig.Inputs()[2]
+				if p.PCla.Reprs[state.NodeID()] >= 0 {
+					t.Fatalf("imp=%v prefix=%d depth=%d: invalid equivalence retained", imp, prefix, depth)
 				}
-				if imp && !slices.Equal(vec.Vec_IntArray(old.PCla.VImps), vec.Vec_IntArray(shared.PCla.VImps)) {
-					t.Fatalf("imp=%v prefix=%d depth=%d: implications differ", imp, prefix, depth)
+				if imp && vec.Vec_IntSize(p.PCla.VImps) != 0 {
+					t.Fatalf("imp=%v prefix=%d depth=%d: invalid implication retained", imp, prefix, depth)
 				}
-				if old.PBmc != nil || shared.PBmc != nil { t.Fatal("BMC state not cleared") }
+				if p.PBmc != nil {
+					t.Fatal("BMC state not cleared")
+				}
 			}
 		}
 	}
