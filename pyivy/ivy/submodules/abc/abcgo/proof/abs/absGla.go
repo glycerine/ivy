@@ -207,34 +207,6 @@ var spStatic_Saig_ManBmcHashKey_s_Primes [5]int32 = [5]int32{ 12582917, 25165843
   SeeAlso     []
 
 ***********************************************************************/
-func Ga2_ObjSatValue(p *Ga2_Man_t, pObj *Gia_Obj_t, f int32) int32 {
-    var Lit int32  = Ga2_ObjFindLit( p, pObj, f );
-    assert(!Gia_ObjIsConst0(pObj), "!Gia_ObjIsConst0(pObj)");
-    if Lit == -1 {
-        return 0; }
-    if Abc_Lit2Var(Lit) >= p.pSat.size {
-        return 0; }
-    return Abc_LitIsCompl(Lit) ^ sat_solver2_var_value( p.pSat, Abc_Lit2Var(Lit) );
-}
-func Ga2_ManDeriveCex(p *Ga2_Man_t, vPis *Vec_Int_t) *Abc_Cex_t {
-    var pCex *Abc_Cex_t;
-    var pObj *Gia_Obj_t;
-    var i, f int32;
-    pCex = Abc_CexAlloc( Gia_ManRegNum(p.pGia), Gia_ManPiNum(p.pGia), p.pPars.iFrame+1 );
-    pCex.iPo = 0;
-    pCex.iFrame = p.pPars.iFrame;
-    Gia_ManForEachObjVec( vPis, p.pGia, pObj, i )
-    {
-        if !Gia_ObjIsPi(p.pGia, pObj) {
-            continue; }
-        assert(Gia_ObjIsPi(p.pGia, pObj), "Gia_ObjIsPi(p.pGia, pObj)");
-        for  f = 0; f <= pCex.iFrame; f++  {
-            if Ga2_ObjSatValue( p, pObj, f ) != 0 {
-                Abc_InfoSetBit( pCex.pData, pCex.nRegs + f * pCex.nPis + Gia_ObjCioId(pObj) ); }
-        }
-    }
-    return pCex;
-} 
 func Ga2_ManRefinePrint(p *Ga2_Man_t, vVec *Vec_Int_t) {
     var pObj, pFanin *Gia_Obj_t;
     var i, k int32;
