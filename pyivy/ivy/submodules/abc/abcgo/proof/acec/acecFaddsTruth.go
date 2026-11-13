@@ -50,15 +50,23 @@ func Dtc_ObjComputeTruth_rec(o *Gia_Obj_t) uint32 {
 	return o.Value
 }
 func Dtc_ObjCleanTruth_rec(o *Gia_Obj_t) {
-	if o.Value == 0 {
-		return
+	// A zero-valued gate may have nonzero fanins. Visit every node in the
+	// cone rather than using Value as a visited flag.
+	seen := make(map[*Gia_Obj_t]bool)
+	var clear func(*Gia_Obj_t)
+	clear = func(node *Gia_Obj_t) {
+		if seen[node] {
+			return
+		}
+		seen[node] = true
+		node.Value = 0
+		if gia.Gia_ObjIsAnd(node) == 0 {
+			return
+		}
+		clear(gia.Gia_ObjFanin0(node))
+		clear(gia.Gia_ObjFanin1(node))
 	}
-	o.Value = 0
-	if gia.Gia_ObjIsAnd(o) == 0 {
-		return
-	}
-	Dtc_ObjCleanTruth_rec(gia.Gia_ObjFanin0(o))
-	Dtc_ObjCleanTruth_rec(gia.Gia_ObjFanin1(o))
+	clear(o)
 }
 func Dtc_ObjComputeTruth(p *Gia_Man_t, id int32, cut []int32, truth *int32) int32 {
 	base := [3]uint32{0xaa, 0xcc, 0xf0}

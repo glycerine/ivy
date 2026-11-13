@@ -30,3 +30,21 @@ func TestFullAdderCutTruthClassification(t *testing.T) {
 		}
 	}
 }
+
+func TestZeroTruthCleansFanins(t *testing.T) {
+	p := gia.Gia_ManStart(16)
+	a, b := gia.Gia_ManAppendCi(p), gia.Gia_ManAppendCi(p)
+	x := gia.Gia_ManAppendAnd(p, a, b)
+	y := gia.Gia_ManAppendAnd(p, a, b^1)
+	root := gia.Gia_ManAppendAnd(p, x, y)
+	var truth int32
+	Dtc_ObjComputeTruth(p, root>>1, []int32{2, a >> 1, b >> 1}, &truth)
+	if truth != 0 {
+		t.Fatalf("truth %x", truth)
+	}
+	for id := int32(1); id < gia.Gia_ManObjNum(p); id++ {
+		if gia.Gia_ManObj(p, id).Value != 0 {
+			t.Fatalf("node %d retains scratch truth %x", id, gia.Gia_ManObj(p, id).Value)
+		}
+	}
+}
