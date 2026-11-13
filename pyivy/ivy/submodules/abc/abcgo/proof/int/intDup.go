@@ -1,205 +1,110 @@
 package int
 
-/**CFile****************************************************************
+// Graph duplication helpers ported from ABC's proof/int/intDup.c.
+// Edge maps replace the original temporary pData pointers.
+import "github.com/glycerine/abcgo/aig/aig"
 
-  FileName    [intDup.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Interpolation engine.]
-
-  Synopsis    [Specialized AIG duplication procedures.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 24, 2008.]
-
-  Revision    [$Id: intDup.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "intInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Create trivial AIG manager for the init state.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Inter_ManStartInitState(nRegs int32) *Aig_Man_t {
-    var p *Aig_Man_t;
-    var pRes *Aig_Obj_t;
-    var ppInputs **Aig_Obj_t;
-    var i int32;
-    assert(nRegs > 0, "nRegs > 0");
-    // inlining of macro ABC_ALLOC
-    ppInputs = ((Aig_Obj_t * *) malloc(sizeof(Aig_Obj_t *) * (size_t)(nRegs)));
-    p = Aig_ManStart( nRegs );
-    for  i = 0; i < nRegs; i++  {
-        ppInputs[i] = Aig_Not( Aig_ObjCreateCi(p) );
-    }
-    pRes = Aig_Multi( p, ppInputs, nRegs, AIG_OBJ_AND );
-    Aig_ObjCreateCo( p, pRes );
-    ppInputs = nil;
-    return p;
+func Inter_ManStartInitState(nRegs int32) *aig.Graph {
+	if nRegs <= 0 {
+		panic("interpolation requires at least one register")
+	}
+	g := aig.NewGraph()
+	allZero := g.Const1()
+	for i := int32(0); i < nRegs; i++ {
+		allZero = g.AND(allZero, g.NewInput().Not())
+	}
+	g.AddOutput(allZero)
+	return g
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Duplicate the AIG w/o POs.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Inter_ManStartDuplicated(p *Aig_Man_t) *Aig_Man_t {
-    var pNew *Aig_Man_t;
-    var pObj *Aig_Obj_t;
-    var i int32;
-    assert(Aig_ManRegNum(p) > 0, "Aig_ManRegNum(p) > 0");
-    // create the new manager
-    pNew = Aig_ManStart( Aig_ManObjNumMax(p) );
-    pNew.pName = Abc_UtilStrsav( p.pName );
-    pNew.pSpec = Abc_UtilStrsav( p.pSpec );
-    // create the PIs
-    Aig_ManCleanData( p );
-    Aig_ManConst1(p).pData = Aig_ManConst1(pNew);
-    // inlining of macro Aig_ManForEachCi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {
-        pObj.pData = Aig_ObjCreateCi( pNew );
-    }
-    // set registers
-    pNew.nTruePis = p.nTruePis;
-    pNew.nTruePos = Saig_ManConstrNum(p);
-    pNew.nRegs    = p.nRegs;
-    // duplicate internal nodes
-    // inlining of macro Aig_ManForEachNode
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-        pObj.pData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }
-    }
-
-    // create constraint outputs
-    // inlining of macro Saig_ManForEachPo
-    // inlining of macro Vec_PtrForEachEntryStop
-    for  i = 0; (i < Saig_ManPoNum(p)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-        if i < Saig_ManPoNum(p)-Saig_ManConstrNum(p) {
-            continue; }
-        Aig_ObjCreateCo( pNew, Aig_Not( Aig_ObjChild0Copy(pObj) ) );
-    }
-
-    // create register inputs with MUXes
-    // inlining of macro Saig_ManForEachLi
-    for  i = 0; (i < Saig_ManRegNum(p)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i+Saig_ManPoNum(p))), 1); i++  {
-        Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );
-    }
-    Aig_ManCleanup( pNew );
-    return pNew;
+// duplicateTransitionInputs maps the source's combinational inputs into a new
+// graph and optionally inserts a control input before the register outputs.
+func duplicateTransitionInputs(src *aig.Graph, control bool) (*aig.Graph, map[int]aig.Edge, aig.Edge) {
+	if src == nil || src.RegisterCount() <= 0 {
+		panic("interpolation requires a sequential graph")
+	}
+	dst := aig.NewGraph()
+	dst.Name, dst.Spec = src.Name, src.Spec
+	copies := map[int]aig.Edge{0: dst.Const1()}
+	ctrl := aig.InvalidEdge
+	inputs := src.Inputs()
+	firstReg := len(inputs) - int(src.RegisterCount())
+	for i, input := range inputs {
+		if control && i == firstReg {
+			ctrl = dst.NewInput()
+		}
+		copies[input.NodeID()] = dst.NewInput()
+	}
+	return dst, copies, ctrl
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Duplicate the AIG w/o POs and transforms to transit into init state.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Inter_ManStartOneOutput(p *Aig_Man_t, fAddFirstPo int32) *Aig_Man_t {
-    var pNew *Aig_Man_t;
-    var pObj, pObjLi, pObjLo *Aig_Obj_t;
-    var pCtrl *Aig_Obj_t  = nil; // Suppress "might be used uninitialized"
-    var i int32;
-    assert(Aig_ManRegNum(p) > 0, "Aig_ManRegNum(p) > 0");
-    // create the new manager
-    pNew = Aig_ManStart( Aig_ManObjNumMax(p) );
-    pNew.pName = Abc_UtilStrsav( p.pName );
-    pNew.pSpec = Abc_UtilStrsav( p.pSpec );
-    // create the PIs
-    Aig_ManCleanData( p );
-    Aig_ManConst1(p).pData = Aig_ManConst1(pNew);
-    // inlining of macro Aig_ManForEachCi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {
-        if i == Saig_ManPiNum(p) {
-            pCtrl = Aig_ObjCreateCi( pNew ); }
-        pObj.pData = Aig_ObjCreateCi( pNew );
-    }
-    // set registers
-    if fAddFirstPo != 0 {
-        pNew.nRegs = 0;
-    } else {
-        pNew.nRegs = p.nRegs;
-    }
-    if fAddFirstPo != 0 {
-        pNew.nTruePis = Aig_ManCiNum(p) + 1;
-    } else {
-        pNew.nTruePis = p.nTruePis + 1;
-    }
-    pNew.nTruePos = fAddFirstPo + Saig_ManConstrNum(p);
-    // duplicate internal nodes
-    // inlining of macro Aig_ManForEachNode
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-        pObj.pData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }
-    }
-
-    // create constraint outputs
-    // inlining of macro Saig_ManForEachPo
-    // inlining of macro Vec_PtrForEachEntryStop
-    for  i = 0; (i < Saig_ManPoNum(p)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-        if i < Saig_ManPoNum(p)-Saig_ManConstrNum(p) {
-            continue; }
-        Aig_ObjCreateCo( pNew, Aig_Not( Aig_ObjChild0Copy(pObj) ) );
-    }
-
-    // add the PO
-    if fAddFirstPo != 0 {
-        pObj = Aig_ManCo( p, 0 );
-        Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );
-    
-    } else {
-        // create register inputs with MUXes
-        // inlining of macro Saig_ManForEachLiLo
-        for  i = 0; (i < Saig_ManRegNum(p)) && (((pObjLi) = Saig_ManLi(p, i)), 1)            && (((pObjLo)=Saig_ManLo(p, i)), 1); i++  {
-            pObj = Aig_Mux( pNew, pCtrl, (Aig_Obj_t *)pObjLo.pData, Aig_ObjChild0Copy(pObjLi) );
-    //        pObj = Aig_Mux( pNew, pCtrl, Aig_ManConst0(pNew), Aig_ObjChild0Copy(pObjLi) );
-            Aig_ObjCreateCo( pNew, pObj );
-        }
-    }
-    Aig_ManCleanup( pNew );
-    return pNew;
+// duplicateTransitionEdge copies the source cone using an operation-local map.
+func duplicateTransitionEdge(src, dst *aig.Graph, copies map[int]aig.Edge, edge aig.Edge) aig.Edge {
+	id := edge.NodeID()
+	result, ok := copies[id]
+	if !ok {
+		node := src.Node(edge)
+		switch node.Kind {
+		case aig.And:
+			result = dst.AND(duplicateTransitionEdge(src, dst, copies, node.Fanins[0]), duplicateTransitionEdge(src, dst, copies, node.Fanins[1]))
+		case aig.ExclusiveOr:
+			result = dst.NewXor(duplicateTransitionEdge(src, dst, copies, node.Fanins[0]), duplicateTransitionEdge(src, dst, copies, node.Fanins[1]))
+		case aig.Buffer, aig.Output:
+			result = duplicateTransitionEdge(src, dst, copies, node.Fanins[0])
+		default:
+			panic("interpolation encountered an unmapped graph input")
+		}
+		copies[id] = result
+	}
+	if edge.Complemented() {
+		return result.Not()
+	}
+	return result
 }
 
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
+func appendConstraintOutputs(src, dst *aig.Graph, copies map[int]aig.Edge) {
+	outputs := src.Outputs()
+	trueOutputs := len(outputs) - int(src.RegisterCount())
+	constraints := int(aig.Aig_ManConstrNum(src))
+	for _, output := range outputs[trueOutputs-constraints : trueOutputs] {
+		driver := src.Node(output).Fanins[0]
+		dst.AddOutput(duplicateTransitionEdge(src, dst, copies, driver).Not())
+	}
+}
 
+// Inter_ManStartDuplicated retains inverted constraints and register inputs.
+func Inter_ManStartDuplicated(src *aig.Graph) *aig.Graph {
+	dst, copies, _ := duplicateTransitionInputs(src, false)
+	appendConstraintOutputs(src, dst, copies)
+	outputs := src.Outputs()
+	for _, output := range outputs[len(outputs)-int(src.RegisterCount()):] {
+		dst.AddOutput(duplicateTransitionEdge(src, dst, copies, src.Node(output).Fanins[0]))
+	}
+	aig.Aig_ManSetRegNum(dst, src.RegisterCount())
+	return dst
+}
 
-//ABC_NAMESPACE_IMPL_END
-
+// Inter_ManStartOneOutput inserts the control input used by ABC's transition
+// loop. With addFirstPO set, it exposes the first ordinary output instead.
+func Inter_ManStartOneOutput(src *aig.Graph, addFirstPO int32) *aig.Graph {
+	dst, copies, control := duplicateTransitionInputs(src, true)
+	appendConstraintOutputs(src, dst, copies)
+	outputs := src.Outputs()
+	if addFirstPO != 0 {
+		if len(outputs) <= int(src.RegisterCount()) {
+			panic("interpolation graph has no ordinary output")
+		}
+		dst.AddOutput(duplicateTransitionEdge(src, dst, copies, src.Node(outputs[0]).Fanins[0]))
+		return dst
+	}
+	inputs := src.Inputs()
+	firstReg := len(inputs) - int(src.RegisterCount())
+	firstLI := len(outputs) - int(src.RegisterCount())
+	for i := 0; i < int(src.RegisterCount()); i++ {
+		lo := copies[inputs[firstReg+i].NodeID()]
+		li := duplicateTransitionEdge(src, dst, copies, src.Node(outputs[firstLI+i]).Fanins[0])
+		dst.AddOutput(dst.Mux(control, lo, li))
+	}
+	aig.Aig_ManSetRegNum(dst, src.RegisterCount())
+	return dst
+}
