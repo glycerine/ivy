@@ -9,16 +9,44 @@ import (
 )
 
 func Msat_SolverPrintStats(p *Msat_Solver_t) {
-	fmt.Printf("MSAT solver (%d vars; %d clauses; %d learned):\nstarts: %d\nconflicts: %d\ndecisions: %d\npropagations: %d\ninspects: %d\n", p.nVars, len(p.vClauses.data), len(p.vLearned.data), p.Stats.nStarts, p.Stats.nConflicts, p.Stats.nDecisions, p.Stats.nPropagations, p.Stats.nInspects)
+	fmt.Printf("C solver (%d vars; %d clauses; %d learned):\n", p.nVars, len(p.vClauses.data), len(p.vLearned.data))
+	fmt.Printf("starts        : %d\nconflicts     : %d\ndecisions     : %d\npropagations  : %d\ninspects      : %d\n", int32(p.Stats.nStarts), int32(p.Stats.nConflicts), int32(p.Stats.nDecisions), int32(p.Stats.nPropagations), int32(p.Stats.nInspects))
 }
 func Msat_SolverPrintAssignment(p *Msat_Solver_t) {
-	for i, lit := range p.pAssigns[:p.nVars] {
-		fmt.Printf("%d: %d\n", i, lit)
+	fmt.Print("Current assignments are: \n")
+	for i := 0; i < p.nVars; i++ {
+		fmt.Printf("%d", i%10)
 	}
+	fmt.Println()
+	for i := 0; i < p.nVars; i++ {
+		lit := p.pAssigns[i]
+		if lit == MSAT_VAR_UNASSIGNED {
+			fmt.Print(".")
+			continue
+		}
+		assert(i == MSAT_LIT2VAR(lit), "assignment variable matches index")
+		if MSAT_LITSIGN(lit) != 0 {
+			fmt.Print("0")
+		} else {
+			fmt.Print("1")
+		}
+	}
+	fmt.Println()
 }
 func Msat_SolverPrintClauses(p *Msat_Solver_t) {
-	for _, c := range p.vClauses.data {
+	fmt.Println("Original clauses: ")
+	for i, c := range p.vClauses.data {
+		fmt.Printf("%3d: ", i)
 		Msat_ClausePrint(c)
+	}
+	fmt.Println("Learned clauses: ")
+	for i, c := range p.vLearned.data {
+		fmt.Printf("%3d: ", i)
+		Msat_ClausePrint(c)
+	}
+	fmt.Println("Variable activity: ")
+	for i := 0; i < p.nVars; i++ {
+		fmt.Printf("%3d : %.4f\n", i, p.pdActivity[i])
 	}
 }
 func (p *Msat_Solver_t) WriteDIMACS(w io.Writer) error {

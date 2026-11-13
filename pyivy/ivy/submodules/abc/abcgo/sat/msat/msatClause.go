@@ -188,6 +188,9 @@ func Msat_ClausePrint(c *Msat_Clause_t) {
 		fmt.Println("NULL pointer")
 		return
 	}
+	if c.learned {
+		fmt.Printf("Act = %.4f  ", c.activity)
+	}
 	for _, lit := range c.lits {
 		sign := ""
 		if lit&1 != 0 {
@@ -197,4 +200,17 @@ func Msat_ClausePrint(c *Msat_Clause_t) {
 	}
 	fmt.Println()
 }
-func Msat_ClausePrintSymbols(c *Msat_Clause_t) { Msat_ClausePrint(c) }
+func Msat_ClausePrintSymbols(c *Msat_Clause_t) {
+	if c == nil {
+		fmt.Println("NULL pointer")
+		return
+	}
+	for _, lit := range c.lits {
+		sign := ""
+		if lit&1 != 0 {
+			sign = "-"
+		}
+		fmt.Printf(" %s%d", sign, (lit>>1)+1)
+	}
+	fmt.Println()
+}

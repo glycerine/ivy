@@ -32,3 +32,11 @@ func TestSolverAllocInitialSeenID(t *testing.T) {
 		t.Fatalf("C initializes seen id to 1; next = %d", got)
 	}
 }
+
+func TestSourceDIMACSParserAcceptsCommentAfterClause(t *testing.T) {
+	var p *Msat_Solver_t
+	text := "p cnf 2 2\n1 2 0 c trailing comment\n-1 2 0\n"
+	if got := Msat_SolverParseDimacs(strings.NewReader(text), &p, 0); got != 1 {
+		t.Fatal("C accepts a comment after the clause terminator")
+	}
+}
