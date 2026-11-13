@@ -82,43 +82,6 @@ const GA2_BIG_NUM = 0x3FFFFFF0
   SeeAlso     []
 
 ***********************************************************************/
-func Ga2_ManStart(pGia *Gia_Man_t, pPars *Abs_Par_t) *Ga2_Man_t {
-    var p *Ga2_Man_t;
-    p = new(Ga2_Man_t);
-    p.timeStart = Abc_Clock();
-    p.fUseNewLine = 1;
-    // user data
-    p.pGia      = pGia;
-    p.pPars     = pPars;
-    // markings 
-    p.nMarked   = Ga2_ManMarkup( pGia, 5, pPars.fUseSimple );
-    p.vCnfs     = Vec_PtrAlloc( 1000 );
-    Vec_PtrPush( p.vCnfs, Vec_IntAlloc(0) );
-    Vec_PtrPush( p.vCnfs, Vec_IntAlloc(0) );
-    // abstraction
-    p.vIds      = Vec_IntStartFull( Gia_ManObjNum(pGia) );
-    p.vProofIds = Vec_IntAlloc( 0 );
-    p.vAbs      = Vec_IntAlloc( 1000 );
-    p.vValues   = Vec_IntAlloc( 1000 );
-    // add constant node to abstraction
-    Ga2_ObjSetId( p, Gia_ManConst0(pGia), 0 );
-    Vec_IntPush( p.vValues, 0 );
-    Vec_IntPush( p.vAbs, 0 );
-    // refinement
-    p.pRnm      = Rnm_ManStart( pGia );
-//    p->pRf2      = Rf2_ManStart( pGia );
-    // SAT solver and variables
-    p.vId2Lit   = Vec_PtrAlloc( 1000 );
-    // temporaries
-    p.vLits     = Vec_IntAlloc( 100 );
-    p.vIsopMem  = Vec_IntAlloc( 100 );
-    Cnf_ReadMsops( &p.pSopSizes, &p.pSops );
-    // hash table
-    p.nTable = Abc_PrimeCudd(1<<18);
-    p.pTable = ABC_CALLOC( int, 6 * p.nTable ); 
-    return p;
-}
-
 func Ga2_ManDumpStats(pGia *Gia_Man_t, pPars *Abs_Par_t, pSat *sat_solver2, iFrame int32, fUseN int32) {
     var pFile *os.File;
     var pFileName string // was [32]byte in C
