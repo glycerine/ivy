@@ -40,7 +40,7 @@ type Gia_Man_t struct {
 	pReprs          []Gia_Rpr_t  // representatives (for CIs and ANDs)
 	pNexts          []int32      // next nodes in the equivalence classes
 	pSibls          []int32      // next nodes in the choice nodes
-	pIso            *int32       // pairs of structurally isomorphic nodes
+	pIso            []int32      // pairs of structurally isomorphic nodes
 	nTerLoop        int32        // the state where loop begins
 	nTerStates      int32        // the total number of ternary states
 	pFanData        []int32      // the database to store fanout information
