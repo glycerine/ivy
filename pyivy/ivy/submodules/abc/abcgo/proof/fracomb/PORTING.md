@@ -67,6 +67,15 @@ against C. Independent direct comparisons with the original C implementation
 also matched 100 generated all-free and 100 mixed asserted/free output graphs;
 the source oracle cases use AND/inverter graphs, not Go's native XOR extension.
 
+`Dar_ManRwsat` has an exact ordered-graph C regression for a two-XOR chain
+and a reducible factoring example, with and without initial balancing where
+applicable. The inputs are constructed in explicit steps. C's `Aig_Exor`
+itself nests two AND calls in function arguments, whose evaluation order C does
+not specify; Go evaluates those calls left to right. Consequently graphs
+constructed independently with those helpers can have different object order
+before rewriting. The small ordered fixtures do not establish exact DAR
+rewrite equivalence for larger designs.
+
 Remaining coverage gaps: the CEC integration tests do not exercise every
 rewrite/sweep result. Resource exhaustion and learned-clause limits are not
 exhaustively characterized, and no broad performance comparison with C has been
