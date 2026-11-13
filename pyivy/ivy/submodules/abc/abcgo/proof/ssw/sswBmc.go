@@ -76,7 +76,6 @@ func Ssw_BmcDynamic(graph *aig.Graph, maxFrames, confLimit, verbose int32, lastF
 	defer Ssw_FrmStop(frm)
 	frm.pFrames = aig.Aig_ManStart(aig.Aig_ManObjNumMax(graph) * 3)
 	sat.pAig = frm.pFrames
-	sat.pSat.SetLimits(int64(confLimit), 0)
 	if verbose != 0 {
 		fmt.Printf("AIG:  PI/PO/Reg = %d/%d/%d.  Node = %6d. Lev = %5d.\n", saig.Saig_ManPiNum(graph), saig.Saig_ManPoNum(graph), saig.Saig_ManRegNum(graph), aig.Aig_ManNodeNum(graph), aig.Aig_ManLevelNum(graph))
 	}
@@ -93,7 +92,7 @@ func Ssw_BmcDynamic(graph *aig.Graph, maxFrames, confLimit, verbose int32, lastF
 			if mapped.Complemented() {
 				lit |= 1
 			}
-			status := sat.pSat.Solve(lit)
+			status := sat.pSat.SolveWithSourceLimits([]bsat.Literal{lit}, int64(confLimit), 0, 0, 0)
 			if status == bsat.Unsatisfiable {
 				result = 1
 				continue

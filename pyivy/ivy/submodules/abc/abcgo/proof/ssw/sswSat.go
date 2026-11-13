@@ -37,9 +37,8 @@ func Ssw_NodesAreEquiv(p *Ssw_Man_t, old, node aig.Edge) int32 {
 		if p.iOutputLit >= 0 {
 			assumptions = append(assumptions, p.iOutputLit)
 		}
-		sat.pSat.SetLimits(int64(p.pPars.nBTLimit), 0)
 		start := time.Now()
-		result := sat.pSat.Solve(assumptions...)
+		result := sat.pSat.SolveWithSourceLimits(assumptions, int64(p.pPars.nBTLimit), 0, 0, 0)
 		elapsed := time.Since(start)
 		p.timeSat += elapsed
 		switch result {

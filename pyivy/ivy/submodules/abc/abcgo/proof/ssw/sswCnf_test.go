@@ -75,6 +75,17 @@ func TestSswBmcDynamicProvesBoundedSafe(t *testing.T) {
 	}
 }
 
+func TestSswBmcDynamicAcceptsSourceSignedConflictLimit(t *testing.T) {
+	g := aig.NewGraph()
+	lo := g.NewInput()
+	g.AddOutput(g.Const0())
+	g.AddOutput(lo)
+	aig.Aig_ManSetRegNum(g, 1)
+	if got := Ssw_BmcDynamic(g, 1, -1, 0, nil); got != 1 {
+		t.Fatalf("constant-zero output result = %d, want source's bounded-safe result", got)
+	}
+}
+
 func TestSswBmcDynamicSourceFrameAndOutputResults(t *testing.T) {
 	g := aig.NewGraph()
 	pi, latch := g.NewInput(), g.NewInput()
