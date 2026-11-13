@@ -1,7 +1,5 @@
 package minisatp
 
-import "sort"
-
 // cancelUntil follows Solver::cancelUntil, reinserting unassigned variables
 // into the original activity heap.
 func (s *solver) cancelUntil(level int) {
@@ -64,12 +62,52 @@ func (s *solver) remove(c *clause) {
 
 func (s *solver) locked(c *clause) bool { return s.reason[c.lits[0]>>1] == c }
 
+func sortLearntClauses(clauses []*clause, seed *float64) {
+	less := func(x, y *clause) bool {
+		return len(x.lits) > 2 && (len(y.lits) == 2 || x.activity < y.activity)
+	}
+	if len(clauses) <= 15 {
+		for i := 0; i < len(clauses)-1; i++ {
+			best := i
+			for j := i + 1; j < len(clauses); j++ {
+				if less(clauses[j], clauses[best]) {
+					best = j
+				}
+			}
+			clauses[i], clauses[best] = clauses[best], clauses[i]
+		}
+		return
+	}
+	*seed *= 1389796
+	*seed -= float64(int(*seed/2147483647)) * 2147483647
+	pivot := clauses[int(*seed/2147483647*float64(len(clauses)))]
+	i, j := -1, len(clauses)
+	for {
+		for {
+			i++
+			if !less(clauses[i], pivot) {
+				break
+			}
+		}
+		for {
+			j--
+			if !less(pivot, clauses[j]) {
+				break
+			}
+		}
+		if i >= j {
+			break
+		}
+		clauses[i], clauses[j] = clauses[j], clauses[i]
+	}
+	sortLearntClauses(clauses[:i], seed)
+	sortLearntClauses(clauses[i:], seed)
+}
+
 func (s *solver) reduceDB() {
 	extra := s.claInc / float64(len(s.learnts))
-	sort.Slice(s.learnts, func(i, j int) bool {
-		x, y := s.learnts[i], s.learnts[j]
-		return len(x.lits) > 2 && (len(y.lits) == 2 || x.activity < y.activity)
-	})
+	seed := 91648253.0
+	sortLearntClauses(s.learnts, &seed)
 	kept := s.learnts[:0]
 	for i, c := range s.learnts {
 		if len(c.lits) > 2 && !s.locked(c) && (i < len(s.learnts)/2 || c.activity < extra) {
@@ -93,6 +131,10 @@ func (s *solver) simplifyDB() {
 	}
 	if len(s.trail) == s.simpAssigns || s.simpProps > 0 {
 		return
+	}
+	for _, lit := range s.trail[s.simpAssigns:] {
+		s.watches[lit] = nil
+		s.watches[lit^1] = nil
 	}
 	for _, db := range []*[]*clause{&s.clauses, &s.learnts} {
 		kept := (*db)[:0]
@@ -127,6 +169,7 @@ func (s *solver) simplifyDB() {
 // search is the no-assumptions portion of Solver::search. Additional source
 // controls and exported proof handling are still under development.
 func (s *solver) search(limit, maxLearnts int) int {
+	s.model = nil
 	count := 0
 	for {
 		if s.expired() {
@@ -178,7 +221,6 @@ func (s *solver) search(limit, maxLearnts int) int {
 }
 
 func (s *solver) solve() int {
-	s.model = nil
 	if s.expired() {
 		return -1
 	}
@@ -192,7 +234,7 @@ func (s *solver) solve() int {
 	if !s.ok {
 		return 0
 	}
-	conflicts, learnts := 100.0, float64(len(s.clauses))/3
+	conflicts, learnts := 100.0, float64(len(s.clauses)/3)
 	for {
 		result := s.search(int(conflicts), int(learnts))
 		if s.interrupted {
