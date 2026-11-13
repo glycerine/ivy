@@ -1,222 +1,149 @@
 package pdr
 
-/**CFile****************************************************************
+// Register equivalence utilities ported from pdrClass.c, Alan Mishchenko (2010).
 
-  FileName    [pdrClass.c]
+import (
+	"fmt"
 
-  SystemName  [ABC: Logic synthesis and verification system.]
+	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/misc/vec"
+)
 
-  PackageName [Property driven reachability.]
-
-  Synopsis    [Equivalence classes of register outputs.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - November 20, 2010.]
-
-  Revision    [$Id: pdrClass.c,v 1.00 2010/11/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "pdrInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Performs duplication with the variable map.]
-
-  Description [Var map contains -1 if const0 and <reg_num> otherwise.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Pdr_ManRehashWithMap(pAig *Aig_Man_t, vMap *Vec_Int_t) *Aig_Man_t {
-    var pFrames *Aig_Man_t;
-    var pObj *Aig_Obj_t;
-    var i, iReg int32;
-    assert(Vec_IntSize(vMap) == Aig_ManRegNum(pAig), "Vec_IntSize(vMap) == Aig_ManRegNum(pAig)");
-    // start the fraig package
-    pFrames = Aig_ManStart( Aig_ManObjNumMax(pAig) );
-    pFrames.pName = Abc_UtilStrsav( pAig.pName );
-    pFrames.pSpec = Abc_UtilStrsav( pAig.pSpec );
-    // create CI mapping
-    Aig_ManCleanData( pAig );
-    Aig_ManConst1(pAig).pData = Aig_ManConst1(pFrames);
-    Aig_ManForEachCi( pAig, pObj, i )
-        pObj.pData = Aig_ObjCreateCi(pFrames);
-    Saig_ManForEachLo( pAig, pObj, i )
-    {
-        iReg = Vec_IntEntry(vMap, i);
-        if iReg == -1 {
-            pObj.pData = Aig_ManConst0(pFrames);
-        } else {
-            pObj.pData = Saig_ManLo(pAig, iReg).pData; }
-    }
-    // add internal nodes of this frame
-    Aig_ManForEachNode( pAig, pObj, i )
-        pObj.pData = Aig_And( pFrames, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );
-    // add output nodes
-    Aig_ManForEachCo( pAig, pObj, i )
-        pObj.pData = Aig_ObjCreateCo( pFrames, Aig_ObjChild0Copy(pObj) );
-    // finish off
-    Aig_ManCleanup( pFrames );
-    Aig_ManSetRegNum( pFrames, Aig_ManRegNum(pAig) );
-    return pFrames;
+// Pdr_ManRehashWithMap duplicates a sequential AIG while replacing each
+// register output with zero (-1) or the specified register output.
+func Pdr_ManRehashWithMap(graph *aig.Graph, mapping *vec.Vec_Int_t) *aig.Graph {
+	if graph == nil || mapping == nil || vec.Vec_IntSize(mapping) != int(graph.RegisterCount()) {
+		panic("pdr: invalid register map")
+	}
+	result := aig.NewGraph()
+	result.Name, result.Spec = graph.Name, graph.Spec
+	inputs := graph.Inputs()
+	copies := make([]aig.Edge, len(graph.Nodes()))
+	done := make([]bool, len(copies))
+	done[0] = true
+	for _, input := range inputs {
+		copies[input.NodeID()] = result.NewInput()
+		done[input.NodeID()] = true
+	}
+	firstReg := len(inputs) - int(graph.RegisterCount())
+	for i, representative := range vec.Vec_IntArray(mapping) {
+		if representative < -1 || int(representative) >= int(graph.RegisterCount()) {
+			panic("pdr: register representative out of range")
+		}
+		id := inputs[firstReg+i].NodeID()
+		if representative == -1 {
+			copies[id] = result.Const0()
+		} else {
+			copies[id] = copies[inputs[firstReg+int(representative)].NodeID()]
+		}
+	}
+	var copyEdge func(aig.Edge) aig.Edge
+	copyEdge = func(edge aig.Edge) aig.Edge {
+		id := edge.NodeID()
+		if !done[id] {
+			node := graph.Node(edge)
+			switch node.Kind {
+			case aig.And:
+				copies[id] = result.AND(copyEdge(node.Fanins[0]), copyEdge(node.Fanins[1]))
+			case aig.ExclusiveOr:
+				copies[id] = result.NewXor(copyEdge(node.Fanins[0]), copyEdge(node.Fanins[1]))
+			case aig.Buffer, aig.Output:
+				copies[id] = copyEdge(node.Fanins[0])
+			default:
+				panic("pdr: unexpected AIG object in register map")
+			}
+			done[id] = true
+		}
+		mapped := copies[id]
+		if edge.Complemented() {
+			mapped = mapped.Not()
+		}
+		return mapped
+	}
+	for _, output := range graph.Outputs() {
+		result.AddOutput(copyEdge(graph.Node(output).Fanins[0]))
+	}
+	aig.Aig_ManCleanup(result)
+	aig.Aig_ManSetRegNum(result, graph.RegisterCount())
+	return result
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Creates mapping of registers.]
-
-  Description [Var map contains -1 if const0 and <reg_num> otherwise.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Pdr_ManCreateMap(p *Aig_Man_t) *Vec_Int_t {
-    var pObj *Aig_Obj_t;
-    var vMap *Vec_Int_t;
-    var pLit2Id *int32;
-    var Lit int32;
-    var i int32;
-    pLit2Id = ABC_ALLOC( int, Aig_ManObjNumMax(p) * 2 );
-    for  i = 0; i < Aig_ManObjNumMax(p) * 2; i++  {
-        pLit2Id[i] = -1;
-    }
-    vMap = Vec_IntAlloc( Aig_ManRegNum(p) );
-    Saig_ManForEachLi( p, pObj, i )
-    {
-        if Aig_ObjChild0(pObj) == Aig_ManConst0(p) {
-            Vec_IntPush( vMap, -1 );
-            continue;
-        }
-        Lit = 2 * Aig_ObjFaninId0(pObj) + Aig_ObjFaninC0(pObj);
-        if pLit2Id[Lit] < 0 { // the first time
-            pLit2Id[Lit] = i; }
-        Vec_IntPush( vMap, pLit2Id[Lit] );
-    }
-    ABC_FREE( pLit2Id );
-    return vMap;
+// Pdr_ManCreateMap groups register inputs with identical drivers, including
+// their polarities. A constant-zero driver is represented by -1.
+func Pdr_ManCreateMap(graph *aig.Graph) *vec.Vec_Int_t {
+	if graph == nil {
+		panic("pdr: nil graph")
+	}
+	result := vec.Vec_IntAlloc(int(graph.RegisterCount()))
+	first := make(map[aig.Edge]int32)
+	for i := int32(0); i < graph.RegisterCount(); i++ {
+		driver := graph.Node(aig.Aig_ManLi(graph, i)).Fanins[0]
+		if driver == graph.Const0() {
+			vec.Vec_IntPush(result, -1)
+			continue
+		}
+		id, found := first[driver]
+		if !found {
+			id = i
+			first[driver] = i
+		}
+		vec.Vec_IntPush(result, id)
+	}
+	return result
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Counts reduced registers.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Pdr_ManCountMap(vMap *Vec_Int_t) int32 {
-    var i, Entry, Counter int32;
-    Vec_IntForEachEntry( vMap, Entry, i )
-        if ( Entry != i )
-            Counter++;
-    return Counter;
+func Pdr_ManCountMap(mapping *vec.Vec_Int_t) int32 {
+	var count int32
+	for i, representative := range vec.Vec_IntArray(mapping) {
+		if representative != int32(i) {
+			count++
+		}
+	}
+	return count
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Counts reduced registers.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Pdr_ManPrintMap(vMap *Vec_Int_t) {
-    var vMarks *Vec_Int_t;
-    var f, i, iClass, Entry, Counter int32;
-    Abc_Print( 1, "    Consts: " );
-    Vec_IntForEachEntry( vMap, Entry, i )
-        if ( Entry == -1 )
-            Abc_Print( 1, "%d ", i );
-    Abc_Print( 1, "\n" );
-    vMarks = Vec_IntAlloc( 100 );
-    Vec_IntForEachEntry( vMap, iClass, f )
-    {
-        if iClass == -1 {
-            continue; }
-        if iClass == f {
-            continue; }
-        // check previous classes
-        if Vec_IntFind( vMarks, iClass ) >= 0 {
-            continue; }
-        Vec_IntPush( vMarks, iClass );
-        // print class
-        Abc_Print( 1, "    Class %d : ", iClass );
-        Vec_IntForEachEntry( vMap, Entry, i )
-            if ( Entry == iClass )
-                Abc_Print( 1, "%d ", i );
-        Abc_Print( 1, "\n" );
-    }
-    Vec_IntFree( vMarks );
+func Pdr_ManPrintMap(mapping *vec.Vec_Int_t) {
+	entries := vec.Vec_IntArray(mapping)
+	fmt.Print("    Consts: ")
+	for i, representative := range entries {
+		if representative == -1 {
+			fmt.Printf("%d ", i)
+		}
+	}
+	fmt.Println()
+	printed := make(map[int32]bool)
+	for i, representative := range entries {
+		if representative < 0 || representative == int32(i) || printed[representative] {
+			continue
+		}
+		printed[representative] = true
+		fmt.Printf("    Class %d : ", representative)
+		for j, candidate := range entries {
+			if candidate == representative {
+				fmt.Printf("%d ", j)
+			}
+		}
+		fmt.Println()
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Pdr_ManEquivClasses(pAig *Aig_Man_t) {
-    var vMap *Vec_Int_t;
-    var pTemp *Aig_Man_t;
-    var f int32;
-    var nFrames int32 = 100;
-    assert(Saig_ManRegNum(pAig) > 0, "Saig_ManRegNum(pAig) > 0");
-    // start the map
-    vMap = Vec_IntAlloc( 0 );
-    Vec_IntFill( vMap, Aig_ManRegNum(pAig), -1 );
-    // iterate and print changes
-    for  f = 0; f < nFrames; f++  {
-        // implement variable map
-        pTemp = Pdr_ManRehashWithMap( pAig, vMap );
-        // report the result
-        Abc_Print( 1, "F =%4d : Total = %6d. Nodes = %6d. RedRegs = %6d. Prop = %s\n", 
-            f+1, Aig_ManNodeNum(pAig), Aig_ManNodeNum(pTemp), Pdr_ManCountMap(vMap), 
-            Aig_ObjChild0(Aig_ManCo(pTemp,0)) == Aig_ManConst0(pTemp) ? "proof" : "unknown" );
-        // recreate the map
-        Pdr_ManPrintMap( vMap );
-        Vec_IntFree( vMap );
-        vMap = Pdr_ManCreateMap( pTemp );
-        Aig_ManStop( pTemp );
-        if Pdr_ManCountMap(vMap) == 0 {
-            break; }
-    }
-    Vec_IntFree( vMap );
+func Pdr_ManEquivClasses(graph *aig.Graph) {
+	if graph == nil || graph.RegisterCount() == 0 {
+		panic("pdr: expected registers")
+	}
+	mapping := vec.Vec_IntAlloc(int(graph.RegisterCount()))
+	vec.Vec_IntFill(mapping, int(graph.RegisterCount()), -1)
+	for frame := 0; frame < 100; frame++ {
+		reduced := Pdr_ManRehashWithMap(graph, mapping)
+		property := "unknown"
+		if reduced.OutputCount() > 0 && reduced.Node(reduced.Outputs()[0]).Fanins[0] == reduced.Const0() {
+			property = "proof"
+		}
+		fmt.Printf("F =%4d : Total = %6d. Nodes = %6d. RedRegs = %6d. Prop = %s\n", frame+1, aig.Aig_ManNodeNum(graph), aig.Aig_ManNodeNum(reduced), Pdr_ManCountMap(mapping), property)
+		Pdr_ManPrintMap(mapping)
+		mapping = Pdr_ManCreateMap(reduced)
+		if Pdr_ManCountMap(mapping) == 0 {
+			break
+		}
+	}
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
