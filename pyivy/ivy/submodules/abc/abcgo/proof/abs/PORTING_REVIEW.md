@@ -4,6 +4,13 @@ The `proof/abs` package is translated and builds. Its current test suite runs
 against the real VTA, GLA, old GLA, SAT, BDD, PDR, and optional SSW prover
 components. Package race tests and `go vet` are required after changes.
 
+ABS timeout clocks follow ABC's platform choices where supported: Linux uses
+thread CPU time; POSIX systems with `getrusage` use process CPU time; and
+Windows uses elapsed time, as Microsoft CRT `clock()` does. The Windows
+clock does not reproduce the CRT's 32-bit overflow after about 24.8 days.
+Targets without an implemented clock reject timed runs explicitly. Existing
+ABS driver checks may poll for expiration more often than the C solver.
+
 The review added exhaustive small-state checks for both GLA drivers: every
 one-input, one-register transition/property pair is compared against all
 three-frame input traces, with returned witnesses replayed on the original
