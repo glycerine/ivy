@@ -32,3 +32,9 @@ implementation is present for a direct LSAT-specific search-trace comparison.
    four state/ownership cases; they pass. Engine enhancements needed by this
    frontend (polarity, decision eligibility and root-value queries) are covered
    by frontend propagation and phase-selection tests.
+
+Follow-up tests compare 3,600 incremental queries and their conflict cores
+against exhaustive assignments. Invalid clauses are validated before the shared
+Satoko engine grows its variable set; a regression checks that the solver
+remains usable after the panic. `go test -race -count=1 ./sat/lsat ./sat/satoko`
+and `go vet ./sat/lsat ./sat/satoko` pass with `GOCACHE=/tmp/abcgo-cache`.
