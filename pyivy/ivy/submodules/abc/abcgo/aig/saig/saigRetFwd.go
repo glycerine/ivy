@@ -232,6 +232,7 @@ func Saig_ManRetimeDupForward(graph *aig.Graph, cut *vec.Vec_Ptr_t) *aig.Graph {
 	}
 	aig.Aig_ManSetRegNum(dst, int32(vec.Vec_PtrSize(cut)))
 	aig.Aig_ManSetConstrNum(dst, aig.Aig_ManConstrNum(graph))
+	dst.Assertions = graph.Assertions
 	aig.Aig_ManCleanup(dst)
 	return dst
 }

@@ -183,16 +183,16 @@ func Saig_ManRetimeDupBackward(src *aig.Graph, cut *vec.Vec_Ptr_t, initial *vec.
 	for i := range cutEdges {
 		known[cutEdges[i].NodeID()] = false
 	}
+	mapped[0], known[0] = dst.Const1(), true
 	for i := 0; i < piCount; i++ {
 		e := inputs[i]
 		mapped[e.NodeID()], known[e.NodeID()] = dst.Inputs()[i], true
 	}
-	for i, edge := range outputs[:poCount] {
-		_ = i
-		dst.AddOutput(copyEdge(aig.Aig_ObjChild0(src, edge)))
-	}
 	for i := range next {
 		mapped[inputs[piCount+i].NodeID()], known[inputs[piCount+i].NodeID()] = next[i], true
+	}
+	for _, edge := range outputs[:poCount] {
+		dst.AddOutput(copyEdge(aig.Aig_ObjChild0(src, edge)))
 	}
 	for i, edge := range cutEdges {
 		phase := false
@@ -202,6 +202,8 @@ func Saig_ManRetimeDupBackward(src *aig.Graph, cut *vec.Vec_Ptr_t, initial *vec.
 		dst.AddOutput(edgeNotIf(copyEdge(edge), phase))
 	}
 	aig.Aig_ManSetRegNum(dst, int32(len(cutEdges)))
+	aig.Aig_ManSetConstrNum(dst, aig.Aig_ManConstrNum(src))
+	dst.Assertions = src.Assertions
 	return dst
 }
 
@@ -324,102 +326,109 @@ func Saig_ManExposeBadRegs(graph *aig.Graph, count int32) {
 	aig.Aig_ManSetRegNum(graph, aig.Aig_ManRegNum(graph)+count)
 }
 
-// Saig_ManRetimeMinAreaBackward currently uses a native frontier heuristic:
-// move latches across their immediate fanin gates when that strictly reduces
-// the interface. The former Nwk_ManDeriveRetimingCut dependency is not ported.
+// Saig_ManRetimeMinAreaBackward derives the source minimum cut and retries
+// after excluding registers whose initial constraints have no solution.
 func Saig_ManRetimeMinAreaBackward(graph *aig.Graph, verbose int32) *aig.Graph {
 	if graph == nil || aig.Aig_ManRegNum(graph) == 0 {
 		return nil
 	}
-	cut := vec.Vec_PtrAlloc(8)
-	seen := make(map[int]bool)
-	for reg := int32(0); reg < Saig_ManRegNum(graph); reg++ {
-		driver := aig.Aig_ObjChild0(graph, Saig_ManLi(graph, reg))
-		if aig.Aig_ObjIsNode(graph, driver) && !seen[driver.NodeID()] {
-			seen[driver.NodeID()] = true
-			vec.Vec_PtrPush(cut, aig.Aig_Regular(driver))
-		}
-	}
-	if vec.Vec_PtrSize(cut) >= int(Saig_ManRegNum(graph)) {
+	bad := Saig_ManGetRegistersToExclude(graph)
+	// Hiding appends register outputs to the ordinary-output section. That
+	// would move them behind trailing constraint outputs, changing their role.
+	if aig.Aig_ManConstrNum(graph) != 0 && vec.Vec_PtrSize(bad) != 0 {
 		return nil
 	}
-	// This heuristic is not the original network-cut algorithm. A candidate
-	// is usable only if it intercepts every latch-input cone; otherwise the
-	// initial-state duplication cannot define the missing primary inputs.
-	covered := make(map[int]bool, vec.Vec_PtrSize(cut))
-	for _, item := range vec.Vec_PtrArray(cut) {
-		covered[item.(aig.Edge).NodeID()] = true
+	if verbose != 0 && vec.Vec_PtrSize(bad) > 0 {
+		fmt.Printf("Excluding %d registers that cannot be backward retimed.\n", vec.Vec_PtrSize(bad))
 	}
-	checked := make(map[int]bool)
-	var covers func(aig.Edge) bool
-	covers = func(edge aig.Edge) bool {
-		if edge.NodeID() == 0 || covered[edge.NodeID()] {
-			return true
-		}
-		if checked[edge.NodeID()] {
-			return false
-		}
-		checked[edge.NodeID()] = true
-		node := graph.Node(edge)
-		switch node.Kind {
-		case aig.And, aig.ExclusiveOr:
-			if covers(node.Fanins[0]) && covers(node.Fanins[1]) {
-				covered[edge.NodeID()] = true
-				return true
-			}
-		case aig.Buffer, aig.Output:
-			if covers(node.Fanins[0]) {
-				covered[edge.NodeID()] = true
-				return true
-			}
-		}
-		return false
-	}
-	for reg := int32(0); reg < Saig_ManRegNum(graph); reg++ {
-		if !covers(aig.Aig_ObjChild0(graph, Saig_ManLi(graph, reg))) {
+	for {
+		Saig_ManHideBadRegs(graph, bad)
+		edges := saigRetimeMinCut(graph, false)
+		if len(edges) >= int(graph.RegisterCount()) {
 			return nil
 		}
+		cut := vec.Vec_PtrAlloc(len(edges))
+		for _, edge := range edges {
+			vec.Vec_PtrPush(cut, edge)
+		}
+		initialGraph := Saig_ManRetimeDupInitState(graph, cut)
+		initial := Saig_ManRetimeInitState(initialGraph)
+		if initial != nil {
+			return Saig_ManRetimeDupBackward(graph, cut, initial)
+		}
+		badReg := Saig_ManRetimeUnsatCore(initialGraph, verbose)
+		if badReg < 0 || badReg >= graph.RegisterCount() {
+			return nil
+		}
+		if aig.Aig_ManConstrNum(graph) != 0 {
+			return nil
+		}
+		if verbose != 0 {
+			fmt.Printf("Excluding register %d.\n", badReg)
+		}
+		bad = vec.Vec_PtrAlloc(1)
+		vec.Vec_PtrPush(bad, Saig_ManLi(graph, badReg))
 	}
-	initialGraph := Saig_ManRetimeDupInitState(graph, cut)
-	initial := Saig_ManRetimeInitState(initialGraph)
-	if initial == nil {
-		return nil
-	}
-	result := Saig_ManRetimeDupBackward(graph, cut, initial)
-	if result != nil && verbose != 0 {
-		fmt.Printf("Backward retiming moved %d registers across a native frontier.\n", vec.Vec_PtrSize(cut))
-	}
-	return result
 }
 
-// Saig_ManRetimeMinArea applies forward retiming repeatedly, then backward
-// retiming unless constrained by the caller's mode flags.
+// Saig_ManRetimeMinArea follows ABC's minimum-cut forward and backward
+// retiming passes, preserving zero initial state when requested.
 func Saig_ManRetimeMinArea(graph *aig.Graph, maxIterations, forwardOnly, backwardOnly, initialState, verbose int32) *aig.Graph {
 	if graph == nil {
 		return nil
 	}
 	current := aig.Aig_ManDupSimple(graph)
 	if backwardOnly == 0 {
-		for i := int32(0); i < maxIterations && Saig_ManRegNum(current) > 0; i++ {
-			fixed, moved := int32(0), int32(0)
-			next := Saig_ManRetimeForwardOne(current, &fixed, &moved)
-			if next == nil || aig.Aig_ManRegNum(next) >= aig.Aig_ManRegNum(current) {
+		for i := int32(0); i < maxIterations && current.RegisterCount() > 0; i++ {
+			edges := saigRetimeMinCut(current, true)
+			if len(edges) >= int(current.RegisterCount()) {
 				break
 			}
-			current = next
+			cut := vec.Vec_PtrAlloc(len(edges))
+			for _, edge := range edges {
+				vec.Vec_PtrPush(cut, edge)
+			}
+			current = Saig_ManRetimeDupForward(current, cut)
+			if current == nil {
+				panic("saig: forward retiming failed")
+			}
 			if verbose != 0 {
 				aig.Aig_ManReportImprovement(graph, current)
 			}
 		}
 	}
-	if forwardOnly == 0 && backwardOnly == 0 && initialState != 0 {
-		for i := int32(0); i < maxIterations; i++ {
-			next := Saig_ManRetimeMinAreaBackward(current, verbose)
-			if next == nil || aig.Aig_ManRegNum(next) >= aig.Aig_ManRegNum(current) {
+	changed := false
+	if forwardOnly == 0 {
+		for i := int32(0); i < maxIterations && current.RegisterCount() > 0; i++ {
+			var next *aig.Graph
+			if initialState == 0 {
+				edges := saigRetimeMinCut(current, false)
+				if len(edges) >= int(current.RegisterCount()) {
+					break
+				}
+				cut := vec.Vec_PtrAlloc(len(edges))
+				for _, edge := range edges {
+					vec.Vec_PtrPush(cut, edge)
+				}
+				next = Saig_ManRetimeDupBackward(current, cut, nil)
+			} else {
+				next = Saig_ManRetimeMinAreaBackward(aig.Aig_ManDupSimple(current), verbose)
+				if next != nil {
+					Saig_ManExposeBadRegs(next, Saig_ManPoNum(next)-Saig_ManPoNum(current))
+				}
+			}
+			if next == nil {
 				break
 			}
 			current = next
+			changed = true
+			if verbose != 0 {
+				aig.Aig_ManReportImprovement(graph, current)
+			}
 		}
+	}
+	if forwardOnly == 0 && initialState == 0 && changed {
+		fmt.Println("Assuming const-0 init-state after backward retiming. Result will not verify.")
 	}
 	return current
 }

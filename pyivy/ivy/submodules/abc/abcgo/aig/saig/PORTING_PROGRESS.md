@@ -2,22 +2,31 @@
 
 ## Minimum-area retiming
 
-`Saig_ManRetimeMinArea` is not yet a faithful port of ABC's algorithm in
-`src/aig/saig/saigRetMin.c`. Its current forward step uses the existing
-single-step retimer, and its backward step uses a local frontier heuristic
-instead of `Nwk_ManDeriveRetimingCut` from `src/opt/nwk/nwkAig.c` and
-`nwkFlow.c`. A candidate-cut coverage check prevents the heuristic from
-constructing an invalid initial-state problem; it can consequently skip
-retiming opportunities that ABC finds. This guard does not complete the port.
+`Saig_ManRetimeMinArea` now uses a vertex-capacitated maximum-flow/minimum-cut
+implementation for the forward and backward passes, with the same PI/PO and
+constant boundaries as `Nwk_ManRetimeCutForward` and
+`Nwk_ManRetimeCutBackward` in `src/opt/nwk/nwkFlow.c`. The implementation is
+in SAIG to avoid an import cycle: `opt/nwk` itself imports `aig/saig`.
 
-Remaining work:
+The backward initialized-state path now hides incompatible registers, retries
+an unsatisfiable cut using the initial-state SAT core, and restores the hidden
+interface. The source's backward-only and no-initial-state paths are included;
+the latter retains ABC's warning that its result need not preserve the initial
+state. A duplication-order bug and an invalid heuristic-cut panic were fixed.
+Constraint and assertion output metadata are preserved. Backward retiming
+conservatively skips cases requiring hidden registers when constraint outputs
+are present, because hiding would otherwise change the constraint positions.
 
-- Port and validate the forward and backward maximum-flow/minimum-cut
-  procedures, including ABC's PI/PO and constant-node boundary rules.
-- Restore the backward initial-state retry loop, including bad-register
-  hiding, unsatisfiable-core selection, and subsequent interface restoration.
-- Restore the source's backward-only and no-initial-state control paths, and
-  verify their original semantics explicitly.
-- Compare retimed graphs with the C implementation and exhaustively validate
-  their reachable outputs and reconstructed initial states on small graphs.
-- Run the SAIG race suite and the dependent FRA SEC integration tests.
+Validation includes exhaustive cut-subset comparisons on small graphs; cut
+sizes compared against the existing NWK port on 200 cleaned graphs in both
+directions; forward/backward register-reduction examples; hidden-register and
+unsatisfiable-initial-state retry cases; and reachable-output comparisons for
+all three-frame traces on 32 generated two-register circuits. Run the full
+SAIG race suite and the dependent FRA race suite after changes.
+
+Remaining review: compare cut tie-breaking and end-to-end behavior directly
+with the C executable on representative larger designs; one shared-driver
+example has been checked against ABC's `retime -M 3 -b`. Implement safe
+constraint-output reordering when hidden registers are needed. The Go NWK converter
+currently omits dangling nodes, whereas the C converter iterates all nodes;
+the SAIG implementation retains the source's all-node behavior.

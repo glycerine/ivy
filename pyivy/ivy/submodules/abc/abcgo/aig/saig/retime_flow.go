@@ -4,6 +4,12 @@ package saig
 // Nwk_ManRetimeCutForward and Nwk_ManRetimeCutBackward in nwkFlow.c.
 import "github.com/glycerine/abcgo/aig/aig"
 
+// Saig_ManDeriveRetimingCut returns the minimum retiming cut without importing
+// opt/nwk, which itself depends on saig. The returned edges are regular.
+func Saig_ManDeriveRetimingCut(g *aig.Graph, forward bool) []aig.Edge {
+	return saigRetimeMinCut(g, forward)
+}
+
 type retimeFlowEdge struct{ to, reverse, capacity int }
 type retimeFlow struct {
 	edges       [][]retimeFlowEdge
