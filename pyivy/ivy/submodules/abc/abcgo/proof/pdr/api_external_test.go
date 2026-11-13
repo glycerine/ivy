@@ -26,6 +26,7 @@ func TestPublicSolveCombinationalConstantFailure(t *testing.T) {
 	g.NewInput()
 	g.NewInput()
 	g.AddOutput(g.Const1())
+	aig.Aig_ManSetRegNum(g, 0)
 	result, err := pdr.Solve(g, nil)
 	if err != nil || result.Status != pdr.Failed || result.Outputs[0].Witness == nil {
 		t.Fatalf("result %+v: %v", result, err)

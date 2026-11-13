@@ -101,6 +101,7 @@ func TestIncrementalPdrSafeAndUnsafe(t *testing.T) {
 func TestIncrementalRestartRecreatesOutputStateAsInC(t *testing.T) {
 	g := aig.NewGraph()
 	g.AddOutput(g.Const0())
+	aig.Aig_ManSetRegNum(g, 0)
 	var pars Pdr_Par_t
 	Pdr_ManSetDefaultParams(&pars)
 	pars.fSolveAll, pars.nTimeOutOne = 1, 50
@@ -121,6 +122,7 @@ func TestIncrementalFreshManagerRecountsTrivialOutputsAsInC(t *testing.T) {
 	g := aig.NewGraph()
 	g.AddOutput(g.Const0())
 	g.AddOutput(g.Const1())
+	aig.Aig_ManSetRegNum(g, 0)
 	var pars Pdr_Par_t
 	Pdr_ManSetDefaultParams(&pars)
 	pars.fSolveAll, pars.fNotVerbose, pars.fSilent = 1, 1, 1

@@ -112,3 +112,23 @@ func TestPdrSolveRestoresPreviousSolverDeadline(t *testing.T) {
 		t.Fatalf("previous expired deadline was not restored: %v", got)
 	}
 }
+
+// pdrSat.c treats an inconclusive generalization query as SAT when the
+// generalization conflict limit is nonzero, even if the deadline caused it.
+func TestPdrGeneralizationExpiredDeadlineMatchesC(t *testing.T) {
+	for _, tc := range []struct{ tryConf, genLimit int32 }{{0, 1}, {1, 0}, {1, 1}} {
+		p, _ := pdrTestSATManager(t, false)
+		p.pPars.nConfGenLimit = tc.genLimit
+		p.timeToStop = util.Abc_Clock() - 1
+		cube := testPdrSet([]int32{0}, nil)
+		got := Pdr_ManCheckCube(p, 0, cube, nil, 0, tc.tryConf, 0)
+		want := int32(-1)
+		wantSATCalls := int32(0)
+		if tc.tryConf != 0 && tc.genLimit != 0 {
+			want, wantSATCalls = 0, 1
+		}
+		if got != want || p.nCalls != 1 || p.nCallsS != wantSATCalls || p.nCallsU != 0 {
+			t.Fatalf("tryConf=%d genLimit=%d: result=%d calls=%d sat=%d unsat=%d", tc.tryConf, tc.genLimit, got, p.nCalls, p.nCallsS, p.nCallsU)
+		}
+	}
+}

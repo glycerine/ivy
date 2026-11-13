@@ -147,6 +147,7 @@ func TestConcreteCounterexampleSkipsComplementAndPseudoInput(t *testing.T) {
 	g := aig.NewGraph()
 	g.NewInput()
 	g.AddOutput(g.Const1())
+	aig.Aig_ManSetRegNum(g, 0)
 	p := Pdr_ManStart(g, &Pdr_Par_t{}, nil)
 	state := testPdrSet(nil, []int32{-1, 2})
 	Pdr_QueuePush(p, Pdr_OblStart(0, 0, state, nil))

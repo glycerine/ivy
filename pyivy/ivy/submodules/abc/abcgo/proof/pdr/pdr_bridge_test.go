@@ -15,6 +15,7 @@ func TestPdrBridgeReportsEachOutputAndAbort(t *testing.T) {
 		g := aig.NewGraph()
 		g.AddOutput(g.Const0())
 		g.AddOutput(g.Const1())
+		aig.Aig_ManSetRegNum(g, 0)
 		var pars Pdr_Par_t
 		Pdr_ManSetDefaultParams(&pars)
 		pars.fSilent, pars.fSolveAll, pars.fStoreCex, pars.fUseBridge = 1, 1, 1, 1
