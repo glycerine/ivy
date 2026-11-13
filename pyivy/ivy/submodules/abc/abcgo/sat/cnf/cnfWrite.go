@@ -2,7 +2,6 @@ package cnf
 
 import (
 	"github.com/glycerine/abcgo/misc/vec"
-	"strings"
 )
 
 func Cnf_ManWriteCnfMapping(manager *Cnf_Man_t, _ *Vec_Ptr_t) *Vec_Int_t {
@@ -32,26 +31,49 @@ func Cnf_SopConvertToVector(sop string, cubes int32, cover *Vec_Int_t) {
 		return
 	}
 	vec.Vec_IntClear(cover)
-	for _, cube := range strings.Fields(sop) {
-		if len(cube) > 0 {
-			vec.Vec_IntPush(cover, int32(len(cube)))
+	for i := int32(0); i < cubes; i++ {
+		cube := int(sop[i])
+		var packed int32
+		for b := 0; b < 4; b++ {
+			var state int32
+			if cube%3 == 0 {
+				state = 1
+			} else if cube%3 == 1 {
+				state = 2
+			}
+			packed = packed<<2 | state
+			cube /= 3
 		}
+		vec.Vec_IntPush(cover, packed)
 	}
-	_ = cubes
 }
 func Cnf_SopCountLiterals(sop string, cubes int32) int32 {
 	var count int32
-	for _, cube := range strings.Fields(sop) {
-		count += int32(len(cube))
+	for i := int32(0); i < cubes; i++ {
+		cube := int(sop[i])
+		for b := 0; b < 4; b++ {
+			if cube%3 != 2 {
+				count++
+			}
+			cube /= 3
+		}
 	}
-	_ = cubes
 	return count
 }
-func Cnf_IsopCountLiterals(isop *Vec_Int_t, _ int32) int32 {
+func Cnf_IsopCountLiterals(isop *Vec_Int_t, variables int32) int32 {
 	if isop == nil {
 		return 0
 	}
-	return int32(vec.Vec_IntSize(isop))
+	var count int32
+	for _, cube := range vec.Vec_IntArray(isop) {
+		for i := int32(0); i < variables; i++ {
+			if cube&3 == 1 || cube&3 == 2 {
+				count++
+			}
+			cube >>= 2
+		}
+	}
+	return count
 }
 func Cnf_IsopWriteCube(cube int32, variables int32, vars, literals []int32) int32 {
 	if variables < 0 || variables > 16 || vars == nil || literals == nil {
@@ -61,11 +83,10 @@ func Cnf_IsopWriteCube(cube int32, variables int32, vars, literals []int32) int3
 	for i := int32(0); i < variables; i++ {
 		state := cube & 3
 		cube >>= 2
-		if state == 0 {
+		if state != 1 && state != 2 {
 			continue
 		}
-		vars[count] = i
-		literals[count] = state & 1
+		literals[count] = vars[i]*2 + state - 1
 		count++
 	}
 	return count
