@@ -331,54 +331,32 @@ func TestModelInvalidatedByContradictoryAddition(t *testing.T) {
 	}
 }
 
-func TestRemoveMarkedRestoresUnitAndSimplifiedFormula(t *testing.T) {
+func TestRemoveMarkedRetainsRootUnitsAsInC(t *testing.T) {
 	p := New(2)
-	p.AddClause([]int{0, 2})
 	Msat_SolverMarkClausesStart(p)
-	p.AddClause([]int{1})
-	if p.Solve(nil, 0, 0) != MSAT_TRUE {
-		t.Fatal("incremental formula")
-	}
-	if Msat_SolverSimplifyDB(p) == 0 {
-		t.Fatal("simplification")
+	if !p.AddClause([]int{0}) {
+		t.Fatal("unit rejected")
 	}
 	Msat_SolverRemoveMarked(p)
-	if p.Solve([]int{0}, 0, 0) != MSAT_TRUE {
-		t.Fatal("removed unit still constrained variable")
-	}
-	if p.Solve([]int{1, 3}, 0, 0) != MSAT_FALSE {
-		t.Fatal("simplification erased marked base formula")
+	if got := p.Solve([]int{1}, 0, 0); got != MSAT_FALSE {
+		t.Fatalf("C removal leaves root units assigned: got %v", got)
 	}
 }
 
-func TestMarkedRollbackAgainstEnumeration(t *testing.T) {
-	rng := rand.New(rand.NewSource(93932))
-	for trial := 0; trial < 250; trial++ {
-		const n = 5
-		p := New(n)
-		var base [][]int
-		for i := 0; i < 7; i++ {
-			clause := randomDistinctClause(rng, n, 3)
-			base = append(base, append([]int(nil), clause...))
-			p.AddClause(clause)
-		}
-		Msat_SolverMarkClausesStart(p)
-		for i := 0; i < 4; i++ {
-			p.AddClause(randomDistinctClause(rng, n, 2))
-		}
-		p.Solve(nil, 0, 0)
-		Msat_SolverRemoveMarked(p)
-		for query := 0; query < 8; query++ {
-			var assumptions []int
-			for i := 0; i < rng.Intn(4); i++ {
-				assumptions = append(assumptions, rng.Intn(2*n))
-			}
-			want := brute(n, base, assumptions)
-			got := p.Solve(assumptions, 0, 0)
-			if (got == MSAT_TRUE) != want || got == MSAT_UNKNOWN {
-				t.Fatalf("trial=%d query=%d got=%v want=%v base=%v assumptions=%v", trial, query, got, want, base, assumptions)
-			}
-		}
+func TestRemoveMarkedDropsOnlyLaterAndLearnedClauses(t *testing.T) {
+	p := New(4)
+	if !p.AddClause([]int{0, 2}) {
+		t.Fatal("base clause rejected")
+	}
+	base := p.vClauses.data[0]
+	Msat_SolverMarkClausesStart(p)
+	if !p.AddClause([]int{4, 6}) {
+		t.Fatal("later clause rejected")
+	}
+	later := p.vClauses.data[1]
+	Msat_SolverRemoveMarked(p)
+	if len(p.vClauses.data) != 1 || p.vClauses.data[0] != base || !later.deleted {
+		t.Fatal("marked removal did not retain the original clause")
 	}
 }
 
@@ -397,14 +375,23 @@ func TestActivityRescaleBeforeNewClauseInsertion(t *testing.T) {
 	if fresh.activity != 10 || old.activity > 1.001 || old.activity < 0.999 {
 		t.Fatal("new clause missed activity rescale", fresh.activity, old.activity)
 	}
-	if Msat_SolverReadClauseNum(p) != 1 {
-		t.Fatal("learned clause omitted from total clause count")
-	}
 }
 func TestTruthTableSetup(t *testing.T) {
 	var truths [6][2]uint32
 	Msat_SolverSetupTruthTables(&truths)
 	if truths[0][0] != 0xaaaaaaaa || truths[4][0] != 0xffff0000 || truths[5][0] != 0 || truths[5][1] != 0xffffffff {
 		t.Fatal(truths)
+	}
+}
+
+func TestClauseNumberCountsCreatedClausesAsInC(t *testing.T) {
+	p := New(3)
+	var first, second *Msat_Clause_t
+	if Msat_ClauseCreate(p, &Msat_IntVec_t{data: []int{0, 2}}, 0, &first) == 0 ||
+		Msat_ClauseCreate(p, &Msat_IntVec_t{data: []int{0, 4}}, 0, &second) == 0 {
+		t.Fatal("clause creation failed")
+	}
+	if first.Num != 0 || second.Num != 1 || Msat_SolverReadClauseNum(p) != 2 {
+		t.Fatalf("created clause numbers %d,%d count %d", first.Num, second.Num, Msat_SolverReadClauseNum(p))
 	}
 }

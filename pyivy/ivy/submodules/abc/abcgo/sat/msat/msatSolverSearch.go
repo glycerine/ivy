@@ -103,46 +103,21 @@ func Msat_SolverRemoveLearned(p *Msat_Solver_t) {
 		Msat_ClauseFree(p, c, 1)
 	}
 	p.vLearned.data = p.vLearned.data[:0]
+	p.nClauses = len(p.vClauses.data)
 }
 
 // A lazy formula snapshot includes root unit facts, which have no clause
 // object in this solver. Rebuild from it so simplification cannot erase the
 // base formula and removed unit clauses cannot leave assignments behind.
 func Msat_SolverRemoveMarked(p *Msat_Solver_t) {
-	Msat_SolverCancelUntil(p, 0)
-	snapshot := p.marked
-	if snapshot == nil {
-		snapshot = &markedFormula{okay: true}
+	for _, clause := range p.vClauses.data[p.nClausesStart:] {
+		Msat_ClauseFree(p, clause, 1)
 	}
-	p.vClauses.data = p.vClauses.data[:0]
+	p.vClauses.data = p.vClauses.data[:p.nClausesStart]
+	for _, clause := range p.vLearned.data {
+		Msat_ClauseFree(p, clause, 1)
+	}
 	p.vLearned.data = p.vLearned.data[:0]
-	for _, w := range p.pvWatched {
-		w.data = w.data[:0]
-	}
-	for v := range p.pAssigns {
-		p.pAssigns[v] = -1
-		p.pReasons[v] = nil
-		p.pLevel[v] = -1
-		p.pModel[v] = -1
-	}
-	p.vTrail.data = p.vTrail.data[:0]
-	p.vTrailLim.data = p.vTrailLim.data[:0]
-	Msat_QueueClear(p.pQueue)
-	p.okay = snapshot.okay
-	p.nLevelRoot = 0
-	Msat_OrderClean(p.pOrder, p.vConeVars)
-	for _, lit := range snapshot.units {
-		if Msat_SolverEnqueue(p, lit, nil) == 0 {
-			p.okay = false
-		}
-	}
-	for _, lits := range snapshot.clauses {
-		Msat_SolverAddClause(p, &Msat_IntVec_t{data: append([]int(nil), lits...)})
-	}
-	if Msat_SolverPropagate(p) != nil {
-		p.okay = false
-	}
-	p.nClausesStart = len(p.vClauses.data)
 }
 func Msat_SolverAnalyze(p *Msat_Solver_t, c *Msat_Clause_t, out *Msat_IntVec_t, back *int) {
 	p.nSeenId++

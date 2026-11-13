@@ -65,7 +65,7 @@ func Msat_SolverClean(p *Msat_Solver_t, n int) {
 	Msat_OrderClean(p.pOrder, p.vConeVars)
 	p.nLevelRoot = 0
 	p.nClausesStart = 0
-	p.marked = nil
+	p.nClauses = 0
 	p.okay = true
 	p.Stats = Msat_SolverStats_t{}
 }
@@ -97,7 +97,7 @@ func Msat_SolverFree(p *Msat_Solver_t)                { *p = Msat_Solver_t{} }
 func Msat_SolverReadVarNum(p *Msat_Solver_t) int      { return p.nVars }
 func Msat_SolverReadVarAllocNum(p *Msat_Solver_t) int { return len(p.pAssigns) }
 func Msat_SolverReadClauseNum(p *Msat_Solver_t) int {
-	return len(p.vClauses.data) + len(p.vLearned.data)
+	return p.nClauses
 }
 func Msat_SolverReadAssignsArray(p *Msat_Solver_t) []int { return p.pAssigns[:p.nVars] }
 func Msat_SolverReadModelArray(p *Msat_Solver_t) []int   { return p.pModel[:p.nVars] }
@@ -115,13 +115,7 @@ func Msat_SolverReadAdjacents(p *Msat_Solver_t) []*Msat_IntVec_t { return p.vAdj
 func Msat_SolverReadConeVars(p *Msat_Solver_t) *Msat_IntVec_t    { return p.vConeVars }
 func Msat_SolverReadVarsUsed(p *Msat_Solver_t) *Msat_IntVec_t    { return p.vVarsUsed }
 func Msat_SolverMarkClausesStart(p *Msat_Solver_t) {
-	Msat_SolverCancelUntil(p, 0)
 	p.nClausesStart = len(p.vClauses.data)
-	snapshot := &markedFormula{units: append([]int(nil), p.vTrail.data...), okay: p.okay}
-	for _, c := range p.vClauses.data {
-		snapshot.clauses = append(snapshot.clauses, append([]int(nil), c.lits...))
-	}
-	p.marked = snapshot
 }
 func Msat_SolverMarkLastClauseTypeA(p *Msat_Solver_t) {
 	p.vClauses.data[len(p.vClauses.data)-1].typeA = true

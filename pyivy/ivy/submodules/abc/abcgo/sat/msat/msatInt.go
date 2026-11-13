@@ -7,14 +7,8 @@ type Msat_Lit_t = int
 type Msat_Var_t = int
 type Msat_SearchParams_t struct{ dVarDecay, dClaDecay float64 }
 type Msat_SolverStats_t struct{ nStarts, nDecisions, nPropagations, nInspects, nConflicts, nSuccesses int64 }
-type markedFormula struct {
-	clauses [][]int
-	units   []int
-	okay    bool
-}
 
 type Msat_Solver_t struct {
-	marked                                 *markedFormula
 	nVars                                  int
 	vClauses, vLearned                     *Msat_ClauseVec_t
 	dClaInc, dClaDecay, dVarInc, dVarDecay float64
@@ -36,7 +30,7 @@ type Msat_Solver_t struct {
 	vReason, vTemp                         *Msat_IntVec_t
 	pMem                                   *Msat_MmStep_t
 	Stats                                  Msat_SolverStats_t
-	nBackTracks, nClausesStart             int
+	nBackTracks, nClausesStart, nClauses   int
 	nClausesAlloc, nClausesAllocL          int
 	okay                                   bool
 	deadline                               time.Time

@@ -24,15 +24,15 @@ C's casts between unrelated clause and integer-vector pointers.
    eliminated raw pointer tagging/flexible-array allocation, used an indexed
    slice heap, and removed unused proof/map state and redundant output work.
    Clause marks/numbers remain because callers can explicitly inspect them.
-   The formula snapshot is allocated only when MarkClausesStart is requested.
+   Marked-clause removal follows the source clause-vector truncation behavior.
 2. **Independent bug review:** checked clause normalization/watch ownership,
    root and assumption levels, conflict learning, repeated solves, models,
    lifecycle/reset/marks, limits, activity arithmetic, pools and containers.
    Failing regressions found forgotten root conflicts across later solves,
    stale models after contradictory clause additions, and marked rollback
    losing its base after units/simplification. Fixed these before integration.
-   Marked rollback now restores a lazy snapshot of base clauses and root unit
-   facts, rather than retaining assignments from removed unit clauses.
+   Marked rollback now follows C and does not restore simplified clauses or
+   clear root assignments contributed by later unit clauses.
    Reviewed activity rescaling before a new clause enters the learnt vector,
    total clause/backtrack accessors, and C Prepare's binding-reset semantics.
 
@@ -59,7 +59,7 @@ implementation reports UNSAT; a source-derived regression retains that result.
 Randomized exhaustive formula tests use distinct-variable clauses to avoid
 mischaracterizing this known source limitation.
 
-Follow-up review added exhaustive incremental and marked-rollback oracles.
+Follow-up review added exhaustive incremental checks and source-derived marked-rollback tests.
 Clause and assumption inputs are now validated fully before normalizing or
 mutating solver state, including satisfied-clause and mixed-assumption cases.
 `GOCACHE=/tmp/abcgo-cache go test -race -count=1 ./sat/msat` and
