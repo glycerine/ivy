@@ -47,3 +47,11 @@ Support and dominator analysis visits all three operands of native MUX nodes;
 flop-to-gate class conversion likewise includes the MUX control cone. Other
 reparameterization routines inherited from the C AND-inverter implementation
 have not been established as native XOR/MUX aware and require separate review.
+
+VTA retains two C source boundary behaviors that callers must account for.
+The source asserts that the object count fits in the object-ID mask, which
+rejects a power-of-two object count even though the largest ID fits. On a run
+that returns without a new counterexample, including trivial UNSAT, C also
+leaves any previously stored sequential witness in place. Tests characterize
+both behaviors; callers should clear old witnesses before invoking VTA and
+should not infer a new witness from a non-SAT return.
