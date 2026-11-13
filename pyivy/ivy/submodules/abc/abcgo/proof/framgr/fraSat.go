@@ -20,6 +20,13 @@ func fraPrepareSAT(p *Fra_Man_t, old, new aig.Edge) {
 	for p.PSat.NumVars() < p.NSatVars {
 		p.PSat.NewVariable()
 	}
+	// The source's two-node queries simplify pending root assignments before
+	// searching. Fra_NodeIsConst intentionally omits this step.
+	if old != aig.InvalidEdge && p.PSat.NeedsPropagation() {
+		if !p.PSat.Simplify() || p.PSat.NeedsPropagation() {
+			panic("fra: SAT root simplification failed")
+		}
+	}
 	if p.PPars.FConeBias != 0 {
 		Fra_SetActivityFactors(p, old, new)
 	}

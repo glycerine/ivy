@@ -13,7 +13,8 @@ func TestFraMiterStatusAndAssertedOutput(t *testing.T) {
 	}{
 		{"zero", func(g *aig.Graph) aig.Edge { return g.Const0() }, 1, -1},
 		{"one", func(g *aig.Graph) aig.Edge { return g.Const1() }, 0, 0},
-		{"input", func(g *aig.Graph) aig.Edge { return g.NewInput() }, 0, -1},
+		// New managers start with nTruePis == 0 in ABC.
+		{"input", func(g *aig.Graph) aig.Edge { return g.NewInput() }, -1, -1},
 		{"unknown", func(g *aig.Graph) aig.Edge { return g.AND(g.NewInput(), g.NewInput()) }, -1, -1},
 		{"phase one", func(g *aig.Graph) aig.Edge { return g.AND(g.NewInput().Not(), g.NewInput().Not()) }, 0, 0},
 	}
