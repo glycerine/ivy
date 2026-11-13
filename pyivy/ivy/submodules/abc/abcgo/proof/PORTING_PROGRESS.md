@@ -5,9 +5,13 @@ correctness review, simplification, and comprehensive tests. A successful
 component test is not evidence that its whole package builds.
 
 As of this checkpoint, `go test ./proof/...` still fails: `abs`, `acec`,
-`cec`, `fra`, and `ssw` contain untranslated or unintegrated code. Their
+`fra`, and `ssw` contain untranslated or unintegrated code. Their
 in-progress changes are recorded in commits prefixed `red:`.
 
+* `cec` builds and passes its full race suite and vet. Cec4 has been
+  integrated, but its source-fidelity review continues; the upstream GIA
+  choices implementation is itself incomplete, as documented in
+  `cec/PORTING.md`.
 * `pdr` builds and passes its full race suite and vet. It has exhaustive
   small-state reachability and witness tests, incremental-solving tests,
   and a Go-facing options API. Concurrent solves must be externally
