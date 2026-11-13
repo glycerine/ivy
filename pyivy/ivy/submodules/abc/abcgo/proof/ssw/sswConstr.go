@@ -1,7 +1,5 @@
 package ssw
 
-import "os"
-
 /**CFile****************************************************************
 
   FileName    [sswConstr.c]
