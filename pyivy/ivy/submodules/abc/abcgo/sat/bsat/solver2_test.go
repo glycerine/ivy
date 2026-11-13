@@ -1,6 +1,9 @@
 package bsat
 
-import "testing"
+import (
+	"testing"
+	"time"
+)
 
 func TestPublicSolver2ContradictoryRootProof(t *testing.T) {
 	s := NewSolver2()
@@ -56,5 +59,25 @@ func TestSolver2RootUnitAssumptionProofCore(t *testing.T) {
 	}
 	if s.Solve(Positive(x)) != Satisfiable {
 		t.Fatal("assumption conflict poisoned formula")
+	}
+}
+
+func TestSolver2DeadlineAndRecovery(t *testing.T) {
+	s := NewSolver2()
+	x, y := s.NewVariable(), s.NewVariable()
+	s.AddClause(Positive(x), Positive(y))
+	s.SetDeadline(time.Unix(0, 1))
+	if got := s.Solve(); got != Unknown {
+		t.Fatalf("expired deadline returned %v", got)
+	}
+	if s.Model() != nil || s.ProofCore() != nil {
+		t.Fatal("interrupted solve exposed a result")
+	}
+	s.SetDeadline(time.Time{})
+	if got := s.Solve(Negative(x)); got != Satisfiable {
+		t.Fatalf("recovery returned %v", got)
+	}
+	if v, ok := s.Value(y); !ok || !v {
+		t.Fatalf("recovered model y=%v valid=%v", v, ok)
 	}
 }

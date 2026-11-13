@@ -169,3 +169,37 @@ func TestProofSolverIncrementalOracle(t *testing.T) {
 		}
 	}
 }
+
+func TestUnconditionalUnsatRemainsUnsatOnRepeatedSolves(t *testing.T) {
+	rng := rand.New(rand.NewSource(187304))
+	checked := 0
+	for trial := 0; trial < 500; trial++ {
+		s := NewSolver()
+		for i := 0; i < 5; i++ {
+			s.NewVariable()
+		}
+		var formula [][]lit
+		for i := 0; i < 22; i++ {
+			p := rng.Perm(5)
+			c := []lit{lit(2*p[0] + rng.Intn(2)), lit(2*p[1] + rng.Intn(2)), lit(2*p[2] + rng.Intn(2))}
+			formula = append(formula, c)
+			s.AddClause(c...)
+		}
+		if formulaHasModel(formula, nil, 5) {
+			continue
+		}
+		checked++
+		for k := 0; k < 4; k++ {
+			var ass []lit
+			if k > 0 {
+				ass = []lit{lit(rng.Intn(10))}
+			}
+			if got := s.Solve(ass...); got != Unsatisfiable {
+				t.Fatalf("trial=%d pass=%d status=%v assumptions=%v formula=%v", trial, k, got, ass, formula)
+			}
+		}
+	}
+	if checked < 10 {
+		t.Fatalf("not enough UNSAT formulas: %d", checked)
+	}
+}

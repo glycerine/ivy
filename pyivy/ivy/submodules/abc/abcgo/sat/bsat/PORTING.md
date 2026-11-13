@@ -264,3 +264,8 @@ from the assignment-filtering loop after normalization. A seeded 200-formula
 oracle now checks SAT status and independently verifies reconstructed UNSAT
 cores when proof logging receives duplicate and complementary input literals.
 The race-enabled BSAT suite passes.
+
+Resource and repeated-solve coverage now includes Solver2 deadline expiration
+and recovery, as well as repeated unconditional/assumption solves on seeded
+UNSAT formulas checked by exhaustive enumeration. The race-enabled BSAT suite
+passes. These tests do not cover every possible budget or callback interaction.
