@@ -35,3 +35,24 @@ func TestClauseInductionSATQueries(t *testing.T) {
 		t.Fatalf("expected reachable next state, got %d", status)
 	}
 }
+
+func TestClauseInductionTopLevel(t *testing.T) {
+	for _, unsafe := range []bool{false, true} {
+		g := aig.NewGraph()
+		x, state := g.NewInput(), g.NewInput()
+		g.AddOutput(state)
+		if unsafe {
+			g.AddOutput(x)
+		} else {
+			g.AddOutput(state)
+		}
+		aig.Aig_ManSetRegNum(g, 1)
+		want := int32(1)
+		if unsafe {
+			want = 0
+		}
+		if got := Fra_Clau(g, 5, 0, 0); got != want {
+			t.Fatalf("unsafe=%v got=%d want=%d", unsafe, got, want)
+		}
+	}
+}
