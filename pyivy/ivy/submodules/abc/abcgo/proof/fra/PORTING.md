@@ -51,6 +51,13 @@ while merged interpolation returns a frame-one counterexample; a negative
 budget returns undecided. The shared INT solver passes the signed budget to
 BSAT unchanged, as the C implementation does.
 
+On the source SEC sequential-simulation failure path, the function returns
+before assigning its optional result graph pointer, leaving the caller's
+previous value intact. A negative global conflict limit can instead stop the
+induction stage with an undecided result graph; a zero frame bound skips it.
+The checked-in `test_vectors/sec_options_source.c` fixture characterizes these
+boundary cases against C.
+
 The SEC `TimeLimit` option is currently ineffective in the active ABC C
 implementation: its global deadline checks are commented out. This port
 preserves that behavior. SEC passes its separate `nPdrTimeout` to PDR.
