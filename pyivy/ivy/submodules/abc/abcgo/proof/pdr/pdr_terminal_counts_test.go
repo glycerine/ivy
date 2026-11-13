@@ -29,3 +29,17 @@ func TestPdrUsesStoredTrueOutputCount(t *testing.T) {
 		}
 	}
 }
+
+func TestPublicSolveUsesStoredTrueOutputCount(t *testing.T) {
+	g := aig.NewGraph()
+	g.AddOutput(g.Const0())
+	g.AddOutput(g.Const1())
+	aig.Aig_ManSetRegNum(g, 0)
+	g.SetTruePoCount(1)
+	options := DefaultOptions()
+	options.Silent, options.SolveAll = true, true
+	result, err := Solve(g, &options)
+	if err != nil || result.Status != Proved || len(result.Outputs) != 1 || result.Outputs[0].Status != Proved {
+		t.Fatalf("result=%+v err=%v", result, err)
+	}
+}
