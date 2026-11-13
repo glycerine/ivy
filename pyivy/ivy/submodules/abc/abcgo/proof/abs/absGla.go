@@ -270,34 +270,6 @@ func Ga2_ManShrinkAbs(p *Ga2_Man_t, nAbs int32, nValues int32, nSatVars int32) {
   SeeAlso     []
 
 ***********************************************************************/
-func Ga2_ManAbsTranslate_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vClasses *Vec_Int_t, fFirst int32) {
-    if pObj.fPhase && !(fFirst != 0) {
-        return; }
-    assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-    Ga2_ManAbsTranslate_rec( p, Gia_ObjFanin0(pObj), vClasses, 0 );
-    Ga2_ManAbsTranslate_rec( p, Gia_ObjFanin1(pObj), vClasses, 0 );
-    Vec_IntWriteEntry( vClasses, Gia_ObjId(p, pObj), 1 );
-}
-
-func Ga2_ManAbsTranslate(p *Ga2_Man_t) *Vec_Int_t {
-    var vGateClasses *Vec_Int_t;
-    var pObj *Gia_Obj_t;
-    var i int32;
-    vGateClasses = Vec_IntStart( Gia_ManObjNum(p.pGia) );
-    Vec_IntWriteEntry( vGateClasses, 0, 1 );
-    Gia_ManForEachObjVec( p.vAbs, p.pGia, pObj, i )
-    {
-        if Gia_ObjIsAnd(pObj) {
-            Ga2_ManAbsTranslate_rec( p.pGia, pObj, vGateClasses, 1 );
-        } else if Gia_ObjIsRo(p.pGia, pObj) {
-            Vec_IntWriteEntry( vGateClasses, Gia_ObjId(p.pGia, pObj), 1 );
-        } else if !Gia_ObjIsConst0(pObj) {
-            assert(false, "0"); }
-//        Gia_ObjPrint( p->pGia, pObj );
-    }
-    return vGateClasses;
-}
-
 func Ga2_ManRestart(p *Ga2_Man_t) {
     var vToAdd *Vec_Int_t;
     var Lit int32  = 1;
