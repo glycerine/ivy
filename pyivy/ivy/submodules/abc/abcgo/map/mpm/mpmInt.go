@@ -203,8 +203,16 @@ func Mpm_ObjSetArea(p *Mpm_Man_t, pObj *Mig_Obj_t, i int32) { Vec_IntWriteEntry(
 func Mpm_ObjEdge(p *Mpm_Man_t, pObj *Mig_Obj_t) int32 { return Vec_IntEntry(&p.vEdges, Mig_ObjId(pObj));               }
 func Mpm_ObjSetEdge(p *Mpm_Man_t, pObj *Mig_Obj_t, i int32) { Vec_IntWriteEntry(&p.vEdges, Mig_ObjId(pObj), i);              }
 
-func Mpm_VarsClear(V2P *int32, P2V *int32, nVars int32) { var i int32; for  i = 0; i < nVars; i++  { V2P[i] = P2V[i] = i; }       }
-func Mpm_VarsSwap(V2P *int32, P2V *int32, iVar int32, jVar int32) { V2P[P2V[iVar]] = jVar; V2P[P2V[jVar]] = iVar; P2V[iVar] ^= P2V[jVar]; P2V[jVar] ^= P2V[iVar]; P2V[iVar] ^= P2V[jVar];  }
+func Mpm_VarsClear(V2P, P2V []int32, nVars int32) {
+ for i:=int32(0); i<nVars; i++ { V2P[i], P2V[i] = i, i }
+}
+func Mpm_VarsSwap(V2P, P2V []int32, iVar, jVar int32) {
+ V2P[P2V[iVar]] = jVar
+ V2P[P2V[jVar]] = iVar
+ P2V[iVar] ^= P2V[jVar]
+ P2V[jVar] ^= P2V[iVar]
+ P2V[iVar] ^= P2V[jVar]
+}
 
 // iterators over object cuts
 // Original macro:
