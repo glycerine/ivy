@@ -62,3 +62,23 @@ func TestBmcAgainstExhaustiveSequentialTraces(t *testing.T) {
 		}
 	}
 }
+
+func TestBmcHandlesRewiredNodeOrder(t *testing.T) {
+	g := aig.NewGraph()
+	a, b, q := g.NewInput(), g.NewInput(), g.NewInput()
+	early, late := g.AND(a, q), g.AND(b, q)
+	aig.Aig_ObjDisconnect(g, early)
+	aig.Aig_ObjConnect(g, early, late, b)
+	g.AddOutput(early)
+	g.AddOutput(a)
+	aig.Aig_ManSetRegNum(g, 1)
+	if err := g.Check(); err != nil {
+		t.Fatal(err)
+	}
+	if got := Ssw_BmcDynamic(g, 3, 0, 0, nil); got != 0 {
+		t.Fatalf("reachable output returned %d", got)
+	}
+	if cex := g.SequentialCounterexample(); cex == nil || saig.Saig_ManVerifyCex(g, cex) == 0 {
+		t.Fatal("missing or invalid BMC witness")
+	}
+}
