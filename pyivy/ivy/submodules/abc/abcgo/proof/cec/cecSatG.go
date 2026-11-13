@@ -39,16 +39,6 @@ import (
 
 // sweeping manager
    
-type Cec3_Par_t struct {
-    nSimWords              int32;     // simulation words
-    nSimRounds              int32;    // simulation rounds
-    nItersMax              int32;     // max number of iterations
-    nConfLimit              int32;    // SAT solver conflict limit
-    fIsMiter              int32;      // this is a miter
-    fUseCones              int32;     // use logic cones
-    fVeryVerbose              int32;  // verbose stats
-    fVerbose              int32;      // verbose stats
-}
 
 // SAT solving manager
    
@@ -101,17 +91,6 @@ func satoko_unmark_cone(p *bmcg_sat_solver, pVars *int32, nVars int32) {}
   SeeAlso     []
 
 ***********************************************************************/
-func Cec3_SetDefaultParams(p *Cec3_Par_t) {
-    memset( p, 0, sizeof(Cec3_Par_t) );
-    p.nSimWords      =      12;    // simulation words
-    p.nSimRounds     =       4;    // simulation rounds
-    p.nItersMax      =      10;    // max number of iterations
-    p.nConfLimit     =    1000;    // conflict limit at a node
-    p.fIsMiter       =       0;    // this is a miter
-    p.fUseCones      =       0;    // use logic cones
-    p.fVeryVerbose   =       0;    // verbose stats
-    p.fVerbose       =       0;    // verbose stats
-}  
 
 /**Function*************************************************************
 
@@ -551,26 +530,6 @@ func Cec3_ManSimAlloc(p *Gia_Man_t, nWords int32) {
   SeeAlso     []
 
 ***********************************************************************/
-var spStatic_Cec3_ManSimHashKey_s_Primes [16]int32 = [16]int32{ 
-        1291, 1699, 1999, 2357, 2953, 3313, 3907, 4177, 
-        4831, 5147, 5647, 6343, 6899, 7103, 7873, 8147 };
-func Cec3_ManSimHashKey(pSim *word, nSims int32, nTableSize int32) int32 {
-    
-    var uHash uint32;
-    var pSimU *uint32 = (unsigned *)pSim;
-    var i int32;
-    var nSimsU int32 = 2 * nSims;
-    if pSimU[0] & 1 {
-        for  i = 0; i < nSimsU; i++  {
-            uHash ^= ~pSimU[i] * spStatic_Cec3_ManSimHashKey_s_Primes[i & 0xf];
-        }
-    } else {
-        for  i = 0; i < nSimsU; i++  {
-            uHash ^= pSimU[i] * spStatic_Cec3_ManSimHashKey_s_Primes[i & 0xf];
-        } }
-    return int32((uHash % nTableSize));
-
-}
 
 /**Function*************************************************************
 
