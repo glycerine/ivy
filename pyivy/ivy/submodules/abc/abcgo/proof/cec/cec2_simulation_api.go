@@ -5,7 +5,6 @@ import (
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"math/bits"
-	"time"
 )
 
 func cec2GraphSimulation(p *gia.Gia_Man_t) *cec3Simulation {
@@ -87,12 +86,16 @@ func Cec2_ManSimClassRefineOne(p *gia.Gia_Man_t, repr int32) {
 	cec2GraphSimulation(p).refineClass(p, repr)
 }
 func Cec2_ManCreateClasses(p *gia.Gia_Man_t, man *Cec2_Man_t) {
-	start := time.Now()
+	unpin := cecPinClockThread()
+	defer unpin()
+	start := cecCPUClock()
 	cec2GraphSimulation(p).createClasses(p)
-	man.timeRefine += time.Since(start).Nanoseconds()
+	man.timeRefine += (cecCPUClock() - start)
 }
 func Cec2_ManSimulate(p *gia.Gia_Man_t, triples *vec.Vec_Int_t, man *Cec2_Man_t) int32 {
-	start := time.Now()
+	unpin := cecPinClockThread()
+	defer unpin()
+	start := cecCPUClock()
 	sim := cec2GraphSimulation(p)
 	for id := int32(1); int(id) < p.ObjectCount(); id++ {
 		_, _, _, kind := p.Gate(id)
@@ -100,7 +103,7 @@ func Cec2_ManSimulate(p *gia.Gia_Man_t, triples *vec.Vec_Int_t, man *Cec2_Man_t)
 			sim.simulateAnd(p, id)
 		}
 	}
-	man.timeSim += time.Since(start).Nanoseconds()
+	man.timeSim += (cecCPUClock() - start)
 	if !p.HasRepresentatives() {
 		return 0
 	}
@@ -116,12 +119,12 @@ func Cec2_ManSimulate(p *gia.Gia_Man_t, triples *vec.Vec_Int_t, man *Cec2_Man_t)
 			}
 		}
 	}
-	start = time.Now()
+	start = cecCPUClock()
 	for id := int32(0); int(id) < p.ObjectCount(); id++ {
 		if gia.Gia_ObjIsHead(p, id) != 0 {
 			sim.refineClass(p, id)
 		}
 	}
-	man.timeRefine += time.Since(start).Nanoseconds()
+	man.timeRefine += (cecCPUClock() - start)
 	return count
 }

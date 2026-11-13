@@ -5,7 +5,6 @@ import (
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/sat/satoko"
-	"time"
 )
 
 // cec2SweepSettings holds the controls used by Cec2_ManPerformSweeping.
@@ -22,6 +21,8 @@ type cec2SweepSettings struct {
 // constructs the reduced graph. The returned simulation is also used for
 // source-style miter counterexample handling by the caller.
 func cec2SweepEquivalences(g *gia.Gia_Man_t, opts cec2SweepSettings) (*gia.Gia_Man_t, *cec3Simulation, *util.Abc_Cex_t) {
+	unpin := cecPinClockThread()
+	defer unpin()
 	if opts.words < 1 || opts.rounds < 0 || opts.iterations < 0 {
 		panic("cec: invalid Cec2 settings")
 	}
@@ -54,7 +55,7 @@ func cec2SweepEquivalences(g *gia.Gia_Man_t, opts cec2SweepSettings) (*gia.Gia_M
 		}
 	}
 	sim := newCec3Simulation(g.ObjectCount(), opts.words)
-	telemetry := &cecSweepTiming{start: time.Now()}
+	telemetry := &cecSweepTiming{start: cecCPUClock()}
 	defer telemetry.print(opts.verbose)
 	simulate := func() { a, b := cec2SimulateAndsTimed(sim, g); telemetry.simTime += a; telemetry.refineTime += b }
 	cec2RandomizeCIs(sim, g)
@@ -64,9 +65,9 @@ func cec2SweepEquivalences(g *gia.Gia_Man_t, opts cec2SweepSettings) (*gia.Gia_M
 			return nil, sim, cex
 		}
 	}
-	classStart := time.Now()
+	classStart := cecCPUClock()
 	sim.createClasses(g)
-	telemetry.refineTime += time.Since(classStart).Nanoseconds()
+	telemetry.refineTime += (cecCPUClock() - classStart)
 	telemetry.classes(g, opts.verbose, opts.veryVerbose)
 	for i := 0; i < opts.rounds; i++ {
 		cec2RandomizeCIs(sim, g)
@@ -110,12 +111,12 @@ func cec2SweepEquivalences(g *gia.Gia_Man_t, opts cec2SweepSettings) (*gia.Gia_M
 				gia.Gia_ObjSetProved(g, id)
 				continue
 			}
-			satStart := time.Now()
+			satStart := cecCPUClock()
 			status, inputs := cnf.solveTwoWithCone(copies[repr]>>1, lit>>1, phase, opts.conflictLimit, opts.useCones)
 			switch status {
 			case satoko.SATOKO_SAT:
 				telemetry.sat++
-				telemetry.satTime += time.Since(satStart).Nanoseconds()
+				telemetry.satTime += (cecCPUClock() - satStart)
 				pattern++
 				if pattern == 64*opts.words {
 					pattern = 1
@@ -127,19 +128,19 @@ func cec2SweepEquivalences(g *gia.Gia_Man_t, opts cec2SweepSettings) (*gia.Gia_M
 				disproved = true
 			case satoko.SATOKO_UNSAT:
 				telemetry.unsat++
-				telemetry.unsatTime += time.Since(satStart).Nanoseconds()
+				telemetry.unsatTime += (cecCPUClock() - satStart)
 				copies[id] = copies[repr] ^ (gia.Gia_ObjPhase(gia.Gia_ManObj(g, id)) ^ gia.Gia_ObjPhase(gia.Gia_ManObj(g, repr)))
 				gia.Gia_ObjSetValue(gia.Gia_ManObj(g, id), copies[id])
 				gia.Gia_ObjSetProved(g, id)
 			default:
 				telemetry.undec++
-				telemetry.undecTime += time.Since(satStart).Nanoseconds()
+				telemetry.undecTime += (cecCPUClock() - satStart)
 				gia.Gia_ObjSetFailed(g, id)
 			}
 			if !opts.useCones {
-				extraStart := time.Now()
+				extraStart := cecCPUClock()
 				cnf.rollback()
-				telemetry.extraTime += time.Since(extraStart).Nanoseconds()
+				telemetry.extraTime += (cecCPUClock() - extraStart)
 			}
 		}
 		if !disproved {

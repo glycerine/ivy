@@ -3,7 +3,6 @@ package cec
 import (
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/misc/util"
-	"time"
 )
 
 // cec4RandomInputs installs the random CI patterns used by Cec4; bit zero is
@@ -22,6 +21,8 @@ func cec4RandomInputs(sim *cec3Simulation, graph *gia.Gia_Man_t) {
 // cec4PrepareSimulation implements the initial and generated-pattern rounds
 // preceding the SAT sweep. A returned witness ends a miter run early.
 func cec4PrepareSimulation(graph *gia.Gia_Man_t, pars *Cec_ParFra_t, simOnly bool, managers ...*Cec4_Man_t) (*cec4PatternPacker, *util.Abc_Cex_t) {
+	unpin := cecPinClockThread()
+	defer unpin()
 	if pars.nWords <= 0 || pars.nRounds < 0 || pars.nGenIters < 0 || (!simOnly && pars.nGenIters > 0 && pars.nItersMax <= 0) {
 		panic("cec4: invalid simulation parameters")
 	}
@@ -78,12 +79,12 @@ func cec4PrepareSimulation(graph *gia.Gia_Man_t, pars *Cec_ParFra_t, simOnly boo
 	for round := int32(0); keepGenerating && round < pars.nGenIters; round++ {
 		generatedRounds++
 		cec4RandomInputs(pack.values, graph)
-		start := time.Now()
+		start := cecCPUClock()
 		count, more := cec4GeneratePatterns(graph, pack, candidates, pars.nItersMax)
 		keepGenerating = more
 		if manager != nil {
 			manager.nSatSat += int32(count)
-			manager.timeGenPats += time.Since(start).Nanoseconds()
+			manager.timeGenPats += (cecCPUClock() - start)
 		}
 		simulate(pack.values, true)
 		if pars.fCheckMiter != 0 {

@@ -8,6 +8,8 @@ import (
 // Cec4_ManPerformSweeping simulates candidates and optionally performs the
 // Glucose-backed SAT sweep, returning zero when the miter has a witness.
 func Cec4_ManPerformSweeping(graph *Gia_Man_t, pars *Cec_ParFra_t, out **Gia_Man_t, simOnly int32) int32 {
+	unpin := cecPinClockThread()
+	defer unpin()
 	manager := Cec4_ManCreate(graph, pars)
 	defer Cec4_ManDestroy(manager)
 	if pars.fVerbose != 0 {
@@ -41,13 +43,15 @@ func Cec4_ManSimulateTest(graph *Gia_Man_t, pars *Cec_ParFra_t) *Gia_Man_t {
 	return result
 }
 func Cec4_ManSimulateTest2(graph *Gia_Man_t, verbose int32) {
-	start := time.Now()
+	unpin := cecPinClockThread()
+	defer unpin()
+	start := cecCPUClock()
 	var pars Cec_ParFra_t
 	Cec4_ManSetParams(&pars)
 	Cec4_ManPerformSweeping(graph, &pars, nil, 0)
 	pars.fVerbose = verbose
 	if verbose != 0 {
-		fmt.Printf("New choice computation time: %s\n", time.Since(start))
+		fmt.Printf("New choice computation time: %s\n", time.Duration(cecCPUClock()-start))
 	}
 }
 func Cec4_ManSimulateTest3(graph *Gia_Man_t, limit, verbose int32) *Gia_Man_t {

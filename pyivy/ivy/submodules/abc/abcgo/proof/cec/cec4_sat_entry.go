@@ -1,8 +1,6 @@
 package cec
 
 import (
-	"time"
-
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/sat/glucose2"
 )
@@ -43,6 +41,8 @@ func Cec4_ManSatSolverRecycle(p *Cec4_Man_t) {
 // Cec4_ManSolveTwo compares two regular GIA objects under the given expected
 // phase. It leaves a counterexample model in p.pSat when SAT is returned.
 func Cec4_ManSolveTwo(p *Cec4_Man_t, first, second, phase int32, easy *int32, verbose int32) int32 {
+	unpin := cecPinClockThread()
+	defer unpin()
 	if easy == nil || first == second || phase < 0 || phase > 1 {
 		panic("cec4: invalid SAT comparison")
 	}
@@ -66,7 +66,7 @@ func Cec4_ManSolveTwo(p *Cec4_Man_t, first, second, phase int32, easy *int32, ve
 			limit = 1
 		}
 	}
-	start := time.Now()
+	start := cecCPUClock()
 	a := Cec4_ObjGetCnfVar(p, first)
 	b := Cec4_ObjGetCnfVar(p, second)
 	if c.jType > 0 {
@@ -79,7 +79,7 @@ func Cec4_ManSolveTwo(p *Cec4_Man_t, first, second, phase int32, easy *int32, ve
 			}
 		}
 	}
-	p.timeCnf += time.Since(start).Nanoseconds()
+	p.timeCnf += cecCPUClock() - start
 	solve := func(x, y int32) (int32, int32) {
 		if limit > 0 {
 			c.solver.SetConfBudget(int64(limit))
@@ -97,10 +97,8 @@ func Cec4_ManSolveTwo(p *Cec4_Man_t, first, second, phase int32, easy *int32, ve
 		status, conflicts = solve(a<<1, b<<1|(phase^1))
 		maxConflicts = conflicts
 		if verbose != 0 && status == glucose2.GLUCOSE_UNSAT {
-			if firstConflicts > maxConflicts {
-				maxConflicts = firstConflicts
-			}
-			conflicts += firstConflicts
+			total, max := cec4DoubleUnsatConflicts(int64(firstConflicts), int64(conflicts))
+			conflicts, maxConflicts = int32(total), int32(max)
 		}
 	}
 	if verbose != 0 && (status == glucose2.GLUCOSE_SAT || status == glucose2.GLUCOSE_UNSAT) {
@@ -118,4 +116,10 @@ func Cec4_ManSolveTwo(p *Cec4_Man_t, first, second, phase int32, easy *int32, ve
 		}
 	}
 	return status
+}
+
+// The source overwrites its temporary maximum on the reverse UNSAT query;
+// its reported maximum therefore uses only that query, while the total uses both.
+func cec4DoubleUnsatConflicts(first, second int64) (total, reportedMax int64) {
+	return first + second, second
 }

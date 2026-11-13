@@ -3,7 +3,6 @@ package cec
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/gia"
-	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/sat/glucose2"
 	"sync"
@@ -11,7 +10,7 @@ import (
 )
 
 func Cec4_ManCreate(g *Gia_Man_t, pars *Cec_ParFra_t) *Cec4_Man_t {
-	p := &Cec4_Man_t{pAig: g, pPars: pars, timeStart: util.Abc_Clock()}
+	p := &Cec4_Man_t{pAig: g, pPars: pars, timeStart: cecCPUClock()}
 	p.pSat = glucose2.NewABCSolver()
 	p.pSat.JustificationMode = int(pars.jType)
 	p.vFrontier = vec.Vec_PtrAlloc(1000)
@@ -28,7 +27,7 @@ func Cec4_ManCreate(g *Gia_Man_t, pars *Cec_ParFra_t) *Cec4_Man_t {
 }
 func Cec4_ManDestroy(p *Cec4_Man_t) {
 	if p.pPars.fVerbose != 0 {
-		total := util.Abc_Clock() - p.timeStart
+		total := cecCPUClock() - p.timeStart
 		sat := p.timeSatSat0 + p.timeSatSat + p.timeSatUnsat0 + p.timeSatUnsat + p.timeSatUndec
 		entries := []struct {
 			name string
@@ -78,18 +77,18 @@ func Cec4_ManDestroy(p *Cec4_Man_t) {
 
 var cec4StatsClock struct {
 	sync.Mutex
-	last time.Time
+	last int64
 }
 
 func Cec4_ManPrintStats(g *Gia_Man_t, pars *Cec_ParFra_t, p *Cec4_Man_t, simulation int32) {
 	if pars.fVerbose == 0 {
 		return
 	}
-	now := time.Now()
+	now := cecCPUClock()
 	cec4StatsClock.Lock()
 	var elapsed time.Duration
-	if p.nItersSim+p.nItersSat != 0 && !cec4StatsClock.last.IsZero() {
-		elapsed = now.Sub(cec4StatsClock.last)
+	if p.nItersSim+p.nItersSat != 0 && cec4StatsClock.last != 0 {
+		elapsed = time.Duration(now - cec4StatsClock.last)
 	}
 	cec4StatsClock.last = now
 	cec4StatsClock.Unlock()

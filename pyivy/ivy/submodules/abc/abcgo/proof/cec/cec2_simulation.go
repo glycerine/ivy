@@ -5,7 +5,6 @@ import (
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/sat/satoko"
 	"math/bits"
-	"time"
 )
 
 type cecReplayTriple struct {
@@ -56,7 +55,9 @@ func cec2SimulateAnds(sim *cec3Simulation, graph *gia.Gia_Man_t) {
 }
 
 func cec2SimulateAndsTimed(sim *cec3Simulation, graph *gia.Gia_Man_t) (int64, int64) {
-	start := time.Now()
+	unpin := cecPinClockThread()
+	defer unpin()
+	start := cecCPUClock()
 	for id := int32(1); int(id) < graph.ObjectCount(); id++ {
 		_, _, _, kind := graph.Gate(id)
 		switch kind {
@@ -67,8 +68,8 @@ func cec2SimulateAndsTimed(sim *cec3Simulation, graph *gia.Gia_Man_t) (int64, in
 			panic("cec: Cec2 simulation requires an AND-inverter graph")
 		}
 	}
-	simTime := time.Since(start).Nanoseconds()
-	start = time.Now()
+	simTime := (cecCPUClock() - start)
+	start = cecCPUClock()
 	if graph.HasRepresentatives() {
 		for id := int32(0); int(id) < graph.ObjectCount(); id++ {
 			if gia.Gia_ObjIsHead(graph, id) != 0 {
@@ -76,7 +77,7 @@ func cec2SimulateAndsTimed(sim *cec3Simulation, graph *gia.Gia_Man_t) (int64, in
 			}
 		}
 	}
-	return simTime, time.Since(start).Nanoseconds()
+	return simTime, (cecCPUClock() - start)
 }
 
 // cec2FailingOutput returns the first output and simulation pattern that is

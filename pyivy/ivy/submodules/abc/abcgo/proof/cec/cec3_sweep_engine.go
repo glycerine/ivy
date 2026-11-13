@@ -6,7 +6,6 @@ import (
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/sat/glucose"
-	"time"
 )
 
 // cec3SweepSettings holds the controls used by Cec2_ManPerformSweeping.
@@ -23,6 +22,8 @@ type cec3SweepSettings struct {
 // constructs the reduced graph. The returned simulation is also used for
 // source-style miter counterexample handling by the caller.
 func cec3SweepEquivalences(g *gia.Gia_Man_t, opts cec3SweepSettings) (*gia.Gia_Man_t, *cec3Simulation, *util.Abc_Cex_t) {
+	unpin := cecPinClockThread()
+	defer unpin()
 	if opts.words < 1 || opts.rounds < 0 || opts.iterations < 0 {
 		panic("cec: invalid Cec3 settings")
 	}
@@ -54,7 +55,7 @@ func cec3SweepEquivalences(g *gia.Gia_Man_t, opts cec3SweepSettings) (*gia.Gia_M
 		}
 	}
 	sim := newCec3Simulation(g.ObjectCount(), opts.words)
-	telemetry := &cecSweepTiming{start: time.Now()}
+	telemetry := &cecSweepTiming{start: cecCPUClock()}
 	defer telemetry.print(opts.verbose)
 	simulate := func() { a, b := cec2SimulateAndsTimed(sim, g); telemetry.simTime += a; telemetry.refineTime += b }
 	cec2RandomizeCIs(sim, g)
@@ -64,9 +65,9 @@ func cec3SweepEquivalences(g *gia.Gia_Man_t, opts cec3SweepSettings) (*gia.Gia_M
 			return nil, sim, cex
 		}
 	}
-	classStart := time.Now()
+	classStart := cecCPUClock()
 	sim.createClasses(g)
-	telemetry.refineTime += time.Since(classStart).Nanoseconds()
+	telemetry.refineTime += (cecCPUClock() - classStart)
 	telemetry.classes(g, opts.verbose, opts.veryVerbose)
 	for i := 0; i < opts.rounds; i++ {
 		cec2RandomizeCIs(sim, g)
@@ -112,12 +113,12 @@ func cec3SweepEquivalences(g *gia.Gia_Man_t, opts cec3SweepSettings) (*gia.Gia_M
 				continue
 			}
 			gia.Gia_ManExtendCopy2Array(reduced)
-			satStart := time.Now()
+			satStart := cecCPUClock()
 			status := Cec3_ManSolveTwo(man, copies[repr]>>1, lit>>1, int32(phase))
 			switch status {
 			case glucose.GLUCOSE_SAT:
 				telemetry.sat++
-				telemetry.satTime += time.Since(satStart).Nanoseconds()
+				telemetry.satTime += (cecCPUClock() - satStart)
 				pattern++
 				if pattern == 64*opts.words {
 					pattern = 1
@@ -134,21 +135,21 @@ func cec3SweepEquivalences(g *gia.Gia_Man_t, opts cec3SweepSettings) (*gia.Gia_M
 				disproved = true
 			case glucose.GLUCOSE_UNSAT:
 				telemetry.unsat++
-				telemetry.unsatTime += time.Since(satStart).Nanoseconds()
+				telemetry.unsatTime += (cecCPUClock() - satStart)
 				man.nSatUnsat++
 				copies[id] = copies[repr] ^ (gia.Gia_ObjPhase(gia.Gia_ManObj(g, id)) ^ gia.Gia_ObjPhase(gia.Gia_ManObj(g, repr)))
 				gia.Gia_ObjSetValue(gia.Gia_ManObj(g, id), copies[id])
 				gia.Gia_ObjSetProved(g, id)
 			default:
 				telemetry.undec++
-				telemetry.undecTime += time.Since(satStart).Nanoseconds()
+				telemetry.undecTime += (cecCPUClock() - satStart)
 				man.nSatUndec++
 				gia.Gia_ObjSetFailed(g, id)
 			}
 			if !opts.useCones {
-				extraStart := time.Now()
+				extraStart := cecCPUClock()
 				glucose.Bmcg_sat_solver_reset(man.pSat)
-				telemetry.extraTime += time.Since(extraStart).Nanoseconds()
+				telemetry.extraTime += (cecCPUClock() - extraStart)
 			}
 		}
 		if !disproved {

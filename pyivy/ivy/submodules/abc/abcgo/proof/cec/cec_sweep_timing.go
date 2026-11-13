@@ -7,7 +7,7 @@ import (
 )
 
 type cecSweepTiming struct {
-	start                                                         time.Time
+	start                                                         int64
 	sat, unsat, undec                                             int32
 	satTime, unsatTime, undecTime, simTime, refineTime, extraTime int64
 }
@@ -27,7 +27,7 @@ func (s *cecSweepTiming) print(verbose bool) {
 	if !verbose {
 		return
 	}
-	total := time.Since(s.start).Nanoseconds()
+	total := (cecCPUClock() - s.start)
 	sat := s.satTime + s.unsatTime + s.undecTime
 	entries := []struct {
 		name string

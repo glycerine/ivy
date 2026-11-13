@@ -22,17 +22,34 @@ func cec4SweepNode(graph, reduced *gia.Gia_Man_t, sim *cec3Simulation, cnf *cec4
 	} else {
 		status = cnf.solveTwo(copies[repr]>>1, copies[id]>>1, relation, conflictLimit)
 	}
+	cec4ApplySweepResult(graph, reduced, sim, cnf, copies, id, repr, pattern, status)
+	return status
+}
+
+func cec4ApplySweepResult(graph, reduced *gia.Gia_Man_t, sim *cec3Simulation, cnf *cec4CNF, copies []int32, id, repr int32, pattern *int, status int32) {
+	obj, representative := gia.Gia_ManObj(graph, id), gia.Gia_ManObj(graph, repr)
+	phase := gia.Gia_ObjPhase(obj) ^ gia.Gia_ObjPhase(representative)
 	switch status {
 	case glucose2.GLUCOSE_SAT:
 		*pattern++
 		if *pattern >= 64*sim.words {
 			panic("cec4: simulation pattern storage is full")
 		}
-		for i := int32(0); i < gia.Gia_ManCiNum(graph); i++ {
-			oldID := gia.Gia_ObjId(graph, gia.Gia_ManCi(graph, i))
-			newID := gia.Gia_ObjId(reduced, gia.Gia_ManCi(reduced, i))
-			if v, ok := cnf.inputs[newID]; ok {
-				sim.setInputBit(oldID, *pattern, cnf.solver.Model[v] == glucose2.LTrue)
+		if cnf.jType == 0 {
+			// ABC replays reduced-graph CI IDs directly on the original graph.
+			// With interleaved CIs this can write a different original object.
+			for variable, object := range cnf.objects {
+				if mapped, ok := cnf.inputs[object]; ok && int(mapped) == variable {
+					sim.setInputBit(object, *pattern, cnf.solver.Model[variable] == glucose2.LTrue)
+				}
+			}
+		} else {
+			// The source replays only the complemented justification trail.
+			for _, lit := range cnf.solver.JustModel[1:] {
+				v := int(lit >> 1)
+				if v < len(cnf.objects) && cnf.objects[v] >= 0 {
+					sim.setInputBit(cnf.objects[v], *pattern, lit&1 == 0)
+				}
 			}
 		}
 	case glucose2.GLUCOSE_UNSAT:
@@ -42,5 +59,4 @@ func cec4SweepNode(graph, reduced *gia.Gia_Man_t, sim *cec3Simulation, cnf *cec4
 	case glucose2.GLUCOSE_UNDEC:
 		gia.Gia_ObjSetFailed(graph, id)
 	}
-	return status
 }

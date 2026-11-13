@@ -5,7 +5,6 @@ import (
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"math/bits"
-	"time"
 )
 
 type cec4SimulationState struct {
@@ -171,7 +170,9 @@ func Cec4_ManSimulateCos(p *Cec4_Man_t) int32 {
 	return 1
 }
 func Cec4_ManSimulate(p *Cec4_Man_t) {
-	start := time.Now()
+	unpin := cecPinClockThread()
+	defer unpin()
+	start := cecCPUClock()
 	p.nSimulates++
 	if !p.simState.initialized {
 		Cec4_RefineInit(p)
@@ -190,10 +191,10 @@ func Cec4_ManSimulate(p *Cec4_Man_t) {
 		gia.Gia_ObjSetColor(g, repr, 0)
 		vec.Vec_IntPush(p.vRefClasses, repr)
 	}
-	p.timeSim += time.Since(start).Nanoseconds()
-	start = time.Now()
+	p.timeSim += (cecCPUClock() - start)
+	start = cecCPUClock()
 	Cec4_RefineClasses(p, p.vRefClasses)
-	p.timeRefine += time.Since(start).Nanoseconds()
+	p.timeRefine += (cecCPUClock() - start)
 }
 func Cec4_ManSimulate_rec(p *Cec4_Man_t, id int32) {
 	if id == 0 || vec.Vec_IntEntry(p.vCexStamps, int(id)) == int32(p.pattern) {

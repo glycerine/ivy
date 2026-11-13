@@ -5,7 +5,6 @@ import (
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/sat/glucose"
-	"time"
 )
 
 func Cec3_ManVerify_rec(g *gia.Gia_Man_t, id int32, s *glucose.Solver) int32 {
@@ -98,7 +97,9 @@ func Cec3_ManSolveTwo(p *Cec3_Man_t, a, b, phase int32) int32 {
 	return status
 }
 func Cec3_ManSweepNode(p *Cec3_Man_t, id int32) int32 {
-	start := time.Now()
+	unpin := cecPinClockThread()
+	defer unpin()
+	start := cecCPUClock()
 	obj := gia.Gia_ManObj(p.pAig, id)
 	repr := gia.Gia_ObjReprObj(p.pAig, id)
 	phase := (gia.Gia_ObjValue(obj)^gia.Gia_ObjValue(repr))&1 ^ gia.Gia_ObjPhase(obj) ^ gia.Gia_ObjPhase(repr)
@@ -121,23 +122,23 @@ func Cec3_ManSweepNode(p *Cec3_Man_t, id int32) int32 {
 			}
 			Cec3_ObjSimSetInputBit(p.pAig, pairs[i], value)
 		}
-		p.timeSatSat += time.Since(start).Nanoseconds()
+		p.timeSatSat += (cecCPUClock() - start)
 		result = 0
 	case glucose.GLUCOSE_UNSAT:
 		p.nSatUnsat++
 		gia.Gia_ObjSetValue(obj, gia.Gia_ObjValue(repr)^phase)
 		gia.Gia_ObjSetProved(p.pAig, id)
-		p.timeSatUnsat += time.Since(start).Nanoseconds()
+		p.timeSatUnsat += (cecCPUClock() - start)
 	default:
 		p.nSatUndec++
 		gia.Gia_ObjSetFailed(p.pAig, id)
-		p.timeSatUndec += time.Since(start).Nanoseconds()
+		p.timeSatUndec += (cecCPUClock() - start)
 		result = 2
 	}
 	if p.pPars.fUseCones == 0 {
-		start = time.Now()
+		start = cecCPUClock()
 		glucose.Bmcg_sat_solver_reset(p.pSat)
-		p.timeExtra += time.Since(start).Nanoseconds()
+		p.timeExtra += (cecCPUClock() - start)
 	}
 	return result
 }

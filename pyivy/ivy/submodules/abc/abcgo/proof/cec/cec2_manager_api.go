@@ -9,7 +9,7 @@ import (
 )
 
 func Cec2_ManCreate(g *gia.Gia_Man_t, pars *Cec2_Par_t) *Cec2_Man_t {
-	p := &Cec2_Man_t{pAig: g, pPars: pars, timeStart: time.Now().UnixNano()}
+	p := &Cec2_Man_t{pAig: g, pPars: pars, timeStart: cecCPUClock()}
 	p.pNew = gia.Gia_ManStart(gia.Gia_ManObjNum(g))
 	gia.Gia_ManFillValue(g)
 	gia.Gia_ObjSetValue(gia.Gia_ManConst0(g), 0)
@@ -34,7 +34,7 @@ func Cec2_ManCreate(g *gia.Gia_Man_t, pars *Cec2_Par_t) *Cec2_Man_t {
 }
 func Cec2_ManDestroy(p *Cec2_Man_t) {
 	if p.pPars.fVerbose != 0 {
-		total := time.Now().UnixNano() - p.timeStart
+		total := cecCPUClock() - p.timeStart
 		sat := p.timeSatSat + p.timeSatUnsat + p.timeSatUndec
 		entries := []struct {
 			name string

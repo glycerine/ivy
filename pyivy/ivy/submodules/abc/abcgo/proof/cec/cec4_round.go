@@ -2,7 +2,6 @@ package cec
 
 import (
 	"github.com/glycerine/abcgo/aig/gia"
-	"time"
 )
 
 // cec4SimulationRound propagates input patterns, creating candidate classes on
@@ -12,13 +11,15 @@ func cec4SimulationRound(sim *cec3Simulation, graph *gia.Gia_Man_t, maxLevel int
 }
 
 func cec4SimulationRoundTimed(sim *cec3Simulation, graph *gia.Gia_Man_t, maxLevel int32, initialized bool) (int64, int64) {
-	start := time.Now()
+	unpin := cecPinClockThread()
+	defer unpin()
+	start := cecCPUClock()
 	cec4SimulateGraph(sim, graph)
-	simTime := time.Since(start).Nanoseconds()
-	start = time.Now()
+	simTime := (cecCPUClock() - start)
+	start = cecCPUClock()
 	if !initialized {
 		cec4CreateClasses(sim, graph, maxLevel)
-		return simTime, time.Since(start).Nanoseconds()
+		return simTime, (cecCPUClock() - start)
 	}
 	// The original only schedules a class when one of its AND nodes differs
 	// from its representative; standalone CI classes are left untouched.
@@ -37,5 +38,5 @@ func cec4SimulationRoundTimed(sim *cec3Simulation, graph *gia.Gia_Man_t, maxLeve
 	for _, head := range heads {
 		cec4RefineClass(sim, graph, head)
 	}
-	return simTime, time.Since(start).Nanoseconds()
+	return simTime, (cecCPUClock() - start)
 }

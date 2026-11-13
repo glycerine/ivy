@@ -3,7 +3,6 @@ package cec
 import (
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/sat/glucose2"
-	"time"
 )
 
 // cec4CNF owns the SAT IDs and the incremental Glucose2 instance used for
@@ -131,13 +130,15 @@ func (c *cec4CNF) variable(id int32) int32 {
 // solveTwo returns Glucose2's SAT/UNSAT/UNDEC status; a SAT result leaves
 // the witness in solver.Model. phase is the expected relation's complement.
 func (c *cec4CNF) solveTwo(first, second, phase, limit int32) int32 {
+	unpin := cecPinClockThread()
+	defer unpin()
 	if first > second {
 		first, second = second, first
 	}
 	if first < 0 || first == second || phase < 0 || phase > 1 {
 		panic("cec4: invalid SAT comparison")
 	}
-	start := time.Now()
+	start := cecCPUClock()
 	a, b := c.variable(first), c.variable(second)
 	if c.jType > 0 {
 		c.solver.SetNewRound()
@@ -149,7 +150,7 @@ func (c *cec4CNF) solveTwo(first, second, phase, limit int32) int32 {
 			}
 		}
 	}
-	c.cnfTime += time.Since(start).Nanoseconds()
+	c.cnfTime += (cecCPUClock() - start)
 	solve := func(x, y int32) int32 {
 		if limit > 0 {
 			c.solver.SetConfBudget(int64(limit))
@@ -167,8 +168,7 @@ func (c *cec4CNF) solveTwo(first, second, phase, limit int32) int32 {
 		status = solve(a<<1, b<<1|(phase^1))
 		secondConflicts := c.solver.Conflicts - before
 		if status == glucose2.GLUCOSE_UNSAT {
-			c.lastConflicts = firstConflicts + secondConflicts
-			c.lastMaxConflicts = max(firstConflicts, secondConflicts)
+			c.lastConflicts, c.lastMaxConflicts = cec4DoubleUnsatConflicts(firstConflicts, secondConflicts)
 		} else {
 			c.lastConflicts = secondConflicts
 			c.lastMaxConflicts = secondConflicts

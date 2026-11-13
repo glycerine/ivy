@@ -5,7 +5,6 @@ import (
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/sat/glucose2"
-	"time"
 )
 
 type cec4SweepStats struct{ sat, unsat, unknown, recycles int }
@@ -13,6 +12,8 @@ type cec4SweepStats struct{ sat, unsat, unknown, recycles int }
 // cec4Sweep performs Cec4's simulation-guided, single-pass SAT sweep.
 // Witnesses are returned to the caller for storage in the source manager.
 func cec4Sweep(graph *gia.Gia_Man_t, pars *Cec_ParFra_t, simOnly, finishGraph bool, managers ...*Cec4_Man_t) (*gia.Gia_Man_t, *util.Abc_Cex_t, cec4SweepStats) {
+	unpin := cecPinClockThread()
+	defer unpin()
 	var stats cec4SweepStats
 	var manager *Cec4_Man_t
 	if len(managers) > 0 {
@@ -97,10 +98,10 @@ func cec4Sweep(graph *gia.Gia_Man_t, pars *Cec_ParFra_t, simOnly, finishGraph bo
 		if repr == gia.GIA_VOID {
 			continue
 		}
-		localStart := time.Now()
+		localStart := cecCPUClock()
 		repr = cec4FindReprAtPattern(sim, graph, id, int32(pattern), stamps)
 		if manager != nil {
-			manager.timeResimLoc += time.Since(localStart).Nanoseconds()
+			manager.timeResimLoc += (cecCPUClock() - localStart)
 		}
 		if repr < 0 {
 			continue
@@ -131,11 +132,11 @@ func cec4Sweep(graph *gia.Gia_Man_t, pars *Cec_ParFra_t, simOnly, finishGraph bo
 		if failed[copies[id]>>1] || failed[copies[repr]>>1] {
 			limit = max(int32(1), limit/10)
 		}
-		satStart := time.Now()
+		satStart := cecCPUClock()
 		cnfBefore := cnf.cnfTime
 		gatesBefore := cnf.gates
 		status := cec4SweepNode(graph, reduced, sim, cnf, copies, id, repr, limit, &pattern)
-		elapsed := time.Since(satStart).Nanoseconds()
+		elapsed := (cecCPUClock() - satStart)
 		if manager != nil {
 			manager.pattern = pattern
 			manager.timeCnf += cnf.cnfTime - cnfBefore
@@ -166,13 +167,13 @@ func cec4Sweep(graph *gia.Gia_Man_t, pars *Cec_ParFra_t, simOnly, finishGraph bo
 				}
 			}
 			if pattern == 64*sim.words-2 {
-				resimStart := time.Now()
+				resimStart := cecCPUClock()
 				simTime, refTime := cec4SimulationRoundTimed(sim, graph, pars.nLevelMax, true)
 				if manager != nil {
 					manager.nSimulates++
 					manager.timeSim += simTime
 					manager.timeRefine += refTime
-					manager.timeResimGlo += time.Since(resimStart).Nanoseconds()
+					manager.timeResimGlo += (cecCPUClock() - resimStart)
 					Cec4_ManPrintStats(graph, pars, manager, 0)
 					manager.pattern = 0
 				}
@@ -196,17 +197,18 @@ func cec4Sweep(graph *gia.Gia_Man_t, pars *Cec_ParFra_t, simOnly, finishGraph bo
 				manager.nSatUndec++
 				manager.timeSatUndec += elapsed
 			}
-			failed[copies[id]>>1] = true
+			// Cec4_ManSweepNode records UNKNOWN against the original candidate ID.
+			failed[id] = true
 		}
 	}
 	if pattern > 0 {
-		resimStart := time.Now()
+		resimStart := cecCPUClock()
 		simTime, refTime := cec4SimulationRoundTimed(sim, graph, pars.nLevelMax, true)
 		if manager != nil {
 			manager.nSimulates++
 			manager.timeSim += simTime
 			manager.timeRefine += refTime
-			manager.timeResimGlo += time.Since(resimStart).Nanoseconds()
+			manager.timeResimGlo += (cecCPUClock() - resimStart)
 			manager.pattern = 0
 		}
 		clear(stamps)
