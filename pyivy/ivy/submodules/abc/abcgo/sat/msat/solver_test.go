@@ -241,23 +241,6 @@ func TestVectorOwnershipAndOrdering(t *testing.T) {
 		t.Fatal(moved.data)
 	}
 }
-func TestVariableHeapUpdatesAndDelete(t *testing.T) {
-	weights := []float64{1, 8, 3, 4}
-	h := Msat_VarHeapAlloc()
-	Msat_VarHeapSetActivity(h, weights)
-	Msat_VarHeapStart(h, []int{0, 1, 2, 3}, 4, 4)
-	Msat_VarHeapCheck(h)
-	if Msat_VarHeapGetMax(h) != 1 {
-		t.Fatal("max")
-	}
-	weights[0] = 9
-	Msat_VarHeapUpdate(h, 0)
-	Msat_VarHeapDelete(h, 3)
-	Msat_VarHeapCheck(h)
-	if Msat_VarHeapGetMax(h) != 0 || Msat_VarHeapGetMax(h) != 2 {
-		t.Fatal("update/delete")
-	}
-}
 func TestPoolsRecycleAndRestart(t *testing.T) {
 	p := Msat_MmFixedStart(8)
 	a := Msat_MmFixedEntryFetch(p)

@@ -76,9 +76,9 @@ Msat_ClauseComputeTruth, Msat_ClauseCreateFake, and
 Msat_ClauseCreateFakeLit declarations are likewise undefined there. They are not
 silently implemented as fake proof, interpolation or enumeration support.
 Call sites requiring those obsolete interfaces need a separate specification.
-The clear standalone Msat_VarHeap_* header contract is implemented with the same
-indexed heap algorithm and tested even though its original standalone bodies
-are absent. No package build blockers or excluded generated files remain.
+The standalone `Msat_VarHeap_*` declarations also lack implementations in
+the original checkout and are not provided as invented replacement algorithms.
+No package build blockers or excluded generated files remain.
 
 `Msat_SolverPrepare` now matches C and clears root assignments, including
 units with no retained clause object. Callers must account for that source
