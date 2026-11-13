@@ -42,9 +42,8 @@ Intentional conservative paths and limits:
   `Acec_ParCec_t`. The other flags, including Booth and the time limit, are
   unused in this C entry point and remain unused in its Go translation.
 - The original CLA carry rewrite requires a unique polarity along every path to
-  each XOR input. Reconvergent XORs commonly violate that assumption. The Go
-  port returns an unchanged duplicate when preflight finds ambiguous polarity;
-  it does not claim to perform that rewrite in this case.
+  each XOR input. Reconvergent XORs commonly violate that assumption. As in C,
+  detecting conflicting polarities violates the rewrite's precondition.
 - The priority-based polynomial expansion retains the C routine's explicit
   restriction against native MUX nodes. The two polynomial builders in
   `acecPo.go` do support native MUXes.

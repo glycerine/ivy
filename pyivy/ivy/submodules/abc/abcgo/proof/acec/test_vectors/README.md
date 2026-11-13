@@ -26,6 +26,11 @@ one output. This does not establish that the later `Acec_Solve` path is safe
 for that graph; the source unconditionally patches its last two outputs after
 matching boxes.
 
+`acec_ambiguous_polarity.c` builds a reconvergent XOR and invokes
+`Acec_DetectAdditional`. With ABC assertions enabled it aborts on inconsistent
+polarity, matching the precondition enforced by the Go port. Build it with the
+same commands, substituting its filename.
+
 `abc_acec_results.txt` records the ABC CLI differential cases; set
 `go test -run TestABCDifferential ./proof/acec` always compares Go against the
 recorded results. Set `ABC_BINARY` to the absolute path of the compiled ABC
