@@ -194,7 +194,7 @@ func TestRetimePreservesOutputMetadata(t *testing.T) {
 	checkRetimeTraces(t, g, out, 2, 2)
 }
 
-func TestBackwardRetimeSkipsConstrainedHiddenRegisters(t *testing.T) {
+func TestBackwardRetimeRestoresConstrainedHiddenRegisters(t *testing.T) {
 	g := aig.NewGraph()
 	x, y := g.NewInput(), g.NewInput()
 	a, b, c, d := g.NewInput(), g.NewInput(), g.NewInput(), g.NewInput()
@@ -204,7 +204,7 @@ func TestBackwardRetimeSkipsConstrainedHiddenRegisters(t *testing.T) {
 	aig.Aig_ManSetRegNum(g, 4)
 	aig.Aig_ManSetConstrNum(g, 1)
 	out := Saig_ManRetimeMinArea(g, 4, 0, 1, 1, 0)
-	if out.RegisterCount() != 4 || aig.Aig_ManConstrNum(out) != 1 {
+	if out.RegisterCount() != 3 || aig.Aig_ManConstrNum(out) != 1 {
 		t.Fatalf("registers=%d constraints=%d", out.RegisterCount(), aig.Aig_ManConstrNum(out))
 	}
 	checkRetimeTraces(t, g, out, 2, 4)
@@ -225,4 +225,21 @@ func TestForwardRetimePreservesOutputMetadata(t *testing.T) {
 		t.Fatalf("registers=%d constraints=%d assertions=%d", out.RegisterCount(), aig.Aig_ManConstrNum(out), out.Assertions)
 	}
 	checkRetimeTraces(t, g, out, 1, 2)
+}
+
+func TestBackwardRetimeSkipsOverlappingAssertedConstraints(t *testing.T) {
+	g := aig.NewGraph()
+	x, y := g.NewInput(), g.NewInput()
+	a, b, c, d := g.NewInput(), g.NewInput(), g.NewInput(), g.NewInput()
+	for _, e := range []aig.Edge{a, b, c, d, x, x.Not(), y, y} {
+		g.AddOutput(e)
+	}
+	aig.Aig_ManSetRegNum(g, 4)
+	aig.Aig_ManSetConstrNum(g, 1)
+	g.Assertions = 4
+	out := Saig_ManRetimeMinArea(g, 4, 0, 1, 1, 0)
+	if out.RegisterCount() != 4 || aig.Aig_ManConstrNum(out) != 1 || out.Assertions != 4 {
+		t.Fatal("unsupported overlap changed interface")
+	}
+	checkRetimeTraces(t, g, out, 2, 4)
 }

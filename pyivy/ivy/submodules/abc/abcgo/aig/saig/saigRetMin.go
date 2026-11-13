@@ -323,7 +323,24 @@ func Saig_ManExposeBadRegs(graph *aig.Graph, count int32) {
 	if graph == nil || count < 0 || count > Saig_ManPiNum(graph) || count > Saig_ManPoNum(graph) {
 		panic("saig: invalid exposed register count")
 	}
-	aig.Aig_ManSetRegNum(graph, aig.Aig_ManRegNum(graph)+count)
+	constraints := int(aig.Aig_ManConstrNum(graph))
+	if count == 0 || constraints == 0 {
+		aig.Aig_ManSetRegNum(graph, aig.Aig_ManRegNum(graph)+count)
+		return
+	}
+	outputs := graph.Outputs()
+	pos := len(outputs) - int(graph.RegisterCount())
+	hidden := pos - constraints - int(count)
+	if hidden < 0 {
+		panic("saig: invalid hidden constraint interface")
+	}
+	reordered := append([]aig.Edge(nil), outputs[:hidden]...)
+	reordered = append(reordered, outputs[pos-constraints:pos]...)
+	reordered = append(reordered, outputs[hidden:pos-constraints]...)
+	reordered = append(reordered, outputs[pos:]...)
+	if err := aig.Aig_ManReorderCisCos(graph, graph.Inputs(), reordered, graph.RegisterCount()+count); err != nil {
+		panic(err)
+	}
 }
 
 // Saig_ManRetimeMinAreaBackward derives the source minimum cut and retries
@@ -333,9 +350,12 @@ func Saig_ManRetimeMinAreaBackward(graph *aig.Graph, verbose int32) *aig.Graph {
 		return nil
 	}
 	bad := Saig_ManGetRegistersToExclude(graph)
-	// Hiding appends register outputs to the ordinary-output section. That
-	// would move them behind trailing constraint outputs, changing their role.
-	if aig.Aig_ManConstrNum(graph) != 0 && vec.Vec_PtrSize(bad) != 0 {
+	originalPOs := int(Saig_ManPoNum(graph))
+	constraints := int(aig.Aig_ManConstrNum(graph))
+	// Assertions denote a prefix, so overlapping asserted constraints cannot
+	// be moved around hidden POs without changing that representation.
+	canHide := constraints == 0 || int(graph.Assertions) <= originalPOs-constraints
+	if !canHide && vec.Vec_PtrSize(bad) != 0 {
 		return nil
 	}
 	if verbose != 0 && vec.Vec_PtrSize(bad) > 0 {
@@ -354,13 +374,32 @@ func Saig_ManRetimeMinAreaBackward(graph *aig.Graph, verbose int32) *aig.Graph {
 		initialGraph := Saig_ManRetimeDupInitState(graph, cut)
 		initial := Saig_ManRetimeInitState(initialGraph)
 		if initial != nil {
-			return Saig_ManRetimeDupBackward(graph, cut, initial)
+			result := Saig_ManRetimeDupBackward(graph, cut, initial)
+			if result != nil && constraints != 0 {
+				outputs := result.Outputs()
+				pos := int(Saig_ManPoNum(result))
+				hidden := pos - originalPOs
+				if hidden < 0 {
+					panic("saig: invalid hidden output count")
+				}
+				if hidden > 0 {
+					firstConstraint := originalPOs - constraints
+					reordered := append([]aig.Edge(nil), outputs[:firstConstraint]...)
+					reordered = append(reordered, outputs[originalPOs:pos]...)
+					reordered = append(reordered, outputs[firstConstraint:originalPOs]...)
+					reordered = append(reordered, outputs[pos:]...)
+					if err := aig.Aig_ManReorderCisCos(result, result.Inputs(), reordered, result.RegisterCount()); err != nil {
+						panic(err)
+					}
+				}
+			}
+			return result
 		}
 		badReg := Saig_ManRetimeUnsatCore(initialGraph, verbose)
 		if badReg < 0 || badReg >= graph.RegisterCount() {
 			return nil
 		}
-		if aig.Aig_ManConstrNum(graph) != 0 {
+		if !canHide {
 			return nil
 		}
 		if verbose != 0 {

@@ -13,9 +13,11 @@ an unsatisfiable cut using the initial-state SAT core, and restores the hidden
 interface. The source's backward-only and no-initial-state paths are included;
 the latter retains ABC's warning that its result need not preserve the initial
 state. A duplication-order bug and an invalid heuristic-cut panic were fixed.
-Constraint and assertion output metadata are preserved. Backward retiming
-conservatively skips cases requiring hidden registers when constraint outputs
-are present, because hiding would otherwise change the constraint positions.
+Constraint and assertion output metadata are preserved. Hidden-register
+outputs are reordered around trailing constraint outputs and restored afterward.
+If assertions overlap the trailing constraints, backward retiming still skips
+cases requiring hidden registers because the two output sets cannot both stay
+contiguous during the transformation.
 
 Validation includes exhaustive cut-subset comparisons on small graphs; cut
 sizes compared against the existing NWK port on 200 cleaned graphs in both
@@ -26,7 +28,8 @@ SAIG race suite and the dependent FRA race suite after changes.
 
 Remaining review: compare cut tie-breaking and end-to-end behavior directly
 with the C executable on representative larger designs; one shared-driver
-example has been checked against ABC's `retime -M 3 -b`. Implement safe
-constraint-output reordering when hidden registers are needed. The Go NWK converter
+example has been checked against ABC's `retime -M 3 -b`. Address the remaining
+overlapping asserted-constraint case if a representation for noncontiguous
+output roles is added. The Go NWK converter
 currently omits dangling nodes, whereas the C converter iterates all nodes;
 the SAIG implementation retains the source's all-node behavior.
