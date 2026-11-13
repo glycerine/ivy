@@ -5,7 +5,28 @@ import (
 	"testing"
 )
 
+type nilMapNetwork map[int]gate
+
+func (nilMapNetwork) ObjectCount() int                      { panic("ObjectCount called on nil map network") }
+func (nilMapNetwork) InputLiterals() []int32                { return nil }
+func (nilMapNetwork) OutputLiterals() []int32               { return nil }
+func (nilMapNetwork) Gate(int32) (int32, int32, int32, int) { panic("Gate called on nil map network") }
+
+type nilSliceNetwork []gate
+
+func (nilSliceNetwork) ObjectCount() int        { panic("ObjectCount called on nil slice network") }
+func (nilSliceNetwork) InputLiterals() []int32  { return nil }
+func (nilSliceNetwork) OutputLiterals() []int32 { return nil }
+func (nilSliceNetwork) Gate(int32) (int32, int32, int32, int) {
+	panic("Gate called on nil slice network")
+}
+
 func TestPublicOptionsAndInterfaceRejections(t *testing.T) {
+	for _, network := range []Network{nilMapNetwork(nil), nilSliceNetwork(nil)} {
+		if _, err := NewModel(network); err == nil || err.Error() != "cec: nil network" {
+			t.Fatalf("typed nil %T: expected nil network error, got %v", network, err)
+		}
+	}
 	a := newCircuit(1)
 	a.outputs = []int32{a.inputs[0]}
 	b := newCircuit(2)

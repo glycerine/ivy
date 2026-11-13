@@ -46,8 +46,11 @@ func NewModel(n Network) (*Model, error) {
 		return nil, fmt.Errorf("cec: nil network")
 	}
 	value := reflect.ValueOf(n)
-	if (value.Kind() == reflect.Pointer || value.Kind() == reflect.Interface) && value.IsNil() {
-		return nil, fmt.Errorf("cec: nil network")
+	switch value.Kind() {
+	case reflect.Chan, reflect.Func, reflect.Interface, reflect.Map, reflect.Pointer, reflect.Slice:
+		if value.IsNil() {
+			return nil, fmt.Errorf("cec: nil network")
+		}
 	}
 	count := n.ObjectCount()
 	if count < 1 || count > 1<<30 {

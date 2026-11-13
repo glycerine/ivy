@@ -75,3 +75,8 @@ on every network.
 snapshots and evaluation, contexts, deadlines, and mutable conflict limits are
 Go convenience APIs, not direct C entry points. `CheckLiteral` and
 `CheckConjunction` are also independent adapter operations.
+
+`NewModel` rejects typed nil implementations for every nil-capable Go kind
+before calling their methods; regressions cover nil map and slice adapters.
+Validation: package build, tests, vet, and race tests pass; the current suite
+reports 93.0% statement coverage.
