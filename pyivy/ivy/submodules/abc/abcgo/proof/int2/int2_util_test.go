@@ -18,6 +18,21 @@ func TestInt2ManComputeCoPresRejectsMalformedSOP(t *testing.T) {
 	Int2_ManComputeCoPres(sop, 2)
 }
 
+func TestSOPSourceStrideBoundsRejectTruncatedCube(t *testing.T) {
+	// The checked-in C loop reads the second literal at pos+2 because it
+	// increments its outer index inside the cube loop. This truncated cube
+	// passes the simple count bound but does not contain that source-indexed
+	// element, so the Go helper must reject it before indexing the vector.
+	sop := vec.Vec_IntAllocArrayCopy([]int32{0, 2, 0, 1}, 4)
+	defer vec.Vec_IntFree(sop)
+	defer func() {
+		if got := recover(); got != "int2: malformed SOP cube" {
+			t.Fatalf("panic = %v, want malformed-cube panic", got)
+		}
+	}()
+	Int2_ManComputeCoPres(sop, 2)
+}
+
 func TestSourceSOPIndexSkipsSecondContiguousLiteral(t *testing.T) {
 	sop := vec.Vec_IntAllocArrayCopy([]int32{0, 2, 0, 3, 0}, 5)
 	got := Int2_ManComputeCoPres(sop, 2)

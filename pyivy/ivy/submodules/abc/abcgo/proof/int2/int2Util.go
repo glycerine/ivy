@@ -20,7 +20,7 @@ func Int2_ManComputeCoPres(vSop *Vec_Int_t, nRegs int32) *Vec_Int_t {
 	for pos := 1; pos < vec.Vec_IntSize(vSop); {
 		count := int(vec.Vec_IntEntry(vSop, pos))
 		pos++
-		if count < 0 || pos+count > vec.Vec_IntSize(vSop) {
+		if count < 0 || (count > 0 && pos+2*(count-1) >= vec.Vec_IntSize(vSop)) {
 			vec.Vec_IntFree(out)
 			panic("int2: malformed SOP cube")
 		}
@@ -115,7 +115,7 @@ func Int2_ManProbToGia(p *Gia_Man_t, vSop *Vec_Int_t) *Gia_Man_t {
 		for pos := 1; pos < vec.Vec_IntSize(vSop); {
 			count := int(vec.Vec_IntEntry(vSop, pos))
 			pos++
-			if count < 0 || pos+count > vec.Vec_IntSize(vSop) {
+			if count < 0 || (count > 0 && pos+2*(count-1) >= vec.Vec_IntSize(vSop)) {
 				gia.Gia_ManHashStop(out)
 				gia.Gia_ManStop(out)
 				panic("int2: malformed SOP cube")

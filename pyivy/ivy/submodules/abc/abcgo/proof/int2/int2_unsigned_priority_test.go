@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestSourceJustificationTreatsHighBitPriorityAsUnsigned(t *testing.T) {
+func TestSourceJustificationUsesSignedPriorityComparison(t *testing.T) {
 	g := gia.Gia_ManStart(8)
 	x, y, state := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
 	gate := gia.Gia_ManAppendAnd(g, x, y)
@@ -20,7 +20,7 @@ func TestSourceJustificationTreatsHighBitPriorityAsUnsigned(t *testing.T) {
 	gia.Gia_ObjSetValue(b, 2)
 	gia.Gia_ObjSetValue(node, 2)
 	Int2_ManJustify_rec(g, node, vec.Vec_IntAlloc(0))
-	if gia.Gia_ObjMark1(a) != 0 {
-		t.Fatal("C unsigned priority is above ABC_INFINITY; input was visited")
+	if gia.Gia_ObjMark1(a) == 0 {
+		t.Fatal("C signed priority is below ABC_INFINITY; input was not visited")
 	}
 }

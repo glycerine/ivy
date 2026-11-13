@@ -33,8 +33,10 @@ repository; no complete alternative was found in the sampled default branches.
 
 The C refinement code tests whether a register CI is a CO, treats priority
 `Value == 1` as the true-AND test, compares Boolean marks when choosing a
-fanin, and assigns infinite priority to the constant. These behaviors are
-retained and can panic or choose a wrong cube; they are not correctness claims.
+fanin, and assigns infinite priority to the constant. Priority comparisons
+use signed `int` semantics; the Go helper does the same, including for negative
+priorities. These source behaviors are retained and can panic or choose a
+wrong cube; they are not correctness claims.
 The C SOP loops increment the index and then read `i+k`, skipping some literals;
 the Go helpers retain that indexing. A nil SOP is dereferenced by the source
 loop and the Go helper also panics; a non-nil empty SOP produces false.

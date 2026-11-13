@@ -7,7 +7,7 @@ for undeclared C variables, inferred helpers, and retained source defects.
 | Helper | Focused coverage |
 | --- | --- |
 | `Int2_ManSetDefaultParams` | `TestSetDefaultParamsResetsAllFields`, `TestSetDefaultParamsRejectsNil` |
-| `Int2_ManCreate`, `Int2_GoCreate`, `Int2_ManStop` | `TestSourceManagerConstructorUnsupported`; Go-only setup and teardown in frame-construction tests. The C constructor contains undeclared `pFrames`. |
+| `Int2_ManCreate`, `Int2_GoCreate`, `Int2_ManStop` | `TestSourceManagerConstructorUnsupported` checks nil and valid graph inputs and verifies no source graph mutation; Go-only setup and teardown in frame-construction tests. The C constructor contains undeclared `pFrames`. |
 | `Int2_ManDupInit` | `TestDupInitMatchesMuxedStateTransitions`, `TestDupInitWithNoOriginalPrimaryInputs`, `TestSourceInitHelpersRejectCombinationalGraph` |
 | `Int2_ManCheckInit` | `TestCheckInitConstantTransitions`, `TestCheckInitAgainstExhaustiveTransitions`, `TestCheckInitIgnoresPropertyOutput`, `TestSourceInitHelpersRejectCombinationalGraph` |
 | `Int2_ManFrameInit` | `TestFrameUnrollingTracksLatestInput`, `TestFrameInitMatchesSequentialSimulation`, `TestSourceCopiesNativeXorAsAnd`, `TestZeroFrameBuildersReturnInitialState` |
@@ -17,9 +17,9 @@ for undeclared C variables, inferred helpers, and retained source defects.
 | `Int2_ManUnroll`, `Int2_ManPreparePrefix` | `TestSourceUnrollAndPrefixReturnUnsupported` checks the source-named entry points. `TestFrameUnrollingTracksLatestInput`, `TestZeroFrameBuildersReturnInitialState`, and `TestPreparePrefixAtFrameZeroConstrainsInitialState` exercise separately named Go-only reconstructions. |
 | `Int2_ManPrepareSuffix` | `TestPrepareSuffixReportsUnsupported`, `TestPrepareSuffixUnsupportedWithOptionalOutputs` check only the unsupported result. |
 | `Int2_ManComputePreimage`, `Int2_ManPerformInterpolation` | `TestPreimageReportsUnsupportedForPrimaryInput`, `TestPerformInterpolationReportsUnsupported` check only the unsupported result. |
-| `Int2_ManJustify_rec` | `TestSourceJustificationUsesPriorityAsBoolean`, `TestSourceJustificationChoosesByMarks`, `TestSourceJustificationSingleControllingFanin`, `TestSourceJustificationOutputMarkPreventsDuplicateSelection` |
+| `Int2_ManJustify_rec` | `TestSourceJustificationUsesPriorityAsBoolean`, `TestSourceJustificationUsesSignedPriorityComparison`, `TestSourceJustificationChoosesByMarks`, `TestSourceJustificationSingleControllingFanin`, `TestSourceJustificationOutputMarkPreventsDuplicateSelection` |
 | `Int2_ManRefineCube` | `TestRefineCubeSourceRejectsRegisterCI`, `TestSourceRefineCubeVisitsControllingPrimaryInput`, `TestSourceRefineCubeTrueAndWithUnitPriority`; these check source behavior, not correct cube minimization. |
-| `Int2_ManComputeCoPres` | `TestInt2ManComputeCoPresRejectsMalformedSOP`, `TestSourceSOPIndexSkipsSecondContiguousLiteral`, `TestSourceCoPresDeduplicatesAndOrdersSingleLiteralCubes` |
+| `Int2_ManComputeCoPres` | `TestInt2ManComputeCoPresRejectsMalformedSOP`, `TestSOPSourceStrideBoundsRejectTruncatedCube`, `TestSourceSOPIndexSkipsSecondContiguousLiteral`, `TestSourceCoPresDeduplicatesAndOrdersSingleLiteralCubes` |
 | `Int2_ManCollectInternal`, `_rec` | `TestSourceCollectInternalVisitsSharedConesOnce` |
 | `Int2_ManProbToGia` | `TestSourceNilSOPPanics`, `TestSourceEmptySOPProducesFalse`, `TestProbToGiaSingleLiteralCubesMatchSourceTransitions`, `TestSourceEmptyCubeMakesSOPTrue` |
 | `int2HashCopyGate` | Used by frame tests; `TestSourceCopiesNativeXorAsAnd` records the C AND-copy behavior. |
