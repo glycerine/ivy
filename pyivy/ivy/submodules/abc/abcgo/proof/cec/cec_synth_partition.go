@@ -8,6 +8,8 @@ import (
 // Gia_ManRegCreatePart extracts the cones of the selected register inputs.
 // Other register outputs become primary inputs; selected outputs remain registers.
 func Gia_ManRegCreatePart(p *gia.Gia_Man_t, part *vec.Vec_Int_t, countPIs, countRegs *int32, mapBack *[]int32) *gia.Gia_Man_t {
+	// The source advances here, then CollectNodesCis advances once more.
+	gia.Gia_ManIncrementTravId(p)
 	selected := vec.Vec_IntArray(part)
 	roots := make([]int32, len(selected))
 	for i, reg := range selected {

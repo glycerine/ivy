@@ -36,3 +36,23 @@ func TestRegisterPartitionPreservesConeAndMapping(t *testing.T) {
 		}
 	}
 }
+
+// cecSynth.c advances the traversal ID before Gia_ManCollectNodesCis, which
+// itself advances it again. Unvisited marks from the old epoch are therefore
+// older than the immediately previous epoch.
+func TestRegisterPartitionAdvancesTraversalTwice(t *testing.T) {
+	g := gia.Gia_ManStart(10)
+	a, b, r := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
+	gia.Gia_ManAppendCo(g, a)
+	gia.Gia_ManSetRegNum(g, 1)
+	_ = r
+	gia.Gia_ManIncrementTravId(g)
+	unused := gia.Gia_ManObj(g, b>>1)
+	gia.Gia_ObjSetTravIdCurrent(g, unused)
+	part := vec.Vec_IntAlloc(1)
+	vec.Vec_IntPush(part, 0)
+	Gia_ManRegCreatePart(g, part, nil, nil, nil)
+	if gia.Gia_ObjIsTravIdPrevious(g, unused) != 0 {
+		t.Fatal("unvisited mark remains in previous epoch")
+	}
+}
