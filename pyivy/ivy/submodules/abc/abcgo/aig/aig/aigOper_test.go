@@ -35,3 +35,57 @@ func TestOriginalAigOperations(t *testing.T) {
 	}
 	Aig_MuxTest()
 }
+
+func TestExorTypeRequiresComplementedOperands(t *testing.T) {
+	g := NewGraph()
+	x := g.NewInput()
+	y := g.NewInput()
+	a := g.AND(x, y)
+	b := g.AND(x.Not(), y.Not())
+	for _, leftComplement := range []bool{false, true} {
+		for _, rightComplement := range []bool{false, true} {
+			left, right := a, b
+			if leftComplement {
+				left = left.Not()
+			}
+			if rightComplement {
+				right = right.Not()
+			}
+			var fan0, fan1 Edge
+			got := Aig_ObjIsExorType(g, left, right, &fan0, &fan1)
+			want := leftComplement && rightComplement
+			if got != want {
+				t.Fatalf("left complemented=%v right complemented=%v: got %v", leftComplement, rightComplement, got)
+			}
+		}
+	}
+}
+
+func TestMiterCompactsCOperandsInPlace(t *testing.T) {
+	g := NewGraph()
+	a := g.NewInput()
+	b := g.NewInput()
+	c := g.NewInput()
+	pairs := []Edge{a, b, b, c}
+	result := Aig_Miter(g, pairs)
+	want0 := g.XOR(a, b).Not()
+	want1 := g.XOR(b, c).Not()
+	if pairs[0] != want0 || pairs[1] != want1 {
+		t.Fatalf("compacted operands %v, want %v %v", pairs, want0, want1)
+	}
+	if result != g.AND(want0, want1).Not() {
+		t.Fatal("wrong balanced miter")
+	}
+}
+func TestMiterTwoRewritesFirstVector(t *testing.T) {
+	g := NewGraph()
+	a := g.NewInput()
+	b := g.NewInput()
+	left := []Edge{a, b}
+	right := []Edge{b, a}
+	result := Aig_MiterTwo(g, left, right)
+	want := g.XOR(a, b).Not()
+	if left[0] != want || left[1] != want || result != g.AND(want, want).Not() {
+		t.Fatalf("left=%v result=%v", left, result)
+	}
+}

@@ -359,7 +359,7 @@ func Aig_ManPartitionNaive(p *Graph, size int32) [][]int32 {
 	return parts
 }
 
-func partClone(dst, src *Graph, e Edge, mapping map[int]Edge, missingInput func(Edge) Edge) Edge {
+func partCloneMode(dst, src *Graph, e Edge, mapping map[int]Edge, missingInput func(Edge) Edge, sourceAnd bool) Edge {
 	id := e.NodeID()
 	value, ok := mapping[id]
 	if !ok {
@@ -372,12 +372,16 @@ func partClone(dst, src *Graph, e Edge, mapping map[int]Edge, missingInput func(
 				panic("aig: partition omits an input")
 			}
 			value = missingInput(Aig_Regular(e))
-		case And:
-			value = dst.AND(partClone(dst, src, n.Fanins[0], mapping, missingInput), partClone(dst, src, n.Fanins[1], mapping, missingInput))
-		case ExclusiveOr:
-			value = dst.NewXor(partClone(dst, src, n.Fanins[0], mapping, missingInput), partClone(dst, src, n.Fanins[1], mapping, missingInput))
+		case And, ExclusiveOr:
+			left := partCloneMode(dst, src, n.Fanins[0], mapping, missingInput, sourceAnd)
+			right := partCloneMode(dst, src, n.Fanins[1], mapping, missingInput, sourceAnd)
+			if n.Kind == ExclusiveOr && !sourceAnd {
+				value = dst.NewXor(left, right)
+			} else {
+				value = dst.AND(left, right)
+			}
 		case Buffer, Output:
-			value = partClone(dst, src, n.Fanins[0], mapping, missingInput)
+			value = partCloneMode(dst, src, n.Fanins[0], mapping, missingInput, sourceAnd)
 		default:
 			panic("aig: invalid partition node")
 		}
@@ -387,6 +391,16 @@ func partClone(dst, src *Graph, e Edge, mapping map[int]Edge, missingInput func(
 		value = value.Not()
 	}
 	return value
+}
+
+// ABC partition-copy paths use Aig_And for every internal node, including EXOR.
+func partCloneABC(dst, src *Graph, e Edge, mapping map[int]Edge, missingInput func(Edge) Edge) Edge {
+	return partCloneMode(dst, src, e, mapping, missingInput, true)
+}
+
+// Other algorithms need the original graph's native XOR semantics.
+func partClone(dst, src *Graph, e Edge, mapping map[int]Edge, missingInput func(Edge) Edge) Edge {
+	return partCloneMode(dst, src, e, mapping, missingInput, false)
 }
 func Aig_ManDupPart_rec(dst, src *Graph, e Edge, support *[]int32) Edge {
 	if src.copies == nil {
@@ -402,7 +416,7 @@ func Aig_ManDupPart_rec(dst, src *Graph, e Edge, support *[]int32) Edge {
 		*support = append(*support, Aig_ObjCioId(src, input))
 		return dst.NewInput()
 	}
-	return partClone(dst, src, e, src.copies, missing)
+	return partCloneABC(dst, src, e, src.copies, missing)
 }
 func Aig_ManDupPart(dst, src *Graph, part []int32, support *[]int32, inverse int32) []Edge {
 	if dst == src {
@@ -457,7 +471,7 @@ func Aig_ManDupPartAll_rec(dst, src *Graph, e Edge) {
 		Aig_ManDupPartAll_rec(dst, src, n.Fanins[0])
 		value = dst.AddOutput(Aig_ObjRealCopy(src, n.Fanins[0]))
 	} else {
-		value = partClone(dst, src, Aig_Regular(e), src.copies, func(input Edge) Edge { return dst.NewInput() })
+		value = partCloneABC(dst, src, Aig_Regular(e), src.copies, func(input Edge) Edge { return dst.NewInput() })
 	}
 	src.copies[id] = value
 	if dst.copies == nil {
@@ -508,9 +522,6 @@ func Aig_ManSupportNodes(p *Graph, parts [][]int32) [][]int32 {
 	return supports
 }
 func Aig_ManMiterPartitioned(a, b *Graph, size, smart int32) []*Graph {
-	if len(a.inputs) != len(b.inputs) || len(a.outputs) != len(b.outputs) {
-		panic("aig: partitioned miter terminal counts differ")
-	}
 	var parts, supports [][]int32
 	if smart != 0 {
 		parts = Aig_ManPartitionSmart(a, size, 0, &supports)

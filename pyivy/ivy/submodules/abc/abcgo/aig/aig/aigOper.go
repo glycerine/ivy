@@ -46,25 +46,29 @@ func Aig_Multi(p *Graph, objects []Edge, n int32, kind int32) Edge {
 	}
 	return Aig_Multi_rec(p, objects, n, kind)
 }
+
+// Aig_Miter overwrites the first half of pairs with XNOR terms, as C does.
+// A Go slice's length cannot be shortened for the caller; only pairs[:len(pairs)/2]
+// contains the compacted terms after the call.
 func Aig_Miter(p *Graph, pairs []Edge) Edge {
 	if len(pairs) == 0 || len(pairs)%2 != 0 {
 		panic("aig: invalid miter pairs")
 	}
-	out := p.Const0()
 	for i := 0; i < len(pairs); i += 2 {
-		out = p.OR(out, p.XOR(pairs[i], pairs[i+1]))
+		pairs[i/2] = p.XOR(pairs[i], pairs[i+1]).Not()
 	}
-	return out
+	return Aig_Multi_rec(p, pairs, int32(len(pairs)/2), 5).Not()
 }
+
+// Aig_MiterTwo replaces the first vector's entries with XNOR terms.
 func Aig_MiterTwo(p *Graph, a, b []Edge) Edge {
 	if len(a) == 0 || len(a) != len(b) {
 		panic("aig: invalid miter vectors")
 	}
-	out := p.Const0()
 	for i := range a {
-		out = p.OR(out, p.XOR(a[i], b[i]))
+		a[i] = p.XOR(a[i], b[i]).Not()
 	}
-	return out
+	return Aig_Multi_rec(p, a, int32(len(a)), 5).Not()
 }
 func Aig_CreateAnd(p *Graph, n int32) Edge {
 	out := p.Const1()
@@ -113,7 +117,7 @@ func Aig_TableLookupInt(p *Graph, a, b Edge) (Edge, bool) {
 	return e, ok
 }
 func Aig_ObjIsExorType(p *Graph, a, b Edge, fan0, fan1 *Edge) bool {
-	if !p.valid(a) || !p.valid(b) {
+	if !p.valid(a) || !p.valid(b) || !a.Complemented() || !b.Complemented() {
 		return false
 	}
 	x, y := p.nodes[a.NodeID()], p.nodes[b.NodeID()]
