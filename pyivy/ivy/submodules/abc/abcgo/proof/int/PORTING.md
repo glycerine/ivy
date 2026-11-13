@@ -1,47 +1,25 @@
 # `proof/int` port status
 
-`proof/int` is the McMillan interpolation engine. Its source includes
-`intCheck.c`, `intContain.c`, `intCore.c`, `intCtrex.c`, `intDup.c`,
-`intFrames.c`, `intInter.c`, `intM114.c`, `intM114p.c`, `intMan.c`, and
-`intUtil.c`, with declarations in `int.h` and `intInt.h`.
+`proof/int` is ABC's McMillan interpolation engine. The Go package is not yet
+complete and does not compile as a package: the translated top-level loop requires the missing DAR rewrite dependency, and
+the optional MiniSat 1.14p implementation in `intM114p.go` remains a C-like draft.
+Do not treat successful explicit-file tests as package-level verification.
 
-## Current state
+The graph transformations, frame unrolling, counterexample extraction,
+containment checks, manager lifecycle, incremental induction checker and
+internal BSAT proof/interpolant step have been translated. Focused tests
+exercise graph semantics, initial-state and latch behavior, counterexamples,
+SAT/UNSAT containment, interpolation proofs, frame unrolling, incremental
+induction and restoration of lifted CNF. These focused tests have passed with
+the race detector. They do not establish end-to-end interpolation correctness.
 
-The generated `.go` files are still starting-point drafts, not a compiling Go
-package. `go test ./proof/int` currently stops on malformed C-style macro loop
-expansions in `intCheck.go` (first error: line 70). `gofmt` independently finds
-parse failures in all 14 Go files. Examples include assignment expressions in
-`for` conditions, C casts, raw `extern` declarations, and an unconverted
-`#ifdef ABC_USE_LIBRARIES` region in `intM114p.go`.
+The translated top-level algorithm still needs review and end-to-end tests.
+It calls `Dar_ManRwsat` to rewrite interpolants, but ABC's
+`opt/dar` implementation has not been ported to `abcgo`. The original optional
+`intM114p.c` uses MiniSat 1.14p under `ABC_USE_LIBRARIES`; it is not included
+in the normal C build and must not be replaced by an unrelated solver while
+claiming it is the original implementation.
 
-Fixing syntax is only the first integration step. The package also assumes C's
-global include namespace: it currently declares no aliases or imports for AIG,
-SAIG, vector, CNF, SAT, counterexample, or Fraig APIs. The generated model uses
-C-style object pointers and `pData`; the current `aig/aig` API represents
-objects as `aig.Edge` values in `aig.Graph`, so a mechanical import alone will
-not make these drafts type-correct.
-
-## Dependency and porting order
-
-1. Define the package boundary and import the current `aig.Graph` APIs, with
-   explicit typed aliases only where they preserve real semantics. Coordinate
-   SAIG, CNF, SAT, counterexample, and Fraig adapters with their package owners.
-2. Port the graph-only utilities and transforms (`intDup.c`, `intFrames.c`,
-   `intInter.c`) against the current graph representation, replacing `pData`
-   side channels with per-operation edge maps.
-3. Port the containment check and counterexample extraction against real
-   solver/CNF APIs, preserving SAT/UNSAT/unknown states and cleanup ownership.
-4. Port manager lifecycle and the interpolation engine (`intMan.c`,
-   `intCheck.c`, `intM114.c`), then add source-C and independent proof
-   validation before calling the package complete.
-5. Treat `intM114p.c` separately: its implementation is conditional on
-   `ABC_USE_LIBRARIES` and depends on MiniSat-1.14p. Do not expose a fake solver
-   implementation when that dependency is unavailable.
-
-## Verification status
-
-No package tests or vet checks pass yet because parsing fails before type
-checking. The first usable gate is package compilation after the shared API
-boundary and all C-style loop/cast/preprocessor remnants are removed. The
-release gate is `go test -race ./proof/int` plus `go vet ./proof/int`, with
-tests for interpolation soundness, sequential traces, and SAT unknown handling.
+Completion requires resolving these dependencies, reviewing the top-level
+translation against the C source, and passing `go test -race ./proof/int` and
+`go vet ./proof/int`, with end-to-end safe, unsafe, and resource-limited cases.

@@ -1,404 +1,162 @@
 package int
 
+// Top-level interpolation loop from proof/int/intCore.c.
 import (
 	"fmt"
 	"time"
+
+	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/misc/util"
+	"github.com/glycerine/abcgo/misc/vec"
+	"github.com/glycerine/abcgo/sat/bmc"
+	"github.com/glycerine/abcgo/sat/cnf"
 )
 
-/**CFile****************************************************************
-
-  FileName    [intCore.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Interpolation engine.]
-
-  Synopsis    [Core procedures.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 24, 2008.]
-
-  Revision    [$Id: intCore.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "intInt.h"
-//#include "sat/bmc/bmc.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////`
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [This procedure sets default values of interpolation parameters.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Inter_ManSetDefaultParams(p *Inter_ManParams_t) { 
-    memset( p, 0, sizeof(Inter_ManParams_t) );
-    p.nBTLimit      = 0;     // limit on the number of conflicts
-    p.nFramesMax    = 0;     // the max number timeframes to unroll
-    p.nSecLimit     = 0;     // time limit in seconds
-    p.nFramesK      = 1;     // the number of timeframes to use in induction
-    p.fRewrite      = 0;     // use additional rewriting to simplify timeframes
-    p.fTransLoop    = 0;     // add transition into the init state under new PI var
-    p.fUsePudlak    = 0;     // use Pudluk interpolation procedure
-    p.fUseOther     = 0;     // use other undisclosed option
-    p.fUseMiniSat   = 0;     // use MiniSat-1.14p instead of internal proof engine
-    p.fCheckKstep   = 1;     // check using K-step induction
-    p.fUseBias      = 0;     // bias decisions to global variables
-    p.fUseBackward  = 0;     // perform backward interpolation
-    p.fUseSeparate  = 0;     // solve each output separately
-    p.fUseTwoFrames = 0;     // create OR of two last timeframes
-    p.fDropSatOuts  = 0;     // replace by 1 the solved outputs
-    p.fVerbose      = 0;     // print verbose statistics
-    p.iFrameMax     =-1;
+func Inter_ManSetDefaultParams(p *Inter_ManParams_t) {
+	*p = Inter_ManParams_t{nFramesK: 1, fCheckKstep: 1, iFrameMax: -1}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Interplates while the number of conflicts is not exceeded.]
-
-  Description [Returns 1 if proven. 0 if failed. -1 if undecided.]
-               
-  SideEffects [Does not check the property in 0-th frame.]
-
-  SeeAlso     []
-
-***********************************************************************/
-func Inter_ManPerformInterpolation(pAig *Aig_Man_t, pPars *Inter_ManParams_t, piFrame *int32) int32 {
-    extern int Inter_ManCheckInductiveContainment( Aig_Man_t * pTrans, Aig_Man_t * pInter, int nSteps, int fBackward );
-    var p *Inter_Man_t;
-    var pCheck *Inter_Check_t  = nil;
-    var pAigTemp *Aig_Man_t;
-    var s, i, RetValue, Status int32;
-    var clk abctime;
-    var clk2 abctime;
-    var clkTotal abctime = Abc_Clock();
-    var timeTemp abctime;
-    var nTimeNewOut abctime;
-    if pPars.nSecLimit {
-        nTimeNewOut = pPars.nSecLimit * int64(time.Second) + Abc_Clock();
-    } else {
-        nTimeNewOut = 0;
-    }
-
-    // enable ORing of the interpolants, if containment check is performed inductively with K > 1
-    if pPars.nFramesK > 1 {
-        pPars.fTransLoop = 1; }
-
-    // sanity checks
-    assert(Saig_ManRegNum(pAig) > 0, "Saig_ManRegNum(pAig) > 0");
-    assert(Saig_ManPiNum(pAig) > 0, "Saig_ManPiNum(pAig) > 0");
-    assert(Saig_ManPoNum(pAig)-Saig_ManConstrNum(pAig) == 1, "Saig_ManPoNum(pAig)-Saig_ManConstrNum(pAig) == 1");
-    if pPars.fVerbose && Saig_ManConstrNum(pAig) {
-        fmt.Printf("Performing interpolation with %d constraints...\n", Saig_ManConstrNum(pAig)); }
-
-    if Inter_ManCheckInitialState(pAig) {
-        *piFrame = -1;
-        fmt.Printf("Property trivially fails in the initial state.\n");
-        return 0;
-    }
-/*
-    if ( Inter_ManCheckAllStates(pAig) )
-    {
-        printf( "Property trivially holds in all states.\n" );
-        return 1;
-    }
-*/
-    // create interpolation manager
-    // can perform SAT sweeping and/or rewriting of this AIG...
-    p = Inter_ManCreate( pAig, pPars );
-    if pPars.fTransLoop {
-        p.pAigTrans = Inter_ManStartOneOutput( pAig, 0 );
-    } else {
-        p.pAigTrans = Inter_ManStartDuplicated( pAig ); }
-    // derive CNF for the transformed AIG
-clk = Abc_Clock();
-    p.pCnfAig = Cnf_Derive( p.pAigTrans, Aig_ManRegNum(p.pAigTrans) ); 
-p.timeCnf += Abc_Clock() - clk;    
-    if pPars.fVerbose { 
-        fmt.Printf("AIG: PI/PO/Reg = %d/%d/%d. And = %d. Lev = %d.  CNF: Var/Cla = %d/%d.\n", Saig_ManPiNum(pAig), Saig_ManPoNum(pAig), Saig_ManRegNum(pAig), Aig_ManAndNum(pAig), Aig_ManLevelNum(pAig), p.pCnfAig.nVars, p.pCnfAig.nClauses);
-    }
- 
-    // derive interpolant
-    *piFrame = -1;
-    p.nFrames = 1;
-    for  s = 0; ; s++  {
-        var pCnfInter2 *Cnf_Dat_t;
-
-clk2 = Abc_Clock();
-        // initial state
-        if pPars.fUseBackward {
-            p.pInter = Inter_ManStartOneOutput( pAig, 1 );
-        } else {
-            p.pInter = Inter_ManStartInitState( Aig_ManRegNum(pAig) ); }
-        assert(Aig_ManCoNum(p.pInter) == 1, "Aig_ManCoNum(p.pInter) == 1");
-clk = Abc_Clock();
-        p.pCnfInter = Cnf_Derive( p.pInter, 0 );  
-p.timeCnf += Abc_Clock() - clk;    
-        // timeframes
-        p.pFrames = Inter_ManFramesInter( pAig, p.nFrames, pPars.fUseBackward, pPars.fUseTwoFrames );
-clk = Abc_Clock();
-        if pPars.fRewrite {
-            p.pFrames = Dar_ManRwsat( pAigTemp = p.pFrames, 1, 0 );
-            Aig_ManStop( pAigTemp );
-//        p->pFrames = Fra_FraigEquivence( pAigTemp = p->pFrames, 100, 0 );
-//        Aig_ManStop( pAigTemp );
-        }
-p.timeRwr += Abc_Clock() - clk;
-        // can also do SAT sweeping on the timeframes...
-clk = Abc_Clock();
-        if pPars.fUseBackward {
-            p.pCnfFrames = Cnf_Derive( p.pFrames, Aig_ManCoNum(p.pFrames) );  
-        } else {
-//            p->pCnfFrames = Cnf_Derive( p->pFrames, 0 );  
-            p.pCnfFrames = Cnf_DeriveSimple( p.pFrames, 0 ); }  
-p.timeCnf += Abc_Clock() - clk;    
-        // report statistics
-        if pPars.fVerbose {
-            fmt.Printf("Step = %2d. Frames = 1 + %d. And = %5d. Lev = %5d.  ", s+1, p.nFrames, Aig_ManNodeNum(p.pFrames), Aig_ManLevelNum(p.pFrames));
-            // inlining of macro ABC_PRT
-            Abc_Print(1, "%s =", ("Time"));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk2)))/(float64(int64(time.Second))));;
-        }
-
-
-        //////////////////////////////////////////
-        // start containment checking
-        if !(pPars.fTransLoop || pPars.fUseBackward || pPars.nFramesK > 1) {
-            pCheck = Inter_CheckStart( p.pAigTrans, pPars.nFramesK );
-            // try new containment check for the initial state
-clk = Abc_Clock();
-            pCnfInter2 = Cnf_Derive( p.pInter, 1 );  
-p.timeCnf += Abc_Clock() - clk;    
-clk = Abc_Clock();
-            RetValue = Inter_CheckPerform( pCheck, pCnfInter2, nTimeNewOut );
-p.timeEqu += Abc_Clock() - clk;
-//            assert( RetValue == 0 );
-            Cnf_DataFree( pCnfInter2 );
-            if p.vInters {
-                Vec_PtrPush( p.vInters, Aig_ManDupSimple(p.pInter) ); }
-        }
-        //////////////////////////////////////////
-
-        // iterate the interpolation procedure
-        for  i = 0; ; i++  {
-            if pPars.nFramesMax && p.nFrames + i >= pPars.nFramesMax { 
-                if pPars.fVerbose {
-                    fmt.Printf("Reached limit (%d) on the number of timeframes.\n", pPars.nFramesMax); }
-                p.timeTotal = Abc_Clock() - clkTotal;
-                Inter_ManStop( p, 0 );
-                Inter_CheckStop( pCheck );
-                return -1;
-            }
-
-            // perform interpolation
-            clk = Abc_Clock();
-#ifdef ABC_USE_LIBRARIES
-            if ( pPars->fUseMiniSat )
-            {
-                assert( !pPars->fUseBackward );
-                RetValue = Inter_ManPerformOneStepM114p( p, pPars->fUsePudlak, pPars->fUseOther );
-            }
-            else 
-#endif
-                RetValue = Inter_ManPerformOneStep( p, pPars.fUseBias, pPars.fUseBackward, nTimeNewOut );
-
-            if pPars.fVerbose {
-                fmt.Printf("   I = %2d. Bmc =%3d. IntAnd =%6d. IntLev =%5d. Conf =%6d.  ", i+1, i + 1 + p.nFrames, Aig_ManNodeNum(p.pInter), Aig_ManLevelNum(p.pInter), p.nConfCur);
-                // inlining of macro ABC_PRT
-                Abc_Print(1, "%s =", ("Time"));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;
-            }
-            // remember the number of timeframes completed
-            pPars.iFrameMax = i - 1 + p.nFrames;
-            if RetValue == 0 { // found a (spurious?) counter-example
-            
-                if i == 0 { // real counterexample
-                
-                    if pPars.fVerbose {
-                        fmt.Printf("Found a real counterexample in frame %d.\n", p.nFrames); }
-                    p.timeTotal = Abc_Clock() - clkTotal;
-                    *piFrame = p.nFrames;
-//                    pAig->pSeqModel = (Abc_Cex_t *)Inter_ManGetCounterExample( pAig, p->nFrames+1, pPars->fVerbose );
-                    {
-                        var RetValue int32;
-                        var ParsBmc Saig_ParBmc_t;
-                        var pParsBmc *Saig_ParBmc_t = &ParsBmc;
-                        Saig_ParBmcSetDefaultParams( pParsBmc );
-                        pParsBmc.nConfLimit = 100000000;
-                        pParsBmc.nStart     = p.nFrames;
-                        pParsBmc.fVerbose   = pPars.fVerbose;
-                        RetValue = Saig_ManBmcScalable( pAig, pParsBmc );
-                        if RetValue == 1 {
-                            fmt.Printf("Error: The problem should be SAT but it is UNSAT.\n");
-                        } else if RetValue == -1 {
-                            fmt.Printf("Error: The problem timed out.\n"); }
-                    }
-                    Inter_ManStop( p, 0 );
-                    Inter_CheckStop( pCheck );
-                    return 0;
-                }
-                // likely spurious counter-example
-                p.nFrames += i;
-                Inter_ManClean( p ); 
-                break;
-            
-            } else if RetValue == -1 {
-                if pPars.nSecLimit && Abc_Clock() > nTimeNewOut { // timed out
-                
-                    if pPars.fVerbose {
-                        fmt.Printf("Reached timeout (%d seconds).\n", pPars.nSecLimit); }
-                
-                } else {
-                    assert(p.nConfCur >= p.nConfLimit, "p.nConfCur >= p.nConfLimit");
-                    if pPars.fVerbose {
-                        fmt.Printf("Reached limit (%d) on the number of conflicts.\n", p.nConfLimit); }
-                }
-                p.timeTotal = Abc_Clock() - clkTotal;
-                Inter_ManStop( p, 0 );
-                Inter_CheckStop( pCheck );
-                return -1;
-            }
-            assert(RetValue == 1, "RetValue == 1"); // found new interpolant
-            // compress the interpolant
-clk = Abc_Clock();
-            if p.pInterNew {
-                // save the timeout value
-                p.pInterNew.Time2Quit = nTimeNewOut;
-//                Ioa_WriteAiger( p->pInterNew, "interpol.aig", 0, 0 );
-                p.pInterNew = Dar_ManRwsat( pAigTemp = p.pInterNew, 1, 0 );
-//                p->pInterNew = Dar_ManRwsat( pAigTemp = p->pInterNew, 0, 0 );
-                Aig_ManStop( pAigTemp );
-                if p.pInterNew == nil {
-                    fmt.Printf("Reached timeout (%d seconds) during rewriting.\n", pPars.nSecLimit);
-                    p.timeTotal = Abc_Clock() - clkTotal;
-                    Inter_ManStop( p, 1 );
-                    Inter_CheckStop( pCheck );
-                    return -1;
-                }
-            }
-p.timeRwr += Abc_Clock() - clk;
-
-            // check if interpolant is trivial
-            if p.pInterNew == nil || Aig_ObjChild0(Aig_ManCo(p.pInterNew,0)) == Aig_ManConst0(p.pInterNew) { 
-//                printf( "interpolant is constant 0\n" );
-                if pPars.fVerbose {
-                    fmt.Printf("The problem is trivially true for all states.\n"); }
-                p.timeTotal = Abc_Clock() - clkTotal;
-                Inter_ManStop( p, 1 );
-                Inter_CheckStop( pCheck );
-                return 1;
-            }
-
-            // check containment of interpolants
-clk = Abc_Clock();
-            if pPars.fCheckKstep { // k-step unique-state induction
-            
-                if Aig_ManCiNum(p.pInterNew) == Aig_ManCiNum(p.pInter) {
-                    if pPars.fTransLoop || pPars.fUseBackward || pPars.nFramesK > 1 {
-clk2 = Abc_Clock();
-                        Status = Inter_ManCheckInductiveContainment( p.pAigTrans, p.pInterNew, Abc_MinInt(i + 1, pPars.nFramesK), pPars.fUseBackward );
-timeTemp = Abc_Clock() - clk2;
-                    
-                    } else {   // new containment check
-clk2 = Abc_Clock();
-                        pCnfInter2 = Cnf_Derive( p.pInterNew, 1 );  
-p.timeCnf += Abc_Clock() - clk2;
-timeTemp = Abc_Clock() - clk2;
-            
-                        Status = Inter_CheckPerform( pCheck, pCnfInter2, nTimeNewOut );
-                        Cnf_DataFree( pCnfInter2 );
-                        if p.vInters {
-                            Vec_PtrPush( p.vInters, Aig_ManDupSimple(p.pInterNew) ); }
-                    }
-                
-                } else {
-                    Status = 0; }
-            
-            } else { // combinational containment
-            
-                if Aig_ManCiNum(p.pInterNew) == Aig_ManCiNum(p.pInter) {
-                    Status = Inter_ManCheckContainment( p.pInterNew, p.pInter );
-                } else {
-                    Status = 0; }
-            }
-p.timeEqu += Abc_Clock() - clk - timeTemp;
-            if Status != 0 { // contained
-            
-                if pPars.fVerbose {
-                    fmt.Printf("Proved containment of interpolants.\n"); }
-                p.timeTotal = Abc_Clock() - clkTotal;
-                Inter_ManStop( p, 1 );
-                Inter_CheckStop( pCheck );
-                return 1;
-            }
-            if pPars.nSecLimit && Abc_Clock() > nTimeNewOut {
-                fmt.Printf("Reached timeout (%d seconds).\n", pPars.nSecLimit);
-                p.timeTotal = Abc_Clock() - clkTotal;
-                Inter_ManStop( p, 1 );
-                Inter_CheckStop( pCheck );
-                return -1;
-            }
-            // save interpolant and convert it into CNF
-            if pPars.fTransLoop {
-                Aig_ManStop( p.pInter );
-                p.pInter = p.pInterNew; 
-            
-            } else {
-                if pPars.fUseBackward {
-                    p.pInter = Aig_ManCreateMiter( pAigTemp = p.pInter, p.pInterNew, 2 );
-                    Aig_ManStop( pAigTemp );
-                    Aig_ManStop( p.pInterNew );
-                    // compress the interpolant
-clk = Abc_Clock();
-                    p.pInter = Dar_ManRwsat( pAigTemp = p.pInter, 1, 0 );
-                    Aig_ManStop( pAigTemp );
-p.timeRwr += Abc_Clock() - clk;
-                
-                } else { // forward with the new containment checking (using only the frontier)
-                
-                    Aig_ManStop( p.pInter );
-                    p.pInter = p.pInterNew; 
-                }
-            }
-            p.pInterNew = nil;
-            Cnf_DataFree( p.pCnfInter );
-clk = Abc_Clock();
-            p.pCnfInter = Cnf_Derive( p.pInter, 0 );  
-p.timeCnf += Abc_Clock() - clk;
-        }
-
-        // start containment checking
-        Inter_CheckStop( pCheck );
-    }
-    assert(false, "0");
-    return RetValue;
+// Inter_ManPerformInterpolation returns 1 for a proof, 0 for a failure,
+// and -1 when a resource limit prevents a decision.
+func Inter_ManPerformInterpolation(graph *aig.Graph, pars *Inter_ManParams_t, frame *int32) int32 {
+	if graph == nil || pars == nil || frame == nil {
+		panic("invalid interpolation arguments")
+	}
+	start := util.Abc_Clock()
+	var deadline int64
+	if pars.nSecLimit != 0 {
+		deadline = start + int64(time.Duration(pars.nSecLimit)*time.Second)
+	}
+	if pars.nFramesK > 1 {
+		pars.fTransLoop = 1
+	}
+	regs := int(graph.RegisterCount())
+	if regs <= 0 || graph.InputCount() <= regs || graph.OutputCount()-regs-int(aig.Aig_ManConstrNum(graph)) != 1 {
+		panic("invalid interpolation graph")
+	}
+	*frame = -1
+	if Inter_ManCheckInitialState(graph) != 0 {
+		fmt.Println("Property trivially fails in the initial state.")
+		return 0
+	}
+	p := Inter_ManCreate(graph, pars)
+	var check *Inter_Check_t
+	finish := func(result, proved int32) int32 {
+		p.timeTotal = util.Abc_Clock() - start
+		Inter_ManStop(p, proved)
+		Inter_CheckStop(check)
+		return result
+	}
+	if pars.fTransLoop != 0 {
+		p.pAigTrans = Inter_ManStartOneOutput(graph, 0)
+	} else {
+		p.pAigTrans = Inter_ManStartDuplicated(graph)
+	}
+	p.pCnfAig = cnf.Cnf_Derive(p.pAigTrans, p.pAigTrans.RegisterCount())
+	p.nFrames = 1
+	for {
+		if pars.fUseBackward != 0 {
+			p.pInter = Inter_ManStartOneOutput(graph, 1)
+		} else {
+			p.pInter = Inter_ManStartInitState(graph.RegisterCount())
+		}
+		p.pCnfInter = cnf.Cnf_Derive(p.pInter, 0)
+		p.pFrames = Inter_ManFramesInter(graph, p.nFrames, pars.fUseBackward, pars.fUseTwoFrames)
+		if pars.fRewrite != 0 {
+			p.pFrames = Dar_ManRwsat(p.pFrames, 1, 0, deadline)
+		}
+		if pars.fUseBackward != 0 {
+			p.pCnfFrames = cnf.Cnf_Derive(p.pFrames, int32(p.pFrames.OutputCount()))
+		} else {
+			p.pCnfFrames = cnf.Cnf_DeriveSimple(p.pFrames, 0)
+		}
+		if pars.fTransLoop == 0 && pars.fUseBackward == 0 && pars.nFramesK <= 1 {
+			check = Inter_CheckStart(p.pAigTrans, pars.nFramesK)
+			initial := cnf.Cnf_Derive(p.pInter, 1)
+			Inter_CheckPerform(check, initial, deadline)
+			cnf.Cnf_DataFree(initial)
+			if p.vInters != nil {
+				vec.Vec_PtrPush(p.vInters, aig.Aig_ManDupSimple(p.pInter))
+			}
+		}
+		for i := int32(0); ; i++ {
+			if pars.nFramesMax != 0 && p.nFrames+i >= pars.nFramesMax {
+				return finish(-1, 0)
+			}
+			result := Inter_ManPerformOneStep(p, pars.fUseBias, pars.fUseBackward, deadline)
+			pars.iFrameMax = i - 1 + p.nFrames
+			if result == 0 {
+				if i == 0 {
+					*frame = p.nFrames
+					var opts bmc.Saig_ParBmc_t
+					bmc.Saig_ParBmcSetDefaultParams(&opts)
+					opts.SetInterpolationOptions(p.nFrames, 100000000, pars.fVerbose)
+					status := bmc.Saig_ManBmcScalable(graph, &opts)
+					if status == 1 {
+						fmt.Println("Error: The problem should be SAT but it is UNSAT.")
+					} else if status == -1 {
+						fmt.Println("Error: The problem timed out.")
+					}
+					return finish(0, 0)
+				}
+				p.nFrames += i
+				Inter_ManClean(p)
+				break
+			}
+			if result == -1 {
+				return finish(-1, 0)
+			}
+			if result != 1 {
+				panic("invalid interpolation result")
+			}
+			if p.pInterNew != nil {
+				p.pInterNew = Dar_ManRwsat(p.pInterNew, 1, 0, deadline)
+				if p.pInterNew == nil {
+					return finish(-1, 1)
+				}
+			}
+			if p.pInterNew == nil || p.pInterNew.Node(p.pInterNew.Outputs()[0]).Fanins[0] == p.pInterNew.Const0() {
+				return finish(1, 1)
+			}
+			status := int32(0)
+			if p.pInterNew.InputCount() == p.pInter.InputCount() {
+				if pars.fCheckKstep == 0 {
+					status = Inter_ManCheckContainment(p.pInterNew, p.pInter)
+				} else if pars.fTransLoop != 0 || pars.fUseBackward != 0 || pars.nFramesK > 1 {
+					steps := i + 1
+					if steps > pars.nFramesK {
+						steps = pars.nFramesK
+					}
+					status = Inter_ManCheckInductiveContainment(p.pAigTrans, p.pInterNew, steps, pars.fUseBackward)
+				} else {
+					data := cnf.Cnf_Derive(p.pInterNew, 1)
+					status = Inter_CheckPerform(check, data, deadline)
+					cnf.Cnf_DataFree(data)
+					if p.vInters != nil {
+						vec.Vec_PtrPush(p.vInters, aig.Aig_ManDupSimple(p.pInterNew))
+					}
+				}
+			}
+			if status == 1 {
+				return finish(1, 1)
+			}
+			if status < 0 || deadline != 0 && util.Abc_Clock() > deadline {
+				return finish(-1, 1)
+			}
+			if pars.fUseBackward != 0 && pars.fTransLoop == 0 {
+				p.pInter = aig.Aig_ManCreateMiter(p.pInter, p.pInterNew, 2)
+				p.pInter = Dar_ManRwsat(p.pInter, 1, 0, deadline)
+				if p.pInter == nil {
+					return finish(-1, 1)
+				}
+			} else {
+				p.pInter = p.pInterNew
+			}
+			p.pInterNew = nil
+			cnf.Cnf_DataFree(p.pCnfInter)
+			p.pCnfInter = cnf.Cnf_Derive(p.pInter, 0)
+		}
+		Inter_CheckStop(check)
+		check = nil
+	}
 }
-
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
