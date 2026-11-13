@@ -1,6 +1,6 @@
 package cudd
 
-import "fmt"
+import "github.com/glycerine/abcgo/bdd/cudd/core"
 
 /**CFile***********************************************************************
 
@@ -64,336 +64,99 @@ import "fmt"
 
 //ABC_NAMESPACE_IMPL_START
 
-
-
-/*---------------------------------------------------------------------------*/
-/* Constant declarations                                                     */
-/*---------------------------------------------------------------------------*/
-
-
-/*---------------------------------------------------------------------------*/
-/* Type declarations                                                         */
-/*---------------------------------------------------------------------------*/
-
-
-/*---------------------------------------------------------------------------*/
-/* Structure declarations                                                    */
-/*---------------------------------------------------------------------------*/
-
-
-/*---------------------------------------------------------------------------*/
-/* Variable declarations                                                     */
-/*---------------------------------------------------------------------------*/
-
-#ifndef lint
-static char rcsid[] DD_UNUSED = "$Id: cuddSolve.c,v 1.12 2004/08/13 18:04:51 fabio Exp $";
-#endif
-
-/*---------------------------------------------------------------------------*/
-/* Macro declarations                                                        */
-/*---------------------------------------------------------------------------*/
-
-
-/**AutomaticStart*************************************************************/
-
-/*---------------------------------------------------------------------------*/
-/* Static function prototypes                                                */
-/*---------------------------------------------------------------------------*/
-
-
-/**AutomaticEnd***************************************************************/
-
-
-/*---------------------------------------------------------------------------*/
-/* Definition of exported functions                                          */
-/*---------------------------------------------------------------------------*/
-
-
-/**Function********************************************************************
-
-  Synopsis    [Implements the solution of F(x,y) = 0.]
-
-  Description [Implements the solution for F(x,y) = 0. The return
-  value is the consistency condition. The y variables are the unknowns
-  and the remaining variables are the parameters.  Returns the
-  consistency condition if successful; NULL otherwise. Cudd_SolveEqn
-  allocates an array and fills it with the indices of the
-  unknowns. This array is used by Cudd_VerifySol.]
-
-  SideEffects [The solution is returned in G; the indices of the y
-  variables are returned in yIndex.]
-
-  SeeAlso     [Cudd_VerifySol]
-
-******************************************************************************/
-DdNode *
-Cudd_SolveEqn(
-  DdManager *  bdd,
-  DdNode * F /* the left-hand side of the equation */,
-  DdNode * Y /* the cube of the y variables */,
-  DdNode ** G /* the array of solutions (return parameter) */,
-  int ** yIndex /* index of y variables */,
-  int  n /* numbers of unknowns */)
-{
-    var res *DdNode;
-    var temp *int32;
-
-    *yIndex = temp = ABC_ALLOC(int, n);
-    if temp == nil {
-        bdd.errorCode = CUDD_MEMORY_OUT;
-        (void) fmt.Fprintf(bdd.out, "Cudd_SolveEqn: Out of memory for yIndex\n");
-        return(nil);
-    }
-
-    for {
-        bdd.reordered = 0;
-        res = cuddSolveEqnRecur(bdd, F, Y, G, n, temp, 0);
-    
-if !(bdd.reordered == 1) { break }
-} 
-
-    return(res);
-
-} /* end of Cudd_SolveEqn */
-
-
-/**Function********************************************************************
-
-  Synopsis    [Checks the solution of F(x,y) = 0.]
-
-  Description [Checks the solution of F(x,y) = 0. This procedure 
-  substitutes the solution components for the unknowns of F and returns 
-  the resulting BDD for F.] 
-
-  SideEffects [Frees the memory pointed by yIndex.]
-
-  SeeAlso     [Cudd_SolveEqn]
-
-******************************************************************************/
-DdNode *
-Cudd_VerifySol(
-  DdManager *  bdd,
-  DdNode * F /* the left-hand side of the equation */,
-  DdNode ** G /* the array of solutions */,
-  int * yIndex /* index of y variables */,
-  int  n /* numbers of unknowns */)
-{
-    var res *DdNode;
-
-    for {
-        bdd.reordered = 0;
-        res = cuddVerifySol(bdd, F, G, yIndex, n);
-    
-if !(bdd.reordered == 1) { break }
-} 
-
-    ABC_FREE(yIndex);
-
-    return(res);
-
-} /* end of Cudd_VerifySol */
-
-
-/*---------------------------------------------------------------------------*/
-/* Definition of internal functions                                          */
-/*---------------------------------------------------------------------------*/
-
-
-/**Function********************************************************************
-
-  Synopsis    [Implements the recursive step of Cudd_SolveEqn.]
-
-  Description [Implements the recursive step of Cudd_SolveEqn. 
-  Returns NULL if the intermediate solution blows up
-  or reordering occurs. The parametric solutions are
-  stored in the array G.]
-
-  SideEffects [none]
-
-  SeeAlso     [Cudd_SolveEqn, Cudd_VerifySol]
-
-******************************************************************************/
-DdNode *
-cuddSolveEqnRecur(
-  DdManager * bdd,
-  DdNode * F /* the left-hand side of the equation */,
-  DdNode * Y /* the cube of remaining y variables */,
-  DdNode ** G /* the array of solutions */,
-  int  n /* number of unknowns */,
-  int * yIndex /* array holding the y variable indices */,
-  int  i /* level of recursion */)
-{
-    var Fn, Fm1, Fv, Fvbar, T, w, nextY, one *DdNode;
-    var variables *DdNodePtr;
-
-    var j int32;
-
-    statLine(bdd);
-    variables = bdd.vars;
-    // inlining of macro DD_ONE
-    one = ((bdd).one);
-
-    /* Base condition. */
-    if Y == one {
-        return F;
-    }
-
-    /* Cofactor of Y. */
-    yIndex[i] = Y.index;
-    // inlining of macro Cudd_T
-    // inlining of macro Cudd_Regular
-    nextY = ((((DdNode *)((ptruint)(Y) & ~01))).type.kids.T);
-
-    /* Universal abstraction of F with respect to the top variable index. */
-    // inlining of macro Cudd_Not
-    Fm1 = cuddBddExistAbstractRecur(bdd, ((DdNode *)((ptrint)(F) ^ 01)), variables[yIndex[i]]);
-    if Fm1 {
-        // inlining of macro Cudd_Not
-        Fm1 = ((DdNode *)((ptrint)(Fm1) ^ 01));
-        // inlining of macro cuddRef
-        cuddSatInc(Cudd_Regular(Fm1).ref);
-    } else {
-        return(nil);
-    }
-
-    Fn = cuddSolveEqnRecur(bdd, Fm1, nextY, G, n, yIndex, i+1);
-    if Fn {
-        // inlining of macro cuddRef
-        cuddSatInc(Cudd_Regular(Fn).ref);
-    } else {
-        Cudd_RecursiveDeref(bdd, Fm1);
-        return(nil);
-    }
-
-    Fv = cuddCofactorRecur(bdd, F, variables[yIndex[i]]);
-    if Fv {
-        // inlining of macro cuddRef
-        cuddSatInc(Cudd_Regular(Fv).ref);
-    } else {
-        Cudd_RecursiveDeref(bdd, Fm1);
-        Cudd_RecursiveDeref(bdd, Fn);
-        return(nil);
-    }
-
-    // inlining of macro Cudd_Not
-    Fvbar = cuddCofactorRecur(bdd, F, ((DdNode *)((ptrint)(variables[yIndex[i]]) ^ 01)));
-    if Fvbar {
-        // inlining of macro cuddRef
-        cuddSatInc(Cudd_Regular(Fvbar).ref);
-    } else {
-        Cudd_RecursiveDeref(bdd, Fm1);
-        Cudd_RecursiveDeref(bdd, Fn);
-        Cudd_RecursiveDeref(bdd, Fv);
-        return(nil);
-    }
-
-    /* Build i-th component of the solution. */
-    // inlining of macro Cudd_Not
-    w = cuddBddIteRecur(bdd, variables[yIndex[i]], ((DdNode *)((ptrint)(Fv) ^ 01)), Fvbar);
-    if w {
-        // inlining of macro cuddRef
-        cuddSatInc(Cudd_Regular(w).ref);
-    } else {
-        Cudd_RecursiveDeref(bdd, Fm1);
-        Cudd_RecursiveDeref(bdd, Fn);
-        Cudd_RecursiveDeref(bdd, Fv);
-        Cudd_RecursiveDeref(bdd, Fvbar);
-        return(nil);
-    }
-
-    // inlining of macro Cudd_Not
-    T = cuddBddRestrictRecur(bdd, w, ((DdNode *)((ptrint)(Fm1) ^ 01)));
-    if T {
-        // inlining of macro cuddRef
-        cuddSatInc(Cudd_Regular(T).ref);
-    } else {
-        Cudd_RecursiveDeref(bdd, Fm1);
-        Cudd_RecursiveDeref(bdd, Fn);
-        Cudd_RecursiveDeref(bdd, Fv);
-        Cudd_RecursiveDeref(bdd, Fvbar);
-        Cudd_RecursiveDeref(bdd, w);
-        return(nil);
-    }
-
-    Cudd_RecursiveDeref(bdd,Fm1);
-    Cudd_RecursiveDeref(bdd,w);
-    Cudd_RecursiveDeref(bdd,Fv);
-    Cudd_RecursiveDeref(bdd,Fvbar);
-
-    /* Substitute components of solution already found into solution. */
-    for j = n-1; j > i; j-- {
-        w = cuddBddComposeRecur(bdd,T, G[j], variables[yIndex[j]]);
-        if w {
-            // inlining of macro cuddRef
-            cuddSatInc(Cudd_Regular(w).ref);
-        } else {
-            Cudd_RecursiveDeref(bdd, Fn);
-            Cudd_RecursiveDeref(bdd, T);
-            return(nil);
-        }
-        Cudd_RecursiveDeref(bdd,T);
-        T = w;
-    }
-    G[i] = T;
-
-    Cudd_Deref(Fn);
-
-    return(Fn);
-
-} /* end of cuddSolveEqnRecur */
-
-
-/**Function********************************************************************
-
-  Synopsis    [Implements the recursive step of Cudd_VerifySol. ]
-
-  Description []
-
-  SideEffects [none]
-
-  SeeAlso     [Cudd_VerifySol]
-
-******************************************************************************/
-DdNode *
-cuddVerifySol(
-  DdManager * bdd,
-  DdNode * F /* the left-hand side of the equation */,
-  DdNode ** G /* the array of solutions */,
-  int * yIndex /* array holding the y variable indices */,
-  int  n /* number of unknowns */)
-{
-    var w, R *DdNode;
-
-    var j int32;
-
-    R = F;
-    // inlining of macro cuddRef
-    cuddSatInc(Cudd_Regular(R).ref);
-    for j = n - 1; j >= 0; j-- {
-         w = Cudd_bddCompose(bdd, R, G[j], yIndex[j]);
-        if w {
-            // inlining of macro cuddRef
-            cuddSatInc(Cudd_Regular(w).ref);
-        } else {
-            return(nil); 
-        }
-        Cudd_RecursiveDeref(bdd,R);
-        R = w;
-    }
-
-    // inlining of macro cuddDeref
-    cuddSatDec(Cudd_Regular(R).ref);
-
-    return(R);
-
-} /* end of cuddVerifySol */
-
-
-/*---------------------------------------------------------------------------*/
-/* Definition of static functions                                            */
-/*---------------------------------------------------------------------------*/
-
-
-//ABC_NAMESPACE_IMPL_END
-
-
+// Cudd_SolveEqn returns the consistency condition, parametric solutions and
+// their corresponding unknown variable indices, in cube order.
+func Cudd_SolveEqn(bdd *DdManager, f, y *DdNode, n int) (*DdNode, []*DdNode, []int) {
+	g := make([]*DdNode, n)
+	indices := make([]int, n)
+	result := cuddSolveEqnRecur(bdd, f, y, g, indices, 0)
+	return result, g, indices
+}
+
+func Cudd_VerifySol(bdd *DdManager, f *DdNode, g []*DdNode, indices []int, n int) *DdNode {
+	return cuddVerifySol(bdd, f, g, indices, n)
+}
+
+func cuddSolveEqnRecur(bdd *DdManager, f, y *DdNode, g []*DdNode, indices []int, i int) *DdNode {
+	if y == bdd.One {
+		return f
+	}
+	indices[i] = int(y.Index)
+	variable := bdd.Vars[indices[i]]
+	fm1 := core.Cudd_bddExistAbstract(bdd, core.Cudd_Not(f), variable)
+	if fm1 == nil {
+		return nil
+	}
+	fm1 = core.Cudd_Not(fm1)
+	core.Cudd_Ref(fm1)
+	fn := cuddSolveEqnRecur(bdd, fm1, y.T, g, indices, i+1)
+	if fn == nil {
+		core.Cudd_RecursiveDeref(bdd, fm1)
+		return nil
+	}
+	core.Cudd_Ref(fn)
+	fv := core.Cudd_Cofactor(bdd, f, variable)
+	if fv == nil {
+		core.Cudd_RecursiveDeref(bdd, fm1)
+		core.Cudd_RecursiveDeref(bdd, fn)
+		return nil
+	}
+	core.Cudd_Ref(fv)
+	fvbar := core.Cudd_Cofactor(bdd, f, core.Cudd_Not(variable))
+	if fvbar == nil {
+		core.Cudd_RecursiveDeref(bdd, fm1)
+		core.Cudd_RecursiveDeref(bdd, fn)
+		core.Cudd_RecursiveDeref(bdd, fv)
+		return nil
+	}
+	core.Cudd_Ref(fvbar)
+	w := core.Cudd_bddIte(bdd, variable, core.Cudd_Not(fv), fvbar)
+	if w == nil {
+		for _, v := range []*DdNode{fm1, fn, fv, fvbar} {
+			core.Cudd_RecursiveDeref(bdd, v)
+		}
+		return nil
+	}
+	core.Cudd_Ref(w)
+	t := core.Cudd_bddRestrict(bdd, w, core.Cudd_Not(fm1))
+	if t == nil {
+		for _, v := range []*DdNode{fm1, fn, fv, fvbar, w} {
+			core.Cudd_RecursiveDeref(bdd, v)
+		}
+		return nil
+	}
+	core.Cudd_Ref(t)
+	for _, v := range []*DdNode{fm1, w, fv, fvbar} {
+		core.Cudd_RecursiveDeref(bdd, v)
+	}
+	for j := len(g) - 1; j > i; j-- {
+		w = core.Cudd_bddCompose(bdd, t, g[j], indices[j])
+		if w == nil {
+			core.Cudd_RecursiveDeref(bdd, fn)
+			core.Cudd_RecursiveDeref(bdd, t)
+			return nil
+		}
+		core.Cudd_Ref(w)
+		core.Cudd_RecursiveDeref(bdd, t)
+		t = w
+	}
+	g[i] = t
+	core.Cudd_Deref(fn)
+	return fn
+}
+
+func cuddVerifySol(bdd *DdManager, f *DdNode, g []*DdNode, indices []int, n int) *DdNode {
+	r := f
+	core.Cudd_Ref(r)
+	for j := n - 1; j >= 0; j-- {
+		w := core.Cudd_bddCompose(bdd, r, g[j], indices[j])
+		if w == nil {
+			return nil
+		}
+		core.Cudd_Ref(w)
+		core.Cudd_RecursiveDeref(bdd, r)
+		r = w
+	}
+	core.Cudd_Deref(r)
+	return r
+}
