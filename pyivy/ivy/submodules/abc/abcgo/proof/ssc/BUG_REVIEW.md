@@ -26,3 +26,10 @@ The earlier GIA dependency blocker has since been resolved. The full package
 now builds and its race tests and vet pass, including a rerun of the original C
 oracle. Additional focused tests cover care masks, witnesses, phase-sensitive
 class refinement, and packed simulation primitives.
+
+A follow-up source-branch pass exercises a full 64-pattern counterexample batch
+and the final partial batch with 66 independent rare output cones, replaying
+all one-block assignments. A separate containment regression checks C's
+left-to-right tie behavior: among equivalent output implementations, the last
+one survives. Both are source-derived tests; no new implementation mismatch was
+found in these paths.
