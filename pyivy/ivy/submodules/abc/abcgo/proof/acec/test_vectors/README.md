@@ -45,6 +45,10 @@ complete `Gia_PolynReorder` result. The Go regression checks those source
 values, including entries for the output objects. Use the same C build commands
 with this filename to regenerate it.
 
+`acec_npn_order.c` records the canonical truth and ordered orbit for a
+three-input truth table. Run it with no arguments and with one argument to
+exercise both an empty and a pre-populated destination vector.
+
 `acec_missing_box.c` invokes normalization on a graph with no arithmetic box;
 the C implementation dereferences the missing box. `acec_large_coefficients.c`
 checks signed exponent carries and cancellations without overflowing C `int`.
