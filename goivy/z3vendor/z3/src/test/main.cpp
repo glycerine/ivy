@@ -244,6 +244,7 @@ int main(int argc, char ** argv) {
     TST_ARGV(lp);
     TST(get_consequences);
     TST(pb2bv);
+    TST(fork_bugfixes); // regression tests for FORK_BUGFIXES.md
     TST_ARGV(cnf_backbones);
     //TST_ARGV(hs);
 }

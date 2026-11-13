@@ -1,0 +1,13 @@
+sat
+((p true)
+ ((or a b) true))
+sat
+((p true)
+ ((or a b) true))
+sat
+((p true)
+ ((or a b) true))
+unsat
+sat
+((p true)
+ ((or a b) true))

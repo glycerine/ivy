@@ -1,0 +1,6 @@
+(goals
+(goal
+  (exists ((x Real))
+    (and (< a x) (< (* (to_real 2) x) b) (or (> x 5.0) (< (+ x b) 7.0))))
+  :precision precise :depth 1)
+)

@@ -1,0 +1,314 @@
+--- a/src/smt/smt_context.h
++++ b/src/smt/smt_context.h
+@@ -80,6 +80,7 @@
+         smt_params &                m_fparams;
+         params_ref                  m_params;
+         setup                       m_setup;
++        unsigned                    m_relevancy_lvl; // backport of upstream z3 5dfe4a4b4 (relevancy cannot be raised after setup)
+         timer                       m_timer;
+         asserted_formulas           m_asserted_formulas;
+         scoped_ptr<quantifier_manager>   m_qmanager;
+@@ -271,9 +272,11 @@
+         }
+ 
+         bool relevancy() const {
+-            return m_fparams.m_relevancy_lvl > 0;
++            return m_relevancy_lvl > 0;
+         }
+ 
++        unsigned relevancy_lvl() const { return m_relevancy_lvl; }
++
+         enode * get_enode(expr const * n) const {
+             SASSERT(e_internalized(n));
+             return m_app2enode[n->get_id()];
+--- a/src/smt/smt_context.cpp
++++ b/src/smt/smt_context.cpp
+@@ -45,6 +45,7 @@
+         m_fparams(p),
+         m_params(_p),
+         m_setup(*this, p),
++        m_relevancy_lvl(2),
+         m_asserted_formulas(m, p, _p),
+         m_qmanager(alloc(quantifier_manager, *this, p, _p)),
+         m_model_generator(alloc(model_generator, m)),
+@@ -310,7 +311,7 @@
+ 
+         TRACE("relevancy",
+               tout << "is_atom: " << d.is_atom() << " is relevant: " << is_relevant_core(l) << "\n";);
+-        if (d.is_atom() && (m_fparams.m_relevancy_lvl == 0 || (m_fparams.m_relevancy_lvl == 1 && !d.is_quantifier()) || is_relevant_core(l)))
++        if (d.is_atom() && (m_relevancy_lvl == 0 || (m_relevancy_lvl == 1 && !d.is_quantifier()) || is_relevant_core(l)))
+             m_atom_propagation_queue.push_back(l);
+ 
+         if (m_manager.has_trace_stream())
+@@ -1605,7 +1606,7 @@
+             SASSERT(relevancy());
+             // Quantifiers are only asserted when marked as relevant.
+             // Other atoms are only asserted when marked as relevant if m_relevancy_lvl >= 2
+-            if (d.is_atom() && (d.is_quantifier() || m_fparams.m_relevancy_lvl >= 2)) {
++            if (d.is_atom() && (d.is_quantifier() || m_relevancy_lvl >= 2)) {
+                 lbool val  = get_assignment(v);
+                 if (val != l_undef)
+                     m_atom_propagation_queue.push_back(literal(v, val == l_false));
+@@ -3263,9 +3264,15 @@
+     }
+ 
+     void context::setup_context(bool use_static_features) {
+-        if (m_setup.already_configured())
++        if (m_setup.already_configured()) {
++            // backport of upstream z3 5dfe4a4b4 (relevancy cannot be raised after setup): a later smt.relevancy update may only lower the
++            // level, so assertions internalized without relevancy are never
++            // filtered out of models afterwards.
++            m_relevancy_lvl = std::min(m_fparams.m_relevancy_lvl, m_relevancy_lvl);
+             return;
++        }
+         m_setup(get_config_mode(use_static_features));
++        m_relevancy_lvl = m_fparams.m_relevancy_lvl;
+         setup_components();
+ #ifndef _EXTERNAL_RELEASE
+         if (m_fparams.m_display_installed_theories) {
+--- a/src/smt/smt_internalizer.cpp
++++ b/src/smt/smt_internalizer.cpp
+@@ -1150,7 +1150,7 @@
+         // Reason: when a learned clause becomes unit, it should mark the
+         // unit literal as relevant. When binary_clause_opt is used,
+         // it is not possible to distinguish between learned and non-learned clauses.
+-        if (lemma && m_fparams.m_relevancy_lvl >= 2)
++        if (lemma && m_relevancy_lvl >= 2)
+             return false; 
+         if (m_base_lvl > 0)
+             return false;
+--- a/src/smt/smt_relevancy.cpp
++++ b/src/smt/smt_relevancy.cpp
+@@ -326,6 +326,11 @@
+            already marked. 
+         */
+         void mark_as_relevant(expr * n) override {
++            // Fork note: z3 4.7.1 could report models violating asserted
++            // formulas when smt.relevancy was raised after assertions were
++            // internalized with relevancy off (they were never marked here).
++            // Fixed by backporting upstream 5dfe4a4b4: context::relevancy()
++            // now uses a context level that setup_context only lowers.
+             if (!enabled())
+                 return;
+             if (!is_relevant_core(n)) {
+--- a/src/smt/params/smt_params.cpp
++++ b/src/smt/params/smt_params.cpp
+@@ -25,7 +25,7 @@
+     smt_params_helper p(_p);
+     m_auto_config = p.auto_config() && gparams::get_value("auto_config") == "true"; // auto-config is not scoped by smt in gparams.
+     m_random_seed = p.random_seed();
+-    m_relevancy_lvl = p.relevancy();
++    m_relevancy_lvl = p.relevancy(); // re-read on every updt_params; the context clamps it (see context::setup_context).
+     m_ematching   = p.ematching();
+     m_phase_selection = static_cast<phase_selection>(p.phase_selection());
+     m_restart_strategy = static_cast<restart_strategy>(p.restart_strategy());
+--- a/src/opt/opt_context.cpp
++++ b/src/opt/opt_context.cpp
+@@ -493,7 +493,12 @@
+         case O_MINIMIZE:
+             is_ge = !is_ge;
+         case O_MAXIMIZE:
+-            if (mdl->eval(obj.m_term, val) && is_numeral(val, k)) {
++            // Backport of upstream z3 e18702330 (fix #1699): evaluate with model
++            // completion. Otherwise a term the model leaves undefined (e.g. a
++            // 0-1 variable introduced by preprocessing) stays symbolic, k stays
++            // 0, the pareto dominance bound is trivially true, and gia_pareto
++            // repeats the same model forever.
++            if (mdl->eval(obj.m_term, val, true) && is_numeral(val, k)) {
+                 if (is_ge) {
+                     result = mk_ge(obj.m_term, val);
+                 }
+@@ -513,7 +518,7 @@
+             for (unsigned i = 0; i < sz; ++i) {
+                 terms.push_back(obj.m_terms[i]);
+                 coeffs.push_back(obj.m_weights[i]);
+-                if (mdl->eval(obj.m_terms[i], val) && m.is_true(val)) {
++                if (mdl->eval(obj.m_terms[i], val, true) && m.is_true(val)) { // completion: upstream e18702330
+                     k += obj.m_weights[i];
+                 }
+             }
+--- a/src/qe/qsat.cpp
++++ b/src/qe/qsat.cpp
+@@ -22,6 +22,7 @@
+ 
+ #include "ast/expr_abstract.h"
+ #include "ast/ast_util.h"
++#include "ast/occurs.h" // BACKPORT upstream z3 1ce0d7512 / 8ad939a10 (fix #2974/#2990): occurs() for elim
+ #include "ast/rewriter/quant_hoist.h"
+ #include "ast/ast_pp.h"
+ #include "ast/rewriter/th_rewriter.h"
+@@ -908,9 +909,9 @@
+             if (level.max() == UINT_MAX) {
+                 num_scopes = 2*(m_level/2);
+             }
+-            else if (m_mode == qsat_qe_rec) {
+-                num_scopes = 2;
+-            }
++            // BACKPORT upstream z3 1ce0d7512 / 8ad939a10 (fix #2974/#2990): the
++            // qsat_qe_rec special case (num_scopes = 2) is removed; elim now
++            // hoists like qe mode, so the ordinary level computation applies.
+             else {
+                 if (level.max() + 2 > m_level) return false;
+                 SASSERT(level.max() + 2 <= m_level);
+@@ -1001,11 +1002,21 @@
+                     if (is_fa) {
+                         tmp = ::push_not(tmp);
+                     }
++                    // BACKPORT upstream z3 1ce0d7512 / 8ad939a10 (fix #2974/#2990):
++                    // trace elim input; a null elim result means the quantifier
++                    // could not be eliminated, so keep e unchanged.
++                    TRACE("qe", tout << "elim-rec " << tmp << "\n";);
+                     tmp = elim(vars, tmp);
++                    if (!tmp) {
++                        visited.insert(e, e);
++                        todo.pop_back();
++                        break;
++                    }
+                     if (is_fa) {
+                         tmp = ::push_not(tmp);
+                     }
+                     trail.push_back(tmp);
++                    TRACE("qe", tout << tmp << "\n";);
+                     visited.insert(e, tmp);
+                     todo.pop_back();
+                     break;
+@@ -1019,16 +1030,30 @@
+             return expr_ref(e, m);
+         }
+         
+-        expr_ref elim(app_ref_vector const& vars, expr* _fml) {
++        /*
++         * Solve ex (x) phi(x)
++         *
++         * BACKPORT upstream z3 1ce0d7512 / 8ad939a10 (fix #2974/#2990): use the
++         * same code path as qe: re-wrap as exists vars. fml, negate, hoist
++         * (which gives every free constant a level, fixing the m_elevel.find
++         * crash in pred_abs::abstract_atoms), and require a ground result.
++         * Returns a null expr_ref when fml has nested quantifiers or the
++         * check is not l_false; the answer is existentially closed only over
++         * the projected free vars that still occur in it.
++         */
++        expr_ref elim(app_ref_vector& vars, expr* _fml) {
+             expr_ref fml(_fml, m);
+-            reset();
+-            m_vars.push_back(app_ref_vector(m));
+-            m_vars.push_back(vars);
+-            initialize_levels();
+-            fml = push_not(fml);            
+-
+-            TRACE("qe", tout << vars << " " << fml << "\n";);
+             expr_ref_vector defs(m);
++            if (has_quantifiers(fml)) {
++                return expr_ref(m);
++            }
++            reset();
++            fml = ::mk_exists(m, vars.size(), vars.c_ptr(), fml);
++            fml = ::push_not(fml);
++            hoist(fml);
++            if (!is_ground(fml)) {
++                throw tactic_exception("formula is not hoistable");
++            }
+             m_pred_abs.abstract_atoms(fml, defs);
+             fml = m_pred_abs.mk_abstract(fml);
+             m_ex.assert_expr(mk_and(defs));
+@@ -1037,27 +1062,22 @@
+             m_fa.assert_expr(m.mk_not(fml));
+             TRACE("qe", tout << "ex: " << fml << "\n";);
+             lbool is_sat = check_sat();
+-            fml = ::mk_and(m_answer);
+-            TRACE("qe", tout << "ans: " << fml << "\n";
+-                  tout << "Free vars: " << m_free_vars << "\n";);            
+-            if (is_sat == l_false) {
+-                obj_hashtable<app> vars;
++
++            unsigned j = 0;
++            switch (is_sat) {
++            case l_false:
++                fml = ::mk_and(m_answer);
+                 for (unsigned i = 0; i < m_free_vars.size(); ++i) {
+-                    app* v = m_free_vars[i].get();
+-                    if (vars.contains(v)) {
+-                        m_free_vars[i] = m_free_vars.back();
+-                        m_free_vars.pop_back();
+-                        --i;
+-                    }
+-                    else {
+-                        vars.insert(v);
+-                    }
++                    app* v = m_free_vars.get(i);
++                    if (occurs(v, fml)) m_free_vars[j++] = v;
++                }
++                m_free_vars.shrink(j);
++                if (!m_free_vars.empty()) {
++                    fml = ::mk_exists(m, m_free_vars.size(), m_free_vars.c_ptr(), fml);
+                 }
+-                fml = mk_exists(m, m_free_vars.size(), m_free_vars.c_ptr(), fml);
+                 return fml;
+-            }
+-            else {
+-                return expr_ref(_fml, m);
++            default:
++                return expr_ref(m);
+             }
+         }
+ 
+--- a/src/qe/qe.cpp
++++ b/src/qe/qe.cpp
+@@ -1758,7 +1758,9 @@
+             // unless the current state is unsatisfiable.
+             // 
+             if (m.is_true(fml_mixed)) {
+-                SASSERT(l_true == m_solver.check());
++                // BACKPORT upstream z3 1ce0d7512 / 8ad939a10 (fix #2974/#2990):
++                // the solver state may be undetermined here, only not unsat.
++                SASSERT(l_false != m_solver.check());
+                 m_current = m_current->add_child(fml_closed);
+                 for (unsigned i = 0; m_defs && i < m_current->num_free_vars(); ++i) {
+                     expr_ref val(m);
+--- a/src/smt/theory_pb.cpp
++++ b/src/smt/theory_pb.cpp
+@@ -1774,7 +1774,19 @@
+                 m_ineq_literals[i].neg();
+             }
+             TRACE("pb", tout << m_ineq_literals << "\n";);
+-            ctx.mk_clause(m_ineq_literals.size(), m_ineq_literals.c_ptr(), justify(m_ineq_literals), CLS_AUX_LEMMA, nullptr);
++            {
++                // FORK FIX (z3 4.7.1 bug; upstream removed this code in its pb rewrite, first in 4.8.5):
++                // justify() allocates a theory_axiom_justification in the context
++                // region, but a CLS_AUX_LEMMA clause owns its justification and
++                // dealloc's it (heap) when the lemma is deleted, aborting with
++                // "free(): invalid pointer" in clause::deallocate. Heap-allocate a
++                // theory_lemma_justification like the other lemma sites in this file.
++                justification* js = nullptr;
++                if (proofs_enabled()) {
++                    js = alloc(theory_lemma_justification, get_id(), ctx, m_ineq_literals.size(), m_ineq_literals.c_ptr());
++                }
++                ctx.mk_clause(m_ineq_literals.size(), m_ineq_literals.c_ptr(), js, CLS_AUX_LEMMA, nullptr);
++            }
+             break;
+         default: {
+             app_ref tmp = m_lemma.to_expr(false, ctx, get_manager());
+diff --git a/src/test/main.cpp goivy/z3vendor/z3/src/test/main.cpp
+index ccdc77ec9..8c2e0c0c4 100644
+--- a/src/test/main.cpp
++++ b/src/test/main.cpp
+@@ -244,6 +244,7 @@ int main(int argc, char ** argv) {
+     TST_ARGV(lp);
+     TST(get_consequences);
+     TST(pb2bv);
++    TST(fork_bugfixes); // regression tests for FORK_BUGFIXES.md
+     TST_ARGV(cnf_backbones);
+     //TST_ARGV(hs);
+ }
+diff --git a/src/test/CMakeLists.txt goivy/z3vendor/z3/src/test/CMakeLists.txt
+index fbcaec5ef..8ef693315 100644
+--- a/src/test/CMakeLists.txt
++++ b/src/test/CMakeLists.txt
+@@ -42,6 +42,7 @@ add_executable(test-z3
+   factor_rewriter.cpp
+   fixed_bit_vector.cpp
+   for_each_file.cpp
++  fork_bugfixes.cpp
+   get_consequences.cpp
+   get_implied_equalities.cpp
+   "${CMAKE_CURRENT_BINARY_DIR}/gparams_register_modules.cpp"

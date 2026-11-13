@@ -326,6 +326,11 @@ namespace smt {
            already marked. 
         */
         void mark_as_relevant(expr * n) override {
+            // Fork note: z3 4.7.1 could report models violating asserted
+            // formulas when smt.relevancy was raised after assertions were
+            // internalized with relevancy off (they were never marked here).
+            // Fixed by backporting upstream 5dfe4a4b4: context::relevancy()
+            // now uses a context level that setup_context only lowers.
             if (!enabled())
                 return;
             if (!is_relevant_core(n)) {
