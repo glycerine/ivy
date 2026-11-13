@@ -55,3 +55,11 @@ that returns without a new counterexample, including trivial UNSAT, C also
 leaves any previously stored sequential witness in place. Tests characterize
 both behaviors; callers should clear old witnesses before invoking VTA and
 should not infer a new witness from a non-SAT return.
+
+With the pthread-enabled C prover, cancellation increments the run ID but does
+not clear an already published proof; a superseded worker can also publish a
+successful result after cancellation. The Go port preserves that behavior.
+As a result, callers must not interpret a proof returned after cancellation as
+necessarily belonging to the current abstraction. The compiled C check for a
+published proof followed by cancellation returns `1` once, then `0`; Go tests
+also cover publication by a superseded worker.

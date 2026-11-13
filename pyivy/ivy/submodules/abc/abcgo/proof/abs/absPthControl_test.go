@@ -27,28 +27,18 @@ func TestAbsProverProofIsConsumedOnce(t *testing.T) {
 	}
 }
 
-func TestAbsProverSupersededProofCannotPublish(t *testing.T) {
+// ABC's pthread worker publishes a successful result even if its run ID was
+// superseded while solving. This characterizes that source behavior.
+func TestAbsProverSupersededProofCanPublish(t *testing.T) {
 	var c absProverControl
-	oldStarted, oldFinish, oldDone := make(chan struct{}), make(chan struct{}), make(chan struct{})
-	old := c.start(func(int32) int32 { close(oldStarted); <-oldFinish; defer close(oldDone); return 1 })
-	<-oldStarted
-	newStarted, newFinish := make(chan struct{}), make(chan struct{})
-	current := c.start(func(int32) int32 { close(newStarted); <-newFinish; return 1 })
-	<-newStarted
+	started, release := make(chan struct{}), make(chan struct{})
+	old := c.start(func(int32) int32 { close(started); <-release; return 1 })
+	<-started
+	current := c.start(func(int32) int32 { return 0 })
 	if !c.stopped(old) || c.stopped(current) {
 		t.Fatal("incorrect cancellation state")
 	}
-	close(oldFinish)
-	<-oldDone
-	// Wait for the stale worker to finish publishing under the lock.
-	deadline := time.Now().Add(time.Second)
-	for time.Now().Before(deadline) {
-		if c.check() != 0 {
-			t.Fatal("stale worker published proof")
-		}
-		runtime.Gosched()
-	}
-	close(newFinish)
+	close(release)
 	waitAbsProof(t, &c)
 }
 
@@ -64,7 +54,7 @@ func TestAbsProverCancelInvalidatesRun(t *testing.T) {
 	close(release)
 }
 
-func TestAbsProverCancelDiscardsPublishedProof(t *testing.T) {
+func TestAbsProverCancelKeepsPublishedProof(t *testing.T) {
 	var c absProverControl
 	c.start(func(int32) int32 { return 1 })
 	deadline := time.Now().Add(time.Second)
@@ -81,7 +71,7 @@ func TestAbsProverCancelDiscardsPublishedProof(t *testing.T) {
 		runtime.Gosched()
 	}
 	c.cancel()
-	if c.check() != 0 {
-		t.Fatal("cancel left stale proof available")
+	if c.check() != 1 || c.check() != 0 {
+		t.Fatal("C oracle expects the published proof once after cancellation")
 	}
 }
