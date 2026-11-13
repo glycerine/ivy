@@ -6,6 +6,13 @@ helpers are folded into graph-scoped implementations rather than retained as
 separate functions. Source comparison and tests are ongoing; a passing test
 suite does not establish full equivalence to ABC on every circuit or option.
 
+Timed `Fra_FraigLatchCorrespondence` uses the calling thread's CPU clock on
+Linux and pins the goroutine for the timed run, matching ABC's `Abc_Clock`.
+Other supported Unix targets use process CPU time; Windows uses elapsed CRT
+clock-style time. Unsupported targets explicitly reject timed runs. The
+timeout is checked inside the partition loop, so an empty partition list can
+finish even after the nominal deadline, as in C.
+
 ## Correctness and validation
 
 - Bounded model checking is compared with exhaustive input traces on generated

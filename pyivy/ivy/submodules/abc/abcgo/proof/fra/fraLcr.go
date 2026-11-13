@@ -4,7 +4,6 @@ package fra
 // the original temporary AIG object pData and pNext fields.
 import (
 	"fmt"
-	"time"
 
 	"github.com/glycerine/abcgo/aig/aig"
 )
@@ -226,9 +225,10 @@ func Fra_FraigLatchCorrespondence(graph *aig.Graph, prefix, conflicts, prove, ve
 	if graph.RegisterCount() <= 0 {
 		panic("latch correspondence requires registers")
 	}
-	var deadline time.Time
+	var deadline int64
 	if timeLimit != 0 {
-		deadline = time.Now().Add(time.Duration(float64(timeLimit) * float64(time.Second)))
+		defer fraLcrPin()()
+		deadline = fraLcrClock() + int64(float64(timeLimit)*fraLcrTicksPerSecond)
 	}
 	sim := Fra_SmlSimulateSeq(graph, prefix, 32, 1, 1)
 	if prove != 0 && sim.NonconstantOutput {
@@ -248,7 +248,7 @@ func Fra_FraigLatchCorrespondence(graph *aig.Graph, prefix, conflicts, prove, ve
 		Fra_ClassNodesMark(p)
 		p.fraigs = nil
 		for _, part := range p.parts {
-			if !deadline.IsZero() && time.Now().After(deadline) {
+			if timeLimit != 0 && fraLcrClock() > deadline {
 				if iterations != nil {
 					*iterations = p.nIters
 				}
