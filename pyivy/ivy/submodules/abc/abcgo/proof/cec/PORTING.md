@@ -192,6 +192,24 @@ so the partition computes AND where the source graph computes XOR. This is an
 inherited C behavior, confirmed against compiled ABC; it can change partition
 semantics and therefore must not be treated as a faithful XOR reduction.
 
+The CEC2/CEC3 sweep engine matrix checks random combinational graphs with cone
+mode both off and on, equivalence merging, miter witnesses, and graph finishing
+enabled or disabled. The sequential partition tests cover cleanup, SCORR and
+LCORR selection; empty and self-only clock domains; traversal epochs; and
+multiple non-contiguous selected registers supplied out of index order. That
+partition case checks PI/other-register counts, selected-state ordering, real
+output order, and the map-back IDs. Extracted submanagers are released on both
+the synthesized and no-PI paths, matching the C loop's cleanup. These checks
+are concrete branch coverage, not a complete parameter cross-product.
+
+Remaining sweep gaps include source comparisons for verbose/statistical
+reporting, unusual conflict-limit and iteration-boundary combinations, and
+exhaustive random seeds/options. Partition gaps include full end-to-end
+class-transfer behavior across interacting clock domains, malformed partition
+indices (which C treats as assertion failures), and exhaustive combinations of
+SCORR/LCORR options and limits. Native XOR partitioning remains the known
+source-inherited semantic defect described above.
+
 The source circuit-SAT output solver checks that its entire counterexample
 store was consumed even when `fCheckMiter` stops after the first SAT output.
 With multiple SAT outputs, the original asserts on trailing records; the Go

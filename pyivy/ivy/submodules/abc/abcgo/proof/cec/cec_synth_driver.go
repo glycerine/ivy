@@ -24,6 +24,9 @@ func Cec_SequentialSynthesisPart(p *gia.Gia_Man_t, pars *Cec_ParSeq_t) int32 {
 		var mapping []int32
 		sub := Gia_ManRegCreatePart(p, part, &nPIs, &nRegs, &mapping)
 		if nPIs == 0 {
+			// The C driver releases partitions even when they have no primary
+			// inputs and therefore skip synthesis and class transfer.
+			gia.Gia_ManStop(sub)
 			continue
 		}
 		switch {
@@ -50,6 +53,7 @@ func Cec_SequentialSynthesisPart(p *gia.Gia_Man_t, pars *Cec_ParSeq_t) int32 {
 		if pars.fVerbose != 0 {
 			fmt.Printf("%3d : Reg = %4d. PI = %4d. (True = %4d. Regs = %4d.) And = %5d. Cl = %5d.\n", index, vec.Vec_IntSize(part), gia.Gia_ManCiNum(sub)-int32(vec.Vec_IntSize(part)), nPIs, nRegs, gia.Gia_ManAndNum(sub), classes)
 		}
+		gia.Gia_ManStop(sub)
 	}
 	Gia_ManNormalizeEquivalences(p, reprs)
 	if pars.fVerbose != 0 {

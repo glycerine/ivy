@@ -82,3 +82,38 @@ func TestRegisterPartitionNativeXorSourceBehavior(t *testing.T) {
 		t.Fatalf("source AND output: %v", got)
 	}
 }
+
+// The source accepts a partition whose selected registers are non-contiguous
+// and supplied out of order. Selected state CIs are appended after the
+// ordinary cone inputs, while real register outputs retain selection order.
+func TestRegisterPartitionMultipleSelectedRegisters(t *testing.T) {
+	g := gia.Gia_ManStart(20)
+	pi0, pi1 := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
+	ro0, ro1, ro2 := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
+	cone2 := gia.Gia_ManAppendAnd(g, pi1, ro1)
+	gia.Gia_ManAppendCo(g, pi0)   // register 0
+	gia.Gia_ManAppendCo(g, ro2)   // register 1
+	gia.Gia_ManAppendCo(g, cone2) // register 2
+	gia.Gia_ManSetRegNum(g, 3)
+	part := vec.Vec_IntAlloc(2)
+	vec.Vec_IntPush(part, 2)
+	vec.Vec_IntPush(part, 0)
+	var pis, regs int32
+	var mapping []int32
+	out := Gia_ManRegCreatePart(g, part, &pis, &regs, &mapping)
+	if pis != 2 || regs != 1 || gia.Gia_ManRegNum(out) != 2 || gia.Gia_ManCiNum(out) != 5 {
+		t.Fatalf("partition shape: PIs=%d otherRegs=%d CIs=%d regs=%d", pis, regs, gia.Gia_ManCiNum(out), gia.Gia_ManRegNum(out))
+	}
+	if got := mapping[4]; got != ro2>>1 {
+		t.Fatalf("selected register 2 mapping = %d, want source object %d", got, ro2>>1)
+	}
+	if got := mapping[6]; got != ro0>>1 {
+		t.Fatalf("selected register 0 mapping = %d, want source object %d", got, ro0>>1)
+	}
+	if f := gia.Gia_ObjFanin0(gia.Gia_ManCo(out, 2)); mapping[gia.Gia_ObjId(out, f)] != cone2>>1 {
+		t.Fatalf("first real register output maps to %d, want source cone node %d", mapping[gia.Gia_ObjId(out, f)], cone2>>1)
+	}
+	if f := gia.Gia_ObjFanin0(gia.Gia_ManCo(out, 3)); mapping[gia.Gia_ObjId(out, f)] != pi0>>1 {
+		t.Fatalf("second real register output maps to %d, want source PI %d", mapping[gia.Gia_ObjId(out, f)], pi0>>1)
+	}
+}
