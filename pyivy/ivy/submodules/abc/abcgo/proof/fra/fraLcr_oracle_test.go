@@ -33,27 +33,30 @@ func TestLatchCorrespondenceAgainstExhaustiveTraces(t *testing.T) {
 			g.AddOutput(e)
 		}
 		aig.Aig_ManSetRegNum(g, 2)
-		reduced := Fra_FraigLatchCorrespondence(g, 0, 10000, 0, 0, nil, 0)
-		if reduced == nil {
-			t.Fatalf("trial %d returned no reduced graph", trial)
-		}
-		for sequence := 0; sequence < 256; sequence++ {
-			originalState, reducedState := make([]bool, 2), make([]bool, reduced.RegisterCount())
-			for frame := 0; frame < 4; frame++ {
-				input := []bool{sequence&(1<<(2*frame)) != 0, sequence&(1<<(2*frame+1)) != 0}
-				original, err := g.Evaluate(append(append([]bool(nil), input...), originalState...))
-				if err != nil {
-					t.Fatal(err)
+		for _, prefix := range []int32{0, 1} {
+			inputGraph := aig.Aig_ManDupOrdered(g)
+			reduced := Fra_FraigLatchCorrespondence(inputGraph, prefix, 10000, 0, 0, nil, 0)
+			if reduced == nil {
+				t.Fatalf("trial %d prefix %d returned no reduced graph", trial, prefix)
+			}
+			for sequence := 0; sequence < 256; sequence++ {
+				originalState, reducedState := make([]bool, 2), make([]bool, reduced.RegisterCount())
+				for frame := 0; frame < 4; frame++ {
+					input := []bool{sequence&(1<<(2*frame)) != 0, sequence&(1<<(2*frame+1)) != 0}
+					original, err := g.Evaluate(append(append([]bool(nil), input...), originalState...))
+					if err != nil {
+						t.Fatal(err)
+					}
+					got, err := reduced.Evaluate(append(append([]bool(nil), input...), reducedState...))
+					if err != nil {
+						t.Fatal(err)
+					}
+					if original[0] != got[0] || original[1] != got[1] {
+						t.Fatalf("trial %d prefix %d sequence %d frame %d original %v reduced %v", trial, prefix, sequence, frame, original, got)
+					}
+					copy(originalState, original[len(original)-len(originalState):])
+					copy(reducedState, got[len(got)-len(reducedState):])
 				}
-				got, err := reduced.Evaluate(append(append([]bool(nil), input...), reducedState...))
-				if err != nil {
-					t.Fatal(err)
-				}
-				if original[0] != got[0] || original[1] != got[1] {
-					t.Fatalf("trial %d sequence %d frame %d original %v reduced %v", trial, sequence, frame, original, got)
-				}
-				copy(originalState, original[len(original)-len(originalState):])
-				copy(reducedState, got[len(got)-len(reducedState):])
 			}
 		}
 	}
