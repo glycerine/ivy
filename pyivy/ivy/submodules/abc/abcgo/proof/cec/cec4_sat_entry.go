@@ -60,7 +60,7 @@ func Cec4_ManSolveTwo(p *Cec4_Man_t, first, second, phase int32, easy *int32, ve
 		c = p.cnf
 	}
 	limit := p.pPars.nBTLimit
-	if p.vFails != nil && (vec.Vec_BitEntry(p.vFails, int(first)) != 0 || vec.Vec_BitEntry(p.vFails, int(second)) != 0) {
+	if p.vFails != nil && (vec.Vec_BitGetEntry(p.vFails, int(first)) != 0 || vec.Vec_BitGetEntry(p.vFails, int(second)) != 0) {
 		limit /= 10
 		if limit < 1 {
 			limit = 1

@@ -3,6 +3,7 @@ package cec
 import (
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/misc/vec"
+	"github.com/glycerine/abcgo/sat/glucose2"
 	"testing"
 )
 
@@ -57,5 +58,46 @@ func TestCec4ManagerSweepResetsStampsAfterFullPatternBatch(t *testing.T) {
 		if stamp != 0 {
 			t.Fatalf("stale stamp %d", stamp)
 		}
+	}
+}
+
+func TestCec4ManagerSweepGrowsFailureBitsForReducedGraph(t *testing.T) {
+	g := gia.Gia_ManStart(10)
+	a, b := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
+	x := gia.Gia_ManAppendAnd(g, a, b)
+	y := gia.Gia_ManAppendAnd(g, x, a)
+	gia.Gia_ManSetPhase(g)
+	g.StartRepresentatives()
+	gia.Gia_ObjSetRepr(g, y>>1, x>>1)
+	reduced := gia.Gia_ManStart(64)
+	ra, rb := gia.Gia_ManAppendCi(reduced), gia.Gia_ManAppendCi(reduced)
+	tail := rb
+	for i := 0; i < 35; i++ {
+		tail = gia.Gia_ManAppendAnd(reduced, tail, ra)
+	}
+	rx := gia.Gia_ManAppendAnd(reduced, ra, rb)
+	ry := gia.Gia_ManAppendAnd(reduced, rx, ra)
+	gia.Gia_ObjSetValue(gia.Gia_ManConst0(g), 0)
+	gia.Gia_ObjSetValue(gia.Gia_ManObj(g, a>>1), ra)
+	gia.Gia_ObjSetValue(gia.Gia_ManObj(g, b>>1), rb)
+	gia.Gia_ObjSetValue(gia.Gia_ManObj(g, x>>1), rx)
+	gia.Gia_ObjSetValue(gia.Gia_ManObj(g, y>>1), ry)
+	p := Cec4_ManCreate(g, &Cec_ParFra_t{jType: 0, nBTLimit: 100, nWords: 1, nItersMax: 1})
+	p.pNew = reduced
+	Cec4_ManSimAlloc(p, 1)
+	if got := Cec4_ManSweepNode(p, y>>1, x>>1); got != 1 {
+		t.Fatalf("sweep result %d", got)
+	}
+	if vec.Vec_BitSize(p.vFails) <= int(ry>>1) {
+		t.Fatal("failure flags did not grow with reduced IDs")
+	}
+	p2 := Cec4_ManCreate(g, &Cec_ParFra_t{jType: 0, nBTLimit: 100})
+	p2.pNew = reduced
+	var easy int32
+	if got := Cec4_ManSolveTwo(p2, rx>>1, ry>>1, 0, &easy, 0); got != glucose2.GLUCOSE_UNSAT {
+		t.Fatalf("direct SAT result %d", got)
+	}
+	if vec.Vec_BitSize(p2.vFails) <= int(ry>>1) {
+		t.Fatal("direct SAT failure flags did not grow")
 	}
 }

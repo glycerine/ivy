@@ -89,7 +89,7 @@ func Cec4_ManSweepNode(p *Cec4_Man_t, id, repr int32) int32 {
 		p.nRecycles++
 	}
 	limit := p.pPars.nBTLimit
-	if vec.Vec_BitEntry(p.vFails, int(p.copies[id]>>1)) != 0 || vec.Vec_BitEntry(p.vFails, int(p.copies[repr]>>1)) != 0 {
+	if vec.Vec_BitGetEntry(p.vFails, int(p.copies[id]>>1)) != 0 || vec.Vec_BitGetEntry(p.vFails, int(p.copies[repr]>>1)) != 0 {
 		limit = max(int32(1), limit/10)
 	}
 	status := cec4SweepNode(p.pAig, p.pNew, p.simState.sim, p.cnf, p.copies, id, repr, limit, &p.pattern)
@@ -114,7 +114,7 @@ func Cec4_ManSweepNode(p *Cec4_Man_t, id, repr int32) int32 {
 		return 1
 	default:
 		p.nSatUndec++
-		vec.Vec_BitWriteEntry(p.vFails, int(p.copies[id]>>1), 1)
+		vec.Vec_BitSetEntry(p.vFails, int(p.copies[id]>>1), 1)
 		return 2
 	}
 }
