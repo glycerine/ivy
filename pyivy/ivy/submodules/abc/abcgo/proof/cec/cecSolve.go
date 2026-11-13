@@ -75,10 +75,11 @@ func Cec_ManSatSolve(patterns *Cec_ManPat_t, graph *Gia_Man_t, pars *Cec_ParSat_
 			}
 			a, b := vec.Vec_IntEntry(pairs, 2*i), vec.Vec_IntEntry(pairs, 2*i+1)
 			x, y := vec.Vec_IntEntry(orig, int(a)), vec.Vec_IntEntry(orig, int(b))
-			if x < 0 || y < 0 {
-				panic("cec: negative original node id")
+			// Synthetic nodes introduced while lowering native gates have no
+			// source ID and cannot be recorded as original-node proofs.
+			if x >= 0 && y >= 0 {
+				vec.Vec_IntPushTwo(equiv, x, y)
 			}
-			vec.Vec_IntPushTwo(equiv, x, y)
 		}
 		if models != nil && status == 1 {
 			models[i] = util.AbcCexSentinel

@@ -11,6 +11,10 @@ import (
 
 // cecOriginalSweep is the speculative-reduction loop from cecCore.c.
 func cecOriginalSweep(graph *Gia_Man_t, pars *Cec_ParFra_t) (*Gia_Man_t, error) {
+	return cecOriginalSweepMapped(graph, graph, nil, nil, pars)
+}
+
+func cecOriginalSweepMapped(graph, original *Gia_Man_t, sourceIDs []int32, aliases *Vec_Int_t, pars *Cec_ParFra_t) (*Gia_Man_t, error) {
 	if graph == nil {
 		return nil, fmt.Errorf("cec: nil sweep graph")
 	}
@@ -33,6 +37,9 @@ func cecOriginalSweep(graph *Gia_Man_t, pars *Cec_ParFra_t) (*Gia_Man_t, error) 
 		}
 	}
 	graph.ClearCombinationalCounterexample()
+	if original != graph {
+		original.ClearCombinationalCounterexample()
+	}
 	pars.iOutFail = -1
 	started := time.Now()
 	deadline := time.Time{}
@@ -42,12 +49,19 @@ func cecOriginalSweep(graph *Gia_Man_t, pars *Cec_ParFra_t) (*Gia_Man_t, error) 
 	gia.Gia_ManRandom(1)
 	initial := gia.Gia_ManDup(graph)
 	if pars.fUseOrigIds != 0 {
-		gia.Gia_ManOrigIdsInit(initial)
-		gia.Gia_ManOrigEquivPairsReset(graph)
+		if sourceIDs == nil {
+			gia.Gia_ManOrigIdsInit(initial)
+		} else {
+			gia.Gia_ManOrigIdsSet(initial, sourceIDs)
+		}
+		gia.Gia_ManOrigEquivPairsReset(original)
 	}
 	var candidates *Vec_Int_t
 	if pars.fUseOrigIds != 0 {
 		candidates = vec.Vec_IntAlloc(1000)
+		if aliases != nil {
+			vec.Vec_IntAppend(candidates, aliases)
+		}
 	}
 	if words := graph.SimulationWordCount(); words > 0 {
 		gia.Gia_ManCecSimAlloc(initial, words)
@@ -137,7 +151,7 @@ func cecOriginalSweep(graph *Gia_Man_t, pars *Cec_ParFra_t) (*Gia_Man_t, error) 
 		}
 	}
 	if candidates != nil {
-		if err := cecValidateOriginalPairs(graph, candidates, pars.nBTLimit, deadline); err != nil {
+		if err := cecValidateOriginalPairs(original, candidates, pars.nBTLimit, deadline); err != nil {
 			gia.Gia_ManStop(fra.pAig)
 			return nil, err
 		}
@@ -151,7 +165,7 @@ func cecOriginalSweep(graph *Gia_Man_t, pars *Cec_ParFra_t) (*Gia_Man_t, error) 
 		for i := range values {
 			values[i] = witness.PData[i>>5]&(uint32(1)<<uint(i&31)) != 0
 		}
-		outputs, err := graph.Evaluate(values)
+		outputs, err := original.Evaluate(values)
 		if err != nil {
 			return nil, fmt.Errorf("cec: replay original sweep witness: %w", err)
 		}
@@ -164,7 +178,7 @@ func cecOriginalSweep(graph *Gia_Man_t, pars *Cec_ParFra_t) (*Gia_Man_t, error) 
 			return nil, fmt.Errorf("cec: original sweep witness does not disprove output %d", output)
 		}
 		pars.iOutFail = sim.iOut
-		if err := graph.SetCombinationalCounterexample(values, int(sim.iOut)); err != nil {
+		if err := original.SetCombinationalCounterexample(values, int(sim.iOut)); err != nil {
 			return nil, err
 		}
 		gia.Gia_ManStop(fra.pAig)

@@ -13,6 +13,17 @@ func Gia_ManOrigEquivPairs(p *Gia_Man_t) *Vec_Int_t { return p.vIdsEquiv }
 func Gia_ManOrigEquivPairsReset(p *Gia_Man_t) {
 	p.vIdsEquiv = vec.Vec_IntAlloc(1000)
 }
+
+// Gia_ManOrigIdsSet installs a mapping; -1 denotes a synthetic node.
+func Gia_ManOrigIdsSet(p *Gia_Man_t, ids []int32) {
+	if len(ids) != int(p.nObjs) {
+		panic("gia: original ID mapping size mismatch")
+	}
+	p.vIdsOrig = vec.Vec_IntAlloc(len(ids))
+	for _, id := range ids {
+		vec.Vec_IntPush(p.vIdsOrig, id)
+	}
+}
 func Gia_ManOrigIdsRemap(p, q *Gia_Man_t) {
 	if p.vIdsOrig == nil {
 		return
@@ -27,11 +38,6 @@ func Gia_ManOrigIdsRemap(p, q *Gia_Man_t) {
 		old := vec.Vec_IntEntry(p.vIdsOrig, int(obj.id))
 		if old != -1 && vec.Vec_IntEntry(q.vIdsOrig, int(lit>>1)) == -1 {
 			vec.Vec_IntWriteEntry(q.vIdsOrig, int(lit>>1), old)
-		}
-	}
-	for _, id := range vec.Vec_IntArray(q.vIdsOrig) {
-		if id < 0 {
-			panic("gia: missing original object ID")
 		}
 	}
 }
@@ -90,7 +96,21 @@ func Gia_ManOrigIdsReduce(p *Gia_Man_t, pairs *Vec_Int_t) *Gia_Man_t {
 		}
 		repr := vec.Vec_IntEntry(mapping, int(obj.id))
 		if repr < 0 {
-			Gia_ObjSetValue(obj, Gia_ManHashAnd(q, Gia_ObjFanin0Copy(obj), Gia_ObjFanin1Copy(obj)))
+			a, b, c, kind := p.Gate(obj.id)
+			var lit int32
+			switch kind {
+			case 2:
+				lit = Gia_ManHashAnd(q, Gia_ObjLitCopy(p, a), Gia_ObjLitCopy(p, b))
+			case 3:
+				lit = Gia_ManHashXor(q, Gia_ObjLitCopy(p, a), Gia_ObjLitCopy(p, b))
+			case 4:
+				lit = Gia_ManHashMux(q, Gia_ObjLitCopy(p, a), Gia_ObjLitCopy(p, b), Gia_ObjLitCopy(p, c))
+			case 5:
+				lit = Gia_ObjLitCopy(p, a)
+			default:
+				panic("gia: unsupported original-ID reduction node")
+			}
+			Gia_ObjSetValue(obj, lit)
 		} else {
 			other := Gia_ManObj(p, repr)
 			Gia_ObjSetValue(obj, Gia_ObjValue(other)^int32(other.fPhase^obj.fPhase))
@@ -101,6 +121,8 @@ func Gia_ManOrigIdsReduce(p *Gia_Man_t, pairs *Vec_Int_t) *Gia_Man_t {
 		obj := Gia_ManCo(p, i)
 		Gia_ObjSetValue(obj, Gia_ManAppendCo(q, Gia_ObjFanin0Copy(obj)))
 	}
+	Gia_ManSetRegNum(q, Gia_ManRegNum(p))
+	Gia_ManSetConstrNum(q, Gia_ManConstrNum(p))
 	if p.pReprs != nil || p.pNexts != nil {
 		panic("gia: existing equivalence classes")
 	}

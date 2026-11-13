@@ -77,9 +77,10 @@ proved original-ID pairs when requested. Speculative pairs are independently
 checked against the original graph, so a failed earlier assumption cannot turn
 into a published proof. Original-ID tracking currently requires the ordinary
 SAT backend; the circuit SAT path does not collect these pairs.
-Its direct entry point requires an
-AND-inverter graph and reports an error for native XOR, MUX, or buffer nodes;
-`Cec_ManVerify` lowers those nodes before invoking the sweep. As in the C
+The public sweep lowers native XOR, MUX, and buffer nodes to AND-inverter
+logic, retains source IDs for original nodes, and independently validates alias
+proofs. Native graphs with existing equivalence classes are rejected until
+class remapping is supported. As in the C
 pipeline, the overall time limit is checked between stages and iterations; an
 individual SAT or FRAIG call can run beyond that limit. Tests compare selected
 cases with the original ABC executable and force the unresolved sweep branch
