@@ -101,7 +101,7 @@ func copiedDriver(old *aig.Graph, index int) aig.Edge {
 	return copy ^ aig.Edge(driver&1)
 }
 func disjunctiveTester(p *aig.Graph, candidates []aig.Edge, k int32) *aig.Graph {
-	if k < 0 || int(k) > len(candidates) {
+	if k <= 0 || int(k) > len(candidates) {
 		panic("live: invalid maximum combination width")
 	}
 	c := newGraphCopy(p, "_nCk")
@@ -145,14 +145,7 @@ func generateDisjunctiveTester(n *Network, p *aig.Graph, combN, combK int32) *ai
 	for i, index := range hints {
 		signals[i] = p.Outputs()[index]
 	}
-	if len(signals) == 0 {
-		c := newGraphCopy(p, "_nCk")
-		c.copyInputs()
-		c.copyOutputs()
-		aig.Aig_ManSetRegNum(c.destination, int32(registers(p)))
-		c.setConstraints()
-		return c.destination
-	}
+
 	return disjunctiveTester(p, signals, combK)
 }
 func generateGeneralDisjunctiveTester(n *Network, p *aig.Graph, k int32) *aig.Graph {
