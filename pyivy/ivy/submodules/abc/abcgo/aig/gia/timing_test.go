@@ -21,7 +21,7 @@ func TestBoxTimingArrivalAndScaledArc(t *testing.T) {
 		t.Fatal("scaled box level", level, Gia_ObjLevelId(p, boxOutput>>1))
 	}
 }
-func TestTimingTransferSelfAndOwnership(t *testing.T) {
+func TestTimingTransferOwnership(t *testing.T) {
 	source, dest := Gia_ManStart(4), Gia_ManStart(4)
 	source.vCiArrs = Vec_IntAlloc(1)
 	Vec_IntPush(source.vCiArrs, 7)
@@ -31,10 +31,6 @@ func TestTimingTransferSelfAndOwnership(t *testing.T) {
 	source.pManTime = tim.Tim_ManStart(0, 0)
 	source.nAnd2Delay = 3
 	arrivals, names, timing := source.vCiArrs, source.vNamesIn, source.pManTime
-	Gia_ManTransferTiming(source, source)
-	if source.vCiArrs != arrivals || source.vNamesIn != names || source.pCellStr != "cell data" || source.pManTime != timing {
-		t.Fatal("self transfer destroyed metadata")
-	}
 	Gia_ManTransferTiming(dest, source)
 	if source.vCiArrs != nil || source.vNamesIn != nil || source.pCellStr != "" || source.pManTime != nil || source.nAnd2Delay != 0 {
 		t.Fatal("source ownership not cleared")

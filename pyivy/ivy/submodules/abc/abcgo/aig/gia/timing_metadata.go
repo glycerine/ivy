@@ -1,11 +1,8 @@
 package gia
 
-// Gia_ManTransferTiming moves source timing/name/configuration ownership. A
-// self-transfer is a no-op, including metadata processed before box timing.
+// Gia_ManTransferTiming moves source timing/name/configuration ownership.
+// ABC checks self-transfer only after the non-box metadata groups.
 func Gia_ManTransferTiming(dst, src *Gia_Man_t) {
-	if dst == src {
-		return
-	}
 	if src.vCiArrs != nil || src.vCoReqs != nil || src.vCoArrs != nil || src.vCoAttrs != nil {
 		dst.vCiArrs, src.vCiArrs = src.vCiArrs, nil
 		dst.vCoReqs, src.vCoReqs = src.vCoReqs, nil
@@ -22,11 +19,13 @@ func Gia_ManTransferTiming(dst, src *Gia_Man_t) {
 		dst.vNamesIn, src.vNamesIn = src.vNamesIn, nil
 		dst.vNamesOut, src.vNamesOut = src.vNamesOut, nil
 	}
+	// The Go string representation cannot distinguish a C NULL pointer from
+	// a non-NULL pointer to an empty string unless configs are also present.
 	if src.vConfigs != nil || src.pCellStr != "" {
 		dst.vConfigs, src.vConfigs = src.vConfigs, nil
 		dst.pCellStr, src.pCellStr = src.pCellStr, ""
 	}
-	if src.pManTime == nil {
+	if src.pManTime == nil || dst == src {
 		return
 	}
 	dst.pManTime, src.pManTime = src.pManTime, nil
