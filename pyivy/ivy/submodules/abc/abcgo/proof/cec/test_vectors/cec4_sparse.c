@@ -20,7 +20,13 @@ static int unknown_case(void) {
  printf("unknown=%d candidate=%d marked=%d\n",status,cand,Vec_BitEntry(p->vFails,cand));
  return 0;
 }
+static int pack_case(int cursor) {
+ Gia_Man_t *g=Gia_ManStart(4);Vec_Int_t *lits=Vec_IntAlloc(1);int result;
+ Gia_ManAppendCi(g);Cec4_ManSimAlloc(g,1);Vec_IntPush(lits,2);g->iPatsPi=cursor;
+ result=Cec4_ManPackAddPatternTry(g,1,lits);printf("pack=%d\n",result);return 0;
+}
 int main(int argc, char **argv) {
+ if(argc>1 && !strcmp(argv[1],"pack")) return pack_case(atoi(argv[2]));
  if(argc>1 && !strcmp(argv[1],"unknown")) return unknown_case();
  int mode=atoi(argv[1]), a,b,c,x,y,i,lit,ret;
  Gia_Man_t *g=Gia_ManStart(16); Cec_ParFra_t pars; Cec4_Man_t *p;

@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
+	"syscall"
 	"testing"
 )
 
@@ -52,6 +53,18 @@ func TestCec4SparseModelAgainstABC(t *testing.T) {
 	fixture := filepath.Join(filepath.Dir(file), "test_vectors/cec4_sparse.c")
 	if out, err := exec.Command(cc, "-DABC_USE_STDINT_H", "-I", src, fixture, archive, "-lstdc++", "-lm", "-ldl", "-lpthread", "-lreadline", "-o", binary).CombinedOutput(); err != nil {
 		t.Fatalf("link: %v\n%s", err, out)
+	}
+	for _, cursor := range []string{"0", "64"} {
+		cmd := exec.Command(binary, "pack", cursor)
+		cmd.Dir = dir
+		out, err := cmd.CombinedOutput()
+		failure, ok := err.(*exec.ExitError)
+		if !ok || !failure.Sys().(syscall.WaitStatus).Signaled() {
+			t.Fatalf("C pack cursor %s did not assert: %v %s", cursor, err, out)
+		}
+	}
+	if out, err := exec.Command(binary, "pack", "1").CombinedOutput(); err != nil || strings.TrimSpace(string(out)) != "pack=1" {
+		t.Fatalf("C valid pack cursor: %v %s", err, out)
 	}
 	if out, err := exec.Command(binary, "unknown").CombinedOutput(); err != nil || strings.TrimSpace(string(out)) != "unknown=2 candidate=31 marked=1" {
 		t.Fatalf("C unknown: %v %s", err, out)

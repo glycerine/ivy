@@ -20,7 +20,12 @@ func Cec4_ManPackAddPatterns(p *Cec4_Man_t, bit int32, literals *Vec_Int_t) {
 	cec4ManagerPacker(p).extend(int(bit), vec.Vec_IntArray(literals))
 }
 func Cec4_ManPackAddPatternTry(p *Cec4_Man_t, bit int32, literals *Vec_Int_t) int32 {
-	if cec4ManagerPacker(p).try(int(bit), vec.Vec_IntArray(literals)) {
+	pack := cec4ManagerPacker(p)
+	// The source checks the manager cursor, even when bit is different.
+	if p.pattern <= 0 || p.pattern >= 64*pack.values.words {
+		panic("cec4: pattern cursor out of range")
+	}
+	if pack.try(int(bit), vec.Vec_IntArray(literals)) {
 		return 1
 	}
 	return 0

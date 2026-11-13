@@ -120,6 +120,9 @@ preserves the source assertion when a reduced ID is outside the original
 graph's failure bitmap.
 The sparse CEC4 justification and the in-range UNKNOWN candidate-ID behavior
 have focused comparisons against compiled C; these are not a full mode audit.
+The source pattern-packing try helper asserts that the current pattern cursor
+is in range, regardless of the separately supplied bit index. The Go helper
+preserves that precondition, with an executable C comparison.
 
 `Cec_ManFraSpecReduction` preserves the source level-limit behavior that
 indexes the original graph using the representative's reduced-copy ID. If
