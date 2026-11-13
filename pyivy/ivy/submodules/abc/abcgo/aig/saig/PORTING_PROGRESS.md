@@ -26,9 +26,18 @@ unsatisfiable-initial-state retry cases; and reachable-output comparisons for
 all three-frame traces on 32 generated two-register circuits. Run the full
 SAIG race suite and the dependent FRA race suite after changes.
 
+The reproducible reference command `go run ./aig/saig/_reference -abc ../abc`
+compares against ABC's network command `retime -M 3`: 22 of 24 deterministic
+two-input, three-register generated examples produced defined initial latches
+in C, and all 64 three-frame traces on those examples matched the original and
+the Go result. The other two C results had unknown initial latches and were
+excluded from that trace comparison. Four C results had fewer registers;
+sequential cleanup of the original graph gives the same counts as those C
+results. This network command is a useful reference but is not a direct call
+to the original SAIG function.
+
 Remaining review: compare cut tie-breaking and end-to-end behavior directly
-with the C executable on representative larger designs; one shared-driver
-example has been checked against ABC's `retime -M 3 -b`. Address the remaining
+with the original SAIG function on larger designs. Address the remaining
 overlapping asserted-constraint case if a representation for noncontiguous
 output roles is added. The Go NWK converter
 currently omits dangling nodes, whereas the C converter iterates all nodes;
