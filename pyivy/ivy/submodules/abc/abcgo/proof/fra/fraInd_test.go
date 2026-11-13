@@ -254,7 +254,7 @@ func TestInductionWithNontrivialImplicationCandidate(t *testing.T) {
 	g.AddOutput(input)
 	g.AddOutput(g.OR(input, a))
 	aig.Aig_ManSetRegNum(g, 2)
-	probe := Fra_ManStart(g, &Fra_Par_t{nFramesK: 1})
+	probe := Fra_ManStart(g, &Fra_Par_t{NFramesK: 1})
 	imps := Fra_ImpDerive(probe, 100, 20, 0)
 	found := false
 	for _, imp := range vec.Vec_IntArray(imps) {

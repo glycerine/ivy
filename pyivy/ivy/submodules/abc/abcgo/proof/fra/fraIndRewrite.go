@@ -19,7 +19,7 @@ func Fra_FraigInductionRewrite(p *Fra_Man_t) {
 	for i := range p.pMemFraig {
 		p.pMemFraig[i] = aig.InvalidEdge
 	}
-	frame := p.pPars.nFramesK
+	frame := p.pPars.NFramesK
 	Fra_ObjSetFraig(p, p.pManAig.Const1(), frame, rewritten.Const1())
 	inputs := p.pManAig.Inputs()
 	regs := int(p.pManAig.RegisterCount())

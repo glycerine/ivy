@@ -10,7 +10,7 @@ func TestInductionRewritePreservesFrameInterface(t *testing.T) {
 	input, latch := source.NewInput(), source.NewInput()
 	source.AddOutput(input)
 	aig.Aig_ManSetRegNum(source, 1)
-	p := Fra_ManStart(source, &Fra_Par_t{nFramesK: 1})
+	p := Fra_ManStart(source, &Fra_Par_t{NFramesK: 1})
 	p.pManFraig = Fra_FramesWithClasses(p)
 	Fra_FraigInductionRewrite(p)
 	if p.pManFraig.RegisterCount() != 1 || p.pManFraig.OutputCount() != 1 {

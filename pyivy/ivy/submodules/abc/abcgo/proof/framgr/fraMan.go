@@ -12,10 +12,10 @@ import (
 )
 
 func Fra_ManStart(graph *aig.Graph, pars *Fra_Par_t) *Fra_Man_t {
-	if graph == nil || pars == nil || pars.nFramesK < 0 {
+	if graph == nil || pars == nil || pars.NFramesK < 0 {
 		panic("fra: invalid manager parameters")
 	}
-	p := &Fra_Man_t{pManAig: graph, pPars: pars, nSizeAlloc: int32(len(graph.Nodes())), nFramesAll: pars.nFramesK + 1}
+	p := &Fra_Man_t{pManAig: graph, pPars: pars, nSizeAlloc: int32(len(graph.Nodes())), nFramesAll: pars.NFramesK + 1}
 	bits := (int32(graph.InputCount())-graph.RegisterCount())*p.nFramesAll + graph.RegisterCount()
 	p.nPatWords = (bits + 31) / 32
 	p.pPatWords = make([]uint32, p.nPatWords)
@@ -73,7 +73,7 @@ func Fra_ManFinalizeComb(p *Fra_Man_t) {
 // Aig_Man_t.pObjCopies. Callers that use it after shutdown must retain it;
 // entries are indexed by node ID * nFramesAll + frame.
 func Fra_ManStop(p *Fra_Man_t) []aig.Edge {
-	if p.pPars.fVerbose != 0 {
+	if p.pPars.FVerbose != 0 {
 		Fra_ManPrint(p)
 	}
 	mapping := p.pMemFraig
@@ -90,8 +90,8 @@ func Fra_ManPrint(p *Fra_Man_t) {
 	if denom == 0 {
 		denom = 1
 	}
-	fmt.Printf("SimWord = %d. Round = %d.  Mem = %0.2f MB.  LitBeg = %d.  LitEnd = %d. (%6.2f %%).\n", p.pPars.nSimWords, p.pSml.rounds, size, p.nLitsBeg, p.nLitsEnd, 100*float64(p.nLitsEnd)/float64(denom))
-	fmt.Printf("Proof = %d. Cex = %d. Fail = %d. FailReal = %d. C-lim = %d. ImpRatio = %6.2f %%\n", p.nSatProof, p.nSatCallsSat, p.nSatFails, p.nSatFailsReal, p.pPars.nBTLimitNode, Fra_ImpComputeStateSpaceRatio(p))
+	fmt.Printf("SimWord = %d. Round = %d.  Mem = %0.2f MB.  LitBeg = %d.  LitEnd = %d. (%6.2f %%).\n", p.pPars.NSimWords, p.pSml.rounds, size, p.nLitsBeg, p.nLitsEnd, 100*float64(p.nLitsEnd)/float64(denom))
+	fmt.Printf("Proof = %d. Cex = %d. Fail = %d. FailReal = %d. C-lim = %d. ImpRatio = %6.2f %%\n", p.nSatProof, p.nSatCallsSat, p.nSatFails, p.nSatFailsReal, p.pPars.NBTLimitNode, Fra_ImpComputeStateSpaceRatio(p))
 	nodeDenom, regDenom := p.nNodesBeg, p.nRegsBeg
 	if nodeDenom == 0 {
 		nodeDenom = 1
@@ -103,7 +103,7 @@ func Fra_ManPrint(p *Fra_Man_t) {
 	if p.pSat != nil {
 		bsat.Sat_SolverPrintStats(os.Stdout, p.pSat)
 	}
-	if p.pPars.fUse1Hot != 0 {
+	if p.pPars.FUse1Hot != 0 {
 		Fra_OneHotEstimateCoverage(p, p.vOneHots)
 	}
 	printTime := func(name string, elapsed time.Duration) { fmt.Printf("%-16s = %.2f sec\n", name, elapsed.Seconds()) }

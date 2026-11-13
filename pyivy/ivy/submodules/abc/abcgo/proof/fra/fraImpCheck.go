@@ -26,7 +26,7 @@ func Fra_ImpCheckForNode(p *Fra_Man_t, imps *vec.Vec_Int_t, node aig.Edge, pos i
 			return int32(i)
 		}
 		left, right := aig.Edge(leftID<<1), aig.Edge(rightID<<1)
-		mappedLeft, mappedRight := Fra_ObjFraig(p, left, p.pPars.nFramesK), Fra_ObjFraig(p, right, p.pPars.nFramesK)
+		mappedLeft, mappedRight := Fra_ObjFraig(p, left, p.pPars.NFramesK), Fra_ObjFraig(p, right, p.pPars.NFramesK)
 		if mappedLeft == aig.InvalidEdge || mappedRight == aig.InvalidEdge {
 			panic("fra: missing implication mapping")
 		}

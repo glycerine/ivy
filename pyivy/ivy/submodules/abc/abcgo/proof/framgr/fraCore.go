@@ -55,10 +55,10 @@ func Fra_FraigVerifyCounterEx(p *Fra_Man_t, cex *vec.Vec_Int_t) {
 
 func Fra_FraigNode(p *Fra_Man_t, obj aig.Edge) {
 	repr := Fra_ClassObjRepr(p, obj)
-	if repr == aig.InvalidEdge || (p.pPars.fDoSparse == 0 && repr == p.pManAig.Const1()) {
+	if repr == aig.InvalidEdge || (p.pPars.FDoSparse == 0 && repr == p.pManAig.Const1()) {
 		return
 	}
-	frame := p.pPars.nFramesK
+	frame := p.pPars.NFramesK
 	node, repNode := Fra_ObjFraig(p, obj, frame), Fra_ObjFraig(p, repr, frame)
 	if node == aig.InvalidEdge || repNode == aig.InvalidEdge {
 		panic("fra: missing FRAIG node mapping")
@@ -80,7 +80,7 @@ func Fra_FraigNode(p *Fra_Man_t, obj aig.Edge) {
 			p.vTimeouts = vec.Vec_PtrAlloc(100)
 		}
 		vec.Vec_PtrPush(p.vTimeouts, obj)
-		if p.pPars.fSpeculate != 0 {
+		if p.pPars.FSpeculate != 0 {
 			panic("fra: speculation after SAT timeout is unsupported by the original assertion")
 		}
 		return
@@ -93,7 +93,7 @@ func Fra_FraigNode(p *Fra_Man_t, obj aig.Edge) {
 	if p.pManFraig.Data != nil {
 		return
 	}
-	if p.pPars.nFramesK == 0 && Fra_ClassObjRepr(p, obj) == repr {
+	if p.pPars.NFramesK == 0 && Fra_ClassObjRepr(p, obj) == repr {
 		panic("fra: counterexample did not refine node class")
 	}
 }
@@ -103,42 +103,42 @@ func Fra_FraigSweep(p *Fra_Man_t) {
 	regs := int(p.pManAig.RegisterCount())
 	for _, obj := range inputs[len(inputs)-regs:] {
 		Fra_FraigNode(p, obj)
-		if p.pPars.fUseImps != 0 {
+		if p.pPars.FUseImps != 0 {
 			pos = Fra_ImpCheckForNode(p, p.pCla.vImps, obj, pos)
 		}
 	}
-	if p.pPars.fLatchCorr != 0 {
+	if p.pPars.FLatchCorr != 0 {
 		return
 	}
-	limit := p.pPars.nBTLimitNode
+	limit := p.pPars.NBTLimitNode
 	for _, obj := range p.pManAig.LiveEdges() {
 		n := p.pManAig.Node(obj)
 		var mapped aig.Edge
 		switch n.Kind {
 		case aig.And:
-			mapped = p.pManFraig.AND(Fra_ObjChild0Fra(p, obj, p.pPars.nFramesK), Fra_ObjChild1Fra(p, obj, p.pPars.nFramesK))
+			mapped = p.pManFraig.AND(Fra_ObjChild0Fra(p, obj, p.pPars.NFramesK), Fra_ObjChild1Fra(p, obj, p.pPars.NFramesK))
 		case aig.ExclusiveOr:
-			mapped = p.pManFraig.NewXor(Fra_ObjChild0Fra(p, obj, p.pPars.nFramesK), Fra_ObjChild1Fra(p, obj, p.pPars.nFramesK))
+			mapped = p.pManFraig.NewXor(Fra_ObjChild0Fra(p, obj, p.pPars.NFramesK), Fra_ObjChild1Fra(p, obj, p.pPars.NFramesK))
 		case aig.Buffer:
-			mapped = Fra_ObjChild0Fra(p, obj, p.pPars.nFramesK)
+			mapped = Fra_ObjChild0Fra(p, obj, p.pPars.NFramesK)
 		default:
 			continue
 		}
-		Fra_ObjSetFraig(p, obj, p.pPars.nFramesK, mapped)
+		Fra_ObjSetFraig(p, obj, p.pPars.NFramesK, mapped)
 		if p.pManFraig.Data != nil {
 			continue
 		}
-		if p.pPars.nLevelMax != 0 && int32(n.Level) > p.pPars.nLevelMax {
-			p.pPars.nBTLimitNode = 5
+		if p.pPars.NLevelMax != 0 && int32(n.Level) > p.pPars.NLevelMax {
+			p.pPars.NBTLimitNode = 5
 		}
 		Fra_FraigNode(p, obj)
-		p.pPars.nBTLimitNode = limit
-		if p.pPars.fUseImps != 0 {
+		p.pPars.NBTLimitNode = limit
+		if p.pPars.FUseImps != 0 {
 			pos = Fra_ImpCheckForNode(p, p.pCla.vImps, obj, pos)
 		}
 	}
 	p.nNodesMiter = aig.Aig_ManNodeNum(p.pManFraig)
-	if p.pPars.fUseImps != 0 {
+	if p.pPars.FUseImps != 0 {
 		Fra_ImpCompactArray(p.pCla.vImps)
 	}
 }
@@ -158,12 +158,12 @@ func fraFraigPerformMapped(g *aig.Graph, pars *Fra_Par_t, callback func(*Fra_Man
 	start := time.Now()
 	p := Fra_ManStart(g, pars)
 	p.pManFraig = Fra_ManPrepareComb(p)
-	p.pSml = Fra_SmlStart(g, 0, 1, pars.nSimWords)
+	p.pSml = Fra_SmlStart(g, 0, 1, pars.NSimWords)
 	Fra_SmlSimulate(p, 0)
 	p.nLitsBeg = Fra_ClassesCountLits(p.pCla)
 	p.nNodesBeg = aig.Aig_ManNodeNum(g)
 	p.nRegsBeg = g.RegisterCount()
-	if pars.fVerbose != 0 {
+	if pars.FVerbose != 0 {
 		Fra_ClassesPrint(p.pCla, 1)
 	}
 	Fra_FraigSweep(p)
@@ -173,7 +173,7 @@ func fraFraigPerformMapped(g *aig.Graph, pars *Fra_Par_t, callback func(*Fra_Man
 	Fra_ManFinalizeComb(p)
 	Fra_ClassesCopyReprs(p.pCla, p.vTimeouts)
 	var result *aig.Graph
-	if pars.fChoicing != 0 {
+	if pars.FChoicing != 0 {
 		traversal := time.Now()
 		result = aig.Aig_ManDupRepr(g, 1)
 		aig.Aig_ManReprStart(result, int32(len(result.Nodes())))
@@ -199,20 +199,20 @@ func Fra_FraigPerform(g *aig.Graph, pars *Fra_Par_t) *aig.Graph {
 func Fra_FraigChoice(g *aig.Graph, limit, level int32) *aig.Graph {
 	var pars Fra_Par_t
 	Fra_ParamsDefault(&pars)
-	pars.nBTLimitNode = limit
-	pars.fChoicing = 1
-	pars.fDoSparse = 1
-	pars.fDontShowBar = 1
-	pars.nLevelMax = level
+	pars.NBTLimitNode = limit
+	pars.FChoicing = 1
+	pars.FDoSparse = 1
+	pars.FDontShowBar = 1
+	pars.NLevelMax = level
 	return Fra_FraigPerform(g, &pars)
 }
 func Fra_FraigEquivenceMapped(g *aig.Graph, limit, prove int32, callback func(*Fra_Man_t)) (*aig.Graph, []aig.Edge) {
 	var pars Fra_Par_t
 	Fra_ParamsDefault(&pars)
-	pars.nBTLimitNode = limit
-	pars.fDoSparse = 1
-	pars.fProve = prove
-	pars.fDontShowBar = 1
+	pars.NBTLimitNode = limit
+	pars.FDoSparse = 1
+	pars.FProve = prove
+	pars.FDontShowBar = 1
 	return fraFraigPerformMapped(g, &pars, callback)
 }
 func Fra_FraigEquivence(g *aig.Graph, limit, prove int32) *aig.Graph {

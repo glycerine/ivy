@@ -10,7 +10,7 @@ func TestInductionFramesTransferLatch(t *testing.T) {
 	input, latch := original.NewInput(), original.NewInput()
 	original.AddOutput(input)
 	aig.Aig_ManSetRegNum(original, 1)
-	pars := &Fra_Par_t{nFramesK: 1}
+	pars := &Fra_Par_t{NFramesK: 1}
 	p := Fra_ManStart(original, pars)
 	graph := Fra_FramesWithClasses(p)
 	if graph.InputCount() != 3 || graph.OutputCount() != 1 || graph.RegisterCount() != 1 || graph.Assertions != 0 {
@@ -34,7 +34,7 @@ func TestInductionFramesEmitClassConstraint(t *testing.T) {
 	input, latch := original.NewInput(), original.NewInput()
 	original.AddOutput(input)
 	aig.Aig_ManSetRegNum(original, 1)
-	p := Fra_ManStart(original, &Fra_Par_t{nFramesK: 1})
+	p := Fra_ManStart(original, &Fra_Par_t{NFramesK: 1})
 	p.pCla.reprs[latch.NodeID()] = 0
 	graph := Fra_FramesWithClasses(p)
 	if graph.Assertions != 1 || graph.OutputCount() != 2 {
@@ -58,7 +58,7 @@ func TestInductionFramesClearDanglingMappings(t *testing.T) {
 	dead := original.AND(a, b)
 	original.AddOutput(latch)
 	aig.Aig_ManSetRegNum(original, 1)
-	p := Fra_ManStart(original, &Fra_Par_t{nFramesK: 1})
+	p := Fra_ManStart(original, &Fra_Par_t{NFramesK: 1})
 	Fra_FramesWithClasses(p)
 	if got := Fra_ObjFraig(p, dead, 0); got != aig.InvalidEdge {
 		t.Fatalf("dangling mapping = %v", got)

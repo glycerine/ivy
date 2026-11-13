@@ -10,3 +10,5 @@ original manager in `proof/fra`, so these implementations are temporarily
 duplicated. Consolidate
 their shared manager and tests before treating this checkpoint as complete;
 fixes to either copy must be evaluated against the other in the meantime.
+The two implementations now use the same `CombOptions` parameter type; their
+manager, class, and simulation types are still distinct.

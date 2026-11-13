@@ -142,7 +142,7 @@ func Fra_BmcPerform(p *Fra_Man_t, prefix, depth int32) {
 	if b.pAigFraig == nil {
 		panic("fra: BMC frame FRAIG failed")
 	}
-	if p.pPars.fVerbose != 0 {
+	if p.pPars.FVerbose != 0 {
 		fmt.Printf("Original AIG = %d. Init %d frames = %d. Fraig = %d. Time = %s.\nBefore BMC: Const = %d. Class = %d. Lit = %d. Imp = %d.\n", aig.Aig_ManNodeNum(b.pAig), b.nFramesAll, aig.Aig_ManNodeNum(b.pAigFrames), aig.Aig_ManNodeNum(b.pAigFraig), time.Since(start), len(p.pCla.constants), len(p.pCla.classes), Fra_ClassesCountLits(p.pCla), oldImps)
 	}
 	prevConst, prevEqual := p.pCla.nodeIsConst, p.pCla.nodesEqual
@@ -151,7 +151,7 @@ func Fra_BmcPerform(p *Fra_Man_t, prefix, depth int32) {
 	defer func() { p.pCla.nodeIsConst, p.pCla.nodesEqual = prevConst, prevEqual }()
 	Fra_ClassesRefine(p.pCla)
 	Fra_ClassesRefine1(p.pCla, 1, nil)
-	if p.pPars.fVerbose != 0 {
+	if p.pPars.FVerbose != 0 {
 		n := 0
 		if b.vImps != nil {
 			n = vec.Vec_IntSize(b.vImps)

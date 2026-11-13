@@ -146,7 +146,7 @@ func Fra_SmlResimulate(p *Fra_Man_t) {
 	p.pCla.simulation = p.pSml
 	p.pSml.assignDistance1(p.pPatWords)
 	p.pSml.simulateOne()
-	if p.pPars.fProve != 0 && Fra_SmlCheckOutput(p) != 0 {
+	if p.pPars.FProve != 0 && Fra_SmlCheckOutput(p) != 0 {
 		return
 	}
 	start := time.Now()
@@ -158,13 +158,13 @@ func Fra_SmlResimulate(p *Fra_Man_t) {
 		changes += Fra_OneHotRefineUsingCex(p, p.vOneHots)
 	}
 	p.timeRef += time.Since(start)
-	if p.pPars.nFramesK == 0 && changes < 1 {
+	if p.pPars.NFramesK == 0 && changes < 1 {
 		fmt.Println("Error: A counter-example did not refine classes!")
 	}
 }
 func Fra_SmlSimulate(p *Fra_Man_t, init int32) {
 	p.pCla.simulation = p.pSml
-	run := func() bool { p.pSml.simulateOne(); return p.pPars.fProve != 0 && Fra_SmlCheckOutput(p) != 0 }
+	run := func() bool { p.pSml.simulateOne(); return p.pPars.FProve != 0 && Fra_SmlCheckOutput(p) != 0 }
 	refine := func() int32 {
 		start := time.Now()
 		n := Fra_ClassesRefine(p.pCla) + Fra_ClassesRefine1(p.pCla, 1, nil)
@@ -175,7 +175,7 @@ func Fra_SmlSimulate(p *Fra_Man_t, init int32) {
 	if run() {
 		return
 	}
-	Fra_ClassesPrepare(p.pCla, p.pPars.fLatchCorr, 0)
+	Fra_ClassesPrepare(p.pCla, p.pPars.FLatchCorr, 0)
 	for _, one := range []bool{false, true} {
 		if one {
 			Fra_SmlSavePattern1(p, init)
@@ -195,7 +195,7 @@ func Fra_SmlSimulate(p *Fra_Man_t, init int32) {
 		}
 		count := len(p.pCla.classes)
 		changes := refine()
-		if count == 0 || float64(changes)/float64(count) <= p.pPars.dSimSatur {
+		if count == 0 || float64(changes)/float64(count) <= p.pPars.DSimSatur {
 			return
 		}
 	}

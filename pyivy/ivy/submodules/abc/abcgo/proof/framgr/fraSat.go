@@ -20,7 +20,7 @@ func fraPrepareSAT(p *Fra_Man_t, old, new aig.Edge) {
 	for p.pSat.NumVars() < p.nSatVars {
 		p.pSat.NewVariable()
 	}
-	if p.pPars.fConeBias != 0 {
+	if p.pPars.FConeBias != 0 {
 		Fra_SetActivityFactors(p, old, new)
 	}
 }
@@ -70,8 +70,8 @@ func Fra_NodesAreEquiv(p *Fra_Man_t, old, new aig.Edge) int32 {
 	if old.Complemented() || new.Complemented() || old == new {
 		panic("fra: invalid equivalence nodes")
 	}
-	limit := p.pPars.nBTLimitNode
-	if p.pPars.fSpeculate == 0 && p.pPars.nFramesK == 0 && limit > 0 && (aig.Aig_ObjIsMarkB(p.pManFraig, old) || aig.Aig_ObjIsMarkB(p.pManFraig, new)) {
+	limit := p.pPars.NBTLimitNode
+	if p.pPars.FSpeculate == 0 && p.pPars.NFramesK == 0 && limit > 0 && (aig.Aig_ObjIsMarkB(p.pManFraig, old) || aig.Aig_ObjIsMarkB(p.pManFraig, new)) {
 		p.nSatFails++
 		if limit <= 10 {
 			return -1
@@ -103,7 +103,7 @@ func Fra_NodesAreImp(p *Fra_Man_t, old, new aig.Edge, negOld, negNew int32) int3
 	}
 	p.nSatCalls++
 	fraPrepareSAT(p, old, new)
-	result := fraSATQuery(p, old, new, p.pPars.nBTLimitNode, fraLit(Fra_ObjSatNum(p, old), negOld != 0), fraLit(Fra_ObjSatNum(p, new), negNew == 0))
+	result := fraSATQuery(p, old, new, p.pPars.NBTLimitNode, fraLit(Fra_ObjSatNum(p, old), negOld != 0), fraLit(Fra_ObjSatNum(p, new), negNew == 0))
 	if result == 1 {
 		p.nSatProof++
 	}
@@ -116,7 +116,7 @@ func Fra_NodesAreClause(p *Fra_Man_t, old, new aig.Edge, negOld, negNew int32) i
 	}
 	p.nSatCalls++
 	fraPrepareSAT(p, old, new)
-	result := fraSATQuery(p, old, new, p.pPars.nBTLimitNode, fraLit(Fra_ObjSatNum(p, old), negOld == 0), fraLit(Fra_ObjSatNum(p, new), negNew == 0))
+	result := fraSATQuery(p, old, new, p.pPars.NBTLimitNode, fraLit(Fra_ObjSatNum(p, old), negOld == 0), fraLit(Fra_ObjSatNum(p, new), negNew == 0))
 	if result == 1 {
 		p.nSatProof++
 	}
@@ -129,7 +129,7 @@ func Fra_NodeIsConst(p *Fra_Man_t, node aig.Edge) int32 {
 	}
 	p.nSatCalls++
 	fraPrepareSAT(p, aig.InvalidEdge, node)
-	result := fraSATQuery(p, aig.InvalidEdge, node, p.pPars.nBTLimitMiter, fraLit(Fra_ObjSatNum(p, node), p.pManFraig.Node(node).Phase))
+	result := fraSATQuery(p, aig.InvalidEdge, node, p.pPars.NBTLimitMiter, fraLit(Fra_ObjSatNum(p, node), p.pManFraig.Node(node).Phase))
 	if result == 1 {
 		p.nSatProof++
 	}
@@ -146,7 +146,7 @@ func Fra_SetActivityFactors_rec(p *Fra_Man_t, node aig.Edge, min, max int32, see
 	if int32(n.Level) <= min || n.Kind == aig.Input {
 		return 0
 	}
-	p.pSat.SetActivityFactor(Fra_ObjSatNum(p, node), p.pPars.dActConeBumpMax*float64(int32(n.Level)-min)/float64(max-min))
+	p.pSat.SetActivityFactor(Fra_ObjSatNum(p, node), p.pPars.DActConeBumpMax*float64(int32(n.Level)-min)/float64(max-min))
 	count := int32(1)
 	for _, fanin := range Fra_ObjFaninVec(p, node) {
 		count += Fra_SetActivityFactors_rec(p, aig.Aig_Regular(fanin), min, max, seen)
@@ -157,7 +157,7 @@ func Fra_SetActivityFactors(p *Fra_Man_t, old, new aig.Edge) int32 {
 	if old == aig.InvalidEdge && new == aig.InvalidEdge {
 		panic("fra: no activity roots")
 	}
-	if p.pPars.dActConeRatio <= 0 || p.pPars.dActConeRatio >= 1 {
+	if p.pPars.DActConeRatio <= 0 || p.pPars.DActConeRatio >= 1 {
 		panic("fra: invalid cone activity ratio")
 	}
 	start := time.Now()
@@ -168,7 +168,7 @@ func Fra_SetActivityFactors(p *Fra_Man_t, old, new aig.Edge) int32 {
 			max = int32(p.pManFraig.Node(edge).Level)
 		}
 	}
-	min := int32(float64(max) * (1 - p.pPars.dActConeRatio))
+	min := int32(float64(max) * (1 - p.pPars.DActConeRatio))
 	seen := make(map[int]bool)
 	for _, edge := range []aig.Edge{old, new} {
 		if edge != aig.InvalidEdge && edge.NodeID() != 0 {

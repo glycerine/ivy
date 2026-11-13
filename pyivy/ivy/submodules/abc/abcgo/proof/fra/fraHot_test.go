@@ -15,7 +15,7 @@ func TestOneHotComputeAndConstraints(t *testing.T) {
 	sim := newFraSimulation(g, 0, 1, 1)
 	sim.nodeWords(a.NodeID())[0] = 0x55555555
 	sim.nodeWords(b.NodeID())[0] = 0xaaaaaaaa
-	p := &Fra_Man_t{pManAig: g, pManFraig: g, pPars: &Fra_Par_t{nFramesK: 1}, pSml: sim, pSat: bsat.NewSolver(), pMemSatNums: make([]int32, len(g.Nodes()))}
+	p := &Fra_Man_t{pManAig: g, pManFraig: g, pPars: &Fra_Par_t{NFramesK: 1}, pSml: sim, pSat: bsat.NewSolver(), pMemSatNums: make([]int32, len(g.Nodes()))}
 	clauses := Fra_OneHotCompute(p, sim)
 	if Fra_OneHotCount(p, clauses) != 1 {
 		t.Fatal("expected one candidate")

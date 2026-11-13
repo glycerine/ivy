@@ -22,7 +22,7 @@ func TestSelectHighestCostImplications(t *testing.T) {
 func TestImplicationConstraintsAcrossFrames(t *testing.T) {
 	g := aig.NewGraph()
 	left, right := g.NewInput(), g.NewInput()
-	p := &Fra_Man_t{pManAig: g, pPars: &Fra_Par_t{nFramesK: 1}, nFramesAll: 2, nSatVars: 3, pSat: bsat.NewSolver(), pMemFraig: make([]aig.Edge, len(g.Nodes())*2)}
+	p := &Fra_Man_t{pManAig: g, pPars: &Fra_Par_t{NFramesK: 1}, nFramesAll: 2, nSatVars: 3, pSat: bsat.NewSolver(), pMemFraig: make([]aig.Edge, len(g.Nodes())*2)}
 	for i := range p.pMemFraig {
 		p.pMemFraig[i] = aig.InvalidEdge
 	}
@@ -48,7 +48,7 @@ func TestImplicationConstraintsAcrossFrames(t *testing.T) {
 func TestImplicationConstraintAllowsSATVariableZero(t *testing.T) {
 	g := aig.NewGraph()
 	left, right := g.NewInput(), g.NewInput()
-	p := &Fra_Man_t{pManAig: g, pPars: &Fra_Par_t{nFramesK: 1}, nFramesAll: 2, nSatVars: 2, pSat: bsat.NewSolver(), pMemFraig: make([]aig.Edge, len(g.Nodes())*2)}
+	p := &Fra_Man_t{pManAig: g, pPars: &Fra_Par_t{NFramesK: 1}, nFramesAll: 2, nSatVars: 2, pSat: bsat.NewSolver(), pMemFraig: make([]aig.Edge, len(g.Nodes())*2)}
 	for i := range p.pMemFraig {
 		p.pMemFraig[i] = aig.InvalidEdge
 	}

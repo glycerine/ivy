@@ -9,6 +9,10 @@ import (
 	"testing"
 )
 
+// Both entry points must accept the same configuration object without a copy
+// or field-by-field conversion as the manager types are consolidated.
+var _ *framgr.CombOptions = (*Fra_Par_t)(nil)
+
 // The extracted manager must preserve the original manager's combinational
 // behavior under the exact configuration used by the legacy CEC fallback.
 func TestSharedCECSweepMatchesOriginalManager(t *testing.T) {
@@ -40,8 +44,8 @@ func TestSharedCECSweepMatchesOriginalManager(t *testing.T) {
 		original, shared := aig.Aig_ManDupSimple(source), aig.Aig_ManDupSimple(source)
 		var pars Fra_Par_t
 		Fra_ParamsDefault(&pars)
-		pars.fDontShowBar, pars.fProve = 1, 1
-		pars.nBTLimitNode, pars.nBTLimitMiter = 2, 300
+		pars.FDontShowBar, pars.FProve = 1, 1
+		pars.NBTLimitNode, pars.NBTLimitMiter = 2, 300
 		old, _ := fraFraigPerformMapped(original, &pars, nil)
 		got := framgr.SweepForCEC(shared, 2, 300)
 		if old == nil || got == nil {
@@ -87,8 +91,8 @@ func TestSharedCECSweepSparseSatAndUnsat(t *testing.T) {
 		original, shared := makeGraph(), makeGraph()
 		var pars Fra_Par_t
 		Fra_ParamsDefault(&pars)
-		pars.fDontShowBar, pars.fProve = 1, 1
-		pars.nBTLimitNode, pars.nBTLimitMiter = 2, 300
+		pars.FDontShowBar, pars.FProve = 1, 1
+		pars.NBTLimitNode, pars.NBTLimitMiter = 2, 300
 		old, _ := fraFraigPerformMapped(original, &pars, nil)
 		got := framgr.SweepForCEC(shared, 2, 300)
 		if old == nil || got == nil || old.InputCount() != 4 || got.InputCount() != 4 {
@@ -139,15 +143,15 @@ func TestGeneralSharedSweepMatchesOriginalOptions(t *testing.T) {
 			a, b := aig.Aig_ManDupSimple(source), aig.Aig_ManDupSimple(source)
 			var p Fra_Par_t
 			Fra_ParamsDefault(&p)
-			p.nSimWords = 2
-			p.nBTLimitNode = 10
-			p.nLevelMax = 3
-			p.fDontShowBar = 1
+			p.NSimWords = 2
+			p.NBTLimitNode = 10
+			p.NLevelMax = 3
+			p.FDontShowBar = 1
 			if mode&1 != 0 {
-				p.fChoicing = 1
+				p.FChoicing = 1
 			}
 			if mode&2 != 0 {
-				p.fDoSparse = 0
+				p.FDoSparse = 0
 			}
 			q := p
 			old, _ := fraFraigPerformMapped(a, &p, nil)
@@ -188,9 +192,9 @@ func TestSharedMappedSweepPreservesSourceMapping(t *testing.T) {
 	oldSource, newSource := aig.Aig_ManDupSimple(source), aig.Aig_ManDupSimple(source)
 	var pars Fra_Par_t
 	Fra_ParamsDefault(&pars)
-	pars.nBTLimitNode = 100
-	pars.fDoSparse = 1
-	pars.fDontShowBar = 1
+	pars.NBTLimitNode = 100
+	pars.FDoSparse = 1
+	pars.FDontShowBar = 1
 	old, oldMap := fraFraigPerformMapped(oldSource, &pars, nil)
 	shared, newMap := Fra_FraigEquivenceMapped(newSource, 100, 0, nil)
 	if len(oldMap) != len(newMap) {
@@ -245,9 +249,9 @@ func TestSharedBMCImplicationCallbackMatchesLegacy(t *testing.T) {
 	oldB, newB := makeBmc(), makeBmc()
 	var pars Fra_Par_t
 	Fra_ParamsDefault(&pars)
-	pars.nBTLimitNode = 1000000
-	pars.fDoSparse = 1
-	pars.fDontShowBar = 1
+	pars.NBTLimitNode = 1000000
+	pars.FDoSparse = 1
+	pars.FDontShowBar = 1
 	old, mapping := fraFraigPerformMapped(oldB.pAigFrames, &pars, func(m *Fra_Man_t) { Fra_BmcFilterImplications(m, oldB) })
 	shared, sharedMapping := framgr.SweepBMCImplications(newB.pAigFrames, newB.pAig, newB.nPref, newB.nDepth, newB.pObjToFrames, newB.vImps, 1000000)
 	if old == nil || shared == nil {

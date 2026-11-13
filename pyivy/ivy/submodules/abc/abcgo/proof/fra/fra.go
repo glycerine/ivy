@@ -9,6 +9,7 @@ import (
 
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/misc/vec"
+	"github.com/glycerine/abcgo/proof/framgr"
 	"github.com/glycerine/abcgo/sat/bsat"
 )
 
@@ -18,15 +19,7 @@ type Vec_Int_t = vec.Vec_Int_t
 type Vec_Ptr_t = vec.Vec_Ptr_t
 type abctime = time.Duration
 
-type Fra_Par_t struct {
-	nSimWords, fPatScores, MaxScore                                    int32
-	dSimSatur, dActConeRatio, dActConeBumpMax                          float64
-	fChoicing, fSpeculate, fProve, fVerbose                            int32
-	fDoSparse, fConeBias                                               int32
-	nBTLimitNode, nBTLimitMiter, nLevelMax                             int32
-	nFramesP, nFramesK, nMaxImps, nMaxLevs                             int32
-	fRewrite, fLatchCorr, fUseImps, fUse1Hot, fWriteImps, fDontShowBar int32
-}
+type Fra_Par_t = framgr.CombOptions
 
 type Fra_Ssw_t struct {
 	nPartSize, nOverSize, nFramesP, nFramesK, nMaxImps, nMaxLevs, nMinDomSize          int32

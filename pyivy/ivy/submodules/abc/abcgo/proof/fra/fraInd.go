@@ -78,23 +78,23 @@ func Fra_FraigInduction(g *aig.Graph, params *Fra_Ssw_t) *aig.Graph {
 	}
 	var pars Fra_Par_t
 	Fra_ParamsDefaultSeq(&pars)
-	pars.nFramesP, pars.nFramesK, pars.nMaxImps, pars.nMaxLevs = params.nFramesP, params.nFramesK, params.nMaxImps, params.nMaxLevs
-	pars.fVerbose, pars.fRewrite, pars.fLatchCorr = params.fVerbose, params.fRewrite, params.fLatchCorr
-	pars.fUseImps, pars.fWriteImps, pars.fUse1Hot = params.fUseImps, params.fWriteImps, params.fUse1Hot
-	if pars.fUse1Hot != 0 && (pars.nFramesP > 0 || pars.nFramesK > 1) {
+	pars.NFramesP, pars.NFramesK, pars.NMaxImps, pars.NMaxLevs = params.nFramesP, params.nFramesK, params.nMaxImps, params.nMaxLevs
+	pars.FVerbose, pars.FRewrite, pars.FLatchCorr = params.fVerbose, params.fRewrite, params.fLatchCorr
+	pars.FUseImps, pars.FWriteImps, pars.FUse1Hot = params.fUseImps, params.fWriteImps, params.fUse1Hot
+	if pars.FUse1Hot != 0 && (pars.NFramesP > 0 || pars.NFramesK > 1) {
 		panic("fra: one-hot induction supports one frame without prefix")
 	}
 	p := Fra_ManStart(g, &pars)
-	pars.nBTLimitNode = 0
-	p.pSml = Fra_SmlSimulateSeq(g, pars.nFramesP, 32, 1, 1)
+	pars.NBTLimitNode = 0
+	p.pSml = Fra_SmlSimulateSeq(g, pars.NFramesP, 32, 1, 1)
 	p.pCla.simulation = p.pSml
-	Fra_ClassesPrepare(p.pCla, pars.fLatchCorr, pars.nMaxLevs)
-	if pars.fUse1Hot != 0 {
+	Fra_ClassesPrepare(p.pCla, pars.FLatchCorr, pars.NMaxLevs)
+	if pars.FUse1Hot != 0 {
 		p.vOneHots = Fra_OneHotCompute(p, p.pSml)
 	}
-	p.pSml = Fra_SmlStart(g, 0, pars.nFramesK+1, pars.nSimWords)
-	if pars.fUseImps != 0 {
-		p.pCla.vImps = Fra_ImpDerive(p, 5000000, pars.nMaxImps, pars.fLatchCorr)
+	p.pSml = Fra_SmlStart(g, 0, pars.NFramesK+1, pars.NSimWords)
+	if pars.FUseImps != 0 {
+		p.pCla.vImps = Fra_ImpDerive(p, 5000000, pars.NMaxImps, pars.FLatchCorr)
 	}
 	timedOut := func() bool {
 		return params.TimeLimit != 0 && time.Since(started) > time.Duration(float64(params.TimeLimit)*float64(time.Second))
@@ -107,7 +107,7 @@ func Fra_FraigInduction(g *aig.Graph, params *Fra_Ssw_t) *aig.Graph {
 		Fra_ManStop(p)
 		return nil
 	}
-	Fra_BmcPerform(p, pars.nFramesP, pars.nFramesK+1)
+	Fra_BmcPerform(p, pars.NFramesP, pars.NFramesK+1)
 	p.nLitsBeg = Fra_ClassesCountLits(p.pCla)
 	p.nNodesBeg = aig.Aig_ManNodeNum(g)
 	p.nRegsBeg = g.RegisterCount()
@@ -134,11 +134,11 @@ func Fra_FraigInduction(g *aig.Graph, params *Fra_Ssw_t) *aig.Graph {
 		traversal := time.Now()
 		p.pManFraig = Fra_FramesWithClasses(p)
 		p.timeTrav += time.Since(traversal)
-		if pars.fRewrite != 0 {
+		if pars.FRewrite != 0 {
 			Fra_FraigInductionRewrite(p)
 		}
 		var data *cnf.Cnf_Dat_t
-		if pars.fUseImps != 0 {
+		if pars.FUseImps != 0 {
 			data = cnf.Cnf_DeriveSimple(p.pManFraig, p.pManFraig.RegisterCount())
 		} else {
 			data = cnf.Cnf_Derive(p.pManFraig, p.pManFraig.RegisterCount())
@@ -148,7 +148,7 @@ func Fra_FraigInduction(g *aig.Graph, params *Fra_Ssw_t) *aig.Graph {
 		if p.pSat == nil {
 			panic("fra: induction CNF is inconsistent")
 		}
-		if pars.fUseImps != 0 {
+		if pars.FUseImps != 0 {
 			Fra_ImpAddToSolver(p, p.pCla.vImps, data.VarNums)
 			if p.pSat == nil {
 				panic("fra: implication constraints contradict induction CNF")
@@ -163,14 +163,14 @@ func Fra_FraigInduction(g *aig.Graph, params *Fra_Ssw_t) *aig.Graph {
 			}
 		}
 		cnf.Cnf_DataFree(data)
-		if pars.fUse1Hot != 0 {
+		if pars.FUse1Hot != 0 {
 			Fra_OneHotAssume(p, p.vOneHots)
 			if p.pSat == nil {
 				panic("fra: one-hot constraints contradict induction CNF")
 			}
 		}
 		p.nSatCallsRecent, p.nSatCallsSkipped = 0, 0
-		if pars.fUse1Hot != 0 {
+		if pars.FUse1Hot != 0 {
 			Fra_OneHotCheck(p, p.vOneHots)
 		}
 		Fra_FraigSweep(p)
@@ -199,7 +199,7 @@ func Fra_FraigInduction(g *aig.Graph, params *Fra_Ssw_t) *aig.Graph {
 	}
 	traversal := time.Now()
 	var result *aig.Graph
-	if pars.fWriteImps != 0 && p.vOneHots != nil && Fra_OneHotCount(p, p.vOneHots) != 0 {
+	if pars.FWriteImps != 0 && p.vOneHots != nil && Fra_OneHotCount(p, p.vOneHots) != 0 {
 		name := ioa.Ioa_FileNameGenericAppend(g.Name, "_care.aig")
 		fmt.Printf("Care one-hotness clauses will be written into file %q.\n", name)
 		result = aig.Aig_ManDupOrdered(g)

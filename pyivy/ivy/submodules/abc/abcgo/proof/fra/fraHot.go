@@ -36,7 +36,7 @@ func Fra_OneHotCompute(p *Fra_Man_t, sim *Fra_Sml_t) *vec.Vec_Int_t {
 	return out
 }
 func Fra_OneHotAssume(p *Fra_Man_t, clauses *vec.Vec_Int_t) {
-	if p.pPars.nFramesK != 1 {
+	if p.pPars.NFramesK != 1 {
 		panic("fra: one-hot constraints require one frame")
 	}
 	inputs := p.pManFraig.Inputs()
