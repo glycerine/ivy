@@ -16,3 +16,21 @@ func TestLabeledSolver2RootAssigned(t *testing.T) {
 		t.Fatal("temporary assumption retained")
 	}
 }
+
+func TestLabeledSolver2RootValue(t *testing.T) {
+	p := NewLabeledSolver2()
+	p.NewVariable()
+	p.NewVariable()
+	p.NewVariable()
+	p.AddClause(1, Positive(0))
+	p.AddClause(2, Negative(1))
+	if value, ok := p.RootValue(0); !ok || !value {
+		t.Fatal("missing true root")
+	}
+	if value, ok := p.RootValue(1); !ok || value {
+		t.Fatal("missing false root")
+	}
+	if _, ok := p.RootValue(2); ok {
+		t.Fatal("unassigned root")
+	}
+}
