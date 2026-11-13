@@ -69,6 +69,9 @@ Both public interpolant-verification wrappers are exercised using a partitioned
 UNSAT proof, and their shared containment diagnostics cover successful checks
 and both failed implications. MiniSat partition tests reject each A-side clause
 and the first B-side clause, checking early exit and restoration of lifted CNF.
+The incremental containment checker is also compared against explicit
+two-register state enumeration for two and three induction frames, all 16
+state predicates, and several transition relations.
 The C `int` command and multi-output driver are in `base/abci`; the current
 `abcgo/base/abci` files remain untranslated drafts, so they do not yet provide
 a working Go command for this package. `proof/int` exposes the library entry

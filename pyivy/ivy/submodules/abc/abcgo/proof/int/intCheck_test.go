@@ -85,3 +85,57 @@ func TestIncrementalInductionCombinesInterpolants(t *testing.T) {
 		}
 	}
 }
+
+// Compare the k-frame SAT query in intCheck.c against explicit enumeration of
+// every initial state. The predicates include constants and non-cubes.
+func TestInductionMultipleFramesAgainstEnumeration(t *testing.T) {
+	truth := func(g *aig.Graph, x, y aig.Edge, table int) aig.Edge {
+		r := g.Const0()
+		for s := 0; s < 4; s++ {
+			if table&(1<<s) == 0 {
+				continue
+			}
+			a, b := x, y
+			if s&1 == 0 {
+				a = a.Not()
+			}
+			if s&2 == 0 {
+				b = b.Not()
+			}
+			r = g.OR(r, g.AND(a, b))
+		}
+		return r
+	}
+	for _, next := range [][2]int{{10, 12}, {5, 12}, {6, 10}, {0, 15}} {
+		for k := int32(2); k <= 3; k++ {
+			for predicate := 0; predicate < 16; predicate++ {
+				trans := aig.NewGraph()
+				x, y := trans.NewInput(), trans.NewInput()
+				trans.AddOutput(truth(trans, x, y, next[0]))
+				trans.AddOutput(truth(trans, x, y, next[1]))
+				aig.Aig_ManSetRegNum(trans, 2)
+				inter := aig.NewGraph()
+				a, b := inter.NewInput(), inter.NewInput()
+				inter.AddOutput(truth(inter, a, b, predicate))
+				check := Inter_CheckStart(trans, k)
+				data := cnf.Cnf_Derive(inter, 1)
+				want := int32(1)
+				for initial := 0; initial < 4; initial++ {
+					s, prefix := initial, true
+					for frame := int32(0); frame < k; frame++ {
+						prefix = prefix && predicate&(1<<s) != 0
+						s = (next[0]>>s)&1 | ((next[1]>>s)&1)<<1
+					}
+					if prefix && predicate&(1<<s) == 0 {
+						want = 0
+					}
+				}
+				got := Inter_CheckPerform(check, data, 0)
+				Inter_CheckStop(check)
+				if got != want {
+					t.Fatalf("next=%v k=%d predicate=%04b got=%d want=%d", next, k, predicate, got, want)
+				}
+			}
+		}
+	}
+}
