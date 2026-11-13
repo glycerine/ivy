@@ -32,8 +32,7 @@ func Gla_ManStart(original *gia.Gia_Man_t, pars *Abs_Par_t) *Gla_Man_t {
 	if original == nil || pars == nil || gia.Gia_ManGateClasses(original) == nil {
 		panic("old GLA requires abstraction classes")
 	}
-	graph := gia.Gia_ManToAigSimple(original)
-	data, err := cnf.Cnf_DeriveOtherMapped(graph, 1)
+	data, err := glaOldCnfForGia(original)
 	if err != nil {
 		panic(err)
 	}
