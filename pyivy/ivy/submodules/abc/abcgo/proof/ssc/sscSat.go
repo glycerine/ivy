@@ -217,12 +217,10 @@ func Ssc_ManFindPivotSat(p *Ssc_Man_t) ([]bool, int) {
 	return p.pattern(), status
 }
 func Ssc_ManCheckEquivalence(p *Ssc_Man_t, repr, node, complement int32) int {
-	p.Stats.Calls++
 	if repr == node {
 		panic("ssc: identical equivalence nodes")
 	}
 	if repr > node {
-		p.Stats.Undecided++
 		return satoko.SATOKO_UNDEC
 	}
 	if repr != 0 {
@@ -243,10 +241,8 @@ func Ssc_ManCheckEquivalence(p *Ssc_Man_t, repr, node, complement int32) int {
 		switch status {
 		case satoko.SATOKO_SAT:
 			p.Pattern = p.pattern()
-			p.Stats.Counterexamples++
 			return status
 		case satoko.SATOKO_UNDEC:
-			p.Stats.Undecided++
 			return status
 		case satoko.SATOKO_UNSAT:
 			literals[0] ^= 1
@@ -255,11 +251,9 @@ func Ssc_ManCheckEquivalence(p *Ssc_Man_t, repr, node, complement int32) int {
 				panic("ssc: learned implication contradicts solver")
 			}
 			if repr == 0 {
-				p.Stats.Proofs++
 				return status
 			}
 		}
 	}
-	p.Stats.Proofs++
 	return satoko.SATOKO_UNSAT
 }

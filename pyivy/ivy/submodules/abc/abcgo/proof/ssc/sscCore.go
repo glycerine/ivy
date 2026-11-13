@@ -152,7 +152,6 @@ func carePatterns(p *Ssc_Man_t) {
 			}
 		}
 		Ssc_GiaSimRound(p.Sim)
-		p.Stats.SimulationRounds++
 		if Ssc_GiaClassesRefine(p.Classes, p.Sim) <= candidateCount/100 {
 			break
 		}
@@ -298,7 +297,17 @@ func checkMappedCandidate(p *Ssc_Man_t, repr, node, complement int32) (int, bool
 		panic("ssc: same FRAIG node has opposite candidate phase")
 	}
 	phase := complement ^ (repr & 1) ^ (node & 1)
-	return Ssc_ManCheckEquivalence(p, repr>>1, node>>1, phase), false
+	p.Stats.Calls++
+	status := Ssc_ManCheckEquivalence(p, repr>>1, node>>1, phase)
+	switch status {
+	case satoko.SATOKO_SAT:
+		p.Stats.Counterexamples++
+	case satoko.SATOKO_UNSAT:
+		p.Stats.Proofs++
+	default:
+		p.Stats.Undecided++
+	}
+	return status, false
 }
 
 func hasNativeGates(g *gia.Gia_Man_t) bool {

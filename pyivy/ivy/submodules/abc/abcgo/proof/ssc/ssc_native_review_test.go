@@ -264,6 +264,18 @@ func TestMappedCandidateSourceOrderAndPhase(t *testing.T) {
 	checkMappedCandidate(p, 2, 3, 0)
 }
 
+func TestInitialSimulationDoesNotIncrementSourceCounters(t *testing.T) {
+	subject, care := fixture()
+	p, status := Ssc_ManStart(subject, care, nil)
+	if status != satoko.SATOKO_SAT {
+		t.Fatalf("pivot status %d", status)
+	}
+	carePatterns(p)
+	if p.Stats != (Statistics{}) {
+		t.Fatalf("initial simulation changed C's untouched counters: %+v", p.Stats)
+	}
+}
+
 func TestRandomSequentialConstraintSweeps(t *testing.T) {
 	rng := rand.New(rand.NewSource(38122))
 	for trial := 0; trial < 80; trial++ {

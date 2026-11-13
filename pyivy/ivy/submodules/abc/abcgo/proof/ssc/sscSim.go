@@ -199,8 +199,8 @@ func Ssc_GiaGetOneSim(s *Simulation) []bool {
 		return nil
 	}
 	p := make([]bool, len(s.Inputs))
-	for i := range p {
-		p[i] = s.Inputs[i][bit/64]&(1<<uint(bit%64)) != 0
+	for i, lit := range s.Graph.InputLiterals() {
+		p[i] = s.Values[lit>>1][bit/64]&(1<<uint(bit%64)) != 0
 	}
 	return p
 }
@@ -227,12 +227,12 @@ func Ssc_GiaTransferPiPattern(dst, care *Simulation, pivot []bool) int32 {
 		panic("ssc: transfer interface mismatch")
 	}
 	Ssc_GiaResetPiPattern(dst, care.Words)
-	for i := range dst.Inputs {
+	for i, lit := range care.Graph.InputLiterals() {
 		for w := range mask {
 			if pivot[i] {
-				dst.Inputs[i][w] = care.Inputs[i][w] | ^mask[w]
+				dst.Inputs[i][w] = care.Values[lit>>1][w] | ^mask[w]
 			} else {
-				dst.Inputs[i][w] = care.Inputs[i][w] & mask[w]
+				dst.Inputs[i][w] = care.Values[lit>>1][w] & mask[w]
 			}
 		}
 	}

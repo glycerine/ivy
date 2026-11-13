@@ -108,8 +108,8 @@ func TestSatPortOrderedImplicationAndReverseWitness(t *testing.T) {
 	if len(p.Pattern) != 3 || p.Pattern[0] || !p.Pattern[1] {
 		t.Fatalf("wrong reverse witness: %v", p.Pattern)
 	}
-	if p.Stats.Counterexamples != 1 {
-		t.Fatalf("wrong SAT stats: %+v", p.Stats)
+	if p.Stats.Calls != 0 || p.Stats.Counterexamples != 0 {
+		t.Fatalf("direct SAT helper must not change sweep counters: %+v", p.Stats)
 	}
 }
 func TestSatPortProvesBothImplicationsUnderCare(t *testing.T) {
@@ -121,8 +121,8 @@ func TestSatPortProvesBothImplicationsUnderCare(t *testing.T) {
 	if got := Ssc_ManCheckEquivalence(p, in[0]>>1, in[1]>>1, 0); got != satoko.SATOKO_UNSAT {
 		t.Fatalf("expected proof, got %d", got)
 	}
-	if p.Stats.Proofs != 1 {
-		t.Fatalf("wrong proof stats: %+v", p.Stats)
+	if p.Stats.Calls != 0 || p.Stats.Proofs != 0 {
+		t.Fatalf("direct SAT helper must not change sweep counters: %+v", p.Stats)
 	}
 }
 func TestSatPortConstantLiteralMapping(t *testing.T) {

@@ -79,6 +79,25 @@ func TestCareMaskAndPatternTransfer(t *testing.T) {
 	}
 }
 
+// C reads the CI simulation objects, which are the snapshot from the last
+// simulation round, rather than the separately stored next input patterns.
+func TestCareHelpersUseLastSimulationSnapshot(t *testing.T) {
+	b := newBuilder(1, 4)
+	gia.Gia_ManAppendCo(b.graph, 1)
+	care := NewSimulation(b.graph, 1)
+	Ssc_GiaSavePiPattern(care, []bool{true})
+	Ssc_GiaSimRound(care)
+	care.Inputs[0][0] = 0 // change pending PI patterns without simulating again
+	if got := Ssc_GiaGetOneSim(care); !reflect.DeepEqual(got, []bool{true}) {
+		t.Fatalf("witness must use simulated input, got %v", got)
+	}
+	dst := NewSimulation(b.graph, 1)
+	Ssc_GiaTransferPiPattern(dst, care, []bool{false})
+	if dst.Inputs[0][0] != 1 {
+		t.Fatalf("transfer must use simulated input, got %#x", dst.Inputs[0][0])
+	}
+}
+
 func TestClassRefinementAndComplementedSimulation(t *testing.T) {
 	c := &Classes{
 		Groups: [][]int32{{0, 1, 2, 3}},
