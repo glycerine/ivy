@@ -18,7 +18,7 @@ func makeWindowChain() (*abc.Network, *abc.Object, *abc.Object, *abc.Object, *ab
 	abc.Abc_ObjSetLevel(inner, 1)
 	abc.Abc_ObjSetLevel(root, 2)
 	co := n.NewObject(abc.ObjectPO)
-	co.AddFanin(root.Signal())
+	abc.Abc_ObjAddFanin(co, root.Signal())
 	return n, a, b, c, root
 }
 

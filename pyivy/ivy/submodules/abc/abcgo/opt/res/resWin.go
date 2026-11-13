@@ -507,7 +507,10 @@ func Res_WinAddMissing(p *Res_Win_t) {
 **********************************************************************
 */
 func Res_WinIsTrivial(p *Res_Win_t) int32 {
-	return Vec_PtrSize(p.vRoots) == 1 && Vec_PtrEntry(p.vRoots, 0) == p.pNode
+	if Vec_PtrSize(p.vRoots) == 1 && Vec_PtrEntry(p.vRoots, 0) == p.pNode {
+		return 1
+	}
+	return 0
 }
 
 /*
