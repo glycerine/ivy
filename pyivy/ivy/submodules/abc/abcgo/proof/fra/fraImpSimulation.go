@@ -39,12 +39,12 @@ func Fra_ImpCompactArray(imps *vec.Vec_Int_t) {
 }
 
 func Fra_ImpComputeStateSpaceRatio(p *Fra_Man_t) float64 {
-	if p.pCla.vImps == nil || vec.Vec_IntSize(p.pCla.vImps) == 0 {
+	if p.pCla.VImps == nil || vec.Vec_IntSize(p.pCla.VImps) == 0 {
 		return 0
 	}
 	sim := Fra_SmlSimulateComb(p.pManAig, 64, 0)
 	violations := make([]uint32, sim.WordsTotal)
-	for _, imp := range vec.Vec_IntArray(p.pCla.vImps) {
+	for _, imp := range vec.Vec_IntArray(p.pCla.VImps) {
 		left, right := sim.NodeWords(int(Fra_ImpLeft(imp))), sim.NodeWords(int(Fra_ImpRight(imp)))
 		for i := sim.PrefixWords; i < sim.WordsTotal; i++ {
 			violations[i] |= left[i] &^ right[i]

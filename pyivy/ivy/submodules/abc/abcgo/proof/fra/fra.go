@@ -85,7 +85,7 @@ func Fra_ObjSetSatNum(m *Fra_Man_t, object aig.Edge, number int32) {
 	m.pMemSatNums[object.NodeID()] = number
 }
 func Fra_ClassObjRepr(m *Fra_Man_t, object aig.Edge) aig.Edge {
-	repr := m.pCla.reprs[object.NodeID()]
+	repr := m.pCla.Reprs[object.NodeID()]
 	if repr < 0 {
 		return aig.InvalidEdge
 	}
@@ -93,9 +93,9 @@ func Fra_ClassObjRepr(m *Fra_Man_t, object aig.Edge) aig.Edge {
 }
 func Fra_ClassObjSetRepr(m *Fra_Man_t, object, repr aig.Edge) {
 	if repr == aig.InvalidEdge {
-		m.pCla.reprs[object.NodeID()] = -1
+		m.pCla.Reprs[object.NodeID()] = -1
 	} else {
-		m.pCla.reprs[object.NodeID()] = repr.NodeID()
+		m.pCla.Reprs[object.NodeID()] = repr.NodeID()
 	}
 }
 func Fra_ObjChild0Fra(m *Fra_Man_t, object aig.Edge, frame int32) aig.Edge {

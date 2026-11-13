@@ -21,7 +21,7 @@ func TestImpCheckForNodeRefinesOppositeRepresentatives(t *testing.T) {
 	if pos := Fra_ImpCheckForNode(p, imps, b, 0); pos != 1 {
 		t.Fatalf("next position = %d", pos)
 	}
-	if vec.Vec_IntEntry(imps, 0) != 0 || vec.Vec_IntEntry(imps, 1) != later || p.pCla.fRefinement != 1 {
+	if vec.Vec_IntEntry(imps, 0) != 0 || vec.Vec_IntEntry(imps, 1) != later || p.pCla.FRefinement != 1 {
 		t.Fatalf("wrong refinement: %v", vec.Vec_IntArray(imps))
 	}
 }

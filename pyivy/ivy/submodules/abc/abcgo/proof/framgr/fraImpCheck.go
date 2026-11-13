@@ -36,13 +36,13 @@ func Fra_ImpCheckForNode(p *Fra_Man_t, imps *vec.Vec_Int_t, node aig.Edge, pos i
 			if negLeft == negRight || (mappedLeft.NodeID() == 0 && negLeft) {
 				continue
 			}
-			p.pCla.fRefinement = 1
+			p.pCla.FRefinement = 1
 			vec.Vec_IntWriteEntry(imps, i, 0)
 			continue
 		}
 		result := Fra_NodesAreImp(p, aig.Aig_Regular(mappedLeft), aig.Aig_Regular(mappedRight), fraBool(negLeft), fraBool(negRight))
 		if result != 1 {
-			p.pCla.fRefinement = 1
+			p.pCla.FRefinement = 1
 			if result == 0 {
 				Fra_SmlResimulate(p)
 			}

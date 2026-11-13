@@ -196,12 +196,12 @@ func Fra_ImpAddToSolver(p *Fra_Man_t, imps *vec.Vec_Int_t, satVarNums []int32) {
 }
 
 func Fra_ImpVerifyUsingSimulation(p *Fra_Man_t) int32 {
-	if p.pCla.vImps == nil || vec.Vec_IntSize(p.pCla.vImps) == 0 {
+	if p.pCla.VImps == nil || vec.Vec_IntSize(p.pCla.VImps) == 0 {
 		return 0
 	}
 	seq := Fra_SmlSimulateSeq(p.pManAig, p.pPars.NFramesP, 2000, 8, 1)
 	var failed int32
-	for _, imp := range vec.Vec_IntArray(p.pCla.vImps) {
+	for _, imp := range vec.Vec_IntArray(p.pCla.VImps) {
 		if Sml_NodeCheckImp(seq, Fra_ImpLeft(imp), Fra_ImpRight(imp)) == 0 {
 			failed++
 		}
@@ -209,11 +209,11 @@ func Fra_ImpVerifyUsingSimulation(p *Fra_Man_t) int32 {
 	return failed
 }
 func Fra_ImpRecordInManager(p *Fra_Man_t, graph *aig.Graph) {
-	if p.pCla.vImps == nil || vec.Vec_IntSize(p.pCla.vImps) == 0 {
+	if p.pCla.VImps == nil || vec.Vec_IntSize(p.pCla.VImps) == 0 {
 		return
 	}
 	initial := graph.OutputCount()
-	for _, imp := range vec.Vec_IntArray(p.pCla.vImps) {
+	for _, imp := range vec.Vec_IntArray(p.pCla.VImps) {
 		left, right := aig.Edge(Fra_ImpLeft(imp)<<1), aig.Edge(Fra_ImpRight(imp)<<1)
 		a, b := aig.Aig_ObjCopy(p.pManAig, left), aig.Aig_ObjCopy(p.pManAig, right)
 		if a == aig.InvalidEdge || b == aig.InvalidEdge {

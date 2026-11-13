@@ -10,5 +10,5 @@ original manager in `proof/fra`, so these implementations are temporarily
 duplicated. Consolidate
 their shared manager and tests before treating this checkpoint as complete;
 fixes to either copy must be evaluated against the other in the meantime.
-The two implementations now share the `CombOptions` parameter type and
-`Simulation` state. Their manager and class types are still distinct.
+The two implementations now share the `CombOptions` parameter type,
+`Simulation` state, and `ClassPartition`. Their manager types are still distinct.

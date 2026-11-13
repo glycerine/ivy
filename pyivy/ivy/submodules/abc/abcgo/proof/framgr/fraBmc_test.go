@@ -93,8 +93,8 @@ func TestFraBmcPerformRefinesInitializedClasses(t *testing.T) {
 	if p.pBmc != nil {
 		t.Fatal("BMC manager not cleared")
 	}
-	if p.pCla.reprs[state.NodeID()] >= 0 {
-		t.Fatalf("invalid equivalence survived: %v", p.pCla.reprs)
+	if p.pCla.Reprs[state.NodeID()] >= 0 {
+		t.Fatalf("invalid equivalence survived: %v", p.pCla.Reprs)
 	}
 }
 
@@ -131,10 +131,10 @@ func TestFraBmcFiltersImplicationsWithNoInternalNodes(t *testing.T) {
 	g.AddOutput(x)
 	aig.Aig_ManSetRegNum(g, 1)
 	p := &Fra_Man_t{pManAig: g, pPars: &Fra_Par_t{}, pCla: Fra_ClassesStart(g)}
-	p.pCla.vImps = vec.Vec_IntAlloc(1)
-	vec.Vec_IntPush(p.pCla.vImps, Fra_ImpCreate(int32(x.NodeID()), int32(state.NodeID())))
+	p.pCla.VImps = vec.Vec_IntAlloc(1)
+	vec.Vec_IntPush(p.pCla.VImps, Fra_ImpCreate(int32(x.NodeID()), int32(state.NodeID())))
 	Fra_BmcPerform(p, 0, 1)
-	if vec.Vec_IntSize(p.pCla.vImps) != 0 {
+	if vec.Vec_IntSize(p.pCla.VImps) != 0 {
 		t.Fatal("invalid implication survived BMC")
 	}
 }

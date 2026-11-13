@@ -39,12 +39,12 @@ func Fra_FraigVerifyCounterEx(p *Fra_Man_t, cex *vec.Vec_Int_t) {
 			values[e.NodeID()] = value(n.Fanins[0])
 		}
 	}
-	for _, id := range p.pCla.constants {
+	for _, id := range p.pCla.Constants {
 		if g.Node(aig.Edge(id<<1)).Phase != values[id] {
 			fmt.Printf("The node %d is not constant under cex!\n", id)
 		}
 	}
-	for _, class := range p.pCla.classes {
+	for _, class := range p.pCla.Classes {
 		for _, id := range class[1:] {
 			first := class[0]
 			if (g.Node(aig.Edge(first<<1)).Phase != g.Node(aig.Edge(id<<1)).Phase) != (values[first] != values[id]) {
@@ -86,7 +86,7 @@ func Fra_FraigNode(p *Fra_Man_t, obj aig.Edge) {
 		}
 		return
 	}
-	p.pCla.fRefinement = 1
+	p.pCla.FRefinement = 1
 	if p.vTimeouts != nil {
 		vec.Vec_PtrPush(p.vTimeouts, obj)
 	}
@@ -105,7 +105,7 @@ func Fra_FraigSweep(p *Fra_Man_t) {
 	for _, obj := range inputs[len(inputs)-regs:] {
 		Fra_FraigNode(p, obj)
 		if p.pPars.FUseImps != 0 {
-			pos = Fra_ImpCheckForNode(p, p.pCla.vImps, obj, pos)
+			pos = Fra_ImpCheckForNode(p, p.pCla.VImps, obj, pos)
 		}
 	}
 	if p.pPars.FLatchCorr != 0 {
@@ -135,12 +135,12 @@ func Fra_FraigSweep(p *Fra_Man_t) {
 		Fra_FraigNode(p, obj)
 		p.pPars.NBTLimitNode = limit
 		if p.pPars.FUseImps != 0 {
-			pos = Fra_ImpCheckForNode(p, p.pCla.vImps, obj, pos)
+			pos = Fra_ImpCheckForNode(p, p.pCla.VImps, obj, pos)
 		}
 	}
 	p.nNodesMiter = aig.Aig_ManNodeNum(p.pManFraig)
 	if p.pPars.FUseImps != 0 {
-		Fra_ImpCompactArray(p.pCla.vImps)
+		Fra_ImpCompactArray(p.pCla.VImps)
 	}
 }
 

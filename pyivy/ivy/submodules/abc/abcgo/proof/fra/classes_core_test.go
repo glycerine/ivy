@@ -18,13 +18,13 @@ func TestClassPartitionGraphSelection(t *testing.T) {
 	notConst := func(int) bool { return false }
 	equal := func(int, int) bool { return true }
 	p := newClassPartition(len(g.Nodes()))
-	p.prepareGraph(g, false, 1, allSame, notConst, equal)
-	if !reflect.DeepEqual(p.classes, [][]int{{a.NodeID(), b.NodeID(), c.NodeID(), ab.NodeID()}}) {
-		t.Fatalf("level-filtered classes %v", p.classes)
+	p.PrepareGraph(g, false, 1, allSame, notConst, equal)
+	if !reflect.DeepEqual(p.Classes, [][]int{{a.NodeID(), b.NodeID(), c.NodeID(), ab.NodeID()}}) {
+		t.Fatalf("level-filtered classes %v", p.Classes)
 	}
-	p.prepareGraph(g, true, 0, allSame, notConst, equal)
-	if !reflect.DeepEqual(p.classes, [][]int{{a.NodeID(), b.NodeID(), c.NodeID()}}) {
-		t.Fatalf("latch correspondence classes %v", p.classes)
+	p.PrepareGraph(g, true, 0, allSame, notConst, equal)
+	if !reflect.DeepEqual(p.Classes, [][]int{{a.NodeID(), b.NodeID(), c.NodeID()}}) {
+		t.Fatalf("latch correspondence classes %v", p.Classes)
 	}
 }
 
@@ -34,31 +34,31 @@ func TestClassPartitionHashCollisionAndRefinement(t *testing.T) {
 	hash := func(int) uint64 { return 0 } // Deliberately collide every signature.
 	constant := func(id int) bool { return signature[id] == 0 }
 	equal := func(a, b int) bool { return signature[a] == signature[b] }
-	p.prepare([]int{1, 2, 3, 4, 5, 6}, hash, constant, equal)
-	if !reflect.DeepEqual(p.classes, [][]int{{1, 3}, {2, 5}}) || !reflect.DeepEqual(p.constants, []int{6}) {
-		t.Fatalf("classes %v constants %v", p.classes, p.constants)
+	p.Prepare([]int{1, 2, 3, 4, 5, 6}, hash, constant, equal)
+	if !reflect.DeepEqual(p.Classes, [][]int{{1, 3}, {2, 5}}) || !reflect.DeepEqual(p.Constants, []int{6}) {
+		t.Fatalf("classes %v constants %v", p.Classes, p.Constants)
 	}
-	if p.literalCount() != 3 || p.pairCount() != 2 || p.reprs[3] != 1 || p.reprs[5] != 2 || p.reprs[6] != 0 {
+	if p.LiteralCount() != 3 || p.PairCount() != 2 || p.Reprs[3] != 1 || p.Reprs[5] != 2 || p.Reprs[6] != 0 {
 		t.Fatalf("counts or representatives incorrect: %+v", p)
 	}
 	signature[3] = 9
-	if p.refine(equal) != 1 || !reflect.DeepEqual(p.classes, [][]int{{2, 5}}) || p.reprs[3] != -1 {
+	if p.Refine(equal) != 1 || !reflect.DeepEqual(p.Classes, [][]int{{2, 5}}) || p.Reprs[3] != -1 {
 		t.Fatalf("split did not remove singleton: %+v", p)
 	}
 }
 
 func TestClassPartitionRejectsInvalidCandidatesBeforeMutation(t *testing.T) {
 	p := newClassPartition(4)
-	p.prepare([]int{1, 2}, func(int) uint64 { return 0 }, func(int) bool { return false }, func(int, int) bool { return true })
+	p.Prepare([]int{1, 2}, func(int) uint64 { return 0 }, func(int) bool { return false }, func(int, int) bool { return true })
 	func() {
 		defer func() {
 			if recover() == nil {
 				t.Error("invalid order accepted")
 			}
 		}()
-		p.prepare([]int{2, 1}, func(int) uint64 { return 0 }, func(int) bool { return false }, func(int, int) bool { return true })
+		p.Prepare([]int{2, 1}, func(int) uint64 { return 0 }, func(int) bool { return false }, func(int, int) bool { return true })
 	}()
-	if !reflect.DeepEqual(p.classes, [][]int{{1, 2}}) || p.reprs[2] != 1 {
+	if !reflect.DeepEqual(p.Classes, [][]int{{1, 2}}) || p.Reprs[2] != 1 {
 		t.Fatal("invalid candidates mutated partition")
 	}
 }
@@ -68,12 +68,12 @@ func TestClassPartitionConstantRefinement(t *testing.T) {
 	p := newClassPartition(len(signature))
 	constant := func(id int) bool { return signature[id] == 0 }
 	equal := func(a, b int) bool { return signature[a] == signature[b] }
-	p.prepare([]int{1, 2, 3, 4}, func(int) uint64 { return 1 }, constant, equal)
+	p.Prepare([]int{1, 2, 3, 4}, func(int) uint64 { return 1 }, constant, equal)
 	signature[1], signature[2], signature[3] = 1, 1, 2
-	if p.refineConstants(constant, equal, true) != 2 {
+	if p.RefineConstants(constant, equal, true) != 2 {
 		t.Fatal("expected removal from constant class and one split")
 	}
-	if !reflect.DeepEqual(p.constants, []int{4}) || !reflect.DeepEqual(p.classes, [][]int{{1, 2}}) || p.reprs[2] != 1 || p.reprs[3] != -1 {
+	if !reflect.DeepEqual(p.Constants, []int{4}) || !reflect.DeepEqual(p.Classes, [][]int{{1, 2}}) || p.Reprs[2] != 1 || p.Reprs[3] != -1 {
 		t.Fatalf("unexpected refined partition: %+v", p)
 	}
 }
@@ -90,24 +90,24 @@ func TestClassPartitionRandomRefinementNeverMerges(t *testing.T) {
 		}
 		p := newClassPartition(n + 1)
 		equal := func(a, b int) bool { return signature[a] == signature[b] }
-		p.prepare(nodes, func(int) uint64 { return 0 }, func(int) bool { return false }, equal)
+		p.Prepare(nodes, func(int) uint64 { return 0 }, func(int) bool { return false }, equal)
 		before := append([]int(nil), signature...)
 		for i := 1; i <= n; i++ {
 			signature[i] = signature[i]*4 + rng.Intn(4)
 		}
-		p.refine(equal)
+		p.Refine(equal)
 		membership := make([]int, n+1)
 		for i := range membership {
 			membership[i] = -1
 		}
-		for i, class := range p.classes {
+		for i, class := range p.Classes {
 			for _, id := range class {
 				membership[id] = i
 			}
 		}
-		for _, class := range p.classes {
+		for _, class := range p.Classes {
 			for _, id := range class[1:] {
-				if before[id] != before[class[0]] || signature[id] != signature[class[0]] || p.reprs[id] != class[0] {
+				if before[id] != before[class[0]] || signature[id] != signature[class[0]] || p.Reprs[id] != class[0] {
 					t.Fatalf("trial %d invalid class %v", trial, class)
 				}
 			}
@@ -132,28 +132,28 @@ func TestClassPartitionLatchCorrespondenceAndPrune(t *testing.T) {
 	g.AddOutput(lo1)
 	aig.Aig_ManSetRegNum(g, 2)
 	p := newClassPartition(len(g.Nodes()))
-	p.latchCorrespondence(g)
-	if !reflect.DeepEqual(p.constants, []int{lo0.NodeID(), lo1.NodeID()}) || p.reprs[lo0.NodeID()] != 0 {
+	p.LatchCorrespondence(g)
+	if !reflect.DeepEqual(p.Constants, []int{lo0.NodeID(), lo1.NodeID()}) || p.Reprs[lo0.NodeID()] != 0 {
 		t.Fatalf("incorrect latch candidates: %+v", p)
 	}
-	weights := make([]int, len(p.reprs))
+	weights := make([]int, len(p.Reprs))
 	weights[lo0.NodeID()], weights[lo1.NodeID()] = 2, 8
-	p.pruneByWeight(weights)
-	if !reflect.DeepEqual(p.constants, []int{lo1.NodeID()}) || p.reprs[lo0.NodeID()] != -1 {
+	p.PruneByWeight(weights)
+	if !reflect.DeepEqual(p.Constants, []int{lo1.NodeID()}) || p.Reprs[lo0.NodeID()] != -1 {
 		t.Fatalf("incorrect pruning: %+v", p)
 	}
 }
 
 func TestClassPartitionSelectRepresentatives(t *testing.T) {
 	p := newClassPartition(6)
-	p.classes = [][]int{{1, 2, 3, 4}}
-	for _, id := range p.classes[0][1:] {
-		p.reprs[id] = 1
+	p.Classes = [][]int{{1, 2, 3, 4}}
+	for _, id := range p.Classes[0][1:] {
+		p.Reprs[id] = 1
 	}
 	support := []int{0, 3, 2, 2, 2}
 	level := []int{0, 1, 4, 3, 3}
-	p.selectRepresentatives(func(id int) int { return support[id] }, func(id int) int { return level[id] })
-	if !reflect.DeepEqual(p.classes, [][]int{{3, 2, 1, 4}}) || p.reprs[3] != -1 || p.reprs[1] != 3 || p.reprs[2] != 3 || p.reprs[4] != 3 {
+	p.SelectRepresentatives(func(id int) int { return support[id] }, func(id int) int { return level[id] })
+	if !reflect.DeepEqual(p.Classes, [][]int{{3, 2, 1, 4}}) || p.Reprs[3] != -1 || p.Reprs[1] != 3 || p.Reprs[2] != 3 || p.Reprs[4] != 3 {
 		t.Fatalf("incorrect representative selection: %+v", p)
 	}
 }
@@ -162,15 +162,15 @@ func TestClassPartitionCopiesRepresentatives(t *testing.T) {
 	g := aig.NewGraph()
 	a, b, c := g.NewInput(), g.NewInput(), g.NewInput()
 	p := newClassPartition(len(g.Nodes()))
-	p.reprs[a.NodeID()] = 0
-	p.reprs[b.NodeID()] = a.NodeID()
-	p.reprs[c.NodeID()] = a.NodeID()
-	p.copyRepresentatives(g, []int{b.NodeID()})
+	p.Reprs[a.NodeID()] = 0
+	p.Reprs[b.NodeID()] = a.NodeID()
+	p.Reprs[c.NodeID()] = a.NodeID()
+	p.CopyRepresentatives(g, []int{b.NodeID()})
 	if aig.Aig_ObjRepr(g, a) != g.Const1() || aig.Aig_ObjRepr(g, b) != aig.InvalidEdge || aig.Aig_ObjRepr(g, c) != a {
 		t.Fatal("wrong copied representatives")
 	}
-	p.reprs[c.NodeID()] = -1
-	p.copyRepresentatives(g, nil)
+	p.Reprs[c.NodeID()] = -1
+	p.CopyRepresentatives(g, nil)
 	if aig.Aig_ObjRepr(g, c) != aig.InvalidEdge {
 		t.Fatal("stale representative retained")
 	}
@@ -182,8 +182,8 @@ func TestClassPartitionSequentialDerivation(t *testing.T) {
 	g.AddOutput(x) // latch input becomes x in the next frame
 	aig.Aig_ManSetRegNum(g, 1)
 	p := newClassPartition(len(g.Nodes()))
-	p.reprs[lo.NodeID()] = 0
-	unrolled := p.deriveSequentialAIG(g, 1)
+	p.Reprs[lo.NodeID()] = 0
+	unrolled := p.DeriveSequentialAIG(g, 1)
 	if unrolled.InputCount() != 3 || unrolled.OutputCount() != 2 || unrolled.Assertions != 1 {
 		t.Fatalf("incorrect unrolling sizes: inputs=%d outputs=%d assertions=%d", unrolled.InputCount(), unrolled.OutputCount(), unrolled.Assertions)
 	}
@@ -206,8 +206,8 @@ func TestClassPartitionSequentialInternalMiter(t *testing.T) {
 	g.AddOutput(x)
 	aig.Aig_ManSetRegNum(g, 1)
 	p := newClassPartition(len(g.Nodes()))
-	p.reprs[gate.NodeID()] = x.NodeID()
-	unrolled := p.deriveSequentialAIG(g, 1)
+	p.Reprs[gate.NodeID()] = x.NodeID()
+	unrolled := p.DeriveSequentialAIG(g, 1)
 	if unrolled.InputCount() != 3 || unrolled.OutputCount() != 2 || unrolled.Assertions != 1 {
 		t.Fatal("incorrect internal miter layout")
 	}
@@ -233,14 +233,14 @@ func TestSimulationDrivesCandidateRefinement(t *testing.T) {
 	s.FrameWords(y.NodeID(), 0)[0] = 0xaaaaaaaa
 	s.SimulateOne()
 	p := newClassPartition(len(g.Nodes()))
-	p.prepareGraph(g, false, 0, s.Hash, s.IsConstant, s.Equal)
-	if !reflect.DeepEqual(p.classes, [][]int{{x.NodeID(), y.NodeID(), gate.NodeID()}}) {
-		t.Fatalf("unexpected initial simulation classes %v", p.classes)
+	p.PrepareGraph(g, false, 0, s.Hash, s.IsConstant, s.Equal)
+	if !reflect.DeepEqual(p.Classes, [][]int{{x.NodeID(), y.NodeID(), gate.NodeID()}}) {
+		t.Fatalf("unexpected initial simulation classes %v", p.Classes)
 	}
 	s.FrameWords(y.NodeID(), 0)[0] = 0xcccccccc
 	s.SimulateOne()
-	p.refine(s.Equal)
-	if len(p.classes) != 0 || p.reprs[y.NodeID()] != -1 || p.reprs[gate.NodeID()] != -1 {
+	p.Refine(s.Equal)
+	if len(p.Classes) != 0 || p.Reprs[y.NodeID()] != -1 || p.Reprs[gate.NodeID()] != -1 {
 		t.Fatalf("simulation failed to split candidates: %+v", p)
 	}
 }
@@ -253,8 +253,8 @@ func TestClassPartitionSequentialBufferFanin(t *testing.T) {
 	g.AddOutput(input)
 	aig.Aig_ManSetRegNum(g, 1)
 	p := newClassPartition(len(g.Nodes()))
-	p.reprs[gate.NodeID()] = latch.NodeID()
-	unrolled := p.deriveSequentialAIG(g, 1)
+	p.Reprs[gate.NodeID()] = latch.NodeID()
+	unrolled := p.DeriveSequentialAIG(g, 1)
 	if unrolled.OutputCount() != 2 {
 		t.Fatalf("outputs = %d", unrolled.OutputCount())
 	}

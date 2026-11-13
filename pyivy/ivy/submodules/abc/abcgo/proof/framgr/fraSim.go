@@ -143,7 +143,7 @@ func Fra_SmlNodeTransferNext(s *Fra_Sml_t, out, in aig.Edge, frame int32) {
 func Fra_SmlCheckNonConstOutputs(s *Fra_Sml_t) int32 { return fraBool(s.HasNonconstantOutput()) }
 func Fra_SmlSimulateOne(s *Fra_Sml_t)                { s.SimulateOne() }
 func Fra_SmlResimulate(p *Fra_Man_t) {
-	p.pCla.simulation = p.pSml
+	p.pCla.Simulation = p.pSml
 	p.pSml.AssignDistance1(p.pPatWords)
 	p.pSml.SimulateOne()
 	if p.pPars.FProve != 0 && Fra_SmlCheckOutput(p) != 0 {
@@ -151,8 +151,8 @@ func Fra_SmlResimulate(p *Fra_Man_t) {
 	}
 	start := time.Now()
 	changes := Fra_ClassesRefine(p.pCla) + Fra_ClassesRefine1(p.pCla, 1, nil)
-	if p.pCla.vImps != nil {
-		changes += Fra_ImpRefineUsingCex(p, p.pCla.vImps)
+	if p.pCla.VImps != nil {
+		changes += Fra_ImpRefineUsingCex(p, p.pCla.VImps)
 	}
 	if p.vOneHots != nil {
 		changes += Fra_OneHotRefineUsingCex(p, p.vOneHots)
@@ -163,7 +163,7 @@ func Fra_SmlResimulate(p *Fra_Man_t) {
 	}
 }
 func Fra_SmlSimulate(p *Fra_Man_t, init int32) {
-	p.pCla.simulation = p.pSml
+	p.pCla.Simulation = p.pSml
 	run := func() bool { p.pSml.SimulateOne(); return p.pPars.FProve != 0 && Fra_SmlCheckOutput(p) != 0 }
 	refine := func() int32 {
 		start := time.Now()
@@ -193,7 +193,7 @@ func Fra_SmlSimulate(p *Fra_Man_t, init int32) {
 		if run() {
 			return
 		}
-		count := len(p.pCla.classes)
+		count := len(p.pCla.Classes)
 		changes := refine()
 		if count == 0 || float64(changes)/float64(count) <= p.pPars.DSimSatur {
 			return

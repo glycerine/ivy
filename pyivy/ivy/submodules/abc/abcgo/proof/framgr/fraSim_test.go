@@ -14,7 +14,7 @@ func TestFraSmlManagerSimulationAndRefinement(t *testing.T) {
 	g.AddOutput(g.AND(x, y))
 	m := &Fra_Man_t{pManAig: g, pPars: &Fra_Par_t{DSimSatur: 0.1}, pCla: Fra_ClassesStart(g), pSml: Fra_SmlStart(g, 0, 1, 1), pPatWords: make([]uint32, 1), nFramesAll: 1}
 	Fra_SmlSimulate(m, 0)
-	if m.pCla.simulation != m.pSml || m.pSml.Rounds < 4 {
+	if m.pCla.Simulation != m.pSml || m.pSml.Rounds < 4 {
 		t.Fatalf("manager did not run simulation and attach class partition: rounds %d", m.pSml.Rounds)
 	}
 	Fra_SmlSavePattern1(m, 0)

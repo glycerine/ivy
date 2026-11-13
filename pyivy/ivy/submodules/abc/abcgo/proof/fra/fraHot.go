@@ -65,7 +65,7 @@ func Fra_OneHotCheck(p *Fra_Man_t, clauses *vec.Vec_Int_t) {
 		left, right := outputs[first+int(Fra_LitReg(a))], outputs[first+int(Fra_LitReg(b))]
 		result := Fra_NodesAreClause(p, left, right, Fra_LitSign(a), Fra_LitSign(b))
 		if result != 1 {
-			p.pCla.fRefinement = 1
+			p.pCla.FRefinement = 1
 			if result == 0 {
 				Fra_SmlResimulate(p)
 			}

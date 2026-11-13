@@ -87,14 +87,14 @@ func Fra_FraigInduction(g *aig.Graph, params *Fra_Ssw_t) *aig.Graph {
 	p := Fra_ManStart(g, &pars)
 	pars.NBTLimitNode = 0
 	p.pSml = Fra_SmlSimulateSeq(g, pars.NFramesP, 32, 1, 1)
-	p.pCla.simulation = p.pSml
+	p.pCla.Simulation = p.pSml
 	Fra_ClassesPrepare(p.pCla, pars.FLatchCorr, pars.NMaxLevs)
 	if pars.FUse1Hot != 0 {
 		p.vOneHots = Fra_OneHotCompute(p, p.pSml)
 	}
 	p.pSml = Fra_SmlStart(g, 0, pars.NFramesK+1, pars.NSimWords)
 	if pars.FUseImps != 0 {
-		p.pCla.vImps = Fra_ImpDerive(p, 5000000, pars.NMaxImps, pars.FLatchCorr)
+		p.pCla.VImps = Fra_ImpDerive(p, 5000000, pars.NMaxImps, pars.FLatchCorr)
 	}
 	timedOut := func() bool {
 		return params.TimeLimit != 0 && time.Since(started) > time.Duration(float64(params.TimeLimit)*float64(time.Second))
@@ -111,13 +111,13 @@ func Fra_FraigInduction(g *aig.Graph, params *Fra_Ssw_t) *aig.Graph {
 	p.nLitsBeg = Fra_ClassesCountLits(p.pCla)
 	p.nNodesBeg = aig.Aig_ManNodeNum(g)
 	p.nRegsBeg = g.RegisterCount()
-	p.pCla.fRefinement = 1
+	p.pCla.FRefinement = 1
 	iteration := int32(0)
-	for ; p.pCla.fRefinement != 0; iteration++ {
+	for ; p.pCla.FRefinement != 0; iteration++ {
 		oldLits := Fra_ClassesCountLits(p.pCla)
 		oldImps, oldHots := 0, int32(0)
-		if p.pCla.vImps != nil {
-			oldImps = vec.Vec_IntSize(p.pCla.vImps)
+		if p.pCla.VImps != nil {
+			oldImps = vec.Vec_IntSize(p.pCla.VImps)
 		}
 		if p.vOneHots != nil {
 			oldHots = Fra_OneHotCount(p, p.vOneHots)
@@ -130,7 +130,7 @@ func Fra_FraigInduction(g *aig.Graph, params *Fra_Ssw_t) *aig.Graph {
 			Fra_ManStop(p)
 			return nil
 		}
-		p.pCla.fRefinement = 0
+		p.pCla.FRefinement = 0
 		traversal := time.Now()
 		p.pManFraig = Fra_FramesWithClasses(p)
 		p.timeTrav += time.Since(traversal)
@@ -149,7 +149,7 @@ func Fra_FraigInduction(g *aig.Graph, params *Fra_Ssw_t) *aig.Graph {
 			panic("fra: induction CNF is inconsistent")
 		}
 		if pars.FUseImps != 0 {
-			Fra_ImpAddToSolver(p, p.pCla.vImps, data.VarNums)
+			Fra_ImpAddToSolver(p, p.pCla.VImps, data.VarNums)
 			if p.pSat == nil {
 				panic("fra: implication constraints contradict induction CNF")
 			}
@@ -182,13 +182,13 @@ func Fra_FraigInduction(g *aig.Graph, params *Fra_Ssw_t) *aig.Graph {
 			panic("fra: SAT solver timed out during induction")
 		}
 		imps, hots := 0, int32(0)
-		if p.pCla.vImps != nil {
-			imps = vec.Vec_IntSize(p.pCla.vImps)
+		if p.pCla.VImps != nil {
+			imps = vec.Vec_IntSize(p.pCla.VImps)
 		}
 		if p.vOneHots != nil {
 			hots = Fra_OneHotCount(p, p.vOneHots)
 		}
-		if p.pCla.fRefinement != 0 && oldLits == Fra_ClassesCountLits(p.pCla) && oldImps == imps && oldHots == hots {
+		if p.pCla.FRefinement != 0 && oldLits == Fra_ClassesCountLits(p.pCla) && oldImps == imps && oldHots == hots {
 			fmt.Println("Fra_FraigInduction(): Internal error. The result may not verify.")
 			// Do not return a potentially unsound reduction after the
 			// refinement loop has failed to make observable progress.

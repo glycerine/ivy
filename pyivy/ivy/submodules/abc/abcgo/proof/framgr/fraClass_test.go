@@ -11,7 +11,7 @@ func TestClassAPIRefinement(t *testing.T) {
 	a, b := graph.NewInput(), graph.NewInput()
 	classes := Fra_ClassesStart(graph)
 	sim := newFraSimulation(graph, 0, 1, 1)
-	classes.simulation = sim
+	classes.Simulation = sim
 	sim.NodeWords(a.NodeID())[0] = 3
 	sim.NodeWords(b.NodeID())[0] = 3
 	Fra_ClassesPrepare(classes, 0, 0)
@@ -32,7 +32,7 @@ func TestClassAPIConstantRefinementSkipped(t *testing.T) {
 	a, b := graph.NewInput(), graph.NewInput()
 	classes := Fra_ClassesStart(graph)
 	sim := newFraSimulation(graph, 0, 1, 1)
-	classes.simulation = sim
+	classes.Simulation = sim
 	Fra_ClassesPrepare(classes, 0, 0)
 	sim.NodeWords(a.NodeID())[0] = 1
 	sim.NodeWords(b.NodeID())[0] = 2
@@ -49,14 +49,14 @@ func TestClassRefinementUsesAlternatePredicates(t *testing.T) {
 	graph := aig.NewGraph()
 	a, b := graph.NewInput(), graph.NewInput()
 	classes := Fra_ClassesStart(graph)
-	classes.classes = [][]int{{a.NodeID(), b.NodeID()}}
-	classes.reprs[b.NodeID()] = a.NodeID()
-	classes.nodeIsConst = func(int) bool { return false }
-	classes.nodesEqual = func(int, int) bool { return false }
+	classes.Classes = [][]int{{a.NodeID(), b.NodeID()}}
+	classes.Reprs[b.NodeID()] = a.NodeID()
+	classes.NodeIsConst = func(int) bool { return false }
+	classes.NodesEqual = func(int, int) bool { return false }
 	if got := Fra_ClassesRefine(classes); got != 1 {
 		t.Fatalf("alternate refinement count = %d", got)
 	}
-	if classes.reprs[b.NodeID()] != -1 {
+	if classes.Reprs[b.NodeID()] != -1 {
 		t.Fatal("alternate refinement did not remove representative")
 	}
 }

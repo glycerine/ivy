@@ -29,7 +29,7 @@ func Lcr_ManFree(p *Fra_Lcr_t) {
 	}
 }
 func Lcr_ManPrint(p *Fra_Lcr_t) {
-	fmt.Printf("Iterations = %d. Classes = %d. Constants = %d.\n", p.nIters, len(p.classes.classes), len(p.classes.constants))
+	fmt.Printf("Iterations = %d. Classes = %d. Constants = %d.\n", p.nIters, len(p.classes.Classes), len(p.classes.Constants))
 }
 
 func lcrInputIndices(g *aig.Graph) map[int]int {
@@ -87,14 +87,14 @@ func (p *Fra_Lcr_t) outputForInput(id int) int {
 func Fra_LcrDeriveAigForPartitioning(p *Fra_Lcr_t) *aig.Graph {
 	dst, copies := lcrStartCopies(p.graph)
 	outputs := p.graph.Outputs()
-	for _, class := range p.classes.classes {
+	for _, class := range p.classes.Classes {
 		result := dst.Const0()
 		for _, id := range class {
 			result = dst.XOR(result, lcrCopy(p.graph, dst, copies, p.graph.Node(outputs[p.outputForInput(id)]).Fanins[0]))
 		}
 		dst.AddOutput(result)
 	}
-	for _, id := range p.classes.constants {
+	for _, id := range p.classes.Constants {
 		dst.AddOutput(lcrCopy(p.graph, dst, copies, p.graph.Node(outputs[p.outputForInput(id)]).Fanins[0]))
 	}
 	return dst
@@ -105,14 +105,14 @@ func Fra_LcrRemapPartitions(p *Fra_Lcr_t, parts [][]int32) [][]int32 {
 	for part, group := range parts {
 		for _, index := range group {
 			var ids []int
-			if int(index) < len(p.classes.classes) {
-				ids = p.classes.classes[index]
+			if int(index) < len(p.classes.Classes) {
+				ids = p.classes.Classes[index]
 			} else {
-				offset := int(index) - len(p.classes.classes)
-				if offset < 0 || offset >= len(p.classes.constants) {
+				offset := int(index) - len(p.classes.Classes)
+				if offset < 0 || offset >= len(p.classes.Constants) {
 					panic("invalid latch partition")
 				}
-				ids = []int{p.classes.constants[offset]}
+				ids = []int{p.classes.Constants[offset]}
 			}
 			for _, id := range ids {
 				in := indices[id]
@@ -126,12 +126,12 @@ func Fra_LcrRemapPartitions(p *Fra_Lcr_t, parts [][]int32) [][]int32 {
 }
 func Fra_ClassNodesMark(p *Fra_Lcr_t) {
 	clear(p.marked)
-	for _, class := range p.classes.classes {
+	for _, class := range p.classes.Classes {
 		for _, id := range class {
 			p.marked[p.outputForInput(id)] = true
 		}
 	}
-	for _, id := range p.classes.constants {
+	for _, id := range p.classes.Constants {
 		p.marked[p.outputForInput(id)] = true
 	}
 }
@@ -148,7 +148,7 @@ func Fra_LcrCreatePart(p *Fra_Lcr_t, outputs []int32) *aig.Graph {
 			n := src.Node(edge)
 			switch n.Kind {
 			case aig.Input:
-				repr := p.classes.reprs[id]
+				repr := p.classes.Reprs[id]
 				if repr < 0 {
 					result = dst.NewInput()
 				} else {
@@ -238,10 +238,10 @@ func Fra_FraigLatchCorrespondence(graph *aig.Graph, prefix, conflicts, prove, ve
 	}
 	p := Lcr_ManAlloc(graph)
 	p.classes = Fra_ClassesStart(graph)
-	p.classes.simulation = sim
+	p.classes.Simulation = sim
 	Fra_ClassesPrepare(p.classes, 1, 0)
-	p.classes.nodeIsConst = p.nodeIsConst
-	p.classes.nodesEqual = p.nodesEqual
+	p.classes.NodeIsConst = p.nodeIsConst
+	p.classes.NodesEqual = p.nodesEqual
 	p.repartition()
 	for {
 		if !deadline.IsZero() && time.Now().After(deadline) {
@@ -274,7 +274,7 @@ func Fra_FraigLatchCorrespondence(graph *aig.Graph, prefix, conflicts, prove, ve
 		changed := Fra_ClassesRefine(p.classes) + Fra_ClassesRefine1(p.classes, 0, nil)
 		p.nIters++
 		if verbose != 0 {
-			fmt.Printf("%3d : Const = %d. Class = %d. Part = %d.\n", p.nIters-1, len(p.classes.constants), len(p.classes.classes), len(p.parts))
+			fmt.Printf("%3d : Const = %d. Class = %d. Part = %d.\n", p.nIters-1, len(p.classes.Constants), len(p.classes.Classes), len(p.parts))
 		}
 		p.repartition()
 		if changed == 0 {

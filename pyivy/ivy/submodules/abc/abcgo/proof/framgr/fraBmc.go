@@ -133,8 +133,8 @@ func Fra_BmcPerform(p *Fra_Man_t, prefix, depth int32) {
 	b.pAigFrames = Fra_BmcFrames(b, 0)
 	var callback func(*Fra_Man_t)
 	oldImps := 0
-	if p.pCla.vImps != nil {
-		b.vImps = p.pCla.vImps
+	if p.pCla.VImps != nil {
+		b.vImps = p.pCla.VImps
 		oldImps = vec.Vec_IntSize(b.vImps)
 		callback = func(comb *Fra_Man_t) { Fra_BmcFilterImplications(comb, b) }
 	}
@@ -143,12 +143,12 @@ func Fra_BmcPerform(p *Fra_Man_t, prefix, depth int32) {
 		panic("fra: BMC frame FRAIG failed")
 	}
 	if p.pPars.FVerbose != 0 {
-		fmt.Printf("Original AIG = %d. Init %d frames = %d. Fraig = %d. Time = %s.\nBefore BMC: Const = %d. Class = %d. Lit = %d. Imp = %d.\n", aig.Aig_ManNodeNum(b.pAig), b.nFramesAll, aig.Aig_ManNodeNum(b.pAigFrames), aig.Aig_ManNodeNum(b.pAigFraig), time.Since(start), len(p.pCla.constants), len(p.pCla.classes), Fra_ClassesCountLits(p.pCla), oldImps)
+		fmt.Printf("Original AIG = %d. Init %d frames = %d. Fraig = %d. Time = %s.\nBefore BMC: Const = %d. Class = %d. Lit = %d. Imp = %d.\n", aig.Aig_ManNodeNum(b.pAig), b.nFramesAll, aig.Aig_ManNodeNum(b.pAigFrames), aig.Aig_ManNodeNum(b.pAigFraig), time.Since(start), len(p.pCla.Constants), len(p.pCla.Classes), Fra_ClassesCountLits(p.pCla), oldImps)
 	}
-	prevConst, prevEqual := p.pCla.nodeIsConst, p.pCla.nodesEqual
-	p.pCla.nodeIsConst = func(id int) bool { return Fra_BmcNodeIsConst(p, aig.Edge(id<<1)) != 0 }
-	p.pCla.nodesEqual = func(a, b int) bool { return Fra_BmcNodesAreEqual(p, aig.Edge(a<<1), aig.Edge(b<<1)) != 0 }
-	defer func() { p.pCla.nodeIsConst, p.pCla.nodesEqual = prevConst, prevEqual }()
+	prevConst, prevEqual := p.pCla.NodeIsConst, p.pCla.NodesEqual
+	p.pCla.NodeIsConst = func(id int) bool { return Fra_BmcNodeIsConst(p, aig.Edge(id<<1)) != 0 }
+	p.pCla.NodesEqual = func(a, b int) bool { return Fra_BmcNodesAreEqual(p, aig.Edge(a<<1), aig.Edge(b<<1)) != 0 }
+	defer func() { p.pCla.NodeIsConst, p.pCla.NodesEqual = prevConst, prevEqual }()
 	Fra_ClassesRefine(p.pCla)
 	Fra_ClassesRefine1(p.pCla, 1, nil)
 	if p.pPars.FVerbose != 0 {
@@ -156,7 +156,7 @@ func Fra_BmcPerform(p *Fra_Man_t, prefix, depth int32) {
 		if b.vImps != nil {
 			n = vec.Vec_IntSize(b.vImps)
 		}
-		fmt.Printf("After BMC: Const = %d. Class = %d. Lit = %d. Imp = %d.\n", len(p.pCla.constants), len(p.pCla.classes), Fra_ClassesCountLits(p.pCla), n)
+		fmt.Printf("After BMC: Const = %d. Class = %d. Lit = %d. Imp = %d.\n", len(p.pCla.Constants), len(p.pCla.Classes), Fra_ClassesCountLits(p.pCla), n)
 	}
 }
 func Fra_BmcPerformSimple(g *aig.Graph, frames, limit, rewrite, verbose int32) {

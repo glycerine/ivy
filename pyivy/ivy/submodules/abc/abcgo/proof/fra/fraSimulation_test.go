@@ -94,9 +94,9 @@ func TestFraSimulationDrivesClassPartition(t *testing.T) {
 	s.FrameWords(y.NodeID(), 0)[0] = 0xcccccccc
 	s.SimulateOne()
 	classes := newClassPartition(len(g.Nodes()))
-	classes.prepareGraph(g, false, 0, s.Hash, s.IsConstant, s.Equal)
-	if classes.reprs[structural.NodeID()] != explicit.NodeID() {
-		t.Fatalf("equivalent XOR forms not grouped: %v", classes.reprs)
+	classes.PrepareGraph(g, false, 0, s.Hash, s.IsConstant, s.Equal)
+	if classes.Reprs[structural.NodeID()] != explicit.NodeID() {
+		t.Fatalf("equivalent XOR forms not grouped: %v", classes.Reprs)
 	}
 }
 
