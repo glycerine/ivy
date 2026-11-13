@@ -67,10 +67,10 @@ func Int2_ManJustify_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vSelect *Vec_Int_t) {
 	fanin0 := gia.Gia_ObjFanin0(pObj)
 	fanin1 := gia.Gia_ObjFanin1(pObj)
 	if gia.Gia_ObjValue(pObj) == 1 {
-		if gia.Gia_ObjValue(fanin0) < util.ABC_INFINITY {
+		if uint32(gia.Gia_ObjValue(fanin0)) < uint32(util.ABC_INFINITY) {
 			Int2_ManJustify_rec(p, fanin0, vSelect)
 		}
-		if gia.Gia_ObjValue(fanin1) < util.ABC_INFINITY {
+		if uint32(gia.Gia_ObjValue(fanin1)) < uint32(util.ABC_INFINITY) {
 			Int2_ManJustify_rec(p, fanin1, vSelect)
 		}
 		return
@@ -82,18 +82,18 @@ func Int2_ManJustify_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vSelect *Vec_Int_t) {
 	switch {
 	case need0 == 0 && need1 == 0:
 		if gia.Gia_ObjMark0(fanin0) <= gia.Gia_ObjMark0(fanin1) {
-			if gia.Gia_ObjValue(fanin0) < util.ABC_INFINITY {
+			if uint32(gia.Gia_ObjValue(fanin0)) < uint32(util.ABC_INFINITY) {
 				Int2_ManJustify_rec(p, fanin0, vSelect)
 			}
-		} else if gia.Gia_ObjValue(fanin1) < util.ABC_INFINITY {
+		} else if uint32(gia.Gia_ObjValue(fanin1)) < uint32(util.ABC_INFINITY) {
 			Int2_ManJustify_rec(p, fanin1, vSelect)
 		}
 	case need0 == 0:
-		if gia.Gia_ObjValue(fanin0) < util.ABC_INFINITY {
+		if uint32(gia.Gia_ObjValue(fanin0)) < uint32(util.ABC_INFINITY) {
 			Int2_ManJustify_rec(p, fanin0, vSelect)
 		}
 	case need1 == 0:
-		if gia.Gia_ObjValue(fanin1) < util.ABC_INFINITY {
+		if uint32(gia.Gia_ObjValue(fanin1)) < uint32(util.ABC_INFINITY) {
 			Int2_ManJustify_rec(p, fanin1, vSelect)
 		}
 	default:
@@ -158,7 +158,7 @@ func Int2_ManRefineCube(p *Gia_Man_t, vAssign *Vec_Int_t, vPrio *Vec_Int_t) *Vec
 	gia.Gia_ObjSetMark1(obj, 0)
 	gia.Gia_ObjSetValue(obj, gia.Gia_ObjValue(fanin))
 	assert(gia.Gia_ObjMark0(obj) == 1, "output is asserted by the assignment")
-	assert(gia.Gia_ObjValue(obj) < util.ABC_INFINITY, "output has finite priority")
+	assert(uint32(gia.Gia_ObjValue(obj)) < uint32(util.ABC_INFINITY), "output has finite priority")
 	// select subset
 	vSubset := vec.Vec_IntAlloc(100)
 	Int2_ManJustify_rec(p, fanin, vSubset)
