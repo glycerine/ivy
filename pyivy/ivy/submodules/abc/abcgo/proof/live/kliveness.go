@@ -80,7 +80,14 @@ func kLiveProofModel(p *aig.Graph, directive, target, invariant int32) *aig.Grap
 	return c.destination
 }
 func flipConePdr(p *aig.Graph, directive, target, invariant, absorbers int32) int32 {
-	return CheckSafety(kLiveProofModel(p, directive, target, invariant), int(target), SafetyOptions{}).Status
+	// The source patches the input manager before duplicating it for PDR.
+	if directive == kCS_WITH_SAFETY_INVARIANTS || directive == kCS_WITH_SAFETY_AND_DCS_INVARIANTS || directive == kCS_WITH_SAFETY_AND_USER_GIVEN_DCS_INVARIANTS {
+		if invariant < 0 {
+			panic("live: safety invariant missing")
+		}
+		modifyAigToApplySafetyInvar(p, target, invariant)
+	}
+	return CheckSafety(kLiveProofModel(p, SIMPLE_kCS, target, invariant), int(target), SafetyOptions{}).Status
 }
 
 func findOutput(n *Network, marker string) int32 {
