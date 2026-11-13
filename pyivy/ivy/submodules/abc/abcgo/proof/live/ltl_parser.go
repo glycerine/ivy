@@ -319,5 +319,6 @@ func traverseAbstractSyntaxTree_postFix(node *ltlNode) {
 	}
 }
 func Abc_FrameCopyLTLDataBase(frame *Frame, network *Network) {
-	frame.LTLProperties = append(frame.LTLProperties[:0], network.LTLProperties...)
+	frame.LTLProperties = make([]string, len(network.LTLProperties))
+	copy(frame.LTLProperties, network.LTLProperties)
 }
