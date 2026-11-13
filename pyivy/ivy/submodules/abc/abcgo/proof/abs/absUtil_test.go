@@ -61,3 +61,25 @@ func TestFlopToGateClassesIncludesNativeMuxControl(t *testing.T) {
 		t.Fatalf("MUX or control cone missing from gate classes")
 	}
 }
+
+// Expected bytes were obtained by compiling the checked-in C absUtil.c and
+// calling Gia_VtaConvertFromGla with nObjs=6, members 2 and 3, and 2 frames.
+func TestVtaFramePackingMatchesCOracle(t *testing.T) {
+	p := gia.Gia_ManStart(8)
+	gia.Gia_ManAppendCi(p)
+	gia.Gia_ManAppendCi(p)
+	gia.Gia_ManAppendCi(p)
+	gia.Gia_ManAppendCi(p)
+	gia.Gia_ManAppendCo(p, 0)
+	if gia.Gia_ManObjNum(p) != 6 {
+		t.Fatal("unexpected fixture size")
+	}
+	classes := vec.Vec_IntStart(6)
+	vec.Vec_IntWriteEntry(classes, 2, 1)
+	vec.Vec_IntWriteEntry(classes, 3, 1)
+	got := vec.Vec_IntArray(Gia_VtaConvertFromGla(p, classes, 2))
+	want := []int32{2, 4, 6, 10, 2, 3, 2, 3, 10, 11}
+	if !reflect.DeepEqual(got, want) {
+		t.Fatalf("Go packing %v, C oracle %v", got, want)
+	}
+}
