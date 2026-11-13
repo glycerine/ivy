@@ -44,12 +44,13 @@ source accepts negative limits, whose behavior is not simply unlimited. The
 checked-in `test_vectors/claus_limit_source.c` characterizes the undefined
 result and assertion behavior against compiled C.
 
-Compiled-C SEC option fixtures cover separate and merged interpolation,
+Compiled-C SEC option fixtures cover single-output, separate and merged interpolation,
 disabled interpolation, and signed interpolation conflict budgets. In the
 fixture, separate interpolation preserves ABC's frame-zero counterexample,
 while merged interpolation returns a frame-one counterexample; a negative
 budget returns undecided. The shared INT solver passes the signed budget to
-BSAT unchanged, as the C implementation does.
+BSAT unchanged, as the C implementation does. The single-output regression also replays its
+counterexample on the original graph after cleanup removes a register.
 
 On the source SEC sequential-simulation failure path, the function returns
 before assigning its optional result graph pointer, leaving the caller's
