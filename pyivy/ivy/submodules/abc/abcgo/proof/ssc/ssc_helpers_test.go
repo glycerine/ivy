@@ -98,6 +98,38 @@ func TestCareHelpersUseLastSimulationSnapshot(t *testing.T) {
 	}
 }
 
+func TestCarePatternsMatchesSourceTransferAndRandomOrder(t *testing.T) {
+	makeManager := func() *Ssc_Man_t {
+		a, c := fixture()
+		p, status := Ssc_ManStart(a, c, nil)
+		if status != satoko.SATOKO_SAT {
+			t.Fatalf("start status %d", status)
+		}
+		return p
+	}
+	got, want := makeManager(), makeManager()
+	gia.Gia_ManRandom(1)
+	carePatterns(got)
+	gotNext := gia.Gia_ManRandom(0)
+	gia.Gia_ManRandom(1)
+	care := NewSimulation(want.Aig, 5)
+	candidates := gia.Gia_ManCiNum(want.Original) + gia.Gia_ManAndNum(want.Original)
+	for {
+		Ssc_GiaRandomPiPattern(care, 5, nil)
+		Ssc_GiaSimRound(care)
+		if Ssc_GiaTransferPiPattern(want.Sim, care, want.Pivot) == 0 {
+			break
+		}
+		Ssc_GiaSimRound(want.Sim)
+		if Ssc_GiaClassesRefine(want.Classes, want.Sim) <= candidates/100 {
+			break
+		}
+	}
+	if gotNext != gia.Gia_ManRandom(0) || !reflect.DeepEqual(got.Sim.Inputs, want.Sim.Inputs) || !reflect.DeepEqual(got.Classes, want.Classes) {
+		t.Fatal("care refinement changed source transfer or random ordering")
+	}
+}
+
 func TestCareMaskIgnoresRegisterInputs(t *testing.T) {
 	g := gia.Gia_ManStart(6)
 	gia.Gia_ManAppendCi(g)
