@@ -12,7 +12,8 @@ func Rf2_ManStart(g *gia.Gia_Man_t) *Rf2_Man_t {
 	if g == nil || gia.Gia_ManPoNum(g) != 1 {
 		panic("refinement requires one primary output")
 	}
-	p := &Rf2_Man_t{pGia: g, vObjs: vec.Vec_IntAlloc(1000), vFanins: vec.Vec_IntAlloc(1000), pvVecs: make([]vec.Vec_Int_t, gia.Gia_ManObjNum(g)), vGrp2Ppi: vec.Vec_VecStart(100)}
+	p := &Rf2_Man_t{pGia: g, vObjs: vec.Vec_IntAlloc(1000), vFanins: vec.Vec_IntAlloc(1000), pvVecs: make([]vec.Vec_Int_t, gia.Gia_ManObjNum(g)), vGrp2Ppi: vec.Vec_VecAlloc(100)}
+	vec.Vec_VecExpandInt(p.vGrp2Ppi, 99)
 	gia.Gia_ManCleanMark0(g)
 	gia.Gia_ManCleanMark1(g)
 	return p
