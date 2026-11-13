@@ -41,7 +41,7 @@ func (p *clausModels) disproves(clause []int32, frameOffset int32) bool {
 		mask := ^uint32(0)
 		for _, lit := range clause {
 			variable := int((lit >> 1) - frameOffset)
-			if lit < 0 || variable <= 0 || variable >= len(p.values) {
+			if lit < 0 || variable < 0 || variable >= len(p.values) {
 				panic("invalid simulated clause variable")
 			}
 			bits := p.values[variable][word]
