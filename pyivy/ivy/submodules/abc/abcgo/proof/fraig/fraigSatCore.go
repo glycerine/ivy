@@ -60,8 +60,14 @@ func fraigSatEnsureVariables(p *Fraig_Man_t) {
 	if p.pSat == nil {
 		Fraig_ManCreateSolver(p)
 	}
-	for i := msat.Msat_SolverReadVarNum(p.pSat); i < len(p.vNodes.pArray); i++ {
+	first := msat.Msat_SolverReadVarNum(p.pSat)
+	for i := first; i < len(p.vNodes.pArray); i++ {
 		msat.Msat_SolverAddVar(p.pSat, int(p.vNodes.pArray[i].Level))
+	}
+	if first == 0 && len(p.vNodes.pArray) != 0 {
+		// FRAIG node zero denotes constant one, rather than a free SAT input.
+		msat.Msat_IntVecWriteEntry(p.vVarsUsed, 0, 1)
+		fraigSatClause(p, fraigLit(p.pConst1, false))
 	}
 	p.vAdjacents = msat.Msat_SolverReadAdjacents(p.pSat)
 }
