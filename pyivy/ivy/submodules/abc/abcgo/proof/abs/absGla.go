@@ -186,37 +186,6 @@ var spStatic_Saig_ManBmcHashKey_s_Primes [5]int32 = [5]int32{ 12582917, 25165843
   SeeAlso     []
 
 ***********************************************************************/
-func Ga2_ManAddToAbsOneStatic(p *Ga2_Man_t, pObj *Gia_Obj_t, f int32, fUseId int32) {
-    var vLeaves *Vec_Int_t;
-    var pLeaf *Gia_Obj_t;
-    var k int32;
-    var Lit int32;
-    var iLitOut int32 = Ga2_ObjFindOrAddLit( p, pObj, f );
-    assert(iLitOut > 1, "iLitOut > 1");
-    assert(Gia_ObjIsConst0(pObj) || Gia_ObjIsRo(p.pGia, pObj) || Gia_ObjIsAnd(pObj), "Gia_ObjIsConst0(pObj) || Gia_ObjIsRo(p.pGia, pObj) || Gia_ObjIsAnd(pObj)");
-    if Gia_ObjIsConst0(pObj) || (f == 0 && Gia_ObjIsRo(p.pGia, pObj)) {
-        iLitOut = Abc_LitNot( iLitOut );
-        sat_solver2_addclause( p.pSat, &iLitOut, &iLitOut + 1, fUseId ? Gia_ObjId(p.pGia, pObj) : -1 );
-    
-    } else {
-        var fUseStatic int32  = 1;
-        Vec_IntClear( p.vLits );
-        vLeaves = Ga2_ObjLeaves( p.pGia, pObj );
-        Gia_ManForEachObjVec( vLeaves, p.pGia, pLeaf, k )
-        {
-            Lit = Ga2_ObjFindOrAddLit( p, pLeaf, f - Gia_ObjIsRo(p.pGia, pObj) );
-            Vec_IntPush( p.vLits, Lit );
-            if Lit < 2 {
-                fUseStatic = 0; }
-        }
-        if (fUseStatic != 0) || Gia_ObjIsRo(p.pGia, pObj) {
-            Ga2_ManCnfAddStatic( p.pSat, Ga2_ObjCnf0(p, pObj), Ga2_ObjCnf1(p, pObj), Vec_IntArray(p.vLits), iLitOut, fUseId ? Gia_ObjId(p.pGia, pObj) : -1 );
-        } else {
-            var uTruth uint32  = Ga2_ObjComputeTruthSpecial( p.pGia, pObj, vLeaves, p.vLits );
-            Ga2_ManCnfAddDynamic( p, uTruth & 0xFFFF, Vec_IntArray(p.vLits), iLitOut, Gia_ObjId(p.pGia, pObj) );
-        }
-    }
-}
 func Ga2_ManAddToAbsOneDynamic(p *Ga2_Man_t, pObj *Gia_Obj_t, f int32) {
 //    int Id = Gia_ObjId(p->pGia, pObj);
     var vLeaves *Vec_Int_t;
