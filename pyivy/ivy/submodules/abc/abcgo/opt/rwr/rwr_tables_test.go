@@ -1,6 +1,10 @@
 package rwr
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/glycerine/abcgo/misc/extra/npn"
+)
 
 // The C loader starts with five leaves and interprets each pair as a new
 // node referring to earlier entries in the forest.
@@ -81,6 +85,27 @@ func TestLoadedForestTruthsAndVolumes(t *testing.T) {
 			if values[i] != (n.truth&(1<<input) != 0) {
 				t.Fatalf("node %d input %d: truth %#x", i, input, n.truth)
 			}
+		}
+	}
+}
+
+func TestForestClassesContainExactlyCanonicalNodes(t *testing.T) {
+	forest := rwrLoadForest(s_RwtAigSubgraphs)
+	canonical, _, _, classMap := npn.Extra_Truth4VarNPN()
+	classes, inverse := rwrClassifyForest(forest, canonical, classMap)
+	seen := make([]bool, len(forest))
+	for class, nodes := range classes {
+		for _, id := range nodes {
+			truth := forest[id].truth
+			if seen[id] || canonical[truth] != truth || int(classMap[truth]) != class || inverse[class] != truth {
+				t.Fatalf("bad class %d node %d truth %#x", class, id, truth)
+			}
+			seen[id] = true
+		}
+	}
+	for id := 5; id < len(forest); id++ {
+		if want := canonical[forest[id].truth] == forest[id].truth; seen[id] != want {
+			t.Fatalf("node %d presence %v want %v", id, seen[id], want)
 		}
 	}
 }
