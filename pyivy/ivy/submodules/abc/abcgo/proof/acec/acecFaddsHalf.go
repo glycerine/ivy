@@ -8,9 +8,7 @@ import (
 )
 
 func Gia_ManDetectHalfAdders(p *Gia_Man_t, verbose int32) *Vec_Int_t {
-	if !acecCanDetectArithmetic(p) {
-		panic("acec: half-adder detection requires AND/XOR nodes without native MUXes or buffers")
-	}
+
 	result := vec.Vec_IntAlloc(1000)
 	var counts [5]int
 	gia.Gia_ManHashStart(p)

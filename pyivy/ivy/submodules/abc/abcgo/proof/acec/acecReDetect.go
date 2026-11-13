@@ -38,9 +38,7 @@ func Ree_TruthPrecompute2() {
 	}
 }
 func Ree_ManComputeCuts(p *Gia_Man_t, pxors **Vec_Int_t, verbose int32) *Vec_Int_t {
-	if !acecCanDetectArithmetic(p) {
-		panic("acec: cut detection requires AND/XOR nodes without native MUXes or buffers")
-	}
+
 	h := vec.Hash_IntManStart(1000)
 	temp, data := vec.Vec_IntAlloc(1000), vec.Vec_IntAlloc(1000)
 	cuts := vec.Vec_IntAlloc(30 * int(gia.Gia_ManAndNum(p)))

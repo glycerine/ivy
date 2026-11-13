@@ -18,17 +18,3 @@ func acecCopyLogic(dst, src *Gia_Man_t, o *Gia_Obj_t) int32 {
 	}
 	return gia.Gia_ManAppendAnd2(dst, a, b)
 }
-
-// Arithmetic cut enumeration assumes two-input AND/XOR nodes. Fall back to
-// ordinary CEC or graph duplication when native MUXes or buffers are present.
-func acecCanDetectArithmetic(p *Gia_Man_t) bool {
-	if gia.Gia_ManMuxNum(p) != 0 {
-		return false
-	}
-	for id := int32(1); id < gia.Gia_ManObjNum(p); id++ {
-		if gia.Gia_ObjIsBuf(gia.Gia_ManObj(p, id)) != 0 {
-			return false
-		}
-	}
-	return true
-}

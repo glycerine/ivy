@@ -54,9 +54,7 @@ func Dtc_ManCutMerge(p *Gia_Man_t, id int32, list0, list1 []int32, cuts, xor2, x
 	}
 }
 func Dtc_ManComputeCuts(p *Gia_Man_t, pxor2, pxor3, pmaj **Vec_Int_t, verbose int32) {
-	if !acecCanDetectArithmetic(p) {
-		panic("acec: cut detection requires AND/XOR nodes without native MUXes or buffers")
-	}
+
 	temp := vec.Vec_IntAlloc(1000)
 	xor2, xor3, maj := vec.Vec_IntAlloc(int(gia.Gia_ManAndNum(p))), vec.Vec_IntAlloc(int(gia.Gia_ManAndNum(p))), vec.Vec_IntAlloc(int(gia.Gia_ManAndNum(p)))
 	cuts := vec.Vec_IntAlloc(30 * int(gia.Gia_ManAndNum(p)))

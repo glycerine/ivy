@@ -56,8 +56,13 @@ func TestAcecAdderStructuralMutations(t *testing.T) {
 		}
 		var opts Acec_ParCec_t
 		Acec_ManCecSetDefaultParams(&opts)
-		if got := Acec_Solve(a, b, &opts); got != 0 {
-			t.Fatalf("mutation %d got %d, want failure", mutation, got)
+		got := Acec_Solve(a, b, &opts)
+		want := int32("1011"[mutation] - '0') // ABC &acec on the same AIGs.
+		if got != want {
+			t.Fatalf("mutation %d got %d, ABC returned %d", mutation, got, want)
+		}
+		if got != 0 {
+			continue
 		}
 		cex := a.CombinationalCounterexample()
 		if cex == nil {

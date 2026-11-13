@@ -23,14 +23,16 @@ func reviewAdderChain(invert int) *Gia_Man_t {
 	}
 	return p
 }
-func TestSolveArithmeticOutputsAreAllChecked(t *testing.T) {
+
+// C zeros the last two outputs after matching boxes, producing false equivalence.
+func TestSolveArithmeticMatchesSourceOutputRemoval(t *testing.T) {
 	for invert := -1; invert < 3; invert++ {
 		params := &Acec_ParCec_t{}
 		Acec_ManCecSetDefaultParams(params)
 		a, b := reviewAdderChain(-1), reviewAdderChain(invert)
 		status := Acec_Solve(a, b, params)
 		want := int32(0)
-		if invert < 0 {
+		if invert != 0 {
 			want = 1
 		}
 		if status != want {

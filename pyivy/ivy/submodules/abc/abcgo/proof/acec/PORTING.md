@@ -1,8 +1,10 @@
 # ACEC port status
 
 The C implementation in `src/proof/acec` has been translated to Go. The
-package builds, and `go test -race -count=1 ./proof/acec` and
-`go vet ./proof/acec` pass. A fresh `go test -count=1 -cover ./proof/acec`
+package builds, and the full race tests and `go vet ./proof/acec` pass.
+Differential cases record source-inherited false-equivalence results described
+below alongside exhaustive evaluation of the original circuits. An earlier
+`go test -count=1 -cover ./proof/acec`
 reported 70.1% statement coverage. This number includes source diagnostic
 routines and does not establish verification correctness by itself.
 
@@ -16,26 +18,22 @@ multiplier and 64 polarity variants of a two-adder chain. Counterexamples are
 replayed on the original inputs. The polynomial builders also passed an
 additional 1,000 deterministic mixed-DAG stress run over all input assignments.
 
-Review fixed several correctness bugs, including discarded final outputs in
-matched ACEC, source-derived scratch cleanup failures, native XOR/MUX/buffer
+Review identified several correctness bugs, including discarded final outputs in
+matched ACEC. Other changes addressed scratch cleanup failures, native XOR/MUX/buffer
 copying errors, missing arithmetic-box handling, polarity ambiguity, signed
 signature multiplication, and polynomial handling of XOR, MUX, and constants.
 
 Intentional conservative paths and limits:
 
-- Arithmetic-box normalization can change individual output functions: the
-  original routine replaces extra roots at a rank with zero. After the boxed
-  CEC run, `Acec_Solve` separately verifies the original circuits before
-  reporting either equivalence or a counterexample. It also replays a reported
-  assignment on the original circuits and records the first differing output.
-  This additional proof can cost time and may return unknown under the conflict
-  limit even when the boxed run finishes.
-- Arithmetic-box detection assumes two-input AND/XOR cuts. For native MUX or
-  buffer graphs, `Acec_ProduceBox` declines the optimization and `Acec_Solve`
-  uses ordinary CEC; `Acec_DeriveBox` similarly returns no box. Normalization
-  duplicates the graph when no box can be derived. Direct calls to the Ree and
-  DTC cut detectors reject these unsupported native nodes with a panic rather
-  than silently omitting their fanins.
+- **Known source defect:** after matching arithmetic boxes, `Acec_Solve`
+  replaces the final two outputs with constant zero before verification, as
+  the C source does. It can therefore report equivalence for circuits whose
+  discarded outputs differ. The returned witness belongs to this modified
+  miter and may not describe a difference in the original circuits. Do not use
+  this result as a proof of the original circuit interfaces.
+- The C cut detectors process two-fanin logic and do not check for native MUX
+  or buffer nodes. The Go port retains that behavior; these routines can omit
+  native gate inputs and their results are not reliable for such graphs.
 - The original CLA carry rewrite requires a unique polarity along every path to
   each XOR input. Reconvergent XORs commonly violate that assumption. The Go
   port returns an unchanged duplicate when preflight finds ambiguous polarity;

@@ -59,13 +59,13 @@ func TestAcecSolveAdderTreesAndReplay(t *testing.T) {
 		Acec_ManCecSetDefaultParams(&opts)
 		got := Acec_Solve(left, right, &opts)
 		want := int32(1)
-		if changed {
+		if changedOutput == 0 {
 			want = 0
 		}
 		if got != want {
 			t.Fatalf("changed=%v result=%d want=%d", changed, got, want)
 		}
-		if changed {
+		if got == 0 {
 			cex := left.CombinationalCounterexample()
 			if cex == nil {
 				t.Fatal("missing counterexample")

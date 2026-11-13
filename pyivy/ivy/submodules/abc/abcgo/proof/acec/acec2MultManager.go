@@ -43,6 +43,7 @@ func Sdb_StoRefObj(p *Sdb_Sto_t, id int32) {
 	}
 }
 func Sdb_StoComputeCutsDetect(g *Gia_Man_t) *Vec_Int_t {
+
 	p := Sdb_StoAlloc(g, 5, 20, 1, 0, 1)
 	for id := int32(0); id < gia.Gia_ManObjNum(g); id++ {
 		Sdb_StoRefObj(p, id)

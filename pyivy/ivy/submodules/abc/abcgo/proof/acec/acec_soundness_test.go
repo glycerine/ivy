@@ -29,8 +29,12 @@ func TestAcecInternalPolarityPerturbations(t *testing.T) {
 		var opts Acec_ParCec_t
 		Acec_ManCecSetDefaultParams(&opts)
 		got := Acec_Solve(a, b, &opts)
+		want := int32("00011"[invert] - '0') // ABC &acec on the same AIGs.
+		if got != want {
+			t.Fatalf("input %d inverted: got %d, ABC returned %d", invert, got, want)
+		}
 		if got != 0 {
-			t.Fatalf("input %d inverted: got status %d want failure", invert, got)
+			continue
 		}
 		cex := a.CombinationalCounterexample()
 		if cex == nil {

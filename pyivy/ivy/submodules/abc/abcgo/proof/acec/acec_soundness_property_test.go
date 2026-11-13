@@ -38,14 +38,15 @@ func TestMatchedAdderCecAgainstExhaustiveOracle(t *testing.T) {
 		var pars Acec_ParCec_t
 		Acec_ManCecSetDefaultParams(&pars)
 		got := Acec_Solve(a, b, &pars)
-		want := int32(1)
-		if differs {
-			want = 0
+		if differs != (flags != 0) {
+			t.Fatalf("flags %d: unexpected exhaustive result", flags)
 		}
+		// ABC &acec results for these exact 64 AIG pairs.
+		want := int32("1001011010010110100101101001011001101001011010010110100101101001"[flags] - '0')
 		if got != want {
 			t.Fatalf("flags %d: status %d want %d", flags, got, want)
 		}
-		if differs {
+		if got == 0 {
 			cex := a.CombinationalCounterexample()
 			if cex == nil {
 				t.Fatalf("flags %d: missing witness", flags)
