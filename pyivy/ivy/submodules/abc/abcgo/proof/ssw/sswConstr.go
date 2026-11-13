@@ -13,7 +13,7 @@ import "os"
   Synopsis    [One round of SAT sweeping.]
 
   Author      [Alan Mishchenko]
-  
+
   Affiliation [UC Berkeley]
 
   Date        [Ver. 1.0. Started - September 1, 2008.]
@@ -28,7 +28,6 @@ import "os"
 
 //ABC_NAMESPACE_IMPL_START
 
-
 ////////////////////////////////////////////////////////////////////////
 ///                        DECLARATIONS                              ///
 ////////////////////////////////////////////////////////////////////////
@@ -42,13 +41,12 @@ import "os"
   Synopsis    [Constructs initialized timeframes with constraints as POs.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
@@ -62,261 +60,53 @@ import "os"
 
 ***********************************************************************/
 
+/**Function*************************************************************
+
+  Synopsis    [Performs fraiging for one node.]
+
+  Description [Returns the fraiged node.]
+
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
 
 /**Function*************************************************************
 
   Synopsis    [Performs fraiging for one node.]
 
   Description [Returns the fraiged node.]
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Performs fraiging for one node.]
 
   Description [Returns the fraiged node.]
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 /**Function*************************************************************
 
   Synopsis    [Performs fraiging for one node.]
 
   Description [Returns the fraiged node.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-
-
-
-/**Function*************************************************************
-
-  Synopsis    [Performs fraiging for one node.]
-
-  Description [Returns the fraiged node.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-
-
-/**Function*************************************************************
-
-  Synopsis    [Performs fraiging for the internal nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-
-
-/**Function*************************************************************
-
-  Synopsis    [Performs fraiging for the internal nodes.]
-
-  Description []
 
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_ManSweepBmcConstr_old(p *Ssw_Man_t) int32 {
-    var pProgress *Bar_Progress_t  = nil;
-    var pObj, pObjNew, pObjLi, pObjLo *Aig_Obj_t;
-    var i, f, iLits int32;
-    var clk abctime;
-clk = Abc_Clock();
-
-    // start initialized timeframes
-    p.pFrames = Aig_ManStart( Aig_ManObjNumMax(p.pAig) * p.pPars.nFramesK );
-    // inlining of macro Saig_ManForEachLo
-    for  i = 0; (i < Saig_ManRegNum(p.pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i+Saig_ManPiNum(p.pAig))), 1); i++  {
-        Ssw_ObjSetFrame( p, pObj, 0, Aig_ManConst0(p.pFrames) );
-    }
-
-    // build the constraint outputs
-    iLits = 0;
-    for  f = 0; f < p.pPars.nFramesK; f++  {
-        // map constants and PIs
-        Ssw_ObjSetFrame( p, Aig_ManConst1(p.pAig), f, Aig_ManConst1(p.pFrames) );
-        // inlining of macro Saig_ManForEachPi
-        // inlining of macro Vec_PtrForEachEntryStop
-        for  i = 0; (i < Saig_ManPiNum(p.pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {
-            pObjNew = Aig_ObjCreateCi(p.pFrames);
-            pObjNew.fPhase = Vec_IntEntry( p.vInits, iLits++ );
-            Ssw_ObjSetFrame( p, pObj, f, pObjNew );
-        }
-        // build the constraint cones
-        // inlining of macro Saig_ManForEachPo
-        // inlining of macro Vec_PtrForEachEntryStop
-        for  i = 0; (i < Saig_ManPoNum(p.pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, i)), 1); i++  {
-            if i < Saig_ManPoNum(p.pAig) - Saig_ManConstrNum(p.pAig) {
-                continue; }
-            pObjNew = Ssw_ManSweepBmcConstr_rec( p, Aig_ObjFanin0(pObj), f );
-            pObjNew = Aig_NotCond( pObjNew, Aig_ObjFaninC0(pObj) );
-            if Aig_Regular(pObjNew) == Aig_ManConst1(p.pFrames) {
-                assert(Aig_IsComplement(pObjNew), "Aig_IsComplement(pObjNew)");
-                continue;
-            }
-            Ssw_NodesAreConstrained( p, pObjNew, Aig_ManConst0(p.pFrames) );
-        }
-    }
-    assert(Vec_IntSize(p.vInits) == iLits + Saig_ManPiNum(p.pAig), "Vec_IntSize(p.vInits) == iLits + Saig_ManPiNum(p.pAig)");
-
-    // sweep internal nodes
-    p.fRefined = 0;
-    if p.pPars.fVerbose {
-        pProgress = Bar_ProgressStart( os.Stdout, Aig_ManObjNumMax(p.pAig) * p.pPars.nFramesK ); }
-    for  f = 0; f < p.pPars.nFramesK; f++  {
-        // sweep internal nodes
-        // inlining of macro Aig_ManForEachNode
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(p.pAig.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-            if p.pPars.fVerbose {
-                Bar_ProgressUpdate( pProgress, Aig_ManObjNumMax(p.pAig) * f + i, nil ); }
-            pObjNew = Aig_And( p.pFrames, Ssw_ObjChild0Fra(p, pObj, f), Ssw_ObjChild1Fra(p, pObj, f) );
-            Ssw_ObjSetFrame( p, pObj, f, pObjNew );
-            p.fRefined |= Ssw_ManSweepNodeConstr( p, pObj, f, 1 );
-        }
-        }
-        // quit if this is the last timeframe
-        if f == p.pPars.nFramesK - 1 {
-            break; }
-        // transfer latch input to the latch outputs
-        // inlining of macro Aig_ManForEachCo
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(p.pAig.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, i)), 1); i++  {
-            Ssw_ObjSetFrame( p, pObj, f, Ssw_ObjChild0Fra(p, pObj, f) );
-        }
-        // build logic cones for register outputs
-        // inlining of macro Saig_ManForEachLiLo
-        for  i = 0; (i < Saig_ManRegNum(p.pAig)) && (((pObjLi) = Saig_ManLi(p.pAig, i)), 1)            && (((pObjLo)=Saig_ManLo(p.pAig, i)), 1); i++  {
-            pObjNew = Ssw_ObjFrame( p, pObjLi, f );
-            Ssw_ObjSetFrame( p, pObjLo, f+1, pObjNew );
-            Ssw_CnfNodeAddToSolver( p.pMSat, Aig_Regular(pObjNew) );//
-        }
-    }
-    if p.pPars.fVerbose {
-        Bar_ProgressStop( pProgress ); }
-
-    // cleanup
-//    Ssw_ClassesCheck( p->ppClasses );
-p.timeBmc += Abc_Clock() - clk;
-    return p.fRefined;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Performs fraiging for the internal nodes.]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ssw_ManSweepBmcConstr(p *Ssw_Man_t) int32 {
-    var pObj, pObjNew, pObjLi, pObjLo *Aig_Obj_t;
-    var i, f, iLits int32;
-    var clk abctime;
-clk = Abc_Clock();
-
-    // start initialized timeframes
-    p.pFrames = Aig_ManStart( Aig_ManObjNumMax(p.pAig) * p.pPars.nFramesK );
-    // inlining of macro Saig_ManForEachLo
-    for  i = 0; (i < Saig_ManRegNum(p.pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i+Saig_ManPiNum(p.pAig))), 1); i++  {
-        Ssw_ObjSetFrame( p, pObj, 0, Aig_ManConst0(p.pFrames) );
-    }
-
-    // build the constraint outputs
-    iLits = 0;
-    p.fRefined = 0;
-    for  f = 0; f < p.pPars.nFramesK; f++  {
-        // map constants and PIs
-        Ssw_ObjSetFrame( p, Aig_ManConst1(p.pAig), f, Aig_ManConst1(p.pFrames) );
-        // inlining of macro Saig_ManForEachPi
-        // inlining of macro Vec_PtrForEachEntryStop
-        for  i = 0; (i < Saig_ManPiNum(p.pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {
-            pObjNew = Aig_ObjCreateCi(p.pFrames);
-            pObjNew.fPhase = Vec_IntEntry( p.vInits, iLits++ );
-            Ssw_ObjSetFrame( p, pObj, f, pObjNew );
-        }
-        // build the constraint cones
-        // inlining of macro Saig_ManForEachPo
-        // inlining of macro Vec_PtrForEachEntryStop
-        for  i = 0; (i < Saig_ManPoNum(p.pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, i)), 1); i++  {
-            if i < Saig_ManPoNum(p.pAig) - Saig_ManConstrNum(p.pAig) {
-                continue; }
-            pObjNew = Ssw_ManSweepBmcConstr_rec( p, Aig_ObjFanin0(pObj), f );
-            pObjNew = Aig_NotCond( pObjNew, Aig_ObjFaninC0(pObj) );
-            if Aig_Regular(pObjNew) == Aig_ManConst1(p.pFrames) {
-                assert(Aig_IsComplement(pObjNew), "Aig_IsComplement(pObjNew)");
-                continue;
-            }
-            Ssw_NodesAreConstrained( p, pObjNew, Aig_ManConst0(p.pFrames) );
-        }        
-        // sweep flops
-        // inlining of macro Saig_ManForEachLo
-        for  i = 0; (i < Saig_ManRegNum(p.pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i+Saig_ManPiNum(p.pAig))), 1); i++  {
-            p.fRefined |= Ssw_ManSweepNodeConstr( p, pObj, f, 1 );
-        }
-        // sweep internal nodes
-        // inlining of macro Aig_ManForEachNode
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(p.pAig.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-            pObjNew = Aig_And( p.pFrames, Ssw_ObjChild0Fra(p, pObj, f), Ssw_ObjChild1Fra(p, pObj, f) );
-            Ssw_ObjSetFrame( p, pObj, f, pObjNew );
-            p.fRefined |= Ssw_ManSweepNodeConstr( p, pObj, f, 1 );
-        }
-        }
-        // quit if this is the last timeframe
-        if f == p.pPars.nFramesK - 1 {
-            break; }
-        // transfer latch input to the latch outputs
-        // inlining of macro Aig_ManForEachCo
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(p.pAig.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, i)), 1); i++  {
-            Ssw_ObjSetFrame( p, pObj, f, Ssw_ObjChild0Fra(p, pObj, f) );
-        }
-        // build logic cones for register outputs
-        // inlining of macro Saig_ManForEachLiLo
-        for  i = 0; (i < Saig_ManRegNum(p.pAig)) && (((pObjLi) = Saig_ManLi(p.pAig, i)), 1)            && (((pObjLo)=Saig_ManLo(p.pAig, i)), 1); i++  {
-            pObjNew = Ssw_ObjFrame( p, pObjLi, f );
-            Ssw_ObjSetFrame( p, pObjLo, f+1, pObjNew );
-            Ssw_CnfNodeAddToSolver( p.pMSat, Aig_Regular(pObjNew) );//
-        }
-    }
-    assert(Vec_IntSize(p.vInits) == iLits + Saig_ManPiNum(p.pAig), "Vec_IntSize(p.vInits) == iLits + Saig_ManPiNum(p.pAig)");
-
-    // cleanup
-//    Ssw_ClassesCheck( p->ppClasses );
-p.timeBmc += Abc_Clock() - clk;
-    return p.fRefined;
-}
-
-
-
 
 /**Function*************************************************************
 
@@ -330,7 +120,17 @@ p.timeBmc += Abc_Clock() - clk;
 
 ***********************************************************************/
 
+/**Function*************************************************************
 
+  Synopsis    [Performs fraiging for the internal nodes.]
+
+  Description []
+
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
 
 /**Function*************************************************************
 
@@ -343,99 +143,33 @@ p.timeBmc += Abc_Clock() - clk;
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_ManSweepConstr(p *Ssw_Man_t) int32 {
-    var pProgress *Bar_Progress_t  = nil;
-    var pObj, pObj2, pObjNew *Aig_Obj_t;
-    var nConstrPairs, i, f, iLits int32;
-    var clk abctime;
-//Ssw_ManPrintPolarity( p->pAig );
 
-    // perform speculative reduction
-clk = Abc_Clock();
-    // create timeframes
-    p.pFrames = Ssw_FramesWithClasses( p );
-    // add constants
-    nConstrPairs = Aig_ManCoNum(p.pFrames)-Aig_ManRegNum(p.pAig);
-    assert((nConstrPairs & 1) == 0, "(nConstrPairs & 1) == 0");
-    for  i = 0; i < nConstrPairs; i += 2  {
-        pObj  = Aig_ManCo( p.pFrames, i   );
-        pObj2 = Aig_ManCo( p.pFrames, i+1 );
-        Ssw_NodesAreConstrained( p, Aig_ObjChild0(pObj), Aig_ObjChild0(pObj2) );
-    }
-    // build logic cones for register inputs
-    for  i = 0; i < Aig_ManRegNum(p.pAig); i++  {
-        pObj  = Aig_ManCo( p.pFrames, nConstrPairs + i );
-        Ssw_CnfNodeAddToSolver( p.pMSat, Aig_ObjFanin0(pObj) );//
-    }
+/**Function*************************************************************
 
-    // map constants and PIs of the last frame
-    f = p.pPars.nFramesK;
-//    iLits = 0;
-    iLits = f * Saig_ManPiNum(p.pAig);
-    Ssw_ObjSetFrame( p, Aig_ManConst1(p.pAig), f, Aig_ManConst1(p.pFrames) );
-    // inlining of macro Saig_ManForEachPi
-    // inlining of macro Vec_PtrForEachEntryStop
-    for  i = 0; (i < Saig_ManPiNum(p.pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {
-        pObjNew = Aig_ObjCreateCi(p.pFrames);
-        pObjNew.fPhase = (p.vInits != nil) && Vec_IntEntry(p.vInits, iLits++);
-        Ssw_ObjSetFrame( p, pObj, f, pObjNew );
-    }
-    assert(Vec_IntSize(p.vInits) == iLits, "Vec_IntSize(p.vInits) == iLits");
-p.timeReduce += Abc_Clock() - clk;
+  Synopsis    [Performs fraiging for the internal nodes.]
 
-    // add constraints to all timeframes
-    for  f = 0; f <= p.pPars.nFramesK; f++  {
-        // inlining of macro Saig_ManForEachPo
-        // inlining of macro Vec_PtrForEachEntryStop
-        for  i = 0; (i < Saig_ManPoNum(p.pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, i)), 1); i++  {
-            if i < Saig_ManPoNum(p.pAig) - Saig_ManConstrNum(p.pAig) {
-                continue; }
-            Ssw_FramesWithClasses_rec( p, Aig_ObjFanin0(pObj), f );
-//            if ( Aig_Regular(Ssw_ObjChild0Fra(p,pObj,f)) == Aig_ManConst1(p->pFrames) )
-            if Ssw_ObjChild0Fra(p,pObj,f) == Aig_ManConst0(p.pFrames) {
-                continue; }
-            assert(Ssw_ObjChild0Fra(p,pObj,f) != Aig_ManConst1(p.pFrames), "Ssw_ObjChild0Fra(p,pObj,f) != Aig_ManConst1(p.pFrames)");
-            if Ssw_ObjChild0Fra(p,pObj,f) == Aig_ManConst1(p.pFrames) {
-                Abc_Print( 1, "Polarity violation.\n" );
-                continue;
-            }
-            Ssw_NodesAreConstrained( p, Ssw_ObjChild0Fra(p,pObj,f), Aig_ManConst0(p.pFrames) );
-        }
-    }
-    f = p.pPars.nFramesK;
-    // clean the solver
-    sat_solver_simplify( p.pMSat.pSat );
+  Description []
 
+  SideEffects []
 
-    // sweep internal nodes
-    p.fRefined = 0;
-    Ssw_ClassesClearRefined( p.ppClasses );
-    if p.pPars.fVerbose {
-        pProgress = Bar_ProgressStart( os.Stdout, Aig_ManObjNumMax(p.pAig) ); }
-    // inlining of macro Aig_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.pAig.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {
-        if p.pPars.fVerbose {
-            Bar_ProgressUpdate( pProgress, i, nil ); }
-        if Saig_ObjIsLo(p.pAig, pObj) {
-            p.fRefined |= Ssw_ManSweepNodeConstr( p, pObj, f, 0 );
-        } else if Aig_ObjIsNode(pObj) {
-            pObjNew = Aig_And( p.pFrames, Ssw_ObjChild0Fra(p, pObj, f), Ssw_ObjChild1Fra(p, pObj, f) );
-            Ssw_ObjSetFrame( p, pObj, f, pObjNew );
-            p.fRefined |= Ssw_ManSweepNodeConstr( p, pObj, f, 0 );
-        }
-    }
-    }
-    if p.pPars.fVerbose {
-        Bar_ProgressStop( pProgress ); }
-    // cleanup
-//    Ssw_ClassesCheck( p->ppClasses );
-    return p.fRefined;
-}
+  SeeAlso     []
+
+***********************************************************************/
+
+/**Function*************************************************************
+
+  Synopsis    [Performs fraiging for the internal nodes.]
+
+  Description []
+
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
 
 ////////////////////////////////////////////////////////////////////////
 ///                       END OF FILE                                ///
 ////////////////////////////////////////////////////////////////////////
-
 
 //ABC_NAMESPACE_IMPL_END
