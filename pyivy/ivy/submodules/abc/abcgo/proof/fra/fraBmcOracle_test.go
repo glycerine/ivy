@@ -47,13 +47,16 @@ func TestBoundedMiterAgainstEnumeratedTraces(t *testing.T) {
 				r0, r1 = outputs[2], outputs[3]
 			}
 		}
-		Fra_BmcPerformSimple(g, 3, 10000, 0, 0)
-		cex := g.SequentialCounterexample()
-		if cex != nil && (cex.IFrame >= 3 || saig.Saig_ManVerifyCex(g, cex) == 0) {
-			t.Fatalf("trial %d invalid cex %+v", trial, cex)
-		}
-		if (cex != nil) != fails {
-			t.Fatalf("trial %d BMC witness %v oracle fails %t", trial, cex, fails)
+		for _, rewrite := range []int32{0, 1} {
+			g.ClearSequentialCounterexample()
+			Fra_BmcPerformSimple(g, 3, 10000, rewrite, 0)
+			cex := g.SequentialCounterexample()
+			if cex != nil && (cex.IFrame >= 3 || saig.Saig_ManVerifyCex(g, cex) == 0) {
+				t.Fatalf("trial %d rewrite=%d invalid cex %+v", trial, rewrite, cex)
+			}
+			if (cex != nil) != fails {
+				t.Fatalf("trial %d rewrite=%d BMC witness %v oracle fails %t", trial, rewrite, cex, fails)
+			}
 		}
 	}
 }
