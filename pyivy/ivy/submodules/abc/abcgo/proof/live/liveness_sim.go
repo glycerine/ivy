@@ -12,7 +12,11 @@ func LivenessToSafetyTransformationSim(n *Network, p *aig.Graph, live, fair []ai
 	return result.Graph
 }
 func LivenessToSafetyTransformationOneStepLoopSim(n *Network, p *aig.Graph, live, fair []aig.Edge) *aig.Graph {
-	return LivenessToSafetyTransformationOneStepLoop(IGNORE_SAFETY_KEEP_LIVENESS_ONE_LOOP_MODE, n, p, live, fair, nil, nil)
+	result, err := LivenessToSafety(n, TransformOptions{Mode: IGNORE_SAFETY_KEEP_LIVENESS_ONE_LOOP_MODE, Liveness: live, Fairness: fair, Restartable: true})
+	if err != nil {
+		panic(err)
+	}
+	return result.Graph
 }
 func Abc_CommandAbcLivenessToSafetySim(frame *Frame, argc int32, argv []string) int32 {
 	return commandTransform(frame, argv, false, true, false)

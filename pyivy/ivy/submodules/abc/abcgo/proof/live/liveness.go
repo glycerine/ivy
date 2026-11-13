@@ -54,6 +54,11 @@ func LivenessToSafety(network *Network, options TransformOptions) (*Network, err
 		return nil, fmt.Errorf("live: invalid transformation mode")
 	}
 	oneStep := options.Mode == 3 || options.Mode == 4
+	// The proof-oriented C one-step constructor returns its input AIG when
+	// there are no registers; the separate simulation constructor does not.
+	if oneStep && !options.Restartable && regs == 0 {
+		return network, nil
+	}
 	doLive := options.Mode != 1
 	doSafety := options.Mode == 0 || options.Mode == 1 || options.Mode == 4
 	copyGraph := newGraphCopy(p, "_l2s")
@@ -231,6 +236,9 @@ func LivenessToSafetyTransformationAbs(mode int32, n *Network, p *aig.Graph, flo
 	return result.Graph
 }
 func LivenessToSafetyTransformationOneStepLoop(mode int32, n *Network, p *aig.Graph, live, fair, assertions, assumptions []aig.Edge) *aig.Graph {
+	if p != nil && registers(p) == 0 {
+		return p
+	}
 	if mode == 0 {
 		mode = 4
 	}
