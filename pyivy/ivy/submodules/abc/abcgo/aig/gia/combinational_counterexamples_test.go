@@ -36,3 +36,28 @@ func TestCombinationalCounterexamplesIncludeCOsAndOwnData(t *testing.T) {
 		t.Fatal("invalid replacement changed stored results")
 	}
 }
+
+func TestCombinationalWitnessInSequentialSlotIncludesRegisterIO(t *testing.T) {
+	g := Gia_ManStart(8)
+	pi, ro := Gia_ManAppendCi(g), Gia_ManAppendCi(g)
+	Gia_ManAppendCo(g, pi)
+	Gia_ManAppendCo(g, ro)
+	Gia_ManSetRegNum(g, 1)
+	model := util.Abc_CexAlloc(0, 2, 1)
+	model.IPo = 1
+	model.PData[0] = 2
+	if err := g.SetCombinationalCounterexampleInSequentialSlot(model); err != nil {
+		t.Fatal(err)
+	}
+	model.PData[0] = 0
+	if got := g.SequentialCounterexample(); got == nil || got.IPo != 1 || got.PData[0] != 2 {
+		t.Fatalf("unexpected witness %+v", got)
+	}
+	bad := util.Abc_CexAlloc(1, 1, 1)
+	if err := g.SetCombinationalCounterexampleInSequentialSlot(bad); err == nil {
+		t.Fatal("accepted sequential witness")
+	}
+	if g.SequentialCounterexample().PData[0] != 2 {
+		t.Fatal("invalid witness changed stored data")
+	}
+}

@@ -54,3 +54,20 @@ func (p *Gia_Man_t) CombinationalCounterexamples() []*util.Abc_Cex_t {
 	}
 	return models
 }
+
+// SetCombinationalCounterexampleInSequentialSlot stores the single
+// combinational witness used by ABC's Cec4 sweep in its sequential-witness
+// slot. Register outputs are treated as CIs and register inputs as COs.
+func (p *Gia_Man_t) SetCombinationalCounterexampleInSequentialSlot(model *util.Abc_Cex_t) error {
+	if p == nil || model == nil {
+		return fmt.Errorf("gia: nil combinational CEX")
+	}
+	n := Gia_ManCiNum(p)
+	if model.NRegs != 0 || model.NPis != n || model.NBits != n || model.IFrame != 0 || model.IPo < 0 || model.IPo >= Gia_ManCoNum(p) || int64(len(model.PData))*32 < int64(n) {
+		return fmt.Errorf("gia: invalid combinational CEX dimensions")
+	}
+	owned := *model
+	owned.PData = append([]uint32(nil), model.PData[:(int64(n)+31)/32]...)
+	p.pCexSeq = &owned
+	return nil
+}
