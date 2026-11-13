@@ -10,6 +10,10 @@ Similarity and pair-driver tests cover equivalent and inequivalent sequential
 graphs and deadline handling. Rarity tests cover bin widths 1 through 16,
 including word-boundary crossings, and replay multi-round witnesses. A
 connected-components oracle checks candidate pair classes across 500 graphs.
+An original-C latch fixture checks dynamic correspondence with both local and
+global simulation and aggressive solver-recycling thresholds. Both C runs
+retain one latch, one PI and one PO; the Go tests also compare all four-frame
+input traces for the fixture. The C probe is in `test_vectors/`.
 
 ABC's `Aig_ManReprStart` explicitly asserts `Aig_ManBufNum(p) == 0` in
 `src/aig/aig/aigRepr.c:47`. The Go `aig.Aig_ManReprStart` preserves this
