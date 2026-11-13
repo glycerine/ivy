@@ -101,13 +101,10 @@ func sat_solver_add_and(s *sat_solver, output, input0, input1, complement0, comp
 
 func sat_solver_var_value(s *sat_solver, variable int32) int32 {
 	value, ok := s.Value(variable)
-	if !ok {
-		return l_Undef
+	if ok && value {
+		return 1
 	}
-	if value {
-		return l_True
-	}
-	return l_False
+	return 0
 }
 
 func sat_solver_final(s *sat_solver, output *[]int32) int32 {

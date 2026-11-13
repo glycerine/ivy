@@ -95,3 +95,17 @@ func TestSATBridgeClauseExpandsVariableRange(t *testing.T) {
 		t.Fatalf("contradicting assignment status = %d, want unsatisfiable", got)
 	}
 }
+
+func TestSATBridgeModelValueUsesBooleanConvention(t *testing.T) {
+	s := sat_solver_new()
+	sat_solver_setnvars(s, 2)
+	if got := sat_solver_solve(s, []int32{sat_literal(0, 0), sat_literal(1, 1)}, 0, 0, 0, 0); got != l_True {
+		t.Fatalf("solve status %d", got)
+	}
+	if got := sat_solver_var_value(s, 0); got != 1 {
+		t.Fatalf("true model value %d", got)
+	}
+	if got := sat_solver_var_value(s, 1); got != 0 {
+		t.Fatalf("false model value %d, want 0", got)
+	}
+}

@@ -55,6 +55,8 @@ establish behavior of the Go implementation, not equivalence to executable C.
 `Int2_ManCreateFrames` in `int2Bmc.c` likewise refers to undeclared `f`,
 `iObj`, and `pFrames` and has inconsistent SAT-manager arguments. Its Go
 implementation is reconstructed and has no executable C oracle.
+The manager constructor in `int2Int.h` calls `Gia_ManHashAlloc(pFrames)`
+without declaring `pFrames`; the Go constructor infers `pGiaPref` there.
 In particular, the C AND branch passes the two mapped fanin literals to
 `Gia_ManHashAnd` without applying the source fanin complement bits; the Go
 implementation currently applies those bits. This is a difference in the
@@ -80,6 +82,14 @@ source-confirmed behavior. The current Go entry point does not return an
 unsupported status, so callers must treat the whole incremental frame builder
 as unsupported for source-fidelity purposes until a complete C contract is
 available; individual matching branches do not validate the full operation.
+
+The Go `Int2_ManCheckFrames` returns -1 for missing frame/object mappings,
+whereas the C helper directly indexes the vectors. The Go `Int2_ManCheckBmc`
+returns undecided for an unconstructed output unless another output is known
+to fail; C instead passes the unchecked mapping to its SAT call. The tests for
+these Go outcomes describe defensive behavior, not an established C contract.
+Likewise, `Int2_ManSetupBmcSolver` checks whether adding an output buffer
+fails and returns nil, while the C code ignores that return value.
 
 The graph-copy and frame helpers follow the checked-in C loop, which treats
 all `Gia_ManForEachAnd` nodes as ordinary ANDs. This changes native XOR/MUX

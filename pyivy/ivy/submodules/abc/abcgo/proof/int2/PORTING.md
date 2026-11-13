@@ -8,9 +8,10 @@ field, including `pFileName`, is cleared before defaults are applied.
 The C-object access in `Int2_ManDupInit`, `Int2_ManFrameInit`, and
 `Int2_ManRefineCube` has been rewritten to use the public GIA accessors. This
 removes invalid C-style assignment expressions from the first two construction
-paths and preserves the source algorithms for initialization muxing,
-timeframe unrolling, and the source cube-justification behavior, including
-its documented defects.
+paths. The Go helpers follow the source's initialization muxing and
+cube-justification behavior, including its documented defects. Unrolling and
+incremental frame construction include inferred behavior where the C source is
+incomplete; their Go tests do not establish equivalence to executable C.
 
 `sat_bridge.go` adapts INT2's local SAT calls to the public `bsat.Solver`
 interface. Exhaustive assumption tests cover all input and output phases for
