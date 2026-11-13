@@ -150,7 +150,7 @@ func Cec2_ManPerformSweeping(p *Gia_Man_t, pPars *Cec2_Par_t, ppNew **Gia_Man_t)
 	settings := cec2SweepSettings{
 		words: int(pPars.nSimWords), rounds: int(pPars.nSimRounds),
 		iterations: int(pPars.nItersMax), conflictLimit: int64(pPars.nConfLimit),
-		useCones: pPars.fUseCones != 0, isMiter: pPars.fIsMiter != 0, finishGraph: ppNew != nil,
+		useCones: pPars.fUseCones != 0, isMiter: pPars.fIsMiter != 0, finishGraph: ppNew != nil, verbose: pPars.fVerbose != 0, veryVerbose: pPars.fVeryVerbose != 0,
 	}
 	reduced, _, cex := cec2SweepEquivalences(p, settings)
 	if ppNew != nil && reduced != nil {

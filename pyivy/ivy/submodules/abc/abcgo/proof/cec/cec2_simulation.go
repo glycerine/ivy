@@ -4,6 +4,7 @@ import (
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/sat/satoko"
 	"math/bits"
+	"time"
 )
 
 // cec2RandomizeCIs preserves pattern zero as the all-zero assignment, as in
@@ -22,6 +23,11 @@ func cec2RandomizeCIs(sim *cec3Simulation, graph *gia.Gia_Man_t) {
 // cec2SimulateAnds replays all patterns and refines each existing candidate
 // class exactly once, matching Cec2_ManSimulate.
 func cec2SimulateAnds(sim *cec3Simulation, graph *gia.Gia_Man_t) {
+	cec2SimulateAndsTimed(sim, graph)
+}
+
+func cec2SimulateAndsTimed(sim *cec3Simulation, graph *gia.Gia_Man_t) (int64, int64) {
+	start := time.Now()
 	for id := int32(1); int(id) < graph.ObjectCount(); id++ {
 		_, _, _, kind := graph.Gate(id)
 		switch kind {
@@ -32,6 +38,8 @@ func cec2SimulateAnds(sim *cec3Simulation, graph *gia.Gia_Man_t) {
 			panic("cec: Cec2 simulation requires an AND-inverter graph")
 		}
 	}
+	simTime := time.Since(start).Nanoseconds()
+	start = time.Now()
 	if graph.HasRepresentatives() {
 		for id := int32(0); int(id) < graph.ObjectCount(); id++ {
 			if gia.Gia_ObjIsHead(graph, id) != 0 {
@@ -39,6 +47,7 @@ func cec2SimulateAnds(sim *cec3Simulation, graph *gia.Gia_Man_t) {
 			}
 		}
 	}
+	return simTime, time.Since(start).Nanoseconds()
 }
 
 // cec2FailingOutput returns the first output and simulation pattern that is

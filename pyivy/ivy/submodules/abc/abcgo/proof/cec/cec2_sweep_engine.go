@@ -4,6 +4,7 @@ import (
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/sat/satoko"
+	"time"
 )
 
 // cec2SweepSettings holds the controls used by Cec2_ManPerformSweeping.
@@ -13,6 +14,7 @@ type cec2SweepSettings struct {
 	useCones                  bool
 	isMiter                   bool
 	finishGraph               bool
+	verbose, veryVerbose      bool
 }
 
 // cec2SweepEquivalences performs Cec2's simulation-guided SAT sweeping and
@@ -46,22 +48,29 @@ func cec2SweepEquivalences(g *gia.Gia_Man_t, opts cec2SweepSettings) (*gia.Gia_M
 	gia.Gia_ManRandomW(1)
 	gia.Gia_ManSetPhase(g)
 	sim := newCec3Simulation(g.ObjectCount(), opts.words)
+	telemetry := &cecSweepTiming{start: time.Now()}
+	defer telemetry.print(opts.verbose)
+	simulate := func() { a, b := cec2SimulateAndsTimed(sim, g); telemetry.simTime += a; telemetry.refineTime += b }
 	cec2RandomizeCIs(sim, g)
-	cec2SimulateAnds(sim, g)
+	simulate()
 	if opts.isMiter {
 		if cex := cec2CaptureMiterFailure(sim, g); cex != nil {
 			return nil, sim, cex
 		}
 	}
+	classStart := time.Now()
 	sim.createClasses(g)
+	telemetry.refineTime += time.Since(classStart).Nanoseconds()
+	telemetry.classes(g, opts.verbose, opts.veryVerbose)
 	for i := 0; i < opts.rounds; i++ {
 		cec2RandomizeCIs(sim, g)
-		cec2SimulateAnds(sim, g)
+		simulate()
 		if opts.isMiter {
 			if cex := cec2CaptureMiterFailure(sim, g); cex != nil {
 				return nil, sim, cex
 			}
 		}
+		telemetry.classes(g, opts.verbose, opts.veryVerbose)
 	}
 	pattern := 0
 	var failure *util.Abc_Cex_t
@@ -94,9 +103,12 @@ func cec2SweepEquivalences(g *gia.Gia_Man_t, opts cec2SweepSettings) (*gia.Gia_M
 				gia.Gia_ObjSetProved(g, id)
 				continue
 			}
+			satStart := time.Now()
 			status, inputs := cnf.solveTwoWithCone(copies[repr]>>1, lit>>1, phase, opts.conflictLimit, opts.useCones)
 			switch status {
 			case satoko.SATOKO_SAT:
+				telemetry.sat++
+				telemetry.satTime += time.Since(satStart).Nanoseconds()
 				pattern++
 				if pattern == 64*opts.words {
 					pattern = 1
@@ -106,26 +118,34 @@ func cec2SweepEquivalences(g *gia.Gia_Man_t, opts cec2SweepSettings) (*gia.Gia_M
 				gia.Gia_ObjSetValue(gia.Gia_ManObj(g, id), -1)
 				disproved = true
 			case satoko.SATOKO_UNSAT:
+				telemetry.unsat++
+				telemetry.unsatTime += time.Since(satStart).Nanoseconds()
 				copies[id] = copies[repr] ^ (gia.Gia_ObjPhase(gia.Gia_ManObj(g, id)) ^ gia.Gia_ObjPhase(gia.Gia_ManObj(g, repr)))
 				gia.Gia_ObjSetValue(gia.Gia_ManObj(g, id), copies[id])
 				gia.Gia_ObjSetProved(g, id)
 			default:
+				telemetry.undec++
+				telemetry.undecTime += time.Since(satStart).Nanoseconds()
 				gia.Gia_ObjSetFailed(g, id)
 			}
 			if !opts.useCones {
+				extraStart := time.Now()
 				cnf.rollback()
+				telemetry.extraTime += time.Since(extraStart).Nanoseconds()
 			}
 		}
 		if !disproved {
+			telemetry.classes(g, opts.verbose, opts.veryVerbose)
 			break
 		}
-		cec2SimulateAnds(sim, g)
+		simulate()
 		if opts.isMiter {
 			failure = cec2CaptureMiterFailure(sim, g)
 			if failure != nil {
 				break
 			}
 		}
+		telemetry.classes(g, opts.verbose, opts.veryVerbose)
 	}
 	if !opts.finishGraph {
 		return nil, sim, failure
