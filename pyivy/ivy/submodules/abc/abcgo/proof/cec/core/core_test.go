@@ -343,3 +343,36 @@ func TestMutableConflictBudget(t *testing.T) {
 		t.Fatalf("query after budget update: %+v %v", result, err)
 	}
 }
+
+// An UNSAT conjunction adds a permanent binary clause. That learned fact must
+// survive later phase-flipped queries and solver recycling without poisoning an
+// unrelated satisfiable conjunction or its witness.
+func TestConjunctionUnsatThenRecycleAndWitness(t *testing.T) {
+	for _, flip := range []bool{false, true} {
+		c := newCircuit(2)
+		a, b := c.inputs[0], c.inputs[1]
+		both := c.add(And, a, b, 0)
+		m, err := NewManager(c, Options{PolarFlip: flip, MaxSATVariables: 1, RecycleQueries: 1})
+		if err != nil {
+			t.Fatal(err)
+		}
+		r, err := m.CheckConjunction(both, a^1)
+		if err != nil || r.Status != Equivalent {
+			t.Fatalf("flip=%v unsat: %+v %v", flip, r, err)
+		}
+		r, err = m.CheckConjunction(both, b)
+		if err != nil || r.Status != Different || r.Counterexample == nil {
+			t.Fatalf("flip=%v sat: %+v %v", flip, r, err)
+		}
+		if !r.Counterexample.Inputs[0] || !r.Counterexample.Inputs[1] {
+			t.Fatalf("flip=%v witness: %+v", flip, r.Counterexample)
+		}
+		if m.Statistics().Recycles == 0 {
+			t.Fatalf("flip=%v expected recycle: %+v", flip, m.Statistics())
+		}
+		r, err = m.CheckConjunction(both, a^1)
+		if err != nil || r.Status != Equivalent {
+			t.Fatalf("flip=%v unsat after recycle: %+v %v", flip, r, err)
+		}
+	}
+}
