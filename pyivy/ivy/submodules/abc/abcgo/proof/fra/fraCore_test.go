@@ -124,3 +124,26 @@ func TestFraFraigProveReturnsSimulationWitness(t *testing.T) {
 		t.Fatalf("invalid witness %v, output %v, error %v", model, got, err)
 	}
 }
+
+// A mapped-sweep callback runs against the live manager before finalizing its
+// result. Mutations through the legacy manager API must affect that result.
+func TestFraMappedCallbackCanReplaceLiveNodeMapping(t *testing.T) {
+	g := aig.NewGraph()
+	a, b := g.NewInput(), g.NewInput()
+	gate := g.AND(a, b)
+	g.AddOutput(gate)
+	var calls int
+	reduced, mapping := Fra_FraigEquivenceMapped(g, 100, 0, func(m *Fra_Man_t) {
+		calls++
+		Fra_ObjSetFraig(m, gate, 0, m.pManFraig.Const0())
+	})
+	if calls != 1 || reduced == nil || mapping[gate.NodeID()] != reduced.Const0() {
+		t.Fatalf("callback=%d mapping=%v", calls, mapping)
+	}
+	for mask := 0; mask < 4; mask++ {
+		out, err := reduced.Evaluate([]bool{mask&1 != 0, mask&2 != 0})
+		if err != nil || out[0] {
+			t.Fatalf("input %d output %v error %v", mask, out, err)
+		}
+	}
+}
