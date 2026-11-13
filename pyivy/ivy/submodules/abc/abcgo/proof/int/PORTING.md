@@ -87,10 +87,20 @@ containment check, and BSAT proof replay receive the same absolute deadline
 and clock domain. As in C, the optional MiniSat solve and its proof replay,
 DAR rewriting, initial-state check, and subsequent BMC witness search do not
 receive that deadline. A proof can therefore complete after the nominal limit
-before the driver's next timeout check. The Go witness builder is a separate
-reconstruction of the C scalable-BMC call and is not a complete source port.
-Tests cover the BSAT clock domain, MiniSat's proof-before-timeout boundary,
-an exhausted MiniSat conflict budget, and backend cleanup. Exhaustive tests
-are limited to small formulas and state spaces; they do not establish
-performance or completion on large instances. Several reported timing
-counters still use Go elapsed time rather than the C CPU clock.
+before the driver's next timeout check.
+
+The Go witness builder is a bounded reconstruction, not a port of the
+`Saig_ManBmcScalable` call in `intCore.c`: it solves exactly the requested
+unrolling with a 1,000,000-conflict limit, while the C caller configures
+scalable BMC with a 100,000,000-conflict limit and starts at the current
+interpolation frame. The Go reconstruction also handles constraint outputs,
+which the C helper in `intCtrex.c` does not cover. Extracted Go witnesses are
+replayed across every frame and rejected if the property, transition, or
+constraint check fails. `TestCounterexampleUnrollingBoundAndConstrainedTrace`
+records the exact-horizon behavior and frame-major PI layout; it does not
+claim equivalence to scalable BMC. Tests cover the BSAT clock domain, MiniSat's
+proof-before-timeout boundary, an exhausted MiniSat conflict budget, and
+backend cleanup. Exhaustive tests are limited to small formulas and state
+spaces; they do not establish performance or completion on large instances.
+Several reported timing counters still use Go elapsed time rather than the C
+CPU clock.

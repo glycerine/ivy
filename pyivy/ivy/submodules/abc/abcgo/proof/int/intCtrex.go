@@ -110,8 +110,55 @@ func interManGetCounterExample(src *aig.Graph, nFrames, verbose int32, deadline 
 			util.Abc_InfoSetBit(result.PData, regs+int32(i))
 		}
 	}
+	if !interVerifyCounterExample(src, result) {
+		if verbose != 0 {
+			fmt.Println("Counterexample generation: extracted witness failed verification")
+		}
+		return nil
+	}
 	if verbose != 0 {
 		fmt.Printf("Counterexample generation: %s\n", time.Since(started))
 	}
 	return result
+}
+
+// interVerifyCounterExample mirrors the source's Saig_ManVerifyCex call and
+// additionally checks the constraint outputs supported by this Go path.
+func interVerifyCounterExample(src *aig.Graph, cex *util.Abc_Cex_t) bool {
+	if src == nil || cex == nil || cex.IFrame < 0 || cex.IPo != 0 || cex.NRegs != src.RegisterCount() {
+		return false
+	}
+	regs := int(src.RegisterCount())
+	pis := src.InputCount() - regs
+	outputs := src.Outputs()
+	pos := len(outputs) - regs
+	constraints := int(aig.Aig_ManConstrNum(src))
+	neededBits := int64(regs) + (int64(cex.IFrame)+1)*int64(pis)
+	if pis < 0 || pos-constraints != 1 || int(cex.NPis) != pis || neededBits != int64(cex.NBits) || int64(len(cex.PData))*32 < neededBits {
+		return false
+	}
+	state := make([]bool, regs)
+	for i := int32(0); i <= cex.IFrame; i++ {
+		inputs := make([]bool, 0, pis+regs)
+		for j := 0; j < pis; j++ {
+			inputs = append(inputs, util.Abc_InfoHasBit(cex.PData, int32(regs)+i*int32(pis)+int32(j)))
+		}
+		inputs = append(inputs, state...)
+		values, err := src.Evaluate(inputs)
+		if err != nil || len(values) != len(outputs) {
+			return false
+		}
+		for j := 0; j < constraints; j++ {
+			if values[1+j] {
+				return false
+			}
+		}
+		if i == cex.IFrame {
+			return values[0]
+		}
+		for j := 0; j < regs; j++ {
+			state[j] = values[pos+j]
+		}
+	}
+	return false
 }
