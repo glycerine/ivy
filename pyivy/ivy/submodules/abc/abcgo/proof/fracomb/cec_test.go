@@ -66,13 +66,13 @@ func TestCecReplacesExistingWitnessWithSourceZeroWitness(t *testing.T) {
 	}
 }
 
-func TestCountXorsRecognizesNativeAndStructuralNodes(t *testing.T) {
+func TestCountXorsRecognizesOnlyStructuralNodes(t *testing.T) {
 	g := aig.NewGraph()
 	x, y := g.NewInput(), g.NewInput()
 	g.NewXor(x, y)
 	g.XOR(x, y)
-	if got := Aig_ManCountXors(g); got != 2 {
-		t.Fatalf("got %d XORs, want 2", got)
+	if got := Aig_ManCountXors(g); got != 1 {
+		t.Fatalf("got %d XORs, want 1 (ABC ignores native EXOR)", got)
 	}
 }
 func TestCecReplacesInvalidExistingWitness(t *testing.T) {

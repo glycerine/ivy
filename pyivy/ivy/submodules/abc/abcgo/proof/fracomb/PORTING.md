@@ -11,7 +11,8 @@
   `cnf.Cnf_Derive` uses the source cut mapping and CNF writer, including the
   free-output encoding needed here. The solver simplifies at the root before
   bounded search, as in the C implementation.
-- `Aig_ManCountXors` recognizes structural and native Go AIG XOR nodes.
+- `Aig_ManCountXors` counts structural XORs; the original's MUX-type
+  precondition excludes native EXOR nodes.
 - `Fra_FraigCec` runs the initial SAT attempt, rewriting, FRAIG sweeps, and a
   final SAT attempt. The caller supplies the actual FRAIG sweep to keep this
   package independent of the manager package.

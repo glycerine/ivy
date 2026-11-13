@@ -52,10 +52,6 @@ func Fra_FraigMiterAssertedOutput(g *aig.Graph) int32 {
 func Aig_ManCountXors(graph *aig.Graph) int32 {
 	var count int32
 	for _, edge := range graph.LiveEdges() {
-		if graph.Node(edge).Kind == aig.ExclusiveOr {
-			count++
-			continue
-		}
 		if aig.Aig_ObjIsMuxType(graph, edge) {
 			if _, _, ok := aig.Aig_ObjRecognizeExor(graph, edge); ok {
 				count++
