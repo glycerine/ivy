@@ -218,3 +218,9 @@ that an assumption contradicting a root unit returned an empty proof core;
 the solver now records the unit's proof dependency. A focused regression also
 checks that this assumption conflict does not poison a subsequent SAT solve.
 `GOCACHE=/tmp/abcgo-cache go test -race -count=1 ./sat/bsat` passes.
+
+The root-conflict review also covered lexicographic solving: an inconsistent
+formula with pending root units could lose its conflict across a later ordinary
+solve. Both entry points now share root-propagation handling, and a regression
+checks repeated lexicographic and ordinary solves. The full race-enabled BSAT
+suite passes after this simplification.

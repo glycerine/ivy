@@ -49,3 +49,21 @@ func TestPublicLexicographicEmptyAndDeadline(t *testing.T) {
 		t.Fatal("resume")
 	}
 }
+
+func TestLexicographicRootConflictPersists(t *testing.T) {
+	s := NewSolver()
+	x, y := s.NewVariable(), s.NewVariable()
+	s.AddClause(Positive(x), Positive(y))
+	s.AddClause(Negative(x))
+	s.AddClause(Negative(y))
+	lits := []Literal{Negative(x), Negative(y)}
+	if status := s.SolveLexicographic(lits); status != Unsatisfiable {
+		t.Fatalf("first solve=%v", status)
+	}
+	if status := s.SolveLexicographic(lits); status != Unsatisfiable {
+		t.Fatalf("root conflict lost: %v", status)
+	}
+	if status := s.Solve(); status != Unsatisfiable {
+		t.Fatalf("base formula should be inconsistent: %v", status)
+	}
+}

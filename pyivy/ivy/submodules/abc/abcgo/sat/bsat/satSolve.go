@@ -70,6 +70,19 @@ func sat_solver_set_resource_limits(s *sat_solver, conflicts, propagations, glob
 		s.nInsLimit = globalPropagations
 	}
 }
+
+// satSolverPropagateRoot records a permanent contradiction before any
+// temporary assumptions are applied.
+func satSolverPropagateRoot(s *sat_solver) bool {
+	if sat_solver_propagate(s) == 0 {
+		return true
+	}
+	s.fSolved = 1
+	if p := solverClauseStore(s); p != nil && p.pEmpty == nil {
+		Sto_ManAddClause(p, nil)
+	}
+	return false
+}
 func sat_solver_solve(s *sat_solver, assumptions []lit, conflicts, propagations, globalConflicts, globalPropagations int64) int32 {
 	if s.fSolved != 0 {
 		if p := solverClauseStore(s); p != nil && p.pEmpty == nil {
@@ -83,11 +96,7 @@ func sat_solver_solve(s *sat_solver, assumptions []lit, conflicts, propagations,
 	// Propagate newly added root units before entering assumption levels. A
 	// root conflict makes the formula permanently inconsistent, even if an
 	// assumption also contradicts an as-yet unpropagated root assignment.
-	if sat_solver_propagate(s) != 0 {
-		s.fSolved = 1
-		if p := solverClauseStore(s); p != nil && p.pEmpty == nil {
-			Sto_ManAddClause(p, nil)
-		}
+	if !satSolverPropagateRoot(s) {
 		return l_False
 	}
 	for _, l := range assumptions {
