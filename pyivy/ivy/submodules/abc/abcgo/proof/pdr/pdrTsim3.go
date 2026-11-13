@@ -12,7 +12,6 @@ import (
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/sat/bsat"
-	"github.com/glycerine/abcgo/sat/cnf"
 )
 
 type Txs3_Man_t_ struct {
@@ -24,7 +23,6 @@ type Txs3_Man_t_ struct {
 	pMan                               *Pdr_Man_t
 	nPiLits                            int32
 	giaToAig                           []int32
-	justificationCNF                   *cnf.Cnf_Dat_t
 }
 
 func Txs3_ManStart(manager *Pdr_Man_t, graph *aig.Graph, priorities *vec.Vec_Int_t) *Txs3_Man_t {
@@ -154,32 +152,21 @@ func Txs3_ManTernarySim(p *Txs3_Man_t, k int32, cube *Pdr_Set_t) *Pdr_Set_t {
 	if deadline != 0 && util.Abc_Clock() >= deadline || p.pMan.pPars.pFuncStop != nil && p.pMan.pPars.pFuncStop(p.pMan.pPars.RunId) != 0 {
 		return nil
 	}
-	// Frame solvers contain learned reachability clauses. A justification
-	// derived under those clauses need not describe the actual transition
-	// relation, so minimize against an independent, unconstrained CNF.
-	if p.justificationCNF == nil {
-		p.justificationCNF = cnf.Cnf_DeriveWithMan(p.pMan.pCnfMan, p.pMan.pAig, aig.Aig_ManCoNum(p.pMan.pAig))
+	// Match ABC: derive the justification in the existing frame solver.
+	// This can retain dependencies on frame clauses; see PORTING.md.
+	solver := Pdr_ManFetchSolver(p.pMan, k)
+	aux := Pdr_ManFreeVar(p.pMan, k) << 1
+	var lits *vec.Vec_Int_t
+	if cube == nil {
+		lits = p.pMan.vLits
+		output := aig.Aig_ManCo(p.pMan.pAig, p.pMan.iOutCur)
+		lit := Pdr_ObjSatVar(p.pMan, k, 2, output)<<1 | 1
+		vec.Vec_IntFill(lits, 1, lit)
+	} else {
+		lits = Pdr_ManCubeToLits(p.pMan, k, cube, 1, 1)
 	}
-	solver := cnf.Cnf_DataWriteIntoSolver(p.justificationCNF, 1, 0)
-	if solver == nil {
-		panic("pdr: cannot build justification solver")
-	}
-	pdrConfigureSolver(solver, p.pMan)
-	aux := solver.NewVariable() << 1
-	lits := make([]int32, 0, vec.Vec_IntSize(p.vCoObjs)+1)
-	for i, id := range vec.Vec_IntArray(p.vCoObjs) {
-		variable := p.justificationCNF.VarNums[p.giaToAig[id]]
-		if variable < 0 {
-			panic("pdr: output missing from justification CNF")
-		}
-		lit := variable << 1
-		if vec.Vec_IntEntry(p.vCoVals, i) != 0 {
-			lit |= 1
-		}
-		lits = append(lits, lit)
-	}
-	lits = append(lits, aux)
-	if !solver.AddClause(lits...) {
+	vec.Vec_IntPush(lits, aux)
+	if !solver.AddClause(vec.Vec_IntArray(lits)...) {
 		panic("pdr: activation clause rejected")
 	}
 	solver.Compress()
@@ -192,7 +179,7 @@ func Txs3_ManTernarySim(p *Txs3_Man_t, k int32, cube *Pdr_Set_t) *Pdr_Set_t {
 	}
 	for i, id := range ids {
 		obj := aig.Aig_ManObj(p.pMan.pAig, p.giaToAig[id])
-		variable := p.justificationCNF.VarNums[obj.NodeID()]
+		variable := Pdr_ObjSatVar(p.pMan, k, 3, obj)
 		if variable < 0 || !aig.Aig_ObjIsCi(p.pMan.pAig, obj) {
 			panic("pdr: invalid cone input")
 		}
@@ -253,10 +240,7 @@ func Txs3_ManTernarySim(p *Txs3_Man_t, k int32, cube *Pdr_Set_t) *Pdr_Set_t {
 		vec.Vec_IntShrink(p.vFfLits, kept)
 	}
 	result := Pdr_SetCreate(p.vFfLits, p.vPiLits)
-	// Abstracted flops become pseudo-inputs, so their removal can leave a
-	// state cube that intersects the abstract initial state. Refinement then
-	// decides whether the resulting counterexample is concrete.
-	if p.pMan.pPars.fUseAbs == 0 && k != 0 && Pdr_SetIsInit(result, -1) != 0 {
+	if k != 0 && Pdr_SetIsInit(result, -1) != 0 {
 		panic("pdr: justification intersects initial state")
 	}
 	return result

@@ -306,6 +306,9 @@ func IPdr_ManSolveInt(p *Pdr_Man_t, checkClauses, pushClauses int32) int32 {
 }
 
 func IPdr_ManSolve(graph *aig.Graph, pars *Pdr_Par_t) int32 {
+	if pars.fNewXSim != 0 && pars.fMonoCnf != 0 {
+		return -1
+	}
 	started := util.Abc_Clock()
 	outputs := int32(len(graph.Outputs())) - aig.Aig_ManRegNum(graph)
 	if pars.nTimeOutOne != 0 && pars.fSolveAll == 0 {

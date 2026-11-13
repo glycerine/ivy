@@ -22,6 +22,53 @@ func TestPdrDefaultParametersResetPriorState(t *testing.T) {
 	}
 }
 
+func TestPdrUnsupportedMonolithicUpdatedSimulation(t *testing.T) {
+	for _, incremental := range []bool{false, true} {
+		g := aig.NewGraph()
+		g.AddOutput(g.Const0())
+		var pars Pdr_Par_t
+		Pdr_ManSetDefaultParams(&pars)
+		pars.fMonoCnf, pars.fNewXSim = 1, 1
+		var got int32
+		if incremental {
+			got = IPdr_ManSolve(g, &pars)
+		} else {
+			got = Pdr_ManSolve(g, &pars)
+		}
+		if got != -1 {
+			t.Fatalf("incremental=%v: got %d, want undecided", incremental, got)
+		}
+	}
+}
+
+func TestPdrDisabledSimpleGeneralizationDoesNotProduceCube(t *testing.T) {
+	var minimum *Pdr_Set_t
+	if got := Pdr_ManGeneralize2(nil, 0, nil, &minimum); got != 0 || minimum != nil {
+		t.Fatalf("disabled source function returned %d and %+v", got, minimum)
+	}
+}
+
+func TestPdrSimpleGeneralizationLosesMultiLiteralCubeAsInC(t *testing.T) {
+	g := aig.NewGraph()
+	first, second := g.NewInput(), g.NewInput()
+	g.AddOutput(g.Const0())
+	g.AddOutput(first)
+	g.AddOutput(second)
+	aig.Aig_ManSetRegNum(g, 2)
+	var pars Pdr_Par_t
+	Pdr_ManSetDefaultParams(&pars)
+	pars.fSimpleGeneral = 1
+	p := Pdr_ManStart(g, &pars, nil)
+	defer Pdr_ManStop(p)
+	Pdr_ManCreateSolver(p, 0)
+	Pdr_ManCreateSolver(p, 1)
+	cube := testPdrSet([]int32{0, 2}, nil)
+	var minimum *Pdr_Set_t
+	if got := Pdr_ManGeneralize(p, 1, cube, nil, &minimum); got != 1 || minimum != nil {
+		t.Fatalf("got result %d and cube %+v; source caller discards the cube", got, minimum)
+	}
+}
+
 func TestPdrContainmentScansRequestedFrames(t *testing.T) {
 	makeSet := func(lits ...int32) *Pdr_Set_t {
 		return Pdr_SetCreate(vec.Vec_IntAllocArrayCopy(lits, len(lits)), vec.Vec_IntAlloc(0))
@@ -262,9 +309,6 @@ func TestPdrSolveTwoRegisterReachability(t *testing.T) {
 			pars.fUseAbs = 1
 			pars.fUseSimpleRef = 1
 		}
-		if trial%11 == 0 {
-			pars.fSimpleGeneral = 1
-		}
 		got := Pdr_ManSolve(g, &pars)
 		want := int32(1)
 		if bad {
@@ -369,6 +413,9 @@ func testAdditionalPdrModes(t *testing.T, incremental bool, trials int) {
 		pars.fMonoCnf = int32(trial % 2)
 		pars.fNewXSim = int32((trial / 2) % 2)
 		pars.fUseAbs = int32((trial / 4) % 2)
+		if pars.fNewXSim != 0 && (pars.fMonoCnf != 0 || pars.fUseAbs != 0) {
+			continue // ABC's updated-simulation combinations can assert or crash.
+		}
 		pars.fUseSimpleRef = 0
 		pars.fShortest = int32((trial / 8) % 2)
 		pars.fFlopPrio = int32((trial / 16) % 2)

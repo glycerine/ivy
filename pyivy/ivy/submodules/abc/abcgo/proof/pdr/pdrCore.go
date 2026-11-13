@@ -521,9 +521,14 @@ func Pdr_ManGeneralize(p *Pdr_Man_t, k int32, cube *Pdr_Set_t, predecessor **Pdr
 	if current.nLits == 0 {
 		panic("pdr: empty generalized cube")
 	}
-	// ABC's alternative simple-generalization body is compiled out (#if 0).
-	// Retain the valid reduced cube instead of replacing it with nil.
 	if p.pPars.fSimpleGeneral != 0 {
+		// ABC's alternative body is compiled out. Its caller still discards
+		// the reduced cube when it contains more than one literal.
+		if current.nLits > 1 {
+			Pdr_ManGeneralize2(p, k, current, minimum)
+			Pdr_SetDeref(current)
+			current = *minimum
+		}
 		*minimum = current
 		p.tGeneral += util.Abc_Clock() - started
 		return 1
@@ -1019,6 +1024,10 @@ func Pdr_ManSolveInt(p *Pdr_Man_t) int32 {
 type pdrNoCounterexample struct{}
 
 func Pdr_ManSolve(graph *aig.Graph, pars *Pdr_Par_t) int32 {
+	// ABC's updated justification assumes dynamic-CNF reverse mappings.
+	if pars.fNewXSim != 0 && pars.fMonoCnf != 0 {
+		return -1
+	}
 	started := util.Abc_Clock()
 	outputs := int32(len(graph.Outputs())) - aig.Aig_ManRegNum(graph)
 	if pars.nTimeOutOne != 0 && pars.fSolveAll == 0 {

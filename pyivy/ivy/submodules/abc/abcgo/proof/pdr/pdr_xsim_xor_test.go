@@ -61,7 +61,6 @@ func TestPdrNewJustificationNativeXorAgainstReachability(t *testing.T) {
 		var pars Pdr_Par_t
 		Pdr_ManSetDefaultParams(&pars)
 		pars.fSilent, pars.fSolveAll, pars.fStoreCex, pars.fNewXSim = 1, 1, 1, 1
-		pars.fMonoCnf = int32(seed & 1)
 		Pdr_ManSolve(g, &pars)
 		models := g.SequentialCounterexamples()
 		for i, expectedFailure := range fails {

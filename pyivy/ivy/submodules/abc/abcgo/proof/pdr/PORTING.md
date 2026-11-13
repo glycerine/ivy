@@ -13,8 +13,9 @@ results are checked with the AIG counterexample verifier. An additional 64
 two-register, multi-output native-XOR machines with complemented edges are
 checked against explicit reachability and their witnesses are replayed. A
 further 160 sampled three-register machines exercise proof-obligation reuse,
-shifted frame starts, both CNF and justification modes, abstraction, and
-incremental restarts against an eight-state reachability oracle. Other
+shifted frame starts, both CNF modes, abstraction, and incremental restarts
+against an eight-state reachability oracle. A local ABC executable, when
+available, also checks 32 generated two-register machines. Other
 tests cover frame limits, SAT conflict limits, expired global and per-output
 deadlines, solver reuse, invariant checks, and SAT core handling. The full
 package has passed `go test -race ./proof/pdr` and
@@ -28,12 +29,23 @@ Remaining review and coverage gaps:
 - Resource exhaustion and per-output deadlines have less coverage than normal
   SAT/UNSAT results. Cancellation is tested, but real timeout, conflict-limit,
   and interruption combinations warrant further tests.
-- SAT-based justification loads a separate unconstrained transition solver so
-  frame-specific clauses cannot invalidate a counterexample. It reuses the
-  derived CNF but rebuilds that solver for each justification; its cost on
-  large designs has not been benchmarked. CNF derivation and solver loading
-  are not interruptible, although the justification solve honors deadlines
-  and cancellation.
+- ABC's updated SAT-based justification (`fNewXSim`, command-line `pdr -u`)
+  can produce an invalid counterexample because it derives the justification
+  in a frame solver containing reachability clauses. This source behavior is
+  preserved. One reproducible three-register machine has transition truth
+  tables `[60055, 49603, 19452]` and property table `19712`, indexed by
+  `input + 2*state`; local ABC reports that its `pdr -u` counterexample fails
+  verification, while ordinary `pdr -m` finds a valid failure. The 160-case
+  three-register test therefore uses the default simulator. The public Go
+  API does not currently expose `fNewXSim`.
+- The original `fNewXSim` implementation also assumes a dynamic-CNF reverse
+  map; local ABC crashes on the above machine with `pdr -m -u -p`. Go reports
+  this option combination as undecided. As in ABC, updated justification with
+  abstraction asserts if a derived cube intersects the initial state.
+- ABC compiles the body of its alternative simple generalization out with
+  `#if 0`; when enabled for a multi-literal cube, its active caller discards
+  the reduced cube. The Go port preserves this source behavior, which can lead
+  to a nil-cube failure. The public Go API does not expose this option.
 - Bridge output, invariant file output, and rare options such as proof
   obligation reuse and shifting the starting frame are not covered end to end.
 - Successful `Pdr_ManSolve` and `IPdr_ManSolve` runs publish their invariant

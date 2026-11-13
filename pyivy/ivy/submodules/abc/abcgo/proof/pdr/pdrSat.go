@@ -15,7 +15,7 @@ func Pdr_ManCreateSolver(p *Pdr_Man_t, k int32) *bsat.Solver {
 	if int(k) != len(p.vSolvers) || int(k) != vec.Vec_VecSize(p.vClauses) || int(k) != vec.Vec_IntSize(p.vActVars) {
 		panic("pdr: inconsistent solver frame count")
 	}
-	solver := Pdr_ManNewSolver(bsat.NewSolver(), p, k, pdrBool(k == 0))
+	solver := Pdr_ManNewSolver(bsat.NewSolverSeed(float64(p.pPars.nRandomSeed)), p, k, pdrBool(k == 0))
 	if solver == nil {
 		return nil
 	}
@@ -37,7 +37,9 @@ func Pdr_ManFetchSolver(p *Pdr_Man_t, k int32) *bsat.Solver {
 		panic("pdr: cannot recycle last frame solver")
 	}
 	p.nStarts++
-	solver.Reset()
+	// ABC restarts this frame with the configured random seed. Reset() uses
+	// the fixed default seed, so construct the equivalent seeded solver.
+	solver = bsat.NewSolverSeed(float64(p.pPars.nRandomSeed))
 	solver = Pdr_ManNewSolver(solver, p, k, pdrBool(k == 0))
 	if solver == nil {
 		return nil
