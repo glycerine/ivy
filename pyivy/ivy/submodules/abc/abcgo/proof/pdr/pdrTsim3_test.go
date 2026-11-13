@@ -11,7 +11,7 @@ import (
 	"github.com/glycerine/abcgo/sat/bsat"
 )
 
-func TestTxs3JustificationHonorsInterruption(t *testing.T) {
+func TestTxs3UsesExistingSolverLimits(t *testing.T) {
 	for _, cancel := range []bool{false, true} {
 		g := aig.NewGraph()
 		input, latch := g.NewInput(), g.NewInput()
@@ -31,8 +31,8 @@ func TestTxs3JustificationHonorsInterruption(t *testing.T) {
 		} else {
 			p.timeToStop = util.Abc_Clock() - 1
 		}
-		if got := Txs3_ManTernarySim(p.pTxs3, 1, nil); got != nil {
-			t.Fatalf("cancel=%v: interrupted justification returned %+v", cancel, got)
+		if got := Txs3_ManTernarySim(p.pTxs3, 1, nil); got == nil {
+			t.Fatalf("cancel=%v: manager changes should not override the solver configuration", cancel)
 		}
 		Pdr_ManStop(p)
 	}

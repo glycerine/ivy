@@ -33,6 +33,20 @@ func TestAbstractCounterexampleRefinesUsedFlop(t *testing.T) {
 	Pdr_ManStop(p)
 }
 
+func TestAbstractCounterexampleRejectsInconsistentPriorMap(t *testing.T) {
+	g := lifecycleGraph()
+	p := Pdr_ManStart(g, &Pdr_Par_t{fUseAbs: 1, fUseSimpleRef: 1}, nil)
+	defer Pdr_ManStop(p)
+	p.vMapPpi2Ff = vec.Vec_IntAllocArrayCopy([]int32{0}, 1)
+	p.vMapFf2Ppi = vec.Vec_IntAllocArrayCopy([]int32{-1}, 1)
+	defer func() {
+		if recover() == nil {
+			t.Fatal("expected the C source's inverse-map assertion")
+		}
+	}()
+	Pdr_ManDeriveCexAbs(p)
+}
+
 func TestAbstractCounterexampleUsesCareMinimization(t *testing.T) {
 	g := aig.NewGraph()
 	_ = g.NewInput()
@@ -50,6 +64,53 @@ func TestAbstractCounterexampleUsesCareMinimization(t *testing.T) {
 		t.Fatal("care minimization did not refine the necessary flop")
 	}
 	Pdr_ManStop(p)
+}
+
+// pdrMan.c refines only care PPIs, even when the abstract trace also
+// assigns another PPI. Here the bad output depends on only the first flop.
+func TestAbstractCounterexampleRefinesOnlyCareFlops(t *testing.T) {
+	g := aig.NewGraph()
+	_ = g.NewInput()
+	first, second := g.NewInput(), g.NewInput()
+	g.AddOutput(first)
+	g.AddOutput(first)
+	g.AddOutput(second)
+	aig.Aig_ManSetRegNum(g, 2)
+	p := Pdr_ManStart(g, &Pdr_Par_t{fUseAbs: 1}, nil)
+	defer Pdr_ManStop(p)
+	p.vMapPpi2Ff = vec.Vec_IntAlloc(2)
+	p.vMapFf2Ppi = vec.Vec_IntStart(2)
+	vec.Vec_IntWriteEntry(p.vMapFf2Ppi, 0, -1)
+	vec.Vec_IntWriteEntry(p.vMapFf2Ppi, 1, -1)
+	p.vAbsFlops = vec.Vec_IntStart(2)
+	Pdr_QueuePush(p, Pdr_OblStart(0, 0, testPdrSet(nil, []int32{2, 4}), nil))
+	if cex := Pdr_ManDeriveCexAbs(p); cex != nil {
+		t.Fatal("abstract counterexample should require refinement")
+	}
+	if got := vec.Vec_IntArray(p.vAbsFlops); got[0] != 1 || got[1] != 0 {
+		t.Fatalf("refined flops = %v, want only the first", got)
+	}
+	if p.nCexes != 1 || p.nCexesTotal != 1 {
+		t.Fatalf("refinement counters = %d, %d", p.nCexes, p.nCexesTotal)
+	}
+}
+
+func TestAbstractCounterexampleWithoutCarePPIIsConcrete(t *testing.T) {
+	g := lifecycleGraph()
+	p := Pdr_ManStart(g, &Pdr_Par_t{fUseAbs: 1}, nil)
+	defer Pdr_ManStop(p)
+	p.vMapPpi2Ff = vec.Vec_IntAlloc(1)
+	p.vMapFf2Ppi = vec.Vec_IntStart(1)
+	vec.Vec_IntWriteEntry(p.vMapFf2Ppi, 0, -1)
+	p.vAbsFlops = vec.Vec_IntStart(1)
+	Pdr_QueuePush(p, Pdr_OblStart(0, 0, testPdrSet(nil, []int32{0, 2}), nil))
+	cex := Pdr_ManDeriveCexAbs(p)
+	if cex == nil || saig.Saig_ManVerifyCex(g, cex) != 1 {
+		t.Fatalf("expected concrete counterexample, got %+v", cex)
+	}
+	if vec.Vec_IntEntry(p.vAbsFlops, 0) != 0 || p.nCexes != 0 || p.nCexesTotal != 0 {
+		t.Fatal("irrelevant abstract input caused refinement")
+	}
 }
 
 func TestManagerStopsFanoutAsInC(t *testing.T) {

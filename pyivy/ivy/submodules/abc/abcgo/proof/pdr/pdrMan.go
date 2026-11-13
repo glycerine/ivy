@@ -15,7 +15,10 @@ func Pdr_ManDeriveCexAbs(p *Pdr_Man_t) *util.Abc_Cex_t {
 		return Pdr_ManDeriveCex(p)
 	}
 	nPis := saig.Saig_ManPiNum(p.pAig)
-	for _, flop := range vec.Vec_IntArray(p.vMapPpi2Ff) {
+	for i, flop := range vec.Vec_IntArray(p.vMapPpi2Ff) {
+		if vec.Vec_IntEntry(p.vMapFf2Ppi, int(flop)) != int32(i) {
+			panic("pdr: inconsistent abstraction maps")
+		}
 		vec.Vec_IntWriteEntry(p.vMapFf2Ppi, int(flop), -1)
 	}
 	vec.Vec_IntClear(p.vMapPpi2Ff)
@@ -57,12 +60,18 @@ func Pdr_ManDeriveCexAbs(p *Pdr_Man_t) *util.Abc_Cex_t {
 				if input >= nPis {
 					input = nPis + vec.Vec_IntEntry(p.vMapFf2Ppi, int(input-nPis))
 				}
+				if input >= cex.NPis {
+					panic("pdr: abstract input outside counterexample")
+				}
 				util.Abc_InfoSetBit(cex.PData, cex.NRegs+frame*cex.NPis+input)
 			}
 			frame++
 		}
 		abs := gia.Gia_ManDupAbs(p.pGia, p.vMapPpi2Ff, p.vMapFf2Ppi)
 		care := bmc.Bmc_CexCareMinimizeAig(abs, nPis, cex, 1, 0, 0)
+		if care.NPis != cex.NPis {
+			panic("pdr: care counterexample input count mismatch")
+		}
 		for frame := int32(0); frame < frames; frame++ {
 			for input := nPis; input < care.NPis; input++ {
 				if !util.Abc_InfoHasBit(care.PData, care.NRegs+care.NPis*frame+input) {

@@ -9,7 +9,6 @@ import (
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/aig/saig"
-	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/sat/bsat"
 )
@@ -148,10 +147,6 @@ func Txs3_ManTernarySim(p *Txs3_Man_t, k int32, cube *Pdr_Set_t) *Pdr_Set_t {
 	}
 	Pdr_ManCollectValues(p.pMan, k, mapObjects(p.vCiObjs), p.vCiVals)
 	Pdr_ManCollectValues(p.pMan, k, mapObjects(p.vCoObjs), p.vCoVals)
-	deadline := Pdr_ManTimeLimit(p.pMan)
-	if deadline != 0 && util.Abc_Clock() >= deadline || p.pMan.pPars.pFuncStop != nil && p.pMan.pPars.pFuncStop(p.pMan.pPars.RunId) != 0 {
-		return nil
-	}
 	// Match ABC: derive the justification in the existing frame solver.
 	// This can retain dependencies on frame clauses; see PORTING.md.
 	solver := Pdr_ManFetchSolver(p.pMan, k)
@@ -190,10 +185,7 @@ func Txs3_ManTernarySim(p *Txs3_Man_t, k int32, cube *Pdr_Set_t) *Pdr_Set_t {
 		}
 		vec.Vec_IntPush(p.vTemp, variable<<1|sign)
 	}
-	status := pdrSolve(p.pMan, solver, vec.Vec_IntArray(p.vTemp), 0)
-	if status == bsat.Unknown {
-		return nil
-	}
+	status := solver.SolveWithResourceLimits(vec.Vec_IntArray(p.vTemp), 0, 0, 0, 0)
 	if status != bsat.Unsatisfiable {
 		panic("pdr: justification is not unsatisfiable")
 	}
