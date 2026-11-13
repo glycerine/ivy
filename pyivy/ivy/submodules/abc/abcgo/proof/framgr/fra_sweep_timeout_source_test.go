@@ -33,10 +33,14 @@ func TestCompleteSweepPropagatesSATExhaustion(t *testing.T) {
 	pars.FConeBias = 0
 	pars.NSimWords = 1
 	var failures, logged int32
+	var timeoutIDs []int
 	out, mapping := SweepMappedCallback(g, pars, func(p *Manager) {
 		failures = p.NSatFailsReal
 		if p.VTimeouts != nil {
 			logged = int32(vec.Vec_PtrSize(p.VTimeouts))
+			for _, item := range vec.Vec_PtrArray(p.VTimeouts) {
+				timeoutIDs = append(timeoutIDs, item.(aig.Edge).NodeID())
+			}
 		}
 	})
 	if out == nil || len(mapping) == 0 {
@@ -46,6 +50,14 @@ func TestCompleteSweepPropagatesSATExhaustion(t *testing.T) {
 	// SAT calls, two timeout entries, and 39 nodes in the result.
 	if failures != 2 || logged != 2 || aig.Aig_ManNodeNum(out) != 39 {
 		t.Fatalf("sweep differs from compiled C: failures=%d timeout entries=%d nodes=%d", failures, logged, aig.Aig_ManNodeNum(out))
+	}
+	if len(timeoutIDs) != 2 || timeoutIDs[0] != 35 || timeoutIDs[1] != 47 {
+		t.Fatalf("timeout IDs = %v, want C IDs [35 47]", timeoutIDs)
+	}
+	for _, id := range timeoutIDs {
+		if repr := aig.Aig_ObjRepr(g, aig.Edge(id<<1)); repr != aig.InvalidEdge {
+			t.Fatalf("timed-out node %d retained representative %v", id, repr)
+		}
 	}
 	for mask := 0; mask < 256; mask++ {
 		values := make([]bool, 8)

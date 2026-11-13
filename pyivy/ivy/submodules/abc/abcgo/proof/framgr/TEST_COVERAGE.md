@@ -1,6 +1,6 @@
 # FRA manager test coverage
 
-The package's statement coverage was 85.6% on the current tree, measured with
+The package's statement coverage was 85.7% on the current tree, measured with
 `go test -coverprofile=/tmp/framgr.cover ./proof/framgr`. Coverage is a guide to
 unexercised code, not proof of equivalence to ABC. A source and independent
 bug/simplicity review found and restored missing preconditions, but this is not
@@ -25,7 +25,9 @@ against compiled C; the model and BMC outcome tests are source-derived Go
 regressions, not compiled-C comparisons.
 
 A complete sweep with a deliberately exhausted SAT budget matches compiled C
-for the number of failed calls, recorded timeouts, and resulting AIG nodes.
+for failed calls, recorded node IDs, cleared representatives, and resulting AIG
+nodes. A second complete sweep matches C when later disproved nodes are also
+added to the timeout list after an earlier SAT limit is hit.
 BMC tests also check prefix-frame exclusion and replay a 20-frame counterexample
 whose bits cross a 32-bit boundary. Optional checks run with
 `ABC_FRA_C_ORACLE=1 go test ./proof/framgr`: the counterexample oracle compiles

@@ -68,8 +68,21 @@ func TestCompleteSweepTimeoutAgainstCompiledC(t *testing.T) {
 		t.Fatalf("link oracle: %v: %s", err, out)
 	}
 	out, err := exec.Command(binary).CombinedOutput()
-	if err != nil || !strings.Contains(string(out), "callback failures=2 logged=2\ndone nodes=39") {
+	if err != nil || !strings.Contains(string(out), "callback failures=2 logged=2\ndone nodes=39\ntimeout=35 repr=-1\ntimeout=47 repr=-1") {
 		t.Fatalf("source oracle: %v: %s", err, out)
+	}
+	args[3] = "test_vectors/fra_sweep_timeout_followup.c"
+	if out, err := exec.Command(cc, args...).CombinedOutput(); err != nil {
+		t.Fatalf("link follow-up oracle: %v: %s", err, out)
+	}
+	out, err = exec.Command(binary).CombinedOutput()
+	if err != nil || !strings.Contains(string(out), "failures=2 sat=7 ids=47,59,63,68,69,72,73,76,77\nrare=77 nodes=57") {
+		t.Fatalf("follow-up source oracle: %v: %s", err, out)
+	}
+	for _, id := range []string{"47", "59", "63", "68", "69", "72", "73", "76", "77"} {
+		if !strings.Contains(string(out), "timeout="+id+" repr=-1\n") {
+			t.Fatalf("source retained candidate %s: %s", id, out)
+		}
 	}
 }
 
