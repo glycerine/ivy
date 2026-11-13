@@ -84,6 +84,18 @@ func Gia_ManDupAbsGates_rec(dst *Gia_Man_t, obj *Gia_Obj_t) {
 func Gia_ManDupAbsGates(p *Gia_Man_t, classes *Vec_Int_t) *Gia_Man_t {
 	var pis, ppis, flops, nodes *Vec_Int_t
 	Gia_ManGlaCollect(p, classes, &pis, &ppis, &flops, &nodes)
+	// A primary output may be driven directly by a primary input. It has no
+	// classified gate to pull it into the collected input set.
+	for i := int32(0); i < gia.Gia_ManPoNum(p); i++ {
+		driver := gia.Gia_ObjFanin0(gia.Gia_ManPo(p, i))
+		if gia.Gia_ObjIsPi(p, driver) != 0 {
+			id := gia.Gia_ObjId(p, driver)
+			if vec.Vec_IntFind(pis, id) < 0 {
+				vec.Vec_IntPush(pis, id)
+			}
+		}
+	}
+	vec.Vec_IntSort(pis, 0)
 	dst := gia.Gia_ManStart(5000)
 	gia.Gia_ManCopyNameSpec(dst, p)
 	gia.Gia_ManFillValue(p)

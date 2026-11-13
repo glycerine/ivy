@@ -57,3 +57,18 @@ func TestDuplicateAbstractionFlopsAndGates(t *testing.T) {
 		}
 	}
 }
+
+func TestGateAbstractionDirectPrimaryInputOutput(t *testing.T) {
+	g := gia.Gia_ManStart(8)
+	x := gia.Gia_ManAppendCi(g)
+	gia.Gia_ManAppendCo(g, x^1)
+	classes := vec.Vec_IntStart(int(gia.Gia_ManObjNum(g)))
+	vec.Vec_IntWriteEntry(classes, 0, 1)
+	out := Gia_ManDupAbsGates(g, classes)
+	for _, b := range []bool{false, true} {
+		got, err := out.Evaluate([]bool{b})
+		if err != nil || got[0] == b {
+			t.Fatalf("input %v: %v, %v", b, got, err)
+		}
+	}
+}
