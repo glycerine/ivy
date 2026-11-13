@@ -27,3 +27,12 @@ func TestSimplifyDoesNotUseConvenienceFailureFlag(t *testing.T) {
 		t.Fatal("C simplify checks propagation, not Go convenience state")
 	}
 }
+
+func TestPrepareDoesNotChangeRootLevelField(t *testing.T) {
+	p := New(2)
+	p.nLevelRoot = 3
+	Msat_SolverPrepare(p, &Msat_IntVec_t{data: []int{0, 1}})
+	if p.nLevelRoot != 3 {
+		t.Fatalf("C prepare leaves root level unchanged, got %d", p.nLevelRoot)
+	}
+}

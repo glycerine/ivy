@@ -95,7 +95,6 @@ func Msat_SolverPrepare(p *Msat_Solver_t, vars *Msat_IntVec_t) {
 	Msat_QueueClear(p.pQueue)
 	Msat_OrderClean(p.pOrder, vars)
 	p.dProgress = 0
-	p.nLevelRoot = 0
 
 }
 func Msat_SolverFree(p *Msat_Solver_t)                { *p = Msat_Solver_t{} }
