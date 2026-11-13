@@ -148,3 +148,27 @@ func TestStructuralCNFReusesPreencodedVariableZero(t *testing.T) {
 		t.Fatalf("AND rejected a valid assignment: %v", got)
 	}
 }
+
+func TestStructuralCNFConstrainsBufferedFanin(t *testing.T) {
+	g := aig.NewGraph()
+	a, b := g.NewInput(), g.NewInput()
+	buffer := aig.Aig_ObjCreate(g, &aig.Node{Kind: aig.Buffer, Fanins: [2]aig.Edge{a.Not(), aig.InvalidEdge}, Phase: true})
+	root := g.AND(buffer, b)
+	p := &Fra_Man_t{pManFraig: g, pSat: bsat.NewSolver(), nSatVars: 1}
+	Fra_ManClean(p, int32(len(g.Nodes())))
+	if !p.pSat.AddClause(bsat.Positive(0)) {
+		t.Fatal("constant setup")
+	}
+	Fra_CnfNodeAddToSolver(p, root, aig.InvalidEdge)
+	for mask := 0; mask < 4; mask++ {
+		av, bv := mask&1 != 0, mask&2 != 0
+		expected := !av && bv
+		assumptions := []bsat.Literal{fraLit(Fra_ObjSatNum(p, a), !av), fraLit(Fra_ObjSatNum(p, b), !bv)}
+		if got := p.pSat.Solve(append(assumptions, fraLit(Fra_ObjSatNum(p, root), !expected))...); got != bsat.Satisfiable {
+			t.Fatalf("mask %d correct result: %v", mask, got)
+		}
+		if got := p.pSat.Solve(append(assumptions, fraLit(Fra_ObjSatNum(p, root), expected))...); got != bsat.Unsatisfiable {
+			t.Fatalf("mask %d incorrect result: %v", mask, got)
+		}
+	}
+}

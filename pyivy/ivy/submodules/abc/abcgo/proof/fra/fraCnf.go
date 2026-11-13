@@ -80,7 +80,7 @@ func Fra_ObjAddToFrontier(p *Fra_Man_t, node aig.Edge, frontier *[]aig.Edge) {
 	Fra_ObjSetSatNum(p, node, p.nSatVars)
 	p.nSatVars++
 	kind := p.pManFraig.Node(node).Kind
-	if kind == aig.And || kind == aig.ExclusiveOr {
+	if kind == aig.And || kind == aig.ExclusiveOr || kind == aig.Buffer {
 		*frontier = append(*frontier, node)
 	}
 }
@@ -106,6 +106,8 @@ func Fra_CnfNodeAddToSolver(p *Fra_Man_t, old, new aig.Edge) {
 		n := graph.Node(node)
 		var fanins []aig.Edge
 		switch {
+		case n.Kind == aig.Buffer:
+			fanins = append(fanins, n.Fanins[0])
 		case n.Kind == aig.ExclusiveOr:
 			fanins = append(fanins, n.Fanins[:]...)
 		case aig.Aig_ObjIsMuxType(graph, node):
