@@ -557,38 +557,7 @@ Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(ti
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_ClassesPrepareSimple(pAig *Aig_Man_t, fLatchCorr int32, nMaxLevs int32) *Ssw_Cla_t {
-    var p *Ssw_Cla_t;
-    var pObj *Aig_Obj_t;
-    var i int32;
-    // start the classes
-    p = Ssw_ClassesStart( pAig );
-    // go through the nodes
-    p.nCands1 = 0;
-    // inlining of macro Aig_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(pAig.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {
-        if fLatchCorr != 0 {
-            if !Saig_ObjIsLo(pAig, pObj) {
-                continue; }
-        
-        } else {
-            if !Aig_ObjIsNode(pObj) && !Saig_ObjIsLo(pAig, pObj) {
-                continue; }
-            // skip the node with more that the given number of levels
-            if (nMaxLevs != 0) && int32(pObj.Level) > nMaxLevs {
-                continue; }
-        }
-        Ssw_ObjSetConst1Cand( pAig, pObj );
-        p.nCands1++;
-    }
-    }
-    // allocate room for classes
-    // inlining of macro ABC_ALLOC
-    p.pMemClassesFree = p.pMemClasses = ((Aig_Obj_t * *) malloc(sizeof(Aig_Obj_t *) * (size_t)(p.nCands1)));
-//    Ssw_ClassesPrint( p, 0 );
-    return p;
-}
+
 
 /**Function*************************************************************
 
@@ -601,61 +570,7 @@ func Ssw_ClassesPrepareSimple(pAig *Aig_Man_t, fLatchCorr int32, nMaxLevs int32)
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_ClassesPrepareFromReprs(pAig *Aig_Man_t) *Ssw_Cla_t {
-    var p *Ssw_Cla_t;
-    var pObj, pRepr *Aig_Obj_t;
-    var pClassSizes *int32;
-    var nEntries int32;
-    var i int32;
-    // start the classes
-    p = Ssw_ClassesStart( pAig );
-    // allocate memory for classes
-    // inlining of macro ABC_CALLOC
-    p.pMemClasses = ((Aig_Obj_t * *) calloc((size_t)(Aig_ManObjNumMax(pAig)), sizeof(Aig_Obj_t *)));
-    // count classes
-    p.nCands1 = 0;
-    // inlining of macro Aig_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(pAig.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {
-        if Ssw_ObjIsConst1Cand(pAig, pObj) {
-            p.nCands1++;
-            continue;
-        }
-        if pRepr = Aig_ObjRepr(pAig, pObj) {
-            if p.pClassSizes[pRepr.Id]++ == 0 {
-                p.pClassSizes[pRepr.Id]++; }
-        }
-    }
-    }
-    // add nodes
-    nEntries = 0;
-    p.nClasses = 0;
-    // inlining of macro ABC_CALLOC
-    pClassSizes = ((int *) calloc((size_t)(Aig_ManObjNumMax(pAig)), sizeof(int)));
-    // inlining of macro Aig_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(pAig.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {
-        if p.pClassSizes[i] {
-            p.pId2Class[i] = p.pMemClasses + nEntries;
-            nEntries += p.pClassSizes[i];
-            p.pId2Class[i][pClassSizes[i]++] = pObj;
-            p.nClasses++;
-            continue;
-        }
-        if Ssw_ObjIsConst1Cand(pAig, pObj) {
-            continue; }
-        if pRepr = Aig_ObjRepr(pAig, pObj) {
-            p.pId2Class[pRepr.Id][pClassSizes[pRepr.Id]++] = pObj; }
-    }
-    }
-    p.pMemClassesFree = p.pMemClasses + nEntries;
-    p.nLits = nEntries - p.nClasses;
-    assert(memcmp(pClassSizes, p.pClassSizes, sizeof(int)*Aig_ManObjNumMax(pAig)) == 0, "memcmp(pClassSizes, p.pClassSizes, sizeof(int)*Aig_ManObjNumMax(pAig)) == 0");
-    pClassSizes = nil;
-//    Abc_Print( 1, "After converting:\n" );
-//    Ssw_ClassesPrint( p, 0 );
-    return p;
-}
+
 
 /**Function*************************************************************
 
