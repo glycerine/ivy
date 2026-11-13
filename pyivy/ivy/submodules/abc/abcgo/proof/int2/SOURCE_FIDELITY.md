@@ -26,6 +26,13 @@ has the same SHA-256 as the local file. The GitHub commits API likewise reports
 only the initial commit for this path. This search does not establish that no
 complete implementation exists elsewhere.
 
+A subsequent GitHub API search compared default branches of 471 distinct
+publicly listed forks: 464 had the same file hash and seven did not have the
+path. For example, the [Yosys fork](https://raw.githubusercontent.com/YosysHQ/abc/yosys-experimental/src/proof/int2/int2Core.c)
+and [OpenROAD fork](https://raw.githubusercontent.com/The-OpenROAD-Project/abc/master/src/proof/int2/int2Core.c)
+match. This sample does not cover every fork, non-default branch, or independent
+repository; no complete alternative was found in the sampled default branches.
+
 Independent components have source-based repairs and tests: timeframe
 construction preserves complemented edges and maps constants and SAT
 variables; JF CNF results use their actual Go type; refinement selects
