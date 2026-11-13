@@ -443,6 +443,12 @@ func Pr_ManProofWriteOne(p *Pr_Man_t, c *Pr_Cls_t) {
 }
 
 func Pr_ManProofTraceOne(p *Pr_Man_t, conflict, final *Pr_Cls_t) int32 {
+	return proofTrace(p, conflict, final, -1)
+}
+
+// skipVar keeps an already-true learned literal in the derived clause while
+// resolving the other root assignments in its implication reason.
+func proofTrace(p *Pr_Man_t, conflict, final *Pr_Cls_t, skipVar int32) int32 {
 	if p == nil || conflict == nil || final == nil {
 		return 0
 	}
@@ -459,6 +465,9 @@ func Pr_ManProofTraceOne(p *Pr_Man_t, conflict, final *Pr_Cls_t) int32 {
 	for i := len(p.pTrail) - 1; i >= 0; i-- {
 		assigned := p.pTrail[i]
 		v := LitVar(assigned)
+		if v == skipVar {
+			continue
+		}
 		if !seen[v] {
 			continue
 		}
@@ -568,20 +577,33 @@ func Pr_ManProofRecordOne(p *Pr_Man_t, clause *Pr_Cls_t) int32 {
 		p.lastError = errors.New("proof: trail is not at root level")
 		return 0
 	}
+	var proofID int32
 	for _, l := range clause.pLits {
 		if Pr_ManEnqueue(p, LitNeg(l), nil) == 0 {
-			Pr_ManCancelUntil(p, p.nRootSize)
-			p.lastError = errors.New("proof: learned clause contradicted by root assignment")
-			return 0
+			reason := p.pReasons[LitVar(l)]
+			if reason != nil {
+				proofID = proofTrace(p, reason, clause, LitVar(l))
+			}
+			if proofID == 0 {
+				Pr_ManCancelUntil(p, p.nRootSize)
+				if p.lastError == nil {
+					p.lastError = errors.New("proof: missing reason for root-implied literal")
+				}
+				return 0
+			}
+			break
 		}
 	}
-	conflict := Pr_ManPropagate(p, p.nRootSize)
-	if conflict == nil {
-		Pr_ManCancelUntil(p, p.nRootSize)
-		p.lastError = fmt.Errorf("proof: learned clause %d is not RUP", clause.Id)
-		return 0
+	var conflict *Pr_Cls_t
+	if proofID == 0 {
+		conflict = Pr_ManPropagate(p, p.nRootSize)
+		if conflict == nil {
+			Pr_ManCancelUntil(p, p.nRootSize)
+			p.lastError = fmt.Errorf("proof: learned clause %d is not RUP", clause.Id)
+			return 0
+		}
+		proofID = Pr_ManProofTraceOne(p, conflict, clause)
 	}
-	proofID := Pr_ManProofTraceOne(p, conflict, clause)
 	Pr_ManCancelUntil(p, p.nRootSize)
 	if proofID == 0 {
 		return 0

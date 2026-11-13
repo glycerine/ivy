@@ -202,6 +202,34 @@ func TestRootRefutationProducesInterpolant(t *testing.T) {
 	}
 }
 
+func TestLearnedClauseAlreadyTrueAtRoot(t *testing.T) {
+	for _, propagated := range []bool{false, true} {
+		p := Pr_ManAlloc(4)
+		add(t, p, true, false, 1)
+		if propagated {
+			add(t, p, true, false, -1, 4)
+		}
+		add(t, p, true, false, 2, 3)
+		add(t, p, true, false, 2, -3)
+		add(t, p, true, false, -2, 3)
+		add(t, p, true, false, -2, -3)
+		if propagated {
+			add(t, p, false, false, 4, 2)
+		} else {
+			add(t, p, false, false, 1, 2)
+		}
+		add(t, p, false, false, 2)
+		add(t, p, false, false)
+		if Pr_ManProofWrite(p) != 1 {
+			t.Fatalf("root-implied learned clause rejected: %v", p.LastError())
+		}
+		steps := p.ProofSteps()
+		if len(steps) == 0 || len(steps[len(steps)-1].Literals) != 0 {
+			t.Fatalf("missing refutation: %v", steps)
+		}
+	}
+}
+
 func TestInterpolantPartitionAndBound(t *testing.T) {
 	p := Pr_ManAlloc(1)
 	add(t, p, true, true, 1)
