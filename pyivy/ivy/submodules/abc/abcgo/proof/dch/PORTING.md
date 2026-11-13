@@ -80,7 +80,9 @@ internal entry points and callbacks do not have a directly equivalent API.
 `src/proof/dch`.
 
 The old DCH SAT path passes the conflict budget to `sat_solver_solve` and
-passes zero for its other three budgets (`dchSat.c`). There is no DCH-local
+passes zero for its other three budgets (`dchSat.c`). Signed conflict and
+recycling thresholds are passed through with C semantics, including negative
+values; zero still disables the corresponding limit. There is no DCH-local
 wall-clock timeout in that path. Tests exercise conflict exhaustion as unknown,
 unlimited conflicts, blocked fanouts, solver recycling boundaries, and SAT
 counterexamples in either query direction. They do not establish behavior for

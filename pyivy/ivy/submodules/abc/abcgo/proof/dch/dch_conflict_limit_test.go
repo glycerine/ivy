@@ -31,6 +31,7 @@ func TestSourceZeroConflictLimitIsUnlimited(t *testing.T) {
 		limit int
 		want  proofResult
 	}{
+		{-1, proofUnknown},
 		{1, proofUnknown},
 		{0, proofEquivalent},
 	} {
@@ -44,5 +45,23 @@ func TestSourceZeroConflictLimitIsUnlimited(t *testing.T) {
 		if err != nil || got != tc.want {
 			t.Fatalf("limit=%d result=%v want=%v error=%v", tc.limit, got, tc.want, err)
 		}
+	}
+}
+
+// C's signed limit is checked by the solver at search boundaries. A proof
+// reached by propagation can still finish even with a negative budget.
+func TestNegativeConflictLimitAllowsImmediateProof(t *testing.T) {
+	g := aig.NewGraph()
+	a, b := g.NewInput(), g.NewInput()
+	zero := g.AND(g.AND(a, b), g.AND(a, b.Not()))
+	params := DefaultParams()
+	params.ConflictLimit = -1
+	m, err := newManager(g, &params)
+	if err != nil {
+		t.Fatal(err)
+	}
+	result, _, err := m.provePair(g.Const1(), zero)
+	if err != nil || result != proofEquivalent {
+		t.Fatalf("result=%v error=%v, want immediate proof", result, err)
 	}
 }

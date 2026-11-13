@@ -49,4 +49,18 @@ func TestSourceSolverRecycleThresholdBoundaries(t *testing.T) {
 			check(t, m, x, y, 1)
 		}
 	})
+	t.Run("negative source thresholds", func(t *testing.T) {
+		m, x, y := newProof(t)
+		m.params.SatVarMax, m.params.CallsRecycle = -1, -1
+		check(t, m, x, y, 2)
+		check(t, m, x, y, 3)
+	})
+	t.Run("signed thresholds accepted at startup", func(t *testing.T) {
+		p := DefaultParams()
+		p.SatVarMax, p.CallsRecycle = -1, -1
+		if _, err := newManager(aig.NewGraph(), &p); err != nil {
+			t.Fatalf("source accepts signed recycling thresholds: %v", err)
+		}
+	})
+
 }

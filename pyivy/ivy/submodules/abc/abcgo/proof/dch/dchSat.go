@@ -22,7 +22,7 @@ const (
 func (m *Manager) provePair(representative, node aig.Edge) (proofResult, []bool, error) {
 	m.stats.SATCalls++
 	m.callsSince++
-	if m.solver == nil || (m.params.SatVarMax > 0 && int(m.nextVar) > m.params.SatVarMax && m.callsSince > m.params.CallsRecycle) {
+	if m.solver == nil || (m.params.SatVarMax != 0 && int(m.nextVar) > m.params.SatVarMax && m.callsSince > m.params.CallsRecycle) {
 		m.recycleSolver()
 	}
 	a, err := m.satLiteral(representative)
@@ -39,7 +39,7 @@ func (m *Manager) provePair(representative, node aig.Edge) (proofResult, []bool,
 	started := time.Now()
 	defer func() { m.stats.Solving += time.Since(started) }()
 	for direction, assumptions := range [][]int32{{a, b ^ 1}, {a ^ 1, b}} {
-		status := m.solver.Solve(assumptions...)
+		status := m.solver.SolveWithSourceLimits(assumptions, int64(m.params.ConflictLimit), 0, 0, 0)
 		switch status {
 		case bsat.Unsatisfiable:
 			// The failed conjunction implies the opposite binary clause.

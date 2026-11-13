@@ -18,8 +18,8 @@ func newManager(g *aig.Graph, parameters *Params) (*Manager, error) {
 	if parameters != nil {
 		params = *parameters
 	}
-	if params.Words <= 0 || params.ConflictLimit < 0 || params.SatVarMax < 0 || params.CallsRecycle < 0 {
-		return nil, fmt.Errorf("dch: invalid simulation/SAT parameters")
+	if params.Words <= 0 {
+		return nil, fmt.Errorf("dch: invalid simulation word count")
 	}
 	if params.Words > int(^uint(0)>>1)/int(aig.Aig_ManObjNumMax(g)) {
 		return nil, fmt.Errorf("dch: simulation allocation size overflows int")
@@ -55,7 +55,6 @@ func newManager(g *aig.Graph, parameters *Params) (*Manager, error) {
 }
 func (m *Manager) recycleSolver() {
 	m.solver = bsat.NewSolver()
-	m.solver.SetLimits(int64(m.params.ConflictLimit), 0)
 	// Dch_ManSatSolverRecycle reserves SAT variable zero and assigns one
 	// to the constant-one node, with an initial capacity of 1000 variables.
 	for i := 0; i < 1000; i++ {
