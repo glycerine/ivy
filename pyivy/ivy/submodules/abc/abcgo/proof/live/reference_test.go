@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"runtime"
 	"slices"
+	"strings"
 	"testing"
 )
 
@@ -47,7 +48,7 @@ func TestBiereAgainstOriginalABC(t *testing.T) {
 	if _, err := os.Stat(binary); err != nil {
 		t.Skip("original ABC executable unavailable")
 	}
-	for _, command := range []string{"l2s", "l2s -1", "l2s -l", "l2s -s", "l2s -s -1", "l2ssim"} {
+	for _, command := range []string{"l2s", "l2s -1", "l2s -l", "l2s -s", "l2s -s -1", "l2ssim", "l2ssim -1"} {
 		n := liveFixture(true)
 		model, err := n.Graph.AigerModel()
 		if err != nil {
@@ -70,34 +71,20 @@ func TestBiereAgainstOriginalABC(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		options := TransformOptions{Mode: 2, Liveness: populateLivenessVector(n, n.Graph), Fairness: populateFairnessVector(n, n.Graph)}
-		if command == "l2s" {
-			options.Mode = 0
+		frame := &Frame{Network: n}
+		args := strings.Fields(command)
+		var status int32
+		if args[0] == "l2ssim" {
+			status = Abc_CommandAbcLivenessToSafetySim(frame, int32(len(args)), args)
+		} else {
+			status = Abc_CommandAbcLivenessToSafety(frame, int32(len(args)), args)
 		}
-		if command == "l2s -1" {
-			options.Mode = 4
+		if status != 0 {
+			t.Fatalf("Go source command %s returned %d", command, status)
 		}
-		if command == "l2s -l" {
-			options.Mode = 1
-		}
-		if command == "l2s -s -1" {
-			options.Mode = 3
-		}
-		if command == "l2ssim" {
-			options.Restartable = true
-		}
-		native, err := LivenessToSafety(n, options)
+		nativeModel, err := frame.Network.Graph.AigerModel()
 		if err != nil {
 			t.Fatal(err)
-		}
-		nativeModel, err := native.Graph.AigerModel()
-		if err != nil {
-			t.Fatal(err)
-		}
-		// The original full-one-loop branch accidentally omits safety POs
-		// (it tests mode 0 rather than mode 4). Native mode 4 retains them.
-		if command == "l2s -1" {
-			nativeModel.Outputs = nativeModel.Outputs[1:]
 		}
 		if len(reference.Inputs) != len(nativeModel.Inputs) || len(reference.Latches) != len(nativeModel.Latches) || len(reference.Outputs) != len(nativeModel.Outputs) {
 			t.Fatalf("C/native interface %s: %d/%d PI %d/%d regs %d/%d PO", command, len(reference.Inputs), len(nativeModel.Inputs), len(reference.Latches), len(nativeModel.Latches), len(reference.Outputs), len(nativeModel.Outputs))
