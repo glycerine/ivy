@@ -2,6 +2,7 @@ package fra
 
 import (
 	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/aig/saig"
 	"testing"
 )
 
@@ -61,5 +62,38 @@ func TestLatchCorrespondenceKeepsDistinctLatches(t *testing.T) {
 		if err != nil || out[0] != ((xx && yy) != (xx != yy)) {
 			t.Fatalf("mask %d out=%v err=%v", mask, out, err)
 		}
+	}
+}
+
+func TestLatchCorrespondenceProducesCounterexample(t *testing.T) {
+	g := aig.NewGraph()
+	x, a := g.NewInput(), g.NewInput()
+	g.NewInput()
+	g.AddOutput(g.AND(x, a))
+	g.AddOutput(x)
+	g.AddOutput(x)
+	aig.Aig_ManSetRegNum(g, 2)
+	if out := Fra_FraigLatchCorrespondence(g, 0, 10000, 1, 0, nil, 0); out != nil {
+		t.Fatal("expected failing miter to stop correspondence")
+	}
+	cex := g.SequentialCounterexample()
+	if cex == nil || saig.Saig_ManVerifyCex(g, cex) == 0 {
+		t.Fatalf("invalid counterexample: %+v", cex)
+	}
+}
+
+func TestLatchCorrespondenceExpiredTimeBudget(t *testing.T) {
+	g := aig.NewGraph()
+	x, a, b := g.NewInput(), g.NewInput(), g.NewInput()
+	g.AddOutput(g.XOR(a, b))
+	g.AddOutput(x)
+	g.AddOutput(x)
+	aig.Aig_ManSetRegNum(g, 2)
+	iterations := int32(-1)
+	if out := Fra_FraigLatchCorrespondence(g, 0, 10000, 0, 0, &iterations, 1e-12); out != nil {
+		t.Fatal("expired budget returned a reduction")
+	}
+	if iterations != 0 {
+		t.Fatalf("iterations=%d", iterations)
 	}
 }
