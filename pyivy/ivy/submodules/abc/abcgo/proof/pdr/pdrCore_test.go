@@ -369,7 +369,6 @@ func TestPdrShortestTraceForLatchChain(t *testing.T) {
 		pars.fSilent, pars.fShortest = 1, 1
 		var status int32
 		if incremental {
-			pars.nFrameMax = 1
 			status = IPdr_ManSolve(g, &pars)
 		} else {
 			status = Pdr_ManSolve(g, &pars)
@@ -449,7 +448,6 @@ func testAdditionalPdrModes(t *testing.T, incremental bool, trials int) {
 		pars.fCtgs = int32((trial / 256) % 2)
 		var got int32
 		if incremental {
-			pars.nFrameMax = 1
 			got = IPdr_ManSolve(g, &pars)
 		} else {
 			got = Pdr_ManSolve(g, &pars)

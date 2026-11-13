@@ -8,12 +8,12 @@ C-shaped entry points remain available for internal integration.
 The package tests include exhaustive one-register transition/property pairs,
 and seeded two-register machines checked against explicit reachability. The
 latter exercise monolithic and dynamic CNF, both ternary simulators,
-abstraction refinement, shortest-trace mode and incremental restarts. Failing
+abstraction refinement and shortest-trace mode. Failing
 results are checked with the AIG counterexample verifier. An additional 64
 two-register, multi-output native-XOR machines with complemented edges are
 checked against explicit reachability and their witnesses are replayed. A
 further 160 sampled three-register machines exercise proof-obligation reuse,
-shifted frame starts, both CNF modes, abstraction, and incremental restarts
+shifted frame starts, both CNF modes, abstraction, and incremental solving
 against an eight-state reachability oracle. A local ABC executable, when
 available, also checks 64 generated two-register machines with matching C and
 Go CNF, abstraction, priority, generalization and frame-management options.
@@ -70,6 +70,11 @@ Remaining review and coverage gaps:
 - Incremental clause restoration remaps literals without sorting them or
   recomputing their membership signature, matching ABC. A non-order-preserving
   map can therefore leave the restored cube's ordering and signature stale.
+- Incremental restart follows ABC's fresh-manager behavior: output witnesses,
+  output maps and per-output time budgets are reset while counters in the
+  shared parameter struct remain. Consequently solved outputs may be counted
+  again. If the first frame-limit restart has no saved clauses, the source's
+  unconditional restore asserts; the Go entry point likewise panics.
 - As in ABC, stopping a PDR manager stops the graph's fanout index even if
   that index existed before the manager started. A caller that needs fanout
   data afterward must rebuild it.

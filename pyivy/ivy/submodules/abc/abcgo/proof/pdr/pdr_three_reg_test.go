@@ -71,7 +71,6 @@ func TestPdrThreeRegisterReachability(t *testing.T) {
 		pars.fReuseProofOblig = int32((trial >> 5) & 1)
 		var result int32
 		if trial&64 != 0 {
-			pars.nFrameMax = 1
 			result = IPdr_ManSolve(g, &pars)
 		} else {
 			result = Pdr_ManSolve(g, &pars)

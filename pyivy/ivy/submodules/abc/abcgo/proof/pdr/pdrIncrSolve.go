@@ -26,7 +26,7 @@ func IPdr_ManSolveInt(p *Pdr_Man_t, checkClauses, pushClauses int32) int32 {
 	outputEdges := graph.Outputs()[:outputs]
 	if pars.fSolveAll != 0 {
 		for i, output := range outputEdges {
-			if aig.Aig_ObjChild0(graph, output) == graph.Const0() && vec.Vec_IntEntry(pars.vOutMap, i) != 1 {
+			if aig.Aig_ObjChild0(graph, output) == graph.Const0() {
 				vec.Vec_IntWriteEntry(pars.vOutMap, i, 1)
 				pars.nProveOuts++
 				if pars.fUseBridge != 0 {
@@ -325,29 +325,14 @@ func IPdr_ManSolve(graph *aig.Graph, pars *Pdr_Par_t) int32 {
 	var result int32
 	for {
 		result = IPdr_ManSolveInt(p, 1, 0)
-		if result != -1 || pars.nFrameMax == 0 || pars.iFrame != pars.nFrameMax {
+		if result != -1 || pars.iFrame != pars.nFrameMax {
 			break
 		}
 		saved := IPdr_ManSaveClauses(p, 1)
-		// The first restart can have no reusable frames. Preserve output
-		// results and budgets across all restarts, including that case.
-		counterexamples, outMap, budgets := p.vCexes, pars.vOutMap, p.pTime4Outs
 		Pdr_ManStop(p)
 		p = Pdr_ManStart(graph, pars, nil)
-		if counterexamples != nil {
-			p.vCexes, pars.vOutMap = counterexamples, outMap
-		}
-		if budgets != nil {
-			p.pTime4Outs = budgets
-		}
-		if saved != nil {
-			IPdr_ManRestoreClauses(p, saved, nil)
-		}
-		if pars.nFrameMax > (1<<30)-1 {
-			pars.nFrameMax = 0
-		} else {
-			pars.nFrameMax <<= 1
-		}
+		IPdr_ManRestoreClauses(p, saved, nil)
+		pars.nFrameMax <<= 1
 	}
 	if p.vCexes != nil {
 		if graph.SequentialCounterexamples() != nil {

@@ -3,12 +3,11 @@ package pdr
 import (
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/aig/saig"
-	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"testing"
 )
 
-func TestIncrementalPdrRestartAndWitness(t *testing.T) {
+func TestIncrementalFirstRestartAssertsOnNilSavedClauses(t *testing.T) {
 	g := aig.NewGraph()
 	x, q0, q1 := g.NewInput(), g.NewInput(), g.NewInput()
 	g.AddOutput(q1)
@@ -18,16 +17,12 @@ func TestIncrementalPdrRestartAndWitness(t *testing.T) {
 	var pars Pdr_Par_t
 	Pdr_ManSetDefaultParams(&pars)
 	pars.fSilent, pars.nFrameMax = 1, 1
-	result := IPdr_ManSolve(g, &pars)
-	if result != 0 {
-		t.Fatalf("got %d, want counterexample", result)
-	}
-	if pars.nFrameMax <= 1 {
-		t.Fatal("incremental driver did not restart")
-	}
-	if g.SequentialCounterexample() == nil || saig.Saig_ManVerifyCex(g, g.SequentialCounterexample()) != 1 {
-		t.Fatal("missing or invalid counterexample")
-	}
+	defer func() {
+		if recover() == nil {
+			t.Fatal("expected C's nil saved-clause assertion")
+		}
+	}()
+	IPdr_ManSolve(g, &pars)
 }
 
 func TestIncrementalPdrSafeAndUnsafe(t *testing.T) {
@@ -58,50 +53,41 @@ func TestIncrementalPdrSafeAndUnsafe(t *testing.T) {
 	}
 }
 
-func TestIncrementalPdrRestartPreservesSolvedOutputs(t *testing.T) {
+func TestIncrementalRestartRecreatesOutputStateAsInC(t *testing.T) {
 	g := aig.NewGraph()
-	x, q0, q1 := g.NewInput(), g.NewInput(), g.NewInput()
-	g.AddOutput(x)
-	g.AddOutput(q1)
-	g.AddOutput(x)
-	g.AddOutput(q0)
-	aig.Aig_ManSetRegNum(g, 2)
+	g.AddOutput(g.Const0())
 	var pars Pdr_Par_t
 	Pdr_ManSetDefaultParams(&pars)
-	pars.fSilent, pars.fNotVerbose, pars.fSolveAll, pars.fStoreCex, pars.nFrameMax = 1, 1, 1, 1, 1
-	result := IPdr_ManSolve(g, &pars)
-	if result != 0 || pars.nFailOuts != 2 {
-		t.Fatalf("result %d failed outputs %d", result, pars.nFailOuts)
-	}
-	if pars.nFrameMax <= 1 {
-		t.Fatal("expected restart")
-	}
-	witnesses := g.SequentialCounterexamples()
-	if witnesses == nil {
-		t.Fatal("missing output witnesses")
-	}
-	for i := 0; i < 2; i++ {
-		cex, ok := vec.Vec_PtrEntry(witnesses, i).(*util.Abc_Cex_t)
-		if !ok || cex == nil || saig.Saig_ManVerifyCex(g, cex) != 1 {
-			t.Fatalf("output %d missing or invalid witness", i)
-		}
+	pars.fSolveAll, pars.nTimeOutOne = 1, 50
+	first := Pdr_ManStart(g, &pars, nil)
+	vec.Vec_PtrWriteEntry(first.vCexes, 0, "solved")
+	vec.Vec_IntWriteEntry(pars.vOutMap, 0, 0)
+	first.pTime4Outs[0] = 0
+	pars.nFailOuts = 1
+	Pdr_ManStop(first)
+	second := Pdr_ManStart(g, &pars, nil)
+	defer Pdr_ManStop(second)
+	if vec.Vec_PtrEntry(second.vCexes, 0) != nil || vec.Vec_IntEntry(pars.vOutMap, 0) != -2 || second.pTime4Outs[0] == 0 || pars.nFailOuts != 1 {
+		t.Fatalf("restart state: witness=%v map=%d budget=%d failed=%d", vec.Vec_PtrEntry(second.vCexes, 0), vec.Vec_IntEntry(pars.vOutMap, 0), second.pTime4Outs[0], pars.nFailOuts)
 	}
 }
 
-func TestIncrementalPdrRestartDoesNotRecountProvedOutputs(t *testing.T) {
+func TestIncrementalFreshManagerRecountsTrivialOutputsAsInC(t *testing.T) {
 	g := aig.NewGraph()
-	x, q0, q1 := g.NewInput(), g.NewInput(), g.NewInput()
 	g.AddOutput(g.Const0())
-	g.AddOutput(q1)
-	g.AddOutput(x)
-	g.AddOutput(q0)
-	aig.Aig_ManSetRegNum(g, 2)
+	g.AddOutput(g.Const1())
 	var pars Pdr_Par_t
 	Pdr_ManSetDefaultParams(&pars)
-	pars.fSilent, pars.fNotVerbose, pars.fSolveAll, pars.nFrameMax = 1, 1, 1, 1
-	result := IPdr_ManSolve(g, &pars)
-	if result != 0 || pars.nFailOuts != 1 || pars.nProveOuts != 1 {
-		t.Fatalf("result %d failed %d proved %d", result, pars.nFailOuts, pars.nProveOuts)
+	pars.fSolveAll, pars.fNotVerbose, pars.fSilent = 1, 1, 1
+	for run := 0; run < 2; run++ {
+		manager := Pdr_ManStart(g, &pars, nil)
+		if got := IPdr_ManSolveInt(manager, 0, 0); got != 0 {
+			t.Fatalf("run %d: got result %d", run, got)
+		}
+		Pdr_ManStop(manager)
+	}
+	if pars.nProveOuts != 2 || pars.nFailOuts != 2 {
+		t.Fatalf("source counters after fresh managers: proved=%d failed=%d", pars.nProveOuts, pars.nFailOuts)
 	}
 }
 
@@ -156,7 +142,6 @@ func TestIncrementalPdrAgainstExhaustiveReachability(t *testing.T) {
 			var pars Pdr_Par_t
 			Pdr_ManSetDefaultParams(&pars)
 			pars.fSilent = 1
-			pars.nFrameMax = 1
 			got := IPdr_ManSolve(g, &pars)
 			want := int32(1)
 			if bad {
