@@ -26,6 +26,7 @@ func Tim_ManSetCoArrival(p *Tim_Man_t, i int, delay float32) {
 	o.timeArr = delay
 	o.TravId = p.nTravIds
 }
+func Tim_ManGetCoArrival(p *Tim_Man_t, i int) float32 { return p.pCos[i].timeArr }
 func Tim_ManSetCiRequired(p *Tim_Man_t, i int, delay float32) {
 	o := &p.pCis[i]
 	if p.fUseTravId && o.TravId == p.nTravIds {

@@ -61,6 +61,10 @@ func Tim_ManDup(p *Tim_Man_t, unit int) *Tim_Man_t {
 	}
 	return q
 }
+
+// CloneTiming lets AIG graph duplication preserve timing metadata without
+// depending on the timing package's concrete type.
+func (p *Tim_Man_t) CloneTiming() any { return Tim_ManDup(p, 0) }
 func Tim_ManTrim(p *Tim_Man_t, present []int) *Tim_Man_t {
 	if len(present) != len(p.vBoxes) {
 		panic("tim: trim mask size")
