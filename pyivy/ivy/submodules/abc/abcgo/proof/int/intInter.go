@@ -1,146 +1,48 @@
 package int
 
-import "fmt"
+// Interpolant validation helpers ported from proof/int/intInter.c.
+import (
+	"fmt"
 
-/**CFile****************************************************************
+	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/sat/bsat"
+)
 
-  FileName    [intInter.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Interpolation engine.]
-
-  Synopsis    [Experimental procedures to derive and compare interpolants.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 24, 2008.]
-
-  Revision    [$Id: intInter.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "intInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Inter_ManDupExpand(pInter *Aig_Man_t, pOther *Aig_Man_t) *Aig_Man_t {
-    var pInterC *Aig_Man_t;
-    assert(Aig_ManCiNum(pInter) <= Aig_ManCiNum(pOther), "Aig_ManCiNum(pInter) <= Aig_ManCiNum(pOther)");
-    pInterC = Aig_ManDupSimple( pInter );
-    Aig_IthVar( pInterC, Aig_ManCiNum(pOther)-1 );
-    assert(Aig_ManCiNum(pInterC) == Aig_ManCiNum(pOther), "Aig_ManCiNum(pInterC) == Aig_ManCiNum(pOther)");
-    return pInterC;
+// Inter_ManDupExpand duplicates an interpolant and appends unused inputs to
+// match the comparison graph, preserving the source input order.
+func Inter_ManDupExpand(interpolant, other *aig.Graph) *aig.Graph {
+	if interpolant == nil || other == nil || interpolant.InputCount() > other.InputCount() {
+		panic("interpolant has too many inputs")
+	}
+	result := aig.Aig_ManDupSimple(interpolant)
+	for result.InputCount() < other.InputCount() {
+		result.NewInput()
+	}
+	return result
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Inter_ManVerifyInterpolant1(pMan *Inta_Man_t, pCnf *Sto_Man_t, pInter *Aig_Man_t) {
-    extern Aig_Man_t * Inta_ManDeriveClauses( Inta_Man_t * pMan, Sto_Man_t * pCnf, int fClausesA );
-    var pLower, pUpper, pInterC *Aig_Man_t;
-    var RetValue1, RetValue2 int32;
-
-    pLower = Inta_ManDeriveClauses( pMan, pCnf, 1 );
-    pUpper = Inta_ManDeriveClauses( pMan, pCnf, 0 );
-    Aig_ManFlipFirstPo( pUpper );
-
-    pInterC = Inter_ManDupExpand( pInter, pLower );
-    RetValue1 = Inter_ManCheckContainment( pLower, pInterC );
-    Aig_ManStop( pInterC );
-
-    pInterC = Inter_ManDupExpand( pInter, pUpper );
-    RetValue2 = Inter_ManCheckContainment( pInterC, pUpper );
-    Aig_ManStop( pInterC );
-    
-    if RetValue1 && (RetValue2 != 0) {
-        fmt.Printf("Im is correct.\n"); }
-    if !RetValue1 {
-        fmt.Printf("Property A => Im fails.\n"); }
-    if !(RetValue2 != 0) {
-        fmt.Printf("Property Im => !B fails.\n"); }
-
-    Aig_ManStop( pLower );
-    Aig_ManStop( pUpper );
+func verifyInterpolant(lower, upper, interpolant *aig.Graph, name string) {
+	aig.Aig_ManFlipFirstPo(upper)
+	lowerValid := Inter_ManCheckContainment(lower, Inter_ManDupExpand(interpolant, lower))
+	upperValid := Inter_ManCheckContainment(Inter_ManDupExpand(interpolant, upper), upper)
+	if lowerValid == 1 && upperValid == 1 {
+		fmt.Printf("%s is correct.\n", name)
+	}
+	if lowerValid == 0 {
+		fmt.Printf("Property A => %s fails.\n", name)
+	}
+	if upperValid == 0 {
+		fmt.Printf("Property %s => !B fails.\n", name)
+	}
+	if lowerValid < 0 || upperValid < 0 {
+		fmt.Printf("Could not verify %s: containment check was undecided.\n", name)
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Inter_ManVerifyInterpolant2(pMan *Intb_Man_t, pCnf *Sto_Man_t, pInter *Aig_Man_t) {
-    extern Aig_Man_t * Intb_ManDeriveClauses( Intb_Man_t * pMan, Sto_Man_t * pCnf, int fClausesA );
-    var pLower, pUpper, pInterC *Aig_Man_t;
-    var RetValue1, RetValue2 int32;
-
-    pLower = Intb_ManDeriveClauses( pMan, pCnf, 1 );
-    pUpper = Intb_ManDeriveClauses( pMan, pCnf, 0 );
-    Aig_ManFlipFirstPo( pUpper );
-
-    pInterC = Inter_ManDupExpand( pInter, pLower );
-//Aig_ManPrintStats( pLower );
-//Aig_ManPrintStats( pUpper );
-//Aig_ManPrintStats( pInterC );
-//Aig_ManDumpBlif( pInterC, "inter_c.blif", NULL, NULL );
-    RetValue1 = Inter_ManCheckContainment( pLower, pInterC );
-    Aig_ManStop( pInterC );
-
-    pInterC = Inter_ManDupExpand( pInter, pUpper );
-    RetValue2 = Inter_ManCheckContainment( pInterC, pUpper );
-    Aig_ManStop( pInterC );
-    
-    if RetValue1 && (RetValue2 != 0) {
-        fmt.Printf("Ip is correct.\n"); }
-    if !RetValue1 {
-        fmt.Printf("Property A => Ip fails.\n"); }
-    if !(RetValue2 != 0) {
-        fmt.Printf("Property Ip => !B fails.\n"); }
-
-    Aig_ManStop( pLower );
-    Aig_ManStop( pUpper );
+func Inter_ManVerifyInterpolant1(manager *bsat.Inta_Man_t, proof *bsat.Sto_Man_t, interpolant *aig.Graph) {
+	verifyInterpolant(bsat.Inta_ManDeriveClauses(manager, proof, 1), bsat.Inta_ManDeriveClauses(manager, proof, 0), interpolant, "Im")
 }
 
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func Inter_ManVerifyInterpolant2(manager *bsat.Intb_Man_t, proof *bsat.Sto_Man_t, interpolant *aig.Graph) {
+	verifyInterpolant(bsat.Intb_ManDeriveClauses(manager, proof, 1), bsat.Intb_ManDeriveClauses(manager, proof, 0), interpolant, "Ip")
+}
