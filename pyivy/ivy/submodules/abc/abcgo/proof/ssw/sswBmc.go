@@ -1,223 +1,122 @@
 package ssw
 
+// Dynamic bounded unrolling and counterexample extraction, ported from sswBmc.c.
 import (
-	"os"
+	"fmt"
+	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/aig/saig"
+	"github.com/glycerine/abcgo/misc/util"
+	"github.com/glycerine/abcgo/sat/bsat"
 	"time"
 )
 
-/**CFile****************************************************************
-
-  FileName    [sswBmc.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Inductive prover with constraints.]
-
-  Synopsis    [Bounded model checker using dynamic unrolling.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - September 1, 2008.]
-
-  Revision    [$Id: sswBmc.c,v 1.00 2008/09/01 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "sswInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Incrementally unroll the timeframes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ssw_BmcUnroll_rec(pFrm *Ssw_Frm_t, pObj *Aig_Obj_t, f int32) *Aig_Obj_t {
-    var pRes, pRes0, pRes1 *Aig_Obj_t;
-    if pRes = Ssw_ObjFrame_(pFrm, pObj, f) {
-        return pRes; }
-    if Aig_ObjIsConst1(pObj) {
-        pRes = Aig_ManConst1( pFrm.pFrames );
-    } else if Saig_ObjIsPi(pFrm.pAig, pObj) {
-        pRes = Aig_ObjCreateCi( pFrm.pFrames );
-    } else if Aig_ObjIsCo(pObj) {
-        Ssw_BmcUnroll_rec( pFrm, Aig_ObjFanin0(pObj), f );
-        pRes = Ssw_ObjChild0Fra_( pFrm, pObj, f );
-    
-    } else if Saig_ObjIsLo(pFrm.pAig, pObj) {
-        if f == 0 {
-            pRes = Aig_ManConst0( pFrm.pFrames );
-        } else {
-            pRes = Ssw_BmcUnroll_rec( pFrm, Saig_ObjLoToLi(pFrm.pAig, pObj), f-1 ); }
-    
-    } else {
-        assert(Aig_ObjIsNode(pObj), "Aig_ObjIsNode(pObj)");
-        Ssw_BmcUnroll_rec( pFrm, Aig_ObjFanin0(pObj), f );
-        Ssw_BmcUnroll_rec( pFrm, Aig_ObjFanin1(pObj), f );
-        pRes0 = Ssw_ObjChild0Fra_( pFrm, pObj, f );
-        pRes1 = Ssw_ObjChild1Fra_( pFrm, pObj, f );
-        pRes = Aig_And( pFrm.pFrames, pRes0, pRes1 );
-    }
-    Ssw_ObjSetFrame_( pFrm, pObj, f, pRes );
-    return pRes;
+func Ssw_BmcUnroll_rec(p *Ssw_Frm_t, obj aig.Edge, frame int32) aig.Edge {
+	if frame < 0 || obj.Complemented() {
+		panic("ssw: invalid unrolling object or frame")
+	}
+	if result := Ssw_ObjFrame_(p, obj, frame); result != aig.InvalidEdge {
+		return result
+	}
+	var result aig.Edge
+	switch {
+	case aig.Aig_ObjIsConst1(p.pAig, obj):
+		result = p.pFrames.Const1()
+	case saig.Saig_ObjIsPi(p.pAig, obj):
+		result = p.pFrames.NewInput()
+	case aig.Aig_ObjIsCo(p.pAig, obj):
+		Ssw_BmcUnroll_rec(p, aig.Aig_ObjFanin0(p.pAig, obj), frame)
+		result = Ssw_ObjChild0Fra_(p, obj, frame)
+	case saig.Saig_ObjIsLo(p.pAig, obj):
+		if frame == 0 {
+			result = p.pFrames.Const0()
+		} else {
+			result = Ssw_BmcUnroll_rec(p, saig.Saig_ObjLoToLi(p.pAig, obj), frame-1)
+		}
+	case aig.Aig_ObjIsNode(p.pAig, obj):
+		Ssw_BmcUnroll_rec(p, aig.Aig_ObjFanin0(p.pAig, obj), frame)
+		Ssw_BmcUnroll_rec(p, aig.Aig_ObjFanin1(p.pAig, obj), frame)
+		a, b := Ssw_ObjChild0Fra_(p, obj, frame), Ssw_ObjChild1Fra_(p, obj, frame)
+		if p.pAig.Node(obj).Kind == aig.ExclusiveOr {
+			result = p.pFrames.NewXor(a, b)
+		} else {
+			result = p.pFrames.AND(a, b)
+		}
+	default:
+		panic("ssw: unsupported object during unrolling")
+	}
+	Ssw_ObjSetFrame_(p, obj, frame, result)
+	return result
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Derives counter-example.]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ssw_BmcGetCounterExample(pFrm *Ssw_Frm_t, pSat *Ssw_Sat_t, iPo int32, iFrame int32) *Abc_Cex_t {
-    var pCex *Abc_Cex_t;
-    var pObj, pObjFrames *Aig_Obj_t;
-    var f, i, nShift int32;
-    assert(Saig_ManRegNum(pFrm.pAig) > 0, "Saig_ManRegNum(pFrm.pAig) > 0");
-    // allocate the counter example
-    pCex = Abc_CexAlloc( Saig_ManRegNum(pFrm.pAig), Saig_ManPiNum(pFrm.pAig), iFrame + 1 );
-    pCex.iPo    = iPo;
-    pCex.iFrame = iFrame;
-    // create data-bits
-    nShift = Saig_ManRegNum(pFrm.pAig);
-    for  f = 0; f <= iFrame; f++, nShift += Saig_ManPiNum(pFrm.pAig)  {
-        // inlining of macro Saig_ManForEachPi
-        // inlining of macro Vec_PtrForEachEntryStop
-        for  i = 0; (i < Saig_ManPiNum(pFrm.pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pFrm.pAig.vCis, i)), 1); i++  {
-            pObjFrames = Ssw_ObjFrame_(pFrm, pObj, f);
-            if pObjFrames == nil {
-                continue; }
-            if Ssw_CnfGetNodeValue( pSat, pObjFrames ) {
-                Abc_InfoSetBit( pCex.pData, nShift + i ); }
-        }
-    }
-    return pCex;
+func Ssw_BmcGetCounterExample(p *Ssw_Frm_t, sat *Ssw_Sat_t, po, frame int32) *util.Abc_Cex_t {
+	regs, pis := saig.Saig_ManRegNum(p.pAig), saig.Saig_ManPiNum(p.pAig)
+	if regs <= 0 {
+		panic("ssw: BMC requires registers")
+	}
+	cex := util.Abc_CexAlloc(regs, pis, frame+1)
+	cex.IPo = po
+	cex.IFrame = frame
+	for f := int32(0); f <= frame; f++ {
+		for i, obj := range p.pAig.Inputs()[:pis] {
+			mapped := Ssw_ObjFrame_(p, obj, f)
+			if mapped != aig.InvalidEdge && Ssw_CnfGetNodeValue(sat, mapped) != 0 {
+				util.Abc_InfoSetBit(cex.PData, regs+f*pis+int32(i))
+			}
+		}
+	}
+	return cex
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    [Performs BMC for the given AIG.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ssw_BmcDynamic(pAig *Aig_Man_t, nFramesMax int32, nConfLimit int32, fVerbose int32, piFrame *int32) int32 {
-    var pFrm *Ssw_Frm_t;
-    var pSat *Ssw_Sat_t;
-    var pObj, pObjFrame *Aig_Obj_t;
-    var status, Lit, i, f, RetValue int32;
-    var clkPart abctime;
-
-    // start managers
-    assert(Saig_ManRegNum(pAig) > 0, "Saig_ManRegNum(pAig) > 0");
-    Aig_ManSetCioIds( pAig );
-    pSat = Ssw_SatStart( 0 );
-    pFrm = Ssw_FrmStart( pAig );
-    pFrm.pFrames = Aig_ManStart( Aig_ManObjNumMax(pAig) * 3 );
-    // report statistics
-    if fVerbose != 0 {
-        Abc_Print( 1, "AIG:  PI/PO/Reg = %d/%d/%d.  Node = %6d. Lev = %5d.\n",
-            Saig_ManPiNum(pAig), Saig_ManPoNum(pAig), Saig_ManRegNum(pAig),
-            Aig_ManNodeNum(pAig), Aig_ManLevelNum(pAig) );
-        fflush( os.Stdout );
-    }
-    // perform dynamic unrolling
-    RetValue = -1;
-    for  f = 0; f < nFramesMax; f++  {
-        clkPart = Abc_Clock();
-        // inlining of macro Saig_ManForEachPo
-        // inlining of macro Vec_PtrForEachEntryStop
-        for  i = 0; (i < Saig_ManPoNum(pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {
-            // unroll the circuit for this output
-            Ssw_BmcUnroll_rec( pFrm, pObj, f );
-            pObjFrame = Ssw_ObjFrame_( pFrm, pObj, f );
-            Ssw_CnfNodeAddToSolver( pSat, Aig_Regular(pObjFrame) );
-            status = sat_solver_simplify(pSat.pSat);
-            assert(status, "status");
-            // solve
-            Lit = toLitCond( Ssw_ObjSatNum(pSat,pObjFrame), Aig_IsComplement(pObjFrame) );
-            if fVerbose != 0 {
-                Abc_Print( 1, "Solving output %2d of frame %3d ... \r",
-                    i % Saig_ManPoNum(pAig), i / Saig_ManPoNum(pAig) );
-            }
-            status = sat_solver_solve( pSat.pSat, &Lit, &Lit + 1, (ABC_INT64_T)nConfLimit, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );
-            if status == l_False {
-/*
-                Lit = lit_neg( Lit );
-                RetValue = sat_solver_addclause( pSat->pSat, &Lit, &Lit + 1 );
-                assert( RetValue );
-                if ( pSat->pSat->qtail != pSat->pSat->qhead )
-                {
-                    RetValue = sat_solver_simplify(pSat->pSat);
-                    assert( RetValue );
-                }
-*/
-                RetValue = 1;
-                continue;
-            
-            } else if status == l_True {
-                pAig.pSeqModel = Ssw_BmcGetCounterExample( pFrm, pSat, i, f );
-                if piFrame != nil {
-                    *piFrame = f; }
-                RetValue = 0;
-                break;
-            
-            } else {
-                if piFrame != nil {
-                    *piFrame = f; }
-                RetValue = -1;
-                break;
-            }
-        }
-        if fVerbose != 0 {
-            Abc_Print( 1, "Solved %2d outputs of frame %3d.  ", Saig_ManPoNum(pAig), f );
-            Abc_Print( 1, "Conf =%8.0f. Var =%8d. AIG=%9d. ",
-                float64(pSat.pSat.stats.conflicts),
-                pSat.nSatVars, Aig_ManNodeNum(pFrm.pFrames) );
-            // inlining of macro ABC_PRT
-            Abc_Print(1, "%s =", ("T"));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clkPart)))/(float64(int64(time.Second))));;
-            clkPart = Abc_Clock();
-            fflush( os.Stdout );
-        }
-        if RetValue != 1 {
-            break; }
-    }
-
-    Ssw_SatStop( pSat );
-    Ssw_FrmStop( pFrm );
-    return RetValue;
+func Ssw_BmcDynamic(graph *aig.Graph, maxFrames, confLimit, verbose int32, lastFrame *int32) int32 {
+	if saig.Saig_ManRegNum(graph) <= 0 {
+		panic("ssw: BMC requires registers")
+	}
+	sat := Ssw_SatStart(0)
+	defer Ssw_SatStop(sat)
+	frm := Ssw_FrmStart(graph)
+	defer Ssw_FrmStop(frm)
+	frm.pFrames = aig.Aig_ManStart(aig.Aig_ManObjNumMax(graph) * 3)
+	sat.pAig = frm.pFrames
+	sat.pSat.SetLimits(int64(confLimit), 0)
+	if verbose != 0 {
+		fmt.Printf("AIG:  PI/PO/Reg = %d/%d/%d.  Node = %6d. Lev = %5d.\n", saig.Saig_ManPiNum(graph), saig.Saig_ManPoNum(graph), saig.Saig_ManRegNum(graph), aig.Aig_ManNodeNum(graph), aig.Aig_ManLevelNum(graph))
+	}
+	result := int32(-1)
+	for frame := int32(0); frame < maxFrames; frame++ {
+		started := time.Now()
+		for i, obj := range graph.Outputs()[:saig.Saig_ManPoNum(graph)] {
+			mapped := Ssw_BmcUnroll_rec(frm, obj, frame)
+			Ssw_CnfNodeAddToSolver(sat, aig.Aig_Regular(mapped))
+			if !sat.pSat.Simplify() {
+				panic("ssw: SAT formula inconsistent before BMC query")
+			}
+			lit := Ssw_ObjSatNum(sat, mapped) << 1
+			if mapped.Complemented() {
+				lit |= 1
+			}
+			status := sat.pSat.Solve(lit)
+			if status == bsat.Unsatisfiable {
+				result = 1
+				continue
+			}
+			if lastFrame != nil {
+				*lastFrame = frame
+			}
+			if status == bsat.Satisfiable {
+				cex := Ssw_BmcGetCounterExample(frm, sat, int32(i), frame)
+				if err := graph.SetSequentialCounterexample(cex); err != nil {
+					panic(err)
+				}
+				result = 0
+			} else {
+				result = -1
+			}
+			break
+		}
+		if verbose != 0 {
+			fmt.Printf("Solved %2d outputs of frame %3d. Var = %8d. AIG = %9d. T = %s\n", saig.Saig_ManPoNum(graph), frame, sat.nSatVars, aig.Aig_ManNodeNum(frm.pFrames), time.Since(started))
+		}
+		if result != 1 {
+			break
+		}
+	}
+	return result
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
