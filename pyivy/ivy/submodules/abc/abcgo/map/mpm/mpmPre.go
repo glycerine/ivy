@@ -891,19 +891,7 @@ func Extra_Truth6AllConfigs(t word, pComp *int32, pPerm *int32, nVars int32) *Ve
   SeeAlso     []
 
 ***********************************************************************/
-func Ifd_ComputeSignature(uTruth word, pCounts []int32) {
-    var v, Pos, Neg, Xor int32;
-    for  v = 0; v < 6; v++  {
-        Neg = Abc_TtCountOnes( Abc_Tt6Cofactor0(uTruth, v) ) / 2;
-        Pos = Abc_TtCountOnes( Abc_Tt6Cofactor1(uTruth, v) ) / 2;
-        Xor = Abc_TtCountOnes( Abc_Tt6Cofactor0(uTruth, v) ^ Abc_Tt6Cofactor1(uTruth, v) ) / 2;
-        if Pos <= Neg {
-            pCounts[v] = (Pos << 20) | (Neg << 10) | Xor;
-        } else {
-            pCounts[v] = (Neg << 20) | (Pos << 10) | Xor; }
-    }
-    Vec_IntSelectSort( pCounts, 6 );
-}
+
 func Ifd_ManDsdTest33() int32 {
     var nVars int32  = 6;
     var vTruths *Vec_Wrd_t  = Ifd_ManDsdTruths( nVars );
@@ -913,7 +901,7 @@ func Ifd_ManDsdTest33() int32 {
     var uTruth word;
     Vec_WrdForEachEntry( vTruths, uTruth, i )
     {
-        Ifd_ComputeSignature( uTruth, pCounts );
+        Ifd_ComputeSignature( uTruth, pCounts[:] );
         // print
         fmt.Printf("%5d :  ", i); 
         for  v = 0; v < 6; v++  {
