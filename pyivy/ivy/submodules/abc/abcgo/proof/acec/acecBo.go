@@ -1,208 +1,114 @@
 package acec
 
-import "fmt"
+// Booth-pattern recognition ported from src/proof/acec/acecBo.c.
+import (
+	"fmt"
 
-/**CFile****************************************************************
+	"github.com/glycerine/abcgo/aig/gia"
+)
 
-  FileName    [acecBo.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [CEC for arithmetic circuits.]
-
-  Synopsis    [Core procedures.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: acecBo.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "acecInt.h"
-//#include "misc/vec/vecWec.h"
-//#include "misc/extra/extra.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Acec_DetectBoothXorMux(p *Gia_Man_t, pMux *Gia_Obj_t, pXor *Gia_Obj_t, pIns []int32) int32 {
-    var pFan0, pFan1 *Gia_Obj_t;
-    var pDat0, pDat1, pCtrl *Gia_Obj_t;
-    if !Gia_ObjIsMuxType(pMux) || !Gia_ObjIsMuxType(pXor) {
-        return 0; }
-    if !Gia_ObjRecognizeExor( pXor, &pFan0, &pFan1 ) {
-        return 0; }
-    pFan0 = Gia_Regular(pFan0);
-    pFan1 = Gia_Regular(pFan1);
-    if Gia_ObjId(p, pFan0) > Gia_ObjId(p, pFan1) {
-        // inlining of macro ABC_SWAP
-         var t *Gia_Obj_t  = pFan0; pFan0 = pFan1; pFan1 = t; };
-    if !(pCtrl = Gia_ObjRecognizeMux( pMux, &pDat0, &pDat1 )) {
-        return 0; }
-    pDat0 = Gia_Regular(pDat0);
-    pDat1 = Gia_Regular(pDat1);
-    pCtrl = Gia_Regular(pCtrl);
-    if !Gia_ObjIsAnd(pDat0) || !Gia_ObjIsAnd(pDat1) {
-        return 0; }
-    if Gia_ObjFaninId0p(p, pDat0) != Gia_ObjFaninId0p(p, pDat1) ||
-         Gia_ObjFaninId1p(p, pDat0) != Gia_ObjFaninId1p(p, pDat1) {
-         return 0; }
-    if Gia_ObjFaninId0p(p, pDat0) != Gia_ObjId(p, pFan0) ||
-         Gia_ObjFaninId1p(p, pDat0) != Gia_ObjId(p, pFan1) {
-         return 0; }
-    pIns[0] = Gia_ObjId(p, pFan0);
-    pIns[1] = Gia_ObjId(p, pFan1);
-    pIns[2] = Gia_ObjId(p, pCtrl);
-    return 1;
-}
-func Acec_DetectBoothXorFanin(p *Gia_Man_t, pObj *Gia_Obj_t, pIns []int32) int32 {
-    var pFan0, pFan1 *Gia_Obj_t;
-    //int Id = Gia_ObjId(p, pObj);
-    if !Gia_ObjIsAnd(pObj) {
-        return 0; }
-    if !Gia_ObjFaninC0(pObj) || !Gia_ObjFaninC1(pObj) {
-        return 0; }
-    pFan0 = Gia_ObjFanin0(pObj);
-    pFan1 = Gia_ObjFanin1(pObj);
-    if !Gia_ObjIsAnd(pFan0) || !Gia_ObjIsAnd(pFan1) {
-        return 0; }
-    if Acec_DetectBoothXorMux(p, Gia_ObjFanin0(pFan0), Gia_ObjFanin0(pFan1), pIns) != 0 {
-        pIns[3] = Gia_ObjId(p, Gia_ObjFanin1(pFan0));
-        pIns[4] = Gia_ObjId(p, Gia_ObjFanin1(pFan1));
-        return 1;
-    }
-    if Acec_DetectBoothXorMux(p, Gia_ObjFanin0(pFan0), Gia_ObjFanin1(pFan1), pIns) != 0 {
-        pIns[3] = Gia_ObjId(p, Gia_ObjFanin1(pFan0));
-        pIns[4] = Gia_ObjId(p, Gia_ObjFanin0(pFan1));
-        return 1;
-    }
-    if Acec_DetectBoothXorMux(p, Gia_ObjFanin1(pFan0), Gia_ObjFanin0(pFan1), pIns) != 0 {
-        pIns[3] = Gia_ObjId(p, Gia_ObjFanin0(pFan0));
-        pIns[4] = Gia_ObjId(p, Gia_ObjFanin1(pFan1));
-        return 1;
-    }
-    if Acec_DetectBoothXorMux(p, Gia_ObjFanin1(pFan0), Gia_ObjFanin1(pFan1), pIns) != 0 {
-        pIns[3] = Gia_ObjId(p, Gia_ObjFanin0(pFan0));
-        pIns[4] = Gia_ObjId(p, Gia_ObjFanin0(pFan1));
-        return 1;
-    }
-    return 0;
-}
-func Acec_DetectBoothOne(p *Gia_Man_t, pObj *Gia_Obj_t, pIns []int32) int32 {
-    var pFan0, pFan1 *Gia_Obj_t;
-    if !Gia_ObjRecognizeExor( pObj, &pFan0, &pFan1 ) {
-        return 0; }
-    pFan0 = Gia_Regular(pFan0);
-    pFan1 = Gia_Regular(pFan1);
-    if (Acec_DetectBoothXorFanin( p, pFan0, pIns ) != 0) && pIns[2] == Gia_ObjId(p, pFan1) {
-        return 1; }
-    if (Acec_DetectBoothXorFanin( p, pFan1, pIns ) != 0) && pIns[2] == Gia_ObjId(p, pFan0) {
-        return 1; }
-    return 0;
+// Acec_DetectBoothXorMux checks whether mux and xor share the same data inputs.
+// ins receives the two data input IDs followed by the mux control ID.
+func Acec_DetectBoothXorMux(p *gia.Gia_Man_t, mux, xor *gia.Gia_Obj_t, ins []int32) int32 {
+	if gia.Gia_ObjIsMuxType(mux) == 0 || gia.Gia_ObjIsMuxType(xor) == 0 {
+		return 0
+	}
+	var fan0, fan1, dat0, dat1 *gia.Gia_Obj_t
+	if gia.Gia_ObjRecognizeExor(xor, &fan0, &fan1) == 0 {
+		return 0
+	}
+	fan0, fan1 = gia.Gia_Regular(fan0), gia.Gia_Regular(fan1)
+	if gia.Gia_ObjId(p, fan0) > gia.Gia_ObjId(p, fan1) {
+		fan0, fan1 = fan1, fan0
+	}
+	ctrl := gia.Gia_ObjRecognizeMux(mux, &dat0, &dat1)
+	if ctrl == nil {
+		return 0
+	}
+	dat0, dat1, ctrl = gia.Gia_Regular(dat0), gia.Gia_Regular(dat1), gia.Gia_Regular(ctrl)
+	if gia.Gia_ObjIsAnd(dat0) == 0 || gia.Gia_ObjIsAnd(dat1) == 0 ||
+		gia.Gia_ObjFaninId0p(p, dat0) != gia.Gia_ObjFaninId0p(p, dat1) ||
+		gia.Gia_ObjFaninId1p(p, dat0) != gia.Gia_ObjFaninId1p(p, dat1) ||
+		gia.Gia_ObjFaninId0p(p, dat0) != gia.Gia_ObjId(p, fan0) ||
+		gia.Gia_ObjFaninId1p(p, dat0) != gia.Gia_ObjId(p, fan1) {
+		return 0
+	}
+	ins[0], ins[1], ins[2] = gia.Gia_ObjId(p, fan0), gia.Gia_ObjId(p, fan1), gia.Gia_ObjId(p, ctrl)
+	return 1
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Acec_DetectBoothTwoXor(p *Gia_Man_t, pObj *Gia_Obj_t, pIns []int32) int32 {
-    var pFan0, pFan1 *Gia_Obj_t;
-    if !Gia_ObjIsAnd(pObj) {
-        return 0; }
-    if Gia_ObjRecognizeExor( Gia_ObjFanin0(pObj), &pFan0, &pFan1 ) {
-        pIns[0] = Gia_ObjId(p, Gia_Regular(pFan0));
-        pIns[1] = Gia_ObjId(p, Gia_Regular(pFan1));
-        pIns[2] = -1;
-        pIns[3] = 0;
-        pIns[4] = Gia_ObjId(p, Gia_ObjFanin1(pObj));
-        return 1;
-    }
-    if Gia_ObjRecognizeExor( Gia_ObjFanin1(pObj), &pFan0, &pFan1 ) {
-        pIns[0] = Gia_ObjId(p, Gia_Regular(pFan0));
-        pIns[1] = Gia_ObjId(p, Gia_Regular(pFan1));
-        pIns[2] = -1;
-        pIns[3] = 0;
-        pIns[4] = Gia_ObjId(p, Gia_ObjFanin0(pObj));
-        return 1;
-    }
-    return 0;
+func Acec_DetectBoothXorFanin(p *gia.Gia_Man_t, obj *gia.Gia_Obj_t, ins []int32) int32 {
+	if gia.Gia_ObjIsAnd(obj) == 0 || gia.Gia_ObjFaninC0(obj) == 0 || gia.Gia_ObjFaninC1(obj) == 0 {
+		return 0
+	}
+	fan0, fan1 := gia.Gia_ObjFanin0(obj), gia.Gia_ObjFanin1(obj)
+	if gia.Gia_ObjIsAnd(fan0) == 0 || gia.Gia_ObjIsAnd(fan1) == 0 {
+		return 0
+	}
+	left := [2]*gia.Gia_Obj_t{gia.Gia_ObjFanin0(fan0), gia.Gia_ObjFanin1(fan0)}
+	right := [2]*gia.Gia_Obj_t{gia.Gia_ObjFanin0(fan1), gia.Gia_ObjFanin1(fan1)}
+	for i := range left {
+		for j := range right {
+			if Acec_DetectBoothXorMux(p, left[i], right[j], ins) != 0 {
+				ins[3], ins[4] = gia.Gia_ObjId(p, left[1-i]), gia.Gia_ObjId(p, right[1-j])
+				return 1
+			}
+		}
+	}
+	return 0
 }
-func Acec_DetectBoothTwo(p *Gia_Man_t, pObj *Gia_Obj_t, pIns []int32) int32 {
-    var pFan0, pFan1 *Gia_Obj_t;
-    if !Gia_ObjRecognizeExor( pObj, &pFan0, &pFan1 ) {
-        return 0; }
-    pFan0 = Gia_Regular(pFan0);
-    pFan1 = Gia_Regular(pFan1);
-    if Acec_DetectBoothTwoXor( p, pFan0, pIns ) != 0 {
-        pIns[2] = Gia_ObjId(p, pFan1);
-        return 1;
-    }
-    if Acec_DetectBoothTwoXor( p, pFan1, pIns ) != 0 {
-        pIns[2] = Gia_ObjId(p, pFan0);
-        return 1;
-    }
-    return 0;
+func Acec_DetectBoothOne(p *gia.Gia_Man_t, obj *gia.Gia_Obj_t, ins []int32) int32 {
+	var fan0, fan1 *gia.Gia_Obj_t
+	if gia.Gia_ObjRecognizeExor(obj, &fan0, &fan1) == 0 {
+		return 0
+	}
+	fan0, fan1 = gia.Gia_Regular(fan0), gia.Gia_Regular(fan1)
+	if Acec_DetectBoothXorFanin(p, fan0, ins) != 0 && ins[2] == gia.Gia_ObjId(p, fan1) {
+		return 1
+	}
+	if Acec_DetectBoothXorFanin(p, fan1, ins) != 0 && ins[2] == gia.Gia_ObjId(p, fan0) {
+		return 1
+	}
+	return 0
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Acec_DetectBoothTest(p *Gia_Man_t) {
-    var pObj *Gia_Obj_t;
-    var i int32;
-    var pIns [5]int32;
-    // inlining of macro Gia_ManForEachAnd
-    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {        
-        if !(Acec_DetectBoothOne(p, pObj, pIns) != 0) && !(Acec_DetectBoothTwo(p, pObj, pIns) != 0) {
-                continue; }
-        fmt.Printf("obj = %4d  :  b0 = %4d  b1 = %4d  b2 = %4d    a0 = %4d  a1 = %4d\n", i, pIns[0], pIns[1], pIns[2], pIns[3], pIns[4]);
-    }
-    }
+func Acec_DetectBoothTwoXor(p *gia.Gia_Man_t, obj *gia.Gia_Obj_t, ins []int32) int32 {
+	if gia.Gia_ObjIsAnd(obj) == 0 {
+		return 0
+	}
+	children := [2]*gia.Gia_Obj_t{gia.Gia_ObjFanin0(obj), gia.Gia_ObjFanin1(obj)}
+	for i, child := range children {
+		var fan0, fan1 *gia.Gia_Obj_t
+		if gia.Gia_ObjRecognizeExor(child, &fan0, &fan1) != 0 {
+			ins[0], ins[1] = gia.Gia_ObjId(p, gia.Gia_Regular(fan0)), gia.Gia_ObjId(p, gia.Gia_Regular(fan1))
+			ins[2], ins[3], ins[4] = -1, 0, gia.Gia_ObjId(p, children[1-i])
+			return 1
+		}
+	}
+	return 0
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func Acec_DetectBoothTwo(p *gia.Gia_Man_t, obj *gia.Gia_Obj_t, ins []int32) int32 {
+	var fan0, fan1 *gia.Gia_Obj_t
+	if gia.Gia_ObjRecognizeExor(obj, &fan0, &fan1) == 0 {
+		return 0
+	}
+	fan0, fan1 = gia.Gia_Regular(fan0), gia.Gia_Regular(fan1)
+	if Acec_DetectBoothTwoXor(p, fan0, ins) != 0 {
+		ins[2] = gia.Gia_ObjId(p, fan1)
+		return 1
+	}
+	if Acec_DetectBoothTwoXor(p, fan1, ins) != 0 {
+		ins[2] = gia.Gia_ObjId(p, fan0)
+		return 1
+	}
+	return 0
+}
+func Acec_DetectBoothTest(p *gia.Gia_Man_t) {
+	var ins [5]int32
+	for id := int32(1); id < gia.Gia_ManObjNum(p); id++ {
+		obj := gia.Gia_ManObj(p, id)
+		if gia.Gia_ObjIsAnd(obj) == 0 || (Acec_DetectBoothOne(p, obj, ins[:]) == 0 && Acec_DetectBoothTwo(p, obj, ins[:]) == 0) {
+			continue
+		}
+		fmt.Printf("obj = %4d  :  b0 = %4d  b1 = %4d  b2 = %4d    a0 = %4d  a1 = %4d\n", id, ins[0], ins[1], ins[2], ins[3], ins[4])
+	}
+}

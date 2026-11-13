@@ -1,122 +1,59 @@
 package acec
 
-import "fmt"
+// XOR-cone utilities ported from src/proof/acec/acecUtil.c.
+import (
+	"fmt"
 
-/**CFile****************************************************************
+	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/misc/vec"
+)
 
-  FileName    [acecUtil.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [CEC for arithmetic circuits.]
-
-  Synopsis    [Various utilities.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: acecUtil.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "acecInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_PolynCollectXors_rec(pGia *Gia_Man_t, iObj int32, vXors *Vec_Int_t) {
-    var pObj *Gia_Obj_t  = Gia_ManObj( pGia, iObj );
-    if Gia_ObjIsTravIdCurrent(pGia, pObj) {
-        return; }
-    Gia_ObjSetTravIdCurrent(pGia, pObj);
-    if !Gia_ObjIsAnd(pObj) || !Gia_ObjIsXor(pObj) || Gia_ObjRefNum(pGia, pObj) > 1 {
-        return; }
-    Gia_PolynCollectXors_rec( pGia, Gia_ObjFaninId0(pObj, iObj), vXors );
-    Gia_PolynCollectXors_rec( pGia, Gia_ObjFaninId1(pObj, iObj), vXors );
-    Vec_IntPushUnique( vXors, iObj );
+func Gia_PolynCollectXors_rec(p *gia.Gia_Man_t, id int32, xors *vec.Vec_Int_t) {
+	obj := gia.Gia_ManObj(p, id)
+	if gia.Gia_ObjIsTravIdCurrent(p, obj) != 0 {
+		return
+	}
+	gia.Gia_ObjSetTravIdCurrent(p, obj)
+	if gia.Gia_ObjIsAnd(obj) == 0 || gia.Gia_ObjIsXor(obj) == 0 || gia.Gia_ObjRefNum(p, obj) > 1 {
+		return
+	}
+	Gia_PolynCollectXors_rec(p, gia.Gia_ObjFaninId0(obj, id), xors)
+	Gia_PolynCollectXors_rec(p, gia.Gia_ObjFaninId1(obj, id), xors)
+	vec.Vec_IntPushUnique(xors, id)
 }
-func Gia_PolynCollectLastXor(pGia *Gia_Man_t, fVerbose int32) *Vec_Int_t {
-    var vXors *Vec_Int_t  = Vec_IntAlloc( 100 );
-    var pObj *Gia_Obj_t  = Gia_ManCo( pGia, Gia_ManCoNum(pGia)-1 );
-    pGia.pRefs = nil;
-    Gia_ManCreateRefs( pGia );
-    Gia_ManIncrementTravId( pGia );
-    Gia_PolynCollectXors_rec( pGia, Gia_ObjFaninId0p(pGia, pObj), vXors );
-    Vec_IntReverseOrder( vXors );
-    pGia.pRefs = nil;
-    return vXors;
+func Gia_PolynCollectLastXor(p *gia.Gia_Man_t, verbose int32) *vec.Vec_Int_t {
+	_ = verbose
+	xors := vec.Vec_IntAlloc(100)
+	obj := gia.Gia_ManCo(p, gia.Gia_ManCoNum(p)-1)
+	p.Refs = nil
+	gia.Gia_ManCreateRefs(p)
+	gia.Gia_ManIncrementTravId(p)
+	Gia_PolynCollectXors_rec(p, gia.Gia_ObjFaninId0p(p, obj), xors)
+	vec.Vec_IntReverseOrder(xors)
+	p.Refs = nil
+	return xors
 }
-func Gia_PolynAnalyzeXors(pGia *Gia_Man_t, fVerbose int32) {
-    var i, iDriver, Count int32;
-    var vXors *Vec_Int_t  = Vec_IntAlloc( 100 );
-    if pGia.pMuxes == nil {
-        fmt.Printf("AIG does not have XORs extracted.\n");
-        return;
-    }
-    assert(pGia.pMuxes, "pGia.pMuxes");
-    // inlining of macro Gia_ManForEachCoDriverId
-    for  i = 0; (i < Vec_IntSize(pGia.vCos)) && (((iDriver) = Gia_ObjFaninId0p(pGia, Gia_ManCo(pGia, i))), 1); i++  {
-        Vec_IntClear( vXors );
-        Gia_ManIncrementTravId( pGia );
-        Gia_PolynCollectXors_rec( pGia, iDriver, vXors );
-        //printf( "%3d : ", i );
-        //Vec_IntPrint( vXors );
-        fmt.Printf("%d=%d  ", i, Vec_IntSize(vXors));
-        Count += Vec_IntSize(vXors);
-    }
-    fmt.Printf("Total = %d.\n", Count);
-    Vec_IntFree( vXors );
+func Gia_PolynAnalyzeXors(p *gia.Gia_Man_t, verbose int32) {
+	_ = verbose
+	if !gia.Gia_ManHasMuxData(p) {
+		fmt.Println("AIG does not have XORs extracted.")
+		return
+	}
+	xors := vec.Vec_IntAlloc(100)
+	count := 0
+	for i := int32(0); i < gia.Gia_ManCoNum(p); i++ {
+		vec.Vec_IntClear(xors)
+		gia.Gia_ManIncrementTravId(p)
+		Gia_PolynCollectXors_rec(p, gia.Gia_ObjFaninId0p(p, gia.Gia_ManCo(p, i)), xors)
+		fmt.Printf("%d=%d  ", i, vec.Vec_IntSize(xors))
+		count += vec.Vec_IntSize(xors)
+	}
+	fmt.Printf("Total = %d.\n", count)
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManDupTopMostRange(p *Gia_Man_t) *Gia_Man_t {
-    var pNew *Gia_Man_t;
-    var vTops *Vec_Int_t  = Vec_IntAlloc( 10 );
-    var i int32;
-    for  i = 45; i < 52; i++  {
-        Vec_IntPush( vTops, Gia_ObjId( p, Gia_ObjFanin0(Gia_ManCo(p, i)) ) );
-    }
-    pNew = Gia_ManDupAndConesLimit( p, Vec_IntArray(vTops), Vec_IntSize(vTops), 100 );
-    Vec_IntFree( vTops );
-    return pNew;
+func Gia_ManDupTopMostRange(p *gia.Gia_Man_t) *gia.Gia_Man_t {
+	tops := make([]int32, 0, 7)
+	for i := int32(45); i < 52; i++ {
+		tops = append(tops, gia.Gia_ObjId(p, gia.Gia_ObjFanin0(gia.Gia_ManCo(p, i))))
+	}
+	return gia.Gia_ManDupAndConesLimit(p, tops, int32(len(tops)), 100)
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
