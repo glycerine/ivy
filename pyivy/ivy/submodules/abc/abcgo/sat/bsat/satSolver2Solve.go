@@ -3,6 +3,11 @@ package bsat
 import "time"
 
 func sat_solver2_solve(s *sat_solver2, assumptions []lit, conflicts, propagations, globalConflicts, globalPropagations int64) int32 {
+	for _, l := range assumptions {
+		if lit_check(l, s.size) == 0 {
+			panic("solver2 assumption outside solver")
+		}
+	}
 	if s.fSolved != 0 {
 		veci_resize(&s.conf_final, 0)
 		return l_False
@@ -31,9 +36,6 @@ func sat_solver2_solve(s *sat_solver2, assumptions []lit, conflicts, propagation
 	}
 	s.root_level = int32(len(assumptions))
 	for _, l := range assumptions {
-		if lit_check(l, s.size) == 0 {
-			panic("solver2 assumption outside solver")
-		}
 		veci_push(&s.trail_lim, s.qtail)
 		if solver2_enqueue(s, l, 0) == 0 {
 			reason := clause2_read(s, s.reasons[lit_var(l)])

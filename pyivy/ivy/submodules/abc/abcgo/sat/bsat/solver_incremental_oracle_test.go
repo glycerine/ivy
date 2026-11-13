@@ -236,3 +236,29 @@ func TestPermanentConflictClearsPriorAssumptionCore(t *testing.T) {
 		}
 	}
 }
+
+func TestInvalidAssumptionDoesNotCorruptSolver(t *testing.T) {
+	for _, proof := range []bool{false, true} {
+		var solve func(...Literal) Status
+		if proof {
+			s := NewSolver2()
+			s.NewVariable()
+			solve = s.Solve
+		} else {
+			s := NewSolver()
+			s.NewVariable()
+			solve = s.Solve
+		}
+		func() {
+			defer func() {
+				if recover() == nil {
+					t.Errorf("proof=%v: invalid assumption accepted", proof)
+				}
+			}()
+			solve(Positive(0), Positive(1))
+		}()
+		if got := solve(Negative(0)); got != Satisfiable {
+			t.Fatalf("proof=%v: solver did not recover: %v", proof, got)
+		}
+	}
+}

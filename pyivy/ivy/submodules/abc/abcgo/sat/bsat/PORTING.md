@@ -275,3 +275,9 @@ an already-known permanent UNSAT result. Previously, after an assumption
 conflict followed by an empty clause, a later unconditional solve exposed the
 old assumptions as its core. A regression covers both variants, and the
 race-enabled BSAT suite passes.
+
+Both solver variants validate the full assumption list before mutating solver
+state. An invalid later assumption previously panicked after earlier assumptions
+were pushed, leaving the solver inconsistent for subsequent calls. A regression
+recovers from the invalid input and verifies a later SAT solve. The full
+race-enabled BSAT suite passes.
