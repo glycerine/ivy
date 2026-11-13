@@ -48,26 +48,7 @@ import "os"
   SeeAlso     []
 
 ***********************************************************************/
-func Wlc_WriteTableOne(pFile *os.File, nFans int32, nOuts int32, pTable *word, Id int32) {
-    var m int32;
-    var nMints int32 = (1<<nFans);
-//    Abc_TtPrintHexArrayRev( stdout, pTable, nMints );  printf( "\n" );
-    assert(nOuts > 0 && nOuts <= 64 && (64 % nOuts) == 0, "nOuts > 0 && nOuts <= 64 && (64 % nOuts) == 0");
-    fmt.Fprintf(pFile, "module table%d(ind, val);\n", Id);
-    fmt.Fprintf(pFile, "  input  [%d:0] ind;\n", nFans-1);
-    fmt.Fprintf(pFile, "  output [%d:0] val;\n", nOuts-1);
-    fmt.Fprintf(pFile, "  reg    [%d:0] val;\n", nOuts-1);
-    fmt.Fprintf(pFile, "  always @(ind)\n");
-    fmt.Fprintf(pFile, "  begin\n");
-    fmt.Fprintf(pFile, "    case (ind)\n");
-    for  m = 0; m < nMints; m++  {
-    fmt.Fprintf(pFile, "      %d\'h%x: val = %d\'h%x;\n", nFans, m, nOuts, uint32(((pTable[(nOuts * m) >> 6] >> ((nOuts * m) & 63)) & Abc_Tt6Mask(nOuts))));
-    }
-    fmt.Fprintf(pFile, "    endcase\n");
-    fmt.Fprintf(pFile, "  end\n");
-    fmt.Fprintf(pFile, "endmodule\n");
-    fmt.Fprintf(pFile, "\n");
-}
+
 func Wlc_WriteTables(pFile *os.File, p *Wlc_Ntk_t) {
     var vNodes *Vec_Int_t;
     var pObj, pFanin *Wlc_Obj_t;
