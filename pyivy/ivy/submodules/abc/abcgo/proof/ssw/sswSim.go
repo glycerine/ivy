@@ -94,28 +94,7 @@ func Ssw_SmlObjsAreEqualBit(p any, pObj0 *Aig_Obj_t, pObj1 *Aig_Obj_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_SmlCheckXorImplication(p *Ssw_Sml_t, pObjLi *Aig_Obj_t, pObjLo *Aig_Obj_t, pCand *Aig_Obj_t) int32 {
-    var pSimLi, pSimLo, pSimCand *uint32;
-    var k int32;
-    assert(pObjLo.fPhase == 0, "pObjLo.fPhase == 0");
-    // pObjLi->fPhase may be 1, but the LI simulation data is not complemented!
-    pSimCand = Ssw_ObjSim( p, Aig_Regular(pCand).Id );
-    pSimLi   = Ssw_ObjSim( p, pObjLi.Id );
-    pSimLo   = Ssw_ObjSim( p, pObjLo.Id );
-    if Aig_Regular(pCand).fPhase ^ Aig_IsComplement(pCand) {
-        for  k = p.nWordsPref; k < p.nWordsTotal; k++  {
-            if ~pSimCand[k] & (pSimLi[k] ^ pSimLo[k]) {
-                return 0; }
-        }
-    
-    } else {
-        for  k = p.nWordsPref; k < p.nWordsTotal; k++  {
-            if pSimCand[k] & (pSimLi[k] ^ pSimLo[k]) {
-                return 0; }
-        }
-    }
-    return 1;
-}
+
 
 /**Function*************************************************************
 
@@ -128,26 +107,7 @@ func Ssw_SmlCheckXorImplication(p *Ssw_Sml_t, pObjLi *Aig_Obj_t, pObjLo *Aig_Obj
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_SmlCountXorImplication(p *Ssw_Sml_t, pObjLi *Aig_Obj_t, pObjLo *Aig_Obj_t, pCand *Aig_Obj_t) int32 {
-    var pSimLi, pSimLo, pSimCand *uint32;
-    var k, Counter int32;
-    assert(pObjLo.fPhase == 0, "pObjLo.fPhase == 0");
-    // pObjLi->fPhase may be 1, but the LI simulation data is not complemented!
-    pSimCand = Ssw_ObjSim( p, Aig_Regular(pCand).Id );
-    pSimLi   = Ssw_ObjSim( p, pObjLi.Id );
-    pSimLo   = Ssw_ObjSim( p, pObjLo.Id );
-    if Aig_Regular(pCand).fPhase ^ Aig_IsComplement(pCand) {
-        for  k = p.nWordsPref; k < p.nWordsTotal; k++  {
-            Counter += Aig_WordCountOnes(~pSimCand[k] & ~(pSimLi[k] ^ pSimLo[k]));
-        }
-    
-    } else {
-        for  k = p.nWordsPref; k < p.nWordsTotal; k++  {
-            Counter += Aig_WordCountOnes(pSimCand[k] & ~(pSimLi[k] ^ pSimLo[k]));
-        }
-    }
-    return Counter;
-}
+
 
 /**Function*************************************************************
 
