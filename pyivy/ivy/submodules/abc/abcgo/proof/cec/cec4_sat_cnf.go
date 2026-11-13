@@ -8,13 +8,14 @@ import (
 // cec4CNF owns the SAT IDs and the incremental Glucose2 instance used for
 // Cec4's simple on-demand CNF. IDs and models never use the GIA scratch fields.
 type cec4CNF struct {
-	graph       *gia.Gia_Man_t
-	solver      *glucose2.SimpSolver
-	jType       int32
-	ids         map[int32]int32
-	objects     []int32
-	inputs      map[int32]int32
-	expandedMux bool
+	graph         *gia.Gia_Man_t
+	solver        *glucose2.SimpSolver
+	jType         int32
+	ids           map[int32]int32
+	objects       []int32 // SAT variable to object ID, or -1 for an auxiliary
+	inputs        map[int32]int32
+	needsFullCone bool
+	gates         [2]int32
 }
 
 func newCec4CNF(graph *gia.Gia_Man_t, jType int32) *cec4CNF {
@@ -28,9 +29,9 @@ func newCec4CNF(graph *gia.Gia_Man_t, jType int32) *cec4CNF {
 
 func (c *cec4CNF) newVar(id int32) int32 {
 	v := int32(c.solver.NewVar(true, true))
+	c.objects = append(c.objects, id)
 	if id >= 0 {
 		c.ids[id] = v
-		c.objects = append(c.objects, id)
 	}
 	return v
 }
@@ -41,6 +42,9 @@ func (c *cec4CNF) gate(out, a, b int32, xor bool) {
 	av, bv := a>>1, b>>1
 	// Glucose's circuit representation requires distinct fanins.
 	useClauses := c.jType < 2 || av == bv
+	if av == bv {
+		c.needsFullCone = true
+	}
 	if useClauses {
 		var ok bool
 		if xor {
@@ -53,6 +57,11 @@ func (c *cec4CNF) gate(out, a, b int32, xor bool) {
 		}
 	}
 	if c.jType > 0 && av != bv {
+		if xor {
+			c.gates[1]++
+		} else {
+			c.gates[0]++
+		}
 		if (!xor && a > b) || (xor && a < b) {
 			a, b = b, a
 		}
@@ -81,6 +90,7 @@ func (c *cec4CNF) variable(id int32) int32 {
 		return v
 	}
 	if kind == 5 || kind == 6 {
+		c.needsFullCone = true
 		v := c.variable(a >> 1)
 		out := c.newVar(id)
 		lit := v<<1 | a&1
@@ -95,7 +105,7 @@ func (c *cec4CNF) variable(id int32) int32 {
 	la := c.variable(a>>1)<<1 | a&1
 	lb := c.variable(b>>1)<<1 | b&1
 	if kind == 4 {
-		c.expandedMux = true
+		c.needsFullCone = true
 		lc := c.variable(third>>1)<<1 | third&1
 		x := c.newVar(-1)
 		c.gate(x, la, lb, false)
@@ -129,7 +139,7 @@ func (c *cec4CNF) solveTwo(first, second, phase, limit int32) int32 {
 		c.solver.SetNewRound()
 		c.solver.MarkCone(glucose2.Var(a))
 		c.solver.MarkCone(glucose2.Var(b))
-		if c.expandedMux {
+		if c.needsFullCone {
 			for v := 0; v < c.solver.NVars(); v++ {
 				c.solver.MarkCone(glucose2.Var(v))
 			}
@@ -156,5 +166,6 @@ func (c *cec4CNF) recycle() {
 	clear(c.ids)
 	clear(c.inputs)
 	c.objects = c.objects[:0]
-	c.expandedMux = false
+	c.needsFullCone = false
+	c.gates = [2]int32{}
 }

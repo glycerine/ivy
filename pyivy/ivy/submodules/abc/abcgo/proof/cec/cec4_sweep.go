@@ -11,7 +11,7 @@ type cec4SweepStats struct{ sat, unsat, unknown, recycles int }
 
 // cec4Sweep performs Cec4's simulation-guided, single-pass SAT sweep.
 // Witnesses are returned to the caller for storage in the source manager.
-func cec4Sweep(graph *gia.Gia_Man_t, pars *Cec_ParFra_t, simOnly, finishGraph bool) (*gia.Gia_Man_t, *util.Abc_Cex_t, cec4SweepStats) {
+func cec4Sweep(graph *gia.Gia_Man_t, pars *Cec_ParFra_t, simOnly, finishGraph bool, bindSolver ...func(*glucose2.SimpSolver)) (*gia.Gia_Man_t, *util.Abc_Cex_t, cec4SweepStats) {
 	var stats cec4SweepStats
 	pack, witness := cec4PrepareSimulation(graph, pars, simOnly)
 	if witness != nil || simOnly {
@@ -36,6 +36,9 @@ func cec4Sweep(graph *gia.Gia_Man_t, pars *Cec_ParFra_t, simOnly, finishGraph bo
 	gia.Gia_ManSetRegNum(reduced, gia.Gia_ManRegNum(graph))
 	gia.Gia_ManHashAlloc(reduced)
 	cnf := newCec4CNF(reduced, pars.jType)
+	if len(bindSolver) > 0 {
+		bindSolver[0](cnf.solver)
+	}
 	pattern, calls := 0, 0
 	failed := make(map[int32]bool)
 	for id := int32(1); id < gia.Gia_ManObjNum(graph); id++ {
@@ -86,6 +89,9 @@ func cec4Sweep(graph *gia.Gia_Man_t, pars *Cec_ParFra_t, simOnly, finishGraph bo
 		calls++
 		if pars.nSatVarMax != 0 && calls > int(pars.nCallsRecycle) && len(cnf.ids) > int(pars.nSatVarMax) {
 			cnf.recycle()
+			if len(bindSolver) > 0 {
+				bindSolver[0](cnf.solver)
+			}
 			calls = 0
 			stats.recycles++
 		}
