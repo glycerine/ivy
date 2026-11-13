@@ -26,13 +26,23 @@ func TestCec4SweepNodeHandlesSameReducedObject(t *testing.T) {
 		sim := newCec3Simulation(int(gia.Gia_ManObjNum(g)), 1)
 		cnf := newCec4CNF(g, 0)
 		bit := 0
-		got := cec4SweepNode(g, g, sim, cnf, copies, y>>1, x>>1, 100, &bit)
 		if different {
-			if got != glucose2.GLUCOSE_SAT || bit != 1 {
-				t.Fatalf("complement relation: %d %d", got, bit)
+			func() {
+				defer func() {
+					if recover() == nil {
+						t.Fatal("expected invariant failure for opposite phase")
+					}
+				}()
+				cec4SweepNode(g, g, sim, cnf, copies, y>>1, x>>1, 100, &bit)
+			}()
+			if bit != 0 {
+				t.Fatal("invariant failure must not fabricate a pattern")
 			}
-		} else if got != glucose2.GLUCOSE_UNSAT || gia.Gia_ObjProved(g, y>>1) == 0 {
-			t.Fatalf("same relation: %d", got)
+		} else {
+			got := cec4SweepNode(g, g, sim, cnf, copies, y>>1, x>>1, 100, &bit)
+			if got != glucose2.GLUCOSE_UNSAT || gia.Gia_ObjProved(g, y>>1) == 0 {
+				t.Fatalf("same relation: %d", got)
+			}
 		}
 	}
 }

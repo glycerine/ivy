@@ -17,7 +17,7 @@ func cec4SweepNode(graph, reduced *gia.Gia_Man_t, sim *cec3Simulation, cnf *cec4
 	if same {
 		status = glucose2.GLUCOSE_UNSAT
 		if relation != 0 {
-			status = glucose2.GLUCOSE_SAT
+			panic("cec4: inconsistent phase for identical reduced objects")
 		}
 	} else {
 		status = cnf.solveTwo(copies[repr]>>1, copies[id]>>1, relation, conflictLimit)
@@ -28,7 +28,7 @@ func cec4SweepNode(graph, reduced *gia.Gia_Man_t, sim *cec3Simulation, cnf *cec4
 		if *pattern >= 64*sim.words {
 			panic("cec4: simulation pattern storage is full")
 		}
-		for i := int32(0); !same && i < gia.Gia_ManCiNum(graph); i++ {
+		for i := int32(0); i < gia.Gia_ManCiNum(graph); i++ {
 			oldID := gia.Gia_ObjId(graph, gia.Gia_ManCi(graph, i))
 			newID := gia.Gia_ObjId(reduced, gia.Gia_ManCi(reduced, i))
 			if v, ok := cnf.inputs[newID]; ok {
