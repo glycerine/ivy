@@ -58,7 +58,7 @@ func Gia_ManDeriveNexts(p *Gia_Man_t) []int32 {
 	next := make([]int32, p.nObjs)
 	for id := p.nObjs - 1; id > 0; id-- {
 		repr := int32(p.pReprs[id].iRepr)
-		if repr == GIA_VOID {
+		if repr == GIA_VOID || repr == 0 {
 			continue
 		}
 		if repr < 0 || repr >= id {
