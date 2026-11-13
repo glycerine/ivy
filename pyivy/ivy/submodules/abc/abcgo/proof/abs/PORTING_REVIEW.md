@@ -42,10 +42,16 @@ External callers can configure them through `Options` and `LegacyOptions`,
 using the corresponding default, setter, and progress methods.
 
 The old GLA `fUseFullProof` option does not select a separate proof-logging
-mode in the Go port: `LabeledSolver2` always creates a proof graph. The
-resulting proof cores are tested, but memory and runtime behavior can differ
-from the C default. Alternate proof modes and their resource behavior remain
-an open fidelity and coverage item.
+mode in the Go port. In C, full mode allocates `pPrf1` at manager creation;
+default mode starts the incremental `pPrf2` manager after the first spurious
+counterexample, registers each newly added abstraction object, grows the
+manager for further refinements, and stops it when the solve ends. Go's
+`LabeledSolver2` always creates `pPrf1` and filters its root labels at the
+bookmark. Both Go option settings are tested through spurious refinement and
+rollback, but this does not establish identical C proof cores, abstraction
+classes, memory use, runtime, or resource-limit outcomes. Implementing the
+default mode requires the incremental manager lifecycle and object-ID mapping
+to be wired through the solver and old GLA; the difference remains open.
 
 Standalone VTA retains the C algorithm's AND-inverter representation
 assumption. Native XOR/MUX nodes are explicitly rejected with an unknown

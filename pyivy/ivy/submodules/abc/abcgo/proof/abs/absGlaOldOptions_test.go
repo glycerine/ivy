@@ -35,3 +35,29 @@ func TestOldGlaProofOptionPreservesResults(t *testing.T) {
 		}
 	}
 }
+
+// Both source proof modes must handle a spurious abstract witness and retain
+// a sound abstraction after core-driven rollback. The Go port currently uses
+// the same full graph in both cases; this tests outcomes, not memory parity.
+func TestOldGlaProofModesRefineAndRollback(t *testing.T) {
+	for _, full := range []int32{0, 1} {
+		g := gia.Gia_ManStart(20)
+		var x [5]int32
+		for i := range x {
+			x[i] = gia.Gia_ManAppendCi(g)
+		}
+		left := gia.Gia_ManAppendAnd(g, gia.Gia_ManAppendAnd(g, x[0], x[1]), x[2])
+		right := gia.Gia_ManAppendAnd(g, gia.Gia_ManAppendAnd(g, x[0]^1, x[3]), x[4])
+		gia.Gia_ManAppendCo(g, gia.Gia_ManAppendAnd(g, left, right))
+		p := NewParameters()
+		p.fUseFullProof, p.nFramesMax, p.nRatioMin = full, 1, 0
+		p.nFramesNoChange = 10
+		got := Gia_ManPerformGlaOld(g, p, 0)
+		if got != -1 || g.SequentialCounterexample() != nil || p.nFramesNoChange != 0 {
+			t.Fatalf("full=%d result=%d witness=%+v unchanged=%d", full, got, g.SequentialCounterexample(), p.nFramesNoChange)
+		}
+		if gia.Gia_ManGateClasses(g) == nil {
+			t.Fatalf("full=%d missing resulting abstraction", full)
+		}
+	}
+}
