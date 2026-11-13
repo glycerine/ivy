@@ -146,7 +146,7 @@ func TestFraBmcPerformSimpleFindsSequentialWitness(t *testing.T) {
 	}
 }
 
-func TestFraBmcSimpleFindsDirectInputWitness(t *testing.T) {
+func TestFraBmcSimpleMissesDirectInputWitnessLikeC(t *testing.T) {
 	g := aig.NewGraph()
 	input, state := g.NewInput(), g.NewInput()
 	g.AddOutput(state)
@@ -154,12 +154,12 @@ func TestFraBmcSimpleFindsDirectInputWitness(t *testing.T) {
 	aig.Aig_ManSetRegNum(g, 1)
 	Fra_BmcPerformSimple(g, 2, 1000, 0, 0)
 	cex := g.SequentialCounterexample()
-	if cex == nil || cex.IPo != 0 || cex.IFrame != 1 {
-		t.Fatalf("missing direct-input witness: %+v", cex)
+	if cex != nil {
+		t.Fatalf("source C fast path unexpectedly found direct-input witness: %+v", cex)
 	}
 }
 
-func TestFraBmcFiltersImplicationsWithNoInternalNodes(t *testing.T) {
+func TestFraBmcKeepsImplicationsWithNoInternalNodes(t *testing.T) {
 	g := aig.NewGraph()
 	x, state := g.NewInput(), g.NewInput()
 	g.AddOutput(state)
@@ -169,7 +169,7 @@ func TestFraBmcFiltersImplicationsWithNoInternalNodes(t *testing.T) {
 	p.PCla.VImps = vec.Vec_IntAlloc(1)
 	vec.Vec_IntPush(p.PCla.VImps, Fra_ImpCreate(int32(x.NodeID()), int32(state.NodeID())))
 	Fra_BmcPerform(p, 0, 1)
-	if vec.Vec_IntSize(p.PCla.VImps) != 0 {
-		t.Fatal("invalid implication survived BMC")
+	if vec.Vec_IntSize(p.PCla.VImps) != 1 {
+		t.Fatal("source fast path unexpectedly invoked the implication callback")
 	}
 }

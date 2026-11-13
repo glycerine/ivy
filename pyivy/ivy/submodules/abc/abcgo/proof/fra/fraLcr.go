@@ -157,10 +157,9 @@ func Fra_LcrCreatePart(p *Fra_Lcr_t, outputs []int32) *aig.Graph {
 						result = result.Not()
 					}
 				}
-			case aig.And:
+			case aig.And, aig.ExclusiveOr:
+				// Fra_LcrCreatePart_rec uses Aig_And for every source node.
 				result = dst.AND(copyEdge(n.Fanins[0]), copyEdge(n.Fanins[1]))
-			case aig.ExclusiveOr:
-				result = dst.XOR(copyEdge(n.Fanins[0]), copyEdge(n.Fanins[1]))
 			case aig.Buffer, aig.Output:
 				result = copyEdge(n.Fanins[0])
 			default:

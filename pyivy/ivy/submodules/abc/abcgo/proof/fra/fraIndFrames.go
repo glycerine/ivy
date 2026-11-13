@@ -59,10 +59,9 @@ func Fra_FramesWithClasses(p *Fra_Man_t) *aig.Graph {
 			node := source.Node(obj)
 			var mapped aig.Edge
 			switch node.Kind {
-			case aig.And:
+			case aig.And, aig.ExclusiveOr:
+				// ABC uses Aig_And for all nodes, including native EXOR.
 				mapped = graph.AND(Fra_ObjChild0Fra(p, obj, f), Fra_ObjChild1Fra(p, obj, f))
-			case aig.ExclusiveOr:
-				mapped = graph.NewXor(Fra_ObjChild0Fra(p, obj, f), Fra_ObjChild1Fra(p, obj, f))
 			case aig.Buffer:
 				mapped = Fra_ObjChild0Fra(p, obj, f)
 			default:

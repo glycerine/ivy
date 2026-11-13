@@ -32,3 +32,23 @@ against ABC for FRA's full range of options remains useful future work.
 The SEC `TimeLimit` option is currently ineffective in the active ABC C
 implementation: its global deadline checks are commented out. This port
 preserves that behavior. SEC passes its separate `nPdrTimeout` to PDR.
+
+An optional differential test runs the ABC executable's network `ssweep`
+wrapper on generated AND/inverter graphs and compares bounded output traces
+with the Go induction result. From `abcgo`, run:
+
+```sh
+ABC_REFERENCE="$(pwd)/../abc" go test ./proof/fra -run TestABCInductionDifferential -v
+```
+
+The test exercises induction depth, partitioning, latch correspondence,
+rewriting, prefix, level-limit, and one-hot options. The wrapper may clean or
+reorder state, so the test checks behavior rather than internal structure. It
+cannot establish that the selected binary was built from this checkout.
+
+ABC's FRA routines do not consistently preserve native EXOR nodes. In
+particular, induction frame construction and extension and latch partition
+construction call `Aig_And` for every internal node, including EXOR nodes.
+The Go ports follow those source operations; do not assume native EXOR retains
+XOR semantics through these paths. The ABC differential above uses ordinary
+AND/inverter graphs and does not cover native EXOR.

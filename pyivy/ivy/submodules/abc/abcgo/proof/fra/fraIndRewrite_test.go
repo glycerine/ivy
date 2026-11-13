@@ -38,3 +38,16 @@ func TestFramesAddMoreTracksLatchCopies(t *testing.T) {
 		t.Fatal("node copy does not use next state")
 	}
 }
+
+func TestFramesAddMoreTreatsNativeExorAsAnd(t *testing.T) {
+	graph := aig.NewGraph()
+	x, y := graph.NewInput(), graph.NewInput()
+	graph.NewInput() // latch output
+	node := graph.NewXor(x, y)
+	graph.AddOutput(x)
+	aig.Aig_ManSetRegNum(graph, 1)
+	Fra_FramesAddMore(graph, 1)
+	if got, want := aig.Aig_ObjCopy(graph, node), graph.AND(x, y); got != want {
+		t.Fatalf("copy=%v want AND %v", got, want)
+	}
+}

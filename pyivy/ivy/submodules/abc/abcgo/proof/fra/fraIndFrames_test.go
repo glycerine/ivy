@@ -64,3 +64,20 @@ func TestInductionFramesClearDanglingMappings(t *testing.T) {
 		t.Fatalf("dangling mapping = %v", got)
 	}
 }
+
+// fraInd.c unrolls every Aig_ManForEachNode via Aig_And, including EXOR.
+func TestInductionFramesTreatNativeExorAsAnd(t *testing.T) {
+	source := aig.NewGraph()
+	x, y := source.NewInput(), source.NewInput()
+	source.NewInput() // latch output
+	node := source.NewXor(x, y)
+	source.AddOutput(node)
+	aig.Aig_ManSetRegNum(source, 1)
+	p := Fra_ManStart(source, &Fra_Par_t{NFramesK: 1})
+	graph := Fra_FramesWithClasses(p)
+	mapped := Fra_ObjFraig(p, node, 0)
+	want := graph.AND(Fra_ObjFraig(p, x, 0), Fra_ObjFraig(p, y, 0))
+	if mapped != want {
+		t.Fatalf("native EXOR unrolled as %v, want AND %v", mapped, want)
+	}
+}

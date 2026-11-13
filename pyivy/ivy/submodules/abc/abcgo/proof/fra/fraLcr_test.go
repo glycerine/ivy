@@ -97,3 +97,24 @@ func TestLatchCorrespondenceExpiredTimeBudget(t *testing.T) {
 		t.Fatalf("iterations=%d", iterations)
 	}
 }
+
+func TestLatchPartitionTreatsNativeExorAsAnd(t *testing.T) {
+	g := aig.NewGraph()
+	x, y := g.NewInput(), g.NewInput()
+	g.NewInput() // latch output
+	g.AddOutput(g.NewXor(x, y))
+	aig.Aig_ManSetRegNum(g, 1)
+	p := Lcr_ManAlloc(g)
+	p.classes = Fra_ClassesStart(g)
+	p.marked[0] = true
+	part := Fra_LcrCreatePart(p, []int32{0})
+	for mask := 0; mask < 4; mask++ {
+		values := make([]bool, part.InputCount())
+		values[len(values)-2] = mask&1 != 0
+		values[len(values)-1] = mask&2 != 0
+		got, err := part.Evaluate(values)
+		if err != nil || got[0] != (mask == 3) {
+			t.Fatalf("mask=%d output=%v err=%v", mask, got, err)
+		}
+	}
+}

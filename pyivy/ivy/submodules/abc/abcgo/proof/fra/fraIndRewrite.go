@@ -75,11 +75,8 @@ func Fra_FramesAddMore(graph *aig.Graph, frames int32) {
 				aig.Aig_ObjSetCopy(graph, edge, aig.InvalidEdge)
 				continue
 			}
-			if node.Kind == aig.And {
-				aig.Aig_ObjSetCopy(graph, edge, graph.AND(a, b))
-			} else {
-				aig.Aig_ObjSetCopy(graph, edge, graph.NewXor(a, b))
-			}
+			// Fra_FramesAddMore uses Aig_And for every source node.
+			aig.Aig_ObjSetCopy(graph, edge, graph.AND(a, b))
 		}
 	}
 }
