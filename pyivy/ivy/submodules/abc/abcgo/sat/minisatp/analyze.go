@@ -15,13 +15,7 @@ func (s *solver) analyze(conflict *clause) ([]int32, int) {
 			return nil, 0
 		}
 		if conflict.learnt {
-			conflict.activity += s.claInc
-			if conflict.activity > 1e20 {
-				for _, c := range s.learnts {
-					c.activity *= 1e-20
-				}
-				s.claInc *= 1e-20
-			}
+			s.bumpClauseActivity(conflict)
 		}
 		start := 0
 		if p >= 0 {

@@ -11,7 +11,7 @@ type clause struct {
 	lits     []int32
 	id       ClauseID
 	learnt   bool
-	activity float64
+	activity float32
 }
 
 type solver struct {
@@ -42,6 +42,17 @@ type solver struct {
 	deadline      time.Time
 	conflictLimit int32
 	interrupted   bool
+}
+
+// bumpClauseActivity mirrors the upstream float activity and rescale order.
+func (s *solver) bumpClauseActivity(c *clause) {
+	c.activity = float32(float64(c.activity) + s.claInc)
+	if float64(c.activity) > 1e20 {
+		for _, other := range s.learnts {
+			other.activity = float32(float64(other.activity) * 1e-20)
+		}
+		s.claInc *= 1e-20
+	}
 }
 
 func (s *solver) expired() bool {

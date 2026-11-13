@@ -21,3 +21,12 @@ func TestImmediateInconsistentSolveRetainsPreviousModel(t *testing.T) {
 		t.Fatalf("upstream solve preserves model when !ok: got %v want %v", s.model, previous)
 	}
 }
+
+func TestSearchImmediatelyReturnsFalseWhenInconsistent(t *testing.T) {
+	s := newSolver(1)
+	s.ok = false
+	s.model = []int8{1}
+	if got := s.search(100, 10); got != 0 || !reflect.DeepEqual(s.model, []int8{1}) {
+		t.Fatalf("upstream search guard preserves model: status=%d model=%v", got, s.model)
+	}
+}

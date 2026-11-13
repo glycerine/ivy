@@ -33,14 +33,8 @@ func (s *solver) learned(lits []int32, id ClauseID) {
 		}
 	}
 	q[1], q[max] = q[max], q[1]
-	c := &clause{lits: q, id: id, learnt: true, activity: s.claInc}
-	if c.activity > 1e20 {
-		for _, other := range s.learnts {
-			other.activity *= 1e-20
-		}
-		c.activity *= 1e-20
-		s.claInc *= 1e-20
-	}
+	c := &clause{lits: q, id: id, learnt: true}
+	s.bumpClauseActivity(c)
 	s.enqueue(q[0], c)
 	s.watches[q[0]^1] = append(s.watches[q[0]^1], c)
 	s.watches[q[1]^1] = append(s.watches[q[1]^1], c)
@@ -110,7 +104,7 @@ func (s *solver) reduceDB() {
 	sortLearntClauses(s.learnts, &seed)
 	kept := s.learnts[:0]
 	for i, c := range s.learnts {
-		if len(c.lits) > 2 && !s.locked(c) && (i < len(s.learnts)/2 || c.activity < extra) {
+		if len(c.lits) > 2 && !s.locked(c) && (i < len(s.learnts)/2 || float64(c.activity) < extra) {
 			s.remove(c)
 		} else {
 			kept = append(kept, c)
@@ -169,6 +163,9 @@ func (s *solver) simplifyDB() {
 // search is the no-assumptions portion of Solver::search. Additional source
 // controls and exported proof handling are still under development.
 func (s *solver) search(limit, maxLearnts int) int {
+	if !s.ok {
+		return 0
+	}
 	s.model = nil
 	count := 0
 	for {
