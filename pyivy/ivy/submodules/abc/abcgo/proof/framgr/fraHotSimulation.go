@@ -46,6 +46,7 @@ func oneHotViolation(a, b uint32, negA, negB bool) uint32 {
 	}
 }
 func Fra_OneHotNodesAreClause(s *Fra_Sml_t, a, b aig.Edge, negA, negB int32) int32 {
+	assert(negA != 0 || negB != 0, "fCompl1 || fCompl2")
 	left, right := s.NodeWords(a.NodeID()), s.NodeWords(b.NodeID())
 	for i := s.PrefixWords; i < s.WordsTotal; i++ {
 		if oneHotViolation(left[i], right[i], negA != 0, negB != 0) != 0 {

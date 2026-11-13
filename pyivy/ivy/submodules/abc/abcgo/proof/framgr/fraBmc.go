@@ -43,6 +43,7 @@ func Bmc_ObjFraig(b *Fra_Bmc_t, obj aig.Edge) aig.Edge {
 }
 func Bmc_ObjSetFraig(b *Fra_Bmc_t, obj, value aig.Edge) { b.PObjToFraig[obj.NodeID()] = value }
 func bmcChildFrames(b *Fra_Bmc_t, obj aig.Edge, frame int32, index int) aig.Edge {
+	assert(!obj.Complemented(), "!Aig_IsComplement(pObj)")
 	child := b.PAig.Node(obj).Fanins[index]
 	if child == aig.InvalidEdge {
 		return child

@@ -106,17 +106,27 @@ func Fra_SmlCheckOutput(p *Fra_Man_t) int32 {
 	return 0
 }
 func Fra_SmlAssignRandom(s *Fra_Sml_t, obj aig.Edge) {
+	assert(aig.Aig_ObjIsCi(s.Graph, obj), "Aig_ObjIsCi(pObj)")
 	for i := range s.NodeWords(obj.NodeID()) {
 		s.NodeWords(obj.NodeID())[i] = aig.Aig_ManRandom(0)
 	}
 }
 func Fra_SmlAssignConst(s *Fra_Sml_t, obj aig.Edge, value, frame int32) {
+	assert(aig.Aig_ObjIsCi(s.Graph, obj) || aig.Aig_ObjIsConst1(s.Graph, obj), "Aig_ObjIsCi(pObj) || Aig_ObjIsConst1(pObj)")
 	s.AssignFrame(obj.NodeID(), int(frame), value != 0)
 }
-func Fra_SmlInitialize(s *Fra_Sml_t, init int32)                  { s.Initialize(init != 0) }
-func Fra_SmlAssignDist1(s *Fra_Sml_t, pattern []uint32)           { s.AssignDistance1(pattern) }
-func Fra_SmlNodeSimulate(s *Fra_Sml_t, obj aig.Edge, frame int32) { s.SimulateNode(obj, int(frame)) }
+func Fra_SmlInitialize(s *Fra_Sml_t, init int32)        { s.Initialize(init != 0) }
+func Fra_SmlAssignDist1(s *Fra_Sml_t, pattern []uint32) { s.AssignDistance1(pattern) }
+func Fra_SmlNodeSimulate(s *Fra_Sml_t, obj aig.Edge, frame int32) {
+	assert(!obj.Complemented(), "!Aig_IsComplement(pObj)")
+	assert(aig.Aig_ObjIsNode(s.Graph, obj), "Aig_ObjIsNode(pObj)")
+	assert(frame == 0 || s.WordsPerFrame < s.WordsTotal, "iFrame == 0 || nWordsFrame < nWordsTotal")
+	s.SimulateNode(obj, int(frame))
+}
 func Fra_SmlNodesCompareInFrame(s *Fra_Sml_t, a, b aig.Edge, frameA, frameB int32) int32 {
+	assert(!a.Complemented() && !b.Complemented(), "!Aig_IsComplement(pObj0) && !Aig_IsComplement(pObj1)")
+	assert(frameA == 0 || s.WordsPerFrame < s.WordsTotal, "iFrame0 == 0 || nWordsFrame < nWordsTotal")
+	assert(frameB == 0 || s.WordsPerFrame < s.WordsTotal, "iFrame1 == 0 || nWordsFrame < nWordsTotal")
 	x, y := s.FrameWords(a.NodeID(), int(frameA)), s.FrameWords(b.NodeID(), int(frameB))
 	for i := range x {
 		if x[i] != y[i] {
@@ -126,6 +136,9 @@ func Fra_SmlNodesCompareInFrame(s *Fra_Sml_t, a, b aig.Edge, frameA, frameB int3
 	return 1
 }
 func Fra_SmlNodeCopyFanin(s *Fra_Sml_t, obj aig.Edge, frame int32) {
+	assert(!obj.Complemented(), "!Aig_IsComplement(pObj)")
+	assert(aig.Aig_ObjIsCo(s.Graph, obj), "Aig_ObjIsCo(pObj)")
+	assert(frame == 0 || s.WordsPerFrame < s.WordsTotal, "iFrame == 0 || nWordsFrame < nWordsTotal")
 	nodes := s.Graph.Nodes()
 	child := nodes[obj.NodeID()].Fanins[0]
 	src, dst := s.FrameWords(child.NodeID(), int(frame)), s.FrameWords(obj.NodeID(), int(frame))
@@ -138,6 +151,10 @@ func Fra_SmlNodeCopyFanin(s *Fra_Sml_t, obj aig.Edge, frame int32) {
 	}
 }
 func Fra_SmlNodeTransferNext(s *Fra_Sml_t, out, in aig.Edge, frame int32) {
+	assert(!out.Complemented() && !in.Complemented(), "!Aig_IsComplement(pOut) && !Aig_IsComplement(pIn)")
+	assert(aig.Aig_ObjIsCo(s.Graph, out), "Aig_ObjIsCo(pOut)")
+	assert(aig.Aig_ObjIsCi(s.Graph, in), "Aig_ObjIsCi(pIn)")
+	assert(frame == 0 || s.WordsPerFrame < s.WordsTotal, "iFrame == 0 || nWordsFrame < nWordsTotal")
 	copy(s.FrameWords(in.NodeID(), int(frame)+1), s.FrameWords(out.NodeID(), int(frame)))
 }
 func Fra_SmlCheckNonConstOutputs(s *Fra_Sml_t) int32 { return fraBool(s.HasNonconstantOutput()) }
