@@ -21,7 +21,7 @@ func (p *Cec_ManSat_t) query(a int32, b *int32) int32 {
 	if b == nil {
 		p.result, p.Error = p.proof.CheckLiteral(a)
 	} else {
-		p.result, p.Error = p.proof.CheckPair(a, *b)
+		p.result, p.Error = p.proof.CheckConjunction(a, *b)
 	}
 	if p.Error != nil {
 		return -1

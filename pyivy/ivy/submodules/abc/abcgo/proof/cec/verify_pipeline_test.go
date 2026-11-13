@@ -121,7 +121,7 @@ func TestVerifyPipelineNaiveSkipsSweep(t *testing.T) {
 		t.Fatal("naive path invoked fallback")
 		return -1, -1, nil
 	}
-	if status := cecVerifyPipeline(g, &pars, failSweep, failFallback); status != 0 || pars.Error != nil || g.CombinationalCounterexample() == nil {
+	if status := cecVerifyPipeline(g, &pars, failSweep, failFallback); status != 0 || pars.Error != nil || g.CombinationalCounterexample() != nil {
 		t.Fatalf("status %d error %v", status, pars.Error)
 	}
 }

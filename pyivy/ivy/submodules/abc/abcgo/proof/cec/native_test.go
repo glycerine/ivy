@@ -29,8 +29,11 @@ func TestNativeSATWitnessAndComplement(t *testing.T) {
 	if Cec_ObjSatVarValue(p, obj) != 0 {
 		t.Fatal("negated input witness has positive input")
 	}
-	if got := Cec_ManSatCheckNodeTwo(p, obj, obj); got != 1 {
+	if got := Cec_ManSatCheckNodeTwo(p, obj, obj); got != 0 || Cec_ObjSatVarValue(p, obj) != 1 {
 		t.Fatalf("identical pair status %d", got)
+	}
+	if got := Cec_ManSatCheckNodeTwo(p, obj, gia.Gia_Not(obj)); got != 1 {
+		t.Fatalf("complementary pair status %d", got)
 	}
 	if p.values != nil {
 		t.Fatal("UNSAT query retained stale SAT witness")
@@ -38,6 +41,25 @@ func TestNativeSATWitnessAndComplement(t *testing.T) {
 	p.pPars.nBTLimit = -1
 	if got := Cec_ManSatCheckNode(p, obj); got != -1 || p.Error == nil {
 		t.Fatal("invalid budget not reported")
+	}
+}
+
+func TestNativeSATVariableValueUsesSourcePolarity(t *testing.T) {
+	for _, flip := range []int32{0, 1} {
+		g := gia.Gia_ManStart(8)
+		a, b := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
+		n := gia.Gia_ManAppendAnd(g, a^1, b^1)
+		pars := new(Cec_ParSat_t)
+		Cec_ManSatSetDefaultParams(pars)
+		pars.fPolarFlip = flip
+		p := Cec_ManSatCreate(g, pars)
+		obj := gia.Gia_ManObj(g, n>>1)
+		if status := Cec_ManSatCheckNode(p, obj); status != 0 {
+			t.Fatalf("flip %d: status %d", flip, status)
+		}
+		if logical, physical := Cec_ObjLogicalValue(p, obj), Cec_ObjSatVarValue(p, obj); logical != 1 || physical != 1-flip {
+			t.Fatalf("flip %d: logical %d physical %d", flip, logical, physical)
+		}
 	}
 }
 

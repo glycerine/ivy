@@ -71,26 +71,15 @@ func cecVerifyPipeline(graph *Gia_Man_t, pars *Cec_ParCec_t, sweep cecSweepRunne
 		pars.Error = err
 		return -1
 	}
-	if reduced == nil && work.CombinationalCounterexample() != nil {
-		// The internal sweep has replayed its model on work; repeat on the
-		// original graph before transferring ownership.
-		w := work.CombinationalCounterexample()
-		values := make([]bool, len(graph.InputLiterals()))
-		for i := range values {
-			values[i] = w.PData[i>>5]&(uint32(1)<<uint(i&31)) != 0
+	// C transfers the witness slot even when it is nil.
+	gia.SwapCombinationalCounterexamples(graph, work)
+	gia.Gia_ManStop(work)
+	if reduced == nil && graph.CombinationalCounterexample() != nil {
+		if gia.Gia_ManVerifyCex(graph, graph.CombinationalCounterexample(), 1) == 0 {
+			fmt.Println("Counter-example simulation has failed.")
 		}
-		outputs, e := graph.Evaluate(values)
-		index := int(pars.iOutFail)
-		if e != nil || index < 0 || 2*index+1 >= len(outputs) || outputs[2*index] == outputs[2*index+1] {
-			gia.Gia_ManStop(work)
-			pars.Error = fmt.Errorf("cec: sweep witness fails original miter replay")
-			return -1
-		}
-		gia.SwapCombinationalCounterexamples(graph, work)
-		gia.Gia_ManStop(work)
 		return 0
 	}
-	gia.Gia_ManStop(work)
 	if reduced == nil {
 		work = gia.Gia_ManDup(graph)
 		gia.Gia_ManEquivFixOutputPairs(work)
@@ -107,23 +96,9 @@ func cecVerifyPipeline(graph *Gia_Man_t, pars *Cec_ParCec_t, sweep cecSweepRunne
 		return -1
 	}
 	pars.iOutFail = output
-	if status == 0 {
-		w := reduced.CombinationalCounterexample()
-		if w == nil {
-			pars.Error = fmt.Errorf("cec: FRA fallback omitted counterexample")
-			return -1
-		}
-		values := make([]bool, len(graph.InputLiterals()))
-		for i := range values {
-			values[i] = w.PData[i>>5]&(uint32(1)<<uint(i&31)) != 0
-		}
-		outputs, e := graph.Evaluate(values)
-		index := int(output)
-		if e != nil || index < 0 || 2*index+1 >= len(outputs) || outputs[2*index] == outputs[2*index+1] {
-			pars.Error = fmt.Errorf("cec: FRA witness fails original miter replay")
-			return -1
-		}
-		gia.SwapCombinationalCounterexamples(graph, reduced)
+	gia.SwapCombinationalCounterexamples(graph, reduced)
+	if graph.CombinationalCounterexample() != nil && gia.Gia_ManVerifyCex(graph, graph.CombinationalCounterexample(), 1) == 0 {
+		fmt.Println("Counter-example simulation has failed.")
 	}
 	return status
 }

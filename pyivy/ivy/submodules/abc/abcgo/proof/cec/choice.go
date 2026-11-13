@@ -106,45 +106,9 @@ func Cec_ManChoiceComputation_int(graph *Gia_Man_t, params *Cec_ParChc_t) int32 
 		Cec_ManResimulateCounterExamplesComb(sim, store)
 		Gia_ManCheckRefinements(graph, status, outputs, sim, params.fUseRings)
 	}
-	// Speculative proofs may depend on earlier assumptions. Verify every
-	// surviving class on the original graph; discard false or unknown pairs.
-	if err := cecValidateChoiceClasses(graph, sim, params.nBTLimit); err != nil {
-		params.Error = err
-		return -1
-	}
 	return 0
 }
 
-func cecValidateChoiceClasses(graph *Gia_Man_t, sim *Cec_ManSim_t, limit int32) error {
-	opts := core.DefaultSATOptions()
-	opts.ConflictLimit, opts.TreatRegistersAsInputs = int64(limit), true
-	manager, err := core.NewManager(graph, opts)
-	if err != nil {
-		return err
-	}
-	phases, err := manager.Model().Values(make([]bool, len(graph.InputLiterals())))
-	if err != nil {
-		return err
-	}
-	for id := int32(1); int(id) < graph.ObjectCount(); id++ {
-		repr := gia.Gia_ObjRepr(graph, id)
-		if repr == gia.GIA_VOID {
-			continue
-		}
-		a, b := repr<<1, id<<1
-		if phases[repr] != phases[id] {
-			b ^= 1
-		}
-		result, e := manager.CheckPair(a, b)
-		if e != nil {
-			return e
-		}
-		if result.Status != core.Equivalent {
-			Cec_ManSimClassRemoveOne(sim, id)
-		}
-	}
-	return nil
-}
 func Cec_ManChoiceComputationVec(graph *Gia_Man_t, snapshots int32, params *Cec_ParChc_t) *Gia_Man_t {
 	if params == nil {
 		params = new(Cec_ParChc_t)

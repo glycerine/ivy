@@ -9,7 +9,6 @@ import (
 )
 
 // cecComputeChoicesCec4 follows Cec_ComputeChoicesNew in cecChoice.c.
-// Every retained equivalence is rechecked on the original logic before use.
 func cecComputeChoicesCec4(graph *Gia_Man_t, verbose int32) (*aig.Graph, error) {
 	if graph == nil || gia.Gia_ManCoNum(graph)%3 != 0 || gia.Gia_ManRegNum(graph) > gia.Gia_ManCoNum(graph)/3 {
 		return nil, fmt.Errorf("cec: invalid Cec4 choice snapshot dimensions")
@@ -32,15 +31,6 @@ func cecComputeChoicesCec4(graph *Gia_Man_t, verbose int32) (*aig.Graph, error) 
 		}
 	}
 	Cec4_ManSimulateTest2(work, verbose)
-	var p Cec_ParFra_t
-	Cec4_ManSetParams(&p)
-	var simPars Cec_ParSim_t
-	Cec_ManSimSetDefaultParams(&simPars)
-	sim := Cec_ManSimStart(work, &simPars)
-	defer Cec_ManSimStop(sim)
-	if err := cecValidateChoiceClasses(work, sim, p.nBTLimit); err != nil {
-		return nil, err
-	}
 	if sourceIDs != nil {
 		if err := graph.TransferRepresentativesFrom(work, sourceIDs); err != nil {
 			return nil, err

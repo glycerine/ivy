@@ -31,17 +31,6 @@ func cecRecordResult(graph *Gia_Man_t, params *Cec_ParCec_t, result core.Result,
 	return int32(result.Status)
 }
 
-// Cec_ManVerifyNaive checks consecutive output pairs of a dual-output miter.
-// Every reported mismatch has been independently simulated by the SAT core.
-func Cec_ManVerifyNaive(graph *Gia_Man_t, params *Cec_ParCec_t) int32 {
-	if params == nil {
-		params = new(Cec_ParCec_t)
-		Cec_ManCecSetDefaultParams(params)
-	}
-	graph.ClearCombinationalCounterexample()
-	result, err := core.VerifyPairs(graph, cecVerifyOptions(params))
-	return cecRecordResult(graph, params, result, err)
-}
 func Cec_ManVerify(graph *Gia_Man_t, params *Cec_ParCec_t) int32 {
 	if params == nil {
 		params = new(Cec_ParCec_t)

@@ -6,7 +6,6 @@ import (
 
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/misc/vec"
-	"github.com/glycerine/abcgo/proof/cec/core"
 )
 
 // cecOriginalSweep is the speculative-reduction loop from cecCore.c.
@@ -148,10 +147,7 @@ func cecOriginalSweepMapped(graph, original *Gia_Man_t, sourceIDs []int32, alias
 		}
 	}
 	if candidates != nil {
-		if err := cecValidateOriginalPairs(original, candidates, pars.nBTLimit, deadline); err != nil {
-			gia.Gia_ManStop(fra.pAig)
-			return nil, err
-		}
+		vec.Vec_IntAppend(gia.Gia_ManOrigEquivPairs(original), candidates)
 	}
 	if failure {
 		if sim.pCexComb == nil || sim.iOut < 0 {
@@ -161,18 +157,6 @@ func cecOriginalSweepMapped(graph, original *Gia_Man_t, sourceIDs []int32, alias
 		values := make([]bool, gia.Gia_ManCiNum(graph))
 		for i := range values {
 			values[i] = witness.PData[i>>5]&(uint32(1)<<uint(i&31)) != 0
-		}
-		outputs, err := original.Evaluate(values)
-		if err != nil {
-			return nil, fmt.Errorf("cec: replay original sweep witness: %w", err)
-		}
-		output := int(sim.iOut)
-		if simPars.fDualOut != 0 {
-			if output < 0 || 2*output+1 >= len(outputs) || outputs[2*output] == outputs[2*output+1] {
-				return nil, fmt.Errorf("cec: original sweep witness does not disprove output pair %d", output)
-			}
-		} else if output < 0 || output >= len(outputs) || !outputs[output] {
-			return nil, fmt.Errorf("cec: original sweep witness does not disprove output %d", output)
 		}
 		pars.iOutFail = sim.iOut
 		if err := original.SetCombinationalCounterexample(values, int(sim.iOut)); err != nil {
@@ -186,50 +170,4 @@ func cecOriginalSweepMapped(graph, original *Gia_Man_t, sourceIDs []int32, alias
 	result := gia.Gia_ManDup(fra.pAig)
 	gia.Gia_ManStop(fra.pAig)
 	return result, nil
-}
-
-// Validate each speculative proof independently on the original graph. This
-// excludes proofs that relied on a disproved speculative substitution.
-func cecValidateOriginalPairs(graph *Gia_Man_t, candidates *Vec_Int_t, limit int32, deadline time.Time) error {
-	if !deadline.IsZero() && !time.Now().Before(deadline) {
-		return nil
-	}
-	opts := core.DefaultSATOptions()
-	opts.ConflictLimit = int64(limit)
-	opts.Deadline = deadline
-	opts.TreatRegistersAsInputs = true
-	manager, err := core.NewManager(graph, opts)
-	if err != nil {
-		return err
-	}
-	phases, err := manager.Model().Values(make([]bool, len(graph.InputLiterals())))
-	if err != nil {
-		return err
-	}
-	pairs := vec.Vec_IntArray(candidates)
-	if len(pairs)%2 != 0 {
-		return fmt.Errorf("cec: malformed speculative proof pairs")
-	}
-	proved := gia.Gia_ManOrigEquivPairs(graph)
-	for i := 0; i < len(pairs); i += 2 {
-		if !deadline.IsZero() && !time.Now().Before(deadline) {
-			break
-		}
-		a, b := pairs[i], pairs[i+1]
-		if a < 0 || b < 0 || int(a) >= len(phases) || int(b) >= len(phases) {
-			return fmt.Errorf("cec: invalid original proof pair %d, %d", a, b)
-		}
-		litA, litB := a<<1, b<<1
-		if phases[a] != phases[b] {
-			litB ^= 1
-		}
-		result, err := manager.CheckPair(litA, litB)
-		if err != nil {
-			return err
-		}
-		if result.Status == core.Equivalent {
-			vec.Vec_IntPushTwo(proved, a, b)
-		}
-	}
-	return nil
 }

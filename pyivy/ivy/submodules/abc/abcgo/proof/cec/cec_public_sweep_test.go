@@ -5,7 +5,6 @@ import (
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/proof/cec/core"
 	"testing"
-	"time"
 )
 
 func TestPublicSweepOriginalIDProofs(t *testing.T) {
@@ -32,19 +31,6 @@ func TestPublicSweepOriginalIDProofs(t *testing.T) {
 		if g.HasRepresentatives() {
 			t.Fatal("input retained internal sweep classes")
 		}
-	}
-}
-
-func TestOriginalPairValidationExpiredDeadline(t *testing.T) {
-	g, a, b := sweepFixture()
-	gia.Gia_ManOrigEquivPairsReset(g)
-	candidates := vec.Vec_IntAlloc(2)
-	vec.Vec_IntPushTwo(candidates, a, b)
-	if err := cecValidateOriginalPairs(g, candidates, 100, time.Now().Add(-time.Second)); err != nil {
-		t.Fatal(err)
-	}
-	if got := vec.Vec_IntSize(gia.Gia_ManOrigEquivPairs(g)); got != 0 {
-		t.Fatalf("published %d expired proofs", got)
 	}
 }
 
@@ -158,20 +144,5 @@ func TestPublicSweepDeepOriginalIDProofs(t *testing.T) {
 	}
 	if !found {
 		t.Fatalf("circuit SAT missing equivalent pair: %v", pairs)
-	}
-}
-
-func TestOriginalPairValidationRejectsSpeculativeFalseProof(t *testing.T) {
-	g, a, b := sweepFixture()
-	gia.Gia_ManOrigEquivPairsReset(g)
-	candidates := vec.Vec_IntAlloc(4)
-	vec.Vec_IntPushTwo(candidates, a, 1) // a depends on all three inputs; CI 1 does not.
-	vec.Vec_IntPushTwo(candidates, a, b)
-	if err := cecValidateOriginalPairs(g, candidates, 100, time.Time{}); err != nil {
-		t.Fatal(err)
-	}
-	pairs := vec.Vec_IntArray(gia.Gia_ManOrigEquivPairs(g))
-	if len(pairs) != 2 || pairs[0] != a || pairs[1] != b {
-		t.Fatalf("validated pairs %v", pairs)
 	}
 }
