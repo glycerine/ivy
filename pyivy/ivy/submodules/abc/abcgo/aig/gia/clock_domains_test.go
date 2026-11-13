@@ -22,3 +22,22 @@ func TestClockDomainsReturnsManagerPartitions(t *testing.T) {
 		t.Fatal("returned slice aliases manager's outer slice")
 	}
 }
+
+func TestSetClockDomainsCopiesAndRetainsEmptyVector(t *testing.T) {
+	p := Gia_ManStart(4)
+	p.SetClockDomains([][]int32{})
+	if p.ClockDomains() == nil || len(p.ClockDomains()) != 0 {
+		t.Fatal("empty vector lost")
+	}
+	values := [][]int32{{1, 2}, {}}
+	p.SetClockDomains(values)
+	values[0][0] = 9
+	got := p.ClockDomains()
+	if len(got) != 2 || vec.Vec_IntEntry(got[0], 0) != 1 || vec.Vec_IntSize(got[1]) != 0 {
+		t.Fatalf("domains %v", got)
+	}
+	p.SetClockDomains(nil)
+	if p.ClockDomains() != nil {
+		t.Fatal("nil vector not cleared")
+	}
+}
