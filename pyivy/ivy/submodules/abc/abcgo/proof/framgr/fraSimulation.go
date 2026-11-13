@@ -210,7 +210,12 @@ func (s *fraSimulation) SimulateOne() {
 				s.SimulateNode(edge, frame)
 			}
 		}
-		for _, out := range outputs {
+		// ABC copies latch-input outputs only when there is a next frame.
+		outputsToCopy := len(outputs)
+		if frame+1 == s.Frames {
+			outputsToCopy -= registers
+		}
+		for _, out := range outputs[:outputsToCopy] {
 			node := nodes[out.NodeID()]
 			src := s.FrameWords(node.Fanins[0].NodeID(), frame)
 			dst := s.FrameWords(out.NodeID(), frame)

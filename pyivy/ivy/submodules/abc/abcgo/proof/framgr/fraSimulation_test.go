@@ -67,6 +67,28 @@ func TestFraSimulationPrefixAndLatchTransfer(t *testing.T) {
 	}
 }
 
+func TestSimulationLeavesLastLatchInputUnchanged(t *testing.T) {
+	g := aig.NewGraph()
+	x, state := g.NewInput(), g.NewInput()
+	g.AddOutput(state)
+	latchInput := g.AddOutput(x)
+	aig.Aig_ManSetRegNum(g, 1)
+	s := newFraSimulation(g, 0, 2, 1)
+	s.AssignFrame(x.NodeID(), 0, true)
+	s.AssignFrame(x.NodeID(), 1, true)
+	s.FrameWords(latchInput.NodeID(), 1)[0] = 0x12345678
+	s.SimulateOne()
+	if got := s.FrameWords(latchInput.NodeID(), 0)[0]; got != ^uint32(0) {
+		t.Fatalf("first-frame latch input = %#x", got)
+	}
+	if got := s.FrameWords(latchInput.NodeID(), 1)[0]; got != 0x12345678 {
+		t.Fatalf("last-frame latch input was overwritten: %#x", got)
+	}
+	if got := s.FrameWords(state.NodeID(), 1)[0]; got != ^uint32(0) {
+		t.Fatalf("latch transfer = %#x", got)
+	}
+}
+
 func TestFraSimulationDistanceOneAcrossWords(t *testing.T) {
 	g := aig.NewGraph()
 	for i := 0; i < 33; i++ {
