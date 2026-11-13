@@ -81,3 +81,14 @@ func TestCec4PatternGeneratorHandlesXOR(t *testing.T) {
 		}
 	}
 }
+
+func TestCec4PatternGeneratorDeclinesRealMux(t *testing.T) {
+	g := gia.Gia_ManStart(10)
+	g.EnableMuxes()
+	a, b, c := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
+	mux := gia.Gia_ManAppendMuxReal(g, a, b, c)
+	pat, vis := vec.Vec_IntAlloc(3), vec.Vec_IntAlloc(5)
+	if Cec4_ManGeneratePatternOne(g, 0, 0, mux>>1, 1, pat, vis) != 0 {
+		t.Fatal("unsupported MUX was treated as an AND")
+	}
+}

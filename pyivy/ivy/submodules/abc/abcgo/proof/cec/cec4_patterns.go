@@ -49,6 +49,11 @@ func (p *cec4Pattern) generate(id, value int32) bool {
 	if gia.Gia_ObjIsAnd(obj) == 0 {
 		panic("cec4: unsupported pattern node")
 	}
+	// The source generator handles AND and XOR nodes, but not real MUXes.
+	// A failed heuristic attempt is safe; treating a MUX as an AND is not.
+	if gia.Gia_ObjIsMux(p.graph, obj) != 0 {
+		return false
+	}
 	a, ca := p.fan(id, 0)
 	b, cb := p.fan(id, 1)
 	if gia.Gia_ObjIsXor(obj) != 0 {
