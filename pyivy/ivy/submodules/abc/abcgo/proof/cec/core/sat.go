@@ -257,6 +257,9 @@ func (m *Manager) CheckLiteral(lit int32) (Result, error) {
 	if !m.models[0].valid(lit) {
 		return Result{}, fmt.Errorf("cec: invalid query literal")
 	}
+	if m.interrupted() {
+		return Result{Status: Undecided}, nil
+	}
 	// Cec_ManSatCheckNode handles the two constant pointers before updating
 	// counters or allocating a cone. The C assert on constant one is represented
 	// as a direct witness so the general-purpose core remains usable by its callers.
