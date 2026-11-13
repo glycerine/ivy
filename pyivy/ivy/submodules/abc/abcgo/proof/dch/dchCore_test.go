@@ -52,7 +52,7 @@ func TestSATProvenAssociativeChoices(t *testing.T) {
 		t.Fatal(err)
 	}
 	checkAllOutputs(t, variants[0], result)
-	if stats.Proofs == 0 || stats.SATCalls < 2 || aig.Aig_ManChoiceNum(result) == 0 {
+	if stats.Proofs == 0 || stats.SATCalls < 1 || aig.Aig_ManChoiceNum(result) == 0 {
 		t.Fatal("no SAT-proven choices", stats, aig.Aig_ManChoiceNum(result))
 	}
 	for _, node := range result.LiveEdges() {

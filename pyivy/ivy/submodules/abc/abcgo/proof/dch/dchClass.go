@@ -105,7 +105,9 @@ func createClasses(g *aig.Graph, order []aig.Edge, words int) *Classes {
 func Dch_ClassesLitNum(c *Classes) int {
 	n := 0
 	for _, g := range c.groups {
-		if len(g) > 1 {
+		// Constant candidates have their own counter in Dch_Cla_t and are
+		// not included in the source's count of ordinary class literals.
+		if len(g) > 1 && g[0].NodeID() != 0 {
 			n += len(g) - 1
 		}
 	}

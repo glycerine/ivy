@@ -20,6 +20,7 @@ const (
 // UNSAT results prove equivalence; SAT produces a counterexample and a conflict
 // budget exhaustion remains unknown, never a guessed proof.
 func (m *Manager) provePair(representative, node aig.Edge) (proofResult, []bool, error) {
+	m.stats.SATCalls++
 	m.callsSince++
 	if m.solver == nil || (m.params.SatVarMax > 0 && int(m.nextVar) > m.params.SatVarMax && m.callsSince > m.params.CallsRecycle) {
 		m.recycleSolver()
@@ -38,7 +39,6 @@ func (m *Manager) provePair(representative, node aig.Edge) (proofResult, []bool,
 	started := time.Now()
 	defer func() { m.stats.Solving += time.Since(started) }()
 	for direction, assumptions := range [][]int32{{a, b ^ 1}, {a ^ 1, b}} {
-		m.stats.SATCalls++
 		status := m.solver.Solve(assumptions...)
 		switch status {
 		case bsat.Unsatisfiable:
