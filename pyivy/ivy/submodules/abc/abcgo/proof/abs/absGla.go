@@ -231,39 +231,6 @@ var spStatic_Ga2_ObjComputeTruthSpecial_uTruth5 [5]uint32 = [5]uint32{ 0xAAAAAAA
   SeeAlso     []
 
 ***********************************************************************/
-func Ga2_ManCnfAddDynamic(p *Ga2_Man_t, uTruth int32, Lits []int32, iLitOut int32, ProofId int32) {
-    var i int32;
-    var k int32;
-    var b int32;
-    var Cube int32;
-    var nClaLits int32;
-    var ClaLits [6]int32;
-//    assert( uTruth > 0 && uTruth < 0xffff );
-    for  i = 0; i < 2; i++  {
-        if i != 0 {
-            uTruth = 0xffff & ~uTruth; }
-//        Extra_PrintBinary( stdout, &uTruth, 16 ); printf( "\n" );
-        for  k = 0; k < p.pSopSizes[uTruth]; k++  {
-            nClaLits = 0;
-            ClaLits[nClaLits++] = i ? lit_neg(iLitOut) : iLitOut;
-            Cube = p.pSops[uTruth][k];
-            for  b = 3; b >= 0; b--  {
-                if Cube % 3 == 0 { // value 0 --> add positive literal
-                
-                    assert(Lits[b] > 1, "Lits[b] > 1");
-                    ClaLits[nClaLits++] = Lits[b];
-                
-                } else if Cube % 3 == 1 { // value 1 --> add negative literal
-                
-                    assert(Lits[b] > 1, "Lits[b] > 1");
-                    ClaLits[nClaLits++] = lit_neg(Lits[b]);
-                }
-                Cube = Cube / 3;
-            }
-            sat_solver2_addclause( p.pSat, ClaLits, ClaLits+nClaLits, ProofId );
-        }
-    }
-}
 /**Function*************************************************************
 
   Synopsis    []
