@@ -45,8 +45,9 @@ type Statistics struct {
 	Elapsed                                                                                time.Duration
 }
 
-// Manager implements the original CEC cone-CNF and two-direction assumption
-// checks, using Go-owned Satoko CDCL state. It is incremental, not concurrent.
+// Manager provides incremental cone-CNF and two-direction assumption checks
+// using Satoko. This Go adapter is separate from the source-shaped CEC SAT
+// implementation in the parent package. A Manager is not concurrent-safe.
 type Manager struct {
 	models       []*Model
 	options      Options
