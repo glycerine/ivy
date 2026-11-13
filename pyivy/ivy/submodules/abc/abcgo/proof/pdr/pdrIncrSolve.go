@@ -41,18 +41,13 @@ func IPdr_ManSolveInt(p *Pdr_Man_t, checkClauses, pushClauses int32) int32 {
 		Pdr_ManCreateSolver(p, frame)
 	} else {
 		frame = int32(vec.Vec_VecSize(p.vClauses) - 1)
-		if checkClauses != 0 && IPdr_ManCheckClauses(p) == -1 {
-			pars.iFrame = frame
-			return -1
+		if checkClauses != 0 {
+			IPdr_ManCheckClauses(p)
 		}
 		if pushClauses != 0 {
 			p.iUseFrame = max(frame, 1)
 			status := Pdr_ManPushClauses(p)
-			if status < 0 {
-				pars.iFrame = frame
-				return -1
-			}
-			if status > 0 {
+			if status != 0 {
 				Pdr_ManReportInvariant(p)
 				Pdr_ManVerifyInvariant(p)
 				return 1

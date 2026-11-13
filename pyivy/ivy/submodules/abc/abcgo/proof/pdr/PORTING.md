@@ -75,6 +75,11 @@ Remaining review and coverage gaps:
   shared parameter struct remain. Consequently solved outputs may be counted
   again. If the first frame-limit restart has no saved clauses, the source's
   unconditional restore asserts; the Go entry point likewise panics.
+- When resuming incremental PDR with clause checking or pushing requested,
+  ABC ignores an inconclusive clause check and treats every nonzero push
+  result, including `-1` for an interrupted check, as the proof branch. The
+  Go driver preserves this source behavior; a result from that interrupted
+  branch must not be relied upon as proof.
 - As in ABC, stopping a PDR manager stops the graph's fanout index even if
   that index existed before the manager started. A caller that needs fanout
   data afterward must rebuild it.

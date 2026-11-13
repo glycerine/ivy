@@ -3,9 +3,54 @@ package pdr
 import (
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/aig/saig"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"testing"
 )
+
+func TestIncrementalRestoredPushTreatsUnknownAsNonzeroLikeC(t *testing.T) {
+	g := aig.NewGraph()
+	input := g.NewInput()
+	_ = g.NewInput() // latch output
+	g.AddOutput(g.Const0())
+	g.AddOutput(input)
+	aig.Aig_ManSetRegNum(g, 1)
+	var pars Pdr_Par_t
+	Pdr_ManSetDefaultParams(&pars)
+	pars.fSilent = 1
+	p := Pdr_ManStart(g, &pars, nil)
+	defer Pdr_ManStop(p)
+	for k := int32(0); k < 3; k++ {
+		Pdr_ManCreateSolver(p, k)
+	}
+	vec.Vec_VecPush(p.vClauses, 1, testPdrSet([]int32{0}, nil))
+	p.timeToStopOne = util.Abc_Clock() - 1
+	// C tests the push return as a boolean, so -1 enters its proof branch.
+	if got := IPdr_ManSolveInt(p, 0, 1); got != 1 {
+		t.Fatalf("got %d, want C's nonzero-branch result", got)
+	}
+}
+
+func TestIncrementalRestoredClauseCheckIgnoresUnknownLikeC(t *testing.T) {
+	g := aig.NewGraph()
+	input, latch := g.NewInput(), g.NewInput()
+	g.AddOutput(latch)
+	g.AddOutput(input)
+	aig.Aig_ManSetRegNum(g, 1)
+	var pars Pdr_Par_t
+	Pdr_ManSetDefaultParams(&pars)
+	pars.fSilent = 1
+	p := Pdr_ManStart(g, &pars, nil)
+	defer Pdr_ManStop(p)
+	for k := int32(0); k < 3; k++ {
+		Pdr_ManCreateSolver(p, k)
+	}
+	vec.Vec_VecPush(p.vClauses, 1, testPdrSet([]int32{0}, nil))
+	p.timeToStopOne = util.Abc_Clock() - 1
+	if got := IPdr_ManSolveInt(p, 1, 0); got != -1 || p.nCalls < 2 {
+		t.Fatalf("result=%d SAT calls=%d, want unknown after the restored check and a property check", got, p.nCalls)
+	}
+}
 
 func TestIncrementalFirstRestartAssertsOnNilSavedClauses(t *testing.T) {
 	g := aig.NewGraph()
