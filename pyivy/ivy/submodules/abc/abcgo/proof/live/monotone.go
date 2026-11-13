@@ -38,23 +38,34 @@ func checkSanityOfKnownMonotone(known, candidates, hints []int32) int32 {
 }
 
 func createMonotoneTester(p *aig.Graph, indexes *aigPoIndices, vectors *monotoneVectorsStruct, start *int32) *aig.Graph {
+	return createMonotoneTesterMode(p, indexes, vectors, start, true)
+}
+func createMonotoneTesterMode(p *aig.Graph, indexes *aigPoIndices, vectors *monotoneVectorsStruct, start *int32, source bool) *aig.Graph {
 	if indexes.attrPendingSignalIndex < 0 {
 		panic("live: pending signal missing")
 	}
-	if checkSanityOfKnownMonotone(vectors.attrKnownMonotone, vectors.attrCandMonotone, vectors.attrHintMonotone) == 0 {
-		panic("live: inconsistent monotone candidate vectors")
+	if source && vectors.attrKnownMonotone != nil {
+		checkSanityOfKnownMonotone(vectors.attrKnownMonotone, vectors.attrCandMonotone, vectors.attrHintMonotone)
 	}
 	c := newGraphCopy(p, "_monotone")
 	c.copyInputs()
 	pendingOld := aig.Aig_ObjCreateCi(c.destination)
 	delayed := make(map[int32]aig.Edge)
+	delayedInOrder := make([]aig.Edge, 0, len(vectors.attrHintMonotone))
 	for _, id := range vectors.attrHintMonotone {
-		delayed[id] = aig.Aig_ObjCreateCi(c.destination)
+		d := aig.Aig_ObjCreateCi(c.destination)
+		delayed[id] = d
+		delayedInOrder = append(delayedInOrder, d)
 	}
 	pending := c.signal(p.Outputs()[indexes.attrPendingSignalIndex])
 	guard := aig.Aig_And(c.destination, pending, pendingOld)
 	for _, id := range vectors.attrKnownMonotone {
-		guard = aig.Aig_And(c.destination, guard, aig.Aig_Exor(c.destination, c.signal(p.Outputs()[id]), delayed[id]).Not())
+		driverID, previous := id, delayed[id]
+		if source {
+			driverID = id - indexes.attrHintSingalBeginningMarker + 1 + indexes.attrPendingSignalIndex
+			previous = delayedInOrder[int(driverID)-propertyOutputs(p)]
+		}
+		guard = aig.Aig_And(c.destination, guard, aig.Aig_Exor(c.destination, c.signal(p.Outputs()[driverID]), previous).Not())
 	}
 	properties := []aig.Edge{}
 	for _, id := range vectors.attrHintMonotone {
@@ -105,7 +116,7 @@ func negateOutputs(p *aig.Graph, first int) *aig.Graph {
 }
 func findNewMonotoneWith(p *aig.Graph, indexes *aigPoIndices, vectors *monotoneVectorsStruct, options SafetyOptions, checker SafetyChecker) []int32 {
 	var start int32
-	tester := negateOutputs(createMonotoneTester(p, indexes, vectors, &start), propertyOutputs(p))
+	tester := negateOutputs(createMonotoneTesterMode(p, indexes, vectors, &start, false), propertyOutputs(p))
 	result := []int32{}
 	serial := int(start)
 	for _, id := range vectors.attrHintMonotone {

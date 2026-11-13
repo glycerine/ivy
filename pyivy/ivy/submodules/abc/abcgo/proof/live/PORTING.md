@@ -30,7 +30,7 @@ Monotonicity discovery retains only proved candidates. Unknown results never bec
 - The source one-step constructor emits a safety output only when assertions are present; the native convenience API also emits a constant-false safety output when none are present.
 - `l2ssim` remains liveness-only, independently of the one-step safety-output behavior. CLI `-s` ignores safety and `-l` ignores liveness; option order does not change their meaning. Default abstraction shadows the first half of original registers, matching source preparation.
 - Safety-name aliases `Assert`/`Assume` are retained alongside `assert_safety`/`assume_safety`.
-- Actual hint indexes replace assumptions that hints are contiguous or immediately follow the pending output. Known-hint delay lookup uses its real vector position, correcting the source's negative-index arithmetic.
+- Convenience discovery uses actual hint indexes. The source-shaped monotone tester retains C's arithmetic for known hints; its delayed-flop index can be negative and is rejected by Go bounds checks where C asserts or reads invalid memory.
 - The convenience discovery APIs query each monotonicity obligation explicitly. The source-named `findNewMonotone` instead flips one obligation and runs PDR on the entire graph, including unrelated outputs, matching C.
 - The source-shaped monotone-discovery function computes results and then returns NULL, as in C; the separate native `FindMonotone` API returns its proved set.
 - Parser state is local and reentrant. Invalid input returns errors instead of exiting the embedding process or reading before the input buffer.

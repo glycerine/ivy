@@ -8,7 +8,7 @@ Regressions added and findings fixed:
 - The simulation command initially inherited full-mode safety output creation; a separate red test caught it. Simulation stays liveness-only. The source one-step constructor emits a safety output only when it receives safety assertions.
 - Missing LTL names initially reached an assertion-style panic; a red test now requires an ordinary error from the native transformation API.
 - A preprocessing-only monotone-discovery run cannot claim a liveness proof. Likewise, finite-k failures remain unknown at the top level.
-- Original hint indexes are preserved even when an unrelated PO separates them. Known-monotone previous-state lookup avoids the source's negative index calculation.
+- Convenience discovery preserves original hint indexes even when an unrelated PO separates them. The source-shaped constructor retains the original negative-index calculation for known monotone hints; a regression characterizes this source defect.
 - Constant false fairness disables unfair-loop counterexamples; no-live/no-fair cases use explicit identity values.
 - Full input/state witnesses are replayed independently in randomized tests.
 - Invalid graphs and negative SAT limits return errors. Expired deadlines stop k-liveness before invoking a checker; resource exhaustion never becomes a safety proof.
