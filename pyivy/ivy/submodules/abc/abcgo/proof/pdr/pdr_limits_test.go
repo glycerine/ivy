@@ -143,3 +143,18 @@ func TestPdrGeneralizationExpiredDeadlineMatchesC(t *testing.T) {
 		}
 	}
 }
+
+// pdrSat.c returns immediately on an inconclusive property query, before
+// touching the caller's predecessor pointer or SAT result counters.
+func TestPdrUnknownPropertyLeavesPredecessorUntouched(t *testing.T) {
+	for _, mono := range []bool{false, true} {
+		p, _ := pdrTestSATManager(t, mono)
+		p.timeToStop = util.Abc_Clock() - 1
+		sentinel := testPdrSet([]int32{0}, nil)
+		predecessor := sentinel
+		status := Pdr_ManCheckCube(p, 0, nil, &predecessor, 0, 0, 0)
+		if status != -1 || predecessor != sentinel || p.nCalls != 1 || p.nCallsS != 0 || p.nCallsU != 0 || p.nXsimRuns != 0 {
+			t.Fatalf("mono=%v status=%d predecessor preserved=%v calls=(%d,%d,%d) simulations=%d", mono, status, predecessor == sentinel, p.nCalls, p.nCallsS, p.nCallsU, p.nXsimRuns)
+		}
+	}
+}

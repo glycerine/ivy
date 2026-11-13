@@ -288,10 +288,10 @@ func ZPdr_ManSimpleMic(p *Pdr_Man_t, k int32, cube **Pdr_Set_t) int32 {
 		lit := (*cube).Lits[i]
 		(*cube).Lits[i] = -1
 		status := Pdr_ManCheckCube(p, k, *cube, nil, p.pPars.nConfLimit, 0, 1)
-		(*cube).Lits[i] = lit
 		if status == -1 {
 			return -1
 		}
+		(*cube).Lits[i] = lit
 		if status == 0 {
 			continue
 		}
@@ -344,9 +344,6 @@ func ZPdr_ManDown(p *Pdr_Man_t, k int32, cube **Pdr_Set_t, pred *Pdr_Set_t, keep
 			status := Pdr_ManCheckCube(p, k-1, ctg, nil, p.pPars.nConfLimit, 0, 1)
 			if status != 1 {
 				Pdr_SetDeref(ctg)
-				if status == -1 {
-					return -1
-				}
 				break
 			}
 			minimum := Pdr_ManReduceClause(p, k-1, ctg)

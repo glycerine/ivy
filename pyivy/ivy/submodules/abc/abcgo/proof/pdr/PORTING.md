@@ -63,6 +63,11 @@ Remaining review and coverage gaps:
   limit treats an inconclusive SAT result as SAT. If a predecessor is also
   requested, a SAT model may be unavailable; the Go model access then fails
   rather than manufacturing one.
+- In `ZPdr_ManSimpleMic`, an inconclusive query leaves the attempted literal
+  marked `-1`, as in C. In `ZPdr_ManDown`, an inconclusive first CTG query
+  exits the CTG loop and continues to the predecessor intersection rather
+  than immediately returning unknown. Both behaviors are source-derived and
+  should be considered when interpreting interrupted generalization.
 - As in the source, `ZPdr_SetIntersection` does not check required literals
   in the unmatched tail after either sorted input ends. Also,
   `Pdr_SetPrintStr` appends no pattern characters when its flop filter is
