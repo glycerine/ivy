@@ -34,10 +34,6 @@ func Acec_Solve(a, b *Gia_Man_t, pars *Acec_ParCec_t) int32 {
 	} else {
 		left, right = Acec_InsertBox(boxA, 0), Acec_InsertBox(boxB, 0)
 		fmt.Printf("Matching of adder trees in LHS and RHS succeeded. Time = %v\n", time.Since(start))
-		gia.Gia_ManPatchCoDriver(left, gia.Gia_ManCoNum(left)-1, 0)
-		gia.Gia_ManPatchCoDriver(right, gia.Gia_ManCoNum(right)-1, 0)
-		gia.Gia_ManPatchCoDriver(left, gia.Gia_ManCoNum(left)-2, 0)
-		gia.Gia_ManPatchCoDriver(right, gia.Gia_ManCoNum(right)-2, 0)
 	}
 	var cecParams cec.Cec_ParCec_t
 	cec.Cec_ManCecSetDefaultParams(&cecParams)
