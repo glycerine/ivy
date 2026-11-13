@@ -34,6 +34,8 @@ Intentional conservative paths and limits:
 - The C cut detectors process two-fanin logic and do not check for native MUX
   or buffer nodes. The Go port retains that behavior; these routines can omit
   native gate inputs and their results are not reliable for such graphs.
+- `Acec_Normalize` requires an arithmetic box: as in C, it passes a missing
+  box to the insertion routine rather than returning a duplicate input graph.
 - The original CLA carry rewrite requires a unique polarity along every path to
   each XOR input. Reconvergent XORs commonly violate that assumption. The Go
   port returns an unchanged duplicate when preflight finds ambiguous polarity;
