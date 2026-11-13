@@ -14,9 +14,10 @@ suite does not establish full equivalence to ABC on every circuit or option.
 - Induction and sequential equivalence have generated-circuit tests and
   counterexample replay tests. SEC replays witnesses on the original graph and
   reports an undecided result when a witness cannot be validated.
-- Invariant verification only supports one induction frame. Unlike the C
-  routine, it rejects other depths instead of claiming success without a check;
-  malformed clause encodings are also rejected.
+- Invariant verification only supports one induction frame. As in the C
+  routine, other depths return success without any check; callers must not
+  interpret that return as a proof. Malformed clause encodings are rejected
+  when the supported depth is checked.
 - Clause generation does not promote unchecked candidates to proved storage
   after an induction solver failure. Its legacy integer return is not itself a
   proof certificate.

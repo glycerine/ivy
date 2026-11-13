@@ -11,15 +11,16 @@ import (
 )
 
 // Fra_InvariantVerify checks each clause in the initial state and checks that
-// their conjunction implies each clause in the next frame. Literal values use
+// their conjunction implies each clause in the next frame. For frames other
+// than 1, ABC returns success without checking; callers must not rely on it.
+// Literal values use
 // ABC's zero-based SAT encoding and clause ends are cumulative offsets.
 func Fra_InvariantVerify(graph *aig.Graph, frames int32, ends, literals *vec.Vec_Int_t) int32 {
 	start := time.Now()
 	if frames != 1 {
 		fmt.Println("Invariant verification: Can only verify for K = 1")
-		// The C routine returns success here despite performing no check.
-		// Do not claim an invariant was verified for an unsupported depth.
-		return 0
+		// ABC returns success despite performing no check for this depth.
+		return 1
 	}
 	data := cnf.Cnf_DeriveSimple(graph, int32(graph.OutputCount()))
 	defer cnf.Cnf_DataFree(data)
