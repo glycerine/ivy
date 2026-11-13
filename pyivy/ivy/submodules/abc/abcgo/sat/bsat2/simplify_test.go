@@ -28,6 +28,66 @@ func TestSimplifierRejectsEliminatedAssumptionsAfterPreprocessing(t *testing.T) 
 	}
 }
 
+func TestSimplifierIncrementalAfterElimination(t *testing.T) {
+	rng := rand.New(rand.NewSource(867340))
+	for trial := 0; trial < 300; trial++ {
+		s := NewSimpSolver()
+		s.UseRedundancyCheck = trial%2 == 0
+		s.UseAsymmetric = trial%3 == 0
+		for v := 0; v < 5; v++ {
+			s.NewVariable()
+			if v != 0 {
+				s.SetFrozen(Var(v), true)
+			}
+		}
+		var formula [][]Lit
+		for i := 0; i < 8; i++ {
+			var clause []Lit
+			for _, v := range rng.Perm(5)[:3] {
+				clause = append(clause, MakeLit(Var(v), rng.Intn(2) != 0))
+			}
+			formula = append(formula, clause)
+			s.AddClause(clause...)
+		}
+		s.Eliminate(trial%2 == 0)
+		for step := 0; step < 8; step++ {
+			if step > 0 && step%2 == 0 {
+				clause := []Lit{MakeLit(Var(1+rng.Intn(4)), rng.Intn(2) != 0), MakeLit(Var(1+rng.Intn(4)), rng.Intn(2) != 0)}
+				formula = append(formula, clause)
+				s.AddClause(clause...)
+			}
+			var assumptions []Lit
+			for i := 0; i < rng.Intn(4); i++ {
+				assumptions = append(assumptions, MakeLit(Var(1+rng.Intn(4)), rng.Intn(2) != 0))
+			}
+			_, want := formulaModel(formula, assumptions, 5)
+			status := s.SolveSimplified(assumptions, true, false)
+			if (status == True) != want || status == Undef {
+				t.Fatalf("trial=%d step=%d status=%v want=%v formula=%v assumptions=%v", trial, step, status, want, formula, assumptions)
+			}
+			if status == True {
+				for _, clause := range formula {
+					satisfied := false
+					for _, l := range clause {
+						if s.ModelValue(l) == True {
+							satisfied = true
+							break
+						}
+					}
+					if !satisfied {
+						t.Fatalf("trial=%d step=%d invalid model %v clause %v", trial, step, s.Model, clause)
+					}
+				}
+				for _, l := range assumptions {
+					if s.ModelValue(l) != True {
+						t.Fatalf("trial=%d step=%d model %v violates assumption %v", trial, step, s.Model, l)
+					}
+				}
+			}
+		}
+	}
+}
+
 func TestSimplifyingSolverAgainstExhaustiveEnumeration(t *testing.T) {
 	rng := rand.New(rand.NewSource(431))
 	for trial := 0; trial < 500; trial++ {
