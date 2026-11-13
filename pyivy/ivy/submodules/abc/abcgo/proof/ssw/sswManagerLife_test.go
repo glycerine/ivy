@@ -23,5 +23,4 @@ func TestManagerCleanupAndStop(t *testing.T) {
 	if p.pAig != nil || p.pNodeToFrames != nil {
 		t.Fatal("stop retained manager state")
 	}
-	aig.Aig_ManFanoutStop(g)
 }
