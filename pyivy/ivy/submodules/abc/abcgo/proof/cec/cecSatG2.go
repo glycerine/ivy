@@ -164,18 +164,7 @@ func Cec4_ObjCleanSatId(p *Gia_Man_t, pObj *Gia_Obj_t) { assert(Cec4_ObjSatId(p,
   SeeAlso     []
 
 ***********************************************************************/
-func Cec4_ManSetParams(pPars *Cec_ParFra_t) {
-    memset( pPars, 0, sizeof(Cec_ParFra_t) );
-    pPars.jType          =       2;    // solver type
-    pPars.fSatSweeping   =       1;    // conflict limit at a node
-    pPars.nWords         =       4;    // simulation words
-    pPars.nRounds        =      10;    // simulation rounds
-    pPars.nItersMax      =    2000;    // this is a miter
-    pPars.nBTLimit       = 1000000;    // use logic cones
-    pPars.nSatVarMax     =    1000;    // the max number of SAT variables before recycling SAT solver
-    pPars.nCallsRecycle  =     500;    // calls to perform before recycling SAT solver
-    pPars.nGenIters      =     100;    // pattern generation iterations
-}
+
 
 /**Function*************************************************************
 
@@ -622,26 +611,7 @@ func Cec4_ObjSimEqual(p *Gia_Man_t, iObj0 int32, iObj1 int32) int32 {
         return 1;
     }
 }
-var spStatic_Cec4_ManSimHashKey_s_Primes [16]int32 = [16]int32{ 
-        1291, 1699, 1999, 2357, 2953, 3313, 3907, 4177, 
-        4831, 5147, 5647, 6343, 6899, 7103, 7873, 8147 };
-func Cec4_ManSimHashKey(pSim *word, nSims int32, nTableSize int32) int32 {
-    
-    var uHash uint32;
-    var pSimU *uint32 = (unsigned *)pSim;
-    var i int32;
-    var nSimsU int32 = 2 * nSims;
-    if pSimU[0] & 1 {
-        for  i = 0; i < nSimsU; i++  {
-            uHash ^= ~pSimU[i] * spStatic_Cec4_ManSimHashKey_s_Primes[i & 0xf];
-        }
-    } else {
-        for  i = 0; i < nSimsU; i++  {
-            uHash ^= pSimU[i] * spStatic_Cec4_ManSimHashKey_s_Primes[i & 0xf];
-        } }
-    return int32((uHash % nTableSize));
 
-}
 func Cec4_RefineOneClassIter(p *Gia_Man_t, iRepr int32) {
     var iObj int32;
     var iPrev int32 = iRepr;
