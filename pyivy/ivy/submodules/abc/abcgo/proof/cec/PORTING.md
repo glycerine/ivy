@@ -1,22 +1,18 @@
 # CEC port status
 
-The circuit model and incremental SAT equivalence group is implemented in
-`core/`, which is independently buildable and uses the Go Satoko solver. GIA can
-use the dependency-neutral Network interface without an import cycle. This is a
-real CNF/CDCL engine, with independently validated counterexamples and original
-CEC result conventions; see core/README.md for APIs and verification.
+The `proof/cec` package builds, including the original CEC, Cec2, Cec3, and
+Cec4 entry points. An independent full `go test -race ./proof/cec` and
+`go vet ./proof/cec` passed after integration. The dependency-neutral `core/`
+package contains the shared SAT equivalence machinery; its own README records
+its APIs and tests. Focused tests also cover Cec4 simulation, pattern packing,
+Glucose solver modes, reduced-graph equivalence and counterexample replay.
 
-The parent CEC package remains incomplete. Its generated files have not been
-hidden or excluded. Remaining groups include the original pattern/simulation
-classes and refinement, SAT-sweeping/FRAIG orchestration, choices/correspondence,
-sequential/semi-formal drivers, synthesis and circuit-based SAT alternatives,
-and legacy parameter/manager adapters. A complete parent-package build remains
-a required integration gate; a green core test is not evidence of that gate.
-
-Completed group verification: actual `go test -race -cover ./proof/cec/core`
-passes (85.4% statement coverage), and `go vet ./proof/cec/core` passes. Separate
-readability and bug reviews are recorded in core/README.md. No git commands were
-used by this worker.
+Passing the package tests establishes a build and the tested behavior; it does
+not establish complete equivalence with ABC on all inputs. The current source
+fidelity review includes Cec4 sweeping, counterexample handling and diagnostics.
+In particular, work is in progress to match the source's detailed per-round
+statistics and timings. The focused harnesses are supplemental, not a
+replacement for the full-package test.
 
 ## Upstream Cec4 choice limitation
 
