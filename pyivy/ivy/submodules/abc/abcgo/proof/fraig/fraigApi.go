@@ -1,319 +1,132 @@
 package fraig
 
-import "fmt"
+// FRAIG manager and node accessors, adapted from fraigApi.c by Alan Mishchenko.
+import (
+	"fmt"
 
-/**CFile****************************************************************
+	"github.com/glycerine/abcgo/sat/msat"
+)
 
-  FileName    [fraigApi.c]
+func Fraig_ManReadVecInputs(p *Fraig_Man_t) *Fraig_NodeVec_t      { return p.vInputs }
+func Fraig_ManReadVecOutputs(p *Fraig_Man_t) *Fraig_NodeVec_t     { return p.vOutputs }
+func Fraig_ManReadVecNodes(p *Fraig_Man_t) *Fraig_NodeVec_t       { return p.vNodes }
+func Fraig_ManReadInputs(p *Fraig_Man_t) []*Fraig_Node_t          { return p.vInputs.pArray }
+func Fraig_ManReadOutputs(p *Fraig_Man_t) []*Fraig_Node_t         { return p.vOutputs.pArray }
+func Fraig_ManReadNodes(p *Fraig_Man_t) []*Fraig_Node_t           { return p.vNodes.pArray }
+func Fraig_ManReadInputNum(p *Fraig_Man_t) int32                  { return int32(len(p.vInputs.pArray)) }
+func Fraig_ManReadOutputNum(p *Fraig_Man_t) int32                 { return int32(len(p.vOutputs.pArray)) }
+func Fraig_ManReadNodeNum(p *Fraig_Man_t) int32                   { return int32(len(p.vNodes.pArray)) }
+func Fraig_ManReadConst1(p *Fraig_Man_t) *Fraig_Node_t            { return p.pConst1 }
+func Fraig_ManReadIthNode(p *Fraig_Man_t, i int32) *Fraig_Node_t  { return p.vNodes.pArray[i] }
+func Fraig_ManReadInputNames(p *Fraig_Man_t) []string             { return p.ppInputNames }
+func Fraig_ManReadOutputNames(p *Fraig_Man_t) []string            { return p.ppOutputNames }
+func Fraig_ManReadVarsInt(p *Fraig_Man_t) *msat.Msat_IntVec_t     { return p.vVarsInt }
+func Fraig_ManReadSat(p *Fraig_Man_t) *msat.Msat_Solver_t         { return p.pSat }
+func Fraig_ManReadFuncRed(p *Fraig_Man_t) int32                   { return p.fFuncRed }
+func Fraig_ManReadFeedBack(p *Fraig_Man_t) int32                  { return p.fFeedBack }
+func Fraig_ManReadDoSparse(p *Fraig_Man_t) int32                  { return p.fDoSparse }
+func Fraig_ManReadChoicing(p *Fraig_Man_t) int32                  { return p.fChoicing }
+func Fraig_ManReadVerbose(p *Fraig_Man_t) int32                   { return p.fVerbose }
+func Fraig_ManReadModel(p *Fraig_Man_t) []int32                   { return p.pModel }
+func Fraig_ManReadPatternNumRandom(p *Fraig_Man_t) int32          { return p.nWordsRand * 32 }
+func Fraig_ManReadPatternNumDynamic(p *Fraig_Man_t) int32         { return p.iWordStart * 32 }
+func Fraig_ManReadPatternNumDynamicFiltered(p *Fraig_Man_t) int32 { return p.iPatsPerm }
+func Fraig_ManReadSatFails(p *Fraig_Man_t) int32                  { return p.nSatFailsReal }
+func Fraig_ManReadConflicts(p *Fraig_Man_t) int32 {
+	if p.pSat == nil {
+		return 0
+	}
+	return int32(msat.Msat_SolverReadBackTracks(p.pSat))
+}
+func Fraig_ManReadInspects(p *Fraig_Man_t) int32 {
+	if p.pSat == nil {
+		return 0
+	}
+	return int32(msat.Msat_SolverReadInspects(p.pSat))
+}
+func Fraig_ManSetFuncRed(p *Fraig_Man_t, value int32)        { p.fFuncRed = value }
+func Fraig_ManSetFeedBack(p *Fraig_Man_t, value int32)       { p.fFeedBack = value }
+func Fraig_ManSetDoSparse(p *Fraig_Man_t, value int32)       { p.fDoSparse = value }
+func Fraig_ManSetChoicing(p *Fraig_Man_t, value int32)       { p.fChoicing = value }
+func Fraig_ManSetTryProve(p *Fraig_Man_t, value int32)       { p.fTryProve = value }
+func Fraig_ManSetVerbose(p *Fraig_Man_t, value int32)        { p.fVerbose = value }
+func Fraig_ManSetOutputNames(p *Fraig_Man_t, names []string) { p.ppOutputNames = names }
+func Fraig_ManSetInputNames(p *Fraig_Man_t, names []string)  { p.ppInputNames = names }
 
-  PackageName [FRAIG: Functionally reduced AND-INV graphs.]
+func Fraig_NodeReadData0(p *Fraig_Node_t) *Fraig_Node_t { return p.pData0 }
+func Fraig_NodeReadData1(p *Fraig_Node_t) *Fraig_Node_t { return p.pData1 }
+func Fraig_NodeReadNum(p *Fraig_Node_t) int32           { return p.Num }
+func Fraig_NodeReadOne(p *Fraig_Node_t) *Fraig_Node_t {
+	if Fraig_IsComplement(p) {
+		panic("fraig: complemented node in fanin accessor")
+	}
+	return p.p1
+}
+func Fraig_NodeReadTwo(p *Fraig_Node_t) *Fraig_Node_t {
+	if Fraig_IsComplement(p) {
+		panic("fraig: complemented node in fanin accessor")
+	}
+	return p.p2
+}
+func Fraig_NodeReadNextE(p *Fraig_Node_t) *Fraig_Node_t      { return p.pNextE }
+func Fraig_NodeReadRepr(p *Fraig_Node_t) *Fraig_Node_t       { return p.pRepr }
+func Fraig_NodeReadNumRefs(p *Fraig_Node_t) int32            { return p.nRefs }
+func Fraig_NodeReadNumFanouts(p *Fraig_Node_t) int32         { return int32(p.nFanouts) }
+func Fraig_NodeReadSimInv(p *Fraig_Node_t) int32             { return int32(p.fInv) }
+func Fraig_NodeReadNumOnes(p *Fraig_Node_t) int32            { return int32(p.nOnes) }
+func Fraig_NodeReadPatternsRandom(p *Fraig_Node_t) []uint32  { return p.puSimR }
+func Fraig_NodeReadPatternsDynamic(p *Fraig_Node_t) []uint32 { return p.puSimD }
+func Fraig_NodeSetData0(p *Fraig_Node_t, data *Fraig_Node_t) { p.pData0 = data }
+func Fraig_NodeSetData1(p *Fraig_Node_t, data *Fraig_Node_t) { p.pData1 = data }
 
-  Synopsis    [Access APIs for the FRAIG manager and node.]
-
-  Author      [Alan Mishchenko <alanmi@eecs.berkeley.edu>]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 2.0. Started - October 1, 2004]
-
-  Revision    [$Id: fraigApi.c,v 1.2 2005/07/08 01:01:30 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "fraigInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Access functions to read the data members of the manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_ManReadVecInputs(p *Fraig_Man_t) *Fraig_NodeVec_t { return p.vInputs;            }
-func Fraig_ManReadVecOutputs(p *Fraig_Man_t) *Fraig_NodeVec_t { return p.vOutputs;           }
-func Fraig_ManReadVecNodes(p *Fraig_Man_t) *Fraig_NodeVec_t { return p.vNodes;             }
-func Fraig_ManReadInputs(p *Fraig_Man_t) **Fraig_Node_t { return p.vInputs.pArray;    }
-func Fraig_ManReadOutputs(p *Fraig_Man_t) **Fraig_Node_t { return p.vOutputs.pArray;   }
-func Fraig_ManReadNodes(p *Fraig_Man_t) **Fraig_Node_t { return p.vNodes.pArray;     }
-func Fraig_ManReadInputNum(p *Fraig_Man_t) int32 { return p.vInputs.nSize;     }
-func Fraig_ManReadOutputNum(p *Fraig_Man_t) int32 { return p.vOutputs.nSize;    }
-func Fraig_ManReadNodeNum(p *Fraig_Man_t) int32 { return p.vNodes.nSize;      }
-func Fraig_ManReadConst1(p *Fraig_Man_t) *Fraig_Node_t { return p.pConst1;            }
-func Fraig_ManReadIthNode(p *Fraig_Man_t, i int32) *Fraig_Node_t { assert(i < p.vNodes.nSize, "i < p.vNodes.nSize"); return p.vNodes.pArray[i];  }
-func Fraig_ManReadInputNames(p *Fraig_Man_t) *string { return p.ppInputNames;       }
-func Fraig_ManReadOutputNames(p *Fraig_Man_t) *string { return p.ppOutputNames;      }
-func Fraig_ManReadVarsInt(p *Fraig_Man_t) string { return (char *)p.vVarsInt;   }
-func Fraig_ManReadSat(p *Fraig_Man_t) string { return (char *)p.pSat;       }
-func Fraig_ManReadFuncRed(p *Fraig_Man_t) int32 { return p.fFuncRed;   }
-func Fraig_ManReadFeedBack(p *Fraig_Man_t) int32 { return p.fFeedBack;  }
-func Fraig_ManReadDoSparse(p *Fraig_Man_t) int32 { return p.fDoSparse;  }
-func Fraig_ManReadChoicing(p *Fraig_Man_t) int32 { return p.fChoicing;  }
-func Fraig_ManReadVerbose(p *Fraig_Man_t) int32 { return p.fVerbose;   }
-func Fraig_ManReadModel(p *Fraig_Man_t) *int32 { return p.pModel;     }
-// returns the number of patterns used for random simulation (this number is fixed for the FRAIG run)
-func Fraig_ManReadPatternNumRandom(p *Fraig_Man_t) int32 { return p.nWordsRand * 32;  }
-// returns the number of dynamic patterns accumulated at runtime (include SAT solver counter-examples and distance-1 patterns derived from them)
-func Fraig_ManReadPatternNumDynamic(p *Fraig_Man_t) int32 { return p.iWordStart * 32;  }
-// returns the number of dynamic patterns proved useful to distinquish some FRAIG nodes (this number is more than 0 after the first garbage collection of patterns)
-func Fraig_ManReadPatternNumDynamicFiltered(p *Fraig_Man_t) int32 { return p.iPatsPerm;        }
-// returns the number of times FRAIG package timed out
-func Fraig_ManReadSatFails(p *Fraig_Man_t) int32 { return p.nSatFailsReal;    }      
-// returns the number of conflicts in the SAT solver
-func Fraig_ManReadConflicts(p *Fraig_Man_t) int32 { if p.pSat {
-    return Msat_SolverReadBackTracks(p.pSat);
-} else {
-    return 0;
-} }      
-// returns the number of inspections in the SAT solver
-func Fraig_ManReadInspects(p *Fraig_Man_t) int32 { if p.pSat {
-    return Msat_SolverReadInspects(p.pSat);
-} else {
-    return 0;
-}   }            
-
-/**Function*************************************************************
-
-  Synopsis    [Access functions to set the data members of the manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_ManSetFuncRed(p *Fraig_Man_t, fFuncRed int32) { p.fFuncRed  = fFuncRed;  }
-func Fraig_ManSetFeedBack(p *Fraig_Man_t, fFeedBack int32) { p.fFeedBack = fFeedBack; }
-func Fraig_ManSetDoSparse(p *Fraig_Man_t, fDoSparse int32) { p.fDoSparse = fDoSparse; }
-func Fraig_ManSetChoicing(p *Fraig_Man_t, fChoicing int32) { p.fChoicing = fChoicing; }
-func Fraig_ManSetTryProve(p *Fraig_Man_t, fTryProve int32) { p.fTryProve = fTryProve; }
-func Fraig_ManSetVerbose(p *Fraig_Man_t, fVerbose int32) { p.fVerbose  = fVerbose;  }
-func Fraig_ManSetOutputNames(p *Fraig_Man_t, ppNames *string) { p.ppOutputNames = ppNames; }
-func Fraig_ManSetInputNames(p *Fraig_Man_t, ppNames *string) { p.ppInputNames  = ppNames; }
-
-/**Function*************************************************************
-
-  Synopsis    [Access functions to read the data members of the node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_NodeReadData0(p *Fraig_Node_t) *Fraig_Node_t { return p.pData0;    }
-func Fraig_NodeReadData1(p *Fraig_Node_t) *Fraig_Node_t { return p.pData1;    }
-func Fraig_NodeReadNum(p *Fraig_Node_t) int32 { return p.Num;       }
-// inlining of macro Fraig_IsComplement
-func Fraig_NodeReadOne(p *Fraig_Node_t) *Fraig_Node_t { assert(!(((int32(((ABC_PTRUINT_T) (p) & 01)) != 0))), "!/*__starting_point_inline_macro:Fraig_IsComplement__*/((int32(((ABC_PTRUINT_T) (p) & 01))))"); return p.p1; }
-// inlining of macro Fraig_IsComplement
-func Fraig_NodeReadTwo(p *Fraig_Node_t) *Fraig_Node_t { assert(!(((int32(((ABC_PTRUINT_T) (p) & 01)) != 0))), "!/*__starting_point_inline_macro:Fraig_IsComplement__*/((int32(((ABC_PTRUINT_T) (p) & 01))))"); return p.p2; }
-func Fraig_NodeReadNextE(p *Fraig_Node_t) *Fraig_Node_t { return p.pNextE;    }
-func Fraig_NodeReadRepr(p *Fraig_Node_t) *Fraig_Node_t { return p.pRepr;     }
-func Fraig_NodeReadNumRefs(p *Fraig_Node_t) int32 { return p.nRefs;     }
-func Fraig_NodeReadNumFanouts(p *Fraig_Node_t) int32 { return p.nFanouts;  }
-func Fraig_NodeReadSimInv(p *Fraig_Node_t) int32 { return p.fInv;      }
-func Fraig_NodeReadNumOnes(p *Fraig_Node_t) int32 { return p.nOnes;     }
-// returns the pointer to the random simulation patterns (their number is returned by Fraig_ManReadPatternNumRandom)
-// memory pointed to by this and the following procedure is maintained by the FRAIG package and exists as long as the package runs
-func Fraig_NodeReadPatternsRandom(p *Fraig_Node_t) *uint32 { return p.puSimR;    }
-// returns the pointer to the dynamic simulation patterns (their number is returned by Fraig_ManReadPatternNumDynamic or Fraig_ManReadPatternNumDynamicFiltered)
-// if the number of patterns is not evenly divisible by 32, the patterns beyond the given number contain garbage
-func Fraig_NodeReadPatternsDynamic(p *Fraig_Node_t) *uint32 { return p.puSimD;    }
-
-/**Function*************************************************************
-
-  Synopsis    [Access functions to set the data members of the node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_NodeSetData0(p *Fraig_Node_t, pData *Fraig_Node_t) { p.pData0  = pData;  }
-func Fraig_NodeSetData1(p *Fraig_Node_t, pData *Fraig_Node_t) { p.pData1  = pData;  }
-
-/**Function*************************************************************
-
-  Synopsis    [Checks the type of the node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-// inlining of macro Fraig_Regular
-func Fraig_NodeIsConst(p *Fraig_Node_t) int32 {  return (((Fraig_Node_t *)((ABC_PTRUINT_T)(p) & ~01)) ).Num   == 0;  }
-// inlining of macro Fraig_Regular
-func Fraig_NodeIsVar(p *Fraig_Node_t) int32 {  return (((Fraig_Node_t *)((ABC_PTRUINT_T)(p) & ~01)) ).NumPi >= 0;  }
-// inlining of macro Fraig_Regular
-func Fraig_NodeIsAnd(p *Fraig_Node_t) int32 {  return (((Fraig_Node_t *)((ABC_PTRUINT_T)(p) & ~01)) ).NumPi <  0 && (((Fraig_Node_t *)((ABC_PTRUINT_T)(p) & ~01)) ).Num > 0;  }
-// inlining of macro Fraig_IsComplement
-func Fraig_NodeComparePhase(p1 *Fraig_Node_t, p2 *Fraig_Node_t) int32 { assert(!(((int32(((ABC_PTRUINT_T) (p1) & 01)) != 0))), "!/*__starting_point_inline_macro:Fraig_IsComplement__*/((int32(((ABC_PTRUINT_T) (p1) & 01))))"); assert(!(((int32(((ABC_PTRUINT_T) (p2) & 01)) != 0))), "!/*__starting_point_inline_macro:Fraig_IsComplement__*/((int32(((ABC_PTRUINT_T) (p2) & 01))))"); return p1.fInv ^ p2.fInv; }
-
-/**Function*************************************************************
-
-  Synopsis    [Returns a new primary input node.]
-
-  Description [If the node with this number does not exist, 
-  create a new PI node with this number.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+func fraigBool(value bool) int32 {
+	if value {
+		return 1
+	}
+	return 0
+}
+func Fraig_NodeIsConst(p *Fraig_Node_t) int32 { return fraigBool(Fraig_Regular(p).Num == 0) }
+func Fraig_NodeIsVar(p *Fraig_Node_t) int32   { return fraigBool(Fraig_Regular(p).NumPi >= 0) }
+func Fraig_NodeIsAnd(p *Fraig_Node_t) int32 {
+	node := Fraig_Regular(p)
+	return fraigBool(node.NumPi < 0 && node.Num > 0)
+}
+func Fraig_NodeComparePhase(a, b *Fraig_Node_t) int32 {
+	if Fraig_IsComplement(a) || Fraig_IsComplement(b) {
+		panic("fraig: complemented node in phase comparison")
+	}
+	return int32(a.fInv ^ b.fInv)
+}
 func Fraig_ManReadIthVar(p *Fraig_Man_t, i int32) *Fraig_Node_t {
-    var k int32;
-    if i < 0 {
-        fmt.Printf("Requesting a PI with a negative number\n");
-        return nil;
-    }
-    // create the PIs to fill in the interval
-    if i >= p.vInputs.nSize {
-        for  k = p.vInputs.nSize; k <= i; k++  {
-            Fraig_NodeCreatePi( p );
-        } } 
-    return p.vInputs.pArray[i];
+	if i < 0 {
+		fmt.Println("Requesting a PI with a negative number")
+		return nil
+	}
+	for int(i) >= len(p.vInputs.pArray) {
+		Fraig_NodeCreatePi(p)
+	}
+	return p.vInputs.pArray[i]
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Creates a new PO node.]
-
-  Description [This procedure may take a complemented node.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_ManSetPo(p *Fraig_Man_t, pNode *Fraig_Node_t) {
-    // internal node may be a PO two times
-    // inlining of macro Fraig_Regular
-    ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode) & ~01)) .fNodePo = 1;
-    Fraig_NodeVecPush( p.vOutputs, pNode );
+func Fraig_ManSetPo(p *Fraig_Man_t, node *Fraig_Node_t) {
+	Fraig_Regular(node).fNodePo = 1
+	Fraig_NodeVecPush(p.vOutputs, node)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Perfoms the AND operation with functional hashing.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_NodeAnd(p *Fraig_Man_t, p1 *Fraig_Node_t, p2 *Fraig_Node_t) *Fraig_Node_t {
-    return Fraig_NodeAndCanon( p, p1, p2 );
+func Fraig_NodeAnd(p *Fraig_Man_t, a, b *Fraig_Node_t) *Fraig_Node_t {
+	return Fraig_NodeAndCanon(p, a, b)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Perfoms the OR operation with functional hashing.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_NodeOr(p *Fraig_Man_t, p1 *Fraig_Node_t, p2 *Fraig_Node_t) *Fraig_Node_t {
-    // inlining of macro Fraig_Not
-    return ((Fraig_Node_t *)((ABC_PTRUINT_T)(Fraig_NodeAndCanon( p, ((Fraig_Node_t *)((ABC_PTRUINT_T)(p1) ^ 01)) , ((Fraig_Node_t *)((ABC_PTRUINT_T)(p2) ^ 01))  )) ^ 01)) ;
+func Fraig_NodeOr(p *Fraig_Man_t, a, b *Fraig_Node_t) *Fraig_Node_t {
+	return Fraig_Not(Fraig_NodeAndCanon(p, Fraig_Not(a), Fraig_Not(b)))
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Perfoms the EXOR operation with functional hashing.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_NodeExor(p *Fraig_Man_t, p1 *Fraig_Node_t, p2 *Fraig_Node_t) *Fraig_Node_t {
-    // inlining of macro Fraig_Not
-    return Fraig_NodeMux( p, p1, ((Fraig_Node_t *)((ABC_PTRUINT_T)(p2) ^ 01)) , p2 );
+func Fraig_NodeExor(p *Fraig_Man_t, a, b *Fraig_Node_t) *Fraig_Node_t {
+	return Fraig_NodeMux(p, a, Fraig_Not(b), b)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Perfoms the MUX operation with functional hashing.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_NodeMux(p *Fraig_Man_t, pC *Fraig_Node_t, pT *Fraig_Node_t, pE *Fraig_Node_t) *Fraig_Node_t {
-    var pAnd1, pAnd2, pRes *Fraig_Node_t;
-    // inlining of macro Fraig_Ref
-    pAnd1 = Fraig_NodeAndCanon( p, pC,          pT );     ;
-    // inlining of macro Fraig_Not
-    // inlining of macro Fraig_Ref
-    pAnd2 = Fraig_NodeAndCanon( p, ((Fraig_Node_t *)((ABC_PTRUINT_T)(pC) ^ 01)) , pE );   ;
-    pRes  = Fraig_NodeOr( p, pAnd1, pAnd2 ); 
-    // inlining of macro Fraig_RecursiveDeref
-    ;
-    // inlining of macro Fraig_RecursiveDeref
-    ;
-    // inlining of macro Fraig_Deref
-    ;
-    return pRes;
+func Fraig_NodeMux(p *Fraig_Man_t, control, yes, no *Fraig_Node_t) *Fraig_Node_t {
+	a := Fraig_NodeAndCanon(p, control, yes)
+	b := Fraig_NodeAndCanon(p, Fraig_Not(control), no)
+	return Fraig_NodeOr(p, a, b)
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    [Sets the node to be equivalent to the given one.]
-
-  Description [This procedure is a work-around for the equivalence check.
-  Does not verify the equivalence. Use at the user's risk.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fraig_NodeSetChoice(pMan *Fraig_Man_t, pNodeOld *Fraig_Node_t, pNodeNew *Fraig_Node_t) {
-//    assert( pMan->fChoicing );
-    pNodeNew.pNextE = pNodeOld.pNextE;
-    pNodeOld.pNextE = pNodeNew;
-    pNodeNew.pRepr  = pNodeOld;
+func Fraig_NodeSetChoice(_ *Fraig_Man_t, old, next *Fraig_Node_t) {
+	next.pNextE = old.pNextE
+	old.pNextE = next
+	next.pRepr = old
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
