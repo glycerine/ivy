@@ -2,6 +2,7 @@ package ssc
 
 import (
 	"math/rand"
+	"reflect"
 	"testing"
 
 	"github.com/glycerine/abcgo/aig/gia"
@@ -273,6 +274,35 @@ func TestInitialSimulationDoesNotIncrementSourceCounters(t *testing.T) {
 	carePatterns(p)
 	if p.Stats != (Statistics{}) {
 		t.Fatalf("initial simulation changed C's untouched counters: %+v", p.Stats)
+	}
+}
+
+func TestConstraintWrapperUsesLevelizedSubject(t *testing.T) {
+	build := func() *gia.Gia_Man_t {
+		g := gia.Gia_ManStart(20)
+		x, y, z := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
+		deep := gia.Gia_ManAppendAnd(g, gia.Gia_ManAppendAnd(g, x, y), z)
+		shallow := gia.Gia_ManAppendAnd(g, x, z)
+		gia.Gia_ManAppendCo(g, deep)
+		gia.Gia_ManAppendCo(g, shallow)
+		return g
+	}
+	// These POs force the earlier-created depth-two node to precede the
+	// later depth-one node before the C wrapper's levelization step.
+	g := build()
+	params := DefaultParams()
+	got := Ssc_PerformSweepingConstr(g, &params)
+	reference := gia.Gia_ManDupLevelized(build())
+	want := Ssc_PerformSweeping(reference, emptyCare(reference), &params)
+	if got.ObjectCount() != want.ObjectCount() || !reflect.DeepEqual(got.OutputLiterals(), want.OutputLiterals()) {
+		t.Fatal("wrapper differs from source levelize-then-sweep sequence")
+	}
+	for id := int32(0); int(id) < got.ObjectCount(); id++ {
+		a, b, c, kind := got.Gate(id)
+		x, y, z, otherKind := want.Gate(id)
+		if a != x || b != y || c != z || kind != otherKind {
+			t.Fatalf("object %d differs from levelized source sequence", id)
+		}
 	}
 }
 

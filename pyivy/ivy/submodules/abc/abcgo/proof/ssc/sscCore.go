@@ -381,6 +381,9 @@ func Ssc_PerformSweepingConstr(p *gia.Gia_Man_t, params *Ssc_Pars_t) *gia.Gia_Ma
 	if constraints == 0 {
 		care = emptyCare(subject)
 	}
+	// The C wrapper levelizes the extracted subject before sweeping; candidate
+	// order controls representative selection and bounded SAT query outcomes.
+	subject = gia.Gia_ManDupLevelized(subject)
 	result := Ssc_PerformSweeping(subject, care, params)
 	if params != nil && params.Append {
 		outputs := result.OutputLiterals()
