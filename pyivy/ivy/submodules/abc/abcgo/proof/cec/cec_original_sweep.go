@@ -14,6 +14,19 @@ func cecOriginalSweep(graph *Gia_Man_t, pars *Cec_ParFra_t) (*Gia_Man_t, error) 
 }
 
 func cecOriginalSweepMapped(graph, original *Gia_Man_t, sourceIDs []int32, aliases *Vec_Int_t, pars *Cec_ParFra_t) (*Gia_Man_t, error) {
+	now, release := cecSweepSourceClock()
+	defer release()
+	if now == nil {
+		if pars.TimeLimit > 0 {
+			return nil, fmt.Errorf("cec: source CPU timeout clock unavailable on this platform")
+		}
+		now = time.Now
+	}
+	return cecOriginalSweepMappedClock(graph, original, sourceIDs, aliases, pars, now)
+}
+
+// now is injectable so the source's iteration-boundary timeout is testable.
+func cecOriginalSweepMappedClock(graph, original *Gia_Man_t, sourceIDs []int32, aliases *Vec_Int_t, pars *Cec_ParFra_t, now func() time.Time) (*Gia_Man_t, error) {
 	if graph == nil {
 		return nil, fmt.Errorf("cec: nil sweep graph")
 	}
@@ -36,11 +49,7 @@ func cecOriginalSweepMapped(graph, original *Gia_Man_t, sourceIDs []int32, alias
 	if original != graph {
 		original.ClearCombinationalCounterexample()
 	}
-	started := time.Now()
-	deadline := time.Time{}
-	if pars.TimeLimit > 0 {
-		deadline = started.Add(time.Duration(pars.TimeLimit) * time.Second)
-	}
+	started := now()
 	gia.Gia_ManRandom(1)
 	initial := gia.Gia_ManDup(graph)
 	if pars.fUseOrigIds != 0 {
@@ -78,12 +87,11 @@ func cecOriginalSweepMapped(graph, original *Gia_Man_t, sourceIDs []int32, alias
 	simPars.nWords = max(pars.nWords, 2*graph.SimulationWordCount())
 	simPars.nFrames = pars.nRounds
 	simPars.fCheckMiter, simPars.fDualOut, simPars.fVerbose = pars.fCheckMiter, pars.fDualOut, pars.fVerbose
-	simPars.deadline = deadline
 	sim := Cec_ManSimStart(initial, &simPars)
 	defer Cec_ManSimStop(sim)
 	var satPars Cec_ParSat_t
 	Cec_ManSatSetDefaultParams(&satPars)
-	satPars.nBTLimit, satPars.fVerbose, satPars.deadline = pars.nBTLimit, pars.fVeryVerbose, deadline
+	satPars.nBTLimit, satPars.fVerbose = pars.nBTLimit, pars.fVeryVerbose
 	pat := Cec_ManPatStart()
 	defer Cec_ManPatStop(pat)
 	failure := false
@@ -94,9 +102,6 @@ func cecOriginalSweepMapped(graph, original *Gia_Man_t, sourceIDs []int32, alias
 		}
 	}
 	for i := int32(1); !failure && i <= pars.nItersMax; i++ {
-		if !deadline.IsZero() && !time.Now().Before(deadline) {
-			break
-		}
 		if pars.fDualOut != 0 {
 			gia.Gia_ManEquivSetColors(fra.pAig, pars.fVeryVerbose)
 		}
@@ -131,6 +136,11 @@ func cecOriginalSweepMapped(graph, original *Gia_Man_t, sourceIDs []int32, alias
 		fra.pAig, sim.pAig = reduced, reduced
 		gia.Gia_ManStop(old)
 		if gia.Gia_ManAndNum(reduced) == 0 {
+			break
+		}
+		// C checks elapsed whole seconds only after reduction, before adapting
+		// the conflict limit or dual-output mode.
+		if pars.TimeLimit > 0 && now().Sub(started)/time.Second >= time.Duration(pars.TimeLimit) {
 			break
 		}
 		if fra.nAllFailed > fra.nAllProved+fra.nAllDisproved {

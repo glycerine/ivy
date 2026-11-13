@@ -74,8 +74,11 @@ nodes that the current Go sweep cannot handle source faithfully.
 `Cec_ManSatSweeping` uses the original speculative sweep and records the
 original-ID pairs when requested, without independently rechecking them. The public sweep rejects those unsupported native nodes and retains source IDs
 for original AIG nodes. As in the C
-pipeline, the overall time limit is checked between stages and iterations; an
-individual SAT or FRAIG call can run beyond that limit. Tests compare selected
+pipeline, the sweep time limit is checked after each completed reduction, and
+individual simulation or SAT calls can run beyond it, as in C. Linux uses the
+source thread-CPU clock; timed sweeps on other platforms report unsupported
+until their source CPU clock is implemented. The FRA fallback has its own
+stage-boundary limit. Tests compare selected
 cases with the original ABC executable and force the unresolved sweep branch
 through the genuine FRA fallback. They do not establish equivalence for every
 network or exercise every internal FRAIG path.
