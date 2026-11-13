@@ -1,7 +1,5 @@
 package saig
 
-import "fmt"
-
 /**CFile****************************************************************
 
   FileName    [saigRetStep.c]
@@ -46,69 +44,6 @@ import "fmt"
   SeeAlso     []
 
 ***********************************************************************/
-func Saig_ManRetimeNodeFwd(p *Aig_Man_t, pObj *Aig_Obj_t, fMakeBug int32) *Aig_Obj_t {
-    var pFanin0, pFanin1 *Aig_Obj_t;
-    var pInput0, pInput1 *Aig_Obj_t;
-    var pObjNew, pObjLi, pObjLo *Aig_Obj_t;
-    var fCompl int32;
-
-    assert(Saig_ManRegNum(p) > 0, "Saig_ManRegNum(p) > 0");
-    assert(Aig_ObjIsNode(pObj), "Aig_ObjIsNode(pObj)");
-
-    // get the fanins
-    pFanin0 = Aig_ObjFanin0(pObj);
-    pFanin1 = Aig_ObjFanin1(pObj);
-    // skip of they are not primary inputs
-    if !Aig_ObjIsCi(pFanin0) || !Aig_ObjIsCi(pFanin1) {
-        return nil; }
-
-    // skip of they are not register outputs
-    if !Saig_ObjIsLo(p, pFanin0) || !Saig_ObjIsLo(p, pFanin1) {
-        return nil; }
-    assert(Aig_ObjCioId(pFanin0) > 0, "Aig_ObjCioId(pFanin0) > 0");
-    assert(Aig_ObjCioId(pFanin1) > 0, "Aig_ObjCioId(pFanin1) > 0");
-
-    // skip latch guns
-    if !Aig_ObjIsTravIdCurrent(p, pFanin0) && !Aig_ObjIsTravIdCurrent(p, pFanin1) {
-        return nil; }
-
-    // get the inputs of these registers
-    pInput0 = Saig_ManLi( p, Aig_ObjCioId(pFanin0) - Saig_ManPiNum(p) );
-    pInput1 = Saig_ManLi( p, Aig_ObjCioId(pFanin1) - Saig_ManPiNum(p) );
-    pInput0 = Aig_ObjChild0( pInput0 );
-    pInput1 = Aig_ObjChild0( pInput1 );
-    pInput0 = Aig_NotCond( pInput0, Aig_ObjFaninC0(pObj) );
-    pInput1 = Aig_NotCond( pInput1, Aig_ObjFaninC1(pObj) );
-    // get the condition when the register should be complemetned
-    fCompl = Aig_ObjFaninC0(pObj) && Aig_ObjFaninC1(pObj);
-
-    if fMakeBug != 0 {
-        fmt.Printf("Introducing bug during retiming.\n");
-        pInput1 = Aig_Not( pInput1 );
-    }
-
-    // create new node
-    pObjNew = Aig_And( p, pInput0, pInput1 );
-
-    // create new register input
-    pObjLi = Aig_ObjCreateCo( p, Aig_NotCond(pObjNew, fCompl) );
-    pObjLi.CioId = Aig_ManCoNum(p) - 1;
-
-    // create new register output
-    pObjLo = Aig_ObjCreateCi( p );
-    pObjLo.CioId = Aig_ManCiNum(p) - 1;
-    p.nRegs++;
-
-    // make sure the register is retimable.
-    Aig_ObjSetTravIdCurrent(p, pObjLo);
-
-//printf( "Reg = %4d. Reg = %4d. Compl = %d. Phase = %d.\n", 
-//       pFanin0->PioNum, pFanin1->PioNum, Aig_IsComplement(pObjNew), fCompl );
-
-    // return register output
-    return Aig_NotCond( pObjLo, fCompl );
-}
-
 /**Function*************************************************************
 
   Synopsis    [Performs one retiming step backward.]
