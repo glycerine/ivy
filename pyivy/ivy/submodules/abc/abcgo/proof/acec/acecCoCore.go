@@ -28,11 +28,16 @@ func Gia_PolynCoreCollect_rec(p *Gia_Man_t, id int32, nodes *Vec_Int_t, visited 
 	o := gia.Gia_ManObj(p, id)
 	Gia_PolynCoreCollect_rec(p, gia.Gia_ObjFaninId0p(p, o), nodes, visited)
 	Gia_PolynCoreCollect_rec(p, gia.Gia_ObjFaninId1p(p, o), nodes, visited)
+	if gia.Gia_ObjIsMux(p, o) != 0 {
+		Gia_PolynCoreCollect_rec(p, gia.Gia_ObjId(p, gia.Gia_ObjFanin2(p, o)), nodes, visited)
+	}
 	vec.Vec_IntPush(nodes, id)
 }
 func Gia_PolynCoreCollect(p *Gia_Man_t, adds, order *Vec_Int_t) *Vec_Int_t {
 	nodes := vec.Vec_IntAlloc(1000)
 	visited := vec.Vec_BitStart(int(gia.Gia_ManObjNum(p)))
+	// The constant is already available in every duplicate and has no fanins.
+	vec.Vec_BitWriteEntry(visited, 0, 1)
 	for i := vec.Vec_IntSize(order) - 1; i >= 0; i-- {
 		box := int(vec.Vec_IntEntry(order, i) * 6)
 		for k := 0; k < 3; k++ {
