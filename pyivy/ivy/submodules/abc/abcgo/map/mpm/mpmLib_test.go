@@ -37,3 +37,12 @@ func TestMappingDefaultsResetAllFields(t *testing.T) {
 		t.Fatalf("defaults %+v", p)
 	}
 }
+
+func TestSimpleLUTLibraryRejectsSizeAboveSourceLimit(t *testing.T) {
+	defer func() {
+		if recover() == nil {
+			t.Error("source assertion did not reject oversized LUT")
+		}
+	}()
+	Mpm_LibLutSetSimple(MPM_VAR_MAX + 1)
+}
