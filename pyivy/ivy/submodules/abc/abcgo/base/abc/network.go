@@ -82,6 +82,7 @@ type Network struct {
 	Exdc, Excare              *Network
 	Onehots                   [][]int32
 	SequenceModel             *util.Abc_Cex_t
+	seqModelVec               *vec.Vec_Ptr_t
 	ObjectPermutation, Phases []int32
 	NameIDs                   []int32
 	Topo                      []int32
