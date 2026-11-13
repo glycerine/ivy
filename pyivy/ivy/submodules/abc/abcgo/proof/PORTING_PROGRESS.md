@@ -144,8 +144,9 @@ The shared AIG/SAIG migration stores C's true terminal counts and per-object
 CioIds instead of deriving them from current terminal slices. Duplication,
 retiming, and register hiding/exposure now follow source-specific count and ID
 updates; C intentionally leaves stale or zero metadata on some paths. The
-backward retiming driver's historical constraint-handling branches and the
-initialized-state `Aig_ManFrames` path remain documented fidelity limits.
+backward retiming driver's historical constraint-handling branches remain a
+documented fidelity limit. Initialized `Aig_ManFrames` with register outputs
+now follows C, including negative true-input counts when no CIs are created.
 
 FRA/AIG partitioned FRAIG and choice and SAIG timeframe bridges are implemented
 through explicit callback APIs, with FRA wrappers supplying the corresponding
