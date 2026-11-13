@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/sat/satoko"
 )
 
 // Exercise the public transformations on actual native XOR, MUX and buffer
@@ -242,6 +243,25 @@ func TestFailedOptionalVerificationStillReturnsResult(t *testing.T) {
 	if got := finishSweep(subject.graph, result.graph, care, &params); got != result.graph {
 		t.Fatal("failed verification must return the original result")
 	}
+}
+
+func TestMappedCandidateSourceOrderAndPhase(t *testing.T) {
+	p := &Ssc_Man_t{}
+	if status, equal := checkMappedCandidate(p, 2, 3, 1); !equal || status != satoko.SATOKO_UNSAT || p.Stats.Calls != 0 {
+		t.Fatal("matching mapped literals must use the no-SAT fast path")
+	}
+	if status, equal := checkMappedCandidate(p, 6, 4, 0); equal || status != satoko.SATOKO_UNDEC || p.Stats.Calls != 1 || p.Stats.Undecided != 1 {
+		t.Fatalf("reversed FRAIG IDs must count as undecided: status %d, stats %+v", status, p.Stats)
+	}
+	defer func() {
+		if recover() == nil {
+			t.Fatal("same FRAIG node with opposite phase must assert")
+		}
+		if p.Stats.Calls != 1 {
+			t.Fatal("assertion must precede SAT call accounting")
+		}
+	}()
+	checkMappedCandidate(p, 2, 3, 0)
 }
 
 func TestRandomSequentialConstraintSweeps(t *testing.T) {

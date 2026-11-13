@@ -236,16 +236,12 @@ func Ssc_PerformSweepingInt(subject, care *gia.Gia_Man_t, params *Ssc_Pars_t) *g
 				complement = 1
 			}
 			mappedRepr, mappedNode := mapping[repr], mapping[id]
-			if mappedRepr == mappedNode^complement {
+			result, structurallyEqual := checkMappedCandidate(p, mappedRepr, mappedNode, complement)
+			if structurallyEqual {
 				gia.Gia_ObjSetRepr(subject, id, repr)
 				gia.Gia_ObjSetProved(subject, id)
 				continue
 			}
-			if mappedRepr>>1 > mappedNode>>1 || mappedRepr>>1 == mappedNode>>1 {
-				continue
-			}
-			fraigComplement := complement ^ (mappedRepr & 1) ^ (mappedNode & 1)
-			result := Ssc_ManCheckEquivalence(p, mappedRepr>>1, mappedNode>>1, fraigComplement)
 			if result == satoko.SATOKO_UNSAT {
 				mapping[id] = mapping[repr] ^ complement
 				gia.Gia_ObjSetRepr(subject, id, repr)
@@ -289,6 +285,20 @@ func Ssc_PerformSweepingInt(subject, care *gia.Gia_Man_t, params *Ssc_Pars_t) *g
 		Ssc_ManPrintStats(p)
 	}
 	return result
+}
+
+// checkMappedCandidate follows the fast path and ordered-ID assertion in the
+// source sweep. A reversed pair still enters the SAT routine, which counts it
+// as an undecided call without querying the solver.
+func checkMappedCandidate(p *Ssc_Man_t, repr, node, complement int32) (int, bool) {
+	if repr == node^complement {
+		return satoko.SATOKO_UNSAT, true
+	}
+	if repr>>1 == node>>1 {
+		panic("ssc: same FRAIG node has opposite candidate phase")
+	}
+	phase := complement ^ (repr & 1) ^ (node & 1)
+	return Ssc_ManCheckEquivalence(p, repr>>1, node>>1, phase), false
 }
 
 func hasNativeGates(g *gia.Gia_Man_t) bool {
