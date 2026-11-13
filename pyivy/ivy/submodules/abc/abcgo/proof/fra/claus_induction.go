@@ -18,9 +18,6 @@ func clausInductivePass(data *cnf.Cnf_Dat_t, frames int32, proven, candidates []
 	if solver == nil {
 		return 0, errors.New("induction transition relation is inconsistent")
 	}
-	if limit > 0 {
-		solver.SetLimits(limit, 0)
-	}
 	addFrame := func(c []int32, frame int32) bool {
 		lifted := make([]int32, len(c))
 		offset := 2 * int32(data.Variables) * frame
@@ -41,11 +38,11 @@ func clausInductivePass(data *cnf.Cnf_Dat_t, frames int32, proven, candidates []
 			}
 		}
 	}
-	return clausCheckInduction(solver, data.Variables, frames, candidates, costs)
+	return clausCheckInduction(solver, data.Variables, frames, candidates, costs, limit)
 }
 
 // Reuse the same incremental solver as the source after its property query.
-func clausCheckInduction(solver *bsat.Solver, variables int, frames int32, candidates [][]int32, costs []int32) (int, error) {
+func clausCheckInduction(solver *bsat.Solver, variables int, frames int32, candidates [][]int32, costs []int32, limit int64) (int, error) {
 	models := newClausModels(variables)
 	offset := frames * int32(variables)
 	removed := 0
@@ -66,7 +63,7 @@ func clausCheckInduction(solver *bsat.Solver, variables int, frames int32, candi
 		for j, lit := range lifted {
 			assumptions[j] = lit ^ 1
 		}
-		status := solver.Solve(assumptions...)
+		status := solver.SolveWithSourceLimits(assumptions, limit, 0, 0, 0)
 		if status == bsat.Unsatisfiable {
 			continue
 		}

@@ -47,7 +47,16 @@ func TestClausPropertyChecksHonorConflictLimit(t *testing.T) {
 		{"bmc", Fra_ClausRunBmc}, {"inductive", Fra_ClausRunSat}, {"single frame", Fra_ClausRunSat0},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			if got := tc.check(clausBudgetFixture(t, 1)); got != 0 {
+			if tc.name == "inductive" {
+				func() {
+					defer func() {
+						if recover() == nil {
+							t.Fatal("source asserts on undefined induction result")
+						}
+					}()
+					tc.check(clausBudgetFixture(t, 1))
+				}()
+			} else if got := tc.check(clausBudgetFixture(t, 1)); got != 0 {
 				t.Fatalf("limited search returned proof %d", got)
 			}
 			if got := tc.check(clausBudgetFixture(t, 0)); got != 1 {

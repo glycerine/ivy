@@ -22,14 +22,20 @@ suite does not establish full equivalence to ABC on every circuit or option.
 - Clause generation does not promote unchecked candidates to proved storage
   after an induction solver failure. Its legacy integer return is not itself a
   proof certificate.
-- An induction refinement loop that makes no progress returns no result rather
-  than the potentially unsound reduction allowed by the original C code.
+- When induction refinement makes no progress, the source prints a warning,
+  stops refining, and emits the current reduction. The Go port follows that
+  behavior; the source warning says the result may not verify.
 
 Exhaustive tests cover small graphs and bounded traces, not all graph sizes,
 parameter combinations, time limits, or interactions among ABC's algorithms.
 The SAIG retiming implementation and its C differential test limitations are
 described in `aig/saig/PORTING_PROGRESS.md`. Independent differential testing
 against ABC for FRA's full range of options remains useful future work.
+
+Clause SAT calls pass signed conflict limits using ABC solver arithmetic; the
+source accepts negative limits, whose behavior is not simply unlimited. The
+checked-in `test_vectors/claus_limit_source.c` characterizes the undefined
+result and assertion behavior against compiled C.
 
 The SEC `TimeLimit` option is currently ineffective in the active ABC C
 implementation: its global deadline checks are commented out. This port

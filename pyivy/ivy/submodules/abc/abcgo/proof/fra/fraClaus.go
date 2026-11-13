@@ -37,17 +37,15 @@ func clausSlices(lits, ends *vec.Vec_Int_t) [][]int32 {
 	return out
 }
 func Fra_ClausRunBmc(p *Clu_Man_t) int32 {
-	p.pSatBmc.SetLimits(int64(p.nBTLimit), 0)
 	out := p.pCnf.VarNums[p.pAig.Outputs()[0].NodeID()]
 	for i := int32(0); i < p.nPref+p.nFrames; i++ {
-		if p.pSatBmc.Solve(bsat.Positive(out+i*int32(p.pCnf.Variables))) != bsat.Unsatisfiable {
+		if p.pSatBmc.SolveWithSourceLimits([]bsat.Literal{bsat.Positive(out + i*int32(p.pCnf.Variables))}, int64(p.nBTLimit), 0, 0, 0) != bsat.Unsatisfiable {
 			return 0
 		}
 	}
 	return 1
 }
 func Fra_ClausRunSat(p *Clu_Man_t) int32 {
-	p.pSatMain.SetLimits(int64(p.nBTLimit), 0)
 	out := p.pCnf.VarNums[p.pAig.Outputs()[0].NodeID()]
 	lits := make([]int32, p.nFrames+1)
 	for i := int32(0); i <= p.nFrames; i++ {
@@ -57,23 +55,25 @@ func Fra_ClausRunSat(p *Clu_Man_t) int32 {
 			lits[i] = bsat.Negative(v)
 		}
 	}
-	if p.pSatMain.Solve(lits...) == bsat.Unsatisfiable {
+	status := p.pSatMain.SolveWithSourceLimits(lits, int64(p.nBTLimit), 0, 0, 0)
+	if status == bsat.Unsatisfiable {
 		return 1
+	}
+	if status != bsat.Satisfiable {
+		panic("fra: source induction SAT result is undefined")
 	}
 	return 0
 }
 func Fra_ClausRunSat0(p *Clu_Man_t) int32 {
-	p.pSatMain.SetLimits(int64(p.nBTLimit), 0)
 	out := p.pCnf.VarNums[p.pAig.Outputs()[0].NodeID()]
-	if p.pSatMain.Solve(bsat.Positive(out)) == bsat.Unsatisfiable {
+	if p.pSatMain.SolveWithSourceLimits([]bsat.Literal{bsat.Positive(out)}, int64(p.nBTLimit), 0, 0, 0) == bsat.Unsatisfiable {
 		return 1
 	}
 	return 0
 }
 func transpose32a(a *[32]uint32) { clausTranspose32(a) }
 func Fra_ClausBmcClauses(p *Clu_Man_t) int32 {
-	p.pSatBmc.SetLimits(int64(p.nBTLimit), 0)
-	return int32(clausFilterBMC(p.pSatBmc, clausSlices(p.vLits, p.vClauses), vec.Vec_IntArray(p.vCosts), p.nPref, p.nFrames, int32(p.pCnf.Variables)))
+	return int32(clausFilterBMC(p.pSatBmc, clausSlices(p.vLits, p.vClauses), vec.Vec_IntArray(p.vCosts), p.nPref, p.nFrames, int32(p.pCnf.Variables), int64(p.nBTLimit)))
 }
 func Fra_ClausSimInfoClean(p *Clu_Man_t) {
 	if p.models == nil {
@@ -104,7 +104,6 @@ func Fra_ClausInductiveClauses(p *Clu_Man_t) int32 {
 	if p.pSatMain == nil {
 		return -1
 	}
-	p.pSatMain.SetLimits(int64(p.nBTLimit), 0)
 	for f := int32(0); f < p.nFrames; f++ {
 		offset := f * 2 * int32(p.pCnf.Variables)
 		for _, clause := range proven {
@@ -133,7 +132,7 @@ func Fra_ClausInductiveClauses(p *Clu_Man_t) int32 {
 	if p.fTarget != 0 && Fra_ClausRunSat0(p) == 0 {
 		p.fFail = 1
 	}
-	removed, err := clausCheckInduction(p.pSatMain, p.pCnf.Variables, p.nFrames, candidates, costs)
+	removed, err := clausCheckInduction(p.pSatMain, p.pCnf.Variables, p.nFrames, candidates, costs, int64(p.nBTLimit))
 	if err != nil {
 		fmt.Println("Clause induction:", err)
 		return -1

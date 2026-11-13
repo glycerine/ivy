@@ -44,6 +44,11 @@ func TestSharedCECSweepMatchesOriginalManager(t *testing.T) {
 			if random.Intn(2) == 0 {
 				edge = edge.Not()
 			}
+			// Proving mode expects the first miter output to be zero for
+			// the all-zero assignment, as asserted by Fra_SmlCheckOutput.
+			if i == 0 && source.Node(edge).Phase != edge.Complemented() {
+				edge = edge.Not()
+			}
 			source.AddOutput(edge)
 		}
 		original, shared := aig.Aig_ManDupSimple(source), aig.Aig_ManDupSimple(source)

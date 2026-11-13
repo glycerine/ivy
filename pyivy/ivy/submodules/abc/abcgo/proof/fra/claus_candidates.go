@@ -182,13 +182,12 @@ func clausFinishSelection(p *Clu_Man_t, filterProven bool) int32 {
 		}
 		start = 0
 		lits = vec.Vec_IntArray(p.vLits)
-		solver.SetLimits(int64(p.nBTLimit), 0)
 		for i, end := range vec.Vec_IntArray(p.vClauses) {
 			assumptions := make([]int32, int(end)-start)
 			for j, lit := range lits[start:int(end)] {
 				assumptions[j] = lit ^ 1
 			}
-			if solver.Solve(assumptions...) == bsat.Unsatisfiable {
+			if solver.SolveWithSourceLimits(assumptions, int64(p.nBTLimit), 0, 0, 0) == bsat.Unsatisfiable {
 				vec.Vec_IntWriteEntry(p.vCosts, i, -1)
 				p.nClauses--
 			}

@@ -91,3 +91,24 @@ func TestSecSourceTrivialWitnessRetainsDefaultOutput(t *testing.T) {
 		t.Fatalf("verified model=%+v", cex)
 	}
 }
+
+// fraSec.c sets bit i rather than nRegs+i in its fallback all-one model;
+// Abc_CexDup then discards that initial-register bit on transfer.
+func TestSecSourceTrivialWitnessUsesRawBitOffset(t *testing.T) {
+	g := aig.NewGraph()
+	x := g.NewInput()
+	g.NewInput()
+	g.AddOutput(x)
+	g.AddOutput(x)
+	aig.Aig_ManSetRegNum(g, 1)
+	var pars Fra_Sec_t
+	Fra_SecSetDefaultParams(&pars)
+	pars.fSilent = 1
+	if status := Fra_FraigSec(g, &pars, nil); status != 0 {
+		t.Fatalf("status=%d", status)
+	}
+	cex := g.SequentialCounterexample()
+	if cex == nil || len(cex.PData) == 0 || cex.PData[0]&3 != 0 || saig.Saig_ManVerifyCexNoClear(g, cex) != 0 {
+		t.Fatalf("source transfers an all-zero, invalid witness: %+v", cex)
+	}
+}

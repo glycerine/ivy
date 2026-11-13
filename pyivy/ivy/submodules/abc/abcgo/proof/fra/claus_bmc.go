@@ -4,7 +4,7 @@ import "github.com/glycerine/abcgo/sat/bsat"
 
 // clausFilterBMC removes candidates falsifiable in any selected timeframe,
 // preserving the original base-frame clause literals and candidate ordering.
-func clausFilterBMC(s *bsat.Solver, clauses [][]int32, costs []int32, prefix, frames, variables int32) int {
+func clausFilterBMC(s *bsat.Solver, clauses [][]int32, costs []int32, prefix, frames, variables int32, limit int64) int {
 	if s == nil || len(clauses) != len(costs) || prefix < 0 || frames < 0 || variables <= 0 {
 		panic("invalid clause BMC input")
 	}
@@ -24,7 +24,7 @@ func clausFilterBMC(s *bsat.Solver, clauses [][]int32, costs []int32, prefix, fr
 			}
 			// Both a counterexample and an unknown SAT result discard the candidate,
 			// matching the C routine's conservative proof behavior.
-			if s.Solve(assumptions...) != bsat.Unsatisfiable {
+			if s.SolveWithSourceLimits(assumptions, limit, 0, 0, 0) != bsat.Unsatisfiable {
 				costs[i] = -1
 				removed++
 			}
