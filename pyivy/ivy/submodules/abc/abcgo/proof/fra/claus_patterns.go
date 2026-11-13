@@ -46,7 +46,7 @@ func clausPatternScores(leaves [][]uint32, skip int) []int32 {
 
 // clausSelectCosts preserves source ordering among equal-cost candidates.
 func clausSelectCosts(costs []int32, maxClauses, simulationWords int) (int32, int) {
-	if maxClauses < 0 || len(costs) <= maxClauses || simulationWords < 0 {
+	if len(costs) <= maxClauses || simulationWords < 0 {
 		panic("invalid clause selection")
 	}
 	limit := simulationWords*32 + 1
