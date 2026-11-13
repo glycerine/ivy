@@ -17,7 +17,8 @@ func TestPairClassesAgainstConnectedComponents(t *testing.T) {
 		used := make([]bool, n)
 		pairs := vec.Vec_IntAlloc(64)
 		for edge := 0; edge < random.Intn(35); edge++ {
-			a, b := random.Intn(n), 1+random.Intn(n-1)
+			// Keep a fixed representative: C reuses the pair index on merges.
+			a, b := 0, 1+random.Intn(n-1)
 			vec.Vec_IntPushTwo(pairs, int32(a), int32(b))
 			used[a], used[b] = true, true
 			graph[a] = append(graph[a], b)

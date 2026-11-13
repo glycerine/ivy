@@ -39,52 +39,56 @@ func Ssw_MiterStatus(g *aig.Graph, verbose int32) int32 {
 	return 1
 }
 
-// Ssw_TransformPairsIntoTempClasses computes ordered transitive classes. The
-// smallest object ID is the representative, including zero for constant one.
+// Ssw_TransformPairsIntoTempClasses follows the source pair-class algorithm.
+// Source loop-index reuse can misalign later pairs or cause an assertion.
 func Ssw_TransformPairsIntoTempClasses(pairs *vec.Vec_Int_t, n int32) []*vec.Vec_Int_t {
 	if n < 0 || vec.Vec_IntSize(pairs)%2 != 0 {
 		panic("ssw: invalid pair list")
 	}
-	parent := make([]int32, n)
-	used := make([]bool, n)
-	for i := range parent {
-		parent[i] = int32(i)
-	}
-	var find func(int32) int32
-	find = func(x int32) int32 {
-		if parent[x] != x {
-			parent[x] = find(parent[x])
-		}
-		return parent[x]
+	classes := make([]*vec.Vec_Int_t, n)
+	repr := make([]int32, n)
+	for i := range repr {
+		repr[i] = -1
 	}
 	for i := 0; i < vec.Vec_IntSize(pairs); i += 2 {
 		a, b := vec.Vec_IntEntry(pairs, i), vec.Vec_IntEntry(pairs, i+1)
 		if a < 0 || b <= 0 || a >= n || b >= n {
 			panic("ssw: pair node out of range")
 		}
-		used[a] = true
-		used[b] = true
-		x, y := find(a), find(b)
-		if x < y {
-			parent[y] = x
-		} else {
-			parent[x] = y
-		}
-	}
-	classes := make([]*vec.Vec_Int_t, n)
-	for i, ok := range used {
-		if !ok {
-			continue
-		}
-		root := find(int32(i))
-		if classes[root] == nil {
-			classes[root] = vec.Vec_IntAlloc(4)
-		}
-		vec.Vec_IntPush(classes[root], int32(i))
-	}
-	for i, class := range classes {
-		if class != nil && vec.Vec_IntSize(class) < 2 {
-			classes[i] = nil
+		ra, rb := repr[a], repr[b]
+		switch {
+		case ra < 0 && rb < 0:
+			classes[a] = vec.Vec_IntAlloc(4)
+			vec.Vec_IntPushTwo(classes[a], a, b)
+			repr[a], repr[b] = a, a
+		case ra >= 0 && rb < 0:
+			vec.Vec_IntPushUniqueOrder(classes[ra], b)
+			repr[b] = ra
+		case ra < 0 && rb >= 0:
+			if rb < a {
+				vec.Vec_IntPushUniqueOrder(classes[rb], a)
+				repr[a] = rb
+			} else {
+				vec.Vec_IntPushFirst(classes[rb], a)
+				classes[a], classes[rb] = classes[rb], nil
+				// C reuses the outer pair index in this traversal.
+				for i = 0; i < vec.Vec_IntSize(classes[a]); i++ {
+					repr[vec.Vec_IntEntry(classes[a], i)] = a
+				}
+			}
+		case ra != rb:
+			to, from := ra, rb
+			if to > from {
+				to, from = from, to
+			}
+			// This likewise changes the next pair offset, as in C.
+			for i = 0; i < vec.Vec_IntSize(classes[from]); i++ {
+				entry := vec.Vec_IntEntry(classes[from], i)
+				vec.Vec_IntPushUniqueOrder(classes[to], entry)
+				repr[entry] = to
+			}
+			vec.Vec_IntFree(classes[from])
+			classes[from] = nil
 		}
 	}
 	return classes
