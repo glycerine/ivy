@@ -72,7 +72,8 @@ func TestInterpolationEndToEnd(t *testing.T) {
 // state exploration. The property is state AND input, so an error may need
 // multiple frames to become reachable.
 func TestInterpolationAgainstExplicitReachability(t *testing.T) {
-	for table := 0; table < 16; table++ {
+	for test := 0; test < 48; test++ {
+		table, mode := test%16, test/16
 		g := aig.NewGraph()
 		x, state := g.NewInput(), g.NewInput()
 		g.AddOutput(g.AND(state, x))
@@ -114,6 +115,10 @@ func TestInterpolationAgainstExplicitReachability(t *testing.T) {
 		}
 		var pars Inter_ManParams_t
 		Inter_ManSetDefaultParams(&pars)
+		if mode > 0 {
+			pars.FUseMiniSat = 1
+			pars.FUsePudlak = int32(mode - 1)
+		}
 		pars.NFramesMax = 5
 		var frame int32
 		got := Inter_ManPerformInterpolation(g, &pars, &frame)
@@ -122,23 +127,51 @@ func TestInterpolationAgainstExplicitReachability(t *testing.T) {
 			want = 0
 		}
 		if got != want {
-			t.Fatalf("table=%04b: got %d want %d frame %d", table, got, want, frame)
+			t.Fatalf("table=%04b mode=%d: got %d want %d frame %d", table, mode, got, want, frame)
 		}
 	}
 }
 
-func TestRequestedMiniSatBackendIsUnavailable(t *testing.T) {
+func TestMiniSatInterpolationEndToEnd(t *testing.T) {
+	for _, pudlak := range []int32{0, 1} {
+		for _, unsafe := range []bool{false, true} {
+			g := aig.NewGraph()
+			x, state := g.NewInput(), g.NewInput()
+			g.AddOutput(state)
+			if unsafe {
+				g.AddOutput(x)
+			} else {
+				g.AddOutput(g.Const0())
+			}
+			aig.Aig_ManSetRegNum(g, 1)
+			var pars Inter_ManParams_t
+			Inter_ManSetDefaultParams(&pars)
+			pars.FUseMiniSat, pars.FUsePudlak, pars.NFramesMax = 1, pudlak, 5
+			var frame int32
+			got := Inter_ManPerformInterpolation(g, &pars, &frame)
+			want := int32(1)
+			if unsafe {
+				want = 0
+			}
+			if got != want {
+				t.Fatalf("pudlak=%d unsafe=%v: got %d want %d, frame %d", pudlak, unsafe, got, want, frame)
+			}
+		}
+	}
+}
+
+func TestMiniSatInterpolationExpiredDeadline(t *testing.T) {
 	g := aig.NewGraph()
-	x := g.NewInput()
 	g.NewInput()
-	g.AddOutput(x)
+	state := g.NewInput()
+	g.AddOutput(state)
 	g.AddOutput(g.Const0())
 	aig.Aig_ManSetRegNum(g, 1)
 	var pars Inter_ManParams_t
 	Inter_ManSetDefaultParams(&pars)
-	pars.FUseMiniSat = 1
-	frame := int32(42)
-	if got := Inter_ManPerformInterpolation(g, &pars, &frame); got != -1 || frame != -1 || g.SequentialCounterexample() != nil {
-		t.Fatalf("unavailable backend should not run BSAT: result %d frame %d", got, frame)
+	pars.FUseMiniSat, pars.NSecLimit = 1, -1
+	var frame int32
+	if got := Inter_ManPerformInterpolation(g, &pars, &frame); got != -1 {
+		t.Fatalf("expired deadline returned %d", got)
 	}
 }

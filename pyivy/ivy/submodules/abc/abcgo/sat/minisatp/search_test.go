@@ -3,8 +3,61 @@ package minisatp
 import (
 	"fmt"
 	"math/rand"
+	"reflect"
 	"testing"
+	"time"
 )
+
+func TestConflictAndDeadlineLimits(t *testing.T) {
+	formula := [][]int32{{0, 2}, {0, 3}, {1, 2}, {1, 3}}
+	for _, limited := range []bool{false, true} {
+		s := New(2)
+		for _, c := range formula {
+			if !s.AddClause(c) {
+				t.Fatal("premature conflict")
+			}
+		}
+		if limited {
+			s.SetLimits(1, time.Time{})
+		}
+		got := s.Solve()
+		want := int32(0)
+		if limited {
+			want = -1
+		}
+		if got != want {
+			t.Fatalf("limited=%v got %d want %d", limited, got, want)
+		}
+	}
+	s := New(1)
+	s.SetLimits(0, time.Now().Add(-time.Second))
+	if s.Solve() != -1 || !s.Interrupted() {
+		t.Fatal("expired deadline was not honored")
+	}
+}
+
+func TestProofRootIndexAndInterleavedChainRemapping(t *testing.T) {
+	s := New(2)
+	for _, c := range [][]int32{{0}, {0, 2}, {2, 3}, {1, 2}} {
+		if !s.AddClause(c) {
+			t.Fatalf("unexpected conflict adding %v", c)
+		}
+	}
+	if s.AddClause([]int32{3}) {
+		t.Fatal("expected contradiction")
+	}
+	roots, chains, inputs := s.Proof()
+	if !reflect.DeepEqual(inputs, []int{0, 3, 4}) {
+		t.Fatalf("root inputs %v", inputs)
+	}
+	if !reflect.DeepEqual(roots, [][]int32{{0}, {1, 2}, {3}}) {
+		t.Fatalf("roots %v", roots)
+	}
+	want := []Chain{{Clauses: []ClauseID{1, 0}, Pivots: []int32{0}}, {Clauses: []ClauseID{2, 3}, Pivots: []int32{1}}}
+	if !reflect.DeepEqual(chains, want) {
+		t.Fatalf("chains %+v want %+v", chains, want)
+	}
+}
 
 func checkProof(s *solver) error {
 	clauses := map[ClauseID]map[int32]bool{}
@@ -91,6 +144,20 @@ func TestSmallFormulasAgainstExhaustiveAssignments(t *testing.T) {
 		got := s.solve()
 		if (got == 1) != sat {
 			t.Fatalf("trial %d formula %v: got %d, sat %v", trial, formula, got, sat)
+		}
+		if sat {
+			for _, clause := range formula {
+				satisfied := false
+				for _, lit := range clause {
+					if (s.model[lit>>1] > 0) != (lit&1 != 0) {
+						satisfied = true
+						break
+					}
+				}
+				if !satisfied {
+					t.Fatalf("trial %d: model %v does not satisfy %v", trial, s.model, clause)
+				}
+			}
 		}
 		if !sat {
 			if err := checkProof(s); err != nil {

@@ -1,6 +1,9 @@
 package minisatp
 
-import "sort"
+import (
+	"sort"
+	"time"
+)
 
 // These types and methods follow Solver.C in MiniSat-p 1.14. The solver is
 // intentionally private until its search and proof export are complete.
@@ -12,29 +15,41 @@ type clause struct {
 }
 
 type solver struct {
-	ok          bool
-	proof       proof
-	clauses     []*clause
-	watches     [][]*clause
-	assign      []int8 // -1 false, 0 undefined, 1 true
-	level       []int
-	reason      []*clause
-	unitID      []ClauseID
-	trail       []int32
-	limits      []int
-	qhead       int
-	trailPos    []int
-	seen        []bool
-	activity    []float64
-	varInc      float64
-	claInc      float64
-	order       varOrder
-	learnts     []*clause
-	conflicts   int32
-	inputCount  int
-	rootInputs  []int
-	simpAssigns int
-	simpProps   int64
+	ok            bool
+	proof         proof
+	clauses       []*clause
+	watches       [][]*clause
+	assign        []int8 // -1 false, 0 undefined, 1 true
+	model         []int8
+	level         []int
+	reason        []*clause
+	unitID        []ClauseID
+	trail         []int32
+	limits        []int
+	qhead         int
+	trailPos      []int
+	seen          []bool
+	activity      []float64
+	varInc        float64
+	claInc        float64
+	order         varOrder
+	learnts       []*clause
+	conflicts     int32
+	inputCount    int
+	rootInputs    []int
+	simpAssigns   int
+	simpProps     int64
+	deadline      time.Time
+	conflictLimit int32
+	interrupted   bool
+}
+
+func (s *solver) expired() bool {
+	if s.interrupted || !s.deadline.IsZero() && !time.Now().Before(s.deadline) {
+		s.interrupted = true
+		return true
+	}
+	return false
 }
 
 func newSolver(n int) *solver {
@@ -73,7 +88,7 @@ func (s *solver) enqueue(lit int32, from *clause) bool {
 // addClause follows newClause's original-clause normalization and root-level
 // resolution. It reports whether the solver remains consistent.
 func (s *solver) addClause(input []int32) bool {
-	if !s.ok {
+	if !s.ok || s.expired() {
 		return false
 	}
 	inputIndex := s.inputCount
@@ -123,12 +138,20 @@ func (s *solver) addClause(input []int32) bool {
 // root-level unit derivations and the final empty clause.
 func (s *solver) propagate() *clause {
 	for s.qhead < len(s.trail) {
+		if s.expired() {
+			return nil
+		}
 		p := s.trail[s.qhead]
 		s.qhead++
 		s.simpProps--
 		watches := s.watches[p]
 		kept := watches[:0]
 		for i, c := range watches {
+			if s.expired() {
+				kept = append(kept, watches[i:]...)
+				s.watches[p] = kept
+				return nil
+			}
 			falseLit := p ^ 1
 			if c.lits[0] == falseLit {
 				c.lits[0], c.lits[1] = c.lits[1], c.lits[0]

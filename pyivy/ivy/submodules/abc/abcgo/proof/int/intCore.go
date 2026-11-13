@@ -4,7 +4,6 @@ package int
 import (
 	"context"
 	"fmt"
-	"os"
 	"time"
 
 	"github.com/glycerine/abcgo/aig/aig"
@@ -40,11 +39,6 @@ func Inter_ManSetDefaultParams(p *Inter_ManParams_t) {
 func Inter_ManPerformInterpolation(graph *aig.Graph, pars *Inter_ManParams_t, frame *int32) int32 {
 	if graph == nil || pars == nil || frame == nil {
 		panic("invalid interpolation arguments")
-	}
-	if pars.FUseMiniSat != 0 {
-		*frame = -1
-		fmt.Fprintln(os.Stderr, ErrMiniSat114pUnavailable)
-		return -1
 	}
 	start := util.Abc_Clock()
 	var deadline int64
@@ -110,7 +104,21 @@ func Inter_ManPerformInterpolation(graph *aig.Graph, pars *Inter_ManParams_t, fr
 			if pars.NFramesMax != 0 && p.nFrames+i >= pars.NFramesMax {
 				return finish(-1, 0)
 			}
-			result := Inter_ManPerformOneStep(p, pars.FUseBias, pars.FUseBackward, deadline)
+			var result int32
+			if pars.FUseMiniSat != 0 {
+				var err error
+				backend := &miniSat114pBackend{conflictLimit: p.nConfLimit}
+				if deadline != 0 {
+					backend.deadline = time.Now().Add(time.Duration(deadline - util.Abc_Clock()))
+				}
+				result, err = interManPerformOneStepM114p(p, backend, pars.FUsePudlak != 0, deadline)
+				if err != nil {
+					fmt.Println("MiniSat interpolation:", err)
+					return finish(-1, 0)
+				}
+			} else {
+				result = Inter_ManPerformOneStep(p, pars.FUseBias, pars.FUseBackward, deadline)
+			}
 			pars.IFrameMax = i - 1 + p.nFrames
 			if result == 0 {
 				if i == 0 {

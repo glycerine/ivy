@@ -84,7 +84,7 @@ func (s *solver) reduceDB() {
 // simplifyDB performs the original root propagation and removes satisfied,
 // unlocked clauses at the same assignment and propagation thresholds.
 func (s *solver) simplifyDB() {
-	if !s.ok {
+	if !s.ok || s.expired() {
 		return
 	}
 	if s.propagate() != nil {
@@ -97,6 +97,9 @@ func (s *solver) simplifyDB() {
 	for _, db := range []*[]*clause{&s.clauses, &s.learnts} {
 		kept := (*db)[:0]
 		for _, c := range *db {
+			if s.expired() {
+				return
+			}
 			satisfied := false
 			for _, lit := range c.lits {
 				if s.value(lit) > 0 {
@@ -126,19 +129,32 @@ func (s *solver) simplifyDB() {
 func (s *solver) search(limit, maxLearnts int) int {
 	count := 0
 	for {
+		if s.expired() {
+			return -1
+		}
 		if conflict := s.propagate(); conflict != nil {
 			s.conflicts++
 			count++
+			if s.conflictLimit > 0 && s.conflicts >= s.conflictLimit {
+				s.interrupted = true
+				return -1
+			}
 			if len(s.limits) == 0 {
 				return 0
 			}
 			learnt, level := s.analyze(conflict)
+			if s.interrupted {
+				return -1
+			}
 			id := s.proof.next - 1
 			s.cancelUntil(level)
 			s.learned(learnt, id)
 			s.varInc /= 0.95
 			s.claInc /= 0.999
 		} else {
+			if s.interrupted {
+				return -1
+			}
 			if limit >= 0 && count >= limit {
 				s.cancelUntil(0)
 				return -1
@@ -151,6 +167,7 @@ func (s *solver) search(limit, maxLearnts int) int {
 			}
 			v := s.order.selectVar()
 			if v < 0 {
+				s.model = append(s.model[:0], s.assign...)
 				s.cancelUntil(0)
 				return 1
 			}
@@ -161,16 +178,26 @@ func (s *solver) search(limit, maxLearnts int) int {
 }
 
 func (s *solver) solve() int {
+	s.model = nil
+	if s.expired() {
+		return -1
+	}
 	if !s.ok {
 		return 0
 	}
 	s.simplifyDB()
+	if s.interrupted {
+		return -1
+	}
 	if !s.ok {
 		return 0
 	}
 	conflicts, learnts := 100.0, float64(len(s.clauses))/3
 	for {
 		result := s.search(int(conflicts), int(learnts))
+		if s.interrupted {
+			return -1
+		}
 		if result >= 0 {
 			return result
 		}

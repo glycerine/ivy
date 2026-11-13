@@ -92,14 +92,34 @@ func TestMiniSatPartitionAssemblyRestoresCNF(t *testing.T) {
 	}
 }
 
-func TestMiniSatMcMillanCreatesOnlyReferencedInputs(t *testing.T) {
+func TestMiniSatMcMillanPreservesUnusedSharedInputs(t *testing.T) {
 	// The shared variable is irrelevant to these partition-local clauses.
 	proof := &fixtureM114p{roots: [][]int32{{0}, {1}}, chains: []M114pChain{{Clauses: []int32{0, 1}, Pivots: []int32{0}}}}
 	graph, err := InterpolateM114p(proof, []int32{0, 1}, []int32{-1, 0}, false)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if graph.InputCount() != 0 {
-		t.Fatalf("unused shared variable created %d inputs", graph.InputCount())
+	if graph.InputCount() != 1 {
+		t.Fatalf("unused shared variable lost: %d inputs", graph.InputCount())
+	}
+}
+
+func TestMiniSatEmptyRootAfterDerivedUnit(t *testing.T) {
+	for _, pudlak := range []bool{false, true} {
+		s := &miniSat114pBackend{}
+		s.SetVarNum(2)
+		if !s.AddClause([]int32{0}) || !s.AddClause([]int32{1, 2}) || s.AddClause(nil) {
+			t.Fatal("unexpected add result")
+		}
+		if s.Solve() != 0 {
+			t.Fatal("expected UNSAT")
+		}
+		g, err := InterpolateM114p(s, []int32{0, 0, 1}, []int32{-1, 0}, pudlak)
+		if err != nil || g == nil {
+			t.Fatalf("pudlak=%v graph=%v err=%v", pudlak, g, err)
+		}
+		if g.InputCount() != 1 {
+			t.Fatalf("pudlak=%v: inputs %d", pudlak, g.InputCount())
+		}
 	}
 }

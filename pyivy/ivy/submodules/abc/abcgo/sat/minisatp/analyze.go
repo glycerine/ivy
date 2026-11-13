@@ -11,6 +11,9 @@ func (s *solver) analyze(conflict *clause) ([]int32, int) {
 	index := len(s.trail) - 1
 	p := int32(-1)
 	for {
+		if s.expired() {
+			return nil, 0
+		}
 		if conflict.learnt {
 			conflict.activity += s.claInc
 			if conflict.activity > 1e20 {
@@ -69,6 +72,9 @@ func (s *solver) analyze(conflict *clause) ([]int32, int) {
 	learnt[0] = p ^ 1
 	var levels uint32
 	for _, lit := range learnt[1:] {
+		if s.expired() {
+			return nil, 0
+		}
 		levels |= 1 << (uint(s.level[lit>>1]) & 31)
 	}
 	toClear := make([]int32, 0)
@@ -103,6 +109,9 @@ func (s *solver) removable(lit int32, levels uint32, clear *[]int32) bool {
 	stack := []int32{lit}
 	top := len(*clear)
 	for len(stack) != 0 {
+		if s.expired() {
+			return false
+		}
 		last := stack[len(stack)-1]
 		stack = stack[:len(stack)-1]
 		for _, q := range s.reason[last>>1].lits[1:] {

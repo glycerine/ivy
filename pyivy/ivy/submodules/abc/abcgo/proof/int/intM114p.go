@@ -1,14 +1,16 @@
 package int
 
 // The optional MiniSat 1.14p proof interface in intM114p.c. ABC's ordinary
-// build excludes it; abcgo does not yet provide the MiniSat 1.14p backend.
+// build excludes it; the Go port supplies the original proof-producing solver.
 import (
 	"errors"
 	"fmt"
 	"time"
 
 	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/sat/cnf"
+	"github.com/glycerine/abcgo/sat/minisatp"
 )
 
 // ErrMiniSat114pUnavailable means that no original MiniSat 1.14p proof
@@ -31,6 +33,39 @@ type M114pBackend interface {
 	Chains() []M114pChain
 	Close()
 }
+
+type miniSat114pBackend struct {
+	solver        *minisatp.Solver
+	deadline      time.Time
+	conflictLimit int32
+}
+
+func (s *miniSat114pBackend) SetVarNum(n int32) {
+	s.solver = minisatp.New(int(n))
+	s.solver.SetLimits(s.conflictLimit, s.deadline)
+}
+func (s *miniSat114pBackend) AddClause(c []int32) bool { return s.solver.AddClause(c) }
+func (s *miniSat114pBackend) Solve() int32             { return s.solver.Solve() }
+func (s *miniSat114pBackend) ConflictNum() int32       { return s.solver.Conflicts() }
+func (s *miniSat114pBackend) Roots() [][]int32         { roots, _, _ := s.solver.Proof(); return roots }
+func (s *miniSat114pBackend) Chains() []M114pChain {
+	_, chains, _ := s.solver.Proof()
+	result := make([]M114pChain, len(chains))
+	for i, c := range chains {
+		result[i].Clauses = make([]int32, len(c.Clauses))
+		for j, id := range c.Clauses {
+			result[i].Clauses[j] = int32(id)
+		}
+		result[i].Pivots = c.Pivots
+	}
+	return result
+}
+func (s *miniSat114pBackend) rootInputIndices() []int {
+	_, _, indices := s.solver.Proof()
+	return indices
+}
+func (s *miniSat114pBackend) Close()            { s.solver = nil }
+func (s *miniSat114pBackend) interrupted() bool { return s.solver != nil && s.solver.Interrupted() }
 
 // Inter_ManDeriveSatSolverM114p assembles the original A and B partitions.
 // A backend must be supplied explicitly; nil reports the unavailable port.
@@ -136,6 +171,14 @@ func Inter_ManResolveM114p(resolvent, clause []int32, pivot int32) ([]int32, err
 
 // InterpolateM114p reconstructs either original proof interpolation algorithm.
 func InterpolateM114p(s M114pBackend, rootParts, varClasses []int32, pudlak bool) (*aig.Graph, error) {
+	return interpolateM114p(s, rootParts, varClasses, pudlak, time.Time{})
+}
+
+func interpolateM114p(s M114pBackend, rootParts, varClasses []int32, pudlak bool, deadline time.Time) (*aig.Graph, error) {
+	expired := func() bool { return !deadline.IsZero() && !time.Now().Before(deadline) }
+	if expired() {
+		return nil, errors.New("MiniSat interpolation deadline reached")
+	}
 	if s == nil {
 		return nil, ErrMiniSat114pUnavailable
 	}
@@ -146,6 +189,9 @@ func InterpolateM114p(s M114pBackend, rootParts, varClasses []int32, pudlak bool
 	g := aig.NewGraph()
 	max := int32(-1)
 	for _, class := range varClasses {
+		if expired() {
+			return nil, errors.New("MiniSat interpolation deadline reached")
+		}
 		if class > max {
 			max = class
 		}
@@ -157,7 +203,7 @@ func InterpolateM114p(s M114pBackend, rootParts, varClasses []int32, pudlak bool
 		}
 		return inputs[index]
 	}
-	if pudlak && max >= 0 {
+	if max >= 0 {
 		input(max)
 	}
 	outputs := make([]aig.Edge, 0, len(roots)+len(chains))
@@ -170,6 +216,9 @@ func InterpolateM114p(s M114pBackend, rootParts, varClasses []int32, pudlak bool
 		return varClasses[v], nil
 	}
 	for i, clause := range roots {
+		if expired() {
+			return nil, errors.New("MiniSat interpolation deadline reached")
+		}
 		edge := g.Const0()
 		if rootParts[i] == 1 {
 			edge = g.Const1()
@@ -177,6 +226,9 @@ func InterpolateM114p(s M114pBackend, rootParts, varClasses []int32, pudlak bool
 			return nil, errors.New("invalid root partition")
 		} else if !pudlak {
 			for _, lit := range clause {
+				if expired() {
+					return nil, errors.New("MiniSat interpolation deadline reached")
+				}
 				c, err := classOf(lit)
 				if err != nil {
 					return nil, err
@@ -194,6 +246,9 @@ func InterpolateM114p(s M114pBackend, rootParts, varClasses []int32, pudlak bool
 		clauses = append(clauses, append([]int32(nil), clause...))
 	}
 	for _, chain := range chains {
+		if expired() {
+			return nil, errors.New("MiniSat interpolation deadline reached")
+		}
 		if len(chain.Clauses) != len(chain.Pivots)+1 || len(chain.Clauses) == 0 {
 			return nil, errors.New("invalid proof chain")
 		}
@@ -204,6 +259,9 @@ func InterpolateM114p(s M114pBackend, rootParts, varClasses []int32, pudlak bool
 		edge := outputs[first]
 		resolvent := append([]int32(nil), clauses[first]...)
 		for j, pivot := range chain.Pivots {
+			if expired() {
+				return nil, errors.New("MiniSat interpolation deadline reached")
+			}
 			next := int(chain.Clauses[j+1])
 			if next < 0 || next >= len(outputs) || pivot < 0 || int(pivot) >= len(varClasses) {
 				return nil, errors.New("invalid proof pivot or antecedent")
@@ -224,6 +282,9 @@ func InterpolateM114p(s M114pBackend, rootParts, varClasses []int32, pudlak bool
 			} else if class >= 0 {
 				var lit int32 = -1
 				for _, x := range clauses[next] {
+					if expired() {
+						return nil, errors.New("MiniSat interpolation deadline reached")
+					}
 					if x>>1 == pivot {
 						lit = x
 						break
@@ -253,12 +314,19 @@ func InterpolateM114p(s M114pBackend, rootParts, varClasses []int32, pudlak bool
 
 // Inter_ManPerformOneStepM114p runs the optional solver supplied by the caller.
 func Inter_ManPerformOneStepM114p(p *Inter_Man_t, s M114pBackend, pudlak bool) (int32, error) {
+	return interManPerformOneStepM114p(p, s, pudlak, 0)
+}
+
+func interManPerformOneStepM114p(p *Inter_Man_t, s M114pBackend, pudlak bool, deadline int64) (int32, error) {
 	if s == nil {
 		return -1, ErrMiniSat114pUnavailable
 	}
 	defer s.Close()
 	roots, vars, err := Inter_ManDeriveSatSolverM114p(s, p.pInter, p.pCnfInter, p.pAigTrans, p.pCnfAig, p.pFrames, p.pCnfFrames)
 	if err != nil {
+		if stopped, ok := s.(interface{ interrupted() bool }); ok && stopped.interrupted() {
+			return -1, nil
+		}
 		return -1, err
 	}
 	start := time.Now()
@@ -268,9 +336,27 @@ func Inter_ManPerformOneStepM114p(p *Inter_Man_t, s M114pBackend, pudlak bool) (
 	switch status {
 	case 0:
 		start = time.Now()
-		p.pInterNew, err = InterpolateM114p(s, roots, vars, pudlak)
+		if source, ok := s.(interface{ rootInputIndices() []int }); ok {
+			indices := source.rootInputIndices()
+			parts := make([]int32, len(indices))
+			for i, index := range indices {
+				if index < 0 || index >= len(roots) {
+					return -1, errors.New("invalid MiniSat root input index")
+				}
+				parts[i] = roots[index]
+			}
+			roots = parts
+		}
+		var until time.Time
+		if deadline != 0 {
+			until = time.Now().Add(time.Duration(deadline - util.Abc_Clock()))
+		}
+		p.pInterNew, err = interpolateM114p(s, roots, vars, pudlak, until)
 		p.timeInt += int64(time.Since(start))
 		if err != nil {
+			if deadline != 0 && util.Abc_Clock() >= deadline {
+				return -1, nil
+			}
 			return -1, err
 		}
 		return 1, nil
