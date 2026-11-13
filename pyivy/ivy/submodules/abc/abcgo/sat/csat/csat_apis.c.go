@@ -23,27 +23,28 @@ type gate struct {
 }
 
 type managerState struct {
-	gates         []gate
-	byName        map[string]int
-	targetNames   []string
-	targetValues  []int
-	finalized     bool
-	prepared      bool
-	mode          int
-	timeLimit     time.Duration
-	conflictLimit int64
-	backtrackCap  uint64
-	inspectCap    uint64
-	backtracks    uint64
-	inspects      uint64
-	dumpFile      string
-	result        *CSAT_Target_ResultT
-	lastError     error
+	gates            []gate
+	byName           map[string]int
+	targetNames      []string
+	targetValues     []int
+	finalized        bool
+	prepared         bool
+	mode             int
+	timeLimit        time.Duration
+	conflictLimit    int64
+	implicationLimit int64
+	backtrackCap     uint64
+	inspectCap       uint64
+	backtracks       uint64
+	inspects         uint64
+	dumpFile         string
+	result           *CSAT_Target_ResultT
+	lastError        error
 }
 
 func ABC_InitManager() ABC_Manager {
 	return &ABC_ManagerStruct_t{state: &managerState{
-		byName: make(map[string]int), conflictLimit: -1,
+		byName: make(map[string]int), conflictLimit: -1, implicationLimit: -1,
 	}}
 }
 
@@ -217,9 +218,16 @@ func ABC_SetLearnLimit(m ABC_Manager, n int32) {
 		}
 	}
 }
-func ABC_SetLearnBacktrackLimit(m ABC_Manager, n int32)   { ABC_SetLearnLimit(m, n) }
-func ABC_SetSolveBacktrackLimit(m ABC_Manager, n int32)   { ABC_SetLearnLimit(m, n) }
-func ABC_SetSolveImplicationLimit(m ABC_Manager, n int32) { ABC_SetLearnLimit(m, n) }
+func ABC_SetLearnBacktrackLimit(m ABC_Manager, n int32) { ABC_SetLearnLimit(m, n) }
+func ABC_SetSolveBacktrackLimit(m ABC_Manager, n int32) { ABC_SetLearnLimit(m, n) }
+func ABC_SetSolveImplicationLimit(m ABC_Manager, n int32) {
+	if m.valid() {
+		m.state.implicationLimit = int64(n)
+		if n <= 0 {
+			m.state.implicationLimit = -1
+		}
+	}
+}
 func ABC_SetTotalBacktrackLimit(m ABC_Manager, n ABC_UINT64_T) {
 	if m.valid() {
 		m.state.backtrackCap = n
@@ -401,12 +409,18 @@ func ABC_Solve(m ABC_Manager) CSAT_StatusT {
 			core.SetConflictBudget(remaining)
 		}
 	}
+	propagationLimit := s.implicationLimit
 	if s.inspectCap > 0 {
 		remaining := int64(0)
 		if s.inspects < s.inspectCap {
 			remaining = int64(s.inspectCap - s.inspects)
 		}
-		core.SetPropagationBudget(remaining)
+		if propagationLimit < 0 || remaining < propagationLimit {
+			propagationLimit = remaining
+		}
+	}
+	if propagationLimit >= 0 {
+		core.SetPropagationBudget(propagationLimit)
 	}
 	if s.timeLimit > 0 {
 		timer := time.AfterFunc(s.timeLimit, core.Interrupt)

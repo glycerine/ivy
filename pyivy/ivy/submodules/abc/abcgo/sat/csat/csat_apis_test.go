@@ -280,6 +280,24 @@ func TestLimitsAndBenchDump(t *testing.T) {
 	}
 }
 
+func TestImplicationLimitUsesPropagationBudget(t *testing.T) {
+	m := ABC_InitManager()
+	defer ABC_ReleaseManager(m)
+	ABC_UseOnlyCoreSatSolver(m)
+	addGate(t, m, CSAT_BPI, "x")
+	addGate(t, m, CSAT_BPI, "y")
+	addGate(t, m, CSAT_BAND, "z", "x", "y")
+	ABC_SetSolveImplicationLimit(m, 1)
+	if got := solveTarget(t, m, []string{"x"}, []int32{1}); got != TIME_OUT {
+		t.Fatalf("propagation limit returned %v, want timeout", got)
+	}
+	ABC_SetSolveImplicationLimit(m, 0)
+	ABC_SolveInit(m)
+	if got := ABC_Solve(m); got != SATISFIABLE {
+		t.Fatalf("cleared propagation limit returned %v", got)
+	}
+}
+
 func boolInt(b bool) int32 {
 	if b {
 		return 1
