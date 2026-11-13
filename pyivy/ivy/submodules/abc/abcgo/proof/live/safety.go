@@ -2,9 +2,13 @@ package live
 
 import (
 	"fmt"
-	"github.com/glycerine/abcgo/aig/aig"
-	"github.com/glycerine/abcgo/sat/bsat"
+	"math"
 	"time"
+
+	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/misc/util"
+	"github.com/glycerine/abcgo/proof/pdr"
+	"github.com/glycerine/abcgo/sat/bsat"
 )
 
 type SafetyOptions struct {
@@ -20,10 +24,78 @@ type SafetyResult struct {
 }
 type SafetyChecker func(*aig.Graph, int, SafetyOptions) SafetyResult
 
-// CheckSafety explores reachable state images with an incremental transition
+// CheckSafety uses ABC's PDR engine. An explicit state budget selects the
+// bounded reachable-image checker, because PDR has no equivalent state limit.
+func CheckSafety(graph *aig.Graph, output int, options SafetyOptions) SafetyResult {
+	if options.MaxStates > 0 {
+		return checkSafetyImages(graph, output, options)
+	}
+	return CheckSafetyPDR(graph, output, options)
+}
+
+// CheckSafetyPDR checks a single output using ABC's PDR engine.
+func CheckSafetyPDR(graph *aig.Graph, output int, options SafetyOptions) SafetyResult {
+	if graph == nil || output < 0 || output >= trueOutputs(graph) {
+		return SafetyResult{Status: -1, Error: fmt.Errorf("live: invalid safety output")}
+	}
+	if err := graph.Check(); err != nil {
+		return SafetyResult{Status: -1, Error: fmt.Errorf("live: invalid graph: %w", err)}
+	}
+	if options.MaxStates != 0 || options.ConflictLimit < 0 || options.ConflictLimit > math.MaxInt32 {
+		return SafetyResult{Status: -1, Error: fmt.Errorf("live: unsupported PDR limit")}
+	}
+	if !options.Deadline.IsZero() && !time.Now().Before(options.Deadline) {
+		return SafetyResult{Status: -1}
+	}
+	c := newGraphCopy(graph, "_pdr")
+	c.copyInputs()
+	aig.Aig_ObjCreateCo(c.destination, c.mapEdge(outputDriver(graph, output)))
+	for i := trueOutputs(graph); i < len(graph.Outputs()); i++ {
+		aig.Aig_ObjCreateCo(c.destination, c.mapEdge(outputDriver(graph, i)))
+	}
+	aig.Aig_ManSetRegNum(c.destination, int32(registers(graph)))
+	opts := pdr.DefaultOptions()
+	opts.Silent = true
+	opts.ConflictLimit = int32(options.ConflictLimit)
+	if !options.Deadline.IsZero() {
+		opts.Stop = func(int32) bool { return !time.Now().Before(options.Deadline) }
+	}
+	result, err := pdr.Solve(c.destination, &opts)
+	if err != nil {
+		return SafetyResult{Status: -1, Error: err}
+	}
+	if result.Status != pdr.Failed {
+		return SafetyResult{Status: int32(result.Status)}
+	}
+	cex := result.Outputs[0].Witness
+	if cex == nil || cex.IFrame < 0 || cex.NRegs != int32(registers(graph)) || cex.NPis != int32(trueInputs(graph)) {
+		return SafetyResult{Status: -1, Error: fmt.Errorf("live: invalid PDR witness")}
+	}
+	states, inputs := make([][]bool, 0, int(cex.IFrame)+1), make([][]bool, 0, int(cex.IFrame)+1)
+	state := make([]bool, registers(graph))
+	for frame := int32(0); frame <= cex.IFrame; frame++ {
+		values := make([]bool, trueInputs(graph))
+		for i := range values {
+			values[i] = util.Abc_InfoHasBit(cex.PData, cex.NRegs+frame*cex.NPis+int32(i))
+		}
+		states = append(states, append([]bool(nil), state...))
+		inputs = append(inputs, values)
+		outputs, err := graph.Evaluate(append(append([]bool(nil), values...), state...))
+		if err != nil {
+			return SafetyResult{Status: -1, Error: err}
+		}
+		if frame == cex.IFrame && !outputs[output] {
+			return SafetyResult{Status: -1, Error: fmt.Errorf("live: PDR witness does not fail selected output")}
+		}
+		state = append([]bool(nil), outputs[trueOutputs(graph):]...)
+	}
+	return SafetyResult{Status: 0, Inputs: inputs, States: states}
+}
+
+// checkSafetyImages explores reachable state images with an incremental transition
 // CNF. SAT blocks complete next-state images, rather than enumerating inputs.
 // A completed frontier proves safety; resource limits explicitly return unknown.
-func CheckSafety(graph *aig.Graph, output int, options SafetyOptions) SafetyResult {
+func checkSafetyImages(graph *aig.Graph, output int, options SafetyOptions) SafetyResult {
 	if graph == nil || output < 0 || output >= trueOutputs(graph) {
 		return SafetyResult{Status: -1, Error: fmt.Errorf("live: invalid safety output")}
 	}

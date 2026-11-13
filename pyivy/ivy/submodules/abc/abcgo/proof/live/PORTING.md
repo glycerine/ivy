@@ -14,9 +14,9 @@ The formula syntax retains source prefix notation (`&`, `+`, `!`, `:G`, `:F`, `:
 
 ## Proof backend boundary
 
-The original package orchestrates PDR, which is a separate package. The native default is a real incremental-CDCL transition-relation checker. It explores reachable *next-state images* using guarded SAT blockers, avoiding enumeration of all PI assignments. Exhausting the reachable-state frontier proves safety; validated SAT models reconstruct counterexample inputs and states. It supports arbitrary register widths; the default 100,000-state budget, SAT conflict budget, and deadline return explicit unknown when exhausted.
+The original package orchestrates PDR. The default `CheckSafety` now calls the native `proof/pdr` implementation on a copied graph containing only the requested property and all register transitions. It replays the PDR witness to return input and state traces and checks that the selected output fails. PDR conflict limits and deadlines return unknown when exhausted. An explicit `MaxStates` instead selects the existing incremental-CDCL reachable-image checker, since PDR has no equivalent state-count limit; this checker proves safety by exhausting the frontier and reports unknown when the budget is exhausted.
 
-`SafetyChecker` allows another real proof engine to be supplied without a dependency cycle. This implementation does not claim to port PDR or to reproduce PDR's performance. No placeholder solver is used. `KLive` only reports a liveness/stabilization proof when a finite absorber depth is proved safe. A counterexample at one finite depth is retained as `LastSafety` and is not mislabeled a liveness disproof. Preprocessing-only discovery similarly does not report a property proof.
+`SafetyChecker` allows another proof engine to be supplied. PDR runs are not established safe concurrently because its invariant frame is global; callers must serialize them, including against direct `proof/pdr` users. `KLive` only reports a liveness/stabilization proof when a finite absorber depth is proved safe. A counterexample at one finite depth is retained as `LastSafety` and is not mislabeled a liveness disproof. Preprocessing-only discovery similarly does not report a property proof.
 
 Monotonicity discovery retains only proved candidates. Unknown results never become barriers. Disjunctive discovery preserves the source's level-one and level-two heuristic; it does not claim to enumerate every monotone disjunction.
 
@@ -45,6 +45,6 @@ GOCACHE=/tmp/abcgo-cache go -C abcgo vet ./proof/live
 
 Tests include six real original-ABC Biere/one-step/simulation modes with exhaustive eight-frame traces; 200 unchanged-C parser/fragment vectors; and seven actual C kernel fixtures covering three absorber depths, combination monitors, arena barriers, and both monotonicity constructors (448 exhaustive six-frame traces). The C kernel generator repairs only the source's one-byte display-name allocation overflow before executing its unchanged graph algorithms.
 
-A separate 250-case random oracle compares SAT reachability and every returned witness against exhaustive state/input exploration. Other regressions cover recurrence/fairness, LTL GF combinations, unknown proof results, monotone discovery, k-depth proof boundaries, aliases/CLI flags, abstraction, deadlines, and combination order.
+A separate 250-case random oracle compares PDR and SAT reachability against exhaustive state/input exploration and checks every returned PDR witness. Other regressions cover recurrence/fairness, LTL GF combinations, unknown proof results, monotone discovery, k-depth proof boundaries, aliases/CLI flags, abstraction, deadlines, and combination order.
 
 Embedded fixtures and reproducible generators live in `test_vectors/`; ordinary tests require no C compiler. The optional original-ABC executable comparison skips only when that executable is unavailable.
