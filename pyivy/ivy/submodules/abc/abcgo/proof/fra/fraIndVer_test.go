@@ -43,3 +43,13 @@ func TestInvariantVerifyBaseAndInduction(t *testing.T) {
 		})
 	}
 }
+
+func TestInvariantVerifyRejectsUnsupportedDepth(t *testing.T) {
+	graph := aig.NewGraph()
+	ends, literals := vec.Vec_IntAlloc(0), vec.Vec_IntAlloc(0)
+	for _, depth := range []int32{0, 2, 10} {
+		if got := Fra_InvariantVerify(graph, depth, ends, literals); got != 0 {
+			t.Fatalf("depth %d incorrectly reported verification", depth)
+		}
+	}
+}
