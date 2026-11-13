@@ -64,7 +64,7 @@ func printClassNode(graph *aig.Graph, id int) {
 }
 
 func (p *classPartition) requireSimulation() *fraSimulation {
-	if p.simulation == nil || p.simulation.graph != p.graph {
+	if p.simulation == nil || p.simulation.Graph != p.graph {
 		panic("fra: class simulation is not attached to its AIG")
 	}
 	return p.simulation
@@ -110,8 +110,8 @@ func Fra_ClassesLatchCorr(p *Fra_Man_t) { p.pCla.latchCorrespondence(p.pManAig) 
 
 func Fra_ClassesPostprocess(p *Fra_Cla_t) {
 	sim := newFraSimulation(p.graph, 0, 1, 32)
-	sim.initialize(false)
-	sim.simulateOne()
+	sim.Initialize(false)
+	sim.SimulateOne()
 	weights := make([]int, len(p.reprs))
 	for id, repr := range p.reprs {
 		if repr >= 0 {

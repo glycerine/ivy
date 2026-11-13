@@ -230,7 +230,7 @@ func Fra_FraigLatchCorrespondence(graph *aig.Graph, prefix, conflicts, prove, ve
 		deadline = time.Now().Add(time.Duration(float64(timeLimit) * float64(time.Second)))
 	}
 	sim := Fra_SmlSimulateSeq(graph, prefix, 32, 1, 1)
-	if prove != 0 && sim.nonconstantOutput {
+	if prove != 0 && sim.NonconstantOutput {
 		if cex := Fra_SmlGetCounterExample(sim); cex != nil {
 			_ = graph.SetSequentialCounterexample(cex)
 		}

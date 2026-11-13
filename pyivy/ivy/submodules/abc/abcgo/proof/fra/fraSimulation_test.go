@@ -14,23 +14,23 @@ func TestFraSimulationCombinationalTruthAndClasses(t *testing.T) {
 	g.AddOutput(and)
 	g.AddOutput(xor)
 	s := newFraSimulation(g, 0, 1, 1)
-	s.frameWords(x.NodeID(), 0)[0] = 0xaaaaaaaa
-	s.frameWords(y.NodeID(), 0)[0] = 0xcccccccc
-	s.simulateOne()
+	s.FrameWords(x.NodeID(), 0)[0] = 0xaaaaaaaa
+	s.FrameWords(y.NodeID(), 0)[0] = 0xcccccccc
+	s.SimulateOne()
 	for mask := 0; mask < 4; mask++ {
 		out, err := g.Evaluate([]bool{mask&1 != 0, mask&2 != 0})
 		if err != nil {
 			t.Fatal(err)
 		}
 		for i, edge := range g.Outputs() {
-			got := s.frameWords(edge.NodeID(), 0)[0]&(1<<mask) != 0
+			got := s.FrameWords(edge.NodeID(), 0)[0]&(1<<mask) != 0
 			if got != out[i] {
 				t.Fatalf("assignment=%d output=%d got=%v want=%v", mask, i, got, out[i])
 			}
 		}
 	}
-	if s.frameWords(and.NodeID(), 0)[0] != 0xeeeeeeee {
-		t.Fatalf("phase-normalized AND = %#x", s.frameWords(and.NodeID(), 0)[0])
+	if s.FrameWords(and.NodeID(), 0)[0] != 0xeeeeeeee {
+		t.Fatalf("phase-normalized AND = %#x", s.FrameWords(and.NodeID(), 0)[0])
 	}
 	if !s.Equal(x.NodeID(), x.NodeID()) || s.Equal(x.NodeID(), y.NodeID()) || s.IsConstant(x.NodeID()) || !s.IsConstant(0) {
 		t.Fatal("wrong class predicates")
@@ -47,21 +47,21 @@ func TestFraSimulationPrefixAndLatchTransfer(t *testing.T) {
 	g.AddOutput(state.Not())
 	aig.Aig_ManSetRegNum(g, 1)
 	s := newFraSimulation(g, 1, 1, 1)
-	s.assignFrame(input.NodeID(), 0, true)
-	s.assignFrame(input.NodeID(), 1, true)
-	s.assignFrame(state.NodeID(), 0, false)
-	s.simulateOne()
-	if got := s.frameWords(po.NodeID(), 0)[0]; got != ^uint32(0) {
+	s.AssignFrame(input.NodeID(), 0, true)
+	s.AssignFrame(input.NodeID(), 1, true)
+	s.AssignFrame(state.NodeID(), 0, false)
+	s.SimulateOne()
+	if got := s.FrameWords(po.NodeID(), 0)[0]; got != ^uint32(0) {
 		t.Fatalf("first output %#x", got)
 	}
-	if got := s.frameWords(po.NodeID(), 1)[0]; got != 0 {
+	if got := s.FrameWords(po.NodeID(), 1)[0]; got != 0 {
 		t.Fatalf("second output %#x", got)
 	}
-	if got := s.frameWords(state.NodeID(), 1)[0]; got != ^uint32(0) {
+	if got := s.FrameWords(state.NodeID(), 1)[0]; got != ^uint32(0) {
 		t.Fatalf("latch transfer %#x", got)
 	}
 	// Prefix words do not contribute to FRA equivalence class comparisons.
-	s.frameWords(input.NodeID(), 0)[0] = 0
+	s.FrameWords(input.NodeID(), 0)[0] = 0
 	if !s.Equal(input.NodeID(), state.NodeID()) || s.Hash(input.NodeID()) != s.Hash(state.NodeID()) {
 		t.Fatal("prefix affected class predicates")
 	}
@@ -73,9 +73,9 @@ func TestFraSimulationDistanceOneAcrossWords(t *testing.T) {
 		g.NewInput()
 	}
 	s := newFraSimulation(g, 0, 1, 2)
-	s.assignDistance1([]uint32{0, 0})
+	s.AssignDistance1([]uint32{0, 0})
 	for i, input := range g.Inputs() {
-		words := s.nodeWords(input.NodeID())
+		words := s.NodeWords(input.NodeID())
 		want := [2]uint32{}
 		want[(i+1)/32] = 1 << uint((i+1)%32)
 		if words[0] != want[0] || words[1] != want[1] {
@@ -90,9 +90,9 @@ func TestFraSimulationDrivesClassPartition(t *testing.T) {
 	explicit := g.NewXor(x, y)
 	structural := aig.Aig_Regular(g.XOR(x, y))
 	s := newFraSimulation(g, 0, 1, 1)
-	s.frameWords(x.NodeID(), 0)[0] = 0xaaaaaaaa
-	s.frameWords(y.NodeID(), 0)[0] = 0xcccccccc
-	s.simulateOne()
+	s.FrameWords(x.NodeID(), 0)[0] = 0xaaaaaaaa
+	s.FrameWords(y.NodeID(), 0)[0] = 0xcccccccc
+	s.SimulateOne()
 	classes := newClassPartition(len(g.Nodes()))
 	classes.prepareGraph(g, false, 0, s.Hash, s.IsConstant, s.Equal)
 	if classes.reprs[structural.NodeID()] != explicit.NodeID() {
@@ -107,9 +107,9 @@ func TestFraSimulationCounterExample(t *testing.T) {
 	g.AddOutput(input)
 	aig.Aig_ManSetRegNum(g, 1)
 	s := newFraSimulation(g, 0, 2, 1)
-	s.assignFrame(input.NodeID(), 0, true)
-	s.simulateOne()
-	cex := s.counterExample()
+	s.AssignFrame(input.NodeID(), 0, true)
+	s.SimulateOne()
+	cex := s.CounterExample()
 	if cex == nil || cex.IPo != 0 || cex.IFrame != 1 {
 		t.Fatalf("unexpected counterexample: %+v", cex)
 	}

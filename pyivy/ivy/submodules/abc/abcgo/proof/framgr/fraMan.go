@@ -85,12 +85,12 @@ func Fra_ManStop(p *Fra_Man_t) []aig.Edge {
 }
 
 func Fra_ManPrint(p *Fra_Man_t) {
-	size := float64(len(p.pManAig.Nodes())) * float64(p.pSml.wordsTotal*4+6*8) / (1 << 20)
+	size := float64(len(p.pManAig.Nodes())) * float64(p.pSml.WordsTotal*4+6*8) / (1 << 20)
 	denom := p.nLitsBeg
 	if denom == 0 {
 		denom = 1
 	}
-	fmt.Printf("SimWord = %d. Round = %d.  Mem = %0.2f MB.  LitBeg = %d.  LitEnd = %d. (%6.2f %%).\n", p.pPars.NSimWords, p.pSml.rounds, size, p.nLitsBeg, p.nLitsEnd, 100*float64(p.nLitsEnd)/float64(denom))
+	fmt.Printf("SimWord = %d. Round = %d.  Mem = %0.2f MB.  LitBeg = %d.  LitEnd = %d. (%6.2f %%).\n", p.pPars.NSimWords, p.pSml.Rounds, size, p.nLitsBeg, p.nLitsEnd, 100*float64(p.nLitsEnd)/float64(denom))
 	fmt.Printf("Proof = %d. Cex = %d. Fail = %d. FailReal = %d. C-lim = %d. ImpRatio = %6.2f %%\n", p.nSatProof, p.nSatCallsSat, p.nSatFails, p.nSatFailsReal, p.pPars.NBTLimitNode, Fra_ImpComputeStateSpaceRatio(p))
 	nodeDenom, regDenom := p.nNodesBeg, p.nRegsBeg
 	if nodeDenom == 0 {

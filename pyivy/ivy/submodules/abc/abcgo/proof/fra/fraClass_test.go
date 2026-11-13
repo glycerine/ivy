@@ -12,13 +12,13 @@ func TestClassAPIRefinement(t *testing.T) {
 	classes := Fra_ClassesStart(graph)
 	sim := newFraSimulation(graph, 0, 1, 1)
 	classes.simulation = sim
-	sim.nodeWords(a.NodeID())[0] = 3
-	sim.nodeWords(b.NodeID())[0] = 3
+	sim.NodeWords(a.NodeID())[0] = 3
+	sim.NodeWords(b.NodeID())[0] = 3
 	Fra_ClassesPrepare(classes, 0, 0)
 	if got := Fra_ClassesCountLits(classes); got != 1 {
 		t.Fatalf("initial literals = %d, want 1", got)
 	}
-	sim.nodeWords(b.NodeID())[0] = 5
+	sim.NodeWords(b.NodeID())[0] = 5
 	if got := Fra_ClassesRefine(classes); got != 1 {
 		t.Fatalf("refinements = %d, want 1", got)
 	}
@@ -34,8 +34,8 @@ func TestClassAPIConstantRefinementSkipped(t *testing.T) {
 	sim := newFraSimulation(graph, 0, 1, 1)
 	classes.simulation = sim
 	Fra_ClassesPrepare(classes, 0, 0)
-	sim.nodeWords(a.NodeID())[0] = 1
-	sim.nodeWords(b.NodeID())[0] = 2
+	sim.NodeWords(a.NodeID())[0] = 1
+	sim.NodeWords(b.NodeID())[0] = 2
 	var skipped int32
 	if got := Fra_ClassesRefine1(classes, 0, &skipped); got != 1 || skipped != 1 {
 		t.Fatalf("refinements, skipped = %d, %d; want 1, 1", got, skipped)

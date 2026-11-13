@@ -10,9 +10,9 @@ func TestImplicationRefinementIgnoresPrefix(t *testing.T) {
 	graph := aig.NewGraph()
 	a, b, c := graph.NewInput(), graph.NewInput(), graph.NewInput()
 	sim := newFraSimulation(graph, 1, 1, 1)
-	sim.nodeWords(a.NodeID())[0], sim.nodeWords(b.NodeID())[0] = 1, 0
-	sim.nodeWords(a.NodeID())[1], sim.nodeWords(b.NodeID())[1] = 3, 1
-	sim.nodeWords(c.NodeID())[1] = 7
+	sim.NodeWords(a.NodeID())[0], sim.NodeWords(b.NodeID())[0] = 1, 0
+	sim.NodeWords(a.NodeID())[1], sim.NodeWords(b.NodeID())[1] = 3, 1
+	sim.NodeWords(c.NodeID())[1] = 7
 	imps := vec.Vec_IntAlloc(2)
 	vec.Vec_IntPush(imps, Fra_ImpCreate(int32(a.NodeID()), int32(b.NodeID())))
 	keep := Fra_ImpCreate(int32(a.NodeID()), int32(c.NodeID()))

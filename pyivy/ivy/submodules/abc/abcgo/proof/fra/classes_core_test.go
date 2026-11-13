@@ -229,16 +229,16 @@ func TestSimulationDrivesCandidateRefinement(t *testing.T) {
 	gate := g.AND(x, y)
 	g.AddOutput(gate)
 	s := newFraSimulation(g, 0, 1, 1)
-	s.frameWords(x.NodeID(), 0)[0] = 0xaaaaaaaa
-	s.frameWords(y.NodeID(), 0)[0] = 0xaaaaaaaa
-	s.simulateOne()
+	s.FrameWords(x.NodeID(), 0)[0] = 0xaaaaaaaa
+	s.FrameWords(y.NodeID(), 0)[0] = 0xaaaaaaaa
+	s.SimulateOne()
 	p := newClassPartition(len(g.Nodes()))
 	p.prepareGraph(g, false, 0, s.Hash, s.IsConstant, s.Equal)
 	if !reflect.DeepEqual(p.classes, [][]int{{x.NodeID(), y.NodeID(), gate.NodeID()}}) {
 		t.Fatalf("unexpected initial simulation classes %v", p.classes)
 	}
-	s.frameWords(y.NodeID(), 0)[0] = 0xcccccccc
-	s.simulateOne()
+	s.FrameWords(y.NodeID(), 0)[0] = 0xcccccccc
+	s.SimulateOne()
 	p.refine(s.Equal)
 	if len(p.classes) != 0 || p.reprs[y.NodeID()] != -1 || p.reprs[gate.NodeID()] != -1 {
 		t.Fatalf("simulation failed to split candidates: %+v", p)

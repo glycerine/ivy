@@ -7,8 +7,8 @@ import (
 
 // Sml_NodeCheckImp checks the simulation-normalized implication left => right.
 func Sml_NodeCheckImp(s *Fra_Sml_t, left, right int32) int32 {
-	l, r := s.nodeWords(int(left)), s.nodeWords(int(right))
-	for i := s.prefixWords; i < s.wordsTotal; i++ {
+	l, r := s.NodeWords(int(left)), s.NodeWords(int(right))
+	for i := s.PrefixWords; i < s.WordsTotal; i++ {
 		if l[i]&^r[i] != 0 {
 			return 0
 		}
@@ -43,16 +43,16 @@ func Fra_ImpComputeStateSpaceRatio(p *Fra_Man_t) float64 {
 		return 0
 	}
 	sim := Fra_SmlSimulateComb(p.pManAig, 64, 0)
-	violations := make([]uint32, sim.wordsTotal)
+	violations := make([]uint32, sim.WordsTotal)
 	for _, imp := range vec.Vec_IntArray(p.pCla.vImps) {
-		left, right := sim.nodeWords(int(Fra_ImpLeft(imp))), sim.nodeWords(int(Fra_ImpRight(imp)))
-		for i := sim.prefixWords; i < sim.wordsTotal; i++ {
+		left, right := sim.NodeWords(int(Fra_ImpLeft(imp))), sim.NodeWords(int(Fra_ImpRight(imp)))
+		for i := sim.PrefixWords; i < sim.WordsTotal; i++ {
 			violations[i] |= left[i] &^ right[i]
 		}
 	}
 	total := 0
-	for _, word := range violations[sim.prefixWords:] {
+	for _, word := range violations[sim.PrefixWords:] {
 		total += bits.OnesCount32(word)
 	}
-	return 100 * float64(total) / float64(32*(sim.wordsTotal-sim.prefixWords))
+	return 100 * float64(total) / float64(32*(sim.WordsTotal-sim.PrefixWords))
 }

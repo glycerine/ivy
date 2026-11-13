@@ -12,8 +12,8 @@ func TestClausCutScoresAndClausePolarity(t *testing.T) {
 	a, b := g.NewInput(), g.NewInput()
 	s := Fra_SmlStart(g, 0, 1, 8)
 	for i := 0; i < 8; i++ {
-		s.nodeWords(a.NodeID())[i] = 0xaaaaaaaa
-		s.nodeWords(b.NodeID())[i] = 0xcccccccc
+		s.NodeWords(a.NodeID())[i] = 0xaaaaaaaa
+		s.NodeWords(b.NodeID())[i] = 0xcccccccc
 	}
 	p := &Clu_Man_t{pCnf: &cnf.Cnf_Dat_t{VarNums: []int32{0, 2, 3}}, vLits: vec.Vec_IntAlloc(4), vClauses: vec.Vec_IntAlloc(2), vCosts: vec.Vec_IntAlloc(2)}
 	scores := clausScores(p, s, []aig.Edge{a, b})

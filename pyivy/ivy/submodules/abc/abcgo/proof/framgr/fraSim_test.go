@@ -14,8 +14,8 @@ func TestFraSmlManagerSimulationAndRefinement(t *testing.T) {
 	g.AddOutput(g.AND(x, y))
 	m := &Fra_Man_t{pManAig: g, pPars: &Fra_Par_t{DSimSatur: 0.1}, pCla: Fra_ClassesStart(g), pSml: Fra_SmlStart(g, 0, 1, 1), pPatWords: make([]uint32, 1), nFramesAll: 1}
 	Fra_SmlSimulate(m, 0)
-	if m.pCla.simulation != m.pSml || m.pSml.rounds < 4 {
-		t.Fatalf("manager did not run simulation and attach class partition: rounds %d", m.pSml.rounds)
+	if m.pCla.simulation != m.pSml || m.pSml.Rounds < 4 {
+		t.Fatalf("manager did not run simulation and attach class partition: rounds %d", m.pSml.Rounds)
 	}
 	Fra_SmlSavePattern1(m, 0)
 	if m.pPatWords[0] != ^uint32(0) {
@@ -36,10 +36,10 @@ func TestFraSmlSimulationFromFile(t *testing.T) {
 		t.Fatal(err)
 	}
 	s := Fra_SmlSimulateCombGiven(g, file, 1, 0)
-	if s == nil || !s.nonconstantOutput {
+	if s == nil || !s.NonconstantOutput {
 		t.Fatal("failed to detect nonzero output")
 	}
-	if got := s.nodeWords(output.NodeID())[0] & 15; got != 6 {
+	if got := s.NodeWords(output.NodeID())[0] & 15; got != 6 {
 		t.Fatalf("output patterns got %04b, want 0110", got)
 	}
 	if err := os.WriteFile(file, []byte("01x1"), 0600); err != nil {
@@ -55,8 +55,8 @@ func TestFraSmlCheckOutputSavesWitness(t *testing.T) {
 	x := g.NewInput()
 	out := g.AddOutput(x)
 	s := Fra_SmlStart(g, 0, 1, 1)
-	s.frameWords(x.NodeID(), 0)[0] = 2
-	s.simulateOne()
+	s.FrameWords(x.NodeID(), 0)[0] = 2
+	s.SimulateOne()
 	m := &Fra_Man_t{pManAig: g, pManFraig: g, pSml: s}
 	if Fra_SmlCheckOutput(m) != 1 {
 		t.Fatal("failed to find output witness")

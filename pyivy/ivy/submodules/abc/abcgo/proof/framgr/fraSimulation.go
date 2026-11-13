@@ -11,11 +11,11 @@ import (
 )
 
 type fraSimulation struct {
-	graph                                                        *aig.Graph
-	prefixFrames, frames, wordsPerFrame, wordsTotal, prefixWords int
-	words                                                        []uint32
-	rounds                                                       int
-	nonconstantOutput                                            bool
+	Graph                                                        *aig.Graph
+	PrefixFrames, Frames, WordsPerFrame, WordsTotal, PrefixWords int
+	Words                                                        []uint32
+	Rounds                                                       int
+	NonconstantOutput                                            bool
 }
 
 func newFraSimulation(graph *aig.Graph, prefix, frames, wordsPerFrame int) *fraSimulation {
@@ -23,24 +23,24 @@ func newFraSimulation(graph *aig.Graph, prefix, frames, wordsPerFrame int) *fraS
 		panic("fra: invalid simulation dimensions")
 	}
 	totalFrames := prefix + frames
-	s := &fraSimulation{graph: graph, prefixFrames: prefix, frames: totalFrames, wordsPerFrame: wordsPerFrame,
-		wordsTotal: totalFrames * wordsPerFrame, prefixWords: prefix * wordsPerFrame}
-	s.words = make([]uint32, len(graph.Nodes())*s.wordsTotal)
+	s := &fraSimulation{Graph: graph, PrefixFrames: prefix, Frames: totalFrames, WordsPerFrame: wordsPerFrame,
+		WordsTotal: totalFrames * wordsPerFrame, PrefixWords: prefix * wordsPerFrame}
+	s.Words = make([]uint32, len(graph.Nodes())*s.WordsTotal)
 	return s
 }
 
-func (s *fraSimulation) nodeWords(id int) []uint32 {
-	if id < 0 || id >= len(s.words)/s.wordsTotal {
+func (s *fraSimulation) NodeWords(id int) []uint32 {
+	if id < 0 || id >= len(s.Words)/s.WordsTotal {
 		panic("fra: invalid simulation node")
 	}
-	return s.words[id*s.wordsTotal : (id+1)*s.wordsTotal]
+	return s.Words[id*s.WordsTotal : (id+1)*s.WordsTotal]
 }
-func (s *fraSimulation) frameWords(id, frame int) []uint32 {
-	if frame < 0 || frame >= s.frames {
+func (s *fraSimulation) FrameWords(id, frame int) []uint32 {
+	if frame < 0 || frame >= s.Frames {
 		panic("fra: invalid simulation frame")
 	}
-	words := s.nodeWords(id)
-	return words[frame*s.wordsPerFrame : (frame+1)*s.wordsPerFrame]
+	words := s.NodeWords(id)
+	return words[frame*s.WordsPerFrame : (frame+1)*s.WordsPerFrame]
 }
 
 var fraSimulationPrimes = [...]uint32{
@@ -57,14 +57,14 @@ var fraSimulationPrimes = [...]uint32{
 // Hash, IsConstant and Equal provide the callbacks for classPartition.
 func (s *fraSimulation) Hash(id int) uint64 {
 	var hash uint32
-	words := s.nodeWords(id)
-	for i := s.prefixWords; i < s.wordsTotal; i++ {
+	words := s.NodeWords(id)
+	for i := s.PrefixWords; i < s.WordsTotal; i++ {
 		hash ^= words[i] * fraSimulationPrimes[i&127]
 	}
 	return uint64(hash)
 }
 func (s *fraSimulation) IsConstant(id int) bool {
-	for _, word := range s.nodeWords(id)[s.prefixWords:] {
+	for _, word := range s.NodeWords(id)[s.PrefixWords:] {
 		if word != 0 {
 			return false
 		}
@@ -72,8 +72,8 @@ func (s *fraSimulation) IsConstant(id int) bool {
 	return true
 }
 func (s *fraSimulation) Equal(a, b int) bool {
-	x, y := s.nodeWords(a), s.nodeWords(b)
-	for i := s.prefixWords; i < s.wordsTotal; i++ {
+	x, y := s.NodeWords(a), s.NodeWords(b)
+	for i := s.PrefixWords; i < s.WordsTotal; i++ {
 		if x[i] != y[i] {
 			return false
 		}
@@ -81,42 +81,42 @@ func (s *fraSimulation) Equal(a, b int) bool {
 	return true
 }
 func (s *fraSimulation) DifferenceWeight(a, b int) int {
-	x, y := s.nodeWords(a), s.nodeWords(b)
+	x, y := s.NodeWords(a), s.NodeWords(b)
 	count := 0
-	for i := s.prefixWords; i < s.wordsTotal; i++ {
+	for i := s.PrefixWords; i < s.WordsTotal; i++ {
 		count += bits.OnesCount32(x[i] ^ y[i])
 	}
 	return count
 }
 func (s *fraSimulation) CountOnes(id int) int {
 	count := 0
-	for _, word := range s.nodeWords(id) {
+	for _, word := range s.NodeWords(id) {
 		count += bits.OnesCount32(word)
 	}
 	return count
 }
-func (s *fraSimulation) assignFrame(id, frame int, value bool) {
+func (s *fraSimulation) AssignFrame(id, frame int, value bool) {
 	var word uint32
 	if value {
 		word = ^uint32(0)
 	}
-	words := s.frameWords(id, frame)
+	words := s.FrameWords(id, frame)
 	for i := range words {
 		words[i] = word
 	}
 }
-func (s *fraSimulation) initialize(initialState bool) {
-	inputs := s.graph.Inputs()
-	registers := int(aig.Aig_ManRegNum(s.graph))
+func (s *fraSimulation) Initialize(initialState bool) {
+	inputs := s.Graph.Inputs()
+	registers := int(aig.Aig_ManRegNum(s.Graph))
 	if initialState && (registers == 0 || registers >= len(inputs)) {
 		panic("fra: invalid sequential initial state")
 	}
 	for i, input := range inputs {
 		if initialState && i >= len(inputs)-registers {
-			s.assignFrame(input.NodeID(), 0, false)
+			s.AssignFrame(input.NodeID(), 0, false)
 			continue
 		}
-		words := s.nodeWords(input.NodeID())
+		words := s.NodeWords(input.NodeID())
 		for j := range words {
 			words[j] = aig.Aig_ManRandom(0)
 		}
@@ -125,48 +125,48 @@ func (s *fraSimulation) initialize(initialState bool) {
 
 // assignDistance1 packs a counterexample and, for one frame, flips one input
 // in each successive bit, following Fra_SmlAssignDist1.
-func (s *fraSimulation) assignDistance1(pattern []uint32) {
-	inputs := s.graph.Inputs()
-	registers := int(aig.Aig_ManRegNum(s.graph))
+func (s *fraSimulation) AssignDistance1(pattern []uint32) {
+	inputs := s.Graph.Inputs()
+	registers := int(aig.Aig_ManRegNum(s.Graph))
 	trueInputs := len(inputs) - registers
 	required := len(inputs)
-	if s.frames > 1 {
-		required = trueInputs*s.frames + registers
+	if s.Frames > 1 {
+		required = trueInputs*s.Frames + registers
 	}
 	if len(pattern) < (required+31)/32 {
 		panic("fra: short simulation pattern")
 	}
 	bit := func(i int) bool { return pattern[i/32]&(uint32(1)<<uint(i%32)) != 0 }
-	if s.frames == 1 {
+	if s.Frames == 1 {
 		for i, input := range inputs {
-			s.assignFrame(input.NodeID(), 0, bit(i))
+			s.AssignFrame(input.NodeID(), 0, bit(i))
 		}
-		limit := min(len(inputs), s.wordsTotal*32-1)
+		limit := min(len(inputs), s.WordsTotal*32-1)
 		for i := 0; i < limit; i++ {
-			words := s.nodeWords(inputs[i].NodeID())
+			words := s.NodeWords(inputs[i].NodeID())
 			words[(i+1)/32] ^= uint32(1) << uint((i+1)%32)
 		}
 		return
 	}
-	for frame := 0; frame < s.frames; frame++ {
+	for frame := 0; frame < s.Frames; frame++ {
 		for i := 0; i < trueInputs; i++ {
-			s.assignFrame(inputs[i].NodeID(), frame, bit(trueInputs*frame+i))
+			s.AssignFrame(inputs[i].NodeID(), frame, bit(trueInputs*frame+i))
 		}
 	}
 	for i := 0; i < registers; i++ {
-		s.assignFrame(inputs[trueInputs+i].NodeID(), 0, bit(trueInputs*s.frames+i))
+		s.AssignFrame(inputs[trueInputs+i].NodeID(), 0, bit(trueInputs*s.Frames+i))
 	}
 }
 
 // initializeGiven loads input-major values from consecutive test patterns and
 // pads the last machine word with the final pattern, as in fraSim.c.
-func (s *fraSimulation) initializeGiven(patterns []byte) {
-	inputs := s.graph.Inputs()
-	if aig.Aig_ManRegNum(s.graph) != 0 || len(inputs) == 0 || len(patterns) == 0 || len(patterns)%len(inputs) != 0 {
+func (s *fraSimulation) InitializeGiven(patterns []byte) {
+	inputs := s.Graph.Inputs()
+	if aig.Aig_ManRegNum(s.Graph) != 0 || len(inputs) == 0 || len(patterns) == 0 || len(patterns)%len(inputs) != 0 {
 		panic("fra: invalid combinational simulation patterns")
 	}
 	count := len(patterns) / len(inputs)
-	if count > s.wordsTotal*32 {
+	if count > s.WordsTotal*32 {
 		panic("fra: too many simulation patterns")
 	}
 	for _, value := range patterns {
@@ -175,9 +175,9 @@ func (s *fraSimulation) initializeGiven(patterns []byte) {
 		}
 	}
 	for i, input := range inputs {
-		words := s.nodeWords(input.NodeID())
+		words := s.NodeWords(input.NodeID())
 		clear(words)
-		for k := 0; k < s.wordsTotal*32; k++ {
+		for k := 0; k < s.WordsTotal*32; k++ {
 			index := min(k, count-1)
 			if patterns[index*len(inputs)+i] != 0 {
 				words[k/32] |= uint32(1) << uint(k%32)
@@ -186,9 +186,9 @@ func (s *fraSimulation) initializeGiven(patterns []byte) {
 	}
 }
 
-func (s *fraSimulation) hasNonconstantOutput() bool {
-	outputs := s.graph.Outputs()
-	primaryOutputs := len(outputs) - int(aig.Aig_ManRegNum(s.graph))
+func (s *fraSimulation) HasNonconstantOutput() bool {
+	outputs := s.Graph.Outputs()
+	primaryOutputs := len(outputs) - int(aig.Aig_ManRegNum(s.Graph))
 	for _, output := range outputs[:primaryOutputs] {
 		if !s.IsConstant(output.NodeID()) {
 			return true
@@ -198,22 +198,22 @@ func (s *fraSimulation) hasNonconstantOutput() bool {
 }
 
 // simulateOne performs node evaluation and latch transfer in frame order.
-func (s *fraSimulation) simulateOne() {
-	nodes := s.graph.Nodes()
-	outputs := s.graph.Outputs()
-	registers := int(aig.Aig_ManRegNum(s.graph))
-	for frame := 0; frame < s.frames; frame++ {
-		for _, edge := range s.graph.LiveEdges() {
+func (s *fraSimulation) SimulateOne() {
+	nodes := s.Graph.Nodes()
+	outputs := s.Graph.Outputs()
+	registers := int(aig.Aig_ManRegNum(s.Graph))
+	for frame := 0; frame < s.Frames; frame++ {
+		for _, edge := range s.Graph.LiveEdges() {
 			id := edge.NodeID()
 			node := nodes[id]
 			if node.Kind == aig.And || node.Kind == aig.ExclusiveOr || node.Kind == aig.Buffer {
-				s.simulateNode(edge, frame)
+				s.SimulateNode(edge, frame)
 			}
 		}
 		for _, out := range outputs {
 			node := nodes[out.NodeID()]
-			src := s.frameWords(node.Fanins[0].NodeID(), frame)
-			dst := s.frameWords(out.NodeID(), frame)
+			src := s.FrameWords(node.Fanins[0].NodeID(), frame)
+			dst := s.FrameWords(out.NodeID(), frame)
 			flip := nodes[node.Fanins[0].NodeID()].Phase != node.Fanins[0].Complemented()
 			for i := range dst {
 				dst[i] = src[i]
@@ -222,29 +222,29 @@ func (s *fraSimulation) simulateOne() {
 				}
 			}
 		}
-		if frame+1 < s.frames {
+		if frame+1 < s.Frames {
 			for i := 0; i < registers; i++ {
-				li := aig.Aig_ManLi(s.graph, int32(i))
-				lo := aig.Aig_ManLo(s.graph, int32(i))
-				copy(s.frameWords(lo.NodeID(), frame+1), s.frameWords(li.NodeID(), frame))
+				li := aig.Aig_ManLi(s.Graph, int32(i))
+				lo := aig.Aig_ManLo(s.Graph, int32(i))
+				copy(s.FrameWords(lo.NodeID(), frame+1), s.FrameWords(li.NodeID(), frame))
 			}
 		}
 	}
-	s.rounds++
+	s.Rounds++
 }
 
 // simulateNode updates one phase-normalized AIG node in a single frame.
-func (s *fraSimulation) simulateNode(edge aig.Edge, frame int) {
-	nodes := s.graph.Nodes()
+func (s *fraSimulation) SimulateNode(edge aig.Edge, frame int) {
+	nodes := s.Graph.Nodes()
 	node := nodes[edge.NodeID()]
 	if node.Kind != aig.And && node.Kind != aig.ExclusiveOr && node.Kind != aig.Buffer {
 		panic("fra: cannot simulate non-node")
 	}
-	dst := s.frameWords(edge.NodeID(), frame)
-	a := s.frameWords(node.Fanins[0].NodeID(), frame)
+	dst := s.FrameWords(edge.NodeID(), frame)
+	a := s.FrameWords(node.Fanins[0].NodeID(), frame)
 	var b []uint32
 	if node.Kind != aig.Buffer {
-		b = s.frameWords(node.Fanins[1].NodeID(), frame)
+		b = s.FrameWords(node.Fanins[1].NodeID(), frame)
 	}
 	for i := range dst {
 		left := a[i]

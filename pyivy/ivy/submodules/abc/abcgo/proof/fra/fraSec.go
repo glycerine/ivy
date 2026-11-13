@@ -310,7 +310,7 @@ func fraFraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph, now f
 			}
 			if graph.RegisterCount() > 0 {
 				sim := Fra_SmlSimulateSeq(graph, 0, 128*frames, 1+16/(1+aig.Aig_ManNodeNum(graph)/1000), 1)
-				if sim.nonconstantOutput {
+				if sim.NonconstantOutput {
 					if cex := Fra_SmlGetCounterExample(sim); cex != nil {
 						_ = graph.SetSequentialCounterexample(cex)
 					}

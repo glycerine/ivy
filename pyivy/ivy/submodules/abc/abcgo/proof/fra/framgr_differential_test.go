@@ -12,6 +12,7 @@ import (
 // Both entry points must accept the same configuration object without a copy
 // or field-by-field conversion as the manager types are consolidated.
 var _ *framgr.CombOptions = (*Fra_Par_t)(nil)
+var _ *framgr.Simulation = (*fraSimulation)(nil)
 
 // The extracted manager must preserve the original manager's combinational
 // behavior under the exact configuration used by the legacy CEC fallback.

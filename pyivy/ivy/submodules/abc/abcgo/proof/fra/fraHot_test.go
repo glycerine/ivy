@@ -13,8 +13,8 @@ func TestOneHotComputeAndConstraints(t *testing.T) {
 	g.AddOutput(b)
 	aig.Aig_ManSetRegNum(g, 2)
 	sim := newFraSimulation(g, 0, 1, 1)
-	sim.nodeWords(a.NodeID())[0] = 0x55555555
-	sim.nodeWords(b.NodeID())[0] = 0xaaaaaaaa
+	sim.NodeWords(a.NodeID())[0] = 0x55555555
+	sim.NodeWords(b.NodeID())[0] = 0xaaaaaaaa
 	p := &Fra_Man_t{pManAig: g, pManFraig: g, pPars: &Fra_Par_t{NFramesK: 1}, pSml: sim, pSat: bsat.NewSolver(), pMemSatNums: make([]int32, len(g.Nodes()))}
 	clauses := Fra_OneHotCompute(p, sim)
 	if Fra_OneHotCount(p, clauses) != 1 {

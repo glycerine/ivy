@@ -8,11 +8,11 @@ import (
 )
 
 func Fra_OneHotCompute(p *Fra_Man_t, sim *Fra_Sml_t) *vec.Vec_Int_t {
-	if sim.graph != p.pManAig {
+	if sim.Graph != p.pManAig {
 		panic("fra: wrong one-hot simulation graph")
 	}
-	inputs := sim.graph.Inputs()
-	first := len(inputs) - int(sim.graph.RegisterCount())
+	inputs := sim.Graph.Inputs()
+	first := len(inputs) - int(sim.Graph.RegisterCount())
 	out := vec.Vec_IntAlloc(100)
 	for i := first; i < len(inputs); i++ {
 		a := inputs[i]

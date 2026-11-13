@@ -8,29 +8,29 @@ import (
 )
 
 // counterExample reconstructs the first failing simulated trace and verifies it.
-func (s *fraSimulation) counterExample() *util.Abc_Cex_t {
-	g := s.graph
+func (s *fraSimulation) CounterExample() *util.Abc_Cex_t {
+	g := s.Graph
 	regs := int(aig.Aig_ManRegNum(g))
 	inputs, outputs := g.Inputs(), g.Outputs()
 	pis := len(inputs) - regs
 	for po, output := range outputs[:len(outputs)-regs] {
-		words := s.nodeWords(output.NodeID())
-		for w := s.prefixWords; w < len(words); w++ {
+		words := s.NodeWords(output.NodeID())
+		for w := s.PrefixWords; w < len(words); w++ {
 			if words[w] == 0 {
 				continue
 			}
-			frame := w / s.wordsPerFrame
-			bit := 32*(w%s.wordsPerFrame) + bits.TrailingZeros32(words[w])
+			frame := w / s.WordsPerFrame
+			bit := 32*(w%s.WordsPerFrame) + bits.TrailingZeros32(words[w])
 			cex := util.Abc_CexAlloc(int32(regs), int32(pis), int32(frame+1))
 			cex.IPo, cex.IFrame = int32(po), int32(frame)
 			for i := 0; i < regs; i++ {
-				if s.nodeWords(inputs[pis+i].NodeID())[bit/32]&(uint32(1)<<uint(bit%32)) != 0 {
+				if s.NodeWords(inputs[pis+i].NodeID())[bit/32]&(uint32(1)<<uint(bit%32)) != 0 {
 					util.Abc_InfoSetBit(cex.PData, int32(i))
 				}
 			}
 			for f := 0; f <= frame; f++ {
 				for i := 0; i < pis; i++ {
-					if s.frameWords(inputs[i].NodeID(), f)[bit/32]&(uint32(1)<<uint(bit%32)) != 0 {
+					if s.FrameWords(inputs[i].NodeID(), f)[bit/32]&(uint32(1)<<uint(bit%32)) != 0 {
 						util.Abc_InfoSetBit(cex.PData, int32(regs+f*pis+i))
 					}
 				}

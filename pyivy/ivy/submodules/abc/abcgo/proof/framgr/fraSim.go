@@ -69,7 +69,7 @@ func Fra_SmlSavePattern(p *Fra_Man_t) {
 func Fra_SmlCheckOutputSavePattern(p *Fra_Man_t, output aig.Edge) {
 	s := p.pSml
 	fanin := p.pManAig.Node(output).Fanins[0]
-	words := s.nodeWords(fanin.NodeID())
+	words := s.NodeWords(fanin.NodeID())
 	word := -1
 	for i, value := range words {
 		if value != 0 {
@@ -87,7 +87,7 @@ func Fra_SmlCheckOutputSavePattern(p *Fra_Man_t, output aig.Edge) {
 		panic("fra: model has too few inputs")
 	}
 	for i, input := range inputs {
-		model[i] = int32((s.nodeWords(input.NodeID())[bit/32] >> uint(bit%32)) & 1)
+		model[i] = int32((s.NodeWords(input.NodeID())[bit/32] >> uint(bit%32)) & 1)
 	}
 	model[len(inputs)] = int32(output.NodeID())
 	if p.pManFraig.Data != nil {
@@ -106,18 +106,18 @@ func Fra_SmlCheckOutput(p *Fra_Man_t) int32 {
 	return 0
 }
 func Fra_SmlAssignRandom(s *Fra_Sml_t, obj aig.Edge) {
-	for i := range s.nodeWords(obj.NodeID()) {
-		s.nodeWords(obj.NodeID())[i] = aig.Aig_ManRandom(0)
+	for i := range s.NodeWords(obj.NodeID()) {
+		s.NodeWords(obj.NodeID())[i] = aig.Aig_ManRandom(0)
 	}
 }
 func Fra_SmlAssignConst(s *Fra_Sml_t, obj aig.Edge, value, frame int32) {
-	s.assignFrame(obj.NodeID(), int(frame), value != 0)
+	s.AssignFrame(obj.NodeID(), int(frame), value != 0)
 }
-func Fra_SmlInitialize(s *Fra_Sml_t, init int32)                  { s.initialize(init != 0) }
-func Fra_SmlAssignDist1(s *Fra_Sml_t, pattern []uint32)           { s.assignDistance1(pattern) }
-func Fra_SmlNodeSimulate(s *Fra_Sml_t, obj aig.Edge, frame int32) { s.simulateNode(obj, int(frame)) }
+func Fra_SmlInitialize(s *Fra_Sml_t, init int32)                  { s.Initialize(init != 0) }
+func Fra_SmlAssignDist1(s *Fra_Sml_t, pattern []uint32)           { s.AssignDistance1(pattern) }
+func Fra_SmlNodeSimulate(s *Fra_Sml_t, obj aig.Edge, frame int32) { s.SimulateNode(obj, int(frame)) }
 func Fra_SmlNodesCompareInFrame(s *Fra_Sml_t, a, b aig.Edge, frameA, frameB int32) int32 {
-	x, y := s.frameWords(a.NodeID(), int(frameA)), s.frameWords(b.NodeID(), int(frameB))
+	x, y := s.FrameWords(a.NodeID(), int(frameA)), s.FrameWords(b.NodeID(), int(frameB))
 	for i := range x {
 		if x[i] != y[i] {
 			return 0
@@ -126,9 +126,9 @@ func Fra_SmlNodesCompareInFrame(s *Fra_Sml_t, a, b aig.Edge, frameA, frameB int3
 	return 1
 }
 func Fra_SmlNodeCopyFanin(s *Fra_Sml_t, obj aig.Edge, frame int32) {
-	nodes := s.graph.Nodes()
+	nodes := s.Graph.Nodes()
 	child := nodes[obj.NodeID()].Fanins[0]
-	src, dst := s.frameWords(child.NodeID(), int(frame)), s.frameWords(obj.NodeID(), int(frame))
+	src, dst := s.FrameWords(child.NodeID(), int(frame)), s.FrameWords(obj.NodeID(), int(frame))
 	flip := nodes[child.NodeID()].Phase != child.Complemented()
 	for i := range dst {
 		dst[i] = src[i]
@@ -138,14 +138,14 @@ func Fra_SmlNodeCopyFanin(s *Fra_Sml_t, obj aig.Edge, frame int32) {
 	}
 }
 func Fra_SmlNodeTransferNext(s *Fra_Sml_t, out, in aig.Edge, frame int32) {
-	copy(s.frameWords(in.NodeID(), int(frame)+1), s.frameWords(out.NodeID(), int(frame)))
+	copy(s.FrameWords(in.NodeID(), int(frame)+1), s.FrameWords(out.NodeID(), int(frame)))
 }
-func Fra_SmlCheckNonConstOutputs(s *Fra_Sml_t) int32 { return fraBool(s.hasNonconstantOutput()) }
-func Fra_SmlSimulateOne(s *Fra_Sml_t)                { s.simulateOne() }
+func Fra_SmlCheckNonConstOutputs(s *Fra_Sml_t) int32 { return fraBool(s.HasNonconstantOutput()) }
+func Fra_SmlSimulateOne(s *Fra_Sml_t)                { s.SimulateOne() }
 func Fra_SmlResimulate(p *Fra_Man_t) {
 	p.pCla.simulation = p.pSml
-	p.pSml.assignDistance1(p.pPatWords)
-	p.pSml.simulateOne()
+	p.pSml.AssignDistance1(p.pPatWords)
+	p.pSml.SimulateOne()
 	if p.pPars.FProve != 0 && Fra_SmlCheckOutput(p) != 0 {
 		return
 	}
@@ -164,14 +164,14 @@ func Fra_SmlResimulate(p *Fra_Man_t) {
 }
 func Fra_SmlSimulate(p *Fra_Man_t, init int32) {
 	p.pCla.simulation = p.pSml
-	run := func() bool { p.pSml.simulateOne(); return p.pPars.FProve != 0 && Fra_SmlCheckOutput(p) != 0 }
+	run := func() bool { p.pSml.SimulateOne(); return p.pPars.FProve != 0 && Fra_SmlCheckOutput(p) != 0 }
 	refine := func() int32 {
 		start := time.Now()
 		n := Fra_ClassesRefine(p.pCla) + Fra_ClassesRefine1(p.pCla, 1, nil)
 		p.timeRef += time.Since(start)
 		return n
 	}
-	p.pSml.initialize(init != 0)
+	p.pSml.Initialize(init != 0)
 	if run() {
 		return
 	}
@@ -182,14 +182,14 @@ func Fra_SmlSimulate(p *Fra_Man_t, init int32) {
 		} else {
 			Fra_SmlSavePattern0(p, init)
 		}
-		p.pSml.assignDistance1(p.pPatWords)
+		p.pSml.AssignDistance1(p.pPatWords)
 		if run() {
 			return
 		}
 		refine()
 	}
 	for {
-		p.pSml.initialize(init != 0)
+		p.pSml.Initialize(init != 0)
 		if run() {
 			return
 		}
@@ -206,10 +206,10 @@ func Fra_SmlStart(g *aig.Graph, prefix, frames, words int32) *Fra_Sml_t {
 func Fra_SmlStop(_ *Fra_Sml_t) {}
 func Fra_SmlSimulateComb(g *aig.Graph, words, check int32) *Fra_Sml_t {
 	s := Fra_SmlStart(g, 0, 1, words)
-	s.initialize(false)
-	s.simulateOne()
+	s.Initialize(false)
+	s.SimulateOne()
 	if check != 0 {
-		s.nonconstantOutput = s.hasNonconstantOutput()
+		s.NonconstantOutput = s.HasNonconstantOutput()
 	}
 	return s
 }
@@ -233,12 +233,12 @@ func Fra_SmlSimulateReadFile(name string) *vec.Vec_Str_t {
 	return result
 }
 func Fra_SmlInitializeGiven(s *Fra_Sml_t, values *vec.Vec_Str_t) {
-	s.initializeGiven(vec.Vec_StrArray(values))
+	s.InitializeGiven(vec.Vec_StrArray(values))
 }
 func Fra_SmlPrintOutputs(s *Fra_Sml_t, patterns int32) {
 	for i := 0; i < int(patterns); i++ {
-		for _, out := range s.graph.Outputs() {
-			fmt.Printf("%d", (s.nodeWords(out.NodeID())[i/32]>>uint(i%32))&1)
+		for _, out := range s.Graph.Outputs() {
+			fmt.Printf("%d", (s.NodeWords(out.NodeID())[i/32]>>uint(i%32))&1)
 		}
 		fmt.Println()
 	}
@@ -260,9 +260,9 @@ func Fra_SmlSimulateCombGiven(g *aig.Graph, name string, check, verbose int32) *
 	patterns := n / inputs
 	s := Fra_SmlStart(g, 0, 1, int32((patterns+31)/32))
 	Fra_SmlInitializeGiven(s, values)
-	s.simulateOne()
+	s.SimulateOne()
 	if check != 0 {
-		s.nonconstantOutput = s.hasNonconstantOutput()
+		s.NonconstantOutput = s.HasNonconstantOutput()
 	}
 	if verbose != 0 {
 		Fra_SmlPrintOutputs(s, int32(patterns))
@@ -271,14 +271,14 @@ func Fra_SmlSimulateCombGiven(g *aig.Graph, name string, check, verbose int32) *
 }
 func Fra_SmlSimulateSeq(g *aig.Graph, prefix, frames, words, check int32) *Fra_Sml_t {
 	s := Fra_SmlStart(g, prefix, frames, words)
-	s.initialize(true)
-	s.simulateOne()
+	s.Initialize(true)
+	s.SimulateOne()
 	if check != 0 {
-		s.nonconstantOutput = s.hasNonconstantOutput()
+		s.NonconstantOutput = s.HasNonconstantOutput()
 	}
 	return s
 }
-func Fra_SmlGetCounterExample(s *Fra_Sml_t) *util.Abc_Cex_t { return s.counterExample() }
+func Fra_SmlGetCounterExample(s *Fra_Sml_t) *util.Abc_Cex_t { return s.CounterExample() }
 func Fra_SmlCopyCounterExample(g, frames *aig.Graph, model []int32) *util.Abc_Cex_t {
 	return copyFrameCounterExample(g, frames, model)
 }

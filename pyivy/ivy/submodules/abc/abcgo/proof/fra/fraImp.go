@@ -15,39 +15,39 @@ import (
 
 func Fra_SmlCountOnesOne(s *Fra_Sml_t, node int32) int32 {
 	var result int32
-	for _, word := range s.nodeWords(int(node))[s.prefixWords:] {
+	for _, word := range s.NodeWords(int(node))[s.PrefixWords:] {
 		result += int32(bits.OnesCount32(word))
 	}
 	return result
 }
 func Fra_SmlCountOnes(s *Fra_Sml_t) []int32 {
-	counts := make([]int32, len(s.graph.Nodes()))
-	for _, edge := range s.graph.LiveEdges() {
+	counts := make([]int32, len(s.Graph.Nodes()))
+	for _, edge := range s.Graph.LiveEdges() {
 		counts[edge.NodeID()] = Fra_SmlCountOnesOne(s, int32(edge.NodeID()))
 	}
 	return counts
 }
 func Sml_NodeNotImpWeight(s *Fra_Sml_t, left, right int32) int32 {
-	a, b := s.nodeWords(int(left)), s.nodeWords(int(right))
+	a, b := s.NodeWords(int(left)), s.NodeWords(int(right))
 	var count int32
-	for i := s.prefixWords; i < s.wordsTotal; i++ {
+	for i := s.PrefixWords; i < s.WordsTotal; i++ {
 		count += int32(bits.OnesCount32(a[i] &^ b[i]))
 	}
 	return count
 }
 func Sml_NodeSaveNotImpPatterns(s *Fra_Sml_t, left, right int32, result []uint32) {
-	a, b := s.nodeWords(int(left)), s.nodeWords(int(right))
-	for i := s.prefixWords; i < s.wordsTotal; i++ {
+	a, b := s.NodeWords(int(left)), s.NodeWords(int(right))
+	for i := s.PrefixWords; i < s.WordsTotal; i++ {
 		result[i] |= a[i] &^ b[i]
 	}
 }
 func Fra_SmlSortUsingOnes(s *Fra_Sml_t, latchCorr int32) [][]int32 {
-	buckets := make([][]int32, s.wordsTotal*32+1)
-	for _, edge := range s.graph.LiveEdges() {
+	buckets := make([][]int32, s.WordsTotal*32+1)
+	for _, edge := range s.Graph.LiveEdges() {
 		if edge.NodeID() == 0 {
 			continue
 		}
-		kind := s.graph.Node(edge).Kind
+		kind := s.Graph.Node(edge).Kind
 		if kind != aig.Input && (latchCorr != 0 || kind != aig.And && kind != aig.ExclusiveOr) {
 			continue
 		}
@@ -112,7 +112,7 @@ func Fra_ImpDerive(p *Fra_Man_t, maxLimit, useLimit, latchCorr int32) *vec.Vec_I
 		}
 	}
 	minCost, maxCost := int32(^uint32(0)>>1), int32(0)
-	for k := seq.wordsTotal * 32; k > 0 && vec.Vec_IntSize(imps) < int(maxLimit); k-- {
+	for k := seq.WordsTotal * 32; k > 0 && vec.Vec_IntSize(imps) < int(maxLimit); k-- {
 		for i := k - 1; i > 0 && vec.Vec_IntSize(imps) < int(maxLimit); i-- {
 			for _, left := range buckets[i] {
 				for _, right := range buckets[k] {

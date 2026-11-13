@@ -46,8 +46,8 @@ func oneHotViolation(a, b uint32, negA, negB bool) uint32 {
 	}
 }
 func Fra_OneHotNodesAreClause(s *Fra_Sml_t, a, b aig.Edge, negA, negB int32) int32 {
-	left, right := s.nodeWords(a.NodeID()), s.nodeWords(b.NodeID())
-	for i := s.prefixWords; i < s.wordsTotal; i++ {
+	left, right := s.NodeWords(a.NodeID()), s.NodeWords(b.NodeID())
+	for i := s.PrefixWords; i < s.WordsTotal; i++ {
 		if oneHotViolation(left[i], right[i], negA != 0, negB != 0) != 0 {
 			return 0
 		}
@@ -55,7 +55,7 @@ func Fra_OneHotNodesAreClause(s *Fra_Sml_t, a, b aig.Edge, negA, negB int32) int
 	return 1
 }
 func Fra_OneHotRefineUsingCex(p *Fra_Man_t, clauses *vec.Vec_Int_t) int32 {
-	if p.pSml.graph != p.pManAig {
+	if p.pSml.Graph != p.pManAig {
 		panic("fra: wrong one-hot simulation graph")
 	}
 	inputs := p.pManAig.Inputs()

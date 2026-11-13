@@ -67,7 +67,7 @@ type Fra_Man_t struct {
 	timeSatFail, timeRef, timeTotal, time1, time2                         abctime
 }
 
-func Fra_ObjSim(s *Fra_Sml_t, id int32) []uint32 { return s.nodeWords(int(id)) }
+func Fra_ObjSim(s *Fra_Sml_t, id int32) []uint32 { return s.NodeWords(int(id)) }
 func Fra_ObjRandomSim() uint32                   { return aig.Aig_ManRandom(0) }
 func Fra_ObjFraig(m *Fra_Man_t, object aig.Edge, frame int32) aig.Edge {
 	return m.pMemFraig[int32(object.NodeID())*m.nFramesAll+frame]

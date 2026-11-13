@@ -12,12 +12,12 @@ import (
 )
 
 func clausScores(p *Clu_Man_t, s *Fra_Sml_t, leaves []aig.Edge) []int32 {
-	if len(leaves) < 2 || len(leaves) > 16 || (s.wordsTotal-int(p.nSimWordsPref))%8 != 0 {
+	if len(leaves) < 2 || len(leaves) > 16 || (s.WordsTotal-int(p.nSimWordsPref))%8 != 0 {
 		panic("fra: invalid simulation cut")
 	}
 	sim := make([][]uint32, len(leaves))
 	for i, e := range leaves {
-		sim[i] = s.nodeWords(e.NodeID())
+		sim[i] = s.NodeWords(e.NodeID())
 	}
 	return clausPatternScores(sim, int(p.nSimWordsPref))
 }
@@ -86,8 +86,8 @@ func Fra_ClausSmlNodeIsConst(s *Fra_Sml_t, obj aig.Edge) int32 {
 	return fraBool(s.IsConstant(obj.NodeID()))
 }
 func Fra_ClausSmlNodesAreImp(s *Fra_Sml_t, left, right aig.Edge) int32 {
-	a, b := s.nodeWords(left.NodeID()), s.nodeWords(right.NodeID())
-	for i := s.prefixWords; i < s.wordsTotal; i++ {
+	a, b := s.NodeWords(left.NodeID()), s.NodeWords(right.NodeID())
+	for i := s.PrefixWords; i < s.WordsTotal; i++ {
 		if a[i]&^b[i] != 0 {
 			return 0
 		}
@@ -95,8 +95,8 @@ func Fra_ClausSmlNodesAreImp(s *Fra_Sml_t, left, right aig.Edge) int32 {
 	return 1
 }
 func Fra_ClausSmlNodesAreImpC(s *Fra_Sml_t, left, right aig.Edge) int32 {
-	a, b := s.nodeWords(left.NodeID()), s.nodeWords(right.NodeID())
-	for i := s.prefixWords; i < s.wordsTotal; i++ {
+	a, b := s.NodeWords(left.NodeID()), s.NodeWords(right.NodeID())
+	for i := s.PrefixWords; i < s.WordsTotal; i++ {
 		if a[i]&b[i] != 0 {
 			return 0
 		}
@@ -104,9 +104,9 @@ func Fra_ClausSmlNodesAreImpC(s *Fra_Sml_t, left, right aig.Edge) int32 {
 	return 1
 }
 func Fra_ClausCollectLatchClauses(p *Clu_Man_t, s *Fra_Sml_t) int32 {
-	oldPrefix := s.prefixWords
-	s.prefixWords = int(p.nSimWordsPref)
-	defer func() { s.prefixWords = oldPrefix }()
+	oldPrefix := s.PrefixWords
+	s.PrefixWords = int(p.nSimWordsPref)
+	defer func() { s.PrefixWords = oldPrefix }()
 	inputs := p.pAig.Inputs()
 	regs := int(p.pAig.RegisterCount())
 	latches := inputs[len(inputs)-regs:]
@@ -155,7 +155,7 @@ func Fra_ClausCollectLatchClauses(p *Clu_Man_t, s *Fra_Sml_t) int32 {
 func clausSimulations(p *Clu_Man_t) (*Fra_Sml_t, *Fra_Sml_t) {
 	aig.Aig_ManRandom(1)
 	seq := Fra_SmlSimulateSeq(p.pAig, 0, p.nPref+p.nSimFrames, p.nSimWords/p.nSimFrames, 1)
-	if p.fTarget != 0 && seq.nonconstantOutput {
+	if p.fTarget != 0 && seq.NonconstantOutput {
 		fmt.Println("Property failed after sequential simulation!")
 		return nil, nil
 	}
