@@ -53,30 +53,42 @@ func giaRecordReprImport(p *Gia_Man_t, node, representative int32) {
 }
 
 func Gia_ManReprFromAigRepr(pAig *aig.Graph, pGia *Gia_Man_t) {
-	giaPrepareReprImport(pGia)
-	inverse := make(map[int]int32, pGia.nObjs)
-	for _, obj := range pGia.pObjs {
-		if Gia_ObjIsCo(obj) == 0 {
-			id := aig.Edge(obj.Value).NodeID()
-			if first, ok := inverse[id]; ok {
-				giaRecordReprImport(pGia, obj.id, first)
-			} else {
-				inverse[id] = obj.id
-			}
-		}
+	if !aig.Aig_ManHasReprs(pAig) {
+		panic("gia: missing AIG representative storage")
 	}
-	for source, target := range inverse {
-		repr := aig.Aig_ObjRepr(pAig, aig.Edge(source)<<1)
+	if pGia.pReprs != nil {
+		panic("gia: representative storage already initialized")
+	}
+	if Gia_ManObjNum(pGia)-Gia_ManCoNum(pGia) != aig.Aig_ManObjNum(pAig)-aig.Aig_ManCoNum(pAig) {
+		panic("gia: AIG/GIA object counts differ")
+	}
+	giaPrepareReprImport(pGia)
+	for _, obj := range pGia.pObjs {
+		if Gia_ObjIsCo(obj) != 0 {
+			continue
+		}
+		value := Gia_ObjValue(obj)
+		if obj.id != 0 && value&1 != 0 {
+			panic("gia: complemented GIA/AIG copy")
+		}
+		aig.Aig_ObjSetCopy(pAig, aig.Edge(uint32(value)>>1)<<1, aig.Edge(obj.id))
+	}
+	for id := int32(0); id < aig.Aig_ManObjNumMax(pAig); id++ {
+		node := aig.Edge(id) << 1
+		if aig.Aig_ObjIsNone(pAig, node) || aig.Aig_ObjIsCo(pAig, node) {
+			continue
+		}
+		repr := aig.Aig_ObjRepr(pAig, node)
 		if repr == aig.InvalidEdge {
 			continue
 		}
-		representative, ok := inverse[repr.NodeID()]
-		if !ok {
-			panic("gia: AIG representative has no GIA copy")
+		mapped := aig.Aig_ObjCopy(pAig, node)
+		representative := aig.Aig_ObjCopy(pAig, repr)
+		if mapped == aig.InvalidEdge || representative == aig.InvalidEdge {
+			panic("gia: missing GIA object mapping")
 		}
-		giaRecordReprImport(pGia, target, representative)
+		Gia_ObjSetRepr(pGia, int32(mapped), int32(representative))
 	}
-	giaFlattenReprs(pGia)
 	pGia.pNexts = Gia_ManDeriveNexts(pGia)
 }
 func Gia_ManReprFromAigRepr2(pAig *aig.Graph, pGia *Gia_Man_t) {
