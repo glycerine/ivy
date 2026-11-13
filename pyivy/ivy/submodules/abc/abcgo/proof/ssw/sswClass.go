@@ -37,29 +37,7 @@ import "time"
 */
 
 // internal representation of candidate equivalence classes
-type Ssw_Cla_t_ struct {
-    // class information
-    pAig       *Aig_Man_t;             // original AIG manager
-    pId2Class     ***Aig_Obj_t;        // non-const classes by ID of repr node
-    pClassSizes             *int32;      // sizes of each equivalence class
-    fConstCorr              int32;
-    // statistics
-    nClasses              int32;         // the total number of non-const classes
-    nCands1              int32;          // the total number of const candidates
-    nLits              int32;            // the number of literals in all classes
-    // memory
-    pMemClasses      **Aig_Obj_t;      // memory allocated for equivalence classes
-    pMemClassesFree      **Aig_Obj_t;  // memory allocated for equivalence classes to be used
-    // temporary data
-    vClassOld       *Vec_Ptr_t;        // old equivalence class after splitting
-    vClassNew       *Vec_Ptr_t;        // new equivalence class(es) after splitting
-    vRefined       *Vec_Ptr_t;         // the nodes refined since the last iteration
-    // procedures used for class refinement
-    pManData            any;
-    unsigned (*pFuncNodeHash) (void *,Aig_Obj_t *);              // returns hash key of the node
-    int (*pFuncNodeIsConst)   (void *,Aig_Obj_t *);              // returns 1 if the node is a constant
-    int (*pFuncNodesAreEqual) (void *,Aig_Obj_t *, Aig_Obj_t *); // returns 1 if nodes are equal up to a complement
-}
+
 
 ////////////////////////////////////////////////////////////////////////
 ///                        DECLARATIONS                              ///
@@ -142,23 +120,7 @@ func Ssw_ObjRemoveClass(p *Ssw_Cla_t, pRepr *Aig_Obj_t) **Aig_Obj_t {
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_ClassesStart(pAig *Aig_Man_t) *Ssw_Cla_t {
-    var p *Ssw_Cla_t;
-    // inlining of macro ABC_ALLOC
-    p = ((Ssw_Cla_t *) malloc(sizeof(Ssw_Cla_t) * (size_t)(1)));
-    memset( p, 0, sizeof(Ssw_Cla_t) );
-    p.pAig         = pAig;
-    // inlining of macro ABC_CALLOC
-    p.pId2Class    = ((Aig_Obj_t ** *) calloc((size_t)(Aig_ManObjNumMax(pAig)), sizeof(Aig_Obj_t **)));
-    // inlining of macro ABC_CALLOC
-    p.pClassSizes  = ((int *) calloc((size_t)(Aig_ManObjNumMax(pAig)), sizeof(int)));
-    p.vClassOld    = Vec_PtrAlloc( 100 );
-    p.vClassNew    = Vec_PtrAlloc( 100 );
-    p.vRefined     = Vec_PtrAlloc( 1000 );
-    if pAig.pReprs == nil {
-        Aig_ManReprStart( pAig, Aig_ManObjNumMax(pAig) ); }
-    return p;
-}
+
 
 /**Function*************************************************************
 
@@ -171,16 +133,7 @@ func Ssw_ClassesStart(pAig *Aig_Man_t) *Ssw_Cla_t {
   SeeAlso     []
 
 ***********************************************************************/
-void Ssw_ClassesSetData( Ssw_Cla_t * p, void * pManData,
-    unsigned (*pFuncNodeHash)(void *,Aig_Obj_t *),               // returns hash key of the node
-    int (*pFuncNodeIsConst)(void *,Aig_Obj_t *),                 // returns 1 if the node is a constant
-    int (*pFuncNodesAreEqual)(void *,Aig_Obj_t *, Aig_Obj_t *) ) // returns 1 if nodes are equal up to a complement
-{
-    p.pManData           = pManData;
-    p.pFuncNodeHash      = pFuncNodeHash;
-    p.pFuncNodeIsConst   = pFuncNodeIsConst;
-    p.pFuncNodesAreEqual = pFuncNodesAreEqual;
-}
+
 
 /**Function*************************************************************
 
@@ -193,15 +146,7 @@ void Ssw_ClassesSetData( Ssw_Cla_t * p, void * pManData,
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_ClassesStop(p *Ssw_Cla_t) {
-    if p.vClassNew {    Vec_PtrFree( p.vClassNew ); }
-    if p.vClassOld {    Vec_PtrFree( p.vClassOld ); }
-    Vec_PtrFree( p.vRefined );
-    p.pId2Class = nil;
-    p.pClassSizes = nil;
-    p.pMemClasses = nil;
-    p = nil;
-}
+
 
 /**Function*************************************************************
 
@@ -214,9 +159,7 @@ func Ssw_ClassesStop(p *Ssw_Cla_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_ClassesReadAig(p *Ssw_Cla_t) *Aig_Man_t {
-    return p.pAig;
-}
+
 
 /**Function*************************************************************
 
@@ -229,9 +172,7 @@ func Ssw_ClassesReadAig(p *Ssw_Cla_t) *Aig_Man_t {
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_ClassesGetRefined(p *Ssw_Cla_t) *Vec_Ptr_t {
-    return p.vRefined;
-}
+
 
 /**Function*************************************************************
 
@@ -244,9 +185,7 @@ func Ssw_ClassesGetRefined(p *Ssw_Cla_t) *Vec_Ptr_t {
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_ClassesClearRefined(p *Ssw_Cla_t) {
-    Vec_PtrClear( p.vRefined );
-}
+
 
 /**Function*************************************************************
 
@@ -259,9 +198,7 @@ func Ssw_ClassesClearRefined(p *Ssw_Cla_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_ClassesCand1Num(p *Ssw_Cla_t) int32 {
-    return p.nCands1;
-}
+
 
 /**Function*************************************************************
 
@@ -274,9 +211,7 @@ func Ssw_ClassesCand1Num(p *Ssw_Cla_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_ClassesClassNum(p *Ssw_Cla_t) int32 {
-    return p.nClasses;
-}
+
 
 /**Function*************************************************************
 
@@ -289,9 +224,7 @@ func Ssw_ClassesClassNum(p *Ssw_Cla_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_ClassesLitNum(p *Ssw_Cla_t) int32 {
-    return p.nLits;
-}
+
 
 /**Function*************************************************************
 
