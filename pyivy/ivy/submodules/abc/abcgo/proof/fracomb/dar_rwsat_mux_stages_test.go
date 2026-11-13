@@ -73,19 +73,14 @@ func TestDarRwsatMuxStagesAgainstSource(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	// The second balancing pass currently has a known source-order divergence.
-	start := strings.Index(string(golden), "balance2 ci=")
-	end := strings.Index(string(golden), "rewrite2 ci=")
-	if start < 0 || end <= start {
-		t.Fatal("invalid source stage golden")
+	if c, ok := runDarCOracle(t, "dar_rwsat_mux_stages.c"); ok && c != string(golden) {
+		t.Fatalf("compiled C rewrite stages differ from golden:\n%s", c)
 	}
-	goBalance, err := os.ReadFile(filepath.Join(filepath.Dir(file), "test_vectors/dar_rwsat_mux_balance2_go.golden"))
-	if err != nil {
-		t.Fatal(err)
-	}
-	expected := string(golden[:start]) + string(goBalance) + string(golden[end:])
-	if actual.String() != expected {
-		t.Fatalf("Go rewrite stages differ from recorded source and balance2 gap:\n%s", actual.String())
+	if actual.String() != string(golden) {
+		got, want := actual.String(), string(golden)
+		i := 0
+		for i < len(got) && i < len(want) && got[i] == want[i] { i++ }
+		t.Fatalf("Go rewrite stages differ from source golden at byte %d (got %q, want %q)", i, got[max(0, i-80):min(len(got), i+120)], want[max(0, i-80):min(len(want), i+120)])
 	}
 	direct, err := dar.Dar_ManRwsat(original, true, false)
 	if err != nil {
@@ -96,8 +91,5 @@ func TestDarRwsatMuxStagesAgainstSource(t *testing.T) {
 	final := strings.LastIndex(string(golden), "rewrite2 ci=")
 	if final < 0 || directDump.String() != string(golden)[final:] {
 		t.Fatalf("Dar_ManRwsat output differs from source final stage:\n%s", directDump.String())
-	}
-	if c, ok := runDarCOracle(t, "dar_rwsat_mux_stages.c"); ok && c != string(golden) {
-		t.Fatalf("compiled C rewrite stages differ from golden:\n%s", c)
 	}
 }
