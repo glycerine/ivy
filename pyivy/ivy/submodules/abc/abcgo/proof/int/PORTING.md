@@ -11,7 +11,11 @@ state exploration; replay a two-register, three-frame witness; exercise
 constraint polarity and constrained witnesses; and cover forward, backward,
 combinational containment, transition-loop, rewriting, and two-step modes.
 Other tests cover SAT and UNSAT containment, frame limits, proof construction,
-and both optional interpolation algorithms. Larger state spaces, interrupted
+both optional interpolation algorithms, constrained witness replay in every
+frame, multiple constraints, and native XOR/MUX gates. Constrained witness
+construction propagates the deadline, with checks between graph construction,
+CNF encoding, SAT solving, and witness extraction; individual graph traversals
+and CNF encoding are not interruptible. Larger state spaces, interrupted
 SAT solving, resource limits during rewriting, and independent validation of
 more proof structures remain useful areas for additional coverage.
 
