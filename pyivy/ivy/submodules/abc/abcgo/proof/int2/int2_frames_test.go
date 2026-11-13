@@ -314,3 +314,31 @@ func TestCheckBmcFindsFailureAfterUnconstructedOutput(t *testing.T) {
 		t.Fatalf("known failing output result %d, want failure", got)
 	}
 }
+
+func TestZeroFrameBuildersReturnInitialState(t *testing.T) {
+	g := gia.Gia_ManStart(12)
+	pi, state := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
+	gia.Gia_ManAppendCo(g, 0)
+	gia.Gia_ManAppendCo(g, pi^1)
+	gia.Gia_ManSetRegNum(g, 1)
+	gia.Gia_ObjSetValue(gia.Gia_ManObj(g, pi>>1), 1)
+	gia.Gia_ObjSetValue(gia.Gia_ManObj(g, state>>1), 1)
+	gia.Gia_ObjSetValue(gia.Gia_ManRi(g, 0), 1)
+	for _, builder := range []struct {
+		name string
+		run  func(*Gia_Man_t) *Gia_Man_t
+	}{
+		{"unroll", func(p *Gia_Man_t) *Gia_Man_t { return Int2_ManUnroll(p, 0) }},
+		{"frame init", func(p *Gia_Man_t) *Gia_Man_t { return Int2_ManFrameInit(p, 0, 0) }},
+	} {
+		out := builder.run(g)
+		result, err := out.Evaluate(nil)
+		if err != nil {
+			t.Fatalf("%s: %v", builder.name, err)
+		}
+		if len(result) != 1 || result[0] {
+			t.Fatalf("%s: got %v, want zero initial state", builder.name, result)
+		}
+		gia.Gia_ManStop(out)
+	}
+}

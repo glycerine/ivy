@@ -95,7 +95,11 @@ func Int2_ManUnroll(p *Gia_Man_t, nFrames int32) *Gia_Man_t {
 	}
 	for i := int32(0); i < gia.Gia_ManRegNum(p); i++ {
 		ri := gia.Gia_ManRi(p, i)
-		gia.Gia_ManAppendCo(pFrames, gia.Gia_ObjValue(ri))
+		value := int32(0)
+		if nFrames > 0 {
+			value = gia.Gia_ObjValue(ri)
+		}
+		gia.Gia_ManAppendCo(pFrames, value)
 	}
 	gia.Gia_ManHashStop(pFrames)
 	temp := pFrames
