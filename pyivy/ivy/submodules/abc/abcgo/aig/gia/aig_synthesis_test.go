@@ -52,6 +52,22 @@ func TestDefaultDchChoiceBridge(t *testing.T) {
 	}
 }
 
+func TestDefaultDchUsesChoiceMiterSourceOrder(t *testing.T) {
+	p := Gia_ManStart(32)
+	a, b, c, d := Gia_ManAppendCi(p), Gia_ManAppendCi(p), Gia_ManAppendCi(p), Gia_ManAppendCi(p)
+	ab := p.AndLiteral(a, b, true)
+	ac := p.AndLiteral(a, c, true)
+	or := p.AndLiteral(ab^1, ac^1, true) ^ 1
+	Gia_ManAppendCo(p, p.AndLiteral(or, d, true))
+	result := Gia_ManPerformDch(p, nil)
+	if result == nil {
+		t.Fatal("default choice path failed")
+	}
+	if nodes, choices := Gia_ManAndNum(result), Gia_ManChoiceNum(result); nodes != 7 || choices != 1 {
+		t.Fatalf("compiled C source path has 7 ANDs and 1 choice; got %d and %d", nodes, choices)
+	}
+}
+
 func TestSequentialCleanupClassBridge(t *testing.T) {
 	p := Gia_ManStart(8)
 	input, first, second := Gia_ManAppendCi(p), Gia_ManAppendCi(p), Gia_ManAppendCi(p)

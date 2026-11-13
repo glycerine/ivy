@@ -34,6 +34,20 @@ func Dar_ManChoiceNew(graph *aig.Graph, options *dar.ChoiceOptions, params *dch.
 	return result, err
 }
 
+// Gia_ManPerformDch supplies the CEC branches of the source GIA entry point
+// without making GIA import CEC. The input GIA remains live, while its timing
+// manager is transferred to the returned graph as in the C implementation.
+func Gia_ManPerformDch(graph *gia.Gia_Man_t, params *dch.Params) (*gia.Gia_Man_t, error) {
+	if params == nil {
+		defaults := dch.DefaultParams()
+		params = &defaults
+	}
+	options := dar.DefaultChoiceOptions()
+	options.Power, options.Light, options.DchParams = params.Power, params.LightSynth, params
+	options.Engine = DarSourceChoiceEngine{Params: params}
+	return gia.Gia_ManPerformDchResult(graph, &options)
+}
+
 // DarSourceChoiceEngine supplies the proof portion of the active C
 // Dar_ManChoiceNew path. DAR passes the three synthesized snapshots in the
 // source order; the engine builds their GIA miter and selects DCH, CEC or
@@ -50,25 +64,10 @@ func (e DarSourceChoiceEngine) ComputeChoices(versions []*aig.Graph) (*aig.Graph
 		defaults := dch.DefaultParams()
 		params = &defaults
 	}
-	snapshots := make([]*gia.Gia_Man_t, 0, len(versions))
-	defer func() {
-		for _, graph := range snapshots {
-			gia.Gia_ManStop(graph)
-		}
-	}()
-	for i, graph := range versions {
-		if graph == nil {
-			return nil, fmt.Errorf("cec: nil DAR snapshot %d", i)
-		}
-		if err := graph.Check(); err != nil {
-			return nil, fmt.Errorf("cec: DAR snapshot %d: %w", i, err)
-		}
-		if i != 0 && (graph.InputCount() != versions[0].InputCount() || graph.OutputCount() != versions[0].OutputCount() || aig.Aig_ManRegNum(graph) != aig.Aig_ManRegNum(versions[0])) {
-			return nil, fmt.Errorf("cec: incompatible DAR snapshot interfaces")
-		}
-		snapshots = append(snapshots, gia.Gia_ManFromAig(graph))
+	miter, err := gia.Gia_ManChoiceMiterFromAigs(versions)
+	if err != nil {
+		return nil, err
 	}
-	miter := gia.Gia_ManChoiceMiter(snapshots)
 	defer gia.Gia_ManStop(miter)
 	if params.UseNew {
 		verbose := int32(0)
@@ -88,5 +87,7 @@ func (e DarSourceChoiceEngine) ComputeChoices(versions []*aig.Graph) (*aig.Graph
 		}
 		return result, nil
 	}
-	return dch.ComputeChoices(gia.Gia_ManToAigSkip(miter, 3), params)
+	input := gia.Gia_ManToAigSkip(miter, 3)
+	defer aig.Aig_ManStop(input)
+	return dch.ComputeChoices(input, params)
 }

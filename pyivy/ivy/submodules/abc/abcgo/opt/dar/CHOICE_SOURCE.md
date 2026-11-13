@@ -44,9 +44,8 @@ functions. The facade can therefore import the CEC integration layer without
 a cycle. No algorithm copy, global registration or partitioned fallback is
 used by the lower DAR default.
 
-One separate boundary remains: `aig/gia.Gia_ManPerformDch` cannot import the
-CEC integration layer because CEC already imports GIA. Its existing default
-uses an explicit DCH engine over total AIGs; it is not the same source path as
-the lower DAR facade. A future source-faithful GIA entry point needs an
-explicit callback supplied from a higher layer or another package split. This
-limitation is independent of the fixed lower DAR default.
+`aig/gia.Gia_ManPerformDch` also uses the source GIA-miter/skip-three/DCH
+path by default. GIA cannot import CEC because CEC imports GIA, so its CEC and
+Cec4 modes require an explicitly supplied engine. The higher-layer
+`proof/cec.Gia_ManPerformDch` wrapper supplies the source CEC engine for those
+options. ABC comparisons cover the default, `-g`, `-x`, and `-g -x` modes.

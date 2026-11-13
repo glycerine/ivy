@@ -39,6 +39,20 @@ func Gia_ManPerformDchResult(p *Gia_Man_t, options *dar.ChoiceOptions) (*Gia_Man
 	if p == nil || options == nil {
 		return nil, fmt.Errorf("gia: missing graph or choice options")
 	}
+	config := *options
+	if config.Engine == nil {
+		params := config.DchParams
+		if params == nil {
+			defaults := dch.DefaultParams()
+			defaults.Power, defaults.LightSynth = config.Power, config.Light
+			params = &defaults
+		}
+		if params.UseGia || params.UseNew {
+			return nil, fmt.Errorf("gia: CEC choice mode requires an explicit CEC engine")
+		}
+		config.DchParams = params
+		config.Engine = giaSourceDCHChoiceEngine{params: params}
+	}
 	if p.pManTime != nil && p.vLevels == nil {
 		Gia_ManLevelWithBoxes(p)
 	}
@@ -46,7 +60,8 @@ func Gia_ManPerformDchResult(p *Gia_Man_t, options *dar.ChoiceOptions) (*Gia_Man
 	defer Gia_ManStop(source)
 	converted := Gia_ManToAig(source, 0)
 	defer aig.Aig_ManStop(converted)
-	optimized, err := dar.Dar_ManChoiceNew(converted, options)
+	optimized, err := dar.Dar_ManChoiceNew(converted, &config)
+	options.SynthesisDuration = config.SynthesisDuration
 	if err != nil {
 		return nil, err
 	}
@@ -71,11 +86,7 @@ func Gia_ManPerformDch(p *Gia_Man_t, parameters any) *Gia_Man_t {
 		return nil
 	}
 	if params != nil {
-		if params.UseGia || params.UseNew {
-			fmt.Fprintln(os.Stderr, "gia: requested CEC choice engine is not yet ported; provide an explicit ChoiceOptions engine")
-			return nil
-		}
-		options = &dar.ChoiceOptions{Balance: true, UpdateLevel: true, Power: params.Power, Light: params.LightSynth, Engine: dch.Engine{Params: params}}
+		options = &dar.ChoiceOptions{Balance: true, UpdateLevel: true, Power: params.Power, Light: params.LightSynth, DchParams: params}
 		if params.Verbose {
 			options.Progress = os.Stdout
 		}
