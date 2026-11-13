@@ -118,3 +118,17 @@ func TestImplicationConstraintsFramePolarity(t *testing.T) {
 		}
 	}
 }
+
+// The original C checks the limit after appending. Thus a zero limit still
+// returns all candidates at the maximum cost, rather than an empty vector.
+func TestSelectHighestCostImplicationsZeroLimit(t *testing.T) {
+	values := vec.Vec_IntAlloc(3)
+	for _, v := range []int32{11, 22, 33} {
+		vec.Vec_IntPush(values, v)
+	}
+	var pivot int32
+	got := Fra_SmlSelectMaxCost(values, []int32{5, 2, 5}, 5, 0, &pivot)
+	if pivot != 5 || vec.Vec_IntSize(got) != 2 || vec.Vec_IntEntry(got, 0) != 11 || vec.Vec_IntEntry(got, 1) != 33 {
+		t.Fatalf("pivot=%d selected=%v", pivot, vec.Vec_IntArray(got))
+	}
+}

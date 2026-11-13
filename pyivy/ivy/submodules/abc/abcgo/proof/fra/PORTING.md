@@ -52,3 +52,8 @@ construction call `Aig_And` for every internal node, including EXOR nodes.
 The Go ports follow those source operations; do not assume native EXOR retains
 XOR semantics through these paths. The ABC differential above uses ordinary
 AND/inverter graphs and does not cover native EXOR.
+
+`Fra_SmlSelectMaxCost` preserves an ABC edge case: with a zero selection limit,
+it still returns all candidates tied at the maximum cost because the C loop
+checks the limit after appending. Normal implication derivation requires a
+positive limit, but direct callers can observe this behavior.

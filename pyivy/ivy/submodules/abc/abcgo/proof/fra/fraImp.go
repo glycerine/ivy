@@ -78,8 +78,11 @@ func Fra_SmlSelectMaxCost(imps *vec.Vec_Int_t, costs []int32, maxCost, limit int
 	}
 	out := vec.Vec_IntAlloc(int(limit))
 	for i, imp := range vec.Vec_IntArray(imps) {
-		if costs[i] >= pivot && vec.Vec_IntSize(out) < int(limit) {
+		if costs[i] >= pivot {
 			vec.Vec_IntPush(out, imp)
+			if vec.Vec_IntSize(out) == int(limit) {
+				break
+			}
 		}
 	}
 	if costRange != nil {
