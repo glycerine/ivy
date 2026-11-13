@@ -42,7 +42,10 @@ in progress; passing tests do not establish that those gaps are resolved.
 * `int2` builds and passes its full race suite, but its driver is a bounded
   fallback rather than a port of the incomplete checked-in C driver. See
   `int2/SOURCE_FIDELITY.md`.
-* `dch`, `ssc`, `live`, and `cec/core` build. Their existing review and
+* `live` uses the ported PDR solver by default. Its safety engines and
+  monitor reductions preserve constraints; the bounded image checker is
+  retained for an explicit state limit. See `live/PORTING.md`.
+* `dch`, `ssc`, and `cec/core` build. Their existing review and
   package-specific documentation describe coverage and any fidelity gaps.
 
 Run full-package checks from `abcgo`, for example `go test -race ./proof/pdr`.
