@@ -136,3 +136,32 @@ func TestGlaDriverTimesOutOnConstantFalseFrames(t *testing.T) {
 		t.Fatalf("result %d witness %+v", result, g.SequentialCounterexample())
 	}
 }
+
+func TestGlaFrameLimitWithTimeoutAndConflictLimit(t *testing.T) {
+	// The first bad state is frame 2. C tests the frame bound before
+	// entering a frame; the enabled timeout and conflict limit must not
+	// turn a bounded unknown into a witness or a proof.
+	for _, frames := range []int32{2, 3} {
+		g := gia.Gia_ManStart(8)
+		x := gia.Gia_ManAppendCi(g)
+		q1, q2 := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
+		gia.Gia_ManAppendCo(g, q2)
+		gia.Gia_ManAppendCo(g, x)
+		gia.Gia_ManAppendCo(g, q1)
+		gia.Gia_ManSetRegNum(g, 2)
+		pars := NewParameters()
+		o := pars.Options()
+		o.FramesMax, o.TimeoutSeconds, o.ConflictLimit = frames, 30, 1000
+		o.RatioMin, o.RatioMinRefine, o.FramesNoChangeLimit = 0, 0, 100
+		pars.SetOptions(o)
+		got := Gia_ManPerformGla(g, pars)
+		cex := g.SequentialCounterexample()
+		if frames == 2 {
+			if got != -1 || cex != nil {
+				t.Fatalf("frames=%d result=%d witness=%+v", frames, got, cex)
+			}
+		} else if got != 0 || cex == nil || cex.IFrame != 2 || gia.Gia_ManVerifyCex(g, cex, 0) != 1 {
+			t.Fatalf("frames=%d result=%d witness=%+v", frames, got, cex)
+		}
+	}
+}
