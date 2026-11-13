@@ -190,11 +190,8 @@ func Fra_FraigInduction(g *aig.Graph, params *Fra_Ssw_t) *aig.Graph {
 		}
 		if p.PCla.FRefinement != 0 && oldLits == Fra_ClassesCountLits(p.PCla) && oldImps == imps && oldHots == hots {
 			fmt.Println("Fra_FraigInduction(): Internal error. The result may not verify.")
-			// Do not return a potentially unsound reduction after the
-			// refinement loop has failed to make observable progress.
-			params.nIters = iteration
-			Fra_ManStop(p)
-			return nil
+			// ABC breaks and emits the current reduction despite this warning.
+			break
 		}
 	}
 	traversal := time.Now()

@@ -225,6 +225,7 @@ func Fra_FraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph) int3
 				break
 			}
 			previous := graph
+			aig.Aig_ManSetRegNum(graph, graph.RegisterCount())
 			if graph.RegisterCount() > 0 {
 				graph = ssw.Ssw_SignalCorrespondence(graph, &sw)
 			} else {
