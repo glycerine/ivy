@@ -70,6 +70,49 @@ func (c *cec2CNF) variable(root int32) int {
 // first with object 0 low, then (except for constant 0) with object 0 high.
 // SAT leaves its witness available through the solver's model.
 func (c *cec2CNF) solveTwo(first, second int32, phase int, limit int64) int {
+	status, _ := c.solveTwoWithCone(first, second, phase, limit, false)
+	return status
+}
+
+// cone collects the SAT variables and CI indices reachable from both roots,
+// matching Cec2_ManCollect_rec without storing traversal marks on the graph.
+func (c *cec2CNF) cone(first, second int32) (variables []int, inputs map[int32]int) {
+	seen := make(map[int32]bool)
+	inputs = make(map[int32]int)
+	var visit func(int32)
+	visit = func(id int32) {
+		if seen[id] {
+			return
+		}
+		seen[id] = true
+		v, ok := c.ids[id]
+		if ok {
+			variables = append(variables, v)
+		}
+		if id == 0 {
+			return
+		}
+		obj := gia.Gia_ManObj(c.graph, id)
+		if gia.Gia_ObjIsAnd(obj) != 0 {
+			visit(gia.Gia_ObjFaninLit0(obj, id) >> 1)
+			visit(gia.Gia_ObjFaninLit1(obj, id) >> 1)
+		} else if gia.Gia_ObjIsCi(obj) != 0 {
+			if !ok {
+				panic("cec: cone input has no SAT variable")
+			}
+			inputs[gia.Gia_ObjCioId(obj)] = v
+		} else {
+			panic("cec: unsupported object in SAT cone")
+		}
+	}
+	visit(first)
+	visit(second)
+	return
+}
+
+// solveTwoWithCone preserves the source's optional decision-cone restriction.
+// The returned input map identifies the SAT model values needed for a pattern.
+func (c *cec2CNF) solveTwoWithCone(first, second int32, phase int, limit int64, useCone bool) (int, map[int32]int) {
 	if first > second {
 		first, second = second, first
 	}
@@ -77,9 +120,22 @@ func (c *cec2CNF) solveTwo(first, second int32, phase int, limit int64) int {
 		panic("cec: invalid SAT comparison")
 	}
 	a, b := c.variable(first), c.variable(second)
-	result := c.solver.SolveAssumptionsLimit([]int{2*a + 1, 2*b + phase}, limit)
-	if result == satoko.SATOKO_UNSAT && first != 0 {
-		result = c.solver.SolveAssumptionsLimit([]int{2 * a, 2*b + (phase ^ 1)}, limit)
+	variables, inputs := c.cone(first, second)
+	if useCone {
+		c.solver.MarkCone(variables, true)
+		defer c.solver.MarkCone(variables, false)
 	}
-	return result
+	status := c.solver.SolveAssumptionsLimit([]int{2*a + 1, 2*b + phase}, limit)
+	if status == satoko.SATOKO_UNSAT && first != 0 {
+		status = c.solver.SolveAssumptionsLimit([]int{2 * a, 2*b + (phase ^ 1)}, limit)
+	}
+	return status, inputs
+}
+
+// rollback discards a non-cone query's clauses and their SAT ID mappings.
+// The caller must bookmark an empty solver before constructing any query.
+func (c *cec2CNF) rollback() {
+	c.solver.Rollback()
+	clear(c.ids)
+	c.objects = c.objects[:0]
 }
