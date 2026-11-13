@@ -70,7 +70,7 @@ type Mpm_Cut_t struct {
     fCompl uint32; /* C bitfield: 1 bits; review packing and truncation */
     fUseless uint32; /* C bitfield: 1 bits; review packing and truncation */           // internal flag
     nLeaves uint32; /* C bitfield: 5 bits; review packing and truncation */           // leaves
-    pLeaves [1]int32;               // leaves
+    pLeaves []int32;               // leaves
 }
      // 48 bytes
 type Mpm_Uni_t struct { 

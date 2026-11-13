@@ -115,14 +115,7 @@ func Mpm_CutPrintAll(p *Mpm_Man_t) {
         Mpm_CutPrint( &p.pCutStore[i].pCut );
     }
 }
-func Mpm_CutFindLeaf(pNew *Mpm_Cut_t, iObj int32) int32 {
-    var i int32;
-    for  i = 0; i < int32(pNew.nLeaves); i++  {
-        if Abc_Lit2Var(pNew.pLeaves[i]) == iObj {
-            return i; }
-    }
-    return i;
-}
+
 static inline int Mpm_CutIsContained( Mpm_Man_t * p, Mpm_Cut_t * pBase, Mpm_Cut_t * pCut ) // check if pCut is contained pBase
 {
     var i int32;
@@ -319,75 +312,6 @@ p->timeCompare += Abc_Clock() - clk;
   SeeAlso     []
 
 ***********************************************************************/
-func Mpm_ManMergeCuts(p *Mpm_Man_t, pCut0 *Mpm_Cut_t, pCut1 *Mpm_Cut_t, pCut2 *Mpm_Cut_t) *Mpm_Cut_t {
-    var pTemp *Mpm_Cut_t;
-    var pCut *Mpm_Cut_t = &((Mpm_Uni_t *)Vec_PtrEntryLast(&p.vFreeUnits)).pCut;
-    var i, c, iPlace int32;
-    // base cut
-    memcpy( pCut.pLeaves, pCut0.pLeaves, sizeof(int) * pCut0.nLeaves );
-    pCut.nLeaves = pCut0.nLeaves;
-    // remaining cuts
-    if p.pPars.fUseDsd {
-        for  c = 1; c < 3; c++  {
-            if c == 1 {
-                pTemp = pCut1;
-            } else {
-                pTemp = pCut2;
-            }
-            if pTemp == nil {
-                break; }
-            p.uPermMask[c] = 0x3FFFF; // 18 bits
-            p.uComplMask[c] = 0;     
-            for  i = 0; i < int32(pTemp.nLeaves); i++  {
-                iPlace = Mpm_CutFindLeaf( pCut, Abc_Lit2Var(pTemp.pLeaves[i]) );
-                if iPlace == int32(pCut.nLeaves) {
-                    if int32(pCut.nLeaves) == p.nLutSize {
-                        return nil; }
-                    pCut.pLeaves[pCut.nLeaves++] = pTemp.pLeaves[i];
-                }
-                p.uPermMask[c] ^= (((i & 7) ^ 7) << (3*iPlace));
-                if pTemp.pLeaves[i] != pCut.pLeaves[iPlace] {
-                    p.uComplMask[c] |= (1 << iPlace); }
-            }
-        }
-    
-    } else {
-        for  c = 1; c < 3; c++  {
-            if c == 1 {
-                pTemp = pCut1;
-            } else {
-                pTemp = pCut2;
-            }
-            if pTemp == nil {
-                break; }
-            for  i = 0; i < int32(pTemp.nLeaves); i++  {
-                iPlace = Mpm_CutFindLeaf( pCut, Abc_Lit2Var(pTemp.pLeaves[i]) );
-                if iPlace == int32(pCut.nLeaves) {
-                    if int32(pCut.nLeaves) == p.nLutSize {
-                        return nil; }
-                    pCut.pLeaves[pCut.nLeaves++] = pTemp.pLeaves[i];
-                }
-            }
-        }
-    }
-    if pCut1 == nil {
-        pCut.hNext    = 0;
-        pCut.iFunc    = pCut0.iFunc;
-        pCut.fUseless = pCut0.fUseless;
-        pCut.fCompl   = pCut0.fCompl;
-    
-    } else {
-        pCut.hNext    = 0;
-        pCut.iFunc    = 0;  pCut.iFunc = ~pCut.iFunc;
-        pCut.fUseless = 0;
-        pCut.fCompl   = 0;
-    }
-    p.nCutsMerged++;
-    p.nCutsMergedAll++;
-    if p.pPars.fUseTruth {
-        Vec_IntSelectSort( pCut.pLeaves, pCut.nLeaves ); }
-    return pCut;
-}
 func Mpm_ManExploreNewCut(p *Mpm_Man_t, pObj *Mig_Obj_t, pCut0 *Mpm_Cut_t, pCut1 *Mpm_Cut_t, pCut2 *Mpm_Cut_t, Required int32) int32 {
     var pCut *Mpm_Cut_t;
     var ArrTime int32;
