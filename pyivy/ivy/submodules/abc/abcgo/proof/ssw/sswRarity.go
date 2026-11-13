@@ -81,7 +81,6 @@ func Ssw_RarAddToBinPat(p *Ssw_RarMan_t, iBin int32, iPat int32) {
     p.pRarity[iBin * (1 << p.pPars.nBinSize) + iPat]++;
 }
 
-func Ssw_RarBitWordNum(nBits int32) int32 { return (nBits>>6) + ((nBits&63) > 0);  }
 
 func Ssw_RarObjSim(p *Ssw_RarMan_t, Id int32) *word { assert(Id < Aig_ManObjNumMax(p.pAig), "Id < Aig_ManObjNumMax(p.pAig)"); return p.pObjData + p.pPars.nWords * Id;    }
 func Ssw_RarPatSim(p *Ssw_RarMan_t, Id int32) *word { assert(Id < 64 * p.pPars.nWords, "Id < 64 * p.pPars.nWords");     return p.pPatData + p.nWordsReg * Id;        }
@@ -90,34 +89,6 @@ func Ssw_RarPatSim(p *Ssw_RarMan_t, Id int32) *word { assert(Id < 64 * p.pPars.n
 ////////////////////////////////////////////////////////////////////////
 ///                     FUNCTION DEFINITIONS                         ///
 ////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ssw_RarSetDefaultParams(p *Ssw_RarPars_t) {
-    memset( p, 0, sizeof(Ssw_RarPars_t) );
-    p.nFrames       =  20;
-    p.nWords        =  50;
-    p.nBinSize      =   8;
-    p.nRounds       =   0;
-    p.nRestart      =   0;
-    p.nRandSeed     =   0;
-    p.TimeOut       =   0;
-    p.TimeOutGap    =   0;
-    p.fSolveAll     =   0;
-    p.fDropSatOuts  =   0;
-    p.fSetLastState =   0;
-    p.fVerbose      =   0;
-    p.fNotVerbose   =   0;
-}
 
 /**Function*************************************************************
 
@@ -223,78 +194,6 @@ func Ssw_RarDeriveCex(p *Ssw_RarMan_t, iFrame int32, iPo int32, iPatFinal int32,
     return pCex;
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Transposing 32-bit matrix.]
-
-  Description [Borrowed from "Hacker's Delight", by Henry Warren.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func transpose32(A []uint32) {
-    var j, k int32;
-    var t uint32;
-    var m uint32 = 0x0000FFFF;
-    for  j = 16; j != 0; j = j >> 1, m = m ^ (m << j)  {
-        for  k = 0; k < 32; k = (k + j + 1) & ~j  {
-            t = (A[k] ^ (A[k+j] >> j)) & m;
-            A[k] = A[k] ^ t;
-            A[k+j] = A[k+j] ^ (t << j);
-        }
-    }
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Transposing 64-bit matrix.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func transpose64(A []word) {
-    var j, k int32;
-    var t word;
-    var m word = 0x00000000FFFFFFFF;
-    for  j = 32; j != 0; j = j >> 1, m = m ^ (m << j)  {
-        for  k = 0; k < 64; k = (k + j + 1) & ~j  {
-            t = (A[k] ^ (A[k+j] >> j)) & m;
-            A[k] = A[k] ^ t;
-            A[k+j] = A[k+j] ^ (t << j);
-        }
-    }
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Transposing 64-bit matrix.]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func transpose64Simple(A []word, B []word) {
-    var i, k int32;
-    for  i = 0; i < 64; i++  {
-        B[i] = 0;
-    }
-    for  i = 0; i < 64; i++  {
-    for  k = 0; k < 64; k++  {
-        if (A[i] >> k) & 1 {
-            B[k] |= ((word)1 << (63-i)); }
-    }
-    }
-}
 
 /**Function*************************************************************
 
