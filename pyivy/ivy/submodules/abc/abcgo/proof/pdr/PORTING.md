@@ -44,6 +44,28 @@ Some profiling counters still use Go elapsed time rather than C CPU time.
 
 Remaining review and coverage gaps:
 
+Timeout and restart coverage maps to specific source branches:
+
+- `pdr_timeout_priority_test.go` exercises no deadline, output-only,
+  global-plus-output, gap-plus-output, gap boundary, and output boundary
+  cases. Its deterministic-clock driver test advances time during SAT and
+  checks simultaneous gap/output expiry in ordinary and incremental PDR; the
+  gap abort takes precedence and the output is not dropped. `pdr_limits_test.go`
+  checks expired global and per-output SAT deadlines in mono and dynamic CNF,
+  deadline restoration, and unknown results under frame/conflict limits.
+- `pdrIncrSolve_test.go` covers restart failure when the source saves no
+  clauses, fresh-manager reset of output witnesses/maps/budgets, retained
+  parameter counters, recounting trivial outputs, unknown restored-clause
+  check/push behavior, and save/rebuild/remap. The restart tests intentionally
+  record ABC's assert/reset behavior.
+- Exhaustive one-register and sampled multi-register reachability tests vary
+  solve-all, mono/dynamic CNF, both ternary simulators, abstraction, shortest
+  traces, incremental solving, shifted starts, and clause reuse. Native-XOR
+  tests include complemented edges and multiple outputs. Optional local ABC
+  differential tests cover CNF, abstraction, priority, generalization, and
+  frame management. These fixtures target branches, but do not exhaust every
+  combination of every PDR parameter.
+
 - The two-register cases are sampled, not exhaustive over all two-register
   machines. Larger sequential designs and deeper refinement chains need
   end-to-end comparisons, including runs against the original ABC PDR.
