@@ -1,460 +1,263 @@
+// Port of the expression parser in verFormula.c by Alan Mishchenko (2006).
 package ver
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/aig/hop"
+	"github.com/glycerine/abcgo/misc/vec"
 	"strings"
 )
 
-/**CFile****************************************************************
+const (
+	verOpMark    int32 = 1
+	verOpMux     int32 = 2
+	verOpEqu     int32 = 3
+	verOpOr      int32 = 4
+	verOpXor     int32 = 5
+	verOpAnd     int32 = 6
+	verOpNeg     int32 = 7
+	verFlagStart       = 1
+	verFlagVar         = 2
+	verFlagOper        = 3
+	verFlagError       = 4
+)
 
-  FileName    [verFormula.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Verilog parser.]
-
-  Synopsis    [Formula parser to read Verilog assign statements.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - August 19, 2006.]
-
-  Revision    [$Id: verFormula.c,v 1.00 2006/08/19 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "ver.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-// the list of operation symbols to be used in expressions
-#define VER_PARSE_SYM_OPEN    '('   // opening parenthesis
-#define VER_PARSE_SYM_CLOSE   ')'   // closing parenthesis
-#define VER_PARSE_SYM_CONST0  '0'   // constant 0
-#define VER_PARSE_SYM_CONST1  '1'   // constant 1
-#define VER_PARSE_SYM_NEGBEF1 '!'   // negation before the variable
-#define VER_PARSE_SYM_NEGBEF2 '~'   // negation before the variable
-#define VER_PARSE_SYM_AND     '&'   // logic AND
-#define VER_PARSE_SYM_OR      '|'   // logic OR
-#define VER_PARSE_SYM_XOR     '^'   // logic XOR
-#define VER_PARSE_SYM_MUX1    '?'   // first symbol of MUX
-#define VER_PARSE_SYM_MUX2    ':'   // second symbol of MUX
-
-// the list of opcodes (also specifying operation precedence)
-const VER_PARSE_OPER_NEG =     7    // negation (highest precedence)
-const VER_PARSE_OPER_AND =     6    // logic AND
-const VER_PARSE_OPER_XOR =     5    // logic EXOR   (a'b | ab')   
-const VER_PARSE_OPER_OR =      4    // logic OR
-const VER_PARSE_OPER_EQU =     3    // equvalence   (a'b'| ab )
-const VER_PARSE_OPER_MUX =     2    // MUX(a,b,c)   (ab | a'c )
-const VER_PARSE_OPER_MARK =    1    // OpStack token standing for an opening parenthesis
-
-// these are values of the internal Flag
-const VER_PARSE_FLAG_START =   1    // after the opening parenthesis 
-const VER_PARSE_FLAG_VAR =     2    // after operation is received
-const VER_PARSE_FLAG_OPER =    3    // after operation symbol is received
-const VER_PARSE_FLAG_ERROR =   4    // when error is detected
-
-// static Hop_Obj_t * Ver_FormulaParserTopOper( Hop_Man_t * pMan, Vec_Ptr_t * vStackFn, int Oper );
-
-// static int         Ver_FormulaParserFindVar( char * pString, Vec_Ptr_t * vNames );
-
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Parser of the formula encountered in assign statements.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ver_FormulaParser(pFormula string, pMan any, vNames *Vec_Ptr_t, vStackFn *Vec_Ptr_t, vStackOp *Vec_Int_t, pErrorMessage string) any {
-    var pTemp string;
-    var bFunc, bTemp *Hop_Obj_t;
-    var nParans, Flag int32;
-    var Oper, Oper1, Oper2 int32;
-    var v int32;
-
-    // clear the stacks and the names
-    Vec_PtrClear( vNames );
-    Vec_PtrClear( vStackFn );
-    Vec_IntClear( vStackOp );
-
-    if !int32(strings.Compare(pFormula, "0")) || !int32(strings.Compare(pFormula, "1\'b0")) {
-        return Hop_ManConst0((Hop_Man_t *)pMan); }
-    if !int32(strings.Compare(pFormula, "1")) || !int32(strings.Compare(pFormula, "1\'b1")) {
-        return Hop_ManConst1((Hop_Man_t *)pMan); }
-
-    // make sure that the number of opening and closing parentheses is the same
-    nParans = 0;
-    for  pTemp = pFormula; *pTemp; pTemp++  {
-        if *pTemp == '(' {
-            nParans++;
-        } else if *pTemp == ')' {
-            nParans--; }
-    }
-    if nParans != 0 {
-        pErrorMessage = fmt.Sprintf("Parse_FormulaParser(): Different number of opening and closing parentheses ().");
-        return nil;
-    }
- 
-    // add parentheses
-    pTemp = pFormula + len(pFormula) + 2;
-    *pTemp-- = 0; *pTemp = ')';
-    for  --pTemp != pFormula  {
-        *pTemp = *(pTemp - 1);
-    }
-    *pTemp = '(';
-
-    // perform parsing
-    Flag = VER_PARSE_FLAG_START;
-    for  pTemp = pFormula; *pTemp; pTemp++  {
-        switch  *pTemp  {
-        // skip all spaces, tabs, and end-of-lines
-        case ' ',
-         '\t',
-         '\r',
-         '\n':
-            continue;
-/*
-        // treat Constant 0 as a variable
-        case VER_PARSE_SYM_CONST0:
-            Vec_PtrPush( vStackFn, Hop_ManConst0(pMan) );  // Cudd_Ref( Hop_ManConst0(pMan) );
-            if ( Flag == VER_PARSE_FLAG_VAR )
-            {
-                sprintf( pErrorMessage, "Parse_FormulaParser(): No operation symbol before constant 0." );
-                Flag = VER_PARSE_FLAG_ERROR; 
-                break;
-            }
-            Flag = VER_PARSE_FLAG_VAR; 
-            break;
-
-        // the same for Constant 1
-        case VER_PARSE_SYM_CONST1:
-            Vec_PtrPush( vStackFn, Hop_ManConst1(pMan) );  //  Cudd_Ref( Hop_ManConst1(pMan) );
-            if ( Flag == VER_PARSE_FLAG_VAR )
-            {
-                sprintf( pErrorMessage, "Parse_FormulaParser(): No operation symbol before constant 1." );
-                Flag = VER_PARSE_FLAG_ERROR; 
-                break;
-            }
-            Flag = VER_PARSE_FLAG_VAR; 
-            break;
-*/
-        case VER_PARSE_SYM_NEGBEF1,
-         VER_PARSE_SYM_NEGBEF2:
-            if Flag == VER_PARSE_FLAG_VAR {// if NEGBEF follows a variable, AND is assumed
-                pErrorMessage = fmt.Sprintf("Parse_FormulaParser(): Variable before negation.");
-                Flag = VER_PARSE_FLAG_ERROR; 
-                break;
-            }
-            Vec_IntPush( vStackOp, VER_PARSE_OPER_NEG );
-            break;
-
-        case VER_PARSE_SYM_AND,
-         VER_PARSE_SYM_OR,
-         VER_PARSE_SYM_XOR,
-         VER_PARSE_SYM_MUX1,
-         VER_PARSE_SYM_MUX2:
-            if Flag != VER_PARSE_FLAG_VAR {
-                pErrorMessage = fmt.Sprintf("Parse_FormulaParser(): There is no variable before AND, EXOR, or OR.");
-                Flag = VER_PARSE_FLAG_ERROR; 
-                break;
-            }
-            if *pTemp == VER_PARSE_SYM_AND {
-                Vec_IntPush( vStackOp, VER_PARSE_OPER_AND );
-            } else if *pTemp == VER_PARSE_SYM_OR {
-                Vec_IntPush( vStackOp, VER_PARSE_OPER_OR );
-            } else if *pTemp == VER_PARSE_SYM_XOR {
-                Vec_IntPush( vStackOp, VER_PARSE_OPER_XOR );
-            } else if *pTemp == VER_PARSE_SYM_MUX1 {
-                Vec_IntPush( vStackOp, VER_PARSE_OPER_MUX ); }
-//            else if ( *pTemp == VER_PARSE_SYM_MUX2 )
-//                Vec_IntPush( vStackOp, VER_PARSE_OPER_MUX );
-            Flag = VER_PARSE_FLAG_OPER; 
-            break;
-
-        case VER_PARSE_SYM_OPEN:
-            if Flag == VER_PARSE_FLAG_VAR {
-                pErrorMessage = fmt.Sprintf("Parse_FormulaParser(): Variable before a parenthesis.");
-                Flag = VER_PARSE_FLAG_ERROR; 
-                break;
-            }
-            Vec_IntPush( vStackOp, VER_PARSE_OPER_MARK );
-            // after an opening bracket, it feels like starting over again
-            Flag = VER_PARSE_FLAG_START; 
-            break;
-
-        case VER_PARSE_SYM_CLOSE:
-            if Vec_IntSize( vStackOp ) {
-                for {
-                    if !Vec_IntSize( vStackOp ) {
-                        pErrorMessage = fmt.Sprintf("Parse_FormulaParser(): There is no opening parenthesis\n");
-                        Flag = VER_PARSE_FLAG_ERROR; 
-                        break;
-                    }
-                    Oper = Vec_IntPop( vStackOp );
-                    if Oper == VER_PARSE_OPER_MARK {
-                        break; }
-                    // skip the second MUX operation
-//                    if ( Oper == VER_PARSE_OPER_MUX2 )
-//                    {
-//                        Oper = Vec_IntPop( vStackOp );
-//                        assert( Oper == VER_PARSE_OPER_MUX1 );
-//                    }
-
-                    // perform the given operation
-                    if Ver_FormulaParserTopOper( (Hop_Man_t *)pMan, vStackFn, Oper ) == nil {
-                        pErrorMessage = fmt.Sprintf("Parse_FormulaParser(): Unknown operation\n");
-                        return nil;
-                    }
-                }
-            
-            } else {
-                pErrorMessage = fmt.Sprintf("Parse_FormulaParser(): There is no opening parenthesis\n");
-                Flag = VER_PARSE_FLAG_ERROR; 
-                break;
-            }
-            if Flag != VER_PARSE_FLAG_ERROR {
-                Flag = VER_PARSE_FLAG_VAR; } 
-            break;
-
-
-        default:
-            // scan the next name
-            v = Ver_FormulaParserFindVar( pTemp, vNames );
-            if *pTemp == '\\' {
-                pTemp++; }
-            pTemp += int32((ABC_PTRUINT_T))Vec_PtrEntry( vNames, 2*v ) - 1;
-
-            // assume operation AND, if vars follow one another
-            if Flag == VER_PARSE_FLAG_VAR {
-                pErrorMessage = fmt.Sprintf("Parse_FormulaParser(): Incorrect state.");
-                return nil;
-            }
-            bTemp = Hop_IthVar( (Hop_Man_t *)pMan, v );
-            Vec_PtrPush( vStackFn, bTemp ); //  Cudd_Ref( bTemp );
-            Flag = VER_PARSE_FLAG_VAR; 
-            break;
-        }
-
-        if Flag == VER_PARSE_FLAG_ERROR {
-            break;      // error exit
-        } else if Flag == VER_PARSE_FLAG_START {
-            continue;  //  go on parsing
-        } else if Flag == VER_PARSE_FLAG_VAR {
-            for {  // check if there are negations in the OpStack     
-                if !Vec_IntSize(vStackOp) {
-                    break; }
-                Oper = Vec_IntPop( vStackOp );
-                if Oper != VER_PARSE_OPER_NEG {
-                    Vec_IntPush( vStackOp, Oper );
-                    break;
-                
-                } else {
-//                      Vec_PtrPush( vStackFn, Cudd_Not(Vec_PtrPop(vStackFn)) );
-                      Vec_PtrPush( vStackFn, Hop_Not((Hop_Obj_t *)Vec_PtrPop(vStackFn)) );
-                }
-            }
-        } else { // if ( Flag == VER_PARSE_FLAG_OPER )
-            for {  // execute all the operations in the OpStack
-               // with precedence higher or equal than the last one
-                Oper1 = Vec_IntPop( vStackOp ); // the last operation
-                if !Vec_IntSize(vStackOp) {  // if it is the only operation, push it back
-                    Vec_IntPush( vStackOp, Oper1 );
-                    break;
-                }
-                Oper2 = Vec_IntPop( vStackOp ); // the operation before the last one
-                if Oper2 >= Oper1 && !(Oper1 == Oper2 && Oper1 == VER_PARSE_OPER_MUX) {  // if Oper2 precedence is higher or equal, execute it
-                    if Ver_FormulaParserTopOper( (Hop_Man_t *)pMan, vStackFn, Oper2 ) == nil {
-                        pErrorMessage = fmt.Sprintf("Parse_FormulaParser(): Unknown operation\n");
-                        return nil;
-                    }
-                    Vec_IntPush( vStackOp,  Oper1 );     // push the last operation back
-                
-                } else {  // if Oper2 precedence is lower, push them back and done
-                    Vec_IntPush( vStackOp, Oper2 );
-                    Vec_IntPush( vStackOp, Oper1 );
-                    break;
-                }
-            } }
-    }
-
-    if Flag != VER_PARSE_FLAG_ERROR {
-        if Vec_PtrSize(vStackFn) {    
-            bFunc = (Hop_Obj_t *)Vec_PtrPop(vStackFn);
-            if !Vec_PtrSize(vStackFn) {
-                if !Vec_IntSize(vStackOp) {
-//                    Cudd_Deref( bFunc );
-                    return bFunc;
-                
-                } else {
-                    pErrorMessage = fmt.Sprintf("Parse_FormulaParser(): Something is left in the operation stack\n"); }
-            } else {
-                pErrorMessage = fmt.Sprintf("Parse_FormulaParser(): Something is left in the function stack\n"); }
-        
-        } else {
-            pErrorMessage = fmt.Sprintf("Parse_FormulaParser(): The input string is empty\n"); }
-    }
-//    Cudd_Ref( bFunc );
-//    Cudd_RecursiveDeref( dd, bFunc );
-    return nil;
+func Ver_FormulaParserTopOper(man *hop.Hop_Man_t, stack *vec.Vec_Ptr_t, op int32) *hop.Hop_Obj_t {
+	b := vec.Vec_PtrPop(stack).(*hop.Hop_Obj_t)
+	a := vec.Vec_PtrPop(stack).(*hop.Hop_Obj_t)
+	var result *hop.Hop_Obj_t
+	switch op {
+	case verOpAnd:
+		result = hop.Hop_And(man, a, b)
+	case verOpXor:
+		result = hop.Hop_Exor(man, a, b)
+	case verOpOr:
+		result = hop.Hop_Or(man, a, b)
+	case verOpEqu:
+		result = hop.Hop_Not(hop.Hop_Exor(man, a, b))
+	case verOpMux:
+		result = hop.Hop_Mux(man, vec.Vec_PtrPop(stack).(*hop.Hop_Obj_t), a, b)
+	default:
+		return nil
+	}
+	vec.Vec_PtrPush(stack, result)
+	return result
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Performs the operation on the top entries in the stack.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ver_FormulaParserTopOper(pMan *Hop_Man_t, vStackFn *Vec_Ptr_t, Oper int32) *Hop_Obj_t {
-    var bArg0, bArg1, bArg2, bFunc *Hop_Obj_t;
-    // perform the given operation
-    bArg2 = (Hop_Obj_t *)Vec_PtrPop( vStackFn );
-    bArg1 = (Hop_Obj_t *)Vec_PtrPop( vStackFn );
-    if Oper == VER_PARSE_OPER_AND {
-        bFunc = Hop_And( pMan, bArg1, bArg2 );
-    } else if Oper == VER_PARSE_OPER_XOR {
-        bFunc = Hop_Exor( pMan, bArg1, bArg2 );
-    } else if Oper == VER_PARSE_OPER_OR {
-        bFunc = Hop_Or( pMan, bArg1, bArg2 );
-    } else if Oper == VER_PARSE_OPER_EQU {
-        bFunc = Hop_Not( Hop_Exor( pMan, bArg1, bArg2 ) );
-    } else if Oper == VER_PARSE_OPER_MUX {
-        bArg0 = (Hop_Obj_t *)Vec_PtrPop( vStackFn );
-//        bFunc = Cudd_bddIte( dd, bArg0, bArg1, bArg2 );  Cudd_Ref( bFunc );
-        bFunc = Hop_Mux( pMan, bArg0, bArg1, bArg2 ); 
-//        Cudd_RecursiveDeref( dd, bArg0 );
-//        Cudd_Deref( bFunc );
-    
-    } else {
-        return nil; }
-//    Cudd_Ref( bFunc );
-//    Cudd_RecursiveDeref( dd, bArg1 );
-//    Cudd_RecursiveDeref( dd, bArg2 );
-    Vec_PtrPush( vStackFn,  bFunc );
-    return bFunc;
+// Names retain the C vector's alternating length/name entries.
+func Ver_FormulaParserFindVar(s string, names *vec.Vec_Ptr_t) int32 {
+	end, start := 0, 0
+	if len(s) > 0 && s[0] == '\\' {
+		start = 1
+		for end < len(s) && s[end] != ' ' {
+			end++
+		}
+	} else {
+		for end < len(s) && !strings.ContainsRune(" \t\r\n,}()!~&|^?:", rune(s[end])) {
+			end++
+		}
+	}
+	name := s[start:end]
+	for i := 0; i < vec.Vec_PtrSize(names)/2; i++ {
+		if vec.Vec_PtrEntry(names, 2*i).(int) == len(name) && vec.Vec_PtrEntry(names, 2*i+1).(string) == name {
+			return int32(i)
+		}
+	}
+	index := int32(vec.Vec_PtrSize(names) / 2)
+	vec.Vec_PtrPush(names, len(name))
+	vec.Vec_PtrPush(names, name)
+	return index
 }
 
-/**Function*************************************************************
+func verFormulaError(dst []byte, message string) { clear(dst); copy(dst, message) }
 
-  Synopsis    [Returns the index of the new variable found.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ver_FormulaParserFindVar(pString string, vNames *Vec_Ptr_t) int32 {
-    var pTemp, pTemp2 string;
-    var nLength, nLength2, i int32;
-    // start the string
-    pTemp = pString;
-    // find the end of the string delimited by other characters
-    if *pTemp == '\\' {
-        pString++;
-        for  *pTemp && *pTemp != ' '  {
-            pTemp++;
-        }
-    
-    } else {
-        for  *pTemp && *pTemp != ' ' && *pTemp != '\t' && *pTemp != '\r' && *pTemp != '\n' && *pTemp != ',' && *pTemp != '}' && 
-                *pTemp != VER_PARSE_SYM_OPEN && *pTemp != VER_PARSE_SYM_CLOSE && 
-                *pTemp != VER_PARSE_SYM_NEGBEF1 && *pTemp != VER_PARSE_SYM_NEGBEF2 && 
-                *pTemp != VER_PARSE_SYM_AND && *pTemp != VER_PARSE_SYM_OR && *pTemp != VER_PARSE_SYM_XOR && 
-                *pTemp != VER_PARSE_SYM_MUX1 && *pTemp != VER_PARSE_SYM_MUX2  {
-                pTemp++;
-        }
-    }
-    // look for this string in the array
-    nLength = pTemp - pString;
-    for  i = 0; i < Vec_PtrSize(vNames)/2; i++  {
-        nLength2 = int32((ABC_PTRUINT_T))Vec_PtrEntry( vNames, 2*i + 0 );
-        if nLength2 != nLength {
-            continue; }
-        pTemp2   = (char *)Vec_PtrEntry( vNames, 2*i + 1 );
-        if strncmp( pString, pTemp2, nLength ) {
-            continue; }
-        return i;
-    }
-    // could not find - add and return the number
-    Vec_PtrPush( vNames, (void *)(ABC_PTRUINT_T)nLength );
-    Vec_PtrPush( vNames, pString );
-    return i;
+func Ver_FormulaParser(formula string, man *hop.Hop_Man_t, names, functions *vec.Vec_Ptr_t, operators *vec.Vec_Int_t, errorMessage []byte) *hop.Hop_Obj_t {
+	vec.Vec_PtrClear(names)
+	vec.Vec_PtrClear(functions)
+	vec.Vec_IntClear(operators)
+	if formula == "0" || formula == "1'b0" {
+		return hop.Hop_ManConst0(man)
+	}
+	if formula == "1" || formula == "1'b1" {
+		return hop.Hop_ManConst1(man)
+	}
+	depth := 0
+	for _, c := range formula {
+		if c == '(' {
+			depth++
+		} else if c == ')' {
+			depth--
+		}
+	}
+	if depth != 0 {
+		verFormulaError(errorMessage, "Parse_FormulaParser(): Different number of opening and closing parentheses ().")
+		return nil
+	}
+	formula = "(" + formula + ")"
+	flag := verFlagStart
+	for pos := 0; pos < len(formula); pos++ {
+		c := formula[pos]
+		switch c {
+		case ' ', '\t', '\r', '\n':
+			continue
+		case '!', '~':
+			if flag == verFlagVar {
+				verFormulaError(errorMessage, "Parse_FormulaParser(): Variable before negation.")
+				flag = verFlagError
+				break
+			}
+			vec.Vec_IntPush(operators, verOpNeg)
+		case '&', '|', '^', '?', ':':
+			if flag != verFlagVar {
+				verFormulaError(errorMessage, "Parse_FormulaParser(): There is no variable before AND, EXOR, or OR.")
+				flag = verFlagError
+				break
+			}
+			switch c {
+			case '&':
+				vec.Vec_IntPush(operators, verOpAnd)
+			case '|':
+				vec.Vec_IntPush(operators, verOpOr)
+			case '^':
+				vec.Vec_IntPush(operators, verOpXor)
+			case '?':
+				vec.Vec_IntPush(operators, verOpMux)
+			}
+			flag = verFlagOper
+		case '(':
+			if flag == verFlagVar {
+				verFormulaError(errorMessage, "Parse_FormulaParser(): Variable before a parenthesis.")
+				flag = verFlagError
+				break
+			}
+			vec.Vec_IntPush(operators, verOpMark)
+			flag = verFlagStart
+		case ')':
+			if vec.Vec_IntSize(operators) == 0 {
+				verFormulaError(errorMessage, "Parse_FormulaParser(): There is no opening parenthesis\n")
+				flag = verFlagError
+				break
+			}
+			for {
+				if vec.Vec_IntSize(operators) == 0 {
+					verFormulaError(errorMessage, "Parse_FormulaParser(): There is no opening parenthesis\n")
+					flag = verFlagError
+					break
+				}
+				op := vec.Vec_IntPop(operators)
+				if op == verOpMark {
+					break
+				}
+				if Ver_FormulaParserTopOper(man, functions, op) == nil {
+					verFormulaError(errorMessage, "Parse_FormulaParser(): Unknown operation\n")
+					return nil
+				}
+			}
+			if flag != verFlagError {
+				flag = verFlagVar
+			}
+		default:
+			v := Ver_FormulaParserFindVar(formula[pos:], names)
+			if c == '\\' {
+				pos++
+			}
+			pos += vec.Vec_PtrEntry(names, 2*int(v)).(int) - 1
+			if flag == verFlagVar {
+				verFormulaError(errorMessage, "Parse_FormulaParser(): Incorrect state.")
+				return nil
+			}
+			vec.Vec_PtrPush(functions, hop.Hop_IthVar(man, v))
+			flag = verFlagVar
+		}
+		if flag == verFlagError {
+			break
+		}
+		if flag == verFlagStart {
+			continue
+		}
+		if flag == verFlagVar {
+			for vec.Vec_IntSize(operators) > 0 {
+				op := vec.Vec_IntPop(operators)
+				if op != verOpNeg {
+					vec.Vec_IntPush(operators, op)
+					break
+				}
+				vec.Vec_PtrPush(functions, hop.Hop_Not(vec.Vec_PtrPop(functions).(*hop.Hop_Obj_t)))
+			}
+		} else {
+			for {
+				op1 := vec.Vec_IntPop(operators)
+				if vec.Vec_IntSize(operators) == 0 {
+					vec.Vec_IntPush(operators, op1)
+					break
+				}
+				op2 := vec.Vec_IntPop(operators)
+				if op2 >= op1 && !(op1 == op2 && op1 == verOpMux) {
+					if Ver_FormulaParserTopOper(man, functions, op2) == nil {
+						verFormulaError(errorMessage, "Parse_FormulaParser(): Unknown operation\n")
+						return nil
+					}
+					vec.Vec_IntPush(operators, op1)
+				} else {
+					vec.Vec_IntPush(operators, op2)
+					vec.Vec_IntPush(operators, op1)
+					break
+				}
+			}
+		}
+	}
+	if flag != verFlagError {
+		if vec.Vec_PtrSize(functions) > 0 {
+			result := vec.Vec_PtrPop(functions).(*hop.Hop_Obj_t)
+			if vec.Vec_PtrSize(functions) == 0 {
+				if vec.Vec_IntSize(operators) == 0 {
+					return result
+				}
+				verFormulaError(errorMessage, "Parse_FormulaParser(): Something is left in the operation stack\n")
+			} else {
+				verFormulaError(errorMessage, "Parse_FormulaParser(): Something is left in the function stack\n")
+			}
+		} else {
+			verFormulaError(errorMessage, "Parse_FormulaParser(): The input string is empty\n")
+		}
+	}
+	return nil
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Returns the AIG representation of the reduction formula.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ver_FormulaReduction(pFormula string, pMan any, vNames *Vec_Ptr_t, pErrorMessage string) any {
-    var pRes *Hop_Obj_t  = nil;
-    var v, fCompl int32;
-    var Symbol byte;
-
-    // get the operation
-    Symbol = *pFormula++;
-    fCompl = ( Symbol == '~' );
-    if fCompl != 0 {
-        Symbol = *pFormula++; }
-    // check the operation
-    if Symbol != '&' && Symbol != '|' && Symbol != '^' {
-        pErrorMessage = fmt.Sprintf("Ver_FormulaReduction(): Unknown operation (%c)\n", Symbol);
-        return nil;
-    }
-    // skip the brace
-    for  *pFormula++ != '{'  {; }
-    // parse the names
-    Vec_PtrClear( vNames );
-    for  *pFormula != '}'  {
-        v = Ver_FormulaParserFindVar( pFormula, vNames );
-        pFormula += int32((ABC_PTRUINT_T))Vec_PtrEntry( vNames, 2*v );
-        for  *pFormula == ' ' || *pFormula == ','  {
-            pFormula++;
-        }
-    }
-    // compute the function
-    if Symbol == '&' {
-        pRes = Hop_CreateAnd( (Hop_Man_t *)pMan, Vec_PtrSize(vNames)/2 );
-    } else if Symbol == '|' {
-        pRes = Hop_CreateOr( (Hop_Man_t *)pMan, Vec_PtrSize(vNames)/2 );
-    } else if Symbol == '^' {
-        pRes = Hop_CreateExor( (Hop_Man_t *)pMan, Vec_PtrSize(vNames)/2 ); }
-    return Hop_NotCond( pRes, fCompl );
+func Ver_FormulaReduction(formula string, man *hop.Hop_Man_t, names *vec.Vec_Ptr_t, errorMessage []byte) *hop.Hop_Obj_t {
+	pos := 0
+	symbol := formula[pos]
+	pos++
+	complement := int32(0)
+	if symbol == '~' {
+		complement = 1
+		symbol = formula[pos]
+		pos++
+	}
+	if symbol != '&' && symbol != '|' && symbol != '^' {
+		verFormulaError(errorMessage, fmt.Sprintf("Ver_FormulaReduction(): Unknown operation (%c)\n", symbol))
+		return nil
+	}
+	for formula[pos] != '{' {
+		pos++
+	}
+	pos++
+	vec.Vec_PtrClear(names)
+	for formula[pos] != '}' {
+		v := Ver_FormulaParserFindVar(formula[pos:], names)
+		pos += vec.Vec_PtrEntry(names, 2*int(v)).(int)
+		for formula[pos] == ' ' || formula[pos] == ',' {
+			pos++
+		}
+	}
+	var result *hop.Hop_Obj_t
+	switch symbol {
+	case '&':
+		result = hop.Hop_CreateAnd(man, int32(vec.Vec_PtrSize(names)/2))
+	case '|':
+		result = hop.Hop_CreateOr(man, int32(vec.Vec_PtrSize(names)/2))
+	case '^':
+		result = hop.Hop_CreateExor(man, int32(vec.Vec_PtrSize(names)/2))
+	}
+	return hop.Hop_NotCond(result, complement)
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
