@@ -67,13 +67,19 @@ GOCACHE=/tmp/abcgo-cache go -C abcgo test -race ./proof/ssc
 GOCACHE=/tmp/abcgo-cache go -C abcgo vet ./proof/ssc
 ```
 
-They currently encounter unrelated malformed GIA drafts (`giaBalAig.go` first).
-`test_native.sh` uses the GIA owner's actual maintained native-source list in a
-temporary module; originals remain visible and untouched. It links all SSC files
-and real dependencies, with no mocks. Verified focused commands:
+The earlier dependency blocker involving malformed GIA drafts has been resolved;
+all three commands now pass against the complete package. `test_native.sh` uses
+the GIA owner's maintained native-source list in a temporary module and links
+all SSC files and real dependencies, with no mocks. Previously verified focused
+commands:
 
 ```
 abcgo/proof/ssc/test_native.sh
 abcgo/proof/ssc/test_native.sh -race
 SSC_CHECK_MODE=vet abcgo/proof/ssc/test_native.sh
 ```
+
+Follow-up coverage checks packed Boolean operations, care-mask and witness
+extraction, pivot-filled pattern transfer, phase-aware class splitting, and
+complemented simulation equivalence. The unchanged C oracle was rerun and
+passed; full package race tests and vet also pass.

@@ -22,5 +22,7 @@ source GIA remains outside the graph API's concurrency contract.
 
 Normal/race focused suites and vet pass with the real native GIA dependency set.
 The C oracle actually ran successfully during review; optional skips are visible.
-Ordinary package validation is blocked by unrelated GIA drafts, documented in
-PORTING.md; no claim is made that those drafts compile.
+The earlier GIA dependency blocker has since been resolved. The full package
+now builds and its race tests and vet pass, including a rerun of the original C
+oracle. Additional focused tests cover care masks, witnesses, phase-sensitive
+class refinement, and packed simulation primitives.
