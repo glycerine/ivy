@@ -81,49 +81,6 @@ import "os"
   SeeAlso     []
 
 ***********************************************************************/
-func Ga2_ManDumpStats(pGia *Gia_Man_t, pPars *Abs_Par_t, pSat *sat_solver2, iFrame int32, fUseN int32) {
-    var pFile *os.File;
-    var pFileName string // was [32]byte in C
-
-    pFileName = fmt.Sprintf("stats_gla%s%s.txt", fUseN ? "n":"", pPars.fUseFullProof ? "p":""); 
-
-    pFile = os.OpenFile(pFileName, os.O_RDWR | os.O_CREATE | os.O_APPEND, 0666);
-
-    fmt.Fprintf(pFile, "%s pi=%d ff=%d and=%d mem=%d bmc=%d", pGia.pName, Gia_ManPiNum(pGia), Gia_ManRegNum(pGia), Gia_ManAndNum(pGia), int32((1 + sat_solver2_memory_proof(pSat)/(1<<20))), iFrame);
-
-    if pGia.vGateClasses {
-    fmt.Fprintf(pFile, " ff=%d and=%d", Gia_GlaCountFlops( pGia, pGia.vGateClasses ), Gia_GlaCountNodes( pGia, pGia.vGateClasses )); }
-
-    fmt.Fprintf(pFile, "\n");
-    _ = (pFile).Close();
-}
-func Ga2_ManReportMemory(p *Ga2_Man_t) {
-    var memTot float64;
-    var memAig float64  = 1.0 * p.pGia.nObjsAlloc * sizeof(Gia_Obj_t) + Vec_IntMemory(p.pGia.vMapping);
-    var memSat float64  = sat_solver2_memory( p.pSat, 1 );
-    var memPro float64  = sat_solver2_memory_proof( p.pSat );
-    var memMap float64  = Vec_VecMemoryInt( (Vec_Vec_t *)p.vId2Lit );
-    var memRef float64  = Rnm_ManMemoryUsage( p.pRnm );
-    var memHash float64 = sizeof(int) * 6 * p.nTable;
-    var memOth float64  = sizeof(Ga2_Man_t);
-    memOth += Vec_VecMemoryInt( (Vec_Vec_t *)p.vCnfs );
-    memOth += Vec_IntMemory( p.vIds );
-    memOth += Vec_IntMemory( p.vProofIds );
-    memOth += Vec_IntMemory( p.vAbs );
-    memOth += Vec_IntMemory( p.vValues );
-    memOth += Vec_IntMemory( p.vLits );
-    memOth += Vec_IntMemory( p.vIsopMem );
-    memOth += 336450 + (sizeof(char) + sizeof(char*)) * 65536;
-    memTot = memAig + memSat + memPro + memMap + memRef + memHash + memOth;
-    ABC_PRMP( "Memory: AIG      ", memAig, memTot );
-    ABC_PRMP( "Memory: SAT      ", memSat, memTot );
-    ABC_PRMP( "Memory: Proof    ", memPro, memTot );
-    ABC_PRMP( "Memory: Map      ", memMap, memTot );
-    ABC_PRMP( "Memory: Refine   ", memRef, memTot );
-    ABC_PRMP( "Memory: Hash     ", memHash,memTot );
-    ABC_PRMP( "Memory: Other    ", memOth, memTot );
-    ABC_PRMP( "Memory: TOTAL    ", memTot, memTot );
-}
 /**Function*************************************************************
 
   Synopsis    [Computes a minimized truth table.]
