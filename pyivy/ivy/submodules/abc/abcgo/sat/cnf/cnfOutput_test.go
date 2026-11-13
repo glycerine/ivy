@@ -114,14 +114,19 @@ func TestLegacyDerivationLeavesLastOutputsFree(t *testing.T) {
 		{"mapped", Cnf_Derive}, {"simple", Cnf_DeriveSimple}, {"fast", Cnf_DeriveFast},
 	} {
 		for free := int32(0); free <= 2; free++ {
-			data := derive.fn(g, free)
 			// ABC's mapped writer requires either all COs or no COs to be free.
 			if derive.name == "mapped" && free == 1 {
-				if data != nil {
-					t.Fatal("mapped CNF accepted a partial free-CO count")
-				}
+				func() {
+					defer func() {
+						if recover() == nil {
+							t.Error("mapped CNF accepted a partial free-CO count")
+						}
+					}()
+					derive.fn(g, free)
+				}()
 				continue
 			}
+			data := derive.fn(g, free)
 			if data == nil {
 				t.Fatalf("%s: no CNF", derive.name)
 			}

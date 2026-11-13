@@ -7,9 +7,14 @@ history. Seeded graph and cut oracles compare small cases against independent
 Boolean evaluation; frame tests exercise initial state and a latch transition.
 
 The readability pass consolidated serialization and leaf traversal and uses
-the shared ISOP implementation for cut costs. The encoder uses a direct
-Tseitin representation; its internal cut mapping and clause optimization are
-not a claim of byte-for-byte or size equivalence with ABC's mapped encoder.
+the shared ISOP implementation for cut costs. `EncodeAIG` uses a direct
+Tseitin representation; `Cnf_Derive` uses ABC's mapped cut-based encoding.
+Direct comparisons against C cover hundreds of mapped AND/inverter graphs.
+
+The source BSAT solver can report SAT for an inconsistent formula when pending
+root units and assumptions interact. The `EncodeAIG` randomized regression
+records two such results reproduced by the original C solver. See the BSAT
+porting notes for the source behavior and its implications.
 
 Known limitations needing further work: fast cuts with more than six leaves
 support AND supergates but reject other cones. Some retained compatibility helpers

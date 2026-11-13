@@ -95,6 +95,13 @@ func Cnf_IsopWriteCube(cube int32, variables int32, vars, literals []int32) int3
 }
 
 func Cnf_ManWriteCnf(manager *Cnf_Man_t, mapped *Vec_Ptr_t, outputs int32) *Cnf_Dat_t {
+	if manager != nil && manager.pManAig != nil {
+		graph := manager.pManAig
+		count := int32(graph.OutputCount())
+		if outputs < 0 || outputs > count || outputs != 0 && outputs != count && (graph.RegisterCount() == 0 || outputs != graph.RegisterCount()) {
+			panic("cnf: invalid free output count")
+		}
+	}
 	result, err := cnfWriteMapped(manager, mapped, outputs)
 	if err != nil {
 		return nil

@@ -121,9 +121,14 @@ func TestMappedWriterSourceFreeOutputRestrictions(t *testing.T) {
 	defer Cnf_ManStop(m)
 	m.pManAig = g
 	mapped := vec.Vec_PtrAlloc(0)
-	if Cnf_ManWriteCnf(m, mapped, 1) != nil {
-		t.Fatal("partial combinational outputs accepted")
-	}
+	func() {
+		defer func() {
+			if recover() == nil {
+				t.Error("partial combinational outputs accepted")
+			}
+		}()
+		Cnf_ManWriteCnf(m, mapped, 1)
+	}()
 	if Cnf_ManWriteCnf(m, mapped, 2) == nil {
 		t.Fatal("all combinational outputs rejected")
 	}
