@@ -218,27 +218,6 @@ func Saig_ManCexRefine(p *Aig_Man_t, pAbs *Aig_Man_t, vFlops *Vec_Int_t, nFrames
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManCexAbstractionRefine(pGia *Gia_Man_t, pCex *Abc_Cex_t, nFfToAddMax int32, fTryFour int32, fSensePath int32, fVerbose int32) int32 {
-    var pNew *Aig_Man_t;
-    var vFlops *Vec_Int_t;
-    if pGia.vFlopClasses == nil {
-        fmt.Printf("Gia_ManCexAbstractionRefine(): Abstraction latch map is missing.\n");
-        return -1;
-    }
-    pNew = Gia_ManToAig( pGia, 0 );
-    vFlops = Gia_ManClasses2Flops( pGia.vFlopClasses );
-    if !(Saig_ManCexRefineStep( pNew, vFlops, pGia.vFlopClasses, pCex, nFfToAddMax, fTryFour, fSensePath, fVerbose ) != 0) {
-        pGia.pCexSeq = pNew.pSeqModel; pNew.pSeqModel = nil;
-        Vec_IntFree( vFlops );
-        Aig_ManStop( pNew );
-        return 0;
-    }
-    Vec_IntFree( pGia.vFlopClasses );
-    pGia.vFlopClasses = Gia_ManFlops2Classes( pGia, vFlops );
-    Vec_IntFree( vFlops );
-    Aig_ManStop( pNew );
-    return -1;
-}
 
 
 /**Function*************************************************************
