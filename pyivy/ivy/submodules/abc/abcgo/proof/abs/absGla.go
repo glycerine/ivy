@@ -125,37 +125,6 @@ func Ga2_ManReportMemory(p *Ga2_Man_t) {
     ABC_PRMP( "Memory: Other    ", memOth, memTot );
     ABC_PRMP( "Memory: TOTAL    ", memTot, memTot );
 }
-func Ga2_ManStop(p *Ga2_Man_t) {
-    Vec_IntFreeP( &p.pGia.vMapping );
-    Gia_ManSetPhase( p.pGia );
-    if p.pPars.fVerbose {
-        Abc_Print( 1, "SAT solver:  Var = %d  Cla = %d  Conf = %d  Lrn = %d  Reduce = %d  Cex = %d  ObjsAdded = %d\n", 
-            sat_solver2_nvars(p.pSat), sat_solver2_nclauses(p.pSat), 
-            sat_solver2_nconflicts(p.pSat), sat_solver2_nlearnts(p.pSat), 
-            p.pSat.nDBreduces, p.nCexes, p.nObjAdded ); }
-    if p.pPars.fVerbose {
-    Abc_Print( 1, "Hash hits = %d.  Hash misses = %d.  Hash overs = %d.  Concurrent calls = %d.\n", 
-        p.nHashHit, p.nHashMiss, p.nHashOver, p.nPdrCalls ); }
-
-    if p.pSat { sat_solver2_delete( p.pSat ); }
-    Vec_VecFree( (Vec_Vec_t *)p.vCnfs );
-    Vec_VecFree( (Vec_Vec_t *)p.vId2Lit );
-    Vec_IntFree( p.vIds );
-    Vec_IntFree( p.vProofIds );
-    Vec_IntFree( p.vAbs );
-    Vec_IntFree( p.vValues );
-    Vec_IntFree( p.vLits );
-    Vec_IntFree( p.vIsopMem );
-    Rnm_ManStop( p.pRnm, 0 );
-//    Rf2_ManStop( p->pRf2, p->pPars->fVerbose );
-    ABC_FREE( p.pTable );
-    ABC_FREE( p.pSopSizes );
-    ABC_FREE( p.pSops[1] );
-    ABC_FREE( p.pSops );
-    ABC_FREE( p );
-}
-
-
 /**Function*************************************************************
 
   Synopsis    [Computes a minimized truth table.]

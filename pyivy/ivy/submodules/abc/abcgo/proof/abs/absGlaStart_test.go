@@ -20,3 +20,21 @@ func TestGlaManagerStartInitializesCutAndConstant(t *testing.T) {
 		t.Fatal("bad manager initialization")
 	}
 }
+
+func TestGlaManagerStopRestoresScratchState(t *testing.T) {
+	g := gia.Gia_ManStart(8)
+	a := gia.Gia_ManAppendCi(g)
+	b := gia.Gia_ManAppendCi(g)
+	gate := gia.Gia_ManAppendAnd(g, a^1, b)
+	gia.Gia_ManAppendCo(g, gate)
+	pars := &Abs_Par_t{}
+	Abs_ParSetDefaults(pars)
+	p := Ga2_ManStart(g, pars)
+	if gia.Gia_ManMapping(g) == nil || !gia.Gia_ManHasStaticFanout(g) {
+		t.Fatal("expected temporary manager state")
+	}
+	Ga2_ManStop(p)
+	if gia.Gia_ManMapping(g) != nil || gia.Gia_ManHasStaticFanout(g) {
+		t.Fatal("manager scratch state was not cleaned")
+	}
+}
