@@ -146,6 +146,9 @@ func Aig_ManLevelNum(p *Graph) int32 {
 }
 func Aig_ManChoiceLevel_rec(p *Graph, e Edge) { p.choiceLevels([]Edge{e}) }
 func Aig_ManChoiceLevel(p *Graph) int32 {
+	for i := range p.nodes {
+		p.nodes[i].Level = 0
+	}
 	roots := append(append([]Edge(nil), p.outputs...), p.inputs...)
 	p.choiceLevels(roots)
 	max := int32(0)
@@ -171,7 +174,6 @@ func (p *Graph) choiceLevels(roots []Edge) {
 		n := p.nodes[id]
 		level := 0
 		if n.Kind == Input {
-			level = n.Level
 			if manager, ok := p.Timing.(*tim.Tim_Man_t); ok {
 				box := tim.Tim_ManBoxForCi(manager, int(Aig_ObjCioId(p, e)))
 				if box >= 0 {
