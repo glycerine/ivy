@@ -24,6 +24,8 @@ in progress; passing tests do not establish that those gaps are resolved.
   semi-formal implementation asserts because its frame migration is
   unfinished; representative storage requires a buffer-free graph. Rarity
   permutation uses Go's PRNG, so its sequence differs from C's `rand()`.
+  Review fixed uniqueness polarity, constant-candidate counts and polarity
+  of unassigned edges; partitioned and constrained traces now have tests.
 * `abs` builds and passes its full race suite and vet. Old GLA currently
   requires XOR/MUX nodes to be lowered to ANDs; full integration review
   remains in progress.
