@@ -68,13 +68,13 @@ func sswRefineConstants(p *Ssw_Cla_t, roots []aig.Edge, recursive int32, constOn
 	if len(candidates) == 0 {
 		return 0
 	}
+	p.nCands1 -= int32(len(candidates))
 	if constOnly {
 		for _, obj := range candidates {
 			aig.Aig_ObjClearRepr(p.pAig, obj)
 		}
 		return 1
 	}
-	p.nCands1 -= int32(len(candidates))
 	repr := candidates[0]
 	aig.Aig_ObjClearRepr(p.pAig, repr)
 	if len(candidates) == 1 {

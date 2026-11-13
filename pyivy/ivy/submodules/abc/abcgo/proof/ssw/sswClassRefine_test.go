@@ -49,3 +49,26 @@ func TestRefineConstantCandidates(t *testing.T) {
 		t.Fatal("constant candidates incorrectly refined")
 	}
 }
+
+func TestConstantOnlyRefinementMaintainsCandidateCount(t *testing.T) {
+	g := aig.NewGraph()
+	a, b := g.NewInput(), g.NewInput()
+	p := Ssw_ClassesStart(g)
+	p.fConstCorr = 1
+	p.nCands1 = 2
+	aig.Aig_ObjSetRepr(g, a, g.Const1())
+	aig.Aig_ObjSetRepr(g, b, g.Const1())
+	p.pFuncNodeIsConst = func(_ any, obj aig.Edge) int32 {
+		if obj == a {
+			return 1
+		}
+		return 0
+	}
+	if Ssw_ClassesRefineConst1(p, 0) != 1 {
+		t.Fatal("expected refinement")
+	}
+	if p.nCands1 != 1 || aig.Aig_ObjRepr(g, b) != aig.InvalidEdge {
+		t.Fatalf("wrong candidate count %d", p.nCands1)
+	}
+	Ssw_ClassesCheck(p)
+}
