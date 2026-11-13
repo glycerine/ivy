@@ -1,6 +1,7 @@
 package cec
 
 import (
+	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/proof/cec/core"
@@ -230,6 +231,127 @@ func TestNativeSweepRejectsFalseSeedClass(t *testing.T) {
 			if pairs[i] == x>>1 && pairs[i+1] == y>>1 || pairs[i] == y>>1 && pairs[i+1] == x>>1 {
 				t.Fatalf("circuit %d: false proof %v", circuit, pairs)
 			}
+		}
+	}
+}
+
+func TestNativeSweepComplementedSeedAlias(t *testing.T) {
+	for _, track := range []int32{0, 1} {
+		g := gia.Gia_ManStart(16)
+		a, b := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
+		x := gia.Gia_ManAppendXorReal(g, a, b)
+		y := gia.Gia_ManAppendBuf(g, x^1)
+		gia.Gia_ManAppendCo(g, x)
+		gia.Gia_ManAppendCo(g, y)
+		g.StartRepresentatives()
+		gia.Gia_ObjSetRepr(g, y>>1, x>>1)
+		gia.Gia_ObjSetNext(g, x>>1, y>>1)
+		var p Cec_ParFra_t
+		Cec_ManFraSetDefaultParams(&p)
+		p.fUseOrigIds = track
+		q := Cec_ManSatSweeping(g, &p, 1)
+		if q == nil || p.Error != nil {
+			t.Fatalf("track %d: %v", track, p.Error)
+		}
+		for bits := 0; bits < 4; bits++ {
+			in := []bool{bits&1 != 0, bits&2 != 0}
+			want, e1 := g.Evaluate(in)
+			got, e2 := q.Evaluate(in)
+			if e1 != nil || e2 != nil || len(got) != 2 || got[0] != want[0] || got[1] != want[1] {
+				t.Fatalf("track %d bits %d want %v got %v errors %v %v", track, bits, want, got, e1, e2)
+			}
+		}
+		if track != 0 {
+			pairs := vec.Vec_IntArray(gia.Gia_ManOrigEquivPairs(g))
+			found := false
+			for i := 0; i+1 < len(pairs); i += 2 {
+				found = found || pairs[i] == x>>1 && pairs[i+1] == y>>1 || pairs[i] == y>>1 && pairs[i+1] == x>>1
+			}
+			if !found {
+				t.Fatalf("missing complemented alias %v", pairs)
+			}
+		}
+	}
+}
+
+func TestNativeSweepConflictLimitedSeed(t *testing.T) {
+	const pigeons, holes = 6, 5
+	ag := aig.NewGraph()
+	vars := make([][]aig.Edge, pigeons)
+	for i := range vars {
+		vars[i] = make([]aig.Edge, holes)
+		for j := range vars[i] {
+			vars[i][j] = ag.NewInput()
+		}
+	}
+	formula := ag.Const1()
+	for i := range vars {
+		clause := ag.Const0()
+		for _, v := range vars[i] {
+			clause = ag.OR(clause, v)
+		}
+		formula = ag.AND(formula, clause)
+	}
+	for h := 0; h < holes; h++ {
+		for i := 0; i < pigeons; i++ {
+			for j := 0; j < i; j++ {
+				formula = ag.AND(formula, ag.OR(vars[i][h].Not(), vars[j][h].Not()))
+			}
+		}
+	}
+	ag.AddOutput(formula)
+	g := gia.Gia_ManFromAig(ag)
+	formulaLit := g.OutputLiterals()[0]
+	in := g.InputLiterals()
+	native := gia.Gia_ManAppendXorReal(g, in[0], in[1])
+	gia.Gia_ManAppendCo(g, native)
+	g.StartRepresentatives()
+	gia.Gia_ObjSetRepr(g, formulaLit>>1, 0)
+	lower, _, _, err := cecLowerSweepGraph(g)
+	if err != nil {
+		t.Fatal(err)
+	}
+	fra := Cec_ManFraStart(lower, &Cec_ParFra_t{nDepthMax: 1})
+	query := Cec_ManFraSpecReduction(fra)
+	if gia.Gia_ManCoNum(query) == 0 {
+		t.Fatal("missing seeded query")
+	}
+	Cec_ManSatSolve(nil, query, &Cec_ParSat_t{nBTLimit: 1}, nil, nil, nil, 0)
+	unknown := false
+	for i := int32(0); i < gia.Gia_ManCoNum(query); i++ {
+		o := gia.Gia_ManCo(query, i)
+		unknown = unknown || gia.Gia_ObjMark0(o) == 0 && gia.Gia_ObjMark1(o) == 0
+	}
+	if !unknown {
+		t.Fatal("fixture did not reach conflict-limited unknown")
+	}
+	var pars Cec_ParFra_t
+	Cec_ManFraSetDefaultParams(&pars)
+	pars.nBTLimit = 1
+	pars.nItersMax = 1
+	pars.fSatSweeping = 1
+	pars.fUseOrigIds = 1
+	result := Cec_ManSatSweeping(g, &pars, 1)
+	if result == nil || pars.Error != nil {
+		t.Fatalf("sweep: %v", pars.Error)
+	}
+	pairs := vec.Vec_IntArray(gia.Gia_ManOrigEquivPairs(g))
+	for i := 0; i+1 < len(pairs); i += 2 {
+		if pairs[i] == 0 && pairs[i+1] == formulaLit>>1 || pairs[i+1] == 0 && pairs[i] == formulaLit>>1 {
+			t.Fatalf("unknown candidate published: %v", pairs)
+		}
+	}
+	for sample := 0; sample < 128; sample++ {
+		inputs := make([]bool, len(in))
+		seed := uint32(sample + 1)
+		for i := range inputs {
+			seed = seed*1664525 + 1013904223
+			inputs[i] = seed>>31 != 0
+		}
+		want, e1 := g.Evaluate(inputs)
+		got, e2 := result.Evaluate(inputs)
+		if e1 != nil || e2 != nil || len(got) != 2 || got[0] != want[0] || got[1] != want[1] {
+			t.Fatalf("sample %d want %v got %v errors %v %v", sample, want, got, e1, e2)
 		}
 	}
 }
