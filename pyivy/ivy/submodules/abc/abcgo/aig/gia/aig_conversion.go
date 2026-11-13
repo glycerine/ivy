@@ -160,15 +160,7 @@ func giaExportAigNode(out *aig.Graph, copies []aig.Edge, p *Gia_Man_t, obj *Gia_
 		result = out.NewInput()
 	case Gia_ObjIsAnd(obj) != 0:
 		a, b := edge(obj.iDiff0, obj.fCompl0), edge(obj.iDiff1, obj.fCompl1)
-		if int(id) < len(p.pMuxes) && p.pMuxes[id] != 0 {
-			control := p.pMuxes[id]
-			c := giaExportAigNode(out, copies, p, p.pObjs[control>>1], choices, record) ^ aig.Edge(control&1)
-			result = out.Mux(c, b, a)
-		} else if Gia_ObjIsXor(obj) != 0 {
-			result = out.NewXor(a, b)
-		} else {
-			result = out.AND(a, b)
-		}
+		result = out.AND(a, b)
 	default:
 		panic("gia: invalid GIA conversion root")
 	}
@@ -244,7 +236,39 @@ func Gia_ManToAigSkip(p *Gia_Man_t, stride int32) *aig.Graph {
 	}
 	return giaExportAig(p, false, false, false, stride)
 }
-func Gia_ManToAigSimple(p *Gia_Man_t) *aig.Graph { return giaExportAig(p, false, true, false, 1) }
+
+// Gia_ManToAigSimple visits source objects in order and requires each AIG
+// object's ID to remain identical, as in giaAig.c.
+func Gia_ManToAigSimple(p *Gia_Man_t) *aig.Graph {
+	out := aig.Aig_ManStart(p.nObjs)
+	out.Name, out.Spec = p.pName, p.pSpec
+	aig.Aig_ManSetConstrNum(out, p.nConstrs)
+	copies := make([]aig.Edge, p.nObjs)
+	for id, obj := range p.pObjs {
+		var result aig.Edge
+		switch {
+		case id == 0:
+			result = out.Const0()
+		case Gia_ObjIsCi(obj) != 0:
+			result = out.NewInput()
+		case Gia_ObjIsCo(obj) != 0:
+			result = out.AddOutput(copies[id-int(obj.iDiff0)] ^ aig.Edge(obj.fCompl0))
+		case Gia_ObjIsAnd(obj) != 0:
+			left := copies[id-int(obj.iDiff0)] ^ aig.Edge(obj.fCompl0)
+			right := copies[id-int(obj.iDiff1)] ^ aig.Edge(obj.fCompl1)
+			result = out.AND(left, right)
+		default:
+			panic("gia: unsupported simple export object")
+		}
+		if id != 0 && result.NodeID() != id {
+			panic("gia: simple export changed object ID")
+		}
+		copies[id] = result
+		obj.Value = uint32(result)
+	}
+	aig.Aig_ManSetRegNum(out, p.nRegs)
+	return out
+}
 
 func Gia_ManCheckChoices_rec(p *Gia_Man_t, obj *Gia_Obj_t) {
 	if obj == nil {

@@ -13,6 +13,7 @@ func TestSplitAgainstExhaustiveTruthTables(t *testing.T) {
 	random := rand.New(rand.NewSource(73021))
 	for trial := 0; trial < 32; trial++ {
 		g := gia.Gia_ManStart(100)
+		gia.Gia_ManHashAlloc(g)
 
 		lits := make([]int32, 4)
 		for i := range lits {
@@ -24,13 +25,13 @@ func TestSplitAgainstExhaustiveTruthTables(t *testing.T) {
 				a, b, c = lits[0]^int32(random.Intn(2)), lits[1]^int32(random.Intn(2)), lits[2]^int32(random.Intn(2))
 			}
 			_ = c
-			out := gia.Gia_ManAppendAnd(g, a, b)
+			out := gia.Gia_ManHashAnd(g, a, b)
 			lits = append(lits, out)
 		}
 		out := lits[len(lits)-1]
 		if trial%4 == 0 {
-			tmp := gia.Gia_ManAppendAnd(g, lits[0], lits[1])
-			out = gia.Gia_ManAppendAnd(g, tmp, lits[0]^1)
+			tmp := gia.Gia_ManHashAnd(g, lits[0], lits[1])
+			out = gia.Gia_ManHashAnd(g, tmp, lits[0]^1)
 		}
 		gia.Gia_ManAppendCo(g, out)
 		sat := false
