@@ -22,6 +22,7 @@ func Gia_VtaConvertToGla(p *gia.Gia_Man_t, vVta *vec.Vec_Int_t) *vec.Vec_Int_t {
 	}
 	bits := util.Abc_Base2Log(uint32(nObjs))
 	mask := int32((uint32(1) << uint(bits)) - 1)
+	assert(nObjs <= mask, "VTA object count fits the source mask")
 	out := vec.Vec_IntStart(int(nObjs))
 	for _, entry := range vec.Vec_IntArray(vVta)[nFrames+2:] {
 		id := entry & mask
@@ -43,7 +44,10 @@ func Gia_VtaConvertFromGla(p *gia.Gia_Man_t, vGla *vec.Vec_Int_t, nFrames int32)
 	if nFrames < 0 {
 		panic("abs: negative frame count")
 	}
-	bits := util.Abc_Base2Log(uint32(gia.Gia_ManObjNum(p)))
+	nObjs := gia.Gia_ManObjNum(p)
+	bits := util.Abc_Base2Log(uint32(nObjs))
+	mask := int32((uint32(1) << uint(bits)) - 1)
+	assert(nObjs <= mask, "VTA object count fits the source mask")
 	nGlaSize := vec.Vec_IntSum(vGla)
 	out := vec.Vec_IntAlloc(1000)
 	vec.Vec_IntPush(out, nFrames)

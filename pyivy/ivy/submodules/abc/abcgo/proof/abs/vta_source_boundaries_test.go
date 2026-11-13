@@ -3,6 +3,7 @@ package abs
 import (
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/misc/util"
+	"github.com/glycerine/abcgo/misc/vec"
 	"testing"
 )
 
@@ -55,5 +56,32 @@ func TestVtaSourceRetainsExistingWitnessWithoutNewCounterexample(t *testing.T) {
 		if got == 0 || g.SequentialCounterexample() != saved {
 			t.Fatalf("constant=%v result=%d: source witness ownership changed", constant, got)
 		}
+	}
+}
+
+func TestVtaSourceConversionRejectsPowerOfTwoObjectCount(t *testing.T) {
+	g := gia.Gia_ManStart(6)
+	q := gia.Gia_ManAppendCi(g)
+	gia.Gia_ManAppendCo(g, q)
+	gia.Gia_ManAppendCo(g, 0)
+	gia.Gia_ManSetRegNum(g, 1)
+	if gia.Gia_ManObjNum(g) != 4 {
+		t.Fatal("fixture must have four objects")
+	}
+	gla := vec.Vec_IntStart(4)
+	vec.Vec_IntWriteEntry(gla, 0, 1)
+	packed := vec.Vec_IntAlloc(4)
+	for _, v := range []int32{1, 3, 4, 0} {
+		vec.Vec_IntPush(packed, v)
+	}
+	for _, convert := range []func(){func() { Gia_VtaConvertFromGla(g, gla, 1) }, func() { Gia_VtaConvertToGla(g, packed) }} {
+		func() {
+			defer func() {
+				if recover() == nil {
+					t.Error("expected C source object-mask assertion")
+				}
+			}()
+			convert()
+		}()
 	}
 }
