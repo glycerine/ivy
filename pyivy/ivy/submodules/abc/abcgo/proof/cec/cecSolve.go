@@ -1,7 +1,6 @@
 package cec
 
-// SAT-sweeping orchestration follows cecSolve.c. Cone-to-CNF construction
-// and incremental solving are provided by the package's existing core adapter.
+// SAT-sweeping orchestration follows cecSolve.c and uses ABC's bsat port.
 import (
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/misc/util"
@@ -40,6 +39,7 @@ func Cec_ManSatSolve(patterns *Cec_ManPat_t, graph *Gia_Man_t, pars *Cec_ParSat_
 	sat := Cec_ManSatCreate(graph, pars)
 	defer Cec_ManSatStop(sat)
 	pars = sat.pPars
+	classic := newCecClassicSolver(graph, pars)
 	var models []*util.Abc_Cex_t
 	if pars.fSaveCexes != 0 {
 		models = make([]*util.Abc_Cex_t, int(gia.Gia_ManCoNum(graph)))
@@ -52,7 +52,14 @@ func Cec_ManSatSolve(patterns *Cec_ManPat_t, graph *Gia_Man_t, pars *Cec_ParSat_
 		} else if lit == 1 {
 			status = 0
 		} else {
-			status = sat.query(lit, nil)
+			status = classic.check(lit)
+			if status == 0 {
+				var err error
+				sat.values, err = sat.proof.Model().Values(classic.inputs())
+				if err != nil {
+					panic(err)
+				}
+			}
 		}
 		cecSetOutputStatus(output, status)
 		if lit > 1 && status == 1 && orig != nil {
