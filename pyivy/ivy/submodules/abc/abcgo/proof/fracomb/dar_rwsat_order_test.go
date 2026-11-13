@@ -67,23 +67,30 @@ func TestDarRwsatOrderedStructureAgainstSource(t *testing.T) {
 		t.Fatalf("Go graph order differs from source:\n%s", out.String())
 	}
 
+	if actual, ok := runDarCOracle(t, "dar_rwsat_order.c"); ok && actual != darRwsatSourceGolden {
+		t.Fatalf("compiled C graph order differs from golden:\n%s", actual)
+	}
+}
+
+func runDarCOracle(t *testing.T, fixtureName string) (string, bool) {
+	t.Helper()
 	// Compare with the compiled checked-in C objects when available; the golden
 	// keeps the same assertion active on systems without a C toolchain.
 	if runtime.GOOS != "linux" {
 		t.Log("C oracle skipped: Linux required")
-		return
+		return "", false
 	}
 	cc, e1 := exec.LookPath("gcc")
 	cxx, e2 := exec.LookPath("g++")
 	if e1 != nil || e2 != nil {
 		t.Log("C oracle skipped: compiler unavailable")
-		return
+		return "", false
 	}
 	_, file, _, _ := runtime.Caller(0)
 	src := filepath.Clean(filepath.Join(filepath.Dir(file), "../../../src"))
 	if _, err := os.Stat(filepath.Join(src, "opt/dar/darScript.o")); err != nil {
 		t.Log("C oracle skipped: ABC object files unavailable")
-		return
+		return "", false
 	}
 	var objects []string
 	if err := filepath.WalkDir(src, func(path string, d os.DirEntry, err error) error {
@@ -98,7 +105,7 @@ func TestDarRwsatOrderedStructureAgainstSource(t *testing.T) {
 		t.Fatal(err)
 	}
 	dir := t.TempDir()
-	fixture := filepath.Join(filepath.Dir(file), "test_vectors/dar_rwsat_order.c")
+	fixture := filepath.Join(filepath.Dir(file), "test_vectors", fixtureName)
 	obj := filepath.Join(dir, "oracle.o")
 	st := filepath.Join(dir, "st.o")
 	bin := filepath.Join(dir, "oracle")
@@ -116,7 +123,5 @@ func TestDarRwsatOrderedStructureAgainstSource(t *testing.T) {
 	if err != nil {
 		t.Fatalf("C oracle: %v\n%s", err, actual)
 	}
-	if string(actual) != darRwsatSourceGolden {
-		t.Fatalf("compiled C graph order differs from golden:\n%s", actual)
-	}
+	return string(actual), true
 }

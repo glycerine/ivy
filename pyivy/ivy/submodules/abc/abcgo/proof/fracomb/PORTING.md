@@ -73,11 +73,23 @@ applicable. The inputs are constructed in explicit steps. C's `Aig_Exor`
 itself nests two AND calls in function arguments, whose evaluation order C does
 not specify; Go evaluates those calls left to right. Consequently graphs
 constructed independently with those helpers can have different object order
-before rewriting. The small ordered fixtures do not establish exact DAR
-rewrite equivalence for larger designs.
+before rewriting. A larger explicitly ordered fixture has eight inputs, four
+outputs and 72 initial AND nodes. Original C and Go agree on every node ID,
+fanin literal and phase after each rwsat stage; the first rewrite reduces it to
+66 nodes. These fixtures do not establish exact DAR rewrite equivalence for all
+larger designs.
 
 Remaining coverage gaps: the CEC integration tests do not exercise every
 rewrite/sweep result. Resource exhaustion and learned-clause limits are not
 exhaustively characterized, and no broad performance comparison with C has been
 performed. Verbose output is not byte-for-byte identical to ABC's diagnostic
 text.
+
+The checked-in 24-MUX stage oracle compares every node and fanin with the
+original C `Dar_ManRwsat` stages. Initial duplication, first balance, rewrite,
+refactor, and final rewrite match exactly. The second balance has 26 nodes in
+both implementations but a different structure and ordering; the Go result
+is recorded separately in `test_vectors/dar_rwsat_mux_balance2_go.golden`.
+C recursively rebuilds output cones using sharing-aware supergate balancing;
+the Go balancer uses an in-place, pairwise strategy. Porting that recursive
+algorithm remains necessary before claiming full DAR structural parity.
