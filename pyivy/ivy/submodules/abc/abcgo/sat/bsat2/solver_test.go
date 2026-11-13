@@ -88,6 +88,56 @@ func TestMiniSatCDCLAgainstExhaustiveEnumeration(t *testing.T) {
 		}
 	}
 }
+
+func TestMiniSatRepeatedAssumptionsAndConflictCores(t *testing.T) {
+	rng := rand.New(rand.NewSource(31802))
+	for trial := 0; trial < 400; trial++ {
+		s := NewSolver()
+		s.Minimization = trial % 3
+		for i := 0; i < 5; i++ {
+			s.NewVariable()
+		}
+		var formula [][]Lit
+		for i := 0; i < 10; i++ {
+			var clause []Lit
+			for j := 0; j < 2+rng.Intn(2); j++ {
+				clause = append(clause, MakeLit(Var(rng.Intn(5)), rng.Intn(2) != 0))
+			}
+			formula = append(formula, clause)
+			s.AddClause(clause...)
+		}
+		for query := 0; query < 12; query++ {
+			var assumptions []Lit
+			for i := 0; i < rng.Intn(5); i++ {
+				assumptions = append(assumptions, MakeLit(Var(rng.Intn(5)), rng.Intn(2) != 0))
+			}
+			_, want := formulaModel(formula, assumptions, 5)
+			got := s.Solve(assumptions...)
+			if (got == True) != want || got == Undef {
+				t.Fatalf("trial=%d query=%d got=%v want=%v formula=%v assumptions=%v", trial, query, got, want, formula, assumptions)
+			}
+			if got == False && len(s.Conflict) > 0 {
+				var core []Lit
+				for _, l := range s.Conflict {
+					found := false
+					for _, a := range assumptions {
+						if a == l.Not() {
+							found = true
+							break
+						}
+					}
+					if !found {
+						t.Fatalf("conflict literal %v absent from assumptions %v", l, assumptions)
+					}
+					core = append(core, l.Not())
+				}
+				if _, sat := formulaModel(formula, core, 5); sat {
+					t.Fatalf("satisfiable conflict core %v formula=%v", core, formula)
+				}
+			}
+		}
+	}
+}
 func TestMiniSatGarbageCollectionRetainsReasons(t *testing.T) {
 	s := NewSolver()
 	s.ca.ExtraClauseField = true
