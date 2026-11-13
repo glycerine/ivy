@@ -110,3 +110,12 @@ source path can run indefinitely. If the first refinement has an empty set,
 the incremental proof logger starts with zero bitset words; a subsequent grow
 can divide by zero in C, so that boundary has undefined source behavior. The
 Go proof logger rejects a zero-width start with a panic instead.
+
+The incremental SAT proof manager now follows `satProof2.h` allocation at
+word-width growth: it reserves 1,000 extra proof rows and retains that capacity
+when compacting. `sat/bsat/test_vectors/proof_growth_oracle.c` checks a bounded
+1,500-row growth and compaction against C; set `ABC_PROOF_GROWTH_ORACLE` to the
+compiled fixture to compare it during the Go test. This does not establish
+identical process memory consumption or timeout outcomes: C and Go allocators,
+proof-manager structures, scheduling and CPU-clock sampling can differ, and
+large-proof resource exhaustion has not been exhaustively characterized.

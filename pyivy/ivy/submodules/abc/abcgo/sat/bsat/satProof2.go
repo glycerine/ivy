@@ -102,7 +102,8 @@ func Prf_ManGrow(p *Prf_Man_t, width int32) {
 	}
 	words := max(Prf_BitWordNum(width), 2*p.nWords)
 	rows := Prf_ManSize(p)
-	next := make([]word, rows*words)
+	// ABC reserves room for 1000 additional learned clauses on each growth.
+	next := make([]word, rows*words, (rows+1000)*words)
 	for i := int32(0); i < rows; i++ {
 		copy(next[i*words:i*words+p.nWords], Prf_ManClauseInfo(p, i))
 	}
@@ -135,11 +136,10 @@ func Prf_ManCompact(p *Prf_Man_t, newID int32) {
 	if p.iFirst < 0 || p.pInfo != nil {
 		panic("compact during proof chain")
 	}
-	next := make([]word, 0, int32(len(p.vSaved))*p.nWords)
-	for _, id := range p.vSaved {
-		next = append(next, Prf_ManClauseInfo(p, id-p.iFirst)...)
+	for i, id := range p.vSaved {
+		copy(p.vInfo[int32(i)*p.nWords:], Prf_ManClauseInfo(p, id-p.iFirst))
 	}
-	p.vInfo = next
+	p.vInfo = p.vInfo[:int32(len(p.vSaved))*p.nWords]
 	p.vSaved = p.vSaved[:0]
 	p.iFirst = newID
 	if p.iFirst2 != -1 {
