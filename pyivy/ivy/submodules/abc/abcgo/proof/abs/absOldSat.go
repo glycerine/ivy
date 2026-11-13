@@ -38,16 +38,7 @@ import (
 
 // local manager
    
-type Saig_RefMan_t struct {
-    // user data
-    pAig  *Aig_Man_t;       // user's AIG
-    pCex  *Abc_Cex_t;       // user's CEX
-    nInputs         int32;    // the number of first inputs to skip
-    fVerbose         int32;   // verbose flag
-    // unrolling
-    pFrames  *Aig_Man_t;    // unrolled timeframes
-    vMapPiF2A  *Vec_Int_t;  // mapping of frame PIs into real PIs
-}
+
 
 // performs ternary simulation
 // extern int Saig_ManSimDataInit( Aig_Man_t * p, Abc_Cex_t * pCex, Vec_Ptr_t * vSimInfo, Vec_Int_t * vRes );
@@ -68,48 +59,7 @@ type Saig_RefMan_t struct {
   SeeAlso     []
 
 ***********************************************************************/
-func Saig_RefManReason2Inputs(p *Saig_RefMan_t, vReasons *Vec_Int_t) *Vec_Int_t {
-    var vOriginal, vVisited *Vec_Int_t;
-    var i, Entry int32;
-    vOriginal = Vec_IntAlloc( Saig_ManPiNum(p.pAig) ); 
-    vVisited = Vec_IntStart( Saig_ManPiNum(p.pAig) );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vReasons)) && (((Entry) = Vec_IntEntry(vReasons, i)), 1); i++  {
-        var iInput int32  = Vec_IntEntry( p.vMapPiF2A, 2*Entry );
-        assert(iInput >= 0 && iInput < Aig_ManCiNum(p.pAig), "iInput >= 0 && iInput < Aig_ManCiNum(p.pAig)");
-        if Vec_IntEntry(vVisited, iInput) == 0 {
-            Vec_IntPush( vOriginal, iInput ); }
-        Vec_IntAddToEntry( vVisited, iInput, 1 );
-    }
-    Vec_IntFree( vVisited );
-    return vOriginal;
-}
 
-/**Function*************************************************************
-
-  Synopsis    [Creates the counter-example.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_RefManReason2Cex(p *Saig_RefMan_t, vReasons *Vec_Int_t) *Abc_Cex_t {
-    var pCare *Abc_Cex_t;
-    var i, Entry, iInput, iFrame int32;
-    pCare = Abc_CexDup( p.pCex, p.pCex.nRegs );
-    memset( pCare.pData, 0, sizeof(unsigned) * Abc_BitWordNum(pCare.nBits) );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vReasons)) && (((Entry) = Vec_IntEntry(vReasons, i)), 1); i++  {
-        assert(Entry >= 0 && Entry < Aig_ManCiNum(p.pFrames), "Entry >= 0 && Entry < Aig_ManCiNum(p.pFrames)");
-        iInput = Vec_IntEntry( p.vMapPiF2A, 2*Entry );
-        iFrame = Vec_IntEntry( p.vMapPiF2A, 2*Entry+1 );
-        Abc_InfoSetBit( pCare.pData, pCare.nRegs + pCare.nPis * iFrame + iInput );
-    }
-    return pCare;
-}
 
 /**Function*************************************************************
 
@@ -122,106 +72,6 @@ func Saig_RefManReason2Cex(p *Saig_RefMan_t, vReasons *Vec_Int_t) *Abc_Cex_t {
   SeeAlso     []
 
 ***********************************************************************/
-func Saig_RefManFindReason_rec(p *Aig_Man_t, pObj *Aig_Obj_t, vPrios *Vec_Int_t, vReasons *Vec_Int_t) {
-    if Aig_ObjIsTravIdCurrent(p, pObj) {
-        return; }
-    Aig_ObjSetTravIdCurrent(p, pObj);
-    if Aig_ObjIsCi(pObj) {
-        Vec_IntPush( vReasons, Aig_ObjCioId(pObj) );
-        return;
-    }
-    assert(Aig_ObjIsNode(pObj), "Aig_ObjIsNode(pObj)");
-    if pObj.fPhase {
-        Saig_RefManFindReason_rec( p, Aig_ObjFanin0(pObj), vPrios, vReasons );
-        Saig_RefManFindReason_rec( p, Aig_ObjFanin1(pObj), vPrios, vReasons );
-    
-    } else {
-        var fPhase0 int32  = Aig_ObjFaninC0(pObj) ^ Aig_ObjFanin0(pObj).fPhase;
-        var fPhase1 int32  = Aig_ObjFaninC1(pObj) ^ Aig_ObjFanin1(pObj).fPhase;
-        assert(!(fPhase0 != 0) || !(fPhase1 != 0), "!fPhase0 || !fPhase1");
-        if !(fPhase0 != 0) && (fPhase1 != 0) {
-            Saig_RefManFindReason_rec( p, Aig_ObjFanin0(pObj), vPrios, vReasons );
-        } else if (fPhase0 != 0) && !(fPhase1 != 0) {
-            Saig_RefManFindReason_rec( p, Aig_ObjFanin1(pObj), vPrios, vReasons );
-        } else {
-            var iPrio0 int32  = Vec_IntEntry( vPrios, Aig_ObjFaninId0(pObj) );
-            var iPrio1 int32  = Vec_IntEntry( vPrios, Aig_ObjFaninId1(pObj) );
-            if iPrio0 <= iPrio1 {
-                Saig_RefManFindReason_rec( p, Aig_ObjFanin0(pObj), vPrios, vReasons );
-            } else {
-                Saig_RefManFindReason_rec( p, Aig_ObjFanin1(pObj), vPrios, vReasons ); }
-        }
-    }
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Returns reasons for the property to fail.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_RefManFindReason(p *Saig_RefMan_t) *Vec_Int_t {
-    var pObj *Aig_Obj_t;
-    var vPrios, vPi2Prio, vReasons *Vec_Int_t;
-    var i, CountPrios int32;
-
-    vPi2Prio = Vec_IntStartFull( Saig_ManPiNum(p.pAig) );
-    vPrios   = Vec_IntStartFull( Aig_ManObjNumMax(p.pFrames) );
-
-    // set PI values according to CEX
-    CountPrios = 0;
-    Aig_ManConst1(p.pFrames).fPhase = 1;
-    // inlining of macro Aig_ManForEachCi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.pFrames.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pFrames.vCis, i)), 1); i++  {
-        var iInput int32  = Vec_IntEntry( p.vMapPiF2A, 2*i );
-        var iFrame int32  = Vec_IntEntry( p.vMapPiF2A, 2*i+1 );
-        pObj.fPhase = Abc_InfoHasBit( p.pCex.pData, p.pCex.nRegs + p.pCex.nPis * iFrame + iInput );
-        // assign priority
-        if Vec_IntEntry(vPi2Prio, iInput) == ~0 {
-            Vec_IntWriteEntry( vPi2Prio, iInput, CountPrios++ ); }
-//        Vec_IntWriteEntry( vPrios, Aig_ObjId(pObj), Vec_IntEntry(vPi2Prio, iInput) );
-        Vec_IntWriteEntry( vPrios, Aig_ObjId(pObj), i );
-    }
-//    printf( "Priority numbers = %d.\n", CountPrios );
-    Vec_IntFree( vPi2Prio );
-
-    // traverse and set the priority
-    // inlining of macro Aig_ManForEachNode
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.pFrames.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pFrames.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-        var fPhase0 int32  = Aig_ObjFaninC0(pObj) ^ Aig_ObjFanin0(pObj).fPhase;
-        var fPhase1 int32  = Aig_ObjFaninC1(pObj) ^ Aig_ObjFanin1(pObj).fPhase;
-        var iPrio0 int32   = Vec_IntEntry( vPrios, Aig_ObjFaninId0(pObj) );
-        var iPrio1 int32   = Vec_IntEntry( vPrios, Aig_ObjFaninId1(pObj) );
-        pObj.fPhase = fPhase0 && fPhase1;
-        if (fPhase0 != 0) && (fPhase1 != 0) { // both are one
-            Vec_IntWriteEntry( vPrios, Aig_ObjId(pObj), Abc_MaxInt(iPrio0, iPrio1) );
-        } else if !(fPhase0 != 0) && (fPhase1 != 0) { 
-            Vec_IntWriteEntry( vPrios, Aig_ObjId(pObj), iPrio0 );
-        } else if (fPhase0 != 0) && !(fPhase1 != 0) {
-            Vec_IntWriteEntry( vPrios, Aig_ObjId(pObj), iPrio1 );
-        } else { // both are zero
-            Vec_IntWriteEntry( vPrios, Aig_ObjId(pObj), Abc_MinInt(iPrio0, iPrio1) ); }
-    }
-    }
-    // check the property output
-    pObj = Aig_ManCo( p.pFrames, 0 );
-    assert(int32(Aig_ObjFanin0(pObj).fPhase) == Aig_ObjFaninC0(pObj), "int32(Aig_ObjFanin0(pObj).fPhase) == Aig_ObjFaninC0(pObj)");
-
-    // select the reason
-    vReasons = Vec_IntAlloc( 100 );
-    Aig_ManIncrementTravId( p.pFrames );
-    if !Aig_ObjIsConst1(Aig_ObjFanin0(pObj)) {
-        Saig_RefManFindReason_rec( p.pFrames, Aig_ObjFanin0(pObj), vPrios, vReasons ); }
-    Vec_IntFree( vPrios );
-    return vReasons;
-}
 
 
 /**Function*************************************************************
@@ -235,159 +85,7 @@ func Saig_RefManFindReason(p *Saig_RefMan_t) *Vec_Int_t {
   SeeAlso     []
 
 ***********************************************************************/
-func Saig_ManUnrollCollect_rec(pAig *Aig_Man_t, pObj *Aig_Obj_t, vObjs *Vec_Int_t, vRoots *Vec_Int_t) {
-    if Aig_ObjIsTravIdCurrent(pAig, pObj) {
-        return; }
-    Aig_ObjSetTravIdCurrent(pAig, pObj);
-    if Aig_ObjIsCo(pObj) {
-        Saig_ManUnrollCollect_rec( pAig, Aig_ObjFanin0(pObj), vObjs, vRoots );
-    } else if Aig_ObjIsNode(pObj) {
-        Saig_ManUnrollCollect_rec( pAig, Aig_ObjFanin0(pObj), vObjs, vRoots );
-        Saig_ManUnrollCollect_rec( pAig, Aig_ObjFanin1(pObj), vObjs, vRoots );
-    }
-    if (vRoots != nil) && Saig_ObjIsLo( pAig, pObj ) {
-        Vec_IntPush( vRoots, Aig_ObjId( Saig_ObjLoToLi(pAig, pObj) ) ); }
-    Vec_IntPush( vObjs, Aig_ObjId(pObj) );
-}
 
-/**Function*************************************************************
-
-  Synopsis    [Derive unrolled timeframes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_ManUnrollWithCex(pAig *Aig_Man_t, pCex *Abc_Cex_t, nInputs int32, pvMapPiF2A **Vec_Int_t) *Aig_Man_t {
-    var pFrames *Aig_Man_t;     // unrolled timeframes
-    var vFrameCos *Vec_Vec_t;   // the list of COs per frame
-    var vFrameObjs *Vec_Vec_t;  // the list of objects per frame
-    var vRoots, vObjs *Vec_Int_t;
-    var pObj *Aig_Obj_t;
-    var i, f int32;
-    // sanity checks
-    assert(Saig_ManPiNum(pAig) == pCex.nPis, "Saig_ManPiNum(pAig) == pCex.nPis");
-    assert(Saig_ManRegNum(pAig) == pCex.nRegs, "Saig_ManRegNum(pAig) == pCex.nRegs");
-    assert(pCex.iPo >= 0 && pCex.iPo < Saig_ManPoNum(pAig), "pCex.iPo >= 0 && pCex.iPo < Saig_ManPoNum(pAig)");
-
-    // map PIs of the unrolled frames into PIs of the original design
-    *pvMapPiF2A = Vec_IntAlloc( 1000 );
-
-    // collect COs and Objs visited in each frame
-    vFrameCos  = Vec_VecStart( pCex.iFrame+1 );
-    vFrameObjs = Vec_VecStart( pCex.iFrame+1 );
-    // initialized the topmost frame
-    pObj = Aig_ManCo( pAig, pCex.iPo );
-    Vec_VecPushInt( vFrameCos, pCex.iFrame, Aig_ObjId(pObj) );
-    for  f = pCex.iFrame; f >= 0; f--  {
-        // collect nodes starting from the roots
-        Aig_ManIncrementTravId( pAig );
-        vRoots = Vec_VecEntryInt( vFrameCos, f );
-        // inlining of macro Aig_ManForEachObjVec
-        for  i = 0; i < Vec_IntSize(vRoots) && (((pObj) = Aig_ManObj(pAig, Vec_IntEntry(vRoots,i))), 1); i++  {
-            Saig_ManUnrollCollect_rec( pAig, pObj, 
-                Vec_VecEntryInt(vFrameObjs, f),
-                (Vec_Int_t *)(f ? Vec_VecEntry(vFrameCos, f-1) : nil) );
-        }
-    }
-
-    // derive unrolled timeframes
-    pFrames = Aig_ManStart( 10000 );
-    pFrames.pName = Abc_UtilStrsav( pAig.pName );
-    pFrames.pSpec = Abc_UtilStrsav( pAig.pSpec );
-    // initialize the flops 
-    // inlining of macro Saig_ManForEachLo
-    for  i = 0; (i < Saig_ManRegNum(pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i+Saig_ManPiNum(pAig))), 1); i++  {
-        pObj.pData = Aig_NotCond( Aig_ManConst1(pFrames), !Abc_InfoHasBit(pCex.pData, i) );
-    }
-    // iterate through the frames
-    for  f = 0; f <= pCex.iFrame; f++  {
-        // construct
-        vObjs = Vec_VecEntryInt( vFrameObjs, f );
-        // inlining of macro Aig_ManForEachObjVec
-        for  i = 0; i < Vec_IntSize(vObjs) && (((pObj) = Aig_ManObj(pAig, Vec_IntEntry(vObjs,i))), 1); i++  {
-            if Aig_ObjIsNode(pObj) {
-                pObj.pData = Aig_And( pFrames, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );
-            } else if Aig_ObjIsCo(pObj) {
-                pObj.pData = Aig_ObjChild0Copy(pObj);
-            } else if Aig_ObjIsConst1(pObj) {
-                pObj.pData = Aig_ManConst1(pFrames);
-            } else if Saig_ObjIsPi(pAig, pObj) {
-                if Aig_ObjCioId(pObj) < nInputs {
-                    var iBit int32  = pCex.nRegs + f * pCex.nPis + Aig_ObjCioId(pObj);
-                    pObj.pData = Aig_NotCond( Aig_ManConst1(pFrames), !Abc_InfoHasBit(pCex.pData, iBit) );
-                
-                } else {
-                    pObj.pData = Aig_ObjCreateCi( pFrames );
-                    Vec_IntPush( *pvMapPiF2A, Aig_ObjCioId(pObj) );
-                    Vec_IntPush( *pvMapPiF2A, f );
-                }
-            }
-        }
-        if f == pCex.iFrame {
-            break; }
-        // transfer
-        vRoots = Vec_VecEntryInt( vFrameCos, f );
-        // inlining of macro Aig_ManForEachObjVec
-        for  i = 0; i < Vec_IntSize(vRoots) && (((pObj) = Aig_ManObj(pAig, Vec_IntEntry(vRoots,i))), 1); i++  {
-            Saig_ObjLiToLo( pAig, pObj ).pData = pObj.pData;
-        }
-    }
-    // create output
-    pObj = Aig_ManCo( pAig, pCex.iPo );
-    Aig_ObjCreateCo( pFrames, Aig_Not((Aig_Obj_t *)pObj.pData) );
-    Aig_ManSetRegNum( pFrames, 0 );
-    // cleanup
-    Vec_VecFree( vFrameCos );
-    Vec_VecFree( vFrameObjs );
-    // finallize
-    Aig_ManCleanup( pFrames );
-    // return
-    return pFrames;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Creates refinement manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_RefManStart(pAig *Aig_Man_t, pCex *Abc_Cex_t, nInputs int32, fVerbose int32) *Saig_RefMan_t {
-    
-    // inlining of macro ABC_CALLOC
-    p := &Saig_RefMan_t{};
-    p.pAig = pAig;
-    p.pCex = pCex;
-    p.nInputs = nInputs;
-    p.fVerbose = fVerbose;
-    p.pFrames = Saig_ManUnrollWithCex( pAig, pCex, nInputs, &p.vMapPiF2A );
-    return p;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Destroys refinement manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_RefManStop(p *Saig_RefMan_t) {
-    Aig_ManStopP( &p.pFrames );
-    Vec_IntFreeP( &p.vMapPiF2A );
-    p = nil;
-}
 
 /**Function*************************************************************
 
@@ -400,34 +98,7 @@ func Saig_RefManStop(p *Saig_RefMan_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Saig_RefManSetPhases(p *Saig_RefMan_t, pCare *Abc_Cex_t, fValue1 int32) int32 {
-    var pObj *Aig_Obj_t;
-    var i, iFrame, iInput int32;
-    Aig_ManConst1( p.pFrames ).fPhase = 1;
-    // inlining of macro Aig_ManForEachCi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.pFrames.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pFrames.vCis, i)), 1); i++  {
-        iInput = Vec_IntEntry( p.vMapPiF2A, 2*i );
-        iFrame = Vec_IntEntry( p.vMapPiF2A, 2*i+1 );
-        pObj.fPhase = Abc_InfoHasBit( p.pCex.pData, p.pCex.nRegs + p.pCex.nPis * iFrame + iInput );
-        // update value if it is a don't-care
-        if (pCare != nil) && !Abc_InfoHasBit( pCare.pData, p.pCex.nRegs + p.pCex.nPis * iFrame + iInput ) {
-            pObj.fPhase = fValue1; }
-    }
-    // inlining of macro Aig_ManForEachNode
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.pFrames.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pFrames.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-        pObj.fPhase = ( Aig_ObjFanin0(pObj).fPhase ^ Aig_ObjFaninC0(pObj) )
-                     & ( Aig_ObjFanin1(pObj).fPhase ^ Aig_ObjFaninC1(pObj) ); }
-    }
-    // inlining of macro Aig_ManForEachCo
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.pFrames.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pFrames.vCos, i)), 1); i++  {
-        pObj.fPhase = ( Aig_ObjFanin0(pObj).fPhase ^ Aig_ObjFaninC0(pObj) );
-    }
-    pObj = Aig_ManCo( p.pFrames, 0 );
-    return pObj.fPhase;
-}
+
 
 /**Function*************************************************************
 
@@ -440,56 +111,7 @@ func Saig_RefManSetPhases(p *Saig_RefMan_t, pCare *Abc_Cex_t, fValue1 int32) int
   SeeAlso     []
 
 ***********************************************************************/
-func Saig_RefManOrderLiterals(p *Saig_RefMan_t, vVar2PiId *Vec_Int_t, vAssumps *Vec_Int_t) *Vec_Vec_t {
-    var vLits *Vec_Vec_t;
-    var vVar2New *Vec_Int_t;
-    var i, Entry, iInput, iFrame int32;
-    // collect literals
-    vLits = Vec_VecAlloc( 100 );
-    vVar2New = Vec_IntStartFull( Saig_ManPiNum(p.pAig) );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vAssumps)) && (((Entry) = Vec_IntEntry(vAssumps, i)), 1); i++  {
-        var iPiNum int32  = Vec_IntEntry( vVar2PiId, lit_var(Entry) );
-        assert(iPiNum >= 0 && iPiNum < Aig_ManCiNum(p.pFrames), "iPiNum >= 0 && iPiNum < Aig_ManCiNum(p.pFrames)");
-        iInput = Vec_IntEntry( p.vMapPiF2A, 2*iPiNum );
-        iFrame = Vec_IntEntry( p.vMapPiF2A, 2*iPiNum+1 );
-//        Abc_InfoSetBit( pCare->pData, pCare->nRegs + pCare->nPis * iFrame + iInput );
-        if Vec_IntEntry( vVar2New, iInput ) == ~0 {
-            Vec_IntWriteEntry( vVar2New, iInput, Vec_VecSize(vLits) ); }
-        Vec_VecPushInt( vLits, Vec_IntEntry( vVar2New, iInput ), Entry );
-    }
-    Vec_IntFree( vVar2New );
-    return vLits;
-}
 
-
-/**Function*************************************************************
-
-  Synopsis    [Generate the care set using SAT solver.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_RefManCreateCex(p *Saig_RefMan_t, vVar2PiId *Vec_Int_t, vAssumps *Vec_Int_t) *Abc_Cex_t {
-    var pCare *Abc_Cex_t;
-    var i, Entry, iInput, iFrame int32;
-    // create counter-example
-    pCare = Abc_CexDup( p.pCex, p.pCex.nRegs );
-    memset( pCare.pData, 0, sizeof(unsigned) * Abc_BitWordNum(pCare.nBits) );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vAssumps)) && (((Entry) = Vec_IntEntry(vAssumps, i)), 1); i++  {
-        var iPiNum int32  = Vec_IntEntry( vVar2PiId, lit_var(Entry) );
-        assert(iPiNum >= 0 && iPiNum < Aig_ManCiNum(p.pFrames), "iPiNum >= 0 && iPiNum < Aig_ManCiNum(p.pFrames)");
-        iInput = Vec_IntEntry( p.vMapPiF2A, 2*iPiNum );
-        iFrame = Vec_IntEntry( p.vMapPiF2A, 2*iPiNum+1 );
-        Abc_InfoSetBit( pCare.pData, pCare.nRegs + pCare.nPis * iFrame + iInput );
-    }
-    return pCare;
-}
 
 /**Function*************************************************************
 
