@@ -95,3 +95,76 @@ func TestOriginalUniquenessLimit(t *testing.T) {
 	}()
 	Inter_ManCheckUniqueness(nil, nil, nil, 2)
 }
+
+// intContain.c constrains the first state negatively for backward checks and
+// the final state negatively for forward checks. Enumerate every input trace.
+func TestInductiveContainmentAgainstTraceEnumeration(t *testing.T) {
+	for transition := 0; transition < 4; transition++ {
+		trans := aig.NewGraph()
+		input, state := trans.NewInput(), trans.NewInput()
+		var next aig.Edge
+		switch transition {
+		case 0:
+			next = state
+		case 1:
+			next = state.Not()
+		case 2:
+			next = input
+		case 3:
+			next = trans.XOR(input, state)
+		}
+		trans.AddOutput(next)
+		aig.Aig_ManSetRegNum(trans, 1)
+		for predicate := 0; predicate < 4; predicate++ {
+			inter := aig.NewGraph()
+			x := inter.NewInput()
+			var value aig.Edge
+			switch predicate {
+			case 0:
+				value = inter.Const0()
+			case 1:
+				value = x
+			case 2:
+				value = x.Not()
+			case 3:
+				value = inter.Const1()
+			}
+			inter.AddOutput(value)
+			for steps := int32(0); steps <= 4; steps++ {
+				for backward := int32(0); backward <= 1; backward++ {
+					want := int32(1)
+					for trace := 0; trace < 1<<uint(steps+1); trace++ {
+						state := trace & 1
+						matches := true
+						for frame := int32(0); frame <= steps; frame++ {
+							v := predicate == 3 || predicate == 1 && state == 1 || predicate == 2 && state == 0
+							if backward == 0 && frame == steps || backward == 1 && frame == 0 {
+								v = !v
+							}
+							matches = matches && v
+							if frame == steps {
+								break
+							}
+							in := (trace >> uint(frame+1)) & 1
+							switch transition {
+							case 1:
+								state ^= 1
+							case 2:
+								state = in
+							case 3:
+								state ^= in
+							}
+						}
+						if matches {
+							want = 0
+							break
+						}
+					}
+					if got := Inter_ManCheckInductiveContainment(trans, inter, steps, backward); got != want {
+						t.Fatalf("transition=%d predicate=%d steps=%d backward=%d got=%d want=%d", transition, predicate, steps, backward, got, want)
+					}
+				}
+			}
+		}
+	}
+}

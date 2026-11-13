@@ -72,6 +72,9 @@ and the first B-side clause, checking early exit and restoration of lifted CNF.
 The incremental containment checker is also compared against explicit
 two-register state enumeration for two and three induction frames, all 16
 state predicates, and several transition relations.
+Forward and backward inductive containment are independently checked by
+enumerating all one-register input traces through four frames, including
+input-dependent transitions and both constant and nonconstant predicates.
 The C `int` command and multi-output driver are in `base/abci`; the current
 `abcgo/base/abci` files remain untranslated drafts, so they do not yet provide
 a working Go command for this package. `proof/int` exposes the library entry
