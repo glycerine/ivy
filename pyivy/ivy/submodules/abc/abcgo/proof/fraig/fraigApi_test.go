@@ -27,3 +27,31 @@ func TestNodeChoiceLinks(t *testing.T) {
 		t.Fatal("choice links incorrect")
 	}
 }
+
+// fraigApi.c fills all missing input indices and permits an output node to be
+// registered more than once, including with opposite edge polarity.
+func TestInputIndexExpansionAndDuplicateOutputs(t *testing.T) {
+	p := Fraig_ManCreate(nil)
+	defer Fraig_ManFree(p)
+	if Fraig_ManReadIthVar(p, -1) != nil || Fraig_ManReadInputNum(p) != 0 {
+		t.Fatal("negative input request changed manager")
+	}
+	fourth := Fraig_ManReadIthVar(p, 3)
+	if fourth == nil || Fraig_ManReadInputNum(p) != 4 {
+		t.Fatal("missing inputs were not allocated")
+	}
+	for i := int32(0); i < 4; i++ {
+		if got := Fraig_ManReadIthVar(p, i); got != Fraig_ManReadInputs(p)[i] || got.NumPi != i {
+			t.Fatalf("input %d: %+v", i, got)
+		}
+	}
+	if Fraig_ManReadIthVar(p, 3) != fourth || Fraig_ManReadInputNum(p) != 4 {
+		t.Fatal("existing input was recreated")
+	}
+	Fraig_ManSetPo(p, fourth)
+	Fraig_ManSetPo(p, Fraig_Not(fourth))
+	outputs := Fraig_ManReadOutputs(p)
+	if len(outputs) != 2 || outputs[0] != fourth || outputs[1] != Fraig_Not(fourth) || fourth.fNodePo != 1 {
+		t.Fatal("duplicate output or edge polarity lost")
+	}
+}

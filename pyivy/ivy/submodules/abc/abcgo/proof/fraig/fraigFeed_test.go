@@ -75,3 +75,30 @@ func TestBitSimulationTruncatesModelToCBitfield(t *testing.T) {
 		}
 	}
 }
+
+// The C covering routine selects the lowest bit in the first nonempty word,
+// then clears every column containing that pattern.
+func TestFeedbackCoveringAcrossWordBoundary(t *testing.T) {
+	columns := [][]uint32{{0, 1}, {1 << 31, 1}, {0, 2}}
+	hits := []int32{2, 1, 2}
+	if got := Fraig_GetSmallestColumn(hits, int32(len(hits))); got != 1 {
+		t.Fatalf("selected column %d", got)
+	}
+	if got := Fraig_GetHittingPattern(columns[1], 2); got != 31 {
+		t.Fatalf("first pattern %d", got)
+	}
+	Fraig_CancelCoveredColumns(columns, hits, 31)
+	if hits[0] != 2 || hits[1] != 0 || hits[2] != 2 {
+		t.Fatalf("after bit 31: %v", hits)
+	}
+	if got := Fraig_GetHittingPattern(columns[0], 2); got != 32 {
+		t.Fatalf("second-word pattern %d", got)
+	}
+	Fraig_CancelCoveredColumns(columns, hits, 32)
+	if hits[0] != 0 || hits[1] != 0 || hits[2] != 2 {
+		t.Fatalf("after bit 32: %v", hits)
+	}
+	if got := Fraig_GetHittingPattern([]uint32{0, 0}, 2); got != -1 {
+		t.Fatalf("empty pattern %d", got)
+	}
+}

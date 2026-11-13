@@ -32,3 +32,27 @@ func TestMuxRecognition(t *testing.T) {
 		t.Fatal("wrong MUX decomposition")
 	}
 }
+
+// fraigUtil.c checks all random words and only the active dynamic words.
+func TestNodeSimulationContainmentUsesActiveWords(t *testing.T) {
+	manager := &Fraig_Man_t{nWordsRand: 2, iWordStart: 2}
+	left := &Fraig_Node_t{puSimR: []uint32{0x5, 0x8}, puSimD: []uint32{0x1, 0x4, 0xffffffff}}
+	right := &Fraig_Node_t{puSimR: []uint32{0x7, 0xc}, puSimD: []uint32{0x3, 0x6, 0}}
+	if got := Fraig_NodeSimsContained(manager, left, right); got != 1 {
+		t.Fatalf("contained signatures: %d", got)
+	}
+	right.puSimR[1] = 0
+	if got := Fraig_NodeSimsContained(manager, left, right); got != 0 {
+		t.Fatalf("random violation missed: %d", got)
+	}
+	right.puSimR[1] = 0xc
+	right.puSimD[1] = 0
+	if got := Fraig_NodeSimsContained(manager, left, right); got != 0 {
+		t.Fatalf("dynamic violation missed: %d", got)
+	}
+	right.puSimD[1] = 0x6
+	manager.iWordStart = 3
+	if got := Fraig_NodeSimsContained(manager, left, right); got != 0 {
+		t.Fatalf("newly active word ignored: %d", got)
+	}
+}
