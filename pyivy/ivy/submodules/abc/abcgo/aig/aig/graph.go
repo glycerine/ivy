@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
+	"time"
 )
 
 // Edge identifies a node and its complemented phase. Node zero is constant one,
@@ -44,6 +45,9 @@ type edgePair struct{ a, b Edge }
 // gates; complemented edges represent inversion directly. Deletion leaves holes
 // so existing edges remain valid, and rewriting may change topological ID order.
 type Graph struct {
+	// Time2Quit is an absolute deadline for source-style AIG optimization.
+	// A zero value means no deadline.
+	Time2Quit time.Time
 	// InputNumbers maps retained CIs to their original interface positions.
 	InputNumbers                      []int32
 	combinationalCex                  *util.Abc_Cex_t

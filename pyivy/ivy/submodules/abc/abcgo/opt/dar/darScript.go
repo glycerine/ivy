@@ -35,6 +35,9 @@ func RewriteForSAT(ctx context.Context, g *aig.Graph, balance bool, progress io.
 			err := writeProgress(progress, "%s: %d nodes\n", stage, result.NodeCount())
 			return err
 		}
+		if ctx != nil {
+			return ctx.Err()
+		}
 		return nil
 	}
 	if err := report("Starting"); err != nil {
@@ -97,7 +100,13 @@ func Rwsat(ctx context.Context, g *aig.Graph, balance, verbose bool) (*aig.Graph
 	return RewriteForSAT(ctx, g, balance, progress)
 }
 func Dar_ManRwsat(g *aig.Graph, balance, verbose bool) (*aig.Graph, error) {
-	return Rwsat(context.Background(), g, balance, verbose)
+	ctx := context.Background()
+	if g != nil && !g.Time2Quit.IsZero() {
+		var cancel context.CancelFunc
+		ctx, cancel = context.WithDeadline(ctx, g.Time2Quit)
+		defer cancel()
+	}
+	return Rwsat(ctx, g, balance, verbose)
 }
 func Dar_ManRewriteDefault(g *aig.Graph) (*aig.Graph, error) {
 	if g == nil {
