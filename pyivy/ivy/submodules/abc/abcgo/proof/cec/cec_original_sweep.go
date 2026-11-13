@@ -5,6 +5,8 @@ import (
 	"time"
 
 	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/misc/vec"
+	"github.com/glycerine/abcgo/proof/cec/core"
 )
 
 // cecOriginalSweep is the speculative-reduction loop from cecCore.c.
@@ -17,12 +19,6 @@ func cecOriginalSweep(graph *Gia_Man_t, pars *Cec_ParFra_t) (*Gia_Man_t, error) 
 	}
 	if pars.nWords <= 0 || pars.nRounds < 0 || pars.nItersMax < 0 || pars.nBTLimit < 0 || pars.TimeLimit < 0 {
 		return nil, fmt.Errorf("cec: invalid original sweep parameters")
-	}
-	// Pairs are recorded as each query is solved, before downstream filtering
-	// of speculative dependencies. At depth greater than one an UNSAT query
-	// may rely on a failed prior assumption, so do not publish those pairs.
-	if pars.fUseOrigIds != 0 && pars.nDepthMax != 1 {
-		return nil, fmt.Errorf("cec: original-ID proof collection requires speculative depth 1")
 	}
 	if pars.fUseOrigIds != 0 && pars.fRunCSat != 0 {
 		return nil, fmt.Errorf("cec: circuit SAT does not collect original-ID proofs")
@@ -48,6 +44,10 @@ func cecOriginalSweep(graph *Gia_Man_t, pars *Cec_ParFra_t) (*Gia_Man_t, error) 
 	if pars.fUseOrigIds != 0 {
 		gia.Gia_ManOrigIdsInit(initial)
 		gia.Gia_ManOrigEquivPairsReset(graph)
+	}
+	var candidates *Vec_Int_t
+	if pars.fUseOrigIds != 0 {
+		candidates = vec.Vec_IntAlloc(1000)
 	}
 	if words := graph.SimulationWordCount(); words > 0 {
 		gia.Gia_ManCecSimAlloc(initial, words)
@@ -107,7 +107,7 @@ func cecOriginalSweep(graph *Gia_Man_t, pars *Cec_ParFra_t) (*Gia_Man_t, error) 
 		if pars.fRunCSat != 0 {
 			Cec_ManSatSolveCSat(pat, queries, &satPars)
 		} else {
-			Cec_ManSatSolve(pat, queries, &satPars, gia.Gia_ManOrigIds(fra.pAig), fra.vXorNodes, gia.Gia_ManOrigEquivPairs(graph), 0)
+			Cec_ManSatSolve(pat, queries, &satPars, gia.Gia_ManOrigIds(fra.pAig), fra.vXorNodes, candidates, 0)
 		}
 		failure = Cec_ManFraClassesUpdate(fra, sim, pat, queries) != 0
 		gia.Gia_ManStop(queries)
@@ -134,6 +134,12 @@ func cecOriginalSweep(graph *Gia_Man_t, pars *Cec_ParFra_t) (*Gia_Man_t, error) 
 			pars.fColorDiff = 0
 		} else if pars.fDualOut != 0 && (gia.Gia_ManAndNum(reduced) < 20000 || fra.nAllProved+fra.nAllDisproved < 10) {
 			pars.fColorDiff, pars.fDualOut = 0, 0
+		}
+	}
+	if candidates != nil {
+		if err := cecValidateOriginalPairs(graph, candidates, pars.nBTLimit, deadline); err != nil {
+			gia.Gia_ManStop(fra.pAig)
+			return nil, err
 		}
 	}
 	if failure {
@@ -169,4 +175,50 @@ func cecOriginalSweep(graph *Gia_Man_t, pars *Cec_ParFra_t) (*Gia_Man_t, error) 
 	result := gia.Gia_ManDup(fra.pAig)
 	gia.Gia_ManStop(fra.pAig)
 	return result, nil
+}
+
+// Validate each speculative proof independently on the original graph. This
+// excludes proofs that relied on a disproved speculative substitution.
+func cecValidateOriginalPairs(graph *Gia_Man_t, candidates *Vec_Int_t, limit int32, deadline time.Time) error {
+	if !deadline.IsZero() && !time.Now().Before(deadline) {
+		return nil
+	}
+	opts := core.DefaultSATOptions()
+	opts.ConflictLimit = int64(limit)
+	opts.Deadline = deadline
+	opts.TreatRegistersAsInputs = true
+	manager, err := core.NewManager(graph, opts)
+	if err != nil {
+		return err
+	}
+	phases, err := manager.Model().Values(make([]bool, len(graph.InputLiterals())))
+	if err != nil {
+		return err
+	}
+	pairs := vec.Vec_IntArray(candidates)
+	if len(pairs)%2 != 0 {
+		return fmt.Errorf("cec: malformed speculative proof pairs")
+	}
+	proved := gia.Gia_ManOrigEquivPairs(graph)
+	for i := 0; i < len(pairs); i += 2 {
+		if !deadline.IsZero() && !time.Now().Before(deadline) {
+			break
+		}
+		a, b := pairs[i], pairs[i+1]
+		if a < 0 || b < 0 || int(a) >= len(phases) || int(b) >= len(phases) {
+			return fmt.Errorf("cec: invalid original proof pair %d, %d", a, b)
+		}
+		litA, litB := a<<1, b<<1
+		if phases[a] != phases[b] {
+			litB ^= 1
+		}
+		result, err := manager.CheckPair(litA, litB)
+		if err != nil {
+			return err
+		}
+		if result.Status == core.Equivalent {
+			vec.Vec_IntPushTwo(proved, a, b)
+		}
+	}
+	return nil
 }

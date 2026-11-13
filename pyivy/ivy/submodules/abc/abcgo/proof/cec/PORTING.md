@@ -73,9 +73,10 @@ returned. Native GIA XOR, MUX and buffer nodes are lowered through the existing
 AIG conversion before the AND-inverter sweep.
 
 `Cec_ManSatSweeping` uses the original speculative sweep and records the SAT-
-proved original-ID pairs when requested. Original-ID tracking requires depth 1
-and the ordinary SAT backend; deeper speculative dependencies and the circuit
-SAT backend cannot currently supply independently validated original-ID pairs.
+proved original-ID pairs when requested. Speculative pairs are independently
+checked against the original graph, so a failed earlier assumption cannot turn
+into a published proof. Original-ID tracking currently requires the ordinary
+SAT backend; the circuit SAT path does not collect these pairs.
 Its direct entry point requires an
 AND-inverter graph and reports an error for native XOR, MUX, or buffer nodes;
 `Cec_ManVerify` lowers those nodes before invoking the sweep. As in the C
