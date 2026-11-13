@@ -23,6 +23,13 @@ signature multiplication, and polynomial handling of XOR, MUX, and constants.
 
 Intentional conservative paths and limits:
 
+- Arithmetic-box normalization can change individual output functions: the
+  original routine replaces extra roots at a rank with zero. After the boxed
+  CEC run, `Acec_Solve` separately verifies the original circuits before
+  reporting either equivalence or a counterexample. It also replays a reported
+  assignment on the original circuits and records the first differing output.
+  This additional proof can cost time and may return unknown under the conflict
+  limit even when the boxed run finishes.
 - Arithmetic-box detection assumes two-input AND/XOR cuts. For native MUX or
   buffer graphs, `Acec_ProduceBox` declines the optimization and `Acec_Solve`
   uses ordinary CEC; `Acec_DeriveBox` similarly returns no box. Normalization
