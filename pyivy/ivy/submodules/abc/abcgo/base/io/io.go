@@ -1349,59 +1349,7 @@ usage:
   SeeAlso     []
 
 ***********************************************************************/
-func IoCommandWriteSortCnf(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {
-    var pFileName string;
-    var c int32;
-    var nVars int32  = 16;
-    var nQueens int32  = 4;
-    extern void Abc_NtkWriteSorterCnf( char * pFileName, int nVars, int nQueens );
 
-    Extra_UtilGetoptReset();
-    for  ( c = Extra_UtilGetopt( argc, argv, "NQh" ) ) != -1  {
-        switch  c  {
-            case 'N':
-                if globalUtilOptind >= argc {
-                    fmt.Fprintf(os.Stdout, "Command line switch \"-N\" should be followed by an integer.\n");
-                    goto usage;
-                }
-                nVars = strconv.Atoi(argv[globalUtilOptind]);
-                globalUtilOptind++;
-                if nVars <= 0 { 
-                    goto usage; }
-                break;
-            case 'Q':
-                if globalUtilOptind >= argc {
-                    fmt.Fprintf(os.Stdout, "Command line switch \"-Q\" should be followed by an integer.\n");
-                    goto usage;
-                }
-                nQueens = strconv.Atoi(argv[globalUtilOptind]);
-                globalUtilOptind++;
-                if nQueens <= 0 { 
-                    goto usage; }
-                break;
-            case 'h':
-                goto usage;
-            default:
-                goto usage;
-        }
-    }
-    if argc != globalUtilOptind + 1 {
-        goto usage; }
-    // get the output file name
-    pFileName = argv[globalUtilOptind];
-    Abc_NtkWriteSorterCnf( pFileName, nVars, nQueens );
-    // call the corresponding file writer
-    return 0;
-
-usage:
-    fmt.Fprintf(pAbc.Err, "usage: write_sorter_cnf [-N <num>] [-Q <num>] <file>\n");
-    fmt.Fprintf(pAbc.Err, "\t         writes CNF for the sorter\n");
-    fmt.Fprintf(pAbc.Err, "\t-N num : the number of sorter bits [default = %d]\n", nVars);
-    fmt.Fprintf(pAbc.Err, "\t-Q num : the number of bits to be asserted to 1 [default = %d]\n", nQueens);
-    fmt.Fprintf(pAbc.Err, "\t-h     : print the help massage\n");
-    fmt.Fprintf(pAbc.Err, "\tfile   : the name of the file to write\n");
-    return 1;
-}
 
 /**Function*************************************************************
 
