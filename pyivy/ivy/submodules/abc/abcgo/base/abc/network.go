@@ -103,16 +103,18 @@ type Network struct {
 	Type, Function            uint8
 	Barriers                  int
 	// CILevel supplies timing-derived initial levels when a timing manager is attached.
-	CILevel         func(*Object) int
-	kindOrder       map[ObjectKind][]*Object
-	cis, cos, boxes []*Object
-	travID          uint64
-	refs            map[*Object]int
-	Name, Spec      string
-	objects         []*Object
-	names           *nm.Manager
-	hashed          map[[2]Edge]Edge
-	constant        *Object
+	CILevel             func(*Object) int
+	kindOrder           map[ObjectKind][]*Object
+	cis, cos, boxes     []*Object
+	travID              uint64
+	levelMax            int
+	reverseLevelsActive bool
+	refs                map[*Object]int
+	Name, Spec          string
+	objects             []*Object
+	names               *nm.Manager
+	hashed              map[[2]Edge]Edge
+	constant            *Object
 }
 
 func NewNetwork(name string) *Network {
