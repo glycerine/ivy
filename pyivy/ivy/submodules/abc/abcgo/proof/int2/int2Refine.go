@@ -63,6 +63,26 @@ func Int2_ManJustify_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vSelect *Vec_Int_t) {
 		vec.Vec_IntPush(vSelect, gia.Gia_ObjCioId(pObj))
 		return
 	}
+	a, b, c, kind := p.Gate(gia.Gia_ObjId(p, pObj))
+	if kind == 3 || kind == 4 || kind == 5 {
+		visit := func(lit int32) {
+			obj := gia.Gia_ManObj(p, lit>>1)
+			if gia.Gia_ObjValue(obj) < util.ABC_INFINITY {
+				Int2_ManJustify_rec(p, obj, vSelect)
+			}
+		}
+		visit(a)
+		if kind == 3 {
+			visit(b)
+		} else if kind == 4 {
+			if gia.Gia_ObjMark0(gia.Gia_ManObj(p, a>>1))^(a&1) != 0 {
+				visit(b)
+			} else {
+				visit(c)
+			}
+		}
+		return
+	}
 	assert(gia.Gia_ObjIsAnd(pObj) != 0, "Gia_ObjIsAnd(pObj)")
 	fanin0 := gia.Gia_ObjFanin0(pObj)
 	fanin1 := gia.Gia_ObjFanin1(pObj)
@@ -131,6 +151,34 @@ func Int2_ManRefineCube(p *Gia_Man_t, vAssign *Vec_Int_t, vPrio *Vec_Int_t) *Vec
 	}
 	for i := int32(0); i < gia.Gia_ManObjNum(p); i++ {
 		obj := gia.Gia_ManObj(p, i)
+		a, b, c, kind := p.Gate(i)
+		if kind == 3 || kind == 4 || kind == 5 {
+			read := func(lit int32) (int32, int32) {
+				fanin := gia.Gia_ManObj(p, lit>>1)
+				if lit>>1 == 0 {
+					return lit & 1, 0
+				}
+				return gia.Gia_ObjMark0(fanin) ^ (lit & 1), gia.Gia_ObjValue(fanin)
+			}
+			value, priority := read(a)
+			if kind == 3 {
+				other, otherPriority := read(b)
+				value ^= other
+				priority = util.Abc_MaxInt(priority, otherPriority)
+			} else if kind == 4 {
+				selected := c
+				if value != 0 {
+					selected = b
+				}
+				var selectedPriority int32
+				value, selectedPriority = read(selected)
+				priority = util.Abc_MaxInt(priority, selectedPriority)
+			}
+			gia.Gia_ObjSetMark0(obj, value)
+			gia.Gia_ObjSetMark1(obj, 0)
+			gia.Gia_ObjSetValue(obj, priority)
+			continue
+		}
 		if gia.Gia_ObjIsAnd(obj) == 0 {
 			continue
 		}
