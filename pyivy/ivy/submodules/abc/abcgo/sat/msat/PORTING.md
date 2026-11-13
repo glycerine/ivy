@@ -77,3 +77,7 @@ Call sites requiring those obsolete interfaces need a separate specification.
 The clear standalone Msat_VarHeap_* header contract is implemented with the same
 indexed heap algorithm and tested even though its original standalone bodies
 are absent. No package build blockers or excluded generated files remain.
+
+`Msat_SolverPrepare` now matches C and clears root assignments, including
+units with no retained clause object. Callers must account for that source
+behavior when preparing a new cone.

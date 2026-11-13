@@ -78,14 +78,6 @@ func Msat_SolverPrepare(p *Msat_Solver_t, vars *Msat_IntVec_t) {
 			panic("cone variable out of range")
 		}
 	}
-	// Root assignments include unit clauses, which have no clause object.
-	// Retain them across cone changes; discarding them weakens the formula.
-	root := make([]int, 0, len(p.vTrail.data))
-	for _, lit := range p.vTrail.data {
-		if p.pLevel[lit>>1] == 0 {
-			root = append(root, lit)
-		}
-	}
 	for v := range p.pAssigns {
 		p.pAssigns[v] = -1
 		p.pReasons[v] = nil
@@ -99,15 +91,7 @@ func Msat_SolverPrepare(p *Msat_Solver_t, vars *Msat_IntVec_t) {
 	Msat_OrderClean(p.pOrder, p.vConeVars)
 	p.dProgress = 0
 	p.nLevelRoot = 0
-	for _, lit := range root {
-		v := lit >> 1
-		used := p.vVarsUsed.data[v]
-		p.vVarsUsed.data[v] = 1
-		if Msat_SolverEnqueue(p, lit, nil) == 0 {
-			p.okay = false
-		}
-		p.vVarsUsed.data[v] = used
-	}
+
 }
 func Msat_SolverFree(p *Msat_Solver_t)                { *p = Msat_Solver_t{} }
 func Msat_SolverReadVarNum(p *Msat_Solver_t) int      { return p.nVars }

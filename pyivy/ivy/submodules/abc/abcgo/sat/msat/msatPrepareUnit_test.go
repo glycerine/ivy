@@ -2,7 +2,7 @@ package msat
 
 import "testing"
 
-func TestPreparePreservesRootUnitAcrossQueries(t *testing.T) {
+func TestPrepareClearsRootUnitAcrossQueries(t *testing.T) {
 	p := Msat_SolverAlloc(4, 1, 1, 1, 1, 0)
 	Msat_SolverAddVar(p, 0)
 	Msat_SolverAddVar(p, 0)
@@ -12,13 +12,13 @@ func TestPreparePreservesRootUnitAcrossQueries(t *testing.T) {
 	vars := &Msat_IntVec_t{data: []int{0, 1}}
 	for i := 0; i < 2; i++ {
 		Msat_SolverPrepare(p, vars)
-		if got := Msat_SolverSolve(p, &Msat_IntVec_t{data: []int{1}}, -1, 0); got != int(MSAT_FALSE) {
-			t.Fatalf("query %d forgot unit: %d", i, got)
+		if got := Msat_SolverSolve(p, &Msat_IntVec_t{data: []int{1}}, -1, 0); got != int(MSAT_TRUE) {
+			t.Fatalf("query %d did not clear unit: %d", i, got)
 		}
 	}
 }
 
-func TestPrepareDiscardsAssumptionsButKeepsRootFacts(t *testing.T) {
+func TestPrepareDiscardsAssumptionsAndRootFacts(t *testing.T) {
 	p := Msat_SolverAlloc(4, 1, 1, 1, 1, 0)
 	for i := 0; i < 3; i++ {
 		Msat_SolverAddVar(p, 0)
@@ -35,7 +35,7 @@ func TestPrepareDiscardsAssumptionsButKeepsRootFacts(t *testing.T) {
 	if got := Msat_SolverSolve(p, &Msat_IntVec_t{data: []int{3}}, -1, 0); got != int(MSAT_TRUE) {
 		t.Fatal("old assumption leaked", got)
 	}
-	if got := Msat_SolverSolve(p, &Msat_IntVec_t{data: []int{1}}, -1, 0); got != int(MSAT_FALSE) {
-		t.Fatal("root unit lost", got)
+	if got := Msat_SolverSolve(p, &Msat_IntVec_t{data: []int{1}}, -1, 0); got != int(MSAT_TRUE) {
+		t.Fatal("root unit was not cleared", got)
 	}
 }
