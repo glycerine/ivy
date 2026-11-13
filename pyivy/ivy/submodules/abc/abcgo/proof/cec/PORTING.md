@@ -143,3 +143,16 @@ A small compiled-C differential checks status, variable IDs and witness; it
 does not establish exact resource-limit, statistics or witness behavior for
 every network. The `core` package's Satoko manager remains a separate Go
 convenience adapter.
+
+## Split-solver source limits
+
+The split port follows the `ABC_USE_PTHREADS` source path; ABC builds without
+that define expose only a `Cec_GiaSplitTest` stub returning -1. The C serial
+path can return UNSAT after finding SAT when its pending stack is empty, and
+the parallel path records a negative cofactor literal for both branches,
+which can produce a false witness. An instrumented compiled-C fixture forces
+SAT outcomes while retaining the source scheduling code and compares both
+behaviors to Go. The C multi-output driver also reads a temporary manager after
+freeing it; Go safely takes ownership of its witness before stopping it, while
+retaining the defined output traversal and result behavior. Native XOR, MUX,
+and buffer graphs are rejected by the split entry points.

@@ -17,9 +17,7 @@ type cecSourceSAT struct {
 }
 
 func newCecSourceSAT(g *Gia_Man_t, p *Cec_ParSat_t) *cecSourceSAT {
-	s := &cecSourceSAT{graph: g, pars: p}
-	s.reset()
-	return s
+	return &cecSourceSAT{graph: g, pars: p, ids: make([]int32, g.ObjectCount())}
 }
 func (s *cecSourceSAT) reset() {
 	s.sat = bsat.NewSolver()
@@ -47,6 +45,9 @@ func (s *cecSourceSAT) addClause(lits ...int32) {
 	}
 }
 func (s *cecSourceSAT) addNode(root int32) {
+	if s.sat == nil {
+		s.reset()
+	}
 	if s.ids[root] != 0 {
 		return
 	}

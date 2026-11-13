@@ -2,7 +2,6 @@ package cec
 
 import (
 	"github.com/glycerine/abcgo/aig/gia"
-	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/proof/cec/core"
 	"github.com/glycerine/abcgo/sat/bsat"
 	"time"
@@ -14,9 +13,6 @@ func Cec_ManSatSolverRecycle(p *Cec_ManSat_t) {
 }
 func (p *Cec_ManSat_t) query(a int32, b *int32) int32 {
 	p.values = nil
-	if p.vCex != nil {
-		vec.Vec_IntClear(p.vCex)
-	}
 	if p.proof == nil {
 		return -1
 	}
@@ -33,13 +29,12 @@ func (p *Cec_ManSat_t) query(a int32, b *int32) int32 {
 		return -1
 	}
 	s := p.source
-	s.sat.SetDeadline(p.pPars.deadline)
 	s.since++
 	s.calls++
-	if p.pPars.nSatVarMax > 0 && s.sat.NumVars() > p.pPars.nSatVarMax && s.since > p.pPars.nCallsRecycle {
+	if s.sat == nil || p.pPars.nSatVarMax > 0 && s.sat.NumVars() > p.pPars.nSatVarMax && s.since > p.pPars.nCallsRecycle {
 		s.reset()
-		s.sat.SetDeadline(p.pPars.deadline)
 	}
+	s.sat.SetDeadline(p.pPars.deadline)
 	s.addNode(a >> 1)
 	lits := []int32{s.literal(a)}
 	if b != nil {
@@ -74,6 +69,9 @@ func (p *Cec_ManSat_t) query(a int32, b *int32) int32 {
 }
 func Cec_ManSatCheckNode(p *Cec_ManSat_t, obj *Gia_Obj_t) int32 {
 	lit := cecObjectLiteral(p, obj)
+	if lit == 0 {
+		return 1
+	}
 	if lit == 1 {
 		panic("cec: constant-one node query")
 	}

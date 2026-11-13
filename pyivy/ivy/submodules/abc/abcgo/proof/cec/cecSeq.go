@@ -1,10 +1,12 @@
 package cec
 
 import (
+	"errors"
 	"fmt"
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
+	"os"
 	"time"
 )
 
@@ -155,7 +157,12 @@ func Cec_ManCheckNonTrivialCands(p *Gia_Man_t) int32 {
 }
 
 func Cec_ManSeqSemiformal(p *Gia_Man_t, pars *Cec_ParSmf_t) int32 {
-	if !p.HasRepresentatives() || gia.Gia_ManRegNum(p) == 0 {
+	if !p.HasRepresentatives() {
+		fmt.Println("Cec_ManSeqSemiformal(): Equivalence classes are not available.")
+		return -1
+	}
+	if gia.Gia_ManRegNum(p) == 0 {
+		fmt.Println("Cec_ManSeqSemiformal(): Not a sequential AIG.")
 		return -1
 	}
 	gia.Gia_ManRandom(1)
@@ -166,41 +173,53 @@ func Cec_ManSeqSemiformal(p *Gia_Man_t, pars *Cec_ParSmf_t) int32 {
 	Cec_ManSatSetDefaultParams(&sat)
 	sat.nBTLimit = pars.nBTLimit
 	sat.fVerbose = pars.fVerbose
+	if sat.fVerbose != 0 {
+		fmt.Print("Starting: ")
+		gia.Gia_ManEquivPrintClasses(p, 0, 0)
+	}
 	noRefinements, result := int32(0), int32(0)
+	gia.Gia_ManCleanMark0(p)
 	for round := int32(0); round < pars.nRounds; round++ {
 		if Cec_ManCheckNonTrivialCands(p) == 0 {
+			fmt.Println("Cec_ManSeqSemiformal: There are only trivial equiv candidates left (PO drivers). Quitting.")
 			break
 		}
-		var outputs *Vec_Int_t
-		var model *Gia_Man_t
-		target := pars.nMinOutputs
-		if target == 0 {
-			for id := int32(1); id < gia.Gia_ManObjNum(p); id++ {
-				if gia.Gia_ObjHasRepr(p, id) != 0 {
-					target++
-				}
-			}
-			target = target/2 + 1
+		var frames int32
+		model := gia.Gia_ManSpecReduceInitFrames(p, state, pars.nFrames, &frames, pars.fDualOut, pars.nMinOutputs)
+		if model == nil {
+			fmt.Println("Quitting refinement because miter could not be unrolled.")
+			break
 		}
-		frames := int32(1)
-		for {
-			model = cecCorrUnrollInit(p, frames, 0, 0, &outputs, pars.fDualOut, state)
-			if gia.Gia_ManCoNum(model) >= target || frames >= pars.nFrames {
-				break
-			}
-			if gia.Gia_ManAndNum(model) > 500000 {
-				return result
-			}
-			frames++
+		if gia.Gia_ManRegNum(model) != 0 || gia.Gia_ManPiNum(model) != gia.Gia_ManPiNum(p)*frames {
+			panic("cec: invalid semiformal unrolling interface")
+		}
+		if pars.fVerbose != 0 {
+			fmt.Printf("Unrolled for %d frames.\n", frames)
 		}
 		info := vec.Vec_PtrAllocSimInfo(int(gia.Gia_ManRegNum(p)+gia.Gia_ManPiNum(p)*(frames+16)), int(pars.nWords))
 		Cec_ManSeqDeriveInfoInitRandom(info, p, state)
 		var patterns int32
 		Cec_ManSatSolveSeq(info, model, &sat, gia.Gia_ManRegNum(p), &patterns)
+		gia.Gia_ManStop(model)
 
 		result = Cec_ManSeqResimulateInfo(p, info, state, pars.fCheckMiter)
+		if state.IPo < 0 {
+			panic("cec: missing semiformal hit counter")
+		}
 		state.IPo = -1
+		if pars.fVerbose != 0 {
+			fmt.Printf("BMC = %3d ", patterns)
+			gia.Gia_ManEquivPrintClasses(p, 0, 0)
+		}
+		cecSemiformalWrite(p, "gore.aig")
+		if reduced := gia.Gia_ManSpecReduce(p, 0, 0, 1, 0, 0); reduced != nil {
+			swept := gia.Gia_ManSeqStructSweep(reduced, 1, 1, 0)
+			gia.Gia_ManStop(reduced)
+			cecSemiformalWrite(swept, "gsrm.aig")
+			gia.Gia_ManStop(swept)
+		}
 		if result != 0 {
+			fmt.Println("Cec_ManSeqSemiformal(): An output of the miter is asserted. Refinement stopped.")
 			break
 		}
 		if patterns > 0 {
@@ -212,5 +231,24 @@ func Cec_ManSeqSemiformal(p *Gia_Man_t, pars *Cec_ParSmf_t) int32 {
 			}
 		}
 	}
+	if pars.fCheckMiter != 0 {
+		if n := Cec_ManCountNonConstOutputs(p); n != 0 {
+			fmt.Printf("The number of POs that are not const-0 candidates = %d.\n", n)
+		}
+	}
 	return result
+}
+
+// The C writer diagnoses fopen errors, but does not diagnose write failures.
+func cecSemiformalWrite(p *Gia_Man_t, name string) {
+	if gia.Gia_ManCoNum(p) == 0 {
+		fmt.Println("AIG cannot be written because it has no POs.")
+		return
+	}
+	if err := gia.Gia_AigerWrite(p, name, 0, 0, 0); err != nil {
+		var pathErr *os.PathError
+		if errors.As(err, &pathErr) && pathErr.Op == "open" {
+			fmt.Printf("Gia_AigerWrite(): Cannot open the output file %q.\n", name)
+		}
+	}
 }

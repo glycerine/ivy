@@ -98,11 +98,8 @@ func Gia_ManSpecReduceInit(p *Gia_Man_t, init *Abc_Cex_t, nFrames, dual int32) *
 	return result
 }
 func Gia_ManSpecReduceInitFrames(p *Gia_Man_t, init *Abc_Cex_t, maxFrames int32, frames *int32, dual, minOutputs int32) *Gia_Man_t {
-	if maxFrames <= 0 {
-		panic("gia: invalid frame limit")
-	}
 	nLits := Gia_ManEquivCountLits(p)
-	for f := int32(1); f <= maxFrames; f++ {
+	for f := int32(1); ; f++ {
 		result := Gia_ManSpecReduceInit(p, init, f, dual)
 		if result == nil {
 			return nil
@@ -122,5 +119,4 @@ func Gia_ManSpecReduceInitFrames(p *Gia_Man_t, init *Abc_Cex_t, maxFrames int32,
 		}
 		Gia_ManStop(result)
 	}
-	return nil
 }

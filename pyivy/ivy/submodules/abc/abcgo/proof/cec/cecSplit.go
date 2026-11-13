@@ -4,12 +4,14 @@ package cec
 import (
 	"fmt"
 	"math"
-	"sync"
+	"runtime"
 	"time"
 
+	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/aig/gia"
-	"github.com/glycerine/abcgo/sat/bmc"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/sat/bsat"
+	"github.com/glycerine/abcgo/sat/cnf"
 )
 
 type splitFix struct {
@@ -30,29 +32,14 @@ type splitResult struct {
 // splitSolve asserts the single output and extracts a primary-input model.
 func splitSolve(part splitPart, timeout int32) splitResult {
 	p := part.graph
-	data := bmc.Cnf_DeriveGiaRemapped(p)
-	if data == nil || gia.Gia_ManCoNum(p) != 1 {
+	aigGraph := gia.Gia_ManToAigSimple(p)
+	aig.Aig_ManSetRegNum(aigGraph, 0)
+	data := cnf.Cnf_Derive(aigGraph, 0)
+	if data == nil {
 		return splitResult{status: -1}
 	}
-	solver := bsat.NewSolver()
-	for _, clause := range data.Clauses {
-		lits := make([]bsat.Literal, len(clause))
-		for i, lit := range clause {
-			lits[i] = bsat.Literal(lit)
-		}
-		if !solver.AddClause(lits...) {
-			return splitResult{status: 1}
-		}
-	}
-	outputID := gia.Gia_ObjId(p, gia.Gia_ManCo(p, 0))
-	if outputID < 0 || int(outputID) >= len(data.VarNums) {
-		return splitResult{status: -1}
-	}
-	output := data.VarNums[outputID]
-	if output < 0 {
-		return splitResult{status: -1}
-	}
-	if !solver.AddClause(bsat.Positive(output)) {
+	solver := cnf.Cnf_DataWriteIntoSolver(data, 1, 0)
+	if solver == nil {
 		return splitResult{status: 1}
 	}
 	if timeout > 0 {
@@ -68,230 +55,340 @@ func splitSolve(part splitPart, timeout int32) splitResult {
 		return result
 	}
 	result.status = 0
-	result.model = make([]bool, gia.Gia_ManCiNum(p))
-	for i := range result.model {
-		id := gia.Gia_ObjId(p, gia.Gia_ManCi(p, int32(i)))
-		if id >= 0 && int(id) < len(data.VarNums) {
-			result.model[i], _ = solver.Value(data.VarNums[id])
+	lits := make([]int32, len(part.fixes))
+	for i, fix := range part.fixes {
+		lits[i] = fix.variable << 1
+		if !fix.value {
+			lits[i] |= 1
 		}
 	}
-	for _, fix := range part.fixes {
-		result.model[fix.variable] = fix.value
+	p.SetSplitCofactors(lits)
+	model := Cec_SplitDeriveModel(p, data, solver)
+	result.model = make([]bool, model.NPis)
+	for i := range result.model {
+		result.model[i] = model.PData[i>>5]&(1<<uint(i&31)) != 0
 	}
 	return result
 }
 
+// Cec_SplitDeriveModel follows cecSplit.c: SAT PI values are overwritten by
+// the cofactor literals and stored in a zero-register combinational model.
+func Cec_SplitDeriveModel(p *gia.Gia_Man_t, data *cnf.Cnf_Dat_t, solver *bsat.Solver) *util.Abc_Cex_t {
+	model := util.Abc_CexAlloc(0, gia.Gia_ManPiNum(p), 1)
+	for i := int32(0); i < gia.Gia_ManPiNum(p); i++ {
+		id := gia.Gia_ObjId(p, gia.Gia_ManPi(p, i))
+		v, _ := solver.Value(data.VarNums[id])
+		if v {
+			model.PData[i>>5] |= 1 << uint(i&31)
+		}
+	}
+	for _, lit := range p.SplitCofactors() {
+		i := lit >> 1
+		mask := uint32(1) << uint(i&31)
+		if lit&1 == 0 {
+			model.PData[i>>5] |= mask
+		} else {
+			model.PData[i>>5] &^= mask
+		}
+	}
+	return model
+}
+
 // splitChoose excludes variables already fixed along this branch.
 func splitChoose(part splitPart, lookAhead int32) (int32, int32, int32) {
-	p := part.graph
-	order := Gia_PermuteSpecialOrder(p)
-	fixed := make(map[int32]bool, len(part.fixes))
-	for _, f := range part.fixes {
-		fixed[f.variable] = true
-	}
-	best, bestCost, bestRefs := int32(-1), int32(math.MaxInt32), int32(0)
-	if lookAhead < 1 {
-		lookAhead = 1
-	}
-	tried := int32(0)
-	for _, variable := range order {
-		if fixed[variable] {
-			continue
-		}
-		refs := gia.Gia_ObjRefNum(p, gia.Gia_ManPi(p, variable))
-		if refs == 0 {
-			continue
-		}
-		if lookAhead == 1 {
-			return variable, refs, -1
-		}
-		zero := gia.Gia_ManDupCofactorVar(p, variable, 0)
-		one := gia.Gia_ManDupCofactorVar(p, variable, 1)
-		cost := gia.Gia_ManAndNum(zero) + gia.Gia_ManAndNum(one)
-		gia.Gia_ManStop(zero)
-		gia.Gia_ManStop(one)
-		if cost < bestCost {
-			best, bestCost, bestRefs = variable, cost, refs
-		}
-		tried++
-		if tried == lookAhead {
-			break
-		}
-	}
-	return best, bestRefs, bestCost
+	var refs, cost int32
+	variable := Gia_SplitCofVar(part.graph, lookAhead, &refs, &cost)
+	return variable, refs, cost
 }
 
 func splitRun(p *gia.Gia_Man_t, workers, timeout, maxIter, lookAhead, verbose, veryVerbose, silent int32, solve func(splitPart, int32) splitResult) (int32, []bool) {
-	start := time.Now()
+	return splitRunMode(p, workers, timeout, maxIter, lookAhead, verbose, veryVerbose, silent, workers != 1, solve)
+}
+func splitRunMode(p *gia.Gia_Man_t, workers, timeout, maxIter, lookAhead, verbose, veryVerbose, silent int32, parallel bool, solve func(splitPart, int32) splitResult) (int32, []bool) {
+	started := time.Now()
 	initial := solve(splitPart{graph: p}, timeout)
-	if verbose != 0 {
-		Cec_GiaSplitPrint(0, 0, initial.vars, initial.conflicts, initial.status, 0, time.Since(start))
+	if verbose != 0 && (!parallel || initial.status != -1) {
+		Cec_GiaSplitPrint(0, 0, initial.vars, initial.conflicts, initial.status, 0, time.Since(started))
 	}
 	if initial.status != -1 {
+		if silent == 0 {
+			if initial.status == 0 {
+				fmt.Println("The problem is SAT without cofactoring.")
+			} else {
+				fmt.Println("The problem is UNSAT without cofactoring.")
+			}
+		}
 		return initial.status, initial.model
 	}
-	if workers < 1 {
-		workers = 1
+	if !parallel {
+		return splitSerial(p, timeout, maxIter, lookAhead, verbose, veryVerbose, silent, started, solve)
 	}
-	if workers > 100 {
-		workers = 100
+	return splitParallel(p, workers, timeout, maxIter, lookAhead, verbose, veryVerbose, silent, started, solve)
+}
+func splitFinish(ret int32, iter int32, started time.Time, silent int32) {
+	if silent != 0 {
+		return
 	}
+	name := "UNDECIDED"
+	if ret == 0 {
+		name = "SAT"
+	} else if ret == 1 {
+		name = "UNSAT"
+	}
+	fmt.Printf("Problem is %s after %d case-splits. Time: %.2f sec\n", name, iter, time.Since(started).Seconds())
+}
+
+// splitSerial follows source depth-first order, including its empty-stack bug.
+func splitSerial(p *gia.Gia_Man_t, timeout, maxIter, lookAhead, verbose, veryVerbose, silent int32, started time.Time, solve func(splitPart, int32) splitResult) (int32, []bool) {
 	stack := []splitPart{{graph: gia.Gia_ManDup(p)}}
-	splits := int32(0)
+	ret := int32(-1)
+	var model []bool
+	iter := int32(1)
 	progress := 0.0
-	unknown := false
-	first := true
-	for len(stack) > 0 {
-		count := int(workers)
-		if count > len(stack) {
-			count = len(stack)
+	for ; len(stack) > 0; iter++ {
+		last := stack[len(stack)-1]
+		stack = stack[:len(stack)-1]
+		variable, fanouts, cost := splitChoose(last, lookAhead)
+		if variable < 0 {
+			gia.Gia_ManStop(last.graph)
+			break
 		}
-		batch := make([]splitPart, count)
-		for i := range batch {
-			batch[i] = stack[len(stack)-1]
-			stack = stack[:len(stack)-1]
-		}
-		results := make([]splitResult, count)
-		var wg sync.WaitGroup
-		for i := range batch {
-			if first {
-				results[i] = initial
-				continue
+		found := false
+		for value := int32(0); value < 2; value++ {
+			child := splitPart{graph: gia.Gia_ManDupCofactorVar(last.graph, variable, value), fixes: append(append([]splitFix(nil), last.fixes...), splitFix{variable, value != 0})}
+			if veryVerbose != 0 && value == 0 {
+				fmt.Printf("Var = %5d. Fanouts = %5d. Cost = %8d.  AndBefore = %6d.  AndAfter = %6d.\n", variable, fanouts, cost, gia.Gia_ManAndNum(last.graph), gia.Gia_ManAndNum(child.graph))
 			}
-			wg.Add(1)
-			go func(i int) { defer wg.Done(); results[i] = solve(batch[i], timeout) }(i)
-		}
-		wg.Wait()
-		first = false
-		for i, part := range batch {
-			result := results[i]
+			result := solve(child, timeout)
+			if result.status == 1 {
+				progress += math.Ldexp(1, -len(child.fixes))
+			}
 			if verbose != 0 {
-				Cec_GiaSplitPrint(splits, int32(len(part.fixes)), result.vars, result.conflicts, result.status, progress, time.Since(start))
+				Cec_GiaSplitPrint(iter, int32(len(child.fixes)), result.vars, result.conflicts, result.status, progress, time.Since(started))
 			}
 			if result.status == 0 {
-				for _, pending := range stack {
-					gia.Gia_ManStop(pending.graph)
-				}
-				for _, item := range batch {
-					gia.Gia_ManStop(item.graph)
-				}
-				return 0, result.model
+				ret = 0
+				model = result.model
+				gia.Gia_ManStop(child.graph)
+				found = true
+				break
 			}
 			if result.status == 1 {
-				progress += math.Ldexp(1, -len(part.fixes))
-				gia.Gia_ManStop(part.graph)
-				continue
+				gia.Gia_ManStop(child.graph)
+			} else {
+				stack = append(stack, child)
 			}
-			if maxIter > 0 && splits >= maxIter {
-				unknown = true
-				gia.Gia_ManStop(part.graph)
-				continue
-			}
-			variable, fanouts, cost := splitChoose(part, lookAhead)
-			if variable < 0 {
-				unknown = true
-				gia.Gia_ManStop(part.graph)
-				continue
-			}
-			for value := int32(0); value < 2; value++ {
-				child := gia.Gia_ManDupCofactorVar(part.graph, variable, value)
-				fixes := append(append([]splitFix(nil), part.fixes...), splitFix{variable, value != 0})
-				stack = append(stack, splitPart{child, fixes})
-				if value == 0 && veryVerbose != 0 {
-					fmt.Printf("Var = %5d. Fanouts = %5d. Cost = %8d. AndBefore = %6d. AndAfter = %6d.\n", variable, fanouts, cost, gia.Gia_ManAndNum(part.graph), gia.Gia_ManAndNum(child))
-				}
-			}
-			splits++
-			gia.Gia_ManStop(part.graph)
+		}
+		gia.Gia_ManStop(last.graph)
+		if found || maxIter != 0 && iter >= maxIter {
+			break
 		}
 	}
-	status := int32(1)
-	if unknown {
-		status = -1
+	if len(stack) == 0 {
+		ret = 1
 	}
-	if silent == 0 {
-		fmt.Printf("Problem status %d after %d case-splits. Time: %s\n", status, splits, time.Since(start))
+	for _, part := range stack {
+		gia.Gia_ManStop(part.graph)
 	}
-	return status, nil
+	splitFinish(ret, iter, started, silent)
+	return ret, model
+}
+
+// The source checks completed workers in slot order and records the negative
+// cofactor literal for both children, including the positive branch.
+type splitSlot struct {
+	part *splitPart
+	done chan splitResult
+}
+
+func splitParallel(p *gia.Gia_Man_t, workers, timeout, maxIter, lookAhead, verbose, veryVerbose, silent int32, started time.Time, solve func(splitPart, int32) splitResult) (int32, []bool) {
+	return splitParallelWithScanHook(p, workers, timeout, maxIter, lookAhead, verbose, veryVerbose, silent, started, solve, nil)
+}
+
+// The hook permits tests to synchronize worker completion at a scan boundary.
+func splitParallelWithScanHook(p *gia.Gia_Man_t, workers, timeout, maxIter, lookAhead, verbose, veryVerbose, silent int32, started time.Time, solve func(splitPart, int32) splitResult, beforeScan func([]splitSlot)) (int32, []bool) {
+	if workers < 1 || workers > 100 {
+		panic("cec: invalid split worker count")
+	}
+	slots := make([]splitSlot, workers)
+	stack := []splitPart{{graph: gia.Gia_ManDup(p)}}
+	iter := int32(0)
+	ret := int32(-1)
+	var model []bool
+	progress := 0.0
+	finished := false
+	for !finished {
+		if beforeScan != nil {
+			beforeScan(slots)
+		}
+		work := len(stack) > 0
+		for i := range slots {
+			slot := &slots[i]
+			if slot.part != nil {
+				select {
+				case result := <-slot.done:
+					part := *slot.part
+					slot.part = nil
+					slot.done = nil
+					if verbose != 0 {
+						Cec_GiaSplitPrint(int32(i+1), int32(len(part.fixes)), result.vars, result.conflicts, result.status, progress, time.Since(started))
+					}
+					if result.status == 0 {
+						ret = 0
+						model = result.model
+						gia.Gia_ManStop(part.graph)
+						finished = true
+						break
+					}
+					if result.status == -1 {
+						variable, fanouts, cost := splitChoose(part, lookAhead)
+						if variable < 0 {
+							gia.Gia_ManStop(part.graph)
+							finished = true
+							break
+						}
+						for value := int32(0); value < 2; value++ {
+							child := splitPart{graph: gia.Gia_ManDupCofactorVar(part.graph, variable, value), fixes: append(append([]splitFix(nil), part.fixes...), splitFix{variable, false})}
+							stack = append(stack, child)
+							if value == 0 && veryVerbose != 0 {
+								fmt.Printf("Var = %5d. Fanouts = %5d. Cost = %8d.  AndBefore = %6d.  AndAfter = %6d.\n", variable, fanouts, cost, gia.Gia_ManAndNum(part.graph), gia.Gia_ManAndNum(child.graph))
+							}
+						}
+						iter++
+						work = true
+					} else {
+						progress += math.Ldexp(1, -len(part.fixes))
+					}
+					gia.Gia_ManStop(part.graph)
+				default:
+					work = true
+					continue
+				}
+			}
+			if finished {
+				break
+			}
+			if len(stack) > 0 {
+				part := stack[len(stack)-1]
+				stack = stack[:len(stack)-1]
+				slot.part = &part
+				slot.done = make(chan splitResult, 1)
+				ch := slot.done
+				go func() { ch <- solve(part, timeout) }()
+			}
+		}
+		if finished {
+			break
+		}
+		if maxIter != 0 && iter >= maxIter {
+			break
+		}
+		if !work {
+			ret = 1
+			break
+		}
+		runtime.Gosched()
+	}
+	for i := range slots {
+		if slots[i].part != nil {
+			<-slots[i].done
+			gia.Gia_ManStop(slots[i].part.graph)
+		}
+	}
+	for _, part := range stack {
+		gia.Gia_ManStop(part.graph)
+	}
+	splitFinish(ret, iter, started, silent)
+	return ret, model
+}
+
+func splitSetModel(p *gia.Gia_Man_t, model []bool, output int32) error {
+	c := util.Abc_CexAlloc(0, gia.Gia_ManPiNum(p), 1)
+	c.IPo = output
+	for i, v := range model {
+		if v {
+			c.PData[i>>5] |= 1 << uint(i&31)
+		}
+	}
+	return p.SetSplitCounterexample(c)
 }
 
 func Cec_GiaSplitTestInt(p *gia.Gia_Man_t, procs, timeout, maxIter, lookAhead, verbose, veryVerbose, silent int32) int32 {
 	p.ClearCombinationalCounterexample()
-	workers := procs
-	if workers > 1 {
-		workers--
+	if err := cecRequireAIG(p); err != nil {
+		fmt.Println(err)
+		return -1
 	}
-	status, model := splitRun(p, workers, timeout, maxIter, lookAhead, verbose, veryVerbose, silent, splitSolve)
-	if status == 0 {
-		if err := p.SetCombinationalCounterexample(model, 0); err != nil {
+	if procs == 1 {
+		return Cec_GiaSplitTest2(p, procs, timeout, maxIter, lookAhead, verbose, veryVerbose, silent)
+	}
+	workers := procs - 1
+	if workers < 1 || workers > 100 {
+		panic("cec: invalid split processor count")
+	}
+	status, model := splitRunMode(p, workers, timeout, maxIter, lookAhead, verbose, veryVerbose, silent, true, splitSolve)
+	if model != nil {
+		if err := splitSetModel(p, model, 0); err != nil {
 			return -1
 		}
 	}
 	return status
 }
 func Cec_GiaSplitTest2(p *gia.Gia_Man_t, procs, timeout, maxIter, lookAhead, verbose, veryVerbose, silent int32) int32 {
-	return Cec_GiaSplitTestInt(p, 1, timeout, maxIter, lookAhead, verbose, veryVerbose, silent)
-}
-
-// splitOutput retains all CIs in their original order: the SAT assignment must
-// remain meaningful in the original graph even when the output cone omits or
-// visits some inputs in a different order. Register outputs are combinational
-// inputs for this single-output SAT query.
-func splitOutput(p *gia.Gia_Man_t, output int32) *gia.Gia_Man_t {
-	q := gia.Gia_ManStart(gia.Gia_ManObjNum(p))
-	if gia.Gia_ManHasMuxData(p) {
-		q.EnableMuxes()
+	if err := cecRequireAIG(p); err != nil {
+		fmt.Println(err)
+		return -1
 	}
-	copies := make([]int32, gia.Gia_ManObjNum(p))
-	for _, lit := range p.InputLiterals() {
-		copies[lit>>1] = gia.Gia_ManAppendCi(q)
-	}
-	copyLit := func(lit int32) int32 { return copies[lit>>1] ^ (lit & 1) }
-	for id := int32(1); id < gia.Gia_ManObjNum(p); id++ {
-		a, b, c, kind := p.Gate(id)
-		switch kind {
-		case 1, 6:
-		case 2:
-			copies[id] = gia.Gia_ManAppendAnd(q, copyLit(a), copyLit(b))
-		case 3:
-			copies[id] = gia.Gia_ManAppendXorReal(q, copyLit(a), copyLit(b))
-		case 4:
-			copies[id] = gia.Gia_ManAppendMuxReal(q, copyLit(a), copyLit(b), copyLit(c))
-		case 5:
-			copies[id] = gia.Gia_ManAppendBuf(q, copyLit(a))
-		default:
-			panic("cec: invalid gate in split output")
+	status, model := splitRun(p, 1, timeout, maxIter, lookAhead, verbose, veryVerbose, silent, splitSolve)
+	if model != nil {
+		if err := splitSetModel(p, model, 0); err != nil {
+			return -1
 		}
 	}
-	gia.Gia_ManAppendCo(q, copyLit(p.OutputLiterals()[output]))
-	return q
+	return status
 }
-
+func splitOutput(p *gia.Gia_Man_t, output int32) *gia.Gia_Man_t {
+	return gia.Gia_ManDupOutputGroup(p, output, output+1)
+}
 func Cec_GiaSplitTest(p *gia.Gia_Man_t, procs, timeout, maxIter, lookAhead, verbose, veryVerbose, silent int32) int32 {
 	p.ClearCombinationalCounterexample()
+	if err := cecRequireAIG(p); err != nil {
+		fmt.Println(err)
+		return -1
+	}
+	result := int32(-1)
 	unknown := false
+	var witness *util.Abc_Cex_t
 	for output := int32(0); output < gia.Gia_ManPoNum(p); output++ {
 		one := splitOutput(p, output)
-		workers := procs
-		if workers > 1 {
-			workers--
+		if verbose != 0 {
+			fmt.Printf("\nSolving output %d:\n", output)
 		}
-		status, model := splitRun(one, workers, timeout, maxIter, lookAhead, verbose, veryVerbose, silent, splitSolve)
-		gia.Gia_ManStop(one)
-		if status == 0 {
-			if p.SetCombinationalCounterexample(model, int(output)) != nil {
-				return -1
+		status := Cec_GiaSplitTestInt(one, procs, timeout, maxIter, lookAhead, verbose, veryVerbose, silent)
+		if status == 0 && result == -1 {
+			witness = one.TakeCombinationalCounterexample()
+			if witness != nil {
+				witness.IPo = output
 			}
-			return 0
+			result = 0
 		}
-		if status < 0 {
+		gia.Gia_ManStop(one)
+		if status == -1 {
 			unknown = true
 		}
 	}
-	if unknown {
-		return -1
+	if result == -1 {
+		if unknown {
+			return -1
+		}
+		return 1
 	}
-	return 1
+	if witness != nil {
+		if err := p.SetSplitCounterexample(witness); err != nil {
+			return -1
+		}
+	}
+	return result
 }
 func Cec_GiaSplitPrint(iter, depth, vars int32, conflicts int64, status int32, progress float64, elapsed time.Duration) {
 	label := "UNDECIDED"

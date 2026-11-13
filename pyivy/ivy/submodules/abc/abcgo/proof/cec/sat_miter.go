@@ -67,6 +67,7 @@ func Cec_ManSatSolveMiter(graph *Gia_Man_t, params *Cec_ParSat_t, statusOut **Ve
 	status := vec.Vec_StrAlloc(len(outputs))
 	store := vec.Vec_IntAlloc(16)
 	for i, lit := range outputs {
+		vec.Vec_IntClear(p.vCex)
 		// C handles constant outputs before calling Cec_ManSatCheckNode.
 		if lit <= 1 {
 			if lit == 0 {

@@ -45,7 +45,11 @@ func Cec_ManSatPrintStats(p *Cec_ManSat_t) {
 		return
 	}
 	s := p.source
-	fmt.Printf("CEC SAT: %d queries, %d SAT, %d UNSAT, %d undecided, %d conflicts, %d recycles\n", s.calls, s.satCount, s.unsatCount, s.undecCount, s.sat.Statistics().Conflicts, s.recycles)
+	var conflicts int64
+	if s.sat != nil {
+		conflicts = s.sat.Statistics().Conflicts
+	}
+	fmt.Printf("CEC SAT: %d queries, %d SAT, %d UNSAT, %d undecided, %d conflicts, %d recycles\n", s.calls, s.satCount, s.unsatCount, s.undecCount, conflicts, s.recycles)
 }
 func Cec_ManSatStop(p *Cec_ManSat_t) {
 	if p != nil {

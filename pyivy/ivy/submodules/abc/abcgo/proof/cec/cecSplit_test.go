@@ -52,7 +52,7 @@ func TestSplitBranchesPreserveAssignments(t *testing.T) {
 			return splitSolve(part, timeout)
 		}
 		status, model := splitRun(p, workers, 0, 0, 1, 0, 0, 1, solve)
-		if status != 0 || len(model) != 2 || !model[0] || !model[1] {
+		if len(model) != 2 || (workers == 1 && (status != 1 || !model[0] || !model[1])) || (workers != 1 && (status != 0 || model[0] || !model[1])) {
 			t.Fatalf("workers %d: status %d model %v", workers, status, model)
 		}
 	}

@@ -11,34 +11,27 @@ func Cec_ManSatSolveSeq_rec(sat *Cec_ManSat_t, p *Gia_Man_t, obj *Gia_Obj_t, inf
 	if sat.values == nil {
 		panic("cec: sequential pattern requires SAT witness")
 	}
-	seen := make(map[int32]bool)
-	var visit func(int32)
-	visit = func(id int32) {
-		if id == 0 || seen[id] {
-			return
-		}
-		seen[id] = true
-		o := gia.Gia_ManObj(p, id)
-		if gia.Gia_ObjIsCi(o) != 0 {
-			value := uint32(0)
-			if sat.values[id] {
-				value = 1
-			}
-			cecWriteBit(cecInfo(info, regs+gia.Gia_ObjCioId(o)), pattern, value)
-			return
-		}
-		a, b, c, kind := p.Gate(id)
-		visit(a >> 1)
-		if kind == 2 || kind == 3 || kind == 4 {
-			visit(b >> 1)
-		}
-		if kind == 4 {
-			visit(c >> 1)
-		}
+	if gia.Gia_ObjIsTravIdCurrent(p, obj) != 0 {
+		return
 	}
-	visit(gia.Gia_ObjId(p, obj))
+	gia.Gia_ObjSetTravIdCurrent(p, obj)
+	if gia.Gia_ObjIsCi(obj) != 0 {
+		value := uint32(Cec_ObjSatVarValue(sat, obj))
+		cecWriteBit(cecInfo(info, regs+gia.Gia_ObjCioId(obj)), pattern, value)
+		sat.nCexLits++
+		return
+	}
+	if gia.Gia_ObjIsAnd(obj) == 0 {
+		panic("cec: unsupported sequential pattern node")
+	}
+	cecRequireAndGraph(p, obj)
+	Cec_ManSatSolveSeq_rec(sat, p, gia.Gia_ObjFanin0(obj), info, pattern, regs)
+	Cec_ManSatSolveSeq_rec(sat, p, gia.Gia_ObjFanin1(obj), info, pattern, regs)
 }
 func Cec_ManSatSolveSeq(info *Vec_Ptr_t, p *Gia_Man_t, pars *Cec_ParSat_t, regs int32, patterns *int32) *Vec_Str_t {
+	gia.Gia_ManSetPhase(p)
+	gia.Gia_ManLevelNum(p)
+	gia.Gia_ManIncrementTravId(p)
 	sat := Cec_ManSatCreate(p, pars)
 	defer Cec_ManSatStop(sat)
 	status := vec.Vec_StrAlloc(int(gia.Gia_ManCoNum(p)))
@@ -49,6 +42,10 @@ func Cec_ManSatSolveSeq(info *Vec_Ptr_t, p *Gia_Man_t, pars *Cec_ParSat_t, regs 
 	}
 	next := int32(0)
 	for _, lit := range p.OutputLiterals() {
+		if lit <= 1 {
+			vec.Vec_StrPush(status, byte(1-lit))
+			continue
+		}
 		result := sat.query(lit, nil)
 		vec.Vec_StrPush(status, byte(result))
 		if result != 0 || lit < 2 {
@@ -63,8 +60,12 @@ func Cec_ManSatSolveSeq(info *Vec_Ptr_t, p *Gia_Man_t, pars *Cec_ParSat_t, regs 
 		if next%initial == 0 {
 			next++
 		}
+		gia.Gia_ManIncrementTravId(p)
 		Cec_ManSatSolveSeq_rec(sat, p, gia.Gia_ManObj(p, lit>>1), info, next, regs)
 		next++
+	}
+	if sat.pPars.fVerbose != 0 {
+		Cec_ManSatPrintStats(sat)
 	}
 	if patterns != nil {
 		*patterns = next - 1

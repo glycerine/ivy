@@ -53,3 +53,26 @@ func TestSatMiterInitializesSourcePhaseMetadata(t *testing.T) {
 		t.Fatal("source miter phase initialization missing")
 	}
 }
+
+func TestSatConstantZeroPreservesSourceModelAndPattern(t *testing.T) {
+	g := gia.Gia_ManStart(8)
+	a := gia.Gia_ManAppendCi(g)
+	p := Cec_ManSatCreate(g, nil)
+	defer Cec_ManSatStop(p)
+	obj := gia.Gia_ManObj(g, a>>1)
+	if Cec_ManSatCheckNode(p, obj) != 0 {
+		t.Fatal("expected SAT")
+	}
+	Cec_ManSavePattern(p, obj, nil)
+	vector := p.vCex
+	before := append([]int32(nil), vec.Vec_IntArray(vector)...)
+	source := p.source
+	calls := source.calls
+	values := append([]bool(nil), p.values...)
+	if got := Cec_ManSatCheckNode(p, gia.Gia_ManConst0(g)); got != 1 {
+		t.Fatalf("status %d", got)
+	}
+	if p.vCex != vector || !reflect.DeepEqual(vec.Vec_IntArray(vector), before) || !reflect.DeepEqual(p.values, values) || source.calls != calls {
+		t.Fatal("constant query altered SAT state")
+	}
+}

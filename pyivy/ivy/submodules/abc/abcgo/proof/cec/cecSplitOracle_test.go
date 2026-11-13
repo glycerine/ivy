@@ -13,7 +13,7 @@ func TestSplitAgainstExhaustiveTruthTables(t *testing.T) {
 	random := rand.New(rand.NewSource(73021))
 	for trial := 0; trial < 32; trial++ {
 		g := gia.Gia_ManStart(100)
-		g.EnableMuxes()
+
 		lits := make([]int32, 4)
 		for i := range lits {
 			lits[i] = gia.Gia_ManAppendCi(g)
@@ -23,15 +23,8 @@ func TestSplitAgainstExhaustiveTruthTables(t *testing.T) {
 			if a>>1 == b>>1 || a>>1 == c>>1 || b>>1 == c>>1 {
 				a, b, c = lits[0]^int32(random.Intn(2)), lits[1]^int32(random.Intn(2)), lits[2]^int32(random.Intn(2))
 			}
-			var out int32
-			switch j % 3 {
-			case 0:
-				out = gia.Gia_ManAppendAnd(g, a, b)
-			case 1:
-				out = gia.Gia_ManAppendXorReal(g, a, b)
-			case 2:
-				out = gia.Gia_ManAppendMuxReal(g, a, b, c)
-			}
+			_ = c
+			out := gia.Gia_ManAppendAnd(g, a, b)
 			lits = append(lits, out)
 		}
 		out := lits[len(lits)-1]
@@ -52,26 +45,14 @@ func TestSplitAgainstExhaustiveTruthTables(t *testing.T) {
 			}
 			sat = sat || result[0]
 		}
-		for _, workers := range []int32{1, 3} {
-			solve := func(part splitPart, timeout int32) splitResult {
-				if len(part.fixes) == 0 {
-					return splitResult{status: -1}
-				}
-				return splitSolve(part, timeout)
-			}
-			status, model := splitRun(g, workers, 0, 0, 2, 0, 0, 1, solve)
-			// Constant outputs have no split variable, so use the direct solver.
-			if status == -1 {
-				status, model = splitRun(g, workers, 0, 0, 2, 0, 0, 1, splitSolve)
-			}
-			if (status == 0) != sat || status == -1 {
-				t.Fatalf("trial %d workers %d status %d sat %t", trial, workers, status, sat)
-			}
-			if sat {
-				outputs, err := g.Evaluate(model)
-				if err != nil || !outputs[0] {
-					t.Fatalf("trial %d workers %d invalid witness %v outputs %v err %v", trial, workers, model, outputs, err)
-				}
+		result := splitSolve(splitPart{graph: g}, 0)
+		if (result.status == 0) != sat || result.status == -1 {
+			t.Fatalf("trial %d status %d sat %v", trial, result.status, sat)
+		}
+		if sat {
+			outputs, err := g.Evaluate(result.model)
+			if err != nil || !outputs[0] {
+				t.Fatalf("trial %d witness %v", trial, result.model)
 			}
 		}
 	}
