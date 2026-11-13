@@ -158,3 +158,25 @@ func TestPdrUnknownPropertyLeavesPredecessorUntouched(t *testing.T) {
 		}
 	}
 }
+
+// C's fTryConf path maps an actual conflict-limit UNKNOWN to SAT, while an
+// identical non-generalization query returns UNKNOWN. The fixture needs SAT
+// search to refute the guarded pigeonhole formula, so this does not rely on
+// a deadline or a trivial root contradiction.
+func TestPdrGeneralizationConflictLimitMatchesC(t *testing.T) {
+	for _, tryConf := range []int32{0, 1} {
+		p, cube, _, _, _ := pdrCtgLateTimeoutFixture(t, []int32{0, 2})
+		p.vSolvers[1].SetStopFunc(0, nil)
+		p.pPars.nConfGenLimit = 1
+		p.timeToStop = 0
+		got := Pdr_ManCheckCube(p, 1, cube, nil, 1, tryConf, 1)
+		want, satCalls := int32(-1), int32(0)
+		if tryConf != 0 {
+			want, satCalls = 0, 1
+		}
+		stats := p.vSolvers[1].Statistics()
+		if got != want || p.nCallsS != satCalls || p.nCallsU != 0 || stats.Conflicts <= 1 {
+			t.Fatalf("tryConf=%d result=%d satCalls=%d unsatCalls=%d conflicts=%d", tryConf, got, p.nCallsS, p.nCallsU, stats.Conflicts)
+		}
+	}
+}

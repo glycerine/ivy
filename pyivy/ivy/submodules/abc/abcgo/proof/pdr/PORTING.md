@@ -20,8 +20,9 @@ Go CNF, abstraction, priority, generalization and frame-management options.
 A safe-latch fixture compares the invariant PLA cover with ABC. Bridge tests
 check the framed proved/failed-output messages and final abort message for
 ordinary and incremental runs. Other
-tests cover frame limits, SAT conflict limits, expired global and per-output
-deadlines, solver reuse, invariant checks, and SAT core handling. The full
+tests cover frame limits, actual SAT conflict-limit exhaustion (including
+generalization's source-specific UNKNOWN handling), expired global and
+per-output deadlines, solver reuse, invariant checks, and SAT core handling. The full
 package has passed `go test -race ./proof/pdr` and
 `go vet ./proof/pdr`.
 
@@ -31,8 +32,9 @@ Remaining review and coverage gaps:
   machines. Larger sequential designs and deeper refinement chains need
   end-to-end comparisons, including runs against the original ABC PDR.
 - Resource exhaustion and per-output deadlines have less coverage than normal
-  SAT/UNSAT results. Cancellation is tested, but real timeout, conflict-limit,
-  and interruption combinations warrant further tests.
+  SAT/UNSAT results. Actual conflict-limit exhaustion and expired deadlines
+  are tested, but elapsed real-time limits and broader interruption
+  combinations warrant further tests.
 - ABC's updated SAT-based justification (`fNewXSim`, command-line `pdr -u`)
   can produce an invalid counterexample because it derives the justification
   in a frame solver containing reachability clauses. This source behavior is
