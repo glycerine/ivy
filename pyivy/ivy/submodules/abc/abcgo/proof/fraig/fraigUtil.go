@@ -297,7 +297,7 @@ func Fraig_NodeIsInSupergate(old, node *Fraig_Node_t) int32 {
 		}
 		return -1
 	}
-	if Fraig_IsComplement(old) || Fraig_NodeIsVar(old) != 0 || Fraig_NodeIsConst(old) != 0 {
+	if Fraig_IsComplement(old) || Fraig_NodeIsVar(old) != 0 {
 		return 0
 	}
 	a, b := Fraig_NodeIsInSupergate(old.p1, node), Fraig_NodeIsInSupergate(old.p2, node)
@@ -310,7 +310,7 @@ func Fraig_NodeIsInSupergate(old, node *Fraig_Node_t) int32 {
 	return 0
 }
 func Fraig_CollectSupergate_rec(n *Fraig_Node_t, v *Fraig_NodeVec_t, first, stopMux int32) {
-	if first == 0 && Fraig_Regular(n).nRefs > 1 || Fraig_IsComplement(n) || Fraig_NodeIsVar(n) != 0 || Fraig_NodeIsConst(n) != 0 || stopMux != 0 && Fraig_NodeIsMuxType(n) != 0 {
+	if first == 0 && Fraig_Regular(n).nRefs > 1 || Fraig_IsComplement(n) || Fraig_NodeIsVar(n) != 0 || stopMux != 0 && Fraig_NodeIsMuxType(n) != 0 {
 		Fraig_NodeVecPushUnique(v, n)
 		return
 	}

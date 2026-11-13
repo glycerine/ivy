@@ -22,8 +22,8 @@ cones, so callers must prepare those first. The C SAT code does not constrain
 its constant node to true. Tests cover these behaviors; they are not guarantees
 of logical equivalence or constrained-miter correctness in those cases.
 
-Other source limitations are preserved: bit simulation assumes a nonconstant
-root; feedback compression does not clear preexisting bits in a partial word;
+Other source limitations are preserved: bit simulation, TFI marking, and
+supergate helpers assume a nonconstant root; feedback compression does not clear preexisting bits in a partial word;
 and the simulation hash uses a fixed prime table without wrapping. Go bounds
 checks turn an overrun of that table into a panic. The msat solver retains root
 unit facts when preparing a new cone. As in the C API, adding an empty or
