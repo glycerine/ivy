@@ -81,5 +81,7 @@ SSC_CHECK_MODE=vet abcgo/proof/ssc/test_native.sh
 
 Follow-up coverage checks packed Boolean operations, care-mask and witness
 extraction, pivot-filled pattern transfer, phase-aware class splitting, and
-complemented simulation equivalence. The unchanged C oracle was rerun and
-passed; full package race tests and vet also pass.
+complemented simulation equivalence. Every pair of fixture nodes is checked
+under both polarities against all care-valid assignments, with SAT witnesses
+independently replayed. The unchanged C oracle was rerun and passed; full
+package race tests and vet also pass.
