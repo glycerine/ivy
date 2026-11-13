@@ -563,19 +563,7 @@ func Ssw_SmlCheckOutput(p *Ssw_Sml_t) *int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_SmlCheckNonConstOutputs(p *Ssw_Sml_t) int32 {
-    var pObj *Aig_Obj_t;
-    var i int32;
-    // inlining of macro Saig_ManForEachPo
-    // inlining of macro Vec_PtrForEachEntryStop
-    for  i = 0; (i < Saig_ManPoNum(p.pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, i)), 1); i++  {
-        if p.pAig.nConstrs && i >= Saig_ManPoNum(p.pAig) - p.pAig.nConstrs {
-            return 0; }
-        if !(Ssw_SmlNodeIsZero(p, pObj) != 0) {
-            return 1; }
-    }
-    return 0;
-}
+
 
 /**Function*************************************************************
 
@@ -711,13 +699,7 @@ p.nSimRounds++;
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_SmlSimulateComb(pAig *Aig_Man_t, nWords int32) *Ssw_Sml_t {
-    var p *Ssw_Sml_t;
-    p = Ssw_SmlStart( pAig, 0, 1, nWords );
-    Ssw_SmlInitialize( p, 0 );
-    Ssw_SmlSimulateOne( p );
-    return p;
-}
+
 
 /**Function*************************************************************
 
@@ -730,14 +712,7 @@ func Ssw_SmlSimulateComb(pAig *Aig_Man_t, nWords int32) *Ssw_Sml_t {
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_SmlSimulateSeq(pAig *Aig_Man_t, nPref int32, nFrames int32, nWords int32) *Ssw_Sml_t {
-    var p *Ssw_Sml_t;
-    p = Ssw_SmlStart( pAig, nPref, nFrames, nWords );
-    Ssw_SmlInitialize( p, 1 );
-    Ssw_SmlSimulateOne( p );
-    p.fNonConstOut = Ssw_SmlCheckNonConstOutputs( p );
-    return p;
-}
+
 
 /**Function*************************************************************
 
@@ -750,11 +725,7 @@ func Ssw_SmlSimulateSeq(pAig *Aig_Man_t, nPref int32, nFrames int32, nWords int3
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_SmlResimulateSeq(p *Ssw_Sml_t) {
-    Ssw_SmlReinitialize( p );
-    Ssw_SmlSimulateOne( p );
-    p.fNonConstOut = Ssw_SmlCheckNonConstOutputs( p );
-}
+
 
 
 /**Function*************************************************************
