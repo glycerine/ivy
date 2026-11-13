@@ -56,7 +56,8 @@ func Ssc_GiaResimulateOneClass(p *Ssc_Man_t, head, node int32) int32 {
 }
 func carePatterns(p *Ssc_Man_t) {
 	care := NewSimulation(p.Care, 5)
-	for round := 0; round < 32; round++ {
+	candidateCount := gia.Gia_ManCiNum(p.Aig) + gia.Gia_ManAndNum(p.Aig)
+	for {
 		Ssc_GiaRandomPiPattern(care, 5, nil)
 		Ssc_GiaSimRound(care)
 		mask := make([]uint64, 5)
@@ -88,7 +89,7 @@ func carePatterns(p *Ssc_Man_t) {
 		}
 		Ssc_GiaSimRound(p.Sim)
 		p.Stats.SimulationRounds++
-		if Ssc_GiaClassesRefine(p.Classes, p.Sim) == 0 {
+		if Ssc_GiaClassesRefine(p.Classes, p.Sim) <= candidateCount/100 {
 			break
 		}
 	}

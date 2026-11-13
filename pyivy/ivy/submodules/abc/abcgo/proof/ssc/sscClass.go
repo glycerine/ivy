@@ -75,7 +75,13 @@ func Ssc_GiaClassesRefine(c *Classes, s *Simulation) int32 {
 			}
 			parts[index] = append(parts[index], id)
 		}
-		splits += int32(len(parts) - 1)
+		if len(g) > 0 && g[0] == 0 {
+			// The source counts each node leaving the constant class,
+			// even when several share a newly discovered signature.
+			splits += int32(len(g) - len(parts[0]))
+		} else {
+			splits += int32(len(parts) - 1)
+		}
 		out = append(out, parts...)
 	}
 	c.Groups = out

@@ -41,8 +41,8 @@ simulation of the original graph on the SAT witness. This proves the same
 candidate obligation without borrowing other packages' mutable metadata.
 
 Class refinement uses deterministic full normalized simulation keys rather than
-source hash buckets followed by equality splitting. Initial simulation has a
-32-round cap, after which SAT still checks every remaining candidate; counterexample
+source hash buckets followed by equality splitting. Initial simulation stops at the source threshold of one percent of candidate
+nodes; counterexample
 refinement is immediate rather than source batch scheduling. These choices may
 change node choices, SAT counts, and resource-limit outcomes, while preserving
 conditional semantics. The source-only declaration `Ssc_GenerateOneHot` has no
