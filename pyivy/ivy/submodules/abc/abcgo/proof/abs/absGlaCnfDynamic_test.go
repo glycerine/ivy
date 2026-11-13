@@ -30,3 +30,19 @@ func TestGlaDynamicCnfTruthTable(t *testing.T) {
 		}
 	}
 }
+
+func TestGlaDynamicCnfAcceptsTwoInputCut(t *testing.T) {
+	for x := 0; x < 2; x++ {
+		for y := 0; y < 2; y++ {
+			for out := 0; out < 2; out++ {
+				solver := bsat.NewLabeledSolver2()
+				p := &Ga2_Man_t{pSat: solver, pSops: cnf.Cnf_ReadMsops()}
+				Ga2_ManCnfAddDynamic(p, 0x8888, []int32{2, 4}, 6, 1)
+				got := solver.Solve(bsat.Literal(2|(x^1)), bsat.Literal(4|(y^1)), bsat.Literal(6|(out^1))) == bsat.Satisfiable
+				if got != (out == x*y) {
+					t.Fatalf("%d & %d = %d: %v", x, y, out, got)
+				}
+			}
+		}
+	}
+}

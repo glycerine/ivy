@@ -4,7 +4,7 @@ import "github.com/glycerine/abcgo/sat/bsat"
 
 // Ga2_ManCnfAddDynamic emits the minimum four-input SOP covers for a cut.
 func Ga2_ManCnfAddDynamic(p *Ga2_Man_t, truth int32, lits []int32, out, proofID int32) {
-	if len(lits) < 4 || len(p.pSops) != 1<<16 {
+	if len(p.pSops) != 1<<16 {
 		panic("abs: invalid dynamic CNF input")
 	}
 	table := uint32(truth) & 0xffff
@@ -25,7 +25,7 @@ func Ga2_ManCnfAddDynamic(p *Ga2_Man_t, truth int32, lits []int32, out, proofID 
 				if digit == 2 {
 					continue
 				}
-				if lits[b] <= 1 {
+				if b >= len(lits) || lits[b] <= 1 {
 					panic("abs: invalid cut literal")
 				}
 				lit := lits[b]
