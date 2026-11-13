@@ -510,63 +510,7 @@ func Fra_ImpAddToSolver(p *Fra_Man_t, vImps *Vec_Int_t, pSatVarNums *int32) {
   SeeAlso     []
 
 ***********************************************************************/
-func Fra_ImpCheckForNode(p *Fra_Man_t, vImps *Vec_Int_t, pNode *Aig_Obj_t, Pos int32) int32 {
-    var pLeft, pRight *Aig_Obj_t;
-    var pLeftF, pRightF *Aig_Obj_t;
-    var i, Imp, Left, Right, Max, RetValue int32;
-    var fComplL, fComplR int32;
-    // inlining of macro Vec_IntForEachEntryStart
-    for  i = Pos; (i < Vec_IntSize(vImps)) && (((Imp) = Vec_IntEntry(vImps, i)), 1); i++  {
-        if Imp == 0 {
-            continue; }
-        Left = Fra_ImpLeft(Imp);
-        Right = Fra_ImpRight(Imp);
-        Max = Abc_MaxInt( Left, Right );
-        assert(Max >= pNode.Id, "Max >= pNode.Id");
-        if Max > pNode.Id {
-            return i; }
-        // get the corresponding nodes
-        pLeft  = Aig_ManObj( p.pManAig, Left );
-        pRight = Aig_ManObj( p.pManAig, Right );
-        // get the corresponding FRAIG nodes
-        pLeftF  = Fra_ObjFraig( pLeft, p.pPars.nFramesK );
-        pRightF = Fra_ObjFraig( pRight, p.pPars.nFramesK );
-        // get the complemented attributes
-        fComplL = pLeft.fPhase ^ Aig_IsComplement(pLeftF);
-        fComplR = pRight.fPhase ^ Aig_IsComplement(pRightF);
-        // check equality
-        if Aig_Regular(pLeftF) == Aig_Regular(pRightF) {
-            if fComplL == fComplR { // x => x  - always true
-                continue; }
-            assert(fComplL != fComplR, "fComplL != fComplR");
-            // consider 4 possibilities:
-            // NOT(1) => 1    or   0 => 1  - always true
-            // 1 => NOT(1)    or   1 => 0  - never true
-            // NOT(x) => x    or   x       - not always true
-            // x => NOT(x)    or   NOT(x)  - not always true
-            if Aig_ObjIsConst1(Aig_Regular(pLeftF)) && fComplL { // proved implication
-                continue; }
-            // disproved implication
-            p.pCla.fRefinement = 1;
-            Vec_IntWriteEntry( vImps, i, 0 );
-            continue;
-        }
-        // check the implication 
-        // - if true, a clause is added
-        // - if false, a cex is simulated
-        // make sure the implication is refined
-        RetValue = Fra_NodesAreImp( p, Aig_Regular(pLeftF), Aig_Regular(pRightF), fComplL, fComplR );
-        if RetValue != 1 {
-            p.pCla.fRefinement = 1;
-            if RetValue == 0 {
-                Fra_SmlResimulate( p ); }
-            if Vec_IntEntry(vImps, i) != 0 {
-                fmt.Printf("Fra_ImpCheckForNode(): Implication is not refined!\n"); }
-            assert(Vec_IntEntry(vImps, i) == 0, "Vec_IntEntry(vImps, i) == 0");
-        }
-    }
-    return i;
-}
+
 
 /**Function*************************************************************
 

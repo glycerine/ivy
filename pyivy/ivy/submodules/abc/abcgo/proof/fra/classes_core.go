@@ -14,6 +14,7 @@ type classPartition struct {
 	graph      *aig.Graph
 	simulation *fraSimulation
 	vImps      *vec.Vec_Int_t
+	fRefinement int32
 	// BMC replaces the simulation predicates temporarily during refinement.
 	nodeIsConst func(int) bool
 	nodesEqual  func(int, int) bool
