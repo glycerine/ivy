@@ -211,3 +211,10 @@ status, matching the primary solver. Previously it exposed a stale model
 (including a fabricated value for the new variable) until the next solve.
 `TestSolver2NewVariableInvalidatesModel` covers invalidation and re-solving;
 `GOCACHE=/tmp/abcgo-cache go test -race -count=1 ./sat/bsat` passes.
+
+A repeated-solve proof oracle now validates public `Solver2` models and
+root-clause proof cores against exhaustive four-variable assignments. It found
+that an assumption contradicting a root unit returned an empty proof core;
+the solver now records the unit's proof dependency. A focused regression also
+checks that this assumption conflict does not poison a subsequent SAT solve.
+`GOCACHE=/tmp/abcgo-cache go test -race -count=1 ./sat/bsat` passes.

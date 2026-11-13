@@ -109,3 +109,63 @@ func TestProofSolverRootConflictBeforeAssumptionsPersists(t *testing.T) {
 		t.Fatalf("base formula should be inconsistent: %v", got)
 	}
 }
+
+func TestProofSolverIncrementalOracle(t *testing.T) {
+	rng := rand.New(rand.NewSource(734916))
+	for trial := 0; trial < 200; trial++ {
+		s := NewSolver2()
+		for i := 0; i < 4; i++ {
+			s.NewVariable()
+		}
+		var formula [][]lit
+		for step := 0; step < 16; step++ {
+			if step%4 == 0 {
+				clause := make([]lit, 1+rng.Intn(3))
+				for i := range clause {
+					clause[i] = lit(rng.Intn(8))
+				}
+				formula = append(formula, append([]lit(nil), clause...))
+				s.AddClause(clause...)
+			}
+			assumptions := make([]lit, rng.Intn(3))
+			for i := range assumptions {
+				assumptions[i] = lit(rng.Intn(8))
+			}
+			want := formulaHasModel(formula, assumptions, 4)
+			status := s.Solve(assumptions...)
+			if (status == Satisfiable) != want {
+				t.Fatalf("trial %d step %d formula %v assumptions %v result %v", trial, step, formula, assumptions, status)
+			}
+			if status == Satisfiable {
+				model := s.Model()
+				value := func(l lit) bool { return model[l>>1] != (l&1 != 0) }
+				for _, clause := range formula {
+					valid := false
+					for _, l := range clause {
+						valid = valid || value(l)
+					}
+					if !valid {
+						t.Fatalf("invalid model %v for %v", model, clause)
+					}
+				}
+				for _, l := range assumptions {
+					if !value(l) {
+						t.Fatalf("model %v violates %d", model, l)
+					}
+				}
+			} else {
+				core := s.ProofCore()
+				var selected [][]lit
+				for _, id := range core {
+					if id < 1 || int(id) > len(formula) {
+						t.Fatalf("invalid proof id %d in %v", id, core)
+					}
+					selected = append(selected, formula[id-1])
+				}
+				if formulaHasModel(selected, assumptions, 4) {
+					t.Fatalf("invalid proof core %v formula=%v assumptions=%v", core, formula, assumptions)
+				}
+			}
+		}
+	}
+}

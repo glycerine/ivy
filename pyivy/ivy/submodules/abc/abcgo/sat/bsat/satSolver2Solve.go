@@ -41,6 +41,10 @@ func sat_solver2_solve(s *sat_solver2, assumptions []lit, conflicts, propagation
 				veci_push(&s.conf_final, lit_neg(l))
 			} else {
 				s.hProofLast = -1
+				if s.levels[lit_var(l)] == 0 && s.units[lit_var(l)] != 0 {
+					proof_chain_start(s, clause2_read(s, s.units[lit_var(l)]))
+					s.hProofLast = proof_chain_stop(s)
+				}
 				veci_resize(&s.conf_final, 0)
 				veci_push(&s.conf_final, lit_neg(l))
 				if s.levels[lit_var(l)] > 0 {

@@ -40,3 +40,21 @@ func TestSolver2NewVariableInvalidatesModel(t *testing.T) {
 		t.Fatal("missing extended model")
 	}
 }
+
+func TestSolver2RootUnitAssumptionProofCore(t *testing.T) {
+	s := NewSolver2()
+	x := s.NewVariable()
+	if !s.AddClause(Positive(x)) {
+		t.Fatal("add unit")
+	}
+	if s.Solve(Negative(x)) != Unsatisfiable {
+		t.Fatal("expected assumption conflict")
+	}
+	core := s.ProofCore()
+	if len(core) != 1 || core[0] != 1 {
+		t.Fatalf("root clause core=%v", core)
+	}
+	if s.Solve(Positive(x)) != Satisfiable {
+		t.Fatal("assumption conflict poisoned formula")
+	}
+}
