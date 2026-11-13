@@ -12,13 +12,11 @@ func TestFeedbackPatternsAndBitSimulation(t *testing.T) {
 	a, b := Fraig_ManReadIthVar(p, 0), Fraig_ManReadIthVar(p, 1)
 	node := Fraig_NodeAnd(p, a, Fraig_Not(b))
 	for _, tc := range []struct{ a, b, want int32 }{{0, 0, 0}, {0, 1, 0}, {1, 0, 1}, {1, 1, 0}} {
-		if got := Fraig_ManSimulateBitNode(p, node, []int32{tc.a, tc.b}); got != tc.want {
+		if got := fraigTestSimulateBitNode(p, node, []int32{tc.a, tc.b}); got != tc.want {
 			t.Fatalf("%v => %d", tc, got)
 		}
 	}
-	if got := Fraig_ManSimulateBitNode(p, p.pConst1, []int32{0, 0}); got != 1 {
-		t.Fatal("constant one simulation", got)
-	}
+
 	vars := msat.Msat_IntVecAlloc(2)
 	msat.Msat_IntVecPush(vars, int(a.Num))
 	msat.Msat_IntVecPush(vars, int(b.Num))
@@ -47,4 +45,15 @@ func TestCoveringUtilities(t *testing.T) {
 	if hits[0] != 0 || hits[1] != 0 || hits[2] != 1 {
 		t.Fatal(hits)
 	}
+}
+
+func TestBitSimulatorDoesNotHandleConstantRoot(t *testing.T) {
+	p := Fraig_ManCreate(&Fraig_Params_t{NPatsRand: 128, NPatsDyna: 128})
+	defer Fraig_ManFree(p)
+	defer func() {
+		if recover() == nil {
+			t.Fatal("constant has no fanins; C traversal does not handle it")
+		}
+	}()
+	Fraig_ManSimulateBitNode(p, p.pConst1, nil)
 }

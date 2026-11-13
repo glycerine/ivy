@@ -11,7 +11,7 @@ func TestSATMatchesExhaustiveSmallCircuits(t *testing.T) {
 	for i, n := range edges {
 		for bits := 0; bits < 8; bits++ {
 			model := []int32{int32(bits & 1), int32(bits >> 1 & 1), int32(bits >> 2 & 1)}
-			if Fraig_ManSimulateBitNode(p, n, model) != 0 {
+			if fraigTestSimulateBitNode(p, n, model) != 0 {
 				signatures[i] |= 1 << uint(bits)
 			}
 		}

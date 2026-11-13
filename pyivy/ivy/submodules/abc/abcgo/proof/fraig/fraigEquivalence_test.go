@@ -2,7 +2,7 @@ package fraig
 
 import "testing"
 
-func TestNodesAreEqualHonorsEdgePhase(t *testing.T) {
+func TestNodesAreEqualUsesRegularNodesForDistinctEdges(t *testing.T) {
 	p := Fraig_ManCreate(&Fraig_Params_t{NPatsRand: 128, NPatsDyna: 128})
 	defer Fraig_ManFree(p)
 	a, b, c := Fraig_ManReadIthVar(p, 0), Fraig_ManReadIthVar(p, 1), Fraig_ManReadIthVar(p, 2)
@@ -11,7 +11,7 @@ func TestNodesAreEqualHonorsEdgePhase(t *testing.T) {
 	if Fraig_NodesAreEqual(p, left, right, -1, 5) != 1 {
 		t.Fatal("equivalent nodes not equal")
 	}
-	if Fraig_NodesAreEqual(p, left, Fraig_Not(right), -1, 5) != 0 {
-		t.Fatal("complemented edge reported equal")
+	if Fraig_NodesAreEqual(p, left, Fraig_Not(right), -1, 5) != 1 {
+		t.Fatal("distinct edges should be compared as regular nodes, as in C")
 	}
 }

@@ -2,54 +2,14 @@ package fraig
 
 import "testing"
 
-func TestExternalClauseConstrainsFreshSolver(t *testing.T) {
-	p := Fraig_ManCreate(&Fraig_Params_t{NPatsRand: 128, NPatsDyna: 128, NBTLimit: -1})
-	defer Fraig_ManFree(p)
-	a, b := Fraig_ManReadIthVar(p, 0), Fraig_ManReadIthVar(p, 1)
-	Fraig_ManAddClause(p, []*Fraig_Node_t{Fraig_Not(a), b}, 2)
-	if got := Fraig_ManCheckClauseUsingSat(p, Fraig_Not(a), b, -1); got != 1 {
-		t.Fatalf("external clause was not enforced: %d", got)
-	}
-}
-
-func TestExternalClauseEncodesInternalNodes(t *testing.T) {
+func TestAddClauseDoesNotEncodeInternalNodes(t *testing.T) {
 	p := Fraig_ManCreate(&Fraig_Params_t{NPatsRand: 128, NPatsDyna: 128, NBTLimit: -1})
 	defer Fraig_ManFree(p)
 	a, b := Fraig_ManReadIthVar(p, 0), Fraig_ManReadIthVar(p, 1)
 	both := Fraig_NodeAnd(p, a, b)
+	fraigSatEnsureVariables(p)
 	Fraig_ManAddClause(p, []*Fraig_Node_t{both}, 1)
-	if got := Fraig_ManCheckClauseUsingSat(p, a, b, -1); got != 1 {
-		t.Fatalf("clause forcing AND did not constrain fanins: %d", got)
-	}
-}
-func TestExternalClauseSimplifiesConstants(t *testing.T) {
-	p := Fraig_ManCreate(&Fraig_Params_t{NPatsRand: 128, NPatsDyna: 128, NBTLimit: -1})
-	defer Fraig_ManFree(p)
-	a, b := Fraig_ManReadIthVar(p, 0), Fraig_ManReadIthVar(p, 1)
-	Fraig_ManAddClause(p, []*Fraig_Node_t{Fraig_Not(p.pConst1), a}, 2)
-	if got := Fraig_ManCheckClauseUsingSat(p, a, b, -1); got != 1 {
-		t.Fatalf("constant-false clause literal was not removed: %d", got)
-	}
-}
-
-func TestExternalNonUnitClauseIncludesItsGateCone(t *testing.T) {
-	p := Fraig_ManCreate(&Fraig_Params_t{NPatsRand: 128, NPatsDyna: 128, NBTLimit: -1})
-	defer Fraig_ManFree(p)
-	a, b, c := Fraig_ManReadIthVar(p, 0), Fraig_ManReadIthVar(p, 1), Fraig_ManReadIthVar(p, 2)
-	both := Fraig_NodeAnd(p, a, b)
-	Fraig_ManAddClause(p, []*Fraig_Node_t{both, c}, 2)
-	if got := Fraig_ManCheckClauseUsingSat(p, a, c, -1); got != 1 {
-		t.Fatalf("external (a AND b) OR c must imply a OR c: %d", got)
-	}
-}
-
-func TestExternalUnitPropagationIgnoresPreviousConeOrder(t *testing.T) {
-	p := Fraig_ManCreate(&Fraig_Params_t{NPatsRand: 128, NPatsDyna: 128, NBTLimit: -1})
-	defer Fraig_ManFree(p)
-	a, b, c := Fraig_ManReadIthVar(p, 0), Fraig_ManReadIthVar(p, 1), Fraig_ManReadIthVar(p, 2)
-	Fraig_ManAddClause(p, []*Fraig_Node_t{a}, 1)
-	Fraig_ManAddClause(p, []*Fraig_Node_t{b, Fraig_Not(a)}, 2)
-	if got := Fraig_ManCheckClauseUsingSat(p, b, c, -1); got != 1 {
-		t.Fatalf("external implication failed to preserve propagated unit: %d", got)
+	if both.fClauses != 0 || both.vFanins != nil {
+		t.Fatal("adding a clause unexpectedly encoded its internal gate")
 	}
 }

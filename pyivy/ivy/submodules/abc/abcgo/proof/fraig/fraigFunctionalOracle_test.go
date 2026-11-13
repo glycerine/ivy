@@ -51,7 +51,7 @@ func TestFunctionalReductionAgainstExhaustiveTruthTables(t *testing.T) {
 				for i := range model {
 					model[i] = int32(assignment >> uint(i) & 1)
 				}
-				got := Fraig_ManSimulateBitNode(p, node, model) != 0
+				got := fraigTestSimulateBitNode(p, node, model) != 0
 				expected := want&(1<<uint(assignment)) != 0
 				if got != expected {
 					t.Fatalf("run %d step %d assignment %d got %t want %t", run, k, assignment, got, expected)

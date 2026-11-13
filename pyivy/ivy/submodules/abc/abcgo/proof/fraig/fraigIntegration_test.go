@@ -64,7 +64,7 @@ func TestFunctionalReductionPreservesTruthTable(t *testing.T) {
 	for av := int32(0); av < 2; av++ {
 		for bv := int32(0); bv < 2; bv++ {
 			for cv := int32(0); cv < 2; cv++ {
-				if got := Fraig_ManSimulateBitNode(p, right, []int32{av, bv, cv}); got != av&bv&cv {
+				if got := fraigTestSimulateBitNode(p, right, []int32{av, bv, cv}); got != av&bv&cv {
 					t.Fatalf("AND %d %d %d = %d", av, bv, cv, got)
 				}
 			}

@@ -31,7 +31,7 @@ func TestSATAgainstRandomSmallTruthTables(t *testing.T) {
 	for i, n := range nodes {
 		for assignment := 0; assignment < 16; assignment++ {
 			model := []int32{int32(assignment & 1), int32(assignment >> 1 & 1), int32(assignment >> 2 & 1), int32(assignment >> 3 & 1)}
-			if Fraig_ManSimulateBitNode(p, n, model) != 0 {
+			if fraigTestSimulateBitNode(p, n, model) != 0 {
 				signatures[i] |= 1 << uint(assignment)
 			}
 		}
@@ -39,7 +39,10 @@ func TestSATAgainstRandomSmallTruthTables(t *testing.T) {
 	for i := 0; i < 120; i++ {
 		a, b := r.Intn(len(nodes)), r.Intn(len(nodes))
 		got := Fraig_NodesAreEqual(p, nodes[a], nodes[b], -1, 5) != 0
-		want := signatures[a] == signatures[b]
+		want := signatures[a] == signatures[b] || signatures[a] == ^signatures[b]
+		if nodes[a] == Fraig_Not(nodes[b]) {
+			want = false
+		}
 		if got != want {
 			t.Fatalf("pair %d,%d: got %t truth %04x %04x", a, b, got, signatures[a], signatures[b])
 		}

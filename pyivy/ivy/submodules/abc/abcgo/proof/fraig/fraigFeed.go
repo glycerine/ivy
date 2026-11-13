@@ -107,22 +107,23 @@ func Fraig_FeedBackCompress(p *Fraig_Man_t) int32 {
 	pats := msat.Msat_IntVecReadArray(p.vPatsReal)
 	count := int32(len(pats))
 	p.iWordStart = (p.iPatsPerm + count + 31) / 32
-	values := make([]bool, len(pats))
 	for _, node := range p.vInputs.pArray {
 		sims := node.puSimD
-		// Read every source before writing: retained patterns may overlap
-		// their destinations in the previous partial word.
-		for i, pat := range pats {
-			values[i] = fraigBit(sims, int32(pat))
+		for w := p.iWordPerm; w < p.iWordStart; w++ {
+			p.pSimsTemp[w] = 0
 		}
-		for i, value := range values {
-			target := p.iPatsPerm + int32(i)
-			mask := uint32(1) << uint(target%32)
-			if value {
-				sims[target/32] |= mask
-			} else {
-				sims[target/32] &^= mask
+		for i, pat := range pats {
+			if fraigBit(sims, int32(pat)) {
+				target := p.iPatsPerm + int32(i)
+				if target < p.iWordPerm*32 {
+					sims[target/32] |= uint32(1) << uint(target%32)
+				} else {
+					p.pSimsTemp[target/32] |= uint32(1) << uint(target%32)
+				}
 			}
+		}
+		for w := p.iWordPerm; w < p.iWordStart; w++ {
+			sims[w] = p.pSimsTemp[w]
 		}
 		node.uHashD = 0
 		for w := int32(0); w < p.iWordStart; w++ {
@@ -308,9 +309,6 @@ func Fraig_ManAllocCounterExample(p *Fraig_Man_t) []int32 {
 	return make([]int32, len(p.vInputs.pArray))
 }
 func Fraig_ManSimulateBitNode_rec(p *Fraig_Man_t, node *Fraig_Node_t) int32 {
-	if Fraig_NodeIsConst(node) != 0 {
-		return 1
-	}
 	if Fraig_NodeIsTravIdCurrent(p, node) != 0 {
 		return int32(node.fMark3)
 	}

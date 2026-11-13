@@ -213,37 +213,15 @@ func Fraig_ManCheckClauseUsingSimInfo(p *Fraig_Man_t, a, b *Fraig_Node_t) int32 
 	return 1
 }
 
-// Fraig_ManAddClause adds a clause over FRAIG edges to the incremental solver.
-// Internal nodes must be encoded before the clause can constrain their fanins.
+// Fraig_ManAddClause adds the given node literals to the existing SAT solver,
+// as in the C implementation. Callers must ensure the variables are present.
 func Fraig_ManAddClause(p *Fraig_Man_t, nodes []*Fraig_Node_t, n int32) {
-	edges := nodes[:n]
-	for _, edge := range edges {
-		if edge == p.pConst1 {
-			return
-		} // A true literal satisfies the clause.
+	if p.pSat == nil {
+		Fraig_ManCreateSolver(p)
 	}
-	fraigSatEnsureVariables(p)
-	for _, edge := range edges {
-		node := Fraig_Regular(edge)
-		if node != p.pConst1 {
-			Fraig_OrderVariables(p, p.pConst1, node)
-		}
-	}
-	// Clause simplification can enqueue a unit on any literal, not just
-	// nodes in the last cone visited above.
-	fraigSatEnableAllVariables(p)
 	msat.Msat_IntVecClear(p.vProj)
-	for _, edge := range edges {
-		if edge == Fraig_Not(p.pConst1) {
-			continue
-		}
-		literal := int(Fraig_Regular(edge).Num) * 2
-		if Fraig_IsComplement(edge) {
-			literal++
-		}
-		msat.Msat_IntVecPush(p.vProj, literal)
+	for _, edge := range nodes[:n] {
+		msat.Msat_IntVecPush(p.vProj, fraigLit(Fraig_Regular(edge), Fraig_IsComplement(edge)))
 	}
 	assert(msat.Msat_SolverAddClause(p.pSat, p.vProj) != 0, "clause accepted")
-	p.hasExternalClauses = true
-	p.externalClauses = append(p.externalClauses, append([]*Fraig_Node_t(nil), edges...))
 }

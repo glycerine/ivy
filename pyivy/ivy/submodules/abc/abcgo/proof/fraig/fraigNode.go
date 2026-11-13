@@ -6,10 +6,10 @@ import (
 	"math/bits"
 )
 
-// Reuse coefficients when feedback expands past the original C prime table.
+// Use the same fixed coefficient table as the C implementation.
 // Equal simulations still have equal hashes, including after a resize.
 func fraigSimulationPrime(index int32) uint32 {
-	return uint32(s_FraigPrimes[index%int32(len(s_FraigPrimes))])
+	return uint32(s_FraigPrimes[index])
 }
 
 // fraigNodeSimComplement reports the phase in which an edge's simulation is stored.

@@ -32,7 +32,7 @@ func TestMuxRecognitionAgainstTruthTable(t *testing.T) {
 				}
 				for assignment := 0; assignment < 8; assignment++ {
 					model := []int32{int32(assignment & 1), int32(assignment >> 1 & 1), int32(assignment >> 2 & 1)}
-					eval := func(n *Fraig_Node_t) int32 { return Fraig_ManSimulateBitNode(p, n, model) }
+					eval := func(n *Fraig_Node_t) int32 { return fraigTestSimulateBitNode(p, n, model) }
 					want := eval(no)
 					if eval(control) != 0 {
 						want = eval(yes)
@@ -65,7 +65,7 @@ func TestXorRecognitionAgainstTruthTable(t *testing.T) {
 		xor := Fraig_NodeIsExor(root) != 0
 		for assignment := 0; assignment < 4; assignment++ {
 			model := []int32{int32(assignment & 1), int32(assignment >> 1 & 1)}
-			got := Fraig_ManSimulateBitNode(p, root, model) != 0
+			got := fraigTestSimulateBitNode(p, root, model) != 0
 			want := (model[0] != model[1]) == xor
 			if got != want {
 				t.Fatalf("phase %d assignment %d xor=%t got=%t", phase, assignment, xor, got)
@@ -93,9 +93,9 @@ func TestCollectSupergateAgainstTruthTable(t *testing.T) {
 				model := []int32{int32(assignment & 1), int32(assignment >> 1 & 1), int32(assignment >> 2 & 1), int32(assignment >> 3 & 1)}
 				want := int32(1)
 				for _, leaf := range leaves.pArray {
-					want &= Fraig_ManSimulateBitNode(p, leaf, model)
+					want &= fraigTestSimulateBitNode(p, leaf, model)
 				}
-				if got := Fraig_ManSimulateBitNode(p, root, model); got != want {
+				if got := fraigTestSimulateBitNode(p, root, model); got != want {
 					t.Fatalf("stop=%d assignment=%d got=%d want=%d", stop, assignment, got, want)
 				}
 			}

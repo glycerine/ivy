@@ -31,7 +31,7 @@ func TestChoicingRecordsIndependentAssociativeImplementation(t *testing.T) {
 	}
 	for bits := 0; bits < 8; bits++ {
 		model := []int32{int32(bits & 1), int32(bits >> 1 & 1), int32(bits >> 2 & 1)}
-		if Fraig_ManSimulateBitNode(p, choice, model) != Fraig_ManSimulateBitNode(p, left, model) {
+		if fraigTestSimulateBitNode(p, choice, model) != fraigTestSimulateBitNode(p, left, model) {
 			t.Fatalf("choice differs for assignment %d", bits)
 		}
 	}

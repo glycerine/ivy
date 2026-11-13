@@ -13,11 +13,7 @@ func Fraig_NodesAreEqual(p *Fraig_Man_t, a, b *Fraig_Node_t, limit, seconds int3
 	if a == Fraig_Not(b) {
 		return 0
 	}
-	left, right := Fraig_Regular(a), Fraig_Regular(b)
-	if (Fraig_IsComplement(a) != Fraig_IsComplement(b)) != (Fraig_NodeComparePhase(left, right) != 0) {
-		return 0
-	}
-	return Fraig_NodeIsEquivalent(p, left, right, limit, seconds)
+	return Fraig_NodeIsEquivalent(p, Fraig_Regular(a), Fraig_Regular(b), limit, seconds)
 }
 func Fraig_ManProveMiter(p *Fraig_Man_t) {
 	if p.fTryProve == 0 {
@@ -34,11 +30,7 @@ func Fraig_ManProveMiter(p *Fraig_Man_t) {
 	}
 }
 func Fraig_ManCheckMiter(p *Fraig_Man_t) int32 {
-	if p.hasExternalClauses {
-		return fraigCheckConstrainedMiter(p)
-	}
 	p.pModel = nil
-	undecided := false
 	for _, edge := range p.vOutputs.pArray {
 		if edge == Fraig_Not(p.pConst1) {
 			continue
@@ -49,13 +41,9 @@ func Fraig_ManCheckMiter(p *Fraig_Man_t) int32 {
 		}
 		p.pModel = Fraig_ManSaveCounterExample(p, edge)
 		if p.pModel == nil {
-			undecided = true
-			continue
+			return -1
 		}
 		return 0
-	}
-	if undecided {
-		return -1
 	}
 	return 1
 }
@@ -67,11 +55,7 @@ func fraigSatEnsureVariables(p *Fraig_Man_t) {
 	for i := first; i < len(p.vNodes.pArray); i++ {
 		msat.Msat_SolverAddVar(p.pSat, int(p.vNodes.pArray[i].Level))
 	}
-	if first == 0 && len(p.vNodes.pArray) != 0 {
-		// FRAIG node zero denotes constant one, rather than a free SAT input.
-		msat.Msat_IntVecWriteEntry(p.vVarsUsed, 0, 1)
-		fraigSatClause(p, fraigLit(p.pConst1, false))
-	}
+
 	p.vAdjacents = msat.Msat_SolverReadAdjacents(p.pSat)
 }
 func fraigLit(node *Fraig_Node_t, neg bool) int {
@@ -89,18 +73,7 @@ func fraigSatClause(p *Fraig_Man_t, literals ...int) {
 	assert(msat.Msat_SolverAddClause(p.pSat, p.vProj) != 0, "SAT clause accepted")
 }
 
-// External clauses can depend on nodes outside the current query cone.
-func fraigSatEnableAllVariables(p *Fraig_Man_t) {
-	msat.Msat_IntVecClear(p.vVarsInt)
-	for i := range p.vNodes.pArray {
-		msat.Msat_IntVecWriteEntry(p.vVarsUsed, i, 1)
-		msat.Msat_IntVecPush(p.vVarsInt, i)
-	}
-}
 func fraigSatSolve(p *Fraig_Man_t, limit, seconds int32, literals ...int) int {
-	if p.hasExternalClauses {
-		fraigSatEnableAllVariables(p)
-	}
 	msat.Msat_SolverPrepare(p.pSat, p.vVarsInt)
 	msat.Msat_IntVecClear(p.vProj)
 	for _, lit := range literals {
@@ -110,62 +83,6 @@ func fraigSatSolve(p *Fraig_Man_t, limit, seconds int32, literals ...int) int {
 	result := msat.Msat_SolverSolve(p.pSat, p.vProj, int(limit), int(seconds))
 	p.timeSat += util.Abc_Clock() - start
 	return result
-}
-
-// Under external constraints, simulation alone cannot certify a witness.
-// Query the actual constrained solver and independently replay each model.
-func fraigCheckConstrainedMiter(p *Fraig_Man_t) int32 {
-	p.pModel = nil
-	undecided := false
-	fraigSatEnsureVariables(p)
-	for _, output := range p.vOutputs.pArray {
-		if output == Fraig_Not(p.pConst1) {
-			continue
-		}
-		node := Fraig_Regular(output)
-		if node != p.pConst1 {
-			Fraig_OrderVariables(p, p.pConst1, node)
-		}
-		status := fraigSatSolve(p, p.nBTLimit, p.nSeconds, fraigLit(node, Fraig_IsComplement(output)))
-		if status == int(msat.MSAT_FALSE) {
-			continue
-		}
-		if status != int(msat.MSAT_TRUE) {
-			undecided = true
-			continue
-		}
-		values := msat.Msat_SolverReadModelArray(p.pSat)
-		model := Fraig_ManAllocCounterExample(p)
-		for i, input := range p.vInputs.pArray {
-			if lit := values[input.Num]; lit >= 0 && lit&1 == 0 {
-				model[i] = 1
-			}
-		}
-		valid := Fraig_ManSimulateBitNode(p, output, model) != 0
-		for _, clause := range p.externalClauses {
-			satisfied := false
-			for _, edge := range clause {
-				if Fraig_ManSimulateBitNode(p, edge, model) != 0 {
-					satisfied = true
-					break
-				}
-			}
-			if !satisfied {
-				valid = false
-				break
-			}
-		}
-		if !valid {
-			undecided = true
-			continue
-		}
-		p.pModel = model
-		return 0
-	}
-	if undecided {
-		return -1
-	}
-	return 1
 }
 
 func Fraig_NodeIsEquivalent(p *Fraig_Man_t, old, node *Fraig_Node_t, limit, seconds int32) int32 {
