@@ -33,3 +33,54 @@ func TestPracticalClassesSentinel(t *testing.T) {
 		}
 	}
 }
+
+func TestLoadedForestTruthsAndVolumes(t *testing.T) {
+	forest := rwrLoadForest(s_RwtAigSubgraphs)
+	if len(forest) != 5+len(s_RwtAigSubgraphs)/2-1 {
+		t.Fatalf("unexpected forest length %d", len(forest))
+	}
+	for i := 5; i < len(forest); i++ {
+		n := forest[i]
+		if n.xor && (n.a.compl || n.b.compl) {
+			t.Fatalf("XOR %d has complemented input", i)
+		}
+		seen := map[int]bool{}
+		var visit func(int)
+		visit = func(id int) {
+			if id < 5 || seen[id] {
+				return
+			}
+			seen[id] = true
+			visit(forest[id].a.node)
+			visit(forest[id].b.node)
+		}
+		visit(i)
+		volume := len(seen)
+		for id := range seen {
+			if forest[id].xor {
+				volume++
+			}
+		}
+		if n.volume != volume {
+			t.Fatalf("node %d volume %d, want %d", i, n.volume, volume)
+		}
+		for input := 0; input < 16; input++ {
+			values := make([]bool, i+1)
+			for j := 1; j < 5; j++ {
+				values[j] = input&(1<<(j-1)) != 0
+			}
+			for j := 5; j <= i; j++ {
+				v := forest[j]
+				a, b := values[v.a.node] != v.a.compl, values[v.b.node] != v.b.compl
+				if v.xor {
+					values[j] = a != b
+				} else {
+					values[j] = a && b
+				}
+			}
+			if values[i] != (n.truth&(1<<input) != 0) {
+				t.Fatalf("node %d input %d: truth %#x", i, input, n.truth)
+			}
+		}
+	}
+}
