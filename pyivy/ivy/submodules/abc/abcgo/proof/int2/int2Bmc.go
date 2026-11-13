@@ -262,10 +262,10 @@ func Int2_ManCreateFrames(p *Int2_Man_t, iFrame int32, vPrefCos *Vec_Int_t) {
 		vec.Vec_PtrPush(p.vMapFrames, frame)
 	}
 	assert(int32(vec.Vec_PtrSize(p.vMapFrames)) == iFrame+1, "frame maps are contiguous")
-	if iFrame == 0 {
-		if sat_solver_addclause(p.pSatPref, []int32{sat_literal(0, 1)}) == 0 {
-			panic("int2: constant-zero SAT unit is inconsistent")
-		}
+	// Frame creation can begin at a later frame; every map still uses SAT
+	// variable zero for GIA constant zero. Reasserting the unit is harmless.
+	if sat_solver_addclause(p.pSatPref, []int32{sat_literal(0, 1)}) == 0 {
+		panic("int2: constant-zero SAT unit is inconsistent")
 	}
 	vec.Vec_IntClear(p.vStack)
 	// Keep the SAT prefix synchronized with every AND created while lowering
@@ -380,9 +380,14 @@ func Int2_ManCreateFrames(p *Int2_Man_t, iFrame int32, vPrefCos *Vec_Int_t) {
 func Int2_ManCheckBmc(p *Int2_Man_t, vCube *Vec_Int_t) int32 {
 	assert(p != nil && p.pGia != nil && p.pSatPref != nil, "BMC manager is initialized")
 	if vCube == nil {
+		unmapped := false
 		for i := int32(0); i < gia.Gia_ManPoNum(p.pGia); i++ {
 			obj := gia.Gia_ManPo(p.pGia, i)
 			lit := Int2_ManCheckFrames(p, 0, gia.Gia_ObjId(p.pGia, obj))
+			if lit < 0 {
+				unmapped = true
+				continue
+			}
 			if lit == 0 {
 				continue
 			}
@@ -398,6 +403,9 @@ func Int2_ManCheckBmc(p *Int2_Man_t, vCube *Vec_Int_t) int32 {
 			default:
 				return -1
 			}
+		}
+		if unmapped {
+			return -1
 		}
 		return 1
 	}

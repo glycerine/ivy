@@ -264,3 +264,53 @@ func TestFrameInitMatchesSequentialSimulation(t *testing.T) {
 		}
 	}
 }
+
+func TestCreateFramesCanStartAtLaterFrame(t *testing.T) {
+	g := gia.Gia_ManStart(8)
+	state := gia.Gia_ManAppendCi(g)
+	gia.Gia_ManAppendCo(g, state)
+	gia.Gia_ManAppendCo(g, 0)
+	gia.Gia_ManSetRegNum(g, 1)
+	m := Int2_ManCreate(g, &Int2_ManPars_t{})
+	defer Int2_ManStop(m)
+	m.pSatPref = sat_solver_new()
+	cos := vec.Vec_IntAllocArrayCopy([]int32{0}, 1)
+	Int2_ManCreateFrames(m, 2, cos)
+	if got := sat_solver_solve(m.pSatPref, []int32{0}, 0, 0, 0, 0); got != l_False {
+		t.Fatalf("constant-zero SAT variable may be true: status %d", got)
+	}
+}
+
+func TestCheckBmcHandlesUnconstructedOutputs(t *testing.T) {
+	g := gia.Gia_ManStart(8)
+	state := gia.Gia_ManAppendCi(g)
+	gia.Gia_ManAppendCo(g, 0)
+	gia.Gia_ManAppendCo(g, 0)
+	gia.Gia_ManAppendCo(g, state)
+	gia.Gia_ManSetRegNum(g, 1)
+	m := Int2_ManCreate(g, &Int2_ManPars_t{})
+	defer Int2_ManStop(m)
+	m.pSatPref = sat_solver_new()
+	cos := vec.Vec_IntAllocArrayCopy([]int32{0}, 1)
+	Int2_ManCreateFrames(m, 0, cos)
+	if got := Int2_ManCheckBmc(m, nil); got != -1 {
+		t.Fatalf("unconstructed output result %d, want undecided", got)
+	}
+}
+
+func TestCheckBmcFindsFailureAfterUnconstructedOutput(t *testing.T) {
+	g := gia.Gia_ManStart(8)
+	state := gia.Gia_ManAppendCi(g)
+	gia.Gia_ManAppendCo(g, 0)
+	gia.Gia_ManAppendCo(g, 1)
+	gia.Gia_ManAppendCo(g, state)
+	gia.Gia_ManSetRegNum(g, 1)
+	m := Int2_ManCreate(g, &Int2_ManPars_t{})
+	defer Int2_ManStop(m)
+	m.pSatPref = sat_solver_new()
+	cos := vec.Vec_IntAllocArrayCopy([]int32{1}, 1)
+	Int2_ManCreateFrames(m, 0, cos)
+	if got := Int2_ManCheckBmc(m, nil); got != 0 {
+		t.Fatalf("known failing output result %d, want failure", got)
+	}
+}
