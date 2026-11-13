@@ -41,7 +41,9 @@ Remaining validation work:
   on deep cone traversal and large feedback/simulation workloads.
 - Compare sparse hash collisions during complete feedback compression against
   the original C implementation. The compiled oracle currently tests repeated
-  rehash group/split operations, rather than the complete compression driver.
+  rehash group/split operations and a compression fixture with one normal
+  covering pair, overlapping patterns, and a partial permanent word. It does
+  not yet exercise sparse-class selection or resizing during compression.
 - Integrate FRAIG with a ported ABC consumer and verify end-to-end results; the
   separate-package test exercises the public API but is not such a consumer.
 
@@ -57,3 +59,9 @@ byte-for-byte reproductions of C's pointer links and output. Go vector backing
 arrays retain removed pointers until overwritten or released, matching the C
 array visible through `Fraig_NodeVecReadArray` but potentially retaining Go
 objects longer.
+
+Simulation vectors and covering columns are allocated as Go slices rather than
+from `mmSims`, so that pool’s byte count does not include those allocations as
+it does in C. Restarting an untouched pool is a no-op in Go; the C function
+assumes that a first chunk exists. There is no interpolation implementation in
+`src/proof/fraig`; interpolation in other packages needs a separate audit.
