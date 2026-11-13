@@ -14,7 +14,7 @@ func TestCec4SweepMixedGatesExhaustive(t *testing.T) {
 			r := rand.New(rand.NewSource(seed))
 			g := gia.Gia_ManStart(80)
 			g.EnableMuxes()
-			lits := []int32{gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)}
+			lits := []int32{gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)}
 			gia.Gia_ManHashAlloc(g)
 			for k := 0; k < 12; k++ {
 				a, b, c := lits[r.Intn(len(lits))]^int32(r.Intn(2)), lits[r.Intn(len(lits))]^int32(r.Intn(2)), lits[r.Intn(len(lits))]^int32(r.Intn(2))
@@ -37,8 +37,8 @@ func TestCec4SweepMixedGatesExhaustive(t *testing.T) {
 			if cex != nil || out == nil {
 				t.Fatalf("mode=%d seed=%d missing result", mode, seed)
 			}
-			for mask := 0; mask < 16; mask++ {
-				in := make([]bool, 4)
+			for mask := 0; mask < 64; mask++ {
+				in := make([]bool, 6)
 				for i := range in {
 					in[i] = mask&(1<<i) != 0
 				}
@@ -52,7 +52,7 @@ func TestCec4SweepMixedGatesExhaustive(t *testing.T) {
 				}
 				for i := range want {
 					if got[i] != want[i] {
-						t.Fatalf("mode=%d seed=%d input=%04b output=%d got=%v want=%v", mode, seed, mask, i, got[i], want[i])
+						t.Fatalf("mode=%d seed=%d input=%06b output=%d got=%v want=%v", mode, seed, mask, i, got[i], want[i])
 					}
 				}
 			}

@@ -23,7 +23,7 @@ func Cec4_ManPerformSweeping(graph *Gia_Man_t, pars *Cec_ParFra_t, out **Gia_Man
 			manager.nSatUndec, manager.nSimulates, manager.nRecycles, pctXor)
 	}
 	if witness != nil {
-		if err := graph.SetCombinationalCounterexampleInSequentialSlot(witness); err != nil {
+		if err := graph.SetCecCombinationalWitness(witness); err != nil {
 			panic(err)
 		}
 	}

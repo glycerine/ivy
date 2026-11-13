@@ -46,7 +46,7 @@ func TestCombinationalWitnessInSequentialSlotIncludesRegisterIO(t *testing.T) {
 	model := util.Abc_CexAlloc(0, 2, 1)
 	model.IPo = 1
 	model.PData[0] = 2
-	if err := g.SetCombinationalCounterexampleInSequentialSlot(model); err != nil {
+	if err := g.SetCecCombinationalWitness(model); err != nil {
 		t.Fatal(err)
 	}
 	model.PData[0] = 0
@@ -54,7 +54,7 @@ func TestCombinationalWitnessInSequentialSlotIncludesRegisterIO(t *testing.T) {
 		t.Fatalf("unexpected witness %+v", got)
 	}
 	bad := util.Abc_CexAlloc(1, 1, 1)
-	if err := g.SetCombinationalCounterexampleInSequentialSlot(bad); err == nil {
+	if err := g.SetCecCombinationalWitness(bad); err == nil {
 		t.Fatal("accepted sequential witness")
 	}
 	if g.SequentialCounterexample().PData[0] != 2 {
