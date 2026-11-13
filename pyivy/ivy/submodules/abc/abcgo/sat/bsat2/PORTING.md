@@ -35,3 +35,9 @@ The package uses only the Go standard library. It does not depend on `bsat`, SAT
 **Bug review:** checked source watch/blocker invariants, full reason relocation, occurrence/queue/dummy relocation, minimization seen-bit cleanup, learned-binary retention, assumption isolation, elimination reconstruction polarity/order, queue singleton growth, hash collisions, and three-valued truth semantics. Added a red regression for stale models after an UNSAT preprocessing failure; `SolveSimplified` now clears previous model/conflict results before preprocessing. Source `Substitute` omitted model reconstruction records; this port records the equivalence so substituted original variables receive correct model values. DIMACS headers are validated and truncated clauses rejected instead of accepting malformed input.
 
 Final validation passed: `GOCACHE=/tmp/abcgo-cache go test ./sat/bsat2` (0.058 s), `go test -race ./sat/bsat ./sat/bsat2` (BSAT2 1.237 s), and `go vet ./sat/bsat ./sat/bsat2`. The remaining source-preserving portability comments in `pstdint.go` are license/history text, not retained preprocessor code.
+
+Follow-up review rejects assumptions on eliminated variables even when
+preprocessing is disabled. Added exhaustive incremental-query and conflict-core
+oracles, post-elimination model checks, and a learned-clause reduction test
+covering locked reasons, binary clauses, and garbage collection. These finite
+tests do not prove every heuristic or resource-limit interaction.
