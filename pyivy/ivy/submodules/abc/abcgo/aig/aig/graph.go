@@ -3,6 +3,7 @@ package aig
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/misc/util"
+	"github.com/glycerine/abcgo/misc/vec"
 )
 
 // Edge identifies a node and its complemented phase. Node zero is constant one,
@@ -46,6 +47,7 @@ type Graph struct {
 	// InputNumbers maps retained CIs to their original interface positions.
 	InputNumbers                      []int32
 	combinationalCex                  *util.Abc_Cex_t
+	seqModelVec                       *vec.Vec_Ptr_t
 	PartitionInputs, PartitionOutputs []int32
 	ClockDomains                      [][]int32
 	FlopReprs                         []int32

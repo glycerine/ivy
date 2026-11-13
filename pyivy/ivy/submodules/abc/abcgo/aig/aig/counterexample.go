@@ -3,6 +3,7 @@ package aig
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/misc/util"
+	"github.com/glycerine/abcgo/misc/vec"
 )
 
 // SetCombinationalCounterexample copies CI values, storing state before primary
@@ -70,6 +71,22 @@ func (p *Graph) SequentialCounterexample() *util.Abc_Cex_t { return p.combinatio
 func (p *Graph) ClearSequentialCounterexample()            { p.combinationalCex = nil }
 func (p *Graph) TakeSequentialCounterexample() *util.Abc_Cex_t {
 	return p.TakeCombinationalCounterexample()
+}
+
+// SetSequentialCounterexamples transfers the per-output witness vector to
+// the graph. Entries may be nil when an output has no counterexample.
+func (p *Graph) SetSequentialCounterexamples(models *vec.Vec_Ptr_t) {
+	p.seqModelVec = models
+}
+
+// SequentialCounterexamples returns the graph's borrowed per-output vector.
+func (p *Graph) SequentialCounterexamples() *vec.Vec_Ptr_t { return p.seqModelVec }
+
+// TakeSequentialCounterexamples transfers the vector out of the graph.
+func (p *Graph) TakeSequentialCounterexamples() *vec.Vec_Ptr_t {
+	models := p.seqModelVec
+	p.seqModelVec = nil
+	return models
 }
 
 // SetInductionCounterexample stores the witness produced by bounded
