@@ -38,99 +38,6 @@ import (
 ///                        DECLARATIONS                              ///
 ////////////////////////////////////////////////////////////////////////
 
-    // refinement object
-type Rfn_Obj_t struct {
-    Value uint32; /* C bitfield: 1 bits; review packing and truncation */  // value
-    fVisit uint32; /* C bitfield: 1 bits; review packing and truncation */  // visited
-    fPPi uint32; /* C bitfield: 1 bits; review packing and truncation */  // PPI
-    Prio uint32; /* C bitfield: 16 bits; review packing and truncation */  // priority
-    Sign uint32; /* C bitfield: 12 bits; review packing and truncation */  // traversal signature
-}
-
-    // abstraction object
-type Gla_Obj_t struct {
-    iGiaObj            int32;         // corresponding GIA obj
-    fAbs uint32; /* C bitfield: 1 bits; review packing and truncation */  // belongs to abstraction
-    fCompl0 uint32; /* C bitfield: 1 bits; review packing and truncation */  // compl bit of the first fanin
-    fConst uint32; /* C bitfield: 1 bits; review packing and truncation */  // object attribute
-    fPi uint32; /* C bitfield: 1 bits; review packing and truncation */  // object attribute
-    fPo uint32; /* C bitfield: 1 bits; review packing and truncation */  // object attribute
-    fRo uint32; /* C bitfield: 1 bits; review packing and truncation */  // object attribute
-    fRi uint32; /* C bitfield: 1 bits; review packing and truncation */  // object attribute
-    fAnd uint32; /* C bitfield: 1 bits; review packing and truncation */  // object attribute
-    fMark uint32; /* C bitfield: 1 bits; review packing and truncation */  // nearby object
-    nFanins uint32; /* C bitfield: 23 bits; review packing and truncation */  // fanin count
-    Fanins [4]int32;       // fanins
-    vFrames      Vec_Int_t;         // variables in each timeframe
-}
-
-    // manager
-type Gla_Man_t struct {
-    // user data
-    pGia0     *Gia_Man_t;           // starting AIG manager
-    pGia     *Gia_Man_t;            // working AIG manager
-    pPars     *Abs_Par_t;           // parameters
-    // internal data
-    vAbs     *Vec_Int_t;            // abstracted objects
-    pObjRoot     *Gla_Obj_t;        // the primary output
-    pObjs     *Gla_Obj_t;           // objects
-    pObj2Obj      *uint32;        // mapping of GIA obj into GLA obj
-    nObjs            int32;           // the number of objects
-    nAbsOld            int32;         // previous abstraction
-//    int            nAbsNew;         // previous abstraction
-//    int            nLrnOld;         // the number of bytes
-//    int            nLrnNew;         // the number of bytes
-    // other data
-    nCexes            int32;          // the number of counter-examples
-    nObjAdded            int32;       // total number of objects added
-    nSatVars            int32;        // the number of SAT variables
-    pCnf     *Cnf_Dat_t;            // CNF derived for the nodes
-    pSat   *sat_solver2;            // incremental SAT solver
-    vTemp     *Vec_Int_t;           // temporary array
-    vAddedNew     *Vec_Int_t;       // temporary array
-    vObjCounts     *Vec_Int_t;      // object counters
-    vCoreCounts     *Vec_Int_t;     // counts how many times each object appears in the core
-    vProofIds     *Vec_Int_t;       // counts how many times each object appears in the core
-    nProofIds            int32;       // proof ID counter
-    // refinement
-    pvRefis     *Vec_Int_t;         // vectors of each object
-    // refinement manager
-    pGia2     *Gia_Man_t;
-    pRnm     *Rnm_Man_t;
-    // statistics  
-    timeInit        abctime;
-    timeSat        abctime;
-    timeUnsat        abctime;
-    timeCex        abctime;
-    timeOther        abctime;
-}
-
-// declarations
-// static Vec_Int_t * Gla_ManCollectPPis( Gla_Man_t * p, Vec_Int_t * vPis );
-
-// static int         Gla_ManCheckVar( Gla_Man_t * p, int iObj, int iFrame );
-
-// static int         Gla_ManGetVar( Gla_Man_t * p, int iObj, int iFrame );
-
-
-// object procedures
-func Gla_ObjId(p *Gla_Man_t, pObj *Gla_Obj_t) int32 { assert(pObj > p.pObjs && pObj < p.pObjs + p.nObjs, "pObj > p.pObjs && pObj < p.pObjs + p.nObjs"); return pObj - p.pObjs;    }
-func Gla_ManObj(p *Gla_Man_t, i int32) *Gla_Obj_t { assert(i >= 0 && i < p.nObjs, "i >= 0 && i < p.nObjs"); if i != 0 {
-    return p.pObjs + i;
-} else {
-    return nil;
-}                   }
-func Gla_ManGiaObj(p *Gla_Man_t, pObj *Gla_Obj_t) *Gia_Obj_t { return Gia_ManObj( p.pGia, pObj.iGiaObj );                                        }
-func Gla_ObjSatValue(p *Gla_Man_t, iGia int32, f int32) int32 { if Gla_ManCheckVar(p, p.pObj2Obj[iGia], f) != 0 {
-    return sat_solver2_var_value( p.pSat, Gla_ManGetVar(p, p.pObj2Obj[iGia], f) );
-} else {
-    return 0;
-}  }
-
-func Gla_ObjRef(p *Gla_Man_t, pObj *Gia_Obj_t, f int32) *Rfn_Obj_t { return (Rfn_Obj_t *)Vec_IntGetEntryP( &(p.pvRefis[Gia_ObjId(p.pGia, pObj)]), f ); }
-func Gla_ObjClearRef(p *Rfn_Obj_t) { *((int *)p) = 0;                                                                    }
-
-
 // iterator through abstracted objects
 // Original macro:
 // #define Gla_ManForEachObj( p, pObj )                       \
@@ -170,38 +77,6 @@ func Gla_ObjClearRef(p *Rfn_Obj_t) { *((int *)p) = 0;                           
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_GlaPrepareCexAndMap(p *Gla_Man_t, ppCex **Abc_Cex_t, pvMap **Vec_Int_t) {
-    var pCex *Abc_Cex_t;
-    var vMap *Vec_Int_t;
-    var pObj, pFanin *Gla_Obj_t;
-    var pGiaObj *Gia_Obj_t;
-    var f, i, k int32;
-    // find PIs and PPIs
-    vMap = Vec_IntAlloc( 1000 );
-    // inlining of macro Gla_ManForEachObjAbs
-    for  i = 0; i < Vec_IntSize(p.vAbs) && ((pObj = Gla_ManObj(p, Vec_IntEntry(p.vAbs, i))),1); i++ {
-        assert(pObj.fConst || pObj.fRo || pObj.fAnd, "pObj.fConst || pObj.fRo || pObj.fAnd");
-        // inlining of macro Gla_ObjForEachFanin
-        for  k = 0; (k < int32(pObj.nFanins)) && ((pFanin = Gla_ManObj(p, pObj.Fanins[k])),1); k++  {
-            if !pFanin.fAbs {
-                Vec_IntPush( vMap, pFanin.iGiaObj ); }
-        }
-    }
-    Vec_IntUniqify( vMap );
-    // derive counter-example
-    pCex = Abc_CexAlloc( 0, Vec_IntSize(vMap), p.pPars.iFrame+1 );
-    pCex.iFrame = p.pPars.iFrame;
-    for  f = 0; f <= p.pPars.iFrame; f++  {
-        // inlining of macro Gia_ManForEachObjVec
-        for  k = 0; (k < Vec_IntSize(vMap)) && ((pGiaObj) = Gia_ManObj(p.pGia, Vec_IntEntry(vMap,k))); k++  {
-            if Gla_ObjSatValue( p, Gia_ObjId(p.pGia, pGiaObj), f ) != 0 {
-                Abc_InfoSetBit( pCex.pData, f * Vec_IntSize(vMap) + k ); }
-        }
-    }
-    *pvMap = vMap;
-    *ppCex = pCex;
-}
-
 /**Function*************************************************************
 
   Synopsis    [Derives counter-example using current assignments.]
@@ -213,26 +88,6 @@ func Gia_GlaPrepareCexAndMap(p *Gla_Man_t, ppCex **Abc_Cex_t, pvMap **Vec_Int_t)
   SeeAlso     []
 
 ***********************************************************************/
-func Gla_ManDeriveCex(p *Gla_Man_t, vPis *Vec_Int_t) *Abc_Cex_t {
-    var pCex *Abc_Cex_t;
-    var pObj *Gia_Obj_t;
-    var i, f int32;
-    pCex = Abc_CexAlloc( Gia_ManRegNum(p.pGia), Gia_ManPiNum(p.pGia), p.pPars.iFrame+1 );
-    pCex.iPo = 0;
-    pCex.iFrame = p.pPars.iFrame;
-    // inlining of macro Gia_ManForEachObjVec
-    for  i = 0; (i < Vec_IntSize(vPis)) && ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(vPis,i))); i++  {
-        if !Gia_ObjIsPi(p.pGia, pObj) {
-            continue; }
-        assert(Gia_ObjIsPi(p.pGia, pObj), "Gia_ObjIsPi(p.pGia, pObj)");
-        for  f = 0; f <= pCex.iFrame; f++  {
-            if Gla_ObjSatValue( p, Gia_ObjId(p.pGia, pObj), f ) != 0 {
-                Abc_InfoSetBit( pCex.pData, pCex.nRegs + f * pCex.nPis + Gia_ObjCioId(pObj) ); }
-        }
-    }
-    return pCex;
-}
-
 /**Function*************************************************************
 
   Synopsis    [Collects GIA abstraction objects.]
@@ -244,67 +99,6 @@ func Gla_ManDeriveCex(p *Gla_Man_t, vPis *Vec_Int_t) *Abc_Cex_t {
   SeeAlso     []
 
 ***********************************************************************/
-func Gla_ManCollectInternal_rec(p *Gia_Man_t, pGiaObj *Gia_Obj_t, vRoAnds *Vec_Int_t) {
-    if Gia_ObjIsTravIdCurrent(p, pGiaObj) {
-        return; }
-    Gia_ObjSetTravIdCurrent(p, pGiaObj);
-    assert(Gia_ObjIsAnd(pGiaObj), "Gia_ObjIsAnd(pGiaObj)");
-    Gla_ManCollectInternal_rec( p, Gia_ObjFanin0(pGiaObj), vRoAnds );
-    Gla_ManCollectInternal_rec( p, Gia_ObjFanin1(pGiaObj), vRoAnds );
-    Vec_IntPush( vRoAnds, Gia_ObjId(p, pGiaObj) );
-}
-func Gla_ManCollect(p *Gla_Man_t, vPis *Vec_Int_t, vPPis *Vec_Int_t, vCos *Vec_Int_t, vRoAnds *Vec_Int_t) {
-    var pObj, pFanin *Gla_Obj_t; 
-    var pGiaObj *Gia_Obj_t;
-    var i, k int32;
-
-    // collect COs
-    Vec_IntPush( vCos, Gia_ObjId(p.pGia, Gia_ManPo(p.pGia, 0)) );
-    // collect fanins of abstracted objects
-    // inlining of macro Gla_ManForEachObjAbs
-    for  i = 0; i < Vec_IntSize(p.vAbs) && ((pObj = Gla_ManObj(p, Vec_IntEntry(p.vAbs, i))),1); i++ {
-        assert(pObj.fConst || pObj.fRo || pObj.fAnd, "pObj.fConst || pObj.fRo || pObj.fAnd");
-        if pObj.fRo {
-            pGiaObj = Gia_ObjRoToRi( p.pGia, Gia_ManObj(p.pGia, pObj.iGiaObj) );
-            Vec_IntPush( vCos, Gia_ObjId(p.pGia, pGiaObj) );
-        }
-        // inlining of macro Gla_ObjForEachFanin
-        for  k = 0; (k < int32(pObj.nFanins)) && ((pFanin = Gla_ManObj(p, pObj.Fanins[k])),1); k++  {
-            if !pFanin.fAbs {
-                Vec_IntPush( (pFanin.fPi ? vPis : vPPis), pFanin.iGiaObj ); }
-        }
-    }
-    Vec_IntUniqify( vPis );
-    Vec_IntUniqify( vPPis );
-    Vec_IntSort( vCos, 0 );
-    // sorting PIs/PPIs/COs leads to refinements that are more "well-aligned"...
-
-    // mark const/PIs/PPIs
-    Gia_ManIncrementTravId( p.pGia );
-    Gia_ObjSetTravIdCurrent( p.pGia, Gia_ManConst0(p.pGia) );
-    // inlining of macro Gia_ManForEachObjVec
-    for  i = 0; (i < Vec_IntSize(vPis)) && ((pGiaObj) = Gia_ManObj(p.pGia, Vec_IntEntry(vPis,i))); i++  {
-        Gia_ObjSetTravIdCurrent( p.pGia, pGiaObj );
-    }
-    // inlining of macro Gia_ManForEachObjVec
-    for  i = 0; (i < Vec_IntSize(vPPis)) && ((pGiaObj) = Gia_ManObj(p.pGia, Vec_IntEntry(vPPis,i))); i++  {
-        Gia_ObjSetTravIdCurrent( p.pGia, pGiaObj );
-    }
-    // mark and add ROs first
-    // inlining of macro Gia_ManForEachObjVec
-    for  i = 0; (i < Vec_IntSize(vCos)) && ((pGiaObj) = Gia_ManObj(p.pGia, Vec_IntEntry(vCos,i))); i++  {
-        if i == 0 { continue; }
-        pGiaObj = Gia_ObjRiToRo( p.pGia, pGiaObj );
-        Gia_ObjSetTravIdCurrent( p.pGia, pGiaObj );
-        Vec_IntPush( vRoAnds, Gia_ObjId(p.pGia, pGiaObj) );
-    }
-    // collect nodes between PIs/PPIs/ROs and COs
-    // inlining of macro Gia_ManForEachObjVec
-    for  i = 0; (i < Vec_IntSize(vCos)) && ((pGiaObj) = Gia_ManObj(p.pGia, Vec_IntEntry(vCos,i))); i++  {
-        Gla_ManCollectInternal_rec( p.pGia, Gia_ObjFanin0(pGiaObj), vRoAnds );
-    }
-}
-
 /**Function*************************************************************
 
   Synopsis    [Drive implications of the given node towards primary outputs.]
@@ -1116,28 +910,6 @@ func Gla_ManStop(p *Gla_Man_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_GlaAbsCount(p *Gla_Man_t, fRo int32, fAnd int32) int32 {
-    var pObj *Gla_Obj_t;
-    var i, Counter int32;
-    if fRo {
-        // inlining of macro Gla_ManForEachObjAbs
-        for  i = 0; i < Vec_IntSize(p.vAbs) && ((pObj = Gla_ManObj(p, Vec_IntEntry(p.vAbs, i))),1); i++ { 
-            Counter += (pObj.fRo && pObj.fAbs);
-        }
-    } else if fAnd {
-        // inlining of macro Gla_ManForEachObjAbs
-        for  i = 0; i < Vec_IntSize(p.vAbs) && ((pObj = Gla_ManObj(p, Vec_IntEntry(p.vAbs, i))),1); i++ { 
-            Counter += (pObj.fAnd && pObj.fAbs);
-        }
-    } else {
-        // inlining of macro Gla_ManForEachObjAbs
-        for  i = 0; i < Vec_IntSize(p.vAbs) && ((pObj = Gla_ManObj(p, Vec_IntEntry(p.vAbs, i))),1); i++ { 
-            Counter += (pObj.fAbs);
-        } }
-    return Counter;
-}
-
-
 /**Function*************************************************************
 
   Synopsis    [Derives new abstraction map.]
@@ -1149,60 +921,6 @@ func Gia_GlaAbsCount(p *Gla_Man_t, fRo int32, fAnd int32) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Gla_ManTranslate_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vGla *Vec_Int_t, nUsageCount int32) int32 {
-    var Value0, Value1 int32;
-    if Gia_ObjIsTravIdCurrent(p, pObj) {
-        return 1; }
-    Gia_ObjSetTravIdCurrent(p, pObj);
-    if Gia_ObjIsCi(pObj) {
-        return 0; }
-    assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-    Value0 = Gla_ManTranslate_rec( p, Gia_ObjFanin0(pObj), vGla, nUsageCount );
-    Value1 = Gla_ManTranslate_rec( p, Gia_ObjFanin1(pObj), vGla, nUsageCount );
-    if Value0 || (Value1 != 0) {
-        Vec_IntAddToEntry( vGla, Gia_ObjId(p, pObj), nUsageCount ); }
-    return Value0 || Value1;
-}
-func Gla_ManTranslate(p *Gla_Man_t) *Vec_Int_t {
-    var vGla, vGla2 *Vec_Int_t;
-    var pObj, pFanin *Gla_Obj_t;
-    var pGiaObj *Gia_Obj_t;
-    var i, k, nUsageCount int32;
-    vGla = Vec_IntStart( Gia_ManObjNum(p.pGia) );
-    // inlining of macro Gla_ManForEachObjAbs
-    for  i = 0; i < Vec_IntSize(p.vAbs) && ((pObj = Gla_ManObj(p, Vec_IntEntry(p.vAbs, i))),1); i++ {
-        nUsageCount = Vec_IntEntry(p.vCoreCounts, pObj.iGiaObj);
-        assert(nUsageCount >= 0, "nUsageCount >= 0");
-        if nUsageCount == 0 {
-            nUsageCount++; }
-        pGiaObj = Gla_ManGiaObj( p, pObj );
-        if Gia_ObjIsConst0(pGiaObj) || Gia_ObjIsRo(p.pGia, pGiaObj) {
-            Vec_IntWriteEntry( vGla, pObj.iGiaObj, nUsageCount );
-            continue;
-        }
-        assert(Gia_ObjIsAnd(pGiaObj), "Gia_ObjIsAnd(pGiaObj)");
-        Gia_ManIncrementTravId( p.pGia );
-        // inlining of macro Gla_ObjForEachFanin
-        for  k = 0; (k < int32(pObj.nFanins)) && ((pFanin = Gla_ManObj(p, pObj.Fanins[k])),1); k++  {
-            Gia_ObjSetTravIdCurrent( p.pGia, Gla_ManGiaObj(p, pFanin) );
-        }
-        Gla_ManTranslate_rec( p.pGia, pGiaObj, vGla, nUsageCount );
-    }
-    Vec_IntWriteEntry( vGla, 0, p.pPars.iFrame+1 );
-    if p.pGia.vLutConfigs { // use mapping from new to old
-    
-        vGla2 = Vec_IntStart( Gia_ManObjNum(p.pGia0) );
-        for  i = 0; i < Gia_ManObjNum(p.pGia); i++  {
-            if Vec_IntEntry(vGla, i) {
-                Vec_IntWriteEntry( vGla2, Vec_IntEntry(p.pGia.vLutConfigs, i), Vec_IntEntry(vGla, i) ); }
-        }
-        Vec_IntFree( vGla );
-        return vGla2;
-    }
-    return vGla;
-}
-
-
 /**Function*************************************************************
 
   Synopsis    [Collect pseudo-PIs.]
@@ -1214,61 +932,6 @@ func Gla_ManTranslate(p *Gla_Man_t) *Vec_Int_t {
   SeeAlso     []
 
 ***********************************************************************/
-func Gla_ManCollectPPis(p *Gla_Man_t, vPis *Vec_Int_t) *Vec_Int_t {
-    var vPPis *Vec_Int_t;
-    var pObj, pFanin *Gla_Obj_t;
-    var i, k int32;
-    vPPis = Vec_IntAlloc( 1000 );
-    if vPis != nil {
-        Vec_IntClear( vPis ); }
-    // inlining of macro Gla_ManForEachObjAbs
-    for  i = 0; i < Vec_IntSize(p.vAbs) && ((pObj = Gla_ManObj(p, Vec_IntEntry(p.vAbs, i))),1); i++ {
-        assert(pObj.fConst || pObj.fRo || pObj.fAnd, "pObj.fConst || pObj.fRo || pObj.fAnd");
-        // inlining of macro Gla_ObjForEachFanin
-        for  k = 0; (k < int32(pObj.nFanins)) && ((pFanin = Gla_ManObj(p, pObj.Fanins[k])),1); k++  {
-            if !pFanin.fPi && !pFanin.fAbs {
-                Vec_IntPush( vPPis, pObj.Fanins[k] );
-            } else if (vPis != nil) && pFanin.fPi && !pFanin.fAbs {
-                Vec_IntPush( vPis, pObj.Fanins[k] ); }
-        }
-    }
-    Vec_IntUniqify( vPPis );
-    Vec_IntReverseOrder( vPPis );
-    if vPis != nil {
-        Vec_IntUniqify( vPis ); }
-    return vPPis;
-}
-func Gla_ManCountPPis(p *Gla_Man_t) int32 {
-    var vPPis *Vec_Int_t  = Gla_ManCollectPPis( p, nil );
-    var RetValue int32  = Vec_IntSize( vPPis );
-    Vec_IntFree( vPPis );
-    return RetValue;
-}
-var spStatic_Gla_ManExplorePPis_Round int32;
-func Gla_ManExplorePPis(p *Gla_Man_t, vPPis *Vec_Int_t) {
-    
-    var pObj, pFanin *Gla_Obj_t;
-    var i, j, k, Count int32;
-    if (spStatic_Gla_ManExplorePPis_Round++ % 5) == 0 {
-        return; }
-    j = 0;
-    // inlining of macro Gla_ManForEachObjAbsVec
-    for  i = 0; i < Vec_IntSize(vPPis) && ((pObj = Gla_ManObj(p, Vec_IntEntry(vPPis, i))),1); i++ {
-        assert(pObj.fAbs == 0, "pObj.fAbs == 0");
-        Count = 0;
-        // inlining of macro Gla_ObjForEachFanin
-        for  k = 0; (k < int32(pObj.nFanins)) && ((pFanin = Gla_ManObj(p, pObj.Fanins[k])),1); k++  {
-            Count += pFanin.fAbs;
-        }
-        if Count == 0 || ((spStatic_Gla_ManExplorePPis_Round & 1) && Count == 1) {
-            continue; }
-        Vec_IntWriteEntry( vPPis, j++, Gla_ObjId(p, pObj) );
-    }
-//    printf( "\n%d -> %d\n", Vec_IntSize(vPPis), j );
-    Vec_IntShrink( vPPis, j );
-}
-
-
 /**Function*************************************************************
 
   Synopsis    [Adds CNF for the given timeframe.]
@@ -1280,127 +943,6 @@ func Gla_ManExplorePPis(p *Gla_Man_t, vPPis *Vec_Int_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gla_ManCheckVar(p *Gla_Man_t, iObj int32, iFrame int32) int32 {
-    var pGla *Gla_Obj_t  = Gla_ManObj( p, iObj );
-    var iVar int32  = Vec_IntGetEntry( &pGla.vFrames, iFrame );
-    assert(!pGla.fPo && !pGla.fRi, "!pGla.fPo && !pGla.fRi");
-    return (iVar > 0);
-}
-func Gla_ManGetVar(p *Gla_Man_t, iObj int32, iFrame int32) int32 {
-    var pGla *Gla_Obj_t  = Gla_ManObj( p, iObj );
-    var iVar int32  = Vec_IntGetEntry( &pGla.vFrames, iFrame );
-    assert(!pGla.fPo && !pGla.fRi, "!pGla.fPo && !pGla.fRi");
-    if iVar == 0 {
-        Vec_IntSetEntry( &pGla.vFrames, iFrame, (iVar = p.nSatVars++) );
-        // remember the change
-        Vec_IntPush( p.vAddedNew, iObj );
-        Vec_IntPush( p.vAddedNew, iFrame );
-    }
-    return iVar;
-}
-func Gla_ManAddClauses(p *Gla_Man_t, iObj int32, iFrame int32, vLits *Vec_Int_t) {
-    var pGlaObj *Gla_Obj_t  = Gla_ManObj( p, iObj );
-    var iVar, iVar1, iVar2 int32;
-    if pGlaObj.fConst {
-        iVar = Gla_ManGetVar( p, iObj, iFrame );
-        sat_solver2_add_const( p.pSat, iVar, 1, 0, iObj );
-    
-    } else if pGlaObj.fRo {
-        assert(pGlaObj.nFanins == 1, "pGlaObj.nFanins == 1");
-        if iFrame == 0 {
-            iVar = Gla_ManGetVar( p, iObj, iFrame );
-            sat_solver2_add_const( p.pSat, iVar, 1, 0, iObj );
-        
-        } else {
-            iVar1 = Gla_ManGetVar( p, iObj, iFrame );
-            iVar2 = Gla_ManGetVar( p, pGlaObj.Fanins[0], iFrame-1 );
-            sat_solver2_add_buffer( p.pSat, iVar1, iVar2, pGlaObj.fCompl0, 0, iObj );
-        }
-    
-    } else if pGlaObj.fAnd {
-        var i int32;
-        var RetValue int32;
-        var nClauses int32;
-        var iFirstClause int32;
-        var pLit *int32;
-        nClauses = p.pCnf.pObj2Count[pGlaObj.iGiaObj];
-        iFirstClause = p.pCnf.pObj2Clause[pGlaObj.iGiaObj];
-        for  i = iFirstClause; i < iFirstClause + nClauses; i++  {
-            Vec_IntClear( vLits );
-            for  pLit = p.pCnf.pClauses[i]; pLit < p.pCnf.pClauses[i+1]; pLit++  {
-                iVar = Gla_ManGetVar( p, lit_var(*pLit), iFrame );
-                Vec_IntPush( vLits, toLitCond( iVar, lit_sign(*pLit) ) );
-            }
-            RetValue = sat_solver2_addclause( p.pSat, Vec_IntArray(vLits), Vec_IntArray(vLits)+Vec_IntSize(vLits), iObj );
-        }
-    
-    } else { assert(false, "0"); }
-}
-func Gia_GlaAddToCounters(p *Gla_Man_t, vCore *Vec_Int_t) {
-    var pGla *Gla_Obj_t;
-    var i int32;
-    // inlining of macro Gla_ManForEachObjAbsVec
-    for  i = 0; i < Vec_IntSize(vCore) && ((pGla = Gla_ManObj(p, Vec_IntEntry(vCore, i))),1); i++ { 
-        Vec_IntAddToEntry( p.vCoreCounts, pGla.iGiaObj, 1 );
-    }
-}
-func Gia_GlaAddToAbs(p *Gla_Man_t, vAbsAdd *Vec_Int_t, fCheck int32) {
-    var pGla *Gla_Obj_t;
-    var i, k int32;
-    // inlining of macro Gla_ManForEachObjAbsVec
-    for  i = 0; i < Vec_IntSize(vAbsAdd) && ((pGla = Gla_ManObj(p, Vec_IntEntry(vAbsAdd, i))),1); i++ {
-        if fCheck != 0 {
-            assert(pGla.fAbs == 0, "pGla.fAbs == 0");
-            if p.pSat.pPrf2 {
-                Vec_IntWriteEntry( p.vProofIds, Gla_ObjId(p, pGla), p.nProofIds++ ); }
-        }
-        if pGla.fAbs {
-            continue; }
-        pGla.fAbs = 1;
-        Vec_IntPush( p.vAbs, Gla_ObjId(p, pGla) );
-        // filter clauses to remove those contained in the abstraction
-        Vec_IntWriteEntry( vAbsAdd, k++, Gla_ObjId(p, pGla) );
-    }
-    Vec_IntShrink( vAbsAdd, k );
-}
-func Gia_GlaAddTimeFrame(p *Gla_Man_t, f int32) {
-    var pObj *Gla_Obj_t;
-    var i int32;
-    // inlining of macro Gla_ManForEachObjAbs
-    for  i = 0; i < Vec_IntSize(p.vAbs) && ((pObj = Gla_ManObj(p, Vec_IntEntry(p.vAbs, i))),1); i++ { 
-        Gla_ManAddClauses( p, Gla_ObjId(p, pObj), f, p.vTemp );
-    }
-    sat_solver2_simplify( p.pSat );
-}
-func Gia_GlaAddOneSlice(p *Gla_Man_t, fCur int32, vCore *Vec_Int_t) {
-    var f, i, iGlaObj int32;
-    for  f = fCur; f >= 0; f--  {
-        // inlining of macro Vec_IntForEachEntry
-        for  i = 0; (i < Vec_IntSize(vCore)) && (((iGlaObj) = Vec_IntEntry(vCore, i)), 1); i++  {
-            Gla_ManAddClauses( p, iGlaObj, f, p.vTemp );
-        }
-    }
-    sat_solver2_simplify( p.pSat );
-}
-func Gla_ManRollBack(p *Gla_Man_t) {
-    var i, iObj, iFrame int32;
-    // inlining of macro Vec_IntForEachEntryDouble
-    for  i = 0; (i+1 < Vec_IntSize(p.vAddedNew)) && (((iObj) = Vec_IntEntry(p.vAddedNew, i)), 1) && (((iFrame) = Vec_IntEntry(p.vAddedNew, i+1)), 1); i += 2  {
-        assert(Vec_IntEntry( &Gla_ManObj(p, iObj).vFrames, iFrame ) > 0, "Vec_IntEntry( &Gla_ManObj(p, iObj).vFrames, iFrame ) > 0");
-        Vec_IntWriteEntry( &Gla_ManObj(p, iObj).vFrames, iFrame, 0 );
-    }
-    // inlining of macro Vec_IntForEachEntryStart
-    for  i = p.nAbsOld; (i < Vec_IntSize(p.vAbs)) && (((iObj) = Vec_IntEntry(p.vAbs, i)), 1); i++  {
-        assert(Gla_ManObj( p, iObj ).fAbs == 1, "Gla_ManObj( p, iObj ).fAbs == 1");
-        Gla_ManObj( p, iObj ).fAbs = 0;
-    }
-    Vec_IntShrink( p.vAbs, p.nAbsOld );
-}
-
-
-            
-
-
 /**Function*************************************************************
 
   Synopsis    [Finds the set of clauses involved in the UNSAT core.]
@@ -1412,62 +954,6 @@ func Gla_ManRollBack(p *Gla_Man_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Gla_ManGetOutLit(p *Gla_Man_t, f int32) int32 {
-    var pFanin *Gla_Obj_t  = Gla_ManObj( p, p.pObjRoot.Fanins[0] );
-    var iSat int32  = Vec_IntEntry( &pFanin.vFrames, f );
-    assert(iSat > 0, "iSat > 0");
-    if f == 0 && pFanin.fRo && !p.pObjRoot.fCompl0 {
-        return -1; }
-    return Abc_Var2Lit( iSat, p.pObjRoot.fCompl0 );
-}
-func Gla_ManUnsatCore(p *Gla_Man_t, f int32, pSat *sat_solver2, nConfMax int32, fVerbose int32, piRetValue *int32, pnConfls *int32) *Vec_Int_t {
-    var vCore *Vec_Int_t  = nil;
-    var nConfPrev int32  = pSat.stats.conflicts;
-    var RetValue int32;
-    var iLit int32 = Gla_ManGetOutLit( p, f );
-    var clk abctime  = Abc_Clock();
-    if piRetValue != nil {
-        *piRetValue = 1; }
-    // consider special case when PO points to the flop
-    // this leads to immediate conflict in the first timeframe
-    if iLit == -1 {
-        vCore = Vec_IntAlloc( 1 );
-        Vec_IntPush( vCore, p.pObjRoot.Fanins[0] );
-        return vCore;
-    }
-    // solve the problem
-    RetValue = sat_solver2_solve( pSat, &iLit, &iLit+1, (ABC_INT64_T)nConfMax, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );
-    if pnConfls != nil {
-        *pnConfls = int32(pSat.stats.conflicts) - nConfPrev; }
-    if RetValue == l_Undef {
-        if piRetValue != nil {
-            *piRetValue = -1; }
-        return nil;
-    }
-    if RetValue == l_True {
-        if piRetValue != nil {
-            *piRetValue = 0; }
-        return nil;
-    }
-    if fVerbose != 0 {
-//        Abc_Print( 1, "%6d", (int)pSat->stats.conflicts - nConfPrev );
-//        Abc_Print( 1, "UNSAT after %7d conflicts.      ", pSat->stats.conflicts );
-//        Abc_PrintTime( 1, "Time", Abc_Clock() - clk );
-    }
-    assert(RetValue == l_False, "RetValue == l_False");
-    // derive the UNSAT core
-    clk = Abc_Clock();
-    vCore = (Vec_Int_t *)Sat_ProofCore( pSat );
-    if vCore != nil {
-        Vec_IntSort( vCore, 1 ); }
-    if fVerbose != 0 {
-//        Abc_Print( 1, "Core is %8d vars    (out of %8d).   ", Vec_IntSize(vCore), sat_solver2_nvars(pSat) );
-//        Abc_PrintTime( 1, "Time", Abc_Clock() - clk );
-    }
-    return vCore;
-}
-
-
 /**Function*************************************************************
 
   Synopsis    []
