@@ -75,6 +75,39 @@ func TestRandomCNFAgainstExhaustive(t *testing.T) {
 		}
 	}
 }
+
+func TestIncrementalClausesAndSimplification(t *testing.T) {
+	rng := rand.New(rand.NewSource(91812))
+	for trial := 0; trial < 400; trial++ {
+		const n = 6
+		s := New()
+		for i := 0; i < n; i++ {
+			s.AddVariable(1)
+		}
+		var clauses [][]int
+		for step := 0; step < 14; step++ {
+			clause := make([]int, 1+rng.Intn(4))
+			for i := range clause {
+				clause[i] = rng.Intn(2 * n)
+			}
+			clauses = append(clauses, append([]int(nil), clause...))
+			s.AddClause(clause)
+			if step%3 == 0 {
+				s.Simplify()
+			}
+			if step%4 == 0 {
+				xSAT_SolverGarbageCollect(s)
+			}
+			want, got := brute(n, clauses), s.Solve()
+			if got == LBoolUndef || (got == LBoolTrue) != want {
+				t.Fatalf("trial=%d step=%d got=%d want=%v clauses=%v", trial, step, got, want, clauses)
+			}
+			if got == LBoolTrue {
+				checkModel(t, s, clauses)
+			}
+		}
+	}
+}
 func TestHardRandomThreeSAT(t *testing.T) {
 	rng := rand.New(rand.NewSource(35235))
 	for run := 0; run < 400; run++ {
