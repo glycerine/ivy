@@ -54,30 +54,6 @@ const TRUTH_UNUSED = 0x1234567812345678
   SeeAlso     []
 
 ***********************************************************************/
-func Acec_ManCecSetDefaultParams(p *Acec_ParCec_t) {
-    memset( p, 0, sizeof(Acec_ParCec_t) );
-    p.nBTLimit       =    1000;    // conflict limit at a node
-    p.TimeLimit      =       0;    // the runtime limit in seconds
-    p.fMiter         =       0;    // input circuit is a miter
-    p.fDualOutput    =       0;    // dual-output miter
-    p.fTwoOutput     =       0;    // two-output miter
-    p.fSilent        =       0;    // print no messages
-    p.fVeryVerbose   =       0;    // verbose stats
-    p.fVerbose       =       0;    // verbose stats
-    p.iOutFail       =      -1;    // the number of failed output
-}  
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Acec_VerifyClasses(p *Gia_Man_t, vLits *Vec_Wec_t, vReprs *Vec_Wec_t) {
     var vFunc *Vec_Ptr_t  = Vec_PtrAlloc( Vec_WecSize(vLits) );
     var vSupp *Vec_Int_t  = Vec_IntAlloc( 100 );
@@ -148,58 +124,6 @@ func Acec_VerifyClasses(p *Gia_Man_t, vLits *Vec_Wec_t, vReprs *Vec_Wec_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Acec_CommonStart(pBase *Gia_Man_t, pAdd *Gia_Man_t) *Gia_Man_t {
-    var pObj *Gia_Obj_t;
-    var i int32;
-    Gia_ManFillValue( pAdd );
-    Gia_ManConst0(pAdd).Value = 0;
-    if pBase == nil {
-        pBase = Gia_ManStart( Gia_ManObjNum(pAdd) );
-        pBase.pName = Abc_UtilStrsav( pAdd.pName );
-        pBase.pSpec = Abc_UtilStrsav( pAdd.pSpec );
-        // inlining of macro Gia_ManForEachCi
-        for  i = 0; (i < Vec_IntSize(pAdd.vCis)) && ((pObj) = Gia_ManCi(pAdd, i)); i++  {
-            pObj.Value = Gia_ManAppendCi(pBase);
-        }
-        Gia_ManHashAlloc( pBase );
-    
-    } else {
-        assert(Gia_ManCiNum(pBase) == Gia_ManCiNum(pAdd), "Gia_ManCiNum(pBase) == Gia_ManCiNum(pAdd)");
-        // inlining of macro Gia_ManForEachCi
-        for  i = 0; (i < Vec_IntSize(pAdd.vCis)) && ((pObj) = Gia_ManCi(pAdd, i)); i++  {
-            pObj.Value = Gia_Obj2Lit( pBase, Gia_ManCi(pBase, i) );
-        }
-    }
-    // inlining of macro Gia_ManForEachAnd
-    for  i = 0; (i < pAdd.nObjs) && ((pObj) = Gia_ManObj(pAdd, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {
-        pObj.Value = Gia_ManHashAnd( pBase, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }
-    }
-    return pBase;
-}
-func Acec_CommonFinish(pBase *Gia_Man_t) {
-    var Id int32;
-    Gia_ManCreateRefs( pBase );
-    // inlining of macro Gia_ManForEachAndId
-    for  Id = 0; (Id < pBase.nObjs); Id++  {                                     if !Gia_ObjIsAnd(Gia_ManObj(pBase, Id)) {} else
-        if Gia_ObjRefNumId(pBase, Id) == 0 {
-            Gia_ManAppendCo( pBase, Abc_Var2Lit(Id,0) ); }
-    }
-}
-func Acec_CountRemap(pAdd *Gia_Man_t, pBase *Gia_Man_t) *Vec_Int_t {
-    var pObj *Gia_Obj_t; var i int32;
-    var vMapNew *Vec_Int_t  = Vec_IntStartFull( Gia_ManObjNum(pAdd) );
-    Gia_ManSetPhase( pAdd );
-    Vec_IntWriteEntry( vMapNew, 0, 0 );
-    // inlining of macro Gia_ManForEachCand
-    for  i = 0; (i < pAdd.nObjs) && ((pObj) = Gia_ManObj(pAdd, i)); i++  {      if !Gia_ObjIsCand(pObj) {} else {
-        var iObjBase int32  = Abc_Lit2Var(pObj.Value);
-        var pObjBase *Gia_Obj_t  = Gia_ManObj( pBase, iObjBase );
-        var iObjRepr int32  = Abc_Lit2Var(pObjBase.Value);
-        Vec_IntWriteEntry( vMapNew, i, Abc_Var2Lit(iObjRepr, Gia_ObjPhase(pObj)) );
-    }
-    }
-    return vMapNew;
-}
 func Acec_ComputeEquivClasses(pOne *Gia_Man_t, pTwo *Gia_Man_t, pvMap1 **Vec_Int_t, pvMap2 **Vec_Int_t) {
     var clk abctime  = Abc_Clock();
     var pBase, pRepr *Gia_Man_t;
