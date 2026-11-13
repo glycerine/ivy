@@ -38,8 +38,9 @@ in progress; passing tests do not establish that those gaps are resolved.
   and coverage of less common paths continue.
 * `int` builds and passes its full race suite and vet. Its normal BSAT path
   has reachability, constraints, witness, and interpolation tests. The
-  optional MiniSat 1.14p proof backend is unavailable and selecting it
-  returns unknown; see `int/PORTING.md`.
+  optional MiniSat 1.14p proof backend is now ported and connected, with
+  proof replay, original-solver comparisons, and interpolation regressions;
+  broader validation continues. See `int/PORTING.md`.
 * `int2` builds and passes its full race suite, but its driver is a bounded
   fallback rather than a port of the incomplete checked-in C driver. See
   `int2/SOURCE_FIDELITY.md`.
