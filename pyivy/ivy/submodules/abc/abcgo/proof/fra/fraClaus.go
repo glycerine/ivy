@@ -281,6 +281,7 @@ func Fra_ClausEstimateCoverageOne(sim *Fra_Sml_t, lits []int32, ids []int, resul
 	}
 }
 func Fra_ClausEstimateCoverage(p *Clu_Man_t) {
+	aig.Aig_ManRandom(1)
 	sim := Fra_SmlSimulateComb(p.pAig, 1<<11, 0)
 	ids := clausVarIDs(p)
 	total := make([]uint32, 1<<11)
