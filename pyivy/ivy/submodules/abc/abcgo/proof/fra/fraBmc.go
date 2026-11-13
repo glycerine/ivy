@@ -15,109 +15,36 @@ import (
 // Fra_Bmc_t_ is the shared bounded-model-checking state.
 type Fra_Bmc_t_ = framgr.BMC
 
+// BMC helpers are shared with the combinational FRA manager.
 func Bmc_ObjFrames(b *Fra_Bmc_t, obj aig.Edge, frame int32) aig.Edge {
-	if frame < 0 || frame >= b.NFramesAll {
-		panic("fra: BMC frame out of bounds")
-	}
-	value := b.PObjToFrames[obj.NodeID()*int(b.NFramesAll)+int(frame)]
-	if value == aig.InvalidEdge {
-		panic("fra: missing BMC frame mapping")
-	}
-	return value
+	return framgr.Bmc_ObjFrames(b, obj, frame)
 }
 func Bmc_ObjSetFrames(b *Fra_Bmc_t, obj aig.Edge, frame int32, value aig.Edge) {
-	if frame < 0 || frame >= b.NFramesAll {
-		panic("fra: BMC frame out of bounds")
-	}
-	b.PObjToFrames[obj.NodeID()*int(b.NFramesAll)+int(frame)] = value
+	framgr.Bmc_ObjSetFrames(b, obj, frame, value)
 }
-func Bmc_ObjFraig(b *Fra_Bmc_t, obj aig.Edge) aig.Edge {
-	value := b.PObjToFraig[obj.NodeID()]
-	if value == aig.InvalidEdge {
-		panic("fra: missing BMC fraig mapping")
-	}
-	return value
-}
-func Bmc_ObjSetFraig(b *Fra_Bmc_t, obj, value aig.Edge) { b.PObjToFraig[obj.NodeID()] = value }
-func bmcChildFrames(b *Fra_Bmc_t, obj aig.Edge, frame int32, index int) aig.Edge {
-	child := b.PAig.Node(obj).Fanins[index]
-	if child == aig.InvalidEdge {
-		return child
-	}
-	value := Bmc_ObjFrames(b, child, frame)
-	if child.Complemented() {
-		value = value.Not()
-	}
-	return value
-}
+func Bmc_ObjFraig(b *Fra_Bmc_t, obj aig.Edge) aig.Edge  { return framgr.Bmc_ObjFraig(b, obj) }
+func Bmc_ObjSetFraig(b *Fra_Bmc_t, obj, value aig.Edge) { framgr.Bmc_ObjSetFraig(b, obj, value) }
 func Bmc_ObjChild0Frames(b *Fra_Bmc_t, obj aig.Edge, frame int32) aig.Edge {
-	return bmcChildFrames(b, obj, frame, 0)
+	return framgr.Bmc_ObjChild0Frames(b, obj, frame)
 }
 func Bmc_ObjChild1Frames(b *Fra_Bmc_t, obj aig.Edge, frame int32) aig.Edge {
-	return bmcChildFrames(b, obj, frame, 1)
+	return framgr.Bmc_ObjChild1Frames(b, obj, frame)
 }
-
 func Fra_BmcNodesAreEqual(p *Fra_Man_t, a, b aig.Edge) int32 {
-	m := p.PBmc
-	for frame := m.NPref; frame < m.NFramesAll; frame++ {
-		left, right := aig.Aig_Regular(Bmc_ObjFrames(m, a, frame)), aig.Aig_Regular(Bmc_ObjFrames(m, b, frame))
-		if left != right && aig.Aig_Regular(Bmc_ObjFraig(m, left)) != aig.Aig_Regular(Bmc_ObjFraig(m, right)) {
-			return 0
-		}
-	}
-	return 1
+	return framgr.Fra_BmcNodesAreEqual(p, a, b)
 }
 func Fra_BmcNodeIsConst(p *Fra_Man_t, obj aig.Edge) int32 {
-	return Fra_BmcNodesAreEqual(p, obj, p.PManAig.Const1())
+	return framgr.Fra_BmcNodeIsConst(p, obj)
 }
-
 func Fra_BmcFilterImplications(p *Fra_Man_t, b *Fra_Bmc_t) {
-	if p.NFramesAll != 1 || p.PManAig != b.PAigFrames {
-		panic("fra: invalid BMC implication manager")
-	}
-	for i := 0; i < vec.Vec_IntSize(b.VImps); i++ {
-		imp := vec.Vec_IntEntry(b.VImps, i)
-		if imp == 0 {
-			continue
-		}
-		left, right := aig.Edge(Fra_ImpLeft(imp)<<1), aig.Edge(Fra_ImpRight(imp)<<1)
-		for frame := b.NPref; frame < b.NFramesAll; frame++ {
-			lt, rt := Bmc_ObjFrames(b, left, frame), Bmc_ObjFrames(b, right, frame)
-			lf, rf := Fra_ObjFraig(p, aig.Aig_Regular(lt), 0), Fra_ObjFraig(p, aig.Aig_Regular(rt), 0)
-			if lf == aig.InvalidEdge || rf == aig.InvalidEdge {
-				panic("fra: missing implication mapping")
-			}
-			lc := b.PAig.Node(left).Phase != lt.Complemented() != lf.Complemented()
-			rc := b.PAig.Node(right).Phase != rt.Complemented() != rf.Complemented()
-			if aig.Aig_Regular(lf) == aig.Aig_Regular(rf) {
-				if lc == rc || (lf.NodeID() == 0 && lc) {
-					continue
-				}
-			} else if Fra_NodesAreImp(p, aig.Aig_Regular(lf), aig.Aig_Regular(rf), fraBool(lc), fraBool(rc)) == 1 {
-				continue
-			}
-			vec.Vec_IntWriteEntry(b.VImps, i, 0)
-			break
-		}
-	}
-	Fra_ImpCompactArray(b.VImps)
+	framgr.Fra_BmcFilterImplications(p, b)
 }
 func Fra_BmcStart(g *aig.Graph, prefix, depth int32) *Fra_Bmc_t {
-	if g == nil || prefix < 0 || depth <= 0 {
-		panic("fra: invalid BMC dimensions")
-	}
-	b := &Fra_Bmc_t{PAig: g, NPref: prefix, NDepth: depth, NFramesAll: prefix + depth}
-	b.PObjToFrames = make([]aig.Edge, len(g.Nodes())*int(b.NFramesAll))
-	for i := range b.PObjToFrames {
-		b.PObjToFrames[i] = aig.InvalidEdge
-	}
-	return b
+	return framgr.Fra_BmcStart(g, prefix, depth)
 }
-func Fra_BmcStop(_ *Fra_Bmc_t) {}
+func Fra_BmcStop(b *Fra_Bmc_t) { framgr.Fra_BmcStop(b) }
 func Fra_BmcFrames(b *Fra_Bmc_t, keepOutputs int32) *aig.Graph {
-	graph, mapping := fraUnrollInitialized(b.PAig, int(b.NFramesAll), keepOutputs != 0)
-	b.PObjToFrames = mapping
-	return graph
+	return framgr.Fra_BmcFrames(b, keepOutputs)
 }
 func Fra_BmcPerform(p *Fra_Man_t, prefix, depth int32) {
 	if p.PBmc != nil {

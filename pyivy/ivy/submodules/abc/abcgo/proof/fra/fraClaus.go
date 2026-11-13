@@ -39,6 +39,7 @@ func clausSlices(lits, ends *vec.Vec_Int_t) [][]int32 {
 	return out
 }
 func Fra_ClausRunBmc(p *Clu_Man_t) int32 {
+	p.pSatBmc.SetLimits(int64(p.nBTLimit), 0)
 	out := p.pCnf.VarNums[p.pAig.Outputs()[0].NodeID()]
 	for i := int32(0); i < p.nPref+p.nFrames; i++ {
 		if p.pSatBmc.Solve(bsat.Positive(out+i*int32(p.pCnf.Variables))) != bsat.Unsatisfiable {
@@ -48,6 +49,7 @@ func Fra_ClausRunBmc(p *Clu_Man_t) int32 {
 	return 1
 }
 func Fra_ClausRunSat(p *Clu_Man_t) int32 {
+	p.pSatMain.SetLimits(int64(p.nBTLimit), 0)
 	out := p.pCnf.VarNums[p.pAig.Outputs()[0].NodeID()]
 	lits := make([]int32, p.nFrames+1)
 	for i := int32(0); i <= p.nFrames; i++ {
@@ -63,6 +65,7 @@ func Fra_ClausRunSat(p *Clu_Man_t) int32 {
 	return 0
 }
 func Fra_ClausRunSat0(p *Clu_Man_t) int32 {
+	p.pSatMain.SetLimits(int64(p.nBTLimit), 0)
 	out := p.pCnf.VarNums[p.pAig.Outputs()[0].NodeID()]
 	if p.pSatMain.Solve(bsat.Positive(out)) == bsat.Unsatisfiable {
 		return 1
@@ -71,6 +74,7 @@ func Fra_ClausRunSat0(p *Clu_Man_t) int32 {
 }
 func transpose32a(a *[32]uint32) { clausTranspose32(a) }
 func Fra_ClausBmcClauses(p *Clu_Man_t) int32 {
+	p.pSatBmc.SetLimits(int64(p.nBTLimit), 0)
 	return int32(clausFilterBMC(p.pSatBmc, clausSlices(p.vLits, p.vClauses), vec.Vec_IntArray(p.vCosts), p.nPref, p.nFrames, int32(p.pCnf.Variables)))
 }
 func Fra_ClausSimInfoClean(p *Clu_Man_t) {
@@ -102,6 +106,7 @@ func Fra_ClausInductiveClauses(p *Clu_Man_t) int32 {
 	if p.pSatMain == nil {
 		return -1
 	}
+	p.pSatMain.SetLimits(int64(p.nBTLimit), 0)
 	for f := int32(0); f < p.nFrames; f++ {
 		offset := f * 2 * int32(p.pCnf.Variables)
 		for _, clause := range proven {
@@ -130,7 +135,7 @@ func Fra_ClausInductiveClauses(p *Clu_Man_t) int32 {
 	if p.fTarget != 0 && Fra_ClausRunSat0(p) == 0 {
 		p.fFail = 1
 	}
-	removed, err := clausInductivePass(p.pCnf, p.nFrames, proven, candidates, costs, int64(p.nBTLimit))
+	removed, err := clausCheckInduction(p.pSatMain, p.pCnf.Variables, p.nFrames, candidates, costs)
 	if err != nil {
 		fmt.Println("Clause induction:", err)
 		return -1

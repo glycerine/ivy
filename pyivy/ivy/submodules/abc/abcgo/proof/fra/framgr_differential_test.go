@@ -7,6 +7,7 @@ import (
 	"math/rand"
 	"slices"
 	"testing"
+	"time"
 )
 
 // Both entry points must accept the same configuration object without a copy
@@ -267,4 +268,56 @@ func TestSharedBMCImplicationCallbackMatchesLegacy(t *testing.T) {
 	if !slices.Equal(mapping, sharedMapping) {
 		t.Fatalf("frame mappings differ: %v != %v", mapping, sharedMapping)
 	}
+}
+
+// This legacy implementation is retained solely as a migration baseline.
+// It shares helpers with framgr and is not an independent correctness oracle.
+func fraFraigPerformMapped(g *aig.Graph, pars *Fra_Par_t, callback func(*Fra_Man_t)) (*aig.Graph, []aig.Edge) {
+	if g == nil || pars == nil {
+		panic("fra: nil FRAIG input")
+	}
+	if aig.Aig_ManNodeNum(g) == 0 && callback == nil {
+		result := aig.Aig_ManDupOrdered(g)
+		mapping := make([]aig.Edge, len(g.Nodes()))
+		for i := range mapping {
+			mapping[i] = aig.Aig_ObjCopy(g, aig.Edge(i<<1))
+		}
+		return result, mapping
+	}
+	start := time.Now()
+	p := Fra_ManStart(g, pars)
+	p.PManFraig = Fra_ManPrepareComb(p)
+	p.PSml = Fra_SmlStart(g, 0, 1, pars.NSimWords)
+	Fra_SmlSimulate(p, 0)
+	p.NLitsBeg = Fra_ClassesCountLits(p.PCla)
+	p.NNodesBeg = aig.Aig_ManNodeNum(g)
+	p.NRegsBeg = g.RegisterCount()
+	if pars.FVerbose != 0 {
+		Fra_ClassesPrint(p.PCla, 1)
+	}
+	Fra_FraigSweep(p)
+	if callback != nil {
+		callback(p)
+	}
+	Fra_ManFinalizeComb(p)
+	Fra_ClassesCopyReprs(p.PCla, p.VTimeouts)
+	var result *aig.Graph
+	if pars.FChoicing != 0 {
+		traversal := time.Now()
+		result = aig.Aig_ManDupRepr(g, 1)
+		aig.Aig_ManReprStart(result, int32(len(result.Nodes())))
+		aig.Aig_ManTransferRepr(result, g)
+		aig.Aig_ManMarkValidChoices(result)
+		p.TimeTrav += time.Since(traversal)
+	} else {
+		result = p.PManFraig
+		aig.Aig_ManCleanup(result)
+	}
+	p.PManFraig = nil
+	p.TimeTotal = time.Since(start)
+	p.NLitsEnd = Fra_ClassesCountLits(p.PCla)
+	p.NNodesEnd = aig.Aig_ManNodeNum(result)
+	p.NRegsEnd = result.RegisterCount()
+	mapping := Fra_ManStop(p)
+	return result, mapping
 }

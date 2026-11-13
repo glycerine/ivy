@@ -28,3 +28,7 @@ parameter combinations, time limits, or interactions among ABC's algorithms.
 The SAIG retiming implementation and its C differential test limitations are
 described in `aig/saig/PORTING_PROGRESS.md`. Independent differential testing
 against ABC for FRA's full range of options remains useful future work.
+
+The SEC `TimeLimit` option is currently ineffective in the active ABC C
+implementation: its global deadline checks are commented out. This port
+preserves that behavior. SEC passes its separate `nPdrTimeout` to PDR.

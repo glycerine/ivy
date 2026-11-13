@@ -1,11 +1,46 @@
 package fra
 
 import (
+	"slices"
 	"testing"
 
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/misc/vec"
+	"github.com/glycerine/abcgo/proof/framgr"
 )
+
+func TestBmcDriverMatchesSharedManager(t *testing.T) {
+	makeManager := func(imp bool) *Fra_Man_t {
+		g := aig.NewGraph()
+		x, y, state := g.NewInput(), g.NewInput(), g.NewInput()
+		g.AddOutput(state)
+		g.AddOutput(g.AND(x, y))
+		aig.Aig_ManSetRegNum(g, 1)
+		p := &Fra_Man_t{PManAig: g, PPars: &Fra_Par_t{}, PCla: Fra_ClassesStart(g)}
+		Fra_ClassesTest(p.PCla, int32(x.NodeID()), int32(state.NodeID()))
+		if imp {
+			p.PCla.VImps = vec.Vec_IntAlloc(2)
+			vec.Vec_IntPush(p.PCla.VImps, Fra_ImpCreate(int32(x.NodeID()), int32(state.NodeID())))
+		}
+		return p
+	}
+	for _, imp := range []bool{false, true} {
+		for prefix := int32(0); prefix < 2; prefix++ {
+			for depth := int32(1); depth <= 3; depth++ {
+				old, shared := makeManager(imp), makeManager(imp)
+				Fra_BmcPerform(old, prefix, depth)
+				framgr.Fra_BmcPerform(shared, prefix, depth)
+				if !slices.Equal(old.PCla.Reprs, shared.PCla.Reprs) || !slices.Equal(old.PCla.Constants, shared.PCla.Constants) {
+					t.Fatalf("imp=%v prefix=%d depth=%d: class results differ", imp, prefix, depth)
+				}
+				if imp && !slices.Equal(vec.Vec_IntArray(old.PCla.VImps), vec.Vec_IntArray(shared.PCla.VImps)) {
+					t.Fatalf("imp=%v prefix=%d depth=%d: implications differ", imp, prefix, depth)
+				}
+				if old.PBmc != nil || shared.PBmc != nil { t.Fatal("BMC state not cleared") }
+			}
+		}
+	}
+}
 
 func TestFraBmcRefinementRespectsFramesAndFraig(t *testing.T) {
 	g := aig.NewGraph()

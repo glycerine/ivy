@@ -118,11 +118,11 @@ func TestFraSimulationCounterExample(t *testing.T) {
 	frames.NewInput()
 	frames.AddOutput(frames.Const0())
 	failed := frames.AddOutput(frames.Const0())
-	copy := copyFrameCounterExample(g, frames, []int32{1, 0, int32(failed.NodeID())})
+	copy := Fra_SmlCopyCounterExample(g, frames, []int32{1, 0, int32(failed.NodeID())})
 	if copy == nil || copy.IFrame != 1 || copy.IPo != 0 {
 		t.Fatalf("unexpected copied counterexample: %+v", copy)
 	}
-	if copyFrameCounterExample(g, frames, []int32{0, 0, int32(failed.NodeID())}) != nil {
+	if Fra_SmlCopyCounterExample(g, frames, []int32{0, 0, int32(failed.NodeID())}) != nil {
 		t.Fatal("accepted invalid model")
 	}
 }

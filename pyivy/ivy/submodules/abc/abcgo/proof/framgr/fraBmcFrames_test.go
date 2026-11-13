@@ -54,3 +54,33 @@ func TestInitializedTimeframesNativeXor(t *testing.T) {
 		}
 	}
 }
+
+func TestInitializedTimeframesTwoRegisterOracle(t *testing.T) {
+	source := aig.NewGraph()
+	x, y, q, r := source.NewInput(), source.NewInput(), source.NewInput(), source.NewInput()
+	source.AddOutput(source.AND(q.Not(), x))
+	source.AddOutput(source.NewXor(r, y))
+	source.AddOutput(source.NewXor(q, y))
+	source.AddOutput(source.AND(r.Not(), x))
+	aig.Aig_ManSetRegNum(source, 2)
+	graph, _ := fraUnrollInitialized(source, 4, true)
+	for mask := 0; mask < 256; mask++ {
+		inputs := make([]bool, 8)
+		for i := range inputs {
+			inputs[i] = mask&(1<<i) != 0
+		}
+		got, err := graph.Evaluate(inputs)
+		if err != nil {
+			t.Fatal(err)
+		}
+		qv, rv := false, false
+		for frame := 0; frame < 4; frame++ {
+			xv, yv := inputs[2*frame], inputs[2*frame+1]
+			want0, want1 := !qv && xv, rv != yv
+			if got[2*frame] != want0 || got[2*frame+1] != want1 {
+				t.Fatalf("mask %d frame %d: got %v, want %v %v", mask, frame, got[2*frame:2*frame+2], want0, want1)
+			}
+			qv, rv = qv != yv, !rv && xv
+		}
+	}
+}

@@ -41,8 +41,13 @@ func clausInductivePass(data *cnf.Cnf_Dat_t, frames int32, proven, candidates []
 			}
 		}
 	}
-	models := newClausModels(data.Variables)
-	offset := frames * int32(data.Variables)
+	return clausCheckInduction(solver, data.Variables, frames, candidates, costs)
+}
+
+// Reuse the same incremental solver as the source after its property query.
+func clausCheckInduction(solver *bsat.Solver, variables int, frames int32, candidates [][]int32, costs []int32) (int, error) {
+	models := newClausModels(variables)
+	offset := frames * int32(variables)
 	removed := 0
 	for i, clause := range candidates {
 		if costs[i] == -1 {
@@ -66,7 +71,7 @@ func clausInductivePass(data *cnf.Cnf_Dat_t, frames int32, proven, candidates []
 			continue
 		}
 		if status == bsat.Satisfiable {
-			model := make([]bool, data.Variables)
+			model := make([]bool, variables)
 			for j := range model {
 				value, ok := solver.Value(offset + int32(j))
 				if !ok {

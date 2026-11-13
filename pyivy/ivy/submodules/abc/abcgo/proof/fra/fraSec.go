@@ -99,33 +99,13 @@ func secTrivialWitness(g *aig.Graph) bool {
 // Fra_FraigSec returns 1 for equivalent, 0 for a verified counterexample,
 // and -1 when the configured procedures cannot decide the miter.
 func Fra_FraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph) int32 {
-	return fraFraigSec(original, pars, result, time.Now)
-}
-
-// The clock is passed explicitly so time-limit behavior can be tested without
-// sleeping or changing process-global state.
-func fraFraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph, now func() time.Time) int32 {
 	if original == nil || pars == nil {
 		panic("invalid sequential equivalence arguments")
 	}
 	pars.nSMnumber = -1
-	started := now()
 	graph := aig.Aig_ManDupSimple(original)
 	status := Fra_FraigMiterStatus(graph)
 	timedOut := false
-	expired := func() bool {
-		return pars.TimeLimit > 0 && now().Sub(started) >= time.Duration(pars.TimeLimit)*time.Second
-	}
-	remainingSeconds := func() int32 {
-		if pars.TimeLimit <= 0 {
-			return 0
-		}
-		remaining := time.Duration(pars.TimeLimit)*time.Second - now().Sub(started)
-		if remaining <= 0 {
-			return 1
-		}
-		return int32((remaining + time.Second - 1) / time.Second)
-	}
 	finish := func() int32 {
 		if status == -1 && timedOut && original.SequentialCounterexample() != nil &&
 			secTransferCex(original, original.SequentialCounterexample()) {
@@ -181,10 +161,6 @@ func fraFraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph, now f
 	if status >= 0 {
 		return finish()
 	}
-	if expired() {
-		timedOut = true
-		return finish()
-	}
 	if graph.RegisterCount() > 0 {
 		graph = aig.Aig_ManReduceLaches(graph, 0)
 	}
@@ -195,28 +171,16 @@ func fraFraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph, now f
 	if status >= 0 {
 		return finish()
 	}
-	if expired() {
-		timedOut = true
-		return finish()
-	}
 	if pars.fPhaseAbstract != 0 {
 		graph = saig.Saig_ManPhaseAbstractAuto(graph, 0)
 	}
 	if pars.fRetimeFirst != 0 && graph.RegisterCount() > 0 {
 		graph = saig.Saig_ManRetimeForward(graph, 100, 0)
 	}
-	if expired() {
-		timedOut = true
-		return finish()
-	}
 	var sw ssw.Ssw_Pars_t
 	if graph.RegisterCount() > 0 {
 		graph = aig.Aig_ManDupOrdered(graph)
 		ssw.Ssw_ManSetDefaultParamsLcorr(&sw)
-		sw.TimeLimit = remainingSeconds()
-		if pars.TimeLimit > 0 {
-			ssw.Ssw_ParsSetDeadline(&sw, started.Add(time.Duration(pars.TimeLimit)*time.Second))
-		}
 		previous := graph
 		graph = ssw.Ssw_LatchCorrespondence(previous, &sw)
 		if previous.SequentialCounterexample() != nil {
@@ -233,15 +197,7 @@ func fraFraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph, now f
 			return finish()
 		}
 	}
-	if expired() {
-		status = -1
-		timedOut = true
-		return finish()
-	}
 	ssw.Ssw_ManSetDefaultParams(&sw)
-	if pars.TimeLimit > 0 {
-		ssw.Ssw_ParsSetDeadline(&sw, started.Add(time.Duration(pars.TimeLimit)*time.Second))
-	}
 	if pars.fFraiging != 0 {
 		graph = Fra_FraigEquivence(graph, 100, 0)
 	}
@@ -252,10 +208,6 @@ func fraFraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph, now f
 	if status >= 0 {
 		return finish()
 	}
-	if expired() {
-		timedOut = true
-		return finish()
-	}
 	if pars.fRetimeRegs != 0 && graph.RegisterCount() > 0 {
 		graph = saig.Saig_ManRetimeMinArea(graph, 1000, 0, 0, 1, 0)
 		graph = aig.Aig_ManDupOrdered(graph)
@@ -263,11 +215,6 @@ func fraFraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph, now f
 	status = Fra_FraigMiterStatus(graph)
 	if status == -1 && pars.fInduction != 0 {
 		for frames := int32(1); frames <= pars.nFramesMax && frames > 0; frames *= 2 {
-			if expired() {
-				timedOut = true
-				break
-			}
-			sw.TimeLimit = remainingSeconds()
 			ssw.Ssw_ParsSetFramesK(&sw, frames)
 			ssw.Ssw_ParsSetBTLimit(&sw, pars.nBTLimit)
 			ssw.Ssw_ParsSetBTLimitGlobal(&sw, pars.nBTLimitGlobal)
@@ -318,10 +265,6 @@ func fraFraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph, now f
 					return finish()
 				}
 			}
-			if expired() {
-				timedOut = true
-				break
-			}
 		}
 	}
 	if timedOut {
@@ -329,16 +272,11 @@ func fraFraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph, now f
 		return finish()
 	}
 	status = Fra_FraigMiterStatus(graph)
-	if status == -1 && expired() {
-		timedOut = true
-		return finish()
-	}
 	if pars.fInterpolation != 0 && status == -1 && graph.RegisterCount() > 0 {
 		var options interp.Inter_ManParams_t
 		interp.Inter_ManSetDefaultParams(&options)
 		options.NBTLimit = pars.nBTLimitInter
 		options.FVerbose = pars.fVeryVerbose
-		options.NSecLimit = remainingSeconds()
 		var depth int32
 		outputs := graph.OutputCount() - int(graph.RegisterCount())
 		if outputs == 1 {
@@ -347,12 +285,6 @@ func fraFraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph, now f
 			remaining := 0
 			status = 1
 			for i, out := range graph.Outputs()[:outputs] {
-				if expired() {
-					status = -1
-					timedOut = true
-					break
-				}
-				options.NSecLimit = remainingSeconds()
 				if graph.Node(out).Fanins[0].NodeID() == 0 {
 					continue
 				}
@@ -395,10 +327,6 @@ func fraFraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph, now f
 			}
 		}
 	}
-	if status == -1 && (timedOut || expired()) {
-		timedOut = true
-		return finish()
-	}
 	if pars.fReachability != 0 && status == -1 && graph.RegisterCount() > 0 && graph.RegisterCount() < pars.nBddVarsMax {
 		var options bbr.Saig_ParBbr_t
 		bbr.Bbr_ManSetDefaultParams(&options)
@@ -408,26 +336,11 @@ func fraFraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph, now f
 		options.FReorder = 1
 		options.FReorderImage = 1
 		options.FSilent = pars.fSilent
-		options.TimeLimit = remainingSeconds()
 		status = bbr.Aig_ManVerifyUsingBdds(graph, &options)
-	}
-	if status == -1 && expired() {
-		timedOut = true
-		return finish()
 	}
 	if pars.fUsePdr != 0 && status == -1 && graph.RegisterCount() > 0 {
 		options := pdr.DefaultOptions()
 		options.Timeout = time.Duration(pars.nPdrTimeout) * time.Second
-		if pars.TimeLimit > 0 {
-			remaining := time.Duration(pars.TimeLimit)*time.Second - now().Sub(started)
-			if remaining <= 0 {
-				timedOut = true
-				return finish()
-			}
-			if options.Timeout <= 0 || remaining < options.Timeout {
-				options.Timeout = remaining
-			}
-		}
 		options.Verbose = pars.fVerbose != 0
 		answer, err := pdr.Solve(graph, &options)
 		if err == nil {
