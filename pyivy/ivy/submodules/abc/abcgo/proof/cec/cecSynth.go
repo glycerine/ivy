@@ -48,18 +48,7 @@ import "fmt"
 
 ***********************************************************************/
 func Cec_SeqSynthesisSetDefaultParams(p *Cec_ParSeq_t) {
-    memset( p, 0, sizeof(Cec_ParSeq_t) );
-    p.fUseLcorr    =    0;  // enables latch correspondence
-    p.fUseScorr    =    0;  // enables signal correspondence
-    p.nBTLimit     = 1000;  // (scorr/lcorr) conflict limit at a node
-    p.nFrames      =    1;  // (scorr only) the number of timeframes
-    p.nLevelMax    =   -1;  // (scorr only) the max number of levels
-    p.fConsts      =    1;  // (scl only) merging constants
-    p.fEquivs      =    1;  // (scl only) merging equivalences
-    p.fUseMiniSat  =    0;  // enables MiniSat in lcorr/scorr
-    p.nMinDomSize  =  100;  // the size of minimum clock domain
-    p.fVeryVerbose =    0;  // verbose stats
-    p.fVerbose     =    0;  // verbose stats
+	*p = Cec_ParSeq_t{nBTLimit: 1000, nFrames: 1, nLevelMax: -1, fConsts: 1, fEquivs: 1, nMinDomSize: 100}
 }
 
 /**Function*************************************************************
@@ -103,104 +92,7 @@ func Cec_SeqReadVerbose(p *Cec_ParSeq_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManRegCreatePart(p *Gia_Man_t, vPart *Vec_Int_t, pnCountPis *int32, pnCountRegs *int32, ppMapBack **int32) *Gia_Man_t {
-    var pNew *Gia_Man_t;
-    var pObj *Gia_Obj_t;
-    var vNodes, vRoots *Vec_Int_t;
-    var i, iOut, nCountPis, nCountRegs int32;
-    var pMapBack *int32;
-    // collect/mark nodes/PIs in the DFS order from the roots
-    Gia_ManIncrementTravId( p );
-    vRoots  = Vec_IntAlloc( Vec_IntSize(vPart) );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vPart)) && (((iOut) = Vec_IntEntry(vPart, i)), 1); i++  {
-        Vec_IntPush( vRoots, Gia_ObjId(p, Gia_ManCo(p, Gia_ManPoNum(p)+iOut)) );
-    }
-    vNodes = Gia_ManCollectNodesCis( p, Vec_IntArray(vRoots), Vec_IntSize(vRoots) );
-    Vec_IntFree( vRoots );
-    // unmark register outputs
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vPart)) && (((iOut) = Vec_IntEntry(vPart, i)), 1); i++  {
-        Gia_ObjSetTravIdPrevious( p, Gia_ManCi(p, Gia_ManPiNum(p)+iOut) );
-    }
-    // count pure PIs
-    nCountPis = nCountRegs = 0;
-    // inlining of macro Gia_ManForEachPi
-    for  i = 0; (i < Gia_ManPiNum(p)) && ((pObj) = Gia_ManCi(p, i)); i++  {
-        nCountPis += Gia_ObjIsTravIdCurrent(p, pObj);
-    }
-    // count outputs of other registers
-    // inlining of macro Gia_ManForEachRo
-    for  i = 0; (i < Gia_ManRegNum(p)) && ((pObj) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {
-        nCountRegs += Gia_ObjIsTravIdCurrent(p, pObj);
-    } // should be !Gia_... ???
-    if pnCountPis != nil {
-        *pnCountPis = nCountPis; }
-    if pnCountRegs != nil {
-        *pnCountRegs = nCountRegs; }
-    // clean old manager
-    Gia_ManFillValue(p);
-    Gia_ManConst0(p).Value = 0;
-    // create the new manager
-    pNew = Gia_ManStart( Vec_IntSize(vNodes) );
-    // create the PIs
-    // inlining of macro Gia_ManForEachCi
-    for  i = 0; (i < Vec_IntSize(p.vCis)) && ((pObj) = Gia_ManCi(p, i)); i++  {
-        if Gia_ObjIsTravIdCurrent(p, pObj) {
-            pObj.Value = Gia_ManAppendCi(pNew); }
-    }
-    // add variables for the register outputs
-    // create fake POs to hold the register outputs
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vPart)) && (((iOut) = Vec_IntEntry(vPart, i)), 1); i++  {
-        pObj = Gia_ManCi(p, Gia_ManPiNum(p)+iOut);
-        pObj.Value = Gia_ManAppendCi(pNew);
-        Gia_ManAppendCo( pNew, pObj.Value );
-        Gia_ObjSetTravIdCurrent( p, pObj ); // added
-    }
-    // create the nodes
-    // inlining of macro Gia_ManForEachObjVec
-    for  i = 0; (i < Vec_IntSize(vNodes)) && ((pObj) = Gia_ManObj(p, Vec_IntEntry(vNodes,i))); i++  {
-        if Gia_ObjIsAnd(pObj) {
-            pObj.Value = Gia_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }
-    }
-    // add real POs for the registers
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vPart)) && (((iOut) = Vec_IntEntry(vPart, i)), 1); i++  {
-        pObj = Gia_ManCo( p, Gia_ManPoNum(p)+iOut );
-        Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );
-    }
-    Gia_ManSetRegNum( pNew, Vec_IntSize(vPart) );
-    // create map
-    if ppMapBack {
-        // inlining of macro ABC_FALLOC
-        pMapBack = ((int *) memset(malloc(sizeof(int) * (size_t)(Gia_ManObjNum(pNew))), 0xff, sizeof(int) * (size_t)(Gia_ManObjNum(pNew))));
-        // map constant nodes
-        pMapBack[0] = 0;
-        // logic cones of register outputs
-        // inlining of macro Gia_ManForEachObjVec
-        for  i = 0; (i < Vec_IntSize(vNodes)) && ((pObj) = Gia_ManObj(p, Vec_IntEntry(vNodes,i))); i++  {
-//            pObjNew = Aig_Regular(pObj->pData);
-//            pMapBack[pObjNew->Id] = pObj->Id;
-            assert(Abc_Lit2Var(Gia_ObjValue(pObj)) >= 0, "Abc_Lit2Var(Gia_ObjValue(pObj)) >= 0");
-            assert(Abc_Lit2Var(Gia_ObjValue(pObj)) < Gia_ManObjNum(pNew), "Abc_Lit2Var(Gia_ObjValue(pObj)) < Gia_ManObjNum(pNew)");
-            pMapBack[ Abc_Lit2Var(Gia_ObjValue(pObj)) ] = Gia_ObjId(p, pObj);
-        }
-        // map register outputs
-        // inlining of macro Vec_IntForEachEntry
-        for  i = 0; (i < Vec_IntSize(vPart)) && (((iOut) = Vec_IntEntry(vPart, i)), 1); i++  {
-            pObj = Gia_ManCi(p, Gia_ManPiNum(p)+iOut);
-//            pObjNew = pObj->pData;
-//            pMapBack[pObjNew->Id] = pObj->Id;
-            assert(Abc_Lit2Var(Gia_ObjValue(pObj)) >= 0, "Abc_Lit2Var(Gia_ObjValue(pObj)) >= 0");
-            assert(Abc_Lit2Var(Gia_ObjValue(pObj)) < Gia_ManObjNum(pNew), "Abc_Lit2Var(Gia_ObjValue(pObj)) < Gia_ManObjNum(pNew)");
-            pMapBack[ Abc_Lit2Var(Gia_ObjValue(pObj)) ] = Gia_ObjId(p, pObj);
-        }
-        *ppMapBack = pMapBack;
-    }
-    Vec_IntFree( vNodes );
-    return pNew;
-}
+
 
 /**Function*************************************************************
 
@@ -213,30 +105,7 @@ func Gia_ManRegCreatePart(p *Gia_Man_t, vPart *Vec_Int_t, pnCountPis *int32, pnC
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_TransferMappedClasses(pPart *Gia_Man_t, pMapBack *int32, pReprs *int32) int32 {
-    var pObj *Gia_Obj_t;
-    var i, Id1, Id2, nClasses int32;
-    if pPart.pReprs == nil { 
-        return 0; }
-    nClasses = 0;
-    // inlining of macro Gia_ManForEachObj
-    for  i = 0; (i < pPart.nObjs) && ((pObj) = Gia_ManObj(pPart, i)); i++  {
-        if Gia_ObjRepr(pPart, i) == GIA_VOID {
-            continue; }
-        assert(i                     < Gia_ManObjNum(pPart), "i                     < Gia_ManObjNum(pPart)");
-        assert(Gia_ObjRepr(pPart, i) < Gia_ManObjNum(pPart), "Gia_ObjRepr(pPart, i) < Gia_ManObjNum(pPart)");
-        Id1 = pMapBack[ i ];
-        Id2 = pMapBack[ Gia_ObjRepr(pPart, i) ];
-        if Id1 == Id2 {
-            continue; }
-        if Id1 < Id2 {
-            pReprs[Id2] = Id1;
-        } else {
-            pReprs[Id1] = Id2; }
-        nClasses++;
-    }
-    return nClasses;
-}
+
 
 
 /**Function*************************************************************
@@ -250,13 +119,7 @@ func Gia_TransferMappedClasses(pPart *Gia_Man_t, pMapBack *int32, pReprs *int32)
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManFindRepr_rec(pReprs *int32, Id int32) int32 {
-    if pReprs[Id] == 0 {
-        return 0; }
-    if pReprs[Id] == ~0 {
-        return Id; }
-    return Gia_ManFindRepr_rec( pReprs, pReprs[Id] );
-}
+
 
 /**Function*************************************************************
 
@@ -269,23 +132,7 @@ func Gia_ManFindRepr_rec(pReprs *int32, Id int32) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManNormalizeEquivalences(p *Gia_Man_t, pReprs *int32) {
-    var i, iRepr int32;
-    assert(p.pReprs == nil, "p.pReprs == nil");
-    assert(p.pNexts == nil, "p.pNexts == nil");
-    // inlining of macro ABC_CALLOC
-    p.pReprs = ((Gia_Rpr_t *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(Gia_Rpr_t)));
-    for  i = 0; i < Gia_ManObjNum(p); i++  {
-        Gia_ObjSetRepr( p, i, GIA_VOID );
-    }
-    for  i = 0; i < Gia_ManObjNum(p); i++  {
-        if pReprs[i] == ~0 {
-            continue; }
-        iRepr = Gia_ManFindRepr_rec( pReprs, i );
-        Gia_ObjSetRepr( p, i, iRepr );
-    }
-    p.pNexts = Gia_ManDeriveNexts( p );
-}
+
 
 /**Function*************************************************************
 
