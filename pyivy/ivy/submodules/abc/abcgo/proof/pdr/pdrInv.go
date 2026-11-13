@@ -2,6 +2,14 @@ package pdr
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/aig/gia/mf"
+	"github.com/glycerine/abcgo/aig/ioa"
+	"github.com/glycerine/abcgo/base/abc"
+	abcmain "github.com/glycerine/abcgo/base/main"
+	"github.com/glycerine/abcgo/misc/vec"
+	"github.com/glycerine/abcgo/sat/bsat"
 	"time"
 )
 
@@ -18,7 +26,7 @@ import "os"
   Synopsis    [Invariant computation, printing, verification.]
 
   Author      [Alan Mishchenko]
-  
+
   Affiliation [UC Berkeley]
 
   Date        [Ver. 1.0. Started - November 20, 2010.]
@@ -34,7 +42,6 @@ import "os"
 
 //ABC_NAMESPACE_IMPL_START
 
-
 ////////////////////////////////////////////////////////////////////////
 ///                        DECLARATIONS                              ///
 ////////////////////////////////////////////////////////////////////////
@@ -43,591 +50,451 @@ import "os"
 ///                     FUNCTION DEFINITIONS                         ///
 ////////////////////////////////////////////////////////////////////////
 
-/**Function*************************************************************
+/*
+*Function*************************************************************
 
-  Synopsis    []
+	Synopsis    []
 
-  Description []
-               
-  SideEffects []
+	Description []
 
-  SeeAlso     []
+	SideEffects []
 
-***********************************************************************/
-func Pdr_ManPrintProgress(p *Pdr_Man_t, fClose int32, Time abctime) {
-    var vVec *Vec_Ptr_t;
-    var i, ThisSize, Length, LengthStart int32;
-    if Vec_PtrSize(p.vSolvers) < 2 {
-        Abc_Print(1, "Frame " );
-        Abc_Print(1, "Clauses                                                     " );
-        Abc_Print(1, "Max Queue " );
-        Abc_Print(1, "Flops " );
-        Abc_Print(1, "Cex      " );
-        Abc_Print(1, "Time" );
-        Abc_Print(1, "\n" );
-        return;
-    }
-    if Abc_FrameIsBatchMode() && !(fClose != 0) {
-        return; }
-    // count the total length of the printout
-    Length = 0;
-    Vec_VecForEachLevel( p.vClauses, vVec, i )
-        Length += 1 + Abc_Base10Log(Vec_PtrSize(vVec)+1);
-    // determine the starting point
-    LengthStart = Abc_MaxInt( 0, Length - 60 );
-    Abc_Print( 1, "%3d :", Vec_PtrSize(p.vSolvers)-1 );
-    ThisSize = 5;
-    if LengthStart > 0 {
-        Abc_Print( 1, " ..." );
-        ThisSize += 4;
-    }
-    Length = 0;
-    Vec_VecForEachLevel( p.vClauses, vVec, i )
-    {
-        if Length < LengthStart {
-            Length += 1 + Abc_Base10Log(Vec_PtrSize(vVec)+1);
-            continue;
-        }
-        Abc_Print( 1, " %d", Vec_PtrSize(vVec) );
-        Length += 1 + Abc_Base10Log(Vec_PtrSize(vVec)+1);
-        ThisSize += 1 + Abc_Base10Log(Vec_PtrSize(vVec)+1);
-    }
-    for  i = ThisSize; i < 70; i++  {
-        Abc_Print( 1, " " );
-    }
-    Abc_Print( 1, "%5d", p.nQueMax );
-    Abc_Print( 1, "%6d", p.vAbsFlops ? Vec_IntCountPositive(p.vAbsFlops) : p.nAbsFlops );
-    if p.pPars.fUseAbs {
-    Abc_Print( 1, "%4d", p.nCexes ); }
-    Abc_Print( 1, "%10.2f sec", 1.0*Time/int64(time.Second) );
-    if p.pPars.fSolveAll {
-        Abc_Print( 1, "  CEX =%4d", p.pPars.nFailOuts ); }
-    if p.pPars.nTimeOutOne {
-        Abc_Print( 1, "  T/O =%3d", p.pPars.nDropOuts ); }
-    Abc_Print( 1, "%s", fClose ? "\n":"\r" );
-    if fClose != 0 {
-        p.nQueMax = 0, p.nCexes = 0; }
-    fflush( os.Stdout );
+	SeeAlso     []
+
+**********************************************************************
+*/
+func Pdr_ManPrintProgress(p *Pdr_Man_t, closeLine int32, elapsed abctime) {
+	if len(p.vSolvers) < 2 {
+		fmt.Println("Frame Clauses                                                     Max Queue Flops Cex      Time")
+		return
+	}
+	if abcmain.Abc_FrameIsBatchMode() != 0 && closeLine == 0 {
+		return
+	}
+	sizes := make([]string, vec.Vec_VecSize(p.vClauses))
+	length := 0
+	for i := range sizes {
+		sizes[i] = fmt.Sprintf(" %d", vec.Vec_PtrSize(vec.Vec_VecEntry(p.vClauses, i)))
+		length += len(sizes[i])
+	}
+	skip := max(0, length-60)
+	fmt.Printf("%3d :", len(p.vSolvers)-1)
+	width, seen := 5, 0
+	if skip > 0 {
+		fmt.Print(" ...")
+		width += 4
+	}
+	for _, size := range sizes {
+		if seen < skip {
+			seen += len(size)
+			continue
+		}
+		fmt.Print(size)
+		width += len(size)
+	}
+	for ; width < 70; width++ {
+		fmt.Print(" ")
+	}
+	flops := p.nAbsFlops
+	if p.vAbsFlops != nil {
+		flops = int32(vec.Vec_IntCountPositive(p.vAbsFlops))
+	}
+	fmt.Printf("%5d%6d", p.nQueMax, flops)
+	if p.pPars.fUseAbs != 0 {
+		fmt.Printf("%4d", p.nCexes)
+	}
+	fmt.Printf("%10.2f sec", time.Duration(elapsed).Seconds())
+	if p.pPars.fSolveAll != 0 {
+		fmt.Printf("  CEX =%4d", p.pPars.nFailOuts)
+	}
+	if p.pPars.nTimeOutOne != 0 {
+		fmt.Printf("  T/O =%3d", p.pPars.nDropOuts)
+	}
+	if closeLine != 0 {
+		fmt.Println()
+		p.nQueMax, p.nCexes = 0, 0
+	} else {
+		fmt.Print("\r")
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Counts how many times each flop appears in the set of cubes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Pdr_ManCountFlops(p *Pdr_Man_t, vCubes *Vec_Ptr_t) *Vec_Int_t {
-    var vFlopCount *Vec_Int_t;
-    var pCube *Pdr_Set_t;
-    var i, n int32;
-    vFlopCount = Vec_IntStart( Aig_ManRegNum(p.pAig) );
-    Vec_PtrForEachEntry( Pdr_Set_t *, vCubes, pCube, i )
-    {
-        if pCube.nRefs == -1 {
-            continue; }
-        for  n = 0; n < pCube.nLits; n++  {
-            assert(pCube.Lits[n] >= 0 && pCube.Lits[n] < 2*Aig_ManRegNum(p.pAig), "pCube.Lits[n] >= 0 && pCube.Lits[n] < 2*Aig_ManRegNum(p.pAig)");
-            Vec_IntAddToEntry( vFlopCount, pCube.Lits[n] >> 1, 1 );
-        }
-    }
-    return vFlopCount;
+// Pdr_ManCountFlops counts register literals in live cubes.
+func Pdr_ManCountFlops(p *Pdr_Man_t, cubes *Vec_Ptr_t) *Vec_Int_t {
+	nRegs := int(aig.Aig_ManRegNum(p.pAig))
+	counts := vec.Vec_IntStart(nRegs)
+	for _, item := range vec.Vec_PtrArray(cubes) {
+		cube := item.(*Pdr_Set_t)
+		if cube.nRefs == -1 {
+			continue
+		}
+		for _, lit := range cube.Lits[:cube.nLits] {
+			if lit < 0 || int(lit>>1) >= nRegs {
+				panic("pdr: cube literal out of register range")
+			}
+			vec.Vec_IntAddToEntry(counts, int(lit>>1), 1)
+		}
+	}
+	return counts
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Pdr_ManFindInvariantStart(p *Pdr_Man_t) int32 {
-    var vArrayK *Vec_Ptr_t;
-    var k int32;
-    var kMax int32 = Vec_PtrSize(p.vSolvers)-1;
-    Vec_VecForEachLevelStartStop( p.vClauses, vArrayK, k, 1, kMax+1 )
-        if ( Vec_PtrSize(vArrayK) == 0 )
-            return k;
-//    return -1;
-    // if there is no starting point (as in case of SAT or undecided), return the last frame
-//    Abc_Print( 1, "The last timeframe contains %d clauses.\n", Vec_PtrSize(Vec_VecEntry(p->vClauses, kMax)) );
-    return kMax;
+	last := len(p.vSolvers) - 1
+	for k := 1; k <= last && k < vec.Vec_VecSize(p.vClauses); k++ {
+		if vec.Vec_PtrSize(vec.Vec_VecEntry(p.vClauses, k)) == 0 {
+			return int32(k)
+		}
+	}
+	return int32(last)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Counts the number of variables used in the clauses.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Pdr_ManCollectCubes(p *Pdr_Man_t, kStart int32) *Vec_Ptr_t {
-    var vResult *Vec_Ptr_t;
-    var vArrayK *Vec_Ptr_t;
-    var pSet *Pdr_Set_t;
-    var i, j int32;
-    vResult = Vec_PtrAlloc( 100 );
-    Vec_VecForEachLevelStart( p.vClauses, vArrayK, i, kStart )
-        Vec_PtrForEachEntry( Pdr_Set_t *, vArrayK, pSet, j )
-            Vec_PtrPush( vResult, pSet );
-    return vResult;
+func Pdr_ManCollectCubes(p *Pdr_Man_t, start int32) *Vec_Ptr_t {
+	if start < 0 {
+		panic("pdr: invalid invariant start")
+	}
+	result := vec.Vec_PtrAlloc(100)
+	for i := int(start); i < vec.Vec_VecSize(p.vClauses); i++ {
+		for _, cube := range vec.Vec_PtrArray(vec.Vec_VecEntry(p.vClauses, i)) {
+			vec.Vec_PtrPush(result, cube)
+		}
+	}
+	return result
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Pdr_ManCountFlopsInv(p *Pdr_Man_t) *Vec_Int_t {
-    var kStart int32  = Pdr_ManFindInvariantStart(p);
-    var vCubes *Vec_Ptr_t  = Pdr_ManCollectCubes(p, kStart);
-    var vInv *Vec_Int_t  = Pdr_ManCountFlops( p, vCubes );
-    Vec_PtrFree(vCubes);
-    return vInv;
+	return Pdr_ManCountFlops(p, Pdr_ManCollectCubes(p, Pdr_ManFindInvariantStart(p)))
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Counts the number of variables used in the clauses.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Pdr_ManCountVariables(p *Pdr_Man_t, kStart int32) int32 {
-    var vFlopCounts *Vec_Int_t;
-    var vCubes *Vec_Ptr_t;
-    var i, Entry, Counter int32;
-    if p.vInfCubes == nil {
-        vCubes = Pdr_ManCollectCubes( p, kStart );
-    } else {
-        vCubes = Vec_PtrDup( p.vInfCubes ); }
-    vFlopCounts = Pdr_ManCountFlops( p, vCubes );
-    Vec_IntForEachEntry( vFlopCounts, Entry, i )
-        Counter += (Entry > 0);
-    Vec_IntFreeP( &vFlopCounts );
-    Vec_PtrFree( vCubes );
-    return Counter;
+func Pdr_ManCountVariables(p *Pdr_Man_t, start int32) int32 {
+	cubes := p.vInfCubes
+	if cubes == nil {
+		cubes = Pdr_ManCollectCubes(p, start)
+	}
+	var count int32
+	for _, n := range vec.Vec_IntArray(Pdr_ManCountFlops(p, cubes)) {
+		if n > 0 {
+			count++
+		}
+	}
+	return count
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Pdr_ManPrintClauses(p *Pdr_Man_t, kStart int32) {
-    var vArrayK *Vec_Ptr_t;
-    var pCube *Pdr_Set_t;
-    var i, k, Counter int32;
-    Vec_VecForEachLevelStart( p.vClauses, vArrayK, k, kStart )
-    {
-        Vec_PtrSort( vArrayK, (int (*)(void))Pdr_SetCompare );
-        Vec_PtrForEachEntry( Pdr_Set_t *, vArrayK, pCube, i )
-        {
-            Abc_Print( 1, "C=%4d. F=%4d ", Counter++, k );
-            Pdr_SetPrint( os.Stdout, pCube, Aig_ManRegNum(p.pAig), nil );  
-            Abc_Print( 1, "\n" ); 
-        }
-    }
+func Pdr_ManPrintClauses(p *Pdr_Man_t, start int32) {
+	if start < 0 {
+		panic("pdr: invalid frame")
+	}
+	var count int
+	for k := int(start); k < vec.Vec_VecSize(p.vClauses); k++ {
+		level := vec.Vec_VecEntry(p.vClauses, k)
+		vec.Vec_PtrSort(level, func(a, b *any) int {
+			x, y := (*a).(*Pdr_Set_t), (*b).(*Pdr_Set_t)
+			return int(Pdr_SetCompare(&x, &y))
+		})
+		for _, item := range vec.Vec_PtrArray(level) {
+			fmt.Printf("C=%4d. F=%4d ", count, k)
+			Pdr_SetPrint(os.Stdout, item.(*Pdr_Set_t), aig.Aig_ManRegNum(p.pAig), nil)
+			fmt.Println()
+			count++
+		}
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     [] 
-
-***********************************************************************/
 func Pdr_SetPrintOne(p *Pdr_Set_t) {
-    var i int32;
-    Abc_Print(1, "Clause: {" );
-    for  i = 0; i < p.nLits; i++  {
-        Abc_Print(1, " %s%d", Abc_LitIsCompl(p.Lits[i])? "!":"", Abc_Lit2Var(p.Lits[i]) );
-    }
-    Abc_Print(1, " }\n" );
+	fmt.Print("Clause: {")
+	for _, lit := range p.Lits[:p.nLits] {
+		if lit&1 != 0 {
+			fmt.Printf(" !%d", lit>>1)
+		} else {
+			fmt.Printf(" %d", lit>>1)
+		}
+	}
+	fmt.Println(" }")
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     [] 
-
-***********************************************************************/
-func Pdr_ManDupAigWithClauses(p *Aig_Man_t, vCubes *Vec_Ptr_t) *Aig_Man_t {
-    var pNew *Aig_Man_t;
-    var pObj, pObjNew, pLit *Aig_Obj_t;
-    var pCube *Pdr_Set_t;
-    var i, n int32;
-    // create the new manager
-    pNew = Aig_ManStart( Aig_ManObjNumMax(p) );
-    pNew.pName = Abc_UtilStrsav( p.pName );
-    pNew.pSpec = Abc_UtilStrsav( p.pSpec );
-    // create the PIs
-    Aig_ManCleanData( p );
-    Aig_ManConst1(p).pData = Aig_ManConst1(pNew);
-    Aig_ManForEachCi( p, pObj, i )
-        pObj.pData = Aig_ObjCreateCi( pNew );
-    // create outputs for each cube
-    Vec_PtrForEachEntry( Pdr_Set_t *, vCubes, pCube, i )
-    {
-//        Pdr_SetPrintOne( pCube );
-        pObjNew = Aig_ManConst1(pNew);
-        for  n = 0; n < pCube.nLits; n++  {
-            assert(Abc_Lit2Var(pCube.Lits[n]) < Saig_ManRegNum(p), "Abc_Lit2Var(pCube.Lits[n]) < Saig_ManRegNum(p)");
-            pLit = Aig_NotCond( Aig_ManCi(pNew, Saig_ManPiNum(p) + Abc_Lit2Var(pCube.Lits[n])), Abc_LitIsCompl(pCube.Lits[n]) );
-            pObjNew = Aig_And( pNew, pObjNew, pLit );
-        }
-        Aig_ObjCreateCo( pNew, pObjNew );
-    }
-    // duplicate internal nodes
-    Aig_ManForEachNode( p, pObj, i )
-        pObj.pData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );
-    // add the POs
-    Saig_ManForEachLi( p, pObj, i )
-        Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );
-    Aig_ManCleanup( pNew );
-    Aig_ManSetRegNum( pNew, Aig_ManRegNum(p) );
-    // check the resulting network
-    if !Aig_ManCheck(pNew) {
-        Abc_Print(1, "Aig_ManDupSimple(): The check has failed.\n" ); }
-    return pNew;
-}
-func Pdr_ManDumpAig(p *Aig_Man_t, vCubes *Vec_Ptr_t) {
-    var pNew *Aig_Man_t  = Pdr_ManDupAigWithClauses( p, vCubes );
-    Ioa_WriteAiger( pNew, "aig_with_clauses.aig", 0, 0 );
-    Aig_ManStop( pNew );
-    Abc_Print(1, "Dumped modified AIG into file \"aig_with_clauses.aig\".\n" );
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     [] 
-
-***********************************************************************/
-func Pdr_ManDumpClauses(p *Pdr_Man_t, pFileName string, fProved int32) {
-    var pFile *os.File;
-    var vFlopCounts *Vec_Int_t;
-    var vCubes *Vec_Ptr_t;
-    var pCube *Pdr_Set_t;
-    var pNamesCi *string;
-    var i, kStart, Count int32;
-    // create file
-    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);
-    if pFile == nil {
-        Abc_Print( 1, "Cannot open file \"%s\" for writing invariant.\n", pFileName );
-        return;
-    } 
-    // collect cubes
-    kStart = Pdr_ManFindInvariantStart( p );
-    if fProved != 0 {
-        vCubes = Pdr_ManCollectCubes( p, kStart );
-    } else {
-        vCubes = Vec_PtrDup( p.vInfCubes ); }
-    Vec_PtrSort( vCubes, (int (*)(void))Pdr_SetCompare );
-//    Pdr_ManDumpAig( p->pAig, vCubes );
-    // count cubes
-    Count = 0;
-    Vec_PtrForEachEntry( Pdr_Set_t *, vCubes, pCube, i )
-    {
-        if pCube.nRefs == -1 {
-            continue; }
-        Count++;
-    }
-    // collect variable appearances
-    if p.pPars.fUseSupp {
-        vFlopCounts = Pdr_ManCountFlops( p, vCubes );
-    } else {
-        vFlopCounts = nil;
-    } 
-    // output the header
-    if fProved != 0 {
-        fmt.Fprintf(pFile, "# Inductive invariant for \"%s\"\n", p.pAig.pName);
-    } else {
-        fmt.Fprintf(pFile, "# Clauses of the last timeframe for \"%s\"\n", p.pAig.pName); }
-    fmt.Fprintf(pFile, "# generated by PDR in ABC on %s\n", Aig_TimeStamp());
-    fmt.Fprintf(pFile, ".i %d\n", p.pPars.fUseSupp ? Pdr_ManCountVariables(p, kStart) : Aig_ManRegNum(p.pAig));
-    fmt.Fprintf(pFile, ".o 1\n");
-    fmt.Fprintf(pFile, ".p %d\n", Count);
-    // output flop names
-    pNamesCi = Abc_NtkCollectCioNames( Abc_FrameReadNtk( Abc_FrameReadGlobalFrame() ), 0 );
-    if pNamesCi != nil {
-        fmt.Fprintf(pFile, ".ilb");
-        for  i = 0; i < Aig_ManRegNum(p.pAig); i++  {
-            if !p.pPars.fUseSupp || Vec_IntEntry( vFlopCounts, i ) {
-                fmt.Fprintf(pFile, " %s", pNamesCi[Saig_ManPiNum(p.pAig) + i]); }
-        }
-        fmt.Fprintf(pFile, "\n");
-        ABC_FREE( pNamesCi );
-        fmt.Fprintf(pFile, ".ob inv\n");
-    }
-    // output cubes
-    Vec_PtrForEachEntry( Pdr_Set_t *, vCubes, pCube, i )
-    {
-        if pCube.nRefs == -1 {
-            continue; }
-        Pdr_SetPrint( pFile, pCube, Aig_ManRegNum(p.pAig), vFlopCounts );  
-        fmt.Fprintf(pFile, " 1\n"); 
-    }
-    fmt.Fprintf(pFile, ".e\n\n");
-    _ = (pFile).Close();
-    Vec_IntFreeP( &vFlopCounts );
-    Vec_PtrFree( vCubes );
-    if fProved != 0 {
-        Abc_Print( 1, "Inductive invariant was written into file \"%s\".\n", pFileName );
-    } else {
-        Abc_Print( 1, "Clauses of the last timeframe were written into file \"%s\".\n", pFileName ); }
+// Pdr_ManDupAigWithClauses creates cube outputs followed by the original
+// next-state outputs, retaining the original input and register ordering.
+func Pdr_ManDupAigWithClauses(src *aig.Graph, cubes *Vec_Ptr_t) *aig.Graph {
+	dst := aig.NewGraph()
+	dst.Name, dst.Spec = src.Name, src.Spec
+	inputs, outputs := src.Inputs(), src.Outputs()
+	nRegs := int(aig.Aig_ManRegNum(src))
+	copies := map[int]aig.Edge{0: dst.Const1()}
+	for _, in := range inputs {
+		copies[in.NodeID()] = dst.NewInput()
+	}
+	var copyEdge func(aig.Edge) aig.Edge
+	copyEdge = func(edge aig.Edge) aig.Edge {
+		result, ok := copies[edge.NodeID()]
+		if !ok {
+			node := src.Node(edge)
+			switch node.Kind {
+			case aig.And:
+				result = dst.AND(copyEdge(node.Fanins[0]), copyEdge(node.Fanins[1]))
+			case aig.ExclusiveOr:
+				result = dst.NewXor(copyEdge(node.Fanins[0]), copyEdge(node.Fanins[1]))
+			case aig.Buffer, aig.Output:
+				result = copyEdge(node.Fanins[0])
+			default:
+				panic("pdr: unexpected AIG node in invariant duplication")
+			}
+			copies[edge.NodeID()] = result
+		}
+		if edge.Complemented() {
+			return result.Not()
+		}
+		return result
+	}
+	for i := 0; i < vec.Vec_PtrSize(cubes); i++ {
+		cube := vec.Vec_PtrEntry(cubes, i).(*Pdr_Set_t)
+		term := dst.Const1()
+		for _, lit := range cube.Lits[:cube.nLits] {
+			reg := int(lit >> 1)
+			if lit < 0 || reg >= nRegs {
+				panic("pdr: cube literal out of range")
+			}
+			input := copyEdge(inputs[len(inputs)-nRegs+reg])
+			if lit&1 != 0 {
+				input = input.Not()
+			}
+			term = dst.AND(term, input)
+		}
+		dst.AddOutput(term)
+	}
+	for _, out := range outputs[len(outputs)-nRegs:] {
+		dst.AddOutput(copyEdge(out))
+	}
+	aig.Aig_ManSetRegNum(dst, int32(nRegs))
+	return dst
 }
 
-/**Function*************************************************************
+func Pdr_ManDumpAig(p *aig.Graph, cubes *Vec_Ptr_t) {
+	if err := ioa.Ioa_WriteAiger(Pdr_ManDupAigWithClauses(p, cubes), "aig_with_clauses.aig", 0, 0); err != nil {
+		fmt.Printf("Could not dump modified AIG: %v\n", err)
+		return
+	}
+	fmt.Println("Dumped modified AIG into file \"aig_with_clauses.aig\".")
+}
 
-  Synopsis    []
+/*
+*Function*************************************************************
 
-  Description []
-               
-  SideEffects []
+	Synopsis    []
 
-  SeeAlso     [] 
+	Description []
 
-***********************************************************************/
+	SideEffects []
+
+	SeeAlso     []
+
+**********************************************************************
+*/
+func Pdr_ManDumpClauses(p *Pdr_Man_t, fileName string, proved int32) {
+	file, err := os.Create(fileName)
+	if err != nil {
+		fmt.Printf("Cannot open file %q for writing invariant: %v\n", fileName, err)
+		return
+	}
+	defer file.Close()
+	start := Pdr_ManFindInvariantStart(p)
+	var cubes *Vec_Ptr_t
+	if proved != 0 {
+		cubes = Pdr_ManCollectCubes(p, start)
+	} else {
+		cubes = vec.Vec_PtrAlloc(vec.Vec_PtrSize(p.vInfCubes))
+		for _, item := range vec.Vec_PtrArray(p.vInfCubes) {
+			vec.Vec_PtrPush(cubes, item)
+		}
+	}
+	vec.Vec_PtrSort(cubes, func(a, b *any) int {
+		x, y := (*a).(*Pdr_Set_t), (*b).(*Pdr_Set_t)
+		return int(Pdr_SetCompare(&x, &y))
+	})
+	count := 0
+	for _, item := range vec.Vec_PtrArray(cubes) {
+		if item.(*Pdr_Set_t).nRefs != -1 {
+			count++
+		}
+	}
+	var counts *Vec_Int_t
+	nInputs := aig.Aig_ManRegNum(p.pAig)
+	if p.pPars.fUseSupp != 0 {
+		counts = Pdr_ManCountFlops(p, cubes)
+		nInputs = Pdr_ManCountVariables(p, start)
+	}
+	if proved != 0 {
+		fmt.Fprintf(file, "# Inductive invariant for %q\n", p.pAig.Name)
+	} else {
+		fmt.Fprintf(file, "# Clauses of the last timeframe for %q\n", p.pAig.Name)
+	}
+	fmt.Fprintf(file, "# generated by PDR in ABC on %s\n.i %d\n.o 1\n.p %d\n", time.Now().Format(time.ANSIC), nInputs, count)
+	var network *abc.Network
+	if frame := abcmain.Abc_FrameReadGlobalFrame(); frame != nil {
+		network, _ = abcmain.Abc_FrameReadNtk(frame).(*abc.Network)
+	}
+	if network != nil {
+		names := abc.Abc_NtkCollectCioNames(network, 0)
+		offset := len(p.pAig.Inputs()) - int(aig.Aig_ManRegNum(p.pAig))
+		if len(names) >= offset+int(aig.Aig_ManRegNum(p.pAig)) {
+			fmt.Fprint(file, ".ilb")
+			for i := 0; i < int(aig.Aig_ManRegNum(p.pAig)); i++ {
+				if counts == nil || vec.Vec_IntEntry(counts, i) != 0 {
+					fmt.Fprintf(file, " %s", names[offset+i])
+				}
+			}
+			fmt.Fprint(file, "\n.ob inv\n")
+		}
+	}
+	for _, item := range vec.Vec_PtrArray(cubes) {
+		cube := item.(*Pdr_Set_t)
+		if cube.nRefs == -1 {
+			continue
+		}
+		Pdr_SetPrint(file, cube, aig.Aig_ManRegNum(p.pAig), counts)
+		fmt.Fprint(file, " 1\n")
+	}
+	fmt.Fprint(file, ".e\n\n")
+	if proved != 0 {
+		fmt.Printf("Inductive invariant was written into file %q.\n", fileName)
+	} else {
+		fmt.Printf("Clauses of the last timeframe were written into file %q.\n", fileName)
+	}
+}
+
 func Pdr_ManDumpString(p *Pdr_Man_t) *Vec_Str_t {
-    var vStr *Vec_Str_t;
-    var vFlopCounts *Vec_Int_t;
-    var vCubes *Vec_Ptr_t;
-    var pCube *Pdr_Set_t;
-    var i, kStart int32;
-    vStr = Vec_StrAlloc( 1000 );
-    // collect cubes
-    kStart = Pdr_ManFindInvariantStart( p );
-    if p.vInfCubes == nil {
-        vCubes = Pdr_ManCollectCubes( p, kStart );
-    } else {
-        vCubes = Vec_PtrDup( p.vInfCubes ); }
-    Vec_PtrSort( vCubes, (int (*)(void))Pdr_SetCompare );
-    // collect variable appearances
-    if p.pPars.fUseSupp {
-        vFlopCounts = Pdr_ManCountFlops( p, vCubes );
-    } else {
-        vFlopCounts = nil;
-    } 
-    // output cubes
-    Vec_PtrForEachEntry( Pdr_Set_t *, vCubes, pCube, i )
-    {
-        if pCube.nRefs == -1 {
-            continue; }
-        Pdr_SetPrintStr( vStr, pCube, Aig_ManRegNum(p.pAig), vFlopCounts );  
-    }
-    Vec_IntFreeP( &vFlopCounts );
-    Vec_PtrFree( vCubes );
-    Vec_StrPush( vStr, '\0' );
-    return vStr;
+	cubes := p.vInfCubes
+	if cubes == nil {
+		cubes = Pdr_ManCollectCubes(p, Pdr_ManFindInvariantStart(p))
+	} else {
+		copyCubes := vec.Vec_PtrAlloc(vec.Vec_PtrSize(cubes))
+		for _, item := range vec.Vec_PtrArray(cubes) {
+			vec.Vec_PtrPush(copyCubes, item)
+		}
+		cubes = copyCubes
+	}
+	vec.Vec_PtrSort(cubes, func(a, b *any) int {
+		x, y := (*a).(*Pdr_Set_t), (*b).(*Pdr_Set_t)
+		return int(Pdr_SetCompare(&x, &y))
+	})
+	var counts *Vec_Int_t
+	if p.pPars.fUseSupp != 0 {
+		counts = Pdr_ManCountFlops(p, cubes)
+	}
+	result := vec.Vec_StrAlloc(1000)
+	for _, item := range vec.Vec_PtrArray(cubes) {
+		cube := item.(*Pdr_Set_t)
+		if cube.nRefs != -1 {
+			Pdr_SetPrintStr(result, cube, aig.Aig_ManRegNum(p.pAig), counts)
+		}
+	}
+	vec.Vec_StrPush(result, 0)
+	return result
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Pdr_ManReportInvariant(p *Pdr_Man_t) {
-    var vCubes *Vec_Ptr_t;
-    var kStart int32  = Pdr_ManFindInvariantStart( p );
-    vCubes = Pdr_ManCollectCubes( p, kStart );
-    Abc_Print( 1, "Invariant F[%d] : %d clauses with %d flops (out of %d) (cex = %d, ave = %.2f)\n", 
-        kStart, Vec_PtrSize(vCubes), Pdr_ManCountVariables(p, kStart), Aig_ManRegNum(p.pAig), p.nCexesTotal, 1.0*p.nXsimLits/p.nXsimRuns );
-//    Abc_Print( 1, "Invariant F[%d] : %d clauses with %d flops (out of %d)\n", 
-//        kStart, Vec_PtrSize(vCubes), Pdr_ManCountVariables(p, kStart), Aig_ManRegNum(p->pAig) );
-    Vec_PtrFree( vCubes );
+	start := Pdr_ManFindInvariantStart(p)
+	cubes := Pdr_ManCollectCubes(p, start)
+	average := float64(0)
+	if p.nXsimRuns != 0 {
+		average = float64(p.nXsimLits) / float64(p.nXsimRuns)
+	}
+	fmt.Printf("Invariant F[%d] : %d clauses with %d flops (out of %d) (cex = %d, ave = %.2f)\n", start, vec.Vec_PtrSize(cubes), Pdr_ManCountVariables(p, start), aig.Aig_ManRegNum(p.pAig), p.nCexesTotal, average)
 }
 
-/**Function*************************************************************
+/*
+*Function*************************************************************
 
-  Synopsis    []
+	Synopsis    []
 
-  Description []
-               
-  SideEffects []
+	Description []
 
-  SeeAlso     []
+	SideEffects []
 
-***********************************************************************/
+	SeeAlso     []
+
+**********************************************************************
+*/
 func Pdr_ManVerifyInvariant(p *Pdr_Man_t) {
-    var pSat *sat_solver;
-    var vLits *Vec_Int_t;
-    var vCubes *Vec_Ptr_t;
-    var pCube *Pdr_Set_t;
-    var i, kStart, kThis, RetValue, Counter int32;
-    var clk abctime  = Abc_Clock();
-    // collect cubes used in the inductive invariant
-    kStart = Pdr_ManFindInvariantStart( p );
-    vCubes = Pdr_ManCollectCubes( p, kStart );
-    // create solver with the cubes
-    kThis = Vec_PtrSize(p.vSolvers);
-    pSat  = Pdr_ManCreateSolver( p, kThis );
-    // add the property output
-//    Pdr_ManSetPropertyOutput( p, kThis );
-    // add the clauses
-    Vec_PtrForEachEntry( Pdr_Set_t *, vCubes, pCube, i )
-    {
-        vLits = Pdr_ManCubeToLits( p, kThis, pCube, 1, 0 );
-        RetValue = sat_solver_addclause( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits) );
-        assert((RetValue != 0), "RetValue");
-        sat_solver_compress( pSat );
-    }
-    // check each clause
-    Vec_PtrForEachEntry( Pdr_Set_t *, vCubes, pCube, i )
-    {
-        vLits = Pdr_ManCubeToLits( p, kThis, pCube, 0, 1 );
-        RetValue = sat_solver_solve( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits), 0, 0, 0, 0 );
-        if RetValue != l_False {
-            Abc_Print( 1, "Verification of clause %d failed.\n", i );
-            Counter++;
-        }
-    }
-    if Counter != 0 {
-        Abc_Print( 1, "Verification of %d clauses has failed.\n", Counter );
-    } else {
-        Abc_Print( 1, "Verification of invariant with %d clauses was successful.  ", Vec_PtrSize(vCubes) );
-        Abc_PrintTime( 1, "Time", Abc_Clock() - clk );
-    }
-//    sat_solver_delete( pSat );
-    Vec_PtrFree( vCubes );
+	started := time.Now()
+	cubes := Pdr_ManCollectCubes(p, Pdr_ManFindInvariantStart(p))
+	frame := int32(len(p.vSolvers))
+	solver := Pdr_ManCreateSolver(p, frame)
+	if solver == nil {
+		fmt.Println("Could not create invariant verification solver.")
+		return
+	}
+	for _, item := range vec.Vec_PtrArray(cubes) {
+		cube := item.(*Pdr_Set_t)
+		if !solver.AddClause(pdrLiterals(Pdr_ManCubeToLits(p, frame, cube, 1, 0))...) || !solver.Compress() {
+			panic("pdr: inconsistent invariant clauses")
+		}
+	}
+	failures := 0
+	for i, item := range vec.Vec_PtrArray(cubes) {
+		cube := item.(*Pdr_Set_t)
+		if solver.Solve(pdrLiterals(Pdr_ManCubeToLits(p, frame, cube, 0, 1))...) != bsat.Unsatisfiable {
+			fmt.Printf("Verification of clause %d failed.\n", i)
+			failures++
+		}
+	}
+	if failures != 0 {
+		fmt.Printf("Verification of %d clauses has failed.\n", failures)
+	} else {
+		fmt.Printf("Verification of invariant with %d clauses was successful. Time = %.2f sec\n", vec.Vec_PtrSize(cubes), time.Since(started).Seconds())
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Pdr_ManDeriveMarkNonInductive(p *Pdr_Man_t, vCubes *Vec_Ptr_t) int32 {
-    var pSat *sat_solver;
-    var vLits *Vec_Int_t;
-    var pCube *Pdr_Set_t;
-    var i, kThis, RetValue, fChanges, Counter int32;
-    // create solver with the cubes
-    kThis = Vec_PtrSize(p.vSolvers);
-    pSat  = Pdr_ManCreateSolver( p, kThis );
-    // add the clauses
-    Vec_PtrForEachEntry( Pdr_Set_t *, vCubes, pCube, i )
-    {
-        if pCube.nRefs == -1 { // skip non-inductive
-            continue; }
-        vLits = Pdr_ManCubeToLits( p, kThis, pCube, 1, 0 );
-        RetValue = sat_solver_addclause( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits) );
-        assert((RetValue != 0), "RetValue");
-        sat_solver_compress( pSat );
-    }
-    // check each clause
-    Vec_PtrForEachEntry( Pdr_Set_t *, vCubes, pCube, i )
-    {
-        if pCube.nRefs == -1 { // skip non-inductive
-            continue; }
-        vLits = Pdr_ManCubeToLits( p, kThis, pCube, 0, 1 );
-        RetValue = sat_solver_solve( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits), 0, 0, 0, 0 );
-        if RetValue != l_False { // mark as non-inductive
-        
-            pCube.nRefs = -1;
-            fChanges = 1;
-        
-        } else {
-            Counter++; }
-    }
-    //Abc_Print(1, "Clauses = %d.\n", Counter );
-    //sat_solver_delete( pSat );
-    return fChanges;
+// Pdr_ManDeriveMarkNonInductive marks clauses not preserved by one transition.
+func Pdr_ManDeriveMarkNonInductive(p *Pdr_Man_t, cubes *Vec_Ptr_t) int32 {
+	frame := int32(len(p.vSolvers))
+	solver := Pdr_ManCreateSolver(p, frame)
+	if solver == nil {
+		panic("pdr: could not create invariant verification solver")
+	}
+	for _, item := range vec.Vec_PtrArray(cubes) {
+		cube := item.(*Pdr_Set_t)
+		if cube.nRefs == -1 {
+			continue
+		}
+		if !solver.AddClause(pdrLiterals(Pdr_ManCubeToLits(p, frame, cube, 1, 0))...) || !solver.Compress() {
+			panic("pdr: inconsistent invariant clauses")
+		}
+	}
+	var changed int32
+	for _, item := range vec.Vec_PtrArray(cubes) {
+		cube := item.(*Pdr_Set_t)
+		if cube.nRefs == -1 {
+			continue
+		}
+		if solver.Solve(pdrLiterals(Pdr_ManCubeToLits(p, frame, cube, 0, 1))...) != bsat.Unsatisfiable {
+			cube.nRefs = -1
+			changed = 1
+		}
+	}
+	return changed
 }
-func Pdr_ManDeriveInfinityClauses(p *Pdr_Man_t, fReduce int32) *Vec_Int_t {
-    var vResult *Vec_Int_t;
-    var vCubes *Vec_Ptr_t;
-    var pCube *Pdr_Set_t;
-    var i, v, kStart int32;
-    // collect cubes used in the inductive invariant
-    kStart = Pdr_ManFindInvariantStart( p );
-    vCubes = Pdr_ManCollectCubes( p, kStart );
-    // refine as long as there are changes
-    if fReduce != 0 {
-        for  Pdr_ManDeriveMarkNonInductive(p, vCubes) != 0  {; } }
-    // collect remaining clauses
-    vResult = Vec_IntAlloc( 1000 );
-    Vec_IntPush( vResult, 0 );
-    Vec_PtrForEachEntry( Pdr_Set_t *, vCubes, pCube, i )
-    {
-        if pCube.nRefs == -1 { // skip non-inductive
-            continue; }
-        Vec_IntAddToEntry( vResult, 0, 1 );
-        Vec_IntPush( vResult, pCube.nLits );
-        for  v = 0; v < pCube.nLits; v++  {
-            Vec_IntPush( vResult, pCube.Lits[v] );
-        }
-    }
-    //Vec_PtrFree( vCubes );
-    Vec_PtrFreeP( &p.vInfCubes );
-    p.vInfCubes = vCubes;
-    Vec_IntPush( vResult, Aig_ManRegNum(p.pAig) );
-    return vResult;
+func Pdr_ManDeriveInfinityClauses(p *Pdr_Man_t, reduce int32) *Vec_Int_t {
+	cubes := Pdr_ManCollectCubes(p, Pdr_ManFindInvariantStart(p))
+	if reduce != 0 {
+		for Pdr_ManDeriveMarkNonInductive(p, cubes) != 0 {
+		}
+	}
+	result := vec.Vec_IntAlloc(1000)
+	vec.Vec_IntPush(result, 0)
+	for i := 0; i < vec.Vec_PtrSize(cubes); i++ {
+		cube := vec.Vec_PtrEntry(cubes, i).(*Pdr_Set_t)
+		if cube.nRefs == -1 {
+			continue
+		}
+		vec.Vec_IntAddToEntry(result, 0, 1)
+		vec.Vec_IntPush(result, cube.nLits)
+		for _, lit := range cube.Lits[:cube.nLits] {
+			vec.Vec_IntPush(result, lit)
+		}
+	}
+	p.vInfCubes = cubes
+	vec.Vec_IntPush(result, aig.Aig_ManRegNum(p.pAig))
+	return result
 }
-
-
 
 /**Function*************************************************************
 
   Synopsis    [Remove clauses while maintaining the invariant.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
@@ -636,361 +503,349 @@ func Pdr_ManDeriveInfinityClauses(p *Pdr_Man_t, fReduce int32) *Vec_Int_t {
 // Original macro:
 // #define Pdr_ForEachCube( pList, pCut, i ) for ( i = 0, pCut = pList + 1; i < pList[0]; i++, pCut += pCut[0] + 1 )
 
+// pdrInvCubes decodes ABC's packed invariant vector: a cube count, each
+// cube's literal count and literals, followed by the original flop count.
+func pdrInvCubes(vInv *Vec_Int_t) ([][]int32, int) { return pdrInvDecode(vInv, false) }
+
+func pdrInvDecode(vInv *Vec_Int_t, allowRemoved bool) ([][]int32, int) {
+	data := vec.Vec_IntArray(vInv)
+	if len(data) < 2 || data[0] < 0 || data[len(data)-1] < 0 {
+		panic("pdr: invalid invariant header")
+	}
+	nRegs := int(data[len(data)-1])
+	cubes := make([][]int32, 0, data[0])
+	pos := 1
+	for i := int32(0); i < data[0]; i++ {
+		if pos >= len(data)-1 || data[pos] < 0 {
+			panic("pdr: invalid invariant cube")
+		}
+		n := int(data[pos])
+		pos++
+		if n > len(data)-1-pos {
+			panic("pdr: truncated invariant cube")
+		}
+		cube := data[pos : pos+n]
+		for _, lit := range cube {
+			if lit == -1 && allowRemoved {
+				continue
+			}
+			if lit < 0 || int(lit>>1) >= nRegs {
+				panic("pdr: invariant literal out of range")
+			}
+		}
+		cubes = append(cubes, cube)
+		pos += n
+	}
+	if pos != len(data)-1 {
+		panic("pdr: unexpected invariant data")
+	}
+	return cubes, nRegs
+}
 
 func Pdr_InvMap(vCounts *Vec_Int_t) *Vec_Int_t {
-    var i, k, Count int32;
-    var vMap *Vec_Int_t  = Vec_IntStart( Vec_IntSize(vCounts) );
-    Vec_IntForEachEntry( vCounts, Count, i )
-        if ( Count )
-            Vec_IntWriteEntry( vMap, i, k++ );
-    return vMap;
+	counts := vec.Vec_IntArray(vCounts)
+	result := vec.Vec_IntStart(len(counts))
+	var next int32
+	for i, count := range counts {
+		if count != 0 {
+			vec.Vec_IntWriteEntry(result, i, next)
+			next++
+		}
+	}
+	return result
 }
 func Pdr_InvCounts(vInv *Vec_Int_t) *Vec_Int_t {
-    var i int32;
-    var k int32;
-    var pCube *int32;
-    var pList *int32 = Vec_IntArray(vInv);
-    var vCounts *Vec_Int_t  = Vec_IntStart( Vec_IntEntryLast(vInv) );
-    // inlining of macro Pdr_ForEachCube
-    for  i, pCube = 0, pList + 1; i < pList[0]; i++, pCube += pCube[0] + 1  {
-        for  k = 0; k < pCube[0]; k++  {
-            Vec_IntAddToEntry( vCounts, Abc_Lit2Var(pCube[k+1]), 1 );
-        }
-    }
-    return vCounts;
+	cubes, nRegs := pdrInvCubes(vInv)
+	counts := vec.Vec_IntStart(nRegs)
+	for _, cube := range cubes {
+		for _, lit := range cube {
+			vec.Vec_IntAddToEntry(counts, int(lit>>1), 1)
+		}
+	}
+	return counts
 }
 func Pdr_InvUsedFlopNum(vInv *Vec_Int_t) int32 {
-    var vCounts *Vec_Int_t  = Pdr_InvCounts( vInv );
-    var nZeros int32  = Vec_IntCountZero( vCounts );
-    Vec_IntFree( vCounts );
-    return Vec_IntEntryLast(vInv) - nZeros;
+	counts := Pdr_InvCounts(vInv)
+	return int32(vec.Vec_IntSize(counts) - vec.Vec_IntCountZero(counts))
 }
-
 func Pdr_InvPrintStr(vInv *Vec_Int_t, vCounts *Vec_Int_t) *Vec_Str_t {
-    var vStr *Vec_Str_t  = Vec_StrAlloc( 1000 );
-    var vMap *Vec_Int_t  = Pdr_InvMap( vCounts );
-    var nVars int32  = Vec_IntSize(vCounts) - Vec_IntCountZero(vCounts);
-    var i int32;
-    var k int32;
-    var pCube *int32;
-    var pList *int32 = Vec_IntArray(vInv);
-    var pBuffer string  = ABC_ALLOC( char, (size_t)uint32(nVars) );
-    for  i = 0; i < nVars; i++  {
-        pBuffer[i] = '-';
-    }
-    // inlining of macro Pdr_ForEachCube
-    for  i, pCube = 0, pList + 1; i < pList[0]; i++, pCube += pCube[0] + 1  {
-        for  k = 0; k < pCube[0]; k++  {
-            pBuffer[Vec_IntEntry(vMap, Abc_Lit2Var(pCube[k+1]))] = '0' + !Abc_LitIsCompl(pCube[k+1]);
-        }
-        for  k = 0; k < nVars; k++  {
-            Vec_StrPush( vStr, pBuffer[k] );
-        }
-        Vec_StrPush( vStr, ' ' );
-        Vec_StrPush( vStr, '1' );
-        Vec_StrPush( vStr, '\n' );
-        for  k = 0; k < pCube[0]; k++  {
-            pBuffer[Vec_IntEntry(vMap, Abc_Lit2Var(pCube[k+1]))] = '-';
-        }
-    }
-    Vec_StrPush( vStr, '\0' );
-    ABC_FREE( pBuffer );
-    Vec_IntFree( vMap );
-    return vStr;
+	cubes, nRegs := pdrInvCubes(vInv)
+	if vec.Vec_IntSize(vCounts) != nRegs {
+		panic("pdr: invariant count size mismatch")
+	}
+	mapping := Pdr_InvMap(vCounts)
+	nVars := nRegs - vec.Vec_IntCountZero(vCounts)
+	result := vec.Vec_StrAlloc(1000)
+	for _, cube := range cubes {
+		pattern := make([]byte, nVars)
+		for i := range pattern {
+			pattern[i] = '-'
+		}
+		for _, lit := range cube {
+			v := int(lit >> 1)
+			if vec.Vec_IntEntry(vCounts, v) == 0 {
+				panic("pdr: invariant literal absent from count map")
+			}
+			pattern[vec.Vec_IntEntry(mapping, v)] = '1' - byte(lit&1)
+		}
+		vec.Vec_StrPushBuffer(result, pattern, len(pattern))
+		vec.Vec_StrPushBuffer(result, []byte(" 1\n"), 3)
+	}
+	vec.Vec_StrPush(result, 0)
+	return result
 }
 func Pdr_InvPrint(vInv *Vec_Int_t, fVerbose int32) {
-    Abc_Print(1, "Invariant contains %d clauses with %d literals and %d flops (out of %d).\n", Vec_IntEntry(vInv, 0), Vec_IntSize(vInv)-Vec_IntEntry(vInv, 0)-2, Pdr_InvUsedFlopNum(vInv), Vec_IntEntryLast(vInv) );
-    if fVerbose != 0 {
-        var vCounts *Vec_Int_t  = Pdr_InvCounts( vInv );
-        var vStr *Vec_Str_t  = Pdr_InvPrintStr( vInv, vCounts );
-        Abc_Print(1, "%s", Vec_StrArray( vStr ) );
-        Vec_IntFree( vCounts );
-        Vec_StrFree( vStr );
-    }
+	cubes, nRegs := pdrInvCubes(vInv)
+	literalCount := 0
+	for _, cube := range cubes {
+		literalCount += len(cube)
+	}
+	fmt.Printf("Invariant contains %d clauses with %d literals and %d flops (out of %d).\n", len(cubes), literalCount, Pdr_InvUsedFlopNum(vInv), nRegs)
+	if fVerbose != 0 {
+		text := vec.Vec_StrArray(Pdr_InvPrintStr(vInv, Pdr_InvCounts(vInv)))
+		if len(text) > 0 && text[len(text)-1] == 0 {
+			text = text[:len(text)-1]
+		}
+		fmt.Print(string(text))
+	}
 }
 
-func Pdr_InvCheck_int(p *Gia_Man_t, vInv *Vec_Int_t, fVerbose int32, pSat *sat_solver, fSkip int32) int32 {
-    var nBTLimit int32;
-    var fCheckProperty int32  = 1;
-    var i, k, status, nFailed, nFailedOuts int32; 
-    // collect cubes
-    var pCube *int32;
-    var pList *int32 = Vec_IntArray(vInv);
-    // create variables
-    var vLits *Vec_Int_t  = Vec_IntAlloc(100);
-    var iFoVarBeg int32  = sat_solver_nvars(pSat) - Gia_ManRegNum(p);
-    var iFiVarBeg int32  = 1 + Gia_ManPoNum(p);
-    // add cubes
-    // inlining of macro Pdr_ForEachCube
-    for  i, pCube = 0, pList + 1; i < pList[0]; i++, pCube += pCube[0] + 1  {
-        // collect literals
-        Vec_IntClear( vLits );
-        for  k = 0; k < pCube[0]; k++  {
-            if pCube[k+1] != -1 {
-                Vec_IntPush( vLits, Abc_Var2Lit(iFoVarBeg + Abc_Lit2Var(pCube[k+1]), !Abc_LitIsCompl(pCube[k+1])) ); }
-        }
-        if Vec_IntSize(vLits) == 0 {
-            Vec_IntFree( vLits );
-            return 1;
-        }
-        // add it to the solver
-        status = sat_solver_addclause( pSat, Vec_IntArray(vLits), Vec_IntLimit(vLits) );
-        assert(status == 1, "status == 1");
-    }
-    // verify property output
-    if fCheckProperty != 0 {
-        for  i = 0; i < Gia_ManPoNum(p); i++  {
-            Vec_IntFill( vLits, 1, Abc_Var2Lit(1+i, 0) );
-            status = sat_solver_solve( pSat, Vec_IntArray(vLits), Vec_IntLimit(vLits), nBTLimit, 0, 0, 0 );
-            if status == l_Undef { // timeout
-                break; }
-            if status == l_True { // sat - property fails
-            
-                if fVerbose != 0 {
-                    Abc_Print(1, "Coverage check failed for output %d.\n", i ); }
-                nFailedOuts++;
-                if fSkip != 0 {
-                    Vec_IntFree( vLits );
-                    return 1;
-                }
-                continue;
-            }
-            assert(status == l_False, "status == l_False"); // unsat - property holds
-        }
-    }
-    // iterate through cubes in the direct order
-    // inlining of macro Pdr_ForEachCube
-    for  i, pCube = 0, pList + 1; i < pList[0]; i++, pCube += pCube[0] + 1  {
-        // collect cube
-        Vec_IntClear( vLits );
-        for  k = 0; k < pCube[0]; k++  {
-            if pCube[k+1] != -1 {
-                Vec_IntPush( vLits, Abc_Var2Lit(iFiVarBeg + Abc_Lit2Var(pCube[k+1]), Abc_LitIsCompl(pCube[k+1])) ); }
-        }
-        // check if this cube intersects with the complement of other cubes in the solver
-        // if it does not intersect, then it is redundant and can be skipped
-        status = sat_solver_solve( pSat, Vec_IntArray(vLits), Vec_IntLimit(vLits), nBTLimit, 0, 0, 0 );
-        if status != l_True && (fVerbose != 0) {
-            Abc_Print(1, "Finished checking clause %d (out of %d)...\r", i, pList[0] ); }
-        if status == l_Undef { // timeout
-            break; }
-        if status == l_False { // unsat -- correct
-            continue; }
-        assert(status == l_True, "status == l_True");
-        if fVerbose != 0 {
-            Abc_Print(1, "Inductiveness check failed for clause %d.\n", i ); }
-        nFailed++;
-        if fSkip != 0 {
-            Vec_IntFree( vLits );
-            return 1;
-        }
-    }
-    Vec_IntFree( vLits );
-    return nFailed + nFailedOuts;
+func Pdr_InvCheck_int(p *gia.Gia_Man_t, inv *Vec_Int_t, verbose int32, solver *bsat.Solver, skip int32) int32 {
+	cubes, nRegs := pdrInvDecode(inv, true)
+	if nRegs != int(gia.Gia_ManRegNum(p)) {
+		panic("pdr: invariant register count mismatch")
+	}
+	inputBase := int32(1) + gia.Gia_ManPoNum(p)
+	outputBase := solver.NumVars() - gia.Gia_ManRegNum(p)
+	for _, cube := range cubes {
+		clause := make([]bsat.Literal, 0, len(cube))
+		for _, lit := range cube {
+			if lit != -1 {
+				clause = append(clause, (outputBase+(lit>>1))<<1|((lit&1)^1))
+			}
+		}
+		if len(clause) == 0 {
+			return 1
+		}
+		if !solver.AddClause(clause...) {
+			panic("pdr: invariant contradicts transition CNF")
+		}
+	}
+	var failed int32
+	for i := int32(0); i < gia.Gia_ManPoNum(p); i++ {
+		status := solver.Solve(bsat.Positive(1 + i))
+		if status == bsat.Unknown {
+			// Inconclusive SAT results must never certify an invariant.
+			return failed + 1
+		}
+		if status == bsat.Satisfiable {
+			if verbose != 0 {
+				fmt.Printf("Coverage check failed for output %d.\n", i)
+			}
+			failed++
+			if skip != 0 {
+				return 1
+			}
+		}
+	}
+	for i, cube := range cubes {
+		assumptions := make([]bsat.Literal, 0, len(cube))
+		for _, lit := range cube {
+			if lit != -1 {
+				assumptions = append(assumptions, (inputBase+(lit>>1))<<1|(lit&1))
+			}
+		}
+		status := solver.Solve(assumptions...)
+		if status == bsat.Unknown {
+			// Inconclusive SAT results must never certify an invariant.
+			return failed + 1
+		}
+		if status == bsat.Satisfiable {
+			if verbose != 0 {
+				fmt.Printf("Inductiveness check failed for clause %d.\n", i)
+			}
+			failed++
+			if skip != 0 {
+				return 1
+			}
+		}
+	}
+	return failed
 }
 
-func Pdr_InvCheck(p *Gia_Man_t, vInv *Vec_Int_t, fVerbose int32) int32 {
-    var RetValue int32;
-    var pCnf *Cnf_Dat_t  = (Cnf_Dat_t *)Mf_ManGenerateCnf( p, 8, 0, 0, 0, 0 );
-    var pSat *sat_solver  = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );
-    assert(sat_solver_nvars(pSat) == pCnf.nVars, "sat_solver_nvars(pSat) == pCnf.nVars");
-    Cnf_DataFree( pCnf );
-    RetValue = Pdr_InvCheck_int( p, vInv, fVerbose, pSat, 0 );
-    sat_solver_delete( pSat );
-    return RetValue;
+func pdrInvGiaSolver(p *gia.Gia_Man_t) *bsat.Solver {
+	cnf := gia.Mf_ManGenerateCnf(p, 8, 0, 0, 0, 0)
+	return pdrInvSolverFromCNF(cnf)
 }
 
-func Pdr_InvMinimize(p *Gia_Man_t, vInv *Vec_Int_t, fVerbose int32) *Vec_Int_t {
-    var nBTLimit int32;
-    var fCheckProperty int32  = 1;
-    var clk abctime  = Abc_Clock();
-    var n, i, k, status, nLits, fFailed, fCannot, nRemoved int32; 
-    var vRes *Vec_Int_t  = nil;
-    // create SAT solver
-    var pCnf *Cnf_Dat_t  = (Cnf_Dat_t *)Mf_ManGenerateCnf( p, 8, 0, 0, 0, 0 );
-    var pSat *sat_solver  = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );
-    var pCube *int32;
-    var pList *int32 = Vec_IntArray(vInv);
-    var nCubes int32 = pList[0];
-    // create variables
-    var vLits *Vec_Int_t  = Vec_IntAlloc(100);
-    var vRemoved *Vec_Bit_t  = Vec_BitStart( nCubes );
-    var iFoVarBeg int32  = pCnf.nVars - Gia_ManRegNum(p);
-    var iFiVarBeg int32  = 1 + Gia_ManPoNum(p);
-    var iAuxVarBeg int32  = sat_solver_nvars(pSat);
-    // allocate auxiliary variables
-    assert(sat_solver_nvars(pSat) == pCnf.nVars, "sat_solver_nvars(pSat) == pCnf.nVars");
-    sat_solver_setnvars( pSat, sat_solver_nvars(pSat) + nCubes );
-    // add clauses
-    // inlining of macro Pdr_ForEachCube
-    for  i, pCube = 0, pList + 1; i < pList[0]; i++, pCube += pCube[0] + 1  {
-        // collect literals
-        Vec_IntFill( vLits, 1, Abc_Var2Lit(iAuxVarBeg + i, 1) ); // neg aux literal
-        for  k = 0; k < pCube[0]; k++  {
-            Vec_IntPush( vLits, Abc_Var2Lit(iFoVarBeg + Abc_Lit2Var(pCube[k+1]), !Abc_LitIsCompl(pCube[k+1])) );
-        }
-        // add it to the solver
-        status = sat_solver_addclause( pSat, Vec_IntArray(vLits), Vec_IntLimit(vLits) );
-        assert(status == 1, "status == 1");
-    }
-    // iterate through clauses 
-    // inlining of macro Pdr_ForEachCube
-    for  i, pCube = 0, pList + 1; i < pList[0]; i++, pCube += pCube[0] + 1  {
-        if Vec_BitEntry(vRemoved, i) {
-            continue; }
-        // collect aux literals for remaining clauses
-        Vec_IntClear( vLits );
-        for  k = 0; k < nCubes; k++  {
-            if k != i && !Vec_BitEntry(vRemoved, k) { // skip this cube and already removed cubes
-                Vec_IntPush( vLits, Abc_Var2Lit(iAuxVarBeg + k, 0) ); }
-        } // pos aux literal
-        nLits = Vec_IntSize( vLits );
-        // check if the property still holds
-        if fCheckProperty != 0 {
-            for  k = 0; k < Gia_ManPoNum(p); k++  {
-                Vec_IntShrink( vLits, nLits );
-                Vec_IntPush( vLits, Abc_Var2Lit(1+k, 0) );
-                status = sat_solver_solve( pSat, Vec_IntArray(vLits), Vec_IntLimit(vLits), nBTLimit, 0, 0, 0 );
-                if status == l_Undef { // timeout
-                
-                    fFailed = 1;
-                    break;
-                }
-                if status == l_True { // sat - property fails
-                    break; }
-                assert(status == l_False, "status == l_False"); // unsat - property holds
-            }
-            if fFailed {
-                break; }
-            if k < Gia_ManPoNum(p) {
-                continue; }
-        }
-        // check other clauses
-        fCannot = 0;
-        // inlining of macro Pdr_ForEachCube
-        for  n, pCube = 0, pList + 1; n < pList[0]; n++, pCube += pCube[0] + 1  {
-            if Vec_BitEntry(vRemoved, n) || n == i {
-                continue; }
-            // collect cube
-            Vec_IntShrink( vLits, nLits );
-            for  k = 0; k < pCube[0]; k++  {
-               Vec_IntPush( vLits, Abc_Var2Lit(iFiVarBeg + Abc_Lit2Var(pCube[k+1]), Abc_LitIsCompl(pCube[k+1])) );
-            }
-            // check if this cube intersects with the complement of other cubes in the solver
-            // if it does not intersect, then it is redundant and can be skipped
-            status = sat_solver_solve( pSat, Vec_IntArray(vLits), Vec_IntLimit(vLits), nBTLimit, 0, 0, 0 );
-            if status == l_Undef { // timeout
-            
-                fFailed = 1;
-                break;
-            }
-            if status == l_False { // unsat -- correct
-                continue; }
-            assert(status == l_True, "status == l_True");
-            // cannot remove
-            fCannot = 1;
-            break;
-        }
-        if fFailed {
-            break; }
-        if fCannot {
-            continue; }
-        if fVerbose != 0 {
-        Abc_Print(1, "Removing clause %d.\n", i ); }
-        Vec_BitWriteEntry( vRemoved, i, 1 );
-        nRemoved++;
-    }
-    if nRemoved != 0 {
-        Abc_Print(1, "Invariant minimization reduced %d clauses (out of %d).  ", nRemoved, nCubes );
-    } else {
-        Abc_Print(1, "Invariant minimization did not change the invariant.  " ); } 
-    Abc_PrintTime( 1, "Time", Abc_Clock() - clk );
-    // cleanup cover
-    if !fFailed && nRemoved > 0 { // finished without timeout and removed some cubes
-    
-        vRes = Vec_IntAlloc( 1000 );
-        Vec_IntPush( vRes, nCubes-nRemoved );
-        // inlining of macro Pdr_ForEachCube
-        for  i, pCube = 0, pList + 1; i < pList[0]; i++, pCube += pCube[0] + 1  {
-            if !Vec_BitEntry(vRemoved, i) {
-                for  k = 0; k <= pCube[0]; k++  {
-                    Vec_IntPush( vRes, pCube[k] );
-                } }
-        }
-        Vec_IntPush( vRes, Vec_IntEntryLast(vInv) );
-    }
-    Cnf_DataFree( pCnf );
-    sat_solver_delete( pSat );
-    Vec_BitFree( vRemoved );
-    Vec_IntFree( vLits );
-    return vRes;
+func pdrInvSolverFromCNF(cnf *mf.CNF) *bsat.Solver {
+	if cnf == nil {
+		return nil
+	}
+	solver := bsat.NewSolver()
+	for solver.NumVars() < int32(cnf.Variables) {
+		solver.NewVariable()
+	}
+	for _, clause := range cnf.Clauses {
+		if !solver.AddClause(clause...) {
+			return nil
+		}
+	}
+	return solver
 }
 
-func Pdr_InvMinimizeLits(p *Gia_Man_t, vInv *Vec_Int_t, fVerbose int32) *Vec_Int_t {
-    var vRes *Vec_Int_t  = nil;
-    var clk abctime  = Abc_Clock();
-    var i int32;
-    var k int32;
-    var nLits int32;
-    var pCube *int32;
-    var pList *int32 = Vec_IntArray(vInv);
-    var nRemoved int32;
-    var pCnf *Cnf_Dat_t  = (Cnf_Dat_t *)Mf_ManGenerateCnf( p, 8, 0, 0, 0, 0 );
-    var pSat *sat_solver;
-//    sat_solver * pSat = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );
-    // inlining of macro Pdr_ForEachCube
-    for  i, pCube = 0, pList + 1; i < pList[0]; i++, pCube += pCube[0] + 1  {
-        nLits += pCube[0];
-        for  k = 0; k < pCube[0]; k++  {
-            var Save int32  = pCube[k+1];
-            pCube[k+1] = -1;
-            //sat_solver_bookmark( pSat );
-            pSat = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );
-            if Pdr_InvCheck_int(p, vInv, 0, pSat, 1) != 0 {
-                pCube[k+1] = Save;
-            } else {
-                if fVerbose != 0 {
-                Abc_Print(1, "Removing lit %d from clause %d.\n", k, i ); }
-                nRemoved++;
-            }
-            sat_solver_delete( pSat );
-            //sat_solver_rollback( pSat );
-            //sat_solver_bookmark( pSat );
-        }
-    }
-    Cnf_DataFree( pCnf );
-    //sat_solver_delete( pSat );
-    if nRemoved != 0 {
-        Abc_Print(1, "Invariant minimization reduced %d literals (out of %d).  ", nRemoved, nLits );
-    } else {
-        Abc_Print(1, "Invariant minimization did not change the invariant.  " ); } 
-    Abc_PrintTime( 1, "Time", Abc_Clock() - clk );
-    if nRemoved > 0 { // finished without timeout and removed some lits
-    
-        vRes = Vec_IntAlloc( 1000 );
-        Vec_IntPush( vRes, pList[0] );
-        // inlining of macro Pdr_ForEachCube
-        for  i, pCube = 0, pList + 1; i < pList[0]; i++, pCube += pCube[0] + 1  {
-            var nLits int32;
-            for  k = 0; k < pCube[0]; k++  {
-                if pCube[k+1] != -1 {
-                    nLits++; }
-            }
-            Vec_IntPush( vRes, nLits );
-            for  k = 0; k < pCube[0]; k++  {
-                if pCube[k+1] != -1 {
-                    Vec_IntPush( vRes, pCube[k+1] ); }
-            }
-        }
-        Vec_IntPush( vRes, Vec_IntEntryLast(vInv) );
-    }
-    return vRes;
+func Pdr_InvCheck(p *gia.Gia_Man_t, inv *Vec_Int_t, verbose int32) int32 {
+	solver := pdrInvGiaSolver(p)
+	if solver == nil {
+		panic("pdr: could not generate invariant verification CNF")
+	}
+	return Pdr_InvCheck_int(p, inv, verbose, solver, 0)
 }
 
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
+// Pdr_InvMinimize removes whole clauses while preserving coverage and induction.
+// A nil return means no clause was removed or a SAT call was inconclusive.
+func Pdr_InvMinimize(p *gia.Gia_Man_t, inv *Vec_Int_t, verbose int32) *Vec_Int_t {
+	cubes, nRegs := pdrInvCubes(inv)
+	if nRegs != int(gia.Gia_ManRegNum(p)) {
+		panic("pdr: invariant register count mismatch")
+	}
+	solver := pdrInvGiaSolver(p)
+	if solver == nil {
+		panic("pdr: could not generate invariant verification CNF")
+	}
+	outputBase := solver.NumVars() - int32(nRegs)
+	inputBase := int32(1) + gia.Gia_ManPoNum(p)
+	auxBase := solver.NumVars()
+	for range cubes {
+		solver.NewVariable()
+	}
+	for i, cube := range cubes {
+		clause := []bsat.Literal{bsat.Negative(auxBase + int32(i))}
+		for _, lit := range cube {
+			clause = append(clause, (outputBase+(lit>>1))<<1|((lit&1)^1))
+		}
+		if !solver.AddClause(clause...) {
+			panic("pdr: inconsistent invariant clause")
+		}
+	}
+	removed := make([]bool, len(cubes))
+	count := 0
+	for i := range cubes {
+		assumptions := make([]bsat.Literal, 0, len(cubes)+nRegs)
+		for k := range cubes {
+			if k != i && !removed[k] {
+				assumptions = append(assumptions, bsat.Positive(auxBase+int32(k)))
+			}
+		}
+		prefix := len(assumptions)
+		cannot := false
+		for k := int32(0); k < gia.Gia_ManPoNum(p); k++ {
+			status := solver.Solve(append(assumptions[:prefix], bsat.Positive(1+k))...)
+			if status == bsat.Unknown {
+				return nil
+			}
+			if status == bsat.Satisfiable {
+				cannot = true
+				break
+			}
+		}
+		if cannot {
+			continue
+		}
+		for k, cube := range cubes {
+			if k == i || removed[k] {
+				continue
+			}
+			assumptions = assumptions[:prefix]
+			for _, lit := range cube {
+				assumptions = append(assumptions, (inputBase+(lit>>1))<<1|(lit&1))
+			}
+			status := solver.Solve(assumptions...)
+			if status == bsat.Unknown {
+				return nil
+			}
+			if status == bsat.Satisfiable {
+				cannot = true
+				break
+			}
+		}
+		if !cannot {
+			removed[i] = true
+			count++
+			if verbose != 0 {
+				fmt.Printf("Removing clause %d.\n", i)
+			}
+		}
+	}
+	if count == 0 {
+		return nil
+	}
+	result := vec.Vec_IntAlloc(vec.Vec_IntSize(inv))
+	vec.Vec_IntPush(result, int32(len(cubes)-count))
+	for i, cube := range cubes {
+		if removed[i] {
+			continue
+		}
+		vec.Vec_IntPush(result, int32(len(cube)))
+		for _, lit := range cube {
+			vec.Vec_IntPush(result, lit)
+		}
+	}
+	vec.Vec_IntPush(result, int32(nRegs))
+	return result
+}
 
-
-//ABC_NAMESPACE_IMPL_END
-
+// Pdr_InvMinimizeLits greedily drops individual cube literals.
+func Pdr_InvMinimizeLits(p *gia.Gia_Man_t, inv *Vec_Int_t, verbose int32) *Vec_Int_t {
+	// Work on a copy: temporary -1 markers are not valid in a packed invariant.
+	data := vec.Vec_IntArray(inv)
+	working := vec.Vec_IntAllocArrayCopy(data, len(data))
+	cubes, nRegs := pdrInvCubes(working)
+	if nRegs != int(gia.Gia_ManRegNum(p)) {
+		panic("pdr: invariant register count mismatch")
+	}
+	cnf := gia.Mf_ManGenerateCnf(p, 8, 0, 0, 0, 0)
+	if cnf == nil {
+		panic("pdr: could not generate invariant verification CNF")
+	}
+	count := 0
+	for i, cube := range cubes {
+		for k, literal := range cube {
+			cube[k] = -1
+			solver := pdrInvSolverFromCNF(cnf)
+			if solver == nil {
+				cube[k] = literal
+				panic("pdr: could not generate invariant verification CNF")
+			}
+			if Pdr_InvCheck_int(p, working, 0, solver, 1) != 0 {
+				cube[k] = literal
+			} else {
+				count++
+				if verbose != 0 {
+					fmt.Printf("Removing lit %d from clause %d.\n", k, i)
+				}
+			}
+		}
+	}
+	if count == 0 {
+		return nil
+	}
+	result := vec.Vec_IntAlloc(vec.Vec_IntSize(inv))
+	vec.Vec_IntPush(result, int32(len(cubes)))
+	for _, cube := range cubes {
+		size := int32(0)
+		for _, lit := range cube {
+			if lit != -1 {
+				size++
+			}
+		}
+		vec.Vec_IntPush(result, size)
+		for _, lit := range cube {
+			if lit != -1 {
+				vec.Vec_IntPush(result, lit)
+			}
+		}
+	}
+	vec.Vec_IntPush(result, int32(nRegs))
+	return result
+}
