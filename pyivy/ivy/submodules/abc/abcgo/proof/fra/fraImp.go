@@ -96,17 +96,7 @@ func Fra_SmlCountOnes(p *Fra_Sml_t) *int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Sml_NodeCheckImp(p *Fra_Sml_t, Left int32, Right int32) int32 {
-    var pSimL, pSimR *uint32;
-    var k int32;
-    pSimL = Fra_ObjSim( p, Left );
-    pSimR = Fra_ObjSim( p, Right );
-    for  k = p.nWordsPref; k < p.nWordsTotal; k++  {
-        if pSimL[k] & ~pSimR[k] {
-            return 0; }
-    }
-    return 1;
-}
+
 
 /**Function*************************************************************
 
@@ -589,24 +579,7 @@ func Fra_ImpCheckForNode(p *Fra_Man_t, vImps *Vec_Int_t, pNode *Aig_Obj_t, Pos i
   SeeAlso     []
 
 ***********************************************************************/
-func Fra_ImpRefineUsingCex(p *Fra_Man_t, vImps *Vec_Int_t) int32 {
-    var pLeft, pRight *Aig_Obj_t;
-    var Imp, i, RetValue int32;
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vImps)) && (((Imp) = Vec_IntEntry(vImps, i)), 1); i++  {
-        if Imp == 0 {
-            continue; }
-        // get the corresponding nodes
-        pLeft = Aig_ManObj( p.pManAig, Fra_ImpLeft(Imp) );
-        pRight = Aig_ManObj( p.pManAig, Fra_ImpRight(Imp) );
-        // check if implication holds using this simulation info
-        if !(Sml_NodeCheckImp(p.pSml, pLeft.Id, pRight.Id) != 0) {
-            Vec_IntWriteEntry( vImps, i, 0 );
-            RetValue = 1;
-        }
-    }
-    return RetValue;
-}
+
 
 /**Function*************************************************************
 
@@ -619,16 +592,7 @@ func Fra_ImpRefineUsingCex(p *Fra_Man_t, vImps *Vec_Int_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Fra_ImpCompactArray(vImps *Vec_Int_t) {
-    var i, k, Imp int32;
-    k = 0;
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vImps)) && (((Imp) = Vec_IntEntry(vImps, i)), 1); i++  {
-        if Imp != 0 {
-            Vec_IntWriteEntry( vImps, k++, Imp ); }
-    }
-    Vec_IntShrink( vImps, k );
-}
+
 
 /**Function*************************************************************
 
@@ -641,30 +605,7 @@ func Fra_ImpCompactArray(vImps *Vec_Int_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Fra_ImpComputeStateSpaceRatio(p *Fra_Man_t) float64 {
-    var nSimWords int32  = 64;
-    var pComb *Fra_Sml_t;
-    var pResult *uint32;
-    var Ratio float64  = 0.0;
-    var Left, Right, Imp, i int32;
-    if p.pCla.vImps == nil || Vec_IntSize(p.pCla.vImps) == 0 {
-        return Ratio; }
-    // simulate the AIG manager with combinational patterns
-    pComb = Fra_SmlSimulateComb( p.pManAig, nSimWords, 0 );
-    // go through the implications and collect where they do not hold
-    pResult = Fra_ObjSim( pComb, 0 );
-    assert(pResult[0] == 0, "pResult[0] == 0");
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(p.pCla.vImps)) && (((Imp) = Vec_IntEntry(p.pCla.vImps, i)), 1); i++  {
-        Left = Fra_ImpLeft(Imp);
-        Right = Fra_ImpRight(Imp);
-        Sml_NodeSaveNotImpPatterns( pComb, Left, Right, pResult );
-    }
-    // count the number of ones in this area
-    Ratio = 100.0 * Fra_SmlCountOnesOne( pComb, 0 ) / (32*(pComb.nWordsTotal-pComb.nWordsPref));
-    Fra_SmlStop( pComb );
-    return Ratio;
-}
+
 
 /**Function*************************************************************
 
