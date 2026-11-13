@@ -195,10 +195,17 @@ func Fra_SmlSimulate(p *Fra_Man_t, init int32) {
 		}
 		count := len(p.PCla.Classes)
 		changes := refine()
-		if count == 0 || float64(changes)/float64(count) <= p.PPars.DSimSatur {
+		if !fraSimulationContinue(changes, count, p.PPars.DSimSatur) {
 			return
 		}
 	}
+}
+
+// The source compares the ratio directly. When no nonconstant classes remain,
+// a positive number of constant refinements makes the ratio +Inf and requests
+// another round; 0/0 produces NaN and ends the loop.
+func fraSimulationContinue(changes int32, classes int, threshold float64) bool {
+	return float64(changes)/float64(classes) > threshold
 }
 func Fra_SmlStart(g *aig.Graph, prefix, frames, words int32) *Fra_Sml_t {
 	return newFraSimulation(g, int(prefix), int(frames), int(words))
