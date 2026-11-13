@@ -7,7 +7,7 @@ import (
 )
 
 func TestStructuralCNFTruthTables(t *testing.T) {
-	for _, kind := range []string{"and", "xor", "mux"} {
+	for _, kind := range []string{"and", "xor", "native-xor", "mux"} {
 		t.Run(kind, func(t *testing.T) {
 			g := aig.NewGraph()
 			a, b, c := g.NewInput(), g.NewInput(), g.NewInput()
@@ -17,6 +17,8 @@ func TestStructuralCNFTruthTables(t *testing.T) {
 				out = g.AND(a.Not(), b)
 			case "xor":
 				out = g.XOR(a.Not(), b)
+			case "native-xor":
+				out = g.NewXor(a.Not(), b)
 			case "mux":
 				out = g.AND(g.AND(a, b).Not(), g.AND(a.Not(), c).Not())
 			}
@@ -32,7 +34,7 @@ func TestStructuralCNFTruthTables(t *testing.T) {
 				switch kind {
 				case "and":
 					expected = !av && bv
-				case "xor":
+				case "xor", "native-xor":
 					expected = !av != bv
 				case "mux":
 					expected = !((av && bv) || (!av && cv))
@@ -51,5 +53,35 @@ func TestStructuralCNFTruthTables(t *testing.T) {
 				}
 			}
 		})
+	}
+}
+
+func TestStructuralCNFSupergateAndSharedNode(t *testing.T) {
+	graph := aig.NewGraph()
+	a, b, c, d := graph.NewInput(), graph.NewInput(), graph.NewInput(), graph.NewInput()
+	shared := graph.AND(a, b)
+	root := graph.AND(graph.AND(shared, c.Not()), d)
+	graph.AddOutput(shared) // Give the shared node a second reference.
+	p := &Fra_Man_t{pManFraig: graph, pSat: bsat.NewSolver(), nSatVars: 1}
+	Fra_ManClean(p, int32(len(graph.Nodes())))
+	if !p.pSat.AddClause(bsat.Positive(0)) {
+		t.Fatal("constant setup")
+	}
+	Fra_CnfNodeAddToSolver(p, root, aig.InvalidEdge)
+	if Fra_ObjFaninVec(p, shared) == nil {
+		t.Fatal("shared node was flattened")
+	}
+	for mask := 0; mask < 16; mask++ {
+		var assumptions []bsat.Literal
+		for i, edge := range []aig.Edge{a, b, c, d} {
+			assumptions = append(assumptions, fraLit(Fra_ObjSatNum(p, edge), mask&(1<<i) == 0))
+		}
+		expected := mask&1 != 0 && mask&2 != 0 && mask&4 == 0 && mask&8 != 0
+		if p.pSat.Solve(append(assumptions, fraLit(Fra_ObjSatNum(p, root), !expected))...) != bsat.Satisfiable {
+			t.Fatalf("correct result rejected for %04b", mask)
+		}
+		if p.pSat.Solve(append(assumptions, fraLit(Fra_ObjSatNum(p, root), expected))...) != bsat.Unsatisfiable {
+			t.Fatalf("wrong result accepted for %04b", mask)
+		}
 	}
 }
