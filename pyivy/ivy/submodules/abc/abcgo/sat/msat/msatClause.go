@@ -169,7 +169,7 @@ func Msat_ClauseCalcReason(p *Msat_Solver_t, c *Msat_Clause_t, implied int, out 
 func Msat_ClauseWriteDimacs(w io.Writer, c *Msat_Clause_t, increment int) {
 	for _, lit := range c.lits {
 		v := lit >> 1
-		if increment != 0 {
+		if increment > 0 {
 			v++
 		}
 		if lit&1 != 0 {

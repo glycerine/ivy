@@ -1,6 +1,7 @@
 package msat
 
 import (
+	"bytes"
 	"io"
 	"os"
 	"path/filepath"
@@ -57,5 +58,13 @@ func TestSourceAssignmentAndClauseReports(t *testing.T) {
 	c := &Msat_Clause_t{learned: true, activity: 1.5, lits: []int{0, 3}}
 	if got = captureMSATOutput(t, func() { Msat_ClausePrint(c) }); got != "Act = 1.5000   1 -2\n" {
 		t.Fatalf("learned clause report %q", got)
+	}
+}
+
+func TestClauseDIMACSNegativeIncrementUsesZeroBasedVariables(t *testing.T) {
+	var out bytes.Buffer
+	Msat_ClauseWriteDimacs(&out, &Msat_Clause_t{lits: []int{2, 5}}, -1)
+	if got := out.String(); got != "1 -2 0\n" {
+		t.Fatalf("C negative increment output %q", got)
 	}
 }
