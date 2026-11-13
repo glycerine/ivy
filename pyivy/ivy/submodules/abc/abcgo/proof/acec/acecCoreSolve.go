@@ -9,19 +9,30 @@ import (
 )
 
 func Acec_ComputeEquivClasses(a, b *Gia_Man_t, mapA, mapB **Vec_Int_t) {
+	acecComputeEquivClasses(a, b, mapA, mapB, cec.Gia_ManComputeGiaEquivs)
+}
+
+// acecComputeEquivClasses returns false if the SAT sweep cannot provide
+// equivalence classes. The caller can then use ordinary CEC.
+func acecComputeEquivClasses(a, b *Gia_Man_t, mapA, mapB **Vec_Int_t, compute func(*gia.Gia_Man_t, int32, int32) *gia.Gia_Man_t) bool {
+	*mapA, *mapB = nil, nil
+	if gia.Gia_ManCiNum(a) != gia.Gia_ManCiNum(b) {
+		return false
+	}
 	start := time.Now()
 	base := Acec_CommonStart(nil, a)
+	defer gia.Gia_ManStop(base)
 	Acec_CommonStart(base, b)
 	Acec_CommonFinish(base)
-	repr := cec.Gia_ManComputeGiaEquivs(base, 100, 0)
+	repr := compute(base, 100, 0)
 	if repr == nil {
-		panic("acec: equivalence computation failed")
+		return false
 	}
+	defer gia.Gia_ManStop(repr)
 	*mapA = Acec_CountRemap(a, base)
 	*mapB = Acec_CountRemap(b, base)
-	gia.Gia_ManStop(base)
-	gia.Gia_ManStop(repr)
 	fmt.Printf("Finished computing equivalent nodes. Time = %v\n", time.Since(start))
+	return true
 }
 func Acec_Solve(a, b *Gia_Man_t, pars *Acec_ParCec_t) int32 {
 	start := time.Now()
