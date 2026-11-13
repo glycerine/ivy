@@ -8,12 +8,35 @@ rather than silently substituting another algorithm.
 
 ## Current checkpoint (2026-11-13)
 
-Proof-package work remains under source-by-source audit. The current
-uncached race gate passes for all packages in `./proof/...`; vet also passes.
+Proof-package work remains under source-by-source audit. The most recent
+uncached `GOCACHE=/tmp/abcgo-cache go test -race -count=1 -p 8 ./proof/...`
+gate passes for all proof packages; `go vet ./proof/...` also passes.
 The shared dependency gate passes for `./aig/...`, `./opt/dar/...`, and
 `./sat/cnf`. These gates do not establish complete source parity: INT2 has
 incomplete C routines, CEC's broader sweep/partition review is unfinished, and
 SAIG retains the documented backward-driver caveat below. Continue the audit.
+
+The uncached `go test -cover -count=1 -p 8 ./proof/...` snapshot below measures
+executed Go statements, not C fidelity or algorithm completeness. Use it to
+find untested behavior, not as a completion threshold.
+
+| Package | Statements |
+| --- | ---: |
+| `abs` | 76.6% |
+| `acec` | 73.9% |
+| `cec` | 79.0% |
+| `cec/core` | 92.7% |
+| `dch` | 89.1% |
+| `fra` | 72.5% |
+| `fracomb` | 89.7% |
+| `fraig` | 74.1% |
+| `framgr` | 83.4% |
+| `int` | 85.6% |
+| `int2` | 88.0% |
+| `live` | 77.9% |
+| `pdr` | 74.8% |
+| `ssc` | 88.6% |
+| `ssw` | 76.4% |
 
 ## Source API inventory
 
@@ -44,14 +67,19 @@ and representation limits described in its package notes.
   callers must lower them first. The old GLA `fUseFullProof` option does not
   select a distinct proof-logging mode in Go, so resource behavior can differ.
   Additional flop-transform tests cover word boundaries, non-Boolean initial
-  values, duplicate selections and unchanged next-state functions. A broader
-  algorithm-by-algorithm audit remains underway.
+  values, duplicate selections and unchanged next-state functions. Bounded
+  frame-limit, 257-label UNSAT-core and compiled-C conflict-budget exhaustion
+  tests were added; larger sequential resource-limit interactions and
+  memory-scale stress remain uncovered. A broader audit remains underway.
 * `acec`: source flow and preconditions are restored. Compiled-ABC differential
   tests cover 76 circuit pairs, and checked-in test vectors exercise Booth
   normalization and tied XOR/MAJ cuts. Negative cut limits and single-output
   box production now match C. The C implementation has reproducible
   false-equivalence cases and a two-output assumption, documented and tested
   as source behavior. Package race tests and vet passed.
+  Added compiled-C recognition comparisons across 96 Booth pattern cases and a
+  source test inventory; end-to-end complex multiplier, timing-box and larger
+  graph differential coverage remain open.
 * `cec`: the naive verifier now uses MF CNF/BSAT, with the C output-variable
   mapping. Compiled ABC comparisons confirm source-inherited false speculative
   equivalence pairs and a reordered-output misclassification; tests preserve
@@ -64,8 +92,9 @@ and representation limits described in its package notes.
   timed sweeps use the C thread-CPU clock; timed sweeps on other platforms
   report unsupported. Package race tests and vet passed.
   The sequential synthesis entry also preserves C's failure boundary for a
-  missing clock-domain vector. Broader sweep/partition review remains partial.
-  Cec4's upstream choice builder remains incomplete.
+  missing clock-domain vector. Tests cover C's incomplete Cec4 builder return
+  and partial construction failure instead of substituting a working builder.
+  Broader sweep/partition review remains partial.
   The lower `opt/dar` facade wires its source default through the CEC adapter,
   and the GIA default uses the GIA miter/skip-three/DCH path. CEC/Cec4 modes are
   exposed through a higher-layer wrapper to avoid an import cycle.
@@ -76,15 +105,20 @@ and representation limits described in its package notes.
 * `dch`: uses the ported BSAT path, source SAT-variable numbering and allocation,
   supergate/MUX clauses, incremental working FRAIG, and source simulation
   behavior. Non-TFO/TFO refinement scope, class counters, SAT-cone values, and
-  random completion now match C. Native XOR/buffer and non-topological inputs
-  outside the C source contract are rejected.
+  random completion now match C. Shared RNG side effects and allocated-choice
+  representative preconditions also match C. Tests cover support and metadata
+  boundaries; recent statement coverage was 88.2%. Native XOR/buffer and
+  non-topological inputs outside the C source contract are rejected.
 * `fra`: SEC, clause and BMC paths follow the active source's timeout, budget,
   solver-reuse behavior, and native-EXOR-as-AND handling where C hardcodes
   `Aig_And`. Source-derived partition, implication, one-hot, and induction
   tests passed. SEC terminal counts and stored CioIds, SEC setup, and the
   induction no-progress branch now follow C. Source-instrumented tests cover
   its no-progress warning/result and the empty-output partition failure
-  boundary; broader behavioral audit remains in progress.
+  boundary. SEC status and witness transfer now match C, including its
+  unvalidated witness behavior; callers needing replay use the separate
+  `Fra_FraigSecVerified` API. Compiled-C SEC comparisons cover separate-output
+  interpolation. Broader behavioral audit remains in progress.
 * `fracomb`: AIG deadlines now propagate through DAR rewrite stages as in C.
   Its SAT path uses the source-mapped CNF writer and source Solver2
   simplification. A multi-sweep SAT fallback test replays witnesses on original
@@ -95,12 +129,18 @@ and representation limits described in its package notes.
   upstream limitations, including witnesses that violate external clauses,
   are covered by source-characterization tests. Node-vector shrink, clear, pop,
   and remove preserve C's backing-array entries observable through
-  `Fraig_NodeVecReadArray`. MSAT review continues.
+  `Fraig_NodeVecReadArray`. Opt-in compiled-C tests compare allocator behavior
+  and compression over covering pairs, overlapping patterns, and partial words.
+  Pool-accounting and real-workload differential gaps remain documented.
 * `framgr`: duplicate BMC helpers were consolidated only where behavior was
   shown identical. Simulation, BMC callback reset, native-EXOR-as-AND behavior,
   output-ID witness layout, SAT root simplification, constant-implication
-  behavior, and the uncomplemented-parent assertion follow C. Race tests and
-  vet pass; broader manager audit remains incomplete.
+  behavior, and the uncomplemented-parent assertion follow C. Tests now cover
+  class-copy/latch-correlation state, BMC adapters, sequential simulation,
+  counterexample/model extraction and one-hot reporting/RNG behavior. The
+  previous coverage snapshot was 80.6%; a new measurement is pending. Remaining
+  branches include some BMC/FRAIG sweep and SAT model paths; this is not a proof
+  of complete algorithm coverage.
 * `int`: MiniSat 1.14p has exhaustive Craig-interpolant checks and option/error
   coverage. Proof-root validation now builds its annotation in one ordered
   pass, preserving clause order. Partition-assembly tests now cover restoration
@@ -116,18 +156,25 @@ and representation limits described in its package notes.
   Refinement compares GIA priorities as unsigned values, matching C's `uint32`
   field. The incremental frame builder reconstructs missing C operations and has no
   unsupported status; it is not source-confirmed and callers must treat the
-  whole path as unsupported for source fidelity.
+  whole path as unsupported for source fidelity. `TEST_COVERAGE.md` maps the
+  implemented helpers to tests and lists timeout/CNF-error gaps.
 * `live`: Go-only reachability and fairness-parser substitutes were removed.
   Graph operations now use explicit AIG arguments as C does; network metadata
   remains sourced from the supplied network. Safe graph-copy and safety-model
-  simplifications preserve source order. Package race tests and vet passed.
+  simplifications preserve source order. Source-shaped graph copying maps C
+  EXOR nodes through AND as the C constructors do, while native convenience
+  APIs retain XOR behavior. Compiled-C tests cover this distinction and the
+  liveness, monotone, constrained-cone and disjunctive wrappers. Source builders
+  now traverse all nodes in source order and set copy mappings, including for
+  unused nodes.
 * `pdr`: source solver context, limits, helper edge cases and graph lifecycle
   are covered. Differential tests exercise 64 machines and source-matched
   option combinations, plus invariant-file output. Package race tests and vet
   passed; some cases expose inherited invalid-counterexample behavior in C.
   Incremental-restart handling preserves source edge cases, including an
   assertion on a first restart with no saved clauses and an interrupted push
-  that can be treated as proof. Further resource-limit coverage is needed.
+  that can be treated as proof. Added solver-recycling threshold coverage;
+  further timeout/resource-limit combinations need coverage.
 * `ssc`: evolving FRAIG substitutions, BSAT frontier encoding, source-style
   class refinement, native-input lowering, random stream, equivalence
   reduction, and CEC verification have source tests. Verbose mode performs the
@@ -138,7 +185,8 @@ and representation limits described in its package notes.
   reduction accounting, stop behavior, and timeout behavior is restored and
   characterized. A reachable invalid rarity witness is documented as an
   upstream C defect. Source CioId setup is restored in manager, BMC,
-  latch-sweep, and dynamic-sweep paths; current race tests and vet passed.
+  latch-sweep, and dynamic-sweep paths. Gap and negative-timeout behavior now
+  match C; current race tests and vet passed.
 
 ## Shared dependencies in progress
 
