@@ -346,6 +346,12 @@ func Saig_ManExposeBadRegs(graph *aig.Graph, count int32) {
 // Saig_ManRetimeMinAreaBackward derives the source minimum cut and retries
 // after excluding registers whose initial constraints have no solution.
 func Saig_ManRetimeMinAreaBackward(graph *aig.Graph, verbose int32) *aig.Graph {
+	if graph != nil && aig.Aig_ManConstrNum(graph) != 0 &&
+		graph.Assertions > Saig_ManPoNum(graph)-aig.Aig_ManConstrNum(graph) {
+		// The intermediate hidden-output interface cannot express overlapping
+		// assertion and constraint ranges. Return the restored interface.
+		return saigRetimeMinAreaBackward(graph, verbose, true)
+	}
 	return saigRetimeMinAreaBackward(graph, verbose, false)
 }
 

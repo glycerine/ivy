@@ -237,6 +237,11 @@ func TestBackwardRetimeRestoresOverlappingAssertedConstraints(t *testing.T) {
 	aig.Aig_ManSetRegNum(g, 4)
 	aig.Aig_ManSetConstrNum(g, 1)
 	g.Assertions = 4
+	direct := Saig_ManRetimeMinAreaBackward(aig.Aig_ManDupSimple(g), 0)
+	if direct == nil || direct.RegisterCount() != 3 || aig.Aig_ManConstrNum(direct) != 1 || direct.Assertions != 4 {
+		t.Fatal("backward helper did not restore overlapping output metadata")
+	}
+	checkRetimeTraces(t, g, direct, 2, 4)
 	out := Saig_ManRetimeMinArea(g, 4, 0, 1, 1, 0)
 	if out.RegisterCount() != 3 || aig.Aig_ManConstrNum(out) != 1 || out.Assertions != 4 {
 		t.Fatal("retiming changed output metadata")

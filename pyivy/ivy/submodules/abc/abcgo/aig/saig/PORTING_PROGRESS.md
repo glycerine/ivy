@@ -16,8 +16,8 @@ state. A duplication-order bug and an invalid heuristic-cut panic were fixed.
 Constraint and assertion output metadata are preserved. The top-level pass
 keeps hidden-register outputs private until their registers are restored,
 including when asserted outputs overlap constraints. The separately exported
-backward helper reorders hidden outputs around constraints; if assertions
-overlap constraints, that helper conservatively skips hidden registers because
+backward helper reorders hidden outputs around constraints; when assertions
+overlap constraints, it instead returns the already-restored interface because
 its intermediate public interface cannot represent both roles.
 
 Validation includes exhaustive cut-subset comparisons on small graphs; cut
@@ -38,8 +38,6 @@ results. This network command is a useful reference but is not a direct call
 to the original SAIG function.
 
 Remaining review: compare cut tie-breaking and end-to-end behavior directly
-with the original SAIG function on larger designs. Address the exported
-backward helper's remaining overlapping asserted-constraint case if a
-representation for noncontiguous output roles is added. The Go NWK converter
+with the original SAIG function on larger designs. The Go NWK converter
 currently omits dangling nodes, whereas the C converter iterates all nodes;
 the SAIG implementation retains the source's all-node behavior.
