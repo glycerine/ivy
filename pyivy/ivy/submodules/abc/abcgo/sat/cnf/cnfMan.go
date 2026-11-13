@@ -305,6 +305,9 @@ func Cnf_DataWriteIntoSolverInt(sat *bsat.Solver, cnf *Cnf_Dat_t, frames int32, 
 			}
 		}
 	}
+	if !sat.Simplify() {
+		return nil
+	}
 	return sat
 }
 func Cnf_DataWriteIntoSolver(cnf *Cnf_Dat_t, frames int32, init int32) *bsat.Solver {

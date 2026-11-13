@@ -12,9 +12,9 @@ Tseitin representation; `Cnf_Derive` uses ABC's mapped cut-based encoding.
 Direct comparisons against C cover hundreds of mapped AND/inverter graphs.
 
 The source BSAT solver can report SAT for an inconsistent formula when pending
-root units and assumptions interact. The `EncodeAIG` randomized regression
-records two such results reproduced by the original C solver. See the BSAT
-porting notes for the source behavior and its implications.
+root units and assumptions interact. As in C, the CNF solver loader simplifies
+the formula before returning, propagating pending root units. See the BSAT
+porting notes for the underlying solver behavior and its implications.
 
 Known limitations needing further work: fast cuts with more than six leaves
 support AND supergates but reject other cones. Some retained compatibility helpers
