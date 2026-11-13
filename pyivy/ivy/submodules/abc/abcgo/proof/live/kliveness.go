@@ -3,6 +3,8 @@ package live
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/misc/vec"
+	"github.com/glycerine/abcgo/proof/pdr"
 	"os"
 	"strings"
 	"time"
@@ -87,7 +89,23 @@ func flipConePdr(p *aig.Graph, directive, target, invariant, absorbers int32) in
 		}
 		modifyAigToApplySafetyInvar(p, target, invariant)
 	}
-	return CheckSafety(kLiveProofModel(p, SIMPLE_kCS, target, invariant), int(target), SafetyOptions{}).Status
+	model := kLiveProofModel(p, SIMPLE_kCS, target, invariant)
+	options := pdr.DefaultOptions()
+	options.SolveAll = true
+	options.Verbose = true
+	// C sets fNotVerbose as well; Silent suppresses the detailed progress.
+	options.Silent = true
+	if _, err := pdr.Solve(model, &options); err != nil {
+		panic(err)
+	}
+	results := model.SequentialCounterexamples()
+	if results == nil {
+		panic("live: PDR did not publish per-output results")
+	}
+	if vec.Vec_PtrEntry(results, int(target)) != nil {
+		return 0
+	}
+	return 1
 }
 
 func findOutput(n *Network, marker string) int32 {
