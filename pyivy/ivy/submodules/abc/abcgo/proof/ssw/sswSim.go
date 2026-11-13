@@ -644,25 +644,7 @@ func Ssw_SmlNodeSimulate(p *Ssw_Sml_t, pObj *Aig_Obj_t, iFrame int32) {
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_SmlNodesCompareInFrame(p *Ssw_Sml_t, pObj0 *Aig_Obj_t, pObj1 *Aig_Obj_t, iFrame0 int32, iFrame1 int32) int32 {
-    var pSims0, pSims1 *uint32;
-    var i int32;
-    assert(iFrame0 < p.nFrames, "iFrame0 < p.nFrames");
-    assert(iFrame1 < p.nFrames, "iFrame1 < p.nFrames");
-    assert(!Aig_IsComplement(pObj0), "!Aig_IsComplement(pObj0)");
-    assert(!Aig_IsComplement(pObj1), "!Aig_IsComplement(pObj1)");
-    assert(iFrame0 == 0 || p.nWordsFrame < p.nWordsTotal, "iFrame0 == 0 || p.nWordsFrame < p.nWordsTotal");
-    assert(iFrame1 == 0 || p.nWordsFrame < p.nWordsTotal, "iFrame1 == 0 || p.nWordsFrame < p.nWordsTotal");
-    // get hold of the simulation information
-    pSims0  = Ssw_ObjSim(p, pObj0.Id) + p.nWordsFrame * iFrame0;
-    pSims1  = Ssw_ObjSim(p, pObj1.Id) + p.nWordsFrame * iFrame1;
-    // compare
-    for  i = 0; i < p.nWordsFrame; i++  {
-        if pSims0[i] != pSims1[i] {
-            return 0; }
-    }
-    return 1;
-}
+
 
 /**Function*************************************************************
 
@@ -675,29 +657,7 @@ func Ssw_SmlNodesCompareInFrame(p *Ssw_Sml_t, pObj0 *Aig_Obj_t, pObj1 *Aig_Obj_t
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_SmlNodeCopyFanin(p *Ssw_Sml_t, pObj *Aig_Obj_t, iFrame int32) {
-    var pSims, pSims0 *uint32;
-    var fCompl, fCompl0, i int32;
-    assert(iFrame < p.nFrames, "iFrame < p.nFrames");
-    assert(!Aig_IsComplement(pObj), "!Aig_IsComplement(pObj)");
-    assert(Aig_ObjIsCo(pObj), "Aig_ObjIsCo(pObj)");
-    assert(iFrame == 0 || p.nWordsFrame < p.nWordsTotal, "iFrame == 0 || p.nWordsFrame < p.nWordsTotal");
-    // get hold of the simulation information
-    pSims  = Ssw_ObjSim(p, pObj.Id) + p.nWordsFrame * iFrame;
-    pSims0 = Ssw_ObjSim(p, Aig_ObjFanin0(pObj).Id) + p.nWordsFrame * iFrame;
-    // get complemented attributes of the children using their random info
-    fCompl  = pObj.fPhase;
-    fCompl0 = Aig_ObjPhaseReal(Aig_ObjChild0(pObj));
-    // copy information as it is
-    if fCompl0 {
-        for  i = 0; i < p.nWordsFrame; i++  {
-            pSims[i] = ~pSims0[i];
-        }
-    } else {
-        for  i = 0; i < p.nWordsFrame; i++  {
-            pSims[i] = pSims0[i];
-        } }
-}
+
 
 /**Function*************************************************************
 
@@ -710,23 +670,7 @@ func Ssw_SmlNodeCopyFanin(p *Ssw_Sml_t, pObj *Aig_Obj_t, iFrame int32) {
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_SmlNodeTransferNext(p *Ssw_Sml_t, pOut *Aig_Obj_t, pIn *Aig_Obj_t, iFrame int32) {
-    var pSims0, pSims1 *uint32;
-    var i int32;
-    assert(iFrame < p.nFrames, "iFrame < p.nFrames");
-    assert(!Aig_IsComplement(pOut), "!Aig_IsComplement(pOut)");
-    assert(!Aig_IsComplement(pIn), "!Aig_IsComplement(pIn)");
-    assert(Aig_ObjIsCo(pOut), "Aig_ObjIsCo(pOut)");
-    assert(Aig_ObjIsCi(pIn), "Aig_ObjIsCi(pIn)");
-    assert(iFrame == 0 || p.nWordsFrame < p.nWordsTotal, "iFrame == 0 || p.nWordsFrame < p.nWordsTotal");
-    // get hold of the simulation information
-    pSims0 = Ssw_ObjSim(p, pOut.Id) + p.nWordsFrame * iFrame;
-    pSims1 = Ssw_ObjSim(p, pIn.Id) + p.nWordsFrame * (iFrame+1);
-    // copy information as it is
-    for  i = 0; i < p.nWordsFrame; i++  {
-        pSims1[i] = pSims0[i];
-    }
-}
+
 
 /**Function*************************************************************
 
@@ -739,22 +683,7 @@ func Ssw_SmlNodeTransferNext(p *Ssw_Sml_t, pOut *Aig_Obj_t, pIn *Aig_Obj_t, iFra
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_SmlNodeTransferFirst(p *Ssw_Sml_t, pOut *Aig_Obj_t, pIn *Aig_Obj_t) {
-    var pSims0, pSims1 *uint32;
-    var i int32;
-    assert(!Aig_IsComplement(pOut), "!Aig_IsComplement(pOut)");
-    assert(!Aig_IsComplement(pIn), "!Aig_IsComplement(pIn)");
-    assert(Aig_ObjIsCo(pOut), "Aig_ObjIsCo(pOut)");
-    assert(Aig_ObjIsCi(pIn), "Aig_ObjIsCi(pIn)");
-    assert(p.nWordsFrame < p.nWordsTotal, "p.nWordsFrame < p.nWordsTotal");
-    // get hold of the simulation information
-    pSims0 = Ssw_ObjSim(p, pOut.Id) + p.nWordsFrame * (p.nFrames-1);
-    pSims1 = Ssw_ObjSim(p, pIn.Id);
-    // copy information as it is
-    for  i = 0; i < p.nWordsFrame; i++  {
-        pSims1[i] = pSims0[i];
-    }
-}
+
 
 
 /**Function*************************************************************
