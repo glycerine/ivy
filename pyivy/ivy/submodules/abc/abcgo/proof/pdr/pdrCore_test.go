@@ -1,6 +1,7 @@
 package pdr
 
 import (
+	"fmt"
 	"reflect"
 	"testing"
 
@@ -38,6 +39,29 @@ func TestPdrUnsupportedMonolithicUpdatedSimulation(t *testing.T) {
 		if got != -1 {
 			t.Fatalf("incremental=%v: got %d, want undecided", incremental, got)
 		}
+	}
+}
+
+func TestPdrRejectsExistingMultiOutputWitnessVector(t *testing.T) {
+	for _, incremental := range []bool{false, true} {
+		t.Run(fmt.Sprintf("incremental=%v", incremental), func(t *testing.T) {
+			g := aig.NewGraph()
+			g.AddOutput(g.Const0())
+			g.SetSequentialCounterexamples(vec.Vec_PtrStart(1))
+			var pars Pdr_Par_t
+			Pdr_ManSetDefaultParams(&pars)
+			pars.fSolveAll, pars.fSilent = 1, 1
+			defer func() {
+				if recover() == nil {
+					t.Fatal("expected the C source's existing-vector assertion")
+				}
+			}()
+			if incremental {
+				IPdr_ManSolve(g, &pars)
+			} else {
+				Pdr_ManSolve(g, &pars)
+			}
+		})
 	}
 }
 

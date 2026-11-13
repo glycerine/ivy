@@ -2,7 +2,6 @@ package pdr
 
 import (
 	"fmt"
-	"slices"
 
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/sat/bsat"
@@ -301,11 +300,6 @@ func IPdr_ManRestoreClauses(p *Pdr_Man_t, clauses *Vec_Vec_t, mapping *Vec_Int_t
 				for i := int32(0); i < cube.nLits; i++ {
 					lit := cube.Lits[i]
 					cube.Lits[i] = 2*vec.Vec_IntEntry(mapping, int(lit>>1)) + (lit & 1)
-				}
-				slices.Sort(cube.Lits[:cube.nLits])
-				cube.Sign = 0
-				for _, lit := range cube.Lits[:cube.nLits] {
-					cube.Sign |= uint64(1) << uint(lit%63)
 				}
 			}
 		}

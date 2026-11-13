@@ -67,6 +67,9 @@ Remaining review and coverage gaps:
   in the unmatched tail after either sorted input ends. Also,
   `Pdr_SetPrintStr` appends no pattern characters when its flop filter is
   nil. Tests record these source behaviors; they are not corrections to ABC.
+- Incremental clause restoration remaps literals without sorting them or
+  recomputing their membership signature, matching ABC. A non-order-preserving
+  map can therefore leave the restored cube's ordering and signature stale.
 - As in ABC, stopping a PDR manager stops the graph's fanout index even if
   that index existed before the manager started. A caller that needs fanout
   data afterward must rebuild it.

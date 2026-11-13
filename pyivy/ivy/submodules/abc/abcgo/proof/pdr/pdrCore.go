@@ -1043,6 +1043,9 @@ func Pdr_ManSolve(graph *aig.Graph, pars *Pdr_Par_t) int32 {
 	p := Pdr_ManStart(graph, pars, nil)
 	result := Pdr_ManSolveInt(p)
 	if p.vCexes != nil {
+		if graph.SequentialCounterexamples() != nil {
+			panic("pdr: graph already has per-output counterexamples")
+		}
 		graph.SetSequentialCounterexamples(p.vCexes)
 		p.vCexes = nil
 	}

@@ -1,6 +1,7 @@
 package pdr
 
 import (
+	"slices"
 	"testing"
 
 	"github.com/glycerine/abcgo/aig/aig"
@@ -23,7 +24,7 @@ func TestIncrementalSaveClausesCopiesCubes(t *testing.T) {
 	}
 }
 
-func TestIncrementalRestoreRemapsCubeOrderingAndSignature(t *testing.T) {
+func TestIncrementalRestoreRemapsWithoutResortingAsInC(t *testing.T) {
 	g := aig.NewGraph()
 	for i := 0; i < 3; i++ {
 		g.NewInput()
@@ -36,12 +37,12 @@ func TestIncrementalRestoreRemapsCubeOrderingAndSignature(t *testing.T) {
 	p := Pdr_ManStart(g, &Pdr_Par_t{}, nil)
 	clauses := vec.Vec_VecStart(2)
 	cube := testPdrSet([]int32{0, 3}, nil)
+	oldSign := cube.Sign
 	vec.Vec_VecPush(clauses, 1, cube)
 	mapping := vec.Vec_IntAllocArrayCopy([]int32{2, 0, 1}, 3)
 	IPdr_ManRestoreClauses(p, clauses, mapping)
-	want := testPdrSet([]int32{1, 4}, nil)
-	if Pdr_SetContains(cube, want) != 1 || Pdr_SetContains(want, cube) != 1 {
-		t.Fatalf("remapped cube has stale order or signature: %+v", cube)
+	if !slices.Equal(cube.Lits, []int32{4, 1}) || cube.Sign != oldSign {
+		t.Fatalf("C preserves literal order and signature after remapping: %+v", cube)
 	}
 	Pdr_ManStop(p)
 }
