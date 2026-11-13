@@ -105,7 +105,8 @@ func Bac_BoxCreate(p *Bac_Ntk_t, Type Bac_ObjType_t, vFanins *Vec_Int_t, nInA in
     }
     // add fanins
     // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vFanins)) && (((iFanin) = Vec_IntEntry(vFanins, i)), 1); i++  {
+    for i = 0; i < Vec_IntSize(vFanins); i++ {
+        iFanin = Vec_IntEntry(vFanins, i)
         Bac_ObjSetFanin( p, Bac_BoxBi(p, iObj, i), iFanin );
     }
     return iObj;
@@ -310,7 +311,8 @@ func Bac_ObjClpMemory(p *Bac_Ntk_t, iBox int32) int32 {
     assert(Bac_BoxBiNum(p, iBox) == Bac_BoxBoNum(p, iBox), "Bac_BoxBiNum(p, iBox) == Bac_BoxBoNum(p, iBox)");
     // for each fanin of RAMBOX, make sure address width is the same
     // inlining of macro Bac_BoxForEachFaninBox
-    for  i = 0; iBox - 1 - i >= 0 && Bac_ObjIsBi(p, iBox - 1 - i) && (((iNext) = Bac_BoxFaninBox(p, iBox, i)), 1); i++  {
+    for i = 0; iBox - 1 - i >= 0 && Bac_ObjIsBi(p, iBox - 1 - i) != 0; i++ {
+        iNext = Bac_BoxFaninBox(p, iBox, i)
         assert(Bac_ObjType(p, iNext) == BAC_BOX_RAMWC, "Bac_ObjType(p, iNext) == BAC_BOX_RAMWC");
     }
 

@@ -370,10 +370,10 @@ func Bac_NtkHasFanouts(p *Bac_Ntk_t) int32 { return p.vFanout.pArray != nil;    
 func Bac_NtkHasCopies(p *Bac_Ntk_t) int32 { return p.vCopy.pArray != nil;                                                             }
 
 func Bac_TypeIsBox(Type Bac_ObjType_t) int32 { return Type >= BAC_OBJ_BOX && Type < BAC_BOX_UNKNOWN;                                       }
-func Bac_NameType(n int32) Bac_NameType_t { assert((n != 0), "n"); return (Bac_NameType_t)Abc_Lit2Att2( n );                                      }
+func Bac_NameType(n int32) Bac_NameType_t { assert((n != 0), "n"); return Bac_NameType_t(Abc_Lit2Att2(n));                                      }
 func Bac_CharIsDigit(c byte) int32 { return c >= '0' && c <= '9'; }
 
-func Bac_ObjType(p *Bac_Ntk_t, i int32) Bac_ObjType_t { return (Bac_ObjType_t)Abc_Lit2Var(int32((unsigned char))Vec_StrEntry(&p.vType, i));          }
+func Bac_ObjType(p *Bac_Ntk_t, i int32) Bac_ObjType_t { return Bac_ObjType_t(Abc_Lit2Var(int32(byte(Vec_StrEntry(&p.vType, i)))));          }
 func Bac_ObjIsPi(p *Bac_Ntk_t, i int32) int32 { return Bac_ObjType(p, i) == BAC_OBJ_PI;                                                     }
 func Bac_ObjIsPo(p *Bac_Ntk_t, i int32) int32 { return Bac_ObjType(p, i) == BAC_OBJ_PO;                                                     }
 func Bac_ObjIsPio(p *Bac_Ntk_t, i int32) int32 { return Bac_ObjIsPi(p, i) || Bac_ObjIsPo(p, i);                                              }
@@ -419,9 +419,9 @@ func Bac_ObjGetConst(p *Bac_Ntk_t, i int32) int32 { assert((Bac_ObjIsCi(p, i) !=
     return 0;
 }              }
 
-func Bac_BoxBiNum(p *Bac_Ntk_t, i int32) int32 { var s int32  = i-1; assert((Bac_ObjIsBox(p, i) != 0), "Bac_ObjIsBox(p, i)"); for --i >= 0               && Bac_ObjIsBi(p, i) {}
+func Bac_BoxBiNum(p *Bac_Ntk_t, i int32) int32 { var s int32  = i-1; assert((Bac_ObjIsBox(p, i) != 0), "Bac_ObjIsBox(p, i)"); for i--; i >= 0 && Bac_ObjIsBi(p, i) != 0; i-- {}
  return s - i;  }
-func Bac_BoxBoNum(p *Bac_Ntk_t, i int32) int32 { var s int32  = i+1; assert((Bac_ObjIsBox(p, i) != 0), "Bac_ObjIsBox(p, i)"); for ++i < Bac_NtkObjNum(p) && Bac_ObjIsBo(p, i) {}
+func Bac_BoxBoNum(p *Bac_Ntk_t, i int32) int32 { var s int32  = i+1; assert((Bac_ObjIsBox(p, i) != 0), "Bac_ObjIsBox(p, i)"); for i++; i < Bac_NtkObjNum(p) && Bac_ObjIsBo(p, i) != 0; i++ {}
  return i - s;  }
 func Bac_BoxSize(p *Bac_Ntk_t, i int32) int32 { return 1 + Bac_BoxBiNum(p, i) + Bac_BoxBoNum(p, i);                                         }
 func Bac_BoxBi(p *Bac_Ntk_t, b int32, i int32) int32 { assert((Bac_ObjIsBox(p, b) != 0), "Bac_ObjIsBox(p, b)"); return b - 1 - i;                                               }
@@ -430,11 +430,11 @@ func Bac_BoxBo(p *Bac_Ntk_t, b int32, i int32) int32 { assert((Bac_ObjIsBox(p, b
 func Bac_BoxBoBox(p *Bac_Ntk_t, i int32) int32 { assert((Bac_ObjIsBo(p, i) != 0), "Bac_ObjIsBo(p, i)"); return i - 1 - Bac_ObjIndex(p, i);                               }
 func Bac_BoxFanin(p *Bac_Ntk_t, b int32, i int32) int32 { return Bac_ObjFanin(p, Bac_BoxBi(p, b, i));                                                 }
 func Bac_BoxFaninBox(p *Bac_Ntk_t, b int32, i int32) int32 { return Bac_BoxBoBox(p, Bac_BoxFanin(p, b, i));                                              }
-func Bac_BoxBiRange(p *Bac_Ntk_t, i int32) int32 { var s int32  = i; assert((Bac_ObjIsBi(p, i) != 0) && !(Bac_ObjBit(p, i) != 0), "Bac_ObjIsBi(p, i) && !Bac_ObjBit(p, i)"); for --i >= 0               && Bac_ObjIsBi(p, i) && Bac_ObjBit(p, i) {}
+func Bac_BoxBiRange(p *Bac_Ntk_t, i int32) int32 { var s int32  = i; assert((Bac_ObjIsBi(p, i) != 0) && !(Bac_ObjBit(p, i) != 0), "Bac_ObjIsBi(p, i) && !Bac_ObjBit(p, i)"); for i--; i >= 0 && Bac_ObjIsBi(p, i) != 0 && Bac_ObjBit(p, i) != 0; i-- {}
  return s - i;  }
-func Bac_BoxBoRange(p *Bac_Ntk_t, i int32) int32 { var s int32  = i; assert((Bac_ObjIsBo(p, i) != 0) && !(Bac_ObjBit(p, i) != 0), "Bac_ObjIsBo(p, i) && !Bac_ObjBit(p, i)"); for ++i < Bac_NtkObjNum(p) && Bac_ObjIsBo(p, i) && Bac_ObjBit(p, i) {}
+func Bac_BoxBoRange(p *Bac_Ntk_t, i int32) int32 { var s int32  = i; assert((Bac_ObjIsBo(p, i) != 0) && !(Bac_ObjBit(p, i) != 0), "Bac_ObjIsBo(p, i) && !Bac_ObjBit(p, i)"); for i++; i < Bac_NtkObjNum(p) && Bac_ObjIsBo(p, i) != 0 && Bac_ObjBit(p, i) != 0; i++ {}
  return i - s;  }
-func Bac_ObjPiRange(p *Bac_Ntk_t, i int32) int32 { var s int32  = i; assert((Bac_ObjIsPi(p, i) != 0) && !(Bac_ObjBit(p, i) != 0), "Bac_ObjIsPi(p, i) && !Bac_ObjBit(p, i)"); for ++i < Bac_NtkObjNum(p) && Bac_ObjIsPi(p, i) && Bac_ObjBit(p, i) {}
+func Bac_ObjPiRange(p *Bac_Ntk_t, i int32) int32 { var s int32  = i; assert((Bac_ObjIsPi(p, i) != 0) && !(Bac_ObjBit(p, i) != 0), "Bac_ObjIsPi(p, i) && !Bac_ObjBit(p, i)"); for i++; i < Bac_NtkObjNum(p) && Bac_ObjIsPi(p, i) != 0 && Bac_ObjBit(p, i) != 0; i++ {}
  return i - s;  }
 
 func Bac_BoxNtkId(p *Bac_Ntk_t, i int32) int32 { assert((Bac_ObjIsBox(p, i) != 0), "Bac_ObjIsBox(p, i)"); return Vec_IntEntry(&p.vFanin, i);                             }
@@ -596,7 +596,9 @@ func Bac_ObjAlloc(p *Bac_Ntk_t, Type Bac_ObjType_t, Fanin int32) int32 {
     return iObj;
 }
 func Bac_ObjDup(pNew *Bac_Ntk_t, p *Bac_Ntk_t, i int32) int32 {
-    var iObj int32  = Bac_ObjAlloc( pNew, Bac_ObjType(p, i), Bac_ObjIsBox(p, i) ? Bac_BoxNtkId(p, i) : -1 );
+    fanin := int32(-1)
+    if Bac_ObjIsBox(p, i) != 0 { fanin = Bac_BoxNtkId(p, i) }
+    iObj := Bac_ObjAlloc(pNew, Bac_ObjType(p, i), fanin)
     if (Bac_NtkHasNames(p) != 0) && (Bac_NtkHasNames(pNew) != 0) && !(Bac_ObjIsCo(p, i) != 0) { 
         Bac_ObjSetName( pNew, iObj, Bac_ObjName(p, i) ); }
     Bac_ObjSetCopy( p, i, iObj );
@@ -616,8 +618,13 @@ func Bac_BoxAlloc(p *Bac_Ntk_t, Type Bac_ObjType_t, nIns int32, nOuts int32, iNt
 func Bac_BoxDup(pNew *Bac_Ntk_t, p *Bac_Ntk_t, iBox int32) int32 {
     var i, iTerm, iBoxNew int32;
     // inlining of macro Bac_BoxForEachBiReverse
-    for  i = Bac_BoxBiNum(p, iBox), iTerm = iBox - i--; (Bac_ObjIsBi(p, iTerm) != 0); iTerm, i = iTerm+1, i-1  {
+    i = Bac_BoxBiNum(p, iBox)
+    iTerm = iBox - i
+    i--
+    for Bac_ObjIsBi(p, iTerm) != 0 {
         Bac_ObjDup( pNew, p, iTerm );
+        iTerm++
+        i--
     }
     iBoxNew = Bac_ObjDup( pNew, p, iBox );
     if (Bac_NtkHasNames(p) != 0) && (Bac_NtkHasNames(pNew) != 0) && (Bac_ObjName(p, iBox) != 0) { 
@@ -644,7 +651,7 @@ func Bac_BoxDelete(p *Bac_Ntk_t, iBox int32) {
     }
 }
 func Bac_BoxReplace(p *Bac_Ntk_t, iBox int32, pArray *int32, nSize int32) {
-    extern void Bac_NtkUpdateFanout( Bac_Ntk_t * p, int iOld, int iNew );
+    // Bac_NtkUpdateFanout is defined in bacNtk.go.
     var i int32;
     var Limit int32 = Bac_BoxBoNum(p, iBox);
     assert(Limit == nSize, "Limit == nSize");
@@ -743,7 +750,8 @@ func Bac_NtkDup(pNew *Bac_Ntk_t, p *Bac_Ntk_t) {
     if Bac_NtkHasNames(p) != 0 {
         Bac_NtkStartNames( pNew ); }
     // inlining of macro Bac_NtkForEachPi
-    for  i = 0; (i < Bac_NtkPiNum(p))  && (((iObj) = Bac_NtkPi(p, i)), 1); i++  { 
+    for i = 0; i < Bac_NtkPiNum(p); i++ {
+        iObj = Bac_NtkPi(p, i) 
         Bac_ObjDup( pNew, p, iObj );
     }
     // inlining of macro Bac_NtkForEachBox
@@ -751,7 +759,8 @@ func Bac_NtkDup(pNew *Bac_Ntk_t, p *Bac_Ntk_t) {
         Bac_BoxDup( pNew, p, iObj ); }
     }
     // inlining of macro Bac_NtkForEachPo
-    for  i = 0; (i < Bac_NtkPoNum(p))  && (((iObj) = Bac_NtkPo(p, i)), 1); i++  { 
+    for i = 0; i < Bac_NtkPoNum(p); i++ {
+        iObj = Bac_NtkPo(p, i) 
         Bac_ObjDup( pNew, p, iObj );
     }
     // inlining of macro Bac_NtkForEachCo
@@ -769,11 +778,13 @@ func Bac_NtkDupUserBoxes(pNew *Bac_Ntk_t, p *Bac_Ntk_t) {
         Vec_IntAppend( &pNew.vInfo, &p.vInfo ); }
     Bac_NtkStartCopies( p );
     // inlining of macro Bac_NtkForEachPi
-    for  i = 0; (i < Bac_NtkPiNum(p))  && (((iObj) = Bac_NtkPi(p, i)), 1); i++  { 
+    for i = 0; i < Bac_NtkPiNum(p); i++ {
+        iObj = Bac_NtkPi(p, i) 
         Bac_ObjDup( pNew, p, iObj );
     }
     // inlining of macro Bac_NtkForEachPo
-    for  i = 0; (i < Bac_NtkPoNum(p))  && (((iObj) = Bac_NtkPo(p, i)), 1); i++  { 
+    for i = 0; i < Bac_NtkPoNum(p); i++ {
+        iObj = Bac_NtkPo(p, i) 
         Bac_ObjDup( pNew, p, iObj );
     }
     // inlining of macro Bac_NtkForEachBoxUser
@@ -793,7 +804,8 @@ func Bac_NtkMoveNames(pNew *Bac_Ntk_t, p *Bac_Ntk_t) {
     assert(!(Bac_NtkHasNames(pNew) != 0), "!Bac_NtkHasNames(pNew)");
     Bac_NtkStartNames( pNew );
     // inlining of macro Bac_NtkForEachPi
-    for  i = 0; (i < Bac_NtkPiNum(p))  && (((iObj) = Bac_NtkPi(p, i)), 1); i++  { 
+    for i = 0; i < Bac_NtkPiNum(p); i++ {
+        iObj = Bac_NtkPi(p, i) 
         Bac_ObjSetName( pNew, Bac_ObjCopy(p, iObj), Bac_ObjName(p, iObj) );
     }
     // inlining of macro Bac_NtkForEachBoxUser
@@ -814,7 +826,8 @@ func Bac_NtkMoveNames(pNew *Bac_Ntk_t, p *Bac_Ntk_t) {
         } }
     }
     // inlining of macro Bac_NtkForEachPo
-    for  i = 0; (i < Bac_NtkPoNum(p))  && (((iObj) = Bac_NtkPo(p, i)), 1); i++  { 
+    for i = 0; i < Bac_NtkPoNum(p); i++ {
+        iObj = Bac_NtkPo(p, i) 
         if !(Bac_ObjName(pNew, Bac_ObjFanin(pNew, Bac_ObjCopy(p, iObj))) != 0) {
             Bac_ObjSetName( pNew, Bac_ObjFanin(pNew, Bac_ObjCopy(p, iObj)), Bac_ObjName(p, iObj) ); }
     }
@@ -861,11 +874,13 @@ func Bac_NtkDeriveIndex(p *Bac_Ntk_t) {
     var i, iObj, iTerm int32;
     Vec_IntFill( &p.vIndex, Bac_NtkObjNum(p), -1 );
     // inlining of macro Bac_NtkForEachPi
-    for  i = 0; (i < Bac_NtkPiNum(p))  && (((iObj) = Bac_NtkPi(p, i)), 1); i++  { 
+    for i = 0; i < Bac_NtkPiNum(p); i++ {
+        iObj = Bac_NtkPi(p, i) 
         Bac_ObjSetIndex( p, iObj, i );
     }
     // inlining of macro Bac_NtkForEachPo
-    for  i = 0; (i < Bac_NtkPoNum(p))  && (((iObj) = Bac_NtkPo(p, i)), 1); i++  { 
+    for i = 0; i < Bac_NtkPoNum(p); i++ {
+        iObj = Bac_NtkPo(p, i) 
         Bac_ObjSetIndex( p, iObj, i );
     }
     // inlining of macro Bac_NtkForEachBox
@@ -885,7 +900,10 @@ func Bac_NtkPrint(p *Bac_Ntk_t) {
     var i, Type, Value, Beg, End int32;
     fmt.Printf("Interface (%d):\n", Bac_NtkInfoNum(p));
     // inlining of macro Vec_IntForEachEntryTriple
-    for  i = 0; (i+2 < Vec_IntSize(&p.vInfo)) && (((Value) = Vec_IntEntry(&p.vInfo, i)), 1) && (((Beg) = Vec_IntEntry(&p.vInfo, i+1)), 1) && (((End) = Vec_IntEntry(&p.vInfo, i+2)), 1); i += 3  {
+    for i = 0; i+2 < Vec_IntSize(&p.vInfo); i += 3 {
+        Value = Vec_IntEntry(&p.vInfo, i)
+        Beg = Vec_IntEntry(&p.vInfo, i+1)
+        End = Vec_IntEntry(&p.vInfo, i+2)
         fmt.Printf("%6d : ", i);
         fmt.Printf("Type =%3d  ", Bac_NtkInfoType(p, i/3));
         if Beg >= 0 {
@@ -899,7 +917,9 @@ func Bac_NtkPrint(p *Bac_Ntk_t) {
     }
     fmt.Printf("Objects (%d):\n", Bac_NtkObjNum(p));
     // inlining of macro Bac_NtkForEachObjType
-    for  i = 0; (i < Bac_NtkObjNum(p))  && (((Type) = Bac_ObjType(p, i)), 1); i++  { if !Type {} else {
+    for i = 0; i < Bac_NtkObjNum(p); i++ {
+        Type = int32(Bac_ObjType(p, i))
+        if Type != 0 {
         fmt.Printf("%6d : ", i);
         fmt.Printf("Type =%3d  ", Type);
         if Bac_ObjIsCo(p, i) != 0 {
@@ -927,7 +947,7 @@ func Bac_NtkPrint(p *Bac_Ntk_t) {
 
 ***********************************************************************/
 func Bac_ManAlloc(pFileName string, nNtks int32) *Bac_Man_t {
-    extern void Bac_ManSetupTypes( char ** pNames, char ** pSymbs );
+    // Bac_ManSetupTypes is defined in bacNtk.go.
     var pNtk *Bac_Ntk_t; var i int32;
     // inlining of macro ABC_CALLOC
     var pNew *Bac_Man_t  = &Bac_Man_t{};
@@ -940,7 +960,8 @@ func Bac_ManAlloc(pFileName string, nNtks int32) *Bac_Man_t {
     // inlining of macro ABC_CALLOC
     pNew.pNtks = ((Bac_Ntk_t *) calloc((size_t)(pNew.nNtks + 1), sizeof(Bac_Ntk_t)));
     // inlining of macro Bac_ManForEachNtk
-    for  i = 1; (i <= Bac_ManNtkNum(pNew)) && (((pNtk) = Bac_ManNtk(pNew, i)), 1); i++  { 
+    for i = 1; i <= Bac_ManNtkNum(pNew); i++ {
+        pNtk = Bac_ManNtk(pNew, i) 
         pNtk.pDesign = pNew;
     }
     Bac_ManSetupTypes( pNew.pPrimNames, pNew.pPrimSymbs );
@@ -959,7 +980,8 @@ func Bac_ManStart(p *Bac_Man_t, nNtks int32) *Bac_Man_t {
     // inlining of macro ABC_CALLOC
     pNew.pNtks = ((Bac_Ntk_t *) calloc((size_t)(nNtks + 1), sizeof(Bac_Ntk_t)));
     // inlining of macro Bac_ManForEachNtk
-    for  i = 1; (i <= Bac_ManNtkNum(pNew)) && (((pNtk) = Bac_ManNtk(pNew, i)), 1); i++  { 
+    for i = 1; i <= Bac_ManNtkNum(pNew); i++ {
+        pNtk = Bac_ManNtk(pNew, i) 
         pNtk.pDesign = pNew;
     }
     return pNew;
@@ -968,16 +990,20 @@ func Bac_ManDup(p *Bac_Man_t) *Bac_Man_t {
     var pNtk, pHost *Bac_Ntk_t; var i int32;
     var pNew *Bac_Man_t  = Bac_ManStart( p, Bac_ManNtkNum(p) );
     // inlining of macro Bac_ManForEachNtk
-    for  i = 1; (i <= Bac_ManNtkNum(p)) && (((pNtk) = Bac_ManNtk(p, i)), 1); i++  { 
+    for i = 1; i <= Bac_ManNtkNum(p); i++ {
+        pNtk = Bac_ManNtk(p, i) 
         Bac_NtkSetCopy( pNtk, i );
     }
     // inlining of macro Bac_ManForEachNtk
-    for  i = 1; (i <= Bac_ManNtkNum(p)) && (((pNtk) = Bac_ManNtk(p, i)), 1); i++  { 
+    for i = 1; i <= Bac_ManNtkNum(p); i++ {
+        pNtk = Bac_ManNtk(p, i) 
         Bac_NtkDup( Bac_NtkCopyNtk(pNew, pNtk), pNtk );
     }
     // inlining of macro Bac_ManForEachNtk
-    for  i = 1; (i <= Bac_ManNtkNum(p)) && (((pNtk) = Bac_ManNtk(p, i)), 1); i++  { 
-        if pHost = Bac_NtkHostNtk(pNtk) {
+    for i = 1; i <= Bac_ManNtkNum(p); i++ {
+        pNtk = Bac_ManNtk(p, i) 
+        pHost = Bac_NtkHostNtk(pNtk)
+        if pHost != nil {
             Bac_NtkSetHost( Bac_NtkCopyNtk(pNew, pNtk), Bac_NtkCopy(pHost), Bac_ObjCopy(pHost, Bac_NtkHostObj(pNtk)) ); }
     }
     return pNew;
@@ -986,16 +1012,20 @@ func Bac_ManDupUserBoxes(p *Bac_Man_t) *Bac_Man_t {
     var pNtk, pHost *Bac_Ntk_t; var i int32;
     var pNew *Bac_Man_t  = Bac_ManStart( p, Bac_ManNtkNum(p) );
     // inlining of macro Bac_ManForEachNtk
-    for  i = 1; (i <= Bac_ManNtkNum(p)) && (((pNtk) = Bac_ManNtk(p, i)), 1); i++  { 
+    for i = 1; i <= Bac_ManNtkNum(p); i++ {
+        pNtk = Bac_ManNtk(p, i) 
         Bac_NtkSetCopy( pNtk, i );
     }
     // inlining of macro Bac_ManForEachNtk
-    for  i = 1; (i <= Bac_ManNtkNum(p)) && (((pNtk) = Bac_ManNtk(p, i)), 1); i++  { 
+    for i = 1; i <= Bac_ManNtkNum(p); i++ {
+        pNtk = Bac_ManNtk(p, i) 
         Bac_NtkDupUserBoxes( Bac_NtkCopyNtk(pNew, pNtk), pNtk );
     }
     // inlining of macro Bac_ManForEachNtk
-    for  i = 1; (i <= Bac_ManNtkNum(p)) && (((pNtk) = Bac_ManNtk(p, i)), 1); i++  { 
-        if pHost = Bac_NtkHostNtk(pNtk) {
+    for i = 1; i <= Bac_ManNtkNum(p); i++ {
+        pNtk = Bac_ManNtk(p, i) 
+        pHost = Bac_NtkHostNtk(pNtk)
+        if pHost != nil {
             Bac_NtkSetHost( Bac_NtkCopyNtk(pNew, pNtk), Bac_NtkCopy(pHost), Bac_ObjCopy(pHost, Bac_NtkHostObj(pNtk)) ); }
     }
     return pNew;
@@ -1003,7 +1033,8 @@ func Bac_ManDupUserBoxes(p *Bac_Man_t) *Bac_Man_t {
 func Bac_ManMoveNames(pNew *Bac_Man_t, p *Bac_Man_t) {
     var pNtk *Bac_Ntk_t; var i int32;
     // inlining of macro Bac_ManForEachNtk
-    for  i = 1; (i <= Bac_ManNtkNum(p)) && (((pNtk) = Bac_ManNtk(p, i)), 1); i++  { 
+    for i = 1; i <= Bac_ManNtkNum(p); i++ {
+        pNtk = Bac_ManNtk(p, i) 
         Bac_NtkMoveNames( Bac_NtkCopyNtk(pNew, pNtk), pNtk );
     }
 }
@@ -1012,7 +1043,8 @@ func Bac_ManMoveNames(pNew *Bac_Man_t, p *Bac_Man_t) {
 func Bac_ManFree(p *Bac_Man_t) {
     var pNtk *Bac_Ntk_t; var i int32;
     // inlining of macro Bac_ManForEachNtk
-    for  i = 1; (i <= Bac_ManNtkNum(p)) && (((pNtk) = Bac_ManNtk(p, i)), 1); i++  { 
+    for i = 1; i <= Bac_ManNtkNum(p); i++ {
+        pNtk = Bac_ManNtk(p, i) 
         Bac_NtkFree( pNtk );
     }
     Vec_IntErase( &p.vBuf2LeafNtk );
@@ -1036,7 +1068,8 @@ func Bac_ManMemory(p *Bac_Man_t) int32 {
     nMem += Abc_NamMemUsed(p.pStrs);
     nMem += Abc_NamMemUsed(p.pMods);
     // inlining of macro Bac_ManForEachNtk
-    for  i = 1; (i <= Bac_ManNtkNum(p)) && (((pNtk) = Bac_ManNtk(p, i)), 1); i++  { 
+    for i = 1; i <= Bac_ManNtkNum(p); i++ {
+        pNtk = Bac_ManNtk(p, i) 
         nMem += Bac_NtkMemory( pNtk );
     }
     return nMem;
@@ -1044,7 +1077,8 @@ func Bac_ManMemory(p *Bac_Man_t) int32 {
 func Bac_ManObjNum(p *Bac_Man_t) int32 {
     var pNtk *Bac_Ntk_t; var i, Count int32;
     // inlining of macro Bac_ManForEachNtk
-    for  i = 1; (i <= Bac_ManNtkNum(p)) && (((pNtk) = Bac_ManNtk(p, i)), 1); i++  { 
+    for i = 1; i <= Bac_ManNtkNum(p); i++ {
+        pNtk = Bac_ManNtk(p, i) 
         Count += Bac_NtkObjNum(pNtk);
     }
     return Count;
@@ -1052,7 +1086,8 @@ func Bac_ManObjNum(p *Bac_Man_t) int32 {
 func Bac_ManNodeNum(p *Bac_Man_t) int32 {
     var pNtk *Bac_Ntk_t; var i, Count int32;
     // inlining of macro Bac_ManForEachNtk
-    for  i = 1; (i <= Bac_ManNtkNum(p)) && (((pNtk) = Bac_ManNtk(p, i)), 1); i++  { 
+    for i = 1; i <= Bac_ManNtkNum(p); i++ {
+        pNtk = Bac_ManNtk(p, i) 
         Count += Bac_NtkBoxNum( pNtk );
     }
     return Count;
@@ -1063,14 +1098,20 @@ func Bac_ManBoxNum_rec(p *Bac_Ntk_t) int32 {
         return p.Count; }
     // inlining of macro Bac_NtkForEachBox
     for  iObj = 0; (iObj < Bac_NtkObjNum(p)); iObj++  { if !(Bac_ObjIsBox(p, iObj) != 0) {} else {
-        Counter += Bac_ObjIsBoxUser(p, iObj) ? Bac_ManBoxNum_rec( Bac_BoxNtk(p, iObj) ) : 1; }
+        if Bac_ObjIsBoxUser(p, iObj) != 0 {
+            Counter += Bac_ManBoxNum_rec(Bac_BoxNtk(p, iObj))
+        } else {
+            Counter++
+        } }
     }
-    return (p.Count = Counter);
+    p.Count = Counter
+    return Counter
 }
 func Bac_ManBoxNum(p *Bac_Man_t) int32 {
     var pNtk *Bac_Ntk_t; var i int32;
     // inlining of macro Bac_ManForEachNtk
-    for  i = 1; (i <= Bac_ManNtkNum(p)) && (((pNtk) = Bac_ManNtk(p, i)), 1); i++  { 
+    for i = 1; i <= Bac_ManNtkNum(p); i++ {
+        pNtk = Bac_ManNtk(p, i) 
         pNtk.Count = -1;
     }
     return Bac_ManBoxNum_rec( Bac_ManRoot(p) );
@@ -1089,7 +1130,8 @@ func Bac_ManPrintStats(p *Bac_Man_t, nModules int32, fVerbose int32) {
     fmt.Printf("\n");
     Bac_ManBoxNum( p );
     // inlining of macro Bac_ManForEachNtk
-    for  i = 1; (i <= Bac_ManNtkNum(p)) && (((pNtk) = Bac_ManNtk(p, i)), 1); i++  {
+    for i = 1; i <= Bac_ManNtkNum(p); i++ {
+        pNtk = Bac_ManNtk(p, i)
         if i == nModules+1 {
             break; }
         fmt.Printf("Module %5d : ", i);
