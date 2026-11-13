@@ -9,18 +9,19 @@ import (
 // cecGeneralSolver follows cecSolveG.c's Glucose2 modes: mode 0 uses CNF,
 // mode 1 uses CNF plus justification, and mode 2 uses circuit justification.
 type cecGeneralSolver struct {
-	graph *Gia_Man_t
-	pars  *Cec_ParSat_t
-	sat   *glucose2.SimpSolver
-	vars  []int32 // object id -> SAT literal, or -1 when not encoded
-	since int32
+	graph  *Gia_Man_t
+	pars   *Cec_ParSat_t
+	sat    *glucose2.SimpSolver
+	vars   []int32 // object id -> SAT literal, or -1 when not encoded
+	phases []bool
+	since  int32
 }
 
 func newCecGeneralSolver(graph *Gia_Man_t, pars *Cec_ParSat_t) *cecGeneralSolver {
 	if pars.SolverType < 0 || pars.SolverType > 2 {
 		panic("cec: invalid general solver type")
 	}
-	s := &cecGeneralSolver{graph: graph, pars: pars}
+	s := &cecGeneralSolver{graph: graph, pars: pars, phases: cecSolverPhases(graph, pars.SolverType == 0 && pars.fPolarFlip != 0)}
 	s.reset()
 	return s
 }
@@ -38,7 +39,7 @@ func (s *cecGeneralSolver) reset() {
 	}
 	s.since = 0
 }
-func (s *cecGeneralSolver) binary(a, b int32, xor bool) int32 {
+func (s *cecGeneralSolver) binary(a, b int32, xor, phase bool) int32 {
 	if a == b {
 		if xor {
 			return s.vars[0]
@@ -53,6 +54,9 @@ func (s *cecGeneralSolver) binary(a, b int32, xor bool) int32 {
 	}
 	v := s.sat.NewVar(true, true)
 	z := int32(v) << 1
+	if phase {
+		z ^= 1
+	}
 	if s.pars.SolverType != 0 {
 		left, right := a, b
 		if (left > right) != xor {
@@ -93,12 +97,12 @@ func (s *cecGeneralSolver) encode(lit int32) int32 {
 	case core.Buffer, core.Output:
 		value = s.encode(a)
 	case core.And, core.Xor:
-		value = s.binary(s.encode(a), s.encode(b), kind == core.Xor)
+		value = s.binary(s.encode(a), s.encode(b), kind == core.Xor, s.phases[id])
 	case core.Mux:
 		cond, t, e := s.encode(a), s.encode(b), s.encode(c)
-		x := s.binary(cond, t, false)
-		y := s.binary(cond^1, e, false)
-		value = s.binary(x^1, y^1, false) ^ 1
+		x := s.binary(cond, t, false, false)
+		y := s.binary(cond^1, e, false, false)
+		value = s.binary(x^1, y^1, false, false) ^ 1
 	default:
 		panic(fmt.Sprintf("cec: unsupported graph object %d", id))
 	}

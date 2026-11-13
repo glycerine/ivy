@@ -7,15 +7,16 @@ import (
 
 // cecClassicSolver uses ABC's bsat package for the default SolverType -1.
 type cecClassicSolver struct {
-	graph *Gia_Man_t
-	pars  *Cec_ParSat_t
-	sat   *bsat.Solver
-	vars  []int32
-	since int32
+	graph  *Gia_Man_t
+	pars   *Cec_ParSat_t
+	sat    *bsat.Solver
+	vars   []int32
+	phases []bool
+	since  int32
 }
 
 func newCecClassicSolver(g *Gia_Man_t, pars *Cec_ParSat_t) *cecClassicSolver {
-	s := &cecClassicSolver{graph: g, pars: pars}
+	s := &cecClassicSolver{graph: g, pars: pars, phases: cecSolverPhases(g, pars.fPolarFlip != 0)}
 	s.reset()
 	return s
 }
@@ -31,7 +32,7 @@ func (s *cecClassicSolver) reset() {
 	}
 	s.since = 0
 }
-func (s *cecClassicSolver) binary(a, b int32, xor bool) int32 {
+func (s *cecClassicSolver) binary(a, b int32, xor, phase bool) int32 {
 	if a == b {
 		if xor {
 			return s.vars[0]
@@ -45,6 +46,9 @@ func (s *cecClassicSolver) binary(a, b int32, xor bool) int32 {
 		return s.vars[0]
 	}
 	z := s.sat.NewVariable() << 1
+	if phase {
+		z ^= 1
+	}
 	clauses := [][]int32{{a ^ 1, b ^ 1, z}, {a, z ^ 1}, {b, z ^ 1}}
 	if xor {
 		clauses = [][]int32{{a, b, z ^ 1}, {a ^ 1, b ^ 1, z ^ 1}, {a, b ^ 1, z}, {a ^ 1, b, z}}
@@ -72,12 +76,12 @@ func (s *cecClassicSolver) encode(lit int32) int32 {
 	case core.Buffer, core.Output:
 		value = s.encode(a)
 	case core.And, core.Xor:
-		value = s.binary(s.encode(a), s.encode(b), kind == core.Xor)
+		value = s.binary(s.encode(a), s.encode(b), kind == core.Xor, s.phases[id])
 	case core.Mux:
 		cond, t, e := s.encode(a), s.encode(b), s.encode(c)
-		x := s.binary(cond, t, false)
-		y := s.binary(cond^1, e, false)
-		value = s.binary(x^1, y^1, false) ^ 1
+		x := s.binary(cond, t, false, false)
+		y := s.binary(cond^1, e, false, false)
+		value = s.binary(x^1, y^1, false, false) ^ 1
 	default:
 		panic("cec: unsupported graph object")
 	}
@@ -126,4 +130,22 @@ func (s *cecClassicSolver) inputs() []bool {
 		}
 	}
 	return model
+}
+
+// cecSolverPhases computes the all-zero input phase used by ABC's optional SAT polarity normalization.
+func cecSolverPhases(graph *Gia_Man_t, enabled bool) []bool {
+	phases := make([]bool, graph.ObjectCount())
+	if !enabled {
+		return phases
+	}
+	model, err := core.NewModel(graph)
+	if err != nil {
+		panic(err)
+	}
+	values, err := model.Values(make([]bool, len(graph.InputLiterals())))
+	if err != nil {
+		panic(err)
+	}
+	copy(phases, values)
+	return phases
 }
