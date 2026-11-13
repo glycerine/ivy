@@ -1,8 +1,10 @@
 package ssw
 
 import (
+	"fmt"
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/misc/vec"
+	"strings"
 	"testing"
 )
 
@@ -23,6 +25,35 @@ func TestClassManagerPreservesRepresentatives(t *testing.T) {
 	Ssw_ClassesStop(p)
 	if aig.Aig_ObjRepr(g, x) != g.Const1() {
 		t.Fatal("stop changed graph representatives")
+	}
+}
+
+// ABC's Aig_ManReprStart asserts Aig_ManBufNum(p) == 0. Check the
+// correspondence entry point as well as the class manager so the source
+// precondition does not become an accidental silent change of behavior.
+func TestSignalCorrespondenceRejectsBufferWhenStartingReprs(t *testing.T) {
+	for _, complemented := range []bool{false, true} {
+		g := aig.NewGraph()
+		input, state := g.NewInput(), g.NewInput()
+		fanin := input
+		if complemented {
+			fanin = fanin.Not()
+		}
+		buffer := aig.Aig_ObjCreate(g, &aig.Node{Kind: aig.Buffer, Fanins: [2]aig.Edge{fanin, aig.InvalidEdge}})
+		g.AddOutput(buffer)
+		g.AddOutput(g.AND(input, state))
+		aig.Aig_ManSetRegNum(g, 1)
+		var pars Ssw_Pars_t
+		Ssw_ManSetDefaultParams(&pars)
+		func() {
+			defer func() {
+				v := recover()
+				if v == nil || !strings.Contains(fmt.Sprint(v), "representatives require buffer-free graph") {
+					t.Fatalf("complemented=%v: unexpected panic %v", complemented, v)
+				}
+			}()
+			Ssw_SignalCorrespondence(g, &pars)
+		}()
 	}
 }
 func TestClassManagerStartsRepresentatives(t *testing.T) {

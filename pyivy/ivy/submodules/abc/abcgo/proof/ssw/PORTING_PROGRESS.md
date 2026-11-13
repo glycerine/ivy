@@ -1,29 +1,27 @@
 # Sequential sweeping port progress
 
-The package is **not yet buildable**: the original draft retains untranslated C
-syntax and pointer representations in most source files. No draft files are
-excluded from the build. The whole package still needs translation, followed by
-correctness and readability reviews and algorithm-level tests.
+The package builds. The full package race tests and `go vet ./proof/ssw`
+pass. Its implementation includes signal and latch correspondence, SAT cone
+encoding, simulation, constrained and dynamic sweeping, and rarity simulation.
+Sequential trace and counterexample tests exercise these paths; passing tests
+are not evidence of exhaustive correctness.
 
-The original correspondence and rarity parameter defaults have been translated
-into `sswParams.go`, including clearing previously set fields. Their focused
-tests pass using a temporary stand-in for the still-unported simulation type;
-this is not a full-package test.
+ABC's `Aig_ManReprStart` explicitly asserts `Aig_ManBufNum(p) == 0` in
+`src/aig/aig/aigRepr.c:47`. The Go `aig.Aig_ManReprStart` preserves this
+precondition, and `Ssw_ClassesStart` calls it if the graph does not already
+have representative storage. Consequently, signal correspondence on such a
+buffered graph panics when it needs to create the storage. Both this public
+entry point and the class-manager precondition have regression tests. The
+frame and SAT helpers separately support buffer nodes; those tests do not
+imply that representative-based correspondence accepts buffered graphs.
+Lifting this precondition would require more than removing the assertion:
+class enumeration, graph-copy ownership, and transfers back to the original
+graph must all preserve representatives and phase through the buffers.
 
-The source's 32- and 64-bit bit-matrix transpose operations and rarity word
-count are in `sswTranspose.go`. Independent bit-level tests check 100 seeded
-matrices at each width and compare the optimized 64-bit operation against a
-straightforward implementation. Inspection revealed that the source's slow
-demonstration transpose reverses output rows relative to its optimized routine;
-the Go reference uses the optimized routine's ordering. Focused verification:
-
-```
-GOCACHE=/tmp/abcgo-cache go test -race \
-  proof/ssw/sswTranspose.go proof/ssw/sswTranspose_test.go
-```
-
-The primary port dependency is representation: ABC's `Aig_Obj_t *` and
-complemented pointer arithmetic must consistently become the Go AIG package's
-graph-owned `aig.Edge` values across frame maps, simulation, class handling,
-and SAT construction. Converting individual pointers mechanically will not
-preserve complement and ownership semantics.
+The original semi-formal manager contains an unconditional assertion because
+its frame-array migration is unfinished; the port preserves it as a panic.
+Rarity permutation uses Go's PRNG, so its exact ordering differs from C's
+platform-dependent `rand()`. Deadline checks are cooperative, and the legacy
+CEC delegation returns unknown when a deadline is required because that API
+does not provide one. Broader differential testing against ABC, especially for
+partitioned and constrained modes, remains useful.
