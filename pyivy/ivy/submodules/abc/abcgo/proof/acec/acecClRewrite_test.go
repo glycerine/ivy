@@ -34,3 +34,17 @@ func TestRewriteTopSingleRoot(t *testing.T) {
 		t.Fatalf("result %v", vec.Vec_IntArray(result))
 	}
 }
+
+// acecCl.c builds a fresh manager and never assigns its register count.
+func TestRewriteReplaceSourceLeavesRegisterCountZero(t *testing.T) {
+	p := gia.Gia_ManStart(8)
+	q := gia.Gia_ManAppendCi(p)
+	gia.Gia_ManAppendCo(p, q)
+	gia.Gia_ManSetRegNum(p, 1)
+	roots := vec.Vec_IntAlloc(1)
+	vec.Vec_IntPush(roots, q)
+	dst := Acec_RewriteReplace(p, roots)
+	if got := gia.Gia_ManRegNum(dst); got != 0 {
+		t.Fatalf("registers=%d, want source result 0", got)
+	}
+}

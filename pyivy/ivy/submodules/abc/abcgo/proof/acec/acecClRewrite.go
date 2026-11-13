@@ -73,7 +73,6 @@ func Acec_RewriteReplace(p *Gia_Man_t, result *Vec_Int_t) *Gia_Man_t {
 		repr := gia.Gia_ManObj(p, lit>>1)
 		gia.Gia_ManCo(p, i).Value = uint32(gia.Gia_ManAppendCo(dst, int32(repr.Value)))
 	}
-	gia.Gia_ManSetRegNum(dst, gia.Gia_ManRegNum(p))
 	gia.Gia_ManSetPhase(p)
 	gia.Gia_ManSetPhase(dst)
 	for i := int32(0); i < gia.Gia_ManCoNum(dst); i++ {
