@@ -30,7 +30,8 @@ func Cec_ManSimulationOne(graph *Gia_Man_t, pars *Cec_ParSim_t) int32 {
 func Cec_ManSimulation(graph *Gia_Man_t, pars *Cec_ParSim_t) {
 	gia.Gia_ManRandom(1)
 	if pars.fSeqSimulate != 0 {
-		util.Abc_Print(1, "Performing rounds of random simulation of %d frames with %d words.\n", pars.nFrames, pars.nWords)
+		// The C format has two verbs but passes rounds, frames, then words.
+		util.Abc_Print(1, "Performing rounds of random simulation of %d frames with %d words.\n", pars.nRounds, pars.nFrames)
 	}
 	old := gia.Gia_ManEquivCountLits(graph)
 	var round, noRefine int32
