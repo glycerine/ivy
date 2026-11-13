@@ -82,9 +82,6 @@ func Fra_ManPartitionTest(graph *aig.Graph, commonLimit int32) {
 	}
 	fmt.Printf("Scanning = %.2f sec\n", time.Since(started).Seconds())
 	outputs := len(supports)
-	if outputs == 0 {
-		return
-	}
 	fmt.Printf("PIs = %6d. POs = %6d. Lim = %3d.   AveS = %3d. SN = %3d. R = %4.2f Max = %5d.\n", graph.InputCount(), outputs, commonLimit, total/outputs, totalNew/outputs, ratio/float64(outputs), largest)
 }
 

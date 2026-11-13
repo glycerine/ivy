@@ -27,6 +27,17 @@ func TestOutputSupportAndOverlap(t *testing.T) {
 	Fra_ManPartitionTest2(graph)
 }
 
+// The original averages by Aig_ManCoNum without a zero-output guard. A
+// compiled C fixture terminates with SIGFPE for this input.
+func TestPartitionDiagnosticZeroOutputsFailsLikeSource(t *testing.T) {
+	defer func() {
+		if recover() == nil {
+			t.Fatal("expected source division-by-zero failure")
+		}
+	}()
+	Fra_ManPartitionTest(aig.NewGraph(), 1)
+}
+
 // Both source diagnostics call Aig_ManSupports, which clears the terminal
 // pNext/CioId union after computing supports.
 func TestPartitionDiagnosticsClearTerminalCioIDs(t *testing.T) {
