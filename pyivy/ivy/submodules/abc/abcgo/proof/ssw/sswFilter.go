@@ -106,8 +106,14 @@ func Ssw_ManSweepNodeFilter(p *Ssw_Man_t, obj aig.Edge, frame int32) int32 {
 		return 0
 	}
 	node, rep := Ssw_ObjFrame(p, obj, frame), Ssw_ObjFrame(p, repr, frame)
-	if node == aig.InvalidEdge || rep == aig.InvalidEdge {
-		panic("ssw: missing framed representative")
+	if node == aig.InvalidEdge {
+		panic("ssw: missing framed candidate")
+	}
+	if rep == aig.InvalidEdge {
+		// A valid rewired graph can visit the lower-ID representative later.
+		// Drop the candidate rather than assuming an unframed equivalence.
+		Ssw_ClassesRemoveNode(p.ppClasses, obj)
+		return 0
 	}
 	phase := aig.Aig_ObjPhase(p.pAig, obj) != aig.Aig_ObjPhase(p.pAig, repr)
 	if (aig.Aig_ObjPhaseReal(p.pFrames, node) != aig.Aig_ObjPhaseReal(p.pFrames, rep)) != phase {
@@ -230,7 +236,12 @@ func Ssw_ManSweepBmcFilter(p *Ssw_Man_t, timeLimit int32) int32 {
 	}
 	return 1
 }
+
+// Ssw_SignalFilter retains ABC's integer-second time budget behavior: a
+// remaining fraction of a second rounds to zero, which means no per-sweep
+// limit, and that wall-clock limit is not passed to individual SAT calls.
 func Ssw_SignalFilter(g *aig.Graph, frames, conflicts, rounds, timeLimit, timeLimit2 int32, cex *util.Abc_Cex_t, latchOnly, verbose int32) {
+	deadline := time.Now().Add(time.Duration(timeLimit) * time.Second)
 	if aig.Aig_ManRegNum(g) <= 0 || aig.Aig_ManConstrNum(g) != 0 {
 		panic("ssw: invalid signal filter graph")
 	}
@@ -258,7 +269,6 @@ func Ssw_SignalFilter(g *aig.Graph, frames, conflicts, rounds, timeLimit, timeLi
 	if cex != nil {
 		Ssw_ManFindStartingState(p, cex)
 	}
-	deadline := time.Now().Add(time.Duration(timeLimit) * time.Second)
 	for r := int32(0); r < rounds; r++ {
 		if verbose != 0 {
 			fmt.Printf("Round %3d:\n", r)
@@ -272,7 +282,7 @@ func Ssw_SignalFilter(g *aig.Graph, frames, conflicts, rounds, timeLimit, timeLi
 			fmt.Print("Initial    : ")
 			Ssw_ClassesPrint(p.ppClasses, 0)
 		}
-		p.pMSat = sswSatStart(p.pPars)
+		p.pMSat = Ssw_SatStart(0)
 		part := int32(0)
 		if timeLimit != 0 {
 			part = int32(time.Until(deadline) / time.Second)

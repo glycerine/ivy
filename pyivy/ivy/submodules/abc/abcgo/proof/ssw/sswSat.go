@@ -7,10 +7,17 @@ import (
 	"time"
 )
 
-func Ssw_NodesAreEquiv(p *Ssw_Man_t, old, node aig.Edge) int32 {
-	if sswDeadlineExpired(p.pPars) {
-		return -1
+// sswQueryLit mirrors ABC: SAT assumptions use the parameter flag even when
+// the solver was initialized with a different polarity flag.
+func sswQueryLit(p *Ssw_Man_t, e aig.Edge, neg bool) int32 {
+	lit := sswLit(p.pMSat, e, neg)
+	if (p.pMSat.fPolarFlip != 0) != (p.pPars.fPolarFlip != 0) && aig.Aig_ObjPhase(p.pFrames, e&^1) {
+		lit ^= 1
 	}
+	return lit
+}
+
+func Ssw_NodesAreEquiv(p *Ssw_Man_t, old, node aig.Edge) int32 {
 	if p.pMSat == nil || old.Complemented() || node.Complemented() || old == node {
 		panic("ssw: invalid equivalence query")
 	}
@@ -21,19 +28,15 @@ func Ssw_NodesAreEquiv(p *Ssw_Man_t, old, node aig.Edge) int32 {
 	Ssw_CnfNodeAddToSolver(sat, node)
 	samePhase := p.pFrames.Node(old).Phase == p.pFrames.Node(node).Phase
 	for direction := 0; direction < 2; direction++ {
-		if sswDeadlineExpired(p.pPars) {
-			return -1
-		}
 		if direction == 1 && old == p.pFrames.Const1() {
 			break
 		}
-		a := sswLit(sat, old, direction == 1)
-		b := sswLit(sat, node, samePhase != (direction == 1))
+		a := sswQueryLit(p, old, direction == 1)
+		b := sswQueryLit(p, node, samePhase != (direction == 1))
 		assumptions := []bsat.Literal{a, b}
 		if p.iOutputLit >= 0 {
 			assumptions = append(assumptions, p.iOutputLit)
 		}
-		sat.pSat.SetDeadline(p.pPars.deadline)
 		sat.pSat.SetLimits(int64(p.pPars.nBTLimit), 0)
 		start := time.Now()
 		result := sat.pSat.Solve(assumptions...)
@@ -76,7 +79,7 @@ func Ssw_NodesAreConstrained(p *Ssw_Man_t, old, node aig.Edge) int32 {
 	sat := p.pMSat
 	Ssw_CnfNodeAddToSolver(sat, old)
 	Ssw_CnfNodeAddToSolver(sat, node&^1)
-	a, b := sswLit(sat, old, false), sswLit(sat, node, false)
+	a, b := sswQueryLit(p, old, false), sswQueryLit(p, node, false)
 	if old == p.pFrames.Const1() {
 		sswAddClause(sat, b)
 	} else {
@@ -88,6 +91,6 @@ func Ssw_NodesAreConstrained(p *Ssw_Man_t, old, node aig.Edge) int32 {
 func Ssw_NodeIsConstrained(p *Ssw_Man_t, out aig.Edge) int32 {
 	child := p.pFrames.Node(out).Fanins[0]
 	Ssw_CnfNodeAddToSolver(p.pMSat, child&^1)
-	sswAddClause(p.pMSat, sswLit(p.pMSat, child, true))
+	sswAddClause(p.pMSat, sswQueryLit(p, child, true))
 	return 1
 }

@@ -141,8 +141,10 @@ func Ssw_RarDeriveCex(p *Ssw_RarMan_t, frame, po, pattern, verbose int32) *util.
 		panic("ssw: incorrect rarity counterexample size")
 	}
 	if saig.Saig_ManVerifyCex(p.pAig, cex) == 0 {
+		// ABC reports a failed replay but still returns the witness. In particular,
+		// a filter started from a nonzero prefix state can produce a witness
+		// that is invalid when replayed from the original zero initial state.
 		fmt.Println("Ssw_RarDeriveCex(): Counter-example is invalid.")
-		return nil
 	}
 	return cex
 }
@@ -347,9 +349,7 @@ func Ssw_RarManObjHashWord(data any, obj aig.Edge) uint32 {
 	var hash uint32
 
 	for i, w := range Ssw_RarObjSim(p, int32(obj.NodeID())) {
-		if aig.Aig_ObjPhase(p.pAig, obj) {
-			w = ^w
-		}
+		// ABC hashes raw words even when equality normalizes by phase.
 		hash ^= uint32(w) * sswSimulationPrimes[(2*i)&127]
 		hash ^= uint32(w>>32) * sswSimulationPrimes[(2*i+1)&127]
 	}
@@ -725,6 +725,7 @@ func Ssw_RarCheckTrivial(g *aig.Graph, verbose int32) int32 {
 **********************************************************************
 */
 func Ssw_RarSimulate(g *aig.Graph, pars *Ssw_RarPars_t) int32 {
+	start := time.Now()
 	if g.RegisterCount() <= 0 || aig.Aig_ManConstrNum(g) != 0 {
 		panic("ssw: invalid rarity graph")
 	}
@@ -735,7 +736,6 @@ func Ssw_RarSimulate(g *aig.Graph, pars *Ssw_RarPars_t) int32 {
 	defer Ssw_RarManStop(p)
 	p.vInits = vec.Vec_IntStart(int(g.RegisterCount() * pars.nWords))
 	pars.nSolved = 0
-	start := time.Now()
 	lastSolved := start
 	restarts := int32(0)
 	result := int32(-1)
@@ -756,10 +756,6 @@ outer:
 				if pars.fSolveAll == 0 {
 					Ssw_RarManPrepareRandom(seed)
 					cex := Ssw_RarDeriveCex(p, r*pars.nFrames+f, p.iFailPo, p.iFailPat, pars.fVerbose)
-					if cex == nil {
-						result = -1
-						break outer
-					}
 					if err := g.SetSequentialCounterexample(cex); err != nil {
 						panic(err)
 					}
@@ -890,6 +886,7 @@ func Ssw_RarSimulateGia(g *gia.Gia_Man_t, pars *Ssw_RarPars_t) int32 {
 **********************************************************************
 */
 func Ssw_RarSignalFilter(g *aig.Graph, pars *Ssw_RarPars_t) int32 {
+	start := time.Now()
 	if g.RegisterCount() <= 0 || aig.Aig_ManConstrNum(g) != 0 {
 		panic("ssw: invalid rarity filter graph")
 	}
@@ -919,7 +916,6 @@ func Ssw_RarSignalFilter(g *aig.Graph, pars *Ssw_RarPars_t) int32 {
 		p.ppClasses = Ssw_ClassesPrepareSimple(g, pars.fLatchOnly, 0)
 	}
 	Ssw_ClassesSetData(p.ppClasses, p, Ssw_RarManObjHashWord, Ssw_RarManObjIsConst, Ssw_RarManObjsAreEqual)
-	start := time.Now()
 	restarts := int32(0)
 	for r := int32(0); pars.nRounds == 0 || restarts*pars.nRestart+r < pars.nRounds; r++ {
 		if Ssw_ClassesCand1Num(p.ppClasses) == 0 && Ssw_ClassesClassNum(p.ppClasses) == 0 {
@@ -938,9 +934,6 @@ func Ssw_RarSignalFilter(g *aig.Graph, pars *Ssw_RarPars_t) int32 {
 			if pars.fMiter != 0 && Ssw_RarManCheckNonConstOutputs(p, -1, 0) != 0 {
 				Ssw_RarManPrepareRandom(seed)
 				cex := Ssw_RarDeriveCex(p, r*pars.nFrames+f, p.iFailPo, p.iFailPat, 1)
-				if cex == nil {
-					return -1
-				}
 				if err := g.SetSequentialCounterexample(cex); err != nil {
 					panic(err)
 				}

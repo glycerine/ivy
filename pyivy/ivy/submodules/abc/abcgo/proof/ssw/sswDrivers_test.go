@@ -5,7 +5,6 @@ import (
 	"github.com/glycerine/abcgo/aig/saig"
 	"github.com/glycerine/abcgo/misc/vec"
 	"testing"
-	"time"
 )
 
 func driverGraph(invert bool) (*aig.Graph, aig.Edge) {
@@ -53,23 +52,5 @@ func TestSequentialDriversEquivalentAndInequivalent(t *testing.T) {
 				})
 			}
 		})
-	}
-}
-func TestSequentialDriversExpiredDeadline(t *testing.T) {
-	a, _ := driverGraph(false)
-	b, _ := driverGraph(false)
-	pairs := vec.Vec_IntAlloc(0)
-	var pars Ssw_Pars_t
-	Ssw_ManSetDefaultParams(&pars)
-	deadline := time.Now().Add(-time.Second)
-	Ssw_ParsSetDeadline(&pars, deadline)
-	if got := Ssw_SecWithPairs(a, b, pairs, pairs, &pars); got != -1 {
-		t.Fatalf("pairs returned %d", got)
-	}
-	if got := Ssw_SecWithSimilarityPairs(a, b, pairs, &pars); got != -1 {
-		t.Fatalf("similarity returned %d", got)
-	}
-	if pars.deadline != deadline {
-		t.Fatal("deadline modified")
 	}
 }

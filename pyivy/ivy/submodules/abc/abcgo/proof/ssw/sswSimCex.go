@@ -12,8 +12,8 @@ func Ssw_SmlCheckOutputSavePattern(p *Ssw_Sml_t, out aig.Edge) []int32 {
 	fanin := p.pAig.Node(out).Fanins[0]
 	words := Ssw_ObjSim(p, int32(fanin.NodeID()))
 	pattern := -1
-	for i := int(p.nWordsPref); i < len(words); i++ {
-		w := words[i]
+	// ABC searches from word zero, including any simulation prefix.
+	for i, w := range words {
 		if w != 0 {
 			pattern = i*32 + bits.TrailingZeros32(w)
 			break

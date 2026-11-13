@@ -28,17 +28,7 @@ func Ssw_SignalCorrespondenceWithPairs(first, second *aig.Graph, ids1, ids2 *vec
 		pars = new(Ssw_Pars_t)
 		Ssw_ManSetDefaultParams(pars)
 	}
-	originalDeadline := pars.deadline
-	if pars.TimeLimit > 0 {
-		limit := time.Now().Add(time.Duration(pars.TimeLimit) * time.Second)
-		if pars.deadline.IsZero() || limit.Before(pars.deadline) {
-			pars.deadline = limit
-		}
-	}
-	defer func() { pars.deadline = originalDeadline }()
-	if sswDeadlineExpired(pars) {
-		return nil
-	}
+
 	if vec.Vec_IntSize(ids1) != vec.Vec_IntSize(ids2) {
 		panic("ssw: mismatched pair vectors")
 	}
@@ -63,9 +53,6 @@ func Ssw_SignalCorrespondeceTestPairs(graph *aig.Graph) *aig.Graph {
 	Ssw_ManSetDefaultParams(&pars)
 	pars.fVerbose = 1
 	reduced := Ssw_SignalCorrespondence(graph, &pars)
-	if reduced == nil {
-		return nil
-	}
 	ids1, ids2 := vec.Vec_IntAlloc(int(aig.Aig_ManObjNumMax(graph))), vec.Vec_IntAlloc(int(aig.Aig_ManObjNumMax(graph)))
 	live := make(map[int]bool)
 	for _, node := range reduced.LiveEdges() {

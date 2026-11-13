@@ -87,7 +87,10 @@ func Ssw_ManUniqueAddConstraint(p *Ssw_Man_t, common *vec.Vec_Ptr_t, f1, f2 int3
 	if p.iOutputLit != -1 {
 		panic("ssw: uniqueness constraint already active")
 	}
-	// Encode the graph value in the same phase-adjusted polarity as the CNF.
-	p.iOutputLit = sswLit(p.pMSat, total, false)
+	// ABC stores the raw literal without its solver phase adjustment.
+	p.iOutputLit = Ssw_ObjSatNum(p.pMSat, total) << 1
+	if total.Complemented() {
+		p.iOutputLit |= 1
+	}
 	return 1
 }

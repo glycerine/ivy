@@ -119,7 +119,7 @@ func Ssw_FilterUsingSemi(manager *Ssw_Man_t, checkTargets, nConfMax, verbose int
 	}
 	var result int32
 	for i := int32(0); i < p.nPatterns; i++ {
-		manager.pMSat = Ssw_SatStart(manager.pPars.fPolarFlip)
+		manager.pMSat = Ssw_SatStart(0)
 		frames := Ssw_ManFilterBmc(p, i, checkTargets)
 		if verbose != 0 {
 			fmt.Printf("%3d : C = %6d. Cl = %6d. F = %3d. P = %3d.\n", i, Ssw_ClassesCand1Num(manager.ppClasses), Ssw_ClassesClassNum(manager.ppClasses), frames, p.nPatterns)

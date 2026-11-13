@@ -5,20 +5,14 @@ import (
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/sat/bsat"
 	"github.com/glycerine/abcgo/sat/cnf"
-	"time"
 )
 
 // Ssw_ManSetConstrPhases finds PI assignments satisfying the unrolled constraints.
 // It returns 0 for satisfiable, 1 for unsatisfiable and -1 for unknown.
 func Ssw_ManSetConstrPhases(g *aig.Graph, frames int32, inits **vec.Vec_Int_t) int32 {
-	return sswManSetConstrPhases(g, frames, inits, time.Time{})
-}
-func sswManSetConstrPhases(g *aig.Graph, frames int32, inits **vec.Vec_Int_t, deadline time.Time) int32 {
+
 	if inits != nil {
 		*inits = nil
-	}
-	if !deadline.IsZero() && !time.Now().Before(deadline) {
-		return -1
 	}
 	unrolled := Ssw_FramesWithConstraints(g, frames)
 	data := cnf.Cnf_Derive(unrolled, 0)
@@ -26,13 +20,9 @@ func sswManSetConstrPhases(g *aig.Graph, frames int32, inits **vec.Vec_Int_t, de
 		panic("ssw: cannot derive constraint CNF")
 	}
 	solver := cnf.Cnf_DataWriteIntoSolver(data, 1, 0)
-	if !deadline.IsZero() && !time.Now().Before(deadline) {
-		return -1
-	}
 	if solver == nil {
 		return 1
 	}
-	solver.SetDeadline(deadline)
 	solver.SetLimits(1000000, 0)
 	switch solver.Solve() {
 	case bsat.Unsatisfiable:

@@ -3,7 +3,6 @@ package ssw
 import (
 	"github.com/glycerine/abcgo/aig/aig"
 	"testing"
-	"time"
 )
 
 // CEC correspondence must preserve every reachable output trace, including
@@ -45,27 +44,6 @@ func TestCecDelegationPreservesReachableTraces(t *testing.T) {
 				copy(oldState, old[1:])
 				copy(newState, got[1:])
 			}
-		}
-	}
-}
-
-func TestCecDelegationRestoresConfiguredTimeout(t *testing.T) {
-	for _, latch := range []bool{false, true} {
-		g := sswDeadlineGraph()
-		var pars Ssw_Pars_t
-		Ssw_ManSetDefaultParams(&pars)
-		pars.fScorrGia = 1
-		pars.TimeLimit = 5
-		if latch {
-			pars.fLatchCorrOpt = 1
-		}
-		deadline := time.Now().Add(time.Hour)
-		Ssw_ParsSetDeadline(&pars, deadline)
-		if Ssw_SignalCorrespondence(g, &pars) == nil {
-			t.Fatalf("latch=%t did not complete before deadline", latch)
-		}
-		if !pars.deadline.Equal(deadline) {
-			t.Fatal("caller deadline was not restored")
 		}
 	}
 }

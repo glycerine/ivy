@@ -34,7 +34,7 @@ func TestUniquenessConstraintRequiresDifferentStates(t *testing.T) {
 	}
 }
 
-func TestUniquenessConstraintWithPhaseFlippedSAT(t *testing.T) {
+func TestUniquenessConstraintRetainsSourcePhaseBehavior(t *testing.T) {
 	g := aig.NewGraph()
 	g.NewInput()
 	lo := g.NewInput()
@@ -58,7 +58,7 @@ func TestUniquenessConstraintWithPhaseFlippedSAT(t *testing.T) {
 		t.Fatal("constraint omitted")
 	}
 	aa, bb := sswLit(sat, a, false), sswLit(sat, b, false)
-	if sat.pSat.Solve(p.iOutputLit, aa, bb) != bsat.Unsatisfiable || sat.pSat.Solve(p.iOutputLit, aa, bb^1) != bsat.Satisfiable {
-		t.Fatal("phase-flipped uniqueness constraint has wrong polarity")
+	if sat.pSat.Solve(p.iOutputLit, aa, bb) != bsat.Satisfiable || sat.pSat.Solve(p.iOutputLit, aa, bb^1) != bsat.Unsatisfiable {
+		t.Fatal("source phase-flipped uniqueness literal behavior changed")
 	}
 }

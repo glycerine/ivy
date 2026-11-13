@@ -17,20 +17,17 @@ func Ssw_ManGetSatVarValue(p *Ssw_Man_t, obj aig.Edge, frame int32) int32 {
 	}
 	variable := Ssw_ObjSatNum(p.pMSat, aig.Aig_Regular(edge))
 	var value int32
-	if edge.Complemented() {
-		value = 1
-	}
 	if variable != 0 {
 		bit, ok := p.pMSat.pSat.Value(variable)
 		if !ok {
 			panic("ssw: SAT model unavailable")
 		}
-		if bit {
-			value ^= 1
+		if bit != edge.Complemented() {
+			value = 1
 		}
 	}
-	// The solver owns its encoding polarity; it may differ from the parameters.
-	if p.pMSat.fPolarFlip != 0 && aig.Aig_ObjPhase(p.pFrames, aig.Aig_Regular(edge)) {
+	// ABC treats an unassigned edge as zero even when it is complemented.
+	if p.pPars.fPolarFlip != 0 && aig.Aig_ObjPhase(p.pFrames, aig.Aig_Regular(edge)) {
 		value ^= 1
 	}
 	return value
@@ -83,9 +80,6 @@ func Ssw_SmlAddPatternDyn(p *Ssw_Man_t) {
 		value, ok := p.pMSat.pSat.Value(variable)
 		if !ok {
 			panic("ssw: SAT model unavailable")
-		}
-		if p.pMSat.fPolarFlip != 0 && aig.Aig_ObjPhase(p.pFrames, obj) {
-			value = !value
 		}
 		if value {
 			words := vec.Vec_PtrEntry(p.vSimInfo, int(aig.Aig_ObjCioId(p.pFrames, obj))).([]uint32)
@@ -154,9 +148,6 @@ func Ssw_ManSweepNode(p *Ssw_Man_t, obj aig.Edge, frame, bmc int32, pairs *vec.V
 	} else {
 		Ssw_ManResimulateBit(p, obj, repr)
 	}
-	if sswDeadlineExpired(p.pPars) {
-		return 0
-	}
 	if aig.Aig_ObjRepr(p.pAig, obj) == repr {
 		panic("ssw: counterexample failed to refine representative")
 	}
@@ -174,9 +165,6 @@ func Ssw_ManSweepBmc(p *Ssw_Man_t) int32 {
 	}
 	p.fRefined = 0
 	for frame := int32(0); frame < p.pPars.nFramesK; frame++ {
-		if sswDeadlineExpired(p.pPars) {
-			return p.fRefined
-		}
 		Ssw_ObjSetFrame(p, p.pAig.Const1(), frame, p.pFrames.Const1())
 		for _, pi := range inputs[:pis] {
 			Ssw_ObjSetFrame(p, pi, frame, p.pFrames.NewInput())
@@ -185,9 +173,6 @@ func Ssw_ManSweepBmc(p *Ssw_Man_t) int32 {
 			p.fRefined |= Ssw_ManSweepNode(p, lo, frame, 1, nil)
 		}
 		for _, obj := range sswFrameNodes(p.pAig) {
-			if sswDeadlineExpired(p.pPars) {
-				return p.fRefined
-			}
 			Ssw_ObjSetFrame(p, obj, frame, sswMakeNode(p, p.pFrames, obj, frame))
 			p.fRefined |= Ssw_ManSweepNode(p, obj, frame, 1, nil)
 		}
@@ -222,9 +207,6 @@ func Ssw_ManDumpEquivMiter(g *aig.Graph, pairs *vec.Vec_Int_t, num, addOutputs i
 func Ssw_ManSweep(p *Ssw_Man_t) int32 {
 	start := time.Now()
 	p.pFrames = Ssw_FramesWithClasses(p)
-	if p.pFrames == nil {
-		return p.fRefined
-	}
 	p.pMSat.pAig = p.pFrames
 	n := aig.Aig_ManCoNum(p.pFrames) - aig.Aig_ManRegNum(p.pAig)
 	if n&1 != 0 {
@@ -256,15 +238,9 @@ func Ssw_ManSweep(p *Ssw_Man_t) int32 {
 		pairs = vec.Vec_IntAlloc(1000)
 	}
 	for _, obj := range inputs[pis:] {
-		if sswDeadlineExpired(p.pPars) {
-			return p.fRefined
-		}
 		p.fRefined |= Ssw_ManSweepNode(p, obj, frame, 0, pairs)
 	}
 	for _, obj := range sswFrameNodes(p.pAig) {
-		if sswDeadlineExpired(p.pPars) {
-			return p.fRefined
-		}
 		Ssw_ObjSetFrame(p, obj, frame, sswMakeNode(p, p.pFrames, obj, frame))
 		if aig.Aig_ObjIsNode(p.pAig, obj) {
 			p.fRefined |= Ssw_ManSweepNode(p, obj, frame, 0, pairs)

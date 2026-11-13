@@ -50,7 +50,7 @@ func TestSweepBmcConstructsInitializedFrames(t *testing.T) {
 	}
 }
 
-func TestUnassignedComplementedFrameUsesConsistentDefault(t *testing.T) {
+func TestUnassignedComplementedFrameRetainsSourceDefault(t *testing.T) {
 	source := aig.NewGraph()
 	a, b := source.NewInput(), source.NewInput()
 	frames := aig.NewGraph()
@@ -63,12 +63,12 @@ func TestUnassignedComplementedFrameUsesConsistentDefault(t *testing.T) {
 	}
 	Ssw_ObjSetFrame(p, a, 0, x)
 	Ssw_ObjSetFrame(p, b, 0, x.Not())
-	if Ssw_ManGetSatVarValue(p, a, 0) != 0 || Ssw_ManGetSatVarValue(p, b, 0) != 1 {
-		t.Fatal("complementary unassigned frame edges received inconsistent defaults")
+	if Ssw_ManGetSatVarValue(p, a, 0) != 0 || Ssw_ManGetSatVarValue(p, b, 0) != 0 {
+		t.Fatal("ABC defaults both unassigned frame edges to zero")
 	}
 }
 
-func TestSatPatternUsesSolverPolarity(t *testing.T) {
+func TestSatPatternRetainsSourceParameterPolarity(t *testing.T) {
 	source := aig.NewGraph()
 	obj := source.NewInput()
 	frames := aig.NewGraph()
@@ -82,12 +82,12 @@ func TestSatPatternUsesSolverPolarity(t *testing.T) {
 	if sat.pSat.Solve(sswLit(sat, frame, false)) != bsat.Satisfiable {
 		t.Fatal("expected SAT")
 	}
-	if Ssw_ManGetSatVarValue(p, obj, 0) != 1 {
-		t.Fatal("pattern interpreted using parameter instead of SAT solver polarity")
+	if Ssw_ManGetSatVarValue(p, obj, 0) != 0 {
+		t.Fatal("ABC uses parameter polarity even when solver polarity differs")
 	}
 }
 
-func TestPhaseFlippedSatPatternCollectorsUseActualValues(t *testing.T) {
+func TestPhaseFlippedSatPatternCollectorsRetainRawValues(t *testing.T) {
 	frames := aig.NewGraph()
 	input := frames.NewInput()
 	aig.Aig_ObjSetPhase(frames, input, true)
@@ -99,15 +99,15 @@ func TestPhaseFlippedSatPatternCollectorsUseActualValues(t *testing.T) {
 	}
 	p := &Ssw_Man_t{pFrames: frames, pMSat: sat, vSimInfo: vec.Vec_PtrAllocSimInfo(1, 1)}
 	Ssw_SmlAddPatternDyn(p)
-	if vec.Vec_PtrEntry(p.vSimInfo, 0).([]uint32)[0] != 1 {
-		t.Fatal("dynamic pattern lost phase flip")
+	if vec.Vec_PtrEntry(p.vSimInfo, 0).([]uint32)[0] != 0 {
+		t.Fatal("ABC stores the raw dynamic SAT value")
 	}
 	vec.Vec_PtrCleanSimInfo(p.vSimInfo, 0, 1)
 	Ssw_SmlAddPattern(p, 0, 0)
-	if vec.Vec_PtrEntry(p.vSimInfo, 0).([]uint32)[0] != 1 {
-		t.Fatal("latch pattern lost phase flip")
+	if vec.Vec_PtrEntry(p.vSimInfo, 0).([]uint32)[0] != 0 {
+		t.Fatal("ABC stores the raw latch SAT value")
 	}
-	if Ssw_CnfGetNodeValue(sat, input) != 1 {
-		t.Fatal("CNF model value lost phase flip")
+	if Ssw_CnfGetNodeValue(sat, input) != 0 {
+		t.Fatal("ABC returns the raw SAT value")
 	}
 }

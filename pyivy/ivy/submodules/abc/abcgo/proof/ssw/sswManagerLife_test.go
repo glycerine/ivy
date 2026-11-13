@@ -20,6 +20,7 @@ func TestManagerCleanupAndStop(t *testing.T) {
 		t.Fatal("cleanup retained frame state")
 	}
 	Ssw_ManStop(p)
+	defer aig.Aig_ManFanoutStop(g)
 	if p.pAig != nil || p.pNodeToFrames != nil {
 		t.Fatal("stop retained manager state")
 	}

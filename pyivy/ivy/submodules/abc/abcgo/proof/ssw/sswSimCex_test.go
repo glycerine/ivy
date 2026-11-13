@@ -33,7 +33,7 @@ func TestSimulationOutputPattern(t *testing.T) {
 	}
 }
 
-func TestSimulationOutputPatternSkipsPrefix(t *testing.T) {
+func TestSimulationOutputPatternRetainsSourcePrefixBehavior(t *testing.T) {
 	g := aig.NewGraph()
 	a, b := g.NewInput(), g.NewInput()
 	g.AddOutput(a)
@@ -42,7 +42,7 @@ func TestSimulationOutputPatternSkipsPrefix(t *testing.T) {
 	Ssw_SmlSimInfo(p, a)[1] = 2
 	Ssw_SmlSimInfo(p, b)[1] = 2
 	model := Ssw_SmlCheckOutput(p)
-	if len(model) != 3 || model[0] != 1 || model[1] != 1 {
-		t.Fatalf("expected suffix pattern, got %v", model)
+	if len(model) != 3 || model[0] != 1 || model[1] != 0 {
+		t.Fatalf("expected source prefix pattern, got %v", model)
 	}
 }

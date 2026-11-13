@@ -44,9 +44,6 @@ func Ssw_ManSweepNodeConstr(p *Ssw_Man_t, obj aig.Edge, frame, _ int32) int32 {
 	}
 	Ssw_SmlSavePatternAig(p, frame)
 	Ssw_ManResimulateBit(p, obj, repr)
-	if sswDeadlineExpired(p.pPars) {
-		return 0
-	}
 	if aig.Aig_ObjRepr(p.pAig, obj) == repr {
 		fmt.Println("Ssw_ManSweepNodeConstr(): Failed to refine representative.")
 	}

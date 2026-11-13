@@ -2,9 +2,33 @@ package ssw
 
 import (
 	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/aig/saig"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"testing"
 )
+
+func TestRarityFilterReturnsInvalidWitnessFromNonzeroPrefix(t *testing.T) {
+	g := aig.NewGraph()
+	x := g.NewInput()
+	r := g.NewInput()
+	g.AddOutput(g.AND(x, r))
+	g.AddOutput(g.Const1()) // next(r) = 1
+	aig.Aig_ManSetRegNum(g, 1)
+
+	prefix := util.Abc_CexAlloc(1, 1, 2)
+	prefix.IFrame = 1
+	util.Abc_InfoSetBit(prefix.PData, 2) // x = 1 in frame 1
+	if saig.Saig_ManVerifyCex(g, prefix) == 0 {
+		t.Fatal("expected a valid prefix reaching r = 1")
+	}
+	pars := &Ssw_RarPars_t{nWords: 1, nFrames: 1, nBinSize: 1, nRounds: 1, fMiter: 1, pCex: prefix}
+	status := Ssw_RarSignalFilter(g, pars)
+	witness := g.SequentialCounterexample()
+	if status != 0 || witness == nil || saig.Saig_ManVerifyCex(g, witness) != 0 {
+		t.Fatal("expected ABC's failure status and invalid zero-initialized witness")
+	}
+}
 
 func TestSswRarityTransposeAndInitialization(t *testing.T) {
 	g := aig.NewGraph()
@@ -120,7 +144,7 @@ func TestSswRarityTransferPreservesRegisterPatterns(t *testing.T) {
 	}
 }
 
-func TestRarityHashMatchesPhaseNormalizedEquality(t *testing.T) {
+func TestRarityHashRetainsSourceRawWordBehavior(t *testing.T) {
 	g := aig.NewGraph()
 	a, b := g.NewInput(), g.NewInput()
 	g.AddOutput(a)
@@ -134,12 +158,12 @@ func TestRarityHashMatchesPhaseNormalizedEquality(t *testing.T) {
 	if Ssw_RarManObjsAreEqual(p, a, b) != 1 {
 		t.Fatal("test patterns should be phase-normalized equal")
 	}
-	if x, y := Ssw_RarManObjHashWord(p, a), Ssw_RarManObjHashWord(p, b); x != y {
-		t.Fatalf("equal patterns have different hashes: %x != %x", x, y)
+	if x, y := Ssw_RarManObjHashWord(p, a), Ssw_RarManObjHashWord(p, b); x == y {
+		t.Fatalf("source hashes raw words, unexpectedly equal: %x", x)
 	}
 }
 
-func TestRarityRejectsInvalidCounterexample(t *testing.T) {
+func TestRarityRetainsSourceInvalidCounterexampleBehavior(t *testing.T) {
 	g := aig.NewGraph()
 	pi := g.NewInput()
 	g.NewInput()
@@ -148,7 +172,7 @@ func TestRarityRejectsInvalidCounterexample(t *testing.T) {
 	aig.Aig_ManSetRegNum(g, 1)
 	p := Ssw_RarManStart(g, &Ssw_RarPars_t{nWords: 1, nFrames: 1, nBinSize: 1})
 	defer Ssw_RarManStop(p)
-	if cex := Ssw_RarDeriveCex(p, 0, 0, 0, 0); cex != nil {
-		t.Fatal("invalid rarity counterexample must not be returned")
+	if cex := Ssw_RarDeriveCex(p, 0, 0, 0, 0); cex == nil || saig.Saig_ManVerifyCex(g, cex) != 0 {
+		t.Fatal("source returns the invalid counterexample after warning")
 	}
 }

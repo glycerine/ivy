@@ -198,9 +198,6 @@ func Ssw_ManSweepResimulateDynLocal(p *Ssw_Man_t, f int32) int32 {
 func Ssw_ManSweepDyn(p *Ssw_Man_t) int32 {
 	start := time.Now()
 	p.pFrames = Ssw_FramesWithClasses(p)
-	if p.pFrames == nil {
-		return p.fRefined
-	}
 	p.pMSat.pAig = p.pFrames
 	aig.Aig_ManFanoutStart(p.pFrames)
 	p.nSRMiterMaxId = aig.Aig_ManObjNumMax(p.pFrames)
@@ -229,9 +226,6 @@ func Ssw_ManSweepDyn(p *Ssw_Man_t) int32 {
 	}
 	var i int32
 	for i = 0; i < aig.Aig_ManObjNumMax(p.pAig); i++ {
-		if sswDeadlineExpired(p.pPars) {
-			return p.fRefined
-		}
 		obj := aig.Aig_ManObj(p.pAig, i)
 		if !p.pAig.ValidEdge(obj) {
 			continue
@@ -264,7 +258,7 @@ func Ssw_ManSweepDyn(p *Ssw_Man_t) int32 {
 				p.nRecyclesTotal++
 				p.nRecycleCalls = 0
 			}
-			p.pMSat = sswSatStart(p.pPars)
+			p.pMSat = Ssw_SatStart(0)
 			p.pMSat.pAig = p.pFrames
 			if p.nPatterns != 0 {
 				panic("ssw: pending simulation patterns")

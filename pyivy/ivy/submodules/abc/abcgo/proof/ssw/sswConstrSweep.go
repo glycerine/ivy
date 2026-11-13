@@ -81,9 +81,6 @@ func Ssw_ManSweepBmcConstr(p *Ssw_Man_t) int32 {
 	inputs := p.pAig.Inputs()
 	regs := int(p.pAig.RegisterCount())
 	for f := int32(0); f < p.pPars.nFramesK; f++ {
-		if sswDeadlineExpired(p.pPars) {
-			return p.fRefined
-		}
 		sswConstrFrameInputs(p, f, &index)
 		sswConstrFrameAssumptions(p, f)
 		for _, lo := range inputs[len(inputs)-regs:] {
@@ -103,18 +100,12 @@ func Ssw_ManSweepBmcConstr_old(p *Ssw_Man_t) int32 {
 	sswConstrInitFrames(p)
 	index := 0
 	for f := int32(0); f < p.pPars.nFramesK; f++ {
-		if sswDeadlineExpired(p.pPars) {
-			return p.fRefined
-		}
 		sswConstrFrameInputs(p, f, &index)
 		sswConstrFrameAssumptions(p, f)
 	}
 	sswConstrCheckInitCount(p, index)
 	p.fRefined = 0
 	for f := int32(0); f < p.pPars.nFramesK; f++ {
-		if sswDeadlineExpired(p.pPars) {
-			return p.fRefined
-		}
 		sswConstrSweepGates(p, f)
 		if f+1 < p.pPars.nFramesK {
 			sswConstrTransfer(p, f)
@@ -126,9 +117,6 @@ func Ssw_ManSweepBmcConstr_old(p *Ssw_Man_t) int32 {
 func Ssw_ManSweepConstr(p *Ssw_Man_t) int32 {
 	start := time.Now()
 	p.pFrames = Ssw_FramesWithClasses(p)
-	if p.pFrames == nil {
-		return p.fRefined
-	}
 	p.pMSat.pAig = p.pFrames
 	graph := p.pAig
 	inputs, outputs := graph.Inputs(), graph.Outputs()
@@ -154,9 +142,6 @@ func Ssw_ManSweepConstr(p *Ssw_Man_t) int32 {
 	p.timeReduce += time.Since(start)
 	nConstraints := int(aig.Aig_ManConstrNum(graph))
 	for frame := int32(0); frame <= f; frame++ {
-		if sswDeadlineExpired(p.pPars) {
-			return p.fRefined
-		}
 		for _, out := range outputs[pos-nConstraints : pos] {
 			driver := graph.Node(out).Fanins[0]
 			Ssw_FramesWithClasses_rec(p, driver&^1, frame)

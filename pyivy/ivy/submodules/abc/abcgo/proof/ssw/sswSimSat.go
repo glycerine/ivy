@@ -38,14 +38,9 @@ func Ssw_ManResimulateBit(p *Ssw_Man_t, _ aig.Edge, repr aig.Edge) {
 	p.timeSimSat += time.Since(start)
 }
 func Ssw_ManResimulateWord(p *Ssw_Man_t, _ aig.Edge, repr aig.Edge, _ int32) {
-	if sswDeadlineExpired(p.pPars) {
-		return
-	}
 	start := time.Now()
 	Ssw_SmlAssignDist1Plus(p.pSml, p.pPatWords)
-	if !sswSimulateOne(p.pSml, p.pPars) || sswDeadlineExpired(p.pPars) {
-		return
-	}
+	Ssw_SmlSimulateOne(p.pSml)
 	constRefined := Ssw_ClassesRefineConst1(p.ppClasses, 1)
 	classRefined := Ssw_ClassesRefine(p.ppClasses, 1)
 	if repr == p.pAig.Const1() {

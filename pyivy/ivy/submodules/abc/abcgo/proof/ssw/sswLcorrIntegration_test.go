@@ -48,18 +48,23 @@ func TestLatchCorrespondenceDriverPreservesTraces(t *testing.T) {
 	}
 }
 
-func TestLatchCorrespondenceCanRunTwiceOnSameGraph(t *testing.T) {
+func TestLatchCorrespondenceRetainsSourceFanoutLifecycle(t *testing.T) {
 	g := aig.NewGraph()
 	pi, l0, l1 := g.NewInput(), g.NewInput(), g.NewInput()
 	g.AddOutput(g.AND(l0, l1))
 	g.AddOutput(pi)
 	g.AddOutput(pi)
 	aig.Aig_ManSetRegNum(g, 2)
-	for i := 0; i < 2; i++ {
-		pars := new(Ssw_Pars_t)
-		Ssw_ManSetDefaultParamsLcorr(pars)
-		if Ssw_LatchCorrespondence(g, pars) == nil {
-			t.Fatal("no correspondence result")
-		}
+	pars := new(Ssw_Pars_t)
+	Ssw_ManSetDefaultParamsLcorr(pars)
+	if Ssw_LatchCorrespondence(g, pars) == nil {
+		t.Fatal("no correspondence result")
 	}
+	defer aig.Aig_ManFanoutStop(g)
+	defer func() {
+		if recover() == nil {
+			t.Fatal("ABC leaves fanout active; a second start should fail")
+		}
+	}()
+	Ssw_LatchCorrespondence(g, pars)
 }

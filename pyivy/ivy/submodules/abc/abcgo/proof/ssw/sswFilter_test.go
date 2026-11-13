@@ -72,3 +72,26 @@ func TestSswSignalFilterRunsAndRestoresMarks(t *testing.T) {
 		}
 	}
 }
+
+func TestSignalFilterDiscardsUnframedRepresentative(t *testing.T) {
+	g := aig.NewGraph()
+	a, b, q := g.NewInput(), g.NewInput(), g.NewInput()
+	early, late := g.AND(a, q), g.AND(b, q)
+	aig.Aig_ObjDisconnect(g, early)
+	aig.Aig_ObjConnect(g, early, late, b)
+	g.AddOutput(early)
+	g.AddOutput(a)
+	aig.Aig_ManSetRegNum(g, 1)
+	classes := Ssw_ClassesStart(g)
+	Ssw_ObjAddClass(classes, early, []aig.Edge{early, late}, 2)
+	aig.Aig_ObjSetRepr(g, late, early)
+	frames := aig.NewGraph()
+	p := &Ssw_Man_t{pAig: g, pFrames: frames, pPars: &Ssw_Pars_t{}, ppClasses: classes, nFrames: 1, pNodeToFrames: make([]aig.Edge, len(g.Nodes()))}
+	for i := range p.pNodeToFrames {
+		p.pNodeToFrames[i] = aig.InvalidEdge
+	}
+	Ssw_ObjSetFrame(p, late, 0, frames.NewInput())
+	if Ssw_ManSweepNodeFilter(p, late, 0) != 0 || classes.nClasses != 0 || aig.Aig_ObjRepr(g, late) != aig.InvalidEdge {
+		t.Fatal("unframed representative was not discarded")
+	}
+}

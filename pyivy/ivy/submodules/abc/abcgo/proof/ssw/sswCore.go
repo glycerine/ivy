@@ -26,9 +26,6 @@ func sswInvokeCallback(pars *Ssw_Pars_t) {
 }
 func Ssw_SignalCorrespondenceRefine(p *Ssw_Man_t) *aig.Graph {
 	started := time.Now()
-	if sswDeadlineExpired(p.pPars) {
-		return nil
-	}
 	p.nLitsBeg = Ssw_ClassesLitNum(p.ppClasses)
 	p.nNodesBeg = aig.Aig_ManNodeNum(p.pAig)
 	p.nRegsBeg = aig.Aig_ManRegNum(p.pAig)
@@ -37,7 +34,7 @@ func Ssw_SignalCorrespondenceRefine(p *Ssw_Man_t) *aig.Graph {
 		Ssw_ClassesPrint(p.ppClasses, 0)
 	}
 	if p.pPars.fLatchCorr == 0 || p.pPars.nFramesK > 1 {
-		p.pMSat = sswSatStart(p.pPars)
+		p.pMSat = Ssw_SatStart(0)
 		if p.pPars.fConstrs != 0 {
 			Ssw_ManSweepBmcConstr(p)
 		} else {
@@ -47,26 +44,17 @@ func Ssw_SignalCorrespondenceRefine(p *Ssw_Man_t) *aig.Graph {
 		p.pMSat = nil
 		Ssw_ManCleanup(p)
 	}
-	if sswDeadlineExpired(p.pPars) {
-		return nil
-	}
 	if p.pPars.fVerbose != 0 {
 		fmt.Print("After  BMC: ")
 		Ssw_ClassesPrint(p.ppClasses, 0)
 	}
 	if p.pPars.pFunc != nil {
 		sswInvokeCallback(p.pPars)
-		if sswDeadlineExpired(p.pPars) {
-			return nil
-		}
 		sswInvokeCallback(p.pPars)
 	}
 	iteration := int32(-1)
 	if p.pPars.nStepsMax != 0 {
 		for iteration = 0; ; iteration++ {
-			if sswDeadlineExpired(p.pPars) {
-				return nil
-			}
 			if p.pPars.nStepsMax == iteration {
 				fmt.Printf("Stopped signal correspondence after %d refinement iterations.\n", iteration)
 				break
@@ -81,7 +69,7 @@ func Ssw_SignalCorrespondenceRefine(p *Ssw_Man_t) *aig.Graph {
 				break
 			}
 			start := time.Now()
-			p.pMSat = sswSatStart(p.pPars)
+			p.pMSat = Ssw_SatStart(0)
 			var changed int32
 			if p.pPars.fLatchCorrOpt != 0 {
 				changed = Ssw_ManSweepLatch(p)
@@ -91,12 +79,6 @@ func Ssw_SignalCorrespondenceRefine(p *Ssw_Man_t) *aig.Graph {
 				changed = Ssw_ManSweepDyn(p)
 			} else {
 				changed = Ssw_ManSweep(p)
-			}
-			if sswDeadlineExpired(p.pPars) {
-				Ssw_SatStop(p.pMSat)
-				p.pMSat = nil
-				Ssw_ManCleanup(p)
-				return nil
 			}
 			if p.pPars.fLatchCorrOpt == 0 {
 				p.pPars.nConflicts += int32(p.pMSat.pSat.Statistics().Conflicts)
@@ -125,9 +107,6 @@ func Ssw_SignalCorrespondenceRefine(p *Ssw_Man_t) *aig.Graph {
 			Ssw_SatStop(p.pMSat)
 			p.pMSat = nil
 			Ssw_ManCleanup(p)
-			if sswDeadlineExpired(p.pPars) {
-				return nil
-			}
 			if changed == 0 {
 				break
 			}
@@ -135,9 +114,6 @@ func Ssw_SignalCorrespondenceRefine(p *Ssw_Man_t) *aig.Graph {
 		}
 	} else {
 		fmt.Println("Stopped signal correspondence after BMC.")
-	}
-	if sswDeadlineExpired(p.pPars) {
-		return nil
 	}
 	p.pPars.nIters = iteration + 1
 	p.timeTotal = time.Since(started)
@@ -160,17 +136,7 @@ func Ssw_SignalCorrespondence(graph *aig.Graph, pars *Ssw_Pars_t) *aig.Graph {
 		pars = new(Ssw_Pars_t)
 		Ssw_ManSetDefaultParams(pars)
 	}
-	originalDeadline := pars.deadline
-	if pars.TimeLimit > 0 {
-		limit := time.Now().Add(time.Duration(pars.TimeLimit) * time.Second)
-		if pars.deadline.IsZero() || limit.Before(pars.deadline) {
-			pars.deadline = limit
-		}
-	}
-	defer func() { pars.deadline = originalDeadline }()
-	if sswDeadlineExpired(pars) {
-		return nil
-	}
+	// ABC's correspondence entrypoint does not consult TimeLimit.
 	if aig.Aig_ManNodeNum(graph) == 0 {
 		pars.nIters = 0
 		if !aig.Aig_ManHasReprs(graph) {
@@ -194,29 +160,24 @@ func Ssw_SignalCorrespondence(graph *aig.Graph, pars *Ssw_Pars_t) *aig.Graph {
 	}
 	if pars.fScorrGia != 0 {
 		if pars.fLatchCorrOpt != 0 {
-			return cec.Cec_LatchCorrespondenceDeadline(graph, pars.nBTLimit, pars.fUseCSat, pars.deadline)
+			return cec.Cec_LatchCorrespondence(graph, pars.nBTLimit, pars.fUseCSat)
 		}
-		return cec.Cec_SignalCorrespondenceDeadline(graph, pars.nBTLimit, pars.fUseCSat, pars.deadline)
+		return cec.Cec_SignalCorrespondence(graph, pars.nBTLimit, pars.fUseCSat)
 	}
 	p := Ssw_ManCreate(graph, pars)
 	defer Ssw_ManStop(p)
 	if pars.fConstrs != 0 {
 		p.ppClasses = Ssw_ClassesPrepareSimple(graph, pars.fLatchCorr, pars.nMaxLevs)
 		Ssw_ClassesSetData(p.ppClasses, graph, nil, Ssw_SmlObjIsConstBit, Ssw_SmlObjsAreEqualBit)
-		status := sswManSetConstrPhases(graph, pars.nFramesK+1, &p.vInits, pars.deadline)
+		status := Ssw_ManSetConstrPhases(graph, pars.nFramesK+1, &p.vInits)
 		if status != 0 {
-			if status == 1 {
-				fmt.Println("Ssw_SignalCorrespondence(): The init state does not satisfy the constraints!")
-				pars.fVerbose = 0
-			}
+			fmt.Println("Ssw_SignalCorrespondence(): The init state does not satisfy the constraints!")
+			pars.fVerbose = 0
 			return nil
 		}
 		Ssw_ManRefineByConstrSim(p)
 	} else {
-		p.ppClasses = sswClassesPrepare(graph, pars.nFramesK, pars.fLatchCorr, pars.fConstCorr, pars.fOutputCorr, pars.nMaxLevs, pars.fVerbose, pars)
-		if p.ppClasses == nil {
-			return nil
-		}
+		p.ppClasses = Ssw_ClassesPrepare(graph, pars.nFramesK, pars.fLatchCorr, pars.fConstCorr, pars.fOutputCorr, pars.nMaxLevs, pars.fVerbose)
 		frames := int32(1) + pars.nFramesAddSim
 		if pars.fLatchCorrOpt != 0 {
 			frames = 2
@@ -226,18 +187,12 @@ func Ssw_SignalCorrespondence(graph *aig.Graph, pars *Ssw_Pars_t) *aig.Graph {
 		p.pSml = Ssw_SmlStart(graph, 0, frames, 1)
 		Ssw_ClassesSetData(p.ppClasses, p.pSml, func(data any, obj aig.Edge) uint32 { return Ssw_SmlObjHashWord(data.(*Ssw_Sml_t), obj) }, func(data any, obj aig.Edge) int32 { return Ssw_SmlObjIsConstWord(data.(*Ssw_Sml_t), obj) }, func(data any, a, b aig.Edge) int32 { return Ssw_SmlObjsAreEqualWord(data.(*Ssw_Sml_t), a, b) })
 	}
-	if sswDeadlineExpired(pars) {
-		return nil
-	}
 	if pars.fLocalSim != 0 && p.pSml != nil {
 		p.pVisited = make([]int32, Ssw_SmlNumFrames(p.pSml)*aig.Aig_ManObjNumMax(graph))
 	}
 	result := Ssw_SignalCorrespondenceRefine(p)
 	if result != nil && pars.fConstrs != 0 && pars.fVerbose != 0 {
 		Ssw_ReportConeReductions(p, graph, result)
-	}
-	if sswDeadlineExpired(pars) {
-		return nil
 	}
 	return result
 }

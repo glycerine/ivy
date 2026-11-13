@@ -14,17 +14,7 @@ func Ssw_SecWithSimilaritySweep(p0, p1 *aig.Graph, pairs *vec.Vec_Int_t, pars *S
 		pars = new(Ssw_Pars_t)
 		Ssw_ManSetDefaultParams(pars)
 	}
-	originalDeadline := pars.deadline
-	if pars.TimeLimit > 0 {
-		limit := time.Now().Add(time.Duration(pars.TimeLimit) * time.Second)
-		if pars.deadline.IsZero() || limit.Before(pars.deadline) {
-			pars.deadline = limit
-		}
-	}
-	defer func() { pars.deadline = originalDeadline }()
-	if sswDeadlineExpired(pars) {
-		return nil
-	}
+
 	Ssw_MatchingStart(p0, p1, pairs)
 	if pars.nIsleDist != 0 {
 		Ssw_MatchingExtend(p0, p1, pars.nIsleDist, pars.fVerbose)
@@ -65,9 +55,6 @@ func Ssw_SecWithSimilarityPairs(p0, p1 *aig.Graph, pairs *vec.Vec_Int_t, pars *S
 		Ssw_ManSetDefaultParams(pars)
 	}
 	result := Ssw_SecWithSimilaritySweep(p0, p1, pairs, pars)
-	if result == nil {
-		return -1
-	}
 	defer aig.Aig_ManStop(result)
 	status := Ssw_MiterStatus(result, 1)
 	switch status {

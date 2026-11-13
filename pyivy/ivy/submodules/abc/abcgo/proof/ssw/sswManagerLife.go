@@ -50,8 +50,7 @@ func Ssw_ManStop(p *Ssw_Man_t) {
 	if p.pPars.fVerbose != 0 {
 		Ssw_ManPrintStats(p)
 	}
-	// This manager starts the input graph fanout index in Ssw_ManCreate.
-	aig.Aig_ManFanoutStop(p.pAig)
+	// ABC leaves the input graph's fanout index active after manager stop.
 	if p.ppClasses != nil {
 		Ssw_ClassesStop(p.ppClasses)
 	}
