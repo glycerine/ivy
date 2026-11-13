@@ -157,6 +157,10 @@ func Int2_ManRefineCube(p *Gia_Man_t, vAssign *Vec_Int_t, vPrio *Vec_Int_t) *Vec
 	gia.Gia_ObjSetMark1(obj, 0)
 	gia.Gia_ObjSetValue(obj, gia.Gia_ObjValue(fanin))
 	assert(gia.Gia_ObjMark0(obj) == 1, "output is asserted by the assignment")
+	// A constant-true output is justified by the empty cube.
+	if fanin == constant {
+		return vec.Vec_IntAlloc(0)
+	}
 	assert(gia.Gia_ObjValue(obj) < util.ABC_INFINITY, "output has finite priority")
 	// select subset
 	vSubset := vec.Vec_IntAlloc(100)

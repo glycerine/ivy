@@ -103,6 +103,34 @@ func TestRefineCubeSupportsCombinationalSuffix(t *testing.T) {
 	}
 }
 
+func TestRefineCubeConstantTrueNeedsNoInputs(t *testing.T) {
+	g := gia.Gia_ManStart(8)
+	gia.Gia_ManAppendCi(g)
+	gia.Gia_ManAppendCo(g, 1)
+	assignment := vec.Vec_IntAllocArrayCopy([]int32{0}, 1)
+	priority := vec.Vec_IntAllocArrayCopy([]int32{1}, 1)
+	subset := Int2_ManRefineCube(g, assignment, priority)
+	if vec.Vec_IntSize(subset) != 0 {
+		t.Fatalf("constant true output needs no inputs: %v", vec.Vec_IntArray(subset))
+	}
+}
+
+func TestComputePreimageConstantTrueSuffix(t *testing.T) {
+	suffix := gia.Gia_ManStart(8)
+	gia.Gia_ManAppendCi(suffix)
+	gia.Gia_ManAppendCo(suffix, 1)
+	prefixSAT, suffixSAT := sat_solver_new(), sat_solver_new()
+	sat_solver_setnvars(prefixSAT, 1)
+	sat_solver_setnvars(suffixSAT, 1)
+	ciMap := vec.Vec_IntAllocArrayCopy([]int32{0}, 1)
+	coMap := vec.Vec_IntAllocArrayCopy([]int32{0}, 1)
+	priority := vec.Vec_IntAllocArrayCopy([]int32{1}, 1)
+	image, status := Int2_ManComputePreimage(suffix, prefixSAT, suffixSAT, ciMap, coMap, priority)
+	if status != INT2_FALSE_NEG || image != nil {
+		t.Fatalf("reachable constant suffix: image %v status %d", image, status)
+	}
+}
+
 func TestComputePreimageBlocksUnreachableSuffixState(t *testing.T) {
 	suffix := gia.Gia_ManStart(8)
 	x := gia.Gia_ManAppendCi(suffix)

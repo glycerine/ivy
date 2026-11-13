@@ -32,3 +32,7 @@ justifying CIs using their values and priorities; suffix construction uses
 the property for the initial image; and preimage blocking translates between
 prefix and suffix SAT variable maps. These repairs do not establish that the
 unavailable full interpolation algorithm has been restored.
+
+The source's cube refinement asserts finite priority even for a constant-true
+suffix. The Go implementation handles that case with an empty justifying cube;
+both refinement and preimage behavior have regression tests.
