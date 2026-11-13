@@ -21,10 +21,10 @@ type Sec_MtrStatus_t struct {
 }
 
 type Saig_ParBbr_t struct {
-	TimeLimit, nBddMax, nIterMax        int32
-	fPartition, fReorder, fReorderImage int32
-	fVerbose, fSilent, fSkipOutCheck    int32
-	iFrame                              int32
+	TimeLimit, NBddMax, NIterMax        int32
+	FPartition, FReorder, FReorderImage int32
+	FVerbose, FSilent, FSkipOutCheck    int32
+	IFrame                              int32
 }
 
 func Saig_ManPiNum(p *aig.Graph) int32          { return int32(len(p.Inputs())) - aig.Aig_ManRegNum(p) }
