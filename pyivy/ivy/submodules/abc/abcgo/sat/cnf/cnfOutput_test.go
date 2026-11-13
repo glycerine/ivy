@@ -135,3 +135,14 @@ func TestLegacyDerivationLeavesLastOutputsFree(t *testing.T) {
 		}
 	}
 }
+
+func TestLiteralPolaritiesPackFromLowBits(t *testing.T) {
+	data := NewMappedCNF(3, [][]int32{{5, 0, 2}, {4, 1, 3}}, nil, []int32{0}, []int32{2})
+	if got := Cnf_DataDeriveLitPolarities(data); !reflect.DeepEqual(got, []byte{10, 5}) {
+		t.Fatalf("polarity bytes %v, want [10 5]", got)
+	}
+	wide := NewMappedCNF(5, [][]int32{{9, 0, 2, 4, 6}}, nil, []int32{0}, []int32{1})
+	if got := Cnf_DataDeriveLitPolarities(wide); !reflect.DeepEqual(got, []byte{0xaa}) {
+		t.Fatalf("four-input polarity byte %v, want [170]", got)
+	}
+}

@@ -160,12 +160,12 @@ func Cnf_DataDeriveLitPolarities(data *Cnf_Dat_t) []byte {
 				polarity = negative
 			}
 			for slot, lit := range clause[1:] {
-				if slot > 2 {
+				if slot > 3 {
 					break
 				}
 				variable := int(lit >> 1)
 				if variable < len(polarity) {
-					result[clauseID] |= polarity[variable] << (2 * (slot + 1))
+					result[clauseID] |= polarity[variable] << (2 * slot)
 				}
 			}
 		}
