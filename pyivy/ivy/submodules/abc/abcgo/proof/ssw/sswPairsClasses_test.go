@@ -42,3 +42,37 @@ func TestMiterStatusConstantsAndUnknown(t *testing.T) {
 		t.Fatal("sequential miter should be undecided")
 	}
 }
+
+func TestMiterStatusSourceClassificationAndPriority(t *testing.T) {
+	t.Run("combinational inverted input is satisfiable", func(t *testing.T) {
+		g := aig.NewGraph()
+		x := g.NewInput()
+		g.AddOutput(x.Not())
+		if got := Ssw_MiterStatus(g, 0); got != 0 {
+			t.Fatalf("status = %d, want satisfiable", got)
+		}
+	})
+	t.Run("sequential input is undecided", func(t *testing.T) {
+		g := aig.NewGraph()
+		x, latch := g.NewInput(), g.NewInput()
+		g.AddOutput(x)
+		g.AddOutput(latch)
+		aig.Aig_ManSetRegNum(g, 1)
+		aig.Aig_ManSetPhase(g)
+		if got := Ssw_MiterStatus(g, 0); got != -1 {
+			t.Fatalf("status = %d, want undecided", got)
+		}
+	})
+	t.Run("one output phase proves satisfiability despite unknown", func(t *testing.T) {
+		g := aig.NewGraph()
+		x, latch := g.NewInput(), g.NewInput()
+		g.AddOutput(x)
+		g.AddOutput(x.Not())
+		g.AddOutput(latch)
+		aig.Aig_ManSetRegNum(g, 1)
+		aig.Aig_ManSetPhase(g)
+		if got := Ssw_MiterStatus(g, 0); got != 0 {
+			t.Fatalf("status = %d, want satisfiable", got)
+		}
+	})
+}
