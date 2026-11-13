@@ -80,6 +80,16 @@ func sat_solver_solve(s *sat_solver, assumptions []lit, conflicts, propagations,
 	sat_solver_set_resource_limits(s, conflicts, propagations, globalConflicts, globalPropagations)
 	s.root_level = 0
 	veci_resize(&s.conf_final, 0)
+	// Propagate newly added root units before entering assumption levels. A
+	// root conflict makes the formula permanently inconsistent, even if an
+	// assumption also contradicts an as-yet unpropagated root assignment.
+	if sat_solver_propagate(s) != 0 {
+		s.fSolved = 1
+		if p := solverClauseStore(s); p != nil && p.pEmpty == nil {
+			Sto_ManAddClause(p, nil)
+		}
+		return l_False
+	}
 	for _, l := range assumptions {
 		if sat_solver_push(s, l) == 0 {
 			sat_solver_canceluntil(s, 0)

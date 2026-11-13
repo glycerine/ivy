@@ -191,3 +191,17 @@ Added proof-store ownership bridges (`EnableClauseStore`, partition/root markers
 BMC bridge also exposes `NeedsPropagation`, `ConflictCount`, `PropagationCount`, consuming `TakeUnitLiterals`, `PropagateUnits`, and `Compress`, with root-conflict persistence and owned queue results covered by tests. Full BSAT and BSAT2 race/vet validation passes together.
 
 `Solver.SolveLexicographic([]Literal) Status` exposes the existing exact lex-SAT algorithm for `misc/extra`. It mutates the ordered assignment vector, updates public model/status state, validates distinct introduced variables, and applies one per-call budget across all recursive subsolves. Empty order uses ordinary solving. The source lower-bound precondition is explicit: start with all-negative literals, then reuse returned assignments while blocking earlier models; arbitrary mixed-sign bounds are not a generic optimization interface. Public regressions enumerate all eight models in variable order (2,0,1), check literal/model agreement and assumption cleanup, then verify UNSAT; empty-order and deadline/resumption paths are also covered. Separate readability review kept this a direct wrapper; bug review checked limits initialization, known input conflicts, public status updates, mutation ownership, and source preconditions.
+
+### Incremental root-conflict review
+
+The public incremental solver and proof-producing Solver2 now propagate pending
+root assignments before opening assumption levels. Without this step, an early
+contradictory assumption could cause backtracking to skip a pending root
+conflict, allowing a later solve to report SAT for an inconsistent formula.
+Regressions exercise this sequence in both solvers and verify the proof core;
+a deterministic incremental oracle compares 5,000 public-API calls with
+exhaustive five-variable evaluation and validates models and assumption cores.
+
+`GOCACHE=/tmp/abcgo-cache go test -race -count=1 ./sat/bsat ./sat/bmc` passes.
+Further correctness, simplicity, and coverage review of `sat/bsat` remains in
+progress; these tests alone do not complete that review.

@@ -20,6 +20,14 @@ func sat_solver2_solve(s *sat_solver2, assumptions []lit, conflicts, propagation
 	if globalPropagations != 0 && (s.nInsLimit == 0 || globalPropagations < s.nInsLimit) {
 		s.nInsLimit = globalPropagations
 	}
+	// Root conflicts must be discovered before assumption levels are opened;
+	// otherwise a contradictory assumption can hide pending propagation.
+	s.root_level = 0
+	veci_resize(&s.conf_final, 0)
+	if solver2_propagate(s) != nil {
+		s.fSolved = 1
+		return l_False
+	}
 	s.root_level = int32(len(assumptions))
 	for _, l := range assumptions {
 		if lit_check(l, s.size) == 0 {
