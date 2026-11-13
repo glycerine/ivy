@@ -3,8 +3,6 @@ package int
 // The ordinary ABC interpolation path from proof/int/intM114.c uses the
 // internal BSAT proof store, not the optional MiniSat-1.14p interface.
 import (
-	"time"
-
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
@@ -98,13 +96,17 @@ func Inter_ManDeriveSatSolver(inter *aig.Graph, interCNF *cnf.Cnf_Dat_t, trans *
 // Inter_ManPerformOneStep runs BSAT and builds an interpolant from its proof.
 // It returns 1 for a proof, 0 for a counterexample, and -1 for unknown.
 func Inter_ManPerformOneStep(p *Inter_Man_t, bias, backward int32, deadline abctime) int32 {
+	return interManPerformOneStepClock(p, bias, backward, deadline, util.Abc_Clock)
+}
+
+func interManPerformOneStepClock(p *Inter_Man_t, bias, backward int32, deadline abctime, clock func() int64) int32 {
 	solver := Inter_ManDeriveSatSolver(p.pInter, p.pCnfInter, p.pAigTrans, p.pCnfAig, p.pFrames, p.pCnfFrames, p.vVarsAB, backward)
 	if solver == nil {
 		p.pInterNew = nil
 		return 1
 	}
 	if deadline != 0 {
-		solver.SetDeadline(time.Now().Add(time.Duration(deadline - util.Abc_Clock())))
+		solver.SetRuntimeDeadline(clock, int64(deadline))
 	}
 	if bias != 0 {
 		solver.SetGlobalVariableBias(vec.Vec_IntArray(p.vVarsAB))
@@ -122,7 +124,7 @@ func Inter_ManPerformOneStep(p *Inter_Man_t, bias, backward int32, deadline abct
 	store := solver.ReleaseClauseStore()
 	start = util.Abc_Clock()
 	manager := bsat.Inta_ManAlloc()
-	p.pInterNew = bsat.Inta_ManInterpolate(manager, store, deadline, vec.Vec_IntArray(p.vVarsAB), 0)
+	p.pInterNew = bsat.Inta_ManInterpolateWithClock(manager, store, int64(deadline), vec.Vec_IntArray(p.vVarsAB), 0, clock)
 	bsat.Inta_ManFree(manager)
 	p.timeInt += util.Abc_Clock() - start
 	if p.pInterNew == nil {

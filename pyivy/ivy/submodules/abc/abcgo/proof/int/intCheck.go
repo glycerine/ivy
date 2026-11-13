@@ -2,8 +2,6 @@ package int
 
 // Incremental inductive containment checking from proof/int/intCheck.c.
 import (
-	"time"
-
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/sat/bsat"
@@ -73,6 +71,10 @@ func Inter_CheckAddEqual(p *Inter_Check_t, a, b int32) {
 // Inter_CheckPerform adds one interpolant to the existing k-induction query.
 // It returns 1 only when the resulting assumptions are proven UNSAT.
 func Inter_CheckPerform(p *Inter_Check_t, data *cnf.Cnf_Dat_t, deadline abctime) int32 {
+	return interCheckPerformClock(p, data, deadline, util.Abc_Clock)
+}
+
+func interCheckPerformClock(p *Inter_Check_t, data *cnf.Cnf_Dat_t, deadline abctime, clock func() int64) int32 {
 	if p == nil || p.pSat == nil || data == nil || data.SourceGraph() == nil {
 		panic("invalid interpolant CNF")
 	}
@@ -82,7 +84,7 @@ func Inter_CheckPerform(p *Inter_Check_t, data *cnf.Cnf_Dat_t, deadline abctime)
 		panic("interpolant dimensions do not match frames")
 	}
 	if deadline != 0 {
-		p.pSat.SetDeadline(time.Now().Add(time.Duration(deadline - util.Abc_Clock())))
+		p.pSat.SetRuntimeDeadline(clock, int64(deadline))
 	}
 	base := p.nVars
 	cnf.Cnf_DataLift(data, base)

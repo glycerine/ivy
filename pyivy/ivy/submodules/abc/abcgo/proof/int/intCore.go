@@ -13,16 +13,9 @@ import (
 	"github.com/glycerine/abcgo/sat/cnf"
 )
 
-// rewriteForInterpolation applies DAR's original rwsat sequence under the
-// interpolation deadline. A nil result signals a stopped or failed rewrite.
-func rewriteForInterpolation(graph *aig.Graph, deadline int64) *aig.Graph {
-	ctx := context.Background()
-	cancel := func() {}
-	if deadline != 0 {
-		ctx, cancel = context.WithTimeout(ctx, time.Duration(deadline-util.Abc_Clock()))
-	}
-	defer cancel()
-	result, err := dar.RewriteForSAT(ctx, graph, true, nil)
+// rewriteForInterpolation applies the source's untimed DAR rwsat sequence.
+func rewriteForInterpolation(graph *aig.Graph) *aig.Graph {
+	result, err := dar.RewriteForSAT(context.Background(), graph, true, nil)
 	if err != nil {
 		return nil
 	}
@@ -44,9 +37,12 @@ func Inter_ManPerformInterpolation(graph *aig.Graph, pars *Inter_ManParams_t, fr
 		return -1
 	}
 	start := util.Abc_Clock()
+	clock := util.Abc_Clock
 	var deadline int64
 	if pars.NSecLimit != 0 {
-		deadline = start + int64(time.Duration(pars.NSecLimit)*time.Second)
+		defer interPinClock()()
+		clock = interCPUClock
+		deadline = clock() + int64(time.Duration(pars.NSecLimit)*time.Second)
 	}
 	if pars.NFramesK > 1 {
 		pars.FTransLoop = 1
@@ -84,7 +80,7 @@ func Inter_ManPerformInterpolation(graph *aig.Graph, pars *Inter_ManParams_t, fr
 		p.pCnfInter = cnf.Cnf_Derive(p.pInter, 0)
 		p.pFrames = Inter_ManFramesInter(graph, p.nFrames, pars.FUseBackward, pars.FUseTwoFrames)
 		if pars.FRewrite != 0 {
-			p.pFrames = rewriteForInterpolation(p.pFrames, deadline)
+			p.pFrames = rewriteForInterpolation(p.pFrames)
 			if p.pFrames == nil {
 				return finish(-1, 0)
 			}
@@ -97,7 +93,7 @@ func Inter_ManPerformInterpolation(graph *aig.Graph, pars *Inter_ManParams_t, fr
 		if pars.FTransLoop == 0 && pars.FUseBackward == 0 && pars.NFramesK <= 1 {
 			check = Inter_CheckStart(p.pAigTrans, pars.NFramesK)
 			initial := cnf.Cnf_Derive(p.pInter, 1)
-			Inter_CheckPerform(check, initial, deadline)
+			interCheckPerformClock(check, initial, deadline, clock)
 			cnf.Cnf_DataFree(initial)
 			if p.vInters != nil {
 				vec.Vec_PtrPush(p.vInters, aig.Aig_ManDupSimple(p.pInter))
@@ -111,22 +107,19 @@ func Inter_ManPerformInterpolation(graph *aig.Graph, pars *Inter_ManParams_t, fr
 			if pars.FUseMiniSat != 0 {
 				var err error
 				backend := &miniSat114pBackend{conflictLimit: p.nConfLimit}
-				if deadline != 0 {
-					backend.deadline = time.Now().Add(time.Duration(deadline - util.Abc_Clock()))
-				}
-				result, err = interManPerformOneStepM114p(p, backend, pars.FUsePudlak != 0, deadline)
+				result, err = interManPerformOneStepM114p(p, backend, pars.FUsePudlak != 0, 0)
 				if err != nil {
 					fmt.Println("MiniSat interpolation:", err)
 					return finish(-1, 0)
 				}
 			} else {
-				result = Inter_ManPerformOneStep(p, pars.FUseBias, pars.FUseBackward, deadline)
+				result = interManPerformOneStepClock(p, pars.FUseBias, pars.FUseBackward, deadline, clock)
 			}
 			pars.IFrameMax = i - 1 + p.nFrames
 			if result == 0 {
 				if i == 0 {
 					*frame = p.nFrames
-					cex := interManGetCounterExample(graph, p.nFrames+1, pars.FVerbose, deadline)
+					cex := interManGetCounterExample(graph, p.nFrames+1, pars.FVerbose, 0)
 					if cex == nil || graph.SetSequentialCounterexample(cex) != nil {
 						*frame = -1
 						return finish(-1, 0)
@@ -144,7 +137,7 @@ func Inter_ManPerformInterpolation(graph *aig.Graph, pars *Inter_ManParams_t, fr
 				panic("invalid interpolation result")
 			}
 			if p.pInterNew != nil {
-				p.pInterNew = rewriteForInterpolation(p.pInterNew, deadline)
+				p.pInterNew = rewriteForInterpolation(p.pInterNew)
 				if p.pInterNew == nil {
 					return finish(-1, 1)
 				}
@@ -164,7 +157,7 @@ func Inter_ManPerformInterpolation(graph *aig.Graph, pars *Inter_ManParams_t, fr
 					status = Inter_ManCheckInductiveContainment(p.pAigTrans, p.pInterNew, steps, pars.FUseBackward)
 				} else {
 					data := cnf.Cnf_Derive(p.pInterNew, 1)
-					status = Inter_CheckPerform(check, data, deadline)
+					status = interCheckPerformClock(check, data, deadline, clock)
 					cnf.Cnf_DataFree(data)
 					if p.vInters != nil {
 						vec.Vec_PtrPush(p.vInters, aig.Aig_ManDupSimple(p.pInterNew))
@@ -174,12 +167,12 @@ func Inter_ManPerformInterpolation(graph *aig.Graph, pars *Inter_ManParams_t, fr
 			if status == 1 {
 				return finish(1, 1)
 			}
-			if status < 0 || deadline != 0 && util.Abc_Clock() > deadline {
+			if status < 0 || deadline != 0 && clock() > deadline {
 				return finish(-1, 1)
 			}
 			if pars.FUseBackward != 0 && pars.FTransLoop == 0 {
 				p.pInter = aig.Aig_ManCreateMiter(p.pInter, p.pInterNew, 2)
-				p.pInter = rewriteForInterpolation(p.pInter, deadline)
+				p.pInter = rewriteForInterpolation(p.pInter)
 				if p.pInter == nil {
 					return finish(-1, 1)
 				}

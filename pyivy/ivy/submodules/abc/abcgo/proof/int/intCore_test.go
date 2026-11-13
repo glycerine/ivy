@@ -160,7 +160,7 @@ func TestMiniSatInterpolationEndToEnd(t *testing.T) {
 	}
 }
 
-func TestMiniSatInterpolationExpiredDeadline(t *testing.T) {
+func TestMiniSatInterpolationCanProveBeforeExpiredDeadlineCheck(t *testing.T) {
 	g := aig.NewGraph()
 	g.NewInput()
 	state := g.NewInput()
@@ -171,8 +171,10 @@ func TestMiniSatInterpolationExpiredDeadline(t *testing.T) {
 	Inter_ManSetDefaultParams(&pars)
 	pars.FUseMiniSat, pars.NSecLimit = 1, -1
 	var frame int32
-	if got := Inter_ManPerformInterpolation(g, &pars, &frame); got != -1 {
-		t.Fatalf("expired deadline returned %d", got)
+	// intCore.c does not pass its deadline to MiniSat and accepts a constant
+	// interpolant proof before reaching the later deadline check.
+	if got := Inter_ManPerformInterpolation(g, &pars, &frame); got != 1 {
+		t.Fatalf("source proof before deadline check returned %d", got)
 	}
 }
 

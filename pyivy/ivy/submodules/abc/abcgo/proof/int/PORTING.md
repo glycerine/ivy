@@ -74,11 +74,17 @@ The C `int` command and multi-output driver are in `base/abci`; the current
 a working Go command for this package. `proof/int` exposes the library entry
 point used by ported Go callers.
 
-The deadline is propagated into SAT solving, rewriting, proof reconstruction,
-and witness solving. Some individual graph traversals and CNF generation are
-not interruptible; the initial-state check also has no SAT deadline in the C
-routine or this port. Solver interruption and a failed witness reconstruction
-are reported as unknown. Tests cover expired deadlines, an exhausted MiniSat
-conflict budget, and explicit backend-unknown and cleanup behavior. Exhaustive
-tests are limited to small formulas and state spaces; they do not establish
-performance or completion on large instances.
+Timed interpolation uses the calling thread's CPU clock on Linux, pinning the
+goroutine for the run; supported non-Linux Unix systems use process CPU time,
+and Windows uses CRT-style elapsed time. ABC's BSAT solve, incremental
+containment check, and BSAT proof replay receive the same absolute deadline
+and clock domain. As in C, the optional MiniSat solve and its proof replay,
+DAR rewriting, initial-state check, and subsequent BMC witness search do not
+receive that deadline. A proof can therefore complete after the nominal limit
+before the driver's next timeout check. The Go witness builder is a separate
+reconstruction of the C scalable-BMC call and is not a complete source port.
+Tests cover the BSAT clock domain, MiniSat's proof-before-timeout boundary,
+an exhausted MiniSat conflict budget, and backend cleanup. Exhaustive tests
+are limited to small formulas and state spaces; they do not establish
+performance or completion on large instances. Several reported timing
+counters still use Go elapsed time rather than the C CPU clock.

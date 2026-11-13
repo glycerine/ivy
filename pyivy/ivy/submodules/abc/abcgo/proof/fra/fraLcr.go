@@ -228,7 +228,7 @@ func Fra_FraigLatchCorrespondence(graph *aig.Graph, prefix, conflicts, prove, ve
 	var deadline int64
 	if timeLimit != 0 {
 		defer fraLcrPin()()
-		deadline = fraLcrClock() + int64(float64(timeLimit)*fraLcrTicksPerSecond)
+		deadline = fraLcrDeadline(fraLcrClock(), timeLimit)
 	}
 	sim := Fra_SmlSimulateSeq(graph, prefix, 32, 1, 1)
 	if prove != 0 && sim.NonconstantOutput {
@@ -282,4 +282,10 @@ func Fra_FraigLatchCorrespondence(graph *aig.Graph, prefix, conflicts, prove, ve
 		*iterations = p.nIters
 	}
 	return result
+}
+
+// The C expression combines a float TimeLimit with integer clock ticks, so
+// both the product and addition use float32 before conversion to abctime.
+func fraLcrDeadline(now int64, timeLimit float32) int64 {
+	return int64(float32(now) + timeLimit*float32(fraLcrTicksPerSecond))
 }

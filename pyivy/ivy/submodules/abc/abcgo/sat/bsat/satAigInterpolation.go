@@ -59,6 +59,10 @@ func (p *aigInterpolation) resolve(final, reason *Sto_Cls_t, pivot lit) {
 	p.pInters[final.Id] = left
 }
 func (p *aigInterpolation) interpolate(cnf *Sto_Man_t, globals []int32, deadline int64, mux bool, verbose int32) *aig.Graph {
+	return p.interpolateWithClock(cnf, globals, deadline, mux, verbose, nil)
+}
+
+func (p *aigInterpolation) interpolateWithClock(cnf *Sto_Man_t, globals []int32, deadline int64, mux bool, verbose int32, clock func() int64) *aig.Graph {
 	p.pCnf, p.muxShared, p.fVerbose = cnf, mux, verbose
 	p.pVarTypes, p.vVarsAB, p.lastErr = interpolationVariables(cnf, globals)
 	if p.lastErr != nil {
@@ -78,7 +82,7 @@ func (p *aigInterpolation) interpolate(cnf *Sto_Man_t, globals []int32, deadline
 		}
 		writer = file
 	}
-	trace, err := reconstructResolution(cnf, p, writer, deadline)
+	trace, err := reconstructResolutionWithClock(cnf, p, writer, deadline, clock)
 	if file != nil {
 		if closeErr := file.Close(); err == nil {
 			err = closeErr

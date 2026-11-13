@@ -3,8 +3,10 @@ package int
 import (
 	"errors"
 	"testing"
+	"time"
 
 	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/sat/cnf"
 )
@@ -90,6 +92,25 @@ func TestInterpolantStepIdentityTransition(t *testing.T) {
 	}
 }
 
+// A live Abc_Clock-domain deadline must remain live during proof replay; it
+// is not a Unix timestamp. The C SAT and interpolation stages share it.
+func TestInterpolantStepUsesOneDeadlineClockDomain(t *testing.T) {
+	inter := aig.NewGraph()
+	x := inter.NewInput()
+	inter.AddOutput(x.Not())
+	trans := aig.NewGraph()
+	state := trans.NewInput()
+	trans.AddOutput(state)
+	aig.Aig_ManSetRegNum(trans, 1)
+	frames := aig.NewGraph()
+	next := frames.NewInput()
+	frames.AddOutput(next)
+	p := &Inter_Man_t{pInter: inter, pCnfInter: cnf.Cnf_Derive(inter, 0), pAigTrans: trans, pCnfAig: cnf.Cnf_Derive(trans, 1), pFrames: frames, pCnfFrames: cnf.Cnf_Derive(frames, 0), vVarsAB: vec.Vec_IntAlloc(1)}
+	if got := Inter_ManPerformOneStep(p, 0, 0, util.Abc_Clock()+int64(time.Second)); got != 1 || p.pInterNew == nil {
+		t.Fatalf("live deadline rejected proof replay: status=%d graph=%v", got, p.pInterNew)
+	}
+}
+
 func TestMiniSatInterpolationStepIdentityTransition(t *testing.T) {
 	for _, pudlak := range []bool{false, true} {
 		inter := aig.NewGraph()
@@ -129,12 +150,21 @@ func TestMiniSatInterpolationStepIdentityTransition(t *testing.T) {
 }
 
 func TestMiniSatInterpolationStepReturnsSATWithoutInterpolant(t *testing.T) {
-	inter:=aig.NewGraph();x:=inter.NewInput();inter.AddOutput(x.Not())
-	trans:=aig.NewGraph();state:=trans.NewInput();trans.AddOutput(state);aig.Aig_ManSetRegNum(trans,1)
-	frames:=aig.NewGraph();next:=frames.NewInput();frames.AddOutput(next.Not())
-	p:=&Inter_Man_t{pInter:inter,pCnfInter:cnf.Cnf_Derive(inter,0),pAigTrans:trans,pCnfAig:cnf.Cnf_Derive(trans,1),pFrames:frames,pCnfFrames:cnf.Cnf_Derive(frames,0)}
-	for _,pudlak:=range []bool{false,true} {
-		got,err:=Inter_ManPerformOneStepM114p(p,&miniSat114pBackend{},pudlak)
-		if got!=0 || err!=nil || p.pInterNew!=nil { t.Fatalf("pudlak=%v got=%d err=%v interpolant=%v",pudlak,got,err,p.pInterNew) }
+	inter := aig.NewGraph()
+	x := inter.NewInput()
+	inter.AddOutput(x.Not())
+	trans := aig.NewGraph()
+	state := trans.NewInput()
+	trans.AddOutput(state)
+	aig.Aig_ManSetRegNum(trans, 1)
+	frames := aig.NewGraph()
+	next := frames.NewInput()
+	frames.AddOutput(next.Not())
+	p := &Inter_Man_t{pInter: inter, pCnfInter: cnf.Cnf_Derive(inter, 0), pAigTrans: trans, pCnfAig: cnf.Cnf_Derive(trans, 1), pFrames: frames, pCnfFrames: cnf.Cnf_Derive(frames, 0)}
+	for _, pudlak := range []bool{false, true} {
+		got, err := Inter_ManPerformOneStepM114p(p, &miniSat114pBackend{}, pudlak)
+		if got != 0 || err != nil || p.pInterNew != nil {
+			t.Fatalf("pudlak=%v got=%d err=%v interpolant=%v", pudlak, got, err, p.pInterNew)
+		}
 	}
 }

@@ -37,6 +37,11 @@ func Inta_ManError(p *Inta_Man_t) error { return p.lastErr }
 func Inta_ManInterpolate(p *Inta_Man_t, cnf *Sto_Man_t, deadline abctime, globals []int32, verbose int32) *aig.Graph {
 	return p.interpolate(cnf, globals, int64(deadline), false, verbose)
 }
+
+// Inta_ManInterpolateWithClock uses an absolute deadline in clock's domain.
+func Inta_ManInterpolateWithClock(p *Inta_Man_t, cnf *Sto_Man_t, deadline int64, globals []int32, verbose int32, clock func() int64) *aig.Graph {
+	return p.interpolateWithClock(cnf, globals, deadline, false, verbose, clock)
+}
 func Inta_ManDeriveClauses(p *Inta_Man_t, cnf *Sto_Man_t, partA int32) *aig.Graph {
 	return p.deriveClauses(cnf, partA)
 }

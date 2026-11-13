@@ -21,3 +21,13 @@ func TestLatchCorrespondenceEmptyPartitionsIgnoreExpiredDeadline(t *testing.T) {
 		t.Fatalf("result=%v iterations=%d, want a graph and one iteration", result, iterations)
 	}
 }
+
+func TestLatchCorrespondenceDeadlineUsesCFloatRounding(t *testing.T) {
+	// C converts the integer Abc_Clock result to float before adding the
+	// float timeout. At this boundary 16777217 rounds down to 16777216.
+	now := int64(16777217)
+	want := int64(16777216 + fraLcrTicksPerSecond)
+	if got := fraLcrDeadline(now, 1); got != want {
+		t.Fatalf("deadline=%d, want %d", got, want)
+	}
+}

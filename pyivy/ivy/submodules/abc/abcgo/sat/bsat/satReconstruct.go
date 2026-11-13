@@ -23,11 +23,18 @@ type resolutionTrace struct {
 	observer     proofAnnotation
 	writer       io.Writer
 	deadline     int64
+	clock        func() int64
 	stats        stats_t
 }
 
 func (r *resolutionTrace) expired() bool {
-	return r.deadline != 0 && time.Now().UnixNano() > r.deadline
+	if r.deadline == 0 {
+		return false
+	}
+	if r.clock != nil {
+		return r.clock() > r.deadline
+	}
+	return time.Now().UnixNano() > r.deadline
 }
 func (r *resolutionTrace) writeRoot(c *Sto_Cls_t) error {
 	r.counter++
@@ -178,10 +185,14 @@ func (r *resolutionTrace) trace(conflict cla, final *Sto_Cls_t) error {
 	return nil
 }
 func reconstructResolution(cnf *Sto_Man_t, observer proofAnnotation, writer io.Writer, deadline int64) (*resolutionTrace, error) {
+	return reconstructResolutionWithClock(cnf, observer, writer, deadline, nil)
+}
+
+func reconstructResolutionWithClock(cnf *Sto_Man_t, observer proofAnnotation, writer io.Writer, deadline int64, clock func() int64) (*resolutionTrace, error) {
 	if cnf == nil || cnf.pHead == nil || cnf.pTail == nil || cnf.pEmpty == nil || cnf.pTail != cnf.pEmpty || cnf.nRoots > cnf.nClauses || cnf.nClausesA > cnf.nRoots {
 		return nil, fmt.Errorf("proof store lacks valid roots/final empty clause")
 	}
-	r := &resolutionTrace{cnf: cnf, assignments: newSatAssignments(cnf.nVars), memory: &Sat_Mem_t{clauses: make(map[cla]*clause)}, watches: make([]veci, 2*cnf.nVars), stored: make(map[cla]*Sto_Cls_t), labels: make([]int32, cnf.nClauses), dependencies: make([][]int32, cnf.nClauses), observer: observer, writer: writer, deadline: deadline}
+	r := &resolutionTrace{cnf: cnf, assignments: newSatAssignments(cnf.nVars), memory: &Sat_Mem_t{clauses: make(map[cla]*clause)}, watches: make([]veci, 2*cnf.nVars), stored: make(map[cla]*Sto_Cls_t), labels: make([]int32, cnf.nClauses), dependencies: make([][]int32, cnf.nClauses), observer: observer, writer: writer, deadline: deadline, clock: clock}
 	index := int32(0)
 	for c := cnf.pHead; c != nil; c = c.pNext {
 		if c.Id != index || c.nLits != int32(len(c.pLits)) || (c.fRoot != 0) != (index < cnf.nRoots) || (c.fA != 0) != (index < cnf.nClausesA) {

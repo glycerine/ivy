@@ -53,3 +53,17 @@ func TestAigInterpolationCraig(t *testing.T) {
 		}
 	}
 }
+
+func TestInterpolationUsesExplicitClockDomain(t *testing.T) {
+	cnf := partitionedProof(t, [][]lit{{0}}, [][]lit{{1}})
+	if cnf == nil {
+		t.Fatal("expected UNSAT proof")
+	}
+	manager := Inta_ManAlloc()
+	if got := Inta_ManInterpolateWithClock(manager, cnf, 100, []int32{0}, 0, func() int64 { return 99 }); got == nil {
+		t.Fatalf("live custom deadline rejected: %v", Inta_ManError(manager))
+	}
+	if got := Inta_ManInterpolateWithClock(manager, cnf, 100, []int32{0}, 0, func() int64 { return 101 }); got != nil {
+		t.Fatal("expired custom deadline accepted")
+	}
+}
