@@ -8,15 +8,18 @@ import (
 // rwrLibrary holds the initialized non-precompute branch of Rwr_ManStart.
 // Each entry in graphs is indexed by its corresponding forest node ID.
 type rwrLibrary struct {
-	forest                         []rwrForestNode
-	classes                        [][]int
-	inverse                        []uint16
-	canonical                      []uint16
-	phases, permutations, classMap []byte
-	practical                      []bool
-	graphs                         []*dec.Dec_Graph_t
-	scores, gains, added           []int16
-	nSubgraphs                     int
+	forest                                          []rwrForestNode
+	classes                                         [][]int
+	inverse                                         []uint16
+	canonical                                       []uint16
+	phases, permutations, classMap                  []byte
+	practical                                       []bool
+	graphs                                          []*dec.Dec_Graph_t
+	scores, gains, added                            []int16
+	nSubgraphs                                      int
+	nCutsGood, nCutsBad                             int
+	nNodesConsidered, nNodesRewritten, nNodesGained int
+	classScores                                     [222]int
 }
 
 func rwrStartLibrary() *rwrLibrary {
