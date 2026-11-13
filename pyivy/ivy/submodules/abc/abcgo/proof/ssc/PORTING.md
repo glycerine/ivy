@@ -40,11 +40,15 @@ the sweep, including prior proved substitutions in later queries. It uses the
 GIA equivalence reducer for AND-only graphs. Native XOR, MUX and buffer inputs
 are lowered in the working FRAIG, but still use a separate output reconstruction
 because GIA's equivalence reducer currently treats native gates as ANDs.
+Verification now builds the two implication miters and dual-output miter from
+the C routine and calls the CEC verification entry point. If the GIA miter
+builder rejects an interface, verification reports undecided.
 
 Class refinement uses deterministic full normalized simulation keys rather than
 source hash buckets followed by equality splitting. Simulation's random-number
-generator and some representative bookkeeping still differ from C. SAT frontier
-and source CNF integration are in progress. These differences can change node
+generator and some representative bookkeeping still differ from C. The SAT
+frontier has been ported, but source CNF integration is still being reviewed.
+These differences can change node
 choices, SAT counts, and resource-limit outcomes. The source-only declaration `Ssc_GenerateOneHot` has no
 definition in this source family and is not invented here. Memory-release helpers
 use Go ownership. There are no disabled-source build tags or placeholder engines.

@@ -164,6 +164,23 @@ func TestClassWordRefinementNormalizesCurrentFirstBit(t *testing.T) {
 	}
 }
 
+func TestVerificationChecksDifferenceUnderCare(t *testing.T) {
+	a := newBuilder(1, 8)
+	b := newBuilder(1, 8)
+	care := newBuilder(1, 8)
+	gia.Gia_ManAppendCo(a.graph, a.graph.InputLiterals()[0])
+	gia.Gia_ManAppendCo(b.graph, 0)
+	gia.Gia_ManAppendCo(care.graph, 0)
+	if got := Ssc_PerformVerification(a.graph, b.graph, care.graph); got != 0 {
+		t.Fatalf("unconstrained difference: got %d", got)
+	}
+	masked := newBuilder(1, 8)
+	gia.Gia_ManAppendCo(masked.graph, masked.graph.InputLiterals()[0])
+	if got := Ssc_PerformVerification(a.graph, b.graph, masked.graph); got != 1 {
+		t.Fatalf("difference excluded by care: got %d", got)
+	}
+}
+
 func TestRandomSequentialConstraintSweeps(t *testing.T) {
 	rng := rand.New(rand.NewSource(38122))
 	for trial := 0; trial < 80; trial++ {

@@ -3,6 +3,7 @@ package ssc
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/proof/cec"
 	"github.com/glycerine/abcgo/proof/cec/core"
 	"github.com/glycerine/abcgo/sat/satoko"
 )
@@ -299,37 +300,22 @@ func Ssc_PerformVerification(a, b, care *gia.Gia_Man_t) int32 {
 	if len(a.OutputLiterals()) != len(b.OutputLiterals()) || len(a.InputLiterals()) != len(b.InputLiterals()) {
 		panic("ssc: verification interface mismatch")
 	}
-	q := newBuilder(len(a.InputLiterals()), a.ObjectCount()+b.ObjectCount()+care.ObjectCount())
-	aa := copyInto(q, a, nil)
-	bb := copyInto(q, b, nil)
-	violations := copyInto(q, care, nil)
-	allowed := int32(1)
-	for _, v := range violations {
-		allowed = q.and(allowed, v^1)
+	condition := gia.Gia_ManDupAndOr(care, gia.Gia_ManPoNum(a), 1, 0)
+	left := gia.Gia_ManMiter(a, condition, 0, 0, 0, 1, 0)
+	if left == nil {
+		return -1
 	}
-	difference := int32(0)
-	for i := range aa {
-		difference = q.or(difference, q.xor(aa[i], bb[i]))
+	right := gia.Gia_ManMiter(b, condition, 0, 0, 0, 1, 0)
+	if right == nil {
+		return -1
 	}
-	gia.Gia_ManAppendCo(q.graph, q.and(allowed, difference))
-	m, _ := Ssc_ManStart(q.graph, emptyCare(q.graph), nil)
-	mapping := copySubjectIntoFraig(m)
-	output := q.graph.OutputLiterals()[0]
-	lit := mapping[output>>1] ^ (output & 1)
-	if lit == 0 {
-		return 1
+	miter := gia.Gia_ManMiter(left, right, 0, 1, 0, 0, 0)
+	if miter == nil {
+		return -1
 	}
-	if lit == 1 {
-		return 0
-	}
-	status := Ssc_ManCheckEquivalence(m, 0, lit>>1, lit&1)
-	if status == satoko.SATOKO_UNSAT {
-		return 1
-	}
-	if status == satoko.SATOKO_SAT {
-		return 0
-	}
-	return -1
+	params := new(cec.Cec_ParCec_t)
+	cec.Cec_ManCecSetDefaultParams(params)
+	return cec.Cec_ManVerify(miter, params)
 }
 func emptyCare(p *gia.Gia_Man_t) *gia.Gia_Man_t {
 	q := gia.Gia_ManStart(int32(len(p.InputLiterals()) + 2))
