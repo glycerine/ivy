@@ -316,5 +316,7 @@ should call `Simplify` and stop if it reports a conflict before solving with
 assumptions. After an unconditional UNSAT result, callers should discard the
 solver rather than reuse it; even an UNSAT formula without initial unit clauses
 can yield SAT on a later query. The source-characterization tests reproduce
-both cases against the original C implementation.
+both cases against the original C implementation. In the first case the
+false-SAT model exposed by `Model` violates an original clause; callers cannot
+assume that a model returned after this source failure satisfies the formula.
 
