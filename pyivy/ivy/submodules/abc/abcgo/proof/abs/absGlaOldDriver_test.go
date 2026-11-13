@@ -99,3 +99,17 @@ func TestOldGlaDriverRefinesSpuriousCounterexample(t *testing.T) {
 		t.Fatal("unsatisfiable graph produced counterexample")
 	}
 }
+
+func TestOldGlaDirectPrimaryInputOutput(t *testing.T) {
+	for _, complement := range []int32{0, 1} {
+		g := gia.Gia_ManStart(4)
+		x := gia.Gia_ManAppendCi(g)
+		gia.Gia_ManAppendCo(g, x^complement)
+		var pars Abs_Par_t
+		Abs_ParSetDefaults(&pars)
+		pars.nFramesMax = 1
+		if got := Gia_ManPerformGlaOld(g, &pars, 0); got != 0 || g.SequentialCounterexample() == nil || gia.Gia_ManVerifyCex(g, g.SequentialCounterexample(), 0) != 1 {
+			t.Fatalf("complement=%d result=%d cex=%+v", complement, got, g.SequentialCounterexample())
+		}
+	}
+}

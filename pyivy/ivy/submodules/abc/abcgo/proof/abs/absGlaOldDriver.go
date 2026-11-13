@@ -32,6 +32,19 @@ func Gia_ManPerformGlaOld(graph *gia.Gia_Man_t, pars *Abs_Par_t, startVta int32)
 		fmt.Println("Sequential miter is trivially SAT.")
 		return 0
 	}
+	// A direct PI output has a concrete frame-zero counterexample and no
+	// internal node whose clauses can be added to the abstraction.
+	driver := gia.Gia_ObjFanin0(po)
+	if gia.Gia_ObjIsPi(graph, driver) != 0 {
+		cex := util.Abc_CexAlloc(gia.Gia_ManRegNum(graph), gia.Gia_ManPiNum(graph), 1)
+		if gia.Gia_ObjFaninC0(po) == 0 {
+			util.Abc_InfoSetBit(cex.PData, cex.NRegs+gia.Gia_ObjCioId(driver))
+		}
+		if err := graph.SetSequentialCounterexample(cex); err != nil {
+			panic(err)
+		}
+		return 0
+	}
 	ret := int32(-1)
 	if gia.Gia_ManGateClasses(graph) == nil {
 		if startVta != 0 {
