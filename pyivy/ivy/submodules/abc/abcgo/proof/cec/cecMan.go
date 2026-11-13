@@ -10,13 +10,15 @@ import (
 // The source-shaped entry points retain their status convention: 1 proved,
 // 0 disproved, -1 interrupted or invalid (Error describes the latter).
 type Cec_ManSat_t struct {
-	pAig   *Gia_Man_t
-	pPars  *Cec_ParSat_t
-	proof  *core.Manager
-	result core.Result
-	values []bool
-	vCex   *Vec_Int_t
-	Error  error
+	pAig     *Gia_Man_t
+	pPars    *Cec_ParSat_t
+	proof    *core.Manager
+	source   *cecSourceSAT
+	result   core.Result
+	values   []bool
+	vCex     *Vec_Int_t
+	nCexLits int32
+	Error    error
 }
 
 func Cec_ManSatCreate(graph *Gia_Man_t, params *Cec_ParSat_t) *Cec_ManSat_t {
@@ -33,14 +35,17 @@ func (p *Cec_ManSat_t) restart() {
 	p.vCex = vec.Vec_IntAlloc(16)
 	o := core.Options{ConflictLimit: int64(p.pPars.nBTLimit), MaxSATVariables: int(p.pPars.nSatVarMax), RecycleQueries: int(p.pPars.nCallsRecycle), PolarFlip: p.pPars.fPolarFlip != 0, TreatRegistersAsInputs: true, Deadline: p.pPars.deadline}
 	p.proof, p.Error = core.NewManager(p.pAig, o)
+	if p.Error == nil {
+		p.source = newCecSourceSAT(p.pAig, p.pPars)
+	}
 }
 func Cec_ManSatPrintStats(p *Cec_ManSat_t) {
-	if p.proof == nil {
+	if p.source == nil {
 		fmt.Printf("CEC SAT: %v\n", p.Error)
 		return
 	}
-	s := p.proof.Statistics()
-	fmt.Printf("CEC SAT: %d queries, %d SAT calls, %d conflicts, %d recycles\n", s.Queries, s.SATCalls, s.Conflicts, s.Recycles)
+	s := p.source
+	fmt.Printf("CEC SAT: %d queries, %d SAT, %d UNSAT, %d undecided, %d conflicts, %d recycles\n", s.calls, s.satCount, s.unsatCount, s.undecCount, s.sat.Statistics().Conflicts, s.recycles)
 }
 func Cec_ManSatStop(p *Cec_ManSat_t) {
 	if p != nil {

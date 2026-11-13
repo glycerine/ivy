@@ -4,6 +4,8 @@ import (
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/proof/cec/core"
+	"github.com/glycerine/abcgo/sat/bsat"
+	"time"
 )
 
 func Cec_ManSatSolverRecycle(p *Cec_ManSat_t) { p.restart() }
@@ -18,19 +20,52 @@ func (p *Cec_ManSat_t) query(a int32, b *int32) int32 {
 	if p.Error = p.proof.SetConflictLimit(int64(p.pPars.nBTLimit)); p.Error != nil {
 		return -1
 	}
-	if b == nil {
-		p.result, p.Error = p.proof.CheckLiteral(a)
-	} else {
-		p.result, p.Error = p.proof.CheckConjunction(a, *b)
+	if a == 0 && b == nil {
+		return 1
 	}
-	if p.Error != nil {
+	if a == 1 && b == nil {
+		panic("cec: constant-one node query")
+	}
+	if !p.pPars.deadline.IsZero() && !time.Now().Before(p.pPars.deadline) {
 		return -1
 	}
-	if p.result.Status == core.Different {
-		p.values, p.Error = p.proof.Model().Values(p.result.Counterexample.Inputs)
-		if p.Error != nil {
-			return -1
+	s := p.source
+	s.sat.SetDeadline(p.pPars.deadline)
+	s.since++
+	s.calls++
+	if p.pPars.nSatVarMax > 0 && s.sat.NumVars() > p.pPars.nSatVarMax && s.since > p.pPars.nCallsRecycle {
+		s.reset()
+		s.sat.SetDeadline(p.pPars.deadline)
+	}
+	s.addNode(a >> 1)
+	lits := []int32{s.literal(a)}
+	if b != nil {
+		s.addNode(*b >> 1)
+		lits = append(lits, s.literal(*b))
+	}
+	result := s.sat.SolveWithResourceLimits(lits, int64(p.pPars.nBTLimit), 0, 0, 0)
+	switch result {
+	case bsat.Unsatisfiable:
+		s.unsatCount++
+		for i := range lits {
+			lits[i] ^= 1
 		}
+		s.addClause(lits...)
+		p.result = core.Result{Status: core.Equivalent}
+	case bsat.Satisfiable:
+		s.satCount++
+		inputs := make([]bool, len(p.pAig.InputLiterals()))
+		for i, lit := range p.pAig.InputLiterals() {
+			id := s.ids[lit>>1]
+			if id != 0 {
+				inputs[i], _ = s.sat.Value(id)
+			}
+		}
+		p.values, p.Error = p.proof.Model().Values(inputs)
+		p.result = core.Result{Status: core.Different, Counterexample: &core.Counterexample{Inputs: inputs}}
+	default:
+		s.undecCount++
+		p.result = core.Result{Status: core.Undecided}
 	}
 	return int32(p.result.Status)
 }

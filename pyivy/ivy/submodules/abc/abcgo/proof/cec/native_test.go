@@ -200,7 +200,7 @@ func TestSourceConjunctionTrivialCasesAndConstantAssertion(t *testing.T) {
 			t.Fatalf("trivial result %d", got)
 		}
 	}
-	if got := p.proof.Statistics().Queries; got != 0 {
+	if got := p.source.calls; got != 0 {
 		t.Fatalf("trivial queries reached solver: %d", got)
 	}
 	defer func() {

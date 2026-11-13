@@ -61,3 +61,17 @@ different input-use orders and solver recycling. They also
 check every gate's CNF under both phase policies, exercise incremental proofs,
 recycling/cancellation and model validation, and compare defaults with original
 CEC source when that optional reference tree is available.
+
+## Source-named SAT wrapper boundary
+
+The parent package's source-named node-query wrappers use a separate BSAT
+backend with CEC frontier allocation and supergate/MUX clauses. This package's
+Satoko manager remains a Go adapter, not the backend for those wrappers.
+Source differential coverage currently includes a small AND supergate; it does
+not establish matching resource limits, solver statistics, or witness selection
+on every network.
+
+`CheckPair`, `VerifyTwo`, `VerifyPairs`, `VerifyMiter`, immutable `Model`
+snapshots and evaluation, contexts, deadlines, and mutable conflict limits are
+Go convenience APIs, not direct C entry points. `CheckLiteral` and
+`CheckConjunction` are also independent adapter operations.

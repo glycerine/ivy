@@ -136,3 +136,10 @@ losing their native semantics; a compiled-C regression characterizes that
 behavior. A buffer is also rejected where the current Go sweep requires a
 strict AND-inverter graph. Phase metadata and the AIG wrapper's GIA cleanup
 and witness ownership now follow their C entry points.
+
+The source-named `Cec_ManSatCreate` and node-query wrappers use a separate
+BSAT backend with the source frontier allocation and supergate/MUX clauses.
+A small compiled-C differential checks status, variable IDs and witness; it
+does not establish exact resource-limit, statistics or witness behavior for
+every network. The `core` package's Satoko manager remains a separate Go
+convenience adapter.

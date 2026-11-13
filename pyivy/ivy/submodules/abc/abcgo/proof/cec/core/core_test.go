@@ -415,3 +415,27 @@ func TestCheckLiteralConstantSourceCases(t *testing.T) {
 		t.Fatalf("one: %+v %v", r, err)
 	}
 }
+
+// cecSolve.c:487-493 requires both the variable and query counts to be
+// strictly greater than their configured thresholds before recycling.
+func TestRecycleRequiresBothStrictThresholds(t *testing.T) {
+	c := newCircuit(2)
+	m, err := NewManager(c, Options{MaxSATVariables: 2, RecycleQueries: 3})
+	if err != nil {
+		t.Fatal(err)
+	}
+	for i, lit := range []int32{c.inputs[0], c.inputs[1], c.inputs[0]} {
+		if _, err := m.CheckLiteral(lit); err != nil {
+			t.Fatal(err)
+		}
+		if got := m.Statistics().Recycles; got != 0 {
+			t.Fatalf("query %d recycled prematurely: %d", i+1, got)
+		}
+	}
+	if _, err := m.CheckLiteral(c.inputs[0]); err != nil {
+		t.Fatal(err)
+	}
+	if got := m.Statistics().Recycles; got != 1 {
+		t.Fatalf("fourth query: got %d recycles", got)
+	}
+}
