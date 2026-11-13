@@ -4,9 +4,10 @@ The goal is a source-faithful Go port of every proof package, followed by
 correctness review, simplification, and comprehensive tests. A successful
 component test is not evidence that its whole package builds.
 
-As of this checkpoint, `go test ./proof/...` still fails: `abs`, `acec`,
-`fra`, and `ssw` contain untranslated or unintegrated code. Their
-in-progress changes are recorded in commits prefixed `red:`.
+As of this checkpoint, `acec` still contains untranslated code. Its
+in-progress changes are recorded in commits prefixed `red:`. The `abs`,
+`fra`, and `ssw` packages now pass full race tests and vet; their review and
+end-to-end coverage are still in progress.
 
 * `cec` builds and passes its full race suite and vet. Cec4 has been
   integrated, but its source-fidelity review continues; the upstream GIA
@@ -16,6 +17,15 @@ in-progress changes are recorded in commits prefixed `red:`.
   small-state reachability and witness tests, incremental-solving tests,
   and a Go-facing options API. Concurrent solves must be externally
   serialized because ABC invariant storage is global.
+* `ssw` builds and passes its full race suite and vet. The original
+  semi-formal implementation asserts because its frame migration is
+  unfinished; representative storage requires a buffer-free graph. Rarity
+  permutation uses Go's PRNG, so its sequence differs from C's `rand()`.
+* `abs` builds and passes its full race suite and vet. Old GLA currently
+  requires XOR/MUX nodes to be lowered to ANDs; full integration review
+  remains in progress.
+* `fra` builds and passes its full race suite and vet. SEC's nontrivial
+  SSW and proof integrations still need end-to-end validation.
 * `fraig` builds and passes its full race suite. Review has fixed constant
   traversal, equivalence polarity, and multi-output miter bugs; SAT truth
   tables, feedback, compression, and external options have tests. Review
