@@ -108,17 +108,23 @@ func Cec_ManChoiceComputation_int(graph *Gia_Man_t, params *Cec_ParChc_t) int32 
 	}
 	// Speculative proofs may depend on earlier assumptions. Verify every
 	// surviving class on the original graph; discard false or unknown pairs.
-	opts := core.DefaultSATOptions()
-	opts.ConflictLimit, opts.TreatRegistersAsInputs = int64(params.nBTLimit), true
-	manager, err := core.NewManager(graph, opts)
-	if err != nil {
+	if err := cecValidateChoiceClasses(graph, sim, params.nBTLimit); err != nil {
 		params.Error = err
 		return -1
 	}
+	return 0
+}
+
+func cecValidateChoiceClasses(graph *Gia_Man_t, sim *Cec_ManSim_t, limit int32) error {
+	opts := core.DefaultSATOptions()
+	opts.ConflictLimit, opts.TreatRegistersAsInputs = int64(limit), true
+	manager, err := core.NewManager(graph, opts)
+	if err != nil {
+		return err
+	}
 	phases, err := manager.Model().Values(make([]bool, len(graph.InputLiterals())))
 	if err != nil {
-		params.Error = err
-		return -1
+		return err
 	}
 	for id := int32(1); int(id) < graph.ObjectCount(); id++ {
 		repr := gia.Gia_ObjRepr(graph, id)
@@ -131,14 +137,13 @@ func Cec_ManChoiceComputation_int(graph *Gia_Man_t, params *Cec_ParChc_t) int32 
 		}
 		result, e := manager.CheckPair(a, b)
 		if e != nil {
-			params.Error = e
-			return -1
+			return e
 		}
 		if result.Status != core.Equivalent {
 			Cec_ManSimClassRemoveOne(sim, id)
 		}
 	}
-	return 0
+	return nil
 }
 func Cec_ManChoiceComputationVec(graph *Gia_Man_t, snapshots int32, params *Cec_ParChc_t) *Gia_Man_t {
 	if params == nil {
@@ -224,7 +229,12 @@ func Cec_ComputeChoices(graph *Gia_Man_t, params *Dch_Pars_t) *Aig_Man_t {
 	return gia.Gia_ManToAig(result, 1)
 }
 func Cec_ComputeChoicesNew(graph *Gia_Man_t, verbose int32) *Aig_Man_t {
-	params := dch.DefaultParams()
-	params.Verbose = verbose != 0
-	return Cec_ComputeChoices(graph, &params)
+	result, err := cecComputeChoicesCec4(graph, verbose)
+	if err != nil {
+		if verbose != 0 {
+			fmt.Printf("CEC choices: %v\n", err)
+		}
+		return nil
+	}
+	return result
 }

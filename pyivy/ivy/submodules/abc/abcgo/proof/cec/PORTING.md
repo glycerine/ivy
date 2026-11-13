@@ -96,7 +96,7 @@ unknown or false pairs are removed. Native gates are lowered for this path and
 validated classes are mapped back to the input graph. `Cec_ComputeChoices`
 uses the vector path and the source's circuit-SAT conflict cap.
 
-`Cec_ComputeChoicesNew` still delegates to the vector driver rather than the
-Cec4-specific source path. The internal `Cec_ManChoiceComputation_int` entry
-point requires AND-inverter inputs; the public vector driver lowers native
-gates first.
+`Cec_ComputeChoicesNew` uses the separate Cec4 simulation and sweep path,
+then independently checks retained classes before constructing choices. The
+internal `Cec_ManChoiceComputation_int` entry point requires AND-inverter
+inputs; the public vector driver lowers native gates first.
