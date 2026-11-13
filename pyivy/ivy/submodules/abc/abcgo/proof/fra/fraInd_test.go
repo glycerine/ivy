@@ -2,6 +2,7 @@ package fra
 
 import (
 	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/misc/vec"
 	"testing"
 )
 
@@ -224,6 +225,49 @@ func TestInductionWithNontrivialOneHotCandidate(t *testing.T) {
 	result := Fra_FraigInduction(g, &Fra_Ssw_t{nFramesK: 1, fUse1Hot: 1})
 	if result == nil {
 		t.Fatal("one-hot induction returned no result")
+	}
+	for sequence := 0; sequence < 16; sequence++ {
+		src, dst := make([]bool, 2), make([]bool, result.RegisterCount())
+		for frame := 0; frame < 4; frame++ {
+			value := sequence&(1<<frame) != 0
+			a, err := g.Evaluate(append([]bool{value}, src...))
+			if err != nil {
+				t.Fatal(err)
+			}
+			b, err := result.Evaluate(append([]bool{value}, dst...))
+			if err != nil {
+				t.Fatal(err)
+			}
+			if a[0] != b[0] {
+				t.Fatalf("sequence %04b frame %d outputs %v/%v", sequence, frame, a, b)
+			}
+			copy(src, a[len(a)-len(src):])
+			copy(dst, b[len(b)-len(dst):])
+		}
+	}
+}
+
+func TestInductionWithNontrivialImplicationCandidate(t *testing.T) {
+	g := aig.NewGraph()
+	input, a, b := g.NewInput(), g.NewInput(), g.NewInput()
+	g.AddOutput(g.AND(a, b.Not()))
+	g.AddOutput(input)
+	g.AddOutput(g.OR(input, a))
+	aig.Aig_ManSetRegNum(g, 2)
+	probe := Fra_ManStart(g, &Fra_Par_t{nFramesK: 1})
+	imps := Fra_ImpDerive(probe, 100, 20, 0)
+	found := false
+	for _, imp := range vec.Vec_IntArray(imps) {
+		if Fra_ImpLeft(imp) == int32(a.NodeID()) && Fra_ImpRight(imp) == int32(b.NodeID()) {
+			found = true
+		}
+	}
+	if !found {
+		t.Fatalf("fixture did not produce a => b: %v", vec.Vec_IntArray(imps))
+	}
+	result := Fra_FraigInduction(g, &Fra_Ssw_t{nFramesK: 1, fUseImps: 1, nMaxImps: 20})
+	if result == nil {
+		t.Fatal("implication induction returned no result")
 	}
 	for sequence := 0; sequence < 16; sequence++ {
 		src, dst := make([]bool, 2), make([]bool, result.RegisterCount())
