@@ -39,3 +39,10 @@ passes the absolute deadline to SAT and checks it between simulation and
 correspondence stages. Graph conversion and some graph traversal stages remain
 non-interruptible. Broader differential testing against ABC, especially for
 partitioned and constrained modes, remains useful.
+
+With flop grouping enabled, ABC transfers the grouped AIG's counterexample
+directly to the original GIA without undoing the permutation or inserted gap
+registers. The compiled `test_vectors/ssw_group_witness.c` fixture produces
+an 11-register witness on a one-register original graph. The Go entry point
+preserves this source behavior; callers cannot assume such a witness has the
+original graph's dimensions or is directly replayable against it.
