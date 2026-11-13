@@ -40,3 +40,10 @@ func TestSourceDIMACSParserAcceptsCommentAfterClause(t *testing.T) {
 		t.Fatal("C accepts a comment after the clause terminator")
 	}
 }
+
+func TestSourceDIMACSParserDoesNotRequireDeclaredClauseCount(t *testing.T) {
+	var p *Msat_Solver_t
+	if Msat_SolverParseDimacs(strings.NewReader("p cnf 2 3\n1 2 0\n"), &p, 0) != 1 {
+		t.Fatal("C reads but does not enforce declared clause count")
+	}
+}

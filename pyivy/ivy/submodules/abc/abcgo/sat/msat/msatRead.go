@@ -78,7 +78,7 @@ func parseDIMACS(r io.Reader, initializeOrder bool) (*Msat_Solver_t, error) {
 	if err := scanner.Err(); err != nil {
 		return nil, err
 	}
-	if p == nil || len(clause) > 0 || count != declared {
+	if p == nil || len(clause) > 0 || initializeOrder && count != declared {
 		return nil, fmt.Errorf("incomplete DIMACS input")
 	}
 	if initializeOrder {
