@@ -277,6 +277,29 @@ func TestInitialSimulationDoesNotIncrementSourceCounters(t *testing.T) {
 	}
 }
 
+func TestStartAcceptsInactiveRecycleOptions(t *testing.T) {
+	subject, care := fixture()
+	params := DefaultParams()
+	params.SatVarMax, params.CallsRecycle = -1, -3
+	p, status := Ssc_ManStart(subject, care, &params)
+	if status != satoko.SATOKO_SAT || p == nil {
+		t.Fatalf("inactive C options changed start status: %d", status)
+	}
+	if p.Params.SatVarMax != -1 || p.Params.CallsRecycle != -3 {
+		t.Fatal("inactive options were not retained")
+	}
+}
+
+func TestStartUnsatisfiableCareDoesNotReturnManager(t *testing.T) {
+	subject := newBuilder(1, 5)
+	care := newBuilder(1, 5)
+	gia.Gia_ManAppendCo(care.graph, 1)
+	p, status := Ssc_ManStart(subject.graph, care.graph, nil)
+	if p != nil || status != satoko.SATOKO_UNSAT {
+		t.Fatalf("got manager %v, status %d; want no manager and UNSAT", p, status)
+	}
+}
+
 func TestConstraintWrapperUsesLevelizedSubject(t *testing.T) {
 	build := func() *gia.Gia_Man_t {
 		g := gia.Gia_ManStart(20)

@@ -24,7 +24,9 @@ func Ssc_ManStart(subject, care *gia.Gia_Man_t, params *Ssc_Pars_t) (*Ssc_Man_t,
 	if params != nil {
 		v = *params
 	}
-	if v.NWords < 1 || v.BTLimit < 0 || v.SatVarMax < 0 || v.CallsRecycle < 0 {
+	// SatVarMax and CallsRecycle are printed by the compiled C implementation
+	// but do not control its solver or have validity checks.
+	if v.NWords < 1 || v.BTLimit < 0 {
 		panic("ssc: invalid parameters")
 	}
 	fraig := newBuilder(len(subject.InputLiterals()), subject.ObjectCount()+care.ObjectCount())
@@ -35,7 +37,7 @@ func Ssc_ManStart(subject, care *gia.Gia_Man_t, params *Ssc_Pars_t) (*Ssc_Man_t,
 	Ssc_ManStartSolver(p)
 	pivot, status := Ssc_ManFindPivotSat(p)
 	if status != satoko.SATOKO_SAT {
-		return p, status
+		return nil, status
 	}
 	p.Pivot = pivot
 	pattern := vec.Vec_IntAlloc(len(pivot))
