@@ -47,13 +47,13 @@ func (s *fraSimulation) CounterExample() *util.Abc_Cex_t {
 // copyFrameCounterExample converts a combinational unrolling model to a trace.
 func copyFrameCounterExample(g, frames *aig.Graph, model []int32) *util.Abc_Cex_t {
 	if g == nil || frames == nil {
-		return nil
+		panic("fra: nil counterexample graph")
 	}
 	regs := int(aig.Aig_ManRegNum(g))
 	pis, pos := len(g.Inputs())-regs, len(g.Outputs())-regs
 	numInputs := len(frames.Inputs())
-	if regs <= 0 || aig.Aig_ManRegNum(frames) != 0 || pis <= 0 || pos <= 0 || numInputs%pis != 0 || len(frames.Outputs()) != numInputs/pis*pos || len(model) <= numInputs {
-		return nil
+	if regs <= 0 || aig.Aig_ManRegNum(frames) != 0 || pis <= 0 || numInputs%pis != 0 || len(frames.Outputs()) != numInputs/pis*pos || len(model) <= numInputs {
+		panic("fra: invalid counterexample frames or model")
 	}
 	for i, output := range frames.Outputs() {
 		if int32(output.NodeID()) != model[numInputs] {
@@ -72,5 +72,5 @@ func copyFrameCounterExample(g, frames *aig.Graph, model []int32) *util.Abc_Cex_
 		}
 		return cex
 	}
-	return nil
+	panic("fra: counterexample output ID not found")
 }

@@ -285,7 +285,12 @@ func Fra_SmlSimulateSeq(g *aig.Graph, prefix, frames, words, check int32) *Fra_S
 	}
 	return s
 }
-func Fra_SmlGetCounterExample(s *Fra_Sml_t) *util.Abc_Cex_t { return s.CounterExample() }
+func Fra_SmlGetCounterExample(s *Fra_Sml_t) *util.Abc_Cex_t {
+	if !s.NonconstantOutput {
+		panic("fra: no nonconstant output detected")
+	}
+	return s.CounterExample()
+}
 func Fra_SmlCopyCounterExample(g, frames *aig.Graph, model []int32) *util.Abc_Cex_t {
 	return copyFrameCounterExample(g, frames, model)
 }
