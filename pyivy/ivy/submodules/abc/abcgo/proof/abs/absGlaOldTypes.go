@@ -29,6 +29,7 @@ type Gla_Man_t struct {
 	pSat                                                 *bsat.LabeledSolver2
 	vTemp, vAddedNew, vObjCounts, vCoreCounts, vProofIds *vec.Vec_Int_t
 	nProofIds                                            int32
+	refSign                                              uint32
 	pvRefis                                              [][]Rfn_Obj_t
 	pGia2                                                *gia.Gia_Man_t
 	pRnm                                                 *Rnm_Man_t
