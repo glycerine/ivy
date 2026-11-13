@@ -56,3 +56,30 @@ func TestSolverCollapse(t *testing.T) {
 		}
 	}
 }
+
+func TestFourSolverCollapse(t *testing.T) {
+	makeSolver := func() *bsat.Solver {
+		s := bsat.NewSolver()
+		for i := 0; i < 4; i++ {
+			s.NewVariable()
+		}
+		s.AddClause(bsat.Negative(1), bsat.Positive(2))
+		s.AddClause(bsat.Negative(1), bsat.Positive(3))
+		s.AddClause(bsat.Positive(1), bsat.Negative(2), bsat.Negative(3))
+		return s
+	}
+	for _, canon := range []int32{0, 1} {
+		for _, rev := range []int32{0, 1} {
+			sop := Bmc_CollapseOne_int3(makeSolver(), makeSolver(), makeSolver(), makeSolver(), 2, 0, 0, canon, rev, 0)
+			if sop == nil {
+				t.Fatalf("no cover canon=%d rev=%d", canon, rev)
+			}
+			for bits := 0; bits < 4; bits++ {
+				in := []bool{bits&1 != 0, bits&2 != 0}
+				if collapseCoverValue(vec.Vec_StrArray(sop), in) != (in[0] && in[1]) {
+					t.Fatalf("cover=%q in=%v", vec.Vec_StrArray(sop), in)
+				}
+			}
+		}
+	}
+}
