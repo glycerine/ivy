@@ -233,6 +233,41 @@ func TestStartSetsCarePhasesFromPivot(t *testing.T) {
 	}
 }
 
+func TestStartCopiesAndInvertsSourceCareGraph(t *testing.T) {
+	subject := newBuilder(2, 10)
+	care := gia.Gia_ManStart(10)
+	care.SetIdentity("care-name", "care-spec")
+	a, b := gia.Gia_ManAppendCi(care), gia.Gia_ManAppendCi(care)
+	lit := gia.Gia_ManAppendAnd(care, a, b)
+	gia.Gia_ManAppendCo(care, lit)
+	expected := gia.Gia_ManDupDfs(care)
+	gia.Gia_ManInvertPos(expected)
+	p, status := Ssc_ManStart(subject.graph, care, nil)
+	if status != satoko.SATOKO_SAT || p == nil {
+		t.Fatalf("start status %d", status)
+	}
+	if p.Aig.NetworkName() != expected.NetworkName() || p.Aig.NetworkSpec() != expected.NetworkSpec() || p.Aig.ObjectCount() != expected.ObjectCount() || !reflect.DeepEqual(p.Aig.OutputLiterals(), expected.OutputLiterals()) {
+		t.Fatal("working FRAIG did not preserve the DFS-copied and inverted care graph")
+	}
+}
+
+func TestSweepRejectsDuplicateCareNodesAtSourceHashStart(t *testing.T) {
+	subject := newBuilder(2, 8)
+	gia.Gia_ManAppendCo(subject.graph, subject.graph.InputLiterals()[0])
+	care := gia.Gia_ManStart(10)
+	a, b := gia.Gia_ManAppendCi(care), gia.Gia_ManAppendCi(care)
+	first := gia.Gia_ManAppendAnd(care, a, b)
+	second := gia.Gia_ManAppendAnd(care, a, b)
+	gia.Gia_ManAppendCo(care, first)
+	gia.Gia_ManAppendCo(care, second)
+	defer func() {
+		if recover() == nil {
+			t.Fatal("C Gia_ManHashStart asserts on duplicate care nodes")
+		}
+	}()
+	Ssc_PerformSweeping(subject.graph, care, nil)
+}
+
 func TestFailedOptionalVerificationStillReturnsResult(t *testing.T) {
 	subject := newBuilder(1, 4)
 	gia.Gia_ManAppendCo(subject.graph, subject.graph.InputLiterals()[0])

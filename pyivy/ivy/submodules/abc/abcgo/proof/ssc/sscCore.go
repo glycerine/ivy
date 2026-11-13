@@ -29,10 +29,8 @@ func Ssc_ManStart(subject, care *gia.Gia_Man_t, params *Ssc_Pars_t) (*Ssc_Man_t,
 	if v.NWords < 1 || v.BTLimit < 0 {
 		panic("ssc: invalid parameters")
 	}
-	fraig := newBuilder(len(subject.InputLiterals()), subject.ObjectCount()+care.ObjectCount())
-	for _, lit := range copyInto(fraig, care, nil) {
-		gia.Gia_ManAppendCo(fraig.graph, lit^1)
-	}
+	fraig := &builder{graph: gia.Gia_ManDupDfs(care), sourceHash: true}
+	gia.Gia_ManInvertPos(fraig.graph)
 	p := &Ssc_Man_t{Params: v, Aig: fraig.graph, Original: subject, Care: care, fraig: fraig}
 	Ssc_ManStartSolver(p)
 	pivot, status := Ssc_ManFindPivotSat(p)
@@ -163,6 +161,7 @@ func Ssc_PerformSweepingInt(subject, care *gia.Gia_Man_t, params *Ssc_Pars_t) *g
 	// as subject candidates are visited. Later SAT queries must see earlier
 	// proved substitutions, not the unreduced subject graph.
 	fraig := p.fraig
+	fraig.startSourceHash()
 	mapping := make([]int32, subject.ObjectCount())
 	for i := range mapping {
 		mapping[i] = -1

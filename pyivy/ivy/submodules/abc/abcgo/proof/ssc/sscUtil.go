@@ -8,18 +8,24 @@ import (
 
 // builder owns structural hashing; no GIA-global scratch table is borrowed.
 type builder struct {
-	graph *gia.Gia_Man_t
-	ands  map[[2]int32]int32
+	graph      *gia.Gia_Man_t
+	ands       map[[2]int32]int32
+	sourceHash bool
+	hashReady  bool
 }
 
 func newBuilder(inputs, capacity int) *builder {
-	b := &builder{gia.Gia_ManStart(int32(capacity)), make(map[[2]int32]int32)}
+	b := &builder{graph: gia.Gia_ManStart(int32(capacity)), ands: make(map[[2]int32]int32)}
 	for i := 0; i < inputs; i++ {
 		gia.Gia_ManAppendCi(b.graph)
 	}
 	return b
 }
 func (b *builder) and(a, c int32) int32 {
+	if b.sourceHash {
+		b.startSourceHash()
+		return gia.Gia_ManHashAnd(b.graph, a, c)
+	}
 	if a == 0 || c == 0 || a == c^1 {
 		return 0
 	}
@@ -39,6 +45,12 @@ func (b *builder) and(a, c int32) int32 {
 	l := gia.Gia_ManAppendAnd(b.graph, a, c)
 	b.ands[key] = l
 	return l
+}
+func (b *builder) startSourceHash() {
+	if b.sourceHash && !b.hashReady {
+		gia.Gia_ManHashStart(b.graph)
+		b.hashReady = true
+	}
 }
 func (b *builder) or(a, c int32) int32     { return b.and(a^1, c^1) ^ 1 }
 func (b *builder) xor(a, c int32) int32    { return b.or(b.and(a, c^1), b.and(a^1, c)) }
