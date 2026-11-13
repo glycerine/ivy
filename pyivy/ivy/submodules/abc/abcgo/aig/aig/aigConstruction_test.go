@@ -26,14 +26,12 @@ func TestRegisterCountConstructionRejectsInvalidInputCount(t *testing.T) {
 	Aig_ManSetRegNumForConstruction(NewGraph(), 1)
 }
 
-func TestRegisterCountCompletionChecksOutputCount(t *testing.T) {
+func TestRegisterCountCompletionMatchesSourceOnIncompleteInterface(t *testing.T) {
 	p := NewGraph()
 	p.NewInput()
 	Aig_ManSetRegNumForConstruction(p, 1)
-	defer func() {
-		if recover() == nil {
-			t.Fatal("expected incomplete interface to panic")
-		}
-	}()
 	Aig_ManSetRegNum(p, 1)
+	if p.TruePiCount() != 0 || p.TruePoCount() != -1 {
+		t.Fatal("source setter preserves incomplete terminal counts")
+	}
 }

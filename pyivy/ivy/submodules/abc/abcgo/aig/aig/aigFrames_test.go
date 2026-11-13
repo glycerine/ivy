@@ -58,21 +58,40 @@ func TestFrameExpansionFreeStateAndEnlarge(t *testing.T) {
 	}
 }
 
-func TestInitializedFrameWithLatchOutputsIsCombinational(t *testing.T) {
+func TestInitializedFrameWithLatchOutputsMatchesSourceMetadata(t *testing.T) {
 	p := NewGraph()
 	state := p.NewInput()
 	p.AddOutput(state)
 	p.AddOutput(state.Not())
 	Aig_ManSetRegNum(p, 1)
 	q := Aig_ManFrames(p, 1, 1, 0, 1, 0, nil)
-	if q.nRegs != 0 || q.InputCount() != 0 || q.OutputCount() != 1 {
-		t.Fatal("initialized expansion invented state inputs")
-	}
-	if err := q.Check(); err != nil {
-		t.Fatal(err)
+	if q.nRegs != 1 || q.InputCount() != 0 || q.OutputCount() != 1 || q.TruePiCount() != -1 || q.TruePoCount() != 0 {
+		t.Fatal("initialized frame metadata differs from ABC")
 	}
 	out, err := q.Evaluate(nil)
 	if err != nil || !out[0] {
 		t.Fatal(out, err)
+	}
+}
+
+func TestInitializedFramesWithRegisterOutputsSourceMetadata(t *testing.T) {
+	p := NewGraph()
+	in, state := p.NewInput(), p.NewInput()
+	p.AddOutput(state)
+	p.AddOutput(in)
+	Aig_ManSetRegNum(p, 1)
+	q := Aig_ManFrames(p, 2, 1, 1, 1, 0, nil)
+	if q.InputCount() != 2 || q.OutputCount() != 3 || q.RegisterCount() != 1 || q.TruePiCount() != 1 || q.TruePoCount() != 2 {
+		t.Fatal("initialized frame terminal counts differ from compiled ABC")
+	}
+	for i, e := range q.inputs {
+		if Aig_ObjCioId(q, e) != int32(i) {
+			t.Fatal("input ID")
+		}
+	}
+	for i, e := range q.outputs {
+		if Aig_ObjCioId(q, e) != int32(i) {
+			t.Fatal("output ID")
+		}
 	}
 }

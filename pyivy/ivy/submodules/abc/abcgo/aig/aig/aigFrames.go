@@ -136,11 +136,7 @@ func Aig_ManFrames(p *Graph, frames, init, outs, regs, enlarge int32, returnedMa
 			output := q.AddOutput(visit(p.outputDriver(e), sourceFrame))
 			Aig_ObjSetFrames(mapping, frames, e, frames-1, output)
 		}
-		// Initialized expansions have no state CIs and are combinational BMC
-		// managers; do not label ordinary PIs as register terminals.
-		if init == 0 {
-			Aig_ManSetRegNum(q, p.nRegs)
-		}
+		Aig_ManSetRegNum(q, p.nRegs)
 	}
 	Aig_ManCleanup(q)
 	if returnedMap != nil {

@@ -210,9 +210,6 @@ func Aig_ManReportImprovement(p, q *Graph) {
 	fmt.Printf("REG: Beg = %5d. End = %5d. (R =%5.1f %%)  AND: Beg = %6d. End = %6d. (R =%5.1f %%)\n", p.nRegs, q.nRegs, reduction(p.nRegs, q.nRegs), Aig_ManNodeNum(p), Aig_ManNodeNum(q), reduction(Aig_ManNodeNum(p), Aig_ManNodeNum(q)))
 }
 func Aig_ManSetRegNum(p *Graph, n int32) {
-	if n < 0 || int(n) > len(p.inputs) || int(n) > len(p.outputs) {
-		panic("aig: invalid register count")
-	}
 	p.nRegs = n
 	p.nTruePis = int32(len(p.inputs)) - n
 	p.nTruePos = int32(len(p.outputs)) - n
