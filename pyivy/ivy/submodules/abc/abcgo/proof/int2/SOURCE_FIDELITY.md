@@ -15,6 +15,16 @@ equivalent performance, resource handling, or an interpolation certificate.
 Reconstructing the missing driver requires a reliable source or a separately
 specified algorithm, rather than assuming its absent control flow.
 
+Source search: the other local ABC checkout has the same `int2Core.c` bytes
+(SHA-256 `99f3fa643b19dd3e65c317ed6f47ba8c845145be8091a34fe111c1ed03837272`).
+Its available git history has one commit for that path,
+`b910cba3e2e065d444d4a7b1bcbf81227417fc11` (2014-01-28,
+"Initial new interpolation code"). The current workspace's available history
+has only the vendoring commit for that path. No complete driver was found in
+these local histories. Attempts to inspect the Berkeley ABC upstream driver and
+its history through the web tool failed, so those sources remain unverified;
+this search does not establish that no complete implementation exists elsewhere.
+
 Independent components have source-based repairs and tests: timeframe
 construction preserves complemented edges and maps constants and SAT
 variables; JF CNF results use their actual Go type; refinement selects

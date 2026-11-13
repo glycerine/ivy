@@ -123,6 +123,21 @@ func TestComputePreimageBlocksUnreachableSuffixState(t *testing.T) {
 	if got := vec.Vec_IntArray(image); len(got) != 3 || got[0] != 0 || got[1] != 1 || got[2] != 0 {
 		t.Fatalf("unreachable state cube %v, want [0 1 0]", got)
 	}
+	// Feed the produced cover into the next image construction: an image
+	// containing state=1, composed with nextState=!state, selects state=0.
+	machine := gia.Gia_ManStart(8)
+	state := gia.Gia_ManAppendCi(machine)
+	gia.Gia_ManAppendCo(machine, 0)
+	gia.Gia_ManAppendCo(machine, state^1)
+	gia.Gia_ManSetRegNum(machine, 1)
+	composed := Int2_ManProbToGia(machine, image)
+	defer gia.Gia_ManStop(composed)
+	for _, value := range []bool{false, true} {
+		got := int2EvalGraph(composed, []bool{value}, nil, make([]bool, gia.Gia_ManObjNum(composed)), nil)
+		if got != !value {
+			t.Fatalf("composed image at state=%t: got %t", value, got)
+		}
+	}
 }
 
 func TestComputePreimageTranslatesSATVariableMappings(t *testing.T) {
