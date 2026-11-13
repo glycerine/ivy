@@ -26,13 +26,13 @@ Monotonicity discovery retains only proved candidates. Unknown results never bec
 
 ## Source adaptations and fixes
 
-- LTL violation outputs respect supplied fairness assumptions. The original C LTL branch omits this guard, unlike its ordinary liveness branch, and can report unfair loops.
-- Full one-step mode retains safety assertions. The C branch accidentally tests mode zero while executing mode four and silently omits them. The original-C comparison isolates its shared liveness output for this explicit correction.
-- `l2ssim` remains liveness-only, independently of the full-one-step correction. CLI `-s` ignores safety and `-l` ignores liveness; option order does not change their meaning. Default abstraction shadows the first half of original registers, matching source preparation.
+- The native `LivenessToSafety` convenience API guards LTL violations with fairness assumptions. The source-shaped LTL wrapper and command match the C branch, which omits the guard and can report unfair loops.
+- The source one-step constructor emits a safety output only when assertions are present; the native convenience API also emits a constant-false safety output when none are present.
+- `l2ssim` remains liveness-only, independently of the one-step safety-output behavior. CLI `-s` ignores safety and `-l` ignores liveness; option order does not change their meaning. Default abstraction shadows the first half of original registers, matching source preparation.
 - Safety-name aliases `Assert`/`Assume` are retained alongside `assert_safety`/`assume_safety`.
 - Actual hint indexes replace assumptions that hints are contiguous or immediately follow the pending output. Known-hint delay lookup uses its real vector position, correcting the source's negative-index arithmetic.
 - Each monotonicity obligation is queried explicitly. This avoids relying on C's ambiguous null counterexample entries or accidentally solving unrelated POs.
-- The source's monotone-discovery function computes results and then returns NULL; the native API returns its proved set.
+- The source-shaped monotone-discovery function computes results and then returns NULL, as in C; the separate native `FindMonotone` API returns its proved set.
 - Parser state is local and reentrant. Invalid input returns errors instead of exiting the embedding process or reading before the input buffer.
 - Combination generation handles `k=0`, validates dimensions, checks int64 overflow, and streams combinations. The C recursive count lacks the zero-width base case.
 - Source allocation/free helpers disappear under Go ownership. Graph interface counts update automatically; Biere compatibility counter helpers compute the source count difference without manual counter repair.

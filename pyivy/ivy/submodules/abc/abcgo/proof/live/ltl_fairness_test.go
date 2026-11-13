@@ -29,12 +29,12 @@ func TestLTLRespectsFairnessAssumptions(t *testing.T) {
 	}
 }
 
-func TestLTLWrapperPreservesFairness(t *testing.T) {
+func TestLTLSourceWrapperOmitsFairness(t *testing.T) {
 	n := liveFixture(false)
 	n.LTLProperties = []string{":G :F assert_fair_q"}
 	g := LivenessToSafetyTransformationWithLTL(IGNORE_SAFETY_KEEP_LIVENESS_MODE, n, n.Graph, nil, []aig.Edge{1}, nil, nil)
-	if got := CheckSafety(g, 0, SafetyOptions{}); got.Status != 1 {
-		t.Fatalf("wrapper ignored false fairness: %+v", got)
+	if got := CheckSafety(g, 0, SafetyOptions{}); got.Status != 0 {
+		t.Fatalf("source wrapper should omit false fairness: %+v", got)
 	}
 }
 

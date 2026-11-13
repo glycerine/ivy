@@ -103,8 +103,8 @@ func TestLTLCommandOneStepUsesOriginalLivenessSignals(t *testing.T) {
 	if got := Abc_CommandAbcLivenessToSafetyWithLTL(frame, 2, []string{"l2s-ltl", "-1"}); got != 0 {
 		t.Fatalf("source one-step branch should not parse LTL: status %d, error %s", got, frame.Err)
 	}
-	if trueOutputs(frame.Network.Graph) != 2 {
-		t.Fatalf("source one-step emits safety and liveness outputs, got %d", trueOutputs(frame.Network.Graph))
+	if trueOutputs(frame.Network.Graph) != 1 {
+		t.Fatalf("source one-step without assertions emits only the liveness output, got %d", trueOutputs(frame.Network.Graph))
 	}
 }
 

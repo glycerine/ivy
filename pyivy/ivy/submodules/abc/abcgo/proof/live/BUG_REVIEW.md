@@ -5,7 +5,7 @@ Reviewed AIG literal polarity, constant-one encoding, output-driver unwrapping, 
 Regressions added and findings fixed:
 
 - Source CLI `-s`/`-l` meanings were initially reversed; a red command test caught this. Flags now preserve source semantics and default abstraction size.
-- The simulation command initially inherited full-mode safety output creation; a separate red test caught it. Simulation stays liveness-only. This is distinct from intentionally repairing C full-one-step mode's omission of safety assertions.
+- The simulation command initially inherited full-mode safety output creation; a separate red test caught it. Simulation stays liveness-only. The source one-step constructor emits a safety output only when it receives safety assertions.
 - Missing LTL names initially reached an assertion-style panic; a red test now requires an ordinary error from the native transformation API.
 - A preprocessing-only monotone-discovery run cannot claim a liveness proof. Likewise, finite-k failures remain unknown at the top level.
 - Original hint indexes are preserved even when an unrelated PO separates them. Known-monotone previous-state lookup avoids the source's negative index calculation.

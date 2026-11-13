@@ -34,6 +34,10 @@ func (c *graphCopy) signal(e aig.Edge) aig.Edge { return c.mapEdge(liveSignal(c.
 // LivenessToSafety implements the Biere saved-state/seen-event construction.
 // All generated outputs use safety convention: true means a violation.
 func LivenessToSafety(network *Network, options TransformOptions) (*Network, error) {
+	return livenessToSafety(network, options, false, false)
+}
+
+func livenessToSafety(network *Network, options TransformOptions, source, sourceOneStep bool) (*Network, error) {
 	if network == nil || network.Graph == nil {
 		return nil, fmt.Errorf("live: missing network")
 	}
@@ -98,7 +102,7 @@ func LivenessToSafety(network *Network, options TransformOptions) (*Network, err
 	live, fair := mapSignals(options.Liveness), mapSignals(options.Fairness)
 	assertions, assumptions := mapSignals(options.SafetyAssertions), mapSignals(options.SafetyAssumptions)
 	badOutputs, outputNames := []aig.Edge{}, []string{}
-	if doSafety {
+	if doSafety && !(sourceOneStep && len(assertions) == 0) {
 		bad := aig.Edge(1)
 		if len(assertions) > 0 {
 			bad = aig.Aig_And(dst, all(dst, assertions).Not(), all(dst, assumptions))
@@ -183,7 +187,10 @@ func LivenessToSafety(network *Network, options TransformOptions) (*Network, err
 					}
 				}
 				holds := buildLogicFromLTLNode(dst, node)
-				bad := aig.Aig_And(dst, loop, aig.Aig_And(dst, all(dst, seenFair), holds.Not()))
+				bad := aig.Aig_And(dst, loop, holds.Not())
+				if !source {
+					bad = aig.Aig_And(dst, bad, all(dst, seenFair))
+				}
 				badOutputs = append(badOutputs, bad)
 				outputNames = append(outputNames, "ltl_l2s")
 			}
@@ -257,7 +264,11 @@ func LivenessToSafetyTransformationOneStepLoop(mode int32, n *Network, p *aig.Gr
 	if mode == 2 {
 		mode = 3
 	}
-	return LivenessToSafetyTransformation(mode, n, p, live, fair, assertions, assumptions)
+	result, err := livenessToSafety(sourceNetwork(n, p), TransformOptions{Mode: mode, Liveness: live, Fairness: fair, SafetyAssertions: assertions, SafetyAssumptions: assumptions}, true, true)
+	if err != nil {
+		panic(err)
+	}
+	return result.Graph
 }
 func validSourceLTL(n *Network, formulas []string) ([]string, error) {
 	valid := make([]string, 0, len(formulas))
@@ -282,7 +293,7 @@ func LivenessToSafetyTransformationWithLTL(mode int32, n *Network, p *aig.Graph,
 			panic(err)
 		}
 	}
-	result, err := LivenessToSafety(n, TransformOptions{Mode: mode, LTL: formulas, Liveness: live, Fairness: fair, SafetyAssertions: assertions, SafetyAssumptions: assumptions})
+	result, err := livenessToSafety(n, TransformOptions{Mode: mode, LTL: formulas, Liveness: live, Fairness: fair, SafetyAssertions: assertions, SafetyAssumptions: assumptions}, true, false)
 	if err != nil {
 		panic(err)
 	}
@@ -468,7 +479,7 @@ func commandTransform(frame *Frame, argv []string, ltl, simulation, abstraction 
 			}
 		}
 	}
-	result, err := LivenessToSafety(n, options)
+	result, err := livenessToSafety(n, options, true, oneStep && !simulation)
 	if err != nil {
 		_, errors := frame.writers()
 		fmt.Fprintln(errors, err)

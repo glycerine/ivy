@@ -30,3 +30,20 @@ func TestOneStepCombinationalGraphReturnsOriginal(t *testing.T) {
 		t.Fatal("source checks for registers before considering mode")
 	}
 }
+
+func TestOneStepSourceSafetyOutputOnlyWithAssertions(t *testing.T) {
+	n := liveFixture(false)
+	p := n.Graph
+	for _, tc := range []struct {
+		assertions []aig.Edge
+		want       int
+	}{
+		{nil, 1},
+		{[]aig.Edge{p.Outputs()[0]}, 2},
+	} {
+		got := LivenessToSafetyTransformationOneStepLoop(FULL_BIERE_ONE_LOOP_MODE, n, p, []aig.Edge{p.Outputs()[0]}, nil, tc.assertions, nil)
+		if count := trueOutputs(got); count != tc.want {
+			t.Fatalf("assertions %d: got %d outputs, want %d", len(tc.assertions), count, tc.want)
+		}
+	}
+}
