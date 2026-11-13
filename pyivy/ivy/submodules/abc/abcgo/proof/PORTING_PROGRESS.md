@@ -56,9 +56,12 @@ and representation limits described in its package notes.
   duplication behavior or reject unsupported input at the source boundary.
   Isomorphism preconditions and constant-miter handling match C. Package race
   tests and vet passed. Cec4's upstream choice builder remains incomplete.
-* `cec/core`: source-named node checks and SAT-value accessors were corrected;
-  the separate Go equivalence helper remains separate. Mixed-gate truth-table,
-  witness, recycling and source-wrapper tests passed under race and vet.
+  `cec.Dar_ManChoiceNew` supplies a source-choice adapter for DAR's GIA miter
+  and DCH/CEC proof paths; direct DAR callback wiring remains a boundary below.
+* `cec/core`: this is a separate Satoko-based Go convenience adapter, not the
+  source CEC SAT backend. Source-named node checks and SAT-value accessors now
+  use the separate BSAT backend in `cec`. Mixed-gate truth-table, witness,
+  recycling and source-wrapper tests have passed under race and vet.
 * `dch`: uses the ported BSAT path, source SAT-variable numbering and allocation,
   supergate/MUX clauses, incremental working FRAIG, and source simulation
   behavior. Non-TFO/TFO refinement scope, class counters, SAT-cone values, and
@@ -90,6 +93,9 @@ and representation limits described in its package notes.
   from a different graph than the one into which it derives clauses. The
   preimage helper also returns undecided because its C code refers to an
   undeclared manager and does not establish a reliable mapping contract.
+  The incremental frame builder reconstructs missing C operations and has no
+  unsupported status; it is not source-confirmed and callers must treat the
+  whole path as unsupported for source fidelity.
 * `live`: Go-only reachability and fairness-parser substitutes were removed.
   Command and option behavior follows the source, including empty-arena and
   zero-register one-step behavior. Package race tests and vet passed.
@@ -97,7 +103,9 @@ and representation limits described in its package notes.
   are covered. Differential tests exercise 64 machines and source-matched
   option combinations, plus invariant-file output. Package race tests and vet
   passed; some cases expose inherited invalid-counterexample behavior in C.
-  Incremental-restart handling still has source differences under review.
+  Incremental-restart handling preserves source edge cases, including an
+  assertion on a first restart with no saved clauses and an interrupted push
+  that can be treated as proof. Further resource-limit coverage is needed.
 * `ssc`: evolving FRAIG substitutions, BSAT frontier encoding, source-style
   class refinement, native-input lowering, random stream, equivalence
   reduction, and CEC verification have source tests. The constrained sweep
@@ -116,9 +124,15 @@ dominance/eviction, area-flow mapping, mapped CNF writer, and variable
 numbering. Direct compiled-C comparisons matched exact ordered DIMACS output
 for 345 generated asserted, free-output, and sequential cases; exhaustive
 three-input truth-function checks also pass. `abcgo/opt/dar` cut enumeration
-follows C's slot ordering and eviction behavior. Newly identified DAR and AIG
-partitioning gaps are actively being investigated and ported; those paths are
-not complete. `abcgo/sat/bsat` has a
+follows C's slot ordering and eviction behavior. The CEC source-choice adapter
+provides DAR's new-choice GIA miter and proof path, but direct
+`opt/dar.Dar_ManChoiceNew` still requires an explicitly supplied source-faithful
+engine; it does not wire one by default.
+
+FRA/AIG partitioned FRAIG and choice and SAIG timeframe bridges are implemented
+through explicit callback APIs, with FRA wrappers supplying the corresponding
+source backends. Remaining `base/abci` callers are out-of-scope drafts and
+are not evidence of completed application integration. `abcgo/sat/bsat` has a
 source-style cumulative resource-limit API. It also preserves an upstream C
 assumption-order bug: after certain root conflicts, solver reuse can report
 SAT for an inconsistent formula. The behavior is C-oracle tested and callers
