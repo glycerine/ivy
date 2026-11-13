@@ -3,7 +3,7 @@ package fraig
 import "testing"
 
 func TestConstantConeTraversal(t *testing.T) {
-	p := Fraig_ManCreate(&Fraig_Params_t{nPatsRand: 128, nPatsDyna: 128})
+	p := Fraig_ManCreate(&Fraig_Params_t{NPatsRand: 128, NPatsDyna: 128})
 	defer Fraig_ManFree(p)
 	p.nTravIds += 2
 	if got := Fraig_MarkTfi_rec(p, p.pConst1); got != 0 {

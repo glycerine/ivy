@@ -8,13 +8,13 @@ import (
 )
 
 func Fraig_ParamsSetDefault(p *Fraig_Params_t) {
-	*p = Fraig_Params_t{nPatsRand: FRAIG_PATTERNS_RANDOM, nPatsDyna: FRAIG_PATTERNS_DYNAMIC, nBTLimit: 99, nSeconds: 20, fFuncRed: 1, fFeedBack: 1, fDist1Pats: 1, fTryProve: 1}
+	*p = Fraig_Params_t{NPatsRand: FRAIG_PATTERNS_RANDOM, NPatsDyna: FRAIG_PATTERNS_DYNAMIC, NBTLimit: 99, NSeconds: 20, FFuncRed: 1, FFeedBack: 1, FDist1Pats: 1, FTryProve: 1}
 }
 func Fraig_ParamsSetDefaultFull(p *Fraig_Params_t) {
 	Fraig_ParamsSetDefault(p)
-	p.nBTLimit = -1
-	p.fDoSparse = 1
-	p.fTryProve = 0
+	p.NBTLimit = -1
+	p.FDoSparse = 1
+	p.FTryProve = 0
 }
 func Fraig_ManCreate(params *Fraig_Params_t) *Fraig_Man_t {
 	aig.Aig_ManRandom(1)
@@ -22,23 +22,23 @@ func Fraig_ManCreate(params *Fraig_Params_t) *Fraig_Man_t {
 		params = &Fraig_Params_t{}
 		Fraig_ParamsSetDefault(params)
 	}
-	if params.nPatsRand < 128 {
-		params.nPatsRand = 128
+	if params.NPatsRand < 128 {
+		params.NPatsRand = 128
 	}
-	if params.nPatsRand > 32768 {
-		params.nPatsRand = 32768
+	if params.NPatsRand > 32768 {
+		params.NPatsRand = 32768
 	}
-	if params.nPatsDyna < 128 {
-		params.nPatsDyna = 128
+	if params.NPatsDyna < 128 {
+		params.NPatsDyna = 128
 	}
-	if params.nPatsDyna > 32768 {
-		params.nPatsDyna = 32768
+	if params.NPatsDyna > 32768 {
+		params.NPatsDyna = 32768
 	}
-	if params.fFuncRed == 0 {
-		params.nPatsRand = 128
-		params.nPatsDyna = 128
+	if params.FFuncRed == 0 {
+		params.NPatsRand = 128
+		params.NPatsDyna = 128
 	}
-	p := &Fraig_Man_t{nWordsRand: (params.nPatsRand + 31) / 32, nWordsDyna: (params.nPatsDyna + 31) / 32, nBTLimit: params.nBTLimit, nSeconds: params.nSeconds, fFuncRed: params.fFuncRed, fFeedBack: params.fFeedBack, fDist1Pats: params.fDist1Pats, fDoSparse: params.fDoSparse, fChoicing: params.fChoicing, fTryProve: params.fTryProve, fVerbose: params.fVerbose, fVerboseP: params.fVerboseP, nInspLimit: params.nInspLimit}
+	p := &Fraig_Man_t{nWordsRand: (params.NPatsRand + 31) / 32, nWordsDyna: (params.NPatsDyna + 31) / 32, nBTLimit: params.NBTLimit, nSeconds: params.NSeconds, fFuncRed: params.FFuncRed, fFeedBack: params.FFeedBack, fDist1Pats: params.FDist1Pats, fDoSparse: params.FDoSparse, fChoicing: params.FChoicing, fTryProve: params.FTryProve, fVerbose: params.FVerbose, fVerboseP: params.FVerboseP, nInspLimit: params.NInspLimit}
 	p.mmNodes = Fraig_MemFixedStart(int32(unsafe.Sizeof(Fraig_Node_t{})))
 	p.mmSims = Fraig_MemFixedStart(4 * (p.nWordsRand + p.nWordsDyna))
 	p.vInputs = Fraig_NodeVecAlloc(1000)

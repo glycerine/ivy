@@ -3,7 +3,7 @@ package fraig
 import "testing"
 
 func TestConstantMiterResults(t *testing.T) {
-	p := Fraig_ManCreate(&Fraig_Params_t{nPatsRand: 128, nPatsDyna: 128})
+	p := Fraig_ManCreate(&Fraig_Params_t{NPatsRand: 128, NPatsDyna: 128})
 	defer Fraig_ManFree(p)
 	Fraig_NodeVecPush(p.vOutputs, Fraig_Not(p.pConst1))
 	if got := Fraig_ManCheckMiter(p); got != 1 {

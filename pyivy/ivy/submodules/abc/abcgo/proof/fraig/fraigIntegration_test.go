@@ -6,7 +6,7 @@ import (
 )
 
 func TestMuxEncodingTruthTable(t *testing.T) {
-	p := Fraig_ManCreate(&Fraig_Params_t{nPatsRand: 128, nPatsDyna: 128, fFuncRed: 0})
+	p := Fraig_ManCreate(&Fraig_Params_t{NPatsRand: 128, NPatsDyna: 128, FFuncRed: 0})
 	defer Fraig_ManFree(p)
 	c, x, y := Fraig_ManReadIthVar(p, 0), Fraig_ManReadIthVar(p, 1), Fraig_ManReadIthVar(p, 2)
 	out := Fraig_NodeMux(p, c, x, y)
@@ -40,7 +40,7 @@ func TestMuxEncodingTruthTable(t *testing.T) {
 	}
 }
 func TestSatCounterexampleFeedback(t *testing.T) {
-	p := Fraig_ManCreate(&Fraig_Params_t{nPatsRand: 128, nPatsDyna: 128, fFuncRed: 0})
+	p := Fraig_ManCreate(&Fraig_Params_t{NPatsRand: 128, NPatsDyna: 128, FFuncRed: 0})
 	defer Fraig_ManFree(p)
 	a, b := Fraig_ManReadIthVar(p, 0), Fraig_ManReadIthVar(p, 1)
 	both := Fraig_NodeAnd(p, a, b)
@@ -53,7 +53,7 @@ func TestSatCounterexampleFeedback(t *testing.T) {
 }
 
 func TestFunctionalReductionPreservesTruthTable(t *testing.T) {
-	p := Fraig_ManCreate(&Fraig_Params_t{nPatsRand: 128, nPatsDyna: 128, fFuncRed: 1, fFeedBack: 1, fDoSparse: 1, nBTLimit: -1})
+	p := Fraig_ManCreate(&Fraig_Params_t{NPatsRand: 128, NPatsDyna: 128, FFuncRed: 1, FFeedBack: 1, FDoSparse: 1, NBTLimit: -1})
 	defer Fraig_ManFree(p)
 	a, b, c := Fraig_ManReadIthVar(p, 0), Fraig_ManReadIthVar(p, 1), Fraig_ManReadIthVar(p, 2)
 	left := Fraig_NodeAnd(p, Fraig_NodeAnd(p, a, b), c)

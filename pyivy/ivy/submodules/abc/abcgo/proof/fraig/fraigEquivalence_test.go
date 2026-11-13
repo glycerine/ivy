@@ -3,7 +3,7 @@ package fraig
 import "testing"
 
 func TestNodesAreEqualHonorsEdgePhase(t *testing.T) {
-	p := Fraig_ManCreate(&Fraig_Params_t{nPatsRand: 128, nPatsDyna: 128})
+	p := Fraig_ManCreate(&Fraig_Params_t{NPatsRand: 128, NPatsDyna: 128})
 	defer Fraig_ManFree(p)
 	a, b, c := Fraig_ManReadIthVar(p, 0), Fraig_ManReadIthVar(p, 1), Fraig_ManReadIthVar(p, 2)
 	left := Fraig_NodeAnd(p, Fraig_NodeAnd(p, a, b), c)

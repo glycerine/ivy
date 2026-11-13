@@ -8,7 +8,7 @@ import (
 func TestFeedbackCompressionAndResize(t *testing.T) {
 	for _, sparse := range []int32{0, 1} {
 		t.Run(map[int32]string{0: "normal", 1: "sparse"}[sparse], func(t *testing.T) {
-			p := Fraig_ManCreate(&Fraig_Params_t{nPatsRand: 128, nPatsDyna: 128, nBTLimit: -1})
+			p := Fraig_ManCreate(&Fraig_Params_t{NPatsRand: 128, NPatsDyna: 128, NBTLimit: -1})
 			defer Fraig_ManFree(p)
 			p.fDoSparse = sparse
 			a, b := Fraig_ManReadIthVar(p, 0), Fraig_ManReadIthVar(p, 1)

@@ -3,7 +3,7 @@ package fraig
 import "testing"
 
 func TestSATMatchesExhaustiveSmallCircuits(t *testing.T) {
-	p := Fraig_ManCreate(&Fraig_Params_t{nPatsRand: 128, nPatsDyna: 128, nBTLimit: -1})
+	p := Fraig_ManCreate(&Fraig_Params_t{NPatsRand: 128, NPatsDyna: 128, NBTLimit: -1})
 	defer Fraig_ManFree(p)
 	a, b, c := Fraig_ManReadIthVar(p, 0), Fraig_ManReadIthVar(p, 1), Fraig_ManReadIthVar(p, 2)
 	edges := []*Fraig_Node_t{a, b, c, Fraig_NodeAnd(p, a, b), Fraig_NodeAnd(p, a, c), Fraig_NodeOr(p, a, b), Fraig_NodeExor(p, a, b), Fraig_NodeMux(p, c, a, b), Fraig_NodeAnd(p, Fraig_NodeAnd(p, a, b), c), Fraig_NodeAnd(p, a, Fraig_NodeAnd(p, b, c))}

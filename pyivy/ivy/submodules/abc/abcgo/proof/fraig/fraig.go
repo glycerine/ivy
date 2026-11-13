@@ -40,21 +40,21 @@ type Fraig_Params_t = Fraig_ParamsStruct_t_
 type Prove_Params_t = Prove_ParamsStruct_t_
 
 type Fraig_ParamsStruct_t_ struct {
-	nPatsRand  int32       // the number of words of random simulation info
-	nPatsDyna  int32       // the number of words of dynamic simulation info
-	nBTLimit   int32       // the max number of backtracks to perform
-	nSeconds   int32       // the timeout for the final proof
-	fFuncRed   int32       // performs only one level hashing
-	fFeedBack  int32       // enables solver feedback
-	fDist1Pats int32       // enables distance-1 patterns
-	fDoSparse  int32       // performs equiv tests for sparse functions
-	fChoicing  int32       // enables recording structural choices
-	fTryProve  int32       // tries to solve the final miter
-	fVerbose   int32       // the verbosiness flag
-	fVerboseP  int32       // the verbosiness flag (for proof reporting)
-	fInternal  int32       // is set to 1 for internal fraig calls
-	nConfLimit int32       // the limit on the number of conflicts
-	nInspLimit ABC_INT64_T // the limit on the number of inspections
+	NPatsRand  int32       // the number of words of random simulation info
+	NPatsDyna  int32       // the number of words of dynamic simulation info
+	NBTLimit   int32       // the max number of backtracks to perform
+	NSeconds   int32       // the timeout for the final proof
+	FFuncRed   int32       // performs only one level hashing
+	FFeedBack  int32       // enables solver feedback
+	FDist1Pats int32       // enables distance-1 patterns
+	FDoSparse  int32       // performs equiv tests for sparse functions
+	FChoicing  int32       // enables recording structural choices
+	FTryProve  int32       // tries to solve the final miter
+	FVerbose   int32       // the verbosiness flag
+	FVerboseP  int32       // the verbosiness flag (for proof reporting)
+	FInternal  int32       // is set to 1 for internal fraig calls
+	NConfLimit int32       // the limit on the number of conflicts
+	NInspLimit ABC_INT64_T // the limit on the number of inspections
 }
 
 type Prove_ParamsStruct_t_ struct {

@@ -35,6 +35,7 @@ func Fraig_ManProveMiter(p *Fraig_Man_t) {
 }
 func Fraig_ManCheckMiter(p *Fraig_Man_t) int32 {
 	p.pModel = nil
+	undecided := false
 	for _, edge := range p.vOutputs.pArray {
 		if edge == Fraig_Not(p.pConst1) {
 			continue
@@ -45,9 +46,13 @@ func Fraig_ManCheckMiter(p *Fraig_Man_t) int32 {
 		}
 		p.pModel = Fraig_ManSaveCounterExample(p, edge)
 		if p.pModel == nil {
-			return -1
+			undecided = true
+			continue
 		}
 		return 0
+	}
+	if undecided {
+		return -1
 	}
 	return 1
 }

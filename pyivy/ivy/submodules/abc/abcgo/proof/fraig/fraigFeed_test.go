@@ -6,7 +6,7 @@ import (
 )
 
 func TestFeedbackPatternsAndBitSimulation(t *testing.T) {
-	params := &Fraig_Params_t{nPatsRand: 128, nPatsDyna: 128, fFuncRed: 0}
+	params := &Fraig_Params_t{NPatsRand: 128, NPatsDyna: 128, FFuncRed: 0}
 	p := Fraig_ManCreate(params)
 	defer Fraig_ManFree(p)
 	a, b := Fraig_ManReadIthVar(p, 0), Fraig_ManReadIthVar(p, 1)
