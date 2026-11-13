@@ -117,7 +117,16 @@ func Fra_BmcStart(g *aig.Graph, prefix, depth int32) *Fra_Bmc_t {
 	}
 	return b
 }
-func Fra_BmcStop(_ *Fra_Bmc_t) {}
+func Fra_BmcStop(b *Fra_Bmc_t) {
+	if b == nil {
+		return
+	}
+	// The C manager owns both derived graphs and both mapping arrays. Release
+	// those references while retaining PAig, which is caller-owned.
+	b.PAigFrames, b.PAigFraig = nil, nil
+	b.PObjToFrames, b.PObjToFraig = nil, nil
+	b.VImps = nil
+}
 func Fra_BmcFrames(b *Fra_Bmc_t, keepOutputs int32) *aig.Graph {
 	graph, mapping := fraUnrollInitialized(b.PAig, int(b.NFramesAll), keepOutputs != 0)
 	b.PObjToFrames = mapping

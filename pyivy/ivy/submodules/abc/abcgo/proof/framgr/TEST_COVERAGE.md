@@ -1,6 +1,6 @@
 # FRA manager test coverage
 
-The package's statement coverage was 85.7% on the current tree, measured with
+The package's statement coverage was 87.2% on the current tree, measured with
 `go test -coverprofile=/tmp/framgr.cover ./proof/framgr`. Coverage is a guide to
 unexercised code, not proof of equivalence to ABC. A source and independent
 bug/simplicity review found and restored missing preconditions, but this is not
@@ -34,12 +34,33 @@ whose bits cross a 32-bit boundary. Optional checks run with
 all linked ABC units from source; the sweep oracle freshly compiles six FRA
 units and links the remaining dependencies from prebuilt ABC objects.
 
+## Algorithm and branch map
+
+| C algorithm / behavior | Go implementation | Focused regression coverage |
+| --- | --- | --- |
+| `Fra_SmlSimulate`, fixed 0/1 and distance-one patterns, saturation | `fraSim.go`, `fraSimulation.go` | `fraSimulation_test.go`, `fra_empty_patterns_test.go`, `fra_entry_distance_boundary_test.go`, `saturation_test.go` |
+| `Fra_FraigNode` SAT proof, disproof, timeout, failed-node handling | `fraCore.go`, `fraSat.go` | `fraCore_test.go`, `fra_sat_failed_node_source_test.go`, `fra_sat_limit_boundary_test.go` |
+| `Fra_FraigSweep` whole-pass timeout order and timeout representatives | `fraCore.go` | `fra_sweep_timeout_source_test.go`, `fra_sweep_timeout_followup_test.go`, `fra_sweep_timeout_c_oracle_test.go` |
+| Latch-correlation sweep exits after processing latch outputs | `fraCore.go` | `fra_sweep_latch_corr_test.go` |
+| `Fra_BmcFrames` initial state, frame transitions, node mappings | `fraBmc.go`, `fraBmcFrames.go` | `fraBmcFrames_test.go`, `fra_bmc_child_source_test.go`, `fra_entry_distance_boundary_test.go` |
+| `Fra_BmcFilterImplications` prefix, common representative and polarity cases | `fraBmc.go` | `fra_bmc_prefix_source_test.go`, `fraBmc_test.go` |
+| `Fra_BmcPerform` callback filtering, class refinement, cleanup and no-node path | `fraBmc.go` | `fraBmc_test.go`, `fra_adapter_source_test.go` |
+| `Fra_BmcPerformSimple` direct assertion, rewritten/unrewritten frames and replayed trace | `fraBmc.go` | `fra_bmc_outcomes_source_test.go`, `fraBmc_test.go` |
+| `Fra_BmcStop` releases its owned frame graphs and node maps while preserving the original graph | `fraBmc.go` | `fraBmc_test.go` |
+| Solver model packing and counterexample projection | `fraSat.go`, `fraSim.go`, `fraSimulationCex.go` | `fra_model_extraction_source_test.go`, `fra_cex_multiframe_test.go`, `fra_bmc_multiframe_source_test.go`, `fra_sat_model_words_test.go` |
+| SAT equivalence, implication, clause, constant, limits and counterexample model | `fraSat.go` | `fraSat_test.go`, `fra_constant_sat_source_test.go`, `fra_sat_limit_boundary_test.go`, `fra_sat_model_words_test.go` |
+
+The current uncached race run and vet pass. Statement coverage is now 87.2%.
+The SAT-query regression added this pass drives the solver-model branch itself
+and checks CI packing over two 32-bit words; the existing extraction fixture
+continues to check permuted SAT-variable IDs and register/PI projection.
+
 Meaningful remaining gaps include:
 
-- Additional SAT-equivalence and implication outcomes, including solver-limit
-  boundaries and the remaining branches in `Fra_ImpCheckForNode`.
 - Less common `Fra_FraigSweep`, `Fra_BmcPerform`, and `Fra_BmcPerformSimple`
-  branches, including resource-exhaustion and verbose reporting behavior.
+  branches, especially level-limited node ordering and verbose diagnostic text.
+- Additional SAT-equivalence and implication combinations beyond the already
+  covered proof, counterexample, failed-node, and budget-boundary cases.
 - Additional sequential-simulation and counterexample edge cases, especially
   larger multi-output pattern reconstruction and additional distance-one
   boundaries.

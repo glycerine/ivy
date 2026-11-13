@@ -53,6 +53,21 @@ func TestFraBmcFramesRejectsUnmappedNode(t *testing.T) {
 	Bmc_ObjFrames(b, x, 0)
 }
 
+func TestFraBmcStopReleasesOwnedGraphsAndMappings(t *testing.T) {
+	original := aig.NewGraph()
+	input := original.NewInput()
+	original.AddOutput(input)
+	b := Fra_BmcStart(original, 0, 1)
+	b.PAigFrames = Fra_BmcFrames(b, 1)
+	b.PAigFraig = aig.NewGraph()
+	b.PObjToFraig = []aig.Edge{aig.InvalidEdge}
+	b.VImps = vec.Vec_IntAlloc(1)
+	Fra_BmcStop(b)
+	if b.PAig != original || b.PAigFrames != nil || b.PAigFraig != nil || b.PObjToFrames != nil || b.PObjToFraig != nil || b.VImps != nil {
+		t.Fatalf("BMC stop retained owned state: %+v", b)
+	}
+}
+
 func TestFraBmcFilterImplicationsSameRepresentative(t *testing.T) {
 	original := aig.NewGraph()
 	x, y := original.NewInput(), original.NewInput()
