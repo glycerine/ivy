@@ -7,6 +7,7 @@ import (
 )
 
 // Sweep supplies the original FRAIG manager to the combinational CEC driver.
+// It must return a new graph; the driver stops its input after the call.
 type Sweep func(*aig.Graph, int32, int32) *aig.Graph
 
 func Fra_FraigMiterStatus(g *aig.Graph) int32 {
@@ -64,7 +65,8 @@ func Aig_ManCountXors(graph *aig.Graph) int32 {
 }
 
 // Fra_FraigCec applies the original sequence of SAT, rewriting, and FRAIG
-// attempts to the given combinational miter. Rewrites replace the caller's graph.
+// attempts to the given combinational miter. Fallback rewrites consume and
+// replace the caller's graph, as in ABC.
 func Fra_FraigCec(graph **aig.Graph, conflictLimit, verbose int32, sweep Sweep) int32 {
 	if graph == nil || *graph == nil {
 		panic("fra: nil CEC miter")
@@ -85,16 +87,22 @@ func Fra_FraigCec(graph **aig.Graph, conflictLimit, verbose int32, sweep Sweep) 
 		return status
 	}
 	var err error
-	miter, err = dar.Dar_ManRwsat(miter, true, false)
+	previous := miter
+	miter, err = dar.Dar_ManRwsat(previous, true, false)
+	aig.Aig_ManStop(previous)
 	if err != nil || miter == nil {
 		panic("fra: source dereferences failed SAT rewrite")
 	}
 	nodeLimit, miterLimit := int32(2), int32(300)
 	for i := 0; i < 6; i++ {
 		if Aig_ManCountXors(miter)*30 > aig.Aig_ManNodeNum(miter)+300 {
-			miter = dar.Dar_ManBalanceXor(miter, true, false, false)
+			previous = miter
+			miter = dar.Dar_ManBalanceXor(previous, true, false, false)
+			aig.Aig_ManStop(previous)
 		}
-		miter = sweep(miter, nodeLimit, miterLimit)
+		previous = miter
+		miter = sweep(previous, nodeLimit, miterLimit)
+		aig.Aig_ManStop(previous)
 		if miter == nil {
 			panic("fra: source dereferences failed FRAIG sweep")
 		}
@@ -102,7 +110,9 @@ func Fra_FraigCec(graph **aig.Graph, conflictLimit, verbose int32, sweep Sweep) 
 		if status >= 0 {
 			break
 		}
-		miter, err = dar.Dar_ManRewriteDefault(miter)
+		previous = miter
+		miter, err = dar.Dar_ManRewriteDefault(previous)
+		aig.Aig_ManStop(previous)
 		if err != nil || miter == nil {
 			panic("fra: source dereferences failed rewrite")
 		}

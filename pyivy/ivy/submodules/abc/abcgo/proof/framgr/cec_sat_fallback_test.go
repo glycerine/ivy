@@ -31,7 +31,7 @@ func TestCECDriverFallbackSATWitness(t *testing.T) {
 		formula = g.AND(formula, clause)
 	}
 	g.AddOutput(formula)
-	original := g
+	original := aig.Aig_ManDupDfs(g)
 	if status := fracomb.Fra_FraigSat(g, 600, 0, 0, 0, 0, 1, 0, 0, 0); status != -1 {
 		t.Fatalf("fixture did not exhaust initial SAT limit: %d", status)
 	}

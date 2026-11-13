@@ -20,7 +20,8 @@
 Partitioned and top-level CEC entry points remain in `proof/fra`; FRAIG
 manager operations remain in `proof/framgr`. This package requires a
 combinational graph for SAT and CEC. A caller must supply a non-nil sweep if
-CEC proceeds past the initial SAT attempt.
+CEC proceeds past the initial SAT attempt. Each fallback rewrite, balance,
+and sweep consumes its input graph; a sweep must return a new graph.
 
 The source-named entry points retain ABC's witness behavior. When the initial
 structural miter check reports failure, `Fra_FraigCec` replaces any model with

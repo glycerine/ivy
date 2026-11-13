@@ -126,8 +126,9 @@ func TestCecSourceDoesNotRevalidateSweepModel(t *testing.T) {
 	calls := 0
 	status := Fra_FraigCec(&g, 100000, 0, func(graph *aig.Graph, _, _ int32) *aig.Graph {
 		calls++
-		graph.Data = make([]int32, graph.InputCount())
-		return graph
+		result := aig.Aig_ManDupDfs(graph)
+		result.Data = make([]int32, result.InputCount())
+		return result
 	})
 	if calls == 0 || status != 0 {
 		t.Fatalf("sweep calls=%d status=%d", calls, status)
@@ -153,7 +154,7 @@ func TestCecSourceSweepLimitsAndFinalSAT(t *testing.T) {
 				t.Fatalf("sweep %d limits=(%d,%d), want (%d,%d)", calls, nodeLimit, miterLimit, wantNode, wantMiter)
 			}
 			calls++
-			return graph
+			return aig.Aig_ManDupDfs(graph)
 		})
 		if calls != 6 || status != tc.want {
 			t.Fatalf("limit=%d calls=%d status=%d want=%d", tc.limit, calls, status, tc.want)
