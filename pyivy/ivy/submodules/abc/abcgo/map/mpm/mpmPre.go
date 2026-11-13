@@ -797,29 +797,22 @@ func Ifd_ManDsdTest4() int32 {
 
 ***********************************************************************/
 func Extra_Truth6SwapAdjacent(t word, iVar int32) word {
-    // variable swapping code
-    static word PMasks[5][3] = {
-        { ABC_CONST(0x9999999999999999), ABC_CONST(0x2222222222222222), ABC_CONST(0x4444444444444444) },
-        { ABC_CONST(0xC3C3C3C3C3C3C3C3), ABC_CONST(0x0C0C0C0C0C0C0C0C), ABC_CONST(0x3030303030303030) },
-        { ABC_CONST(0xF00FF00FF00FF00F), ABC_CONST(0x00F000F000F000F0), ABC_CONST(0x0F000F000F000F00) },
-        { ABC_CONST(0xFF0000FFFF0000FF), ABC_CONST(0x0000FF000000FF00), ABC_CONST(0x00FF000000FF0000) },
-        { ABC_CONST(0xFFFF00000000FFFF), ABC_CONST(0x00000000FFFF0000), ABC_CONST(0x0000FFFF00000000) }
-    };
-    assert(iVar < 5, "iVar < 5");
-    return (t & PMasks[iVar][0]) | ((t & PMasks[iVar][1]) << (1 << iVar)) | ((t & PMasks[iVar][2]) >> (1 << iVar));
+    masks := [5][3]word{
+        {0x9999999999999999, 0x2222222222222222, 0x4444444444444444},
+        {0xC3C3C3C3C3C3C3C3, 0x0C0C0C0C0C0C0C0C, 0x3030303030303030},
+        {0xF00FF00FF00FF00F, 0x00F000F000F000F0, 0x0F000F000F000F00},
+        {0xFF0000FFFF0000FF, 0x0000FF000000FF00, 0x00FF000000FF0000},
+        {0xFFFF00000000FFFF, 0x00000000FFFF0000, 0x0000FFFF00000000},
+    }
+    assert(iVar >= 0 && iVar < 5, "valid adjacent variable")
+    shift := uint(1 << iVar)
+    return t & masks[iVar][0] | (t & masks[iVar][1]) << shift | (t & masks[iVar][2]) >> shift
 }
 func Extra_Truth6ChangePhase(t word, iVar int32) word {
-    // elementary truth tables
-    static word Truth6[6] = {
-        ABC_CONST(0xAAAAAAAAAAAAAAAA),
-        ABC_CONST(0xCCCCCCCCCCCCCCCC),
-        ABC_CONST(0xF0F0F0F0F0F0F0F0),
-        ABC_CONST(0xFF00FF00FF00FF00),
-        ABC_CONST(0xFFFF0000FFFF0000),
-        ABC_CONST(0xFFFFFFFF00000000)
-    };
-    assert(iVar < 6, "iVar < 6");
-    return ((t & ~Truth6[iVar]) << (1 << iVar)) | ((t & Truth6[iVar]) >> (1 << iVar));
+    masks := [6]word{0xAAAAAAAAAAAAAAAA, 0xCCCCCCCCCCCCCCCC, 0xF0F0F0F0F0F0F0F0, 0xFF00FF00FF00FF00, 0xFFFF0000FFFF0000, 0xFFFFFFFF00000000}
+    assert(iVar >= 0 && iVar < 6, "valid phase variable")
+    shift := uint(1 << iVar)
+    return (t &^ masks[iVar]) << shift | (t & masks[iVar]) >> shift
 }
 func Extra_Truth6AllConfigs2(t word, pComp *int32, pPerm *int32, nVars int32) *Vec_Wrd_t {
     var nPerms int32  = Extra_Factorial( nVars );
