@@ -81,5 +81,12 @@ func Fra_FramesWithClasses(p *Fra_Man_t) *aig.Graph {
 	}
 	aig.Aig_ManSetRegNum(graph, source.RegisterCount())
 	aig.Aig_ManCleanup(graph)
+	// Cleanup can remove a frame node that was mapped before it became
+	// dangling. C leaves an AIG_OBJ_NONE marker; clear the Go mapping.
+	for i, edge := range p.pMemFraig {
+		if edge != aig.InvalidEdge && aig.Aig_ObjIsNone(graph, edge) {
+			p.pMemFraig[i] = aig.InvalidEdge
+		}
+	}
 	return graph
 }

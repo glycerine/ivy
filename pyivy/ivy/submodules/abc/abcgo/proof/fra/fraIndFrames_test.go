@@ -51,3 +51,16 @@ func TestInductionFramesEmitClassConstraint(t *testing.T) {
 		}
 	}
 }
+
+func TestInductionFramesClearDanglingMappings(t *testing.T) {
+	original := aig.NewGraph()
+	a, b, latch := original.NewInput(), original.NewInput(), original.NewInput()
+	dead := original.AND(a, b)
+	original.AddOutput(latch)
+	aig.Aig_ManSetRegNum(original, 1)
+	p := Fra_ManStart(original, &Fra_Par_t{nFramesK: 1})
+	Fra_FramesWithClasses(p)
+	if got := Fra_ObjFraig(p, dead, 0); got != aig.InvalidEdge {
+		t.Fatalf("dangling mapping = %v", got)
+	}
+}
