@@ -49,6 +49,9 @@ package mpm
 ///                         PARAMETERS                               ///
 ////////////////////////////////////////////////////////////////////////
  
+type word = uint64
+type abctime = int64
+
 const MPM_CUT_MAX =      32
 
 const MPM_UNIT_TIME =     1
@@ -169,7 +172,9 @@ type Mpm_Man_t struct {
 func Mpm_ObjCutBest(p *Mpm_Man_t, pObj *Mig_Obj_t) int32 { return Vec_IntEntry(&p.vCutBests, Mig_ObjId(pObj));            }
 func Mpm_ObjSetCutBest(p *Mpm_Man_t, pObj *Mig_Obj_t, i int32) { Vec_IntWriteEntry(&p.vCutBests, Mig_ObjId(pObj), i);           }
 
-func Mpm_CutWordNum(nLeaves int32) int32 { return ((sizeof(Mpm_Cut_t) + (nLeaves << 2)) >> 3);             }
+// Mpm_CutWordNum counts 64-bit storage words in C's packed cut record.
+// Its C header is 12 bytes including the first leaf; Go fields are unpacked.
+func Mpm_CutWordNum(nLeaves int32) int32 { return (12 + (nLeaves << 2)) >> 3 }
 func Mpm_CutFetch(p *Mpm_Man_t, h int32) *Mpm_Cut_t { var pCut *Mpm_Cut_t  = (Mpm_Cut_t *)Mmr_StepEntry( p.pManCuts, h );  assert(Mpm_CutWordNum(pCut.nLeaves) == (h & p.pManCuts.uMask), "Mpm_CutWordNum(pCut.nLeaves) == (h & p.pManCuts.uMask)"); return pCut; }
 func Mpm_ObjCutBestP(p *Mpm_Man_t, pObj *Mig_Obj_t) *Mpm_Cut_t { return Mpm_CutFetch( p, Mpm_ObjCutBest(p, pObj) );              }
 

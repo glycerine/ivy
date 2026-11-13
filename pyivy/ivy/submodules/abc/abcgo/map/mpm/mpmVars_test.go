@@ -20,3 +20,11 @@ func TestVariablePermutationInverses(t *testing.T) {
 		}
 	}
 }
+
+func TestCutWordCountMatchesCLayout(t *testing.T) {
+	for _, tc := range []struct{ leaves, want int32 }{{0, 1}, {1, 2}, {2, 2}, {3, 3}, {12, 7}} {
+		if got := Mpm_CutWordNum(tc.leaves); got != tc.want {
+			t.Fatalf("leaves=%d got=%d want=%d", tc.leaves, got, tc.want)
+		}
+	}
+}

@@ -43,6 +43,9 @@ and representation limits described in its package notes.
   race tests and vet passed. Standalone VTA rejects native XOR/MUX graphs;
   callers must lower them first. The old GLA `fUseFullProof` option does not
   select a distinct proof-logging mode in Go, so resource behavior can differ.
+  Additional flop-transform tests cover word boundaries, non-Boolean initial
+  values, duplicate selections and unchanged next-state functions. A broader
+  algorithm-by-algorithm audit remains underway.
 * `acec`: source flow and preconditions are restored. Compiled-ABC differential
   tests cover 76 circuit pairs, and checked-in test vectors exercise Booth
   normalization and tied XOR/MAJ cuts. Negative cut limits and single-output
@@ -60,8 +63,9 @@ and representation limits described in its package notes.
   iteration. Partition traversal now advances the source epoch twice. Linux
   timed sweeps use the C thread-CPU clock; timed sweeps on other platforms
   report unsupported. Package race tests and vet passed.
-  Broader sweep/partition review remains partial. Cec4's upstream choice
-  builder remains incomplete.
+  The sequential synthesis entry also preserves C's failure boundary for a
+  missing clock-domain vector. Broader sweep/partition review remains partial.
+  Cec4's upstream choice builder remains incomplete.
   The lower `opt/dar` facade wires its source default through the CEC adapter,
   and the GIA default uses the GIA miter/skip-three/DCH path. CEC/Cec4 modes are
   exposed through a higher-layer wrapper to avoid an import cycle.
@@ -78,8 +82,9 @@ and representation limits described in its package notes.
   solver-reuse behavior, and native-EXOR-as-AND handling where C hardcodes
   `Aig_And`. Source-derived partition, implication, one-hot, and induction
   tests passed. SEC terminal counts and stored CioIds, SEC setup, and the
-  induction no-progress branch now follow C; broader behavioral audit remains
-  in progress.
+  induction no-progress branch now follow C. Source-instrumented tests cover
+  its no-progress warning/result and the empty-output partition failure
+  boundary; broader behavioral audit remains in progress.
 * `fracomb`: AIG deadlines now propagate through DAR rewrite stages as in C.
   Its SAT path uses the source-mapped CNF writer and source Solver2
   simplification. A multi-sweep SAT fallback test replays witnesses on original
@@ -88,7 +93,9 @@ and representation limits described in its package notes.
 * `fraig`: source behavior has been restored for miter checks, external clauses,
   feedback compression, pointer-based hashing/order, and MSAT behavior. Several
   upstream limitations, including witnesses that violate external clauses,
-  are covered by source-characterization tests. MSAT review continues.
+  are covered by source-characterization tests. Node-vector shrink, clear, pop,
+  and remove preserve C's backing-array entries observable through
+  `Fraig_NodeVecReadArray`. MSAT review continues.
 * `framgr`: duplicate BMC helpers were consolidated only where behavior was
   shown identical. Simulation, BMC callback reset, native-EXOR-as-AND behavior,
   output-ID witness layout, SAT root simplification, constant-implication
@@ -96,7 +103,9 @@ and representation limits described in its package notes.
   vet pass; broader manager audit remains incomplete.
 * `int`: MiniSat 1.14p has exhaustive Craig-interpolant checks and option/error
   coverage. Proof-root validation now builds its annotation in one ordered
-  pass, preserving clause order. Race tests and vet passed.
+  pass, preserving clause order. Partition-assembly tests now cover restoration
+  of variable/literal state on success and early failures, and C's stop behavior
+  after rejecting a B clause. Race tests and vet passed.
 * `int2`: the checked-in C interpolation driver is uncompilably incomplete, so
   the Go driver returns undecided and does not invent a bounded reachability
   fallback. Helper tests characterize source behavior. The suffix constructor
