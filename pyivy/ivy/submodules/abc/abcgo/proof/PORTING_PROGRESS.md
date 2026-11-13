@@ -117,7 +117,7 @@ and representation limits described in its package notes.
   behavior. Non-TFO/TFO refinement scope, class counters, SAT-cone values, and
   random completion now match C. Shared RNG side effects and allocated-choice
   representative preconditions also match C. Tests cover support and metadata
-  boundaries; recent statement coverage was 88.2%. Native XOR/buffer and
+  boundaries; current statement coverage is 91.2%. Native XOR/buffer and
   non-topological inputs outside the C source contract are rejected.
 * `fra`: SEC, clause and BMC paths follow the active source's timeout, budget,
   solver-reuse behavior, and native-EXOR-as-AND handling where C hardcodes
@@ -148,7 +148,7 @@ and representation limits described in its package notes.
   behavior, and the uncomplemented-parent assertion follow C. Tests now cover
   class-copy/latch-correlation state, BMC adapters, sequential simulation,
   counterexample/model extraction and one-hot reporting/RNG behavior. The
-  previous coverage snapshot was 80.6%; a new measurement is pending. Remaining
+  current statement coverage is 85.6%. Remaining
   branches include some BMC/FRAIG sweep and SAT model paths; this is not a proof
   of complete algorithm coverage.
 * `int`: MiniSat 1.14p has exhaustive Craig-interpolant checks and option/error
