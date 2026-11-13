@@ -72,6 +72,16 @@ func TestPdrDisabledSimpleGeneralizationDoesNotProduceCube(t *testing.T) {
 	}
 }
 
+func TestBlockCubeInitialStateAssertionAsInC(t *testing.T) {
+	p := &Pdr_Man_t{pPars: &Pdr_Par_t{}, vSolvers: make([]*bsat.Solver, 2), iUseFrame: 1}
+	defer func() {
+		if got := recover(); got != "pdr: proof obligation includes initial state" {
+			t.Fatalf("got panic %v, want C's initial-state assertion", got)
+		}
+	}()
+	Pdr_ManBlockCube(p, testPdrSet([]int32{1}, nil))
+}
+
 func TestPdrSimpleGeneralizationLosesMultiLiteralCubeAsInC(t *testing.T) {
 	g := aig.NewGraph()
 	first, second := g.NewInput(), g.NewInput()
@@ -108,6 +118,26 @@ func TestPdrContainmentScansRequestedFrames(t *testing.T) {
 	}
 	if Pdr_ManCheckContainment(p, 2, makeSet(4, 6)) != 1 {
 		t.Fatal("expected clause contained at frame 2")
+	}
+}
+
+func TestPdrPushClausesCleansFinalFrameWithoutPushing(t *testing.T) {
+	p := &Pdr_Man_t{pPars: &Pdr_Par_t{}, iUseFrame: 1, vSolvers: make([]*bsat.Solver, 2), vClauses: vec.Vec_VecStart(2)}
+	short := testPdrSet([]int32{0}, nil)
+	covered := testPdrSet([]int32{0, 2}, nil)
+	independent := testPdrSet([]int32{2}, nil)
+	for _, cube := range []*Pdr_Set_t{covered, independent, short} {
+		vec.Vec_VecPush(p.vClauses, 1, cube)
+	}
+	if got := Pdr_ManPushClauses(p); got != 0 {
+		t.Fatalf("empty push range returned %d", got)
+	}
+	frame := vec.Vec_VecEntry(p.vClauses, 1)
+	if vec.Vec_PtrSize(frame) != 2 || covered.nRefs != 0 {
+		t.Fatalf("final cleanup retained covered cube: frame size=%d refs=%d", vec.Vec_PtrSize(frame), covered.nRefs)
+	}
+	if Pdr_ManCheckContainment(p, 1, testPdrSet([]int32{0, 2}, nil)) != 1 {
+		t.Fatal("cleanup removed a needed covering cube")
 	}
 }
 

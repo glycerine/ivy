@@ -660,6 +660,12 @@ func Pdr_ManBlockCube(p *Pdr_Man_t, cube *Pdr_Set_t) int32 {
 			return 1
 		}
 		obligation = Pdr_QueuePop(p)
+		if obligation.iFrame <= 0 {
+			panic("pdr: invalid proof obligation frame")
+		}
+		if Pdr_SetIsInit(obligation.pState, -1) != 0 {
+			panic("pdr: proof obligation includes initial state")
+		}
 		if obligation.iFrame < p.iUseFrame {
 			p.iUseFrame = obligation.iFrame
 		}
@@ -686,6 +692,9 @@ func Pdr_ManBlockCube(p *Pdr_Man_t, cube *Pdr_Set_t) int32 {
 			return -1
 		}
 		if status != 0 {
+			if minimum == nil || predecessor != nil {
+				panic("pdr: invalid inductive generalization result")
+			}
 			k := obligation.iFrame
 			for ; k < lastFrame; k++ {
 				status = Pdr_ManCheckCube(p, k, minimum, nil, 0, 0, 1)
@@ -724,6 +733,9 @@ func Pdr_ManBlockCube(p *Pdr_Man_t, cube *Pdr_Set_t) int32 {
 				Pdr_OblDeref(obligation)
 			}
 		} else {
+			if minimum != nil || predecessor == nil {
+				panic("pdr: invalid predecessor generalization result")
+			}
 			obligation.prio = priority
 			priority--
 			Pdr_QueuePush(p, obligation)

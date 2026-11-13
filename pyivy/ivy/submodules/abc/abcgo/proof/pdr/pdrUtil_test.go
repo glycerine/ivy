@@ -60,3 +60,33 @@ func TestPdrObligationQueueOrderAndReferences(t *testing.T) {
 		t.Fatalf("queue state %+v", manager)
 	}
 }
+
+// C inserts equal-priority obligations after existing peers, and a queue
+// cleanup releases each obligation's reference to its shared successor.
+func TestPdrQueueStableTiesAndSharedSuccessor(t *testing.T) {
+	manager := &Pdr_Man_t{}
+	next := Pdr_OblStart(2, 0, testPdrSet([]int32{1}, nil), nil)
+	first := Pdr_OblStart(1, 4, testPdrSet([]int32{3}, nil), next)
+	second := Pdr_OblStart(1, 4, testPdrSet([]int32{5}, nil), Pdr_OblRef(next))
+	before := Pdr_OblStart(1, 3, testPdrSet([]int32{7}, nil), nil)
+	for _, item := range []*Pdr_Obl_t{first, second, before} {
+		Pdr_QueuePush(manager, item)
+	}
+	if got := Pdr_QueuePop(manager); got != before {
+		t.Fatalf("first popped %p, want %p", got, before)
+	} else {
+		Pdr_OblDeref(got)
+	}
+	if got := Pdr_QueuePop(manager); got != first {
+		t.Fatalf("equal-priority queue order got %p, want %p", got, first)
+	} else {
+		Pdr_OblDeref(got)
+	}
+	if next.nRefs != 1 || next.pState == nil {
+		t.Fatalf("shared successor released early: %+v", next)
+	}
+	Pdr_QueueStop(manager)
+	if manager.nQueCur != 0 || manager.pQueue != nil || second.nRefs != 0 || next.nRefs != 0 || next.pState != nil {
+		t.Fatalf("queue stop retained obligations: manager=%+v second=%+v next=%+v", manager, second, next)
+	}
+}
