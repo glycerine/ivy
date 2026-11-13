@@ -1,330 +1,186 @@
 package ssw
 
-/**CFile****************************************************************
+// Optimized latch-correlation sweeping, ported from sswLcorr.c.
+import (
+	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/aig/saig"
+	"github.com/glycerine/abcgo/misc/util"
+	"github.com/glycerine/abcgo/misc/vec"
+	"time"
+)
 
-  FileName    [sswLcorr.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Inductive prover with constraints.]
-
-  Synopsis    [Latch correspondence.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - September 1, 2008.]
-
-  Revision    [$Id: sswLcorr.c,v 1.00 2008/09/01 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "sswInt.h"
-//#include "bar.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Tranfers simulation information from FRAIG to AIG.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Ssw_ManSweepTransfer(p *Ssw_Man_t) {
-    var pObj, pObjFraig *Aig_Obj_t;
-    var pInfo *uint32;
-    var i int32;
-    // transfer simulation information
-    // inlining of macro Aig_ManForEachCi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.pAig.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {
-        pObjFraig = Ssw_ObjFrame( p, pObj, 0 );
-        if pObjFraig == Aig_ManConst0(p.pFrames) {
-            Ssw_SmlObjAssignConst( p.pSml, pObj, 0, 0 );
-            continue;
-        }
-        assert(!Aig_IsComplement(pObjFraig), "!Aig_IsComplement(pObjFraig)");
-        assert(Aig_ObjIsCi(pObjFraig), "Aig_ObjIsCi(pObjFraig)");
-        pInfo = (unsigned *)Vec_PtrEntry( p.vSimInfo, Aig_ObjCioId(pObjFraig) );
-        Ssw_SmlObjSetWord( p.pSml, pObj, pInfo[0], 0, 0 );
-    }
+	for _, obj := range p.pAig.Inputs() {
+		mapped := Ssw_ObjFrame(p, obj, 0)
+		if mapped == p.pFrames.Const0() {
+			Ssw_SmlObjAssignConst(p.pSml, obj, 0, 0)
+			continue
+		}
+		if mapped.Complemented() || !aig.Aig_ObjIsCi(p.pFrames, mapped) {
+			panic("ssw: invalid latch simulation mapping")
+		}
+		info := vec.Vec_PtrEntry(p.vSimInfo, int(aig.Aig_ObjCioId(p.pFrames, mapped))).([]uint32)
+		Ssw_SmlObjSetWord(p.pSml, obj, info[0], 0, 0)
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Performs one round of simulation with counter-examples.]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Ssw_ManSweepResimulate(p *Ssw_Man_t) int32 {
-    var RetValue1, RetValue2 int32;
-    var clk abctime  = Abc_Clock();
-    // transfer PI simulation information from storage
-    Ssw_ManSweepTransfer( p );
-    // simulate internal nodes
-    Ssw_SmlSimulateOneFrame( p.pSml );
-    // check equivalence classes
-    RetValue1 = Ssw_ClassesRefineConst1( p.ppClasses, 1 );
-    RetValue2 = Ssw_ClassesRefine( p.ppClasses, 1 );
-    // prepare simulation info for the next round
-    Vec_PtrCleanSimInfo( p.vSimInfo, 0, 1 );
-    p.nPatterns = 0;
-    p.nSimRounds++;
-p.timeSimSat += Abc_Clock() - clk;
-    return RetValue1 > 0 || RetValue2 > 0;
+	start := time.Now()
+	Ssw_ManSweepTransfer(p)
+	Ssw_SmlSimulateOneFrame(p.pSml)
+	a, b := Ssw_ClassesRefineConst1(p.ppClasses, 1), Ssw_ClassesRefine(p.ppClasses, 1)
+	vec.Vec_PtrCleanSimInfo(p.vSimInfo, 0, 1)
+	p.nPatterns = 0
+	p.nSimRounds++
+	p.timeSimSat += time.Since(start)
+	if a > 0 || b > 0 {
+		return 1
+	}
+	return 0
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Saves one counter-example into internal storage.]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ssw_SmlAddPattern(p *Ssw_Man_t, pRepr *Aig_Obj_t, pCand *Aig_Obj_t) {
-    var pObj *Aig_Obj_t;
-    var pInfo *uint32;
-    var i, nVarNum, Value int32;
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.pMSat.vUsedPis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pMSat.vUsedPis, i)), 1); i++  {
-        nVarNum = Ssw_ObjSatNum( p.pMSat, pObj );
-        assert(nVarNum > 0, "nVarNum > 0");
-        Value = sat_solver_var_value( p.pMSat.pSat, nVarNum );
-        if Value == 0 {
-            continue; }
-        pInfo = (unsigned *)Vec_PtrEntry( p.vSimInfo, Aig_ObjCioId(pObj) );
-        Abc_InfoSetBit( pInfo, p.nPatterns );
-    }
+func Ssw_SmlAddPattern(p *Ssw_Man_t, _, _ aig.Edge) {
+	for _, item := range vec.Vec_PtrArray(p.pMSat.vUsedPis) {
+		obj := item.(aig.Edge)
+		variable := Ssw_ObjSatNum(p.pMSat, obj)
+		if variable <= 0 {
+			panic("ssw: missing SAT variable")
+		}
+		value, ok := p.pMSat.pSat.Value(variable)
+		if !ok {
+			panic("ssw: SAT model unavailable")
+		}
+		if value {
+			info := vec.Vec_PtrEntry(p.vSimInfo, int(aig.Aig_ObjCioId(p.pFrames, obj))).([]uint32)
+			util.Abc_InfoSetBit(info, p.nPatterns)
+		}
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Builds fraiged logic cone of the node.]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ssw_ManBuildCone_rec(p *Ssw_Man_t, pObj *Aig_Obj_t) {
-    var pObjNew *Aig_Obj_t;
-    assert(!Aig_IsComplement(pObj), "!Aig_IsComplement(pObj)");
-    if Ssw_ObjFrame( p, pObj, 0 ) {
-        return; }
-    assert(Aig_ObjIsNode(pObj), "Aig_ObjIsNode(pObj)");
-    Ssw_ManBuildCone_rec( p, Aig_ObjFanin0(pObj) );
-    Ssw_ManBuildCone_rec( p, Aig_ObjFanin1(pObj) );
-    pObjNew = Aig_And( p.pFrames, Ssw_ObjChild0Fra(p, pObj, 0), Ssw_ObjChild1Fra(p, pObj, 0) );
-    Ssw_ObjSetFrame( p, pObj, 0, pObjNew );
+func Ssw_ManBuildCone_rec(p *Ssw_Man_t, obj aig.Edge) {
+	if obj.Complemented() {
+		panic("ssw: complemented cone node")
+	}
+	if Ssw_ObjFrame(p, obj, 0) != aig.InvalidEdge {
+		return
+	}
+	n := p.pAig.Node(obj)
+	if n.Kind != aig.And && n.Kind != aig.ExclusiveOr && n.Kind != aig.Buffer {
+		panic("ssw: unmapped cone input")
+	}
+	Ssw_ManBuildCone_rec(p, n.Fanins[0]&^1)
+	if n.Kind != aig.Buffer {
+		Ssw_ManBuildCone_rec(p, n.Fanins[1]&^1)
+	}
+	Ssw_ObjSetFrame(p, obj, 0, sswMakeNode(p, p.pFrames, obj, 0))
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Recycles the SAT solver.]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ssw_ManSweepLatchOne(p *Ssw_Man_t, pObjRepr *Aig_Obj_t, pObj *Aig_Obj_t) {
-    var pObjFraig, pObjReprFraig, pObjLi *Aig_Obj_t;
-    var RetValue int32;
-    var clk abctime;
-    assert(Aig_ObjIsCi(pObj), "Aig_ObjIsCi(pObj)");
-    assert(Aig_ObjIsCi(pObjRepr) || Aig_ObjIsConst1(pObjRepr), "Aig_ObjIsCi(pObjRepr) || Aig_ObjIsConst1(pObjRepr)");
-    // check if it makes sense to skip some calls
-    if p.nCallsCount > 100 && p.nCallsUnsat < p.nCallsSat {
-        if ++p.nCallsDelta < 0 {
-            return; }
-    }
-    p.nCallsDelta = 0;
-clk = Abc_Clock();
-    // get the fraiged node
-    pObjLi = Saig_ObjLoToLi( p.pAig, pObj );
-    Ssw_ManBuildCone_rec( p, Aig_ObjFanin0(pObjLi) );
-    pObjFraig = Ssw_ObjChild0Fra( p, pObjLi, 0 );
-    // get the fraiged representative
-    if Aig_ObjIsCi(pObjRepr) {
-        pObjLi = Saig_ObjLoToLi( p.pAig, pObjRepr );
-        Ssw_ManBuildCone_rec( p, Aig_ObjFanin0(pObjLi) );
-        pObjReprFraig = Ssw_ObjChild0Fra( p, pObjLi, 0 );
-    
-    } else {
-        pObjReprFraig = Ssw_ObjFrame( p, pObjRepr, 0 ); }
-p.timeReduce += Abc_Clock() - clk;
-    // if the fraiged nodes are the same, return
-    if Aig_Regular(pObjFraig) == Aig_Regular(pObjReprFraig) {
-        return; }
-    p.nRecycleCalls++;
-    p.nCallsCount++;
-
-    // check equivalence of the two nodes
-    if (pObj.fPhase == pObjRepr.fPhase) != (Aig_ObjPhaseReal(pObjFraig) == Aig_ObjPhaseReal(pObjReprFraig)) {
-        p.nPatterns++;
-        p.nStrangers++;
-        p.fRefined = 1;
-    
-    } else {
-        RetValue = Ssw_NodesAreEquiv( p, Aig_Regular(pObjReprFraig), Aig_Regular(pObjFraig) );
-        if RetValue == 1 {  // proved equivalence
-        
-            p.nCallsUnsat++;
-            return;
-        }
-        if RetValue == -1 { // timed out
-        
-            Ssw_ClassesRemoveNode( p.ppClasses, pObj );
-            p.nCallsUnsat++;
-            p.fRefined = 1;
-            return;
-        
-        } else { // disproved equivalence
-        
-            Ssw_SmlAddPattern( p, pObjRepr, pObj );
-            p.nPatterns++;
-            p.nCallsSat++;
-            p.fRefined = 1;
-        }
-    }
+func Ssw_ManSweepLatchOne(p *Ssw_Man_t, repr, obj aig.Edge) {
+	if !aig.Aig_ObjIsCi(p.pAig, obj) || (!aig.Aig_ObjIsCi(p.pAig, repr) && repr != p.pAig.Const1()) {
+		panic("ssw: invalid latch candidate")
+	}
+	if p.nCallsCount > 100 && p.nCallsUnsat < p.nCallsSat {
+		p.nCallsDelta++
+		if p.nCallsDelta < 0 {
+			return
+		}
+	}
+	p.nCallsDelta = 0
+	start := time.Now()
+	li := saig.Saig_ObjLoToLi(p.pAig, obj)
+	Ssw_ManBuildCone_rec(p, p.pAig.Node(li).Fanins[0]&^1)
+	candidate := Ssw_ObjChild0Fra(p, li, 0)
+	representative := Ssw_ObjFrame(p, repr, 0)
+	if aig.Aig_ObjIsCi(p.pAig, repr) {
+		li = saig.Saig_ObjLoToLi(p.pAig, repr)
+		Ssw_ManBuildCone_rec(p, p.pAig.Node(li).Fanins[0]&^1)
+		representative = Ssw_ObjChild0Fra(p, li, 0)
+	}
+	p.timeReduce += time.Since(start)
+	if candidate.NodeID() == representative.NodeID() {
+		return
+	}
+	p.nRecycleCalls++
+	p.nCallsCount++
+	if (p.pAig.Node(obj).Phase == p.pAig.Node(repr).Phase) != (aig.Aig_ObjPhaseReal(p.pFrames, candidate) == aig.Aig_ObjPhaseReal(p.pFrames, representative)) {
+		p.nPatterns++
+		p.nStrangers++
+		p.fRefined = 1
+		return
+	}
+	switch Ssw_NodesAreEquiv(p, representative&^1, candidate&^1) {
+	case 1:
+		p.nCallsUnsat++
+	case -1:
+		Ssw_ClassesRemoveNode(p.ppClasses, obj)
+		p.nCallsUnsat++
+		p.fRefined = 1
+	default:
+		Ssw_SmlAddPattern(p, repr, obj)
+		p.nPatterns++
+		p.nCallsSat++
+		p.fRefined = 1
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Performs one iteration of sweeping latches.]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Ssw_ManSweepLatch(p *Ssw_Man_t) int32 {
-//    Bar_Progress_t * pProgress = NULL;
-    var vClass *Vec_Ptr_t;
-    var pObj, pRepr, pTemp *Aig_Obj_t;
-    var i, k int32;
-
-    // start the timeframe
-    p.pFrames = Aig_ManStart( Aig_ManObjNumMax(p.pAig) );
-    // map constants and PIs
-    Ssw_ObjSetFrame( p, Aig_ManConst1(p.pAig), 0, Aig_ManConst1(p.pFrames) );
-    // inlining of macro Saig_ManForEachPi
-    // inlining of macro Vec_PtrForEachEntryStop
-    for  i = 0; (i < Saig_ManPiNum(p.pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {
-        Ssw_ObjSetFrame( p, pObj, 0, Aig_ObjCreateCi(p.pFrames) );
-    }
-
-    // implement equivalence classes
-    // inlining of macro Saig_ManForEachLo
-    for  i = 0; (i < Saig_ManRegNum(p.pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i+Saig_ManPiNum(p.pAig))), 1); i++  {
-        pRepr = Aig_ObjRepr( p.pAig, pObj );
-        if pRepr == nil {
-            pTemp = Aig_ObjCreateCi(p.pFrames);
-            pTemp.pData = pObj;
-        
-        } else {
-            pTemp = Aig_NotCond( Ssw_ObjFrame(p, pRepr, 0), pRepr.fPhase ^ pObj.fPhase ); }
-        Ssw_ObjSetFrame( p, pObj, 0, pTemp );
-    }
-    Aig_ManSetCioIds( p.pFrames );
-
-    // prepare simulation info
-    assert(p.vSimInfo == nil, "p.vSimInfo == nil");
-    p.vSimInfo = Vec_PtrAllocSimInfo( Aig_ManCiNum(p.pFrames), 1 );
-    Vec_PtrCleanSimInfo( p.vSimInfo, 0, 1 );
-
-    // go through the registers
-//    if ( p->pPars->fVerbose )
-//        pProgress = Bar_ProgressStart( stdout, Aig_ManRegNum(p->pAig) );
-    vClass = Vec_PtrAlloc( 100 );
-    p.fRefined = 0;
-    p.nCallsCount = p.nCallsSat = p.nCallsUnsat = 0;
-    // inlining of macro Saig_ManForEachLo
-    for  i = 0; (i < Saig_ManRegNum(p.pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i+Saig_ManPiNum(p.pAig))), 1); i++  {
-//        if ( p->pPars->fVerbose )
-//            Bar_ProgressUpdate( pProgress, i, NULL );
-        // consider the case of constant candidate
-        if Ssw_ObjIsConst1Cand( p.pAig, pObj ) {
-            Ssw_ManSweepLatchOne( p, Aig_ManConst1(p.pAig), pObj );
-        } else {
-            // consider the case of equivalence class
-            Ssw_ClassesCollectClass( p.ppClasses, pObj, vClass );
-            if Vec_PtrSize(vClass) == 0 {
-                continue; }
-            // try to prove equivalences in this class
-            // inlining of macro Vec_PtrForEachEntry
-            for  k = 0; (k < Vec_PtrSize(vClass)) && (((pTemp) = (Aig_Obj_t *)Vec_PtrEntry(vClass, k)), 1); k++  {
-                if Aig_ObjRepr(p.pAig, pTemp) == pObj {
-                    Ssw_ManSweepLatchOne( p, pObj, pTemp );
-                    if p.nPatterns == 32 {
-                        break; }
-                }
-            }
-        }
-        // resimulate
-        if p.nPatterns == 32 {
-            Ssw_ManSweepResimulate( p ); }
-        // attempt recycling the SAT solver
-        if p.pPars.nSatVarMax &&
-             p.pMSat.nSatVars > p.pPars.nSatVarMax &&
-             p.nRecycleCalls > p.pPars.nRecycleCalls {
-            p.nVarsMax  = Abc_MaxInt( p.nVarsMax,  p.pMSat.nSatVars );
-            p.nCallsMax = Abc_MaxInt( p.nCallsMax, p.pMSat.nSolverCalls );
-            Ssw_SatStop( p.pMSat );
-            p.pMSat = Ssw_SatStart( 0 );
-            p.nRecycles++;
-            p.nRecycleCalls = 0;
-        }
-    }
-//    ABC_PRT( "reduce", p->timeReduce );
-//    Aig_TableProfile( p->pFrames );
-//    Abc_Print( 1, "And gates = %d\n", Aig_ManNodeNum(p->pFrames) );
-    // resimulate
-    if p.nPatterns > 0 {
-        Ssw_ManSweepResimulate( p ); }
-    // cleanup
-    Vec_PtrFree( vClass );
-//    if ( p->pPars->fVerbose )
-//        Bar_ProgressStop( pProgress );
-
-    // cleanup
-//    Ssw_ClassesCheck( p->ppClasses );
-    return p.fRefined;
+	p.pFrames = aig.NewGraph()
+	p.pMSat.pAig = p.pFrames
+	g := p.pAig
+	inputs := g.Inputs()
+	regs := int(g.RegisterCount())
+	pis := len(inputs) - regs
+	Ssw_ObjSetFrame(p, g.Const1(), 0, p.pFrames.Const1())
+	for _, pi := range inputs[:pis] {
+		Ssw_ObjSetFrame(p, pi, 0, p.pFrames.NewInput())
+	}
+	for _, lo := range inputs[pis:] {
+		repr := aig.Aig_ObjRepr(g, lo)
+		var mapped aig.Edge
+		if repr == aig.InvalidEdge {
+			mapped = p.pFrames.NewInput()
+		} else {
+			mapped = Ssw_ObjFrame(p, repr, 0)
+			if g.Node(repr).Phase != g.Node(lo).Phase {
+				mapped = mapped.Not()
+			}
+		}
+		Ssw_ObjSetFrame(p, lo, 0, mapped)
+	}
+	if p.vSimInfo != nil {
+		panic("ssw: simulation info already allocated")
+	}
+	p.vSimInfo = vec.Vec_PtrAllocSimInfo(p.pFrames.InputCount(), 1)
+	class := vec.Vec_PtrAlloc(100)
+	p.fRefined = 0
+	p.nCallsCount = 0
+	p.nCallsSat = 0
+	p.nCallsUnsat = 0
+	for _, lo := range inputs[pis:] {
+		if Ssw_ObjIsConst1Cand(g, lo) != 0 {
+			Ssw_ManSweepLatchOne(p, g.Const1(), lo)
+		} else {
+			Ssw_ClassesCollectClass(p.ppClasses, lo, class)
+			for _, item := range vec.Vec_PtrArray(class) {
+				candidate := item.(aig.Edge)
+				if aig.Aig_ObjRepr(g, candidate) == lo {
+					Ssw_ManSweepLatchOne(p, lo, candidate)
+					if p.nPatterns == 32 {
+						break
+					}
+				}
+			}
+		}
+		if p.nPatterns == 32 {
+			Ssw_ManSweepResimulate(p)
+		}
+		if p.pPars.nSatVarMax != 0 && p.pMSat.nSatVars > p.pPars.nSatVarMax && p.nRecycleCalls > p.pPars.nRecycleCalls {
+			p.nVarsMax = max(p.nVarsMax, p.pMSat.nSatVars)
+			p.nCallsMax = max(p.nCallsMax, p.pMSat.nSolverCalls)
+			Ssw_SatStop(p.pMSat)
+			p.pMSat = Ssw_SatStart(0)
+			p.pMSat.pAig = p.pFrames
+			p.nRecycles++
+			p.nRecycleCalls = 0
+		}
+	}
+	if p.nPatterns > 0 {
+		Ssw_ManSweepResimulate(p)
+	}
+	return p.fRefined
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
