@@ -42,6 +42,19 @@ func Cec_ManVerifyNaive(graph *Gia_Man_t, params *Cec_ParCec_t) int32 {
 	return cecRecordResult(graph, params, result, err)
 }
 func Cec_ManVerify(graph *Gia_Man_t, params *Cec_ParCec_t) int32 {
+	if params == nil {
+		params = new(Cec_ParCec_t)
+		Cec_ManCecSetDefaultParams(params)
+	}
+	// ABC handles phase and simple-input cases before selecting either SAT path.
+	if status := Cec_ManHandleSpecialCases(graph, params); status != -1 {
+		return status
+	}
+	if params.Error != nil {
+		return -1
+	}
+	// The default source sweep/fallback orchestration still needs porting. Until
+	// then, retain the existing validated direct SAT path for nontrivial cases.
 	return Cec_ManVerifyNaive(graph, params)
 }
 func Cec_ManVerifySimple(graph *Gia_Man_t) int32 {
@@ -107,6 +120,10 @@ func Cec_ManVerifyOld(graph *Gia_Man_t, verbose int32, failed *int32, started ab
 func Cec_ManHandleSpecialCases(graph *Gia_Man_t, params *Cec_ParCec_t) int32 {
 	params.Error = nil
 	params.iOutFail = -1
+	if graph == nil {
+		params.Error = fmt.Errorf("cec: nil network")
+		return -1
+	}
 	graph.ClearCombinationalCounterexample()
 	model, err := core.NewModel(graph)
 	if err != nil {
