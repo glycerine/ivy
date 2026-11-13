@@ -123,3 +123,28 @@ func TestStructuralCNFIncrementalSharedCone(t *testing.T) {
 		}
 	}
 }
+
+func TestStructuralCNFReusesPreencodedVariableZero(t *testing.T) {
+	graph := aig.NewGraph()
+	a, b := graph.NewInput(), graph.NewInput()
+	root := graph.AND(a, b)
+	p := &Fra_Man_t{pManFraig: graph, pSat: bsat.NewSolver(), nSatVars: 2}
+	Fra_ManClean(p, int32(len(graph.Nodes())))
+	p.pSat.NewVariable()
+	p.pSat.NewVariable()
+	Fra_ObjSetSatNum(p, a, 0)
+	Fra_ObjSetFaninVec(p, a, []aig.Edge{})
+	Fra_ObjSetSatNum(p, b, 1)
+	Fra_ObjSetFaninVec(p, b, []aig.Edge{})
+	Fra_CnfNodeAddToSolver(p, root, aig.InvalidEdge)
+	if Fra_ObjSatNum(p, a) != 0 || p.nSatVars != 3 {
+		t.Fatalf("preencoded variable zero reassigned: a=%d next=%d", Fra_ObjSatNum(p, a), p.nSatVars)
+	}
+	rootVar := Fra_ObjSatNum(p, root)
+	if got := p.pSat.Solve(bsat.Negative(0), bsat.Positive(1), bsat.Positive(rootVar)); got != bsat.Unsatisfiable {
+		t.Fatalf("AND accepted an inconsistent assignment: %v", got)
+	}
+	if got := p.pSat.Solve(bsat.Positive(0), bsat.Positive(1), bsat.Positive(rootVar)); got != bsat.Satisfiable {
+		t.Fatalf("AND rejected a valid assignment: %v", got)
+	}
+}

@@ -64,7 +64,7 @@ func TestInductionGeneratedTwoRegisterCircuits(t *testing.T) {
 			}
 		}
 	}
-	if completed < 48 {
+	if completed != 72 {
 		t.Fatalf("only %d of 72 induction runs completed", completed)
 	}
 }

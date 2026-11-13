@@ -175,7 +175,8 @@ func Fra_ImpAddToSolver(p *Fra_Man_t, imps *vec.Vec_Int_t, satVarNums []int32) {
 		for f := int32(0); f < p.pPars.nFramesK; f++ {
 			a, b := Fra_ObjFraig(p, left, f), Fra_ObjFraig(p, right, f)
 			av, bv := satVarNums[a.NodeID()], satVarNums[b.NodeID()]
-			if av <= 0 || av >= p.nSatVars || bv <= 0 || bv >= p.nSatVars {
+			// Go CNF numbering may assign zero to a real input variable.
+			if av < 0 || av >= p.nSatVars || bv < 0 || bv >= p.nSatVars {
 				panic("fra: invalid implication SAT variable")
 			}
 			negA := p.pManAig.Node(left).Phase != a.Complemented()

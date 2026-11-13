@@ -72,7 +72,9 @@ func Fra_ObjAddToFrontier(p *Fra_Man_t, node aig.Edge, frontier *[]aig.Edge) {
 	if node.Complemented() {
 		panic("fra: complemented frontier node")
 	}
-	if Fra_ObjSatNum(p, node) != 0 || node.NodeID() == 0 {
+	// An existing CNF can assign variable zero to a real input. Its non-nil
+	// fanin sentinel marks the node encoded even when the number is zero.
+	if Fra_ObjSatNum(p, node) != 0 || Fra_ObjFaninVec(p, node) != nil || node.NodeID() == 0 {
 		return
 	}
 	Fra_ObjSetSatNum(p, node, p.nSatVars)
