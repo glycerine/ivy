@@ -114,48 +114,7 @@ import "os"
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_ManSweepNodeConstr(p *Ssw_Man_t, pObj *Aig_Obj_t, f int32, fBmc int32) int32 {
-    var pObjRepr, pObjFraig, pObjFraig2, pObjReprFraig *Aig_Obj_t;
-    var RetValue int32;
-    // get representative of this class
-    pObjRepr = Aig_ObjRepr( p.pAig, pObj );
-    if pObjRepr == nil {
-        return 0; }
-    // get the fraiged node
-    pObjFraig = Ssw_ObjFrame( p, pObj, f );
-    // get the fraiged representative
-    pObjReprFraig = Ssw_ObjFrame( p, pObjRepr, f );
-    // check if constant 0 pattern distinquishes these nodes
-    assert(pObjFraig != nil && pObjReprFraig != nil, "pObjFraig != nil && pObjReprFraig != nil");
-    assert((pObj.fPhase == pObjRepr.fPhase) == (Aig_ObjPhaseReal(pObjFraig) == Aig_ObjPhaseReal(pObjReprFraig)), "(pObj.fPhase == pObjRepr.fPhase) == (Aig_ObjPhaseReal(pObjFraig) == Aig_ObjPhaseReal(pObjReprFraig))");
-    // if the fraiged nodes are the same, return
-    if Aig_Regular(pObjFraig) == Aig_Regular(pObjReprFraig) {
-        return 0; }
-    // call equivalence checking
-    if Aig_Regular(pObjFraig) != Aig_ManConst1(p.pFrames) {
-        RetValue = Ssw_NodesAreEquiv( p, Aig_Regular(pObjReprFraig), Aig_Regular(pObjFraig) );
-    } else {
-        RetValue = Ssw_NodesAreEquiv( p, Aig_Regular(pObjFraig), Aig_Regular(pObjReprFraig) ); }
-    if RetValue == 1 {  // proved equivalent
-    
-        pObjFraig2 = Aig_NotCond( pObjReprFraig, pObj.fPhase ^ pObjRepr.fPhase );
-        Ssw_ObjSetFrame( p, pObj, f, pObjFraig2 );
-        return 0;
-    }
-    if RetValue == -1 { // timed out
-    
-        Ssw_ClassesRemoveNode( p.ppClasses, pObj );
-        return 1;
-    }
-    // disproved equivalence
-    Ssw_SmlSavePatternAig( p, f );
-    Ssw_ManResimulateBit( p, pObj, pObjRepr );
-    assert(Aig_ObjRepr( p.pAig, pObj ) != pObjRepr, "Aig_ObjRepr( p.pAig, pObj ) != pObjRepr");
-    if Aig_ObjRepr( p.pAig, pObj ) == pObjRepr {
-        Abc_Print( 1, "Ssw_ManSweepNodeConstr(): Failed to refine representative.\n" );
-    }
-    return 1;
-}
+
 
 /**Function*************************************************************
 
