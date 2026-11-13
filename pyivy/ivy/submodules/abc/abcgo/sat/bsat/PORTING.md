@@ -205,3 +205,9 @@ exhaustive five-variable evaluation and validates models and assumption cores.
 `GOCACHE=/tmp/abcgo-cache go test -race -count=1 ./sat/bsat ./sat/bmc` passes.
 Further correctness, simplicity, and coverage review of `sat/bsat` remains in
 progress; these tests alone do not complete that review.
+
+The proof-producing `Solver2.NewVariable` now invalidates the preceding solve
+status, matching the primary solver. Previously it exposed a stale model
+(including a fabricated value for the new variable) until the next solve.
+`TestSolver2NewVariableInvalidatesModel` covers invalidation and re-solving;
+`GOCACHE=/tmp/abcgo-cache go test -race -count=1 ./sat/bsat` passes.

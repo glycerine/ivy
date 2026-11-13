@@ -15,6 +15,7 @@ func NewSolver2() *Solver2 {
 	return &Solver2{solver: s, nextID: 1}
 }
 func (p *Solver2) NewVariable() int32 {
+	p.solver.lastStatus = Unknown
 	v := p.solver.size
 	sat_solver2_setnvars(p.solver, v+1)
 	return v
