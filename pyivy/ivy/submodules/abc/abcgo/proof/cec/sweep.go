@@ -175,8 +175,6 @@ func Cec_ManSatSweeping(graph *Gia_Man_t, params *Cec_ParFra_t, silent int32) *G
 	}
 	if !native {
 		result, err = cecOriginalSweep(graph, params)
-	} else if graph.HasRepresentatives() {
-		err = fmt.Errorf("cec: native sweep with existing representatives is not supported")
 	} else {
 		var lowered *Gia_Man_t
 		var mapping []int32
@@ -197,6 +195,9 @@ func Cec_ManSatSweeping(graph *Gia_Man_t, params *Cec_ParFra_t, silent int32) *G
 			}
 			if err == nil {
 				result, err = cecOriginalSweepMapped(lowered, graph, mapping, aliases, params)
+				if err == nil && graph.HasRepresentatives() {
+					graph.ClearRepresentatives()
+				}
 			}
 		}
 	}

@@ -160,15 +160,76 @@ func TestNativeSweepPreservesSequentialInterface(t *testing.T) {
 	}
 }
 
-func TestNativeSweepRejectsExistingClasses(t *testing.T) {
-	g := gia.Gia_ManStart(8)
-	a, b := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
-	x := gia.Gia_ManAppendXorReal(g, a, b)
+func TestNativeSweepTransfersExistingClasses(t *testing.T) {
+	g := gia.Gia_ManStart(24)
+	a, b, c := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
+	x := gia.Gia_ManAppendXorReal(g, gia.Gia_ManAppendXorReal(g, a, b), c)
+	y := gia.Gia_ManAppendXorReal(g, a, gia.Gia_ManAppendXorReal(g, b, c))
 	gia.Gia_ManAppendCo(g, x)
+	gia.Gia_ManAppendCo(g, y)
 	g.StartRepresentatives()
+	gia.Gia_ObjSetRepr(g, y>>1, x>>1)
+	gia.Gia_ObjSetNext(g, x>>1, y>>1)
 	var p Cec_ParFra_t
 	Cec_ManFraSetDefaultParams(&p)
-	if q := Cec_ManSatSweeping(g, &p, 1); q != nil || p.Error == nil {
+	p.fUseOrigIds = 1
+	q := Cec_ManSatSweeping(g, &p, 1)
+	if q == nil || p.Error != nil {
 		t.Fatalf("result %v error %v", q, p.Error)
+	}
+	if g.HasRepresentatives() {
+		t.Fatal("source classes were not transferred")
+	}
+	pairs := vec.Vec_IntArray(gia.Gia_ManOrigEquivPairs(g))
+	found := false
+	for i := 0; i+1 < len(pairs); i += 2 {
+		found = found || pairs[i] == x>>1 && pairs[i+1] == y>>1 || pairs[i] == y>>1 && pairs[i+1] == x>>1
+	}
+	if !found {
+		t.Fatalf("missing original pair: %v", pairs)
+	}
+	for bits := 0; bits < 8; bits++ {
+		in := []bool{bits&1 != 0, bits&2 != 0, bits&4 != 0}
+		want, e1 := g.Evaluate(in)
+		got, e2 := q.Evaluate(in)
+		if e1 != nil || e2 != nil || len(got) != 2 || got[0] != want[0] || got[1] != want[1] {
+			t.Fatalf("bits %d original %v reduced %v errors %v %v", bits, want, got, e1, e2)
+		}
+	}
+}
+
+func TestNativeSweepRejectsFalseSeedClass(t *testing.T) {
+	for _, circuit := range []int32{0, 1} {
+		g := gia.Gia_ManStart(16)
+		a, b := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
+		x := gia.Gia_ManAppendXorReal(g, a, b)
+		y := gia.Gia_ManAppendAnd(g, a, b)
+		gia.Gia_ManAppendCo(g, x)
+		gia.Gia_ManAppendCo(g, y)
+		g.StartRepresentatives()
+		gia.Gia_ObjSetRepr(g, y>>1, x>>1)
+		gia.Gia_ObjSetNext(g, x>>1, y>>1)
+		var p Cec_ParFra_t
+		Cec_ManFraSetDefaultParams(&p)
+		p.fUseOrigIds = 1
+		p.fRunCSat = circuit
+		q := Cec_ManSatSweeping(g, &p, 1)
+		if q == nil || p.Error != nil {
+			t.Fatalf("circuit %d: %v", circuit, p.Error)
+		}
+		for bits := 0; bits < 4; bits++ {
+			in := []bool{bits&1 != 0, bits&2 != 0}
+			want, e1 := g.Evaluate(in)
+			got, e2 := q.Evaluate(in)
+			if e1 != nil || e2 != nil || len(got) != 2 || got[0] != want[0] || got[1] != want[1] {
+				t.Fatalf("circuit %d bits %d want %v got %v errors %v %v", circuit, bits, want, got, e1, e2)
+			}
+		}
+		pairs := vec.Vec_IntArray(gia.Gia_ManOrigEquivPairs(g))
+		for i := 0; i+1 < len(pairs); i += 2 {
+			if pairs[i] == x>>1 && pairs[i+1] == y>>1 || pairs[i] == y>>1 && pairs[i+1] == x>>1 {
+				t.Fatalf("circuit %d: false proof %v", circuit, pairs)
+			}
+		}
 	}
 }

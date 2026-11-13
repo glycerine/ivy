@@ -78,9 +78,8 @@ checked against the original graph, so a failed earlier assumption cannot turn
 into a published proof. The ordinary and circuit SAT backends both collect
 candidate pairs for that independent validation.
 The public sweep lowers native XOR, MUX, and buffer nodes to AND-inverter
-logic, retains source IDs for original nodes, and independently validates alias
-proofs. Native graphs with existing equivalence classes are rejected until
-class remapping is supported. As in the C
+logic, retains source IDs for original nodes, remaps existing equivalence
+classes, and independently validates alias proofs. As in the C
 pipeline, the overall time limit is checked between stages and iterations; an
 individual SAT or FRAIG call can run beyond that limit. Tests compare selected
 cases with the original ABC executable and force the unresolved sweep branch

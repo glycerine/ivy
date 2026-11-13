@@ -73,22 +73,35 @@ func cecLowerSweepGraph(src *Gia_Man_t) (*Gia_Man_t, []int32, *Vec_Int_t, error)
 	gia.Gia_ManSetRegNum(result, gia.Gia_ManRegNum(src))
 	gia.Gia_ManSetConstrNum(result, gia.Gia_ManConstrNum(src))
 	inverse := make([]int32, result.ObjectCount())
+	forward := make([]int32, src.ObjectCount())
 	for i := range inverse {
 		inverse[i] = -1
 	}
+	for i := range forward {
+		forward[i] = -1
+	}
 	inverse[0] = 0
+	forward[0] = 0
 	sourceInputs, lowerInputs := src.InputLiterals(), result.InputLiterals()
 	for i, lit := range sourceInputs {
 		inverse[lowerInputs[i]>>1] = lit >> 1
+		forward[lit>>1] = lowerInputs[i] >> 1
 	}
 	aliases := vec.Vec_IntAlloc(0)
 	for i, id := range nodes {
 		lit := remap(loweredOutputs[len(outputs)+i])
 		varID := lit >> 1
+		forward[id] = varID
 		if inverse[varID] < 0 {
 			inverse[varID] = id
 		} else {
 			vec.Vec_IntPushTwo(aliases, inverse[varID], id)
+		}
+	}
+	if src.HasRepresentatives() {
+		if err := result.TransferRepresentativesFrom(src, forward); err != nil {
+			gia.Gia_ManStop(result)
+			return nil, nil, nil, fmt.Errorf("cec: remap native equivalence classes: %w", err)
 		}
 	}
 	return result, inverse, aliases, nil
