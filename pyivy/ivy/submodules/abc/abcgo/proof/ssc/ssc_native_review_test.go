@@ -79,3 +79,56 @@ func TestRandomNativeGateTransformations(t *testing.T) {
 		}
 	}
 }
+
+func TestDropContainedSequentialCones(t *testing.T) {
+	g := gia.Gia_ManStart(32)
+	g.EnableMuxes()
+	x := gia.Gia_ManAppendCi(g)
+	q0 := gia.Gia_ManAppendCi(g)
+	q1 := gia.Gia_ManAppendCi(g)
+	_ = gia.Gia_ManAppendCi(g) // unused register
+	contained := gia.Gia_ManAppendAnd(g, x, q0)
+	next0 := gia.Gia_ManAppendXorReal(g, x, q1)
+	next1 := gia.Gia_ManAppendMuxReal(g, x, q0, q1)
+	gia.Gia_ManAppendCo(g, contained)
+	gia.Gia_ManAppendCo(g, q0)
+	gia.Gia_ManAppendCo(g, next0)
+	gia.Gia_ManAppendCo(g, next1)
+	gia.Gia_ManAppendCo(g, x)
+	gia.Gia_ManSetRegNum(g, 3)
+
+	result := Gia_ManDropContained(g)
+	if result.RegisterCount() != 2 || len(result.InputLiterals()) != 3 || len(result.OutputLiterals()) != 3 {
+		t.Fatalf("expected one PO and two transitively reachable registers, got %d inputs, %d outputs, %d registers", len(result.InputLiterals()), len(result.OutputLiterals()), result.RegisterCount())
+	}
+	for mask := 0; mask < 8; mask++ {
+		in := []bool{mask&1 != 0, mask&2 != 0, mask&4 != 0}
+		got, err := result.Evaluate(in)
+		if err != nil {
+			t.Fatal(err)
+		}
+		want, err := g.Evaluate(append(append([]bool(nil), in...), false))
+		if err != nil {
+			t.Fatal(err)
+		}
+		for i := range got {
+			if got[i] != want[i+1] {
+				t.Fatalf("mask %d output %d: got %v want %v", mask, i, got[i], want[i+1])
+			}
+		}
+	}
+}
+
+func TestDropContainedKeepsRegistersWhenNoPrimaryOutputDrops(t *testing.T) {
+	g := gia.Gia_ManStart(10)
+	x := gia.Gia_ManAppendCi(g)
+	gia.Gia_ManAppendCi(g)
+	gia.Gia_ManAppendCo(g, x)
+	gia.Gia_ManAppendCo(g, x^1)
+	gia.Gia_ManAppendCo(g, x)
+	gia.Gia_ManSetRegNum(g, 1)
+	result := Gia_ManDropContained(g)
+	if result.RegisterCount() != 1 || len(result.OutputLiterals()) != 3 {
+		t.Fatalf("all distinct POs and the register must survive: %d outputs, %d registers", len(result.OutputLiterals()), result.RegisterCount())
+	}
+}

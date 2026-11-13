@@ -115,7 +115,9 @@ func Gia_ManDropContained(p *gia.Gia_Man_t) *gia.Gia_Man_t {
 	if status != satoko.SATOKO_SAT {
 		return nil
 	}
-	outputs := p.OutputLiterals()
+	// Only primary outputs participate in containment. Register inputs are
+	// transition functions, not members of the output union.
+	outputs := p.OutputLiterals()[:int(gia.Gia_ManPoNum(p))]
 	keep := make([]bool, len(outputs))
 	for i := range keep {
 		keep[i] = true
@@ -137,14 +139,17 @@ func Gia_ManDropContained(p *gia.Gia_Man_t) *gia.Gia_Man_t {
 		}
 	}
 	selected := make([]int32, 0, len(outputs))
-	for i, l := range outputs {
+	for i := range outputs {
 		if keep[i] {
-			selected = append(selected, l)
+			selected = append(selected, int32(i))
 		}
 	}
-	q := copyMapped(p, selected, nil)
-	gia.Gia_ManSetRegNum(q, 0)
-	return q
+	if len(selected) == len(outputs) {
+		return gia.Gia_ManDup(p)
+	}
+	// Following the selected PO cones also retains the transitive register
+	// dependencies and their corresponding next-state functions.
+	return gia.Gia_ManDupCones(p, selected, int32(len(selected)), 0)
 }
 func Gia_ManOptimizeRing(p *gia.Gia_Man_t) *gia.Gia_Man_t {
 	if gia.Gia_ManConstrNum(p) != 0 || p.RegisterCount() != 0 {
