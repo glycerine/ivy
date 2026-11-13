@@ -76,17 +76,7 @@ import "fmt"
   SeeAlso     []
 
 ***********************************************************************/
-func Saig_ManCexFirstFlopPi(p *Aig_Man_t, pAbs *Aig_Man_t) int32 { 
-    var pObj *Aig_Obj_t;
-    var i int32;
-    assert(pAbs.vCiNumsOrig != nil, "pAbs.vCiNumsOrig != nil");
-    Aig_ManForEachCi( p, pObj, i )
-    {
-        if Vec_IntEntry(pAbs.vCiNumsOrig, i) >= Saig_ManPiNum(p) {
-            return i; }
-    }
-    return -1;
-}
+
 
 /**Function*************************************************************
 
@@ -193,63 +183,7 @@ func Saig_ManCexRefine(p *Aig_Man_t, pAbs *Aig_Man_t, vFlops *Vec_Int_t, nFrames
   SeeAlso     []
 
 ***********************************************************************/
-func Saig_ManCexRefineStep(p *Aig_Man_t, vFlops *Vec_Int_t, vFlopClasses *Vec_Int_t, pCex *Abc_Cex_t, nFfToAddMax int32, fTryFour int32, fSensePath int32, fVerbose int32) int32 {
-    var pAbs *Aig_Man_t;
-    var vFlopsNew *Vec_Int_t;
-    var i, Entry int32;
-    var clk abctime  = Abc_Clock();
-    pAbs = Saig_ManDupAbstraction( p, vFlops );
-    if fSensePath != 0 {
-        vFlopsNew = Saig_ManExtendCounterExampleTest2( pAbs, Saig_ManCexFirstFlopPi(p, pAbs), pCex, fVerbose );
-    } else {
-//        vFlopsNew = Saig_ManExtendCounterExampleTest( pAbs, Saig_ManCexFirstFlopPi(p, pAbs), pCex, fTryFour, fVerbose );
-        vFlopsNew = Saig_ManExtendCounterExampleTest3( pAbs, Saig_ManCexFirstFlopPi(p, pAbs), pCex, fVerbose ); }
-    if vFlopsNew == nil {
-        Aig_ManStop( pAbs );
-        return 0;
-    }
-    if Vec_IntSize(vFlopsNew) == 0 {
-        fmt.Printf("Refinement did not happen. Discovered a true counter-example.\n");
-        fmt.Printf("Remapping counter-example from %d to %d primary inputs.\n", Aig_ManCiNum(pAbs), Aig_ManCiNum(p));
-        p.pSeqModel = Saig_ManCexRemap( p, pAbs, pCex );
-        Vec_IntFree( vFlopsNew );
-        Aig_ManStop( pAbs );
-        return 0;
-    }
-    if fVerbose != 0 {
-        fmt.Printf("Adding %d registers to the abstraction (total = %d).  ", Vec_IntSize(vFlopsNew), Aig_ManRegNum(p)+Vec_IntSize(vFlopsNew));
-        Abc_PrintTime( 1, "Time", Abc_Clock() - clk );
-    }
-    // vFlopsNew contains PI numbers that should be kept in pAbs
-    // select the most useful flops among those to be added
-    if nFfToAddMax > 0 && Vec_IntSize(vFlopsNew) > nFfToAddMax {
-        var vFlopsNewBest *Vec_Int_t;
-        // shift the indices
-        Vec_IntForEachEntry( vFlopsNew, Entry, i )
-            Vec_IntAddToEntry( vFlopsNew, i, -Saig_ManPiNum(p) );
-        // create new flops
-        vFlopsNewBest = Saig_ManCbaFilterFlops( p, pCex, vFlopClasses, vFlopsNew, nFfToAddMax );
-        assert(Vec_IntSize(vFlopsNewBest) == nFfToAddMax, "Vec_IntSize(vFlopsNewBest) == nFfToAddMax");
-        fmt.Printf("Filtering flops based on cost (%d -> %d).\n", Vec_IntSize(vFlopsNew), Vec_IntSize(vFlopsNewBest));
-        // update
-        Vec_IntFree( vFlopsNew );
-        vFlopsNew = vFlopsNewBest;
-        // shift the indices
-        Vec_IntForEachEntry( vFlopsNew, Entry, i )
-            Vec_IntAddToEntry( vFlopsNew, i, Saig_ManPiNum(p) );
-    }
-    // add to the abstraction
-    Vec_IntForEachEntry( vFlopsNew, Entry, i )
-    {
-        Entry = Vec_IntEntry(pAbs.vCiNumsOrig, Entry);
-        assert(Entry >= Saig_ManPiNum(p), "Entry >= Saig_ManPiNum(p)");
-        assert(Entry < Aig_ManCiNum(p), "Entry < Aig_ManCiNum(p)");
-        Vec_IntPush( vFlops, Entry-Saig_ManPiNum(p) );
-    }
-    Vec_IntFree( vFlopsNew );
-    Aig_ManStop( pAbs );
-    return 1;
-}
+
 
 /**Function*************************************************************
 
