@@ -137,17 +137,21 @@ func Cec_ManCheckNonTrivialCands(p *Gia_Man_t) int32 {
 	if !p.HasRepresentatives() {
 		return 0
 	}
-	drivers := make(map[int32]bool)
 	for i := int32(0); i < gia.Gia_ManPoNum(p); i++ {
-		drivers[gia.Gia_ObjFaninId0p(p, gia.Gia_ManPo(p, i))] = true
+		gia.Gia_ObjSetMark0(gia.Gia_ObjFanin0(gia.Gia_ManPo(p, i)), 1)
 	}
-	for id := int32(1); id < gia.Gia_ManObjNum(p); id++ {
+	result := int32(0)
+	for id := int32(0); id < gia.Gia_ManObjNum(p); id++ {
 		o := gia.Gia_ManObj(p, id)
-		if gia.Gia_ObjIsCand(o) != 0 && !drivers[id] && gia.Gia_ObjRepr(p, id) != gia.GIA_VOID {
-			return 1
+		if gia.Gia_ObjIsCand(o) != 0 && gia.Gia_ObjMark0(o) == 0 && gia.Gia_ObjRepr(p, id) != gia.GIA_VOID {
+			result = 1
+			break
 		}
 	}
-	return 0
+	for i := int32(0); i < gia.Gia_ManPoNum(p); i++ {
+		gia.Gia_ObjSetMark0(gia.Gia_ObjFanin0(gia.Gia_ManPo(p, i)), 0)
+	}
+	return result
 }
 
 func Cec_ManSeqSemiformal(p *Gia_Man_t, pars *Cec_ParSmf_t) int32 {
