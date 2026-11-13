@@ -1,7 +1,5 @@
 package abs
 
-import "fmt"
-
 /**CFile****************************************************************
 
   FileName    [saigAbsStart.c]
