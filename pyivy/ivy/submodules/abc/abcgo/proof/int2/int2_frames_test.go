@@ -2,6 +2,7 @@ package int2
 
 import (
 	"testing"
+	"time"
 
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/misc/vec"
@@ -451,5 +452,33 @@ func TestCheckInitIgnoresPropertyOutput(t *testing.T) {
 		if got := Int2_ManCheckInit(g); got != 1 {
 			t.Fatalf("property %d: result %d, want transition to init", property, got)
 		}
+	}
+}
+
+func TestCheckBmcReturnsUndecidedOnExpiredDeadline(t *testing.T) {
+	g := gia.Gia_ManStart(8)
+	input, state := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
+	gia.Gia_ManAppendCo(g, input)
+	gia.Gia_ManAppendCo(g, state)
+	gia.Gia_ManSetRegNum(g, 1)
+	m := Int2_ManCreate(g, &Int2_ManPars_t{})
+	defer Int2_ManStop(m)
+	m.pSatPref = sat_solver_new()
+	cos := vec.Vec_IntAllocArrayCopy([]int32{0}, 1)
+	Int2_ManCreateFrames(m, 0, cos)
+	lit := Int2_ManCheckFrames(m, 0, gia.Gia_ObjId(g, gia.Gia_ManPo(g, 0)))
+	// Leave an unconstrained variable so the solver reaches a search boundary
+	// after applying the property assumption.
+	sat_solver_setnvars(m.pSatPref, sat_solver_nvars(m.pSatPref)+1)
+	m.pSatPref.SetDeadline(time.Now().Add(-time.Second))
+	if got := Int2_ManCheckBmc(m, nil); got != -1 {
+		t.Fatalf("property result %d, want undecided", got)
+	}
+	if got := Int2_ManCheckBmc(m, vec.Vec_IntAllocArrayCopy([]int32{lit}, 1)); got != -1 {
+		t.Fatalf("cube result %d, want undecided", got)
+	}
+	m.pSatPref.SetDeadline(time.Time{})
+	if got := Int2_ManCheckBmc(m, nil); got != 0 {
+		t.Fatalf("retry result %d, want counterexample", got)
 	}
 }

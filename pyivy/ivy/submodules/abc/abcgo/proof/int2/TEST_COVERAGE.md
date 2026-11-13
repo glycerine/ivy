@@ -13,7 +13,7 @@ for undeclared C variables, inferred helpers, and retained source defects.
 | `Int2_ManFrameInit` | `TestFrameUnrollingTracksLatestInput`, `TestFrameInitMatchesSequentialSimulation`, `TestSourceCopiesNativeXorAsAnd`, `TestZeroFrameBuildersReturnInitialState` |
 | `Int2_ManSetupBmcSolver` | `TestSetupBmcSolverConstrainsFinalState` |
 | `Int2_ManCheckFrames`, `Int2_ManWriteFrames`, `Int2_ManCreateFrames` | `TestCreateFramesPreservesComplementedAndFanins`, `TestCreateFramesMapsConstantAtEveryFrame`, `TestCreateFramesAllocatesDirectInputSATVariable`, `TestCreateFramesCanStartAtLaterFrame`, `TestSourceCopiesNativeXorAsAnd`. The C builder is incomplete; these tests establish Go behavior only. |
-| `Int2_ManCheckBmc` | `TestCreateFramesAllocatesDirectInputSATVariable`, `TestCheckBmcHandlesUnconstructedOutputs`, `TestCheckBmcFindsFailureAfterUnconstructedOutput`, `TestCheckBmcCubeAssumptionsMatchSourceStatus` |
+| `Int2_ManCheckBmc` | `TestCreateFramesAllocatesDirectInputSATVariable`, `TestCheckBmcHandlesUnconstructedOutputs`, `TestCheckBmcFindsFailureAfterUnconstructedOutput`, `TestCheckBmcCubeAssumptionsMatchSourceStatus`, `TestCheckBmcReturnsUndecidedOnExpiredDeadline` |
 | `Int2_ManUnroll` | `TestFrameUnrollingTracksLatestInput`, `TestZeroFrameBuildersReturnInitialState`. The C function uses undeclared `pAig`. |
 | `Int2_ManPreparePrefix` | `TestPreparePrefixAtFrameZeroConstrainsInitialState`. Its C implementation contains unresolved identifiers and CNF ownership issues. |
 | `Int2_ManPrepareSuffix` | `TestPrepareSuffixReportsUnsupported`, `TestPrepareSuffixUnsupportedWithOptionalOutputs` check only the unsupported result. |
@@ -28,7 +28,8 @@ for undeclared C variables, inferred helpers, and retained source defects.
 | SAT bridge AND, buffer, model and final core | `TestSATBridgeAndGateAllInputPolarities`, `TestSATBridgeBufferComplement`, `TestSATBridgeRejectsInconsistentGateClauses`, `TestSATBridgeModelValueUsesBooleanConvention`, `TestSATBridgeFinalReturnsNegatedAssumptions` |
 
 The SAT bridge tests exercise an exhausted global propagation budget and
-contradictory gate clauses. Failure paths dependent on JF CNF derivation and
+contradictory gate clauses; BMC tests cover UNKNOWN from an expired deadline for
+both property and cube checks, followed by a successful retry. Failure paths dependent on JF CNF derivation and
 all SAT timeout modes are not exhaustively exercised. In particular, reaching the bodies of the
 unsupported suffix/preimage stubs does not validate those algorithms. The
 zero-frame behavior and incremental builder have no executable C oracle.
