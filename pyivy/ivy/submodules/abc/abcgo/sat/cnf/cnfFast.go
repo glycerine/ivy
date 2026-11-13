@@ -167,8 +167,11 @@ func Cnf_CutDeriveTruth(graph *Aig_Man_t, leaves, nodes *Vec_Ptr_t) uint64 {
 }
 
 func Cnf_ObjGetLit(mapping *Vec_Int_t, object *Aig_Obj_t, complemented int32) int32 {
-	if mapping == nil || object == nil {
+	if object == nil {
 		return -1
+	}
+	if mapping == nil {
+		return int32((*object).NodeID())<<1 | complemented&1
 	}
 	variable := vec.Vec_IntEntry(mapping, int((*object).NodeID()))
 	if variable < 0 {
@@ -177,13 +180,68 @@ func Cnf_ObjGetLit(mapping *Vec_Int_t, object *Aig_Obj_t, complemented int32) in
 	return variable<<1 | complemented&1
 }
 
+// largeAndLeaves identifies the supergate case used by ABC for cuts larger
+// than six leaves. A complemented internal edge is not an AND supergate.
+func largeAndLeaves(graph *Aig_Man_t, root aig.Edge, leaves *Vec_Ptr_t) []aig.Edge {
+	boundary := make(map[int]bool)
+	for _, value := range vec.Vec_PtrArray(leaves) {
+		edge, ok := value.(aig.Edge)
+		if !ok {
+			panic("cnf: invalid cut leaf")
+		}
+		boundary[edge.NodeID()] = true
+	}
+	var result []aig.Edge
+	seen := make(map[aig.Edge]bool)
+	var visit func(aig.Edge)
+	visit = func(edge aig.Edge) {
+		if boundary[edge.NodeID()] {
+			if !seen[edge] {
+				result = append(result, edge)
+				seen[edge] = true
+			}
+			return
+		}
+		node := graph.Node(edge)
+		if edge.Complemented() || node.Kind != aig.And {
+			panic("cnf: large cut is not an AND supergate")
+		}
+		visit(node.Fanins[0])
+		visit(node.Fanins[1])
+	}
+	visit(root)
+	return result
+}
+
 // Cnf_ComputeClauses emits truth-table clauses for a root and its cut leaves.
 func Cnf_ComputeClauses(graph *Aig_Man_t, root *Aig_Obj_t, leaves, nodes *Vec_Ptr_t, mapping, _ *Vec_Int_t, clauses *Vec_Int_t) {
 	if graph == nil || root == nil {
 		return
 	}
 	if vec.Vec_PtrSize(leaves) > 6 {
-		panic("cnf: truth-table clause generation supports at most six leaves")
+		inputs := largeAndLeaves(graph, *root, leaves)
+		out := Cnf_ObjGetLit(mapping, root, 0)
+		vec.Vec_IntPush(clauses, 0)
+		vec.Vec_IntPush(clauses, out)
+		for _, edge := range inputs {
+			var sign int32
+			if edge.Complemented() {
+				sign = 1
+			}
+			lit := Cnf_ObjGetLit(mapping, &edge, sign)
+			vec.Vec_IntPush(clauses, lit^1)
+		}
+		for _, edge := range inputs {
+			var sign int32
+			if edge.Complemented() {
+				sign = 1
+			}
+			lit := Cnf_ObjGetLit(mapping, &edge, sign)
+			vec.Vec_IntPush(clauses, 0)
+			vec.Vec_IntPush(clauses, out^1)
+			vec.Vec_IntPush(clauses, lit)
+		}
+		return
 	}
 	truth := Cnf_CutDeriveTruth(graph, leaves, nodes)
 	out := Cnf_ObjGetLit(mapping, root, 0)
@@ -201,7 +259,11 @@ func Cnf_ComputeClauses(graph *Aig_Man_t, root *Aig_Obj_t, leaves, nodes *Vec_Pt
 			if !ok {
 				continue
 			}
-			lit := Cnf_ObjGetLit(mapping, &edge, int32(assignment>>i&1))
+			sign := int32(assignment >> i & 1)
+			if edge.Complemented() {
+				sign ^= 1
+			}
+			lit := Cnf_ObjGetLit(mapping, &edge, sign)
 			vec.Vec_IntPush(clauses, lit)
 		}
 	}
@@ -226,7 +288,14 @@ func Cnf_CutCountClauses(graph *Aig_Man_t, leaves, nodes *Vec_Ptr_t, _ *Vec_Int_
 	}
 	n := vec.Vec_PtrSize(leaves)
 	if n > 6 {
-		panic("cnf: truth-table clause generation supports at most six leaves")
+		if vec.Vec_PtrSize(nodes) == 0 {
+			panic("cnf: large cut has no root")
+		}
+		root, ok := vec.Vec_PtrEntryLast(nodes).(aig.Edge)
+		if !ok {
+			panic("cnf: invalid cut root")
+		}
+		return int32(len(largeAndLeaves(graph, root, leaves)) + 1)
 	}
 	return int32(1 << n)
 }

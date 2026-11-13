@@ -45,3 +45,53 @@ func TestCutClauseCountMatchesEmittedClauses(t *testing.T) {
 		t.Fatalf("count = %d, emitted = %d", got, count)
 	}
 }
+
+func TestLargeAndCutClauses(t *testing.T) {
+	g := aig.NewGraph()
+	leaves, nodes := vec.Vec_PtrAlloc(7), vec.Vec_PtrAlloc(1)
+	var inputs []aig.Edge
+	for i := 0; i < 7; i++ {
+		e := g.NewInput()
+		inputs = append(inputs, e)
+		vec.Vec_PtrPush(leaves, e)
+	}
+	root := inputs[0]
+	for i, e := range inputs[1:] {
+		if i == 2 {
+			e = e.Not()
+		}
+		root = g.AND(root, e)
+	}
+	vec.Vec_PtrPush(nodes, root)
+	clauses := vec.Vec_IntAlloc(0)
+	Cnf_ComputeClauses(g, &root, leaves, nodes, nil, nil, clauses)
+	if got := Cnf_CutCountClauses(g, leaves, nodes, nil); got != 8 {
+		t.Fatalf("clause count %d", got)
+	}
+	for assignment := 0; assignment < 256; assignment++ {
+		valid, clause, started := true, false, false
+		for _, lit := range vec.Vec_IntArray(clauses) {
+			if lit == 0 {
+				if started && !clause {
+					valid = false
+				}
+				clause, started = false, true
+				continue
+			}
+			var value bool
+			if int(lit>>1) == root.NodeID() {
+				value = assignment&128 != 0
+			} else {
+				value = assignment&(1<<(int(lit>>1)-1)) != 0
+			}
+			if value != (lit&1 != 0) {
+				clause = true
+			}
+		}
+		valid = valid && started && clause
+		wantOutput := assignment&0x7f == 0x77
+		if valid != ((assignment&128 != 0) == wantOutput) {
+			t.Fatalf("assignment %08b accepted=%v", assignment, valid)
+		}
+	}
+}
