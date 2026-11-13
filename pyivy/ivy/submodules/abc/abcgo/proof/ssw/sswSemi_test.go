@@ -8,13 +8,22 @@ import (
 )
 
 func TestSemiFormalManagerRetainsSourceAssertion(t *testing.T) {
+	g := aig.NewGraph()
+	input, state := g.NewInput(), g.NewInput()
+	g.AddOutput(state)
+	g.AddOutput(input)
+	aig.Aig_ManSetRegNum(g, 1)
+	var pars Ssw_Pars_t
+	Ssw_ManSetDefaultParams(&pars)
+	manager := Ssw_ManCreate(g, &pars)
+	defer Ssw_ManStop(manager)
 	defer func() {
 		r := recover()
 		if r == nil || !strings.Contains(r.(string), "unfinished") {
 			t.Fatalf("unexpected panic %v", r)
 		}
 	}()
-	Ssw_SemManStart(nil, 100, 0)
+	Ssw_SemManStart(manager, 100, 0)
 }
 func TestSemiFormalPatternCapture(t *testing.T) {
 	g := aig.NewGraph()
