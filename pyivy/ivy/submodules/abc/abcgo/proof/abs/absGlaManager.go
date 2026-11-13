@@ -18,6 +18,7 @@ type Ga2_Man_t struct {
 	pRnm                                                        *Rnm_Man_t
 	vId2Lit                                                     []*vec.Vec_Int_t
 	pSat                                                        *bsat.LabeledSolver2
+	proofActive                                                 bool
 	nSatVars, nCexes, nObjAdded, nPdrCalls                      int32
 	pTable                                                      []int32
 	nTable, nHashHit, nHashMiss, nHashOver                      int32

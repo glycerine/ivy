@@ -185,34 +185,6 @@ var spStatic_Saig_ManBmcHashKey_s_Primes [5]int32 = [5]int32{ 12582917, 25165843
   SeeAlso     []
 
 ***********************************************************************/
-func Ga2_ManAddToAbs(p *Ga2_Man_t, vToAdd *Vec_Int_t) {
-    var vLeaves *Vec_Int_t;
-    var pObj, pFanin *Gia_Obj_t;
-    var f, i, k int32;
-    // add abstraction objects
-    Gia_ManForEachObjVec( vToAdd, p.pGia, pObj, i )
-    {
-        Ga2_ManSetupNode( p, pObj, 1 );
-        if p.pSat.pPrf2 {
-            Vec_IntWriteEntry( p.vProofIds, Gia_ObjId(p.pGia, pObj), p.nProofIds++ ); }
-    }
-    // add PPI objects
-    Gia_ManForEachObjVec( vToAdd, p.pGia, pObj, i )
-    {
-        vLeaves = Ga2_ObjLeaves( p.pGia, pObj );
-        Gia_ManForEachObjVec( vLeaves, p.pGia, pFanin, k )
-            if ( Ga2_ObjId( p, pFanin ) == -1 )
-                Ga2_ManSetupNode( p, pFanin, 0 );
-    }
-    // add new clauses to the timeframes
-    for  f = 0; f <= p.pPars.iFrame; f++  {
-        Vec_IntFillExtra( Ga2_MapFrameMap(p, f), Vec_IntSize(p.vValues), -1 );
-        Gia_ManForEachObjVec( vToAdd, p.pGia, pObj, i )
-            Ga2_ManAddToAbsOneStatic( p, pObj, f, 1 );
-    }
-//    sat_solver2_simplify( p->pSat );
-}
-
 /**Function*************************************************************
 
   Synopsis    []
