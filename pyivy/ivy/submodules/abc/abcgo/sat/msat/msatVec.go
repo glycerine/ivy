@@ -106,9 +106,7 @@ func Msat_IntVecPushUnique(p *Msat_IntVec_t, value int) int {
 	return 0
 }
 func Msat_IntVecPushUniqueOrder(p *Msat_IntVec_t, value, increase int) {
-	if Msat_IntVecPushUnique(p, value) != 0 {
-		return
-	}
+	Msat_IntVecPushUnique(p, value)
 	for i := len(p.data) - 1; i > 0; i-- {
 		if increase != 0 && p.data[i] >= p.data[i-1] || increase == 0 && p.data[i] <= p.data[i-1] {
 			break
