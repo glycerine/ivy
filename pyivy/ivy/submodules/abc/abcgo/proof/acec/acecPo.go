@@ -241,9 +241,7 @@ func (p *polynomial) replace(id int32, positive, negative int32, literalMode boo
 			}
 			continue
 		}
-		if positive == -2 {
-			continue
-		} // the original object-based XOR branch is empty
+
 		first, second := positive>>1, negative>>1
 		switch {
 		case positive&1 == 0 && negative&1 == 0:
@@ -262,6 +260,48 @@ func (p *polynomial) replace(id int32, positive, negative int32, literalMode boo
 		}
 	}
 }
+
+// replaceXor expands a Boolean XOR as a+b-2ab, accounting for input
+// complements in object mode. Source acecPo.c left this case empty.
+func (p *polynomial) replaceXor(id, left, right int32, literalMode bool) {
+	count := len(p.terms)
+	for i := 0; i < count; i++ {
+		term := p.terms[i]
+		if len(term.coef) == 0 {
+			continue
+		}
+		at := sort.Search(len(term.vars), func(j int) bool { return term.vars[j] >= id })
+		if at == len(term.vars) || term.vars[at] != id {
+			continue
+		}
+		vars := append([]int32(nil), term.vars...)
+		vars = append(vars[:at], vars[at+1:]...)
+		coef := append([]int32(nil), term.coef...)
+		term.coef = nil
+		if !literalMode {
+			if (left^right)&1 != 0 {
+				p.add(vars, coef)
+				coef = negCoefficients(coef)
+			}
+			left >>= 1
+			right >>= 1
+		}
+		p.add(insertUnique(append([]int32(nil), vars...), left), coef)
+		p.add(insertUnique(append([]int32(nil), vars...), right), coef)
+		twice := make([]int32, len(coef))
+		for j, c := range coef {
+			if c > 0 {
+				twice[j] = -(c + 1)
+			} else {
+				twice[j] = -c + 1
+			}
+		}
+		both := insertUnique(append([]int32(nil), vars...), left)
+		both = insertUnique(both, right)
+		p.add(both, twice)
+	}
+}
+
 func negCoefficients(in []int32) []int32 {
 	out := make([]int32, len(in))
 	for i, v := range in {
@@ -363,7 +403,11 @@ func Gia_PolynBuildNew2(graph *gia.Gia_Man_t, roots *vec.Vec_Int_t, extra int32,
 		id := values[i]
 		obj := gia.Gia_ManObj(graph, id)
 		p.replace(2*id+1, -1, 2*id, true)
-		p.replace(2*id, gia.Gia_ObjFaninLit0(obj, id), gia.Gia_ObjFaninLit1(obj, id), true)
+		if gia.Gia_ObjIsXor(obj) != 0 {
+			p.replaceXor(2*id, gia.Gia_ObjFaninLit0(obj, id), gia.Gia_ObjFaninLit1(obj, id), true)
+		} else {
+			p.replace(2*id, gia.Gia_ObjFaninLit0(obj, id), gia.Gia_ObjFaninLit1(obj, id), true)
+		}
 	}
 	for _, id := range vec.Vec_IntArray(leaves) {
 		p.replace(2*id+1, -1, 2*id, true)
@@ -429,7 +473,7 @@ func Gia_PolynBuildNew(graph *gia.Gia_Man_t, sign *vec.Vec_Wec_t, roots *vec.Vec
 		id := values[i]
 		obj := gia.Gia_ManObj(graph, id)
 		if gia.Gia_ObjIsXor(obj) != 0 {
-			p.replace(id, -2, 0, false)
+			p.replaceXor(id, gia.Gia_ObjFaninLit0(obj, id), gia.Gia_ObjFaninLit1(obj, id), false)
 		} else {
 			p.replace(id, gia.Gia_ObjFaninLit0(obj, id), gia.Gia_ObjFaninLit1(obj, id), false)
 		}

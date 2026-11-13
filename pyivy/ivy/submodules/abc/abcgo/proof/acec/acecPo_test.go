@@ -128,3 +128,32 @@ func TestPolynomialWeightedOutputsAndCancellation(t *testing.T) {
 		}
 	}
 }
+func TestPolynomialBothBuildersRealXorPolarities(t *testing.T) {
+	for flags := 0; flags < 8; flags++ {
+		g := gia.Gia_ManStart(16)
+		a, b := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
+		root := gia.Gia_ManAppendXorReal(g, a^int32(flags&1), b^int32(flags>>1&1)) ^ int32(flags>>2&1)
+		roots := vec.Vec_IntAllocArrayCopy([]int32{root}, 1)
+		leaves := vec.Vec_IntAllocArrayCopy([]int32{a >> 1, b >> 1}, 2)
+		nodes := vec.Vec_IntAllocArrayCopy([]int32{root >> 1}, 1)
+		obj := Gia_PolynBuildNew(g, nil, roots, 0, leaves, nodes, 0, 0, 0)
+		lit := Gia_PolynBuildNew2(g, roots, 0, leaves, nodes, 0, 0, 0)
+		for mask := 0; mask < 4; mask++ {
+			x, y := mask&1 != 0, mask&2 != 0
+			want := (x != (flags&1 != 0)) != (y != (flags&2 != 0))
+			if flags&4 != 0 {
+				want = !want
+			}
+			expected := int64(0)
+			if want {
+				expected = 1
+			}
+			if got := polynomialValue(obj, map[int32]bool{a >> 1: x, b >> 1: y}); got != expected {
+				t.Fatalf("object flags %d mask %d got %d want %d", flags, mask, got, expected)
+			}
+			if got := polynomialValue(lit, map[int32]bool{a: x, b: y}); got != expected {
+				t.Fatalf("literal flags %d mask %d got %d want %d", flags, mask, got, expected)
+			}
+		}
+	}
+}
