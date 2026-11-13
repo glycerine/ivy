@@ -66,7 +66,9 @@ func lcrStartCopies(src *aig.Graph) (*aig.Graph, map[int]aig.Edge) {
 	dst.Name, dst.Spec = src.Name, src.Spec
 	copies := map[int]aig.Edge{0: dst.Const1()}
 	for _, in := range src.Inputs() {
-		copies[in.NodeID()] = dst.NewInput()
+		image := dst.NewInput()
+		aig.Aig_ObjSetLevel(dst, image, int32(src.Node(in).Level))
+		copies[in.NodeID()] = image
 	}
 	return dst, copies
 }

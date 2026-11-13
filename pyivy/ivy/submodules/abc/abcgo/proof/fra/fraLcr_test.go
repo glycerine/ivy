@@ -118,3 +118,26 @@ func TestLatchPartitionTreatsNativeExorAsAnd(t *testing.T) {
 		}
 	}
 }
+
+// Both FRA LCR constructors call ABC's Aig_ManStartFrom, which preserves
+// each copied CI's level even when that input is unused by the partition.
+func TestLatchPartitionPreservesInputLevels(t *testing.T) {
+	g := aig.NewGraph()
+	x, state := g.NewInput(), g.NewInput()
+	aig.Aig_ObjSetLevel(g, x, 3)
+	aig.Aig_ObjSetLevel(g, state, 7)
+	g.AddOutput(x)
+	g.AddOutput(state)
+	aig.Aig_ManSetRegNum(g, 1)
+	p := Lcr_ManAlloc(g)
+	p.classes = Fra_ClassesStart(g)
+	for name, part := range map[string]*aig.Graph{
+		"partitioning": Fra_LcrDeriveAigForPartitioning(p),
+		"partition":    Fra_LcrCreatePart(p, []int32{0}),
+	} {
+		inputs := part.Inputs()
+		if len(inputs) < 2 || part.Node(inputs[0]).Level != 3 || part.Node(inputs[1]).Level != 7 {
+			t.Fatalf("%s did not preserve input levels", name)
+		}
+	}
+}
