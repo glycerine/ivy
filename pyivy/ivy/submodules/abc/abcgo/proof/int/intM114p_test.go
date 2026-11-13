@@ -169,6 +169,40 @@ func TestMiniSatPartitionAssemblyStopsAtContradictoryBClause(t *testing.T) {
 	}
 }
 
+func TestMiniSatPartitionAssemblyRejectsEachAClause(t *testing.T) {
+	inter := aig.NewGraph()
+	x := inter.NewInput()
+	inter.AddOutput(x.Not())
+	trans := aig.NewGraph()
+	state := trans.NewInput()
+	trans.AddOutput(state)
+	aig.Aig_ManSetRegNum(trans, 1)
+	frames := aig.NewGraph()
+	next := frames.NewInput()
+	frames.AddOutput(next)
+	ci, ct, cf := cnf.Cnf_Derive(inter, 0), cnf.Cnf_Derive(trans, 1), cnf.Cnf_Derive(frames, 0)
+	baseline := &fixtureM114p{}
+	parts, _, err := Inter_ManDeriveSatSolverM114p(baseline, inter, ci, trans, ct, frames, cf)
+	if err != nil {
+		t.Fatal(err)
+	}
+	iv, tv := append([]int32(nil), ci.VarNums...), append([]int32(nil), ct.VarNums...)
+	ic, tc := copyClauseSlices(ci.Clauses), copyClauseSlices(ct.Clauses)
+	for i, part := range parts {
+		if part != 0 {
+			break
+		}
+		s := &rejectingM114p{rejectAt: i + 1}
+		_, _, err := Inter_ManDeriveSatSolverM114p(s, inter, ci, trans, ct, frames, cf)
+		if err == nil || len(s.added) != i+1 {
+			t.Fatalf("reject %d: clauses %d error %v", i, len(s.added), err)
+		}
+		if !reflect.DeepEqual(iv, ci.VarNums) || !reflect.DeepEqual(tv, ct.VarNums) || !reflect.DeepEqual(ic, ci.Clauses) || !reflect.DeepEqual(tc, ct.Clauses) {
+			t.Fatalf("reject %d left CNF lifted", i)
+		}
+	}
+}
+
 func TestMiniSatMcMillanPreservesUnusedSharedInputs(t *testing.T) {
 	// The shared variable is irrelevant to these partition-local clauses.
 	proof := &fixtureM114p{roots: [][]int32{{0}, {1}}, chains: []M114pChain{{Clauses: []int32{0, 1}, Pivots: []int32{0}}}}

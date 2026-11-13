@@ -10,7 +10,48 @@ import (
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/aig/ioa"
 	"github.com/glycerine/abcgo/misc/vec"
+	"github.com/glycerine/abcgo/sat/bsat"
 )
+
+func TestVerifyInterpolantPublicWrappers(t *testing.T) {
+	proof := bsat.Sto_ManAlloc()
+	bsat.Sto_ManAddClause(proof, []int32{0})
+	bsat.Sto_ManMarkClausesA(proof)
+	bsat.Sto_ManAddClause(proof, []int32{1})
+	bsat.Sto_ManMarkRoots(proof)
+	bsat.Sto_ManAddClause(proof, nil)
+	for _, variant := range []int{1, 2} {
+		r, w, err := os.Pipe()
+		if err != nil {
+			t.Fatal(err)
+		}
+		old := os.Stdout
+		os.Stdout = w
+		func() {
+			defer func() { os.Stdout = old; w.Close() }()
+			if variant == 1 {
+				m := bsat.Inta_ManAlloc()
+				inter := bsat.Inta_ManInterpolate(m, proof, 0, []int32{0}, 0)
+				if inter == nil {
+					t.Fatalf("Inta interpolation: %v", bsat.Inta_ManError(m))
+				}
+				Inter_ManVerifyInterpolant1(m, proof, inter)
+			} else {
+				m := bsat.Intb_ManAlloc()
+				inter := bsat.Intb_ManInterpolate(m, proof, []int32{0}, 0)
+				if inter == nil {
+					t.Fatalf("Intb interpolation: %v", bsat.Intb_ManError(m))
+				}
+				Inter_ManVerifyInterpolant2(m, proof, inter)
+			}
+		}()
+		out, err := io.ReadAll(r)
+		r.Close()
+		if err != nil || !strings.Contains(string(out), "is correct.") {
+			t.Fatalf("variant %d output %q error %v", variant, out, err)
+		}
+	}
+}
 
 func TestVerifyInterpolantContainmentDiagnostics(t *testing.T) {
 	graph := func(invert bool) *aig.Graph {
