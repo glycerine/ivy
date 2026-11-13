@@ -16,7 +16,8 @@ func Acec_CollectXorTops(p *Gia_Man_t) *Vec_Int_t {
 		if gia.Gia_ObjRecognizeExor(o, &a, &b) == 0 {
 			if first {
 				fmt.Println("XORs do not form a continuous sequence")
-				return nil
+				roots = nil
+				break
 			}
 			continue
 		}
@@ -26,7 +27,8 @@ func Acec_CollectXorTops(p *Gia_Man_t) *Vec_Int_t {
 		xb := gia.Gia_ObjRecognizeExor(gia.Gia_Regular(b), &b0, &b1)
 		if xa == xb {
 			fmt.Println("Both inputs of top level XOR have XOR/non-XOR")
-			return nil
+			roots = nil
+			break
 		}
 		vec.Vec_IntPush(roots, gia.Gia_ObjId(p, o))
 		if xb != 0 {

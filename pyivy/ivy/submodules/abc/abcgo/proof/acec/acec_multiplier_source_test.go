@@ -124,15 +124,19 @@ func TestSourceMultiplier3Acec(t *testing.T) {
 	}
 }
 
-func TestSourceMultiplier4Truth(t *testing.T) {
+func TestSourceMultiplier4Truth(t *testing.T) { testSourceMultiplierTruth(t, 4) }
+func TestSourceMultiplier5Truth(t *testing.T) { testSourceMultiplierTruth(t, 5) }
+
+func testSourceMultiplierTruth(t *testing.T, width int) {
+	t.Helper()
 	for _, swap := range []bool{false, true} {
-		p := sourceMultiplier(4, swap, -1)
-		for a := 0; a < 16; a++ {
-			for b := 0; b < 16; b++ {
-				in := make([]bool, 8)
-				for i := 0; i < 4; i++ {
+		p := sourceMultiplier(width, swap, -1)
+		for a := 0; a < 1<<width; a++ {
+			for b := 0; b < 1<<width; b++ {
+				in := make([]bool, 2*width)
+				for i := 0; i < width; i++ {
 					in[i] = a&(1<<i) != 0
-					in[4+i] = b&(1<<i) != 0
+					in[width+i] = b&(1<<i) != 0
 				}
 				out, err := p.Evaluate(in)
 				if err != nil {
@@ -148,15 +152,19 @@ func TestSourceMultiplier4Truth(t *testing.T) {
 	}
 }
 
-// A mismatch in output 6 exposes the source's discarded-output behavior;
+// A mismatch in the second-to-last output exposes the source's discarded-output behavior;
 // a mismatch in output 0 instead supplies a replayable witness.
-func TestSourceMultiplier4Acec(t *testing.T) {
+func TestSourceMultiplier4Acec(t *testing.T) { testSourceMultiplierAcec(t, 4) }
+func TestSourceMultiplier5Acec(t *testing.T) { testSourceMultiplierAcec(t, 5) }
+
+func testSourceMultiplierAcec(t *testing.T, width int) {
+	t.Helper()
 	for _, tc := range []struct {
 		flip   int
 		status int32
-	}{{-1, 1}, {0, 0}, {6, 1}} {
+	}{{-1, 1}, {0, 0}, {width, 0}, {2*width - 2, 1}} {
 		t.Run(fmt.Sprintf("flip_%d", tc.flip), func(t *testing.T) {
-			a, b := sourceMultiplier(4, false, -1), sourceMultiplier(4, true, tc.flip)
+			a, b := sourceMultiplier(width, false, -1), sourceMultiplier(width, true, tc.flip)
 			var pars Acec_ParCec_t
 			Acec_ManCecSetDefaultParams(&pars)
 			if got := Acec_Solve(a, b, &pars); got != tc.status {
@@ -182,21 +190,21 @@ func TestSourceMultiplier4Acec(t *testing.T) {
 				if cex == nil {
 					t.Fatal("missing Go witness")
 				}
-				in := make([]bool, 8)
+				in := make([]bool, 2*width)
 				for i := range in {
 					in[i] = util.Abc_InfoHasBit(cex.PData, int32(i))
 				}
 				checkWitness(in)
 			}
-			if tc.flip == 6 {
-				x, _ := a.Evaluate(make([]bool, 8))
-				y, _ := b.Evaluate(make([]bool, 8))
-				if x[6] == y[6] {
+			if tc.flip == 2*width-2 {
+				x, _ := a.Evaluate(make([]bool, 2*width))
+				y, _ := b.Evaluate(make([]bool, 2*width))
+				if x[tc.flip] == y[tc.flip] {
 					t.Fatal("discarded output should differ")
 				}
 			}
 			if binary := os.Getenv("ACEC_MULTIPLIER_ORACLE"); binary != "" {
-				output, err := exec.Command(binary, strconv.Itoa(tc.flip), "4").CombinedOutput()
+				output, err := exec.Command(binary, strconv.Itoa(tc.flip), strconv.Itoa(width)).CombinedOutput()
 				if err != nil {
 					t.Fatalf("C oracle: %v: %s", err, output)
 				}
@@ -209,10 +217,10 @@ func TestSourceMultiplier4Acec(t *testing.T) {
 						t.Fatalf("missing C witness: %s", output)
 					}
 					line, _, _ = strings.Cut(line, "\n")
-					if len(line) != 8 {
+					if len(line) != 2*width {
 						t.Fatalf("malformed C witness %q", line)
 					}
-					in := make([]bool, 8)
+					in := make([]bool, 2*width)
 					for i, c := range line {
 						if c != '0' && c != '1' {
 							t.Fatalf("malformed C witness %q", line)

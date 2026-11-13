@@ -4,7 +4,7 @@
 #include "proof/acec/acec.h"
 extern void Acec_InsertFadd(Gia_Man_t *, int *, int *);
 static Gia_Man_t *fixture(int width, int swap, int flip) {
- Gia_Man_t *p=Gia_ManStart(400); int a[4],b[4],cols[8][16]={{0}},sizes[8]={0};
+ Gia_Man_t *p=Gia_ManStart(400); int a[5],b[5],cols[10][32]={{0}},sizes[10]={0};
  for(int i=0;i<width;i++)a[i]=Gia_ManAppendCi(p);
  for(int i=0;i<width;i++)b[i]=Gia_ManAppendCi(p);
  for(int i=0;i<width;i++)for(int j=0;j<width;j++){
@@ -21,7 +21,9 @@ static Gia_Man_t *fixture(int width, int swap, int flip) {
  return p;
 }
 int main(int argc,char **argv) {
- int flip=atoi(argv[1]), width=argc>2?atoi(argv[2]):3; Gia_Man_t *a=fixture(width,0,-1),*b=fixture(width,1,flip);Acec_ParCec_t pars;
+ int flip=atoi(argv[1]), width=argc>2?atoi(argv[2]):3;
+ if (width < 1 || width > 5) return 2;
+ Gia_Man_t *a=fixture(width,0,-1),*b=fixture(width,1,flip);Acec_ParCec_t pars;
  Acec_ManCecSetDefaultParams(&pars); int status=Acec_Solve(a,b,&pars);printf("SOURCE_STATUS=%d\n",status);
  if(a->pCexComb) {printf("SOURCE_WITNESS=");for(int i=0;i<2*width;i++)printf("%d",Abc_InfoHasBit(a->pCexComb->pData,i));puts("");}
  fflush(stdout);return 0;

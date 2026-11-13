@@ -49,6 +49,10 @@ with this filename to regenerate it.
 three-input truth table. Run it with no arguments and with one argument to
 exercise both an empty and a pre-populated destination vector.
 
+`acec_phase.c` and `acec_phase_two.c` exercise phase propagation on a
+two-adder chain and two disconnected full adders. The Go tests compare the
+tree count and the reported input/output phases with compiled ABC.
+
 `acec_missing_box.c` invokes normalization on a graph with no arithmetic box;
 the C implementation dereferences the missing box. `acec_large_coefficients.c`
 checks signed exponent carries and cancellations without overflowing C `int`.
@@ -69,7 +73,7 @@ slots, including their values on failure. Intermediate AND calls are sequenced
 explicitly to avoid C's unspecified argument evaluation order changing node
 IDs. The Go regression builds the same GIA operations and compares every row.
 
-`acec_multiplier_oracle.c` compares deterministic 3×3 and 4×4 multiplier graphs
+`acec_multiplier_oracle.c` compares deterministic 3×3, 4×4, and 5×5 multiplier graphs
 through C `Acec_Solve`. For 3×3, invoke it with `-1` (equivalent), `0` (invert output
 0), or `4` (invert output 4). Freshly compiled `src/proof/acec/*.c` routines,
 linked with the remaining ABC object files, return statuses `1`, `0`, and `1`
@@ -86,3 +90,10 @@ The last case is again the source's discarded-output false equivalence. The Go
 test checks all 256 operand pairs and replays both C and Go witnesses against
 the original circuit pair. Regenerate the oracle after changing its C fixture;
 the earlier 3×3-only binary does not accept the width argument.
+
+With width argument `5`, flip arguments `-1`, `0`, `5`, and `8` yield C
+statuses `1`, `0`, `0`, and `1`. Both mismatch cases return the all-zero
+10-input witness; the output-8 case reproduces the documented false
+equivalence. The Go test checks all 1,024 operand pairs, both operand orders,
+and replays source and Go witnesses. Recompile the C fixture before running
+the 5×5 differential; earlier binaries accept at most four-bit operands.

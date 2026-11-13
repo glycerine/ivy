@@ -3,13 +3,14 @@
 The C implementation in `src/proof/acec` has been translated to Go. The
 package builds, and the full race tests and `go vet ./proof/acec` pass.
 Differential cases record source-inherited false-equivalence results described
-below alongside exhaustive evaluation of the original circuits. An earlier
+below alongside exhaustive evaluation of the original circuits. A fresh
 `go test -count=1 -cover ./proof/acec`
-reported 70.1% statement coverage. This number includes source diagnostic
+reported 76.6% statement coverage. This number includes source diagnostic
 routines and does not establish verification correctness by itself.
 
 The review and tests exercise half/full-adder cut recognition over input
-polarities; carry-tree discovery, phase propagation, and reconstruction;
+polarities; carry-tree discovery, phase propagation, and reconstruction,
+including compiled-C comparisons for one and two disconnected trees;
 BDD-independent polynomial expansion on AND, native XOR, and native MUX
 networks; NPN classes and LUT statistics; timing-box construction and
 collapse; and end-to-end arithmetic equivalence. The end-to-end checks use
@@ -53,6 +54,15 @@ Intentional conservative paths and limits:
 - The original CLA carry rewrite requires a unique polarity along every path to
   each XOR input. Reconvergent XORs commonly violate that assumption. As in C,
   detecting conflicting polarities violates the rewrite's precondition.
+- `Acec_DetectXorBuildNew` initializes its mirror map with zeros in C, so
+  even an empty root list can replace ordinary outputs with constant zero.
+  The Go port retains this source behavior; it must not be assumed to preserve
+  the original circuit.
+- `Acec_CollectXorTops` rejects a plain two-input XOR because neither input
+  is itself an XOR. It also rejects a discontinuous sequence of XOR outputs.
+  In either case C clears the root vector and then dereferences it while
+  printing; the Go port likewise panics. The compiled C two-input fixture
+  exits with a segmentation fault.
 - The priority-based polynomial expansion retains the C routine's explicit
   restriction against native MUX nodes. The two polynomial builders in
   `acecPo.go` do support native MUXes.
