@@ -1,1892 +1,344 @@
 package fra
 
+// Clause induction orchestration from fraClaus.c.
 import (
 	"fmt"
-	"time"
+	"math/bits"
+	"path/filepath"
+	"strings"
+
+	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/aig/ioa"
+	"github.com/glycerine/abcgo/misc/vec"
+	"github.com/glycerine/abcgo/sat/bsat"
+	"github.com/glycerine/abcgo/sat/cnf"
 )
 
-/**CFile****************************************************************
-
-  FileName    [fraClaus.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [New FRAIG package.]
-
-  Synopsis    [Induction with clause strengthening.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 30, 2007.]
-
-  Revision    [$Id: fraClau.c,v 1.00 2007/06/30 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "fra.h"
-//#include "sat/cnf/cnf.h"
-//#include "sat/bsat/satSolver.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-      
-type Clu_Man_t struct {
-    // parameters
-    nFrames              int32;        // the K of the K-step induction
-    nPref              int32;          // the number of timeframes to skip  
-    nClausesMax              int32;    // the max number of 4-clauses to consider
-    nLutSize              int32;       // the max cut size
-    nLevels              int32;        // the number of levels for cut computation
-    nCutsMax              int32;       // the maximum number of cuts to compute at a node
-    nBatches              int32;       // the number of clause batches to use
-    fStepUp              int32;        // increase cut size for each batch
-    fTarget              int32;        // tries to prove the property
-    fVerbose              int32;       
-    fVeryVerbose              int32;
-    // internal parameters
-    nSimWords              int32;      // the number of simulation words
-    nSimWordsPref              int32;  // the number of simulation words in the prefix
-    nSimFrames              int32;     // the number of frames to simulate 
-    nBTLimit              int32;       // the largest number of backtracks (0 = infinite)
-    // the network 
-    pAig       *Aig_Man_t;
-    // SAT solvers
-    pSatMain      *sat_solver;
-    pSatBmc      *sat_solver;
-    // CNF for the test solver
-    pCnf       *Cnf_Dat_t;
-    fFail              int32;
-    fFiltering              int32; 
-    fNothingNew              int32;
-    // clauses
-    vLits       *Vec_Int_t;
-    vClauses       *Vec_Int_t;
-    vCosts       *Vec_Int_t;
-    nClauses              int32;
-    nCuts              int32;
-    nOneHots              int32;
-    nOneHotsProven              int32;
-    // clauses proven
-    vLitsProven       *Vec_Int_t;
-    vClausesProven       *Vec_Int_t;
-    // counter-examples
-    vCexes       *Vec_Ptr_t;
-    nCexes              int32;
-    nCexesAlloc              int32;
+func Fra_ClausAlloc(graph *aig.Graph, frames, prefix, maxClauses, cutSize, levels, maxCuts, batches, step, target, verbose, veryVerbose int32) *Clu_Man_t {
+	return &Clu_Man_t{pAig: graph, nFrames: frames, nPref: prefix, nClausesMax: maxClauses, nLutSize: cutSize, nLevels: levels, nCutsMax: maxCuts, nBatches: batches, fStepUp: step, fTarget: target, fVerbose: verbose, fVeryVerbose: veryVerbose, nSimWords: 512, nSimFrames: 32, nSimWordsPref: prefix * 512 / 32, vLits: vec.Vec_IntAlloc(1 << 14), vClauses: vec.Vec_IntAlloc(1 << 12), vCosts: vec.Vec_IntAlloc(1 << 12), vLitsProven: vec.Vec_IntAlloc(1 << 14), vClausesProven: vec.Vec_IntAlloc(1 << 12)}
 }
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Runs the SAT solver on the problem.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fra_ClausRunBmc(p *Clu_Man_t) int32 {
-    var pObj *Aig_Obj_t;
-    var Lits [2]int32;
-    var nLitsTot int32;
-    var RetValue int32;
-    var i int32;
-    // set the output literals
-    nLitsTot = 2 * p.pCnf.nVars;
-    pObj = Aig_ManCo(p.pAig, 0);
-    for  i = 0; i < p.nPref + p.nFrames; i++  {
-        Lits[0] = i * nLitsTot + toLitCond( p.pCnf.pVarNums[pObj.Id], 0 ); 
-        RetValue = sat_solver_solve( p.pSatBmc, Lits, Lits + 1, (ABC_INT64_T)p.nBTLimit, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );
-        if RetValue != l_False {
-            return 0; }
-    }
-    return 1;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Runs the SAT solver on the problem.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fra_ClausRunSat(p *Clu_Man_t) int32 {
-    var pObj *Aig_Obj_t;
-    var pLits *int32;
-    var i, RetValue int32;
-    // inlining of macro ABC_ALLOC
-    pLits = ((int *) malloc(sizeof(int) * (size_t)(p.nFrames + 1)));
-    // set the output literals
-    pObj = Aig_ManCo(p.pAig, 0);
-    for  i = 0; i <= p.nFrames; i++  {
-        pLits[i] = i * 2 * p.pCnf.nVars + toLitCond( p.pCnf.pVarNums[pObj.Id], i != p.nFrames );
-    } 
-    // try to solve the problem
-    RetValue = sat_solver_solve( p.pSatMain, pLits, pLits + p.nFrames + 1, (ABC_INT64_T)p.nBTLimit, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );
-    pLits = nil;
-    if RetValue == l_False {
-        return 1; }
-    // get the counter-example
-    assert(RetValue == l_True, "RetValue == l_True");
-    return 0;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Runs the SAT solver on the problem.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fra_ClausRunSat0(p *Clu_Man_t) int32 {
-    var pObj *Aig_Obj_t;
-    var Lits [2]int32;
-    var RetValue int32;
-    pObj = Aig_ManCo(p.pAig, 0);
-    Lits[0] = toLitCond( p.pCnf.pVarNums[pObj.Id], 0 ); 
-    RetValue = sat_solver_solve( p.pSatMain, Lits, Lits + 1, (ABC_INT64_T)p.nBTLimit, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );
-    if RetValue == l_False {
-        return 1; }
-    return 0;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Return combinations appearing in the cut.]
-
-  Description [This procedure is taken from "Hacker's Delight" by H.S.Warren.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func transpose32a(a []uint32) {
-    var j, k int32;
-    unsigned long m, t;
-    for  j, m = 16, 0x0000FFFF; (j != 0); j >>= 1, m ^= m << j  {
-        for  k = 0; k < 32; k = ((k | j) + 1) & ~j  {
-            t = (a[k] ^ (a[k|j] >> j)) & m;
-            a[k] ^= t;
-            a[k|j] ^= (t << j);
-        }
-    }
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Return combinations appearing in the cut.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fra_ClausProcessClausesCut(p *Clu_Man_t, pSimMan *Fra_Sml_t, pCut *Dar_Cut_t, pScores *int32) int32 {
-    var Matrix [32]uint32;
-    var pSims [16]*uint32;
-    var uWord uint32;
-    var nSeries, i, k, j int32;
-    var nWordsForSim int32  = pSimMan.nWordsTotal - p.nSimWordsPref;
-    // compute parameters
-    assert(pCut.nLeaves > 1 && pCut.nLeaves < 5, "pCut.nLeaves > 1 && pCut.nLeaves < 5");
-    assert(nWordsForSim % 8 == 0, "nWordsForSim % 8 == 0");
-    // get parameters
-    for  i = 0; i < int32(pCut.nLeaves); i++  {
-        pSims[i] = Fra_ObjSim( pSimMan, pCut.pLeaves[i] ) + p.nSimWordsPref;
-    }
-    // add combinational patterns
-    memset( pScores, 0, sizeof(int) * 16 );
-    nSeries = nWordsForSim / 8;
-    for  i = 0; i < nSeries; i++  {
-        memset( Matrix, 0, sizeof(unsigned) * 32 );
-        for  k = 0; k < 8; k++  {
-            for  j = 0; j < int32(pCut.nLeaves); j++  {
-                Matrix[31-(k*4+j)] = pSims[j][i*8+k];
-            }
-        }
-        transpose32a( Matrix );
-        for  k = 0; k < 32; k++  {
-            for  j = 0, uWord = Matrix[k]; j < 8; j++, uWord >>= 4  {
-                pScores[uWord & 0xF]++;
-            }
-        }
-    }
-    // collect patterns
-    uWord = 0;
-    for  i = 0; i < 16; i++  {
-        if pScores[i] {
-            uWord |= (1 << i); }
-    }
-//    Extra_PrintBinary( stdout, &uWord, 16 ); printf( "\n" );
-    return int32(uWord);
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Return combinations appearing in the cut.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fra_ClausProcessClausesCut2(p *Clu_Man_t, pSimMan *Fra_Sml_t, pCut *Dar_Cut_t, pScores *int32) int32 {
-    var pSims [16]*uint32;
-    var uWord uint32;
-    var iMint, i, k, b int32;
-    var nWordsForSim int32  = pSimMan.nWordsTotal - p.nSimWordsPref;
-    // compute parameters
-    assert(pCut.nLeaves > 1 && pCut.nLeaves < 5, "pCut.nLeaves > 1 && pCut.nLeaves < 5");
-    assert(nWordsForSim % 8 == 0, "nWordsForSim % 8 == 0");
-    // get parameters
-    for  i = 0; i < int32(pCut.nLeaves); i++  {
-        pSims[i] = Fra_ObjSim( pSimMan, pCut.pLeaves[i] ) + p.nSimWordsPref;
-    }
-    // add combinational patterns
-    memset( pScores, 0, sizeof(int) * 16 );
-    for  i = 0; i < nWordsForSim; i++  {
-        for  k = 0; k < 32; k++  {
-            iMint = 0;
-            for  b = 0; b < int32(pCut.nLeaves); b++  {
-                if pSims[b][i] & (1 << k) {
-                    iMint |= (1 << b); }
-            }
-            pScores[iMint]++;
-        }
-    }
-    // collect patterns
-    uWord = 0;
-    for  i = 0; i < 16; i++  {
-        if pScores[i] {
-            uWord |= (1 << i); }
-    }
-//    Extra_PrintBinary( stdout, &uWord, 16 ); printf( "\n" );
-    return int32(uWord);
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Return the number of combinations appearing in the cut.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fra_ClausProcessClausesCut3(p *Clu_Man_t, pSimMan *Fra_Sml_t, pCut *Aig_Cut_t, pScores *int32) {
-    var Matrix [32]uint32;
-    var pSims [16]*uint32;
-    var uWord uint32;
-    var iMint, i, j, k, b, nMints, nSeries int32;
-    var nWordsForSim int32  = pSimMan.nWordsTotal - p.nSimWordsPref;
-
-    // compute parameters
-    assert(pCut.nFanins > 1 && pCut.nFanins < 17, "pCut.nFanins > 1 && pCut.nFanins < 17");
-    assert(nWordsForSim % 8 == 0, "nWordsForSim % 8 == 0");
-    // get parameters
-    for  i = 0; i < int32(pCut.nFanins); i++  {
-        pSims[i] = Fra_ObjSim( pSimMan, pCut.pFanins[i] ) + p.nSimWordsPref;
-    }
-    // add combinational patterns
-    nMints = (1 << pCut.nFanins);
-    memset( pScores, 0, sizeof(int) * nMints );
-
-    if pCut.nLeafMax == 4 {
-        // convert the simulation patterns
-        nSeries = nWordsForSim / 8;
-        for  i = 0; i < nSeries; i++  {
-            memset( Matrix, 0, sizeof(unsigned) * 32 );
-            for  k = 0; k < 8; k++  {
-                for  j = 0; j < int32(pCut.nFanins); j++  {
-                    Matrix[31-(k*4+j)] = pSims[j][i*8+k];
-                }
-            }
-            transpose32a( Matrix );
-            for  k = 0; k < 32; k++  {
-                for  j = 0, uWord = Matrix[k]; j < 8; j++, uWord >>= 4  {
-                    pScores[uWord & 0xF]++;
-                }
-            }
-        }
-    
-    } else {
-        // go through the simulation patterns
-        for  i = 0; i < nWordsForSim; i++  {
-            for  k = 0; k < 32; k++  {
-                iMint = 0;
-                for  b = 0; b < int32(pCut.nFanins); b++  {
-                    if pSims[b][i] & (1 << k) {
-                        iMint |= (1 << b); }
-                }
-                pScores[iMint]++;
-            }
-        }
-    }
-}
-
-
-/**Function*************************************************************
-
-  Synopsis    [Returns the cut-off cost.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fra_ClausSelectClauses(p *Clu_Man_t) int32 {
-    var pCostCount *int32;
-    var nClauCount int32;
-    var Cost int32;
-    var CostMax int32;
-    var i int32;
-    var c int32;
-    assert(Vec_IntSize(p.vClauses) > p.nClausesMax, "Vec_IntSize(p.vClauses) > p.nClausesMax");   
-    // count how many implications have each cost
-    CostMax = p.nSimWords * 32 + 1;
-    // inlining of macro ABC_ALLOC
-    pCostCount = ((int *) malloc(sizeof(int) * (size_t)(CostMax)));
-    memset( pCostCount, 0, sizeof(int) * CostMax );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(p.vCosts)) && (((Cost) = Vec_IntEntry(p.vCosts, i)), 1); i++  {
-        if Cost == -1 {
-            continue; }
-        assert(Cost < CostMax, "Cost < CostMax");
-        pCostCount[ Cost ]++;
-    }
-    assert(pCostCount[0] == 0, "pCostCount[0] == 0");
-    // select the bound on the cost (above this bound, implication will be included)
-    nClauCount = 0;
-    for  c = CostMax - 1; c > 0; c--  {
-        assert(pCostCount[c] >= 0, "pCostCount[c] >= 0");
-        nClauCount += pCostCount[c];
-        if nClauCount >= p.nClausesMax {
-            break; }
-    }
-    // collect implications with the given costs
-    nClauCount = 0;
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(p.vCosts)) && (((Cost) = Vec_IntEntry(p.vCosts, i)), 1); i++  {
-        if Cost >= c && nClauCount < p.nClausesMax {
-            nClauCount++;
-            continue;
-        }
-        Vec_IntWriteEntry( p.vCosts, i, -1 );
-    }
-    pCostCount = nil;
-    p.nClauses = nClauCount;
-if p.fVerbose {
-fmt.Printf("Selected %d clauses. Cost range: [%d < %d < %d]\n", nClauCount, 1, c, CostMax); }
-    return c;
-}
-
-
-/**Function*************************************************************
-
-  Synopsis    [Processes the clauses.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fra_ClausRecordClause(p *Clu_Man_t, pCut *Dar_Cut_t, iMint int32, Cost int32) {
-    var i int32;
-    for  i = 0; i < int32(pCut.nLeaves); i++  {
-        Vec_IntPush( p.vLits, toLitCond( p.pCnf.pVarNums[pCut.pLeaves[i]], (iMint&(1<<i)) ) );
-    }
-    Vec_IntPush( p.vClauses, Vec_IntSize(p.vLits) );
-    Vec_IntPush( p.vCosts, Cost );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Processes the clauses.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fra_ClausRecordClause2(p *Clu_Man_t, pCut *Aig_Cut_t, iMint int32, Cost int32) {
-    var i int32;
-    for  i = 0; i < int32(pCut.nFanins); i++  {
-        Vec_IntPush( p.vLits, toLitCond( p.pCnf.pVarNums[pCut.pFanins[i]], (iMint&(1<<i)) ) );
-    }
-    Vec_IntPush( p.vClauses, Vec_IntSize(p.vLits) );
-    Vec_IntPush( p.vCosts, Cost );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Returns 1 if simulation info is composed of all zeros.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fra_ClausSmlNodeIsConst(pSeq *Fra_Sml_t, pObj *Aig_Obj_t) int32 {
-    var pSims *uint32;
-    var i int32;
-    pSims = Fra_ObjSim(pSeq, pObj.Id);
-    for  i = pSeq.nWordsPref; i < pSeq.nWordsTotal; i++  {
-        if pSims[i] {
-            return 0; }
-    }
-    return 1;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Returns 1 if implications holds.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fra_ClausSmlNodesAreImp(pSeq *Fra_Sml_t, pObj1 *Aig_Obj_t, pObj2 *Aig_Obj_t) int32 {
-    var pSimL, pSimR *uint32;
-    var k int32;
-    pSimL = Fra_ObjSim(pSeq, pObj1.Id);
-    pSimR = Fra_ObjSim(pSeq, pObj2.Id);
-    for  k = pSeq.nWordsPref; k < pSeq.nWordsTotal; k++  {
-        if pSimL[k] & ~pSimR[k] { // !(Obj1 -> Obj2)
-            return 0; }
-    }
-    return 1;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Returns 1 if implications holds.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fra_ClausSmlNodesAreImpC(pSeq *Fra_Sml_t, pObj1 *Aig_Obj_t, pObj2 *Aig_Obj_t) int32 {
-    var pSimL, pSimR *uint32;
-    var k int32;
-    pSimL = Fra_ObjSim(pSeq, pObj1.Id);
-    pSimR = Fra_ObjSim(pSeq, pObj2.Id);
-    for  k = pSeq.nWordsPref; k < pSeq.nWordsTotal; k++  {
-        if pSimL[k] & pSimR[k] {
-            return 0; }
-    }
-    return 1;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Processes the clauses.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fra_ClausCollectLatchClauses(p *Clu_Man_t, pSeq *Fra_Sml_t) int32 {
-    var pObj1, pObj2 *Aig_Obj_t;
-    var pSims1, pSims2 *uint32;
-    var CostMax, i, k, nCountConst, nCountImps int32;
-
-    nCountConst = nCountImps = 0;
-    CostMax = p.nSimWords * 32;
-/*
-    // add the property
-    {
-        Aig_Obj_t * pObj;
-        int Lits[1];
-        pObj = Aig_ManCo( p->pAig, 0 );
-        Lits[0] = toLitCond( p->pCnf->pVarNums[pObj->Id], 1 ); 
-        Vec_IntPush( p->vLits, Lits[0] );
-        Vec_IntPush( p->vClauses, Vec_IntSize(p->vLits) );
-        Vec_IntPush( p->vCosts, CostMax );
-        nCountConst++;
-//        printf( "Added the target property to the set of clauses to be inductively checked.\n" );
-    }
-*/
-
-    pSeq.nWordsPref = p.nSimWordsPref;
-    // inlining of macro Aig_ManForEachLoSeq
-    // inlining of macro Vec_PtrForEachEntryStart
-    for  i = Aig_ManCiNum(p.pAig)-Aig_ManRegNum(p.pAig); (i < Vec_PtrSize(p.pAig.vCis)) && (((pObj1) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {
-        pSims1 = Fra_ObjSim( pSeq, pObj1.Id );
-        if Fra_ClausSmlNodeIsConst( pSeq, pObj1 ) != 0 {
-            Vec_IntPush( p.vLits, toLitCond( p.pCnf.pVarNums[pObj1.Id], 1 ) );
-            Vec_IntPush( p.vClauses, Vec_IntSize(p.vLits) );
-            Vec_IntPush( p.vCosts, CostMax );
-            nCountConst++;
-            continue;
-        }
-        // inlining of macro Aig_ManForEachLoSeq
-        // inlining of macro Vec_PtrForEachEntryStart
-        for  k = Aig_ManCiNum(p.pAig)-Aig_ManRegNum(p.pAig); (k < Vec_PtrSize(p.pAig.vCis)) && (((pObj2) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, k)), 1); k++  {
-            pSims2 = Fra_ObjSim( pSeq, pObj2.Id );
-            if Fra_ClausSmlNodesAreImp( pSeq, pObj1, pObj2 ) != 0 {
-                Vec_IntPush( p.vLits, toLitCond( p.pCnf.pVarNums[pObj1.Id], 1 ) );
-                Vec_IntPush( p.vLits, toLitCond( p.pCnf.pVarNums[pObj2.Id], 0 ) );
-                Vec_IntPush( p.vClauses, Vec_IntSize(p.vLits) );
-                Vec_IntPush( p.vCosts, CostMax );
-                nCountImps++;
-                continue;
-            }
-            if Fra_ClausSmlNodesAreImp( pSeq, pObj2, pObj1 ) != 0 {
-                Vec_IntPush( p.vLits, toLitCond( p.pCnf.pVarNums[pObj2.Id], 1 ) );
-                Vec_IntPush( p.vLits, toLitCond( p.pCnf.pVarNums[pObj1.Id], 0 ) );
-                Vec_IntPush( p.vClauses, Vec_IntSize(p.vLits) );
-                Vec_IntPush( p.vCosts, CostMax );
-                nCountImps++;
-                continue;
-            }
-            if Fra_ClausSmlNodesAreImpC( pSeq, pObj1, pObj2 ) != 0 {
-                Vec_IntPush( p.vLits, toLitCond( p.pCnf.pVarNums[pObj1.Id], 1 ) );
-                Vec_IntPush( p.vLits, toLitCond( p.pCnf.pVarNums[pObj2.Id], 1 ) );
-                Vec_IntPush( p.vClauses, Vec_IntSize(p.vLits) );
-                Vec_IntPush( p.vCosts, CostMax );
-                nCountImps++;
-                continue;
-            }
-        }
-        if nCountConst + nCountImps > p.nClausesMax / 2 {
-            break; }
-    }
-    pSeq.nWordsPref = 0;
-    if p.fVerbose {
-    fmt.Printf("Collected %d register constants and %d one-hotness implications.\n", nCountConst, nCountImps); }
-    p.nOneHots = nCountConst + nCountImps;
-    p.nOneHotsProven = 0;
-    return 0;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Processes the clauses.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fra_ClausProcessClauses(p *Clu_Man_t, fRefs int32) int32 {
-    var pMemCuts *Aig_MmFixed_t;
-//    Aig_ManCut_t * pManCut;
-    var pComb, pSeq *Fra_Sml_t;
-    var pObj *Aig_Obj_t;
-    var pCut *Dar_Cut_t;
-    var Scores [16]int32;
-    var uScores int32;
-    var i int32;
-    var k int32;
-    var j int32;
-    var nCuts int32;
-    var clk abctime;
-
-    // simulate the AIG
-clk = Abc_Clock();
-//    srand( 0xAABBAABB );
-    Aig_ManRandom(1);
-    pSeq = Fra_SmlSimulateSeq( p.pAig, 0, p.nPref + p.nSimFrames, p.nSimWords/p.nSimFrames, 1 );
-    if p.fTarget && pSeq.fNonConstOut {
-        fmt.Printf("Property failed after sequential simulation!\n");
-        Fra_SmlStop( pSeq );
-        return 0;
-    }
-if p.fVerbose {
-// inlining of macro ABC_PRT
-Abc_Print(1, "%s =", ("Sim-seq"));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;
-}
-
-
-clk = Abc_Clock();
-    if fRefs != 0 {
-    Fra_ClausCollectLatchClauses( p, pSeq );
-if p.fVerbose {
-// inlining of macro ABC_PRT
-Abc_Print(1, "%s =", ("Lat-cla"));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;
-}
-    }
-
-
-    // generate cuts for all nodes, assign cost, and find best cuts
-clk = Abc_Clock();
-    pMemCuts = Dar_ManComputeCuts( p.pAig, 10, 0, 1 );
-//    pManCut = Aig_ComputeCuts( p->pAig, 10, 4, 0, 1 );
-if p.fVerbose {
-// inlining of macro ABC_PRT
-Abc_Print(1, "%s =", ("Cuts   "));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;
-}
-
-    // collect sequential info for each cut
-clk = Abc_Clock();
-    // inlining of macro Aig_ManForEachNode
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.pAig.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-        // inlining of macro Dar_ObjForEachCut
-        for  (pCut) = Dar_ObjCuts(pObj), k = 0; k < int32((pObj).nCuts); k, pCut = k+1, pCut+1  { if (pCut).fUsed==0 {} else
-            if pCut.nLeaves > 1 {
-                pCut.uTruth = Fra_ClausProcessClausesCut( p, pSeq, pCut, Scores );
-//                uScores = Fra_ClausProcessClausesCut2( p, pSeq, pCut, Scores );
-//                if ( uScores != pCut->uTruth )
-//                {
-//                    int x = 0;
-//                }
-            }
-        } }
-    }
-if p.fVerbose {
-// inlining of macro ABC_PRT
-Abc_Print(1, "%s =", ("Infoseq"));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;
-}
-    Fra_SmlStop( pSeq );
-
-    // perform combinational simulation
-clk = Abc_Clock();
-//    srand( 0xAABBAABB );
-    Aig_ManRandom(1);
-    pComb = Fra_SmlSimulateComb( p.pAig, p.nSimWords + p.nSimWordsPref, 0 );
-if p.fVerbose {
-// inlining of macro ABC_PRT
-Abc_Print(1, "%s =", ("Sim-cmb"));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;
-}
-
-    // collect combinational info for each cut
-clk = Abc_Clock();
-    // inlining of macro Aig_ManForEachNode
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.pAig.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-        // inlining of macro Dar_ObjForEachCut
-        for  (pCut) = Dar_ObjCuts(pObj), k = 0; k < int32((pObj).nCuts); k, pCut = k+1, pCut+1  { if (pCut).fUsed==0 {} else
-            if pCut.nLeaves > 1 {
-                nCuts++;
-                uScores = Fra_ClausProcessClausesCut( p, pComb, pCut, Scores );
-                uScores &= ~pCut.uTruth; pCut.uTruth = 0;
-                if uScores == 0 {
-                    continue; }
-                // write the clauses
-                for  j = 0; j < (1<<pCut.nLeaves); j++  {
-                    if uScores & (1 << j) {
-                        Fra_ClausRecordClause( p, pCut, j, Scores[j] ); }
-                }
-
-            }
-        } }
-    }
-    Fra_SmlStop( pComb );
-    Aig_MmFixedStop( pMemCuts, 0 );
-//    Aig_ManCutStop( pManCut );
-if p.fVerbose {
-// inlining of macro ABC_PRT
-Abc_Print(1, "%s =", ("Infocmb"));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;
-}
-
-    if p.fVerbose {
-    fmt.Printf("Node = %5d. Non-triv cuts = %7d. Clauses = %6d. Clause per cut = %6.2f.\n", Aig_ManNodeNum(p.pAig), nCuts, Vec_IntSize(p.vClauses), 1.0*Vec_IntSize(p.vClauses)/nCuts); }
-
-    if Vec_IntSize(p.vClauses) > p.nClausesMax {
-        Fra_ClausSelectClauses( p );
-    } else {
-        p.nClauses = Vec_IntSize( p.vClauses ); }
-    return 1;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Processes the clauses.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fra_ClausProcessClauses2(p *Clu_Man_t, fRefs int32) int32 {
-//    Aig_MmFixed_t * pMemCuts;
-    var pManCut *Aig_ManCut_t;
-    var pComb, pSeq *Fra_Sml_t;
-    var pObj *Aig_Obj_t;
-    var pCut *Aig_Cut_t;
-    var i, k, j, nCuts int32;
-    var clk abctime;
-    var ScoresSeq, ScoresComb [1<<12]int32;
-    assert(p.nLutSize < 13, "p.nLutSize < 13");
-
-    // simulate the AIG
-clk = Abc_Clock();
-//    srand( 0xAABBAABB );
-    Aig_ManRandom(1);
-    pSeq = Fra_SmlSimulateSeq( p.pAig, 0, p.nPref + p.nSimFrames, p.nSimWords/p.nSimFrames, 1  );
-    if p.fTarget && pSeq.fNonConstOut {
-        fmt.Printf("Property failed after sequential simulation!\n");
-        Fra_SmlStop( pSeq );
-        return 0;
-    }
-if p.fVerbose {
-//ABC_PRT( "Sim-seq", Abc_Clock() - clk );
-}
-
-    // perform combinational simulation
-clk = Abc_Clock();
-//    srand( 0xAABBAABB );
-    Aig_ManRandom(1);
-    pComb = Fra_SmlSimulateComb( p.pAig, p.nSimWords + p.nSimWordsPref, 0 );
-if p.fVerbose {
-//ABC_PRT( "Sim-cmb", Abc_Clock() - clk );
-}
-
-
-clk = Abc_Clock();
-    if fRefs != 0 {
-    Fra_ClausCollectLatchClauses( p, pSeq );
-if p.fVerbose {
-//ABC_PRT( "Lat-cla", Abc_Clock() - clk );
-}
-    }
-
-
-    // generate cuts for all nodes, assign cost, and find best cuts
-clk = Abc_Clock();
-//    pMemCuts = Dar_ManComputeCuts( p->pAig, 10, 0, 1 );
-    pManCut = Aig_ComputeCuts( p.pAig, p.nCutsMax, p.nLutSize, 0, p.fVerbose );
-if p.fVerbose {
-//ABC_PRT( "Cuts   ", Abc_Clock() - clk );
-}
-
-    // collect combinational info for each cut
-clk = Abc_Clock();
-    // inlining of macro Aig_ManForEachNode
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.pAig.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-        if pObj.Level > uint32(p.nLevels) {
-            continue; }
-        // inlining of macro Aig_ObjForEachCut
-        for  k = 0, pCut = Aig_ObjCuts(pManCut, pObj); k < pManCut.nCutsMax; k++, pCut = Aig_CutNext(pCut)  { 
-            if pCut.nFanins > 1 {
-                nCuts++;
-                Fra_ClausProcessClausesCut3( p, pSeq, pCut, ScoresSeq );
-                Fra_ClausProcessClausesCut3( p, pComb, pCut, ScoresComb );
-                // write the clauses
-                for  j = 0; j < (1<<pCut.nFanins); j++  {
-                    if ScoresComb[j] != 0 && ScoresSeq[j] == 0 {
-                        Fra_ClausRecordClause2( p, pCut, j, ScoresComb[j] ); }
-                }
-
-            }
-        }
-    }
-    }
-    Fra_SmlStop( pSeq );
-    Fra_SmlStop( pComb );
-    p.nCuts = nCuts;
-//    Aig_MmFixedStop( pMemCuts, 0 );
-    Aig_ManCutStop( pManCut );
-    p.pAig.pManCuts = nil;
-
-    if p.fVerbose {
-    fmt.Printf("Node = %5d. Cuts = %7d. Clauses = %6d. Clause/cut = %6.2f.\n", Aig_ManNodeNum(p.pAig), nCuts, Vec_IntSize(p.vClauses), 1.0*Vec_IntSize(p.vClauses)/nCuts);
-    // inlining of macro ABC_PRT
-    Abc_Print(1, "%s =", ("Processing sim-info to find candidate clauses (unoptimized)"));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;
-    }
-
-    // filter out clauses that are contained in the already proven clauses
-    assert(p.nClauses == 0, "p.nClauses == 0");
-    p.nClauses = Vec_IntSize( p.vClauses );
-    if Vec_IntSize( p.vClausesProven ) > 0 {
-        var RetValue, k, Beg int32;
-        var End int32  = -1; // Suppress "might be used uninitialized"
-        var pStart *int32;
-        // reset the solver
-        if p.pSatMain {  sat_solver_delete( p.pSatMain ); }
-        p.pSatMain = (sat_solver *)Cnf_DataWriteIntoSolver( p.pCnf, 1, 0 );
-        if p.pSatMain == nil {
-            fmt.Printf("Error: Main solver is unsat.\n");
-            return -1;
-        }  
-
-        // add the proven clauses
-        Beg = 0;
-        pStart = Vec_IntArray(p.vLitsProven);
-        // inlining of macro Vec_IntForEachEntry
-        for  i = 0; (i < Vec_IntSize(p.vClausesProven)) && (((End) = Vec_IntEntry(p.vClausesProven, i)), 1); i++  {
-            assert(End - Beg <= p.nLutSize, "End - Beg <= p.nLutSize");
-            // add the clause to all timeframes
-            RetValue = sat_solver_addclause( p.pSatMain, pStart + Beg, pStart + End );
-            if RetValue == 0 {
-                fmt.Printf("Error: Solver is UNSAT after adding assumption clauses.\n");
-                return -1;
-            }
-            Beg = End;
-        }
-        assert(End == Vec_IntSize(p.vLitsProven), "End == Vec_IntSize(p.vLitsProven)");
-
-        // check the clauses
-        Beg = 0;
-        pStart = Vec_IntArray(p.vLits);
-        // inlining of macro Vec_IntForEachEntry
-        for  i = 0; (i < Vec_IntSize(p.vClauses)) && (((End) = Vec_IntEntry(p.vClauses, i)), 1); i++  {
-            assert(Vec_IntEntry( p.vCosts, i ) >= 0, "Vec_IntEntry( p.vCosts, i ) >= 0");
-            assert(End - Beg <= p.nLutSize, "End - Beg <= p.nLutSize");
-            // check the clause
-            for  k = Beg; k < End; k++  {
-                pStart[k] = lit_neg( pStart[k] );
-            }
-            RetValue = sat_solver_solve( p.pSatMain, pStart + Beg, pStart + End, (ABC_INT64_T)p.nBTLimit, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );
-            for  k = Beg; k < End; k++  {
-                pStart[k] = lit_neg( pStart[k] );
-            }
-            // the clause holds
-            if RetValue == l_False {
-                Vec_IntWriteEntry( p.vCosts, i, -1 );
-                p.nClauses--;
-            }
-            Beg = End;
-        }
-        assert(End == Vec_IntSize(p.vLits), "End == Vec_IntSize(p.vLits)");
-        if p.fVerbose {
-        fmt.Printf("Already proved clauses filtered out %d candidate clauses (out of %d).\n", Vec_IntSize(p.vClauses) - p.nClauses, Vec_IntSize(p.vClauses)); }
-    }
-
-    p.fFiltering = 0;
-    if p.nClauses > p.nClausesMax {
-        Fra_ClausSelectClauses( p );
-        p.fFiltering = 1;
-    }
-    return 1;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Converts AIG into the SAT solver.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fra_ClausBmcClauses(p *Clu_Man_t) int32 {
-    var pStart *int32;
-    var nLitsTot int32;
-    var RetValue int32;
-    var Beg int32;
-    var End int32;
-    var Counter int32;
-    var i int32;
-    var k int32;
-    var f int32;
-/*
-    for ( i = 0; i < Vec_IntSize(p->vLits); i++ )
-        printf( "%d ", p->vLits->pArray[i] );
-    printf( "\n" );
-*/
-    // add the clauses
-    Counter = 0;
-    // skip through the prefix variables
-    if p.nPref {
-        nLitsTot = p.nPref * 2 * p.pCnf.nVars;
-        for  i = 0; i < Vec_IntSize(p.vLits); i++  {
-            p.vLits.pArray[i] += nLitsTot;
-        }
-    }
-    // go through the timeframes
-    nLitsTot = 2 * p.pCnf.nVars;
-    pStart = Vec_IntArray(p.vLits);
-    for  f = 0; f < p.nFrames; f++  {
-        Beg = 0;
-        // inlining of macro Vec_IntForEachEntry
-        for  i = 0; (i < Vec_IntSize(p.vClauses)) && (((End) = Vec_IntEntry(p.vClauses, i)), 1); i++  {
-            if Vec_IntEntry( p.vCosts, i ) == -1 {
-                Beg = End;
-                continue;
-            }
-            assert(Vec_IntEntry( p.vCosts, i ) > 0, "Vec_IntEntry( p.vCosts, i ) > 0");
-            assert(End - Beg <= p.nLutSize, "End - Beg <= p.nLutSize");
-
-            for  k = Beg; k < End; k++  {
-                pStart[k] = lit_neg( pStart[k] );
-            }
-            RetValue = sat_solver_solve( p.pSatBmc, pStart + Beg, pStart + End, (ABC_INT64_T)p.nBTLimit, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );
-            for  k = Beg; k < End; k++  {
-                pStart[k] = lit_neg( pStart[k] );
-            }
-
-            if RetValue != l_False {
-                Beg = End;
-                Vec_IntWriteEntry( p.vCosts, i, -1 );
-                Counter++;
-                continue;
-            }
-/*
-            // add the clause
-            RetValue = sat_solver_addclause( p->pSatBmc, pStart + Beg, pStart + End );
-    //        assert( RetValue == 1 );
-            if ( RetValue == 0 )
-            {
-                printf( "Error: Solver is UNSAT after adding BMC clauses.\n" );
-                return -1;
-            }
-*/
-            Beg = End;
-
-            // simplify the solver
-            if p.pSatBmc.qtail != p.pSatBmc.qhead {
-                RetValue = sat_solver_simplify(p.pSatBmc);
-                assert(RetValue != 0, "RetValue != 0");
-                assert(p.pSatBmc.qtail == p.pSatBmc.qhead, "p.pSatBmc.qtail == p.pSatBmc.qhead");
-            }
-        }
-        // increment literals
-        for  i = 0; i < Vec_IntSize(p.vLits); i++  {
-            p.vLits.pArray[i] += nLitsTot;
-        }
-    }
-
-    // return clauses back to normal
-    nLitsTot = (p.nPref + p.nFrames) * nLitsTot;
-    for  i = 0; i < Vec_IntSize(p.vLits); i++  {
-        p.vLits.pArray[i] -= nLitsTot;
-    }
-/*
-    for ( i = 0; i < Vec_IntSize(p->vLits); i++ )
-        printf( "%d ", p->vLits->pArray[i] );
-    printf( "\n" );
-*/
-    return Counter;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Cleans simulation info.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fra_ClausSimInfoClean(p *Clu_Man_t) {
-    assert(p.pCnf.nVars <= Vec_PtrSize(p.vCexes), "p.pCnf.nVars <= Vec_PtrSize(p.vCexes)");
-    Vec_PtrCleanSimInfo( p.vCexes, 0, p.nCexesAlloc/32 );
-    p.nCexes = 0;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Reallocs simulation info.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fra_ClausSimInfoRealloc(p *Clu_Man_t) {
-    assert(p.nCexes == p.nCexesAlloc, "p.nCexes == p.nCexesAlloc");
-    Vec_PtrReallocSimInfo( p.vCexes );
-    Vec_PtrCleanSimInfo( p.vCexes, p.nCexesAlloc/32, 2 * p.nCexesAlloc/32 );
-    p.nCexesAlloc *= 2;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Records simulation info.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fra_ClausSimInfoRecord(p *Clu_Man_t, pModel *int32) {
-    var i int32;
-    if p.nCexes == p.nCexesAlloc {
-        Fra_ClausSimInfoRealloc( p ); }
-    assert(p.nCexes < p.nCexesAlloc, "p.nCexes < p.nCexesAlloc");
-    for  i = 0; i < p.pCnf.nVars; i++  {
-        if pModel[i] == l_True {
-            assert(Abc_InfoHasBit( (unsigned *)Vec_PtrEntry(p.vCexes, i), p.nCexes ) == 0, "Abc_InfoHasBit( (unsigned *)Vec_PtrEntry(p.vCexes, i), p.nCexes ) == 0");
-            Abc_InfoSetBit( (unsigned *)Vec_PtrEntry(p.vCexes, i), p.nCexes );
-        }
-    }
-    p.nCexes++;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Uses the simulation info.]
-
-  Description [Returns 1 if the simulation info disproved the clause.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fra_ClausSimInfoCheck(p *Clu_Man_t, pLits *int32, nLits int32) int32 {
-    var pSims [16]*uint32;
-    var uWord uint32;
-    var nWords, iVar, i, w int32;
-    for  i = 0; i < nLits; i++  {
-        iVar = lit_var(pLits[i]) - p.nFrames * p.pCnf.nVars;
-        assert(iVar > 0 && iVar < p.pCnf.nVars, "iVar > 0 && iVar < p.pCnf.nVars");
-        pSims[i] = (unsigned *)Vec_PtrEntry( p.vCexes, iVar );
-    }
-    nWords = p.nCexes / 32;
-    for  w = 0; w < nWords; w++  {
-        uWord = ~uint32(0);
-        for  i = 0; i < nLits; i++  {
-            uWord &= (lit_sign(pLits[i])? pSims[i][w] : ~pSims[i][w]);
-        }
-        if uWord != 0 {
-            return 1; }
-    }
-    if p.nCexes % 32 {
-        uWord = ~uint32(0);
-        for  i = 0; i < nLits; i++  {
-            uWord &= (lit_sign(pLits[i])? pSims[i][w] : ~pSims[i][w]);
-        }
-        if uWord & Abc_InfoMask( p.nCexes % 32 ) {
-            return 1; }
-    }
-    return 0;
-}
-
-
-/**Function*************************************************************
-
-  Synopsis    [Converts AIG into the SAT solver.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fra_ClausInductiveClauses(p *Clu_Man_t) int32 {
-//    Aig_Obj_t * pObjLi, * pObjLo;
-    var pStart *int32;
-    var nLitsTot int32;
-    var RetValue int32;
-    var Beg int32;
-    var End int32;
-    var Counter int32;
-    var i int32;
-    var k int32;
-    var f int32;
-    var fFlag int32;//, Lits[2];
-    p.fFail = 0;
-
-    // reset the solver
-    if p.pSatMain {  sat_solver_delete( p.pSatMain ); }
-    p.pSatMain = (sat_solver *)Cnf_DataWriteIntoSolver( p.pCnf, p.nFrames+1, 0 );
-    if p.pSatMain == nil {
-        fmt.Printf("Error: Main solver is unsat.\n");
-        return -1;
-    }  
-    Fra_ClausSimInfoClean( p );
-
-/*
-    // check if the property holds
-    if ( Fra_ClausRunSat0( p ) )
-        printf( "Property holds without strengthening.\n" );
-    else
-        printf( "Property does not hold without strengthening.\n" );
-*/
-/*
-    // add constant registers
-    Aig_ManForEachLiLoSeq( p->pAig, pObjLi, pObjLo, i )  
-        if ( Aig_ObjFanin0(pObjLi) == Aig_ManConst1(p->pAig) )
-        {
-            for ( k = 0; k < p->nFrames; k++ )
-            {
-                Lits[0] = k * 2 * p->pCnf->nVars + toLitCond( p->pCnf->pVarNums[pObjLo->Id], Aig_ObjFaninC0(pObjLi) ); 
-                RetValue = sat_solver_addclause( p->pSatMain, Lits, Lits + 1 );
-                if ( RetValue == 0 )
-                {
-                    printf( "Error: Solver is UNSAT after adding constant-register clauses.\n" );
-                    return -1;
-                }
-            }
-        }
-*/
-
-
-    // add the proven clauses
-    nLitsTot = 2 * p.pCnf.nVars;
-    pStart = Vec_IntArray(p.vLitsProven);
-    for  f = 0; f < p.nFrames; f++  {
-        Beg = 0;
-        // inlining of macro Vec_IntForEachEntry
-        for  i = 0; (i < Vec_IntSize(p.vClausesProven)) && (((End) = Vec_IntEntry(p.vClausesProven, i)), 1); i++  {
-            assert(End - Beg <= p.nLutSize, "End - Beg <= p.nLutSize");
-            // add the clause to all timeframes
-            RetValue = sat_solver_addclause( p.pSatMain, pStart + Beg, pStart + End );
-            if RetValue == 0 {
-                fmt.Printf("Error: Solver is UNSAT after adding assumption clauses.\n");
-                return -1;
-            }
-            Beg = End;
-        }
-        // increment literals
-        for  i = 0; i < Vec_IntSize(p.vLitsProven); i++  {
-            p.vLitsProven.pArray[i] += nLitsTot;
-        }
-    }
-    // return clauses back to normal
-    nLitsTot = (p.nFrames) * nLitsTot;
-    for  i = 0; i < Vec_IntSize(p.vLitsProven); i++  {
-        p.vLitsProven.pArray[i] -= nLitsTot;
-    }
-
-/*
-    // add the proven clauses
-    nLitsTot = 2 * p->pCnf->nVars;
-    pStart = Vec_IntArray(p->vLitsProven);
-    Beg = 0;
-    Vec_IntForEachEntry( p->vClausesProven, End, i )
-    {
-        assert( End - Beg <= p->nLutSize );
-        // add the clause to all timeframes
-        RetValue = sat_solver_addclause( p->pSatMain, pStart + Beg, pStart + End );
-        if ( RetValue == 0 )
-        {
-            printf( "Error: Solver is UNSAT after adding assumption clauses.\n" );
-            return -1;
-        }
-        Beg = End;
-    }
-*/
-    
-    // add the clauses
-    nLitsTot = 2 * p.pCnf.nVars;
-    pStart = Vec_IntArray(p.vLits);
-    for  f = 0; f < p.nFrames; f++  {
-        Beg = 0;
-        // inlining of macro Vec_IntForEachEntry
-        for  i = 0; (i < Vec_IntSize(p.vClauses)) && (((End) = Vec_IntEntry(p.vClauses, i)), 1); i++  {
-            if Vec_IntEntry( p.vCosts, i ) == -1 {
-                Beg = End;
-                continue;
-            }
-            assert(Vec_IntEntry( p.vCosts, i ) > 0, "Vec_IntEntry( p.vCosts, i ) > 0");
-            assert(End - Beg <= p.nLutSize, "End - Beg <= p.nLutSize");
-            // add the clause to all timeframes
-            RetValue = sat_solver_addclause( p.pSatMain, pStart + Beg, pStart + End );
-            if RetValue == 0 {
-                fmt.Printf("Error: Solver is UNSAT after adding assumption clauses.\n");
-                return -1;
-            }
-            Beg = End;
-        }
-        // increment literals
-        for  i = 0; i < Vec_IntSize(p.vLits); i++  {
-            p.vLits.pArray[i] += nLitsTot;
-        }
-    }
-
-    // simplify the solver
-    if p.pSatMain.qtail != p.pSatMain.qhead {
-        RetValue = sat_solver_simplify(p.pSatMain);
-        assert(RetValue != 0, "RetValue != 0");
-        assert(p.pSatMain.qtail == p.pSatMain.qhead, "p.pSatMain.qtail == p.pSatMain.qhead");
-    }
-  
-    // check if the property holds
-    if p.fTarget {
-        if Fra_ClausRunSat0( p ) != 0 {
-            if p.fVerbose {
-            fmt.Printf(" Property holds.  "); }
-        
-        } else {
-            if p.fVerbose {
-            fmt.Printf(" Property fails.  "); }
-    //        return -2;
-            p.fFail = 1;
-        }
-    }
-
-/*
-    // add the property for the first K frames
-    for ( i = 0; i < p->nFrames; i++ )
-    {
-        Aig_Obj_t * pObj;
-        int Lits[2];
-        // set the output literals
-        pObj = Aig_ManCo(p->pAig, 0);
-        Lits[0] = i * nLitsTot + toLitCond( p->pCnf->pVarNums[pObj->Id], 1 ); 
-        // add the clause
-        RetValue = sat_solver_addclause( p->pSatMain, Lits, Lits + 1 );
-//        assert( RetValue == 1 );
-        if ( RetValue == 0 )
-        {
-            printf( "Error: Solver is UNSAT after adding property for the first K frames.\n" );
-            return -1;
-        }
-    }
-*/
-
-    // simplify the solver
-    if p.pSatMain.qtail != p.pSatMain.qhead {
-        RetValue = sat_solver_simplify(p.pSatMain);
-        assert(RetValue != 0, "RetValue != 0");
-        assert(p.pSatMain.qtail == p.pSatMain.qhead, "p.pSatMain.qtail == p.pSatMain.qhead");
-    }
-
-
-    // check the clause in the last timeframe
-    Beg = 0;
-    Counter = 0;
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(p.vClauses)) && (((End) = Vec_IntEntry(p.vClauses, i)), 1); i++  {
-        if Vec_IntEntry( p.vCosts, i ) == -1 {
-            Beg = End;
-            continue;
-        }
-        assert(Vec_IntEntry( p.vCosts, i ) > 0, "Vec_IntEntry( p.vCosts, i ) > 0");
-        assert(End - Beg <= p.nLutSize, "End - Beg <= p.nLutSize");
-
-        if Fra_ClausSimInfoCheck(p, pStart + Beg, End - Beg) != 0 {
-            fFlag = 1;
-//            printf( "s-" );
-
-            Beg = End;
-            Vec_IntWriteEntry( p.vCosts, i, -1 );
-            Counter++;
-            continue;
-        
-        } else {
-            fFlag = 0;
-//            printf( "s?" );
-        }
-
-        for  k = Beg; k < End; k++  {
-            pStart[k] = lit_neg( pStart[k] );
-        }
-        RetValue = sat_solver_solve( p.pSatMain, pStart + Beg, pStart + End, (ABC_INT64_T)p.nBTLimit, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );
-        for  k = Beg; k < End; k++  {
-            pStart[k] = lit_neg( pStart[k] );
-        }
-
-        // the problem is not solved
-        if RetValue != l_False {
-//            printf( "S- " );
-//            Fra_ClausSimInfoRecord( p, (int*)p->pSatMain->model.ptr + p->nFrames * p->pCnf->nVars );
-            Fra_ClausSimInfoRecord( p, (int*)p.pSatMain.model + p.nFrames * p.pCnf.nVars );
-//            RetValue = Fra_ClausSimInfoCheck(p, pStart + Beg, End - Beg);
-//            assert( RetValue );
-
-            Beg = End;
-            Vec_IntWriteEntry( p.vCosts, i, -1 );
-            Counter++;
-            continue;
-        }
-//        printf( "S+ " );
-//        assert( !fFlag );
-
-/*
-        // add the clause
-        RetValue = sat_solver_addclause( p->pSatMain, pStart + Beg, pStart + End );
-//        assert( RetValue == 1 );
-        if ( RetValue == 0 )
-        {
-            printf( "Error: Solver is UNSAT after adding proved clauses.\n" );
-            return -1;
-        }
-*/
-        Beg = End;
-
-        // simplify the solver
-        if p.pSatMain.qtail != p.pSatMain.qhead {
-            RetValue = sat_solver_simplify(p.pSatMain);
-            assert(RetValue != 0, "RetValue != 0");
-            assert(p.pSatMain.qtail == p.pSatMain.qhead, "p.pSatMain.qtail == p.pSatMain.qhead");
-        }
-    }
-
-    // return clauses back to normal
-    nLitsTot = p.nFrames * nLitsTot;
-    for  i = 0; i < Vec_IntSize(p.vLits); i++  {
-        p.vLits.pArray[i] -= nLitsTot;
-    }
-
-//    if ( fFail )
-//        return -2;
-    return Counter;
-}
-
-
-
-/**Function*************************************************************
-
-  Synopsis    [Converts AIG into the SAT solver.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fra_ClausAlloc(pAig *Aig_Man_t, nFrames int32, nPref int32, nClausesMax int32, nLutSize int32, nLevels int32, nCutsMax int32, nBatches int32, fStepUp int32, fTarget int32, fVerbose int32, fVeryVerbose int32) *Clu_Man_t {
-    var p *Clu_Man_t;
-    // inlining of macro ABC_ALLOC
-    p = ((Clu_Man_t *) malloc(sizeof(Clu_Man_t) * (size_t)(1)));
-    *p = Clu_Man_t{};
-    p.pAig          = pAig;
-    p.nFrames       = nFrames;
-    p.nPref         = nPref;
-    p.nClausesMax   = nClausesMax;
-    p.nLutSize      = nLutSize;
-    p.nLevels       = nLevels;
-    p.nCutsMax      = nCutsMax;
-    p.nBatches      = nBatches;
-    p.fStepUp       = fStepUp;
-    p.fTarget       = fTarget;
-    p.fVerbose      = fVerbose;
-    p.fVeryVerbose  = fVeryVerbose;
-    p.nSimWords     = 512;//1024;//64;
-    p.nSimFrames    = 32;//8;//32;
-    p.nSimWordsPref = p.nPref*p.nSimWords/p.nSimFrames;
-
-    p.vLits         = Vec_IntAlloc( 1<<14 );
-    p.vClauses      = Vec_IntAlloc( 1<<12 );
-    p.vCosts        = Vec_IntAlloc( 1<<12 );
-
-    p.vLitsProven   = Vec_IntAlloc( 1<<14 );
-    p.vClausesProven= Vec_IntAlloc( 1<<12 );
-
-    p.nCexesAlloc   = 1024;
-    p.vCexes        = Vec_PtrAllocSimInfo( Aig_ManObjNumMax(p.pAig)+1, p.nCexesAlloc/32 );
-    Vec_PtrCleanSimInfo( p.vCexes, 0, p.nCexesAlloc/32 );
-    return p;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Converts AIG into the SAT solver.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Fra_ClausFree(p *Clu_Man_t) {
-    if p.vCexes {    Vec_PtrFree( p.vCexes ); }
-    if p.vLits {     Vec_IntFree( p.vLits ); }
-    if p.vClauses {  Vec_IntFree( p.vClauses ); }
-    if p.vLitsProven {     Vec_IntFree( p.vLitsProven ); }
-    if p.vClausesProven {  Vec_IntFree( p.vClausesProven ); }
-    if p.vCosts {    Vec_IntFree( p.vCosts ); }
-    if p.pCnf {      Cnf_DataFree( p.pCnf ); }
-    if p.pSatMain {  sat_solver_delete( p.pSatMain ); }
-    if p.pSatBmc {   sat_solver_delete( p.pSatBmc ); }
-    p = nil;
+	if p != nil {
+		*p = Clu_Man_t{}
+	}
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    [Converts AIG into the SAT solver.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+func clausSlices(lits, ends *vec.Vec_Int_t) [][]int32 {
+	values := vec.Vec_IntArray(lits)
+	begin := 0
+	out := make([][]int32, 0, vec.Vec_IntSize(ends))
+	for _, end := range vec.Vec_IntArray(ends) {
+		if end < int32(begin) || int(end) > len(values) {
+			panic("invalid clause offsets")
+		}
+		out = append(out, values[begin:end])
+		begin = int(end)
+	}
+	if begin != len(values) {
+		panic("incomplete clause offsets")
+	}
+	return out
+}
+func Fra_ClausRunBmc(p *Clu_Man_t) int32 {
+	out := p.pCnf.VarNums[p.pAig.Outputs()[0].NodeID()]
+	for i := int32(0); i < p.nPref+p.nFrames; i++ {
+		if p.pSatBmc.Solve(bsat.Positive(out+i*int32(p.pCnf.Variables))) != bsat.Unsatisfiable {
+			return 0
+		}
+	}
+	return 1
+}
+func Fra_ClausRunSat(p *Clu_Man_t) int32 {
+	out := p.pCnf.VarNums[p.pAig.Outputs()[0].NodeID()]
+	lits := make([]int32, p.nFrames+1)
+	for i := int32(0); i <= p.nFrames; i++ {
+		v := out + i*int32(p.pCnf.Variables)
+		lits[i] = bsat.Positive(v)
+		if i != p.nFrames {
+			lits[i] = bsat.Negative(v)
+		}
+	}
+	if p.pSatMain.Solve(lits...) == bsat.Unsatisfiable {
+		return 1
+	}
+	return 0
+}
+func Fra_ClausRunSat0(p *Clu_Man_t) int32 {
+	out := p.pCnf.VarNums[p.pAig.Outputs()[0].NodeID()]
+	if p.pSatMain.Solve(bsat.Positive(out)) == bsat.Unsatisfiable {
+		return 1
+	}
+	return 0
+}
+func transpose32a(a *[32]uint32) { clausTranspose32(a) }
+func Fra_ClausBmcClauses(p *Clu_Man_t) int32 {
+	return int32(clausFilterBMC(p.pSatBmc, clausSlices(p.vLits, p.vClauses), vec.Vec_IntArray(p.vCosts), p.nPref, p.nFrames, int32(p.pCnf.Variables)))
+}
+func Fra_ClausSimInfoClean(p *Clu_Man_t) {
+	if p.models == nil {
+		p.models = newClausModels(p.pCnf.Variables)
+	} else {
+		p.models.clear()
+	}
+}
+func Fra_ClausSimInfoRealloc(_ *Clu_Man_t) { /* Go slices grow while recording. */ }
+func Fra_ClausSimInfoRecord(p *Clu_Man_t, model []bool) {
+	if p.models == nil {
+		p.models = newClausModels(p.pCnf.Variables)
+	}
+	p.models.record(model)
+}
+func Fra_ClausSimInfoCheck(p *Clu_Man_t, lits []int32) int32 {
+	if p.models != nil && p.models.disproves(lits, p.nFrames*int32(p.pCnf.Variables)) {
+		return 1
+	}
+	return 0
+}
+func Fra_ClausInductiveClauses(p *Clu_Man_t) int32 {
+	proven := clausSlices(p.vLitsProven, p.vClausesProven)
+	candidates := clausSlices(p.vLits, p.vClauses)
+	costs := vec.Vec_IntArray(p.vCosts)
+	// Build the exact preceding-frame relation for the source's property check.
+	p.pSatMain = cnf.Cnf_DataWriteIntoSolver(p.pCnf, p.nFrames+1, 0)
+	if p.pSatMain == nil {
+		return -1
+	}
+	for f := int32(0); f < p.nFrames; f++ {
+		offset := f * 2 * int32(p.pCnf.Variables)
+		for _, clause := range proven {
+			lifted := make([]int32, len(clause))
+			for j, lit := range clause {
+				lifted[j] = lit + offset
+			}
+			if !p.pSatMain.AddClause(lifted...) {
+				return -1
+			}
+		}
+		for i, clause := range candidates {
+			if costs[i] == -1 {
+				continue
+			}
+			lifted := make([]int32, len(clause))
+			for j, lit := range clause {
+				lifted[j] = lit + offset
+			}
+			if !p.pSatMain.AddClause(lifted...) {
+				return -1
+			}
+		}
+	}
+	p.fFail = 0
+	if p.fTarget != 0 && Fra_ClausRunSat0(p) == 0 {
+		p.fFail = 1
+	}
+	removed, err := clausInductivePass(p.pCnf, p.nFrames, proven, candidates, costs, int64(p.nBTLimit))
+	if err != nil {
+		fmt.Println("Clause induction:", err)
+		return -1
+	}
+	return int32(removed)
+}
 func Fra_ClausAddToStorage(p *Clu_Man_t) {
-    var pStart *int32; 
-    var Beg, End, Counter, i, k int32;
-    Beg = 0;
-    Counter = 0;
-    pStart = Vec_IntArray( p.vLits );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(p.vClauses)) && (((End) = Vec_IntEntry(p.vClauses, i)), 1); i++  {
-        if Vec_IntEntry( p.vCosts, i ) == -1 {
-            Beg = End;
-            continue;
-        }
-        assert(Vec_IntEntry( p.vCosts, i ) > 0, "Vec_IntEntry( p.vCosts, i ) > 0");
-        assert(End - Beg <= p.nLutSize, "End - Beg <= p.nLutSize");
-        for  k = Beg; k < End; k++  {
-            Vec_IntPush( p.vLitsProven, pStart[k] );
-        }
-        Vec_IntPush( p.vClausesProven, Vec_IntSize(p.vLitsProven) );
-        Beg = End;
-        Counter++;
-
-        if i < p.nOneHots {
-            p.nOneHotsProven++; }
-    }
-    if p.fVerbose {
-    fmt.Printf("Added to storage %d proved clauses (including %d one-hot clauses)\n", Counter, p.nOneHotsProven); }
-
-    Vec_IntClear( p.vClauses );
-    Vec_IntClear( p.vLits );
-    Vec_IntClear( p.vCosts );
-    p.nClauses = 0;
-
-    p.fNothingNew = int32((Counter == 0));
+	clauses := clausSlices(p.vLits, p.vClauses)
+	count := 0
+	for i, clause := range clauses {
+		if vec.Vec_IntEntry(p.vCosts, i) == -1 {
+			continue
+		}
+		vec.Vec_IntPushArray(p.vLitsProven, clause, len(clause))
+		vec.Vec_IntPush(p.vClausesProven, int32(vec.Vec_IntSize(p.vLitsProven)))
+		count++
+		if int32(i) < p.nOneHots {
+			p.nOneHotsProven++
+		}
+	}
+	vec.Vec_IntClear(p.vClauses)
+	vec.Vec_IntClear(p.vLits)
+	vec.Vec_IntClear(p.vCosts)
+	p.nClauses = 0
+	p.fNothingNew = 0
+	if count == 0 {
+		p.fNothingNew = 1
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Converts AIG into the SAT solver.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Fra_ClausPrintIndClauses(p *Clu_Man_t) {
-    var Counters [9]int32 ;
-    var pStart *int32; 
-    var Beg, End, i int32;
-    Beg = 0;
-    pStart = Vec_IntArray( p.vLitsProven );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(p.vClausesProven)) && (((End) = Vec_IntEntry(p.vClausesProven, i)), 1); i++  {
-        if End - Beg >= 8 {
-            Counters[8]++;
-        } else {
-            Counters[End - Beg]++; }
-//printf( "%d ", End-Beg );
-        Beg = End;
-    }
-    fmt.Printf("SUMMARY: Total proved clauses = %d. ", Vec_IntSize(p.vClausesProven));
-    fmt.Printf("Clause per lit: ");
-    for  i = 0; i < 8; i++  {
-        if Counters[i] {
-            fmt.Printf("%d=%d ", i, Counters[i]); }
-    }
-    if Counters[8] {
-            fmt.Printf(">7=%d ", Counters[8]); }
-    fmt.Printf("\n");
+	var counts [9]int
+	for _, clause := range clausSlices(p.vLitsProven, p.vClausesProven) {
+		n := len(clause)
+		if n > 8 {
+			n = 8
+		}
+		counts[n]++
+	}
+	fmt.Printf("SUMMARY: Total proved clauses = %d. Clause per lit: ", vec.Vec_IntSize(p.vClausesProven))
+	for i, n := range counts {
+		if n != 0 {
+			fmt.Printf("%d=%d ", i, n)
+		}
+	}
+	fmt.Println()
+}
+func clausVarIDs(p *Clu_Man_t) []int {
+	ids := make([]int, p.pCnf.Variables)
+	for i := range ids {
+		ids[i] = -1
+	}
+	for id, v := range p.pCnf.VarNums {
+		if v >= 0 && int(v) < len(ids) {
+			ids[v] = id
+		}
+	}
+	return ids
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Writes the clauses into an AIGER file.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fra_ClausGetLiteral(p *Clu_Man_t, pVar2Id *int32, Lit int32) *Aig_Obj_t {
-    var pLiteral *Aig_Obj_t;
-    var NodeId int32  = pVar2Id[ lit_var(Lit) ];
-    assert(NodeId >= 0, "NodeId >= 0");
-    pLiteral = (Aig_Obj_t *)Aig_ManObj( p.pAig, NodeId ).pData;
-    return Aig_NotCond( pLiteral, lit_sign(Lit) );
+// Fra_ClausWriteIndClauses recreates the C routine's care AIGER output.
+func Fra_ClausWriteIndClauses(p *Clu_Man_t) {
+	src := p.pAig
+	dst := aig.NewGraph()
+	mapping := map[int]aig.Edge{0: dst.Const1()}
+	for _, in := range src.Inputs() {
+		mapping[in.NodeID()] = dst.NewInput()
+	}
+	var copyNode func(aig.Edge) aig.Edge
+	copyNode = func(e aig.Edge) aig.Edge {
+		value, ok := mapping[e.NodeID()]
+		if !ok {
+			n := src.Node(e)
+			a := copyNode(n.Fanins[0])
+			switch n.Kind {
+			case aig.And:
+				value = dst.AND(a, copyNode(n.Fanins[1]))
+			case aig.ExclusiveOr:
+				value = dst.XOR(a, copyNode(n.Fanins[1]))
+			case aig.Buffer, aig.Output:
+				value = a
+			default:
+				panic("invalid care graph node")
+			}
+			mapping[e.NodeID()] = value
+		}
+		if e.Complemented() {
+			return value.Not()
+		}
+		return value
+	}
+	ids := clausVarIDs(p)
+	for _, clause := range clausSlices(p.vLitsProven, p.vClausesProven) {
+		out := dst.Const0()
+		for _, lit := range clause {
+			v := int(lit >> 1)
+			if v >= len(ids) || ids[v] < 0 {
+				panic("unmapped care literal")
+			}
+			e := copyNode(aig.Edge(ids[v]) << 1)
+			if lit&1 != 0 {
+				e = e.Not()
+			}
+			out = dst.OR(out, e)
+		}
+		dst.AddOutput(out)
+	}
+	name := strings.TrimSuffix(src.Name, filepath.Ext(src.Name)) + "_care.aig"
+	if err := ioa.Ioa_WriteAiger(dst, name, 0, 1); err != nil {
+		fmt.Println("Could not write care clauses:", err)
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Writes the clauses into an AIGER file.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fra_ClausWriteIndClauses(p *Clu_Man_t) { 
-    extern void Ioa_WriteAiger( Aig_Man_t * pMan, char * pFileName, int fWriteSymbols, int fCompact );
-    var pNew *Aig_Man_t;
-    var pClause, pLiteral *Aig_Obj_t;
-    var pName string;
-    var pStart, pVar2Id *int32; 
-    var Beg, End, i, k int32;
-    // create mapping from SAT vars to node IDs
-    // inlining of macro ABC_ALLOC
-    pVar2Id = ((int *) malloc(sizeof(int) * (size_t)(p.pCnf.nVars)));
-    memset( pVar2Id, 0xFF, sizeof(int) * p.pCnf.nVars );
-    for  i = 0; i < Aig_ManObjNumMax(p.pAig); i++  {
-        if p.pCnf.pVarNums[i] >= 0 {
-            assert(p.pCnf.pVarNums[i] < p.pCnf.nVars, "p.pCnf.pVarNums[i] < p.pCnf.nVars");
-            pVar2Id[ p.pCnf.pVarNums[i] ] = i;
-        }
-    }
-    // start the manager
-    pNew = Aig_ManDupWithoutPos( p.pAig );
-    // add the clauses
-    Beg = 0;
-    pStart = Vec_IntArray( p.vLitsProven );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(p.vClausesProven)) && (((End) = Vec_IntEntry(p.vClausesProven, i)), 1); i++  {
-        pClause = Fra_ClausGetLiteral( p, pVar2Id, pStart[Beg] );
-        for  k = Beg + 1; k < End; k++  {
-            pLiteral = Fra_ClausGetLiteral( p, pVar2Id, pStart[k] );
-            pClause = Aig_Or( pNew, pClause, pLiteral );
-        }
-        Aig_ObjCreateCo( pNew, pClause );
-        Beg = End;
-    }
-    pVar2Id = nil;
-    Aig_ManCleanup( pNew );
-    pName = Ioa_FileNameGenericAppend( p.pAig.pName, "_care.aig" );
-    fmt.Printf("Care one-hotness clauses will be written into file \"%s\".\n", pName);
-    Ioa_WriteAiger( pNew, pName, 0, 1 );
-    Aig_ManStop( pNew );
+func Fra_ClausEstimateCoverageOne(sim *Fra_Sml_t, lits []int32, ids []int, result []uint32) {
+	for i := range result {
+		result[i] = ^uint32(0)
+	}
+	for _, lit := range lits {
+		v := int(lit >> 1)
+		words := Fra_ObjSim(sim, int32(ids[v]))
+		for i := range result {
+			value := words[i]
+			if lit&1 == 0 {
+				value = ^value
+			}
+			result[i] &= value
+		}
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Checks if the clause holds using the given simulation info.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fra_ClausEstimateCoverageOne(pSim *Fra_Sml_t, pLits *int32, nLits int32, pVar2Id *int32, pResult *uint32) {
-    var pSims [16]*uint32;
-    var iVar, i, w int32;
-    for  i = 0; i < nLits; i++  {
-        iVar = lit_var(pLits[i]);
-        pSims[i] = Fra_ObjSim( pSim, pVar2Id[iVar] );
-    }
-    for  w = 0; w < pSim.nWordsTotal; w++  {
-        pResult[w] = ~uint32(0);
-        for  i = 0; i < nLits; i++  {
-            pResult[w] &= (lit_sign(pLits[i])? pSims[i][w] : ~pSims[i][w]);
-        }
-    }
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Estimates the coverage of state space by clauses.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Fra_ClausEstimateCoverage(p *Clu_Man_t) {
-    var nCombSimWords int32  = (1<<11);
-    var pComb *Fra_Sml_t;
-    var pResultTot, pResultOne *uint32;
-    var nCovered, Beg, End, i, w int32;
-    var pStart, pVar2Id *int32; 
-    var clk abctime  = Abc_Clock();
-    // simulate the circuit with nCombSimWords * 32 = 64K patterns
-//    srand( 0xAABBAABB );
-    Aig_ManRandom(1);
-    pComb = Fra_SmlSimulateComb( p.pAig, nCombSimWords, 0 );
-    // create mapping from SAT vars to node IDs
-    // inlining of macro ABC_ALLOC
-    pVar2Id = ((int *) malloc(sizeof(int) * (size_t)(p.pCnf.nVars)));
-    memset( pVar2Id, 0, sizeof(int) * p.pCnf.nVars );
-    for  i = 0; i < Aig_ManObjNumMax(p.pAig); i++  {
-        if p.pCnf.pVarNums[i] >= 0 {
-            assert(p.pCnf.pVarNums[i] < p.pCnf.nVars, "p.pCnf.pVarNums[i] < p.pCnf.nVars");
-            pVar2Id[ p.pCnf.pVarNums[i] ] = i;
-        }
-    }
-    // get storage for one assignment and all assignments
-    assert(Aig_ManCoNum(p.pAig) > 2, "Aig_ManCoNum(p.pAig) > 2");
-    pResultOne = Fra_ObjSim( pComb, Aig_ManCo(p.pAig, 0).Id );
-    pResultTot = Fra_ObjSim( pComb, Aig_ManCo(p.pAig, 1).Id );
-    // start the OR of don't-cares
-    for  w = 0; w < nCombSimWords; w++  {
-        pResultTot[w] = 0;
-    }
-    // check clauses
-    Beg = 0;
-    pStart = Vec_IntArray( p.vLitsProven );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(p.vClausesProven)) && (((End) = Vec_IntEntry(p.vClausesProven, i)), 1); i++  {
-        Fra_ClausEstimateCoverageOne( pComb, pStart + Beg, End-Beg, pVar2Id, pResultOne );
-        Beg = End;
-        for  w = 0; w < nCombSimWords; w++  {
-            pResultTot[w] |= pResultOne[w];
-        }
-    }
-    // count the total number of patterns contained in the don't-care
-    nCovered = 0;
-    for  w = 0; w < nCombSimWords; w++  {
-        nCovered += Aig_WordCountOnes( pResultTot[w] );
-    }
-    Fra_SmlStop( pComb );
-    pVar2Id = nil;
-    // print the result
-    fmt.Printf("Care states ratio = %f. ", 1.0 * (nCombSimWords * 32 - nCovered) / (nCombSimWords * 32));
-    fmt.Printf("(%d out of %d patterns)  ", nCombSimWords * 32 - nCovered, nCombSimWords * 32);
-    // inlining of macro ABC_PRT
-    Abc_Print(1, "%s =", ("Time"));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;
+	sim := Fra_SmlSimulateComb(p.pAig, 1<<11, 0)
+	ids := clausVarIDs(p)
+	total := make([]uint32, 1<<11)
+	one := make([]uint32, len(total))
+	for _, clause := range clausSlices(p.vLitsProven, p.vClausesProven) {
+		Fra_ClausEstimateCoverageOne(sim, clause, ids, one)
+		for i := range total {
+			total[i] |= one[i]
+		}
+	}
+	count := 0
+	for _, v := range total {
+		count += bits.OnesCount32(v)
+	}
+	fmt.Printf("Care states ratio = %f. (%d out of %d patterns)\n", float64(len(total)*32-count)/float64(len(total)*32), len(total)*32-count, len(total)*32)
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    [Converts AIG into the SAT solver.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Fra_Claus(pAig *Aig_Man_t, nFrames int32, nPref int32, nClausesMax int32, nLutSize int32, nLevels int32, nCutsMax int32, nBatches int32, fStepUp int32, fBmc int32, fRefs int32, fTarget int32, fVerbose int32, fVeryVerbose int32) int32 {
-    var p *Clu_Man_t;
-    var clk abctime;
-    var clkTotal abctime = Abc_Clock();
-    var clkInd abctime;
-    var b, Iter, Counter, nPrefOld int32;
-    var nClausesBeg int32;
-
-    // create the manager
-    p = Fra_ClausAlloc( pAig, nFrames, nPref, nClausesMax, nLutSize, nLevels, nCutsMax, nBatches, fStepUp, fTarget, fVerbose, fVeryVerbose );
-if p.fVerbose {
-    fmt.Printf("PARAMETERS: Frames = %d. Pref = %d. Clauses max = %d. Cut size = %d.\n", nFrames, nPref, nClausesMax, nLutSize);
-    fmt.Printf("Level max = %d. Cuts max = %d. Batches = %d. Increment cut size = %s.\n", nLevels, nCutsMax, nBatches, fStepUp? "yes":"no");
-//ABC_PRT( "Sim-seq", Abc_Clock() - clk );
+func Fra_Claus(graph *aig.Graph, frames, prefix, maxClauses, cutSize, levels, maxCuts, batches, step, bmc, refs, target, verbose, veryVerbose int32) int32 {
+	p := Fra_ClausAlloc(graph, frames, prefix, maxClauses, cutSize, levels, maxCuts, batches, step, target, verbose, veryVerbose)
+	defer Fra_ClausFree(p)
+	if graph == nil || frames <= 0 || prefix < 0 || (target != 0 && graph.OutputCount()-int(graph.RegisterCount()) != 1) {
+		panic("invalid clause induction input")
+	}
+	p.pCnf = cnf.Cnf_DeriveSimple(graph, int32(graph.OutputCount()))
+	p.pSatBmc = cnf.Cnf_DataWriteIntoSolver(p.pCnf, p.nPref+p.nFrames, 1)
+	if p.pSatBmc == nil {
+		fmt.Println("Error: BMC solver is unsat.")
+		return 1
+	}
+	if target != 0 && Fra_ClausRunBmc(p) == 0 {
+		fmt.Printf("Problem fails the base case after %d frame expansion.\n", p.nPref+p.nFrames)
+		return 1
+	}
+	p.pSatMain = cnf.Cnf_DataWriteIntoSolver(p.pCnf, p.nFrames+1, 0)
+	if p.pSatMain == nil {
+		fmt.Println("Error: Main solver is unsat.")
+		return 1
+	}
+	for batch := int32(0); batch < p.nBatches; batch++ {
+		if batch != 0 && p.nLutSize < 12 && (p.fFiltering == 0 || p.fNothingNew != 0 || p.fStepUp != 0) {
+			p.nLutSize++
+		}
+		if target != 0 && Fra_ClausRunSat(p) != 0 {
+			fmt.Println("Problem is inductive without strengthening.")
+			return 1
+		}
+		old := p.nPref
+		p.nPref = 0
+		p.nSimWordsPref = 0
+		Fra_ClausProcessClauses2(p, refs)
+		p.nPref = old
+		p.nSimWordsPref = p.nPref * p.nSimWords / p.nSimFrames
+		if bmc != 0 {
+			p.nClauses -= Fra_ClausBmcClauses(p)
+		}
+		counter := int32(1)
+		for counter > 0 {
+			counter = Fra_ClausInductiveClauses(p)
+			if counter > 0 {
+				p.nClauses -= counter
+			}
+		}
+		Fra_ClausAddToStorage(p)
+		if target != 0 {
+			if counter == -1 {
+				fmt.Println("Fra_Claus: internal error.")
+			} else if p.fFail != 0 {
+				fmt.Println("Property fails during refinement.")
+			} else {
+				fmt.Println("Property holds inductively after strengthening.")
+				break
+			}
+		}
+	}
+	Fra_InvariantVerify(graph, frames, p.vClausesProven, p.vLitsProven)
+	if verbose != 0 {
+		Fra_ClausPrintIndClauses(p)
+		Fra_ClausEstimateCoverage(p)
+	}
+	if target == 0 {
+		Fra_ClausWriteIndClauses(p)
+	}
+	return 1
 }
-
-    assert(!p.fTarget || Aig_ManCoNum(pAig) - Aig_ManRegNum(pAig) == 1, "!p.fTarget || Aig_ManCoNum(pAig) - Aig_ManRegNum(pAig) == 1");
-
-clk = Abc_Clock();
-    // derive CNF
-//    if ( p->fTarget )
-//        p->pAig->nRegs++;
-    p.pCnf = Cnf_DeriveSimple( p.pAig, Aig_ManCoNum(p.pAig) );
-//    if ( p->fTarget )
-//        p->pAig->nRegs--;
-if fVerbose != 0 {
-//ABC_PRT( "CNF    ", Abc_Clock() - clk );
-}
-
-    // check BMC
-clk = Abc_Clock();
-    p.pSatBmc = (sat_solver *)Cnf_DataWriteIntoSolver( p.pCnf, p.nPref + p.nFrames, 1 );
-    if p.pSatBmc == nil {
-        fmt.Printf("Error: BMC solver is unsat.\n");
-        Fra_ClausFree( p );
-        return 1;
-    } 
-    if p.fTarget && !(Fra_ClausRunBmc( p ) != 0) {
-        fmt.Printf("Problem fails the base case after %d frame expansion.\n", p.nPref + p.nFrames);
-        Fra_ClausFree( p );
-        return 1;
-    }
-if fVerbose != 0 {
-//ABC_PRT( "SAT-bmc", Abc_Clock() - clk );
-}
-
-    // start the SAT solver
-clk = Abc_Clock();
-    p.pSatMain = (sat_solver *)Cnf_DataWriteIntoSolver( p.pCnf, p.nFrames+1, 0 );
-    if p.pSatMain == nil {
-        fmt.Printf("Error: Main solver is unsat.\n");
-        Fra_ClausFree( p );
-        return 1;
-    } 
-
-
-    for  b = 0; b < p.nBatches; b++  {
-//        if ( fVerbose )
-        fmt.Printf("*** BATCH %d:  ", b+1);
-        if (b != 0) && p.nLutSize < 12 && (!p.fFiltering || p.fNothingNew || p.fStepUp) {
-            p.nLutSize++; }
-        fmt.Printf("Using %d-cuts.\n", p.nLutSize);
-
-        // try solving without additional clauses
-        if p.fTarget && (Fra_ClausRunSat( p ) != 0) {
-            fmt.Printf("Problem is inductive without strengthening.\n");
-            Fra_ClausFree( p );
-            return 1;
-        }
-        if fVerbose != 0 {
-//        ABC_PRT( "SAT-ind", Abc_Clock() - clk );
-        }
- 
-        // collect the candidate inductive clauses using 4-cuts
-        clk = Abc_Clock();
-        nPrefOld = p.nPref; p.nPref = 0; p.nSimWordsPref = 0;
-    //    Fra_ClausProcessClauses( p, fRefs );
-        Fra_ClausProcessClauses2( p, fRefs );
-        p.nPref = nPrefOld;
-        p.nSimWordsPref = p.nPref*p.nSimWords/p.nSimFrames;
-        nClausesBeg = p.nClauses;
-
-    //ABC_PRT( "Clauses", Abc_Clock() - clk );
-
-
-        // check clauses using BMC
-        if fBmc != 0 {
-            clk = Abc_Clock();
-            Counter = Fra_ClausBmcClauses( p );
-            p.nClauses -= Counter;
-            if fVerbose != 0 {
-                fmt.Printf("BMC disproved %d clauses.  ", Counter);
-                // inlining of macro ABC_PRT
-                Abc_Print(1, "%s =", ("Time"));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;
-            }
-        }
-
-
-        // prove clauses inductively
-        clkInd = clk = Abc_Clock();
-        Counter = 1;
-        for  Iter = 0; Counter > 0; Iter++  {
-            if fVerbose != 0 {
-            fmt.Printf("Iter %3d : Begin = %5d. ", Iter, p.nClauses); }
-            Counter = Fra_ClausInductiveClauses( p );
-            if Counter > 0 {
-               p.nClauses -= Counter; }
-            if fVerbose != 0 {
-            fmt.Printf("End = %5d. Exs = %5d.  ", p.nClauses, p.nCexes);
-    //        printf( "\n" );
-            // inlining of macro ABC_PRT
-            Abc_Print(1, "%s =", ("Time"));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;
-            }
-            clk = Abc_Clock();
-        }
-        // add proved clauses to storage
-        Fra_ClausAddToStorage( p );
-        // report the results
-        if p.fTarget {
-            if Counter == -1 {
-                fmt.Printf("Fra_Claus(): Internal error.  ");
-            } else if p.fFail {
-                fmt.Printf("Property FAILS during refinement.  ");
-            } else {
-                fmt.Printf("Property HOLDS inductively after strengthening.  "); }
-            // inlining of macro ABC_PRT
-            Abc_Print(1, "%s =", ("Time  "));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clkTotal)))/(float64(int64(time.Second))));;
-            if !p.fFail {
-                break; }
-        
-        } else {
-            fmt.Printf("Finished proving inductive clauses. ");
-            // inlining of macro ABC_PRT
-            Abc_Print(1, "%s =", ("Time  "));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clkTotal)))/(float64(int64(time.Second))));;
-        }
-    }
-
-    // verify the computed interpolant
-    Fra_InvariantVerify( pAig, nFrames, p.vClausesProven, p.vLitsProven );
-//    printf( "THIS COMMAND IS KNOWN TO HAVE A BUG!\n" );
-
-//    if ( !p->fTarget && p->fVerbose )
-    if p.fVerbose {
-        Fra_ClausPrintIndClauses( p );
-        Fra_ClausEstimateCoverage( p );
-    }
-
-    if !p.fTarget {
-        Fra_ClausWriteIndClauses( p );
-    }
-/*
-    // print the statistic into a file
-    {
-        FILE * pTable;
-        assert( p->nBatches == 1 );
-        pTable = fopen( "stats.txt", "a+" );
-        fprintf( pTable, "%s ",  pAig->pName );
-        fprintf( pTable, "%d ",  Aig_ManCiNum(pAig)-Aig_ManRegNum(pAig) );
-        fprintf( pTable, "%d ",  Aig_ManCoNum(pAig)-Aig_ManRegNum(pAig) );
-        fprintf( pTable, "%d ",  Aig_ManRegNum(pAig) );
-        fprintf( pTable, "%d ",  Aig_ManNodeNum(pAig) );
-        fprintf( pTable, "%d ",  p->nCuts );
-        fprintf( pTable, "%d ",  nClausesBeg );
-        fprintf( pTable, "%d ",  p->nClauses );
-        fprintf( pTable, "%d ",  Iter );
-        fprintf( pTable, "%.2f ", (float)(clkInd-clkTotal)/(float)(CLOCKS_PER_SEC) );
-        fprintf( pTable, "%.2f ", (float)(Abc_Clock()-clkInd)/(float)(CLOCKS_PER_SEC) );
-        fprintf( pTable, "%.2f ", (float)(Abc_Clock()-clkTotal)/(float)(CLOCKS_PER_SEC) );
-        fprintf( pTable, "\n" );
-        fclose( pTable );
-    }
-*/
-    // clean the manager
-    Fra_ClausFree( p );
-    return 1;
-}
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
