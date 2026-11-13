@@ -118,7 +118,7 @@ func Gia_ManIsoMatchNodes(iso []int32, store []uint32, words int32, a, b *vec.Ve
 
 func Cec_ManTransformClasses(p *gia.Gia_Man_t) {
 	iso := p.Isomorphism()
-	if len(iso) != int(gia.Gia_ManObjNum(p)) {
+	if !p.HasRepresentatives() || len(iso) != int(gia.Gia_ManObjNum(p)) {
 		panic("cec: missing isomorphism pairs")
 	}
 	p.StartRepresentatives()

@@ -48,3 +48,16 @@ func TestIsomorphismSimulationComplements(t *testing.T) {
 		t.Fatalf("simulation %x", got)
 	}
 }
+
+// cecIso.c requires both existing representative arrays and pIso.
+func TestTransformClassesRequiresAllocatedClasses(t *testing.T) {
+	p := gia.Gia_ManStart(8)
+	gia.Gia_ManAppendCi(p)
+	p.SetIsomorphism(make([]int32, gia.Gia_ManObjNum(p)))
+	defer func() {
+		if recover() == nil {
+			t.Fatal("missing class arrays accepted")
+		}
+	}()
+	Cec_ManTransformClasses(p)
+}
