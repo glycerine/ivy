@@ -74,3 +74,38 @@ func TestSswBmcDynamicProvesBoundedSafe(t *testing.T) {
 		t.Fatalf("result=%d", got)
 	}
 }
+
+func TestSswCnfBufferIsConstrained(t *testing.T) {
+	g := aig.NewGraph()
+	a := g.NewInput()
+	b := aig.Aig_ObjCreate(g, &aig.Node{Kind: aig.Buffer, Fanins: [2]aig.Edge{a.Not(), aig.InvalidEdge}})
+	p := Ssw_SatStart(0)
+	p.pAig = g
+	Ssw_CnfNodeAddToSolver(p, b)
+	for _, v := range []bool{false, true} {
+		for _, out := range []bool{false, true} {
+			status := p.pSat.Solve(sswLit(p, a, !v), sswLit(p, b, !out))
+			if (status == bsat.Satisfiable) != (out != v) {
+				t.Fatalf("input=%v output=%v status=%v", v, out, status)
+			}
+		}
+	}
+}
+func TestSswBmcUnrollBuffer(t *testing.T) {
+	g := aig.NewGraph()
+	a := g.NewInput()
+	g.NewInput()
+	b := aig.Aig_ObjCreate(g, &aig.Node{Kind: aig.Buffer, Fanins: [2]aig.Edge{a.Not(), aig.InvalidEdge}})
+	o := g.AddOutput(b)
+	g.AddOutput(a)
+	aig.Aig_ManSetRegNum(g, 1)
+	p := Ssw_FrmStart(g)
+	defer Ssw_FrmStop(p)
+	p.pFrames = aig.NewGraph()
+	result := Ssw_BmcUnroll_rec(p, o, 0)
+	p.pFrames.AddOutput(result)
+	got, err := p.pFrames.Evaluate([]bool{true})
+	if err != nil || got[0] {
+		t.Fatalf("output=%v error=%v", got, err)
+	}
+}

@@ -23,7 +23,7 @@ func Ssw_BmcUnroll_rec(p *Ssw_Frm_t, obj aig.Edge, frame int32) aig.Edge {
 		result = p.pFrames.Const1()
 	case saig.Saig_ObjIsPi(p.pAig, obj):
 		result = p.pFrames.NewInput()
-	case aig.Aig_ObjIsCo(p.pAig, obj):
+	case aig.Aig_ObjIsCo(p.pAig, obj) || aig.Aig_ObjIsBuf(p.pAig, obj):
 		Ssw_BmcUnroll_rec(p, aig.Aig_ObjFanin0(p.pAig, obj), frame)
 		result = Ssw_ObjChild0Fra_(p, obj, frame)
 	case saig.Saig_ObjIsLo(p.pAig, obj):

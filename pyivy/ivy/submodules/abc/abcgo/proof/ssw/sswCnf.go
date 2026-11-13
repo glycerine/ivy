@@ -93,7 +93,7 @@ func Ssw_ObjAddToFrontier(p *Ssw_Sat_t, obj aig.Edge, frontier *vec.Vec_Ptr_t) {
 	for p.pSat.NumVars() < p.nSatVars {
 		p.pSat.NewVariable()
 	}
-	if aig.Aig_ObjIsNode(p.pAig, obj) {
+	if aig.Aig_ObjIsNode(p.pAig, obj) || aig.Aig_ObjIsBuf(p.pAig, obj) {
 		vec.Vec_PtrPush(frontier, obj)
 	}
 }
@@ -108,6 +108,13 @@ func Ssw_CnfNodeAddToSolver(p *Ssw_Sat_t, obj aig.Edge) {
 	Ssw_ObjAddToFrontier(p, obj, frontier)
 	for i := 0; i < vec.Vec_PtrSize(frontier); i++ {
 		node := vec.Vec_PtrEntry(frontier, i).(aig.Edge)
+		if aig.Aig_ObjIsBuf(p.pAig, node) {
+			a := aig.Aig_ObjChild0(p.pAig, node)
+			Ssw_ObjAddToFrontier(p, aig.Aig_Regular(a), frontier)
+			sswAddClause(p, sswLit(p, a, true), sswLit(p, node, false))
+			sswAddClause(p, sswLit(p, a, false), sswLit(p, node, true))
+			continue
+		}
 		if p.pAig.Node(node).Kind == aig.ExclusiveOr {
 			a, b := aig.Aig_ObjChild0(p.pAig, node), aig.Aig_ObjChild1(p.pAig, node)
 			Ssw_ObjAddToFrontier(p, aig.Aig_Regular(a), frontier)
@@ -153,6 +160,14 @@ func Ssw_CnfGetNodeValue(p *Ssw_Sat_t, obj aig.Edge) int32 {
 	}
 	if aig.Aig_ObjIsCi(p.pAig, obj) {
 		return 0
+	}
+	if aig.Aig_ObjIsBuf(p.pAig, obj) {
+		child := aig.Aig_ObjChild0(p.pAig, obj)
+		value := Ssw_CnfGetNodeValue(p, aig.Aig_Regular(child))
+		if child.Complemented() {
+			value ^= 1
+		}
+		return value
 	}
 	if !aig.Aig_ObjIsNode(p.pAig, obj) {
 		panic("ssw: unsupported model object")
