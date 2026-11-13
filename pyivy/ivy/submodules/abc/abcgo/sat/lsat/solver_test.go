@@ -173,3 +173,94 @@ func TestConflictSnapshotAndCurrentModelDistinction(t *testing.T) {
 		t.Fatal("model snapshot lost")
 	}
 }
+
+func TestIncrementalQueriesAndConflictCores(t *testing.T) {
+	rng := rand.New(rand.NewSource(41734))
+	for trial := 0; trial < 300; trial++ {
+		const n = 5
+		s := New()
+		for i := 0; i < n; i++ {
+			s.NewVariable()
+		}
+		var clauses [][]int
+		satisfiable := func(assumptions []int) bool {
+			for mask := 0; mask < 1<<n; mask++ {
+				ok := true
+				for _, lit := range assumptions {
+					if ((mask>>(lit>>1))&1)^(lit&1) == 0 {
+						ok = false
+						break
+					}
+				}
+				for _, clause := range clauses {
+					any := false
+					for _, lit := range clause {
+						if ((mask>>(lit>>1))&1)^(lit&1) != 0 {
+							any = true
+							break
+						}
+					}
+					if !any {
+						ok = false
+						break
+					}
+				}
+				if ok {
+					return true
+				}
+			}
+			return false
+		}
+		for step := 0; step < 12; step++ {
+			if step%2 == 0 {
+				clause := []int{rng.Intn(2 * n), rng.Intn(2 * n), rng.Intn(2 * n)}
+				clauses = append(clauses, append([]int(nil), clause...))
+				s.AddClause(clause)
+			}
+			var assumptions []int
+			for i := 0; i < rng.Intn(5); i++ {
+				assumptions = append(assumptions, rng.Intn(2*n))
+			}
+			want, got := satisfiable(assumptions), s.Solve(assumptions)
+			if got != want {
+				t.Fatalf("trial=%d step=%d got=%v want=%v clauses=%v assumptions=%v", trial, step, got, want, clauses, assumptions)
+			}
+			if got {
+				continue
+			}
+			var core []int
+			for _, lit := range s.Conflict() {
+				found := false
+				for _, a := range assumptions {
+					if a == lit^1 {
+						found = true
+						break
+					}
+				}
+				if !found {
+					t.Fatalf("conflict %v absent from %v", s.Conflict(), assumptions)
+				}
+				core = append(core, lit^1)
+			}
+			if satisfiable(core) {
+				t.Fatalf("trial=%d step=%d satisfiable conflict core %v", trial, step, core)
+			}
+		}
+	}
+}
+
+func TestInvalidClauseDoesNotGrowVariables(t *testing.T) {
+	s := New()
+	s.NewVariable()
+	func() {
+		defer func() {
+			if recover() == nil {
+				t.Error("invalid literal accepted")
+			}
+		}()
+		s.AddClause([]int{20, -1})
+	}()
+	if s.VariableCount() != 1 || !s.Solve(nil) {
+		t.Fatal("invalid clause changed solver state")
+	}
+}

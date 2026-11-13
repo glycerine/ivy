@@ -38,16 +38,20 @@ func (s *Solver) AddClause(lits []int) bool {
 	if !s.ok {
 		return false
 	}
-	s.cancel(0)
-	copyLits := append([]int(nil), lits...)
-	for _, lit := range copyLits {
+	maxVariable := -1
+	for _, lit := range lits {
 		if lit < 0 {
 			panic("negative encoded literal")
 		}
-		for lit>>1 >= len(s.values) {
-			s.AddVariable(true)
+		if lit>>1 > maxVariable {
+			maxVariable = lit >> 1
 		}
 	}
+	s.cancel(0)
+	for maxVariable >= len(s.values) {
+		s.AddVariable(true)
+	}
+	copyLits := append([]int(nil), lits...)
 	sort.Ints(copyLits)
 	out := copyLits[:0]
 	last := -2
