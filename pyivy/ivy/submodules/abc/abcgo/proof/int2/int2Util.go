@@ -113,7 +113,11 @@ func Int2_ManProbToGia(p *Gia_Man_t, vSop *Vec_Int_t) *Gia_Man_t {
 		gia.Gia_ObjSetValue(co, gia.Gia_ObjFanin0Copy(co))
 	}
 	sop := int32(0)
-	if vSop != nil {
+	if vSop == nil {
+		// The initial suffix is the property's output. Subsequent suffixes
+		// use the SOP over next-state outputs below.
+		sop = gia.Gia_ObjValue(gia.Gia_ManPo(p, 0))
+	} else {
 		for pos := 1; pos < vec.Vec_IntSize(vSop); {
 			count := int(vec.Vec_IntEntry(vSop, pos))
 			pos++

@@ -250,10 +250,20 @@ func Int2_ManComputePreimage(pSuff *Gia_Man_t, pSatPref, pSatSuff *sat_solver, v
 		if status == l_False {
 			var core []int32
 			sat_solver_final(pSatPref, &core)
-			clause := append([]int32(nil), core...)
-			vec.Vec_IntPush(image, int32(len(clause)))
-			for _, literal := range clause {
-				vec.Vec_IntPush(image, literal)
+			clause := make([]int32, 0, len(core))
+			vec.Vec_IntPush(image, int32(len(core)))
+			for _, literal := range core {
+				stateIndex := -1
+				for i := 0; i < vec.Vec_IntSize(vCiMap); i++ {
+					if vec.Vec_IntEntry(vCiMap, i) == literal>>1 {
+						stateIndex = i
+						break
+					}
+				}
+				assert(stateIndex >= 0, "core literal maps to a state variable")
+				suffixVariable := vec.Vec_IntEntry(vCoMap, int(firstStateCI)+stateIndex)
+				clause = append(clause, sat_literal(suffixVariable, literal&1))
+				vec.Vec_IntPush(image, sat_literal(int32(stateIndex), literal&1))
 			}
 			if sat_solver_addclause(pSatSuff, clause) == 0 {
 				return image, INT2_COMPUTED

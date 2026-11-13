@@ -102,3 +102,47 @@ func TestRefineCubeSupportsCombinationalSuffix(t *testing.T) {
 		t.Fatalf("selected CI indices %v, want both inputs", vec.Vec_IntArray(subset))
 	}
 }
+
+func TestComputePreimageBlocksUnreachableSuffixState(t *testing.T) {
+	suffix := gia.Gia_ManStart(8)
+	x := gia.Gia_ManAppendCi(suffix)
+	gia.Gia_ManAppendCo(suffix, x)
+	prefixSAT, suffixSAT := sat_solver_new(), sat_solver_new()
+	sat_solver_setnvars(prefixSAT, 1)
+	sat_solver_setnvars(suffixSAT, 1)
+	if sat_solver_addclause(prefixSAT, []int32{1}) == 0 || sat_solver_addclause(suffixSAT, []int32{0}) == 0 {
+		t.Fatal("could not construct test solvers")
+	}
+	ciMap := vec.Vec_IntAllocArrayCopy([]int32{0}, 1)
+	coMap := vec.Vec_IntAllocArrayCopy([]int32{0}, 1)
+	prio := vec.Vec_IntAllocArrayCopy([]int32{1}, 1)
+	image, status := Int2_ManComputePreimage(suffix, prefixSAT, suffixSAT, ciMap, coMap, prio)
+	if status != INT2_COMPUTED || image == nil {
+		t.Fatalf("preimage status %d image %v", status, image)
+	}
+	if got := vec.Vec_IntArray(image); len(got) != 2 || got[0] != 1 || got[1] != 1 {
+		t.Fatalf("blocked cube %v, want [1 1]", got)
+	}
+}
+
+func TestComputePreimageTranslatesSATVariableMappings(t *testing.T) {
+	suffix := gia.Gia_ManStart(8)
+	x := gia.Gia_ManAppendCi(suffix)
+	gia.Gia_ManAppendCo(suffix, x)
+	prefixSAT, suffixSAT := sat_solver_new(), sat_solver_new()
+	sat_solver_setnvars(prefixSAT, 1)
+	sat_solver_setnvars(suffixSAT, 2)
+	if sat_solver_addclause(prefixSAT, []int32{1}) == 0 || sat_solver_addclause(suffixSAT, []int32{2}) == 0 {
+		t.Fatal("could not construct test solvers")
+	}
+	ciMap := vec.Vec_IntAllocArrayCopy([]int32{0}, 1)
+	coMap := vec.Vec_IntAllocArrayCopy([]int32{1}, 1)
+	prio := vec.Vec_IntAllocArrayCopy([]int32{1}, 1)
+	image, status := Int2_ManComputePreimage(suffix, prefixSAT, suffixSAT, ciMap, coMap, prio)
+	if status != INT2_COMPUTED || image == nil {
+		t.Fatalf("status %d image %v", status, image)
+	}
+	if got := vec.Vec_IntArray(image); len(got) != 2 || got[0] != 1 || got[1] != 1 {
+		t.Fatalf("blocked state cube %v, want [1 1]", got)
+	}
+}
