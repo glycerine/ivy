@@ -90,3 +90,24 @@ func TestKLiveUsesNativeConstraints(t *testing.T) {
 		t.Fatal("unconstrained recurrence was incorrectly proved")
 	}
 }
+
+func TestNamedPropertySelectionExcludesNativeConstraints(t *testing.T) {
+	for _, name := range []string{"assert_fair_constraint", "assume_fair_constraint", "assert_safety_constraint", "assume_safety_constraint"} {
+		t.Run(name, func(t *testing.T) {
+			g := aig.NewGraph()
+			x := g.NewInput()
+			g.AddOutput(x)
+			g.AddOutput(x)
+			aig.Aig_ManSetConstrNum(g, 1)
+			n, err := NewNetwork(g, []string{"x"}, []string{"ordinary", name})
+			if err != nil {
+				t.Fatal(err)
+			}
+			for _, selectSignals := range []func(*Network, *aig.Graph) []aig.Edge{populateLivenessVector, populateFairnessVector, populateSafetyAssertionVector, populateSafetyAssumptionVector} {
+				if got := selectSignals(n, g); len(got) != 0 {
+					t.Fatalf("constraint %q selected as a property: %v", name, got)
+				}
+			}
+		})
+	}
+}

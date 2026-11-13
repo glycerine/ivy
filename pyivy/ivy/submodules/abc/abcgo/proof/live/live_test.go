@@ -33,8 +33,8 @@ func TestSafetyReachabilityAndLimits(t *testing.T) {
 	if got := CheckSafety(liveFixture(false).Graph, 0, SafetyOptions{}); got.Status != 1 {
 		t.Fatalf("zero latch should be safe %+v", got)
 	}
-	if got := CheckSafety(oscillator.Graph, 0, SafetyOptions{MaxStates: 1}); got.Status != -1 {
-		t.Fatal("state limit must be unknown")
+	if got := CheckSafety(oscillator.Graph, 0, SafetyOptions{MaxStates: 1}); got.Status != -1 || got.Error == nil {
+		t.Fatal("unsupported state limit must return unknown with an error")
 	}
 }
 func TestBiereLoopAndFairness(t *testing.T) {

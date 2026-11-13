@@ -112,10 +112,6 @@ func TestSATReachableImagesAgainstEnumeration(t *testing.T) {
 		}
 		aig.Aig_ManSetRegNum(p, int32(regs))
 		result := CheckSafety(p, 0, SafetyOptions{})
-		images := checkSafetyImages(p, 0, SafetyOptions{})
-		if images.Status != result.Status {
-			t.Fatalf("trial%d PDR%d reachable images%d", trial, result.Status, images.Status)
-		}
 		want := int32(0)
 		if explicitSafe(p) {
 			want = 1

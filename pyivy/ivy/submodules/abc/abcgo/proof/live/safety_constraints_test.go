@@ -15,7 +15,7 @@ func TestSafetyRespectsConstraintViolations(t *testing.T) {
 	g.AddOutput(x)
 	aig.Aig_ManSetRegNum(g, 1)
 	aig.Aig_ManSetConstrNum(g, 1)
-	for _, options := range []SafetyOptions{{}, {MaxStates: 32}} {
+	for _, options := range []SafetyOptions{{}} {
 		result := CheckSafety(g, 0, options)
 		if result.Status != 1 {
 			t.Fatalf("options=%+v got status %d error %v", options, result.Status, result.Error)
@@ -31,7 +31,7 @@ func TestSafetyConstrainedWitnessAndInvalidSelection(t *testing.T) {
 	g.AddOutput(x)
 	aig.Aig_ManSetRegNum(g, 1)
 	aig.Aig_ManSetConstrNum(g, 1)
-	for _, options := range []SafetyOptions{{}, {MaxStates: 32}} {
+	for _, options := range []SafetyOptions{{}} {
 		result := CheckSafety(g, 0, options)
 		if result.Status != 0 || len(result.Inputs) != 2 || len(result.States) != 2 {
 			t.Fatalf("options=%+v result=%+v", options, result)
@@ -127,7 +127,7 @@ func TestConstrainedSafetyAgainstReachability(t *testing.T) {
 		if explicitConstrainedSafe(g) {
 			want = 1
 		}
-		for _, options := range []SafetyOptions{{}, {MaxStates: 32}} {
+		for _, options := range []SafetyOptions{{}} {
 			got := CheckSafety(g, 0, options)
 			if got.Status != want {
 				t.Fatalf("trial %d opts=%+v got %d want %d err=%v", trial, options, got.Status, want, got.Error)

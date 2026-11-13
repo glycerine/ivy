@@ -1,10 +1,8 @@
 package live
 
 import (
-	"bufio"
 	"fmt"
 	"github.com/glycerine/abcgo/aig/aig"
-	"io"
 	"strconv"
 	"strings"
 	"time"
@@ -100,32 +98,6 @@ func collectUserGivenDisjunctiveMonotoneSignals(n *Network) [][]int32 {
 		if strings.Contains(outputName(n, i), "csLevel1Stabil_") {
 			result = append(result, []int32{int32(i)})
 		}
-	}
-	return result
-}
-func getVecOfVecFairness(reader io.Reader) [][]int32 {
-	scanner := bufio.NewScanner(reader)
-	result := [][]int32{}
-	for scanner.Scan() {
-		line := scanner.Text()
-		if index := strings.Index(line, ":"); index >= 0 {
-			line = line[index+1:]
-		}
-		fields := strings.Fields(line)
-		group := []int32{}
-		for _, field := range fields {
-			value, err := strconv.ParseInt(field, 10, 32)
-			if err != nil {
-				panic(err)
-			}
-			group = append(group, int32(value))
-		}
-		if len(group) > 0 {
-			result = append(result, group)
-		}
-	}
-	if err := scanner.Err(); err != nil {
-		panic(err)
 	}
 	return result
 }

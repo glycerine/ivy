@@ -249,7 +249,7 @@ func LivenessToSafetyTransformationWithLTL(mode int32, n *Network, p *aig.Graph,
 }
 func selectOutputs(n *Network, prefix string) []aig.Edge {
 	signals := []aig.Edge{}
-	for i := 0; i < trueOutputs(n.Graph); i++ {
+	for i := 0; i < propertyOutputs(n.Graph); i++ {
 		if strings.HasPrefix(outputName(n, i), prefix) {
 			signals = append(signals, n.Graph.Outputs()[i])
 		}
@@ -264,7 +264,7 @@ func populateFairnessVector(n *Network, p *aig.Graph) []aig.Edge {
 }
 func selectOutputAliases(n *Network, prefixes ...string) []aig.Edge {
 	result := []aig.Edge{}
-	for i := 0; i < trueOutputs(n.Graph); i++ {
+	for i := 0; i < propertyOutputs(n.Graph); i++ {
 		for _, prefix := range prefixes {
 			if strings.HasPrefix(outputName(n, i), prefix) {
 				result = append(result, n.Graph.Outputs()[i])
