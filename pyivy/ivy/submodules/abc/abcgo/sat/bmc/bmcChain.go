@@ -41,7 +41,11 @@ func Bmc_ChainTest(graph *gia.Gia_Man_t, maxFrames, conflictLimit, verbose, very
 		if model != nil {
 			model.IPo = int32(output)
 		}
-		vec.Vec_PtrPush(results, model)
+		if model == nil {
+			vec.Vec_PtrPush(results, nil)
+		} else {
+			vec.Vec_PtrPush(results, model)
+		}
 	}
 	if cexes != nil {
 		*cexes = results

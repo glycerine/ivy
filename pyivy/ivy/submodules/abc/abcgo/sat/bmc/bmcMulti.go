@@ -45,7 +45,11 @@ func Gia_ManMultiProveAig(graph *aig.Graph, params *Bmc_MulPar_t) *vec.Vec_Ptr_t
 			timeout = params.TimeOutGlo
 		}
 		model := checkOneProperty(graph, output, 0, 0, timeout, params.TimePerOut)
-		vec.Vec_PtrPush(results, model)
+		if model == nil {
+			vec.Vec_PtrPush(results, nil)
+		} else {
+			vec.Vec_PtrPush(results, model)
+		}
 	}
 	return results
 }

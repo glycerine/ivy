@@ -1,6 +1,7 @@
 package bmc
 
 import (
+	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/aig/gia"
 )
 

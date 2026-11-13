@@ -1,393 +1,226 @@
 package bmc
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/misc/vec"
+	"time"
+)
 
-/**CFile****************************************************************
-
-  FileName    [bmcInse.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [SAT-based bounded model checking.]
-
-  Synopsis    []
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: bmcInse.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "bmc.h"
-//#include "sat/cnf/cnf.h"
-//#include "sat/bsat/satStore.h"
-//#include "aig/gia/giaAig.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-// inlining of macro ABC_ALLOC
-func Gia_ParTestAlloc(p *Gia_Man_t, nWords int32) { assert(!p.pData, "!p.pData"); p.pData = (unsigned *)((word *) malloc(sizeof(word) * (size_t)(2*nWords*Gia_ManObjNum(p)))); p.iData = nWords; }
-func Gia_ParTestFree(p *Gia_Man_t) { p.pData = nil; p.iData = 0;             }
-func Gia_ParTestObj(p *Gia_Man_t, Id int32) *word { return (word *)p.pData + Id*(p.iData << 1);   }
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManInseInit(p *Gia_Man_t, vInit *Vec_Int_t) {
-    var pObj *Gia_Obj_t;
-    var pData1, pData0 *word;
-    var i, k int32;
-    // inlining of macro Gia_ManForEachRi
-    for k = 0; k < Gia_ManRegNum(p); k++ {
-    	pObj = Gia_ManCo(p, Gia_ManPoNum(p)+k)
-    	if pObj == nil { break }
-        pData0 = Gia_ParTestObj( p, Gia_ObjId(p, pObj) );
-        pData1 = pData0 + p.iData;
-        if Vec_IntEntry(vInit, k) == 0 { // 0
-            for  i = 0; i < p.iData; i++  {
-                pData0[i] = ~(word)0, pData1[i] = 0;
-            }
-        } else if Vec_IntEntry(vInit, k) == 1 { // 1
-            for  i = 0; i < p.iData; i++  {
-                pData0[i] = 0, pData1[i] = ~(word)0;
-            }
-        } else { // if ( Vec_IntEntry(vInit, k) > 1 ) // X
-            for  i = 0; i < p.iData; i++  {
-                pData0[i] = pData1[i] = 0;
-            } }
-    }
-}
-func Gia_ManInseSimulateObj(p *Gia_Man_t, Id int32) {
-    var pObj *Gia_Obj_t  = Gia_ManObj( p, Id );
-    var pData0, pDataA0, pDataB0 *word;
-    var pData1, pDataA1, pDataB1 *word;
-    var i int32;
-    if Gia_ObjIsAnd(pObj) {
-        pData0  = Gia_ParTestObj( p, Id );
-        pData1  = pData0 + p.iData;
-        if Gia_ObjFaninC0(pObj) {
-            pDataA1 = Gia_ParTestObj( p, Gia_ObjFaninId0(pObj, Id) );
-            pDataA0 = pDataA1 + p.iData;
-            if Gia_ObjFaninC1(pObj) {
-                pDataB1 = Gia_ParTestObj( p, Gia_ObjFaninId1(pObj, Id) );
-                pDataB0 = pDataB1 + p.iData;
-            
-            } else {
-                pDataB0 = Gia_ParTestObj( p, Gia_ObjFaninId1(pObj, Id) );
-                pDataB1 = pDataB0 + p.iData;
-            }
-        
-        } else {
-            pDataA0 = Gia_ParTestObj( p, Gia_ObjFaninId0(pObj, Id) );
-            pDataA1 = pDataA0 + p.iData;
-            if Gia_ObjFaninC1(pObj) {
-                pDataB1 = Gia_ParTestObj( p, Gia_ObjFaninId1(pObj, Id) );
-                pDataB0 = pDataB1 + p.iData;
-            
-            } else {
-                pDataB0 = Gia_ParTestObj( p, Gia_ObjFaninId1(pObj, Id) );
-                pDataB1 = pDataB0 + p.iData;
-            }
-        }
-        for  i = 0; i < p.iData; i++  {
-            pData0[i] = pDataA0[i] | pDataB0[i], pData1[i] = pDataA1[i] & pDataB1[i];
-        }
-    
-    } else if Gia_ObjIsCo(pObj) {
-        pData0  = Gia_ParTestObj( p, Id );
-        pData1  = pData0 + p.iData;
-        if Gia_ObjFaninC0(pObj) {
-            pDataA1 = Gia_ParTestObj( p, Gia_ObjFaninId0(pObj, Id) );
-            pDataA0 = pDataA1 + p.iData;
-        
-        } else {
-            pDataA0 = Gia_ParTestObj( p, Gia_ObjFaninId0(pObj, Id) );
-            pDataA1 = pDataA0 + p.iData;
-        }
-        for  i = 0; i < p.iData; i++  {
-            pData0[i] = pDataA0[i], pData1[i] = pDataA1[i];
-        }
-    
-    } else if Gia_ObjIsCi(pObj) {
-        if Gia_ObjIsPi(p, pObj) {
-            pData0  = Gia_ParTestObj( p, Id );
-            pData1  = pData0 + p.iData;
-            for  i = 0; i < p.iData; i++  {
-                pData0[i] = Gia_ManRandomW(0), pData1[i] = ~pData0[i];
-            }
-        
-        } else {
-            var Id2 int32  = Gia_ObjId(p, Gia_ObjRoToRi(p, pObj));
-            pData0  = Gia_ParTestObj( p, Id );
-            pData1  = pData0 + p.iData;
-            pDataA0 = Gia_ParTestObj( p, Id2 );
-            pDataA1 = pDataA0 + p.iData;
-            for  i = 0; i < p.iData; i++  {
-                pData0[i] = pDataA0[i], pData1[i] = pDataA1[i];
-            }
-        }
-    
-    } else if Gia_ObjIsConst0(pObj) {
-        pData0  = Gia_ParTestObj( p, Id );
-        pData1  = pData0 + p.iData;
-        for  i = 0; i < p.iData; i++  {
-            pData0[i] = ~(word)0, pData1[i] = 0;
-        }
-    
-    } else { assert(false, "0"); }
+// inseState packs ternary simulations into separate known-zero and known-one
+// bitsets for each GIA object. A bit clear in both sets represents X.
+type inseState struct {
+	p               *gia.Gia_Man_t
+	words           int
+	zero, one       [][]uint64
+	inputs, outputs []int32
+	npi, npo        int
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManInseHighestScore(p *Gia_Man_t, pCost *int32) int32 {
-    var pObj *Gia_Obj_t;
-    var pData0, pData1 *word;
-    var pCounts *int32;
-    var CountBest int32;
-    var i, k, b, nPats, iPat int32;
-    nPats = 64 * p.iData;
-    // inlining of macro ABC_CALLOC
-    pCounts = ((int *) calloc((size_t)(nPats), sizeof(int)));
-    // inlining of macro Gia_ManForEachRi
-    for k = 0; k < Gia_ManRegNum(p); k++ {
-    	pObj = Gia_ManCo(p, Gia_ManPoNum(p)+k)
-    	if pObj == nil { break }
-        pData0 = Gia_ParTestObj( p, Gia_ObjId(p, pObj) );
-        pData1 = pData0 + p.iData;
-        for  i = 0; i < p.iData; i++  {
-            for  b = 0; b < 64; b++  {
-                pCounts[64*i+b] += (((pData0[i] >> b) & 1) || ((pData1[i] >> b) & 1));
-            }
-        } // binary
-    }
-    iPat = 0;
-    CountBest = pCounts[0]; 
-    for  k = 1; k < nPats; k++  {
-        if CountBest < pCounts[k] {
-            CountBest = pCounts[k];
-iPat = k; }
-    }
-    *pCost = Gia_ManRegNum(p) - CountBest; // ternary
-    pCounts = nil;
-    return iPat;
+func newInseState(p *gia.Gia_Man_t, nwords int) *inseState {
+	if p == nil || nwords <= 0 {
+		panic("bmc: invalid initial-state simulation")
+	}
+	n := gia.Gia_ManObjNum(p)
+	s := &inseState{p: p, words: nwords, zero: make([][]uint64, n), one: make([][]uint64, n), inputs: p.InputLiterals(), outputs: p.OutputLiterals(), npi: int(gia.Gia_ManPiNum(p)), npo: int(gia.Gia_ManPoNum(p))}
+	for i := range s.zero {
+		s.zero[i] = make([]uint64, nwords)
+		s.one[i] = make([]uint64, nwords)
+	}
+	return s
 }
-func Gia_ManInseFindStarting(p *Gia_Man_t, iPat int32, vInit *Vec_Int_t, vInputs *Vec_Int_t) {
-    var pObj *Gia_Obj_t;
-    var pData0, pData1 *word;
-    var i, k int32;
-    Vec_IntClear( vInit );
-    // inlining of macro Gia_ManForEachRi
-    for k = 0; k < Gia_ManRegNum(p); k++ {
-    	pObj = Gia_ManCo(p, Gia_ManPoNum(p)+k)
-    	if pObj == nil { break }
-        pData0 = Gia_ParTestObj( p, Gia_ObjId(p, pObj) );
-        pData1 = pData0 + p.iData;
-        for  i = 0; i < p.iData; i++  {
-            assert((pData0[i] & pData1[i]) == 0, "(pData0[i] & pData1[i]) == 0");
-        }
-        if Abc_InfoHasBit( (unsigned *)pData0, iPat ) {
-            Vec_IntPush( vInit, 0 );
-        } else if Abc_InfoHasBit( (unsigned *)pData1, iPat ) {
-            Vec_IntPush( vInit, 1 );
-        } else { 
-            Vec_IntPush( vInit, 2 ); }
-    }
-    // inlining of macro Gia_ManForEachPi
-    for k = 0; k < Gia_ManPiNum(p); k++ {
-    	pObj = Gia_ManCi(p, k)
-    	if pObj == nil { break }
-        pData0 = Gia_ParTestObj( p, Gia_ObjId(p, pObj) );
-        pData1 = pData0 + p.iData;
-        for  i = 0; i < p.iData; i++  {
-            assert((pData0[i] & pData1[i]) == 0, "(pData0[i] & pData1[i]) == 0");
-        }
-        if Abc_InfoHasBit( (unsigned *)pData0, iPat ) {
-            Vec_IntPush( vInputs, 0 );
-        } else if Abc_InfoHasBit( (unsigned *)pData1, iPat ) {
-            Vec_IntPush( vInputs, 1 );
-        } else { 
-            Vec_IntPush( vInputs, 2 ); }
-    }
+func (s *inseState) init(values []int32) {
+	if len(values) != len(s.inputs)-s.npi {
+		panic("bmc: wrong initial state length")
+	}
+	for i, value := range values {
+		id := gia.Gia_ObjId(s.p, gia.Gia_ManRi(s.p, int32(i)))
+		for w := 0; w < s.words; w++ {
+			s.zero[id][w], s.one[id][w] = 0, 0
+			if value == 0 {
+				s.zero[id][w] = ^uint64(0)
+			} else if value == 1 {
+				s.one[id][w] = ^uint64(0)
+			}
+		}
+	}
 }
-func Gia_ManInseSimulate(p *Gia_Man_t, vInit0 *Vec_Int_t, vInputs *Vec_Int_t, vInit *Vec_Int_t) *Vec_Int_t {
-    var vRes *Vec_Int_t;
-    var pObj, pObjRo, pObjRi *Gia_Obj_t;
-    var nFrames int32  = Vec_IntSize(vInputs) / Gia_ManPiNum(p);
-    var i, f, iBit int32;
-    assert(Vec_IntSize(vInputs) % Gia_ManPiNum(p) == 0, "Vec_IntSize(vInputs) % Gia_ManPiNum(p) == 0");
-    assert(Vec_IntSize(vInit0) == Gia_ManRegNum(p), "Vec_IntSize(vInit0) == Gia_ManRegNum(p)");
-    assert(Vec_IntSize(vInit) == Gia_ManRegNum(p), "Vec_IntSize(vInit) == Gia_ManRegNum(p)");
-    Gia_ManConst0(p).fMark0 = 0;
-    // inlining of macro Gia_ManForEachRi
-    for i = 0; i < Gia_ManRegNum(p); i++ {
-    	pObj = Gia_ManCo(p, Gia_ManPoNum(p)+i)
-    	if pObj == nil { break }
-        pObj.fMark0 = Vec_IntEntry(vInit0, i);
-    }
-    for  f = 0; f < nFrames; f++  {
-        // inlining of macro Gia_ManForEachPi
-        for i = 0; i < Gia_ManPiNum(p); i++ {
-        	pObj = Gia_ManCi(p, i)
-        	if pObj == nil { break }
-            pObj.fMark0 = Vec_IntEntry(vInputs, iBit++);
-        }
-        // inlining of macro Gia_ManForEachAnd
-        for i = 0; i < p.nObjs; i++ {
-        	pObj = Gia_ManObj(p, i)
-        	if pObj == nil { break }
-        	if !Gia_ObjIsAnd(pObj) {} else {
-            pObj.fMark0 = (Gia_ObjFanin0(pObj).fMark0 ^ Gia_ObjFaninC0(pObj)) & 
-                           (Gia_ObjFanin1(pObj).fMark0 ^ Gia_ObjFaninC1(pObj)); }
-        }
-        // inlining of macro Gia_ManForEachRi
-        for i = 0; i < Gia_ManRegNum(p); i++ {
-        	pObj = Gia_ManCo(p, Gia_ManPoNum(p)+i)
-        	if pObj == nil { break }
-            pObj.fMark0 = Gia_ObjFanin0(pObj).fMark0 ^ Gia_ObjFaninC0(pObj);
-        }
-        // inlining of macro Gia_ManForEachRiRo
-        for i = 0; i < Gia_ManRegNum(p); i++ {
-        	pObjRi = Gia_ManCo(p, Gia_ManPoNum(p)+i)
-        	if pObjRi == nil { break }
-        	pObjRo = Gia_ManCi(p, Gia_ManPiNum(p)+i)
-        	if pObjRo == nil { break }
-            pObjRo.fMark0 = pObjRi.fMark0;
-        }
-    }
-    assert(iBit == Vec_IntSize(vInputs), "iBit == Vec_IntSize(vInputs)");
-    vRes = Vec_IntAlloc( Gia_ManRegNum(p) );
-    // inlining of macro Gia_ManForEachRo
-    for i = 0; i < Gia_ManRegNum(p); i++ {
-    	pObj = Gia_ManCi(p, Gia_ManPiNum(p)+i)
-    	if pObj == nil { break }
-        assert(Vec_IntEntry(vInit, i) == 2 || Vec_IntEntry(vInit, i) == int32(pObj.fMark0), "Vec_IntEntry(vInit, i) == 2 || Vec_IntEntry(vInit, i) == int32(pObj.fMark0)");
-    }
-    // inlining of macro Gia_ManForEachRo
-    for i = 0; i < Gia_ManRegNum(p); i++ {
-    	pObj = Gia_ManCi(p, Gia_ManPiNum(p)+i)
-    	if pObj == nil { break }
-        Vec_IntPush( vRes, pObj.fMark0 | (Vec_IntEntry(vInit, i) != 2 ? 4 : 0) );
-    }
-    // inlining of macro Gia_ManForEachObj
-    for i = 0; i < p.nObjs; i++ {
-    	pObj = Gia_ManObj(p, i)
-    	if pObj == nil { break }
-        pObj.fMark0 = 0;
-    }
-    return vRes;
+func (s *inseState) fanin(lit int32, w int) (uint64, uint64) {
+	a, b := s.zero[lit>>1][w], s.one[lit>>1][w]
+	if lit&1 != 0 {
+		return b, a
+	}
+	return a, b
+}
+func (s *inseState) simulate() {
+	for id := int32(0); id < gia.Gia_ManObjNum(s.p); id++ {
+		a, b, c, kind := s.p.Gate(id)
+		for w := 0; w < s.words; w++ {
+			switch kind {
+			case 0:
+				s.zero[id][w], s.one[id][w] = ^uint64(0), 0
+			case 1:
+				pi := -1
+				for i, lit := range s.inputs {
+					if lit>>1 == id {
+						pi = i
+						break
+					}
+				}
+				if pi < 0 {
+					panic("bmc: invalid input")
+				}
+				if pi < s.npi {
+					s.zero[id][w] = gia.Gia_ManRandomW(0)
+					s.one[id][w] = ^s.zero[id][w]
+				} else {
+					ri := gia.Gia_ObjId(s.p, gia.Gia_ManRi(s.p, int32(pi-s.npi)))
+					s.zero[id][w], s.one[id][w] = s.zero[ri][w], s.one[ri][w]
+				}
+			case 2:
+				a0, a1 := s.fanin(a, w)
+				b0, b1 := s.fanin(b, w)
+				s.zero[id][w], s.one[id][w] = a0|b0, a1&b1
+			case 3:
+				a0, a1 := s.fanin(a, w)
+				b0, b1 := s.fanin(b, w)
+				s.zero[id][w], s.one[id][w] = (a0&b0)|(a1&b1), (a0&b1)|(a1&b0)
+			case 4:
+				c0, c1 := s.fanin(a, w)
+				t0, t1 := s.fanin(b, w)
+				e0, e1 := s.fanin(c, w)
+				s.zero[id][w], s.one[id][w] = (c1&t0)|(c0&e0)|(t0&e0), (c1&t1)|(c0&e1)|(t1&e1)
+			case 5, 6:
+				s.zero[id][w], s.one[id][w] = s.fanin(a, w)
+			default:
+				panic("bmc: invalid GIA object")
+			}
+		}
+	}
+}
+func (s *inseState) best() (int, int32) {
+	counts := make([]int32, 64*s.words)
+	for i := 0; i < len(s.inputs)-s.npi; i++ {
+		id := gia.Gia_ObjId(s.p, gia.Gia_ManRi(s.p, int32(i)))
+		for w := 0; w < s.words; w++ {
+			known := s.zero[id][w] | s.one[id][w]
+			for bit := 0; bit < 64; bit++ {
+				counts[64*w+bit] += int32((known >> bit) & 1)
+			}
+		}
+	}
+	best := 0
+	for i := 1; i < len(counts); i++ {
+		if counts[i] > counts[best] {
+			best = i
+		}
+	}
+	return best, int32(len(s.inputs)-s.npi) - counts[best]
+}
+func (s *inseState) extract(pattern int, init, inputs *vec.Vec_Int_t) {
+	val := func(id int32) int32 {
+		mask := uint64(1) << uint(pattern%64)
+		if s.zero[id][pattern/64]&mask != 0 {
+			return 0
+		}
+		if s.one[id][pattern/64]&mask != 0 {
+			return 1
+		}
+		return 2
+	}
+	vec.Vec_IntClear(init)
+	for i := 0; i < len(s.inputs)-s.npi; i++ {
+		vec.Vec_IntPush(init, val(gia.Gia_ObjId(s.p, gia.Gia_ManRi(s.p, int32(i)))))
+	}
+	for i := 0; i < s.npi; i++ {
+		vec.Vec_IntPush(inputs, val(s.inputs[i]>>1))
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManInsePerform(p *Gia_Man_t, vInit0 *Vec_Int_t, nFrames int32, nWords int32, fVerbose int32) *Vec_Int_t {
-    var vRes, vInit, vInputs *Vec_Int_t;
-    var pObj *Gia_Obj_t;
-    var i, f, iPat, Cost, Cost0 int32;
-    var clk abctime;
-    var clkTotal abctime = Abc_Clock();
-    Gia_ManRandomW( 1 );
-    if fVerbose != 0 {
-        fmt.Printf("Running with %d frames, %d words, and %sgiven init state.\n", nFrames, nWords, vInit0 ? "":"no "); }
-    vInit = Vec_IntAlloc(0); Vec_IntFill( vInit, Gia_ManRegNum(p), 2 );
-    vInputs = Vec_IntStart( Gia_ManPiNum(p) * nFrames );
-    Gia_ParTestAlloc( p, nWords );
-    Gia_ManInseInit( p, vInit );
-    Cost0 = 0;
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vInit)) && (((iPat) = Vec_IntEntry(vInit, i)), 1); i++  {
-        Cost0 += ((iPat >> 1) & 1);
-    }
-    if fVerbose != 0 {
-        fmt.Printf("Frame =%6d : Values =%6d (out of %6d)\n", 0, Cost0, Cost0); }
-    for  f = 0; f < nFrames; f++  {
-        clk = Abc_Clock();
-        // inlining of macro Gia_ManForEachObj
-        for i = 0; i < p.nObjs; i++ {
-        	pObj = Gia_ManObj(p, i)
-        	if pObj == nil { break }
-            Gia_ManInseSimulateObj( p, i );
-        }
-        iPat = Gia_ManInseHighestScore( p, &Cost );
-        Gia_ManInseFindStarting( p, iPat, vInit, vInputs );
-        Gia_ManInseInit( p, vInit );
-        if fVerbose != 0 {
-            fmt.Printf("Frame =%6d : Values =%6d (out of %6d)   ", f+1, Cost, Cost0); }
-        if fVerbose != 0 {
-            Abc_PrintTime( 1, "Time", Abc_Clock() - clk ); }
-    }
-    Gia_ParTestFree( p );
-    vRes = Gia_ManInseSimulate( p, vInit0, vInputs, vInit );
-    Vec_IntFreeP( &vInit );
-    Vec_IntFreeP( &vInputs );
-    fmt.Printf("After %d frames, found a sequence to produce %d x-values (out of %d).  ", f, Cost, Gia_ManRegNum(p));
-    Abc_PrintTime( 1, "Total runtime", Abc_Clock() - clkTotal );
-    return vRes;
+// Gia_ManInseSimulate simulates the selected sequence from a concrete state;
+// bit 2 marks registers whose final ternary value is known.
+func Gia_ManInseSimulate(p *gia.Gia_Man_t, initial, inputs, expected *vec.Vec_Int_t) *vec.Vec_Int_t {
+	npi, nreg := int(gia.Gia_ManPiNum(p)), int(gia.Gia_ManRegNum(p))
+	init, stim, want := vec.Vec_IntArray(initial), vec.Vec_IntArray(inputs), vec.Vec_IntArray(expected)
+	if len(init) != nreg || len(want) != nreg || npi == 0 && len(stim) != 0 || npi > 0 && len(stim)%npi != 0 {
+		panic("bmc: invalid simulation dimensions")
+	}
+	state := make([]bool, nreg)
+	for i, v := range init {
+		if v != 0 && v != 1 {
+			panic("bmc: non-binary initial state")
+		}
+		state[i] = v != 0
+	}
+	frames := 0
+	if npi > 0 {
+		frames = len(stim) / npi
+	}
+	for f := 0; f < frames; f++ {
+		values := make([]bool, npi+nreg)
+		for i := 0; i < npi; i++ {
+			if stim[f*npi+i] != 0 && stim[f*npi+i] != 1 {
+				panic("bmc: non-binary input")
+			}
+			values[i] = stim[f*npi+i] != 0
+		}
+		copy(values[npi:], state)
+		outputs, err := p.Evaluate(values)
+		if err != nil {
+			panic(err)
+		}
+		copy(state, outputs[int(gia.Gia_ManPoNum(p)):])
+	}
+	result := vec.Vec_IntAlloc(nreg)
+	for i, v := range state {
+		x := int32(0)
+		if v {
+			x = 1
+		}
+		if want[i] != 2 {
+			if want[i] != x {
+				panic("bmc: ternary state mismatch")
+			}
+			x |= 4
+		}
+		vec.Vec_IntPush(result, x)
+	}
+	return result
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_ManInseTest(p *Gia_Man_t, vInit0 *Vec_Int_t, nFrames int32, nWords int32, nTimeOut int32, fSim int32, fVerbose int32) *Vec_Int_t {
-    var vRes, vInit *Vec_Int_t;
-    vInit = Vec_IntAlloc(0); Vec_IntFill( vInit, Gia_ManRegNum(p), 0 );
-    vRes = Gia_ManInsePerform( p, vInit, nFrames, nWords, fVerbose );
-    if vInit != vInit0 {
-        Vec_IntFree( vInit ); }
-    return vRes;
+func Gia_ManInsePerform(p *gia.Gia_Man_t, initial *vec.Vec_Int_t, nFrames, nWords, verbose int32) *vec.Vec_Int_t {
+	if p == nil || nFrames < 0 || nWords <= 0 {
+		panic("bmc: invalid initial-state search")
+	}
+	nreg, npi := int(gia.Gia_ManRegNum(p)), int(gia.Gia_ManPiNum(p))
+	if initial == nil {
+		initial = vec.Vec_IntStart(nreg)
+	}
+	start := time.Now()
+	gia.Gia_ManRandomW(1)
+	init := vec.Vec_IntAlloc(nreg)
+	vec.Vec_IntFill(init, nreg, 2)
+	inputs := vec.Vec_IntAlloc(npi * int(nFrames))
+	state := newInseState(p, int(nWords))
+	state.init(vec.Vec_IntArray(init))
+	cost := int32(nreg)
+	for f := int32(0); f < nFrames; f++ {
+		state.simulate()
+		pat, c := state.best()
+		cost = c
+		state.extract(pat, init, inputs)
+		state.init(vec.Vec_IntArray(init))
+		if verbose != 0 {
+			fmt.Printf("Frame =%6d : Values =%6d (out of %6d)\n", f+1, cost, nreg)
+		}
+	}
+	result := Gia_ManInseSimulate(p, initial, inputs, init)
+	fmt.Printf("After %d frames, found a sequence to produce %d x-values (out of %d). Total runtime: %s\n", nFrames, cost, nreg, time.Since(start))
+	return result
 }
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func Gia_ManInseTest(p *gia.Gia_Man_t, initial *vec.Vec_Int_t, nFrames, nWords, nTimeOut, fSim, verbose int32) *vec.Vec_Int_t {
+	_ = initial
+	_ = nTimeOut
+	_ = fSim
+	return Gia_ManInsePerform(p, vec.Vec_IntStart(int(gia.Gia_ManRegNum(p))), nFrames, nWords, verbose)
+}

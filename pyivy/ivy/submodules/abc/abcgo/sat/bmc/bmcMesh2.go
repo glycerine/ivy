@@ -1,448 +1,250 @@
 package bmc
 
-import "fmt"
+import (
+	"fmt"
+	"time"
 
-/**CFile****************************************************************
+	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/sat/bsat"
+)
 
-  FileName    [bmcMesh.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [SAT-based bounded model checking.]
-
-  Synopsis    [Synthesis for mesh of LUTs.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: bmcMesh.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "bmc.h"
-//#include "sat/satoko/satoko.h"
-//#include "sat/bsat/satSolver.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Bmc_MeshVarValue2(p *sat_solver, v int32) int32 {
-//    int value = var_value(p, v) != SATOKO_VAR_UNASSING ? var_value(p, v) : satoko_var_polarity(p, v);
-//    return value == SATOKO_LIT_TRUE;
-    return sat_solver_var_value( p, v );
+// Bmc_MeshVarValue2 reads a variable in the solver's current model.
+func Bmc_MeshVarValue2(s *bsat.Solver, v int32) int32 {
+	value, ok := s.Value(v)
+	if !ok {
+		panic("bmc: mesh variable has no model")
+	}
+	if value {
+		return 1
+	}
+	return 0
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Bmc_MeshAddOneHotness2(pSat *sat_solver, iFirst int32, iLast int32) int32 {
-    var i int32;
-    var j int32;
-    var v int32;
-    var pVars [100]int32;
-    var nVars int32;
-    var nCount int32;
-    assert(iFirst < iLast && iFirst + 110 > iLast, "iFirst < iLast && iFirst + 110 > iLast");
-    for  v = iFirst; v < iLast; v++  {
-        if Bmc_MeshVarValue2(pSat, v) != 0 { // v = 1
-        
-            assert(nVars < 100, "nVars < 100");
-            pVars[ nVars++ ] = v;
-        }
-    }
-    if nVars <= 1 {
-        return 0; }
-    for  i = 0;   i < nVars; i++  {
-    for  j = i+1; j < nVars; j++  {
-        var pLits [2]int32;
-        var RetValue int32;
-        pLits[0] = Abc_Var2Lit( pVars[i], 1 );
-        pLits[1] = Abc_Var2Lit( pVars[j], 1 );
-        RetValue = sat_solver_addclause( pSat, pLits, pLits+2 );  assert((RetValue != 0), "RetValue");
-        nCount++;
-    }
-    }
-    return nCount;
+func mesh2OneHot(s *bsat.Solver, model []bool, first, last int32) int32 {
+	if first < 0 || first >= last || int(last) > len(model) {
+		panic("bmc: invalid mesh variable range")
+	}
+	var selected []int32
+	for v := first; v < last; v++ {
+		if model[v] {
+			selected = append(selected, v)
+		}
+	}
+	var count int32
+	for i, a := range selected {
+		for _, b := range selected[i+1:] {
+			if !s.AddClause(bsat.Negative(a), bsat.Negative(b)) {
+				panic("bmc: inconsistent mesh one-hot constraint")
+			}
+			count++
+		}
+	}
+	return count
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Bmc_MeshTest2(p *Gia_Man_t, X int32, Y int32, T int32, fVerbose int32) {
-    var clk abctime  = Abc_Clock();
-//    sat_solver * pSat = satoko_create();
-    var pSat *sat_solver  = sat_solver_new();
-    var pObj *Gia_Obj_t;
-    var Me [102][102]int32 = [102][102]int32{{0}};
-    var pN [102][2]int32 = [102][2]int32{{0}};
-    var I int32  = Gia_ManPiNum(p);
-    var G int32  = I + Gia_ManAndNum(p);
-    var i, x, y, t, g, c, status, RetValue, Lit, iVar, nClauses int32;
-
-    assert(X <= 100 && Y <= 100 && T <= 100 && G <= 100, "X <= 100 && Y <= 100 && T <= 100 && G <= 100");
-
-    // init the graph
-    for  i = 0; i < I; i++  {
-        pN[i][0] = pN[i][1] = -1;
-    }
-    // inlining of macro Gia_ManForEachAnd
-    for i = 0; i < p.nObjs; i++ {
-    	pObj = Gia_ManObj(p, i)
-    	if pObj == nil { break }
-    	if !Gia_ObjIsAnd(pObj) {} else {
-        pN[i-1][0] = Gia_ObjFaninId0(pObj, i)-1;
-        pN[i-1][1] = Gia_ObjFaninId1(pObj, i)-1;
-    }
-    }
-    if fVerbose != 0 {
-        fmt.Printf("The graph has %d inputs: ", Gia_ManPiNum(p));
-        for  i = 0; i < I; i++  {
-            fmt.Printf("%c ", 'a' + i);
-        }
-        fmt.Printf("  and %d nodes: ", Gia_ManAndNum(p));
-        for  i = I; i < G; i++  {
-            fmt.Printf("%c=%c%c ", 'a' + i, 'a' + pN[i][0], 'a' + pN[i][1]);
-        }
-        fmt.Printf("\n");
-    }
-
-    // init SAT variables (time vars + graph vars + config vars)
-    // config variables: 16 = 4 buff vars + 12 node vars
-    iVar = 0;
-    for  y = 0; y < Y; y++  {
-    for  x = 0; x < X; x++  {
-        //printf( "%3d %3d %3d    %s", iVar, iVar+T, iVar+T+G, x == X-1 ? "\n":"" );
-        Me[x][y] = iVar;
-        iVar += T + G + NCPARS + 1;
-    }
-    }
-    Me[101][100] = T;
-    Me[101][101] = G;
-    if fVerbose != 0 {
-        fmt.Printf("SAT variable count is %d (%d time vars + %d graph vars + %d config vars + %d aux vars)\n", iVar, X*Y*T, X*Y*G, X*Y*NCPARS, X*Y); }
-
-    // add constraints
-
-    // time 0 and primary inputs only on the boundary
-    for  x = 0; x < X; x++  {
-    for  y = 0; y < Y; y++  {
-        var iTVar int32  = Bmc_MeshTVar( Me, x, y );
-        var iGVar int32  = Bmc_MeshGVar( Me, x, y );
-
-        if x == 0 || x == X-1 || y == 0 || y == Y-1 { // boundary
-        
-            // time 0 is required
-            for  t = 0; t < T; t++  {
-                Lit = Abc_Var2Lit( iTVar+t, int32((t > 0)) );
-                RetValue = sat_solver_addclause( pSat, &Lit, &Lit+1 );  assert((RetValue != 0), "RetValue");
-            }
-            // internal nodes are not allowed
-            for  g = I; g < G; g++  {
-                Lit = Abc_Var2Lit( iGVar+g, 1 );
-                RetValue = sat_solver_addclause( pSat, &Lit, &Lit+1 );  assert((RetValue != 0), "RetValue");
-            }
-        
-        } else { // not a boundary
-        
-            Lit = Abc_Var2Lit( iTVar, 1 );  // cannot have time 0
-            RetValue = sat_solver_addclause( pSat, &Lit, &Lit+1 );  assert((RetValue != 0), "RetValue");
-        }
-    }
-    }
-    for  x = 1; x < X-1; x++  {
-    for  y = 1; y < Y-1; y++  {
-        var pLits [100]int32;
-        var nLits int32;
-
-        var iTVar int32  = Bmc_MeshTVar( Me, x, y );
-        var iGVar int32  = Bmc_MeshGVar( Me, x, y );
-        var iCVar int32  = Bmc_MeshCVar( Me, x, y );
-        var iUVar int32  = Bmc_MeshUVar( Me, x, y );
-
-        // 0=left  1=up  2=right  3=down
-        var iTVars [4]int32; 
-        var iGVars [4]int32;
-
-        iTVars[0] = Bmc_MeshTVar( Me, x-1, y );
-        iGVars[0] = Bmc_MeshGVar( Me, x-1, y );
-
-        iTVars[1] = Bmc_MeshTVar( Me, x, y-1 );
-        iGVars[1] = Bmc_MeshGVar( Me, x, y-1 );
-
-        iTVars[2] = Bmc_MeshTVar( Me, x+1, y );
-        iGVars[2] = Bmc_MeshGVar( Me, x+1, y );
-
-        iTVars[3] = Bmc_MeshTVar( Me, x, y+1 );
-        iGVars[3] = Bmc_MeshGVar( Me, x, y+1 );
-
-        // condition when cell is used
-        for  g = 0; g < G; g++  {
-            pLits[0] = Abc_Var2Lit( iGVar+g, 1 );
-            pLits[1] = Abc_Var2Lit( iUVar, 0 );
-            RetValue = sat_solver_addclause( pSat, pLits, pLits+2 );  assert((RetValue != 0), "RetValue");
-            nClauses++;
-        }
-
-        // at least one time is used
-        pLits[0] = Abc_Var2Lit( iUVar, 1 );
-        for  t = 1; t < T; t++  {
-            pLits[t] = Abc_Var2Lit( iTVar+t, 0 );
-        }
-        RetValue = sat_solver_addclause( pSat, pLits, pLits+T );  assert((RetValue != 0), "RetValue");
-        nClauses++;
-
-        // at least one config is used
-        pLits[0] = Abc_Var2Lit( iUVar, 1 );
-        for  c = 0; c < NCPARS; c++  {
-            pLits[c+1] = Abc_Var2Lit( iCVar+c, 0 );
-        }
-        RetValue = sat_solver_addclause( pSat, pLits, pLits+NCPARS+1 );  assert((RetValue != 0), "RetValue");
-        nClauses++;
-
-        // constraints for each time
-        for  t = 1; t < T; t++  {
-            var Conf [12][2]int32 = [12][2]int32{{0, 1}, {0, 2}, {0, 3}, {1, 2}, {1, 3}, {2, 3},   {1, 0}, {2, 0}, {3, 0}, {2, 1}, {3, 1}, {3, 2}};
-            // buffer
-            for  g = 0; g < G; g++  {
-            for  c = 0; c < 4; c++  {
-                nLits = 0;
-                pLits[ nLits++ ] = Abc_Var2Lit( iTVar+t, 1 );
-                pLits[ nLits++ ] = Abc_Var2Lit( iGVar+g, 1 );
-                pLits[ nLits++ ] = Abc_Var2Lit( iCVar+c, 1 );
-                pLits[ nLits++ ] = Abc_Var2Lit( iTVars[c]+t-1, 0 );
-                RetValue = sat_solver_addclause( pSat, pLits, pLits+nLits );  assert((RetValue != 0), "RetValue");
-
-                nLits = 0;
-                pLits[ nLits++ ] = Abc_Var2Lit( iTVar+t, 1 );
-                pLits[ nLits++ ] = Abc_Var2Lit( iGVar+g, 1 );
-                pLits[ nLits++ ] = Abc_Var2Lit( iCVar+c, 1 );
-                pLits[ nLits++ ] = Abc_Var2Lit( iGVars[c]+g, 0 );
-                RetValue = sat_solver_addclause( pSat, pLits, pLits+nLits );  assert((RetValue != 0), "RetValue");
-
-                nClauses += 2;
-            }
-            }
-            for  g = 0; g < I; g++  {
-            for  c = 4; c < NCPARS; c++  {
-                pLits[0] = Abc_Var2Lit( iGVar+g, 1 );
-                pLits[1] = Abc_Var2Lit( iCVar+c, 1 );
-                RetValue = sat_solver_addclause( pSat, pLits, pLits+2 );  assert((RetValue != 0), "RetValue");
-                nClauses++;
-            }
-            }
-            // node
-            for  g = I; g < G; g++  {
-            for  c = 0; c < 12; c++  {
-                assert(pN[g][0] >= 0 && pN[g][1] >= 0, "pN[g][0] >= 0 && pN[g][1] >= 0");
-                assert(pN[g][0] <  g && pN[g][1] <  g, "pN[g][0] <  g && pN[g][1] <  g");
-
-                nLits = 0;
-                pLits[ nLits++ ] = Abc_Var2Lit( iTVar+t, 1 );
-                pLits[ nLits++ ] = Abc_Var2Lit( iGVar+g, 1 );
-                pLits[ nLits++ ] = Abc_Var2Lit( iCVar+c+4, 1 );
-                pLits[ nLits++ ] = Abc_Var2Lit( iTVars[Conf[c][0]]+t-1, 0 );
-                RetValue = sat_solver_addclause( pSat, pLits, pLits+nLits );  assert((RetValue != 0), "RetValue");
-
-                nLits = 0;
-                pLits[ nLits++ ] = Abc_Var2Lit( iTVar+t, 1 );
-                pLits[ nLits++ ] = Abc_Var2Lit( iGVar+g, 1 );
-                pLits[ nLits++ ] = Abc_Var2Lit( iCVar+c+4, 1 );
-                pLits[ nLits++ ] = Abc_Var2Lit( iTVars[Conf[c][1]]+t-1, 0 );
-                RetValue = sat_solver_addclause( pSat, pLits, pLits+nLits );  assert((RetValue != 0), "RetValue");
-
-
-                nLits = 0;
-                pLits[ nLits++ ] = Abc_Var2Lit( iTVar+t, 1 );
-                pLits[ nLits++ ] = Abc_Var2Lit( iGVar+g, 1 );
-                pLits[ nLits++ ] = Abc_Var2Lit( iCVar+c+4, 1 );
-                pLits[ nLits++ ] = Abc_Var2Lit( iGVars[Conf[c][0]]+pN[g][0], 0 );
-                RetValue = sat_solver_addclause( pSat, pLits, pLits+nLits );  assert((RetValue != 0), "RetValue");
-
-                nLits = 0;
-                pLits[ nLits++ ] = Abc_Var2Lit( iTVar+t, 1 );
-                pLits[ nLits++ ] = Abc_Var2Lit( iGVar+g, 1 );
-                pLits[ nLits++ ] = Abc_Var2Lit( iCVar+c+4, 1 );
-                pLits[ nLits++ ] = Abc_Var2Lit( iGVars[Conf[c][1]]+pN[g][1], 0 );
-                RetValue = sat_solver_addclause( pSat, pLits, pLits+nLits );  assert((RetValue != 0), "RetValue");
-
-                nClauses += 4;
-            }
-            }
-        }
-    }
-    }
-
-    // final condition
-    {
-        var iGVar int32  = Bmc_MeshGVar( Me, 1, 1 ) + G-1;
-        Lit = Abc_Var2Lit( iGVar, 0 );
-        RetValue = sat_solver_addclause( pSat, &Lit, &Lit+1 );  
-        if RetValue == 0 {
-            fmt.Printf("Problem has no solution. ");
-            Abc_PrintTime( 1, "Time", Abc_Clock() - clk );
-//            satoko_destroy( pSat );
-            sat_solver_delete( pSat );
-            return;
-        }
-    }
-
-    if fVerbose != 0 {
-        fmt.Printf("Finished adding %d clauses. Started solving...\n", nClauses); }
-
-    for {
-        var nAddClauses int32;
-//        status = satoko_solve( pSat );
-        status = sat_solver_solve( pSat, nil, nil, 0, 0, 0, 0 );
-//        if ( status == SATOKO_UNSAT )
-        if status == l_False {
-            fmt.Printf("Problem has no solution. ");
-            break;
-        }
-//        if ( status == SATOKO_UNDEC )
-        if status == l_Undef {
-            fmt.Printf("Computation timed out. ");
-            break;
-        }
-//        assert( status == SATOKO_SAT );
-        assert(status == l_True, "status == l_True");
-        // check if the solution is valid and add constraints
-        for  x = 0; x < X; x++  {
-        for  y = 0; y < Y; y++  {
-            if x == 0 || x == X-1 || y == 0 || y == Y-1 { // boundary
-            
-                var iGVar int32  = Bmc_MeshGVar( Me, x, y );
-                nAddClauses += Bmc_MeshAddOneHotness2( pSat, iGVar, iGVar + G );
-            
-            } else {
-                var iTVar int32  = Bmc_MeshTVar( Me, x, y );
-                var iGVar int32  = Bmc_MeshGVar( Me, x, y );
-                var iCVar int32  = Bmc_MeshCVar( Me, x, y );
-                nAddClauses += Bmc_MeshAddOneHotness2( pSat, iTVar, iTVar + T );
-                nAddClauses += Bmc_MeshAddOneHotness2( pSat, iGVar, iGVar + G );
-                nAddClauses += Bmc_MeshAddOneHotness2( pSat, iCVar, iCVar + NCPARS );
-            }
-        }
-        }
-        if nAddClauses > 0 {
-            fmt.Printf("Adding %d one-hotness clauses.\n", nAddClauses);
-            continue;
-        }
-        fmt.Printf("Satisfying solution found. ");
-/*
-//        iVar = satoko_varnum(pSat);
-        iVar = sat_solver_nvars(pSat);
-        for ( i = 0; i < iVar; i++ )
-            if ( Bmc_MeshVarValue2(pSat, i) )
-                printf( "%d ", i );
-        printf( "\n" );
-*/
-        break;
-    }
-    Abc_PrintTime( 1, "Time", Abc_Clock() - clk );
-//    if ( status == SATOKO_SAT )
-    if status == l_True {
-        // count the number of nodes and buffers
-        var nBuffs, nNodes int32;
-        for  y = 1; y < Y-1; y++  {
-        for  x = 1; x < X-1; x++  {
-            var iCVar int32  = Bmc_MeshCVar( Me, x, y );
-            for  c = 0; c < 4; c++  {
-                if Bmc_MeshVarValue2(pSat, iCVar+c) != 0 {
-                    //printf( "Buffer y=%d x=%d  (var = %d; config = %d)\n", y, x, iCVar+c, c );
-                    nBuffs++;
-                }
-            }
-            for  c = 4; c < NCPARS; c++  {
-                if Bmc_MeshVarValue2(pSat, iCVar+c) != 0 {
-                    //printf( "Node   y=%d x=%d  (var = %d; config = %d)\n", y, x, iCVar+c, c );
-                    nNodes++;
-                }
-            }
-        }
-        }
-        fmt.Printf("The %d x %d mesh with latency %d with %d active cells (%d nodes and %d buffers):\n", X, Y, T, nNodes+nBuffs, nNodes, nBuffs);
-        // print mesh
-        fmt.Printf(" Y\\X ");
-        for  x = 0; x < X; x++  {
-            fmt.Printf("  %-2d ", x);
-        }
-        fmt.Printf("\n");
-        for  y = 0; y < Y; y++  {
-            fmt.Printf(" %-2d  ", y);
-            for  x = 0; x < X; x++  {
-                var iTVar int32   = Bmc_MeshTVar( Me, x, y );
-                var iGVar int32   = Bmc_MeshGVar( Me, x, y );
-
-                var fFound int32;                ;
-                for  t = 0; t < T; t++  {
-                for  g = 0; g < G; g++  {
-                    if (Bmc_MeshVarValue2(pSat, iTVar+t) != 0) && (Bmc_MeshVarValue2(pSat, iGVar+g) != 0) {
-                        fmt.Printf(" %c%-2d ", 'a' + g, t);
-                        fFound = 1;
-                    }
-                }
-                }
-                if fFound != 0 {
-                    continue; }
-                if x == 0 || x == X-1 || y == 0 || y == Y-1 { // boundary
-                    fmt.Printf("  *  ");
-                } else {
-                    fmt.Printf("     "); }
-            }
-            fmt.Printf("\n");
-        }
-    }
-    //satoko_destroy( pSat );
-    sat_solver_delete( pSat );
+// Bmc_MeshAddOneHotness2 adds mutual exclusion for active variables in the model.
+func Bmc_MeshAddOneHotness2(s *bsat.Solver, first, last int32) int32 {
+	return mesh2OneHot(s, s.Model(), first, last)
 }
 
-
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+// Bmc_MeshTest2 encodes a graph placement and iteratively refines one-hot
+// constraints until it finds a valid mesh or proves it impossible.
+func Bmc_MeshTest2(p *gia.Gia_Man_t, X, Y, T, verbose int32) {
+	if p == nil || X < 3 || Y < 3 || T < 1 || X > 100 || Y > 100 || T > 100 {
+		panic("bmc: invalid mesh dimensions")
+	}
+	start := time.Now()
+	inputs := p.InputLiterals()
+	I := int32(len(inputs))
+	type fanins struct{ a, b int32 }
+	nodes := make([]fanins, I)
+	ids := make(map[int32]int32)
+	for i, lit := range inputs {
+		ids[lit>>1] = int32(i)
+	}
+	for id := int32(1); id < gia.Gia_ManObjNum(p); id++ {
+		a, b, _, kind := p.Gate(id)
+		if kind == 0 || kind == 1 || kind == 6 {
+			continue
+		}
+		if kind != 2 {
+			panic("bmc: mesh requires an AND-inverter graph")
+		}
+		aa, ok := ids[a>>1]
+		if !ok {
+			panic("bmc: missing mesh fanin")
+		}
+		bb, ok := ids[b>>1]
+		if !ok {
+			panic("bmc: missing mesh fanin")
+		}
+		ids[id] = int32(len(nodes))
+		nodes = append(nodes, fanins{aa, bb})
+	}
+	G := int32(len(nodes))
+	if G == 0 || G > 100 {
+		panic("bmc: mesh graph size out of range")
+	}
+	const configs int32 = 16
+	stride := T + G + configs + 1
+	base := func(x, y int32) int32 { return (y*X + x) * stride }
+	tv := func(x, y int32) int32 { return base(x, y) }
+	gv := func(x, y int32) int32 { return base(x, y) + T }
+	cv := func(x, y int32) int32 { return base(x, y) + T + G }
+	uv := func(x, y int32) int32 { return base(x, y) + T + G + configs }
+	s := bsat.NewSolver()
+	for i := int32(0); i < X*Y*stride; i++ {
+		s.NewVariable()
+	}
+	if verbose != 0 {
+		fmt.Printf("SAT variable count is %d (%d time vars + %d graph vars + %d config vars + %d aux vars)\n", s.NumVars(), X*Y*T, X*Y*G, X*Y*configs, X*Y)
+	}
+	clause := func(lits ...bsat.Literal) bool { return s.AddClause(lits...) }
+	boundary := func(x, y int32) bool { return x == 0 || x == X-1 || y == 0 || y == Y-1 }
+	for x := int32(0); x < X; x++ {
+		for y := int32(0); y < Y; y++ {
+			if boundary(x, y) {
+				for t := int32(0); t < T; t++ {
+					lit := bsat.Negative(tv(x, y) + t)
+					if t == 0 {
+						lit = bsat.Positive(tv(x, y) + t)
+					}
+					if !clause(lit) {
+						fmt.Println("Problem has no solution.")
+						return
+					}
+				}
+				for g := I; g < G; g++ {
+					if !clause(bsat.Negative(gv(x, y) + g)) {
+						fmt.Println("Problem has no solution.")
+						return
+					}
+				}
+			} else if !clause(bsat.Negative(tv(x, y))) {
+				fmt.Println("Problem has no solution.")
+				return
+			}
+		}
+	}
+	pairs := [12][2]int32{{0, 1}, {0, 2}, {0, 3}, {1, 2}, {1, 3}, {2, 3}, {1, 0}, {2, 0}, {3, 0}, {2, 1}, {3, 1}, {3, 2}}
+	for x := int32(1); x < X-1; x++ {
+		for y := int32(1); y < Y-1; y++ {
+			tim, graph, config, used := tv(x, y), gv(x, y), cv(x, y), uv(x, y)
+			times := [4]int32{tv(x-1, y), tv(x, y-1), tv(x+1, y), tv(x, y+1)}
+			graphs := [4]int32{gv(x-1, y), gv(x, y-1), gv(x+1, y), gv(x, y+1)}
+			for g := int32(0); g < G; g++ {
+				clause(bsat.Negative(graph+g), bsat.Positive(used))
+			}
+			timeClause := []bsat.Literal{bsat.Negative(used)}
+			for t := int32(1); t < T; t++ {
+				timeClause = append(timeClause, bsat.Positive(tim+t))
+			}
+			clause(timeClause...)
+			confClause := []bsat.Literal{bsat.Negative(used)}
+			for c := int32(0); c < configs; c++ {
+				confClause = append(confClause, bsat.Positive(config+c))
+			}
+			clause(confClause...)
+			for t := int32(1); t < T; t++ {
+				for g := int32(0); g < G; g++ {
+					for c := int32(0); c < 4; c++ {
+						head := []bsat.Literal{bsat.Negative(tim + t), bsat.Negative(graph + g), bsat.Negative(config + c)}
+						clause(append(append([]bsat.Literal(nil), head...), bsat.Positive(times[c]+t-1))...)
+						clause(append(append([]bsat.Literal(nil), head...), bsat.Positive(graphs[c]+g))...)
+					}
+				}
+				for g := int32(0); g < I; g++ {
+					for c := int32(4); c < configs; c++ {
+						clause(bsat.Negative(graph+g), bsat.Negative(config+c))
+					}
+				}
+				for g := I; g < G; g++ {
+					for c := int32(0); c < 12; c++ {
+						head := []bsat.Literal{bsat.Negative(tim + t), bsat.Negative(graph + g), bsat.Negative(config + c + 4)}
+						for _, lit := range []bsat.Literal{bsat.Positive(times[pairs[c][0]] + t - 1), bsat.Positive(times[pairs[c][1]] + t - 1), bsat.Positive(graphs[pairs[c][0]] + nodes[g].a), bsat.Positive(graphs[pairs[c][1]] + nodes[g].b)} {
+							clause(append(append([]bsat.Literal(nil), head...), lit)...)
+						}
+					}
+				}
+			}
+		}
+	}
+	if !clause(bsat.Positive(gv(1, 1) + G - 1)) {
+		fmt.Println("Problem has no solution.")
+		return
+	}
+	var model []bool
+	for {
+		status := s.Solve()
+		if status == bsat.Unsatisfiable {
+			fmt.Printf("Problem has no solution. Time: %s\n", time.Since(start))
+			return
+		}
+		if status != bsat.Satisfiable {
+			fmt.Printf("Computation timed out. Time: %s\n", time.Since(start))
+			return
+		}
+		model = s.Model()
+		var added int32
+		for x := int32(0); x < X; x++ {
+			for y := int32(0); y < Y; y++ {
+				if boundary(x, y) {
+					added += mesh2OneHot(s, model, gv(x, y), gv(x, y)+G)
+				} else {
+					added += mesh2OneHot(s, model, tv(x, y), tv(x, y)+T)
+					added += mesh2OneHot(s, model, gv(x, y), gv(x, y)+G)
+					added += mesh2OneHot(s, model, cv(x, y), cv(x, y)+configs)
+				}
+			}
+		}
+		if added == 0 {
+			break
+		}
+		if verbose != 0 {
+			fmt.Printf("Adding %d one-hotness clauses.\n", added)
+		}
+	}
+	fmt.Printf("Satisfying solution found. Time: %s\n", time.Since(start))
+	var buffers, nodesCount int32
+	for y := int32(1); y < Y-1; y++ {
+		for x := int32(1); x < X-1; x++ {
+			for c := int32(0); c < configs; c++ {
+				if model[cv(x, y)+c] {
+					if c < 4 {
+						buffers++
+					} else {
+						nodesCount++
+					}
+				}
+			}
+		}
+	}
+	fmt.Printf("The %d x %d mesh with latency %d with %d active cells (%d nodes and %d buffers):\n", X, Y, T, nodesCount+buffers, nodesCount, buffers)
+	fmt.Print(" Y\\X ")
+	for x := int32(0); x < X; x++ {
+		fmt.Printf("  %-2d ", x)
+	}
+	fmt.Println()
+	for y := int32(0); y < Y; y++ {
+		fmt.Printf(" %-2d  ", y)
+		for x := int32(0); x < X; x++ {
+			found := false
+			for t := int32(0); t < T; t++ {
+				for g := int32(0); g < G; g++ {
+					if model[tv(x, y)+t] && model[gv(x, y)+g] {
+						fmt.Printf(" %c%-2d ", 'a'+g, t)
+						found = true
+					}
+				}
+			}
+			if !found {
+				if boundary(x, y) {
+					fmt.Print("  *  ")
+				} else {
+					fmt.Print("     ")
+				}
+			}
+		}
+		fmt.Println()
+	}
+}

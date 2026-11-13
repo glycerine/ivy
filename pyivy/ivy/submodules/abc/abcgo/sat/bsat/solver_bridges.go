@@ -154,3 +154,14 @@ func (s *sat_solver_t) SolveLexicographic(literals []Literal) Status {
 	s.lastStatus = Status(sat_solver_solve_lexsat(s, literals, int32(len(literals))))
 	return s.lastStatus
 }
+
+// SetPivotVariables records the preferred proof pivot variables. The solver
+// owns a copy, so the caller may reuse its slice after this call.
+func (s *sat_solver_t) SetPivotVariables(vars []int32) {
+	for _, v := range vars {
+		if v < 0 || v >= s.NumVars() {
+			panic("pivot variable outside solver")
+		}
+	}
+	sat_solver_set_pivot_variables(s, vars, int32(len(vars)))
+}

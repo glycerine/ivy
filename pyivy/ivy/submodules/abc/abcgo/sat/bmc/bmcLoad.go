@@ -6,6 +6,7 @@ import (
 
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/sat/bsat"
+	"github.com/glycerine/abcgo/sat/cnf"
 )
 
 // Bmc_LoadTest checks every GIA output using the shared exact CNF encoder and

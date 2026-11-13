@@ -6,6 +6,7 @@ import (
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/sat/bsat"
 	"github.com/glycerine/abcgo/sat/cnf"
+	"strings"
 	"time"
 )
 
@@ -52,10 +53,11 @@ func Gia_ManFaultTest(p, golden *gia.Gia_Man_t, opts *Bmc_ParFf_t) {
 	var m *gia.Gia_Man_t
 	var data *cnf.Cnf_Dat_t
 	var solver *bsat.Solver
-	if Gia_ManFaultPrepare(p, golden, opts, nfunc, faultMap, tests, scratch, &m, &data, &solver, 1) == 0 {
+	prepared := Gia_ManFaultPrepare(p, golden, opts, nfunc, faultMap, tests, scratch, &m, &data, &solver, 1)
+	if prepared == 0 && (m == nil || data == nil || solver == nil) {
 		return
 	}
-	for iteration := int32(vec.Vec_IntSize(tests)) / nfunc; iteration < 1000000; iteration++ {
+	for iteration := int32(vec.Vec_IntSize(tests)) / nfunc; prepared != 0 && iteration < 1000000; iteration++ {
 		if iteration > 0 && opts.nIterCheck > 0 && iteration%opts.nIterCheck == 0 && vec.Vec_IntSize(faultMap) > 0 {
 			params := vec.Vec_IntAlloc(int(gia.Gia_ManPiNum(m) - nfunc))
 			for i := nfunc; i < gia.Gia_ManPiNum(m); i++ {
@@ -103,9 +105,9 @@ func Gia_ManFaultTest(p, golden *gia.Gia_Man_t, opts *Bmc_ParFf_t) {
 	if opts.fDump != 0 && count > 0 {
 		var err error
 		if opts.fDumpDelay != 0 && opts.Algo == 1 {
-			err = Gia_ManDumpTestsDelay(tests, count, "tests.txt", p)
+			err = Gia_ManDumpTestsDelay(tests, count, faultOutputName(p, "_tests.txt", "tests.txt"), p)
 		} else {
-			err = Gia_ManDumpTests(tests, count, "tests.txt")
+			err = Gia_ManDumpTests(tests, count, faultOutputName(p, "_tests.txt", "tests.txt"))
 		}
 		if err != nil {
 			fmt.Println(err)
@@ -157,6 +159,18 @@ func Gia_ManFaultTest(p, golden *gia.Gia_Man_t, opts *Bmc_ParFf_t) {
 	status := remaining.Solve()
 	fmt.Printf("Remaining fault status: %v.\n", status)
 	if status == bsat.Satisfiable && opts.fDumpUntest != 0 {
-		Gia_ManDumpUntests(m, data, remaining, nfunc, "untest.txt", opts.fVerbose)
+		Gia_ManDumpUntests(m, data, remaining, nfunc, faultOutputName(p, "_untest.txt", "untest.txt"), opts.fVerbose)
 	}
+}
+
+// faultOutputName preserves ABC's file naming convention for input designs.
+func faultOutputName(p *gia.Gia_Man_t, suffix, fallback string) string {
+	_, spec := p.Identity()
+	if spec == "" {
+		return fallback
+	}
+	if dot := strings.LastIndexByte(spec, '.'); dot >= 0 {
+		spec = spec[:dot]
+	}
+	return spec + suffix
 }
