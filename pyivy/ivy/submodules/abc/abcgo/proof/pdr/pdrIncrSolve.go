@@ -352,7 +352,6 @@ func IPdr_ManSolve(graph *aig.Graph, pars *Pdr_Par_t) int32 {
 				proved = 1
 			}
 			Pdr_ManDumpClauses(p, filename, proved)
-			fmt.Printf("Dumped inductive invariant in file %q.\n", filename)
 		}
 	}
 	p.tTotal += util.Abc_Clock() - started

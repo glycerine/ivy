@@ -63,3 +63,38 @@ func TestInvariantDumpAgainstLocalABC(t *testing.T) {
 		t.Fatalf("C cover:\n%s\nGo cover:\n%s", c, goCover)
 	}
 }
+
+// Unlike Pdr_ManSolve, C's IPdr_ManSolve does not add a second dump notice
+// after Pdr_ManDumpClauses has reported the file it wrote.
+func TestIncrementalInvariantDumpPrintsSourceNoticeOnce(t *testing.T) {
+	g := aig.NewGraph()
+	q := g.NewInput()
+	g.AddOutput(q)
+	g.AddOutput(g.Const0())
+	aig.Aig_ManSetRegNum(g, 1)
+	var pars Pdr_Par_t
+	Pdr_ManSetDefaultParams(&pars)
+	pars.fSilent, pars.fDumpInv = 1, 1
+	pars.pInvFileName = filepath.Join(t.TempDir(), "inv.pla")
+	file, err := os.CreateTemp(t.TempDir(), "stdout")
+	if err != nil {
+		t.Fatal(err)
+	}
+	old := os.Stdout
+	var result int32
+	func() {
+		defer func() { os.Stdout = old }()
+		os.Stdout = file
+		result = IPdr_ManSolve(g, &pars)
+	}()
+	if err := file.Close(); err != nil {
+		t.Fatal(err)
+	}
+	output, err := os.ReadFile(file.Name())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if result != 1 || strings.Count(string(output), "Inductive invariant was written into file") != 1 || strings.Contains(string(output), "Dumped inductive invariant") {
+		t.Fatalf("result=%d output=%q", result, output)
+	}
+}
