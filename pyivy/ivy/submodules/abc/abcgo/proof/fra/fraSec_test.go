@@ -41,3 +41,38 @@ func TestSecDefaultsAndTrivialMiter(t *testing.T) {
 		}
 	}
 }
+
+func TestSecSequentialMiterSafeAndFailing(t *testing.T) {
+	for _, tc := range []struct {
+		name string
+		fail bool
+		want int32
+	}{{"safe", false, 1}, {"failing", true, 0}} {
+		t.Run(tc.name, func(t *testing.T) {
+			g := aig.NewGraph()
+			input, a, b := g.NewInput(), g.NewInput(), g.NewInput()
+			if tc.fail {
+				g.AddOutput(g.AND(input, a))
+			} else {
+				g.AddOutput(g.XOR(a, b))
+			}
+			g.AddOutput(input)
+			g.AddOutput(input)
+			aig.Aig_ManSetRegNum(g, 2)
+			var pars Fra_Sec_t
+			Fra_SecSetDefaultParams(&pars)
+			pars.fSilent = 1
+			pars.fRetimeFirst = 0
+			pars.fRetimeRegs = 0
+			if got := Fra_FraigSec(g, &pars, nil); got != tc.want {
+				t.Fatalf("status=%d want=%d", got, tc.want)
+			}
+			if tc.fail {
+				cex := g.SequentialCounterexample()
+				if cex == nil || saig.Saig_ManVerifyCex(g, cex) == 0 {
+					t.Fatalf("invalid witness: %+v", cex)
+				}
+			}
+		})
+	}
+}
