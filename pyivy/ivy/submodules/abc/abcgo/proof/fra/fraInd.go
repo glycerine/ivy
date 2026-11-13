@@ -103,29 +103,7 @@ p.timeRwr += Abc_Clock() - clk;
   SeeAlso     []
 
 ***********************************************************************/
-func Fra_FramesConstrainNode(pManFraig *Aig_Man_t, pObj *Aig_Obj_t, iFrame int32) {
-    var pObjNew, pObjNew2, pObjRepr, pObjReprNew, pMiter *Aig_Obj_t;
-    // skip nodes without representative
-    if (pObjRepr = Fra_ClassObjRepr(pObj)) == nil {
-        return; }
-    assert(pObjRepr.Id < pObj.Id, "pObjRepr.Id < pObj.Id");
-    // get the new node 
-    pObjNew = Fra_ObjFraig( pObj, iFrame );
-    // get the new node of the representative
-    pObjReprNew = Fra_ObjFraig( pObjRepr, iFrame );
-    // if this is the same node, no need to add constraints
-    if Aig_Regular(pObjNew) == Aig_Regular(pObjReprNew) {
-        return; }
-    // these are different nodes - perform speculative reduction
-    pObjNew2 = Aig_NotCond( pObjReprNew, pObj.fPhase ^ pObjRepr.fPhase );
-    // set the new node
-    Fra_ObjSetFraig( pObj, iFrame, pObjNew2 );
-    // add the constraint
-    pMiter = Aig_Exor( pManFraig, pObjNew, pObjReprNew );
-    pMiter = Aig_NotCond( pMiter, !Aig_ObjPhaseReal(pMiter) );
-    assert(Aig_ObjPhaseReal(pMiter) == 1, "Aig_ObjPhaseReal(pMiter) == 1");
-    Aig_ObjCreateCo( pManFraig, pMiter );
-}
+
 
 /**Function*************************************************************
 
@@ -138,77 +116,7 @@ func Fra_FramesConstrainNode(pManFraig *Aig_Man_t, pObj *Aig_Obj_t, iFrame int32
   SeeAlso     []
 
 ***********************************************************************/
-func Fra_FramesWithClasses(p *Fra_Man_t) *Aig_Man_t {
-    var pManFraig *Aig_Man_t;
-    var pObj, pObjLi, pObjLo, pObjNew *Aig_Obj_t;
-    var i, k, f int32;
-    assert(p.pManFraig == nil, "p.pManFraig == nil");
-    assert(Aig_ManRegNum(p.pManAig) > 0, "Aig_ManRegNum(p.pManAig) > 0");
-    assert(Aig_ManRegNum(p.pManAig) < Aig_ManCiNum(p.pManAig), "Aig_ManRegNum(p.pManAig) < Aig_ManCiNum(p.pManAig)");
 
-    // start the fraig package
-    pManFraig = Aig_ManStart( Aig_ManObjNumMax(p.pManAig) * p.nFramesAll );
-    pManFraig.pName = Abc_UtilStrsav( p.pManAig.pName );
-    pManFraig.pSpec = Abc_UtilStrsav( p.pManAig.pSpec );
-    pManFraig.nRegs = p.pManAig.nRegs;
-    // create PI nodes for the frames
-    for  f = 0; f < p.nFramesAll; f++  {
-        Fra_ObjSetFraig( Aig_ManConst1(p.pManAig), f, Aig_ManConst1(pManFraig) );
-    }
-    for  f = 0; f < p.nFramesAll; f++  {
-        // inlining of macro Aig_ManForEachPiSeq
-        // inlining of macro Vec_PtrForEachEntryStop
-        for  i = 0; (i < Aig_ManCiNum(p.pManAig)-Aig_ManRegNum(p.pManAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vCis, i)), 1); i++  {
-            Fra_ObjSetFraig( pObj, f, Aig_ObjCreateCi(pManFraig) );
-        }
-    }
-    // create latches for the first frame
-    // inlining of macro Aig_ManForEachLoSeq
-    // inlining of macro Vec_PtrForEachEntryStart
-    for  i = Aig_ManCiNum(p.pManAig)-Aig_ManRegNum(p.pManAig); (i < Vec_PtrSize(p.pManAig.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vCis, i)), 1); i++  {
-        Fra_ObjSetFraig( pObj, 0, Aig_ObjCreateCi(pManFraig) );
-    }
-
-    // add timeframes
-//    pManFraig->fAddStrash = 1;
-    for  f = 0; f < p.nFramesAll - 1; f++  {
-        // set the constraints on the latch outputs
-        // inlining of macro Aig_ManForEachLoSeq
-        // inlining of macro Vec_PtrForEachEntryStart
-        for  i = Aig_ManCiNum(p.pManAig)-Aig_ManRegNum(p.pManAig); (i < Vec_PtrSize(p.pManAig.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vCis, i)), 1); i++  {
-            Fra_FramesConstrainNode( pManFraig, pObj, f );
-        }
-        // add internal nodes of this frame
-        // inlining of macro Aig_ManForEachNode
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(p.pManAig.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-            pObjNew = Aig_And( pManFraig, Fra_ObjChild0Fra(pObj,f), Fra_ObjChild1Fra(pObj,f) );
-            Fra_ObjSetFraig( pObj, f, pObjNew );
-            Fra_FramesConstrainNode( pManFraig, pObj, f );
-        }
-        }
-        // transfer latch input to the latch outputs 
-        // inlining of macro Aig_ManForEachLiLoSeq
-        for  k = 0; (k < Aig_ManRegNum(p.pManAig)) && (((pObjLi) = Aig_ManLi(p.pManAig, k)), 1)            && (((pObjLo)=Aig_ManLo(p.pManAig, k)), 1); k++  {
-            Fra_ObjSetFraig( pObjLo, f+1, Fra_ObjChild0Fra(pObjLi,f) );
-        }
-    }
-//    pManFraig->fAddStrash = 0;
-    // mark the asserts
-    pManFraig.nAsserts = Aig_ManCoNum(pManFraig);
-    // add the POs for the latch outputs of the last frame
-    // inlining of macro Aig_ManForEachLoSeq
-    // inlining of macro Vec_PtrForEachEntryStart
-    for  i = Aig_ManCiNum(p.pManAig)-Aig_ManRegNum(p.pManAig); (i < Vec_PtrSize(p.pManAig.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vCis, i)), 1); i++  {
-        Aig_ObjCreateCo( pManFraig, Fra_ObjFraig(pObj,p.nFramesAll-1) );
-    }
-
-    // remove dangling nodes
-    Aig_ManCleanup( pManFraig );
-    // make sure the satisfying assignment is node assigned
-    assert(pManFraig.pData == nil, "pManFraig.pData == nil");
-    return pManFraig;
-}
 
 /**Function*************************************************************
 
