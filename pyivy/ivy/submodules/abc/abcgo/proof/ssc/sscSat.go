@@ -25,7 +25,9 @@ func Ssc_ManStartSolver(p *Ssc_Man_t) {
 	p.inconsistent = false
 	p.satVars[0] = make([]int32, p.Aig.ObjectCount())
 	p.satNext = int32(formula.Variables)
-	for p.sat.NumVars() < p.satNext {
+	// The source reserves 1,000 additional SAT variables before adding the
+	// initial clauses. Later frontier nodes consume this existing capacity.
+	for p.sat.NumVars() < p.satNext+1000 {
 		p.sat.NewVariable()
 	}
 	// SSC reserves variable zero as the unmapped-object sentinel.

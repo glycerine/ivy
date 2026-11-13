@@ -14,6 +14,19 @@ func sscSatFixture() (*Ssc_Man_t, []int32) {
 	Ssc_ManStartSolver(p)
 	return p, inputs
 }
+
+func TestSatStartReservesSourceVariableCapacity(t *testing.T) {
+	p, in := sscSatFixture()
+	initial := p.satNext
+	if got := p.sat.NumVars(); got != initial+1000 {
+		t.Fatalf("source starts with nVars+1000: got %d, base %d", got, initial)
+	}
+	root := gia.Gia_ManAppendAnd(p.Aig, in[0], in[1])
+	p.cnfNode(root >> 1)
+	if got := p.sat.NumVars(); got != initial+1000 {
+		t.Fatalf("frontier should use reserved variables: got %d", got)
+	}
+}
 func TestSatPortSupergateFrontier(t *testing.T) {
 	p, in := sscSatFixture()
 	first := gia.Gia_ManAppendAnd(p.Aig, in[0], in[1])
