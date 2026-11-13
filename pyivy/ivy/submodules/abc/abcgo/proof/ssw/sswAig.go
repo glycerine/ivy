@@ -60,7 +60,7 @@ func Ssw_FramesConstrainNode(p *Ssw_Man_t, frames, graph *aig.Graph, obj aig.Edg
 func sswFrameNodes(graph *aig.Graph) []aig.Edge {
 	var nodes []aig.Edge
 	for _, e := range aig.Aig_ManDfsAll(graph) {
-		if aig.Aig_ObjIsNode(graph, e) {
+		if aig.Aig_ObjIsNode(graph, e) || graph.Node(e).Kind == aig.Buffer {
 			nodes = append(nodes, e)
 		}
 	}
@@ -74,7 +74,11 @@ func sswCheckFrames(p *Ssw_Man_t) {
 	p.nConstrReduced = 0
 }
 func sswMakeNode(p *Ssw_Man_t, frames *aig.Graph, obj aig.Edge, frame int32) aig.Edge {
-	a, b := Ssw_ObjChild0Fra(p, obj, frame), Ssw_ObjChild1Fra(p, obj, frame)
+	a := Ssw_ObjChild0Fra(p, obj, frame)
+	if p.pAig.Node(obj).Kind == aig.Buffer {
+		return a
+	}
+	b := Ssw_ObjChild1Fra(p, obj, frame)
 	if p.pAig.Node(obj).Kind == aig.ExclusiveOr {
 		return frames.NewXor(a, b)
 	}

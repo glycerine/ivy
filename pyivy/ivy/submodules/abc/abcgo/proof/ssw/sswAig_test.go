@@ -79,3 +79,23 @@ func TestSswFrameManagerInitialMapping(t *testing.T) {
 		t.Fatal("incorrect frame mapping allocation")
 	}
 }
+
+func TestFrameConstructionPreservesBufferedTransition(t *testing.T) {
+	g := aig.NewGraph()
+	pi, lo := g.NewInput(), g.NewInput()
+	buffer := aig.Aig_ObjCreate(g, &aig.Node{Kind: aig.Buffer, Fanins: [2]aig.Edge{pi.Not(), aig.InvalidEdge}})
+	g.AddOutput(lo)
+	g.AddOutput(buffer)
+	aig.Aig_ManSetRegNum(g, 1)
+	p := &Ssw_Man_t{pAig: g, pPars: &Ssw_Pars_t{nFramesK: 1}, nFrames: 2, pNodeToFrames: make([]aig.Edge, len(g.Nodes())*2)}
+	for i := range p.pNodeToFrames {
+		p.pNodeToFrames[i] = aig.InvalidEdge
+	}
+	frames := Ssw_FramesWithClasses(p)
+	for _, value := range []bool{false, true} {
+		outputs, err := frames.Evaluate([]bool{false, value})
+		if err != nil || len(outputs) != 1 || outputs[0] == value {
+			t.Fatalf("input %v: output %v error %v", value, outputs, err)
+		}
+	}
+}
