@@ -21,6 +21,7 @@ func TestFraMiterStatusAndAssertedOutput(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			g := aig.NewGraph()
 			g.AddOutput(tc.makeOutput(g))
+			aig.Aig_ManSetRegNum(g, 0)
 			if got := Fra_FraigMiterStatus(g); got != tc.status {
 				t.Fatalf("status %d want %d", got, tc.status)
 			}

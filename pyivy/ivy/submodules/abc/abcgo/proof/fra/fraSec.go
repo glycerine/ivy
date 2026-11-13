@@ -172,6 +172,7 @@ func Fra_FraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph) int3
 		return finish()
 	}
 	if pars.fPhaseAbstract != 0 {
+		aig.Aig_ManSetRegNum(graph, graph.RegisterCount())
 		graph = saig.Saig_ManPhaseAbstractAuto(graph, 0)
 	}
 	if pars.fRetimeFirst != 0 && graph.RegisterCount() > 0 {
@@ -209,6 +210,7 @@ func Fra_FraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph) int3
 		return finish()
 	}
 	if pars.fRetimeRegs != 0 && graph.RegisterCount() > 0 {
+		aig.Aig_ManSetRegNum(graph, graph.RegisterCount())
 		graph = saig.Saig_ManRetimeMinArea(graph, 1000, 0, 0, 1, 0)
 		graph = aig.Aig_ManDupOrdered(graph)
 	}
@@ -242,6 +244,7 @@ func Fra_FraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph) int3
 				break
 			}
 			if graph.RegisterCount() > 0 {
+				aig.Aig_ManSetRegNum(graph, graph.RegisterCount())
 				graph = saig.Saig_ManRetimeMinArea(graph, 1000, 0, 0, 1, 0)
 				graph = aig.Aig_ManDupOrdered(graph)
 			}
@@ -336,6 +339,7 @@ func Fra_FraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph) int3
 		options.FReorder = 1
 		options.FReorderImage = 1
 		options.FSilent = pars.fSilent
+		aig.Aig_ManSetRegNum(graph, graph.RegisterCount())
 		status = bbr.Aig_ManVerifyUsingBdds(graph, &options)
 	}
 	if pars.fUsePdr != 0 && status == -1 && graph.RegisterCount() > 0 {

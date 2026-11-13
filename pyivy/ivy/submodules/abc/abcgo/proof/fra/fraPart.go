@@ -9,6 +9,8 @@ import (
 )
 
 func fraOutputSupports(graph *aig.Graph) [][]int {
+	aig.Aig_ManSetCioIds(graph)
+	defer aig.Aig_ManCleanCioIds(graph)
 	indices := make(map[int]int, graph.InputCount())
 	for i, edge := range graph.Inputs() {
 		indices[edge.NodeID()] = i

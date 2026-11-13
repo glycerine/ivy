@@ -40,6 +40,7 @@ func TestSecTransfersCombinationalMixedModel(t *testing.T) {
 	original := aig.NewGraph()
 	a, b := original.NewInput(), original.NewInput()
 	original.AddOutput(original.XOR(a, b))
+	aig.Aig_ManSetRegNum(original, 0)
 	reduced := aig.Aig_ManDupSimple(original)
 	reduced.Data = []int32{1, 0}
 	if !secTransferWitness(original, reduced) {
