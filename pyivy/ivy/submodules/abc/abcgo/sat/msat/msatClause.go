@@ -18,13 +18,15 @@ func Msat_ClauseCreate(p *Msat_Solver_t, v *Msat_IntVec_t, learnt int, out **Msa
 	*out = nil
 	lits := append([]int(nil), v.data...)
 	if learnt == 0 {
-		sort.Ints(lits)
-		filtered := lits[:0]
-		previous := -2
 		for _, lit := range lits {
 			if lit < 0 || lit>>1 >= p.nVars {
 				panic("literal variable out of range")
 			}
+		}
+		sort.Ints(lits)
+		filtered := lits[:0]
+		previous := -2
+		for _, lit := range lits {
 			if lit == previous {
 				continue
 			}

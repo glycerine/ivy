@@ -82,6 +82,67 @@ func TestRandomCNFAndAssumptions(t *testing.T) {
 		}
 	}
 }
+
+func TestIncrementalClausesAndAssumptionsAgainstEnumeration(t *testing.T) {
+	rng := rand.New(rand.NewSource(715203))
+	for trial := 0; trial < 500; trial++ {
+		const n = 5
+		p := New(n)
+		var clauses [][]int
+		for step := 0; step < 12; step++ {
+			if step%2 == 0 {
+				clause := []int{rng.Intn(2 * n), rng.Intn(2 * n), rng.Intn(2 * n)}
+				clauses = append(clauses, append([]int(nil), clause...))
+				p.AddClause(clause)
+			}
+			var assumptions []int
+			for i := 0; i < rng.Intn(5); i++ {
+				assumptions = append(assumptions, rng.Intn(2*n))
+			}
+			want, got := brute(n, clauses, assumptions), p.Solve(assumptions, 0, 0)
+			if (got == MSAT_TRUE) != want || got == MSAT_UNKNOWN {
+				t.Fatalf("trial=%d step=%d got=%v want=%v clauses=%v assumptions=%v", trial, step, got, want, clauses, assumptions)
+			}
+			if got == MSAT_TRUE {
+				for _, lit := range assumptions {
+					if p.pModel[lit>>1] != lit {
+						t.Fatalf("model %v violates assumption %d", p.pModel, lit)
+					}
+				}
+				for _, clause := range clauses {
+					satisfied := false
+					for _, lit := range clause {
+						if p.pModel[lit>>1] == lit {
+							satisfied = true
+							break
+						}
+					}
+					if !satisfied {
+						t.Fatalf("model %v violates clause %v", p.pModel, clause)
+					}
+				}
+			}
+		}
+	}
+}
+
+func TestClauseValidationDoesNotSkipSatisfiedPrefix(t *testing.T) {
+	p := New(1)
+	if !p.AddClause([]int{0}) {
+		t.Fatal("unit rejected")
+	}
+	func() {
+		defer func() {
+			if recover() == nil {
+				t.Error("out-of-range literal accepted")
+			}
+		}()
+		p.AddClause([]int{0, 4})
+	}()
+	if p.Solve(nil, 0, 0) != MSAT_TRUE || p.ModelValue(0) != 1 {
+		t.Fatal("invalid clause changed formula")
+	}
+}
 func TestPigeonholeLearning(t *testing.T) {
 	const pigeons = 5
 	const holes = 4

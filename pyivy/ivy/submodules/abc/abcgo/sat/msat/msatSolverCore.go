@@ -21,6 +21,11 @@ func Msat_SolverAddVar(p *Msat_Solver_t, level int) int {
 	return 1
 }
 func Msat_SolverAddClause(p *Msat_Solver_t, lits *Msat_IntVec_t) int {
+	for _, lit := range lits.data {
+		if lit < 0 || lit>>1 >= p.nVars {
+			panic("literal variable out of range")
+		}
+	}
 	for i := range p.pModel {
 		p.pModel[i] = -1
 	}
