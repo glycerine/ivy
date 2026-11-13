@@ -52,3 +52,15 @@ func TestDataLiftPreservesLocalCountAndReverses(t *testing.T) {
 		t.Fatalf("lift round trip changed mapping or clauses: %v %v", data.VarNums, data.Clauses)
 	}
 }
+
+func TestDataDupOwnsOptionalMetadata(t *testing.T) {
+	mapping := vec.Vec_IntAlloc(1)
+	vec.Vec_IntPush(mapping, 7)
+	src := &CNF{pClaPols: []byte{1}, vMapping: mapping}
+	copy := Cnf_DataDup(src)
+	copy.pClaPols[0] = 0
+	vec.Vec_IntWriteEntry(copy.vMapping, 0, 3)
+	if src.pClaPols[0] != 1 || vec.Vec_IntEntry(src.vMapping, 0) != 7 {
+		t.Fatal("duplicate aliases source metadata")
+	}
+}

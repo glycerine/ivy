@@ -91,6 +91,10 @@ func Cnf_DataDup(src *Cnf_Dat_t) *Cnf_Dat_t {
 	result.Obj2Count = append([]int32(nil), src.Obj2Count...)
 	result.pObj2Clause = append([]int32(nil), src.pObj2Clause...)
 	result.pObj2Count = append([]int32(nil), src.pObj2Count...)
+	result.pClaPols = append([]byte(nil), src.pClaPols...)
+	if src.vMapping != nil {
+		result.vMapping = vec.Vec_IntDup(src.vMapping)
+	}
 	return &result
 }
 func Cnf_DataFree(cnf *Cnf_Dat_t) {
