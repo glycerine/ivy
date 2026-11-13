@@ -108,11 +108,11 @@ func Msat_ClauseFree(p *Msat_Solver_t, c *Msat_Clause_t, remove int) {
 	c.lits = nil
 }
 func Msat_ClausePropagate(c *Msat_Clause_t, lit int, assigns []int, out *int) int {
-	*out = -1
 	falseLit := lit ^ 1
 	if c.lits[0] == falseLit {
 		c.lits[0], c.lits[1] = c.lits[1], c.lits[0]
 	}
+	assert(c.lits[1] == falseLit, "propagated literal matches watch")
 	if assigns[c.lits[0]>>1] == c.lits[0] {
 		return 1
 	}

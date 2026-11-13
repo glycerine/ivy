@@ -49,6 +49,9 @@ func parseDIMACS(r io.Reader, initializeOrder bool) (*Msat_Solver_t, error) {
 				if p.okay {
 					if Msat_SolverAddClause(p, &Msat_IntVec_t{data: clause}) == 0 {
 						p.okay = false
+						if !initializeOrder {
+							return p, nil
+						}
 					}
 				}
 				clause = nil
@@ -85,7 +88,10 @@ func Msat_SolverParseDimacs(r io.Reader, out **Msat_Solver_t, verbose int) int {
 	if err != nil {
 		return 0
 	}
+	if !p.okay {
+		return 0
+	}
 	p.fVerbose = verbose
 	*out = p
-	return boolInt(p.okay)
+	return Msat_SolverSimplifyDB(p)
 }

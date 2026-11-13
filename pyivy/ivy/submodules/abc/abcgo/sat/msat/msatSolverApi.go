@@ -6,6 +6,7 @@ func Msat_SolverAlloc(n int, claInc, claDecay, varInc, varDecay float64, verbose
 		panic("negative variable capacity")
 	}
 	p := &Msat_Solver_t{vClauses: Msat_ClauseVecAlloc(512), vLearned: Msat_ClauseVecAlloc(512), dClaInc: claInc, dClaDecay: claDecay, dVarInc: varInc, dVarDecay: varDecay, fVerbose: verbose, pQueue: Msat_QueueAlloc(n), vTrail: Msat_IntVecAlloc(n), vTrailLim: Msat_IntVecAlloc(n), vConeVars: Msat_IntVecAlloc(n), vVarsUsed: Msat_IntVecAlloc(n), vReason: Msat_IntVecAlloc(n), vTemp: Msat_IntVecAlloc(n), pMem: Msat_MmStepStart(10), okay: true}
+	p.nSeenId = 1
 	p.pOrder = Msat_OrderAlloc(p)
 	Msat_SolverResize(p, n)
 	return p

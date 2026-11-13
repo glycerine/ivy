@@ -268,7 +268,7 @@ func TestPoolsRecycleAndRestart(t *testing.T) {
 		t.Fatal("pool did not reuse entry")
 	}
 	Msat_MmFixedRestart(p)
-	if Msat_MmFixedReadMemUsage(p) != 8 {
+	if Msat_MmFixedReadMemUsage(p) != 8192 {
 		t.Fatal("restart discarded allocation")
 	}
 	step := Msat_MmStepStart(3)

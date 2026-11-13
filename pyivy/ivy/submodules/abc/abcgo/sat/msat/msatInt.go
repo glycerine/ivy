@@ -40,13 +40,7 @@ func Msat_SolverReadDecisionLevel(p *Msat_Solver_t) int            { return len(
 func Msat_SolverReadDecisionLevelArray(p *Msat_Solver_t) []int     { return p.pLevel }
 func Msat_SolverReadReasonArray(p *Msat_Solver_t) []*Msat_Clause_t { return p.pReasons }
 func Msat_SolverReadVarValue(p *Msat_Solver_t, v int) Msat_Type_t {
-	if p.pAssigns[v] < 0 {
-		return MSAT_UNKNOWN
-	}
-	if p.pAssigns[v]&1 == 0 {
-		return MSAT_TRUE
-	}
-	return MSAT_FALSE
+	return Msat_Type_t(p.pAssigns[v])
 }
 func Msat_SolverReadLearned(p *Msat_Solver_t) *Msat_ClauseVec_t        { return p.vLearned }
 func Msat_SolverReadWatchedArray(p *Msat_Solver_t) []*Msat_ClauseVec_t { return p.pvWatched }

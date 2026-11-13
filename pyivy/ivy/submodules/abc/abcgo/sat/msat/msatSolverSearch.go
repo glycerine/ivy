@@ -186,13 +186,10 @@ func Msat_SolverReduceDB(p *Msat_Solver_t) {
 	p.vLearned.data = kept
 }
 func Msat_SolverSearch(p *Msat_Solver_t, conflictLimit, learnedLimit, backtrackLimit int, params *Msat_SearchParams_t) Msat_Type_t {
+	assert(len(p.vTrailLim.data) == p.nLevelRoot, "decision level matches root")
 	p.Stats.nStarts++
-	if params.dVarDecay > 0 {
-		p.dVarDecay = 1 / params.dVarDecay
-	}
-	if params.dClaDecay > 0 {
-		p.dClaDecay = 1 / params.dClaDecay
-	}
+	p.dVarDecay = 1 / params.dVarDecay
+	p.dClaDecay = 1 / params.dClaDecay
 	for i := 0; i < p.nVars; i++ {
 		p.pdActivity[i] = float64(p.pFactors[i])
 	}
