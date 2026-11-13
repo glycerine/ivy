@@ -80,3 +80,20 @@ As a result, callers must not interpret a proof returned after cancellation as
 necessarily belonging to the current abstraction. The compiled C check for a
 published proof followed by cancellation returns `1` once, then `0`; Go tests
 also cover publication by a superseded worker.
+
+The modern GLA refinement loop mirrors C's root-assignment shortcut: it stops
+when the output variable is assigned, even if the output literal is true. A
+source-derived two-register fixture reaches this case after layer refinement;
+C and Go return unknown without a witness, although the initial state violates
+the property. The Go result therefore retains this source false-negative.
+
+Modern GLA also asserts that a nonzero target SAT literal is greater than one.
+A register whose next state is constant one reaches literal 1 at a later frame
+and aborts in C; the Go port retains that assertion as a panic.
+
+The GLA boundary fixtures are `test_vectors/gla_true_root_oracle.c` and
+`test_vectors/gla_const_later_oracle.c`. The optional environment variables
+`ABS_GLA_ROOT_ORACLE` and `ABS_GLA_CONST_ORACLE` run their compiled binaries
+in the Go tests. The checked results above used a freshly compiled
+`src/proof/abs/absGla.c` linked with the remaining ABC object files; those
+support objects must match the checkout.

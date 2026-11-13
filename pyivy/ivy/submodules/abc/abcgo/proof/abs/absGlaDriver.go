@@ -115,6 +115,9 @@ func Gia_ManPerformGla(g *gia.Gia_Man_t, pars *Abs_Par_t) int32 {
 			if lit == 0 {
 				continue
 			}
+			if lit == 1 {
+				panic("abs: GLA target literal must exceed one")
+			}
 
 			for p.pSat.NumVars() < p.nSatVars {
 				p.pSat.NewVariable()
@@ -122,7 +125,9 @@ func Gia_ManPerformGla(g *gia.Gia_Man_t, pars *Abs_Par_t) int32 {
 			oldVars := p.nSatVars
 			refinements := int32(0)
 			for {
-				if value, assigned := p.pSat.RootValue(lit >> 1); assigned && value == (lit&1 != 0) {
+				// The C driver stops for either polarity once the target variable
+				// is assigned at the root, even when the literal is true.
+				if p.pSat.RootAssigned(lit >> 1) {
 					break
 				}
 				p.pSat.SetLimits(int64(pars.nConfLimit), 0)

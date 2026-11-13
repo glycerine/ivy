@@ -85,8 +85,9 @@ func TestGlaDriverSequentialCounterexample(t *testing.T) {
 	}
 }
 
-func TestGlaDriverConstantTrueAtLaterFrame(t *testing.T) {
+func TestGlaDriverConstantTrueAtLaterFrameSourceAssertion(t *testing.T) {
 	g := gia.Gia_ManStart(6)
+	gia.Gia_ManAppendCi(g) // unused PI, matching the source fixture
 	q := gia.Gia_ManAppendCi(g)
 	gia.Gia_ManAppendCo(g, q)
 	gia.Gia_ManAppendCo(g, 1)
@@ -97,9 +98,12 @@ func TestGlaDriverConstantTrueAtLaterFrame(t *testing.T) {
 	pars.nRatioMin = 0
 	pars.nRatioMin2 = 0
 	pars.nFramesNoChangeLim = 100
-	if result := Gia_ManPerformGla(g, pars); result != 0 || g.SequentialCounterexample() == nil || g.SequentialCounterexample().IFrame != 1 || gia.Gia_ManVerifyCex(g, g.SequentialCounterexample(), 0) != 1 {
-		t.Fatalf("result %d witness %+v", result, g.SequentialCounterexample())
-	}
+	defer func() {
+		if got := recover(); got != "abs: GLA target literal must exceed one" {
+			t.Fatalf("panic=%v, want source literal assertion", got)
+		}
+	}()
+	Gia_ManPerformGla(g, pars)
 }
 
 func TestGlaDriverLayerModeTerminatesWithRealWitness(t *testing.T) {
@@ -162,6 +166,33 @@ func TestGlaFrameLimitWithTimeoutAndConflictLimit(t *testing.T) {
 			}
 		} else if got != 0 || cex == nil || cex.IFrame != 2 || gia.Gia_ManVerifyCex(g, cex, 0) != 1 {
 			t.Fatalf("frames=%d result=%d witness=%+v", frames, got, cex)
+		}
+	}
+}
+
+// ABC skips checking frames up to and including nFramesStart or iFrameProved
+// while still unrolling their transitions (absGla.c, frame loop).
+func TestGlaSkippedFramesStillUnrollState(t *testing.T) {
+	for _, mode := range []string{"start", "proved"} {
+		g := gia.Gia_ManStart(8)
+		x := gia.Gia_ManAppendCi(g)
+		q1, q2 := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
+		gia.Gia_ManAppendCo(g, q2)
+		gia.Gia_ManAppendCo(g, x)
+		gia.Gia_ManAppendCo(g, q1)
+		gia.Gia_ManSetRegNum(g, 2)
+		p := NewParameters()
+		p.nFramesMax, p.nFramesNoChangeLim = 4, 100
+		p.nRatioMin, p.nRatioMin2 = 0, 0
+		if mode == "start" {
+			p.nFramesStart = 2
+		} else {
+			p.fUseSkip, p.iFrameProved = 1, 2
+		}
+		got := Gia_ManPerformGla(g, p)
+		cex := g.SequentialCounterexample()
+		if got != 0 || cex == nil || cex.IFrame != 3 || gia.Gia_ManVerifyCex(g, cex, 0) != 1 {
+			t.Fatalf("mode=%s result=%d witness=%+v", mode, got, cex)
 		}
 	}
 }
