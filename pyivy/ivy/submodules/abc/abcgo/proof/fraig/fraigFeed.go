@@ -328,7 +328,7 @@ func Fraig_ManSimulateBitNode(p *Fraig_Man_t, node *Fraig_Node_t, model []int32)
 	Fraig_ManIncrementTravId(p)
 	for i, n := range p.vInputs.pArray {
 		Fraig_NodeSetTravIdCurrent(p, n)
-		n.fMark3 = uint32(model[i])
+		n.fMark3 = uint32(model[i]) & 1
 	}
 	n := Fraig_ManSimulateBitNode_rec(p, Fraig_Regular(node))
 	if Fraig_IsComplement(node) {

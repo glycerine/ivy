@@ -64,3 +64,14 @@ func TestSmallestColumnIncludesNegativeNonzeroCounts(t *testing.T) {
 		t.Fatalf("minimum nonzero column = %d, want 1", got)
 	}
 }
+
+func TestBitSimulationTruncatesModelToCBitfield(t *testing.T) {
+	p := Fraig_ManCreate(&Fraig_Params_t{NPatsRand: 128, NPatsDyna: 128})
+	defer Fraig_ManFree(p)
+	a := Fraig_ManReadIthVar(p, 0)
+	for _, tc := range []struct{ input, want int32 }{{0, 0}, {1, 1}, {2, 0}, {3, 1}, {-1, 1}} {
+		if got := Fraig_ManSimulateBitNode(p, a, []int32{tc.input}); got != tc.want {
+			t.Fatalf("input %d: C one-bit field gives %d, got %d", tc.input, tc.want, got)
+		}
+	}
+}

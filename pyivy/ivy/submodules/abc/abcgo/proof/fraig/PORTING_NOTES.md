@@ -23,10 +23,10 @@ its constant node to true. Tests cover these behaviors; they are not guarantees
 of logical equivalence or constrained-miter correctness in those cases.
 
 Other source limitations are preserved: bit simulation, TFI marking, and
-supergate helpers assume a nonconstant root; feedback compression does not clear preexisting bits in a partial word;
-and the simulation hash uses a fixed prime table without wrapping. Go bounds
-checks turn an overrun of that table into a panic. The msat solver retains root
-unit facts when preparing a new cone. As in the C API, adding an empty or
+supergate helpers assume a nonconstant root; feedback compression does not clear
+preexisting bits in a partial word; and the simulation hash uses a fixed prime
+table without wrapping. Go bounds checks turn an overrun of that table into a
+panic. As in C, MSAT preparation clears root unit assignments. As in the C API, adding an empty or
 contradictory external clause triggers an assertion rather than representing an
 inconsistent manager.
 
@@ -40,3 +40,8 @@ Remaining validation work:
   compression, including repeated compression over multiple word boundaries.
 - Integrate FRAIG with a ported ABC consumer and verify end-to-end results; the
   separate-package test exercises the public API but is not such a consumer.
+
+The 107 unique FRAIG APIs declared in `fraig.h` have 105 C implementations
+and corresponding Go functions. `Fraig_DfsReverse` and `Fraig_CountLevels`
+are declared in the header but have no implementations in the C checkout;
+they are not supplied as invented replacements.
