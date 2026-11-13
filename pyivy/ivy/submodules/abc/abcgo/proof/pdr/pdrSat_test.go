@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/sat/bsat"
 )
@@ -95,5 +96,53 @@ func TestPdrSATPropertyConstraint(t *testing.T) {
 		if got := Pdr_ManCheckCube(p, 1, nil, nil, 0, 0, 0); got != 1 {
 			t.Fatalf("mono=%v constrained property result %d, want UNSAT", mono, got)
 		}
+	}
+}
+
+func TestPdrSATPrepareModelMaterializesStructuralCone(t *testing.T) {
+	g := aig.NewGraph()
+	x, y, z := g.NewInput(), g.NewInput(), g.NewInput()
+	inner := g.AND(x, y)
+	root := g.AND(inner, z)
+	g.AddOutput(root)
+	aig.Aig_ManSetRegNum(g, 0)
+	p := &Pdr_Man_t{pAig: g, pPars: &Pdr_Par_t{nRecycle: 100}, vLits: vec.Vec_IntAlloc(0), vClauses: vec.Vec_VecAlloc(0), vActVars: vec.Vec_IntAlloc(0)}
+	Pdr_ManCreateSolver(p, 0)
+	// Represent the root as a three-input cut. Its intermediate AND is then
+	// absent from the lazy SAT cone, although ternary simulation may read it.
+	cnf := p.pCnf2
+	id := root.NodeID()
+	v := func(e aig.Edge) int32 { return cnf.VarNums[e.NodeID()] << 1 }
+	cnf.Obj2Clause[id] = int32(len(cnf.Clauses))
+	cnf.Obj2Count[id] = 4
+	cnf.Clauses = append(cnf.Clauses,
+		[]int32{v(root) ^ 1, v(x)}, []int32{v(root) ^ 1, v(y)},
+		[]int32{v(root) ^ 1, v(z)}, []int32{v(root), v(x) ^ 1, v(y) ^ 1, v(z) ^ 1})
+	Pdr_ManCreateSolver(p, 1)
+	pdrPrepareModel(p, 1, nil)
+	output := Pdr_ObjSatVar(p, 1, 2, aig.Aig_ManCo(g, 0))
+	if p.vSolvers[1].Solve(bsat.Positive(output)) != bsat.Satisfiable {
+		t.Fatal("expected satisfiable output")
+	}
+	for _, obj := range []aig.Edge{x, y, z, inner, root, aig.Aig_ManCo(g, 0)} {
+		variable := Pdr_ObjSatVar(p, 1, 3, obj)
+		value, ok := p.vSolvers[1].Value(variable)
+		if !ok || !value {
+			t.Fatalf("object %v: value %v, model valid %v", obj, value, ok)
+		}
+	}
+}
+
+func TestPdrSATUnknownDoesNotProducePredecessor(t *testing.T) {
+	p, _ := pdrTestSATManager(t, false)
+	Pdr_ManCreateSolver(p, 1)
+	p.pPars.nConfGenLimit = 1
+	p.timeToStop = util.Abc_Clock() - 1
+	var predecessor *Pdr_Set_t
+	if got := Pdr_ManCheckCube(p, 1, testPdrSet([]int32{0}, nil), &predecessor, 0, 1, 0); got != -1 {
+		t.Fatalf("timed out predecessor query returned %d, want unknown", got)
+	}
+	if predecessor != nil {
+		t.Fatal("timed out query returned a predecessor")
 	}
 }

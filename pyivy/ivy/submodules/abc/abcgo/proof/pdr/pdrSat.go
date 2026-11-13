@@ -121,6 +121,40 @@ func pdrLiterals(v *vec.Vec_Int_t) []bsat.Literal {
 	return vec.Vec_IntArray(v)
 }
 
+// Materialize the structural cone before solving. Ternary simulation reads
+// values for cone objects, including nodes omitted by CNF cuts; adding their
+// SAT variables after Solve would invalidate the model in the Go solver.
+func pdrPrepareModel(p *Pdr_Man_t, k int32, cube *Pdr_Set_t) {
+	if p.pPars.fMonoCnf != 0 {
+		return
+	}
+	var stack []aig.Edge
+	if cube == nil {
+		stack = append(stack, aig.Aig_ManCo(p.pAig, p.iOutCur))
+	} else {
+		for _, lit := range cube.Lits[:cube.nLits] {
+			if lit >= 0 {
+				stack = append(stack, saig.Saig_ManLi(p.pAig, lit>>1))
+			}
+		}
+	}
+	seen := make(map[int]bool)
+	for len(stack) != 0 {
+		obj := aig.Aig_Regular(stack[len(stack)-1])
+		stack = stack[:len(stack)-1]
+		if seen[obj.NodeID()] {
+			continue
+		}
+		seen[obj.NodeID()] = true
+		Pdr_ObjSatVar(p, k, 3, obj)
+		if aig.Aig_ObjIsCo(p.pAig, obj) {
+			stack = append(stack, aig.Aig_ObjFanin0(p.pAig, obj))
+		} else if aig.Aig_ObjIsNode(p.pAig, obj) {
+			stack = append(stack, aig.Aig_ObjFanin0(p.pAig, obj), aig.Aig_ObjFanin1(p.pAig, obj))
+		}
+	}
+}
+
 func Pdr_ManSolverAddClause(p *Pdr_Man_t, k int32, cube *Pdr_Set_t) {
 	solver := Pdr_ManSolver(p, k)
 	if !solver.AddClause(pdrLiterals(Pdr_ManCubeToLits(p, k, cube, 1, 0))...) {
@@ -169,6 +203,9 @@ func Pdr_ManCheckCubeCs(p *Pdr_Man_t, k int32, cube *Pdr_Set_t) int32 {
 func Pdr_ManCheckCube(p *Pdr_Man_t, k int32, cube *Pdr_Set_t, predecessor **Pdr_Set_t, conflictLimit, tryConf, useLit int32) int32 {
 	p.nCalls++
 	solver := Pdr_ManFetchSolver(p, k)
+	if predecessor != nil {
+		pdrPrepareModel(p, k, cube)
+	}
 	var assumptions []bsat.Literal
 	limit := conflictLimit
 	if cube == nil {
@@ -198,7 +235,16 @@ func Pdr_ManCheckCube(p *Pdr_Man_t, k int32, cube *Pdr_Set_t, predecessor **Pdr_
 	status := pdrSolve(p, solver, assumptions, limit)
 	if status == bsat.Unknown {
 		if cube != nil && tryConf != 0 && p.pPars.nConfGenLimit != 0 {
-			status = bsat.Satisfiable
+			if predecessor != nil {
+				// A conservative SAT answer is sufficient when only testing
+				// generalization, but a predecessor requires a real model.
+				status = pdrSolve(p, solver, assumptions, conflictLimit)
+				if status == bsat.Unknown {
+					return -1
+				}
+			} else {
+				status = bsat.Satisfiable
+			}
 		} else {
 			return -1
 		}
