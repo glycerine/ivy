@@ -46,36 +46,6 @@ import "fmt"
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManCexRemap(p *Gia_Man_t, pCexAbs *Abc_Cex_t, vPis *Vec_Int_t) *Abc_Cex_t {
-    var pCex *Abc_Cex_t;
-    var i, f, iPiNum int32;
-    assert(pCexAbs.iPo == 0, "pCexAbs.iPo == 0");
-    // start the counter-example
-    pCex = Abc_CexAlloc( Gia_ManRegNum(p), Gia_ManPiNum(p), pCexAbs.iFrame+1 );
-    pCex.iFrame = pCexAbs.iFrame;
-    pCex.iPo    = pCexAbs.iPo;
-    // copy the bit data
-    for  f = 0; f <= pCexAbs.iFrame; f++  {
-        for  i = 0; i < Vec_IntSize(vPis); i++  {
-            if Abc_InfoHasBit( pCexAbs.pData, pCexAbs.nRegs + pCexAbs.nPis * f + i ) {
-                iPiNum = Gia_ObjCioId( Gia_ManObj(p, Vec_IntEntry(vPis, i)) );
-                Abc_InfoSetBit( pCex.pData, pCex.nRegs + pCex.nPis * f + iPiNum );
-            }
-        }
-    }
-    // verify the counter example
-    if !Gia_ManVerifyCex( p, pCex, 0 ) {
-        Abc_Print( 1, "Gia_ManCexRemap(): Counter-example is invalid.\n" );
-        Abc_CexFree( pCex );
-        pCex = nil;
-    
-    } else {
-        Abc_Print( 1, "Counter-example verification is successful.\n" );
-        Abc_Print( 1, "Output %d of miter \"%s\" was asserted in frame %d. \n", pCex.iPo, p.pName, pCex.iFrame );
-    }
-    return pCex;
-}
-
 /**Function*************************************************************
 
   Synopsis    [Refines gate-level abstraction using the counter-example.]

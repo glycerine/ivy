@@ -1,151 +1,101 @@
+// Go port of absIter.c by Alan Mishchenko, UC Berkeley (2005).
 package abs
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/misc/util"
+	"github.com/glycerine/abcgo/misc/vec"
+	"github.com/glycerine/abcgo/sat/bmc"
+)
 
-/**CFile****************************************************************
-
-  FileName    [absIter.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Abstraction package.]
-
-  Synopsis    [Iterative improvement of abstraction.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: absIter.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "abs.h"
-//#include "sat/bmc/bmc.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-func Gia_ObjIsInGla(p *Gia_Man_t, pObj *Gia_Obj_t) int32 { return Vec_IntEntry(p.vGateClasses, Gia_ObjId(p, pObj));  }
-func Gia_ObjAddToGla(p *Gia_Man_t, pObj *Gia_Obj_t) { Vec_IntWriteEntry(p.vGateClasses, Gia_ObjId(p, pObj), 1); }
-func Gia_ObjRemFromGla(p *Gia_Man_t, pObj *Gia_Obj_t) { Vec_IntWriteEntry(p.vGateClasses, Gia_ObjId(p, pObj), 0); }
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_IterTryImprove(p *Gia_Man_t, nTimeOut int32, iFrame0 int32) int32 {
-    var pAbs *Gia_Man_t  = Gia_ManDupAbsGates( p, p.vGateClasses );
-    var pAig *Aig_Man_t  = Gia_ManToAigSimple( pAbs );
-    var nStart int32;
-    var nFrames int32;
-    if iFrame0 != 0 {
-        nFrames = iFrame0 + 1;
-    } else {
-        nFrames = 10000000;
-    }
-    var nNodeDelta int32   =         2000;
-    var nBTLimit int32;
-    var nBTLimitAll int32;
-    var fVerbose int32;
-    var RetValue, iFrame int32; 
-    RetValue = Saig_BmcPerform( pAig, nStart, nFrames, nNodeDelta, nTimeOut, nBTLimit, nBTLimitAll, fVerbose, 0, &iFrame, 1, 0 );
-    assert(RetValue == 0 || RetValue == -1, "RetValue == 0 || RetValue == -1");
-    Aig_ManStop( pAig );
-    Gia_ManStop( pAbs );
-    return iFrame;
+func Gia_ObjIsInGla(p *Gia_Man_t, obj *Gia_Obj_t) int32 {
+	return vec.Vec_IntEntry(gia.Gia_ManGateClasses(p), int(gia.Gia_ObjId(p, obj)))
 }
-func Gia_ManShrinkGla(p *Gia_Man_t, nFrameMax int32, nTimeOut int32, fUsePdr int32, fUseSat int32, fUseBdd int32, fVerbose int32) *Gia_Man_t {
-    var pObj *Gia_Obj_t;
-    var i, iFrame0, iFrame int32;
-    var nTotal, nRemoved int32;
-    var vGScopy *Vec_Int_t;
-    var clk abctime;
-    var clkTotal abctime = Abc_Clock();
-    assert(Gia_ManPoNum(p) == 1, "Gia_ManPoNum(p) == 1");
-    assert(p.vGateClasses != nil, "p.vGateClasses != nil");
-    vGScopy = Vec_IntDup( p.vGateClasses );
-    if nFrameMax == 0 {
-        iFrame0 = Gia_IterTryImprove( p, 0, 0 );
-    } else {
-        iFrame0 = nFrameMax - 1; }
-    for {
-        var fChanges int32;
-        // inlining of macro Gia_ManForEachObj1
-        for  i = 1; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {
-            if pObj.fMark0 {
-                continue; }
-            if !(Gia_ObjIsInGla(p, pObj) != 0) {
-                continue; }
-            if pObj == Gia_ObjFanin0( Gia_ManPo(p, 0) ) {
-                continue; }
-            if Gia_ObjIsAnd(pObj) {
-                if (Gia_ObjIsInGla(p, Gia_ObjFanin0(pObj)) != 0) && (Gia_ObjIsInGla(p, Gia_ObjFanin1(pObj)) != 0) {
-                    continue; }
-            }
-            if Gia_ObjIsRo(p, pObj) {
-                if Gia_ObjIsInGla(p, Gia_ObjFanin0(Gia_ObjRoToRi(p, pObj))) != 0 {
-                    continue; }
-            }        
-            clk = Abc_Clock();
-            fmt.Printf("%5d : ", nTotal);
-            fmt.Printf("Obj =%7d   ", i);
-            Gia_ObjRemFromGla( p, pObj );
-            iFrame = Gia_IterTryImprove( p, nTimeOut, iFrame0 );
-            if nFrameMax != 0 {
-                assert(iFrame <= nFrameMax, "iFrame <= nFrameMax");
-            } else {
-                assert(iFrame <= iFrame0, "iFrame <= iFrame0"); }
-            fmt.Printf("Frame =%6d   ", iFrame);
-            if iFrame < iFrame0 {
-                pObj.fMark0 = 1;
-                Gia_ObjAddToGla( p, pObj );
-                fmt.Printf("           ");
-            
-            } else {
-                fChanges = 1;
-                nRemoved++;
-                fmt.Printf("Removing   ");
-                Vec_IntWriteEntry( vGScopy, Gia_ObjId(p, pObj), 0 );
-            }
-            Abc_PrintTime( 1, "Time", Abc_Clock() - clk );
-            nTotal++;
-            // update the classes
-            Vec_IntFreeP( &p.vGateClasses );
-            p.vGateClasses = Vec_IntDup(vGScopy);
-        }
-        if !(fChanges != 0) {
-            break; }
-    }
-    Gia_ManCleanMark0(p);
-    Vec_IntFree( vGScopy );
-    fmt.Printf("Tried = %d.  ", nTotal);
-    fmt.Printf("Removed = %d. (%.2f %%)  ", nRemoved, 100.0 * nRemoved / Vec_IntCountPositive(p.vGateClasses));
-    Abc_PrintTime( 1, "Time",  Abc_Clock() - clkTotal );
-    return nil;
+func Gia_ObjAddToGla(p *Gia_Man_t, obj *Gia_Obj_t) {
+	vec.Vec_IntWriteEntry(gia.Gia_ManGateClasses(p), int(gia.Gia_ObjId(p, obj)), 1)
+}
+func Gia_ObjRemFromGla(p *Gia_Man_t, obj *Gia_Obj_t) {
+	vec.Vec_IntWriteEntry(gia.Gia_ManGateClasses(p), int(gia.Gia_ObjId(p, obj)), 0)
 }
 
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
+func Gia_IterTryImprove(p *Gia_Man_t, timeout, initialFrame int32) int32 {
+	abstraction := Gia_ManDupAbsGates(p, gia.Gia_ManGateClasses(p))
+	graph := gia.Gia_ManToAigSimple(abstraction)
+	frames := int32(10000000)
+	if initialFrame != 0 {
+		frames = initialFrame + 1
+	}
+	var frame int32
+	status := bmc.Saig_BmcPerform(graph, 0, frames, 2000, timeout, 0, 0, 0, 0, &frame, 1, 0)
+	if status != 0 && status != -1 {
+		panic("abs: unexpected bounded-check status")
+	}
+	aig.Aig_ManStop(graph)
+	gia.Gia_ManStop(abstraction)
+	return frame
+}
 
-
-//ABC_NAMESPACE_IMPL_END
-
+// Gia_ManShrinkGla tries removing boundary objects while preserving the
+// established bounded-checking depth; accepted removals update the original map.
+func Gia_ManShrinkGla(p *Gia_Man_t, nFrameMax, timeout, fUsePdr, fUseSat, fUseBdd, verbose int32) *Gia_Man_t {
+	classes := gia.Gia_ManGateClasses(p)
+	if gia.Gia_ManPoNum(p) != 1 || classes == nil {
+		panic("abs: expected one output and an abstraction map")
+	}
+	saved := vec.Vec_IntDup(classes)
+	initial := nFrameMax - 1
+	if nFrameMax == 0 {
+		initial = Gia_IterTryImprove(p, 0, 0)
+	}
+	var tried, removed int32
+	started := util.Abc_Clock()
+	for {
+		changed := false
+		for id := int32(1); id < gia.Gia_ManObjNum(p); id++ {
+			obj := gia.Gia_ManObj(p, id)
+			if gia.Gia_ObjMark0(obj) != 0 || Gia_ObjIsInGla(p, obj) == 0 || obj == gia.Gia_ObjFanin0(gia.Gia_ManPo(p, 0)) {
+				continue
+			}
+			if gia.Gia_ObjIsAnd(obj) != 0 && Gia_ObjIsInGla(p, gia.Gia_ObjFanin0(obj)) != 0 && Gia_ObjIsInGla(p, gia.Gia_ObjFanin1(obj)) != 0 {
+				continue
+			}
+			if gia.Gia_ObjIsRo(p, obj) != 0 && Gia_ObjIsInGla(p, gia.Gia_ObjFanin0(gia.Gia_ObjRoToRi(p, obj))) != 0 {
+				continue
+			}
+			mark := util.Abc_Clock()
+			fmt.Printf("%5d : Obj =%7d   ", tried, id)
+			Gia_ObjRemFromGla(p, obj)
+			frame := Gia_IterTryImprove(p, timeout, initial)
+			if (nFrameMax != 0 && frame > nFrameMax) || (nFrameMax == 0 && frame > initial) {
+				panic("abs: bounded checker exceeded frame limit")
+			}
+			fmt.Printf("Frame =%6d   ", frame)
+			if frame < initial {
+				gia.Gia_ObjSetMark0(obj, 1)
+				Gia_ObjAddToGla(p, obj)
+				fmt.Print("           ")
+			} else {
+				changed = true
+				removed++
+				fmt.Print("Removing   ")
+				vec.Vec_IntWriteEntry(saved, int(id), 0)
+			}
+			util.Abc_PrintTime(1, "Time", util.Abc_Clock()-mark)
+			tried++
+			copy(vec.Vec_IntArray(classes), vec.Vec_IntArray(saved))
+		}
+		if !changed {
+			break
+		}
+	}
+	gia.Gia_ManCleanMark0(p)
+	fmt.Printf("Tried = %d.  Removed = %d. (%.2f %%)  ", tried, removed, 100*float64(removed)/float64(vec.Vec_IntCountPositive(classes)))
+	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-started)
+	_ = fUsePdr
+	_ = fUseSat
+	_ = fUseBdd
+	_ = verbose
+	return nil
+}
