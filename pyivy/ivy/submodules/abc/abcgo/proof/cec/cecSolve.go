@@ -5,6 +5,7 @@ import (
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
+	"github.com/glycerine/abcgo/proof/cec/core"
 )
 
 func cecResetPatterns(p *Cec_ManPat_t) {
@@ -36,9 +37,15 @@ func Cec_ManSatSolve(patterns *Cec_ManPat_t, graph *Gia_Man_t, pars *Cec_ParSat_
 	gia.Gia_ManSetPhase(graph)
 	gia.Gia_ManLevelNum(graph)
 	gia.Gia_ManIncrementTravId(graph)
-	sat := Cec_ManSatCreate(graph, pars)
-	defer Cec_ManSatStop(sat)
-	pars = sat.pPars
+	if pars == nil {
+		pars = new(Cec_ParSat_t)
+		Cec_ManSatSetDefaultParams(pars)
+	}
+	sat := &Cec_ManSat_t{pAig: graph, pPars: pars}
+	model, err := core.NewModel(graph)
+	if err != nil {
+		panic(err)
+	}
 	classic := newCecClassicSolver(graph, pars)
 	var models []*util.Abc_Cex_t
 	if pars.fSaveCexes != 0 {
@@ -55,7 +62,7 @@ func Cec_ManSatSolve(patterns *Cec_ManPat_t, graph *Gia_Man_t, pars *Cec_ParSat_
 			status = classic.check(lit)
 			if status == 0 {
 				var err error
-				sat.values, err = sat.proof.Model().Values(classic.inputs())
+				sat.values, err = model.Values(classic.inputs())
 				if err != nil {
 					panic(err)
 				}
