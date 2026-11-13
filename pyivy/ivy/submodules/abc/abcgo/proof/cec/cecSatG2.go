@@ -2,6 +2,7 @@ package cec
 
 import (
 	"fmt"
+ "github.com/glycerine/abcgo/sat/glucose2"
 	"os"
 	"time"
 )
@@ -30,31 +31,31 @@ import (
 //#include "misc/util/utilTruth.h"
 //#include "cec.h"
 
-#define USE_GLUCOSE2
+// #define USE_GLUCOSE2
 
                    
 
 //#include "sat/glucose2/AbcGlucose2.h"
 
-#define sat_solver                         bmcg2_sat_solver
-#define sat_solver_start                   bmcg2_sat_solver_start
-#define sat_solver_stop                    bmcg2_sat_solver_stop
-#define sat_solver_addclause               bmcg2_sat_solver_addclause
-#define sat_solver_add_and                 bmcg2_sat_solver_add_and
-#define sat_solver_add_xor                 bmcg2_sat_solver_add_xor
-#define sat_solver_addvar                  bmcg2_sat_solver_addvar
-#define sat_solver_read_cex_varvalue       bmcg2_sat_solver_read_cex_varvalue
-#define sat_solver_reset                   bmcg2_sat_solver_reset
-#define sat_solver_set_conflict_budget     bmcg2_sat_solver_set_conflict_budget
-#define sat_solver_conflictnum             bmcg2_sat_solver_conflictnum
-#define sat_solver_solve                   bmcg2_sat_solver_solve
-#define sat_solver_read_cex_varvalue       bmcg2_sat_solver_read_cex_varvalue
-#define sat_solver_read_cex                bmcg2_sat_solver_read_cex
-#define sat_solver_jftr                    bmcg2_sat_solver_jftr
-#define sat_solver_set_jftr                bmcg2_sat_solver_set_jftr
-#define sat_solver_set_var_fanin_lit       bmcg2_sat_solver_set_var_fanin_lit
-#define sat_solver_start_new_round         bmcg2_sat_solver_start_new_round
-#define sat_solver_mark_cone               bmcg2_sat_solver_mark_cone
+// #define sat_solver                         bmcg2_sat_solver
+// #define sat_solver_start                   bmcg2_sat_solver_start
+// #define sat_solver_stop                    bmcg2_sat_solver_stop
+// #define sat_solver_addclause               bmcg2_sat_solver_addclause
+// #define sat_solver_add_and                 bmcg2_sat_solver_add_and
+// #define sat_solver_add_xor                 bmcg2_sat_solver_add_xor
+// #define sat_solver_addvar                  bmcg2_sat_solver_addvar
+// #define sat_solver_read_cex_varvalue       bmcg2_sat_solver_read_cex_varvalue
+// #define sat_solver_reset                   bmcg2_sat_solver_reset
+// #define sat_solver_set_conflict_budget     bmcg2_sat_solver_set_conflict_budget
+// #define sat_solver_conflictnum             bmcg2_sat_solver_conflictnum
+// #define sat_solver_solve                   bmcg2_sat_solver_solve
+// #define sat_solver_read_cex_varvalue       bmcg2_sat_solver_read_cex_varvalue
+// #define sat_solver_read_cex                bmcg2_sat_solver_read_cex
+// #define sat_solver_jftr                    bmcg2_sat_solver_jftr
+// #define sat_solver_set_jftr                bmcg2_sat_solver_set_jftr
+// #define sat_solver_set_var_fanin_lit       bmcg2_sat_solver_set_var_fanin_lit
+// #define sat_solver_start_new_round         bmcg2_sat_solver_start_new_round
+// #define sat_solver_mark_cone               bmcg2_sat_solver_mark_cone
 
      
 
@@ -96,7 +97,7 @@ type Cec4_Man_t struct {
     pAig       *Gia_Man_t;           // user's AIG
     pNew       *Gia_Man_t;           // internal AIG
     // SAT solving
-    pSat      *sat_solver;           // SAT solver
+    pSat      *glucose2.SimpSolver;           // SAT solver
     vFrontier       *Vec_Ptr_t;      // CNF construction
     vFanins       *Vec_Ptr_t;        // CNF construction
     vCexMin       *Vec_Int_t;        // minimized CEX
@@ -177,98 +178,8 @@ func Cec4_ObjCleanSatId(p *Gia_Man_t, pObj *Gia_Obj_t) { assert(Cec4_ObjSatId(p,
   SeeAlso     []
 
 ***********************************************************************/
-func Cec4_ManCreate(pAig *Gia_Man_t, pPars *Cec_ParFra_t) *Cec4_Man_t {
-    // inlining of macro ABC_CALLOC
-    var p *Cec4_Man_t  = &Cec4_Man_t{};
-    memset( p, 0, sizeof(Cec4_Man_t) );
-    p.timeStart     = Abc_Clock();
-    p.pPars         = pPars;
-    p.pAig          = pAig;
-    p.pSat          = sat_solver_start();  
-    sat_solver_set_jftr( p.pSat, pPars.jType );
-    p.vFrontier     = Vec_PtrAlloc( 1000 );
-    p.vFanins       = Vec_PtrAlloc( 100 );
-    p.vCexMin       = Vec_IntAlloc( 100 );
-    p.vClassUpdates = Vec_IntAlloc( 100 );
-    p.vCexStamps    = Vec_IntStart( Gia_ManObjNum(pAig) );
-    p.vCands        = Vec_IntAlloc( 100 );
-    p.vVisit        = Vec_IntAlloc( 100 );
-    p.vPat          = Vec_IntAlloc( 100 );
-    p.vDisprPairs   = Vec_IntAlloc( 100 );
-    p.vFails        = Vec_BitStart( Gia_ManObjNum(pAig) );
-    //pAig->pData     = p->pSat; // point AIG manager to the solver
-    return p;
-}
-func Cec4_ManDestroy(p *Cec4_Man_t) {
-    if p.pPars.fVerbose {
-        var timeTotal abctime  = Abc_Clock() - p.timeStart;
-        var timeSat abctime    = p.timeSatSat0 + p.timeSatSat + p.timeSatUnsat0 + p.timeSatUnsat + p.timeSatUndec;
-        var timeOther abctime  = timeTotal - timeSat - p.timeSim - p.timeRefine - p.timeResimLoc - p.timeGenPats;// - p->timeResimGlo;
-        // inlining of macro ABC_PRTP
-        Abc_Print(1, "%s =", ("SAT solving  "));
-Abc_Print(1, "%9.2f sec (%6.2f %%)\n", 1.0*(float64((timeSat)))/(float64(int64(time.Second))), (float64((timeTotal)))? 100.0*(float64((timeSat)))/(float64((timeTotal))) : 0.0);;
-        // inlining of macro ABC_PRTP
-        Abc_Print(1, "%s =", ("  sat(easy)  "));
-Abc_Print(1, "%9.2f sec (%6.2f %%)\n", 1.0*(float64((p.timeSatSat0)))/(float64(int64(time.Second))), (float64((timeTotal)))? 100.0*(float64((p.timeSatSat0)))/(float64((timeTotal))) : 0.0);;
-        // inlining of macro ABC_PRTP
-        Abc_Print(1, "%s =", ("  sat        "));
-Abc_Print(1, "%9.2f sec (%6.2f %%)\n", 1.0*(float64((p.timeSatSat)))/(float64(int64(time.Second))), (float64((timeTotal)))? 100.0*(float64((p.timeSatSat)))/(float64((timeTotal))) : 0.0);;
-        // inlining of macro ABC_PRTP
-        Abc_Print(1, "%s =", ("  unsat(easy)"));
-Abc_Print(1, "%9.2f sec (%6.2f %%)\n", 1.0*(float64((p.timeSatUnsat0)))/(float64(int64(time.Second))), (float64((timeTotal)))? 100.0*(float64((p.timeSatUnsat0)))/(float64((timeTotal))) : 0.0);;
-        // inlining of macro ABC_PRTP
-        Abc_Print(1, "%s =", ("  unsat      "));
-Abc_Print(1, "%9.2f sec (%6.2f %%)\n", 1.0*(float64((p.timeSatUnsat)))/(float64(int64(time.Second))), (float64((timeTotal)))? 100.0*(float64((p.timeSatUnsat)))/(float64((timeTotal))) : 0.0);;
-        // inlining of macro ABC_PRTP
-        Abc_Print(1, "%s =", ("  fail       "));
-Abc_Print(1, "%9.2f sec (%6.2f %%)\n", 1.0*(float64((p.timeSatUndec)))/(float64(int64(time.Second))), (float64((timeTotal)))? 100.0*(float64((p.timeSatUndec)))/(float64((timeTotal))) : 0.0);;
-        // inlining of macro ABC_PRTP
-        Abc_Print(1, "%s =", ("Generate CNF "));
-Abc_Print(1, "%9.2f sec (%6.2f %%)\n", 1.0*(float64((p.timeCnf)))/(float64(int64(time.Second))), (float64((timeTotal)))? 100.0*(float64((p.timeCnf)))/(float64((timeTotal))) : 0.0);;
-        // inlining of macro ABC_PRTP
-        Abc_Print(1, "%s =", ("Generate pats"));
-Abc_Print(1, "%9.2f sec (%6.2f %%)\n", 1.0*(float64((p.timeGenPats)))/(float64(int64(time.Second))), (float64((timeTotal)))? 100.0*(float64((p.timeGenPats)))/(float64((timeTotal))) : 0.0);;
-        // inlining of macro ABC_PRTP
-        Abc_Print(1, "%s =", ("Simulation   "));
-Abc_Print(1, "%9.2f sec (%6.2f %%)\n", 1.0*(float64((p.timeSim)))/(float64(int64(time.Second))), (float64((timeTotal)))? 100.0*(float64((p.timeSim)))/(float64((timeTotal))) : 0.0);;
-        // inlining of macro ABC_PRTP
-        Abc_Print(1, "%s =", ("Refinement   "));
-Abc_Print(1, "%9.2f sec (%6.2f %%)\n", 1.0*(float64((p.timeRefine)))/(float64(int64(time.Second))), (float64((timeTotal)))? 100.0*(float64((p.timeRefine)))/(float64((timeTotal))) : 0.0);;
-        // inlining of macro ABC_PRTP
-        Abc_Print(1, "%s =", ("Resim global "));
-Abc_Print(1, "%9.2f sec (%6.2f %%)\n", 1.0*(float64((p.timeResimGlo)))/(float64(int64(time.Second))), (float64((timeTotal)))? 100.0*(float64((p.timeResimGlo)))/(float64((timeTotal))) : 0.0);;
-        // inlining of macro ABC_PRTP
-        Abc_Print(1, "%s =", ("Resim local  "));
-Abc_Print(1, "%9.2f sec (%6.2f %%)\n", 1.0*(float64((p.timeResimLoc)))/(float64(int64(time.Second))), (float64((timeTotal)))? 100.0*(float64((p.timeResimLoc)))/(float64((timeTotal))) : 0.0);;
-        // inlining of macro ABC_PRTP
-        Abc_Print(1, "%s =", ("Other        "));
-Abc_Print(1, "%9.2f sec (%6.2f %%)\n", 1.0*(float64((timeOther)))/(float64(int64(time.Second))), (float64((timeTotal)))? 100.0*(float64((timeOther)))/(float64((timeTotal))) : 0.0);;
-        // inlining of macro ABC_PRTP
-        Abc_Print(1, "%s =", ("TOTAL        "));
-Abc_Print(1, "%9.2f sec (%6.2f %%)\n", 1.0*(float64((timeTotal)))/(float64(int64(time.Second))), (float64((timeTotal)))? 100.0*(float64((timeTotal)))/(float64((timeTotal))) : 0.0);;
-        fflush( os.Stdout );
-    }
-    Vec_WrdFreeP( &p.pAig.vSims );
-    Vec_WrdFreeP( &p.pAig.vSimsPi );
-    Gia_ManCleanMark01( p.pAig );
-    sat_solver_stop( p.pSat );
-    Gia_ManStopP( &p.pNew );
-    Vec_PtrFreeP( &p.vFrontier );
-    Vec_PtrFreeP( &p.vFanins );
-    Vec_IntFreeP( &p.vCexMin );
-    Vec_IntFreeP( &p.vClassUpdates );
-    Vec_IntFreeP( &p.vCexStamps );
-    Vec_IntFreeP( &p.vCands );
-    Vec_IntFreeP( &p.vVisit );
-    Vec_IntFreeP( &p.vPat );
-    Vec_IntFreeP( &p.vDisprPairs );
-    Vec_BitFreeP( &p.vFails );
-    Vec_IntFreeP( &p.vRefClasses );
-    Vec_IntFreeP( &p.vRefNodes );
-    Vec_IntFreeP( &p.vRefBins );
-    p.pTable = nil;
-    p = nil;
-}
+
+
 func Cec4_ManStartNew(pAig *Gia_Man_t) *Gia_Man_t {
     var pObj *Gia_Obj_t; var i int32;
     var pNew *Gia_Man_t  = Gia_ManStart( Gia_ManObjNum(pAig) );
@@ -931,87 +842,11 @@ func Cec4_ManSimAlloc(p *Gia_Man_t, nWords int32) {
   SeeAlso     []
 
 ***********************************************************************/
-func Cec4_ManPrintTfiConeStats(p *Gia_Man_t) {
-    var vRoots *Vec_Int_t   = Vec_IntAlloc( 100 );
-    var vNodes *Vec_Int_t   = Vec_IntAlloc( 100 );
-    var vLeaves *Vec_Int_t  = Vec_IntAlloc( 100 );
-    var i, k int32;
-    // inlining of macro Gia_ManForEachClass0
-    for  i = 0; i < Gia_ManObjNum(p); i++  { if !Gia_ObjIsHead(p, i) {} else {
-        Vec_IntClear( vRoots );
-        if i % 100 != 0 {
-            continue; }
-        Vec_IntPush( vRoots, i );
-        // inlining of macro Gia_ClassForEachObj1
-        for  assert(Gia_ObjIsHead(p, i), "Gia_ObjIsHead(p, i)"), k = Gia_ObjNext(p, i); k > 0; k = Gia_ObjNext(p, k)  {
-            Vec_IntPush( vRoots, k );
-        }
-        Gia_ManCollectTfi( p, vRoots, vNodes );
-        fmt.Printf("Class %6d : ", i);
-        fmt.Printf("Roots = %6d  ", Vec_IntSize(vRoots));
-        fmt.Printf("Nodes = %6d  ", Vec_IntSize(vNodes));
-        fmt.Printf("\n");
-    }
-    }
-    Vec_IntFree( vRoots );
-    Vec_IntFree( vNodes );
-    Vec_IntFree( vLeaves );
-}
+
 var spStatic_Cec4_ManPrintStats_clk abctime;
-func Cec4_ManPrintStats(p *Gia_Man_t, pPars *Cec_ParFra_t, pMan *Cec4_Man_t, fSim int32) {
-    
-    var clkThis abctime;
-    var i, nLits, Counter, Counter0, CounterX int32;
-    if !pPars.fVerbose {
-        return; }
-    if pMan.nItersSim + pMan.nItersSat {
-        clkThis = Abc_Clock() - spStatic_Cec4_ManPrintStats_clk; }
-    spStatic_Cec4_ManPrintStats_clk = Abc_Clock();
-    for  i = 0; i < Gia_ManObjNum(p); i++  {
-        if Gia_ObjIsHead(p, i) {
-            Counter++;
-        } else if Gia_ObjIsConst(p, i) {
-            Counter0++;
-        } else if Gia_ObjIsNone(p, i) {
-            CounterX++; }
-    }
-    nLits = Gia_ManObjNum(p) - Counter - CounterX;
-    if fSim != 0 {
-        fmt.Printf("Sim %4d : ", pMan.nItersSim++ + pMan.nItersSat);
-        fmt.Printf("%6.2f %%  ", 100.0*nLits/Gia_ManCandNum(p));
-    
-    } else {
-        fmt.Printf("SAT %4d : ", pMan.nItersSim + pMan.nItersSat++);
-        fmt.Printf("%6.2f %%  ", 100.0*pMan.nAndNodes/Gia_ManAndNum(p));
-    }
-    fmt.Printf("P =%7d  ", pMan ? pMan.nSatUnsat : 0);
-    fmt.Printf("D =%7d  ", pMan ? pMan.nSatSat   : 0);
-    fmt.Printf("F =%8d  ", pMan ? pMan.nSatUndec : 0);
-    //printf( "Last =%6d  ", pMan ? pMan->iLastConst : 0 );
-    Abc_Print( 1, "cst =%9d  cls =%8d  lit =%9d   ",  Counter0, Counter, nLits );
-    Abc_PrintTime( 1, "Time", clkThis );
-}
-func Cec4_ManPrintClasses2(p *Gia_Man_t) {
-    var i, k int32;
-    // inlining of macro Gia_ManForEachClass0
-    for  i = 0; i < Gia_ManObjNum(p); i++  { if !Gia_ObjIsHead(p, i) {} else {
-        fmt.Printf("Class %d : ", i);
-        // inlining of macro Gia_ClassForEachObj1
-        for  assert(Gia_ObjIsHead(p, i), "Gia_ObjIsHead(p, i)"), k = Gia_ObjNext(p, i); k > 0; k = Gia_ObjNext(p, k)  {
-            fmt.Printf("%d ", k);
-        }
-        fmt.Printf("\n");
-    }
-    }
-}
-func Cec4_ManPrintClasses(p *Gia_Man_t) {
-    var k, Count int32;
-    // inlining of macro Gia_ClassForEachObj1
-    for  assert(Gia_ObjIsHead(p, 0), "Gia_ObjIsHead(p, 0)"), k = Gia_ObjNext(p, 0); k > 0; k = Gia_ObjNext(p, k)  {
-        Count++;
-    }
-    fmt.Printf("Const0 class has %d entries.\n", Count);
-}
+
+
+
 
 
 /**Function*************************************************************
