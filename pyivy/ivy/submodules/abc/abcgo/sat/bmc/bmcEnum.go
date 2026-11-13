@@ -14,7 +14,7 @@ func enumerateDerivedPatterns(p *gia.Gia_Man_t, limit int) int {
 		return 0
 	}
 	graph := gia.Gia_ManToAigSimple(p)
-	formula := cnf.Cnf_DeriveSimple(graph, 0)
+	formula := cnf.Cnf_DeriveSimple(graph, int32(graph.OutputCount()))
 	if formula == nil {
 		return 0
 	}
@@ -54,7 +54,7 @@ func enumerateDerivedPatterns(p *gia.Gia_Man_t, limit int) int {
 			return count
 		}
 		dg := gia.Gia_ManToAigSimple(derived)
-		dc := cnf.Cnf_DeriveSimple(dg, 0)
+		dc := cnf.Cnf_DeriveSimple(dg, int32(dg.OutputCount()))
 		if dc == nil {
 			return count
 		}

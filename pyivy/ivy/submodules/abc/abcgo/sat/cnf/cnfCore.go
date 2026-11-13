@@ -40,17 +40,19 @@ func Cnf_DeriveWithMan(manager *Cnf_Man_t, graph *Aig_Man_t, nOutputs int32) *Cn
 	if manager != nil {
 		manager.pManAig = graph
 	}
-	data, err := EncodeAIG(graph, int(nOutputs))
-	if err != nil {
-		return nil
-	}
-	return data
+	return deriveLegacyAIG(graph, nOutputs)
 }
 func Cnf_Derive(graph *Aig_Man_t, nOutputs int32) *Cnf_Dat_t {
 	return Cnf_DeriveWithMan(nil, graph, nOutputs)
 }
 func Cnf_DeriveOtherWithMan(manager *Cnf_Man_t, graph *Aig_Man_t, _ int32) *Cnf_Dat_t {
-	return Cnf_DeriveWithMan(manager, graph, -1)
+	if graph == nil {
+		return nil
+	}
+	if manager != nil {
+		manager.pManAig = graph
+	}
+	return deriveLegacyAIG(graph, int32(graph.OutputCount()))
 }
 func Cnf_DeriveOther(graph *Aig_Man_t, skipTTMin int32) *Cnf_Dat_t {
 	return Cnf_DeriveOtherWithMan(nil, graph, skipTTMin)

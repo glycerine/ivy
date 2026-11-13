@@ -157,6 +157,19 @@ func EncodeAIG(graph *aig.Graph, nOutputs int) (*CNF, error) {
 	return result, nil
 }
 
+// deriveLegacyAIG preserves ABC's convention: the final freeOutputs outputs
+// remain unconstrained, while preceding outputs are asserted.
+func deriveLegacyAIG(graph *aig.Graph, freeOutputs int32) *CNF {
+	if graph == nil || freeOutputs < 0 || int(freeOutputs) > graph.OutputCount() {
+		return nil
+	}
+	result, err := EncodeAIG(graph, graph.OutputCount()-int(freeOutputs))
+	if err != nil {
+		return nil
+	}
+	return result
+}
+
 func boolBit(v bool) int32 {
 	if v {
 		return 1

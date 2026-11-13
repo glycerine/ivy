@@ -14,7 +14,7 @@ func Bmc_CollapseOneInt2(p *gia.Gia_Man_t, cubeLimit, conflictLimit, canonical, 
 		return nil
 	}
 	graph := gia.Gia_ManToAigSimple(p)
-	formula := cnf.Cnf_DeriveSimple(graph, 0)
+	formula := cnf.Cnf_DeriveSimple(graph, int32(graph.OutputCount()))
 	if formula == nil {
 		return nil
 	}

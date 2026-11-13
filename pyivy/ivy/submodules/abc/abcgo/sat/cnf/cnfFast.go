@@ -301,11 +301,7 @@ func Cnf_CountCnfSize(graph *Aig_Man_t) int32 {
 	return count + int32(graph.OutputCount())
 }
 func Cnf_DeriveFastClauses(graph *Aig_Man_t, outputs int32) *Cnf_Dat_t {
-	data, err := EncodeAIG(graph, int(outputs))
-	if err != nil {
-		return nil
-	}
-	return data
+	return deriveLegacyAIG(graph, outputs)
 }
 func Cnf_DeriveFast(graph *Aig_Man_t, outputs int32) *Cnf_Dat_t {
 	return Cnf_DeriveFastClauses(graph, outputs)

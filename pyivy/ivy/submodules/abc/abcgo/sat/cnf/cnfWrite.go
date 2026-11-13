@@ -96,28 +96,20 @@ func Cnf_ManWriteCnf(manager *Cnf_Man_t, _ *Vec_Ptr_t, outputs int32) *Cnf_Dat_t
 	if manager == nil {
 		return nil
 	}
-	result, err := EncodeAIG(manager.pManAig, int(outputs))
-	if err != nil {
-		return nil
-	}
-	return result
+	return deriveLegacyAIG(manager.pManAig, outputs)
 }
 func Cnf_ManWriteCnfOther(manager *Cnf_Man_t, _ *Vec_Ptr_t) *Cnf_Dat_t {
 	if manager == nil {
 		return nil
 	}
-	result, err := EncodeAIG(manager.pManAig, -1)
+	result, err := EncodeAIG(manager.pManAig, 0)
 	if err != nil {
 		return nil
 	}
 	return result
 }
 func Cnf_DeriveSimple(graph *Aig_Man_t, outputs int32) *Cnf_Dat_t {
-	result, err := EncodeAIG(graph, int(outputs))
-	if err != nil {
-		return nil
-	}
-	return result
+	return deriveLegacyAIG(graph, outputs)
 }
 func Cnf_DeriveSimpleForRetiming(graph *Aig_Man_t) *Cnf_Dat_t {
 	result, err := EncodeAIG(graph, 0)

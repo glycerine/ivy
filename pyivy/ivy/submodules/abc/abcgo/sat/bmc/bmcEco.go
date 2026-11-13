@@ -63,7 +63,7 @@ func Bmc_EcoPatch(p *gia.Gia_Man_t, nIns, nOuts int32) int32 {
 		return -1
 	}
 	g := gia.Gia_ManToAigSimple(p)
-	formula := cnf.Cnf_DeriveSimple(g, 0)
+	formula := cnf.Cnf_DeriveSimple(g, int32(g.OutputCount()))
 	if formula == nil {
 		return -1
 	}

@@ -52,7 +52,7 @@ func Abc_ObjExpandCubes(sop *vec.Vec_Str_t, p *gia.Gia_Man_t, nVars int32) int32
 		return -1
 	}
 	g := gia.Gia_ManToAigSimple(p)
-	formula := cnf.Cnf_DeriveSimple(g, 0)
+	formula := cnf.Cnf_DeriveSimple(g, int32(g.OutputCount()))
 	if formula == nil {
 		return -1
 	}

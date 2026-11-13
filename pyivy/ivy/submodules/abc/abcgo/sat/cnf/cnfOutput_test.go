@@ -101,3 +101,37 @@ func TestSolverLoadingFramesAndInitialization(t *testing.T) {
 		t.Fatal("combinational frames rejected")
 	}
 }
+
+func TestLegacyDerivationLeavesLastOutputsFree(t *testing.T) {
+	g := aig.NewGraph()
+	x, y := g.NewInput(), g.NewInput()
+	g.AddOutput(x)
+	g.AddOutput(y)
+	for _, derive := range []struct {
+		name string
+		fn   func(*aig.Graph, int32) *Cnf_Dat_t
+	}{
+		{"mapped", Cnf_Derive}, {"simple", Cnf_DeriveSimple}, {"fast", Cnf_DeriveFast},
+	} {
+		for free := int32(0); free <= 2; free++ {
+			data := derive.fn(g, free)
+			if data == nil {
+				t.Fatalf("%s: no CNF", derive.name)
+			}
+			s := Cnf_DataWriteIntoSolver(data, 1, 0)
+			for mask := 0; mask < 4; mask++ {
+				as := []bsat.Literal{bsat.Positive(data.VarNums[x.NodeID()]), bsat.Positive(data.VarNums[y.NodeID()])}
+				for i := range as {
+					if mask&(1<<i) == 0 {
+						as[i] ^= 1
+					}
+				}
+				got := s != nil && s.Solve(as...) == bsat.Satisfiable
+				want := (free >= 2 || mask&1 != 0) && (free >= 1 || mask&2 != 0)
+				if got != want {
+					t.Fatalf("%s free=%d mask=%02b got=%v want=%v", derive.name, free, mask, got, want)
+				}
+			}
+		}
+	}
+}
