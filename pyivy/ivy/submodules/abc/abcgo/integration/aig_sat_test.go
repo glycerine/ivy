@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	aig "github.com/glycerine/abcgo/aig/miniaig"
+	"github.com/glycerine/abcgo/integration"
 	"github.com/glycerine/abcgo/sat/satoko"
 )
 
@@ -15,17 +16,9 @@ func TestMiniAIGSatokoTruthParity(t *testing.T) {
 		p := aig.Mini_AigStart()
 		inputs := []int{aig.Mini_AigCreatePi(p), aig.Mini_AigCreatePi(p), aig.Mini_AigCreatePi(p)}
 		out := aig.Mini_AigTruth(p, inputs, 3, truth*0x01010101)
-		s := satoko.New()
-		s.SetVariables(aig.Mini_AigNodeNum(p))
-		s.AddClause([]int{1}) // Node zero is constant false.
-		for id := 1; id < aig.Mini_AigNodeNum(p); id++ {
-			if !aig.Mini_AigNodeIsAnd(p, id) {
-				continue
-			}
-			a, b, z := aig.Mini_AigNodeFanin0(p, id), aig.Mini_AigNodeFanin1(p, id), id*2
-			s.AddClause([]int{z ^ 1, a})
-			s.AddClause([]int{z ^ 1, b})
-			s.AddClause([]int{z, a ^ 1, b ^ 1})
+		s, err := integration.MiniAIGSolver(p)
+		if err != nil {
+			t.Fatal(err)
 		}
 		for assignment := 0; assignment < 8; assignment++ {
 			assumptions := make([]int, 0, 4)
