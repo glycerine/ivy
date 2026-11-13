@@ -74,63 +74,7 @@ import "os"
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_ManSetConstrPhases_(p *Aig_Man_t, nFrames int32, pvInits **Vec_Int_t) int32 {
-    var vLits *Vec_Int_t;
-    var pSat *sat_solver;
-    var pCnf *Cnf_Dat_t;
-    var pObj *Aig_Obj_t;
-    var i, f, iVar, RetValue, nRegs int32;
-    if pvInits {
-        *pvInits = nil; }
-    assert(p.nConstrs > 0, "p.nConstrs > 0");
-    // create CNF
-    nRegs = p.nRegs; p.nRegs = 0;
-    pCnf = Cnf_Derive( p, Aig_ManCoNum(p) );
-    p.nRegs = nRegs;
-    // create SAT solver
-    pSat = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, nFrames, 0 );
-    assert(pSat.size == nFrames * pCnf.nVars, "pSat.size == nFrames * pCnf.nVars");
-    // collect constraint literals
-    vLits = Vec_IntAlloc( 100 );
-    // inlining of macro Saig_ManForEachLo
-    for  i = 0; (i < Saig_ManRegNum(p)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i+Saig_ManPiNum(p))), 1); i++  {
-        assert(pCnf.pVarNums[Aig_ObjId(pObj)] >= 0, "pCnf.pVarNums[Aig_ObjId(pObj)] >= 0");
-        Vec_IntPush( vLits, toLitCond(pCnf.pVarNums[Aig_ObjId(pObj)], 1) );
-    }
-    for  f = 0; f < nFrames; f++  {
-        // inlining of macro Saig_ManForEachPo
-        // inlining of macro Vec_PtrForEachEntryStop
-        for  i = 0; (i < Saig_ManPoNum(p)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-            if i < Saig_ManPoNum(p) - Saig_ManConstrNum(p) {
-                continue; }
-            assert(pCnf.pVarNums[Aig_ObjId(pObj)] >= 0, "pCnf.pVarNums[Aig_ObjId(pObj)] >= 0");
-            iVar = pCnf.pVarNums[Aig_ObjId(pObj)] + pCnf.nVars*f;
-            Vec_IntPush( vLits, toLitCond(iVar, 1) );
-        }
-    }
-    RetValue = sat_solver_solve( pSat, (int *)Vec_IntArray(vLits),
-        (int *)Vec_IntArray(vLits) + Vec_IntSize(vLits),
-        (ABC_INT64_T)1000000, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );
-    if RetValue == l_True && pvInits {
-        *pvInits = Vec_IntAlloc( 1000 );
-        for  f = 0; f < nFrames; f++  {
-            // inlining of macro Saig_ManForEachPi
-            // inlining of macro Vec_PtrForEachEntryStop
-            for  i = 0; (i < Saig_ManPiNum(p)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {
-                iVar = pCnf.pVarNums[Aig_ObjId(pObj)] + pCnf.nVars*f;
-                Vec_IntPush( *pvInits, sat_solver_var_value(pSat, iVar) );
-            }
-        }
-    }
-    sat_solver_delete( pSat );
-    Vec_IntFree( vLits );
-    Cnf_DataFree( pCnf );
-    if RetValue == l_False {
-        return 1; }
-    if RetValue == l_True {
-        return 0; }
-    return -1;
-}
+
 
 /**Function*************************************************************
 
