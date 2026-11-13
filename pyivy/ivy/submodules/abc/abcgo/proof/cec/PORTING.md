@@ -14,6 +14,14 @@ In particular, work is in progress to match the source's detailed per-round
 statistics and timings. The focused harnesses are supplemental, not a
 replacement for the full-package test.
 
+The top-level `Cec_ManVerify` currently uses the direct SAT implementation
+instead of the source's default normalization, iterative SAT-sweeping, and
+old-engine fallback pipeline. Likewise, the current `Cec_ManSatSweeping`
+delegates to a different sweep, and `Cec_ManVerifyOld` delegates back to the
+current top-level implementation rather than the original SSW-based fallback.
+These are substantive source-fidelity and option-behavior gaps; passing tests
+of their Boolean outcomes does not establish equivalence of the algorithms.
+
 ## Upstream Cec4 choice limitation
 
 The choice-building path `gia.Cec4_ManSatSolverChoices` is not a working
