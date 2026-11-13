@@ -247,8 +247,29 @@ func LivenessToSafetyTransformationOneStepLoop(mode int32, n *Network, p *aig.Gr
 	}
 	return LivenessToSafetyTransformation(mode, n, p, live, fair, assertions, assumptions)
 }
+func validSourceLTL(n *Network, formulas []string) ([]string, error) {
+	valid := make([]string, 0, len(formulas))
+	for _, formula := range formulas {
+		node, err := ParseFormula(formula)
+		if err == nil && isWellFormed(node) != 0 && checkSignalNameExistence(n, node) != 0 {
+			valid = append(valid, formula)
+		}
+	}
+	if len(valid) == 0 {
+		return nil, fmt.Errorf("live: no valid LTL properties")
+	}
+	return valid, nil
+}
 func LivenessToSafetyTransformationWithLTL(mode int32, n *Network, p *aig.Graph, live, fair, assertions, assumptions []aig.Edge) *aig.Graph {
-	result, err := LivenessToSafety(n, TransformOptions{Mode: mode, LTL: n.LTLProperties, Liveness: live, Fairness: fair, SafetyAssertions: assertions, SafetyAssumptions: assumptions})
+	formulas := n.LTLProperties
+	if mode == FULL_BIERE_MODE || mode == IGNORE_SAFETY_KEEP_LIVENESS_MODE {
+		var err error
+		formulas, err = validSourceLTL(n, formulas)
+		if err != nil {
+			panic(err)
+		}
+	}
+	result, err := LivenessToSafety(n, TransformOptions{Mode: mode, LTL: formulas, Liveness: live, Fairness: fair, SafetyAssertions: assertions, SafetyAssumptions: assumptions})
 	if err != nil {
 		panic(err)
 	}
@@ -423,6 +444,15 @@ func commandTransform(frame *Frame, argv []string, ltl, simulation, abstraction 
 		options.LTL = append([]string(nil), frame.LTLProperties...)
 		if len(options.LTL) == 0 {
 			options.LTL = n.LTLProperties
+		}
+		if options.Mode == FULL_BIERE_MODE || options.Mode == IGNORE_SAFETY_KEEP_LIVENESS_MODE {
+			var err error
+			options.LTL, err = validSourceLTL(n, options.LTL)
+			if err != nil {
+				_, errors := frame.writers()
+				fmt.Fprintln(errors, err)
+				return 1
+			}
 		}
 	}
 	result, err := LivenessToSafety(n, options)

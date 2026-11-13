@@ -107,3 +107,14 @@ func TestLTLCommandOneStepUsesOriginalLivenessSignals(t *testing.T) {
 		t.Fatalf("source one-step emits safety and liveness outputs, got %d", trueOutputs(frame.Network.Graph))
 	}
 }
+
+func TestLTLCommandSkipsInvalidFormulaWhenOthersAreValid(t *testing.T) {
+	n := liveFixture(true)
+	frame := &Frame{Network: n, LTLProperties: []string{":G :F missing", ":G :F assert_fair_q"}, Out: &bytes.Buffer{}, Err: &bytes.Buffer{}}
+	if got := Abc_CommandAbcLivenessToSafetyWithLTL(frame, 2, []string{"l2s-ltl", "-s"}); got != 0 {
+		t.Fatalf("C skips invalid formulas and keeps valid ones: status %d, error %s", got, frame.Err)
+	}
+	if trueOutputs(frame.Network.Graph) != 1 {
+		t.Fatalf("expected one accepted LTL property, got %d", trueOutputs(frame.Network.Graph))
+	}
+}

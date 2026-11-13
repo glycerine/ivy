@@ -10,7 +10,7 @@ The main APIs are `LivenessToSafety`, `ParseFormula`, `CheckSafety`, `KLive`, `F
 
 `TransformOptions` selects full, safety-only, liveness-only, or one-step construction, optional shadow-state abstraction, restartable SAVE, and Boolean combinations of GF formulas. One-step mode checks self-loops only. The C LTL command routes one-step mode to the ordinary liveness construction and ignores LTL formulas. Partial shadow sets are abstractions: they may introduce spurious counterexamples. General full-shadow mode records a saved state and event history to detect recurrent counterexamples.
 
-The formula syntax retains source prefix notation (`&`, `+`, `!`, `:G`, `:F`, `:X`, `:U`). Native `>` additionally implements the source enum's implication operation. Parsing recognizes all these temporal operators; circuit compilation explicitly accepts only Boolean combinations of GF with combinational operands, matching the source supported fragment. Boolean names refer to named true POs, with `true`/`false` constants. Trailing operands and malformed formulas are errors.
+The formula syntax retains source prefix notation (`&`, `+`, `!`, `:G`, `:F`, `:X`, `:U`). Native `>` additionally implements the source enum's implication operation. Parsing recognizes all these temporal operators; circuit compilation explicitly accepts only Boolean combinations of GF with combinational operands, matching the source supported fragment. Boolean names refer to named true POs, with `true`/`false` constants. The direct Go parser reports trailing operands and malformed formulas as errors. The C-shaped LTL command and wrapper skip invalid formulas when at least one valid formula remains, and report an error when none do (C aborts the process in that case).
 
 ## Proof backend boundary
 
