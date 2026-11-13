@@ -171,7 +171,7 @@ func Gia_ManDualXor2(p *Gia_Man_t, LitA []int32, LitB []int32, LitZ []int32) {
     
     if fForceZero != 0 { LitZ[0]   = Gia_ManHashAnd( p, LitZ[0], Abc_LitNot(LitZ[1]) ); }
 }
-func Gia_ManDualXorN(p *Gia_Man_t, pLits *int32, n int32, LitZ []int32) {
+func Gia_ManDualXorN(p *Gia_Man_t, pLits []int32, n int32, LitZ []int32) {
     var i int32;
     LitZ[0] = 0;
     LitZ[1] = 0;
@@ -192,7 +192,7 @@ func Gia_ManDualAnd2(p *Gia_Man_t, LitA []int32, LitB []int32, LitZ []int32) {
     //LitZ[1]   = Gia_ManHashAnd( p, Gia_ManHashOr(p, LitA[0], LitA[1]), Gia_ManHashOr(p, LitB[0], LitB[1]) );
     //LitZ[1]   = Gia_ManHashAnd( p, LitZ[1], Abc_LitNot(LitZ[0]) );
 }
-func Gia_ManDualAndN(p *Gia_Man_t, pLits *int32, n int32, LitZ []int32) {
+func Gia_ManDualAndN(p *Gia_Man_t, pLits []int32, n int32, LitZ []int32) {
     var i, LitZero, LitOne int32;
     LitZ[0] = 1;
     for  i = 0; i < n; i++  {

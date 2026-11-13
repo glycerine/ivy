@@ -154,55 +154,55 @@ func Acb_Oper2Name(i int32) string {
 
 ***********************************************************************/
 var pLibStr [25]string = [25]string{
-    "GATE buf        1       O=a;            PIN * INV 1 999 1.0 0.0 1.0 0.0\n"
-    "GATE inv        1       O=!a;           PIN * INV 1 999 1.0 0.0 1.0 0.0\n"
-    "GATE and2       1       O=a*b;          PIN * INV 1 999 1.0 0.0 1.0 0.0\n"
-    "GATE and3       1       O=a*b*c;        PIN * INV 1 999 1.0 0.0 1.0 0.0\n"
-    "GATE and4       1       O=a*b*c*d;      PIN * INV 1 999 1.0 0.0 1.0 0.0\n"
-    "GATE or2        1       O=a+b;          PIN * INV 1 999 1.0 0.0 1.0 0.0\n"
-    "GATE or3        1       O=a+b+c;        PIN * INV 1 999 1.0 0.0 1.0 0.0\n"
-    "GATE or4        1       O=a+b+c+d;      PIN * INV 1 999 1.0 0.0 1.0 0.0\n"
-    "GATE nand2      1       O=!(a*b);       PIN * INV 1 999 1.0 0.0 1.0 0.0\n"
-    "GATE nand3      1       O=!(a*b*c);     PIN * INV 1 999 1.0 0.0 1.0 0.0\n"
-    "GATE nand4      1       O=!(a*b*c*d);   PIN * INV 1 999 1.0 0.0 1.0 0.0\n"
-    "GATE nor2       1       O=!(a+b);       PIN * INV 1 999 1.0 0.0 1.0 0.0\n"
-    "GATE nor3       1       O=!(a+b+c);     PIN * INV 1 999 1.0 0.0 1.0 0.0\n"
-    "GATE nor4       1       O=!(a+b+c+d);   PIN * INV 1 999 1.0 0.0 1.0 0.0\n"
-    "GATE xor        1       O=!a*b+a*!b;    PIN * INV 1 999 1.0 0.0 1.0 0.0\n"
-    "GATE xnor       1       O=a*b+!a*!b;    PIN * INV 1 999 1.0 0.0 1.0 0.0\n"
-    "GATE zero       0       O=CONST0;\n"
+    "GATE buf        1       O=a;            PIN * INV 1 999 1.0 0.0 1.0 0.0\n" +
+    "GATE inv        1       O=!a;           PIN * INV 1 999 1.0 0.0 1.0 0.0\n" +
+    "GATE and2       1       O=a*b;          PIN * INV 1 999 1.0 0.0 1.0 0.0\n" +
+    "GATE and3       1       O=a*b*c;        PIN * INV 1 999 1.0 0.0 1.0 0.0\n" +
+    "GATE and4       1       O=a*b*c*d;      PIN * INV 1 999 1.0 0.0 1.0 0.0\n" +
+    "GATE or2        1       O=a+b;          PIN * INV 1 999 1.0 0.0 1.0 0.0\n" +
+    "GATE or3        1       O=a+b+c;        PIN * INV 1 999 1.0 0.0 1.0 0.0\n" +
+    "GATE or4        1       O=a+b+c+d;      PIN * INV 1 999 1.0 0.0 1.0 0.0\n" +
+    "GATE nand2      1       O=!(a*b);       PIN * INV 1 999 1.0 0.0 1.0 0.0\n" +
+    "GATE nand3      1       O=!(a*b*c);     PIN * INV 1 999 1.0 0.0 1.0 0.0\n" +
+    "GATE nand4      1       O=!(a*b*c*d);   PIN * INV 1 999 1.0 0.0 1.0 0.0\n" +
+    "GATE nor2       1       O=!(a+b);       PIN * INV 1 999 1.0 0.0 1.0 0.0\n" +
+    "GATE nor3       1       O=!(a+b+c);     PIN * INV 1 999 1.0 0.0 1.0 0.0\n" +
+    "GATE nor4       1       O=!(a+b+c+d);   PIN * INV 1 999 1.0 0.0 1.0 0.0\n" +
+    "GATE xor        1       O=!a*b+a*!b;    PIN * INV 1 999 1.0 0.0 1.0 0.0\n" +
+    "GATE xnor       1       O=a*b+!a*!b;    PIN * INV 1 999 1.0 0.0 1.0 0.0\n" +
+    "GATE zero       0       O=CONST0;\n" +
     "GATE one        0       O=CONST1;\n",
 };
 var pLibStr2 [25]string = [25]string{
-    "GATE buf        1       O=a;            PIN * INV 1 999 1.0 0.0 1.0 0.0\n"
-    "GATE inv        1       O=!a;           PIN * INV 1 999 1.0 0.0 1.0 0.0\n"
-    "GATE and2       1       O=a*b;          PIN * INV 1 999 1.0 0.0 1.0 0.0\n"
-    "GATE or2        1       O=a+b;          PIN * INV 1 999 1.0 0.0 1.0 0.0\n"
-    "GATE nand2      1       O=!(a*b);       PIN * INV 1 999 1.0 0.0 1.0 0.0\n"
-    "GATE nor2       1       O=!(a+b);       PIN * INV 1 999 1.0 0.0 1.0 0.0\n"
-    "GATE xor        1       O=!a*b+a*!b;    PIN * INV 1 999 1.0 0.0 1.0 0.0\n"
-    "GATE xnor       1       O=a*b+!a*!b;    PIN * INV 1 999 1.0 0.0 1.0 0.0\n"
-    "GATE zero       0       O=CONST0;\n"
+    "GATE buf        1       O=a;            PIN * INV 1 999 1.0 0.0 1.0 0.0\n" +
+    "GATE inv        1       O=!a;           PIN * INV 1 999 1.0 0.0 1.0 0.0\n" +
+    "GATE and2       1       O=a*b;          PIN * INV 1 999 1.0 0.0 1.0 0.0\n" +
+    "GATE or2        1       O=a+b;          PIN * INV 1 999 1.0 0.0 1.0 0.0\n" +
+    "GATE nand2      1       O=!(a*b);       PIN * INV 1 999 1.0 0.0 1.0 0.0\n" +
+    "GATE nor2       1       O=!(a+b);       PIN * INV 1 999 1.0 0.0 1.0 0.0\n" +
+    "GATE xor        1       O=!a*b+a*!b;    PIN * INV 1 999 1.0 0.0 1.0 0.0\n" +
+    "GATE xnor       1       O=a*b+!a*!b;    PIN * INV 1 999 1.0 0.0 1.0 0.0\n" +
+    "GATE zero       0       O=CONST0;\n" +
     "GATE one        0       O=CONST1;\n",
 };
 func Acb_IntallLibrary(f2Ins int32) {
-    extern Mio_Library_t * Mio_LibraryReadBuffer( char * pBuffer, int fExtendedFormat, st__table * tExcludeGate, int fVerbose );
+
     var pLib *Mio_Library_t;
     var i int32;
     // create library string
     var vLibStr *Vec_Str_t  = Vec_StrAlloc( 1000 );
-    var ppLibStr *string;
+    var ppLibStr []string;
     if f2Ins != 0 {
-        ppLibStr = pLibStr2;
+        ppLibStr = pLibStr2[:];
     } else {
-        ppLibStr = pLibStr;
+        ppLibStr = pLibStr[:];
     }
-    for  i = 0; ppLibStr[i]; i++  {
+    for i = 0; int(i) < len(ppLibStr) && ppLibStr[i] != ""; i++ {
         Vec_StrAppend( vLibStr, ppLibStr[i] );
     }
-    Vec_StrPush( vLibStr, '\0' );
+    Vec_StrPush( vLibStr, 0 );
     // create library
-    pLib = Mio_LibraryReadBuffer( Vec_StrArray(vLibStr), 0, nil, 0 );
+    pLib = Mio_LibraryReadBuffer(string(Vec_StrArray(vLibStr)[:Vec_StrSize(vLibStr)-1]), 0, nil, 0);
     Mio_LibrarySetName( pLib, Abc_UtilStrsav("iccad17.genlib") );
     Mio_UpdateGenlib( pLib );
     Vec_StrFree( vLibStr );
