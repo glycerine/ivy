@@ -39,11 +39,11 @@ Remaining validation work:
   implementation, including solver feedback and sparse functional reduction.
 - Exercise SAT timeout and unknown outcomes during real search, and assess limits
   on deep cone traversal and large feedback/simulation workloads.
-- Compare sparse hash collisions during complete feedback compression against
-  the original C implementation. The compiled oracle currently tests repeated
-  rehash group/split operations and a compression fixture with one normal
-  covering pair, overlapping patterns, and a partial permanent word. It does
-  not yet exercise sparse-class selection or resizing during compression.
+- Broaden compiled-C compression comparisons beyond the deterministic normal
+  and sparse covering fixtures, including larger collision classes, repeated
+  compression, and resize workloads with internal nodes. The current oracle
+  exercises sparse-class selection, one resize, overlapping patterns, and a
+  partial permanent word.
 - Integrate FRAIG with a ported ABC consumer and verify end-to-end results; the
   separate-package test exercises the public API but is not such a consumer.
 

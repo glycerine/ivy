@@ -47,6 +47,26 @@ func TestCompressionAgainstOriginalC(t *testing.T) {
 	msat.Msat_IntVecPush(p.vPatsReal, 31)
 	Fraig_FeedBackCompress(p)
 	got := fmt.Sprintf("%d %d %d %08x %08x %08x %08x %08x %08x\n", p.iWordStart, p.iWordPerm, p.iPatsPerm, a.puSimD[0], a.puSimD[1], b.puSimD[0], b.puSimD[1], p.pSimsReal[0], p.pSimsReal[1])
+
+	sparseA := &Fraig_Node_t{Num: 1, NumPi: 0, puSimR: make([]uint32, 1), puSimD: []uint32{0x80000000, 1, 0, 0, 0}}
+	sparseB := &Fraig_Node_t{Num: 2, NumPi: 1, puSimR: make([]uint32, 1), puSimD: []uint32{0, 1, 0, 0, 0}}
+	sparseA.pNextF = sparseB
+	constant := &Fraig_Node_t{NumPi: -1}
+	q := &Fraig_Man_t{
+		pConst1: constant,
+		vInputs: &Fraig_NodeVec_t{pArray: []*Fraig_Node_t{sparseA, sparseB}},
+		vNodes:  &Fraig_NodeVec_t{pArray: []*Fraig_Node_t{constant, sparseA, sparseB}},
+		vCones:  Fraig_NodeVecAlloc(8), mmSims: Fraig_MemFixedStart(24),
+		pTableF:   &Fraig_HashTable_t{},
+		pTableF0:  &Fraig_HashTable_t{nBins: 1, nEntries: 2, pBins: []*Fraig_Node_t{sparseA}},
+		fDoSparse: 1, nWordsRand: 1, nWordsDyna: 5,
+		iWordStart: 3, iWordPerm: 1, iPatsPerm: 31,
+		pSimsReal: []uint32{0x7fffffff, 0, 0, 0, 0},
+		pSimsTemp: make([]uint32, 5), vPatsReal: msat.Msat_IntVecAlloc(4),
+	}
+	Fraig_FeedBackCompress(q)
+	got += fmt.Sprintf("%d %d %d %d %08x %08x %08x %d\n", q.iWordStart, q.iWordPerm, q.iPatsPerm, q.nWordsDyna, sparseA.puSimD[0], sparseB.puSimD[0], q.pSimsReal[0], q.pTableF0.nEntries)
+	Fraig_MemFixedStop(q.mmSims, 0)
 	if got != string(original) {
 		t.Fatalf("Go compression: %soriginal C: %s", got, original)
 	}
