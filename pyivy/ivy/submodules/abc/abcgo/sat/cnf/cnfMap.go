@@ -1,8 +1,6 @@
 package cnf
 
 import (
-	"math/bits"
-
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/misc/vec"
 )
@@ -59,13 +57,8 @@ func Cnf_CutSuperAreaFlow(super *Vec_Ptr_t, area []int32, graph *aig.Graph) int3
 func cutCNFCost(cut *aig.Aig_Cut_t) int {
 	leaves := int(aig.Aig_CutLeaveNum(cut))
 	truth := aig.Aig_CutTruth(cut)
-	if leaves <= 4 && len(truth) > 0 {
-		mask := uint32(1)<<(1<<leaves) - 1
-		ones := bits.OnesCount32(truth[0] & mask)
-		if zeros := (1 << leaves) - ones; zeros < ones {
-			return zeros
-		}
-		return ones
+	if len(truth) > 0 {
+		return cutSopCost(truth, leaves)
 	}
 	return leaves + 1
 }
@@ -88,6 +81,10 @@ func Cnf_DeriveMapping(manager *Cnf_Man_t) {
 		}
 		var best *aig.Aig_Cut_t
 		for cut := aig.Aig_ObjCuts(manager.pCuts, aig.Edge(id)<<1); cut != nil; cut = aig.Aig_CutNext(cut) {
+			leaves := aig.Aig_CutLeaves(cut)
+			if len(leaves) == 0 || len(leaves) == 1 && leaves[0] == int32(id) || len(aig.Aig_CutTruth(cut)) == 0 {
+				continue
+			}
 			if best == nil || cutCNFCost(cut) < cutCNFCost(best) {
 				best = cut
 			}

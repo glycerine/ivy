@@ -50,6 +50,14 @@ func TestCutCompositionHonorsMergeLimit(t *testing.T) {
 	}
 }
 
+func TestManagerCutSopCost(t *testing.T) {
+	manager := Cnf_ManStart()
+	cut := &Dar_Cut_t{nLeaves: 2, uTruth: 0x8888}
+	if got := Cnf_CutSopCost(manager, cut); got != 3 {
+		t.Fatalf("AND cost = %d, want 3", got)
+	}
+}
+
 func TestCutDeriveTruthRepeatsAcrossWord(t *testing.T) {
 	g := aig.NewGraph()
 	x, y := g.NewInput(), g.NewInput()

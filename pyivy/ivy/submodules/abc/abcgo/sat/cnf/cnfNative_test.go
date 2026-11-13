@@ -253,6 +253,11 @@ func TestNativeCutMappingOwnsCopies(t *testing.T) {
 	if len(cut.pFanins) == 0 {
 		t.Fatal("selected cut lost its support")
 	}
+	for _, leaf := range cut.pFanins {
+		if leaf == int32(root.NodeID()) {
+			t.Fatal("selected cut depends on itself")
+		}
+	}
 	mapping := Cnf_ManScanMapping(manager, 1, 0)
 	if vec.Vec_PtrSize(mapping) == 0 {
 		t.Fatal("mapping traversal returned no gates")

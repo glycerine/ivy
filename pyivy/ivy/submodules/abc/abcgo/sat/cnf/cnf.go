@@ -118,8 +118,9 @@ type Cnf_Man_t_ struct {
 // inlining of macro Dar_ObjForEachCut
 func Dar_ObjBestCut(pObj *Aig_Obj_t) *Dar_Cut_t { return nil }
 
-func Cnf_CutSopCost(p *Cnf_Man_t, pCut *Dar_Cut_t) int32 {
-	return int32(p.pSopSizes[pCut.uTruth]) + int32(p.pSopSizes[0xFFFF&^pCut.uTruth])
+func Cnf_CutSopCost(_ *Cnf_Man_t, pCut *Dar_Cut_t) int32 {
+	truth := uint32(pCut.uTruth)
+	return int32(cutSopCost([]uint32{truth | truth<<16}, 4))
 }
 
 func Cnf_CutLeaveNum(pCut *Cnf_Cut_t) int32 { return int32(pCut.nFanins) }
