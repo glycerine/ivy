@@ -42,10 +42,10 @@ func TestInductionGeneratedTwoRegisterCircuits(t *testing.T) {
 				continue
 			}
 			completed++
-			for seq := 0; seq < 64; seq++ {
+			for seq := 0; seq < 256; seq++ {
 				state := make([]bool, 2)
 				newstate := make([]bool, reduced.RegisterCount())
-				for f := 0; f < 3; f++ {
+				for f := 0; f < 4; f++ {
 					in := []bool{seq&(1<<(2*f)) != 0, seq&(1<<(2*f+1)) != 0}
 					a, err := g.Evaluate(append(append([]bool{}, in...), state...))
 					if err != nil {
