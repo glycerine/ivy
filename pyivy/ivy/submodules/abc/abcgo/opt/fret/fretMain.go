@@ -205,7 +205,6 @@ func Abc_FlowRetime_MinReg(ntk *Abc_Ntk_t, verbose, computeInit, guaranteeInit, 
 	}
 	fretPrintf("\tfinal reg count = %d\n", Abc_NtkLatchNum(ntk))
 	fretPrintf("\tfinal levels = %d\n", Abc_NtkLevel(ntk))
-	Abc_NtkDoCheck(ntk)
 	return ntk
 }
 
