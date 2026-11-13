@@ -36,6 +36,15 @@ aborts because `src/sat/bsat/satSolver2.c:1294` requires a nonzero ID. The
 source-named Go entry point likewise panics when this path loads its first
 clause. This affects both OR and AND output modes.
 
+For a graph with no outputs, the source OR-output path attempts to add an
+empty clause and hits `sat_solver_addclause`'s nonempty-clause assertion. The
+Go entry point preserves that panic; the empty AND-output path remains SAT.
+
+Signed conflict and propagation limits pass through to the source-compatible
+BSAT API. ABC can return SAT, UNSAT, or undecided for negative limits,
+depending on previous counters and whether the formula is already resolved.
+The ordinary BSAT limit API retains its separate nonnegative validation.
+
 The package's full race suite covers the SAT solver, OR and AND
 output modes, all two-input single-output truth functions under all input
 phases, all pairs of two-input output functions, empty outputs, and witness

@@ -122,20 +122,17 @@ func TestSATPolarityTransformReturnsSourceSolverModel(t *testing.T) {
 }
 
 func TestSATEmptyOutputCombination(t *testing.T) {
-	for _, andOutputs := range []int32{0, 1} {
-		for _, solver := range []int32{0} {
-			g := aig.NewGraph()
-			g.NewInput()
-			got := Fra_FraigSat(g, 0, 0, 0, 0, 0, 1, andOutputs, solver, 0)
-			want := int32(1)
-			if andOutputs != 0 {
-				want = 0
-			}
-			if got != want {
-				t.Fatalf("and=%d solver=%d got=%d want=%d", andOutputs, solver, got, want)
-			}
-		}
+	g := aig.NewGraph()
+	g.NewInput()
+	if got := Fra_FraigSat(g, 0, 0, 0, 0, 0, 1, 1, 0, 0); got != 0 {
+		t.Fatalf("empty AND status=%d", got)
 	}
+	defer func() {
+		if recover() == nil {
+			t.Fatal("C asserts when OR clause has no literals")
+		}
+	}()
+	Fra_FraigSat(g, 0, 0, 0, 0, 0, 1, 0, 0, 0)
 }
 
 func TestSATAllTruthFunctionsWithInputPhases(t *testing.T) {
