@@ -15,6 +15,16 @@ func Msat_SolverResize(p *Msat_Solver_t, n int) {
 	if n < 0 {
 		panic("negative variable capacity")
 	}
+	if n < len(p.pAssigns) {
+		p.pAssigns = p.pAssigns[:n]
+		p.pModel = p.pModel[:n]
+		p.pLevel = p.pLevel[:n]
+		p.pReasons = p.pReasons[:n]
+		p.pdActivity = p.pdActivity[:n]
+		p.pFactors = p.pFactors[:n]
+		p.pSeen = p.pSeen[:n]
+		p.pvWatched = p.pvWatched[:2*n]
+	}
 	for len(p.pAssigns) < n {
 		p.pAssigns = append(p.pAssigns, -1)
 		p.pModel = append(p.pModel, -1)
@@ -24,7 +34,9 @@ func Msat_SolverResize(p *Msat_Solver_t, n int) {
 		p.pFactors = append(p.pFactors, 1)
 		p.pSeen = append(p.pSeen, 0)
 		p.pvWatched = append(p.pvWatched, Msat_ClauseVecAlloc(16), Msat_ClauseVecAlloc(16))
-		p.vAdjacents = append(p.vAdjacents, Msat_IntVecAlloc(5))
+		if len(p.vAdjacents) < len(p.pAssigns) {
+			p.vAdjacents = append(p.vAdjacents, Msat_IntVecAlloc(5))
+		}
 		p.vVarsUsed.data = append(p.vVarsUsed.data, 1)
 
 	}
