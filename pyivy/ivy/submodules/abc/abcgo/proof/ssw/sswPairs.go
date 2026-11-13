@@ -24,6 +24,21 @@ func Ssw_TransferSignalPairs(miter, first, second *aig.Graph, ids1, ids2 *vec.Ve
 	return Ssw_TransferSignalPairsMapped(ids1, ids2, copies1, copies2)
 }
 func Ssw_SignalCorrespondenceWithPairs(first, second *aig.Graph, ids1, ids2 *vec.Vec_Int_t, pars *Ssw_Pars_t) *aig.Graph {
+	if pars == nil {
+		pars = new(Ssw_Pars_t)
+		Ssw_ManSetDefaultParams(pars)
+	}
+	originalDeadline := pars.deadline
+	if pars.TimeLimit > 0 {
+		limit := time.Now().Add(time.Duration(pars.TimeLimit) * time.Second)
+		if pars.deadline.IsZero() || limit.Before(pars.deadline) {
+			pars.deadline = limit
+		}
+	}
+	defer func() { pars.deadline = originalDeadline }()
+	if sswDeadlineExpired(pars) {
+		return nil
+	}
 	if vec.Vec_IntSize(ids1) != vec.Vec_IntSize(ids2) {
 		panic("ssw: mismatched pair vectors")
 	}
@@ -32,10 +47,6 @@ func Ssw_SignalCorrespondenceWithPairs(first, second *aig.Graph, ids1, ids2 *vec
 	pairs := Ssw_TransferSignalPairsMapped(ids1, ids2, copies1, copies2)
 	classes := Ssw_TransformPairsIntoTempClasses(pairs, aig.Aig_ManObjNumMax(miter))
 	vec.Vec_IntFree(pairs)
-	if pars == nil {
-		pars = new(Ssw_Pars_t)
-		Ssw_ManSetDefaultParams(pars)
-	}
 	p := Ssw_ManCreate(miter, pars)
 	p.ppClasses = Ssw_ClassesPreparePairs(miter, classes)
 	p.pSml = Ssw_SmlStart(miter, 0, p.nFrames+pars.nFramesAddSim, 1)
