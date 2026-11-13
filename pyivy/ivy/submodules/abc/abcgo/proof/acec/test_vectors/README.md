@@ -59,3 +59,12 @@ commands but additionally exclude `*/proof/acec/acecPolyn.o` at link time.
 `go test -run TestABCDifferential ./proof/acec` always compares Go against the
 recorded results. Set `ABC_BINARY` to the absolute path of the compiled ABC
 executable to also rerun ABC against the generated AIGs.
+
+`acec_booth_oracle.c` generates `acec_booth_results.txt` using the same
+compile/link commands above, substituting its filename. It compares two Booth
+recognizers on 96 ordered constructions: 32 input-polarity combinations for
+each of a valid Booth-one shape, a different-control negative case, and a
+valid Booth-two shape. The fixture records both return values and all output
+slots, including their values on failure. Intermediate AND calls are sequenced
+explicitly to avoid C's unspecified argument evaluation order changing node
+IDs. The Go regression builds the same GIA operations and compares every row.
