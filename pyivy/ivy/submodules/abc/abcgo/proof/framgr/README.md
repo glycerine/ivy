@@ -11,4 +11,5 @@ duplicated. Consolidate
 their shared manager and tests before treating this checkpoint as complete;
 fixes to either copy must be evaluated against the other in the meantime.
 The two implementations now share the `CombOptions` parameter type,
-`Simulation` state, and `ClassPartition`. Their manager types are still distinct.
+`Simulation` state, `ClassPartition`, and `BMC` state. Their manager types are
+still distinct.

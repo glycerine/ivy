@@ -13,12 +13,12 @@ func SweepBMCImplications(frames, source *aig.Graph, prefix, depth int32, mappin
 		panic("fra: invalid BMC implication arguments")
 	}
 	b := Fra_BmcStart(source, prefix, depth)
-	if len(mappings) != len(b.pObjToFrames) {
+	if len(mappings) != len(b.PObjToFrames) {
 		panic("fra: invalid BMC frame mapping")
 	}
-	b.pObjToFrames = mappings
-	b.pAigFrames = frames
-	b.vImps = implications
+	b.PObjToFrames = mappings
+	b.PAigFrames = frames
+	b.VImps = implications
 	defer Fra_BmcStop(b)
 	return Fra_FraigEquivenceMapped(frames, limit, 0, func(manager *Fra_Man_t) { Fra_BmcFilterImplications(manager, b) })
 }

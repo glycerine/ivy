@@ -14,6 +14,7 @@ import (
 var _ *framgr.CombOptions = (*Fra_Par_t)(nil)
 var _ *framgr.Simulation = (*fraSimulation)(nil)
 var _ *framgr.ClassPartition = (*classPartition)(nil)
+var _ *framgr.BMC = (*Fra_Bmc_t)(nil)
 
 // The extracted manager must preserve the original manager's combinational
 // behavior under the exact configuration used by the legacy CEC fallback.
@@ -241,10 +242,10 @@ func TestSharedBMCImplicationCallbackMatchesLegacy(t *testing.T) {
 		g.AddOutput(n)
 		aig.Aig_ManSetRegNum(g, 1)
 		b := Fra_BmcStart(g, 0, 2)
-		b.pAigFrames = Fra_BmcFrames(b, 0)
-		b.vImps = vec.Vec_IntAlloc(4)
+		b.PAigFrames = Fra_BmcFrames(b, 0)
+		b.VImps = vec.Vec_IntAlloc(4)
 		for _, pair := range [][2]aig.Edge{{x, q}, {q, x}, {x, n}, {n, x}} {
-			vec.Vec_IntPush(b.vImps, Fra_ImpCreate(int32(pair[0].NodeID()), int32(pair[1].NodeID())))
+			vec.Vec_IntPush(b.VImps, Fra_ImpCreate(int32(pair[0].NodeID()), int32(pair[1].NodeID())))
 		}
 		return b
 	}
@@ -254,13 +255,13 @@ func TestSharedBMCImplicationCallbackMatchesLegacy(t *testing.T) {
 	pars.NBTLimitNode = 1000000
 	pars.FDoSparse = 1
 	pars.FDontShowBar = 1
-	old, mapping := fraFraigPerformMapped(oldB.pAigFrames, &pars, func(m *Fra_Man_t) { Fra_BmcFilterImplications(m, oldB) })
-	shared, sharedMapping := framgr.SweepBMCImplications(newB.pAigFrames, newB.pAig, newB.nPref, newB.nDepth, newB.pObjToFrames, newB.vImps, 1000000)
+	old, mapping := fraFraigPerformMapped(oldB.PAigFrames, &pars, func(m *Fra_Man_t) { Fra_BmcFilterImplications(m, oldB) })
+	shared, sharedMapping := framgr.SweepBMCImplications(newB.PAigFrames, newB.PAig, newB.NPref, newB.NDepth, newB.PObjToFrames, newB.VImps, 1000000)
 	if old == nil || shared == nil {
 		t.Fatal("nil result")
 	}
-	if !slices.Equal(vec.Vec_IntArray(oldB.vImps), vec.Vec_IntArray(newB.vImps)) {
-		t.Fatalf("implications differ: %v != %v", vec.Vec_IntArray(oldB.vImps), vec.Vec_IntArray(newB.vImps))
+	if !slices.Equal(vec.Vec_IntArray(oldB.VImps), vec.Vec_IntArray(newB.VImps)) {
+		t.Fatalf("implications differ: %v != %v", vec.Vec_IntArray(oldB.VImps), vec.Vec_IntArray(newB.VImps))
 	}
 	if !slices.Equal(mapping, sharedMapping) {
 		t.Fatalf("frame mappings differ: %v != %v", mapping, sharedMapping)
