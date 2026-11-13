@@ -46,6 +46,10 @@ Remaining review and coverage gaps:
   map; local ABC crashes on the above machine with `pdr -m -u -p`. Go reports
   this option combination as undecided. As in ABC, updated justification with
   abstraction asserts if a derived cube intersects the initial state.
+- SAT-based justification uses the frame solver's existing runtime and stop
+  configuration, with zero per-call budgets. Like C, it asserts that the solve
+  is UNSAT; an interrupted or otherwise inconclusive solve can trigger that
+  assertion instead of returning an undecided result.
 - ABC compiles the body of its alternative simple generalization out with
   `#if 0`; when enabled for a multi-literal cube, its active caller discards
   the reduced cube. The Go port preserves this source behavior, which can lead
