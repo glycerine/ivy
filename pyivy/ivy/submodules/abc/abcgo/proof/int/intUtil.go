@@ -8,13 +8,25 @@ import (
 	"github.com/glycerine/abcgo/sat/cnf"
 )
 
+// propertyCheckGraph asserts bad outputs and the negation of constraint
+// violations, without changing the caller's graph.
+func propertyCheckGraph(g *aig.Graph) *aig.Graph {
+	if aig.Aig_ManConstrNum(g) == 0 {
+		return g
+	}
+	copy := aig.Aig_ManDupSimple(g)
+	aig.Aig_ManInvertConstraints(copy)
+	return copy
+}
+
 // Inter_ManCheckInitialState returns 1 when the output is satisfiable from the
 // all-zero register state and stores the corresponding one-frame witness.
 func Inter_ManCheckInitialState(g *aig.Graph) int32 {
 	if g == nil {
 		return 0
 	}
-	data := cnf.Cnf_Derive(g, g.RegisterCount())
+	query := propertyCheckGraph(g)
+	data := cnf.Cnf_Derive(query, query.RegisterCount())
 	if data == nil {
 		return 0
 	}
@@ -27,7 +39,7 @@ func Inter_ManCheckInitialState(g *aig.Graph) int32 {
 		return 0
 	}
 	cex := util.Abc_CexAlloc(g.RegisterCount(), int32(pis), 1)
-	for i, input := range g.Inputs()[:pis] {
+	for i, input := range query.Inputs()[:pis] {
 		value, ok := solver.Value(data.VarNums[input.NodeID()])
 		if !ok {
 			return 0
@@ -48,7 +60,8 @@ func Inter_ManCheckAllStates(g *aig.Graph) int32 {
 	if g == nil {
 		return 0
 	}
-	data := cnf.Cnf_Derive(g, g.RegisterCount())
+	query := propertyCheckGraph(g)
+	data := cnf.Cnf_Derive(query, query.RegisterCount())
 	if data == nil {
 		return 0
 	}
