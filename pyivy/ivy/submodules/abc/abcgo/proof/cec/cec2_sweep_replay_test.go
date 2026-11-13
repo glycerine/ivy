@@ -20,7 +20,7 @@ func TestCec2SweepReplaysRareCounterexample(t *testing.T) {
 			}
 		}
 		gia.Gia_ManAppendCo(g, root)
-		out, sim, cex := cec2SweepEquivalences(g, cec2SweepSettings{words: 1, rounds: 0, iterations: 1, conflictLimit: 1000, useCones: cones})
+		out, sim, cex := cec2SweepEquivalences(g, cec2SweepSettings{finishGraph: true, words: 1, rounds: 0, iterations: 1, conflictLimit: 1000, useCones: cones})
 		if cex != nil {
 			t.Fatal("non-miter produced witness")
 		}

@@ -79,9 +79,6 @@ type Cec2_Man_t struct {
     timeStart          abctime;
 }
 
-func Cec2_ObjSatId(p *Gia_Man_t, pObj *Gia_Obj_t) int32 { return Gia_ObjCopy2Array(p, Gia_ObjId(p, pObj));                                                     }
-func Cec2_ObjSetSatId(p *Gia_Man_t, pObj *Gia_Obj_t, Num int32) int32 { assert(Cec2_ObjSatId(p, pObj) == -1, "Cec2_ObjSatId(p, pObj) == -1"); Gia_ObjSetCopy2Array(p, Gia_ObjId(p, pObj), Num); return Num;  }
-func Cec2_ObjCleanSatId(p *Gia_Man_t, pObj *Gia_Obj_t) { assert(Cec2_ObjSatId(p, pObj) != -1, "Cec2_ObjSatId(p, pObj) != -1"); Gia_ObjSetCopy2Array(p, Gia_ObjId(p, pObj), -1);               }
 
 ////////////////////////////////////////////////////////////////////////
 ///                     FUNCTION DEFINITIONS                         ///
@@ -99,16 +96,8 @@ func Cec2_ObjCleanSatId(p *Gia_Man_t, pObj *Gia_Obj_t) { assert(Cec2_ObjSatId(p,
 
 ***********************************************************************/
 func Cec2_SetDefaultParams(p *Cec2_Par_t) {
-    memset( p, 0, sizeof(Cec2_Par_t) );
-    p.nSimWords      =      12;    // simulation words
-    p.nSimRounds     =       4;    // simulation rounds
-    p.nItersMax      =      10;    // max number of iterations
-    p.nConfLimit     =    1000;    // conflict limit at a node
-    p.fIsMiter       =       0;    // this is a miter
-    p.fUseCones      =       1;    // use logic cones
-    p.fVeryVerbose   =       0;    // verbose stats
-    p.fVerbose       =       0;    // verbose stats
-}  
+    *p = Cec2_Par_t{nSimWords: 12, nSimRounds: 4, nItersMax: 10, nConfLimit: 1000, fUseCones: 1}
+}
 
 /**Function*************************************************************
 
@@ -121,259 +110,9 @@ func Cec2_SetDefaultParams(p *Cec2_Par_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Cec2_AddClausesMux(p *Gia_Man_t, pNode *Gia_Obj_t, pSat *satoko_t) {
-    var fPolarFlip int32;
-    var pNodeI, pNodeT, pNodeE *Gia_Obj_t;
-    var pLits [4]int32;
-    var RetValue int32;
-    var VarF int32;
-    var VarI int32;
-    var VarT int32;
-    var VarE int32;
-    var fCompT int32;
-    var fCompE int32;
-
-    assert(!Gia_IsComplement( pNode ), "!Gia_IsComplement( pNode )");
-    assert(pNode.fMark0, "pNode.fMark0");
-    // get nodes (I = if, T = then, E = else)
-    pNodeI = Gia_ObjRecognizeMux( pNode, &pNodeT, &pNodeE );
-    // get the variable numbers
-    VarF = Cec2_ObjSatId(p, pNode);
-    VarI = Cec2_ObjSatId(p, pNodeI);
-    VarT = Cec2_ObjSatId(p, Gia_Regular(pNodeT));
-    VarE = Cec2_ObjSatId(p, Gia_Regular(pNodeE));
-    // get the complementation flags
-    fCompT = Gia_IsComplement(pNodeT);
-    fCompE = Gia_IsComplement(pNodeE);
-
-    // f = ITE(i, t, e)
-
-    // i' + t' + f
-    // i' + t  + f'
-    // i  + e' + f
-    // i  + e  + f'
-
-    // create four clauses
-    pLits[0] = Abc_Var2Lit(VarI, 1);
-    pLits[1] = Abc_Var2Lit(VarT, 1^fCompT);
-    pLits[2] = Abc_Var2Lit(VarF, 0);
-    if fPolarFlip != 0 {
-        if pNodeI.fPhase {               pLits[0] = Abc_LitNot( pLits[0] ); }
-        if Gia_Regular(pNodeT).fPhase {  pLits[1] = Abc_LitNot( pLits[1] ); }
-        if pNode.fPhase {                pLits[2] = Abc_LitNot( pLits[2] ); }
-    }
-    RetValue = satoko_add_clause( pSat, pLits, 3 );
-    assert((RetValue != 0), "RetValue");
-    pLits[0] = Abc_Var2Lit(VarI, 1);
-    pLits[1] = Abc_Var2Lit(VarT, 0^fCompT);
-    pLits[2] = Abc_Var2Lit(VarF, 1);
-    if fPolarFlip != 0 {
-        if pNodeI.fPhase {               pLits[0] = Abc_LitNot( pLits[0] ); }
-        if Gia_Regular(pNodeT).fPhase {  pLits[1] = Abc_LitNot( pLits[1] ); }
-        if pNode.fPhase {                pLits[2] = Abc_LitNot( pLits[2] ); }
-    }
-    RetValue = satoko_add_clause( pSat, pLits, 3 );
-    assert((RetValue != 0), "RetValue");
-    pLits[0] = Abc_Var2Lit(VarI, 0);
-    pLits[1] = Abc_Var2Lit(VarE, 1^fCompE);
-    pLits[2] = Abc_Var2Lit(VarF, 0);
-    if fPolarFlip != 0 {
-        if pNodeI.fPhase {               pLits[0] = Abc_LitNot( pLits[0] ); }
-        if Gia_Regular(pNodeE).fPhase {  pLits[1] = Abc_LitNot( pLits[1] ); }
-        if pNode.fPhase {                pLits[2] = Abc_LitNot( pLits[2] ); }
-    }
-    RetValue = satoko_add_clause( pSat, pLits, 3 );
-    assert((RetValue != 0), "RetValue");
-    pLits[0] = Abc_Var2Lit(VarI, 0);
-    pLits[1] = Abc_Var2Lit(VarE, 0^fCompE);
-    pLits[2] = Abc_Var2Lit(VarF, 1);
-    if fPolarFlip != 0 {
-        if pNodeI.fPhase {               pLits[0] = Abc_LitNot( pLits[0] ); }
-        if Gia_Regular(pNodeE).fPhase {  pLits[1] = Abc_LitNot( pLits[1] ); }
-        if pNode.fPhase {                pLits[2] = Abc_LitNot( pLits[2] ); }
-    }
-    RetValue = satoko_add_clause( pSat, pLits, 3 );
-    assert((RetValue != 0), "RetValue");
-
-    // two additional clauses
-    // t' & e' -> f'
-    // t  & e  -> f 
-
-    // t  + e   + f'
-    // t' + e'  + f 
-
-    if VarT == VarE {
-//        assert( fCompT == !fCompE );
-        return;
-    }
-
-    pLits[0] = Abc_Var2Lit(VarT, 0^fCompT);
-    pLits[1] = Abc_Var2Lit(VarE, 0^fCompE);
-    pLits[2] = Abc_Var2Lit(VarF, 1);
-    if fPolarFlip != 0 {
-        if Gia_Regular(pNodeT).fPhase {  pLits[0] = Abc_LitNot( pLits[0] ); }
-        if Gia_Regular(pNodeE).fPhase {  pLits[1] = Abc_LitNot( pLits[1] ); }
-        if pNode.fPhase {                pLits[2] = Abc_LitNot( pLits[2] ); }
-    }
-    RetValue = satoko_add_clause( pSat, pLits, 3 );
-    assert((RetValue != 0), "RetValue");
-    pLits[0] = Abc_Var2Lit(VarT, 1^fCompT);
-    pLits[1] = Abc_Var2Lit(VarE, 1^fCompE);
-    pLits[2] = Abc_Var2Lit(VarF, 0);
-    if fPolarFlip != 0 {
-        if Gia_Regular(pNodeT).fPhase {  pLits[0] = Abc_LitNot( pLits[0] ); }
-        if Gia_Regular(pNodeE).fPhase {  pLits[1] = Abc_LitNot( pLits[1] ); }
-        if pNode.fPhase {                pLits[2] = Abc_LitNot( pLits[2] ); }
-    }
-    RetValue = satoko_add_clause( pSat, pLits, 3 );
-    assert((RetValue != 0), "RetValue");
+func Cec2_ObjGetCnfVar(p *Cec2_Man_t, iObj int32) int32 {
+    return Gia_ObjGetCnfVar(p.pNew, iObj, p.vFrontier, p.vFanins, p.pSat)
 }
-func Cec2_AddClausesSuper(p *Gia_Man_t, pNode *Gia_Obj_t, vSuper *Vec_Ptr_t, pSat *satoko_t) {
-    var fPolarFlip int32;
-    var pFanin *Gia_Obj_t;
-    var pLits *int32;
-    var nLits int32;
-    var RetValue int32;
-    var i int32;
-    assert(!Gia_IsComplement(pNode), "!Gia_IsComplement(pNode)");
-    assert(Gia_ObjIsAnd( pNode ), "Gia_ObjIsAnd( pNode )");
-    // create storage for literals
-    nLits = Vec_PtrSize(vSuper) + 1;
-    // inlining of macro ABC_ALLOC
-    pLits = ((int *) malloc(sizeof(int) * (size_t)(nLits)));
-    // suppose AND-gate is A & B = C
-    // add !A => !C   or   A + !C
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vSuper)) && (((pFanin) = (Gia_Obj_t *)Vec_PtrEntry(vSuper, i)), 1); i++  {
-        pLits[0] = Abc_Var2Lit(Cec2_ObjSatId(p, Gia_Regular(pFanin)), Gia_IsComplement(pFanin));
-        pLits[1] = Abc_Var2Lit(Cec2_ObjSatId(p, pNode), 1);
-        if fPolarFlip != 0 {
-            if Gia_Regular(pFanin).fPhase {  pLits[0] = Abc_LitNot( pLits[0] ); }
-            if pNode.fPhase {                pLits[1] = Abc_LitNot( pLits[1] ); }
-        }
-        RetValue = satoko_add_clause( pSat, pLits, 2 );
-        assert((RetValue != 0), "RetValue");
-    }
-    // add A & B => C   or   !A + !B + C
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vSuper)) && (((pFanin) = (Gia_Obj_t *)Vec_PtrEntry(vSuper, i)), 1); i++  {
-        pLits[i] = Abc_Var2Lit(Cec2_ObjSatId(p, Gia_Regular(pFanin)), !Gia_IsComplement(pFanin));
-        if fPolarFlip != 0 {
-            if Gia_Regular(pFanin).fPhase {  pLits[i] = Abc_LitNot( pLits[i] ); }
-        }
-    }
-    pLits[nLits-1] = Abc_Var2Lit(Cec2_ObjSatId(p, pNode), 0);
-    if fPolarFlip != 0 {
-        if pNode.fPhase {  pLits[nLits-1] = Abc_LitNot( pLits[nLits-1] ); }
-    }
-    RetValue = satoko_add_clause( pSat, pLits, nLits );
-    assert((RetValue != 0), "RetValue");
-    pLits = nil;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Adds clauses and returns CNF variable of the node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Cec2_CollectSuper_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vSuper *Vec_Ptr_t, fFirst int32, fUseMuxes int32) {
-    // if the new node is complemented or a PI, another gate begins
-    if Gia_IsComplement(pObj) || Gia_ObjIsCi(pObj) || 
-         (!fFirst && (p.pRefs ? Gia_ObjRefNum(p, pObj) : Gia_ObjValue(pObj)) > 1) || 
-         (fUseMuxes && pObj.fMark0) {
-        Vec_PtrPushUnique( vSuper, pObj );
-        return;
-    }
-    // go through the branches
-    Cec2_CollectSuper_rec( p, Gia_ObjChild0(pObj), vSuper, 0, fUseMuxes );
-    Cec2_CollectSuper_rec( p, Gia_ObjChild1(pObj), vSuper, 0, fUseMuxes );
-}
-func Cec2_CollectSuper(p *Gia_Man_t, pObj *Gia_Obj_t, fUseMuxes int32, vSuper *Vec_Ptr_t) {
-    assert(!Gia_IsComplement(pObj), "!Gia_IsComplement(pObj)");
-    assert(!Gia_ObjIsCi(pObj), "!Gia_ObjIsCi(pObj)");
-    Vec_PtrClear( vSuper );
-    Cec2_CollectSuper_rec( p, pObj, vSuper, 1, fUseMuxes );
-}
-func Cec2_ObjAddToFrontier(p *Gia_Man_t, pObj *Gia_Obj_t, vFrontier *Vec_Ptr_t, pSat *satoko_t) {
-    var iVar int32;
-    assert(!Gia_IsComplement(pObj), "!Gia_IsComplement(pObj)");
-    assert(!Gia_ObjIsConst0(pObj), "!Gia_ObjIsConst0(pObj)");
-    if Cec2_ObjSatId(p, pObj) >= 0 {
-        return; }
-    assert(Cec2_ObjSatId(p, pObj) == -1, "Cec2_ObjSatId(p, pObj) == -1");
-    iVar = satoko_add_variable(pSat, 0);
-    if p.vVar2Obj {
-        assert(Vec_IntSize(p.vVar2Obj) == iVar, "Vec_IntSize(p.vVar2Obj) == iVar");
-        Vec_IntPush( p.vVar2Obj, Gia_ObjId(p, pObj) );
-    }
-    Cec2_ObjSetSatId( p, pObj, iVar );
-    if Gia_ObjIsAnd(pObj) {
-        Vec_PtrPush( vFrontier, pObj ); }
-}
-func Gia_ObjGetCnfVar(pGia *Gia_Man_t, iObj int32, vFrontier *Vec_Ptr_t, vFanins *Vec_Ptr_t, pSat *satoko_t) int32 { 
-    var pNode, pFanin *Gia_Obj_t;
-    var pObj *Gia_Obj_t  = Gia_ManObj(pGia, iObj);
-    var i int32;
-    var k int32;
-    var fUseMuxes int32 = 1;
-    if Vec_IntSize(&pGia.vCopies2) < Gia_ManObjNum(pGia) {
-        Vec_IntFillExtra( &pGia.vCopies2, Gia_ManObjNum(pGia), -1 ); }
-    // quit if CNF is ready
-    if Cec2_ObjSatId(pGia,pObj) >= 0 {
-        return Cec2_ObjSatId(pGia,pObj); }
-    assert(iObj > 0, "iObj > 0");
-    if Gia_ObjIsCi(pObj) {
-        var iVar int32  = satoko_add_variable(pSat, 0);
-        if pGia.vVar2Obj {
-            assert(Vec_IntSize(pGia.vVar2Obj) == iVar, "Vec_IntSize(pGia.vVar2Obj) == iVar");
-            Vec_IntPush( pGia.vVar2Obj, iObj );
-        }
-        return Cec2_ObjSetSatId( pGia, pObj, iVar );
-    }
-    assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-    // start the frontier
-    Vec_PtrClear( vFrontier );
-    Cec2_ObjAddToFrontier( pGia, pObj, vFrontier, pSat );
-    // explore nodes in the frontier
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vFrontier)) && (((pNode) = (Gia_Obj_t *)Vec_PtrEntry(vFrontier, i)), 1); i++  {
-        // create the supergate
-        assert(Cec2_ObjSatId(pGia,pNode) >= 0, "Cec2_ObjSatId(pGia,pNode) >= 0");
-        if (fUseMuxes != 0) && pNode.fMark0 {
-            Vec_PtrClear( vFanins );
-            Vec_PtrPushUnique( vFanins, Gia_ObjFanin0( Gia_ObjFanin0(pNode) ) );
-            Vec_PtrPushUnique( vFanins, Gia_ObjFanin0( Gia_ObjFanin1(pNode) ) );
-            Vec_PtrPushUnique( vFanins, Gia_ObjFanin1( Gia_ObjFanin0(pNode) ) );
-            Vec_PtrPushUnique( vFanins, Gia_ObjFanin1( Gia_ObjFanin1(pNode) ) );
-            // inlining of macro Vec_PtrForEachEntry
-            for  k = 0; (k < Vec_PtrSize(vFanins)) && (((pFanin) = (Gia_Obj_t *)Vec_PtrEntry(vFanins, k)), 1); k++  {
-                Cec2_ObjAddToFrontier( pGia, Gia_Regular(pFanin), vFrontier, pSat );
-            }
-            Cec2_AddClausesMux( pGia, pNode, pSat );
-        
-        } else {
-            Cec2_CollectSuper( pGia, pNode, fUseMuxes, vFanins );
-            // inlining of macro Vec_PtrForEachEntry
-            for  k = 0; (k < Vec_PtrSize(vFanins)) && (((pFanin) = (Gia_Obj_t *)Vec_PtrEntry(vFanins, k)), 1); k++  {
-                Cec2_ObjAddToFrontier( pGia, Gia_Regular(pFanin), vFrontier, pSat );
-            }
-            Cec2_AddClausesSuper( pGia, pNode, vFanins, pSat ); 
-            //printf( "%d ", Vec_PtrSize(vFanins) );
-        }
-        assert(Vec_PtrSize(vFanins) > 1, "Vec_PtrSize(vFanins) > 1");
-    }
-    return Cec2_ObjSatId(pGia,pObj);
-}
-func Cec2_ObjGetCnfVar(p *Cec2_Man_t, iObj int32) int32 { 
-    return Gia_ObjGetCnfVar( p.pNew, iObj, p.vFrontier, p.vFanins, p.pSat );
-}
-
 
 /**Function*************************************************************
 
@@ -947,141 +686,27 @@ func Cec2_ManPrintStats(p *Gia_Man_t, pPars *Cec2_Par_t, pMan *Cec2_Man_t) {
     fmt.Printf("F =%5d ", pMan ? pMan.nSatUndec : 0);
     Gia_ManEquivPrintClasses( p, pPars.fVeryVerbose, 0 );
 }
+// Cec2_ManPerformSweeping runs simulation-guided SAT sweeping using the
+// source parameters, retaining the source's miter result convention.
 func Cec2_ManPerformSweeping(p *Gia_Man_t, pPars *Cec2_Par_t, ppNew **Gia_Man_t) int32 {
-    var pMan *Cec2_Man_t  = Cec2_ManCreate( p, pPars ); 
-    var pObj, pRepr, pObjNew *Gia_Obj_t; 
-    var i int32;
-    var Iter int32;
-    var fDisproved int32 = 1;
-
-    // check if any output trivially fails under all-0 pattern
-    Gia_ManRandomW( 1 );
-    Gia_ManSetPhase( p );
-    if pPars.fIsMiter {
-        // inlining of macro Gia_ManForEachCo
-        for  i = 0; (i < Vec_IntSize(p.vCos)) && ((pObj) = Gia_ManCo(p, i)); i++  {
-            if pObj.fPhase {
-                p.pCexSeq = Cec2_ManDeriveCex( p, i, -1 );
-                goto finalize;
-            }
-        }
+    settings := cec2SweepSettings{
+        words: int(pPars.nSimWords), rounds: int(pPars.nSimRounds),
+        iterations: int(pPars.nItersMax), conflictLimit: int64(pPars.nConfLimit),
+        useCones: pPars.fUseCones != 0, isMiter: pPars.fIsMiter != 0, finishGraph: ppNew != nil,
     }
-
-    // simulate one round and create classes
-    Cec2_ManSimAlloc( p, pPars.nSimWords );
-    Cec2_ManSimulateCis( p );
-    Cec2_ManSimulate( p, nil, pMan );
-    if pPars.fIsMiter && !(Cec2_ManSimulateCos(p) != 0) { // cex detected
-        goto finalize; }
-    Cec2_ManCreateClasses( p, pMan );
-    Cec2_ManPrintStats( p, pPars, pMan );
-
-    // perform additinal simulation
-    for  i = 0; i < pPars.nSimRounds; i++  {
-        Cec2_ManSimulateCis( p );
-        Cec2_ManSimulate( p, nil, pMan );
-        if pPars.fIsMiter && !(Cec2_ManSimulateCos(p) != 0) { // cex detected
-            goto finalize; }
-        Cec2_ManPrintStats( p, pPars, pMan );
-    }
-    // perform sweeping
-    //pMan = Cec2_ManCreate( p, pPars );
-    for  Iter = 0; (fDisproved != 0) && Iter < pPars.nItersMax; Iter++  {
-        fDisproved = 0;
-        pMan.nPatterns = 0;
-        Cec2_ManSimulateCis( p );
-        Vec_IntClear( pMan.vCexTriples );
-        // inlining of macro Gia_ManForEachAnd
-        for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {
-            if ~pObj.Value || Gia_ObjFailed(p, i) { // skip swept nodes and failed nodes
-                continue; }
-            if !~Gia_ObjFanin0(pObj).Value || !~Gia_ObjFanin1(pObj).Value { // skip fanouts of non-swept nodes
-                continue; }
-            assert(!Gia_ObjProved(p, i) && !Gia_ObjFailed(p, i), "!Gia_ObjProved(p, i) && !Gia_ObjFailed(p, i)");
-            // duplicate the node
-            pObj.Value = Gia_ManHashAnd( pMan.pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );
-            if Vec_IntSize(&pMan.pNew.vCopies2) == Abc_Lit2Var(pObj.Value) {
-                pObjNew = Gia_ManObj( pMan.pNew, Abc_Lit2Var(pObj.Value) );
-                pObjNew.fMark0 = Gia_ObjIsMuxType( pObjNew );
-                Gia_ObjSetPhase( pMan.pNew, pObjNew );
-                Vec_IntPush( &pMan.pNew.vCopies2, -1 );
-            }
-            assert(Vec_IntSize(&pMan.pNew.vCopies2) == Gia_ManObjNum(pMan.pNew), "Vec_IntSize(&pMan.pNew.vCopies2) == Gia_ManObjNum(pMan.pNew)");
-            pRepr = Gia_ObjReprObj( p, i );
-            if pRepr == nil || !~pRepr.Value {
-                continue; }
-            if Abc_Lit2Var(pObj.Value) == Abc_Lit2Var(pRepr.Value) {
-                assert((pObj.Value ^ pRepr.Value) == (pObj.fPhase ^ pRepr.fPhase), "(pObj.Value ^ pRepr.Value) == (pObj.fPhase ^ pRepr.fPhase)");
-                Gia_ObjSetProved( p, i );
-                continue;
-            }
-            if Cec2_ManSweepNode(pMan, i) != 0 {
-                if Gia_ObjProved(p, i) {
-                    pObj.Value = Abc_LitNotCond( pRepr.Value, pObj.fPhase ^ pRepr.fPhase ); }
-                continue;
-            }
-            pObj.Value = ~0;
-            Vec_IntPushThree( pMan.vCexTriples, Gia_ObjId(p, pRepr), i, Abc_Var2Lit(p.iPatsPi, pObj.fPhase ^ pRepr.fPhase) );
-            fDisproved = 1;
-        }
-        }
-        if fDisproved != 0 {
-            var Fails int32  = Cec2_ManSimulate( p, pMan.vCexTriples, pMan );
-            if (Fails != 0) && pPars.fVerbose {
-                fmt.Printf("Failed to resimulate %d times with pattern = %d  (total = %d).\n", Fails, pMan.nPatterns, pPars.nSimWords * 64); }
-            if pPars.fIsMiter && !(Cec2_ManSimulateCos(p) != 0) { // cex detected
-                break; }
-        }
-        Cec2_ManPrintStats( p, pPars, pMan );
-    }
-    // finish the AIG, if it is not finished
-    if ppNew {
-        // inlining of macro Gia_ManForEachAnd
-        for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else
-            if !~pObj.Value { 
-                pObj.Value = Gia_ManHashAnd( pMan.pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }
-        }
-        // inlining of macro Gia_ManForEachCo
-        for  i = 0; (i < Vec_IntSize(p.vCos)) && ((pObj) = Gia_ManCo(p, i)); i++  {
-            pObj.Value = Gia_ManAppendCo( pMan.pNew, Gia_ObjFanin0Copy(pObj) );
-        }
-        *ppNew = Gia_ManCleanup( pMan.pNew );
-        (*ppNew).pName = Abc_UtilStrsav( p.pName );
-        (*ppNew).pSpec = Abc_UtilStrsav( p.pSpec );
-    }
-finalize:
-    Cec2_ManDestroy( pMan );
-    //Gia_ManEquivPrintClasses( p, 1, 0 );
-    if p.pCexSeq {
-        return 0;
-    } else {
-        return 1;
-    }
+    reduced, _, cex := cec2SweepEquivalences(p, settings)
+    if ppNew != nil && reduced != nil { *ppNew = reduced }
+    if cex != nil { return 0 }
+    return 1
 }
+
 func Cec2_ManSimulateTest(p *Gia_Man_t, pPars0 *Cec_ParFra_t) *Gia_Man_t {
-    var pNew *Gia_Man_t  = nil;
-    //abctime clk = Abc_Clock();
-    var Pars Cec2_Par_t;
-    var pPars *Cec2_Par_t = &Pars;
-    Cec2_SetDefaultParams( pPars );
-    // set resource limits
-//    pPars->nSimWords  = pPars0->nWords;     // simulation words
-//    pPars->nSimRounds = pPars0->nRounds;    // simulation rounds
-//    pPars->nItersMax  = pPars0->nItersMax;  // max number of iterations
-    pPars.nConfLimit = pPars0.nBTLimit;   // conflict limit at a node
-    pPars.fUseCones  = pPars0.fUseCones;
-    pPars.fVerbose   = pPars0.fVerbose;
-//    Gia_ManComputeGiaEquivs( p, 100000, 0 );
-//    Gia_ManEquivPrintClasses( p, 1, 0 );
-    Cec2_ManPerformSweeping( p, pPars, &pNew );
-    //Abc_PrintTime( 1, "SAT sweeping time", Abc_Clock() - clk );
-    return pNew;
+    var pars Cec2_Par_t
+    Cec2_SetDefaultParams(&pars)
+    pars.nConfLimit = pPars0.nBTLimit
+    pars.fUseCones = pPars0.fUseCones
+    pars.fVerbose = pPars0.fVerbose
+    var reduced *Gia_Man_t
+    Cec2_ManPerformSweeping(p, &pars, &reduced)
+    return reduced
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

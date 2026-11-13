@@ -12,6 +12,7 @@ type cec2SweepSettings struct {
 	conflictLimit             int64
 	useCones                  bool
 	isMiter                   bool
+	finishGraph               bool
 }
 
 // cec2SweepEquivalences performs Cec2's simulation-guided SAT sweeping and
@@ -22,6 +23,26 @@ func cec2SweepEquivalences(g *gia.Gia_Man_t, opts cec2SweepSettings) (*gia.Gia_M
 		panic("cec: invalid Cec2 settings")
 	}
 	defer gia.Gia_ManCleanMark01(g)
+	n := g.ObjectCount()
+	copies := make([]int32, n)
+	for i := range copies {
+		copies[i] = -1
+	}
+	copies[0] = 0
+	gia.Gia_ManFillValue(g)
+	gia.Gia_ObjSetValue(gia.Gia_ManObj(g, 0), 0)
+	reduced := gia.Gia_ManStart(int32(n))
+	for i := int32(0); i < gia.Gia_ManCiNum(g); i++ {
+		id := gia.Gia_ManCiIdToId(g, i)
+		copies[id] = gia.Gia_ManAppendCi(reduced)
+		gia.Gia_ObjSetValue(gia.Gia_ManObj(g, id), copies[id])
+	}
+	gia.Gia_ManHashAlloc(reduced)
+	solver := satoko.New()
+	if !opts.useCones {
+		solver.Bookmark()
+	}
+	cnf := newCec2CNF(reduced, solver)
 	gia.Gia_ManRandomW(1)
 	gia.Gia_ManSetPhase(g)
 	sim := newCec3Simulation(g.ObjectCount(), opts.words)
@@ -42,22 +63,6 @@ func cec2SweepEquivalences(g *gia.Gia_Man_t, opts cec2SweepSettings) (*gia.Gia_M
 			}
 		}
 	}
-	n := g.ObjectCount()
-	copies := make([]int32, n)
-	for i := range copies {
-		copies[i] = -1
-	}
-	copies[0] = 0
-	reduced := gia.Gia_ManStart(int32(n))
-	for i := int32(0); i < gia.Gia_ManCiNum(g); i++ {
-		copies[gia.Gia_ManCiIdToId(g, i)] = gia.Gia_ManAppendCi(reduced)
-	}
-	gia.Gia_ManHashAlloc(reduced)
-	solver := satoko.New()
-	if !opts.useCones {
-		solver.Bookmark()
-	}
-	cnf := newCec2CNF(reduced, solver)
 	pattern := 0
 	var failure *util.Abc_Cex_t
 	for iter := 0; iter < opts.iterations; iter++ {
@@ -74,6 +79,7 @@ func cec2SweepEquivalences(g *gia.Gia_Man_t, opts cec2SweepSettings) (*gia.Gia_M
 			oldN := reduced.ObjectCount()
 			lit := gia.Gia_ManHashAnd(reduced, copies[a>>1]^(a&1), copies[b>>1]^(b&1))
 			copies[id] = lit
+			gia.Gia_ObjSetValue(gia.Gia_ManObj(g, id), lit)
 			if reduced.ObjectCount() != oldN {
 				obj := gia.Gia_ManObj(reduced, lit>>1)
 				gia.Gia_ObjSetMark0(obj, gia.Gia_ObjIsMuxType(obj))
@@ -97,9 +103,11 @@ func cec2SweepEquivalences(g *gia.Gia_Man_t, opts cec2SweepSettings) (*gia.Gia_M
 				}
 				cec2ReplayModel(sim, g, solver, inputs, pattern)
 				copies[id] = -1
+				gia.Gia_ObjSetValue(gia.Gia_ManObj(g, id), -1)
 				disproved = true
 			case satoko.SATOKO_UNSAT:
 				copies[id] = copies[repr] ^ (gia.Gia_ObjPhase(gia.Gia_ManObj(g, id)) ^ gia.Gia_ObjPhase(gia.Gia_ManObj(g, repr)))
+				gia.Gia_ObjSetValue(gia.Gia_ManObj(g, id), copies[id])
 				gia.Gia_ObjSetProved(g, id)
 			default:
 				gia.Gia_ObjSetFailed(g, id)
@@ -119,13 +127,18 @@ func cec2SweepEquivalences(g *gia.Gia_Man_t, opts cec2SweepSettings) (*gia.Gia_M
 			}
 		}
 	}
+	if !opts.finishGraph {
+		return nil, sim, failure
+	}
 	for id := int32(1); int(id) < n; id++ {
 		a, b, _, kind := g.Gate(id)
 		if kind == 2 && copies[id] < 0 {
 			copies[id] = gia.Gia_ManHashAnd(reduced, copies[a>>1]^(a&1), copies[b>>1]^(b&1))
+			gia.Gia_ObjSetValue(gia.Gia_ManObj(g, id), copies[id])
 		}
 		if kind == 6 {
-			gia.Gia_ManAppendCo(reduced, copies[a>>1]^(a&1))
+			copies[id] = gia.Gia_ManAppendCo(reduced, copies[a>>1]^(a&1))
+			gia.Gia_ObjSetValue(gia.Gia_ManObj(g, id), copies[id])
 		}
 	}
 	gia.Gia_ManHashStop(reduced)
