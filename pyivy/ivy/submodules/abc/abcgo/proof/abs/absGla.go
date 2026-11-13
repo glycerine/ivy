@@ -164,66 +164,6 @@ var spStatic_Saig_ManBmcHashKey_s_Primes [5]int32 = [5]int32{ 12582917, 25165843
   SeeAlso     []
 
 ***********************************************************************/
-func Ga2_ManRefinePrint(p *Ga2_Man_t, vVec *Vec_Int_t) {
-    var pObj, pFanin *Gia_Obj_t;
-    var i, k int32;
-    fmt.Printf("\n         Unsat core: \n");
-    Gia_ManForEachObjVec( vVec, p.pGia, pObj, i )
-    {
-        var vLeaves *Vec_Int_t  = Ga2_ObjLeaves( p.pGia, pObj );
-        fmt.Printf("%12d : ", i);
-        fmt.Printf("Obj =%6d ", Gia_ObjId(p.pGia, pObj));
-        if Gia_ObjIsRo(p.pGia, pObj) {
-            fmt.Printf("ff ");
-        } else {
-            fmt.Printf("   "); }
-        if Ga2_ObjIsAbs0(p, pObj) != 0 {
-            fmt.Printf("a ");
-        } else if Ga2_ObjIsLeaf0(p, pObj) != 0 {
-            fmt.Printf("l ");
-        } else { 
-            fmt.Printf("  "); }
-        fmt.Printf("Fanins: ");
-        Gia_ManForEachObjVec( vLeaves, p.pGia, pFanin, k )
-        {
-            fmt.Printf("%6d ", Gia_ObjId(p.pGia, pFanin));
-            if Gia_ObjIsRo(p.pGia, pFanin) {
-                fmt.Printf("ff ");
-            } else {
-                fmt.Printf("   "); }
-            if Ga2_ObjIsAbs0(p, pFanin) != 0 {
-                fmt.Printf("a ");
-            } else if Ga2_ObjIsLeaf0(p, pFanin) != 0 {
-                fmt.Printf("l ");
-            } else {
-                fmt.Printf("  "); }
-        }
-        fmt.Printf("\n");
-    }
-}
-func Ga2_ManRefinePrintPPis(p *Ga2_Man_t) {
-    var vVec *Vec_Int_t  = Vec_IntAlloc( 100 );
-    var pObj *Gia_Obj_t;
-    var i int32;
-    Gia_ManForEachObjVec( p.vValues, p.pGia, pObj, i )
-    {
-        if !(i != 0) { continue; }
-        if Ga2_ObjIsAbs(p, pObj) != 0 {
-            continue; }
-        assert(pObj.fPhase, "pObj.fPhase");
-        assert((Ga2_ObjIsLeaf(p, pObj) != 0), "Ga2_ObjIsLeaf(p, pObj)");
-        assert(Gia_ObjIsAnd(pObj) || Gia_ObjIsCi(pObj), "Gia_ObjIsAnd(pObj) || Gia_ObjIsCi(pObj)");
-        Vec_IntPush( vVec, Gia_ObjId(p.pGia, pObj) );
-    }
-    fmt.Printf("        Current PPIs (%d): ", Vec_IntSize(vVec));
-    Vec_IntSort( vVec, 1 );
-    Gia_ManForEachObjVec( vVec, p.pGia, pObj, i )
-        fmt.Printf("%d ", Gia_ObjId(p.pGia, pObj));
-    fmt.Printf("\n");
-    Vec_IntFree( vVec );
-}
-
-
 /**Function*************************************************************
 
   Synopsis    [Creates a new manager.]
