@@ -1,6 +1,7 @@
 package cec
 
 import (
+	"fmt"
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
@@ -81,7 +82,9 @@ func cec3SweepEquivalences(g *gia.Gia_Man_t, opts cec3SweepSettings) (*gia.Gia_M
 	var failure *util.Abc_Cex_t
 	for iter := 0; iter < opts.iterations; iter++ {
 		disproved := false
-		cec2RandomizeCIs(sim, g)
+		cec2BeginSweepIteration(sim, g, &pattern)
+		var triples []cecReplayTriple
+		man.nPatterns = 0
 		for id := int32(1); int(id) < n; id++ {
 			a, b, _, kind := g.Gate(id)
 			if kind != 2 || copies[id] >= 0 || gia.Gia_ObjFailed(g, id) != 0 {
@@ -123,6 +126,7 @@ func cec3SweepEquivalences(g *gia.Gia_Man_t, opts cec3SweepSettings) (*gia.Gia_M
 				for i := 0; i+1 < len(pairs); i += 2 {
 					sim.setInputBit(pairs[i], pattern, glucose.Bmcg_sat_solver_read_cex_varvalue(man.pSat, pairs[i+1]) != 0)
 				}
+				triples = append(triples, cecReplayTriple{repr: repr, node: id, pattern: pattern, phase: gia.Gia_ObjPhase(gia.Gia_ManObj(g, id)) ^ gia.Gia_ObjPhase(gia.Gia_ManObj(g, repr))})
 				man.nSatSat++
 				man.nPatterns++
 				copies[id] = -1
@@ -152,6 +156,9 @@ func cec3SweepEquivalences(g *gia.Gia_Man_t, opts cec3SweepSettings) (*gia.Gia_M
 			break
 		}
 		simulate()
+		if fails := cec2CountReplayFailures(sim, triples); fails > 0 && opts.verbose {
+			fmt.Printf("Failed to resimulate %d times with pattern = %d  (total = %d).\n", fails, len(triples), 64*opts.words)
+		}
 		if opts.isMiter {
 			failure = cec2CaptureMiterFailure(sim, g)
 			if failure != nil {

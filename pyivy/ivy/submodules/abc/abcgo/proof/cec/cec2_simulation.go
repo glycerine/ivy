@@ -8,6 +8,34 @@ import (
 	"time"
 )
 
+type cecReplayTriple struct {
+	repr, node int32
+	pattern    int
+	phase      int32
+}
+
+// cec2CountReplayFailures mirrors the optional counterexample replay check
+// performed by Cec2_ManSimulate and Cec3_ManSimulate.
+func cec2CountReplayFailures(sim *cec3Simulation, triples []cecReplayTriple) int {
+	failures := 0
+	for _, triple := range triples {
+		mask := uint64(1) << uint(triple.pattern&63)
+		a := sim.object(triple.repr)[triple.pattern>>6]&mask != 0
+		b := sim.object(triple.node)[triple.pattern>>6]&mask != 0
+		if (a != (triple.phase != 0)) == b {
+			failures++
+		}
+	}
+	return failures
+}
+
+// cec2BeginSweepIteration matches Cec2/3_ManSimulateCis: each newly
+// randomized pattern batch starts writing counterexamples at pattern one.
+func cec2BeginSweepIteration(sim *cec3Simulation, graph *gia.Gia_Man_t, pattern *int) {
+	cec2RandomizeCIs(sim, graph)
+	*pattern = 0
+}
+
 // cec2RandomizeCIs preserves pattern zero as the all-zero assignment, as in
 // Cec2_ObjSimCi. Pattern zero is used to normalize class phases.
 func cec2RandomizeCIs(sim *cec3Simulation, graph *gia.Gia_Man_t) {

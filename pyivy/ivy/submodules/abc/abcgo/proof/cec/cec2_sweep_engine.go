@@ -1,6 +1,7 @@
 package cec
 
 import (
+	"fmt"
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/sat/satoko"
@@ -81,7 +82,8 @@ func cec2SweepEquivalences(g *gia.Gia_Man_t, opts cec2SweepSettings) (*gia.Gia_M
 	var failure *util.Abc_Cex_t
 	for iter := 0; iter < opts.iterations; iter++ {
 		disproved := false
-		cec2RandomizeCIs(sim, g)
+		cec2BeginSweepIteration(sim, g, &pattern)
+		var triples []cecReplayTriple
 		for id := int32(1); int(id) < n; id++ {
 			a, b, _, kind := g.Gate(id)
 			if kind != 2 || copies[id] >= 0 || gia.Gia_ObjFailed(g, id) != 0 {
@@ -119,6 +121,7 @@ func cec2SweepEquivalences(g *gia.Gia_Man_t, opts cec2SweepSettings) (*gia.Gia_M
 					pattern = 1
 				}
 				cec2ReplayModel(sim, g, solver, inputs, pattern)
+				triples = append(triples, cecReplayTriple{repr: repr, node: id, pattern: pattern, phase: gia.Gia_ObjPhase(gia.Gia_ManObj(g, id)) ^ gia.Gia_ObjPhase(gia.Gia_ManObj(g, repr))})
 				copies[id] = -1
 				gia.Gia_ObjSetValue(gia.Gia_ManObj(g, id), -1)
 				disproved = true
@@ -144,6 +147,9 @@ func cec2SweepEquivalences(g *gia.Gia_Man_t, opts cec2SweepSettings) (*gia.Gia_M
 			break
 		}
 		simulate()
+		if fails := cec2CountReplayFailures(sim, triples); fails > 0 && opts.verbose {
+			fmt.Printf("Failed to resimulate %d times with pattern = %d  (total = %d).\n", fails, len(triples), 64*opts.words)
+		}
 		if opts.isMiter {
 			failure = cec2CaptureMiterFailure(sim, g)
 			if failure != nil {
