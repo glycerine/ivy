@@ -1,0 +1,5 @@
+# Source: acec_source_harness.c linked against ABC objects from this checkout.
+booth_mask=8
+booth_normalized_inputs=7
+booth_normalized_outputs=3
+tied_cuts=1 2 3 10 20 1 2 3 11 21
