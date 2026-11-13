@@ -2,6 +2,7 @@ package bsat
 
 import (
 	"math"
+	"math/rand"
 	"testing"
 )
 
@@ -243,5 +244,56 @@ func TestUnconditionalUnsatPersistsAcrossAssumptionQueries(t *testing.T) {
 	}
 	if s.AddClause(Positive(x)) {
 		t.Fatal("addition to globally UNSAT solver should fail")
+	}
+}
+
+func TestProofStoreNormalizedInputsAgainstEnumeration(t *testing.T) {
+	rng := rand.New(rand.NewSource(28219))
+	checked := 0
+	for trial := 0; trial < 200; trial++ {
+		s := NewSolver()
+		s.EnableClauseStore()
+		for i := 0; i < 4; i++ {
+			s.NewVariable()
+		}
+		var original [][]lit
+		for i := 0; i < 12; i++ {
+			c := make([]lit, 1+rng.Intn(4))
+			for j := range c {
+				c[j] = lit(rng.Intn(8))
+			}
+			original = append(original, append([]lit(nil), c...))
+			if !s.AddClause(c...) {
+				break
+			}
+		}
+		s.MarkClauseStoreRoots()
+		wantSAT := formulaHasModel(original, nil, 4)
+		if got := s.Solve(); (got == Satisfiable) != wantSAT {
+			t.Fatalf("trial %d status=%v formula=%v", trial, got, original)
+		}
+		if !wantSAT {
+			store := s.ReleaseClauseStore()
+			interp := Intp_ManAlloc()
+			core := Intp_ManUnsatCore(interp, store, 0, 0)
+			if err := Intp_ManError(interp); err != nil {
+				t.Fatalf("trial %d invalid stored proof: %v", trial, err)
+			}
+			roots := store.Clauses()
+			subset := make([][]lit, 0, len(core))
+			for _, id := range core {
+				if id < 0 || int(id) >= len(roots) || !roots[id].Root {
+					t.Fatalf("invalid root ID %d", id)
+				}
+				subset = append(subset, roots[id].Literals)
+			}
+			if formulaHasModel(subset, nil, 4) {
+				t.Fatalf("satisfiable proof core %v", core)
+			}
+			checked++
+		}
+	}
+	if checked < 10 {
+		t.Fatalf("too few UNSAT proof cases: %d", checked)
 	}
 }

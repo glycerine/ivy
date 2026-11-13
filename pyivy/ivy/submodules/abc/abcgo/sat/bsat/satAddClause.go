@@ -38,15 +38,13 @@ func sat_solver_addclause(s *sat_solver, input []lit) int32 {
 		}
 	}
 	write := 0
-	last := lit_Undef
 	for _, l := range data {
-		if l == lit_neg(last) || s.assigns[lit_var(l)] == lit_sign(l) {
+		if s.assigns[lit_var(l)] == lit_sign(l) {
 			return 1
 		}
-		if l != last && s.assigns[lit_var(l)] == satUnassigned {
+		if s.assigns[lit_var(l)] == satUnassigned {
 			data[write] = l
 			write++
-			last = l
 		}
 	}
 	data = data[:write]

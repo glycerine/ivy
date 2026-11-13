@@ -258,3 +258,9 @@ The full race-enabled BSAT suite passes.
 An additional proof-store reuse regression checks that an unconditionally UNSAT
 formula stays UNSAT through subsequent assumption queries and rejects further
 clauses. The race-enabled BSAT suite passes; this covers a small instance only.
+
+The clause-addition review removed redundant duplicate and tautology checks
+from the assignment-filtering loop after normalization. A seeded 200-formula
+oracle now checks SAT status and independently verifies reconstructed UNSAT
+cores when proof logging receives duplicate and complementary input literals.
+The race-enabled BSAT suite passes.
