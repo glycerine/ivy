@@ -24,8 +24,8 @@ Validation includes exhaustive cut-subset comparisons on small graphs; cut
 sizes compared against the existing NWK port on 200 cleaned graphs in both
 directions; forward/backward register-reduction examples; hidden-register and
 unsatisfiable-initial-state retry cases; and reachable-output comparisons for
-all three-frame traces on 32 generated two-register circuits. Run the full
-SAIG race suite and the dependent FRA race suite after changes.
+all three-frame traces on 32 generated two-register circuits. The latest full
+SAIG and dependent FRA race suites and vet pass.
 
 The reproducible reference command `go run ./aig/saig/_reference -abc ../abc`
 compares against ABC's network command `retime -M 3`: 22 of 24 deterministic
@@ -37,7 +37,8 @@ sequential cleanup of the original graph gives the same counts as those C
 results. This network command is a useful reference but is not a direct call
 to the original SAIG function.
 
-Remaining review: compare cut tie-breaking and end-to-end behavior directly
-with the original SAIG function on larger designs. The Go NWK converter
-currently omits dangling nodes, whereas the C converter iterates all nodes;
-the SAIG implementation retains the source's all-node behavior.
+The latest uncached SAIG race tests and vet pass. Remaining review: compare cut
+tie-breaking and end-to-end behavior directly with the original SAIG function
+on larger designs. The Go NWK converter currently omits dangling nodes,
+whereas the C converter iterates all nodes; the SAIG implementation retains the
+source's all-node behavior.

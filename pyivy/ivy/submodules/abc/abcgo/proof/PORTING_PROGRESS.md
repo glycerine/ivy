@@ -8,13 +8,12 @@ rather than silently substituting another algorithm.
 
 ## Current checkpoint (2026-11-13)
 
-Proof-package work is under parallel source-by-source audit. Recent green
-checkpoints cover CEC, FRA/framgr, ACEC, DCH, ABS, INT2, live, SSW, PDR, BSAT,
-MSAT, MiniSat-p, DAR, and SSC. The lower DAR facade and GIA default choice path
-now call their source pipelines. Several package race/vet gates passed after
-their latest changes, but the repository-wide proof gate has not been rerun
-after ongoing terminal-count/CioId propagation fixes. Those shared AIG and
-SAIG changes remain under review, so this checkpoint is not completion.
+Proof-package work remains under source-by-source audit. The current
+uncached race gate passes for all packages in `./proof/...`; vet also passes.
+The shared dependency gate passes for `./aig/...`, `./opt/dar/...`, and
+`./sat/cnf`. These gates do not establish complete source parity: INT2 has
+incomplete C routines, CEC's broader sweep/partition review is unfinished, and
+SAIG retains the documented backward-driver caveat below. Continue the audit.
 
 ## Source API inventory
 
@@ -55,8 +54,13 @@ and representation limits described in its package notes.
   equivalence pairs and a reordered-output misclassification; tests preserve
   and document those defects. Native XOR/MUX wrapper paths now follow C's
   duplication behavior or reject unsupported input at the source boundary.
-  Isomorphism preconditions and constant-miter handling match C. Package race
-  tests and vet passed. Cec4's upstream choice builder remains incomplete.
+  Isomorphism preconditions and constant-miter handling match C. Sweep early
+  exits preserve `iOutFail`, the circuit-SAT path does not publish Go-only
+  original-ID pairs, and timeout checks occur after a completed reduction
+  iteration. Linux timed sweeps use the C thread-CPU clock; timed sweeps on
+  other platforms report unsupported. Package race tests and vet passed.
+  Broader sweep/partition review remains partial. Cec4's upstream choice
+  builder remains incomplete.
   The lower `opt/dar` facade wires its source default through the CEC adapter,
   and the GIA default uses the GIA miter/skip-three/DCH path. CEC/Cec4 modes are
   exposed through a higher-layer wrapper to avoid an import cycle.
@@ -119,10 +123,9 @@ and representation limits described in its package notes.
   later RNG state. Complete option parity remains under review.
 * `ssw`: source rarity, SAT polarity, prefix, class-count, manager-lifecycle,
   reduction accounting, stop behavior, and timeout behavior is restored and
-  characterized. A reachable invalid
-  rarity witness is documented as an upstream C defect. Source CioId setup is
-  restored in manager, BMC, latch-sweep, and dynamic-sweep paths; race tests and
-  vet passed. Further shared retiming metadata fixes are still in progress.
+  characterized. A reachable invalid rarity witness is documented as an
+  upstream C defect. Source CioId setup is restored in manager, BMC,
+  latch-sweep, and dynamic-sweep paths; current race tests and vet passed.
 
 ## Shared dependencies in progress
 
@@ -137,11 +140,12 @@ the GIA/CNF/CEC import cycle. The facade's default choice path uses the source
 GIA miter and DCH/CEC/Cec4 branches; the lower GIA API exposes CEC/Cec4 through
 an explicit higher-layer wrapper. Compiled ABC option-matrix checks pass.
 
-The shared AIG/SAIG migration now stores C's true terminal counts and per-object
-CioIds instead of deriving them from current terminal slices. Source review
-continues across duplication, retiming, and register hiding/exposure: C
-intentionally leaves stale or zero metadata on some paths, so each call site
-must follow the exact source operation rather than normalize the graph.
+The shared AIG/SAIG migration stores C's true terminal counts and per-object
+CioIds instead of deriving them from current terminal slices. Duplication,
+retiming, and register hiding/exposure now follow source-specific count and ID
+updates; C intentionally leaves stale or zero metadata on some paths. The
+backward retiming driver's historical constraint-handling branches and the
+initialized-state `Aig_ManFrames` path remain documented fidelity limits.
 
 FRA/AIG partitioned FRAIG and choice and SAIG timeframe bridges are implemented
 through explicit callback APIs, with FRA wrappers supplying the corresponding
@@ -154,10 +158,10 @@ are advised to simplify and discard a conflicting solver. `abcgo/sat/msat` now
 matches C's chunk pools, clause allocation accounting, learned-clause sorting,
 DIMACS/report output, vector ordering and accessors; source-by-source
 comparison continues. The original C checkout only declares the unused
-variable-heap API, so its Go replacement bodies were removed. A selected
-cross-package proof race/vet batch passed except for the SSC optional C oracle,
-which could not link the current shared C objects (`st__strcmp` unresolved).
-A final `go test -race` and `go vet` run across `./proof/...` remains required.
+variable-heap API, so its Go replacement bodies were removed. The latest
+uncached `go test -race -count=1 -p 8 ./proof/...` and `go vet ./proof/...`
+both pass. The optional SSC C oracle remains opt-in (`SSC_BUILD_ORACLE=1`);
+its fresh-source build passed earlier, but is not run by the default gate.
 
 Run full checks from `abcgo`, excluding experimental directories, for example:
 
