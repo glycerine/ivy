@@ -2,11 +2,66 @@ package csat
 
 import (
 	"fmt"
+	"math/rand"
 	"os"
 	"path/filepath"
 	"strings"
 	"testing"
 )
+
+func TestRandomNetworksAgainstBooleanEvaluation(t *testing.T) {
+	rng := rand.New(rand.NewSource(513))
+	for trial := 0; trial < 100; trial++ {
+		m := ABC_InitManager()
+		if trial%2 != 0 {
+			ABC_UseOnlyCoreSatSolver(m)
+		}
+		names := []string{"a", "b", "c"}
+		for _, name := range names {
+			addGate(t, m, CSAT_BPI, name)
+		}
+		type operation struct {
+			typ  GateType
+			a, b int
+		}
+		var operations []operation
+		for i := 0; i < 6; i++ {
+			op := operation{typ: []GateType{CSAT_BAND, CSAT_BOR, CSAT_BXOR, CSAT_BNAND}[rng.Intn(4)], a: rng.Intn(len(names)), b: rng.Intn(len(names))}
+			name := fmt.Sprintf("g%d", i)
+			addGate(t, m, op.typ, name, names[op.a], names[op.b])
+			operations = append(operations, op)
+			names = append(names, name)
+		}
+		for mask := 0; mask < 8; mask++ {
+			values := []bool{mask&1 != 0, mask&2 != 0, mask&4 != 0}
+			for _, op := range operations {
+				a, b := values[op.a], values[op.b]
+				var value bool
+				switch op.typ {
+				case CSAT_BAND:
+					value = a && b
+				case CSAT_BOR:
+					value = a || b
+				case CSAT_BXOR:
+					value = a != b
+				case CSAT_BNAND:
+					value = !(a && b)
+				}
+				values = append(values, value)
+			}
+			targetNames := []string{"a", "b", "c", names[len(names)-1]}
+			targetValues := []int32{boolInt(values[0]), boolInt(values[1]), boolInt(values[2]), boolInt(values[len(values)-1])}
+			if got := solveTarget(t, m, targetNames, targetValues); got != SATISFIABLE {
+				t.Fatalf("trial=%d mask=%d true output status=%v", trial, mask, got)
+			}
+			targetValues[3] ^= 1
+			if got := solveTarget(t, m, targetNames, targetValues); got != UNSATISFIABLE {
+				t.Fatalf("trial=%d mask=%d false output status=%v", trial, mask, got)
+			}
+		}
+		ABC_ReleaseManager(m)
+	}
+}
 
 func addGate(t *testing.T, m ABC_Manager, typ GateType, name string, inputs ...string) {
 	t.Helper()
