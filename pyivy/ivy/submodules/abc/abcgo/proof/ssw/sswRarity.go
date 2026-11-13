@@ -3,6 +3,10 @@ package ssw
 import (
 	"fmt"
 	"time"
+ "math/bits"
+ "github.com/glycerine/abcgo/aig/aig"
+ "github.com/glycerine/abcgo/aig/saig"
+ "github.com/glycerine/abcgo/misc/vec"
 )
 
 /**CFile****************************************************************
@@ -39,83 +43,43 @@ import (
 
    
 type Ssw_RarMan_t struct {
-    // parameters
-    pPars *Ssw_RarPars_t;
-    nGroups            int32;      // the number of flop groups
-    nWordsReg            int32;    // the number of words in the registers
-    // internal data
-    pAig     *Aig_Man_t;         // AIG with equivalence classes
-    ppClasses     *Ssw_Cla_t;    // equivalence classes
-    vInits     *Vec_Int_t;       // initial state
-    // simulation data
-    pObjData          *word;     // simulation info for each obj
-    pPatData          *word;     // pattern data for each reg
-    // candidates to update
-    vUpdConst     *Vec_Ptr_t;    // constant 1 candidates
-    vUpdClass     *Vec_Ptr_t;    // class representatives
-    // rarity data
-    pRarity           *int32;      // occur counts for patterns in groups
-    pPatCosts        *float64;    // pattern costs
-    // best patterns
-    vPatBests     *Vec_Int_t;    // best patterns
-    iFailPo            int32;      // failed primary output
-    iFailPat            int32;     // failed pattern
-    // counter-examples
-    vCexes     *Vec_Ptr_t;
+ pPars *Ssw_RarPars_t
+ nGroups, nWordsReg int32
+ pAig *aig.Graph
+ ppClasses *Ssw_Cla_t
+ vInits *vec.Vec_Int_t
+ pObjData, pPatData []uint64
+ vUpdConst, vUpdClass *vec.Vec_Ptr_t
+ pRarity []int32
+ pPatCosts []float64
+ vPatBests *vec.Vec_Int_t
+ iFailPo, iFailPat int32
+ vCexes *vec.Vec_Ptr_t
 }
 
-
-func Ssw_RarGetBinPat(p *Ssw_RarMan_t, iBin int32, iPat int32) int32 {
-    assert(iBin >= 0 && iBin < Aig_ManRegNum(p.pAig) / p.pPars.nBinSize, "iBin >= 0 && iBin < Aig_ManRegNum(p.pAig) / p.pPars.nBinSize");
-    assert(iPat >= 0 && iPat < (1 << p.pPars.nBinSize), "iPat >= 0 && iPat < (1 << p.pPars.nBinSize)");
-    return p.pRarity[iBin * (1 << p.pPars.nBinSize) + iPat];
+func Ssw_RarGetBinPat(p *Ssw_RarMan_t, bin, pat int32) int32 {
+ if bin<0 || bin>=p.nGroups || pat<0 || pat>=1<<p.pPars.nBinSize { panic("ssw: rarity index out of bounds") }
+ return p.pRarity[bin*(1<<p.pPars.nBinSize)+pat]
 }
-func Ssw_RarSetBinPat(p *Ssw_RarMan_t, iBin int32, iPat int32, Value int32) {
-    assert(iBin >= 0 && iBin < Aig_ManRegNum(p.pAig) / p.pPars.nBinSize, "iBin >= 0 && iBin < Aig_ManRegNum(p.pAig) / p.pPars.nBinSize");
-    assert(iPat >= 0 && iPat < (1 << p.pPars.nBinSize), "iPat >= 0 && iPat < (1 << p.pPars.nBinSize)");
-    p.pRarity[iBin * (1 << p.pPars.nBinSize) + iPat] = Value;
+func Ssw_RarSetBinPat(p *Ssw_RarMan_t, bin, pat, value int32) {
+ if bin<0 || bin>=p.nGroups || pat<0 || pat>=1<<p.pPars.nBinSize { panic("ssw: rarity index out of bounds") }
+ p.pRarity[bin*(1<<p.pPars.nBinSize)+pat]=value
 }
-func Ssw_RarAddToBinPat(p *Ssw_RarMan_t, iBin int32, iPat int32) {
-    assert(iBin >= 0 && iBin < Aig_ManRegNum(p.pAig) / p.pPars.nBinSize, "iBin >= 0 && iBin < Aig_ManRegNum(p.pAig) / p.pPars.nBinSize");
-    assert(iPat >= 0 && iPat < (1 << p.pPars.nBinSize), "iPat >= 0 && iPat < (1 << p.pPars.nBinSize)");
-    p.pRarity[iBin * (1 << p.pPars.nBinSize) + iPat]++;
+func Ssw_RarAddToBinPat(p *Ssw_RarMan_t, bin, pat int32) { Ssw_RarSetBinPat(p,bin,pat,Ssw_RarGetBinPat(p,bin,pat)+1) }
+func Ssw_RarObjSim(p *Ssw_RarMan_t, id int32) []uint64 {
+ if id<0 || id>=aig.Aig_ManObjNumMax(p.pAig) {panic("ssw: invalid rarity object")}
+ start:=id*p.pPars.nWords;return p.pObjData[start:start+p.pPars.nWords]
 }
-
-
-func Ssw_RarObjSim(p *Ssw_RarMan_t, Id int32) *word { assert(Id < Aig_ManObjNumMax(p.pAig), "Id < Aig_ManObjNumMax(p.pAig)"); return p.pObjData + p.pPars.nWords * Id;    }
-func Ssw_RarPatSim(p *Ssw_RarMan_t, Id int32) *word { assert(Id < 64 * p.pPars.nWords, "Id < 64 * p.pPars.nWords");     return p.pPatData + p.nWordsReg * Id;        }
-
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Initializes random primary inputs.]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+func Ssw_RarPatSim(p *Ssw_RarMan_t, id int32) []uint64 {
+ if id<0 || id>=64*p.pPars.nWords {panic("ssw: invalid rarity pattern")}
+ start:=id*p.nWordsReg;return p.pPatData[start:start+p.nWordsReg]
+}
 func Ssw_RarManAssingRandomPis(p *Ssw_RarMan_t) {
-    var pSim *word;
-    var pObj *Aig_Obj_t;
-    var w, i int32;
-    // inlining of macro Saig_ManForEachPi
-    // inlining of macro Vec_PtrForEachEntryStop
-    for  i = 0; (i < Saig_ManPiNum(p.pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {
-        pSim = Ssw_RarObjSim( p, Aig_ObjId(pObj) );
-        for  w = 0; w < p.pPars.nWords; w++  {
-            pSim[w] = Aig_ManRandom64(0);
-        }
-//        pSim[0] <<= 1;
-//        pSim[0] = (pSim[0] << 2) | 2;
-        pSim[0] = (pSim[0] << 4) | ((i & 1) ? 0xA : 0xC);
-    }
+ for i,obj:=range p.pAig.Inputs()[:saig.Saig_ManPiNum(p.pAig)] {
+  sim:=Ssw_RarObjSim(p,int32(obj.NodeID()))
+  for w:=range sim {sim[w]=aig.Aig_ManRandom64(0)}
+  tail:=uint64(0xc);if i&1!=0 {tail=0xa};sim[0]=sim[0]<<4|tail
+ }
 }
 
 /**Function*************************************************************
@@ -238,43 +202,9 @@ func TransposeTest() {
 
 ***********************************************************************/
 func Ssw_RarTranspose(p *Ssw_RarMan_t) {
-    var pObj *Aig_Obj_t;
-    var M [64]word;
-    var w, r, i int32;
-    for  w = 0; w < p.pPars.nWords; w++  {
-    for  r = 0; r < p.nWordsReg; r++  {
-        // save input
-        for  i = 0; i < 64; i++  {
-            if r*64 + 63-i < Aig_ManRegNum(p.pAig) {
-                pObj = Saig_ManLi( p.pAig, r*64 + 63-i );
-                M[i] = Ssw_RarObjSim( p, Aig_ObjId(pObj) )[w];
-            
-            } else {
-                M[i] = 0; }
-        }
-        // transpose
-        transpose64( M );
-        // save output
-        for  i = 0; i < 64; i++  {
-            Ssw_RarPatSim( p, w*64 + 63-i )[r] = M[i];
-        }
-    }
-    }
-/*
-    Saig_ManForEachLi( p->pAig, pObj, i )
-    {
-        word * pBitData = Ssw_RarObjSim( p, Aig_ObjId(pObj) );
-        Extra_PrintBinary( stdout, (unsigned *)pBitData, 64*p->pPars->nWords ); Abc_Print( 1, "\n" );
-    }
-    Abc_Print( 1, "\n" );
-    for ( i = 0; i < p->pPars->nWords*64; i++ )
-    {
-        word * pBitData = Ssw_RarPatSim( p, i );
-        Extra_PrintBinary( stdout, (unsigned *)pBitData, Aig_ManRegNum(p->pAig) ); Abc_Print( 1, "\n" );
-    }
-    Abc_Print( 1, "\n" );
-*/
+ for w:=int32(0);w<p.pPars.nWords;w++ {for r:=int32(0);r<p.nWordsReg;r++ {var m [64]uint64;for i:=int32(0);i<64;i++ {idx:=r*64+63-i;if idx<aig.Aig_ManRegNum(p.pAig){li:=saig.Saig_ManLi(p.pAig,idx);m[i]=Ssw_RarObjSim(p,int32(li.NodeID()))[w]}};transpose64(m[:]);for i:=int32(0);i<64;i++ {Ssw_RarPatSim(p,w*64+63-i)[r]=m[i]}}}
 }
+
 
 
 
@@ -290,40 +220,10 @@ func Ssw_RarTranspose(p *Ssw_RarMan_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_RarManInitialize(p *Ssw_RarMan_t, vInit *Vec_Int_t) {
-    var pObj, pObjLi *Aig_Obj_t;
-    var pSim, pSimLi *word;
-    var w, i int32;
-    // constant
-    pObj = Aig_ManConst1( p.pAig );
-    pSim = Ssw_RarObjSim( p, Aig_ObjId(pObj) );
-    for  w = 0; w < p.pPars.nWords; w++  {
-        pSim[w] = ~(word)0;
-    }
-    // primary inputs
-    Ssw_RarManAssingRandomPis( p );
-    // flop outputs
-    if vInit != nil {
-        assert(Vec_IntSize(vInit) == Saig_ManRegNum(p.pAig) * p.pPars.nWords, "Vec_IntSize(vInit) == Saig_ManRegNum(p.pAig) * p.pPars.nWords");
-        // inlining of macro Saig_ManForEachLo
-        for  i = 0; (i < Saig_ManRegNum(p.pAig)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i+Saig_ManPiNum(p.pAig))), 1); i++  {
-            pSim = Ssw_RarObjSim( p, Aig_ObjId(pObj) );
-            for  w = 0; w < p.pPars.nWords; w++  {
-                pSim[w] = Vec_IntEntry(vInit, w * Saig_ManRegNum(p.pAig) + i) ? ~(word)0 : (word)0;
-            }
-        }
-    
-    } else {
-        // inlining of macro Saig_ManForEachLiLo
-        for  i = 0; (i < Saig_ManRegNum(p.pAig)) && (((pObjLi) = Saig_ManLi(p.pAig, i)), 1)            && (((pObj)=Saig_ManLo(p.pAig, i)), 1); i++  {
-            pSimLi = Ssw_RarObjSim( p, Aig_ObjId(pObjLi) );
-            pSim   = Ssw_RarObjSim( p, Aig_ObjId(pObj) );
-            for  w = 0; w < p.pPars.nWords; w++  {
-                pSim[w] = pSimLi[w];
-            }
-        }
-    }
+func Ssw_RarManInitialize(p *Ssw_RarMan_t, init *vec.Vec_Int_t) {
+ constant:=Ssw_RarObjSim(p,0);for i:=range constant {constant[i]=^uint64(0)};Ssw_RarManAssingRandomPis(p);regs:=aig.Aig_ManRegNum(p.pAig);if init!=nil && vec.Vec_IntSize(init)!=int(regs*p.pPars.nWords){panic("ssw: wrong rarity initialization size")};for i:=int32(0);i<regs;i++ {lo,li:=saig.Saig_ManLo(p.pAig,i),saig.Saig_ManLi(p.pAig,i);dst:=Ssw_RarObjSim(p,int32(lo.NodeID()));if init==nil {copy(dst,Ssw_RarObjSim(p,int32(li.NodeID())))} else {for w:=range dst {dst[w]=0;if vec.Vec_IntEntry(init,w*int(regs)+int(i))!=0 {dst[w]=^uint64(0)}}}}
 }
+
 
 /**Function*************************************************************
 
@@ -336,16 +236,8 @@ func Ssw_RarManInitialize(p *Ssw_RarMan_t, vInit *Vec_Int_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_RarManPoIsConst0(pMan any, pObj *Aig_Obj_t) int32 {
-    var p *Ssw_RarMan_t  = (Ssw_RarMan_t *)pMan;
-    var pSim *word  = Ssw_RarObjSim( p, Aig_ObjId(pObj) );
-    var w int32;
-    for  w = 0; w < p.pPars.nWords; w++  {
-        if pSim[w] {
-            return 0; }
-    }
-    return 1;
-}
+func Ssw_RarManPoIsConst0(data any, obj aig.Edge) int32 {p:=data.(*Ssw_RarMan_t);for _,v:=range Ssw_RarObjSim(p,int32(obj.NodeID())){if v!=0{return 0}};return 1}
+
 
 /**Function*************************************************************
 
@@ -358,22 +250,8 @@ func Ssw_RarManPoIsConst0(pMan any, pObj *Aig_Obj_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_RarManObjIsConst(pMan any, pObj *Aig_Obj_t) int32 {
-    var p *Ssw_RarMan_t  = (Ssw_RarMan_t *)pMan;
-    var pSim *word  = Ssw_RarObjSim( p, Aig_ObjId(pObj) );
-    var Flip word;
-    if pObj.fPhase {
-        Flip = ~(word)0;
-    } else {
-        Flip = 0;
-    }
-    var w int32;
-    for  w = 0; w < p.pPars.nWords; w++  {
-        if pSim[w] ^ Flip {
-            return 0; }
-    }
-    return 1;
-}
+func Ssw_RarManObjIsConst(data any,obj aig.Edge) int32 {p:=data.(*Ssw_RarMan_t);var flip uint64;if aig.Aig_ObjPhase(p.pAig,obj){flip=^uint64(0)};for _,v:=range Ssw_RarObjSim(p,int32(obj.NodeID())){if v!=flip{return 0}};return 1}
+
 
 /**Function*************************************************************
 
@@ -386,23 +264,8 @@ func Ssw_RarManObjIsConst(pMan any, pObj *Aig_Obj_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_RarManObjsAreEqual(pMan any, pObj0 *Aig_Obj_t, pObj1 *Aig_Obj_t) int32 {
-    var p *Ssw_RarMan_t  = (Ssw_RarMan_t *)pMan;
-    var pSim0 *word  = Ssw_RarObjSim( p, pObj0.Id );
-    var pSim1 *word  = Ssw_RarObjSim( p, pObj1.Id );
-    var Flip word;
-    if pObj0.fPhase != pObj1.fPhase {
-        Flip = ~(word)0;
-    } else {
-        Flip = 0;
-    }
-    var w int32;
-    for  w = 0; w < p.pPars.nWords; w++  {
-        if pSim0[w] ^ pSim1[w] ^ Flip {
-            return 0; }
-    }
-    return 1;
-}
+func Ssw_RarManObjsAreEqual(data any,a,b aig.Edge) int32 {p:=data.(*Ssw_RarMan_t);var flip uint64;if aig.Aig_ObjPhase(p.pAig,a)!=aig.Aig_ObjPhase(p.pAig,b){flip=^uint64(0)};x,y:=Ssw_RarObjSim(p,int32(a.NodeID())),Ssw_RarObjSim(p,int32(b.NodeID()));for i:=range x {if x[i]^y[i]^flip!=0{return 0}};return 1}
+
 
 /**Function*************************************************************
 
@@ -455,22 +318,8 @@ func Ssw_RarManObjHashWord(pMan any, pObj *Aig_Obj_t) uint32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_RarManObjWhichOne(p *Ssw_RarMan_t, pObj *Aig_Obj_t) int32 {
-    var pSim *word  = Ssw_RarObjSim( p, Aig_ObjId(pObj) );
-    var Flip word;//pObj->fPhase ? ~(word)0 : 0; // bug fix!
-    var w, i int32;
-    for  w = 0; w < p.pPars.nWords; w++  {
-        if pSim[w] ^ Flip {
-            for  i = 0; i < 64; i++  {
-                if ((pSim[w] ^ Flip) >> i) & 1 {
-                    break; }
-            }
-            assert(i < 64, "i < 64");
-            return w * 64 + i;
-        }
-    }
-    return -1;
-}
+func Ssw_RarManObjWhichOne(p *Ssw_RarMan_t,obj aig.Edge) int32 {for w,v:=range Ssw_RarObjSim(p,int32(obj.NodeID())){if v!=0{return int32(w*64+bits.TrailingZeros64(v))}};return -1}
+
 
 /**Function*************************************************************
 
@@ -651,29 +500,10 @@ func Ssw_RarManSimulate(p *Ssw_RarMan_t, vInit *Vec_Int_t, fUpdate int32, fFirst
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_RarManStart(pAig *Aig_Man_t, pPars *Ssw_RarPars_t) *Ssw_RarMan_t {
-    
-//    if ( Aig_ManRegNum(pAig) < nBinSize || nBinSize <= 0 )
-//        return NULL;
-    // inlining of macro ABC_CALLOC
-    p := &Ssw_RarMan_t{};
-    p.pAig      = pAig;
-    p.pPars     = pPars;
-    p.nGroups   = Aig_ManRegNum(pAig) / pPars.nBinSize;
-    // inlining of macro ABC_CALLOC
-    p.pRarity   = ((int *) calloc((size_t)((1 << pPars.nBinSize) * p.nGroups), sizeof(int)));
-    // inlining of macro ABC_CALLOC
-    p.pPatCosts = ((double *) calloc((size_t)(p.pPars.nWords * 64), sizeof(double)));
-    p.nWordsReg = Ssw_RarBitWordNum( Aig_ManRegNum(pAig) );
-    // inlining of macro ABC_ALLOC
-    p.pObjData  = ((word *) malloc(sizeof(word) * (size_t)(Aig_ManObjNumMax(pAig) * p.pPars.nWords)));
-    // inlining of macro ABC_ALLOC
-    p.pPatData  = ((word *) malloc(sizeof(word) * (size_t)(64 * p.pPars.nWords * p.nWordsReg)));
-    p.vUpdConst = Vec_PtrAlloc( 100 );
-    p.vUpdClass = Vec_PtrAlloc( 100 );
-    p.vPatBests = Vec_IntAlloc( 100 );
-    return p;
+func Ssw_RarManStart(g *aig.Graph,pars *Ssw_RarPars_t) *Ssw_RarMan_t {
+ if pars.nWords<=0||pars.nFrames<=0||pars.nBinSize<=0||pars.nBinSize>16 {panic("ssw: invalid rarity parameters")};groups:=aig.Aig_ManRegNum(g)/pars.nBinSize;words:=Ssw_RarBitWordNum(aig.Aig_ManRegNum(g));return &Ssw_RarMan_t{pAig:g,pPars:pars,nGroups:groups,nWordsReg:words,pRarity:make([]int32,int(groups)*(1<<pars.nBinSize)),pPatCosts:make([]float64,int(pars.nWords)*64),pObjData:make([]uint64,int(aig.Aig_ManObjNumMax(g))*int(pars.nWords)),pPatData:make([]uint64,64*int(pars.nWords)*int(words)),vUpdConst:vec.Vec_PtrAlloc(100),vUpdClass:vec.Vec_PtrAlloc(100),vPatBests:vec.Vec_IntAlloc(100)}
 }
+
 
 /**Function*************************************************************
 
@@ -686,24 +516,8 @@ func Ssw_RarManStart(pAig *Aig_Man_t, pPars *Ssw_RarPars_t) *Ssw_RarMan_t {
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_RarManStop(p *Ssw_RarMan_t) {
-//    Vec_PtrFreeP( &p->vCexes );
-    if p.vCexes {
-        assert(p.pAig.vSeqModelVec == nil, "p.pAig.vSeqModelVec == nil");
-        p.pAig.vSeqModelVec = p.vCexes;
-        p.vCexes = nil;
-    }
-    if p.ppClasses { Ssw_ClassesStop( p.ppClasses ); }
-    Vec_IntFreeP( &p.vInits );
-    Vec_IntFreeP( &p.vPatBests );
-    Vec_PtrFreeP( &p.vUpdConst );
-    Vec_PtrFreeP( &p.vUpdClass );
-    p.pObjData = nil;
-    p.pPatData = nil;
-    p.pPatCosts = nil;
-    p.pRarity = nil;
-    p = nil;
-}
+func Ssw_RarManStop(p *Ssw_RarMan_t){if p==nil{return};if p.vCexes!=nil{if p.pAig.SequentialCounterexamples()!=nil{panic("ssw: counterexample vector already exists")};p.pAig.SetSequentialCounterexamples(p.vCexes)};if p.ppClasses!=nil{Ssw_ClassesStop(p.ppClasses)};*p=Ssw_RarMan_t{}}
+
 
 /**Function*************************************************************
 
