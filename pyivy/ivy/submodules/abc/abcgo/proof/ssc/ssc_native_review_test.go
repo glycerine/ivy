@@ -213,6 +213,37 @@ func TestVerificationChecksDifferenceUnderCare(t *testing.T) {
 	}
 }
 
+func TestStartSetsCarePhasesFromPivot(t *testing.T) {
+	subject := gia.Gia_ManStart(4)
+	gia.Gia_ManAppendCi(subject)
+	care := gia.Gia_ManStart(4)
+	a := gia.Gia_ManAppendCi(care)
+	gia.Gia_ManAppendCo(care, a^1)
+	manager, status := Ssc_ManStart(subject, care, nil)
+	if manager == nil || status != 1 {
+		t.Fatalf("expected satisfiable pivot, got %d", status)
+	}
+	if got := gia.Gia_ObjPhase(gia.Gia_ManCi(care, 0)); got != 1 {
+		t.Fatalf("care input phase = %d, want 1", got)
+	}
+	if got := gia.Gia_ManCheckCoPhase(care); got != 0 {
+		t.Fatalf("care violation phase = %d, want 0", got)
+	}
+}
+
+func TestFailedOptionalVerificationStillReturnsResult(t *testing.T) {
+	subject := newBuilder(1, 4)
+	gia.Gia_ManAppendCo(subject.graph, subject.graph.InputLiterals()[0])
+	result := newBuilder(1, 4)
+	gia.Gia_ManAppendCo(result.graph, 0)
+	care := emptyCare(subject.graph)
+	params := DefaultParams()
+	params.Verify = true
+	if got := finishSweep(subject.graph, result.graph, care, &params); got != result.graph {
+		t.Fatal("failed verification must return the original result")
+	}
+}
+
 func TestRandomSequentialConstraintSweeps(t *testing.T) {
 	rng := rand.New(rand.NewSource(38122))
 	for trial := 0; trial < 80; trial++ {

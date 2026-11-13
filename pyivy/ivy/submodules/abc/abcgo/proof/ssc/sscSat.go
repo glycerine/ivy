@@ -24,7 +24,7 @@ func Ssc_ManStartSolver(p *Ssc_Man_t) {
 	p.sat = bsat.NewSolver()
 	p.inconsistent = false
 	p.satVars[0] = make([]int32, p.Aig.ObjectCount())
-	p.satNext = int32(formula.Variables) + 1
+	p.satNext = int32(formula.Variables)
 	for p.sat.NumVars() < p.satNext {
 		p.sat.NewVariable()
 	}
@@ -32,29 +32,19 @@ func Ssc_ManStartSolver(p *Ssc_Man_t) {
 	for _, row := range formula.Clauses {
 		lits := make([]bsat.Literal, len(row))
 		for i, lit := range row {
-			lits[i] = lit + 2
+			lits[i] = lit
 		}
 		if !p.sat.AddClause(lits...) {
 			p.inconsistent = true
 			return
 		}
 	}
-	// The Go CNF encoder folds constants rather than assigning a variable;
-	// SSC needs the explicit constant-one SAT variable used by the C solver.
-	p.satVars[0][0] = p.satNext
-	p.satNext++
-	for p.sat.NumVars() < p.satNext {
-		p.sat.NewVariable()
-	}
-	if !p.sat.AddClause(bsat.Positive(p.satVars[0][0])) {
-		p.inconsistent = true
-		return
-	}
+	p.satVars[0][0] = formula.VarNums[0]
 	inputs := p.Aig.InputLiterals()
 	p.satInputs = make([]int32, len(inputs))
 	for i, lit := range inputs {
 		copy := gia.Gia_ObjValue(gia.Gia_ManObj(p.Aig, lit>>1))
-		variable := formula.VarNums[copy>>1] + 1
+		variable := formula.VarNums[copy>>1]
 		if variable <= 0 {
 			panic("ssc: missing CNF input variable")
 		}

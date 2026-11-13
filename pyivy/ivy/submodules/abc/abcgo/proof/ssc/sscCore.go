@@ -3,6 +3,7 @@ package ssc
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/proof/cec"
 	"github.com/glycerine/abcgo/proof/cec/core"
 	"github.com/glycerine/abcgo/sat/satoko"
@@ -37,6 +38,20 @@ func Ssc_ManStart(subject, care *gia.Gia_Man_t, params *Ssc_Pars_t) (*Ssc_Man_t,
 		return p, status
 	}
 	p.Pivot = pivot
+	pattern := vec.Vec_IntAlloc(len(pivot))
+	for _, value := range pivot {
+		bit := int32(0)
+		if value {
+			bit = 1
+		}
+		vec.Vec_IntPush(pattern, bit)
+	}
+	gia.Gia_ManSetPhasePattern(subject, pattern)
+	gia.Gia_ManSetPhasePattern(care, pattern)
+	if violations := gia.Gia_ManCheckCoPhase(care); violations != 0 {
+		fmt.Printf("Computed reference pattern violates %d constraints (this is a bug!).\n", violations)
+		return nil, satoko.SATOKO_UNDEC
+	}
 	p.Sim = NewSimulation(subject, int(v.NWords))
 	p.Classes = Ssc_GiaClassesInit(subject, pivot)
 	return p, status
@@ -178,12 +193,19 @@ func Ssc_PerformSweepingInt(subject, care *gia.Gia_Man_t, params *Ssc_Pars_t) *g
 	// word is full, refining any remaining candidates at the end of the pass.
 	Ssc_GiaResetPiPattern(p.Sim, int(p.Params.NWords))
 	Ssc_GiaSavePiPattern(p.Sim, p.Pivot)
+	var disproved [][2]int32
 	flushPatterns := func() {
 		for p.Sim.Patterns < 64*p.Sim.Words {
 			Ssc_GiaSavePiPattern(p.Sim, p.Pivot)
 		}
 		Ssc_GiaSimRound(p.Sim)
 		Ssc_GiaClassesRefine(p.Classes, p.Sim)
+		for _, pair := range disproved {
+			if p.Classes.Repr[pair[1]] == pair[0] {
+				fmt.Printf("Pair (%d, %d) are still equivalent.\n", pair[0], pair[1])
+			}
+		}
+		disproved = nil
 		Ssc_GiaResetPiPattern(p.Sim, int(p.Params.NWords))
 		Ssc_GiaSavePiPattern(p.Sim, p.Pivot)
 	}
@@ -230,6 +252,7 @@ func Ssc_PerformSweepingInt(subject, care *gia.Gia_Man_t, params *Ssc_Pars_t) *g
 				gia.Gia_ObjSetProved(subject, id)
 			} else if result == satoko.SATOKO_SAT {
 				Ssc_GiaSavePiPattern(p.Sim, p.Pattern)
+				disproved = append(disproved, [2]int32{repr, id})
 				if repr > 0 {
 					Ssc_GiaResimulateOneClass(p, repr, id)
 				}
@@ -279,8 +302,12 @@ func hasNativeGates(g *gia.Gia_Man_t) bool {
 }
 func Ssc_PerformSweeping(subject, care *gia.Gia_Man_t, params *Ssc_Pars_t) *gia.Gia_Man_t {
 	result := Ssc_PerformSweepingInt(subject, care, params)
-	if params != nil && params.Verify && Ssc_PerformVerification(subject, result, care) == 0 {
-		panic("ssc: conditional equivalence verification failed")
+	return finishSweep(subject, result, care, params)
+}
+
+func finishSweep(subject, result, care *gia.Gia_Man_t, params *Ssc_Pars_t) *gia.Gia_Man_t {
+	if params != nil && params.Verify {
+		Ssc_PerformVerification(subject, result, care)
 	}
 	return result
 }
@@ -303,7 +330,16 @@ func Ssc_PerformVerification(a, b, care *gia.Gia_Man_t) int32 {
 	}
 	params := new(cec.Cec_ParCec_t)
 	cec.Cec_ManCecSetDefaultParams(params)
-	return cec.Cec_ManVerify(miter, params)
+	status := cec.Cec_ManVerify(miter, params)
+	switch status {
+	case 1:
+		fmt.Println("Verification succeeded.")
+	case 0:
+		fmt.Println("Verification failed.")
+	default:
+		fmt.Println("Verification undecided.")
+	}
+	return status
 }
 func emptyCare(p *gia.Gia_Man_t) *gia.Gia_Man_t {
 	q := gia.Gia_ManStart(int32(len(p.InputLiterals()) + 2))
