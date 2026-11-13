@@ -68,3 +68,13 @@ synthesis/GIA/new-engine selection flags remain upstream controls as in old DCH.
 
 Validated with DCH vet and full-package race tests for DCH, AIG and BSAT.
 No stubs, excluded source files, parser-only success claims or Git operations.
+
+## Follow-up class and SAT review
+
+Compared class refinement, SAT conflict/recycling conditions, and option
+handling against the current C source. The SAT path now forwards signed
+conflict limits and applies signed nonzero recycling thresholds as the C code
+does; tests cover negative budgets, propagation-only proofs and recycling.
+Removed an unused private class-removal helper; no source algorithm calls it.
+The source API, metadata and broader workload comparison gaps remain recorded
+in PORTING.md.

@@ -30,20 +30,6 @@ func (c *Classes) representative(node aig.Edge) aig.Edge {
 	}
 	return c.groups[i][0]
 }
-func (c *Classes) remove(node aig.Edge) {
-	i, ok := c.byNode[node.NodeID()]
-	if !ok {
-		return
-	}
-	group := c.groups[i]
-	for j, n := range group {
-		if n == node {
-			c.groups[i] = append(group[:j], group[j+1:]...)
-			break
-		}
-	}
-	c.index()
-}
 func signature(g *aig.Graph, node aig.Edge, sims [][]uint32) string {
 	row := sims[node.NodeID()]
 	bytes := make([]byte, 4*len(row))
