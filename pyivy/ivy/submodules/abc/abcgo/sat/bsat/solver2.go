@@ -27,11 +27,15 @@ func (p *Solver2) AddClause(literals ...Literal) bool {
 	if s.fSolved != 0 {
 		return false
 	}
+	maxVar := int32(-1)
 	for _, l := range literals {
 		if l < 0 {
 			panic("negative encoded literal")
 		}
-		sat_solver2_setnvars(s, lit_var(l)+1)
+		maxVar = max(maxVar, lit_var(l))
+	}
+	if maxVar >= 0 {
+		sat_solver2_setnvars(s, maxVar+1)
 	}
 	satisfied := false
 	unassigned := false

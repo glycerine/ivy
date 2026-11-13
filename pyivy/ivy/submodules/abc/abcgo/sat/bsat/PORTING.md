@@ -281,3 +281,8 @@ state. An invalid later assumption previously panicked after earlier assumptions
 were pushed, leaving the solver inconsistent for subsequent calls. A regression
 recovers from the invalid input and verifies a later SAT solve. The full
 race-enabled BSAT suite passes.
+
+Solver2 clause input validation now scans the complete clause before growing
+its variable arrays, and grows them once. An invalid later literal previously
+left the variable count changed after the panic. A regression checks the
+recovered solver's count and usability; the race-enabled BSAT suite passes.

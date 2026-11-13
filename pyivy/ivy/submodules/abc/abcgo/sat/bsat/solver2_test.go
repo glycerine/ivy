@@ -81,3 +81,22 @@ func TestSolver2DeadlineAndRecovery(t *testing.T) {
 		t.Fatalf("recovered model y=%v valid=%v", v, ok)
 	}
 }
+
+func TestSolver2InvalidClauseDoesNotGrowVariables(t *testing.T) {
+	s := NewSolver2()
+	s.NewVariable()
+	func() {
+		defer func() {
+			if recover() == nil {
+				t.Error("negative literal should panic")
+			}
+		}()
+		s.AddClause(Positive(4), -1)
+	}()
+	if n := s.NumVars(); n != 1 {
+		t.Fatalf("invalid clause changed variable count to %d", n)
+	}
+	if s.Solve(Negative(0)) != Satisfiable {
+		t.Fatal("solver did not remain usable")
+	}
+}
