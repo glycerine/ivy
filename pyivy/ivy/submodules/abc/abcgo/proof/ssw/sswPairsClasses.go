@@ -100,7 +100,11 @@ func Ssw_FreeTempClasses(classes []*vec.Vec_Int_t, n int32) {
 		}
 	}
 }
-func sswPairsFromMaps(g1, g2 *aig.Graph, ids1, ids2 *vec.Vec_Int_t, copy1, copy2 []aig.Edge) *vec.Vec_Int_t {
+
+// Ssw_TransferSignalPairsMapped transfers source-node pairs using copy maps
+// returned by saig.Saig_ManCreateMiterWithCopies. Complement phases are
+// intentionally ignored, matching the C pair representation of regular IDs.
+func Ssw_TransferSignalPairsMapped(ids1, ids2 *vec.Vec_Int_t, copy1, copy2 []aig.Edge) *vec.Vec_Int_t {
 	if vec.Vec_IntSize(ids1) != vec.Vec_IntSize(ids2) {
 		panic("ssw: mismatched paired IDs")
 	}

@@ -9,6 +9,9 @@ import (
 	"time"
 )
 
+// Ssw_TransferSignalPairs reads copy metadata already installed on the source
+// graphs. When using Go's miter constructor, prefer Ssw_TransferSignalPairsMapped
+// with the maps returned by saig.Saig_ManCreateMiterWithCopies.
 func Ssw_TransferSignalPairs(miter, first, second *aig.Graph, ids1, ids2 *vec.Vec_Int_t) *vec.Vec_Int_t {
 	copies1 := make([]aig.Edge, aig.Aig_ManObjNumMax(first))
 	copies2 := make([]aig.Edge, aig.Aig_ManObjNumMax(second))
@@ -18,7 +21,7 @@ func Ssw_TransferSignalPairs(miter, first, second *aig.Graph, ids1, ids2 *vec.Ve
 	for i := range copies2 {
 		copies2[i] = aig.Aig_ObjCopy(second, aig.Aig_ManObj(second, int32(i)))
 	}
-	return sswPairsFromMaps(first, second, ids1, ids2, copies1, copies2)
+	return Ssw_TransferSignalPairsMapped(ids1, ids2, copies1, copies2)
 }
 func Ssw_SignalCorrespondenceWithPairs(first, second *aig.Graph, ids1, ids2 *vec.Vec_Int_t, pars *Ssw_Pars_t) *aig.Graph {
 	if vec.Vec_IntSize(ids1) != vec.Vec_IntSize(ids2) {
@@ -26,7 +29,7 @@ func Ssw_SignalCorrespondenceWithPairs(first, second *aig.Graph, ids1, ids2 *vec
 	}
 	miter, copies1, copies2 := saig.Saig_ManCreateMiterWithCopies(first, second, 0)
 	aig.Aig_ManCleanup(miter)
-	pairs := sswPairsFromMaps(first, second, ids1, ids2, copies1, copies2)
+	pairs := Ssw_TransferSignalPairsMapped(ids1, ids2, copies1, copies2)
 	classes := Ssw_TransformPairsIntoTempClasses(pairs, aig.Aig_ManObjNumMax(miter))
 	vec.Vec_IntFree(pairs)
 	if pars == nil {
