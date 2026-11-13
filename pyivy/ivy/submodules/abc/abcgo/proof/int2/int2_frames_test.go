@@ -438,3 +438,18 @@ func TestPreparePrefixAtFrameZeroConstrainsInitialState(t *testing.T) {
 		}
 	}
 }
+
+func TestCheckInitIgnoresPropertyOutput(t *testing.T) {
+	// The C helper constrains register-input fanins to zero; it does not
+	// assert the primary property output while checking a transition to init.
+	for _, property := range []int32{0, 1} {
+		g := gia.Gia_ManStart(8)
+		gia.Gia_ManAppendCi(g)
+		gia.Gia_ManAppendCo(g, property)
+		gia.Gia_ManAppendCo(g, 0)
+		gia.Gia_ManSetRegNum(g, 1)
+		if got := Int2_ManCheckInit(g); got != 1 {
+			t.Fatalf("property %d: result %d, want transition to init", property, got)
+		}
+	}
+}
