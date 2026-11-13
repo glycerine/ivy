@@ -69,6 +69,7 @@ func Ssw_BmcDynamic(graph *aig.Graph, maxFrames, confLimit, verbose int32, lastF
 	if saig.Saig_ManRegNum(graph) <= 0 {
 		panic("ssw: BMC requires registers")
 	}
+	aig.Aig_ManSetCioIds(graph)
 	sat := Ssw_SatStart(0)
 	defer Ssw_SatStop(sat)
 	frm := Ssw_FrmStart(graph)

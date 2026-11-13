@@ -142,6 +142,7 @@ func Ssw_ManSweepLatch(p *Ssw_Man_t) int32 {
 		}
 		Ssw_ObjSetFrame(p, lo, 0, mapped)
 	}
+	aig.Aig_ManSetCioIds(p.pFrames)
 	if p.vSimInfo != nil {
 		panic("ssw: simulation info already allocated")
 	}

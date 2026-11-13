@@ -13,6 +13,7 @@ func TestSswDynamicCollectConstraintSupport(t *testing.T) {
 	g.AddOutput(gate)
 	g.AddOutput(b)
 	g.AddOutput(a)
+	aig.Aig_ManSetCioIds(g)
 	p := &Ssw_Man_t{pAig: aig.NewGraph(), pFrames: g, nSRMiterMaxId: aig.Aig_ManObjNumMax(g)}
 	p.pAig.NewInput()
 	p.pAig.NewInput()

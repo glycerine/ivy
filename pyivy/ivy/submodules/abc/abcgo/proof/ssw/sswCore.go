@@ -102,12 +102,8 @@ func Ssw_SignalCorrespondenceRefine(p *Ssw_Man_t) *aig.Graph {
 			}
 			previousProof, previousSat = p.nSatProof, p.nSatCallsSat
 			previousRecycles, previousFailures = p.nRecycles, p.nSatFailsReal
-			if p.pMSat.nSatVars > p.nVarsMax {
-				p.nVarsMax = p.pMSat.nSatVars
-			}
-			if p.pMSat.nSolverCalls > p.nCallsMax {
-				p.nCallsMax = p.pMSat.nSolverCalls
-			}
+			p.nVarsMax = max(p.nVarsMax, p.pMSat.nSatVars)
+			p.nCallsMax = max(p.nCallsMax, p.pMSat.nSolverCalls)
 			Ssw_SatStop(p.pMSat)
 			p.pMSat = nil
 			Ssw_ManCleanup(p)

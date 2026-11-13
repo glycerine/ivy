@@ -206,6 +206,7 @@ func Ssw_ManSweepDyn(p *Ssw_Man_t) int32 {
 	for _, obj := range p.pAig.Inputs()[:saig.Saig_ManPiNum(p.pAig)] {
 		Ssw_ObjSetFrame(p, obj, f, p.pFrames.NewInput())
 	}
+	aig.Aig_ManSetCioIds(p.pFrames)
 	Ssw_ManLabelPiNodes(p)
 	p.timeReduce += time.Since(start)
 	if p.vSimInfo != nil {

@@ -24,6 +24,7 @@ func Ssw_ManCreate(g *aig.Graph, pars *Ssw_Pars_t) *Ssw_Man_t {
 		panic("ssw: sequential AIG required")
 	}
 	aig.Aig_ManFanoutStart(g)
+	aig.Aig_ManSetCioIds(g)
 	nFrames := pars.nFramesK + 1
 	p := &Ssw_Man_t{pAig: g, pPars: pars, nFrames: nFrames, iOutputLit: -1,
 		pNodeToFrames: make([]aig.Edge, len(g.Nodes())*int(nFrames)),
