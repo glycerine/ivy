@@ -130,7 +130,8 @@ func Cnf_CutDeriveTruth(graph *Aig_Man_t, leaves, nodes *Vec_Ptr_t) uint64 {
 	}
 	root, _ := vec.Vec_PtrEntryLast(nodes).(aig.Edge)
 	var truth uint64
-	for assignment := 0; assignment < 1<<len(leafIDs); assignment++ {
+	// ABC truth words repeat the cut's table across all 64 bits.
+	for assignment := 0; assignment < 64; assignment++ {
 		values := make(map[int]bool, vec.Vec_PtrSize(nodes)+len(leafIDs))
 		for i, edge := range leafIDs {
 			values[edge.NodeID()] = (assignment&(1<<i) != 0) != edge.Complemented()
