@@ -100,9 +100,6 @@ func Pdr_ManDeriveCex(p *Pdr_Man_t) *util.Abc_Cex_t {
 	var frame int32
 	for entry := p.pQueue; entry != nil; entry = entry.pNext {
 		for _, lit := range entry.pState.Lits[entry.pState.nLits:entry.pState.nTotal] {
-			if lit < 0 {
-				panic("pdr: negative PI literal")
-			}
 			if lit&1 == 0 && lit>>1 < cex.NPis {
 				util.Abc_InfoSetBit(cex.PData, cex.NRegs+frame*cex.NPis+(lit>>1))
 			}
