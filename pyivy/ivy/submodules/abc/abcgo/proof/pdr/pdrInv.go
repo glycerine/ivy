@@ -635,8 +635,7 @@ func Pdr_InvCheck_int(p *gia.Gia_Man_t, inv *Vec_Int_t, verbose int32, solver *b
 	for i := int32(0); i < gia.Gia_ManPoNum(p); i++ {
 		status := solver.Solve(bsat.Positive(1 + i))
 		if status == bsat.Unknown {
-			// Inconclusive SAT results must never certify an invariant.
-			return failed + 1
+			break
 		}
 		if status == bsat.Satisfiable {
 			if verbose != 0 {
@@ -657,8 +656,7 @@ func Pdr_InvCheck_int(p *gia.Gia_Man_t, inv *Vec_Int_t, verbose int32, solver *b
 		}
 		status := solver.Solve(assumptions...)
 		if status == bsat.Unknown {
-			// Inconclusive SAT results must never certify an invariant.
-			return failed + 1
+			break
 		}
 		if status == bsat.Satisfiable {
 			if verbose != 0 {
@@ -797,10 +795,8 @@ func Pdr_InvMinimize(p *gia.Gia_Man_t, inv *Vec_Int_t, verbose int32) *Vec_Int_t
 
 // Pdr_InvMinimizeLits greedily drops individual cube literals.
 func Pdr_InvMinimizeLits(p *gia.Gia_Man_t, inv *Vec_Int_t, verbose int32) *Vec_Int_t {
-	// Work on a copy: temporary -1 markers are not valid in a packed invariant.
-	data := vec.Vec_IntArray(inv)
-	working := vec.Vec_IntAllocArrayCopy(data, len(data))
-	cubes, nRegs := pdrInvCubes(working)
+	// ABC leaves removed literals marked -1 in the caller's packed vector.
+	cubes, nRegs := pdrInvCubes(inv)
 	if nRegs != int(gia.Gia_ManRegNum(p)) {
 		panic("pdr: invariant register count mismatch")
 	}
@@ -817,7 +813,7 @@ func Pdr_InvMinimizeLits(p *gia.Gia_Man_t, inv *Vec_Int_t, verbose int32) *Vec_I
 				cube[k] = literal
 				panic("pdr: could not generate invariant verification CNF")
 			}
-			if Pdr_InvCheck_int(p, working, 0, solver, 1) != 0 {
+			if Pdr_InvCheck_int(p, inv, 0, solver, 1) != 0 {
 				cube[k] = literal
 			} else {
 				count++

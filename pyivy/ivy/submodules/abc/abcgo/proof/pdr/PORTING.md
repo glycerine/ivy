@@ -50,6 +50,15 @@ Remaining review and coverage gaps:
   `#if 0`; when enabled for a multi-literal cube, its active caller discards
   the reduced cube. The Go port preserves this source behavior, which can lead
   to a nil-cube failure. The public Go API does not expose this option.
+- `Pdr_InvCheck_int` follows ABC on inconclusive SAT queries: it stops that
+  check loop and returns failures counted so far, which may be zero. A zero
+  result therefore does not establish an invariant if the supplied solver was
+  interrupted. `Pdr_InvMinimizeLits` also follows ABC by leaving removed
+  literals marked `-1` in its input vector.
+- As in ABC, a generalization query with a nonzero generalization conflict
+  limit treats an inconclusive SAT result as SAT. If a predecessor is also
+  requested, a SAT model may be unavailable; the Go model access then fails
+  rather than manufacturing one.
 - As in the source, `ZPdr_SetIntersection` does not check required literals
   in the unmatched tail after either sorted input ends. Also,
   `Pdr_SetPrintStr` appends no pattern characters when its flop filter is

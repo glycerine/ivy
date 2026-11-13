@@ -4,8 +4,10 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
+	"slices"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/aig/gia"
@@ -164,6 +166,28 @@ func TestInvariantCheckGia(t *testing.T) {
 	}
 }
 
+func TestInvariantCheckUnknownReturnsCountSoFarAsInC(t *testing.T) {
+	g := gia.Gia_ManStart(16)
+	input := gia.Gia_ManAppendCi(g)
+	latch := gia.Gia_ManAppendCi(g)
+	gia.Gia_ManAppendCo(g, input)
+	gia.Gia_ManAppendCo(g, latch)
+	gia.Gia_ManSetRegNum(g, 1)
+	solver := pdrInvGiaSolver(g)
+	if solver == nil {
+		t.Fatal("invariant CNF unavailable")
+	}
+	solver.SetDeadline(time.Now().Add(-time.Second))
+	if status := solver.Solve(bsat.Positive(1)); status != bsat.Unknown {
+		t.Fatalf("expected an inconclusive query, got %v", status)
+	}
+	// With no cubes, C breaks out on an unknown coverage query and returns
+	// the failures accumulated so far, which is zero in this case.
+	if got := Pdr_InvCheck_int(g, pdrInvVector(0, 1), 0, solver, 0); got != 0 {
+		t.Fatalf("got failures=%d, want source's zero", got)
+	}
+}
+
 func TestInvariantMinimization(t *testing.T) {
 	g := gia.Gia_ManStart(16)
 	q := gia.Gia_ManAppendCi(g)
@@ -185,10 +209,9 @@ func TestInvariantMinimization(t *testing.T) {
 	t.Run("redundant literal", func(t *testing.T) {
 		// q || r and q || !r together imply q; adding r to a third cube is redundant.
 		inv := pdrInvVector(3, 1, 0, 1, 0, 2, 0, 2, 2)
-		before := append([]int32(nil), vec.Vec_IntArray(inv)...)
 		got := Pdr_InvMinimizeLits(g, inv, 0)
-		if !reflect.DeepEqual(vec.Vec_IntArray(inv), before) {
-			t.Fatal("minimization changed its input")
+		if !slices.Contains(vec.Vec_IntArray(inv), int32(-1)) {
+			t.Fatal("source leaves removed literals marked in the input")
 		}
 		if got == nil || Pdr_InvCheck(g, got, 0) != 0 {
 			t.Fatalf("invalid minimized invariant: %v", got)

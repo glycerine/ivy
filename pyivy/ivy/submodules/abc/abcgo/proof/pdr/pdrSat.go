@@ -237,16 +237,9 @@ func Pdr_ManCheckCube(p *Pdr_Man_t, k int32, cube *Pdr_Set_t, predecessor **Pdr_
 	status := pdrSolve(p, solver, assumptions, limit)
 	if status == bsat.Unknown {
 		if cube != nil && tryConf != 0 && p.pPars.nConfGenLimit != 0 {
-			if predecessor != nil {
-				// A conservative SAT answer is sufficient when only testing
-				// generalization, but a predecessor requires a real model.
-				status = pdrSolve(p, solver, assumptions, conflictLimit)
-				if status == bsat.Unknown {
-					return -1
-				}
-			} else {
-				status = bsat.Satisfiable
-			}
+			// ABC treats an exhausted generalization budget as SAT, even
+			// when the caller requests a predecessor.
+			status = bsat.Satisfiable
 		} else {
 			return -1
 		}

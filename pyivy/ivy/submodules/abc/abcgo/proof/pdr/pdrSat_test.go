@@ -133,16 +133,12 @@ func TestPdrSATPrepareModelMaterializesStructuralCone(t *testing.T) {
 	}
 }
 
-func TestPdrSATUnknownDoesNotProducePredecessor(t *testing.T) {
+func TestPdrSATUnknownGeneralizationIsTreatedAsSAT(t *testing.T) {
 	p, _ := pdrTestSATManager(t, false)
 	Pdr_ManCreateSolver(p, 1)
 	p.pPars.nConfGenLimit = 1
 	p.timeToStop = util.Abc_Clock() - 1
-	var predecessor *Pdr_Set_t
-	if got := Pdr_ManCheckCube(p, 1, testPdrSet([]int32{0}, nil), &predecessor, 0, 1, 0); got != -1 {
-		t.Fatalf("timed out predecessor query returned %d, want unknown", got)
-	}
-	if predecessor != nil {
-		t.Fatal("timed out query returned a predecessor")
+	if got := Pdr_ManCheckCube(p, 1, testPdrSet([]int32{0}, nil), nil, 0, 1, 0); got != 0 {
+		t.Fatalf("timed out generalization returned %d, want source's SAT result", got)
 	}
 }
