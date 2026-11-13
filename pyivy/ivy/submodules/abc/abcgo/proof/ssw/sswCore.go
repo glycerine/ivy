@@ -53,6 +53,7 @@ func Ssw_SignalCorrespondenceRefine(p *Ssw_Man_t) *aig.Graph {
 		sswInvokeCallback(p.pPars)
 	}
 	iteration := int32(-1)
+	var previousProof, previousSat, previousRecycles, previousFailures int32
 	if p.pPars.nStepsMax != 0 {
 		for iteration = 0; ; iteration++ {
 			if p.pPars.nStepsMax == iteration {
@@ -84,7 +85,8 @@ func Ssw_SignalCorrespondenceRefine(p *Ssw_Man_t) *aig.Graph {
 				p.pPars.nConflicts += int32(p.pMSat.pSat.Statistics().Conflicts)
 			}
 			if p.pPars.fVerbose != 0 {
-				fmt.Printf("%3d : C =%7d. Cl =%7d. F =%5d. T = %.2f sec\n", iteration, Ssw_ClassesCand1Num(p.ppClasses), Ssw_ClassesClassNum(p.ppClasses), p.nSatFailsReal, time.Since(start).Seconds())
+				fmt.Print(sswSweepStats(p, iteration, previousProof, previousSat, previousRecycles, previousFailures))
+				fmt.Printf("T = %.2f sec\n", time.Since(start).Seconds())
 			}
 			if p.pPars.fLatchCorrOpt == 0 && p.pPars.fStopWhenGone != 0 && saig.Saig_ManPoNum(p.pAig) == 1 && Ssw_ObjIsConst1Cand(p.pAig, aig.Aig_ObjFanin0(p.pAig, aig.Aig_ManCo(p.pAig, 0))) == 0 {
 				fmt.Printf("Iterative refinement is stopped after iteration %d because the property output is no longer a candidate constant.\n", iteration)
@@ -98,6 +100,8 @@ func Ssw_SignalCorrespondenceRefine(p *Ssw_Man_t) *aig.Graph {
 				aig.Aig_ManCleanMarkB(p.pAig)
 				return aig.Aig_ManDupSimple(p.pAig)
 			}
+			previousProof, previousSat = p.nSatProof, p.nSatCallsSat
+			previousRecycles, previousFailures = p.nRecycles, p.nSatFailsReal
 			if p.pMSat.nSatVars > p.nVarsMax {
 				p.nVarsMax = p.pMSat.nSatVars
 			}
@@ -196,6 +200,24 @@ func Ssw_SignalCorrespondence(graph *aig.Graph, pars *Ssw_Pars_t) *aig.Graph {
 	}
 	return result
 }
+
+// sswSweepStats reports per-iteration changes, as in Ssw_SignalCorrespondenceRefine.
+func sswSweepStats(p *Ssw_Man_t, iteration, previousProof, previousSat, previousRecycles, previousFailures int32) string {
+	result := fmt.Sprintf("%3d : C =%7d. Cl =%7d. ", iteration, Ssw_ClassesCand1Num(p.ppClasses), Ssw_ClassesClassNum(p.ppClasses))
+	if p.pPars.fLatchCorrOpt != 0 {
+		return result + fmt.Sprintf("Pr =%6d. Cex =%5d. R =%4d. F =%4d. ", p.nSatProof-previousProof, p.nSatCallsSat-previousSat, p.nRecycles-previousRecycles, p.nSatFailsReal-previousFailures)
+	}
+	result += fmt.Sprintf("LR =%6d. NR =%6d. ", p.nConstrReduced, aig.Aig_ManNodeNum(p.pFrames))
+	if p.pPars.fDynamic != 0 {
+		result += fmt.Sprintf("Cex =%5d. R =%4d. ", p.nSatCallsSat-previousSat, p.nRecycles-previousRecycles)
+	}
+	property := "-"
+	if saig.Saig_ManPoNum(p.pAig) == 1 && Ssw_ObjIsConst1Cand(p.pAig, aig.Aig_ObjFanin0(p.pAig, aig.Aig_ManCo(p.pAig, 0))) != 0 {
+		property = "+"
+	}
+	return result + fmt.Sprintf("F =%5d. %s ", p.nSatFailsReal-previousFailures, property)
+}
+
 func Ssw_LatchCorrespondence(graph *aig.Graph, pars *Ssw_Pars_t) *aig.Graph {
 	if pars == nil {
 		pars = new(Ssw_Pars_t)
