@@ -284,6 +284,14 @@ func aigerModelFromNetwork(network *abc.Network) (*ioa.Model, error) {
 			return nil, err
 		}
 	}
+	for i, latch := range latches {
+		input := latch.Fanins()[0].Object
+		next, err := literalForObject(input)
+		if err != nil {
+			return nil, err
+		}
+		model.Latches[i].Next = next
+	}
 	allOutputs := make([]uint32, 0, len(network.ObjectsOfKind(abc.ObjectPO)))
 	outputs := network.ObjectsOfKind(abc.ObjectPO)
 	for _, po := range outputs {

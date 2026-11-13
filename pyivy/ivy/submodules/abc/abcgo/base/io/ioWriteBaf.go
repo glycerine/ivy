@@ -57,11 +57,8 @@ func WriteBAF(w stdio.Writer, n *abc.Network) error {
 	if len(latches) != len(model.Latches) {
 		return fmt.Errorf("BAF register metadata mismatch")
 	}
-	for i, latch := range latches {
+	for _, latch := range latches {
 		names := [3]string{blifObjectName(latch), blifObjectName(latch.Fanins()[0].Object), blifObjectName(latch.Fanouts()[0])}
-		if name := model.Symbols[ioa.Symbol{Kind: 'l', Index: uint32(i)}]; name != "" {
-			names[0] = name
-		}
 		for _, name := range names {
 			if err = field(name); err != nil {
 				return err

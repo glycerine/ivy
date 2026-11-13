@@ -326,6 +326,9 @@ func NetworkFromAigerModel(model *ioa.Model) (*abc.Network, error) {
 }
 
 func cloneAigerLists(in [][]uint32) [][]uint32 {
+	if in == nil {
+		return nil
+	}
 	out := make([][]uint32, len(in))
 	for i := range in {
 		out[i] = append([]uint32(nil), in[i]...)

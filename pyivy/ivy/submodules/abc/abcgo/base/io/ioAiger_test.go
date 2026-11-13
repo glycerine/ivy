@@ -94,7 +94,7 @@ func TestAigerNativeDispatchAndCounterexampleTrace(t *testing.T) {
 	if err = WriteAigerCounterexample(cex, network, nil, trace); err != nil {
 		t.Fatal(err)
 	}
-	if data, readErr := os.ReadFile(trace); readErr != nil || string(data) != "1\n0 1 000 1\n1 0 111 0\n" {
+	if data, readErr := os.ReadFile(trace); readErr != nil || string(data) != "1\n0 1 000 1\n1 1 110 0\n" {
 		t.Fatalf("counterexample trace = %q, err=%v", data, readErr)
 	}
 }
