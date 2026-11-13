@@ -10,7 +10,8 @@ rather than silently substituting another algorithm.
 
 Proof-package work remains under source-by-source audit. The most recent
 uncached `GOCACHE=/tmp/abcgo-cache go test -race -count=1 -p 8 ./proof/...`
-gate passes for all proof packages; `go vet ./proof/...` also passes.
+gate passes for all proof packages. The combined proof/GIA/BSAT race gate and
+`go vet ./proof/... ./aig/gia ./sat/bsat` also pass.
 The shared dependency gate passes for `./aig/...`, `./opt/dar/...`, and
 `./sat/cnf`. These gates do not establish complete source parity: INT2 has
 incomplete C routines, CEC's broader sweep/partition review is unfinished, and
@@ -27,15 +28,15 @@ find untested behavior, not as a completion threshold.
 | `cec` | 79.0% |
 | `cec/core` | 92.7% |
 | `dch` | 89.1% |
-| `fra` | 72.5% |
+| `fra` | 73.7% |
 | `fracomb` | 89.7% |
 | `fraig` | 74.1% |
 | `framgr` | 83.4% |
 | `int` | 85.6% |
-| `int2` | 88.0% |
-| `live` | 77.9% |
-| `pdr` | 74.8% |
-| `ssc` | 88.6% |
+| `int2` | 88.4% |
+| `live` | 85.7% |
+| `pdr` | 74.9% |
+| `ssc` | 89.2% |
 | `ssw` | 76.4% |
 
 ## Source API inventory
@@ -70,7 +71,9 @@ and representation limits described in its package notes.
   values, duplicate selections and unchanged next-state functions. Bounded
   frame-limit, 257-label UNSAT-core and compiled-C conflict-budget exhaustion
   tests were added; larger sequential resource-limit interactions and
-  memory-scale stress remain uncovered. A broader audit remains underway.
+  memory-scale stress remain uncovered. Linux timeout handling now uses the
+  source thread-CPU clock and pins the solving goroutine; non-Linux still uses
+  wall time where C uses process CPU time. A broader audit remains underway.
 * `acec`: source flow and preconditions are restored. Compiled-ABC differential
   tests cover 76 circuit pairs, and checked-in test vectors exercise Booth
   normalization and tied XOR/MAJ cuts. Negative cut limits and single-output
@@ -173,14 +176,16 @@ and representation limits described in its package notes.
   passed; some cases expose inherited invalid-counterexample behavior in C.
   Incremental-restart handling preserves source edge cases, including an
   assertion on a first restart with no saved clauses and an interrupted push
-  that can be treated as proof. Added solver-recycling threshold coverage;
+  that can be treated as proof. SAT solvers now restart in place to preserve the
+  pointer identity exposed by the C API. Added solver-recycling threshold coverage;
   further timeout/resource-limit combinations need coverage.
 * `ssc`: evolving FRAIG substitutions, BSAT frontier encoding, source-style
   class refinement, native-input lowering, random stream, equivalence
   reduction, and CEC verification have source tests. Verbose mode performs the
   source's five-word care estimate and advances the shared RNG. Care-pattern
   transfer uses the source helpers, with tests for simulation, classes, and
-  later RNG state. Complete option parity remains under review.
+  later RNG state. Negative SAT budgets now follow C through pivot and
+  assumption checks. Complete option parity remains under review.
 * `ssw`: source rarity, SAT polarity, prefix, class-count, manager-lifecycle,
   reduction accounting, stop behavior, and timeout behavior is restored and
   characterized. A reachable invalid rarity witness is documented as an
