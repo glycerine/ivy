@@ -22,6 +22,7 @@ Monotonicity discovery retains only proved candidates. Unknown results never bec
 
 ## Source adaptations and fixes
 
+- LTL violation outputs respect supplied fairness assumptions. The original C LTL branch omits this guard, unlike its ordinary liveness branch, and can report unfair loops.
 - Full one-step mode retains safety assertions. The C branch accidentally tests mode zero while executing mode four and silently omits them. The original-C comparison isolates its shared liveness output for this explicit correction.
 - `l2ssim` remains liveness-only, independently of the full-one-step correction. CLI `-s` ignores safety and `-l` ignores liveness; option order does not change their meaning. Default abstraction shadows the first half of original registers, matching source preparation.
 - Safety-name aliases `Assert`/`Assume` are retained alongside `assert_safety`/`assume_safety`.

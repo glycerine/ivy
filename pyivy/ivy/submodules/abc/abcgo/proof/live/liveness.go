@@ -179,7 +179,8 @@ func LivenessToSafety(network *Network, options TransformOptions) (*Network, err
 					}
 				}
 				holds := buildLogicFromLTLNode(dst, node)
-				badOutputs = append(badOutputs, aig.Aig_And(dst, loop, holds.Not()))
+				bad := aig.Aig_And(dst, loop, aig.Aig_And(dst, all(dst, seenFair), holds.Not()))
+				badOutputs = append(badOutputs, bad)
 				outputNames = append(outputNames, "ltl_l2s")
 			}
 		} else {
@@ -240,7 +241,7 @@ func LivenessToSafetyTransformationOneStepLoop(mode int32, n *Network, p *aig.Gr
 	return LivenessToSafetyTransformation(mode, n, p, live, fair, assertions, assumptions)
 }
 func LivenessToSafetyTransformationWithLTL(mode int32, n *Network, p *aig.Graph, live, fair, assertions, assumptions []aig.Edge) *aig.Graph {
-	result, err := LivenessToSafety(n, TransformOptions{Mode: mode, LTL: n.LTLProperties, SafetyAssertions: assertions, SafetyAssumptions: assumptions})
+	result, err := LivenessToSafety(n, TransformOptions{Mode: mode, LTL: n.LTLProperties, Liveness: live, Fairness: fair, SafetyAssertions: assertions, SafetyAssumptions: assumptions})
 	if err != nil {
 		panic(err)
 	}
