@@ -38,6 +38,19 @@ the core solver. `ABC_AddTarget` constrains all named signals conjunctively.
 - Integrity checks walk backward from POs and detect unused internal gates.
   Release is idempotent, and result getters return caller-owned copies.
 
+## Follow-up review and tests
+
+The implication limit now sets a propagation budget independently of the
+conflict limit; the stricter remaining cumulative limit also applies. Result
+allocation provides indexable name and value slices, and BENCH export retains
+named output aliases. Regressions cover these cases. A seeded oracle checks 100
+networks, all input assignments, both target polarities, repeated targets, and
+both solver modes against direct Boolean evaluation.
+
+`GOCACHE=/tmp/abcgo-cache go test -race -count=1 ./sat/csat` and
+`GOCACHE=/tmp/abcgo-cache go vet ./sat/csat` pass. These tests do not establish
+equivalence to the legacy Ivy heuristics or cover every resource interaction.
+
 ## Known limits
 
 - Mode 0 uses MiniSAT preprocessing rather than ABC's Ivy proof engine. Both
