@@ -138,6 +138,11 @@ func interVerifyCounterExample(src *aig.Graph, cex *util.Abc_Cex_t) bool {
 		return false
 	}
 	state := make([]bool, regs)
+	for i := 0; i < regs; i++ {
+		if util.Abc_InfoHasBit(cex.PData, int32(i)) {
+			return false
+		}
+	}
 	for i := int32(0); i <= cex.IFrame; i++ {
 		inputs := make([]bool, 0, pis+regs)
 		for j := 0; j < pis; j++ {

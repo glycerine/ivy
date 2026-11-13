@@ -86,6 +86,15 @@ func TestSourceCecNoOutputsAsserts(t *testing.T) {
 	Fra_FraigCec(&g, 10, 0, nil)
 }
 
+func TestSourceCecNilMiterAsserts(t *testing.T) {
+	defer func() {
+		if recover() != "fra: nil CEC miter" {
+			t.Fatal("nil miter did not take the source assertion path")
+		}
+	}()
+	Fra_FraigCec(nil, 10, 0, nil)
+}
+
 // With an expired Time2Quit and an initially undecided SAT query, ABC's
 // Dar_ManRwsat returns NULL and Fra_FraigCec dereferences it in the loop.
 func TestSourceCecExpiredRewriteFails(t *testing.T) {
@@ -97,4 +106,18 @@ func TestSourceCecExpiredRewriteFails(t *testing.T) {
 		}
 	}()
 	Fra_FraigCec(&g, 1000, 0, func(graph *aig.Graph, _, _ int32) *aig.Graph { return graph })
+}
+
+func TestSourceCecExpiredPerSweepRewriteFails(t *testing.T) {
+	g := cecPigeonholeMiter()
+	defer func() {
+		if recover() != "fra: source dereferences failed rewrite" {
+			t.Fatal("C dereferences a failed per-sweep rewrite")
+		}
+	}()
+	Fra_FraigCec(&g, 1000, 0, func(input *aig.Graph, _, _ int32) *aig.Graph {
+		result := aig.Aig_ManDupDfs(input)
+		result.Time2Quit = time.Now().Add(-time.Second)
+		return result
+	})
 }

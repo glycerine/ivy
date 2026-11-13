@@ -86,10 +86,8 @@ performed. Verbose output is not byte-for-byte identical to ABC's diagnostic
 text.
 
 The checked-in 24-MUX stage oracle compares every node and fanin with the
-original C `Dar_ManRwsat` stages. Initial duplication, first balance, rewrite,
-refactor, and final rewrite match exactly. The second balance has 26 nodes in
-both implementations but a different structure and ordering; the Go result
-is recorded separately in `test_vectors/dar_rwsat_mux_balance2_go.golden`.
-C recursively rebuilds output cones using sharing-aware supergate balancing;
-the Go balancer uses an in-place, pairwise strategy. Porting that recursive
-algorithm remains necessary before claiming full DAR structural parity.
+original C `Dar_ManRwsat` stages. Initial duplication, both balances, rewrite,
+refactor, and final rewrite now match exactly. The two-XOR and larger ordered
+fixtures also match their C stage oracles. These results establish parity for
+the tested structures; they do not establish exact DAR rewrite equivalence for
+all larger designs.
