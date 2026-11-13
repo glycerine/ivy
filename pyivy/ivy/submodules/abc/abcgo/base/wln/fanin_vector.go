@@ -34,7 +34,7 @@ func (v *Wln_Vec_t) appendFanin(id int32) {
 
 func (v *Wln_Vec_t) fanins() []int32 {
 	if v.nSize > 2 {
-		return v.heap[:v.nSize]
+		return v.heap
 	}
-	return v.inline[:v.nSize]
+	return v.inline[:]
 }

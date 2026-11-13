@@ -7,14 +7,19 @@ import (
 
 func TestFaninVectorSourceStorageTransitions(t *testing.T) {
 	var v Wln_Vec_t
+	// C uses the two inline slots for CI/CO metadata before adding fanins.
+	v.fanins()[1] = 7
+	if v.fanins()[1] != 7 {
+		t.Fatal("inline metadata slot is not writable")
+	}
 	for i := int32(0); i < 10; i++ {
 		v.appendFanin(10 + i)
 		want := make([]int32, i+1)
 		for j := range want {
 			want[j] = 10 + int32(j)
 		}
-		if !reflect.DeepEqual(v.fanins(), want) {
-			t.Fatalf("after %d: %v want %v", i+1, v.fanins(), want)
+		if !reflect.DeepEqual(v.fanins()[:v.nSize], want) {
+			t.Fatalf("after %d: %v want %v", i+1, v.fanins()[:v.nSize], want)
 		}
 		wantCap := int32(0)
 		if i >= 2 {
