@@ -1,6 +1,7 @@
 package cnf
 
 import (
+	"math/rand"
 	"os"
 	"testing"
 
@@ -8,6 +9,94 @@ import (
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/sat/bsat"
 )
+
+func TestEncodeAIGRandomGraphsAgainstEvaluation(t *testing.T) {
+	rng := rand.New(rand.NewSource(70814))
+	for trial := 0; trial < 100; trial++ {
+		g := aig.NewGraph()
+		pool := []aig.Edge{g.NewInput(), g.NewInput(), g.NewInput(), g.Const0(), g.Const1()}
+		for i := 0; i < 7; i++ {
+			a, b := pool[rng.Intn(len(pool))], pool[rng.Intn(len(pool))]
+			if rng.Intn(2) == 0 {
+				a = a.Not()
+			}
+			if rng.Intn(2) == 0 {
+				b = b.Not()
+			}
+			if rng.Intn(2) == 0 {
+				pool = append(pool, g.AND(a, b))
+			} else {
+				pool = append(pool, g.NewXor(a, b))
+			}
+		}
+		for i := 0; i < 2; i++ {
+			root := pool[rng.Intn(len(pool))]
+			if rng.Intn(2) == 0 {
+				root = root.Not()
+			}
+			g.AddOutput(root)
+		}
+		for outputCount := 0; outputCount <= 2; outputCount++ {
+			data, err := EncodeAIG(g, outputCount)
+			if err != nil {
+				t.Fatal(err)
+			}
+			s := Cnf_DataWriteIntoSolver(data, 1, 0)
+			for mask := 0; mask < 8; mask++ {
+				values := []bool{mask&1 != 0, mask&2 != 0, mask&4 != 0}
+				outputs, err := g.Evaluate(values)
+				if err != nil {
+					t.Fatal(err)
+				}
+				want := true
+				for _, value := range outputs[:outputCount] {
+					want = want && value
+				}
+				got := false
+				if s != nil {
+					var assumptions []bsat.Literal
+					for i, edge := range g.Inputs() {
+						variable := data.VarNums[edge.NodeID()]
+						if values[i] {
+							assumptions = append(assumptions, bsat.Positive(variable))
+						} else {
+							assumptions = append(assumptions, bsat.Negative(variable))
+						}
+					}
+					got = s.Solve(assumptions...) == bsat.Satisfiable
+				}
+				if got != want {
+					t.Fatalf("trial=%d outputs=%d inputs=%03b got=%v want=%v", trial, outputCount, mask, got, want)
+				}
+			}
+		}
+	}
+}
+
+func TestEncodeExplicitXorOfConstants(t *testing.T) {
+	for _, a := range []bool{false, true} {
+		for _, b := range []bool{false, true} {
+			g := aig.NewGraph()
+			left, right := g.Const0(), g.Const0()
+			if a {
+				left = g.Const1()
+			}
+			if b {
+				right = g.Const1()
+			}
+			root := aig.Aig_ObjCreate(g, &aig.Node{Kind: aig.ExclusiveOr, Fanins: [2]aig.Edge{left, right}})
+			g.AddOutput(root)
+			data, err := EncodeAIG(g, 1)
+			if err != nil {
+				t.Fatal(err)
+			}
+			got := Cnf_DataWriteIntoSolver(data, 1, 0) != nil
+			if got != (a != b) {
+				t.Fatalf("%v xor %v: satisfiable=%v", a, b, got)
+			}
+		}
+	}
+}
 
 func cnfSatisfiableWithInputs(cnf *CNF, inputs map[int]bool) bool {
 	for assignment := 0; assignment < 1<<cnf.Variables; assignment++ {

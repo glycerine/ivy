@@ -109,6 +109,10 @@ func EncodeAIG(graph *aig.Graph, nOutputs int) (*CNF, error) {
 			appendClause(out<<1|1, b.lit)
 			appendClause(out<<1, a.lit^1, b.lit^1)
 		case aig.ExclusiveOr:
+			if a.constant && b.constant {
+				force(out, a.truth != b.truth)
+				break
+			}
 			if a.constant {
 				if a.truth {
 					b.lit ^= 1
