@@ -23,6 +23,7 @@ cp -p libz3.dylib ../../native_lib/ || true
 cp -p z3 ../../native_lib/
 
 cd ..
+rm -rf native.build
 mv build native.build
 
 # 6. build wasm too, using emscripten

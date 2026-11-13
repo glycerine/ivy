@@ -46,6 +46,15 @@ The binaries under `native.build/` and `../native_lib/` were built before
 these fixes. `run_tests.sh` fails against them until `compile.sh` rebuilds
 them.
 
+Watch for a nested build directory. `compile.sh` ends with
+`mv build native.build`. If `native.build` already exists, `mv` puts the new
+build inside it as `native.build/build`, and `native.build/` keeps the old
+build and its old generated Makefile. Linking `test-z3` there then fails
+with "undefined reference to `tst_fork_bugfixes()`", because that Makefile
+predates `src/test/fork_bugfixes.cpp`. Remove the old `native.build` before
+the `mv` (or run `rm -rf native.build` before `compile.sh`). The files
+`compile.sh` copies into `../native_lib` are correct either way.
+
 Expected `test-z3` output:
 
 ```

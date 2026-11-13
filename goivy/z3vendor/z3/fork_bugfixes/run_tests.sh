@@ -25,6 +25,8 @@ if [ -z "$z3" ] || [ ! -x "$z3" ]; then
     echo "z3 binary not found; pass its path as the first argument" >&2
     exit 2
 fi
+# The vectors run from test_vectors/, so make the path absolute.
+z3="$(cd "$(dirname "$z3")" && pwd)/$(basename "$z3")"
 echo "using $z3"
 
 pass=0
