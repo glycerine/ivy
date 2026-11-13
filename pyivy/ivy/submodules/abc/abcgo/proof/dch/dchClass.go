@@ -71,6 +71,12 @@ func createClasses(g *aig.Graph, order []aig.Edge, words int) *Classes {
 		sims := simulateWords(g, order, words, random)
 		refined := [][]aig.Edge{}
 		for _, group := range c.groups {
+			// Dch_ClassesRefine only refines ordinary classes. The constant
+			// candidate group is refined later by SAT counterexamples.
+			if pass > 0 && len(group) > 0 && group[0].NodeID() == 0 {
+				refined = append(refined, group)
+				continue
+			}
 			if len(group) < 2 {
 				refined = append(refined, group)
 				continue

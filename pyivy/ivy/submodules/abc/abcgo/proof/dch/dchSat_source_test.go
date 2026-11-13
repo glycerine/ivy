@@ -168,3 +168,55 @@ func TestDchRejectsNativeNodesOutsideSourceContract(t *testing.T) {
 		}
 	}
 }
+
+// The C initial random passes refine nonconstant classes only; constant
+// candidates discovered by the first pass wait for SAT counterexamples.
+func TestDchInitialSimulationKeepsConstantCandidates(t *testing.T) {
+	const inputs = 10
+	random := aig.NewAigRandomSource()
+	random.Uint32() // source reset draw
+	samples := [2]map[int]bool{{}, {}}
+	for pass := 0; pass < 2; pass++ {
+		var rows [inputs]uint32
+		for i := range rows {
+			rows[i] = random.Uint32() << 1
+		}
+		for bit := 0; bit < 32; bit++ {
+			mask := 0
+			for i, row := range rows {
+				if row&(1<<uint(bit)) != 0 {
+					mask |= 1 << uint(i)
+				}
+			}
+			samples[pass][mask] = true
+		}
+	}
+	target := -1
+	for mask := 1; mask < 1<<inputs; mask++ {
+		if !samples[0][mask] && samples[1][mask] {
+			target = mask
+			break
+		}
+	}
+	if target < 0 {
+		t.Fatal("fixture has no second-round-only input")
+	}
+	g := aig.NewGraph()
+	node := g.Const1()
+	for i := 0; i < inputs; i++ {
+		x := g.NewInput()
+		if target&(1<<uint(i)) == 0 {
+			x = x.Not()
+		}
+		node = g.AND(node, x)
+	}
+	g.AddOutput(node)
+	order, err := graphOrder(g)
+	if err != nil {
+		t.Fatal(err)
+	}
+	classes := createClasses(g, order, 1)
+	if got := classes.representative(node); got != g.Const1() {
+		t.Fatalf("constant candidate lost during later random passes: representative %v", got)
+	}
+}
