@@ -97,3 +97,28 @@ func Ssw_ClassesRemoveNode(p *Ssw_Cla_t, obj aig.Edge) {
 	}
 	p.nLits--
 }
+
+func Ssw_ClassesCheck(p *Ssw_Cla_t) {
+	var classes, literals, constants int32
+	for id, class := range p.pId2Class {
+		if class == nil {
+			continue
+		}
+		if len(class) < 2 || int32(len(class)) != p.pClassSizes[id] || class[0].NodeID() != id || aig.Aig_ObjRepr(p.pAig, class[0]) != aig.InvalidEdge {
+			panic("ssw: malformed class")
+		}
+		for i := 1; i < len(class); i++ {
+			if class[i-1].NodeID() >= class[i].NodeID() || aig.Aig_ObjRepr(p.pAig, class[i]) != class[0] {
+				panic("ssw: malformed class member")
+			}
+			literals++
+		}
+		classes++
+	}
+	for _, obj := range p.pAig.LiveEdges() {
+		constants += Ssw_ObjIsConst1Cand(p.pAig, obj)
+	}
+	if classes != p.nClasses || literals != p.nLits || constants != p.nCands1 {
+		panic("ssw: class statistics disagree")
+	}
+}

@@ -243,41 +243,7 @@ import "time"
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_ClassesCheck(p *Ssw_Cla_t) {
-    var pObj *Aig_Obj_t;
-    var pPrev *Aig_Obj_t;
-    var ppClass **Aig_Obj_t;
-    var i, k, nLits, nClasses, nCands1 int32;
-    nClasses = nLits = 0;
-    // inlining of macro Ssw_ManForEachClass
-    for  k = 0; k < Aig_ManObjNumMax(p.pAig); k++  {                if ((ppClass) = p.pId2Class[k]) == nil {} else {
-        pPrev = nil;
-        assert(p.pClassSizes[ppClass[0].Id] >= 2, "p.pClassSizes[ppClass[0].Id] >= 2");
-        // inlining of macro Ssw_ClassForEachNode
-        for  i = 0; i < p.pClassSizes[ppClass[0].Id]; i++  {                if ((pObj) = p.pId2Class[ppClass[0].Id][i]) == nil {} else {
-            if i == 0 {
-                assert(Aig_ObjRepr(p.pAig, pObj) == nil, "Aig_ObjRepr(p.pAig, pObj) == nil");
-            } else {
-                assert(Aig_ObjRepr(p.pAig, pObj) == ppClass[0], "Aig_ObjRepr(p.pAig, pObj) == ppClass[0]");
-                assert(pPrev.Id < pObj.Id, "pPrev.Id < pObj.Id");
-                nLits++;
-            }
-            pPrev = pObj;
-        }
-        }
-        nClasses++;
-    }
-    }
-    nCands1 = 0;
-    // inlining of macro Aig_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.pAig.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {
-        nCands1 += Ssw_ObjIsConst1Cand( p.pAig, pObj ); }
-    }
-    assert(p.nLits == nLits, "p.nLits == nLits");
-    assert(p.nCands1 == nCands1, "p.nCands1 == nCands1");
-    assert(p.nClasses == nClasses, "p.nClasses == nClasses");
-}
+
 
 /**Function*************************************************************
 

@@ -52,3 +52,19 @@ func TestRemoveCandidateFromClassAndConstant(t *testing.T) {
 		t.Fatal("last candidate not removed")
 	}
 }
+
+func TestClassIntegrityCheck(t *testing.T) {
+	g := aig.NewGraph()
+	a, b := g.NewInput(), g.NewInput()
+	p := Ssw_ClassesStart(g)
+	Ssw_ObjAddClass(p, a, []aig.Edge{a, b}, 2)
+	aig.Aig_ObjSetRepr(g, b, a)
+	Ssw_ClassesCheck(p)
+	p.nLits++
+	defer func() {
+		if recover() == nil {
+			t.Fatal("inconsistent statistics accepted")
+		}
+	}()
+	Ssw_ClassesCheck(p)
+}
