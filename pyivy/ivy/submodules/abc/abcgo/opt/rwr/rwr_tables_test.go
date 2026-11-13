@@ -65,6 +65,48 @@ func TestStartedLibraryCanReconstructFunctions(t *testing.T) {
 	}
 }
 
+func TestCutEvaluationSelectsStrictlyBetterCandidate(t *testing.T) {
+	p := rwrStartLibrary()
+	class := -1
+	for i, nodes := range p.classes {
+		if len(nodes) >= 4 && dec.Dec_GraphLeaveNum(p.graphs[nodes[0]]) == 4 {
+			class = i
+			break
+		}
+	}
+	if class < 0 {
+		t.Fatal("fixture needs a class with four implementations")
+	}
+	nodes := p.classes[class]
+	inputs := []any{1, 2, 3, 4}
+	calls := 0
+	best, gain := p.rwrEvaluateCut(p.inverse[class], inputs, 5, func(g *dec.Dec_Graph_t) int32 {
+		for i, want := range inputs {
+			if dec.Dec_GraphLeafFunc(g, int32(i)) != want {
+				t.Fatalf("leaf %d not assigned", i)
+			}
+		}
+		n := calls
+		calls++
+		switch n {
+		case 0:
+			return -1
+		case 1:
+			return 3
+		case 2, 3:
+			return 1
+		default:
+			return 5
+		}
+	})
+	if calls != len(nodes) || p.nSubgraphs != len(nodes) || gain != 4 || best != p.graphs[nodes[2]] {
+		t.Fatalf("calls=%d candidates=%d gain=%d", calls, p.nSubgraphs, gain)
+	}
+	if p.scores[nodes[1]] != 1 || p.gains[nodes[1]] != 2 || p.added[nodes[1]] != 3 || p.scores[nodes[2]] != 1 || p.gains[nodes[2]] != 4 || p.added[nodes[2]] != 1 || p.scores[nodes[3]] != 0 {
+		t.Fatal("candidate scoring does not follow C's strict-improvement rule")
+	}
+}
+
 func TestPracticalClassesSentinel(t *testing.T) {
 	if len(s_RwrPracticalClasses) != 136 || s_RwrPracticalClasses[135] != 0 {
 		t.Fatalf("practical classes length or terminator changed: %d", len(s_RwrPracticalClasses))
@@ -72,6 +114,21 @@ func TestPracticalClassesSentinel(t *testing.T) {
 	for i := 1; i < len(s_RwrPracticalClasses)-1; i++ {
 		if s_RwrPracticalClasses[i] <= s_RwrPracticalClasses[i-1] {
 			t.Fatalf("classes out of order at %d", i)
+		}
+	}
+	practical := rwrPracticalClasses()
+	count := 0
+	for _, yes := range practical {
+		if yes {
+			count++
+		}
+	}
+	if count != 135 {
+		t.Fatalf("got %d practical classes, want 135", count)
+	}
+	for _, truth := range s_RwrPracticalClasses[:135] {
+		if !practical[truth] {
+			t.Fatalf("missing practical class %#x", truth)
 		}
 	}
 }
