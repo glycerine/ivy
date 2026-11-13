@@ -17,6 +17,8 @@ func Gia_ManPerformGlaOld(graph *gia.Gia_Man_t, pars *Abs_Par_t, startVta int32)
 	if graph == nil || pars == nil || gia.Gia_ManPoNum(graph) != 1 || pars.nFramesMax != 0 && pars.nFramesStart > pars.nFramesMax {
 		panic("invalid old GLA arguments")
 	}
+	// A previous result must not survive a new verification run.
+	graph.ClearSequentialCounterexample()
 	po := gia.Gia_ManPo(graph, 0)
 	if gia.Gia_ObjIsConst0(gia.Gia_ObjFanin0(po)) != 0 {
 		if gia.Gia_ObjFaninC0(po) == 0 {
