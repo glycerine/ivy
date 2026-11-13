@@ -137,17 +137,15 @@ func TestSetupBmcSolverConstrainsFinalState(t *testing.T) {
 	}
 }
 
-func TestPrepareSuffixReturnsOnlyRegisterVariableMap(t *testing.T) {
+func TestPrepareSuffixReportsUnsupported(t *testing.T) {
 	g := testInt2InputToBadMachine()
 	image := vec.Vec_IntAllocArrayCopy([]int32{0, 0}, 2)
 	all := vec.Vec_IntAllocArrayCopy([]int32{0}, 1)
-	var coMap *Vec_Int_t
-	var suffix *Gia_Man_t
-	solver := Int2_ManPrepareSuffix(g, image, all, &coMap, &suffix)
-	if solver == nil || suffix == nil || coMap == nil || vec.Vec_IntSize(coMap) != 1 {
-		t.Fatalf("solver %v suffix %v register map %v", solver, suffix, coMap)
+	coMap := vec.Vec_IntAlloc(1)
+	suffix := g
+	if solver := Int2_ManPrepareSuffix(g, image, all, &coMap, &suffix); solver != nil || coMap != nil || suffix != nil {
+		t.Fatalf("unsupported suffix returned solver %v map %v graph %v", solver, coMap, suffix)
 	}
-	defer gia.Gia_ManStop(suffix)
 }
 
 func TestCheckInitAgainstExhaustiveTransitions(t *testing.T) {

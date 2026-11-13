@@ -41,5 +41,6 @@ loop and the Go helper also panics; a non-nil empty SOP produces false.
 
 The C preimage helper refers to an undeclared manager and has no reliable
 prefix/suffix mapping contract. `Int2_ManComputePreimage` therefore returns
-nil with the existing undecided status. Suffix CO maps select only register
-variables, as in the C selector. No preimage or interpolation claim is made.
+nil with the existing undecided status. The suffix constructor also returns nil without a map or graph because the C
+clause loop references undeclared `vSop`. No suffix, preimage, or interpolation
+claim is made.

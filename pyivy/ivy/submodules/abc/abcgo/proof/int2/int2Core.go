@@ -145,80 +145,17 @@ func Int2_ManPreparePrefix(p *Gia_Man_t, f int32, pvCiMap **Vec_Int_t) *sat_solv
 
 **********************************************************************
 */
-func Int2_ManPrepareSuffix(p *Gia_Man_t, vImageOne *Vec_Int_t, vImagesAll *Vec_Int_t, pvCoMap **Vec_Int_t, ppSuff **Gia_Man_t) *sat_solver {
-	assert(pvCoMap != nil, "CO map output is provided")
-	pSuff := Int2_ManProbToGia(p, vImageOne)
-	assert(gia.Gia_ManPiNum(pSuff) == gia.Gia_ManCiNum(p), "suffix inputs match original CIs")
-	pNew := gia.Jf_ManDeriveCnf(pSuff, 0)
-	cnf, ok := pNew.TakeData().(*Cnf_Dat_t)
-	gia.Gia_ManStop(pSuff)
-	if !ok || cnf == nil {
-		gia.Gia_ManStop(pNew)
+// Int2_ManPrepareSuffix is unsupported: the C implementation refers to an
+// undeclared SOP variable, so its clause mapping has no reliable contract.
+// A nil solver and nil output pointers indicate that no suffix was produced.
+func Int2_ManPrepareSuffix(_ *Gia_Man_t, _, _ *Vec_Int_t, pvCoMap **Vec_Int_t, ppSuff **Gia_Man_t) *sat_solver {
+	if pvCoMap != nil {
 		*pvCoMap = nil
-		return nil
-	}
-	solver := sat_solver_from_clauses(int32(cnf.Variables), cnf.Clauses)
-	if solver == nil {
-		gia.Gia_ManStop(pNew)
-		*pvCoMap = nil
-		return nil
-	}
-	// JF encodes each CO but does not assert it; the suffix query asks for
-	// assignments satisfying its single property/image output.
-	output := gia.Gia_ManPo(pNew, 0)
-	outputVar := cnf.VarNums[gia.Gia_ObjId(pNew, output)]
-	if outputVar < 0 || sat_solver_addclause(solver, []int32{sat_literal(outputVar, 0)}) == 0 {
-		gia.Gia_ManStop(pNew)
-		*pvCoMap = nil
-		return nil
-	}
-	coMap := vec.Vec_IntAlloc(int(gia.Gia_ManCiNum(pNew)))
-	for i := int32(0); i < gia.Gia_ManCiNum(pNew); i++ {
-		pi := gia.Gia_ManCi(pNew, i)
-		variable := cnf.VarNums[gia.Gia_ObjId(pNew, pi)]
-		if variable < 0 {
-			variable = sat_solver_nvars(solver)
-			sat_solver_setnvars(solver, variable+1)
-		}
-		vec.Vec_IntPush(coMap, variable)
-	}
-	// Image covers reserve entry zero; each subsequent cube contains state
-	// literals, which must be translated to this solver's CI variables.
-	for cursor := 1; cursor < vec.Vec_IntSize(vImagesAll); {
-		count := vec.Vec_IntEntry(vImagesAll, cursor)
-		cursor++
-		if count < 0 || cursor+int(count) > vec.Vec_IntSize(vImagesAll) {
-			panic("int2: malformed accumulated image cubes")
-		}
-		clause := make([]int32, count)
-		for k := range clause {
-			lit := vec.Vec_IntEntry(vImagesAll, cursor)
-			state := lit >> 1
-			if lit < 0 || state >= gia.Gia_ManRegNum(p) {
-				panic("int2: image cube state index out of range")
-			}
-			variable := vec.Vec_IntEntry(coMap, int(gia.Gia_ManPiNum(p)+state))
-			clause[k] = sat_literal(variable, (lit&1)^1)
-			cursor++
-		}
-		if sat_solver_addclause(solver, clause) == 0 {
-			gia.Gia_ManStop(pNew)
-			*pvCoMap = nil
-			return nil
-		}
-	}
-	// The C selector returns register-output variables only, after the PIs.
-	*pvCoMap = vec.Vec_IntAlloc(int(gia.Gia_ManRegNum(p)))
-	for i := gia.Gia_ManPiNum(p); i < gia.Gia_ManCiNum(p); i++ {
-		ci := gia.Gia_ManCi(pNew, i)
-		vec.Vec_IntPush(*pvCoMap, cnf.VarNums[gia.Gia_ObjId(pNew, ci)])
 	}
 	if ppSuff != nil {
-		*ppSuff = pNew
-	} else {
-		gia.Gia_ManStop(pNew)
+		*ppSuff = nil
 	}
-	return solver
+	return nil
 }
 
 /**Function*************************************************************
