@@ -99,12 +99,9 @@ func sat_solver_solve(s *sat_solver, assumptions []lit, conflicts, propagations,
 	sat_solver_set_resource_limits(s, conflicts, propagations, globalConflicts, globalPropagations)
 	s.root_level = 0
 	veci_resize(&s.conf_final, 0)
-	// Propagate newly added root units before entering assumption levels. A
-	// root conflict makes the formula permanently inconsistent, even if an
-	// assumption also contradicts an as-yet unpropagated root assignment.
-	if !satSolverPropagateRoot(s) {
-		return l_False
-	}
+	// ABC pushes assumptions before propagating pending root units. This can
+	// lose a pre-existing root conflict after a failed assumption; callers must
+	// simplify before assumptions when using potentially inconsistent clauses.
 	for _, l := range assumptions {
 		if sat_solver_push(s, l) == 0 {
 			sat_solver_canceluntil(s, 0)

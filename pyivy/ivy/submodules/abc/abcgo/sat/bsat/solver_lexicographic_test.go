@@ -51,6 +51,93 @@ func TestPublicLexicographicEmptyAndDeadline(t *testing.T) {
 	}
 }
 
+// ABC's lex-SAT routine invokes the same internal search as ordinary solving;
+// the Go public wrapper applies one propagation budget to its whole search.
+func TestLexicographicPropagationBudgetAndRetry(t *testing.T) {
+	s := NewSolver()
+	for i := 0; i < 4; i++ {
+		s.NewVariable()
+	}
+	order := []Literal{Negative(0), Negative(1), Negative(2), Negative(3)}
+	s.SetLimits(0, 1)
+	if got := s.SolveLexicographic(order); got != Unknown {
+		t.Fatalf("limited solve=%v, want unknown", got)
+	}
+	if s.Model() != nil || s.root_level != 0 || s.trail_lim.size != 0 {
+		t.Fatalf("limited solve leaked model or assumptions")
+	}
+	s.SetLimits(0, 0)
+	if got := s.SolveLexicographic(order); got != Satisfiable {
+		t.Fatalf("unlimited retry=%v", got)
+	}
+	for i, value := range s.Model() {
+		if value {
+			t.Fatalf("minimum model variable %d is true", i)
+		}
+	}
+}
+
+func TestLexicographicBudgetSpansRecursiveSearches(t *testing.T) {
+	// These clauses make the first ordinary search SAT in five propagations,
+	// but the lexicographic refinement must perform additional propagation.
+	clauses := [][]Literal{{9, 8}, {7, 3}, {1, 7, 8}, {7, 1, 2}, {6, 9, 5}, {2, 6}, {0, 5}, {8, 7, 3}}
+	newFixture := func() *Solver {
+		s := NewSolver()
+		for i := 0; i < 5; i++ {
+			s.NewVariable()
+		}
+		for _, c := range clauses {
+			if !s.AddClause(c...) {
+				t.Fatal("fixture is inconsistent")
+			}
+		}
+		return s
+	}
+	baseline := newFixture()
+	if baseline.Solve() != Satisfiable {
+		t.Fatal("baseline is not SAT")
+	}
+	firstSearchBudget := baseline.PropagationCount()
+	if firstSearchBudget == 0 {
+		t.Fatal("fixture did not propagate")
+	}
+	s := newFixture()
+	s.SetLimits(0, firstSearchBudget)
+	order := []Literal{Negative(0), Negative(1), Negative(2), Negative(3), Negative(4)}
+	if got := s.SolveLexicographic(order); got != Unknown {
+		t.Fatalf("budget=%d got=%v", firstSearchBudget, got)
+	}
+	if s.PropagationCount() <= firstSearchBudget {
+		t.Fatalf("fixture did not exercise later search")
+	}
+	if s.root_level != 0 || s.trail_lim.size != 0 || s.Model() != nil {
+		t.Fatal("incomplete refinement leaked assumptions or model")
+	}
+	s.SetLimits(0, 0)
+	if got := s.SolveLexicographic(order); got != Satisfiable {
+		t.Fatalf("retry=%v", got)
+	}
+	want := -1
+	for mask := 0; mask < 32; mask++ {
+		assignment := make([]lit, 5)
+		for i := range assignment {
+			assignment[i] = Negative(int32(i))
+			if mask&(1<<uint(4-i)) != 0 {
+				assignment[i] = Positive(int32(i))
+			}
+		}
+		if formulaHasModel(clauses, assignment, 5) {
+			want = mask
+			break
+		}
+	}
+	for i, value := range s.Model() {
+		if value != (want&(1<<uint(4-i)) != 0) {
+			t.Fatalf("retry model=%v, want lexicographic mask %05b", s.Model(), want)
+		}
+	}
+}
+
 func TestLexicographicRootConflictPersists(t *testing.T) {
 	s := NewSolver()
 	x, y := s.NewVariable(), s.NewVariable()

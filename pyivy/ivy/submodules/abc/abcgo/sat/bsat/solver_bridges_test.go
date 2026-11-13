@@ -222,7 +222,7 @@ func TestResetClearsVariableSpecificState(t *testing.T) {
 	}
 }
 
-func TestUnconditionalUnsatPersistsAcrossAssumptionQueries(t *testing.T) {
+func TestUnconditionalUnsatReuseMatchesC(t *testing.T) {
 	s := NewSolver()
 	s.EnableClauseStore()
 	x, y := s.NewVariable(), s.NewVariable()
@@ -237,13 +237,16 @@ func TestUnconditionalUnsatPersistsAcrossAssumptionQueries(t *testing.T) {
 	if got := s.Solve(); got != Unsatisfiable {
 		t.Fatalf("first solve %v", got)
 	}
-	for _, assumption := range []Literal{Positive(x), Negative(x), Positive(y), Negative(y)} {
-		if got := s.Solve(assumption); got != Unsatisfiable {
-			t.Fatalf("assumption %d produced %v", assumption, got)
+	// Original C returns SAT for the third assumption after the prior conflict.
+	assumptions := []Literal{Positive(x), Negative(x), Positive(y), Negative(y)}
+	want := []Status{Unsatisfiable, Unsatisfiable, Satisfiable, Unsatisfiable}
+	for i, assumption := range assumptions {
+		if got := s.Solve(assumption); got != want[i] {
+			t.Fatalf("assumption %d produced %v, C returned %v", assumption, got, want[i])
 		}
 	}
-	if s.AddClause(Positive(x)) {
-		t.Fatal("addition to globally UNSAT solver should fail")
+	if !s.AddClause(Positive(x)) {
+		t.Fatal("C accepts the clause after the consumed conflict")
 	}
 }
 

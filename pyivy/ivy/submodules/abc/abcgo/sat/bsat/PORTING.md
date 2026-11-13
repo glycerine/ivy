@@ -305,3 +305,16 @@ truth tables for enabled buffers, XOR-AND gates, and half-sorters close the
 identified coverage gaps. The earlier statement that review was in progress
 describes that point in this chronological log. Finite tests do not prove all
 heuristic, resource-limit, or proof workloads.
+# Root conflicts and assumptions
+
+The source solver applies assumptions before propagating pending root units.
+For clauses `(x OR y)`, `NOT x`, `NOT y`, solving first under `x`, then under
+`NOT x`, and then with no assumptions returns UNSAT, SAT, SAT in ABC. The final
+two results are unsound: the original formula is inconsistent. This port
+preserves that behavior; callers that may have pending inconsistent root units
+should call `Simplify` and stop if it reports a conflict before solving with
+assumptions. After an unconditional UNSAT result, callers should discard the
+solver rather than reuse it; even an UNSAT formula without initial unit clauses
+can yield SAT on a later query. The source-characterization tests reproduce
+both cases against the original C implementation.
+
