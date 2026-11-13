@@ -85,6 +85,7 @@ type Frame struct {
 	libraries                  []*Library
 	Status, NFrames            int32
 	Cex                        *Counterexample
+	abcState                   *ABCFrameState
 	BatchMode, BridgeMode      bool
 	MaxLoad                    float32
 	TimeCommand, TimeTotal     time.Duration
