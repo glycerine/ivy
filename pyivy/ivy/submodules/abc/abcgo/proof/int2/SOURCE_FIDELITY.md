@@ -22,8 +22,9 @@ Its available git history has one commit for that path,
 "Initial new interpolation code"). The current workspace's available history
 has only the vendoring commit for that path. No complete driver was found in
 these local histories. The current [Berkeley ABC upstream driver](https://github.com/berkeley-abc/abc/blob/master/src/proof/int2/int2Core.c)
-has the same SHA-256 as the local file. Upstream history has not been checked;
-this search does not establish that no complete implementation exists elsewhere.
+has the same SHA-256 as the local file. The GitHub commits API likewise reports
+only the initial commit for this path. This search does not establish that no
+complete implementation exists elsewhere.
 
 Independent components have source-based repairs and tests: timeframe
 construction preserves complemented edges and maps constants and SAT
