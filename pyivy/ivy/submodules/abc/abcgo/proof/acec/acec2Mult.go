@@ -1,6 +1,8 @@
 package acec
 
-import "fmt"
+import ("fmt"
+"github.com/glycerine/abcgo/misc/vec"
+)
 
 /**CFile****************************************************************
 
@@ -284,7 +286,7 @@ const SDB_CUT_NO_LEAF =   0xF
 
     
 type Sdb_Cut_t struct {
-    Sign            word;                      // signature
+    Sign            uint64;                      // signature
     iFunc             int32;                     // functionality
     Cost             int32;                      // cut cost
     CostLev             int32;                   // cut cost
@@ -303,7 +305,7 @@ type Sdb_Sto_t struct {
     pGia      *Gia_Man_t;                      // user's AIG manager (will be modified by adding nodes)
     vRefs      *Vec_Int_t;                     // refs for each node
     vCuts      *Vec_Wec_t;                     // cuts for each node
-    vTtMem      *Vec_Mem_t;                    // truth tables
+    vTtMem      *vec.Vec_Mem_t;                    // truth tables
     pCuts [3][SDB_MAX_CUTNUM]Sdb_Cut_t;  // temporary cuts
     ppCuts [SDB_MAX_CUTNUM]*Sdb_Cut_t;    // temporary cut pointers
     nCutsR             int32;                    // the number of cuts
@@ -313,8 +315,6 @@ type Sdb_Sto_t struct {
     CutCount [4]float64;               // cut counters
     clkStart         abctime;                  // starting time
 }
-
-func Sdb_CutTruth(p *Sdb_Sto_t, pCut *Sdb_Cut_t) *word { return Vec_MemReadEntry(p.vTtMem, Abc_Lit2Var(pCut.iFunc));           }
 
 // Original macro:
 // #define Sdb_ForEachCut( pList, pCut, i ) for ( i = 0, pCut = pList + 1; i < pList[0]; i++, pCut += pCut[0] + 2 )
@@ -327,72 +327,6 @@ func Sdb_CutTruth(p *Sdb_Sto_t, pCut *Sdb_Cut_t) *word { return Vec_MemReadEntry
 /**Function*************************************************************
 
   Synopsis    [Check correctness of cuts.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Sdb_CutComputeTruth6(p *Sdb_Sto_t, pCut0 *Sdb_Cut_t, pCut1 *Sdb_Cut_t, fCompl0 int32, fCompl1 int32, pCutR *Sdb_Cut_t, fIsXor int32) int32 {
-    var nOldSupp int32 = pCutR.nLeaves;
-    var truthId int32;
-    var fCompl int32; var t word;
-    var t0 word  = *Sdb_CutTruth(p, pCut0);
-    var t1 word  = *Sdb_CutTruth(p, pCut1);
-    if Abc_LitIsCompl(pCut0.iFunc) ^ fCompl0 { t0 = ~t0; }
-    if Abc_LitIsCompl(pCut1.iFunc) ^ fCompl1 { t1 = ~t1; }
-    t0 = Abc_Tt6Expand( t0, pCut0.pLeaves, pCut0.nLeaves, pCutR.pLeaves, pCutR.nLeaves );
-    t1 = Abc_Tt6Expand( t1, pCut1.pLeaves, pCut1.nLeaves, pCutR.pLeaves, pCutR.nLeaves );
-    if fIsXor != 0 {
-        t = t0 ^ t1;
-    } else {
-        t = t0 & t1;
-    }
-    if fCompl = int32((t & 1)) { t = ~t; }
-    if p.fTruthMin {
-        pCutR.nLeaves = Abc_Tt6MinBase( &t, pCutR.pLeaves, pCutR.nLeaves ); }
-    assert(int32((t & 1)) == 0, "int32((t & 1)) == 0");
-    truthId        = Vec_MemHashInsert(p.vTtMem, &t);
-    pCutR.iFunc   = Abc_Var2Lit( truthId, fCompl );
-    assert(int32(pCutR.nLeaves) <= nOldSupp, "int32(pCutR.nLeaves) <= nOldSupp");
-    return int32(pCutR.nLeaves) < nOldSupp;
-}
-func Sdb_CutComputeTruth(p *Sdb_Sto_t, pCut0 *Sdb_Cut_t, pCut1 *Sdb_Cut_t, fCompl0 int32, fCompl1 int32, pCutR *Sdb_Cut_t, fIsXor int32) int32 {
-    if p.nCutSize <= 6 {
-        return Sdb_CutComputeTruth6( p, pCut0, pCut1, fCompl0, fCompl1, pCutR, fIsXor ); }
-    {
-    var uTruth, uTruth0, uTruth1 [SDB_MAX_TT_WORDS]word;
-    var nOldSupp int32 = pCutR.nLeaves;
-    var truthId int32;
-    var nCutSize int32 = p.nCutSize;
-    var fCompl int32;
-    var nWords int32      = Abc_Truth6WordNum(nCutSize);
-    var pTruth0 *word  = Sdb_CutTruth(p, pCut0);
-    var pTruth1 *word  = Sdb_CutTruth(p, pCut1);
-    Abc_TtCopy( uTruth0, pTruth0, nWords, Abc_LitIsCompl(pCut0.iFunc) ^ fCompl0 );
-    Abc_TtCopy( uTruth1, pTruth1, nWords, Abc_LitIsCompl(pCut1.iFunc) ^ fCompl1 );
-    Abc_TtExpand( uTruth0, nCutSize, pCut0.pLeaves, pCut0.nLeaves, pCutR.pLeaves, pCutR.nLeaves );
-    Abc_TtExpand( uTruth1, nCutSize, pCut1.pLeaves, pCut1.nLeaves, pCutR.pLeaves, pCutR.nLeaves );
-    if fIsXor != 0 {
-        Abc_TtXor( uTruth, uTruth0, uTruth1, nWords, (fCompl = int32(((uTruth0[0] ^ uTruth1[0]) & 1))) );
-    } else {
-        Abc_TtAnd( uTruth, uTruth0, uTruth1, nWords, (fCompl = int32(((uTruth0[0] & uTruth1[0]) & 1))) ); }
-    if p.fTruthMin {
-        pCutR.nLeaves = Abc_TtMinBase( uTruth, pCutR.pLeaves, pCutR.nLeaves, nCutSize ); }
-    assert((uTruth[0] & 1) == 0, "(uTruth[0] & 1) == 0");
-//Kit_DsdPrintFromTruth( uTruth, pCutR->nLeaves ), printf("\n" ), printf("\n" );
-    truthId        = Vec_MemHashInsert(p.vTtMem, uTruth);
-    pCutR.iFunc   = Abc_Var2Lit( truthId, fCompl );
-    assert(int32(pCutR.nLeaves) <= nOldSupp, "int32(pCutR.nLeaves) <= nOldSupp");
-    return int32(pCutR.nLeaves) < nOldSupp;
-    }
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
 
   Description []
                
