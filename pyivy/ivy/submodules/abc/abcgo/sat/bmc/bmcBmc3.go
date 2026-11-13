@@ -83,6 +83,7 @@ func Saig_ManBmcScalable(graph *aig.Graph, params *Saig_ParBmc_t) int32 {
 	}
 	start := time.Now()
 	var found bool
+	failed := make([]bool, pos)
 	for frame := int32(0); frame < maxFrames; frame++ {
 		if frame < params.nStart {
 			params.iFrame = frame
@@ -123,6 +124,9 @@ func Saig_ManBmcScalable(graph *aig.Graph, params *Saig_ParBmc_t) int32 {
 			continue
 		}
 		for output := int32(0); output < pos; output++ {
+			if params.fSolveAll != 0 && failed[output] {
+				continue
+			}
 			if params.nTimeOutOne > 0 {
 				solver.SetDeadline(time.Now().Add(time.Duration(params.nTimeOutOne) * time.Millisecond))
 			}
@@ -141,6 +145,7 @@ func Saig_ManBmcScalable(graph *aig.Graph, params *Saig_ParBmc_t) int32 {
 			switch status {
 			case bsat.Satisfiable:
 				found = true
+				failed[output] = true
 				params.nFailOuts++
 				model := makeBmcCounterexample(graph, unrolled, frameMap, data.VarNums, solver, frame, output, pis)
 				if model != nil {
@@ -160,6 +165,9 @@ func Saig_ManBmcScalable(graph *aig.Graph, params *Saig_ParBmc_t) int32 {
 		if params.fSolveAll != 0 && found && params.nFailOuts >= pos {
 			return 0
 		}
+	}
+	if found {
+		return 0
 	}
 	if unbounded && regs >= 30 {
 		return -1
