@@ -13,7 +13,8 @@ resource bounds, and choice and fanout handling. Additional exhaustive tests
 check sparse SAT reduction, choice-cycle prevention, miter proof polarity,
 randomized functional reduction, repeated normal and sparse feedback compression
 across permanent-word boundaries, choice-class simulation during compression,
-and source-specific external-clause behavior.
+source-specific external-clause behavior, and a compiled C oracle for repeated
+sparse hash group/split operations (enabled with `FRAIG_C_DIFFERENTIAL=1`).
 
 The source APIs deliberately retain several C limitations: distinct edge
 arguments to `Fraig_NodesAreEqual` are compared after removing complements;
@@ -38,8 +39,9 @@ Remaining validation work:
   implementation, including solver feedback and sparse functional reduction.
 - Exercise SAT timeout and unknown outcomes during real search, and assess limits
   on deep cone traversal and large feedback/simulation workloads.
-- Exercise deliberate sparse hash collisions during repeated compression and
-  compare resulting classes against the original C implementation.
+- Compare sparse hash collisions during complete feedback compression against
+  the original C implementation. The compiled oracle currently tests repeated
+  rehash group/split operations, rather than the complete compression driver.
 - Integrate FRAIG with a ported ABC consumer and verify end-to-end results; the
   separate-package test exercises the public API but is not such a consumer.
 
@@ -47,3 +49,11 @@ The 107 unique FRAIG APIs declared in `fraig.h` have 105 C implementations
 and corresponding Go functions. `Fraig_DfsReverse` and `Fraig_CountLevels`
 are declared in the header but have no implementations in the C checkout;
 they are not supplied as invented replacements.
+
+The fixed-size allocator is implemented through the shared Go `misc/mem` pool,
+not C's intrusive free list. It preserves entry allocation and recycling for
+valid callers, but newly allocated byte contents and verbose statistics are not
+byte-for-byte reproductions of C's pointer links and output. Go vector backing
+arrays retain removed pointers until overwritten or released, matching the C
+array visible through `Fraig_NodeVecReadArray` but potentially retaining Go
+objects longer.
