@@ -203,3 +203,36 @@ func TestUnconditionalUnsatRemainsUnsatOnRepeatedSolves(t *testing.T) {
 		t.Fatalf("not enough UNSAT formulas: %d", checked)
 	}
 }
+
+func TestPermanentConflictClearsPriorAssumptionCore(t *testing.T) {
+	for _, proof := range []bool{false, true} {
+		var add func(...Literal) bool
+		var solve func(...Literal) Status
+		var core func() []Literal
+		if proof {
+			s := NewSolver2()
+			s.NewVariable()
+			add = s.AddClause
+			solve = s.Solve
+			core = s.UnsatCore
+		} else {
+			s := NewSolver()
+			s.NewVariable()
+			add = s.AddClause
+			solve = s.Solve
+			core = s.UnsatCore
+		}
+		if solve(Positive(0), Negative(0)) != Unsatisfiable || len(core()) == 0 {
+			t.Fatalf("proof=%v missing assumption core", proof)
+		}
+		if add() {
+			t.Fatalf("proof=%v accepted empty clause", proof)
+		}
+		if solve() != Unsatisfiable {
+			t.Fatalf("proof=%v expected permanent UNSAT", proof)
+		}
+		if got := core(); len(got) != 0 {
+			t.Fatalf("proof=%v stale assumption core: %v", proof, got)
+		}
+	}
+}

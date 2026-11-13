@@ -4,6 +4,7 @@ import "time"
 
 func sat_solver2_solve(s *sat_solver2, assumptions []lit, conflicts, propagations, globalConflicts, globalPropagations int64) int32 {
 	if s.fSolved != 0 {
+		veci_resize(&s.conf_final, 0)
 		return l_False
 	}
 	s.hLearntLast, s.hProofLast = -1, -1

@@ -269,3 +269,9 @@ Resource and repeated-solve coverage now includes Solver2 deadline expiration
 and recovery, as well as repeated unconditional/assumption solves on seeded
 UNSAT formulas checked by exhaustive enumeration. The race-enabled BSAT suite
 passes. These tests do not cover every possible budget or callback interaction.
+
+Both public solver variants now clear the prior assumption core when returning
+an already-known permanent UNSAT result. Previously, after an assumption
+conflict followed by an empty clause, a later unconditional solve exposed the
+old assumptions as its core. A regression covers both variants, and the
+race-enabled BSAT suite passes.

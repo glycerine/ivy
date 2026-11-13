@@ -85,6 +85,7 @@ func satSolverPropagateRoot(s *sat_solver) bool {
 }
 func sat_solver_solve(s *sat_solver, assumptions []lit, conflicts, propagations, globalConflicts, globalPropagations int64) int32 {
 	if s.fSolved != 0 {
+		veci_resize(&s.conf_final, 0)
 		if p := solverClauseStore(s); p != nil && p.pEmpty == nil {
 			Sto_ManAddClause(p, nil)
 		}
