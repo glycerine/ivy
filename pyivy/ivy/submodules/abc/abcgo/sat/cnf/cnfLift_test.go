@@ -40,3 +40,15 @@ func TestLiftAndFlipOnlySelectedLiterals(t *testing.T) {
 		t.Fatalf("clauses = %v / %v, want %v", data.Clauses, data.pClauses, want)
 	}
 }
+
+func TestDataLiftPreservesLocalCountAndReverses(t *testing.T) {
+	data := &CNF{Variables: 2, nVars: 2, VarNums: []int32{-1, 0, 1}, Clauses: [][]int32{{0, 3}}}
+	Cnf_DataLift(data, 4)
+	if data.Variables != 2 || data.nVars != 2 {
+		t.Fatalf("lift changed local variable count to %d/%d", data.Variables, data.nVars)
+	}
+	Cnf_DataLift(data, -4)
+	if !reflect.DeepEqual(data.VarNums, []int32{-1, 0, 1}) || !reflect.DeepEqual(data.Clauses, [][]int32{{0, 3}}) {
+		t.Fatalf("lift round trip changed mapping or clauses: %v %v", data.VarNums, data.Clauses)
+	}
+}

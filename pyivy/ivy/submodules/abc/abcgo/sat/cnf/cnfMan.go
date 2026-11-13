@@ -109,8 +109,6 @@ func Cnf_DataLift(cnf *Cnf_Dat_t, variables int32) {
 		return
 	}
 	cnf.LiftVariableOffsets(variables)
-	cnf.nVars += variables
-	cnf.Variables = int(cnf.nVars)
 }
 
 // LiftVariableOffsets shifts literals and object mappings into a larger
