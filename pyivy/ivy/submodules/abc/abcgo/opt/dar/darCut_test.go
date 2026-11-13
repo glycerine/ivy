@@ -2,6 +2,7 @@ package dar
 
 import (
 	"github.com/glycerine/abcgo/aig/aig"
+	"reflect"
 	"testing"
 )
 
@@ -16,6 +17,51 @@ func TestCutSupportMinimization(t *testing.T) {
 			}
 			if ((c.Truth >> index) & 1) != uint16((truth>>assignment)&1) {
 				t.Fatalf("truth %04x assignment %d reduced %+v", truth, assignment, c)
+			}
+		}
+	}
+}
+
+// These slot contents follow Dar_ObjComputeCuts' nested physical-slot order,
+// dominance filtering and value-based replacement in darCut.c.
+func TestCutPhysicalSlotsAndEviction(t *testing.T) {
+	g := aig.NewGraph()
+	a, b, c, d, e := g.NewInput(), g.NewInput(), g.NewInput(), g.NewInput(), g.NewInput()
+	x, y := g.AND(a, b), g.AND(b, c)
+	z := g.AND(x, y)
+	tail := g.AND(d, e)
+	root := g.AND(z, tail)
+	g.AddOutput(root)
+	for _, tc := range []struct {
+		limit  int
+		leaves [][]aig.Edge
+		values []int
+	}{
+		{2, [][]aig.Edge{{root}, {a, b, c, tail}}, []int{1001, 5}},
+		{3, [][]aig.Edge{{root}, {z, tail}, {a, b, c, tail}}, []int{1001, 2, 5}},
+		{4, [][]aig.Edge{{root}, {z, tail}, {a, b, c, tail}, {a, b, y, tail}}, []int{1001, 2, 5, 5}},
+	} {
+		slots := NewCutEnumerator(g, tc.limit).Slots(root)
+		if len(slots) != tc.limit {
+			t.Fatalf("limit %d: %d slots", tc.limit, len(slots))
+		}
+		for i, slot := range slots {
+			if !slot.Used || !reflect.DeepEqual(slot.Cut.Leaves, tc.leaves[i]) || slot.Value != tc.values[i] {
+				t.Fatalf("limit %d slot %d: %+v", tc.limit, i, slot)
+			}
+		}
+	}
+	slots := NewCutEnumerator(g, 10).Slots(root)
+	if !slots[7].Used || slots[8].Used || slots[9].Used {
+		t.Fatalf("unused physical slots: %+v", slots)
+	}
+	for i, x := range slots {
+		if !x.Used {
+			continue
+		}
+		for j, y := range slots {
+			if i != j && y.Used && Dar_CutCheckDominance(x.Cut, y.Cut) {
+				t.Fatalf("slot %d dominates slot %d", i, j)
 			}
 		}
 	}
