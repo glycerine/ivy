@@ -9,13 +9,15 @@ rather than silently substituting another algorithm.
 ## Current checkpoint (2026-11-13)
 
 Proof-package work remains under source-by-source audit. The most recent
-uncached `GOCACHE=/tmp/abcgo-cache go test -race -count=1 -p 8 ./proof/...`
-gate passes for all proof packages. The combined proof/GIA/BSAT race gate and
-`go vet ./proof/... ./aig/gia ./sat/bsat` also pass.
+uncached `GOCACHE=/tmp/abcgo-final-proof-cache go test -race -count=1 -p 8 ./proof/...`
+gate passes for all proof packages, and `go vet ./proof/...` passes. The
+combined proof/GIA/BSAT race gate and `go vet ./proof/... ./aig/gia ./sat/bsat`
+also pass.
 The shared dependency gate passes for `./aig/...`, `./opt/dar/...`, and
 `./sat/cnf`. These gates do not establish complete source parity: INT2 has
-incomplete C routines, CEC's broader sweep/partition review is unfinished, and
-SAIG retains the documented backward-driver caveat below. Continue the audit.
+incomplete C routines, CEC's broader sweep/partition review remains partial,
+and SAIG retains the documented backward-driver caveat below. Continue the
+audit.
 
 The uncached `go test -cover -count=1 -p 8 ./proof/...` snapshot below measures
 executed Go statements, not C fidelity or algorithm completeness. Use it to
@@ -24,20 +26,20 @@ find untested behavior, not as a completion threshold.
 | Package | Statements |
 | --- | ---: |
 | `abs` | 76.6% |
-| `acec` | 73.9% |
-| `cec` | 79.0% |
-| `cec/core` | 92.7% |
-| `dch` | 89.1% |
-| `fra` | 73.7% |
-| `fracomb` | 89.7% |
-| `fraig` | 74.1% |
-| `framgr` | 83.4% |
-| `int` | 85.6% |
-| `int2` | 88.4% |
-| `live` | 85.7% |
-| `pdr` | 74.9% |
-| `ssc` | 89.2% |
-| `ssw` | 76.4% |
+| `acec` | 76.6% |
+| `cec` | 80.3% |
+| `cec/core` | 93.0% |
+| `dch` | 91.2% |
+| `fra` | 74.8% |
+| `fracomb` | 92.4% |
+| `fraig` | 77.6% |
+| `framgr` | 85.6% |
+| `int` | 87.2% |
+| `int2` | 90.8% |
+| `live` | 86.8% |
+| `pdr` | 77.4% |
+| `ssc` | 88.8% |
+| `ssw` | 79.8% |
 
 ## Source API inventory
 
@@ -92,8 +94,13 @@ and representation limits described in its package notes.
   exits preserve `iOutFail`, the circuit-SAT path does not publish Go-only
   original-ID pairs, and timeout checks occur after a completed reduction
   iteration. Partition traversal now advances the source epoch twice. Linux
-  timed sweeps use the C thread-CPU clock; timed sweeps on other platforms
-  report unsupported. Package race tests and vet passed.
+  timed sweeps and internal CEC2/3/4 timers use the C thread-CPU clock;
+  non-Linux timing retains a wall-clock fallback. Separately managed timed
+  calls require creation and destruction on the same OS thread. New compiled-C
+  tests cover CEC2/3 SAT and UNSAT witnesses, CEC4 sparse replay, conflict
+  limits, UNKNOWN candidate IDs, interleaved inputs, and timer behavior. The
+  CEC4 out-of-range failure-bitmap behavior still differs from C; the reviewed
+  source matrix remains selective. Package race tests and vet passed.
   The sequential synthesis entry also preserves C's failure boundary for a
   missing clock-domain vector. Tests cover C's incomplete Cec4 builder return
   and partial construction failure instead of substituting a working builder.
@@ -169,7 +176,13 @@ and representation limits described in its package notes.
   APIs retain XOR behavior. Compiled-C tests cover this distinction and the
   liveness, monotone, constrained-cone and disjunctive wrappers. Source builders
   now traverse all nodes in source order and set copy mappings, including for
-  unused nodes.
+  unused nodes. Compiled-C tests also cover source parser cursor semantics,
+  usage ordering, incomplete-source boundaries and wrapper behavior. Race
+  tests and vet pass at 86.8% statement coverage. A confirmed fidelity gap
+  remains for native constraint outputs: C's source builder includes every PO
+  and clears the constraint count, while Go's source-shaped builders filter
+  and preserve native constraints. Command adaptation, diagnostics and
+  malformed-input behavior also differ; see `live/PORTING.md`.
 * `pdr`: source solver context, limits, helper edge cases and graph lifecycle
   are covered. Differential tests exercise 64 machines and source-matched
   option combinations, plus invariant-file output. Package race tests and vet
@@ -214,13 +227,18 @@ backward retiming driver's historical constraint-handling branches remain a
 documented fidelity limit. Initialized `Aig_ManFrames` with register outputs
 now follows C, including negative true-input counts when no CIs are created.
 
-Timeout accounting remains a cross-package fidelity gap. On Linux, C
-`Abc_Clock` measures current-thread CPU time; Go's shared `util.Abc_Clock` and
-several direct deadline checks use wall time. CEC's original sweep now pins its
-goroutine and uses the source CPU clock on Linux, but PDR, INT, ABS, SSW, and
-FRA deadlines and solver contexts still need a call-site-by-call-site review.
-Switching the shared helper alone would be unsafe because goroutines can move
-between OS threads and SAT/context deadlines currently use wall time.
+Timeout accounting remains a cross-package fidelity gap. ABS now uses the C
+thread-CPU clock on Linux while pinning the solving goroutine, process CPU via
+`getrusage` on supported non-Linux POSIX systems, and elapsed time on Windows
+to match the Microsoft CRT; unsupported timed platforms fail explicitly. The
+Windows CRT clock's roughly 24.8-day overflow is not emulated. CEC timed
+sweeps and internal CEC2/3/4 timers pin their goroutine and use the source
+thread-CPU clock on Linux; non-Linux builds retain a wall-time fallback.
+Separately managed timed calls need create/destroy operations to stay on the
+same OS thread. PDR, INT, SSW, and FRA deadlines and solver contexts still need
+a call-site-by-call-site review. Switching the shared helper alone would be
+unsafe because goroutines can move between OS threads and SAT/context deadlines
+currently use wall time.
 
 FRA/AIG partitioned FRAIG and choice and SAIG timeframe bridges are implemented
 through explicit callback APIs, with FRA wrappers supplying the corresponding
