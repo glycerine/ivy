@@ -13,7 +13,7 @@ func cec4SimulateGraph(s *cec3Simulation, graph *gia.Gia_Man_t) {
 		_, _, _, kind := graph.Gate(id)
 		switch kind {
 		case 0, 1:
-		case 2, 3, 4, 6:
+		case 2, 3, 4, 5, 6:
 			cec4SimulateNode(s, graph, id)
 		default:
 			panic("cec4: unsupported graph node")

@@ -33,7 +33,7 @@ func cec4SimulateNode(s *cec3Simulation, graph *gia.Gia_Man_t, id int32) {
 			}
 			dst[i] = (v & y) | (^v & n)
 		}
-	case 6:
+	case 5, 6:
 		s.copyDriver(id, a>>1, a&1 != 0)
 	default:
 		panic("cec4: unsupported simulation node")

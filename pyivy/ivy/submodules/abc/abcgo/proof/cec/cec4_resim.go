@@ -13,6 +13,8 @@ func cec4ResimulateNode(sim *cec3Simulation, graph *gia.Gia_Man_t, id, stamp int
 	switch kind {
 	case 1:
 		return
+	case 5, 6:
+		cec4ResimulateNode(sim, graph, a>>1, stamp, stamps)
 	case 2, 3:
 		cec4ResimulateNode(sim, graph, a>>1, stamp, stamps)
 		cec4ResimulateNode(sim, graph, b>>1, stamp, stamps)
