@@ -61,50 +61,7 @@ import "os"
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_ManSetConstrPhases(p *Aig_Man_t, nFrames int32, pvInits **Vec_Int_t) int32 {
-    var pFrames *Aig_Man_t;
-    var pSat *sat_solver;
-    var pCnf *Cnf_Dat_t;
-    var pObj *Aig_Obj_t;
-    var i, RetValue int32;
-    if pvInits {
-        *pvInits = nil; }
-//    assert( p->nConstrs > 0 );
-    // derive the timeframes
-    pFrames = Ssw_FramesWithConstraints( p, nFrames );
-    // create CNF
-    pCnf = Cnf_Derive( pFrames, 0 );
-    // create SAT solver
-    pSat = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );
-    if pSat == nil {
-        Cnf_DataFree( pCnf );
-        Aig_ManStop( pFrames );
-        return 1;
-    }
-    // solve
-    RetValue = sat_solver_solve( pSat, nil, nil,
-        (ABC_INT64_T)1000000, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );
-    if RetValue == l_True && pvInits {
-        *pvInits = Vec_IntAlloc( 1000 );
-        // inlining of macro Aig_ManForEachCi
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(pFrames.vCis)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pFrames.vCis, i)), 1); i++  {
-            Vec_IntPush( *pvInits, sat_solver_var_value(pSat, pCnf.pVarNums[Aig_ObjId(pObj)]) );
-        }
 
-//        Aig_ManForEachCi( pFrames, pObj, i )
-//            Abc_Print( 1, "%d", Vec_IntEntry(*pvInits, i) );
-//        Abc_Print( 1, "\n" );
-    }
-    sat_solver_delete( pSat );
-    Cnf_DataFree( pCnf );
-    Aig_ManStop( pFrames );
-    if RetValue == l_False {
-        return 1; }
-    if RetValue == l_True {
-        return 0; }
-    return -1;
-}
 
 /**Function*************************************************************
 
