@@ -93,10 +93,25 @@ func CheckSafetyPDR(graph *aig.Graph, output int, options SafetyOptions) SafetyR
 	if result.Status != pdr.Failed {
 		return SafetyResult{Status: int32(result.Status)}
 	}
-	cex := result.Outputs[0].Witness
-	if cex == nil || cex.IFrame < 0 || cex.NRegs != int32(registers(graph))+constraintLatchCount(constraints) || cex.NPis != int32(trueInputs(graph)) {
+	return decodeSafetyWitness(graph, output, result.Outputs[0].Witness, int32(registers(graph))+constraintLatchCount(constraints))
+}
+
+// decodeSafetyWitness validates dimensions, zero initial state and every
+// transition before exposing an engine-supplied counterexample to callers.
+func decodeSafetyWitness(graph *aig.Graph, output int, cex *util.Abc_Cex_t, expectedRegs int32) SafetyResult {
+	if cex == nil || cex.IFrame < 0 || cex.NRegs != expectedRegs || cex.NPis != int32(trueInputs(graph)) {
 		return SafetyResult{Status: -1, Error: fmt.Errorf("live: invalid PDR witness")}
 	}
+	expectedBits := int64(cex.NRegs) + (int64(cex.IFrame)+1)*int64(cex.NPis)
+	if expectedBits < 0 || expectedBits != int64(cex.NBits) || int64(len(cex.PData))*32 < expectedBits {
+		return SafetyResult{Status: -1, Error: fmt.Errorf("live: truncated or inconsistent PDR witness")}
+	}
+	for i := int32(0); i < cex.NRegs; i++ {
+		if util.Abc_InfoHasBit(cex.PData, i) {
+			return SafetyResult{Status: -1, Error: fmt.Errorf("live: nonzero PDR initial state")}
+		}
+	}
+	constraints := int(aig.Aig_ManConstrNum(graph))
 	states, inputs := make([][]bool, 0, int(cex.IFrame)+1), make([][]bool, 0, int(cex.IFrame)+1)
 	state := make([]bool, registers(graph))
 	for frame := int32(0); frame <= cex.IFrame; frame++ {
