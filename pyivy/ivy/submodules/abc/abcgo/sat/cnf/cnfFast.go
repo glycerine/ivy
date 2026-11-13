@@ -218,6 +218,7 @@ func Cnf_ComputeClauses(graph *Aig_Man_t, root *Aig_Obj_t, leaves, nodes *Vec_Pt
 	if graph == nil || root == nil {
 		return
 	}
+	vec.Vec_IntClear(clauses)
 	if vec.Vec_PtrSize(leaves) > 6 {
 		inputs := largeAndLeaves(graph, *root, leaves)
 		out := Cnf_ObjGetLit(mapping, root, 0)

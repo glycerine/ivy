@@ -95,3 +95,50 @@ func TestLargeAndCutClauses(t *testing.T) {
 		}
 	}
 }
+
+func TestCutClausesComplementedLeafAndReuse(t *testing.T) {
+	g := aig.NewGraph()
+	x, y := g.NewInput(), g.NewInput()
+	root := g.AND(x, y)
+	leaves, nodes := vec.Vec_PtrAlloc(2), vec.Vec_PtrAlloc(1)
+	vec.Vec_PtrPush(leaves, x.Not())
+	vec.Vec_PtrPush(leaves, y)
+	vec.Vec_PtrPush(nodes, root)
+	clauses := vec.Vec_IntAlloc(0)
+	Cnf_ComputeClauses(g, &root, leaves, nodes, nil, nil, clauses)
+	Cnf_ComputeClauses(g, &root, leaves, nodes, nil, nil, clauses)
+	count := 0
+	for _, lit := range vec.Vec_IntArray(clauses) {
+		if lit == 0 {
+			count++
+		}
+	}
+	if count != 4 {
+		t.Fatalf("reused output contains %d clauses, want 4", count)
+	}
+	for assignment := 0; assignment < 8; assignment++ {
+		valid, clause, started := true, false, false
+		for _, lit := range vec.Vec_IntArray(clauses) {
+			if lit == 0 {
+				if started && !clause {
+					valid = false
+				}
+				started, clause = true, false
+				continue
+			}
+			variable := int(lit >> 1)
+			bit := variable - 1
+			if variable == root.NodeID() {
+				bit = 2
+			}
+			if (assignment&(1<<bit) != 0) != (lit&1 != 0) {
+				clause = true
+			}
+		}
+		valid = valid && clause
+		want := (assignment&4 != 0) == (assignment&1 != 0 && assignment&2 != 0)
+		if valid != want {
+			t.Fatalf("assignment %03b accepted=%v want=%v", assignment, valid, want)
+		}
+	}
+}
