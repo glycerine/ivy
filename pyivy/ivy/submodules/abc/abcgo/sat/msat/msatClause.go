@@ -57,7 +57,8 @@ func Msat_ClauseCreate(p *Msat_Solver_t, v *Msat_IntVec_t, learnt int, out **Msa
 	if len(lits) == 1 {
 		return Msat_SolverEnqueue(p, lits[0], nil)
 	}
-	c := &Msat_Clause_t{Num: len(p.vClauses.data) + len(p.vLearned.data), learned: learnt != 0, lits: lits}
+	c := &Msat_Clause_t{Num: p.nClauses, learned: learnt != 0, lits: lits}
+	p.nClauses++
 	if c.learned {
 		best := 1
 		for i := 2; i < len(lits); i++ {

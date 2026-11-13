@@ -395,3 +395,16 @@ func TestClauseNumberCountsCreatedClausesAsInC(t *testing.T) {
 		t.Fatalf("created clause numbers %d,%d count %d", first.Num, second.Num, Msat_SolverReadClauseNum(p))
 	}
 }
+
+func TestTruthTableSetupPreservesExistingLowWords(t *testing.T) {
+	var truths [6][2]uint32
+	truths[0][0] = 1
+	truths[1][0] = 2
+	Msat_SolverSetupTruthTables(&truths)
+	if truths[0][0] != 0xaaaaaaab || truths[1][0] != 0xccccccce {
+		t.Fatalf("source ORs masks into existing words: %x %x", truths[0][0], truths[1][0])
+	}
+	if truths[0][1] != truths[0][0] || truths[1][1] != truths[1][0] {
+		t.Fatal("high words should copy initialized low words")
+	}
+}

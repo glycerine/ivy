@@ -122,7 +122,6 @@ func Msat_SolverMarkLastClauseTypeA(p *Msat_Solver_t) {
 }
 
 func Msat_SolverSetupTruthTables(truths *[6][2]uint32) {
-	*truths = [6][2]uint32{}
 	for v := 0; v < 5; v++ {
 		for m := 0; m < 32; m++ {
 			if m&(1<<v) != 0 {
@@ -131,6 +130,7 @@ func Msat_SolverSetupTruthTables(truths *[6][2]uint32) {
 		}
 		truths[v][1] = truths[v][0]
 	}
+	truths[5][0] = 0
 	truths[5][1] = ^uint32(0)
 }
 

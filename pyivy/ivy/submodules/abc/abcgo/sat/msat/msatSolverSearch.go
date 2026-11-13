@@ -88,6 +88,7 @@ func Msat_SolverSimplifyDB(p *Msat_Solver_t) int {
 		}
 		vec.data = kept
 	}
+	p.nClauses = num
 	return 1
 }
 func Msat_SolverRemoveLearned(p *Msat_Solver_t) {
@@ -106,9 +107,7 @@ func Msat_SolverRemoveLearned(p *Msat_Solver_t) {
 	p.nClauses = len(p.vClauses.data)
 }
 
-// A lazy formula snapshot includes root unit facts, which have no clause
-// object in this solver. Rebuild from it so simplification cannot erase the
-// base formula and removed unit clauses cannot leave assignments behind.
+// Msat_SolverRemoveMarked removes clauses added after the recorded index.
 func Msat_SolverRemoveMarked(p *Msat_Solver_t) {
 	for _, clause := range p.vClauses.data[p.nClausesStart:] {
 		Msat_ClauseFree(p, clause, 1)
