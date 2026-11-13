@@ -170,10 +170,7 @@ func Pdr_ManTimeLimit(p *Pdr_Man_t) abctime {
 	if p.timeToStopOne == 0 {
 		return p.timeToStop
 	}
-	if p.timeToStop < p.timeToStopOne {
-		return p.timeToStop
-	}
-	return p.timeToStopOne
+	return min(p.timeToStop, p.timeToStopOne)
 }
 
 ////////////////////////////////////////////////////////////////////////

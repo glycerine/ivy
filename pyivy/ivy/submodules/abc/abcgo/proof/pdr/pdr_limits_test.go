@@ -10,6 +10,17 @@ import (
 	"github.com/glycerine/abcgo/sat/bsat"
 )
 
+func TestPdrTimeLimitChoosesEarliestActiveDeadline(t *testing.T) {
+	for _, tc := range []struct{ global, output, want int64 }{
+		{0, 0, 0}, {10, 0, 10}, {0, 20, 20}, {10, 20, 10}, {20, 10, 10}, {10, 10, 10}, {-1, 10, -1},
+	} {
+		p := &Pdr_Man_t{timeToStop: tc.global, timeToStopOne: tc.output}
+		if got := Pdr_ManTimeLimit(p); got != tc.want {
+			t.Fatalf("global=%d output=%d: got %d, want %d", tc.global, tc.output, got, tc.want)
+		}
+	}
+}
+
 // A two-register delay reaches the bad state in frame two. Stopping at
 // frame one must not be confused with a proof or with a counterexample.
 func TestPdrFrameLimitReportsUnknown(t *testing.T) {
