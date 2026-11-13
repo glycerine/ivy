@@ -47,3 +47,21 @@ func TestSweepBmcConstructsInitializedFrames(t *testing.T) {
 		t.Fatal("initial frame construction incorrect")
 	}
 }
+
+func TestUnassignedComplementedFrameUsesConsistentDefault(t *testing.T) {
+	source := aig.NewGraph()
+	a, b := source.NewInput(), source.NewInput()
+	frames := aig.NewGraph()
+	x := frames.NewInput()
+	sat := Ssw_SatStart(0)
+	sat.pAig = frames
+	p := &Ssw_Man_t{pAig: source, pFrames: frames, pMSat: sat, pPars: &Ssw_Pars_t{}, nFrames: 1, pNodeToFrames: make([]aig.Edge, len(source.Nodes()))}
+	for i := range p.pNodeToFrames {
+		p.pNodeToFrames[i] = aig.InvalidEdge
+	}
+	Ssw_ObjSetFrame(p, a, 0, x)
+	Ssw_ObjSetFrame(p, b, 0, x.Not())
+	if Ssw_ManGetSatVarValue(p, a, 0) != 0 || Ssw_ManGetSatVarValue(p, b, 0) != 1 {
+		t.Fatal("complementary unassigned frame edges received inconsistent defaults")
+	}
+}

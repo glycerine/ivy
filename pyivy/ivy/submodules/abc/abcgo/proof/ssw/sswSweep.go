@@ -17,13 +17,16 @@ func Ssw_ManGetSatVarValue(p *Ssw_Man_t, obj aig.Edge, frame int32) int32 {
 	}
 	variable := Ssw_ObjSatNum(p.pMSat, aig.Aig_Regular(edge))
 	var value int32
+	if edge.Complemented() {
+		value = 1
+	}
 	if variable != 0 {
 		bit, ok := p.pMSat.pSat.Value(variable)
 		if !ok {
 			panic("ssw: SAT model unavailable")
 		}
-		if bit != edge.Complemented() {
-			value = 1
+		if bit {
+			value ^= 1
 		}
 	}
 	if p.pPars.fPolarFlip != 0 && aig.Aig_ObjPhase(p.pFrames, aig.Aig_Regular(edge)) {
