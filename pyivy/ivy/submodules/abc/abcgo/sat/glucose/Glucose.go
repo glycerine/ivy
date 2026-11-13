@@ -690,6 +690,17 @@ func (s *Solver) Solve(assumptions []Lit) bool {
 // ToDimacs writes the root-simplified formula plus the supplied assumptions.
 // Variables are compacted in first-clause occurrence order, as in Glucose.
 func (s *Solver) ToDimacs(w io.Writer, assumptions []Lit) error {
+	for _, p := range assumptions {
+		if p < 0 || int(p.Var()) >= s.NVars() {
+			return fmt.Errorf("DIMACS assumption variable out of range: %d", p)
+		}
+	}
+	for _, p := range assumptions {
+		if s.ValueLit(p) == LFalse {
+			_, err := io.WriteString(w, "p cnf 1 2\n1 0\n-1 0\n")
+			return err
+		}
+	}
 	if !s.ok {
 		_, err := io.WriteString(w, "p cnf 1 2\n1 0\n-1 0\n")
 		return err
@@ -720,9 +731,6 @@ func (s *Solver) ToDimacs(w io.Writer, assumptions []Lit) error {
 		clauses = append(clauses, row)
 	}
 	for _, p := range assumptions {
-		if p < 0 || int(p.Var()) >= s.NVars() {
-			return fmt.Errorf("DIMACS assumption variable out of range: %d", p)
-		}
 		mapVar(p.Var())
 	}
 	if _, err := fmt.Fprintf(w, "p cnf %d %d\n", len(mapped), len(clauses)+len(assumptions)); err != nil {

@@ -174,6 +174,25 @@ func TestStreamAndDIMACS(t *testing.T) {
 	}
 }
 
+func TestDIMACSContradictoryRootAssumption(t *testing.T) {
+	s := NewSolver()
+	s.NewVar(true, true)
+	if !s.AddClause([]Lit{0}) {
+		t.Fatal("root unit rejected")
+	}
+	var out bytes.Buffer
+	if err := s.ToDimacs(&out, []Lit{1}); err != nil {
+		t.Fatal(err)
+	}
+	other := NewSolver()
+	if _, err := ParseDIMACS(&out, other); err != nil {
+		t.Fatal(err)
+	}
+	if other.Solve(nil) {
+		t.Fatal("DIMACS export lost contradictory root assumption")
+	}
+}
+
 type failingReader struct{}
 
 func (failingReader) Read([]byte) (int, error) { return 0, errors.New("injected read failure") }
