@@ -19,7 +19,7 @@ for undeclared C variables, inferred helpers, and retained source defects.
 | `Int2_ManPrepareSuffix` | `TestPrepareSuffixReportsUnsupported`, `TestPrepareSuffixUnsupportedWithOptionalOutputs` check only the unsupported result. |
 | `Int2_ManComputePreimage`, `Int2_ManPerformInterpolation` | `TestPreimageReportsUnsupportedForPrimaryInput`, `TestPerformInterpolationReportsUnsupported` check only the unsupported result. |
 | `Int2_ManJustify_rec` | `TestSourceJustificationUsesPriorityAsBoolean`, `TestSourceJustificationChoosesByMarks`, `TestSourceJustificationSingleControllingFanin`, `TestSourceJustificationOutputMarkPreventsDuplicateSelection` |
-| `Int2_ManRefineCube` | `TestRefineCubeSourceRejectsRegisterCI`; this checks a source defect, not correct cube minimization. |
+| `Int2_ManRefineCube` | `TestRefineCubeSourceRejectsRegisterCI`, `TestSourceRefineCubeVisitsControllingPrimaryInput`, `TestSourceRefineCubeTrueAndWithUnitPriority`; these check source behavior, not correct cube minimization. |
 | `Int2_ManComputeCoPres` | `TestInt2ManComputeCoPresRejectsMalformedSOP`, `TestSourceSOPIndexSkipsSecondContiguousLiteral`, `TestSourceCoPresDeduplicatesAndOrdersSingleLiteralCubes` |
 | `Int2_ManCollectInternal`, `_rec` | `TestSourceCollectInternalVisitsSharedConesOnce` |
 | `Int2_ManProbToGia` | `TestSourceNilSOPPanics`, `TestSourceEmptySOPProducesFalse`, `TestProbToGiaSingleLiteralCubesMatchSourceTransitions` |
@@ -28,8 +28,9 @@ for undeclared C variables, inferred helpers, and retained source defects.
 | SAT bridge AND, buffer, model and final core | `TestSATBridgeAndGateAllInputPolarities`, `TestSATBridgeBufferComplement`, `TestSATBridgeRejectsInconsistentGateClauses`, `TestSATBridgeModelValueUsesBooleanConvention`, `TestSATBridgeFinalReturnsNegatedAssumptions` |
 
 The SAT bridge tests exercise an exhausted global propagation budget and
-contradictory gate clauses; BMC tests cover UNKNOWN from an expired deadline for
-both property and cube checks, followed by a successful retry. Failure paths dependent on JF CNF derivation and
-all SAT timeout modes are not exhaustively exercised. In particular, reaching the bodies of the
+contradictory gate clauses, including the C AND helper's assertions; BMC
+tests cover UNKNOWN from an expired deadline for both property and cube checks,
+followed by a successful retry. Failure paths dependent on JF CNF derivation
+and all SAT timeout modes are not exhaustively exercised. Reaching the bodies of the
 unsupported suffix/preimage stubs does not validate those algorithms. The
 zero-frame behavior and incremental builder have no executable C oracle.

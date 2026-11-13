@@ -84,17 +84,17 @@ func sat_solver_add_and(s *sat_solver, output, input0, input1, complement0, comp
 		panic("int2: negative SAT gate variable")
 	}
 	if sat_solver_addclause(s, []int32{sat_literal(output, 1^complement), sat_literal(input0, complement0)}) == 0 {
-		return 0
+		panic("int2: SAT AND clause was rejected")
 	}
 	if sat_solver_addclause(s, []int32{sat_literal(output, 1^complement), sat_literal(input1, complement1)}) == 0 {
-		return 0
+		panic("int2: SAT AND clause was rejected")
 	}
 	if sat_solver_addclause(s, []int32{
 		sat_literal(output, complement),
 		sat_literal(input0, 1^complement0),
 		sat_literal(input1, 1^complement1),
 	}) == 0 {
-		return 0
+		panic("int2: SAT AND clause was rejected")
 	}
 	return 3
 }

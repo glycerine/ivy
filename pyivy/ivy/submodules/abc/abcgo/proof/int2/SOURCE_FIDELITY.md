@@ -90,6 +90,9 @@ to fail; C instead passes the unchecked mapping to its SAT call. The tests for
 these Go outcomes describe defensive behavior, not an established C contract.
 Likewise, `Int2_ManSetupBmcSolver` checks whether adding an output buffer
 fails and returns nil, while the C code ignores that return value.
+The separate SAT bridge follows the C helper distinction: adding an
+inconsistent AND clause triggers an assertion-equivalent panic, whereas adding
+an inconsistent buffer clause returns zero.
 
 The graph-copy and frame helpers follow the checked-in C loop, which treats
 all `Gia_ManForEachAnd` nodes as ordinary ANDs. This changes native XOR/MUX

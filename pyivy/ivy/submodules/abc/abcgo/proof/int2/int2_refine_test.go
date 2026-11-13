@@ -128,3 +128,45 @@ func TestSourceJustificationOutputMarkPreventsDuplicateSelection(t *testing.T) {
 		t.Fatalf("selected %v", vec.Vec_IntArray(selected))
 	}
 }
+
+func TestSourceRefineCubeVisitsControllingPrimaryInput(t *testing.T) {
+	// The source's justification stops at PIs, so the returned set is empty.
+	// Exercise all AND input values, including both controlling-fanin branches.
+	for phase := int32(0); phase < 4; phase++ {
+		for mask := int32(0); mask < 4; mask++ {
+			xval, yval := mask&1, (mask>>1)&1
+			gateValue := (xval ^ (phase & 1)) & (yval ^ ((phase >> 1) & 1))
+			if gateValue != 0 {
+				continue
+			}
+			g := gia.Gia_ManStart(12)
+			x, y, state := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
+			gate := gia.Gia_ManAppendAnd(g, x^(phase&1), y^((phase>>1)&1))
+			gia.Gia_ManAppendCo(g, gate^1)
+			gia.Gia_ManAppendCo(g, state)
+			gia.Gia_ManSetRegNum(g, 1)
+			assignment := vec.Vec_IntAllocArrayCopy([]int32{xval, yval, 0}, 3)
+			priority := vec.Vec_IntAllocArrayCopy([]int32{2, 3, 4}, 3)
+			selected := Int2_ManRefineCube(g, assignment, priority)
+			if vec.Vec_IntSize(selected) != 0 {
+				t.Fatalf("phase=%d mask=%d: source should stop at PI, got %v", phase, mask, vec.Vec_IntArray(selected))
+			}
+		}
+	}
+}
+
+func TestSourceRefineCubeTrueAndWithUnitPriority(t *testing.T) {
+	g := gia.Gia_ManStart(12)
+	x, y, state := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
+	gate := gia.Gia_ManAppendAnd(g, x, y)
+	gia.Gia_ManAppendCo(g, gate)
+	gia.Gia_ManAppendCo(g, state)
+	gia.Gia_ManSetRegNum(g, 1)
+	selected := Int2_ManRefineCube(g, vec.Vec_IntAllocArrayCopy([]int32{1, 1, 0}, 3), vec.Vec_IntAllocArrayCopy([]int32{1, 1, 1}, 3))
+	if vec.Vec_IntSize(selected) != 0 {
+		t.Fatalf("source stops at PIs, got %v", vec.Vec_IntArray(selected))
+	}
+	if gia.Gia_ObjMark1(gia.Gia_ManObj(g, x>>1)) == 0 || gia.Gia_ObjMark1(gia.Gia_ManObj(g, y>>1)) == 0 {
+		t.Fatal("source Value==1 branch did not visit both PIs")
+	}
+}

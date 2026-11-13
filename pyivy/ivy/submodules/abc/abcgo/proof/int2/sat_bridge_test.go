@@ -173,9 +173,12 @@ func TestSATBridgeRejectsInconsistentGateClauses(t *testing.T) {
 			if s == nil {
 				t.Fatal("fixture inconsistent")
 			}
-			if got := sat_solver_add_and(s, 2, 0, 1, 0, 0, 0); got != 0 {
-				t.Fatalf("contradictory AND accepted: %d", got)
-			}
+			defer func() {
+				if recover() == nil {
+					t.Fatal("source AND helper asserts on a rejected clause")
+				}
+			}()
+			sat_solver_add_and(s, 2, 0, 1, 0, 0, 0)
 		})
 	}
 }
