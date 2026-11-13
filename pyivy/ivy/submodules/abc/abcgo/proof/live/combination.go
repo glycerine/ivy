@@ -119,7 +119,7 @@ func disjunctiveTester(p *aig.Graph, candidates []aig.Edge, k int32) *aig.Graph 
 	for i, group := range groups {
 		signals := make([]aig.Edge, len(group))
 		for j, index := range group {
-			signals[j] = c.signal(candidates[index])
+			signals[len(group)-1-j] = c.signal(candidates[index])
 		}
 		properties[i] = aig.Aig_Or(c.destination, disjoin(c.destination, signals).Not(), states[i])
 	}
