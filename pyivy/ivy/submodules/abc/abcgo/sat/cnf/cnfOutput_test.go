@@ -69,7 +69,7 @@ func TestTransformPolarityUsesNodePhases(t *testing.T) {
 func TestSolverLoadingFramesAndInitialization(t *testing.T) {
 	g := aig.NewGraph()
 	lo := g.NewInput()
-	g.AddOutput(lo)
+	g.AddOutput(lo.Not())
 	aig.Aig_ManSetRegNum(g, 1)
 	data, err := EncodeAIG(g, 0)
 	if err != nil {
@@ -82,6 +82,12 @@ func TestSolverLoadingFramesAndInitialization(t *testing.T) {
 		}
 		if s.Solve(bsat.Positive(data.VarNums[lo.NodeID()])) != bsat.Unsatisfiable {
 			t.Fatalf("frames=%d: initial latch is not constrained to zero", frames)
+		}
+		if frames == 2 {
+			next := data.VarNums[lo.NodeID()] + int32(data.Variables)
+			if s.Solve(bsat.Positive(next)) != bsat.Satisfiable || s.Solve(bsat.Negative(next)) != bsat.Unsatisfiable {
+				t.Fatal("second frame does not follow the inverted latch input")
+			}
 		}
 	}
 	combinational := aig.NewGraph()
