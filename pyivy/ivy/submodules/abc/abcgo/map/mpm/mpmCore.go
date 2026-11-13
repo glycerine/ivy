@@ -46,20 +46,7 @@ package mpm
 
 ***********************************************************************/
 func Mpm_ManSetParsDefault(p *Mpm_Par_t) {
-    memset( p, 0, sizeof(Mpm_Par_t) );
-    p.pLib           =   nil;  // LUT library
-    p.nNumCuts       =      8;  // cut number
-    p.fUseTruth      =      0;  // uses truth tables
-    p.fUseDsd        =      0;  // uses DSDs
-    p.fCutMin        =      0;  // enables cut minimization
-    p.fOneRound      =      0;  // enabled one round
-    p.DelayTarget    =     -1;  // delay target
-    p.fDeriveLuts    =      0;  // use truth tables to derive AIG structure
-    p.fMap4Cnf       =      0;  // mapping for CNF
-    p.fMap4Aig       =      0;  // mapping for AIG
-    p.fMap4Gates     =      0;  // mapping for gates
-    p.fVerbose       =      0;  // verbose output
-    p.fVeryVerbose   =      0;  // verbose output
+    *p = Mpm_Par_t{nNumCuts: 8, DelayTarget: -1}
 }
 
 /**Function*************************************************************
