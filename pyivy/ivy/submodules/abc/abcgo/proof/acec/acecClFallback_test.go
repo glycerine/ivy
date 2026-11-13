@@ -14,8 +14,8 @@ func TestSourceDetectAdditionalRejectsAmbiguousPolarity(t *testing.T) {
 	gia.Gia_ManHashStop(p)
 	// The C implementation asserts on inconsistent leaf polarity here.
 	defer func() {
-		if recover() == nil {
-			t.Fatal("expected source polarity assertion")
+		if got := recover(); got != "acec: inconsistent leaf polarity" {
+			t.Fatalf("polarity panic = %v", got)
 		}
 	}()
 	Acec_DetectAdditional(p, 0)

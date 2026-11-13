@@ -10,8 +10,8 @@ func TestProduceBoxWithoutXors(t *testing.T) {
 	a := gia.Gia_ManAppendCi(p)
 	gia.Gia_ManAppendCo(p, a)
 	defer func() {
-		if recover() == nil {
-			t.Fatal("expected C zero-root assertion")
+		if got := recover(); got != "acec: root ordering requires an XOR chain" {
+			t.Fatalf("root-chain panic = %v", got)
 		}
 	}()
 	Acec_ProduceBox(p, 0)
@@ -55,7 +55,10 @@ func TestProduceBoxWithoutAdderTree(t *testing.T) {
 	Acec_InsertFadd(p, in, out)
 	gia.Gia_ManAppendCo(p, out[0])
 	gia.Gia_ManAppendCo(p, out[1])
-	if box := Acec_ProduceBox(p, 0); box != nil {
-		t.Fatal("a single output rank is not an adder tree")
-	}
+	defer func() {
+		if got := recover(); got != "acec: root ordering requires an XOR chain" {
+			t.Fatalf("root-chain panic = %v", got)
+		}
+	}()
+	Acec_ProduceBox(p, 0)
 }

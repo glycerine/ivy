@@ -48,10 +48,13 @@ func TestABCDifferential(t *testing.T) {
 			if len(expected) != c.count {
 				t.Fatalf("invalid vector length %d", len(expected))
 			}
-			dir := t.TempDir()
-			base := filepath.Join(dir, "base.aig")
-			if err := gia.Gia_AigerWrite(c.graph(c.base), base, 0, 0, 0); err != nil {
-				t.Fatal(err)
+			var dir, base string
+			if abc != "" {
+				dir = t.TempDir()
+				base = filepath.Join(dir, "base.aig")
+				if err := gia.Gia_AigerWrite(c.graph(c.base), base, 0, 0, 0); err != nil {
+					t.Fatal(err)
+				}
 			}
 			for i := 0; i < c.count; i++ {
 				var params Acec_ParCec_t

@@ -31,6 +31,10 @@ matching boxes.
 polarity, matching the precondition enforced by the Go port. Build it with the
 same commands, substituting its filename.
 
+`acec_one_root.c` and `acec_single_adder.c` both reach the same assertion
+because their roots do not form a linked chain. `acec_disconnected_roots.c`
+shows that C retains the first linked chain and omits a disconnected root.
+
 `acec_zero_roots.c` invokes `Acec_ProduceBox` on a single-input buffer graph.
 With assertions enabled, ABC aborts in `Acec_OrderTreeRoots` because no XOR
 root exists; the Go test checks the corresponding panic. Build it with the

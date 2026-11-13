@@ -1,16 +1,13 @@
 package acec
 
-import (
-	"reflect"
-	"testing"
-)
+import "testing"
 
 // The source initializer overwrites every field, not just the conflict limit.
 func TestSourceParameterDefaultsReplacePriorValues(t *testing.T) {
 	p := Acec_ParCec_t{nBTLimit: 7, TimeLimit: 7, fMiter: 7, fDualOutput: 7, fTwoOutput: 7, fBooth: 7, fSilent: 7, fVeryVerbose: 7, fVerbose: 7, iOutFail: 7}
 	Acec_ManCecSetDefaultParams(&p)
 	want := Acec_ParCec_t{nBTLimit: 1000, iOutFail: -1}
-	if !reflect.DeepEqual(p, want) {
+	if p != want {
 		t.Fatalf("parameters %#v, source defaults %#v", p, want)
 	}
 }

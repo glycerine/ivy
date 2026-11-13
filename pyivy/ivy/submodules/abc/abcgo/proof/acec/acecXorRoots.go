@@ -19,7 +19,7 @@ func Acec_CheckXors(p *Gia_Man_t, xors *Vec_Int_t) {
 		if n > 1 {
 			fmt.Printf("*** Obj %d has %d two-input XOR cuts.\n", id, n)
 			total++
-		} else if n == 1 && gia.Gia_ObjRecognizeExor(gia.Gia_ManObj(p, int32(id)), nil, nil) == 0 {
+		} else if n == 1 && gia.Gia_ObjRecognizeExor(gia.Gia_ManObj(p, int32(id)), nil, nil) != 0 {
 			fmt.Printf("*** Obj %d cannot be recognized as XOR.\n", id)
 		}
 	}
@@ -30,9 +30,6 @@ func Acec_CheckXors(p *Gia_Man_t, xors *Vec_Int_t) {
 func Acec_OrderTreeRoots(p *Gia_Man_t, adds, roots, ranks *Vec_Int_t) *Vec_Int_t {
 	n := vec.Vec_IntSize(roots)
 	order := vec.Vec_IntAlloc(n)
-	if n == 0 {
-		panic("acec: root ordering requires an XOR chain")
-	}
 	move := vec.Vec_IntStartFull(n)
 	for i := 0; 6*i < vec.Vec_IntSize(adds); i++ {
 		node := vec.Vec_IntEntry(adds, 6*i+4)
@@ -47,27 +44,24 @@ func Acec_OrderTreeRoots(p *Gia_Man_t, adds, roots, ranks *Vec_Int_t) *Vec_Int_t
 			}
 		}
 	}
-	used := make([]bool, n)
-	// Start at chain tails, then retain disconnected roots in their given order.
-	for pass := 0; pass < 2; pass++ {
-		for start := 0; start < n; start++ {
-			if used[start] {
-				continue
-			}
-			if pass == 0 && (vec.Vec_IntEntry(move, start) != -1 || vec.Vec_IntFind(move, int32(start)) < 0) {
-				continue
-			}
-			i := start
-			for !used[i] {
-				used[i] = true
-				vec.Vec_IntPush(order, vec.Vec_IntEntry(roots, i))
-				next := vec.Vec_IntFind(move, int32(i))
-				if next < 0 || used[next] {
-					break
-				}
-				i = next
-			}
+	// The source requires a chain tail referenced by another rank.
+	start := -1
+	for i := 0; i < n; i++ {
+		if vec.Vec_IntEntry(move, i) == -1 && vec.Vec_IntFind(move, int32(i)) >= 0 {
+			start = i
+			break
 		}
+	}
+	if start < 0 {
+		panic("acec: root ordering requires an XOR chain")
+	}
+	for i := start; ; {
+		vec.Vec_IntPush(order, vec.Vec_IntEntry(roots, i))
+		next := vec.Vec_IntFind(move, int32(i))
+		if next < 0 {
+			break
+		}
+		i = next
 	}
 	return order
 }
