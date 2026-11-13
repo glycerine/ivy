@@ -329,52 +329,21 @@ func Int2_ManCreateFrames(p *Int2_Man_t, iFrame int32, vPrefCos *Vec_Int_t) {
 				vec.Vec_IntPush(p.vStack, faninID)
 			}
 		case gia.Gia_ObjIsAnd(obj) != 0:
-			a, b, c, kind := p.pGia.Gate(iObj)
-			fanins := []int32{a, b}
-			if kind == 4 {
-				fanins = append(fanins, c)
-			}
-			if kind == 5 {
-				fanins = fanins[:1]
-			}
-			mapped := make([]int32, len(fanins))
-			ready := true
-			for i, fanin := range fanins {
-				mapped[i] = Int2_ManCheckFrames(p, frame, fanin>>1)
-				if mapped[i] < 0 {
-					ready = false
-				} else {
-					mapped[i] ^= fanin & 1
-				}
-			}
-			if !ready {
+			ids := []int32{gia.Gia_ObjFaninId0p(p.pGia, obj), gia.Gia_ObjFaninId1p(p.pGia, obj)}
+			complements := []int32{gia.Gia_ObjFaninC0(obj), gia.Gia_ObjFaninC1(obj)}
+			mapped := []int32{Int2_ManCheckFrames(p, frame, ids[0]), Int2_ManCheckFrames(p, frame, ids[1])}
+			if mapped[0] < 0 || mapped[1] < 0 {
 				vec.Vec_IntPush(p.vStack, frame)
 				vec.Vec_IntPush(p.vStack, iObj)
-				for i, fanin := range fanins {
+				for i, id := range ids {
 					if mapped[i] < 0 {
 						vec.Vec_IntPush(p.vStack, frame)
-						vec.Vec_IntPush(p.vStack, fanin>>1)
+						vec.Vec_IntPush(p.vStack, id)
 					}
 				}
 				continue
 			}
-			var lit int32
-			switch kind {
-			case 2:
-				lit = hashAnd(mapped[0], mapped[1])
-			case 3:
-				x := hashAnd(mapped[0], mapped[1]^1)
-				y := hashAnd(mapped[0]^1, mapped[1])
-				lit = hashAnd(x^1, y^1) ^ 1
-			case 4:
-				x := hashAnd(mapped[0], mapped[1])
-				y := hashAnd(mapped[0]^1, mapped[2])
-				lit = hashAnd(x^1, y^1) ^ 1
-			case 5:
-				lit = mapped[0]
-			default:
-				panic("int2: unsupported internal GIA object")
-			}
+			lit := hashAnd(mapped[0]^complements[0], mapped[1]^complements[1])
 			Int2_ManWriteFrames(p, frame, iObj, lit)
 		default:
 			panic("int2: unsupported GIA object in frame construction")

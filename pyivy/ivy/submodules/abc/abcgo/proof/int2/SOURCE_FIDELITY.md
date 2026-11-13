@@ -46,3 +46,27 @@ nil without a map or graph: its clause loop references undeclared `k` and
 `vSop`, and CNF is derived into `pNew` but read from `pSuff`. The C code
 does not provide a reliable clause or CNF contract to port. No suffix,
 preimage, or interpolation claim is made.
+
+Other reconstructed helpers also have limits. `Int2_ManUnroll` uses the
+undeclared name `pAig` throughout its C body; `Int2_ManPreparePrefix` reads
+the CNF from `pPref` despite deriving it into `pNew`, and refers to undeclared
+locals. The Go versions resolve those errors by inference, so their tests
+establish behavior of the Go implementation, not equivalence to executable C.
+`Int2_ManCreateFrames` in `int2Bmc.c` likewise refers to undeclared `f`,
+`iObj`, and `pFrames` and has inconsistent SAT-manager arguments. Its Go
+implementation is reconstructed and has no executable C oracle.
+In particular, the C AND branch passes the two mapped fanin literals to
+`Gia_ManHashAnd` without applying the source fanin complement bits; the Go
+implementation currently applies those bits. This is a difference in the
+source text, not an executable comparison, because the C function does not
+compile as written.
+
+The graph-copy and frame helpers follow the checked-in C loop, which treats
+all `Gia_ManForEachAnd` nodes as ordinary ANDs. This changes native XOR/MUX
+semantics. A compiled C probe (`test_vectors/native_xor_copy.c`) confirms a
+native XOR of two inputs copies as their AND; a Go regression checks the same
+result across all input assignments. `Int2_ManCreateFrames` has an incomplete
+C body as noted above, so the analogous incremental behavior remains inferred.
+Zero-frame unrolling and frame
+initialization also explicitly return the all-zero initial state in Go;
+the C bodies read values not initialized by a zero-iteration loop.

@@ -57,9 +57,6 @@ func Int2_ManCollectInternal_rec(p *Gia_Man_t, obj *Gia_Obj_t, nodes *Vec_Int_t,
 	}
 	Int2_ManCollectInternal_rec(p, gia.Gia_ObjFanin0(obj), nodes, seen)
 	Int2_ManCollectInternal_rec(p, gia.Gia_ObjFanin1(obj), nodes, seen)
-	if gia.Gia_ObjIsMux(p, obj) != 0 {
-		Int2_ManCollectInternal_rec(p, gia.Gia_ObjFanin2(p, obj), nodes, seen)
-	}
 	vec.Vec_IntPush(nodes, id)
 }
 
