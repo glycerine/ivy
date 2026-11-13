@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/aig"
 	"strings"
+	"sync"
 )
 
 type tokenType int32
@@ -34,8 +35,16 @@ func generateTypedNode(kind tokenType) *ltlNode { return &ltlNode{Type: kind, Ob
 
 // ParseFormula reads the source prefix notation: &,+,! and :G,:F,:X,:U.
 // Unlike the C global cursor, every invocation owns its parsing position.
-func ParseFormula(text string) (*LTLNode, error) {
-	position := 0
+func ParseFormula(text string) (*LTLNode, error) { return parseFormula(text, true, true) }
+
+// Source tokenization does not recognize '>' as an operator, and C returns
+// after the first expression rather than rejecting trailing input.
+func parseFormula(text string, implication, strict bool) (*LTLNode, error) {
+	node, _, err := parseFormulaAt(text, 0, implication, strict)
+	return node, err
+}
+func parseFormulaAt(text string, start int, implication, strict bool) (*LTLNode, int, error) {
+	position := start
 	var parse func() (*ltlNode, error)
 	skip := func() {
 		for position < len(text) && strings.ContainsRune(" \t\n\r\v\f", rune(text[position])) {
@@ -58,7 +67,9 @@ func ParseFormula(text string) (*LTLNode, error) {
 		case '!':
 			kind = NOT
 		case '>':
-			kind = IMPLY
+			if implication {
+				kind = IMPLY
+			}
 		case ':':
 			if position == len(text) {
 				return nil, fmt.Errorf("live: missing temporal operator")
@@ -104,16 +115,49 @@ func ParseFormula(text string) (*LTLNode, error) {
 	}
 	root, err := parse()
 	if err != nil {
-		return nil, err
+		return nil, position, err
 	}
-	skip()
-	if position != len(text) {
-		return nil, fmt.Errorf("live: trailing formula input at byte %d", position)
+	if strict {
+		skip()
 	}
-	return root, nil
+	if strict && position != len(text) {
+		return nil, position, fmt.Errorf("live: trailing formula input at byte %d", position)
+	}
+	return root, position, nil
 }
-func parseFormulaCreateAST(text string) *ltlNode { node, _ := ParseFormula(text); return node }
-func readLtlFormula(text string) *ltlNode        { return parseFormulaCreateAST(text) }
+
+// Source readLtlFormula uses this process-wide cursor; the exported native
+// parser remains reentrant. A lock protects the Go representation from races.
+var sourceParserMu sync.Mutex
+var startOfSuffixString int
+
+func resetGlobalVar() { sourceParserMu.Lock(); startOfSuffixString = 0; sourceParserMu.Unlock() }
+func readLtlFormula(text string) *ltlNode {
+	sourceParserMu.Lock()
+	defer sourceParserMu.Unlock()
+	if startOfSuffixString >= len(text) {
+		return nil
+	}
+	node, end, err := parseFormulaAt(text, startOfSuffixString, false, false)
+	startOfSuffixString = end
+	if err != nil {
+		return nil
+	}
+	return node
+}
+func parseFormulaCreateAST(text string) *ltlNode {
+	sourceParserMu.Lock()
+	defer sourceParserMu.Unlock()
+	defer func() { startOfSuffixString = 0 }()
+	if startOfSuffixString >= len(text) {
+		return nil
+	}
+	node, _, err := parseFormulaAt(text, startOfSuffixString, false, false)
+	if err != nil {
+		return nil
+	}
+	return node
+}
 func checkBooleanConstant(name string) int32 {
 	if name == "true" {
 		return 1

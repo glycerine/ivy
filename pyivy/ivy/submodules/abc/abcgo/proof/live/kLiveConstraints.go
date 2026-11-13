@@ -1,6 +1,7 @@
 package live
 
 import (
+	"fmt"
 	"github.com/glycerine/abcgo/aig/aig"
 	"strings"
 )
@@ -67,4 +68,40 @@ func createNewAigWith0LivePoMode(p *aig.Graph, signals []aig.Edge, index *int32,
 }
 func generateWorkingAig(p *aig.Graph, n *Network, index *int32) *aig.Graph {
 	return createNewAigWith0LivePo(p, collectCSSignals(n, p), index)
+}
+
+// checkMonotoneSignal and gatherMonotoneSignals are unfinished source entry
+// points; the latter prints each internal object before returning NULL.
+func checkMonotoneSignal() []aig.Edge { return nil }
+func gatherMonotoneSignals(p *aig.Graph) []aig.Edge {
+	for _, edge := range p.LiveEdges() {
+		kind := p.Node(edge).Kind
+		if kind == aig.And || kind == aig.ExclusiveOr {
+			n := p.Node(edge)
+			c0, c1 := " ", " "
+			if n.Fanins[0].Complemented() {
+				c0 = "'"
+			}
+			if n.Fanins[1].Complemented() {
+				c1 = "'"
+			}
+			fmt.Printf("Node %4d : AND( %4d%s, %4d%s ) (refs = %3d)", edge.NodeID(), n.Fanins[0].NodeID(), c0, n.Fanins[1].NodeID(), c1, n.Refs)
+			if equiv := aig.Aig_ObjEquiv(p, edge); equiv != aig.InvalidEdge {
+				fmt.Printf("  { %4d ", edge.NodeID())
+				for equiv != aig.InvalidEdge {
+					phase := " "
+					if aig.Aig_ObjPhase(p, equiv) != aig.Aig_ObjPhase(p, edge) {
+						phase = "'"
+					}
+					fmt.Printf(" %4d%s", equiv.NodeID(), phase)
+					equiv = aig.Aig_ObjEquiv(p, equiv)
+				}
+				fmt.Print(" }")
+			} else if aig.Aig_ObjRepr(p, edge) != aig.InvalidEdge {
+				fmt.Printf("  class of %d", edge.NodeID())
+			}
+			fmt.Println()
+		}
+	}
+	return nil
 }

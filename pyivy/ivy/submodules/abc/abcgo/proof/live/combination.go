@@ -142,6 +142,11 @@ func disjunctiveTester(p *aig.Graph, candidates []aig.Edge, k int32) *aig.Graph 
 }
 func generateDisjunctiveTester(n *Network, p *aig.Graph, combN, combK int32) *aig.Graph {
 	hints := findHintOutputs(n)
+	// The C constructor uses last-first+1 as its count, then indexes the
+	// hint vector through that count. Gaps violate that source precondition.
+	if len(hints) > 0 && int(hints[len(hints)-1]-hints[0]+1) != len(hints) {
+		panic("live: source hint range is not contiguous")
+	}
 	signals := make([]aig.Edge, len(hints))
 	for i, index := range hints {
 		signals[i] = p.Outputs()[index]

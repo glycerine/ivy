@@ -48,7 +48,7 @@ func TestBiereAgainstOriginalABC(t *testing.T) {
 	if _, err := os.Stat(binary); err != nil {
 		t.Skip("original ABC executable unavailable")
 	}
-	for _, command := range []string{"l2s", "l2s -1", "l2s -l", "l2s -s", "l2s -s -1", "l2ssim", "l2ssim -1"} {
+	for _, command := range []string{"l2s", "l2s -1", "l2s -l", "l2s -l -1", "l2s -s", "l2s -s -1", "l2ssim", "l2ssim -1"} {
 		n := liveFixture(true)
 		model, err := n.Graph.AigerModel()
 		if err != nil {

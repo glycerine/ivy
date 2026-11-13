@@ -47,3 +47,50 @@ func TestArenaViolationHelperTruthTable(t *testing.T) {
 		}
 	}
 }
+
+func TestSourceArenaHelpersAllowExtraLatchEntries(t *testing.T) {
+	old := aig.Aig_ManStart(8)
+	x := aig.Aig_ObjCreateCi(old)
+	aig.Aig_ObjCreateCo(old, x)
+	dst := aig.Aig_ManStart(8)
+	copy := aig.Aig_ObjCreateCi(dst)
+	extra := aig.Aig_ObjCreateCi(dst)
+	aig.Aig_ObjSetCopy(old, x, copy)
+	var next, monotone []aig.Edge
+	createArenaViolation(old, dst, copy, copy, [][]int32{{0}}, []aig.Edge{copy, extra}, &next, &monotone)
+	if len(next) != 1 || len(monotone) != 1 {
+		t.Fatalf("next=%v monotone=%v", next, monotone)
+	}
+	outs := createArenaLi(dst, [][]int32{{0}}, []aig.Edge{copy, extra})
+	if len(outs) != 1 {
+		t.Fatalf("source emits one CO per barrier, got %d", len(outs))
+	}
+	if createArenaLO(dst, nil) != nil || createArenaLi(dst, nil, nil) != nil || collectBarrierDisjunctions(old, dst, nil) != nil {
+		t.Fatal("source empty helper returns NULL")
+	}
+}
+
+func TestSourceMonotonicityVerificationTruthTable(t *testing.T) {
+	g := aig.NewGraph()
+	inputs := make([]aig.Edge, 6)
+	for i := range inputs {
+		inputs[i] = g.NewInput()
+	}
+	result := createAndGateForMonotonicityVerification(g, inputs[:2], inputs[2:4], inputs[4], inputs[5])
+	g.AddOutput(result)
+	for mask := 0; mask < 64; mask++ {
+		v := make([]bool, 6)
+		for i := range v {
+			v[i] = mask&(1<<i) != 0
+		}
+		got, err := g.Evaluate(v)
+		if err != nil {
+			t.Fatal(err)
+		}
+		guard := v[4] && v[5]
+		want := (!guard || !v[2] || v[0]) && (!guard || !v[3] || v[1])
+		if got[0] != want {
+			t.Fatalf("%v: got %v want %v", v, got[0], want)
+		}
+	}
+}

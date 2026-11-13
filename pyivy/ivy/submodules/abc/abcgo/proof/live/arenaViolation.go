@@ -3,6 +3,9 @@ package live
 import "github.com/glycerine/abcgo/aig/aig"
 
 func createArenaLO(p *aig.Graph, barriers [][]int32) []aig.Edge {
+	if len(barriers) == 0 {
+		return nil
+	}
 	result := make([]aig.Edge, len(barriers))
 	for i := range result {
 		result[i] = aig.Aig_ObjCreateCi(p)
@@ -10,11 +13,14 @@ func createArenaLO(p *aig.Graph, barriers [][]int32) []aig.Edge {
 	return result
 }
 func createArenaLi(p *aig.Graph, barriers [][]int32, signals []aig.Edge) []aig.Edge {
-	if len(barriers) != len(signals) {
+	if len(barriers) == 0 {
+		return nil
+	}
+	if len(signals) < len(barriers) {
 		panic("live: arena next-state count")
 	}
-	result := make([]aig.Edge, len(signals))
-	for i, e := range signals {
+	result := make([]aig.Edge, len(barriers))
+	for i, e := range signals[:len(barriers)] {
 		result[i] = aig.Aig_ObjCreateCo(p, e)
 	}
 	return result
@@ -35,6 +41,9 @@ func driverToPoNew(p *aig.Graph, po aig.Edge) aig.Edge {
 	return copy ^ aig.Edge(driver&1)
 }
 func collectBarrierDisjunctions(old, new *aig.Graph, barriers [][]int32) []aig.Edge {
+	if len(barriers) == 0 {
+		return nil
+	}
 	signals := make([]aig.Edge, len(barriers))
 	for i, group := range barriers {
 		if len(group) == 0 {
@@ -53,8 +62,20 @@ func collectBarrierDisjunctions(old, new *aig.Graph, barriers [][]int32) []aig.E
 }
 func Aig_Xor(p *aig.Graph, a, b aig.Edge) aig.Edge { return aig.Aig_Exor(p, a, b) }
 func createArenaViolation(old, new *aig.Graph, begin, within aig.Edge, barriers [][]int32, previous []aig.Edge, next, monotone *[]aig.Edge) aig.Edge {
+	return createArenaViolationMode(old, new, begin, within, barriers, previous, next, monotone, true)
+}
+func createArenaViolationMode(old, new *aig.Graph, begin, within aig.Edge, barriers [][]int32, previous []aig.Edge, next, monotone *[]aig.Edge, source bool) aig.Edge {
+	if next == nil || monotone == nil {
+		panic("live: missing arena output vector")
+	}
+	if source && len(*monotone) != 0 {
+		panic("live: source arena output vector must be empty")
+	}
 	signals := collectBarrierDisjunctions(old, new, barriers)
-	if len(previous) != len(signals) {
+	if source && signals == nil {
+		panic("live: source requires nonempty barriers")
+	}
+	if len(previous) < len(signals) {
 		panic("live: barrier latch count")
 	}
 	*monotone = append((*monotone)[:0], signals...)
@@ -79,7 +100,7 @@ func collectPendingSignalWithDSC(n *Network, p *aig.Graph) int32 {
 	return findPendingSignal(sourceNetwork(n, p))
 }
 func createMonotoneBarriers(p *aig.Graph, signals, previous []aig.Edge, pending, oldPending aig.Edge) aig.Edge {
-	if len(signals) != len(previous) {
+	if len(previous) < len(signals) {
 		panic("live: monotone barrier latch count")
 	}
 	guard := aig.Aig_And(p, pending, oldPending)
@@ -89,10 +110,18 @@ func createMonotoneBarriers(p *aig.Graph, signals, previous []aig.Edge, pending,
 	}
 	return result
 }
+
+// createAndGateForMonotonicityVerification retains the C argument order.
+func createAndGateForMonotonicityVerification(p *aig.Graph, signals, previous []aig.Edge, pendingLo, pendingSignal aig.Edge) aig.Edge {
+	return createMonotoneBarriers(p, signals, previous, pendingSignal, pendingLo)
+}
 func createNewAigWith0LivePoWithDSC(p *aig.Graph, signals []aig.Edge, index *int32, windowBegin, withinWindow, pendingIndex int32, barriers [][]int32) *aig.Graph {
 	return createNewAigWith0LivePoWithDSCMode(p, signals, index, windowBegin, withinWindow, pendingIndex, barriers, true)
 }
 func createNewAigWith0LivePoWithDSCMode(p *aig.Graph, signals []aig.Edge, index *int32, windowBegin, withinWindow, pendingIndex int32, barriers [][]int32, source bool) *aig.Graph {
+	if source && len(barriers) == 0 {
+		panic("live: source requires nonempty barriers")
+	}
 	if windowBegin < 0 || withinWindow < 0 || pendingIndex < 0 {
 		panic("live: arena window/pending output missing")
 	}
@@ -115,7 +144,7 @@ func createNewAigWith0LivePoWithDSCMode(p *aig.Graph, signals []aig.Edge, index 
 	}
 	begin, within := c.signal(p.Outputs()[windowBegin]), c.signal(p.Outputs()[withinWindow])
 	var barrierNext, barrierSignals []aig.Edge
-	violation := createArenaViolation(p, c.destination, begin, within, barriers, arenaLatches, &barrierNext, &barrierSignals)
+	violation := createArenaViolationMode(p, c.destination, begin, within, barriers, arenaLatches, &barrierNext, &barrierSignals, source)
 	pending := c.signal(p.Outputs()[pendingIndex])
 	monotone := createMonotoneBarriers(c.destination, barrierSignals, monotoneOld, pending, pendingOld)
 	for i := 0; i < propertyOutputs(p); i++ {

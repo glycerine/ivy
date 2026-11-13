@@ -23,7 +23,7 @@ func TestSourceBuildersCopyUnusedNodesInInputOrder(t *testing.T) {
 		}},
 		{"arena", func(p *aig.Graph, used aig.Edge) *aig.Graph {
 			index := int32(-1)
-			return createNewAigWith0LivePoWithDSC(p, []aig.Edge{used}, &index, 0, 0, 0, nil)
+			return createNewAigWith0LivePoWithDSC(p, []aig.Edge{used}, &index, 0, 0, 0, [][]int32{{0}})
 		}},
 		{"monotone", func(p *aig.Graph, _ aig.Edge) *aig.Graph {
 			return createMonotoneTester(p, &aigPoIndices{0, 0, 0, -1}, &monotoneVectorsStruct{attrHintMonotone: []int32{0}}, nil)

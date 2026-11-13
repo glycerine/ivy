@@ -171,7 +171,16 @@ func livenessToSafety(network *Network, options TransformOptions, source, source
 			}
 			sharedGF := make(map[aig.Edge]aig.Edge)
 			for _, formula := range options.LTL {
-				node, err := ParseFormula(formula)
+				var node *LTLNode
+				var err error
+				if source {
+					node = parseFormulaCreateAST(formula)
+					if node == nil {
+						err = fmt.Errorf("live: invalid source LTL formula")
+					}
+				} else {
+					node, err = ParseFormula(formula)
+				}
 				if err != nil {
 					return nil, err
 				}
@@ -289,9 +298,11 @@ func LivenessToSafetyTransformationOneStepLoop(mode int32, n *Network, p *aig.Gr
 func validSourceLTL(n *Network, formulas []string) ([]string, error) {
 	valid := make([]string, 0, len(formulas))
 	for _, formula := range formulas {
-		node, err := ParseFormula(formula)
-		if err == nil && isWellFormed(node) != 0 && checkSignalNameExistence(n, node) != 0 {
-			valid = append(valid, formula)
+		node := parseFormulaCreateAST(formula)
+		if node != nil && isWellFormed(node) != 0 && checkSignalNameExistence(n, node) != 0 {
+			// Preserve the parsed expression when the source global cursor
+			// started within the input or the C parser ignored a trailing tail.
+			valid = append(valid, node.String())
 		}
 	}
 	if len(valid) == 0 {
@@ -435,8 +446,20 @@ func retrieveLOName(n *Network, old, new *aig.Graph, pivot aig.Edge, live, fair 
 func updateNewNetworkNameManager(n *Network, p *aig.Graph, piNames, loNames []string) {
 	n.InputNames = append(append([]string(nil), piNames...), loNames...)
 }
+func printLivenessUsage(frame *Frame, ltl bool) int32 {
+	out, _ := frame.writers()
+	name := "l2s"
+	if ltl {
+		name = "l3s"
+	}
+	fmt.Fprintf(out, "usage: %s [-1lsh]\n", name)
+	fmt.Fprint(out, "\t         performs Armin Biere's live-to-safe transformation\n\t-1 : no shadow logic, presume all loops are self loops\n\t-l : ignore liveness and fairness outputs\n\t-s : ignore safety assertions and assumptions\n\t-h : print command usage\n")
+	return 1
+}
 func commandTransform(frame *Frame, argv []string, ltl, simulation, abstraction bool) int32 {
-	if frame.Network == nil {
+	if simulation && frame.Network == nil {
+		_, err := frame.writers()
+		fmt.Fprintln(err, "Empty network.")
 		return 1
 	}
 	options := TransformOptions{}
@@ -462,12 +485,12 @@ func commandTransform(frame *Frame, argv []string, ltl, simulation, abstraction 
 			switch flag {
 			case "-s":
 				if onlyLiveness || onlySafety {
-					return 1
+					return printLivenessUsage(frame, ltl)
 				}
 				onlyLiveness = true
 			case "-l":
 				if onlyLiveness || onlySafety {
-					return 1
+					return printLivenessUsage(frame, ltl)
 				}
 				onlySafety = true
 			case "-1":
@@ -476,15 +499,18 @@ func commandTransform(frame *Frame, argv []string, ltl, simulation, abstraction 
 				}
 				oneStep = true
 			case "-h":
-				out, _ := frame.writers()
-				fmt.Fprintln(out, "l2s [-s|-l] [-1]")
-				return 1
+				return printLivenessUsage(frame, ltl)
 			default:
-				return 1
+				return printLivenessUsage(frame, ltl)
 			}
 		}
 	}
 
+	if frame.Network == nil {
+		_, err := frame.writers()
+		fmt.Fprintln(err, "Empty network.")
+		return 1
+	}
 	if simulation {
 		onlyLiveness = true
 	}
@@ -525,7 +551,7 @@ func commandTransform(frame *Frame, argv []string, ltl, simulation, abstraction 
 			}
 		}
 	}
-	result, err := livenessToSafety(n, options, true, oneStep && !simulation)
+	result, err := livenessToSafety(n, options, true, oneStep && !simulation && options.Mode != IGNORE_LIVENESS_KEEP_SAFETY_MODE)
 	if err != nil {
 		_, errors := frame.writers()
 		fmt.Fprintln(errors, err)

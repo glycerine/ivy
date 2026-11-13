@@ -5,6 +5,7 @@ import (
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/proof/pdr"
+	"io"
 	"os"
 	"strings"
 	"time"
@@ -203,7 +204,13 @@ func kLive(n *Network, options KLiveOptions, source bool) KLiveResult {
 	}
 	invariant := collectSafetyInvariantPOIndex(n)
 	if (options.Directive == 1 || options.Directive == 3 || options.Directive == 4) && invariant < 0 {
+		if source {
+			panic("live: source requires safety invariant")
+		}
 		return KLiveResult{Status: -1, Error: fmt.Errorf("live: csSafetyInvar_ output missing")}
+	}
+	if source && (options.Directive == 3 || options.Directive == 4) && len(barriers) == 0 {
+		panic("live: source requires nonempty barriers")
 	}
 	if options.Directive == 3 || options.Directive == 4 {
 		if collectWindowBeginSignalWithDSC(n, n.Graph) < 0 || collectWithinWindowSignalWithDSC(n, n.Graph) < 0 || findPendingSignal(n) < 0 {
@@ -255,6 +262,15 @@ func kLive(n *Network, options KLiveOptions, source bool) KLiveResult {
 	}
 	return result
 }
+func printKLiveUsage(frame *Frame, combination bool) int32 {
+	out, _ := frame.writers()
+	if combination {
+		fmt.Fprint(out, "usage: nck [-cmgCh]\n\tgenerates combinatorial signals for stabilization\n\t-h : print usage\n")
+	} else {
+		fmt.Fprint(out, "usage: kcs [-cmgCh]\n\timplements Claessen-Sorensson's k-Liveness algorithm\n\t-c : verification with constraints, looks for POs prefixed with csSafetyInvar_\n\t-m : discovers monotone signals\n\t-g : verification with user-supplied barriers, looks for POs prefixed with csLevel1Stabil_\n\t-C : verification with discovered monotone signals\n\t-h : print usage\n")
+	}
+	return 1
+}
 func Abc_CommandCS_kLiveness(frame *Frame, argc int32, argv []string) int32 {
 	options := KLiveOptions{Checker: frame.Checker}
 	args := argv
@@ -281,7 +297,7 @@ func Abc_CommandCS_kLiveness(frame *Frame, argc int32, argv []string) int32 {
 		case "-g":
 			options.Directive = 4
 		default:
-			return 1
+			return printKLiveUsage(frame, false)
 		}
 	}
 	result := kLive(frame.Network, options, true)
@@ -307,7 +323,7 @@ func Abc_CommandNChooseK(frame *Frame, argc int32, argv []string) int32 {
 		}
 		for _, flag := range arg[1:] {
 			if !strings.ContainsRune("cmCg", flag) {
-				return 1
+				return printKLiveUsage(frame, true)
 			}
 		}
 	}
@@ -328,4 +344,11 @@ func Abc_CommandNChooseK(frame *Frame, argc int32, argv []string) int32 {
 	result := generateGeneralDisjunctiveTester(frame.Network, frame.Network.Graph, k)
 	frame.Network = &Network{Graph: result}
 	return 1
+}
+
+// getVecOfVecFairness is the source's unfinished reader: it consumes input
+// and returns an allocated empty vector without interpreting any lines.
+func getVecOfVecFairness(r io.Reader) [][]string {
+	_, _ = io.Copy(io.Discard, r)
+	return [][]string{}
 }
