@@ -15,13 +15,34 @@ package-sized checkpoints on the current branch. A repository-wide race/vet
 gate has not yet been rerun after the latest changes; several focused audits
 remain active, so do not treat this checkpoint as completion.
 
+## Source API inventory
+
+Every checked-in `src/proof` package directory has a Go counterpart. A
+tree-wide scan of exported C declarations and definitions found no confirmed
+missing active external API. This is an inventory result, not proof that all
+implementations or option branches are source-equivalent. C macro iterations
+do not require Go functions, and some C internal helpers are consolidated into
+Go methods. DCH and SSC class/SAT helpers and CEC solver helpers use
+package-internal implementations; INT's optional MiniSat 1.14p interpolation
+helpers share a Go implementation. The ABS UNSAT-core refinement helpers in
+`absRef.c` are under `#if 0`.
+
+Some headers declare symbols that have no implementation in this C checkout,
+including `Fraig_DfsReverse`, `Fraig_CountLevels`, `Ssc_GenerateOneHot`, and
+`ZPdr_SetIsInit`. These are upstream declaration-only entries, not completed Go
+implementations. INT2's checked-in interpolation driver and suffix/preimage
+helpers are incomplete, as detailed below; ABS also has the source-fidelity
+and representation limits described in its package notes.
+
 ## Package status
 
 * `abs`: source tests cover C's VTA object bound, cancellation result behavior,
   and non-topological flop-ranking order. Native MUX controls are included by
   Go graph helpers where those helpers accept native GIA nodes. The C
   cancellation behavior can expose a stale proof, and is documented. Full
-  race tests and vet passed.
+  race tests and vet passed. Standalone VTA rejects native XOR/MUX graphs;
+  callers must lower them first. The old GLA `fUseFullProof` option does not
+  select a distinct proof-logging mode in Go, so resource behavior can differ.
 * `acec`: source flow and preconditions are restored. Compiled-ABC differential
   tests cover 76 circuit pairs, and checked-in test vectors exercise Booth
   normalization and tied XOR/MAJ cuts. Negative cut limits and single-output
@@ -66,7 +87,9 @@ remain active, so do not treat this checkpoint as completion.
   the Go driver returns undecided and does not invent a bounded reachability
   fallback. Helper tests characterize source behavior. The suffix constructor
   remains unsupported because C references undeclared `k`/`vSop` and reads CNF
-  from a different graph than the one into which it derives clauses.
+  from a different graph than the one into which it derives clauses. The
+  preimage helper also returns undecided because its C code refers to an
+  undeclared manager and does not establish a reliable mapping contract.
 * `live`: Go-only reachability and fairness-parser substitutes were removed.
   Command and option behavior follows the source, including empty-arena and
   zero-register one-step behavior. Package race tests and vet passed.
@@ -93,7 +116,9 @@ dominance/eviction, area-flow mapping, mapped CNF writer, and variable
 numbering. Direct compiled-C comparisons matched exact ordered DIMACS output
 for 345 generated asserted, free-output, and sequential cases; exhaustive
 three-input truth-function checks also pass. `abcgo/opt/dar` cut enumeration
-follows C's slot ordering and eviction behavior. `abcgo/sat/bsat` has a
+follows C's slot ordering and eviction behavior. Newly identified DAR and AIG
+partitioning gaps are actively being investigated and ported; those paths are
+not complete. `abcgo/sat/bsat` has a
 source-style cumulative resource-limit API. It also preserves an upstream C
 assumption-order bug: after certain root conflicts, solver reuse can report
 SAT for an inconsistent formula. The behavior is C-oracle tested and callers
