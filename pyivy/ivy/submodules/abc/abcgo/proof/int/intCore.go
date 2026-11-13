@@ -123,6 +123,14 @@ func Inter_ManPerformInterpolation(graph *aig.Graph, pars *Inter_ManParams_t, fr
 			if result == 0 {
 				if i == 0 {
 					*frame = p.nFrames
+					if aig.Aig_ManConstrNum(graph) != 0 {
+						cex := interManGetCounterExample(graph, p.nFrames+1, pars.FVerbose, deadline)
+						if cex == nil || graph.SetSequentialCounterexample(cex) != nil {
+							*frame = -1
+							return finish(-1, 0)
+						}
+						return finish(0, 0)
+					}
 					var opts bmc.Saig_ParBmc_t
 					bmc.Saig_ParBmcSetDefaultParams(&opts)
 					opts.SetInterpolationOptions(p.nFrames, 100000000, pars.FVerbose)

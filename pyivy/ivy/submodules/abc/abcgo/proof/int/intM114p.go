@@ -77,7 +77,7 @@ func Inter_ManDeriveSatSolverM114p(s M114pBackend, inter *aig.Graph, interCNF *c
 		return nil, nil, errors.New("invalid MiniSat interpolation input")
 	}
 	regs := int(trans.RegisterCount())
-	if regs == 0 || inter.RegisterCount() != 0 || frames.RegisterCount() != 0 || inter.OutputCount() != 1 || frames.OutputCount() != 1 || inter.InputCount() != regs || frames.InputCount() < regs {
+	if regs == 0 || inter.RegisterCount() != 0 || frames.RegisterCount() != 0 || inter.OutputCount() != 1 || frames.OutputCount() < 1 || inter.InputCount() != regs || frames.InputCount() < regs {
 		return nil, nil, errors.New("incompatible MiniSat interpolation graphs")
 	}
 	fv, tv := int32(framesCNF.Variables), int32(transCNF.Variables)

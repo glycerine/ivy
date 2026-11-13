@@ -76,3 +76,63 @@ func TestConstrainedSequentialWitness(t *testing.T) {
 		}
 	}
 }
+
+func TestConstrainedUnrollRejectsEarlierConstraintViolation(t *testing.T) {
+	g := aig.NewGraph()
+	x, state := g.NewInput(), g.NewInput()
+	g.AddOutput(state)
+	g.AddOutput(x) // each legal frame requires x=false
+	g.AddOutput(x)
+	aig.Aig_ManSetRegNum(g, 1)
+	aig.Aig_ManSetConstrNum(g, 1)
+	frames := Inter_ManFramesBmc(g, 2)
+	for mask := 0; mask < 4; mask++ {
+		out, err := frames.Evaluate([]bool{mask&1 != 0, mask&2 != 0})
+		if err != nil {
+			t.Fatal(err)
+		}
+		if out[0] {
+			t.Fatalf("constraint-violating sequence %02b accepted", mask)
+		}
+	}
+	if got := Inter_ManGetCounterExample(g, 2, 0); got != nil {
+		t.Fatalf("unexpected witness %+v", got)
+	}
+}
+
+func TestConstrainedWitnessHonorsExpiredDeadline(t *testing.T) {
+	g := aig.NewGraph()
+	x, state := g.NewInput(), g.NewInput()
+	g.AddOutput(state)
+	g.AddOutput(x.Not())
+	g.AddOutput(x)
+	aig.Aig_ManSetRegNum(g, 1)
+	aig.Aig_ManSetConstrNum(g, 1)
+	if got := interManGetCounterExample(g, 2, 0, util.Abc_Clock()-1); got != nil {
+		t.Fatalf("expired deadline yielded witness %+v", got)
+	}
+}
+
+func TestWitnessChecksEveryConstraintInEveryFrame(t *testing.T) {
+	baseline := aig.NewGraph()
+	bx, bs := baseline.NewInput(), baseline.NewInput()
+	baseline.AddOutput(bs)
+	baseline.AddOutput(baseline.Const0())
+	baseline.AddOutput(bx)
+	aig.Aig_ManSetRegNum(baseline, 1)
+	aig.Aig_ManSetConstrNum(baseline, 1)
+	if got := Inter_ManGetCounterExample(baseline, 2, 0); got == nil {
+		t.Fatal("first constraint alone should permit a witness")
+	}
+	g := aig.NewGraph()
+	x, state := g.NewInput(), g.NewInput()
+	g.AddOutput(state)
+	g.AddOutput(g.Const0())  // first constraint allows every input
+	g.AddOutput(state.Not()) // second constraint excludes the initial state
+	g.AddOutput(x)
+	aig.Aig_ManSetRegNum(g, 1)
+	aig.Aig_ManSetConstrNum(g, 2)
+	if got := Inter_ManGetCounterExample(g, 2, 0); got != nil {
+		t.Fatalf("contradictory constraints produced witness %+v", got)
+	}
+}
