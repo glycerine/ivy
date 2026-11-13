@@ -65,3 +65,14 @@ from `mmSims`, so that pool’s byte count does not include those allocations as
 it does in C. Restarting an untouched pool is a no-op in Go; the C function
 assumes that a first chunk exists. There is no interpolation implementation in
 `src/proof/fraig`; interpolation in other packages needs a separate audit.
+
+The C manager obtains one pool entry per simulation vector, three feedback
+buffers, and temporary covering column, recycling covering columns after use
+(`fraigNode.c`, `fraigFeed.c`). The Go pool exposes byte slices while FRAIG
+exposes word slices. Directly sharing that backing storage requires unsafe
+byte-to-word conversion and suitable alignment; reserving unused byte entries
+would instead double-allocate and produce misleading memory accounting. A
+typed pool or allocator API change would need separate design and validation,
+including active slice lifetime across resize and temporary-column recycling.
+The standalone fixed pool is compared with compiled C for chunk usage, LIFO
+recycling, and restart with `FRAIG_C_DIFFERENTIAL=1`.
