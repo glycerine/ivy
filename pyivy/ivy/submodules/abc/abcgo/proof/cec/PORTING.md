@@ -20,8 +20,12 @@ The choice-building path `gia.Cec4_ManSatSolverChoices` is not a working
 implementation when independent choice classes are present: its recursive AND
 builder returns constant zero. This is inherited from the original C routine
 `src/aig/gia/giaEquiv.c` (`Cec4_ManSatSolverAnd_rec`), which also immediately
-returns zero. The Go code preserves that behavior; a correct choice builder
-requires an implementation and independent equivalence tests. A build or a
+returns zero. The Go entry point now explicitly panics when independent choices
+need reconstruction instead of returning a potentially corrupt graph; it still
+duplicates the swept graph when no independent choices exist. The recursive AND
+entry point also panics. There are no in-tree Go production callers of this
+choice builder. A correct implementation requires independent equivalence
+tests. A build or a
 passing test of other Cec4 paths does not establish correctness of this path.
 
 ## Sequential and miter review

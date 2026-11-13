@@ -2,9 +2,11 @@ package gia
 
 import "sort"
 
-// Cec4_ManSatSolverAnd_rec is intentionally identical to the unfinished
-// upstream routine in giaEquiv.c; ABC currently returns zero unconditionally.
-func Cec4_ManSatSolverAnd_rec(_, _, _ *Gia_Man_t, _ int32) int32 { return 0 }
+// Cec4_ManSatSolverAnd_rec cannot reconstruct choices: the upstream routine
+// is unfinished and returns constant zero, which can corrupt the result graph.
+func Cec4_ManSatSolverAnd_rec(_, _, _ *Gia_Man_t, _ int32) int32 {
+	panic("gia: Cec4 choice reconstruction is unavailable")
+}
 func Cec4_ManSatSolverChoices_rec(dst, src, swept *Gia_Man_t, id int32) int32 {
 	if Gia_ObjIsClass(src, id) == 0 {
 		return Cec4_ManSatSolverAnd_rec(dst, src, swept, id)
@@ -31,25 +33,8 @@ func Cec4_ManSatSolverChoices_rec(dst, src, swept *Gia_Man_t, id int32) int32 {
 	return lits[0] ^ int32(Gia_ManObj(src, last).fPhase)
 }
 func Cec4_ManSatSolverChoices(src, swept *Gia_Man_t) *Gia_Man_t {
-	if Cec4_ManMarkIndependentClasses(src, swept) == 0 {
-		return Gia_ManDup(swept)
+	if Cec4_ManMarkIndependentClasses(src, swept) != 0 {
+		panic("gia: Cec4 choice reconstruction is unavailable")
 	}
-	dst := Gia_ManStart(swept.nObjs)
-	dst.pName, dst.pSpec = src.pName, src.pSpec
-	dst.pSibls = make([]int32, swept.nObjs)
-	Gia_ManFillValue(swept)
-	Gia_ManConst0(swept).Value = 0
-	for i := int32(0); i < Gia_ManCiNum(swept); i++ {
-		Gia_ManCi(swept, i).Value = uint32(Gia_ManAppendCi(dst))
-	}
-	for i := int32(0); i < Gia_ManCoNum(src); i++ {
-		co := Gia_ManCo(src, i)
-		Cec4_ManSatSolverChoices_rec(dst, src, swept, Gia_ObjFaninId0(co, co.id))
-	}
-	for i := int32(0); i < Gia_ManCoNum(swept); i++ {
-		co := Gia_ManCo(swept, i)
-		co.Value = uint32(Gia_ManAppendCo(dst, Gia_ObjFanin0Copy(co)))
-	}
-	Gia_ManSetRegNum(dst, Gia_ManRegNum(src))
-	return dst
+	return Gia_ManDup(swept)
 }
