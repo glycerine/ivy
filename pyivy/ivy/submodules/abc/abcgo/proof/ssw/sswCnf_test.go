@@ -75,6 +75,29 @@ func TestSswBmcDynamicProvesBoundedSafe(t *testing.T) {
 	}
 }
 
+func TestSswBmcDynamicSourceFrameAndOutputResults(t *testing.T) {
+	g := aig.NewGraph()
+	pi, latch := g.NewInput(), g.NewInput()
+	g.AddOutput(g.Const0())
+	g.AddOutput(latch)
+	g.AddOutput(pi)
+	aig.Aig_ManSetRegNum(g, 1)
+	last := int32(73)
+	if got := Ssw_BmcDynamic(g, 0, 0, 0, &last); got != -1 || last != 73 {
+		t.Fatalf("zero frames: result=%d frame=%d", got, last)
+	}
+	if got := Ssw_BmcDynamic(g, 1, 0, 0, &last); got != 1 || last != 73 {
+		t.Fatalf("bounded safe: result=%d frame=%d", got, last)
+	}
+	if got := Ssw_BmcDynamic(g, 2, 0, 0, &last); got != 0 || last != 1 {
+		t.Fatalf("failure: result=%d frame=%d", got, last)
+	}
+	cex := g.SequentialCounterexample()
+	if cex == nil || cex.IPo != 1 || cex.IFrame != 1 || !util.Abc_InfoHasBit(cex.PData, 1) {
+		t.Fatalf("incorrect source output/frame witness: %+v", cex)
+	}
+}
+
 func TestSswCnfBufferIsConstrained(t *testing.T) {
 	g := aig.NewGraph()
 	a := g.NewInput()

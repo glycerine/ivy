@@ -1,11 +1,31 @@
 package abs
 
 import (
+	"reflect"
 	"testing"
 
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/misc/vec"
 )
+
+// absRpm.c derives dominators by propagating backwards from COs and then
+// walks the chains of marked inputs. Two outputs must terminate the chain
+// where their fanouts diverge.
+func TestPiDominatorsRespectReconvergentOutputs(t *testing.T) {
+	p := gia.Gia_ManStart(16)
+	x, y, z := gia.Gia_ManAppendCi(p), gia.Gia_ManAppendCi(p), gia.Gia_ManAppendCi(p)
+	a := gia.Gia_ManAppendAnd(p, x, y)
+	b := gia.Gia_ManAppendAnd(p, a, z)
+	gia.Gia_ManAppendCo(p, b)
+	gia.Gia_ObjSetMark1(gia.Gia_ManObj(p, x>>1), 1)
+	if got := vec.Vec_IntArray(Gia_ManComputePiDoms(p)); !reflect.DeepEqual(got, []int32{a >> 1, b >> 1}) {
+		t.Fatalf("single-output dominators %v", got)
+	}
+	gia.Gia_ManAppendCo(p, a)
+	if got := vec.Vec_IntArray(Gia_ManComputePiDoms(p)); !reflect.DeepEqual(got, []int32{a >> 1}) {
+		t.Fatalf("multiple-output dominators %v", got)
+	}
+}
 
 func TestStructuralReparameterizationOutputRange(t *testing.T) {
 	for table := 0; table < 16; table++ {
