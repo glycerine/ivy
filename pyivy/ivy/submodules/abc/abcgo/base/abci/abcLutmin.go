@@ -56,25 +56,7 @@ package abci
   SeeAlso     []
 
 ***********************************************************************/
-int Abc_ObjCheckAbsorb( Abc_Obj_t * pObj, Abc_Obj_t * pPivot, int nLutSize, Vec_Ptr_t * vFanins )
-{
-    Abc_Obj_t * pFanin;
-    int i;
-    assert( Abc_ObjIsNode(pObj) && Abc_ObjIsNode(pPivot) );
-    // add fanins of the node
-    Vec_PtrClear( vFanins );
-    Abc_ObjForEachFanin( pObj, pFanin, i )
-        if ( pFanin != pPivot )
-            Vec_PtrPush( vFanins, pFanin );
-    // add fanins of the fanin
-    Abc_ObjForEachFanin( pPivot, pFanin, i )
-    {
-        Vec_PtrPushUnique( vFanins, pFanin );
-        if ( Vec_PtrSize(vFanins) > nLutSize )
-            return 0;
-    }
-    return 1;
-} 
+// Abc_ObjCheckAbsorb is translated in lutmin_absorb.go.
 
 /**Function*************************************************************
 
@@ -87,34 +69,7 @@ int Abc_ObjCheckAbsorb( Abc_Obj_t * pObj, Abc_Obj_t * pPivot, int nLutSize, Vec_
   SeeAlso     []
 
 ***********************************************************************/
-void Abc_NtkCheckAbsorb( Abc_Ntk_t * pNtk, int nLutSize )
-{
-    Vec_Int_t * vCounts;
-    Vec_Ptr_t * vFanins;
-    Abc_Obj_t * pObj, * pFanin;
-    int i, k, Counter = 0, Counter2 = 0;
-    abctime clk = Abc_Clock();
-    vCounts = Vec_IntStart( Abc_NtkObjNumMax(pNtk) );
-    vFanins = Vec_PtrAlloc( 100 );
-    Abc_NtkForEachNode( pNtk, pObj, i )
-    Abc_ObjForEachFanin( pObj, pFanin, k )
-        if ( Abc_ObjIsNode(pFanin) && Abc_ObjCheckAbsorb( pObj, pFanin, nLutSize, vFanins ) )
-        {
-            Vec_IntAddToEntry( vCounts, Abc_ObjId(pFanin), 1 );
-            Counter++;
-        }
-    Vec_PtrFree( vFanins );
-    Abc_NtkForEachNode( pNtk, pObj, i )
-        if ( Vec_IntEntry(vCounts, Abc_ObjId(pObj)) == Abc_ObjFanoutNum(pObj) )
-        {
-//            printf( "%d ", Abc_ObjId(pObj) );
-            Counter2++;
-        }
-    printf( "Absorted = %6d. (%6.2f %%)   Fully = %6d. (%6.2f %%)  ", 
-        Counter,  100.0 * Counter  / Abc_NtkNodeNum(pNtk), 
-        Counter2, 100.0 * Counter2 / Abc_NtkNodeNum(pNtk) );
-    Abc_PrintTime( 1, "Time", Abc_Clock() - clk );
-}
+// Abc_NtkCheckAbsorb is translated in lutmin_absorb.go.
 
 /**Function*************************************************************
 
