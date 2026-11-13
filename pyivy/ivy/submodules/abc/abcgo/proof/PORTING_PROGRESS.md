@@ -57,8 +57,9 @@ and representation limits described in its package notes.
   Isomorphism preconditions and constant-miter handling match C. Sweep early
   exits preserve `iOutFail`, the circuit-SAT path does not publish Go-only
   original-ID pairs, and timeout checks occur after a completed reduction
-  iteration. Linux timed sweeps use the C thread-CPU clock; timed sweeps on
-  other platforms report unsupported. Package race tests and vet passed.
+  iteration. Partition traversal now advances the source epoch twice. Linux
+  timed sweeps use the C thread-CPU clock; timed sweeps on other platforms
+  report unsupported. Package race tests and vet passed.
   Broader sweep/partition review remains partial. Cec4's upstream choice
   builder remains incomplete.
   The lower `opt/dar` facade wires its source default through the CEC adapter,
@@ -76,7 +77,9 @@ and representation limits described in its package notes.
 * `fra`: SEC, clause and BMC paths follow the active source's timeout, budget,
   solver-reuse behavior, and native-EXOR-as-AND handling where C hardcodes
   `Aig_And`. Source-derived partition, implication, one-hot, and induction
-  tests passed; broader behavioral audit remains in progress.
+  tests passed. SEC terminal counts and stored CioIds, SEC setup, and the
+  induction no-progress branch now follow C; broader behavioral audit remains
+  in progress.
 * `fracomb`: AIG deadlines now propagate through DAR rewrite stages as in C.
   Its SAT path uses the source-mapped CNF writer and source Solver2
   simplification. A multi-sweep SAT fallback test replays witnesses on original
@@ -88,8 +91,9 @@ and representation limits described in its package notes.
   are covered by source-characterization tests. MSAT review continues.
 * `framgr`: duplicate BMC helpers were consolidated only where behavior was
   shown identical. Simulation, BMC callback reset, native-EXOR-as-AND behavior,
-  and output-ID witness layout follow C; broader manager audit remains
-  incomplete.
+  output-ID witness layout, SAT root simplification, constant-implication
+  behavior, and the uncomplemented-parent assertion follow C. Race tests and
+  vet pass; broader manager audit remains incomplete.
 * `int`: MiniSat 1.14p has exhaustive Craig-interpolant checks and option/error
   coverage. Proof-root validation now builds its annotation in one ordered
   pass, preserving clause order. Race tests and vet passed.
