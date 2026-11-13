@@ -1,448 +1,275 @@
 package acec
 
-import "fmt"
+// Priority-ordered polynomial expansion from acecPolyn.c.
+import (
+	"fmt"
+	"sort"
+	"time"
 
-/**CFile****************************************************************
+	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/misc/vec"
+)
 
-  FileName    [acecPolyn.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [CEC for arithmetic circuits.]
-
-  Synopsis    [Polynomial extraction.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: acecPolyn.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "acecInt.h"
-//#include "misc/vec/vecWec.h"
-//#include "misc/vec/vecHsh.h"
-//#include "misc/vec/vecQue.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-/*
-!a            ->   1 - a
-a & b         ->   ab
-a | b         ->   a + b - ab
-a ^ b         ->   a + b - 2ab
-MUX(a, b, c)  ->   ab | (1 - a)c = ab + (1-a)c - ab(1-a)c = ab + c - ac
-
-!a & b        ->   (1 - a)b = b - ab
- a & !b       ->   a(1 - b) = a - ab
-!a & !b       ->   1 - a - b + ab
-*/
-
-   
 type Pln_Man_t struct {
-    pGia     *Gia_Man_t;      // AIG manager
-    pHashC  *Hsh_VecMan_t;    // hash table for constants
-    pHashM  *Hsh_VecMan_t;    // hash table for monomials
-    vQue     *Vec_Que_t;      // queue by largest node
-    vCounts     *Vec_Flt_t;   // largest node
-    vCoefs     *Vec_Int_t;    // coefficients for each monomial
-    Vec_Int_t *    vTempC[2]; // polynomial representation
-    Vec_Int_t *    vTempM[4]; // polynomial representation
-    vOrder     *Vec_Int_t;    // order of collapsing
-    nBuilds            int32;   // built monomials
-    nUsed            int32;     // used monomials
+	graph                *gia.Gia_Man_t
+	constants, monomials *vec.Hsh_VecMan_t
+	queue                *vec.Vec_Que_t
+	counts               *vec.Vec_Flt_t
+	coefs                *vec.Vec_Int_t
+	tempC                [2]*vec.Vec_Int_t
+	tempM                [4]*vec.Vec_Int_t
+	order                *vec.Vec_Int_t
+	builds, used         int32
 }
 
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Computation manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Pln_ManAlloc(pGia *Gia_Man_t, vOrder *Vec_Int_t) *Pln_Man_t {
-    // inlining of macro ABC_CALLOC
-    var p *Pln_Man_t  = &Pln_Man_t{};
-    p.pGia      = pGia;
-    p.pHashC    = Hsh_VecManStart( 1000 );
-    p.pHashM    = Hsh_VecManStart( 1000 );
-    p.vQue      = Vec_QueAlloc( 1000 );
-    p.vCounts   = Vec_FltAlloc( 1000 );
-    p.vCoefs    = Vec_IntAlloc( 1000 );
-    p.vTempC[0] = Vec_IntAlloc( 100 );
-    p.vTempC[1] = Vec_IntAlloc( 100 );
-    p.vTempM[0] = Vec_IntAlloc( 100 );
-    p.vTempM[1] = Vec_IntAlloc( 100 );
-    p.vTempM[2] = Vec_IntAlloc( 100 );
-    p.vTempM[3] = Vec_IntAlloc( 100 );
-    if vOrder != nil {
-        p.vOrder = Vec_IntDup(vOrder);
-    } else {
-        p.vOrder = Vec_IntStartNatural( Gia_ManObjNum(pGia) );
-    }
-    assert(Vec_IntSize(p.vOrder) == Gia_ManObjNum(pGia), "Vec_IntSize(p.vOrder) == Gia_ManObjNum(pGia)");
-    Vec_QueSetPriority( p.vQue, Vec_FltArrayP(p.vCounts) );
-    // add 0-constant and 1-monomial
-    Hsh_VecManAdd( p.pHashC, p.vTempC[0] );
-    Hsh_VecManAdd( p.pHashM, p.vTempM[0] );
-    Vec_FltPush( p.vCounts, 0 );
-    Vec_IntPush( p.vCoefs, 0 );
-    return p;
+func Pln_ManAlloc(graph *gia.Gia_Man_t, order *vec.Vec_Int_t) *Pln_Man_t {
+	p := &Pln_Man_t{graph: graph, constants: vec.Hsh_VecManStart(1000), monomials: vec.Hsh_VecManStart(1000), queue: vec.Vec_QueAlloc(1000), counts: vec.Vec_FltAlloc(1000), coefs: vec.Vec_IntAlloc(1000)}
+	for i := range p.tempC {
+		p.tempC[i] = vec.Vec_IntAlloc(100)
+	}
+	for i := range p.tempM {
+		p.tempM[i] = vec.Vec_IntAlloc(100)
+	}
+	if order == nil {
+		p.order = vec.Vec_IntStartNatural(int(gia.Gia_ManObjNum(graph)))
+	} else {
+		p.order = vec.Vec_IntDup(order)
+	}
+	if vec.Vec_IntSize(p.order) != int(gia.Gia_ManObjNum(graph)) {
+		panic("invalid polynomial collapse order")
+	}
+	vec.Vec_QueSetPriority(p.queue, vec.Vec_FltArrayP(p.counts))
+	vec.Hsh_VecManAdd(p.constants, p.tempC[0])
+	vec.Hsh_VecManAdd(p.monomials, p.tempM[0])
+	vec.Vec_FltPush(p.counts, 0)
+	vec.Vec_IntPush(p.coefs, 0)
+	return p
 }
 func Pln_ManStop(p *Pln_Man_t) {
-    Hsh_VecManStop( p.pHashC );
-    Hsh_VecManStop( p.pHashM );
-    Vec_QueFree( p.vQue );
-    Vec_FltFree( p.vCounts );
-    Vec_IntFree( p.vCoefs );
-    Vec_IntFree( p.vTempC[0] );
-    Vec_IntFree( p.vTempC[1] );
-    Vec_IntFree( p.vTempM[0] );
-    Vec_IntFree( p.vTempM[1] );
-    Vec_IntFree( p.vTempM[2] );
-    Vec_IntFree( p.vTempM[3] );
-    Vec_IntFree( p.vOrder );
-    p = nil;
+	if p != nil {
+		*p = Pln_Man_t{}
+	}
 }
-func Pln_ManCompare3(pData0 *int32, pData1 *int32) int32 {
-    if pData0[0] < pData1[0] { return -1; }
-    if pData0[0] > pData1[0] { return  1; }
-    if pData0[1] < pData1[1] { return -1; }
-    if pData0[1] > pData1[1] { return  1; }
-    return 0;
+func Pln_ManCompare3(a, b []int32) int32 {
+	if a[0] < b[0] || a[0] == b[0] && a[1] < b[1] {
+		return -1
+	}
+	if a[0] > b[0] || a[0] == b[0] && a[1] > b[1] {
+		return 1
+	}
+	return 0
 }
-func Pln_ManPrintFinal(p *Pln_Man_t, fVerbose int32, fVeryVerbose int32) {
-    var vArray *Vec_Int_t;
-    var i, k, Entry, iMono, iConst int32;
-    // collect triples
-    var vPairs *Vec_Int_t  = Vec_IntAlloc( 100 );
-    // inlining of macro Vec_IntForEachEntry
-    for  iMono = 0; (iMono < Vec_IntSize(p.vCoefs)) && (((iConst) = Vec_IntEntry(p.vCoefs, iMono)), 1); iMono++  {
-        if iConst == 0 { 
-            continue; }
-        vArray = Hsh_VecReadEntry( p.pHashC, iConst );
-        Vec_IntPush( vPairs, Vec_IntEntry(vArray, 0) );
-        vArray = Hsh_VecReadEntry( p.pHashM, iMono );
-        Vec_IntPush( vPairs, Vec_IntSize(vArray) ? Vec_IntEntry(vArray, 0) : 0 );
-        Vec_IntPushTwo( vPairs, iConst, iMono );
-    }
-    // sort triples
-    qsort( Vec_IntArray(vPairs), (size_t)(Vec_IntSize(vPairs)/4), 16, (int (*)(void *, void *))Pln_ManCompare3 );
-    // print
-    if fVerbose != 0 {
-    // inlining of macro Vec_IntForEachEntryDouble
-    for  i = 0; (i+1 < Vec_IntSize(vPairs)) && (((iConst) = Vec_IntEntry(vPairs, i)), 1) && (((iMono) = Vec_IntEntry(vPairs, i+1)), 1); i += 2  {
-        if i % 4 == 0 {
-            continue; }
-        fmt.Printf("%-6d : ", i/4);
-        vArray = Hsh_VecReadEntry( p.pHashC, iConst );
-        // inlining of macro Vec_IntForEachEntry
-        for  k = 0; (k < Vec_IntSize(vArray)) && (((Entry) = Vec_IntEntry(vArray, k)), 1); k++  {
-            fmt.Printf("%s%d", Entry < 0 ? "-" : "+", (1 << (Abc_AbsInt(Entry)-1)));
-        }
-        vArray = Hsh_VecReadEntry( p.pHashM, iMono );
-        // inlining of macro Vec_IntForEachEntry
-        for  k = 0; (k < Vec_IntSize(vArray)) && (((Entry) = Vec_IntEntry(vArray, k)), 1); k++  {
-            fmt.Printf(" * %d", Entry);
-        }
-        fmt.Printf("\n");
-    } }
-    fmt.Printf("HashC = %d. HashM = %d.  Total = %d. Used = %d.  ", Hsh_VecSize(p.pHashC), Hsh_VecSize(p.pHashM), p.nBuilds, Vec_IntSize(vPairs)/4);
-    Vec_IntFree( vPairs );
+func Pln_ManPrintFinal(p *Pln_Man_t, verbose, veryVerbose int32) {
+	type row struct{ key, first, constant, mono int32 }
+	rows := []row{}
+	for mono, c := range vec.Vec_IntArray(p.coefs) {
+		if c == 0 {
+			continue
+		}
+		cv := vec.Hsh_VecReadArray(p.constants, c)
+		mv := vec.Hsh_VecReadArray(p.monomials, int32(mono))
+		first := int32(0)
+		if len(mv) > 0 {
+			first = mv[0]
+		}
+		rows = append(rows, row{cv[0], first, c, int32(mono)})
+	}
+	sort.SliceStable(rows, func(i, j int) bool {
+		return rows[i].key < rows[j].key || rows[i].key == rows[j].key && rows[i].first < rows[j].first
+	})
+	if verbose != 0 {
+		for i, r := range rows {
+			fmt.Printf("%-6d : ", i)
+			for _, c := range vec.Hsh_VecReadArray(p.constants, r.constant) {
+				sign := "+"
+				if c < 0 {
+					sign = "-"
+				}
+				fmt.Printf("%s%d", sign, int64(1)<<uint(abs32(c)-1))
+			}
+			for _, v := range vec.Hsh_VecReadArray(p.monomials, r.mono) {
+				fmt.Printf(" * %d", v)
+			}
+			fmt.Println()
+		}
+	}
+	fmt.Printf("HashC = %d. HashM = %d.  Total = %d. Used = %d.  ", vec.Hsh_VecSize(p.constants), vec.Hsh_VecSize(p.monomials), p.builds, len(rows))
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Vec_IntAppendMinus2x(vVec1 *Vec_Int_t, vVec2 *Vec_Int_t) {
-    var Entry, i int32;
-    Vec_IntClear( vVec1 );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vVec2)) && (((Entry) = Vec_IntEntry(vVec2, i)), 1); i++  {
-        Vec_IntPush( vVec1, Entry > 0 ? -Entry-1 : -Entry+1 );
-    }
+func plnMinus2x(dst, src *vec.Vec_Int_t) {
+	vec.Vec_IntClear(dst)
+	for _, c := range vec.Vec_IntArray(src) {
+		if c > 0 {
+			vec.Vec_IntPush(dst, -c-1)
+		} else {
+			vec.Vec_IntPush(dst, -c+1)
+		}
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_PolynMergeConstOne(vConst *Vec_Int_t, New int32) {
-    var i, Old int32;
-    assert(New != 0, "New != 0");
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vConst)) && (((Old) = Vec_IntEntry(vConst, i)), 1); i++  {
-        assert(Old != 0, "Old != 0");
-        if Old == New { // A == B
-        
-            Vec_IntDrop( vConst, i );
-            Gia_PolynMergeConstOne( vConst, New > 0 ? New + 1 : New - 1 );
-            return;
-        }
-        if Abc_AbsInt(Old) == Abc_AbsInt(New) { // A == -B
-        
-            Vec_IntDrop( vConst, i );
-            return;
-        }
-        if Old + New == 1 || Old + New == -1 {  // sign(A) != sign(B)  &&  abs(abs(A)-abs(B)) == 1 
-        
-            var Value int32  = Abc_MinInt( Abc_AbsInt(Old), Abc_AbsInt(New) );
-            Vec_IntDrop( vConst, i );
-            Gia_PolynMergeConstOne( vConst, (Old + New == 1) ? Value : -Value );
-            return;
-        }
-    }
-    Vec_IntPushUniqueOrder( vConst, New );
+func Gia_PolynMergeConstOne(coef *vec.Vec_Int_t, n int32) {
+	if n == 0 {
+		panic("zero polynomial coefficient")
+	}
+	for i, old := range vec.Vec_IntArray(coef) {
+		if old == n {
+			vec.Vec_IntDrop(coef, i)
+			if n > 0 {
+				Gia_PolynMergeConstOne(coef, n+1)
+			} else {
+				Gia_PolynMergeConstOne(coef, n-1)
+			}
+			return
+		}
+		if abs32(old) == abs32(n) {
+			vec.Vec_IntDrop(coef, i)
+			return
+		}
+		if old+n == 1 || old+n == -1 {
+			vec.Vec_IntDrop(coef, i)
+			v := abs32(old)
+			if abs32(n) < v {
+				v = abs32(n)
+			}
+			if old+n < 0 {
+				v = -v
+			}
+			Gia_PolynMergeConstOne(coef, v)
+			return
+		}
+	}
+	vec.Vec_IntPushUniqueOrder(coef, n)
 }
-func Gia_PolynMergeConst(vConst *Vec_Int_t, p *Pln_Man_t, iConstAdd int32) {
-    var i, New int32;
-    var vConstAdd *Vec_Int_t  = Hsh_VecReadEntry( p.pHashC, iConstAdd );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vConstAdd)) && (((New) = Vec_IntEntry(vConstAdd, i)), 1); i++  {
-        Gia_PolynMergeConstOne( vConst, New );
-        vConstAdd = Hsh_VecReadEntry( p.pHashC, iConstAdd );
-    }
+func Gia_PolynMergeConst(coef *vec.Vec_Int_t, p *Pln_Man_t, index int32) {
+	for _, v := range append([]int32(nil), vec.Hsh_VecReadArray(p.constants, index)...) {
+		Gia_PolynMergeConstOne(coef, v)
+	}
 }
-func Gia_PolynBuildAdd(p *Pln_Man_t, vTempC *Vec_Int_t, vTempM *Vec_Int_t) {
-    var iConst int32;
-    var iConstNew int32;
-    var iMono int32;
-    if vTempM != nil {
-        iMono = Hsh_VecManAdd(p.pHashM, vTempM);
-    } else {
-        iMono = 0;
-    }
-    p.nBuilds++;
-    if iMono == Vec_IntSize(p.vCoefs) { // new monomial
-    
-        iConst = Hsh_VecManAdd( p.pHashC, vTempC );
-        Vec_IntPush( p.vCoefs, iConst );
-//        Vec_FltPush( p->vCounts, Vec_IntEntryLast(vTempM) );
-        Vec_FltPush( p.vCounts, float32(Vec_IntEntry(p.vOrder, Vec_IntEntryLast(vTempM))) );
-        Vec_QuePush( p.vQue, iMono );
-//        Vec_QueUpdate( p->vQue, iMono );
-        if iConst != 0 {
-            p.nUsed++; }
-        return;
-    }
-    // this monomial exists
-    iConst = Vec_IntEntry( p.vCoefs, iMono );
-    if iConst != 0 {
-        Gia_PolynMergeConst( vTempC, p, iConst ); }
-    iConstNew = Hsh_VecManAdd( p.pHashC, vTempC );
-    Vec_IntWriteEntry( p.vCoefs, iMono, iConstNew );
-    if (iConst != 0) && !(iConstNew != 0) {
-        p.nUsed--;
-    } else if !(iConst != 0) && (iConstNew != 0) {
-        p.nUsed++; }
-    //assert( p->nUsed == Vec_IntSize(p->vCoefs) - Vec_IntCountZero(p->vCoefs) );
+func Gia_PolynBuildAdd(p *Pln_Man_t, coef, mono *vec.Vec_Int_t) {
+	id := int32(0)
+	if mono != nil {
+		id = vec.Hsh_VecManAdd(p.monomials, mono)
+	}
+	p.builds++
+	if int(id) == vec.Vec_IntSize(p.coefs) {
+		c := vec.Hsh_VecManAdd(p.constants, coef)
+		vec.Vec_IntPush(p.coefs, c)
+		driver := vec.Vec_IntEntryLast(mono)
+		vec.Vec_FltPush(p.counts, float32(vec.Vec_IntEntry(p.order, int(driver))))
+		vec.Vec_QuePush(p.queue, int(id))
+		if c != 0 {
+			p.used++
+		}
+		return
+	}
+	old := vec.Vec_IntEntry(p.coefs, int(id))
+	if old != 0 {
+		Gia_PolynMergeConst(coef, p, old)
+	}
+	current := vec.Hsh_VecManAdd(p.constants, coef)
+	vec.Vec_IntWriteEntry(p.coefs, int(id), current)
+	if old != 0 && current == 0 {
+		p.used--
+	} else if old == 0 && current != 0 {
+		p.used++
+	}
 }
-func Gia_PolynBuildOne(p *Pln_Man_t, iMono int32) {
-    var pObj *Gia_Obj_t; 
-    var vArray, vConst *Vec_Int_t;
-    var iFan0, iFan1 int32;
-    var k, iConst, iDriver int32;
-
-    assert(Vec_IntSize(p.vCoefs) == Hsh_VecSize(p.pHashM), "Vec_IntSize(p.vCoefs) == Hsh_VecSize(p.pHashM)");
-    vArray  = Hsh_VecReadEntry( p.pHashM, iMono );
-    iDriver = Vec_IntEntryLast( vArray );
-    pObj    = Gia_ManObj( p.pGia, iDriver );
-    if !Gia_ObjIsAnd(pObj) {
-        return; }
-    assert(!Gia_ObjIsMux(p.pGia, pObj), "!Gia_ObjIsMux(p.pGia, pObj)");
-
-    iConst = Vec_IntEntry( p.vCoefs, iMono );
-    if iConst == 0 {
-        return; }
-    Vec_IntWriteEntry( p.vCoefs, iMono, 0 );
-    p.nUsed--;
-
-    iFan0 = Gia_ObjFaninId0p(p.pGia, pObj);
-    iFan1 = Gia_ObjFaninId1p(p.pGia, pObj);
-    for  k = 0; k < 4; k++  {
-        Vec_IntClear( p.vTempM[k] );
-        Vec_IntAppend( p.vTempM[k], vArray );
-        Vec_IntPop( p.vTempM[k] );
-        if k == 1 || k == 3 {
-            Vec_IntPushUniqueOrderCost( p.vTempM[k], iFan0, p.vOrder ); }    // x
-//            Vec_IntPushUniqueOrder( p->vTempM[k], iFan0 );    // x
-        if k == 2 || k == 3 {
-            Vec_IntPushUniqueOrderCost( p.vTempM[k], iFan1, p.vOrder ); }    // y
-//            Vec_IntPushUniqueOrder( p->vTempM[k], iFan1 );    // y
-    }
-
-    vConst = Hsh_VecReadEntry( p.pHashC, iConst );
-
-    if !Gia_ObjIsXor(pObj) {
-        for  k = 0; k < 2; k++  {
-            Vec_IntAppendMinus( p.vTempC[k], vConst, k );
-        } }
-
-    if Gia_ObjIsXor(pObj) {
-        vConst = Hsh_VecReadEntry( p.pHashC, iConst );
-        Vec_IntAppendMinus( p.vTempC[0], vConst, 0 );
-        Gia_PolynBuildAdd( p, p.vTempC[0], p.vTempM[1] );   //  C * x 
-
-        vConst = Hsh_VecReadEntry( p.pHashC, iConst );
-        Vec_IntAppendMinus( p.vTempC[0], vConst, 0 );
-        Gia_PolynBuildAdd( p, p.vTempC[0], p.vTempM[2] );   //  C * y 
-
-        //if ( !p->pGia->vXors || Vec_IntFind(p->pGia->vXors, iDriver) == -1 || Vec_IntFind(p->pGia->vXors, iDriver) == 5 )
-        { 
-            vConst = Hsh_VecReadEntry( p.pHashC, iConst );
-            Vec_IntAppendMinus2x( p.vTempC[0], vConst );
-            Gia_PolynBuildAdd( p, p.vTempC[0], p.vTempM[3] );   // -C * x * y 
-        }
-    
-    } else if Gia_ObjFaninC0(pObj) && Gia_ObjFaninC1(pObj) {  //  C * (1 - x) * (1 - y)
-    
-        Gia_PolynBuildAdd( p, p.vTempC[0], p.vTempM[0] );   //  C * 1
-        Gia_PolynBuildAdd( p, p.vTempC[1], p.vTempM[1] );   // -C * x
-        vConst = Hsh_VecReadEntry( p.pHashC, iConst );
-        for  k = 0; k < 2; k++  {
-            Vec_IntAppendMinus( p.vTempC[k], vConst, k );
-        }
-        Gia_PolynBuildAdd( p, p.vTempC[1], p.vTempM[2] );   // -C * y 
-        Gia_PolynBuildAdd( p, p.vTempC[0], p.vTempM[3] );   //  C * x * y
-    
-    } else if Gia_ObjFaninC0(pObj) && !Gia_ObjFaninC1(pObj) { //  C * (1 - x) * y
-    
-        Gia_PolynBuildAdd( p, p.vTempC[0], p.vTempM[2] );   //  C * y 
-        Gia_PolynBuildAdd( p, p.vTempC[1], p.vTempM[3] );   // -C * x * y
-    
-    } else if !Gia_ObjFaninC0(pObj) && Gia_ObjFaninC1(pObj) { //  C * x * (1 - y)
-    
-        Gia_PolynBuildAdd( p, p.vTempC[0], p.vTempM[1] );   //  C * x 
-        Gia_PolynBuildAdd( p, p.vTempC[1], p.vTempM[3] );   // -C * x * y
-    
-    } else {   
-        Gia_PolynBuildAdd( p, p.vTempC[0], p.vTempM[3] ); }   //  C * x * y
+func Gia_PolynBuildOne(p *Pln_Man_t, mono int32) {
+	values := append([]int32(nil), vec.Hsh_VecReadArray(p.monomials, mono)...)
+	if len(values) == 0 {
+		return
+	}
+	driver := values[len(values)-1]
+	obj := gia.Gia_ManObj(p.graph, driver)
+	if gia.Gia_ObjIsAnd(obj) == 0 {
+		return
+	}
+	if gia.Gia_ObjIsMux(p.graph, obj) != 0 {
+		panic("polynomial expansion does not support mux")
+	}
+	c := vec.Vec_IntEntry(p.coefs, int(mono))
+	if c == 0 {
+		return
+	}
+	vec.Vec_IntWriteEntry(p.coefs, int(mono), 0)
+	p.used--
+	a, b := gia.Gia_ObjFaninId0(obj, driver), gia.Gia_ObjFaninId1(obj, driver)
+	for k := 0; k < 4; k++ {
+		v := p.tempM[k]
+		vec.Vec_IntClear(v)
+		vec.Vec_IntPushArray(v, values, len(values)-1)
+		if k == 1 || k == 3 {
+			vec.Vec_IntPushUniqueOrderCost(v, a, p.order)
+		}
+		if k == 2 || k == 3 {
+			vec.Vec_IntPushUniqueOrderCost(v, b, p.order)
+		}
+	}
+	coefficients := append([]int32(nil), vec.Hsh_VecReadArray(p.constants, c)...)
+	add := func(idx int, negate, twice bool) {
+		v := p.tempC[0]
+		vec.Vec_IntClear(v)
+		for _, x := range coefficients {
+			if twice {
+				if x > 0 {
+					x = -x - 1
+				} else {
+					x = -x + 1
+				}
+			} else if negate {
+				x = -x
+			}
+			vec.Vec_IntPush(v, x)
+		}
+		Gia_PolynBuildAdd(p, v, p.tempM[idx])
+	}
+	if gia.Gia_ObjIsXor(obj) != 0 {
+		add(1, false, false)
+		add(2, false, false)
+		add(3, false, true)
+	} else if gia.Gia_ObjFaninC0(obj) != 0 && gia.Gia_ObjFaninC1(obj) != 0 {
+		add(0, false, false)
+		add(1, true, false)
+		add(2, true, false)
+		add(3, false, false)
+	} else if gia.Gia_ObjFaninC0(obj) != 0 {
+		add(2, false, false)
+		add(3, true, false)
+	} else if gia.Gia_ObjFaninC1(obj) != 0 {
+		add(1, false, false)
+		add(3, true, false)
+	} else {
+		add(3, false, false)
+	}
 }
-func Gia_PolynBuild(pGia *Gia_Man_t, vOrder *Vec_Int_t, fSigned int32, fVerbose int32, fVeryVerbose int32) {
-    var clk abctime  = Abc_Clock();//, clk2 = 0;
-    var pObj *Gia_Obj_t; 
-    var vPres *Vec_Bit_t  = Vec_BitStart( Gia_ManObjNum(pGia) );
-    var i, iMono, iDriver, LevPrev, LevCur, Iter, Line int32;
-    var p *Pln_Man_t  = Pln_ManAlloc( pGia, vOrder );
-    // inlining of macro Gia_ManForEachCoReverse
-    for  i = Vec_IntSize(pGia.vCos) - 1; (i >= 0) && ((pObj) = Gia_ManCo(pGia, i)); i--  {
-        Vec_IntFill( p.vTempC[0], 1,  i+1 );      //  2^i
-        Vec_IntFill( p.vTempC[1], 1, -i-1 );      // -2^i
-
-        iDriver = Gia_ObjFaninId0p( pGia, pObj );
-        Vec_IntFill( p.vTempM[0], 1, iDriver );   //  Driver
-
-        if (fSigned != 0) && i == Gia_ManCoNum(pGia)-1 {
-            if Gia_ObjFaninC0(pObj) {
-                Gia_PolynBuildAdd( p, p.vTempC[1], nil );           // -C
-                Gia_PolynBuildAdd( p, p.vTempC[0], p.vTempM[0] );   //  C * Driver
-            
-            } else {
-                Gia_PolynBuildAdd( p, p.vTempC[1], p.vTempM[0] ); }   // -C * Driver
-        
-        } else {
-            if Gia_ObjFaninC0(pObj) {
-                Gia_PolynBuildAdd( p, p.vTempC[0], nil );           //  C
-                Gia_PolynBuildAdd( p, p.vTempC[1], p.vTempM[0] );   // -C * Driver
-            
-            } else {
-                Gia_PolynBuildAdd( p, p.vTempC[0], p.vTempM[0] ); }   //  C * Driver
-        }
-    }
-    LevPrev = -1;
-    for  Iter = 0; ; Iter++  {
-        var vTempM *Vec_Int_t;
-        //abctime temp = Abc_Clock();
-        if Vec_QueSize(p.vQue) == 0 {
-            break; }
-        iMono = Vec_QuePop(p.vQue);
-
-        // report
-        vTempM = Hsh_VecReadEntry( p.pHashM, iMono );
-        //printf( "Removing var %d\n", Vec_IntEntryLast(vTempM) );
-        LevCur = Vec_IntEntryLast(vTempM);
-        if !Gia_ObjIsAnd(Gia_ManObj(pGia, LevCur)) {
-            continue; }
-
-        if LevPrev != LevCur {
-            if Vec_BitEntry( vPres, LevCur ) && (fVerbose != 0) {
-                fmt.Printf("Repeating entry %d\n", LevCur);
-            } else {
-                Vec_BitSetEntry( vPres, LevCur, 1 ); }
-
-            if fVeryVerbose != 0 {
-                fmt.Printf("Line%5d   Iter%10d : Obj =%6d.  Order =%6d.  HashC =%6d. HashM =%10d.  Total =%10d. Used =%10d.\n", Line++, Iter, LevCur, Vec_IntEntry(p.vOrder, LevCur), Hsh_VecSize(p.pHashC), Hsh_VecSize(p.pHashM), p.nBuilds, p.nUsed); }
-        }
-        LevPrev = LevCur;
-
-        Gia_PolynBuildOne( p, iMono );
-        //clk2 += Abc_Clock() - temp;
-    }
-    //Abc_PrintTime( 1, "Time2", clk2 );
-    Pln_ManPrintFinal( p, fVerbose, fVeryVerbose );
-    Abc_PrintTime( 1, "Time", Abc_Clock() - clk );
-    Pln_ManStop( p );
-    Vec_BitFree( vPres );
+func Gia_PolynBuild(graph *gia.Gia_Man_t, order *vec.Vec_Int_t, signed, verbose, veryVerbose int32) {
+	started := time.Now()
+	p := Pln_ManAlloc(graph, order)
+	defer Pln_ManStop(p)
+	for i := gia.Gia_ManCoNum(graph) - 1; i >= 0; i-- {
+		obj := gia.Gia_ManCo(graph, i)
+		id := gia.Gia_ObjId(graph, obj)
+		lit := gia.Gia_ObjFaninLit0(obj, id)
+		coefficient := i + 1
+		if signed != 0 && i == gia.Gia_ManCoNum(graph)-1 {
+			coefficient = -coefficient
+		}
+		vec.Vec_IntFill(p.tempC[0], 1, coefficient)
+		vec.Vec_IntFill(p.tempC[1], 1, -coefficient)
+		vec.Vec_IntFill(p.tempM[0], 1, lit>>1)
+		if lit&1 != 0 {
+			Gia_PolynBuildAdd(p, p.tempC[0], nil)
+			Gia_PolynBuildAdd(p, p.tempC[1], p.tempM[0])
+		} else {
+			Gia_PolynBuildAdd(p, p.tempC[0], p.tempM[0])
+		}
+	}
+	for vec.Vec_QueSize(p.queue) > 0 {
+		mono := vec.Vec_QuePop(p.queue)
+		Gia_PolynBuildOne(p, int32(mono))
+	}
+	Pln_ManPrintFinal(p, verbose, veryVerbose)
+	fmt.Printf("Time = %.2f sec\n", time.Since(started).Seconds())
 }
 
-
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Gia_PolynBuild2(pGia *Gia_Man_t, fSigned int32, fVerbose int32, fVeryVerbose int32) {
-    var pHashC *Hsh_VecMan_t  = Hsh_VecManStart( 1000 );    // hash table for constants
-    var pHashM *Hsh_VecMan_t  = Hsh_VecManStart( 1000 );    // hash table for monomials
-    //Vec_Wec_t * vLit2Mono = Vec_WecStart( Gia_ManObjNum(pGia) * 2 );
-
-    Hsh_VecManStop( pHashC );
-    Hsh_VecManStop( pHashM );
-}
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+// Gia_PolynBuild2 is empty in the original source apart from allocating and
+// releasing two hash tables.
+func Gia_PolynBuild2(_ *gia.Gia_Man_t, _, _, _ int32) {}
