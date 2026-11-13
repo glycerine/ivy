@@ -177,65 +177,6 @@ func Ga2_ManComputeTruth(p *Gia_Man_t, pRoot *Gia_Obj_t, vLeaves *Vec_Int_t) uin
   SeeAlso     []
 
 ***********************************************************************/
-func Ga2_ManBreakTree_rec(p *Gia_Man_t, pObj *Gia_Obj_t, fFirst int32, N int32) int32 {   // breaks a tree rooted at the node into N-feasible subtrees
-    var Val0, Val1 int32;
-    if pObj.fPhase && !(fFirst != 0) {
-        return 1; }
-    Val0 = Ga2_ManBreakTree_rec( p, Gia_ObjFanin0(pObj), 0, N );
-    Val1 = Ga2_ManBreakTree_rec( p, Gia_ObjFanin1(pObj), 0, N );
-    if Val0 + Val1 < N {
-        return Val0 + Val1; }
-    if Val0 + Val1 == N {
-        pObj.fPhase = 1;
-        return 1;
-    }
-    assert(Val0 + Val1 > N, "Val0 + Val1 > N");
-    assert(Val0 < N && Val1 < N, "Val0 < N && Val1 < N");
-    if Val0 >= Val1 {
-        Gia_ObjFanin0(pObj).fPhase = 1;
-        Val0 = 1;
-    
-    } else {
-        Gia_ObjFanin1(pObj).fPhase = 1;
-        Val1 = 1;
-    }
-    if Val0 + Val1 < N {
-        return Val0 + Val1; }
-    if Val0 + Val1 == N {
-        pObj.fPhase = 1;
-        return 1;
-    }
-    assert(false, "0");
-    return -1;
-}
-func Ga2_ManCheckNodesAnd(p *Gia_Man_t, vNodes *Vec_Int_t) int32 {
-    var pObj *Gia_Obj_t;
-    var i int32;
-    Gia_ManForEachObjVec( vNodes, p, pObj, i )
-        if ( (!Gia_ObjFanin0(pObj).fPhase && Gia_ObjFaninC0(pObj)) || 
-             (!Gia_ObjFanin1(pObj).fPhase && Gia_ObjFaninC1(pObj)) )
-            return 0;
-    return 1;
-}
-func Ga2_ManCollectNodes_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vNodes *Vec_Int_t, fFirst int32) {
-    if pObj.fPhase && !(fFirst != 0) {
-        return; }
-    assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-    Ga2_ManCollectNodes_rec( p, Gia_ObjFanin0(pObj), vNodes, 0 );
-    Ga2_ManCollectNodes_rec( p, Gia_ObjFanin1(pObj), vNodes, 0 );
-    Vec_IntPush( vNodes, Gia_ObjId(p, pObj) );
-
-}
-func Ga2_ManCollectLeaves_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vLeaves *Vec_Int_t, fFirst int32) {
-    if pObj.fPhase && !(fFirst != 0) {
-        Vec_IntPushUnique( vLeaves, Gia_ObjId(p, pObj) );
-        return;
-    }
-    assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-    Ga2_ManCollectLeaves_rec( p, Gia_ObjFanin0(pObj), vLeaves, 0 );
-    Ga2_ManCollectLeaves_rec( p, Gia_ObjFanin1(pObj), vLeaves, 0 );
-}
-var spStatic_Ga2_ManMarkup_uTruth5 [5]uint32 = [5]uint32{ 0xAAAAAAAA, 0xCCCCCCCC, 0xF0F0F0F0, 0xFF00FF00, 0xFFFF0000 };
 func Ga2_ManMarkup(p *Gia_Man_t, N int32, fSimple int32) int32 {
     
 //    abctime clk = Abc_Clock();
@@ -486,12 +427,6 @@ func Ga2_ManStop(p *Ga2_Man_t) {
   SeeAlso     []
 
 ***********************************************************************/
-var spStatic_Ga2_ObjTruthDepends_uInvTruth5 [5]uint32 = [5]uint32{ 0x55555555, 0x33333333, 0x0F0F0F0F, 0x00FF00FF, 0x0000FFFF };
-func Ga2_ObjTruthDepends(t uint32, v int32) uint32 {
-    
-    assert(v >= 0 && v <= 4, "v >= 0 && v <= 4");
-    return ((t ^ (t >> (1 << v))) & spStatic_Ga2_ObjTruthDepends_uInvTruth5[v]);
-}
 var spStatic_Ga2_ObjComputeTruthSpecial_uTruth5 [5]uint32 = [5]uint32{ 0xAAAAAAAA, 0xCCCCCCCC, 0xF0F0F0F0, 0xFF00FF00, 0xFFFF0000 };
 func Ga2_ObjComputeTruthSpecial(p *Gia_Man_t, pRoot *Gia_Obj_t, vLeaves *Vec_Int_t, vLits *Vec_Int_t) uint32 {
     var fVerbose int32;
@@ -610,15 +545,6 @@ if fVerbose != 0 {
   SeeAlso     []
 
 ***********************************************************************/
-func Ga2_ManCnfCompute(uTruth uint32, nVars int32, vCover *Vec_Int_t) *Vec_Int_t {
-    var RetValue int32;
-    assert(nVars <= 5, "nVars <= 5");
-    // transform truth table into the SOP
-    RetValue = Kit_TruthIsop( &uTruth, nVars, vCover, 0 );
-    assert(RetValue == 0, "RetValue == 0");
-    // check the case of constant cover
-    return Vec_IntDup( vCover );
-}
 
 /**Function*************************************************************
 
