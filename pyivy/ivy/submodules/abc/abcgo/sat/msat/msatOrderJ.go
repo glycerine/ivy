@@ -35,32 +35,41 @@ func (p *BoundaryOrder) remove(v int) {
 	p.present[v] = false
 }
 func (p *BoundaryOrder) Unassigned(v int) {
-	if p.solver.vVarsUsed.data[v] != 0 && !p.present[v] {
-		for _, n := range p.solver.vAdjacents[v].data {
-			if p.solver.pAssigns[n] >= 0 {
-				p.present[v] = true
-				p.variables = append(p.variables, v)
+	assert(!p.present[v], "unassigned variable is not already on boundary")
+	for _, n := range p.solver.vAdjacents[v].data {
+		if p.solver.pAssigns[n] != MSAT_VAR_UNASSIGNED {
+			p.present[v] = true
+			p.variables = append(p.variables, v)
+			break
+		}
+	}
+	for _, neighbor := range p.solver.vAdjacents[v].data {
+		if !p.present[neighbor] {
+			continue
+		}
+		assert(p.solver.pAssigns[neighbor] == MSAT_VAR_UNASSIGNED, "boundary neighbor is unassigned")
+		hasAssigned := false
+		for _, n := range p.solver.vAdjacents[neighbor].data {
+			if p.solver.pAssigns[n] != MSAT_VAR_UNASSIGNED {
+				hasAssigned = true
 				break
 			}
+		}
+		if !hasAssigned {
+			p.remove(neighbor)
 		}
 	}
 }
 func (p *BoundaryOrder) Select() int {
-	best := -1
+	best, weight := MSAT_ORDER_UNKNOWN, -1.0
 	for _, v := range p.variables {
-		if p.solver.pAssigns[v] < 0 && (best < 0 || p.solver.pdActivity[v] > p.solver.pdActivity[best]) {
-			best = v
+		if p.solver.pdActivity[v] > weight {
+			best, weight = v, p.solver.pdActivity[v]
 		}
 	}
-	if best < 0 {
-		for _, v := range p.solver.vConeVars.data {
-			if p.solver.pAssigns[v] < 0 {
-				return v
-			}
-		}
-		return MSAT_ORDER_UNKNOWN
+	if best != MSAT_ORDER_UNKNOWN {
+		assert(p.solver.vVarsUsed.data[best] != 0, "boundary variable is in cone")
 	}
-	p.remove(best)
 	return best
 }
 func (p *BoundaryOrder) Clear() { p.variables = p.variables[:0]; clear(p.present) }
