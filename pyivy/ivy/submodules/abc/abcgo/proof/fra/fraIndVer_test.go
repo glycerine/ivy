@@ -53,3 +53,34 @@ func TestInvariantVerifyRejectsUnsupportedDepth(t *testing.T) {
 		}
 	}
 }
+
+func TestInvariantVerifyRejectsMalformedClauses(t *testing.T) {
+	graph := aig.NewGraph()
+	input, latch := graph.NewInput(), graph.NewInput()
+	graph.AddOutput(input)
+	aig.Aig_ManSetRegNum(graph, 1)
+	_ = latch
+	for _, tc := range []struct {
+		name       string
+		ends, lits []int32
+	}{
+		{"missing offsets", nil, []int32{0}},
+		{"offset beyond literals", []int32{2}, []int32{0}},
+		{"decreasing offsets", []int32{1, 0}, []int32{0}},
+		{"negative literal", []int32{1}, []int32{-1}},
+		{"out of range literal", []int32{1}, []int32{1 << 30}},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			ends, lits := vec.Vec_IntAlloc(len(tc.ends)), vec.Vec_IntAlloc(len(tc.lits))
+			for _, x := range tc.ends {
+				vec.Vec_IntPush(ends, x)
+			}
+			for _, x := range tc.lits {
+				vec.Vec_IntPush(lits, x)
+			}
+			if Fra_InvariantVerify(graph, 1, ends, lits) != 0 {
+				t.Fatal("malformed invariant reported verified")
+			}
+		})
+	}
+}

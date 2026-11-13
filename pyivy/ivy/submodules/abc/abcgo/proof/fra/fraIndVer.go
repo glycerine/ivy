@@ -23,13 +23,28 @@ func Fra_InvariantVerify(graph *aig.Graph, frames int32, ends, literals *vec.Vec
 	}
 	data := cnf.Cnf_DeriveSimple(graph, int32(graph.OutputCount()))
 	defer cnf.Cnf_DataFree(data)
+	values := vec.Vec_IntArray(literals)
+	previous := int32(0)
+	for _, end := range vec.Vec_IntArray(ends) {
+		if end < previous || int64(end) > int64(len(values)) {
+			fmt.Println("Invariant verification: invalid clause offsets.")
+			return 0
+		}
+		previous = end
+	}
+	if int64(previous) != int64(len(values)) {
+		fmt.Println("Invariant verification: incomplete clause offsets.")
+		return 0
+	}
+	for _, literal := range values {
+		if literal < 0 || int64(literal)>>1 >= int64(data.Variables) {
+			fmt.Println("Invariant verification: invalid clause literal.")
+			return 0
+		}
+	}
 	check := func(solver *bsat.Solver, offset int32) int {
 		failures, begin := 0, 0
-		values := vec.Vec_IntArray(literals)
 		for _, end := range vec.Vec_IntArray(ends) {
-			if end < int32(begin) || int(end) > len(values) {
-				panic("fra: invalid invariant clause offsets")
-			}
 			assumptions := make([]bsat.Literal, int(end)-begin)
 			for i, literal := range values[begin:end] {
 				assumptions[i] = bsat.Literal((literal + offset*2) ^ 1)
@@ -53,11 +68,7 @@ func Fra_InvariantVerify(graph *aig.Graph, frames int32, ends, literals *vec.Vec
 		return 0
 	}
 	begin := 0
-	values := vec.Vec_IntArray(literals)
 	for _, end := range vec.Vec_IntArray(ends) {
-		if end < int32(begin) || int(end) > len(values) {
-			panic("fra: invalid invariant clause offsets")
-		}
 		clause := make([]bsat.Literal, int(end)-begin)
 		for i, literal := range values[begin:end] {
 			clause[i] = bsat.Literal(literal)
