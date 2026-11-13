@@ -260,7 +260,7 @@ func Fra_SmlSimulateCombGiven(g *aig.Graph, name string, check, verbose int32) *
 	}
 	n := vec.Vec_StrSize(values)
 	inputs := len(g.Inputs())
-	if inputs == 0 || n == 0 || n%inputs != 0 {
+	if inputs == 0 || n%inputs != 0 {
 		fmt.Printf("File %q: invalid number of input digits (%d).\n", name, n)
 		return nil
 	}

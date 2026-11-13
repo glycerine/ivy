@@ -19,7 +19,7 @@ type fraSimulation struct {
 }
 
 func newFraSimulation(graph *aig.Graph, prefix, frames, wordsPerFrame int) *fraSimulation {
-	if graph == nil || prefix < 0 || frames <= 0 || wordsPerFrame <= 0 {
+	if graph == nil || prefix < 0 || frames <= 0 || wordsPerFrame < 0 {
 		panic("fra: invalid simulation dimensions")
 	}
 	totalFrames := prefix + frames
@@ -30,7 +30,7 @@ func newFraSimulation(graph *aig.Graph, prefix, frames, wordsPerFrame int) *fraS
 }
 
 func (s *fraSimulation) NodeWords(id int) []uint32 {
-	if id < 0 || id >= len(s.Words)/s.WordsTotal {
+	if id < 0 || id >= len(s.Graph.Nodes()) {
 		panic("fra: invalid simulation node")
 	}
 	return s.Words[id*s.WordsTotal : (id+1)*s.WordsTotal]
@@ -162,7 +162,7 @@ func (s *fraSimulation) AssignDistance1(pattern []uint32) {
 // pads the last machine word with the final pattern, as in fraSim.c.
 func (s *fraSimulation) InitializeGiven(patterns []byte) {
 	inputs := s.Graph.Inputs()
-	if aig.Aig_ManRegNum(s.Graph) != 0 || len(inputs) == 0 || len(patterns) == 0 || len(patterns)%len(inputs) != 0 {
+	if aig.Aig_ManRegNum(s.Graph) != 0 || len(inputs) == 0 || len(patterns)%len(inputs) != 0 {
 		panic("fra: invalid combinational simulation patterns")
 	}
 	count := len(patterns) / len(inputs)
