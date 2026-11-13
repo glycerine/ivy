@@ -11,6 +11,9 @@ func TestAbstractionClassAccessors(t *testing.T) {
 	if Vec_IntEntry(Gia_ManGateClasses(p), 0) != 1 {
 		t.Fatal("gate map mismatch")
 	}
+	gate := Vec_IntStart(1)
+	Gia_ManSetGateClasses(p, gate)
+	if Gia_ManGateClasses(p) != gate { t.Fatal("gate map ownership mismatch") }
 	obj := Vec_IntStart(2)
 	Gia_ManSetObjClasses(p, obj)
 	if Gia_ManObjClasses(p) != obj {
