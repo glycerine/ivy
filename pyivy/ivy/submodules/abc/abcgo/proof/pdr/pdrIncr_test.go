@@ -24,6 +24,36 @@ func TestIncrementalSaveClausesCopiesCubes(t *testing.T) {
 	}
 }
 
+// The first latch stays zero while the second becomes one. Their positive
+// cubes are respectively unreachable and reachable in R1.
+func TestIncrementalRebuildKeepsOnlyR1BlockedCubes(t *testing.T) {
+	g := aig.NewGraph()
+	g.NewInput()
+	g.NewInput()
+	g.AddOutput(g.Const0())
+	g.AddOutput(g.Const0())
+	g.AddOutput(g.Const1())
+	aig.Aig_ManSetRegNum(g, 2)
+	var pars Pdr_Par_t
+	Pdr_ManSetDefaultParams(&pars)
+	p := Pdr_ManStart(g, &pars, nil)
+	defer Pdr_ManStop(p)
+	if IPdr_ManRebuildClauses(p, nil) != -1 {
+		t.Fatal("nil saved clauses must return -1")
+	}
+	saved := vec.Vec_VecStart(2)
+	blocked, reachable := testPdrSet([]int32{0}, nil), testPdrSet([]int32{2}, nil)
+	vec.Vec_VecPush(saved, 1, blocked)
+	vec.Vec_VecPush(saved, 1, reachable)
+	if got := IPdr_ManRebuildClauses(p, saved); got != 0 {
+		t.Fatalf("rebuild result %d", got)
+	}
+	frame := vec.Vec_VecEntry(p.vClauses, 1)
+	if vec.Vec_PtrSize(frame) != 1 || vec.Vec_PtrEntry(frame, 0) != blocked || reachable.nRefs != 0 || len(p.vSolvers) != 2 {
+		t.Fatalf("rebuild kept %v; reachable refs=%d solvers=%d", vec.Vec_PtrArray(frame), reachable.nRefs, len(p.vSolvers))
+	}
+}
+
 func TestIncrementalRestoreRemapsWithoutResortingAsInC(t *testing.T) {
 	g := aig.NewGraph()
 	for i := 0; i < 3; i++ {

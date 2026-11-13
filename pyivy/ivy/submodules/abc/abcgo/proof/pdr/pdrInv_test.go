@@ -50,6 +50,43 @@ func TestInvariantManagerCollectionAndFlopCounts(t *testing.T) {
 	}
 }
 
+func TestInvariantDumpStringSourceBranches(t *testing.T) {
+	g := aig.NewGraph()
+	for i := 0; i < 3; i++ {
+		input := g.NewInput()
+		g.AddOutput(input)
+	}
+	aig.Aig_ManSetRegNum(g, 3)
+	frames := vec.Vec_VecStart(3)
+	first := testPdrSet([]int32{0, 5}, nil)
+	second := testPdrSet([]int32{4}, nil)
+	ignored := testPdrSet([]int32{2}, nil)
+	ignored.nRefs = -1
+	for _, cube := range []*Pdr_Set_t{first, ignored, second} {
+		vec.Vec_VecPush(frames, 2, cube)
+	}
+	pars := &Pdr_Par_t{fUseSupp: 1}
+	p := &Pdr_Man_t{pAig: g, pPars: pars, vClauses: frames, vSolvers: make([]*bsat.Solver, 3)}
+	if got := vec.Vec_IntArray(Pdr_ManCountFlopsInv(p)); !reflect.DeepEqual(got, []int32{1, 0, 2}) {
+		t.Fatalf("flop counts = %v", got)
+	}
+	if got := string(vec.Vec_StrArray(Pdr_ManDumpString(p))); got != "-1 1\n10 1\n\x00" {
+		t.Fatalf("collected invariant = %q", got)
+	}
+	p.vInfCubes = vec.Vec_PtrAlloc(3)
+	for _, cube := range []*Pdr_Set_t{first, ignored, second} {
+		vec.Vec_PtrPush(p.vInfCubes, cube)
+	}
+	if got := string(vec.Vec_StrArray(Pdr_ManDumpString(p))); got != "-1 1\n10 1\n\x00" {
+		t.Fatalf("stored invariant = %q", got)
+	}
+	pars.fUseSupp = 0
+	// Pdr_SetPrintStr in C emits no pattern when its filter is nil.
+	if got := string(vec.Vec_StrArray(Pdr_ManDumpString(p))); got != " 1\n 1\n\x00" {
+		t.Fatalf("unfiltered source output = %q", got)
+	}
+}
+
 func TestInvariantReductionReleasesMarkedCube(t *testing.T) {
 	g := aig.NewGraph()
 	_ = g.NewInput() // register output
