@@ -242,7 +242,6 @@ func Fra_ClausProcessClauses2(p *Clu_Man_t, refs int32) int32 {
 	return clausFinishSelection(p, true)
 }
 func Fra_ClausProcessClauses(p *Clu_Man_t, refs int32) int32 {
-	p.nCuts = 0
 	seq, comb := clausSimulations(p)
 	if seq == nil {
 		return 0
@@ -263,7 +262,6 @@ func Fra_ClausProcessClauses(p *Clu_Man_t, refs int32) int32 {
 			if len(cut.Leaves) < 2 {
 				continue
 			}
-			p.nCuts++
 			seqScores, combScores := clausScores(p, seq, cut.Leaves), clausScores(p, comb, cut.Leaves)
 			for minterm, cost := range combScores {
 				if cost != 0 && seqScores[minterm] == 0 {
@@ -272,5 +270,10 @@ func Fra_ClausProcessClauses(p *Clu_Man_t, refs int32) int32 {
 			}
 		}
 	}
-	return clausFinishSelection(p, false)
+	// The older C routine keeps its cut count local and does not touch the
+	// filtering flag, including when it selects clauses by cost.
+	filtering := p.fFiltering
+	result := clausFinishSelection(p, false)
+	p.fFiltering = filtering
+	return result
 }
