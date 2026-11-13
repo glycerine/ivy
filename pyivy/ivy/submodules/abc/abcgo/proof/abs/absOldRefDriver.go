@@ -113,6 +113,8 @@ func Saig_ManCexAbstractionFlops(g *aig.Graph, params *Gia_ParAbs_t) *vec.Vec_In
 	if params.fVerbose != 0 {
 		fmt.Println("Performing counter-example-based refinement.")
 	}
+	// A previous run's witness must not be reported for this run.
+	g.ClearSequentialCounterexample()
 	flops := vec.Vec_IntAlloc(1)
 	vec.Vec_IntPush(flops, 0)
 	abstract := saig.Saig_ManDupAbstraction(g, flops)
