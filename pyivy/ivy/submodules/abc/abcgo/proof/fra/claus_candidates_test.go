@@ -93,3 +93,31 @@ func TestClausCandidatesFilterPreviouslyProved(t *testing.T) {
 		t.Fatalf("previously proved candidate retained: %v", vec.Vec_IntArray(p.vCosts))
 	}
 }
+
+// The source collects register clauses only when refs is enabled. Without it,
+// this cut-free design has no strengthening candidates and remains unproved.
+func TestClausLatchStrengtheningDisabledWithoutRefs(t *testing.T) {
+	g := aig.NewGraph()
+	g.NewInput()
+	first, second := g.NewInput(), g.NewInput()
+	g.AddOutput(first)
+	g.AddOutput(second)
+	g.AddOutput(g.Const0())
+	aig.Aig_ManSetRegNum(g, 2)
+	p := Fra_ClausAlloc(g, 1, 0, 32, 4, 8, 8, 1, 0, 1, 0, 0)
+	p.pCnf = cnf.Cnf_DeriveSimple(g, int32(g.OutputCount()))
+	p.pSatBmc = cnf.Cnf_DataWriteIntoSolver(p.pCnf, 1, 1)
+	if Fra_ClausRunBmc(p) != 1 {
+		t.Fatal("initial state violates property")
+	}
+	p.pSatMain = cnf.Cnf_DataWriteIntoSolver(p.pCnf, 2, 0)
+	if Fra_ClausRunSat(p) != 0 {
+		t.Fatal("property unexpectedly 1-inductive")
+	}
+	if Fra_ClausProcessClauses2(p, 0) != 1 || p.nClauses != 0 {
+		t.Fatalf("unexpected candidates: %d", p.nClauses)
+	}
+	if removed := Fra_ClausInductiveClauses(p); removed != 0 || p.fFail != 1 {
+		t.Fatalf("reported proof without strengthening: removed=%d fail=%d", removed, p.fFail)
+	}
+}
