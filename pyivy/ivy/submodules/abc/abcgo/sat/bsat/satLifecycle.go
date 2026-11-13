@@ -126,7 +126,6 @@ func sat_solver_delete(s *sat_solver) {
 }
 func sat_solver_restart(s *sat_solver) { zsat_solver_restart_seed(s, 91648253) }
 func zsat_solver_restart_seed(s *sat_solver, seed float64) {
-	s.ClearActivityFactors()
 	Sat_MemRestart(&s.Mem)
 	s.hLearnts = -1
 	s.hBinary = Sat_MemAppend(&s.Mem, nil, 2, 0, 0)

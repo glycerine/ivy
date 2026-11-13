@@ -65,3 +65,21 @@ func TestEmptySolverDecisionSelection(t *testing.T) {
 		t.Fatal(got)
 	}
 }
+
+// The C restart resets the clause database but leaves cone activity state to
+// the caller; the higher-level Go Reset has a stronger fresh-formula contract.
+func TestInternalRestartRetainsActivityCone(t *testing.T) {
+	for _, seeded := range []bool{false, true} {
+		s := sat_solver_new()
+		s.NewVariable()
+		s.SetActivityFactor(0, 2)
+		if seeded {
+			zsat_solver_restart_seed(s, 42)
+		} else {
+			sat_solver_restart(s)
+		}
+		if s.act_vars.size != 1 || s.act_vars.ptr[0] != 0 || s.factors[0] != 2 {
+			t.Fatalf("seeded=%v: restart changed cone: vars=%v factors=%v", seeded, veci_begin(&s.act_vars), s.factors)
+		}
+	}
+}

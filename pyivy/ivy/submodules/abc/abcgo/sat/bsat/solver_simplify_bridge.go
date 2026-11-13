@@ -1,7 +1,7 @@
 package bsat
 
-// Simplify propagates root assignments and removes satisfied clauses. It
-// reports false when root propagation proves the formula inconsistent.
+// Simplify propagates root assignments. It reports false when root
+// propagation proves the formula inconsistent.
 func (s *sat_solver_t) Simplify() bool {
 	s.lastStatus = Unknown
 	if s.fSolved != 0 {
