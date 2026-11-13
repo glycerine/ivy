@@ -10,7 +10,10 @@ func TestInductionGeneratedTwoRegisterCircuits(t *testing.T) {
 	r := rand.New(rand.NewSource(7919))
 	completed := 0
 	for trial := 0; trial < 24; trial++ {
-		for _, config := range []struct{ frames, partition int32 }{{1, 0}, {2, 0}, {1, 1}} {
+		for _, config := range []struct{ frames, partition, latchOnly, rewrite, levels int32 }{
+			{1, 0, 0, 0, 0}, {2, 0, 0, 0, 0}, {1, 1, 0, 0, 0},
+			{1, 0, 1, 0, 0}, {1, 0, 0, 1, 1},
+		} {
 			frames := config.frames
 			g := aig.NewGraph()
 			edges := []aig.Edge{g.NewInput(), g.NewInput(), g.NewInput(), g.NewInput()}
@@ -36,7 +39,7 @@ func TestInductionGeneratedTwoRegisterCircuits(t *testing.T) {
 				g.AddOutput(e)
 			}
 			aig.Aig_ManSetRegNum(g, 2)
-			reduced := Fra_FraigInduction(g, &Fra_Ssw_t{nFramesK: frames, nPartSize: config.partition})
+			reduced := Fra_FraigInduction(g, &Fra_Ssw_t{nFramesK: frames, nPartSize: config.partition, fLatchCorr: config.latchOnly, fRewrite: config.rewrite, nMaxLevs: config.levels})
 			if reduced == nil {
 				// A stalled refinement returns unknown rather than an unsafe result.
 				continue
@@ -64,7 +67,7 @@ func TestInductionGeneratedTwoRegisterCircuits(t *testing.T) {
 			}
 		}
 	}
-	if completed != 72 {
-		t.Fatalf("only %d of 72 induction runs completed", completed)
+	if completed != 120 {
+		t.Fatalf("only %d of 120 induction runs completed", completed)
 	}
 }
