@@ -186,32 +186,6 @@ var spStatic_Saig_ManBmcHashKey_s_Primes [5]int32 = [5]int32{ 12582917, 25165843
   SeeAlso     []
 
 ***********************************************************************/
-func Ga2_ManSetupNode(p *Ga2_Man_t, pObj *Gia_Obj_t, fAbs int32) {
-    var uTruth uint32;
-    var nLeaves int32;
-//    int Id = Gia_ObjId(p->pGia, pObj);
-    assert(pObj.fPhase, "pObj.fPhase");
-    assert(Vec_PtrSize(p.vCnfs) == 2 * Vec_IntSize(p.vValues), "Vec_PtrSize(p.vCnfs) == 2 * Vec_IntSize(p.vValues)");
-    // assign abstraction ID to the node
-    if Ga2_ObjId(p,pObj) == -1 {
-        Ga2_ObjSetId( p, pObj, Vec_IntSize(p.vValues) );
-        Vec_IntPush( p.vValues, Gia_ObjId(p.pGia, pObj) );
-        Vec_PtrPush( p.vCnfs, nil );
-        Vec_PtrPush( p.vCnfs, nil );
-    }
-    assert(Ga2_ObjCnf0(p, pObj) == nil, "Ga2_ObjCnf0(p, pObj) == nil");
-    if !(fAbs != 0) {
-        return; }
-    Vec_IntPush( p.vAbs, Gia_ObjId(p.pGia, pObj) );
-    assert(Gia_ObjIsAnd(pObj) || Gia_ObjIsRo(p.pGia, pObj), "Gia_ObjIsAnd(pObj) || Gia_ObjIsRo(p.pGia, pObj)");
-    // compute parameters
-    nLeaves = Ga2_ObjLeaveNum(p.pGia, pObj);
-    uTruth = Ga2_ObjTruth( p.pGia, pObj );
-    // create CNF for pos/neg phases
-    Vec_PtrWriteEntry( p.vCnfs, 2 * Ga2_ObjId(p,pObj),     Ga2_ManCnfCompute( uTruth, nLeaves, p.vIsopMem) );    
-    Vec_PtrWriteEntry( p.vCnfs, 2 * Ga2_ObjId(p,pObj) + 1, Ga2_ManCnfCompute(~uTruth, nLeaves, p.vIsopMem) );
-}
-
 func Ga2_ManAddToAbsOneStatic(p *Ga2_Man_t, pObj *Gia_Obj_t, f int32, fUseId int32) {
     var vLeaves *Vec_Int_t;
     var pLeaf *Gia_Obj_t;
