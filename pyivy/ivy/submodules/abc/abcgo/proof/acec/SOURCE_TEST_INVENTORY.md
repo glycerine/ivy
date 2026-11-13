@@ -6,7 +6,7 @@ implementations are in `src/proof/acec`.
 
 | C source family | Covered behavior |
 | --- | --- |
-| `acec.c`, `acecCore.c` | Parameter defaults, miter/witness behavior, adder-box matching, and small end-to-end equivalence cases: `acec_options_review_test.go`, `acec_source_witness_test.go`, `acecCoreMatch_test.go`, `acec_integration_test.go`, `abc_differential_test.go`. |
+| `acec.c`, `acecCore.c` | Parameter defaults, miter/witness behavior, adder-box matching, positive/negative/equal rank-shift selection, and small end-to-end equivalence cases: `acec_options_review_test.go`, `acec_source_witness_test.go`, `acecCoreMatch_test.go`, `acec_integration_test.go`, `abc_differential_test.go`. |
 | `acec2Mult.c`, `acecMult.c` | Cut storage and truth, multiplier scans, partial products, and small exhaustive multiplier checks and 3×3 through 5×5 end-to-end C/Go comparisons: `acec2Mult*test.go`, `acecMult*test.go`, `acec_multiplier_test.go`, `acec_multiplier_source_test.go`. |
 | `acecBo.c` | Booth tree cases: `acecBo_test.go`. |
 | `acecCl.c`, `acecCo.c`, `acecCover.c` | CLA detection and rewriting, core ordering/root collection, and cover exploration: `acecCl*test.go`, `acecCo*test.go`, `acecCover*test.go`. |

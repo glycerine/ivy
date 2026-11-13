@@ -28,6 +28,7 @@ func Acec_MatchCopy(lits *Vec_Wec_t, m *Vec_Int_t) *Vec_Wec_t {
 }
 func Acec_MatchCountCommon(a, b *Vec_Wec_t, shift int32) int32 {
 	tmp := vec.Vec_IntAlloc(100)
+	defer vec.Vec_IntFree(tmp)
 	var n int32
 	for i := 0; i < vec.Vec_WecSize(a); i++ {
 		j := i + int(shift)
@@ -77,6 +78,8 @@ func Acec_MoveDuplicates(lits, classes *Vec_Wec_t) {
 }
 func Acec_MatchCheckShift(p0, p1 *Gia_Man_t, lits0, lits1 *Vec_Wec_t, map0, map1 *Vec_Int_t, roots0, roots1 *Vec_Wec_t) {
 	a, b := Acec_MatchCopy(lits0, map0), Acec_MatchCopy(lits1, map1)
+	defer vec.Vec_WecFree(a)
+	defer vec.Vec_WecFree(b)
 	common, plus, minus := Acec_MatchCountCommon(a, b, 0), Acec_MatchCountCommon(a, b, 1), Acec_MatchCountCommon(a, b, -1)
 	if plus >= minus && plus > common {
 		vec.Vec_WecInsertLevel(lits0, 0)

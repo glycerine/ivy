@@ -51,3 +51,64 @@ func TestMatchShiftCounts(t *testing.T) {
 		t.Fatalf("unshifted common %d", got)
 	}
 }
+
+func TestMatchCheckShiftDirectionsAndNoShift(t *testing.T) {
+	newLevels := func(count int, rank int, lit int32) *Vec_Wec_t {
+		levels := vec.Vec_WecStart(count)
+		vec.Vec_WecPush(levels, rank, lit)
+		return levels
+	}
+	newMap := func() *Vec_Int_t {
+		mapping := vec.Vec_IntStart(4)
+		for i := int32(0); i < 4; i++ {
+			vec.Vec_IntWriteEntry(mapping, int(i), i<<1)
+		}
+		return mapping
+	}
+
+	t.Run("shift_up", func(t *testing.T) {
+		left, right := newLevels(1, 0, 2), newLevels(2, 1, 2)
+		leftRoots, rightRoots := vec.Vec_WecStart(1), vec.Vec_WecStart(2)
+		mapLeft, mapRight := newMap(), newMap()
+		defer vec.Vec_WecFree(left)
+		defer vec.Vec_WecFree(right)
+		defer vec.Vec_WecFree(leftRoots)
+		defer vec.Vec_WecFree(rightRoots)
+		defer vec.Vec_IntFree(mapLeft)
+		defer vec.Vec_IntFree(mapRight)
+		Acec_MatchCheckShift(nil, nil, left, right, mapLeft, mapRight, leftRoots, rightRoots)
+		if vec.Vec_WecSize(left) != 2 || vec.Vec_IntSize(vec.Vec_WecEntry(left, 0)) != 0 || vec.Vec_WecSize(leftRoots) != 2 {
+			t.Fatal("positive rank offset did not add an empty level on the left")
+		}
+	})
+	t.Run("shift_down", func(t *testing.T) {
+		left, right := newLevels(2, 1, 2), newLevels(1, 0, 2)
+		leftRoots, rightRoots := vec.Vec_WecStart(2), vec.Vec_WecStart(1)
+		mapLeft, mapRight := newMap(), newMap()
+		defer vec.Vec_WecFree(left)
+		defer vec.Vec_WecFree(right)
+		defer vec.Vec_WecFree(leftRoots)
+		defer vec.Vec_WecFree(rightRoots)
+		defer vec.Vec_IntFree(mapLeft)
+		defer vec.Vec_IntFree(mapRight)
+		Acec_MatchCheckShift(nil, nil, left, right, mapLeft, mapRight, leftRoots, rightRoots)
+		if vec.Vec_WecSize(right) != 2 || vec.Vec_IntSize(vec.Vec_WecEntry(right, 0)) != 0 || vec.Vec_WecSize(rightRoots) != 2 {
+			t.Fatal("negative rank offset did not add an empty level on the right")
+		}
+	})
+	t.Run("already_aligned", func(t *testing.T) {
+		left, right := newLevels(1, 0, 2), newLevels(1, 0, 2)
+		leftRoots, rightRoots := vec.Vec_WecStart(1), vec.Vec_WecStart(1)
+		mapLeft, mapRight := newMap(), newMap()
+		defer vec.Vec_WecFree(left)
+		defer vec.Vec_WecFree(right)
+		defer vec.Vec_WecFree(leftRoots)
+		defer vec.Vec_WecFree(rightRoots)
+		defer vec.Vec_IntFree(mapLeft)
+		defer vec.Vec_IntFree(mapRight)
+		Acec_MatchCheckShift(nil, nil, left, right, mapLeft, mapRight, leftRoots, rightRoots)
+		if vec.Vec_WecSize(left) != 1 || vec.Vec_WecSize(right) != 1 || vec.Vec_WecSize(leftRoots) != 1 || vec.Vec_WecSize(rightRoots) != 1 {
+			t.Fatal("aligned roots were shifted")
+		}
+	})
+}

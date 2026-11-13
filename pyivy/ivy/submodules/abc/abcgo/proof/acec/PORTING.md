@@ -36,6 +36,15 @@ matched ACEC. Other changes addressed scratch cleanup failures, native XOR/MUX/b
 copying errors, missing arithmetic-box handling, polarity ambiguity, signed
 signature parsing, and polynomial handling of XOR, MUX, and constants.
 
+The C/Go review also found three matcher scratch-vector ownership gaps. The Go
+port now frees the two equivalence maps after box matching, the temporary
+literal-class copies after shift detection, and the common-count scratch vector
+after each count, matching the C cleanup points. `acecCoreMatch_test.go` now
+exercises positive and negative rank shifts plus the already-aligned path.
+Uncached package tests, `go vet`, and race tests pass after these changes. The
+uncached statement coverage run reports 77.2%; this metric includes source
+diagnostic routines and does not prove the algorithm correct on all graphs.
+
 Intentional conservative paths and limits:
 
 - `Acec_ParseDistribute` preserves C's `left + right - 1` arithmetic on signed encoded exponents. Negative factors can therefore produce a coefficient encoding that does not represent their mathematical product.
