@@ -172,27 +172,7 @@ func Ssw_SmlObjsAreEqualBit(p any, pObj0 *Aig_Obj_t, pObj1 *Aig_Obj_t) int32 {
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_SmlNodeCountOnesRealVec(p *Ssw_Sml_t, vObjs *Vec_Ptr_t) int32 {
-    var pObj *Aig_Obj_t;
-    var pSims *uint32;
-    var uWord uint32;
-    var i, k, Counter int32;
-    if Vec_PtrSize(vObjs) == 0 {
-        return 0; }
-    for  i = 0; i < p.nWordsTotal; i++  {
-        uWord = 0;
-        // inlining of macro Vec_PtrForEachEntry
-        for  k = 0; (k < Vec_PtrSize(vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vObjs, k)), 1); k++  {
-            pSims = Ssw_ObjSim(p, Aig_Regular(pObj).Id);
-            if Aig_Regular(pObj).fPhase ^ Aig_IsComplement(pObj) {
-                uWord |= ~pSims[i];
-            } else {
-                uWord |= pSims[i]; }
-        }
-        Counter += Aig_WordCountOnes( uWord );
-    }
-    return Counter;
-}
+
 
 
 

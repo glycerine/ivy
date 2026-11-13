@@ -2,6 +2,7 @@ package ssw
 
 import (
 	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/misc/vec"
 	"math/bits"
 )
 
@@ -40,6 +41,24 @@ func Ssw_SmlNodeCountOnesReal(p *Ssw_Sml_t, obj aig.Edge) int32 {
 			word = ^word
 		}
 		count += int32(bits.OnesCount32(word))
+	}
+	return count
+}
+
+// Ssw_SmlNodeCountOnesRealVec counts bits set in the OR of real node values.
+func Ssw_SmlNodeCountOnesRealVec(p *Ssw_Sml_t, objects *vec.Vec_Ptr_t) int32 {
+	var count int32
+	for i := int32(0); i < p.nWordsTotal; i++ {
+		var combined uint32
+		for j := 0; j < vec.Vec_PtrSize(objects); j++ {
+			obj := vec.Vec_PtrEntry(objects, j).(aig.Edge)
+			value := Ssw_ObjSim(p, int32(obj.NodeID()))[i]
+			if p.pAig.Node(obj).Phase != obj.Complemented() {
+				value = ^value
+			}
+			combined |= value
+		}
+		count += int32(bits.OnesCount32(combined))
 	}
 	return count
 }

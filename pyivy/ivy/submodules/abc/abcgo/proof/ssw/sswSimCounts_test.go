@@ -2,6 +2,7 @@ package ssw
 
 import (
 	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/misc/vec"
 	"testing"
 )
 
@@ -26,5 +27,19 @@ func TestSimulationCountsRespectPrefixAndPolarity(t *testing.T) {
 	}
 	if Ssw_SmlNodeIsZero(p, a) != 0 || Ssw_SmlNodeIsZeroFrame(p, b, 0) != 1 {
 		t.Fatal("wrong zero test")
+	}
+}
+
+func TestSimulationCountUnionOfRealNodes(t *testing.T) {
+	g := aig.NewGraph()
+	a, b := g.NewInput(), g.NewInput()
+	p := Ssw_SmlStart(g, 0, 1, 1)
+	Ssw_SmlSimInfo(p, a)[0] = 3
+	Ssw_SmlSimInfo(p, b)[0] = 5
+	objects := vec.Vec_PtrAlloc(2)
+	vec.Vec_PtrPush(objects, a)
+	vec.Vec_PtrPush(objects, b)
+	if got := Ssw_SmlNodeCountOnesRealVec(p, objects); got != 3 {
+		t.Fatalf("union count %d", got)
 	}
 }
