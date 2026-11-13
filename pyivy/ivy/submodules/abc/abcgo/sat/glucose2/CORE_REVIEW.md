@@ -85,3 +85,19 @@ GOCACHE=/tmp/abcgo-cache go vet ./sat/glucose2 ./sat/bmc
 
 These checks do not establish correctness for all solver workloads or prove
 that every C++ option has identical behavior.
+
+## Additional risk-focused tests
+
+The follow-up coverage audit added independent tests for 1,000 randomized
+assumption-core queries and recovery, interruption/deadline and propagation
+budgets, and learned-clause reduction with independently checked DRUP proof
+steps. Simplifier tests check 300 randomized formulas through repeated solves
+and incremental clauses, and 300 substitution cases against exhaustive Boolean
+assignments. Bridge tests exercise reset, callbacks, stop/deadline handling,
+and AND/XOR encodings. Circuit oracles exhaustively check small-function
+quantification, equivalence and overlap, and three-input SOP covers.
+
+`GOCACHE=/tmp/abcgo-cache go test -race -count=1 -coverprofile=/tmp/glucose2-cover-after.out ./sat/glucose2`
+and `GOCACHE=/tmp/abcgo-cache go vet ./sat/glucose2` pass. Statement coverage
+increased from 74.9% to 80.7%; coverage and these finite cases do not prove all
+solver workloads or resource-limit paths correct.
