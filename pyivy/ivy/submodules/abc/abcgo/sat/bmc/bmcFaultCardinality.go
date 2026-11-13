@@ -92,15 +92,28 @@ func Cnf_AddCardinVar(level, base int32, vars *vec.Vec_Int_t, k int32) int32 {
 func Cnf_AddCardinConstrGeneral(s *bsat.Solver, vars *vec.Vec_Int_t, k, strict int32) {
 	cardSort(s, vec.Vec_IntArray(vars), k, strict)
 }
+
+// Cnf_AddCardinConstr constrains at most one input to be true and leaves
+// their OR in vars. Each pair requires one aggregate variable.
 func Cnf_AddCardinConstr(s *bsat.Solver, vars *vec.Vec_Int_t) int32 {
 	for vec.Vec_IntSize(vars) > 1 {
-		a, b := vec.Vec_IntEntry(vars, 0), vec.Vec_IntEntry(vars, 1)
-		cardClause(s, bsat.Negative(a), bsat.Negative(b))
-		next := s.NumVars()
-		work := []int32{a, b}
-		Cnf_AddSorder(s, work, 0, 1, &next)
-		vec.Vec_IntDrop(vars, 1)
-		vec.Vec_IntWriteEntry(vars, 0, work[0])
+		n := vec.Vec_IntSize(vars)
+		write := 0
+		for i := 0; i+1 < n; i += 2 {
+			a, b := vec.Vec_IntEntry(vars, i), vec.Vec_IntEntry(vars, i+1)
+			out := s.NewVariable()
+			cardClause(s, bsat.Negative(a), bsat.Negative(b))
+			cardClause(s, bsat.Negative(a), bsat.Positive(out))
+			cardClause(s, bsat.Negative(b), bsat.Positive(out))
+			cardClause(s, bsat.Positive(a), bsat.Positive(b), bsat.Negative(out))
+			vec.Vec_IntWriteEntry(vars, write, out)
+			write++
+		}
+		if n&1 != 0 {
+			vec.Vec_IntWriteEntry(vars, write, vec.Vec_IntEntry(vars, n-1))
+			write++
+		}
+		vec.Vec_IntShrink(vars, write)
 	}
 	return s.NumVars()
 }

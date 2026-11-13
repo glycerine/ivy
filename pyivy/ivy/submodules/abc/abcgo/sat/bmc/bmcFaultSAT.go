@@ -91,15 +91,15 @@ func Gia_ManDumpUntests(m *gia.Gia_Man_t, data *cnf.Cnf_Dat_t, solver *bsat.Solv
 		return 0
 	}
 	defer f.Close()
-	count := 0
+	count := int32(0)
 	for iteration := int32(0); iteration < 10000; iteration++ {
 		status := solver.Solve()
 		if status == bsat.Unknown {
 			fmt.Printf("Timeout reached after dumping %d untestable faults.\n", iteration)
-			return iteration
+			return count
 		}
 		if status == bsat.Unsatisfiable {
-			return iteration
+			return count
 		}
 		var block []bsat.Literal
 		var active []int
@@ -137,10 +137,10 @@ func Gia_ManDumpUntests(m *gia.Gia_Man_t, data *cnf.Cnf_Dat_t, solver *bsat.Solv
 			}
 		}
 		if !solver.AddClause(block...) {
-			return iteration
+			return count
 		}
 	}
-	return 10000
+	return count
 }
 
 // Gia_ManFaultDumpNewFaults enumerates faults found by newTest and missed by

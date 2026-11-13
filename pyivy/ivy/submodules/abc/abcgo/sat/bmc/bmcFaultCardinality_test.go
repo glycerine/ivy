@@ -87,3 +87,37 @@ func TestCardinalityDiagnostic(t *testing.T) {
 		t.Fatalf("got %d unique patterns", len(seen))
 	}
 }
+
+func TestCardinalityAggregateAndSize(t *testing.T) {
+	for n := 1; n <= 8; n++ {
+		s := bsat.NewSolver()
+		vars := vec.Vec_IntAlloc(n)
+		for i := 0; i < n; i++ {
+			vec.Vec_IntPush(vars, s.NewVariable())
+		}
+		Cnf_AddCardinConstr(s, vars)
+		if s.NumVars() != int32(2*n-1) {
+			t.Fatalf("n=%d: got %d variables", n, s.NumVars())
+		}
+		out := vec.Vec_IntEntry(vars, 0)
+		for mask := 0; mask < 1<<n; mask++ {
+			for z := 0; z < 2; z++ {
+				assumptions := make([]bsat.Literal, n+1)
+				for i := 0; i < n; i++ {
+					assumptions[i] = bsat.Negative(int32(i))
+					if mask&(1<<i) != 0 {
+						assumptions[i] = bsat.Positive(int32(i))
+					}
+				}
+				assumptions[n] = bsat.Negative(out)
+				if z != 0 {
+					assumptions[n] = bsat.Positive(out)
+				}
+				want := bits.OnesCount(uint(mask)) <= 1 && (z != 0) == (mask != 0)
+				if got := s.Solve(assumptions...) == bsat.Satisfiable; got != want {
+					t.Fatalf("n=%d mask=%d out=%d got=%v", n, mask, z, got)
+				}
+			}
+		}
+	}
+}

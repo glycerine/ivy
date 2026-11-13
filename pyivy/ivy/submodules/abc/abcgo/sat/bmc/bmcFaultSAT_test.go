@@ -109,3 +109,34 @@ func TestDumpNewFaults(t *testing.T) {
 		t.Fatalf("faults %q %v", data, err)
 	}
 }
+
+func TestDumpUntestableFaultCountMatchesRows(t *testing.T) {
+	p := gia.Gia_ManStart(4)
+	a := gia.Gia_ManAppendCi(p)
+	data := &cnf.Cnf_Dat_t{VarNums: make([]int32, gia.Gia_ManObjNum(p))}
+	data.VarNums[a>>1] = 0
+	for _, value := range []bool{false, true} {
+		s := bsat.NewSolver()
+		s.NewVariable()
+		lit := bsat.Negative(0)
+		if value {
+			lit = bsat.Positive(0)
+		}
+		if !s.AddClause(lit) {
+			t.Fatal("unit failed")
+		}
+		name := filepath.Join(t.TempDir(), "faults")
+		got := Gia_ManDumpUntests(p, data, s, 0, name, 0)
+		content, err := os.ReadFile(name)
+		if err != nil {
+			t.Fatal(err)
+		}
+		want := int32(0)
+		if value {
+			want = 1
+		}
+		if got != want || strings.Count(string(content), "\n") != int(want) {
+			t.Fatalf("value=%v count=%d file=%q", value, got, content)
+		}
+	}
+}

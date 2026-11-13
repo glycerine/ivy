@@ -83,6 +83,26 @@ SAT cardinality constraints, GIA simulation, bounded-core proof output, and
 solver bridges. The 32-bit `Abc_InfoHasBit` remains in use for `[]uint32`
 bitsets; 64-bit simulation words use `Abc_TtGetBit`.
 
+## Correctness and simplicity review
+
+A subsequent inspection found and fixed several issues:
+
+- The scalable BMC solver now applies the global deadline during SAT calls and
+  accounts for cumulative per-output SAT time. The earlier implementation only
+  checked the global limit between frames and restarted the per-output budget.
+- Remapped GIA CNF now leaves outputs unasserted, as the C helper does, and
+  preserves GIA object IDs even when inputs and gates are interleaved. Exhaustive
+  tests cover complemented outputs and both input values.
+- Cube extraction and fault analysis preserve their caller's SAT resource
+  limits. Untestable-fault reporting counts nonempty rows actually written.
+- The at-most-one constraint uses a balanced OR aggregation with one auxiliary
+  per pair; exhaustive tests check both the constraint and aggregate value.
+  The BMC clause loader also avoids rebuilding literals already in BSAT format.
+
+The review changes passed `go test -race -count=1 ./sat/bmc ./sat/bsat
+./sat/cnf` and `go vet ./sat/bmc ./sat/bsat ./sat/cnf`. These checks and the
+inspection do not establish correctness for every graph or option.
+
 ## Remaining work
 
 The small-model and differential tests do not cover every algorithm, option,
