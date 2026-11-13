@@ -21,7 +21,8 @@ constant literals, and keep their constraint cones active for subsequent
 queries. The msat solver retains root unit facts when preparing a new cone.
 Constrained miter checks use SAT and validate returned witnesses against both
 the output and all external clauses; simulation-only witnesses can violate those
-clauses.
+clauses. As in the C API, attempting to add an empty or contradictory external
+clause triggers an assertion rather than representing an inconsistent manager.
 
 Remaining validation work:
 
