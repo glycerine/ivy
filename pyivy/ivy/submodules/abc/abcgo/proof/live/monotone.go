@@ -136,4 +136,9 @@ func FindMonotone(n *Network, options SafetyOptions, checker SafetyChecker) []in
 	vectors := &monotoneVectorsStruct{attrCandMonotone: hints, attrHintMonotone: hints}
 	return findNewMonotoneWith(n.Graph, indexes, vectors, options, checker)
 }
-func findMonotoneSignals(n *Network) []int32 { return FindMonotone(n, SafetyOptions{}, CheckSafety) }
+
+// findMonotoneSignals follows the C entry point, which discards its results.
+func findMonotoneSignals(n *Network) []int32 {
+	FindMonotone(n, SafetyOptions{}, CheckSafety)
+	return nil
+}
