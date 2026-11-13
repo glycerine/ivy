@@ -53,3 +53,12 @@ the corresponding legacy abstraction parameters. Mapping an option into a
 record does not by itself prove equivalent runtime behavior: source C itself
 initializes some legacy fields without using them in this package, and the
 full-proof mode difference above remains open.
+
+A declaration-name scan of `abs.h` found 29 public declarations. After the
+collection and bounded-shrink tests, every non-diagnostic declaration is named
+by at least one `proof/abs` test. The three exceptions are output-only
+`Gia_ManPrintFlopClasses`, `Gia_ManPrintGateClasses`, and
+`Gia_ManPrintObjClasses`, which delegate to `aig/gia` printing helpers and do
+not have direct output-format tests in this package. A name occurrence does
+not establish full branch coverage; resource limits, large proofs and
+cross-package differential testing remain coverage gaps.

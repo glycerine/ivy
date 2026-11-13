@@ -89,3 +89,30 @@ func TestAbstractionDuplicationPreservesConstraintMetadata(t *testing.T) {
 		t.Fatalf("flop abstraction constraints=%d, want 1", got)
 	}
 }
+
+func TestGlaCollectSeparatesInputsFlopsAndGates(t *testing.T) {
+	g := gia.Gia_ManStart(12)
+	x := gia.Gia_ManAppendCi(g)
+	kept := gia.Gia_ManAppendCi(g)
+	omitted := gia.Gia_ManAppendCi(g)
+	out := gia.Gia_ManAppendAnd(g, kept, omitted)
+	gia.Gia_ManAppendCo(g, out)
+	gia.Gia_ManAppendCo(g, x)
+	gia.Gia_ManAppendCo(g, 0)
+	gia.Gia_ManSetRegNum(g, 2)
+	classes := vec.Vec_IntStart(int(gia.Gia_ManObjNum(g)))
+	for _, id := range []int32{0, kept >> 1, out >> 1} {
+		vec.Vec_IntWriteEntry(classes, int(id), 1)
+	}
+	var pis, ppis, flops, nodes *vec.Vec_Int_t
+	Gia_ManGlaCollect(g, classes, &pis, &ppis, &flops, &nodes)
+	for _, tc := range []struct {
+		name string
+		got  *vec.Vec_Int_t
+		want int32
+	}{{"PI", pis, x >> 1}, {"PPI", ppis, omitted >> 1}, {"flop", flops, kept >> 1}, {"gate", nodes, out >> 1}} {
+		if vec.Vec_IntSize(tc.got) != 1 || vec.Vec_IntEntry(tc.got, 0) != tc.want {
+			t.Errorf("%s entries=%v want [%d]", tc.name, vec.Vec_IntArray(tc.got), tc.want)
+		}
+	}
+}
