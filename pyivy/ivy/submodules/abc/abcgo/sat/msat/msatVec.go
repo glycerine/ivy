@@ -73,14 +73,16 @@ func Msat_IntVecPop(p *Msat_IntVec_t) int {
 func Msat_IntVecWriteEntry(p *Msat_IntVec_t, i int, value int) { p.data[i] = value }
 func Msat_IntVecReadEntry(p *Msat_IntVec_t, i int) int         { return p.data[i] }
 
-func Msat_IntVecAllocArray(a []int, n int) *Msat_IntVec_t { return &Msat_IntVec_t{data: a[:n]} }
+func Msat_IntVecAllocArray(a []int, n int) *Msat_IntVec_t { return &Msat_IntVec_t{data: a[:n:n]} }
 func Msat_IntVecAllocArrayCopy(a []int, n int) *Msat_IntVec_t {
-	return &Msat_IntVec_t{data: append([]int(nil), a[:n]...)}
+	data := make([]int, n)
+	copy(data, a[:n])
+	return &Msat_IntVec_t{data: data}
 }
 func Msat_IntVecDup(p *Msat_IntVec_t) *Msat_IntVec_t {
-	q := Msat_IntVecAlloc(cap(p.data))
-	q.data = append(q.data, p.data...)
-	return q
+	data := make([]int, len(p.data), cap(p.data))
+	copy(data, p.data)
+	return &Msat_IntVec_t{data: data}
 }
 func Msat_IntVecDupArray(p *Msat_IntVec_t) *Msat_IntVec_t {
 	q := &Msat_IntVec_t{data: p.data}
