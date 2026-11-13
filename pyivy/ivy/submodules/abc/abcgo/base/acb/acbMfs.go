@@ -101,19 +101,19 @@ func Acb_DeriveCnfFromTruth(Truth word, nVars int32, vCover *Vec_Int_t, vCnf *Ve
 }
 
 func Acb_DeriveCnfForWindowOne(p *Acb_Ntk_t, iObj int32) {
-    var vCnfs *Vec_Wec_t  = &p.vCnfs;
+    var vCnfs []Vec_Str_t = p.vCnfs;
     var vCnfBase *Vec_Str_t  = Acb_ObjCnfs( p, iObj );
     assert(Vec_StrSize(vCnfBase) == 0, "Vec_StrSize(vCnfBase) == 0"); // unassigned
-    assert(Vec_WecSize(vCnfs) == Acb_NtkObjNumMax(p), "Vec_WecSize(vCnfs) == Acb_NtkObjNumMax(p)");
+    assert(len(vCnfs) == int(Acb_NtkObjNumMax(p)), "len(vCnfs) == int(Acb_NtkObjNumMax(p))");
     Acb_DeriveCnfFromTruth( Acb_ObjTruth(p, iObj), Acb_ObjFaninNum(p, iObj), &p.vCover, &p.vCnf );
     Vec_StrGrow( vCnfBase, Vec_StrSize(&p.vCnf) );
     memcpy( Vec_StrArray(vCnfBase), Vec_StrArray(&p.vCnf), (size_t)Vec_StrSize(&p.vCnf) );
     vCnfBase.nSize = Vec_StrSize(&p.vCnf);
 }
-func Acb_DeriveCnfForWindow(p *Acb_Ntk_t, vWin *Vec_Int_t, PivotVar int32) *Vec_Wec_t {
-    var vCnfs *Vec_Wec_t  = &p.vCnfs;
+func Acb_DeriveCnfForWindow(p *Acb_Ntk_t, vWin *Vec_Int_t, PivotVar int32) []Vec_Str_t {
+    var vCnfs []Vec_Str_t = p.vCnfs;
     var vCnfBase *Vec_Str_t; var i, iObj int32;
-    assert(Vec_WecSize(vCnfs) == Acb_NtkObjNumMax(p), "Vec_WecSize(vCnfs) == Acb_NtkObjNumMax(p)");
+    assert(len(vCnfs) == int(Acb_NtkObjNumMax(p)), "len(vCnfs) == int(Acb_NtkObjNumMax(p))");
     Vec_IntForEachEntry( vWin, iObj, i )
     {
         if Abc_LitIsCompl(iObj) && i < PivotVar {
@@ -165,7 +165,7 @@ func Acb_NtkCountRoots(vWinObjs *Vec_Int_t, PivotVar int32) int32 {
     return nRoots;
 }
 func Acb_DeriveCnfForNode(p *Acb_Ntk_t, iObj int32, pSat *sat_solver, OutVar int32) {
-    var vCnfs *Vec_Wec_t  = &p.vCnfs;
+    var vCnfs []Vec_Str_t = p.vCnfs;
     var vFaninVars *Vec_Int_t  = &p.vCover;
     var vClas *Vec_Int_t  = Vec_IntAlloc( 100 );
     var vLits *Vec_Int_t  = Vec_IntAlloc( 100 );
@@ -183,7 +183,7 @@ func Acb_DeriveCnfForNode(p *Acb_Ntk_t, iObj int32, pSat *sat_solver, OutVar int
     }
     Vec_IntPush( vFaninVars, OutVar );
     // derive CNF for the node
-    Acb_TranslateCnf( vClas, vLits, (Vec_Str_t *)Vec_WecEntry(vCnfs, iObj), vFaninVars, -1 );
+    Acb_TranslateCnf( vClas, vLits, &vCnfs[iObj], vFaninVars, -1 );
     // add clauses
     Prev = 0;
     Vec_IntForEachEntry( vClas, This, k )
@@ -210,7 +210,7 @@ func Acb_NtkWindow2Cnf(p *Acb_Ntk_t, vWinObjs *Vec_Int_t, Pivot int32) *Cnf_Dat_
     var iFanin int32;
     var pFanins *int32;
     var Entry int32;
-    var vCnfs *Vec_Wec_t  = Acb_DeriveCnfForWindow( p, vWinObjs, PivotVar );
+    var vCnfs []Vec_Str_t = Acb_DeriveCnfForWindow( p, vWinObjs, PivotVar );
     var vClas *Vec_Int_t  = Vec_IntAlloc( 100 );
     var vLits *Vec_Int_t  = Vec_IntAlloc( 1000 );
     // mark new SAT variables
@@ -230,7 +230,7 @@ func Acb_NtkWindow2Cnf(p *Acb_Ntk_t, vWinObjs *Vec_Int_t, Pivot int32) *Cnf_Dat_
             Vec_IntPush( vFaninVars, Acb_ObjFunc(p, iFanin) );
         Vec_IntPush( vFaninVars, Acb_ObjFunc(p, iObj) );
         // derive CNF for the node
-        Acb_TranslateCnf( vClas, vLits, (Vec_Str_t *)Vec_WecEntry(vCnfs, iObj), vFaninVars, -1 );
+        Acb_TranslateCnf( vClas, vLits, &vCnfs[iObj], vFaninVars, -1 );
     }
     // add second clauses for the TFO
     Vec_IntForEachEntryStart( vWinObjs, iObjLit, i, TfoStart )
@@ -243,7 +243,7 @@ func Acb_NtkWindow2Cnf(p *Acb_Ntk_t, vWinObjs *Vec_Int_t, Pivot int32) *Cnf_Dat_
             Vec_IntPush( vFaninVars, Acb_ObjFunc(p, iFanin) + (Acb_ObjFunc(p, iFanin) > PivotVar) * nTfoSize );
         Vec_IntPush( vFaninVars, Acb_ObjFunc(p, iObj) + nTfoSize );
         // derive CNF for the node
-        Acb_TranslateCnf( vClas, vLits, (Vec_Str_t *)Vec_WecEntry(vCnfs, iObj), vFaninVars, PivotVar );
+        Acb_TranslateCnf( vClas, vLits, &vCnfs[iObj], vFaninVars, PivotVar );
     }
     if nRoots > 0 {
         // create XOR clauses for the roots

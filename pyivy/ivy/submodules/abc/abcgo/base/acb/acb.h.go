@@ -93,7 +93,7 @@ type Acb_Ntk_t_ struct {
     vPathR       Vec_Int_t;     // path
     vCounts       Vec_Flt_t;    // priority counts
     vFanouts       Vec_Wec_t;   // fanouts
-    vCnfs       Vec_Wec_t;      // CNF
+    vCnfs       []Vec_Str_t;    // CNF, one byte vector per object
     vCnf       Vec_Str_t;       // CNF
     vSuppOld       Vec_Int_t;   // previous support
     // other
@@ -216,7 +216,7 @@ func Acb_NtkCleanObjPathD(p *Acb_Ntk_t) { Vec_IntFill(&p.vPathD,    Vec_StrCap(&
 func Acb_NtkCleanObjPathR(p *Acb_Ntk_t) { Vec_IntFill(&p.vPathR,    Vec_StrCap(&p.vObjType),  0);                                   }
 func Acb_NtkCleanObjCounts(p *Acb_Ntk_t) { Vec_FltFill(&p.vCounts,   Vec_StrCap(&p.vObjType),  0);                                   }
 func Acb_NtkCleanObjFanout(p *Acb_Ntk_t) { Vec_WecInit(&p.vFanouts,  Vec_StrCap(&p.vObjType)    );                                   }
-func Acb_NtkCleanObjCnfs(p *Acb_Ntk_t) { Vec_WecInit(&p.vCnfs,     Vec_StrCap(&p.vObjType)    );                                   }
+func Acb_NtkCleanObjCnfs(p *Acb_Ntk_t) { acbResizeCnfs(p, Vec_StrCap(&p.vObjType));                                   }
 
 func Acb_NtkHasObjCopies(p *Acb_Ntk_t) int32 { return Vec_IntSize(&p.vObjCopy)  > 0;                                                      }
 func Acb_NtkHasObjFuncs(p *Acb_Ntk_t) int32 { return Vec_IntSize(&p.vObjFunc)  > 0;                                                      }
@@ -232,7 +232,7 @@ func Acb_NtkHasObjPathD(p *Acb_Ntk_t) int32 { return Vec_IntSize(&p.vPathD)    >
 func Acb_NtkHasObjPathR(p *Acb_Ntk_t) int32 { return Vec_IntSize(&p.vPathR)    > 0;                                                      }
 func Acb_NtkHasObjCounts(p *Acb_Ntk_t) int32 { return Vec_FltSize(&p.vCounts)   > 0;                                                      }
 func Acb_NtkHasObjFanout(p *Acb_Ntk_t) int32 { return Vec_WecSize(&p.vFanouts)  > 0;                                                      }
-func Acb_NtkHasObjCnfs(p *Acb_Ntk_t) int32 { return Vec_WecSize(&p.vCnfs)     > 0;                                                      }
+func Acb_NtkHasObjCnfs(p *Acb_Ntk_t) int32 { if len(p.vCnfs) > 0 { return 1 }; return 0;                                                      }
 
 func Acb_NtkFreeObjCopies(p *Acb_Ntk_t) { Vec_IntErase(&p.vObjCopy);                                                                 }
 func Acb_NtkFreeObjFuncs(p *Acb_Ntk_t) { Vec_IntErase(&p.vObjFunc);                                                                 }
@@ -248,7 +248,7 @@ func Acb_NtkFreeObjPathD(p *Acb_Ntk_t) { Vec_IntErase(&p.vPathD);               
 func Acb_NtkFreeObjPathR(p *Acb_Ntk_t) { Vec_IntErase(&p.vPathR);                                                                   }
 func Acb_NtkFreeObjCounts(p *Acb_Ntk_t) { Vec_FltErase(&p.vCounts);                                                                  }
 func Acb_NtkFreeObjFanout(p *Acb_Ntk_t) { Vec_WecErase(&p.vFanouts);                                                                 }
-func Acb_NtkFreeObjCnfs(p *Acb_Ntk_t) { Vec_WecErase(&p.vCnfs);                                                                    }
+func Acb_NtkFreeObjCnfs(p *Acb_Ntk_t) { p.vCnfs = nil;                                                                    }
 
 func Acb_ObjType(p *Acb_Ntk_t, i int32) Acb_ObjType_t { assert(i>0, "i>0"); return Acb_ObjType_t(Vec_StrEntry(&p.vObjType, i));                }
 func Acb_ObjCleanType(p *Acb_Ntk_t, i int32) { assert(i>0, "i>0"); Vec_StrWriteEntry( &p.vObjType, i, byte(ABC_OPER_NONE) );                              }
@@ -307,7 +307,17 @@ func Acb_ObjLevelR(p *Acb_Ntk_t, i int32) int32 { assert(i>0, "i>0"); return Vec
 func Acb_ObjPathD(p *Acb_Ntk_t, i int32) int32 { assert(i>0, "i>0"); return Vec_IntEntry(&p.vPathD, i);                                                     }
 func Acb_ObjPathR(p *Acb_Ntk_t, i int32) int32 { assert(i>0, "i>0"); return Vec_IntEntry(&p.vPathR, i);                                                     }
 func Acb_ObjCounts(p *Acb_Ntk_t, i int32) float32 { assert(i>0, "i>0"); return Vec_FltEntry(&p.vCounts, i);                                                    }
-func Acb_ObjCnfs(p *Acb_Ntk_t, i int32) *Vec_Str_t { assert(i>0, "i>0"); return (Vec_Str_t *)Vec_WecEntry(&p.vCnfs, i);                                         }
+// acbResizeCnfs mirrors Vec_WecInit/Vec_WecPushLevel while keeping the
+// byte-vector entries separately typed rather than relying on C struct casts.
+func acbResizeCnfs(p *Acb_Ntk_t, n int) {
+    if n <= cap(p.vCnfs) {
+        p.vCnfs = p.vCnfs[:n]
+        return
+    }
+    old := p.vCnfs[:cap(p.vCnfs)]
+    p.vCnfs = append(old, make([]Vec_Str_t, n-len(old))...)
+}
+func Acb_ObjCnfs(p *Acb_Ntk_t, i int32) *Vec_Str_t { assert(i>0, "i>0"); return &p.vCnfs[i];                                         }
 
 func Acb_ObjSetCopy(p *Acb_Ntk_t, i int32, x int32) { assert(Acb_ObjCopy(p, i) == -1, "Acb_ObjCopy(p, i) == -1"); Vec_IntWriteEntry( &p.vObjCopy, i, x );                            }
 func Acb_ObjSetFunc(p *Acb_Ntk_t, i int32, x int32) { assert(Acb_ObjFunc(p, i) == -1, "Acb_ObjFunc(p, i) == -1"); Vec_IntWriteEntry( &p.vObjFunc, i, x );                            }
@@ -602,7 +612,7 @@ func Acb_ObjAlloc(p *Acb_Ntk_t, Type Acb_ObjType_t, nFans int32, nFons int32) in
     if Acb_NtkHasObjPathR(p) != 0 { Vec_IntPush(&p.vPathR    ,  0); }
     if Acb_NtkHasObjCounts(p) != 0 { Vec_FltPush(&p.vCounts   ,  0); }
     if Acb_NtkHasObjFanout(p) != 0 { Vec_WecPushLevel(&p.vFanouts); }
-    if Acb_NtkHasObjCnfs(p) != 0 { Vec_WecPushLevel(&p.vCnfs); }
+    if Acb_NtkHasObjCnfs(p) != 0 { acbResizeCnfs(p, len(p.vCnfs)+1); }
     if p.vQue { Vec_QueSetPriority( p.vQue, Vec_FltArrayP(&p.vCounts) ); }
     return iObj;
 }
@@ -732,7 +742,7 @@ func Acb_NtkFree(p *Acb_Ntk_t) {
     Vec_IntErase( &p.vPathR );    
     Vec_FltErase( &p.vCounts );    
     Vec_WecErase( &p.vFanouts );
-    Vec_WecErase( &p.vCnfs );    
+    p.vCnfs = nil;    
     Vec_StrErase( &p.vCnf );    
     Vec_IntErase( &p.vSuppOld );    
     // other
@@ -789,11 +799,13 @@ func Acb_NtkDup(pMan *Acb_Man_t, p *Acb_Ntk_t, vObjs *Vec_Int_t) *Acb_Ntk_t {
     pNew = Acb_NtkAlloc( pMan, Acb_NtkNameId(p), Acb_NtkCiNum(p), Acb_NtkCoNum(p), Vec_IntSize(vObjs) );
     Acb_NtkCleanObjCopies( p );
     // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vObjs)) && (((iObj) = Vec_IntEntry(vObjs, i)), 1); i++  {
+    for i = 0; i < Vec_IntSize(vObjs); i++ {
+        iObj = Vec_IntEntry(vObjs, i)
         iObjNew = Acb_ObjDup( pNew, p, iObj );
     }
     // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vObjs)) && (((iObj) = Vec_IntEntry(vObjs, i)), 1); i++  {
+    for i = 0; i < Vec_IntSize(vObjs); i++ {
+        iObj = Vec_IntEntry(vObjs, i)
         iObjNew = Acb_ObjCopy( p, iObj );
         // inlining of macro Acb_ObjForEachFanin
         for k = 0; k < Acb_ObjFaninNum(p, iObj); k++ {
@@ -826,7 +838,8 @@ func Acb_NtkDupAttrs(pNew *Acb_Ntk_t, p *Acb_Ntk_t) {
     var i, iObj int32;
     assert(Vec_IntSize(&pNew.vOrder) == 0, "Vec_IntSize(&pNew.vOrder) == 0");
     // inlining of macro Acb_NtkForEachCioOrder
-    for  i = 0; (i < Acb_NtkCioOrderNum(p))  && (((iObj) = Acb_NtkCioOrder(p, i)), 1); i++  { 
+    for i = 0; i < Acb_NtkCioOrderNum(p); i++ {
+        iObj = Acb_NtkCioOrder(p, i)
         Vec_IntPush( &pNew.vOrder, Acb_ObjCopy(p, iObj) );
     }
 //    Vec_IntRemapArray( &p->vObjCopy, &p->vOrder,    &pNew->vOrder,    Acb_NtkCioOrderNum(p) );
@@ -891,7 +904,9 @@ func Acb_NtkPrint(p *Acb_Ntk_t) {
     fmt.Printf("Interface (%d):\n", Acb_NtkCioNum(p));
     fmt.Printf("Objects (%d):\n", Acb_NtkObjNum(p));
     // inlining of macro Acb_NtkForEachObjType
-    for  i = 1; i < Vec_StrSize(&p.vObjType) && (((Type) = Acb_ObjType(p, i)), 1); i++  { if !(Type != 0) {} else {
+    for i = 1; i < Vec_StrSize(&p.vObjType); i++ {
+        Type = Acb_ObjType(p, i)
+        if Type != 0 {
         fmt.Printf("%6d : ", i);
         fmt.Printf("Type =%3d  ", Type);
         fmt.Printf("Fanins = %d  ", Acb_ObjFaninNum(p, i));
@@ -952,14 +967,15 @@ func Acb_ManAlloc(pFileName string, nNtks int32, pStrs *Abc_Nam_t, pFuns *Abc_Na
     return pNew;
 }
 func Acb_ManDupTypeNames(pNew *Acb_Man_t, p *Acb_Man_t) {
-   memcpy( pNew.pTypeNames, p.pTypeNames, sizeof(void *) * ABC_OPER_LAST );
+   pNew.pTypeNames = p.pTypeNames
 }
 func Acb_ManDup(p *Acb_Man_t, pFuncOrder func(*Acb_Ntk_t) *Vec_Int_t) *Acb_Man_t {
     var pNtk, pNtkNew *Acb_Ntk_t; var i int32;
     var pNew *Acb_Man_t  = Acb_ManAlloc( p.pSpec, Acb_ManNtkNum(p), Abc_NamRef(p.pStrs), Abc_NamRef(p.pFuns), Abc_NamStart(100, 24), Hash_IntManRef(p.vHash) );
     Acb_ManDupTypeNames( pNew, p );
     // inlining of macro Acb_ManForEachNtk
-    for  i = 1; (i <= Acb_ManNtkNum(p)) && (((pNtk) = Acb_ManNtk(p, i)), 1); i++  {
+    for i = 1; i <= Acb_ManNtkNum(p); i++ {
+        pNtk = Acb_ManNtk(p, i)
         pNtkNew = Acb_NtkDupOrder( pNew, pNtk, pFuncOrder );
         Acb_NtkAdd( pNew, pNtkNew );
         Acb_NtkDupAttrs( pNtkNew, pNtk );
@@ -973,7 +989,8 @@ func Acb_ManDup(p *Acb_Man_t, pFuncOrder func(*Acb_Ntk_t) *Vec_Int_t) *Acb_Man_t
 func Acb_ManFree(p *Acb_Man_t) {
     var pNtk *Acb_Ntk_t; var i int32;
     // inlining of macro Acb_ManForEachNtk
-    for  i = 1; (i <= Acb_ManNtkNum(p)) && (((pNtk) = Acb_ManNtk(p, i)), 1); i++  { 
+    for i = 1; i <= Acb_ManNtkNum(p); i++ {
+        pNtk = Acb_ManNtk(p, i)
         Acb_NtkFree( pNtk );
     }
     p.vNtks.pArray = nil;
@@ -1005,7 +1022,8 @@ func Acb_ManUnsetMap(p *Acb_Man_t, i int32) {
 func Acb_ManCleanMap(p *Acb_Man_t) {
     var i, Entry int32;
     // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(&p.vUsed)) && (((Entry) = Vec_IntEntry(&p.vUsed, i)), 1); i++  {
+    for i = 0; i < Vec_IntSize(&p.vUsed); i++ {
+        Entry = Vec_IntEntry(&p.vUsed, i)
         Vec_IntWriteEntry( &p.vNameMap, Entry, 0 );
     }
     Vec_IntClear( &p.vUsed );
@@ -1029,7 +1047,8 @@ func Acb_ManUnsetMap2(p *Acb_Man_t, i int32) {
 func Acb_ManCleanMap2(p *Acb_Man_t) {
     var i, Entry int32;
     // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(&p.vUsed2)) && (((Entry) = Vec_IntEntry(&p.vUsed2, i)), 1); i++  {
+    for i = 0; i < Vec_IntSize(&p.vUsed2); i++ {
+        Entry = Vec_IntEntry(&p.vUsed2, i)
         Vec_IntWriteEntry( &p.vNameMap2, Entry, 0 );
     }
     Vec_IntClear( &p.vUsed2 );
@@ -1053,7 +1072,8 @@ func Acb_ManMemory(p *Acb_Man_t) int32 {
     nMem += int32(Vec_StrMemory(&p.vOut2 ));  
     nMem += int32(Vec_PtrMemory(&p.vNtks));
     // inlining of macro Acb_ManForEachNtk
-    for  i = 1; (i <= Acb_ManNtkNum(p)) && (((pNtk) = Acb_ManNtk(p, i)), 1); i++  { 
+    for i = 1; i <= Acb_ManNtkNum(p); i++ {
+        pNtk = Acb_ManNtk(p, i)
         nMem += Acb_NtkMemory( pNtk );
     }
     return nMem;
@@ -1061,7 +1081,8 @@ func Acb_ManMemory(p *Acb_Man_t) int32 {
 func Acb_ManObjNum(p *Acb_Man_t) int32 {
     var pNtk *Acb_Ntk_t; var i, Count int32;
     // inlining of macro Acb_ManForEachNtk
-    for  i = 1; (i <= Acb_ManNtkNum(p)) && (((pNtk) = Acb_ManNtk(p, i)), 1); i++  { 
+    for i = 1; i <= Acb_ManNtkNum(p); i++ {
+        pNtk = Acb_ManNtk(p, i)
         Count += Acb_NtkObjNum(pNtk);
     }
     return Count;
@@ -1069,7 +1090,8 @@ func Acb_ManObjNum(p *Acb_Man_t) int32 {
 func Acb_ManBoxNum(p *Acb_Man_t) int32 {
     var pNtk *Acb_Ntk_t; var i, Count int32;
     // inlining of macro Acb_ManForEachNtk
-    for  i = 1; (i <= Acb_ManNtkNum(p)) && (((pNtk) = Acb_ManNtk(p, i)), 1); i++  { 
+    for i = 1; i <= Acb_ManNtkNum(p); i++ {
+        pNtk = Acb_ManNtk(p, i)
         Count += Acb_NtkBoxNum( pNtk );
     }
     return Count;
@@ -1119,7 +1141,8 @@ func Acb_ManPrintStats(p *Acb_Man_t, nModules int32, fVerbose int32) {
     fmt.Printf("mem =%6.3f MB", 1.0*Acb_ManMemory(p)/(1<<20));
     fmt.Printf("\n");
     // inlining of macro Acb_ManForEachNtk
-    for  i = 1; (i <= Acb_ManNtkNum(p)) && (((pNtk) = Acb_ManNtk(p, i)), 1); i++  {
+    for i = 1; i <= Acb_ManNtkNum(p); i++ {
+        pNtk = Acb_ManNtk(p, i)
         if i == nModules+1 {
             break; }
         fmt.Printf("Module %5d : ", i);

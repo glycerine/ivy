@@ -116,36 +116,27 @@ func Acb_ObjCollectTfoVec(p *Acb_Ntk_t, objects *Vec_Int_t) *Vec_Int_t {
 
 ***********************************************************************/
 func Acb_NtkIsPiBuffers(p *Acb_Ntk_t, iObj int32) int32 {
-    if Acb_ObjIsCi(p, iObj) {
-        return 1; }
-    if Acb_ObjFaninNum(p, iObj) != 1 {
-        return 0; }
-    return Acb_NtkIsPiBuffers( p, Acb_ObjFanin(p, iObj, 0) );
+    if Acb_ObjIsCi(p, iObj) != 0 { return 1 }
+    if Acb_ObjFaninNum(p, iObj) != 1 { return 0 }
+    return Acb_NtkIsPiBuffers(p, Acb_ObjFanin(p, iObj, 0))
 }
-func Acb_NtkCountPiBuffers(p *Acb_Ntk_t, vObjs *Vec_Int_t) int32 {
-    var i, iObj, Count int32;
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vObjs)) && (((iObj) = Vec_IntEntry(vObjs, i)), 1); i++  {
-        Count += Acb_NtkIsPiBuffers( p, iObj );
-    }
-    return Count;
+func Acb_NtkCountPiBuffers(p *Acb_Ntk_t, objects *Vec_Int_t) int32 {
+    var count int32
+    for _, obj := range Vec_IntArray(objects) { count += Acb_NtkIsPiBuffers(p, obj) }
+    return count
 }
-func Acb_NtkCountPoDrivers(p *Acb_Ntk_t, vObjs *Vec_Int_t) int32 {
-    var i, iObj, Count int32;
-    Acb_NtkIncTravId( p );
-    // inlining of macro Acb_NtkForEachCo
-    for  i = 0; (i < Acb_NtkCoNum(p))  && (((iObj) = Acb_NtkCo(p, i)), 1); i++  {
-        var Fanin0 int32  = Acb_ObjFanin0(p, iObj);
-        Acb_ObjSetTravIdCur( p, iObj );
-        Acb_ObjSetTravIdCur( p, Fanin0 );
-        if Acb_ObjFaninNum(p, Fanin0) == 1 {
-            Acb_ObjSetTravIdCur( p, Acb_ObjFanin0(p, Fanin0) ); }
+func Acb_NtkCountPoDrivers(p *Acb_Ntk_t, objects *Vec_Int_t) int32 {
+    var count int32
+    Acb_NtkIncTravId(p)
+    for i := int32(0); i < Acb_NtkCoNum(p); i++ {
+        obj := Acb_NtkCo(p, i)
+        fanin := Acb_ObjFanin0(p, obj)
+        Acb_ObjSetTravIdCur(p, obj)
+        Acb_ObjSetTravIdCur(p, fanin)
+        if Acb_ObjFaninNum(p, fanin) == 1 { Acb_ObjSetTravIdCur(p, Acb_ObjFanin0(p, fanin)) }
     }
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vObjs)) && (((iObj) = Vec_IntEntry(vObjs, i)), 1); i++  {
-        Count += Acb_ObjIsTravIdCur(p, iObj);
-    }
-    return Count;
+    for _, obj := range Vec_IntArray(objects) { count += Acb_ObjIsTravIdCur(p, obj) }
+    return count
 }
 
 /**Function*************************************************************
@@ -673,7 +664,7 @@ func Acb_NtkResetNode(p *Acb_Ntk_t, Pivot int32, uTruth word, vSupp *Vec_Int_t) 
     }
     // update function
     Vec_WrdSetEntry( &p.vObjTruth, Pivot, uTruth );
-    Vec_IntErase( Vec_WecEntry(&p.vCnfs, Pivot) );
+    Vec_StrErase(&p.vCnfs[Pivot]);
     // remove old fanins
     Acb_ObjRemoveFaninFanout( p, Pivot );
     Acb_ObjRemoveFanins( p, Pivot );
