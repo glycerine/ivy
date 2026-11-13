@@ -44,3 +44,30 @@ func TestVtaObjectTableDeleteAndReinsert(t *testing.T) {
 		t.Fatal("rollback left replacement")
 	}
 }
+
+// Vta_ManComputeDepthIncrease mirrors absVta.c's comparator: lower priority
+// sorts first, then objects use their source-array ID as the pointer-order tie.
+func TestVtaDepthComparatorMatchesSourceOrder(t *testing.T) {
+	table := newVtaObjectTable(2)
+	first := table.findOrAdd(8, 0)
+	second := table.findOrAdd(3, 0)
+	first.Prio = 4
+	second.Prio = 7
+
+	if got := Vta_ManComputeDepthIncrease(&first, &second); got != -1 {
+		t.Fatalf("lower priority compares as %d, want -1", got)
+	}
+	if got := Vta_ManComputeDepthIncrease(&second, &first); got != 1 {
+		t.Fatalf("higher priority compares as %d, want 1", got)
+	}
+	second.Prio = first.Prio
+	if got := Vta_ManComputeDepthIncrease(&first, &second); got != -1 {
+		t.Fatalf("earlier source object compares as %d, want -1", got)
+	}
+	if got := Vta_ManComputeDepthIncrease(&second, &first); got != 1 {
+		t.Fatalf("later source object compares as %d, want 1", got)
+	}
+	if got := Vta_ManComputeDepthIncrease(&first, &first); got != 0 {
+		t.Fatalf("same object compares as %d, want 0", got)
+	}
+}

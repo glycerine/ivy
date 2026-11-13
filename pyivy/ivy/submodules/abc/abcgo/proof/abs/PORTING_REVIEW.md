@@ -20,6 +20,25 @@ complemented edges, duplicate nodes, interleaved inputs, VTA startup, and
 counterexample handling. These checks cover small examples; they are not a
 proof of correctness for arbitrary networks or all resource-limit settings.
 
+The follow-up review added two branch-focused checks against active C routines:
+`absVta.c`'s `Vta_ManComputeDepthIncrease` ordering (priority, source object
+order, and equality), and `absGlaOld.c`'s fanout implication from an AND node
+to a controlling pseudo-input. The tests check the returned ordering and
+selected IDs; they do not establish full proof behavior for larger graphs.
+After those additions, `go test -count=1 -coverprofile` measured 77.5%
+statement coverage in `proof/abs`; the comparator is fully covered and the
+fanout implication routine is 72.2% covered. Package build, race tests and vet
+pass. Uncovered code is concentrated in diagnostics, reporting and dormant
+source helpers rather than the tested proof drivers.
+
+An uncached race-enabled coverage run measured 77.3% of statements in
+`proof/abs` and 78.1% in `sat/bsat` with the extended-support regression.
+`Abs_ManSupport3` in `absRpm.c` has no active C caller, but remains callable;
+its regression exercises shared support-node expansion with one or both
+fanins already visited, and checks that cone reference counts are restored.
+The percentages include diagnostics, platform-specific paths and other
+dormant source routines.
+
 The `Gia_ManPerformGla` and `Gia_ManPerformGlaOld` entry points lower native XOR and MUX nodes into
 AND-inverter cones before running the original AND-only refinement. It maps
 incoming gate classes to the lowered graph, conservatively maps selected cones
@@ -119,3 +138,12 @@ compiled fixture to compare it during the Go test. This does not establish
 identical process memory consumption or timeout outcomes: C and Go allocators,
 proof-manager structures, scheduling and CPU-clock sampling can differ, and
 large-proof resource exhaustion has not been exhaustively characterized.
+
+A bounded five-input contradictory miter exercises the old GLA driver through
+layer refinement, proof-core rollback, and the minimum-abstraction-ratio stop
+in both proof modes. `absGlaOldRatioOracle_test.go` checks the status, frame,
+stability count and resulting gate classes against the values from the C
+fixture `test_vectors/gla_old_ratio_oracle.c`; `ABS_OLD_RATIO_ORACLE` can point
+to the compiled C fixture for a live differential run. Ratios 0, 50 and 100
+cover both completion and the frame-zero cutoff. This fixture does not test
+conflict exhaustion or large-proof resource limits.
