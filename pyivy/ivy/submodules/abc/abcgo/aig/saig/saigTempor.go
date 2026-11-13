@@ -1,155 +1,86 @@
 package saig
 
-import "fmt"
+import (
+	"fmt"
+	"sync"
 
-/**CFile****************************************************************
+	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/misc/vec"
+)
 
-  FileName    [saigTempor.c]
+// TemporalBMC performs bounded checking and reports the last completed frame.
+type TemporalBMC func(*aig.Graph, int32, int32, int32, int32, *int32) int32
 
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Sequential AIG package.]
-
-  Synopsis    [Temporal decomposition.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: saigTempor.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "saig.h"
-//#include "sat/bmc/bmc.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Creates initialized timeframes for temporal decomposition.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-/**Function*************************************************************
-
-  Synopsis    [Find index of first non-zero entry.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Vec_IntLastNonZeroBeforeLimit(vTemp *Vec_Int_t, Limit int32) int32 {
-    var Entry, i int32;
-    if vTemp == nil {
-        return -1; }
-    // inlining of macro Vec_IntForEachEntryReverse
-    for  i = Vec_IntSize(vTemp) - 1; (i >= 0) && (((Entry) = Vec_IntEntry(vTemp, i)), 1); i--  {
-        if i >= Limit {
-            continue; }
-        if Entry != 0 {
-            return i; }
-    }
-    return -1;
+var temporalBMC struct {
+	sync.RWMutex
+	run TemporalBMC
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Saig_ManTempor(pAig *Aig_Man_t, nFrames int32, TimeOut int32, nConfLimit int32, fUseBmc int32, fUseTransSigs int32, fVerbose int32, fVeryVerbose int32) *Aig_Man_t { 
-    extern int Saig_ManPhasePrefixLength( Aig_Man_t * p, int fVerbose, int fVeryVerbose, Vec_Int_t ** pvTrans );
-
-    var vTransSigs *Vec_Int_t  = nil;
-    var RetValue int32;
-    var nFramesFinished int32 = -1;
-    assert(nFrames >= 0, "nFrames >= 0"); 
-    if nFrames == 0 {
-        nFrames = Saig_ManPhasePrefixLength( pAig, fVerbose, fVeryVerbose, &vTransSigs );
-        if nFrames == 0 {
-            Vec_IntFreeP( &vTransSigs );
-            fmt.Printf("The leading sequence has length 0. Temporal decomposition is not performed.\n");
-            return nil;
-        }
-        if nFrames == 1 {
-            Vec_IntFreeP( &vTransSigs );
-            fmt.Printf("The leading sequence has length 1. Temporal decomposition is not performed.\n");
-            return nil;
-        }
-        if fUseTransSigs != 0 {
-            var Entry int32;
-            var i int32;
-            var iLast int32 = -1;
-            // inlining of macro Vec_IntForEachEntry
-            for  i = 0; (i < Vec_IntSize(vTransSigs)) && (((Entry) = Vec_IntEntry(vTransSigs, i)), 1); i++  {
-                if Entry != 0 {
-                    iLast = i;
-                } else {
-                    iLast = iLast;
-                }
-            }
-            if iLast > 0 && iLast < nFrames {
-                Abc_Print( 1, "Reducing frame count from %d to %d to fit the last transient.\n", nFrames, iLast );
-                nFrames = iLast;
-            }
-        }
-        Abc_Print( 1, "Using computed frame number (%d).\n", nFrames );
-    
-    } else {
-        Abc_Print( 1, "Using user-given frame number (%d).\n", nFrames ); }
-    // run BMC2
-    if fUseBmc != 0 {
-        RetValue = Saig_BmcPerform( pAig, 0, nFrames, 2000, TimeOut, nConfLimit, 0, fVerbose, 0, &nFramesFinished, 0, 0 );
-        if RetValue == 0 {
-            Vec_IntFreeP( &vTransSigs );
-            fmt.Printf("A cex found in the first %d frames.\n", nFrames);
-            return nil;
-        }
-        if nFramesFinished + 1 < nFrames {
-            var iLastBefore int32  = Vec_IntLastNonZeroBeforeLimit( vTransSigs, nFramesFinished );
-            if iLastBefore < 1 || !(fUseTransSigs != 0) {
-                Vec_IntFreeP( &vTransSigs );
-                fmt.Printf("BMC for %d frames could not be completed. A cex may exist!\n", nFrames);
-                return nil;
-            }
-            assert(iLastBefore < nFramesFinished, "iLastBefore < nFramesFinished");
-            fmt.Printf("BMC succeeded to frame %d. Adjusting frame count to be (%d) based on the last transient signal.\n", nFramesFinished, iLastBefore);
-            nFrames = iLastBefore;
-        }
-    }
-    Vec_IntFreeP( &vTransSigs );
-    return Saig_ManTemporDecompose( pAig, nFrames );
+// RegisterTemporalBMC connects the bounded model checking implementation.
+func RegisterTemporalBMC(run TemporalBMC) {
+	temporalBMC.Lock()
+	temporalBMC.run = run
+	temporalBMC.Unlock()
 }
 
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
+func Vec_IntLastNonZeroBeforeLimit(values *vec.Vec_Int_t, limit int32) int32 {
+	if values == nil || limit <= 0 {
+		return -1
+	}
+	i := min(int(limit), vec.Vec_IntSize(values)) - 1
+	for ; i >= 0; i-- {
+		if vec.Vec_IntEntry(values, i) != 0 {
+			return int32(i)
+		}
+	}
+	return -1
+}
 
-//ABC_NAMESPACE_IMPL_END
-
+func Saig_ManTempor(g *aig.Graph, frames, timeout, conflicts, useBMC, useTransient, verbose, veryVerbose int32) *aig.Graph {
+	if g == nil || frames < 0 {
+		return nil
+	}
+	var transient *vec.Vec_Int_t
+	if frames == 0 {
+		frames = Saig_ManPhasePrefixLength(g, verbose, veryVerbose, &transient)
+		if frames <= 1 {
+			fmt.Printf("The leading sequence has length %d. Temporal decomposition is not performed.\n", frames)
+			return nil
+		}
+		if useTransient != 0 {
+			last := Vec_IntLastNonZeroBeforeLimit(transient, int32(vec.Vec_IntSize(transient)))
+			if last > 0 && last < frames {
+				fmt.Printf("Reducing frame count from %d to %d to fit the last transient.\n", frames, last)
+				frames = last
+			}
+		}
+		fmt.Printf("Using computed frame number (%d).\n", frames)
+	} else {
+		fmt.Printf("Using user-given frame number (%d).\n", frames)
+	}
+	if useBMC != 0 {
+		temporalBMC.RLock()
+		run := temporalBMC.run
+		temporalBMC.RUnlock()
+		if run == nil {
+			fmt.Println("Bounded model checking is unavailable; temporal decomposition is not performed.")
+			return nil
+		}
+		finished := int32(-1)
+		result := run(g, frames, timeout, conflicts, verbose, &finished)
+		if result == 0 {
+			fmt.Printf("A cex found in the first %d frames.\n", frames)
+			return nil
+		}
+		if finished+1 < frames {
+			last := Vec_IntLastNonZeroBeforeLimit(transient, finished)
+			if last < 1 || useTransient == 0 {
+				fmt.Printf("BMC for %d frames could not be completed. A cex may exist!\n", frames)
+				return nil
+			}
+			fmt.Printf("BMC succeeded to frame %d. Adjusting frame count to be (%d) based on the last transient signal.\n", finished, last)
+			frames = last
+		}
+	}
+	return Saig_ManTemporDecompose(g, frames)
+}
