@@ -32,9 +32,6 @@ func Msat_SolverAddClause(p *Msat_Solver_t, lits *Msat_IntVec_t) int {
 	return result
 }
 func Msat_SolverProgressEstimate(p *Msat_Solver_t) float64 {
-	if p.nVars == 0 {
-		return 1
-	}
 	sum := 0.0
 	factor := 1 / float64(p.nVars)
 	for i, value := range p.pAssigns[:p.nVars] {

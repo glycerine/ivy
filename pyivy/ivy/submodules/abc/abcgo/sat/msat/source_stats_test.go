@@ -1,6 +1,9 @@
 package msat
 
-import "testing"
+import (
+	"math"
+	"testing"
+)
 
 func TestSimplifyResetsClauseNumberCounter(t *testing.T) {
 	p := New(3)
@@ -33,5 +36,12 @@ func TestRemoveMarkedResetsClauseNumberCounter(t *testing.T) {
 	Msat_SolverRemoveMarked(p)
 	if got := Msat_SolverReadClauseNum(p); got != 1 {
 		t.Fatalf("clause counter after removal = %d", got)
+	}
+}
+
+func TestSourceProgressEstimateWithZeroVariablesIsNaN(t *testing.T) {
+	p := New(0)
+	if got := Msat_SolverProgressEstimate(p); !math.IsNaN(got) {
+		t.Fatalf("C computes 0/0 for zero variables, got %v", got)
 	}
 }
