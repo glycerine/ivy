@@ -99,3 +99,11 @@ formulas. The independent GIA oracle matches status and conflict count on its
 original-C status differential, and vet pass. This evidence covers those cases;
 it does not establish complete search-trace equivalence for arbitrary restart,
 reduction, assumption, or incremental histories.
+
+### Follow-up incremental review
+
+Clause and cone inputs are fully validated before changing solver state. A
+seeded rollback oracle checks 300 formulas and repeated post-rollback
+assumptions against exhaustive evaluation. Full subtree race tests and vet pass
+with `GOCACHE=/tmp/abcgo-cache`; these finite cases do not establish search-trace
+or performance equivalence for all workloads.
