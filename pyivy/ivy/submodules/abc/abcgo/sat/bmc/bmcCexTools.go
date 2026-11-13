@@ -370,65 +370,6 @@ func Bmc_CexPrint(pCex *Abc_Cex_t, nRealPis int32, fVerbose int32) {
 
 /**Function*************************************************************
 
-  Synopsis    [Verifies the care set of the counter-example.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Bmc_CexVerify(p *Gia_Man_t, pCex *Abc_Cex_t, pCexCare *Abc_Cex_t) int32 {
-    var pObj *Gia_Obj_t;
-    var i, k int32;
-//    assert( pCex->nRegs > 0 );
-//    assert( pCexCare->nRegs == 0 );
-    Gia_ObjTerSimSet0( Gia_ManConst0(p) );
-    // inlining of macro Gia_ManForEachRi
-    for k = 0; k < Gia_ManRegNum(p); k++ {
-    	pObj = Gia_ManCo(p, Gia_ManPoNum(p)+k)
-    	if pObj == nil { break }
-        Gia_ObjTerSimSet0( pObj );
-    }
-    for  i = 0; i <= pCex.iFrame; i++  {
-        // inlining of macro Gia_ManForEachPi
-        for k = 0; k < Gia_ManPiNum(p); k++ {
-        	pObj = Gia_ManCi(p, k)
-        	if pObj == nil { break }
-            if !Abc_InfoHasBit( pCexCare.pData, pCexCare.nRegs + i * pCexCare.nPis + k ) {
-                Gia_ObjTerSimSetX( pObj );
-            } else if Abc_InfoHasBit( pCex.pData, pCex.nRegs + i * pCex.nPis + k ) {
-                Gia_ObjTerSimSet1( pObj );
-            } else {
-                Gia_ObjTerSimSet0( pObj ); }
-        }
-        // inlining of macro Gia_ManForEachRo
-        for k = 0; k < Gia_ManRegNum(p); k++ {
-        	pObj = Gia_ManCi(p, Gia_ManPiNum(p)+k)
-        	if pObj == nil { break }
-            Gia_ObjTerSimRo( p, pObj );
-        }
-        // inlining of macro Gia_ManForEachAnd
-        for k = 0; k < p.nObjs; k++ {
-        	pObj = Gia_ManObj(p, k)
-        	if pObj == nil { break }
-        	if !Gia_ObjIsAnd(pObj) {} else {
-            Gia_ObjTerSimAnd( pObj ); }
-        }
-        // inlining of macro Gia_ManForEachCo
-        for k = 0; k < Vec_IntSize(p.vCos); k++ {
-        	pObj = Gia_ManCo(p, k)
-        	if pObj == nil { break }
-            Gia_ObjTerSimCo( pObj );
-        }
-    }
-    pObj = Gia_ManPo( p, pCex.iPo );
-    return Gia_ObjTerSimGet1(pObj);
-}
-
-/**Function*************************************************************
-
   Synopsis    [Simulates one bit to check whether it is essential.]
 
   Description []
