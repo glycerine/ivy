@@ -146,3 +146,50 @@ func TestInductionExhaustiveOneRegisterTransitions(t *testing.T) {
 		}
 	}
 }
+
+func TestInductionPrefixAndPartitionPreserveOutputs(t *testing.T) {
+	for _, tc := range []struct {
+		name                      string
+		frames, prefix, partition int32
+	}{
+		{"two-frames", 2, 0, 0}, {"prefix", 1, 1, 0}, {"partitions", 1, 0, 1},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			g := aig.NewGraph()
+			input, a, b := g.NewInput(), g.NewInput(), g.NewInput()
+			g.AddOutput(g.XOR(a, b))
+			g.AddOutput(g.AND(a, input))
+			g.AddOutput(input)
+			g.AddOutput(input)
+			aig.Aig_ManSetRegNum(g, 2)
+			if tc.partition != 0 {
+				g.OneHotGroups = [][]int32{{0, 1}}
+			}
+			out := Fra_FraigInduction(g, &Fra_Ssw_t{nFramesK: tc.frames, nFramesP: tc.prefix, nPartSize: tc.partition})
+			if out == nil {
+				t.Fatal("induction returned nil")
+			}
+			for sequence := 0; sequence < 16; sequence++ {
+				src, dst := make([]bool, g.RegisterCount()), make([]bool, out.RegisterCount())
+				for frame := 0; frame < 4; frame++ {
+					input := sequence&(1<<frame) != 0
+					left, err := g.Evaluate(append([]bool{input}, src...))
+					if err != nil {
+						t.Fatal(err)
+					}
+					right, err := out.Evaluate(append([]bool{input}, dst...))
+					if err != nil {
+						t.Fatal(err)
+					}
+					for i := 0; i < 2; i++ {
+						if left[i] != right[i] {
+							t.Fatalf("sequence=%04b frame=%d output=%d original=%v reduced=%v", sequence, frame, i, left, right)
+						}
+					}
+					copy(src, left[len(left)-len(src):])
+					copy(dst, right[len(right)-len(dst):])
+				}
+			}
+		})
+	}
+}
