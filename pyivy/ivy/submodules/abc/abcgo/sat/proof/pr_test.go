@@ -161,6 +161,47 @@ func TestRejectsClausesAfterEmptyWithoutMutation(t *testing.T) {
 	}
 }
 
+func TestRootContradictionProducesResolution(t *testing.T) {
+	for _, clauses := range [][][]int32{{{1}, {-1}}, {{1}, {-1, 2}, {-2}}} {
+		p := Pr_ManAlloc(2)
+		for _, clause := range clauses {
+			add(t, p, true, false, clause...)
+		}
+		add(t, p, false, false)
+		if Pr_ManProofWrite(p) != 1 {
+			t.Fatalf("roots %v: %v", clauses, p.LastError())
+		}
+		steps := p.ProofSteps()
+		if len(steps) == 0 || len(steps[len(steps)-1].Literals) != 0 {
+			t.Fatalf("roots %v: missing empty resolvent: %v", clauses, steps)
+		}
+		if Pr_ManProofWrite(p) != 1 {
+			t.Fatalf("repeated proof for %v: %v", clauses, p.LastError())
+		}
+	}
+}
+
+func TestEmptyRootIsAlreadyARefutation(t *testing.T) {
+	p := Pr_ManAlloc(0)
+	add(t, p, true, false)
+	if Pr_ManProofWrite(p) != 1 || p.pEmpty.pProof == 0 {
+		t.Fatalf("empty root was rejected: %v", p.LastError())
+	}
+}
+
+func TestRootRefutationProducesInterpolant(t *testing.T) {
+	p := Pr_ManAlloc(1)
+	add(t, p, true, true, 1)
+	add(t, p, true, false, -1)
+	add(t, p, false, false)
+	if Pr_ManProofWrite(p) != 1 {
+		t.Fatalf("proof failed: %v", p.LastError())
+	}
+	if p.interpolant != 0xaaaaaaaa {
+		t.Fatalf("interpolant = %#08x", p.interpolant)
+	}
+}
+
 func TestInterpolantPartitionAndBound(t *testing.T) {
 	p := Pr_ManAlloc(1)
 	add(t, p, true, true, 1)

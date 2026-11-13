@@ -45,6 +45,7 @@ type Pr_Man_t_ struct {
 	pTail         *Pr_Cls_t
 	pLearnt       *Pr_Cls_t
 	pEmpty        *Pr_Cls_t
+	rootConflict  *Pr_Cls_t
 
 	nRootSize  int32
 	nTrailSize int32
@@ -626,19 +627,28 @@ func Pr_ManProcessRoots(p *Pr_Man_t) int32 {
 	}
 	p.pTrail = nil
 	p.nTrailSize = 0
+	p.rootConflict = nil
+	for i := range p.pAssigns {
+		p.pAssigns[i] = LIT_UNDEF
+		p.pReasons[i] = nil
+	}
 	p.activeClauses = p.nRoots
 	for _, c := range p.clauses[:p.nRoots] {
+		if len(c.pLits) == 0 {
+			p.rootConflict = c
+			return 1
+		}
 		if len(c.pLits) != 1 {
 			continue
 		}
 		if !LitValid(c.pLits[0], p.nVars) || Pr_ManEnqueue(p, c.pLits[0], c) == 0 {
-			p.lastError = errors.New("proof: conflicting root unit clauses")
-			return 0
+			p.rootConflict = c
+			return 1
 		}
 	}
 	if conflict := Pr_ManPropagate(p, 0); conflict != nil {
-		p.lastError = fmt.Errorf("proof: root-level conflict in clause %d", conflict.Id)
-		return 0
+		p.rootConflict = conflict
+		return 1
 	}
 	p.nRootSize = p.nTrailSize
 	return 1
@@ -737,6 +747,14 @@ func Pr_ManProofWrite(p *Pr_Man_t) int32 {
 	}()
 	for _, c := range p.clauses[:p.nRoots] {
 		Pr_ManProofWriteOne(p, c)
+	}
+	if p.rootConflict != nil {
+		p.pEmpty.pProof = Pr_ManProofTraceOne(p, p.rootConflict, p.pEmpty)
+		if p.pEmpty.pProof == 0 {
+			return 0
+		}
+		p.finished = true
+		return 1
 	}
 	for _, c := range p.clauses[p.nRoots:] {
 		if len(c.pLits) == 0 {
