@@ -89,6 +89,49 @@ func TestRandomSATAndResolutionProofs(t *testing.T) {
 		}
 	}
 }
+
+func TestIncrementalQueriesAndProofAnchoring(t *testing.T) {
+	rng := rand.New(rand.NewSource(612057))
+	for trial := 0; trial < 300; trial++ {
+		const variables = 5
+		s := New(true)
+		s.SetVariableCount(variables)
+		var roots [][]int
+		for step := 0; step < 10; step++ {
+			if step%2 == 0 {
+				clause := []int{rng.Intn(2 * variables), rng.Intn(2 * variables), rng.Intn(2 * variables)}
+				roots = append(roots, append([]int(nil), clause...))
+				s.AddClause(clause)
+			}
+			var assumptions []int
+			for i := 0; i < rng.Intn(5); i++ {
+				assumptions = append(assumptions, rng.Intn(2*variables))
+			}
+			want, got := brute(variables, roots, assumptions), s.Solve(assumptions, 0)
+			if (got == Satisfiable) != want || got == Undecided {
+				t.Fatalf("trial=%d step=%d got=%d want=%v", trial, step, got, want)
+			}
+			if got == Unsatisfiable {
+				if err := s.Proof().ValidateAgainst(roots, assumptions); err != nil {
+					t.Fatalf("trial=%d step=%d proof: %v", trial, step, err)
+				}
+			} else {
+				for _, clause := range append(append([][]int(nil), roots...), asClauses(assumptions)...) {
+					valid := false
+					for _, lit := range clause {
+						if s.ModelValue(lit>>1)^(lit&1) == 1 {
+							valid = true
+							break
+						}
+					}
+					if !valid {
+						t.Fatalf("trial=%d step=%d invalid model %v clause %v", trial, step, s.model, clause)
+					}
+				}
+			}
+		}
+	}
+}
 func asClauses(as []int) [][]int {
 	out := make([][]int, len(as))
 	for i, lit := range as {
