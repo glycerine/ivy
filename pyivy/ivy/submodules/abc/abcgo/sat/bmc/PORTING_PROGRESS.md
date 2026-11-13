@@ -14,10 +14,18 @@ The most recent uncached verification from the `abcgo` directory was:
 GOCACHE=/tmp/abcgo-cache go test -count=1 ./sat/bmc ./sat/bsat
 ```
 
-Both packages passed. A previous `go test -coverprofile` run reported 73.5%
+Both packages passed. The following whole-package checks also passed after the
+expanded tests:
+
+```sh
+GOCACHE=/tmp/abcgo-cache go test -race -count=1 ./sat/bmc
+GOCACHE=/tmp/abcgo-cache go vet ./sat/bmc
+```
+
+A previous `go test -coverprofile` run reported 73.5%
 statement coverage for `sat/bmc`, before the latest independent oracle tests
 were added. Coverage is a measure of executed statements, not proof of correct
-results. A whole-package race and vet pass has not been recorded here.
+results.
 
 ## Correctness work and test evidence
 
@@ -32,22 +40,31 @@ The suite includes the following independent or end-to-end checks:
 - `bmcBmcOracle_test.go` compares small sequential circuits with an explicit
   state oracle, checking first failure frames, output identities, and witness
   replay. It includes 1,024 single-output and 512 two-output cases.
+  `bmcWitnessOracle_test.go` adds 192 two-register, two-input configurations.
 - `bmcDifferential_test.go` compares three deterministic fixtures with C ABC
   and independently replays the Go counterexamples. It uses `ABC_BINARY` if
   set, otherwise a local source-tree `abc` executable; the test skips if no
   executable is available. The fixtures passed against the local executable.
+  `bmcDifferentialExpanded_test.go` adds five fixtures for multi-input and
+  multi-register circuits, complemented logic, multiple outputs, and delayed
+  failures; an explicit-state oracle checks frames and replays witnesses.
 - `bmcICheckOracle_test.go` compares induction SAT results against explicit
   state-pair exploration for 1,024 small cases.
 - `bmcCexCareOracle_test.go` replays completions of reported care sets and
   minimization reasons on small multi-frame circuits.
 - `bmcFaultEndToEnd_test.go` checks emitted suites for all five fault models,
   both delay-fault modes, cardinality options, and extension of prior patterns.
+  `bmcFaultMultiGate_test.go` independently checks two-gate combinational and
+  sequential fault models and their emitted test suites.
 - `bmcExa3Oracle_test.go` and `bmcZyxOracle_test.go` independently evaluate
   synthesized networks and compare selected small cases with exhaustive
-  truth-table or network enumeration.
+  truth-table or network enumeration. `bmcZyxWideOracle_test.go` verifies
+  seven-input functions across the 64-bit truth-table word boundary.
 - `bmcFxOracle_test.go` checks onset coverage and offset exclusion for all 256
   three-input functions and a two-output case. `bmcMeshOracle_test.go` checks
   placement witnesses from both solver backends and impossible small layouts.
+  `bmcMeshFanoutOracle_test.go` adds reconvergent fanout and internal buffering;
+  the existing mesh test oracle was corrected to allow valid gate buffers.
 
 Other focused tests cover packed two-bit fields, formula fault unfolding,
 SAT cardinality constraints, GIA simulation, bounded-core proof output, and

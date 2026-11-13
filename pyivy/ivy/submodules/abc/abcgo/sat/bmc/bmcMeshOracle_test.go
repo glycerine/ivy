@@ -106,11 +106,13 @@ func checkMeshWitness(t *testing.T, output string, xsize, ysize, inputs int, fan
 				}
 				return false
 			}
-			if cell.node < inputs {
-				if !has(cell.node, -1) {
-					t.Fatalf("invalid buffer at %d,%d: %+v\n%s", x, y, cell, output)
-				}
+			if has(cell.node, -1) {
+				// Every computed signal, including an internal gate output,
+				// can be forwarded through a buffer cell.
 				continue
+			}
+			if cell.node < inputs {
+				t.Fatalf("invalid buffer at %d,%d: %+v\n%s", x, y, cell, output)
 			}
 			pair := fanins[cell.node-inputs]
 			valid := false
