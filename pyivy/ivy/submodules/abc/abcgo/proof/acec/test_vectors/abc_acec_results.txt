@@ -1,0 +1,6 @@
+# Results from ABC &acec on the deterministic generators in abc_differential_test.go.
+# Each digit is the status for ascending fixture index; 1=equivalent, 0=not equivalent.
+mutation=1011
+input_polarity=00011
+signed_chain=1001011010010110100101101001011001101001011010010110100101101001
+output_inversion=011
