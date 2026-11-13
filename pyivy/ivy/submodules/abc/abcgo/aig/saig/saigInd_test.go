@@ -31,7 +31,7 @@ func TestInductionBoundedConstantProperties(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			g := inductionOneRegister(tc.property, 0)
 			defer aig.Aig_ManStop(g)
-			got := Saig_ManInduction(g, 0, 1, 0, 0, 0, boolInt(tc.cex), 0, 0)
+			got := Saig_ManInduction(g, 0, 1, 0, 0, 0, inductionBoolInt(tc.cex), 0, 0)
 			if got != tc.want {
 				t.Fatalf("induction returned %d, want %d", got, tc.want)
 			}
@@ -51,7 +51,7 @@ func TestInductionRejectsInvalidRegisterlessGraph(t *testing.T) {
 	}
 }
 
-func boolInt(value bool) int32 {
+func inductionBoolInt(value bool) int32 {
 	if value {
 		return 1
 	}
