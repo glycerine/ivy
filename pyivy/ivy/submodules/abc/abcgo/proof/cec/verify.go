@@ -53,9 +53,7 @@ func Cec_ManVerify(graph *Gia_Man_t, params *Cec_ParCec_t) int32 {
 	if params.Error != nil {
 		return -1
 	}
-	// The default source sweep/fallback orchestration still needs porting. Until
-	// then, retain the existing validated direct SAT path for nontrivial cases.
-	return Cec_ManVerifyNaive(graph, params)
+	return cecVerifyPipeline(graph, params, cecOriginalSweep, cecVerifyFra)
 }
 func Cec_ManVerifySimple(graph *Gia_Man_t) int32 {
 	params := new(Cec_ParCec_t)
@@ -102,12 +100,12 @@ func Cec_ManTransformPattern(graph *Gia_Man_t, output int32, values []int32) {
 }
 
 func Cec_ManVerifyOld(graph *Gia_Man_t, verbose int32, failed *int32, started abctime, silent int32) int32 {
-	params := new(Cec_ParCec_t)
-	Cec_ManCecSetDefaultParams(params)
-	params.nBTLimit = 10000000
-	status := Cec_ManVerify(graph, params)
+	status, output, err := cecVerifyFra(graph, verbose)
 	if failed != nil {
-		*failed = params.iOutFail
+		*failed = output
+	}
+	if err != nil {
+		status = -1
 	}
 	if silent == 0 {
 		fmt.Printf("CEC status: %d\n", status)

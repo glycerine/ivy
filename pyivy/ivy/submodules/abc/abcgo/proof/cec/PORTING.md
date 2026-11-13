@@ -63,3 +63,20 @@ An end-to-end classic SAT sweep test also verifies transfer and replay of
 CO-indexed counterexamples and proved-output sentinels through graph cleanup,
 including a register-input CO. These checks supplement the full package suite;
 they do not establish complete coverage of all sequential algorithms.
+
+## Classic combinational verification pipeline
+
+`Cec_ManVerify` now performs the source's trivial-case checks, output-pair
+normalization, iterative simulation/speculative SAT sweeping, and the original
+FRAIG fallback. The explicit naive option takes the direct SAT path. Sweep and
+FRA witnesses are replayed against the original paired outputs before they are
+returned. Native GIA XOR, MUX and buffer nodes are lowered through the existing
+AIG conversion before the AND-inverter sweep.
+
+The original sweep's optional original-ID tracking remains unsupported by the
+private implementation; `Cec_ManVerify` does not request it. As in the C
+pipeline, the overall time limit is checked between stages and iterations; an
+individual SAT or FRAIG call can run beyond that limit. Tests compare selected
+cases with the original ABC executable and force the unresolved sweep branch
+through the genuine FRA fallback. They do not establish equivalence for every
+network or exercise every internal FRAIG path.
