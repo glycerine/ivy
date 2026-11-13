@@ -109,6 +109,39 @@ func TestIncrementalNodeChecksAndValidatedWitness(t *testing.T) {
 		t.Fatal("invalid literal accepted")
 	}
 }
+
+func TestConjunctionQueriesAndEquivalenceRemainDistinct(t *testing.T) {
+	for _, flip := range []bool{false, true} {
+		c := newCircuit(2)
+		a, b := c.inputs[0], c.inputs[1]
+		m, err := NewManager(c, Options{PolarFlip: flip})
+		if err != nil {
+			t.Fatal(err)
+		}
+		for _, tc := range []struct {
+			x, y   int32
+			status Status
+		}{
+			{a, a, Different}, {a, a ^ 1, Equivalent}, {a, b, Different}, {a ^ 1, b, Different}, {0, b, Equivalent}, {1, b, Different},
+		} {
+			got, err := m.CheckConjunction(tc.x, tc.y)
+			if err != nil || got.Status != tc.status {
+				t.Fatalf("flip=%v literals=%d,%d got=%+v err=%v", flip, tc.x, tc.y, got, err)
+			}
+			if got.Status == Different {
+				x, _ := m.Model().Value(got.Counterexample.Inputs, tc.x)
+				y, _ := m.Model().Value(got.Counterexample.Inputs, tc.y)
+				if !x || !y {
+					t.Fatalf("invalid witness %+v", got.Counterexample)
+				}
+			}
+		}
+		got, err := m.CheckPair(a, a)
+		if err != nil || got.Status != Equivalent {
+			t.Fatalf("equality changed: %+v %v", got, err)
+		}
+	}
+}
 func TestVerifyTwoPairsAndMiter(t *testing.T) {
 	left, right := newCircuit(2), newCircuit(2)
 	left.outputs = []int32{left.add(And, 2, 4, 0)}

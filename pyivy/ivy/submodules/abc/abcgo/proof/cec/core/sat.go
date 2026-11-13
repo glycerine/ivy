@@ -283,6 +283,38 @@ func (m *Manager) CheckPair(a, b int32) (Result, error) {
 	}
 	return m.checkPair(0, a, 0, b, -1)
 }
+
+// CheckConjunction checks whether both literals can be true. Its status uses
+// the CEC convention: Different means SAT and Equivalent means UNSAT.
+func (m *Manager) CheckConjunction(a, b int32) (Result, error) {
+	if !m.models[0].valid(a) || !m.models[0].valid(b) {
+		return Result{}, fmt.Errorf("cec: invalid conjunction literal")
+	}
+	m.begin()
+	if m.interrupted() {
+		return Result{Status: Undecided}, nil
+	}
+	x, y := m.encode(0, a), m.encode(0, b)
+	switch m.solve(x, y) {
+	case satoko.SATOKO_UNSAT:
+		m.clause(x^1, y^1)
+		return Result{Status: Equivalent}, nil
+	case satoko.SATOKO_SAT:
+		inputs := m.assignment()
+		values, err := m.models[0].Values(inputs)
+		if err != nil {
+			return Result{}, err
+		}
+		left := values[a>>1] != (a&1 != 0)
+		right := values[b>>1] != (b&1 != 0)
+		if !left || !right {
+			return Result{}, fmt.Errorf("cec: SAT conjunction witness failed independent simulation")
+		}
+		return Result{Different, &Counterexample{Inputs: inputs, Output: -1, Left: left, Right: right}}, nil
+	default:
+		return Result{Status: Undecided}, nil
+	}
+}
 func (m *Manager) checkPair(leftModel int, left int32, rightModel int, right int32, output int) (Result, error) {
 	m.begin()
 	if m.interrupted() {
