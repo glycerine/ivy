@@ -21,6 +21,11 @@ func Fra_FraigVerifyCounterEx(p *Fra_Man_t, cex *vec.Vec_Int_t) {
 	if vec.Vec_IntSize(cex) != len(inputs) {
 		panic("fra: incorrect counterexample input count")
 	}
+	for _, e := range g.LiveEdges() {
+		if g.Node(e).MarkB {
+			panic("fra: counterexample simulation marks must be clear")
+		}
+	}
 	values := make([]bool, len(g.Nodes()))
 	values[0] = true
 	for i, e := range inputs {
