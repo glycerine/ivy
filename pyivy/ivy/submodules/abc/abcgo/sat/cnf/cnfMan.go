@@ -3,7 +3,9 @@ package cnf
 import (
 	"compress/gzip"
 	"fmt"
+	"io"
 	"os"
+	"strings"
 
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/misc/vec"
@@ -174,12 +176,34 @@ func Cnf_DataLiftAndFlipLits(cnf *Cnf_Dat_t, variables int32, flips *Vec_Int_t) 
 	cnf.pClauses = cloneClauses(cnf.Clauses)
 }
 
-func writeCNF(file *os.File, cnf *Cnf_Dat_t, zeroBased bool) error {
+func writeCNF(file io.Writer, cnf *Cnf_Dat_t, zeroBased bool, forall, exists *Vec_Int_t) error {
 	if cnf == nil {
 		return fmt.Errorf("cnf: nil data")
 	}
 	if _, err := fmt.Fprintf(file, "p cnf %d %d\n", cnf.Variables, len(cnf.Clauses)); err != nil {
 		return err
+	}
+	for _, quantifier := range []struct {
+		kind      string
+		variables *Vec_Int_t
+	}{{"a", forall}, {"e", exists}} {
+		if quantifier.variables == nil {
+			continue
+		}
+		if _, err := fmt.Fprintf(file, "%s ", quantifier.kind); err != nil {
+			return err
+		}
+		for _, variable := range vec.Vec_IntArray(quantifier.variables) {
+			if !zeroBased {
+				variable++
+			}
+			if _, err := fmt.Fprintf(file, "%d ", variable); err != nil {
+				return err
+			}
+		}
+		if _, err := fmt.Fprintln(file, "0"); err != nil {
+			return err
+		}
 	}
 	for _, clause := range cnf.Clauses {
 		for _, lit := range clause {
@@ -201,17 +225,21 @@ func writeCNF(file *os.File, cnf *Cnf_Dat_t, zeroBased bool) error {
 	return nil
 }
 func Cnf_DataPrint(cnf *Cnf_Dat_t, readable int32) {
-	if err := writeCNF(os.Stdout, cnf, readable != 0); err != nil {
+	if err := writeCNF(os.Stdout, cnf, readable != 0, nil, nil); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 	}
 }
-func Cnf_DataWriteIntoFile(cnf *Cnf_Dat_t, filename string, _ int32, _ *Vec_Int_t, _ *Vec_Int_t) {
+func Cnf_DataWriteIntoFile(cnf *Cnf_Dat_t, filename string, readable int32, forall, exists *Vec_Int_t) {
+	if strings.HasSuffix(filename, ".gz") {
+		Cnf_DataWriteIntoFileGz(cnf, filename, readable, forall, exists)
+		return
+	}
 	file, err := os.Create(filename)
 	if err != nil {
 		return
 	}
 	defer file.Close()
-	_ = writeCNF(file, cnf, false)
+	_ = writeCNF(file, cnf, readable != 0, forall, exists)
 }
 func Cnf_DataWriteIntoFileGz(cnf *Cnf_Dat_t, filename string, readable int32, forall, exists *Vec_Int_t) {
 	file, err := os.Create(filename)
@@ -220,36 +248,8 @@ func Cnf_DataWriteIntoFileGz(cnf *Cnf_Dat_t, filename string, readable int32, fo
 	}
 	defer file.Close()
 	writer := gzip.NewWriter(file)
-	_ = writeCNFToWriter(writer, cnf, readable != 0)
+	_ = writeCNF(writer, cnf, readable != 0, forall, exists)
 	_ = writer.Close()
-	_ = forall
-	_ = exists
-}
-func writeCNFToWriter(writer *gzip.Writer, cnf *Cnf_Dat_t, zeroBased bool) error {
-	if cnf == nil {
-		return fmt.Errorf("cnf: nil data")
-	}
-	if _, err := fmt.Fprintf(writer, "p cnf %d %d\n", cnf.Variables, len(cnf.Clauses)); err != nil {
-		return err
-	}
-	for _, clause := range cnf.Clauses {
-		for _, lit := range clause {
-			variable := int(lit >> 1)
-			if !zeroBased {
-				variable++
-			}
-			if lit&1 != 0 {
-				variable = -variable
-			}
-			if _, err := fmt.Fprintf(writer, "%d ", variable); err != nil {
-				return err
-			}
-		}
-		if _, err := fmt.Fprintln(writer, "0"); err != nil {
-			return err
-		}
-	}
-	return nil
 }
 
 func Cnf_DataWriteIntoSolverInt(sat *bsat.Solver, cnf *Cnf_Dat_t, frames int32, init int32) *bsat.Solver {
