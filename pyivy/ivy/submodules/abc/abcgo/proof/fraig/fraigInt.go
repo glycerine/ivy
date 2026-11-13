@@ -173,11 +173,12 @@ type Fraig_ManStruct_t_ struct {
 	mmSims  *Fraig_MemFixed_t // the memory manager for simulation info
 
 	// solving the SAT problem
-	pSat               *Msat_Solver_t // the SAT solver
-	hasExternalClauses bool           // SAT queries must retain every encoded constraint cone
-	vProj              *Msat_IntVec_t // the temporary array of projection vars
-	nSatNums           int32          // the counter of SAT variables
-	pModel             []int32        // the assignment, which satisfies the miter
+	pSat               *Msat_Solver_t    // the SAT solver
+	hasExternalClauses bool              // SAT queries must retain every encoded constraint cone
+	externalClauses    [][]*Fraig_Node_t // retained for counterexample validation
+	vProj              *Msat_IntVec_t    // the temporary array of projection vars
+	nSatNums           int32             // the counter of SAT variables
+	pModel             []int32           // the assignment, which satisfies the miter
 	// these arrays belong to the solver
 	vVarsInt   *Msat_IntVec_t   // the temporary array of variables
 	vAdjacents []*Msat_IntVec_t // the temporary storage for connectivity

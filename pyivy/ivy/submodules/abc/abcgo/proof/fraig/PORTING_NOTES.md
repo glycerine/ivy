@@ -19,6 +19,9 @@ hashing of dynamic simulation words beyond the original fixed prime table.
 External clauses now allocate SAT variables, encode internal nodes, simplify
 constant literals, and keep their constraint cones active for subsequent
 queries. The msat solver retains root unit facts when preparing a new cone.
+Constrained miter checks use SAT and validate returned witnesses against both
+the output and all external clauses; simulation-only witnesses can violate those
+clauses.
 
 Remaining validation work:
 

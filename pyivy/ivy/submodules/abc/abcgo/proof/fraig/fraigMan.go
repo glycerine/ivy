@@ -245,4 +245,5 @@ func Fraig_ManAddClause(p *Fraig_Man_t, nodes []*Fraig_Node_t, n int32) {
 	}
 	assert(msat.Msat_SolverAddClause(p.pSat, p.vProj) != 0, "clause accepted")
 	p.hasExternalClauses = true
+	p.externalClauses = append(p.externalClauses, append([]*Fraig_Node_t(nil), edges...))
 }
