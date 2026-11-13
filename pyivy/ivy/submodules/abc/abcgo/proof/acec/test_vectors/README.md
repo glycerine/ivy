@@ -53,6 +53,13 @@ exercise both an empty and a pre-populated destination vector.
 two-adder chain and two disconnected full adders. The Go tests compare the
 tree count and the reported input/output phases with compiled ABC.
 
+`acec_box_delay.c` covers both carry polarities and all fanout/XOR-trick
+combinations for a two-box path. `acec_box_delay_large.c` covers the four
+fanout/XOR-trick combinations for a seven-box path. The Go tests compare the
+recorded ABC timing results and exhaustively simulate the collapsed large
+path. The multiplier oracle supports widths through six; set
+`ACEC_MULTIPLIER_ORACLE` to its executable to replay the C comparison.
+
 `acec_missing_box.c` invokes normalization on a graph with no arithmetic box;
 the C implementation dereferences the missing box. `acec_large_coefficients.c`
 checks signed exponent carries and cancellations without overflowing C `int`.

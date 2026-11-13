@@ -5,7 +5,7 @@ package builds, and the full race tests and `go vet ./proof/acec` pass.
 Differential cases record source-inherited false-equivalence results described
 below alongside exhaustive evaluation of the original circuits. A fresh
 `go test -count=1 -cover ./proof/acec`
-reported 76.6% statement coverage. This number includes source diagnostic
+reported 77.0% statement coverage. This number includes source diagnostic
 routines and does not establish verification correctness by itself.
 
 The review and tests exercise half/full-adder cut recognition over input
@@ -13,10 +13,14 @@ polarities; carry-tree discovery, phase propagation, and reconstruction,
 including compiled-C comparisons for one and two disconnected trees;
 BDD-independent polynomial expansion on AND, native XOR, and native MUX
 networks; NPN classes and LUT statistics; timing-box construction and
-collapse; and end-to-end arithmetic equivalence. The end-to-end checks use
-exhaustive simulation of small circuits as an oracle, including a 2×2
-multiplier and 64 polarity variants of a two-adder chain. Counterexamples are
-replayed on the original inputs. The polynomial builders also passed an
+collapse; and end-to-end arithmetic equivalence. Compiled-C comparisons cover
+all eight two-box polarity/fanout/XOR-trick timing variants and four seven-box
+carry-chain configurations; collapsed seven-box graphs are checked on all 512
+input assignments. The end-to-end checks exhaustively simulate unsigned
+multipliers through 6×6 bits in both operand orders and 64 polarity variants
+of a two-adder chain. Compiled ABC is also compared on equivalent 6×6 graphs
+and three output inversions; returned mismatch witnesses are replayed on the
+original inputs. The polynomial builders also passed an
 additional 1,000 deterministic mixed-DAG stress run over all input assignments.
 
 Review identified several correctness bugs, including discarded final outputs in
@@ -68,7 +72,7 @@ Intentional conservative paths and limits:
   `acecPo.go` do support native MUXes.
 - `Acec_StructTest` is empty in C. `Gia_PolynBuild2` only allocates and frees
   temporary hash tables there; its Go body has no algorithmic effect either.
-- Booth partial-product detection, complex multiplier layouts, timing-box
-  configurations, and equivalence proofs across a large real-world corpus
-  need further differential testing against ABC. Passing the small exhaustive
-  cases does not cover all topologies or resource-limit behavior.
+- Booth partial-product detection, signed and irregular multiplier layouts,
+  other timing-box shapes, and equivalence proofs across a large real-world
+  corpus need further differential testing against ABC. Passing the exhaustive
+  small cases does not cover all topologies or resource-limit behavior.
