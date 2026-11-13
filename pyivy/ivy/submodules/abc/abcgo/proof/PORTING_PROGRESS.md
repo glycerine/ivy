@@ -26,9 +26,9 @@ in progress; passing tests do not establish that those gaps are resolved.
   permutation uses Go's PRNG, so its sequence differs from C's `rand()`.
   Review fixed uniqueness polarity, constant-candidate counts and polarity
   of unassigned edges; partitioned and constrained traces now have tests.
-* `abs` builds and passes its full race suite and vet. Old GLA currently
-  requires XOR/MUX nodes to be lowered to ANDs; full integration review
-  remains in progress.
+* `abs` builds and passes its full race suite and vet. The old GLA driver
+  lowers native XOR/MUX nodes to ANDs and maps results back to the original
+  graph; full integration review remains in progress.
 * `fra` builds and passes its full race suite and vet. SEC's nontrivial
   SSW and proof integrations still need end-to-end validation.
 * `fraig` builds and passes its full race suite. Review has fixed constant
