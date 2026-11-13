@@ -205,17 +205,31 @@ func printGroups(groups [][]int32, n *Network, fileName, marker string) {
 		panic(err)
 	}
 	defer file.Close()
-	for _, group := range groups {
-		names := []string{}
-		for _, id := range group {
+	for i, group := range groups {
+		if marker == "csLevel1Stabil" {
+			fmt.Printf("INT[%d] : ( ", i)
+		}
+		fmt.Fprint(file, "( ")
+		for j, id := range group {
 			name := outputName(n, int(id))
 			position := strings.Index(name, marker)
 			if position < 0 {
 				panic("live: group output has no expected name marker")
 			}
-			names = append(names, name[position:])
+			suffix := name[position:]
+			fmt.Fprint(file, suffix)
+			if marker == "csLevel1Stabil" {
+				fmt.Print(suffix)
+			}
+			ending := " )\n"
+			if j < len(group)-1 {
+				ending = " || "
+			}
+			fmt.Fprint(file, ending)
+			if marker == "csLevel1Stabil" {
+				fmt.Print(ending)
+			}
 		}
-		fmt.Fprintf(file, "( %s )\n", strings.Join(names, " || "))
 	}
 }
 func printAllIntVectors(groups [][]int32, n *Network, fileName string) {

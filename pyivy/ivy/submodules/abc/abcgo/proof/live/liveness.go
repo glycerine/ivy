@@ -369,15 +369,23 @@ func getPoIndex(p *aig.Graph, pivot aig.Edge) int32 {
 	return -1
 }
 func retrieveTruePiName(n *Network, old, new *aig.Graph, pivot aig.Edge) string {
+	index := -1
 	for i, e := range new.Inputs()[:trueInputs(new)] {
 		if e == pivot {
-			if i < trueInputs(old) {
-				return inputName(n, i)
-			}
-			return "SAVE_BIERE"
+			index = i
+			break
 		}
 	}
-	return "UNKNOWN"
+	if index < 0 {
+		panic("live: pivot is not a true PI")
+	}
+	if index == trueInputs(new)-1 {
+		return "SAVE_BIERE"
+	}
+	if index >= trueInputs(old) || aig.Aig_ObjCopy(old, old.Inputs()[index]) != pivot {
+		panic("live: PI copy mismatch")
+	}
+	return inputName(n, index)
 }
 func retrieveLOName(n *Network, old, new *aig.Graph, pivot aig.Edge, live, fair []aig.Edge) string {
 	index := -1
@@ -387,12 +395,16 @@ func retrieveLOName(n *Network, old, new *aig.Graph, pivot aig.Edge, live, fair 
 			break
 		}
 	}
-	r := registers(old)
 	if index < 0 {
-		return "UNKNOWN"
+		panic("live: pivot is not a latch output")
 	}
+	r := registers(old)
 	if index < r {
-		return inputName(n, trueInputs(old)+index)
+		oldIndex := trueInputs(old) + index
+		if aig.Aig_ObjCopy(old, old.Inputs()[oldIndex]) != pivot {
+			panic("live: latch copy mismatch")
+		}
+		return inputName(n, oldIndex)
 	}
 	if index == r {
 		return "SAVED_LO"
@@ -400,7 +412,25 @@ func retrieveLOName(n *Network, old, new *aig.Graph, pivot aig.Edge, live, fair 
 	if index < 2*r+1 {
 		return inputName(n, trueInputs(old)+index-r-1) + "__SHADOW"
 	}
-	return fmt.Sprintf("monitor%d", index-2*r-1)
+	offset := index - 2*r - 1
+	marker, suffix := "assert_fair", "__LIVENESS"
+	if offset >= len(live) {
+		offset -= len(live)
+		marker, suffix = "assume_fair", "__FAIRNESS"
+		if offset >= len(fair) {
+			return "UNKNOWN"
+		}
+	}
+	for i := 0; i < trueOutputs(old); i++ {
+		name := outputName(n, i)
+		if strings.HasPrefix(name, marker) {
+			if offset == 0 {
+				return name + suffix
+			}
+			offset--
+		}
+	}
+	panic("live: monitor name not found")
 }
 func updateNewNetworkNameManager(n *Network, p *aig.Graph, piNames, loNames []string) {
 	n.InputNames = append(append([]string(nil), piNames...), loNames...)
