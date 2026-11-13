@@ -196,38 +196,6 @@ var spStatic_Saig_ManBmcHashKey_s_Primes [5]int32 = [5]int32{ 12582917, 25165843
   SeeAlso     []
 
 ***********************************************************************/
-func Ga2_ManRestart(p *Ga2_Man_t) {
-    var vToAdd *Vec_Int_t;
-    var Lit int32  = 1;
-    assert(p.pGia != nil && p.pGia.vGateClasses != nil, "p.pGia != nil && p.pGia.vGateClasses != nil");
-    assert(Gia_ManPi(p.pGia, 0).fPhase, "Gia_ManPi(p.pGia, 0).fPhase"); // marks are set
-    // clear SAT variable numbers (begin with 1)
-    if p.pSat { sat_solver2_delete( p.pSat ); }
-    p.pSat      = sat_solver2_new();
-    p.pSat.nLearntStart = p.pPars.nLearnedStart;
-    p.pSat.nLearntDelta = p.pPars.nLearnedDelta;
-    p.pSat.nLearntRatio = p.pPars.nLearnedPerce;
-    p.pSat.nLearntMax   = p.pSat.nLearntStart;
-    // add clause x0 = 0  (lit0 = 1; lit1 = 0)
-    sat_solver2_addclause( p.pSat, &Lit, &Lit + 1, -1 );
-    // remove previous abstraction
-    Ga2_ManShrinkAbs( p, 1, 1, 1 );
-    // start new abstraction
-    vToAdd = Ga2_ManAbsDerive( p.pGia );
-    assert(p.pSat.pPrf2 == nil, "p.pSat.pPrf2 == nil");
-    assert(p.pPars.iFrame < 0, "p.pPars.iFrame < 0");
-    Ga2_ManAddToAbs( p, vToAdd );
-    Vec_IntFree( vToAdd );
-    p.LimAbs = Vec_IntSize(p.vAbs);
-    p.LimPpi = Vec_IntSize(p.vValues);
-    // set runtime limit
-    if p.pPars.nTimeOut {
-        sat_solver2_set_runtime_limit( p.pSat, p.pPars.nTimeOut * int64(time.Second) + p.timeStart ); }
-    // clean the hash table
-    memset( p.pTable, 0, 6 * sizeof(int) * p.nTable );
-}
-
-
 /**Function*************************************************************
 
   Synopsis    []
