@@ -157,12 +157,13 @@ func Acec_ParseSignatureTest() {
 
 type polynomialTerm struct{ vars, coef []int32 }
 type polynomial struct {
-	terms []*polynomialTerm
-	byKey map[string]int
+	terms       []*polynomialTerm
+	byKey       map[string]int
+	literalMode bool
 }
 
-func newPolynomial() *polynomial {
-	p := &polynomial{byKey: make(map[string]int)}
+func newPolynomial(literalMode bool) *polynomial {
+	p := &polynomial{byKey: make(map[string]int), literalMode: literalMode}
 	p.add(nil, nil)
 	return p
 }
@@ -207,6 +208,13 @@ func mergeCoefficient(values []int32, n int32) []int32 {
 	return values
 }
 func (p *polynomial) add(vars, coef []int32) {
+	// GIA variable 0 is false; in literal mode literal 1 is true.
+	if len(vars) > 0 && vars[0] == 0 {
+		return
+	}
+	if p.literalMode && len(vars) > 0 && vars[0] == 1 {
+		vars = vars[1:]
+	}
 	key := fmt.Sprint(vars)
 	i, ok := p.byKey[key]
 	if !ok {
@@ -283,16 +291,17 @@ func (p *polynomial) replaceXor(id, left, right int32, literalMode bool) {
 		vars = append(vars[:at], vars[at+1:]...)
 		coef := append([]int32(nil), term.coef...)
 		term.coef = nil
+		leftVar, rightVar := left, right
 		if !literalMode {
 			if (left^right)&1 != 0 {
 				p.add(vars, coef)
 				coef = negCoefficients(coef)
 			}
-			left >>= 1
-			right >>= 1
+			leftVar >>= 1
+			rightVar >>= 1
 		}
-		p.add(insertUnique(append([]int32(nil), vars...), left), coef)
-		p.add(insertUnique(append([]int32(nil), vars...), right), coef)
+		p.add(insertUnique(append([]int32(nil), vars...), leftVar), coef)
+		p.add(insertUnique(append([]int32(nil), vars...), rightVar), coef)
 		twice := make([]int32, len(coef))
 		for j, c := range coef {
 			if c > 0 {
@@ -301,8 +310,8 @@ func (p *polynomial) replaceXor(id, left, right int32, literalMode bool) {
 				twice[j] = -c + 1
 			}
 		}
-		both := insertUnique(append([]int32(nil), vars...), left)
-		both = insertUnique(both, right)
+		both := insertUnique(append([]int32(nil), vars...), leftVar)
+		both = insertUnique(both, rightVar)
 		p.add(both, twice)
 	}
 }
@@ -390,7 +399,7 @@ func Gia_PolynPrintStats(p *vec.Vec_Wec_t) {
 }
 
 func Gia_PolynBuildNew2(graph *gia.Gia_Man_t, roots *vec.Vec_Int_t, extra int32, leaves, nodes *vec.Vec_Int_t, signed, verbose, veryVerbose int32) *vec.Vec_Wec_t {
-	p := newPolynomial()
+	p := newPolynomial(true)
 	rootLits := vec.Vec_IntArray(roots)
 	for i, lit := range rootLits {
 		rank := i
@@ -423,7 +432,7 @@ func Gia_PolynBuildNew2(graph *gia.Gia_Man_t, roots *vec.Vec_Int_t, extra int32,
 	return p.result()
 }
 func Gia_PolynBuildNew(graph *gia.Gia_Man_t, sign *vec.Vec_Wec_t, roots *vec.Vec_Int_t, extra int32, leaves, nodes *vec.Vec_Int_t, signed, verbose, veryVerbose int32) *vec.Vec_Wec_t {
-	p := newPolynomial()
+	p := newPolynomial(false)
 	rootLits := vec.Vec_IntArray(roots)
 	if sign != nil {
 		leafIDs := vec.Vec_IntArray(leaves)
