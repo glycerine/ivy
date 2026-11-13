@@ -77,6 +77,7 @@ func (o *Object) IsCO() bool { return o.Kind == ObjectPO || o.Kind == ObjectBI }
 // Network owns objects with stable IDs; deletion leaves holes, as in ABC.
 // Mutations must be serialized by the caller.
 type Network struct {
+	Faults                    []int32
 	Constraints               int32
 	Exdc, Excare              *Network
 	Onehots                   [][]int32

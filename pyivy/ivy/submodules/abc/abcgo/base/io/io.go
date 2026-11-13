@@ -384,46 +384,7 @@ func Io_End(pAbc *Abc_Frame_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func IoCommandReadFins(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {
-    extern Vec_Int_t * Io_ReadFins( Abc_Ntk_t * pNtk, char * pFileName, int fVerbose );
-    var pNtk *Abc_Ntk_t  = Abc_FrameReadNtk(pAbc);
-    var pFileName string;
-    var c, fVerbose int32;
 
-    Extra_UtilGetoptReset();
-    for  ( c = Extra_UtilGetopt( argc, argv, "vh" ) ) != -1  {
-        switch  c  {
-            case 'v':
-                fVerbose ^= 1;
-                break;
-            case 'h':
-                goto usage;
-            default:
-                goto usage;
-        }
-    }
-    if argc != globalUtilOptind + 1 {
-        goto usage; }
-    // get the input file name
-    pFileName = argv[globalUtilOptind];
-    // check current network
-    if pNtk == nil {
-        Abc_Print( -1, "Empty network.\n" );
-        return 1;
-    }
-    // compute information and save it in the network
-    Vec_IntFreeP( &pNtk.vFins );
-    pNtk.vFins = Io_ReadFins( pNtk, pFileName, fVerbose );
-    return 0;
-
-usage:
-    fmt.Fprintf(pAbc.Err, "usage: read_fins [-vh] <file>\n");
-    fmt.Fprintf(pAbc.Err, "\t         reads the network in equation format\n");
-    fmt.Fprintf(pAbc.Err, "\t-v     : enable verbose output [default = %s].\n", fVerbose? "yes": "no");
-    fmt.Fprintf(pAbc.Err, "\t-h     : prints the command summary\n");
-    fmt.Fprintf(pAbc.Err, "\tfile   : the name of a file to read\n");
-    return 1;
-}
 
 /**Function*************************************************************
 
