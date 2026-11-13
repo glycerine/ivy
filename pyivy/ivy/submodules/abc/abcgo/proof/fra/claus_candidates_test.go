@@ -121,3 +121,23 @@ func TestClausLatchStrengtheningDisabledWithoutRefs(t *testing.T) {
 		t.Fatalf("reported proof without strengthening: removed=%d fail=%d", removed, p.fFail)
 	}
 }
+
+// fraClaus.c sets nWordsPref to the configured prefix during collection and
+// unconditionally clears it afterward, even if the caller supplied a prefix.
+func TestClausCollectLatchClausesClearsSimulationPrefix(t *testing.T) {
+	g := aig.NewGraph()
+	latch := g.NewInput()
+	g.AddOutput(latch)
+	aig.Aig_ManSetRegNum(g, 1)
+	p := Fra_ClausAlloc(g, 1, 0, 10, 4, 1, 2, 1, 0, 0, 0, 0)
+	p.pCnf = cnf.Cnf_DeriveSimple(g, 1)
+	p.nSimWordsPref = 1
+	sim := Fra_SmlStart(g, 1, 1, 1)
+	if sim.PrefixWords != 1 {
+		t.Fatalf("fixture prefix=%d", sim.PrefixWords)
+	}
+	Fra_ClausCollectLatchClauses(p, sim)
+	if sim.PrefixWords != 0 {
+		t.Fatalf("prefix=%d, C clears it", sim.PrefixWords)
+	}
+}

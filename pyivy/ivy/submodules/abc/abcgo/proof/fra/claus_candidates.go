@@ -104,9 +104,7 @@ func Fra_ClausSmlNodesAreImpC(s *Fra_Sml_t, left, right aig.Edge) int32 {
 	return 1
 }
 func Fra_ClausCollectLatchClauses(p *Clu_Man_t, s *Fra_Sml_t) int32 {
-	oldPrefix := s.PrefixWords
 	s.PrefixWords = int(p.nSimWordsPref)
-	defer func() { s.PrefixWords = oldPrefix }()
 	inputs := p.pAig.Inputs()
 	regs := int(p.pAig.RegisterCount())
 	latches := inputs[len(inputs)-regs:]
@@ -144,6 +142,8 @@ func Fra_ClausCollectLatchClauses(p *Clu_Man_t, s *Fra_Sml_t) int32 {
 			break
 		}
 	}
+	// The C routine clears this field after collection.
+	s.PrefixWords = 0
 	p.nOneHots = consts + imps
 	p.nOneHotsProven = 0
 	if p.fVerbose != 0 {
