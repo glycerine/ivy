@@ -231,7 +231,8 @@ func (s *SimpSolver) Substitute(v Var, x Lit) bool {
 	if !s.ok {
 		return false
 	}
-	if s.frozen[v] || s.eliminated[v] || !s.ValueVar(v).IsUndef() || x.Var() == v {
+	if v < 0 || int(v) >= s.NVars() || x < 0 || int(x.Var()) >= s.NVars() ||
+		s.frozen[v] || s.eliminated[v] || s.eliminated[x.Var()] || !s.ValueVar(v).IsUndef() || x.Var() == v {
 		panic("invalid substitution")
 	}
 	cs := append([]*Clause(nil), s.cleanOccurrences(v)...)

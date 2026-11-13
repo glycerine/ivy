@@ -1,6 +1,7 @@
 package glucose2
 
 import (
+	"fmt"
 	"math/rand"
 	"testing"
 )
@@ -124,4 +125,44 @@ func TestSimpSolverNativeStatusOracle(t *testing.T) {
 	if hash != 818442487605194937 {
 		t.Fatalf("native preprocessing status oracle %d", hash)
 	}
+}
+
+func TestSimpRejectsEliminatedAssumptionsWhenDisabled(t *testing.T) {
+	for _, tc := range []struct{ turnOff, doSimp bool }{{false, false}, {true, false}, {true, true}} {
+		t.Run(fmt.Sprintf("turnOff=%v/doSimp=%v", tc.turnOff, tc.doSimp), func(t *testing.T) {
+			s := NewSimpSolver()
+			s.NewVar(true, true)
+			s.NewVar(true, true)
+			s.SetFrozen(1, true)
+			// x != y. Once x is eliminated, x=false and y=false is impossible.
+			s.AddClause([]Lit{MkLit(0, false), MkLit(1, false)})
+			s.AddClause([]Lit{MkLit(0, true), MkLit(1, true)})
+			if !s.Eliminate(tc.turnOff) || !s.IsEliminated(0) {
+				t.Fatal("expected x eliminated")
+			}
+			defer func() {
+				if recover() == nil {
+					t.Fatal("expected eliminated assumption to be rejected")
+				}
+			}()
+			s.SolveLimited([]Lit{MkLit(0, true), MkLit(1, true)}, tc.doSimp)
+		})
+	}
+}
+
+func TestSimpRejectsEliminatedSubstitutionTarget(t *testing.T) {
+	s := NewSimpSolver()
+	for i := 0; i < 3; i++ {
+		s.NewVar(true, true)
+	}
+	s.SetFrozen(2, true)
+	if !s.Substitute(0, MkLit(2, false)) {
+		t.Fatal("initial substitution")
+	}
+	defer func() {
+		if recover() == nil {
+			t.Fatal("expected eliminated substitution target to be rejected")
+		}
+	}()
+	s.Substitute(1, MkLit(0, false))
 }

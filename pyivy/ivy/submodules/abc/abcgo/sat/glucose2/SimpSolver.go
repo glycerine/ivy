@@ -213,14 +213,20 @@ func (s *SimpSolver) SolveLimited(assumptions []Lit, options ...bool) LBool {
 	if len(options) > 1 {
 		turnOff = options[1]
 	}
+	// Elimination remains in effect even when simplification is disabled.
+	for _, p := range assumptions {
+		if p < 0 || int(p.Var()) >= s.NVars() {
+			panic("assumption variable out of range")
+		}
+		if s.eliminated[p.Var()] {
+			panic("assumption variable already eliminated")
+		}
+	}
 	doSimp = doSimp && s.useSimplification
 	var extraFrozen []Var
 	if doSimp {
 		for _, p := range assumptions {
 			v := p.Var()
-			if s.eliminated[v] {
-				panic("assumption variable already eliminated")
-			}
 			if !s.frozen[v] {
 				s.SetFrozen(v, true)
 				extraFrozen = append(extraFrozen, v)
