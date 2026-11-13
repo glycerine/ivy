@@ -316,3 +316,47 @@ func (p *Graph) refreshFanouts() {
 		p.fanouts.Rebuild(p)
 	}
 }
+
+// Aig_ObjReplaceInputFanouts redirects all uses of an input, keeping the
+// original input in the interface. The replacement must not depend on it.
+func Aig_ObjReplaceInputFanouts(p *Graph, input, replacement Edge) {
+	if input.Complemented() || !p.valid(input) || p.node(input).Kind != Input || !p.valid(replacement) {
+		panic("aig: invalid input replacement")
+	}
+	for _, e := range p.dfs([]Edge{replacement}, true, false, false) {
+		if e.NodeID() == input.NodeID() {
+			panic("aig: input replacement introduces cycle")
+		}
+	}
+	// Snapshot the original consumers; rebuilding one may delete another.
+	for _, e := range p.LiveEdges() {
+		if !p.valid(e) {
+			continue
+		}
+		n := *p.node(e)
+		if n.Kind != And && n.Kind != ExclusiveOr && n.Kind != Buffer && n.Kind != Output {
+			continue
+		}
+		fanins := n.Fanins
+		changed := false
+		for i, f := range nodeFanins(n) {
+			if f.NodeID() == input.NodeID() {
+				fanins[i] = Aig_NotCond(replacement, int32(f&1))
+				changed = true
+			}
+		}
+		if !changed {
+			continue
+		}
+		switch n.Kind {
+		case Output:
+			Aig_ObjPatchFanin0(p, e, fanins[0])
+		case Buffer:
+			Aig_ObjReplace(p, e, fanins[0], 0)
+		case And:
+			Aig_ObjReplace(p, e, p.AND(fanins[0], fanins[1]), 0)
+		case ExclusiveOr:
+			Aig_ObjReplace(p, e, p.NewXor(fanins[0], fanins[1]), 0)
+		}
+	}
+}

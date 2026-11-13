@@ -107,3 +107,43 @@ func TestExplicitConstantOutputCleanup(t *testing.T) {
 		t.Fatal("unary output fanout missing")
 	}
 }
+
+func TestReplaceInputFanouts(t *testing.T) {
+	p := NewGraph()
+	a, b, c := p.NewInput(), p.NewInput(), p.NewInput()
+	first := p.AND(a.Not(), b)
+	xor := p.NewXor(a, c)
+	p.AddOutput(first)
+	p.AddOutput(xor)
+	p.AddOutput(a.Not())
+	Aig_ManFanoutStart(p)
+	Aig_ObjReplaceInputFanouts(p, a, b.Not())
+	if err := p.Check(); err != nil {
+		t.Fatal(err)
+	}
+	for mask := 0; mask < 8; mask++ {
+		in := []bool{mask&1 != 0, mask&2 != 0, mask&4 != 0}
+		out, err := p.Evaluate(in)
+		if err != nil {
+			t.Fatal(err)
+		}
+		want := []bool{in[1], !in[1] != in[2], in[1]}
+		for i := range want {
+			if out[i] != want[i] {
+				t.Fatalf("input=%v output=%v want=%v", in, out, want)
+			}
+		}
+	}
+}
+
+func TestReplaceInputFanoutsRejectsCycle(t *testing.T) {
+	p := NewGraph()
+	a, b := p.NewInput(), p.NewInput()
+	replacement := p.AND(a, b)
+	defer func() {
+		if recover() == nil {
+			t.Fatal("expected cycle rejection")
+		}
+	}()
+	Aig_ObjReplaceInputFanouts(p, a, replacement)
+}
