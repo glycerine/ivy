@@ -1,477 +1,123 @@
 package ssw
 
-import "time"
+// Pair-guided sequential correspondence, ported from sswPairs.c.
+import (
+	"fmt"
+	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/aig/saig"
+	"github.com/glycerine/abcgo/misc/vec"
+	"time"
+)
 
-/**CFile****************************************************************
-
-  FileName    [sswPairs.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Inductive prover with constraints.]
-
-  Synopsis    [Calls to the SAT solver.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - September 1, 2008.]
-
-  Revision    [$Id: sswPairs.c,v 1.00 2008/09/01 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "sswInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Reports the status of the miter.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ssw_MiterStatus(p *Aig_Man_t, fVerbose int32) int32 {
-    var pObj, pChild *Aig_Obj_t;
-    var i, CountConst0, CountNonConst0, CountUndecided int32;
-//    if ( p->pData )
-//        return 0;
-    // inlining of macro Saig_ManForEachPo
-    // inlining of macro Vec_PtrForEachEntryStop
-    for  i = 0; (i < Saig_ManPoNum(p)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-        pChild = Aig_ObjChild0(pObj);
-        // check if the output is constant 0
-        if pChild == Aig_ManConst0(p) {
-            CountConst0++;
-            continue;
-        }
-        // check if the output is constant 1
-        if pChild == Aig_ManConst1(p) {
-            CountNonConst0++;
-            continue;
-        }
-        // check if the output is a primary input
-        if p.nRegs == 0 && Aig_ObjIsCi(Aig_Regular(pChild)) {
-            CountNonConst0++;
-            continue;
-        }
-        // check if the output can be not constant 0
-        if Aig_Regular(pChild).fPhase != uint32(Aig_IsComplement(pChild)) {
-            CountNonConst0++;
-            continue;
-        }
-        CountUndecided++;
-    }
-
-    if fVerbose != 0 {
-        Abc_Print( 1, "Miter has %d outputs. ", Saig_ManPoNum(p) );
-        Abc_Print( 1, "Const0 = %d.  ", CountConst0 );
-        Abc_Print( 1, "NonConst0 = %d.  ", CountNonConst0 );
-        Abc_Print( 1, "Undecided = %d.  ", CountUndecided );
-        Abc_Print( 1, "\n" );
-    }
-
-    if CountNonConst0 {
-        return 0; }
-    if CountUndecided != 0 {
-        return -1; }
-    return 1;
+func Ssw_TransferSignalPairs(miter, first, second *aig.Graph, ids1, ids2 *vec.Vec_Int_t) *vec.Vec_Int_t {
+	copies1 := make([]aig.Edge, aig.Aig_ManObjNumMax(first))
+	copies2 := make([]aig.Edge, aig.Aig_ManObjNumMax(second))
+	for i := range copies1 {
+		copies1[i] = aig.Aig_ObjCopy(first, aig.Aig_ManObj(first, int32(i)))
+	}
+	for i := range copies2 {
+		copies2[i] = aig.Aig_ObjCopy(second, aig.Aig_ManObj(second, int32(i)))
+	}
+	return sswPairsFromMaps(first, second, ids1, ids2, copies1, copies2)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Transfer equivalent pairs to the miter.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ssw_TransferSignalPairs(pMiter *Aig_Man_t, pAig1 *Aig_Man_t, pAig2 *Aig_Man_t, vIds1 *Vec_Int_t, vIds2 *Vec_Int_t) *Vec_Int_t {
-    var vIds *Vec_Int_t;
-    var pObj1, pObj2 *Aig_Obj_t;
-    var pObj1m, pObj2m *Aig_Obj_t;
-    var i int32;
-    vIds = Vec_IntAlloc( 2 * Vec_IntSize(vIds1) );
-    for  i = 0; i < Vec_IntSize(vIds1); i++  {
-        pObj1 = Aig_ManObj( pAig1, Vec_IntEntry(vIds1, i) );
-        pObj2 = Aig_ManObj( pAig2, Vec_IntEntry(vIds2, i) );
-        pObj1m = Aig_Regular((Aig_Obj_t *)pObj1.pData);
-        pObj2m = Aig_Regular((Aig_Obj_t *)pObj2.pData);
-        assert(pObj1m && (pObj2m != nil), "pObj1m && pObj2m");
-        if pObj1m == pObj2m {
-            continue; }
-        if pObj1m.Id < pObj2m.Id {
-            Vec_IntPush( vIds, pObj1m.Id );
-            Vec_IntPush( vIds, pObj2m.Id );
-        
-        } else {
-            Vec_IntPush( vIds, pObj2m.Id );
-            Vec_IntPush( vIds, pObj1m.Id );
-        }
-    }
-    return vIds;
+func Ssw_SignalCorrespondenceWithPairs(first, second *aig.Graph, ids1, ids2 *vec.Vec_Int_t, pars *Ssw_Pars_t) *aig.Graph {
+	if vec.Vec_IntSize(ids1) != vec.Vec_IntSize(ids2) {
+		panic("ssw: mismatched pair vectors")
+	}
+	miter, copies1, copies2 := saig.Saig_ManCreateMiterWithCopies(first, second, 0)
+	aig.Aig_ManCleanup(miter)
+	pairs := sswPairsFromMaps(first, second, ids1, ids2, copies1, copies2)
+	classes := Ssw_TransformPairsIntoTempClasses(pairs, aig.Aig_ManObjNumMax(miter))
+	vec.Vec_IntFree(pairs)
+	if pars == nil {
+		pars = new(Ssw_Pars_t)
+		Ssw_ManSetDefaultParams(pars)
+	}
+	p := Ssw_ManCreate(miter, pars)
+	p.ppClasses = Ssw_ClassesPreparePairs(miter, classes)
+	p.pSml = Ssw_SmlStart(miter, 0, p.nFrames+pars.nFramesAddSim, 1)
+	Ssw_ClassesSetData(p.ppClasses, p.pSml, func(data any, node aig.Edge) uint32 { return Ssw_SmlObjHashWord(data.(*Ssw_Sml_t), node) }, func(data any, node aig.Edge) int32 { return Ssw_SmlObjIsConstWord(data.(*Ssw_Sml_t), node) }, func(data any, a, b aig.Edge) int32 { return Ssw_SmlObjsAreEqualWord(data.(*Ssw_Sml_t), a, b) })
+	result := Ssw_SignalCorrespondenceRefine(p)
+	Ssw_FreeTempClasses(classes, aig.Aig_ManObjNumMax(miter))
+	Ssw_ManStop(p)
+	aig.Aig_ManStop(miter)
+	return result
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Transform pairs into class representation.]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ssw_TransformPairsIntoTempClasses(vPairs *Vec_Int_t, nObjNumMax int32) **Vec_Int_t {
-    var pvClasses **Vec_Int_t;   // vector of classes
-    var pReprs *int32;             // mapping nodes into their representatives
-    var Entry, idObj, idRepr, idReprObj, idReprRepr, i int32;
-    // allocate data-structures
-    // inlining of macro ABC_CALLOC
-    pvClasses = ((Vec_Int_t * *) calloc((size_t)(nObjNumMax), sizeof(Vec_Int_t *)));
-    // inlining of macro ABC_ALLOC
-    pReprs    = ((int *) malloc(sizeof(int) * (size_t)(nObjNumMax)));
-    for  i = 0; i < nObjNumMax; i++  {
-        pReprs[i] = -1;
-    }
-    // consider pairs
-    for  i = 0; i < Vec_IntSize(vPairs); i += 2  {
-        // get both objects
-        idRepr = Vec_IntEntry( vPairs, i   );
-        idObj  = Vec_IntEntry( vPairs, i+1 );
-        assert(idObj > 0, "idObj > 0");
-        assert((pReprs[idRepr] == -1) || (pvClasses[pReprs[idRepr]] != nil), "(pReprs[idRepr] == -1) || (pvClasses[pReprs[idRepr]] != nil)");
-        assert((pReprs[idObj]  == -1) || (pvClasses[pReprs[idObj] ] != nil), "(pReprs[idObj]  == -1) || (pvClasses[pReprs[idObj] ] != nil)");
-        // get representatives of both objects
-        idReprRepr = pReprs[idRepr];
-        idReprObj  = pReprs[idObj];
-        // check different situations
-        if idReprRepr == -1 && idReprObj == -1 {   // they do not have classes
-            // create a class
-            pvClasses[idRepr] = Vec_IntAlloc( 4 );
-            Vec_IntPush( pvClasses[idRepr], idRepr );
-            Vec_IntPush( pvClasses[idRepr], idObj );
-            pReprs[ idRepr ] = idRepr;
-            pReprs[ idObj  ] = idRepr;
-        
-        } else if idReprRepr >= 0 && idReprObj == -1 {   // representative has a class
-            // add iObj to the same class
-            Vec_IntPushUniqueOrder( pvClasses[idReprRepr], idObj );
-            pReprs[ idObj ] = idReprRepr;
-        
-        } else if idReprRepr == -1 && idReprObj >= 0 {   // object has a class
-            assert(idReprObj != idRepr, "idReprObj != idRepr");
-            if idReprObj < idRepr { // add idRepr to the same class
-                Vec_IntPushUniqueOrder( pvClasses[idReprObj], idRepr );
-                pReprs[ idRepr ] = idReprObj;
-            
-            } else { // if ( idReprObj > idRepr )
-             // make idRepr new representative
-                Vec_IntPushFirst( pvClasses[idReprObj], idRepr );
-                pvClasses[idRepr] = pvClasses[idReprObj];
-                pvClasses[idReprObj] = nil;
-                // set correct representatives of each node
-                // inlining of macro Vec_IntForEachEntry
-                for  i = 0; (i < Vec_IntSize(pvClasses[idRepr])) && (((Entry) = Vec_IntEntry(pvClasses[idRepr], i)), 1); i++  {
-                    pReprs[ Entry ] = idRepr;
-                }
-            }
-        
-        } else { // if ( idReprRepr >= 0 && idReprObj >= 0 )
-           // both have classes
-            if idReprRepr == idReprObj {  // the classes are the same
-                // nothing to do
-            
-            } else {  // the classes are different
-                // find the repr of the new class
-                if idReprRepr < idReprObj {
-                    // inlining of macro Vec_IntForEachEntry
-                    for  i = 0; (i < Vec_IntSize(pvClasses[idReprObj])) && (((Entry) = Vec_IntEntry(pvClasses[idReprObj], i)), 1); i++  {
-                        Vec_IntPushUniqueOrder( pvClasses[idReprRepr], Entry );
-                        pReprs[ Entry ] = idReprRepr;
-                    }
-                    Vec_IntFree( pvClasses[idReprObj] );
-                    pvClasses[idReprObj] = nil;
-                
-                } else { // if ( idReprRepr > idReprObj )
-                
-                    // inlining of macro Vec_IntForEachEntry
-                    for  i = 0; (i < Vec_IntSize(pvClasses[idReprRepr])) && (((Entry) = Vec_IntEntry(pvClasses[idReprRepr], i)), 1); i++  {
-                        Vec_IntPushUniqueOrder( pvClasses[idReprObj], Entry );
-                        pReprs[ Entry ] = idReprObj;
-                    }
-                    Vec_IntFree( pvClasses[idReprRepr] );
-                    pvClasses[idReprRepr] = nil;
-                }
-            }
-        }
-    }
-    pReprs = nil;
-    return pvClasses;
+func Ssw_SignalCorrespondeceTestPairs(graph *aig.Graph) *aig.Graph {
+	start := time.Now()
+	var pars Ssw_Pars_t
+	Ssw_ManSetDefaultParams(&pars)
+	pars.fVerbose = 1
+	reduced := Ssw_SignalCorrespondence(graph, &pars)
+	if reduced == nil {
+		return nil
+	}
+	ids1, ids2 := vec.Vec_IntAlloc(int(aig.Aig_ManObjNumMax(graph))), vec.Vec_IntAlloc(int(aig.Aig_ManObjNumMax(graph)))
+	live := make(map[int]bool)
+	for _, node := range reduced.LiveEdges() {
+		live[node.NodeID()] = true
+	}
+	for _, node := range graph.LiveEdges() {
+		copy := aig.Aig_ObjCopy(graph, node)
+		if copy == aig.InvalidEdge || !live[aig.Aig_Regular(copy).NodeID()] {
+			continue
+		}
+		vec.Vec_IntPush(ids1, int32(node.NodeID()))
+		vec.Vec_IntPush(ids2, int32(aig.Aig_Regular(copy).NodeID()))
+	}
+	fmt.Printf("Recorded %d pairs (before: %d after: %d).\n", vec.Vec_IntSize(ids1), aig.Aig_ManObjNumMax(graph), aig.Aig_ManObjNumMax(reduced))
+	result := Ssw_SignalCorrespondenceWithPairs(graph, reduced, ids1, ids2, &pars)
+	vec.Vec_IntFree(ids1)
+	vec.Vec_IntFree(ids2)
+	sswReportPairResult(result, aig.Aig_ManRegNum(graph)+aig.Aig_ManRegNum(reduced), start)
+	aig.Aig_ManStop(reduced)
+	return result
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ssw_FreeTempClasses(pvClasses **Vec_Int_t, nObjNumMax int32) {
-    var i int32;
-    for  i = 0; i < nObjNumMax; i++  {
-        if pvClasses[i] {
-            Vec_IntFree( pvClasses[i] ); }
-    }
-    pvClasses = nil;
+func sswReportPairResult(graph *aig.Graph, total int32, start time.Time) int32 {
+	result := Ssw_MiterStatus(graph, 1)
+	switch result {
+	case 1:
+		fmt.Print("Verification successful.  ")
+	case 0:
+		fmt.Print("Verification failed with a counter-example.  ")
+	default:
+		fmt.Printf("Verification UNDECIDED. The number of remaining regs = %d (total = %d).  ", aig.Aig_ManRegNum(graph), total)
+	}
+	fmt.Printf("Time = %.2f sec\n", time.Since(start).Seconds())
+	return result
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Performs signal correspondence for the miter of two AIGs with node pairs defined.]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ssw_SignalCorrespondenceWithPairs(pAig1 *Aig_Man_t, pAig2 *Aig_Man_t, vIds1 *Vec_Int_t, vIds2 *Vec_Int_t, pPars *Ssw_Pars_t) *Aig_Man_t {
-    var p *Ssw_Man_t;
-    var pAigNew, pMiter *Aig_Man_t;
-    var Pars Ssw_Pars_t;
-    var vPairs *Vec_Int_t;
-    var pvClasses **Vec_Int_t;
-    assert(Vec_IntSize(vIds1) == Vec_IntSize(vIds2), "Vec_IntSize(vIds1) == Vec_IntSize(vIds2)");
-    // create sequential miter
-    pMiter = Saig_ManCreateMiter( pAig1, pAig2, 0 );
-    Aig_ManCleanup( pMiter );
-    // transfer information to the miter
-    vPairs = Ssw_TransferSignalPairs( pMiter, pAig1, pAig2, vIds1, vIds2 );
-    // create representation of the classes
-    pvClasses = Ssw_TransformPairsIntoTempClasses( vPairs, Aig_ManObjNumMax(pMiter) );
-    Vec_IntFree( vPairs );
-    // if parameters are not given, create them
-    if pPars == nil {
-        Ssw_ManSetDefaultParams( pPars = &Pars ); }
-    // start the induction manager
-    p = Ssw_ManCreate( pMiter, pPars );
-    // create equivalence classes using these IDs
-    p.ppClasses = Ssw_ClassesPreparePairs( pMiter, pvClasses );
-    p.pSml = Ssw_SmlStart( pMiter, 0, p.nFrames + p.pPars.nFramesAddSim, 1 );
-    Ssw_ClassesSetData( p.ppClasses, p.pSml, (unsigned(*)(void *,Aig_Obj_t *))Ssw_SmlObjHashWord, (int(*)(void *,Aig_Obj_t *))Ssw_SmlObjIsConstWord, (int(*)(void *,Aig_Obj_t *,Aig_Obj_t *))Ssw_SmlObjsAreEqualWord );
-    // perform refinement of classes
-    pAigNew = Ssw_SignalCorrespondenceRefine( p );
-    // cleanup
-    Ssw_FreeTempClasses( pvClasses, Aig_ManObjNumMax(pMiter) );
-    Ssw_ManStop( p );
-    Aig_ManStop( pMiter );
-    return pAigNew;
+func Ssw_SecWithPairs(first, second *aig.Graph, ids1, ids2 *vec.Vec_Int_t, pars *Ssw_Pars_t) int32 {
+	if ids1 == nil || ids2 == nil {
+		panic("ssw: missing pair vectors")
+	}
+	start := time.Now()
+	fmt.Println("Performing specialized verification with node pairs.")
+	result := Ssw_SignalCorrespondenceWithPairs(first, second, ids1, ids2, pars)
+	if result == nil {
+		return -1
+	}
+	defer aig.Aig_ManStop(result)
+	return sswReportPairResult(result, aig.Aig_ManRegNum(first)+aig.Aig_ManRegNum(second), start)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Runs inductive SEC for the miter of two AIGs with node pairs defined.]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ssw_SignalCorrespondeceTestPairs(pAig *Aig_Man_t) *Aig_Man_t {
-    var pAigNew, pAigRes *Aig_Man_t;
-    var Pars Ssw_Pars_t;
-    var pPars *Ssw_Pars_t = &Pars;
-    var vIds1, vIds2 *Vec_Int_t;
-    var pObj, pRepr *Aig_Obj_t;
-    var RetValue, i int32;
-    var clk abctime  = Abc_Clock();
-    Ssw_ManSetDefaultParams( pPars );
-    pPars.fVerbose = 1;
-    pAigNew = Ssw_SignalCorrespondence( pAig, pPars );
-    // record pairs of equivalent nodes
-    vIds1 = Vec_IntAlloc( Aig_ManObjNumMax(pAig) );
-    vIds2 = Vec_IntAlloc( Aig_ManObjNumMax(pAig) );
-    // inlining of macro Aig_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(pAig.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {
-        pRepr = Aig_Regular((Aig_Obj_t *)pObj.pData);
-        if pRepr == nil {
-            continue; }
-        if Aig_ManObj(pAigNew, pRepr.Id) == nil {
-            continue; }
-/*
-        if ( Aig_ObjIsNode(pObj) )
-            Abc_Print( 1, "n " );
-        else if ( Saig_ObjIsPi(pAig, pObj) )
-            Abc_Print( 1, "pi " );
-        else if ( Saig_ObjIsLo(pAig, pObj) )
-            Abc_Print( 1, "lo " );
-*/
-        Vec_IntPush( vIds1, Aig_ObjId(pObj) );
-        Vec_IntPush( vIds2, Aig_ObjId(pRepr) );
-    }
-    }
-    Abc_Print( 1, "Recorded %d pairs (before: %d  after: %d).\n", Vec_IntSize(vIds1), Aig_ManObjNumMax(pAig), Aig_ManObjNumMax(pAigNew) );
-    // try the new AIGs
-    pAigRes = Ssw_SignalCorrespondenceWithPairs( pAig, pAigNew, vIds1, vIds2, pPars );
-    Vec_IntFree( vIds1 );
-    Vec_IntFree( vIds2 );
-    // report the results
-    RetValue = Ssw_MiterStatus( pAigRes, 1 );
-    if RetValue == 1 {
-        Abc_Print( 1, "Verification successful.  " );
-    } else if RetValue == 0 {
-        Abc_Print( 1, "Verification failed with the counter-example.  " );
-    } else {
-        Abc_Print( 1, "Verification UNDECIDED. Remaining registers %d (total %d).  ",
-            Aig_ManRegNum(pAigRes), Aig_ManRegNum(pAig) + Aig_ManRegNum(pAigNew) ); }
-    // inlining of macro ABC_PRT
-    Abc_Print(1, "%s =", ("Time"));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;
-    // cleanup
-    Aig_ManStop( pAigNew );
-    return pAigRes;
+func Ssw_SecGeneral(first, second *aig.Graph, pars *Ssw_Pars_t) int32 {
+	start := time.Now()
+	fmt.Println("Performing general verification without node pairs.")
+	miter := saig.Saig_ManCreateMiter(first, second, 0)
+	aig.Aig_ManCleanup(miter)
+	result := Ssw_SignalCorrespondence(miter, pars)
+	aig.Aig_ManStop(miter)
+	if result == nil {
+		return -1
+	}
+	defer aig.Aig_ManStop(result)
+	return sswReportPairResult(result, aig.Aig_ManRegNum(first)+aig.Aig_ManRegNum(second), start)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Runs inductive SEC for the miter of two AIGs with node pairs defined.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ssw_SecWithPairs(pAig1 *Aig_Man_t, pAig2 *Aig_Man_t, vIds1 *Vec_Int_t, vIds2 *Vec_Int_t, pPars *Ssw_Pars_t) int32 {
-    var pAigRes *Aig_Man_t;
-    var RetValue int32;
-    var clk abctime  = Abc_Clock();
-    assert(vIds1 != nil && vIds2 != nil, "vIds1 != nil && vIds2 != nil");
-    // try the new AIGs
-    Abc_Print( 1, "Performing specialized verification with node pairs.\n" );
-    pAigRes = Ssw_SignalCorrespondenceWithPairs( pAig1, pAig2, vIds1, vIds2, pPars );
-    // report the results
-    RetValue = Ssw_MiterStatus( pAigRes, 1 );
-    if RetValue == 1 {
-        Abc_Print( 1, "Verification successful.  " );
-    } else if RetValue == 0 {
-        Abc_Print( 1, "Verification failed with a counter-example.  " );
-    } else {
-        Abc_Print( 1, "Verification UNDECIDED. The number of remaining regs = %d (total = %d).  ",
-            Aig_ManRegNum(pAigRes), Aig_ManRegNum(pAig1) + Aig_ManRegNum(pAig2) ); }
-    // inlining of macro ABC_PRT
-    Abc_Print(1, "%s =", ("Time"));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;
-    // cleanup
-    Aig_ManStop( pAigRes );
-    return RetValue;
+func Ssw_SecGeneralMiter(miter *aig.Graph, pars *Ssw_Pars_t) int32 {
+	start := time.Now()
+	result := Ssw_SignalCorrespondence(miter, pars)
+	if result == nil {
+		return -1
+	}
+	defer aig.Aig_ManStop(result)
+	return sswReportPairResult(result, aig.Aig_ManRegNum(miter), start)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Runs inductive SEC for the miter of two AIGs.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ssw_SecGeneral(pAig1 *Aig_Man_t, pAig2 *Aig_Man_t, pPars *Ssw_Pars_t) int32 {
-    var pAigRes, pMiter *Aig_Man_t;
-    var RetValue int32;
-    var clk abctime  = Abc_Clock();
-    // try the new AIGs
-    Abc_Print( 1, "Performing general verification without node pairs.\n" );
-    pMiter = Saig_ManCreateMiter( pAig1, pAig2, 0 );
-    Aig_ManCleanup( pMiter );
-    pAigRes = Ssw_SignalCorrespondence( pMiter, pPars );
-    Aig_ManStop( pMiter );
-    // report the results
-    RetValue = Ssw_MiterStatus( pAigRes, 1 );
-    if RetValue == 1 {
-        Abc_Print( 1, "Verification successful.  " );
-    } else if RetValue == 0 {
-        Abc_Print( 1, "Verification failed with a counter-example.  " );
-    } else {
-        Abc_Print( 1, "Verification UNDECIDED. The number of remaining regs = %d (total = %d).  ",
-            Aig_ManRegNum(pAigRes), Aig_ManRegNum(pAig1) + Aig_ManRegNum(pAig2) ); }
-    // inlining of macro ABC_PRT
-    Abc_Print(1, "%s =", ("Time"));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;
-    // cleanup
-    Aig_ManStop( pAigRes );
-    return RetValue;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Runs inductive SEC for the miter of two AIGs.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ssw_SecGeneralMiter(pMiter *Aig_Man_t, pPars *Ssw_Pars_t) int32 {
-    var pAigRes *Aig_Man_t;
-    var RetValue int32;
-    var clk abctime  = Abc_Clock();
-    // try the new AIGs
-//    Abc_Print( 1, "Performing general verification without node pairs.\n" );
-    pAigRes = Ssw_SignalCorrespondence( pMiter, pPars );
-    // report the results
-    RetValue = Ssw_MiterStatus( pAigRes, 1 );
-    if RetValue == 1 {
-        Abc_Print( 1, "Verification successful.  " );
-    } else if RetValue == 0 {
-        Abc_Print( 1, "Verification failed with a counter-example.  " );
-    } else {
-        Abc_Print( 1, "Verification UNDECIDED. The number of remaining regs = %d (total = %d).  ",
-            Aig_ManRegNum(pAigRes), Aig_ManRegNum(pMiter) ); }
-    // inlining of macro ABC_PRT
-    Abc_Print(1, "%s =", ("Time"));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;
-    // cleanup
-    Aig_ManStop( pAigRes );
-    return RetValue;
-}
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
