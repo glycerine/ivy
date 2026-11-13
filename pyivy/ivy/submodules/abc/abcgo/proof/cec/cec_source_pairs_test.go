@@ -122,6 +122,7 @@ func TestSourceSweepPairsAgainstABC(t *testing.T) {
 	binary := filepath.Join(dir, "oracle")
 	const program = `#include "aig/gia/gia.h"
 #include "proof/cec/cec.h"
+#include "proof/cec/cecInt.h"
 #include <stdio.h>
 extern int Cec_ManCheckSat_rec(Gia_Man_t *, Gia_Obj_t *, int);
 extern word Cec_ManCheckSat2(Gia_Man_t *, Gia_Obj_t *, int, Vec_Wrd_t *);
@@ -154,6 +155,13 @@ int main(void) {
  printf("backward:%d,%d,%d\n",stub,fresh,conflict);
  Gia_ManIncrementTravId(g); fresh=(int)Cec_ManCheckSat2_rec(g,Gia_ManObj(g,x>>1),2,NULL); conflict=(int)Cec_ManCheckSat2_rec(g,Gia_ManObj(g,x>>1),2,NULL);
  printf("backword:%d,%d\n",fresh,conflict); Gia_ManStop(g); }
+ { Gia_Man_t *g=Gia_ManStart(16); Cec_ParSat_t opts; Cec_ManSat_t *sat; Vec_Int_t *ptr; int a=Gia_ManAppendCi(g),b=Gia_ManAppendCi(g),c=Gia_ManAppendCi(g),x=Gia_ManAppendAnd(g,a,b),y=Gia_ManAppendAnd(g,x,c),status;
+ Gia_ManAppendCo(g,y);Gia_ManSetPhase(g);Gia_ManLevelNum(g);Gia_ManIncrementTravId(g);
+ Cec_ManSatSetDefaultParams(&opts); sat=Cec_ManSatCreate(g,&opts);status=Cec_ManSatCheckNode(sat,Gia_ManObj(g,y>>1));ptr=sat->vCex;
+ Cec_ManSavePattern(sat,Gia_ManObj(g,x>>1),Gia_ManObj(g,y>>1));
+ printf("pattern:%d,%d,%d,%d,%d,%d,%d\n",status,ptr==sat->vCex,sat->nCexLits,Vec_IntEntry(ptr,0),Vec_IntEntry(ptr,1),Vec_IntEntry(ptr,2),Gia_ObjIsTravIdCurrent(g,Gia_ManObj(g,c>>1)));
+ Cec_ManSavePattern(sat,Gia_ManObj(g,x>>1),NULL);printf("pattern2:%d,%d,%d,%d,%d\n",ptr==sat->vCex,sat->nCexLits,Vec_IntEntry(ptr,0),Vec_IntEntry(ptr,1),Gia_ObjIsTravIdCurrent(g,Gia_ManObj(g,c>>1)));
+ Cec_ManSatStop(sat);Gia_ManStop(g); }
  return 0;
 }`
 	if err = os.WriteFile(cfile, []byte(program), 0600); err != nil {
@@ -170,7 +178,7 @@ int main(void) {
 	if !strings.Contains(string(out), "reordered:1") {
 		t.Fatalf("ABC reordered CO result: %s", out)
 	}
-	if !strings.Contains(string(out), "backword:1,0") || !strings.Contains(string(out), "backward:0,1,0") || !strings.Contains(string(out), "specialbuffer:-1") || !strings.Contains(string(out), "verifytwo:1,0") || !strings.Contains(string(out), "verifytworeg:0,0,2,1") {
+	if !strings.Contains(string(out), "pattern:0,1,3,0,2,4,1") || !strings.Contains(string(out), "pattern2:1,5,0,2,0") || !strings.Contains(string(out), "backword:1,0") || !strings.Contains(string(out), "backward:0,1,0") || !strings.Contains(string(out), "specialbuffer:-1") || !strings.Contains(string(out), "verifytwo:1,0") || !strings.Contains(string(out), "verifytworeg:0,0,2,1") {
 		t.Fatalf("ABC verify-two source behavior: %s", out)
 	}
 	var original []int32

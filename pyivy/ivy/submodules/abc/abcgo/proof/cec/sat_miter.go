@@ -4,7 +4,6 @@ import (
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
-	"github.com/glycerine/abcgo/proof/cec/core"
 	"time"
 )
 
@@ -21,54 +20,47 @@ func Cec_ManSatAddToStore(store, pattern *Vec_Int_t, output int32) {
 	}
 }
 
-// Cec_ManSavePattern records only the inputs in the queried cones, retaining
-// the original cube literal convention: even requires true, odd requires false.
+// Cec_ManSatSolveMiter_rec records CI values in source cone traversal order.
+// It shares the manager's current traversal ID across both queried roots.
+func Cec_ManSatSolveMiter_rec(p *Cec_ManSat_t, graph *Gia_Man_t, obj *Gia_Obj_t) {
+	if gia.Gia_ObjIsTravIdCurrent(graph, obj) != 0 {
+		return
+	}
+	gia.Gia_ObjSetTravIdCurrent(graph, obj)
+	if gia.Gia_ObjIsCi(obj) != 0 {
+		p.nCexLits++
+		lit := gia.Gia_ObjCioId(obj) << 1
+		if Cec_ObjSatVarValue(p, obj) == 0 {
+			lit |= 1
+		}
+		vec.Vec_IntPush(p.vCex, lit)
+		return
+	}
+	if gia.Gia_ObjIsAnd(obj) == 0 {
+		panic("cec: pattern cone requires AND or CI")
+	}
+	cecRequireAndGraph(graph, obj)
+	Cec_ManSatSolveMiter_rec(p, graph, gia.Gia_ObjFanin0(obj))
+	Cec_ManSatSolveMiter_rec(p, graph, gia.Gia_ObjFanin1(obj))
+}
+
+// Cec_ManSavePattern clears and reuses the source pattern vector.
 func Cec_ManSavePattern(p *Cec_ManSat_t, a, b *Gia_Obj_t) {
 	if p.values == nil {
 		panic("cec: cannot save pattern without a SAT witness")
 	}
-	p.vCex = vec.Vec_IntAlloc(16)
-	indices := make(map[int32]int)
-	for i, lit := range p.pAig.InputLiterals() {
-		indices[lit>>1] = i
-	}
-	visited := make(map[int32]bool)
-	var visit func(int32)
-	visit = func(id int32) {
-		if visited[id] {
-			return
-		}
-		visited[id] = true
-		x, y, z, kind := p.pAig.Gate(id)
-		if kind == core.Input {
-			lit := int32(indices[id]) << 1
-			if !p.values[id] {
-				lit |= 1
-			}
-			vec.Vec_IntPush(p.vCex, lit)
-			return
-		}
-		switch kind {
-		case core.And, core.Xor:
-			visit(x >> 1)
-			visit(y >> 1)
-		case core.Mux:
-			visit(x >> 1)
-			visit(y >> 1)
-			visit(z >> 1)
-		case core.Buffer, core.Output:
-			visit(x >> 1)
-		}
-	}
-	if a != nil {
-		visit(gia.Gia_ObjId(p.pAig, gia.Gia_Regular(a)))
-	}
+	vec.Vec_IntClear(p.vCex)
+	gia.Gia_ManIncrementTravId(p.pAig)
+	Cec_ManSatSolveMiter_rec(p, p.pAig, gia.Gia_Regular(a))
 	if b != nil {
-		visit(gia.Gia_ObjId(p.pAig, gia.Gia_Regular(b)))
+		Cec_ManSatSolveMiter_rec(p, p.pAig, gia.Gia_Regular(b))
 	}
 }
 
 func Cec_ManSatSolveMiter(graph *Gia_Man_t, params *Cec_ParSat_t, statusOut **Vec_Str_t) *Vec_Int_t {
+	gia.Gia_ManSetPhase(graph)
+	gia.Gia_ManLevelNum(graph)
+	gia.Gia_ManIncrementTravId(graph)
 	p := Cec_ManSatCreate(graph, params)
 	defer Cec_ManSatStop(p)
 	outputs := graph.OutputLiterals()
