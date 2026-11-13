@@ -9,12 +9,16 @@ handles, while simulation and vector storage use slices.
 The tests include public API use from a separate Go package, exhaustive MUX
 clause checks, SAT comparisons against exhaustive truth tables for small circuits,
 normal and sparse feedback compression, pattern overlap and partial-word cases,
-resource bounds, and choice and fanout handling. Statement coverage was 67.7%
-when last measured.
+resource bounds, and choice and fanout handling. Additional exhaustive tests
+check sparse SAT reduction, choice-cycle prevention, miter proof polarity,
+randomized functional reduction, and external clauses involving internal gates.
 
 The port also repairs C-derived edge cases in complemented equality, multi-output
 miter checking, simulation of constant nodes, feedback pattern compaction, and
 hashing of dynamic simulation words beyond the original fixed prime table.
+External clauses now allocate SAT variables, encode internal nodes, simplify
+constant literals, and keep their constraint cones active for subsequent
+queries. The msat solver retains root unit facts when preparing a new cone.
 
 Remaining validation work:
 
