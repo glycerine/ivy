@@ -2,6 +2,7 @@ package bmc
 
 import (
 	"testing"
+	"time"
 
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/misc/util"
@@ -80,5 +81,22 @@ func TestScalableBMCSolveAllReturnsFailureWhenSomeOutputsSafe(t *testing.T) {
 	params := Saig_ParBmc_t{nFramesMax: 2, fSolveAll: 1}
 	if result := Saig_ManBmcScalable(g, &params); result != 0 || params.nFailOuts != 1 {
 		t.Fatalf("result=%d failures=%d", result, params.nFailOuts)
+	}
+}
+
+func TestBmcSolveDeadlineUsesEarliestLimit(t *testing.T) {
+	now := time.Unix(100, 0)
+	global := now.Add(10 * time.Second)
+	for _, tc := range []struct {
+		global time.Time
+		per    time.Duration
+		want   time.Time
+	}{
+		{time.Time{}, 0, time.Time{}}, {global, 0, global}, {time.Time{}, 500 * time.Millisecond, now.Add(500 * time.Millisecond)},
+		{global, 500 * time.Millisecond, now.Add(500 * time.Millisecond)}, {global, 20 * time.Second, global},
+	} {
+		if got := bmcSolveDeadline(tc.global, now, tc.per); !got.Equal(tc.want) {
+			t.Errorf("global=%v per=%d got=%v want=%v", tc.global, tc.per, got, tc.want)
+		}
 	}
 }

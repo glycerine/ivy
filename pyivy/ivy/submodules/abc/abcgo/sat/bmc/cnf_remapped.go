@@ -5,19 +5,20 @@ import (
 	"github.com/glycerine/abcgo/sat/cnf"
 )
 
-// Cnf_DeriveGiaRemapped builds a typed CNF for all GIA outputs while treating
-// the sequential terminals as ordinary SAT variables, matching the historic
-// remapped-CNF callers' use of every CO as a constraint.
+// Cnf_DeriveGiaRemapped encodes GIA logic without asserting outputs.
+// VarNums is indexed by original GIA object ID; output variables are
+// equivalent to their drivers, including complemented and constant drivers.
 func Cnf_DeriveGiaRemapped(graph *gia.Gia_Man_t) *cnf.Cnf_Dat_t {
 	if graph == nil {
 		return nil
 	}
-	native := gia.Gia_ManToAigSimple(graph)
-	data, err := cnf.EncodeAIG(native, native.OutputCount())
+	data, err := gia.Mf_ManGenerateCnfResult(graph, 6, true, false, false)
 	if err != nil {
 		return nil
 	}
-	return data
+	result := cnf.NewMappedCNF(data.Variables, data.Clauses, data.VarNums, data.Obj2Clause, data.Obj2Count)
+	result.Mapping = append([]int32(nil), data.Mapping...)
+	return result
 }
 
 // Cnf_DataLiftGia relocates the CNF's variables and clauses into a larger

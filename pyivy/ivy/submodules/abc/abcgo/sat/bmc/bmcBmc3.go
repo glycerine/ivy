@@ -55,6 +55,18 @@ func Saig_ParBmcSetDefaultParams(p *Saig_ParBmc_t) {
 	*p = Saig_ParBmc_t{nLearnedStart: 10000, nLearnedDelta: 2000, nLearnedPerce: 80, iFrame: -1}
 }
 
+// bmcSolveDeadline applies the global budget even inside a single SAT call.
+func bmcSolveDeadline(global, now time.Time, remaining time.Duration) time.Time {
+	if remaining <= 0 {
+		return global
+	}
+	local := now.Add(remaining)
+	if global.IsZero() || local.Before(global) {
+		return local
+	}
+	return global
+}
+
 // Saig_ManBmcScalable performs bounded sequential checking with a fresh native
 // unrolling per depth and an incremental BSAT solver for that depth. It returns
 // 0 when a property is disproved, 1 when the requested bound is safe, and -1
@@ -82,8 +94,13 @@ func Saig_ManBmcScalable(graph *aig.Graph, params *Saig_ParBmc_t) int32 {
 		}
 	}
 	start := time.Now()
+	var deadline time.Time
+	if params.nTimeOut > 0 {
+		deadline = start.Add(time.Duration(params.nTimeOut) * time.Second)
+	}
 	var found bool
 	failed := make([]bool, pos)
+	spent := make([]time.Duration, pos)
 	for frame := int32(0); frame < maxFrames; frame++ {
 		if frame < params.nStart {
 			params.iFrame = frame
@@ -107,15 +124,7 @@ func Saig_ManBmcScalable(graph *aig.Graph, params *Saig_ParBmc_t) int32 {
 		}
 		baseUnsat := false
 		for _, clause := range data.Clauses {
-			lits := make([]bsat.Literal, len(clause))
-			for i, lit := range clause {
-				if lit&1 != 0 {
-					lits[i] = bsat.Negative(lit >> 1)
-				} else {
-					lits[i] = bsat.Positive(lit >> 1)
-				}
-			}
-			if !solver.AddClause(lits...) {
+			if !solver.AddClause(clause...) {
 				baseUnsat = true
 				break
 			}
@@ -127,9 +136,16 @@ func Saig_ManBmcScalable(graph *aig.Graph, params *Saig_ParBmc_t) int32 {
 			if params.fSolveAll != 0 && failed[output] {
 				continue
 			}
-			if params.nTimeOutOne > 0 {
-				solver.SetDeadline(time.Now().Add(time.Duration(params.nTimeOutOne) * time.Millisecond))
+			solveStart := time.Now()
+			solveDeadline := deadline
+			if params.fSolveAll != 0 && params.nTimeOutOne > 0 {
+				remaining := time.Duration(params.nTimeOutOne)*time.Millisecond - spent[output]
+				if remaining <= 0 {
+					return -1
+				}
+				solveDeadline = bmcSolveDeadline(deadline, solveStart, remaining)
 			}
+			solver.SetDeadline(solveDeadline)
 			solver.SetLimits(int64(params.nConfLimit), 0)
 			coIndex := int(frame)*int(pos) + int(output)
 			if coIndex < 0 || coIndex >= len(unrolled.Outputs()) {
@@ -141,6 +157,7 @@ func Saig_ManBmcScalable(graph *aig.Graph, params *Saig_ParBmc_t) int32 {
 				return -1
 			}
 			status := solver.Solve(bsat.Positive(variable))
+			spent[output] += time.Since(solveStart)
 			params.iFrame = frame
 			switch status {
 			case bsat.Satisfiable:
