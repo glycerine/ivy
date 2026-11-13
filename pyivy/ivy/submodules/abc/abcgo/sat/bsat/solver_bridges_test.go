@@ -119,3 +119,28 @@ func TestPublicPropagationAndUnitQueue(t *testing.T) {
 		t.Fatal("root conflict forgotten")
 	}
 }
+
+func TestClauseStoreDoesNotClaimGlobalUnsatForAssumptions(t *testing.T) {
+	s := NewSolver()
+	s.EnableClauseStore()
+	x, a, b := s.NewVariable(), s.NewVariable(), s.NewVariable()
+	for _, ca := range []Literal{Positive(a), Negative(a)} {
+		for _, cb := range []Literal{Positive(b), Negative(b)} {
+			if !s.AddClause(Positive(x), ca, cb) {
+				t.Fatal("unexpected inconsistency")
+			}
+		}
+	}
+	s.MarkClauseStoreRoots()
+	if got := s.Solve(Negative(x)); got != Unsatisfiable {
+		t.Fatalf("assumption solve=%v", got)
+	}
+	for _, clause := range solverClauseStore(s).Clauses() {
+		if len(clause.Literals) == 0 {
+			t.Fatalf("empty proof clause for satisfiable base formula: %+v", clause)
+		}
+	}
+	if got := s.Solve(); got != Satisfiable {
+		t.Fatalf("base formula=%v", got)
+	}
+}

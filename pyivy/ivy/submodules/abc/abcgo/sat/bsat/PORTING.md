@@ -229,3 +229,10 @@ Lexicographic solving is also checked against exhaustive enumeration for 500
 seeded four-variable formulas, including SAT model and UNSAT results. The full
 `go test -race -count=1 ./sat/bsat` and `go vet ./sat/bsat` pass. This checks
 small instances and does not prove every solver option or proof path.
+
+Proof-store review found that UNSAT under temporary assumptions could append an
+empty clause even when the base formula was satisfiable. The solver now emits
+that global refutation only for an unconditional UNSAT solve (or a discovered
+root conflict). A regression exercises a satisfiable four-clause formula made
+UNSAT by an assumption and checks that no empty clause is logged. The full
+race-enabled BSAT and BMC package tests pass.

@@ -109,7 +109,7 @@ func sat_solver_solve(s *sat_solver, assumptions []lit, conflicts, propagations,
 	status := sat_solver_solve_internal(s)
 	sat_solver_canceluntil(s, 0)
 	s.root_level = 0
-	if status == l_False {
+	if status == l_False && len(assumptions) == 0 {
 		if p := solverClauseStore(s); p != nil && p.pEmpty == nil {
 			Sto_ManAddClause(p, nil)
 		}
