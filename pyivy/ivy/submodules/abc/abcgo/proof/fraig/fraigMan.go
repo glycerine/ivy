@@ -4,8 +4,50 @@ import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/sat/msat"
+	"io"
+	"os"
 	"unsafe"
 )
+
+// Prove_ParamsSetDefault initializes the equivalence-checking engine settings.
+func Prove_ParamsSetDefault(p *Prove_Params_t) {
+	*p = Prove_Params_t{fUseFraiging: 1, fUseRewriting: 1, nItersMax: 6,
+		nMiteringLimitStart: 5000, nMiteringLimitMulti: 2,
+		nRewritingLimitStart: 3, nRewritingLimitMulti: 1,
+		nFraigingLimitStart: 2, nFraigingLimitMulti: 8,
+		nBddSizeLimit: 1000000, fBddReorder: 1}
+}
+
+// Prove_ParamsPrint prints the source engine's parameter report.
+func Prove_ParamsPrint(p *Prove_Params_t) { proveParamsPrint(os.Stdout, p) }
+
+func proveParamsPrint(w io.Writer, p *Prove_Params_t) {
+	yes := func(v int32) string {
+		if v != 0 {
+			return "yes"
+		}
+		return "no"
+	}
+	fmt.Fprintln(w, "CEC enging parameters:")
+	fmt.Fprintf(w, "Fraiging enabled: %s\n", yes(p.fUseFraiging))
+	fmt.Fprintf(w, "Rewriting enabled: %s\n", yes(p.fUseRewriting))
+	fmt.Fprintf(w, "BDD construction enabled: %s\n", yes(p.fUseBdds))
+	fmt.Fprintf(w, "Verbose output enabled: %s\n", yes(p.fVerbose))
+	fmt.Fprintf(w, "Solver iterations: %d\n", p.nItersMax)
+	fmt.Fprintf(w, "Starting mitering limit: %d\n", p.nMiteringLimitStart)
+	fmt.Fprintf(w, "Multiplicative coeficient for mitering: %.2f\n", p.nMiteringLimitMulti)
+	fmt.Fprintf(w, "Starting number of rewriting iterations: %d\n", p.nRewritingLimitStart)
+	fmt.Fprintf(w, "Multiplicative coeficient for rewriting: %.2f\n", p.nRewritingLimitMulti)
+	// Preserve the source report's chosen fields, including its two fraiging labels.
+	fmt.Fprintf(w, "Starting number of conflicts in fraiging: %.2f\n", p.nFraigingLimitMulti)
+	fmt.Fprintf(w, "Multiplicative coeficient for fraiging: %.2f\n", p.nRewritingLimitMulti)
+	fmt.Fprintf(w, "BDD size limit for bailing out: %d\n", p.nBddSizeLimit)
+	fmt.Fprintf(w, "BDD reordering enabled: %s\n", yes(p.fBddReorder))
+	fmt.Fprintf(w, "Last-gasp mitering limit: %d\n", p.nMiteringLimitLast)
+	fmt.Fprintf(w, "Total conflict limit: %d\n", int32(p.nTotalBacktrackLimit))
+	fmt.Fprintf(w, "Total inspection limit: %d\n", int32(p.nTotalInspectLimit))
+	fmt.Fprintln(w, "Parameter dump complete.")
+}
 
 func Fraig_ParamsSetDefault(p *Fraig_Params_t) {
 	*p = Fraig_Params_t{NPatsRand: FRAIG_PATTERNS_RANDOM, NPatsDyna: FRAIG_PATTERNS_DYNAMIC, NBTLimit: 99, NSeconds: 20, FFuncRed: 1, FFeedBack: 1, FDist1Pats: 1, FTryProve: 1}
