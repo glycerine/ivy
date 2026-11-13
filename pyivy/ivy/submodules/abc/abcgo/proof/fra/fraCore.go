@@ -7,46 +7,11 @@ import (
 
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/misc/vec"
+	"github.com/glycerine/abcgo/proof/fracomb"
 )
 
-func Fra_FraigMiterStatus(g *aig.Graph) int32 {
-	if g.Data != nil {
-		return 0
-	}
-	inputs := g.Inputs()
-	regs := int(g.RegisterCount())
-	pis := make(map[int]bool, len(inputs)-regs)
-	for _, e := range inputs[:len(inputs)-regs] {
-		pis[e.NodeID()] = true
-	}
-	outputs := g.Outputs()
-	undecided := false
-	for _, out := range outputs[:len(outputs)-regs] {
-		child := g.Node(out).Fanins[0]
-		if child == g.Const0() {
-			continue
-		}
-		if child == g.Const1() || pis[child.NodeID()] || g.Node(child).Phase != child.Complemented() {
-			return 0
-		}
-		undecided = true
-	}
-	if undecided {
-		return -1
-	}
-	return 1
-}
-func Fra_FraigMiterAssertedOutput(g *aig.Graph) int32 {
-	outputs := g.Outputs()
-	regs := int(g.RegisterCount())
-	for i, out := range outputs[:len(outputs)-regs] {
-		child := g.Node(out).Fanins[0]
-		if child != g.Const0() && (child == g.Const1() || g.Node(child).Phase != child.Complemented()) {
-			return int32(i)
-		}
-	}
-	return -1
-}
+func Fra_FraigMiterStatus(g *aig.Graph) int32         { return fracomb.Fra_FraigMiterStatus(g) }
+func Fra_FraigMiterAssertedOutput(g *aig.Graph) int32 { return fracomb.Fra_FraigMiterAssertedOutput(g) }
 
 // Fra_FraigVerifyCounterEx reports candidate classes disproved by a pattern.
 // The original used shared object mark bits; local values avoid mutating the AIG.

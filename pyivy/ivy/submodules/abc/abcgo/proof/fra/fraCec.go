@@ -6,7 +6,6 @@ import (
 	"fmt"
 
 	"github.com/glycerine/abcgo/aig/aig"
-	"github.com/glycerine/abcgo/opt/dar"
 	"github.com/glycerine/abcgo/proof/fracomb"
 )
 
@@ -16,74 +15,17 @@ func Fra_FraigSat(graph *aig.Graph, conflictLimit, propagationLimit int64, learn
 }
 
 // Aig_ManCountXors counts XOR structures recognized by the AIG manager.
-func Aig_ManCountXors(graph *aig.Graph) int32 {
-	var count int32
-	for _, edge := range graph.LiveEdges() {
-		if aig.Aig_ObjIsMuxType(graph, edge) {
-			if _, _, ok := aig.Aig_ObjRecognizeExor(graph, edge); ok {
-				count++
-			}
-		}
-	}
-	return count
-}
+func Aig_ManCountXors(graph *aig.Graph) int32 { return fracomb.Aig_ManCountXors(graph) }
 
-// Fra_FraigCec applies the original sequence of SAT, rewriting, and FRAIG
-// attempts to the given miter. Rewrites replace the caller's graph.
+// Fra_FraigCec runs ABC's SAT, rewriting and FRAIG sequence.
 func Fra_FraigCec(graph **aig.Graph, conflictLimit, verbose int32) int32 {
-	if graph == nil || *graph == nil {
-		panic("fra: nil CEC miter")
-	}
-	miter := *graph
-	if verbose != 0 {
-		fmt.Printf("Original miter:   Nodes = %6d.\n", aig.Aig_ManNodeNum(miter))
-	}
-	status := Fra_FraigMiterStatus(miter)
-	if status == 0 {
-		miter.Data = make([]int32, miter.InputCount())
-		return status
-	}
-	status = Fra_FraigSat(miter, 600, 0, 0, 0, 0, 1, 0, 0, 0)
-	if status >= 0 {
-		return status
-	}
-	var err error
-	miter, err = dar.Dar_ManRwsat(miter, true, false)
-	if err != nil || miter == nil {
-		return -1
-	}
 	var params Fra_Par_t
 	Fra_ParamsDefault(&params)
-	params.nBTLimitNode, params.nBTLimitMiter = 2, 300
 	params.fDontShowBar, params.fProve = 1, 1
-	for i := 0; i < 6; i++ {
-		if Aig_ManCountXors(miter)*30 > aig.Aig_ManNodeNum(miter)+300 {
-			miter = dar.Dar_ManBalanceXor(miter, true, false, false)
-		}
-		miter = Fra_FraigPerform(miter, &params)
-		if miter == nil {
-			return -1
-		}
-		status = Fra_FraigMiterStatus(miter)
-		if status >= 0 {
-			break
-		}
-		miter, err = dar.Dar_ManRewriteDefault(miter)
-		if err != nil || miter == nil {
-			return -1
-		}
-		status = Fra_FraigMiterStatus(miter)
-		if status >= 0 {
-			break
-		}
-		params.nBTLimitNode *= 8
-		params.nBTLimitMiter *= 2
-	}
-	if status == -1 {
-		status = Fra_FraigSat(miter, int64(conflictLimit), 0, 0, 0, 0, 1, 0, 0, 0)
-	}
-	*graph = miter
-	return status
+	return fracomb.Fra_FraigCec(graph, conflictLimit, verbose, func(g *aig.Graph, nodeLimit, miterLimit int32) *aig.Graph {
+		params.nBTLimitNode, params.nBTLimitMiter = nodeLimit, miterLimit
+		return Fra_FraigPerform(g, &params)
+	})
 }
 
 // Fra_FraigCecPartitioned checks matching output partitions of two networks.
