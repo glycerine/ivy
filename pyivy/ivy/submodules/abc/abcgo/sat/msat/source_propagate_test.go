@@ -20,3 +20,13 @@ func TestClausePropagateRequiresMatchingWatch(t *testing.T) {
 	out := -1
 	Msat_ClausePropagate(c, 4, []int{-1, -1, -1}, &out)
 }
+
+func TestClauseRemoveWatchAssertsWhenAbsent(t *testing.T) {
+	v := Msat_ClauseVecAlloc(1)
+	defer func() {
+		if recover() == nil {
+			t.Fatal("C asserts when watched clause is missing")
+		}
+	}()
+	Msat_ClauseRemoveWatch(v, &Msat_Clause_t{})
+}

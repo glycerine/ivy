@@ -67,7 +67,7 @@ func Msat_SolverSolve(p *Msat_Solver_t, assumptions *Msat_IntVec_t, backtrackLim
 	}
 	p.nLevelRoot = len(p.vTrailLim.data)
 	conflictLimit := 100.0
-	learntLimit := float64(len(p.vClauses.data)) / 3
+	learntLimit := float64(len(p.vClauses.data) / 3)
 	params := Msat_SearchParams_t{0.95, 0.999}
 	start := p.Stats.nConflicts
 	p.nBackTracks = int(start)

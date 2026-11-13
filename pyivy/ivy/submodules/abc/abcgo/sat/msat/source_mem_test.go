@@ -40,3 +40,26 @@ func TestStepPoolExcludesLargeAllocationsFromUsage(t *testing.T) {
 		t.Fatalf("pool chunk usage %d", got)
 	}
 }
+
+func TestSolverClauseUsesAndRecyclesSourceArena(t *testing.T) {
+	p := New(2)
+	if !p.AddClause([]int{0, 2}) {
+		t.Fatal("first clause")
+	}
+	if got := Msat_MmStepReadMemUsage(Msat_SolverReadMem(p)); got != 16384 {
+		t.Fatalf("C allocates 1024 16-byte entries, got %d bytes", got)
+	}
+	first := p.vClauses.data[0]
+	firstEntry := &first.arena[0]
+	Msat_ClauseFree(p, first, 1)
+	p.vClauses.data = p.vClauses.data[:0]
+	if !p.AddClause([]int{1, 3}) {
+		t.Fatal("second clause")
+	}
+	if &p.vClauses.data[0].arena[0] != firstEntry {
+		t.Fatal("C recycles the freed arena entry")
+	}
+	if got := Msat_MmStepReadMemUsage(p.pMem); got != 16384 {
+		t.Fatalf("recycled entry allocated another chunk, got %d", got)
+	}
+}

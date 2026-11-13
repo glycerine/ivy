@@ -104,19 +104,19 @@ func Msat_SolverReadVarAllocNum(p *Msat_Solver_t) int { return len(p.pAssigns) }
 func Msat_SolverReadClauseNum(p *Msat_Solver_t) int {
 	return p.nClauses
 }
-func Msat_SolverReadAssignsArray(p *Msat_Solver_t) []int { return p.pAssigns[:p.nVars] }
-func Msat_SolverReadModelArray(p *Msat_Solver_t) []int   { return p.pModel[:p.nVars] }
-func Msat_SolverReadBackTracks(p *Msat_Solver_t) int     { return int(p.Stats.nConflicts) }
-func Msat_SolverReadInspects(p *Msat_Solver_t) int       { return int(p.Stats.nInspects) }
+func Msat_SolverReadAssignsArray(p *Msat_Solver_t) []int { return p.pAssigns }
+func Msat_SolverReadModelArray(p *Msat_Solver_t) []int   { return p.pModel }
+func Msat_SolverReadBackTracks(p *Msat_Solver_t) int     { return int(int32(p.Stats.nConflicts)) }
+func Msat_SolverReadInspects(p *Msat_Solver_t) int       { return int(int32(p.Stats.nInspects)) }
 func Msat_SolverSetVerbosity(p *Msat_Solver_t, v int)    { p.fVerbose = v }
-func Msat_SolverReadFactors(p *Msat_Solver_t) []float32  { return p.pFactors[:p.nVars] }
+func Msat_SolverReadFactors(p *Msat_Solver_t) []float32  { return p.pFactors }
 func Msat_SolverReadClause(p *Msat_Solver_t, n int) *Msat_Clause_t {
 	if n < len(p.vClauses.data) {
 		return p.vClauses.data[n]
 	}
 	return p.vLearned.data[n-len(p.vClauses.data)]
 }
-func Msat_SolverReadAdjacents(p *Msat_Solver_t) []*Msat_IntVec_t { return p.vAdjacents[:p.nVars] }
+func Msat_SolverReadAdjacents(p *Msat_Solver_t) []*Msat_IntVec_t { return p.vAdjacents }
 func Msat_SolverReadConeVars(p *Msat_Solver_t) *Msat_IntVec_t    { return p.vConeVars }
 func Msat_SolverReadVarsUsed(p *Msat_Solver_t) *Msat_IntVec_t    { return p.vVarsUsed }
 func Msat_SolverMarkClausesStart(p *Msat_Solver_t) {

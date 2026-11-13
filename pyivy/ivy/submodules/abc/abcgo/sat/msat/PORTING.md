@@ -88,3 +88,8 @@ The source-named AddClause and Solve APIs do not retain a rejected-clause or
 root-conflict status and do not clear the previous model when adding a clause;
 callers must handle their return values as in C. The existing Go convenience
 methods retain their own failure status and model invalidation behavior.
+
+Clause creation reserves and recycles an entry of the C clause allocation size
+in the step pool. This preserves the C pool's observable accounting and reuse.
+The Go clause and literal objects remain separately allocated, so actual Go
+heap usage includes that additional object overhead.

@@ -11,6 +11,7 @@ type Msat_Clause_t struct {
 	Num                           int
 	learned, mark, typeA, deleted bool
 	lits                          []int
+	arena                         []byte
 	activity                      float32
 }
 
@@ -56,7 +57,8 @@ func Msat_ClauseCreate(p *Msat_Solver_t, v *Msat_IntVec_t, learnt int, out **Msa
 	if len(lits) == 1 {
 		return Msat_SolverEnqueue(p, lits[0], nil)
 	}
-	c := &Msat_Clause_t{Num: p.nClauses, learned: learnt != 0, lits: lits}
+	bytes := 4 * (len(lits) + 2 + learnt)
+	c := &Msat_Clause_t{Num: p.nClauses, learned: learnt != 0, lits: lits, arena: Msat_MmStepEntryFetch(p.pMem, bytes)}
 	p.nClauses++
 	if c.learned {
 		best := 1
@@ -98,11 +100,16 @@ func Msat_ClauseRemoveWatch(v *Msat_ClauseVec_t, c *Msat_Clause_t) {
 			return
 		}
 	}
+	panic("watched clause not found")
 }
 func Msat_ClauseFree(p *Msat_Solver_t, c *Msat_Clause_t, remove int) {
 	if remove != 0 && len(c.lits) > 1 {
 		Msat_ClauseRemoveWatch(p.pvWatched[c.lits[0]^1], c)
 		Msat_ClauseRemoveWatch(p.pvWatched[c.lits[1]^1], c)
+	}
+	if c.arena != nil {
+		Msat_MmStepEntryRecycle(p.pMem, c.arena, len(c.arena))
+		c.arena = nil
 	}
 	c.deleted = true
 	c.lits = nil
