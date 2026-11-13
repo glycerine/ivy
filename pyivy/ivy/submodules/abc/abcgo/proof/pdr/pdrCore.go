@@ -736,7 +736,7 @@ func Pdr_ManBlockCube(p *Pdr_Man_t, cube *Pdr_Set_t) int32 {
 		if p.pPars.pFuncStop != nil && p.pPars.pFuncStop(p.pPars.RunId) != 0 {
 			return -1
 		}
-		now := util.Abc_Clock()
+		now := pdrNow(p)
 		if p.timeToStop != 0 && now > p.timeToStop || p.timeToStopOne != 0 && now > p.timeToStopOne ||
 			p.pPars.nTimeOutGap != 0 && p.pPars.timeLastSolved != 0 && now > p.pPars.timeLastSolved+int64(p.pPars.nTimeOutGap)*int64(time.Second) {
 			return -1
@@ -759,13 +759,14 @@ func Pdr_ManBlockCube(p *Pdr_Man_t, cube *Pdr_Set_t) int32 {
 **********************************************************************
 */
 func Pdr_ManSolveInt(p *Pdr_Man_t) int32 {
+	defer pdrStartTimedClock(p)()
 	pars := p.pPars
 	graph := p.pAig
 	outputs := graph.TruePoCount()
 	inputs := graph.TruePiCount()
 	started := util.Abc_Clock()
 	if pars.nTimeOut != 0 {
-		p.timeToStop = started + int64(pars.nTimeOut)*int64(time.Second)
+		p.timeToStop = pdrNow(p) + int64(pars.nTimeOut)*int64(time.Second)
 	} else {
 		p.timeToStop = 0
 	}
@@ -784,7 +785,7 @@ func Pdr_ManSolveInt(p *Pdr_Man_t) int32 {
 			}
 		}
 	}
-	pars.timeLastSolved = util.Abc_Clock()
+	pars.timeLastSolved = pdrNow(p)
 	frame := int32(0)
 	Pdr_ManCreateSolver(p, frame)
 	for {
@@ -851,16 +852,16 @@ func Pdr_ManSolveInt(p *Pdr_Man_t) int32 {
 					}
 					return -1
 				}
-				pars.timeLastSolved = util.Abc_Clock()
+				pars.timeLastSolved = pdrNow(p)
 				continue
 			}
 			oneStarted := int64(0)
 			if p.pTime4Outs != nil {
-				oneStarted = util.Abc_Clock()
+				oneStarted = pdrNow(p)
 				p.timeToStopOne = oneStarted + p.pTime4Outs[index]
 			}
 			for {
-				if pars.nTimeOutGap != 0 && pars.timeLastSolved != 0 && util.Abc_Clock() > pars.timeLastSolved+int64(pars.nTimeOutGap)*int64(time.Second) {
+				if pars.nTimeOutGap != 0 && pars.timeLastSolved != 0 && pdrNow(p) > pars.timeLastSolved+int64(pars.nTimeOutGap)*int64(time.Second) {
 					pars.iFrame = frame
 					return -1
 				}
@@ -873,7 +874,7 @@ func Pdr_ManSolveInt(p *Pdr_Man_t) int32 {
 					status = Pdr_ManBlockCube(p, cube)
 				}
 				if status == -1 {
-					if p.timeToStopOne != 0 && util.Abc_Clock() > p.timeToStopOne && (p.timeToStop == 0 || util.Abc_Clock() <= p.timeToStop) {
+					if p.timeToStopOne != 0 && pdrNow(p) > p.timeToStopOne && (p.timeToStop == 0 || pdrNow(p) <= p.timeToStop) {
 						Pdr_QueueClean(p)
 						break
 					}
@@ -939,7 +940,7 @@ func Pdr_ManSolveInt(p *Pdr_Man_t) int32 {
 				break
 			}
 			if p.pTime4Outs != nil {
-				elapsed := util.Abc_Clock() - oneStarted
+				elapsed := pdrNow(p) - oneStarted
 				if p.pTime4Outs[index] > elapsed {
 					p.pTime4Outs[index] -= elapsed
 				} else {
@@ -1014,7 +1015,7 @@ func Pdr_ManSolveInt(p *Pdr_Man_t) int32 {
 		if pars.fVerbose != 0 {
 			Pdr_ManPrintProgress(p, 0, util.Abc_Clock()-started)
 		}
-		now := util.Abc_Clock()
+		now := pdrNow(p)
 		if pars.pFuncStop != nil && pars.pFuncStop(pars.RunId) != 0 || p.timeToStop != 0 && now > p.timeToStop || pars.nTimeOutGap != 0 && pars.timeLastSolved != 0 && now > pars.timeLastSolved+int64(pars.nTimeOutGap)*int64(time.Second) || pars.nFrameMax != 0 && frame >= pars.nFrameMax {
 			pars.iFrame = frame
 			return -1

@@ -143,6 +143,7 @@ type Pdr_Man_t struct {
 	nXsimLits int32
 	// runtime
 	timeToStop    abctime
+	runtimeClock  func() int64
 	timeToStopOne abctime
 	// time stats
 	tSat      abctime

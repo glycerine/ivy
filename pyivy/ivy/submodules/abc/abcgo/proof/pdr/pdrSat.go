@@ -181,15 +181,20 @@ func Pdr_ManCollectValues(p *Pdr_Man_t, k int32, objects, values *vec.Vec_Int_t)
 // the caller's conflict limit, then restores the solver's prior limits.
 func pdrSolve(p *Pdr_Man_t, solver *bsat.Solver, assumptions []bsat.Literal, limit int32) bsat.Status {
 	oldConflicts, oldPropagations := solver.Limits()
-	oldDeadline := solver.Deadline()
+	oldClock, oldDeadline := solver.RuntimeDeadline()
 	solver.SetLimits(int64(limit), 0)
 	deadline := Pdr_ManTimeLimit(p)
-	if deadline == 0 {
+	if p.runtimeClock != nil {
+		solver.SetRuntimeDeadline(p.runtimeClock, deadline)
+	} else if deadline == 0 {
 		solver.SetDeadline(time.Time{})
 	} else {
 		solver.SetDeadline(time.Now().Add(time.Duration(deadline - util.Abc_Clock())))
 	}
-	defer func() { solver.SetLimits(oldConflicts, oldPropagations); solver.SetDeadline(oldDeadline) }()
+	defer func() {
+		solver.SetLimits(oldConflicts, oldPropagations)
+		solver.SetRuntimeDeadline(oldClock, oldDeadline)
+	}()
 	return solver.Solve(assumptions...)
 }
 

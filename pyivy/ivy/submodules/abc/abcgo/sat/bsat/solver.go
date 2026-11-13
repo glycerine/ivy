@@ -118,6 +118,12 @@ func (s *sat_solver_t) SetRuntimeDeadline(clock func() int64, deadline int64) {
 	s.nRuntimeLimit = deadline
 }
 
+// RuntimeDeadline returns the clock and absolute deadline used by the solver.
+// A nil clock denotes the wall-clock domain used by SetDeadline.
+func (s *sat_solver_t) RuntimeDeadline() (func() int64, int64) {
+	return s.runtimeClock, s.nRuntimeLimit
+}
+
 func (s *sat_solver_t) runtimeExpired() bool {
 	if s.nRuntimeLimit == 0 {
 		return false

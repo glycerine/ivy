@@ -169,7 +169,9 @@ func Pdr_ManFreeVar(p *Pdr_Man_t, k int32) int32 {
 }
 
 func pdrConfigureSolver(solver *bsat.Solver, p *Pdr_Man_t) {
-	if p.timeToStop != 0 {
+	if p.runtimeClock != nil {
+		solver.SetRuntimeDeadline(p.runtimeClock, p.timeToStop)
+	} else if p.timeToStop != 0 {
 		solver.SetDeadline(time.Now().Add(time.Duration(int64(p.timeToStop) - util.Abc_Clock())))
 	} else {
 		solver.SetDeadline(time.Time{})

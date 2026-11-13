@@ -124,6 +124,23 @@ func TestPdrSolveRestoresPreviousSolverDeadline(t *testing.T) {
 	}
 }
 
+func TestPdrSolveRestoresPreviousClockDomain(t *testing.T) {
+	solver := bsat.NewSolver()
+	oldClock := func() int64 { return 99 }
+	solver.SetRuntimeDeadline(oldClock, 100)
+	p := &Pdr_Man_t{pPars: &Pdr_Par_t{}, runtimeClock: func() int64 { return 20 }, timeToStop: 10}
+	if got := pdrSolve(p, solver, nil, 0); got != bsat.Unknown {
+		t.Fatalf("expired CPU-domain query = %v", got)
+	}
+	clock, deadline := solver.RuntimeDeadline()
+	if clock == nil || clock() != 99 || deadline != 100 {
+		t.Fatalf("previous domain was not restored: clock=%v deadline=%d", clock != nil, deadline)
+	}
+	if got := solver.Solve(); got != bsat.Satisfiable {
+		t.Fatalf("restored solver = %v", got)
+	}
+}
+
 // pdrSat.c treats an inconclusive generalization query as SAT when the
 // generalization conflict limit is nonzero, even if the deadline caused it.
 func TestPdrGeneralizationExpiredDeadlineMatchesC(t *testing.T) {

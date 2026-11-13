@@ -26,6 +26,15 @@ per-output deadlines, solver reuse, invariant checks, and SAT core handling. The
 package has passed `go test -race ./proof/pdr` and
 `go vet ./proof/pdr`.
 
+Timed ordinary and incremental solves use the calling thread CPU clock on
+Linux, with the solve goroutine pinned; supported non-Linux Unix targets use
+process CPU time and Windows uses CRT-style elapsed time. Their SAT queries
+use the same absolute clock domain and restore the solver's previous clock
+and limit afterward. A timed manager retains its CPU-clock domain after a
+solve; callers reusing it directly on Linux must pin their goroutine to the
+same OS thread across those calls. Managers that have not run a timed solve
+retain the existing wall-clock domain for direct helper calls.
+
 Remaining review and coverage gaps:
 
 - The two-register cases are sampled, not exhaustive over all two-register

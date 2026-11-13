@@ -50,7 +50,7 @@ func Pdr_ManStart(graph *aig.Graph, pars *Pdr_Par_t, initialPriority *vec.Vec_In
 	if pars.nTimeOutOne > 0 {
 		p.pTime4Outs = make([]abctime, outputs)
 		for i := range p.pTime4Outs {
-			p.pTime4Outs[i] = int64(pars.nTimeOutOne)*int64(time.Second)/1000 + 1
+			p.pTime4Outs[i] = int64(pars.nTimeOutOne)*int64(time.Second)/1000 + pdrClockQuantum
 		}
 	}
 	if pars.fSolveAll != 0 {
