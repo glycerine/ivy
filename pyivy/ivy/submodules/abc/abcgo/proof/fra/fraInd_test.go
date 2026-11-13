@@ -193,3 +193,18 @@ func TestInductionPrefixAndPartitionPreserveOutputs(t *testing.T) {
 		})
 	}
 }
+
+func TestInductionTimeoutReturnsNoResult(t *testing.T) {
+	g := aig.NewGraph()
+	input, latch := g.NewInput(), g.NewInput()
+	g.AddOutput(g.AND(input, latch))
+	g.AddOutput(input)
+	aig.Aig_ManSetRegNum(g, 1)
+	pars := &Fra_Ssw_t{nFramesK: 1, TimeLimit: 1e-12, fSilent: 1}
+	if result := Fra_FraigInduction(g, pars); result != nil {
+		t.Fatal("expected timed-out induction to return no graph")
+	}
+	if pars.nIters != -1 {
+		t.Fatalf("iteration count=%d", pars.nIters)
+	}
+}
