@@ -4,10 +4,13 @@ The goal is a source-faithful Go port of every proof package, followed by
 correctness review, simplification, and comprehensive tests. A successful
 component test is not evidence that its whole package builds.
 
-As of this checkpoint, `acec` still contains untranslated code. Its
-in-progress changes are recorded in commits prefixed `red:`. The `abs`,
-`fra`, and `ssw` packages now pass full race tests and vet; their review and
-end-to-end coverage are still in progress.
+All proof packages now build and pass `go test -race -count=1 -p 2 ./proof/...`.
+Correctness review, end-to-end coverage, and the fidelity gaps below remain
+in progress; passing tests do not establish that those gaps are resolved.
+
+* `acec` builds and passes its full race suite and vet. Arithmetic detector,
+  adder-box reconstruction, and polynomial tests are in place. Independent
+  correctness review and broader end-to-end equivalence coverage continue.
 
 * `cec` builds and passes its full race suite and vet. Cec4 has been
   integrated, but its source-fidelity review continues; the upstream GIA
