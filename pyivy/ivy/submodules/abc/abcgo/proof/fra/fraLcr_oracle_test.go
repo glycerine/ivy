@@ -22,7 +22,7 @@ func TestLatchCorrespondenceAgainstExhaustiveTraces(t *testing.T) {
 			if rng.Intn(2) == 0 {
 				edges = append(edges, g.AND(a, b))
 			} else {
-				edges = append(edges, g.NewXor(a, b))
+				edges = append(edges, g.XOR(a, b))
 			}
 		}
 		for i := 0; i < 4; i++ {

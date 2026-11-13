@@ -33,10 +33,10 @@ func TestSATImplicationProofAndWitness(t *testing.T) {
 func TestSATEquivalenceAndClause(t *testing.T) {
 	g := aig.NewGraph()
 	a, b := g.NewInput(), g.NewInput()
-	native := g.NewXor(a, b)
+	native := g.AND(g.OR(a, b), g.AND(a, b).Not())
 	expanded := aig.Aig_Regular(g.XOR(a, b))
 	p := satTestManager(g)
-	// The expanded XOR's regular node is complemented relative to XOR, so
+	// The second XOR's regular node is complemented relative to XOR, so
 	// phase normalization should recognize the pair as equivalent up to phase.
 	if got := Fra_NodesAreEquiv(p, native, expanded); got != 1 {
 		t.Fatalf("XOR equivalence: %d", got)

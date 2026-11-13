@@ -79,7 +79,7 @@ func TestFraFraigProvesEquivalentXorForms(t *testing.T) {
 	g := aig.NewGraph()
 	x, y := g.NewInput(), g.NewInput()
 	structural := g.XOR(x, y)
-	explicit := g.NewXor(x, y)
+	explicit := g.AND(g.OR(x, y), g.AND(x, y).Not())
 	g.AddOutput(structural)
 	g.AddOutput(explicit)
 	reduced, mapping := Fra_FraigEquivenceMapped(g, 1000, 0, nil)

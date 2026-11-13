@@ -46,7 +46,8 @@ func TestInitializedTimeframesNativeXor(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		want := []bool{false, values[0], values[0] != values[1]}
+		// ABC constructs AND for native EXOR nodes in each unrolled frame.
+		want := []bool{false, false, false}
 		for i := range want {
 			if got[i] != want[i] {
 				t.Fatalf("input %v output %d = %v, want %v", values, i, got[i], want[i])

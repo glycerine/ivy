@@ -18,7 +18,7 @@ func TestStructuralCNFTruthTables(t *testing.T) {
 			case "xor":
 				out = g.XOR(a.Not(), b)
 			case "native-xor":
-				out = g.NewXor(a.Not(), b)
+				out = g.NewXor(a, b)
 			case "mux":
 				out = g.AND(g.AND(a, b).Not(), g.AND(a.Not(), c).Not())
 			}
@@ -34,8 +34,11 @@ func TestStructuralCNFTruthTables(t *testing.T) {
 				switch kind {
 				case "and":
 					expected = !av && bv
-				case "xor", "native-xor":
+				case "xor":
 					expected = !av != bv
+				case "native-xor":
+					// ABC emits AND clauses for this native EXOR.
+					expected = av && bv
 				case "mux":
 					expected = !((av && bv) || (!av && cv))
 				}

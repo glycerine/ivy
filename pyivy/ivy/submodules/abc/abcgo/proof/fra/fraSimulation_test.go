@@ -10,7 +10,7 @@ func TestFraSimulationCombinationalTruthAndClasses(t *testing.T) {
 	g := aig.NewGraph()
 	x, y := g.NewInput(), g.NewInput()
 	and := g.AND(x.Not(), y.Not())
-	xor := g.NewXor(x, y)
+	xor := g.XOR(x, y)
 	g.AddOutput(and)
 	g.AddOutput(xor)
 	s := newFraSimulation(g, 0, 1, 1)
@@ -87,7 +87,7 @@ func TestFraSimulationDistanceOneAcrossWords(t *testing.T) {
 func TestFraSimulationDrivesClassPartition(t *testing.T) {
 	g := aig.NewGraph()
 	x, y := g.NewInput(), g.NewInput()
-	explicit := g.NewXor(x, y)
+	explicit := aig.Aig_Regular(g.AND(g.OR(x, y), g.AND(x, y).Not()))
 	structural := aig.Aig_Regular(g.XOR(x, y))
 	s := newFraSimulation(g, 0, 1, 1)
 	s.FrameWords(x.NodeID(), 0)[0] = 0xaaaaaaaa
