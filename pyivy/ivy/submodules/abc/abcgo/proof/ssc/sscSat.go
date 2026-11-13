@@ -56,6 +56,10 @@ func Ssc_ManStartSolver(p *Ssc_Man_t) {
 		p.satVars[0][lit>>1] = variable
 		p.satInputs[i] = variable
 	}
+	// ABC simplifies the newly loaded care CNF before attempting a pivot.
+	if !p.sat.Simplify() {
+		p.inconsistent = true
+	}
 }
 func (p *Ssc_Man_t) satVar(id int32) int32 {
 	if id < 0 {

@@ -42,6 +42,21 @@ func TestSatStartRejectsReinitialization(t *testing.T) {
 	}()
 	Ssc_ManStartSolver(p)
 }
+
+func TestSatStartDetectsContradictoryCareOutputs(t *testing.T) {
+	g := gia.Gia_ManStart(5)
+	x := gia.Gia_ManAppendCi(g)
+	gia.Gia_ManAppendCo(g, x)
+	gia.Gia_ManAppendCo(g, x^1)
+	p := &Ssc_Man_t{Aig: g, Params: DefaultParams()}
+	Ssc_ManStartSolver(p)
+	if !p.inconsistent {
+		t.Fatal("contradictory care CNF was not rejected during initialization")
+	}
+	if pivot, status := Ssc_ManFindPivotSat(p); status != satoko.SATOKO_UNSAT || pivot != nil {
+		t.Fatalf("pivot=%v status=%d; want no pivot and UNSAT", pivot, status)
+	}
+}
 func TestSatPortSupergateFrontier(t *testing.T) {
 	p, in := sscSatFixture()
 	first := gia.Gia_ManAppendAnd(p.Aig, in[0], in[1])
