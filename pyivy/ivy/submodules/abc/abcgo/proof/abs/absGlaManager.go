@@ -6,6 +6,8 @@ import (
 	"github.com/glycerine/abcgo/sat/bsat"
 )
 
+const GA2_BIG_NUM = 0x3FFFFFF0
+
 // Ga2_Man_t contains the gate abstraction's cuts, frame literals and solver.
 type Ga2_Man_t struct {
 	pGia                                                        *gia.Gia_Man_t

@@ -41,7 +41,6 @@ import "os"
 ///                        DECLARATIONS                              ///
 ////////////////////////////////////////////////////////////////////////
 
-const GA2_BIG_NUM = 0x3FFFFFF0
 
     // manager
 ////////////////////////////////////////////////////////////////////////
@@ -186,129 +185,6 @@ var spStatic_Saig_ManBmcHashKey_s_Primes [5]int32 = [5]int32{ 12582917, 25165843
   SeeAlso     []
 
 ***********************************************************************/
-func Ga2_ManAddToAbsOneDynamic(p *Ga2_Man_t, pObj *Gia_Obj_t, f int32) {
-//    int Id = Gia_ObjId(p->pGia, pObj);
-    var vLeaves *Vec_Int_t;
-    var pLeaf *Gia_Obj_t;
-    var uTruth uint32;
-    var i, Lit int32;
-
-    assert((Ga2_ObjIsAbs0(p, pObj) != 0), "Ga2_ObjIsAbs0(p, pObj)");
-    assert(Gia_ObjIsConst0(pObj) || Gia_ObjIsRo(p.pGia, pObj) || Gia_ObjIsAnd(pObj), "Gia_ObjIsConst0(pObj) || Gia_ObjIsRo(p.pGia, pObj) || Gia_ObjIsAnd(pObj)");
-    if Gia_ObjIsConst0(pObj) || (f == 0 && Gia_ObjIsRo(p.pGia, pObj)) {
-        Ga2_ObjAddLit( p, pObj, f, 0 );
-    
-    } else if Gia_ObjIsRo(p.pGia, pObj) {
-        // if flop is included in the abstraction, but its driver is not
-        // flop input driver has no variable assigned -- we assign it here
-        pLeaf = Gia_ObjRoToRi( p.pGia, pObj );
-        Lit = Ga2_ObjFindOrAddLit( p, Gia_ObjFanin0(pLeaf), f-1 );
-        assert(Lit >= 0, "Lit >= 0");
-        Lit = Abc_LitNotCond( Lit, Gia_ObjFaninC0(pLeaf) );
-        Ga2_ObjAddLit( p, pObj, f, Lit );
-    
-    } else {
-        assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
-        Vec_IntClear( p.vLits );
-        vLeaves = Ga2_ObjLeaves( p.pGia, pObj );
-        Gia_ManForEachObjVec( vLeaves, p.pGia, pLeaf, i )
-        {
-            if Ga2_ObjIsAbs0(p, pLeaf) != 0 {      // belongs to original abstraction
-            
-                Lit = Ga2_ObjFindLit( p, pLeaf, f );
-                assert(Lit >= 0, "Lit >= 0");
-            
-            } else if Ga2_ObjIsLeaf0(p, pLeaf) != 0 { // belongs to original PPIs
-            
-                Lit = Ga2_ObjFindLit( p, pLeaf, f );
-//                Lit = Ga2_ObjFindOrAddLit( p, pLeaf, f );
-                if Lit == -1 {
-                    Lit = GA2_BIG_NUM + 2*i;
-//                    assert( 0 );
-                }
-            
-            } else { assert(false, "0"); }
-            Vec_IntPush( p.vLits, Lit );
-        }
-
-        // minimize truth table
-        uTruth = Ga2_ObjComputeTruthSpecial( p.pGia, pObj, vLeaves, p.vLits );
-        if uTruth == 0 || uTruth == ~0 { // const 0 / 1
-        
-            Lit = (uTruth > 0);
-            Ga2_ObjAddLit( p, pObj, f, Lit );
-        
-        } else if uTruth == 0xAAAAAAAA || uTruth == 0x55555555 {  // buffer / inverter
-        
-            Lit = Vec_IntEntry( p.vLits, 0 );
-            if Lit >= GA2_BIG_NUM {
-                pLeaf = Gia_ManObj( p.pGia, Vec_IntEntry(vLeaves, (Lit-GA2_BIG_NUM)/2) );
-                Lit = Ga2_ObjFindLit( p, pLeaf, f );
-                assert(Lit == -1, "Lit == -1");
-                Lit = Ga2_ObjFindOrAddLit( p, pLeaf, f );
-            }
-            assert(Lit >= 0, "Lit >= 0");
-            Lit = Abc_LitNotCond( Lit, uTruth == 0x55555555 );
-            Ga2_ObjAddLit( p, pObj, f, Lit );
-            assert(Lit < 10000000, "Lit < 10000000");
-        
-        } else {
-            assert(Vec_IntSize(p.vLits) > 1 && Vec_IntSize(p.vLits) < 6, "Vec_IntSize(p.vLits) > 1 && Vec_IntSize(p.vLits) < 6");
-            // replace literals
-            Vec_IntForEachEntry( p.vLits, Lit, i )
-            {
-                if Lit >= GA2_BIG_NUM {
-                    pLeaf = Gia_ManObj( p.pGia, Vec_IntEntry(vLeaves, (Lit-GA2_BIG_NUM)/2) );
-                    Lit = Ga2_ObjFindLit( p, pLeaf, f );
-                    assert(Lit == -1, "Lit == -1");
-                    Lit = Ga2_ObjFindOrAddLit( p, pLeaf, f );
-                    Vec_IntWriteEntry( p.vLits, i, Lit );
-                }
-                assert(Lit < 10000000, "Lit < 10000000");
-            }
-
-            // add new nodes
-            if Vec_IntSize(p.vLits) == 5 {
-                Vec_IntClear( p.vLits );
-                Gia_ManForEachObjVec( vLeaves, p.pGia, pLeaf, i )
-                    Vec_IntPush( p.vLits, Ga2_ObjFindOrAddLit( p, pLeaf, f ) );
-                Lit = Ga2_ObjFindOrAddLit(p, pObj, f);
-                Ga2_ManCnfAddStatic( p.pSat, Ga2_ObjCnf0(p, pObj), Ga2_ObjCnf1(p, pObj), Vec_IntArray(p.vLits), Lit, -1 );
-            
-            } else {
-//                int fUseHash = 1;
-                if !p.pPars.fSkipHash {
-                    var pLookup *int32;
-                    var nSize int32 = Vec_IntSize(p.vLits);
-                    assert(Vec_IntSize(p.vLits) < 5, "Vec_IntSize(p.vLits) < 5");
-                    assert(Vec_IntEntry(p.vLits, 0) <= Vec_IntEntryLast(p.vLits), "Vec_IntEntry(p.vLits, 0) <= Vec_IntEntryLast(p.vLits)");
-                    assert(Ga2_ObjFindLit(p, pObj, f) == -1, "Ga2_ObjFindLit(p, pObj, f) == -1");
-                    for  i = Vec_IntSize(p.vLits); i < 4; i++  {
-                        Vec_IntPush( p.vLits, GA2_BIG_NUM );
-                    }
-                    Vec_IntPush( p.vLits, int32(uTruth) );
-                    assert(Vec_IntSize(p.vLits) == 5, "Vec_IntSize(p.vLits) == 5");
-
-                    // perform structural hashing here!!!
-                    pLookup = Saig_ManBmcLookup( p, Vec_IntArray(p.vLits) );
-                    if *pLookup == 0 {
-                        *pLookup = Ga2_ObjFindOrAddLit(p, pObj, f);
-                        Vec_IntShrink( p.vLits, nSize );
-                        Ga2_ManCnfAddDynamic( p, uTruth & 0xFFFF, Vec_IntArray(p.vLits), *pLookup, -1 );
-                    
-                    } else {
-                        Ga2_ObjAddLit( p, pObj, f, *pLookup ); }
-
-                
-                } else {
-                    Lit = Ga2_ObjFindOrAddLit(p, pObj, f);
-                    Ga2_ManCnfAddDynamic( p, uTruth & 0xFFFF, Vec_IntArray(p.vLits), Lit, -1 );
-                }
-            }
-        }
-    }
-}
-
 func Ga2_ManAddAbsClauses(p *Ga2_Man_t, f int32) {
     var fSimple int32;
     var pObj *Gia_Obj_t;
