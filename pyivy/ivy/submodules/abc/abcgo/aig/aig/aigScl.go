@@ -195,6 +195,46 @@ func Aig_ManSeqCleanup(p *Graph) int32 {
 		}
 		p.ClockDomains = domains
 	}
+	if p.OneHotGroups != nil {
+		groups := make([][]int32, 0, len(p.OneHotGroups))
+		for _, group := range p.OneHotGroups {
+			var mapped []int32
+			for _, reg := range group {
+				if reg < 0 || int(reg) >= len(oldToNew) {
+					panic("aig: invalid one-hot register")
+				}
+				if next := oldToNew[reg]; next >= 0 {
+					mapped = append(mapped, next)
+				}
+			}
+			if len(mapped) > 1 {
+				groups = append(groups, mapped)
+			}
+		}
+		p.OneHotGroups = groups
+	}
+	if p.OneHotInputGroups != nil {
+		groups := make([][]int32, 0, len(p.OneHotInputGroups))
+		for _, group := range p.OneHotInputGroups {
+			var mapped []int32
+			for _, input := range group {
+				if input < 0 || int(input) >= pis+len(oldToNew) {
+					panic("aig: invalid one-hot input")
+				}
+				if int(input) < pis {
+					mapped = append(mapped, input)
+					continue
+				}
+				if next := oldToNew[int(input)-pis]; next >= 0 {
+					mapped = append(mapped, int32(pis)+next)
+				}
+			}
+			if len(mapped) > 1 {
+				groups = append(groups, mapped)
+			}
+		}
+		p.OneHotInputGroups = groups
+	}
 	p.inputs, p.outputs = inputs, outputs
 	p.nRegs = int32(len(inputs) - pis)
 	p.FlopNumbers = numbers

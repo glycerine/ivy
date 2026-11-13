@@ -50,6 +50,10 @@ type Graph struct {
 	seqModelVec                       *vec.Vec_Ptr_t
 	PartitionInputs, PartitionOutputs []int32
 	ClockDomains                      [][]int32
+	// OneHotGroups contains register indices known to be mutually exclusive.
+	OneHotGroups [][]int32
+	// OneHotInputGroups contains projected partition input indices.
+	OneHotInputGroups                 [][]int32
 	FlopReprs                         []int32
 	cutManager                        *Aig_ManCut_t
 	reverseLevels                     []int32

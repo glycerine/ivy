@@ -21,6 +21,14 @@ func dupMetadata(dst, src *Graph) {
 	for i, domain := range dst.ClockDomains {
 		dst.ClockDomains[i] = slices.Clone(domain)
 	}
+	dst.OneHotGroups = slices.Clone(src.OneHotGroups)
+	for i, group := range dst.OneHotGroups {
+		dst.OneHotGroups[i] = slices.Clone(group)
+	}
+	dst.OneHotInputGroups = slices.Clone(src.OneHotInputGroups)
+	for i, group := range dst.OneHotInputGroups {
+		dst.OneHotInputGroups[i] = slices.Clone(group)
+	}
 	if src.Timing != nil {
 		if c, ok := src.Timing.(interface{ CloneTiming() any }); ok {
 			dst.Timing = c.CloneTiming()
