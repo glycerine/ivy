@@ -27,6 +27,24 @@ func TestCutDifferenceAndContainment(t *testing.T) {
 		t.Fatalf("unique inputs %v", vec.Vec_IntArray(got))
 	}
 }
+
+// The C loop stops when i == Limit. A negative limit is never reached and
+// therefore scans all levels, rather than disabling the search.
+func TestCutDifferenceNegativeLimitScansAll(t *testing.T) {
+	cuts := vec.Vec_WecStart(2)
+	for _, id := range []int32{1, 2, 3} {
+		vec.Vec_WecPush(cuts, 0, id)
+		vec.Vec_WecPush(cuts, 1, id)
+	}
+	cut := []int32{4, 1, 2, 3, 7}
+	if got := Sdb_StoDiffExactlyOne(cuts, -1, cut); got != 7 {
+		t.Fatalf("negative limit: got %d, want 7", got)
+	}
+	var count int32
+	if got := Sdb_StoDiffExactlyOne3(cuts, -1, cut, &count); got != 7 || count != 2 {
+		t.Fatalf("negative limit: got %d with count %d, want 7 with count 2", got, count)
+	}
+}
 func TestCutPatternScan(t *testing.T) {
 	p := &Sdb_Sto_t{vCuts: vec.Vec_WecStart(1), vTtMem: vec.Vec_MemAllocForTT(6, 0)}
 	id := vec.Vec_MemHashInsert(p.vTtMem, []uint64{uint64(s_FuncTruths4[0])})

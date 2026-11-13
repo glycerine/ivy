@@ -21,7 +21,7 @@ func Sdb_StoDiffExactlyOne(cuts *Vec_Wec_t, limit int32, cut []int32) int32 {
 			return -1
 		}
 	}
-	for i := 0; i < vec.Vec_WecSize(cuts) && int32(i) < limit; i++ {
+	for i := 0; i < vec.Vec_WecSize(cuts) && int32(i) != limit; i++ {
 		id := Sdb_StoDiffExactlyOne2(vec.Vec_WecEntry(cuts, i), cut)
 		if id != -1 {
 			return id
@@ -32,7 +32,7 @@ func Sdb_StoDiffExactlyOne(cuts *Vec_Wec_t, limit int32, cut []int32) int32 {
 func Sdb_StoDiffExactlyOne3(cuts *Vec_Wec_t, limit int32, cut []int32, count *int32) int32 {
 	all := int32(-1)
 	*count = 0
-	for i := 0; i < vec.Vec_WecSize(cuts) && int32(i) < limit; i++ {
+	for i := 0; i < vec.Vec_WecSize(cuts) && int32(i) != limit; i++ {
 		id := Sdb_StoDiffExactlyOne2(vec.Vec_WecEntry(cuts, i), cut)
 		if id != -1 {
 			if all == -1 {
