@@ -85,3 +85,41 @@ func TestStructuralCNFSupergateAndSharedNode(t *testing.T) {
 		}
 	}
 }
+
+func TestStructuralCNFIncrementalSharedCone(t *testing.T) {
+	graph := aig.NewGraph()
+	a, b, c, d := graph.NewInput(), graph.NewInput(), graph.NewInput(), graph.NewInput()
+	shared := graph.AND(a, b)
+	left, right := graph.AND(shared, c), graph.AND(shared, d.Not())
+	p := &Fra_Man_t{pManFraig: graph, pSat: bsat.NewSolver(), nSatVars: 1}
+	Fra_ManClean(p, int32(len(graph.Nodes())))
+	if !p.pSat.AddClause(bsat.Positive(0)) {
+		t.Fatal("constant setup")
+	}
+	Fra_CnfNodeAddToSolver(p, left, aig.InvalidEdge)
+	if p.pSat.Solve() != bsat.Satisfiable {
+		t.Fatal("first cone was unsatisfiable")
+	}
+	sharedVar := Fra_ObjSatNum(p, shared)
+	Fra_CnfNodeAddToSolver(p, right, aig.InvalidEdge)
+	if Fra_ObjSatNum(p, shared) != sharedVar {
+		t.Fatal("shared node got a new variable")
+	}
+	for mask := 0; mask < 16; mask++ {
+		var assumptions []bsat.Literal
+		for i, edge := range []aig.Edge{a, b, c, d} {
+			assumptions = append(assumptions, fraLit(Fra_ObjSatNum(p, edge), mask&(1<<i) == 0))
+		}
+		sharedValue := mask&1 != 0 && mask&2 != 0
+		leftValue := sharedValue && mask&4 != 0
+		rightValue := sharedValue && mask&8 == 0
+		assumptions = append(assumptions, fraLit(Fra_ObjSatNum(p, left), !leftValue), fraLit(Fra_ObjSatNum(p, right), !rightValue))
+		if p.pSat.Solve(assumptions...) != bsat.Satisfiable {
+			t.Fatalf("consistent shared-cone result rejected for %04b", mask)
+		}
+		assumptions[len(assumptions)-1] ^= 1
+		if p.pSat.Solve(assumptions...) != bsat.Unsatisfiable {
+			t.Fatalf("incorrect shared-cone result accepted for %04b", mask)
+		}
+	}
+}
