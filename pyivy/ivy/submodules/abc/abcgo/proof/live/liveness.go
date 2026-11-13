@@ -169,6 +169,7 @@ func livenessToSafety(network *Network, options TransformOptions, source, source
 			for i, e := range fair {
 				seenFair[i] = monitor(e, fmt.Sprintf("fairness%d__SEEN", i))
 			}
+			sharedGF := make(map[aig.Edge]aig.Edge)
 			for _, formula := range options.LTL {
 				node, err := ParseFormula(formula)
 				if err != nil {
@@ -190,7 +191,13 @@ func livenessToSafety(network *Network, options TransformOptions, source, source
 				var groups [][]*ltlNode
 				populateAigPointerUnitGF(dst, node, &signals, &groups)
 				for i, signal := range signals {
-					seen := monitor(signal, fmt.Sprintf("ltl%d__GF", i))
+					seen, found := sharedGF[signal]
+					if !source || !found {
+						seen = monitor(signal, fmt.Sprintf("ltl%d__GF", i))
+						if source {
+							sharedGF[signal] = seen
+						}
+					}
 					for _, gf := range groups[i] {
 						setAIGNodePtrOfGloballyNode(gf, seen)
 					}
