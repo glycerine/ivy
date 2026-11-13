@@ -25,12 +25,12 @@ func newFraSimulation(graph *aig.Graph, prefix, frames, wordsPerFrame int) *fraS
 	totalFrames := prefix + frames
 	s := &fraSimulation{Graph: graph, PrefixFrames: prefix, Frames: totalFrames, WordsPerFrame: wordsPerFrame,
 		WordsTotal: totalFrames * wordsPerFrame, PrefixWords: prefix * wordsPerFrame}
-	s.Words = make([]uint32, len(graph.Nodes())*s.WordsTotal)
+	s.Words = make([]uint32, int(aig.Aig_ManObjNumMax(graph))*s.WordsTotal)
 	return s
 }
 
 func (s *fraSimulation) NodeWords(id int) []uint32 {
-	if id < 0 || id >= len(s.Graph.Nodes()) {
+	if id < 0 || id >= int(aig.Aig_ManObjNumMax(s.Graph)) {
 		panic("fra: invalid simulation node")
 	}
 	return s.Words[id*s.WordsTotal : (id+1)*s.WordsTotal]
