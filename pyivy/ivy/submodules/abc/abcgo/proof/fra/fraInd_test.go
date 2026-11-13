@@ -99,3 +99,50 @@ func TestInductionOptionsPreserveReachableOutput(t *testing.T) {
 		})
 	}
 }
+
+func TestInductionExhaustiveOneRegisterTransitions(t *testing.T) {
+	for truth := 0; truth < 16; truth++ {
+		g := aig.NewGraph()
+		input, latch := g.NewInput(), g.NewInput()
+		next := g.Const0()
+		for row := 0; row < 4; row++ {
+			if truth&(1<<row) == 0 {
+				continue
+			}
+			a, b := input, latch
+			if row&1 == 0 {
+				a = a.Not()
+			}
+			if row&2 == 0 {
+				b = b.Not()
+			}
+			next = g.OR(next, g.AND(a, b))
+		}
+		g.AddOutput(g.XOR(input, latch))
+		g.AddOutput(next)
+		aig.Aig_ManSetRegNum(g, 1)
+		result := Fra_FraigInduction(g, &Fra_Ssw_t{nFramesK: 1})
+		if result == nil {
+			t.Fatalf("transition %04b returned no graph", truth)
+		}
+		for sequence := 0; sequence < 16; sequence++ {
+			src, dst := make([]bool, g.RegisterCount()), make([]bool, result.RegisterCount())
+			for frame := 0; frame < 4; frame++ {
+				value := sequence&(1<<frame) != 0
+				a, err := g.Evaluate(append([]bool{value}, src...))
+				if err != nil {
+					t.Fatal(err)
+				}
+				b, err := result.Evaluate(append([]bool{value}, dst...))
+				if err != nil {
+					t.Fatal(err)
+				}
+				if a[0] != b[0] {
+					t.Fatalf("transition %04b sequence %04b frame %d outputs %v/%v", truth, sequence, frame, a, b)
+				}
+				copy(src, a[len(a)-len(src):])
+				copy(dst, b[len(b)-len(dst):])
+			}
+		}
+	}
+}
