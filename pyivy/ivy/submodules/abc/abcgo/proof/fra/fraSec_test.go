@@ -76,3 +76,37 @@ func TestSecSequentialMiterSafeAndFailing(t *testing.T) {
 		})
 	}
 }
+
+func TestSecSequentialMiterWithDefaultRetiming(t *testing.T) {
+	g := aig.NewGraph()
+	input, a := g.NewInput(), g.NewInput()
+	g.NewInput()
+	g.AddOutput(g.AND(input, a))
+	g.AddOutput(input)
+	g.AddOutput(input)
+	aig.Aig_ManSetRegNum(g, 2)
+	var pars Fra_Sec_t
+	Fra_SecSetDefaultParams(&pars)
+	pars.fSilent = 1
+	if got := Fra_FraigSec(g, &pars, nil); got != 0 {
+		t.Fatalf("status=%d want failure", got)
+	}
+	if cex := g.SequentialCounterexample(); cex == nil || saig.Saig_ManVerifyCex(g, cex) == 0 {
+		t.Fatalf("invalid witness: %+v", cex)
+	}
+}
+
+func TestSecSafeMiterWithDefaultRetiming(t *testing.T) {
+	g := aig.NewGraph()
+	input, a, b := g.NewInput(), g.NewInput(), g.NewInput()
+	g.AddOutput(g.XOR(a, b))
+	g.AddOutput(input)
+	g.AddOutput(input)
+	aig.Aig_ManSetRegNum(g, 2)
+	var pars Fra_Sec_t
+	Fra_SecSetDefaultParams(&pars)
+	pars.fSilent = 1
+	if got := Fra_FraigSec(g, &pars, nil); got != 1 {
+		t.Fatalf("status=%d want proof", got)
+	}
+}
