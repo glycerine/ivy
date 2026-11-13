@@ -22,6 +22,9 @@ func Gia_GlaCollectAssigned(p *Gia_Man_t, classes *Vec_Int_t) *Vec_Int_t {
 		if Gia_ObjIsAnd(obj) != 0 {
 			add(Gia_ObjFanin0(obj).id)
 			add(Gia_ObjFanin1(obj).id)
+			if control, _, _, kind := p.Gate(obj.id); kind == 4 {
+				add(control >> 1)
+			}
 		} else if Gia_ObjIsRo(p, obj) != 0 {
 			add(Gia_ObjFanin0(Gia_ObjRoToRi(p, obj)).id)
 		} else if Gia_ObjIsConst0(obj) == 0 {
