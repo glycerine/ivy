@@ -52,6 +52,15 @@ func (p *Gia_Man_t) SequentialCounterexample() *util.Abc_Cex_t { return p.pCexSe
 
 func (p *Gia_Man_t) ClearSequentialCounterexample() { p.pCexSeq = nil }
 
+// TransferSequentialCounterexampleSource transfers ownership as ABC's direct
+// pCexSeq assignment does, without checking dimensions against this manager.
+// Some ABC callers transfer witnesses from transformed graphs whose register
+// counts differ from the destination; SetSequentialCounterexample remains the
+// validated copying API for ordinary callers.
+func (p *Gia_Man_t) TransferSequentialCounterexampleSource(model *util.Abc_Cex_t) {
+	p.pCexSeq = model
+}
+
 func (p *Gia_Man_t) TakeSequentialCounterexample() *util.Abc_Cex_t {
 	model := p.pCexSeq
 	p.pCexSeq = nil
