@@ -8,6 +8,9 @@ import (
 	"time"
 )
 
+// Acec_DetectXorBuildNew follows the source carry rewrite. Its nonempty path
+// remains unverified: reconvergent XOR inputs can have opposite polarities,
+// while Acec_DetectLitPolarity requires a consistent polarity on every path.
 func Acec_DetectXorBuildNew(p *Gia_Man_t, roots *Vec_Int_t) *Gia_Man_t {
 	mirrors := vec.Vec_IntStartFull(int(gia.Gia_ManObjNum(p)))
 	for i := 0; 4*i < vec.Vec_IntSize(roots); i++ {
