@@ -275,6 +275,11 @@ func Fra_ClausEstimateCoverage(p *Clu_Man_t) {
 	}
 	fmt.Printf("Care states ratio = %f. (%d out of %d patterns)\n", float64(len(total)*32-count)/float64(len(total)*32), len(total)*32-count, len(total)*32)
 }
+
+// Fra_Claus runs ABC's clause discovery driver. As in the original C, its
+// return value is 1 on normal completion and several failure paths; it does
+// not communicate whether the property was proved. The driver reports the
+// outcome separately and verifies its stored invariant when applicable.
 func Fra_Claus(graph *aig.Graph, frames, prefix, maxClauses, cutSize, levels, maxCuts, batches, step, bmc, refs, target, verbose, veryVerbose int32) int32 {
 	p := Fra_ClausAlloc(graph, frames, prefix, maxClauses, cutSize, levels, maxCuts, batches, step, target, verbose, veryVerbose)
 	defer Fra_ClausFree(p)
