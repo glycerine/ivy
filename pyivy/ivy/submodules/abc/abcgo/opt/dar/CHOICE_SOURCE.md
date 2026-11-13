@@ -6,26 +6,47 @@ then chooses one of three proof paths. The default converts the interleaved GIA
 miter with `Gia_ManToAigSkip(..., 3)` and calls `Dch_ComputeChoices`; the
 `fUseGia` and `fUseNew` paths call the corresponding CEC choice engines.
 
-The current DAR entry point does **not** yet reproduce this path: absent an
-explicit injected engine it returns an error. The
-existing `dch.Engine` calls `Dch_DeriveTotalAig`, the distinct constructor used
-by `Dar_ManChoiceNewAig`, rather than the active new-choice GIA miter path.
-`TestChoiceMiterAndTotalAIGHaveDifferentNodeOrder` demonstrates that those
-constructors do not even assign the same AIG node order for a synthesis
-fixture; equivalent outputs alone do not establish equivalent DCH choices.
+`opt/dar.Dar_ManChoiceNew` now invokes this source path when no engine is
+provided. `ChoiceOptions.DchParams` selects the original DCH controls and nil
+uses ABC defaults. An explicitly supplied engine remains an opt-in override;
+partitioned choices require an explicit FRAIG callback. The distinct
+`Dar_ManChoiceNewAig` entry point uses `Dch_DeriveTotalAig`, as its C source
+does. That routine is not interchangeable with the GIA miter path: the
+`TestChoiceMiterAndTotalAIGHaveDifferentNodeOrder` fixture shows different
+intermediate AIG node ordering.
 
-Directly importing the existing GIA or CEC packages from DAR creates an import
-cycle: GIA's synthesis code imports DAR, and CEC's choice code imports DAR.
-`proof/cec.Dar_ManChoiceNew` provides the source-named, typed Go entry point
-through a higher layer: it creates the actual GIA miter and selects the DCH,
-CEC, or Cec4 path. The lower-level `opt/dar.Dar_ManChoiceNew` still requires an
-explicit engine because it cannot import that higher layer without a cycle;
-it reports an error if none is provided. Neither path silently falls back to
-the partitioned engine. `Dar_ManChoiceNewAig` uses the source's
-`Dch_DeriveTotalAig`/DCH path by default. The explicit partitioned engine is a
-separate source operation and requires the actual FRAIG callback supplied by
-the higher layer.
+The facade's source path is wired through `proof/cec.DarSourceChoiceEngine`.
+The engine creates and stops GIA snapshots and their miter, preserves the AIG
+snapshots owned by its caller, and dispatches to the DCH, CEC, or Cec4 source
+branch. A compiled original-C miter fixture compares node kinds, literals and
+ordering; the lower facade's ABC `&dch`, `-g`, `-x` and `-g -x` option matrix
+compares node counts, choice counts and truth tables. These fixtures cover
+representative cases, not all circuits or choices.
 
-On success both source-named new-choice wrappers consume the input AIG, like
-the C entry point, and transfer its timing manager to the result before
-recomputing choice levels. On a Go error the input graph remains available.
+On success the source-named new-choice entry consumes its input AIG, transfers
+its timing manager to the result before recomputing levels, and releases the
+intermediate AIGs. On a Go error the input remains available.
+
+## Package boundary
+
+The former import cycle included GIA and CNF as well as direct CEC imports:
+
+```text
+opt/dar -> proof/cec -> aig/gia -> opt/dar
+opt/dar -> proof/cec -> aig/gia -> sat/cnf -> opt/dar
+opt/dar -> proof/cec -> proof/fracomb or proof/framgr -> opt/dar
+```
+
+The existing DAR implementation and its internal tests now live in
+`opt/dar/core`. GIA, CNF, FRACOMB, FRAMGR and the CEC implementation import
+that core; `opt/dar` is a compatibility facade with type aliases and forwarding
+functions. The facade can therefore import the CEC integration layer without
+a cycle. No algorithm copy, global registration or partitioned fallback is
+used by the lower DAR default.
+
+One separate boundary remains: `aig/gia.Gia_ManPerformDch` cannot import the
+CEC integration layer because CEC already imports GIA. Its existing default
+uses an explicit DCH engine over total AIGs; it is not the same source path as
+the lower DAR facade. A future source-faithful GIA entry point needs an
+explicit callback supplied from a higher layer or another package split. This
+limitation is independent of the fixed lower DAR default.

@@ -3,7 +3,7 @@ package cnf
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/aig"
-	"github.com/glycerine/abcgo/opt/dar"
+	dar "github.com/glycerine/abcgo/opt/dar/core"
 )
 
 // cnfApplyDarMapping implements Cnf_DeriveMapping's area-flow score and

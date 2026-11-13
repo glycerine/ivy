@@ -5,7 +5,7 @@ import (
 
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/aig/gia"
-	"github.com/glycerine/abcgo/opt/dar"
+	dar "github.com/glycerine/abcgo/opt/dar/core"
 	"github.com/glycerine/abcgo/proof/dch"
 )
 
@@ -24,6 +24,7 @@ func Dar_ManChoiceNew(graph *aig.Graph, options *dar.ChoiceOptions, params *dch.
 		config = *options
 	}
 	config.Power, config.Light = params.Power, params.LightSynth
+	config.DchParams = params
 	config.Engine = DarSourceChoiceEngine{Params: params}
 	result, err := dar.Dar_ManChoiceNew(graph, &config)
 	params.SynthDuration = config.SynthesisDuration

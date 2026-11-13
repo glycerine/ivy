@@ -5,7 +5,7 @@ import (
 
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/misc/vec"
-	"github.com/glycerine/abcgo/opt/dar"
+	dar "github.com/glycerine/abcgo/opt/dar/core"
 )
 
 // deriveOtherMapped follows Cnf_DeriveOther's DAR-cut, area-flow mapping and

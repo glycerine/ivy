@@ -8,7 +8,7 @@ import (
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
-	"github.com/glycerine/abcgo/opt/dar"
+	dar "github.com/glycerine/abcgo/opt/dar/core"
 )
 
 type Fra_Bmc_t_ struct {

@@ -3,7 +3,7 @@ package fracomb
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/aig"
-	"github.com/glycerine/abcgo/opt/dar"
+	dar "github.com/glycerine/abcgo/opt/dar/core"
 )
 
 // Sweep supplies the original FRAIG manager to the combinational CEC driver.
@@ -15,9 +15,11 @@ func Fra_FraigMiterStatus(g *aig.Graph) int32 {
 	}
 	inputs := g.Inputs()
 	regs := int(g.RegisterCount())
-	pis := make(map[int]bool, len(inputs)-regs)
-	for _, e := range inputs[:len(inputs)-regs] {
-		pis[e.NodeID()] = true
+	pis := make(map[int]bool, len(inputs))
+	for i, e := range inputs {
+		if int32(i) < g.TruePiCount() {
+			pis[e.NodeID()] = true
+		}
 	}
 	outputs := g.Outputs()
 	undecided := false
@@ -85,7 +87,7 @@ func Fra_FraigCec(graph **aig.Graph, conflictLimit, verbose int32, sweep Sweep) 
 	var err error
 	miter, err = dar.Dar_ManRwsat(miter, true, false)
 	if err != nil || miter == nil {
-		return -1
+		panic("fra: source dereferences failed SAT rewrite")
 	}
 	nodeLimit, miterLimit := int32(2), int32(300)
 	for i := 0; i < 6; i++ {
@@ -94,7 +96,7 @@ func Fra_FraigCec(graph **aig.Graph, conflictLimit, verbose int32, sweep Sweep) 
 		}
 		miter = sweep(miter, nodeLimit, miterLimit)
 		if miter == nil {
-			return -1
+			panic("fra: source dereferences failed FRAIG sweep")
 		}
 		status = Fra_FraigMiterStatus(miter)
 		if status >= 0 {
@@ -102,7 +104,7 @@ func Fra_FraigCec(graph **aig.Graph, conflictLimit, verbose int32, sweep Sweep) 
 		}
 		miter, err = dar.Dar_ManRewriteDefault(miter)
 		if err != nil || miter == nil {
-			return -1
+			panic("fra: source dereferences failed rewrite")
 		}
 		status = Fra_FraigMiterStatus(miter)
 		if status >= 0 {

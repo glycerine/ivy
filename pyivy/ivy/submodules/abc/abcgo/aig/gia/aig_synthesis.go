@@ -3,7 +3,7 @@ package gia
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/aig"
-	"github.com/glycerine/abcgo/opt/dar"
+	dar "github.com/glycerine/abcgo/opt/dar/core"
 	"github.com/glycerine/abcgo/proof/dch"
 	"os"
 )
