@@ -63,7 +63,13 @@ func (m *Manager) Rewrite() error {
 					break
 				}
 			}
-			if len(cut.Leaves) != 4 {
+			leaves := cut.Leaves
+			if len(leaves) == 3 {
+				// ABC pads three-leaf cuts with constant one before matching
+				// the four-input library (darCore.c, Dar_ManRewrite).
+				leaves = append(append([]aig.Edge(nil), leaves...), g.Const1())
+			}
+			if len(leaves) != 4 {
 				continue
 			}
 			m.Stats.Cuts++
@@ -71,12 +77,12 @@ func (m *Manager) Rewrite() error {
 			class := &m.library.classes[match.Class]
 			var inputs [4]aig.Edge
 			for i := range inputs {
-				inputs[i] = cut.Leaves[match.Permutation[i]]
+				inputs[i] = leaves[match.Permutation[i]]
 				if match.InputPhase&(1<<i) != 0 {
 					inputs[i] = inputs[i].Not()
 				}
 			}
-			oldArea := int(aig.Aig_NodeMffcLabelCut(g, root, cut.Leaves))
+			oldArea := int(aig.Aig_NodeMffcLabelCut(g, root, leaves))
 			var powerSaved float32
 			if m.Params.Power {
 				powerSaved = mffcPower(g, root, m.probabilities)
