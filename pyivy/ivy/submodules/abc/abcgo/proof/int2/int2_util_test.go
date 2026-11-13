@@ -74,3 +74,54 @@ func TestInt2ManComputeCoPresRejectsMalformedSOP(t *testing.T) {
 	}()
 	Int2_ManComputeCoPres(sop, 2)
 }
+
+// Compare suffix construction against direct simulation of the source graph,
+// including support cones with shared, complemented and native gates.
+func TestProbToGiaNativeGateCones(t *testing.T) {
+	for _, kind := range []string{"xor", "mux", "buffer"} {
+		for phase := int32(0); phase < 8; phase++ {
+			g := gia.Gia_ManStart(32)
+			a, b, s := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
+			var gate int32
+			switch kind {
+			case "xor":
+				gate = gia.Gia_ManAppendXorReal(g, a^(phase&1), s^((phase>>1)&1))
+			case "mux":
+				g.EnableMuxes()
+				gate = gia.Gia_ManAppendMuxReal(g, a^(phase&1), b^((phase>>1)&1), s^((phase>>2)&1))
+			case "buffer":
+				gate = gia.Gia_ManAppendBuf(g, s^(phase&1))
+			}
+			gia.Gia_ManAppendCo(g, gate^1)
+			gia.Gia_ManAppendCo(g, gate)
+			gia.Gia_ManSetRegNum(g, 1)
+			// Compare both the initial property and a negated next-state cube.
+			for which := 0; which < 2; which++ {
+				var sop *vec.Vec_Int_t
+				if which == 1 {
+					sop = vec.Vec_IntAllocArrayCopy([]int32{0, 1, 1}, 3)
+				}
+				out := Int2_ManProbToGia(g, sop)
+				for mask := 0; mask < 8; mask++ {
+					inputs := []bool{mask&1 != 0, mask&2 != 0, mask&4 != 0}
+					orig, err := g.Evaluate(inputs)
+					if err != nil {
+						t.Fatal(err)
+					}
+					got, err := out.Evaluate(inputs)
+					if err != nil {
+						t.Fatal(err)
+					}
+					want := orig[0]
+					if which == 1 {
+						want = !orig[1]
+					}
+					if got[0] != want {
+						t.Fatalf("%s phase=%d suffix=%d input=%v: got %v want %v", kind, phase, which, inputs, got[0], want)
+					}
+				}
+				gia.Gia_ManStop(out)
+			}
+		}
+	}
+}

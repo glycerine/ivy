@@ -190,3 +190,77 @@ func TestPrepareSuffixBlocksStateCubeUsingMappedVariable(t *testing.T) {
 		}
 	}
 }
+
+func TestCheckInitAgainstExhaustiveTransitions(t *testing.T) {
+	// Every pair of Boolean next-state functions over two registers.
+	for table0 := int32(0); table0 < 16; table0++ {
+		for table1 := int32(0); table1 < 16; table1++ {
+			g := gia.Gia_ManStart(32)
+			a, b := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
+			gia.Gia_ManHashAlloc(g)
+			build := func(table int32) int32 {
+				result := int32(0)
+				for mask := int32(0); mask < 4; mask++ {
+					if table&(1<<mask) == 0 {
+						continue
+					}
+					left, right := a^((mask&1)^1), b^(((mask>>1)&1)^1)
+					result = gia.Gia_ManHashOr(g, result, gia.Gia_ManHashAnd(g, left, right))
+				}
+				return result
+			}
+			n0, n1 := build(table0), build(table1)
+			gia.Gia_ManAppendCo(g, 0)
+			gia.Gia_ManAppendCo(g, n0)
+			gia.Gia_ManAppendCo(g, n1)
+			gia.Gia_ManHashStop(g)
+			gia.Gia_ManSetRegNum(g, 2)
+			want := false
+			for mask := int32(0); mask < 4; mask++ {
+				if (table0|table1)&(1<<mask) == 0 {
+					want = true
+				}
+			}
+			if got := Int2_ManCheckInit(g) != 0; got != want {
+				t.Fatalf("tables %04b %04b: got %v want %v", table0, table1, got, want)
+			}
+			gia.Gia_ManStop(g)
+		}
+	}
+}
+
+func TestFrameInitMatchesSequentialSimulation(t *testing.T) {
+	g := gia.Gia_ManStart(32)
+	a, b := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
+	x, y := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
+	g.EnableMuxes()
+	next0 := gia.Gia_ManAppendMuxReal(g, a, x^1, b)
+	next1 := gia.Gia_ManAppendXorReal(g, y, next0)
+	gia.Gia_ManAppendCo(g, gia.Gia_ManAppendBuf(g, x))
+	gia.Gia_ManAppendCo(g, next0)
+	gia.Gia_ManAppendCo(g, next1)
+	gia.Gia_ManSetRegNum(g, 2)
+	frames := Int2_ManFrameInit(g, 3, 0)
+	defer gia.Gia_ManStop(frames)
+	for mask := 0; mask < 64; mask++ {
+		inputs := make([]bool, 6)
+		for i := range inputs {
+			inputs[i] = mask&(1<<i) != 0
+		}
+		state := []bool{false, false}
+		for frame := 0; frame < 3; frame++ {
+			out, err := g.Evaluate([]bool{inputs[2*frame], inputs[2*frame+1], state[0], state[1]})
+			if err != nil {
+				t.Fatal(err)
+			}
+			state[0], state[1] = out[1], out[2]
+		}
+		out, err := frames.Evaluate(inputs)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if out[0] != state[0] || out[1] != state[1] {
+			t.Fatalf("input=%v got=%v want=%v", inputs, out, state)
+		}
+	}
+}
