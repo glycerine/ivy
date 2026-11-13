@@ -25,6 +25,20 @@ func Dar_ManRewrite(g *aig.Graph, params *RewriteParams) error {
 }
 func (m *Manager) Rewrite() error {
 	g := m.Graph
+	if m.Params.UpdateLevel {
+		// ABC fixes the global level bound for the whole rewrite and uses
+		// reverse levels to allow individual nodes to consume available slack.
+		// Remove dangling logic before timing, as ABC does; otherwise its
+		// fanouts would falsely consume required-level slack.
+		aig.Aig_ManCleanup(g)
+		aig.Aig_ManStartReverseLevels(g, 0)
+		defer aig.Aig_ManStopReverseLevels(g)
+	}
+	refreshRequiredLevels := func() {
+		if m.Params.UpdateLevel {
+			aig.Aig_ManUpdateReverseLevel(g, g.Const1())
+		}
+	}
 	cuts := NewCutEnumerator(g, m.Params.CutsMax)
 	for _, root := range g.LiveEdges() {
 		if m.Params.Context != nil {
@@ -56,6 +70,7 @@ func (m *Manager) Rewrite() error {
 					saved := int(aig.Aig_NodeMffcLabelCut(g, root, cut.Leaves))
 					aig.Aig_ObjReplace(g, root, replacement, 0)
 					aig.Aig_ManCleanup(g)
+					refreshRequiredLevels()
 					m.Stats.Replacements++
 					m.Stats.NodesSaved += saved
 					cuts = NewCutEnumerator(g, m.Params.CutsMax)
@@ -124,7 +139,7 @@ func (m *Manager) Rewrite() error {
 				}
 			}
 			for _, candidate := range class.roots {
-				if m.Params.UpdateLevel && levels[candidate.index] > g.Node(root).Level {
+				if m.Params.UpdateLevel && int32(levels[candidate.index]) > aig.Aig_ObjRequiredLevel(g, root) {
 					continue
 				}
 				area, powerAdded := evaluateLibraryCandidate(g, class, existing, candidate.index, probabilities, m.Params.Power)
@@ -173,11 +188,13 @@ func (m *Manager) Rewrite() error {
 		}
 		if graphDependsOn(g, replacement, root) {
 			aig.Aig_ManCleanup(g)
+			refreshRequiredLevels()
 			cuts = NewCutEnumerator(g, m.Params.CutsMax)
 			continue
 		}
 		aig.Aig_ObjReplace(g, root, replacement, 0)
 		aig.Aig_ManCleanup(g)
+		refreshRequiredLevels()
 		m.Stats.Replacements++
 		m.Stats.NodesSaved += best.gain
 		cuts = NewCutEnumerator(g, m.Params.CutsMax)
