@@ -238,6 +238,9 @@ func Aig_ObjReplace(p *Graph, old, replacement Edge, updateLevel int32) {
 	if p.node(old).Kind == Input || p.node(old).Kind == Output || p.node(old).Kind == Constant {
 		panic("aig: cannot replace terminal")
 	}
+	if p.node(replacement).Kind == Buffer || p.node(replacement).Kind == Output {
+		panic("aig: invalid replacement object")
+	}
 	for _, e := range p.dfs([]Edge{replacement}, false, false, false) {
 		if e.NodeID() == old.NodeID() {
 			panic("aig: replacement introduces cycle")
@@ -246,11 +249,26 @@ func Aig_ObjReplace(p *Graph, old, replacement Edge, updateLevel int32) {
 	p.node(replacement).Refs++
 	Aig_ObjDelete_rec(p, old, 0)
 	p.node(replacement).Refs--
-	// A buffer preserves the old stable edge ID and all existing fanout handles.
 	n := p.node(old)
-	n.Kind = Buffer
-	n.Fanins = [2]Edge{replacement, InvalidEdge}
-	p.node(replacement).Refs++
+	r := p.node(replacement)
+	if replacement.Complemented() || r.Refs != 0 || r.Kind != And && r.Kind != ExclusiveOr {
+		// The source keeps a buffer when the replacement is complemented,
+		// referenced, or a terminal.
+		n.Kind = Buffer
+		n.Fanins = [2]Edge{replacement, InvalidEdge}
+		r.Refs++
+	} else {
+		// Move an unused positive node into the old object slot, preserving
+		// the old ID and its fanouts as in Aig_ObjReplace in aigObj.c.
+		kind, fanins := r.Kind, r.Fanins
+		Aig_ObjDisconnect(p, replacement)
+		n.Kind, n.Fanins = kind, fanins
+		for _, fanin := range nodeFanins(*n) {
+			p.node(fanin).Refs++
+		}
+		Aig_TableInsert(p, old)
+		Aig_ObjDelete(p, replacement)
+	}
 	p.recomputeLevels()
 	p.refreshFanouts()
 }

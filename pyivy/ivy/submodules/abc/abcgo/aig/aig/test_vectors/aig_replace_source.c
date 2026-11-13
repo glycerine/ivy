@@ -1,0 +1,3 @@
+#include <stdio.h>
+#include "aig/aig/aig.h"
+static void run(int mode){Aig_Man_t*g=Aig_ManStart(20);Aig_Obj_t*a=Aig_ObjCreateCi(g),*b=Aig_ObjCreateCi(g),*c=Aig_ObjCreateCi(g);Aig_Obj_t*old=Aig_And(g,a,b),*r=Aig_And(g,a,c);int rid=r->Id;Aig_ObjCreateCo(g,old);if(mode==2)Aig_ObjCreateCo(g,r);Aig_ObjReplace(g,old,Aig_NotCond(r,mode==1),0);printf("%d kind=%s f0=%d f1=%d oldref=%d newpresent=%d lookup_old=%d\n",mode,Aig_ObjIsBuf(old)?"buffer":"and",2*Aig_ObjFaninId0(old)+Aig_ObjFaninC0(old),Aig_ObjIsBuf(old)?-1:2*Aig_ObjFaninId1(old)+Aig_ObjFaninC1(old),old->nRefs,Aig_ManObj(g,rid)!=NULL,Aig_And(g,a,c)==old);Aig_ManStop(g);}int main(void){for(int i=0;i<3;i++)run(i);}
