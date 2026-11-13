@@ -64,7 +64,12 @@ int main(void) {
   for(h=0;h<7;h++) for(i=0;i<8;i++) for(j=0;j<i;j++) f=Aig_And(g,f,Aig_Or(g,Aig_Not(v[i][h]),Aig_Not(v[j][h])));
   Aig_ObjCreateCo(g,f);
   first=Fra_FraigSat(g,600,0,0,0,0,1,0,0,0); result=Fra_FraigCec(&g,100000,0);
-  printf("oracle:%d,%d\n",first,result); Aig_ManStop(g); Abc_Stop(); return 0;
+  printf("oracle:%d,%d\n",first,result); Aig_ManStop(g);
+  g=Aig_ManStart(10); v[0][0]=Aig_ObjCreateCi(g); v[0][1]=Aig_ObjCreateCi(g);
+  Aig_ObjCreateCo(g,Aig_And(g,v[0][0],v[0][1]));
+  first=Fra_FraigMiterStatus(g); result=Fra_FraigCec(&g,100000,0);
+  printf("direct:%d,%d,%d,%d\n",first,result,((int *)g->pData)[0],((int *)g->pData)[1]);
+  Aig_ManStop(g); Abc_Stop(); return 0;
 }`
 	cfile, binary := filepath.Join(dir, "oracle.c"), filepath.Join(dir, "oracle")
 	if err := os.WriteFile(cfile, []byte(program), 0600); err != nil {
@@ -79,6 +84,24 @@ int main(void) {
 	}
 	if !strings.Contains(string(out), "oracle:-1,1") {
 		t.Fatalf("unexpected ABC result: %s", out)
+	}
+	if !strings.Contains(string(out), "direct:-1,0,1,1") {
+		t.Fatalf("unexpected ABC direct SAT result: %s", out)
+	}
+	direct := aig.NewGraph()
+	x, y := direct.NewInput(), direct.NewInput()
+	direct.AddOutput(direct.AND(x, y))
+	if status := fracomb.Fra_FraigMiterStatus(direct); status != -1 {
+		t.Fatalf("direct structural status = %d, want -1", status)
+	}
+	original := direct
+	directCalls := 0
+	if status := fracomb.Fra_FraigCec(&direct, 100000, 0, func(*aig.Graph, int32, int32) *aig.Graph { directCalls++; return nil }); status != 0 {
+		t.Fatalf("direct SAT status = %d, want 0", status)
+	}
+	model, ok := direct.Data.([]int32)
+	if direct != original || directCalls != 0 || !ok || len(model) != 2 || model[0] != 1 || model[1] != 1 {
+		t.Fatalf("direct graph retained=%v, sweeps=%d, model=%v; ABC retained graph with [1 1]", direct == original, directCalls, direct.Data)
 	}
 	g := aig.NewGraph()
 	var v [8][7]aig.Edge
