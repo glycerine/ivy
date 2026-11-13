@@ -20,6 +20,20 @@ func publicGraph() *aig.Graph {
 	aig.Aig_ManSetRegNum(g, 1)
 	return g
 }
+
+func TestPublicSolveCombinationalConstantFailure(t *testing.T) {
+	g := aig.NewGraph()
+	g.NewInput()
+	g.NewInput()
+	g.AddOutput(g.Const1())
+	result, err := pdr.Solve(g, nil)
+	if err != nil || result.Status != pdr.Failed || result.Outputs[0].Witness == nil {
+		t.Fatalf("result %+v: %v", result, err)
+	}
+	if saig.Saig_ManVerifyCex(g, result.Outputs[0].Witness) != 1 {
+		t.Fatal("invalid combinational counterexample")
+	}
+}
 func TestPublicSolveAllWitnessStorage(t *testing.T) {
 	for _, store := range []bool{false, true} {
 		g := publicGraph()

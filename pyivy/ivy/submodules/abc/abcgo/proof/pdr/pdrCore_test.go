@@ -279,6 +279,77 @@ func TestPdrSolveTwoRegisterReachability(t *testing.T) {
 	}
 }
 
+func TestPdrSolveAdditionalModesAgainstReachability(t *testing.T) {
+	seed := uint32(0x31415926)
+	nextRandom := func() int { seed ^= seed << 13; seed ^= seed >> 17; seed ^= seed << 5; return int(seed & 255) }
+	for trial := 0; trial < 512; trial++ {
+		tables := [3]int{nextRandom(), nextRandom(), nextRandom()}
+		g := aig.NewGraph()
+		vars := [3]aig.Edge{g.NewInput(), g.NewInput(), g.NewInput()}
+		truth := func(table int) aig.Edge {
+			r := g.Const0()
+			for row := 0; row < 8; row++ {
+				if table&(1<<row) == 0 {
+					continue
+				}
+				term := g.Const1()
+				for i, v := range vars {
+					if row&(1<<i) == 0 {
+						v = v.Not()
+					}
+					term = g.AND(term, v)
+				}
+				r = g.AND(r.Not(), term.Not()).Not()
+			}
+			return r
+		}
+		g.AddOutput(truth(tables[2]))
+		g.AddOutput(truth(tables[0]))
+		g.AddOutput(truth(tables[1]))
+		aig.Aig_ManSetRegNum(g, 2)
+		reached := [4]bool{true}
+		bad := false
+		for changed := true; changed; {
+			changed = false
+			for state := 0; state < 4; state++ {
+				if !reached[state] {
+					continue
+				}
+				for input := 0; input < 2; input++ {
+					row := input + 2*state
+					if tables[2]&(1<<row) != 0 {
+						bad = true
+					}
+					next := ((tables[0] >> row) & 1) | (((tables[1] >> row) & 1) << 1)
+					if !reached[next] {
+						reached[next] = true
+						changed = true
+					}
+				}
+			}
+		}
+		var pars Pdr_Par_t
+		Pdr_ManSetDefaultParams(&pars)
+		pars.fSilent = 1
+		pars.fMonoCnf = int32(trial % 2)
+		pars.fNewXSim = int32((trial / 2) % 2)
+		pars.fUseAbs = int32((trial / 4) % 2)
+		pars.fUseSimpleRef = 0
+		pars.fShortest = int32((trial / 8) % 2)
+		got := Pdr_ManSolve(g, &pars)
+		want := int32(1)
+		if bad {
+			want = 0
+		}
+		if got != want {
+			t.Fatalf("trial %d tables %v: got %d want %d", trial, tables, got, want)
+		}
+		if got == 0 && (g.SequentialCounterexample() == nil || saig.Saig_ManVerifyCex(g, g.SequentialCounterexample()) != 1) {
+			t.Fatalf("trial %d tables %v: invalid counterexample", trial, tables)
+		}
+	}
+}
+
 func TestPdrHonorsStopCallback(t *testing.T) {
 	g := aig.NewGraph()
 	in := g.NewInput()

@@ -166,6 +166,7 @@ func Txs3_ManTernarySim(p *Txs3_Man_t, k int32, cube *Pdr_Set_t) *Pdr_Set_t {
 	vec.Vec_IntClear(p.vTemp)
 	vec.Vec_IntPush(p.vTemp, aux^1)
 	ids, values := vec.Vec_IntArray(p.vCiObjs), vec.Vec_IntArray(p.vCiVals)
+	varToID := make(map[int32]int32, len(ids))
 	if len(ids) != len(values) {
 		panic("pdr: inconsistent cone values")
 	}
@@ -175,6 +176,7 @@ func Txs3_ManTernarySim(p *Txs3_Man_t, k int32, cube *Pdr_Set_t) *Pdr_Set_t {
 		if variable < 0 || !aig.Aig_ObjIsCi(p.pMan.pAig, obj) {
 			panic("pdr: invalid cone input")
 		}
+		varToID[variable] = int32(obj.NodeID())
 		sign := int32(0)
 		if values[i] == 0 {
 			sign = 1
@@ -192,12 +194,14 @@ func Txs3_ManTernarySim(p *Txs3_Man_t, k int32, cube *Pdr_Set_t) *Pdr_Set_t {
 	slices.Sort(vec.Vec_IntArray(p.vTemp))
 	vec.Vec_IntClear(p.vPiLits)
 	vec.Vec_IntClear(p.vFfLits)
-	varToID := p.pMan.vVar2Ids[k]
 	for _, lit := range vec.Vec_IntArray(p.vTemp) {
 		if lit == aux^1 {
 			continue
 		}
-		id := vec.Vec_IntEntry(varToID, int(lit>>1))
+		id, ok := varToID[lit>>1]
+		if !ok {
+			panic("pdr: core literal is not a cone input")
+		}
 		obj := aig.Aig_ManObj(p.pMan.pAig, id)
 		if !aig.Aig_ObjIsCi(p.pMan.pAig, obj) {
 			panic("pdr: core literal is not a CI")
@@ -225,7 +229,10 @@ func Txs3_ManTernarySim(p *Txs3_Man_t, k int32, cube *Pdr_Set_t) *Pdr_Set_t {
 		vec.Vec_IntShrink(p.vFfLits, kept)
 	}
 	result := Pdr_SetCreate(p.vFfLits, p.vPiLits)
-	if k != 0 && Pdr_SetIsInit(result, -1) != 0 {
+	// Abstracted flops become pseudo-inputs, so their removal can leave a
+	// state cube that intersects the abstract initial state. Refinement then
+	// decides whether the resulting counterexample is concrete.
+	if p.pMan.pPars.fUseAbs == 0 && k != 0 && Pdr_SetIsInit(result, -1) != 0 {
 		panic("pdr: justification intersects initial state")
 	}
 	return result
