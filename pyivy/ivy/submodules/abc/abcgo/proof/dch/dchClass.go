@@ -65,9 +65,11 @@ func createClasses(g *aig.Graph, order []aig.Edge, words int, sources ...*aig.Ai
 		}
 	}
 	c := &Classes{groups: [][]aig.Edge{candidates}}
-	random := aig.NewAigRandomSource()
+	var random *aig.AigRandomSource
 	if len(sources) > 0 {
 		random = sources[0]
+	} else {
+		random = aig.NewAigRandomSource()
 	}
 	random.Uint32() // Aig_ManRandom(1) reset draw is discarded by dchCore.c.
 	for pass := 0; pass < 8; pass++ {

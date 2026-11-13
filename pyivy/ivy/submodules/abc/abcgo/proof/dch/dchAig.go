@@ -45,10 +45,7 @@ func DeriveTotalAig(variants []*aig.Graph) (*aig.Graph, error) {
 	copyEdge = func(i int, e aig.Edge) (aig.Edge, error) {
 		regular := aig.Aig_Regular(e)
 		if old, ok := copies[i][e.NodeID()]; ok {
-			if e.Complemented() {
-				old = old.Not()
-			}
-			return old, nil
+			return old ^ aig.Edge(e&1), nil
 		}
 		node := variants[i].Node(regular)
 		a, err := copyEdge(i, node.Fanins[0])
@@ -69,10 +66,7 @@ func DeriveTotalAig(variants []*aig.Graph) (*aig.Graph, error) {
 			return aig.InvalidEdge, fmt.Errorf("dch: unsupported snapshot node %d", e.NodeID())
 		}
 		copies[i][e.NodeID()] = value
-		if e.Complemented() {
-			value = value.Not()
-		}
-		return value, nil
+		return value ^ aig.Edge(e&1), nil
 	}
 	outputs := make([][]aig.Edge, len(variants))
 	for i, g := range variants {
