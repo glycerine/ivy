@@ -44,3 +44,19 @@ func TestClassAPIConstantRefinementSkipped(t *testing.T) {
 		t.Fatalf("later refinements = %d, want 1", got)
 	}
 }
+
+func TestClassRefinementUsesAlternatePredicates(t *testing.T) {
+	graph := aig.NewGraph()
+	a, b := graph.NewInput(), graph.NewInput()
+	classes := Fra_ClassesStart(graph)
+	classes.classes = [][]int{{a.NodeID(), b.NodeID()}}
+	classes.reprs[b.NodeID()] = a.NodeID()
+	classes.nodeIsConst = func(int) bool { return false }
+	classes.nodesEqual = func(int, int) bool { return false }
+	if got := Fra_ClassesRefine(classes); got != 1 {
+		t.Fatalf("alternate refinement count = %d", got)
+	}
+	if classes.reprs[b.NodeID()] != -1 {
+		t.Fatal("alternate refinement did not remove representative")
+	}
+}

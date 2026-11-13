@@ -76,17 +76,26 @@ func Fra_ClassesPrepare(p *Fra_Cla_t, latchCorr, maxLevels int32) {
 }
 
 func Fra_ClassesRefine(p *Fra_Cla_t) int32 {
-	return int32(p.refine(p.requireSimulation().Equal))
+	_, equal := p.refinementPredicates()
+	return int32(p.refine(equal))
 }
 
 func Fra_ClassesRefine1(p *Fra_Cla_t, refineNew int32, skipped *int32) int32 {
-	sim := p.requireSimulation()
+	isConst, equal := p.refinementPredicates()
 	before := len(p.constants)
-	result := p.refineConstants(sim.IsConstant, sim.Equal, refineNew != 0)
+	result := p.refineConstants(isConst, equal, refineNew != 0)
 	if skipped != nil && refineNew == 0 && before-len(p.constants) > 1 {
 		*skipped++
 	}
 	return int32(result)
+}
+
+func (p *classPartition) refinementPredicates() (func(int) bool, func(int, int) bool) {
+	if p.nodeIsConst != nil && p.nodesEqual != nil {
+		return p.nodeIsConst, p.nodesEqual
+	}
+	sim := p.requireSimulation()
+	return sim.IsConstant, sim.Equal
 }
 
 func Fra_ClassesTest(p *Fra_Cla_t, id1, id2 int32) {

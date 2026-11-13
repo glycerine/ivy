@@ -14,9 +14,12 @@ type classPartition struct {
 	graph      *aig.Graph
 	simulation *fraSimulation
 	vImps      *vec.Vec_Int_t
-	classes    [][]int
-	constants  []int
-	reprs      []int // -1 means no representative
+	// BMC replaces the simulation predicates temporarily during refinement.
+	nodeIsConst func(int) bool
+	nodesEqual  func(int, int) bool
+	classes     [][]int
+	constants   []int
+	reprs       []int // -1 means no representative
 }
 
 func newClassPartition(nodeCount int) *classPartition {
