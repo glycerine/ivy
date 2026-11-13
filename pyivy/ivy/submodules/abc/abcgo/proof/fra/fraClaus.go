@@ -137,6 +137,23 @@ func Fra_ClausInductiveClauses(p *Clu_Man_t) int32 {
 	}
 	return int32(removed)
 }
+
+// clausRefineAndStore commits candidates only after the induction pass has
+// completed successfully. A failed solver setup must not promote unchecked
+// candidates to proven clauses.
+func clausRefineAndStore(p *Clu_Man_t) bool {
+	for {
+		removed := Fra_ClausInductiveClauses(p)
+		if removed < 0 {
+			return false
+		}
+		if removed == 0 {
+			Fra_ClausAddToStorage(p)
+			return true
+		}
+		p.nClauses -= removed
+	}
+}
 func Fra_ClausAddToStorage(p *Clu_Man_t) {
 	clauses := clausSlices(p.vLits, p.vClauses)
 	count := 0
@@ -318,18 +335,12 @@ func Fra_Claus(graph *aig.Graph, frames, prefix, maxClauses, cutSize, levels, ma
 		if bmc != 0 {
 			p.nClauses -= Fra_ClausBmcClauses(p)
 		}
-		counter := int32(1)
-		for counter > 0 {
-			counter = Fra_ClausInductiveClauses(p)
-			if counter > 0 {
-				p.nClauses -= counter
-			}
+		if !clausRefineAndStore(p) {
+			fmt.Println("Fra_Claus: internal error; candidates were not stored.")
+			return 1
 		}
-		Fra_ClausAddToStorage(p)
 		if target != 0 {
-			if counter == -1 {
-				fmt.Println("Fra_Claus: internal error.")
-			} else if p.fFail != 0 {
+			if p.fFail != 0 {
 				fmt.Println("Property fails during refinement.")
 			} else {
 				fmt.Println("Property holds inductively after strengthening.")
