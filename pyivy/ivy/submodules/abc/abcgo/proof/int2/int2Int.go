@@ -2,15 +2,15 @@ package int2
 
 import (
 	"github.com/glycerine/abcgo/aig/gia"
-	"github.com/glycerine/abcgo/aig/gia/mf"
 	"github.com/glycerine/abcgo/misc/vec"
+	"github.com/glycerine/abcgo/sat/cnf"
 )
 
 type Gia_Man_t = gia.Gia_Man_t
 type Gia_Obj_t = gia.Gia_Obj_t
 type Vec_Int_t = vec.Vec_Int_t
 type Vec_Ptr_t = vec.Vec_Ptr_t
-type Cnf_Dat_t = mf.CNF
+type Cnf_Dat_t = cnf.CNF
 type abctime = int64
 
 /**CFile****************************************************************

@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/glycerine/abcgo/aig/gia"
-	"github.com/glycerine/abcgo/aig/gia/mf"
 	"github.com/glycerine/abcgo/misc/vec"
 )
 
@@ -54,7 +53,7 @@ import (
 **********************************************************************
 */
 func Int2_ManDupInit(p *Gia_Man_t, fVerbose int32) *Gia_Man_t {
-	assert(Gia_ManRegNum(p) > 0, "Gia_ManRegNum(p) > 0")
+	assert(gia.Gia_ManRegNum(p) > 0, "Gia_ManRegNum(p) > 0")
 	pNew := gia.Gia_ManStart(10000)
 	pNew.CopyIdentityFrom(p)
 	gia.Gia_ObjSetValue(gia.Gia_ManConst0(p), 0)
@@ -114,7 +113,7 @@ func Int2_ManDupInit(p *Gia_Man_t, fVerbose int32) *Gia_Man_t {
 func Int2_ManCheckInit(p *Gia_Man_t) int32 {
 	assert(gia.Gia_ManRegNum(p) > 0, "Gia_ManRegNum(p) > 0")
 	pNew := gia.Jf_ManDeriveCnf(p, 0)
-	cnf, ok := pNew.TakeData().(*mf.CNF)
+	cnf, ok := pNew.TakeData().(*Cnf_Dat_t)
 	if !ok || cnf == nil {
 		gia.Gia_ManStop(pNew)
 		return 0
@@ -201,7 +200,7 @@ func Int2_ManSetupBmcSolver(p *Gia_Man_t, nFrames int32) *sat_solver {
 	assert(gia.Gia_ManRegNum(pFrames) == 0, "Gia_ManRegNum(pFrames) == 0")
 	pNew := gia.Jf_ManDeriveCnf(pFrames, 0)
 	gia.Gia_ManStop(pFrames)
-	cnf, ok := pNew.TakeData().(*mf.CNF)
+	cnf, ok := pNew.TakeData().(*Cnf_Dat_t)
 	if !ok || cnf == nil {
 		gia.Gia_ManStop(pNew)
 		return nil
@@ -258,13 +257,12 @@ func Int2_ManCreateFrames(p *Int2_Man_t, iFrame int32, vPrefCos *Vec_Int_t) {
 	assert(p != nil && p.pGia != nil && p.pGiaPref != nil && p.pSatPref != nil, "manager and prefix state exist")
 	assert(iFrame >= 0, "frame index is nonnegative")
 	for i := int32(vec.Vec_PtrSize(p.vMapFrames)); i <= iFrame; i++ {
-		vec.Vec_PtrPush(p.vMapFrames, vec.Vec_IntStartFull(int(gia.Gia_ManObjNum(p.pGia))))
+		frame := vec.Vec_IntStartFull(int(gia.Gia_ManObjNum(p.pGia)))
+		vec.Vec_IntWriteEntry(frame, 0, 0)
+		vec.Vec_PtrPush(p.vMapFrames, frame)
 	}
 	assert(int32(vec.Vec_PtrSize(p.vMapFrames)) == iFrame+1, "frame maps are contiguous")
 	if iFrame == 0 {
-		if Int2_ManCheckFrames(p, iFrame, 0) < 0 {
-			Int2_ManWriteFrames(p, iFrame, 0, 0)
-		}
 		if sat_solver_addclause(p.pSatPref, []int32{sat_literal(0, 1)}) == 0 {
 			panic("int2: constant-zero SAT unit is inconsistent")
 		}
@@ -285,7 +283,9 @@ func Int2_ManCreateFrames(p *Int2_Man_t, iFrame int32, vPrefCos *Vec_Int_t) {
 		obj := gia.Gia_ManObj(p.pGia, iObj)
 		switch {
 		case gia.Gia_ObjIsPi(p.pGia, obj) != 0:
-			Int2_ManWriteFrames(p, frame, iObj, gia.Gia_ManAppendCi(p.pGiaPref))
+			lit := gia.Gia_ManAppendCi(p.pGiaPref)
+			sat_solver_setnvars(p.pSatPref, (lit>>1)+1)
+			Int2_ManWriteFrames(p, frame, iObj, lit)
 		case gia.Gia_ObjIsRo(p.pGia, obj) != 0 && frame == 0:
 			Int2_ManWriteFrames(p, frame, iObj, 0)
 		case gia.Gia_ObjIsRo(p.pGia, obj) != 0:
@@ -316,6 +316,8 @@ func Int2_ManCreateFrames(p *Int2_Man_t, iFrame int32, vPrefCos *Vec_Int_t) {
 			lit0 := Int2_ManCheckFrames(p, frame, fanin0ID)
 			lit1 := Int2_ManCheckFrames(p, frame, fanin1ID)
 			if lit0 >= 0 && lit1 >= 0 {
+				lit0 ^= gia.Gia_ObjFaninC0(obj)
+				lit1 ^= gia.Gia_ObjFaninC1(obj)
 				before := gia.Gia_ManObjNum(p.pGiaPref)
 				lit := gia.Gia_ManHashAnd(p.pGiaPref, lit0, lit1)
 				Int2_ManWriteFrames(p, frame, iObj, lit)

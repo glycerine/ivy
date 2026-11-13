@@ -4,7 +4,6 @@ import (
 	"time"
 
 	"github.com/glycerine/abcgo/aig/gia"
-	"github.com/glycerine/abcgo/aig/gia/mf"
 	"github.com/glycerine/abcgo/misc/vec"
 )
 
@@ -108,7 +107,7 @@ func Int2_ManPreparePrefix(p *Gia_Man_t, f int32, pvCiMap **Vec_Int_t) *sat_solv
 	assert(pvCiMap != nil, "CI map output is provided")
 	pPref := Int2_ManUnroll(p, f)
 	pNew := gia.Jf_ManDeriveCnf(pPref, 0)
-	cnf, ok := pNew.TakeData().(*mf.CNF)
+	cnf, ok := pNew.TakeData().(*Cnf_Dat_t)
 	gia.Gia_ManStop(pPref)
 	if !ok || cnf == nil {
 		gia.Gia_ManStop(pNew)
@@ -149,7 +148,7 @@ func Int2_ManPrepareSuffix(p *Gia_Man_t, vImageOne *Vec_Int_t, vImagesAll *Vec_I
 	pSuff := Int2_ManProbToGia(p, vImageOne)
 	assert(gia.Gia_ManPiNum(pSuff) == gia.Gia_ManCiNum(p), "suffix inputs match original CIs")
 	pNew := gia.Jf_ManDeriveCnf(pSuff, 0)
-	cnf, ok := pNew.TakeData().(*mf.CNF)
+	cnf, ok := pNew.TakeData().(*Cnf_Dat_t)
 	gia.Gia_ManStop(pSuff)
 	if !ok || cnf == nil {
 		gia.Gia_ManStop(pNew)

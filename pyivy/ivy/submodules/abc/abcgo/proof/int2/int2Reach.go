@@ -42,7 +42,7 @@ func int2EvalGraph(p *Gia_Man_t, inputs, state, values, next []bool) bool {
 		obj := gia.Gia_ManRo(p, int32(i))
 		values[gia.Gia_ObjId(p, obj)] = bit
 	}
-	for id := 1; id < nObj; id++ {
+	for id := 1; id < len(values); id++ {
 		obj := gia.Gia_ManObj(p, int32(id))
 		if gia.Gia_ObjIsAnd(obj) == 0 {
 			continue
