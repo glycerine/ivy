@@ -34,6 +34,14 @@ AND/XOR phase encodings, callbacks, stop flags, original inert circuit hooks,
 command registration/flags, CNF-file handling and witness validity. DRUP output
 is parsed and each addition independently checked by RUP, including empty clause.
 
+Follow-up review fixed eliminated assumptions bypassing validation when
+preprocessing is off, invalid substitutions mutating the solver, stale models
+after preprocessing failure, and DIMACS exports losing assumptions that
+contradict root assignments. Regressions cover each case. A 300-formula
+incremental preprocessing oracle validates repeated queries and reconstructed
+models; a separate 4,000-query oracle validates assumption conflict cores.
+These finite tests do not prove all solver or resource-limit behavior.
+
 Passed:
 
 ```
