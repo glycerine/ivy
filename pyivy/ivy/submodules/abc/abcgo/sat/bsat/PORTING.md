@@ -249,3 +249,8 @@ Previously, records from the old formula remained in the store and could be
 mistaken for roots of the new formula. Callers that need the old proof can
 release the store before reset. A regression checks the new store's contents;
 the full race-enabled BSAT suite passes.
+
+Reset also clears pending learned units and variable-indexed user and pivot
+state from the old formula. The learned-unit regression creates an actual
+learned unit before reset, then verifies it is not returned for the new formula.
+The full race-enabled BSAT suite passes.

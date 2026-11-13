@@ -92,6 +92,9 @@ func (s *sat_solver_t) Reset() {
 		s.pStore = Sto_ManAlloc()
 	}
 	sat_solver_restart(s)
+	for _, pending := range []*veci{&s.unit_lits, &s.user_vars, &s.user_values, &s.pivot_vars} {
+		veci_resize(pending, 0)
+	}
 	s.fSolved = 0
 	s.lastStatus = Unknown
 	veci_resize(&s.conf_final, 0)

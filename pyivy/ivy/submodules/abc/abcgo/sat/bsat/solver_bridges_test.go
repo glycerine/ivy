@@ -185,3 +185,38 @@ func TestResetStartsFreshClauseStore(t *testing.T) {
 		t.Fatalf("reset store roots=%d", store.NumRoots())
 	}
 }
+
+func TestResetDiscardsLearnedUnitQueue(t *testing.T) {
+	s := NewSolver()
+	x, y := s.NewVariable(), s.NewVariable()
+	s.AddClause(Positive(x), Positive(y))
+	s.AddClause(Positive(x), Negative(y))
+	if s.Solve() != Satisfiable {
+		t.Fatal("expected satisfiable formula")
+	}
+	if len(veci_begin(&s.unit_lits)) == 0 {
+		t.Fatal("test expected a learned unit")
+	}
+	s.Reset()
+	if units := s.TakeUnitLiterals(); len(units) != 0 {
+		t.Fatalf("old learned units after reset: %v", units)
+	}
+}
+
+func TestResetClearsVariableSpecificState(t *testing.T) {
+	s := NewSolver()
+	s.NewVariable()
+	s.NewVariable()
+	s.SetPivotVariables([]int32{1})
+	// User-variable collection is internal state indexed by the old formula.
+	veci_push(&s.user_vars, 1)
+	veci_push(&s.user_values, 1)
+	s.Reset()
+	s.NewVariable()
+	if s.pivot_vars.size != 0 || s.user_vars.size != 0 || s.user_values.size != 0 {
+		t.Fatal("reset retained old variable-specific state")
+	}
+	if s.Solve() != Satisfiable {
+		t.Fatal("reused solver should be satisfiable")
+	}
+}
