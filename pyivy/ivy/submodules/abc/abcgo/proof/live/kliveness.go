@@ -33,6 +33,7 @@ func introduceAbsorberLogicMode(p *aig.Graph, zero, index *int32, nonFirst int32
 	}
 	c.copyInputs()
 	state := aig.Aig_ObjCreateCi(c.destination)
+	c.copySourceNodes()
 	input := c.signal(p.Outputs()[*zero])
 	previous := input
 	if nonFirst != 0 {
@@ -75,6 +76,7 @@ func kLiveProofModelMode(p *aig.Graph, directive, target, invariant int32, sourc
 		c = newSourceGraphCopy(p, "_proof")
 	}
 	c.copyInputs()
+	c.copySourceNodes()
 	for i := 0; i < propertyOutputs(p); i++ {
 		property := c.signal(p.Outputs()[i])
 		if int32(i) == target && (directive == 1 || directive == 3 || directive == 4) {

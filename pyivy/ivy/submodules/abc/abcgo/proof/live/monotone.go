@@ -60,6 +60,7 @@ func createMonotoneTesterMode(p *aig.Graph, indexes *aigPoIndices, vectors *mono
 		delayed[id] = d
 		delayedInOrder = append(delayedInOrder, d)
 	}
+	c.copySourceNodes()
 	pending := c.signal(p.Outputs()[indexes.attrPendingSignalIndex])
 	guard := aig.Aig_And(c.destination, pending, pendingOld)
 	for _, id := range vectors.attrKnownMonotone {

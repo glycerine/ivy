@@ -110,6 +110,19 @@ func newSourceGraphCopy(p *aig.Graph, suffix string) *graphCopy {
 	c.sourceNodes = true
 	return c
 }
+
+// copySourceNodes performs the C constructors' object-order node loop.
+// It must run after source CIs and the constructor's extra CIs are created.
+func (c *graphCopy) copySourceNodes() {
+	if !c.sourceNodes {
+		return
+	}
+	for id, n := range c.nodes {
+		if (n.Kind == aig.And || n.Kind == aig.ExclusiveOr) && !aig.Aig_ObjIsNone(c.source, aig.Edge(id)<<1) {
+			c.visit(id)
+		}
+	}
+}
 func (c *graphCopy) mapEdge(e aig.Edge) aig.Edge { return c.visit(e.NodeID()) ^ aig.Edge(e&1) }
 func (c *graphCopy) visit(id int) aig.Edge {
 	if e, exists := c.mapping[id]; exists {

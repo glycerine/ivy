@@ -114,6 +114,7 @@ func disjunctiveTester(p *aig.Graph, candidates []aig.Edge, k int32) *aig.Graph 
 	for i := range states {
 		states[i] = aig.Aig_ObjCreateCi(c.destination)
 	}
+	c.copySourceNodes()
 	properties := make([]aig.Edge, len(groups))
 	for i, group := range groups {
 		signals := make([]aig.Edge, len(group))

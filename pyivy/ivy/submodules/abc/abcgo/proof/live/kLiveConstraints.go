@@ -46,6 +46,7 @@ func createNewAigWith0LivePoMode(p *aig.Graph, signals []aig.Edge, index *int32,
 		c = newSourceGraphCopy(p, "_0Live")
 	}
 	c.copyInputs()
+	c.copySourceNodes()
 	for _, e := range signals {
 		c.signal(e)
 	}

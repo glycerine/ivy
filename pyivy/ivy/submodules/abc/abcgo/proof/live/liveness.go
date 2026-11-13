@@ -92,6 +92,18 @@ func livenessToSafety(network *Network, options TransformOptions, source, source
 		originalRegisters[r] = image
 		registerNames = append(registerNames, inputName(network, pis+r))
 	}
+	saved, savedNext, capture := aig.InvalidEdge, aig.InvalidEdge, aig.InvalidEdge
+	if doLive && !oneStep {
+		saved = aig.Aig_ObjCreateCi(dst)
+		registerNames = append(registerNames, "SAVED_LO")
+		savedNext = aig.Aig_Or(dst, save, saved)
+		if options.Restartable {
+			capture = save
+		} else {
+			capture = aig.Aig_And(dst, save, saved.Not())
+		}
+	}
+	copyGraph.copySourceNodes()
 	for r := 0; r < regs; r++ {
 		next = append(next, copyGraph.signal(p.Outputs()[pos+r]))
 	}
@@ -117,13 +129,7 @@ func livenessToSafety(network *Network, options TransformOptions, source, source
 		loop := save
 		seenLive, seenFair := live, fair
 		if !oneStep {
-			saved := aig.Aig_ObjCreateCi(dst)
-			registerNames = append(registerNames, "SAVED_LO")
-			next = append(next, aig.Aig_Or(dst, save, saved))
-			capture := aig.Aig_And(dst, save, saved.Not())
-			if options.Restartable {
-				capture = save
-			}
+			next = append(next, savedNext)
 			compare := aig.Edge(0)
 			shadows := options.ShadowRegisters
 			if shadows == nil {

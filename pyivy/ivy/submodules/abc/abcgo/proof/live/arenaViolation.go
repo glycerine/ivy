@@ -105,6 +105,7 @@ func createNewAigWith0LivePoWithDSCMode(p *aig.Graph, signals []aig.Edge, index 
 	violationOld := aig.Aig_ObjCreateCi(c.destination)
 	pendingOld := aig.Aig_ObjCreateCi(c.destination)
 	monotoneOld := createMonotoneBarrierLO(c.destination, barriers)
+	c.copySourceNodes()
 	for _, e := range signals {
 		c.signal(e)
 	}

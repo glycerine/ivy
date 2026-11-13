@@ -40,7 +40,7 @@ Monotonicity discovery retains only proved candidates. Unknown results never bec
 
 Source-shaped graph builders reproduce the C loops that copy native EXOR nodes with `Aig_And`; this changes their truth function. The native `LivenessToSafety`, `KLive`, and monotonicity discovery convenience APIs preserve XOR semantics.
 
-Graph construction uses source-compatible copy bookkeeping on its input graph. Concurrent transformations of the same graph require caller synchronization; independent graphs and the local parser do not share scratch state.
+Source-mode liveness, simulation, absorber, constrained-cone, arena, combination, and monotonicity builders traverse every live input AND/EXOR in source object order and set its input-graph copy mapping, including unused nodes. Native convenience paths retain lazy copying. Graph construction uses source-compatible copy bookkeeping on its input graph. Concurrent transformations of the same graph require caller synchronization; independent graphs and the local parser do not share scratch state.
 
 ## Verification
 

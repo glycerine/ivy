@@ -32,6 +32,7 @@ func createDisjunctiveMonotoneTesterMode(p *aig.Graph, indexes *aigPoIndices, ve
 	for i := range delayed {
 		delayed[i] = aig.Aig_ObjCreateCi(c.destination)
 	}
+	c.copySourceNodes()
 	pending := c.signal(p.Outputs()[indexes.attrPendingSignalIndex])
 	guard := aig.Aig_And(c.destination, pending, previousPending)
 	antecedents := []aig.Edge{}
