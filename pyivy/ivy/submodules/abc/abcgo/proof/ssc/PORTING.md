@@ -31,22 +31,24 @@ others being false, preserving the disjunction of outputs.
 `Append`, `Verbose`, `Verify` fields. Defaults equal the C defaults. Start returns
 a manager plus the SAT status instead of C's invalid-pointer sentinel. Simulation
 and class helpers take explicit `Simulation` and `Classes` objects, replacing
-mutable GIA-embedded simulation buffers and eliminating package-global random
-state. Scalar bit primitives use slices and `math/bits`; simulation doubles each
+mutable GIA-embedded simulation buffers. Random patterns use the shared GIA
+random generator, as in C; concurrent sweeps can interleave its stream. Scalar
+bit primitives use slices and `math/bits`; simulation doubles each
 input's word row when saving patterns beyond capacity.
 
 The current implementation builds a care-initialized FRAIG and grows it during
 the sweep, including prior proved substitutions in later queries. It uses the
-GIA equivalence reducer for AND-only graphs. Native XOR, MUX and buffer inputs
-are lowered in the working FRAIG, but still use a separate output reconstruction
-because GIA's equivalence reducer currently treats native gates as ANDs.
+GIA equivalence reducer. Native XOR, MUX and buffer inputs are lowered at the
+boundary to the AND-inverter representation expected by C. Representative
+metadata for a lowered graph belongs to the lowered copy, not the native input.
 Verification now builds the two implication miters and dual-output miter from
 the C routine and calls the CEC verification entry point. If the GIA miter
 builder rejects an interface, verification reports undecided.
 
-Class refinement uses deterministic full normalized simulation keys rather than
-source hash buckets followed by equality splitting. Simulation's random-number
-generator and some representative bookkeeping still differ from C. The SAT
+Class refinement follows the source's constant-node hash buckets, collision
+splitting and existing-class refinement. Constant candidates use representative
+zero without a class link, and unproved candidates remain in nonconstant
+classes. The SAT
 frontier has been ported, but source CNF integration is still being reviewed.
 These differences can change node
 choices, SAT counts, and resource-limit outcomes. The source-only declaration `Ssc_GenerateOneHot` has no

@@ -3,7 +3,6 @@ package ssc
 import (
 	"github.com/glycerine/abcgo/aig/gia"
 	"math/bits"
-	"math/rand"
 )
 
 func Ssc_SimAnd(out, a, b []uint64, n int, ca, cb bool) {
@@ -66,7 +65,7 @@ func Ssc_SimCountBits(a []uint64, n int) int32 {
 	return count
 }
 func NewSimulation(p *gia.Gia_Man_t, words int) *Simulation {
-	s := &Simulation{Graph: p, random: rand.New(rand.NewSource(1))}
+	s := &Simulation{Graph: p}
 	Ssc_GiaResetPiPattern(s, words)
 	return s
 }
@@ -106,16 +105,16 @@ func Ssc_GiaRandomPiPattern(s *Simulation, words int, pivot []bool) {
 	// The C routine fills primary inputs, not register outputs. The latter
 	// retain the zero words installed by Ssc_GiaResetPiPattern.
 	for i := 0; i < int(gia.Gia_ManPiNum(s.Graph)); i++ {
-		for w := range s.Inputs[i] {
-			s.Inputs[i][w] = s.random.Uint64()
-		}
 		if pivot == nil {
-			s.Inputs[i][0] = s.Inputs[i][0]&^3 | 2
+			s.Inputs[i][0] = uint64(gia.Gia_ManRandom(0))<<32 | uint64(gia.Gia_ManRandom(0))<<2 | 2
 		} else {
-			s.Inputs[i][0] &^= 1
+			s.Inputs[i][0] = uint64(gia.Gia_ManRandom(0))<<32 | uint64(gia.Gia_ManRandom(0))<<1
 			if pivot[i] {
 				s.Inputs[i][0] |= 1
 			}
+		}
+		for w := 1; w < words; w++ {
+			s.Inputs[i][w] = uint64(gia.Gia_ManRandom(0))<<32 | uint64(gia.Gia_ManRandom(0))
 		}
 	}
 }

@@ -229,7 +229,7 @@ func TestPublishedRepresentativesHavePivotPhase(t *testing.T) {
 	gia.Gia_ManAppendCo(care.graph, care.graph.InputLiterals()[0]^1)
 	r := Ssc_PerformSweeping(a.graph, care.graph, nil)
 	v, _ := r.Evaluate([]bool{true})
-	if !v[0] || gia.Gia_ObjRepr(a.graph, x>>1) != 0 || gia.Gia_ObjPhase(gia.Gia_ManObj(a.graph, x>>1)) != 1 || gia.Gia_ObjNext(a.graph, 0) != x>>1 {
+	if !v[0] || gia.Gia_ObjRepr(a.graph, x>>1) != 0 || gia.Gia_ObjPhase(gia.Gia_ManObj(a.graph, x>>1)) != 1 || gia.Gia_ObjNext(a.graph, 0) != 0 {
 		t.Fatal("proved constant-one phase/class metadata lost")
 	}
 }

@@ -51,6 +51,9 @@ func TestRandomNativeGateTransformations(t *testing.T) {
 		params.SatVarMax = 1
 		params.CallsRecycle = 0
 		result := Ssc_PerformSweeping(g, care, &params)
+		if hasNativeGates(result) {
+			t.Fatal("sweeping must return an AND-inverter graph")
+		}
 		checkCare(t, g, result, care)
 
 		for _, transformed := range []*gia.Gia_Man_t{Gia_ManDropContained(g), Gia_ManOptimizeRing(g)} {
@@ -152,6 +155,20 @@ func TestRandomPatternLeavesRegisterOutputsZero(t *testing.T) {
 	}
 }
 
+func TestRandomPatternUsesGiaRandomWords(t *testing.T) {
+	g := gia.Gia_ManStart(3)
+	gia.Gia_ManAppendCi(g)
+	gia.Gia_ManRandom(1)
+	high, low := gia.Gia_ManRandom(0), gia.Gia_ManRandom(0)
+	want := uint64(high)<<32 | uint64(low)<<2 | 2
+	gia.Gia_ManRandom(1)
+	sim := NewSimulation(g, 1)
+	Ssc_GiaRandomPiPattern(sim, 1, nil)
+	if sim.Inputs[0][0] != want {
+		t.Fatalf("got %x want %x", sim.Inputs[0][0], want)
+	}
+}
+
 func TestClassWordRefinementNormalizesCurrentFirstBit(t *testing.T) {
 	g := gia.Gia_ManStart(4)
 	gia.Gia_ManAppendCi(g)
@@ -161,6 +178,21 @@ func TestClassWordRefinementNormalizesCurrentFirstBit(t *testing.T) {
 	c := &Classes{Groups: [][]int32{{0, 1}}, Repr: []int32{-1, 0}, Phase: []bool{false, false}}
 	if n := Ssc_GiaClassesRefine(c, s); n != 0 || c.Repr[1] != 0 {
 		t.Fatal("complementary simulation words should remain in the same class")
+	}
+}
+
+// For two departed constant candidates, the C hash table has 101 buckets;
+// 2*1291 and 204*1291 collide but the signatures must still be split.
+func TestClassRefinementSplitsConstantHashCollision(t *testing.T) {
+	g := gia.Gia_ManStart(5)
+	gia.Gia_ManAppendCi(g)
+	gia.Gia_ManAppendCi(g)
+	s := NewSimulation(g, 1)
+	Ssc_GiaResetSimInfo(s)
+	s.Values[1][0], s.Values[2][0] = 2, 204
+	c := &Classes{Groups: [][]int32{{0, 1, 2}}, Repr: []int32{-1, 0, 0}, Phase: make([]bool, 3)}
+	if count := Ssc_GiaClassesRefine(c, s); count != 2 || c.Repr[1] != -1 || c.Repr[2] != -1 {
+		t.Fatalf("collision must split, counting two departures: count=%d repr=%v", count, c.Repr)
 	}
 }
 

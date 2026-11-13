@@ -144,6 +144,15 @@ func carePatterns(p *Ssc_Man_t) {
 	}
 }
 func Ssc_PerformSweepingInt(subject, care *gia.Gia_Man_t, params *Ssc_Pars_t) *gia.Gia_Man_t {
+	// C SSC operates on ordinary AND-inverter graphs. Lower the extended GIA
+	// gate kinds at the boundary so the source reducer sees the same contract.
+	if hasNativeGates(subject) {
+		subject = gia.Gia_ManDupNoMuxes(subject, 1)
+	}
+	if hasNativeGates(care) {
+		care = gia.Gia_ManDupNoMuxes(care, 1)
+	}
+	gia.Gia_ManRandom(1)
 	p, status := Ssc_ManStart(subject, care, params)
 	if status == satoko.SATOKO_UNSAT {
 		return copyOutputs(subject, nil, true)
@@ -230,64 +239,43 @@ func Ssc_PerformSweepingInt(subject, care *gia.Gia_Man_t, params *Ssc_Pars_t) *g
 	if p.Sim.Patterns > 1 {
 		flushPatterns()
 	}
-	// Publish canonical proved-class links, including phase metadata from Pivot.
-	tails := make(map[int32]int32)
+	// The C class links include candidates that remain unproved; proved flags
+	// separately control which links the equivalence reducer may use. Constant
+	// candidates have representative zero but are not a linked class.
 	for id := int32(1); int(id) < subject.ObjectCount(); id++ {
-		if gia.Gia_ObjHasRepr(subject, id) == 0 {
-			continue
+		gia.Gia_ObjUnsetRepr(subject, id)
+		gia.Gia_ObjSetNext(subject, id, 0)
+	}
+	for _, group := range p.Classes.Groups {
+		for i := 1; i < len(group); i++ {
+			gia.Gia_ObjSetRepr(subject, group[i], group[0])
+			if group[0] != 0 {
+				gia.Gia_ObjSetNext(subject, group[i-1], group[i])
+			}
 		}
-		root := gia.Gia_ObjRepr(subject, id)
-		for gia.Gia_ObjHasRepr(subject, root) != 0 {
-			root = gia.Gia_ObjRepr(subject, root)
-		}
-		gia.Gia_ObjSetRepr(subject, id, root)
-		previous, ok := tails[root]
-		if !ok {
-			previous = root
-		}
-		gia.Gia_ObjSetNext(subject, previous, id)
-		tails[root] = id
 	}
 	// C derives the final graph from the proved representative classes and
 	// then removes dangling nodes, rather than rebuilding directly from the SAT
 	// query mappings.
-	var result *gia.Gia_Man_t
-	native := false
-	for id := int32(0); int(id) < subject.ObjectCount(); id++ {
-		_, _, _, kind := subject.Gate(id)
-		if kind >= 3 && kind <= 5 {
-			native = true
-			break
-		}
+	result := gia.Gia_ManEquivReduce(subject, 0, 0, 1, 0)
+	if result == nil {
+		result = gia.Gia_ManDup(subject)
 	}
-	if native {
-		// Gia_ManEquivReduce currently treats native XOR, MUX and buffer
-		// nodes as ANDs. Preserve their semantics until that dependency is
-		// ported for native nodes.
-		replacements := make([]int32, subject.ObjectCount())
-		for id := range replacements {
-			replacements[id] = int32(id) << 1
-			if gia.Gia_ObjHasRepr(subject, int32(id)) != 0 {
-				repr := gia.Gia_ObjRepr(subject, int32(id))
-				phase := int32(0)
-				if p.Classes.Phase[id] != p.Classes.Phase[repr] {
-					phase = 1
-				}
-				replacements[id] = replacements[repr] ^ phase
-			}
-		}
-		result = copyMapped(subject, subject.OutputLiterals(), replacements)
-	} else {
-		result = gia.Gia_ManEquivReduce(subject, 0, 0, 1, 0)
-		if result == nil {
-			result = gia.Gia_ManDup(subject)
-		}
-		result = gia.Gia_ManCleanup(result)
-	}
+	result = gia.Gia_ManCleanup(result)
 	if p.Params.Verbose {
 		Ssc_ManPrintStats(p)
 	}
 	return result
+}
+
+func hasNativeGates(g *gia.Gia_Man_t) bool {
+	for id := int32(0); int(id) < g.ObjectCount(); id++ {
+		_, _, _, kind := g.Gate(id)
+		if kind >= 3 && kind <= 5 {
+			return true
+		}
+	}
+	return false
 }
 func Ssc_PerformSweeping(subject, care *gia.Gia_Man_t, params *Ssc_Pars_t) *gia.Gia_Man_t {
 	result := Ssc_PerformSweepingInt(subject, care, params)

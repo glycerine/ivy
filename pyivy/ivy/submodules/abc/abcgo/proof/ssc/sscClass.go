@@ -1,8 +1,9 @@
 package ssc
 
 import (
-	"encoding/binary"
 	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/misc/util"
+	"sort"
 )
 
 func Ssc_GiaClassesInit(p *gia.Gia_Man_t, pivot []bool) *Classes {
@@ -53,38 +54,71 @@ func Ssc_GiaSimAreEqual(s *Simulation, a, b int32) bool {
 }
 func Ssc_GiaSimIsConst0(s *Simulation, id int32) bool { return Ssc_GiaSimAreEqual(s, 0, id) }
 func Ssc_GiaClassesRefine(c *Classes, s *Simulation) int32 {
+	// C first refines existing nonconstant classes, then hashes nodes that
+	// just left the constant class and refines each resulting hash bucket.
 	var out [][]int32
+	var moved []int32
 	var splits int32
-	for _, g := range c.Groups {
-		groups := map[string]int{}
+	partition := func(g []int32) [][]int32 {
 		var parts [][]int32
-		for _, id := range g {
-			buf := make([]byte, 8*s.Words)
-			flip := s.Values[id][0]&1 != 0
-			for w, x := range s.Values[id] {
-				if flip {
-					x = ^x
+		for len(g) > 0 {
+			group := []int32{g[0]}
+			var rest []int32
+			for _, id := range g[1:] {
+				if Ssc_GiaSimAreEqual(s, g[0], id) {
+					group = append(group, id)
+				} else {
+					rest = append(rest, id)
 				}
-				binary.LittleEndian.PutUint64(buf[w*8:], x)
 			}
-			key := string(buf)
-			index, ok := groups[key]
-			if !ok {
-				index = len(parts)
-				groups[key] = index
-				parts = append(parts, nil)
+			parts = append(parts, group)
+			g = rest
+		}
+		return parts
+	}
+	for _, g := range c.Groups {
+		if g[0] == 0 {
+			constants := []int32{0}
+			for _, id := range g[1:] {
+				if Ssc_GiaSimIsConst0(s, id) {
+					constants = append(constants, id)
+				} else {
+					moved = append(moved, id)
+				}
 			}
-			parts[index] = append(parts[index], id)
+			out = append(out, constants)
+			continue
 		}
-		if len(g) > 0 && g[0] == 0 {
-			// The source counts each node leaving the constant class,
-			// even when several share a newly discovered signature.
-			splits += int32(len(g) - len(parts[0]))
-		} else {
-			splits += int32(len(parts) - 1)
-		}
+		parts := partition(g)
+		splits += int32(len(parts) - 1)
 		out = append(out, parts...)
 	}
+	if len(moved) != 0 {
+		primes := [...]uint64{1291, 1699, 1999, 2357, 2953, 3313, 3907, 4177, 4831, 5147, 5647, 6343, 6899, 7103, 7873, 8147}
+		tableSize := uint32(util.Abc_PrimeCudd(uint32(100 + len(moved)/3)))
+		buckets := make(map[uint32][]int32)
+		var keys []uint32
+		for _, id := range moved {
+			var hash uint32
+			flip := s.Values[id][0]&1 != 0
+			for i, word := range s.Values[id] {
+				if flip {
+					word = ^word
+				}
+				hash ^= uint32(word * primes[i&15])
+			}
+			key := hash % tableSize
+			if len(buckets[key]) == 0 {
+				keys = append(keys, key)
+			}
+			buckets[key] = append(buckets[key], id)
+		}
+		for _, key := range keys {
+			out = append(out, partition(buckets[key])...)
+		}
+		splits += int32(len(moved))
+	}
+	sort.Slice(out, func(i, j int) bool { return out[i][0] < out[j][0] })
 	c.Groups = out
 	c.reindex()
 	return splits

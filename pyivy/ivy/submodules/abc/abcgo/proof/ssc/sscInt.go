@@ -3,11 +3,10 @@ package ssc
 import (
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/sat/bsat"
-	"math/rand"
 )
 
-// Ssc_Man_t owns all mutable simulation, class, and SAT state. It never borrows
-// GIA scratch fields and separate managers can operate independently.
+// Ssc_Man_t owns the simulation, class, and SAT state for one sweep. The GIA
+// conversion and reduction helpers also use scratch fields on their inputs.
 type Ssc_Man_t struct {
 	Params         Ssc_Pars_t
 	Aig, Care      *gia.Gia_Man_t
@@ -29,7 +28,6 @@ type Simulation struct {
 	Graph           *gia.Gia_Man_t
 	Inputs, Values  [][]uint64
 	Words, Patterns int
-	random          *rand.Rand
 }
 type Classes struct {
 	Groups [][]int32
