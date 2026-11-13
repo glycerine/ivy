@@ -208,3 +208,40 @@ func TestInductionTimeoutReturnsNoResult(t *testing.T) {
 		t.Fatalf("iteration count=%d", pars.nIters)
 	}
 }
+
+func TestInductionWithNontrivialOneHotCandidate(t *testing.T) {
+	g := aig.NewGraph()
+	input, a, b := g.NewInput(), g.NewInput(), g.NewInput()
+	g.AddOutput(g.AND(a, b))
+	g.AddOutput(input)
+	g.AddOutput(input.Not())
+	aig.Aig_ManSetRegNum(g, 2)
+	sim := Fra_SmlSimulateSeq(g, 0, 32, 1, 1)
+	probe := &Fra_Man_t{pManAig: g}
+	if Fra_OneHotCount(probe, Fra_OneHotCompute(probe, sim)) == 0 {
+		t.Fatal("fixture produced no one-hot candidate")
+	}
+	result := Fra_FraigInduction(g, &Fra_Ssw_t{nFramesK: 1, fUse1Hot: 1})
+	if result == nil {
+		t.Fatal("one-hot induction returned no result")
+	}
+	for sequence := 0; sequence < 16; sequence++ {
+		src, dst := make([]bool, 2), make([]bool, result.RegisterCount())
+		for frame := 0; frame < 4; frame++ {
+			value := sequence&(1<<frame) != 0
+			a, err := g.Evaluate(append([]bool{value}, src...))
+			if err != nil {
+				t.Fatal(err)
+			}
+			b, err := result.Evaluate(append([]bool{value}, dst...))
+			if err != nil {
+				t.Fatal(err)
+			}
+			if a[0] != b[0] {
+				t.Fatalf("sequence %04b frame %d outputs %v/%v", sequence, frame, a, b)
+			}
+			copy(src, a[len(a)-len(src):])
+			copy(dst, b[len(b)-len(dst):])
+		}
+	}
+}
