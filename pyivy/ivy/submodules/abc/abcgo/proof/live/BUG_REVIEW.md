@@ -17,3 +17,5 @@ Regressions added and findings fixed:
 The original-C kernel oracle exposed a separate source buffer overflow in the monotone manager display name: allocation allowed one underscore but formatting wrote two. Its generator repairs only that byte count; native strings have no such fixed allocation. All graph equations remain original C in the reference.
 
 Final evidence: full-package normal tests, race tests, and vet pass. Exact C traces cover all major graph-construction families; independent reachable-state enumeration checks PDR against independently enumerated states. Defined source limitations (one-step loops, abstraction, GF-only compilation, and bounded proof resources) are documented in `PORTING.md`.
+
+Additional edge-path coverage in `safety_edge_test.go` checks PDR selection and limit rejection, expired/future deadlines, and witness replay rejection for a violating constraint or a trace that never falsifies the selected property. `go test -cover` reports 87.7% statement coverage for `proof/live`.
