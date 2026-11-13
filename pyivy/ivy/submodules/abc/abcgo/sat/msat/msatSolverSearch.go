@@ -92,19 +92,15 @@ func Msat_SolverSimplifyDB(p *Msat_Solver_t) int {
 	return 1
 }
 func Msat_SolverRemoveLearned(p *Msat_Solver_t) {
-	Msat_SolverCancelUntil(p, 0)
 	for _, c := range p.vLearned.data {
 		if Msat_ClauseIsLocked(p, c) != 0 {
-			for v, reason := range p.pReasons {
-				if reason == c {
-					p.pReasons[v] = nil
-				}
-			}
+			panic("learned clause is locked")
 		}
 		Msat_ClauseFree(p, c, 1)
 	}
 	p.vLearned.data = p.vLearned.data[:0]
 	p.nClauses = len(p.vClauses.data)
+	clear(p.pReasons)
 }
 
 // Msat_SolverRemoveMarked removes clauses added after the recorded index.
@@ -133,9 +129,6 @@ func Msat_SolverAnalyze(p *Msat_Solver_t, c *Msat_Clause_t, out *Msat_IntVec_t, 
 			panic("missing implication reason")
 		}
 		Msat_ClauseCalcReason(p, c, lit, p.vReason)
-		if c.learned {
-			Msat_SolverClaBumpActivity(p, c)
-		}
 		for _, q := range p.vReason.data {
 			v := q >> 1
 			if p.pSeen[v] == stamp {

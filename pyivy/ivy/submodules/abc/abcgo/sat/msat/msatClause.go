@@ -93,12 +93,7 @@ func Msat_ClauseSetNum(c *Msat_Clause_t, n int)   { c.Num = n }
 func Msat_ClauseReadTypeA(c *Msat_Clause_t) int   { return boolInt(c.typeA) }
 func Msat_ClauseSetTypeA(c *Msat_Clause_t, v int) { c.typeA = v != 0 }
 func Msat_ClauseIsLocked(p *Msat_Solver_t, c *Msat_Clause_t) int {
-	for v, r := range p.pReasons[:p.nVars] {
-		if r == c && p.pAssigns[v] >= 0 {
-			return 1
-		}
-	}
-	return 0
+	return boolInt(p.pReasons[c.lits[0]>>1] == c)
 }
 func Msat_ClauseReadActivity(c *Msat_Clause_t) float32     { return c.activity }
 func Msat_ClauseWriteActivity(c *Msat_Clause_t, a float32) { c.activity = a }
