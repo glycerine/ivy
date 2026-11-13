@@ -13,11 +13,13 @@ complemented edges, duplicate nodes, interleaved inputs, VTA startup, and
 counterexample handling. These checks cover small examples; they are not a
 proof of correctness for arbitrary networks or all resource-limit settings.
 
-The `Gia_ManPerformGlaOld` entry point lowers native XOR and MUX nodes into
+The `Gia_ManPerformGla` and `Gia_ManPerformGlaOld` entry points lower native XOR and MUX nodes into
 AND-inverter cones before running the original AND-only refinement. It maps
 incoming gate classes to the lowered graph, conservatively maps selected cones
 back to original gate classes, and verifies any witness against the original
-graph. Gate abstraction reconstruction also preserves native XOR and MUX nodes.
+graph. Old GLA also transfers seeded VTA frame classes to the lowered graph
+and consumes them when VTA starts. Gate abstraction reconstruction preserves
+native XOR and MUX nodes.
 The lower-level `Gla_ManStart` and `Gla_ManStart2` interfaces still require an
 AND-only graph; replacing only their SAT clauses would leave refinement unsound.
 The port also supports reordered inputs, duplicate AND nodes, and buffers.

@@ -17,6 +17,11 @@ func Gia_ManPerformGla(g *gia.Gia_Man_t, pars *Abs_Par_t) int32 {
 	if g == nil || pars == nil || gia.Gia_ManPoNum(g) != 1 {
 		panic("abs: GLA requires one output")
 	}
+	if glaOldHasSpecialGates(g) {
+		return glaPerformLowered(g, pars, false, func(lowered *gia.Gia_Man_t) int32 {
+			return Gia_ManPerformGla(lowered, pars)
+		})
+	}
 	start := time.Now()
 	pars.iFrame = -1
 	g.ClearSequentialCounterexample()
