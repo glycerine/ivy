@@ -72,7 +72,7 @@ func (m *Manager) sweep() error {
 			m.mapped[node.NodeID()] = aig.InvalidEdge
 			continue
 		}
-		m.refineCounterexample(assignment)
+		m.refineCounterexample(assignment, node, representative)
 		if m.classes.representative(node) == representative {
 			return fmt.Errorf("dch: SAT counterexample did not refine node %d", node.NodeID())
 		}

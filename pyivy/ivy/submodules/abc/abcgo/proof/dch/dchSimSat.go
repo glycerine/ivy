@@ -64,7 +64,7 @@ func (m *Manager) simulateTFO(inputs []bool) map[int]bool {
 
 // Refine candidates with an actual SAT counterexample. Classes are partitioned
 // by the full counterexample history, so unchanged classes need no splitting.
-func (m *Manager) refineCounterexample(inputs []bool) {
+func (m *Manager) refineCounterexample(inputs []bool, target ...aig.Edge) {
 	var values []bool
 	var changed map[int]bool
 	if m.params.SimulateTFO {
@@ -76,6 +76,10 @@ func (m *Manager) refineCounterexample(inputs []bool) {
 	}
 	refined := [][]aig.Edge{}
 	for _, group := range m.classes.groups {
+		if !m.params.SimulateTFO && len(target) == 2 && group[0] != target[1] {
+			refined = append(refined, group)
+			continue
+		}
 		needsSplit := !m.params.SimulateTFO
 		if !needsSplit {
 			for _, node := range group {
@@ -91,6 +95,10 @@ func (m *Manager) refineCounterexample(inputs []bool) {
 		}
 		zero, one := []aig.Edge{}, []aig.Edge{}
 		for _, node := range group {
+			if !m.params.SimulateTFO && len(target) == 2 && target[1].NodeID() == 0 && (node.NodeID() < target[0].NodeID() || node.NodeID() >= target[0].NodeID()+500) {
+				zero = append(zero, node)
+				continue
+			}
 			if values[node.NodeID()] != aig.Aig_ObjPhase(m.graph, node) {
 				one = append(one, node)
 			} else {
