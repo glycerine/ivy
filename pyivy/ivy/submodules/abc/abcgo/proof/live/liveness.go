@@ -3,7 +3,6 @@ package live
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/aig"
-	"strconv"
 	"strings"
 )
 
@@ -347,8 +346,20 @@ func commandTransform(frame *Frame, argv []string, ltl, simulation, abstraction 
 	if len(args) > 0 && !strings.HasPrefix(args[0], "-") {
 		args = args[1:]
 	}
-	for i := 0; i < len(args); i++ {
-		switch args[i] {
+	flags := []string{}
+	for _, arg := range args {
+		if !strings.HasPrefix(arg, "-") || len(arg) < 2 {
+			return 1
+		}
+		for _, flag := range arg[1:] {
+			flags = append(flags, "-"+string(flag))
+		}
+	}
+	for _, flag := range flags {
+		if simulation && flag != "-1" {
+			return 1
+		}
+		switch flag {
 		case "-s":
 			onlyLiveness = true
 		case "-l":
@@ -356,19 +367,9 @@ func commandTransform(frame *Frame, argv []string, ltl, simulation, abstraction 
 		case "-1":
 			oneStep = true
 
-		case "-a":
-			i++
-			if i == len(args) {
-				return 1
-			}
-			count, err := strconv.Atoi(args[i])
-			if err != nil || count < 0 || count > registers(frame.Network.Graph) {
-				return 1
-			}
-			options.ShadowRegisters = prepareFlopVector(frame.Network.Graph, int32(count))
 		case "-h":
 			out, _ := frame.writers()
-			fmt.Fprintln(out, "l2s [-s|-l] [-1] [-a shadow-register-count]")
+			fmt.Fprintln(out, "l2s [-s|-l] [-1]")
 			return 1
 		default:
 			return 1

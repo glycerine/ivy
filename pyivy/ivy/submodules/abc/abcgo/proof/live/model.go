@@ -20,6 +20,7 @@ type Abc_Ntk_t = Network
 type Frame struct {
 	Network       *Network
 	LTLProperties []string
+	In            io.Reader
 	Out, Err      io.Writer
 	Checker       SafetyChecker
 }

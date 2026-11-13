@@ -3,7 +3,7 @@ package live
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/aig"
-	"strconv"
+	"os"
 	"strings"
 	"time"
 )
@@ -210,8 +210,17 @@ func Abc_CommandCS_kLiveness(frame *Frame, argc int32, argv []string) int32 {
 	if len(args) > 0 && !strings.HasPrefix(args[0], "-") {
 		args = args[1:]
 	}
-	for i := 0; i < len(args); i++ {
-		switch args[i] {
+	flags := []string{}
+	for _, arg := range args {
+		if !strings.HasPrefix(arg, "-") || len(arg) < 2 {
+			return 1
+		}
+		for _, flag := range arg[1:] {
+			flags = append(flags, "-"+string(flag))
+		}
+	}
+	for _, flag := range flags {
+		switch flag {
 		case "-c":
 			options.Directive = 1
 		case "-m":
@@ -220,16 +229,6 @@ func Abc_CommandCS_kLiveness(frame *Frame, argc int32, argv []string) int32 {
 			options.Directive = 3
 		case "-g":
 			options.Directive = 4
-		case "-K":
-			i++
-			if i == len(args) {
-				return 1
-			}
-			value, err := strconv.Atoi(args[i])
-			if err != nil || value < 1 {
-				return 1
-			}
-			options.MaxAbsorbers = value
 		default:
 			return 1
 		}
@@ -244,18 +243,38 @@ func Abc_CommandCS_kLiveness(frame *Frame, argc int32, argv []string) int32 {
 	return 0
 }
 func Abc_CommandNChooseK(frame *Frame, argc int32, argv []string) int32 {
-	k := 1
-	if len(argv) > 1 {
-		value, err := strconv.Atoi(argv[len(argv)-1])
-		if err != nil {
-			return 1
-		}
-		k = value
-	}
-	if frame.Network == nil || k < 0 || k > registers(frame.Network.Graph) {
+	if frame == nil || frame.Network == nil || frame.Network.Graph == nil {
 		return 1
 	}
-	result := generateGeneralDisjunctiveTester(frame.Network, frame.Network.Graph, int32(k))
+	args := argv
+	if len(args) > 0 {
+		args = args[1:]
+	}
+	for _, arg := range args {
+		if !strings.HasPrefix(arg, "-") {
+			return 1
+		}
+		for _, flag := range arg[1:] {
+			if !strings.ContainsRune("cmCg", flag) {
+				return 1
+			}
+		}
+	}
+	out, _ := frame.writers()
+	fmt.Fprint(out, "Enter parameterizedCombK = ")
+	input := frame.In
+	if input == nil {
+		input = os.Stdin
+	}
+	var k int32
+	if _, err := fmt.Fscan(input, &k); err != nil {
+		fmt.Fprintln(out, "\nFailed to read integer!")
+		return 0
+	}
+	if k < 0 || int(k) > registers(frame.Network.Graph) {
+		return 1
+	}
+	result := generateGeneralDisjunctiveTester(frame.Network, frame.Network.Graph, k)
 	frame.Network = &Network{Graph: result}
-	return 0
+	return 1
 }
