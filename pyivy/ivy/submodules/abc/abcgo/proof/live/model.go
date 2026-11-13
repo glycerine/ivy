@@ -4,9 +4,10 @@ package live
 
 import (
 	"fmt"
-	"github.com/glycerine/abcgo/aig/aig"
 	"io"
 	"os"
+
+	"github.com/glycerine/abcgo/aig/aig"
 )
 
 type Aig_Man_t = aig.Graph
@@ -43,23 +44,23 @@ func NewNetwork(graph *aig.Graph, inputNames, outputNames []string) (*Network, e
 	if err := graph.Check(); err != nil {
 		return nil, fmt.Errorf("live: invalid graph: %w", err)
 	}
-	if len(inputNames) != 0 && len(inputNames) != len(graph.Inputs()) {
+	if len(inputNames) != 0 && len(inputNames) != graph.InputCount() {
 		return nil, fmt.Errorf("live: input name count mismatch")
 	}
-	if len(outputNames) != 0 && len(outputNames) != len(graph.Outputs()) {
+	if len(outputNames) != 0 && len(outputNames) != graph.OutputCount() {
 		return nil, fmt.Errorf("live: output name count mismatch")
 	}
 	return &Network{Graph: graph, InputNames: append([]string(nil), inputNames...), OutputNames: append([]string(nil), outputNames...)}, nil
 }
 func registers(p *aig.Graph) int   { return int(aig.Aig_ManRegNum(p)) }
-func trueInputs(p *aig.Graph) int  { return len(p.Inputs()) - registers(p) }
-func trueOutputs(p *aig.Graph) int { return len(p.Outputs()) - registers(p) }
+func trueInputs(p *aig.Graph) int  { return p.InputCount() - registers(p) }
+func trueOutputs(p *aig.Graph) int { return p.OutputCount() - registers(p) }
 
 // propertyOutputs excludes trailing native constraint-violation outputs.
 func propertyOutputs(p *aig.Graph) int { return trueOutputs(p) - int(aig.Aig_ManConstrNum(p)) }
 func (c *graphCopy) appendConstraints() {
 	for i := propertyOutputs(c.source); i < trueOutputs(c.source); i++ {
-		aig.Aig_ObjCreateCo(c.destination, c.signal(c.source.Outputs()[i]))
+		aig.Aig_ObjCreateCo(c.destination, c.signal(aig.Aig_ManCo(c.source, int32(i))))
 	}
 }
 func (c *graphCopy) setConstraints() {
@@ -67,10 +68,10 @@ func (c *graphCopy) setConstraints() {
 }
 
 func outputDriver(p *aig.Graph, index int) aig.Edge {
-	e := p.Outputs()[index]
-	nodes := p.Nodes()
-	if nodes[e.NodeID()].Kind == aig.Output {
-		return nodes[e.NodeID()].Fanins[0] ^ aig.Edge(e&1)
+	e := aig.Aig_ManCo(p, int32(index))
+	node := p.Node(e)
+	if node.Kind == aig.Output {
+		return node.Fanins[0] ^ aig.Edge(e&1)
 	}
 	return e
 }
@@ -94,10 +95,11 @@ type graphCopy struct {
 }
 
 func newGraphCopy(p *aig.Graph, suffix string) *graphCopy {
-	result := aig.Aig_ManStart(int32(len(p.Nodes())))
+	nodes := p.Nodes()
+	result := aig.Aig_ManStart(int32(len(nodes)))
 	result.Name = p.Name + suffix
 	aig.Aig_ObjSetCopy(p, 0, 0)
-	return &graphCopy{p, result, map[int]aig.Edge{0: 0}, p.Nodes()}
+	return &graphCopy{p, result, map[int]aig.Edge{0: 0}, nodes}
 }
 func (c *graphCopy) mapEdge(e aig.Edge) aig.Edge { return c.visit(e.NodeID()) ^ aig.Edge(e&1) }
 func (c *graphCopy) visit(id int) aig.Edge {
@@ -124,11 +126,6 @@ func (c *graphCopy) copyInputs() {
 	for _, input := range c.source.Inputs() {
 		c.mapping[input.NodeID()] = aig.Aig_ObjCreateCi(c.destination)
 		aig.Aig_ObjSetCopy(c.source, input, c.mapping[input.NodeID()])
-	}
-}
-func (c *graphCopy) copyOutputs() {
-	for i := range c.source.Outputs() {
-		aig.Aig_ObjCreateCo(c.destination, c.mapEdge(outputDriver(c.source, i)))
 	}
 }
 func all(p *aig.Graph, signals []aig.Edge) aig.Edge {

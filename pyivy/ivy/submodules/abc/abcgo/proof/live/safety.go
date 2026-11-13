@@ -52,27 +52,23 @@ func CheckSafetyPDR(graph *aig.Graph, output int, options SafetyOptions) SafetyR
 	c := newGraphCopy(graph, "_pdr")
 	c.copyInputs()
 	constraints := int(aig.Aig_ManConstrNum(graph))
-	var invalid aig.Edge
 	bad := c.mapEdge(outputDriver(graph, output))
+	var invalidNow aig.Edge
 	if constraints > 0 {
 		// Constraint outputs are asserted for forbidden inputs. Once a
 		// violation occurs, an invalid-history latch disables future bads.
-		invalid = c.destination.NewInput()
-		invalidNow := invalid
+		invalidNow = c.destination.NewInput()
 		for i := trueOutputs(graph) - constraints; i < trueOutputs(graph); i++ {
 			invalidNow = c.destination.OR(invalidNow, c.mapEdge(outputDriver(graph, i)))
 		}
 		bad = c.destination.AND(bad, invalidNow.Not())
-		aig.Aig_ObjCreateCo(c.destination, bad)
-		for i := trueOutputs(graph); i < len(graph.Outputs()); i++ {
-			aig.Aig_ObjCreateCo(c.destination, c.mapEdge(outputDriver(graph, i)))
-		}
+	}
+	aig.Aig_ObjCreateCo(c.destination, bad)
+	for i := trueOutputs(graph); i < graph.OutputCount(); i++ {
+		aig.Aig_ObjCreateCo(c.destination, c.mapEdge(outputDriver(graph, i)))
+	}
+	if constraints > 0 {
 		aig.Aig_ObjCreateCo(c.destination, invalidNow)
-	} else {
-		aig.Aig_ObjCreateCo(c.destination, bad)
-		for i := trueOutputs(graph); i < len(graph.Outputs()); i++ {
-			aig.Aig_ObjCreateCo(c.destination, c.mapEdge(outputDriver(graph, i)))
-		}
 	}
 	aig.Aig_ManSetRegNum(c.destination, int32(registers(graph))+constraintLatchCount(constraints))
 	opts := pdr.DefaultOptions()
