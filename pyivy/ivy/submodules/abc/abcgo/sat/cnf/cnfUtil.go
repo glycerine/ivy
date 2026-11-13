@@ -2,7 +2,6 @@ package cnf
 
 import (
 	"bufio"
-	"fmt"
 	"os"
 	"strconv"
 	"strings"
@@ -295,4 +294,3 @@ func Cnf_DataSolveFromFile(filename string, conflictLimit, _ int32, _ int32, _ i
 	return 0
 }
 
-var _ = fmt.Sprintf
