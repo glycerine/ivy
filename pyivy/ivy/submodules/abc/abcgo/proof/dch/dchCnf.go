@@ -12,7 +12,7 @@ func (m *Manager) satLiteral(edge aig.Edge) (int, error) {
 	if !exists {
 		variable = m.solver.AddVariable(false)
 		m.variables[id] = variable
-		n := m.graph.Node(aig.Aig_Regular(edge))
+		n := m.satGraph.Node(aig.Aig_Regular(edge))
 		var clauses [][]int
 		raw := variable << 1
 		if m.params.PolarFlip && n.Phase {
@@ -52,7 +52,7 @@ func (m *Manager) satLiteral(edge aig.Edge) (int, error) {
 	if edge.Complemented() {
 		literal ^= 1
 	}
-	if m.params.PolarFlip && aig.Aig_ObjPhase(m.graph, aig.Aig_Regular(edge)) {
+	if m.params.PolarFlip && aig.Aig_ObjPhase(m.satGraph, aig.Aig_Regular(edge)) {
 		literal ^= 1
 	}
 	return literal, nil

@@ -13,6 +13,8 @@ type Statistics struct {
 }
 type Manager struct {
 	graph      *aig.Graph
+	satGraph   *aig.Graph
+	mapped     []aig.Edge
 	params     Params
 	order      []aig.Edge
 	classes    *Classes

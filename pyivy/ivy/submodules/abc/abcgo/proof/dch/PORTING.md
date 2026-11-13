@@ -30,9 +30,14 @@ Eight rounds of ABC's independent multiply-with-carry stream produce 32-bit
 simulation signatures, normalized by all-zero-input phase. Classes only split;
 these signatures propose candidates and never certify equivalence.
 
-Lazy Tseitin CNF includes complemented AND/XOR/buffer logic. Polarity adjustment
+The source sweep builds an incremental working FRAIG: proved nodes are
+substituted before later cones are constructed, structural matches need no SAT
+query, and unknown nodes block their fanouts. Lazy Tseitin CNF includes
+complemented AND/XOR/buffer logic. Polarity adjustment
 changes SAT variables consistently. Incremental pure-Go Satoko proves both miter
-directions; only UNSAT in both directions certifies a pair. SAT counterexamples
+directions; only UNSAT in both directions certifies a pair. Each UNSAT
+query adds its proved implication to the incremental solver, and a constant-one
+representative needs only the first query. SAT counterexamples
 refine classes, while budget exhaustion blocks unproved nodes/fanouts. Solver
 recycling follows the source's soft variable/count thresholds. There is no input
 truth-table bound or small-circuit production fallback.

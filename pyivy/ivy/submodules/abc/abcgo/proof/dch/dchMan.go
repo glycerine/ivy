@@ -30,7 +30,7 @@ func newManager(g *aig.Graph, parameters *Params) (*Manager, error) {
 	}
 	aig.Aig_ManSetPhase(g)
 	m := &Manager{
-		graph: g, params: params, order: order,
+		graph: g, satGraph: g, params: params, order: order,
 		proven: map[int]aig.Edge{}, blocked: map[int]bool{},
 		fanouts: map[int][]int{}, ranks: map[int]int{},
 		lastValues: make([]bool, int(aig.Aig_ManObjNumMax(g))),

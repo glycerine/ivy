@@ -32,22 +32,30 @@ func (m *Manager) provePair(representative, node aig.Edge) (proofResult, []bool,
 	if err != nil {
 		return proofDifferent, nil, err
 	}
-	if aig.Aig_ObjPhase(m.graph, representative) != aig.Aig_ObjPhase(m.graph, node) {
+	if aig.Aig_ObjPhase(m.satGraph, representative) != aig.Aig_ObjPhase(m.satGraph, node) {
 		b ^= 1
 	}
 	started := time.Now()
 	defer func() { m.stats.Solving += time.Since(started) }()
-	for _, assumptions := range [][]int{{a, b ^ 1}, {a ^ 1, b}} {
+	for direction, assumptions := range [][]int{{a, b ^ 1}, {a ^ 1, b}} {
 		m.stats.SATCalls++
 		status := m.solver.SolveAssumptionsLimit(assumptions, int64(m.params.ConflictLimit))
 		switch status {
 		case satoko.SATOKO_UNSAT:
+			// The failed conjunction implies the opposite binary clause.
+			// Retain it in the incremental solver as in Dch_NodesAreEquiv.
+			if !m.solver.AddClause([]int{assumptions[0] ^ 1, assumptions[1] ^ 1}) {
+				return proofUnknown, nil, fmt.Errorf("dch: inconsistent proved implication")
+			}
+			if direction == 0 && representative == m.satGraph.Const1() {
+				return proofEquivalent, nil, nil
+			}
 		case satoko.SATOKO_UNDEC:
 			m.stats.Unknown++
 			return proofUnknown, nil, nil
 		case satoko.SATOKO_SAT:
 			assignment := make([]bool, m.graph.InputCount())
-			for i, input := range m.graph.Inputs() {
+			for i, input := range m.satGraph.Inputs() {
 				if variable, ok := m.variables[input.NodeID()]; ok {
 					assignment[i] = m.solver.ModelValue(variable) == 1
 				}
