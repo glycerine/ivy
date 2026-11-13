@@ -13,9 +13,11 @@ func Cec_ManSatSolving(graph *Gia_Man_t, pars *Cec_ParSat_t, proved int32) *Gia_
 		CecG_ManSatSolve(patterns, graph, pars, proved)
 	}
 	result := gia.Gia_ManCleanup(graph)
-	models := graph.SequentialCounterexamples()
+	models := graph.CombinationalCounterexamples()
 	if models != nil {
-		if err := result.SetSequentialCounterexamples(models); err != nil { panic(err) }
+		if err := result.SetCombinationalCounterexamples(models); err != nil {
+			panic(err)
+		}
 		graph.ClearSequentialCounterexamples()
 	}
 	return result
