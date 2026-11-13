@@ -50,6 +50,13 @@ Cec2, Cec3 and Cec4 direct output-simulation routines likewise preserve the
 source phase-normalized comparison. Their top-level sweepers perform the
 source all-zero-input phase check before entering simulation.
 
+`cec2_simulation_api_test.go` now directly covers the source CEC2 helper paths
+for register-output signature copies, random CI initialization with pattern
+zero reserved, phase-normalized hash keys, and simulation-class splitting.
+These are focused source-derived checks; the CEC2 simulation remains subject
+to the zero-primary-input limitation above and does not establish coverage of
+every sequential sweep branch.
+
 An end-to-end classic SAT sweep test verifies transfer and replay of
 CO-indexed counterexamples and proved-output sentinels through graph cleanup,
 including a register-input CO. These checks supplement the full package suite;
