@@ -3,6 +3,7 @@ package ssc
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/gia"
+	"io"
 	"math/rand"
 	"os"
 	"os/exec"
@@ -16,6 +17,9 @@ import (
 // The oracle links unchanged original SSC/GIA/SAT object files. Optimization
 // outside the care set and native scheduling are deliberately unconstrained.
 func TestOriginalCConstrainedSweeps(t *testing.T) {
+	if os.Getenv("SSC_BUILD_ORACLE") != "1" {
+		t.Skip("set SSC_BUILD_ORACLE=1 to build the original C oracle from source")
+	}
 	cc, e := exec.LookPath("cc")
 	if e != nil {
 		t.Skip("C compiler unavailable")
@@ -24,15 +28,73 @@ func TestOriginalCConstrainedSweeps(t *testing.T) {
 	if e != nil {
 		t.Skip("C++ linker unavailable")
 	}
+	if _, e = exec.LookPath("make"); e != nil {
+		t.Skip("make unavailable")
+	}
 	_, file, _, _ := runtime.Caller(0)
 	source := os.Getenv("SSC_SOURCE_ROOT")
 	if source == "" {
 		source = filepath.Clean(filepath.Join(filepath.Dir(file), "../../../src"))
 	}
-	if _, e = os.Stat(filepath.Join(source, "proof/ssc/sscCore.o")); e != nil {
-		t.Skip("original ABC objects unavailable")
-	}
 	d := t.TempDir()
+	// Build in an isolated copy: object files in the checkout may be stale or
+	// concurrently rebuilt with a different set of ABC compile-time options.
+	root := filepath.Dir(source)
+	build := filepath.Join(d, "abc")
+	if e = os.MkdirAll(build, 0755); e != nil {
+		t.Fatal(e)
+	}
+	copyFile := func(from, to string) error {
+		in, err := os.Open(from)
+		if err != nil {
+			return err
+		}
+		defer in.Close()
+		out, err := os.Create(to)
+		if err != nil {
+			return err
+		}
+		_, copyErr := io.Copy(out, in)
+		closeErr := out.Close()
+		if copyErr != nil {
+			return copyErr
+		}
+		return closeErr
+	}
+	for _, name := range []string{"Makefile", "arch_flags.c", "depends.sh"} {
+		if e = copyFile(filepath.Join(root, name), filepath.Join(build, name)); e != nil {
+			t.Fatal(e)
+		}
+	}
+	if e = os.Chmod(filepath.Join(build, "depends.sh"), 0755); e != nil {
+		t.Fatal(e)
+	}
+	e = filepath.WalkDir(source, func(path string, entry os.DirEntry, walkErr error) error {
+		if walkErr != nil {
+			return walkErr
+		}
+		rel, err := filepath.Rel(source, path)
+		if err != nil {
+			return err
+		}
+		target := filepath.Join(build, "src", rel)
+		if entry.IsDir() {
+			return os.MkdirAll(target, 0755)
+		}
+		if !entry.Type().IsRegular() || strings.HasSuffix(path, ".o") || strings.HasSuffix(path, ".d") {
+			return nil
+		}
+		return copyFile(path, target)
+	})
+	if e != nil {
+		t.Fatal(e)
+	}
+	makeCmd := exec.Command("make", "-j4", "ABC_USE_STDINT_H=1", "ABC_USE_NO_READLINE=1", "ABC_USE_NO_PTHREADS=1")
+	makeCmd.Dir = build
+	if out, err := makeCmd.CombinedOutput(); err != nil {
+		t.Fatalf("build original ABC: %v\n%s", err, out)
+	}
+	source = filepath.Join(build, "src")
 	c, o, exe := filepath.Join(d, "oracle.c"), filepath.Join(d, "oracle.o"), filepath.Join(d, "oracle")
 	code := `#include "aig/gia/gia.h"
 #include "proof/ssc/ssc.h"
@@ -40,7 +102,7 @@ int main(void){int n,a,b,j,i,q,k;Ssc_Pars_t pars;while(scanf("%d",&n)==1){Gia_Ma
 	if e = os.WriteFile(c, []byte(code), 0600); e != nil {
 		t.Fatal(e)
 	}
-	if out, e := exec.Command(cc, "-std=gnu99", "-DLIN64", "-I"+source, "-c", c, "-o", o).CombinedOutput(); e != nil {
+	if out, e := exec.Command(cc, "-std=gnu99", "-DABC_USE_STDINT_H=1", "-DABC_USE_CUDD=1", "-I"+source, "-c", c, "-o", o).CombinedOutput(); e != nil {
 		t.Fatalf("compile %v %s", e, out)
 	}
 	args := []string{o}

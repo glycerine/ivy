@@ -19,6 +19,9 @@ func sscStatus(status bsat.Status) int {
 	}
 }
 func Ssc_ManStartSolver(p *Ssc_Man_t) {
+	if p.sat != nil || p.satVars[0] != nil {
+		panic("ssc: solver already initialized")
+	}
 	graph := gia.Gia_ManToAigSimple(p.Aig)
 	formula := cnf.Cnf_Derive(graph, 0)
 	p.sat = bsat.NewSolver()

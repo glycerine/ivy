@@ -27,6 +27,20 @@ func TestSatStartReservesSourceVariableCapacity(t *testing.T) {
 		t.Fatalf("frontier should use reserved variables: got %d", got)
 	}
 }
+
+func TestSatStartRejectsReinitialization(t *testing.T) {
+	p, _ := sscSatFixture()
+	original := p.sat
+	defer func() {
+		if recover() == nil {
+			t.Fatal("C solver initialization asserts when already initialized")
+		}
+		if p.sat != original {
+			t.Fatal("failed reinitialization replaced the solver")
+		}
+	}()
+	Ssc_ManStartSolver(p)
+}
 func TestSatPortSupergateFrontier(t *testing.T) {
 	p, in := sscSatFixture()
 	first := gia.Gia_ManAppendAnd(p.Aig, in[0], in[1])
