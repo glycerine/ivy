@@ -45,10 +45,10 @@ func duplicateTransitionEdge(src, dst *aig.Graph, copies map[int]aig.Edge, edge 
 	if !ok {
 		node := src.Node(edge)
 		switch node.Kind {
-		case aig.And:
+		case aig.And, aig.ExclusiveOr:
+			// ABC's interpolation cone-copy loops call Aig_And for every
+			// native node, including AIG_OBJ_EXOR.
 			result = dst.AND(duplicateTransitionEdge(src, dst, copies, node.Fanins[0]), duplicateTransitionEdge(src, dst, copies, node.Fanins[1]))
-		case aig.ExclusiveOr:
-			result = dst.NewXor(duplicateTransitionEdge(src, dst, copies, node.Fanins[0]), duplicateTransitionEdge(src, dst, copies, node.Fanins[1]))
 		case aig.Buffer, aig.Output:
 			result = duplicateTransitionEdge(src, dst, copies, node.Fanins[0])
 		default:

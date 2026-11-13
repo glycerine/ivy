@@ -11,7 +11,7 @@ func TestFramesInterTruthTables(t *testing.T) {
 	x, lo := src.NewInput(), src.NewInput()
 	src.AddOutput(lo)
 	src.AddOutput(x) // constraint
-	src.AddOutput(src.NewXor(x, lo))
+	src.AddOutput(src.XOR(x, lo))
 	aig.Aig_ManSetRegNum(src, 1)
 	aig.Aig_ManSetConstrNum(src, 1)
 	for _, addRegs := range []int32{0, 1} {

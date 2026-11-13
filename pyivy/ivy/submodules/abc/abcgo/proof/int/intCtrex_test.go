@@ -11,7 +11,7 @@ func TestCounterexampleFromUnrolling(t *testing.T) {
 	g := aig.NewGraph()
 	x, lo := g.NewInput(), g.NewInput()
 	g.AddOutput(lo)
-	g.AddOutput(g.NewXor(x, lo))
+	g.AddOutput(g.XOR(x, lo))
 	aig.Aig_ManSetRegNum(g, 1)
 	if got := Inter_ManGetCounterExample(g, 1, 0); got != nil {
 		t.Fatal("initial state cannot satisfy property", got)

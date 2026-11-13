@@ -22,7 +22,7 @@ func TestTransitionDuplication(t *testing.T) {
 	x, lo := src.NewInput(), src.NewInput()
 	src.AddOutput(x)
 	src.AddOutput(x.Not()) // constraint, inverted by the duplication routines
-	src.AddOutput(src.NewXor(x, lo))
+	src.AddOutput(src.XOR(x, lo))
 	aig.Aig_ManSetRegNum(src, 1)
 	aig.Aig_ManSetConstrNum(src, 1)
 
