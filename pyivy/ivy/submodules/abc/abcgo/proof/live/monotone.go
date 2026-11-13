@@ -3,6 +3,7 @@ package live
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/proof/pdr"
 	"slices"
 	"strings"
 )
@@ -119,7 +120,23 @@ func findNewMonotoneWith(p *aig.Graph, indexes *aigPoIndices, vectors *monotoneV
 	return result
 }
 func findNewMonotone(p *aig.Graph, indexes *aigPoIndices, vectors *monotoneVectorsStruct) []int32 {
-	return findNewMonotoneWith(p, indexes, vectors, SafetyOptions{}, CheckSafety)
+	var start int32
+	tester := createMonotoneTester(p, indexes, vectors, &start)
+	var proved []int32
+	for i := int(start); i < trueOutputs(tester); i++ {
+		output := tester.Outputs()[i]
+		driver := outputDriver(tester, i)
+		aig.Aig_ObjPatchFanin0(tester, output, driver.Not())
+		result, err := pdr.Solve(tester, nil)
+		aig.Aig_ObjPatchFanin0(tester, output, driver)
+		if err != nil {
+			panic(err)
+		}
+		if result.Status == pdr.Proved {
+			proved = append(proved, int32(i)-(indexes.attrPendingSignalIndex+1)+indexes.attrHintSingalBeginningMarker)
+		}
+	}
+	return proved
 }
 func findRemainingMonotoneCandidates(known, hints []int32) []int32 {
 	return vectorDifference(hints, known)
@@ -139,6 +156,12 @@ func FindMonotone(n *Network, options SafetyOptions, checker SafetyChecker) []in
 
 // findMonotoneSignals follows the C entry point, which discards its results.
 func findMonotoneSignals(n *Network) []int32 {
-	FindMonotone(n, SafetyOptions{}, CheckSafety)
+	pending, hints := findPendingSignal(n), findHintOutputs(n)
+	if pending < 0 || len(hints) == 0 {
+		return nil
+	}
+	indexes := &aigPoIndices{pending, hints[0], hints[len(hints)-1], -1}
+	vectors := &monotoneVectorsStruct{attrCandMonotone: hints, attrHintMonotone: hints}
+	findNewMonotone(n.Graph, indexes, vectors)
 	return nil
 }

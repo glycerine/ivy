@@ -31,7 +31,7 @@ Monotonicity discovery retains only proved candidates. Unknown results never bec
 - `l2ssim` remains liveness-only, independently of the one-step safety-output behavior. CLI `-s` ignores safety and `-l` ignores liveness; option order does not change their meaning. Default abstraction shadows the first half of original registers, matching source preparation.
 - Safety-name aliases `Assert`/`Assume` are retained alongside `assert_safety`/`assume_safety`.
 - Actual hint indexes replace assumptions that hints are contiguous or immediately follow the pending output. Known-hint delay lookup uses its real vector position, correcting the source's negative-index arithmetic.
-- Each monotonicity obligation is queried explicitly. This avoids relying on C's ambiguous null counterexample entries or accidentally solving unrelated POs.
+- The convenience discovery APIs query each monotonicity obligation explicitly. The source-named `findNewMonotone` instead flips one obligation and runs PDR on the entire graph, including unrelated outputs, matching C.
 - The source-shaped monotone-discovery function computes results and then returns NULL, as in C; the separate native `FindMonotone` API returns its proved set.
 - Parser state is local and reentrant. Invalid input returns errors instead of exiting the embedding process or reading before the input buffer.
 - Combination generation handles `k=0`, validates dimensions, checks int64 overflow, and streams combinations. The C recursive count lacks the zero-width base case.
