@@ -46,3 +46,14 @@ func TestCec4SimulationAndRefinementEntryPoints(t *testing.T) {
 		t.Fatal("simulation buffers retained after destroy")
 	}
 }
+
+func TestCec4DirectOutputSimulationDetectsConstantOne(t *testing.T) {
+	g := gia.Gia_ManStart(4)
+	gia.Gia_ManAppendCo(g, 1)
+	p := Cec4_ManCreate(g, &Cec_ParFra_t{})
+	defer Cec4_ManDestroy(p)
+	Cec4_ManSimAlloc(p, 1)
+	if got := Cec4_ManSimulateCos(p); got != 0 || g.SequentialCounterexample() == nil {
+		t.Fatalf("constant-one output not reported: %d", got)
+	}
+}

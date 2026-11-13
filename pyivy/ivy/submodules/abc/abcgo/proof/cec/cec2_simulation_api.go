@@ -57,9 +57,6 @@ func Cec2_ManSimulateCos(p *gia.Gia_Man_t) int32 {
 	for i := int32(0); i < gia.Gia_ManCoNum(p); i++ {
 		id := gia.Gia_ObjId(p, gia.Gia_ManCo(p, i))
 		Cec2_ObjSimCo(p, id)
-		if Cec2_ObjSimEqual(p, id, 0) != 0 {
-			continue
-		}
 		for w, word := range Cec2_ObjSim(p, id) {
 			if word != 0 {
 				cex := Cec2_ManDeriveCex(p, i, int32(w*64+bits.TrailingZeros64(word)))

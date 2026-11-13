@@ -3,6 +3,7 @@ package cec
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/sat/glucose2"
 	"sync"
@@ -10,7 +11,7 @@ import (
 )
 
 func Cec4_ManCreate(g *Gia_Man_t, pars *Cec_ParFra_t) *Cec4_Man_t {
-	p := &Cec4_Man_t{pAig: g, pPars: pars, timeStart: time.Now().UnixNano()}
+	p := &Cec4_Man_t{pAig: g, pPars: pars, timeStart: util.Abc_Clock()}
 	p.pSat = glucose2.NewABCSolver()
 	p.pSat.JustificationMode = int(pars.jType)
 	p.vFrontier = vec.Vec_PtrAlloc(1000)
@@ -27,7 +28,7 @@ func Cec4_ManCreate(g *Gia_Man_t, pars *Cec_ParFra_t) *Cec4_Man_t {
 }
 func Cec4_ManDestroy(p *Cec4_Man_t) {
 	if p.pPars.fVerbose != 0 {
-		total := time.Now().UnixNano() - p.timeStart
+		total := util.Abc_Clock() - p.timeStart
 		sat := p.timeSatSat0 + p.timeSatSat + p.timeSatUnsat0 + p.timeSatUnsat + p.timeSatUndec
 		entries := []struct {
 			name string
