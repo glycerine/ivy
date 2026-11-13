@@ -605,22 +605,30 @@ func Ssw_RarManStop(p *Ssw_RarMan_t) {
 func Ssw_RarTransferPatterns(p *Ssw_RarMan_t, init *vec.Vec_Int_t) {
 	Ssw_RarTranspose(p)
 	count := int32(64) * p.pPars.nWords
-	getByte := func(pattern []uint64, bin int32) int32 { return int32((pattern[bin/8] >> uint((bin%8)*8)) & 255) }
+	getBin := func(pattern []uint64, bin int32) int32 {
+		start := bin * p.pPars.nBinSize
+		word, shift := start/64, uint(start%64)
+		value := pattern[word] >> shift
+		if shift+uint(p.pPars.nBinSize) > 64 {
+			value |= pattern[word+1] << (64 - shift)
+		}
+		return int32(value & ((uint64(1) << uint(p.pPars.nBinSize)) - 1))
+	}
 	for k := int32(0); k < count; k++ {
 		pat := Ssw_RarPatSim(p, k)
 		for i := int32(0); i < p.nGroups; i++ {
-			Ssw_RarAddToBinPat(p, i, getByte(pat, i))
+			Ssw_RarAddToBinPat(p, i, getBin(pat, i))
 		}
 	}
 	for k := int32(0); k < count; k++ {
 		pat := Ssw_RarPatSim(p, k)
 		p.pPatCosts[k] = 0
 		for i := int32(0); i < p.nGroups; i++ {
-			v := Ssw_RarGetBinPat(p, i, getByte(pat, i))
+			v := Ssw_RarGetBinPat(p, i, getBin(pat, i))
 			if v <= 0 {
 				panic("ssw: invalid rarity count")
 			}
-			p.pPatCosts[k] += 1 / float64(v*v)
+			p.pPatCosts[k] += 1 / (float64(v) * float64(v))
 		}
 	}
 	vec.Vec_IntClear(init)
