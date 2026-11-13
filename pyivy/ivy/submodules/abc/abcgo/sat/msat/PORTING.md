@@ -72,7 +72,8 @@ The following public declarations have no definition anywhere in the original
 MSAT source in this checkout: Msat_SolverReadSolutions,
 Msat_SolverReadSolutionsArray, Msat_SolverReadTruth, Msat_SolverSetProofWriting,
 Msat_SolverSetVarMap and Msat_SolverSetVarTypeA. The internal
-Msat_ClauseComputeTruth declaration is likewise undefined there. They are not
+Msat_ClauseComputeTruth, Msat_ClauseCreateFake, and
+Msat_ClauseCreateFakeLit declarations are likewise undefined there. They are not
 silently implemented as fake proof, interpolation or enumeration support.
 Call sites requiring those obsolete interfaces need a separate specification.
 The clear standalone Msat_VarHeap_* header contract is implemented with the same
@@ -82,3 +83,8 @@ are absent. No package build blockers or excluded generated files remain.
 `Msat_SolverPrepare` now matches C and clears root assignments, including
 units with no retained clause object. Callers must account for that source
 behavior when preparing a new cone.
+
+The source-named AddClause and Solve APIs do not retain a rejected-clause or
+root-conflict status and do not clear the previous model when adding a clause;
+callers must handle their return values as in C. The existing Go convenience
+methods retain their own failure status and model invalidation behavior.

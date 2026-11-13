@@ -68,8 +68,7 @@ func Msat_SolverSimplifyDB(p *Msat_Solver_t) int {
 	if len(p.vTrailLim.data) != 0 {
 		panic("simplification requires root level")
 	}
-	if !p.okay || Msat_SolverPropagate(p) != nil {
-		p.okay = false
+	if Msat_SolverPropagate(p) != nil {
 		return 0
 	}
 	num := 0
@@ -196,7 +195,6 @@ func Msat_SolverSearch(p *Msat_Solver_t, conflictLimit, learnedLimit, backtrackL
 	for i := 0; i < p.nVars; i++ {
 		p.pdActivity[i] = float64(p.pFactors[i])
 	}
-	Msat_OrderClean(p.pOrder, p.vConeVars)
 	conflicts := 0
 	for {
 		c := Msat_SolverPropagate(p)
@@ -223,7 +221,6 @@ func Msat_SolverSearch(p *Msat_Solver_t, conflictLimit, learnedLimit, backtrackL
 		variable := Msat_OrderVarSelect(p.pOrder)
 		if variable == MSAT_ORDER_UNKNOWN {
 			copy(p.pModel, p.pAssigns)
-			p.Stats.nSuccesses++
 			Msat_SolverCancelUntil(p, p.nLevelRoot)
 			return MSAT_TRUE
 		}

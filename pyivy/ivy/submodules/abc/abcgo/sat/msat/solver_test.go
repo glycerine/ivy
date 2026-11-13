@@ -57,12 +57,12 @@ func TestRandomCNFAndAssumptions(t *testing.T) {
 	rng := rand.New(rand.NewSource(432))
 	for run := 0; run < 1000; run++ {
 		n := 3 + rng.Intn(6)
-		p := newSolver(n)
+		p := New(n)
 		var cs [][]int
 		for k := 0; k < rng.Intn(30); k++ {
 			c := randomDistinctClause(rng, n, 3)
 			cs = append(cs, c)
-			Msat_SolverAddClause(p, &Msat_IntVec_t{data: append([]int(nil), c...)})
+			p.AddClause(c)
 		}
 		for trial := 0; trial < 4; trial++ {
 			var as []int
@@ -70,7 +70,7 @@ func TestRandomCNFAndAssumptions(t *testing.T) {
 				as = append(as, rng.Intn(2*n))
 			}
 			want := brute(n, cs, as)
-			got := Msat_SolverSolve(p, &Msat_IntVec_t{data: as}, 0, 0)
+			got := int(p.Solve(as, 0, 0))
 			if (got == int(MSAT_TRUE)) != want || got == 0 {
 				t.Fatalf("case %d trial %d got %d SAT %v clauses %v assumptions %v", run, trial, got, want, cs, as)
 			}
@@ -206,15 +206,16 @@ func TestDIMACSRoundTrip(t *testing.T) {
 	}
 }
 
-func TestRootConflictPersistsAcrossSolves(t *testing.T) {
+func TestSourceRootConflictIsNotPersisted(t *testing.T) {
 	p := newSolver(2)
 	for _, c := range [][]int{{1, 3}, {0}, {2}} {
 		Msat_SolverAddClause(p, &Msat_IntVec_t{data: c})
 	}
-	for i := 0; i < 3; i++ {
-		if Msat_SolverSolve(p, nil, 0, 0) != int(MSAT_FALSE) {
-			t.Fatal("root conflict forgotten on solve", i)
-		}
+	if Msat_SolverSolve(p, nil, 0, 0) != int(MSAT_FALSE) {
+		t.Fatal("first root conflict")
+	}
+	if Msat_SolverSolve(p, nil, 0, 0) != int(MSAT_TRUE) {
+		t.Fatal("C does not remember previous root conflict")
 	}
 }
 func TestVectorOwnershipAndOrdering(t *testing.T) {

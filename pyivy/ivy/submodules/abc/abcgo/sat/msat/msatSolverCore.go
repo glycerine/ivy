@@ -24,17 +24,8 @@ func Msat_SolverAddClause(p *Msat_Solver_t, lits *Msat_IntVec_t) int {
 			panic("literal variable out of range")
 		}
 	}
-	for i := range p.pModel {
-		p.pModel[i] = -1
-	}
-	if !p.okay {
-		return 0
-	}
 	var c *Msat_Clause_t
 	result := Msat_ClauseCreate(p, lits, 0, &c)
-	if result == 0 {
-		p.okay = false
-	}
 	if c != nil {
 		Msat_ClauseVecPush(p.vClauses, c)
 	}
@@ -61,21 +52,11 @@ func Msat_SolverSolve(p *Msat_Solver_t, assumptions *Msat_IntVec_t, backtrackLim
 			}
 		}
 	}
-	if !p.okay {
-		return int(MSAT_FALSE)
-	}
 	p.deadline = time.Time{}
 	if timeLimit > 0 {
 		p.deadline = time.Now().Add(time.Duration(timeLimit) * time.Second)
 	}
-	for i := range p.pModel {
-		p.pModel[i] = -1
-	}
 	defer Msat_SolverCancelUntil(p, 0)
-	if Msat_SolverPropagate(p) != nil {
-		p.okay = false
-		return int(MSAT_FALSE)
-	}
 	if assumptions != nil {
 		for _, lit := range assumptions.data {
 			if Msat_SolverAssume(p, lit) == 0 || Msat_SolverPropagate(p) != nil {
@@ -94,9 +75,6 @@ func Msat_SolverSolve(p *Msat_Solver_t, assumptions *Msat_IntVec_t, backtrackLim
 	for {
 		status := Msat_SolverSearch(p, int(conflictLimit), int(learntLimit), backtrackLimit, &params)
 		if status != MSAT_UNKNOWN {
-			if status == MSAT_FALSE && p.nLevelRoot == 0 {
-				p.okay = false
-			}
 			return int(status)
 		}
 		if backtrackLimit > 0 && p.Stats.nConflicts-start > int64(backtrackLimit) || !p.deadline.IsZero() && time.Now().After(p.deadline) {

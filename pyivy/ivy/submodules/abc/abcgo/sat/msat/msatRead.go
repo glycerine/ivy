@@ -47,7 +47,9 @@ func parseDIMACS(r io.Reader, initializeOrder bool) (*Msat_Solver_t, error) {
 			}
 			if n == 0 {
 				if p.okay {
-					Msat_SolverAddClause(p, &Msat_IntVec_t{data: clause})
+					if Msat_SolverAddClause(p, &Msat_IntVec_t{data: clause}) == 0 {
+						p.okay = false
+					}
 				}
 				clause = nil
 				count++

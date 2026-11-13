@@ -6,12 +6,6 @@ func Msat_SolverAlloc(n int, claInc, claDecay, varInc, varDecay float64, verbose
 		panic("negative variable capacity")
 	}
 	p := &Msat_Solver_t{vClauses: Msat_ClauseVecAlloc(512), vLearned: Msat_ClauseVecAlloc(512), dClaInc: claInc, dClaDecay: claDecay, dVarInc: varInc, dVarDecay: varDecay, fVerbose: verbose, pQueue: Msat_QueueAlloc(n), vTrail: Msat_IntVecAlloc(n), vTrailLim: Msat_IntVecAlloc(n), vConeVars: Msat_IntVecAlloc(n), vVarsUsed: Msat_IntVecAlloc(n), vReason: Msat_IntVecAlloc(n), vTemp: Msat_IntVecAlloc(n), pMem: Msat_MmStepStart(10), okay: true}
-	if p.dClaInc <= 0 {
-		p.dClaInc = 1
-	}
-	if p.dVarInc <= 0 {
-		p.dVarInc = 1
-	}
 	p.pOrder = Msat_OrderAlloc(p)
 	Msat_SolverResize(p, n)
 	return p
@@ -33,7 +27,9 @@ func Msat_SolverResize(p *Msat_Solver_t, n int) {
 		p.vVarsUsed.data = append(p.vVarsUsed.data, 1)
 
 	}
-	Msat_OrderClean(p.pOrder, p.vConeVars)
+	Msat_OrderSetBounds(p.pOrder, n)
+	p.pQueue = Msat_QueueAlloc(n)
+	Msat_IntVecFill(p.vVarsUsed, n, 1)
 }
 func Msat_SolverClean(p *Msat_Solver_t, n int) {
 	if n < 0 || n > len(p.pAssigns) {
@@ -94,11 +90,10 @@ func Msat_SolverPrepare(p *Msat_Solver_t, vars *Msat_IntVec_t) {
 		p.pLevel[v] = -1
 		p.pdActivity[v] = 0
 	}
-	p.vConeVars.data = append(p.vConeVars.data[:0], vars.data...)
 	p.vTrail.data = p.vTrail.data[:0]
 	p.vTrailLim.data = p.vTrailLim.data[:0]
 	Msat_QueueClear(p.pQueue)
-	Msat_OrderClean(p.pOrder, p.vConeVars)
+	Msat_OrderClean(p.pOrder, vars)
 	p.dProgress = 0
 	p.nLevelRoot = 0
 

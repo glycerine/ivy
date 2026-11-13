@@ -51,7 +51,6 @@ func Msat_ClauseCreate(p *Msat_Solver_t, v *Msat_IntVec_t, learnt int, out **Msa
 		lits = append(lits[:0], v.data...)
 	}
 	if len(lits) == 0 {
-		p.okay = false
 		return 0
 	}
 	if len(lits) == 1 {
@@ -76,12 +75,6 @@ func Msat_ClauseCreate(p *Msat_Solver_t, v *Msat_IntVec_t, learnt int, out **Msa
 	Msat_ClauseVecPush(p.pvWatched[c.lits[1]^1], c)
 	*out = c
 	return 1
-}
-func Msat_ClauseCreateFake(p *Msat_Solver_t, v *Msat_IntVec_t) *Msat_Clause_t {
-	return &Msat_Clause_t{lits: append([]int(nil), v.data...)}
-}
-func Msat_ClauseCreateFakeLit(p *Msat_Solver_t, lit int) *Msat_Clause_t {
-	return &Msat_Clause_t{lits: []int{lit}}
 }
 func Msat_ClauseReadLearned(c *Msat_Clause_t) int { return boolInt(c.learned) }
 func Msat_ClauseReadSize(c *Msat_Clause_t) int    { return len(c.lits) }
@@ -144,11 +137,17 @@ func Msat_ClauseSimplify(c *Msat_Clause_t, assigns []int) int {
 }
 func Msat_ClauseCalcReason(p *Msat_Solver_t, c *Msat_Clause_t, implied int, out *Msat_IntVec_t) {
 	out.data = out.data[:0]
-	for _, lit := range c.lits {
-		if lit == implied {
-			continue
-		}
+	assert(implied == MSAT_LIT_UNASSIGNED || implied == c.lits[0], "implied literal is first")
+	start := 0
+	if implied != MSAT_LIT_UNASSIGNED {
+		start = 1
+	}
+	for _, lit := range c.lits[start:] {
+		assert(p.pAssigns[lit>>1] == lit^1, "reason literal is false")
 		out.data = append(out.data, lit^1)
+	}
+	if c.learned {
+		Msat_SolverClaBumpActivity(p, c)
 	}
 }
 func Msat_ClauseWriteDimacs(w io.Writer, c *Msat_Clause_t, increment int) {
