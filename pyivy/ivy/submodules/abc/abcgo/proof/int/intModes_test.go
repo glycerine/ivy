@@ -10,11 +10,11 @@ func TestInterpolationModesAgainstReachability(t *testing.T) {
 		name      string
 		configure func(*Inter_ManParams_t)
 	}{
-		{"combinational", func(p *Inter_ManParams_t) { p.fCheckKstep = 0 }},
-		{"backward", func(p *Inter_ManParams_t) { p.fUseBackward = 1 }},
-		{"transition-loop", func(p *Inter_ManParams_t) { p.fTransLoop = 1 }},
-		{"rewrite", func(p *Inter_ManParams_t) { p.fRewrite = 1 }},
-		{"two-step", func(p *Inter_ManParams_t) { p.nFramesK = 2 }},
+		{"combinational", func(p *Inter_ManParams_t) { p.FCheckKstep = 0 }},
+		{"backward", func(p *Inter_ManParams_t) { p.FUseBackward = 1 }},
+		{"transition-loop", func(p *Inter_ManParams_t) { p.FTransLoop = 1 }},
+		{"rewrite", func(p *Inter_ManParams_t) { p.FRewrite = 1 }},
+		{"two-step", func(p *Inter_ManParams_t) { p.NFramesK = 2 }},
 	}
 	for _, mode := range modes {
 		t.Run(mode.name, func(t *testing.T) {
@@ -30,7 +30,7 @@ func TestInterpolationModesAgainstReachability(t *testing.T) {
 				aig.Aig_ManSetRegNum(g, 1)
 				var pars Inter_ManParams_t
 				Inter_ManSetDefaultParams(&pars)
-				pars.nFramesMax = 5
+				pars.NFramesMax = 5
 				mode.configure(&pars)
 				var frame int32
 				got := Inter_ManPerformInterpolation(g, &pars, &frame)

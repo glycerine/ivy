@@ -8,7 +8,7 @@ import (
 func TestInterpolationDefaultsAndInitialFailure(t *testing.T) {
 	var pars Inter_ManParams_t
 	Inter_ManSetDefaultParams(&pars)
-	if pars.nFramesK != 1 || pars.fCheckKstep != 1 || pars.iFrameMax != -1 {
+	if pars.NFramesK != 1 || pars.FCheckKstep != 1 || pars.IFrameMax != -1 {
 		t.Fatalf("unexpected defaults: %+v", pars)
 	}
 	g := aig.NewGraph()
@@ -26,7 +26,7 @@ func TestInterpolationDefaultsAndInitialFailure(t *testing.T) {
 func TestInterpolationFrameLimit(t *testing.T) {
 	var pars Inter_ManParams_t
 	Inter_ManSetDefaultParams(&pars)
-	pars.nFramesMax = 1
+	pars.NFramesMax = 1
 	g := aig.NewGraph()
 	g.NewInput()
 	state := g.NewInput()
@@ -52,7 +52,7 @@ func TestInterpolationEndToEnd(t *testing.T) {
 		aig.Aig_ManSetRegNum(g, 1)
 		var pars Inter_ManParams_t
 		Inter_ManSetDefaultParams(&pars)
-		pars.nFramesMax = 5
+		pars.NFramesMax = 5
 		var frame int32
 		got := Inter_ManPerformInterpolation(g, &pars, &frame)
 		want := int32(1)
@@ -114,7 +114,7 @@ func TestInterpolationAgainstExplicitReachability(t *testing.T) {
 		}
 		var pars Inter_ManParams_t
 		Inter_ManSetDefaultParams(&pars)
-		pars.nFramesMax = 5
+		pars.NFramesMax = 5
 		var frame int32
 		got := Inter_ManPerformInterpolation(g, &pars, &frame)
 		want := int32(1)

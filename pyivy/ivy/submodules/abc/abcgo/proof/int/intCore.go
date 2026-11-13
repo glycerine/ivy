@@ -31,7 +31,7 @@ func rewriteForInterpolation(graph *aig.Graph, deadline int64) *aig.Graph {
 }
 
 func Inter_ManSetDefaultParams(p *Inter_ManParams_t) {
-	*p = Inter_ManParams_t{nFramesK: 1, fCheckKstep: 1, iFrameMax: -1}
+	*p = Inter_ManParams_t{NFramesK: 1, FCheckKstep: 1, IFrameMax: -1}
 }
 
 // Inter_ManPerformInterpolation returns 1 for a proof, 0 for a failure,
@@ -42,11 +42,11 @@ func Inter_ManPerformInterpolation(graph *aig.Graph, pars *Inter_ManParams_t, fr
 	}
 	start := util.Abc_Clock()
 	var deadline int64
-	if pars.nSecLimit != 0 {
-		deadline = start + int64(time.Duration(pars.nSecLimit)*time.Second)
+	if pars.NSecLimit != 0 {
+		deadline = start + int64(time.Duration(pars.NSecLimit)*time.Second)
 	}
-	if pars.nFramesK > 1 {
-		pars.fTransLoop = 1
+	if pars.NFramesK > 1 {
+		pars.FTransLoop = 1
 	}
 	regs := int(graph.RegisterCount())
 	if regs <= 0 || graph.InputCount() <= regs || graph.OutputCount()-regs-int(aig.Aig_ManConstrNum(graph)) != 1 {
@@ -65,7 +65,7 @@ func Inter_ManPerformInterpolation(graph *aig.Graph, pars *Inter_ManParams_t, fr
 		Inter_CheckStop(check)
 		return result
 	}
-	if pars.fTransLoop != 0 {
+	if pars.FTransLoop != 0 {
 		p.pAigTrans = Inter_ManStartOneOutput(graph, 0)
 	} else {
 		p.pAigTrans = Inter_ManStartDuplicated(graph)
@@ -73,26 +73,26 @@ func Inter_ManPerformInterpolation(graph *aig.Graph, pars *Inter_ManParams_t, fr
 	p.pCnfAig = cnf.Cnf_Derive(p.pAigTrans, p.pAigTrans.RegisterCount())
 	p.nFrames = 1
 	for {
-		if pars.fUseBackward != 0 {
+		if pars.FUseBackward != 0 {
 			p.pInter = Inter_ManStartOneOutput(graph, 1)
 		} else {
 			p.pInter = Inter_ManStartInitState(graph.RegisterCount())
 		}
 		p.pCnfInter = cnf.Cnf_Derive(p.pInter, 0)
-		p.pFrames = Inter_ManFramesInter(graph, p.nFrames, pars.fUseBackward, pars.fUseTwoFrames)
-		if pars.fRewrite != 0 {
+		p.pFrames = Inter_ManFramesInter(graph, p.nFrames, pars.FUseBackward, pars.FUseTwoFrames)
+		if pars.FRewrite != 0 {
 			p.pFrames = rewriteForInterpolation(p.pFrames, deadline)
 			if p.pFrames == nil {
 				return finish(-1, 0)
 			}
 		}
-		if pars.fUseBackward != 0 {
+		if pars.FUseBackward != 0 {
 			p.pCnfFrames = cnf.Cnf_Derive(p.pFrames, int32(p.pFrames.OutputCount()))
 		} else {
 			p.pCnfFrames = cnf.Cnf_DeriveSimple(p.pFrames, 0)
 		}
-		if pars.fTransLoop == 0 && pars.fUseBackward == 0 && pars.nFramesK <= 1 {
-			check = Inter_CheckStart(p.pAigTrans, pars.nFramesK)
+		if pars.FTransLoop == 0 && pars.FUseBackward == 0 && pars.NFramesK <= 1 {
+			check = Inter_CheckStart(p.pAigTrans, pars.NFramesK)
 			initial := cnf.Cnf_Derive(p.pInter, 1)
 			Inter_CheckPerform(check, initial, deadline)
 			cnf.Cnf_DataFree(initial)
@@ -101,17 +101,17 @@ func Inter_ManPerformInterpolation(graph *aig.Graph, pars *Inter_ManParams_t, fr
 			}
 		}
 		for i := int32(0); ; i++ {
-			if pars.nFramesMax != 0 && p.nFrames+i >= pars.nFramesMax {
+			if pars.NFramesMax != 0 && p.nFrames+i >= pars.NFramesMax {
 				return finish(-1, 0)
 			}
-			result := Inter_ManPerformOneStep(p, pars.fUseBias, pars.fUseBackward, deadline)
-			pars.iFrameMax = i - 1 + p.nFrames
+			result := Inter_ManPerformOneStep(p, pars.FUseBias, pars.FUseBackward, deadline)
+			pars.IFrameMax = i - 1 + p.nFrames
 			if result == 0 {
 				if i == 0 {
 					*frame = p.nFrames
 					var opts bmc.Saig_ParBmc_t
 					bmc.Saig_ParBmcSetDefaultParams(&opts)
-					opts.SetInterpolationOptions(p.nFrames, 100000000, pars.fVerbose)
+					opts.SetInterpolationOptions(p.nFrames, 100000000, pars.FVerbose)
 					status := bmc.Saig_ManBmcScalable(graph, &opts)
 					if status == 1 {
 						fmt.Println("Error: The problem should be SAT but it is UNSAT.")
@@ -141,14 +141,14 @@ func Inter_ManPerformInterpolation(graph *aig.Graph, pars *Inter_ManParams_t, fr
 			}
 			status := int32(0)
 			if p.pInterNew.InputCount() == p.pInter.InputCount() {
-				if pars.fCheckKstep == 0 {
+				if pars.FCheckKstep == 0 {
 					status = Inter_ManCheckContainment(p.pInterNew, p.pInter)
-				} else if pars.fTransLoop != 0 || pars.fUseBackward != 0 || pars.nFramesK > 1 {
+				} else if pars.FTransLoop != 0 || pars.FUseBackward != 0 || pars.NFramesK > 1 {
 					steps := i + 1
-					if steps > pars.nFramesK {
-						steps = pars.nFramesK
+					if steps > pars.NFramesK {
+						steps = pars.NFramesK
 					}
-					status = Inter_ManCheckInductiveContainment(p.pAigTrans, p.pInterNew, steps, pars.fUseBackward)
+					status = Inter_ManCheckInductiveContainment(p.pAigTrans, p.pInterNew, steps, pars.FUseBackward)
 				} else {
 					data := cnf.Cnf_Derive(p.pInterNew, 1)
 					status = Inter_CheckPerform(check, data, deadline)
@@ -164,7 +164,7 @@ func Inter_ManPerformInterpolation(graph *aig.Graph, pars *Inter_ManParams_t, fr
 			if status < 0 || deadline != 0 && util.Abc_Clock() > deadline {
 				return finish(-1, 1)
 			}
-			if pars.fUseBackward != 0 && pars.fTransLoop == 0 {
+			if pars.FUseBackward != 0 && pars.FTransLoop == 0 {
 				p.pInter = aig.Aig_ManCreateMiter(p.pInter, p.pInterNew, 2)
 				p.pInter = rewriteForInterpolation(p.pInter, deadline)
 				if p.pInter == nil {

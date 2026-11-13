@@ -15,8 +15,8 @@ func Inter_ManCreate(graph *Aig_Man_t, params *Inter_ManParams_t) *Inter_Man_t {
 	if graph == nil || params == nil {
 		panic("interpolation requires graph and parameters")
 	}
-	p := &Inter_Man_t{pAig: graph, nConfLimit: params.nBTLimit, fVerbose: params.fVerbose, pFileName: params.pFileName, vVarsAB: vec.Vec_IntAlloc(int(graph.RegisterCount()))}
-	if params.fDropInvar != 0 {
+	p := &Inter_Man_t{pAig: graph, nConfLimit: params.NBTLimit, fVerbose: params.FVerbose, pFileName: params.PFileName, vVarsAB: vec.Vec_IntAlloc(int(graph.RegisterCount()))}
+	if params.FDropInvar != 0 {
 		p.vInters = vec.Vec_PtrAlloc(100)
 	}
 	return p
