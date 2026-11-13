@@ -14,6 +14,7 @@ func TestIslandMatchingExtendAndComplete(t *testing.T) {
 		x := g.AND(a, b)
 		y := g.AND(x, a.Not())
 		g.AddOutput(y)
+		aig.Aig_ManSetRegNum(g, 0)
 		return g, a, x, y
 	}
 	a, ai, ax, ay := build()
@@ -52,6 +53,8 @@ func TestIslandMatchingRejectsMissingInputs(t *testing.T) {
 	a, b := aig.NewGraph(), aig.NewGraph()
 	a.NewInput()
 	b.NewInput()
+	aig.Aig_ManSetRegNum(a, 0)
+	aig.Aig_ManSetRegNum(b, 0)
 	p := vec.Vec_IntAlloc(2)
 	vec.Vec_IntPushTwo(p, 0, 0)
 	defer func() {

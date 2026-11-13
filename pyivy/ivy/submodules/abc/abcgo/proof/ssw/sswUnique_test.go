@@ -62,3 +62,32 @@ func TestUniquenessConstraintRetainsSourcePhaseBehavior(t *testing.T) {
 		t.Fatal("source phase-flipped uniqueness literal behavior changed")
 	}
 }
+
+func TestUniquenessSkipsBothConstantComparisons(t *testing.T) {
+	for _, inverted := range []bool{false, true} {
+		g := aig.NewGraph()
+		lo := g.NewInput()
+		g.AddOutput(lo)
+		aig.Aig_ManSetRegNum(g, 1)
+		frames := aig.NewGraph()
+		x := frames.NewInput()
+		sat := Ssw_SatStart(0)
+		defer Ssw_SatStop(sat)
+		sat.pAig = frames
+		p := &Ssw_Man_t{pAig: g, pFrames: frames, pMSat: sat, nFrames: 2, pNodeToFrames: make([]aig.Edge, len(g.Nodes())*2), iOutputLit: -1}
+		for i := range p.pNodeToFrames {
+			p.pNodeToFrames[i] = aig.InvalidEdge
+		}
+		other := x
+		if inverted {
+			other = x.Not()
+		}
+		Ssw_ObjSetFrame(p, lo, 0, x)
+		Ssw_ObjSetFrame(p, lo, 1, other)
+		support := vec.Vec_PtrAlloc(1)
+		vec.Vec_PtrPush(support, lo)
+		if got := Ssw_ManUniqueAddConstraint(p, support, 0, 1); got != 0 || p.iOutputLit != -1 {
+			t.Fatalf("inverted=%t: result=%d output literal=%d", inverted, got, p.iOutputLit)
+		}
+	}
+}

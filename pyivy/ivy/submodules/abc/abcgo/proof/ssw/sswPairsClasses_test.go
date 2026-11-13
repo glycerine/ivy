@@ -24,10 +24,12 @@ func TestPairsBuildOrderedTransitiveClasses(t *testing.T) {
 func TestMiterStatusConstantsAndUnknown(t *testing.T) {
 	g := aig.NewGraph()
 	g.AddOutput(g.Const0())
+	aig.Aig_ManSetRegNum(g, 0)
 	if Ssw_MiterStatus(g, 0) != 1 {
 		t.Fatal("zero miter")
 	}
 	g.AddOutput(g.Const1())
+	aig.Aig_ManSetRegNum(g, 0)
 	if Ssw_MiterStatus(g, 0) != 0 {
 		t.Fatal("one miter")
 	}
@@ -48,6 +50,7 @@ func TestMiterStatusSourceClassificationAndPriority(t *testing.T) {
 		g := aig.NewGraph()
 		x := g.NewInput()
 		g.AddOutput(x.Not())
+		aig.Aig_ManSetRegNum(g, 0)
 		if got := Ssw_MiterStatus(g, 0); got != 0 {
 			t.Fatalf("status = %d, want satisfiable", got)
 		}

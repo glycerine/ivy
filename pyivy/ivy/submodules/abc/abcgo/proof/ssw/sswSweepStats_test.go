@@ -10,6 +10,7 @@ func TestSweepStatsUseSourceIterationDeltas(t *testing.T) {
 	g := aig.NewGraph()
 	x := g.NewInput()
 	g.AddOutput(x)
+	aig.Aig_ManSetRegNum(g, 0)
 	classes := Ssw_ClassesStart(g)
 	defer Ssw_ClassesStop(classes)
 	Ssw_ObjSetConst1Cand(g, x)
