@@ -69,3 +69,34 @@ func TestNodeVectorGrowthAndRemoval(t *testing.T) {
 		t.Fatal("shrink failed")
 	}
 }
+
+// C exposes its backing pointer array and changes only the logical size when
+// shrinking, clearing, popping, or removing an entry (fraigVec.c:156-178,
+// 331-359). Previously returned views therefore retain those trailing slots.
+func TestNodeVectorSizeChangesPreserveBackingEntries(t *testing.T) {
+	a, b, c := &Fraig_Node_t{}, &Fraig_Node_t{}, &Fraig_Node_t{}
+	for _, op := range []struct {
+		name  string
+		apply func(*Fraig_NodeVec_t)
+		want  []*Fraig_Node_t
+	}{
+		{"shrink", func(v *Fraig_NodeVec_t) { Fraig_NodeVecShrink(v, 1) }, []*Fraig_Node_t{a, b, c}},
+		{"clear", Fraig_NodeVecClear, []*Fraig_Node_t{a, b, c}},
+		{"pop", func(v *Fraig_NodeVec_t) { Fraig_NodeVecPop(v) }, []*Fraig_Node_t{a, b, c}},
+		{"remove", func(v *Fraig_NodeVec_t) { Fraig_NodeVecRemove(v, b) }, []*Fraig_Node_t{a, c, c}},
+	} {
+		t.Run(op.name, func(t *testing.T) {
+			v := Fraig_NodeVecAlloc(3)
+			for _, n := range []*Fraig_Node_t{a, b, c} {
+				Fraig_NodeVecPush(v, n)
+			}
+			backing := Fraig_NodeVecReadArray(v)
+			op.apply(v)
+			for i, want := range op.want {
+				if backing[i] != want {
+					t.Errorf("backing[%d] = %p, want %p", i, backing[i], want)
+				}
+			}
+		})
+	}
+}

@@ -42,7 +42,6 @@ func Fraig_NodeVecShrink(p *Fraig_NodeVec_t, size int32) {
 	if size < 0 || int(size) > len(p.pArray) {
 		panic("fraig: invalid vector size")
 	}
-	clear(p.pArray[size:])
 	p.pArray = p.pArray[:size]
 }
 func Fraig_NodeVecClear(p *Fraig_NodeVec_t)                    { Fraig_NodeVecShrink(p, 0) }
@@ -104,7 +103,6 @@ func Fraig_NodeVecPop(p *Fraig_NodeVec_t) *Fraig_Node_t {
 		panic("fraig: pop from empty vector")
 	}
 	node := p.pArray[i]
-	p.pArray[i] = nil
 	p.pArray = p.pArray[:i]
 	return node
 }
