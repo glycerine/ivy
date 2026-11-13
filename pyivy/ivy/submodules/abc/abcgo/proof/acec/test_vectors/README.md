@@ -36,6 +36,11 @@ With assertions enabled, ABC aborts in `Acec_OrderTreeRoots` because no XOR
 root exists; the Go test checks the corresponding panic. Build it with the
 same commands, substituting its filename.
 
+`acec_polynomial_order.c` builds a two-full-adder chain and prints the
+complete `Gia_PolynReorder` result. The Go regression checks those source
+values, including entries for the output objects. Use the same C build commands
+with this filename to regenerate it.
+
 `abc_acec_results.txt` records the ABC CLI differential cases; set
 `go test -run TestABCDifferential ./proof/acec` always compares Go against the
 recorded results. Set `ABC_BINARY` to the absolute path of the compiled ABC
