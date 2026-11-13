@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/bool/kit"
 	"github.com/glycerine/abcgo/misc/vec"
 )
 
@@ -143,7 +144,7 @@ func cutValue(cut *Cnf_Cut_t, assignment int) bool { return truthBit(cut.truth, 
 
 // Cnf_CutCompose substitutes fan's function for leaf in cut and returns the
 // exact truth table over the union of the remaining leaves.
-func Cnf_CutCompose(_ *Cnf_Man_t, cut, fan *Cnf_Cut_t, leaf int32) *Cnf_Cut_t {
+func Cnf_CutCompose(manager *Cnf_Man_t, cut, fan *Cnf_Cut_t, leaf int32) *Cnf_Cut_t {
 	position := -1
 	for i, id := range cut.pFanins {
 		if id == leaf {
@@ -158,13 +159,10 @@ func Cnf_CutCompose(_ *Cnf_Man_t, cut, fan *Cnf_Cut_t, leaf int32) *Cnf_Cut_t {
 	remaining = append(remaining, cut.pFanins[:position]...)
 	remaining = append(remaining, cut.pFanins[position+1:]...)
 	leaves := Cnf_CutMergeLeaves(&Cnf_Cut_t{pFanins: remaining}, fan)
-	if len(leaves) > 16 {
+	if len(leaves) > 16 || manager != nil && int32(len(leaves)+1) > manager.nMergeLimit {
 		return nil
 	}
 	resultLeaves := leaves
-	if len(resultLeaves) > 16 {
-		return nil
-	}
 	result := Cnf_CutAlloc(nil, int32(len(resultLeaves)))
 	copy(result.pFanins, resultLeaves)
 	for assignment := 0; assignment < 1<<len(resultLeaves); assignment++ {
@@ -207,13 +205,29 @@ func containsLeaf(leaves []int32, id int32) bool {
 	return false
 }
 func cutSopCost(truth []uint32, variables int) int {
-	minterms, maxterms := 0, 0
-	for i := 0; i < 1<<variables; i++ {
-		if truthBit(truth, i) {
-			minterms++
-		} else {
-			maxterms++
+	words := append([]uint32(nil), truth...)
+	if variables < 5 {
+		period := 1 << variables
+		for bit := period; bit < 32; bit++ {
+			if words[0]&(1<<uint(bit%period)) != 0 {
+				words[0] |= 1 << uint(bit)
+			}
 		}
 	}
-	return minterms + maxterms
+	var cover []uint32
+	if kit.Kit_TruthIsop(words, int32(variables), &cover, 0) < 0 {
+		return 127
+	}
+	cost := len(cover)
+	for i := range words {
+		words[i] = ^words[i]
+	}
+	if kit.Kit_TruthIsop(words, int32(variables), &cover, 0) < 0 {
+		return 127
+	}
+	cost += len(cover)
+	if cost > 127 {
+		return 127
+	}
+	return cost
 }

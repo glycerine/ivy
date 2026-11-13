@@ -31,6 +31,25 @@ func TestCollectLeavesEntryPointsAgree(t *testing.T) {
 	}
 }
 
+func TestCutCompositionCostReflectsCover(t *testing.T) {
+	top := Cnf_CutFromTruth([]int32{1, 2}, []uint32{8})
+	fan := Cnf_CutFromTruth([]int32{3, 4}, []uint32{8})
+	result := Cnf_CutCompose(nil, top, fan, 2)
+	if result == nil || result.Cost != 4 {
+		t.Fatalf("three-input AND cost = %v, want four clauses", result)
+	}
+}
+
+func TestCutCompositionHonorsMergeLimit(t *testing.T) {
+	manager := Cnf_ManStart()
+	manager.nMergeLimit = 3
+	top := Cnf_CutFromTruth([]int32{1, 2}, []uint32{8})
+	fan := Cnf_CutFromTruth([]int32{3, 4}, []uint32{8})
+	if Cnf_CutCompose(manager, top, fan, 2) != nil {
+		t.Fatal("composition exceeded manager merge limit")
+	}
+}
+
 func TestCutDeriveTruthRepeatsAcrossWord(t *testing.T) {
 	g := aig.NewGraph()
 	x, y := g.NewInput(), g.NewInput()
