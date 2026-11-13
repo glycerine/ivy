@@ -128,11 +128,20 @@ func Msat_ClausePropagate(c *Msat_Clause_t, lit int, assigns []int, out *int) in
 	return 0
 }
 func Msat_ClauseSimplify(c *Msat_Clause_t, assigns []int) int {
-	for _, lit := range c.lits {
-		if assigns[lit>>1] == lit {
+	j := 0
+	for i, lit := range c.lits {
+		value := assigns[lit>>1]
+		if value == MSAT_VAR_UNASSIGNED {
+			c.lits[j] = lit
+			j++
+			continue
+		}
+		if value == lit {
 			return 1
 		}
+		assert(i >= 2, "false literal is not watched")
 	}
+	c.lits = c.lits[:j]
 	return 0
 }
 func Msat_ClauseCalcReason(p *Msat_Solver_t, c *Msat_Clause_t, implied int, out *Msat_IntVec_t) {
