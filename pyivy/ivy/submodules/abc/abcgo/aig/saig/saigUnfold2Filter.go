@@ -19,7 +19,9 @@ func filterUnfold2Candidates(g *aig.Graph, candidates *vec.Vec_Vec_t, conflicts,
 		return classes, fmt.Errorf("saig: invalid induction filter arguments")
 	}
 	frames := Saig_ManCreateIndMiter2(g, candidates)
-	formula := cnf.Cnf_DeriveSimple(frames, 0)
+	// Keep each induction output as a query variable; the source passes
+	// the full CO count so the CNF does not assert all outputs at once.
+	formula := cnf.Cnf_DeriveSimple(frames, aig.Aig_ManCoNum(frames))
 	if formula == nil {
 		return classes, fmt.Errorf("saig: cannot encode induction miter")
 	}
