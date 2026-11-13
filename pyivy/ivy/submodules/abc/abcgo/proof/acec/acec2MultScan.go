@@ -109,9 +109,6 @@ func Sdb_StoFindInputs(cuts *Vec_Wec_t, front int32) *Vec_Int_t {
 		}
 	}
 	min = vec.Vec_IntEntry(counts, int(front))
-	if min == 0 {
-		return res
-	}
 	vec.Vec_IntPush(second, front)
 	vec.Vec_IntWriteEntry(counts, int(front), 0)
 	for i := 0; i < vec.Vec_IntSize(counts); i++ {
