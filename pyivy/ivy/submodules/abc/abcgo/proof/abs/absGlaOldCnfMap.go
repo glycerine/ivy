@@ -11,6 +11,14 @@ import (
 // glaOldCnfForGia expresses mapped AIG clauses and LUT boundaries in GIA
 // object IDs. The Go AIG exporter may reorder CIs relative to logic nodes.
 func glaOldCnfForGia(g *gia.Gia_Man_t) (*cnf.Cnf_Dat_t, error) {
+	// The original old-GLA AIG conversion treats every internal node as an
+	// AND. Real XOR/MUX nodes require prior lowering to ordinary ANDs.
+	for id := int32(1); id < gia.Gia_ManObjNum(g); id++ {
+		obj := gia.Gia_ManObj(g, id)
+		if gia.Gia_ObjIsXor(obj) != 0 || gia.Gia_ObjIsMux(g, obj) != 0 {
+			return nil, fmt.Errorf("old GLA: lower XOR/MUX object %d to ANDs first", id)
+		}
+	}
 	aigGraph := gia.Gia_ManToAigSimple(g)
 	data, err := cnf.Cnf_DeriveOtherMapped(aigGraph, 1)
 	if err != nil {
@@ -29,7 +37,9 @@ func glaOldCnfForGia(g *gia.Gia_Man_t) (*cnf.Cnf_Dat_t, error) {
 		}
 		aid := int(lit >> 1)
 		if reverse[aid] >= 0 {
-			return nil, fmt.Errorf("old GLA: AIG conversion merged GIA objects %d and %d", reverse[aid], id)
+			// ABC's original simple conversion asserts this cannot occur. Use
+			// immediate-fanin cuts to preserve each GIA node independently.
+			return glaOldLocalCnf(g)
 		}
 		reverse[aid] = int32(id)
 		inverted[aid] = int32(lit & 1)
@@ -107,4 +117,59 @@ func glaOldCnfForGia(g *gia.Gia_Man_t) (*cnf.Cnf_Dat_t, error) {
 	result := cnf.NewMappedCNF(n, clauses, nil, offsets, counts)
 	result.Mapping = append([]int32(nil), vec.Vec_IntArray(mapping)...)
 	return result, nil
+}
+
+// glaOldLocalCnf preserves object identity when AIG hashing would merge or
+// simplify distinct GIA ANDs. Each AND uses its valid immediate-fanin cut.
+func glaOldLocalCnf(g *gia.Gia_Man_t) (*cnf.Cnf_Dat_t, error) {
+	n := int(gia.Gia_ManObjNum(g))
+	mapping := vec.Vec_IntStart(n)
+	counts, offsets := make([]int32, n), make([]int32, n)
+	for i := range counts {
+		counts[i], offsets[i] = -1, -1
+	}
+	clauses := make([][]int32, 0, 3*n)
+	for id := int32(0); id < int32(n); id++ {
+		obj := gia.Gia_ManObj(g, id)
+		switch {
+		case gia.Gia_ObjIsConst0(obj) != 0:
+			offsets[id] = int32(len(clauses))
+			counts[id] = 1
+			clauses = append(clauses, []int32{2*id + 1})
+		case gia.Gia_ObjIsCi(obj) != 0:
+			counts[id] = 0
+		case gia.Gia_ObjIsAnd(obj) != 0:
+			if gia.Gia_ObjIsXor(obj) != 0 || gia.Gia_ObjIsMux(g, obj) != 0 {
+				return nil, fmt.Errorf("old GLA: local cut fallback does not support XOR or MUX object %d", id)
+			}
+			a, b := gia.Gia_ObjId(g, gia.Gia_ObjFanin0(obj)), gia.Gia_ObjId(g, gia.Gia_ObjFanin1(obj))
+			ca, cb := gia.Gia_ObjFaninC0(obj), gia.Gia_ObjFaninC1(obj)
+			vec.Vec_IntWriteEntry(mapping, int(id), int32(vec.Vec_IntSize(mapping)))
+			var truth uint32
+			for assignment := 0; assignment < 16; assignment++ {
+				av := int32(assignment&1) ^ ca
+				bv := int32((assignment>>1)&1) ^ cb
+				truth |= uint32(av&bv) << assignment
+			}
+			vec.Vec_IntPush(mapping, int32(truth))
+			vec.Vec_IntPush(mapping, a)
+			vec.Vec_IntPush(mapping, b)
+			vec.Vec_IntPush(mapping, -1)
+			vec.Vec_IntPush(mapping, -1)
+			offsets[id] = int32(len(clauses))
+			counts[id] = 3
+			clauses = append(clauses, []int32{2*id + 1, 2*a + ca}, []int32{2*id + 1, 2*b + cb}, []int32{2 * id, 2*a + (ca ^ 1), 2*b + (cb ^ 1)})
+		case gia.Gia_ObjIsCo(obj) != 0:
+			a := gia.Gia_ObjId(g, gia.Gia_ObjFanin0(obj))
+			c := gia.Gia_ObjFaninC0(obj)
+			offsets[id] = int32(len(clauses))
+			counts[id] = 2
+			clauses = append(clauses, []int32{2 * id, 2*a + (c ^ 1)}, []int32{2*id + 1, 2*a + c})
+		default:
+			return nil, fmt.Errorf("old GLA: unsupported GIA object %d", id)
+		}
+	}
+	data := cnf.NewMappedCNF(n, clauses, nil, offsets, counts)
+	data.Mapping = append([]int32(nil), vec.Vec_IntArray(mapping)...)
+	return data, nil
 }

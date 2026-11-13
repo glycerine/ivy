@@ -15,7 +15,11 @@ func Gia_ManDupMapped_rec(p *gia.Gia_Man_t, obj *gia.Gia_Obj_t, dst *gia.Gia_Man
 	}
 	Gia_ManDupMapped_rec(p, gia.Gia_ObjFanin0(obj), dst)
 	Gia_ManDupMapped_rec(p, gia.Gia_ObjFanin1(obj), dst)
-	obj.Value = uint32(gia.Gia_ManAppendAnd(dst, gia.Gia_ObjFanin0Copy(obj), gia.Gia_ObjFanin1Copy(obj)))
+	if gia.Gia_ObjIsBuf(obj) != 0 {
+		obj.Value = uint32(gia.Gia_ManAppendBuf(dst, gia.Gia_ObjFanin0Copy(obj)))
+	} else {
+		obj.Value = uint32(gia.Gia_ManAppendAnd(dst, gia.Gia_ObjFanin0Copy(obj), gia.Gia_ObjFanin1Copy(obj)))
+	}
 	vec.Vec_IntPush(gia.Gia_ManLutConfigs(dst), gia.Gia_ObjId(p, obj))
 }
 
