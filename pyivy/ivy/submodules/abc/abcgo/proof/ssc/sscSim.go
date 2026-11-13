@@ -182,7 +182,8 @@ func Ssc_GiaGetCareMask(s *Simulation) []uint64 {
 	for i := range mask {
 		mask[i] = ^uint64(0)
 	}
-	for _, o := range s.Graph.OutputLiterals() {
+	// Register inputs are COs but are not POs; the C mask iterates POs only.
+	for _, o := range s.Graph.OutputLiterals()[:int(gia.Gia_ManPoNum(s.Graph))] {
 		for w := range mask {
 			x := s.Values[o>>1][w]
 			if o&1 != 0 {

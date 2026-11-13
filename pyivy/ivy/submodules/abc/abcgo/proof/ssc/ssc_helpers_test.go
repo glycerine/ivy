@@ -98,6 +98,19 @@ func TestCareHelpersUseLastSimulationSnapshot(t *testing.T) {
 	}
 }
 
+func TestCareMaskIgnoresRegisterInputs(t *testing.T) {
+	g := gia.Gia_ManStart(6)
+	gia.Gia_ManAppendCi(g)
+	gia.Gia_ManAppendCo(g, 1) // primary output is always true
+	gia.Gia_ManAppendCo(g, 0) // register input is always false
+	gia.Gia_ManSetRegNum(g, 1)
+	s := NewSimulation(g, 1)
+	Ssc_GiaSimRound(s)
+	if got := Ssc_GiaGetCareMask(s)[0]; got != ^uint64(0) {
+		t.Fatalf("care mask included the register input: got %#x", got)
+	}
+}
+
 func TestClassRefinementAndComplementedSimulation(t *testing.T) {
 	c := &Classes{
 		Groups: [][]int32{{0, 1, 2, 3}},
