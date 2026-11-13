@@ -48,59 +48,7 @@ import "os"
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_FramesWithConstraints(p *Aig_Man_t, nFrames int32) *Aig_Man_t {
-    var pFrames *Aig_Man_t;
-    var pObj, pObjLi, pObjLo *Aig_Obj_t;
-    var i, f int32;
-//    assert( Saig_ManConstrNum(p) > 0 );
-    assert(Aig_ManRegNum(p) > 0, "Aig_ManRegNum(p) > 0");
-    assert(Aig_ManRegNum(p) < Aig_ManCiNum(p), "Aig_ManRegNum(p) < Aig_ManCiNum(p)");
-    // start the fraig package
-    pFrames = Aig_ManStart( Aig_ManObjNumMax(p) * nFrames );
-    // create latches for the first frame
-    // inlining of macro Saig_ManForEachLo
-    for  i = 0; (i < Saig_ManRegNum(p)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i+Saig_ManPiNum(p))), 1); i++  {
-        Aig_ObjSetCopy( pObj, Aig_ManConst0(pFrames) );
-    }
-    // add timeframes
-    for  f = 0; f < nFrames; f++  {
-        // map constants and PIs
-        Aig_ObjSetCopy( Aig_ManConst1(p), Aig_ManConst1(pFrames) );
-        // inlining of macro Saig_ManForEachPi
-        // inlining of macro Vec_PtrForEachEntryStop
-        for  i = 0; (i < Saig_ManPiNum(p)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {
-            Aig_ObjSetCopy( pObj, Aig_ObjCreateCi(pFrames) );
-        }
-        // add internal nodes of this frame
-        // inlining of macro Aig_ManForEachNode
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {
-            Aig_ObjSetCopy( pObj, Aig_And( pFrames, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ) ); }
-        }
-        // transfer to the primary output
-        // inlining of macro Aig_ManForEachCo
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(p.vCos)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-            Aig_ObjSetCopy( pObj, Aig_ObjChild0Copy(pObj) );
-        }
-        // create constraint outputs
-        // inlining of macro Saig_ManForEachPo
-        // inlining of macro Vec_PtrForEachEntryStop
-        for  i = 0; (i < Saig_ManPoNum(p)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {
-            if i < Saig_ManPoNum(p) - Saig_ManConstrNum(p) {
-                continue; }
-            Aig_ObjCreateCo( pFrames, Aig_Not( Aig_ObjCopy(pObj) ) );
-        }
-        // transfer latch inputs to the latch outputs
-        // inlining of macro Saig_ManForEachLiLo
-        for  i = 0; (i < Saig_ManRegNum(p)) && (((pObjLi) = Saig_ManLi(p, i)), 1)            && (((pObjLo)=Saig_ManLo(p, i)), 1); i++  {
-            Aig_ObjSetCopy( pObjLo, Aig_ObjCopy(pObjLi) );
-        }
-    }
-    // remove dangling nodes
-    Aig_ManCleanup( pFrames );
-    return pFrames;
-}
+
 
 /**Function*************************************************************
 
