@@ -80,6 +80,16 @@ func fraigSatClause(p *Fraig_Man_t, literals ...int) {
 	assert(msat.Msat_SolverAddClause(p.pSat, p.vProj) != 0, "SAT clause accepted")
 }
 func fraigSatSolve(p *Fraig_Man_t, limit, seconds int32, literals ...int) int {
+	if p.hasExternalClauses {
+		// External clauses may depend on nodes outside this query's fanin cone.
+		// Keep all encoded variables active so their clauses can propagate.
+		for i := range p.vNodes.pArray {
+			if msat.Msat_IntVecReadEntry(p.vVarsUsed, i) == 0 {
+				msat.Msat_IntVecWriteEntry(p.vVarsUsed, i, 1)
+				msat.Msat_IntVecPush(p.vVarsInt, i)
+			}
+		}
+	}
 	msat.Msat_SolverPrepare(p.pSat, p.vVarsInt)
 	msat.Msat_IntVecClear(p.vProj)
 	for _, lit := range literals {
