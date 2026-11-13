@@ -43,3 +43,22 @@ func TestRandomPiPatternsMatchCSequence(t *testing.T) {
 		}
 	}
 }
+
+func TestVerboseSweepConsumesCareEstimateRandomPatterns(t *testing.T) {
+	// The C verbose path estimates care with five words before its two initial
+	// five-word refinement rounds. Each two-input round draws 20 RNG words.
+	subject := newBuilder(2, 8)
+	gia.Gia_ManAppendCo(subject.graph, 0)
+	care := emptyCare(subject.graph)
+	gia.Gia_ManRandom(1)
+	for i := 0; i < 60; i++ {
+		gia.Gia_ManRandom(0)
+	}
+	want := gia.Gia_ManRandom(0)
+	params := DefaultParams()
+	params.Verbose = true
+	Ssc_PerformSweeping(subject.graph, care, &params)
+	if got := gia.Gia_ManRandom(0); got != want {
+		t.Fatalf("verbose sweep RNG after care estimate: got %08x want %08x", got, want)
+	}
+}

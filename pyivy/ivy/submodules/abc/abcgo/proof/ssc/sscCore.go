@@ -176,6 +176,12 @@ func Ssc_PerformSweepingInt(subject, care *gia.Gia_Man_t, params *Ssc_Pars_t) *g
 	if status != satoko.SATOKO_SAT {
 		return gia.Gia_ManDup(subject)
 	}
+	if p.Params.Verbose {
+		// The source estimates care before initial refinement. Besides the
+		// diagnostic, this advances the shared GIA random stream.
+		careSim := NewSimulation(p.Aig, 5)
+		fmt.Printf("Care set produced %d hits out of %d.\n", Ssc_GiaEstimateCare(careSim, 5), 640)
+	}
 	carePatterns(p)
 	// The original solver's working graph starts with the care cone and grows
 	// as subject candidates are visited. Later SAT queries must see earlier
