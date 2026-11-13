@@ -1,8 +1,11 @@
 package bmc
 
 import (
+	"fmt"
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/sat/bsat"
+	"io"
+	"os"
 )
 
 func cardClause(s *bsat.Solver, lits ...bsat.Literal) {
@@ -100,4 +103,40 @@ func Cnf_AddCardinConstr(s *bsat.Solver, vars *vec.Vec_Int_t) int32 {
 		vec.Vec_IntWriteEntry(vars, 0, work[0])
 	}
 	return s.NumVars()
+}
+
+// Cnf_AddCardinConstrTest prints all eight-bit patterns with exactly two bits set.
+func Cnf_AddCardinConstrTest() { printCardinalityPatterns(os.Stdout) }
+
+func printCardinalityPatterns(out io.Writer) int {
+	s := bsat.NewSolver()
+	vars := vec.Vec_IntAlloc(8)
+	for i := 0; i < 8; i++ {
+		vec.Vec_IntPush(vars, s.NewVariable())
+	}
+	Cnf_AddCardinConstrPairWise(s, vars, 2, 1)
+	count := 0
+	for s.Solve() == bsat.Satisfiable {
+		count++
+		fmt.Fprintf(out, "%3d : ", count)
+		block := make([]bsat.Literal, 8)
+		for i := range block {
+			value, ok := s.Value(int32(i))
+			if !ok {
+				panic("bmc: missing solver model")
+			}
+			if value {
+				fmt.Fprint(out, 1)
+				block[i] = bsat.Negative(int32(i))
+			} else {
+				fmt.Fprint(out, 0)
+				block[i] = bsat.Positive(int32(i))
+			}
+		}
+		fmt.Fprintln(out)
+		if !s.AddClause(block...) {
+			break
+		}
+	}
+	return count
 }

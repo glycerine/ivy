@@ -1,9 +1,11 @@
 package bmc
 
 import (
+	"bytes"
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/sat/bsat"
 	"math/bits"
+	"strings"
 	"testing"
 )
 
@@ -65,5 +67,23 @@ func TestCardinalityAtMostOne(t *testing.T) {
 		if got := s.Solve(a...) == bsat.Satisfiable; got != (bits.OnesCount(uint(mask)) <= 1) {
 			t.Fatalf("mask %04b", mask)
 		}
+	}
+}
+
+func TestCardinalityDiagnostic(t *testing.T) {
+	var output bytes.Buffer
+	if n := printCardinalityPatterns(&output); n != 28 {
+		t.Fatalf("got %d patterns, want 28", n)
+	}
+	seen := map[string]bool{}
+	for _, line := range strings.Split(strings.TrimSpace(output.String()), "\n") {
+		parts := strings.Split(line, ": ")
+		if len(parts) != 2 || len(parts[1]) != 8 || strings.Count(parts[1], "1") != 2 || seen[parts[1]] {
+			t.Fatalf("invalid pattern %q", line)
+		}
+		seen[parts[1]] = true
+	}
+	if len(seen) != 28 {
+		t.Fatalf("got %d unique patterns", len(seen))
 	}
 }
