@@ -8,6 +8,11 @@ import (
 // Saig_RefManFindReason follows controlling values from the unrolled output
 // to a sufficient set of frame inputs, using the original priority rule.
 func Saig_RefManFindReason(p *Saig_RefMan_t) *vec.Vec_Int_t {
+	result, _ := oldRefinementReason(p)
+	return result
+}
+
+func oldRefinementReason(p *Saig_RefMan_t) (*vec.Vec_Int_t, []bool) {
 	g := p.pFrames
 	Saig_RefManSetPhases(p, nil, 0)
 	priority := make([]int, len(g.Nodes()))
@@ -57,6 +62,9 @@ func Saig_RefManFindReason(p *Saig_RefMan_t) *vec.Vec_Int_t {
 			return
 		}
 		n := g.Node(e)
+		if n.Kind == aig.Constant {
+			return
+		}
 		if n.Kind != aig.And {
 			panic("refinement reason expects an AND-inverter graph")
 		}
@@ -80,5 +88,5 @@ func Saig_RefManFindReason(p *Saig_RefMan_t) *vec.Vec_Int_t {
 	if out.NodeID() != g.Const1().NodeID() {
 		visit(out)
 	}
-	return result
+	return result, seen
 }

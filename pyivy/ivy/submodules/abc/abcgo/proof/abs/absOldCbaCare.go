@@ -12,6 +12,7 @@ type Saig_ManCba_t struct {
 	nInputs, fVerbose      int32
 	vMapPiF2A              *vec.Vec_Int_t
 	vReg2Frame, vReg2Value *vec.Vec_Vec_t
+	phase, visited         []bool
 }
 
 // Saig_ManCbaReason2Inputs maps frame inputs to distinct additional inputs,
