@@ -37,6 +37,13 @@ source accepts negative limits, whose behavior is not simply unlimited. The
 checked-in `test_vectors/claus_limit_source.c` characterizes the undefined
 result and assertion behavior against compiled C.
 
+Compiled-C SEC option fixtures cover separate and merged interpolation,
+disabled interpolation, and signed interpolation conflict budgets. In the
+fixture, separate interpolation preserves ABC's frame-zero counterexample,
+while merged interpolation returns a frame-one counterexample; a negative
+budget returns undecided. The shared INT solver passes the signed budget to
+BSAT unchanged, as the C implementation does.
+
 The SEC `TimeLimit` option is currently ineffective in the active ABC C
 implementation: its global deadline checks are commented out. This port
 preserves that behavior. SEC passes its separate `nPdrTimeout` to PDR.
