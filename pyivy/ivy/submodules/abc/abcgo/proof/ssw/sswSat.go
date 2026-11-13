@@ -8,6 +8,9 @@ import (
 )
 
 func Ssw_NodesAreEquiv(p *Ssw_Man_t, old, node aig.Edge) int32 {
+	if sswDeadlineExpired(p.pPars) {
+		return -1
+	}
 	if p.pMSat == nil || old.Complemented() || node.Complemented() || old == node {
 		panic("ssw: invalid equivalence query")
 	}
@@ -18,6 +21,9 @@ func Ssw_NodesAreEquiv(p *Ssw_Man_t, old, node aig.Edge) int32 {
 	Ssw_CnfNodeAddToSolver(sat, node)
 	samePhase := p.pFrames.Node(old).Phase == p.pFrames.Node(node).Phase
 	for direction := 0; direction < 2; direction++ {
+		if sswDeadlineExpired(p.pPars) {
+			return -1
+		}
 		if direction == 1 && old == p.pFrames.Const1() {
 			break
 		}
@@ -27,6 +33,7 @@ func Ssw_NodesAreEquiv(p *Ssw_Man_t, old, node aig.Edge) int32 {
 		if p.iOutputLit >= 0 {
 			assumptions = append(assumptions, p.iOutputLit)
 		}
+		sat.pSat.SetDeadline(p.pPars.deadline)
 		sat.pSat.SetLimits(int64(p.pPars.nBTLimit), 0)
 		start := time.Now()
 		result := sat.pSat.Solve(assumptions...)

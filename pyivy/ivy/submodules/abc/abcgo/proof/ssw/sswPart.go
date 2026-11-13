@@ -31,6 +31,9 @@ func Ssw_SignalCorrespondencePart(g *aig.Graph, pars *Ssw_Pars_t) *aig.Graph {
 	}
 	aig.Aig_ManReprStart(g, int32(len(g.Nodes())))
 	for i, part := range partitions {
+		if sswDeadlineExpired(pars) {
+			return nil
+		}
 		var countPis, countRegs int32
 		var mapping []int32
 		subgraph := aig.Aig_ManRegCreatePart(g, part, &countPis, &countRegs, &mapping)
@@ -39,6 +42,10 @@ func Ssw_SignalCorrespondencePart(g *aig.Graph, pars *Ssw_Pars_t) *aig.Graph {
 		}
 		if countPis > 0 {
 			reduced := Ssw_SignalCorrespondence(subgraph, pars)
+			if reduced == nil {
+				aig.Aig_ManStop(subgraph)
+				return nil
+			}
 			classes := aig.Aig_TransferMappedClasses(g, subgraph, mapping)
 			if verbose != 0 {
 				fmt.Printf("%3d : Reg = %4d. PI = %4d. (True = %4d. Regs = %4d.) And = %5d. It = %3d. Cl = %5d.\n", i, len(part), subgraph.InputCount()-len(part), countPis, countRegs, aig.Aig_ManNodeNum(subgraph), pars.nIters, classes)

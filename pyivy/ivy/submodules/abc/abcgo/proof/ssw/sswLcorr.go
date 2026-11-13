@@ -155,6 +155,9 @@ func Ssw_ManSweepLatch(p *Ssw_Man_t) int32 {
 	p.nCallsSat = 0
 	p.nCallsUnsat = 0
 	for _, lo := range inputs[pis:] {
+		if sswDeadlineExpired(p.pPars) {
+			return p.fRefined
+		}
 		if Ssw_ObjIsConst1Cand(g, lo) != 0 {
 			Ssw_ManSweepLatchOne(p, g.Const1(), lo)
 		} else {
@@ -176,7 +179,7 @@ func Ssw_ManSweepLatch(p *Ssw_Man_t) int32 {
 			p.nVarsMax = max(p.nVarsMax, p.pMSat.nSatVars)
 			p.nCallsMax = max(p.nCallsMax, p.pMSat.nSolverCalls)
 			Ssw_SatStop(p.pMSat)
-			p.pMSat = Ssw_SatStart(p.pPars.fPolarFlip)
+			p.pMSat = sswSatStart(p.pPars)
 			p.pMSat.pAig = p.pFrames
 			p.nRecycles++
 			p.nRecycleCalls = 0

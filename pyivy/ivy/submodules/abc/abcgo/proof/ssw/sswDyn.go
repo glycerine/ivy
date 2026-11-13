@@ -226,6 +226,9 @@ func Ssw_ManSweepDyn(p *Ssw_Man_t) int32 {
 	}
 	var i int32
 	for i = 0; i < aig.Aig_ManObjNumMax(p.pAig); i++ {
+		if sswDeadlineExpired(p.pPars) {
+			return p.fRefined
+		}
 		obj := aig.Aig_ManObj(p.pAig, i)
 		if !p.pAig.ValidEdge(obj) {
 			continue
@@ -253,7 +256,7 @@ func Ssw_ManSweepDyn(p *Ssw_Man_t) int32 {
 				p.nRecyclesTotal++
 				p.nRecycleCalls = 0
 			}
-			p.pMSat = Ssw_SatStart(p.pPars.fPolarFlip)
+			p.pMSat = sswSatStart(p.pPars)
 			p.pMSat.pAig = p.pFrames
 			if p.nPatterns != 0 {
 				panic("ssw: pending simulation patterns")

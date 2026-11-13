@@ -1,6 +1,9 @@
 package ssw
 
-import "github.com/glycerine/abcgo/misc/util"
+import (
+	"github.com/glycerine/abcgo/misc/util"
+	"time"
+)
 
 /**CFile****************************************************************
 
@@ -39,26 +42,27 @@ import "github.com/glycerine/abcgo/misc/util"
 // choicing parameters
 
 type Ssw_Pars_t struct {
-	nPartSize      int32 // size of the partition
-	nOverSize      int32 // size of the overlap between partitions
-	nFramesK       int32 // the induction depth
-	nFramesAddSim  int32 // the number of additional frames to simulate
-	fConstrs       int32 // treat the last nConstrs POs as seq constraints
-	fMergeFull     int32 // enables full merge when constraints are used
-	nMaxLevs       int32 // the max number of levels of nodes to consider
-	nBTLimit       int32 // conflict limit at a node
-	nBTLimitGlobal int32 // conflict limit for multiple runs
-	nMinDomSize    int32 // min clock domain considered for optimization
-	nItersStop     int32 // stop after the given number of iterations
-	fDumpSRInit    int32 // dumps speculative reduction
-	nResimDelta    int32 // the number of nodes to resimulate
-	nStepsMax      int32 // (scorr only) the max number of induction steps
-	TimeLimit      int32 // time out in seconds
-	fPolarFlip     int32 // uses polarity adjustment
-	fLatchCorr     int32 // perform register correspondence
-	fConstCorr     int32 // perform constant correspondence
-	fOutputCorr    int32 // perform 'PO correspondence'
-	fSemiFormal    int32 // enable semiformal filtering
+	deadline       time.Time // optional absolute correspondence deadline
+	nPartSize      int32     // size of the partition
+	nOverSize      int32     // size of the overlap between partitions
+	nFramesK       int32     // the induction depth
+	nFramesAddSim  int32     // the number of additional frames to simulate
+	fConstrs       int32     // treat the last nConstrs POs as seq constraints
+	fMergeFull     int32     // enables full merge when constraints are used
+	nMaxLevs       int32     // the max number of levels of nodes to consider
+	nBTLimit       int32     // conflict limit at a node
+	nBTLimitGlobal int32     // conflict limit for multiple runs
+	nMinDomSize    int32     // min clock domain considered for optimization
+	nItersStop     int32     // stop after the given number of iterations
+	fDumpSRInit    int32     // dumps speculative reduction
+	nResimDelta    int32     // the number of nodes to resimulate
+	nStepsMax      int32     // (scorr only) the max number of induction steps
+	TimeLimit      int32     // time out in seconds
+	fPolarFlip     int32     // uses polarity adjustment
+	fLatchCorr     int32     // perform register correspondence
+	fConstCorr     int32     // perform constant correspondence
+	fOutputCorr    int32     // perform 'PO correspondence'
+	fSemiFormal    int32     // enable semiformal filtering
 	//    int              fUniqueness;   // enable uniqueness constraints
 	fDynamic      int32 // enable dynamic addition of constraints
 	fLocalSim     int32 // enable local simulation simulation

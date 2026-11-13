@@ -1,5 +1,7 @@
 package ssw
 
+import "time"
+
 // Ssw_ParsSetFramesK sets the induction depth for signal correspondence.
 func Ssw_ParsSetFramesK(p *Ssw_Pars_t, frames int32) { p.nFramesK = frames }
 
@@ -14,3 +16,6 @@ func Ssw_ParsIterations(p *Ssw_Pars_t) int32 { return p.nIters }
 
 // Ssw_ParsConflicts returns the number of SAT conflicts performed.
 func Ssw_ParsConflicts(p *Ssw_Pars_t) int32 { return p.nConflicts }
+
+// Ssw_ParsSetDeadline sets an absolute deadline; zero clears it.
+func Ssw_ParsSetDeadline(p *Ssw_Pars_t, deadline time.Time) { p.deadline = deadline }

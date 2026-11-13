@@ -165,6 +165,9 @@ func Ssw_ManSweepBmc(p *Ssw_Man_t) int32 {
 	}
 	p.fRefined = 0
 	for frame := int32(0); frame < p.pPars.nFramesK; frame++ {
+		if sswDeadlineExpired(p.pPars) {
+			return p.fRefined
+		}
 		Ssw_ObjSetFrame(p, p.pAig.Const1(), frame, p.pFrames.Const1())
 		for _, pi := range inputs[:pis] {
 			Ssw_ObjSetFrame(p, pi, frame, p.pFrames.NewInput())
@@ -173,6 +176,9 @@ func Ssw_ManSweepBmc(p *Ssw_Man_t) int32 {
 			p.fRefined |= Ssw_ManSweepNode(p, lo, frame, 1, nil)
 		}
 		for _, obj := range sswFrameNodes(p.pAig) {
+			if sswDeadlineExpired(p.pPars) {
+				return p.fRefined
+			}
 			Ssw_ObjSetFrame(p, obj, frame, sswMakeNode(p, p.pFrames, obj, frame))
 			p.fRefined |= Ssw_ManSweepNode(p, obj, frame, 1, nil)
 		}
@@ -242,6 +248,9 @@ func Ssw_ManSweep(p *Ssw_Man_t) int32 {
 		latches[lo.NodeID()] = true
 	}
 	for _, obj := range p.pAig.LiveEdges() {
+		if sswDeadlineExpired(p.pPars) {
+			return p.fRefined
+		}
 		if latches[obj.NodeID()] {
 			p.fRefined |= Ssw_ManSweepNode(p, obj, frame, 0, pairs)
 		} else if aig.Aig_ObjIsNode(p.pAig, obj) {

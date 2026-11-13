@@ -125,10 +125,29 @@ func Ssw_ClassesPreparePairsSimple(g *aig.Graph, pairs *vec.Vec_Int_t) *Ssw_Cla_
 
 // Ssw_ClassesPrepare derives candidate classes through sequential simulation.
 func Ssw_ClassesPrepare(g *aig.Graph, framesK, latchOnly, constOnly, outputOnly, maxLevels, verbose int32) *Ssw_Cla_t {
+	return sswClassesPrepare(g, framesK, latchOnly, constOnly, outputOnly, maxLevels, verbose, nil)
+}
+
+func sswClassesPrepare(g *aig.Graph, framesK, latchOnly, constOnly, outputOnly, maxLevels, verbose int32, pars *Ssw_Pars_t) *Ssw_Cla_t {
+	if sswDeadlineExpired(pars) {
+		return nil
+	}
 	p := Ssw_ClassesStart(g)
 	p.fConstCorr = constOnly
 	nFrames := max(framesK, 4)
-	sml := Ssw_SmlSimulateSeq(g, 0, nFrames, 2)
+	sml := Ssw_SmlStart(g, 0, nFrames, 2)
+	Ssw_SmlInitialize(sml, 1)
+	if !sswSimulateOne(sml, pars) {
+		Ssw_SmlStop(sml)
+		Ssw_ClassesStop(p)
+		return nil
+	}
+	sml.fNonConstOut = Ssw_SmlCheckNonConstOutputs(sml)
+	if sswDeadlineExpired(pars) {
+		Ssw_SmlStop(sml)
+		Ssw_ClassesStop(p)
+		return nil
+	}
 	Ssw_ClassesSetData(p, sml,
 		func(data any, obj aig.Edge) uint32 { return Ssw_SmlObjHashWord(data.(*Ssw_Sml_t), obj) },
 		func(data any, obj aig.Edge) int32 { return Ssw_SmlObjIsConstWord(data.(*Ssw_Sml_t), obj) },
@@ -173,6 +192,11 @@ func Ssw_ClassesPrepare(g *aig.Graph, framesK, latchOnly, constOnly, outputOnly,
 	Ssw_ClassesPrepareRehash(p, candidates, constOnly)
 	rounds := int32(1)
 	for ; rounds < 16; rounds++ {
+		if sswDeadlineExpired(pars) {
+			Ssw_SmlStop(sml)
+			Ssw_ClassesStop(p)
+			return nil
+		}
 		vec.Vec_PtrClear(candidates)
 		for _, obj := range g.LiveEdges() {
 			if Ssw_ObjIsConst1Cand(g, obj) != 0 {
@@ -182,7 +206,13 @@ func Ssw_ClassesPrepare(g *aig.Graph, framesK, latchOnly, constOnly, outputOnly,
 		if int32(vec.Vec_PtrSize(candidates)) != p.nCands1 {
 			panic("ssw: inconsistent constant candidates")
 		}
-		Ssw_SmlResimulateSeq(sml)
+		Ssw_SmlReinitialize(sml)
+		if !sswSimulateOne(sml, pars) {
+			Ssw_SmlStop(sml)
+			Ssw_ClassesStop(p)
+			return nil
+		}
+		sml.fNonConstOut = Ssw_SmlCheckNonConstOutputs(sml)
 		if Ssw_ClassesPrepareRehash(p, candidates, constOnly) == 0 {
 			break
 		}

@@ -40,7 +40,9 @@ func Ssw_ManResimulateBit(p *Ssw_Man_t, _ aig.Edge, repr aig.Edge) {
 func Ssw_ManResimulateWord(p *Ssw_Man_t, _ aig.Edge, repr aig.Edge, _ int32) {
 	start := time.Now()
 	Ssw_SmlAssignDist1Plus(p.pSml, p.pPatWords)
-	Ssw_SmlSimulateOne(p.pSml)
+	if !sswSimulateOne(p.pSml, p.pPars) {
+		return
+	}
 	constRefined := Ssw_ClassesRefineConst1(p.ppClasses, 1)
 	classRefined := Ssw_ClassesRefine(p.ppClasses, 1)
 	if repr == p.pAig.Const1() {
