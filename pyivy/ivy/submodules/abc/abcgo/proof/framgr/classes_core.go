@@ -196,10 +196,7 @@ func (p *classPartition) LatchCorrespondence(graph *aig.Graph) {
 	if graph == nil || len(graph.Nodes()) > len(p.Reprs) {
 		panic("fra: invalid AIG for class partition")
 	}
-	p.Classes, p.Constants = nil, nil
-	for i := range p.Reprs {
-		p.Reprs[i] = -1
-	}
+	p.Constants = nil
 	for i := int32(0); i < aig.Aig_ManRegNum(graph); i++ {
 		id := aig.Aig_ManLo(graph, i).NodeID()
 		p.Constants = append(p.Constants, id)
