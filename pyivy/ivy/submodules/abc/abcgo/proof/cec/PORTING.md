@@ -17,3 +17,13 @@ Completed group verification: actual `go test -race -cover ./proof/cec/core`
 passes (85.4% statement coverage), and `go vet ./proof/cec/core` passes. Separate
 readability and bug reviews are recorded in core/README.md. No git commands were
 used by this worker.
+
+## Upstream Cec4 choice limitation
+
+The choice-building path `gia.Cec4_ManSatSolverChoices` is not a working
+implementation when independent choice classes are present: its recursive AND
+builder returns constant zero. This is inherited from the original C routine
+`src/aig/gia/giaEquiv.c` (`Cec4_ManSatSolverAnd_rec`), which also immediately
+returns zero. The Go code preserves that behavior; a correct choice builder
+requires an implementation and independent equivalence tests. A build or a
+passing test of other Cec4 paths does not establish correctness of this path.
