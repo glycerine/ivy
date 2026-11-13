@@ -12,6 +12,9 @@ import (
 
 type fraCecSolver interface {
 	AddClause(...bsat.Literal) bool
+	NewVariable() int32
+	NumVars() int32
+	Simplify() bool
 	Solve(...bsat.Literal) bsat.Status
 	SetLimits(int64, int64)
 	Value(int32) (bool, bool)
@@ -41,6 +44,9 @@ func Fra_FraigSat(graph *aig.Graph, conflictLimit, propagationLimit int64, learn
 		primary.SetLearntReduction(learnedStart, learnedDelta, learnedPercent)
 		solver = primary
 	}
+	for int(solver.NumVars()) < formula.Variables {
+		solver.NewVariable()
+	}
 	for _, row := range formula.Clauses {
 		if !solver.AddClause(row...) {
 			return 1
@@ -65,6 +71,9 @@ func Fra_FraigSat(graph *aig.Graph, conflictLimit, propagationLimit int64, learn
 	}
 	if conflictLimit < 0 || propagationLimit < 0 {
 		panic("fra: negative SAT limit")
+	}
+	if !solver.Simplify() {
+		return 1
 	}
 	solver.SetLimits(conflictLimit, propagationLimit)
 	status := solver.Solve()

@@ -2,8 +2,32 @@ package fracomb
 
 import (
 	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/sat/bsat"
+	"github.com/glycerine/abcgo/sat/cnf"
+	"reflect"
 	"testing"
 )
+
+// The expected variable and clause order was produced by C Cnf_Derive with
+// both output variables free, as used by Fra_FraigSat.
+func TestSATFreeOutputCNFMatchesABC(t *testing.T) {
+	g := aig.NewGraph()
+	x, y := g.NewInput(), g.NewInput()
+	n := g.AND(x, y)
+	g.AddOutput(n)
+	g.AddOutput(n.Not())
+	f := cnf.Cnf_Derive(g, 2)
+	if f == nil {
+		t.Fatal("CNF derivation failed")
+	}
+	if f.Variables != 7 || f.VarNums[x.NodeID()] != 4 || f.VarNums[y.NodeID()] != 5 || f.VarNums[g.Outputs()[0].NodeID()] != 1 || f.VarNums[g.Outputs()[1].NodeID()] != 2 {
+		t.Fatalf("unexpected variable numbering: %d %v", f.Variables, f.VarNums)
+	}
+	want := [][]bsat.Literal{{6, 9, 11}, {7, 8}, {7, 10}, {12}, {2, 7}, {3, 6}, {4, 6}, {5, 7}}
+	if !reflect.DeepEqual(f.Clauses, want) {
+		t.Fatalf("clauses = %v, want %v", f.Clauses, want)
+	}
+}
 
 func TestSATTwoOutputTruthTables(t *testing.T) {
 	for aTable := 0; aTable < 16; aTable++ {
