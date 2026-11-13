@@ -15,6 +15,24 @@ type fixtureM114p struct {
 	nvars  int32
 }
 
+type rejectingM114p struct {
+	fixtureM114p
+	rejectAt int
+}
+
+func (p *rejectingM114p) AddClause(c []int32) bool {
+	p.added = append(p.added, append([]int32(nil), c...))
+	return len(p.added) != p.rejectAt
+}
+
+func copyClauseSlices(clauses [][]int32) [][]int32 {
+	result := make([][]int32, len(clauses))
+	for i, clause := range clauses {
+		result[i] = append([]int32(nil), clause...)
+	}
+	return result
+}
+
 func (p *fixtureM114p) SetVarNum(n int32) { p.nvars = n }
 func (p *fixtureM114p) AddClause(c []int32) bool {
 	p.added = append(p.added, append([]int32(nil), c...))
@@ -64,6 +82,7 @@ func TestMiniSatPartitionAssemblyRestoresCNF(t *testing.T) {
 	frames.AddOutput(next)
 	ci, ct, cf := cnf.Cnf_Derive(inter, 0), cnf.Cnf_Derive(trans, 1), cnf.Cnf_Derive(frames, 0)
 	beforeI, beforeT := append([]int32(nil), ci.VarNums...), append([]int32(nil), ct.VarNums...)
+	clausesI, clausesT := copyClauseSlices(ci.Clauses), copyClauseSlices(ct.Clauses)
 	s := &fixtureM114p{}
 	roots, vars, err := Inter_ManDeriveSatSolverM114p(s, inter, ci, trans, ct, frames, cf)
 	if err != nil {
@@ -75,7 +94,8 @@ func TestMiniSatPartitionAssemblyRestoresCNF(t *testing.T) {
 	if vars[cf.VarNums[next.NodeID()]] != 0 {
 		t.Fatal("shared variable mapping missing")
 	}
-	if !reflect.DeepEqual(beforeI, ci.VarNums) || !reflect.DeepEqual(beforeT, ct.VarNums) {
+	if !reflect.DeepEqual(beforeI, ci.VarNums) || !reflect.DeepEqual(beforeT, ct.VarNums) ||
+		!reflect.DeepEqual(clausesI, ci.Clauses) || !reflect.DeepEqual(clausesT, ct.Clauses) {
 		t.Fatal("lifted CNF not restored")
 	}
 	sawB := false
@@ -89,6 +109,63 @@ func TestMiniSatPartitionAssemblyRestoresCNF(t *testing.T) {
 	}
 	if !sawB {
 		t.Fatal("missing B clauses")
+	}
+}
+
+func TestMiniSatPartitionAssemblyRestoresCNFAfterFailure(t *testing.T) {
+	inter := aig.NewGraph()
+	x := inter.NewInput()
+	inter.AddOutput(x.Not())
+	trans := aig.NewGraph()
+	state := trans.NewInput()
+	trans.AddOutput(state)
+	aig.Aig_ManSetRegNum(trans, 1)
+	frames := aig.NewGraph()
+	next := frames.NewInput()
+	frames.AddOutput(next)
+	ci, ct, cf := cnf.Cnf_Derive(inter, 0), cnf.Cnf_Derive(trans, 1), cnf.Cnf_Derive(frames, 0)
+	iv, tv := append([]int32(nil), ci.VarNums...), append([]int32(nil), ct.VarNums...)
+	ic, tc := copyClauseSlices(ci.Clauses), copyClauseSlices(ct.Clauses)
+	s := &rejectingM114p{rejectAt: 1}
+	if _, _, err := Inter_ManDeriveSatSolverM114p(s, inter, ci, trans, ct, frames, cf); err == nil {
+		t.Fatal("expected failed A-clause insertion")
+	}
+	if !reflect.DeepEqual(iv, ci.VarNums) || !reflect.DeepEqual(tv, ct.VarNums) || !reflect.DeepEqual(ic, ci.Clauses) || !reflect.DeepEqual(tc, ct.Clauses) {
+		t.Fatal("failure left CNF lifted")
+	}
+}
+
+func TestMiniSatPartitionAssemblyStopsAtContradictoryBClause(t *testing.T) {
+	inter := aig.NewGraph()
+	x := inter.NewInput()
+	inter.AddOutput(x.Not())
+	trans := aig.NewGraph()
+	state := trans.NewInput()
+	trans.AddOutput(state)
+	aig.Aig_ManSetRegNum(trans, 1)
+	frames := aig.NewGraph()
+	next := frames.NewInput()
+	frames.AddOutput(next)
+	ci, ct, cf := cnf.Cnf_Derive(inter, 0), cnf.Cnf_Derive(trans, 1), cnf.Cnf_Derive(frames, 0)
+	baseline := &fixtureM114p{}
+	parts, _, err := Inter_ManDeriveSatSolverM114p(baseline, inter, ci, trans, ct, frames, cf)
+	if err != nil {
+		t.Fatal(err)
+	}
+	firstB := -1
+	for i, part := range parts {
+		if part == 1 {
+			firstB = i
+			break
+		}
+	}
+	if firstB < 0 {
+		t.Fatal("fixture has no B clauses")
+	}
+	stopping := &rejectingM114p{rejectAt: firstB + 1}
+	got, _, err := Inter_ManDeriveSatSolverM114p(stopping, inter, ci, trans, ct, frames, cf)
+	if err != nil || len(got) != firstB+1 || got[firstB] != 1 || len(stopping.added) != firstB+1 {
+		t.Fatalf("parts=%v added=%d err=%v", got, len(stopping.added), err)
 	}
 }
 
