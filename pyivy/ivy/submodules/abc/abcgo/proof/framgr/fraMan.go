@@ -65,7 +65,6 @@ func Fra_ManFinalizeComb(p *Fra_Man_t) {
 	for _, output := range p.PManAig.Outputs() {
 		p.PManFraig.AddOutput(Fra_ObjChild0Fra(p, output, 0))
 	}
-	aig.Aig_ManSetRegNum(p.PManFraig, p.PManAig.RegisterCount())
 	aig.Aig_ManCleanMarkB(p.PManFraig)
 }
 
