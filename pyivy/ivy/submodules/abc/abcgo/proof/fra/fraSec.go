@@ -20,6 +20,13 @@ import (
 
 var secUnsolvedNumber atomic.Int32
 
+// ABC refreshes the true-terminal counts directly at several SEC stages;
+// unlike Aig_ManSetRegNum, these writes do not reset stored CioIds.
+func secRefreshTrueCounts(g *aig.Graph) {
+	g.SetTruePiCount(int32(g.InputCount()) - g.RegisterCount())
+	g.SetTruePoCount(int32(g.OutputCount()) - g.RegisterCount())
+}
+
 func secSaveUnsolved(graph *aig.Graph) {
 	abcmain.Abc_FrameSetSave1(aig.Aig_ManDupSimple(graph))
 }
@@ -172,7 +179,7 @@ func Fra_FraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph) int3
 		return finish()
 	}
 	if pars.fPhaseAbstract != 0 {
-		aig.Aig_ManSetRegNum(graph, graph.RegisterCount())
+		secRefreshTrueCounts(graph)
 		graph = saig.Saig_ManPhaseAbstractAuto(graph, 0)
 	}
 	if pars.fRetimeFirst != 0 && graph.RegisterCount() > 0 {
@@ -210,7 +217,7 @@ func Fra_FraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph) int3
 		return finish()
 	}
 	if pars.fRetimeRegs != 0 && graph.RegisterCount() > 0 {
-		aig.Aig_ManSetRegNum(graph, graph.RegisterCount())
+		secRefreshTrueCounts(graph)
 		graph = saig.Saig_ManRetimeMinArea(graph, 1000, 0, 0, 1, 0)
 		graph = aig.Aig_ManDupOrdered(graph)
 	}
@@ -245,7 +252,7 @@ func Fra_FraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph) int3
 				break
 			}
 			if graph.RegisterCount() > 0 {
-				aig.Aig_ManSetRegNum(graph, graph.RegisterCount())
+				secRefreshTrueCounts(graph)
 				graph = saig.Saig_ManRetimeMinArea(graph, 1000, 0, 0, 1, 0)
 				graph = aig.Aig_ManDupOrdered(graph)
 			}
@@ -276,6 +283,7 @@ func Fra_FraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph) int3
 		return finish()
 	}
 	status = Fra_FraigMiterStatus(graph)
+	aig.Aig_ManSetRegNum(graph, graph.RegisterCount())
 	if pars.fInterpolation != 0 && status == -1 && graph.RegisterCount() > 0 {
 		var options interp.Inter_ManParams_t
 		interp.Inter_ManSetDefaultParams(&options)
@@ -340,7 +348,7 @@ func Fra_FraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph) int3
 		options.FReorder = 1
 		options.FReorderImage = 1
 		options.FSilent = pars.fSilent
-		aig.Aig_ManSetRegNum(graph, graph.RegisterCount())
+		secRefreshTrueCounts(graph)
 		status = bbr.Aig_ManVerifyUsingBdds(graph, &options)
 	}
 	if pars.fUsePdr != 0 && status == -1 && graph.RegisterCount() > 0 {
