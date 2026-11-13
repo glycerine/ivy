@@ -51,27 +51,6 @@ import "fmt"
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManAbsSetDefaultParams(p *Gia_ParAbs_t) {
-    memset( p, 0, sizeof(Gia_ParAbs_t) );
-    p.Algo        =        0;    // algorithm: CBA
-    p.nFramesMax  =       10;    // timeframes for PBA
-    p.nConfMax    =    10000;    // conflicts for PBA
-    p.fDynamic    =        1;    // dynamic unfolding for PBA
-    p.fConstr     =        0;    // use constraints
-    p.nFramesBmc  =      250;    // timeframes for BMC
-    p.nConfMaxBmc =     5000;    // conflicts for BMC
-    p.nStableMax  =  1000000;    // the number of stable frames to quit
-    p.nRatio      =       10;    // ratio of flops to quit
-    p.nBobPar     =  1000000;    // the number of frames before trying to quit
-    p.fUseBdds    =        0;    // use BDDs to refine abstraction
-    p.fUseDprove  =        0;    // use 'dprove' to refine abstraction
-    p.fUseStart   =        1;    // use starting frame
-    p.fVerbose    =        0;    // verbose output
-    p.fVeryVerbose=        0;    // printing additional information
-    p.Status      =       -1;    // the problem status
-    p.nFramesDone =       -1;    // the number of rames covered
-}
-
 
 /**Function*************************************************************
 
@@ -84,40 +63,7 @@ func Gia_ManAbsSetDefaultParams(p *Gia_ParAbs_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Saig_ManCexRemap(p *Aig_Man_t, pAbs *Aig_Man_t, pCexAbs *Abc_Cex_t) *Abc_Cex_t {
-    var pCex *Abc_Cex_t;
-    var pObj *Aig_Obj_t;
-    var i, f int32;
-    if !Saig_ManVerifyCex( pAbs, pCexAbs ) {
-        fmt.Printf("Saig_ManCexRemap(): The initial counter-example is invalid.\n"); }
-//    else
-//        printf( "Saig_ManCexRemap(): The initial counter-example is correct.\n" );
-    // start the counter-example
-    pCex = Abc_CexAlloc( Aig_ManRegNum(p), Saig_ManPiNum(p), pCexAbs.iFrame+1 );
-    pCex.iFrame = pCexAbs.iFrame;
-    pCex.iPo    = pCexAbs.iPo;
-    // copy the bit data
-    for  f = 0; f <= pCexAbs.iFrame; f++  {
-        Saig_ManForEachPi( pAbs, pObj, i )
-        {
-            if i == Saig_ManPiNum(p) {
-                break; }
-            if Abc_InfoHasBit( pCexAbs.pData, pCexAbs.nRegs + pCexAbs.nPis * f + i ) {
-                Abc_InfoSetBit( pCex.pData, pCex.nRegs + pCex.nPis * f + i ); }
-        }
-    }
-    // verify the counter example
-    if !Saig_ManVerifyCex( p, pCex ) {
-        fmt.Printf("Saig_ManCexRemap(): Counter-example is invalid.\n");
-        Abc_CexFree( pCex );
-        pCex = nil;
-    
-    } else {
-        Abc_Print( 1, "Counter-example verification is successful.\n" );
-        Abc_Print( 1, "Output %d of miter \"%s\" was asserted in frame %d. \n", pCex.iPo, p.pName, pCex.iFrame );
-    }
-    return pCex;
-}
+
 
 /**Function*************************************************************
 
@@ -316,16 +262,6 @@ func Saig_ManCexRefineStep(p *Aig_Man_t, vFlops *Vec_Int_t, vFlopClasses *Vec_In
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManClasses2Flops(vFlopClasses *Vec_Int_t) *Vec_Int_t {
-    var vFlops *Vec_Int_t;
-    var i, Entry int32;
-    vFlops = Vec_IntAlloc( 100 );
-    Vec_IntForEachEntry( vFlopClasses, Entry, i )
-        if ( Entry )
-            Vec_IntPush( vFlops, i );
-    return vFlops;
-}
-
 /**Function*************************************************************
 
   Synopsis    [Transform flop list into flop map.]
@@ -337,15 +273,6 @@ func Gia_ManClasses2Flops(vFlopClasses *Vec_Int_t) *Vec_Int_t {
   SeeAlso     []
 
 ***********************************************************************/
-func Gia_ManFlops2Classes(pGia *Gia_Man_t, vFlops *Vec_Int_t) *Vec_Int_t {
-    var vFlopClasses *Vec_Int_t;
-    var i, Entry int32;
-    vFlopClasses = Vec_IntStart( Gia_ManRegNum(pGia) );
-    Vec_IntForEachEntry( vFlops, Entry, i )
-        Vec_IntWriteEntry( vFlopClasses, Entry, 1 );
-    return vFlopClasses;
-}
-
 /**Function*************************************************************
 
   Synopsis    [Refines abstraction using the latch map.]
