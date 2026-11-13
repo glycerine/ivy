@@ -33,7 +33,7 @@ import "time"
 ////////////////////////////////////////////////////////////////////////
 
    
-type Ssw_RarMan_t struct {
+type sswRar2Man struct {
     // parameters
     nWords            int32;       // the number of words to simulate
     nFrames            int32;      // the number of frames to simulate
@@ -53,17 +53,17 @@ type Ssw_RarMan_t struct {
 
 }
 
-func Ssw_RarGetBinPat(p *Ssw_RarMan_t, iBin int32, iPat int32) int32 {
+func sswRar2GetBinPat(p *sswRar2Man, iBin int32, iPat int32) int32 {
     assert(iBin >= 0 && iBin < Aig_ManRegNum(p.pAig) / p.nBinSize, "iBin >= 0 && iBin < Aig_ManRegNum(p.pAig) / p.nBinSize");
     assert(iPat >= 0 && iPat < (1 << p.nBinSize), "iPat >= 0 && iPat < (1 << p.nBinSize)");
     return p.pRarity[iBin * (1 << p.nBinSize) + iPat];
 }
-func Ssw_RarSetBinPat(p *Ssw_RarMan_t, iBin int32, iPat int32, Value int32) {
+func sswRar2SetBinPat(p *sswRar2Man, iBin int32, iPat int32, Value int32) {
     assert(iBin >= 0 && iBin < Aig_ManRegNum(p.pAig) / p.nBinSize, "iBin >= 0 && iBin < Aig_ManRegNum(p.pAig) / p.nBinSize");
     assert(iPat >= 0 && iPat < (1 << p.nBinSize), "iPat >= 0 && iPat < (1 << p.nBinSize)");
     p.pRarity[iBin * (1 << p.nBinSize) + iPat] = Value;
 }
-func Ssw_RarAddToBinPat(p *Ssw_RarMan_t, iBin int32, iPat int32) {
+func sswRar2AddToBinPat(p *sswRar2Man, iBin int32, iPat int32) {
     assert(iBin >= 0 && iBin < Aig_ManRegNum(p.pAig) / p.nBinSize, "iBin >= 0 && iBin < Aig_ManRegNum(p.pAig) / p.nBinSize");
     assert(iPat >= 0 && iPat < (1 << p.nBinSize), "iPat >= 0 && iPat < (1 << p.nBinSize)");
     p.pRarity[iBin * (1 << p.nBinSize) + iPat]++;
@@ -84,12 +84,12 @@ func Ssw_RarAddToBinPat(p *Ssw_RarMan_t, iBin int32, iPat int32) {
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_RarManStart(pAig *Aig_Man_t, nWords int32, nFrames int32, nBinSize int32, fVerbose int32) *Ssw_RarMan_t {
-    var p *Ssw_RarMan_t;
+func sswRar2ManStart(pAig *Aig_Man_t, nWords int32, nFrames int32, nBinSize int32, fVerbose int32) *sswRar2Man {
+    var p *sswRar2Man;
     if Aig_ManRegNum(pAig) < nBinSize || nBinSize <= 0 {
         return nil; }
     // inlining of macro ABC_CALLOC
-    p = &Ssw_RarMan_t{};
+    p = &sswRar2Man{};
     p.pAig = pAig;
     p.nWords = nWords;
     p.nFrames = nFrames;
@@ -118,7 +118,7 @@ func Ssw_RarManStart(pAig *Aig_Man_t, nWords int32, nFrames int32, nBinSize int3
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_RarManStop(p *Ssw_RarMan_t) {
+func sswRar2ManStop(p *sswRar2Man) {
     if p.pSml { Ssw_SmlStop( p.pSml ); }
     if p.ppClasses { Ssw_ClassesStop( p.ppClasses ); }
     Vec_PtrFreeP( &p.vSimInfo );
@@ -141,7 +141,7 @@ func Ssw_RarManStop(p *Ssw_RarMan_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_RarUpdateCounters(p *Ssw_RarMan_t) {
+func Ssw_RarUpdateCounters(p *sswRar2Man) {
     var pObj *Aig_Obj_t;
     var pData *uint32;
     var i, k int32;
@@ -163,14 +163,14 @@ func Ssw_RarUpdateCounters(p *Ssw_RarMan_t) {
                 p.pGroupValues[i / p.nBinSize] |= (1 << (i % p.nBinSize)); }
         }
         for  i = 0; i < p.nGroups; i++  {
-            Ssw_RarAddToBinPat( p, i, p.pGroupValues[i] );
+            sswRar2AddToBinPat( p, i, p.pGroupValues[i] );
         }
     }
 /*
     for ( i = 0; i < p->nGroups; i++ )
     {
         for ( k = 0; k < (1 << p->nBinSize); k++ )
-            Abc_Print( 1, "%d ", Ssw_RarGetBinPat(p, i, k) );
+            Abc_Print( 1, "%d ", sswRar2GetBinPat(p, i, k) );
         Abc_Print( 1, "\n" );
     }
 */
@@ -187,7 +187,7 @@ func Ssw_RarUpdateCounters(p *Ssw_RarMan_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_RarTransferPatterns(p *Ssw_RarMan_t, vInits *Vec_Int_t) {
+func sswRar2TransferPatterns(p *sswRar2Man, vInits *Vec_Int_t) {
     var pObj *Aig_Obj_t;
     var pData *uint32;
     var i, k, Value int32;
@@ -207,7 +207,7 @@ func Ssw_RarTransferPatterns(p *Ssw_RarMan_t, vInits *Vec_Int_t) {
         // find the cost of its values
         p.pPatCosts[k] = 0.0;
         for  i = 0; i < p.nGroups; i++  {
-            Value = Ssw_RarGetBinPat( p, i, p.pGroupValues[i] );
+            Value = sswRar2GetBinPat( p, i, p.pGroupValues[i] );
             assert(Value > 0, "Value > 0");
             p.pPatCosts[k] += 1.0/(Value*Value);
         }
@@ -253,7 +253,7 @@ func Ssw_RarTransferPatterns(p *Ssw_RarMan_t, vInits *Vec_Int_t) {
   SeeAlso     []
 
 ***********************************************************************/
-func Ssw_RarFindStartingState(pAig *Aig_Man_t, pCex *Abc_Cex_t) *Vec_Int_t {
+func sswRar2FindStartingState(pAig *Aig_Man_t, pCex *Abc_Cex_t) *Vec_Int_t {
     var vInit *Vec_Int_t;
     var pObj, pObjLi *Aig_Obj_t;
     var f, i, iBit int32;
@@ -318,7 +318,7 @@ func Ssw_RarFindStartingState(pAig *Aig_Man_t, pCex *Abc_Cex_t) *Vec_Int_t {
 ***********************************************************************/
 func Ssw_RarSimulate2(pAig *Aig_Man_t, nFrames int32, nWords int32, nBinSize int32, nRounds int32, TimeOut int32, fVerbose int32) int32 {
     var fMiter int32  = 1;
-    var p *Ssw_RarMan_t;
+    var p *sswRar2Man;
     var r int32;
     var clk abctime;
     var clkTotal abctime = Abc_Clock();
@@ -341,7 +341,7 @@ func Ssw_RarSimulate2(pAig *Aig_Man_t, nFrames int32, nWords int32, nBinSize int
     Aig_ManRandom( 1 );
 
     // create manager
-    p = Ssw_RarManStart( pAig, nWords, nFrames, nBinSize, fVerbose );
+    p = sswRar2ManStart( pAig, nWords, nFrames, nBinSize, fVerbose );
     p.vInits = Vec_IntStart( Aig_ManRegNum(pAig) * nWords );
     Ssw_SmlInitializeSpecial( p.pSml, p.vInits );
 
@@ -358,7 +358,7 @@ func Ssw_RarSimulate2(pAig *Aig_Man_t, nFrames int32, nWords int32, nBinSize int
         }
         // get initialization patterns
         Ssw_RarUpdateCounters( p );
-        Ssw_RarTransferPatterns( p, p.vInits );
+        sswRar2TransferPatterns( p, p.vInits );
         Ssw_SmlInitializeSpecial( p.pSml, p.vInits );
         // printout
         if fVerbose != 0 {
@@ -379,7 +379,7 @@ func Ssw_RarSimulate2(pAig *Aig_Man_t, nFrames int32, nWords int32, nBinSize int
         Abc_PrintTime( 1, "Time", Abc_Clock() - clkTotal );
     }
     // cleanup
-    Ssw_RarManStop( p );
+    sswRar2ManStop( p );
     return RetValue;
 }
 
@@ -397,7 +397,7 @@ func Ssw_RarSimulate2(pAig *Aig_Man_t, nFrames int32, nWords int32, nBinSize int
 ***********************************************************************/
 func Ssw_RarSignalFilter2(pAig *Aig_Man_t, nFrames int32, nWords int32, nBinSize int32, nRounds int32, TimeOut int32, pCex *Abc_Cex_t, fLatchOnly int32, fVerbose int32) int32 {
     var fMiter int32;
-    var p *Ssw_RarMan_t;
+    var p *sswRar2Man;
     var r, i, k int32;
     var clkTotal abctime  = Abc_Clock();
     var nTimeToStop abctime;
@@ -419,11 +419,11 @@ func Ssw_RarSignalFilter2(pAig *Aig_Man_t, nFrames int32, nWords int32, nBinSize
     Aig_ManRandom( 1 );
 
     // create manager
-    p = Ssw_RarManStart( pAig, nWords, nFrames, nBinSize, fVerbose );
+    p = sswRar2ManStart( pAig, nWords, nFrames, nBinSize, fVerbose );
     // compute starting state if needed
     assert(p.vInits == nil, "p.vInits == nil");
     if pCex != nil {
-        p.vInits = Ssw_RarFindStartingState( pAig, pCex );
+        p.vInits = sswRar2FindStartingState( pAig, pCex );
     } else {
         p.vInits = Vec_IntStart( Aig_ManRegNum(pAig) ); }
     // duplicate the array
@@ -472,7 +472,7 @@ func Ssw_RarSignalFilter2(pAig *Aig_Man_t, nFrames int32, nWords int32, nBinSize
         }
         // get initialization patterns
         Ssw_RarUpdateCounters( p );
-        Ssw_RarTransferPatterns( p, p.vInits );
+        sswRar2TransferPatterns( p, p.vInits );
         Ssw_SmlInitializeSpecial( p.pSml, p.vInits );
         // check timeout
         if TimeOut && Abc_Clock() > nTimeToStop {
@@ -486,7 +486,7 @@ func Ssw_RarSignalFilter2(pAig *Aig_Man_t, nFrames int32, nWords int32, nBinSize
         Abc_PrintTime( 1, "Time", Abc_Clock() - clkTotal );
     }
     // cleanup
-    Ssw_RarManStop( p );
+    sswRar2ManStop( p );
     return -1;
 }
 

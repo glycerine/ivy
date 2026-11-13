@@ -92,25 +92,6 @@ func Ssw_RarPatSim(p *Ssw_RarMan_t, Id int32) *word { assert(Id < 64 * p.pPars.n
 
 /**Function*************************************************************
 
-  Synopsis    [Prepares random number generator.]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ssw_RarManPrepareRandom(nRandSeed int32) {
-    var i int32;
-    Aig_ManRandom( 1 );
-    for  i = 0; i < nRandSeed; i++  {
-        Aig_ManRandom( 0 );
-    }
-}
-
-/**Function*************************************************************
-
   Synopsis    [Initializes random primary inputs.]
 
   Description []

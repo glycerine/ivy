@@ -30,110 +30,14 @@ package ssw
 ////////////////////////////////////////////////////////////////////////
 
 // simulation manager
-type Ssw_Sml_t_ struct {
-    pAig       *Aig_Man_t;              // the original AIG manager
-    nPref              int32;             // the number of timeframes in the prefix
-    nFrames              int32;           // the number of timeframes 
-    nWordsFrame              int32;       // the number of words in each timeframe
-    nWordsTotal              int32;       // the total number of words at a node
-    nWordsPref              int32;        // the number of word in the prefix
-    fNonConstOut              int32;      // have seen a non-const-0 output during simulation
-    nSimRounds              int32;        // statistics
-    timeSim          abctime;           // statistics
-    pData [0]uint32;          // simulation data for the nodes
-}
 
-func Ssw_ObjSim(p *Ssw_Sml_t, Id int32) *uint32 { return p.pData + p.nWordsTotal * Id; }
-func Ssw_ObjRandomSim() uint32 { return Aig_ManRandom(0);               }
+
+
+
 
 ////////////////////////////////////////////////////////////////////////
 ///                     FUNCTION DEFINITIONS                         ///
 ////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Computes hash value of the node using its simulation info.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-var spStatic_Ssw_SmlObjHashWord_s_SPrimes [128]int32 = [128]int32{
-        1009, 1049, 1093, 1151, 1201, 1249, 1297, 1361, 1427, 1459,
-        1499, 1559, 1607, 1657, 1709, 1759, 1823, 1877, 1933, 1997,
-        2039, 2089, 2141, 2213, 2269, 2311, 2371, 2411, 2467, 2543,
-        2609, 2663, 2699, 2741, 2797, 2851, 2909, 2969, 3037, 3089,
-        3169, 3221, 3299, 3331, 3389, 3461, 3517, 3557, 3613, 3671,
-        3719, 3779, 3847, 3907, 3943, 4013, 4073, 4129, 4201, 4243,
-        4289, 4363, 4441, 4493, 4549, 4621, 4663, 4729, 4793, 4871,
-        4933, 4973, 5021, 5087, 5153, 5227, 5281, 5351, 5417, 5471,
-        5519, 5573, 5651, 5693, 5749, 5821, 5861, 5923, 6011, 6073,
-        6131, 6199, 6257, 6301, 6353, 6397, 6481, 6563, 6619, 6689,
-        6737, 6803, 6863, 6917, 6977, 7027, 7109, 7187, 7237, 7309,
-        7393, 7477, 7523, 7561, 7607, 7681, 7727, 7817, 7877, 7933,
-        8011, 8039, 8059, 8081, 8093, 8111, 8123, 8147,
-    };
-func Ssw_SmlObjHashWord(p *Ssw_Sml_t, pObj *Aig_Obj_t) uint32 {
-    
-    var pSims *uint32;
-    var uHash uint32;
-    var i int32;
-//    assert( p->nWordsTotal <= 128 );
-    uHash = 0;
-    pSims = Ssw_ObjSim(p, pObj.Id);
-    for  i = p.nWordsPref; i < p.nWordsTotal; i++  {
-        uHash ^= pSims[i] * spStatic_Ssw_SmlObjHashWord_s_SPrimes[i & 0x7F];
-    }
-    return uHash;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Returns 1 if simulation info is composed of all zeros.]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ssw_SmlObjIsConstWord(p *Ssw_Sml_t, pObj *Aig_Obj_t) int32 {
-    var pSims *uint32;
-    var i int32;
-    pSims = Ssw_ObjSim(p, pObj.Id);
-    for  i = p.nWordsPref; i < p.nWordsTotal; i++  {
-        if pSims[i] {
-            return 0; }
-    }
-    return 1;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Returns 1 if simulation infos are equal.]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ssw_SmlObjsAreEqualWord(p *Ssw_Sml_t, pObj0 *Aig_Obj_t, pObj1 *Aig_Obj_t) int32 {
-    var pSims0, pSims1 *uint32;
-    var i int32;
-    pSims0 = Ssw_ObjSim(p, pObj0.Id);
-    pSims1 = Ssw_ObjSim(p, pObj1.Id);
-    for  i = p.nWordsPref; i < p.nWordsTotal; i++  {
-        if pSims0[i] != pSims1[i] {
-            return 0; }
-    }
-    return 1;
-}
 
 /**Function*************************************************************
 
@@ -1182,86 +1086,6 @@ p.nSimRounds++;
 
 /**Function*************************************************************
 
-  Synopsis    [Allocates simulation manager.]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ssw_SmlStart(pAig *Aig_Man_t, nPref int32, nFrames int32, nWordsFrame int32) *Ssw_Sml_t {
-    var p *Ssw_Sml_t;
-    // inlining of macro ABC_ALLOC
-    p = (Ssw_Sml_t *)((char *) malloc(sizeof(char) * (size_t)(sizeof(Ssw_Sml_t) + sizeof(unsigned) * Aig_ManObjNumMax(pAig) * (nPref + nFrames) * nWordsFrame)));
-    memset( p, 0, sizeof(Ssw_Sml_t) + sizeof(unsigned) * (nPref + nFrames) * nWordsFrame );
-    p.pAig        = pAig;
-    p.nPref       = nPref;
-    p.nFrames     = nPref + nFrames;
-    p.nWordsFrame = nWordsFrame;
-    p.nWordsTotal = (nPref + nFrames) * nWordsFrame;
-    p.nWordsPref  = nPref * nWordsFrame;
-    return p;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Allocates simulation manager.]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ssw_SmlClean(p *Ssw_Sml_t) {
-    memset( p.pData, 0, sizeof(unsigned) * Aig_ManObjNumMax(p.pAig) * p.nWordsTotal );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Get simulation data.]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ssw_SmlSimDataPointers(p *Ssw_Sml_t) *Vec_Ptr_t {
-    var vSimInfo *Vec_Ptr_t;
-    var pObj *Aig_Obj_t;
-    var i int32;
-    vSimInfo = Vec_PtrStart( Aig_ManObjNumMax(p.pAig) );
-    // inlining of macro Aig_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.pAig.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {
-        Vec_PtrWriteEntry( vSimInfo, i, Ssw_ObjSim(p, i) ); }
-    }
-    return vSimInfo;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Deallocates simulation manager.]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ssw_SmlStop(p *Ssw_Sml_t) {
-    p = nil;
-}
-
-
-/**Function*************************************************************
-
   Synopsis    [Performs simulation of the uninitialized circuit.]
 
   Description []
@@ -1316,53 +1140,6 @@ func Ssw_SmlResimulateSeq(p *Ssw_Sml_t) {
     p.fNonConstOut = Ssw_SmlCheckNonConstOutputs( p );
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Returns the number of frames simulated in the manager.]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ssw_SmlNumFrames(p *Ssw_Sml_t) int32 {
-    return p.nFrames;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Returns the total number of simulation words.]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ssw_SmlNumWordsTotal(p *Ssw_Sml_t) int32 {
-    return p.nWordsTotal;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Returns the pointer to the simulation info of the node.]
-
-  Description [The simulation info is normalized unless procedure
-  Ssw_SmlUnnormalize() is called in advance.]
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ssw_SmlSimInfo(p *Ssw_Sml_t, pObj *Aig_Obj_t) *uint32 {
-    assert(!Aig_IsComplement(pObj), "!Aig_IsComplement(pObj)");
-    return Ssw_ObjSim( p, pObj.Id );
-}
 
 /**Function*************************************************************
 
