@@ -47,8 +47,8 @@ func TestCec4ChoicesIndependentClassFailsExplicitly(t *testing.T) {
 		t.Fatal("expected independent equivalent alternatives")
 	}
 	defer func() {
-		if got := recover(); got != "gia: Cec4 choice reconstruction is unavailable" {
-			t.Fatalf("unexpected panic: %v", got)
+		if recover() == nil {
+			t.Fatal("source builder must fail on uninitialized output driver")
 		}
 	}()
 	Cec4_ManSatSolverChoices(p, q)
@@ -80,11 +80,29 @@ func TestCec4ChoicesDependentClassPreservesFunction(t *testing.T) {
 	}
 }
 
-func TestCec4ChoiceAndBuilderFailsExplicitly(t *testing.T) {
-	defer func() {
-		if got := recover(); got != "gia: Cec4 choice reconstruction is unavailable" {
-			t.Fatalf("unexpected panic: %v", got)
-		}
-	}()
-	Cec4_ManSatSolverAnd_rec(nil, nil, nil, 0)
+func TestCec4ChoiceAndBuilderSourceStub(t *testing.T) {
+	if got := Cec4_ManSatSolverAnd_rec(nil, nil, nil, 0); got != 0 {
+		t.Fatalf("stub returned %d", got)
+	}
+}
+
+// The C choice-recursion path invokes the unfinished AND builder for each
+// independent class member; each returned literal is zero.
+func TestCec4ChoiceRecursionUsesSourceZeroStub(t *testing.T) {
+	src := Gia_ManStart(8)
+	Gia_ManAppendCi(src)
+	Gia_ManAppendCi(src)
+	src.StartRepresentatives()
+	Gia_ObjSetRepr(src, 2, 1)
+	Gia_ObjSetNext(src, 1, 2)
+	src.pReprs[1].fColorA = 1
+	src.pReprs[2].fColorA = 1
+	dst := Gia_ManStart(8)
+	dst.pSibls = make([]int32, 3)
+	if got := Cec4_ManSatSolverChoices_rec(dst, src, nil, 1); got != 0 {
+		t.Fatalf("class literal %d", got)
+	}
+	if got := Cec4_ManSatSolverChoices_rec(dst, src, nil, 0); got != 0 {
+		t.Fatalf("nonclass literal %d", got)
+	}
 }

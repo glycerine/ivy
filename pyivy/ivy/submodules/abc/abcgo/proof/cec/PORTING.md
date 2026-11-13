@@ -25,21 +25,15 @@ equivalence of these algorithms.
 
 ## Upstream Cec4 choice limitation
 
-The choice-building path `gia.Cec4_ManSatSolverChoices` is not a working
-implementation when independent choice classes are present: its recursive AND
-builder returns constant zero. This is inherited from the original C routine
-`src/aig/gia/giaEquiv.c` (`Cec4_ManSatSolverAnd_rec`), which also immediately
-returns zero. The Go entry point now explicitly panics when independent choices
-need reconstruction instead of returning a potentially corrupt graph; it still
-duplicates the swept graph when no independent choices exist. The recursive AND
-entry point also panics. There are no in-tree Go production callers of this
-choice builder. ABC's separate `Gia_ManEquivToChoices` workflow is ported in
-`aig/gia/equiv_choices.go`, but it operates on one graph's representative
-classes, whereas this unfinished entry point accepts original and swept graphs
-and produces sibling choices. It is not a drop-in implementation. A correct
-adapter would require a source-backed contract and independent equivalence
-tests. A build or a passing test of other Cec4 paths does not establish
-correctness of this path.
+The choice-building path `gia.Cec4_ManSatSolverChoices` is unfinished in
+`src/aig/gia/giaEquiv.c`: its recursive AND builder unconditionally returns
+literal zero. The Go source-named entry points preserve this stub and the rest
+of the source construction sequence. For an independent class whose output
+driver remains uninitialized, the original C builder aborts; Go also fails at
+that point instead of constructing a substitute graph. A compiled-C subprocess
+regression covers both the zero-returning stub and the failing builder path.
+When no independent classes exist, both paths duplicate the swept graph.
+There are no in-tree Go production callers of this choice builder.
 
 ## Sequential and miter review
 
