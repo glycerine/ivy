@@ -5,14 +5,14 @@ import "github.com/glycerine/abcgo/aig/aig"
 // The simulation variant permits SAVE to restart shadow capture and event
 // accumulation, while the proof-oriented variant captures only once.
 func LivenessToSafetyTransformationSim(n *Network, p *aig.Graph, live, fair []aig.Edge) *aig.Graph {
-	result, err := LivenessToSafety(n, TransformOptions{Mode: IGNORE_SAFETY_KEEP_LIVENESS_MODE, Liveness: live, Fairness: fair, Restartable: true})
+	result, err := LivenessToSafety(sourceNetwork(n, p), TransformOptions{Mode: IGNORE_SAFETY_KEEP_LIVENESS_MODE, Liveness: live, Fairness: fair, Restartable: true})
 	if err != nil {
 		panic(err)
 	}
 	return result.Graph
 }
 func LivenessToSafetyTransformationOneStepLoopSim(n *Network, p *aig.Graph, live, fair []aig.Edge) *aig.Graph {
-	result, err := LivenessToSafety(n, TransformOptions{Mode: IGNORE_SAFETY_KEEP_LIVENESS_ONE_LOOP_MODE, Liveness: live, Fairness: fair, Restartable: true})
+	result, err := LivenessToSafety(sourceNetwork(n, p), TransformOptions{Mode: IGNORE_SAFETY_KEEP_LIVENESS_ONE_LOOP_MODE, Liveness: live, Fairness: fair, Restartable: true})
 	if err != nil {
 		panic(err)
 	}

@@ -70,12 +70,14 @@ func createConstrained0LiveConeWithDSC(p *aig.Graph, signals []aig.Edge) aig.Edg
 }
 func collectCSSignalsWithDSC(n *Network, p *aig.Graph) []aig.Edge { return collectCSSignals(n, p) }
 func collectWindowBeginSignalWithDSC(n *Network, p *aig.Graph) int32 {
-	return findOutput(n, "windowBegins_")
+	return findOutput(sourceNetwork(n, p), "windowBegins_")
 }
 func collectWithinWindowSignalWithDSC(n *Network, p *aig.Graph) int32 {
-	return findOutput(n, "withinWindow_")
+	return findOutput(sourceNetwork(n, p), "withinWindow_")
 }
-func collectPendingSignalWithDSC(n *Network, p *aig.Graph) int32 { return findPendingSignal(n) }
+func collectPendingSignalWithDSC(n *Network, p *aig.Graph) int32 {
+	return findPendingSignal(sourceNetwork(n, p))
+}
 func createMonotoneBarriers(p *aig.Graph, signals, previous []aig.Edge, pending, oldPending aig.Edge) aig.Edge {
 	if len(signals) != len(previous) {
 		panic("live: monotone barrier latch count")

@@ -221,15 +221,27 @@ func LivenessToSafety(network *Network, options TransformOptions) (*Network, err
 	names = append(names, registerNames...)
 	return &Network{Graph: dst, InputNames: names, OutputNames: outputNames}, nil
 }
+
+// sourceNetwork retains network names and properties while using the AIG
+// explicitly supplied to the C-shaped entry points.
+func sourceNetwork(n *Network, p *aig.Graph) *Network {
+	if n == nil || p == nil {
+		panic("live: missing network or source AIG")
+	}
+	copy := *n
+	copy.Graph = p
+	return &copy
+}
+
 func LivenessToSafetyTransformation(mode int32, n *Network, p *aig.Graph, live, fair, assertions, assumptions []aig.Edge) *aig.Graph {
-	result, err := LivenessToSafety(n, TransformOptions{Mode: mode, Liveness: live, Fairness: fair, SafetyAssertions: assertions, SafetyAssumptions: assumptions})
+	result, err := LivenessToSafety(sourceNetwork(n, p), TransformOptions{Mode: mode, Liveness: live, Fairness: fair, SafetyAssertions: assertions, SafetyAssumptions: assumptions})
 	if err != nil {
 		panic(err)
 	}
 	return result.Graph
 }
 func LivenessToSafetyTransformationAbs(mode int32, n *Network, p *aig.Graph, flops []int32, live, fair, assertions, assumptions []aig.Edge) *aig.Graph {
-	result, err := LivenessToSafety(n, TransformOptions{Mode: mode, ShadowRegisters: flops, Liveness: live, Fairness: fair, SafetyAssertions: assertions, SafetyAssumptions: assumptions})
+	result, err := LivenessToSafety(sourceNetwork(n, p), TransformOptions{Mode: mode, ShadowRegisters: flops, Liveness: live, Fairness: fair, SafetyAssertions: assertions, SafetyAssumptions: assumptions})
 	if err != nil {
 		panic(err)
 	}
@@ -261,6 +273,7 @@ func validSourceLTL(n *Network, formulas []string) ([]string, error) {
 	return valid, nil
 }
 func LivenessToSafetyTransformationWithLTL(mode int32, n *Network, p *aig.Graph, live, fair, assertions, assumptions []aig.Edge) *aig.Graph {
+	n = sourceNetwork(n, p)
 	formulas := n.LTLProperties
 	if mode == FULL_BIERE_MODE || mode == IGNORE_SAFETY_KEEP_LIVENESS_MODE {
 		var err error
@@ -285,10 +298,10 @@ func selectOutputs(n *Network, prefix string) []aig.Edge {
 	return signals
 }
 func populateLivenessVector(n *Network, p *aig.Graph) []aig.Edge {
-	return selectOutputs(n, "assert_fair")
+	return selectOutputs(sourceNetwork(n, p), "assert_fair")
 }
 func populateFairnessVector(n *Network, p *aig.Graph) []aig.Edge {
-	return selectOutputs(n, "assume_fair")
+	return selectOutputs(sourceNetwork(n, p), "assume_fair")
 }
 func selectOutputAliases(n *Network, prefixes ...string) []aig.Edge {
 	result := []aig.Edge{}
@@ -303,10 +316,10 @@ func selectOutputAliases(n *Network, prefixes ...string) []aig.Edge {
 	return result
 }
 func populateSafetyAssertionVector(n *Network, p *aig.Graph) []aig.Edge {
-	return selectOutputAliases(n, "assert_safety", "Assert")
+	return selectOutputAliases(sourceNetwork(n, p), "assert_safety", "Assert")
 }
 func populateSafetyAssumptionVector(n *Network, p *aig.Graph) []aig.Edge {
-	return selectOutputAliases(n, "assume_safety", "Assume")
+	return selectOutputAliases(sourceNetwork(n, p), "assume_safety", "Assume")
 }
 func prepareFlopVector(p *aig.Graph, length int32) []int32 {
 	if length < 0 || int(length) > registers(p) {
