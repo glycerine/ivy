@@ -26,10 +26,9 @@ GOCACHE=/tmp/abcgo-cache go test -race -count=1 ./sat/bmc
 GOCACHE=/tmp/abcgo-cache go vet ./sat/bmc
 ```
 
-A previous `go test -coverprofile` run reported 73.5%
-statement coverage for `sat/bmc`, before the latest independent oracle tests
-were added. Coverage is a measure of executed statements, not proof of correct
-results.
+The expanded algorithm and entry-point suite passed under the race detector
+with 79.9% statement coverage. Coverage is a measure of executed statements,
+not proof of correct results or coverage of every option and input.
 
 ## Correctness work and test evidence
 
@@ -71,6 +70,13 @@ The suite includes the following independent or end-to-end checks:
   `bmcMeshFanoutOracle_test.go` adds reconvergent fanout and internal buffering;
   the existing mesh test oracle was corrected to allow valid gate buffers.
   The expanded cases found no implementation bugs.
+
+Further algorithm tests cover bounded-checking and unrolling entry points,
+ternary simulation, CEX target and care analysis, induction entry points,
+MNIST parsing, exact-synthesis variants, and exhaustive two-input collapse,
+SOP expansion, and ECO feasibility. CNF variable lifting is checked across a
+round trip. These checks cover additional paths but do not establish correctness
+for every possible graph, timeout, or option combination.
 
 Other focused tests cover packed two-bit fields, formula fault unfolding,
 SAT cardinality constraints, GIA simulation, bounded-core proof output, and
