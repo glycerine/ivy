@@ -244,3 +244,28 @@ func TestSimulationDrivesCandidateRefinement(t *testing.T) {
 		t.Fatalf("simulation failed to split candidates: %+v", p)
 	}
 }
+
+func TestClassPartitionSequentialBufferFanin(t *testing.T) {
+	g := aig.NewGraph()
+	input, latch := g.NewInput(), g.NewInput()
+	buffer := aig.Aig_ObjCreate(g, &aig.Node{Kind: aig.Buffer, Fanins: [2]aig.Edge{input.Not(), aig.InvalidEdge}, Phase: true})
+	gate := g.AND(buffer, latch)
+	g.AddOutput(input)
+	aig.Aig_ManSetRegNum(g, 1)
+	p := newClassPartition(len(g.Nodes()))
+	p.reprs[gate.NodeID()] = latch.NodeID()
+	unrolled := p.deriveSequentialAIG(g, 1)
+	if unrolled.OutputCount() != 2 {
+		t.Fatalf("outputs = %d", unrolled.OutputCount())
+	}
+	for mask := 0; mask < 8; mask++ {
+		in := []bool{mask&1 != 0, mask&2 != 0, mask&4 != 0}
+		out, err := unrolled.Evaluate(in)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if out[0] != (!in[0] || !in[1]) || out[1] != (!in[1] || !in[2]) {
+			t.Fatalf("inputs %v outputs %v", in, out)
+		}
+	}
+}

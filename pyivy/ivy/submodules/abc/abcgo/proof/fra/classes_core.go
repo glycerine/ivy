@@ -11,9 +11,9 @@ import (
 // Simulation supplies the hash and equality predicates; hash collisions are
 // resolved by refinement rather than treated as equivalence.
 type classPartition struct {
-	graph      *aig.Graph
-	simulation *fraSimulation
-	vImps      *vec.Vec_Int_t
+	graph       *aig.Graph
+	simulation  *fraSimulation
+	vImps       *vec.Vec_Int_t
 	fRefinement int32
 	// BMC replaces the simulation predicates temporarily during refinement.
 	nodeIsConst func(int) bool
@@ -339,6 +339,18 @@ func (p *classPartition) deriveSequentialAIG(graph *aig.Graph, frames int) *aig.
 		for _, edge := range graph.LiveEdges() {
 			id := edge.NodeID()
 			node := nodes[id]
+			if node.Kind == aig.Buffer {
+				fanin := node.Fanins[0]
+				value := mapping[fanin.NodeID()]
+				if value == aig.InvalidEdge {
+					panic("fra: missing mapped buffer fanin")
+				}
+				if fanin.Complemented() {
+					value = value.Not()
+				}
+				mapping[id] = value
+				continue
+			}
 			if node.Kind != aig.And && node.Kind != aig.ExclusiveOr {
 				continue
 			}
