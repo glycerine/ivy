@@ -55,3 +55,32 @@ verification is still pending. Fixed missing API bridges, concrete pointer and
 slice conversions, CNF data import, and floating-point diagnostic calculations.
 Removed an invalid empty-name case from a pre-existing test (the source name
 manager requires nonempty names).
+
+### Behavioral review, first tranche
+
+Added exhaustive CNF truth checks through three variables; graph link,
+traversal and path checks; all two-input duplicate/constant/buffer cleanup
+cases; every supported fanin/fanout decomposition with shared inputs; seeded
+area/delay optimization equivalence checks; small/constant optimizer cases;
+Verilog round-trip coverage; and a single-target ECO support/function test.
+
+Fixes exposed by these tests:
+
+- Per-object storage used allocation capacity as its logical length, breaking
+  CNF indexing and later growth. Logical lengths now follow object count.
+- Duplicate-input removal updated the wrong fanout list after shifting fanins
+  (also a C source defect). Save the removed edge and update its source's list.
+- Constant CNF used variable zero when redundant fanins were present. Constrain
+  the output variable at `nVars`, as for nonconstant functions.
+- Full timing refresh retained levels, path counts and queue entries from
+  removed cones. Clear those before the existing full recomputation.
+- ECO prime-cube generation had lost C's logical negation, producing `00`
+  instead of `11` for an AND patch. Restored the source polarity.
+- Supporting package repairs: BSAT reset clears its facade's contradiction
+  flag; the vector queue returns the C empty sentinel and permits reattaching
+  the same stable priority slice header.
+
+The end-to-end ECO mapped-file test and the original Ivy prover bridge live in
+`base/abci` because they require that package's command registration. They are
+not yet verified: ABCI still has independent compile errors beginning in
+`abc.go`. This is a remaining integration requirement, not a passing test.

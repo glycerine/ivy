@@ -683,6 +683,16 @@ func Acb_NtkUpdateTiming(p *Acb_Ntk_t, iObj int32) {
 	var Entry int32
 	var LevelMax int32 = p.LevelMax
 	var LevelD, LevelR, nPaths1, nPaths2 int32
+	if iObj <= 0 {
+		if p.vQue != nil {
+			Vec_QueClear(p.vQue)
+		}
+		// Removed cones can leave formerly used inputs with stale reverse levels.
+		Acb_NtkCleanObjLevelD(p)
+		Acb_NtkCleanObjLevelR(p)
+		Acb_NtkCleanObjPathD(p)
+		Acb_NtkCleanObjPathR(p)
+	}
 	// assuming that direct level of the new nodes (including iObj) is up to date
 	var vTfi *Vec_Int_t = Acb_ObjCollectTfi(p, iObj, 1)
 	var vTfo *Vec_Int_t = Acb_ObjCollectTfo(p, iObj, 1)

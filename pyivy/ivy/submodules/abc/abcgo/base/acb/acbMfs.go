@@ -139,7 +139,9 @@ func Acb_DeriveCnfFromTruth(Truth word, nVars int32, vCover *Vec_Int_t, vCnf *Ve
 	Vec_StrClear(vCnf)
 	if Truth == 0 || ^Truth == 0 {
 		//        assert( nVars == 0 );
-		Vec_StrPush(vCnf, byte(boolInt(Truth == 0, 1, 0)))
+		// A constant still constrains the output at index nVars when its
+		// redundant fanins have not yet been removed.
+		Vec_StrPush(vCnf, byte(Abc_Var2Lit(nVars, boolInt(Truth == 0, 1, 0))))
 		Vec_StrPush(vCnf, byte(255))
 		return 1
 
@@ -1988,7 +1990,7 @@ func Acb_NtkOpt(pNtk *Acb_Ntk_t, pPars *Acb_Par_t) {
 	} else {
 		var Value int32
 		Acb_NtkUpdateTiming(pNtk, -1) // compute delay information
-		for {
+		for pNtk.vQue != nil {
 			Value = int32(Vec_QueTopPriority(pNtk.vQue))
 			if Value <= 0 {
 				break

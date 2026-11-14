@@ -209,8 +209,11 @@ func Acb_ObjRemoveDup(p *Acb_Ntk_t, iObj int32, i int32, j int32) {
 	c11 = Abc_Tt6Cofactor1(Abc_Tt6Cofactor1(uTruth, i), j)
 	uTruthNew = (^s_Truths6[i] & c00) | (s_Truths6[i] & c11)
 	Vec_WrdWriteEntry(&p.vObjTruth, iObj, Abc_Tt6RemoveVar(uTruthNew, j))
+	// Save the removed edge before compacting the fanin list. The C source
+	// removes from the wrong object's fanouts and reads the shifted index.
+	fanin := Acb_ObjFanin(p, iObj, j)
 	Acb_ObjDeleteFaninIndex(p, iObj, j)
-	Vec_IntRemove(Vec_WecEntry(&p.vFanouts, iObj), Acb_ObjFanin(p, iObj, j))
+	Vec_IntRemove(Vec_WecEntry(&p.vFanouts, fanin), iObj)
 	Acb_ObjSuppMin(p, iObj)
 }
 func Acb_ObjRemoveDupFanins_int(p *Acb_Ntk_t, iObj int32) int32 {

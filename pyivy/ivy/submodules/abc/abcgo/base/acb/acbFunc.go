@@ -2081,7 +2081,7 @@ func Acb_EnumerateSatAssigns(pSat *sat_solver, PivotVar int32, FreeVar int32, vD
 				iVar = Vec_IntFind(vDivVars, Abc_Lit2Var(iLit))
 				assert(iVar >= 0, "iVar >= 0")
 				//uCube &= Abc_LitIsCompl(pFinal[i]) ? s_Truths6[iVar] : ~s_Truths6[iVar];
-				Vec_StrWriteEntry(vTempSop, Vec_StrSize(vTempSop)-Vec_IntSize(vDivVars)+iVar, byte('0'+Abc_LitIsCompl(iLit)))
+				Vec_StrWriteEntry(vTempSop, Vec_StrSize(vTempSop)-Vec_IntSize(vDivVars)+iVar, byte('0'+(1-Abc_LitIsCompl(iLit))))
 			}
 
 		} else {

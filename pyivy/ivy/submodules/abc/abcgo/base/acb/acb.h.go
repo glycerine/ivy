@@ -223,24 +223,25 @@ func Acb_NtkBoxNum(p *Acb_Ntk_t) int32  { return Acb_NtkTypeNum(p, ABC_OPER_BOX)
 func Acb_NtkNodeNum(p *Acb_Ntk_t) int32 { return Vec_StrCountLarger(&p.vObjType, byte(ABC_OPER_BOX)) }
 func Acb_NtkSeqNum(p *Acb_Ntk_t) int32  { return Vec_IntSize(&p.vSeq) }
 
-func Acb_NtkCleanObjCopies(p *Acb_Ntk_t)  { Vec_IntFill(&p.vObjCopy, Vec_StrCap(&p.vObjType), -1) }
-func Acb_NtkCleanObjFuncs(p *Acb_Ntk_t)   { Vec_IntFill(&p.vObjFunc, Vec_StrCap(&p.vObjType), -1) }
-func Acb_NtkCleanObjWeights(p *Acb_Ntk_t) { Vec_IntFill(&p.vObjWeight, Vec_StrCap(&p.vObjType), 0) }
-func Acb_NtkCleanObjTruths(p *Acb_Ntk_t)  { Vec_WrdFill(&p.vObjTruth, Vec_StrCap(&p.vObjType), 0) }
-func Acb_NtkCleanObjNames(p *Acb_Ntk_t)   { Vec_IntFill(&p.vObjName, Vec_StrCap(&p.vObjType), 0) }
-func Acb_NtkCleanObjRanges(p *Acb_Ntk_t)  { Vec_IntFill(&p.vObjRange, Vec_StrCap(&p.vObjType), 0) }
-func Acb_NtkCleanObjTravs(p *Acb_Ntk_t)   { Vec_IntFill(&p.vObjTrav, Vec_StrCap(&p.vObjType), 0) }
+// Per-object slices track object count; spare allocation capacity is not an object.
+func Acb_NtkCleanObjCopies(p *Acb_Ntk_t)  { Vec_IntFill(&p.vObjCopy, Vec_StrSize(&p.vObjType), -1) }
+func Acb_NtkCleanObjFuncs(p *Acb_Ntk_t)   { Vec_IntFill(&p.vObjFunc, Vec_StrSize(&p.vObjType), -1) }
+func Acb_NtkCleanObjWeights(p *Acb_Ntk_t) { Vec_IntFill(&p.vObjWeight, Vec_StrSize(&p.vObjType), 0) }
+func Acb_NtkCleanObjTruths(p *Acb_Ntk_t)  { Vec_WrdFill(&p.vObjTruth, Vec_StrSize(&p.vObjType), 0) }
+func Acb_NtkCleanObjNames(p *Acb_Ntk_t)   { Vec_IntFill(&p.vObjName, Vec_StrSize(&p.vObjType), 0) }
+func Acb_NtkCleanObjRanges(p *Acb_Ntk_t)  { Vec_IntFill(&p.vObjRange, Vec_StrSize(&p.vObjType), 0) }
+func Acb_NtkCleanObjTravs(p *Acb_Ntk_t)   { Vec_IntFill(&p.vObjTrav, Vec_StrSize(&p.vObjType), 0) }
 func Acb_NtkCleanObjAttrs(p *Acb_Ntk_t) {
-	Vec_IntFill(&p.vObjAttr, Vec_StrCap(&p.vObjType), 0)
+	Vec_IntFill(&p.vObjAttr, Vec_StrSize(&p.vObjType), 0)
 	Vec_IntFill(&p.vAttrSto, 1, -1)
 }
-func Acb_NtkCleanObjLevelD(p *Acb_Ntk_t) { Vec_IntFill(&p.vLevelD, Vec_StrCap(&p.vObjType), 0) }
-func Acb_NtkCleanObjLevelR(p *Acb_Ntk_t) { Vec_IntFill(&p.vLevelR, Vec_StrCap(&p.vObjType), 0) }
-func Acb_NtkCleanObjPathD(p *Acb_Ntk_t)  { Vec_IntFill(&p.vPathD, Vec_StrCap(&p.vObjType), 0) }
-func Acb_NtkCleanObjPathR(p *Acb_Ntk_t)  { Vec_IntFill(&p.vPathR, Vec_StrCap(&p.vObjType), 0) }
-func Acb_NtkCleanObjCounts(p *Acb_Ntk_t) { Vec_FltFill(&p.vCounts, Vec_StrCap(&p.vObjType), 0) }
-func Acb_NtkCleanObjFanout(p *Acb_Ntk_t) { Vec_WecInit(&p.vFanouts, Vec_StrCap(&p.vObjType)) }
-func Acb_NtkCleanObjCnfs(p *Acb_Ntk_t)   { acbResizeCnfs(p, int(Vec_StrCap(&p.vObjType))) }
+func Acb_NtkCleanObjLevelD(p *Acb_Ntk_t) { Vec_IntFill(&p.vLevelD, Vec_StrSize(&p.vObjType), 0) }
+func Acb_NtkCleanObjLevelR(p *Acb_Ntk_t) { Vec_IntFill(&p.vLevelR, Vec_StrSize(&p.vObjType), 0) }
+func Acb_NtkCleanObjPathD(p *Acb_Ntk_t)  { Vec_IntFill(&p.vPathD, Vec_StrSize(&p.vObjType), 0) }
+func Acb_NtkCleanObjPathR(p *Acb_Ntk_t)  { Vec_IntFill(&p.vPathR, Vec_StrSize(&p.vObjType), 0) }
+func Acb_NtkCleanObjCounts(p *Acb_Ntk_t) { Vec_FltFill(&p.vCounts, Vec_StrSize(&p.vObjType), 0) }
+func Acb_NtkCleanObjFanout(p *Acb_Ntk_t) { Vec_WecInit(&p.vFanouts, Vec_StrSize(&p.vObjType)) }
+func Acb_NtkCleanObjCnfs(p *Acb_Ntk_t)   { acbResizeCnfs(p, int(Vec_StrSize(&p.vObjType))) }
 
 func Acb_NtkHasObjCopies(p *Acb_Ntk_t) int32  { return boolInt(Vec_IntSize(&p.vObjCopy) > 0, 1, 0) }
 func Acb_NtkHasObjFuncs(p *Acb_Ntk_t) int32   { return boolInt(Vec_IntSize(&p.vObjFunc) > 0, 1, 0) }
