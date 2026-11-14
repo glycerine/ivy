@@ -10,7 +10,7 @@ func mergeFixture(t *testing.T, maxCuts int32) (*Amap_Man_t, *Amap_Obj_t) {
 	t.Helper()
 	lib, _ := testAndLibrary(t)
 	lib.pRules = Amap_LibLookupTableAlloc(lib.vRules, 0)
-	p := &Amap_Man_t_{pLib: lib, pPars: &Amap_Par_t{nCutsMax: maxCuts}, vTemp: Vec_IntAlloc(4), ppCutsTemp: make([]*Amap_Cut_t, 8)}
+	p := &Amap_Man_t_{pLib: lib, pPars: &Amap_Par_t{NCutsMax: maxCuts}, vTemp: Vec_IntAlloc(4), ppCutsTemp: make([]*Amap_Cut_t, 8)}
 	p.vObjs = Vec_PtrAlloc(4)
 	a := &Amap_Obj_t_{Type: AMAP_OBJ_PI, Id: 0, nCuts: 1, pData: &Amap_Cut_t{nFans: 1, Fans: []int32{0}}}
 	b := &Amap_Obj_t_{Type: AMAP_OBJ_PI, Id: 1, nCuts: 1, pData: &Amap_Cut_t{nFans: 1, Fans: []int32{2}}}

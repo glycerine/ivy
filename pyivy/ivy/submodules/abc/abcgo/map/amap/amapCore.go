@@ -11,11 +11,11 @@ func Amap_ManSetDefaultParams(p *Amap_Par_t) {
 		panic("amap: nil parameters")
 	}
 	*p = Amap_Par_t{
-		nIterFlow: 1,
-		nIterArea: 4,
-		nCutsMax:  500,
-		fUseXors:  1,
-		fEpsilon:  0.001,
+		NIterFlow: 1,
+		NIterArea: 4,
+		NCutsMax:  500,
+		FUseXors:  1,
+		FEpsilon:  0.001,
 	}
 }
 
@@ -45,20 +45,20 @@ func Amap_ManMapGraph(pAig *Aig_Man_t, pLib *Amap_Lib_t, pPars *Amap_Par_t) *Vec
 	started := time.Now()
 	p := Amap_ManStart(int32(pAig.NodeCount()))
 	p.pPars, p.pLib = pPars, pLib
-	if pPars.fFreeInvs != 0 {
+	if pPars.FFreeInvs != 0 {
 		p.fAreaInv = 0
 	} else if pLib.pGateInv != nil {
 		p.fAreaInv = float32(pLib.pGateInv.dArea)
 	}
-	p.fUseMux = amapBool(pPars.fUseMuxes != 0 && pLib.fHasMux != 0)
-	p.fUseXor = amapBool(pPars.fUseXors != 0 && pLib.fHasXor != 0)
+	p.fUseMux = amapBool(pPars.FUseMuxes != 0 && pLib.fHasMux != 0)
+	p.fUseXor = amapBool(pPars.FUseXors != 0 && pLib.fHasXor != 0)
 	tempSize := max(0, int(pLib.nNodes)*2)
 	p.ppCutsTemp = make([]*Amap_Cut_t, tempSize)
 	Amap_ManCreate(p, pAig)
 	Amap_ManMap(p)
 	result := Amap_ManProduceMapped(p)
 	Amap_ManStop(p)
-	if pPars.fVerbose != 0 {
+	if pPars.FVerbose != 0 {
 		fmt.Printf("Total runtime: %.2f sec\n", time.Since(started).Seconds())
 	}
 	return result

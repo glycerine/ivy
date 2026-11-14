@@ -67,7 +67,7 @@ func Amap_ManCutSaveStored(p *Amap_Man_t, node *Amap_Obj_t) {
 	if node == nil {
 		return
 	}
-	limit := int(p.pPars.nCutsMax) - 1
+	limit := int(p.pPars.NCutsMax) - 1
 	if limit < 1 {
 		limit = 1
 	}
@@ -238,7 +238,7 @@ func Amap_ManMerge(p *Amap_Man_t) {
 			Amap_ManMergeNodeCuts(p, node)
 		}
 	}
-	if p.pPars.fVerbose != 0 {
+	if p.pPars.FVerbose != 0 {
 		fmt.Printf("Internal AIG objects=%d cuts=%d; merge elapsed %.2fs\n", Amap_ManObjNum(p), p.nCutsUsed, time.Since(started).Seconds())
 	}
 }

@@ -117,7 +117,7 @@ func amapCompareFanout(a, b, epsilon float32) int32 {
 	return 0
 }
 func Amap_CutCompareDelay(p *Amap_Man_t, a, b *Amap_Mat_t) int32 {
-	e := p.pPars.fEpsilon
+	e := p.pPars.FEpsilon
 	if c := amapCompareMetric(a.Delay, b.Delay, e); c != 0 {
 		return c
 	}
@@ -130,7 +130,7 @@ func Amap_CutCompareDelay(p *Amap_Man_t, a, b *Amap_Mat_t) int32 {
 	return 1
 }
 func Amap_CutCompareArea(p *Amap_Man_t, a, b *Amap_Mat_t) int32 {
-	e := p.pPars.fEpsilon
+	e := p.pPars.FEpsilon
 	if c := amapCompareMetric(a.Area, b.Area, e); c != 0 {
 		return c
 	}
@@ -309,7 +309,7 @@ func Amap_ManMatchNode(p *Amap_Man_t, o *Amap_Obj_t, flow, refs int32) {
 	best := bestDelay
 	areaGain := float32(math.Abs(float64(bestArea.Area-bestDelay.Area))) / bestDelay.Area
 	delayGain := float32(math.Abs(float64(bestArea.Delay-bestDelay.Delay))) / bestArea.Delay
-	if areaGain >= p.pPars.fADratio*delayGain {
+	if areaGain >= p.pPars.FADratio*delayGain {
 		best = bestArea
 	}
 	o.fPolar = best.pCut.fInv ^ best.pSet.fInv
@@ -328,17 +328,17 @@ func Amap_ManMatch(p *Amap_Man_t, flow, refs int32) {
 	}
 	area := Amap_ManComputeMapping(p)
 	inverters := Amap_ManCountInverters(p)
-	if p.pPars.fVerbose != 0 {
+	if p.pPars.FVerbose != 0 {
 		fmt.Printf("Area =%9.2f. Gate =%9.2f. Inv =%9.2f. (%6d.) Delay =%6.2f. Time %s\n", area+float32(inverters)*p.fAreaInv, area, float32(inverters)*p.fAreaInv, inverters, Amap_ManMaxDelay(p), time.Since(start))
 	}
 }
 func Amap_ManMap(p *Amap_Man_t) {
 	Amap_ManMerge(p)
-	for i := int32(0); i < p.pPars.nIterFlow; i++ {
+	for i := int32(0); i < p.pPars.NIterFlow; i++ {
 		Amap_ManMatch(p, 1, amapBool(i > 0))
 	}
-	for i := int32(0); i < p.pPars.nIterArea; i++ {
-		Amap_ManMatch(p, 0, amapBool(p.pPars.nIterFlow > 0 || i > 0))
+	for i := int32(0); i < p.pPars.NIterArea; i++ {
+		Amap_ManMatch(p, 0, amapBool(p.pPars.NIterFlow > 0 || i > 0))
 	}
 	Amap_ManCleanData(p)
 }

@@ -54,7 +54,7 @@ func TestAmapMapGraphXorAndMux(t *testing.T) {
 			Amap_ManSetDefaultParams(pars)
 			if tc.name == "mux" {
 				// The C oracle is run with `amap -m`; enable MUX cut matching here.
-				pars.fUseMuxes = 1
+				pars.FUseMuxes = 1
 			}
 			mapped := Amap_ManMapGraph(graph, lib, pars)
 			cleanupMappedOutput(t, mapped)

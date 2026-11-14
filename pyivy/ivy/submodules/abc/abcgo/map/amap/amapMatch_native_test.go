@@ -14,7 +14,7 @@ func matchFixture() (*Amap_Man_t, *Amap_Obj_t, *Amap_Obj_t, *Amap_Obj_t) {
 	set.Ins[1] = 2
 	lib.pNodes = make([]Amap_Nod_t, 2)
 	lib.pNodes[1].pSets = set
-	p := &Amap_Man_t{pLib: lib, pPars: &Amap_Par_t{fEpsilon: 0.001, fADratio: 1}, fAreaInv: 0.5, fEpsilonInternal: 0.001, vObjs: vec.Vec_PtrAlloc(8), vPis: vec.Vec_PtrAlloc(2), vPos: vec.Vec_PtrAlloc(2)}
+	p := &Amap_Man_t{pLib: lib, pPars: &Amap_Par_t{FEpsilon: 0.001, FADratio: 1}, fAreaInv: 0.5, fEpsilonInternal: 0.001, vObjs: vec.Vec_PtrAlloc(8), vPis: vec.Vec_PtrAlloc(2), vPos: vec.Vec_PtrAlloc(2)}
 	a := &Amap_Obj_t{Type: AMAP_OBJ_PI, Id: 0, EstRefs: 1}
 	b := &Amap_Obj_t{Type: AMAP_OBJ_PI, Id: 1, EstRefs: 1}
 	cut := &Amap_Cut_t{iMat: 1, nFans: 2, Fans: []int32{0, 2}}

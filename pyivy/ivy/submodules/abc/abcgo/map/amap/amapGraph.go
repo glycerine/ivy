@@ -250,7 +250,7 @@ func Amap_ManCreate(p *Amap_Man_t, source *aig.Graph) {
 		driver := source.Node(output).Fanins[0]
 		Amap_ManCreatePo(p, Amap_AndToObj(p, source, driver))
 	}
-	if p.pPars != nil && p.pPars.fVerbose != 0 {
+	if p.pPars != nil && p.pPars.FVerbose != 0 {
 		fmt.Printf("Performing mapping with %d given and %d created choices.\n", p.nChoicesGiven, p.nChoicesAdded)
 	}
 }
