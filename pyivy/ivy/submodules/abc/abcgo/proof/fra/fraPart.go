@@ -17,7 +17,7 @@ func fraOutputSupports(graph *aig.Graph) [][]int {
 	}
 	result := make([][]int, graph.OutputCount())
 	for i, output := range graph.Outputs() {
-		for _, edge := range aig.Aig_Support(graph, output) {
+		for _, edge := range aig.Aig_Support(graph, aig.Aig_ObjFanin0(graph, output)) {
 			result[i] = append(result[i], indices[edge.NodeID()])
 		}
 	}
