@@ -2425,11 +2425,39 @@ func Acb_GenerateInstance(p *Acb_Ntk_t, vDivs *Vec_Int_t, vUsed *Vec_Int_t, vTar
 	Vec_StrPush(vStr, 0)
 	return vStr
 }
+
+// Keep generated wire names distinct from the supplied port names.
+func acbCompleteSignalNames(names *Vec_Ptr_t, nIns, nNodes int32, reserved ...string) {
+	used := make(map[string]bool)
+	for _, name := range reserved {
+		used[name] = true
+	}
+	for i := int32(0); i < Vec_PtrSize(names); i++ {
+		if name, ok := Vec_PtrEntry(names, i).(string); ok {
+			used[name] = true
+		}
+	}
+	next := 1
+	for i := nIns; i < nIns+nNodes; i++ {
+		if Vec_PtrEntry(names, i) != nil {
+			continue
+		}
+		for {
+			name := fmt.Sprintf("ww%d", next)
+			next++
+			if !used[name] {
+				Vec_PtrWriteEntry(names, i, name)
+				used[name] = true
+				break
+			}
+		}
+	}
+}
+
 func Acb_GenerateSignalNames(p *Acb_Ntk_t, vDivs *Vec_Int_t, vUsed *Vec_Int_t, nNodes int32, vTars *Vec_Int_t, vGates *Vec_Wec_t) *Vec_Ptr_t {
 	var vRes *Vec_Ptr_t = Vec_PtrStart(Vec_IntSize(vUsed) + nNodes)
 	var i int32
 	var iObj int32
-	var nWires int32 = 1
 	// create input names
 	// inlining of macro Vec_IntForEachEntryInVec
 	for i = 0; i < Vec_IntSize(vUsed); i++ {
@@ -2443,14 +2471,15 @@ func Acb_GenerateSignalNames(p *Acb_Ntk_t, vDivs *Vec_Int_t, vUsed *Vec_Int_t, n
 		iObj = Vec_IntEntry(vTars, i)
 		var vGate *Vec_Int_t = Vec_WecEntry(vGates, Vec_IntSize(vUsed)+nNodes+i)
 		assert(Vec_IntEntry(vGate, 0) == ABC_OPER_BIT_BUF, "Vec_IntEntry(vGate, 0) == ABC_OPER_BIT_BUF")
-		Vec_PtrWriteEntry(vRes, Vec_IntEntry(vGate, 1), Abc_UtilStrsav(Acb_ObjNameStr(p, iObj)))
-	}
-	for i = Vec_IntSize(vUsed); i < Vec_IntSize(vUsed)+nNodes; i++ {
-		if Vec_PtrEntry(vRes, i) == nil {
-			Vec_PtrWriteEntry(vRes, i, fmt.Sprintf("ww%d", nWires))
-			nWires++
+		if Vec_PtrEntry(vRes, Vec_IntEntry(vGate, 1)) == nil {
+			Vec_PtrWriteEntry(vRes, Vec_IntEntry(vGate, 1), Acb_ObjNameStr(p, iObj))
 		}
 	}
+	outNames := make([]string, Vec_IntSize(vTars))
+	for i := range outNames {
+		outNames[i] = Acb_ObjNameStr(p, Vec_IntEntry(vTars, int32(i)))
+	}
+	acbCompleteSignalNames(vRes, Vec_IntSize(vUsed), nNodes, outNames...)
 	return vRes
 }
 func Acb_GetUsedDivs(vDivs *Vec_Int_t, vUsed *Vec_Int_t) *Vec_Int_t {
@@ -2489,6 +2518,24 @@ func Acb_GeneratePatch(p *Acb_Ntk_t, vDivs *Vec_Int_t, vUsed *Vec_Int_t, vSops *
 	return acbGeneratePatchFromGates(p, vDivs, vUsed, vTars, vGates, nOuts)
 }
 
+// acbWritePatchWires declares exactly the internal signals, even when
+// multiple outputs share a driver or an output directly aliases a PI.
+func acbWritePatchWires(text *Vec_Str_t, names *Vec_Ptr_t, gates *Vec_Wec_t, nIns, nNodes, nOuts int32) {
+	outputs := make(map[int32]bool, nOuts)
+	for i := int32(0); i < nOuts; i++ {
+		outputs[Vec_IntEntry(Vec_WecEntry(gates, nIns+nNodes+i), 1)] = true
+	}
+	var wires []string
+	for i := nIns; i < nIns+nNodes; i++ {
+		if !outputs[i] {
+			wires = append(wires, Vec_PtrEntry(names, i).(string))
+		}
+	}
+	if len(wires) != 0 {
+		Vec_StrPrintF(text, "  wire %s;\n\n", strings.Join(wires, ", "))
+	}
+}
+
 // acbGeneratePatchFromGates emits the source patch format after technology
 // mapping. Keeping serialization separate lets it be checked independently of
 // ABCI's application-wide command registry.
@@ -2498,7 +2545,6 @@ func acbGeneratePatchFromGates(p *Acb_Ntk_t, vDivs, vUsed, vTars *Vec_Int_t, vGa
 	var k int32
 	var iObj int32
 	var nWires int32 = Vec_WecSize(vGates) - Vec_IntSize(vUsed) - nOuts
-	var fFirst int32 = 1
 	var nGates1 [5]int32
 	var nGates0 [5]int32
 	var vNames *Vec_Ptr_t = Acb_GenerateSignalNames(p, vDivs, vUsed, nWires, vTars, vGates)
@@ -2580,33 +2626,21 @@ func acbGeneratePatchFromGates(p *Acb_Ntk_t, vDivs, vUsed, vTars *Vec_Int_t, vGa
 	}
 	Vec_StrAppend(vStr, ";\n")
 
-	Vec_StrAppend(vStr, "  input")
-	// inlining of macro Vec_IntForEachEntryInVec
-	for i = 0; i < Vec_IntSize(vUsed); i++ {
-		iObj = Vec_IntEntry(vDivs, Vec_IntEntry(vUsed, i))
-		sep := ""
-		if i > 0 {
-			sep = ","
-		}
-		Vec_StrPrintF(vStr, "%s %s", sep, Acb_ObjNameStr(p, iObj))
-	}
-	Vec_StrAppend(vStr, ";\n")
-
-	if nWires > nOuts {
-		Vec_StrAppend(vStr, "  wire")
-		for i = 0; i < nWires; i++ {
-			var pName string = Vec_PtrEntry(vNames, Vec_IntSize(vUsed)+i).(string)
-			if strncmp(pName, "ww", 2) == 0 {
-				sep := ","
-				if fFirst != 0 {
-					sep = ""
-				}
-				Vec_StrPrintF(vStr, "%s %s", sep, pName)
-				fFirst = 0
+	if Vec_IntSize(vUsed) > 0 {
+		Vec_StrAppend(vStr, "  input")
+		// inlining of macro Vec_IntForEachEntryInVec
+		for i = 0; i < Vec_IntSize(vUsed); i++ {
+			iObj = Vec_IntEntry(vDivs, Vec_IntEntry(vUsed, i))
+			sep := ""
+			if i > 0 {
+				sep = ","
 			}
+			Vec_StrPrintF(vStr, "%s %s", sep, Acb_ObjNameStr(p, iObj))
 		}
-		Vec_StrAppend(vStr, ";\n\n")
+		Vec_StrAppend(vStr, ";\n")
 	}
+
+	acbWritePatchWires(vStr, vNames, vGates, Vec_IntSize(vUsed), nWires, nOuts)
 
 	// create internal nodes
 	// inlining of macro Vec_WecForEachLevelStartStop
@@ -2635,6 +2669,15 @@ func acbGeneratePatchFromGates(p *Acb_Ntk_t, vDivs, vUsed, vTars *Vec_Int_t, vGa
 			}
 			Vec_StrPrintF(vStr, " 1'b%d", bit)
 			Vec_StrPrintF(vStr, " );\n")
+		}
+	}
+	// Preserve separate output ports sharing a driver, including PI drivers.
+	for i = 0; i < nOuts; i++ {
+		out := Acb_ObjNameStr(p, Vec_IntEntry(vTars, i))
+		driver := Vec_IntEntry(Vec_WecEntry(vGates, Vec_IntSize(vUsed)+nWires+i), 1)
+		name := Vec_PtrEntry(vNames, driver).(string)
+		if out != name {
+			Vec_StrPrintF(vStr, "  buf ( %s, %s );\n", out, name)
 		}
 	}
 	Vec_StrAppend(vStr, "\nendmodule\n\n")
@@ -2701,7 +2744,6 @@ func Acb_GenerateSignalNames2(vGates *Vec_Wec_t, vIns *Vec_Ptr_t, vOuts *Vec_Ptr
 	var vRes *Vec_Ptr_t = Vec_PtrStart(Vec_WecSize(vGates))
 	var pName string
 	var i int32
-	var nWires int32 = 1
 	// create input names
 	// inlining of macro Vec_PtrForEachEntry
 	for i = 0; i < Vec_PtrSize(vIns); i++ {
@@ -2714,14 +2756,15 @@ func Acb_GenerateSignalNames2(vGates *Vec_Wec_t, vIns *Vec_Ptr_t, vOuts *Vec_Ptr
 		pName = Vec_PtrEntry(vOuts, i).(string)
 		var vGate *Vec_Int_t = Vec_WecEntry(vGates, nIns+nNodes+i)
 		assert(Vec_IntEntry(vGate, 0) == ABC_OPER_BIT_BUF, "Vec_IntEntry(vGate, 0) == ABC_OPER_BIT_BUF")
-		Vec_PtrWriteEntry(vRes, Vec_IntEntry(vGate, 1), Abc_UtilStrsav(pName))
-	}
-	for i = nIns; i < nIns+nNodes; i++ {
-		if Vec_PtrEntry(vRes, i) == nil {
-			Vec_PtrWriteEntry(vRes, i, fmt.Sprintf("ww%d", nWires))
-			nWires++
+		if Vec_PtrEntry(vRes, Vec_IntEntry(vGate, 1)) == nil {
+			Vec_PtrWriteEntry(vRes, Vec_IntEntry(vGate, 1), pName)
 		}
 	}
+	outNames := make([]string, nOuts)
+	for i := range outNames {
+		outNames[i] = Vec_PtrEntry(vOuts, int32(i)).(string)
+	}
+	acbCompleteSignalNames(vRes, nIns, nNodes, outNames...)
 	return vRes
 }
 func Acb_GeneratePatch2(pGia *Gia_Man_t, vIns *Vec_Ptr_t, vOuts *Vec_Ptr_t) *Vec_Str_t {
@@ -2737,7 +2780,6 @@ func acbGeneratePatchFromGates2(vGates *Vec_Wec_t, vIns, vOuts *Vec_Ptr_t) *Vec_
 	var k int32
 	var iObj int32
 	var nWires int32 = Vec_WecSize(vGates) - nIns - nOuts
-	var fFirst int32 = 1
 	var vNames *Vec_Ptr_t = Acb_GenerateSignalNames2(vGates, vIns, vOuts)
 
 	var vStr *Vec_Str_t = Vec_StrAlloc(100)
@@ -2771,33 +2813,21 @@ func acbGeneratePatchFromGates2(vGates *Vec_Wec_t, vIns, vOuts *Vec_Ptr_t) *Vec_
 	}
 	Vec_StrAppend(vStr, ";\n")
 
-	Vec_StrAppend(vStr, "  input")
-	// inlining of macro Vec_PtrForEachEntry
-	for i = 0; i < Vec_PtrSize(vIns); i++ {
-		pName = Vec_PtrEntry(vIns, i).(string)
-		sep := ""
-		if i > 0 {
-			sep = ","
-		}
-		Vec_StrPrintF(vStr, "%s %s", sep, pName)
-	}
-	Vec_StrAppend(vStr, ";\n")
-
-	if nWires > nOuts {
-		Vec_StrAppend(vStr, "  wire")
-		for i = 0; i < nWires; i++ {
-			pName = Vec_PtrEntry(vNames, nIns+i).(string)
-			if strncmp(pName, "ww", 2) == 0 {
-				sep := ","
-				if fFirst != 0 {
-					sep = ""
-				}
-				Vec_StrPrintF(vStr, "%s %s", sep, pName)
-				fFirst = 0
+	if nIns > 0 {
+		Vec_StrAppend(vStr, "  input")
+		// inlining of macro Vec_PtrForEachEntry
+		for i = 0; i < Vec_PtrSize(vIns); i++ {
+			pName = Vec_PtrEntry(vIns, i).(string)
+			sep := ""
+			if i > 0 {
+				sep = ","
 			}
+			Vec_StrPrintF(vStr, "%s %s", sep, pName)
 		}
-		Vec_StrAppend(vStr, ";\n\n")
+		Vec_StrAppend(vStr, ";\n")
 	}
+
+	acbWritePatchWires(vStr, vNames, vGates, nIns, nWires, nOuts)
 
 	// create internal nodes
 	// inlining of macro Vec_WecForEachLevelStartStop
@@ -2826,6 +2856,15 @@ func acbGeneratePatchFromGates2(vGates *Vec_Wec_t, vIns, vOuts *Vec_Ptr_t) *Vec_
 			}
 			Vec_StrPrintF(vStr, " 1'b%d", bit)
 			Vec_StrPrintF(vStr, " );\n")
+		}
+	}
+	// Preserve separate output ports sharing a driver, including PI drivers.
+	for i = 0; i < nOuts; i++ {
+		out := Vec_PtrEntry(vOuts, i).(string)
+		driver := Vec_IntEntry(Vec_WecEntry(vGates, nIns+nWires+i), 1)
+		name := Vec_PtrEntry(vNames, driver).(string)
+		if out != name {
+			Vec_StrPrintF(vStr, "  buf ( %s, %s );\n", out, name)
 		}
 	}
 	Vec_StrAppend(vStr, "\nendmodule\n\n")

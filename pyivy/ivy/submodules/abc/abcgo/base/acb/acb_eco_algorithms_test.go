@@ -420,3 +420,73 @@ func TestMappedPatchSerialization(t *testing.T) {
 		}
 	}
 }
+
+func TestPatchSerializationOutputAliases(t *testing.T) {
+	ins := Vec_PtrAlloc(2)
+	Vec_PtrPush(ins, "a")
+	Vec_PtrPush(ins, "b")
+	outs := Vec_PtrAlloc(3)
+	for _, s := range []string{"y", "z", "w"} {
+		Vec_PtrPush(outs, s)
+	}
+	rows := [][]int32{{}, {}, {int32(ABC_OPER_BIT_OR), 2, 0, 1}, {int32(ABC_OPER_BIT_BUF), 0}, {int32(ABC_OPER_BIT_BUF), 2}, {int32(ABC_OPER_BIT_BUF), 2}}
+	gates := Vec_WecAlloc(6)
+	for _, r := range rows {
+		Vec_IntPushArray(Vec_WecPushLevel(gates), r, int32(len(r)))
+	}
+	patch := acbGeneratePatchFromGates2(gates, ins, outs)
+	text := string(acbCStringBytes(patch))
+	if !strings.Contains(text, "buf ( y, a );") || !strings.Contains(text, "buf ( w, z );") {
+		t.Fatalf("missing output aliases:\n%s", text)
+	}
+	q, _ := acbReadFixture(t, text)
+	g := Acb_NtkToGia2(q, 0, 0, nil, 0)
+	defer Gia_ManStop(g)
+	for a := 0; a < 4; a++ {
+		args := []bool{a&1 != 0, a&2 != 0}
+		got, err := g.Evaluate(args)
+		want := []bool{args[0], args[0] || args[1], args[0] || args[1]}
+		if err != nil || !reflect.DeepEqual(got, want) {
+			t.Fatalf("aliases got%v want%v err%v", got, want, err)
+		}
+	}
+}
+
+func TestPatchSerializationWithoutInputs(t *testing.T) {
+	ins, outs := Vec_PtrAlloc(0), Vec_PtrAlloc(1)
+	Vec_PtrPush(outs, "y")
+	gates := Vec_WecAlloc(2)
+	Vec_IntPushTwo(Vec_WecPushLevel(gates), int32(ABC_OPER_CONST_T), 0)
+	Vec_IntPushTwo(Vec_WecPushLevel(gates), int32(ABC_OPER_BIT_BUF), 0)
+	patch := acbGeneratePatchFromGates2(gates, ins, outs)
+	text := string(acbCStringBytes(patch))
+	if strings.Contains(text, "input;") {
+		t.Fatalf("empty input declaration: %s", text)
+	}
+	q, _ := acbReadFixture(t, text)
+	g := Acb_NtkToGia2(q, 0, 0, nil, 0)
+	defer Gia_ManStop(g)
+	got, err := g.Evaluate(nil)
+	if err != nil || !reflect.DeepEqual(got, []bool{true}) {
+		t.Fatalf("constant patch %v %v", got, err)
+	}
+}
+
+func TestGeneratedWireNameCollision(t *testing.T) {
+	names := Vec_PtrStart(5)
+	Vec_PtrWriteEntry(names, 0, "ww1")
+	Vec_PtrWriteEntry(names, 1, "a")
+	Vec_PtrWriteEntry(names, 4, "ww3")
+	acbCompleteSignalNames(names, 2, 3, "ww2")
+	for i, want := range []string{"ww1", "a", "ww4", "ww5", "ww3"} {
+		if got := Vec_PtrEntry(names, int32(i)); got != want {
+			t.Fatalf("name%d got%v want%s", i, got, want)
+		}
+	}
+}
+
+func TestMissingVerilogFile(t *testing.T) {
+	if p := Acb_VerilogSimpleRead(filepath.Join(t.TempDir(), "absent.v"), ""); p != nil {
+		t.Fatal("missing file returned a network")
+	}
+}

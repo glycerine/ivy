@@ -21,19 +21,21 @@ used by the C source. Existing tests cover only a small part of the behavior.
 
 - [x] Inventory the C and Go files, existing tests, and current compiler errors.
 - [x] Complete compilation of every ACB production file and existing test.
-- [ ] Review network allocation, fanin/fanout storage, traversal, duplication,
+- [x] Review network allocation, fanin/fanout storage, traversal, duplication,
       reference counting, levels, paths, and cleanup against `acb.h/acbUtil.c`.
-- [ ] Review parsers, truth/SOP transforms, and ABC/GIA conversion against
+- [x] Review parsers, truth/SOP transforms, and ABC/GIA conversion against
       `acbFunc.c/acbAbc.c/acbTest.c`; test round trips and error cases.
-- [ ] Review MFS window construction, CNF/SAT plumbing, resubstitution, and
+- [x] Review MFS window construction, CNF/SAT plumbing, resubstitution, and
       push/decomposition against `acbMfs.c/acbPush.c`.
-- [ ] Add behavioral tests for every algorithm family, including exhaustive
+- [x] Add behavioral tests for every algorithm family, including exhaustive
       small truth tables, reconvergence, constants, unsupported/error inputs,
       optimization equivalence, and multiword boundary cases. Use original C
       results as an oracle when feasible.
-- [ ] Run the complete ACB tests, race/checkptr checks, coverage inspection,
-      and downstream compilation; resolve failures and record actual coverage.
-- [ ] Review the final diff for fidelity and simplicity, update source review,
+- [x] Run the complete ACB tests, race/checkptr checks, coverage inspection,
+      and downstream compilation; resolve ACB failures and record the boundary.
+- [ ] Verify the complete command-driven ECO mapping and Ivy integration once
+      `base/abci` builds. Its independent compiler failures are recorded below.
+- [x] Review the final diff for fidelity and simplicity, update source review,
       and commit coherent changes with messages under 60 characters.
 
 ## Verification and progress
@@ -129,3 +131,34 @@ of ABCI command registration; mapping was not replaced or mocked.
 
 `go test -race ./base/acb` passed before the final serializer tranche. Final
 coverage, race/checkptr and diff checks will be recorded after that tranche.
+
+### Final package verification
+
+The ACB package has **57 test functions** and **75.5% statement coverage**, up
+from the initial 5.5%. Focused source-file coverage: ABC conversion 94.7%, push
+logic 92.6%, MFS 80.7%, ECO/function code 72.0%, utility code 70.8%, and header
+storage/APIs 74.2%. Uncovered statements include diagnostics, experimental
+entry points and the command-dependent integration paths; this is broad
+algorithmic coverage, not a claim of exhaustive testing of every function.
+
+Passed from `abcgo` with `GOCACHE=/tmp/abcgo-gocache`:
+
+- `go test ./base/acb -coverprofile=/tmp/acb.cover`
+- `go test -race -gcflags=all=-d=checkptr=2 ./base/acb`
+- `gofmt -l base/acb` (no output)
+- `git diff --check -- base/acb` (no errors)
+
+The last review added shared-output/PI-alias serialization, constant patches
+without inputs, collision-free generated names, public ABC optimizer entry
+points, and hierarchical box accounting. Source-derived graph and SAT
+algorithms remain in place. The native C Ashenhurst counterexample is retained
+as a fixture with a reproduction command.
+
+Downstream check: `go test ./base/abci ./opt/fret -run '^$'` remains blocked by
+independent ABCI command translation errors in `abc.go`, starting at line 6311.
+The original Ivy callback bridge and end-to-end ECO test are saved separately
+in commit `c335e37fa`, labeled `red:`. No dummy mapping/proving implementation or
+skipped test was used to conceal this boundary. Package completion and this
+remaining application integration requirement are tracked separately.
+
+See `ACB_SOURCE_REVIEW.md` for the detailed correctness findings and test map.

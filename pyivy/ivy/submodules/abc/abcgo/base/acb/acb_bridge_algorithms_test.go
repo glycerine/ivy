@@ -211,3 +211,61 @@ func TestBoxFinalOutputCountAndDeletion(t *testing.T) {
 		}
 	}
 }
+
+func TestABCOptimizationEntryPoints(t *testing.T) {
+	n := baseabc.Abc_NtkAlloc(baseabc.ABC_NTK_LOGIC, baseabc.ABC_FUNC_SOP, 1)
+	defer baseabc.Abc_NtkDelete(n)
+	n.Name = "fixture"
+	a, b := baseabc.Abc_NtkCreatePi(n), baseabc.Abc_NtkCreatePi(n)
+	baseabc.Abc_ObjAssignName(a, "a", "")
+	baseabc.Abc_ObjAssignName(b, "b", "")
+	gate := baseabc.Abc_NtkCreateNode(n)
+	baseabc.Abc_ObjAddFanin(gate, a)
+	baseabc.Abc_ObjAddFanin(gate, b)
+	gate.Data = "11 1\n"
+	inv := baseabc.Abc_NtkCreateNode(n)
+	baseabc.Abc_ObjAddFanin(inv, gate)
+	inv.Data = "0 1\n"
+	po := baseabc.Abc_NtkCreatePo(n)
+	baseabc.Abc_ObjAssignName(po, "y", "")
+	baseabc.Abc_ObjAddFanin(po, inv)
+	var pars Acb_Par_t
+	Acb_ParSetDefault(&pars)
+	Acb_ParSetCommand(&pars, 3, 2, 3, 20, 100, 0, 0, 0, 0, 1, 0, 0, 0, 0)
+	for _, out := range []*Abc_Ntk_t{Abc_NtkOptMfse(n, &pars), Abc_NtkOptPush(n, 3, 0)} {
+		if out == nil || Abc_NtkCheck(out) == 0 {
+			t.Fatal("entry point produced invalid ABC network")
+		}
+		defer Abc_NtkDelete(out)
+		for a := 0; a < 4; a++ {
+			inputs := map[*baseabc.Object]bool{baseabc.Abc_NtkCi(out, 0): a&1 != 0, baseabc.Abc_NtkCi(out, 1): a&2 != 0}
+			got, err := out.Evaluate(baseabc.Abc_NtkCo(out, 0).Signal(), inputs)
+			if err != nil || got != (a != 3) {
+				t.Fatalf("entry point a%d got%v err%v", a, got, err)
+			}
+		}
+	}
+}
+
+func TestHierarchicalBoxAccounting(t *testing.T) {
+	root := acbNetwork(t, 0)
+	m := root.pDesign
+	m.iRoot = Acb_NtkId(root)
+	child := Acb_NtkAlloc(m, Abc_NamStrFindOrAdd(m.pStrs, "child", nil), 1, 1, 3)
+	pi := Acb_ObjAlloc(child, ABC_OPER_CI, 0, 0)
+	inv := Acb_ObjAlloc(child, ABC_OPER_BIT_INV, 1, 0)
+	Acb_ObjAddFanin(child, inv, pi)
+	acbOutput(child, inv)
+	Acb_NtkCleanObjFuncs(root)
+	for i := 0; i < 2; i++ {
+		box := Acb_ObjAlloc(root, ABC_OPER_BOX, 0, 1)
+		Acb_ObjSetNtkId(root, box, Acb_NtkId(child))
+	}
+	var prims, boxes int32
+	Acb_ManBoxNumRec(m, &prims, &boxes)
+	// Two child instances each have a CI, inverter and CO, and each root box
+	// contributes its separate FON object to the primitive count.
+	if prims != 8 || boxes != 2 || Acb_ManBoxNum(m) != 2 || Acb_ManObjNum(m) != 7 {
+		t.Fatalf("hierarchy prims%d boxes%d", prims, boxes)
+	}
+}
