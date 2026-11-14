@@ -205,8 +205,7 @@ func Gia_ManDupOnsetOffset(src *Gia_Man_t) *Gia_Man_t {
 	giaDupMappedNodes(out, src)
 	for i := int32(0); i < Gia_ManCoNum(src); i++ {
 		obj := Gia_ManCo(src, i)
-		edge, _, _, _ := src.Gate(obj.id)
-		lit := int32(src.pObjs[edge>>1].Value) ^ (edge & 1)
+		lit := giaMappedEdge(src, obj)
 		Gia_ManAppendCo(out, lit)
 		obj.Value = uint32(Gia_ManAppendCo(out, lit^1))
 	}

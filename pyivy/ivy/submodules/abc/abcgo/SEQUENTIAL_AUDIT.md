@@ -3754,3 +3754,41 @@ Input removal, onset/offset, randomized edge mutation and other GIA families
 remain open. Original package completion remains 2/131; the audit stays active.
 Full uncached GIA race tests pass in 85.047s
 (`/tmp/abcgo-permutation-gap-race.log`).
+
+Input removal/onset-offset review: compared DupLastPis, DupRemovePis and
+DupOnsetOffset with giaDup.c and their source callers. LastPis is explicitly
+combinational and retains the suffix. C RemovePis keeps the first CI-count
+minus removed-count inputs; its actual acb callers are combinational, where
+that means removing the PI suffix. The existing Go extension retains register
+pairs when removing trailing PIs from a sequential graph; a separate direct
+transition test checks it, without claiming a sequential C baseline. No new
+extension was introduced in this review.
+
+OnsetOffset pairs every raw CO with its complement, including register-input
+terminals, and retains the old register count. Preserve that source convention
+rather than inventing a two-machine sequential interpretation. Bmc_FxCompute
+uses the paired circuit as combinational CNF over all CIs. Reuse the existing
+giaMappedEdge helper instead of duplicating the fanin lookup and phase XOR;
+this is the only production change in this checkpoint.
+
+Independent truth tables and compiled original C agree on 136 cases and
+3,568 input/state rows: all retained-input counts zero through six, prefix/
+suffix removal, eight gate polarities, and onset/offset with zero/three/six
+registers. The same cases pass on DFS-ordered Go graphs. Tests preserve real
+XOR/MUX/buffer counts and identity, check constant outputs and paired CO order,
+and use buffer-transparent ordinary-AND graphs for the native baseline.
+Additional cases cover the existing sequential RemovePis behavior, simple-mode
+opposite-phase ANDs, negative/excess counts, direct uses of removed inputs,
+uses confined to dangling logic, and LastPis' sequential rejection. Dropped
+inputs must be unused throughout the raw copied logic; no implicit pruning
+algorithm was added to relax that source precondition.
+
+The initial focused tests pass in 1.816s (`/tmp/abcgo-input-dual-focused.log`).
+After the helper simplification and added rejection coverage, focused tests
+pass in 1.827s (`/tmp/abcgo-input-dual-final-focused.log`). GIA vet passes
+(`/tmp/abcgo-input-dual-vet.log`); full GIA/BMC race results follow below.
+No correctness defect was found in these routines. Randomized CI-edge
+mutation and other GIA duplication families still need review; original
+package completion remains 2/131 and the sequential audit stays active.
+Full uncached race tests pass for GIA (86.846s) and its BMC caller (25.693s),
+recorded in `/tmp/abcgo-input-dual-race.log`.
