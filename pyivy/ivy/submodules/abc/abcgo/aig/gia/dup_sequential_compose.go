@@ -150,43 +150,48 @@ func Gia_ManDupTimes(src *Gia_Man_t, times int32) *Gia_Man_t {
 	}
 	out := Gia_ManStart(src.nObjs)
 	out.CopyIdentityFrom(src)
+	out.fGiaSimple = src.fGiaSimple
 	if src.PMuxes != nil {
 		out.EnableMuxes()
 	}
-	pis, ros, pos, ris := make([]int32, 0), make([]int32, 0), make([]int32, 0), make([]int32, 0)
-	for t := int32(0); t < times; t++ {
+	nPis, nPos, nRegs := int(Gia_ManPiNum(src)), int(Gia_ManPoNum(src)), int(src.nRegs)
+	cis := make([]int32, int(times)*(nPis+nRegs))
+	cos := make([]int32, int(times)*(nPos+nRegs))
+	pis, ros := cis[:int(times)*nPis], cis[int(times)*nPis:]
+	pos, ris := cos[:int(times)*nPos], cos[int(times)*nPos:]
+	for t := 0; t < int(times); t++ {
 		Gia_ManFillValue(src)
 		src.pObjs[0].Value = 0
 		for _, obj := range src.pObjs[1:] {
 			_, _, _, kind := src.Gate(obj.id)
 			if kind == 1 {
-				lit := Gia_ManAppendCi(out)
-				obj.Value = uint32(lit)
-				if Gia_ObjIsPi(src, obj) != 0 {
-					pis = append(pis, lit>>1)
-				} else {
-					ros = append(ros, lit>>1)
-				}
+				obj.Value = uint32(Gia_ManAppendCi(out))
 			} else if kind == 6 {
 				giaDupMappedOutput(out, src, obj)
-				id := int32(obj.Value >> 1)
-				if Gia_ObjIsPo(src, obj) != 0 {
-					pos = append(pos, id)
-				} else {
-					ris = append(ris, id)
-				}
 			} else {
 				Gia_ManDupOrderDfs_rec(out, src, obj)
 			}
 		}
+		// DFS and terminal remapping can make physical object order differ
+		// from the public interface. Group copies using that interface order.
+		for i := 0; i < nPis; i++ {
+			pis[t*nPis+i] = int32(Gia_ManPi(src, int32(i)).Value >> 1)
+		}
+		for i := 0; i < nRegs; i++ {
+			ros[t*nRegs+i] = int32(Gia_ManRo(src, int32(i)).Value >> 1)
+			ris[t*nRegs+i] = int32(Gia_ManRi(src, int32(i)).Value >> 1)
+		}
+		for i := 0; i < nPos; i++ {
+			pos[t*nPos+i] = int32(Gia_ManPo(src, int32(i)).Value >> 1)
+		}
 	}
 	vec.Vec_IntClear(out.vCis)
-	for _, id := range append(pis, ros...) {
+	for _, id := range cis {
 		Gia_ObjSetCioId(out.pObjs[id], int32(vec.Vec_IntSize(out.vCis)))
 		vec.Vec_IntPush(out.vCis, id)
 	}
 	vec.Vec_IntClear(out.vCos)
-	for _, id := range append(pos, ris...) {
+	for _, id := range cos {
 		Gia_ObjSetCioId(out.pObjs[id], int32(vec.Vec_IntSize(out.vCos)))
 		vec.Vec_IntPush(out.vCos, id)
 	}

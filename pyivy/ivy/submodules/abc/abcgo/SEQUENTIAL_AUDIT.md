@@ -3660,3 +3660,56 @@ race run after the equivalent CI-literal helper simplification passes all
 new cases in 4.530s
 (`/tmp/abcgo-sequential-composition-final-focused-race.log`). Final GIA vet
 passes (`/tmp/abcgo-sequential-composition-final-vet.log`).
+
+Repeated duplication/flop-class review: a new minimal red test shows
+Gia_ManDupTimes changes the input interface of a DFS-ordered graph with an
+unused first PI (`/tmp/abcgo-dup-times-order-red.log`). It collected terminals
+in physical object order instead of source interface order. Record terminal
+mappings from source PI/RO/PO/RI vectors after each copy, preserving their
+public order before grouping all primary terminals ahead of register ones.
+Physical graph copying and its one-object-per-source-object contract remain
+unchanged. Output-vector remapping has a separate regression. A compiled
+original-C witness also reproduces the wrong DFS-order output; normal-layout
+comparisons remain source-exact rather than endorsing that upstream defect.
+
+Temporary terminal storage now consists of two exactly sized arrays with
+PI/RO and PO/RI views. This replaces four growing slices and final
+concatenations, mirroring source pre-sizing without extra join allocations.
+The 100-call, 32-copy benchmark changes 459 to 447 allocations per call and
+about 45.1 KB to 43.3 KB. Logs are `/tmp/abcgo-dup-times-before.log` and
+`/tmp/abcgo-dup-times-after.log`. One short timing sample is not a whole-program
+speed claim.
+
+Boundary inspection found that both Times and FlopClass lose simple mode,
+causing a valid r AND NOT r source node to panic in raw copying. Separate
+red tests precede that fix (`/tmp/abcgo-dup-times-simple-red.log` and
+`/tmp/abcgo-dup-class-simple-red.log`). Preserve fGiaSimple in Times and in
+the shared raw-copy initializer giaDupMappedStart; the same raw-copy contract
+also applies to its permutation, constraint, trim and related callers.
+Regression coverage explicitly checks times, class, permutation and constraint
+copies. No simplification or buffer reinterpretation replaces the retained
+opposite-phase AND node.
+
+Independent truth tables exercise 72 repetition cases with one/two/three
+copies, zero/one/two registers, and real XOR/MUX/buffer gates, preserving object
+counts and CI/CO ordinals. A further 72 DFS-layout cases cover 40,288 rows.
+Flop-class extraction covers all 27 assignments of three signed class labels,
+four selections including an absent class, and eight gate polarity patterns:
+864 cases and 55,296 rows. It preserves stable nonselected/selected register
+ordering and correctly exposes nonselected registers as primary terminals.
+All 936 normal-layout cases (95,584 rows) match compiled original C using
+ordinary-AND, buffer-transparent equivalents. Class extraction itself otherwise
+matches the source; its new production change is simple-mode propagation.
+
+Empty managers, constant-only outputs, autonomous registers, no-output graphs
+with dangling logic, invalid duplication counts/class vectors and manually
+reordered COs have additional coverage. Final focused tests pass in 2.546s
+(`/tmp/abcgo-dup-times-class-final-focused.log`); GIA vet passes
+(`/tmp/abcgo-dup-times-class-vet.log`). Every current module package, including
+tests, compiles (`/tmp/abcgo-dup-times-class-build.log`). These compile checks
+do not count other packages as audited. Final GIA/base-abci race results follow.
+Other GIA duplication families remain open; original completion remains 2/131.
+Full uncached race tests pass for GIA (72.616s) and its base/abci caller
+(28.860s), recorded in `/tmp/abcgo-dup-times-class-race.log`. The allocation
+benchmark was repeated on the final source in `/tmp/abcgo-dup-times-after.log`.
+The sequential audit remains active.
