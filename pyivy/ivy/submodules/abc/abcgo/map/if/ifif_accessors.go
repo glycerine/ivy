@@ -25,3 +25,12 @@ func If_LibLutMaxSize(lib *If_LibLut_t) int32                 { return lib.LutMa
 func If_LibLutDelay(lib *If_LibLut_t, lutSize, pin int32) float32 {
 	return lib.pLutDelays[lutSize][pin]
 }
+
+// If_LibLutAddWireDelay adjusts every source delay entry, including unused pins.
+func If_LibLutAddWireDelay(lib *If_LibLut_t, delta float32) {
+	for size := int32(0); size <= lib.LutMax; size++ {
+		for pin := int32(0); pin <= size; pin++ {
+			lib.pLutDelays[size][pin] += delta
+		}
+	}
+}

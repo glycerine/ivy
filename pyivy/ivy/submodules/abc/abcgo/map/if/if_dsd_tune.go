@@ -68,3 +68,53 @@ func Id_DsdManTuneStr1(p *If_DsdMan_t, structure string, conflicts, verbose int3
 	p.nObjsPrev = 0
 	p.LutSize = 0
 }
+
+// If_DsdManTune follows ifDsd.c's mark/retry protocol for two-LUT matching.
+// spec is retained because the source entry point accepts but does not use it.
+func If_DsdManTune(p *If_DsdMan_t, lutSize, fast, add, spec, verbose int32) {
+	if add == 0 || lutSize == 0 {
+		for id := int32(0); id < If_DsdManObjNum(p); id++ {
+			If_DsdVecObj(&p.vObjs, id).fMark = 0
+		}
+	}
+	if lutSize == 0 {
+		return
+	}
+	scratch := vec.Vec_IntAlloc(1000)
+	defer vec.Vec_IntFree(scratch)
+	solver := If_ManSatBuildXY(lutSize)
+	defer If_ManSatUnbuild(solver)
+	for id := int32(0); id < If_DsdManObjNum(p); id++ {
+		object := If_DsdVecObj(&p.vObjs, id)
+		if object.nSupp <= lutSize || add != 0 && object.fMark == 0 {
+			continue
+		}
+		object.fMark = 0
+		if If_DsdManCheckXY(p, id<<1, lutSize, 0, 0, 0, 0) != 0 {
+			continue
+		}
+		if fast == 0 {
+			truth := append([]word(nil), object.truth...)
+			dau.Dau_DsdMinBase(truth, object.nFans, make([]int32, object.nFans))
+			if If_ManSatCheckXYall(solver, lutSize, truth, object.nSupp, scratch) != 0 {
+				continue
+			}
+		}
+		object.fMark = 1
+	}
+	if verbose != 0 {
+		marked := make([]int, p.nVars+1)
+		for id := int32(0); id < If_DsdManObjNum(p); id++ {
+			obj := If_DsdVecObj(&p.vObjs, id)
+			if obj.fMark != 0 {
+				marked[obj.nSupp]++
+			}
+		}
+		fmt.Printf("DSD functions excluded by support: %v\n", marked)
+	}
+}
+
+// The portable C build uses the serial matcher for this entry point.
+func Id_DsdManTuneStr(p *If_DsdMan_t, structure string, conflicts, processes, verbose int32) {
+	Id_DsdManTuneStr1(p, structure, conflicts, verbose)
+}
