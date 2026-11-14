@@ -169,9 +169,9 @@ func bddLinearLiveNodes(dd *DdManager) map[*DdNode]bool {
 			visit(node)
 		}
 	}
-	// The manager owns one reference to each projection. CUDD includes these
-	// roots while counting keys, then subtracts projections whose total refcount
-	// is exactly that manager reference.
+	// Projection handles are manager roots even though Go Ref does not encode
+	// their implicit CUDD manager pin. They are added here and filtered below
+	// when their Go Ref count is zero.
 	for _, variable := range dd.Vars {
 		visit(variable)
 	}
@@ -180,16 +180,6 @@ func bddLinearLiveNodes(dd *DdManager) map[*DdNode]bool {
 
 func bddLinearCountedNodes(dd *DdManager) map[*DdNode]bool {
 	live := bddLinearLiveNodes(dd)
-	incoming := make(map[*DdNode]int, len(live))
-	for node := range live {
-		for _, child := range []*DdNode{node.T, node.E} {
-			if child != nil && !Cudd_IsConstant(child) {
-				if regular := Cudd_Regular(child); live[regular] {
-					incoming[regular]++
-				}
-			}
-		}
-	}
 	projections := make(map[*DdNode]bool, len(dd.Vars))
 	for _, variable := range dd.Vars {
 		if variable != nil && !Cudd_IsConstant(variable) {
@@ -197,7 +187,10 @@ func bddLinearCountedNodes(dd *DdManager) map[*DdNode]bool {
 		}
 	}
 	for node := range live {
-		if projections[node] && node.Ref+uint32(incoming[node]) == 0 {
+		// In this Go core, Ref counts all incoming child arcs and explicit root
+		// references, but does not store the manager's implicit projection pin.
+		// Thus Ref==0 corresponds to CUDD's isolated projection ref==1.
+		if projections[node] && node.Ref == 0 {
 			delete(live, node)
 		}
 	}

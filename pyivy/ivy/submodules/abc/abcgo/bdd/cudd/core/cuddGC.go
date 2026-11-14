@@ -10,15 +10,35 @@ func Cudd_GarbageCollect(dd *DdManager, clearCache bool) int32 {
 		return 0
 	}
 	started := time.Now()
-	defer func() {
-		dd.garbageCollections++
-		dd.gcTime += uint64(time.Since(started).Nanoseconds())
-	}()
 	if !dd.runHooks(CUDD_PRE_GC_HOOK, "DD", nil) {
 		return 0
 	}
 	marked := make(map[*DdNode]bool)
+	incoming := make(map[*DdNode]uint64)
 	stack := make([]*DdNode, 0, len(dd.unique)+len(dd.addUnique)+len(dd.zddUnique))
+	tables := []map[bddUniqueKey]*DdNode{dd.unique, dd.addUnique, dd.zddUnique}
+	for _, table := range tables {
+		for _, n := range table {
+			if !n.childrenReleased {
+				if t := Cudd_Regular(n.T); t != nil {
+					incoming[t]++
+				}
+				if e := Cudd_Regular(n.E); e != nil {
+					incoming[e]++
+				}
+			}
+		}
+	}
+	for _, n := range dd.constants {
+		if !n.childrenReleased {
+			if t := Cudd_Regular(n.T); t != nil {
+				incoming[t]++
+			}
+			if e := Cudd_Regular(n.E); e != nil {
+				incoming[e]++
+			}
+		}
+	}
 	mark := func(n *DdNode) {
 		if n != nil {
 			n = Cudd_Regular(n)
@@ -29,20 +49,26 @@ func Cudd_GarbageCollect(dd *DdManager, clearCache bool) int32 {
 		}
 	}
 	mark(dd.One)
+	mark(dd.LogicZero)
 	mark(dd.Zero)
 	mark(dd.Background)
+	mark(dd.PlusInfinity)
+	mark(dd.MinusInfinity)
 	for _, n := range dd.Vars {
 		mark(n)
 	}
-	for _, table := range []map[bddUniqueKey]*DdNode{dd.unique, dd.addUnique, dd.zddUnique} {
+	for _, n := range dd.Univ {
+		mark(n)
+	}
+	for _, table := range tables {
 		for _, n := range table {
-			if n.Ref != 0 {
+			if n.Ref == ^uint32(0) || uint64(n.Ref) > incoming[n] {
 				mark(n)
 			}
 		}
 	}
 	for _, n := range dd.constants {
-		if n.Ref != 0 {
+		if n.Ref == ^uint32(0) || uint64(n.Ref) > incoming[n] {
 			mark(n)
 		}
 	}
@@ -53,9 +79,14 @@ func Cudd_GarbageCollect(dd *DdManager, clearCache bool) int32 {
 		mark(n.E)
 	}
 	deleted := 0
-	for _, table := range []map[bddUniqueKey]*DdNode{dd.unique, dd.addUnique, dd.zddUnique} {
+	for _, table := range tables {
 		for key, n := range table {
 			if !marked[n] {
+				if !n.childrenReleased {
+					n.childrenReleased = true
+					Cudd_RecursiveDeref(dd, n.T)
+					Cudd_RecursiveDeref(dd, n.E)
+				}
 				delete(table, key)
 				deleted++
 			}
@@ -63,15 +94,43 @@ func Cudd_GarbageCollect(dd *DdManager, clearCache bool) int32 {
 	}
 	for key, n := range dd.constants {
 		if !marked[n] {
+			if !n.childrenReleased {
+				n.childrenReleased = true
+				Cudd_RecursiveDeref(dd, n.T)
+				Cudd_RecursiveDeref(dd, n.E)
+			}
 			delete(dd.constants, key)
 			deleted++
 		}
 	}
-	if clearCache {
-		clear(dd.cache)
-		clear(dd.computed)
-		clear(dd.addCache)
+	if deleted == 0 {
+		if !dd.runHooks(CUDD_POST_GC_HOOK, "DD", nil) {
+			return 0
+		}
+		return 0
 	}
-	dd.runHooks(CUDD_POST_GC_HOOK, "DD", nil)
+	dd.garbageCollections++
+	if clearCache {
+		live := func(n *DdNode) bool { return n == nil || marked[Cudd_Regular(n)] }
+		for key, value := range dd.cache {
+			if !live(key.f) || !live(key.g) || !live(key.h) || !live(value) {
+				delete(dd.cache, key)
+			}
+		}
+		for key, value := range dd.addCache {
+			if !live(key.f) || !live(key.g) || !live(key.h) || !live(value) {
+				delete(dd.addCache, key)
+			}
+		}
+		for key, value := range dd.computed {
+			if !live(key.f) || !live(key.g) || !live(key.h) || !live(value) {
+				delete(dd.computed, key)
+			}
+		}
+	}
+	dd.gcTime += uint64(time.Since(started).Nanoseconds())
+	if !dd.runHooks(CUDD_POST_GC_HOOK, "DD", nil) {
+		return 0
+	}
 	return int32(deleted)
 }

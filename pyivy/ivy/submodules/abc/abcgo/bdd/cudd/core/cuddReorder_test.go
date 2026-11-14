@@ -360,10 +360,45 @@ func TestDynamicReorderConstantPinsAndCollection(t *testing.T) {
 			t.Fatal("manager constant pin collected")
 		}
 	}
-	// Four distinct manager constant pins plus the external numeric terminal.
+	// Constants stay in the rebuilt live graph so their handles survive, but
+	// CUDD's sifting key count excludes the constants subtable.
 	roots := dd.liveReorderRoots()
 	heap := reorderBuild(dd, roots, dd.InvPerm)
-	if heap.cost != 5 {
-		t.Fatal("constant heap offset omitted", heap.cost)
+	constants := 0
+	for node := range heap.nodes {
+		if Cudd_IsConstant(node) {
+			constants++
+		}
+	}
+	if heap.cost != 0 || constants != 5 {
+		t.Fatal("constant pins/key count mismatch", heap.cost, constants)
+	}
+}
+
+func TestReorderRootsExcludeNodesReferencedOnlyByParents(t *testing.T) {
+	dd := NewBDDManager(3)
+	child := Cudd_bddAnd(dd, dd.Vars[0], dd.Vars[1])
+	root := Cudd_bddIte(dd, dd.Vars[2], child, dd.One)
+	Cudd_Ref(root)
+	if got := Cudd_ExternalRefCount(dd, child); got != 0 {
+		t.Fatalf("internal child external refs=%d, want 0", got)
+	}
+	roots := dd.liveReorderRoots()
+	for _, candidate := range roots.active {
+		if candidate == Cudd_Regular(child) {
+			t.Fatal("parent-referenced child was treated as an external reorder root")
+		}
+	}
+	Cudd_Ref(child)
+	if got := Cudd_ExternalRefCount(dd, child); got != 1 {
+		t.Fatalf("explicit child external refs=%d, want 1", got)
+	}
+	roots = dd.liveReorderRoots()
+	found := false
+	for _, candidate := range roots.active {
+		found = found || candidate == Cudd_Regular(child)
+	}
+	if !found {
+		t.Fatal("explicitly referenced child was omitted from reorder roots")
 	}
 }

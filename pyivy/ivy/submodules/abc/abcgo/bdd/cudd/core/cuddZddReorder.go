@@ -363,9 +363,8 @@ func zddFixTree(dd *DdManager, node *mtr.MtrNode) {
 // zddHeapSize is the number of live canonical nonterminal ZDD nodes.
 func zddHeapSize(dd *DdManager) int { return len(dd.zddUnique) }
 
-// zddSymmCheck ports cuddZddSymmCheck for adjacent levels. Core Ref stores
-// external roots only, so incoming arcs are counted explicitly when forming
-// the CUDD reference-count equality.
+// zddSymmCheck ports cuddZddSymmCheck for adjacent levels. DdNode.Ref already
+// includes both root references and incoming arcs, as in CUDD's node refcount.
 func zddSymmCheck(dd *DdManager, x, y int) bool {
 	if dd == nil || x < 0 || y != x+1 || y >= dd.ZddSize {
 		return false
@@ -405,16 +404,6 @@ func zddSymmCheck(dd *DdManager, x, y int) bool {
 			continue
 		}
 		totalRefCount += int(f.Ref)
-		for _, parent := range dd.zddUnique {
-			if int(parent.Index) == xIndex {
-				if parent.T == f {
-					totalRefCount++
-				}
-				if parent.E == f {
-					totalRefCount++
-				}
-			}
-		}
 	}
 	return arcCount == totalRefCount && (xSym || xSymPrime)
 }
@@ -622,7 +611,7 @@ func Cudd_zddReduceHeap(dd *DdManager, method Cudd_ReorderingType, minsize int) 
 		dd.reorderingTime += time.Since(started)
 		return result
 	}
-	if method != CUDD_REORDER_RANDOM && method != CUDD_REORDER_RANDOM_PIVOT && method != CUDD_REORDER_SIFT && method != CUDD_REORDER_SIFT_CONVERGE && method != CUDD_REORDER_LINEAR && method != CUDD_REORDER_LINEAR_CONVERGE {
+	if method != CUDD_REORDER_RANDOM && method != CUDD_REORDER_RANDOM_PIVOT && method != CUDD_REORDER_SIFT && method != CUDD_REORDER_SIFT_CONVERGE && method != CUDD_REORDER_SYMM_SIFT && method != CUDD_REORDER_SYMM_SIFT_CONV && method != CUDD_REORDER_LINEAR && method != CUDD_REORDER_LINEAR_CONVERGE {
 		return finish(0)
 	}
 	n := dd.ZddSize
@@ -637,6 +626,12 @@ func Cudd_zddReduceHeap(dd *DdManager, method Cudd_ReorderingType, minsize int) 
 		return finish(0)
 	}
 	if maxVar == 0 || maxSwap == 0 {
+		return finish(1)
+	}
+	if method == CUDD_REORDER_SYMM_SIFT || method == CUDD_REORDER_SYMM_SIFT_CONV {
+		if Cudd_zddTreeSifting(dd, method) == 0 {
+			return finish(0)
+		}
 		return finish(1)
 	}
 	if method == CUDD_REORDER_LINEAR || method == CUDD_REORDER_LINEAR_CONVERGE {

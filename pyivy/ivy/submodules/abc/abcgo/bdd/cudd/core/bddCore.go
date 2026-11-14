@@ -23,6 +23,7 @@ type DdNode struct {
 	manager          *DdManager
 	regular, inverse *DdNode
 	family           uint8
+	childrenReleased bool
 }
 type bddUniqueKey struct {
 	index uint32
@@ -41,6 +42,9 @@ type DdManager struct {
 	initSlots, slotCount              uint32
 	bddTableSlots, zddTableSlots      []uint32
 	tableGrowthFactor                 uint32
+	minDead                           uint32
+	gcFraction                        float64
+	cacheSlack                        int32
 	PermZ, InvPermZ                   []int
 	Univ                              []*DdNode
 	Tree, TreeZ                       *mtr.MtrNode
@@ -57,6 +61,15 @@ type DdManager struct {
 	nextID                            uint64
 	cacheLookups, cacheHits           uint64
 	garbageCollections, gcTime        uint64
+	epsilon                           float64
+	cacheSlots                        uint32
+	ReorderCycle                      int32
+	groupcheck                        Cudd_AggregationType
+	gcEnabled                         int32
+	countDead                         uint32
+	recomb, symmviolation             int32
+	arcviolation, populationSize       int32
+	numberXovers                      int32
 	closed                            bool
 	linearMatrix                      []uint64
 	linearSize                        int
@@ -298,8 +311,11 @@ func NewBDDManager(variables int) *DdManager {
 	if variables < 0 || uint64(variables) >= uint64(bddConstantIndex) {
 		return nil
 	}
-	dd := &DdManager{unique: map[bddUniqueKey]*DdNode{}, cache: map[bddITEKey]*DdNode{}, computed: map[computedKey]*DdNode{}, nextID: 2, reorderMethod: CUDD_REORDER_SIFT, maxGrowth: 1.1, maxGrowthAlt: 1.1, minHit: 30.0 / 70.0, looseUpTo: 5 * CUDD_UNIQUE_SLOTS, maxCache: 2 * CUDD_CACHE_SLOTS, maxCacheHard: 3 * CUDD_CACHE_SLOTS, siftMaxVar: 1000, siftMaxSwap: 2000000, stdout: os.Stdout, stderr: os.Stderr}
+	dd := &DdManager{unique: map[bddUniqueKey]*DdNode{}, cache: map[bddITEKey]*DdNode{}, computed: map[computedKey]*DdNode{}, nextID: 2, epsilon: 1e-12, cacheSlots: CUDD_CACHE_SLOTS, maxLive: ^uint32(0), reorderMethod: CUDD_REORDER_SIFT, maxGrowth: 1.1, maxGrowthAlt: 2.2, minHit: 30.0 / 70.0, looseUpTo: 5 * CUDD_UNIQUE_SLOTS, maxCache: 2 * CUDD_CACHE_SLOTS, maxCacheHard: 3 * CUDD_CACHE_SLOTS, siftMaxVar: 1000, siftMaxSwap: 2000000, stdout: os.Stdout, stderr: os.Stderr}
 	dd.tableGrowthFactor = 1
+	dd.groupcheck = CUDD_GROUP_CHECK7
+	dd.gcEnabled = 1
+	dd.countDead = ^uint32(0)
 	dd.One = &DdNode{Index: bddConstantIndex, Value: 1, ID: 0, manager: dd}
 	dd.LogicZero = &DdNode{Index: bddConstantIndex, Value: 0, ID: 1, manager: dd, regular: dd.One, inverse: dd.One}
 	dd.One.inverse = dd.LogicZero
@@ -406,6 +422,86 @@ func Cudd_ReadNodeCount(dd *DdManager) int {
 	return len(dd.unique) + len(dd.zddUnique) + len(dd.addUnique) + len(dd.constants)
 }
 
+func Cudd_ReadEpsilon(dd *DdManager) float64 {
+	if dd == nil || dd.closed {
+		return 0
+	}
+	return dd.epsilon
+}
+
+func Cudd_SetEpsilon(dd *DdManager, epsilon float64) {
+	if dd != nil && !dd.closed {
+		dd.epsilon = epsilon
+	}
+}
+
+// Cudd_ExternalRefCount subtracts references held by live unique-node edges.
+// Manager internals use this to identify roots separately from child links.
+func Cudd_ExternalRefCount(dd *DdManager, node *DdNode) uint32 {
+	if dd == nil || dd.closed || node == nil || node.manager != dd {
+		return 0
+	}
+	node = Cudd_Regular(node)
+	if node.Ref == ^uint32(0) {
+		return node.Ref
+	}
+	var incoming uint64
+	for _, table := range []map[bddUniqueKey]*DdNode{dd.unique, dd.addUnique, dd.zddUnique} {
+		for _, parent := range table {
+			if parent.childrenReleased {
+				continue
+			}
+			if Cudd_Regular(parent.T) == node {
+				incoming++
+			}
+			if Cudd_Regular(parent.E) == node {
+				incoming++
+			}
+		}
+	}
+	if incoming >= uint64(node.Ref) {
+		return 0
+	}
+	return node.Ref - uint32(incoming)
+}
+
+// Cudd_CheckZeroRef reports canonical nodes that still have references from
+// outside manager-owned edges and terminals. This is the Go graph equivalent
+// of the CUDD leak check used by testcudd after it releases its temporary roots.
+func Cudd_CheckZeroRef(dd *DdManager) int32 {
+	if dd == nil || dd.closed {
+		return 0
+	}
+	seen := make(map[*DdNode]struct{})
+	count := int32(0)
+	check := func(table map[bddUniqueKey]*DdNode) {
+		for _, node := range table {
+			node = Cudd_Regular(node)
+			if _, ok := seen[node]; ok {
+				continue
+			}
+			seen[node] = struct{}{}
+			if Cudd_ExternalRefCount(dd, node) != 0 {
+				count++
+			}
+		}
+	}
+	check(dd.unique)
+	check(dd.addUnique)
+	check(dd.zddUnique)
+	for _, node := range dd.constants {
+		node = Cudd_Regular(node)
+		if _, ok := seen[node]; ok {
+			continue
+		}
+		seen[node] = struct{}{}
+		if Cudd_ExternalRefCount(dd, node) != 0 {
+			count++
+		}
+	}
+	return count
+}
+
 // Cudd_InitTable creates unique-table state before variables are added. Go
 // maps replace the C subtables and slabs; capacities and slot thresholds are
 // retained because they affect public statistics and later growth policy.
@@ -435,6 +531,8 @@ func Cudd_InitTable(numVars, numVarsZ, numSlots, looseUpTo uint32) *DdManager {
 	}
 	dd.tableBDDSize, dd.tableZddSize = numVars, numVarsZ
 	dd.initSlots, dd.slotCount = slots, uint32(totalSlots)
+	dd.gcFraction = DD_GC_FRAC_HI
+	dd.minDead = uint32(dd.gcFraction * float64(dd.slotCount))
 	dd.bddTableSlots = make([]uint32, numVars)
 	dd.zddTableSlots = make([]uint32, numVarsZ)
 	for i := range dd.bddTableSlots {
@@ -454,7 +552,7 @@ func Cudd_AllocNode(dd *DdManager) *DdNode {
 	if dd == nil || dd.closed {
 		return nil
 	}
-	if dd.maxLive != 0 && uint32(Cudd_ReadNodeCount(dd)) >= dd.maxLive {
+	if dd.maxLive != 0 && uint32(Cudd_ReadNodeCount(dd)) > dd.maxLive {
 		dd.errorCode = CUDD_TOO_MANY_NODES
 		return nil
 	}
@@ -491,7 +589,11 @@ func (dd *DdManager) node(index uint32, t, e *DdNode) *DdNode {
 		n = &DdNode{Index: index, T: t, E: e, ID: dd.nextID, manager: dd}
 		n.inverse = &DdNode{Index: index, ID: dd.nextID + 1, manager: dd, regular: n, inverse: n}
 		dd.nextID += 2
+		Cudd_Ref(t)
+		Cudd_Ref(e)
 		dd.unique[key] = n
+	} else {
+		reclaimNode(n)
 	}
 	return Cudd_NotCond(n, complemented)
 }
@@ -588,9 +690,21 @@ func (dd *DdManager) iteChecked(f, g, h *DdNode, check func() bool) *DdNode {
 
 func Cudd_Ref(n *DdNode) {
 	n = Cudd_Regular(n)
-	if n != nil && n.Ref < math.MaxUint32 {
-		n.Ref++
+	if n != nil {
+		reclaimNode(n)
+		if n.Ref < math.MaxUint32 {
+			n.Ref++
+		}
 	}
+}
+
+func reclaimNode(n *DdNode) {
+	if n == nil || !n.childrenReleased {
+		return
+	}
+	n.childrenReleased = false
+	Cudd_Ref(n.T)
+	Cudd_Ref(n.E)
 }
 func Cudd_Deref(n *DdNode) {
 	n = Cudd_Regular(n)
@@ -599,8 +713,18 @@ func Cudd_Deref(n *DdNode) {
 	}
 }
 func Cudd_RecursiveDeref(dd *DdManager, n *DdNode) {
-	if dd != nil && !dd.closed && n != nil && n.manager == dd {
-		Cudd_Deref(n)
+	if dd == nil || dd.closed || n == nil || n.manager != dd {
+		return
+	}
+	n = Cudd_Regular(n)
+	if n.Ref == 0 || n.Ref == math.MaxUint32 {
+		return
+	}
+	n.Ref--
+	if n.Ref == 0 && !n.childrenReleased {
+		n.childrenReleased = true
+		Cudd_RecursiveDeref(dd, n.T)
+		Cudd_RecursiveDeref(dd, n.E)
 	}
 }
 
@@ -889,6 +1013,12 @@ func (dd *DdManager) constant(value float64) *DdNode {
 	if n := dd.constants[key]; n != nil {
 		return n
 	}
+	for _, n := range dd.constants {
+		if n.Value == value || math.Abs(n.Value-value) < dd.epsilon {
+			reclaimNode(n)
+			return n
+		}
+	}
 	n := &DdNode{Index: bddConstantIndex, Value: value, ID: dd.nextID, manager: dd}
 	n.inverse = &DdNode{Index: bddConstantIndex, ID: dd.nextID + 1, manager: dd, regular: n, inverse: n}
 	dd.nextID += 2
@@ -901,11 +1031,14 @@ func (dd *DdManager) zddNode(index uint32, t, e *DdNode) *DdNode {
 	}
 	key := bddUniqueKey{index, t, e}
 	if n := dd.zddUnique[key]; n != nil {
+		reclaimNode(n)
 		return n
 	}
 	n := &DdNode{Index: index, T: t, E: e, ID: dd.nextID, manager: dd, family: 1}
 	n.inverse = &DdNode{Index: index, ID: dd.nextID + 1, manager: dd, regular: n, inverse: n}
 	dd.nextID += 2
+	Cudd_Ref(t)
+	Cudd_Ref(e)
 	dd.zddUnique[key] = n
 	return n
 }

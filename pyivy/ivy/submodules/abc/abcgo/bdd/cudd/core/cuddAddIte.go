@@ -91,10 +91,13 @@ func (dd *DdManager) addNode(index uint32, t, e *DdNode) *DdNode {
 	}
 	key := bddUniqueKey{index, t, e}
 	if n := dd.addUnique[key]; n != nil {
+		reclaimNode(n)
 		return n
 	}
 	n := &DdNode{Index: index, T: t, E: e, ID: dd.nextID, manager: dd, family: 2}
 	dd.nextID += 2
+	Cudd_Ref(t)
+	Cudd_Ref(e)
 	dd.addUnique[key] = n
 	return n
 }

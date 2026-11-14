@@ -13,6 +13,13 @@ func Cudd_Output(dd *DdManager) io.Writer {
 	}
 	return dd.stdout
 }
+
+func Cudd_ErrorOutput(dd *DdManager) io.Writer {
+	if dd == nil || dd.stderr == nil {
+		return os.Stderr
+	}
+	return dd.stderr
+}
 func Cudd_SetOutput(dd *DdManager, stdout, stderr io.Writer) {
 	if dd == nil || dd.closed {
 		return
@@ -113,7 +120,7 @@ func Cudd_ReadCacheSlots(dd *DdManager) uint32 {
 	if dd == nil || dd.closed {
 		return 0
 	}
-	return CUDD_CACHE_SLOTS
+	return dd.cacheSlots
 }
 func Cudd_ReadCacheUsedSlots(dd *DdManager) float64 {
 	if dd == nil || dd.closed {
@@ -270,6 +277,138 @@ func Cudd_ReadNextReordering(dd *DdManager) uint32 {
 func Cudd_SetNextReordering(dd *DdManager, next uint32) {
 	if dd != nil && !dd.closed {
 		dd.nextDyn = next
+	}
+}
+
+func Cudd_ReadReorderingCycle(dd *DdManager) int32 {
+	if dd == nil || dd.closed {
+		return 0
+	}
+	return dd.ReorderCycle
+}
+
+func Cudd_SetReorderingCycle(dd *DdManager, cycle int32) {
+	if dd != nil && !dd.closed {
+		dd.ReorderCycle = cycle
+	}
+}
+
+func Cudd_ReadGroupcheck(dd *DdManager) Cudd_AggregationType {
+	if dd == nil || dd.closed {
+		return CUDD_GROUP_CHECK7
+	}
+	return dd.groupcheck
+}
+
+func Cudd_SetGroupcheck(dd *DdManager, check Cudd_AggregationType) {
+	if dd != nil && !dd.closed {
+		dd.groupcheck = check
+	}
+}
+
+func Cudd_GarbageCollectionEnabled(dd *DdManager) int32 {
+	if dd == nil || dd.closed {
+		return 0
+	}
+	return dd.gcEnabled
+}
+
+func Cudd_EnableGarbageCollection(dd *DdManager) {
+	if dd != nil && !dd.closed {
+		dd.gcEnabled = 1
+	}
+}
+
+func Cudd_DisableGarbageCollection(dd *DdManager) {
+	if dd != nil && !dd.closed {
+		dd.gcEnabled = 0
+	}
+}
+
+func Cudd_DeadAreCounted(dd *DdManager) int32 {
+	if dd == nil || dd.closed {
+		return 0
+	}
+	if dd.countDead == 0 {
+		return 1
+	}
+	return 0
+}
+
+func Cudd_TurnOnCountDead(dd *DdManager) {
+	if dd != nil && !dd.closed {
+		dd.countDead = 0
+	}
+}
+
+func Cudd_TurnOffCountDead(dd *DdManager) {
+	if dd != nil && !dd.closed {
+		dd.countDead = ^uint32(0)
+	}
+}
+
+func Cudd_ReadRecomb(dd *DdManager) int32 {
+	if dd == nil || dd.closed {
+		return 0
+	}
+	return dd.recomb
+}
+
+func Cudd_SetRecomb(dd *DdManager, recomb int32) {
+	if dd != nil && !dd.closed {
+		dd.recomb = recomb
+	}
+}
+
+func Cudd_ReadSymmviolation(dd *DdManager) int32 {
+	if dd == nil || dd.closed {
+		return 0
+	}
+	return dd.symmviolation
+}
+
+func Cudd_SetSymmviolation(dd *DdManager, value int32) {
+	if dd != nil && !dd.closed {
+		dd.symmviolation = value
+	}
+}
+
+func Cudd_ReadArcviolation(dd *DdManager) int32 {
+	if dd == nil || dd.closed {
+		return 0
+	}
+	return dd.arcviolation
+}
+
+func Cudd_SetArcviolation(dd *DdManager, value int32) {
+	if dd != nil && !dd.closed {
+		dd.arcviolation = value
+	}
+}
+
+func Cudd_ReadPopulationSize(dd *DdManager) int32 {
+	if dd == nil || dd.closed {
+		return 0
+	}
+	return dd.populationSize
+}
+
+func Cudd_SetPopulationSize(dd *DdManager, size int32) {
+	if dd != nil && !dd.closed {
+		dd.populationSize = size
+	}
+}
+
+func Cudd_ReadNumberXovers(dd *DdManager) int32 {
+	if dd == nil || dd.closed {
+		return 0
+	}
+	return dd.numberXovers
+}
+
+func Cudd_SetNumberXovers(dd *DdManager, count int32) {
+	if dd != nil && !dd.closed {
+		dd.numberXovers = count
 	}
 }
 func Cudd_ReadSwapSteps(dd *DdManager) float64 { return -1 }

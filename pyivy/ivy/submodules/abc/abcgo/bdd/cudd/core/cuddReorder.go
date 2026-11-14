@@ -31,13 +31,13 @@ func (dd *DdManager) liveReorderRoots() reorderRoots {
 	roots := reorderRoots{pins: append([]*DdNode(nil), dd.Vars...)}
 	for _, table := range []map[bddUniqueKey]*DdNode{dd.unique, dd.addUnique} {
 		for _, node := range table {
-			if node.Ref != 0 {
+			if Cudd_ExternalRefCount(dd, node) != 0 {
 				roots.active = append(roots.active, node)
 			}
 		}
 	}
 	for _, node := range dd.constants {
-		if node.Ref != 0 {
+		if Cudd_ExternalRefCount(dd, node) != 0 {
 			roots.active = append(roots.active, node)
 		}
 	}
@@ -78,7 +78,8 @@ func reorderBuild(dd *DdManager, roots reorderRoots, order []int) *reorderHeap {
 	for _, root := range roots.active {
 		fresh := transfer(root)
 		h.active = append(h.active, fresh)
-		h.external[fresh] = root.Ref
+		external := Cudd_ExternalRefCount(dd, root)
+		h.external[fresh] += external
 	}
 	for _, pin := range roots.pins {
 		h.pins = append(h.pins, transfer(pin))
@@ -106,7 +107,6 @@ func reorderBuild(dd *DdManager, roots reorderRoots, order []int) *reorderHeap {
 			collect(transfer(constant), h.nodes)
 		}
 	}
-	h.cost = len(h.nodes)
 	for _, pin := range h.pins {
 		collect(pin, h.nodes)
 	}
@@ -114,11 +114,28 @@ func reorderBuild(dd *DdManager, roots reorderRoots, order []int) *reorderHeap {
 		if Cudd_IsConstant(node) {
 			continue
 		}
-		h.levels[scratch.Perm[node.Index]]++
 		h.incoming[Cudd_Regular(node.T)]++
 		h.incoming[Cudd_Regular(node.E)]++
 	}
+	for node := range h.nodes {
+		if Cudd_IsConstant(node) {
+			continue
+		}
+		h.levels[scratch.Perm[node.Index]]++
+		if !reorderIsIsolatedProjection(h, node) {
+			h.cost++
+		}
+	}
 	return h
+}
+
+// CUDD's sifting objective is keys-isolated: constants are outside the BDD
+// unique-table key count, and a projection with no external or parent refs is
+// counted as an isolated key and removed from the objective.
+func reorderIsIsolatedProjection(h *reorderHeap, node *DdNode) bool {
+	index := int(node.Index)
+	return index >= 0 && index < len(h.dd.Vars) && h.dd.Vars[index] == node &&
+		h.external[node] == 0 && h.incoming[node] == 0
 }
 func reorderValidOrder(order []int, n int) bool {
 	if len(order) != n {
