@@ -55,6 +55,7 @@ func Fraig_ManSetInputNames(p *Fraig_Man_t, names []string)  { p.ppInputNames = 
 
 func Fraig_NodeReadData0(p *Fraig_Node_t) *Fraig_Node_t { return p.pData0 }
 func Fraig_NodeReadData1(p *Fraig_Node_t) *Fraig_Node_t { return p.pData1 }
+func Fraig_NodeReadData1Copy(p *Fraig_Node_t) any       { return p.pData1Copy }
 func Fraig_NodeReadNum(p *Fraig_Node_t) int32           { return p.Num }
 func Fraig_NodeReadOne(p *Fraig_Node_t) *Fraig_Node_t {
 	if Fraig_IsComplement(p) {
@@ -78,6 +79,7 @@ func Fraig_NodeReadPatternsRandom(p *Fraig_Node_t) []uint32  { return p.puSimR }
 func Fraig_NodeReadPatternsDynamic(p *Fraig_Node_t) []uint32 { return p.puSimD }
 func Fraig_NodeSetData0(p *Fraig_Node_t, data *Fraig_Node_t) { p.pData0 = data }
 func Fraig_NodeSetData1(p *Fraig_Node_t, data *Fraig_Node_t) { p.pData1 = data }
+func Fraig_NodeSetData1Copy(p *Fraig_Node_t, data any)       { p.pData1Copy = data }
 
 func fraigBool(value bool) int32 {
 	if value {

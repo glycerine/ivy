@@ -270,6 +270,9 @@ type Fraig_NodeStruct_t_ struct {
 	// misc information
 	pData0 *Fraig_Node_t // temporary storage for the corresponding network node
 	pData1 *Fraig_Node_t // temporary storage for the corresponding network node
+	// pData1Copy carries the source C pData1 type-pun for cross-package
+	// reconstruction payloads without weakening the FRAIG node pointer API.
+	pData1Copy any
 
 	// representation of node's fanouts
 	pFanPivot  *Fraig_Node_t // the first fanout of this node

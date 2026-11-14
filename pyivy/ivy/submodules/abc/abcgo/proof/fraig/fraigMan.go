@@ -244,5 +244,11 @@ func Fraig_ManAddClause(p *Fraig_Man_t, nodes []*Fraig_Node_t, n int32) {
 // Prove_ParamsSetItersMax applies the C parameter field nItersMax.
 func Prove_ParamsSetItersMax(p *Prove_Params_t, value int32) { p.nItersMax = value }
 
+// Prove_ParamsSetMiteringLimitLast applies the C parameter field
+// nMiteringLimitLast to callers outside the fraig package.
+func Prove_ParamsSetMiteringLimitLast(p *Prove_Params_t, value int32) {
+	p.nMiteringLimitLast = value
+}
+
 // Prove_ParamsSetVerbose applies the C parameter field fVerbose.
 func Prove_ParamsSetVerbose(p *Prove_Params_t, value int32) { p.fVerbose = value }
