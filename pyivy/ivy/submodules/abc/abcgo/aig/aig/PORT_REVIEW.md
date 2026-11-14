@@ -81,7 +81,12 @@ implemented and source-audited: initialization uses the original two-word AIG
 random stream, and 1,166 compiled-C operations match words, cares, signatures,
 insertion results, candidates, counters and final statistics. The source-named
 care diagnostic is disabled as in C; explicit WriteCare remains available.
-The Just experimental driver still needs its sequential source review.
+The sequential justification review now matches 4,310 compiled-C queries,
+including support order and every object's scratch state, and the complete
+packing/justification experiment. It restored transparent CO handling and failed
+attempt support, shared traversal rollover, and validated witness CI indices.
+The experimental comparison excludes elapsed time and includes successful
+targets, an impossible cone, both histograms and final scratch cleanup.
 
 ## Order, timing and visualization reviews
 

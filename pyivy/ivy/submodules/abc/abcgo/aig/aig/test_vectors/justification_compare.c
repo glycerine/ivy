@@ -1,4 +1,10 @@
 #include "aig/aig/aigJust.c"
+#include "aig/aig/aigPack.c"
+
+unsigned enable_dbg_outs = 1;
+int Abc_FrameIsBridgeMode(void) { return 0; }
+int Gia_ManToBridgeText(FILE *f, int n, unsigned char *s) { abort(); }
+char *vnsprintf(const char *f, va_list a) { abort(); }
 
 int main(void)
 {
@@ -26,7 +32,20 @@ int main(void)
             o[i].Type = AIG_OBJ_CO; o[i].CioId = i-(1+nci+nnodes);
             o[i].pFanin0 = Aig_NotCond(o+a/2, a&1); Vec_PtrPush(g.vCos, o+i);
         }
-        for (i = 0; i < total; i++) { o[i].Id=i; g.nObjs[o[i].Type]++; Vec_PtrPush(g.vObjs,o+i); }
+        for (i = 0; i < total; i++)
+        {
+            o[i].Id=i; g.nObjs[o[i].Type]++; Vec_PtrPush(g.vObjs,o+i);
+            if (o[i].Type == AIG_OBJ_AND) o[i].fPhase = Aig_ObjPhaseReal(o[i].pFanin0) & Aig_ObjPhaseReal(o[i].pFanin1);
+            if (o[i].Type == AIG_OBJ_CO) o[i].fPhase = Aig_ObjPhaseReal(o[i].pFanin0);
+        }
+        if (nqueries < 0)
+        {
+            Aig_ManRandom(1);
+            Aig_ManJustExperiment(&g);
+            printf("scratch %d:", g.nTravIds);
+            for (i=0; i<total; i++) printf(" %d/%d", Aig_ObjGetTerValue(o+i), o[i].TravId);
+            puts("");
+        }
         support = Vec_IntAlloc(nci);
         for (j = 0; j < nqueries; j++)
         {

@@ -212,3 +212,67 @@ func TestJustificationAgainstCompiledSource(t *testing.T) {
 	}
 	t.Logf("compared %d justification/ternary queries", len(labels))
 }
+
+func TestJustificationExperimentAgainstCompiledSource(t *testing.T) {
+	g := NewGraph()
+	inputs := make([]Edge, 12)
+	for i := range inputs {
+		inputs[i] = g.NewInput()
+	}
+	positive := g.AND(inputs[0], inputs[1])
+	negative := g.AND(inputs[0].Not(), inputs[1].Not())
+	for _, input := range inputs[2:] {
+		positive = g.AND(positive, input)
+		negative = g.AND(negative, input.Not())
+	}
+	impossible := g.AND(g.AND(inputs[0], inputs[1]), g.AND(inputs[0].Not(), inputs[2]))
+	beforeOutputs := len(g.nodes)
+	g.AddOutput(positive)
+	g.AddOutput(negative)
+	g.AddOutput(impossible)
+	Aig_ManSetCioIds(g)
+	var input strings.Builder
+	fmt.Fprintf(&input, "%d %d %d -1\n", len(g.inputs), beforeOutputs-1-len(g.inputs), len(g.outputs))
+	for id := 1 + len(g.inputs); id < beforeOutputs; id++ {
+		fmt.Fprintf(&input, "%d %d\n", g.nodes[id].Fanins[0], g.nodes[id].Fanins[1])
+	}
+	for _, output := range g.outputs {
+		fmt.Fprintf(&input, "%d ", g.outputDriver(output))
+	}
+	input.WriteByte('\n')
+	Aig_ManRandom(1)
+	defer Aig_ManRandom(1)
+	var want strings.Builder
+	want.WriteString(captureAigOutput(t, func() { Aig_ManJustExperiment(g) }))
+	fmt.Fprintf(&want, "scratch %d:", g.travID)
+	for id, n := range g.nodes {
+		if n.MarkA || n.MarkB {
+			t.Fatalf("experiment retained scratch flags on object %d", id)
+		}
+		fmt.Fprintf(&want, " %d/%d", Aig_ObjGetTerValue(g, Edge(id)<<1), n.TravID)
+	}
+	want.WriteByte('\n')
+	got := runAigSourceFixtureInput(t, "justification_compare.c", input.String(), "aigUtil.c")
+	normalizeTiming := func(output string) string {
+		lines := strings.Split(output, "\n")
+		for i, line := range lines {
+			if strings.HasPrefix(line, "PO =") {
+				parts := strings.SplitN(line, " T", 2)
+				if len(parts) != 2 {
+					t.Fatalf("experiment summary lacks elapsed time: %q", line)
+				}
+				lines[i] = parts[0]
+			}
+		}
+		return strings.Join(lines, "\n")
+	}
+	if normalizeTiming(got) != normalizeTiming(want.String()) {
+		t.Fatalf("C:\n%sGo:\n%s", got, want.String())
+	}
+	if !strings.Contains(want.String(), "C1f =     1.") {
+		t.Fatal("experiment did not exercise the impossible cone")
+	}
+	if err := g.Check(); err != nil {
+		t.Fatalf("experiment damaged borrowed graph: %v", err)
+	}
+}
