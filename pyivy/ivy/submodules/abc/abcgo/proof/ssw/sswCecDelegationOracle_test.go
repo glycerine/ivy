@@ -19,7 +19,7 @@ func TestCecDelegationPreservesReachableTraces(t *testing.T) {
 		Ssw_ManSetDefaultParams(&pars)
 		pars.fScorrGia = 1
 		if latch {
-			pars.fLatchCorrOpt = 1
+			pars.FLatchCorrOpt = 1
 		}
 		reduced := Ssw_SignalCorrespondence(g, &pars)
 		if reduced == nil {

@@ -15,7 +15,7 @@ func TestStopWhenGoneRetainsSourceIterationCount(t *testing.T) {
 
 	var pars Ssw_Pars_t
 	Ssw_ManSetDefaultParams(&pars)
-	pars.fStopWhenGone = 1
+	pars.FStopWhenGone = 1
 	pars.nIters = 37
 	result := Ssw_SignalCorrespondence(g, &pars)
 	if result == nil {

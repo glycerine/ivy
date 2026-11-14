@@ -18,7 +18,7 @@ func TestSatEquivalenceQueries(t *testing.T) {
 		}
 		sat := Ssw_SatStart(flip)
 		sat.pAig = g
-		p := &Ssw_Man_t{pPars: &Ssw_Pars_t{fPolarFlip: flip}, pFrames: g, pMSat: sat, iOutputLit: -1}
+		p := &Ssw_Man_t{pPars: &Ssw_Pars_t{FPolarFlip: flip}, pFrames: g, pMSat: sat, iOutputLit: -1}
 		if got := Ssw_NodesAreEquiv(p, x, same); got != 1 {
 			t.Fatalf("flip %d: equal result %d", flip, got)
 		}
@@ -32,7 +32,7 @@ func TestSatEquivalenceConstraint(t *testing.T) {
 	a, b := g.NewInput(), g.NewInput()
 	sat := Ssw_SatStart(0)
 	sat.pAig = g
-	p := &Ssw_Man_t{pPars: &Ssw_Pars_t{fConstrs: 1}, pFrames: g, pMSat: sat, iOutputLit: -1}
+	p := &Ssw_Man_t{pPars: &Ssw_Pars_t{FConstrs: 1}, pFrames: g, pMSat: sat, iOutputLit: -1}
 	Ssw_NodesAreConstrained(p, a, b.Not())
 	if sat.pSat.Solve(sswLit(sat, a, false), sswLit(sat, b, false)) != bsat.Unsatisfiable {
 		t.Fatal("constraint permits equal inputs")
@@ -56,7 +56,7 @@ func TestOutputConstraintUsesSourceFaninPolarity(t *testing.T) {
 				out := g.AddOutput(driver)
 				sat := Ssw_SatStart(flip)
 				sat.pAig = g
-				p := &Ssw_Man_t{pPars: &Ssw_Pars_t{fPolarFlip: flip}, pFrames: g, pMSat: sat, iOutputLit: -1}
+				p := &Ssw_Man_t{pPars: &Ssw_Pars_t{FPolarFlip: flip}, pFrames: g, pMSat: sat, iOutputLit: -1}
 				if Ssw_NodeIsConstrained(p, out) != 1 {
 					t.Fatal("constraint rejected")
 				}

@@ -170,7 +170,7 @@ func Ssw_ManSweepLatch(p *Ssw_Man_t) int32 {
 		if p.nPatterns == 32 {
 			Ssw_ManSweepResimulate(p)
 		}
-		if p.pPars.nSatVarMax != 0 && p.pMSat.nSatVars > p.pPars.nSatVarMax && p.nRecycleCalls > p.pPars.nRecycleCalls {
+		if p.pPars.NSatVarMax != 0 && p.pMSat.nSatVars > p.pPars.NSatVarMax && p.nRecycleCalls > p.pPars.nRecycleCalls {
 			p.nVarsMax = max(p.nVarsMax, p.pMSat.nSatVars)
 			p.nCallsMax = max(p.nCallsMax, p.pMSat.nSolverCalls)
 			Ssw_SatStop(p.pMSat)

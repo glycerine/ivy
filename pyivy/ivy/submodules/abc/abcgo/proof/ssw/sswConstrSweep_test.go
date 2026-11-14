@@ -12,7 +12,7 @@ func sswEmptyConstraintManager() *Ssw_Man_t {
 	g.AddOutput(lo)
 	g.AddOutput(pi)
 	aig.Aig_ManSetRegNum(g, 1)
-	pars := &Ssw_Pars_t{nFramesK: 1, fConstrs: 1}
+	pars := &Ssw_Pars_t{NFramesK: 1, FConstrs: 1}
 	p := Ssw_ManCreate(g, pars)
 	p.ppClasses = Ssw_ClassesStart(g)
 	p.pMSat = Ssw_SatStart(0)
@@ -41,7 +41,7 @@ func TestConstrainedSweepWithInputConstraint(t *testing.T) {
 		g.AddOutput(lo)
 		aig.Aig_ManSetRegNum(g, 1)
 		aig.Aig_ManSetConstrNum(g, 1)
-		p := Ssw_ManCreate(g, &Ssw_Pars_t{nFramesK: 1, fConstrs: 1})
+		p := Ssw_ManCreate(g, &Ssw_Pars_t{NFramesK: 1, FConstrs: 1})
 		p.ppClasses = Ssw_ClassesStart(g)
 		p.pMSat = Ssw_SatStart(0)
 		p.vInits = vec.Vec_IntAlloc(2)

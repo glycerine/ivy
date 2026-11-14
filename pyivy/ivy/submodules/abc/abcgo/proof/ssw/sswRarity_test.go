@@ -22,7 +22,7 @@ func TestRarityFilterReturnsInvalidWitnessFromNonzeroPrefix(t *testing.T) {
 	if saig.Saig_ManVerifyCex(g, prefix) == 0 {
 		t.Fatal("expected a valid prefix reaching r = 1")
 	}
-	pars := &Ssw_RarPars_t{nWords: 1, nFrames: 1, nBinSize: 1, nRounds: 1, fMiter: 1, pCex: prefix}
+	pars := &Ssw_RarPars_t{NWords: 1, NFrames: 1, NBinSize: 1, NRounds: 1, FMiter: 1, PCex: prefix}
 	status := Ssw_RarSignalFilter(g, pars)
 	witness := g.SequentialCounterexample()
 	if status != 0 || witness == nil || saig.Saig_ManVerifyCex(g, witness) != 0 {
@@ -41,7 +41,7 @@ func TestSswRarityTransposeAndInitialization(t *testing.T) {
 		g.AddOutput(g.Const0())
 	}
 	aig.Aig_ManSetRegNum(g, 70)
-	pars := &Ssw_RarPars_t{nWords: 2, nFrames: 1, nBinSize: 8}
+	pars := &Ssw_RarPars_t{NWords: 2, NFrames: 1, NBinSize: 8}
 	p := Ssw_RarManStart(g, pars)
 	defer Ssw_RarManStop(p)
 	init := vec.Vec_IntAlloc(140)
@@ -85,7 +85,7 @@ func TestSswRarityBinCountersAndObjectComparison(t *testing.T) {
 	g.AddOutput(a)
 	g.AddOutput(b)
 	aig.Aig_ManSetRegNum(g, 1)
-	p := Ssw_RarManStart(g, &Ssw_RarPars_t{nWords: 1, nFrames: 1, nBinSize: 1})
+	p := Ssw_RarManStart(g, &Ssw_RarPars_t{NWords: 1, NFrames: 1, NBinSize: 1})
 	defer Ssw_RarManStop(p)
 	Ssw_RarAddToBinPat(p, 0, 1)
 	Ssw_RarAddToBinPat(p, 0, 1)
@@ -105,7 +105,7 @@ func TestSswRarityFindsSequentialCounterexample(t *testing.T) {
 	g.AddOutput(lo)
 	g.AddOutput(pi)
 	aig.Aig_ManSetRegNum(g, 1)
-	pars := &Ssw_RarPars_t{nWords: 1, nFrames: 2, nBinSize: 8, nRounds: 1}
+	pars := &Ssw_RarPars_t{NWords: 1, NFrames: 2, NBinSize: 8, NRounds: 1}
 	if got := Ssw_RarSimulate(g, pars); got != 0 {
 		t.Fatalf("result=%d", got)
 	}
@@ -125,7 +125,7 @@ func TestSswRarityTransferPreservesRegisterPatterns(t *testing.T) {
 		g.AddOutput(g.Const0())
 	}
 	aig.Aig_ManSetRegNum(g, 8)
-	p := Ssw_RarManStart(g, &Ssw_RarPars_t{nWords: 1, nFrames: 1, nBinSize: 8})
+	p := Ssw_RarManStart(g, &Ssw_RarPars_t{NWords: 1, NFrames: 1, NBinSize: 8})
 	defer Ssw_RarManStop(p)
 	for i, li := range g.Outputs()[1:] {
 		Ssw_RarObjSim(p, int32(li.NodeID()))[0] = uint64(i + 1)
@@ -151,7 +151,7 @@ func TestRarityHashRetainsSourceRawWordBehavior(t *testing.T) {
 	g.AddOutput(b)
 	aig.Aig_ManSetRegNum(g, 1)
 	aig.Aig_ObjSetPhase(g, b, true)
-	p := Ssw_RarManStart(g, &Ssw_RarPars_t{nWords: 1, nFrames: 1, nBinSize: 1})
+	p := Ssw_RarManStart(g, &Ssw_RarPars_t{NWords: 1, NFrames: 1, NBinSize: 1})
 	defer Ssw_RarManStop(p)
 	Ssw_RarObjSim(p, int32(a.NodeID()))[0] = 0x0123456789abcdef
 	Ssw_RarObjSim(p, int32(b.NodeID()))[0] = ^uint64(0x0123456789abcdef)
@@ -170,7 +170,7 @@ func TestRarityRetainsSourceInvalidCounterexampleBehavior(t *testing.T) {
 	g.AddOutput(g.Const0())
 	g.AddOutput(pi)
 	aig.Aig_ManSetRegNum(g, 1)
-	p := Ssw_RarManStart(g, &Ssw_RarPars_t{nWords: 1, nFrames: 1, nBinSize: 1})
+	p := Ssw_RarManStart(g, &Ssw_RarPars_t{NWords: 1, NFrames: 1, NBinSize: 1})
 	defer Ssw_RarManStop(p)
 	if cex := Ssw_RarDeriveCex(p, 0, 0, 0, 0); cex == nil || saig.Saig_ManVerifyCex(g, cex) != 0 {
 		t.Fatal("source returns the invalid counterexample after warning")

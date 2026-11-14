@@ -13,7 +13,7 @@ func TestRarityGapDeadlineStartsAfterFirstSolvedOutput(t *testing.T) {
 	g.AddOutput(state)
 	g.AddOutput(input)
 	aig.Aig_ManSetRegNum(g, 1)
-	pars := &Ssw_RarPars_t{nWords: 1, nFrames: 2, nBinSize: 1, nRounds: 1, TimeOutGap: -1}
+	pars := &Ssw_RarPars_t{NWords: 1, NFrames: 2, NBinSize: 1, NRounds: 1, TimeOutGap: -1}
 	if got := Ssw_RarSimulate(g, pars); got != 0 {
 		t.Fatalf("result %d; gap before any solved output should not stop simulation", got)
 	}

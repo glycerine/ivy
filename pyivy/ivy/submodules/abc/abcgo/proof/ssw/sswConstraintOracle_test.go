@@ -16,7 +16,7 @@ func TestConstrainedEquivalenceIsNotUnconditional(t *testing.T) {
 	sat := Ssw_SatStart(0)
 	defer Ssw_SatStop(sat)
 	sat.pAig = frames
-	p := &Ssw_Man_t{pAig: source, pFrames: frames, pPars: &Ssw_Pars_t{fConstrs: 1, nBTLimit: 1000}, pMSat: sat, iOutputLit: -1, nFrames: 1, pNodeToFrames: make([]aig.Edge, len(source.Nodes()))}
+	p := &Ssw_Man_t{pAig: source, pFrames: frames, pPars: &Ssw_Pars_t{FConstrs: 1, NBTLimit: 1000}, pMSat: sat, iOutputLit: -1, nFrames: 1, pNodeToFrames: make([]aig.Edge, len(source.Nodes()))}
 	for i := range p.pNodeToFrames {
 		p.pNodeToFrames[i] = aig.InvalidEdge
 	}

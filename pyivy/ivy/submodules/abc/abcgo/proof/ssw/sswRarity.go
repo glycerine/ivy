@@ -60,16 +60,16 @@ type Ssw_RarMan_t struct {
 }
 
 func Ssw_RarGetBinPat(p *Ssw_RarMan_t, bin, pat int32) int32 {
-	if bin < 0 || bin >= p.nGroups || pat < 0 || pat >= 1<<p.pPars.nBinSize {
+	if bin < 0 || bin >= p.nGroups || pat < 0 || pat >= 1<<p.pPars.NBinSize {
 		panic("ssw: rarity index out of bounds")
 	}
-	return p.pRarity[bin*(1<<p.pPars.nBinSize)+pat]
+	return p.pRarity[bin*(1<<p.pPars.NBinSize)+pat]
 }
 func Ssw_RarSetBinPat(p *Ssw_RarMan_t, bin, pat, value int32) {
-	if bin < 0 || bin >= p.nGroups || pat < 0 || pat >= 1<<p.pPars.nBinSize {
+	if bin < 0 || bin >= p.nGroups || pat < 0 || pat >= 1<<p.pPars.NBinSize {
 		panic("ssw: rarity index out of bounds")
 	}
-	p.pRarity[bin*(1<<p.pPars.nBinSize)+pat] = value
+	p.pRarity[bin*(1<<p.pPars.NBinSize)+pat] = value
 }
 func Ssw_RarAddToBinPat(p *Ssw_RarMan_t, bin, pat int32) {
 	Ssw_RarSetBinPat(p, bin, pat, Ssw_RarGetBinPat(p, bin, pat)+1)
@@ -78,11 +78,11 @@ func Ssw_RarObjSim(p *Ssw_RarMan_t, id int32) []uint64 {
 	if id < 0 || id >= aig.Aig_ManObjNumMax(p.pAig) {
 		panic("ssw: invalid rarity object")
 	}
-	start := id * p.pPars.nWords
-	return p.pObjData[start : start+p.pPars.nWords]
+	start := id * p.pPars.NWords
+	return p.pObjData[start : start+p.pPars.NWords]
 }
 func Ssw_RarPatSim(p *Ssw_RarMan_t, id int32) []uint64 {
-	if id < 0 || id >= 64*p.pPars.nWords {
+	if id < 0 || id >= 64*p.pPars.NWords {
 		panic("ssw: invalid rarity pattern")
 	}
 	start := id * p.nWordsReg
@@ -116,10 +116,10 @@ func Ssw_RarManAssingRandomPis(p *Ssw_RarMan_t) {
 **********************************************************************
 */
 func Ssw_RarDeriveCex(p *Ssw_RarMan_t, frame, po, pattern, verbose int32) *util.Abc_Cex_t {
-	trace := make([]int32, frame/p.pPars.nFrames+1)
+	trace := make([]int32, frame/p.pPars.NFrames+1)
 	trace[len(trace)-1] = pattern
 	for r := len(trace) - 2; r >= 0; r-- {
-		pattern = vec.Vec_IntEntry(p.vPatBests, r*int(p.pPars.nWords)+int(pattern/64))
+		pattern = vec.Vec_IntEntry(p.vPatBests, r*int(p.pPars.NWords)+int(pattern/64))
 		trace[r] = pattern
 	}
 	cex := util.Abc_CexAlloc(aig.Aig_ManRegNum(p.pAig), saig.Saig_ManPiNum(p.pAig), frame+1)
@@ -128,7 +128,7 @@ func Ssw_RarDeriveCex(p *Ssw_RarMan_t, frame, po, pattern, verbose int32) *util.
 	bit := cex.NRegs
 	for f := int32(0); f <= frame; f++ {
 		Ssw_RarManAssingRandomPis(p)
-		pattern = trace[f/p.pPars.nFrames]
+		pattern = trace[f/p.pPars.NFrames]
 		for _, obj := range p.pAig.Inputs()[:saig.Saig_ManPiNum(p.pAig)] {
 			v := Ssw_RarObjSim(p, int32(obj.NodeID()))
 			if v[pattern/64]&(uint64(1)<<uint(pattern%64)) != 0 {
@@ -196,7 +196,7 @@ func TransposeTest() {
 **********************************************************************
 */
 func Ssw_RarTranspose(p *Ssw_RarMan_t) {
-	for w := int32(0); w < p.pPars.nWords; w++ {
+	for w := int32(0); w < p.pPars.NWords; w++ {
 		for r := int32(0); r < p.nWordsReg; r++ {
 			var m [64]uint64
 			for i := int32(0); i < 64; i++ {
@@ -234,7 +234,7 @@ func Ssw_RarManInitialize(p *Ssw_RarMan_t, init *vec.Vec_Int_t) {
 	}
 	Ssw_RarManAssingRandomPis(p)
 	regs := aig.Aig_ManRegNum(p.pAig)
-	if init != nil && vec.Vec_IntSize(init) != int(regs*p.pPars.nWords) {
+	if init != nil && vec.Vec_IntSize(init) != int(regs*p.pPars.NWords) {
 		panic("ssw: wrong rarity initialization size")
 	}
 	for i := int32(0); i < regs; i++ {
@@ -405,7 +405,7 @@ func Ssw_RarManCheckNonConstOutputs(p *Ssw_RarMan_t, frame int32, elapsed time.D
 		}
 		p.iFailPo = int32(i)
 		p.iFailPat = Ssw_RarManObjWhichOne(p, obj)
-		if p.pPars.fSolveAll == 0 {
+		if p.pPars.FSolveAll == 0 {
 			break
 		}
 		p.pPars.nSolved++
@@ -416,7 +416,7 @@ func Ssw_RarManCheckNonConstOutputs(p *Ssw_RarMan_t, frame int32, elapsed time.D
 		if p.pPars.pFuncOnFail != nil && p.pPars.pFuncOnFail(int32(i), nil) != 0 {
 			return 2
 		}
-		if p.pPars.fNotVerbose == 0 {
+		if p.pPars.FNotVerbose == 0 {
 			fmt.Printf("Output %d was asserted in frame %d (solved %d out of %d outputs). Time %s\n", i, frame, p.pPars.nSolved, saig.Saig_ManPoNum(g), elapsed)
 		}
 	}
@@ -540,12 +540,12 @@ func Ssw_RarManSimulate(p *Ssw_RarMan_t, init *vec.Vec_Int_t, update, first int3
 **********************************************************************
 */
 func Ssw_RarManStart(g *aig.Graph, pars *Ssw_RarPars_t) *Ssw_RarMan_t {
-	if pars.nWords <= 0 || pars.nFrames <= 0 || pars.nBinSize <= 0 || pars.nBinSize > 16 {
+	if pars.NWords <= 0 || pars.NFrames <= 0 || pars.NBinSize <= 0 || pars.NBinSize > 16 {
 		panic("ssw: invalid rarity parameters")
 	}
-	groups := aig.Aig_ManRegNum(g) / pars.nBinSize
+	groups := aig.Aig_ManRegNum(g) / pars.NBinSize
 	words := Ssw_RarBitWordNum(aig.Aig_ManRegNum(g))
-	return &Ssw_RarMan_t{pAig: g, pPars: pars, nGroups: groups, nWordsReg: words, pRarity: make([]int32, int(groups)*(1<<pars.nBinSize)), pPatCosts: make([]float64, int(pars.nWords)*64), pObjData: make([]uint64, int(aig.Aig_ManObjNumMax(g))*int(pars.nWords)), pPatData: make([]uint64, 64*int(pars.nWords)*int(words)), vUpdConst: vec.Vec_PtrAlloc(100), vUpdClass: vec.Vec_PtrAlloc(100), vPatBests: vec.Vec_IntAlloc(100)}
+	return &Ssw_RarMan_t{pAig: g, pPars: pars, nGroups: groups, nWordsReg: words, pRarity: make([]int32, int(groups)*(1<<pars.NBinSize)), pPatCosts: make([]float64, int(pars.NWords)*64), pObjData: make([]uint64, int(aig.Aig_ManObjNumMax(g))*int(pars.NWords)), pPatData: make([]uint64, 64*int(pars.NWords)*int(words)), vUpdConst: vec.Vec_PtrAlloc(100), vUpdClass: vec.Vec_PtrAlloc(100), vPatBests: vec.Vec_IntAlloc(100)}
 }
 
 /*
@@ -592,15 +592,15 @@ func Ssw_RarManStop(p *Ssw_RarMan_t) {
 */
 func Ssw_RarTransferPatterns(p *Ssw_RarMan_t, init *vec.Vec_Int_t) {
 	Ssw_RarTranspose(p)
-	count := int32(64) * p.pPars.nWords
+	count := int32(64) * p.pPars.NWords
 	getBin := func(pattern []uint64, bin int32) int32 {
-		start := bin * p.pPars.nBinSize
+		start := bin * p.pPars.NBinSize
 		word, shift := start/64, uint(start%64)
 		value := pattern[word] >> shift
-		if shift+uint(p.pPars.nBinSize) > 64 {
+		if shift+uint(p.pPars.NBinSize) > 64 {
 			value |= pattern[word+1] << (64 - shift)
 		}
-		return int32(value & ((uint64(1) << uint(p.pPars.nBinSize)) - 1))
+		return int32(value & ((uint64(1) << uint(p.pPars.NBinSize)) - 1))
 	}
 	for k := int32(0); k < count; k++ {
 		pat := Ssw_RarPatSim(p, k)
@@ -620,7 +620,7 @@ func Ssw_RarTransferPatterns(p *Ssw_RarMan_t, init *vec.Vec_Int_t) {
 		}
 	}
 	vec.Vec_IntClear(init)
-	for i := int32(0); i < p.pPars.nWords; i++ {
+	for i := int32(0); i < p.pPars.NWords; i++ {
 		best := int32(-1)
 		cost := math.Inf(-1)
 		for k := int32(0); k < count; k++ {
@@ -737,32 +737,32 @@ func Ssw_RarSimulate(g *aig.Graph, pars *Ssw_RarPars_t) int32 {
 		panic("ssw: invalid rarity graph")
 	}
 	g.ClearSequentialCounterexample()
-	seed := pars.nRandSeed
+	seed := pars.NRandSeed
 	Ssw_RarManPrepareRandom(seed)
 	p := Ssw_RarManStart(g, pars)
 	defer Ssw_RarManStop(p)
-	p.vInits = vec.Vec_IntStart(int(g.RegisterCount() * pars.nWords))
+	p.vInits = vec.Vec_IntStart(int(g.RegisterCount() * pars.NWords))
 	pars.nSolved = 0
 	var lastSolved int64
 	restarts := int32(0)
 	result := int32(-1)
 outer:
-	for r := int32(0); pars.nRounds == 0 || restarts*pars.nRestart+r < pars.nRounds; r++ {
-		for f := int32(0); f < pars.nFrames; f++ {
+	for r := int32(0); pars.NRounds == 0 || restarts*pars.NRestart+r < pars.NRounds; r++ {
+		for f := int32(0); f < pars.NFrames; f++ {
 			var init *vec.Vec_Int_t
 			if f == 0 {
 				init = p.vInits
 			}
 			Ssw_RarManSimulate(p, init, 0, 0)
-			status := Ssw_RarManCheckNonConstOutputs(p, r*pars.nFrames+f, time.Since(start))
+			status := Ssw_RarManCheckNonConstOutputs(p, r*pars.NFrames+f, time.Since(start))
 			if status == 2 {
 				break outer
 			}
 			if status == 1 {
 				result = 0
-				if pars.fSolveAll == 0 {
+				if pars.FSolveAll == 0 {
 					Ssw_RarManPrepareRandom(seed)
-					cex := Ssw_RarDeriveCex(p, r*pars.nFrames+f, p.iFailPo, p.iFailPat, pars.fVerbose)
+					cex := Ssw_RarDeriveCex(p, r*pars.NFrames+f, p.iFailPo, p.iFailPat, pars.FVerbose)
 					if err := g.SetSequentialCounterexample(cex); err != nil {
 						panic(err)
 					}
@@ -775,22 +775,22 @@ outer:
 			if sswDeadlineExceeded(pars.TimeOut, sswCPUClock(), deadline) || pars.TimeOutGap != 0 && lastSolved != 0 && sswCPUClock() > lastSolved+int64(pars.TimeOutGap)*sswTicksPerSecond {
 				break outer
 			}
-			if pars.fSolveAll != 0 && p.vCexes != nil && vec.Vec_PtrCountZero(p.vCexes) == 0 {
+			if pars.FSolveAll != 0 && p.vCexes != nil && vec.Vec_PtrCountZero(p.vCexes) == 0 {
 				break outer
 			}
 		}
-		if pars.nRestart != 0 && r == pars.nRestart {
+		if pars.NRestart != 0 && r == pars.NRestart {
 			r = -1
 			seed = (seed + 1) % 1000
 			Ssw_RarManPrepareRandom(seed)
-			vec.Vec_IntFill(p.vInits, int(g.RegisterCount()*pars.nWords), 0)
+			vec.Vec_IntFill(p.vInits, int(g.RegisterCount()*pars.NWords), 0)
 			restarts++
 			vec.Vec_IntClear(p.vPatBests)
 		} else {
 			Ssw_RarTransferPatterns(p, p.vInits)
 		}
 	}
-	if pars.fSetLastState != 0 && p.vInits != nil {
+	if pars.FSetLastState != 0 && p.vInits != nil {
 		vec.Vec_IntShrink(p.vInits, int(g.RegisterCount()))
 		g.Data = p.vInits
 		p.vInits = nil
@@ -847,7 +847,7 @@ func Ssw_RarRandomPermFlop(flops, unused int32) *vec.Vec_Int_t {
 func Ssw_RarSimulateGia(g *gia.Gia_Man_t, pars *Ssw_RarPars_t) int32 {
 	src := g
 	var perm *vec.Vec_Int_t
-	if pars.fUseFfGrouping != 0 {
+	if pars.FUseFfGrouping != 0 {
 		perm = Ssw_RarRandomPermFlop(gia.Gia_ManRegNum(g), 10)
 		src = gia.Gia_ManDupPermFlopGap(g, perm)
 		defer gia.Gia_ManStop(src)
@@ -886,19 +886,19 @@ func Ssw_RarSignalFilter(g *aig.Graph, pars *Ssw_RarPars_t) int32 {
 	if aig.Aig_ManNodeNum(g) == 0 {
 		return -1
 	}
-	if pars.fMiter != 0 && Ssw_RarCheckTrivial(g, 1) != 0 {
+	if pars.FMiter != 0 && Ssw_RarCheckTrivial(g, 1) != 0 {
 		return 0
 	}
-	seed := pars.nRandSeed
+	seed := pars.NRandSeed
 	Ssw_RarManPrepareRandom(seed)
 	p := Ssw_RarManStart(g, pars)
 	defer Ssw_RarManStop(p)
-	if pars.pCex != nil {
-		p.vInits = Ssw_RarFindStartingState(g, pars.pCex)
+	if pars.PCex != nil {
+		p.vInits = Ssw_RarFindStartingState(g, pars.PCex)
 	} else {
 		p.vInits = vec.Vec_IntStart(int(g.RegisterCount()))
 	}
-	for i := int32(1); i < pars.nWords; i++ {
+	for i := int32(1); i < pars.NWords; i++ {
 		for k := int32(0); k < g.RegisterCount(); k++ {
 			vec.Vec_IntPush(p.vInits, vec.Vec_IntEntry(p.vInits, int(k)))
 		}
@@ -906,15 +906,15 @@ func Ssw_RarSignalFilter(g *aig.Graph, pars *Ssw_RarPars_t) int32 {
 	if aig.Aig_ManHasReprs(g) {
 		p.ppClasses = Ssw_ClassesPrepareFromReprs(g)
 	} else {
-		p.ppClasses = Ssw_ClassesPrepareSimple(g, pars.fLatchOnly, 0)
+		p.ppClasses = Ssw_ClassesPrepareSimple(g, pars.FLatchOnly, 0)
 	}
 	Ssw_ClassesSetData(p.ppClasses, p, Ssw_RarManObjHashWord, Ssw_RarManObjIsConst, Ssw_RarManObjsAreEqual)
 	restarts := int32(0)
-	for r := int32(0); pars.nRounds == 0 || restarts*pars.nRestart+r < pars.nRounds; r++ {
+	for r := int32(0); pars.NRounds == 0 || restarts*pars.NRestart+r < pars.NRounds; r++ {
 		if Ssw_ClassesCand1Num(p.ppClasses) == 0 && Ssw_ClassesClassNum(p.ppClasses) == 0 {
 			break
 		}
-		for f := int32(0); f < pars.nFrames; f++ {
+		for f := int32(0); f < pars.NFrames; f++ {
 			var init *vec.Vec_Int_t
 			if f == 0 {
 				init = p.vInits
@@ -924,9 +924,9 @@ func Ssw_RarSignalFilter(g *aig.Graph, pars *Ssw_RarPars_t) int32 {
 				first = 1
 			}
 			Ssw_RarManSimulate(p, init, 1, first)
-			if pars.fMiter != 0 && Ssw_RarManCheckNonConstOutputs(p, -1, 0) != 0 {
+			if pars.FMiter != 0 && Ssw_RarManCheckNonConstOutputs(p, -1, 0) != 0 {
 				Ssw_RarManPrepareRandom(seed)
-				cex := Ssw_RarDeriveCex(p, r*pars.nFrames+f, p.iFailPo, p.iFailPat, 1)
+				cex := Ssw_RarDeriveCex(p, r*pars.NFrames+f, p.iFailPo, p.iFailPat, 1)
 				if err := g.SetSequentialCounterexample(cex); err != nil {
 					panic(err)
 				}
@@ -936,11 +936,11 @@ func Ssw_RarSignalFilter(g *aig.Graph, pars *Ssw_RarPars_t) int32 {
 				return -1
 			}
 		}
-		if pars.pCex == nil && pars.nRestart != 0 && r == pars.nRestart {
+		if pars.PCex == nil && pars.NRestart != 0 && r == pars.NRestart {
 			r = -1
 			seed = (seed + 1) % 1000
 			Ssw_RarManPrepareRandom(seed)
-			vec.Vec_IntFill(p.vInits, int(g.RegisterCount()*pars.nWords), 0)
+			vec.Vec_IntFill(p.vInits, int(g.RegisterCount()*pars.NWords), 0)
 			restarts++
 			vec.Vec_IntClear(p.vPatBests)
 		} else {

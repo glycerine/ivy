@@ -77,7 +77,7 @@ func Ssw_ManUpdateEquivs(p *Ssw_Man_t, g *aig.Graph, verbose int32) {
 		if repr != aig.InvalidEdge {
 			total++
 		}
-		if repr != aig.InvalidEdge && seen[obj.NodeID()] && p.pPars.fConstrs != 0 && p.pPars.fMergeFull == 0 {
+		if repr != aig.InvalidEdge && seen[obj.NodeID()] && p.pPars.FConstrs != 0 && p.pPars.FMergeFull == 0 {
 			aig.Aig_ObjSetRepr(g, obj, aig.InvalidEdge)
 			removed++
 		}

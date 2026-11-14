@@ -69,7 +69,7 @@ func TestSswFilterBmcNoCandidates(t *testing.T) {
 	g.AddOutput(lo)
 	g.AddOutput(g.AND(pi, lo))
 	aig.Aig_ManSetRegNum(g, 1)
-	p := Ssw_ManCreate(g, &Ssw_Pars_t{nFramesK: 2})
+	p := Ssw_ManCreate(g, &Ssw_Pars_t{NFramesK: 2})
 	defer Ssw_ManStop(p)
 	p.pMSat = Ssw_SatStart(0)
 	if got := Ssw_ManSweepBmcFilter(p, 0); got != 1 {

@@ -72,7 +72,7 @@ func Ssw_ManCollectPos_rec(p *Ssw_Man_t, obj aig.Edge, newPos *vec.Vec_Int_t) {
 	}
 }
 func Ssw_ManLoadSolver(p *Ssw_Man_t, repr, obj aig.Edge) {
-	f := p.pPars.nFramesK
+	f := p.pPars.NFramesK
 	if repr == obj {
 		panic("ssw: duplicate comparison nodes")
 	}
@@ -201,7 +201,7 @@ func Ssw_ManSweepDyn(p *Ssw_Man_t) int32 {
 	p.pMSat.pAig = p.pFrames
 	aig.Aig_ManFanoutStart(p.pFrames)
 	p.nSRMiterMaxId = aig.Aig_ManObjNumMax(p.pFrames)
-	f := p.pPars.nFramesK
+	f := p.pPars.NFramesK
 	Ssw_ObjSetFrame(p, p.pAig.Const1(), f, p.pFrames.Const1())
 	for _, obj := range p.pAig.Inputs()[:saig.Saig_ManPiNum(p.pAig)] {
 		Ssw_ObjSetFrame(p, obj, f, p.pFrames.NewInput())
@@ -218,7 +218,7 @@ func Ssw_ManSweepDyn(p *Ssw_Man_t) int32 {
 	p.iNodeStart = 0
 	resim := func(i int32) {
 		p.iNodeLast = i
-		if p.pPars.fLocalSim != 0 {
+		if p.pPars.FLocalSim != 0 {
 			Ssw_ManSweepResimulateDynLocal(p, f)
 		} else {
 			Ssw_ManSweepResimulateDyn(p, f)
@@ -245,7 +245,7 @@ func Ssw_ManSweepDyn(p *Ssw_Man_t) int32 {
 				p.fRefined |= Ssw_ManSweepNode(p, obj, f, 0, nil)
 			}
 		}
-		if p.pMSat.pSat == nil || (p.pPars.nSatVarMax2 != 0 && p.pMSat.nSatVars > p.pPars.nSatVarMax2 && p.nRecycleCalls > p.pPars.nRecycleCalls2) {
+		if p.pMSat.pSat == nil || (p.pPars.NSatVarMax2 != 0 && p.pMSat.nSatVars > p.pPars.NSatVarMax2 && p.nRecycleCalls > p.pPars.NRecycleCalls2) {
 			if p.nPatterns > 0 {
 				resim(i)
 			}

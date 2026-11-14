@@ -11,7 +11,7 @@ func TestManagerCleanupAndStop(t *testing.T) {
 	g.AddOutput(pi)
 	g.AddOutput(lo)
 	aig.Aig_ManSetRegNum(g, 1)
-	p := Ssw_ManCreate(g, &Ssw_Pars_t{nFramesK: 1})
+	p := Ssw_ManCreate(g, &Ssw_Pars_t{NFramesK: 1})
 	p.pFrames = aig.NewGraph()
 	p.nConstrTotal, p.nConstrReduced = 3, 2
 	p.pNodeToFrames[0] = p.pFrames.Const1()
@@ -43,7 +43,7 @@ func TestManagerCleanupRetainsMappingsWithoutFrameGraph(t *testing.T) {
 	g.AddOutput(x)
 	g.AddOutput(latch)
 	aig.Aig_ManSetRegNum(g, 1)
-	p := Ssw_ManCreate(g, &Ssw_Pars_t{nFramesK: 1})
+	p := Ssw_ManCreate(g, &Ssw_Pars_t{NFramesK: 1})
 	defer aig.Aig_ManFanoutStop(g)
 	defer Ssw_ManStop(p)
 	p.pNodeToFrames[0] = x

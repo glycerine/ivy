@@ -25,7 +25,7 @@ func TestUniqueRegisterPairInfoSourceBranches(t *testing.T) {
 	sat := Ssw_SatStart(0)
 	defer Ssw_SatStop(sat)
 	sat.pAig = frames
-	p := &Ssw_Man_t{pAig: original, pFrames: frames, pMSat: sat, pPars: &Ssw_Pars_t{nBTLimit: 1000}, nFrames: 2, iOutputLit: -1, pNodeToFrames: make([]aig.Edge, len(original.Nodes())*2)}
+	p := &Ssw_Man_t{pAig: original, pFrames: frames, pMSat: sat, pPars: &Ssw_Pars_t{NBTLimit: 1000}, nFrames: 2, iOutputLit: -1, pNodeToFrames: make([]aig.Edge, len(original.Nodes())*2)}
 	for i, node := range regs {
 		Ssw_ObjSetFrame(p, node, 0, pairs[i][0])
 		Ssw_ObjSetFrame(p, node, 1, pairs[i][1])
@@ -52,7 +52,7 @@ func TestUniqueOneRequiresFeasibleEqualLatchValues(t *testing.T) {
 			a, b := frames.NewInput(), frames.NewInput()
 			sat := Ssw_SatStart(0)
 			sat.pAig = frames
-			p := &Ssw_Man_t{pAig: original, pFrames: frames, pMSat: sat, pPars: &Ssw_Pars_t{nFramesK: 2}, nFrames: 2, iOutputLit: -1, pNodeToFrames: make([]aig.Edge, len(original.Nodes())*2), vDiffPairs: vec.Vec_IntAllocArrayCopy([]int32{feasible}, 1), vCommon: vec.Vec_PtrAlloc(1)}
+			p := &Ssw_Man_t{pAig: original, pFrames: frames, pMSat: sat, pPars: &Ssw_Pars_t{NFramesK: 2}, nFrames: 2, iOutputLit: -1, pNodeToFrames: make([]aig.Edge, len(original.Nodes())*2), vDiffPairs: vec.Vec_IntAllocArrayCopy([]int32{feasible}, 1), vCommon: vec.Vec_PtrAlloc(1)}
 			Ssw_ObjSetFrame(p, lo, 0, a)
 			Ssw_ObjSetFrame(p, lo, 1, b)
 			Ssw_CnfNodeAddToSolver(sat, a)
@@ -92,7 +92,7 @@ func TestUniqueOneIndexesLatchSupportAfterPrimaryInputs(t *testing.T) {
 	sat.pAig = frames
 	p := &Ssw_Man_t{
 		pAig: original, pFrames: frames, pMSat: sat,
-		pPars: &Ssw_Pars_t{nFramesK: 2}, nFrames: 2, iOutputLit: -1,
+		pPars: &Ssw_Pars_t{NFramesK: 2}, nFrames: 2, iOutputLit: -1,
 		pNodeToFrames: make([]aig.Edge, len(original.Nodes())*2),
 		vDiffPairs:    vec.Vec_IntAllocArrayCopy([]int32{0, 1}, 2),
 		vCommon:       vec.Vec_PtrAlloc(2),

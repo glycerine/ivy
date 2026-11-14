@@ -111,7 +111,7 @@ func Ssw_FramesWithClasses(p *Ssw_Man_t) *aig.Graph {
 	}
 	nodes := sswFrameNodes(graph)
 	iLits := 0
-	for f := int32(0); f < p.pPars.nFramesK; f++ {
+	for f := int32(0); f < p.pPars.NFramesK; f++ {
 		Ssw_ObjSetFrame(p, graph.Const1(), f, frames.Const1())
 		for _, pi := range inputs[:pis] {
 			next := frames.NewInput()
@@ -139,7 +139,7 @@ func Ssw_FramesWithClasses(p *Ssw_Man_t) *aig.Graph {
 		panic("ssw: incorrect initial phase count")
 	}
 	for _, lo := range inputs[pis:] {
-		frames.AddOutput(Ssw_ObjFrame(p, lo, p.pPars.nFramesK))
+		frames.AddOutput(Ssw_ObjFrame(p, lo, p.pPars.NFramesK))
 	}
 	aig.Aig_ManCleanup(frames)
 	if frames.Data != nil {

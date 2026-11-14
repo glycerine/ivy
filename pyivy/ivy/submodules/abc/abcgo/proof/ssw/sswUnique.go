@@ -29,7 +29,7 @@ func Ssw_UniqueRegisterPairInfo(p *Ssw_Man_t) {
 	}
 }
 func Ssw_ManUniqueOne(p *Ssw_Man_t, repr, obj aig.Edge, verbose int32) int32 {
-	if p.pPars.nFramesK <= 1 || p.vDiffPairs == nil || vec.Vec_IntSize(p.vDiffPairs) != int(p.pAig.RegisterCount()) {
+	if p.pPars.NFramesK <= 1 || p.vDiffPairs == nil || vec.Vec_IntSize(p.vDiffPairs) != int(p.pAig.RegisterCount()) {
 		panic("ssw: invalid uniqueness state")
 	}
 	var support []aig.Edge

@@ -193,7 +193,7 @@ func Ssw_ManSweepBmcFilter(p *Ssw_Man_t, timeLimit int32) int32 {
 	g := p.pAig
 	pis := saig.Saig_ManPiNum(g)
 	pos := saig.Saig_ManPoNum(g)
-	p.pFrames = aig.Aig_ManStart(aig.Aig_ManObjNumMax(g) * p.pPars.nFramesK)
+	p.pFrames = aig.Aig_ManStart(aig.Aig_ManObjNumMax(g) * p.pPars.NFramesK)
 	p.pMSat.pAig = p.pFrames
 	for i, lo := range g.Inputs()[pis:] {
 		v := p.pFrames.Const0()
@@ -202,7 +202,7 @@ func Ssw_ManSweepBmcFilter(p *Ssw_Man_t, timeLimit int32) int32 {
 		}
 		Ssw_ObjSetFrame(p, lo, 0, v)
 	}
-	for f := int32(0); f < p.pPars.nFramesK; f++ {
+	for f := int32(0); f < p.pPars.NFramesK; f++ {
 		if f == p.nFrames-1 {
 			sswFilterGrowFrames(p)
 		}
@@ -218,11 +218,11 @@ func Ssw_ManSweepBmcFilter(p *Ssw_Man_t, timeLimit int32) int32 {
 				break
 			}
 		}
-		if p.pPars.fVerbose != 0 {
+		if p.pPars.FVerbose != 0 {
 			fmt.Printf("Frame %4d : ", f)
 			Ssw_ClassesPrint(p.ppClasses, 0)
 		}
-		if timedOut || f == p.pPars.nFramesK-1 || (timeLimit != 0 && float32(timeLimit) <= float32(sswCPUClock()-started)/float32(sswTicksPerSecond)) {
+		if timedOut || f == p.pPars.NFramesK-1 || (timeLimit != 0 && float32(timeLimit) <= float32(sswCPUClock()-started)/float32(sswTicksPerSecond)) {
 			break
 		}
 		for _, out := range g.Outputs() {
@@ -257,12 +257,12 @@ func Ssw_SignalFilter(g *aig.Graph, frames, conflicts, rounds, timeLimit, timeLi
 	aig.Aig_ManRandom(1)
 	pars := &Ssw_Pars_t{}
 	Ssw_ManSetDefaultParams(pars)
-	pars.nFramesK = 3
-	pars.nBTLimit = conflicts
+	pars.NFramesK = 3
+	pars.NBTLimit = conflicts
 	pars.TimeLimit = timeLimit
-	pars.fVerbose = verbose
+	pars.FVerbose = verbose
 	p := Ssw_ManCreate(g, pars)
-	pars.nFramesK = frames
+	pars.NFramesK = frames
 	if aig.Aig_ManHasReprs(g) {
 		p.ppClasses = Ssw_ClassesPrepareFromReprs(g)
 	} else {
@@ -302,7 +302,7 @@ func Ssw_SignalFilter(g *aig.Graph, frames, conflicts, rounds, timeLimit, timeLi
 	}
 	aig.Aig_ManSetPhase(g)
 	aig.Aig_ManCleanMarkB(g)
-	pars.fVerbose = 0
+	pars.FVerbose = 0
 	Ssw_ManStop(p)
 }
 

@@ -11,7 +11,7 @@ import (
 // the solver was initialized with a different polarity flag.
 func sswQueryLit(p *Ssw_Man_t, e aig.Edge, neg bool) int32 {
 	lit := sswLit(p.pMSat, e, neg)
-	if (p.pMSat.fPolarFlip != 0) != (p.pPars.fPolarFlip != 0) && aig.Aig_ObjPhase(p.pFrames, e&^1) {
+	if (p.pMSat.fPolarFlip != 0) != (p.pPars.FPolarFlip != 0) && aig.Aig_ObjPhase(p.pFrames, e&^1) {
 		lit ^= 1
 	}
 	return lit
@@ -38,7 +38,7 @@ func Ssw_NodesAreEquiv(p *Ssw_Man_t, old, node aig.Edge) int32 {
 			assumptions = append(assumptions, p.iOutputLit)
 		}
 		start := time.Now()
-		result := sat.pSat.SolveWithSourceLimits(assumptions, int64(p.pPars.nBTLimit), 0, 0, 0)
+		result := sat.pSat.SolveWithSourceLimits(assumptions, int64(p.pPars.NBTLimit), 0, 0, 0)
 		elapsed := time.Since(start)
 		p.timeSat += elapsed
 		switch result {
@@ -65,7 +65,7 @@ func Ssw_NodesAreConstrained(p *Ssw_Man_t, old, node aig.Edge) int32 {
 	if p.pMSat == nil || old.NodeID() == node.NodeID() {
 		panic("ssw: invalid equivalence constraint")
 	}
-	if p.pPars.fConstrs == 0 && aig.Aig_ObjPhaseReal(p.pFrames, old) != aig.Aig_ObjPhaseReal(p.pFrames, node) {
+	if p.pPars.FConstrs == 0 && aig.Aig_ObjPhaseReal(p.pFrames, old) != aig.Aig_ObjPhaseReal(p.pFrames, node) {
 		panic("ssw: inconsistent constraint phases")
 	}
 	if node.NodeID() == 0 {

@@ -17,8 +17,8 @@ func TestConstrainedSweepCarriesRegisterConstraintAcrossFrames(t *testing.T) {
 	aig.Aig_ManSetConstrNum(g, 1)
 	var pars Ssw_Pars_t
 	Ssw_ManSetDefaultParams(&pars)
-	pars.fConstrs = 1
-	pars.nFramesK = 2
+	pars.FConstrs = 1
+	pars.NFramesK = 2
 	pars.nStepsMax = 3
 	reduced := Ssw_SignalCorrespondence(g, &pars)
 	if reduced == nil {

@@ -16,8 +16,8 @@ func Ssw_SecWithSimilaritySweep(p0, p1 *aig.Graph, pairs *vec.Vec_Int_t, pars *S
 	}
 
 	Ssw_MatchingStart(p0, p1, pairs)
-	if pars.nIsleDist != 0 {
-		Ssw_MatchingExtend(p0, p1, pars.nIsleDist, pars.fVerbose)
+	if pars.NIsleDist != 0 {
+		Ssw_MatchingExtend(p0, p1, pars.NIsleDist, pars.FVerbose)
 	}
 	Ssw_MatchingComplete(p0, p1)
 	Ssw_MatchingComplete(p1, p0)
@@ -25,13 +25,13 @@ func Ssw_SecWithSimilaritySweep(p0, p1 *aig.Graph, pairs *vec.Vec_Int_t, pars *S
 	miter := sswIslandMiter(p0, p1)
 	matches := Ssw_MatchingMiter(miter, p0, p1, all)
 	man := Ssw_ManCreate(miter, pars)
-	if pars.fPartSigCorr != 0 {
+	if pars.FPartSigCorr != 0 {
 		man.ppClasses = Ssw_ClassesPreparePairsSimple(miter, matches)
 	} else {
-		man.ppClasses = Ssw_ClassesPrepare(miter, pars.nFramesK, pars.fLatchCorr, pars.fConstCorr, pars.fOutputCorr, pars.nMaxLevs, pars.fVerbose)
+		man.ppClasses = Ssw_ClassesPrepare(miter, pars.NFramesK, pars.FLatchCorr, pars.FConstCorr, pars.FOutputCorr, pars.NMaxLevs, pars.FVerbose)
 	}
-	if pars.fDumpSRInit != 0 {
-		if pars.fPartSigCorr != 0 {
+	if pars.FDumpSRInit != 0 {
+		if pars.FPartSigCorr != 0 {
 			reduced := Ssw_SpeculativeReduction(man)
 			if err := aig.Aig_ManDumpBlif(reduced, "srm_part.blif", nil, nil); err != nil {
 				panic(err)
@@ -41,7 +41,7 @@ func Ssw_SecWithSimilaritySweep(p0, p1 *aig.Graph, pairs *vec.Vec_Int_t, pars *S
 			fmt.Println("Dumping speculative miter is possible only for partial signal correspondence (switch \"-c\").")
 		}
 	}
-	man.pSml = Ssw_SmlStart(miter, 0, 1+pars.nFramesAddSim, 1)
+	man.pSml = Ssw_SmlStart(miter, 0, 1+pars.NFramesAddSim, 1)
 	Ssw_ClassesSetData(man.ppClasses, man.pSml, func(data any, e aig.Edge) uint32 { return Ssw_SmlObjHashWord(data.(*Ssw_Sml_t), e) }, func(data any, e aig.Edge) int32 { return Ssw_SmlObjIsConstWord(data.(*Ssw_Sml_t), e) }, func(data any, a, b aig.Edge) int32 { return Ssw_SmlObjsAreEqualWord(data.(*Ssw_Sml_t), a, b) })
 	result := Ssw_SignalCorrespondenceRefine(man)
 	Ssw_ManStop(man)
@@ -74,7 +74,7 @@ func Ssw_SecWithSimilarity(p0, p1 *aig.Graph, pars *Ssw_Pars_t) int32 {
 		pars = new(Ssw_Pars_t)
 		Ssw_ManSetDefaultParams(pars)
 	}
-	if pars.fVerbose != 0 {
+	if pars.FVerbose != 0 {
 		fmt.Println("Performing sequential verification using structural similarity.")
 	}
 	var a, b *aig.Graph
@@ -89,6 +89,6 @@ func Ssw_SecWithSimilarity(p0, p1 *aig.Graph, pars *Ssw_Pars_t) int32 {
 	if aig.Aig_ManRegNum(a) <= 0 || aig.Aig_ManRegNum(b) <= 0 || saig.Saig_ManPiNum(a) != saig.Saig_ManPiNum(b) || saig.Saig_ManPoNum(a) != saig.Saig_ManPoNum(b) {
 		panic("ssw: incompatible sequential graphs")
 	}
-	pairs := saig.Saig_StrSimPerformMatching(a, b, 0, pars.fVerbose, nil)
+	pairs := saig.Saig_StrSimPerformMatching(a, b, 0, pars.FVerbose, nil)
 	return Ssw_SecWithSimilarityPairs(a, b, pairs, pars)
 }

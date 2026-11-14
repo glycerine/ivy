@@ -80,14 +80,14 @@ func Ssw_ManSweepBmcConstr(p *Ssw_Man_t) int32 {
 	index := 0
 	inputs := p.pAig.Inputs()
 	regs := int(p.pAig.RegisterCount())
-	for f := int32(0); f < p.pPars.nFramesK; f++ {
+	for f := int32(0); f < p.pPars.NFramesK; f++ {
 		sswConstrFrameInputs(p, f, &index)
 		sswConstrFrameAssumptions(p, f)
 		for _, lo := range inputs[len(inputs)-regs:] {
 			p.fRefined |= Ssw_ManSweepNodeConstr(p, lo, f, 1)
 		}
 		sswConstrSweepGates(p, f)
-		if f+1 < p.pPars.nFramesK {
+		if f+1 < p.pPars.NFramesK {
 			sswConstrTransfer(p, f)
 		}
 	}
@@ -99,15 +99,15 @@ func Ssw_ManSweepBmcConstr_old(p *Ssw_Man_t) int32 {
 	start := time.Now()
 	sswConstrInitFrames(p)
 	index := 0
-	for f := int32(0); f < p.pPars.nFramesK; f++ {
+	for f := int32(0); f < p.pPars.NFramesK; f++ {
 		sswConstrFrameInputs(p, f, &index)
 		sswConstrFrameAssumptions(p, f)
 	}
 	sswConstrCheckInitCount(p, index)
 	p.fRefined = 0
-	for f := int32(0); f < p.pPars.nFramesK; f++ {
+	for f := int32(0); f < p.pPars.NFramesK; f++ {
 		sswConstrSweepGates(p, f)
-		if f+1 < p.pPars.nFramesK {
+		if f+1 < p.pPars.NFramesK {
 			sswConstrTransfer(p, f)
 		}
 	}
@@ -133,7 +133,7 @@ func Ssw_ManSweepConstr(p *Ssw_Man_t) int32 {
 	for _, out := range frameOutputs[pairs:] {
 		Ssw_CnfNodeAddToSolver(p.pMSat, p.pFrames.Node(out).Fanins[0]&^1)
 	}
-	f := p.pPars.nFramesK
+	f := p.pPars.NFramesK
 	index := int(f) * pis
 	sswConstrFrameInputs(p, f, &index)
 	if vec.Vec_IntSize(p.vInits) != index {

@@ -17,7 +17,7 @@ func TestConstraintConeRemovesOnlyIntersectingRepresentatives(t *testing.T) {
 	aig.Aig_ManReprStart(g, int32(len(g.Nodes())))
 	aig.Aig_ObjSetRepr(g, pi, g.Const1())
 	aig.Aig_ObjSetRepr(g, prop, g.Const1())
-	p := &Ssw_Man_t{pAig: g, pPars: &Ssw_Pars_t{fConstrs: 1}}
+	p := &Ssw_Man_t{pAig: g, pPars: &Ssw_Pars_t{FConstrs: 1}}
 	Ssw_ManUpdateEquivs(p, g, 0)
 	if aig.Aig_ObjRepr(g, pi) != aig.InvalidEdge || aig.Aig_ObjRepr(g, prop) != g.Const1() {
 		t.Fatal("incorrect constraint cone representative removal")

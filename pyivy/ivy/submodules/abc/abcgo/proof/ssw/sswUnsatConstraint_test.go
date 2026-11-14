@@ -16,7 +16,7 @@ func TestConstrainedSignalCorrespondenceRejectsImpossibleConstraint(t *testing.T
 	aig.Aig_ManSetConstrNum(g, 1)
 	var pars Ssw_Pars_t
 	Ssw_ManSetDefaultParams(&pars)
-	pars.fConstrs = 1
+	pars.FConstrs = 1
 	pars.nStepsMax = 2
 	if result := Ssw_SignalCorrespondence(g, &pars); result != nil {
 		t.Fatal("impossible constraint accepted")

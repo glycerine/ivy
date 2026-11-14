@@ -13,7 +13,7 @@ func sswTestFrameManager() (*Ssw_Man_t, aig.Edge, aig.Edge) {
 	g.AddOutput(lo)
 	g.AddOutput(g.XOR(pi, lo))
 	aig.Aig_ManSetRegNum(g, 1)
-	p := &Ssw_Man_t{pAig: g, pPars: &Ssw_Pars_t{nFramesK: 2}, nFrames: 3, pNodeToFrames: make([]aig.Edge, int(aig.Aig_ManObjNumMax(g))*3)}
+	p := &Ssw_Man_t{pAig: g, pPars: &Ssw_Pars_t{NFramesK: 2}, nFrames: 3, pNodeToFrames: make([]aig.Edge, int(aig.Aig_ManObjNumMax(g))*3)}
 	for i := range p.pNodeToFrames {
 		p.pNodeToFrames[i] = aig.InvalidEdge
 	}
@@ -87,7 +87,7 @@ func TestFrameConstructionPreservesBufferedTransition(t *testing.T) {
 	g.AddOutput(lo)
 	g.AddOutput(buffer)
 	aig.Aig_ManSetRegNum(g, 1)
-	p := &Ssw_Man_t{pAig: g, pPars: &Ssw_Pars_t{nFramesK: 1}, nFrames: 2, pNodeToFrames: make([]aig.Edge, len(g.Nodes())*2)}
+	p := &Ssw_Man_t{pAig: g, pPars: &Ssw_Pars_t{NFramesK: 1}, nFrames: 2, pNodeToFrames: make([]aig.Edge, len(g.Nodes())*2)}
 	for i := range p.pNodeToFrames {
 		p.pNodeToFrames[i] = aig.InvalidEdge
 	}

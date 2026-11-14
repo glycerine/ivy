@@ -1,10 +1,10 @@
 package ssw
 
 // Ssw_ParsSetFramesK sets the induction depth for signal correspondence.
-func Ssw_ParsSetFramesK(p *Ssw_Pars_t, frames int32) { p.nFramesK = frames }
+func Ssw_ParsSetFramesK(p *Ssw_Pars_t, frames int32) { p.NFramesK = frames }
 
 // Ssw_ParsSetBTLimit sets the per-node conflict limit.
-func Ssw_ParsSetBTLimit(p *Ssw_Pars_t, limit int32) { p.nBTLimit = limit }
+func Ssw_ParsSetBTLimit(p *Ssw_Pars_t, limit int32) { p.NBTLimit = limit }
 
 // Ssw_ParsSetBTLimitGlobal sets the conflict limit across runs.
 func Ssw_ParsSetBTLimitGlobal(p *Ssw_Pars_t, limit int32) { p.nBTLimitGlobal = limit }

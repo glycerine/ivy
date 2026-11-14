@@ -16,8 +16,8 @@ func TestGroupedRarityGiaRetainsSourceWitnessDimensions(t *testing.T) {
 	gia.Gia_ManSetRegNum(g, 1)
 	var pars Ssw_RarPars_t
 	Ssw_RarSetDefaultParams(&pars)
-	pars.nFrames, pars.nWords, pars.nBinSize, pars.nRounds = 2, 1, 1, 1
-	pars.fUseFfGrouping, pars.fSilent = 1, 1
+	pars.NFrames, pars.NWords, pars.NBinSize, pars.NRounds = 2, 1, 1, 1
+	pars.FUseFfGrouping, pars.fSilent = 1, 1
 	if got := Ssw_RarSimulateGia(g, &pars); got != 0 {
 		t.Fatalf("result = %d, want source result 0", got)
 	}

@@ -13,7 +13,7 @@ func TestLatchSweepRefinesDifferentTransitions(t *testing.T) {
 	g.AddOutput(a)
 	g.AddOutput(b)
 	aig.Aig_ManSetRegNum(g, 2)
-	pars := &Ssw_Pars_t{nFramesK: 1, nBTLimit: 1000}
+	pars := &Ssw_Pars_t{NFramesK: 1, NBTLimit: 1000}
 	p := Ssw_ManCreate(g, pars)
 	p.pMSat = Ssw_SatStart(0)
 	p.ppClasses = Ssw_ClassesStart(g)
@@ -36,7 +36,7 @@ func TestLatchSweepKeepsIdenticalTransitions(t *testing.T) {
 	g.AddOutput(pi)
 	g.AddOutput(pi)
 	aig.Aig_ManSetRegNum(g, 2)
-	p := Ssw_ManCreate(g, &Ssw_Pars_t{nFramesK: 1})
+	p := Ssw_ManCreate(g, &Ssw_Pars_t{NFramesK: 1})
 	p.pMSat = Ssw_SatStart(0)
 	p.ppClasses = Ssw_ClassesStart(g)
 	p.pSml = Ssw_SmlStart(g, 0, 2, 1)

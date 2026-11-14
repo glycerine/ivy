@@ -27,7 +27,7 @@ func Ssw_ManGetSatVarValue(p *Ssw_Man_t, obj aig.Edge, frame int32) int32 {
 		}
 	}
 	// ABC treats an unassigned edge as zero even when it is complemented.
-	if p.pPars.fPolarFlip != 0 && aig.Aig_ObjPhase(p.pFrames, aig.Aig_Regular(edge)) {
+	if p.pPars.FPolarFlip != 0 && aig.Aig_ObjPhase(p.pFrames, aig.Aig_Regular(edge)) {
 		value ^= 1
 	}
 	return value
@@ -108,7 +108,7 @@ func Ssw_ManSweepNode(p *Ssw_Man_t, obj aig.Edge, frame, bmc int32, pairs *vec.V
 	if aig.Aig_Regular(nodeFrame) == aig.Aig_Regular(reprFrame) {
 		return 0
 	}
-	if bmc == 0 && p.pPars.fDynamic != 0 {
+	if bmc == 0 && p.pPars.FDynamic != 0 {
 		start := time.Now()
 		Ssw_ManLoadSolver(p, repr, obj)
 		p.nRecycleCalls++
@@ -125,25 +125,25 @@ func Ssw_ManSweepNode(p *Ssw_Man_t, obj aig.Edge, frame, bmc int32, pairs *vec.V
 			adjusted = adjusted.Not()
 		}
 		Ssw_ObjSetFrame(p, obj, frame, adjusted)
-		if p.pPars.fEquivDump2 != 0 && pairs != nil {
+		if p.pPars.FEquivDump2 != 0 && pairs != nil {
 			vec.Vec_IntPushTwo(pairs, int32(repr.NodeID()), int32(obj.NodeID()))
 		}
 		return 0
 	}
-	if p.pPars.fEquivDump != 0 && pairs != nil {
+	if p.pPars.FEquivDump != 0 && pairs != nil {
 		vec.Vec_IntPushTwo(pairs, int32(repr.NodeID()), int32(obj.NodeID()))
 	}
 	if result == -1 {
 		Ssw_ClassesRemoveNode(p.ppClasses, obj)
 		return 1
 	}
-	if bmc == 0 && p.pPars.fDynamic != 0 {
+	if bmc == 0 && p.pPars.FDynamic != 0 {
 		Ssw_SmlAddPatternDyn(p)
 		p.nPatterns++
 		return 1
 	}
 	Ssw_SmlSavePatternAig(p, frame)
-	if p.pPars.fConstrs == 0 {
+	if p.pPars.FConstrs == 0 {
 		Ssw_ManResimulateWord(p, obj, repr, frame)
 	} else {
 		Ssw_ManResimulateBit(p, obj, repr)
@@ -155,7 +155,7 @@ func Ssw_ManSweepNode(p *Ssw_Man_t, obj aig.Edge, frame, bmc int32, pairs *vec.V
 }
 func Ssw_ManSweepBmc(p *Ssw_Man_t) int32 {
 	start := time.Now()
-	p.pFrames = aig.Aig_ManStart(aig.Aig_ManObjNumMax(p.pAig) * p.pPars.nFramesK)
+	p.pFrames = aig.Aig_ManStart(aig.Aig_ManObjNumMax(p.pAig) * p.pPars.NFramesK)
 	p.pMSat.pAig = p.pFrames
 	inputs, outputs := p.pAig.Inputs(), p.pAig.Outputs()
 	regs := int(aig.Aig_ManRegNum(p.pAig))
@@ -164,7 +164,7 @@ func Ssw_ManSweepBmc(p *Ssw_Man_t) int32 {
 		Ssw_ObjSetFrame(p, lo, 0, p.pFrames.Const0())
 	}
 	p.fRefined = 0
-	for frame := int32(0); frame < p.pPars.nFramesK; frame++ {
+	for frame := int32(0); frame < p.pPars.NFramesK; frame++ {
 		Ssw_ObjSetFrame(p, p.pAig.Const1(), frame, p.pFrames.Const1())
 		for _, pi := range inputs[:pis] {
 			Ssw_ObjSetFrame(p, pi, frame, p.pFrames.NewInput())
@@ -176,7 +176,7 @@ func Ssw_ManSweepBmc(p *Ssw_Man_t) int32 {
 			Ssw_ObjSetFrame(p, obj, frame, sswMakeNode(p, p.pFrames, obj, frame))
 			p.fRefined |= Ssw_ManSweepNode(p, obj, frame, 1, nil)
 		}
-		if frame == p.pPars.nFramesK-1 {
+		if frame == p.pPars.NFramesK-1 {
 			break
 		}
 		for _, out := range outputs {
@@ -223,7 +223,7 @@ func Ssw_ManSweep(p *Ssw_Man_t) int32 {
 	// The C driver does not abort when simplification finds a contradiction;
 	// subsequent SAT queries observe the resulting UNSAT solver state.
 	p.pMSat.pSat.Simplify()
-	frame := p.pPars.nFramesK
+	frame := p.pPars.NFramesK
 	Ssw_ObjSetFrame(p, p.pAig.Const1(), frame, p.pFrames.Const1())
 	inputs := p.pAig.Inputs()
 	pis := len(inputs) - int(aig.Aig_ManRegNum(p.pAig))
@@ -234,7 +234,7 @@ func Ssw_ManSweep(p *Ssw_Man_t) int32 {
 	p.fRefined = 0
 	Ssw_ClassesClearRefined(p.ppClasses)
 	var pairs *vec.Vec_Int_t
-	if p.pPars.fEquivDump != 0 || p.pPars.fEquivDump2 != 0 {
+	if p.pPars.FEquivDump != 0 || p.pPars.FEquivDump2 != 0 {
 		pairs = vec.Vec_IntAlloc(1000)
 	}
 	for _, obj := range inputs[pis:] {
@@ -247,11 +247,11 @@ func Ssw_ManSweep(p *Ssw_Man_t) int32 {
 		}
 	}
 
-	if p.pPars.fEquivDump != 0 {
+	if p.pPars.FEquivDump != 0 {
 		Ssw_ManDumpEquivMiter(p.pAig, pairs, sswEquivDumpCounter, 1)
 		sswEquivDumpCounter++
 	}
-	if p.pPars.fEquivDump2 != 0 && p.fRefined == 0 {
+	if p.pPars.FEquivDump2 != 0 && p.fRefined == 0 {
 		Ssw_ManDumpEquivMiter(p.pAig, pairs, 0, 0)
 	}
 	return p.fRefined

@@ -41,45 +41,45 @@ import (
 // choicing parameters
 
 type Ssw_Pars_t struct {
-	nPartSize      int32 // size of the partition
-	nOverSize      int32 // size of the overlap between partitions
-	nFramesK       int32 // the induction depth
-	nFramesAddSim  int32 // the number of additional frames to simulate
-	fConstrs       int32 // treat the last nConstrs POs as seq constraints
-	fMergeFull     int32 // enables full merge when constraints are used
-	nMaxLevs       int32 // the max number of levels of nodes to consider
-	nBTLimit       int32 // conflict limit at a node
+	NPartSize      int32 // size of the partition
+	NOverSize      int32 // size of the overlap between partitions
+	NFramesK       int32 // the induction depth
+	NFramesAddSim  int32 // the number of additional frames to simulate
+	FConstrs       int32 // treat the last nConstrs POs as seq constraints
+	FMergeFull     int32 // enables full merge when constraints are used
+	NMaxLevs       int32 // the max number of levels of nodes to consider
+	NBTLimit       int32 // conflict limit at a node
 	nBTLimitGlobal int32 // conflict limit for multiple runs
 	nMinDomSize    int32 // min clock domain considered for optimization
-	nItersStop     int32 // stop after the given number of iterations
-	fDumpSRInit    int32 // dumps speculative reduction
+	NItersStop     int32 // stop after the given number of iterations
+	FDumpSRInit    int32 // dumps speculative reduction
 	nResimDelta    int32 // the number of nodes to resimulate
 	nStepsMax      int32 // (scorr only) the max number of induction steps
 	TimeLimit      int32 // time out in seconds
-	fPolarFlip     int32 // uses polarity adjustment
-	fLatchCorr     int32 // perform register correspondence
-	fConstCorr     int32 // perform constant correspondence
-	fOutputCorr    int32 // perform 'PO correspondence'
+	FPolarFlip     int32 // uses polarity adjustment
+	FLatchCorr     int32 // perform register correspondence
+	FConstCorr     int32 // perform constant correspondence
+	FOutputCorr    int32 // perform 'PO correspondence'
 	fSemiFormal    int32 // enable semiformal filtering
 	//    int              fUniqueness;   // enable uniqueness constraints
-	fDynamic      int32 // enable dynamic addition of constraints
-	fLocalSim     int32 // enable local simulation simulation
-	fPartSigCorr  int32 // uses partial signal correspondence
-	nIsleDist     int32 // extends islands by the given distance
+	FDynamic      int32 // enable dynamic addition of constraints
+	FLocalSim     int32 // enable local simulation simulation
+	FPartSigCorr  int32 // uses partial signal correspondence
+	NIsleDist     int32 // extends islands by the given distance
 	fScorrGia     int32 // new signal correspondence implementation
 	fUseCSat      int32 // new SAT solver using when fScorrGia is selected
-	fVerbose      int32 // verbose stats
-	fFlopVerbose  int32 // verbose printout of redundant flops
-	fEquivDump    int32 // enables dumping equivalences
-	fEquivDump2   int32 // enables dumping equivalences
-	fStopWhenGone int32 // stop when PO output is not a candidate constant
+	FVerbose      int32 // verbose stats
+	FFlopVerbose  int32 // verbose printout of redundant flops
+	FEquivDump    int32 // enables dumping equivalences
+	FEquivDump2   int32 // enables dumping equivalences
+	FStopWhenGone int32 // stop when PO output is not a candidate constant
 	// optimized latch correspondence
-	fLatchCorrOpt int32 // perform register correspondence (optimized)
-	nSatVarMax    int32 // max number of SAT vars before recycling SAT solver (optimized latch corr only)
+	FLatchCorrOpt int32 // perform register correspondence (optimized)
+	NSatVarMax    int32 // max number of SAT vars before recycling SAT solver (optimized latch corr only)
 	nRecycleCalls int32 // calls to perform before recycling SAT solver (optimized latch corr only)
 	// optimized signal correspondence
-	nSatVarMax2    int32 // max number of SAT vars before recycling SAT solver (optimized latch corr only)
-	nRecycleCalls2 int32 // calls to perform before recycling SAT solver (optimized latch corr only)
+	NSatVarMax2    int32 // max number of SAT vars before recycling SAT solver (optimized latch corr only)
+	NRecycleCalls2 int32 // calls to perform before recycling SAT solver (optimized latch corr only)
 	// internal parameters
 	nIters     int32 // the number of iterations performed
 	nConflicts int32 // the total number of conflicts performed
@@ -91,31 +91,31 @@ type Ssw_Pars_t struct {
 // SetStopWhenGone configures the correspondence sweep to stop once no
 // equivalent pairs remain, and sets its induction depth.
 func (p *Ssw_Pars_t) SetStopWhenGone(enabled int32, frames int32) {
-	p.fStopWhenGone = enabled
-	p.nFramesK = frames
+	p.FStopWhenGone = enabled
+	p.NFramesK = frames
 }
 
 type Ssw_RarPars_t struct {
-	nFrames        int32
-	nWords         int32
-	nBinSize       int32
-	nRounds        int32
-	nRestart       int32
-	nRandSeed      int32
+	NFrames        int32
+	NWords         int32
+	NBinSize       int32
+	NRounds        int32
+	NRestart       int32
+	NRandSeed      int32
 	TimeOut        int32
 	TimeOutGap     int32
-	fSolveAll      int32
-	fSetLastState  int32
-	fVerbose       int32
-	fNotVerbose    int32
+	FSolveAll      int32
+	FSetLastState  int32
+	FVerbose       int32
+	FNotVerbose    int32
 	fSilent        int32
-	fDropSatOuts   int32
-	fMiter         int32
-	fUseCex        int32
-	fLatchOnly     int32
-	fUseFfGrouping int32
+	FDropSatOuts   int32
+	FMiter         int32
+	FUseCex        int32
+	FLatchOnly     int32
+	FUseFfGrouping int32
 	nSolved        int32
-	pCex           *util.Abc_Cex_t
+	PCex           *util.Abc_Cex_t
 	pFuncOnFail    func(int32, *util.Abc_Cex_t) int32 // called for a failed output in MO mode
 }
 

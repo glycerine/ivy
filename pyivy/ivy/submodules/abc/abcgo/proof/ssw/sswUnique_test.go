@@ -17,7 +17,7 @@ func TestUniquenessConstraintRequiresDifferentStates(t *testing.T) {
 	a, b := frames.NewInput(), frames.NewInput()
 	sat := Ssw_SatStart(0)
 	sat.pAig = frames
-	p := &Ssw_Man_t{pAig: g, pFrames: frames, pMSat: sat, pPars: &Ssw_Pars_t{nFramesK: 2}, nFrames: 2, pNodeToFrames: make([]aig.Edge, len(g.Nodes())*2), iOutputLit: -1}
+	p := &Ssw_Man_t{pAig: g, pFrames: frames, pMSat: sat, pPars: &Ssw_Pars_t{NFramesK: 2}, nFrames: 2, pNodeToFrames: make([]aig.Edge, len(g.Nodes())*2), iOutputLit: -1}
 	for i := range p.pNodeToFrames {
 		p.pNodeToFrames[i] = aig.InvalidEdge
 	}
@@ -46,7 +46,7 @@ func TestUniquenessConstraintRetainsSourcePhaseBehavior(t *testing.T) {
 	aig.Aig_ObjSetPhase(frames, b, true)
 	sat := Ssw_SatStart(1)
 	sat.pAig = frames
-	p := &Ssw_Man_t{pAig: g, pFrames: frames, pMSat: sat, pPars: &Ssw_Pars_t{nFramesK: 2, fPolarFlip: 1}, nFrames: 2, pNodeToFrames: make([]aig.Edge, len(g.Nodes())*2), iOutputLit: -1}
+	p := &Ssw_Man_t{pAig: g, pFrames: frames, pMSat: sat, pPars: &Ssw_Pars_t{NFramesK: 2, FPolarFlip: 1}, nFrames: 2, pNodeToFrames: make([]aig.Edge, len(g.Nodes())*2), iOutputLit: -1}
 	for i := range p.pNodeToFrames {
 		p.pNodeToFrames[i] = aig.InvalidEdge
 	}

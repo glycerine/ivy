@@ -29,7 +29,7 @@ func rarityShiftGraph(n int) *aig.Graph {
 func TestRarityMultiRoundCounterexample(t *testing.T) {
 	for _, words := range []int32{1, 2} {
 		g := rarityShiftGraph(5)
-		pars := &Ssw_RarPars_t{nWords: words, nFrames: 2, nBinSize: 2, nRounds: 4}
+		pars := &Ssw_RarPars_t{NWords: words, NFrames: 2, NBinSize: 2, NRounds: 4}
 		if got := Ssw_RarSimulate(g, pars); got != 0 {
 			t.Fatalf("words=%d: result %d", words, got)
 		}
@@ -49,7 +49,7 @@ func TestRaritySolveAllOutputsAndCallback(t *testing.T) {
 	g.AddOutput(a)
 	aig.Aig_ManSetRegNum(g, 2)
 	var called []int32
-	pars := &Ssw_RarPars_t{nWords: 1, nFrames: 1, nBinSize: 1, nRounds: 4, fSolveAll: 1, fNotVerbose: 1,
+	pars := &Ssw_RarPars_t{NWords: 1, NFrames: 1, NBinSize: 1, NRounds: 4, FSolveAll: 1, FNotVerbose: 1,
 		pFuncOnFail: func(po int32, _ *util.Abc_Cex_t) int32 { called = append(called, po); return 0 },
 	}
 	if got := Ssw_RarSimulate(g, pars); got != 0 {
@@ -75,7 +75,7 @@ func TestRarityTransferUsesConfiguredBinWidth(t *testing.T) {
 			g.AddOutput(g.Const0())
 		}
 		aig.Aig_ManSetRegNum(g, 80)
-		p := Ssw_RarManStart(g, &Ssw_RarPars_t{nWords: 1, nFrames: 1, nBinSize: width})
+		p := Ssw_RarManStart(g, &Ssw_RarPars_t{NWords: 1, NFrames: 1, NBinSize: width})
 		// This pattern crosses a 64-bit word boundary at widths 3 and 5.
 		for i, li := range g.Outputs()[1:] {
 			if (i*17+3)%11 < 5 {
@@ -113,7 +113,7 @@ func TestRarityReplaysRandomInputsAcrossRounds(t *testing.T) {
 			g.AddOutput(regs[i-1])
 		}
 		aig.Aig_ManSetRegNum(g, int32(len(regs)))
-		pars := &Ssw_RarPars_t{nWords: 2, nFrames: 2, nBinSize: 2, nRounds: 5, nRandSeed: seed}
+		pars := &Ssw_RarPars_t{NWords: 2, NFrames: 2, NBinSize: 2, NRounds: 5, NRandSeed: seed}
 		if got := Ssw_RarSimulate(g, pars); got != 0 {
 			t.Fatalf("seed=%d: result %d", seed, got)
 		}

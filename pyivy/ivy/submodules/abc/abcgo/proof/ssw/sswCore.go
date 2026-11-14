@@ -29,13 +29,13 @@ func Ssw_SignalCorrespondenceRefine(p *Ssw_Man_t) *aig.Graph {
 	p.nLitsBeg = Ssw_ClassesLitNum(p.ppClasses)
 	p.nNodesBeg = aig.Aig_ManNodeNum(p.pAig)
 	p.nRegsBeg = aig.Aig_ManRegNum(p.pAig)
-	if p.pPars.fVerbose != 0 {
+	if p.pPars.FVerbose != 0 {
 		fmt.Print("Before BMC: ")
 		Ssw_ClassesPrint(p.ppClasses, 0)
 	}
-	if p.pPars.fLatchCorr == 0 || p.pPars.nFramesK > 1 {
+	if p.pPars.FLatchCorr == 0 || p.pPars.NFramesK > 1 {
 		p.pMSat = Ssw_SatStart(0)
-		if p.pPars.fConstrs != 0 {
+		if p.pPars.FConstrs != 0 {
 			Ssw_ManSweepBmcConstr(p)
 		} else {
 			Ssw_ManSweepBmc(p)
@@ -44,7 +44,7 @@ func Ssw_SignalCorrespondenceRefine(p *Ssw_Man_t) *aig.Graph {
 		p.pMSat = nil
 		Ssw_ManCleanup(p)
 	}
-	if p.pPars.fVerbose != 0 {
+	if p.pPars.FVerbose != 0 {
 		fmt.Print("After  BMC: ")
 		Ssw_ClassesPrint(p.ppClasses, 0)
 	}
@@ -60,7 +60,7 @@ func Ssw_SignalCorrespondenceRefine(p *Ssw_Man_t) *aig.Graph {
 				fmt.Printf("Stopped signal correspondence after %d refinement iterations.\n", iteration)
 				break
 			}
-			if p.pPars.nItersStop >= 0 && p.pPars.nItersStop == iteration {
+			if p.pPars.NItersStop >= 0 && p.pPars.NItersStop == iteration {
 				speculative := Ssw_SpeculativeReduction(p)
 				if err := aig.Aig_ManDumpBlif(speculative, "srm.blif", nil, nil); err != nil {
 					fmt.Printf("Cannot write speculative miter: %v\n", err)
@@ -72,23 +72,23 @@ func Ssw_SignalCorrespondenceRefine(p *Ssw_Man_t) *aig.Graph {
 			start := time.Now()
 			p.pMSat = Ssw_SatStart(0)
 			var changed int32
-			if p.pPars.fLatchCorrOpt != 0 {
+			if p.pPars.FLatchCorrOpt != 0 {
 				changed = Ssw_ManSweepLatch(p)
-			} else if p.pPars.fConstrs != 0 {
+			} else if p.pPars.FConstrs != 0 {
 				changed = Ssw_ManSweepConstr(p)
-			} else if p.pPars.fDynamic != 0 {
+			} else if p.pPars.FDynamic != 0 {
 				changed = Ssw_ManSweepDyn(p)
 			} else {
 				changed = Ssw_ManSweep(p)
 			}
-			if p.pPars.fLatchCorrOpt == 0 {
+			if p.pPars.FLatchCorrOpt == 0 {
 				p.pPars.nConflicts += int32(p.pMSat.pSat.Statistics().Conflicts)
 			}
-			if p.pPars.fVerbose != 0 {
+			if p.pPars.FVerbose != 0 {
 				fmt.Print(sswSweepStats(p, iteration, previousProof, previousSat, previousRecycles, previousFailures))
 				fmt.Printf("T = %.2f sec\n", time.Since(start).Seconds())
 			}
-			if p.pPars.fLatchCorrOpt == 0 && p.pPars.fStopWhenGone != 0 && saig.Saig_ManPoNum(p.pAig) == 1 && Ssw_ObjIsConst1Cand(p.pAig, aig.Aig_ObjFanin0(p.pAig, aig.Aig_ManCo(p.pAig, 0))) == 0 {
+			if p.pPars.FLatchCorrOpt == 0 && p.pPars.FStopWhenGone != 0 && saig.Saig_ManPoNum(p.pAig) == 1 && Ssw_ObjIsConst1Cand(p.pAig, aig.Aig_ObjFanin0(p.pAig, aig.Aig_ManCo(p.pAig, 0))) == 0 {
 				fmt.Printf("Iterative refinement is stopped after iteration %d because the property output is no longer a candidate constant.\n", iteration)
 				p.nLitsEnd = p.nLitsBeg
 				p.nNodesEnd = p.nNodesBeg
@@ -117,7 +117,7 @@ func Ssw_SignalCorrespondenceRefine(p *Ssw_Man_t) *aig.Graph {
 	}
 	p.pPars.nIters = iteration + 1
 	p.timeTotal = time.Since(started)
-	Ssw_ManUpdateEquivs(p, p.pAig, p.pPars.fVerbose)
+	Ssw_ManUpdateEquivs(p, p.pAig, p.pPars.FVerbose)
 	result := aig.Aig_ManDupRepr(p.pAig, 0)
 	aig.Aig_ManSeqCleanup(result)
 	p.nLitsEnd = Ssw_ClassesLitNum(p.ppClasses)
@@ -142,54 +142,54 @@ func Ssw_SignalCorrespondence(graph *aig.Graph, pars *Ssw_Pars_t) *aig.Graph {
 		aig.Aig_ManReprStart(graph, aig.Aig_ManObjNumMax(graph))
 		return aig.Aig_ManDupOrdered(graph)
 	}
-	if pars.fLatchCorrOpt != 0 {
-		pars.fLatchCorr = 1
-		pars.nFramesAddSim = 0
+	if pars.FLatchCorrOpt != 0 {
+		pars.FLatchCorr = 1
+		pars.NFramesAddSim = 0
 		if len(graph.ClockDomains) > 0 {
 			return Ssw_SignalCorrespondencePart(graph, pars)
 		}
 	} else {
-		if pars.nFramesK <= 0 {
+		if pars.NFramesK <= 0 {
 			panic("ssw: induction depth must be positive")
 		}
-		if pars.nPartSize > 0 && pars.nPartSize < aig.Aig_ManRegNum(graph) || len(graph.ClockDomains) > 0 {
+		if pars.NPartSize > 0 && pars.NPartSize < aig.Aig_ManRegNum(graph) || len(graph.ClockDomains) > 0 {
 			return Ssw_SignalCorrespondencePart(graph, pars)
 		}
 	}
 	if pars.fScorrGia != 0 {
-		if pars.fLatchCorrOpt != 0 {
-			return cec.Cec_LatchCorrespondence(graph, pars.nBTLimit, pars.fUseCSat)
+		if pars.FLatchCorrOpt != 0 {
+			return cec.Cec_LatchCorrespondence(graph, pars.NBTLimit, pars.fUseCSat)
 		}
-		return cec.Cec_SignalCorrespondence(graph, pars.nBTLimit, pars.fUseCSat)
+		return cec.Cec_SignalCorrespondence(graph, pars.NBTLimit, pars.fUseCSat)
 	}
 	p := Ssw_ManCreate(graph, pars)
 	defer Ssw_ManStop(p)
-	if pars.fConstrs != 0 {
-		p.ppClasses = Ssw_ClassesPrepareSimple(graph, pars.fLatchCorr, pars.nMaxLevs)
+	if pars.FConstrs != 0 {
+		p.ppClasses = Ssw_ClassesPrepareSimple(graph, pars.FLatchCorr, pars.NMaxLevs)
 		Ssw_ClassesSetData(p.ppClasses, graph, nil, Ssw_SmlObjIsConstBit, Ssw_SmlObjsAreEqualBit)
-		status := Ssw_ManSetConstrPhases(graph, pars.nFramesK+1, &p.vInits)
+		status := Ssw_ManSetConstrPhases(graph, pars.NFramesK+1, &p.vInits)
 		if status != 0 {
 			fmt.Println("Ssw_SignalCorrespondence(): The init state does not satisfy the constraints!")
-			pars.fVerbose = 0
+			pars.FVerbose = 0
 			return nil
 		}
 		Ssw_ManRefineByConstrSim(p)
 	} else {
-		p.ppClasses = Ssw_ClassesPrepare(graph, pars.nFramesK, pars.fLatchCorr, pars.fConstCorr, pars.fOutputCorr, pars.nMaxLevs, pars.fVerbose)
-		frames := int32(1) + pars.nFramesAddSim
-		if pars.fLatchCorrOpt != 0 {
+		p.ppClasses = Ssw_ClassesPrepare(graph, pars.NFramesK, pars.FLatchCorr, pars.FConstCorr, pars.FOutputCorr, pars.NMaxLevs, pars.FVerbose)
+		frames := int32(1) + pars.NFramesAddSim
+		if pars.FLatchCorrOpt != 0 {
 			frames = 2
-		} else if pars.fDynamic != 0 {
-			frames = p.nFrames + pars.nFramesAddSim
+		} else if pars.FDynamic != 0 {
+			frames = p.nFrames + pars.NFramesAddSim
 		}
 		p.pSml = Ssw_SmlStart(graph, 0, frames, 1)
 		Ssw_ClassesSetData(p.ppClasses, p.pSml, func(data any, obj aig.Edge) uint32 { return Ssw_SmlObjHashWord(data.(*Ssw_Sml_t), obj) }, func(data any, obj aig.Edge) int32 { return Ssw_SmlObjIsConstWord(data.(*Ssw_Sml_t), obj) }, func(data any, a, b aig.Edge) int32 { return Ssw_SmlObjsAreEqualWord(data.(*Ssw_Sml_t), a, b) })
 	}
-	if pars.fLocalSim != 0 && p.pSml != nil {
+	if pars.FLocalSim != 0 && p.pSml != nil {
 		p.pVisited = make([]int32, Ssw_SmlNumFrames(p.pSml)*aig.Aig_ManObjNumMax(graph))
 	}
 	result := Ssw_SignalCorrespondenceRefine(p)
-	if result != nil && pars.fConstrs != 0 && pars.fVerbose != 0 {
+	if result != nil && pars.FConstrs != 0 && pars.FVerbose != 0 {
 		Ssw_ReportConeReductions(p, graph, result)
 	}
 	return result
@@ -198,11 +198,11 @@ func Ssw_SignalCorrespondence(graph *aig.Graph, pars *Ssw_Pars_t) *aig.Graph {
 // sswSweepStats reports per-iteration changes, as in Ssw_SignalCorrespondenceRefine.
 func sswSweepStats(p *Ssw_Man_t, iteration, previousProof, previousSat, previousRecycles, previousFailures int32) string {
 	result := fmt.Sprintf("%3d : C =%7d. Cl =%7d. ", iteration, Ssw_ClassesCand1Num(p.ppClasses), Ssw_ClassesClassNum(p.ppClasses))
-	if p.pPars.fLatchCorrOpt != 0 {
+	if p.pPars.FLatchCorrOpt != 0 {
 		return result + fmt.Sprintf("Pr =%6d. Cex =%5d. R =%4d. F =%4d. ", p.nSatProof-previousProof, p.nSatCallsSat-previousSat, p.nRecycles-previousRecycles, p.nSatFailsReal-previousFailures)
 	}
 	result += fmt.Sprintf("LR =%6d. NR =%6d. ", p.nConstrReduced, aig.Aig_ManNodeNum(p.pFrames))
-	if p.pPars.fDynamic != 0 {
+	if p.pPars.FDynamic != 0 {
 		result += fmt.Sprintf("Cex =%5d. R =%4d. ", p.nSatCallsSat-previousSat, p.nRecycles-previousRecycles)
 	}
 	property := "-"

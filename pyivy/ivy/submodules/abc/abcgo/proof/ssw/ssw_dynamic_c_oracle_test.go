@@ -17,10 +17,10 @@ func TestDynamicLatchCorrespondenceMatchesC(t *testing.T) {
 		aig.Aig_ManSetRegNum(g, 2)
 		pars := new(Ssw_Pars_t)
 		Ssw_ManSetDefaultParamsLcorr(pars)
-		pars.fDynamic = 1
-		pars.fLocalSim = local
-		pars.nSatVarMax2 = 1
-		pars.nRecycleCalls2 = 0
+		pars.FDynamic = 1
+		pars.FLocalSim = local
+		pars.NSatVarMax2 = 1
+		pars.NRecycleCalls2 = 0
 		out := Ssw_LatchCorrespondence(g, pars)
 		if out == nil || out.RegisterCount() != 1 || out.InputCount() != 2 || out.OutputCount() != 2 {
 			t.Fatalf("local=%d unexpected interface", local)

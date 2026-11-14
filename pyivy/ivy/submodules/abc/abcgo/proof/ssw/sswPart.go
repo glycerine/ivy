@@ -8,26 +8,26 @@ import (
 )
 
 func Ssw_SignalCorrespondencePart(g *aig.Graph, pars *Ssw_Pars_t) *aig.Graph {
-	if pars.fConstrs != 0 {
+	if pars.FConstrs != 0 {
 		fmt.Println("Cannot use partitioned computation with constraints.")
 		return nil
 	}
 	started := time.Now()
-	partSize, verbose := pars.nPartSize, pars.fVerbose
-	pars.nPartSize = 0
-	pars.fVerbose = 0
-	defer func() { pars.nPartSize = partSize; pars.fVerbose = verbose }()
+	partSize, verbose := pars.NPartSize, pars.FVerbose
+	pars.NPartSize = 0
+	pars.FVerbose = 0
+	defer func() { pars.NPartSize = partSize; pars.FVerbose = verbose }()
 	var partitions [][]int32
 	if g.ClockDomains != nil {
 		for _, domain := range g.ClockDomains {
 			if partSize != 0 && len(domain) > int(partSize) {
-				aig.Aig_ManPartDivide(&partitions, domain, partSize, pars.nOverSize)
+				aig.Aig_ManPartDivide(&partitions, domain, partSize, pars.NOverSize)
 			} else {
 				partitions = append(partitions, append([]int32(nil), domain...))
 			}
 		}
 	} else {
-		partitions = aig.Aig_ManRegPartitionSimple(g, partSize, pars.nOverSize)
+		partitions = aig.Aig_ManRegPartitionSimple(g, partSize, pars.NOverSize)
 	}
 	aig.Aig_ManReprStart(g, int32(len(g.Nodes())))
 	for i, part := range partitions {

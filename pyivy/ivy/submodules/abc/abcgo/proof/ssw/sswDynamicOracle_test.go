@@ -36,8 +36,8 @@ func TestDynamicSweepPreservesSequentialBehavior(t *testing.T) {
 			aig.Aig_ManSetRegNum(g, 1)
 			var pars Ssw_Pars_t
 			Ssw_ManSetDefaultParams(&pars)
-			pars.fDynamic = 1
-			pars.fLocalSim = local
+			pars.FDynamic = 1
+			pars.FLocalSim = local
 			pars.nStepsMax = 3
 			reduced := Ssw_SignalCorrespondence(g, &pars)
 			if reduced == nil {

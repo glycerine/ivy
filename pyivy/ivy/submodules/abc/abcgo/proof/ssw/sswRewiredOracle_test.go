@@ -29,11 +29,11 @@ func TestCorrespondenceHandlesRewiredNodeOrder(t *testing.T) {
 		Ssw_ManSetDefaultParams(p)
 		p.nStepsMax = 2
 		if mode == 3 {
-			p.fConstrs = 1
+			p.FConstrs = 1
 		}
 		if mode > 0 && mode < 3 {
-			p.fDynamic = 1
-			p.fLocalSim = mode - 1
+			p.FDynamic = 1
+			p.FLocalSim = mode - 1
 		}
 		result := Ssw_SignalCorrespondence(g, p)
 		if result == nil {
@@ -122,8 +122,8 @@ func TestDynamicPrebuiltFaninRemainsCorrectAfterMerge(t *testing.T) {
 	}
 	pars := new(Ssw_Pars_t)
 	Ssw_ManSetDefaultParams(pars)
-	pars.fDynamic = 1
-	pars.nFramesK = 1
+	pars.FDynamic = 1
+	pars.NFramesK = 1
 	p := Ssw_ManCreate(g, pars)
 	p.ppClasses = Ssw_ClassesStart(g)
 	Ssw_ObjAddClass(p.ppClasses, repr, []aig.Edge{repr, candidate}, 2)

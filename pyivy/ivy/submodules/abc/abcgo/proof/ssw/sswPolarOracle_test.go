@@ -28,10 +28,10 @@ func TestPhaseFlippedCorrespondencePreservesTraces(t *testing.T) {
 		aig.Aig_ManSetRegNum(g, 1)
 		pars := new(Ssw_Pars_t)
 		Ssw_ManSetDefaultParams(pars)
-		pars.fPolarFlip = 1
+		pars.FPolarFlip = 1
 		if trial%3 != 0 {
-			pars.fDynamic = 1
-			pars.fLocalSim = int32(trial % 2)
+			pars.FDynamic = 1
+			pars.FLocalSim = int32(trial % 2)
 		}
 		pars.nStepsMax = 3
 		out := Ssw_SignalCorrespondence(g, pars)

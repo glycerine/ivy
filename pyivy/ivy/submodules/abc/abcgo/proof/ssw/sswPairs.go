@@ -39,7 +39,7 @@ func Ssw_SignalCorrespondenceWithPairs(first, second *aig.Graph, ids1, ids2 *vec
 	vec.Vec_IntFree(pairs)
 	p := Ssw_ManCreate(miter, pars)
 	p.ppClasses = Ssw_ClassesPreparePairs(miter, classes)
-	p.pSml = Ssw_SmlStart(miter, 0, p.nFrames+pars.nFramesAddSim, 1)
+	p.pSml = Ssw_SmlStart(miter, 0, p.nFrames+pars.NFramesAddSim, 1)
 	Ssw_ClassesSetData(p.ppClasses, p.pSml, func(data any, node aig.Edge) uint32 { return Ssw_SmlObjHashWord(data.(*Ssw_Sml_t), node) }, func(data any, node aig.Edge) int32 { return Ssw_SmlObjIsConstWord(data.(*Ssw_Sml_t), node) }, func(data any, a, b aig.Edge) int32 { return Ssw_SmlObjsAreEqualWord(data.(*Ssw_Sml_t), a, b) })
 	result := Ssw_SignalCorrespondenceRefine(p)
 	Ssw_FreeTempClasses(classes, aig.Aig_ManObjNumMax(miter))
@@ -51,7 +51,7 @@ func Ssw_SignalCorrespondeceTestPairs(graph *aig.Graph) *aig.Graph {
 	start := time.Now()
 	var pars Ssw_Pars_t
 	Ssw_ManSetDefaultParams(&pars)
-	pars.fVerbose = 1
+	pars.FVerbose = 1
 	reduced := Ssw_SignalCorrespondence(graph, &pars)
 	ids1, ids2 := vec.Vec_IntAlloc(int(aig.Aig_ManObjNumMax(graph))), vec.Vec_IntAlloc(int(aig.Aig_ManObjNumMax(graph)))
 	live := make(map[int]bool)

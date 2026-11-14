@@ -11,7 +11,7 @@ func TestManagerConstructionAndEquivCount(t *testing.T) {
 	g.AddOutput(pi)
 	g.AddOutput(lo)
 	aig.Aig_ManSetRegNum(g, 1)
-	pars := &Ssw_Pars_t{nFramesK: 2}
+	pars := &Ssw_Pars_t{NFramesK: 2}
 	p := Ssw_ManCreate(g, pars)
 	if p.nFrames != 3 || p.nPatWords != 1 || p.iOutputLit != -1 {
 		t.Fatal("bad manager dimensions")
