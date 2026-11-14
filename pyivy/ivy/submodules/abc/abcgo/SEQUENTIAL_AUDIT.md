@@ -899,3 +899,37 @@ found reference mutations in CNF cuts and BBR, plus the previously migrated
 reference-bounded fanout loops. The non-integer Aig_ObjFanout0 helper also
 still scans by object ID rather than following the maintained head; it has no
 production repository callers and needs its own regression before repair.
+
+### Physical CO references and the raw fanout object accessor
+
+Red regressions exposed synthetic manager-ownership references on explicit CO
+objects: C reports zero fanouts, while Go reported one, allowed a dereference
+of that ownership count, and restored it during reference resets. Removed the
+synthetic count from creation, resetting, recounting and validation. Output
+ownership remains in the manager's output vector and cleanup follows those
+roots. Direct deletion of an attached CO still rejects misuse explicitly;
+output-aware deletion removes it normally. Legacy raw output edges retain
+their implicit consumer count, with a separate compatibility regression.
+
+The non-integer fanout helper now uses the maintained circular-list head in
+constant time rather than scanning objects by ID. Red tests cover reordering
+the head, missing fanout allocation and C's unconditional zero-handle
+conversion to object zero. A compiled fixture uses the original inline C
+reference and fanout accessors to verify the counter sequence 0/1/0/0 and
+nonempty/empty handle conversion. The ordinary counter helpers need no special
+CO adjustment now that stored counts represent physical fanouts.
+
+Focused regressions, full AIG race tests and the CNF, BBR, PDR and SSW race
+suites pass. The full uncached module integration gate also passes:
+`go test -p 1 ./... -count=1 -timeout 180s` completes with exit zero,
+129 packages tested and three without tests. The log is
+`/tmp/abcgo-output-refs-integration.log`. This is an AIG checkpoint, not
+completion of its audit.
+
+Read-only dominator review identifies the next source-contract questions:
+the Go store keeps private traversal marks/reference counts, whereas C's
+drivers and volume analysis mutate graph traversal IDs and marks. Existing
+Go tests explicitly expect graph immutability, so their green result does not
+prove source fidelity. Compare complete driver state and ordering against C
+before blessing that design or replacing its tests. No dominator source
+changes have been made in this checkpoint.
