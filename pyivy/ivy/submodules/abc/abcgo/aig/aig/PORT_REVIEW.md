@@ -207,3 +207,10 @@ Full AIG and ABCI race suites pass (33.424s/28.894s), with the later XOR parity
 regression passing separately. This checkpoint does not close the package-wide
 audit: full BLIF/Verilog dump writers and the remaining file inventory still
 need source reconciliation. See SEQUENTIAL_AUDIT.md for detailed evidence.
+
+BLIF naming follow-up: a new independent-reader regression failed for supplied
+port names that duplicated generated constant/gate/output nets. Generated names
+now reserve all supplied input/output names first and use the same unique-name
+helper as expression printing. Six parsed round trips, each evaluated at all
+four input assignments, cover both input/output naming and reserved suffixes.
+Full dump-writer source validation remains in progress.

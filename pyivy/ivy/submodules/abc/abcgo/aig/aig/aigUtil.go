@@ -224,13 +224,7 @@ func aigExpression(p *Graph, e Edge, verilog bool) string {
 		if _, named := names[input.NodeID()]; named {
 			continue
 		}
-		base := fmt.Sprintf("pi%d", i)
-		name := base
-		for suffix := 1; used[name]; suffix++ {
-			name = fmt.Sprintf("%s_%d", base, suffix)
-		}
-		names[input.NodeID()] = name
-		used[name] = true
+		names[input.NodeID()] = aigUniqueName(fmt.Sprintf("pi%d", i), used)
 	}
 	neg, and, or := "!", " * ", " + "
 	if verilog {
@@ -375,15 +369,14 @@ func Aig_ManDump(p *Graph) error {
 // All dump names are local snapshots rather than cached IDs in graph nodes.
 func aigDumpNames(p *Graph, inputs, outputs []string) map[int]string {
 	names := map[int]string{}
-	for i := range p.nodes {
-		names[i] = fmt.Sprintf("n%d", i)
-	}
+	used := map[string]bool{}
 	if inputs != nil {
 		if len(inputs) != len(p.inputs) {
 			panic("aig: input name count")
 		}
 		for i, e := range p.inputs {
 			names[e.NodeID()] = inputs[i]
+			used[inputs[i]] = true
 		}
 	}
 	if outputs != nil {
@@ -392,10 +385,27 @@ func aigDumpNames(p *Graph, inputs, outputs []string) map[int]string {
 		}
 		for i, e := range p.outputs {
 			names[e.NodeID()] = outputs[i]
+			used[outputs[i]] = true
+		}
+	}
+	for i := range p.nodes {
+		if _, supplied := names[i]; !supplied {
+			names[i] = aigUniqueName(fmt.Sprintf("n%d", i), used)
 		}
 	}
 	return names
 }
+
+// Reserve caller-supplied names before assigning any generated names.
+func aigUniqueName(base string, used map[string]bool) string {
+	name := base
+	for suffix := 1; used[name]; suffix++ {
+		name = fmt.Sprintf("%s_%d", base, suffix)
+	}
+	used[name] = true
+	return name
+}
+
 func aigModelName(p *Graph) string {
 	if p.Name == "" {
 		return "test"

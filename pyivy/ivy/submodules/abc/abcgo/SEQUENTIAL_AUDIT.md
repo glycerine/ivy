@@ -1678,3 +1678,31 @@ Full AIG and ABCI race suites pass in 33.424s and 28.894s, recorded in
 test passes independently. This closes these printer entry points, not the
 complete AIG audit. Full BLIF/Verilog dump writers and the final production-file
 inventory still require reconciliation before package 2 can be marked complete.
+
+### BLIF generated-net naming checkpoint
+
+Read the full BLIF/Verilog dump writers against aigUtil.c. Both use local
+name maps and deterministic graph order instead of overwriting source graph
+scratch fields; typed XORs/buffers and zero-initialized register transitions
+remain explicit. Existing Boolean tests cover default-name BLIF truth, but did
+not exercise caller-supplied names against internal generated names.
+
+Added an independent-reader regression before repair. Input names n0, n3 and
+n4 each caused ParseBLIF to reject the export for a duplicate driver (constant,
+internal gate or default output). The dump name allocator now reserves all
+supplied input/output names before generating any defaults. A shared unique-name
+helper also serves expression printing, removing duplicate suffix logic. This
+keeps normal names unchanged while preserving supplied port names when a
+collision occurs. C likewise assumes its generated names do not collide; the
+Go writer now avoids that invalid-output case.
+
+Six round trips cover constant/gate/output collisions, an output name matching
+a default input, and an already reserved numeric suffix. The independent BLIF
+reader checks the exported netlist, then its evaluator checks all four input
+assignments for each case. Full writer validation remains open, including
+sequential export and native-source semantic comparisons; this checkpoint does
+not mark the AIG package complete.
+
+After the naming repair, full AIG and ABCI race suites pass in 33.014s and
+29.004s (`/tmp/abcgo-dump-names-review.log`). Completed-package count remains
+1/131; aig/aig is still the active sequential review.
