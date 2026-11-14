@@ -2090,3 +2090,37 @@ silently claiming source parity proves correctness. Review reverse copy maps
 for any expansion nodes and cover direct/inverse duplication, whole-part copies,
 partitioned miters and FRA/choice transfer before closing that repair. The
 package audit remains active on aig/aig, completed count 1/131.
+
+### Native-XOR partition copy repair
+
+Replaced the test that expected native XOR to become AND with a red truth-table
+regression. A second red test showed both smart and naive partitioned miters
+incorrectly report XOR(a,b) equivalent to AND(a,b). The compiled original-C
+fixture explicitly demonstrates that upstream defect for native EXOR, while
+its default expanded-XOR representation yields the correct mismatch truth 14.
+Go now expands native XORs using the existing AND-based XOR constructor in
+partition-copy paths. Other cloning paths retain native XOR nodes.
+
+The expansion exposed a second bug with a red reverse-copy-map regression:
+copying a complemented implementation root discarded its polarity when mapping
+back to the original graph. Both whole-part reverse-map writes now preserve
+that bit. All eight input/output polarity combinations are checked over all
+four assignments, including forward and reverse map semantics. The map contains
+only the five original objects; the two new implementation nodes have no
+invented source bindings. Existing representative transfer skips absent maps.
+
+Additional tests cover reversed input ordering, direct and inverse copying,
+complemented outputs, constants and input aliases. A test-only exhaustive
+classifier exercises FRA and choice transfer on native/expanded XOR versions
+with an independent AND output. The classifier rejects native XOR fragments
+and overwrites its scratch copy map to check driver restoration. Result truth
+tables and graph consistency pass. This repairs a source bug rather than
+claiming that incorrect native C behavior is the intended Boolean contract.
+
+The sequential audit remains on aig/aig, with 1/131 original packages completed.
+
+Validation: full AIG/FRA/ABCI race suites pass in
+68.859s/12.335s/29.071s (`/tmp/abcgo-partition-xor-review.log`). The final
+expanded focused race tests, including buffer aliases and exact reverse-map
+ownership, pass in 2.316s (`/tmp/abcgo-partition-xor-final.log`). No fresh
+whole-repository run is claimed for this isolated repair.

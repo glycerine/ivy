@@ -320,3 +320,14 @@ correct. The existing native-XOR copy test enshrines that error and must be
 replaced with an explicit upstream-bug demonstration plus red/green functional
 regressions. AND-only backend compatibility and reverse mapping of expansion
 nodes need verification in the next repair. Package review is not complete.
+
+Native-XOR partition copying is now repaired: expand to existing AND-only XOR
+logic instead of copying as AND. Red clone/miter tests and an original-C fixture
+demonstrate the previous false-equivalence bug. A separate red copy-map test
+caught lost reverse-map polarity, now retained. Exhaustive signed two-input
+cases, forward/inverse/reverse mappings, constants/aliases and FRA/choice scratch
+map restoration pass focused checks. Auxiliary expansion nodes deliberately
+have no original-object binding. This closes the above XOR defect; the overall
+package audit and final function inventory remain incomplete.
+Full AIG/FRA/ABCI race checks pass (68.859s/12.335s/29.071s); the final focused
+signed-XOR/map/buffer/native-C checks pass with the race detector in 2.316s.

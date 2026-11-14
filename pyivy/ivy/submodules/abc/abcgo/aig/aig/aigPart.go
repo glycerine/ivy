@@ -421,7 +421,7 @@ func Aig_ManPartitionNaive(p *Graph, size int32) [][]int32 {
 	return parts
 }
 
-func partCloneMode(dst, src *Graph, e Edge, mapping map[int]Edge, missingInput func(Edge) Edge, sourceAnd bool) Edge {
+func partCloneMode(dst, src *Graph, e Edge, mapping map[int]Edge, missingInput func(Edge) Edge, andOnly bool) Edge {
 	id := e.NodeID()
 	value, ok := mapping[id]
 	if !ok {
@@ -435,15 +435,19 @@ func partCloneMode(dst, src *Graph, e Edge, mapping map[int]Edge, missingInput f
 			}
 			value = missingInput(Aig_Regular(e))
 		case And, ExclusiveOr:
-			left := partCloneMode(dst, src, n.Fanins[0], mapping, missingInput, sourceAnd)
-			right := partCloneMode(dst, src, n.Fanins[1], mapping, missingInput, sourceAnd)
-			if n.Kind == ExclusiveOr && !sourceAnd {
-				value = dst.NewXor(left, right)
+			left := partCloneMode(dst, src, n.Fanins[0], mapping, missingInput, andOnly)
+			right := partCloneMode(dst, src, n.Fanins[1], mapping, missingInput, andOnly)
+			if n.Kind == ExclusiveOr {
+				if andOnly {
+					value = dst.XOR(left, right)
+				} else {
+					value = dst.NewXor(left, right)
+				}
 			} else {
 				value = dst.AND(left, right)
 			}
 		case Buffer, Output:
-			value = partCloneMode(dst, src, n.Fanins[0], mapping, missingInput, sourceAnd)
+			value = partCloneMode(dst, src, n.Fanins[0], mapping, missingInput, andOnly)
 		default:
 			panic("aig: invalid partition node")
 		}
@@ -455,7 +459,8 @@ func partCloneMode(dst, src *Graph, e Edge, mapping map[int]Edge, missingInput f
 	return value
 }
 
-// ABC partition-copy paths use Aig_And for every internal node, including EXOR.
+// Partition backends expect AND-only graphs. Expand native XORs rather than
+// reproducing the C copier's incorrect treatment of EXOR nodes as ANDs.
 func partCloneABC(dst, src *Graph, e Edge, mapping map[int]Edge, missingInput func(Edge) Edge) Edge {
 	return partCloneMode(dst, src, e, mapping, missingInput, true)
 }
@@ -539,7 +544,7 @@ func Aig_ManDupPartAll_rec(dst, src *Graph, e Edge) {
 	if dst.copies == nil {
 		dst.copies = map[int]Edge{0: 0}
 	}
-	dst.copies[value.NodeID()] = Aig_Regular(e)
+	dst.copies[value.NodeID()] = dupPhase(Aig_Regular(e), value.Complemented())
 }
 func Aig_ManDupPartAll(src *Graph, part []int32) *Graph {
 	dst := NewGraph()
@@ -554,7 +559,7 @@ func Aig_ManDupPartAll(src *Graph, part []int32) *Graph {
 	}
 	// Record reverse mappings for every copied object, not just output roots.
 	for sourceID, target := range src.copies {
-		dst.copies[target.NodeID()] = Edge(sourceID) << 1
+		dst.copies[target.NodeID()] = dupPhase(Edge(sourceID)<<1, target.Complemented())
 	}
 	return dst
 }
