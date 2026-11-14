@@ -33,7 +33,8 @@ type Aig_Dom_t struct {
 	Nodes     []int
 }
 
-// Aig_Sto_t owns dominator sets and analysis-only marks/reference counts.
+// Aig_Sto_t owns dominator sets. Diagnostics use graph work marks,
+// traversal IDs and temporary reference updates, as in the source.
 // Direct output edges receive synthetic boundary IDs starting at NodeCount;
 // explicit Output nodes use their existing IDs. OutputIDs exposes this mapping.
 // The graph must not be structurally edited while this store is in use.
@@ -45,8 +46,6 @@ type Aig_Sto_t struct {
 	Times                                                  []int
 	DomNodes, Total, FilteredSupersets, FilteredCandidates int
 	fanins, fanouts                                        [][]int
-	marked                                                 []bool
-	refs                                                   []int
 }
 
 func Aig_ManDomStart(g *Graph, limit int) *Aig_Sto_t {
@@ -59,7 +58,6 @@ func Aig_ManDomStart(g *Graph, limit int) *Aig_Sto_t {
 		Dominators: make([][]*Aig_Dom_t, count),
 		Times:      make([]int, count),
 		fanins:     make([][]int, count), fanouts: make([][]int, count),
-		marked: make([]bool, count), refs: make([]int, count),
 	}
 	for id, n := range g.nodes {
 		if g.deleted[id] {
@@ -89,7 +87,6 @@ func Aig_ManDomStart(g *Graph, limit int) *Aig_Sto_t {
 				panic("aig: invalid dominator fanin")
 			}
 			s.fanouts[f] = append(s.fanouts[f], id)
-			s.refs[f]++
 		}
 	}
 
@@ -393,39 +390,39 @@ func Aig_ObjDomCollect(s *Aig_Sto_t, cut []int) []*Aig_Dom_t {
 	}
 	return out
 }
-func domVolume(s *Aig_Sto_t, id int, seen []bool) int {
-	if seen[id] {
+func Aig_ObjDomVolume_rec(s *Aig_Sto_t, id int) int {
+	g := s.Graph
+	if g.nodes[id].TravID == g.travID {
 		return 0
 	}
-	seen[id] = true
-	if s.marked[id] || len(s.fanins[id]) == 0 {
+	g.nodes[id].TravID = g.travID
+	if g.nodes[id].MarkA || len(s.fanins[id]) == 0 {
 		return 1
 	}
 	n := 0
 	for _, f := range s.fanins[id] {
-		n += domVolume(s, f, seen)
+		n += Aig_ObjDomVolume_rec(s, f)
 	}
 	return n
 }
-func Aig_ObjDomVolume_rec(s *Aig_Sto_t, id int, seen []bool) int { return domVolume(s, id, seen) }
 func Aig_ObjDomVolume(s *Aig_Sto_t, d *Aig_Dom_t) int {
-	seen := make([]bool, len(s.fanins))
+	Aig_ManIncrementTravId(s.Graph)
 	n := 0
 	for _, id := range d.Nodes {
-		n += domVolume(s, id, seen)
+		n += Aig_ObjDomVolume_rec(s, id)
 	}
 	return n
 }
 func Aig_ObjDomDeref_rec(s *Aig_Sto_t, id int) int { return domDeref(s, id, nil) }
 func domDeref(s *Aig_Sto_t, id int, barriers map[int]bool) int {
-	if s.refs[id] <= 0 {
+	if s.Graph.nodes[id].Refs <= 0 {
 		panic("aig: dominator reference underflow")
 	}
-	s.refs[id]--
-	if s.refs[id] > 0 {
+	s.Graph.nodes[id].Refs--
+	if s.Graph.nodes[id].Refs > 0 {
 		return 0
 	}
-	if s.marked[id] {
+	if s.Graph.nodes[id].MarkA {
 		return 1
 	}
 	if barriers[id] {
@@ -439,12 +436,15 @@ func domDeref(s *Aig_Sto_t, id int, barriers map[int]bool) int {
 }
 func Aig_ObjDomRef_rec(s *Aig_Sto_t, id int) int { return domRef(s, id, nil) }
 func domRef(s *Aig_Sto_t, id int, barriers map[int]bool) int {
-	old := s.refs[id]
-	s.refs[id]++
+	old := s.Graph.nodes[id].Refs
+	if old < 0 {
+		panic("aig: negative dominator reference count")
+	}
+	s.Graph.nodes[id].Refs++
 	if old > 0 {
 		return 0
 	}
-	if s.marked[id] {
+	if s.Graph.nodes[id].MarkA {
 		return 1
 	}
 	if barriers[id] {
@@ -495,7 +495,7 @@ func Aig_ObjDomCollectLos(s *Aig_Sto_t) []int {
 	for _, e := range g.inputs[len(g.inputs)-n:] {
 		id := e.NodeID()
 		ids = append(ids, id)
-		s.marked[id] = true
+		g.nodes[id].MarkA = true
 	}
 	return ids
 }
@@ -528,9 +528,7 @@ func Aig_ObjDomFindGood(s *Aig_Sto_t) []DomAnalysis {
 		result = append(result, DomAnalysis{newAigDom(d.Nodes), Aig_ObjDomVolume(s, d), Aig_ObjDomDomed(s, d)})
 	}
 	Aig_ObjPoLogicRef(s)
-	for i := range s.marked {
-		s.marked[i] = false
-	}
+	Aig_ManCleanMarkA(s.Graph)
 	return result
 }
 func Aig_ManComputeDomsTest2(g *Graph, num int) []DomAnalysis {
@@ -570,7 +568,7 @@ func Aig_ManComputeDomsForCofactoring(g *Graph) map[int]map[int]int {
 	defer Aig_ManDomStop(s)
 	result := map[int]map[int]int{}
 	for id, n := range g.nodes {
-		if g.deleted[id] || n.Kind != Input && n.Kind != And && n.Kind != ExclusiveOr || s.refs[id] < 10 {
+		if g.deleted[id] || n.Kind != Input && n.Kind != And && n.Kind != ExclusiveOr || n.Refs < 10 {
 			continue
 		}
 		counts := Aig_ObjDomCount(s, Edge(id)<<1)

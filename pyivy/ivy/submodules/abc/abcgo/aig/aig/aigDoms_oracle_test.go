@@ -40,8 +40,9 @@ func TestDominatorDriversAgainstCompiledSource(t *testing.T) {
 	for mode, name := range []string{"nodes", "flops", "pis"} {
 		t.Run(name, func(t *testing.T) {
 			g := NewGraph()
-			a, b, lo := g.NewInput(), g.NewInput(), g.NewInput()
+			a, b := g.NewInput(), g.NewInput()
 			g.NewInput()
+			lo := g.NewInput()
 			x, y, z := g.AND(a, lo), g.AND(b, lo), g.AND(a, b)
 			g.AddOutput(z)
 			g.AddOutput(x)
@@ -79,6 +80,39 @@ func TestDominatorDriversAgainstCompiledSource(t *testing.T) {
 			if !ok || got.String() != want {
 				t.Fatalf("Go driver:\n%sC driver:\n%s", got.String(), want)
 			}
+			if name == "flops" {
+				Aig_ObjSetMarkA(g, x)
+				volume := Aig_ObjDomVolume(s, NewDominator(x.NodeID()))
+				Aig_ObjClearMarkA(g, x)
+				Aig_ObjDomCollectLos(s)
+				marked := 0
+				if Aig_ObjIsMarkA(g, lo) {
+					marked = 1
+				}
+				Aig_ObjPoLogicDeref(s)
+				refs := domTestRefs(g)
+				Aig_ObjPoLogicRef(s)
+				Aig_ObjSetMarkA(g, a)
+				Aig_ObjDomFindGood(s)
+				got.Reset()
+				fmt.Fprintf(&got, "volume %d lo-mark %d generation %d\n", volume, marked, g.travID)
+				for id, n := range g.nodes {
+					mark := 0
+					if n.MarkA {
+						mark = 1
+					}
+					fmt.Fprintf(&got, "%d refs %d restored %d mark %d trav %d\n", id, refs[id], n.Refs, mark, n.TravID)
+				}
+				_, rest, ok := strings.Cut(string(out), "DIAG BEGIN\n")
+				if !ok {
+					t.Fatal("missing diagnostic source states")
+				}
+				want, _, ok := strings.Cut(rest, "DIAG END\n")
+				if !ok || got.String() != want {
+					t.Fatalf("Go diagnostics:\n%sC diagnostics:\n%s", got.String(), want)
+				}
+			}
+
 		})
 	}
 }

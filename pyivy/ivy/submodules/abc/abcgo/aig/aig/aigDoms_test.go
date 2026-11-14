@@ -21,6 +21,14 @@ func domTestFanouts(g *Graph) *Graph {
 
 // Check graph structure and values without imposing a non-source promise that
 // analysis leaves the traversal generation unchanged.
+func domTestRefs(g *Graph) []int {
+	refs := make([]int, len(g.nodes))
+	for i, n := range g.nodes {
+		refs[i] = n.Refs
+	}
+	return refs
+}
+
 func domTestWithoutTraversal(nodes []Node) []Node {
 	for i := range nodes {
 		nodes[i].TravID = 0
@@ -237,7 +245,7 @@ func TestDominatorFlopConeAndRefRestoration(t *testing.T) {
 	if len(s.Dominators[a.NodeID()]) != 0 || len(s.Dominators[b.NodeID()]) == 0 || len(s.Dominators[lo.NodeID()]) == 0 {
 		t.Fatal("flop cone filtering")
 	}
-	refs := append([]int(nil), s.refs...)
+	refs := domTestRefs(g)
 	reports := Aig_ObjDomFindGood(s)
 	if len(reports) != 2 {
 		t.Fatal(reports)
@@ -247,11 +255,11 @@ func TestDominatorFlopConeAndRefRestoration(t *testing.T) {
 			t.Fatal(r)
 		}
 	}
-	if !reflect.DeepEqual(refs, s.refs) || !reflect.DeepEqual(domTestWithoutTraversal(nodes), domTestWithoutTraversal(g.Nodes())) {
+	if !reflect.DeepEqual(refs, domTestRefs(g)) || !reflect.DeepEqual(domTestWithoutTraversal(nodes), domTestWithoutTraversal(g.Nodes())) {
 		t.Fatal("references or graph mutated")
 	}
-	for _, mark := range s.marked {
-		if mark {
+	for _, n := range g.nodes {
+		if n.MarkA {
 			t.Fatal("mark leaked")
 		}
 	}
@@ -359,12 +367,12 @@ func TestDominatorRelatedCutRefRestoration(t *testing.T) {
 	g.nRegs = 1
 	s := Aig_ManComputeDomsFlops(domTestFanouts(g), 2)
 	Aig_ObjDomCollectLos(s)
-	before := append([]int(nil), s.refs...)
+	before := domTestRefs(g)
 	if got := Aig_ObjDomDomed(s, newAigDom([]int{x.NodeID(), y.NodeID()})); got != 1 {
 		t.Fatal(got)
 	}
-	if !reflect.DeepEqual(before, s.refs) {
-		t.Fatal("references not restored", before, s.refs)
+	if !reflect.DeepEqual(before, domTestRefs(g)) {
+		t.Fatal("references not restored", before, domTestRefs(g))
 	}
 }
 
@@ -459,8 +467,8 @@ func TestDominatorRepeatedExplicitOutput(t *testing.T) {
 	if len(s.OutputIDs) != 2 || s.OutputIDs[0] == s.OutputIDs[1] {
 		t.Fatal(s.OutputIDs)
 	}
-	if s.refs[x.NodeID()] != 2 {
-		t.Fatal("repeated output reference not represented", s.refs)
+	if g.nodes[x.NodeID()].Refs != 2 {
+		t.Fatal("repeated output reference not represented", domTestRefs(g))
 	}
 }
 

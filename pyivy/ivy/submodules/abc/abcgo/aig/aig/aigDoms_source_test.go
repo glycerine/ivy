@@ -123,3 +123,75 @@ func TestDominatorWrappersOwnSourceFanoutLifetime(t *testing.T) {
 		})
 	}
 }
+
+func TestDominatorVolumeUsesGraphMarksAndTraversal(t *testing.T) {
+	g := NewGraph()
+	a, b := g.NewInput(), g.NewInput()
+	x := g.AND(a, b)
+	g.AddOutput(x)
+	s := Aig_ManDomStart(g, 2)
+	Aig_ObjSetMarkA(g, x)
+	before := g.travID
+	if got := Aig_ObjDomVolume(s, NewDominator(x.NodeID())); got != 1 {
+		t.Errorf("marked boundary volume = %d, want 1", got)
+	}
+	if g.travID != before+1 || !Aig_ObjIsTravIdCurrent(g, x) || Aig_ObjIsTravIdCurrent(g, a) {
+		t.Error("volume did not leave source traversal state at marked boundary")
+	}
+	Aig_ObjClearMarkA(g, x)
+	if got := Aig_ObjDomVolume(s, NewDominator(x.NodeID(), g.Outputs()[0].NodeID())); got != 2 {
+		t.Errorf("overlapping cones counted terminals more than once: %d", got)
+	}
+}
+
+func TestDominatorDiagnosticUsesGraphReferencesAndMarks(t *testing.T) {
+	g := NewGraph()
+	a, b, lo := g.NewInput(), g.NewInput(), g.NewInput()
+	po, li := g.AND(a, lo), g.AND(b, lo)
+	g.AddOutput(po)
+	g.AddOutput(li)
+	g.nRegs = 1
+	s := Aig_ManDomStart(g, 2)
+	ids := Aig_ObjDomCollectLos(s)
+	if len(ids) != 1 || ids[0] != lo.NodeID() || !Aig_ObjIsMarkA(g, lo) {
+		t.Error("LO collection did not set source graph mark")
+	}
+	Aig_ObjPoLogicDeref(s)
+	if Aig_ObjRefs(g, po) != 0 || Aig_ObjRefs(g, a) != 0 || Aig_ObjRefs(g, lo) != 1 {
+		t.Error("PO dereference changed a shadow copy instead of graph references")
+	}
+	Aig_ObjPoLogicRef(s)
+	if err := g.Check(); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestDominatorFindGoodClearsSourceMarks(t *testing.T) {
+	g := NewGraph()
+	a, lo := g.NewInput(), g.NewInput()
+	g.AddOutput(g.AND(a, lo))
+	g.nRegs = 1
+	Aig_ManFanoutStart(g)
+	s := Aig_ManComputeDomsFlops(g, 2)
+	Aig_ObjSetMarkA(g, a)
+	Aig_ObjDomFindGood(s)
+	if Aig_ObjIsMarkA(g, a) || Aig_ObjIsMarkA(g, lo) {
+		t.Error("FindGood left source work marks")
+	}
+	if err := g.Check(); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestDominatorRefRejectsNegativeSourceCounter(t *testing.T) {
+	g := NewGraph()
+	a := g.NewInput()
+	s := Aig_ManDomStart(g, 1)
+	g.node(a).Refs = -1
+	defer func() {
+		if recover() == nil {
+			t.Error("reference helper accepted negative source counter")
+		}
+	}()
+	Aig_ObjDomRef_rec(s, a.NodeID())
+}
