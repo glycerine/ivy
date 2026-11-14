@@ -84,8 +84,52 @@ func Aig_ManInter(on, off *aig.Graph, relation, verbose int32) *aig.Graph {
 	manager := bsat.Inta_ManAlloc()
 	defer bsat.Inta_ManFree(manager)
 	result := bsat.Inta_ManInterpolate(manager, store, 0, globals, verbose)
-	if result == nil {
-		panic(fmt.Sprintf("interpolation failed: %v", bsat.Inta_ManError(manager)))
-	}
 	return result
+}
+
+// Aig_ManInterFast checks corresponding output pairs using one incremental
+// solver, following aigInter.c. Results expose the source's per-output status.
+func Aig_ManInterFast(on, off *aig.Graph, verbose int32) []bool {
+	validate(on, off)
+	if on.OutputCount() != off.OutputCount() {
+		panic("incremental interpolation requires equal CO counts")
+	}
+	// C temporarily sets nRegs to nOutputs to expose all CO variables. The Go
+	// CNF API takes that free-output count directly, preserving graph metadata.
+	a, b := cnf.Cnf_Derive(on, int32(on.OutputCount())), cnf.Cnf_Derive(off, int32(off.OutputCount()))
+	if a == nil || b == nil {
+		panic("incremental interpolation CNF derivation failed")
+	}
+	defer cnf.Cnf_DataFree(a)
+	defer cnf.Cnf_DataFree(b)
+	cnf.Cnf_DataLift(b, int32(a.Variables))
+	solver := bsat.NewSolver()
+	defer solver.Close()
+	solver.SetNumVars(int32(a.Variables + b.Variables))
+	if !addCNF(solver, a) || !addCNF(solver, b) {
+		return nil
+	}
+	inputsA, inputsB := on.Inputs(), off.Inputs()
+	for i, input := range inputsA {
+		va, vb := a.VarNums[input.NodeID()], b.VarNums[inputsB[i].NodeID()]
+		if va < 0 || vb < 0 {
+			panic("incremental interpolation CI has no CNF variable")
+		}
+		if !solver.AddClause(bsat.Positive(va), bsat.Negative(vb)) || !solver.AddClause(bsat.Negative(va), bsat.Positive(vb)) {
+			panic("incremental interpolation CI equality is inconsistent")
+		}
+	}
+	if !solver.Simplify() {
+		panic("incremental interpolation base CNF is inconsistent")
+	}
+	outputsA, outputsB := on.Outputs(), off.Outputs()
+	results := make([]bool, len(outputsA))
+	for i, output := range outputsA {
+		va, vb := a.VarNums[output.NodeID()], b.VarNums[outputsB[i].NodeID()]
+		results[i] = solver.Solve(bsat.Positive(va), bsat.Positive(vb)) == bsat.Unsatisfiable
+		if !results[i] {
+			fmt.Println("The incremental SAT problem is not UNSAT.")
+		}
+	}
+	return results
 }

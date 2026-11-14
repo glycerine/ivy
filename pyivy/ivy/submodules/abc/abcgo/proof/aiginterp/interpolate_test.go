@@ -101,3 +101,38 @@ func TestProofInterpolationAllTwoInputPredicatePairs(t *testing.T) {
 		}
 	}
 }
+
+func TestIncrementalSATAllTwoInputOutputPairs(t *testing.T) {
+	for a := uint32(0); a < 16; a++ {
+		for b := uint32(0); b < 16; b++ {
+			on, off := predicate(a), predicate(b)
+			original := on.Node(on.Outputs()[0]).Fanins[0]
+			on.AddOutput(original.Not())
+			on.AddOutput(on.Const1())
+			on.AddOutput(on.Const0())
+			other := off.Node(off.Outputs()[0]).Fanins[0]
+			for i := 0; i < 3; i++ {
+				off.AddOutput(other)
+			}
+			result := Aig_ManInterFast(on, off, 0)
+			want := []bool{a&b == 0, (^a&15)&b == 0, b == 0, true}
+			if len(result) != len(want) {
+				t.Fatalf("A=%x B=%x missing output results %v", a, b, result)
+			}
+			for i := range want {
+				if result[i] != want[i] {
+					t.Fatalf("A=%x B=%x output=%d got=%v want=%v", a, b, i, result, want)
+				}
+			}
+			if on.RegisterCount() != 0 || off.RegisterCount() != 0 {
+				t.Fatal("CNF derivation changed register metadata")
+			}
+			if err := on.Check(); err != nil {
+				t.Fatal(err)
+			}
+			if err := off.Check(); err != nil {
+				t.Fatal(err)
+			}
+		}
+	}
+}
