@@ -94,24 +94,34 @@ func Aig_ManDfs_rec(p *Graph, e Edge, nodes *[]Edge) {
 	}
 }
 func Aig_ManDfsAll_rec(p *Graph, e Edge, nodes *[]Edge) {
-	for _, x := range p.dfs([]Edge{e}, false, false, false) {
-		exists := false
-		for _, old := range *nodes {
-			if old == x {
-				exists = true
-				break
-			}
-		}
-		if !exists {
-			*nodes = append(*nodes, x)
-		}
+	n := p.node(e)
+	if n.TravID == p.travID {
+		return
 	}
+	n.TravID = p.travID
+	switch n.Kind {
+	case Input:
+	case Output:
+		Aig_ManDfsAll_rec(p, n.Fanins[0], nodes)
+	case And, ExclusiveOr:
+		Aig_ManDfsAll_rec(p, n.Fanins[0], nodes)
+		Aig_ManDfsAll_rec(p, n.Fanins[1], nodes)
+	default:
+		panic("aig: all-object DFS requires a CI, CO or logic node")
+	}
+	*nodes = append(*nodes, Aig_Regular(e))
 }
 func Aig_ManDfsArray(p *Graph, nodes []Edge, n int32) []Edge {
 	if n < 0 || int(n) > len(nodes) {
 		panic("aig: invalid DFS range")
 	}
-	return p.dfs(nodes[:n], false, false, false)
+	Aig_ManIncrementTravId(p)
+	p.node(p.Const1()).TravID = p.travID
+	result := []Edge{p.Const1()}
+	for _, e := range nodes[:n] {
+		Aig_ManDfsAll_rec(p, e, &result)
+	}
+	return result
 }
 func Aig_ManDfsAll(p *Graph) []Edge {
 	roots := make([]Edge, 0, len(p.nodes))
@@ -159,9 +169,48 @@ func Aig_ManDfsNodes(p *Graph, nodes []Edge, n int32) []Edge {
 	return result
 }
 func Aig_ManDfsChoices_rec(p *Graph, e Edge, nodes *[]Edge) {
-	*nodes = append(*nodes, p.dfs([]Edge{e}, true, false, true)...)
+	p.dfsChoices(e, nodes, make(map[int]bool))
 }
-func Aig_ManDfsChoices(p *Graph) []Edge { return p.dfs(p.outputs, true, false, true) }
+func (p *Graph) dfsChoices(e Edge, nodes *[]Edge, active map[int]bool) {
+	if e == InvalidEdge {
+		return
+	}
+	n := p.node(e)
+	if n.TravID == p.travID {
+		return
+	}
+	if n.Kind != And && n.Kind != ExclusiveOr {
+		panic("aig: choice DFS requires logic nodes or premarked terminals")
+	}
+	if active[e.NodeID()] {
+		panic("aig: cyclic choice traversal")
+	}
+	active[e.NodeID()] = true
+	p.dfsChoices(n.Fanins[0], nodes, active)
+	p.dfsChoices(n.Fanins[1], nodes, active)
+	if alternative, ok := p.equivs[e.NodeID()]; ok {
+		p.dfsChoices(alternative, nodes, active)
+	}
+	delete(active, e.NodeID())
+	n.TravID = p.travID
+	*nodes = append(*nodes, Aig_Regular(e))
+}
+func Aig_ManDfsChoices(p *Graph) []Edge {
+	if p.equivs == nil {
+		panic("aig: choice DFS requires equivalence storage")
+	}
+	Aig_ManIncrementTravId(p)
+	p.node(p.Const1()).TravID = p.travID
+	for _, e := range p.inputs {
+		p.node(e).TravID = p.travID
+	}
+	var nodes []Edge
+	active := make(map[int]bool)
+	for _, e := range p.outputs {
+		p.dfsChoices(p.outputDriver(e), &nodes, active)
+	}
+	return nodes
+}
 func Aig_ManDfsReverse(p *Graph) []Edge {
 	roots := make([]Edge, 0, len(p.nodes))
 	for id, n := range p.nodes {
