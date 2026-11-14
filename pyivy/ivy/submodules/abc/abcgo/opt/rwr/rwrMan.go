@@ -74,4 +74,8 @@ func Rwr_ManReadCompl(p *Rwr_Man_t) int32           { return p.fCompl }
 func Rwr_ManAddTimeCuts(p *Rwr_Man_t, t int64)      { p.timeCut += t }
 func Rwr_ManAddTimeUpdate(p *Rwr_Man_t, t int64)    { p.timeUpdate += t }
 func Rwr_ManAddTimeTotal(p *Rwr_Man_t, t int64)     { p.timeTotal += t }
-func Rwr_Precompute()                               { p := Rwr_ManStart(1); Rwr_ManStop(p) }
+
+// Rwr_ManSetNodesBeg and Rwr_ManSetNodesEnd record pass boundary counts.
+func Rwr_ManSetNodesBeg(p *Rwr_Man_t, count int32) { p.nNodesBeg = count }
+func Rwr_ManSetNodesEnd(p *Rwr_Man_t, count int32) { p.nNodesEnd = count }
+func Rwr_Precompute()                              { p := Rwr_ManStart(1); Rwr_ManStop(p) }

@@ -3,9 +3,13 @@ package rwr_test
 import (
 	"testing"
 
+	"github.com/glycerine/abcgo/base/abc"
 	"github.com/glycerine/abcgo/bool/dec"
+	"github.com/glycerine/abcgo/opt/cut"
 	"github.com/glycerine/abcgo/opt/rwr"
 )
+
+var _ func(*rwr.Rwr_Man_t, *cut.Cut_Man_t, *abc.Object, int32, int32, int32) int32 = rwr.Rwr_NodeRewrite
 
 type apiNetwork struct{}
 
@@ -20,7 +24,7 @@ func (apiNetwork) CountGraph(any, *dec.Dec_Graph_t, int32, int32) int32 { return
 // contract remain callable by clients that cannot access opt/rwr internals.
 func TestExportedRewriteAPI(t *testing.T) {
 	manager := rwr.Rwr_ManStart(0)
-	gain := rwr.Rwr_NodeRewrite(manager, apiNetwork{}, nil,
+	gain := rwr.Rwr_RewriteCuts(manager, apiNetwork{}, nil,
 		[]rwr.Rwr_Cut{{Truth: 0x6996, Leaves: []int32{0, 1, 2, 3}}}, 12, 0, 0)
 	if gain != 2 || rwr.Rwr_ManReadDecs(manager) == nil || len(rwr.Rwr_ManReadLeaves(manager)) != 4 {
 		t.Fatalf("gain=%d graph=%p leaves=%v", gain, rwr.Rwr_ManReadDecs(manager), rwr.Rwr_ManReadLeaves(manager))
