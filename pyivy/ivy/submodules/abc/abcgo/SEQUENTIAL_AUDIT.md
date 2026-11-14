@@ -3009,3 +3009,28 @@ The full uncached GIA race suite passes in 19.853s
 (`/tmp/abcgo-giarf-packing-classes-race.log`), and GIA vet passes. GIA remains
 under audit; metadata/transfer algorithms and remaining families still need
 review. Original package completion remains 2/131.
+
+Mapped hashing review: Gia_ManDupHashMapping copied every internal object as
+an AND, silently changing real XOR and MUX functions. Added a failing signed
+gate regression before repair (`/tmp/abcgo-mapping-hash-typed-red.log`). The
+copy pass now dispatches logical gates through the existing AND/XOR/MUX hash
+operations and forwards buffers. The source giaIf.c routine assumes ordinary
+AND graphs; that path and its mapping-copy policy remain intact. Real gates
+are normalized to ordinary hashed ANDs, using existing primitives rather than
+an alternative mapping algorithm.
+
+Coverage checks 64 gate/polarity combinations over all eight input assignments
+(512 rows), preserving terminal/register counts, root complement and copied
+LUT truth. Another 32 signed XOR/buffer/MUX/AND chains over 16 assignments
+(512 rows) check dependent cut truth against actual mapped leaf values and
+output equivalence. The existing identical-LUT merge regression also passes.
+Mapping/packing transfer was compared with giaIf.c; its existing source-shaped
+logic is unchanged and needs additional remapping/dangling-record coverage.
+
+Full uncached race suites pass for GIA (20.235s), map/if (4.478s), and the
+base/abci caller (29.464s). The shared log is
+`/tmp/abcgo-mapping-hash-review-race.log`. Vet passes for GIA and map/if.
+Expanded vet also reports existing base/abci self-assignment, unkeyed literals
+and unreachable-code diagnostics (`/tmp/abcgo-mapping-hash-review-vet.log`);
+no base/abci files changed in this repair. These diagnostics remain for that
+package's sequential audit. Original completion remains 2/131.

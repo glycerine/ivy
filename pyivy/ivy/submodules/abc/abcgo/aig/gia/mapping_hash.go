@@ -16,9 +16,27 @@ func Gia_ManDupHashMapping(src *Gia_Man_t) *Gia_Man_t {
 	}
 	for id := int32(1); id < Gia_ManObjNum(src); id++ {
 		obj := Gia_ManObj(src, id)
-		if Gia_ObjIsAnd(obj) != 0 {
-			obj.Value = uint32(Gia_ManHashAnd(dst, Gia_ObjFanin0Copy(obj), Gia_ObjFanin1Copy(obj)))
+		if Gia_ObjIsAnd(obj) == 0 {
+			continue
 		}
+		// The C routine assumes an ordinary AND graph. Normalize real gates
+		// through the existing hash operations before transferring LUT cuts.
+		a, b, c, kind := src.Gate(id)
+		copyLit := func(lit int32) int32 { return Gia_ObjLitCopy(src, lit) }
+		var literal int32
+		switch kind {
+		case 2:
+			literal = Gia_ManHashAnd(dst, copyLit(a), copyLit(b))
+		case 3:
+			literal = Gia_ManHashXor(dst, copyLit(a), copyLit(b))
+		case 4:
+			literal = Gia_ManHashMux(dst, copyLit(a), copyLit(b), copyLit(c))
+		case 5:
+			literal = copyLit(a)
+		default:
+			panic("gia: invalid mapped duplication gate")
+		}
+		obj.Value = uint32(literal)
 	}
 	for i := int32(0); i < Gia_ManCoNum(src); i++ {
 		Gia_ManAppendCo(dst, Gia_ObjFanin0Copy(Gia_ManCo(src, i)))
