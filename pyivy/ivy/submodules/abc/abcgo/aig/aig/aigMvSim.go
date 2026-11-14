@@ -16,9 +16,12 @@ type mvPair struct{ a, b int32 }
 // MvManager stores symbolic functions as complemented integer literals. A
 // distinct literal is allocated for each PI at each symbolic frame. Retired
 // values use one distinguished unknown value whose complement stays unknown.
+// The graph and sequential interface must remain fixed while the manager lives.
 type MvManager struct {
 	graph       *Graph
 	values      []int32
+	frameOrder  []Edge
+	nextState   []int32
 	nextLiteral int32
 	hashed      map[mvPair]int32
 	states      [][]int32
@@ -36,7 +39,24 @@ func Aig_MvManStart(p *Graph, satur int32) *MvManager {
 	if p.nRegs <= 0 || int(p.nRegs) > len(p.inputs) || int(p.nRegs) > len(p.outputs) || satur < 1 || satur > (1<<30)-1 {
 		panic("aig: invalid multivalued simulation interface")
 	}
-	return &MvManager{graph: p, values: make([]int32, len(p.nodes)), nextLiteral: 2, hashed: map[mvPair]int32{}, seen: map[string]int32{}}
+	// Preserve object order on source-topological graphs, resolving forward
+	// dependencies once for Go graphs whose objects have been rewired.
+	order := p.TopologicalObjects()
+	latches := make(map[Edge]bool, p.nRegs)
+	for _, lo := range p.inputs[len(p.inputs)-int(p.nRegs):] {
+		latches[lo] = true
+	}
+	frameOrder := order[:0]
+	for _, e := range order {
+		if !latches[e] {
+			frameOrder = append(frameOrder, e)
+		}
+	}
+	return &MvManager{
+		graph: p, values: make([]int32, len(p.nodes)), frameOrder: frameOrder,
+		nextState: make([]int32, p.nRegs), nextLiteral: 2,
+		hashed: map[mvPair]int32{}, seen: map[string]int32{},
+	}
 }
 func Aig_MvManStop(p *MvManager) { *p = MvManager{} }
 
@@ -93,65 +113,40 @@ func (p *MvManager) xor(a, b int32, first bool) int32 {
 }
 func Aig_MvSimulateFrame(p *MvManager, first, verbose int32) {
 	g := p.graph
-	done, active := make([]bool, len(g.nodes)), make([]bool, len(g.nodes))
-	done[0] = true
-	p.values[0] = 0
-	piCount := len(g.inputs) - int(g.nRegs)
-	for i, input := range g.inputs {
-		if i >= piCount {
-			done[input.NodeID()] = true
-		}
-	}
-	var visit func(Edge) int32
-	visit = func(e Edge) int32 {
-		if !g.valid(e) {
-			panic("aig: invalid symbolic edge")
-		}
-		id := e.NodeID()
-		if !done[id] {
-			if active[id] {
-				panic("aig: combinational cycle in symbolic simulation")
-			}
-			active[id] = true
-			n := g.node(e)
-			switch n.Kind {
-			case Constant:
-				p.values[id] = 0
-			case Input:
-				if first != 0 {
-					p.values[id] = p.newLiteral()
-				} else {
-					p.values[id] = SAIG_UNDEF_VALUE
-				}
-			case And:
-				p.values[id] = p.and(visit(n.Fanins[0]), visit(n.Fanins[1]), first != 0)
-			case ExclusiveOr:
-				p.values[id] = p.xor(visit(n.Fanins[0]), visit(n.Fanins[1]), first != 0)
-			case Buffer, Output:
-				p.values[id] = visit(n.Fanins[0])
-			default:
-				panic("aig: invalid symbolic node")
-			}
-			active[id] = false
-			done[id] = true
-		}
-		value := p.values[id]
+	value := func(e Edge) int32 {
+		result := p.values[e.NodeID()]
 		if e.Complemented() {
-			return mvNot(value)
+			return mvNot(result)
 		}
-		return value
+		return result
 	}
-	for id := range g.nodes {
-		if !g.deleted[id] {
-			visit(Edge(id) << 1)
+	for _, e := range p.frameOrder {
+		id := e.NodeID()
+		n := g.node(e)
+		switch n.Kind {
+		case Constant:
+			p.values[id] = 0
+		case Input:
+			if first != 0 {
+				p.values[id] = p.newLiteral()
+			} else {
+				p.values[id] = SAIG_UNDEF_VALUE
+			}
+		case And:
+			p.values[id] = p.and(value(n.Fanins[0]), value(n.Fanins[1]), first != 0)
+		case ExclusiveOr:
+			p.values[id] = p.xor(value(n.Fanins[0]), value(n.Fanins[1]), first != 0)
+		case Buffer, Output:
+			p.values[id] = value(n.Fanins[0])
+		default:
+			panic("aig: invalid symbolic node")
 		}
 	}
-	next := make([]int32, g.nRegs)
 	for i, e := range g.outputs[len(g.outputs)-int(g.nRegs):] {
-		next[i] = visit(e)
+		p.nextState[i] = value(e)
 	}
-	for i, e := range g.inputs[piCount:] {
-		p.values[e.NodeID()] = next[i]
+	for i, e := range g.inputs[len(g.inputs)-int(g.nRegs):] {
+		p.values[e.NodeID()] = p.nextState[i]
 	}
 }
 func (p *MvManager) currentState() []int32 {
@@ -335,6 +330,8 @@ func Aig_MvManDeriveMap(p *MvManager, verbose int32) []Edge {
 	return mapping
 }
 func Aig_MvManPostProcess(p *MvManager, state int32) {
+	// C's pRegsUndef counters are never populated. Use actual histories for
+	// this diagnostic, consistent with the mapping and retirement routines.
 	known := Aig_MvManFindXFlops(p)
 	count := 0
 	for _, flag := range known {

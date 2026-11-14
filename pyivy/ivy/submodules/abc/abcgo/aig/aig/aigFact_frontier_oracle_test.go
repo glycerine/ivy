@@ -12,6 +12,10 @@ import (
 )
 
 func runAigSourceFixture(t *testing.T, fixture string, sources ...string) string {
+	return runAigSourceFixtureInput(t, fixture, "", sources...)
+}
+
+func runAigSourceFixtureInput(t *testing.T, fixture, input string, sources ...string) string {
 	t.Helper()
 	if runtime.GOOS != "linux" {
 		t.Skip("fixture uses GNU linker section collection")
@@ -34,7 +38,9 @@ func runAigSourceFixture(t *testing.T, fixture string, sources ...string) string
 	if out, err := exec.CommandContext(ctx, cc, args...).CombinedOutput(); err != nil {
 		t.Fatalf("compile source frontier: %v: %s", err, out)
 	}
-	out, err := exec.CommandContext(ctx, binary).CombinedOutput()
+	command := exec.CommandContext(ctx, binary)
+	command.Stdin = strings.NewReader(input)
+	out, err := command.CombinedOutput()
 	if err != nil {
 		t.Fatalf("run source frontier: %v: %s", err, out)
 	}

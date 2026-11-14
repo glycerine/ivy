@@ -44,3 +44,28 @@ Focused actual-core MV/partition tests pass with -race. The thin SAIG forwarding
 API and parity tests pass with -race in a temporary integration module containing
 the actual converted AIG core and actual dependency packages. Full SAIG-package
 build remains pending its other generated files.
+
+## Sequential source audit
+
+The preceding integration report is historical. The current audit compares
+the complete simulator with checked-in saigSimMv.c. A red regression found
+that allocating every PI symbol before gates changed literal identities when
+a PI was created after a gate. Frame processing now preserves source object
+order on topological graphs. A cached dependency order handles Go's rewritten
+DAGs, buffers and native XORs; a forward-buffer test verifies that extension
+without changing graph scratch fields. The graph must remain fixed while a
+manager is active. Reusing the frame order and next-state buffer removes the
+per-frame traversal arrays and recursive walk.
+
+A compiled full-source fixture compares frame values, symbolic object counts,
+state-repeat indices, undefined/constant/binary/oscillator classes, skip masks,
+the derived mapping and the complete driver. Another fixture compares period
+search and state hashing over 4,367 histories, including unsigned hash overflow
+and wraparound of the sixteen primes. The existing original-C AND/hash/create
+comparison remains active.
+
+Postprocessing deliberately derives undefined classification from histories:
+C's separate counters are never populated. A focused test checks diagnostic
+group counts, exclusion of undefined histories and lasso markers. This is an
+explicit correction to the diagnostic, not a substitute for the simulation.
+See ../../SEQUENTIAL_AUDIT.md for the current validation and package scope.
