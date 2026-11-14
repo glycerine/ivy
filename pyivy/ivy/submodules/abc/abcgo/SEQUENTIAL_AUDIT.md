@@ -194,3 +194,24 @@ rebuild in `Aig_ObjCreateCi`: `NewInput` already performs the rebuild.
 The package audit remains incomplete. Earlier full AIG race checks passed. Final sequential tests
 (`go test -p 1 ./aig/aig ./aig/saig ./proof/dch -count=1`) pass after the
 corrected contract test.
+
+### aig/aig: duplication review checkpoint
+
+Inspected all of `aigDup.go`, focusing source comparisons on simple/partial
+copies, output-free and flop-only copies, representative phases, miter creation
+and selected sequential outputs in `src/aig/aig/aigDup.c`. Reviewed existing
+duplication tests and the shared copy-map/manager initialization operations.
+
+Found output-role metadata incorrectly inherited by `Aig_ManCreateMiter`.
+C allocates a fresh manager at `aigDup.c:1049`; the Go `dupStart` copied operand
+constraint and assertion counts into the new comparison manager. Added
+`TestCreateMiterDoesNotInheritOutputRoles` before changing code; both cases
+failed with inherited counts of one. Miter creation now uses the existing
+`Aig_ManStartFrom` interface-copy helper without cloning output-role metadata.
+The regression also verifies the graph and evaluates both input assignments.
+Removed a duplicate assignment of RetimingChanged in `dupMetadata`.
+
+Full AIG race tests pass. The directly affected interpolation caller also passes
+`go test -p 1 ./proof/int -count=1`. The full `aig/aig`
+audit remains in progress; this checkpoint is not a claim that every
+specialized duplication/metadata combination has been exhaustively tested.

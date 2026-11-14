@@ -15,7 +15,6 @@ func dupMetadata(dst, src *Graph) {
 	dst.Assertions, dst.BarrierBuffers = src.Assertions, src.BarrierBuffers
 	dst.PartitionInputs = slices.Clone(src.PartitionInputs)
 	dst.PartitionOutputs = slices.Clone(src.PartitionOutputs)
-	dst.RetimingChanged = src.RetimingChanged
 	dst.FlopNumbers = slices.Clone(src.FlopNumbers)
 	dst.FlopReprs = slices.Clone(src.FlopReprs)
 	dst.ClockDomains = slices.Clone(src.ClockDomains)
@@ -510,7 +509,9 @@ func Aig_ManCreateMiter(a, b *Graph, operation int32) *Graph {
 	if a.nRegs != 0 || b.nRegs != 0 || len(a.inputs) != len(b.inputs) || len(a.outputs) != 1 || len(b.outputs) != 1 {
 		panic("aig: invalid miter operands")
 	}
-	dst := dupStart(a)
+	// The source creates a fresh combinational manager. Operand output roles
+	// (constraints/assertions) do not describe the new comparison output.
+	dst := Aig_ManStartFrom(a)
 	x := dupEdge(dst, a, dupOutputDriver(a, a.outputs[0]))
 	b.copies = map[int]Edge{0: 0}
 	for i, e := range b.inputs {
