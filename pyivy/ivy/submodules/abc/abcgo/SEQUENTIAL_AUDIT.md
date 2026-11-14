@@ -380,3 +380,25 @@ Aig_ManInterTest and Aig_ManInterRepar still contain replacement algorithms and
 remain required repair work. Their presence keeps the AIG audit incomplete.
 Full driver, ACB and ABCI race tests pass after migration. The final AIG race
 check also covers removal of unused projection helpers.
+
+### Native solver2 self-test repair
+
+Ported Aig_ManInterTest from aigRepar.c into proof/aiginterp: mapped CNF,
+partition-A internal variable flags, marked A clauses, lifted B copy, equal
+used CIs, XORed COs and the unequal-output assumption. This calls the existing
+BSAT solver2 and proof logger. The source's interpolant extraction is commented
+out, so no alternate interpolant is synthesized by the self-test. Clause stats
+and interpolation timing are reported as in the source.
+
+Added narrow source-style solver2 bridges for allocation, variable/clause
+partition marking, statistics and shutdown. A unit test verifies assumption
+refutation with an actual resolution core and subsequent incremental SAT.
+Found stale models visible after the new variable-growth API; added a red test
+before invalidating prior results, matching existing public solver behavior.
+Removed the old Shannon self-comparison function from AIG and retained its
+separate append test. Sixteen exhaustive truth-function tests now exercise
+the actual solver2 self-comparison and verify input graphs are unchanged.
+
+Reparameterization still requires the source solver2 proof interpolant driver;
+this audit is not complete. Full uncached BSAT, native driver and AIG race
+tests pass with these changes.
