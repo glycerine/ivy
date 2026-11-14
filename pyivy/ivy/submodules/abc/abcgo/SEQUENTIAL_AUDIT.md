@@ -3620,3 +3620,43 @@ the previous full GIA/base-abci race run. This closes expanded review coverage
 for the property/constraint functions in dup_compose.go, not the remaining
 GIA duplication or other algorithm families. Original completion stays 2/131;
 the sequential audit remains active.
+
+Sequential hold/invariant/cone composition review: compared Gia_ManDupSelf,
+Gia_ManDupInvMiter and Gia_ManDupAppendCones against giaDup.c. A new minimal
+red regression passes the source itself as an additional combinational cone
+and exposes an unmapped-fanin panic
+(`/tmp/abcgo-append-cones-alias-red.log`). The Go code cleared the cone's Value
+scratch and then read CI mappings back from the aliased source. C reads them
+from the destination CI list instead. Restore that exact mapping with the
+existing Gia_ManCiLit helper, avoiding a source clone or a second algorithm.
+
+Expanded independent transition tables and the compiled original-C equivalent
+AND graphs agree for 464 cases and 29,760 input/state rows. They cover all
+eight gate polarity combinations in source and invariant/cone, register hold
+control, I(state) AND NOT I(nextState), state-only versus complete-CI cone
+inputs, zero/one/two appended cones, repeated cone pointers, and truncated
+cone lists with a trailing unused nil entry. Unlike the earlier upstream
+alias examples, the aliased-source cone cases also match original C directly.
+Tests check interface/register/constraint counts, source identity and removal
+of dangling logic. Go graphs retain real XOR/MUX gates and physical buffers;
+the C baseline uses ordinary-AND expansions and transparent buffers.
+
+Additional tests compare eight-cycle hold traces for 64 sequences and eight
+polarity variants (4,096 frames) with the independently stepped source and
+verify both constant invariants over all 64 input/state assignments. Focused
+coverage initially passes in 2.020s
+(`/tmp/abcgo-sequential-composition-focused.log`); trace/constant additions
+pass in 0.007s (`/tmp/abcgo-sequential-composition-boundaries.log`). The native
+fixture explicitly declares InvMiter because gia.h lacks its prototype.
+
+Full GIA race and BMC caller verification and the final focused check after
+simplifying the destination lookup to Gia_ManCiLit are recorded below.
+Flop-class extraction, repeated duplication and other GIA families still need
+review. Original package completion remains 2/131; the audit remains active.
+The full uncached GIA race suite passes in 66.229s
+(`/tmp/abcgo-sequential-composition-race.log`); its BMC caller passes race tests
+in 25.161s (`/tmp/abcgo-sequential-composition-bmc-race.log`). The final focused
+race run after the equivalent CI-literal helper simplification passes all
+new cases in 4.530s
+(`/tmp/abcgo-sequential-composition-final-focused-race.log`). Final GIA vet
+passes (`/tmp/abcgo-sequential-composition-final-vet.log`).

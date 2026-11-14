@@ -73,7 +73,7 @@ func Gia_ManDupAppendCones(src *Gia_Man_t, cones []*Gia_Man_t, count, onlyRegs i
 		Gia_ManFillValue(cone)
 		cone.pObjs[0].Value = 0
 		for i := int32(0); i < expected; i++ {
-			Gia_ManPi(cone, i).Value = Gia_ManCi(src, start+i).Value
+			Gia_ManPi(cone, i).Value = uint32(Gia_ManCiLit(out, start+i))
 		}
 		giaComposeNodes(out, cone, true)
 		giaDupMappedOutput(out, cone, Gia_ManPo(cone, 0))
