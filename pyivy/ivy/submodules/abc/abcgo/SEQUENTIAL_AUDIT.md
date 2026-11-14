@@ -2922,3 +2922,22 @@ engine without an import cycle or another duplicated/invented solver. Preserve
 the existing exact-clause/variable-layout CEC tests and add Giarf source query
 comparisons, recycling, budget and witness coverage. This remains pending;
 GIA and the full sequential audit are still active at 2/131 completed originals.
+
+Source-BSAT integration, first checkpoint: extracted the existing source CEC
+CNF builder into proof/cec/core.SourceCNF, with callbacks for live GIA node
+metadata and recognized MUX pins. GIA supplies those callbacks through
+SourceCNFGraph; the source-shaped CEC wrapper delegates to the shared builder.
+The original frontier order, variable-zero/constant-one-slot convention,
+supergate boundaries, polarity handling and MUX clauses are retained. There
+is one encoder implementation, not a duplicated GIA solver or replacement
+Tseitin encoding. Existing tests read the same state through borrowed
+Solver/IDs accessors; their expected values and native records are unchanged.
+
+Focused source/native CEC tests pass in 8.729s. The full uncached race suites
+for GIA, CEC and CEC core pass in 17.675s, 41.382s and 1.262s respectively
+(`/tmp/abcgo-shared-cec-cnf-race.log`). These adjacent-package checks support
+this shared-code extraction and do not count either CEC package as audited.
+Giarf still uses its old adapter at this checkpoint. Its new clause-count
+regression fails with seven clauses versus the source supergate's four
+(`/tmp/abcgo-giarf-source-backend-red.log`); it will accompany the subsequent
+BSAT wiring change rather than being included in this green extraction commit.

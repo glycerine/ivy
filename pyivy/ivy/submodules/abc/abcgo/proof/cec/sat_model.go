@@ -13,10 +13,10 @@ func Cec_ObjSatVarValue(p *Cec_ManSat_t, obj *Gia_Obj_t) int32 {
 		}
 		return value
 	}
-	if id < 0 || int(id) >= len(p.source.ids) {
+	if id < 0 || int(id) >= len(p.source.cnf.IDs()) {
 		panic("cec: invalid SAT variable")
 	}
-	value, ok := p.source.sat.Value(p.source.ids[id])
+	value, ok := p.source.cnf.Solver().Value(p.source.cnf.IDs()[id])
 	if !ok {
 		panic("cec: SAT variable value requested without a valid witness")
 	}

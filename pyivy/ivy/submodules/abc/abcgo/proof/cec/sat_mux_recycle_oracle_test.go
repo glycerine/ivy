@@ -91,7 +91,7 @@ int main(void){Gia_Man_t *g=Gia_ManStart(20);Cec_ParSat_t opts;Cec_ManSat_t *p;i
 		obj := gia.Gia_NotCond(gia.Gia_ManObj(g, m>>1), (m&1)^i)
 		status := Cec_ManSatCheckNode(p, obj)
 		s := p.source
-		fmt.Fprintf(&goText, "q:%d,%d,%d,%d,%d,%d,%d,%d,%d\n", i, status, s.recycles, s.calls, s.since, s.sat.NumVars(), Cec_ObjSatVarValue(p, gia.Gia_ManObj(g, a>>1)), Cec_ObjSatVarValue(p, gia.Gia_ManObj(g, b>>1)), Cec_ObjSatVarValue(p, gia.Gia_ManObj(g, c>>1)))
+		fmt.Fprintf(&goText, "q:%d,%d,%d,%d,%d,%d,%d,%d,%d\n", i, status, s.recycles, s.calls, s.since, s.cnf.Solver().NumVars(), Cec_ObjSatVarValue(p, gia.Gia_ManObj(g, a>>1)), Cec_ObjSatVarValue(p, gia.Gia_ManObj(g, b>>1)), Cec_ObjSatVarValue(p, gia.Gia_ManObj(g, c>>1)))
 	}
 
 	h := gia.Gia_ManStart(512)

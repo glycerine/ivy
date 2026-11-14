@@ -31,17 +31,17 @@ func (p *Cec_ManSat_t) query(a int32, b *int32) int32 {
 	s := p.source
 	s.since++
 	s.calls++
-	if s.sat == nil || p.pPars.NSatVarMax > 0 && s.sat.NumVars() > p.pPars.NSatVarMax && s.since > p.pPars.NCallsRecycle {
+	if s.cnf.Solver() == nil || p.pPars.NSatVarMax > 0 && s.cnf.Solver().NumVars() > p.pPars.NSatVarMax && s.since > p.pPars.NCallsRecycle {
 		s.reset()
 	}
-	s.sat.SetDeadline(p.pPars.deadline)
+	s.cnf.Solver().SetDeadline(p.pPars.deadline)
 	s.addNode(a >> 1)
 	lits := []int32{s.literal(a)}
 	if b != nil {
 		s.addNode(*b >> 1)
 		lits = append(lits, s.literal(*b))
 	}
-	result := s.sat.SolveWithResourceLimits(lits, int64(p.pPars.NBTLimit), 0, 0, 0)
+	result := s.cnf.Solver().SolveWithResourceLimits(lits, int64(p.pPars.NBTLimit), 0, 0, 0)
 	switch result {
 	case bsat.Unsatisfiable:
 		s.unsatCount++
@@ -54,9 +54,9 @@ func (p *Cec_ManSat_t) query(a int32, b *int32) int32 {
 		s.satCount++
 		inputs := make([]bool, len(p.pAig.InputLiterals()))
 		for i, lit := range p.pAig.InputLiterals() {
-			id := s.ids[lit>>1]
+			id := s.cnf.IDs()[lit>>1]
 			if id != 0 {
-				inputs[i], _ = s.sat.Value(id)
+				inputs[i], _ = s.cnf.Solver().Value(id)
 			}
 		}
 		p.values, p.Error = p.proof.Model().Values(inputs)

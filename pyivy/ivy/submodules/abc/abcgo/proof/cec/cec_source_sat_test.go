@@ -18,23 +18,23 @@ func TestSourceSATFrontierAndClauses(t *testing.T) {
 		p.fPolarFlip = flip
 		s := newCecSourceSAT(g, p)
 		s.addNode(node >> 1)
-		if s.ids[node>>1] != 2 || s.ids[a>>1] != 4 || s.ids[b>>1] != 5 || s.ids[c>>1] != 3 {
-			t.Fatalf("frontier: %v", s.ids)
+		if s.cnf.IDs()[node>>1] != 2 || s.cnf.IDs()[a>>1] != 4 || s.cnf.IDs()[b>>1] != 5 || s.cnf.IDs()[c>>1] != 3 {
+			t.Fatalf("frontier: %v", s.cnf.IDs())
 		}
-		if s.sat.NumVars() != 6 {
-			t.Fatalf("SAT variable count %d", s.sat.NumVars())
+		if s.cnf.Solver().NumVars() != 6 {
+			t.Fatalf("SAT variable count %d", s.cnf.Solver().NumVars())
 		}
-		if s.sat.Solve(s.literal(node)) != bsat.Satisfiable {
+		if s.cnf.Solver().Solve(s.literal(node)) != bsat.Satisfiable {
 			t.Fatal("source SAT query failed")
 		}
 		for _, lit := range []int32{a, b, c} {
-			value, ok := s.sat.Value(s.ids[lit>>1])
+			value, ok := s.cnf.Solver().Value(s.cnf.IDs()[lit>>1])
 			if !ok || !value {
 				t.Fatalf("source witness for %d: %v %v", lit, value, ok)
 			}
 		}
-		if s.ids[node>>1-1] != 0 {
-			t.Fatalf("supergate intermediate allocated: %v", s.ids)
+		if s.cnf.IDs()[node>>1-1] != 0 {
+			t.Fatalf("supergate intermediate allocated: %v", s.cnf.IDs())
 		}
 		for mask := 0; mask < 8; mask++ {
 			ass := []int32{s.literal(node)}
@@ -45,7 +45,7 @@ func TestSourceSATFrontierAndClauses(t *testing.T) {
 				}
 				ass = append(ass, v)
 			}
-			got := s.sat.Solve(ass...)
+			got := s.cnf.Solver().Solve(ass...)
 			if (got == bsat.Satisfiable) != (mask == 7) {
 				t.Fatalf("flip %d mask %d status %v", flip, mask, got)
 			}
@@ -66,8 +66,8 @@ func TestSourceSATRecognizedMuxClauses(t *testing.T) {
 		p.fPolarFlip = flip
 		s := newCecSourceSAT(g, p)
 		s.addNode(root >> 1)
-		if s.ids[a>>1] != 0 || s.ids[b>>1] != 0 {
-			t.Fatalf("MUX intermediate variables: %v", s.ids)
+		if s.cnf.IDs()[a>>1] != 0 || s.cnf.IDs()[b>>1] != 0 {
+			t.Fatalf("MUX intermediate variables: %v", s.cnf.IDs())
 		}
 		for mask := 0; mask < 16; mask++ {
 			var ass []int32
@@ -79,7 +79,7 @@ func TestSourceSATRecognizedMuxClauses(t *testing.T) {
 				ass = append(ass, v)
 			}
 			want := !((mask&1 != 0 && mask&2 != 0) || (mask&1 == 0 && mask&4 != 0))
-			if got := s.sat.Solve(ass...); (got == bsat.Satisfiable) != (want == (mask&8 != 0)) {
+			if got := s.cnf.Solver().Solve(ass...); (got == bsat.Satisfiable) != (want == (mask&8 != 0)) {
 				t.Fatalf("flip=%d mask=%d result=%v", flip, mask, got)
 			}
 		}
@@ -98,8 +98,8 @@ func TestSourceSATRecycleRetainsCounterexampleAndCounters(t *testing.T) {
 	vec.Vec_IntPush(p.vCex, 17)
 	calls := p.source.calls
 	Cec_ManSatSolverRecycle(p)
-	if p.source.calls != calls || p.source.ids[x>>1] != 0 || vec.Vec_IntSize(p.vCex) != 1 || vec.Vec_IntEntry(p.vCex, 0) != 17 {
-		t.Fatalf("recycle lost state: calls=%d ids=%v cex=%v", p.source.calls, p.source.ids, vec.Vec_IntArray(p.vCex))
+	if p.source.calls != calls || p.source.cnf.IDs()[x>>1] != 0 || vec.Vec_IntSize(p.vCex) != 1 || vec.Vec_IntEntry(p.vCex, 0) != 17 {
+		t.Fatalf("recycle lost state: calls=%d ids=%v cex=%v", p.source.calls, p.source.cnf.IDs(), vec.Vec_IntArray(p.vCex))
 	}
 }
 
@@ -114,10 +114,10 @@ func TestSourceSATValueReadsPhysicalVariable(t *testing.T) {
 	if Cec_ManSatCheckNode(p, gia.Gia_ManObj(g, root>>1)) != 0 {
 		t.Fatal("expected SAT")
 	}
-	if p.source.ids[mid>>1] != 0 {
+	if p.source.cnf.IDs()[mid>>1] != 0 {
 		t.Fatal("intermediate should not have a SAT variable")
 	}
-	v, ok := p.source.sat.Value(0)
+	v, ok := p.source.cnf.Solver().Value(0)
 	if !ok {
 		t.Fatal("missing model")
 	}
