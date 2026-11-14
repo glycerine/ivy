@@ -146,6 +146,24 @@ func Abc_NtkCuts(network Network, params *Cut_Params_t) *Cut_Man_t {
 	}
 	return p
 }
+
+// Cut_ManStartForNetwork starts a cut manager with the network inventory and
+// trivial CI cuts installed, but leaves recursive cut computation to the
+// caller. This is the lifecycle used by ABC's local rewriting/restructuring
+// passes that request cuts one node at a time.
+func Cut_ManStartForNetwork(network Network, params *Cut_Params_t) *Cut_Man_t {
+	if network == nil {
+		panic("cut: missing network")
+	}
+	p := Cut_ManStart(params)
+	p.network, p.networkCounts = networkInventory(network)
+	for _, node := range network.CutNodes() {
+		if node.Input && p.networkCounts[node.ID] > 0 {
+			Cut_NodeSetTriv(p, node.ID)
+		}
+	}
+	return p
+}
 func Abc_NtkCutsOracle(network Network, p *Cut_Oracle_t) {
 	nodes, fanoutCounts := networkInventory(network)
 	if Cut_OracleReadDrop(p) != 0 {
