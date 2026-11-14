@@ -50,7 +50,7 @@ func (d *dupGraph) inputs() {
 
 // allNodes preserves the original duplication pass, including dangling logic.
 func (d *dupGraph) allNodes() {
-	for _, e := range aig.Aig_ManDfsAll(d.src) {
+	for _, e := range d.src.TopologicalObjects() {
 		n := d.src.Node(e)
 		if n.Kind == aig.And || n.Kind == aig.ExclusiveOr || n.Kind == aig.Buffer {
 			d.edge(e)
@@ -300,7 +300,7 @@ func replayCexFrames(p *aig.Graph, c *util.Abc_Cex_t, onFrame func(int32, []bool
 		for i, e := range p.Outputs() {
 			outs[i] = evaluate(e)
 		}
-		for _, e := range aig.Aig_ManDfsAll(p) {
+		for _, e := range p.TopologicalObjects() {
 			evaluate(e)
 		}
 		if frame < c.IFrame {

@@ -50,7 +50,7 @@ func miterMapped(copies []aig.Edge, e aig.Edge) aig.Edge {
 // Missing inputs deliberately leave their entire dependent cone unmapped when
 // extracting one independent register half.
 func miterCopyLogic(src, dst *aig.Graph, copies []aig.Edge) {
-	for _, e := range aig.Aig_ManDfsAll(src) {
+	for _, e := range src.TopologicalObjects() {
 		n := src.Node(e)
 		if n.Kind == aig.Constant || n.Kind == aig.Input {
 			continue
@@ -187,7 +187,7 @@ func Saig_ManDualRail(src *aig.Graph, miter int32) *aig.Graph {
 		}
 		return r
 	}
-	for _, e := range aig.Aig_ManDfsAll(src) {
+	for _, e := range src.TopologicalObjects() {
 		n := src.Node(e)
 		switch n.Kind {
 		case aig.And:
@@ -382,7 +382,7 @@ func Saig_ManDemiterMarkPos(src *aig.Graph) {
 			aig.Aig_ObjSetMarkB(src, e)
 		}
 	}
-	for _, e := range aig.Aig_ManDfsAll(src) {
+	for _, e := range src.TopologicalObjects() {
 		n := src.Node(e)
 		if n.Kind != aig.And && n.Kind != aig.ExclusiveOr && n.Kind != aig.Buffer {
 			continue
