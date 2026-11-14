@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/binary"
 	"fmt"
+	timpkg "github.com/glycerine/abcgo/misc/tim"
 	"github.com/glycerine/abcgo/misc/vec"
 	"math"
 	"sort"
@@ -646,16 +647,27 @@ func aigerDecodeExtension(p *Gia_Man_t, tag byte, payload []byte, opts AigerRead
 		p.vEdge1 = aigerVecInts(first)
 		p.vEdge2 = aigerVecInts(second)
 	case 'h', 't':
-		timing, _ := p.pManTime.(*AigerTimingData)
-		if timing == nil {
-			timing = new(AigerTimingData)
-		}
 		if tag == 'h' {
-			timing.Hierarchy = append([]byte(nil), data...)
+			if manager, err := timpkg.UnmarshalAigerTiming(data); err == nil {
+				p.pManTime = manager
+			} else {
+				timing, _ := p.pManTime.(*AigerTimingData)
+				if timing == nil {
+					timing = new(AigerTimingData)
+				}
+				timing.Hierarchy = append([]byte(nil), data...)
+				p.pManTime = timing
+			}
 		} else {
-			timing.Timing = append([]byte(nil), data...)
+			if _, isTimManager := p.pManTime.(*timpkg.Tim_Man_t); !isTimManager {
+				timing, _ := p.pManTime.(*AigerTimingData)
+				if timing == nil {
+					timing = new(AigerTimingData)
+				}
+				timing.Timing = append([]byte(nil), data...)
+				p.pManTime = timing
+			}
 		}
-		p.pManTime = timing
 	}
 	if p.aigerExtensions == nil {
 		p.aigerExtensions = map[byte][]byte{}
@@ -999,6 +1011,9 @@ func aigerEncodeExtensions(p *Gia_Man_t, wire *aigerWireModel, opts AigerWriteOp
 				return nil, err
 			}
 			data['h'] = encoded
+			if payload, ok := p.aigerExtensions['t']; ok {
+				data['t'] = append([]byte(nil), payload...)
+			}
 		default:
 			return nil, fmt.Errorf("gia: timing manager has no AIGER serializer")
 		}
