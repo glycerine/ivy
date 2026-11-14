@@ -1,6 +1,11 @@
 package wln
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/glycerine/abcgo/aig/miniaig"
+	"github.com/glycerine/abcgo/misc/util"
+	"github.com/glycerine/abcgo/misc/vec"
+)
 
 /**CFile****************************************************************
 
@@ -52,14 +57,14 @@ var spStatic_Wln_ObjName_Buffer string // was [100]byte in C
 func Wln_ObjName(p *Wln_Ntk_t, iObj int32) string {
 
 	if Wln_NtkHasNameId(p) != 0 && Wln_ObjNameId(p, iObj) != 0 {
-		return Abc_NamStr(p.pManName, Wln_ObjNameId(p, iObj))
+		return util.Abc_NamStr(p.pManName, Wln_ObjNameId(p, iObj))
 	}
 	spStatic_Wln_ObjName_Buffer = fmt.Sprintf("n%d", iObj)
 	return spStatic_Wln_ObjName_Buffer
 }
 func Wln_ObjConstString(p *Wln_Ntk_t, iObj int32) string {
 	assert(Wln_ObjIsConst(p, iObj) != 0, "Wln_ObjIsConst(p, iObj)")
-	return Abc_NamStr(p.pManName, Wln_ObjFanin0(p, iObj))
+	return util.Abc_NamStr(p.pManName, Wln_ObjFanin0(p, iObj))
 }
 func Wln_ObjUpdateType(p *Wln_Ntk_t, iObj int32, Type int32) {
 	assert(Wln_ObjIsNone(p, iObj) != 0, "Wln_ObjIsNone(p, iObj)")
@@ -89,23 +94,23 @@ func Wln_ObjAlloc(p *Wln_Ntk_t, Type, Signed, End, Beg int32) int32 {
 	if iObj == Vec_IntCap(&p.vTypes) {
 		old := len(p.vFanins)
 		p.vFanins = append(p.vFanins, make([]Wln_Vec_t, old)...)
-		Vec_IntGrow(&p.vTypes, 2*iObj)
+		vec.Vec_IntGrow(&p.vTypes, int(2*iObj))
 	}
-	assert(iObj == Vec_StrSize(&p.vSigns), "iObj == Vec_StrSize(&p.vSigns)")
+	assert(iObj == int32(vec.Vec_StrSize(&p.vSigns)), "iObj == int32(vec.Vec_StrSize(&p.vSigns))")
 	assert(iObj == Vec_IntSize(&p.vRanges), "iObj == Vec_IntSize(&p.vRanges)")
-	Vec_IntPush(&p.vTypes, Type)
-	Vec_StrPush(&p.vSigns, byte(Signed))
-	Vec_IntPush(&p.vRanges, Hash_Int2ManInsert(p.pRanges, End, Beg, 0))
+	vec.Vec_IntPush(&p.vTypes, Type)
+	vec.Vec_StrPush(&p.vSigns, byte(Signed))
+	vec.Vec_IntPush(&p.vRanges, vec.Hash_Int2ManInsert(p.pRanges, End, Beg, 0))
 	if Wln_ObjIsCi(p, iObj) != 0 {
 		Wln_ObjSetFanin(p, iObj, 1, Vec_IntSize(&p.vCis))
-		Vec_IntPush(&p.vCis, iObj)
+		vec.Vec_IntPush(&p.vCis, iObj)
 	}
 	if Wln_ObjIsCo(p, iObj) != 0 {
 		Wln_ObjSetFanin(p, iObj, 1, Vec_IntSize(&p.vCos))
-		Vec_IntPush(&p.vCos, iObj)
+		vec.Vec_IntPush(&p.vCos, iObj)
 	}
 	if Wln_ObjIsFf(p, iObj) != 0 {
-		Vec_IntPush(&p.vFfs, iObj)
+		vec.Vec_IntPush(&p.vFfs, iObj)
 	}
 	p.nObjs[Type]++
 	return iObj
@@ -120,7 +125,7 @@ func Wln_ObjCreateCo(p *Wln_Ntk_t, iFanin int32) int32 {
 	return iCo
 }
 func Wln_ObjPrint(p *Wln_Ntk_t, iObj int32) {
-	fmt.Printf("Obj %6d : Type = %6s  Fanins = %d : ", iObj, Abc_OperName(Wln_ObjType(p, iObj)), Wln_ObjFaninNum(p, iObj))
+	fmt.Printf("Obj %6d : Type = %6s  Fanins = %d : ", iObj, miniaig.Abc_OperName(int(Wln_ObjType(p, iObj))), Wln_ObjFaninNum(p, iObj))
 	for _, iFanin := range Wln_ObjFanins(p, iObj)[:Wln_ObjFaninNum(p, iObj)] {
 		if iFanin != 0 {
 			fmt.Printf("%5d ", iFanin)

@@ -182,8 +182,8 @@ func Wln_ObjRefsFaninInc(p *Wln_Ntk_t, i int32, k int32) { Wln_ObjRefsInc(p, Wln
 func Wln_ObjRefsFaninDec(p *Wln_Ntk_t, i int32, k int32) { Wln_ObjRefsDec(p, Wln_ObjFanin(p, i, k)) }
 
 func Wln_ObjFanoutNum(p *Wln_Ntk_t, i int32) int32 { return Vec_IntEntry(&p.vRefs, i) }
-func Wln_ObjFanouts(p *Wln_Ntk_t, i int32) *int32 {
-	return Vec_IntEntryP(&p.vFanout, Vec_IntEntry(&p.vFanout, i))
+func Wln_ObjFanouts(p *Wln_Ntk_t, i int32) []int32 {
+	return wlnIntArray(&p.vFanout)[Vec_IntEntry(&p.vFanout, i):]
 }
 func Wln_ObjFanout(p *Wln_Ntk_t, i int32, f int32) int32       { return Wln_ObjFanouts(p, i)[f] }
 func Wln_ObjSetFanout(p *Wln_Ntk_t, i int32, f int32, v int32) { Wln_ObjFanouts(p, i)[f] = v }
