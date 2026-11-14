@@ -450,3 +450,34 @@ execution. Required follow-up: replace that substitute with a clearly traced
 source port preserving demonstrated failure behavior, or repair the original
 algorithm only with sufficient specification/evidence. Do not silently invent
 new reparameterization constraints. AIG remains in progress.
+
+### Reparameterization source driver replaces the invented projection
+
+Added a Go red regression before changing the old entry point: an identity
+circuit returned a graph instead of failing on C's forbidden clause ID zero.
+The new driver in proof/aiginterp mechanically retains the solver layout,
+partition flags, two CNF copies per side, comparisons, assumptions, proof
+interpolation, DAR rewriting, incremental CNF feedback and append steps.
+Source-zero IDs use a narrow explicit-ID BSAT bridge; the actual solver guard
+rejects them. Later source indexing defects are retained and commented, not
+silently corrected or replaced with new mathematics.
+
+Removed the projection-based Aig_ManInterRepar and its image-synthesis helper.
+Removed the test that demanded that invented successful algorithm; its source
+failure replacement checks the actual solver guard and unchanged input graph,
+and is paired with the original-C oracle from the previous checkpoint. Clause
+primitive and append tests remain. The entry point moved to proof/aiginterp,
+consistent with the other interpolation drivers; no repository callers besides
+tests used reparameterization.
+
+The source guard makes later steps unreachable for ordinary nonempty CNFs.
+Retaining their mechanical translation is traceability, not evidence that
+those steps would work if the guard were bypassed. This routine remains
+unusable as in upstream C; no successful port claim is made for its intended
+mathematical functionality. A future upstream-algorithm repair requires more
+specification, not restoration of the removed substitute. Also flagged for the
+remaining partition review: the historical report describes Shannon-based
+functional classes where source SAT conflict controls are ignored; those
+paths require the same fidelity scrutiny before aig/aig can be completed.
+
+Full uncached BSAT, native-driver and AIG race suites pass for this checkpoint.
