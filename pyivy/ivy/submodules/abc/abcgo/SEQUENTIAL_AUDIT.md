@@ -639,3 +639,30 @@ entire module: 129 packages passed tests and three packages have no tests.
 The additional proof/aiginterp package accounts for the difference from the
 original 131-package inventory. Passing this integration gate does not mark
 the still-pending package reviews complete.
+
+### Cone marking, cleaning and DAG-size contracts
+
+Compared all four cone-marking routines and Aig_DagSize against aigDfs.c.
+New red regressions exposed traversal through premarked/unmarked boundaries,
+modification of CI marks, traversal through buffers/COs, overcounting below
+premarked gates and failure to consume cone marks during DAG sizing. Cleaning
+also cleared protected copy entries while leaving the actual auxiliary payload
+on newly visited gates. These are observable source-contract errors, not just
+differences in private traversal implementation.
+
+The four helpers now share a postorder gate-only traversal, stopping whenever
+the current mark already equals the requested state. Mark/count/clean stop at
+marked gates; unmark stops at unmarked gates. Cleaning clears both typed-copy
+and auxiliary-payload representations of C's pData only on newly visited gates.
+DAG sizing follows C's count-and-mark followed by unmark, including consumption
+of existing cone marks. The prior Go cycle guard is retained. This also avoids
+walking an entire protected subtree before checking its boundary mark.
+
+Added an independent compiled-C oracle that includes the original aigDfs.c
+and exercises the five operations on the same seeded cone. Go's returned
+counts, marks and both pData representations agree with C. Additional tests
+cover shared cones, explicit XOR gates, repeated counting, terminal marks and
+buffer/CO boundaries. The full uncached AIG race suite passes, including the
+compiled oracle. No production repository callers currently use these five
+helpers; wider package audits remain pending. Reverse DFS, support and
+composition helpers still need review before this DFS family can be closed.
