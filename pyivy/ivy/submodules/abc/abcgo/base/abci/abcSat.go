@@ -7,6 +7,7 @@ import (
 
 	abc "github.com/glycerine/abcgo/base/abc"
 	abcmain "github.com/glycerine/abcgo/base/main"
+	"github.com/glycerine/abcgo/bdd/cudd/core"
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/sat/bsat"
 )
@@ -33,7 +34,7 @@ func satEdgeLit(s *bsat.Solver2, edge abc.Edge) bsat.Literal {
 func satNeg(l bsat.Literal) bsat.Literal { return l ^ 1 }
 
 func Abc_NtkGetCiSatVarNums(n *Abc_Ntk_t) *Vec_Int_t {
-	v := vec.Vec_IntAlloc(Abc_NtkCiNum(n))
+	v := vec.Vec_IntAlloc(int(Abc_NtkCiNum(n)))
 	for _, ci := range n.Inputs() {
 		vec.Vec_IntPush(v, satNodeVar(ci))
 	}
@@ -185,6 +186,21 @@ func Abc_NtkMiterSatCreateLogic(n *Abc_Ntk_t, allPrimes int32) any {
 	}
 	var cube []byte
 	for _, node := range n.Nodes() {
+		root, ok := node.Data.(*core.DdNode)
+		manager, managerOK := n.FunctionManager.(*core.DdManager)
+		if !ok || !managerOK {
+			panic("BDD SAT encoding requires BDD nodes and their manager")
+		}
+		if core.Cudd_Regular(root) == core.Cudd_ReadOne(manager) {
+			lit := bsat.Positive(satNodeVar(node))
+			if core.Cudd_IsComplement(root) {
+				lit = satNeg(lit)
+			}
+			if !s.AddClause(lit) {
+				return nil
+			}
+			continue
+		}
 		negative, positive := "", ""
 		abc.Abc_NodeBddToCnf(node, nil, &cube, allPrimes, &negative, &positive)
 		if !satAddSOPPhase(s, node, negative, false) || !satAddSOPPhase(s, node, positive, true) {
