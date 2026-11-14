@@ -3429,7 +3429,7 @@ func Abc_CommandPrintStatus(pAbc *Abc_Frame_t, argc int32, argv []string) int32 
 			var pTemp *Abc_Cex_t
 			var nCexes int32
 			var Counter int32
-			//printf( "\n" );
+			//fmt.Printf( "\n" );
 			for c = 0; c < int32(Vec_PtrSize(abcFrameCexVector(pAbc))); c++ {
 				entry := Vec_PtrEntry(abcFrameCexVector(pAbc), c)
 				if sentinel, ok := entry.(uintptr); ok && sentinel == 1 {
@@ -3444,7 +3444,7 @@ func Abc_CommandPrintStatus(pAbc *Abc_Frame_t, argc int32, argv []string) int32 
 				}
 			}
 			//            if ( Counter )
-			//                printf( "In total, %d (out of %d) outputs are \"sat\" but CEXes are not recorded.\n", Counter, Vec_PtrSize(pAbc->vCexVec) );
+			//                fmt.Printf( "In total, %d (out of %d) outputs are \"sat\" but CEXes are not recorded.\n", Counter, Vec_PtrSize(pAbc->vCexVec) );
 		}
 	}
 	if abcFrameStatuses(pAbc) != nil {
@@ -7243,7 +7243,6 @@ usage:
 */
 func Abc_CommandTestTruth(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 
-	var pResult *int32 = nil
 	var c, fVerbose int32
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "vh"); c != -1; c = Extra_UtilGetopt(argc, argv, "vh") {
@@ -7261,8 +7260,10 @@ func Abc_CommandTestTruth(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(1, "Input file is not given.\n")
 		return 0
 	}
-	pResult = bool_kit.Kit_TruthTest(argv[globalUtilOptind])
-	pResult = nil
+	if _, err := bool_kit.Kit_TruthTest(argv[globalUtilOptind]); err != nil {
+		Abc_Print(-1, "%s\n", err)
+		return 1
+	}
 	return 0
 
 usage:
@@ -8500,7 +8501,6 @@ func Abc_CommandExact(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	var nFunc int32
 	var nStartGates int32 = 1
 	var nBTLimit int32 = 400000
-	var p1, p2 string
 	var pTruth [64]word
 	var pArrTimeProfile [8]int32
 	var fHasArrTimeProfile int32
@@ -8604,11 +8604,11 @@ func Abc_CommandExact(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	}
 
 	if fMakeAIG != 0 {
-		var pArrTimes []int32
+		var pArrTimes *int32
 		if fHasArrTimeProfile != 0 {
-			pArrTimes = pArrTimeProfile[:]
+			pArrTimes = &pArrTimeProfile[0]
 		}
-		pGiaRes = Gia_ManFindExact(pTruth, nVars, nFunc, nMaxDepth, pArrTimes, nBTLimit, nStartGates-1, fVerbose)
+		pGiaRes = Gia_ManFindExact(&pTruth[0], nVars, nFunc, nMaxDepth, pArrTimes, nBTLimit, nStartGates-1, fVerbose)
 		if pGiaRes != nil {
 			Abc_FrameUpdateGia(pAbc, pGiaRes)
 		} else {
@@ -8616,11 +8616,11 @@ func Abc_CommandExact(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		}
 
 	} else {
-		var pArrTimes []int32
+		var pArrTimes *int32
 		if fHasArrTimeProfile != 0 {
-			pArrTimes = pArrTimeProfile[:]
+			pArrTimes = &pArrTimeProfile[0]
 		}
-		pNtkRes = Abc_NtkFindExact(pTruth, nVars, nFunc, nMaxDepth, pArrTimes, nBTLimit, nStartGates-1, fVerbose)
+		pNtkRes = Abc_NtkFindExact(&pTruth[0], nVars, nFunc, nMaxDepth, pArrTimes, nBTLimit, nStartGates-1, fVerbose)
 		if pNtkRes != nil {
 			Abc_FrameReplaceCurrentNetwork(pAbc, pNtkRes)
 			base_main.Abc_FrameClearVerifStatus(pAbc)
@@ -9724,7 +9724,7 @@ func Abc_CommandMiter(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 
 usage:
 	if nPartSize == 0 {
-		strcpy(Buffer, "unused")
+		Buffer = "unused"
 	} else {
 		Buffer = fmt.Sprintf("%d", nPartSize)
 	}
@@ -11745,7 +11745,7 @@ func Abc_CommandCone(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		}
 	}
 	if (pNodeCo != nil) && (baseabc.Abc_ObjFaninC0(pNodeCo) != 0) && !(fSeq != 0) {
-		Abc_NtkPo(pNtkRes, 0).fCompl0 ^= 1
+		baseabc.Abc_ObjXorFaninC(Abc_NtkPo(pNtkRes, 0), 0)
 		//        Abc_Print( -1, "The extracted cone represents the complement function of the CO.\n" );
 	}
 	if pNtkRes == nil {
@@ -12107,7 +12107,7 @@ func Abc_CommandTopAnd(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "The PO driver is complemented. AND-decomposition is impossible.\n")
 		return 0
 	}
-	if Abc_ObjIsNode(Abc_ObjChild0(Abc_NtkPo(pNtk, 0))) == 0 {
+	if Abc_ObjIsNode(Abc_ObjChild0(Abc_NtkPo(pNtk, 0)).Object) == 0 {
 		Abc_Print(-1, "The PO driver is not a node. AND-decomposition is impossible.\n")
 		return 0
 	}
@@ -12557,12 +12557,12 @@ func Abc_CommandCareSet(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	}
 
 	// replace the EXDC
-	if pNtk.pExcare {
-		Abc_NtkDelete(pNtk.pExcare)
-		pNtk.pExcare = nil
+	if pNtk.Excare {
+		Abc_NtkDelete(pNtk.Excare)
+		pNtk.Excare = nil
 	}
 	pNtkRes = Abc_NtkDup(pNtk)
-	pNtkRes.pExcare = pNtkNew
+	pNtkRes.Excare = pNtkNew
 
 	// replace the current network
 	Abc_FrameReplaceCurrentNetwork(pAbc, pNtkRes)
@@ -12698,16 +12698,16 @@ func Abc_CommandCut(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Cut computation is available only for AIGs (run \"strash\").\n")
 		return 1
 	}
-	if pParams.NVarsMax < opt_cut.CUT_SIZE_MIN || pParams.nVarsMax > opt_cut.CUT_SIZE_MAX {
+	if pParams.NVarsMax < opt_cut.CUT_SIZE_MIN || pParams.NVarsMax > opt_cut.CUT_SIZE_MAX {
 		Abc_Print(-1, "Can only compute the cuts for %d <= K <= %d.\n", opt_cut.CUT_SIZE_MIN, opt_cut.CUT_SIZE_MAX)
 		return 1
 	}
-	if pParams.FDag && pParams.FTree {
+	if (pParams.FDag != 0) && (pParams.FTree != 0) {
 		Abc_Print(-1, "Cannot compute both DAG cuts and tree cuts at the same time.\n")
 		return 1
 	}
 
-	if pParams.FNpnSave {
+	if pParams.FNpnSave != 0 {
 		pParams.NVarsMax = 6
 		pParams.FTruth = 1
 	}
@@ -12826,7 +12826,7 @@ func Abc_CommandScut(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	       return 1;
 	   }
 	*/
-	if pParams.NVarsMax < opt_cut.CUT_SIZE_MIN || pParams.nVarsMax > opt_cut.CUT_SIZE_MAX {
+	if pParams.NVarsMax < opt_cut.CUT_SIZE_MIN || pParams.NVarsMax > opt_cut.CUT_SIZE_MAX {
 		Abc_Print(-1, "Can only compute the cuts for %d <= K <= %d.\n", opt_cut.CUT_SIZE_MIN, opt_cut.CUT_SIZE_MAX)
 		return 1
 	}
@@ -13389,11 +13389,10 @@ func Abc_CommandInter(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 1
 	}
 	if nArgcNew == 0 {
-		var pObj *Abc_Obj_t
-		var i int32
 		Abc_Print(-1, "Deriving new circuit structure for the current network.\n")
-		Abc_NtkForEachPo(pNtk2, pObj, i)
-		baseabc.Abc_ObjXorFaninC(pObj, 0)
+		for _, pObj := range pNtk2.Outputs() {
+			baseabc.Abc_ObjXorFaninC(pObj, 0)
+		}
 	}
 	if (fRelation != 0) && Abc_NtkCoNum(pNtk1) != 1 {
 		Abc_Print(-1, "Computation of interplants as a relation only works for single-output functions.\n")
@@ -14522,9 +14521,9 @@ func Abc_CommandDRewrite(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-C\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nCutsMax = abcAtoi(argv[globalUtilOptind])
+			pPars.CutsMax = int(abcAtoi(argv[globalUtilOptind]))
 			globalUtilOptind++
-			if pPars.nCutsMax < 0 {
+			if pPars.CutsMax < 0 {
 				goto usage
 			}
 			break
@@ -14533,29 +14532,29 @@ func Abc_CommandDRewrite(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-N\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nSubgMax = abcAtoi(argv[globalUtilOptind])
+			pPars.SubgraphsMax = int(abcAtoi(argv[globalUtilOptind]))
 			globalUtilOptind++
-			if pPars.nSubgMax < 0 {
+			if pPars.SubgraphsMax < 0 {
 				goto usage
 			}
 			break
 		case 'f':
-			pPars.fFanout ^= 1
+			pPars.Fanout ^= (1 != 0)
 			break
 		case 'l':
-			pPars.fUpdateLevel ^= 1
+			pPars.UpdateLevel ^= (1 != 0)
 			break
 		case 'z':
-			pPars.fUseZeros ^= 1
+			pPars.UseZeros ^= (1 != 0)
 			break
 		case 'r':
-			pPars.fRecycle ^= 1
+			pPars.Recycle ^= (1 != 0)
 			break
 		case 'v':
-			pPars.fVerbose ^= 1
+			pPars.Verbose ^= (1 != 0)
 			break
 		case 'w':
-			pPars.fVeryVerbose ^= 1
+			pPars.VeryVerbose ^= (1 != 0)
 			break
 		case 'h':
 			goto usage
@@ -14583,14 +14582,14 @@ func Abc_CommandDRewrite(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 usage:
 	Abc_Print(-2, "usage: drw [-C num] [-N num] [-lfzrvwh]\n")
 	Abc_Print(-2, "\t         performs combinational AIG rewriting\n")
-	Abc_Print(-2, "\t-C num : the max number of cuts at a node [default = %d]\n", pPars.nCutsMax)
-	Abc_Print(-2, "\t-N num : the max number of subgraphs tried [default = %d]\n", pPars.nSubgMax)
-	Abc_Print(-2, "\t-l     : toggle preserving the number of levels [default = %s]\n", abcSelect(pPars.fUpdateLevel, "yes", "no"))
-	Abc_Print(-2, "\t-f     : toggle representing fanouts [default = %s]\n", abcSelect(pPars.fFanout, "yes", "no"))
-	Abc_Print(-2, "\t-z     : toggle using zero-cost replacements [default = %s]\n", abcSelect(pPars.fUseZeros, "yes", "no"))
-	Abc_Print(-2, "\t-r     : toggle using cut recycling [default = %s]\n", abcSelect(pPars.fRecycle, "yes", "no"))
-	Abc_Print(-2, "\t-v     : toggle verbose printout [default = %s]\n", abcSelect(pPars.fVerbose, "yes", "no"))
-	Abc_Print(-2, "\t-w     : toggle very verbose printout [default = %s]\n", abcSelect(pPars.fVeryVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-C num : the max number of cuts at a node [default = %d]\n", pPars.CutsMax)
+	Abc_Print(-2, "\t-N num : the max number of subgraphs tried [default = %d]\n", pPars.SubgraphsMax)
+	Abc_Print(-2, "\t-l     : toggle preserving the number of levels [default = %s]\n", abcSelectIf(pPars.UpdateLevel, "yes", "no"))
+	Abc_Print(-2, "\t-f     : toggle representing fanouts [default = %s]\n", abcSelectIf(pPars.Fanout, "yes", "no"))
+	Abc_Print(-2, "\t-z     : toggle using zero-cost replacements [default = %s]\n", abcSelectIf(pPars.UseZeros, "yes", "no"))
+	Abc_Print(-2, "\t-r     : toggle using cut recycling [default = %s]\n", abcSelectIf(pPars.Recycle, "yes", "no"))
+	Abc_Print(-2, "\t-v     : toggle verbose printout [default = %s]\n", abcSelectIf(pPars.Verbose, "yes", "no"))
+	Abc_Print(-2, "\t-w     : toggle very verbose printout [default = %s]\n", abcSelectIf(pPars.VeryVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h     : print the command usage\n")
 	return 1
 }
@@ -14625,9 +14624,9 @@ func Abc_CommandDRefactor(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-C\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nMffcMin = abcAtoi(argv[globalUtilOptind])
+			pPars.MffcMin = int(abcAtoi(argv[globalUtilOptind]))
 			globalUtilOptind++
-			if pPars.nMffcMin < 0 {
+			if pPars.MffcMin < 0 {
 				goto usage
 			}
 			break
@@ -14636,9 +14635,9 @@ func Abc_CommandDRefactor(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-N\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nLeafMax = abcAtoi(argv[globalUtilOptind])
+			pPars.LeafMax = int(abcAtoi(argv[globalUtilOptind]))
 			globalUtilOptind++
-			if pPars.nLeafMax < 0 {
+			if pPars.LeafMax < 0 {
 				goto usage
 			}
 			break
@@ -14647,26 +14646,26 @@ func Abc_CommandDRefactor(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-C\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nCutsMax = abcAtoi(argv[globalUtilOptind])
+			pPars.CutsMax = int(abcAtoi(argv[globalUtilOptind]))
 			globalUtilOptind++
-			if pPars.nCutsMax < 0 {
+			if pPars.CutsMax < 0 {
 				goto usage
 			}
 			break
 		case 'e':
-			pPars.fExtend ^= 1
+			pPars.Extend ^= (1 != 0)
 			break
 		case 'l':
-			pPars.fUpdateLevel ^= 1
+			pPars.UpdateLevel ^= (1 != 0)
 			break
 		case 'z':
-			pPars.fUseZeros ^= 1
+			pPars.UseZeros ^= (1 != 0)
 			break
 		case 'v':
-			pPars.fVerbose ^= 1
+			pPars.Verbose ^= (1 != 0)
 			break
 		case 'w':
-			pPars.fVeryVerbose ^= 1
+			pPars.VeryVerbose ^= (1 != 0)
 			break
 		case 'h':
 			goto usage
@@ -14682,7 +14681,7 @@ func Abc_CommandDRefactor(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "This command works only for strashed networks.\n")
 		return 1
 	}
-	if pPars.nLeafMax < 4 || pPars.nLeafMax > 15 {
+	if pPars.LeafMax < 4 || pPars.LeafMax > 15 {
 		Abc_Print(-1, "This command only works for cut sizes 4 <= K <= 15.\n")
 		return 1
 	}
@@ -14698,14 +14697,14 @@ func Abc_CommandDRefactor(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 usage:
 	Abc_Print(-2, "usage: drf [-M num] [-K num] [-C num] [-elzvwh]\n")
 	Abc_Print(-2, "\t         performs combinational AIG refactoring\n")
-	Abc_Print(-2, "\t-M num : the min MFFC size to attempt refactoring [default = %d]\n", pPars.nMffcMin)
-	Abc_Print(-2, "\t-K num : the max number of cuts leaves [default = %d]\n", pPars.nLeafMax)
-	Abc_Print(-2, "\t-C num : the max number of cuts to try at a node [default = %d]\n", pPars.nCutsMax)
-	Abc_Print(-2, "\t-e     : toggle extending tbe cut below MFFC [default = %s]\n", abcSelect(pPars.fExtend, "yes", "no"))
-	Abc_Print(-2, "\t-l     : toggle preserving the number of levels [default = %s]\n", abcSelect(pPars.fUpdateLevel, "yes", "no"))
-	Abc_Print(-2, "\t-z     : toggle using zero-cost replacements [default = %s]\n", abcSelect(pPars.fUseZeros, "yes", "no"))
-	Abc_Print(-2, "\t-v     : toggle verbose printout [default = %s]\n", abcSelect(pPars.fVerbose, "yes", "no"))
-	Abc_Print(-2, "\t-w     : toggle very verbose printout [default = %s]\n", abcSelect(pPars.fVeryVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-M num : the min MFFC size to attempt refactoring [default = %d]\n", pPars.MffcMin)
+	Abc_Print(-2, "\t-K num : the max number of cuts leaves [default = %d]\n", pPars.LeafMax)
+	Abc_Print(-2, "\t-C num : the max number of cuts to try at a node [default = %d]\n", pPars.CutsMax)
+	Abc_Print(-2, "\t-e     : toggle extending tbe cut below MFFC [default = %s]\n", abcSelectIf(pPars.Extend, "yes", "no"))
+	Abc_Print(-2, "\t-l     : toggle preserving the number of levels [default = %s]\n", abcSelectIf(pPars.UpdateLevel, "yes", "no"))
+	Abc_Print(-2, "\t-z     : toggle using zero-cost replacements [default = %s]\n", abcSelectIf(pPars.UseZeros, "yes", "no"))
+	Abc_Print(-2, "\t-v     : toggle verbose printout [default = %s]\n", abcSelectIf(pPars.Verbose, "yes", "no"))
+	Abc_Print(-2, "\t-w     : toggle very verbose printout [default = %s]\n", abcSelectIf(pPars.VeryVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h     : print the command usage\n")
 	return 1
 }
@@ -15725,7 +15724,7 @@ func Abc_CommandIProve(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	if RetValue == 0 {
 		var pObj *Abc_Obj_t
 		var i int32
-		var pSimInfo *int32 = Abc_NtkVerifySimulatePattern(pNtk, pNtkTemp.pModel)
+		var pSimInfo []int32 = Abc_NtkVerifySimulatePatternSlice(pNtk, pNtkTemp.Model)
 		for i = 0; i < Abc_NtkCoNum(pNtk); i++ {
 			pObj = baseabc.Abc_NtkCo(pNtk, i)
 			if pSimInfo[i] == 1 {
@@ -15753,7 +15752,7 @@ func Abc_CommandIProve(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	Abc_FrameReplaceCurrentNetwork(pAbc, pNtkTemp)
 	// update counter example
 	if RetValue == 0 && Abc_NtkLatchNum(pNtkTemp) == 0 {
-		var pCex *Abc_Cex_t = util.Abc_CexDeriveFromCombModel(pNtkTemp.pModel, Abc_NtkPiNum(pNtkTemp), 0, iOut)
+		var pCex *Abc_Cex_t = util.Abc_CexDeriveFromCombModel(pNtkTemp.Model, Abc_NtkPiNum(pNtkTemp), 0, iOut)
 		Abc_FrameReplaceCex(pAbc, &pCex)
 	}
 	if pLogFileName != "" {
@@ -16441,7 +16440,7 @@ func Abc_CommandFraig(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 1
 	}
 
-	if pParams.FTryProve { // report the result
+	if pParams.FTryProve != 0 { // report the result
 		Abc_NtkMiterReport(pNtkRes)
 	}
 
@@ -18115,7 +18114,7 @@ func Abc_CommandTimeScale(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Empty network.\n")
 		return 1
 	}
-	if pNtk.pManTime == nil {
+	if pNtk.TimingManager == nil {
 		Abc_Print(-1, "Timing manager is not defined.\n")
 		return 1
 	}
@@ -18439,7 +18438,7 @@ func Abc_CommandIf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		pPars.FCutMin = 1
 	}
 
-	if pPars.FEnableCheck07+pPars.FUseCofVars+pPars.FUseDsdTune+(pPars.PLutStruct != "") > 1 {
+	if pPars.FEnableCheck07+pPars.FUseCofVars+pPars.FUseDsdTune+boolInt(pPars.PLutStruct != "") > 1 {
 		Abc_Print(-1, "Only one additional check can be performed at the same time.\n")
 		return 1
 	}
@@ -18476,7 +18475,7 @@ func Abc_CommandIf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		pPars.FUseDsd = 1
 		ifpkg.If_DsdManSetNewAsUseless(pDsdMan)
 	}
-	if pPars.PLutStruct {
+	if pPars.PLutStruct != "" {
 		if pPars.FDsdBalance != 0 {
 			Abc_Print(-1, "Incompatible options (-S and -x).\n")
 			return 1
@@ -18532,13 +18531,13 @@ func Abc_CommandIf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 
 	if pPars.FUseDsd != 0 {
 		var LutSize int32
-		if pPars.PLutStruct && pPars.PLutStruct[2] == 0 {
+		if len(pPars.PLutStruct) == 2 {
 			LutSize = int32(pPars.PLutStruct[0] - '0')
 		} else {
 			LutSize = 0
 		}
 		p, _ := base_main.Abc_FrameReadManDsd().(*ifpkg.If_DsdMan_t)
-		if pPars.PLutStruct && pPars.PLutStruct[2] != 0 {
+		if len(pPars.PLutStruct) > 2 {
 			fmt.Printf("DSD only works for LUT structures XY.\n")
 			return 0
 		}
@@ -18605,7 +18604,7 @@ func Abc_CommandIf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			Abc_Print(-1, "Balancing before FPGA mapping has failed.\n")
 			return 1
 		}
-		if !base_main.Abc_FrameReadFlag("silentmode") {
+		if base_main.Abc_FrameReadFlag("silentmode") == "" {
 			Abc_Print(1, "The network was strashed and balanced before FPGA mapping.\n")
 		}
 		// get the new network
@@ -19215,7 +19214,7 @@ func Abc_CommandDsdMatch(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	}
 	if pStruct != "" {
 		var pStructCur string = ifpkg.If_DsdManGetCellStr(pDsdMan)
-		if pStructCur && (int32(strings.Compare(pStructCur, pStruct)) != 0) {
+		if pStructCur != "" && (int32(strings.Compare(pStructCur, pStruct)) != 0) {
 			Abc_Print(-1, "DSD manager matched with cell %s should be cleaned by \"dsd_filter -m\" before matching with cell %s.\n", pStructCur, pStruct)
 			return 0
 		}
@@ -19715,7 +19714,7 @@ func Abc_CommandUndc(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		pInit = baseabc.Abc_NtkCollectLatchValuesStr(abcFrameNtk(pAbc))
 		// count the number of X-valued flops
 		for k = 0; k < Abc_NtkLatchNum(abcFrameNtk(pAbc)); k++ {
-			nFlopsX += int32((pInit[k] == 'x'))
+			nFlopsX += boolInt(pInit[k] == 'x')
 		}
 		// compare this value
 		if Abc_NtkPiNum(pNtk)+nFlopsX != abcFrameCex(pAbc).NPis {
@@ -21130,7 +21129,7 @@ func Abc_CommandSeqSweep2(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 
 		} else {
 			Abc_Print(0, "Setting the number of constraints to be %d.\n", nConstrs)
-			pNtk.nConstrs = nConstrs
+			pNtk.Constraints = nConstrs
 		}
 	}
 
@@ -22163,7 +22162,7 @@ func Abc_CommandSim3(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	baseabc.Abc_NtkSetSeqModelVec(pNtk, nil)
 	if (pPars.FSetLastState != 0) && abcFrameNtk(pAbc).Data != nil {
 		var pObj *Abc_Obj_t
-		vInit, _ := Abc_ObjData(abcFrameNtk(pAbc)).(*Vec_Int_t)
+		vInit, _ := abcFrameNtk(pAbc).Data.(*Vec_Int_t)
 		abcFrameNtk(pAbc).Data = nil
 		latchIndex := int32(0)
 		for id := int32(0); id < Abc_NtkObjNumMax(abcFrameNtk(pAbc)); id++ {
@@ -22511,9 +22510,9 @@ func Abc_CommandClockGate(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-L\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nLevelMax = abcAtoi(argv[globalUtilOptind])
+			pPars.LevelMax = int(abcAtoi(argv[globalUtilOptind]))
 			globalUtilOptind++
-			if pPars.nLevelMax <= 0 {
+			if pPars.LevelMax <= 0 {
 				goto usage
 			}
 			break
@@ -22522,9 +22521,9 @@ func Abc_CommandClockGate(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-N\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nCandMax = abcAtoi(argv[globalUtilOptind])
+			pPars.CandidateMax = int(abcAtoi(argv[globalUtilOptind]))
 			globalUtilOptind++
-			if pPars.nCandMax <= 0 {
+			if pPars.CandidateMax <= 0 {
 				goto usage
 			}
 			break
@@ -22533,9 +22532,9 @@ func Abc_CommandClockGate(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-D\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nOdcMax = abcAtoi(argv[globalUtilOptind])
+			pPars.ODCMax = int(abcAtoi(argv[globalUtilOptind]))
 			globalUtilOptind++
-			if pPars.nOdcMax <= 0 {
+			if pPars.ODCMax <= 0 {
 				goto usage
 			}
 			break
@@ -22544,9 +22543,9 @@ func Abc_CommandClockGate(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-C\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nConfMax = abcAtoi(argv[globalUtilOptind])
+			pPars.ConflictMax = int(abcAtoi(argv[globalUtilOptind]))
 			globalUtilOptind++
-			if pPars.nConfMax <= 0 {
+			if pPars.ConflictMax <= 0 {
 				goto usage
 			}
 			break
@@ -22555,9 +22554,9 @@ func Abc_CommandClockGate(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-V\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nVarsMin = abcAtoi(argv[globalUtilOptind])
+			pPars.VarsMin = int(abcAtoi(argv[globalUtilOptind]))
 			globalUtilOptind++
-			if pPars.nVarsMin <= 0 {
+			if pPars.VarsMin <= 0 {
 				goto usage
 			}
 			break
@@ -22566,20 +22565,20 @@ func Abc_CommandClockGate(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-K\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nFlopsMin = abcAtoi(argv[globalUtilOptind])
+			pPars.FlopsMin = int(abcAtoi(argv[globalUtilOptind]))
 			globalUtilOptind++
-			if pPars.nFlopsMin <= 0 {
+			if pPars.FlopsMin <= 0 {
 				goto usage
 			}
 			break
 		case 'a':
-			pPars.fAreaOnly ^= 1
+			pPars.AreaOnly ^= (1 != 0)
 			break
 		case 'v':
-			pPars.fVerbose ^= 1
+			pPars.Verbose ^= (1 != 0)
 			break
 		case 'w':
-			pPars.fVeryVerbose ^= 1
+			pPars.VeryVerbose ^= (1 != 0)
 			break
 		case 'h':
 			goto usage
@@ -22620,15 +22619,15 @@ func Abc_CommandClockGate(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 usage:
 	Abc_Print(-2, "usage: clockgate [-LNDCVK <num>] [-avwh] <file>\n")
 	Abc_Print(-2, "\t         sequential clock gating with observability don't-cares\n")
-	Abc_Print(-2, "\t-L num : max level number of a clock gate [default = %d]\n", pPars.nLevelMax)
-	Abc_Print(-2, "\t-N num : max number of candidates for a flop [default = %d]\n", pPars.nCandMax)
-	Abc_Print(-2, "\t-D num : max number of ODC levels to consider [default = %d]\n", pPars.nOdcMax)
-	Abc_Print(-2, "\t-C num : max number of conflicts at a node [default = %d]\n", pPars.nConfMax)
-	Abc_Print(-2, "\t-V num : min number of vars to recycle SAT solver [default = %d]\n", pPars.nVarsMin)
-	Abc_Print(-2, "\t-K num : min number of flops to recycle SAT solver [default = %d]\n", pPars.nFlopsMin)
-	Abc_Print(-2, "\t-a     : toggle minimizing area-only [default = %s]\n", abcSelect(pPars.fAreaOnly, "yes", "no"))
-	Abc_Print(-2, "\t-v     : toggle verbose output [default = %s]\n", abcSelect(pPars.fVerbose, "yes", "no"))
-	Abc_Print(-2, "\t-w     : toggle even more detailed output [default = %s]\n", abcSelect(pPars.fVeryVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-L num : max level number of a clock gate [default = %d]\n", pPars.LevelMax)
+	Abc_Print(-2, "\t-N num : max number of candidates for a flop [default = %d]\n", pPars.CandidateMax)
+	Abc_Print(-2, "\t-D num : max number of ODC levels to consider [default = %d]\n", pPars.ODCMax)
+	Abc_Print(-2, "\t-C num : max number of conflicts at a node [default = %d]\n", pPars.ConflictMax)
+	Abc_Print(-2, "\t-V num : min number of vars to recycle SAT solver [default = %d]\n", pPars.VarsMin)
+	Abc_Print(-2, "\t-K num : min number of flops to recycle SAT solver [default = %d]\n", pPars.FlopsMin)
+	Abc_Print(-2, "\t-a     : toggle minimizing area-only [default = %s]\n", abcSelectIf(pPars.AreaOnly, "yes", "no"))
+	Abc_Print(-2, "\t-v     : toggle verbose output [default = %s]\n", abcSelectIf(pPars.Verbose, "yes", "no"))
+	Abc_Print(-2, "\t-w     : toggle even more detailed output [default = %s]\n", abcSelectIf(pPars.VeryVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h     : print the command usage\n")
 	Abc_Print(-2, "\tfile   : (optional) constraints for primary inputs and register outputs\n")
 	return 1
@@ -22846,7 +22845,7 @@ usage:
 */
 func Abc_CommandSymFun(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 
-	var pFun *word = nil
+	var pFun []word = nil
 	var pStr, pTruth, pCommand string
 	var c int32
 	var k, truthSize int32
@@ -22903,8 +22902,7 @@ func Abc_CommandSymFun(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	if nVars > 2 {
 		truthSize = (1 << (nVars - 2)) + 1
 	}
-	pTruth = ABC_CALLOC(char, truthSize)
-	misc_extra.Extra_PrintHexadecimalString(pTruth, pFun, nVars)
+	pTruth = misc_extra.Extra_PrintHexadecimalString(abcWordsToTruth32(pFun), nVars)
 	pFun = nil
 	if fVerbose != 0 {
 		if nVars > 6 {
@@ -22917,7 +22915,6 @@ func Abc_CommandSymFun(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		fmt.Printf("%s\n", pTruth)
 	}
 	// read the truth table to be the current network in ABC
-	pCommand = ABC_CALLOC(char, len(pTruth)+100)
 	pCommand = fmt.Sprintf("read_truth %s", pTruth)
 	base_main.Cmd_CommandExecute(pAbc, pCommand)
 	pCommand = ""
@@ -23451,7 +23448,7 @@ func Abc_CommandCec(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		}
 	}
 
-	if (pNtk != nil) && pNtk.vPhases != nil {
+	if (pNtk != nil) && pNtk.Phases != nil {
 		Abc_Print(-1, "Cannot compare networks with phases defined.\n")
 		return 1
 	}
@@ -23496,7 +23493,7 @@ func Abc_CommandCec(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 
 usage:
 	if nPartSize == 0 {
-		strcpy(Buffer, "unused")
+		Buffer = "unused"
 	} else {
 		Buffer = fmt.Sprintf("%d", nPartSize)
 	}
@@ -24513,7 +24510,7 @@ func Abc_CommandSat(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	if RetValue == 0 && Abc_NtkPoNum(pNtk) == 1 {
 		//int i;
 		//Abc_Obj_t * pObj;
-		pSimInfo := Abc_NtkVerifySimulatePattern(pNtk, pNtk.pModel)
+		pSimInfo := Abc_NtkVerifySimulatePatternSlice(pNtk, pNtk.Model)
 		if *pSimInfo != 1 {
 			Abc_Print(1, "ERROR in Abc_NtkMiterSat(): Generated counter example is invalid.\n")
 		}
@@ -24679,7 +24676,7 @@ func Abc_CommandDSat(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	}
 
 	if argc == globalUtilOptind+1 {
-		var pModel *int32 = nil
+		var pModel []int32 = nil
 
 		// get the input file name
 		var pFileName string = argv[globalUtilOptind]
@@ -24695,7 +24692,7 @@ func Abc_CommandDSat(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		}
 		sat_cnf.Cnf_DataSolveFromFile(pFileName, nConfLimit, nLearnedStart, nLearnedDelta, nLearnedPerce, fVerbose, fShowPattern, &pModel, piNum)
 		if (pModel != nil) && (pNtk != nil) {
-			pSimInfo := Abc_NtkVerifySimulatePattern(pNtk, pModel)
+			pSimInfo := Abc_NtkVerifySimulatePatternSlice(pNtk, pModel)
 			if *pSimInfo != 1 {
 				Abc_Print(1, "ERROR in mapping PIs into SAT vars: Generated CEX is invalid.\n")
 			}
@@ -24727,12 +24724,12 @@ func Abc_CommandDSat(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	RetValue = Abc_NtkDSat(pNtk, ABC_INT64_T(nConfLimit), ABC_INT64_T(nInsLimit), nLearnedStart, nLearnedDelta, nLearnedPerce, fAlignPol, fAndOuts, fNewSolver, fVerbose)
 	// verify that the pattern is correct
 	if RetValue == 0 && Abc_NtkPoNum(pNtk) == 1 {
-		pSimInfo := Abc_NtkVerifySimulatePattern(pNtk, pNtk.pModel)
+		pSimInfo := Abc_NtkVerifySimulatePatternSlice(pNtk, pNtk.Model)
 		if *pSimInfo != 1 {
 			Abc_Print(1, "ERROR in Abc_NtkMiterSat(): Generated counter example is invalid.\n")
 		}
 		pSimInfo = nil
-		abcFrameSetCex(pAbc, util.Abc_CexCreate(0, Abc_NtkPiNum(pNtk), pNtk.pModel, 0, 0, 0))
+		abcFrameSetCex(pAbc, util.Abc_CexCreate(0, Abc_NtkPiNum(pNtk), pNtk.Model, 0, 0, 0))
 	}
 	abcFrameSetStatus(pAbc, RetValue)
 	if !(fSilent != 0) {
@@ -25229,7 +25226,7 @@ func Abc_CommandPSat(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	if RetValue == 0 && Abc_NtkPoNum(pNtk) == 1 {
 		//int i;
 		//Abc_Obj_t * pObj;
-		var pSimInfo *int32 = Abc_NtkVerifySimulatePattern(pNtk, pNtk.pModel)
+		var pSimInfo []int32 = Abc_NtkVerifySimulatePatternSlice(pNtk, pNtk.Model)
 		if pSimInfo[0] != 1 {
 			Abc_Print(1, "ERROR in Abc_NtkMiterSat(): Generated counter example is invalid.\n")
 		}
@@ -25414,7 +25411,7 @@ func Abc_CommandProve(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 
 	// verify that the pattern is correct
 	if RetValue == 0 {
-		var pSimInfo *int32 = Abc_NtkVerifySimulatePattern(pNtk, pNtkTemp.pModel)
+		var pSimInfo []int32 = Abc_NtkVerifySimulatePatternSlice(pNtk, pNtkTemp.Model)
 		if pSimInfo[0] != 1 {
 			Abc_Print(1, "ERROR in Abc_NtkMiterProve(): Generated counter-example is invalid.\n")
 		}
@@ -26370,7 +26367,7 @@ func Abc_CommandBmcInter(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			Abc_Print(1, "Cannot solve multiple-output miter with constraints.\n")
 			return 0
 		}
-		if pPars.FUseSeparate {
+		if pPars.FUseSeparate != 0 {
 			Abc_Print(0, "Each of %d outputs will be solved separately.\n", Abc_NtkPoNum(pNtk))
 			abcFrameSetStatus(pAbc, Abc_NtkDarBmcInter(pNtk, pPars, &pNtkRes))
 			pSeqModel := Abc_NtkReadSeqModel(pNtk)
@@ -26393,10 +26390,10 @@ func Abc_CommandBmcInter(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			abcFrameSetStatus(pAbc, Abc_NtkDarBmcInter(pNtkNew, pPars, nil))
 			if abcFrameStatus(pAbc) == 0 {
 				var pMan *Aig_Man_t = Abc_NtkToDar(pNtk, 0, 1)
-				pNtkNew.pSeqModel.iPo = aig_saig.Saig_ManFindFailedPoCex(pMan, pNtkNew.pSeqModel)
+				pNtkNew.SequenceModel.iPo = aig_saig.Saig_ManFindFailedPoCex(pMan, pNtkNew.SequenceModel)
 				Aig_ManStop(pMan)
 			}
-			Abc_FrameReplaceCex(pAbc, &pNtkNew.pSeqModel)
+			Abc_FrameReplaceCex(pAbc, &pNtkNew.SequenceModel)
 			Abc_NtkDelete(pNtkNew)
 		}
 		abcFrameSetNFrames(pAbc, -1)
@@ -27097,7 +27094,7 @@ func Abc_CommandConstr(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			return 0
 		}
 		Abc_Print(1, "Constraints are converted to be primary outputs.\n")
-		pNtk.nConstrs = 0
+		pNtk.Constraints = 0
 		return 0
 	}
 	// consider the case of manual constraint definition
@@ -27113,7 +27110,7 @@ func Abc_CommandConstr(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			return 0
 		}
 		Abc_Print(1, "Setting the last %d POs as constraint outputs.\n", nConstrs)
-		pNtk.nConstrs = nConstrs
+		pNtk.Constraints = nConstrs
 		return 0
 	}
 	// consider the case of already defined constraints
@@ -28083,7 +28080,7 @@ func Abc_CommandPdr(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	}
 	if Abc_NtkLatchNum(pNtk) == 0 {
 		pNtkFlop = Abc_NtkDup(pNtk)
-		baseabc.Abc_NtkAddLatch(pNtkFlop, baseabc.Abc_AigConst1(pNtkFlop), baseabc.ABC_INIT_ONE)
+		baseabc.Abc_NtkAddLatch(pNtkFlop, baseabc.Abc_AigConst1(pNtkFlop).Object, baseabc.ABC_INIT_ONE)
 	}
 	// run the procedure
 	pPars.FUseBridge = boolInt((abcFrameBridgeMode(pAbc) != 0))
@@ -28102,7 +28099,7 @@ func Abc_CommandPdr(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	if baseabc.Abc_NtkReadSeqModelVec(pNtkUsed) != nil {
 		abcFrameReplaceCexVectorFromNetwork(pAbc, pNtkUsed)
 	} else {
-		Abc_FrameReplaceCex(pAbc, &pNtkUsed.pSeqModel)
+		Abc_FrameReplaceCex(pAbc, &pNtkUsed.SequenceModel)
 	}
 	if pNtkFlop != nil {
 		Abc_NtkDelete(pNtkFlop)
@@ -28446,7 +28443,7 @@ func Abc_CommandCexCut(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			return 0
 		}
 		pNtkNew = Abc_NtkFromAigPhase(pAigNew)
-		pNtkNew.pName = Extra_UtilStrsav(abcFrameNtk(pAbc).pName)
+		pNtkNew.Name = Extra_UtilStrsav(abcFrameNtk(pAbc).Name)
 		Aig_ManStop(pAigNew)
 		// update the network
 		Abc_FrameReplaceCurrentNetwork(pAbc, pNtkNew)
@@ -28762,7 +28759,7 @@ func Abc_CommandDualRail(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	pAigNew = aig_saig.Saig_ManDupDual(pAig, vDcFlops, nDualPis, fDualFfs, fMiterFfs, fComplPo, fCheckZero, fCheckOne)
 	Aig_ManStop(pAig)
 	pNtkNew = Abc_NtkFromAigPhase(pAigNew)
-	pNtkNew.pName = Extra_UtilStrsav(pNtk.pName)
+	pNtkNew.Name = Extra_UtilStrsav(pNtk.Name)
 	Aig_ManStop(pAigNew)
 	Vec_IntFreeP(&vDcFlops)
 
@@ -28853,7 +28850,7 @@ func Abc_CommandBlockPo(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	pNtkNew = Abc_NtkFromAigPhase(pAig)
 	Aig_ManStop(pAig)
 	// transfer the name
-	pNtkNew.pName = Extra_UtilStrsav(pNtk.pName)
+	pNtkNew.Name = Extra_UtilStrsav(pNtk.Name)
 	pNtkNew.pSpec = Extra_UtilStrsav(pNtk.pSpec)
 	// replace the current network
 	Abc_FrameReplaceCurrentNetwork(pAbc, pNtkNew)
@@ -28920,7 +28917,7 @@ func Abc_CommandIso(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	pAig = Abc_NtkToDar(pNtk, 0, 1)
 	pTemp = aig_saig.Saig_ManIsoReduce(pAig, &vPosEquivs, fVerbose)
 	pNtkNew = Abc_NtkFromAigPhase(pTemp)
-	pNtkNew.pName = Extra_UtilStrsav(pNtk.pName)
+	pNtkNew.Name = Extra_UtilStrsav(pNtk.Name)
 	Aig_ManStop(pTemp)
 	Aig_ManStop(pAig)
 
@@ -29649,18 +29646,18 @@ func Abc_CommandAbc9Get(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	}
 	// copy names
 	if fNames != 0 {
-		pGia.vNamesIn = Abc_NtkCollectCiNames(abcFrameNtk(pAbc))
-		pGia.vNamesOut = Abc_NtkCollectCoNames(abcFrameNtk(pAbc))
+		pGia.VNamesIn = Abc_NtkCollectCiNames(abcFrameNtk(pAbc))
+		pGia.VNamesOut = Abc_NtkCollectCoNames(abcFrameNtk(pAbc))
 	}
 	// copy user timing information
-	if abcFrameNtk(pAbc).pManTime != nil {
+	if abcFrameNtk(pAbc).TimingManager != nil {
 		var pNtk *Abc_Ntk_t = abcFrameNtk(pAbc)
-		giapkg.Vec_FltFreeP(&pGia.vInArrs)
-		giapkg.Vec_FltFreeP(&pGia.vOutReqs)
+		giapkg.Vec_FltFreeP(&pGia.VInArrs)
+		giapkg.Vec_FltFreeP(&pGia.VOutReqs)
 		pGia.DefInArrs = Abc_NtkReadDefaultArrivalWorst(pNtk)
 		pGia.DefOutReqs = Abc_NtkReadDefaultRequiredWorst(pNtk)
-		pGia.vInArrs = giapkg.Vec_FltAllocArray(Abc_NtkGetCiArrivalFloats(pNtk), int(Abc_NtkCiNum(pNtk)))
-		pGia.vOutReqs = giapkg.Vec_FltAllocArray(Abc_NtkGetCoRequiredFloats(pNtk), int(Abc_NtkCoNum(pNtk)))
+		pGia.VInArrs = giapkg.Vec_FltAllocArray(Abc_NtkGetCiArrivalFloats(pNtk), int(Abc_NtkCiNum(pNtk)))
+		pGia.VOutReqs = giapkg.Vec_FltAllocArray(Abc_NtkGetCoRequiredFloats(pNtk), int(Abc_NtkCoNum(pNtk)))
 		pGia.And2Delay = int32(pNtk.AndGateDelay)
 	}
 	Abc_FrameUpdateGia(pAbc, pGia)
@@ -29731,12 +29728,12 @@ func Abc_CommandAbc9Put(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		pNtk = Abc_NtkFromMappedGia(abcFrameGia(pAbc), 1, fUseBuffs)
 	} else if giapkg.Gia_ManHasCellMapping(abcFrameGia(pAbc)) != 0 {
 		pNtk = Abc_NtkFromCellMappedGia(abcFrameGia(pAbc), fUseBuffs)
-	} else if (Gia_ManHasMapping(abcFrameGia(pAbc)) != 0) || abcFrameGia(pAbc).pMuxes {
+	} else if (Gia_ManHasMapping(abcFrameGia(pAbc)) != 0) || abcFrameGia(pAbc).PMuxes {
 		pNtk = Abc_NtkFromMappedGia(abcFrameGia(pAbc), 0, fUseBuffs)
 	} else if giapkg.Gia_ManHasDangling(abcFrameGia(pAbc)) == 0 {
 		pMan = giapkg.Gia_ManToAig(abcFrameGia(pAbc), 0)
 		pNtk = Abc_NtkFromAigPhase(pMan)
-		pNtk.pName = Extra_UtilStrsav(pMan.pName)
+		pNtk.Name = Extra_UtilStrsav(pMan.pName)
 		Aig_ManStop(pMan)
 
 	} else {
@@ -29745,7 +29742,7 @@ func Abc_CommandAbc9Put(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		// create network without choices
 		pMan = giapkg.Gia_ManToAig(abcFrameGia(pAbc), 0)
 		pNtkNoCh = Abc_NtkFromAigPhase(pMan)
-		pNtkNoCh.pName = Extra_UtilStrsav(pMan.pName)
+		pNtkNoCh.Name = Extra_UtilStrsav(pMan.pName)
 		Aig_ManStop(pMan)
 		// derive network with choices
 		pMan = giapkg.Gia_ManToAig(abcFrameGia(pAbc), 1)
@@ -29754,7 +29751,7 @@ func Abc_CommandAbc9Put(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Aig_ManStop(pMan)
 	}
 	// transfer PI names to pNtk
-	if abcFrameGia(pAbc).vNamesIn {
+	if abcFrameGia(pAbc).VNamesIn {
 		var pObj *Abc_Obj_t
 		var i int32
 		for i = 0; i < Abc_NtkObjNumMax(pNtk); i++ {
@@ -29762,14 +29759,14 @@ func Abc_CommandAbc9Put(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			if pObj == nil || baseabc.Abc_ObjIsCi(pObj) == 0 {
 				continue
 			}
-			if i < Vec_PtrSize(abcFrameGia(pAbc).vNamesIn) {
+			if i < Vec_PtrSize(abcFrameGia(pAbc).VNamesIn) {
 				baseabc.Abc_ObjDeleteName(pObj)
-				baseabc.Abc_ObjAssignName(pObj, Vec_PtrEntry(abcFrameGia(pAbc).vNamesIn, i).(string), "")
+				baseabc.Abc_ObjAssignName(pObj, Vec_PtrEntry(abcFrameGia(pAbc).VNamesIn, i).(string), "")
 			}
 		}
 	}
 	// transfer PO names to pNtk
-	if abcFrameGia(pAbc).vNamesOut {
+	if abcFrameGia(pAbc).VNamesOut {
 		var pSuffix string // was [100]byte in C
 
 		var pObj *Abc_Obj_t
@@ -29780,38 +29777,38 @@ func Abc_CommandAbc9Put(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			if pObj == nil || baseabc.Abc_ObjIsCo(pObj) == 0 {
 				continue
 			}
-			if i < Vec_PtrSize(abcFrameGia(pAbc).vNamesOut) {
+			if i < Vec_PtrSize(abcFrameGia(pAbc).VNamesOut) {
 				baseabc.Abc_ObjDeleteName(pObj)
 				if Abc_ObjIsPo(pObj) != 0 {
-					baseabc.Abc_ObjAssignName(pObj, Vec_PtrEntry(abcFrameGia(pAbc).vNamesOut, i).(string), "")
+					baseabc.Abc_ObjAssignName(pObj, Vec_PtrEntry(abcFrameGia(pAbc).VNamesOut, i).(string), "")
 				} else {
 					assert(i >= Abc_NtkPoNum(pNtk), "i >= Abc_NtkPoNum(pNtk)")
 					pSuffix = fmt.Sprintf("_li%0*d", nDigits, i-Abc_NtkPoNum(pNtk))
-					baseabc.Abc_ObjAssignName(pObj, Vec_PtrEntry(abcFrameGia(pAbc).vNamesOut, i).(string), pSuffix)
+					baseabc.Abc_ObjAssignName(pObj, Vec_PtrEntry(abcFrameGia(pAbc).VNamesOut, i).(string), pSuffix)
 				}
 			}
 		}
 	}
 
 	// decouple CI/CO with the same name
-	if abcFrameGia(pAbc).vNamesIn || abcFrameGia(pAbc).vNamesOut {
+	if abcFrameGia(pAbc).VNamesIn || abcFrameGia(pAbc).VNamesOut {
 		baseabc.Abc_NtkRedirectCiCo(pNtk)
 	}
 
 	// transfer timing information
-	if abcFrameGia(pAbc).vInArrs || abcFrameGia(pAbc).vOutReqs {
+	if abcFrameGia(pAbc).VInArrs || abcFrameGia(pAbc).VOutReqs {
 		var pObj *Abc_Obj_t
 		var i int32
 		Abc_NtkTimeInitialize(pNtk, nil)
 		Abc_NtkTimeSetDefaultArrival(pNtk, abcFrameGia(pAbc).DefInArrs, abcFrameGia(pAbc).DefInArrs)
 		Abc_NtkTimeSetDefaultRequired(pNtk, abcFrameGia(pAbc).DefOutReqs, abcFrameGia(pAbc).DefOutReqs)
-		if abcFrameGia(pAbc).vInArrs {
+		if abcFrameGia(pAbc).VInArrs {
 			Abc_NtkForEachCi(pNtk, pObj, i)
-			Abc_NtkTimeSetArrival(pNtk, baseabc.Abc_ObjId(pObj), giapkg.Vec_FltEntry(abcFrameGia(pAbc).vInArrs, int(i)), giapkg.Vec_FltEntry(abcFrameGia(pAbc).vInArrs, int(i)))
+			Abc_NtkTimeSetArrival(pNtk, baseabc.Abc_ObjId(pObj), giapkg.Vec_FltEntry(abcFrameGia(pAbc).VInArrs, int(i)), giapkg.Vec_FltEntry(abcFrameGia(pAbc).VInArrs, int(i)))
 		}
-		if abcFrameGia(pAbc).vOutReqs {
+		if abcFrameGia(pAbc).VOutReqs {
 			Abc_NtkForEachCo(pNtk, pObj, i)
-			Abc_NtkTimeSetRequired(pNtk, baseabc.Abc_ObjId(pObj), giapkg.Vec_FltEntry(abcFrameGia(pAbc).vOutReqs, int(i)), giapkg.Vec_FltEntry(abcFrameGia(pAbc).vOutReqs, int(i)))
+			Abc_NtkTimeSetRequired(pNtk, baseabc.Abc_ObjId(pObj), giapkg.Vec_FltEntry(abcFrameGia(pAbc).VOutReqs, int(i)), giapkg.Vec_FltEntry(abcFrameGia(pAbc).VOutReqs, int(i)))
 		}
 	}
 
@@ -29859,7 +29856,7 @@ func Gia_ManCompareWithBest(pBest *Gia_Man_t, p *Gia_Man_t, pnBestLuts *int32, p
 		*pnBestLuts = nCurLuts
 		*pnBestEdges = nCurEdges
 		*pnBestLevels = nCurLevels
-		//printf( "\nUpdating best (%d %d %d).\n\n", nCurLuts, nCurEdges, nCurLevels );
+		//fmt.Printf( "\nUpdating best (%d %d %d).\n\n", nCurLuts, nCurEdges, nCurLevels );
 		return 1
 	}
 	return 0
@@ -31229,7 +31226,7 @@ func Abc_CommandAbc9Strash(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		if Gia_ManHasMapping(abcFrameGia(pAbc)) != 0 {
 			Abc_Print(0, "Restructing the current AIG destroys the LUT mapping.\n")
 		}
-		Vec_IntFreeP(&abcFrameGia(pAbc).vMapping)
+		Vec_IntFreeP(&abcFrameGia(pAbc).VMapping)
 		pTemp = giapkg.Gia_ManDupMuxRestructure(abcFrameGia(pAbc))
 		Abc_Print(1, "Finished AIG restructing to enable efficient mapping of 4:1 MUXes into 4-LUTs.\n")
 
@@ -31238,53 +31235,53 @@ func Abc_CommandAbc9Strash(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		giapkg.Gia_ManTransferPacking(pTemp, abcFrameGia(pAbc))
 		Gia_ManTransferTiming(pTemp, abcFrameGia(pAbc))
 
-	} else if (Gia_ManHasMapping(abcFrameGia(pAbc)) != 0) && abcFrameGia(pAbc).vConfigs {
+	} else if (Gia_ManHasMapping(abcFrameGia(pAbc)) != 0) && abcFrameGia(pAbc).VConfigs {
 		pTemp = ifpkg.If_ManDeriveGiaFromCells(abcFrameGia(pAbc))
 	} else if Gia_ManHasMapping(abcFrameGia(pAbc)) != 0 {
 		pTemp = opt_dau.Dsm_ManDeriveGia(abcFrameGia(pAbc), fAddMuxes) // delay-oriented unmapping
 	} else if fAddMuxes != 0 {
-		if abcFrameGia(pAbc).pMuxes {
+		if abcFrameGia(pAbc).PMuxes {
 			Abc_Print(-1, "Abc_CommandAbc9Strash(): The AIG already has MUXes.\n")
 			return 1
 		}
 		pTemp = giapkg.Gia_ManDupMuxes(abcFrameGia(pAbc), Limit)
-		if !base_main.Abc_FrameReadFlag("silentmode") {
+		if base_main.Abc_FrameReadFlag("silentmode") == "" {
 			fmt.Printf("Generated AND/XOR/MUX graph.\n")
 		}
 
-	} else if (fCollapse != 0) && abcFrameGia(pAbc).pAigExtra {
+	} else if (fCollapse != 0) && abcFrameGia(pAbc).PAigExtra {
 		assert((Gia_ManBufNum(abcFrameGia(pAbc)) == 0), "!Gia_ManBufNum(abcFrameGia(pAbc))")
 		if (giapkg.Gia_ManIsSeqWithBoxes(abcFrameGia(pAbc)) != 0) || (giapkg.Gia_ManRegBoxNum(abcFrameGia(pAbc)) != 0) {
 			var pUnshuffled *Gia_Man_t = giapkg.Gia_ManDupUnshuffleInputs(abcFrameGia(pAbc))
 			Gia_ManTransferTiming(pUnshuffled, abcFrameGia(pAbc))
-			pTemp = giapkg.Gia_ManDupCollapse(pUnshuffled, pUnshuffled.pAigExtra, nil, boolInt(giapkg.Gia_ManRegBoxNum(pUnshuffled) > 0))
+			pTemp = giapkg.Gia_ManDupCollapse(pUnshuffled, pUnshuffled.PAigExtra, nil, boolInt(giapkg.Gia_ManRegBoxNum(pUnshuffled) > 0))
 			Gia_ManTransferTiming(abcFrameGia(pAbc), pUnshuffled)
 			Gia_ManStop(pUnshuffled)
 
 		} else {
-			pTemp = giapkg.Gia_ManDupCollapse(abcFrameGia(pAbc), abcFrameGia(pAbc).pAigExtra, nil, 0)
+			pTemp = giapkg.Gia_ManDupCollapse(abcFrameGia(pAbc), abcFrameGia(pAbc).PAigExtra, nil, 0)
 		}
-		if !base_main.Abc_FrameReadFlag("silentmode") {
+		if base_main.Abc_FrameReadFlag("silentmode") == "" {
 			fmt.Printf("Collapsed AIG with boxes and logic of the boxes.\n")
 		}
 
-	} else if abcFrameGia(pAbc).pMuxes {
+	} else if abcFrameGia(pAbc).PMuxes {
 		pTemp = giapkg.Gia_ManDupNoMuxes(abcFrameGia(pAbc), 0)
-		if !base_main.Abc_FrameReadFlag("silentmode") {
+		if base_main.Abc_FrameReadFlag("silentmode") == "" {
 			fmt.Printf("Generated AIG from AND/XOR/MUX graph.\n")
 		}
 
 	} else {
 		pTemp = giapkg.Gia_ManRehash(abcFrameGia(pAbc), fAddStrash)
 		//        if ( !Abc_FrameReadFlag("silentmode") )
-		//            printf( "Rehashed the current AIG.\n" );
+		//            fmt.Printf( "Rehashed the current AIG.\n" );
 	}
-	if !((fCollapse != 0) && abcFrameGia(pAbc).pAigExtra) {
+	if !((fCollapse != 0) && abcFrameGia(pAbc).PAigExtra) {
 		Gia_ManTransferTiming(pTemp, abcFrameGia(pAbc))
-		abcFrameGia(pAbc).vConfigs = pTemp.vConfigs
-		pTemp.vConfigs = nil
-		abcFrameGia(pAbc).pCellStr = pTemp.pCellStr
-		pTemp.pCellStr = nil
+		abcFrameGia(pAbc).VConfigs = pTemp.VConfigs
+		pTemp.VConfigs = nil
+		abcFrameGia(pAbc).PCellStr = pTemp.PCellStr
+		pTemp.PCellStr = nil
 	}
 	Abc_FrameUpdateGia(pAbc, pTemp)
 	return 0
@@ -31983,7 +31980,7 @@ func Abc_CommandAbc9MLGen(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9MLGen(): This command works only for combinational AIGs.\n")
 		return 0
 	}
-	Vec_WrdFreeP(&abcFrameGia(pAbc).vSimsPi)
+	Vec_WrdFreeP(&abcFrameGia(pAbc).VSimsPi)
 	pArgvNew = argv[globalUtilOptind:]
 	nArgcNew = argc - globalUtilOptind
 	if nArgcNew == 0 {
@@ -32061,7 +32058,7 @@ func Abc_CommandAbc9MLTest(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9MLTest(): This command works only for combinational AIGs.\n")
 		return 0
 	}
-	Vec_WrdFreeP(&abcFrameGia(pAbc).vSimsPi)
+	Vec_WrdFreeP(&abcFrameGia(pAbc).VSimsPi)
 	pArgvNew = argv[globalUtilOptind:]
 	nArgcNew = argc - globalUtilOptind
 	if nArgcNew != 1 {
@@ -32142,28 +32139,28 @@ func Abc_CommandAbc9ReadSim(pAbc *Abc_Frame_t, argc int32, argv []string) int32 
 		return 1
 	}
 	if fOutputs != 0 {
-		Vec_WrdFreeP(&abcFrameGia(pAbc).vSimsPo)
-		abcFrameGia(pAbc).vSimsPo = giapkg.Vec_WrdReadHex(pArgvNew[0], nil, 1)
-		if Vec_WrdSize(abcFrameGia(pAbc).vSimsPo)%Gia_ManCoNum(abcFrameGia(pAbc)) != 0 {
-			Vec_WrdFreeP(&abcFrameGia(pAbc).vSimsPo)
+		Vec_WrdFreeP(&abcFrameGia(pAbc).VSimsPo)
+		abcFrameGia(pAbc).VSimsPo = giapkg.Vec_WrdReadHex(pArgvNew[0], nil, 1)
+		if Vec_WrdSize(abcFrameGia(pAbc).VSimsPo)%Gia_ManCoNum(abcFrameGia(pAbc)) != 0 {
+			Vec_WrdFreeP(&abcFrameGia(pAbc).VSimsPo)
 			Abc_Print(-1, "File size (%d words) does not match the number of AIG inputs (%d %% %d != %d).\n",
-				Vec_WrdSize(abcFrameGia(pAbc).vSimsPo), Vec_WrdSize(abcFrameGia(pAbc).vSimsPo), Gia_ManCiNum(abcFrameGia(pAbc)),
-				Vec_WrdSize(abcFrameGia(pAbc).vSimsPo)%Gia_ManCiNum(abcFrameGia(pAbc)))
+				Vec_WrdSize(abcFrameGia(pAbc).VSimsPo), Vec_WrdSize(abcFrameGia(pAbc).VSimsPo), Gia_ManCiNum(abcFrameGia(pAbc)),
+				Vec_WrdSize(abcFrameGia(pAbc).VSimsPo)%Gia_ManCiNum(abcFrameGia(pAbc)))
 			return 1
 		}
-		abcFrameGia(pAbc).nSimWords = Vec_WrdSize(abcFrameGia(pAbc).vSimsPo) / Gia_ManCoNum(abcFrameGia(pAbc))
+		abcFrameGia(pAbc).NSimWords = Vec_WrdSize(abcFrameGia(pAbc).VSimsPo) / Gia_ManCoNum(abcFrameGia(pAbc))
 
 	} else {
-		Vec_WrdFreeP(&abcFrameGia(pAbc).vSimsPi)
-		abcFrameGia(pAbc).vSimsPi = giapkg.Vec_WrdReadHex(pArgvNew[0], nil, 1)
-		if Vec_WrdSize(abcFrameGia(pAbc).vSimsPi)%Gia_ManCiNum(abcFrameGia(pAbc)) != 0 {
-			Vec_WrdFreeP(&abcFrameGia(pAbc).vSimsPi)
+		Vec_WrdFreeP(&abcFrameGia(pAbc).VSimsPi)
+		abcFrameGia(pAbc).VSimsPi = giapkg.Vec_WrdReadHex(pArgvNew[0], nil, 1)
+		if Vec_WrdSize(abcFrameGia(pAbc).VSimsPi)%Gia_ManCiNum(abcFrameGia(pAbc)) != 0 {
+			Vec_WrdFreeP(&abcFrameGia(pAbc).VSimsPi)
 			Abc_Print(-1, "File size (%d words) does not match the number of AIG inputs (%d %% %d != %d).\n",
-				Vec_WrdSize(abcFrameGia(pAbc).vSimsPi), Vec_WrdSize(abcFrameGia(pAbc).vSimsPi), Gia_ManCiNum(abcFrameGia(pAbc)),
-				Vec_WrdSize(abcFrameGia(pAbc).vSimsPi)%Gia_ManCiNum(abcFrameGia(pAbc)))
+				Vec_WrdSize(abcFrameGia(pAbc).VSimsPi), Vec_WrdSize(abcFrameGia(pAbc).VSimsPi), Gia_ManCiNum(abcFrameGia(pAbc)),
+				Vec_WrdSize(abcFrameGia(pAbc).VSimsPi)%Gia_ManCiNum(abcFrameGia(pAbc)))
 			return 1
 		}
-		abcFrameGia(pAbc).nSimWords = Vec_WrdSize(abcFrameGia(pAbc).vSimsPi) / Gia_ManCiNum(abcFrameGia(pAbc))
+		abcFrameGia(pAbc).NSimWords = Vec_WrdSize(abcFrameGia(pAbc).VSimsPi) / Gia_ManCiNum(abcFrameGia(pAbc))
 	}
 	return 0
 
@@ -32220,9 +32217,9 @@ func Abc_CommandAbc9WriteSim(pAbc *Abc_Frame_t, argc int32, argv []string) int32
 		Abc_Print(-1, "Abc_CommandAbc9WriteSim(): This command works only for combinational AIGs.\n")
 		return 0
 	}
-	sims = abcFrameGia(pAbc).vSimsPi
+	sims = abcFrameGia(pAbc).VSimsPi
 	if fOutputs != 0 {
-		sims = abcFrameGia(pAbc).vSimsPo
+		sims = abcFrameGia(pAbc).VSimsPo
 	}
 	if sims == nil {
 		Abc_Print(-1, "Abc_CommandAbc9WriteSim(): Does not have simulation information available.\n")
@@ -32235,12 +32232,12 @@ func Abc_CommandAbc9WriteSim(pAbc *Abc_Frame_t, argc int32, argv []string) int32
 		return 1
 	}
 	if fOutputs != 0 {
-		assert(Vec_WrdSize(abcFrameGia(pAbc).vSimsPo)%Gia_ManCoNum(abcFrameGia(pAbc)) == 0, "Vec_WrdSize(abcFrameGia(pAbc).vSimsPo) % Gia_ManCoNum(abcFrameGia(pAbc)) == 0")
-		giapkg.Vec_WrdDumpHex(pArgvNew[0], abcFrameGia(pAbc).vSimsPo, int(Vec_WrdSize(abcFrameGia(pAbc).vSimsPo)/Gia_ManCoNum(abcFrameGia(pAbc))), 1)
+		assert(Vec_WrdSize(abcFrameGia(pAbc).VSimsPo)%Gia_ManCoNum(abcFrameGia(pAbc)) == 0, "Vec_WrdSize(abcFrameGia(pAbc).vSimsPo) % Gia_ManCoNum(abcFrameGia(pAbc)) == 0")
+		giapkg.Vec_WrdDumpHex(pArgvNew[0], abcFrameGia(pAbc).VSimsPo, int(Vec_WrdSize(abcFrameGia(pAbc).VSimsPo)/Gia_ManCoNum(abcFrameGia(pAbc))), 1)
 
 	} else {
-		assert(Vec_WrdSize(abcFrameGia(pAbc).vSimsPi)%Gia_ManCiNum(abcFrameGia(pAbc)) == 0, "Vec_WrdSize(abcFrameGia(pAbc).vSimsPi) % Gia_ManCiNum(abcFrameGia(pAbc)) == 0")
-		giapkg.Vec_WrdDumpHex(pArgvNew[0], abcFrameGia(pAbc).vSimsPi, int(Vec_WrdSize(abcFrameGia(pAbc).vSimsPi)/Gia_ManCiNum(abcFrameGia(pAbc))), 1)
+		assert(Vec_WrdSize(abcFrameGia(pAbc).VSimsPi)%Gia_ManCiNum(abcFrameGia(pAbc)) == 0, "Vec_WrdSize(abcFrameGia(pAbc).vSimsPi) % Gia_ManCiNum(abcFrameGia(pAbc)) == 0")
+		giapkg.Vec_WrdDumpHex(pArgvNew[0], abcFrameGia(pAbc).VSimsPi, int(Vec_WrdSize(abcFrameGia(pAbc).VSimsPi)/Gia_ManCiNum(abcFrameGia(pAbc))), 1)
 	}
 	return 0
 
@@ -32290,7 +32287,7 @@ func Abc_CommandAbc9PrintSim(pAbc *Abc_Frame_t, argc int32, argv []string) int32
 		Abc_Print(-1, "Abc_CommandAbc9PrintSim(): This command works only for combinational AIGs.\n")
 		return 0
 	}
-	if abcFrameGia(pAbc).vSimsPi == nil {
+	if abcFrameGia(pAbc).VSimsPi == nil {
 		Abc_Print(-1, "Abc_CommandAbc9PrintSim(): Simulation patterns are not defined.\n")
 		return 0
 	}
@@ -32375,21 +32372,21 @@ func Abc_CommandAbc9GenSim(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 0
 	}
 	if fSatBased != 0 {
-		if abcFrameGia(pAbc).vSimsPi == nil {
+		if abcFrameGia(pAbc).VSimsPi == nil {
 			Abc_Print(-1, "Abc_CommandAbc9GenSim(): Does not have simulation information available.\n")
 			return 0
 		}
 		giapkg.Gia_ManPatSatImprove(abcFrameGia(pAbc), nWords, fVerbose)
 
 	} else if fDist != 0 {
-		if abcFrameGia(pAbc).vSimsPi == nil {
+		if abcFrameGia(pAbc).VSimsPi == nil {
 			Abc_Print(-1, "Abc_CommandAbc9GenSim(): Does not have simulation information available.\n")
 			return 0
 		}
 		giapkg.Gia_ManPatDistImprove(abcFrameGia(pAbc), fVerbose)
 
 	} else if nRare >= 0 {
-		if abcFrameGia(pAbc).vSimsPi == nil {
+		if abcFrameGia(pAbc).VSimsPi == nil {
 			Abc_Print(-1, "Abc_CommandAbc9GenSim(): Does not have simulation information available.\n")
 			return 0
 		}
@@ -32397,8 +32394,8 @@ func Abc_CommandAbc9GenSim(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 
 	} else {
 		util.Abc_Random(1)
-		Vec_WrdFreeP(&abcFrameGia(pAbc).vSimsPi)
-		abcFrameGia(pAbc).vSimsPi = giapkg.Vec_WrdStartRandom(int(Gia_ManCiNum(abcFrameGia(pAbc)) * nWords))
+		Vec_WrdFreeP(&abcFrameGia(pAbc).VSimsPi)
+		abcFrameGia(pAbc).VSimsPi = giapkg.Vec_WrdStartRandom(int(Gia_ManCiNum(abcFrameGia(pAbc)) * nWords))
 		fmt.Printf("Generated %d random patterns (%d 64-bit data words) for each input of the AIG.\n", 64*nWords, nWords)
 	}
 	giapkg.Gia_ManSimProfile(abcFrameGia(pAbc))
@@ -32465,7 +32462,7 @@ func Abc_CommandAbc9SimRsb(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9SimRsb(): This command works only for combinational AIGs.\n")
 		return 0
 	}
-	if abcFrameGia(pAbc).vSimsPi == nil {
+	if abcFrameGia(pAbc).VSimsPi == nil {
 		Abc_Print(-1, "Abc_CommandAbc9SimRsb(): Does not have simulation information available.\n")
 		return 0
 	}
@@ -34253,7 +34250,7 @@ func Abc_CommandAbc9Synch2(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Dch(): There is no AIG.\n")
 		return 1
 	}
-	pTemp = giapkg.Gia_ManAigSynch2(abcFrameGia(pAbc), pPars, nLutSize, nRelaxRatio)
+	pTemp = giapkg.Gia_ManAigSynch2(abcFrameGia(pAbc), pPars.native(), nLutSize, nRelaxRatio)
 	Abc_FrameUpdateGia(pAbc, pTemp)
 	return 0
 
@@ -34790,7 +34787,7 @@ func Abc_CommandAbc9Scl(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 1
 	}
 	if (giapkg.Gia_ManBoxNum(abcFrameGia(pAbc)) != 0) && (giapkg.Gia_ManRegBoxNum(abcFrameGia(pAbc)) != 0) {
-		if abcFrameGia(pAbc).pAigExtra == nil {
+		if abcFrameGia(pAbc).PAigExtra == nil {
 			fmt.Printf("Timing manager is given but there is no GIA of boxes.\n")
 			return 0
 		}
@@ -34894,7 +34891,7 @@ func Abc_CommandAbc9Lcorr(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 1
 	}
 	if (giapkg.Gia_ManBoxNum(abcFrameGia(pAbc)) != 0) && (giapkg.Gia_ManRegBoxNum(abcFrameGia(pAbc)) != 0) {
-		if abcFrameGia(pAbc).pAigExtra == nil {
+		if abcFrameGia(pAbc).PAigExtra == nil {
 			fmt.Printf("Timing manager is given but there is no GIA of boxes.\n")
 			return 0
 		}
@@ -35014,7 +35011,7 @@ func Abc_CommandAbc9Scorr(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 1
 	}
 	if (giapkg.Gia_ManBoxNum(abcFrameGia(pAbc)) != 0) && (giapkg.Gia_ManRegBoxNum(abcFrameGia(pAbc)) != 0) {
-		if abcFrameGia(pAbc).pAigExtra == nil {
+		if abcFrameGia(pAbc).PAigExtra == nil {
 			fmt.Printf("Timing manager is given but there is no GIA of boxes.\n")
 			return 0
 		}
@@ -35612,8 +35609,8 @@ usage:
 */
 func Abc_CommandAbc9Srm(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	var pFileNameIn string
-	var pFileName [10]byte = "gsrm.aig"
-	var pFileName2 [10]byte = "gsyn.aig"
+	var pFileName string = "gsrm.aig"
+	var pFileName2 string = "gsyn.aig"
 	var pTemp, pAux *Gia_Man_t
 	var c, fVerbose int32
 	var fSynthesis int32
@@ -35755,7 +35752,7 @@ func Abc_CommandAbc9Srm2(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Srm2(): There is no AIG.\n")
 		return 1
 	}
-	if abcFrameGia(pAbc).pReprs == nil || abcFrameGia(pAbc).pNexts == nil {
+	if abcFrameGia(pAbc).PReprs == nil || abcFrameGia(pAbc).PNexts == nil {
 		Abc_Print(-1, "Equivalences are not defined.\n")
 		return 0
 	}
@@ -35770,10 +35767,10 @@ func Abc_CommandAbc9Srm2(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	pFileName = fmt.Sprintf("gsrm.aig")
 	pTemp = giapkg.Gia_ManDup(abcFrameGia(pAbc))
 	// copy equivalences
-	pTemp.pReprs = ABC_ALLOC(giapkg.Gia_Rpr_t, Gia_ManObjNum(pTemp))
-	memcpy(pTemp.pReprs, abcFrameGia(pAbc).pReprs, sizeof(giapkg.Gia_Rpr_t)*Gia_ManObjNum(pTemp))
-	pTemp.pNexts = ABC_ALLOC(int, Gia_ManObjNum(pTemp))
-	memcpy(pTemp.pNexts, abcFrameGia(pAbc).pNexts, sizeof(int)*Gia_ManObjNum(pTemp))
+	pTemp.PReprs = ABC_ALLOC(giapkg.Gia_Rpr_t, Gia_ManObjNum(pTemp))
+	memcpy(pTemp.PReprs, abcFrameGia(pAbc).PReprs, sizeof(giapkg.Gia_Rpr_t)*Gia_ManObjNum(pTemp))
+	pTemp.PNexts = ABC_ALLOC(int, Gia_ManObjNum(pTemp))
+	memcpy(pTemp.PNexts, abcFrameGia(pAbc).PNexts, sizeof(int)*Gia_ManObjNum(pTemp))
 	//Gia_ManPrintStats( pTemp, 0 );
 	// filter the classes
 	if giapkg.Gia_ManFilterEquivsForSpeculation(pTemp, pFileName1, pFileName2, fLatchA, fLatchB) == 0 {
@@ -35851,7 +35848,7 @@ func Abc_CommandAbc9Filter(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Srm2(): There is no AIG.\n")
 		return 1
 	}
-	if abcFrameGia(pAbc).pReprs == nil || abcFrameGia(pAbc).pNexts == nil {
+	if abcFrameGia(pAbc).PReprs == nil || abcFrameGia(pAbc).PNexts == nil {
 		Abc_Print(-1, "Equivalences are not defined.\n")
 		return 0
 	}
@@ -36164,7 +36161,7 @@ func Abc_CommandAbc9Cec(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			for i = 0; i < Gia_ManCoNum(abcFrameGia(pAbc)); i++ {
 				pObj = Gia_ManCo(abcFrameGia(pAbc), i)
 				if pObj.fPhase {
-					abcFrameGia(pAbc).pCexComb = util.Abc_CexAlloc(0, Gia_ManCiNum(abcFrameGia(pAbc)), 1)
+					abcFrameGia(pAbc).PCexComb = util.Abc_CexAlloc(0, Gia_ManCiNum(abcFrameGia(pAbc)), 1)
 					if pPars.FSilent == 0 {
 						Abc_Print(1, "Networks are NOT EQUIVALENT. Output %d trivially differs (different phase).  ", i)
 						Abc_PrintTime(1, "Time", Abc_Clock()-clk)
@@ -36173,14 +36170,14 @@ func Abc_CommandAbc9Cec(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 					break
 				}
 			}
-			if abcFrameGia(pAbc).pCexComb == nil {
+			if abcFrameGia(pAbc).PCexComb == nil {
 				var pTemp *Gia_Man_t = giapkg.Gia_ManDemiterToDual(abcFrameGia(pAbc))
 				abcFrameSetStatus(pAbc, proof_cec.Cec_ManVerify(pTemp, pPars))
-				abcFrameGia(pAbc).pCexComb, pTemp.pCexComb = pTemp.pCexComb, abcFrameGia(pAbc).pCexComb
+				abcFrameGia(pAbc).PCexComb, pTemp.PCexComb = pTemp.PCexComb, abcFrameGia(pAbc).PCexComb
 				Gia_ManStop(pTemp)
 			}
 		}
-		Abc_FrameReplaceCex(pAbc, &abcFrameGia(pAbc).pCexComb)
+		Abc_FrameReplaceCex(pAbc, &abcFrameGia(pAbc).PCexComb)
 		return 0
 	}
 	if nArgcNew > 2 {
@@ -36222,11 +36219,11 @@ func Abc_CommandAbc9Cec(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			FileName = pArgvNew[0]
 		} else {
 			assert(nArgcNew == 0, "nArgcNew == 0")
-			if abcFrameGia(pAbc).pSpec == nil {
+			if abcFrameGia(pAbc).PSpec == nil {
 				Abc_Print(-1, "File name is not given on the command line.\n")
 				return 1
 			}
-			FileName = abcFrameGia(pAbc).pSpec
+			FileName = abcFrameGia(pAbc).PSpec
 		}
 		// fix the wrong symbol
 		for pTemp = FileName; *pTemp; pTemp++ {
@@ -36257,9 +36254,9 @@ func Abc_CommandAbc9Cec(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			Abc_Print(0, "The verification miter is written into file \"%s\".\n", "cec_miter.aig")
 			Gia_AigerWrite(pMiter, "cec_miter.aig", 0, 0, 0)
 		}
-		if pGias[0].vSimsPi {
-			pMiter.vSimsPi = giapkg.Vec_WrdDup(pGias[0].vSimsPi)
-			pMiter.nSimWords = pGias[0].nSimWords
+		if pGias[0].VSimsPi {
+			pMiter.VSimsPi = giapkg.Vec_WrdDup(pGias[0].VSimsPi)
+			pMiter.NSimWords = pGias[0].NSimWords
 		}
 		if fUseNew != 0 {
 			var clk abctime = Abc_Clock()
@@ -36275,7 +36272,7 @@ func Abc_CommandAbc9Cec(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 
 		} else {
 			abcFrameSetStatus(pAbc, proof_cec.Cec_ManVerify(pMiter, pPars))
-			Abc_FrameReplaceCex(pAbc, &pGias[0].pCexComb)
+			Abc_FrameReplaceCex(pAbc, &pGias[0].PCexComb)
 		}
 		Gia_ManStop(pMiter)
 	}
@@ -36455,7 +36452,7 @@ func Abc_CommandAbc9Sweep(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Sweep(): There is no AIG.\n")
 		return 1
 	}
-	if (giapkg.Gia_ManBoxNum(abcFrameGia(pAbc)) != 0) && abcFrameGia(pAbc).pAigExtra == nil {
+	if (giapkg.Gia_ManBoxNum(abcFrameGia(pAbc)) != 0) && abcFrameGia(pAbc).PAigExtra == nil {
 		fmt.Printf("Timing manager is given but there is no GIA of boxes.\n")
 		return 0
 	}
@@ -37385,7 +37382,7 @@ func Abc_CommandAbc9If(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	}
 
 	if abcFrameGia(pAbc) == nil {
-		if !base_main.Abc_FrameReadFlag("silentmode") {
+		if base_main.Abc_FrameReadFlag("silentmode") == "" {
 			Abc_Print(-1, "Empty GIA network.\n")
 		}
 		return 0
@@ -37436,7 +37433,7 @@ func Abc_CommandAbc9If(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		pPars.FCutMin = 1
 	}
 
-	if pPars.FEnableCheck07+pPars.FUseCofVars+pPars.FUseDsdTune+pPars.FEnableCheck75+pPars.FEnableCheck75u+(pPars.PLutStruct != "") > 1 {
+	if pPars.FEnableCheck07+pPars.FUseCofVars+pPars.FUseDsdTune+pPars.FEnableCheck75+pPars.FEnableCheck75u+boolInt(pPars.PLutStruct != "") > 1 {
 		Abc_Print(-1, "Only one additional check can be performed at the same time.\n")
 		return 1
 	}
@@ -37488,7 +37485,7 @@ func Abc_CommandAbc9If(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		pPars.PFuncCell = ifpkg.If_CutPerformCheck75
 		pPars.FCutMin = 1
 	}
-	if pPars.PLutStruct {
+	if pPars.PLutStruct != "" {
 		if pPars.FDsdBalance != 0 {
 			Abc_Print(-1, "Incompatible options (-S and -x).\n")
 			return 1
@@ -37553,13 +37550,13 @@ func Abc_CommandAbc9If(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 
 	if pPars.FUseDsd != 0 {
 		var LutSize int32
-		if pPars.PLutStruct && pPars.PLutStruct[2] == 0 {
+		if len(pPars.PLutStruct) == 2 {
 			LutSize = int32(pPars.PLutStruct[0] - '0')
 		} else {
 			LutSize = 0
 		}
 		p, _ := base_main.Abc_FrameReadManDsd().(*ifpkg.If_DsdMan_t)
-		if pPars.PLutStruct && pPars.PLutStruct[2] != 0 {
+		if len(pPars.PLutStruct) > 2 {
 			fmt.Printf("DSD only works for LUT structures XY.\n")
 			return 0
 		}
@@ -37596,7 +37593,7 @@ func Abc_CommandAbc9If(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Truth tables cannot be computed for LUT larger than %d inputs.\n", ifpkg.IF_MAX_FUNC_LUTSIZE)
 		return 1
 	}
-	if abcFrameGia(pAbc).pManTime && abcFrameResource[any](pAbc, "pLibBox") == nil {
+	if abcFrameGia(pAbc).PManTime && abcFrameResource[any](pAbc, "pLibBox") == nil {
 		Abc_Print(-1, "Design has boxes but box library is not entered.\n")
 		return 1
 	}
@@ -39402,7 +39399,7 @@ func Abc_CommandAbc9Edge(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 0
 	}
 	if fUsePack != 0 {
-		if abcFrameGia(pAbc).vPacking == nil {
+		if abcFrameGia(pAbc).VPacking == nil {
 			Abc_Print(-1, "Packing information is not present.\n")
 			return 0
 		}
@@ -39414,7 +39411,7 @@ func Abc_CommandAbc9Edge(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		giapkg.Seg_ManComputeDelay(abcFrameGia(pAbc), DelayMax, nFanouts, boolInt(nEdges == 2), fVerbose)
 		return 0
 	}
-	if abcFrameGia(pAbc).pManTime && (fReverse != 0) {
+	if abcFrameGia(pAbc).PManTime && (fReverse != 0) {
 		Abc_Print(0, "Reverse computation does not work when boxes are present.\n")
 		return 0
 	}
@@ -39423,7 +39420,7 @@ func Abc_CommandAbc9Edge(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	} else {
 		DelayMax = giapkg.Gia_ManComputeEdgeDelay(abcFrameGia(pAbc), boolInt(nEdges == 2))
 	}
-	//printf( "The number of edges = %d.  Delay = %d.\n", Gia_ManEvalEdgeCount(pAbc->pGia), DelayMax );
+	//fmt.Printf( "The number of edges = %d.  Delay = %d.\n", Gia_ManEvalEdgeCount(pAbc->pGia), DelayMax );
 	return 0
 
 usage:
@@ -39595,11 +39592,11 @@ func Abc_CommandAbc9Unmap(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Struct(): There is no AIG to map.\n")
 		return 1
 	}
-	Vec_IntFreeP(&abcFrameGia(pAbc).vMapping)
-	Vec_IntFreeP(&abcFrameGia(pAbc).vPacking)
-	Vec_IntFreeP(&abcFrameGia(pAbc).vCellMapping)
-	Vec_IntFreeP(&abcFrameGia(pAbc).vEdge1)
-	Vec_IntFreeP(&abcFrameGia(pAbc).vEdge2)
+	Vec_IntFreeP(&abcFrameGia(pAbc).VMapping)
+	Vec_IntFreeP(&abcFrameGia(pAbc).VPacking)
+	Vec_IntFreeP(&abcFrameGia(pAbc).VCellMapping)
+	Vec_IntFreeP(&abcFrameGia(pAbc).VEdge1)
+	Vec_IntFreeP(&abcFrameGia(pAbc).VEdge2)
 	return 0
 
 usage:
@@ -39707,9 +39704,9 @@ func Abc_CommandAbc9Trace(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 1
 	}
 	if fUseLutLib != 0 {
-		abcFrameGia(pAbc).pLutLib = abcFrameResource[any](pAbc, "pLibLut")
+		abcFrameGia(pAbc).PLutLib = abcFrameResource[any](pAbc, "pLibLut")
 	} else {
-		abcFrameGia(pAbc).pLutLib = nil
+		abcFrameGia(pAbc).PLutLib = nil
 	}
 	giapkg.Gia_ManDelayTraceLutPrint(abcFrameGia(pAbc), fVerbose)
 	return 0
@@ -39799,9 +39796,9 @@ func Abc_CommandAbc9Speedup(pAbc *Abc_Frame_t, argc int32, argv []string) int32 
 		return 1
 	}
 	if fUseLutLib != 0 {
-		abcFrameGia(pAbc).pLutLib = abcFrameResource[any](pAbc, "pLibLut")
+		abcFrameGia(pAbc).PLutLib = abcFrameResource[any](pAbc, "pLibLut")
 	} else {
-		abcFrameGia(pAbc).pLutLib = nil
+		abcFrameGia(pAbc).PLutLib = nil
 	}
 	pTemp = giapkg.Gia_ManSpeedup(abcFrameGia(pAbc), Percentage, Degree, fVerbose, fVeryVerbose)
 	Abc_FrameUpdateGia(pAbc, pTemp)
@@ -41591,7 +41588,7 @@ func Abc_CommandAbc9Cone(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Gia_ManForEachPo(abcFrameGia(pAbc), pObj, i)
 		{
 			var pOne *Gia_Man_t = giapkg.Gia_ManDupDfsCone(abcFrameGia(pAbc), pObj)
-			Buffer = fmt.Sprintf("%s_%0*d.aig", Extra_FileNameGeneric(abcFrameGia(pAbc).pSpec), nDigits, i)
+			Buffer = fmt.Sprintf("%s_%0*d.aig", Extra_FileNameGeneric(abcFrameGia(pAbc).PSpec), nDigits, i)
 			Gia_AigerWrite(pOne, Buffer, 0, 0, 0)
 			Gia_ManStop(pOne)
 		}
@@ -42186,8 +42183,8 @@ func Abc_CommandAbc9SplitProve(pAbc *Abc_Frame_t, argc int32, argv []string) int
 		return 1
 	}
 	abcFrameSetStatus(pAbc, proof_cec.Cec_GiaSplitTest(abcFrameGia(pAbc), nProcs, nTimeOut, nIterMax, LookAhead, fVerbose, fVeryVerbose, fSilent))
-	abcFrameSetCex(pAbc, abcFrameGia(pAbc).pCexComb)
-	abcFrameGia(pAbc).pCexComb = nil
+	abcFrameSetCex(pAbc, abcFrameGia(pAbc).PCexComb)
+	abcFrameGia(pAbc).PCexComb = nil
 	return 0
 
 usage:
@@ -43770,11 +43767,11 @@ func Abc_CommandAbc9Inse(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Inse(): AIG is combinational.\n")
 		return 0
 	}
-	if abcFrameGia(pAbc).vInitClasses != nil {
+	if abcFrameGia(pAbc).VInitClasses != nil {
 		Abc_Print(1, "Abc_CommandAbc9Inse(): All-0 initial state is assumed.\n")
-		Vec_IntFreeP(&abcFrameGia(pAbc).vInitClasses)
+		Vec_IntFreeP(&abcFrameGia(pAbc).VInitClasses)
 	}
-	abcFrameGia(pAbc).vInitClasses = sat_bmc.Gia_ManInseTest(abcFrameGia(pAbc), nil, nFrames, nWords, nTimeOut, fSim, fVerbose)
+	abcFrameGia(pAbc).VInitClasses = sat_bmc.Gia_ManInseTest(abcFrameGia(pAbc), nil, nFrames, nWords, nTimeOut, fSim, fVerbose)
 	return 0
 
 usage:
@@ -43867,8 +43864,8 @@ func Abc_CommandAbc9Maxi(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Maxi(): AIG is combinational.\n")
 		return 0
 	}
-	vTemp = abcFrameGia(pAbc).vInitClasses
-	abcFrameGia(pAbc).vInitClasses = sat_bmc.Gia_ManMaxiTest(abcFrameGia(pAbc), vTemp, nFrames, nWords, nTimeOut, fSim, fVerbose)
+	vTemp = abcFrameGia(pAbc).VInitClasses
+	abcFrameGia(pAbc).VInitClasses = sat_bmc.Gia_ManMaxiTest(abcFrameGia(pAbc), vTemp, nFrames, nWords, nTimeOut, fSim, fVerbose)
 	Vec_IntFreeP(&vTemp)
 	return 0
 
@@ -43961,11 +43958,11 @@ func Abc_CommandAbc9Bmci(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Bmci(): AIG is combinational.\n")
 		return 0
 	}
-	if abcFrameGia(pAbc).vInitClasses == nil {
+	if abcFrameGia(pAbc).VInitClasses == nil {
 		Abc_Print(-1, "Abc_CommandAbc9Bmci(): Init array is not given.\n")
 		return 0
 	}
-	sat_bmc.Gia_ManBmciTest(abcFrameGia(pAbc), abcFrameGia(pAbc).vInitClasses, nFrames, nWords, nTimeOut, fSim, fVerbose)
+	sat_bmc.Gia_ManBmciTest(abcFrameGia(pAbc), abcFrameGia(pAbc).VInitClasses, nFrames, nWords, nTimeOut, fSim, fVerbose)
 	return 0
 
 usage:
@@ -44084,8 +44081,8 @@ func Abc_CommandAbc9Demiter(pAbc *Abc_Frame_t, argc int32, argv []string) int32 
 		return 0
 	}
 	if (fDumpFiles != 0) || (fDumpFilesTwo != 0) {
-		var pName0 [1000]byte = "miter_part0.aig"
-		var pName1 [1000]byte = "miter_part1.aig"
+		var pName0 string = "miter_part0.aig"
+		var pName1 string = "miter_part1.aig"
 		var pPart1, pPart2 *Gia_Man_t
 		if Gia_ManPoNum(abcFrameGia(pAbc))%2 != 0 {
 			Abc_Print(-1, "Abc_CommandAbc9Demiter(): Does not look like a dual-output miter.\n")
@@ -44096,8 +44093,8 @@ func Abc_CommandAbc9Demiter(pAbc *Abc_Frame_t, argc int32, argv []string) int32 
 		} else {
 			giapkg.Gia_ManDemiterDual(abcFrameGia(pAbc), &pPart1, &pPart2)
 		}
-		if abcFrameGia(pAbc).pSpec {
-			var pGen string = Extra_FileNameGeneric(abcFrameGia(pAbc).pSpec)
+		if abcFrameGia(pAbc).PSpec {
+			var pGen string = Extra_FileNameGeneric(abcFrameGia(pAbc).PSpec)
 			pName0 = fmt.Sprintf("%s_1.aig", pGen)
 			pName1 = fmt.Sprintf("%s_2.aig", pGen)
 			pGen = ""
@@ -44107,9 +44104,9 @@ func Abc_CommandAbc9Demiter(pAbc *Abc_Frame_t, argc int32, argv []string) int32 
 		Gia_ManStop(pPart1)
 		Gia_ManStop(pPart2)
 		if fDumpFilesTwo != 0 {
-			printf("Two parts of the two-word miter are dumped into files \"%s\" and \"%s\".\n", pName0, pName1)
+			fmt.Printf("Two parts of the two-word miter are dumped into files \"%s\" and \"%s\".\n", pName0, pName1)
 		} else {
-			printf("Two parts of the dual-output miter are dumped into files \"%s\" and \"%s\".\n", pName0, pName1)
+			fmt.Printf("Two parts of the dual-output miter are dumped into files \"%s\" and \"%s\".\n", pName0, pName1)
 		}
 		return 0
 	}
@@ -44566,7 +44563,7 @@ func Abc_CommandAbc9Acec(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			Gia_ManStop(pDual)
 			abcFrameSetStatus(pAbc, proof_acec.Acec_Solve(pGia0, pGia1, pPars))
 		}
-		Abc_FrameReplaceCex(pAbc, &pGia0.pCexComb)
+		Abc_FrameReplaceCex(pAbc, &pGia0.PCexComb)
 		Gia_ManStop(pGia0)
 		Gia_ManStop(pGia1)
 		return 0
@@ -44579,7 +44576,7 @@ func Abc_CommandAbc9Acec(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		var pTemp string
 		var FileName string
 		if nArgcNew == 0 {
-			FileName = abcFrameGia(pAbc).pSpec
+			FileName = abcFrameGia(pAbc).PSpec
 			if FileName == "" {
 				Abc_Print(-1, "File name is not given on the command line.\n")
 				return 1
@@ -44611,7 +44608,7 @@ func Abc_CommandAbc9Acec(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			return 0
 		}
 		abcFrameSetStatus(pAbc, proof_acec.Acec_Solve(abcFrameGia(pAbc), pSecond, pPars))
-		Abc_FrameReplaceCex(pAbc, &abcFrameGia(pAbc).pCexComb)
+		Abc_FrameReplaceCex(pAbc, &abcFrameGia(pAbc).PCexComb)
 		Gia_ManStop(pSecond)
 
 	} else if nArgcNew == 2 {
@@ -44639,7 +44636,7 @@ func Abc_CommandAbc9Acec(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			}
 		}
 		abcFrameSetStatus(pAbc, proof_acec.Acec_Solve(pGias[0], pGias[1], pPars))
-		Abc_FrameReplaceCex(pAbc, &pGias[0].pCexComb)
+		Abc_FrameReplaceCex(pAbc, &pGias[0].PCexComb)
 		Gia_ManStop(pGias[0])
 		Gia_ManStop(pGias[1])
 
@@ -45641,11 +45638,11 @@ func Abc_CommandAbc9AbsCreate(pAbc *Abc_Frame_t, argc int32, argv []string) int3
 		Abc_Print(-1, "The network is combinational.\n")
 		return 0
 	}
-	if abcFrameGia(pAbc).vFlopClasses != nil {
+	if abcFrameGia(pAbc).VFlopClasses != nil {
 		Abc_Print(-1, "Abstraction flop map is already defined.\n")
 		return 0
 	}
-	abcFrameGia(pAbc).vFlopClasses = Vec_IntStart(Gia_ManRegNum(abcFrameGia(pAbc)))
+	abcFrameGia(pAbc).VFlopClasses = Vec_IntStart(Gia_ManRegNum(abcFrameGia(pAbc)))
 	// read the flop list
 	if argc != globalUtilOptind+1 {
 		Abc_Print(-1, "Flop list should be specified on the command line.\n")
@@ -45657,7 +45654,7 @@ func Abc_CommandAbc9AbsCreate(pAbc *Abc_Frame_t, argc int32, argv []string) int3
 	for pFlopNum {
 		var iFlop int32 = abcAtoi(pFlopNum)
 		assert(iFlop >= 0 && iFlop < Gia_ManRegNum(abcFrameGia(pAbc)), "iFlop >= 0 && iFlop < Gia_ManRegNum(abcFrameGia(pAbc))")
-		Vec_IntWriteEntry(abcFrameGia(pAbc).vFlopClasses, iFlop, 1)
+		Vec_IntWriteEntry(abcFrameGia(pAbc).VFlopClasses, iFlop, 1)
 		pFlopNum = strtok(nil, " ,")
 	}
 	return 0
@@ -45706,11 +45703,11 @@ func Abc_CommandAbc9AbsDerive(pAbc *Abc_Frame_t, argc int32, argv []string) int3
 		Abc_Print(-1, "The network is combinational.\n")
 		return 0
 	}
-	if abcFrameGia(pAbc).vFlopClasses == nil {
+	if abcFrameGia(pAbc).VFlopClasses == nil {
 		Abc_Print(-1, "Abstraction flop map is missing.\n")
 		return 0
 	}
-	pTemp = proof_abs.Gia_ManDupAbsFlops(abcFrameGia(pAbc), abcFrameGia(pAbc).vFlopClasses)
+	pTemp = proof_abs.Gia_ManDupAbsFlops(abcFrameGia(pAbc), abcFrameGia(pAbc).VFlopClasses)
 	Abc_FrameUpdateGia(pAbc, pTemp)
 	return 0
 
@@ -45842,13 +45839,13 @@ func Abc_CommandAbc9GlaDerive(pAbc *Abc_Frame_t, argc int32, argv []string) int3
 		Abc_Print(1, "The miters is already solved; skipping the command.\n")
 		return 0
 	}
-	if abcFrameGia(pAbc).vGateClasses == nil {
+	if abcFrameGia(pAbc).VGateClasses == nil {
 		Abc_Print(-1, "Abstraction gate map is missing.\n")
 		return 0
 	}
-	pTemp = proof_abs.Gia_ManDupAbsGates(abcFrameGia(pAbc), abcFrameGia(pAbc).vGateClasses)
+	pTemp = proof_abs.Gia_ManDupAbsGates(abcFrameGia(pAbc), abcFrameGia(pAbc).VGateClasses)
 	Gia_ManStop(pTemp)
-	pTemp = proof_abs.Gia_ManDupAbsGates(abcFrameGia(pAbc), abcFrameGia(pAbc).vGateClasses)
+	pTemp = proof_abs.Gia_ManDupAbsGates(abcFrameGia(pAbc), abcFrameGia(pAbc).VGateClasses)
 	Abc_FrameUpdateGia(pAbc, pTemp)
 	//    Abc_Print( 1,"This command is currently not enabled.\n" );
 	return 0
@@ -46011,7 +46008,7 @@ func Abc_CommandAbc9GlaShrink(pAbc *Abc_Frame_t, argc int32, argv []string) int3
 		Abc_Print(-1, "Abc_CommandAbc9GlaShrink(): There is no AIG.\n")
 		return 1
 	}
-	if abcFrameGia(pAbc).vGateClasses == nil {
+	if abcFrameGia(pAbc).VGateClasses == nil {
 		Abc_Print(-1, "Abc_CommandAbc9GlaShrink(): There is no gate-level abstraction.\n")
 		return 0
 	}
@@ -46565,13 +46562,13 @@ func Abc_CommandAbc9Vta2Gla(pAbc *Abc_Frame_t, argc int32, argv []string) int32 
 		Abc_Print(-1, "Abc_CommandAbc9Vta2Gla(): There is no AIG.\n")
 		return 0
 	}
-	if abcFrameGia(pAbc).vObjClasses == nil {
+	if abcFrameGia(pAbc).VObjClasses == nil {
 		Abc_Print(-1, "Abc_CommandAbc9Vta2Gla(): There is no variable-time-frame abstraction is defined.\n")
 		return 0
 	}
-	Vec_IntFreeP(&abcFrameGia(pAbc).vGateClasses)
-	abcFrameGia(pAbc).vGateClasses = proof_abs.Gia_VtaConvertToGla(abcFrameGia(pAbc), abcFrameGia(pAbc).vObjClasses)
-	Vec_IntFreeP(&abcFrameGia(pAbc).vObjClasses)
+	Vec_IntFreeP(&abcFrameGia(pAbc).VGateClasses)
+	abcFrameGia(pAbc).VGateClasses = proof_abs.Gia_VtaConvertToGla(abcFrameGia(pAbc), abcFrameGia(pAbc).VObjClasses)
+	Vec_IntFreeP(&abcFrameGia(pAbc).VObjClasses)
 	return 0
 
 usage:
@@ -46625,7 +46622,7 @@ func Abc_CommandAbc9Gla2Vta(pAbc *Abc_Frame_t, argc int32, argv []string) int32 
 		Abc_Print(-1, "Abc_CommandAbc9Gla2Vta(): There is no AIG.\n")
 		return 0
 	}
-	if abcFrameGia(pAbc).vGateClasses == nil {
+	if abcFrameGia(pAbc).VGateClasses == nil {
 		Abc_Print(-1, "Abc_CommandAbc9Gla2Vta(): There is no gate-level abstraction is defined.\n")
 		return 0
 	}
@@ -46633,9 +46630,9 @@ func Abc_CommandAbc9Gla2Vta(pAbc *Abc_Frame_t, argc int32, argv []string) int32 
 		Abc_Print(-1, "Abc_CommandAbc9Gla2Vta(): The number of timeframes (%d) should be a positive integer.\n", nFrames)
 		return 0
 	}
-	Vec_IntFreeP(&abcFrameGia(pAbc).vObjClasses)
-	abcFrameGia(pAbc).vObjClasses = proof_abs.Gia_VtaConvertFromGla(abcFrameGia(pAbc), abcFrameGia(pAbc).vGateClasses, nFrames)
-	Vec_IntFreeP(&abcFrameGia(pAbc).vGateClasses)
+	Vec_IntFreeP(&abcFrameGia(pAbc).VObjClasses)
+	abcFrameGia(pAbc).VObjClasses = proof_abs.Gia_VtaConvertFromGla(abcFrameGia(pAbc), abcFrameGia(pAbc).VGateClasses, nFrames)
+	Vec_IntFreeP(&abcFrameGia(pAbc).VGateClasses)
 	return 0
 
 usage:
@@ -46678,13 +46675,13 @@ func Abc_CommandAbc9Fla2Gla(pAbc *Abc_Frame_t, argc int32, argv []string) int32 
 		Abc_Print(-1, "Abc_CommandAbc9Fla2Gla(): There is no AIG.\n")
 		return 0
 	}
-	if abcFrameGia(pAbc).vFlopClasses == nil {
+	if abcFrameGia(pAbc).VFlopClasses == nil {
 		Abc_Print(-1, "Abc_CommandAbc9Fla2Gla(): There is no gate-level abstraction is defined.\n")
 		return 0
 	}
-	Vec_IntFreeP(&abcFrameGia(pAbc).vGateClasses)
-	abcFrameGia(pAbc).vGateClasses = proof_abs.Gia_FlaConvertToGla(abcFrameGia(pAbc), abcFrameGia(pAbc).vFlopClasses)
-	Vec_IntFreeP(&abcFrameGia(pAbc).vFlopClasses)
+	Vec_IntFreeP(&abcFrameGia(pAbc).VGateClasses)
+	abcFrameGia(pAbc).VGateClasses = proof_abs.Gia_FlaConvertToGla(abcFrameGia(pAbc), abcFrameGia(pAbc).VFlopClasses)
+	Vec_IntFreeP(&abcFrameGia(pAbc).VFlopClasses)
 	return 0
 
 usage:
@@ -46726,13 +46723,13 @@ func Abc_CommandAbc9Gla2Fla(pAbc *Abc_Frame_t, argc int32, argv []string) int32 
 		Abc_Print(-1, "Abc_CommandAbc9Gla2Fla(): There is no AIG.\n")
 		return 0
 	}
-	if abcFrameGia(pAbc).vGateClasses == nil {
+	if abcFrameGia(pAbc).VGateClasses == nil {
 		Abc_Print(-1, "Abc_CommandAbc9Gla2Fla(): There is no gate-level abstraction is defined.\n")
 		return 0
 	}
-	Vec_IntFreeP(&abcFrameGia(pAbc).vFlopClasses)
-	abcFrameGia(pAbc).vFlopClasses = proof_abs.Gia_GlaConvertToFla(abcFrameGia(pAbc), abcFrameGia(pAbc).vGateClasses)
-	Vec_IntFreeP(&abcFrameGia(pAbc).vGateClasses)
+	Vec_IntFreeP(&abcFrameGia(pAbc).VFlopClasses)
+	abcFrameGia(pAbc).VFlopClasses = proof_abs.Gia_GlaConvertToFla(abcFrameGia(pAbc), abcFrameGia(pAbc).VGateClasses)
+	Vec_IntFreeP(&abcFrameGia(pAbc).VGateClasses)
 	return 0
 
 usage:

@@ -2,6 +2,7 @@ package abci
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/proof/dch"
 	"time"
 
 	"github.com/glycerine/abcgo/aig/aig"
@@ -341,4 +342,11 @@ func Abc_NtkDress2(n1, n2 *abc.Network, conflictLimit, verbose int32) {
 	Abc_NtkDressPrintStats(result, abc.Abc_NtkNodeNum(n1), abc.Abc_NtkNodeNum(n1), time.Since(start).Nanoseconds())
 	Abc_NtkDress2Transfer(n1, n2, result, verbose)
 	vec.Vec_VecFree(result)
+}
+
+// native translates the C command record into the single DCH engine record.
+func (p *Dch_Pars_t) native() *dch.Params {
+	return &dch.Params{Words: int(p.nWords), ConflictLimit: int(p.nBTLimit), SatVarMax: int(p.nSatVarMax), NodesAhead: int(p.nNodesAhead), CallsRecycle: int(p.nCallsRecycle),
+		Synthesis: p.fSynthesis != 0, PolarFlip: p.fPolarFlip != 0, SimulateTFO: p.fSimulateTfo != 0, Power: p.fPower != 0,
+		UseGia: p.fUseGia != 0, UseCSat: p.fUseCSat != 0, UseNew: p.fUseNew != 0, LightSynth: p.fLightSynth != 0, SkipRedundantSupport: p.fSkipRedSupp != 0, Verbose: p.fVerbose != 0, SynthDuration: time.Duration(p.timeSynth)}
 }

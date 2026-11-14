@@ -1377,7 +1377,7 @@ func Abc_NtkTryNewMiter(pFileName0 string, pFileName1 string) *Vec_Ptr_t {
 		var Lit int32 = Abc_Var2Lit(iCoVarBeg+i, 0)
 		status := pSat.SolveWithResourceLimits([]int32{Lit}, int64(nBTLimit), 0, 0, 0)
 		assert(status != sat_bsat.Unknown, "status != sat_bsat.Unknown")
-		if status == sat_bsat.Unsat {
+		if status == sat_bsat.Unsatisfiable {
 			continue
 		}
 		Vec_PtrWriteEntry(vCexes, int(i), sat_bsat.Sat_SolverGetModel(pSat, pVars, nVars))

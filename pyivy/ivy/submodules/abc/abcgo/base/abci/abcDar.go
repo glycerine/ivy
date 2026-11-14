@@ -314,7 +314,7 @@ func Abc_NtkToDarChoices(pNtk *Abc_Ntk_t) *Aig_Man_t {
 	pMan.Name, pMan.Spec = pNtk.Name, pNtk.Spec
 	pMan.Assertions = pNtk.Constraints
 	pMan.BarrierBuffers = int32(pNtk.Barriers)
-	abc.Abc_AigConst1(pNtk).Temp = int(pMan.Const1())
+	abc.Abc_AigConst1(pNtk).Object.Temp = int(pMan.Const1())
 	for i := int32(0); i < abc.Abc_NtkCiNum(pNtk); i++ {
 		ci := abc.Abc_NtkCi(pNtk, i)
 		ci.Temp = int(pMan.NewInput())
@@ -428,8 +428,8 @@ func Abc_NtkFromAigPhase(pMan *Aig_Man_t) *Abc_Ntk_t {
 	pNtkNew.Constraints = pMan.Assertions
 	pNtkNew.Barriers = int(pMan.BarrierBuffers)
 	pNtkNew.Name, pNtkNew.Spec = pMan.Name, pMan.Spec
-	pis := int(pMan.InputCount() - pMan.RegisterCount())
-	pos := int(pMan.OutputCount() - pMan.RegisterCount())
+	pis := int(pMan.InputCount() - int(pMan.RegisterCount()))
+	pos := int(pMan.OutputCount() - int(pMan.RegisterCount()))
 	if pis < 0 || pos < 0 {
 		return nil
 	}
@@ -450,7 +450,7 @@ func Abc_NtkFromAigPhase(pMan *Aig_Man_t) *Abc_Ntk_t {
 	}
 	for i := 0; i < pis; i++ {
 		id := inputs[i].NodeID()
-		copies[id], valid[id] = pNtkNew.CI(i).Signal(), true
+		copies[id], valid[id] = abc.Abc_NtkCi(pNtkNew, int32(i)).Signal(), true
 	}
 	abc.Abc_NtkOrderCisCos(pNtkNew)
 	manager := abc.Abc_NtkReadFunctionManager(pNtkNew).(*abc.Abc_Aig_t)
@@ -567,7 +567,7 @@ func Abc_NtkFromMappedGia(p *Gia_Man_t, fFindEnables int32, fUseBuffs int32) *Ab
 	// follows the topological AND representation; mapped LUT and mux managers
 	// are rejected here because their cut metadata is required to preserve the
 	// mapped node function.
-	if p == nil || giapkg.Gia_ManHasMapping(p) == 0 || fFindEnables != 0 || giapkg.Gia_ManHasMuxData(p) != 0 {
+	if p == nil || giapkg.Gia_ManHasMapping(p) == 0 || fFindEnables != 0 || giapkg.Gia_ManHasMuxData(p) {
 		return nil
 	}
 	n := abc.Abc_NtkAlloc(abc.ABC_NTK_LOGIC, abc.ABC_FUNC_AIG, 1)
@@ -608,7 +608,7 @@ func Abc_NtkFromMappedGia(p *Gia_Man_t, fFindEnables int32, fUseBuffs int32) *Ab
 	for i := int32(0); i < giapkg.Gia_ManPoNum(p)+giapkg.Gia_ManRegNum(p); i++ {
 		co := giapkg.Gia_ManCo(p, i)
 		dst := abc.Abc_NtkCo(n, i)
-		driver := Abc_NtkObj(n, giapkg.Gia_ObjValue(giapkg.Gia_ManObj(p, giapkg.Gia_ObjFaninId0(co, giapkg.Gia_ManCiNum(p)+i))))
+		driver := Abc_NtkObj(n, giapkg.Gia_ObjValue(giapkg.Gia_ManObj(p, giapkg.Gia_ObjFaninId0(co, giapkg.Gia_ObjId(p, co))))).Signal()
 		if giapkg.Gia_ObjFaninC0(co) != 0 {
 			driver = abc.Abc_ObjNot(driver)
 		}
@@ -729,12 +729,11 @@ func Abc_NtkFromDarSeq(pNtkOld *Abc_Ntk_t, pMan *Aig_Man_t) *Abc_Ntk_t {
 **********************************************************************
 */
 func Abc_NtkCollectCiNames(pNtk *Abc_Ntk_t) *Vec_Ptr_t {
-	var pObj *Abc_Obj_t
-	var i int32
 	var vNames *Vec_Ptr_t
 	vNames = Vec_PtrAlloc(100)
-	Abc_NtkForEachCi(pNtk, pObj, i)
-	Vec_PtrPush(vNames, Extra_UtilStrsav(Abc_ObjName(pObj)))
+	for i := int32(0); i < Abc_NtkCiNum(pNtk); i++ {
+		Vec_PtrPush(vNames, Abc_ObjName(abc.Abc_NtkCi(pNtk, i)))
+	}
 	return vNames
 }
 
@@ -752,12 +751,11 @@ func Abc_NtkCollectCiNames(pNtk *Abc_Ntk_t) *Vec_Ptr_t {
 **********************************************************************
 */
 func Abc_NtkCollectCoNames(pNtk *Abc_Ntk_t) *Vec_Ptr_t {
-	var pObj *Abc_Obj_t
-	var i int32
 	var vNames *Vec_Ptr_t
 	vNames = Vec_PtrAlloc(100)
-	Abc_NtkForEachCo(pNtk, pObj, i)
-	Vec_PtrPush(vNames, Extra_UtilStrsav(Abc_ObjName(pObj)))
+	for i := int32(0); i < Abc_NtkCoNum(pNtk); i++ {
+		Vec_PtrPush(vNames, Abc_ObjName(abc.Abc_NtkCo(pNtk, i)))
+	}
 	return vNames
 }
 
@@ -776,11 +774,8 @@ func Abc_NtkCollectCoNames(pNtk *Abc_Ntk_t) *Vec_Ptr_t {
 */
 func Abc_NtkGetLatchValues(pNtk *Abc_Ntk_t) *Vec_Int_t {
 	var vInits *Vec_Int_t
-	var pLatch *Abc_Obj_t
-	var i int32
 	vInits = Vec_IntAlloc(Abc_NtkLatchNum(pNtk))
-	Abc_NtkForEachLatch(pNtk, pLatch, i)
-	{
+	for _, pLatch := range pNtk.ObjectsOfKind(abc.ObjectLatch) {
 		if abc.Abc_LatchIsInit0(pLatch) != 0 {
 			Vec_IntPush(vInits, 0)
 		} else if abc.Abc_LatchIsInit1(pLatch) != 0 {
@@ -895,7 +890,7 @@ func Abc_NtkDarFraigPart(pNtk *Abc_Ntk_t, nPartSize int32, nConfLimit int32, nLe
 		return nil
 	}
 	pTemp = pMan
-	pMan = aiggraph.Aig_ManFraigPartitioned(pTemp, nPartSize, nConfLimit, nLevelMax, fVerbose)
+	pMan = proof_fra.Aig_ManFraigPartitioned(pTemp, nPartSize, nConfLimit, nLevelMax, fVerbose)
 	Aig_ManStop(pTemp)
 	pNtkAig = Abc_NtkFromDar(pNtk, pMan)
 	Aig_ManStop(pMan)
@@ -947,7 +942,6 @@ func Abc_NtkCSweep(pNtk *Abc_Ntk_t, nCutsMax int32, nLeafMax int32, fVerbose int
 func Abc_NtkDRewrite(pNtk *Abc_Ntk_t, pPars *Dar_RwrPar_t) *Abc_Ntk_t {
 	var pMan, pTemp *Aig_Man_t
 	var pNtkAig *Abc_Ntk_t
-	var clk abctime
 	assert((Abc_NtkIsStrash(pNtk) != 0), "Abc_NtkIsStrash(pNtk)")
 	pMan = Abc_NtkToDar(pNtk, 0, 0)
 	if pMan == nil {
@@ -962,12 +956,15 @@ func Abc_NtkDRewrite(pNtk *Abc_Ntk_t, pPars *Dar_RwrPar_t) *Abc_Ntk_t {
 	           Vec_VecFree( vParts );
 	       }
 	*/
-	opt_dar.Dar_ManRewrite(pMan, pPars)
+	if err := opt_dar.Dar_ManRewrite(pMan, pPars); err != nil {
+		Aig_ManStop(pMan)
+		Abc_Print(1, "%s\n", err)
+		return nil
+	}
 	//    pTemp = pMan
-	pMan = opt_dar.Dar_ManBalance(pTemp, pPars.fUpdateLevel)
+	// Balancing was commented out in the C source.
 	//    Aig_ManStop( pTemp );
 
-	clk = Abc_Clock()
 	pTemp = pMan
 	pMan = aiggraph.Aig_ManDupDfs(pTemp)
 	Aig_ManStop(pTemp)
@@ -995,7 +992,6 @@ func Abc_NtkDRewrite(pNtk *Abc_Ntk_t, pPars *Dar_RwrPar_t) *Abc_Ntk_t {
 func Abc_NtkDRefactor(pNtk *Abc_Ntk_t, pPars *Dar_RefPar_t) *Abc_Ntk_t {
 	var pMan, pTemp *Aig_Man_t
 	var pNtkAig *Abc_Ntk_t
-	var clk abctime
 	assert((Abc_NtkIsStrash(pNtk) != 0), "Abc_NtkIsStrash(pNtk)")
 	pMan = Abc_NtkToDar(pNtk, 0, 0)
 	if pMan == nil {
@@ -1003,12 +999,15 @@ func Abc_NtkDRefactor(pNtk *Abc_Ntk_t, pPars *Dar_RefPar_t) *Abc_Ntk_t {
 	}
 	//    Aig_ManPrintStats( pMan );
 
-	opt_dar.Dar_ManRefactor(pMan, pPars)
+	if err := opt_dar.Dar_ManRefactor(pMan, pPars); err != nil {
+		Aig_ManStop(pMan)
+		Abc_Print(1, "%s\n", err)
+		return nil
+	}
 	//    pTemp = pMan
-	pMan = opt_dar.Dar_ManBalance(pTemp, pPars.fUpdateLevel)
+	// Balancing was commented out in the C source.
 	//    Aig_ManStop( pTemp );
 
-	clk = Abc_Clock()
 	pTemp = pMan
 	pMan = aiggraph.Aig_ManDupDfs(pTemp)
 	Aig_ManStop(pTemp)
@@ -1036,7 +1035,6 @@ func Abc_NtkDRefactor(pNtk *Abc_Ntk_t, pPars *Dar_RefPar_t) *Abc_Ntk_t {
 func Abc_NtkDC2(pNtk *Abc_Ntk_t, fBalance int32, fUpdateLevel int32, fFanout int32, fPower int32, fVerbose int32) *Abc_Ntk_t {
 	var pMan, pTemp *Aig_Man_t
 	var pNtkAig *Abc_Ntk_t
-	var clk abctime
 	assert((Abc_NtkIsStrash(pNtk) != 0), "Abc_NtkIsStrash(pNtk)")
 	pMan = Abc_NtkToDar(pNtk, 0, 0)
 	if pMan == nil {
@@ -1044,10 +1042,14 @@ func Abc_NtkDC2(pNtk *Abc_Ntk_t, fBalance int32, fUpdateLevel int32, fFanout int
 	}
 	//    Aig_ManPrintStats( pMan );
 
-	clk = Abc_Clock()
 	pTemp = pMan
-	pMan = opt_dar.Dar_ManCompress2(pTemp, (fBalance != 0), (fUpdateLevel != 0), (fFanout != 0), (fPower != 0), (fVerbose != 0))
+	var err error
+	pMan, err = opt_dar.Dar_ManCompress2(pTemp, (fBalance != 0), (fUpdateLevel != 0), (fFanout != 0), (fPower != 0), (fVerbose != 0))
 	Aig_ManStop(pTemp)
+	if err != nil {
+		Abc_Print(1, "%s\n", err)
+		return nil
+	}
 	//ABC_PRT( "time", Abc_Clock() - clk );
 
 	//    Aig_ManPrintStats( pMan );
@@ -1078,8 +1080,13 @@ func Abc_NtkDChoice(pNtk *Abc_Ntk_t, fBalance int32, fUpdateLevel int32, fConstr
 		return nil
 	}
 	pTemp = pMan
-	pMan = opt_dar.Dar_ManChoice(pTemp, (fBalance != 0), (fUpdateLevel != 0), (fConstruct != 0), nConfMax, nLevelMax, (fVerbose != 0))
+	var err error
+	pMan, err = opt_dar.Dar_ManChoice(pTemp, (fBalance != 0), (fUpdateLevel != 0), (fConstruct != 0), nConfMax, nLevelMax, (fVerbose != 0))
 	Aig_ManStop(pTemp)
+	if err != nil {
+		Abc_Print(1, "%s\n", err)
+		return nil
+	}
 	pNtkAig = Abc_NtkFromDarChoices(pNtk, pMan)
 	Aig_ManStop(pMan)
 	return pNtkAig
@@ -1099,36 +1106,58 @@ func Abc_NtkDChoice(pNtk *Abc_Ntk_t, fBalance int32, fUpdateLevel int32, fConstr
 **********************************************************************
 */
 func Abc_NtkDch(pNtk *Abc_Ntk_t, pPars *Dch_Pars_t) *Abc_Ntk_t {
-
-	var pMan, pTemp *Aig_Man_t
-	var pNtkAig *Abc_Ntk_t
-	var pGia *Gia_Man_t
-	var clk abctime
-	assert((Abc_NtkIsStrash(pNtk) != 0), "Abc_NtkIsStrash(pNtk)")
-	pMan = Abc_NtkToDar(pNtk, 0, 0)
-	if pMan == nil {
+	assert(Abc_NtkIsStrash(pNtk) != 0, "Abc_NtkIsStrash(pNtk)")
+	g := Abc_NtkToDar(pNtk, 0, 0)
+	if g == nil {
 		return nil
 	}
-	clk = Abc_Clock()
+	params := pPars.native()
+	start := Abc_Clock()
+	var combined *Gia_Man_t
 	if pPars.fSynthesis != 0 {
-		pGia = opt_dar.Dar_NewChoiceSynthesis(pMan, 1, 1, pPars.fPower, pPars.fLightSynth, pPars.fVerbose)
+		options := opt_dar.ChoiceOptions{Balance: true, UpdateLevel: true, Power: params.Power, Light: params.LightSynth}
+		if params.Verbose {
+			options.Progress = os.Stdout
+		}
+		versions, err := opt_dar.Dar_NewChoiceSynthesis(g, &options)
+		Aig_ManStop(g)
+		if err != nil {
+			Abc_Print(1, "%s\n", err)
+			return nil
+		}
+		combined, err = giapkg.Gia_ManChoiceMiterFromAigs(versions)
+		for _, version := range versions {
+			Aig_ManStop(version)
+		}
+		if err != nil {
+			Abc_Print(1, "%s\n", err)
+			return nil
+		}
 	} else {
-		pGia = Gia_ManFromAig(pMan)
-		Aig_ManStop(pMan)
+		combined = Gia_ManFromAig(g)
+		Aig_ManStop(g)
 	}
-	pPars.timeSynth = Abc_Clock() - clk
-	if pPars.fUseGia != 0 {
-		pMan = proof_cec.Cec_ComputeChoices(pGia, pPars)
+	defer Gia_ManStop(combined)
+	pPars.timeSynth = Abc_Clock() - start
+	params.SynthDuration = time.Duration(pPars.timeSynth)
+	var result *Aig_Man_t
+	if params.UseGia {
+		result = proof_cec.Cec_ComputeChoices(combined, params)
 	} else {
-		pMan = giapkg.Gia_ManToAigSkip(pGia, 3)
-		Gia_ManStop(pGia)
-		pTemp = pMan
-		pMan = proof_dch.Dch_ComputeChoices(pTemp, pPars)
-		Aig_ManStop(pTemp)
+		input := giapkg.Gia_ManToAigSkip(combined, 3)
+		var err error
+		result, err = proof_dch.Dch_ComputeChoices(input, params)
+		Aig_ManStop(input)
+		if err != nil {
+			Abc_Print(1, "%s\n", err)
+			return nil
+		}
 	}
-	pNtkAig = Abc_NtkFromDarChoices(pNtk, pMan)
-	Aig_ManStop(pMan)
-	return pNtkAig
+	if result == nil {
+		return nil
+	}
+	defer Aig_ManStop(result)
+	return Abc_NtkFromDarChoices(pNtk, result)
 }
 
 /*
@@ -1147,7 +1176,6 @@ func Abc_NtkDch(pNtk *Abc_Ntk_t, pPars *Dch_Pars_t) *Abc_Ntk_t {
 func Abc_NtkDrwsat(pNtk *Abc_Ntk_t, fBalance int32, fVerbose int32) *Abc_Ntk_t {
 	var pMan, pTemp *Aig_Man_t
 	var pNtkAig *Abc_Ntk_t
-	var clk abctime
 	assert((Abc_NtkIsStrash(pNtk) != 0), "Abc_NtkIsStrash(pNtk)")
 	pMan = Abc_NtkToDar(pNtk, 0, 0)
 	if pMan == nil {
@@ -1155,10 +1183,14 @@ func Abc_NtkDrwsat(pNtk *Abc_Ntk_t, fBalance int32, fVerbose int32) *Abc_Ntk_t {
 	}
 	//    Aig_ManPrintStats( pMan );
 
-	clk = Abc_Clock()
 	pTemp = pMan
-	pMan = opt_dar.Dar_ManRwsat(pTemp, (fBalance != 0), (fVerbose != 0))
+	var err error
+	pMan, err = opt_dar.Dar_ManRwsat(pTemp, (fBalance != 0), (fVerbose != 0))
 	Aig_ManStop(pTemp)
+	if err != nil {
+		Abc_Print(1, "%s\n", err)
+		return nil
+	}
 	//ABC_PRT( "time", Abc_Clock() - clk );
 
 	//    Aig_ManPrintStats( pMan );
@@ -1181,68 +1213,45 @@ func Abc_NtkDrwsat(pNtk *Abc_Ntk_t, fBalance int32, fVerbose int32) *Abc_Ntk_t {
 **********************************************************************
 */
 func Abc_NtkConstructFromCnf(pNtk *Abc_Ntk_t, p *Cnf_Man_t, vMapped *Vec_Ptr_t) *Abc_Ntk_t {
-	var pNtkNew *Abc_Ntk_t
-	var pNode, pNodeNew *Abc_Obj_t
-	var pObj, pLeaf *Aig_Obj_t
-	var pCut *sat_cnf.Cnf_Cut_t
-	var vCover *Vec_Int_t
-	var uTruth uint32
-	var i, k, nDupGates int32
-	// create the new network
-	pNtkNew = abc.Abc_NtkStartFrom(pNtk, abc.ABC_NTK_LOGIC, abc.ABC_FUNC_SOP)
-	// make the mapper point to the new network
-	aiggraph.Aig_ManConst1(p.pManAig).pData = abc.Abc_NtkCreateNodeConst1(pNtkNew)
-	Abc_NtkForEachCi(pNtk, pNode, i)
-	aiggraph.Aig_ManCi(p.pManAig, i).pData = Abc_ObjReadCopyEdge(pNode)
-	// process the nodes in topological order
-	vCover = Vec_IntAlloc(1 << 16)
-	for i, item := range giapkg.Vec_PtrArray(vMapped) {
-		pObj = item.(*Aig_Obj_t)
-		// create new node
-		pNodeNew = abc.Abc_NtkCreateNode(pNtkNew)
-		// add fanins according to the cut
-		pCut = pObj.pData.(*Cnf_Cut_t)
-		Cnf_CutForEachLeaf(p.pManAig, pCut, pLeaf, k)
-		Abc_ObjAddFanin(pNodeNew, pLeaf.pData.(*Abc_Obj_t))
-		// add logic function
-		if pCut.nFanins < 5 {
-			truth := sat_cnf.Cnf_CutTruth(pCut)
-			if len(truth) > 0 {
-				uTruth = 0xFFFF & truth[0]
-			}
-			sat_cnf.Cnf_SopConvertToVector(p.pSops[uTruth], p.pSopSizes[uTruth], vCover)
-			abc.Abc_ObjSetData(pNodeNew, abc.Abc_SopCreateFromIsop(abc.Abc_NtkReadFunctionManager(pNtkNew), pCut.nFanins, vCover))
-
-		} else {
-			abc.Abc_ObjSetData(pNodeNew, abc.Abc_SopCreateFromIsop(abc.Abc_NtkReadFunctionManager(pNtkNew), pCut.nFanins, pCut.vIsop[1]))
+	n := abc.Abc_NtkStartFrom(pNtk, abc.ABC_NTK_LOGIC, abc.ABC_FUNC_SOP)
+	g := p.MappingGraph()
+	constant := abc.Abc_NtkCreateNodeConst1(n)
+	copies := map[int]*Abc_Obj_t{g.Const1().NodeID(): constant}
+	for i, edge := range g.Inputs() {
+		copies[edge.NodeID()] = Abc_ObjReadCopyEdge(abc.Abc_NtkCi(pNtk, int32(i))).Object
+	}
+	cover := Vec_IntAlloc(1 << 16)
+	for _, item := range giapkg.Vec_PtrArray(vMapped) {
+		edge := item.(aiggraph.Edge)
+		cut := sat_cnf.Cnf_ObjBestCut(p, &edge)
+		node := abc.Abc_NtkCreateNode(n)
+		for _, leaf := range sat_cnf.Cnf_CutLeaves(cut) {
+			Abc_ObjAddFanin(node, copies[int(leaf)])
 		}
-		// save the node
-		pObj.pData = pNodeNew
+		fanins := sat_cnf.Cnf_CutLeaveNum(cut)
+		isop := cut.PositiveCover()
+		if fanins < 5 {
+			sop, cubes := p.TruthCover(uint16(sat_cnf.Cnf_CutTruth(cut)[0]))
+			sat_cnf.Cnf_SopConvertToVector(sop, cubes, cover)
+			isop = cover
+		}
+		node.Data = abc.Abc_SopCreateFromIsop(nil, fanins, isop)
+		copies[edge.NodeID()] = node
 	}
-	Vec_IntFree(vCover)
-	// add the CO drivers
-	Abc_NtkForEachCo(pNtk, pNode, i)
-	{
-		pObj = aiggraph.Aig_ManCo(p.pManAig, i)
-		pNodeNew = abc.Abc_ObjNotCond(aiggraph.Aig_ObjFanin0(pObj).Data.(*Abc_Obj_t), aiggraph.Aig_ObjFaninC0(pObj))
-		Abc_ObjAddFanin(Abc_ObjReadCopyEdge(pNode).Object, pNodeNew)
+	Vec_IntFree(cover)
+	for i, output := range g.Outputs() {
+		fanin := g.Node(output).Fanins[0]
+		driver := abc.Abc_ObjNotCond(copies[fanin.NodeID()], boolInt(fanin.Complemented()))
+		Abc_ObjAddFanin(Abc_ObjReadCopyEdge(abc.Abc_NtkCo(pNtk, int32(i))).Object, driver)
 	}
-
-	// remove the constant node if not used
-	pNodeNew = aiggraph.Aig_ManConst1(p.pManAig).Data.(*Abc_Obj_t)
-	if abc.Abc_ObjFanoutNum(pNodeNew) == 0 {
-		abc.Abc_NtkDeleteObj(pNodeNew)
+	if abc.Abc_ObjFanoutNum(constant) == 0 {
+		abc.Abc_NtkDeleteObj(constant)
 	}
-	// minimize the node
-	//    Abc_NtkSweep( pNtkNew, 0 );
-	// decouple the PO driver nodes to reduce the number of levels
-	nDupGates = abc.Abc_NtkLogicMakeSimpleCos(pNtkNew, 1)
-	//    if ( nDupGates && If_ManReadVerbose(pIfMan) )
-	//        Abc_Print( 1, "Duplicated %d gates to decouple the CO drivers.\n", nDupGates );
-	if abc.Abc_NtkCheck(pNtkNew) == 0 {
+	abc.Abc_NtkLogicMakeSimpleCos(n, 1)
+	if abc.Abc_NtkCheck(n) == 0 {
 		Abc_Print(1, "Abc_NtkConstructFromCnf(): Network check has failed.\n")
 	}
-	return pNtkNew
+	return n
 }
 
 /*
@@ -1262,7 +1271,7 @@ func Abc_NtkDarToCnf(pNtk *Abc_Ntk_t, pFileName string, fFastAlgo int32, fChange
 	//    Vec_Ptr_t * vMapped = NULL;
 	var pMan *Aig_Man_t
 	//    Cnf_Man_t * pManCnf = NULL;
-	var pCnf *giapkg.Cnf_Dat_t
+	var pCnf *sat_cnf.Cnf_Dat_t
 	var pNtkNew *Abc_Ntk_t = nil
 	var clk abctime = Abc_Clock()
 	assert((Abc_NtkIsStrash(pNtk) != 0), "Abc_NtkIsStrash(pNtk)")
@@ -1297,7 +1306,7 @@ func Abc_NtkDarToCnf(pNtk *Abc_Ntk_t, pFileName string, fFastAlgo int32, fChange
 	// print stats
 	//    if ( fVerbose )
 	{
-		Abc_Print(1, "CNF stats: Vars = %6d. Clauses = %7d. Literals = %8d.   ", pCnf.nVars, pCnf.nClauses, pCnf.nLiterals)
+		Abc_Print(1, "CNF stats: Vars = %6d. Clauses = %7d. Literals = %8d.   ", sat_cnf.Cnf_DataVarNum(pCnf), sat_cnf.Cnf_DataClauseNum(pCnf), sat_cnf.Cnf_DataLiteralNum(pCnf))
 		Abc_PrintTime(1, "Time", Abc_Clock()-clk)
 	}
 
@@ -1337,8 +1346,8 @@ func Abc_NtkDSat(pNtk *Abc_Ntk_t, nConfLimit ABC_INT64_T, nInsLimit ABC_INT64_T,
 	//    assert( Abc_NtkPoNum(pNtk) == 1 );
 	pMan = Abc_NtkToDar(pNtk, 0, 0)
 	RetValue = proof_fra.Fra_FraigSat(pMan, nConfLimit, nInsLimit, nLearnedStart, nLearnedDelta, nLearnedPerce, fAlignPol, fAndOuts, fNewSolver, fVerbose)
-	Abc_NtkSetModel(pNtk, pMan.pData)
-	pMan.pData = nil
+	Abc_NtkSetModel(pNtk, abcAigModel(pMan))
+	pMan.Data = nil
 	Aig_ManStop(pMan)
 	return RetValue
 }
@@ -1363,8 +1372,8 @@ func Abc_NtkPartitionedSat(pNtk *Abc_Ntk_t, nAlgo int32, nPartSize int32, nConfP
 	assert(Abc_NtkLatchNum(pNtk) == 0, "Abc_NtkLatchNum(pNtk) == 0")
 	pMan = Abc_NtkToDar(pNtk, 0, 0)
 	RetValue = aiggraph.Aig_ManPartitionedSat(pMan, nAlgo, nPartSize, nConfPart, nConfTotal, fAlignPol, fSynthesize, fVerbose)
-	Abc_NtkSetModel(pNtk, pMan.pData)
-	pMan.pData = nil
+	Abc_NtkSetModel(pNtk, abcAigModel(pMan))
+	pMan.Data = nil
 	Aig_ManStop(pMan)
 	return RetValue
 }
@@ -1455,8 +1464,8 @@ func Abc_NtkDarCec(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, nConfLimit int32, fPartit
 	RetValue = proof_fra.Fra_FraigCec(&pMan, 100000, fVerbose)
 	// transfer model if given
 	if pNtk2 == nil {
-		Abc_NtkSetModel(pNtk1, pMan.pData)
-		pMan.pData = nil
+		Abc_NtkSetModel(pNtk1, abcAigModel(pMan))
+		pMan.Data = nil
 	}
 	Aig_ManStop(pMan)
 
@@ -1474,7 +1483,6 @@ finish:
 		Abc_Print(1, "Networks are UNDECIDED.  ")
 		ABC_PRT("Time", Abc_Clock()-clkTotal)
 	}
-	fflush(os.Stdout)
 	return RetValue
 }
 
@@ -1527,11 +1535,10 @@ func Abc_NtkDarSeqSweep(pNtk *Abc_Ntk_t, pPars *Fra_Ssw_t) *Abc_Ntk_t {
 		if aiggraph.Aig_ManRegNum(pMan) < Abc_NtkLatchNum(pNtk) {
 			pNtkAig = Abc_NtkFromDarSeqSweep(pNtk, pMan)
 		} else {
-			var pObj *Abc_Obj_t
-			var i int32
 			pNtkAig = Abc_NtkFromDar(pNtk, pMan)
-			Abc_NtkForEachLatch(pNtkAig, pObj, i)
-			abc.Abc_LatchSetInit0(pObj)
+			for _, pObj := range pNtkAig.ObjectsOfKind(abc.ObjectLatch) {
+				abc.Abc_LatchSetInit0(pObj)
+			}
 		}
 		Aig_ManStop(pMan)
 	}
@@ -1564,7 +1571,7 @@ func Abc_NtkPrintLatchEquivClasses(pNtk *Abc_Ntk_t, pAig *Aig_Man_t) {
 	}
 	aiggraph.Aig_ManSetCioIds(pAig)
 	header := false
-	pis := aiggraph.Saig_ManPiNum(pAig)
+	pis := aig_saig.Saig_ManPiNum(pAig)
 	for i := int32(0); i < aiggraph.Aig_ManRegNum(pAig); i++ {
 		flop := aiggraph.Aig_ManLo(pAig, i)
 		repr := aiggraph.Aig_ObjRepr(pAig, flop)
@@ -1633,11 +1640,10 @@ func Abc_NtkDarSeqSweep2(pNtk *Abc_Ntk_t, pPars *Ssw_Pars_t) *Abc_Ntk_t {
 	if aiggraph.Aig_ManRegNum(pMan) < Abc_NtkLatchNum(pNtk) {
 		pNtkAig = Abc_NtkFromDarSeqSweep(pNtk, pMan)
 	} else {
-		var pObj *Abc_Obj_t
-		var i int32
 		pNtkAig = Abc_NtkFromDar(pNtk, pMan)
-		Abc_NtkForEachLatch(pNtkAig, pObj, i)
-		abc.Abc_LatchSetInit0(pObj)
+		for _, pObj := range pNtkAig.ObjectsOfKind(abc.ObjectLatch) {
+			abc.Abc_LatchSetInit0(pObj)
+		}
 	}
 	Aig_ManStop(pMan)
 	return pNtkAig
@@ -1670,11 +1676,10 @@ func Abc_NtkDarLcorr(pNtk *Abc_Ntk_t, nFramesP int32, nConfMax int32, fVerbose i
 		if aiggraph.Aig_ManRegNum(pMan) < Abc_NtkLatchNum(pNtk) {
 			pNtkAig = Abc_NtkFromDarSeqSweep(pNtk, pMan)
 		} else {
-			var pObj *Abc_Obj_t
-			var i int32
 			pNtkAig = Abc_NtkFromDar(pNtk, pMan)
-			Abc_NtkForEachLatch(pNtkAig, pObj, i)
-			abc.Abc_LatchSetInit0(pObj)
+			for _, pObj := range pNtkAig.ObjectsOfKind(abc.ObjectLatch) {
+				abc.Abc_LatchSetInit0(pObj)
+			}
 		}
 		Aig_ManStop(pMan)
 	}
@@ -1715,11 +1720,10 @@ func Abc_NtkDarLcorrNew(pNtk *Abc_Ntk_t, nVarsMax int32, nConfMax int32, fVerbos
 		if aiggraph.Aig_ManRegNum(pMan) < Abc_NtkLatchNum(pNtk) {
 			pNtkAig = Abc_NtkFromDarSeqSweep(pNtk, pMan)
 		} else {
-			var pObj *Abc_Obj_t
-			var i int32
 			pNtkAig = Abc_NtkFromDar(pNtk, pMan)
-			Abc_NtkForEachLatch(pNtkAig, pObj, i)
-			abc.Abc_LatchSetInit0(pObj)
+			for _, pObj := range pNtkAig.ObjectsOfKind(abc.ObjectLatch) {
+				abc.Abc_LatchSetInit0(pObj)
+			}
 		}
 		Aig_ManStop(pMan)
 	}
@@ -1759,7 +1763,7 @@ func Abc_NtkDarBmc(pNtk *Abc_Ntk_t, nStart int32, nFrames int32, nSizeMax int32,
 	var clk abctime = Abc_Clock()
 	var nTimeLimit abctime
 	if nTimeOut != 0 {
-		nTimeLimit = nTimeOut*int64(time.Second) + Abc_Clock()
+		nTimeLimit = int64(nTimeOut)*int64(time.Second) + Abc_Clock()
 	} else {
 		nTimeLimit = 0
 	}
@@ -1773,7 +1777,7 @@ func Abc_NtkDarBmc(pNtk *Abc_Ntk_t, nStart int32, nFrames int32, nSizeMax int32,
 		Abc_Print(1, "Converting miter into AIG has failed.\n")
 		return RetValue
 	}
-	assert(pMan.nRegs > 0, "pMan.nRegs > 0")
+	assert(pMan.RegisterCount() > 0, "pMan.RegisterCount() > 0")
 	assert(vMap == nil || Vec_IntSize(vMap) == Saig_ManPoNum(pMan), "vMap == nil || Vec_IntSize(vMap) == Saig_ManPoNum(pMan)")
 	if (fVerbose != 0) && (vMap != nil) && Abc_NtkPoNum(pNtk) != Saig_ManPoNum(pMan) {
 		Abc_Print(1, "Expanded %d outputs into %d outputs using OR decomposition.\n", Abc_NtkPoNum(pNtk), Saig_ManPoNum(pMan))
@@ -1825,7 +1829,7 @@ func Abc_NtkDarBmc(pNtk *Abc_Ntk_t, nStart int32, nFrames int32, nSizeMax int32,
 	Aig_ManStop(pMan)
 	// update the counter-example
 	if (Abc_NtkReadSeqModel(pNtk) != nil) && (vMap != nil) {
-		Abc_NtkReadSeqModel(pNtk).iPo = Vec_IntEntry(vMap, Abc_NtkReadSeqModel(pNtk).IPo)
+		Abc_NtkReadSeqModel(pNtk).IPo = Vec_IntEntry(vMap, Abc_NtkReadSeqModel(pNtk).IPo)
 	}
 	Vec_IntFreeP(&vMap)
 	return RetValue
@@ -1852,7 +1856,7 @@ func Abc_NtkDarBmc3(pNtk *Abc_Ntk_t, pPars *Saig_ParBmc_t, fOrDecomp int32) int3
 	var clk abctime = Abc_Clock()
 	var nTimeOut abctime
 	if pPars.NTimeOut != 0 {
-		nTimeOut = pPars.NTimeOut*int64(time.Second) + Abc_Clock()
+		nTimeOut = int64(pPars.NTimeOut)*int64(time.Second) + Abc_Clock()
 	} else {
 		nTimeOut = 0
 	}
@@ -1865,7 +1869,7 @@ func Abc_NtkDarBmc3(pNtk *Abc_Ntk_t, pPars *Saig_ParBmc_t, fOrDecomp int32) int3
 		Abc_Print(1, "Converting miter into AIG has failed.\n")
 		return RetValue
 	}
-	assert(pMan.nRegs > 0, "pMan.nRegs > 0")
+	assert(pMan.RegisterCount() > 0, "pMan.RegisterCount() > 0")
 	if (pPars.FVerbose != 0) && (vMap != nil) && Abc_NtkPoNum(pNtk) != Saig_ManPoNum(pMan) {
 		Abc_Print(1, "Expanded %d outputs into %d outputs using OR decomposition.\n", Abc_NtkPoNum(pNtk), Saig_ManPoNum(pMan))
 	}
@@ -1905,12 +1909,12 @@ func Abc_NtkDarBmc3(pNtk *Abc_Ntk_t, pPars *Saig_ParBmc_t, fOrDecomp int32) int3
 
 			} else {
 				var nOutputs int32 = Saig_ManPoNum(pMan) - aig_saig.Saig_ManConstrNum(pMan)
-				if pMan.SequentialCounterexamples() == nil || giapkg.Vec_PtrCountZero(pMan.SequentialCounterexamples()) == nOutputs {
+				if pMan.SequentialCounterexamples() == nil || int32(giapkg.Vec_PtrCountZero(pMan.SequentialCounterexamples())) == nOutputs {
 					Abc_Print(1, "None of the %d outputs is found to be SAT", nOutputs)
-				} else if giapkg.Vec_PtrCountZero(pMan.SequentialCounterexamples()) == 0 {
+				} else if int32(giapkg.Vec_PtrCountZero(pMan.SequentialCounterexamples())) == 0 {
 					Abc_Print(1, "All %d outputs are found to be SAT", nOutputs)
 				} else {
-					Abc_Print(1, "Some outputs are SAT (%d out of %d)", nOutputs-giapkg.Vec_PtrCountZero(pMan.SequentialCounterexamples()), nOutputs)
+					Abc_Print(1, "Some outputs are SAT (%d out of %d)", nOutputs-int32(giapkg.Vec_PtrCountZero(pMan.SequentialCounterexamples())), nOutputs)
 					if pPars.NDropOuts != 0 {
 						Abc_Print(1, " while others timed out (%d out of %d)", pPars.NDropOuts, nOutputs)
 					}
@@ -1936,7 +1940,7 @@ func Abc_NtkDarBmc3(pNtk *Abc_Ntk_t, pPars *Saig_ParBmc_t, fOrDecomp int32) int3
 	Aig_ManStop(pMan)
 	// update the counter-example
 	if (Abc_NtkReadSeqModel(pNtk) != nil) && (vMap != nil) {
-		Abc_NtkReadSeqModel(pNtk).iPo = Vec_IntEntry(vMap, Abc_NtkReadSeqModel(pNtk).IPo)
+		Abc_NtkReadSeqModel(pNtk).IPo = Vec_IntEntry(vMap, Abc_NtkReadSeqModel(pNtk).IPo)
 	}
 	Vec_IntFreeP(&vMap)
 	return RetValue
@@ -1960,20 +1964,20 @@ func Abc_NtkDarBmcInter_int(pMan *Aig_Man_t, pPars *Inter_ManParams_t, ppNtkRes 
 	var iFrame int32
 	var clk abctime = Abc_Clock()
 	var nTotalProvedSat int32
-	assert(pMan.nRegs > 0, "pMan.nRegs > 0")
+	assert(pMan.RegisterCount() > 0, "pMan.RegisterCount() > 0")
 	if ppNtkRes != nil {
 		*ppNtkRes = nil
 	}
-	if pPars.FUseSeparate {
+	if pPars.FUseSeparate != 0 {
 		var pTemp, pAux *Aig_Man_t
-		var pObjPo *Aig_Obj_t
+		var pObjPo aiggraph.Edge
 		var i, Counter int32
 		for i = 0; i < Saig_ManPoNum(pMan); i++ {
-			pObjPo = Saig_ManPo(pMan, i)
-			if aiggraph.Aig_ObjFanin0(pObjPo) == aiggraph.Aig_ManConst1(pMan) {
+			pObjPo = pMan.Outputs()[i]
+			if aiggraph.Aig_ObjFanin0(pMan, pObjPo) == aiggraph.Aig_ManConst1(pMan) {
 				continue
 			}
-			if pPars.FVerbose {
+			if pPars.FVerbose != 0 {
 				Abc_Print(1, "Solving output %2d (out of %2d):\n", i, Saig_ManPoNum(pMan))
 			}
 			pTemp = aiggraph.Aig_ManDupOneOutput(pMan, i, 1)
@@ -1983,8 +1987,8 @@ func Abc_NtkDarBmcInter_int(pMan *Aig_Man_t, pPars *Inter_ManParams_t, ppNtkRes 
 			if aiggraph.Aig_ManRegNum(pTemp) == 0 {
 				pTemp.ClearSequentialCounterexample()
 				RetValue = proof_fra.Fra_FraigSat(pTemp, int64(pPars.NBTLimit), 0, 0, 0, 0, 0, 0, 0, 0)
-				if pTemp.pData != nil {
-					pTemp.SetCecCounterexample(misc_util.Abc_CexCreate(aiggraph.Aig_ManRegNum(pMan), aig_saig.Saig_ManPiNum(pMan), pTemp.pData, 0, i, 1))
+				if pTemp.Data != nil {
+					pTemp.SetCecCounterexample(misc_util.Abc_CexCreate(aiggraph.Aig_ManRegNum(pMan), aig_saig.Saig_ManPiNum(pMan), abcAigModel(pTemp), 0, i, 1))
 				}
 				//                pNtk->pModel = pTemp->pData, pTemp->pData = NULL;
 
@@ -1992,7 +1996,7 @@ func Abc_NtkDarBmcInter_int(pMan *Aig_Man_t, pPars *Inter_ManParams_t, ppNtkRes 
 				RetValue = proof_int.Inter_ManPerformInterpolation(pTemp, pPars, &iFrame)
 			}
 			if pTemp.SequentialCounterexample() != nil {
-				if pPars.FDropSatOuts {
+				if pPars.FDropSatOuts != 0 {
 					Abc_Print(1, "Output %d proved SAT in frame %d (replacing by const 0 and continuing...)\n", i, pTemp.SequentialCounterexample().IFrame)
 					aiggraph.Aig_ObjPatchFanin0(pMan, pObjPo, aiggraph.Aig_ManConst0(pMan))
 					Aig_ManStop(pTemp)
@@ -2082,7 +2086,7 @@ func Abc_NtkDarBmcInter(pNtk *Abc_Ntk_t, pPars *Inter_ManParams_t, ppNtkRes **Ab
 		Abc_Print(1, "Converting miter into AIG has failed.\n")
 		return -1
 	}
-	if pPars.FUseSeparate && (ppNtkRes != nil) {
+	if (pPars.FUseSeparate != 0) && (ppNtkRes != nil) {
 		var pManNew *Aig_Man_t
 		RetValue = Abc_NtkDarBmcInter_int(pMan, pPars, &pManNew)
 		*ppNtkRes = Abc_NtkFromAigPhase(pManNew)
@@ -2113,7 +2117,6 @@ func Abc_NtkDarBmcInter(pNtk *Abc_Ntk_t, pPars *Inter_ManParams_t, ppNtkRes **Ab
 **********************************************************************
 */
 func Abc_NtkDarDemiter(pNtk *Abc_Ntk_t) int32 {
-	var pFileNameGeneric string
 	var pFileName0 string // was [1000]byte in C
 
 	var pFileName1 string // was [1000]byte in C
@@ -2131,17 +2134,7 @@ func Abc_NtkDarDemiter(pNtk *Abc_Ntk_t) int32 {
 		Abc_Print(1, "Demitering has failed.\n")
 		return 0
 	}
-	// create file names
-	name := abc.Abc_NtkSpec(pNtk)
-	if name == "" {
-		name = Abc_NtkName(pNtk)
-	}
-	pFileNameGeneric = Extra_FileNameGeneric(name)
-	//    sprintf( pFileName0,  "%s%s",  pFileNameGeneric, "_part0.aig" );
-	//    sprintf( pFileName1,  "%s%s",  pFileNameGeneric, "_part1.aig" );
-	pFileName0 = fmt.Sprintf("%s", "part0.aig")
-	pFileName1 = fmt.Sprintf("%s", "part1.aig")
-	pFileNameGeneric = ""
+	pFileName0, pFileName1 = "part0.aig", "part1.aig"
 	// dump files
 	aig_ioa.Ioa_WriteAiger(pPart0, pFileName0, 0, 0)
 	aig_ioa.Ioa_WriteAiger(pPart1, pFileName1, 0, 0)
@@ -2349,7 +2342,7 @@ func Abc_NtkDarProve(pNtk *Abc_Ntk_t, pSecPar *Fra_Sec_t, nBmcFramesMax int32, n
 		Abc_Print(1, "Converting miter into AIG has failed.\n")
 		return -1
 	}
-	assert(pMan.nRegs > 0, "pMan.nRegs > 0")
+	assert(pMan.RegisterCount() > 0, "pMan.RegisterCount() > 0")
 
 	if pSecPar.FTryBmc != 0 {
 		RetValue = sat_bmc.Saig_BmcPerform(pMan, 0, nBmcFramesMax, 2000, 0, nBmcConfMax, 0, pSecPar.FVerbose, 0, &iFrame, 0, 0)
@@ -2465,7 +2458,7 @@ func Abc_NtkDarSec(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, pSecPar *Fra_Sec_t) int32
 		Abc_Print(1, "Converting miter into AIG has failed.\n")
 		return -1
 	}
-	assert(pMan.nRegs > 0, "pMan.nRegs > 0")
+	assert(pMan.RegisterCount() > 0, "pMan.RegisterCount() > 0")
 
 	// perform verification
 	RetValue = proof_fra.Fra_FraigSec(pMan, pSecPar, nil)
@@ -2728,10 +2721,10 @@ func Abc_NtkDarLatchSweep(pNtk *Abc_Ntk_t, fLatchConst int32, fLatchEqual int32,
 	}
 	if fSaveNames != 0 {
 		aiggraph.Aig_ManSeqCleanup(pMan)
-		if (fLatchConst != 0) && pMan.nRegs {
+		if (fLatchConst != 0) && (pMan.RegisterCount() != 0) {
 			pMan = aiggraph.Aig_ManConstReduce(pMan, fUseMvSweep, nFramesSymb, nFramesSatur, fVerbose, fVeryVerbose)
 		}
-		if (fLatchEqual != 0) && pMan.nRegs {
+		if (fLatchEqual != 0) && (pMan.RegisterCount() != 0) {
 			pMan = aiggraph.Aig_ManReduceLaches(pMan, fVerbose)
 		}
 
@@ -3004,18 +2997,18 @@ func Abc_NtkDarSeqSim(pNtk *Abc_Ntk_t, nFrames int32, nWords int32, TimeOut int3
 		pPars.FVerbose = fVerbose
 		pGia = Gia_ManFromAig(pMan)
 		if giapkg.Gia_ManSimSimulate(pGia, pPars) != 0 {
-			if pGia.pCexSeq {
+			if pGia.SequentialCounterexample() != nil {
 				Abc_Print(1, "Simulation of %d frames with %d words asserted output %d in frame %d. ",
-					nFrames, nWords, pGia.pCexSeq.iPo, pGia.pCexSeq.iFrame)
-				status = Saig_ManVerifyCex(pMan, pGia.pCexSeq)
+					nFrames, nWords, pGia.SequentialCounterexample().IPo, pGia.SequentialCounterexample().IFrame)
+				status = Saig_ManVerifyCex(pMan, pGia.SequentialCounterexample())
 				if status == 0 {
 					Abc_Print(1, "Abc_NtkDarSeqSim(): Counter-example verification has FAILED.\n")
 				}
 			}
 			Abc_NtkSetModel(pNtk, nil)
 			Abc_NtkSetSeqModel(pNtk, nil)
-			Abc_NtkSetSeqModel(pNtk, pGia.pCexSeq)
-			pGia.pCexSeq = nil
+			Abc_NtkSetSeqModel(pNtk, pGia.SequentialCounterexample())
+			pGia.ClearSequentialCounterexample()
 			RetValue = 0
 
 		} else {
@@ -3036,12 +3029,12 @@ func Abc_NtkDarSeqSim(pNtk *Abc_Ntk_t, nFrames int32, nWords int32, TimeOut int3
 		} else {
 			pSml = proof_fra.Fra_SmlSimulateSeq(pMan, 0, nFrames, nWords, fMiter)
 		}
-		if pSml.fNonConstOut {
+		if pSml.NonconstantOutput {
 			pCex = proof_fra.Fra_SmlGetCounterExample(pSml)
 			if pCex != nil {
 				Abc_Print(1, "Simulation of %d frame%s with %d word%s asserted output %d in frame %d. ",
-					pSml.nFrames, pluralFrames(pSml.nFrames),
-					pSml.nWordsFrame, pluralFrames(pSml.nWordsFrame),
+					int32(pSml.Frames), pluralFrames(int32(pSml.Frames)),
+					int32(pSml.WordsPerFrame), pluralFrames(int32(pSml.WordsPerFrame)),
 					pCex.IPo, pCex.IFrame)
 				status = Saig_ManVerifyCex(pMan, pCex)
 				if status == 0 {
@@ -3111,8 +3104,8 @@ func Abc_NtkDarSeqSim3(pNtk *Abc_Ntk_t, pPars *Ssw_RarPars_t) int32 {
 	}
 	abc.Abc_NtkSetSeqModelVec(pNtk, pMan.TakeSequentialCounterexamples())
 	//    ABC_PRT( "Time", Abc_Clock() - clk );
-	pNtk.pData = pMan.pData
-	pMan.pData = nil
+	pNtk.Data = pMan.Data
+	pMan.Data = nil
 	Aig_ManStop(pMan)
 	return RetValue
 }
@@ -3395,14 +3388,15 @@ func Abc_NtkInter(pNtkOn *Abc_Ntk_t, pNtkOff *Abc_Ntk_t, fRelation int32, fVerbo
 	// start the new network
 	pNtkInter = abc.Abc_NtkAlloc(abc.ABC_NTK_STRASH, abc.ABC_FUNC_AIG, 1)
 	Abc_NtkSetName(pNtkInter, Extra_UtilStrsav(Abc_NtkName(pNtkOn)))
-	Abc_NtkForEachPi(pNtkOn, pObj, i)
-	abc.Abc_NtkDupObj(pNtkInter, pObj, 1)
+	for _, pObj := range pNtkOn.Inputs() {
+		abc.Abc_NtkDupObj(pNtkInter, pObj, 1)
+	}
 	// process each POs separately
 	timeCnf = 0
 	timeSat = 0
 	timeInt = 0
-	Abc_NtkForEachCo(pNtkOn, pObj, i)
-	{
+	for i = 0; i < Abc_NtkCoNum(pNtkOn); i++ {
+		pObj = abc.Abc_NtkCo(pNtkOn, i)
 		pNtkOn1 = abc.Abc_NtkCreateCone(pNtkOn, Abc_ObjFanin0(pObj), Abc_ObjName(pObj), 1)
 		if abc.Abc_ObjFaninC0(pObj) != 0 {
 			abc.Abc_ObjXorFaninC(Abc_NtkPo(pNtkOn1, 0), 0)
@@ -3517,7 +3511,7 @@ func Abc_NtkBalanceExor(pNtk *Abc_Ntk_t, fUpdateLevel int32, fVerbose int32) *Ab
 	}
 	//    Aig_ManPrintStats( pMan );
 	if fVerbose != 0 {
-		opt_dar.Dar_BalancePrintStats(pMan)
+		opt_dar.Dar_BalancePrintStats(os.Stdout, pMan)
 	}
 	// perform balancing
 	pTemp = opt_dar.Dar_ManBalance(pMan, (fUpdateLevel != 0))
@@ -3691,12 +3685,17 @@ func Abc_NtkDarClockGate(pNtk *Abc_Ntk_t, pCare *Abc_Ntk_t, pPars *Cgt_Par_t) *A
 			return nil
 		}
 	}
-	pMan = opt_cgt.Cgt_ClockGating(pMan1, pMan2, pPars)
+	var err error
+	pMan, err = opt_cgt.Cgt_ClockGating(pMan1, pMan2, pPars)
 	Aig_ManStop(pMan1)
 	if pMan2 != nil {
 		Aig_ManStop(pMan2)
 	}
 	if pMan == nil {
+		return nil
+	}
+	if err != nil {
+		Abc_Print(1, "%s\n", err)
 		return nil
 	}
 	pNtkAig = Abc_NtkFromDar(pNtk, pMan)
@@ -3720,14 +3719,14 @@ func Abc_NtkDarClockGate(pNtk *Abc_Ntk_t, pCare *Abc_Ntk_t, pPars *Cgt_Par_t) *A
 func Abc_NtkDarExtWin(pNtk *Abc_Ntk_t, nObjId int32, nDist int32, fVerbose int32) *Abc_Ntk_t {
 	var pNtkAig *Abc_Ntk_t
 	var pMan1, pMan *Aig_Man_t
-	var pObj *Aig_Obj_t
+	var pObj aiggraph.Edge
 	pMan1 = Abc_NtkToDar(pNtk, 0, 1)
 	if pMan1 == nil {
 		return nil
 	}
 	if nObjId == -1 {
 		pObj = aig_saig.Saig_ManFindPivot(pMan1)
-		Abc_Print(1, "Selected object %d as a window pivot.\n", pObj.Id)
+		Abc_Print(1, "Selected object %d as a window pivot.\n", pObj.NodeID())
 
 	} else {
 		if nObjId >= aiggraph.Aig_ManObjNumMax(pMan1) {
@@ -3736,12 +3735,12 @@ func Abc_NtkDarExtWin(pNtk *Abc_Ntk_t, nObjId int32, nDist int32, fVerbose int32
 			return nil
 		}
 		pObj = aiggraph.Aig_ManObj(pMan1, nObjId)
-		if pObj == nil {
+		if pObj == aiggraph.InvalidEdge {
 			Aig_ManStop(pMan1)
 			Abc_Print(1, "Object with ID %d does not exist.\n", nObjId)
 			return nil
 		}
-		if !aig_saig.Saig_ObjIsLo(pMan1, pObj) && !aiggraph.Aig_ObjIsNode(pObj) {
+		if !aig_saig.Saig_ObjIsLo(pMan1, pObj) && !aiggraph.Aig_ObjIsNode(pMan1, pObj) {
 			Aig_ManStop(pMan1)
 			Abc_Print(1, "Object with ID %d is not a node or reg output.\n", nObjId)
 			return nil
@@ -3777,14 +3776,14 @@ func Abc_NtkDarInsWin(pNtk *Abc_Ntk_t, pCare *Abc_Ntk_t, nObjId int32, nDist int
 	var pMan1 *Aig_Man_t
 	var pMan2 *Aig_Man_t = nil
 	var pMan *Aig_Man_t
-	var pObj *Aig_Obj_t
+	var pObj aiggraph.Edge
 	pMan1 = Abc_NtkToDar(pNtk, 0, 1)
 	if pMan1 == nil {
 		return nil
 	}
 	if nObjId == -1 {
 		pObj = aig_saig.Saig_ManFindPivot(pMan1)
-		Abc_Print(1, "Selected object %d as a window pivot.\n", pObj.Id)
+		Abc_Print(1, "Selected object %d as a window pivot.\n", pObj.NodeID())
 
 	} else {
 		if nObjId >= aiggraph.Aig_ManObjNumMax(pMan1) {
@@ -3793,12 +3792,12 @@ func Abc_NtkDarInsWin(pNtk *Abc_Ntk_t, pCare *Abc_Ntk_t, nObjId int32, nDist int
 			return nil
 		}
 		pObj = aiggraph.Aig_ManObj(pMan1, nObjId)
-		if pObj == nil {
+		if pObj == aiggraph.InvalidEdge {
 			Aig_ManStop(pMan1)
 			Abc_Print(1, "Object with ID %d does not exist.\n", nObjId)
 			return nil
 		}
-		if !aig_saig.Saig_ObjIsLo(pMan1, pObj) && !aiggraph.Aig_ObjIsNode(pObj) {
+		if !aig_saig.Saig_ObjIsLo(pMan1, pObj) && !aiggraph.Aig_ObjIsNode(pMan1, pObj) {
 			Aig_ManStop(pMan1)
 			Abc_Print(1, "Object with ID %d is not a node or reg output.\n", nObjId)
 			return nil
@@ -3845,7 +3844,7 @@ func Abc_NtkDarFrames(pNtk *Abc_Ntk_t, nPrefix int32, nFrames int32, fInit int32
 		return nil
 	}
 	pTemp = pMan
-	pMan = aig_saig.Saig_ManTimeframeSimplify(pTemp, nPrefix, nFrames, fInit, fVerbose)
+	pMan = proof_fra.Saig_ManTimeframeSimplify(pTemp, nPrefix, nFrames, fInit, fVerbose)
 	Aig_ManStop(pTemp)
 	if pMan == nil {
 		return nil
@@ -3959,7 +3958,7 @@ func Amap_ManProduceNetwork(pNtk *Abc_Ntk_t, vMapping *Vec_Ptr_t) *Abc_Ntk_t {
 	var vNodesNew *Vec_Ptr_t
 	var pNtkNew *Abc_Ntk_t
 	var pNodeNew, pFaninNew *Abc_Obj_t
-	var i, k, iPis, iPos, nDupGates int32
+	var k, iPis, iPos int32
 	// make sure gates exist in the current library
 	for _, item := range giapkg.Vec_PtrArray(vMapping) {
 		pRes = item.(*Amap_Out_t)
@@ -3995,7 +3994,7 @@ func Amap_ManProduceNetwork(pNtk *Abc_Ntk_t, vMapping *Vec_Ptr_t) *Abc_Ntk_t {
 	assert(iPis == Abc_NtkCiNum(pNtkNew), "iPis == Abc_NtkCiNum(pNtkNew)")
 	assert(iPos == Abc_NtkCoNum(pNtkNew), "iPos == Abc_NtkCoNum(pNtkNew)")
 	// decouple the PO driver nodes to reduce the number of levels
-	nDupGates = abc.Abc_NtkLogicMakeSimpleCos(pNtkNew, 0)
+	abc.Abc_NtkLogicMakeSimpleCos(pNtkNew, 0)
 	//    if ( nDupGates && Map_ManReadVerbose(pMan) )
 	//        Abc_Print( 1, "Duplicated %d gates to decouple the CO drivers.\n", nDupGates );
 	return pNtkNew
@@ -4198,7 +4197,7 @@ func Abc_NtkDarConstrProfile(pNtk *Abc_Ntk_t, fVerbose int32) {
 	//    Aig_Obj_t * pObj;
 	//    int i, Entry;
 	assert((Abc_NtkIsStrash(pNtk) != 0), "Abc_NtkIsStrash(pNtk)")
-	assert(Abc_NtkConstrNum(pNtk), "Abc_NtkConstrNum(pNtk)")
+	assert((Abc_NtkConstrNum(pNtk) != 0), "Abc_NtkConstrNum(pNtk)")
 	pMan = Abc_NtkToDar(pNtk, 0, 1)
 	if pMan == nil {
 		return
@@ -4379,3 +4378,16 @@ func Abc_NtkDarTestNtk(pNtk *Abc_Ntk_t) *Abc_Ntk_t {
 
 //#include "abcDarUnfold2.c"
 //ABC_NAMESPACE_IMPL_END))))))))))))))))))))))))))))))
+
+func abcAigModel(g *Aig_Man_t) []int32 {
+	data := aiggraph.Aig_ManReleaseData(g)
+	if data == nil {
+		return nil
+	}
+	return data.([]int32)
+}
+
+func Saig_ManDetectConstrTest(p *Aig_Man_t) int32 {
+	_, _, status := aig_saig.Saig_ManDetectConstr(p, 0)
+	return status
+}
