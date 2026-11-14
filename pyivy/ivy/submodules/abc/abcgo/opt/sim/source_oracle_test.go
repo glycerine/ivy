@@ -199,7 +199,7 @@ func TestOriginalABCSupportAndSymmetryCounts(t *testing.T) {
 	}
 	dir := t.TempDir()
 	var command strings.Builder
-	var wantsupp, wantsym []int
+	var wantsupp, wantsuppSource, wantsym []int
 	for i, f := range []uint64{0x80, 0x96, 0xe8, 0xfe, 0x16, 0x69, 0x17, 0xe9, 0x81, 0x7e, 0x42, 0x53} {
 		g := truthGraph(3, f)
 		path := filepath.Join(dir, fmt.Sprintf("circuit%d.aig", i))
@@ -209,6 +209,8 @@ func TestOriginalABCSupportAndSymmetryCounts(t *testing.T) {
 		fmt.Fprintf(&command, "read_aiger %s; print_supp; print_symm; ", path)
 		supp := Sim_ComputeFunSupp(g, false)
 		wantsupp = append(wantsupp, Sim_UtilCountOnes(supp[0], 1))
+		sourceSupp := Sim_ComputeFunSuppSource(g, false)
+		wantsuppSource = append(wantsuppSource, Sim_UtilCountOnes(sourceSupp[0], 1))
 		wantsym = append(wantsym, Sim_ComputeTwoVarSymms(g, false))
 	}
 	out, err := exec.Command(binary, "-c", command.String()).CombinedOutput()
@@ -224,8 +226,8 @@ func TestOriginalABCSupportAndSymmetryCounts(t *testing.T) {
 	for i := range supp {
 		a, _ := strconv.Atoi(string(supp[i][1]))
 		b, _ := strconv.Atoi(string(sym[i][1]))
-		if a != wantsupp[i] || b != wantsym[i] {
-			t.Fatalf("case%d C supp%d sym%d; Go supp%d sym%d", i, a, b, wantsupp[i], wantsym[i])
+		if a != wantsupp[i] || a != wantsuppSource[i] || b != wantsym[i] {
+			t.Fatalf("case%d C supp%d sym%d; Go supp%d/source supp%d sym%d", i, a, b, wantsupp[i], wantsuppSource[i], wantsym[i])
 		}
 	}
 }

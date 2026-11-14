@@ -53,6 +53,15 @@ state; standalone `Sim_UtilSetRandom` uses Go's concurrency-safe generator.
 Results are deterministic per manager and concurrent analyses do not share RNG or
 graph marks. Exact random word streams are intentionally not libc-compatible.
 
+The separate `Sim_ComputeFunSuppSourceWithSolver` entry point preserves the
+`simSupp.c` random-round, target iteration, SAT witness, and FIFO replay schedule.
+The C-facing `abci.Sim_ComputeFunSupp` supplies the original cofactor-miter/FRAIG
+proof callback. Its private glibc-compatible random generator reproduces the
+`srand(0xABC)` stream without changing libc's process-global RNG state; that
+process-global side effect is the remaining compatibility difference. The
+no-callback entry point uses the package's exact cofactor solver for native Go
+callers.
+
 Native Graph stores zero-initialized registers. The compatibility sequential
 wrappers use that convention; `SequentialSimulation` accepts explicit initial
 0/1/unknown values, with unknown states randomized as in C. Explicit XOR and
