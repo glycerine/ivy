@@ -119,13 +119,10 @@ func TestExactReparameterizationPreservesImage(t *testing.T) {
 		}
 	}
 }
-func TestInterpolationSelfTestAndAppend(t *testing.T) {
+func TestInterpolationAppend(t *testing.T) {
 	p := NewGraph()
 	a, b := p.NewInput(), p.NewInput()
 	p.AddOutput(p.NewXor(a, b))
-	if err := Aig_ManInterTest(p, 0); err != nil {
-		t.Fatal(err)
-	}
 	base := NewGraph()
 	base.NewInput()
 	base.NewInput()

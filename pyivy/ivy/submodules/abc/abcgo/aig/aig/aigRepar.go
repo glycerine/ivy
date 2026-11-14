@@ -54,28 +54,6 @@ func Aig_ManInterAddXor(sink Aig_ClauseSink, a, b, c, complement, mark int32) er
 	}
 	return nil
 }
-func Aig_ManInterTest(p *Graph, verbose int32) error {
-	if p.nRegs != 0 || len(p.outputs) != 1 {
-		return fmt.Errorf("aig: interpolation self-test requires one combinational output")
-	}
-	if err := p.Check(); err != nil {
-		return err
-	}
-	start := time.Now()
-	work := NewGraph()
-	for range p.inputs {
-		work.NewInput()
-	}
-	a := interCopy(p, work, p.outputDriver(p.outputs[0]), work.inputs)
-	b := interCopy(p, work, p.outputDriver(p.outputs[0]), work.inputs)
-	if splitReduce(work, work.XOR(a, b), make(map[Edge]Edge)) != work.Const0() {
-		return fmt.Errorf("aig: circuit self-comparison is satisfiable")
-	}
-	if verbose != 0 {
-		fmt.Printf("Circuit self-comparison is UNSAT. Total interpolation time=%s\n", time.Since(start))
-	}
-	return nil
-}
 func Aig_ManAppend(base, additional *Graph) {
 	if base == additional || len(additional.outputs) != 1 || len(base.inputs) != len(additional.inputs) || base.nRegs != 0 || additional.nRegs != 0 {
 		panic("aig: append requires distinct equal-input combinational managers and one added output")
