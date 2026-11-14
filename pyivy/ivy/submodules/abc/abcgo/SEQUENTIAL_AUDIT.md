@@ -1333,3 +1333,32 @@ the retiming family.
 Validation after the clock-domain fix: full AIG and ABCI race suites pass
 (9.838s and 29.439s), recorded in
 `/tmp/abcgo-retiming-driver-review.log`.
+
+### Direct edge-retiming reconstruction metadata
+
+A new red test exposed stale register metadata when callers use the low-level
+manager API: after moving two LOs and their AND, Rtm_ManToAig returned one
+register with two old flop IDs, a two-register domain and obsolete one-hot
+claims. The high-level driver's cleanup did not protect this path.
+
+Moved that cleanup into reconstruction, shared by direct and driver callers.
+Original identities are retained only when the reconstructed count matches
+the source count and exactly one zero-encoded latch remains on each original
+LO edge. The already computed total makes a second scan of all edges
+unnecessary. ONE normalization changes register encoding and invalidates old
+IDs; VOID, which C reconstructs as zero, has unchanged encoding when the
+layout is otherwise identical. Tests cover ZERO/ONE/VOID explicitly.
+
+When identity changes, reconstruction clears old flop-number/representative
+and register one-hot claims, retains true-PI-only groups, and rebuilds complete
+single-domain membership. Clock-domain validation is shared with the driver.
+An unchanged layout preserves its existing metadata, including correspondence;
+the original graph's metadata remains untouched. The driver still records
+that moves occurred even if a sequence restores the original layout. New
+direct-path tests verify metadata and sequential traces both with and without
+movement; all 260 complete-driver C comparisons remain green.
+
+Full AIG and ABCI race suites pass (9.944s and 28.641s) in
+`/tmp/abcgo-retiming-reconstruction-review.log`. The final AIG race run after
+reusing the existing register total and adding initial-encoding cases also
+passes (9.994s), in `/tmp/abcgo-retiming-reconstruction-final.log`.
