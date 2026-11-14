@@ -212,12 +212,25 @@ func Aig_ObjCompareIdIncrease(a, b Edge) int {
 // is written into the graph, and repeated XOR operands retain their parity.
 func aigExpression(p *Graph, e Edge, verilog bool) string {
 	names := make(map[int]string, len(p.inputs))
-	for i, input := range p.inputs {
+	used := make(map[string]bool, len(p.inputs))
+	for _, input := range p.inputs {
 		name, ok := p.objectData[input.NodeID()].(string)
-		if !ok || name == "" {
-			name = fmt.Sprintf("pi%d", i)
+		if ok && name != "" {
+			names[input.NodeID()] = name
+			used[name] = true
+		}
+	}
+	for i, input := range p.inputs {
+		if _, named := names[input.NodeID()]; named {
+			continue
+		}
+		base := fmt.Sprintf("pi%d", i)
+		name := base
+		for suffix := 1; used[name]; suffix++ {
+			name = fmt.Sprintf("%s_%d", base, suffix)
 		}
 		names[input.NodeID()] = name
+		used[name] = true
 	}
 	neg, and, or := "!", " * ", " + "
 	if verilog {
@@ -302,12 +315,6 @@ func Aig_ObjPrintVerbose(p *Graph, e Edge, history int32) {
 		panic("aig: verbose printing requires a regular object")
 	}
 	n := p.node(e)
-	suffix := func(f Edge) string {
-		if f.Complemented() {
-			return "'"
-		}
-		return " "
-	}
 	fmt.Printf("Node %d : ", e.NodeID())
 	switch n.Kind {
 	case Constant:
@@ -320,14 +327,14 @@ func Aig_ObjPrintVerbose(p *Graph, e Edge, history int32) {
 			kind = "BUF"
 		}
 		f := n.Fanins[0]
-		fmt.Printf("%s( %d%s )", kind, f.NodeID(), suffix(f))
+		fmt.Printf("%s( %d%s )", kind, f.NodeID(), aigPrintComplement(f))
 	default:
 		kind := "AND"
 		if n.Kind == ExclusiveOr {
 			kind = "XOR"
 		}
 		a, b := n.Fanins[0], n.Fanins[1]
-		fmt.Printf("%s( %d%s, %d%s )", kind, a.NodeID(), suffix(a), b.NodeID(), suffix(b))
+		fmt.Printf("%s( %d%s, %d%s )", kind, a.NodeID(), aigPrintComplement(a), b.NodeID(), aigPrintComplement(b))
 	}
 	fmt.Printf(" (refs = %3d)", n.Refs)
 }
@@ -579,7 +586,7 @@ func Aig_ManPrintControlFanouts(p *Graph) {
 	}
 	control := p.inputs[len(p.inputs)-1]
 	fmt.Println("Control signal:")
-	Aig_ObjPrintVerbose(p, control, 0)
+	Aig_ObjPrint(p, control)
 	fmt.Print("\n\n")
 	for i, n := range p.nodes {
 		if p.deleted[i] || len(nodeFanins(n)) != 2 {
@@ -588,9 +595,9 @@ func Aig_ManPrintControlFanouts(p *Graph) {
 		for j, f := range n.Fanins {
 			other := n.Fanins[1-j]
 			if Aig_Regular(f) == control && p.node(other).Kind == Input {
-				Aig_ObjPrintVerbose(p, Edge(i)<<1, 0)
+				Aig_ObjPrint(p, Edge(i)<<1)
 				fmt.Println()
-				Aig_ObjPrintVerbose(p, Aig_Regular(other), 0)
+				Aig_ObjPrint(p, Aig_Regular(other))
 				fmt.Print("\n\n")
 			}
 		}

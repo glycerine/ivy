@@ -1640,3 +1640,41 @@ Full AIG and ABCI race suites pass in 25.821s and 28.557s, recorded in
 visualization review, not the entire AIG package. Printing and the remaining
 source inventory still need verification before marking package 2 complete;
 completed-package count remains 1/131.
+
+### Expression and object printing source review
+
+Read the expression, verbose-object/cone/manager, ordinary-object and control
+fanout printers against aigUtil.c and aigObj.c. Regressions failed before
+repair for root expression parentheses, expanded XOR recognition, distinct
+unnamed inputs, verbose traversal scope, ordinary object formatting, null
+objects and the control printer's use of the wrong diagnostic routine.
+Expression printing now follows source nesting and XOR-before-MUX recognition;
+unnamed inputs use current interface positions without changing CioID scratch
+state. A further red regression exposed collisions with supplied names. All
+supplied names are now reserved before allocating unique fallback names.
+
+Ordinary diagnostics retain complemented-root prefixes, source spacing,
+reference counts and choice-class annotations, including constant-one's valid
+zero-valued handle. Null prints without accessing a graph. A shared complement
+suffix helper removes duplicate formatting logic. Verbose cone/manager
+printing uses the source DFS entry points, restoring the constant prelude,
+terminal coverage, ordering and traversal marks. Go prints stable CI object IDs
+in the manager header instead of C process addresses. Explicit XOR/buffer
+diagnostics remain typed Go extensions; physical XOR expressions preserve
+repeated operands rather than applying source supergate deduplication, which
+would change parity.
+
+The compiled fixture executes the original printers/DFS on all 256
+three-input truth functions, both expression/object polarities, complete
+manager dumps, cones, null objects and control fanouts: 29,704 queries match,
+including traversal generation and every object's traversal mark. Only C's
+pointer-valued PI header is normalized; the Go header's ordered IDs are checked
+separately. Parsed Eqn expressions independently reproduce all 2,048 truth
+assignments. Additional direct tests cover choice annotations, supplied/default
+name collisions, and repeated physical XOR parity through complemented outputs.
+
+Full AIG and ABCI race suites pass in 33.424s and 28.894s, recorded in
+`/tmp/abcgo-printing-current-review.log`; the subsequently added XOR parity
+test passes independently. This closes these printer entry points, not the
+complete AIG audit. Full BLIF/Verilog dump writers and the final production-file
+inventory still require reconciliation before package 2 can be marked complete.

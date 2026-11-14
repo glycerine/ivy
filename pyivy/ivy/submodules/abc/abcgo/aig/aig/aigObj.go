@@ -167,8 +167,63 @@ func Aig_ObjPatchFanin0(p *Graph, e, driver Edge) {
 	}
 }
 func Aig_ObjPrint(p *Graph, e Edge) {
+	if e == InvalidEdge {
+		fmt.Print("Object is NULL.")
+		return
+	}
+	if e.Complemented() {
+		fmt.Print("Compl ")
+		e = Aig_Regular(e)
+	}
 	n := p.node(e)
-	fmt.Printf("%d: kind=%d fanins=(%d,%d) level=%d refs=%d\n", e.NodeID(), n.Kind, n.Fanins[0], n.Fanins[1], n.Level, n.Refs)
+	fmt.Printf("Node %4d : ", e.NodeID())
+	switch n.Kind {
+	case Constant:
+		fmt.Print("constant 1")
+	case Input:
+		fmt.Print("PI")
+	case Output:
+		f := n.Fanins[0]
+		fmt.Printf("PO( %4d%s )", f.NodeID(), aigPrintComplement(f))
+	case Buffer:
+		f := n.Fanins[0]
+		fmt.Printf("BUF( %d%s )", f.NodeID(), aigPrintComplement(f))
+	default:
+		kind := "AND"
+		if n.Kind == ExclusiveOr {
+			kind = "XOR"
+		}
+		a, b := n.Fanins[0], n.Fanins[1]
+		fmt.Printf("%s( %4d%s, %4d%s )", kind, a.NodeID(), aigPrintComplement(a), b.NodeID(), aigPrintComplement(b))
+	}
+	fmt.Printf(" (refs = %3d)", n.Refs)
+	if next, ok := p.equivs[e.NodeID()]; ok && next != InvalidEdge {
+		fmt.Printf("  { %4d ", e.NodeID())
+		seen := map[int]bool{e.NodeID(): true}
+		for next != InvalidEdge {
+			id := next.NodeID()
+			if seen[id] {
+				panic("aig: cyclic diagnostic equivalence class")
+			}
+			seen[id] = true
+			suffix := " "
+			if (p.node(next).Phase != next.Complemented()) != n.Phase {
+				suffix = "'"
+			}
+			fmt.Printf(" %4d%s", id, suffix)
+			next = Aig_ObjEquiv(p, next)
+		}
+		fmt.Print(" }")
+	} else if repr, ok := p.reprs[e.NodeID()]; ok && repr != InvalidEdge {
+		fmt.Printf("  class of %d", e.NodeID())
+	}
+}
+
+func aigPrintComplement(e Edge) string {
+	if e.Complemented() {
+		return "'"
+	}
+	return " "
 }
 func (p *Graph) real(e Edge) Edge {
 	seen := make(map[int]bool)

@@ -189,3 +189,21 @@ Validation: randomized 10,000-operation packed-state deque oracle, explicit 10/1
 Counterexample ownership integration: Graph now exposes Set/Get/Clear/Take combinational witness methods matching GIA. Design review keeps storage private and uses explicit borrowed/transfer ownership. Separate bug review verified CI-order conversion into ABC's register-first counterexample layout, copied input ownership, and preserving an existing model after invalid setter arguments. Ownership/packing regression and full AIG race suite pass.
 
 Terminal metadata follow-up: source calls to `Aig_ManSetRegNum` in array and node duplication, representative duplication, retiming conversion, and frame expansion finalize the stored true PI/PO counts and CI/CO IDs. Source-derived regressions cover those producers, including both representative traversal modes on a sequential graph. Proof FRA, SSW, CEC, and frame-manager paths consume representative duplicates; FRA frame construction and interpolation array duplication also use the affected producers. FRA counterexample handling reads stored true PI counts, and SSW simulation uses terminal IDs, so preserving this metadata affects proof integration.
+
+### Sequential printing checkpoint
+
+Expression and ordinary/verbose object, cone, manager and control-fanout
+printers were checked against the original C implementations. Red regressions
+preceded repairs to expression root formatting/XOR recognition, unique fallback
+input names, source DFS scope, null diagnostics and source object formatting.
+The native fixture matches 29,704 queries across all three-input truth
+functions, including complemented objects and traversal scratch state. Stable
+Go CI IDs replace C addresses in one header. Independent Eqn evaluation covers
+all 2,048 assignments plus supplied-name collisions and repeated physical XOR
+parity through complemented outputs. Physical XOR/buffer support remains a Go
+extension; XOR operand occurrences must retain their parity.
+
+Full AIG and ABCI race suites pass (33.424s/28.894s), with the later XOR parity
+regression passing separately. This checkpoint does not close the package-wide
+audit: full BLIF/Verilog dump writers and the remaining file inventory still
+need source reconciliation. See SEQUENTIAL_AUDIT.md for detailed evidence.

@@ -40,7 +40,9 @@ int main(void)
             }
             else if (mode==1) { Aig_ObjPrintVerbose(o+lit/2,0); puts(""); }
             else if (mode==2) Aig_ObjPrintVerboseCone(&g,o+lit/2,0);
-            else { assert(mode==3); Aig_ManPrintVerbose(&g,0); }
+            else if (mode==3) Aig_ManPrintVerbose(&g,0);
+            else if (mode==4) { Aig_ObjPrint(&g,lit<0 ? NULL : Aig_NotCond(o+lit/2,lit&1)); puts(""); }
+            else { assert(mode==5); Aig_ManPrintControlFanouts(&g); }
             printf("traversal %d:",g.nTravIds);
             for (i=0; i<total; i++) printf(" %d",o[i].TravId);
             puts("");
