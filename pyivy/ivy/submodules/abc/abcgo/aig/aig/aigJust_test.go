@@ -55,7 +55,7 @@ func TestJustificationTraversalWrap(t *testing.T) {
 	p.travID = 1<<31 - 1
 	p.node(a).TravID = 1
 	var support []int32
-	if !Aig_ObjFindSatAssign(p, a, 1, &support) || p.travID != 1 || len(support) != 1 {
+	if !Aig_ObjFindSatAssign(p, a, 1, &support) || p.travID != 2 || len(support) != 1 {
 		t.Fatal(p.travID, support)
 	}
 }

@@ -86,6 +86,9 @@ func Aig_NtkFindSatAssign_rec(p *Graph, e Edge, value int32, support *[]int32, h
 	if n.Kind == Input {
 		if support != nil {
 			index := Aig_ObjCioId(p, e)
+			if index < 0 || int(index) >= len(p.inputs) || p.inputs[index] != e {
+				panic("aig: justification requires CI IDs indexing the current interface")
+			}
 			*support = append(*support, index*2+(1-value))
 		}
 		return true
@@ -135,28 +138,26 @@ func Aig_NtkFindSatAssign_rec(p *Graph, e Edge, value int32, support *[]int32, h
 	}
 	return Aig_NtkFindSatAssign_rec(p, a, 0, support, heur)
 }
-func justNextTraversal(p *Graph) {
-	if p.travID == int32(1<<31-1) {
-		for i := range p.nodes {
-			p.nodes[i].TravID = 0
-		}
-		p.travID = 1
-	} else {
-		p.travID++
-	}
-}
+
+// On failure support retains the last attempt's partial assignments, as in C;
+// these are diagnostic state, not a satisfying witness or an UNSAT certificate.
+// Collecting support requires current CI indices (Aig_ManSetCioIds).
 func Aig_ObjFindSatAssign(p *Graph, e Edge, value int32, support *[]int32) bool {
+	if n := p.node(e); n.Kind == Output {
+		driver := n.Fanins[0]
+		if e.Complemented() {
+			driver = driver.Not()
+		}
+		return Aig_ObjFindSatAssign(p, driver, value, support)
+	}
 	for attempt := int32(0); attempt < 8; attempt++ {
 		if support != nil {
 			*support = (*support)[:0]
 		}
-		justNextTraversal(p)
+		Aig_ManIncrementTravId(p)
 		if Aig_NtkFindSatAssign_rec(p, e, value, support, attempt) {
 			return true
 		}
-	}
-	if support != nil {
-		*support = (*support)[:0]
 	}
 	return false
 }
@@ -194,7 +195,7 @@ func Aig_ObjTerSimulate_rec(p *Graph, e Edge) int32 {
 	return Aig_ObjNotCondTerValue(value, int32(e&1))
 }
 func Aig_ObjTerSimulate(p *Graph, e Edge, support []int32) int32 {
-	justNextTraversal(p)
+	Aig_ManIncrementTravId(p)
 	for _, literal := range support {
 		index := literal >> 1
 		if index < 0 || int(index) >= len(p.inputs) {
