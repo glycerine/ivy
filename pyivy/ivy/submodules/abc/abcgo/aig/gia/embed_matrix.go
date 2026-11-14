@@ -59,8 +59,8 @@ func Emb_ManVecMultiply(matrix [][]float32, v []float32, nDims int32, result []f
 	}
 }
 func Emb_ManVecOrthogonolizeOne(eigen, v []float32, nDims int32, result []float32) {
-	// Preserve the source's sequential evaluation when result aliases v.
+	projection := Emb_ManVecMultiplyOne(v, eigen, nDims)
 	for i := int32(0); i < nDims; i++ {
-		result[i] = v[i] - eigen[i]*Emb_ManVecMultiplyOne(v, eigen, nDims)
+		result[i] = v[i] - eigen[i]*projection
 	}
 }

@@ -3271,3 +3271,25 @@ existing nonzero matrix tests still pass. Full uncached GIA race tests pass in
 33.439s (`/tmp/abcgo-embedding-boundaries-race.log`) and GIA vet passes
 (`/tmp/abcgo-embedding-boundaries-vet.log`). Remaining solver/placement
 algorithms and other GIA families still need audit; completion remains 2/131.
+
+Embedding projection review: the orthogonalization helper recomputed the
+unchanged dot product once per coordinate, making the operation quadratic.
+When the destination aliases either input, earlier writes also changed later
+dot products and the result was not orthogonal. Red alias tests demonstrate
+nonzero residuals for parallel vectors and incorrect general projection
+residuals (`/tmp/abcgo-embedding-orthogonal-red.log`). Compute the projection
+once before writing components. This makes the helper linear and supports
+either full input alias without allocation. The source formula is unchanged;
+original C shares the aliasing defect and redundant work. Production power
+iteration already uses separate buffers, preserving its arithmetic/results.
+
+A compiled original giaEmbed.c fixture compares all 672 float32 component
+bits for 24 disjoint-vector projections; all match. Focused native/alias tests
+pass in 1.866s (`/tmp/abcgo-embedding-orthogonal-focused.log`). The 1000-call
+microbenchmark changes 32/128/512-element projection times from approximately
+569/10518/190414 ns to 33/261/596 ns, with zero allocations in both versions
+(`/tmp/abcgo-embedding-orthogonal-before.log`,
+`/tmp/abcgo-embedding-orthogonal-after.log`); no whole-program speedup is claimed.
+Full uncached GIA race tests pass in 37.243s
+(`/tmp/abcgo-embedding-projection-placement-race.log`) and GIA vet passes.
+The package remains under audit; original completion is 2/131.
