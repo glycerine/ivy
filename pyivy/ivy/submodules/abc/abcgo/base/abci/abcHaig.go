@@ -1,560 +1,358 @@
 package abci
 
-import "fmt"
+import (
+	"fmt"
 
-/**CFile****************************************************************
+	"github.com/glycerine/abcgo/aig/hop"
+	"github.com/glycerine/abcgo/base/abc"
+	"github.com/glycerine/abcgo/misc/vec"
+)
 
-  FileName    [abcHaig.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Network and node package.]
-
-  Synopsis    [Implements history AIG for combinational rewriting.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: abcHaig.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "base/abc/abc.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-
-/**Function*************************************************************
-
-  Synopsis    [Collects the nodes in the classes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkHaigCollectMembers(p *Hop_Man_t) *Vec_Ptr_t {
-    var vObjs *Vec_Ptr_t;
-    var pObj *Hop_Obj_t;
-    var i int32;
-    vObjs = Vec_PtrAlloc( 4098 );
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  {
-        if pObj.pData == nil {
-            continue; }
-        pObj.pData = Hop_ObjRepr( pObj );
-        Vec_PtrPush( vObjs, pObj );
-    }
-    return vObjs;
+// Abc_NtkHaigCollectMembers normalizes each marked object's representative and
+// returns all non-representative members, matching the source HAIG pass.
+func Abc_NtkHaigCollectMembers(manager *Hop_Man_t) *Vec_Ptr_t {
+	members := vec.Vec_PtrAlloc(4098)
+	for _, object := range hop.Hop_ManObjects(manager) {
+		if hop.Hop_ObjData(object) == nil {
+			continue
+		}
+		hop.Hop_ObjSetData(object, hop.Hop_ObjRepr(object))
+		vec.Vec_PtrPush(members, object)
+	}
+	return members
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Creates classes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkHaigCreateClasses(vMembers *Vec_Ptr_t) *Vec_Ptr_t {
-    var vClasses *Vec_Ptr_t;
-    var pObj, pRepr *Hop_Obj_t;
-    var i int32;
-
-    // count classes
-    vClasses = Vec_PtrAlloc( 4098 );
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vMembers)) && (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(vMembers, i)), 1); i++  {
-        pRepr = (Hop_Obj_t *)pObj.pData;
-        assert(pRepr.pData == nil, "pRepr.pData == nil");
-        if pRepr.fMarkA == 0 { // new
-        
-            pRepr.fMarkA = 1;
-            Vec_PtrPush( vClasses, pRepr );
-        }
-    }
-
-    // set representatives as representatives
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vClasses)) && (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(vClasses, i)), 1); i++  {
-        pObj.fMarkA = 0;
-        pObj.pData = pObj;
-    }
-
-    // go through the members and update
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vMembers)) && (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(vMembers, i)), 1); i++  {
-        pRepr = (Hop_Obj_t *)pObj.pData;
-        if ((Hop_Obj_t *)pRepr.pData).Id > pObj.Id {
-            pRepr.pData = pObj; }
-    }
-
-    // change representatives of the class
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vMembers)) && (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(vMembers, i)), 1); i++  {
-        pRepr = (Hop_Obj_t *)pObj.pData;
-        pObj.pData = pRepr.pData;
-        assert(((Hop_Obj_t *)pObj.pData).Id <= pObj.Id, "((Hop_Obj_t *)pObj.pData).Id <= pObj.Id");
-    }
-
-    // update classes
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vClasses)) && (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(vClasses, i)), 1); i++  {
-        pRepr = (Hop_Obj_t *)pObj.pData;
-        assert(pRepr.pData == pRepr, "pRepr.pData == pRepr");
-//        pRepr->pData = NULL;
-        Vec_PtrWriteEntry( vClasses, i, pRepr );
-        Vec_PtrPush( vMembers, pObj );
-    }
-
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vMembers)) && (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(vMembers, i)), 1); i++  {
-        if pObj.pData == pObj {
-            pObj.pData = nil; }
-    }
-
-/*
-    Vec_PtrForEachEntry( Hop_Obj_t *, vMembers, pObj, i )
-    {
-        printf( "ObjId = %4d : ", pObj->Id );
-        if ( pObj->pData == NULL )
-        {
-            printf( "NULL" );
-        }
-        else
-        {
-            printf( "%4d", ((Hop_Obj_t *)pObj->pData)->Id );
-            assert( ((Hop_Obj_t *)pObj->pData)->Id <= pObj->Id );
-        }
-        printf( "\n" );
-    }
-*/
-    return vClasses;
+func haigDataNode(value any) *Hop_Obj_t {
+	node, _ := value.(*Hop_Obj_t)
+	return node
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Counts how many data members have non-trivial fanout.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkHaigCountFans(p *Hop_Man_t) int32 {
-    var pObj *Hop_Obj_t;
-    var i, Counter int32;
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  {
-        if pObj.pData == nil {
-            continue; }
-        if Hop_ObjRefs(pObj) > 0 {
-            Counter++; }
-    }
-    fmt.Printf("The number of class members with fanouts = %5d.\n", Counter);
-    return Counter;
+// Abc_NtkHaigCreateClasses chooses the lowest-ID member as each class head.
+func Abc_NtkHaigCreateClasses(members *Vec_Ptr_t) *Vec_Ptr_t {
+	classes := vec.Vec_PtrAlloc(4098)
+	for _, item := range vec.Vec_PtrArray(members) {
+		object := item.(*Hop_Obj_t)
+		repr := haigDataNode(hop.Hop_ObjData(object))
+		if repr == nil || hop.Hop_ObjData(repr) != nil {
+			panic("HAIG representative is not a class root")
+		}
+		if hop.Hop_ObjIsMarkA(repr) == 0 {
+			hop.Hop_ObjSetMarkA(repr)
+			vec.Vec_PtrPush(classes, repr)
+		}
+	}
+	for _, item := range vec.Vec_PtrArray(classes) {
+		repr := item.(*Hop_Obj_t)
+		hop.Hop_ObjClearMarkA(repr)
+		hop.Hop_ObjSetData(repr, repr)
+	}
+	for _, item := range vec.Vec_PtrArray(members) {
+		object := item.(*Hop_Obj_t)
+		repr := haigDataNode(hop.Hop_ObjData(object))
+		current := haigDataNode(hop.Hop_ObjData(repr))
+		if current == nil {
+			panic("HAIG class lost its initial member")
+		}
+		if current.Id > object.Id {
+			hop.Hop_ObjSetData(repr, object)
+		}
+	}
+	for _, item := range vec.Vec_PtrArray(members) {
+		object := item.(*Hop_Obj_t)
+		repr := haigDataNode(hop.Hop_ObjData(object))
+		chosen := haigDataNode(hop.Hop_ObjData(repr))
+		if chosen == nil || chosen.Id > object.Id {
+			panic("HAIG representative order is invalid")
+		}
+		hop.Hop_ObjSetData(object, chosen)
+	}
+	for i, item := range vec.Vec_PtrArray(classes) {
+		old := item.(*Hop_Obj_t)
+		repr := haigDataNode(hop.Hop_ObjData(old))
+		if repr == nil || haigDataNode(hop.Hop_ObjData(repr)) != repr {
+			panic("HAIG class head is not self-representing")
+		}
+		vec.Vec_PtrWriteEntry(classes, i, repr)
+		vec.Vec_PtrPush(members, repr)
+	}
+	for _, item := range vec.Vec_PtrArray(members) {
+		object := item.(*Hop_Obj_t)
+		if haigDataNode(hop.Hop_ObjData(object)) == object {
+			hop.Hop_ObjSetData(object, nil)
+		}
+	}
+	return classes
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Hop_ObjReprHop(pObj *Hop_Obj_t) *Hop_Obj_t {
-    var pRepr *Hop_Obj_t;
-    assert(pObj.pNext != nil, "pObj.pNext != nil");
-    if pObj.pData == nil {
-        return pObj.pNext; }
-    pRepr = (Hop_Obj_t *)pObj.pData;
-    assert(pRepr.pData == pRepr, "pRepr.pData == pRepr");
-    return Hop_NotCond( pRepr.pNext, pObj.fPhase ^ pRepr.fPhase );
+func Abc_NtkHaigCountFans(manager *Hop_Man_t) int32 {
+	var count int32
+	for _, object := range hop.Hop_ManObjects(manager) {
+		if hop.Hop_ObjData(object) != nil && hop.Hop_ObjRefs(object) > 0 {
+			count++
+		}
+	}
+	fmt.Printf("The number of class members with fanouts = %5d.\n", count)
+	return count
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Hop_ObjChild0Hop(pObj *Hop_Obj_t) *Hop_Obj_t { return Hop_NotCond( Hop_ObjReprHop(Hop_ObjFanin0(pObj)), Hop_ObjFaninC0(pObj) ); }
-func Hop_ObjChild1Hop(pObj *Hop_Obj_t) *Hop_Obj_t { return Hop_NotCond( Hop_ObjReprHop(Hop_ObjFanin1(pObj)), Hop_ObjFaninC1(pObj) ); }
-
-/**Function*************************************************************
-
-  Synopsis    [Stops history AIG.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkHaigReconstruct(p *Hop_Man_t) *Hop_Man_t { 
-    var pNew *Hop_Man_t;
-    var pObj *Hop_Obj_t;
-    var i, Counter int32;
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  {
-        pObj.pNext = nil;
-    }
-    // start the HOP package
-    pNew = Hop_ManStart();
-    pNew.vObjs = Vec_PtrAlloc( p.nCreated );
-    Vec_PtrPush( pNew.vObjs, Hop_ManConst1(pNew) );
-    // map the constant node
-    Hop_ManConst1(p).pNext = Hop_ManConst1(pNew);
-    // map the CIs
-    // inlining of macro Hop_ManForEachPi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vPis)) && (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vPis, i)), 1); i++  {
-        pObj.pNext = Hop_ObjCreatePi(pNew);
-    }
-    // map the internal nodes
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  {
-        if !Hop_ObjIsNode(pObj) {
-            continue; }
-        pObj.pNext = Hop_And( pNew, Hop_ObjChild0Hop(pObj), Hop_ObjChild1Hop(pObj) );
-//        assert( !Hop_IsComplement(pObj->pNext) );
-        if Hop_ManConst1(pNew) == Hop_Regular(pObj.pNext) {
-            Counter++; }
-        if pObj.pData { // member of the class
-            Hop_Regular(pObj.pNext).pData = Hop_Regular(((Hop_Obj_t *)pObj.pData).pNext); }
-    }
-//    printf( " Counter = %d.\n", Counter );
-    // transfer the POs
-    // inlining of macro Hop_ManForEachPo
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vPos)) && (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vPos, i)), 1); i++  {
-        Hop_ObjCreatePo( pNew, Hop_ObjChild0Hop(pObj) );
-    }
-    // check the new manager
-    if !Hop_ManCheck(pNew) {
-        fmt.Printf("Abc_NtkHaigReconstruct: Check for History AIG has failed.\n");
-        Hop_ManStop(pNew);
-        return nil;
-    }
-    return pNew;
+func Hop_ObjReprHop(object *Hop_Obj_t) *Hop_Obj_t {
+	next := hop.Hop_ObjReadNext(object)
+	if next == nil {
+		panic("HAIG HOP node has no reconstructed successor")
+	}
+	repr := haigDataNode(hop.Hop_ObjData(object))
+	if repr == nil {
+		return next
+	}
+	if haigDataNode(hop.Hop_ObjData(repr)) != repr {
+		panic("HAIG class representative is not normalized")
+	}
+	reprNext := hop.Hop_ObjReadNext(repr)
+	if reprNext == nil {
+		panic("HAIG representative has no reconstructed successor")
+	}
+	return hop.Hop_NotCond(reprNext, boolInt32(hop.Hop_ObjPhase(object) != hop.Hop_ObjPhase(repr)))
+}
+func Hop_ObjChild0Hop(object *Hop_Obj_t) *Hop_Obj_t {
+	return hop.Hop_NotCond(Hop_ObjReprHop(hop.Hop_ObjFanin0(object)), hop.Hop_ObjFaninC0(object))
+}
+func Hop_ObjChild1Hop(object *Hop_Obj_t) *Hop_Obj_t {
+	return hop.Hop_NotCond(Hop_ObjReprHop(hop.Hop_ObjFanin1(object)), hop.Hop_ObjFaninC1(object))
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Returns 1 if pOld is in the TFI of pNew.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkHaigCheckTfi_rec(pNode *Abc_Obj_t, pOld *Abc_Obj_t) int32 {
-    if pNode == nil {
-        return 0; }
-    if pNode == pOld {
-        return 1; }
-    // check the trivial cases
-    if Abc_ObjIsCi(pNode) {
-        return 0; }
-    assert(Abc_ObjIsNode(pNode), "Abc_ObjIsNode(pNode)");
-    // if this node is already visited, skip
-    if Abc_NodeIsTravIdCurrent( pNode ) {
-        return 0; }
-    // mark the node as visited
-    Abc_NodeSetTravIdCurrent( pNode );
-    // check the children
-    if Abc_NtkHaigCheckTfi_rec( Abc_ObjFanin0(pNode), pOld ) != 0 {
-        return 1; }
-    if Abc_NtkHaigCheckTfi_rec( Abc_ObjFanin1(pNode), pOld ) != 0 {
-        return 1; }
-    // check equivalent nodes
-    return Abc_NtkHaigCheckTfi_rec( (Abc_Obj_t *)pNode.pData, pOld );
+// Abc_NtkHaigReconstruct transfers a HAIG into a fresh HOP manager, replacing
+// each class member by its current representative while preserving phase.
+func Abc_NtkHaigReconstruct(manager *Hop_Man_t) *Hop_Man_t {
+	for _, object := range hop.Hop_ManObjects(manager) {
+		hop.Hop_ObjSetNext(object, nil)
+	}
+	result := hop.Hop_ManStartWithObjects(int(hop.Hop_ManObjNum(manager)) + 1)
+	hop.Hop_ObjSetNext(hop.Hop_ManConst1(manager), hop.Hop_ManConst1(result))
+	for i := int32(0); i < hop.Hop_ManPiNum(manager); i++ {
+		hop.Hop_ObjSetNext(hop.Hop_ManPi(manager, i), hop.Hop_ObjCreatePi(result))
+	}
+	for _, object := range hop.Hop_ManObjects(manager) {
+		if hop.Hop_ObjIsNode(object) == 0 {
+			continue
+		}
+		next := hop.Hop_And(result, Hop_ObjChild0Hop(object), Hop_ObjChild1Hop(object))
+		hop.Hop_ObjSetNext(object, next)
+		if member := haigDataNode(hop.Hop_ObjData(object)); member != nil {
+			reprNext := hop.Hop_ObjReadNext(member)
+			if reprNext == nil {
+				hop.Hop_ManStop(result)
+				return nil
+			}
+			hop.Hop_ObjSetData(hop.Hop_Regular(next), hop.Hop_Regular(reprNext))
+		}
+	}
+	for i := int32(0); i < hop.Hop_ManPoNum(manager); i++ {
+		hop.Hop_ObjCreatePo(result, Hop_ObjChild0Hop(hop.Hop_ManPo(manager, i)))
+	}
+	if hop.Hop_ManCheck(result) == 0 {
+		fmt.Println("Abc_NtkHaigReconstruct: Check for History AIG has failed.")
+		hop.Hop_ManStop(result)
+		return nil
+	}
+	return result
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Returns 1 if pOld is in the TFI of pNew.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkHaigCheckTfi(pNtk *Abc_Ntk_t, pOld *Abc_Obj_t, pNew *Abc_Obj_t) int32 {
-    assert(!Abc_ObjIsComplement(pOld), "!Abc_ObjIsComplement(pOld)");
-    assert(!Abc_ObjIsComplement(pNew), "!Abc_ObjIsComplement(pNew)");
-    Abc_NtkIncrementTravId(pNtk);
-    return Abc_NtkHaigCheckTfi_rec( pNew, pOld );
+func Abc_NtkHaigCheckTfi_rec(node, old *Abc_Obj_t, visited map[*Abc_Obj_t]bool) int32 {
+	if node == nil {
+		return 0
+	}
+	if node == old {
+		return 1
+	}
+	if abc.Abc_ObjIsCi(node) != 0 {
+		return 0
+	}
+	if abc.Abc_ObjIsNode(node) == 0 {
+		panic("HAIG TFI traversal reached a non-node")
+	}
+	if visited[node] {
+		return 0
+	}
+	visited[node] = true
+	for _, fanin := range node.Fanins() {
+		if Abc_NtkHaigCheckTfi_rec(fanin.Object, old, visited) != 0 {
+			return 1
+		}
+	}
+	for choice := node.Choice; choice != nil; choice = choice.Choice {
+		if Abc_NtkHaigCheckTfi_rec(choice, old, visited) != 0 {
+			return 1
+		}
+	}
+	return 0
+}
+func Abc_NtkHaigCheckTfi(network *Abc_Ntk_t, old, node *Abc_Obj_t) int32 {
+	if old == nil || node == nil {
+		return 0
+	}
+	return Abc_NtkHaigCheckTfi_rec(node, old, make(map[*Abc_Obj_t]bool))
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Hop_ObjChild0Next(pObj *Hop_Obj_t) *Abc_Obj_t { return Abc_ObjNotCond( (Abc_Obj_t *)Hop_ObjFanin0(pObj).pNext, Hop_ObjFaninC0(pObj) );  }
-func Hop_ObjChild1Next(pObj *Hop_Obj_t) *Abc_Obj_t { return Abc_ObjNotCond( (Abc_Obj_t *)Hop_ObjFanin1(pObj).pNext, Hop_ObjFaninC1(pObj) );  }
-
-/**Function*************************************************************
-
-  Synopsis    [Stops history AIG.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkHaigRecreateAig(pNtk *Abc_Ntk_t, p *Hop_Man_t) *Abc_Ntk_t {
-    var pNtkAig *Abc_Ntk_t;
-    var pObjOld, pObjAbcThis, pObjAbcRepr *Abc_Obj_t;
-    var pObj *Hop_Obj_t;
-    var i int32;
-    assert(p.nCreated == Vec_PtrSize(p.vObjs), "p.nCreated == Vec_PtrSize(p.vObjs)");
-
-    // start the new network
-    pNtkAig = Abc_NtkStartFrom( pNtk, ABC_NTK_STRASH, ABC_FUNC_AIG );
-
-    // transfer new nodes to the PIs of HOP
-    Hop_ManConst1(p).pNext = (Hop_Obj_t *)Abc_AigConst1( pNtkAig );
-    // inlining of macro Hop_ManForEachPi
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vPis)) && (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vPis, i)), 1); i++  {
-        pObj.pNext = (Hop_Obj_t *)Abc_NtkCi( pNtkAig, i );
-    }
-
-    // construct new nodes
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  {
-        if !Hop_ObjIsNode(pObj) {
-            continue; }
-        pObj.pNext = (Hop_Obj_t *)Abc_AigAnd( (Abc_Aig_t *)pNtkAig.pManFunc, Hop_ObjChild0Next(pObj), Hop_ObjChild1Next(pObj) );
-        assert(!Hop_IsComplement(pObj.pNext), "!Hop_IsComplement(pObj.pNext)");
-    }
-
-    // set the COs
-    // inlining of macro Abc_NtkForEachCo
-    for  i = 0; (i < Abc_NtkCoNum(pNtk)) && (((pObjOld) = Abc_NtkCo(pNtk, i)), 1); i++  {
-        Abc_ObjAddFanin( pObjOld.pCopy, Hop_ObjChild0Next(Hop_ManPo(p,i)) );
-    }
-
-    // construct choice nodes
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  {
-        // skip the node without choices
-        if pObj.pData == nil {
-            continue; }
-        // skip the representative of the class
-        if pObj.pData == pObj {
-            continue; }
-        // do not create choices for constant 1 and PIs
-        if !Hop_ObjIsNode((Hop_Obj_t *)pObj.pData) {
-            continue; }
-        // get the corresponding new nodes
-        pObjAbcThis = (Abc_Obj_t *)pObj.pNext;
-        pObjAbcRepr = (Abc_Obj_t *)((Hop_Obj_t *)pObj.pData).pNext;
-        // the new node cannot be already in the class
-        assert(pObjAbcThis.pData == nil, "pObjAbcThis.pData == nil");
-        // the new node cannot have fanouts
-        assert(Abc_ObjFanoutNum(pObjAbcThis) == 0, "Abc_ObjFanoutNum(pObjAbcThis) == 0");
-        // these should be different nodes
-        assert(pObjAbcRepr != pObjAbcThis, "pObjAbcRepr != pObjAbcThis");
-        // do not create choices if there is a path from pObjAbcThis to pObjAbcRepr
-        if !(Abc_NtkHaigCheckTfi( pNtkAig, pObjAbcRepr, pObjAbcThis ) != 0) {
-            // find the last node in the class
-            for  pObjAbcRepr.pData  {
-                pObjAbcRepr = (Abc_Obj_t *)pObjAbcRepr.pData;
-            }
-            // add the new node at the end of the list
-            pObjAbcRepr.pData = pObjAbcThis;
-        }
-    }
-
-    // finish the new network
-//    Abc_NtkFinalize( pNtk, pNtkAig );
-//    Abc_AigCleanup( pNtkAig->pManFunc );
-    // check correctness of the network
-    if !Abc_NtkCheck( pNtkAig ) {
-        fmt.Printf("Abc_NtkHaigUse: The network check has failed.\n");
-        Abc_NtkDelete( pNtkAig );
-        return nil;
-    }
-    return pNtkAig;
+func Hop_ObjChild0NextHaig(object *Hop_Obj_t) abc.Edge {
+	fanin := hop.Hop_ObjFanin0(object)
+	edge, ok := hop.Hop_ObjReadNextData(fanin).(abc.Edge)
+	if !ok {
+		panic("HAIG HOP fanin has no ABC successor")
+	}
+	return abc.Abc_ObjNotCond(edge, hop.Hop_ObjFaninC0(object))
+}
+func Hop_ObjChild1NextHaig(object *Hop_Obj_t) abc.Edge {
+	fanin := hop.Hop_ObjFanin1(object)
+	edge, ok := hop.Hop_ObjReadNextData(fanin).(abc.Edge)
+	if !ok {
+		panic("HAIG HOP fanin has no ABC successor")
+	}
+	return abc.Abc_ObjNotCond(edge, hop.Hop_ObjFaninC1(object))
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Resets representatives.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkHaigResetReprsOld(pMan *Hop_Man_t) {
-    var vMembers, vClasses *Vec_Ptr_t;
-
-    // collect members of the classes and make them point to reprs
-    vMembers = Abc_NtkHaigCollectMembers( pMan );
-    fmt.Printf("Collected %6d class members.\n", Vec_PtrSize(vMembers));
-
-    // create classes
-    vClasses = Abc_NtkHaigCreateClasses( vMembers );
-    fmt.Printf("Collected %6d classes. (Ave = %5.2f)\n", Vec_PtrSize(vClasses), float32((Vec_PtrSize(vMembers)))/Vec_PtrSize(vClasses));
-
-    Vec_PtrFree( vMembers );
-    Vec_PtrFree( vClasses );
+// Abc_NtkHaigRecreateAig transfers the loop-free HOP graph and its safe choice
+// classes back to an ABC strashed network.
+func Abc_NtkHaigRecreateAig(network *Abc_Ntk_t, manager *Hop_Man_t) *Abc_Ntk_t {
+	result := abc.Abc_NtkStartFrom(network, abc.ABC_NTK_STRASH, abc.ABC_FUNC_AIG)
+	aig, ok := result.FunctionManager.(*abc.Abc_Aig_t)
+	if !ok {
+		panic("HAIG output network has no AIG manager")
+	}
+	hop.Hop_ObjSetNextData(hop.Hop_ManConst1(manager), abc.Abc_AigConst1(result))
+	for i := int32(0); i < hop.Hop_ManPiNum(manager); i++ {
+		hop.Hop_ObjSetNextData(hop.Hop_ManPi(manager, i), abc.Abc_NtkCi(result, i).Signal())
+	}
+	for _, object := range hop.Hop_ManObjects(manager) {
+		if hop.Hop_ObjIsNode(object) == 0 {
+			continue
+		}
+		edge := abc.Abc_AigAnd(aig, Hop_ObjChild0NextHaig(object), Hop_ObjChild1NextHaig(object))
+		if edge.Complement {
+			panic("HAIG HOP node reconstructed to a complemented ABC edge")
+		}
+		hop.Hop_ObjSetNextData(object, edge)
+	}
+	for i := int32(0); i < abc.Abc_NtkCoNum(network); i++ {
+		old := abc.Abc_NtkCo(network, i)
+		po := abc.Abc_ObjCopyEdge(old).Object
+		abc.Abc_ObjAddFanin(po, Hop_ObjChild0NextHaig(hop.Hop_ManPo(manager, i)))
+	}
+	for _, object := range hop.Hop_ManObjects(manager) {
+		repr := haigDataNode(hop.Hop_ObjData(object))
+		if repr == nil || repr == object || hop.Hop_ObjIsNode(repr) == 0 {
+			continue
+		}
+		thisEdge, okThis := hop.Hop_ObjReadNextData(object).(abc.Edge)
+		reprEdge, okRepr := hop.Hop_ObjReadNextData(repr).(abc.Edge)
+		if !okThis || !okRepr || thisEdge.Object == nil || reprEdge.Object == nil {
+			panic("HAIG choice node has no ABC mapping")
+		}
+		if thisEdge.Complement || reprEdge.Complement {
+			panic("HAIG choice mapping is complemented")
+		}
+		this, head := thisEdge.Object, reprEdge.Object
+		if this.Choice != nil || len(this.Fanouts()) != 0 || head == this {
+			panic("HAIG choice candidate violates source invariants")
+		}
+		if Abc_NtkHaigCheckTfi(result, head, this) != 0 {
+			continue
+		}
+		tail := head
+		seen := map[*Abc_Obj_t]bool{head: true}
+		for tail.Choice != nil {
+			tail = tail.Choice
+			if seen[tail] {
+				panic("cycle in ABC choice chain")
+			}
+			seen[tail] = true
+		}
+		tail.Choice = this
+	}
+	if abc.Abc_NtkCheck(result) == 0 {
+		fmt.Println("Abc_NtkHaigUse: The network check has failed.")
+		abc.Abc_NtkDelete(result)
+		return nil
+	}
+	return result
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Resets representatives.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkHaigResetReprs(p *Hop_Man_t) int32 {
-    var pObj, pRepr *Hop_Obj_t;
-    var i, nClasses, nMembers, nFanouts, nNormals int32;
-    // clear self-classes
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  {
-        // fix the strange situation of double-loop
-        pRepr = (Hop_Obj_t *)pObj.pData;
-        if (pRepr != nil) && pRepr.pData == pObj {
-            pRepr.pData = pRepr; }
-        // remove self-loops
-        if pObj.pData == pObj {
-            pObj.pData = nil; }
-    }
-    // set representatives
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  {
-        if pObj.pData == nil {
-            continue; }
-        // get representative of the node
-        pRepr = Hop_ObjRepr( pObj );
-        pRepr.pData = pRepr;
-        // set the representative
-        pObj.pData = pRepr;
-    }
-    // make each class point to the smallest topological order
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  {
-        if pObj.pData == nil {
-            continue; }
-        pRepr = Hop_ObjRepr( pObj );
-        if pRepr.Id > pObj.Id {
-            pRepr.pData = pObj;
-            pObj.pData = pObj;
-        
-        } else {
-            pObj.pData = pRepr; }
-    }
-    // count classes, members, and fanouts - and verify
-    nMembers = nClasses = nFanouts = nNormals = 0;
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vObjs)) && (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  {
-        if pObj.pData == nil {
-            continue; }
-        // count members
-        nMembers++;
-        // count the classes and fanouts
-        if pObj.pData == pObj {
-            nClasses++;
-        } else if Hop_ObjRefs(pObj) > 0 {
-            nFanouts++;
-        } else {
-            nNormals++; }
-        // compare representatives
-        pRepr = Hop_ObjRepr( pObj );
-        assert(pObj.pData == pRepr, "pObj.pData == pRepr");
-        assert(pRepr.Id <= pObj.Id, "pRepr.Id <= pObj.Id");
-    }
-//    printf( "Nodes = %7d.  Member = %7d.  Classes = %6d.  Fanouts = %6d.  Normals = %6d.\n", 
-//        Hop_ManNodeNum(p), nMembers, nClasses, nFanouts, nNormals );
-    return nFanouts;
+func Abc_NtkHaigResetReprsOld(manager *Hop_Man_t) {
+	members := Abc_NtkHaigCollectMembers(manager)
+	fmt.Printf("Collected %6d class members.\n", vec.Vec_PtrSize(members))
+	classes := Abc_NtkHaigCreateClasses(members)
+	if vec.Vec_PtrSize(classes) != 0 {
+		fmt.Printf("Collected %6d classes. (Ave = %5.2f)\n", vec.Vec_PtrSize(classes), float64(vec.Vec_PtrSize(members))/float64(vec.Vec_PtrSize(classes)))
+	} else {
+		fmt.Println("Collected      0 classes.")
+	}
+	vec.Vec_PtrFree(members)
+	vec.Vec_PtrFree(classes)
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Transform HOP manager into the one without loops.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkHopRemoveLoops(pNtk *Abc_Ntk_t, pMan *Hop_Man_t) *Abc_Ntk_t {
-    var pNtkAig *Abc_Ntk_t;
-    var pManTemp *Hop_Man_t;
-
-    // iteratively reconstruct the HOP manager to create choice nodes
-    for  Abc_NtkHaigResetReprs( pMan ) != 0  {
-        pMan = Abc_NtkHaigReconstruct( pManTemp = pMan );
-        Hop_ManStop( pManTemp );
-    }
-
-    // traverse in the topological order and create new AIG
-    pNtkAig = Abc_NtkHaigRecreateAig( pNtk, pMan );
-    Hop_ManStop( pMan );
-    return pNtkAig;
+// Abc_NtkHaigResetReprs normalizes classes, chooses earliest topological IDs,
+// and returns the number of referenced non-representative members.
+func Abc_NtkHaigResetReprs(manager *Hop_Man_t) int32 {
+	objects := hop.Hop_ManObjects(manager)
+	for _, object := range objects {
+		repr := haigDataNode(hop.Hop_ObjData(object))
+		if repr != nil && haigDataNode(hop.Hop_ObjData(repr)) == object {
+			hop.Hop_ObjSetData(repr, repr)
+		}
+		if repr == object {
+			hop.Hop_ObjSetData(object, nil)
+		}
+	}
+	for _, object := range objects {
+		if hop.Hop_ObjData(object) == nil {
+			continue
+		}
+		repr := hop.Hop_ObjRepr(object)
+		hop.Hop_ObjSetData(repr, repr)
+		hop.Hop_ObjSetData(object, repr)
+	}
+	for _, object := range objects {
+		if hop.Hop_ObjData(object) == nil {
+			continue
+		}
+		repr := hop.Hop_ObjRepr(object)
+		if repr.Id > object.Id {
+			hop.Hop_ObjSetData(repr, object)
+			hop.Hop_ObjSetData(object, object)
+		} else {
+			hop.Hop_ObjSetData(object, repr)
+		}
+	}
+	var fanouts int32
+	for _, object := range objects {
+		if hop.Hop_ObjData(object) == nil {
+			continue
+		}
+		repr := hop.Hop_ObjRepr(object)
+		if hop.Hop_ObjData(object) != repr || repr.Id > object.Id {
+			panic("HAIG representative normalization failed")
+		}
+		if object != repr && hop.Hop_ObjRefs(object) > 0 {
+			fanouts++
+		}
+	}
+	return fanouts
 }
 
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+// Abc_NtkHopRemoveLoops repeatedly collapses classes with live fanout, then
+// reconstructs the AIG with only choices that cannot introduce a dependency loop.
+func Abc_NtkHopRemoveLoops(network *Abc_Ntk_t, manager *Hop_Man_t) *Abc_Ntk_t {
+	for manager != nil && Abc_NtkHaigResetReprs(manager) != 0 {
+		temp := manager
+		manager = Abc_NtkHaigReconstruct(temp)
+		hop.Hop_ManStop(temp)
+		if manager == nil {
+			return nil
+		}
+	}
+	if manager == nil {
+		return nil
+	}
+	result := Abc_NtkHaigRecreateAig(network, manager)
+	hop.Hop_ManStop(manager)
+	return result
+}
