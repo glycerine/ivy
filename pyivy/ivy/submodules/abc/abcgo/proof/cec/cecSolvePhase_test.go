@@ -11,7 +11,7 @@ func TestSolverPhaseNormalization(t *testing.T) {
 	n := gia.Gia_ManAppendAnd(g, a^1, b^1)
 	gia.Gia_ManAppendCo(g, n)
 	for _, flip := range []int32{0, 1} {
-		pars := &Cec_ParSat_t{nBTLimit: 1000, fPolarFlip: flip}
+		pars := &Cec_ParSat_t{NBTLimit: 1000, fPolarFlip: flip}
 		classic := newCecClassicSolver(g, pars)
 		if classic.check(n) != 0 || classic.vars[n>>1]&1 != flip {
 			t.Fatalf("classic polarity flip %d: %d", flip, classic.vars[n>>1])

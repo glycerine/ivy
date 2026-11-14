@@ -32,7 +32,7 @@ func TestCec4SweepMixedGatesExhaustive(t *testing.T) {
 			for k := 0; k < 4; k++ {
 				gia.Gia_ManAppendCo(g, lits[len(lits)-1-k]^int32(r.Intn(2)))
 			}
-			pars := Cec_ParFra_t{jType: mode, nWords: 1, nRounds: 1, nItersMax: 10, nBTLimit: 500, nCallsRecycle: 1, nSatVarMax: 1}
+			pars := Cec_ParFra_t{JType: mode, NWords: 1, NRounds: 1, NItersMax: 10, NBTLimit: 500, NCallsRecycle: 1, nSatVarMax: 1}
 			out, cex, _ := cec4Sweep(g, &pars, false, true)
 			if cex != nil || out == nil {
 				t.Fatalf("mode=%d seed=%d missing result", mode, seed)

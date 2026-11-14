@@ -25,13 +25,13 @@ func TestSemiformalSourceDiagnostics(t *testing.T) {
 		gia.Gia_ObjSetNext(g, x>>1, y>>1)
 		var pars Cec_ParSmf_t
 		Cec_ManSmfSetDefaultParams(&pars)
-		pars.nWords = 1
-		pars.nFrames = 1
-		pars.nRounds = 1
+		pars.NWords = 1
+		pars.NFrames = 1
+		pars.NRounds = 1
 		if os.Getenv("CEC_ZERO_ROUNDS") == "1" {
-			pars.nRounds = 0
+			pars.NRounds = 0
 		}
-		pars.nMinOutputs = 1
+		pars.NMinOutputs = 1
 		Cec_ManSeqSemiformal(g, &pars)
 		return
 	}

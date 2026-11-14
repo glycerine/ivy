@@ -11,7 +11,7 @@ func TestCec4RegisterOutputSimulationCopiesRegisterInput(t *testing.T) {
 	gia.Gia_ManAppendCo(g, ro)
 	gia.Gia_ManAppendCo(g, pi)
 	gia.Gia_ManSetRegNum(g, 1)
-	p := Cec4_ManCreate(g, &Cec_ParFra_t{nWords: 1})
+	p := Cec4_ManCreate(g, &Cec_ParFra_t{NWords: 1})
 	Cec4_ManSimAlloc(p, 1)
 	ri := gia.Gia_ObjId(g, gia.Gia_ManCo(g, 1))
 	Cec4_ObjSim(p, ri)[0] = 0x9876543210

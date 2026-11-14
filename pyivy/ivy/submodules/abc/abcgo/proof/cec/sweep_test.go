@@ -65,7 +65,7 @@ func TestNativeSweepMiterCounterexample(t *testing.T) {
 	p, _, _ := sweepFixture()
 	params := new(Cec_ParFra_t)
 	Cec_ManFraSetDefaultParams(params)
-	params.fCheckMiter = 1
+	params.FCheckMiter = 1
 	result, err := SatSweep(p, params)
 	if err != nil || result != nil || p.CombinationalCounterexample() == nil {
 		t.Fatalf("miter mismatch: %v", err)
@@ -78,9 +78,9 @@ func TestNativeSweepLevelBoundAndNoIterations(t *testing.T) {
 		params := new(Cec_ParFra_t)
 		Cec_ManFraSetDefaultParams(params)
 		if noIterations {
-			params.nItersMax = 0
+			params.NItersMax = 0
 		} else {
-			params.nLevelMax = 1
+			params.NLevelMax = 1
 		}
 		reduced, err := SatSweep(p, params)
 		if err != nil || reduced == nil {

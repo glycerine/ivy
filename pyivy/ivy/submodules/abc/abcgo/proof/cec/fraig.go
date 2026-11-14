@@ -10,9 +10,9 @@ func Cec_FraigCombinational(graph *Aig_Man_t, conflicts, verbose int32) *Aig_Man
 	Cec_ManFraSetDefaultParams(params)
 	params.fSatSweeping = 1
 	params.fUseOrigIds = 1
-	params.nBTLimit = conflicts
-	params.nItersMax = 20
-	params.fVerbose = verbose
+	params.NBTLimit = conflicts
+	params.NItersMax = 20
+	params.FVerbose = verbose
 	converted := gia.Gia_ManFromAigSimple(graph)
 	defer gia.Gia_ManStop(converted)
 	reduced := Cec_ManSatSweeping(converted, params, 0)

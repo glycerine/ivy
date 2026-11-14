@@ -34,10 +34,10 @@ func cecOriginalSweepMappedClock(graph, original *Gia_Man_t, sourceIDs []int32, 
 	if words := graph.SimulationWordCount(); words > 0 && len(graph.SimulationInputs()) != int(gia.Gia_ManCiNum(graph)*words) {
 		return nil, fmt.Errorf("cec: invalid original sweep input simulation size")
 	}
-	if pars.nWords <= 0 || pars.nRounds < 0 || pars.nItersMax < 0 || pars.nBTLimit < 0 || pars.TimeLimit < 0 {
+	if pars.NWords <= 0 || pars.NRounds < 0 || pars.NItersMax < 0 || pars.NBTLimit < 0 || pars.TimeLimit < 0 {
 		return nil, fmt.Errorf("cec: invalid original sweep parameters")
 	}
-	if pars.fDualOut != 0 && gia.Gia_ManPoNum(graph)&1 != 0 {
+	if pars.FDualOut != 0 && gia.Gia_ManPoNum(graph)&1 != 0 {
 		return nil, fmt.Errorf("cec: dual-output sweep requires output pairs")
 	}
 	for id := int32(0); int(id) < graph.ObjectCount(); id++ {
@@ -80,19 +80,19 @@ func cecOriginalSweepMappedClock(graph, original *Gia_Man_t, sourceIDs []int32, 
 	}
 	fra := Cec_ManFraStart(initial, pars)
 	defer Cec_ManFraStop(fra)
-	if pars.fDualOut != 0 {
+	if pars.FDualOut != 0 {
 		pars.fColorDiff = 1
 	}
 	var simPars Cec_ParSim_t
 	Cec_ManSimSetDefaultParams(&simPars)
-	simPars.nWords = max(pars.nWords, 2*graph.SimulationWordCount())
-	simPars.nFrames = pars.nRounds
-	simPars.fCheckMiter, simPars.fDualOut, simPars.fVerbose = pars.fCheckMiter, pars.fDualOut, pars.fVerbose
+	simPars.NWords = max(pars.NWords, 2*graph.SimulationWordCount())
+	simPars.NFrames = pars.NRounds
+	simPars.FCheckMiter, simPars.FDualOut, simPars.FVerbose = pars.FCheckMiter, pars.FDualOut, pars.FVerbose
 	sim := Cec_ManSimStart(initial, &simPars)
 	defer Cec_ManSimStop(sim)
 	var satPars Cec_ParSat_t
 	Cec_ManSatSetDefaultParams(&satPars)
-	satPars.nBTLimit, satPars.fVerbose = pars.nBTLimit, pars.fVeryVerbose
+	satPars.NBTLimit, satPars.FVerbose = pars.NBTLimit, pars.FVeryVerbose
 	pat := Cec_ManPatStart()
 	defer Cec_ManPatStop(pat)
 	failure := false
@@ -102,24 +102,24 @@ func cecOriginalSweepMappedClock(graph, original *Gia_Man_t, sourceIDs []int32, 
 			failure = Cec_ManSimClassesRefine(sim) != 0
 		}
 	}
-	for i := int32(1); !failure && i <= pars.nItersMax; i++ {
-		if pars.fDualOut != 0 {
-			gia.Gia_ManEquivSetColors(fra.pAig, pars.fVeryVerbose)
+	for i := int32(1); !failure && i <= pars.NItersMax; i++ {
+		if pars.FDualOut != 0 {
+			gia.Gia_ManEquivSetColors(fra.pAig, pars.FVeryVerbose)
 		}
 		queries := Cec_ManFraSpecReduction(fra)
 		if gia.Gia_ManCoNum(queries) == 0 {
 			gia.Gia_ManStop(queries)
-			if pars.fDualOut != 0 && gia.Gia_ManAndNum(fra.pAig) > 0 {
+			if pars.FDualOut != 0 && gia.Gia_ManAndNum(fra.pAig) > 0 {
 				if pars.fColorDiff != 0 {
 					pars.fColorDiff = 0
 				} else {
-					pars.fDualOut = 0
+					pars.FDualOut = 0
 				}
 				continue
 			}
 			break
 		}
-		if pars.fRunCSat != 0 {
+		if pars.FRunCSat != 0 {
 			Cec_ManSatSolveCSat(pat, queries, &satPars)
 		} else {
 			Cec_ManSatSolve(pat, queries, &satPars, gia.Gia_ManOrigIds(fra.pAig), fra.vXorNodes, candidates, 0)
@@ -130,7 +130,7 @@ func cecOriginalSweepMappedClock(graph, original *Gia_Man_t, sourceIDs []int32, 
 			break
 		}
 		old := fra.pAig
-		reduced := gia.Gia_ManEquivReduceAndRemap(old, 0, simPars.fDualOut)
+		reduced := gia.Gia_ManEquivReduceAndRemap(old, 0, simPars.FDualOut)
 		if reduced == nil {
 			break
 		}
@@ -145,15 +145,15 @@ func cecOriginalSweepMappedClock(graph, original *Gia_Man_t, sourceIDs []int32, 
 			break
 		}
 		if fra.nAllFailed > fra.nAllProved+fra.nAllDisproved {
-			if satPars.nBTLimit >= 10001 || pars.fSatSweeping != 0 {
+			if satPars.NBTLimit >= 10001 || pars.fSatSweeping != 0 {
 				break
 			}
-			satPars.nBTLimit *= 10
+			satPars.NBTLimit *= 10
 		}
-		if pars.fDualOut != 0 && pars.fColorDiff != 0 && (gia.Gia_ManAndNum(reduced) < 100000 || fra.nAllProved+fra.nAllDisproved < 10) {
+		if pars.FDualOut != 0 && pars.fColorDiff != 0 && (gia.Gia_ManAndNum(reduced) < 100000 || fra.nAllProved+fra.nAllDisproved < 10) {
 			pars.fColorDiff = 0
-		} else if pars.fDualOut != 0 && (gia.Gia_ManAndNum(reduced) < 20000 || fra.nAllProved+fra.nAllDisproved < 10) {
-			pars.fColorDiff, pars.fDualOut = 0, 0
+		} else if pars.FDualOut != 0 && (gia.Gia_ManAndNum(reduced) < 20000 || fra.nAllProved+fra.nAllDisproved < 10) {
+			pars.fColorDiff, pars.FDualOut = 0, 0
 		}
 	}
 	if candidates != nil {

@@ -17,7 +17,7 @@ func Cec_ManVerifyNaive(graph *Gia_Man_t, params *Cec_ParCec_t) int32 {
 		Cec_ManCecSetDefaultParams(params)
 	}
 	params.Error = nil
-	if graph == nil || gia.Gia_ManPoNum(graph)%2 != 0 || params.nBTLimit < 0 {
+	if graph == nil || gia.Gia_ManPoNum(graph)%2 != 0 || params.NBTLimit < 0 {
 		params.Error = fmt.Errorf("cec: invalid naive verification input")
 		return -1
 	}
@@ -35,7 +35,7 @@ func Cec_ManVerifyNaive(graph *Gia_Man_t, params *Cec_ParCec_t) int32 {
 		params.Error = fmt.Errorf("cec: failed to load mapped CNF")
 		return -1
 	}
-	solver.SetLimits(int64(params.nBTLimit), 0)
+	solver.SetLimits(int64(params.NBTLimit), 0)
 	started := time.Now()
 	nPairs := gia.Gia_ManPoNum(graph) / 2
 	var unsat, sat, undec, trivial int32

@@ -17,7 +17,7 @@ func TestCec4ManagerLifecycleAndDiagnostics(t *testing.T) {
 	gia.Gia_ObjSetRepr(g, b>>1, a>>1)
 	gia.Gia_ObjSetNext(g, a>>1, b>>1)
 	gia.Gia_ObjSetNext(g, b>>1, -1)
-	pars := &Cec_ParFra_t{jType: 2, fVerbose: 1}
+	pars := &Cec_ParFra_t{JType: 2, FVerbose: 1}
 	p := Cec4_ManCreate(g, pars)
 	if p.pSat == nil || p.pSat.JustificationMode != 2 || vec.Vec_IntSize(p.vCexStamps) != g.ObjectCount() {
 		t.Fatal("manager not initialized")

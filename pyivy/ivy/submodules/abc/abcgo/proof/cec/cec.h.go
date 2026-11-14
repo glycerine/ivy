@@ -41,79 +41,79 @@ import "time"
 type Cec_ParSat_t struct {
 	deadline      time.Time
 	SolverType    int32 // SAT solver type
-	nBTLimit      int32 // conflict limit at a node
-	nSatVarMax    int32 // the max number of SAT variables
-	nCallsRecycle int32 // calls to perform before recycling SAT solver
-	fNonChrono    int32 // use non-chronological backtracling (for circuit SAT only)
+	NBTLimit      int32 // conflict limit at a node
+	NSatVarMax    int32 // the max number of SAT variables
+	NCallsRecycle int32 // calls to perform before recycling SAT solver
+	FNonChrono    int32 // use non-chronological backtracling (for circuit SAT only)
 	fPolarFlip    int32 // flops polarity of variables
-	fCheckMiter   int32 // the circuit is the miter
+	FCheckMiter   int32 // the circuit is the miter
 	//    int              fFirstStop;    // stop on the first sat output
-	fLearnCls  int32 // perform clause learning
-	fSaveCexes int32 // saves counter-examples
-	fVerbose   int32 // verbose stats
+	FLearnCls  int32 // perform clause learning
+	FSaveCexes int32 // saves counter-examples
+	FVerbose   int32 // verbose stats
 }
 
 // simulation parameters
 
 type Cec_ParSim_t struct {
 	deadline    time.Time
-	nWords      int32 // the number of simulation words
-	nFrames     int32 // the number of simulation frames
-	nRounds     int32 // the number of simulation rounds
-	nNonRefines int32 // the max number of rounds without refinement
+	NWords      int32 // the number of simulation words
+	NFrames     int32 // the number of simulation frames
+	NRounds     int32 // the number of simulation rounds
+	NNonRefines int32 // the max number of rounds without refinement
 	TimeLimit   int32 // the runtime limit in seconds
-	fDualOut    int32 // miter with separate outputs
-	fCheckMiter int32 // the circuit is the miter
+	FDualOut    int32 // miter with separate outputs
+	FCheckMiter int32 // the circuit is the miter
 	//    int              fFirstStop;    // stop on the first sat output
-	fSeqSimulate int32 // performs sequential simulation
+	FSeqSimulate int32 // performs sequential simulation
 	fLatchCorr   int32 // consider only latch outputs
 	fConstCorr   int32 // consider only constants
 	fVeryVerbose int32 // verbose stats
-	fVerbose     int32 // verbose stats
+	FVerbose     int32 // verbose stats
 }
 
 // semiformal parameters
 
 type Cec_ParSmf_t struct {
-	nWords      int32 // the number of simulation words
-	nRounds     int32 // the number of simulation rounds
-	nFrames     int32 // the max number of time frames
-	nNonRefines int32 // the max number of rounds without refinement
-	nMinOutputs int32 // the min outputs to accumulate
-	nBTLimit    int32 // conflict limit at a node
+	NWords      int32 // the number of simulation words
+	NRounds     int32 // the number of simulation rounds
+	NFrames     int32 // the max number of time frames
+	NNonRefines int32 // the max number of rounds without refinement
+	NMinOutputs int32 // the min outputs to accumulate
+	NBTLimit    int32 // conflict limit at a node
 	TimeLimit   int32 // the runtime limit in seconds
-	fDualOut    int32 // miter with separate outputs
-	fCheckMiter int32 // the circuit is the miter
+	FDualOut    int32 // miter with separate outputs
+	FCheckMiter int32 // the circuit is the miter
 	//    int              fFirstStop;    // stop on the first sat output
-	fVerbose int32 // verbose stats
+	FVerbose int32 // verbose stats
 }
 
 // combinational SAT sweeping parameters
 
 type Cec_ParFra_t struct {
 	Error         error // native driver validation/model errors
-	jType         int32 // solver type
-	nWords        int32 // the number of simulation words
-	nRounds       int32 // the number of simulation rounds
-	nItersMax     int32 // the maximum number of iterations of SAT sweeping
-	nBTLimit      int32 // conflict limit at a node
+	JType         int32 // solver type
+	NWords        int32 // the number of simulation words
+	NRounds       int32 // the number of simulation rounds
+	NItersMax     int32 // the maximum number of iterations of SAT sweeping
+	NBTLimit      int32 // conflict limit at a node
 	TimeLimit     int32 // the runtime limit in seconds
-	nLevelMax     int32 // restriction on the level nodes to be swept
-	nDepthMax     int32 // the depth in terms of steps of speculative reduction
-	nCallsRecycle int32 // calls to perform before recycling SAT solver
+	NLevelMax     int32 // restriction on the level nodes to be swept
+	NDepthMax     int32 // the depth in terms of steps of speculative reduction
+	NCallsRecycle int32 // calls to perform before recycling SAT solver
 	nSatVarMax    int32 // the max number of SAT variables
-	nGenIters     int32 // pattern generation iterations
-	fRewriting    int32 // enables AIG rewriting
-	fCheckMiter   int32 // the circuit is the miter
+	NGenIters     int32 // pattern generation iterations
+	FRewriting    int32 // enables AIG rewriting
+	FCheckMiter   int32 // the circuit is the miter
 	//    int              fFirstStop;    // stop on the first sat output
-	fDualOut     int32 // miter with separate outputs
+	FDualOut     int32 // miter with separate outputs
 	fColorDiff   int32 // miter with separate outputs
 	fSatSweeping int32 // enable SAT sweeping
-	fRunCSat     int32 // enable another solver
-	fUseCones    int32 // use cones
+	FRunCSat     int32 // enable another solver
+	FUseCones    int32 // use cones
 	fUseOrigIds  int32 // enable recording of original IDs
-	fVeryVerbose int32 // verbose stats
-	fVerbose     int32 // verbose stats
+	FVeryVerbose int32 // verbose stats
+	FVerbose     int32 // verbose stats
 	iOutFail     int32 // the failed output
 }
 
@@ -122,15 +122,15 @@ type Cec_ParFra_t struct {
 type Cec_ParCec_t struct {
 	// Error reports invalid input or model validation failures from a verification run.
 	Error     error
-	nBTLimit  int32 // conflict limit at a node
+	NBTLimit  int32 // conflict limit at a node
 	TimeLimit int32 // the runtime limit in seconds
 	//    int              fFirstStop;    // stop on the first sat output
 	fUseSmartCnf int32 // use smart CNF computation
 	fRewriting   int32 // enables AIG rewriting
-	fNaive       int32 // performs naive SAT-based checking
-	fSilent      int32 // print no messages
-	fVeryVerbose int32 // verbose stats
-	fVerbose     int32 // verbose stats
+	FNaive       int32 // performs naive SAT-based checking
+	FSilent      int32 // print no messages
+	FVeryVerbose int32 // verbose stats
+	FVerbose     int32 // verbose stats
 	iOutFail     int32 // the number of failed output
 }
 
@@ -140,22 +140,22 @@ type Cec_ParCor_t struct {
 	deadline     time.Time
 	nWords       int32 // the number of simulation words
 	nRounds      int32 // the number of simulation rounds
-	nFrames      int32 // the number of time frames
-	nPrefix      int32 // the number of time frames in the prefix
-	nBTLimit     int32 // conflict limit at a node
+	NFrames      int32 // the number of time frames
+	NPrefix      int32 // the number of time frames in the prefix
+	NBTLimit     int32 // conflict limit at a node
 	nLevelMax    int32 // (scorr only) the max number of levels
 	nStepsMax    int32 // (scorr only) the max number of induction steps
-	fLatchCorr   int32 // consider only latch outputs
-	fConstCorr   int32 // consider only constants
-	fUseRings    int32 // use rings
-	fMakeChoices int32 // use equilvaences as choices
-	fUseCSat     int32 // use circuit-based solver
+	FLatchCorr   int32 // consider only latch outputs
+	FConstCorr   int32 // consider only constants
+	FUseRings    int32 // use rings
+	FMakeChoices int32 // use equilvaences as choices
+	FUseCSat     int32 // use circuit-based solver
 	//    int              fFirstStop;    // stop on the first sat output
 	fUseSmartCnf  int32 // use smart CNF computation
-	fStopWhenGone int32 // quit when PO is not a candidate constant
-	fVerboseFlops int32 // verbose stats
+	FStopWhenGone int32 // quit when PO is not a candidate constant
+	FVerboseFlops int32 // verbose stats
 	fVeryVerbose  int32 // verbose stats
-	fVerbose      int32 // verbose stats
+	FVerbose      int32 // verbose stats
 	// callback
 	pData any
 	pFunc any
@@ -167,11 +167,11 @@ type Cec_ParChc_t struct {
 	Error        error // native choice validation/proof errors
 	nWords       int32 // the number of simulation words
 	nRounds      int32 // the number of simulation rounds
-	nBTLimit     int32 // conflict limit at a node
+	NBTLimit     int32 // conflict limit at a node
 	fUseRings    int32 // use rings
-	fUseCSat     int32 // use circuit-based solver
+	FUseCSat     int32 // use circuit-based solver
 	fVeryVerbose int32 // verbose stats
-	fVerbose     int32 // verbose stats
+	FVerbose     int32 // verbose stats
 }
 
 // sequential synthesis parameters

@@ -14,7 +14,7 @@ func TestCec4ManagerSATAndRecycle(t *testing.T) {
 		a, b := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
 		x := gia.Gia_ManAppendAnd(g, a, b)
 		y := gia.Gia_ManAppendAnd(g, a, b)
-		m := &Cec4_Man_t{pNew: g, pPars: &Cec_ParFra_t{jType: mode, nBTLimit: 1000, nCallsRecycle: 100, nSatVarMax: 100}, vFails: vec.Vec_BitStart(int(gia.Gia_ManObjNum(g)))}
+		m := &Cec4_Man_t{pNew: g, pPars: &Cec_ParFra_t{JType: mode, NBTLimit: 1000, NCallsRecycle: 100, nSatVarMax: 100}, vFails: vec.Vec_BitStart(int(gia.Gia_ManObjNum(g)))}
 		var easy int32
 		if got := Cec4_ManSolveTwo(m, x>>1, y>>1, 0, &easy, 1); got != glucose2.GLUCOSE_UNSAT {
 			t.Fatalf("mode %d equal gates: %d", mode, got)

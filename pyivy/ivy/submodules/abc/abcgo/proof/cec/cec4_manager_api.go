@@ -12,7 +12,7 @@ import (
 func Cec4_ManCreate(g *Gia_Man_t, pars *Cec_ParFra_t) *Cec4_Man_t {
 	p := &Cec4_Man_t{pAig: g, pPars: pars, timeStart: cecCPUClock()}
 	p.pSat = glucose2.NewABCSolver()
-	p.pSat.JustificationMode = int(pars.jType)
+	p.pSat.JustificationMode = int(pars.JType)
 	p.vFrontier = vec.Vec_PtrAlloc(1000)
 	p.vFanins = vec.Vec_PtrAlloc(100)
 	p.vCexMin = vec.Vec_IntAlloc(100)
@@ -26,7 +26,7 @@ func Cec4_ManCreate(g *Gia_Man_t, pars *Cec_ParFra_t) *Cec4_Man_t {
 	return p
 }
 func Cec4_ManDestroy(p *Cec4_Man_t) {
-	if p.pPars.fVerbose != 0 {
+	if p.pPars.FVerbose != 0 {
 		total := cecCPUClock() - p.timeStart
 		sat := p.timeSatSat0 + p.timeSatSat + p.timeSatUnsat0 + p.timeSatUnsat + p.timeSatUndec
 		entries := []struct {
@@ -81,7 +81,7 @@ var cec4StatsClock struct {
 }
 
 func Cec4_ManPrintStats(g *Gia_Man_t, pars *Cec_ParFra_t, p *Cec4_Man_t, simulation int32) {
-	if pars.fVerbose == 0 {
+	if pars.FVerbose == 0 {
 		return
 	}
 	now := cecCPUClock()

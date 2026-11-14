@@ -53,7 +53,7 @@ func Gia_CommandSpecI(p *Gia_Man_t, frames, conflicts, useStart, checkMiter, ver
 		}
 		var pars Cec_ParSim_t
 		Cec_ManSimSetDefaultParams(&pars)
-		pars.fCheckMiter = checkMiter
+		pars.FCheckMiter = checkMiter
 		if Cec_ManSeqResimulateCounter(p, &pars, cex) != 0 {
 			break
 		}

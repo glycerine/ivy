@@ -30,9 +30,9 @@ func TestSourceChoiceRefinementOptionsAndSoundness(t *testing.T) {
 			Cec_ManChcSetDefaultParams(&p)
 			p.nWords = 1
 			p.nRounds = 1
-			p.nBTLimit = 1000
+			p.NBTLimit = 1000
 			p.fUseRings = rings
-			p.fUseCSat = csat
+			p.FUseCSat = csat
 			q := Cec_ManChoiceComputationVec(g, 2, &p)
 			if q == nil || p.Error != nil {
 				t.Fatalf("rings %d csat %d: %v", rings, csat, p.Error)

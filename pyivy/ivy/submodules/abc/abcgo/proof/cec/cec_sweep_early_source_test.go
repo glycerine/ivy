@@ -13,9 +13,9 @@ func TestSourceSweepPreservesFailureIndexWithoutFailure(t *testing.T) {
 	gia.Gia_ManAppendCo(g, n)
 	var pars Cec_ParFra_t
 	Cec_ManFraSetDefaultParams(&pars)
-	pars.nItersMax = 0
-	pars.nWords = 1
-	pars.nRounds = 1
+	pars.NItersMax = 0
+	pars.NWords = 1
+	pars.NRounds = 1
 	pars.iOutFail = 123
 	out := Cec_ManSatSweeping(g, &pars, 1)
 	if pars.Error != nil || out == nil {

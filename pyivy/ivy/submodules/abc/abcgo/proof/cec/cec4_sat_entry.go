@@ -10,7 +10,7 @@ func cec4EnsureCNF(p *Cec4_Man_t) *cec4CNF {
 		panic("cec4: missing SAT manager")
 	}
 	if p.cnf == nil {
-		p.cnf = newCec4CNF(p.pNew, p.pPars.jType)
+		p.cnf = newCec4CNF(p.pNew, p.pPars.JType)
 		p.pSat = p.cnf.solver
 	} else if p.cnf.graph != p.pNew {
 		panic("cec4: SAT manager graph changed")
@@ -46,7 +46,7 @@ func Cec4_ManSolveTwo(p *Cec4_Man_t, first, second, phase int32, easy *int32, ve
 	if easy == nil || first == second || phase < 0 || phase > 1 {
 		panic("cec4: invalid SAT comparison")
 	}
-	limit := p.pPars.nBTLimit
+	limit := p.pPars.NBTLimit
 	if p.vFails != nil && (vec.Vec_BitEntry(p.vFails, int(first)) != 0 || vec.Vec_BitEntry(p.vFails, int(second)) != 0) {
 		limit = max(int32(1), limit/10)
 	}
@@ -59,7 +59,7 @@ func Cec4_ManSolveTwo(p *Cec4_Man_t, first, second, phase int32, easy *int32, ve
 	*easy = 0
 	c := cec4EnsureCNF(p)
 	p.nCallsSince++
-	if p.nCallsSince > p.pPars.nCallsRecycle && p.pPars.nSatVarMax != 0 && int32(len(c.ids)) > p.pPars.nSatVarMax {
+	if p.nCallsSince > p.pPars.NCallsRecycle && p.pPars.nSatVarMax != 0 && int32(len(c.ids)) > p.pPars.nSatVarMax {
 		Cec4_ManSatSolverRecycle(p)
 		c = p.cnf
 	}

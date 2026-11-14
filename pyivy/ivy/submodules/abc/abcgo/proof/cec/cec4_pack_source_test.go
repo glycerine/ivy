@@ -10,7 +10,7 @@ import (
 func TestCec4PackTryChecksSourcePatternCursor(t *testing.T) {
 	g := gia.Gia_ManStart(4)
 	gia.Gia_ManAppendCi(g)
-	p := Cec4_ManCreate(g, &Cec_ParFra_t{nWords: 1})
+	p := Cec4_ManCreate(g, &Cec_ParFra_t{NWords: 1})
 	Cec4_ManSimAlloc(p, 1)
 	lits := vec.Vec_IntAlloc(1)
 	vec.Vec_IntPush(lits, 2)

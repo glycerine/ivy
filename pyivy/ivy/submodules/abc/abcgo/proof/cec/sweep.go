@@ -18,13 +18,13 @@ func SatSweep(graph *Gia_Man_t, params *Cec_ParFra_t) (*Gia_Man_t, error) {
 		params = new(Cec_ParFra_t)
 		Cec_ManFraSetDefaultParams(params)
 	}
-	if params.nWords < 0 || params.nRounds < 0 || params.nItersMax < 0 || params.nBTLimit < 0 || params.TimeLimit < 0 {
+	if params.NWords < 0 || params.NRounds < 0 || params.NItersMax < 0 || params.NBTLimit < 0 || params.TimeLimit < 0 {
 		return nil, fmt.Errorf("cec: negative sweeping limit")
 	}
 	params.iOutFail = -1
 	graph.ClearCombinationalCounterexample()
 	options := core.DefaultSATOptions()
-	options.ConflictLimit = int64(params.nBTLimit)
+	options.ConflictLimit = int64(params.NBTLimit)
 	options.TreatRegistersAsInputs = true
 	if params.TimeLimit > 0 {
 		options.Deadline = time.Now().Add(time.Duration(params.TimeLimit) * time.Second)
@@ -39,7 +39,7 @@ func SatSweep(graph *Gia_Man_t, params *Cec_ParFra_t) (*Gia_Man_t, error) {
 	if err != nil {
 		return nil, err
 	}
-	words := int(params.nWords)
+	words := int(params.NWords)
 	if words < 1 {
 		words = 1
 	}
@@ -74,12 +74,12 @@ func SatSweep(graph *Gia_Man_t, params *Cec_ParFra_t) (*Gia_Man_t, error) {
 	}
 	buckets := make(map[string][]int32)
 	levels := sweepLevels(graph)
-	if params.nItersMax > 0 {
+	if params.NItersMax > 0 {
 		for id := int32(0); int(id) < len(signatures); id++ {
 			if !options.Deadline.IsZero() && time.Now().After(options.Deadline) {
 				break
 			}
-			if params.nLevelMax > 0 && levels[id] > int(params.nLevelMax) {
+			if params.NLevelMax > 0 && levels[id] > int(params.NLevelMax) {
 				continue
 			}
 			_, _, _, kind := graph.Gate(id)
@@ -132,11 +132,11 @@ func SatSweep(graph *Gia_Man_t, params *Cec_ParFra_t) (*Gia_Man_t, error) {
 			graph.SetNext(root, int32(id))
 		}
 	}
-	if params.fCheckMiter != 0 {
+	if params.FCheckMiter != 0 {
 		check := options
 		check.TreatRegistersAsInputs = true
 		var result core.Result
-		if params.fDualOut != 0 {
+		if params.FDualOut != 0 {
 			result, err = core.VerifyPairs(graph, check)
 		} else {
 			result, err = core.VerifyMiter(graph, check)

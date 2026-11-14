@@ -64,7 +64,7 @@ func Cec_ManSatSolveSeq(info *Vec_Ptr_t, p *Gia_Man_t, pars *Cec_ParSat_t, regs 
 		Cec_ManSatSolveSeq_rec(sat, p, gia.Gia_ManObj(p, lit>>1), info, next, regs)
 		next++
 	}
-	if sat.pPars.fVerbose != 0 {
+	if sat.pPars.FVerbose != 0 {
 		Cec_ManSatPrintStats(sat)
 	}
 	if patterns != nil {

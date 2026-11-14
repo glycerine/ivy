@@ -14,7 +14,7 @@ func TestCec4SweepPreservesOutputs(t *testing.T) {
 		z := gia.Gia_ManAppendAnd(g, y, c^1)
 		gia.Gia_ManAppendCo(g, x)
 		gia.Gia_ManAppendCo(g, z)
-		p := Cec_ParFra_t{jType: mode, nWords: 1, nRounds: 1, nItersMax: 10, nBTLimit: 1000}
+		p := Cec_ParFra_t{JType: mode, NWords: 1, NRounds: 1, NItersMax: 10, NBTLimit: 1000}
 		out, cex, stats := cec4Sweep(g, &p, false, true)
 		if stats.unsat == 0 {
 			t.Fatalf("mode %d: no SAT proof exercised", mode)
@@ -55,7 +55,7 @@ func TestCec4SweepPreservesSmallAIGs(t *testing.T) {
 			}
 			gia.Gia_ManAppendCo(g, lits[len(lits)-1])
 			gia.Gia_ManAppendCo(g, lits[len(lits)-2]^1)
-			p := Cec_ParFra_t{jType: mode, nWords: 1, nRounds: 1, nItersMax: 10, nBTLimit: 100}
+			p := Cec_ParFra_t{JType: mode, NWords: 1, NRounds: 1, NItersMax: 10, NBTLimit: 100}
 			out, cex, _ := cec4Sweep(g, &p, false, true)
 			if cex != nil || out == nil {
 				t.Fatalf("mode %d seed %d: missing output", mode, seed)

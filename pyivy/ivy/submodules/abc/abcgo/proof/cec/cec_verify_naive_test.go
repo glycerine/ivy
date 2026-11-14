@@ -28,7 +28,7 @@ func naiveTestGraph(unequal bool) *gia.Gia_Man_t {
 func TestNaiveMappedCNFChecksBothDirectionsAndKeepsSourceState(t *testing.T) {
 	for _, different := range []bool{false, true} {
 		g := naiveTestGraph(different)
-		p := Cec_ParCec_t{nBTLimit: 1000, iOutFail: 17}
+		p := Cec_ParCec_t{NBTLimit: 1000, iOutFail: 17}
 		got := Cec_ManVerifyNaive(g, &p)
 		want := int32(1)
 		if different {
@@ -72,7 +72,7 @@ func TestNaiveVerificationAgainstOriginalABC(t *testing.T) {
 				}
 			}
 		}
-		p := Cec_ParCec_t{nBTLimit: 1000}
+		p := Cec_ParCec_t{NBTLimit: 1000}
 		got := Cec_ManVerifyNaive(g, &p)
 		if got != want {
 			t.Fatalf("different %v: Go %d ABC %d: %s", different, got, want, text)
@@ -96,7 +96,7 @@ func TestNaiveVerificationKeepsSourceWitnessAndChecksAllPairs(t *testing.T) {
 		t.Fatal(err)
 	}
 	before := g.CombinationalCounterexample()
-	p := Cec_ParCec_t{nBTLimit: 1000, iOutFail: 19}
+	p := Cec_ParCec_t{NBTLimit: 1000, iOutFail: 19}
 	if got := Cec_ManVerifyNaive(g, &p); got != 0 || p.Error != nil {
 		t.Fatalf("status %d error %v", got, p.Error)
 	}
@@ -114,7 +114,7 @@ func TestNaiveVerificationConstantOutputs(t *testing.T) {
 			second = 1
 		}
 		gia.Gia_ManAppendCo(g, second)
-		p := Cec_ParCec_t{nBTLimit: 100}
+		p := Cec_ParCec_t{NBTLimit: 100}
 		want := int32(1)
 		if different {
 			want = 0

@@ -68,14 +68,14 @@ func Cec_ManSeqDeriveInfoInitRandom(info *Vec_Ptr_t, p *Gia_Man_t, cex *Abc_Cex_
 }
 func Cec_ManSeqResimulate(p *Cec_ManSim_t, info *Vec_Ptr_t) int32 {
 	regs, pis, pos := gia.Gia_ManRegNum(p.pAig), gia.Gia_ManPiNum(p.pAig), gia.Gia_ManPoNum(p.pAig)
-	if vec.Vec_PtrSize(info) != int(regs+pis*p.pPars.nFrames) {
+	if vec.Vec_PtrSize(info) != int(regs+pis*p.pPars.NFrames) {
 		panic("cec: sequential simulation frame layout mismatch")
 	}
 	for k := int32(0); k < regs; k++ {
 		copy(cecInfo(p.vCoSimInfo, pos+k), cecInfo(info, k))
 	}
 	k := regs
-	for frame := int32(0); frame < p.pPars.nFrames; frame++ {
+	for frame := int32(0); frame < p.pPars.NFrames; frame++ {
 		if !p.pPars.deadline.IsZero() && !time.Now().Before(p.pPars.deadline) {
 			return 0
 		}
@@ -103,9 +103,9 @@ func Cec_ManSeqResimulateInfo(p *Gia_Man_t, info *Vec_Ptr_t, state *Abc_Cex_t, c
 	}
 	var pars Cec_ParSim_t
 	Cec_ManSimSetDefaultParams(&pars)
-	pars.nFrames = remaining / pis
-	pars.nWords = int32(vec.Vec_PtrReadWordsSimInfo(info))
-	pars.fCheckMiter = check
+	pars.NFrames = remaining / pis
+	pars.NWords = int32(vec.Vec_PtrReadWordsSimInfo(info))
+	pars.FCheckMiter = check
 	cecSimRefs(p)
 	sim := Cec_ManSimStart(p, &pars)
 	sim.pBestState = state
@@ -119,9 +119,9 @@ func Cec_ManSeqResimulateCounter(p *Gia_Man_t, pars *Cec_ParSim_t, cex *Abc_Cex_
 		return -1
 	}
 	gia.Gia_ManRandom(1)
-	info := vec.Vec_PtrAllocSimInfo(int(gia.Gia_ManRegNum(p)+gia.Gia_ManPiNum(p)*(pars.nFrames+cex.IFrame+1)), 1)
+	info := vec.Vec_PtrAllocSimInfo(int(gia.Gia_ManRegNum(p)+gia.Gia_ManPiNum(p)*(pars.NFrames+cex.IFrame+1)), 1)
 	Cec_ManSeqDeriveInfoFromCex(info, p, cex)
-	return Cec_ManSeqResimulateInfo(p, info, nil, pars.fCheckMiter)
+	return Cec_ManSeqResimulateInfo(p, info, nil, pars.FCheckMiter)
 }
 func Cec_ManCountNonConstOutputs(p *Gia_Man_t) int32 {
 	if !p.HasRepresentatives() {
@@ -171,21 +171,21 @@ func Cec_ManSeqSemiformal(p *Gia_Man_t, pars *Cec_ParSmf_t) int32 {
 	state.IPo = -1
 	var sat Cec_ParSat_t
 	Cec_ManSatSetDefaultParams(&sat)
-	sat.nBTLimit = pars.nBTLimit
-	sat.fVerbose = pars.fVerbose
-	if sat.fVerbose != 0 {
+	sat.NBTLimit = pars.NBTLimit
+	sat.FVerbose = pars.FVerbose
+	if sat.FVerbose != 0 {
 		fmt.Print("Starting: ")
 		gia.Gia_ManEquivPrintClasses(p, 0, 0)
 	}
 	noRefinements, result := int32(0), int32(0)
 	gia.Gia_ManCleanMark0(p)
-	for round := int32(0); round < pars.nRounds; round++ {
+	for round := int32(0); round < pars.NRounds; round++ {
 		if Cec_ManCheckNonTrivialCands(p) == 0 {
 			fmt.Println("Cec_ManSeqSemiformal: There are only trivial equiv candidates left (PO drivers). Quitting.")
 			break
 		}
 		var frames int32
-		model := gia.Gia_ManSpecReduceInitFrames(p, state, pars.nFrames, &frames, pars.fDualOut, pars.nMinOutputs)
+		model := gia.Gia_ManSpecReduceInitFrames(p, state, pars.NFrames, &frames, pars.FDualOut, pars.NMinOutputs)
 		if model == nil {
 			fmt.Println("Quitting refinement because miter could not be unrolled.")
 			break
@@ -193,21 +193,21 @@ func Cec_ManSeqSemiformal(p *Gia_Man_t, pars *Cec_ParSmf_t) int32 {
 		if gia.Gia_ManRegNum(model) != 0 || gia.Gia_ManPiNum(model) != gia.Gia_ManPiNum(p)*frames {
 			panic("cec: invalid semiformal unrolling interface")
 		}
-		if pars.fVerbose != 0 {
+		if pars.FVerbose != 0 {
 			fmt.Printf("Unrolled for %d frames.\n", frames)
 		}
-		info := vec.Vec_PtrAllocSimInfo(int(gia.Gia_ManRegNum(p)+gia.Gia_ManPiNum(p)*(frames+16)), int(pars.nWords))
+		info := vec.Vec_PtrAllocSimInfo(int(gia.Gia_ManRegNum(p)+gia.Gia_ManPiNum(p)*(frames+16)), int(pars.NWords))
 		Cec_ManSeqDeriveInfoInitRandom(info, p, state)
 		var patterns int32
 		Cec_ManSatSolveSeq(info, model, &sat, gia.Gia_ManRegNum(p), &patterns)
 		gia.Gia_ManStop(model)
 
-		result = Cec_ManSeqResimulateInfo(p, info, state, pars.fCheckMiter)
+		result = Cec_ManSeqResimulateInfo(p, info, state, pars.FCheckMiter)
 		if state.IPo < 0 {
 			panic("cec: missing semiformal hit counter")
 		}
 		state.IPo = -1
-		if pars.fVerbose != 0 {
+		if pars.FVerbose != 0 {
 			fmt.Printf("BMC = %3d ", patterns)
 			gia.Gia_ManEquivPrintClasses(p, 0, 0)
 		}
@@ -226,12 +226,12 @@ func Cec_ManSeqSemiformal(p *Gia_Man_t, pars *Cec_ParSmf_t) int32 {
 			noRefinements = 0
 		} else {
 			noRefinements++
-			if noRefinements == pars.nNonRefines {
+			if noRefinements == pars.NNonRefines {
 				break
 			}
 		}
 	}
-	if pars.fCheckMiter != 0 {
+	if pars.FCheckMiter != 0 {
 		if n := Cec_ManCountNonConstOutputs(p); n != 0 {
 			fmt.Printf("The number of POs that are not const-0 candidates = %d.\n", n)
 		}

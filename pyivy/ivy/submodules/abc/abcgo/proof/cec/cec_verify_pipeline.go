@@ -28,7 +28,7 @@ func cecVerifyPipeline(graph *Gia_Man_t, pars *Cec_ParCec_t, sweep cecSweepRunne
 	clean := gia.Gia_ManCleanup(work)
 	gia.Gia_ManStop(work)
 	work = clean
-	if pars.fNaive != 0 {
+	if pars.FNaive != 0 {
 		status := Cec_ManVerifyNaive(work, pars)
 		if status == 0 && work.CombinationalCounterexample() != nil {
 			gia.SwapCombinationalCounterexamples(graph, work)
@@ -50,13 +50,13 @@ func cecVerifyPipeline(graph *Gia_Man_t, pars *Cec_ParCec_t, sweep cecSweepRunne
 	}
 	var sweepPars Cec_ParFra_t
 	Cec_ManFraSetDefaultParams(&sweepPars)
-	sweepPars.nItersMax = 1000
-	sweepPars.nBTLimit = pars.nBTLimit
+	sweepPars.NItersMax = 1000
+	sweepPars.NBTLimit = pars.NBTLimit
 	sweepPars.TimeLimit = pars.TimeLimit
-	sweepPars.fVerbose = pars.fVerbose
-	sweepPars.fVeryVerbose = pars.fVeryVerbose
-	sweepPars.fCheckMiter = 1
-	sweepPars.fDualOut = 1
+	sweepPars.FVerbose = pars.FVerbose
+	sweepPars.FVeryVerbose = pars.FVeryVerbose
+	sweepPars.FCheckMiter = 1
+	sweepPars.FDualOut = 1
 	reduced, err := sweep(work, &sweepPars)
 	pars.iOutFail = sweepPars.iOutFail
 	if err != nil {
@@ -83,7 +83,7 @@ func cecVerifyPipeline(graph *Gia_Man_t, pars *Cec_ParCec_t, sweep cecSweepRunne
 	if pars.TimeLimit > 0 && time.Since(started) >= time.Duration(pars.TimeLimit)*time.Second {
 		return -1
 	}
-	status, output, err := fallback(reduced, pars.fVerbose)
+	status, output, err := fallback(reduced, pars.FVerbose)
 	if err != nil {
 		pars.Error = err
 		return -1

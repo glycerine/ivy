@@ -51,7 +51,7 @@ func TestVerifyOriginalABC(t *testing.T) {
 		}
 		var pars Cec_ParCec_t
 		Cec_ManCecSetDefaultParams(&pars)
-		pars.fSilent = 1
+		pars.FSilent = 1
 		status := Cec_ManVerify(g, &pars)
 		if status != abcStatus || pars.Error != nil {
 			t.Fatalf("unequal %v: Go %d (%v), ABC %d: %s", unequal, status, pars.Error, abcStatus, text)

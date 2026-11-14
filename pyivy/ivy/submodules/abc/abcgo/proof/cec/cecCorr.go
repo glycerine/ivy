@@ -413,8 +413,8 @@ func Cec_ManLoadCounterExamples2(info *Vec_Ptr_t, store *Vec_Int_t, start int32)
 func Cec_ManResimulateCounterExamples(sim *Cec_ManSim_t, store *Vec_Int_t, frames int32) int32 {
 	pairs := Gia_ManCorrCreateRemapping(sim.pAig)
 	cecSimRefs(sim.pAig)
-	sim.pPars.nFrames = frames
-	info := vec.Vec_PtrAllocSimInfo(int(gia.Gia_ManRegNum(sim.pAig)+gia.Gia_ManPiNum(sim.pAig)*frames), int(sim.pPars.nWords))
+	sim.pPars.NFrames = frames
+	info := vec.Vec_PtrAllocSimInfo(int(gia.Gia_ManRegNum(sim.pAig)+gia.Gia_ManPiNum(sim.pAig)*frames), int(sim.pPars.NWords))
 	result := int32(0)
 	for start := int32(0); int(start) < vec.Vec_IntSize(store); {
 		if !sim.pPars.deadline.IsZero() && !time.Now().Before(sim.pPars.deadline) {
@@ -433,8 +433,8 @@ func Cec_ManResimulateCounterExamples(sim *Cec_ManSim_t, store *Vec_Int_t, frame
 }
 func Cec_ManResimulateCounterExamplesComb(sim *Cec_ManSim_t, store *Vec_Int_t) int32 {
 	cecSimRefs(sim.pAig)
-	sim.pPars.nFrames = 1
-	info := vec.Vec_PtrAllocSimInfo(int(gia.Gia_ManCiNum(sim.pAig)), int(sim.pPars.nWords))
+	sim.pPars.NFrames = 1
+	info := vec.Vec_PtrAllocSimInfo(int(gia.Gia_ManCiNum(sim.pAig)), int(sim.pPars.NWords))
 	result := int32(0)
 	for start := int32(0); int(start) < vec.Vec_IntSize(store); {
 		Cec_ManStartSimInfo(info, 0)
@@ -615,12 +615,12 @@ func cecCorrDeadlineExpired(pars *Cec_ParCor_t) bool {
 func cecCorrSim(p *Gia_Man_t, pars *Cec_ParCor_t) *Cec_ManSim_t {
 	var sim Cec_ParSim_t
 	Cec_ManSimSetDefaultParams(&sim)
-	sim.nWords = pars.nWords
-	sim.nFrames = pars.nFrames
-	sim.fVerbose = pars.fVerbose
-	sim.fLatchCorr = pars.fLatchCorr
-	sim.fConstCorr = pars.fConstCorr
-	sim.fSeqSimulate = 1
+	sim.NWords = pars.nWords
+	sim.NFrames = pars.NFrames
+	sim.FVerbose = pars.FVerbose
+	sim.fLatchCorr = pars.FLatchCorr
+	sim.fConstCorr = pars.FConstCorr
+	sim.FSeqSimulate = 1
 	sim.deadline = pars.deadline
 	return Cec_ManSimStart(p, &sim)
 }
@@ -654,20 +654,20 @@ func Cec_ManLSCorrespondenceBmc(p *Gia_Man_t, pars *Cec_ParCor_t, prefix int32) 
 	defer Cec_ManSimStop(sim)
 	var sat Cec_ParSat_t
 	Cec_ManSatSetDefaultParams(&sat)
-	sat.nBTLimit = pars.nBTLimit
-	sat.fVerbose = pars.fVerbose
+	sat.NBTLimit = pars.NBTLimit
+	sat.FVerbose = pars.FVerbose
 	sat.deadline = pars.deadline
 	for {
 		if cecCorrDeadlineExpired(pars) {
 			return
 		}
 		var outputs *Vec_Int_t
-		model := Gia_ManCorrSpecReduceInit(p, pars.nFrames, prefix, 1-pars.fLatchCorr, &outputs, pars.fUseRings)
+		model := Gia_ManCorrSpecReduceInit(p, pars.NFrames, prefix, 1-pars.FLatchCorr, &outputs, pars.FUseRings)
 		if gia.Gia_ManCoNum(model) == 0 {
 			break
 		}
-		if sat.nBTLimit > 0 {
-			sat.nBTLimit = int32(min(int64(sat.nBTLimit)*10, int64(1<<30)))
+		if sat.NBTLimit > 0 {
+			sat.NBTLimit = int32(min(int64(sat.NBTLimit)*10, int64(1<<30)))
 		}
 		var status *Vec_Str_t
 		store := Cec_ManSatSolveMiter(model, &sat, &status)
@@ -678,11 +678,11 @@ func Cec_ManLSCorrespondenceBmc(p *Gia_Man_t, pars *Cec_ParCor_t, prefix int32) 
 			break
 		}
 		before := cecCorrClassSignature(p)
-		Cec_ManResimulateCounterExamples(sim, store, pars.nFrames+1+prefix)
+		Cec_ManResimulateCounterExamples(sim, store, pars.NFrames+1+prefix)
 		if cecCorrDeadlineExpired(pars) {
 			return
 		}
-		Gia_ManCheckRefinements(p, status, outputs, sim, pars.fUseRings)
+		Gia_ManCheckRefinements(p, status, outputs, sim, pars.FUseRings)
 		if slices.Equal(before, cecCorrClassSignature(p)) {
 			cecCorrDiscardDisproved(p, status, outputs, sim)
 		}
@@ -723,7 +723,7 @@ func Cec_ManLSCorrespondenceClasses(p *Gia_Man_t, pars *Cec_ParCor_t) (result in
 	if gia.Gia_ManRegNum(p) == 0 {
 		return 0
 	}
-	if pars.nFrames <= 0 || pars.nWords <= 0 {
+	if pars.NFrames <= 0 || pars.nWords <= 0 {
 		panic("cec: invalid correspondence parameters")
 	}
 	gia.Gia_ManRandom(1)
@@ -741,13 +741,13 @@ func Cec_ManLSCorrespondenceClasses(p *Gia_Man_t, pars *Cec_ParCor_t) (result in
 	}
 	var sat Cec_ParSat_t
 	Cec_ManSatSetDefaultParams(&sat)
-	sat.nBTLimit = pars.nBTLimit
-	sat.fVerbose = pars.fVerbose
+	sat.NBTLimit = pars.NBTLimit
+	sat.FVerbose = pars.FVerbose
 	sat.deadline = pars.deadline
-	if pars.fUseCSat != 0 {
-		sat.nBTLimit = min(sat.nBTLimit, 1000)
+	if pars.FUseCSat != 0 {
+		sat.NBTLimit = min(sat.NBTLimit, 1000)
 	}
-	if pars.fLatchCorr == 0 || pars.nFrames > 1 {
+	if pars.FLatchCorr == 0 || pars.NFrames > 1 {
 		Cec_ManLSCorrespondenceBmc(p, pars, 0)
 		if cecCorrDeadlineExpired(pars) {
 			return -1
@@ -767,7 +767,7 @@ func Cec_ManLSCorrespondenceClasses(p *Gia_Man_t, pars *Cec_ParCor_t) (result in
 		}
 		start := time.Now()
 		var outputs *Vec_Int_t
-		model := Gia_ManCorrSpecReduce(p, pars.nFrames, 1-pars.fLatchCorr, &outputs, pars.fUseRings)
+		model := Gia_ManCorrSpecReduce(p, pars.NFrames, 1-pars.FLatchCorr, &outputs, pars.FUseRings)
 		if gia.Gia_ManCoNum(model) == 0 {
 			return 1
 		}
@@ -780,19 +780,19 @@ func Cec_ManLSCorrespondenceClasses(p *Gia_Man_t, pars *Cec_ParCor_t) (result in
 			return 1
 		}
 		before := cecCorrClassSignature(p)
-		Cec_ManResimulateCounterExamples(sim, store, pars.nFrames+2)
+		Cec_ManResimulateCounterExamples(sim, store, pars.NFrames+2)
 		if cecCorrDeadlineExpired(pars) {
 			return -1
 		}
-		Gia_ManCheckRefinements(p, status, outputs, sim, pars.fUseRings)
+		Gia_ManCheckRefinements(p, status, outputs, sim, pars.FUseRings)
 		if slices.Equal(before, cecCorrClassSignature(p)) {
 			cecCorrDiscardDisproved(p, status, outputs, sim)
 		}
-		if pars.fVerbose != 0 {
+		if pars.FVerbose != 0 {
 			Cec_ManRefinedClassPrintStats(p, status, round+1, time.Since(start).Nanoseconds())
 		}
 		cecCorrCallback(pars)
-		if pars.fStopWhenGone != 0 && gia.Gia_ManPoNum(p) == 1 && gia.Gia_ObjIsConst(p, gia.Gia_ObjFaninId0p(p, gia.Gia_ManPo(p, 0))) == 0 {
+		if pars.FStopWhenGone != 0 && gia.Gia_ManPoNum(p) == 1 && gia.Gia_ObjIsConst(p, gia.Gia_ObjFaninId0p(p, gia.Gia_ManPo(p, 0))) == 0 {
 			return 0
 		}
 		if slices.Equal(before, cecCorrClassSignature(p)) {
@@ -913,7 +913,7 @@ func Cec_ManLSCorrespondence(p *Gia_Man_t, pars *Cec_ParCor_t) *Gia_Man_t {
 		return nil
 	}
 	p.ClearRepresentatives()
-	if pars.nPrefix == 0 {
+	if pars.NPrefix == 0 {
 		status := Cec_ManLSCorrespondenceClasses(p, pars)
 		if status < 0 || cecCorrDeadlineExpired(pars) {
 			p.ClearRepresentatives()
@@ -924,7 +924,7 @@ func Cec_ManLSCorrespondence(p *Gia_Man_t, pars *Cec_ParCor_t) *Gia_Man_t {
 			return copy
 		}
 	} else {
-		shifted, mapping := cecCorrDuplicate(p, false, false, Cec_ManComputeInitState(p, pars.nPrefix))
+		shifted, mapping := cecCorrDuplicate(p, false, false, Cec_ManComputeInitState(p, pars.NPrefix))
 		if Cec_ManLSCorrespondenceClasses(shifted, pars) < 0 || cecCorrDeadlineExpired(pars) {
 			p.ClearRepresentatives()
 			return nil
@@ -942,20 +942,20 @@ func Cec_ManLSCorrespondence(p *Gia_Man_t, pars *Cec_ParCor_t) *Gia_Man_t {
 		if err := p.TransferRepresentativesFrom(shifted, inverse); err != nil {
 			panic(err)
 		}
-		pars.fUseCSat = 0
-		pars.nBTLimit = max(pars.nBTLimit, 1000)
-		Cec_ManLSCorrespondenceBmc(p, pars, pars.nPrefix)
+		pars.FUseCSat = 0
+		pars.NBTLimit = max(pars.NBTLimit, 1000)
+		Cec_ManLSCorrespondenceBmc(p, pars, pars.NPrefix)
 		if cecCorrDeadlineExpired(pars) {
 			p.ClearRepresentatives()
 			return nil
 		}
 	}
-	if pars.fMakeChoices != 0 {
+	if pars.FMakeChoices != 0 {
 		return cecCorrChoices(p)
 	}
 	reduced := Gia_ManCorrReduce(p)
 	result, _ := cecCorrDuplicate(reduced, false, true, nil)
-	if pars.fVerboseFlops != 0 {
+	if pars.FVerboseFlops != 0 {
 		Cec_ManPrintFlopEquivs(p)
 	}
 	return result

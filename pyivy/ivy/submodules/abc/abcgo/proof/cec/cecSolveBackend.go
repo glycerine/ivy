@@ -102,16 +102,16 @@ func (s *cecClassicSolver) check(lit int32) int32 {
 	if lit == 1 {
 		return 0
 	}
-	if s.pars.nBTLimit < 0 {
+	if s.pars.NBTLimit < 0 {
 		return -1
 	}
 	s.since++
 	s.calls++
-	if s.pars.nSatVarMax > 0 && s.sat.NumVars() > s.pars.nSatVarMax && s.since > s.pars.nCallsRecycle {
+	if s.pars.NSatVarMax > 0 && s.sat.NumVars() > s.pars.NSatVarMax && s.since > s.pars.NCallsRecycle {
 		s.reset()
 	}
 	encoded := s.encode(lit)
-	s.sat.SetLimits(int64(s.pars.nBTLimit), 0)
+	s.sat.SetLimits(int64(s.pars.NBTLimit), 0)
 	switch s.sat.Solve(encoded) {
 	case bsat.Unsatisfiable:
 		s.unsatCount++

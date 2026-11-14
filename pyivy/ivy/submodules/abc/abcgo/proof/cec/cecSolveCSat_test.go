@@ -17,7 +17,7 @@ func TestCbsSolveMarksOutputsAndStoresPattern(t *testing.T) {
 	gia.Gia_ManAppendCo(g, x)
 	pat := Cec_ManPatStart()
 	defer Cec_ManPatStop(pat)
-	Cec_ManSatSolveCSat(pat, g, &Cec_ParSat_t{nBTLimit: 1000})
+	Cec_ManSatSolveCSat(pat, g, &Cec_ParSat_t{NBTLimit: 1000})
 	if gia.Gia_ObjMark1(gia.Gia_ManCo(g, 0)) != 1 || gia.Gia_ObjMark0(gia.Gia_ManCo(g, 1)) != 1 {
 		t.Fatal("CBS output statuses incorrect")
 	}

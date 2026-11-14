@@ -9,7 +9,7 @@ func TestDividedCorrespondencePreservesTraces(t *testing.T) {
 	p := corrFixture(0)
 	var params Cec_ParCor_t
 	Cec_ManCorSetDefaultParams(&params)
-	params.fLatchCorr = 1
+	params.FLatchCorr = 1
 	params.nWords = 1
 	before := make([][]bool, 16)
 	for pattern := range before {

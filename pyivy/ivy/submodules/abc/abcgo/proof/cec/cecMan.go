@@ -33,7 +33,7 @@ func Cec_ManSatCreate(graph *Gia_Man_t, params *Cec_ParSat_t) *Cec_ManSat_t {
 func (p *Cec_ManSat_t) restart() {
 	p.values = nil
 	p.vCex = vec.Vec_IntAlloc(16)
-	o := core.Options{ConflictLimit: int64(p.pPars.nBTLimit), MaxSATVariables: int(p.pPars.nSatVarMax), RecycleQueries: int(p.pPars.nCallsRecycle), PolarFlip: p.pPars.fPolarFlip != 0, TreatRegistersAsInputs: true, Deadline: p.pPars.deadline}
+	o := core.Options{ConflictLimit: int64(p.pPars.NBTLimit), MaxSATVariables: int(p.pPars.NSatVarMax), RecycleQueries: int(p.pPars.NCallsRecycle), PolarFlip: p.pPars.fPolarFlip != 0, TreatRegistersAsInputs: true, Deadline: p.pPars.deadline}
 	p.proof, p.Error = core.NewManager(p.pAig, o)
 	if p.Error == nil {
 		p.source = newCecSourceSAT(p.pAig, p.pPars)

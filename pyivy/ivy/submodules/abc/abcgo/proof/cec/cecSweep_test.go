@@ -18,7 +18,7 @@ func TestCecSpeculativeReductionAndUpdate(t *testing.T) {
 	gia.Gia_ObjSetRepr(g, b>>1, a>>1)
 	gia.Gia_ObjSetNext(g, a>>1, b>>1)
 	gia.Gia_ObjSetNext(g, b>>1, -1)
-	p := Cec_ManFraStart(g, &Cec_ParFra_t{nDepthMax: 1})
+	p := Cec_ManFraStart(g, &Cec_ParFra_t{NDepthMax: 1})
 	queries := Cec_ManFraSpecReduction(p)
 	if name, spec := queries.Identity(); name != "source" || spec != "source" {
 		t.Fatalf("unexpected source metadata: %q %q", name, spec)
@@ -34,7 +34,7 @@ func TestCecSpeculativeReductionAndUpdate(t *testing.T) {
 		}
 	}
 	gia.Gia_ObjSetMark1(gia.Gia_ManCo(queries, 0), 1)
-	sim := Cec_ManSimStart(g, &Cec_ParSim_t{nWords: 1})
+	sim := Cec_ManSimStart(g, &Cec_ParSim_t{NWords: 1})
 	pat := Cec_ManPatStart()
 	if got := Cec_ManFraClassesUpdate(p, sim, pat, queries); got != 0 {
 		t.Fatalf("unexpected miter failure %d", got)
@@ -47,7 +47,7 @@ func TestCecSpeculativeReductionAndUpdate(t *testing.T) {
 func TestCecFraCreateInfoCopiesSelectedSeries(t *testing.T) {
 	g := gia.Gia_ManStart(4)
 	gia.Gia_ManAppendCi(g)
-	sim := Cec_ManSimStart(g, &Cec_ParSim_t{nWords: 2})
+	sim := Cec_ManSimStart(g, &Cec_ParSim_t{NWords: 2})
 	all := vec.Vec_PtrAllocSimInfo(1, 4)
 	copy(vec.Vec_PtrEntry(all, 0).([]uint32), []uint32{1, 2, 3, 4})
 	Cec_ManFraCreateInfo(sim, sim.vCiSimInfo, all, 1)
@@ -67,7 +67,7 @@ func TestCecClassUpdateRecordsUndecided(t *testing.T) {
 	gia.Gia_ObjSetRepr(g, b>>1, a>>1)
 	gia.Gia_ObjSetNext(g, a>>1, b>>1)
 	gia.Gia_ObjSetNext(g, b>>1, -1)
-	p := Cec_ManFraStart(g, &Cec_ParFra_t{nDepthMax: 1})
+	p := Cec_ManFraStart(g, &Cec_ParFra_t{NDepthMax: 1})
 	queries := Cec_ManFraSpecReduction(p)
 	// Structurally identical nodes do not need a SAT query; build one explicitly
 	// to exercise the source's undecided-output handling.
@@ -76,7 +76,7 @@ func TestCecClassUpdateRecordsUndecided(t *testing.T) {
 	}
 	gia.Gia_ManAppendCo(queries, 0)
 	vec.Vec_IntPushTwo(p.vXorNodes, a>>1, b>>1)
-	sim := Cec_ManSimStart(g, &Cec_ParSim_t{nWords: 1})
+	sim := Cec_ManSimStart(g, &Cec_ParSim_t{NWords: 1})
 	if Cec_ManFraClassesUpdate(p, sim, Cec_ManPatStart(), queries) != 0 {
 		t.Fatal("unexpected miter failure")
 	}

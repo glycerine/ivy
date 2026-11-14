@@ -29,13 +29,13 @@ func CecG_ManSatSolve(patterns *Cec_ManPat_t, graph *Gia_Man_t, pars *Cec_ParSat
 		if lit > 1 && proveZero != 0 && status == 1 {
 			gia.Gia_ManPatchCoDriver(graph, int32(i), 0)
 		}
-		if lit > 1 && status == 0 && pars.fCheckMiter != 0 {
+		if lit > 1 && status == 0 && pars.FCheckMiter != 0 {
 			break
 		}
 	}
 
 	fmt.Printf("Recycles %d\n", sat.recycles)
-	if pars.fVerbose != 0 {
+	if pars.FVerbose != 0 {
 		sat.printStats()
 	}
 }

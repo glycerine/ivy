@@ -13,7 +13,7 @@ func Cec_ManFraSpecReduction(p *Cec_ManFra_t) *Gia_Man_t {
 	g := p.pAig
 	gia.Gia_ManSetPhase(g)
 	vec.Vec_IntClear(p.vXorNodes)
-	if p.pPars.nLevelMax != 0 {
+	if p.pPars.NLevelMax != 0 {
 		gia.Gia_ManLevelNum(g)
 	}
 	out := gia.Gia_ManStart(gia.Gia_ManObjNum(g))
@@ -52,10 +52,10 @@ func Cec_ManFraSpecReduction(p *Cec_ManFra_t) *Gia_Man_t {
 		if reprCopy < 0 || node>>1 == reprCopy>>1 {
 			continue
 		}
-		if p.pPars.nLevelMax != 0 && (gia.Gia_ObjLevelId(g, id) > p.pPars.nLevelMax || gia.Gia_ObjLevelId(g, reprCopy>>1) > p.pPars.nLevelMax) {
+		if p.pPars.NLevelMax != 0 && (gia.Gia_ObjLevelId(g, id) > p.pPars.NLevelMax || gia.Gia_ObjLevelId(g, reprCopy>>1) > p.pPars.NLevelMax) {
 			continue
 		}
-		if p.pPars.fDualOut != 0 {
+		if p.pPars.FDualOut != 0 {
 			var differs int32
 			if p.pPars.fColorDiff != 0 {
 				differs = gia.Gia_ObjDiffColors(g, repr, id)
@@ -75,7 +75,7 @@ func Cec_ManFraSpecReduction(p *Cec_ManFra_t) *Gia_Man_t {
 		gia.Gia_ManAppendCo(out, miter)
 		vec.Vec_IntPushTwo(p.vXorNodes, repr, id)
 		depths[id] = 1 + max(depths[id], depths[repr])
-		if p.pPars.nDepthMax != 0 && depths[id] >= p.pPars.nDepthMax {
+		if p.pPars.NDepthMax != 0 && depths[id] >= p.pPars.NDepthMax {
 			copies[id] = -1
 		}
 	}
@@ -126,7 +126,7 @@ func Cec_ManFraClassesUpdate(p *Cec_ManFra_t, sim *Cec_ManSim_t, pat *Cec_ManPat
 		panic("cec: speculative output count mismatch")
 	}
 	g := p.pAig
-	if p.pPars.nDepthMax != 1 {
+	if p.pPars.NDepthMax != 1 {
 		gia.Gia_ManCleanMark0(g)
 		gia.Gia_ManCleanMark1(g)
 		for k := int32(0); k < gia.Gia_ManCoNum(queries); k++ {

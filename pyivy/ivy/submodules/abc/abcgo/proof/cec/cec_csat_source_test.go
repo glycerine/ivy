@@ -14,7 +14,7 @@ func TestCircuitSATCheckMiterAssertsOnTrailingRecords(t *testing.T) {
 	gia.Gia_ManAppendCo(g, b)
 	var p Cec_ParSat_t
 	Cec_ManSatSetDefaultParams(&p)
-	p.fCheckMiter = 1
+	p.FCheckMiter = 1
 	defer func() {
 		if recover() == nil {
 			t.Fatal("source requires trailing-store assertion")

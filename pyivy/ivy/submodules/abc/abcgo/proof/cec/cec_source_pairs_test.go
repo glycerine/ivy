@@ -28,7 +28,7 @@ func sourcePairFixture(t *testing.T) (*gia.Gia_Man_t, []int32) {
 	y := gia.Gia_ManAppendAnd(g, x, inputs[0])
 	gia.Gia_ManAppendCo(g, x)
 	gia.Gia_ManAppendCo(g, y)
-	p := Cec_ParFra_t{nWords: 1, nRounds: 1, nItersMax: 10, nBTLimit: 1000, nDepthMax: 0, fUseOrigIds: 1}
+	p := Cec_ParFra_t{NWords: 1, NRounds: 1, NItersMax: 10, NBTLimit: 1000, NDepthMax: 0, fUseOrigIds: 1}
 	if out := Cec_ManSatSweeping(g, &p, 1); out == nil || p.Error != nil {
 		t.Fatalf("source sweep: %v", p.Error)
 	}

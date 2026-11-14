@@ -23,7 +23,7 @@ func cec4RandomInputs(sim *cec3Simulation, graph *gia.Gia_Man_t) {
 func cec4PrepareSimulation(graph *gia.Gia_Man_t, pars *Cec_ParFra_t, simOnly bool, managers ...*Cec4_Man_t) (*cec4PatternPacker, *util.Abc_Cex_t) {
 	unpin := cecPinClockThread()
 	defer unpin()
-	if pars.nWords <= 0 || pars.nRounds < 0 || pars.nGenIters < 0 || (!simOnly && pars.nGenIters > 0 && pars.nItersMax <= 0) {
+	if pars.NWords <= 0 || pars.NRounds < 0 || pars.NGenIters < 0 || (!simOnly && pars.NGenIters > 0 && pars.NItersMax <= 0) {
 		panic("cec4: invalid simulation parameters")
 	}
 	var manager *Cec4_Man_t
@@ -31,7 +31,7 @@ func cec4PrepareSimulation(graph *gia.Gia_Man_t, pars *Cec_ParFra_t, simOnly boo
 		manager = managers[0]
 	}
 	simulate := func(sim *cec3Simulation, initialized bool) {
-		a, b := cec4SimulationRoundTimed(sim, graph, pars.nLevelMax, initialized)
+		a, b := cec4SimulationRoundTimed(sim, graph, pars.NLevelMax, initialized)
 		if manager != nil {
 			manager.nSimulates++
 			manager.timeSim += a
@@ -45,10 +45,10 @@ func cec4PrepareSimulation(graph *gia.Gia_Man_t, pars *Cec_ParFra_t, simOnly boo
 	}
 	gia.Gia_ManRandom(1)
 	gia.Gia_ManSetPhase(graph)
-	if pars.nLevelMax != 0 {
+	if pars.NLevelMax != 0 {
 		gia.Gia_ManLevelNum(graph)
 	}
-	if pars.fCheckMiter != 0 {
+	if pars.FCheckMiter != 0 {
 		for i := int32(0); i < gia.Gia_ManCoNum(graph); i++ {
 			if gia.Gia_ObjPhase(gia.Gia_ManCo(graph, i)) != 0 {
 				cex := util.Abc_CexAlloc(0, gia.Gia_ManCiNum(graph), 1)
@@ -57,16 +57,16 @@ func cec4PrepareSimulation(graph *gia.Gia_Man_t, pars *Cec_ParFra_t, simOnly boo
 			}
 		}
 	}
-	pack := newCec4PatternPacker(int(gia.Gia_ManObjNum(graph)), int(pars.nWords))
-	for round := int32(0); round <= pars.nRounds; round++ {
+	pack := newCec4PatternPacker(int(gia.Gia_ManObjNum(graph)), int(pars.NWords))
+	for round := int32(0); round <= pars.NRounds; round++ {
 		cec4RandomInputs(pack.values, graph)
 		simulate(pack.values, round != 0)
-		if pars.fCheckMiter != 0 {
+		if pars.FCheckMiter != 0 {
 			if _, cex := cec4FirstFailingOutput(pack.values, graph); cex != nil {
 				return pack, cex
 			}
 		}
-		if round == 0 || round > 1 && (round-1)%max(int32(1), pars.nRounds/5) == 0 {
+		if round == 0 || round > 1 && (round-1)%max(int32(1), pars.NRounds/5) == 0 {
 			printStats()
 		}
 	}
@@ -76,18 +76,18 @@ func cec4PrepareSimulation(graph *gia.Gia_Man_t, pars *Cec_ParFra_t, simOnly boo
 	candidates := newCec4Candidates(graph)
 	keepGenerating := true
 	var generatedRounds int32
-	for round := int32(0); keepGenerating && round < pars.nGenIters; round++ {
+	for round := int32(0); keepGenerating && round < pars.NGenIters; round++ {
 		generatedRounds++
 		cec4RandomInputs(pack.values, graph)
 		start := cecCPUClock()
-		count, more := cec4GeneratePatterns(graph, pack, candidates, pars.nItersMax)
+		count, more := cec4GeneratePatterns(graph, pack, candidates, pars.NItersMax)
 		keepGenerating = more
 		if manager != nil {
 			manager.nSatSat += int32(count)
 			manager.timeGenPats += (cecCPUClock() - start)
 		}
 		simulate(pack.values, true)
-		if pars.fCheckMiter != 0 {
+		if pars.FCheckMiter != 0 {
 			if _, cex := cec4FirstFailingOutput(pack.values, graph); cex != nil {
 				return pack, cex
 			}

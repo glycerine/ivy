@@ -153,7 +153,7 @@ int main(void) {
 			gia.Gia_ManAppendCi(g)
 		}
 		g.StartRepresentatives()
-		p := Cec_ManSimStart(g, &Cec_ParSim_t{nWords: int32(nw)})
+		p := Cec_ManSimStart(g, &Cec_ParSim_t{NWords: int32(nw)})
 		p.pMems = make([]uint32, (n+2)*(nw+1))
 		fmt.Fprintf(&input, "C %d %d", n, nw)
 		class := cecTestVec()

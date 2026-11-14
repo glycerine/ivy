@@ -129,7 +129,7 @@ func TestSpecialCasesBufferNodeRequiresFurtherVerification(t *testing.T) {
 	gia.Gia_ManAppendCo(g, b)
 	var p Cec_ParCec_t
 	Cec_ManCecSetDefaultParams(&p)
-	p.fSilent = 1
+	p.FSilent = 1
 	if got := Cec_ManHandleSpecialCases(g, &p); got != -1 {
 		t.Fatalf("got %d, want source undecided", got)
 	}
@@ -144,7 +144,7 @@ func TestSpecialCasesEquivalentKeepsCallerState(t *testing.T) {
 		t.Fatal(err)
 	}
 	before := g.CombinationalCounterexample()
-	p := Cec_ParCec_t{iOutFail: 17, fSilent: 1}
+	p := Cec_ParCec_t{iOutFail: 17, FSilent: 1}
 	if got := Cec_ManHandleSpecialCases(g, &p); got != 1 || p.iOutFail != 17 || g.CombinationalCounterexample() != before {
 		t.Fatalf("status %d output %d witness %p", got, p.iOutFail, g.CombinationalCounterexample())
 	}
@@ -160,7 +160,7 @@ func TestSpecialCasesUpdatesPhaseMetadata(t *testing.T) {
 	gia.Gia_ObjSetPhaseValue(gia.Gia_ManObj(g, node>>1), 0)
 	var p Cec_ParCec_t
 	Cec_ManCecSetDefaultParams(&p)
-	p.fSilent = 1
+	p.FSilent = 1
 	if got := Cec_ManHandleSpecialCases(g, &p); got != -1 {
 		t.Fatalf("status %d", got)
 	}

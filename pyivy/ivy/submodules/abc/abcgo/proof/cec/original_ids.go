@@ -10,11 +10,11 @@ import (
 func Gia_ManComputeGiaEquivs(graph *gia.Gia_Man_t, conflicts, verbose int32) *gia.Gia_Man_t {
 	var pars Cec_ParFra_t
 	Cec_ManFraSetDefaultParams(&pars)
-	pars.nItersMax = 100
+	pars.NItersMax = 100
 	pars.fUseOrigIds = 1
 	pars.fSatSweeping = 1
-	pars.nBTLimit = conflicts
-	pars.fVerbose = verbose
+	pars.NBTLimit = conflicts
+	pars.FVerbose = verbose
 	swept := Cec_ManSatSweeping(graph, &pars, 0)
 	if swept == nil {
 		return nil

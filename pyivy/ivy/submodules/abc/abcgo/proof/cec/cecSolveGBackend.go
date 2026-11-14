@@ -124,7 +124,7 @@ func (s *cecGeneralSolver) check(lit int32) int32 {
 	}
 	s.since++
 	s.calls++
-	if s.pars.nSatVarMax > 0 && s.sat.NVars() > int(s.pars.nSatVarMax) && s.since > s.pars.nCallsRecycle {
+	if s.pars.NSatVarMax > 0 && s.sat.NVars() > int(s.pars.NSatVarMax) && s.since > s.pars.NCallsRecycle {
 		s.reset()
 	}
 	encoded := s.encode(lit)
@@ -132,8 +132,8 @@ func (s *cecGeneralSolver) check(lit int32) int32 {
 		s.sat.SetNewRound()
 		s.sat.MarkCone(glucose2.Lit(encoded).Var())
 	}
-	if s.pars.nBTLimit > 0 {
-		s.sat.SetConfBudget(int64(s.pars.nBTLimit))
+	if s.pars.NBTLimit > 0 {
+		s.sat.SetConfBudget(int64(s.pars.NBTLimit))
 	} else {
 		s.sat.BudgetOff()
 	}

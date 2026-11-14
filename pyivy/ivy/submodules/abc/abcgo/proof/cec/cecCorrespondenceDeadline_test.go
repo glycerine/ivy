@@ -18,7 +18,7 @@ func TestCorrespondenceDeadlineStopsAfterCallbackWithoutMutatingSource(t *testin
 		aig.Aig_ManSetRegNum(g, 2)
 		var pars Cec_ParCor_t
 		Cec_ManCorSetDefaultParams(&pars)
-		pars.fLatchCorr = latch
+		pars.FLatchCorr = latch
 		pars.deadline = time.Now().Add(time.Hour)
 		calls := 0
 		pars.pFunc = func(any) { calls++; pars.deadline = time.Now().Add(-time.Second) }
@@ -59,7 +59,7 @@ func TestDirectCorrespondenceDeadlineDiscardsSpeculativeClasses(t *testing.T) {
 			gia.Gia_ManSetRegNum(p, 2)
 			var pars Cec_ParCor_t
 			Cec_ManCorSetDefaultParams(&pars)
-			pars.nPrefix = prefix
+			pars.NPrefix = prefix
 			pars.deadline = time.Now().Add(time.Hour)
 			calls := 0
 			pars.pFunc = func(any) { calls++; pars.deadline = time.Now().Add(-time.Second) }

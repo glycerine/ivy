@@ -14,10 +14,10 @@ type Dch_Pars_t = dch.Params
 func cecChoiceParams(params *Cec_ParChc_t) dch.Params {
 	result := dch.DefaultParams()
 	if params != nil {
-		result.ConflictLimit = int(params.nBTLimit)
+		result.ConflictLimit = int(params.NBTLimit)
 		result.Words = int(params.nWords)
-		result.Verbose = params.fVerbose != 0
-		result.UseCSat = params.fUseCSat != 0
+		result.Verbose = params.FVerbose != 0
+		result.UseCSat = params.FUseCSat != 0
 	}
 	return result
 }
@@ -61,7 +61,7 @@ func Cec_ManChoiceComputation_int(graph *Gia_Man_t, params *Cec_ParChc_t) int32 
 		params.Error = err
 		return -1
 	}
-	if params.nWords <= 0 || params.nRounds < 0 || params.nBTLimit < 0 {
+	if params.nWords <= 0 || params.nRounds < 0 || params.NBTLimit < 0 {
 		params.Error = fmt.Errorf("cec: invalid choice computation parameters")
 		return -1
 	}
@@ -76,14 +76,14 @@ func Cec_ManChoiceComputation_int(graph *Gia_Man_t, params *Cec_ParChc_t) int32 
 	gia.Gia_ManRandom(1)
 	var simPars Cec_ParSim_t
 	Cec_ManSimSetDefaultParams(&simPars)
-	simPars.nWords, simPars.nFrames, simPars.fVerbose = params.nWords, params.nRounds, params.fVerbose
+	simPars.NWords, simPars.NFrames, simPars.FVerbose = params.nWords, params.nRounds, params.FVerbose
 	sim := Cec_ManSimStart(graph, &simPars)
 	defer Cec_ManSimStop(sim)
 	Cec_ManSimClassesPrepare(sim, -1)
 	Cec_ManSimClassesRefine(sim)
 	var satPars Cec_ParSat_t
 	Cec_ManSatSetDefaultParams(&satPars)
-	satPars.nBTLimit, satPars.fVerbose = params.nBTLimit, params.fVerbose
+	satPars.NBTLimit, satPars.FVerbose = params.NBTLimit, params.FVerbose
 	for round := 0; round < 1000; round++ {
 		var outputs *Vec_Int_t
 		query := Cec_ManCombSpecReduce(graph, &outputs, params.fUseRings)
@@ -93,8 +93,8 @@ func Cec_ManChoiceComputation_int(graph *Gia_Man_t, params *Cec_ParChc_t) int32 
 		}
 		var status *Vec_Str_t
 		var store *Vec_Int_t
-		if params.fUseCSat != 0 {
-			store = gia.Cbs_ManSolveMiterNc(query, params.nBTLimit, &status, 0, 0)
+		if params.FUseCSat != 0 {
+			store = gia.Cbs_ManSolveMiterNc(query, params.NBTLimit, &status, 0, 0)
 		} else {
 			store = Cec_ManSatSolveMiter(query, &satPars, &status)
 		}
@@ -144,9 +144,9 @@ func Cec_ManChoiceComputation(graph *Gia_Man_t, params *Cec_ParChc_t) *Gia_Man_t
 	}
 	options := dch.DefaultParams()
 	options.UseGia = true
-	options.ConflictLimit = int(params.nBTLimit)
-	options.UseCSat = params.fUseCSat != 0
-	options.Verbose = params.fVerbose != 0
+	options.ConflictLimit = int(params.NBTLimit)
+	options.UseCSat = params.FUseCSat != 0
+	options.Verbose = params.FVerbose != 0
 	source := gia.Gia_ManToAig(graph, 0)
 	result, err := Dar_ManChoiceNew(source, nil, &options)
 	params.Error = err
@@ -163,15 +163,15 @@ func Cec_ComputeChoices(graph *Gia_Man_t, params *Dch_Pars_t) *Aig_Man_t {
 	}
 	var choice Cec_ParChc_t
 	Cec_ManChcSetDefaultParams(&choice)
-	choice.nBTLimit = int32(params.ConflictLimit)
+	choice.NBTLimit = int32(params.ConflictLimit)
 	if params.UseCSat {
-		choice.fUseCSat = 1
-		if choice.nBTLimit > 100 {
-			choice.nBTLimit = 100
+		choice.FUseCSat = 1
+		if choice.NBTLimit > 100 {
+			choice.NBTLimit = 100
 		}
 	}
 	if params.Verbose {
-		choice.fVerbose = 1
+		choice.FVerbose = 1
 	}
 	result := Cec_ManChoiceComputationVec(graph, 3, &choice)
 	if result == nil {

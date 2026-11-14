@@ -17,7 +17,7 @@ func TestCec4ManagerSweepNodeProvesEquivalentPair(t *testing.T) {
 	for id := int32(0); id < gia.Gia_ManObjNum(g); id++ {
 		gia.Gia_ObjSetValue(gia.Gia_ManObj(g, id), id<<1)
 	}
-	p := Cec4_ManCreate(g, &Cec_ParFra_t{jType: 0, nBTLimit: 100, nWords: 1, nItersMax: 1})
+	p := Cec4_ManCreate(g, &Cec_ParFra_t{JType: 0, NBTLimit: 100, NWords: 1, NItersMax: 1})
 	p.pNew = g
 	p.simState = &cec4SimulationState{sim: newCec3Simulation(int(gia.Gia_ManObjNum(g)), 1)}
 	if got := Cec4_ManSweepNode(p, y>>1, x>>1); got != 1 {
@@ -40,7 +40,7 @@ func TestCec4ManagerSweepResetsStampsAfterFullPatternBatch(t *testing.T) {
 	for id := int32(0); id < gia.Gia_ManObjNum(g); id++ {
 		gia.Gia_ObjSetValue(gia.Gia_ManObj(g, id), id<<1)
 	}
-	p := Cec4_ManCreate(g, &Cec_ParFra_t{jType: 0, nBTLimit: 100, nWords: 1, nItersMax: 1})
+	p := Cec4_ManCreate(g, &Cec_ParFra_t{JType: 0, NBTLimit: 100, NWords: 1, NItersMax: 1})
 	p.pNew = g
 	Cec4_ManSimAlloc(p, 1)
 	p.pattern = 61
@@ -82,7 +82,7 @@ func TestCec4ManagerSweepRejectsOutOfRangeFailureBits(t *testing.T) {
 	gia.Gia_ObjSetValue(gia.Gia_ManObj(g, b>>1), rb)
 	gia.Gia_ObjSetValue(gia.Gia_ManObj(g, x>>1), rx)
 	gia.Gia_ObjSetValue(gia.Gia_ManObj(g, y>>1), ry)
-	p := Cec4_ManCreate(g, &Cec_ParFra_t{jType: 0, nBTLimit: 100, nWords: 1, nItersMax: 1})
+	p := Cec4_ManCreate(g, &Cec_ParFra_t{JType: 0, NBTLimit: 100, NWords: 1, NItersMax: 1})
 	p.pNew = reduced
 	Cec4_ManSimAlloc(p, 1)
 	assertPanic := func(name string, f func()) {
@@ -95,13 +95,13 @@ func TestCec4ManagerSweepRejectsOutOfRangeFailureBits(t *testing.T) {
 		f()
 	}
 	assertPanic("sweep", func() { Cec4_ManSweepNode(p, y>>1, x>>1) })
-	p2 := Cec4_ManCreate(g, &Cec_ParFra_t{jType: 0, nBTLimit: 100})
+	p2 := Cec4_ManCreate(g, &Cec_ParFra_t{JType: 0, NBTLimit: 100})
 	p2.pNew = reduced
 	var easy int32
 	assertPanic("solve", func() { Cec4_ManSolveTwo(p2, rx>>1, ry>>1, 0, &easy, 0) })
 
 	// C checks the first incoming ID before sorting, and its OR short-circuits.
-	p3 := Cec4_ManCreate(g, &Cec_ParFra_t{jType: 0, nBTLimit: 100})
+	p3 := Cec4_ManCreate(g, &Cec_ParFra_t{JType: 0, NBTLimit: 100})
 	p3.pNew = reduced
 	vec.Vec_BitWriteEntry(p3.vFails, int(ra>>1), 1)
 	Cec4_ManSolveTwo(p3, ra>>1, ry>>1, 0, &easy, 0)
@@ -122,7 +122,7 @@ func TestCec4ManagerSweepReadsCopiesCreatedAfterFirstCall(t *testing.T) {
 	for _, lit := range []int32{0, a, b, x, y} {
 		gia.Gia_ObjSetValue(gia.Gia_ManObj(g, lit>>1), lit)
 	}
-	p := Cec4_ManCreate(g, &Cec_ParFra_t{jType: 0, nBTLimit: 100, nWords: 1, nItersMax: 1})
+	p := Cec4_ManCreate(g, &Cec_ParFra_t{JType: 0, NBTLimit: 100, NWords: 1, NItersMax: 1})
 	p.pNew = g
 	Cec4_ManSimAlloc(p, 1)
 	if got := Cec4_ManSweepNode(p, y>>1, x>>1); got != 1 {
@@ -140,7 +140,7 @@ func TestCec4ManagerPatternGenerationRefinesCandidates(t *testing.T) {
 	x, y := gia.Gia_ManAppendAnd(g, a, b), gia.Gia_ManAppendAnd(g, a, c)
 	gia.Gia_ManAppendCo(g, y)
 	gia.Gia_ManSetPhase(g)
-	p := Cec4_ManCreate(g, &Cec_ParFra_t{nWords: 1, nItersMax: 2000})
+	p := Cec4_ManCreate(g, &Cec_ParFra_t{NWords: 1, NItersMax: 2000})
 	Cec4_ManSimAlloc(p, 1)
 	// Keep the inputs in distinct simulation classes while making the two ANDs equal.
 	p.simState.sim.object(a >> 1)[0] = 14

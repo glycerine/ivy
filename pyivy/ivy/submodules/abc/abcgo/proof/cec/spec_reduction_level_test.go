@@ -19,7 +19,7 @@ func TestSpecReductionLevelLimitMatchesSourceCopyIndex(t *testing.T) {
 	gia.Gia_ManAppendCo(g, candidate)
 	g.StartRepresentatives()
 	gia.Gia_ObjSetRepr(g, candidate>>1, repr>>1)
-	p := Cec_ManFraStart(g, &Cec_ParFra_t{nLevelMax: 1, nDepthMax: 1})
+	p := Cec_ManFraStart(g, &Cec_ParFra_t{NLevelMax: 1, NDepthMax: 1})
 	queries := Cec_ManFraSpecReduction(p)
 	if gia.Gia_ManCoNum(queries) != 0 || vec.Vec_IntSize(p.vXorNodes) != 0 {
 		t.Fatalf("source level check should suppress this pair; got %d queries and pairs %v", gia.Gia_ManCoNum(queries), vec.Vec_IntArray(p.vXorNodes))

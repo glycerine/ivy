@@ -16,7 +16,7 @@ func TestSatSolvingTransfersAllCOModelsAndProvedSentinels(t *testing.T) {
 	gia.Gia_ManAppendCo(g, pi)
 	gia.Gia_ManAppendCo(g, ro)
 	gia.Gia_ManSetRegNum(g, 1)
-	p := Cec_ParSat_t{SolverType: -1, nBTLimit: 1000, fSaveCexes: 1}
+	p := Cec_ParSat_t{SolverType: -1, NBTLimit: 1000, FSaveCexes: 1}
 	out := Cec_ManSatSolving(g, &p, 1)
 	if out == nil || gia.Gia_ManRegNum(out) != 1 {
 		t.Fatal("missing sequential graph")

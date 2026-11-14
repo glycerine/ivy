@@ -17,10 +17,10 @@ func TestSimulationSequentialReportSourceDimensions(t *testing.T) {
 	gia.Gia_ManSetRegNum(g, 1)
 	var p Cec_ParSim_t
 	Cec_ManSimSetDefaultParams(&p)
-	p.fSeqSimulate = 1
-	p.nRounds = 0
-	p.nFrames = 3
-	p.nWords = 7
+	p.FSeqSimulate = 1
+	p.NRounds = 0
+	p.NFrames = 3
+	p.NWords = 7
 	old := os.Stdout
 	rd, wr, err := os.Pipe()
 	if err != nil {

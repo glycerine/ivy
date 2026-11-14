@@ -12,9 +12,9 @@ func Cec_LatchCorrespondence(graph *Aig_Man_t, conflicts, useCSat int32) *Aig_Ma
 func Cec_LatchCorrespondenceDeadline(graph *Aig_Man_t, conflicts, useCSat int32, deadline time.Time) *Aig_Man_t {
 	params := new(Cec_ParCor_t)
 	Cec_ManCorSetDefaultParams(params)
-	params.fLatchCorr = 1
-	params.fUseCSat = useCSat
-	params.nBTLimit = conflicts
+	params.FLatchCorr = 1
+	params.FUseCSat = useCSat
+	params.NBTLimit = conflicts
 	params.deadline = deadline
 	return cecCorrespondence(graph, params)
 }
@@ -24,8 +24,8 @@ func Cec_SignalCorrespondence(graph *Aig_Man_t, conflicts, useCSat int32) *Aig_M
 func Cec_SignalCorrespondenceDeadline(graph *Aig_Man_t, conflicts, useCSat int32, deadline time.Time) *Aig_Man_t {
 	params := new(Cec_ParCor_t)
 	Cec_ManCorSetDefaultParams(params)
-	params.fUseCSat = useCSat
-	params.nBTLimit = conflicts
+	params.FUseCSat = useCSat
+	params.NBTLimit = conflicts
 	params.deadline = deadline
 	return cecCorrespondence(graph, params)
 }

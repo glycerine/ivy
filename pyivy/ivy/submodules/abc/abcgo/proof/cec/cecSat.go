@@ -165,9 +165,9 @@ func Cec2_ManPerformSweeping(p *Gia_Man_t, pPars *Cec2_Par_t, ppNew **Gia_Man_t)
 func Cec2_ManSimulateTest(p *Gia_Man_t, pPars0 *Cec_ParFra_t) *Gia_Man_t {
 	var pars Cec2_Par_t
 	Cec2_SetDefaultParams(&pars)
-	pars.nConfLimit = pPars0.nBTLimit
-	pars.fUseCones = pPars0.fUseCones
-	pars.fVerbose = pPars0.fVerbose
+	pars.nConfLimit = pPars0.NBTLimit
+	pars.fUseCones = pPars0.FUseCones
+	pars.fVerbose = pPars0.FVerbose
 	var reduced *Gia_Man_t
 	Cec2_ManPerformSweeping(p, &pars, &reduced)
 	return reduced

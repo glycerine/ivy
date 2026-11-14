@@ -82,8 +82,8 @@ int main(void){Gia_Man_t *g=Gia_ManStart(20);Cec_ParSat_t opts;Cec_ManSat_t *p;i
 	gia.Gia_ManSetPhase(g)
 	var opts Cec_ParSat_t
 	Cec_ManSatSetDefaultParams(&opts)
-	opts.nSatVarMax = 2
-	opts.nCallsRecycle = 0
+	opts.NSatVarMax = 2
+	opts.NCallsRecycle = 0
 	p := Cec_ManSatCreate(g, &opts)
 	defer Cec_ManSatStop(p)
 	var goText strings.Builder
@@ -124,7 +124,7 @@ int main(void){Gia_Man_t *g=Gia_ManStart(20);Cec_ParSat_t opts;Cec_ManSat_t *p;i
 	gia.Gia_ManSetPhase(h)
 	var limitOpts Cec_ParSat_t
 	Cec_ManSatSetDefaultParams(&limitOpts)
-	limitOpts.nBTLimit = 1
+	limitOpts.NBTLimit = 1
 	limitMan := Cec_ManSatCreate(h, &limitOpts)
 	status := Cec_ManSatCheckNode(limitMan, gia.Gia_NotCond(gia.Gia_ManObj(h, root>>1), root&1))
 	if status != -1 {

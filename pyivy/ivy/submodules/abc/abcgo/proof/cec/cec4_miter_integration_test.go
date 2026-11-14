@@ -12,7 +12,7 @@ func TestCec4EntryReplaysNontrivialMiterWitness(t *testing.T) {
 		mismatch := gia.Gia_ManAppendAnd(g, a, b^1)
 		gia.Gia_ManAppendCo(g, 0)
 		gia.Gia_ManAppendCo(g, mismatch)
-		p := Cec_ParFra_t{jType: mode, nWords: 1, nRounds: 1, nItersMax: 10, nBTLimit: 100, fCheckMiter: 1}
+		p := Cec_ParFra_t{JType: mode, NWords: 1, NRounds: 1, NItersMax: 10, NBTLimit: 100, FCheckMiter: 1}
 		if got := Cec4_ManPerformSweeping(g, &p, nil, 0); got != 0 {
 			t.Fatalf("mode %d status %d", mode, got)
 		}

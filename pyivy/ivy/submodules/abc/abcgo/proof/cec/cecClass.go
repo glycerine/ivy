@@ -26,13 +26,13 @@ type Cec_ManSim_t struct {
 }
 
 func Cec_ManSimStart(aig *Gia_Man_t, pars *Cec_ParSim_t) *Cec_ManSim_t {
-	if pars == nil || pars.nWords <= 0 {
+	if pars == nil || pars.NWords <= 0 {
 		panic("invalid CEC simulation parameters")
 	}
-	p := &Cec_ManSim_t{pAig: aig, pPars: pars, nWords: pars.nWords, pSimInfo: make([]int32, gia.Gia_ManObjNum(aig)), iOut: -1, nMems: 1, vClassOld: vec.Vec_IntAlloc(1000), vClassNew: vec.Vec_IntAlloc(1000), vRefinedC: vec.Vec_IntAlloc(10000)}
-	p.vCiSimInfo = vec.Vec_PtrAllocSimInfo(int(gia.Gia_ManCiNum(aig)), int(pars.nWords))
-	if pars.fCheckMiter != 0 || gia.Gia_ManRegNum(aig) != 0 {
-		p.vCoSimInfo = vec.Vec_PtrAllocSimInfo(int(gia.Gia_ManCoNum(aig)), int(pars.nWords))
+	p := &Cec_ManSim_t{pAig: aig, pPars: pars, nWords: pars.NWords, pSimInfo: make([]int32, gia.Gia_ManObjNum(aig)), iOut: -1, nMems: 1, vClassOld: vec.Vec_IntAlloc(1000), vClassNew: vec.Vec_IntAlloc(1000), vRefinedC: vec.Vec_IntAlloc(10000)}
+	p.vCiSimInfo = vec.Vec_PtrAllocSimInfo(int(gia.Gia_ManCiNum(aig)), int(pars.NWords))
+	if pars.FCheckMiter != 0 || gia.Gia_ManRegNum(aig) != 0 {
+		p.vCoSimInfo = vec.Vec_PtrAllocSimInfo(int(gia.Gia_ManCoNum(aig)), int(pars.NWords))
 	}
 	return p
 }
@@ -273,12 +273,12 @@ func Cec_ManSimFindBestPattern(p *Cec_ManSim_t) {
 	p.pBestState.IPo = score
 }
 func Cec_ManSimAnalyzeOutputs(p *Cec_ManSim_t) int32 {
-	if p.pPars.fCheckMiter == 0 {
+	if p.pPars.FCheckMiter == 0 {
 		return 0
 	}
 	n := gia.Gia_ManPoNum(p.pAig)
 	step := int32(1)
-	if p.pPars.fDualOut != 0 {
+	if p.pPars.FDualOut != 0 {
 		if n&1 != 0 {
 			panic("dual-output miter must have pairs")
 		}
@@ -485,7 +485,7 @@ func Cec_ManSimSimulateRound(p *Cec_ManSim_t, infoCis, infoCos *Vec_Ptr_t) int32
 func Cec_ManSimCreateInfo(p *Cec_ManSim_t, infoCis, infoCos *Vec_Ptr_t) {
 	cis := gia.Gia_ManCiNum(p.pAig)
 	pis := gia.Gia_ManPiNum(p.pAig)
-	seq := p.pPars.fSeqSimulate != 0 && gia.Gia_ManRegNum(p.pAig) > 0
+	seq := p.pPars.FSeqSimulate != 0 && gia.Gia_ManRegNum(p.pAig) > 0
 	for i := int32(0); i < cis; i++ {
 		dst := vec.Vec_PtrEntry(infoCis, int(i)).([]uint32)
 		if seq && i >= pis {
@@ -537,7 +537,7 @@ func Cec_ManSimClassesPrepare(p *Cec_ManSim_t, levelMax int32) int32 {
 		}
 		gia.Gia_ObjSetRepr(p.pAig, id, r)
 	}
-	if p.pPars.fSeqSimulate != 0 {
+	if p.pPars.FSeqSimulate != 0 {
 		for i := int32(0); i < gia.Gia_ManRegNum(p.pAig); i++ {
 			o := gia.Gia_ManRo(p.pAig, i)
 			if gia.Gia_ObjValue(o) != 0 {
@@ -563,11 +563,11 @@ func Cec_ManSimClassesPrepare(p *Cec_ManSim_t, levelMax int32) int32 {
 		}
 		return Cec_ManSimSimulateRound(p, p.vCiSimInfo, p.vCoSimInfo)
 	}
-	for p.nWords = 1; p.nWords <= p.pPars.nWords; p.nWords = 2*p.nWords + 1 {
+	for p.nWords = 1; p.nWords <= p.pPars.NWords; p.nWords = 2*p.nWords + 1 {
 		if !p.pPars.deadline.IsZero() && !time.Now().Before(p.pPars.deadline) {
 			return 0
 		}
-		if p.pPars.fVerbose != 0 {
+		if p.pPars.FVerbose != 0 {
 			cecSimClassPrint(p)
 		}
 		for i := 0; i < 4; i++ {
@@ -584,14 +584,14 @@ func Cec_ManSimClassesPrepare(p *Cec_ManSim_t, levelMax int32) int32 {
 }
 func Cec_ManSimClassesRefine(p *Cec_ManSim_t) int32 {
 	cecSimRefs(p.pAig)
-	p.nWords = p.pPars.nWords
+	p.nWords = p.pPars.NWords
 	cecSimEnsureInfo(p.vCiSimInfo, p.nWords)
 	cecSimEnsureInfo(p.vCoSimInfo, p.nWords)
-	for i := int32(0); i < p.pPars.nRounds; i++ {
+	for i := int32(0); i < p.pPars.NRounds; i++ {
 		if !p.pPars.deadline.IsZero() && !time.Now().Before(p.pPars.deadline) {
 			return 0
 		}
-		if p.pPars.fVerbose != 0 && i%max(1, p.pPars.nRounds/5) == 0 {
+		if p.pPars.FVerbose != 0 && i%max(1, p.pPars.NRounds/5) == 0 {
 			cecSimClassPrint(p)
 		}
 		Cec_ManSimCreateInfo(p, p.vCiSimInfo, p.vCoSimInfo)
@@ -599,7 +599,7 @@ func Cec_ManSimClassesRefine(p *Cec_ManSim_t) int32 {
 			return 1
 		}
 	}
-	if p.pPars.fVerbose != 0 {
+	if p.pPars.FVerbose != 0 {
 		cecSimClassPrint(p)
 	}
 	return 0

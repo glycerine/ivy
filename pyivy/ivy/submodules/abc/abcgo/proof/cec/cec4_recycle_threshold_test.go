@@ -28,7 +28,7 @@ func TestCec4SweepRecycleThresholdBoundary(t *testing.T) {
 			gia.Gia_ManAppendCo(g, right)
 			gia.Gia_ManAppendCo(g, left2)
 			gia.Gia_ManAppendCo(g, right2)
-			pars := &Cec_ParFra_t{jType: 0, nWords: 1, nRounds: 1, nItersMax: 10, nBTLimit: 1000, nSatVarMax: tc.maxVars, nCallsRecycle: tc.calls}
+			pars := &Cec_ParFra_t{JType: 0, NWords: 1, NRounds: 1, NItersMax: 10, NBTLimit: 1000, nSatVarMax: tc.maxVars, NCallsRecycle: tc.calls}
 			manager := Cec4_ManCreate(g, pars)
 			defer Cec4_ManDestroy(manager)
 			out, cex, _ := cec4Sweep(g, pars, false, true, manager)
@@ -79,7 +79,7 @@ func runCec4PigeonholeRecycle(t *testing.T, conflictLimit int32) cec4SweepStats 
 	gia.Gia_ManAppendCo(g, formula)
 	gia.Gia_ManAppendCo(g, left)
 	gia.Gia_ManAppendCo(g, right)
-	pars := &Cec_ParFra_t{jType: 0, nWords: 1, nRounds: 1, nItersMax: 10, nGenIters: 0, nBTLimit: conflictLimit, nSatVarMax: 1, nCallsRecycle: 0}
+	pars := &Cec_ParFra_t{JType: 0, NWords: 1, NRounds: 1, NItersMax: 10, NGenIters: 0, NBTLimit: conflictLimit, nSatVarMax: 1, NCallsRecycle: 0}
 	manager := Cec4_ManCreate(g, pars)
 	defer Cec4_ManDestroy(manager)
 	out, cex, stats := cec4Sweep(g, pars, false, true, manager)

@@ -9,7 +9,7 @@ import (
 
 func cecVerifyOptions(p *Cec_ParCec_t) core.Options {
 	options := core.DefaultCECOptions()
-	options.ConflictLimit = int64(p.nBTLimit)
+	options.ConflictLimit = int64(p.NBTLimit)
 	if p.TimeLimit > 0 {
 		options.Deadline = time.Now().Add(time.Duration(p.TimeLimit) * time.Second)
 	}
@@ -48,7 +48,7 @@ func Cec_ManVerify(graph *Gia_Man_t, params *Cec_ParCec_t) int32 {
 func Cec_ManVerifySimple(graph *Gia_Man_t) int32 {
 	params := new(Cec_ParCec_t)
 	Cec_ManCecSetDefaultParams(params)
-	params.fSilent = 1
+	params.FSilent = 1
 	if graph.RegisterCount() != 0 || len(graph.OutputLiterals()) != 2 {
 		return -1
 	}
@@ -65,7 +65,7 @@ func Cec_ManVerifyTwo(left, right *Gia_Man_t, verbose int32) int32 {
 	defer gia.Gia_ManStop(miter)
 	var params Cec_ParCec_t
 	Cec_ManCecSetDefaultParams(&params)
-	params.fVerbose = verbose
+	params.FVerbose = verbose
 	status := Cec_ManVerify(miter, &params)
 	// C transfers the miter witness slot even when it is nil.
 	gia.SwapCombinationalCounterexamples(left, miter)

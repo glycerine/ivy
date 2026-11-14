@@ -33,18 +33,18 @@ func Cec_SequentialSynthesisPart(p *gia.Gia_Man_t, pars *Cec_ParSeq_t) int32 {
 		case pars.fUseScorr != 0:
 			var cor Cec_ParCor_t
 			Cec_ManCorSetDefaultParams(&cor)
-			cor.nBTLimit = pars.nBTLimit
+			cor.NBTLimit = pars.nBTLimit
 			cor.nLevelMax = pars.nLevelMax
-			cor.fVerbose = pars.fVeryVerbose
-			cor.fUseCSat = 1
+			cor.FVerbose = pars.fVeryVerbose
+			cor.FUseCSat = 1
 			Cec_ManLSCorrespondenceClasses(sub, &cor)
 		case pars.fUseLcorr != 0:
 			var cor Cec_ParCor_t
 			Cec_ManCorSetDefaultParams(&cor)
-			cor.fLatchCorr = 1
-			cor.nBTLimit = pars.nBTLimit
-			cor.fVerbose = pars.fVeryVerbose
-			cor.fUseCSat = 1
+			cor.FLatchCorr = 1
+			cor.NBTLimit = pars.nBTLimit
+			cor.FVerbose = pars.fVeryVerbose
+			cor.FUseCSat = 1
 			Cec_ManLSCorrespondenceClasses(sub, &cor)
 		default:
 			gia.Gia_ManSeqCleanupClasses(sub, pars.fConsts, pars.fEquivs, pars.fVerbose)

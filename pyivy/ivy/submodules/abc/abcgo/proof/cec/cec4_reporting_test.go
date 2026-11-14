@@ -15,7 +15,7 @@ func TestCec4EntryVerboseReportsSimulationAndSAT(t *testing.T) {
 	b := gia.Gia_ManAppendAnd(g, a, x)
 	gia.Gia_ManAppendCo(g, b)
 	gia.Gia_ManAppendCo(g, z)
-	pars := Cec_ParFra_t{jType: 0, nWords: 1, nRounds: 1, nItersMax: 4, nBTLimit: 1000, fVerbose: 1}
+	pars := Cec_ParFra_t{JType: 0, NWords: 1, NRounds: 1, NItersMax: 4, NBTLimit: 1000, FVerbose: 1}
 	r, w, err := os.Pipe()
 	if err != nil {
 		t.Fatal(err)
@@ -53,7 +53,7 @@ func TestCec4GeneratedPatternsCountedBeforeEarlyMiterExit(t *testing.T) {
 		root = gia.Gia_ManAppendAnd(g, root, lit)
 	}
 	gia.Gia_ManAppendCo(g, root)
-	pars := Cec_ParFra_t{jType: 0, nWords: 1, nRounds: 0, nGenIters: 1, nItersMax: 2000, fCheckMiter: 1}
+	pars := Cec_ParFra_t{JType: 0, NWords: 1, NRounds: 0, NGenIters: 1, NItersMax: 2000, FCheckMiter: 1}
 	manager := Cec4_ManCreate(g, &pars)
 	defer Cec4_ManDestroy(manager)
 	_, witness := cec4PrepareSimulation(g, &pars, false, manager)
@@ -76,7 +76,7 @@ func TestCec4GeneratedPatternCountResetBeforeSAT(t *testing.T) {
 		root = gia.Gia_ManAppendAnd(g, root, lit)
 	}
 	gia.Gia_ManAppendCo(g, root)
-	pars := Cec_ParFra_t{jType: 0, nWords: 1, nRounds: 0, nGenIters: 1, nItersMax: 2000, nBTLimit: 1000}
+	pars := Cec_ParFra_t{JType: 0, NWords: 1, NRounds: 0, NGenIters: 1, NItersMax: 2000, NBTLimit: 1000}
 	manager := Cec4_ManCreate(g, &pars)
 	defer Cec4_ManDestroy(manager)
 	_, witness, stats := cec4Sweep(g, &pars, false, false, manager)

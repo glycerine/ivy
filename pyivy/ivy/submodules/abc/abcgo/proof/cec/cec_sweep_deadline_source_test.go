@@ -12,9 +12,9 @@ func TestSweepExpiredClockStillRunsFirstIteration(t *testing.T) {
 	g, a, b := sweepFixture()
 	var pars Cec_ParFra_t
 	Cec_ManFraSetDefaultParams(&pars)
-	pars.nWords = 1
-	pars.nRounds = 1
-	pars.nItersMax = 1
+	pars.NWords = 1
+	pars.NRounds = 1
+	pars.NItersMax = 1
 	pars.fUseOrigIds = 1
 	pars.TimeLimit = 1
 	base := time.Unix(100, 0)

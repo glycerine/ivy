@@ -52,7 +52,7 @@ func cec4Sweep(graph *gia.Gia_Man_t, pars *Cec_ParFra_t, simOnly, finishGraph bo
 	}
 	gia.Gia_ManSetRegNum(reduced, gia.Gia_ManRegNum(graph))
 	gia.Gia_ManHashAlloc(reduced)
-	cnf := newCec4CNF(reduced, pars.jType)
+	cnf := newCec4CNF(reduced, pars.JType)
 	if manager != nil {
 		cnf.solver = manager.pSat
 		manager.cnf = cnf
@@ -91,7 +91,7 @@ func cec4Sweep(graph *gia.Gia_Man_t, pars *Cec_ParFra_t, simOnly, finishGraph bo
 		}
 		copies[id] = copyLit
 		gia.Gia_ObjSetValue(gia.Gia_ManObj(graph, id), copyLit)
-		if pars.nLevelMax != 0 && gia.Gia_ObjLevelId(graph, id) > pars.nLevelMax {
+		if pars.NLevelMax != 0 && gia.Gia_ObjLevelId(graph, id) > pars.NLevelMax {
 			continue
 		}
 		repr := gia.Gia_ObjRepr(graph, id)
@@ -122,7 +122,7 @@ func cec4Sweep(graph *gia.Gia_Man_t, pars *Cec_ParFra_t, simOnly, finishGraph bo
 			}
 			return failed[object]
 		}
-		limit := pars.nBTLimit
+		limit := pars.NBTLimit
 		if failure(copies[repr]>>1) || failure(copies[id]>>1) {
 			limit = max(int32(1), limit/10)
 		}
@@ -130,7 +130,7 @@ func cec4Sweep(graph *gia.Gia_Man_t, pars *Cec_ParFra_t, simOnly, finishGraph bo
 		if manager != nil {
 			manager.nCallsSince = int32(calls)
 		}
-		if pars.nSatVarMax != 0 && calls > int(pars.nCallsRecycle) && len(cnf.ids) > int(pars.nSatVarMax) {
+		if pars.nSatVarMax != 0 && calls > int(pars.NCallsRecycle) && len(cnf.ids) > int(pars.nSatVarMax) {
 			cnf.recycle()
 			if manager != nil {
 				manager.pSat = cnf.solver
@@ -150,7 +150,7 @@ func cec4Sweep(graph *gia.Gia_Man_t, pars *Cec_ParFra_t, simOnly, finishGraph bo
 			manager.timeCnf += cnf.cnfTime - cnfBefore
 			manager.nGates[0] += cnf.gates[0] - gatesBefore[0]
 			manager.nGates[1] += cnf.gates[1] - gatesBefore[1]
-			if pars.fVerbose != 0 && status != glucose2.GLUCOSE_UNDEC {
+			if pars.FVerbose != 0 && status != glucose2.GLUCOSE_UNDEC {
 				bucket := 0
 				if status == glucose2.GLUCOSE_UNSAT {
 					bucket = 1
@@ -168,7 +168,7 @@ func cec4Sweep(graph *gia.Gia_Man_t, pars *Cec_ParFra_t, simOnly, finishGraph bo
 			if manager != nil {
 				manager.nSatSat++
 				manager.nPatterns++
-				if pars.fVerbose != 0 && cnf.lastConflicts == 0 {
+				if pars.FVerbose != 0 && cnf.lastConflicts == 0 {
 					manager.timeSatSat0 += elapsed
 				} else {
 					manager.timeSatSat += elapsed
@@ -176,7 +176,7 @@ func cec4Sweep(graph *gia.Gia_Man_t, pars *Cec_ParFra_t, simOnly, finishGraph bo
 			}
 			if pattern == 64*sim.words-2 {
 				resimStart := cecCPUClock()
-				simTime, refTime := cec4SimulationRoundTimed(sim, graph, pars.nLevelMax, true)
+				simTime, refTime := cec4SimulationRoundTimed(sim, graph, pars.NLevelMax, true)
 				if manager != nil {
 					manager.nSimulates++
 					manager.timeSim += simTime
@@ -193,7 +193,7 @@ func cec4Sweep(graph *gia.Gia_Man_t, pars *Cec_ParFra_t, simOnly, finishGraph bo
 			stats.unsat++
 			if manager != nil {
 				manager.nSatUnsat++
-				if pars.fVerbose != 0 && cnf.lastConflicts == 0 {
+				if pars.FVerbose != 0 && cnf.lastConflicts == 0 {
 					manager.timeSatUnsat0 += elapsed
 				} else {
 					manager.timeSatUnsat += elapsed
@@ -211,7 +211,7 @@ func cec4Sweep(graph *gia.Gia_Man_t, pars *Cec_ParFra_t, simOnly, finishGraph bo
 	}
 	if pattern > 0 {
 		resimStart := cecCPUClock()
-		simTime, refTime := cec4SimulationRoundTimed(sim, graph, pars.nLevelMax, true)
+		simTime, refTime := cec4SimulationRoundTimed(sim, graph, pars.NLevelMax, true)
 		if manager != nil {
 			manager.nSimulates++
 			manager.timeSim += simTime

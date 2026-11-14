@@ -24,7 +24,7 @@ func cecTestClassGraph() (*Gia_Man_t, []int32) {
 }
 func TestSimulationClassRefinementAndPool(t *testing.T) {
 	aig, ids := cecTestClassGraph()
-	pars := &Cec_ParSim_t{nWords: 2}
+	pars := &Cec_ParSim_t{NWords: 2}
 	p := Cec_ManSimStart(aig, pars)
 	aig.StartRepresentatives()
 	cecSimRefs(aig)
@@ -65,7 +65,7 @@ func TestSimulationClassRefinementAndPool(t *testing.T) {
 	for _, l := range lits {
 		gia.Gia_ManAppendCo(aig, l)
 	}
-	p = Cec_ManSimStart(aig, &Cec_ParSim_t{nWords: 1})
+	p = Cec_ManSimStart(aig, &Cec_ParSim_t{NWords: 1})
 	aig.StartRepresentatives()
 	cecSimRefs(aig)
 	for _, l := range lits {
@@ -82,7 +82,7 @@ func TestSimulationClassRefinementAndPool(t *testing.T) {
 }
 func TestSimulationCounterexampleAndPrepare(t *testing.T) {
 	aig, _ := cecTestClassGraph()
-	p := Cec_ManSimStart(aig, &Cec_ParSim_t{nWords: 1, nRounds: 1, fCheckMiter: 1})
+	p := Cec_ManSimStart(aig, &Cec_ParSim_t{NWords: 1, NRounds: 1, FCheckMiter: 1})
 	for i, x := range []uint32{0xaaaaaaaa, 0xcccccccc, 0xf0f0f0f0} {
 		vec.Vec_PtrEntry(p.vCiSimInfo, i).([]uint32)[0] = x
 	}
@@ -100,7 +100,7 @@ func TestSimulationCounterexampleAndPrepare(t *testing.T) {
 		t.Fatal("invalid reported counterexample", in, out)
 	}
 	aig, _ = cecTestClassGraph()
-	p = Cec_ManSimStart(aig, &Cec_ParSim_t{nWords: 1, nRounds: 1, fVerbose: 1})
+	p = Cec_ManSimStart(aig, &Cec_ParSim_t{NWords: 1, NRounds: 1, FVerbose: 1})
 	Cec_ManSimClassesPrepare(p, -1)
 	Cec_ManSimClassesRefine(p) // rounds<5 must not divide by zero
 }
@@ -170,7 +170,7 @@ func TestForwardSimulationSpecialGates(t *testing.T) {
 	}
 	g.StartRepresentatives()
 	cecSimRefs(g)
-	p := Cec_ManSimStart(g, &Cec_ParSim_t{nWords: 2})
+	p := Cec_ManSimStart(g, &Cec_ParSim_t{NWords: 2})
 	p.vCoSimInfo = vec.Vec_PtrAllocSimInfo(4, 2)
 	rows := [][2]uint32{{0xaaaaaaaa, 0x57491086}, {0xcccccccc, 0x17432901}, {0xf0f0f0f0, 0x27453012}}
 	for i, row := range rows {

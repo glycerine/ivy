@@ -17,7 +17,7 @@ func TestCec4ReplayUsesSourceReducedIDsWithInterleavedInputs(t *testing.T) {
 	gia.Gia_ManSetPhase(g)
 	g.StartRepresentatives()
 	gia.Gia_ObjSetRepr(g, y>>1, x>>1)
-	p := Cec4_ManCreate(g, &Cec_ParFra_t{jType: 0, nBTLimit: 100, nWords: 1, nItersMax: 1})
+	p := Cec4_ManCreate(g, &Cec_ParFra_t{JType: 0, NBTLimit: 100, NWords: 1, NItersMax: 1})
 	p.pNew = Cec4_ManStartNew(g)
 	gia.Gia_ObjSetValue(gia.Gia_ManObj(g, x>>1), gia.Gia_ManAppendAnd(p.pNew, 2, 4))
 	gia.Gia_ObjSetValue(gia.Gia_ManObj(g, y>>1), gia.Gia_ManAppendAnd(p.pNew, 2, 6))

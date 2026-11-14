@@ -54,7 +54,7 @@ func TestNativeSweepOriginalIDsAndWitnesses(t *testing.T) {
 		var p Cec_ParFra_t
 		Cec_ManFraSetDefaultParams(&p)
 		p.fUseOrigIds = 1
-		p.nDepthMax = depth
+		p.NDepthMax = depth
 		q := cecTestSweepLowered(g, &p)
 		if p.Error != nil || q == nil {
 			t.Fatalf("depth %d: %v", depth, p.Error)
@@ -124,7 +124,7 @@ func TestNativeSweepPreservesSequentialInterface(t *testing.T) {
 	var p Cec_ParFra_t
 	Cec_ManFraSetDefaultParams(&p)
 	p.fUseOrigIds = 1
-	p.nDepthMax = 2
+	p.NDepthMax = 2
 	q := cecTestSweepLowered(g, &p)
 	if p.Error != nil || q == nil {
 		t.Fatalf("sweep: %v", p.Error)
@@ -198,7 +198,7 @@ func TestNativeSweepRejectsFalseSeedClass(t *testing.T) {
 		var p Cec_ParFra_t
 		Cec_ManFraSetDefaultParams(&p)
 		p.fUseOrigIds = 1
-		p.fRunCSat = circuit
+		p.FRunCSat = circuit
 		q := cecTestSweepLowered(g, &p)
 		if q == nil || p.Error != nil {
 			t.Fatalf("circuit %d: %v", circuit, p.Error)
@@ -296,12 +296,12 @@ func TestNativeSweepConflictLimitedSeed(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	fra := Cec_ManFraStart(lower, &Cec_ParFra_t{nDepthMax: 1})
+	fra := Cec_ManFraStart(lower, &Cec_ParFra_t{NDepthMax: 1})
 	query := Cec_ManFraSpecReduction(fra)
 	if gia.Gia_ManCoNum(query) == 0 {
 		t.Fatal("missing seeded query")
 	}
-	Cec_ManSatSolve(nil, query, &Cec_ParSat_t{nBTLimit: 1}, nil, nil, nil, 0)
+	Cec_ManSatSolve(nil, query, &Cec_ParSat_t{NBTLimit: 1}, nil, nil, nil, 0)
 	unknown := false
 	for i := int32(0); i < gia.Gia_ManCoNum(query); i++ {
 		o := gia.Gia_ManCo(query, i)
@@ -312,8 +312,8 @@ func TestNativeSweepConflictLimitedSeed(t *testing.T) {
 	}
 	var pars Cec_ParFra_t
 	Cec_ManFraSetDefaultParams(&pars)
-	pars.nBTLimit = 1
-	pars.nItersMax = 1
+	pars.NBTLimit = 1
+	pars.NItersMax = 1
 	pars.fSatSweeping = 1
 	pars.fUseOrigIds = 1
 	result := cecTestSweepLowered(g, &pars)

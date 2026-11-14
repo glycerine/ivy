@@ -16,7 +16,7 @@ func TestGeneralSolverModesHandleXorAndMux(t *testing.T) {
 	n := gia.Gia_ManAppendMuxReal(g, a, b, c)
 	zeroM := gia.Gia_ManAppendAnd(g, m, n^1)
 	for mode := int32(0); mode < 3; mode++ {
-		s := newCecGeneralSolver(g, &Cec_ParSat_t{SolverType: mode, nBTLimit: 1000})
+		s := newCecGeneralSolver(g, &Cec_ParSat_t{SolverType: mode, NBTLimit: 1000})
 		if got := s.check(zeroX); got != 1 {
 			t.Fatalf("mode %d XOR contradiction = %d", mode, got)
 		}

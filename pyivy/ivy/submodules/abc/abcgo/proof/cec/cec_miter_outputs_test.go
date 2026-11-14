@@ -12,9 +12,9 @@ func TestMiterOutputAnalysisMatchesSourcePhaseNormalization(t *testing.T) {
 		if dual {
 			gia.Gia_ManAppendCo(g, 1)
 		}
-		pars := Cec_ParSim_t{nWords: 1, fCheckMiter: 1}
+		pars := Cec_ParSim_t{NWords: 1, FCheckMiter: 1}
 		if dual {
-			pars.fDualOut = 1
+			pars.FDualOut = 1
 		}
 		sim := Cec_ManSimStart(g, &pars)
 		if dual {

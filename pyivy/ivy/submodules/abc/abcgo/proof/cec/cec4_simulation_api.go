@@ -96,7 +96,7 @@ func Cec4_RefineInit(p *Cec4_Man_t) {
 	for id := int32(0); id < count; id++ {
 		gia.Gia_ObjSetNext(g, id, -1)
 		obj := gia.Gia_ManObj(g, id)
-		if gia.Gia_ObjIsCo(obj) == 0 && (p.pPars.nLevelMax == 0 || gia.Gia_ObjLevel(g, obj) <= p.pPars.nLevelMax) {
+		if gia.Gia_ObjIsCo(obj) == 0 && (p.pPars.NLevelMax == 0 || gia.Gia_ObjLevel(g, obj) <= p.pPars.NLevelMax) {
 			vec.Vec_IntPush(p.vRefNodes, id)
 		}
 	}

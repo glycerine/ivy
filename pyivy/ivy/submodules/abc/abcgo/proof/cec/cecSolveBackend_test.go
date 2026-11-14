@@ -39,7 +39,7 @@ func TestClassicAndGeneralBackendsAgainstTruthTables(t *testing.T) {
 		}
 	}
 	for mode := int32(-1); mode <= 2; mode++ {
-		pars := &Cec_ParSat_t{SolverType: mode, nBTLimit: 1000}
+		pars := &Cec_ParSat_t{SolverType: mode, NBTLimit: 1000}
 		classic := newCecClassicSolver(g, pars)
 		var general *cecGeneralSolver
 		if mode >= 0 {

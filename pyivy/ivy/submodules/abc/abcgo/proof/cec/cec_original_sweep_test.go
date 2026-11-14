@@ -15,7 +15,7 @@ func TestOriginalSweepPreservesSourcePhaseNormalizedMiter(t *testing.T) {
 	x := gia.Gia_ManAppendCi(g)
 	gia.Gia_ManAppendCo(g, x)
 	gia.Gia_ManAppendCo(g, x^1)
-	p := Cec_ParFra_t{nWords: 1, nRounds: 1, nItersMax: 2, nBTLimit: 100, fCheckMiter: 1, fDualOut: 1, iOutFail: -1}
+	p := Cec_ParFra_t{NWords: 1, NRounds: 1, NItersMax: 2, NBTLimit: 100, FCheckMiter: 1, FDualOut: 1, iOutFail: -1}
 	out, err := cecOriginalSweep(g, &p)
 	if err != nil || out == nil || p.iOutFail != -1 || g.CombinationalCounterexample() != nil {
 		t.Fatalf("out %v error %v failed output %d witness %+v", out, err, p.iOutFail, g.CombinationalCounterexample())
@@ -29,7 +29,7 @@ func TestOriginalSweepEquivalentAlternatives(t *testing.T) {
 	y := gia.Gia_ManAppendAnd(g, a, gia.Gia_ManAppendAnd(g, b, c))
 	gia.Gia_ManAppendCo(g, x)
 	gia.Gia_ManAppendCo(g, y)
-	p := Cec_ParFra_t{nWords: 1, nRounds: 1, nItersMax: 4, nBTLimit: 100, nDepthMax: 1, fCheckMiter: 1, fDualOut: 1}
+	p := Cec_ParFra_t{NWords: 1, NRounds: 1, NItersMax: 4, NBTLimit: 100, NDepthMax: 1, FCheckMiter: 1, FDualOut: 1}
 	out, err := cecOriginalSweep(g, &p)
 	if err != nil || out == nil {
 		t.Fatalf("out %v error %v", out, err)
@@ -51,7 +51,7 @@ func TestOriginalSweepPreservesNonMiterOutputs(t *testing.T) {
 	y := gia.Gia_ManAppendAnd(g, a, gia.Gia_ManAppendAnd(g, b, c))
 	gia.Gia_ManAppendCo(g, x)
 	gia.Gia_ManAppendCo(g, y^1)
-	p := Cec_ParFra_t{nWords: 1, nRounds: 1, nItersMax: 4, nBTLimit: 100, nDepthMax: 1}
+	p := Cec_ParFra_t{NWords: 1, NRounds: 1, NItersMax: 4, NBTLimit: 100, NDepthMax: 1}
 	out, err := cecOriginalSweep(g, &p)
 	if err != nil || out == nil {
 		t.Fatalf("out %v error %v", out, err)
@@ -74,7 +74,7 @@ func TestOriginalSweepUsesPreloadedSimulation(t *testing.T) {
 	// Pattern zero is reserved for the all-zero input; pattern one differs.
 	gia.Gia_ManCecSaveCIWord(g, 2)
 	gia.Gia_ManCecSaveCIWord(g, 0)
-	p := Cec_ParFra_t{nWords: 1, nRounds: 1, nItersMax: 2, nBTLimit: 100, fCheckMiter: 1, fDualOut: 1}
+	p := Cec_ParFra_t{NWords: 1, NRounds: 1, NItersMax: 2, NBTLimit: 100, FCheckMiter: 1, FDualOut: 1}
 	out, err := cecOriginalSweep(g, &p)
 	if err != nil || out != nil || p.iOutFail != 0 || g.CombinationalCounterexample() == nil {
 		t.Fatalf("out %v error %v failed output %d witness %+v", out, err, p.iOutFail, g.CombinationalCounterexample())
@@ -99,7 +99,7 @@ func TestOriginalSweepReplaysRareMiterWitness(t *testing.T) {
 	}
 	gia.Gia_ManAppendCo(g, 0)
 	gia.Gia_ManAppendCo(g, x)
-	p := Cec_ParFra_t{nWords: 1, nRounds: 1, nItersMax: 100, nBTLimit: 1000, nDepthMax: 1, fCheckMiter: 1, fDualOut: 1}
+	p := Cec_ParFra_t{NWords: 1, NRounds: 1, NItersMax: 100, NBTLimit: 1000, NDepthMax: 1, FCheckMiter: 1, FDualOut: 1}
 	out, err := cecOriginalSweep(g, &p)
 	if err != nil || out != nil || p.iOutFail != 0 || g.CombinationalCounterexample() == nil {
 		t.Fatalf("out %v error %v failed output %d witness %+v", out, err, p.iOutFail, g.CombinationalCounterexample())
@@ -150,7 +150,7 @@ func TestOriginalSweepABC(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	p := Cec_ParFra_t{nWords: 1, nRounds: 1, nItersMax: 10, nBTLimit: 100, nDepthMax: 1}
+	p := Cec_ParFra_t{NWords: 1, NRounds: 1, NItersMax: 10, NBTLimit: 100, NDepthMax: 1}
 	got := Cec_ManSatSweeping(g, &p, 1)
 	if p.Error != nil || got == nil {
 		t.Fatalf("sweep: %v", p.Error)

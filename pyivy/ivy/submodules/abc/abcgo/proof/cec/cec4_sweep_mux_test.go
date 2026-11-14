@@ -13,7 +13,7 @@ func TestCec4SweepPreservesNativeMuxOutputs(t *testing.T) {
 		x, y := gia.Gia_ManAppendMuxReal(g, c, a, b), gia.Gia_ManAppendMuxReal(g, c, a, b)
 		gia.Gia_ManAppendCo(g, x)
 		gia.Gia_ManAppendCo(g, y^1)
-		pars := Cec_ParFra_t{jType: mode, nWords: 1, nRounds: 1, nItersMax: 10, nBTLimit: 100}
+		pars := Cec_ParFra_t{JType: mode, NWords: 1, NRounds: 1, NItersMax: 10, NBTLimit: 100}
 		out, cex, _ := cec4Sweep(g, &pars, false, true)
 		if out == nil || cex != nil {
 			t.Fatalf("mode %d: no reduced graph", mode)

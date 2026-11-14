@@ -9,7 +9,7 @@ func TestCec4EntryStoresZeroPatternMiterWitness(t *testing.T) {
 	g := gia.Gia_ManStart(8)
 	gia.Gia_ManAppendCi(g)
 	gia.Gia_ManAppendCo(g, 1)
-	p := Cec_ParFra_t{nWords: 1, nItersMax: 1, fCheckMiter: 1}
+	p := Cec_ParFra_t{NWords: 1, NItersMax: 1, FCheckMiter: 1}
 	if status := Cec4_ManPerformSweeping(g, &p, nil, 1); status != 0 {
 		t.Fatalf("status %d", status)
 	}
@@ -25,7 +25,7 @@ func TestCec4EarlyMiterFailureLeavesOutputPointerUntouched(t *testing.T) {
 	gia.Gia_ManAppendCo(g, 1)
 	sentinel := gia.Gia_ManStart(4)
 	out := sentinel
-	pars := Cec_ParFra_t{nWords: 1, nItersMax: 1, fCheckMiter: 1}
+	pars := Cec_ParFra_t{NWords: 1, NItersMax: 1, FCheckMiter: 1}
 	if status := Cec4_ManPerformSweeping(g, &pars, &out, 0); status != 0 {
 		t.Fatalf("status = %d", status)
 	}
@@ -42,7 +42,7 @@ func TestCec4EntryReturnsEquivalentReducedGraph(t *testing.T) {
 	x := gia.Gia_ManAppendAnd(g, a, b)
 	y := gia.Gia_ManAppendAnd(g, x, a)
 	gia.Gia_ManAppendCo(g, y)
-	p := Cec_ParFra_t{nWords: 1, nRounds: 1, nItersMax: 1, nBTLimit: 100, jType: 0}
+	p := Cec_ParFra_t{NWords: 1, NRounds: 1, NItersMax: 1, NBTLimit: 100, JType: 0}
 	out := Cec4_ManSimulateTest(g, &p)
 	if out == nil {
 		t.Fatal("missing reduced graph")

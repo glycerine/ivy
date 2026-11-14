@@ -39,7 +39,7 @@ func TestNativeSATWitnessAndComplement(t *testing.T) {
 	if p.values == nil || Cec_ObjSatVarValue(p, obj) != 1 {
 		t.Fatal("trivial query unexpectedly changed the previous SAT witness")
 	}
-	p.pPars.nBTLimit = -1
+	p.pPars.NBTLimit = -1
 	if got := Cec_ManSatCheckNode(p, obj); got != -1 || p.Error == nil {
 		t.Fatal("invalid budget not reported")
 	}

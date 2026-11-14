@@ -30,7 +30,7 @@ func TestCec4ManagerSweepNodeRecordsSourceEasyProof(t *testing.T) {
 	for id := int32(0); id < gia.Gia_ManObjNum(g); id++ {
 		gia.Gia_ObjSetValue(gia.Gia_ManObj(g, id), id<<1)
 	}
-	p := Cec4_ManCreate(g, &Cec_ParFra_t{jType: 0, nBTLimit: 100, nWords: 1, nItersMax: 1, fVerbose: 1})
+	p := Cec4_ManCreate(g, &Cec_ParFra_t{JType: 0, NBTLimit: 100, NWords: 1, NItersMax: 1, FVerbose: 1})
 	p.pNew = g
 	Cec4_ManSimAlloc(p, 1)
 	if got := Cec4_ManSweepNode(p, y>>1, x>>1); got != 1 {
@@ -49,7 +49,7 @@ func TestCec4ManagerSweepNodeUsesCopyPhase(t *testing.T) {
 	gia.Gia_ManSetPhase(g)
 	g.StartRepresentatives()
 	gia.Gia_ObjSetRepr(g, y>>1, x>>1)
-	p := Cec4_ManCreate(g, &Cec_ParFra_t{jType: 0, nBTLimit: 100, nWords: 1, nItersMax: 1})
+	p := Cec4_ManCreate(g, &Cec_ParFra_t{JType: 0, NBTLimit: 100, NWords: 1, NItersMax: 1})
 	p.pNew = gia.Gia_ManStart(10)
 	ra, rb := gia.Gia_ManAppendCi(p.pNew), gia.Gia_ManAppendCi(p.pNew)
 	rx := gia.Gia_ManAppendXorReal(p.pNew, ra, rb)
@@ -78,7 +78,7 @@ func TestCec4ManagerSweepUnknownMarksOriginalCandidate(t *testing.T) {
 	g.StartRepresentatives()
 	gia.Gia_ObjSetRepr(g, candidate, 0)
 	gia.Gia_ManSetPhase(g)
-	p := Cec4_ManCreate(g, &Cec_ParFra_t{jType: 0, nBTLimit: 1, nWords: 1, nItersMax: 1})
+	p := Cec4_ManCreate(g, &Cec_ParFra_t{JType: 0, NBTLimit: 1, NWords: 1, NItersMax: 1})
 	p.pNew = gia.Gia_ManStart(512)
 	inputs := make([][]int32, pigeons)
 	for i := range inputs {
@@ -125,7 +125,7 @@ func TestCec4ManagerSweepStoresSourceClauseModel(t *testing.T) {
 	gia.Gia_ManSetPhase(g)
 	g.StartRepresentatives()
 	gia.Gia_ObjSetRepr(g, y>>1, x>>1)
-	p := Cec4_ManCreate(g, &Cec_ParFra_t{jType: 0, nBTLimit: 100, nWords: 1, nItersMax: 1})
+	p := Cec4_ManCreate(g, &Cec_ParFra_t{JType: 0, NBTLimit: 100, NWords: 1, NItersMax: 1})
 	p.pNew = g
 	for id := int32(0); id < gia.Gia_ManObjNum(g); id++ {
 		gia.Gia_ObjSetValue(gia.Gia_ManObj(g, id), id<<1)
@@ -155,7 +155,7 @@ func TestCec4SparseModelPreservesUnassignedInput(t *testing.T) {
 		gia.Gia_ManSetPhase(g)
 		g.StartRepresentatives()
 		gia.Gia_ObjSetRepr(g, y>>1, x>>1)
-		p := Cec4_ManCreate(g, &Cec_ParFra_t{jType: mode, nBTLimit: 100, nWords: 1, nItersMax: 1})
+		p := Cec4_ManCreate(g, &Cec_ParFra_t{JType: mode, NBTLimit: 100, NWords: 1, NItersMax: 1})
 		p.pNew = g
 		for id := int32(0); id < gia.Gia_ManObjNum(g); id++ {
 			gia.Gia_ObjSetValue(gia.Gia_ManObj(g, id), id<<1)

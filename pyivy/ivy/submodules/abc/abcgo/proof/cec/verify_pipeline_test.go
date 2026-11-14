@@ -16,7 +16,7 @@ func TestVerifySpecialCasesPrecedeSAT(t *testing.T) {
 			// ABC's PI-vs-PI special case sets the first input in its witness.
 			// A negative conflict limit is invalid for the SAT core, so success
 			// demonstrates that the special-case path did not invoke it.
-			pars := Cec_ParCec_t{nBTLimit: -1, fNaive: naive, fSilent: 1, iOutFail: -1}
+			pars := Cec_ParCec_t{NBTLimit: -1, FNaive: naive, FSilent: 1, iOutFail: -1}
 			if got := Cec_ManVerify(g, &pars); got != 0 || pars.Error != nil || pars.iOutFail != 0 {
 				t.Fatalf("status %d, error %v, output %d", got, pars.Error, pars.iOutFail)
 			}
@@ -112,7 +112,7 @@ func TestVerifyPipelineNaiveSkipsSweep(t *testing.T) {
 	gia.Gia_ManAppendCo(g, x)
 	var pars Cec_ParCec_t
 	Cec_ManCecSetDefaultParams(&pars)
-	pars.fNaive = 1
+	pars.FNaive = 1
 	failSweep := func(*Gia_Man_t, *Cec_ParFra_t) (*Gia_Man_t, error) {
 		t.Fatal("naive path invoked sweep")
 		return nil, nil

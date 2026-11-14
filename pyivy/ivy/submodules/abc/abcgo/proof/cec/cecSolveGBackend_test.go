@@ -14,7 +14,7 @@ func TestGeneralSolverModes(t *testing.T) {
 			x := gia.Gia_ManAppendAnd(g, a, b)
 			y := gia.Gia_ManAppendAnd(g, a^1, b)
 			zero := gia.Gia_ManAppendAnd(g, x, y)
-			s := newCecGeneralSolver(g, &Cec_ParSat_t{SolverType: mode, nBTLimit: 1000, nSatVarMax: 2, nCallsRecycle: 1})
+			s := newCecGeneralSolver(g, &Cec_ParSat_t{SolverType: mode, NBTLimit: 1000, NSatVarMax: 2, NCallsRecycle: 1})
 			if got := s.check(zero); got != 1 {
 				t.Fatalf("contradiction result %d", got)
 			}

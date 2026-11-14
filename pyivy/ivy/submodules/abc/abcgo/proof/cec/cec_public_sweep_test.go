@@ -12,7 +12,7 @@ func TestPublicSweepOriginalIDProofs(t *testing.T) {
 		g, a, b := sweepFixture()
 		var p Cec_ParFra_t
 		Cec_ManFraSetDefaultParams(&p)
-		p.nItersMax = iters
+		p.NItersMax = iters
 		p.fUseOrigIds = 1
 		reduced := Cec_ManSatSweeping(g, &p, 1)
 		if p.Error != nil || reduced == nil {
@@ -49,7 +49,7 @@ func TestDeepSweepPreservesFunctionAndEveryPublishedPair(t *testing.T) {
 		gia.Gia_ManAppendCo(g, x^1)
 		var p Cec_ParFra_t
 		Cec_ManFraSetDefaultParams(&p)
-		p.nWords, p.nRounds, p.nItersMax, p.nBTLimit, p.nDepthMax, p.fUseOrigIds = 1, 1, 30, 1000, depth, 1
+		p.NWords, p.NRounds, p.NItersMax, p.NBTLimit, p.NDepthMax, p.fUseOrigIds = 1, 1, 30, 1000, depth, 1
 		result := Cec_ManSatSweeping(g, &p, 1)
 		if p.Error != nil || result == nil {
 			t.Fatalf("depth %d: %v", depth, p.Error)
@@ -97,7 +97,7 @@ func TestPublicSweepRejectsInvalidInputs(t *testing.T) {
 	a := gia.Gia_ManAppendCi(g)
 	gia.Gia_ManAppendCo(g, a)
 	Cec_ManFraSetDefaultParams(&p)
-	p.fDualOut = 1
+	p.FDualOut = 1
 	if got := Cec_ManSatSweeping(g, &p, 1); got != nil || p.Error == nil {
 		t.Fatalf("odd dual miter: %v %v", got, p.Error)
 	}
@@ -117,7 +117,7 @@ func TestPublicSweepDeepOriginalIDProofs(t *testing.T) {
 		g, a, b := sweepFixture()
 		var p Cec_ParFra_t
 		Cec_ManFraSetDefaultParams(&p)
-		p.fUseOrigIds, p.nDepthMax = 1, depth
+		p.fUseOrigIds, p.NDepthMax = 1, depth
 		if got := Cec_ManSatSweeping(g, &p, 1); got == nil || p.Error != nil {
 			t.Fatalf("depth %d: graph %v error %v", depth, got, p.Error)
 		}
@@ -133,7 +133,7 @@ func TestPublicSweepDeepOriginalIDProofs(t *testing.T) {
 	g, _, _ := sweepFixture()
 	var p Cec_ParFra_t
 	Cec_ManFraSetDefaultParams(&p)
-	p.fUseOrigIds, p.fRunCSat = 1, 1
+	p.fUseOrigIds, p.FRunCSat = 1, 1
 	if got := Cec_ManSatSweeping(g, &p, 1); got == nil || p.Error != nil {
 		t.Fatalf("circuit SAT: graph %v error %v", got, p.Error)
 	}

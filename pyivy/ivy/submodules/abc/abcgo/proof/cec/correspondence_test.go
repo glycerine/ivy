@@ -37,7 +37,7 @@ func TestLatchCorrespondenceEqualTransitions(t *testing.T) {
 	gia.Gia_ManSetRegNum(p, 2)
 	var pars Cec_ParCor_t
 	Cec_ManCorSetDefaultParams(&pars)
-	pars.fLatchCorr = 1
+	pars.FLatchCorr = 1
 	pars.nWords = 1
 	result := Cec_ManLSCorrespondence(p, &pars)
 	if gia.Gia_ManRegNum(result) != 1 {
@@ -110,10 +110,10 @@ func TestCorrespondenceModesPreserveSequentialFunction(t *testing.T) {
 				original := corrFixture(mode)
 				var pars Cec_ParCor_t
 				Cec_ManCorSetDefaultParams(&pars)
-				pars.fLatchCorr = latch
-				pars.fUseRings = rings
+				pars.FLatchCorr = latch
+				pars.FUseRings = rings
 				pars.nWords = 1
-				pars.nBTLimit = 10000
+				pars.NBTLimit = 10000
 				reduced := Cec_ManLSCorrespondence(original, &pars)
 				if gia.Gia_ManRegNum(reduced) > 2 {
 					t.Fatalf("failed to merge registers latch%d rings%d mode%d", latch, rings, mode)
@@ -160,7 +160,7 @@ func TestCorrespondenceOriginalABC(t *testing.T) {
 			Cec_ManCorSetDefaultParams(&pars)
 			pars.nWords = 1
 			if !signal {
-				pars.fLatchCorr = 1
+				pars.FLatchCorr = 1
 			}
 			native := Cec_ManLSCorrespondence(original, &pars)
 			if int(gia.Gia_ManRegNum(native)) != len(reference.Latches) {
@@ -229,13 +229,13 @@ func TestCorrespondenceRandomSequentialNetworks(t *testing.T) {
 		var pars Cec_ParCor_t
 		Cec_ManCorSetDefaultParams(&pars)
 		pars.nWords = 1
-		pars.nFrames = 1 + int32(trial%2)
-		pars.fLatchCorr = int32(trial % 2)
-		pars.fUseRings = 0
+		pars.NFrames = 1 + int32(trial%2)
+		pars.FLatchCorr = int32(trial % 2)
+		pars.FUseRings = 0
 		if trial%3 == 0 {
-			pars.fUseRings = 1
+			pars.FUseRings = 1
 		}
-		pars.nBTLimit = 10000
+		pars.NBTLimit = 10000
 		result := Cec_ManLSCorrespondence(p, &pars)
 		for sample := 0; sample < 40; sample++ {
 			pattern := random.IntN(1 << 12)
@@ -293,8 +293,8 @@ func TestCorrespondenceSATRefinesRareTransition(t *testing.T) {
 		Cec_ManCorSetDefaultParams(&pars)
 		pars.nWords = 1
 		pars.nRounds = 1
-		pars.fLatchCorr = latch
-		pars.nBTLimit = 10000
+		pars.FLatchCorr = latch
+		pars.NBTLimit = 10000
 		result := Cec_ManLSCorrespondence(p, &pars)
 		// One latch is truly zero, while the rare conjunction's latch needs the
 		// incremental SAT witness rather than relying on random simulation alone.
@@ -313,8 +313,8 @@ func TestCorrespondencePrefixAndSemiformal(t *testing.T) {
 	p := corrFixture(1)
 	var pars Cec_ParCor_t
 	Cec_ManCorSetDefaultParams(&pars)
-	pars.nPrefix = 1
-	pars.fLatchCorr = 1
+	pars.NPrefix = 1
+	pars.FLatchCorr = 1
 	pars.nWords = 1
 	result := Cec_ManLSCorrespondence(p, &pars)
 	if gia.Gia_ManRegNum(result) > 2 {
@@ -323,15 +323,15 @@ func TestCorrespondencePrefixAndSemiformal(t *testing.T) {
 	p = corrFixture(1)
 	var simPars Cec_ParSim_t
 	Cec_ManSimSetDefaultParams(&simPars)
-	simPars.nWords = 1
-	simPars.fSeqSimulate = 1
+	simPars.NWords = 1
+	simPars.FSeqSimulate = 1
 	sim := Cec_ManSimStart(p, &simPars)
 	Cec_ManSimClassesPrepare(sim, -1)
 	var semiformal Cec_ParSmf_t
 	Cec_ManSmfSetDefaultParams(&semiformal)
-	semiformal.nWords = 1
-	semiformal.nFrames = 3
-	semiformal.nRounds = 2
+	semiformal.NWords = 1
+	semiformal.NFrames = 3
+	semiformal.NRounds = 2
 	if got := Cec_ManSeqSemiformal(p, &semiformal); got != 0 {
 		t.Fatalf("unexpected semiformal result%d", got)
 	}
@@ -350,8 +350,8 @@ func TestCorrespondenceCreatesInternalChoices(t *testing.T) {
 	var pars Cec_ParCor_t
 	Cec_ManCorSetDefaultParams(&pars)
 	pars.nWords = 1
-	pars.fMakeChoices = 1
-	pars.nBTLimit = 10000
+	pars.FMakeChoices = 1
+	pars.NBTLimit = 10000
 	result := Cec_ManLSCorrespondence(p, &pars)
 	choices := 0
 	for id := int32(1); id < gia.Gia_ManObjNum(result); id++ {
@@ -377,7 +377,7 @@ func TestCorrespondenceAutonomousOscillator(t *testing.T) {
 	gia.Gia_ManSetRegNum(p, 1)
 	var pars Cec_ParCor_t
 	Cec_ManCorSetDefaultParams(&pars)
-	pars.fLatchCorr = 1
+	pars.FLatchCorr = 1
 	pars.nWords = 1
 	result := Cec_ManLSCorrespondence(p, &pars)
 	if gia.Gia_ManRegNum(result) != 1 || !slices.Equal(corrTrace(p, 0, 8), corrTrace(result, 0, 8)) {

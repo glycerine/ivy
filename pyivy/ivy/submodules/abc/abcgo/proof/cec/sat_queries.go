@@ -16,7 +16,7 @@ func (p *Cec_ManSat_t) query(a int32, b *int32) int32 {
 	if p.proof == nil {
 		return -1
 	}
-	if p.Error = p.proof.SetConflictLimit(int64(p.pPars.nBTLimit)); p.Error != nil {
+	if p.Error = p.proof.SetConflictLimit(int64(p.pPars.NBTLimit)); p.Error != nil {
 		return -1
 	}
 	if a == 0 && b == nil {
@@ -31,7 +31,7 @@ func (p *Cec_ManSat_t) query(a int32, b *int32) int32 {
 	s := p.source
 	s.since++
 	s.calls++
-	if s.sat == nil || p.pPars.nSatVarMax > 0 && s.sat.NumVars() > p.pPars.nSatVarMax && s.since > p.pPars.nCallsRecycle {
+	if s.sat == nil || p.pPars.NSatVarMax > 0 && s.sat.NumVars() > p.pPars.NSatVarMax && s.since > p.pPars.NCallsRecycle {
 		s.reset()
 	}
 	s.sat.SetDeadline(p.pPars.deadline)
@@ -41,7 +41,7 @@ func (p *Cec_ManSat_t) query(a int32, b *int32) int32 {
 		s.addNode(*b >> 1)
 		lits = append(lits, s.literal(*b))
 	}
-	result := s.sat.SolveWithResourceLimits(lits, int64(p.pPars.nBTLimit), 0, 0, 0)
+	result := s.sat.SolveWithResourceLimits(lits, int64(p.pPars.NBTLimit), 0, 0, 0)
 	switch result {
 	case bsat.Unsatisfiable:
 		s.unsatCount++

@@ -19,7 +19,7 @@ func TestSatSolveMarksAndPatchesOutputs(t *testing.T) {
 			nonzero := gia.Gia_ManAppendAnd(g, a, b)
 			gia.Gia_ManAppendCo(g, contradiction)
 			gia.Gia_ManAppendCo(g, nonzero)
-			pars := &Cec_ParSat_t{nBTLimit: 1000}
+			pars := &Cec_ParSat_t{NBTLimit: 1000}
 			if general {
 				CecG_ManSatSolve(nil, g, pars, 1)
 			} else {
@@ -60,7 +60,7 @@ func TestSatSolveSavesModelsAndPatterns(t *testing.T) {
 	gia.Gia_ManAppendCo(g, both)
 	p := Cec_ManPatStart()
 	defer Cec_ManPatStop(p)
-	pars := &Cec_ParSat_t{nBTLimit: 1000, fSaveCexes: 1}
+	pars := &Cec_ParSat_t{NBTLimit: 1000, FSaveCexes: 1}
 	Cec_ManSatSolve(p, g, pars, nil, nil, nil, 0)
 	models := g.CombinationalCounterexamples()
 	if len(models) != 3 || models[0] != util.AbcCexSentinel || models[1] == nil || models[2] == nil {
@@ -87,7 +87,7 @@ func TestSatSolveOriginalPairs(t *testing.T) {
 	pairs := vec.Vec_IntAlloc(2)
 	vec.Vec_IntPushTwo(pairs, 0, 1)
 	equiv := vec.Vec_IntAlloc(2)
-	Cec_ManSatSolve(nil, g, &Cec_ParSat_t{nBTLimit: 1000}, orig, pairs, equiv, 0)
+	Cec_ManSatSolve(nil, g, &Cec_ParSat_t{NBTLimit: 1000}, orig, pairs, equiv, 0)
 	if vec.Vec_IntSize(equiv) != 2 || vec.Vec_IntEntry(equiv, 0) != 11 || vec.Vec_IntEntry(equiv, 1) != 17 {
 		t.Fatal("missing equivalent original IDs", vec.Vec_IntArray(equiv))
 	}

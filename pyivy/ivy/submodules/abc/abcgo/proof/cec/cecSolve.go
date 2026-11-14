@@ -48,7 +48,7 @@ func Cec_ManSatSolve(patterns *Cec_ManPat_t, graph *Gia_Man_t, pars *Cec_ParSat_
 	}
 	classic := newCecClassicSolver(graph, pars)
 	var models []*util.Abc_Cex_t
-	if pars.fSaveCexes != 0 {
+	if pars.FSaveCexes != 0 {
 		models = make([]*util.Abc_Cex_t, int(gia.Gia_ManCoNum(graph)))
 	}
 	for i, lit := range graph.OutputLiterals() {
@@ -100,7 +100,7 @@ func Cec_ManSatSolve(patterns *Cec_ManPat_t, graph *Gia_Man_t, pars *Cec_ParSat_
 				Cec_ManPatSavePattern(patterns, sat, output)
 				patterns.timeTotalSave += util.Abc_Clock() - start
 			}
-			if pars.fCheckMiter != 0 {
+			if pars.FCheckMiter != 0 {
 				break
 			}
 		}
@@ -110,7 +110,7 @@ func Cec_ManSatSolve(patterns *Cec_ManPat_t, graph *Gia_Man_t, pars *Cec_ParSat_
 			panic(err)
 		}
 	}
-	if pars.fVerbose != 0 {
+	if pars.FVerbose != 0 {
 		classic.printStats()
 	}
 }
@@ -132,7 +132,7 @@ func Cec_ManSatSolveCSat(patterns *Cec_ManPat_t, graph *Gia_Man_t, pars *Cec_Par
 
 func cecManSatSolveCSat(patterns *Cec_ManPat_t, graph *Gia_Man_t, pars *Cec_ParSat_t, orig, pairs, equiv *Vec_Int_t) {
 	var statuses *Vec_Str_t
-	store := gia.Cbs_ManSolveMiterNc(graph, pars.nBTLimit, &statuses, 0, 0)
+	store := gia.Cbs_ManSolveMiterNc(graph, pars.NBTLimit, &statuses, 0, 0)
 	pat := vec.Vec_IntAlloc(1000)
 	cecResetPatterns(patterns)
 	var start int32
@@ -163,7 +163,7 @@ func cecManSatSolveCSat(patterns *Cec_ManPat_t, graph *Gia_Man_t, pars *Cec_ParS
 			Cec_ManPatSavePatternCSat(patterns, pat)
 			patterns.timeTotalSave += util.Abc_Clock() - clock
 		}
-		if pars.fCheckMiter != 0 {
+		if pars.FCheckMiter != 0 {
 			break
 		}
 	}

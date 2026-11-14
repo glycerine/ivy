@@ -52,7 +52,7 @@ func Cec4_ManGeneratePatterns(p *Cec4_Man_t) int32 {
 	}
 	start := cecCPUClock()
 	pack := cec4ManagerPacker(p)
-	count, more := cec4GeneratePatterns(p.pAig, pack, p.candidates, p.pPars.nItersMax)
+	count, more := cec4GeneratePatterns(p.pAig, pack, p.candidates, p.pPars.NItersMax)
 	p.timeGenPats += cecCPUClock() - start
 	p.nSatSat += int32(count)
 	p.pattern = pack.cursor
@@ -82,7 +82,7 @@ func Cec4_ManSweepNode(p *Cec4_Man_t, id, repr int32) int32 {
 		panic("cec4: sweep is not initialized")
 	}
 	if p.cnf == nil {
-		p.cnf = newCec4CNF(p.pNew, p.pPars.jType)
+		p.cnf = newCec4CNF(p.pNew, p.pPars.JType)
 		p.pSat = p.cnf.solver
 	}
 	if p.copies == nil {
@@ -99,14 +99,14 @@ func Cec4_ManSweepNode(p *Cec4_Man_t, id, repr int32) int32 {
 	representative := gia.Gia_ManObj(p.pAig, repr)
 	phase := (p.copies[id]^p.copies[repr])&1 ^ gia.Gia_ObjPhase(obj) ^ gia.Gia_ObjPhase(representative)
 	var easy int32
-	status := Cec4_ManSolveTwo(p, p.copies[repr]>>1, p.copies[id]>>1, phase, &easy, p.pPars.fVerbose)
+	status := Cec4_ManSolveTwo(p, p.copies[repr]>>1, p.copies[id]>>1, phase, &easy, p.pPars.FVerbose)
 	cec4ApplySweepResult(p.pAig, p.pNew, p.simState.sim, p.cnf, p.copies, id, repr, &p.pattern, status)
 	elapsed := cecCPUClock() - start
 
 	switch status {
 	case glucose2.GLUCOSE_SAT:
 		vec.Vec_IntClear(p.vPat)
-		if p.pPars.jType == 0 {
+		if p.pPars.JType == 0 {
 			// Source iterates the reduced graph's CI/SAT-ID pairs in allocation order.
 			for variable, object := range p.cnf.objects {
 				if mapped, ok := p.cnf.inputs[object]; ok && int(mapped) == variable {
@@ -135,7 +135,7 @@ func Cec4_ManSweepNode(p *Cec4_Man_t, id, repr int32) int32 {
 			p.timeSatSat += elapsed
 		}
 		if p.pattern == 64*p.simState.sim.words-2 {
-			cec4SimulationRound(p.simState.sim, p.pAig, p.pPars.nLevelMax, true)
+			cec4SimulationRound(p.simState.sim, p.pAig, p.pPars.NLevelMax, true)
 			vec.Vec_IntFill(p.vCexStamps, int(gia.Gia_ManObjNum(p.pAig)), 0)
 			p.pattern = 0
 			if p.packer != nil {

@@ -19,7 +19,7 @@ func TestSourceSweepFailureDiagnostic(t *testing.T) {
 		gia.Gia_ManCecSimAlloc(g, 1)
 		gia.Gia_ManCecSaveCIWord(g, 2)
 		gia.Gia_ManCecSaveCIWord(g, 0)
-		p := Cec_ParFra_t{nWords: 1, nRounds: 1, nItersMax: 2, nBTLimit: 100, fCheckMiter: 1, fDualOut: 1, iOutFail: -1}
+		p := Cec_ParFra_t{NWords: 1, NRounds: 1, NItersMax: 2, NBTLimit: 100, FCheckMiter: 1, FDualOut: 1, iOutFail: -1}
 		r, w, err := os.Pipe()
 		if err != nil {
 			t.Fatal(err)
