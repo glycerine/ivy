@@ -13,7 +13,7 @@ import (
 // independent of Exa3_ManEvalV2's truth-table implementation.
 func TestExa32IndependentTruthTables(t *testing.T) {
 	for _, truth := range []uint64{2, 4, 6, 8, 14} {
-		p := Exa3_ManAllocV2(&Bmc_EsPar_t{nVars: 2, nNodes: 1, nLutSize: 2}, []uint64{truth})
+		p := Exa3_ManAllocV2(&Bmc_EsPar_t{NVars: 2, NNodes: 1, NLutSize: 2}, []uint64{truth})
 		if Exa3_ManAddCnfStartV2(p, 0) == 0 {
 			t.Fatalf("truth=%x: startup", truth)
 		}
@@ -83,7 +83,7 @@ func TestExa3Entrypoints(t *testing.T) {
 		{"v2-complement", "7", Exa3_ManExactSynthesisV2, 0, "Realization"},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			out := captureMeshOutput(t, func() { tc.run(&Bmc_EsPar_t{nVars: 2, nNodes: 1, nLutSize: 2, pTtStr: tc.truth, fUseIncr: tc.mode}) })
+			out := captureMeshOutput(t, func() { tc.run(&Bmc_EsPar_t{NVars: 2, NNodes: 1, NLutSize: 2, PTtStr: tc.truth, FUseIncr: tc.mode}) })
 			if !strings.Contains(out, tc.want) || strings.Contains(out, "no solution") {
 				t.Fatalf("unexpected output %q", out)
 			}
@@ -93,13 +93,13 @@ func TestExa3Entrypoints(t *testing.T) {
 
 func TestOtherExactSynthesisEntrypoints(t *testing.T) {
 	t.Run("two-input-v2", func(t *testing.T) {
-		output := captureMeshOutput(t, func() { Exa_ManExactSynthesis2(&Bmc_EsPar_t{nVars: 2, nNodes: 1, pTtStr: "8"}) })
+		output := captureMeshOutput(t, func() { Exa_ManExactSynthesis2(&Bmc_EsPar_t{NVars: 2, NNodes: 1, PTtStr: "8"}) })
 		if !strings.Contains(output, "Realization") {
 			t.Fatalf("missing solution: %q", output)
 		}
 	})
 	t.Run("zyx-majority", func(t *testing.T) {
-		output := captureMeshOutput(t, func() { Zyx_ManExactSynthesis(&Bmc_EsPar_t{nVars: 3, nNodes: 1, nLutSize: 3, fMajority: 1}) })
+		output := captureMeshOutput(t, func() { Zyx_ManExactSynthesis(&Bmc_EsPar_t{NVars: 3, NNodes: 1, NLutSize: 3, FMajority: 1}) })
 		if !strings.Contains(output, "MAJ3") || strings.Contains(output, "no solution") {
 			t.Fatalf("missing majority solution: %q", output)
 		}
@@ -107,7 +107,7 @@ func TestOtherExactSynthesisEntrypoints(t *testing.T) {
 }
 
 func TestExa32InitialPolarityPreservesSolution(t *testing.T) {
-	p := Exa3_ManAllocV2(&Bmc_EsPar_t{nVars: 2, nNodes: 1, nLutSize: 2}, []uint64{8})
+	p := Exa3_ManAllocV2(&Bmc_EsPar_t{NVars: 2, NNodes: 1, NLutSize: 2}, []uint64{8})
 	Exa3_ManInitPolarity(p)
 	if Exa3_ManAddCnfStartV2(p, 0) == 0 {
 		t.Fatal("startup unsatisfiable")
@@ -134,7 +134,7 @@ func TestExactSynthesisEntrypointWritesBlif(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer os.Chdir(old)
-	output := captureMeshOutput(t, func() { Exa_ManExactSynthesis(&Bmc_EsPar_t{nVars: 2, nNodes: 1, pTtStr: "8"}) })
+	output := captureMeshOutput(t, func() { Exa_ManExactSynthesis(&Bmc_EsPar_t{NVars: 2, NNodes: 1, PTtStr: "8"}) })
 	if !strings.Contains(output, "Realization") {
 		t.Fatalf("no realization: %q", output)
 	}
@@ -153,7 +153,7 @@ func TestExactSynthesisEntrypointWritesBlif(t *testing.T) {
 }
 
 func TestZyxBlockingRemovesTopology(t *testing.T) {
-	p, err := newZyxSynthesis(&Bmc_EsPar_t{nVars: 2, nNodes: 1, nLutSize: 2, pTtStr: "8"})
+	p, err := newZyxSynthesis(&Bmc_EsPar_t{NVars: 2, NNodes: 1, NLutSize: 2, PTtStr: "8"})
 	if err != nil {
 		t.Fatal(err)
 	}

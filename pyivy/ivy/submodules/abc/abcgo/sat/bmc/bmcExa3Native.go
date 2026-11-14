@@ -42,7 +42,7 @@ func Exa3_ManMarkup(p *Exa3_Man_t) int32 {
 	p.iVar = 1 + p.LutMask*p.nNodes
 	for i := p.nVars; i < p.nObjs; i++ {
 		for k := int32(0); k < p.nLutSize; k++ {
-			if p.pPars.fFewerVars != 0 && i == p.nObjs-1 && k == 0 {
+			if p.pPars.FFewerVars != 0 && i == p.nObjs-1 && k == 0 {
 				j := p.nObjs - 2
 				p.marks[i][k][j] = p.iVar
 				p.outLits[j] = append(p.outLits[j], bsat.Positive(p.iVar))
@@ -50,7 +50,7 @@ func Exa3_ManMarkup(p *Exa3_Man_t) int32 {
 				continue
 			}
 			start := int32(0)
-			if p.pPars.fFewerVars != 0 {
+			if p.pPars.FFewerVars != 0 {
 				start = p.nLutSize - 1 - k
 			}
 			for j := start; j < i-k; j++ {
@@ -63,10 +63,10 @@ func Exa3_ManMarkup(p *Exa3_Man_t) int32 {
 	return p.iVar
 }
 func Exa3_ManAlloc(params *Bmc_EsPar_t, truth []uint64) *Exa3_Man_t {
-	if params == nil || params.nVars < 1 || params.nVars > 10 || params.nNodes < 1 || params.nLutSize < 1 || params.nLutSize > 6 || params.nLutSize > params.nVars {
+	if params == nil || params.NVars < 1 || params.NVars > 10 || params.NNodes < 1 || params.NLutSize < 1 || params.NLutSize > 6 || params.NLutSize > params.NVars {
 		panic("bmc: invalid LUT synthesis parameters")
 	}
-	p := &Exa3_Man_t{pPars: params, nVars: params.nVars, nNodes: params.nNodes, nLutSize: params.nLutSize, LutMask: (1 << params.nLutSize) - 1, nObjs: params.nVars + params.nNodes, nWords: int32((1<<params.nVars + 63) / 64), pTruth: append([]uint64(nil), truth...), used: make(map[[5]int32]bool), pSat: bsat.NewSolver()}
+	p := &Exa3_Man_t{pPars: params, nVars: params.NVars, nNodes: params.NNodes, nLutSize: params.NLutSize, LutMask: (1 << params.NLutSize) - 1, nObjs: params.NVars + params.NNodes, nWords: int32((1<<params.NVars + 63) / 64), pTruth: append([]uint64(nil), truth...), used: make(map[[5]int32]bool), pSat: bsat.NewSolver()}
 	if len(p.pTruth) < int(p.nWords) {
 		panic("bmc: short truth table")
 	}
@@ -201,7 +201,7 @@ func Exa3_ManAddCnfStart(p *Exa3_Man_t, onlyAnd int32) int32 {
 				}
 			}
 		}
-		if p.pPars.fUseIncr != 0 {
+		if p.pPars.FUseIncr != 0 {
 			for j := p.nVars; j < i; j++ {
 				for n, v := range p.marks[i][0] {
 					if v == 0 {
@@ -385,12 +385,12 @@ func Exa3_ManPrint(p *Exa3_Man_t, iteration, mint int32, elapsed int64) {
 	fmt.Printf("Iter%6d : %0*b Var =%5d Cla =%6d Conf =%9d Time = %.2f sec\n", iteration, p.nVars, mint, stats.Variables, stats.Clauses, stats.Conflicts, time.Duration(elapsed).Seconds())
 }
 func Exa3_ManExactSynthesis(params *Bmc_EsPar_t) {
-	if params == nil || params.nVars < 1 || params.nVars > 10 {
+	if params == nil || params.NVars < 1 || params.NVars > 10 {
 		fmt.Println("Invalid LUT synthesis parameters.")
 		return
 	}
 	truth := make([]uint64, 16)
-	util.Abc_TtReadHex(truth, params.pTtStr)
+	util.Abc_TtReadHex(truth, params.PTtStr)
 	complement := int32(0)
 	if truth[0]&1 != 0 {
 		complement = 1
@@ -401,7 +401,7 @@ func Exa3_ManExactSynthesis(params *Bmc_EsPar_t) {
 	p := Exa3_ManAlloc(params, truth)
 	defer Exa3_ManFree(p)
 	start := time.Now()
-	if Exa3_ManAddCnfStart(p, params.fOnlyAnd) == 0 {
+	if Exa3_ManAddCnfStart(p, params.FOnlyAnd) == 0 {
 		fmt.Println("The problem has no solution.")
 		return
 	}
@@ -409,7 +409,7 @@ func Exa3_ManExactSynthesis(params *Bmc_EsPar_t) {
 	status := bsat.Unknown
 	mint := int32(1)
 	iteration := int32(0)
-	if params.fUseIncr != 0 {
+	if params.FUseIncr != 0 {
 		for p.pSat.NumVars() < p.iVar+p.nNodes*(1<<p.nVars) {
 			p.pSat.NewVariable()
 		}
@@ -421,7 +421,7 @@ func Exa3_ManExactSynthesis(params *Bmc_EsPar_t) {
 	}
 	for ; mint != -1; iteration++ {
 		added := int32(0)
-		if params.fUseIncr != 0 {
+		if params.FUseIncr != 0 {
 			added = Exa3_ManAddCnf2(p, mint)
 		} else {
 			added = Exa3_ManAddCnf(p, mint)
@@ -431,7 +431,7 @@ func Exa3_ManExactSynthesis(params *Bmc_EsPar_t) {
 			break
 		}
 		status = p.pSat.Solve()
-		if params.fVerbose != 0 && (params.fUseIncr == 0 || iteration%100 == 0) {
+		if params.FVerbose != 0 && (params.FUseIncr == 0 || iteration%100 == 0) {
 			Exa3_ManPrint(p, iteration, mint, int64(time.Since(start)))
 		}
 		if status != bsat.Satisfiable {

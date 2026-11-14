@@ -35,7 +35,7 @@ func Exa_ManMarkup(p *Exa_Man_t) int32 {
 	p.iVar = 1 + p.nNodes*3
 	for i := p.nVars; i < p.nObjs; i++ {
 		for k := int32(0); k < 2; k++ {
-			if p.pPars.fFewerVars != 0 && i == p.nObjs-1 && k == 0 {
+			if p.pPars.FFewerVars != 0 && i == p.nObjs-1 && k == 0 {
 				j := p.nObjs - 2
 				p.vOutLits[j] = append(p.vOutLits[j], bsat.Positive(p.iVar))
 				p.VarMarks[i][k][j] = p.iVar
@@ -43,7 +43,7 @@ func Exa_ManMarkup(p *Exa_Man_t) int32 {
 				continue
 			}
 			start := int32(0)
-			if p.pPars.fFewerVars != 0 {
+			if p.pPars.FFewerVars != 0 {
 				start = 1 - k
 			}
 			for j := start; j < i-k; j++ {
@@ -56,10 +56,10 @@ func Exa_ManMarkup(p *Exa_Man_t) int32 {
 	return p.iVar
 }
 func Exa_ManAlloc(pars *Bmc_EsPar_t, truth []uint64) *Exa_Man_t {
-	if pars == nil || pars.nVars < 2 || pars.nVars > 10 || pars.nNodes < 1 || pars.nVars+pars.nNodes > MAJ_NOBJS {
+	if pars == nil || pars.NVars < 2 || pars.NVars > 10 || pars.NNodes < 1 || pars.NVars+pars.NNodes > MAJ_NOBJS {
 		panic("bmc: invalid exact synthesis size")
 	}
-	p := &Exa_Man_t{pPars: pars, nVars: pars.nVars, nNodes: pars.nNodes, nObjs: pars.nVars + pars.nNodes, nWords: util.Abc_TtWordNum(pars.nVars), pTruth: truth, pSat: bsat.NewSolver()}
+	p := &Exa_Man_t{pPars: pars, nVars: pars.NVars, nNodes: pars.NNodes, nObjs: pars.NVars + pars.NNodes, nWords: util.Abc_TtWordNum(pars.NVars), pTruth: truth, pSat: bsat.NewSolver()}
 	if len(truth) < int(p.nWords) {
 		panic("bmc: short truth table")
 	}
@@ -346,11 +346,11 @@ func Exa_ManAddCnf(p *Exa_Man_t, mint int32) int32 {
 func Exa_ManExactSynthesis(pars *Bmc_EsPar_t) { exaManExactSynthesis(pars, true, true) }
 
 func exaManExactSynthesis(pars *Bmc_EsPar_t, dumpBlif, useTimeout bool) {
-	if pars == nil || pars.nVars > 10 {
+	if pars == nil || pars.NVars > 10 {
 		return
 	}
-	truth := make([]uint64, util.Abc_TtWordNum(pars.nVars))
-	util.Abc_TtReadHex(truth, pars.pTtStr)
+	truth := make([]uint64, util.Abc_TtWordNum(pars.NVars))
+	util.Abc_TtReadHex(truth, pars.PTtStr)
 	compl := int32(truth[0] & 1)
 	if compl != 0 {
 		for i := range truth {
@@ -363,7 +363,7 @@ func exaManExactSynthesis(pars *Bmc_EsPar_t, dumpBlif, useTimeout bool) {
 	}
 	p := Exa_ManAlloc(&localPars, truth)
 	defer Exa_ManFree(p)
-	if Exa_ManAddCnfStart(p, pars.fOnlyAnd) == 0 {
+	if Exa_ManAddCnfStart(p, pars.FOnlyAnd) == 0 {
 		fmt.Println("The problem has no solution.")
 		return
 	}

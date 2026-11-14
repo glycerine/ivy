@@ -16,7 +16,7 @@ func Bmc_ChainFailOneOutput(graph *gia.Gia_Man_t, maxFrames, conflictLimit, verb
 		return nil
 	}
 	native := gia.Gia_ManToAig(graph, 0)
-	options := Saig_ParBmc_t{nFramesMax: maxFrames, nConfLimit: conflictLimit, fVerbose: veryVerbose}
+	options := Saig_ParBmc_t{NFramesMax: maxFrames, NConfLimit: conflictLimit, FVerbose: veryVerbose}
 	if Saig_ManBmcScalable(native, &options) != 0 {
 		return nil
 	}
@@ -59,10 +59,10 @@ func checkOneProperty(source *aig.Graph, output int, maxFrames, conflictLimit, t
 		return nil
 	}
 	options := Saig_ParBmc_t{
-		nFramesMax:  maxFrames,
-		nConfLimit:  conflictLimit,
-		nTimeOut:    timeout,
-		nTimeOutOne: timeoutPerOutput,
+		NFramesMax:  maxFrames,
+		NConfLimit:  conflictLimit,
+		NTimeOut:    timeout,
+		NTimeOutOne: timeoutPerOutput,
 	}
 	if Saig_ManBmcScalable(projected, &options) != 0 {
 		return nil

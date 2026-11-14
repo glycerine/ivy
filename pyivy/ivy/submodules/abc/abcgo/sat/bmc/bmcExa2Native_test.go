@@ -22,7 +22,7 @@ func TestExa2SynthesisDoesNotDumpBLIF(t *testing.T) {
 	}
 	original := os.Stdout
 	os.Stdout = w
-	Exa_ManExactSynthesis2(&Bmc_EsPar_t{nVars: 2, nNodes: 1, pTtStr: "8"})
+	Exa_ManExactSynthesis2(&Bmc_EsPar_t{NVars: 2, NNodes: 1, PTtStr: "8"})
 	w.Close()
 	os.Stdout = original
 	output := make([]byte, 8192)

@@ -71,7 +71,7 @@ func TestBMCWitnessTwoInputsTwoRegisters(t *testing.T) {
 				reachable = next
 			}
 			got := [2]int{-1, -1}
-			params := Saig_ParBmc_t{nFramesMax: bound, nStart: int32(start), fSolveAll: 1, fStoreCex: 1}
+			params := Saig_ParBmc_t{NFramesMax: bound, NStart: int32(start), FSolveAll: 1, FStoreCex: 1}
 			params.pFuncOnFail = func(out int32, cex *util.Abc_Cex_t) int32 {
 				if out < 0 || out > 1 || cex == nil || cex.IPo != out || got[out] >= 0 || cex.NRegs != 2 || cex.NPis != 2 {
 					t.Fatalf("trial %d: invalid witness output=%d cex=%+v", trial, out, cex)
@@ -137,8 +137,8 @@ func TestBMCWitnessTwoInputsTwoRegisters(t *testing.T) {
 					count++
 				}
 			}
-			if status != expected || got != want || params.nFailOuts != count {
-				t.Fatalf("trial=%d start=%d tables=%04x got frames=%v status=%d count=%d want frames=%v status=%d count=%d", trial, start, tables, got, status, params.nFailOuts, want, expected, count)
+			if status != expected || got != want || params.NFailOuts != count {
+				t.Fatalf("trial=%d start=%d tables=%04x got frames=%v status=%d count=%d want frames=%v status=%d count=%d", trial, start, tables, got, status, params.NFailOuts, want, expected, count)
 			}
 		}
 	}

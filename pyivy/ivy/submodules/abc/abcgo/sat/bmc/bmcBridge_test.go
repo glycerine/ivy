@@ -61,12 +61,12 @@ func TestScalableBMCBridgeReportsSameModelOutputs(t *testing.T) {
 	g.AddOutput(pi)
 	g.AddOutput(pi)
 	var stream bytes.Buffer
-	params := Saig_ParBmc_t{nFramesMax: 2, fSolveAll: 1, fUseBridge: 1, pBridgeWriter: &stream}
+	params := Saig_ParBmc_t{NFramesMax: 2, FSolveAll: 1, FUseBridge: 1, pBridgeWriter: &stream}
 	if result := Saig_ManBmcScalable(g, &params); result != 0 {
 		t.Fatalf("result=%d, want SAT witness", result)
 	}
-	if params.nFailOuts != 2 {
-		t.Fatalf("same model should fail both outputs, got %d", params.nFailOuts)
+	if params.NFailOuts != 2 {
+		t.Fatalf("same model should fail both outputs, got %d", params.NFailOuts)
 	}
 	want := []byte("000101 0000000000000011 \x02\x01\x00\x01\x00\x01\x01\x01\x03\x01\x00" +
 		"000101 0000000000000011 \x02\x01\x01\x01\x00\x01\x01\x01\x03\x01\x00")
@@ -82,7 +82,7 @@ func TestScalableBMCBridgeReportsSafeAtCompleteness(t *testing.T) {
 	g.AddOutput(state) // property
 	aig.Aig_ManSetRegNum(g, 1)
 	var stream bytes.Buffer
-	params := Saig_ParBmc_t{nFramesMax: 4, fUseBridge: 1, pBridgeWriter: &stream}
+	params := Saig_ParBmc_t{NFramesMax: 4, FUseBridge: 1, pBridgeWriter: &stream}
 	if result := Saig_ManBmcScalable(g, &params); result != 1 {
 		t.Fatalf("result=%d, want safe completeness", result)
 	}
@@ -98,7 +98,7 @@ func TestScalableBMCBridgeSingleSolveOmitsSatResult(t *testing.T) {
 	g := aig.NewGraph()
 	g.AddOutput(g.Const1())
 	var stream bytes.Buffer
-	params := Saig_ParBmc_t{nFramesMax: 1, fUseBridge: 1, pBridgeWriter: &stream}
+	params := Saig_ParBmc_t{NFramesMax: 1, FUseBridge: 1, pBridgeWriter: &stream}
 	if result := Saig_ManBmcScalable(g, &params); result != 0 {
 		t.Fatalf("result=%d, want SAT witness", result)
 	}

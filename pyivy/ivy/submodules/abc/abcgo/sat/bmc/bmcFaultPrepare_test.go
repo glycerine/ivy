@@ -59,7 +59,7 @@ func TestFaultDriverDumpsExistingTestsWhenPreparationFinishes(t *testing.T) {
 	if err = os.WriteFile("prior.txt", []byte("00\n01\n"), 0600); err != nil {
 		t.Fatal(err)
 	}
-	Gia_ManFaultTest(graph, graph, &Bmc_ParFf_t{Algo: 3, pFileName: "prior.txt", fDump: 1})
+	Gia_ManFaultTest(graph, graph, &Bmc_ParFf_t{Algo: 3, PFileName: "prior.txt", FDump: 1})
 	data, err := os.ReadFile("tests.txt")
 	if err != nil {
 		t.Fatalf("expected retained test suite: %v", err)

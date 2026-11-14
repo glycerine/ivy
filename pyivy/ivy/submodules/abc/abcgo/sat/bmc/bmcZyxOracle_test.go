@@ -48,7 +48,7 @@ func simulateZyxIndependent(t *testing.T, net *zyxNetwork, nInputs int) uint64 {
 func TestZyxAllTwoInputFunctions(t *testing.T) {
 	for truth := 0; truth < 16; truth++ {
 		for order := int32(0); order <= 1; order++ {
-			p, err := newZyxSynthesis(&Bmc_EsPar_t{nVars: 2, nNodes: 1, nLutSize: 2, pTtStr: fmt.Sprintf("%x", truth), fOrderNodes: order})
+			p, err := newZyxSynthesis(&Bmc_EsPar_t{NVars: 2, NNodes: 1, NLutSize: 2, PTtStr: fmt.Sprintf("%x", truth), FOrderNodes: order})
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -99,7 +99,7 @@ func TestZyxThreeInputTruthTablesAgainstEnumeration(t *testing.T) {
 	// impossible tables and selected realizable tables requiring all inputs.
 	for _, truth := range []int{0x80, 0x96, 0xe8, 0xfe, 0x7f, 0x01, 0x69} {
 		for _, ordered := range []int32{0, 1} {
-			p, err := newZyxSynthesis(&Bmc_EsPar_t{nVars: 3, nNodes: 2, nLutSize: 2, pTtStr: fmt.Sprintf("%02x", truth), fOrderNodes: ordered})
+			p, err := newZyxSynthesis(&Bmc_EsPar_t{NVars: 3, NNodes: 2, NLutSize: 2, PTtStr: fmt.Sprintf("%02x", truth), FOrderNodes: ordered})
 			if err != nil {
 				t.Fatal(err)
 			}

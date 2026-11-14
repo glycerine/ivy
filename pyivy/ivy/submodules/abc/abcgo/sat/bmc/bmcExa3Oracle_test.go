@@ -9,7 +9,7 @@ func TestExa3IndependentTruthTables(t *testing.T) {
 	// All normal two-input functions that depend on both inputs.
 	for _, truth := range []uint64{0x2, 0x4, 0x6, 0x8, 0xe} {
 		for _, incremental := range []int32{0, 1} {
-			p := Exa3_ManAlloc(&Bmc_EsPar_t{nVars: 2, nNodes: 1, nLutSize: 2, fUseIncr: incremental}, []uint64{truth})
+			p := Exa3_ManAlloc(&Bmc_EsPar_t{NVars: 2, NNodes: 1, NLutSize: 2, FUseIncr: incremental}, []uint64{truth})
 			if Exa3_ManAddCnfStart(p, 0) == 0 {
 				t.Fatalf("truth=%x mode=%d initial CNF", truth, incremental)
 			}

@@ -41,7 +41,7 @@ func TestFaultDriverDetectsSingleGateFaults(t *testing.T) {
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			_ = os.Remove("tests.txt")
-			Gia_ManFaultTest(p, p, &Bmc_ParFf_t{Algo: tc.algo, pFormStr: tc.form, fBasic: tc.basic, nCardConstr: tc.card, fNonStrict: tc.nonstrict, fDump: 1})
+			Gia_ManFaultTest(p, p, &Bmc_ParFf_t{Algo: tc.algo, PFormStr: tc.form, FBasic: tc.basic, NCardConstr: tc.card, FNonStrict: tc.nonstrict, FDump: 1})
 			data, err := os.ReadFile("tests.txt")
 			if err != nil {
 				t.Fatalf("generated suite: %v", err)
@@ -82,7 +82,7 @@ func TestFaultDriverDetectsDelayFault(t *testing.T) {
 	gia.Gia_ManSetRegNum(p, 1)
 	for _, ffOnly := range []int32{0, 1} {
 		_ = os.Remove("tests.txt")
-		Gia_ManFaultTest(p, p, &Bmc_ParFf_t{Algo: 1, fFfOnly: ffOnly, fDump: 1})
+		Gia_ManFaultTest(p, p, &Bmc_ParFf_t{Algo: 1, FFfOnly: ffOnly, FDump: 1})
 		data, err := os.ReadFile("tests.txt")
 		if err != nil {
 			t.Fatalf("ffOnly=%d: %v", ffOnly, err)
@@ -122,7 +122,7 @@ func TestFaultDriverExtendsPriorPatterns(t *testing.T) {
 	if err = os.WriteFile("prior.txt", []byte("11\n"), 0600); err != nil {
 		t.Fatal(err)
 	}
-	Gia_ManFaultTest(p, p, &Bmc_ParFf_t{Algo: 2, fBasic: 1, pFileName: "prior.txt", fDump: 1})
+	Gia_ManFaultTest(p, p, &Bmc_ParFf_t{Algo: 2, FBasic: 1, PFileName: "prior.txt", FDump: 1})
 	data, err := os.ReadFile("tests.txt")
 	if err != nil {
 		t.Fatal(err)

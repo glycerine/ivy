@@ -117,7 +117,7 @@ func TestScalableBMCNormalizesNativeXORToAIG(t *testing.T) {
 	g := aig.NewGraph()
 	a, b := g.NewInput(), g.NewInput()
 	g.AddOutput(g.NewXor(a, b))
-	params := Saig_ParBmc_t{nFramesMax: 1}
+	params := Saig_ParBmc_t{NFramesMax: 1}
 	if result := Saig_ManBmcScalable(g, &params); result != 0 {
 		t.Fatalf("result=%d, want XOR counterexample", result)
 	}
@@ -176,7 +176,7 @@ func TestScalableBMCMultiOutputMatchesCUnderConflictBudget(t *testing.T) {
 	if len(cFrames) != 2 || cFrames[0] != 1 || cFrames[1] != 0 {
 		t.Fatalf("C multi-output frames=%v\n%s", cFrames, out)
 	}
-	params := Saig_ParBmc_t{nFramesMax: 3, nConfLimit: 1, fSolveAll: 1, fStoreCex: 1}
+	params := Saig_ParBmc_t{NFramesMax: 3, NConfLimit: 1, FSolveAll: 1, FStoreCex: 1}
 	if result := Saig_ManBmcScalable(g, &params); result != 0 {
 		t.Fatalf("Go result=%d, want failing", result)
 	}
@@ -263,7 +263,7 @@ func TestScalableBMCConflictUnknownMatchesC(t *testing.T) {
 	if strings.Contains(text, "Stopping BMC because all 2^0 reachable states are visited") || regexp.MustCompile(`Output\s+0 was asserted`).MatchString(text) {
 		t.Fatalf("C did not stop at conflict-budget UNKNOWN:\n%s", text)
 	}
-	params := Saig_ParBmc_t{nConfLimit: 1}
+	params := Saig_ParBmc_t{NConfLimit: 1}
 	if result := Saig_ManBmcScalable(g, &params); result != -1 {
 		t.Fatalf("Go result=%d, want unknown (-1); C output:\n%s", result, text)
 	}

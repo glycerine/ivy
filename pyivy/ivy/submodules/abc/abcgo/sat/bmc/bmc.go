@@ -42,73 +42,73 @@ package bmc
 // exact synthesis parameters
 
 type Bmc_EsPar_t struct {
-	nVars       int32
-	nNodes      int32
-	nLutSize    int32
-	nMajSupp    int32
-	fMajority   int32
-	fUseIncr    int32
-	fOnlyAnd    int32
-	fGlucose    int32
-	fOrderNodes int32
-	fEnumSols   int32
-	fFewerVars  int32
+	NVars       int32
+	NNodes      int32
+	NLutSize    int32
+	NMajSupp    int32
+	FMajority   int32
+	FUseIncr    int32
+	FOnlyAnd    int32
+	FGlucose    int32
+	FOrderNodes int32
+	FEnumSols   int32
+	FFewerVars  int32
 	RuntimeLim  int32
-	fVerbose    int32
-	pTtStr      string
+	FVerbose    int32
+	PTtStr      string
 }
 
 func Bmc_EsParSetDefault(pPars *Bmc_EsPar_t) {
 	*pPars = Bmc_EsPar_t{}
-	pPars.nVars = 0
-	pPars.nNodes = 0
-	pPars.nLutSize = 2
-	pPars.nMajSupp = 0
-	pPars.fMajority = 0
-	pPars.fUseIncr = 0
-	pPars.fOnlyAnd = 0
-	pPars.fGlucose = 0
-	pPars.fOrderNodes = 0
-	pPars.fEnumSols = 0
-	pPars.fFewerVars = 0
+	pPars.NVars = 0
+	pPars.NNodes = 0
+	pPars.NLutSize = 2
+	pPars.NMajSupp = 0
+	pPars.FMajority = 0
+	pPars.FUseIncr = 0
+	pPars.FOnlyAnd = 0
+	pPars.FGlucose = 0
+	pPars.FOrderNodes = 0
+	pPars.FEnumSols = 0
+	pPars.FFewerVars = 0
 	pPars.RuntimeLim = 0
-	pPars.fVerbose = 1
+	pPars.FVerbose = 1
 }
 
 // unrolling manager
 type Unr_Man_t = Unr_Man_t_
 
 type Bmc_AndPar_t struct {
-	nStart        int32 // starting timeframe
-	nFramesMax    int32 // maximum number of timeframes
-	nFramesAdd    int32 // the number of additional frames
-	nConfLimit    int32 // maximum number of conflicts at a node
-	nTimeOut      int32 // timeout in seconds
-	nLutSize      int32 // LUT size for cut computation
-	nProcs        int32 // the number of parallel solvers
-	fLoadCnf      int32 // dynamic CNF loading
-	fDumpFrames   int32 // dump unrolled timeframes
-	fUseSynth     int32 // use synthesis
-	fUseOldCnf    int32 // use old CNF construction
-	fUseGlucose   int32 // use Glucose 3.0 as the default solver
-	fUseEliminate int32 // use variable elimination
-	fVerbose      int32 // verbose
-	fVeryVerbose  int32 // very verbose
-	fNotVerbose   int32 // skip line-by-line print-out
-	iFrame        int32 // explored up to this frame
-	nFailOuts     int32 // the number of failed outputs
-	nDropOuts     int32 // the number of dropped outputs
+	NStart        int32 // starting timeframe
+	NFramesMax    int32 // maximum number of timeframes
+	NFramesAdd    int32 // the number of additional frames
+	NConfLimit    int32 // maximum number of conflicts at a node
+	NTimeOut      int32 // timeout in seconds
+	NLutSize      int32 // LUT size for cut computation
+	NProcs        int32 // the number of parallel solvers
+	FLoadCnf      int32 // dynamic CNF loading
+	FDumpFrames   int32 // dump unrolled timeframes
+	FUseSynth     int32 // use synthesis
+	FUseOldCnf    int32 // use old CNF construction
+	FUseGlucose   int32 // use Glucose 3.0 as the default solver
+	FUseEliminate int32 // use variable elimination
+	FVerbose      int32 // verbose
+	FVeryVerbose  int32 // very verbose
+	FNotVerbose   int32 // skip line-by-line print-out
+	IFrame        int32 // explored up to this frame
+	NFailOuts     int32 // the number of failed outputs
+	NDropOuts     int32 // the number of dropped outputs
 
-	pFuncOnFrameDone func(int32, int32, int32) // callback on each frame status (frame, po, status)
+	PFuncOnFrameDone func(int32, int32, int32) // callback on each frame status (frame, po, status)
 }
 
 type Bmc_BCorePar_t struct {
-	iFrame      int32  // timeframe
-	iOutput     int32  // property output
-	nTimeOut    int32  // timeout in seconds
-	pFilePivots string // file name with AIG IDs of pivot objects
-	pFileProof  string // file name to write the resulting proof
-	fVerbose    int32  // verbose output
+	IFrame      int32  // timeframe
+	IOutput     int32  // property output
+	NTimeOut    int32  // timeout in seconds
+	PFilePivots string // file name with AIG IDs of pivot objects
+	PFileProof  string // file name to write the resulting proof
+	FVerbose    int32  // verbose output
 }
 
 type Bmc_MulPar_t struct {
@@ -117,30 +117,30 @@ type Bmc_MulPar_t struct {
 	TimeOutInc   int32
 	TimeOutGap   int32
 	TimePerOut   int32
-	fUseSyn      int32
-	fDumpFinal   int32
-	fVerbose     int32
-	fVeryVerbose int32
+	FUseSyn      int32
+	FDumpFinal   int32
+	FVerbose     int32
+	FVeryVerbose int32
 }
 
 type Bmc_ParFf_t struct {
-	pFileName      string
-	pFormStr       string
+	PFileName      string
+	PFormStr       string
 	Algo           int32
 	fComplVars     int32
-	fStartPats     int32
-	nTimeOut       int32
-	nIterCheck     int32
-	nCardConstr    int32
-	fNonStrict     int32
-	fBasic         int32
-	fFfOnly        int32
-	fCheckUntest   int32
-	fDump          int32
-	fDumpDelay     int32
-	fDumpUntest    int32
-	fDumpNewFaults int32
-	fVerbose       int32
+	FStartPats     int32
+	NTimeOut       int32
+	NIterCheck     int32
+	NCardConstr    int32
+	FNonStrict     int32
+	FBasic         int32
+	FFfOnly        int32
+	FCheckUntest   int32
+	FDump          int32
+	FDumpDelay     int32
+	FDumpUntest    int32
+	FDumpNewFaults int32
+	FVerbose       int32
 }
 
 ////////////////////////////////////////////////////////////////////////

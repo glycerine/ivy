@@ -205,7 +205,7 @@ func TestBMCAgainstCABCExpanded(t *testing.T) {
 				t.Fatalf("C got output=%d frame=%d, oracle output=%d frame=%d: %s", output, frame, expectedOutput, expectedFrame, text)
 			}
 			graph := f.graph()
-			p := Saig_ParBmc_t{nFramesMax: 4}
+			p := Saig_ParBmc_t{NFramesMax: 4}
 			result := Saig_ManBmcScalable(graph, &p)
 			if frame < 0 {
 				if result != 1 {

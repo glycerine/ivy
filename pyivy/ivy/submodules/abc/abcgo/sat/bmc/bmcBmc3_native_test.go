@@ -20,7 +20,7 @@ func TestScalableBMCFindsOneFrameCounterexample(t *testing.T) {
 	aig.Aig_ManSetRegNum(g, 1)
 	var params Saig_ParBmc_t
 	Saig_ParBmcSetDefaultParams(&params)
-	params.nFramesMax = 2
+	params.NFramesMax = 2
 	if got := Saig_ManBmcScalable(g, &params); got != 0 {
 		t.Fatalf("result=%d, want counterexample (0)", got)
 	}
@@ -46,7 +46,7 @@ func TestScalableBMCBackendSelectionMatchesSourcePriority(t *testing.T) {
 			g.AddOutput(state)
 			g.AddOutput(pi)
 			aig.Aig_ManSetRegNum(g, 1)
-			params := Saig_ParBmc_t{nFramesMax: 2, fUseSatoko: tc.satoko, fUseGlucose: tc.glucose}
+			params := Saig_ParBmc_t{NFramesMax: 2, FUseSatoko: tc.satoko, FUseGlucose: tc.glucose}
 			if got := Saig_ManBmcScalable(g, &params); got != 0 {
 				t.Fatalf("result=%d, want witness", got)
 			}
@@ -65,7 +65,7 @@ func TestScalableBMCProvesZeroStateInvariant(t *testing.T) {
 	aig.Aig_ManSetRegNum(g, 1)
 	var params Saig_ParBmc_t
 	Saig_ParBmcSetDefaultParams(&params)
-	params.nFramesMax = 2
+	params.NFramesMax = 2
 	if got := Saig_ManBmcScalable(g, &params); got != -1 {
 		t.Fatalf("result=%d, want unknown after finite bound (-1)", got)
 	}
@@ -95,7 +95,7 @@ func TestScalableBMCStartAndWitnessReplacement(t *testing.T) {
 	if err := g.SetSequentialCounterexample(old); err != nil {
 		t.Fatal(err)
 	}
-	params := Saig_ParBmc_t{nStart: 1, nFramesMax: 2}
+	params := Saig_ParBmc_t{NStart: 1, NFramesMax: 2}
 	if got := Saig_ManBmcScalable(g, &params); got != 0 {
 		t.Fatalf("result=%d, want witness", got)
 	}
@@ -199,12 +199,12 @@ func TestScalableBMCJumpRaisesConflictBudget(t *testing.T) {
 		property = g.AND(property, part)
 	}
 	g.AddOutput(property)
-	params := Saig_ParBmc_t{nFramesMax: 2, nConfLimit: 1, nFramesJump: 1, nConfLimitJump: 0}
+	params := Saig_ParBmc_t{NFramesMax: 2, NConfLimit: 1, NFramesJump: 1, NConfLimitJump: 0}
 	if got := Saig_ManBmcScalable(g, &params); got != -1 {
 		t.Fatalf("result=%d, want bounded unknown after jump", got)
 	}
-	if params.nConfLimit != 0 {
-		t.Fatalf("conflict budget after jump=%d, want unlimited", params.nConfLimit)
+	if params.NConfLimit != 0 {
+		t.Fatalf("conflict budget after jump=%d, want unlimited", params.NConfLimit)
 	}
 }
 
@@ -218,9 +218,9 @@ func TestScalableBMCSolveAllCountsDistinctOutputs(t *testing.T) {
 	aig.Aig_ManSetRegNum(g, 2)
 	var params Saig_ParBmc_t
 	Saig_ParBmcSetDefaultParams(&params)
-	params.nFramesMax = 4
-	params.fSolveAll = 1
-	params.fStoreCex = 1
+	params.NFramesMax = 4
+	params.FSolveAll = 1
+	params.FStoreCex = 1
 	if result := Saig_ManBmcScalable(g, &params); result != 0 {
 		t.Fatalf("result=%d, want failing", result)
 	}
@@ -233,8 +233,8 @@ func TestScalableBMCSolveAllCountsDistinctOutputs(t *testing.T) {
 			frames[output] = cex.IFrame
 		}
 	}
-	if len(frames) != 2 || frames[0] != 0 || frames[1] != 2 || params.nFailOuts != 2 {
-		t.Fatalf("frames=%v count=%d", frames, params.nFailOuts)
+	if len(frames) != 2 || frames[0] != 0 || frames[1] != 2 || params.NFailOuts != 2 {
+		t.Fatalf("frames=%v count=%d", frames, params.NFailOuts)
 	}
 }
 
@@ -242,16 +242,16 @@ func TestScalableBMCSolveAllReturnsFailureWhenSomeOutputsSafe(t *testing.T) {
 	g := aig.NewGraph()
 	g.AddOutput(g.Const1())
 	g.AddOutput(g.Const0())
-	params := Saig_ParBmc_t{nFramesMax: 2, fSolveAll: 1, fStoreCex: 1}
-	if result := Saig_ManBmcScalable(g, &params); result != 0 || params.nFailOuts != 1 {
-		t.Fatalf("result=%d failures=%d", result, params.nFailOuts)
+	params := Saig_ParBmc_t{NFramesMax: 2, FSolveAll: 1, FStoreCex: 1}
+	if result := Saig_ManBmcScalable(g, &params); result != 0 || params.NFailOuts != 1 {
+		t.Fatalf("result=%d failures=%d", result, params.NFailOuts)
 	}
 }
 
 func TestScalableBMCSolveAllCallbackRespectsCEXStorageOption(t *testing.T) {
 	g := aig.NewGraph()
 	g.AddOutput(g.Const1())
-	params := Saig_ParBmc_t{nFramesMax: 1, fSolveAll: 1}
+	params := Saig_ParBmc_t{NFramesMax: 1, FSolveAll: 1}
 	called := false
 	params.pFuncOnFail = func(_ int32, cex *util.Abc_Cex_t) int32 {
 		called = true

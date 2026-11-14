@@ -86,28 +86,28 @@ func (p *zyxSynthesis) set(v int32, val bool) bool {
 	return p.clause(bsat.Negative(v))
 }
 func newZyxSynthesis(pars *Bmc_EsPar_t) (*zyxSynthesis, error) {
-	if pars == nil || pars.nVars < 2 || pars.nVars > 10 || pars.nNodes < 1 || pars.nLutSize < 2 || pars.nLutSize > 6 || pars.nLutSize > pars.nVars || pars.nVars+pars.nNodes > 26 {
+	if pars == nil || pars.NVars < 2 || pars.NVars > 10 || pars.NNodes < 1 || pars.NLutSize < 2 || pars.NLutSize > 6 || pars.NLutSize > pars.NVars || pars.NVars+pars.NNodes > 26 {
 		return nil, fmt.Errorf("invalid synthesis dimensions")
 	}
-	if pars.fMajority != 0 && pars.nLutSize != 3 {
+	if pars.FMajority != 0 && pars.NLutSize != 3 {
 		return nil, fmt.Errorf("majority gates require three fanins")
 	}
-	n, nodeCount, k := int(pars.nVars), int(pars.nNodes), int(pars.nLutSize)
+	n, nodeCount, k := int(pars.NVars), int(pars.NNodes), int(pars.NLutSize)
 	total := n + nodeCount
 	minterms := 1 << n
 	functions := 1 << k
-	p := &zyxSynthesis{pars: *pars, solver: &zyxSolver{s: glucose.Glucose_solver_start()}, target: make([]uint64, util.Abc_TtWordNum(pars.nVars)), topo: make([][]int32, nodeCount), funcs: make([][]int32, nodeCount), values: make([][]int32, minterms), combos: make([][][]int, nodeCount), constrained: make([]bool, minterms)}
-	if pars.fMajority != 0 {
+	p := &zyxSynthesis{pars: *pars, solver: &zyxSolver{s: glucose.Glucose_solver_start()}, target: make([]uint64, util.Abc_TtWordNum(pars.NVars)), topo: make([][]int32, nodeCount), funcs: make([][]int32, nodeCount), values: make([][]int32, minterms), combos: make([][][]int, nodeCount), constrained: make([]bool, minterms)}
+	if pars.FMajority != 0 {
 		for m := 0; m < minterms; m++ {
 			if bits.OnesCount(uint(m)) > n/2 {
 				util.Abc_TtSetBit(p.target, int32(m))
 			}
 		}
 	} else {
-		if pars.pTtStr == "" {
+		if pars.PTtStr == "" {
 			return nil, fmt.Errorf("missing truth table")
 		}
-		util.Abc_TtReadHex(p.target, pars.pTtStr)
+		util.Abc_TtReadHex(p.target, pars.PTtStr)
 		if p.target[0]&1 != 0 {
 			p.inverted = true
 			for i := range p.target {
@@ -154,17 +154,17 @@ func newZyxSynthesis(pars *Bmc_EsPar_t) (*zyxSynthesis, error) {
 			p.clause(cl...)
 		}
 		p.set(p.funcs[i][0], false)
-		if pars.fMajority != 0 {
+		if pars.FMajority != 0 {
 			for v := 1; v < functions; v++ {
 				p.set(p.funcs[i][v], bits.OnesCount(uint(v)) > k/2)
 			}
 		}
-		if k == 2 && pars.fMajority == 0 {
+		if k == 2 && pars.FMajority == 0 {
 			f := p.funcs[i]
 			p.clause(bsat.Positive(f[1]), bsat.Positive(f[2]), bsat.Positive(f[3]))
 			p.clause(bsat.Negative(f[1]), bsat.Positive(f[2]), bsat.Negative(f[3]))
 			p.clause(bsat.Positive(f[1]), bsat.Negative(f[2]), bsat.Negative(f[3]))
-			if pars.fOnlyAnd != 0 {
+			if pars.FOnlyAnd != 0 {
 				p.clause(bsat.Negative(f[1]), bsat.Negative(f[2]), bsat.Positive(f[3]))
 			}
 		}
@@ -180,7 +180,7 @@ func newZyxSynthesis(pars *Bmc_EsPar_t) (*zyxSynthesis, error) {
 		p.clause(clause...)
 	}
 	p.set(p.topo[nodeCount-1][total-2], true)
-	if pars.fMajority != 0 {
+	if pars.FMajority != 0 {
 		for j, v := range p.topo[0] {
 			p.set(v, j < 3)
 		}
@@ -196,8 +196,8 @@ func (p *zyxSynthesis) addMinterm(m int) bool {
 		return true
 	}
 	p.constrained[m] = true
-	k := int(p.pars.nLutSize)
-	n := int(p.pars.nVars)
+	k := int(p.pars.NLutSize)
+	n := int(p.pars.NVars)
 	for gate, sets := range p.combos {
 		for _, fans := range sets {
 			for pattern := 0; pattern < 1<<k; pattern++ {
@@ -241,7 +241,7 @@ func (p *zyxSynthesis) model() zyxNetwork {
 	return result
 }
 func (p *zyxSynthesis) mismatch(net zyxNetwork) int {
-	n := int(p.pars.nVars)
+	n := int(p.pars.NVars)
 	vals := make([]bool, n+len(net.fanins))
 	for m := range p.values {
 		for i := 0; i < n; i++ {
@@ -282,7 +282,7 @@ func (p *zyxSynthesis) ordered(net zyxNetwork) bool {
 		if comparison > 0 {
 			return false
 		}
-		if comparison == 0 && p.pars.fMajority == 0 {
+		if comparison == 0 && p.pars.FMajority == 0 {
 			for j := len(net.funcs[i]) - 1; j >= 0; j-- {
 				if net.funcs[i-1][j] != net.funcs[i][j] {
 					if net.funcs[i-1][j] {
@@ -293,7 +293,7 @@ func (p *zyxSynthesis) ordered(net zyxNetwork) bool {
 			}
 		}
 	}
-	n := int(p.pars.nVars)
+	n := int(p.pars.NVars)
 	for a := 0; a < n; a++ {
 		for b := a + 1; b < n; b++ {
 			symmetric := true
@@ -365,7 +365,7 @@ func (p *zyxSynthesis) solve() (*zyxNetwork, bsat.Status) {
 			return nil, status
 		}
 		net := p.model()
-		if p.pars.fOrderNodes != 0 && !p.ordered(net) {
+		if p.pars.FOrderNodes != 0 && !p.ordered(net) {
 			if !p.blockUnordered(net) {
 				return nil, bsat.Unsatisfiable
 			}
@@ -392,7 +392,7 @@ func (p *zyxSynthesis) blockTopology(net *zyxNetwork) bool {
 
 func (p *zyxSynthesis) writeSolution(net *zyxNetwork, first bool) error {
 	var hex strings.Builder
-	for i := (1<<int(p.pars.nVars))/4 - 1; i >= 0; i-- {
+	for i := (1<<int(p.pars.NVars))/4 - 1; i >= 0; i-- {
 		var digit int
 		for b := 0; b < 4; b++ {
 			bit := util.Abc_TtGetBit(p.target, int32(4*i+b)) != 0
@@ -405,7 +405,7 @@ func (p *zyxSynthesis) writeSolution(net *zyxNetwork, first bool) error {
 		}
 		hex.WriteByte("0123456789abcdef"[digit])
 	}
-	name := fmt.Sprintf("%s-%d-%d.bool", hex.String(), p.pars.nLutSize, p.pars.nNodes)
+	name := fmt.Sprintf("%s-%d-%d.bool", hex.String(), p.pars.NLutSize, p.pars.NNodes)
 	flags := os.O_WRONLY | os.O_CREATE | os.O_APPEND
 	if first {
 		flags = os.O_WRONLY | os.O_CREATE | os.O_TRUNC
@@ -416,7 +416,7 @@ func (p *zyxSynthesis) writeSolution(net *zyxNetwork, first bool) error {
 	}
 	var out strings.Builder
 	for i, fans := range net.fanins {
-		fmt.Fprintf(&out, "%c", 'A'+int(p.pars.nVars)+i)
+		fmt.Fprintf(&out, "%c", 'A'+int(p.pars.NVars)+i)
 		for j := len(net.funcs[i]) - 1; j >= 0; j-- {
 			value := net.funcs[i][j]
 			if net.complemented && i == len(net.fanins)-1 {
@@ -429,7 +429,7 @@ func (p *zyxSynthesis) writeSolution(net *zyxNetwork, first bool) error {
 			}
 		}
 		for _, v := range fans {
-			if v < int(p.pars.nVars) {
+			if v < int(p.pars.NVars) {
 				fmt.Fprintf(&out, "%c", 'a'+v)
 			} else {
 				fmt.Fprintf(&out, "%c", 'A'+v)
@@ -456,7 +456,7 @@ func Zyx_ManExactSynthesis(pars *Bmc_EsPar_t) {
 		fmt.Printf("Exact synthesis: %v.\n", err)
 		return
 	}
-	fmt.Printf("Running exact synthesis for %d-input function with %d %d-input gates...\n", pars.nVars, pars.nNodes, pars.nLutSize)
+	fmt.Printf("Running exact synthesis for %d-input function with %d %d-input gates...\n", pars.NVars, pars.NNodes, pars.NLutSize)
 	count := 0
 	for {
 		net, status := p.solve()
@@ -467,10 +467,10 @@ func Zyx_ManExactSynthesis(pars *Bmc_EsPar_t) {
 			break
 		}
 		count++
-		fmt.Printf("Realization of given %d-input function using %d %d-input gates:\n", pars.nVars, pars.nNodes, pars.nLutSize)
+		fmt.Printf("Realization of given %d-input function using %d %d-input gates:\n", pars.NVars, pars.NNodes, pars.NLutSize)
 		for i := len(net.fanins) - 1; i >= 0; i-- {
-			fmt.Printf("%02d = ", int(pars.nVars)+i)
-			if pars.fMajority != 0 {
+			fmt.Printf("%02d = ", int(pars.NVars)+i)
+			if pars.FMajority != 0 {
 				fmt.Print("MAJ3")
 			} else {
 				fmt.Printf("%d'b", len(net.funcs[i]))
@@ -488,7 +488,7 @@ func Zyx_ManExactSynthesis(pars *Bmc_EsPar_t) {
 			}
 			fmt.Print("(")
 			for _, v := range net.fanins[i] {
-				if v < int(pars.nVars) {
+				if v < int(pars.NVars) {
 					fmt.Printf(" %c", 'a'+v)
 				} else {
 					fmt.Printf(" %02d", v)
@@ -496,16 +496,16 @@ func Zyx_ManExactSynthesis(pars *Bmc_EsPar_t) {
 			}
 			fmt.Println(" )")
 		}
-		if pars.fMajority == 0 {
+		if pars.FMajority == 0 {
 			if err := p.writeSolution(net, count == 1); err != nil {
 				fmt.Printf("Cannot write solution: %v\n", err)
 			}
 		}
-		if pars.fEnumSols == 0 || !p.blockTopology(net) {
+		if pars.FEnumSols == 0 || !p.blockTopology(net) {
 			break
 		}
 	}
-	if pars.fEnumSols != 0 {
+	if pars.FEnumSols != 0 {
 		fmt.Printf("Finished enumerating %d solutions.\n", count)
 	}
 	fmt.Printf("Total runtime: %s\n", time.Since(start))

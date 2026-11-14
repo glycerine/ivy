@@ -12,11 +12,11 @@ func TestZyxSynthesis(t *testing.T) {
 		p    Bmc_EsPar_t
 		want bsat.Status
 	}{
-		{"and", Bmc_EsPar_t{nVars: 2, nNodes: 1, nLutSize: 2, pTtStr: "8"}, bsat.Satisfiable},
-		{"xor", Bmc_EsPar_t{nVars: 2, nNodes: 1, nLutSize: 2, pTtStr: "6"}, bsat.Satisfiable},
-		{"xor only and", Bmc_EsPar_t{nVars: 2, nNodes: 1, nLutSize: 2, pTtStr: "6", fOnlyAnd: 1}, bsat.Unsatisfiable},
-		{"majority", Bmc_EsPar_t{nVars: 3, nNodes: 1, nLutSize: 3, fMajority: 1}, bsat.Satisfiable},
-		{"and3 impossible", Bmc_EsPar_t{nVars: 3, nNodes: 1, nLutSize: 2, pTtStr: "80"}, bsat.Unsatisfiable},
+		{"and", Bmc_EsPar_t{NVars: 2, NNodes: 1, NLutSize: 2, PTtStr: "8"}, bsat.Satisfiable},
+		{"xor", Bmc_EsPar_t{NVars: 2, NNodes: 1, NLutSize: 2, PTtStr: "6"}, bsat.Satisfiable},
+		{"xor only and", Bmc_EsPar_t{NVars: 2, NNodes: 1, NLutSize: 2, PTtStr: "6", FOnlyAnd: 1}, bsat.Unsatisfiable},
+		{"majority", Bmc_EsPar_t{NVars: 3, NNodes: 1, NLutSize: 3, FMajority: 1}, bsat.Satisfiable},
+		{"and3 impossible", Bmc_EsPar_t{NVars: 3, NNodes: 1, NLutSize: 2, PTtStr: "80"}, bsat.Unsatisfiable},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			p, err := newZyxSynthesis(&tc.p)
@@ -43,7 +43,7 @@ func TestZyxSolutionFile(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer os.Chdir(old)
-	p, err := newZyxSynthesis(&Bmc_EsPar_t{nVars: 2, nNodes: 1, nLutSize: 2, pTtStr: "7"})
+	p, err := newZyxSynthesis(&Bmc_EsPar_t{NVars: 2, NNodes: 1, NLutSize: 2, PTtStr: "7"})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -61,7 +61,7 @@ func TestZyxSolutionFile(t *testing.T) {
 }
 
 func TestZyxNodeOrdering(t *testing.T) {
-	pars := Bmc_EsPar_t{nVars: 3, nNodes: 2, nLutSize: 2, pTtStr: "80", fOrderNodes: 1}
+	pars := Bmc_EsPar_t{NVars: 3, NNodes: 2, NLutSize: 2, PTtStr: "80", FOrderNodes: 1}
 	p, err := newZyxSynthesis(&pars)
 	if err != nil {
 		t.Fatal(err)

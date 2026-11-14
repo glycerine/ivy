@@ -30,7 +30,7 @@ func TestBoundedCheckingEntryPoints(t *testing.T) {
 		t.Run(entry.name, func(t *testing.T) {
 			for _, bound := range []int32{1, 2} {
 				g := gia.Gia_ManFromAig(entryPointGraph())
-				p := &Bmc_AndPar_t{nFramesMax: bound}
+				p := &Bmc_AndPar_t{NFramesMax: bound}
 				status := entry.run(g, p)
 				if bound == 1 && status != 1 {
 					t.Fatalf("bound 1 status %d", status)

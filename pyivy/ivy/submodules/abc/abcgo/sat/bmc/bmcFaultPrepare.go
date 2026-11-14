@@ -17,13 +17,13 @@ func Gia_ManFaultPrepare(p, reference *gia.Gia_Man_t, options *Bmc_ParFf_t, nFun
 	var original, faulty *gia.Gia_Man_t
 	switch options.Algo {
 	case 0:
-		faulty = Gia_ManFormulaUnfold(p, options.pFormStr, options.fFfOnly)
+		faulty = Gia_ManFormulaUnfold(p, options.PFormStr, options.FFfOnly)
 	case 1:
 		if gia.Gia_ManRegNum(p) == 0 {
 			return 0
 		}
-		original = Gia_ManFaultUnfold(reference, 0, options.fFfOnly)
-		faulty = Gia_ManFaultUnfold(p, 1, options.fFfOnly)
+		original = Gia_ManFaultUnfold(reference, 0, options.FFfOnly)
+		faulty = Gia_ManFaultUnfold(p, 1, options.FFfOnly)
 	case 2:
 		faulty = Gia_ManStuckAtUnfold(p, faultMap)
 	case 3:
@@ -49,8 +49,8 @@ func Gia_ManFaultPrepare(p, reference *gia.Gia_Man_t, options *Bmc_ParFf_t, nFun
 	for i := 0; i < enc.Variables; i++ {
 		solver.NewVariable()
 	}
-	if options.nTimeOut > 0 {
-		solver.SetDeadline(time.Now().Add(time.Duration(options.nTimeOut) * time.Second))
+	if options.NTimeOut > 0 {
+		solver.SetDeadline(time.Now().Add(time.Duration(options.NTimeOut) * time.Second))
 	}
 	for _, clause := range enc.Clauses {
 		if !solver.AddClause(clause...) {
@@ -71,16 +71,16 @@ func Gia_ManFaultPrepare(p, reference *gia.Gia_Man_t, options *Bmc_ParFf_t, nFun
 		id := gia.Gia_ObjId(m, gia.Gia_ManCi(m, i))
 		vec.Vec_IntPush(scratch, data.VarNums[id])
 	}
-	if options.fBasic != 0 {
+	if options.FBasic != 0 {
 		Cnf_AddCardinConstr(solver, scratch)
-	} else if options.nCardConstr != 0 {
+	} else if options.NCardConstr != 0 {
 		strict := int32(1)
-		if options.fNonStrict != 0 {
+		if options.FNonStrict != 0 {
 			strict = 0
 		}
-		Cnf_AddCardinConstrGeneral(solver, scratch, options.nCardConstr, strict)
+		Cnf_AddCardinConstrGeneral(solver, scratch, options.NCardConstr, strict)
 	}
-	if vec.Vec_IntSize(tests) == 0 && options.fStartPats != 0 {
+	if vec.Vec_IntSize(tests) == 0 && options.FStartPats != 0 {
 		for value := int32(0); value < 2; value++ {
 			for i := int32(0); i < nFuncVars; i++ {
 				vec.Vec_IntPush(tests, value)

@@ -108,7 +108,7 @@ func TestBMCAgainstCABC(t *testing.T) {
 				t.Fatalf("could not identify C result: %s", text)
 			}
 			graph := tc.build()
-			params := Saig_ParBmc_t{nFramesMax: 4}
+			params := Saig_ParBmc_t{NFramesMax: 4}
 			result := Saig_ManBmcScalable(graph, &params)
 			if cframe != tc.wantFrame {
 				t.Fatalf("C frame=%d want=%d: %s", cframe, tc.wantFrame, text)

@@ -41,7 +41,7 @@ func TestFaultDriverTwoGateFaultCoverage(t *testing.T) {
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			os.Remove("tests.txt")
-			Gia_ManFaultTest(g, g, &Bmc_ParFf_t{Algo: tc.algo, pFormStr: tc.form, fBasic: tc.basic, fDump: 1})
+			Gia_ManFaultTest(g, g, &Bmc_ParFf_t{Algo: tc.algo, PFormStr: tc.form, FBasic: tc.basic, FDump: 1})
 			data, err := os.ReadFile("tests.txt")
 			if err != nil {
 				t.Fatal(err)
@@ -141,7 +141,7 @@ func TestFaultDriverTwoGateDelayCoverage(t *testing.T) {
 		for _, basic := range []int32{0, 1} {
 			t.Run(fmt.Sprintf("ff%d_basic%d", ffOnly, basic), func(t *testing.T) {
 				os.Remove("tests.txt")
-				Gia_ManFaultTest(g, g, &Bmc_ParFf_t{Algo: 1, fFfOnly: ffOnly, fBasic: basic, fDump: 1})
+				Gia_ManFaultTest(g, g, &Bmc_ParFf_t{Algo: 1, FFfOnly: ffOnly, FBasic: basic, FDump: 1})
 				data, err := os.ReadFile("tests.txt")
 				if err != nil {
 					t.Fatal(err)

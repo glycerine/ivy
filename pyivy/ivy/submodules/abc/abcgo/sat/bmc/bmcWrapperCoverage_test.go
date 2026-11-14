@@ -100,7 +100,7 @@ func TestBMCGIAWrappers(t *testing.T) {
 				g.AddOutput(next)
 				aig.Aig_ManSetRegNum(g, 1)
 				p := gia.Gia_ManFromAig(g)
-				params := &Bmc_AndPar_t{nFramesMax: 2}
+				params := &Bmc_AndPar_t{NFramesMax: 2}
 				got := impl.run(p, params)
 				if bad {
 					cex := p.SequentialCounterexample()

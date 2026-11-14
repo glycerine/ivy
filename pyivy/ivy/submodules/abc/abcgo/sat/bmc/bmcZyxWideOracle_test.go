@@ -17,7 +17,7 @@ func TestZyxSevenInputWideTruth(t *testing.T) {
 		{"nor", "00000000000000000000000000000001", true},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			p, err := newZyxSynthesis(&Bmc_EsPar_t{nVars: 7, nNodes: 3, nLutSize: 3, pTtStr: tc.truth})
+			p, err := newZyxSynthesis(&Bmc_EsPar_t{NVars: 7, NNodes: 3, NLutSize: 3, PTtStr: tc.truth})
 			if err != nil {
 				t.Fatal(err)
 			}

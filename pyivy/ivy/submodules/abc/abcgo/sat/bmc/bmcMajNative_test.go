@@ -16,7 +16,7 @@ func TestMajoritySynthesis(t *testing.T) {
 
 func TestExactTwoInputSynthesis(t *testing.T) {
 	for _, want := range []uint64{0x8888888888888888, 0x6666666666666666, 0xeeeeeeeeeeeeeeee} {
-		pars := &Bmc_EsPar_t{nVars: 2, nNodes: 1}
+		pars := &Bmc_EsPar_t{NVars: 2, NNodes: 1}
 		p := Exa_ManAlloc(pars, []uint64{want})
 		if Exa_ManAddCnfStart(p, 0) == 0 {
 			t.Fatal("structural constraints")

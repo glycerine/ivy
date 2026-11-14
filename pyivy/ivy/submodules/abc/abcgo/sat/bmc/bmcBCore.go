@@ -191,13 +191,13 @@ func Bmc_ManBCorePerform(p *gia.Gia_Man_t, params *Bmc_BCorePar_t) {
 	start := time.Now()
 	solver := bsat.NewSolver()
 	solver.EnableClauseStore()
-	if params.nTimeOut > 0 {
-		solver.SetDeadline(start.Add(time.Duration(params.nTimeOut) * time.Second))
+	if params.NTimeOut > 0 {
+		solver.SetDeadline(start.Add(time.Duration(params.NTimeOut) * time.Second))
 	}
-	mapping := Bmc_ManBCoreCollect(p, params.iFrame, params.iOutput, solver)
+	mapping := Bmc_ManBCoreCollect(p, params.IFrame, params.IOutput, solver)
 	solver.MarkClauseStoreRoots()
-	if params.pFilePivots != "" {
-		pivots := Bmc_ManBCoreCollectPivots(p, params.pFilePivots, mapping)
+	if params.PFilePivots != "" {
+		pivots := Bmc_ManBCoreCollectPivots(p, params.PFilePivots, mapping)
 		solver.SetPivotVariables(vec.Vec_IntArray(pivots))
 	}
 	status := solver.Solve()
@@ -209,21 +209,21 @@ func Bmc_ManBCorePerform(p *gia.Gia_Man_t, params *Bmc_BCorePar_t) {
 		fmt.Println("The BMC problem is SAT.")
 		return
 	}
-	if params.fVerbose != 0 {
+	if params.FVerbose != 0 {
 		fmt.Printf("SAT solver returned UNSAT after %7d conflicts. Time %s\n", solver.Statistics().Conflicts, time.Since(start))
 	}
 	store := solver.ReleaseClauseStore()
 	proof := bsat.Intp_ManAlloc()
-	core := bsat.Intp_ManUnsatCore(proof, store, 1, params.fVerbose)
+	core := bsat.Intp_ManUnsatCore(proof, store, 1, params.FVerbose)
 	if err := bsat.Intp_ManError(proof); err != nil {
 		fmt.Printf("Cannot derive BMC proof: %v\n", err)
 		return
 	}
 	sort.Slice(core, func(i, j int) bool { return core[i] < core[j] })
 	file := os.Stdout
-	if params.pFileProof != "" {
+	if params.PFileProof != "" {
 		var err error
-		file, err = os.Create(params.pFileProof)
+		file, err = os.Create(params.PFileProof)
 		if err != nil {
 			fmt.Printf("Cannot write BMC proof: %v\n", err)
 			return

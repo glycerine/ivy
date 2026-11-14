@@ -23,7 +23,7 @@ type bmc3Solver interface {
 }
 
 func newBmc3Solver(p *Saig_ParBmc_t) bmc3Solver {
-	if p.fUseSatoko != 0 {
+	if p.FUseSatoko != 0 {
 		s := satoko.New()
 		s.SetRunID(int(p.RunId))
 		if p.pFuncStop != nil {
@@ -31,12 +31,12 @@ func newBmc3Solver(p *Saig_ParBmc_t) bmc3Solver {
 		}
 		return &bmc3Satoko{Solver: s}
 	}
-	if p.fUseGlucose != 0 {
+	if p.FUseGlucose != 0 {
 		return &bmc3Glucose{Solver: glucose.NewSolver()}
 	}
 	s := bsat.NewSolver()
-	s.SetLearnedPolicy(p.nLearnedStart, p.nLearnedDelta, p.nLearnedPerce)
-	s.SetNoRestarts(p.fNoRestarts != 0)
+	s.SetLearnedPolicy(p.NLearnedStart, p.NLearnedDelta, p.NLearnedPerce)
+	s.SetNoRestarts(p.FNoRestarts != 0)
 	s.SetStopFunc(p.RunId, p.pFuncStop)
 	return s
 }

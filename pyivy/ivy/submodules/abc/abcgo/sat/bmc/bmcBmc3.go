@@ -15,34 +15,34 @@ import (
 // It lives beside the native implementation so this algorithm can be tested
 // without importing the unrelated C-derived unrolling declarations.
 type Saig_ParBmc_t struct {
-	nStart         int32
-	nFramesMax     int32
-	nConfLimit     int32
-	nConfLimitJump int32
-	nFramesJump    int32
-	nTimeOut       int32
-	nTimeOutGap    int32
-	nTimeOutOne    int32
-	nPisAbstract   int32
-	fSolveAll      int32
-	fStoreCex      int32
-	fUseBridge     int32
-	fDropSatOuts   int32
+	NStart         int32
+	NFramesMax     int32
+	NConfLimit     int32
+	NConfLimitJump int32
+	NFramesJump    int32
+	NTimeOut       int32
+	NTimeOutGap    int32
+	NTimeOutOne    int32
+	NPisAbstract   int32
+	FSolveAll      int32
+	FStoreCex      int32
+	FUseBridge     int32
+	FDropSatOuts   int32
 	nFfToAddMax    int32
 	fSkipRand      int32
-	fNoRestarts    int32
-	fUseSatoko     int32
-	fUseGlucose    int32
-	nLearnedStart  int32
-	nLearnedDelta  int32
-	nLearnedPerce  int32
-	fVerbose       int32
-	fNotVerbose    int32
-	pLogFileName   string
-	fSilent        int32
-	iFrame         int32
-	nFailOuts      int32
-	nDropOuts      int32
+	FNoRestarts    int32
+	FUseSatoko     int32
+	FUseGlucose    int32
+	NLearnedStart  int32
+	NLearnedDelta  int32
+	NLearnedPerce  int32
+	FVerbose       int32
+	FNotVerbose    int32
+	PLogFileName   string
+	FSilent        int32
+	IFrame         int32
+	NFailOuts      int32
+	NDropOuts      int32
 	timeLastSolved int64
 	pFuncOnFail    func(int32, *util.Abc_Cex_t) int32
 	RunId          int32
@@ -55,7 +55,7 @@ func Saig_ParBmcSetDefaultParams(p *Saig_ParBmc_t) {
 	if p == nil {
 		return
 	}
-	*p = Saig_ParBmc_t{nLearnedStart: 10000, nLearnedDelta: 2000, nLearnedPerce: 80, iFrame: -1}
+	*p = Saig_ParBmc_t{NLearnedStart: 10000, NLearnedDelta: 2000, NLearnedPerce: 80, IFrame: -1}
 }
 
 // bmcSolveDeadline applies the global budget even inside a single SAT call.
@@ -84,12 +84,12 @@ func Saig_ManBmcScalable(graph *aig.Graph, params *Saig_ParBmc_t) int32 {
 	if regs < 0 || regs > int32(graph.InputCount()) || regs > int32(graph.OutputCount()) {
 		return -1
 	}
-	maxFrames := params.nFramesMax
+	maxFrames := params.NFramesMax
 	unbounded := maxFrames <= 0
 	completeAt := int32(-1)
 	if unbounded {
-		params.nFramesMax = 1000000000 // ABC_INFINITY
-		maxFrames = params.nFramesMax
+		params.NFramesMax = 1000000000 // ABC_INFINITY
+		maxFrames = params.NFramesMax
 	}
 	if regs < 30 {
 		completeAt = int32(1) << uint(regs)
@@ -98,22 +98,22 @@ func Saig_ManBmcScalable(graph *aig.Graph, params *Saig_ParBmc_t) int32 {
 		maxFrames = 1
 	}
 	start := time.Now()
-	if params.nTimeOutOne > 0 && params.nTimeOut == 0 {
-		params.nTimeOut = params.nTimeOutOne*pos/1000 + 1
+	if params.NTimeOutOne > 0 && params.NTimeOut == 0 {
+		params.NTimeOut = params.NTimeOutOne*pos/1000 + 1
 	}
-	if params.nTimeOutOne > 0 && params.fSolveAll == 0 {
-		params.nTimeOutOne = 0
+	if params.NTimeOutOne > 0 && params.FSolveAll == 0 {
+		params.NTimeOutOne = 0
 	}
 	params.timeLastSolved = start.UnixNano()
 	var deadline time.Time
-	if params.nTimeOut > 0 {
-		deadline = start.Add(time.Duration(params.nTimeOut) * time.Second)
+	if params.NTimeOut > 0 {
+		deadline = start.Add(time.Duration(params.NTimeOut) * time.Second)
 	}
 	var found bool
 	failed := make([]bool, pos)
 	spent := make([]time.Duration, pos)
 	var storedCEX *vec.Vec_Ptr_t
-	if params.fSolveAll != 0 && params.fStoreCex != 0 {
+	if params.FSolveAll != 0 && params.FStoreCex != 0 {
 		storedCEX = vec.Vec_PtrStart(int(pos))
 		defer graph.SetSequentialCounterexamples(storedCEX)
 	}
@@ -149,31 +149,31 @@ func Saig_ManBmcScalable(graph *aig.Graph, params *Saig_ParBmc_t) int32 {
 	}
 	for frame := int32(0); frame < maxFrames; frame++ {
 		// C checks completeness before adding the frame at 2^nRegs.
-		if completeAt >= 0 && params.nFramesJump == 0 && frame == completeAt {
-			if params.fUseBridge != 0 {
+		if completeAt >= 0 && params.NFramesJump == 0 && frame == completeAt {
+			if params.FUseBridge != 0 {
 				for output := int32(0); output < pos; output++ {
 					if !failed[output] && spent[output] >= 0 {
 						_ = writeBmcBridgeResult(bmcBridgeWriter(params.pBridgeWriter), 1, nil, output)
 					}
 				}
 			}
-			if params.nFailOuts > 0 {
+			if params.NFailOuts > 0 {
 				return 0
 			}
 			return 1
 		}
-		if params.fSolveAll != 0 && params.nFailOuts+params.nDropOuts >= pos {
-			if params.nFailOuts > 0 {
+		if params.FSolveAll != 0 && params.NFailOuts+params.NDropOuts >= pos {
+			if params.NFailOuts > 0 {
 				return 0
 			}
 			return 1
 		}
-		if frame < params.nStart || frame < jumpFrame {
-			params.iFrame = frame
+		if frame < params.NStart || frame < jumpFrame {
+			params.IFrame = frame
 			continue
 		}
 		targets := make([]int32, pos)
-		if params.fSolveAll != 0 {
+		if params.FSolveAll != 0 {
 			for output := int32(0); output < pos; output++ {
 				if failed[output] || spent[output] < 0 {
 					continue
@@ -189,19 +189,19 @@ func Saig_ManBmcScalable(graph *aig.Graph, params *Saig_ParBmc_t) int32 {
 			}
 		}
 		for output := int32(0); output < pos; output++ {
-			if params.fSolveAll != 0 && (failed[output] || spent[output] < 0) {
+			if params.FSolveAll != 0 && (failed[output] || spent[output] < 0) {
 				continue
 			}
-			if params.nTimeOutGap > 0 && time.Since(time.Unix(0, params.timeLastSolved)) > time.Duration(params.nTimeOutGap)*time.Second {
+			if params.NTimeOutGap > 0 && time.Since(time.Unix(0, params.timeLastSolved)) > time.Duration(params.NTimeOutGap)*time.Second {
 				return resultFromFailures(params)
 			}
-			if params.nTimeOut > 0 && time.Since(start) >= time.Duration(params.nTimeOut)*time.Second {
+			if params.NTimeOut > 0 && time.Since(start) >= time.Duration(params.NTimeOut)*time.Second {
 				return resultFromFailures(params)
 			}
 			if params.pFuncStop != nil && params.pFuncStop(params.RunId) != 0 {
 				return resultFromFailures(params)
 			}
-			if params.fSolveAll == 0 {
+			if params.FSolveAll == 0 {
 				target, ok := cutManager.outputLiteral(int(frame), output)
 				if !ok {
 					return -1
@@ -213,15 +213,15 @@ func Saig_ManBmcScalable(graph *aig.Graph, params *Saig_ParBmc_t) int32 {
 			}
 			solveStart := time.Now()
 			solveDeadline := deadline
-			if params.nTimeOutGap > 0 {
-				gapDeadline := time.Unix(0, params.timeLastSolved).Add(time.Duration(params.nTimeOutGap) * time.Second)
+			if params.NTimeOutGap > 0 {
+				gapDeadline := time.Unix(0, params.timeLastSolved).Add(time.Duration(params.NTimeOutGap) * time.Second)
 				solveDeadline = bmcSolveDeadline(solveDeadline, solveStart, time.Until(gapDeadline))
 			}
-			if params.fSolveAll != 0 && params.nTimeOutOne > 0 {
-				remaining := time.Duration(params.nTimeOutOne)*time.Millisecond - spent[output]
+			if params.FSolveAll != 0 && params.NTimeOutOne > 0 {
+				remaining := time.Duration(params.NTimeOutOne)*time.Millisecond - spent[output]
 				if remaining <= 0 {
 					if !failed[output] && spent[output] >= 0 {
-						params.nDropOuts++
+						params.NDropOuts++
 						spent[output] = -1
 					}
 					continue
@@ -229,7 +229,7 @@ func Saig_ManBmcScalable(graph *aig.Graph, params *Saig_ParBmc_t) int32 {
 				solveDeadline = bmcSolveDeadline(solveDeadline, solveStart, remaining)
 			}
 			solver.SetDeadline(solveDeadline)
-			solver.SetLimits(int64(params.nConfLimit), 0)
+			solver.SetLimits(int64(params.NConfLimit), 0)
 			variable := targets[output]
 			var status bsat.Status
 			switch variable {
@@ -241,19 +241,19 @@ func Saig_ManBmcScalable(graph *aig.Graph, params *Saig_ParBmc_t) int32 {
 				status = solver.Solve(bmcCToBSATAssumption(variable))
 			}
 			spent[output] += time.Since(solveStart)
-			params.iFrame = frame
+			params.IFrame = frame
 			jumped := false
 			switch status {
 			case bsat.Satisfiable:
 				found = true
 				failed[output] = true
-				params.nFailOuts++
+				params.NFailOuts++
 				model := cutManager.counterexample(solver, frame, output)
-				if params.fSolveAll != 0 && params.fUseBridge != 0 && model != nil {
+				if params.FSolveAll != 0 && params.FUseBridge != 0 && model != nil {
 					_ = writeBmcBridgeResult(bmcBridgeWriter(params.pBridgeWriter), 0, model, output)
 				}
 				callbackModel := model
-				if params.fSolveAll != 0 {
+				if params.FSolveAll != 0 {
 					if storedCEX != nil && model != nil {
 						vec.Vec_PtrWriteEntry(storedCEX, int(output), model)
 					} else {
@@ -262,11 +262,11 @@ func Saig_ManBmcScalable(graph *aig.Graph, params *Saig_ParBmc_t) int32 {
 				} else if model != nil {
 					_ = graph.SetSequentialCounterexample(model)
 				}
-				if params.fSolveAll != 0 && params.pFuncOnFail != nil && params.pFuncOnFail(output, callbackModel) != 0 {
+				if params.FSolveAll != 0 && params.pFuncOnFail != nil && params.pFuncOnFail(output, callbackModel) != 0 {
 					return 0
 				}
 				params.timeLastSolved = time.Now().UnixNano()
-				if params.fSolveAll == 0 {
+				if params.FSolveAll == 0 {
 					return 0
 				}
 				// The source tests all remaining outputs against this same SAT
@@ -285,7 +285,7 @@ func Saig_ManBmcScalable(graph *aig.Graph, params *Saig_ParBmc_t) int32 {
 						continue
 					}
 					failed[other] = true
-					params.nFailOuts++
+					params.NFailOuts++
 					otherModel := model
 					if otherModel != nil {
 						copy := *otherModel
@@ -293,7 +293,7 @@ func Saig_ManBmcScalable(graph *aig.Graph, params *Saig_ParBmc_t) int32 {
 						copy.IPo = other
 						otherModel = &copy
 					}
-					if params.fUseBridge != 0 && otherModel != nil {
+					if params.FUseBridge != 0 && otherModel != nil {
 						_ = writeBmcBridgeResult(bmcBridgeWriter(params.pBridgeWriter), 0, otherModel, other)
 					}
 					if storedCEX != nil && otherModel != nil {
@@ -315,17 +315,17 @@ func Saig_ManBmcScalable(graph *aig.Graph, params *Saig_ParBmc_t) int32 {
 						return 1
 					}
 				}
-				if params.fUseBridge != 0 {
+				if params.FUseBridge != 0 {
 					_ = writeBmcBridgeProgress(bmcBridgeWriter(params.pBridgeWriter), output, frame)
 				}
 			case bsat.Unknown:
-				if params.nFramesJump > 0 {
-					params.nConfLimit = params.nConfLimitJump
-					jumpFrame = frame + params.nFramesJump
+				if params.NFramesJump > 0 {
+					params.NConfLimit = params.NConfLimitJump
+					jumpFrame = frame + params.NFramesJump
 					jumped = true
-				} else if params.fSolveAll != 0 && params.nTimeOutOne > 0 {
-					if spent[output] >= time.Duration(params.nTimeOutOne)*time.Millisecond {
-						params.nDropOuts++
+				} else if params.FSolveAll != 0 && params.NTimeOutOne > 0 {
+					if spent[output] >= time.Duration(params.NTimeOutOne)*time.Millisecond {
+						params.NDropOuts++
 						spent[output] = -1
 					}
 				} else {
@@ -336,10 +336,10 @@ func Saig_ManBmcScalable(graph *aig.Graph, params *Saig_ParBmc_t) int32 {
 				break
 			}
 		}
-		if params.fSolveAll != 0 && found && params.nFailOuts >= pos {
+		if params.FSolveAll != 0 && found && params.NFailOuts >= pos {
 			return 0
 		}
-		if params.nFramesJump > 0 && jumpFrame > frame {
+		if params.NFramesJump > 0 && jumpFrame > frame {
 			continue
 		}
 	}
@@ -350,7 +350,7 @@ func Saig_ManBmcScalable(graph *aig.Graph, params *Saig_ParBmc_t) int32 {
 }
 
 func resultFromFailures(params *Saig_ParBmc_t) int32 {
-	if params != nil && params.nFailOuts > 0 {
+	if params != nil && params.NFailOuts > 0 {
 		return 0
 	}
 	return -1

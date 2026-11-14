@@ -152,8 +152,8 @@ func Gia_ManFaultDumpNewFaults(m *gia.Gia_Man_t, nFuncVars int32, tests, newTest
 	baseGraph := Gia_ManFaultCofactor(m, newTest)
 	s := bsat.NewSolver()
 	s.NewVariable()
-	if params.nTimeOut > 0 {
-		s.SetDeadline(time.Now().Add(time.Duration(params.nTimeOut) * time.Second))
+	if params.NTimeOut > 0 {
+		s.SetDeadline(time.Now().Add(time.Duration(params.NTimeOut) * time.Second))
 	}
 	base := new(cnf.Cnf_Dat_t)
 	if faultAddOne(m, nil, s, newTest, nFuncVars, 1, nil, base) == 0 {
@@ -167,7 +167,7 @@ func Gia_ManFaultDumpNewFaults(m *gia.Gia_Man_t, nFuncVars int32, tests, newTest
 		}
 	}
 	start := time.Now()
-	count := Gia_ManDumpUntests(baseGraph, base, s, nFuncVars, "newfaults.txt", params.fVerbose)
+	count := Gia_ManDumpUntests(baseGraph, base, s, nFuncVars, "newfaults.txt", params.FVerbose)
 	fmt.Printf("Dumped %d new multiple faults into file %q. Time = %s\n", count, "newfaults.txt", time.Since(start))
 	return 1
 }

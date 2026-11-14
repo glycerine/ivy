@@ -68,7 +68,7 @@ func TestScalableBMCExhaustiveStateOracle(t *testing.T) {
 						}
 						reachable = next
 					}
-					params := Saig_ParBmc_t{nStart: int32(start), nFramesMax: bound, fSolveAll: all, fStoreCex: all}
+					params := Saig_ParBmc_t{NStart: int32(start), NFramesMax: bound, FSolveAll: all, FStoreCex: all}
 					result := Saig_ManBmcScalable(g, &params)
 					if earliest < 0 {
 						wantSafe := int32(-1)
@@ -141,7 +141,7 @@ func TestScalableBMCMultiOutputOracle(t *testing.T) {
 					reachable = next
 				}
 				got := [2]int{-1, -1}
-				params := Saig_ParBmc_t{nStart: int32(start), nFramesMax: bound, fSolveAll: 1, fStoreCex: 1}
+				params := Saig_ParBmc_t{NStart: int32(start), NFramesMax: bound, FSolveAll: 1, FStoreCex: 1}
 				params.pFuncOnFail = func(output int32, cex *util.Abc_Cex_t) int32 {
 					if output < 0 || output > 1 || cex == nil || got[output] >= 0 || cex.IPo != output {
 						t.Fatalf("invalid witness output=%d cex=%+v", output, cex)
@@ -177,8 +177,8 @@ func TestScalableBMCMultiOutputOracle(t *testing.T) {
 						count++
 					}
 				}
-				if result != expected || got != want || params.nFailOuts != count {
-					t.Fatalf("trans=%x out=%x,%x start=%d got=%v result=%d count=%d want=%v result=%d count=%d", transition, out0, out1, start, got, result, params.nFailOuts, want, expected, count)
+				if result != expected || got != want || params.NFailOuts != count {
+					t.Fatalf("trans=%x out=%x,%x start=%d got=%v result=%d count=%d want=%v result=%d count=%d", transition, out0, out1, start, got, result, params.NFailOuts, want, expected, count)
 				}
 			}
 		}

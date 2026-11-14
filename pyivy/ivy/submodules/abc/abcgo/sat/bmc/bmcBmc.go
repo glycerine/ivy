@@ -19,12 +19,12 @@ func Saig_ManBmcSimple(graph *aig.Graph, frames, sizeMax, conflictLimit, rewrite
 	if graph == nil || frames < 0 {
 		return -1
 	}
-	params := Saig_ParBmc_t{nFramesMax: frames, nConfLimit: conflictLimit, fVerbose: verbose}
+	params := Saig_ParBmc_t{NFramesMax: frames, NConfLimit: conflictLimit, FVerbose: verbose}
 	status := Saig_ManBmcScalable(graph, &params)
 	if failedFrame != nil {
 		*failedFrame = frames
 		if status == 0 {
-			*failedFrame = params.iFrame
+			*failedFrame = params.IFrame
 		}
 	}
 	_ = sizeMax

@@ -7,7 +7,7 @@ import (
 
 func TestExa3AND(t *testing.T) {
 	for _, incremental := range []int32{0, 1} {
-		p := Exa3_ManAlloc(&Bmc_EsPar_t{nVars: 2, nNodes: 1, nLutSize: 2, fUseIncr: incremental}, []uint64{8})
+		p := Exa3_ManAlloc(&Bmc_EsPar_t{NVars: 2, NNodes: 1, NLutSize: 2, FUseIncr: incremental}, []uint64{8})
 		if Exa3_ManAddCnfStart(p, 0) == 0 {
 			t.Fatal("start")
 		}
@@ -37,7 +37,7 @@ func TestExa3AND(t *testing.T) {
 
 func TestExa3ThreeInputAnd(t *testing.T) {
 	for _, incremental := range []int32{0, 1} {
-		p := Exa3_ManAlloc(&Bmc_EsPar_t{nVars: 3, nNodes: 2, nLutSize: 2, fUseIncr: incremental}, []uint64{0x80})
+		p := Exa3_ManAlloc(&Bmc_EsPar_t{NVars: 3, NNodes: 2, NLutSize: 2, FUseIncr: incremental}, []uint64{0x80})
 		if Exa3_ManAddCnfStart(p, 0) == 0 {
 			t.Fatal("start")
 		}

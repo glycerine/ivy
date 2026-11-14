@@ -47,7 +47,7 @@ func TestBCoreProofFile(t *testing.T) {
 	gia.Gia_ManAppendCo(p, pi)
 	gia.Gia_ManSetRegNum(p, 1)
 	path := filepath.Join(t.TempDir(), "proof")
-	Bmc_ManBCorePerform(p, &Bmc_BCorePar_t{pFileProof: path})
+	Bmc_ManBCorePerform(p, &Bmc_BCorePar_t{PFileProof: path})
 	contents, err := os.ReadFile(path)
 	if err != nil {
 		t.Fatal(err)

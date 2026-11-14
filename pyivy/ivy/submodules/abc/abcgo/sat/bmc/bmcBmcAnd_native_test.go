@@ -16,7 +16,7 @@ func TestGiaManBmcPerformAdapterStoresCounterexample(t *testing.T) {
 	graph.AddOutput(pi)
 	aig.Aig_ManSetRegNum(graph, 1)
 	g := gia.Gia_ManFromAig(graph)
-	params := &Bmc_AndPar_t{nFramesMax: 2}
+	params := &Bmc_AndPar_t{NFramesMax: 2}
 	if result := Gia_ManBmcPerform(g, params); result != 0 {
 		t.Fatalf("result=%d, want counterexample (0)", result)
 	}
@@ -113,7 +113,7 @@ func TestGiaManBmcPerformAdapterProvesZeroStateInvariant(t *testing.T) {
 	graph.AddOutput(state)
 	aig.Aig_ManSetRegNum(graph, 1)
 	g := gia.Gia_ManFromAig(graph)
-	params := &Bmc_AndPar_t{nFramesMax: 2}
+	params := &Bmc_AndPar_t{NFramesMax: 2}
 	if result := Gia_ManBmcPerform(g, params); result != 1 {
 		t.Fatalf("result=%d, want bounded-safe (1)", result)
 	}

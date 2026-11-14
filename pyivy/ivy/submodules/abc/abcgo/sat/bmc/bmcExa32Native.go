@@ -33,7 +33,7 @@ func Exa3_ManMarkupV2(p *Exa3_Man_tV2) int32 {
 	p.iVar = 1 + p.LutMask*p.nNodes
 	for i := p.nVars; i < p.nObjs; i++ {
 		for k := int32(0); k < p.nLutSize; k++ {
-			if p.pPars.fFewerVars != 0 && i == p.nObjs-1 && k == 0 {
+			if p.pPars.FFewerVars != 0 && i == p.nObjs-1 && k == 0 {
 				j := p.nObjs - 2
 				vec.Vec_WecPush(p.vOutLits, int(j), bsat.Positive(p.iVar))
 				p.VarMarks[i][k][j] = p.iVar
@@ -41,7 +41,7 @@ func Exa3_ManMarkupV2(p *Exa3_Man_tV2) int32 {
 				continue
 			}
 			j := int32(0)
-			if p.pPars.fFewerVars != 0 {
+			if p.pPars.FFewerVars != 0 {
 				j = p.nLutSize - 1 - k
 			}
 			for ; j < i-k; j++ {
@@ -87,10 +87,10 @@ func Exa3_ManInitPolarity(p *Exa3_Man_tV2) {
 	}
 }
 func Exa3_ManAllocV2(pars *Bmc_EsPar_t, truth []uint64) *Exa3_Man_tV2 {
-	if pars == nil || pars.nVars < 1 || pars.nVars > 10 || pars.nNodes < 1 || pars.nLutSize < 1 || pars.nLutSize > 6 || pars.nVars+pars.nNodes > MAJ_NOBJSV2 || int(util.Abc_TtWordNum(pars.nVars)) > len(truth) {
+	if pars == nil || pars.NVars < 1 || pars.NVars > 10 || pars.NNodes < 1 || pars.NLutSize < 1 || pars.NLutSize > 6 || pars.NVars+pars.NNodes > MAJ_NOBJSV2 || int(util.Abc_TtWordNum(pars.NVars)) > len(truth) {
 		panic("bmc: invalid LUT synthesis parameters")
 	}
-	p := &Exa3_Man_tV2{pPars: pars, nVars: pars.nVars, nNodes: pars.nNodes, nLutSize: pars.nLutSize, LutMask: (1 << pars.nLutSize) - 1, nObjs: pars.nVars + pars.nNodes, nWords: util.Abc_TtWordNum(pars.nVars), pTruth: truth}
+	p := &Exa3_Man_tV2{pPars: pars, nVars: pars.NVars, nNodes: pars.NNodes, nLutSize: pars.NLutSize, LutMask: (1 << pars.NLutSize) - 1, nObjs: pars.NVars + pars.NNodes, nWords: util.Abc_TtWordNum(pars.NVars), pTruth: truth}
 	p.vOutLits = vec.Vec_WecStart(int(p.nObjs))
 	Exa3_ManMarkupV2(p)
 	Exa3_ManTruthTablesV2(p)
@@ -322,13 +322,13 @@ func Exa3_ManAddCnfV2(p *Exa3_Man_tV2, mint int32) int32 {
 	return 1
 }
 func Exa3_ManExactSynthesisV2(pars *Bmc_EsPar_t) {
-	if pars == nil || pars.nVars < 1 || pars.nVars > 10 {
+	if pars == nil || pars.NVars < 1 || pars.NVars > 10 {
 		fmt.Println("Invalid synthesis parameters.")
 		return
 	}
 	start := time.Now()
-	truth := make([]uint64, util.Abc_TtWordNum(pars.nVars))
-	util.Abc_TtReadHex(truth, pars.pTtStr)
+	truth := make([]uint64, util.Abc_TtWordNum(pars.NVars))
+	util.Abc_TtReadHex(truth, pars.PTtStr)
 	complement := int32(0)
 	if truth[0]&1 != 0 {
 		complement = 1
@@ -337,7 +337,7 @@ func Exa3_ManExactSynthesisV2(pars *Bmc_EsPar_t) {
 		}
 	}
 	p := Exa3_ManAllocV2(pars, truth)
-	if Exa3_ManAddCnfStartV2(p, pars.fOnlyAnd) == 0 {
+	if Exa3_ManAddCnfStartV2(p, pars.FOnlyAnd) == 0 {
 		fmt.Println("The problem has no solution.")
 		return
 	}

@@ -17,7 +17,7 @@ func Gia_ManFaultTest(p, golden *gia.Gia_Man_t, opts *Bmc_ParFf_t) {
 		return
 	}
 	var nvars, nparams int32
-	if opts.Algo == 0 && Gia_FormStrCount(opts.pFormStr, &nvars, &nparams) != 0 {
+	if opts.Algo == 0 && Gia_FormStrCount(opts.PFormStr, &nvars, &nparams) != 0 {
 		return
 	}
 	if opts.Algo < 0 || opts.Algo > 4 {
@@ -34,8 +34,8 @@ func Gia_ManFaultTest(p, golden *gia.Gia_Man_t, opts *Bmc_ParFf_t) {
 		return
 	}
 	tests := vec.Vec_IntAlloc(10000)
-	if opts.pFileName != "" {
-		tests = Gia_ManGetTestPatterns(opts.pFileName)
+	if opts.PFileName != "" {
+		tests = Gia_ManGetTestPatterns(opts.PFileName)
 		if tests == nil {
 			return
 		}
@@ -58,7 +58,7 @@ func Gia_ManFaultTest(p, golden *gia.Gia_Man_t, opts *Bmc_ParFf_t) {
 		return
 	}
 	for iteration := int32(vec.Vec_IntSize(tests)) / nfunc; prepared != 0 && iteration < 1000000; iteration++ {
-		if iteration > 0 && opts.nIterCheck > 0 && iteration%opts.nIterCheck == 0 && vec.Vec_IntSize(faultMap) > 0 {
+		if iteration > 0 && opts.NIterCheck > 0 && iteration%opts.NIterCheck == 0 && vec.Vec_IntSize(faultMap) > 0 {
 			params := vec.Vec_IntAlloc(int(gia.Gia_ManPiNum(m) - nfunc))
 			for i := nfunc; i < gia.Gia_ManPiNum(m); i++ {
 				id := gia.Gia_ObjId(m, gia.Gia_ManCi(m, i))
@@ -87,7 +87,7 @@ func Gia_ManFaultTest(p, golden *gia.Gia_Man_t, opts *Bmc_ParFf_t) {
 				vec.Vec_IntPush(scratch, 0)
 			}
 		}
-		if opts.fDumpNewFaults != 0 {
+		if opts.FDumpNewFaults != 0 {
 			if vec.Vec_IntSize(tests) > 0 {
 				Gia_ManFaultDumpNewFaults(m, nfunc, tests, scratch, opts)
 			}
@@ -102,9 +102,9 @@ func Gia_ManFaultTest(p, golden *gia.Gia_Man_t, opts *Bmc_ParFf_t) {
 	}
 	count := int32(vec.Vec_IntSize(tests)) / nfunc
 	fmt.Printf("Testing runtime: %s; %d test patterns.\n", time.Since(start), count)
-	if opts.fDump != 0 && count > 0 {
+	if opts.FDump != 0 && count > 0 {
 		var err error
-		if opts.fDumpDelay != 0 && opts.Algo == 1 {
+		if opts.FDumpDelay != 0 && opts.Algo == 1 {
 			err = Gia_ManDumpTestsDelay(tests, count, faultOutputName(p, "_tests.txt", "tests.txt"), p)
 		} else {
 			err = Gia_ManDumpTests(tests, count, faultOutputName(p, "_tests.txt", "tests.txt"))
@@ -113,15 +113,15 @@ func Gia_ManFaultTest(p, golden *gia.Gia_Man_t, opts *Bmc_ParFf_t) {
 			fmt.Println(err)
 		}
 	}
-	if count == 0 || (p == golden && opts.fDumpUntest == 0 && opts.fCheckUntest == 0) {
+	if count == 0 || (p == golden && opts.FDumpUntest == 0 && opts.FCheckUntest == 0) {
 		return
 	}
 	remaining := bsat.NewSolver()
 	for i := 0; i < data.Variables; i++ {
 		remaining.NewVariable()
 	}
-	if opts.nTimeOut > 0 {
-		remaining.SetDeadline(time.Now().Add(time.Duration(opts.nTimeOut) * time.Second))
+	if opts.NTimeOut > 0 {
+		remaining.SetDeadline(time.Now().Add(time.Duration(opts.NTimeOut) * time.Second))
 	}
 	for _, clause := range data.Clauses {
 		if !remaining.AddClause(clause...) {
@@ -139,7 +139,7 @@ func Gia_ManFaultTest(p, golden *gia.Gia_Man_t, opts *Bmc_ParFf_t) {
 	if !remaining.AddClause(faults...) {
 		return
 	}
-	if opts.fBasic != 0 {
+	if opts.FBasic != 0 {
 		Cnf_AddCardinConstr(remaining, vars)
 	}
 	for i := int32(0); i < gia.Gia_ManCoNum(m); i++ {
@@ -158,8 +158,8 @@ func Gia_ManFaultTest(p, golden *gia.Gia_Man_t, opts *Bmc_ParFf_t) {
 	}
 	status := remaining.Solve()
 	fmt.Printf("Remaining fault status: %v.\n", status)
-	if status == bsat.Satisfiable && opts.fDumpUntest != 0 {
-		Gia_ManDumpUntests(m, data, remaining, nfunc, faultOutputName(p, "_untest.txt", "untest.txt"), opts.fVerbose)
+	if status == bsat.Satisfiable && opts.FDumpUntest != 0 {
+		Gia_ManDumpUntests(m, data, remaining, nfunc, faultOutputName(p, "_untest.txt", "untest.txt"), opts.FVerbose)
 	}
 }
 

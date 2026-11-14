@@ -149,16 +149,16 @@ func Saig_BmcPerform(graph *aig.Graph, start, framesMax, nodesMax, timeout, conf
 		return -1
 	}
 	params := Saig_ParBmc_t{
-		nStart:      start,
-		nFramesMax:  framesMax,
-		nConfLimit:  conflictsOne,
-		nTimeOut:    timeout,
-		fVerbose:    verbose,
-		fNotVerbose: silent,
+		NStart:      start,
+		NFramesMax:  framesMax,
+		NConfLimit:  conflictsOne,
+		NTimeOut:    timeout,
+		FVerbose:    verbose,
+		FNotVerbose: silent,
 	}
 	status := Saig_ManBmcScalable(graph, &params)
 	if failedFrame != nil {
-		*failedFrame = params.iFrame
+		*failedFrame = params.IFrame
 		if status == 0 {
 			*failedFrame--
 		}
