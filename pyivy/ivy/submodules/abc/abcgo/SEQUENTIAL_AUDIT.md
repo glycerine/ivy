@@ -2671,3 +2671,25 @@ The sibling HCD copier has the same source-derived stored-fanin assumption;
 its production synthesis path also imports ordinary AIGs. It needs a separate
 regression/repair before this choice-family review can close. HCD's distinct
 dangling-node assertion and register bookkeeping must remain source-faithful.
+
+The HCD follow-up regression also failed: all 32 phase cases left the MUX's
+control-only cone unvisited (`/tmp/abcgo-gia-hcd-real-red.log`). Its recursive
+C copier is textually identical to the GIA one, so the Go HCD entry point now
+delegates to the corrected recursive copier. This removes 12 lines of repeated
+logic and ensures both paths normalize real gates consistently. HCD's outer
+wrapper still performs its original dangling-node assertion and retains its
+original register behavior; it was not replaced by the different GIA wrapper.
+The 512-assignment analytical matrix now runs against both entry points.
+
+Expanded the native fixture to call the actual HCD C entry point too. Normal
+ABC builds do not include giaHcd.o on this checkout, so the test compiles
+giaHcd.c directly into a temporary object and links its real routines with
+section garbage collection; no HCD algorithm stubs are used. Both native
+miters agree with Go on size and all truth rows when C receives its ordinary
+AND expansions. Focused HCD/native regressions pass in 1.841s. The full
+uncached GIA race suite passes in 16.109s and vet passes; logs are
+`/tmp/abcgo-gia-hcd-final-race.log` and
+`/tmp/abcgo-gia-hcd-final-vet.log`.
+
+The remainder of the HCD family (including TFI/choice-link cycle checks) is
+still pending inspection; the miter repair alone does not close that review.

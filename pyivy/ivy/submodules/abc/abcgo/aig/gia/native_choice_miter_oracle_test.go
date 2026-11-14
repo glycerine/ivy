@@ -33,7 +33,7 @@ func TestNativeChoiceMiterAgainstCompiledABC(t *testing.T) {
 		if e != nil {
 			return e
 		}
-		if !d.IsDir() && strings.HasSuffix(path, ".o") && path != filepath.Join(src, "misc/st/st.o") {
+		if !d.IsDir() && strings.HasSuffix(path, ".o") && path != filepath.Join(src, "misc/st/st.o") && path != filepath.Join(src, "aig/gia/giaHcd.o") {
 			objs = append(objs, path)
 		}
 		return nil
@@ -45,13 +45,20 @@ func TestNativeChoiceMiterAgainstCompiledABC(t *testing.T) {
 		t.Fatalf("st: %v %s", e, out)
 	}
 	objs = append(objs, st)
+	// HCD is not included in the normal ABC object build. Compile its actual
+	// source here; discard unrelated HCD routines when linking the oracle.
+	hcd := filepath.Join(dir, "giaHcd.o")
+	if out, e := exec.Command(cc, "-DABC_USE_STDINT_H", "-ffunction-sections", "-fdata-sections", "-I", src, "-c", filepath.Join(src, "aig/gia/giaHcd.c"), "-o", hcd).CombinedOutput(); e != nil {
+		t.Fatalf("HCD source: %v %s", e, out)
+	}
+	objs = append(objs, hcd)
 	lib := filepath.Join(dir, "abc.a")
 	if out, e := exec.Command(ar, append([]string{"qcs", lib}, objs...)...).CombinedOutput(); e != nil {
 		t.Fatalf("archive: %v %s", e, out)
 	}
 	exe := filepath.Join(dir, "oracle")
 	fixture := filepath.Join(filepath.Dir(file), "test_vectors/native_choice_miter_oracle.c")
-	if out, e := exec.Command(cc, "-DABC_USE_STDINT_H", "-I", src, fixture, lib, "-lstdc++", "-lm", "-ldl", "-lpthread", "-lreadline", "-o", exe).CombinedOutput(); e != nil {
+	if out, e := exec.Command(cc, "-DABC_USE_STDINT_H", "-I", src, fixture, lib, "-Wl,--gc-sections", "-lstdc++", "-lm", "-ldl", "-lpthread", "-lreadline", "-o", exe).CombinedOutput(); e != nil {
 		t.Fatalf("link: %v %s", e, out)
 	}
 	source, e := exec.Command(exe).CombinedOutput()
@@ -71,7 +78,20 @@ func TestNativeChoiceMiterAgainstCompiledABC(t *testing.T) {
 		Gia_ManAppendCo(g, m^int32((i>>1)&1))
 		snapshots[i] = g
 	}
-	out := Gia_ManChoiceMiter(snapshots)
+	compareChoiceMiterOracle(t, source, Gia_ManChoiceMiter(snapshots))
+	hcdSource, e := exec.Command(exe, "--hcd").CombinedOutput()
+	if e != nil {
+		t.Fatalf("run HCD: %v %s", e, hcdSource)
+	}
+	networks := Vec_PtrAlloc(len(snapshots))
+	for _, graph := range snapshots {
+		Vec_PtrPush(networks, graph)
+	}
+	compareChoiceMiterOracle(t, hcdSource, Hcd_ManChoiceMiter(networks))
+}
+
+func compareChoiceMiterOracle(t *testing.T, source []byte, out *Gia_Man_t) {
+	t.Helper()
 	var got strings.Builder
 	fmt.Fprintf(&got, "nodes:%d,outputs:%d\n", Gia_ManObjNum(out), Gia_ManCoNum(out))
 	for mask := 0; mask < 16; mask++ {

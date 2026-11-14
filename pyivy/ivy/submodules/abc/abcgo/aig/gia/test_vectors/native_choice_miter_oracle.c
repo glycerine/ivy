@@ -1,5 +1,7 @@
 #include "aig/gia/gia.h"
 #include <stdio.h>
+
+extern Gia_Man_t *Hcd_ManChoiceMiter(Vec_Ptr_t *vGias);
 static Gia_Man_t *snapshot(int phase, int real)
 {
     Gia_Man_t *g = Gia_ManStart(24);
@@ -31,13 +33,18 @@ int main(int argc, char **argv)
     Gia_Man_t *g[3], *m;
     Vec_Ptr_t *v = Vec_PtrAlloc(3);
     Gia_Obj_t *o;
-    int i, mask, vals[128];
+    int i, mask, vals[128], real = 0, hcd = 0;
+    for (i = 1; i < argc; ++i)
+    {
+        real |= strcmp(argv[i], "--real") == 0;
+        hcd |= strcmp(argv[i], "--hcd") == 0;
+    }
     for (i = 0; i < 3; ++i)
     {
-        g[i] = snapshot(i, argc > 1);
+        g[i] = snapshot(i, real);
         Vec_PtrPush(v, g[i]);
     }
-    m = Gia_ManChoiceMiter(v);
+    m = hcd ? Hcd_ManChoiceMiter(v) : Gia_ManChoiceMiter(v);
     printf("nodes:%d,outputs:%d\n", Gia_ManObjNum(m), Gia_ManCoNum(m));
     for (mask = 0; mask < 16; ++mask)
     {

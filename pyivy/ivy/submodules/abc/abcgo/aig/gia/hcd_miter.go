@@ -2,19 +2,9 @@ package gia
 
 // Hcd_ManChoiceMiter_rec copies a cone and its CO into the shared manager.
 func Hcd_ManChoiceMiter_rec(dst, src *Gia_Man_t, obj *Gia_Obj_t) int32 {
-	if obj.Value != ^uint32(0) {
-		return int32(obj.Value)
-	}
-	Hcd_ManChoiceMiter_rec(dst, src, Gia_ObjFanin0(obj))
-	var lit int32
-	if Gia_ObjIsCo(obj) != 0 {
-		lit = Gia_ManAppendCo(dst, Gia_ObjFanin0Copy(obj))
-	} else {
-		Hcd_ManChoiceMiter_rec(dst, src, Gia_ObjFanin1(obj))
-		lit = Gia_ManHashAnd(dst, Gia_ObjFanin0Copy(obj), Gia_ObjFanin1Copy(obj))
-	}
-	obj.Value = uint32(lit)
-	return lit
+	// Both C recursive copiers are identical. Share the implementation and
+	// its real-gate normalization rather than duplicating the AND-only bug.
+	return Gia_ManChoiceMiter_rec(dst, src, obj)
 }
 func Hcd_ManChoiceMiter(networks *Vec_Ptr_t) *Gia_Man_t {
 	if Vec_PtrSize(networks) == 0 {

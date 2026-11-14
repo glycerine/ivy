@@ -40,6 +40,21 @@ func TestNativeChoiceMiterPreservesRealGateLogic(t *testing.T) {
 }
 
 func TestChoiceMiterCopiesControlOnlyCones(t *testing.T) {
+	checkChoiceMiterControlOnlyCones(t, Gia_ManChoiceMiter)
+}
+
+func TestHcdChoiceMiterCopiesControlOnlyCones(t *testing.T) {
+	checkChoiceMiterControlOnlyCones(t, func(graphs []*Gia_Man_t) *Gia_Man_t {
+		networks := Vec_PtrAlloc(len(graphs))
+		for _, graph := range graphs {
+			Vec_PtrPush(networks, graph)
+		}
+		return Hcd_ManChoiceMiter(networks)
+	})
+}
+
+func checkChoiceMiterControlOnlyCones(t *testing.T, build func([]*Gia_Man_t) *Gia_Man_t) {
+	t.Helper()
 	for signs := int32(0); signs < 32; signs++ {
 		t.Run(fmt.Sprint(signs), func(t *testing.T) {
 			graphs := make([]*Gia_Man_t, 3)
@@ -56,7 +71,7 @@ func TestChoiceMiterCopiesControlOnlyCones(t *testing.T) {
 				Gia_ManAppendCo(g, Gia_ManAppendBuf(g, a^int32(version&1)))
 				graphs[version], controls[version] = g, control
 			}
-			miter := Gia_ManChoiceMiter(graphs)
+			miter := build(graphs)
 			if Gia_ManHashStarted(miter) != 0 || Gia_ManXorNum(miter) != 0 || Gia_ManMuxNum(miter) != 0 {
 				t.Fatal("miter must finish hashing and contain ordinary AND logic")
 			}
