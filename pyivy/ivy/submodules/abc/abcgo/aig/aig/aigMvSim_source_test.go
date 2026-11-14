@@ -187,7 +187,7 @@ func TestMultivaluePostprocessGroupsActualDefinedHistories(t *testing.T) {
 	g.nRegs = 4
 	p := Aig_MvManStart(g, 2)
 	p.states = [][]int32{{1, 1, 1, 1}, {0, 0, 1, SAIG_UNDEF_VALUE}, {1, 1, 1, SAIG_UNDEF_VALUE}}
-	text := captureMvOutput(t, func() { Aig_MvManPostProcess(p, 1) })
+	text := captureAigOutput(t, func() { Aig_MvManPostProcess(p, 1) })
 	for _, part := range []string{"never became undef = 3. (Total = 4.)", "FLOP     0 : (  2)", "FLOP     2 : (  1)"} {
 		if !strings.Contains(text, part) {
 			t.Fatalf("diagnostic missing %q: %s", part, text)
@@ -198,7 +198,7 @@ func TestMultivaluePostprocessGroupsActualDefinedHistories(t *testing.T) {
 	}
 }
 
-func captureMvOutput(t *testing.T, action func()) string {
+func captureAigOutput(t *testing.T, action func()) string {
 	t.Helper()
 	f, err := os.CreateTemp(t.TempDir(), "mv-output")
 	if err != nil {
@@ -235,7 +235,7 @@ func TestMultivalueAggressiveSaturationAgainstCompiledSource(t *testing.T) {
 	}
 	g.nRegs = 6
 	var mapping []Edge
-	trace := captureMvOutput(t, func() { mapping = Aig_MvManSimulate(g, 1, 2, 0, 1) })
+	trace := captureAigOutput(t, func() { mapping = Aig_MvManSimulate(g, 1, 2, 0, 1) })
 	var got strings.Builder
 	got.WriteString(trace)
 	got.WriteString("driver:")

@@ -3,11 +3,13 @@ package aig
 
 import (
 	"fmt"
+	"slices"
+	"sync"
+
 	"github.com/glycerine/abcgo/aig/ioa"
 	"github.com/glycerine/abcgo/bool/bdc"
 	"github.com/glycerine/abcgo/bool/kit"
-	"slices"
-	"sync"
+	"github.com/glycerine/abcgo/misc/util"
 )
 
 const RMAN_MAXVARS = 12
@@ -29,9 +31,9 @@ type Aig_RMan_t struct {
 	nBins, nEntries                                    int32
 	pBins                                              []*Aig_Tru_t
 	pBidec                                             *bdc.Bdc_Man_t
-	pTruthInit, pTruth, pTruthC, pTruthTemp            [RMAX_MAXWORD]uint32
+	pTruthInit, pTruth, pTruthTemp                     [RMAX_MAXWORD]uint32
 	pMints                                             [2 * RMAN_MAXVARS]Aig_VSig_t
-	pPerm, pPermR                                      [RMAN_MAXVARS]byte
+	pPerm                                              [RMAN_MAXVARS]byte
 	nVarFuncs                                          [RMAN_MAXVARS + 1]int32
 	nTotal, nTtDsd, nTtDsdPart, nTtDsdNot, nUniqueVars int32
 }
@@ -51,7 +53,8 @@ func Aig_RManSortNums(a []int32, n int32) {
 	}
 }
 func Aig_RManCompareSigs(a, b *Aig_VSig_t, n int32) int32 {
-	// Original memcmp compares the first int's bytes, not numeric counts.
+	// Match little-endian C memcmp of nOnes only, not numeric counts or the
+	// cofactor-count fields. This ordering determines canonical identities.
 	x, y := uint32(a.nOnes), uint32(b.nOnes)
 	for i := uint(0); i < 32; i += 8 {
 		aa, bb := byte(x>>i), byte(y>>i)
@@ -94,9 +97,7 @@ func Aig_RManPrintUniqueVars(s []Aig_VSig_t, n int32) {
 		}
 	}
 	fmt.Println()
-	if n > 0 {
-		fmt.Print("0")
-	}
+	fmt.Print("0")
 	for i := int32(1); i < n; i++ {
 		if Aig_RManCompareSigs(&s[2*(i-1)], &s[2*i], n) == 0 {
 			fmt.Print("-")
@@ -119,22 +120,18 @@ func Aig_RManTableHash(t []uint32, n, bins int32, primes []int32) int32 {
 	return int32(hash % uint32(bins))
 }
 func Aig_RManComputeVSigs(t []uint32, n int32, s []Aig_VSig_t, aux []uint32) {
+	canonWords(n) // Keep the recorder's twelve-variable bound.
 	for v := int32(0); v < n; v++ {
 		for phase := int32(0); phase < 2; phase++ {
-			canonCofactor(aux, t, n, v, phase)
+			if phase == 0 {
+				kit.Kit_TruthCofactor0New(aux, t, n, v)
+			} else {
+				kit.Kit_TruthCofactor1New(aux, t, n, v)
+			}
 			sig := &s[2*v+phase]
 			*sig = Aig_VSig_t{}
-			for bit := int32(0); bit < 32*canonWords(n); bit++ {
-				if canonGet(aux, bit) == 0 {
-					continue
-				}
-				sig.nOnes++
-				for i := int32(0); i < n; i++ {
-					if bit&(1<<uint(i)) == 0 {
-						sig.nCofOnes[i]++
-					}
-				}
-			}
+			sig.nOnes = kit.Kit_TruthCountOnes(aux, n)
+			kit.Kit_TruthCountOnesInCofs0(aux, n, sig.nCofOnes[:])
 			Aig_RManSortNums(sig.nCofOnes[:], n)
 		}
 	}
@@ -156,7 +153,7 @@ func Aig_RManSemiCanonicize(out, in []uint32, n int32, perm []byte, s []Aig_VSig
 		if Aig_RManCompareSigs(&s[2*i], &s[2*i+1], n) > 0 {
 			phase |= 1 << uint(i)
 			s[2*i], s[2*i+1] = s[2*i+1], s[2*i]
-			canonPhase(in, n, i)
+			kit.Kit_TruthChangePhase(in, n, i)
 		}
 	}
 	originalIn, originalOut := in, out
@@ -170,7 +167,7 @@ func Aig_RManSemiCanonicize(out, in []uint32, n int32, perm []byte, s []Aig_VSig
 			perm[i], perm[i+1] = perm[i+1], perm[i]
 			s[2*i], s[2*(i+1)] = s[2*(i+1)], s[2*i]
 			s[2*i+1], s[2*(i+1)+1] = s[2*(i+1)+1], s[2*i+1]
-			canonSwap(out, in, n, i, i+1)
+			kit.Kit_TruthSwapAdjacentVars(out, in, n, i)
 			in, out = out, in
 		}
 		if !changed {
@@ -195,48 +192,8 @@ func canonWords(n int32) int32 {
 }
 func canonGet(t []uint32, bit int32) uint32 { return t[bit>>5] >> uint(bit&31) & 1 }
 func canonSet(t []uint32, bit int32)        { t[bit>>5] |= 1 << uint(bit&31) }
-func canonCofactor(out, in []uint32, n, v, phase int32) {
-	clear(out[:canonWords(n)])
-	mask := int32(1) << uint(v)
-	for bit := int32(0); bit < 32*canonWords(n); bit++ {
-		src := bit &^ mask
-		if phase != 0 {
-			src |= mask
-		}
-		if canonGet(in, src) != 0 {
-			canonSet(out, bit)
-		}
-	}
-}
-func canonPhase(t []uint32, n, v int32) {
-	mask := int32(1) << uint(v)
-	for bit := int32(0); bit < 32*canonWords(n); bit++ {
-		if bit&mask != 0 {
-			continue
-		}
-		other := bit | mask
-		if canonGet(t, bit) != canonGet(t, other) {
-			t[bit>>5] ^= 1 << uint(bit&31)
-			t[other>>5] ^= 1 << uint(other&31)
-		}
-	}
-}
-func canonSwap(out, in []uint32, n, a, b int32) {
-	clear(out[:canonWords(n)])
-	mask := int32(1)<<uint(a) | int32(1)<<uint(b)
-	for bit := int32(0); bit < 32*canonWords(n); bit++ {
-		dst := bit
-		if (bit >> uint(a) & 1) != (bit >> uint(b) & 1) {
-			dst ^= mask
-		}
-		if canonGet(in, bit) != 0 {
-			canonSet(out, dst)
-		}
-	}
-}
-
 func Aig_RManStart() *Aig_RMan_t {
-	p := &Aig_RMan_t{nVars: RMAN_MAXVARS, pAig: NewGraph(), nBins: 5003}
+	p := &Aig_RMan_t{nVars: RMAN_MAXVARS, pAig: NewGraph(), nBins: util.Abc_PrimeCudd(5000)}
 	for i := int32(0); i < p.nVars; i++ {
 		p.pAig.NewInput()
 	}
@@ -251,6 +208,8 @@ func Aig_RManTableLookup(p *Aig_RMan_t, truth []uint32, n int32) **Aig_Tru_t {
 	slot := &p.pBins[Aig_RManTableHash(truth, n, p.nBins, canonHashPrimes)]
 	for *slot != nil {
 		entry := *slot
+		// The width tag prevents cross-width truth comparisons and reads past
+		// the allocation in the original C lookup.
 		if entry.nVars == uint32(n) && slices.Equal(entry.pTruth, truth[:canonWords(n)]) {
 			return slot
 		}
@@ -258,24 +217,9 @@ func Aig_RManTableLookup(p *Aig_RMan_t, truth []uint32, n int32) **Aig_Tru_t {
 	}
 	return slot
 }
-func canonNextPrime(n int32) int32 {
-	for {
-		n++
-		prime := true
-		for d := int32(2); d <= n/d; d++ {
-			if n%d == 0 {
-				prime = false
-				break
-			}
-		}
-		if prime {
-			return n
-		}
-	}
-}
 func Aig_RManTableResize(p *Aig_RMan_t) {
 	old := p.pBins
-	p.nBins = canonNextPrime(3 * p.nBins)
+	p.nBins = util.Abc_PrimeCudd(uint32(3 * p.nBins))
 	p.pBins = make([]*Aig_Tru_t, p.nBins)
 	var count int32
 	for _, head := range old {
@@ -303,6 +247,7 @@ func Aig_RManTableFindOrAdd(p *Aig_RMan_t, truth []uint32, n int32) int32 {
 	}
 	if p.nEntries == 3*p.nBins {
 		Aig_RManTableResize(p)
+		// Reacquire the bucket: slot previously referred to the old table.
 		slot = Aig_RManTableLookup(p, truth, n)
 	}
 	*slot = &Aig_Tru_t{Id: p.nEntries, nVars: uint32(n), nVisits: 1, pTruth: append([]uint32(nil), truth[:canonWords(n)]...)}
