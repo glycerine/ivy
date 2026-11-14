@@ -1,174 +1,135 @@
+// Property splitting, ported from ABC aigSplit.c (Alan Mishchenko).
 package aig
 
 import (
 	"fmt"
-	"math/rand/v2"
 	"time"
+
+	cudd "github.com/glycerine/abcgo/bdd/cudd/core"
+	"github.com/glycerine/abcgo/bdd/extrab/cascade"
 )
 
-// These source-named BDD helpers use an exact Shannon-reduced decision graph
-// represented with Graph muxes, replacing CUDD pointers and reference counting.
-func Aig_NodeBddToMuxes_rec(decisions *Graph, function Edge, destination *Graph, mapping map[int]Edge) Edge {
-	id := function.NodeID()
-	value, ok := mapping[id]
-	if !ok {
-		n := *decisions.node(function)
-		if n.Kind != And && n.Kind != ExclusiveOr && n.Kind != Buffer && n.Kind != Output {
-			panic("aig: unmapped decision variable")
-		}
-		a := Aig_NodeBddToMuxes_rec(decisions, n.Fanins[0], destination, mapping)
-		if n.Kind == Buffer || n.Kind == Output {
-			value = a
-		} else {
-			b := Aig_NodeBddToMuxes_rec(decisions, n.Fanins[1], destination, mapping)
-			if n.Kind == And {
-				value = destination.AND(a, b)
-			} else {
-				value = destination.NewXor(a, b)
-			}
-		}
-		mapping[id] = value
+func Aig_NodeBddToMuxes_rec(dd *cudd.DdManager, function *cudd.DdNode, destination *Graph, mapping map[*cudd.DdNode]Edge) Edge {
+	if cudd.Cudd_IsComplement(function) {
+		panic("aig: BDD-to-MUX recursion requires a regular node")
 	}
-	if function.Complemented() {
-		value = value.Not()
-	}
-	return value
-}
-func splitCofactor(p *Graph, root Edge, assignment map[int]bool) Edge {
-	memo := map[int]Edge{0: p.Const1()}
-	for id, value := range assignment {
-		memo[id] = p.Const0()
-		if value {
-			memo[id] = p.Const1()
-		}
-	}
-	var visit func(Edge) Edge
-	visit = func(e Edge) Edge {
-		id := e.NodeID()
-		value, ok := memo[id]
-		if !ok {
-			n := p.nodes[id]
-			switch n.Kind {
-			case Input:
-				value = Edge(id) << 1
-			case Output, Buffer:
-				value = visit(n.Fanins[0])
-			case And:
-				value = p.AND(visit(n.Fanins[0]), visit(n.Fanins[1]))
-			case ExclusiveOr:
-				value = p.NewXor(visit(n.Fanins[0]), visit(n.Fanins[1]))
-			default:
-				panic("aig: invalid cofactor node")
-			}
-			memo[id] = value
-		}
-		if e.Complemented() {
-			value = value.Not()
-		}
-		return value
-	}
-	return visit(root)
-}
-func splitReduce(p *Graph, root Edge, memo map[Edge]Edge) Edge {
-	regular := Aig_Regular(root)
-	if result, ok := memo[regular]; ok {
-		if root.Complemented() {
-			return result.Not()
-		}
+	if result, ok := mapping[function]; ok {
 		return result
 	}
-	support := Aig_Support(p, regular)
-	value := p.Const1()
-	if len(support) == 0 {
-		if !Aig_ObjPhaseReal(p, regular) {
-			value = p.Const0()
-		}
-	} else {
-		positions := make(map[int]int, len(p.inputs))
-		for i, e := range p.inputs {
-			positions[e.NodeID()] = i
-		}
-		variable := support[0]
-		for _, e := range support[1:] {
-			if positions[e.NodeID()] < positions[variable.NodeID()] {
-				variable = e
+	low := cudd.Cudd_E(function)
+	a := Aig_NodeBddToMuxes_rec(dd, cudd.Cudd_Regular(low), destination, mapping)
+	if cudd.Cudd_IsComplement(low) {
+		a = a.Not()
+	}
+	b := Aig_NodeBddToMuxes_rec(dd, cudd.Cudd_T(function), destination, mapping)
+	variable, ok := mapping[cudd.Cudd_bddIthVar(dd, int(function.Index))]
+	if !ok {
+		panic("aig: unmapped BDD variable")
+	}
+	result := destination.Mux(variable, b, a)
+	mapping[function] = result
+	return result
+}
+
+// Typed local scratch replaces the source pData BDD cache, keeping BDD handles
+// separate from the graph's AIG-copy maps and unrelated object payloads.
+func Aig_ManBuildPoBdd_rec(p *Graph, e Edge, dd *cudd.DdManager, mapping map[int]*cudd.DdNode) *cudd.DdNode {
+	result, ok := mapping[e.NodeID()]
+	if !ok {
+		n := *p.node(e)
+		a := Aig_ManBuildPoBdd_rec(p, n.Fanins[0], dd, mapping)
+		switch n.Kind {
+		case Buffer, Output:
+			result = a
+		case And, ExclusiveOr:
+			b := Aig_ManBuildPoBdd_rec(p, n.Fanins[1], dd, mapping)
+			if n.Kind == And {
+				result = cudd.Cudd_bddAnd(dd, a, b)
+			} else {
+				result = cudd.Cudd_bddXor(dd, a, b)
 			}
+		default:
+			panic("aig: unmapped BDD terminal")
 		}
-		low := splitReduce(p, splitCofactor(p, regular, map[int]bool{variable.NodeID(): false}), memo)
-		high := splitReduce(p, splitCofactor(p, regular, map[int]bool{variable.NodeID(): true}), memo)
-		if low == high {
-			value = low
-		} else if high.Complemented() {
-			value = p.Mux(variable, high.Not(), low.Not()).Not()
-		} else {
-			value = p.Mux(variable, high, low)
+		if result == nil {
+			panic("aig: failed to build property BDD")
 		}
+		cudd.Cudd_Ref(result)
+		mapping[e.NodeID()] = result
 	}
-	memo[regular] = value
-	if root.Complemented() {
-		value = value.Not()
-	}
-	return value
+	return cudd.Cudd_NotCond(result, e.Complemented())
 }
-func Aig_ManBuildPoBdd_rec(p *Graph, e Edge, decisions *Graph) Edge {
-	if p.copies == nil {
-		panic("aig: decision variable mapping not initialized")
-	}
-	return Aig_ManDup_rec(decisions, p, e)
-}
-func Aig_ManBuildPoBdd(p *Graph, function *Edge) *Graph {
+
+// The returned function has one external BDD reference owned by the caller.
+func Aig_ManBuildPoBdd(p *Graph, function **cudd.DdNode) *cudd.DdManager {
 	if len(p.outputs)-int(p.nRegs) != 1 || function == nil {
 		panic("aig: splitting requires one property output")
 	}
-	decisions := Aig_ManStartFrom(p)
-	root := Aig_ManBuildPoBdd_rec(p, p.outputDriver(p.outputs[0]), decisions)
-	*function = splitReduce(decisions, root, make(map[Edge]Edge))
-	return decisions
+	dd := cudd.Cudd_Init(uint32(len(p.inputs)), 0, cudd.CUDD_UNIQUE_SLOTS, cudd.CUDD_CACHE_SLOTS, 0)
+	if dd == nil {
+		panic("aig: failed to create BDD manager")
+	}
+	cudd.Cudd_AutodynEnable(dd, cudd.CUDD_REORDER_SYMM_SIFT)
+	mapping := map[int]*cudd.DdNode{0: cudd.Cudd_ReadOne(dd)}
+	cudd.Cudd_Ref(mapping[0])
+	for i, input := range p.inputs {
+		mapping[input.NodeID()] = cudd.Cudd_bddIthVar(dd, i)
+		cudd.Cudd_Ref(mapping[input.NodeID()])
+	}
+	*function = Aig_ManBuildPoBdd_rec(p, p.outputDriver(p.outputs[0]), dd, mapping)
+	cudd.Cudd_Ref(*function)
+	for _, node := range mapping {
+		cudd.Cudd_RecursiveDeref(dd, node)
+	}
+	cudd.Cudd_ReduceHeap(dd, cudd.CUDD_REORDER_SYMM_SIFT, 1)
+	return dd
 }
-func Aig_ManCofactorBdds(p *Graph, subset []Edge, decisions *Graph, function Edge) []Edge {
+
+// Each result retains its own reference, including zero and duplicate cofactors.
+func Aig_ManCofactorBdds(p *Graph, subset []*cudd.DdNode, dd *cudd.DdManager, function *cudd.DdNode) []*cudd.DdNode {
 	if len(subset) > 16 {
 		panic("aig: at most 16 cofactoring variables")
 	}
-	seen := make(map[int]bool)
-	for _, e := range subset {
-		if e.Complemented() || decisions.node(e).Kind != Input || seen[e.NodeID()] {
+	seen := make(map[*cudd.DdNode]bool)
+	for _, variable := range subset {
+		if variable == nil || int(variable.Index) >= len(dd.Vars) || variable != dd.Vars[variable.Index] || seen[variable] {
 			panic("aig: invalid cofactoring variables")
 		}
-		seen[e.NodeID()] = true
+		seen[variable] = true
 	}
-	results := make([]Edge, 0, 1<<uint(len(subset)))
-	memo := make(map[Edge]Edge)
+	results := make([]*cudd.DdNode, 0, 1<<uint(len(subset)))
 	for code := 0; code < 1<<uint(len(subset)); code++ {
-		assignment := make(map[int]bool, len(subset))
-		cube := decisions.Const1()
-		for i, e := range subset {
-			value := code&(1<<uint(len(subset)-1-i)) != 0
-			assignment[e.NodeID()] = value
-			literal := e
-			if !value {
-				literal = literal.Not()
-			}
-			cube = decisions.AND(cube, literal)
-		}
-		cofactor := splitReduce(decisions, splitCofactor(decisions, function, assignment), memo)
-		results = append(results, decisions.AND(cofactor, cube))
+		cube := cascade.Extra_bddBitsToCube(dd, code, len(subset), subset, true)
+		cudd.Cudd_Ref(cube)
+		cofactor := cudd.Cudd_Cofactor(dd, function, cube)
+		cudd.Cudd_Ref(cofactor)
+		result := cudd.Cudd_bddAnd(dd, cofactor, cube)
+		cudd.Cudd_Ref(result)
+		cudd.Cudd_RecursiveDeref(dd, cofactor)
+		cudd.Cudd_RecursiveDeref(dd, cube)
+		results = append(results, result)
 	}
 	return results
 }
-func Aig_ManConvertBddsToAigs(p, decisions *Graph, cofactors []Edge) *Graph {
+
+func Aig_ManConvertBddsToAigs(p *Graph, dd *cudd.DdManager, cofactors []*cudd.DdNode) *Graph {
 	q := Aig_ManStartFrom(p)
-	mapping := map[int]Edge{0: 0}
-	if len(decisions.inputs) != len(q.inputs) {
-		panic("aig: inconsistent decision variable count")
+	mapping := map[*cudd.DdNode]Edge{cudd.Cudd_ReadOne(dd): q.Const1()}
+	if len(dd.Vars) != len(q.inputs) {
+		panic("aig: inconsistent BDD variable count")
 	}
-	for i, e := range decisions.inputs {
-		mapping[e.NodeID()] = q.inputs[i]
+	for i, input := range q.inputs {
+		mapping[cudd.Cudd_bddIthVar(dd, i)] = input
 	}
 	for _, function := range cofactors {
-		if function == decisions.Const0() {
+		if function == cudd.Cudd_ReadLogicZero(dd) {
 			continue
 		}
-		q.AddOutput(Aig_NodeBddToMuxes_rec(decisions, function, q, mapping))
+		result := Aig_NodeBddToMuxes_rec(dd, cudd.Cudd_Regular(function), q, mapping)
+		if cudd.Cudd_IsComplement(function) {
+			result = result.Not()
+		}
+		q.AddOutput(result)
 	}
 	for _, output := range p.outputs[1:] {
 		q.AddOutput(Aig_ManDup_rec(q, p, p.outputDriver(output)))
@@ -177,25 +138,37 @@ func Aig_ManConvertBddsToAigs(p, decisions *Graph, cofactors []Edge) *Graph {
 	Aig_ManSetRegNum(q, p.nRegs)
 	return q
 }
+
 func Aig_ManVecRandSubset(values []Edge, count int32) []Edge {
 	if count < 0 {
 		panic("aig: negative subset size")
 	}
 	result := append([]Edge(nil), values...)
 	for len(result) > int(count) {
-		i := rand.IntN(len(result))
-		result = append(result[:i], result[i+1:]...)
+		value := result[int(Aig_ManRandom(0)%uint32(len(result)))]
+		// Vec_PtrRemove removes the last equal entry, retaining survivor order.
+		for i := len(result) - 1; i >= 0; i-- {
+			if result[i] == value {
+				result = append(result[:i], result[i+1:]...)
+				break
+			}
+		}
 	}
 	return result
 }
+
 func Aig_ManSplit(p *Graph, variables, verbose int32) *Graph {
 	start := time.Now()
 	if len(p.outputs)-int(p.nRegs) != 1 {
 		fmt.Println("Currently works only for one primary output.")
 		return nil
 	}
-	if variables < 1 || variables > 16 {
-		fmt.Println("The number of cofactoring variables must be between 1 and 16.")
+	if variables < 1 {
+		fmt.Println("The number of cofactoring variables should be a positive number.")
+		return nil
+	}
+	if variables > 16 {
+		fmt.Println("The number of cofactoring variables should be less than 17.")
 		return nil
 	}
 	support := Aig_Support(p, Aig_Regular(p.outputDriver(p.outputs[0])))
@@ -203,17 +176,31 @@ func Aig_ManSplit(p *Graph, variables, verbose int32) *Graph {
 		fmt.Println("Property output function is a constant.")
 		return nil
 	}
-	var function Edge
-	decisions := Aig_ManBuildPoBdd(p, &function)
-	subset := Aig_ManVecRandSubset(support, variables)
-	for i, e := range subset {
-		index := Aig_ObjCioId(p, e)
-		subset[i] = decisions.inputs[index]
-	}
-	cofactors := Aig_ManCofactorBdds(p, subset, decisions, function)
-	result := Aig_ManConvertBddsToAigs(p, decisions, cofactors)
+	var function *cudd.DdNode
+	dd := Aig_ManBuildPoBdd(p, &function)
+	defer cudd.Cudd_Quit(dd)
+	defer cudd.Cudd_RecursiveDeref(dd, function)
 	if verbose != 0 {
-		fmt.Printf("Support =%5d. Created %d cofactors (out of %d). Time=%s\n", len(support), len(result.outputs)-int(result.nRegs), len(cofactors), time.Since(start))
+		fmt.Printf("Support =%5d.  BDD size =%6d.  ", len(support), cudd.Cudd_DagSize(function))
+	}
+	selected := Aig_ManVecRandSubset(support, variables)
+	positions := make(map[int]int, len(p.inputs))
+	for i, input := range p.inputs {
+		positions[input.NodeID()] = i
+	}
+	subset := make([]*cudd.DdNode, len(selected))
+	for i, input := range selected {
+		subset[i] = cudd.Cudd_bddIthVar(dd, positions[input.NodeID()])
+	}
+	cofactors := Aig_ManCofactorBdds(p, subset, dd, function)
+	defer func() {
+		for _, cofactor := range cofactors {
+			cudd.Cudd_RecursiveDeref(dd, cofactor)
+		}
+	}()
+	result := Aig_ManConvertBddsToAigs(p, dd, cofactors)
+	if verbose != 0 {
+		fmt.Printf("Created %d cofactors (out of %d).  Time=%s\n", len(result.outputs)-int(result.nRegs), len(cofactors), time.Since(start))
 	}
 	return result
 }

@@ -1,6 +1,47 @@
 package aig
 
-import "testing"
+import (
+	"slices"
+	"testing"
+
+	cudd "github.com/glycerine/abcgo/bdd/cudd/core"
+)
+
+func TestSplitDoesNotDependOnTerminalScratchIDs(t *testing.T) {
+	p := NewGraph()
+	a, b := p.NewInput(), p.NewInput()
+	p.AddOutput(p.AND(a, b))
+	// CI IDs are scratch state, not the variable numbering used by C's BDD
+	// builder. NewInput leaves both at zero until an explicit indexing pass.
+	q := Aig_ManSplit(p, 2, 0)
+	if q == nil || len(q.outputs) != 1 {
+		t.Fatal("AND property should have one nonzero minterm")
+	}
+	for mask := 0; mask < 4; mask++ {
+		input := []bool{mask&1 != 0, mask&2 != 0}
+		want, _ := p.Evaluate(input)
+		got, err := q.Evaluate(input)
+		if err != nil || !slices.Equal(got, want) {
+			t.Fatalf("mask %d: got %v (%v), want %v", mask, got, err, want)
+		}
+	}
+}
+
+func TestSplitRandomSubsetUsesSourceStream(t *testing.T) {
+	values := []Edge{2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24}
+	rng := NewAigRandomSource()
+	rng.Uint32() // Aig_ManRandom(1) returns and consumes the first word.
+	want := slices.Clone(values)
+	for len(want) > 4 {
+		i := int(rng.Uint32() % uint32(len(want)))
+		want = append(want[:i], want[i+1:]...)
+	}
+	Aig_ManRandom(1)
+	defer Aig_ManRandom(1)
+	if got := Aig_ManVecRandSubset(values, 4); !slices.Equal(got, want) {
+		t.Fatalf("subset = %v, want source stream %v", got, want)
+	}
+}
 
 func TestSplitCofactorsPreservePropertyAndState(t *testing.T) {
 	p := NewGraph()
@@ -35,19 +76,22 @@ func TestSplitCofactorsPreservePropertyAndState(t *testing.T) {
 		t.Fatal(err)
 	}
 }
-func TestShannonReductionDetectsSemanticConstants(t *testing.T) {
+func TestSplitBddReductionDetectsSemanticConstants(t *testing.T) {
 	p := NewGraph()
 	a, b := p.NewInput(), p.NewInput()
 	zero := p.AND(p.AND(p.OR(a, b), a.Not()), b.Not())
 	p.AddOutput(zero)
-	var function Edge
+	var function *cudd.DdNode
 	decisions := Aig_ManBuildPoBdd(p, &function)
-	if function != decisions.Const0() {
+	defer cudd.Cudd_Quit(decisions)
+	defer cudd.Cudd_RecursiveDeref(decisions, function)
+	if function != cudd.Cudd_ReadLogicZero(decisions) {
 		t.Fatal("semantic zero not reduced")
 	}
-	cofs := Aig_ManCofactorBdds(p, decisions.inputs[:1], decisions, function)
+	cofs := Aig_ManCofactorBdds(p, decisions.Vars[:1], decisions, function)
 	for _, e := range cofs {
-		if e != decisions.Const0() {
+		defer cudd.Cudd_RecursiveDeref(decisions, e)
+		if e != cudd.Cudd_ReadLogicZero(decisions) {
 			t.Fatal(cofs)
 		}
 	}
