@@ -3318,3 +3318,35 @@ Next inspection target: the embedding constant's reserved fanin slots can
 make an isolated constant qualify as a random pivot. That path still needs
 a regression and repair. Iterative eigenvector accuracy and remaining GIA
 algorithm families also remain under review. Original completion is 2/131.
+
+Embedding pivot review: regressions confirm that the constant's reserved
+fanin slots made it eligible for random selection even when isolated from
+every output. Some starting states therefore embedded only one vertex instead
+of the four output-connected vertices. Wire-only graphs similarly selected
+the wrong component; an empty graph never terminated because no vertex passed
+the rejection sampler. Red evidence is `/tmp/abcgo-embedding-pivot-red.log`;
+the empty-graph regression runs in a bounded child process and captured the
+five-second deadline instead of hanging the suite.
+
+Preserve the source rejection sampler but restrict eligible nodes to the
+output-connected traversal marks left by component discovery. Mark the
+constant when joining multiple components so normal bridge selection remains
+eligible. If no eligible internal node exists, seed BFS from the first output,
+or from the constant for an empty graph. These are terminating base cases for
+the existing distance algorithm, not a replacement layout algorithm. Original
+C shares the isolated-constant/empty-graph defects.
+
+Tests cover 128 starting-state/simple-or-clustered combinations with an unused
+CI and isolated constant, joined wire-only components, and wire/empty graphs
+through dimensions, covariance, eigenvectors, projection and finite placement.
+A compiled giaEmbed.c baseline covers 16 ordinary connected cases with varied
+random starting states: centered distance dimensions, all covariance entries,
+the principal eigenvector and projected coordinates agree within 1e-5. Those
+cases retain original pivot sampling behavior; defective boundary cases are
+checked against their output-reachability invariants instead of C's failure.
+
+Focused tests pass in 1.907s (`/tmp/abcgo-embedding-pivot-focused.log`), full
+uncached GIA race tests pass in 41.107s
+(`/tmp/abcgo-embedding-pivot-race.log`), and GIA vet passes
+(`/tmp/abcgo-embedding-pivot-vet.log`). Iterative eigenvector accuracy and
+remaining GIA algorithm families still need review. Completion remains 2/131.

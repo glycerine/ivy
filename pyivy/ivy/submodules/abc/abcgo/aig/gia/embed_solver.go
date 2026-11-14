@@ -13,6 +13,7 @@ func Emb_ManComputeDimensions(p *Emb_Man_t, nDims int32) {
 			constant.fanins[i] = output
 			output.fanouts[len(output.fanouts)-1] = constant
 		}
+		Emb_ObjSetTravIdCurrent(p, constant)
 	}
 	if p.pVecs != nil {
 		panic("gia: embedding dimensions already computed")

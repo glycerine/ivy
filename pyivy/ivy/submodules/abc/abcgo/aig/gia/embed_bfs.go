@@ -63,12 +63,27 @@ func Emb_ManFindDistances(p *Emb_Man_t, starts *Vec_Int_t, distances []Emb_Dat_t
 	return Emb_ManPerformBfs(p, current, next, distances)
 }
 func Emb_ManRandomVertex(p *Emb_Man_t) *Emb_Obj_t {
+	// ConnectedComponents leaves the output-connected vertices marked. The
+	// constant's reserved fanin slots alone do not make it a valid pivot.
+	found := false
+	for _, o := range p.objects {
+		if Emb_ObjIsNode(o) != 0 && Emb_ObjIsTravIdCurrent(p, o) != 0 {
+			found = true
+			break
+		}
+	}
+	if !found {
+		if Emb_ManCoNum(p) != 0 {
+			return Emb_ManCo(p, 0)
+		}
+		return Emb_ManObj(p, 0)
+	}
 	for {
 		id := int32((911 * Gia_ManRandom(0)) % uint32(Gia_ManObjNum(p.pGia)))
 		handle := Gia_ObjValue(Gia_ManObj(p.pGia, id))
 		if handle >= 0 {
 			o := Emb_ManObj(p, handle)
-			if Emb_ObjIsNode(o) != 0 {
+			if Emb_ObjIsNode(o) != 0 && Emb_ObjIsTravIdCurrent(p, o) != 0 {
 				return o
 			}
 		}
