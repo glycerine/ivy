@@ -426,6 +426,10 @@ func Abc_NtkDelete(n *Network) {
 	if n == nil {
 		return
 	}
+	if manager, ok := n.TimingManager.(interface{ Stop() }); ok {
+		manager.Stop()
+		n.TimingManager = nil
+	}
 	for _, o := range n.Objects() {
 		if o.MarkA || o.MarkB || o.MarkC {
 			panic(fmt.Sprintf("abc: deleting marked object %d", o.ID))

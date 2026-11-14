@@ -93,6 +93,10 @@ type Network struct {
 	Topo                      []int32
 	AndGateDelay              float64
 	MappingTiming             *MappingTiming
+	// TimingManager stores source-compatible per-network timing state owned by
+	// clients such as base/abci. It is kept separate from MappingTiming, which
+	// carries only the mapper's CI/CO scalar annotations.
+	TimingManager any
 	// lutTimes is ABC's temporary per-object arrival/required/slack storage.
 	lutTimes        []float32
 	WireLoad        string
