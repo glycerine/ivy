@@ -1362,3 +1362,57 @@ Full AIG and ABCI race suites pass (9.944s and 28.641s) in
 `/tmp/abcgo-retiming-reconstruction-review.log`. The final AIG race run after
 reusing the existing register total and adding initial-encoding cases also
 passes (9.994s), in `/tmp/abcgo-retiming-reconstruction-final.log`.
+
+### Frontier retiming source review
+
+Reviewed all of aigRetF.go against aigRetF.c: CO-scoped fixed-point marking,
+register links, dynamic object scanning, buffer bypass, complemented-pin reset
+normalization, move limits, scratch cleanup, sequential pruning and final
+rehashing. The local typed register/domain maps replace C's temporary pNext
+links; the existing same-domain restriction and explicit XOR support are Go
+extensions. Old registers that survive frontier pruning retain their identities,
+so its projected one-hot groups can remain valid; this differs from moving
+latches among arbitrary edges in the other retiming implementation.
+
+The new source comparison exposed a port mismatch before repair: Go treated
+zero as a no-op and rejected negative limits, while C checks the limit after
+the first eligible move. Restored that source behavior by using a minimum
+effective limit of one. Updated the old no-op test to exercise an actual
+ineligible cross-domain pair rather than asserting the invented zero-limit
+behavior. Both the compiled zero-limit regression and a focused negative-limit
+regression failed before the change. Existing polarity/XOR/feedback/domain
+tests continue to pass.
+
+The C frontier routine's final Aig_ManDupOrdered call crashes even on the
+two-register AND example: converting the old gate to a buffer introduces a
+forward reference to its new LO, violating that copier's increasing-ID
+topology assumption. An AddressSanitizer run traced the null fanin to
+Aig_ObjLevelNew through Aig_ObjCreateCo in Aig_ManDupOrdered. The source C
+algorithms remain unchanged. The frontier fixture captures the source graph
+immediately before this final copy and evaluates it recursively, including
+buffer/forward references. It executes real source marking, movement and
+sequential cleanup; it does not validate C's broken final copier. Go already
+uses its reviewed recursive duplicator, which handles these references.
+
+All 130 frontier cases (26 directed/seeded graphs at limits -1, 0, 1, 2 and 5)
+match the captured C register counts and 64-frame traces: 8,320 output frames.
+The 260 complete edge-driver cases still pass with the shared recursive C
+evaluator. A separate fixture executes original marking twice on each of three
+graphs and matches every object's MarkB and TravID plus the manager generation:
+observable autonomous feedback, a PI-fed reverse register chain, and no true
+PIs. It checks that C clears its temporary latch links; Go preserves unrelated
+object payloads. Dangling logic remains outside CO-based marking in both.
+
+Independent sequential tests cover all eight combinations of equal/opposite
+LI drivers and the two input complement flags, making new logic simplify to
+a literal or constant. Every case moves the gate, preserves zero-reset traces
+and leaves no live scratch marks. Constants are handled through regular Go
+edges rather than writing through C's potentially complemented pointers.
+
+Full AIG and ABCI race suites pass after the limit repair (11.537s and 28.582s)
+in `/tmp/abcgo-frontier-step-review.log`. The added marking and simplified-result
+tests have their own focused pass; the final full AIG race suite passes in
+11.728s, recorded in `/tmp/abcgo-frontier-final-review.log`.
+This closes the current edge/frontier retiming family review. The AIG package
+audit is still open, including its property-splitting implementation and the
+remaining unreviewed families; completed package count remains 1/131.
