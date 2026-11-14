@@ -214,3 +214,12 @@ now reserve all supplied input/output names first and use the same unique-name
 helper as expression printing. Six parsed round trips, each evaluated at all
 four input assignments, cover both input/output naming and reserved suffixes.
 Full dump-writer source validation remains in progress.
+
+Full dump-writer source checkpoint: 4,096 C/Go BLIF/Verilog readbacks cover all
+256 three-input functions with zero through three registers. All PO/next-state
+values, zero reset, interface/register dimensions and rising clock declarations
+match; explicit XOR/buffer and named sequential cases also pass. Writes preserve
+graph scratch and payloads. Full AIG/ABCI race checks pass (55.776s/28.930s),
+followed by focused race checks for the latest additions. This closes the dump
+writer comparison; the adjacent manager first-PO flip has a newly found source
+representation mismatch that still needs its separate repair checkpoint.

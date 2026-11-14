@@ -378,3 +378,47 @@ func TestUtilBlifExhaustiveBooleanSemantics(t *testing.T) {
 		}
 	}
 }
+
+func TestDumpWritersPreserveGraphScratch(t *testing.T) {
+	g := NewGraph()
+	a, b := g.NewInput(), g.NewInput()
+	root := g.AND(a, b.Not())
+	g.AddOutput(root)
+	g.AddOutput(root.Not())
+	Aig_ManSetRegNum(g, 1)
+	for i := range g.nodes {
+		g.nodes[i].MarkA = i%2 != 0
+		g.nodes[i].MarkB = i%3 != 0
+		g.nodes[i].TravID = int32(i + 20)
+		g.nodes[i].CioID = int32(i + 40)
+	}
+	g.objectData = map[int]any{a.NodeID(): "a", root.NodeID(): "saved payload"}
+	g.copies = map[int]Edge{b.NodeID(): root.Not()}
+	before := g.Nodes()
+	for _, writer := range []func(io.Writer) error{
+		func(w io.Writer) error { return WriteBLIF(w, g, nil, nil) },
+		func(w io.Writer) error { return WriteVerilog(w, g) },
+	} {
+		if err := writer(io.Discard); err != nil {
+			t.Fatal(err)
+		}
+		if !reflect.DeepEqual(before, g.nodes) || g.travID != 1 ||
+			!reflect.DeepEqual(g.objectData, map[int]any{a.NodeID(): "a", root.NodeID(): "saved payload"}) ||
+			!reflect.DeepEqual(g.copies, map[int]Edge{b.NodeID(): root.Not()}) {
+			t.Fatal("dumping changed node metadata, payloads or copies")
+		}
+	}
+}
+
+func TestGenericFilenameUsesOnlyBasenameExtension(t *testing.T) {
+	for _, tc := range []struct{ input, want string }{
+		{"/parent.v/graph", "graph_x.aig"},
+		{"C:\\parent.v\\graph.blif", "graph_x.aig"},
+		{"/parent\\nested/file.blif", "file_x.aig"},
+		{"graph.part.blif", "graph.part_x.aig"},
+	} {
+		if got := Aig_FileNameGenericAppend(tc.input, "_x.aig"); got != tc.want {
+			t.Fatalf("basename %q: got %q, want %q", tc.input, got, tc.want)
+		}
+	}
+}

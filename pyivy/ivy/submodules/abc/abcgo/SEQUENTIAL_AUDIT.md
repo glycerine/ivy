@@ -1706,3 +1706,35 @@ not mark the AIG package complete.
 After the naming repair, full AIG and ABCI race suites pass in 33.014s and
 29.004s (`/tmp/abcgo-dump-names-review.log`). Completed-package count remains
 1/131; aig/aig is still the active sequential review.
+
+### Full dump-writer semantic review
+
+Linked the original C BLIF/Verilog writers and DFS into a graph-only fixture;
+there are no substitute writer algorithms. Built all 256 three-input Boolean
+functions with zero through three registers. Additional direct, complemented
+and constant outputs expose every logic node to satisfy C's DFS precondition.
+Read both C and Go exports with the production independent BLIF/Verilog readers:
+4,096 circuits (1,024 graphs x two implementations x two formats). At every
+input/state assignment, all POs and register-input values match the original
+Go graph; dimensions, zero initialization and rising-clock-edge declarations
+are checked. This proves the one-step transition relation and reset values,
+not an independent external HDL simulator's interpretation. The C Verilog
+writer emits redundant identical LI assignments; these are harmless in these
+readbacks, while Go emits each assignment once.
+
+Additional round trips cover explicit repeated XOR operands, inverted buffers,
+zero through two registers and supplied sequential terminal names. Snapshot
+checks prove writes preserve node fields (including nonstandard CioIDs/marks),
+manager generation, payloads and copy bindings. The basename helper also has
+portable mixed-separator/dotted-parent tests. Its local, filename-only extension
+handling intentionally avoids the original static-buffer helper's dotted-parent
+and mixed-separator quirks. No dump algorithm needed replacement or repair in
+this checkpoint beyond the already committed name-collision fix.
+
+Full AIG/ABCI race suites pass in 55.776s/28.930s, recorded in
+`/tmp/abcgo-native-dumps-review.log`. Latest dump-only race checks additionally
+cover the typed-node, scratch, supplied sequential-name and filename tests
+(`/tmp/abcgo-native-dumps-final.log`). Review of the adjacent manager routine
+then found a distinct first-PO flip representation bug; its new regression is
+red and the repair is the next checkpoint. AIG/package-wide completion remains
+unproven; completed-package count is still 1/131.
