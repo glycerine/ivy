@@ -498,62 +498,96 @@ func Aig_SupportNodes(p *Graph, roots []Edge, n int32, support *[]Edge) {
 	}
 }
 func Aig_Transfer_rec(source, destination *Graph, root Edge) {
-	Aig_ManDup_rec(destination, source, root)
+	source.transferCone(destination, root, make(map[int]bool))
+}
+func (source *Graph) transferCone(destination *Graph, root Edge, active map[int]bool) {
+	if root.Complemented() {
+		panic("aig: recursive transfer requires a regular object")
+	}
+	n := *source.node(root)
+	if n.Kind != And && n.Kind != ExclusiveOr || n.MarkA {
+		return
+	}
+	if active[root.NodeID()] {
+		panic("aig: cyclic transfer cone")
+	}
+	active[root.NodeID()] = true
+	source.transferCone(destination, Aig_Regular(n.Fanins[0]), active)
+	source.transferCone(destination, Aig_Regular(n.Fanins[1]), active)
+	a, b := Aig_ObjRealCopy(source, n.Fanins[0]), Aig_ObjRealCopy(source, n.Fanins[1])
+	var copy Edge
+	if n.Kind == ExclusiveOr {
+		// Retain the existing Go graph extension for explicit XOR nodes.
+		copy = destination.NewXor(a, b)
+	} else {
+		copy = destination.AND(a, b)
+	}
+	Aig_ObjSetCopy(source, root, copy)
+	source.node(root).MarkA = true
+	delete(active, root.NodeID())
 }
 func Aig_Transfer(source, destination *Graph, root Edge, nVars int32) Edge {
 	if source == destination {
 		return root
 	}
-	if nVars < 0 || int(nVars) > len(source.inputs) {
-		panic("aig: invalid transfer variable count")
+	if root.NodeID() == 0 {
+		return dupPhase(destination.Const1(), root.Complemented())
 	}
-	source.copies = map[int]Edge{0: 0}
-	for i := int32(0); i < nVars; i++ {
-		source.copies[source.inputs[i].NodeID()] = Aig_IthVar(destination, i)
-	}
-	return Aig_ManDup_rec(destination, source, root)
-}
-func Aig_Compose_rec(p *Graph, root, function, variable Edge) {
-	index := -1
-	for i, e := range p.inputs {
-		if e == variable {
-			index = i
+	for i, input := range source.inputs {
+		if int32(i) == nVars {
 			break
 		}
+		Aig_ObjSetCopy(source, input, Aig_IthVar(destination, int32(i)))
 	}
-	if index < 0 {
-		panic("aig: composition variable is not input")
+	Aig_Transfer_rec(source, destination, Aig_Regular(root))
+	Aig_ConeUnmark_rec(source, Aig_Regular(root))
+	return Aig_ObjRealCopy(source, root)
+}
+func Aig_Compose_rec(p *Graph, root, function, variable Edge) {
+	p.composeCone(root, function, variable, make(map[int]bool))
+}
+func (p *Graph) composeCone(root, function, variable Edge, active map[int]bool) {
+	if root.Complemented() {
+		panic("aig: recursive composition requires a regular object")
 	}
-	result := Aig_Compose(p, root, function, int32(index))
-	Aig_ObjSetCopy(p, root, result)
+	// Copy the node value: building the replacement may grow p.nodes.
+	n := *p.node(root)
+	if n.MarkA {
+		return
+	}
+	if n.Kind == Constant || n.Kind == Input {
+		copy := root
+		if root == variable {
+			copy = function
+		}
+		Aig_ObjSetCopy(p, root, copy)
+		return
+	}
+	if n.Kind != And {
+		panic("aig: composition requires an AND-inverter cone")
+	}
+	if active[root.NodeID()] {
+		panic("aig: cyclic composition cone")
+	}
+	active[root.NodeID()] = true
+	p.composeCone(Aig_Regular(n.Fanins[0]), function, variable, active)
+	p.composeCone(Aig_Regular(n.Fanins[1]), function, variable, active)
+	copy := p.AND(Aig_ObjRealCopy(p, n.Fanins[0]), Aig_ObjRealCopy(p, n.Fanins[1]))
+	Aig_ObjSetCopy(p, root, copy)
+	p.node(root).MarkA = true
+	delete(active, root.NodeID())
 }
 func Aig_Compose(p *Graph, root, function Edge, index int32) Edge {
-	if index < 0 || int(index) >= len(p.inputs) {
+	if int(index) >= len(p.inputs) {
+		fmt.Printf("Aig_Compose(): The PI variable %d is not defined.\n", index)
+		return InvalidEdge
+	}
+	if index < 0 {
 		panic("aig: invalid composition input")
 	}
-	variable := p.inputs[index]
-	memo := map[int]Edge{0: 0, variable.NodeID(): function}
-	var visit func(Edge) Edge
-	visit = func(e Edge) Edge {
-		id := e.NodeID()
-		value, ok := memo[id]
-		if !ok {
-			n := p.nodes[id]
-			if n.Kind == Input {
-				value = Edge(id) << 1
-			} else if n.Kind == And {
-				value = p.AND(visit(n.Fanins[0]), visit(n.Fanins[1]))
-			} else {
-				panic("aig: unsupported composition node")
-			}
-			memo[id] = value
-		}
-		if e.Complemented() {
-			value = value.Not()
-		}
-		return value
-	}
-	return visit(root)
+	Aig_Compose_rec(p, Aig_Regular(root), function, p.inputs[index])
+	Aig_ConeUnmark_rec(p, Aig_Regular(root))
+	return Aig_ObjRealCopy(p, root)
 }
 func Aig_ObjCollectCut_rec(p *Graph, root Edge, nodes *[]Edge) {
 	if p.node(root).MarkA {
