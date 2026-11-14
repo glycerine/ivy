@@ -3,6 +3,7 @@ package mapper
 import (
 	"fmt"
 	"math"
+	"reflect"
 	"time"
 )
 
@@ -49,7 +50,14 @@ func Map_HashKey2(p0, p1 *Map_Node_t, tableSize int32) uint32 {
 	if tableSize <= 0 {
 		return 0
 	}
-	return uint32((uint32(p0.Num)*12582917 + uint32(p1.Num)) % uint32(tableSize))
+	address := func(node *Map_Node_t) uintptr {
+		base := reflect.ValueOf(Map_Regular(node)).Pointer()
+		if Map_IsComplement(node) {
+			base |= 1
+		}
+		return base
+	}
+	return uint32((address(p0) + address(p1)*12582917) % uintptr(tableSize))
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -190,7 +198,11 @@ func Map_NodeIsAnd(p *Map_Node_t) int32 {
 }
 
 // inlining of macro Map_IsComplement
-func Map_NodeComparePhase(p1, p2 *Map_Node_t) int32 { return int32(p1.fInv ^ p2.fInv) }
+func Map_NodeComparePhase(p1, p2 *Map_Node_t) int32 {
+	assert(!Map_IsComplement(p1), "!Map_IsComplement(p1)")
+	assert(!Map_IsComplement(p2), "!Map_IsComplement(p2)")
+	return int32(p1.fInv ^ p2.fInv)
+}
 
 /*
 *Function*************************************************************
@@ -357,15 +369,14 @@ func Map_NodeCreate(p *Map_Man_t, p1, p2 *Map_Node_t) *Map_Node_t {
 		node.fInv = 1
 	}
 	if p1 != nil {
-		p1 = Map_Regular(p1)
-		node.Level = p1.Level
+		node.Level = Map_Regular(p1).Level
 		if p2 != nil && Map_Regular(p2).Level > node.Level {
 			node.Level = Map_Regular(p2).Level
 		}
 		if p2 != nil {
 			node.Level++
 		}
-		phase1, phase2 := mapNodeSimComplement(p1), false
+		phase1, phase2 := mapNodeSimComplement(p1), true
 		if p2 != nil {
 			phase2 = mapNodeSimComplement(p2)
 		}

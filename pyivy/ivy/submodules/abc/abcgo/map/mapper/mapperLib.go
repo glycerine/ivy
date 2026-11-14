@@ -12,10 +12,10 @@ import (
 )
 
 func Map_SuperLibCreate(genlib *mio.Mio_Library_t, text *vec.Vec_Str_t, path, exclude string, algorithm, verbose int32) *Map_SuperLib_t {
-	if genlib == nil {
+	if genlib == nil && (text != nil || algorithm != 0) {
 		return nil
 	}
-	lib := &Map_SuperLibStruct_t_{pName: path, pGenlib: genlib, fVerbose: verbose}
+	lib := &Map_SuperLibStruct_t_{pName: path, fVerbose: verbose}
 	lib.mmSupers = extra.Extra_MmFixedStart(int32(unsafe.Sizeof(Map_SuperStruct_t_{})))
 	lib.mmEntries = extra.Extra_MmFixedStart(int32(unsafe.Sizeof(Map_HashEntryStruct_t_{})))
 	lib.mmForms = extra.Extra_MmFlexStart()
@@ -42,11 +42,11 @@ func Map_SuperLibCreate(genlib *mio.Mio_Library_t, text *vec.Vec_Str_t, path, ex
 	if verbose != 0 {
 		fmt.Printf("Loaded %d unique %d-input supergates from %q. %.2f sec\n", lib.nSupersReal, lib.nVarsMax, path, float64(Abc_Clock()-start)/1e9)
 	}
-	lib.pGateInv = mio.Mio_LibraryReadInv(genlib)
-	lib.tDelayInv.Rise = mio.Mio_LibraryReadDelayInvRise(genlib)
-	lib.tDelayInv.Fall = mio.Mio_LibraryReadDelayInvFall(genlib)
+	lib.pGateInv = mio.Mio_LibraryReadInv(lib.pGenlib)
+	lib.tDelayInv.Rise = mio.Mio_LibraryReadDelayInvRise(lib.pGenlib)
+	lib.tDelayInv.Fall = mio.Mio_LibraryReadDelayInvFall(lib.pGenlib)
 	lib.tDelayInv.Worst = max(lib.tDelayInv.Rise, lib.tDelayInv.Fall)
-	lib.AreaInv, lib.AreaBuf = mio.Mio_LibraryReadAreaInv(genlib), mio.Mio_LibraryReadAreaBuf(genlib)
+	lib.AreaInv, lib.AreaBuf = mio.Mio_LibraryReadAreaInv(lib.pGenlib), mio.Mio_LibraryReadAreaBuf(lib.pGenlib)
 	lib.pSuperInv = &Map_SuperStruct_t_{Num: -1, nGates: 1, nFanins: 1, nFanLimit: 10, pRoot: lib.pGateInv, Area: lib.AreaInv, tDelayMax: lib.tDelayInv}
 	lib.pSuperInv.pFanins[0] = lib.ppSupers[0]
 	lib.pSuperInv.tDelaysR[0] = Map_Time_t{Rise: MAP_NO_VAR, Fall: lib.tDelayInv.Rise}

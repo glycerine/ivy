@@ -87,15 +87,18 @@ func Map_LibraryReadGateTree(lib *Map_SuperLib_t, line string, number, maxVars i
 		return nil
 	}
 	pinCount := mio.Mio_GateReadPinNum(gate.pRoot)
-	if pinCount < 0 || pinCount >= int32(len(gate.pFanins)) {
+	if pinCount < 0 || pinCount > int32(len(gate.pFanins)) {
 		return nil
 	}
 	gate.nFanLimit = uint32(s_MapFanoutLimits[pinCount])
 	children := make([]int, 0, maxVars)
 	formula := ""
 	for i := 1; i < len(fields); i++ {
-		if fields[i] == "#" {
-			formula = strings.TrimSpace(strings.Join(fields[i+1:], " "))
+		if strings.HasPrefix(fields[i], "#") {
+			formula = strings.TrimPrefix(fields[i], "#")
+			if formula == "" && i+1 < len(fields) {
+				formula = fields[i+1]
+			}
 			break
 		}
 		id, err := strconv.Atoi(fields[i])
@@ -121,27 +124,33 @@ func Map_LibraryReadGateTree(lib *Map_SuperLib_t, line string, number, maxVars i
 	return gate
 }
 
-func Vec_StrGets(buffer string, bufferSize int32, source *Vec_Str_t, position *int32) int32 {
-	if bufferSize <= 1 || source == nil || position == nil {
-		return 0
+func Vec_StrGets(buffer []byte, bufferSize int32, source *Vec_Str_t, position *int32) int32 {
+	if bufferSize <= 1 || source == nil || position == nil || len(buffer) < int(bufferSize) {
+		panic("mapper: invalid string reader arguments")
 	}
 	data := vec.Vec_StrArray(source)
 	start := int(*position)
-	if start < 0 || start >= len(data) {
+	if start < 0 || start > len(data) {
+		panic("mapper: invalid string reader position")
+	}
+	if start == len(data) {
+		buffer[0] = 0
 		return 0
 	}
-	end := start
-	for end < len(data) && end-start < int(bufferSize)-1 {
-		end++
-		if data[end-1] == '\n' {
-			break
+	for i := start; i < len(data); i++ {
+		offset := i - start
+		buffer[offset] = data[i]
+		if data[i] == 0 {
+			*position += int32(offset)
+			return 0
+		}
+		if data[i] == '\n' || offset == int(bufferSize)-1 {
+			*position += int32(offset + 1)
+			buffer[offset+1] = 0
+			return 1
 		}
 	}
-	*position = int32(end)
-	if end == start {
-		return 0
-	}
-	return 1
+	return 0
 }
 
 func Map_LibraryCompareLibNames(a, b string) int32 {
@@ -156,7 +165,16 @@ func Map_LibraryReadFileTreeStr(lib *Map_SuperLib_t, genlib *mio.Mio_Library_t, 
 	if lib == nil || genlib == nil || source == nil {
 		return 0
 	}
-	lines := strings.Split(string(vec.Vec_StrArray(source)), "\n")
+	var lines []string
+	var pos int32
+	buffer := make([]byte, 5001)
+	for Vec_StrGets(buffer, 5000, source, &pos) != 0 {
+		end := 0
+		for end < len(buffer) && buffer[end] != 0 {
+			end++
+		}
+		lines = append(lines, string(buffer[:end]))
+	}
 	first := -1
 	for i, line := range lines {
 		line = strings.TrimSpace(line)
@@ -170,7 +188,7 @@ func Map_LibraryReadFileTreeStr(lib *Map_SuperLib_t, genlib *mio.Mio_Library_t, 
 	}
 	libName := strings.Fields(strings.TrimSpace(lines[first]))
 	if len(libName) == 0 || Map_LibraryCompareLibNames(mio.Mio_LibraryReadName(genlib), libName[0]) != 0 {
-		fmt.Printf("Supergate library %q does not match the loaded genlib library.\\n", fileName)
+		fmt.Printf("Supergate library %q does not match the loaded genlib library.\n", fileName)
 		return 0
 	}
 	readCount := func(index int) (int32, bool) {
@@ -207,7 +225,7 @@ func Map_LibraryReadFileTreeStr(lib *Map_SuperLib_t, genlib *mio.Mio_Library_t, 
 	count := lib.nVarsMax
 	for _, line := range lines[first+4:] {
 		line = strings.TrimSpace(line)
-		if line == "" || strings.HasPrefix(line, "#") {
+		if line == "" {
 			continue
 		}
 		gate := Map_LibraryReadGateTree(lib, line, count, lib.nVarsMax)
@@ -217,17 +235,26 @@ func Map_LibraryReadFileTreeStr(lib *Map_SuperLib_t, genlib *mio.Mio_Library_t, 
 		lib.ppSupers[count] = gate
 		count++
 	}
-	lib.nSupersAll = count
-	lib.nSupersReal = 0
-	for _, gate := range lib.ppSupers[:count] {
-		if gate != nil {
-			lib.nSupersReal += int32(gate.fSuper)
-		}
+	if count != lib.nLines {
+		fmt.Printf("The number of lines read (%d) is different from what the file says (%d).\n", count, lib.nLines)
 	}
+	lib.nSupersAll = count
+	real := int32(0)
+	for _, gate := range lib.ppSupers[:lib.nLines] {
+		if gate == nil {
+			panic("mapper: missing declared supergate")
+		}
+		real += int32(gate.fSuper)
+	}
+	if real != lib.nSupersReal {
+		fmt.Printf("The number of gates read (%d) is different what the file says (%d).\n", real, lib.nSupersReal)
+	}
+	lib.nSupersReal = real
 	return 1
 }
 
 func Map_LibraryReadTree(lib *Map_SuperLib_t, genlib *mio.Mio_Library_t, fileName, excludeFile string) int32 {
+	assert(lib.pGenlib == nil, "lib.pGenlib == nil")
 	var excluded *st.Table
 	if excludeFile != "" {
 		names := make(map[string]bool)
