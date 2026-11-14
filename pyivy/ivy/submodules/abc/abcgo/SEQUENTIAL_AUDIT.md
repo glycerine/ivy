@@ -3216,3 +3216,27 @@ pass in 31.475s (`/tmp/abcgo-placement-control-race.log`) and GIA vet passes
 (`/tmp/abcgo-placement-control-vet.log`). Distance/eigensolver/placement
 boundaries and remaining GIA families still need review. Original completion
 remains 2/131 and the sequential goal stays active.
+
+Embedding distance/covariance review: discovered that freshly allocated
+dimension vectors used zero for unreachable vertices. Covariance already
+filters infinity sentinels, but those zeros were centered as real observations,
+adding false covariance from unused CIs. Two red regressions demonstrate the
+missing sentinel and a diagonal sum of 14 instead of the reachable population's
+10 (`/tmp/abcgo-embedding-unreachable-red.log`). Initialize distance storage
+to embInfinity before BFS writes reached vertices. This restores the intended
+initialization shown commented out in giaEmbed.c; no BFS or covariance
+algorithm was replaced. Original C shares the initialization defect.
+
+Regressions cover disconnected output components joined through the embedding
+constant, an unused CI, and all 16 covariance cells computed independently from
+reachable raw moments. Unreachable dimensions remain sentinel-valued until
+centering converts them to zero. A compiled original giaEmbed.c fixture checks
+single and paired BFS seeds for every vertex in simple/clustered ordinary AND
+graphs with and without register feedback: reached counts, level counts,+farthest-node tie selection and every distance match source. The native
+comparison intentionally does not assert the original faulty covariance.
+
+Focused tests pass in 1.873s (`/tmp/abcgo-embedding-distances-focused.log`).
+Full uncached GIA race tests pass in 33.447s
+(`/tmp/abcgo-embedding-distances-race.log`), and GIA vet passes. Repeated-seed
+and zero-norm numerical boundaries are still being examined. Remaining GIA
+families and the full sequential goal remain open; original completion is 2/131.

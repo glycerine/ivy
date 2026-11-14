@@ -18,6 +18,11 @@ func Emb_ManComputeDimensions(p *Emb_Man_t, nDims int32) {
 		panic("gia: embedding dimensions already computed")
 	}
 	p.pVecs = make([]Emb_Dat_t, p.nObjs*nDims)
+	// BFS writes only reached vertices. Preserve the sentinel expected by
+	// covariance centering so isolated vertices do not become sample points.
+	for i := range p.pVecs {
+		p.pVecs[i] = embInfinity
+	}
 	starts := vec.Vec_IntAlloc(int(nDims))
 	pivot := Emb_ManRandomVertex(p)
 	vec.Vec_IntPush(starts, pivot.hHandle)
