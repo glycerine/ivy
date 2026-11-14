@@ -8,6 +8,9 @@ the g3 fork's `src/` tree:
 * g3 commit c3c0016bd: relevancy and pareto backports
 * g3 commit d91cef3ad: qsat/qe and theory_pb fixes
 * g3 commit 0c41ffbae: bvsmul_noovfl/noudfl folding backport
+* g3 commits deaf40e62, 048427fed, 74ab0e1a2, b75598ba8, ebcebc895: fixes 6-10
+  below, found by the g3 audit (g3 `pkg/AUDIT.md`); their red tests are in
+  g3 commits a26556e2b and 1d959a9d5
 
 They are copied here unchanged.
 
@@ -18,6 +21,11 @@ They are copied here unchanged.
 | 3 | `qe_rec` segfaults on formulas with free constants and can return unsound results | backport of upstream 1ce0d7512 / 8ad939a10 (#2974, #2990) | `qe/qsat.cpp`, `qe/qe.cpp` |
 | 4 | `free(): invalid pointer` abort in theory_pb with proofs on | local fix (upstream rewrote this code in 4.8.5) | `smt/theory_pb.cpp` |
 | 5 | `bvsmul_noovfl`/`bvsmul_noudfl` fold constant operands to the wrong value | backport of upstream (z3 4.17.0) `mk_bvsmul_no_overflow` | `ast/rewriter/bv_rewriter.{h,cpp}` |
+| 6 | `dom-simplify` turns a satisfiable goal into `false` | backport of upstream 0ef8ebe89f (#4895) | `tactic/core/dom_simplify_tactic.cpp` |
+| 7 | `sat` on an unsat problem after `pop`: term-ite cache survives pop | backport of upstream 4c0db00a7b | `smt/elim_term_ite.h` |
+| 8 | `sat` on an unsat problem after `smt.macro_finder` is turned off | local fix (still present upstream) | `smt/asserted_formulas.cpp` |
+| 9 | `pb-preprocess` answers `sat` on unsat goals, segfaults | backport of upstream da8530e2db, 939860148f, 42f206171d, 302c0d178c | `tactic/core/pb_preprocess_tactic.cpp` |
+| 10 | `unsat` on a satisfiable datatype problem with `smt.relevancy=1` | backport of upstream 7fc4653e47 (#4623) | `smt/theory_datatype.cpp` |
 
 Every changed site has a comment that starts with "backport of upstream",
 "BACKPORT upstream", or "FORK FIX".
@@ -251,6 +259,147 @@ z3 4.17.0 gives `true`. At width 1, `(bvsmul_noovfl #b1 #b1)` and
     than 2^(w-1).
 * The "operand is 1" shortcut is skipped when `bv_sz == 1`.
 * Delete `mk_bvsmul_no_underflow` and its TRACE.
+
+---
+
+## 6. dom-simplify re-simplifies the dominator-tree root
+
+**Upstream:** 0ef8ebe89f (2020-12-14, "fix #4895"), which added the same
+guard to `simplify_rec` (now `src/ast/simplifiers/dominator_simplifier.cpp`).
+
+**Symptom.** `(assert (= true (ite p1 p0 p1)))` is satisfied by p0 = p1 =
+true, but `(check-sat-using (then dom-simplify smt))` answers `unsat` and
+`(apply dom-simplify)` prints the goal `(= true false)`.
+
+**Cause.** `dom_simplify_tactic::simplify_rec` recurses into every child of
+`e` in the dominator tree. The root is its own child in `tree(e)`, so the
+root is simplified again under the assumption made from its own value.
+
+**Fix.** `src/tactic/core/dom_simplify_tactic.cpp:290`: recurse only
+`if (child != e)` (in `simplify_rec`, `src/tactic/core/dom_simplify_tactic.cpp:263`).
+
+**Test.** `TST(z3_4_7_1_dom_simplify_root)`, `src/test/z3_4_7_1_bugs.cpp:106`
+(registered at `src/test/main.cpp:212`).
+
+---
+
+## 7. elim_term_ite cache survives pop
+
+**Upstream:** 4c0db00a7b (2019-08-30, "fix push/pop bug for ite-elimination").
+
+**Symptom.** In `(set-logic QF_LRA)`, after `(push)`, an assertion
+containing `(ite c a b)`, `(check-sat)` and `(pop)`, a second scope that
+asserts `a = 1`, `b = 1`, `x = 0` and `x + 2*(ite c a b) < 1` is reported
+`sat`; the correct answer is `unsat`.
+
+**Cause.** `asserted_formulas` keeps one `elim_term_ite` rewriter for its
+whole life. `elim_term_ite_rw` declared its own `reset()` that only reset
+the config, shadowing `rewriter_tpl::reset()`, so the rewriter cache was
+never cleared. After `pop` the term-ite was replaced by a name whose
+definition had been popped.
+
+**Fix.** `src/smt/elim_term_ite.h:48`: the shadowing `reset()` is removed
+(a comment marks the place), so `rewriter_tpl::reset()` clears both the new
+definitions and the cache after each pass.
+
+**Test.** `TST(z3_4_7_1_elim_term_ite_pop)`, `src/test/z3_4_7_1_bugs.cpp:120`
+(registered at `src/test/main.cpp:213`).
+
+---
+
+## 8. Stored macros not expanded after `smt.macro_finder` is turned off
+
+**Upstream:** none. The bug is still present in upstream z3 (checked at
+1a1d88dde7, 2026-11-13, v5.4.2), which answers `sat sat` on the
+reproduction below. A draft upstream bug report is kept with the g3
+project.
+
+**Symptom.**
+```
+(set-option :smt.macro_finder true)
+(declare-fun f (Int) Int)
+(push)
+(assert (forall ((x Int)) (= (f x) (+ x 1))))
+(check-sat)
+(set-option :smt.macro_finder false)
+(assert (= (f 1) 5))
+(check-sat)
+```
+4.7.1 answers `sat sat`; the second answer must be `unsat`.
+
+**Cause.** The quantifier that became a macro was removed from the asserted
+formulas. `asserted_formulas::reduce` applies stored macros only by running
+find-macros, which no longer runs once the option is off, so the new
+assertion is never checked against the macro. `expand_macros()` was declared
+in the header but never defined.
+
+**Fix.** `src/smt/asserted_formulas.cpp:233-241`: when macros exist, run
+find-macros if it applies, otherwise call `expand_macros()`; the new
+definition of `asserted_formulas::expand_macros()` is at
+`src/smt/asserted_formulas.cpp:344`. With the finder on, the path is
+unchanged.
+
+**Test.** `TST(z3_4_7_1_macro_finder_off)`, `src/test/z3_4_7_1_bugs.cpp:153`
+(registered at `src/test/main.cpp:214`).
+
+---
+
+## 9. pb-preprocess: wrong goal indices, unsound resolve, crash in replace
+
+**Upstream:** da8530e2db (2021-08-02, #5447), 939860148f (2021-08-04, #5452,
+re-applied in 391db898d3), 42f206171d (2021-12-27, #5741) and 302c0d178c
+(2022-02-26, #5867).
+
+**Symptom.** `(then pb-preprocess smt)` answers `sat` on unsatisfiable goals,
+for example `p1`, `(> x 0)`, `p0`, `(not p1)`, or `(or (not p0) (not p1))`,
+`p1`, `p0`; on some goals z3 segfaults. Over 2000 random scripts 4.7.1 gave
+18 wrong answers and 5 segfaults; with this fix, none.
+
+**Cause.**
+* `classify_vars(i, ...)` recorded the position in `m_ge` where later code
+  reads a goal index.
+* The subsumption pass appended to `args2`/`coeffs2` across candidates.
+* `resolve` never set `min_index` for the first complement, and deleted a
+  unit clause even when no complement was found.
+* `replace` kept updating the goal after it had become inconsistent.
+
+**Fix.** All in `src/tactic/core/pb_preprocess_tactic.cpp`:
+* `:183` `classify_vars(m_ge[i], ...)`;
+* `:252-253` reset `args2`/`coeffs2` before each subsumption candidate;
+* `:542-555` in `resolve`: set `min_index` when `i == 0` and return unless a
+  complement was found;
+* `:643` stop the `replace` loop once `g->inconsistent()`.
+
+**Tests.** `TST(z3_4_7_1_pb_preprocess_index)`,
+`src/test/z3_4_7_1_bugs.cpp:188`, and `TST(z3_4_7_1_pb_preprocess_resolve)`,
+`src/test/z3_4_7_1_bugs.cpp:204` (registered at `src/test/main.cpp:215-216`).
+
+---
+
+## 10. Datatype recognizer assigned false before it is relevant
+
+**Upstream:** 7fc4653e47 (2020-08-11, "fix #4623").
+
+**Symptom.** With `smt.relevancy=1`, a problem where a recognizer such as
+`(is-cons l)` is assigned false before any recognizer of that class is
+relevant is reported `unsat`; the correct answer is `sat`.
+
+**Cause.** `theory_datatype::propagate_recognizer` looked the recognizer up
+in the class's recognizer table, which was still empty, and treated the
+missing entry as a conflict.
+
+**Fix.** `src/smt/theory_datatype.cpp:750-754` (in `propagate_recognizer`,
+`src/smt/theory_datatype.cpp:740`): if the class has no recognizers yet,
+register the triggering one with `add_recognizer(w, recognizer)` first.
+
+**Test.** `TST(z3_4_7_1_dt_recognizer)`, `src/test/z3_4_7_1_bugs.cpp:243`
+(registered at `src/test/main.cpp:217`).
+
+**Note on fixes 6-10.** Their tests live in `src/test/z3_4_7_1_bugs.cpp`
+(listed in `src/test/CMakeLists.txt:119`), not in
+`src/test/fork_bugfixes.cpp`, and their source changes are not in
+`fork_bugfixes/fork_bugfixes.patch`. The changed sites carry explanatory
+comments but not the "FORK FIX" prefix.
 
 ---
 

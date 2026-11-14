@@ -209,6 +209,12 @@ int main(int argc, char ** argv) {
     TST(permutation);
     TST(nlsat);
     if (test_all) return 0;
+    TST(z3_4_7_1_dom_simplify_root);
+    TST(z3_4_7_1_elim_term_ite_pop);
+    TST(z3_4_7_1_macro_finder_off);
+    TST(z3_4_7_1_pb_preprocess_index);
+    TST(z3_4_7_1_pb_preprocess_resolve);
+    TST(z3_4_7_1_dt_recognizer);
     TST(ext_numeral);
     TST(interval);
     TST(f2n);
