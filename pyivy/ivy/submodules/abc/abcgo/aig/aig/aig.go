@@ -154,7 +154,12 @@ func Aig_NotCond(e Edge, c int32) Edge {
 	}
 	return e
 }
-func Aig_IsComplement(e Edge) int32 { return int32(e & 1) }
+func Aig_IsComplement(e Edge) int32 {
+	if e == InvalidEdge {
+		return 0
+	}
+	return int32(e & 1)
+}
 
 func Aig_ManCiNum(p *Graph) int32 { return int32(len(p.inputs)) }
 func Aig_ManCoNum(p *Graph) int32 { return int32(len(p.outputs)) }
@@ -216,6 +221,9 @@ func Aig_ManObj(p *Graph, i int32) Edge {
 }
 
 func Aig_ObjType(p *Graph, e Edge) Aig_Type_t {
+	if p.deleted[e.NodeID()] {
+		return AIG_OBJ_NONE
+	}
 	switch p.node(e).Kind {
 	case Constant:
 		return AIG_OBJ_CONST1
@@ -232,7 +240,7 @@ func Aig_ObjType(p *Graph, e Edge) Aig_Type_t {
 	}
 	return AIG_OBJ_NONE
 }
-func Aig_ObjIsNone(p *Graph, e Edge) bool   { return !p.valid(e) }
+func Aig_ObjIsNone(p *Graph, e Edge) bool   { return !p.valid(e) || p.nodes[e.NodeID()].Kind == vacant }
 func Aig_ObjIsConst1(p *Graph, e Edge) bool { return e == p.Const1() }
 func Aig_ObjIsCi(p *Graph, e Edge) bool     { return p.node(e).Kind == Input }
 func Aig_ObjIsCo(p *Graph, e Edge) bool {
@@ -302,8 +310,8 @@ func Aig_ObjFaninId1(p *Graph, e Edge) int32 {
 	}
 	return int32(x.NodeID())
 }
-func Aig_ObjFaninC0(p *Graph, e Edge) int32   { return int32(p.node(e).Fanins[0] & 1) }
-func Aig_ObjFaninC1(p *Graph, e Edge) int32   { return int32(p.node(e).Fanins[1] & 1) }
+func Aig_ObjFaninC0(p *Graph, e Edge) int32   { return Aig_IsComplement(p.node(e).Fanins[0]) }
+func Aig_ObjFaninC1(p *Graph, e Edge) int32   { return Aig_IsComplement(p.node(e).Fanins[1]) }
 func Aig_ObjFanin0(p *Graph, e Edge) Edge     { return Aig_Regular(p.node(e).Fanins[0]) }
 func Aig_ObjFanin1(p *Graph, e Edge) Edge     { return Aig_Regular(p.node(e).Fanins[1]) }
 func Aig_ObjChild0(p *Graph, e Edge) Edge     { return p.node(e).Fanins[0] }
@@ -381,7 +389,9 @@ func Aig_ObjSetLevel(p *Graph, e Edge, l int32) int32 {
 	p.setLevelMode(e.NodeID(), levelStructural)
 	return l
 }
-func Aig_ObjClean(p *Graph, e Edge) { *p.node(e) = Node{} }
+func Aig_ObjClean(p *Graph, e Edge) {
+	*p.node(e) = emptyNode()
+}
 func Aig_ObjFanout0(p *Graph, e Edge) Edge {
 	first := Aig_ObjFanout0Int(p, int32(e.NodeID()))
 	return Aig_ManObj(p, first>>1)
@@ -431,9 +441,20 @@ func Aig_ObjCreateGhost(p *Graph, a, b Edge, kind Aig_Type_t) *Node {
 	if a > b {
 		a, b = b, a
 	}
-	k := And
-	if kind == AIG_OBJ_EXOR {
+	var k NodeKind
+	switch kind {
+	case AIG_OBJ_CI:
+		k = Input
+	case AIG_OBJ_CO:
+		k = Output
+	case AIG_OBJ_BUF:
+		k = Buffer
+	case AIG_OBJ_AND:
+		k = And
+	case AIG_OBJ_EXOR:
 		k = ExclusiveOr
+	default:
+		panic("aig: unsupported ghost type")
 	}
 	p.ghost = Node{Kind: k, Fanins: [2]Edge{a, b}}
 	return &p.ghost
@@ -442,7 +463,9 @@ func Aig_ObjCreateGhost(p *Graph, a, b Edge, kind Aig_Type_t) *Node {
 // internal memory manager
 func Aig_ManFetchMemory(p *Graph) Edge {
 	e := Edge(len(p.nodes)) << 1
-	p.nodes = append(p.nodes, Node{})
+	// A reserved C slot already contributes to ObjNum, but its type is NONE.
+	// Distinguish that record from both constant one and a recycled slot.
+	p.nodes = append(p.nodes, emptyNode())
 	return e
 }
 func Aig_ManRecycleMemory(p *Graph, e Edge) {

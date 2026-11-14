@@ -15,7 +15,7 @@ const InvalidEdge Edge = ^Edge(0)
 
 func (e Edge) Not() Edge          { return e ^ 1 }
 func (e Edge) NodeID() int        { return int(e >> 1) }
-func (e Edge) Complemented() bool { return e&1 != 0 }
+func (e Edge) Complemented() bool { return e != InvalidEdge && e&1 != 0 }
 
 type NodeKind uint8
 
@@ -26,6 +26,8 @@ const (
 	Buffer
 	ExclusiveOr
 	Output
+	// vacant is the zeroed C AIG_OBJ_NONE record used during raw construction.
+	vacant
 )
 
 type Node struct {
@@ -88,8 +90,17 @@ type Graph struct {
 	deleted                                     map[int]bool
 }
 
+// emptyNode distinguishes a zeroed C record from the real constant-one node.
+func emptyNode() Node { return Node{Kind: vacant, Fanins: [2]Edge{InvalidEdge, InvalidEdge}} }
+
 func NewGraph() *Graph {
-	return &Graph{nodes: []Node{{Kind: Constant, Phase: true}}, hash: make(map[edgePair]Edge), deleted: make(map[int]bool), travID: 1}
+	return &Graph{
+		nodes:   []Node{{Kind: Constant, Phase: true, Fanins: [2]Edge{InvalidEdge, InvalidEdge}}},
+		hash:    make(map[edgePair]Edge),
+		ghost:   emptyNode(),
+		deleted: make(map[int]bool),
+		travID:  1,
+	}
 }
 func (g *Graph) Const1() Edge         { return 0 }
 func (g *Graph) Const0() Edge         { return 1 }
@@ -127,7 +138,7 @@ func (g *Graph) Outputs() []Edge            { return append([]Edge(nil), g.outpu
 func (g *Graph) valid(e Edge) bool          { return e.NodeID() < len(g.nodes) && !g.deleted[e.NodeID()] }
 func (g *Graph) NewInput() Edge {
 	e := Edge(len(g.nodes)) << 1
-	g.nodes = append(g.nodes, Node{Kind: Input})
+	g.nodes = append(g.nodes, Node{Kind: Input, Fanins: [2]Edge{InvalidEdge, InvalidEdge}})
 	g.inputs = append(g.inputs, e)
 	g.refreshFanouts()
 	return e

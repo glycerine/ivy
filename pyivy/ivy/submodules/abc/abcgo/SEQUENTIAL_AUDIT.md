@@ -2347,3 +2347,77 @@ handling were read alongside existing truth, cut and factoring tests. No
 truth-word bug found in this checkpoint. Focused native frame tests pass in
 1.011s; window/truth tests pass in 1.115s. Header/allocation helper regressions
 from the subsequent inventory are being handled separately before closure.
+
+### Header records, ghost types and absent children
+
+Re-read the executable aig.h adapters rather than counting the header's
+commented declarations as reviewed code. Red tests found CI/CO/buffer ghosts
+were silently labelled AND; map each supported source kind explicitly.
+Another red test found raw FetchMemory allocated an extra constant, and Type
+panicked on a recycled object. A raw C reservation is AIG_OBJ_NONE but still
+contributes to ObjNum until recycled. Preserve both facts with an internal
+vacant kind, using the existing deletion map only for actual recycling. No
+extra per-node or per-manager storage was added.
+
+Native comparison caught the initial manager ghost having the same zero-value
+constant confusion. NewGraph, raw allocation and Clean now share explicit
+empty-record initialization where appropriate. Constants/CIs have absent
+children, distinct from constant-one edge zero. Red tests also found missing
+children reported as complemented because InvalidEdge has its low bit set;
+source-style complement/fanin accessors now treat the missing edge as untagged.
+The source inline helpers confirm that NULL children have no complement bit.
+The small existing bit-count helpers were retained: their explicit C flow is
+already compact and does not need an unrelated algorithm rewrite.
+
+A compiled original-header fixture compares initial ghost state, all five
+supported ghost kinds, sorted/complemented children, terminal child absence,
+raw/cleared/recycled object types and exact 4-to-3 object counts. It passes,
+as do the direct red/green regressions. Final focused header race checks pass
+in 2.107s (`/tmp/abcgo-header-records-final-race.log`). Prior full AIG/partsat/ABCI
+race checks passed in 74.627s/16.237s/29.052s before the final initial-ghost and
+missing-phase refinements. The current full-module uncached run has already
+passed AIG in 45.166s; remaining packages are still running, so no whole-module
+success is claimed yet.
+
+### File inventory reconciliation
+
+All 52 current production files are accounted for below. This inventory links
+back to the detailed source comparisons above; it is not substitute evidence
+for those checks or a declaration that the package is complete.
+
+| Files | Source review and evidence |
+| --- | --- |
+| `aig.go`, `graph.go` | Header/node/edge construction, lifecycle, hash and mutation checkpoints; native header states above. |
+| `aigConstruction.go`, `aigInterface.go` | Construction-only counts, interface permutations, preserved CioID union contracts and metadata tests. |
+| `counterexample.go` | State-before-PI witness layout, ownership/dimension guards, sequential/induction witness tests. |
+| `choice_access.go`, `phase_access.go`, `object_data_access.go`, `aigReprStorage.go` | Small typed accessors read against corresponding source fields and owning algorithms. |
+| `fanout_status.go`, `level_modes.go` | Fanout ownership and structural/choice/reset timing conventions; circular-link and XOR level checkpoints. |
+| `aigCheck.go`, `aigObj.go`, `aigMan.go` | Physical refs, lifecycle, local CO patching, predicates, manager start/stats and cleanup source matrices. |
+| `aigMem.go`, `aigTable.go` | Owned pools/recycling, retained source large blocks, hash keys/ordering and ghost lookups. |
+| `aigDup.go`, `aigDfs.go` | Copy/interface metadata, phase-normalized miters, all source traversal families, transfers/composition and source ordering. |
+| `aigMffc.go`, `aigRepr.go` | Reference/frontier state, representative chains/phases, cleanup and choice-loop filtering. |
+| `aigCuts.go`, `aigTruth.go`, `aigWin.go` | Cut merging/truth/dominance and window heuristics; new native word/window matrices above. |
+| `aigFrames.go` | All 64 source flag/frame cases, exact maps/state and exhaustive truth vectors above. |
+| `aigTiming.go`, `aigFanout.go`, `aigOrder.go` | Incremental forward/reverse updates, circular pin links and 1,000-step order model. |
+| `aigDoms.go`, `aigFact.go` | Source dominator/factoring flow, IDs/marks/copies, native state and packed support truth checkpoints. |
+| `aigTsim.go`, `aigMvSim.go` | Original ternary/multivalue streams, packing/hash/history/state scopes and reduction drivers. |
+| `aigCanon.go` | Source signature/permutation/truth/library workflow and 700 native cases. |
+| `aigRet.go`, `aigRet_storage.go`, `aigRetF.go` | Source edge/frontier retiming, packed overflow values, reset/reconstruction, metadata and sequential traces. |
+| `aigScl.go` | Full/basic sequential cleanup, flop/register maps and exact native reference/fanout state. |
+| `aigSplit.go` | Source BDD-cofactoring driver restored; CUDD integration and source safety defects documented. |
+| `aigPack.go`, `aigJust.go`, `aigJust_experiment.go` | Source packing/rare-justification flow, random streams, all heuristics and experiment histograms. |
+| `aigPart.go`, `aigPartReg.go`, `aigPartSat.go` | Pooled supports, attraction scores, partition/representative maps, typed-XOR repairs and native SAT boundaries/labels. Solver driver moved to `proof/aigpartsat`. |
+| `aigInter.go`, `aigRepar.go` | Source clause/append primitives; actual interpolation/reparameterization drivers moved to `proof/aiginterp`, including explicit upstream failures. |
+| `aiger_model.go` | Source writer constants/constraints/register layout; mixed-graph exhaustive adapter tests. |
+| `aigShow.go` | Source rendering/filename/external-viewer ownership and output/mark tests. |
+| `aigOper.go`, `aigTest.go` | All source constructors and original seeded MUX experiment; demo spelling updated to CO, with write-failure regression. |
+| `aigUtil.go` | Printing/writers, RNG, lists, phase/reference utilities and witness helpers; **remaining direct scratch-cleanup contract review below**. |
+| `assert.go`, `aig_.go` | Assertion caller location/format; source template has no executable body. |
+
+The remaining utility review must explicitly reconcile CleanNext with C's
+pNext/CioId union: clearing only the typed next map appears to preserve CioIDs
+that C zeroes. Add a red regression before changing it. Also check recursive
+CleanData's root assertions and typed traversal extension against the source;
+source ternary Xsim is nCuts, not pData, so CleanData must not erase Xsim.
+The latter is a confirmed storage distinction, not a bug to invent or fix.
+AIG remains in progress, original completion count 1/131.
