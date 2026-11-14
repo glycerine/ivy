@@ -553,3 +553,33 @@ roundtrip helpers directly call the recursive API and rely on its current
 node-only behavior, so restoring it requires reviewing and adapting those
 call sites rather than changing the helper in isolation. These are open
 findings, not completed audit work.
+
+### Array and choice DFS source contracts
+
+Restored Aig_ManDfsArray and Aig_ManDfsAll_rec to their source contract.
+Array traversal starts a traversal, includes the constant first and respects
+the specified root range. The recursive helper respects caller-supplied marks
+and marks returned objects, eliminating its old repeated whole-cone scans and
+linear result-slice duplicate searches. New red tests exposed the omitted
+constant, absent traversal setup and ignored seeds. Empty arrays, repeated
+roots, complemented CO drivers and unrelated inputs are covered.
+
+Reviewed choice DFS separately from ordinary DFS: the source deliberately
+visits fanins before choice alternatives and marks each logic object after
+recursion. Restored its traversal setup, premarked terminals and nonnil
+equivalence-table requirement. Red regressions exposed ignored recursive
+seeds, duplicate appended cones and the missing equivalence precondition.
+The Go cycle guard is retained to reject invalid cyclic graphs safely.
+
+AMAP unconditionally used choice DFS, unlike amapGraph.c. Its caller now
+selects ordinary or choice DFS based on allocated equivalence storage, exactly
+as C does. The existing ordinary reconstruction test and a new explicit source
+choice test cover both branches, copied choice links and all input assignments.
+The full uncached AIG and AMAP race suites pass. This is a caller integration
+repair, not a completed AMAP package audit.
+
+These repairs close the array/choice findings from the previous checkpoint.
+Ordinary DFS, preorder DFS, DfsAll and ABCI's recursive callers remain open;
+in particular DfsAll is used by several ports as a topological all-object
+iterator, while source DfsAll assumes no dangling gates. Those callers require
+source-specific review before changing that contract.
