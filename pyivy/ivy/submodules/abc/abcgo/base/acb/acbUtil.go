@@ -1395,14 +1395,14 @@ func Acb_NtkInsert(pFileNameIn string, pFileNameOut string, vNames *Vec_Ptr_t, f
 		// inlining of macro Vec_PtrForEachEntry
 		for i = 0; i < Vec_PtrSize(vNames); i++ {
 			pName = Vec_PtrEntry(vNames, i).(string)
-			fmt.Fprintf(pFile, " t_%d%s", i, map[bool]string{i == Vec_PtrSize(vNames)-1: ";", true: ","}[i == Vec_PtrSize(vNames)-1])
+			fmt.Fprintf(pFile, " t_%d%s", i, map[bool]string{true: ";", false: ","}[i == Vec_PtrSize(vNames)-1])
 		}
 
 	} else {
 		// inlining of macro Vec_PtrForEachEntry
 		for i = 0; i < Vec_PtrSize(vNames); i++ {
 			pName = Vec_PtrEntry(vNames, i).(string)
-			fmt.Fprintf(pFile, " t%d_%s%s", i, pName, map[bool]string{i == Vec_PtrSize(vNames)-1: ";", true: ","}[i == Vec_PtrSize(vNames)-1])
+			fmt.Fprintf(pFile, " t%d_%s%s", i, pName, map[bool]string{true: ";", false: ","}[i == Vec_PtrSize(vNames)-1])
 		}
 	}
 	fmt.Fprintf(pFile, "\n\n")

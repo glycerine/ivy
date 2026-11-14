@@ -461,3 +461,35 @@ func TestAshenhurstRejectsUnreachableDivisorRewrite(t *testing.T) {
 	}
 	acbCheckLinks(t, p)
 }
+
+func TestOptimizationReconvergentMultiOutput(t *testing.T) {
+	for mode := 0; mode < 4; mode++ {
+		for seed := int64(0); seed < 40; seed++ {
+			t.Run(fmt.Sprintf("mode%d_seed%d", mode, seed), func(t *testing.T) {
+				p := acbNetwork(t, 6)
+				r := rand.New(rand.NewSource(seed))
+				functions := []uint64{8, 14, 6, 7, 9, 0, 15, 10, 12}
+				for j := 0; j < 15; j++ {
+					prev := Acb_NtkObjNum(p)
+					other := int32(1 + r.Intn(int(prev)))
+					acbNode(p, stretchTruth(functions[r.Intn(len(functions))], 2), prev, other)
+				}
+				last := Acb_NtkObjNum(p)
+				acbOutput(p, last)
+				acbOutput(p, last-4)
+				want := acbTable(p)
+				var pars Acb_Par_t
+				Acb_ParSetDefault(&pars)
+				pars.nLutSize = 3
+				pars.fArea = int32(mode & 1)
+				pars.fUseAshen = int32(mode >> 1)
+				pars.fMoreEffort = 1
+				Acb_NtkOpt(p, &pars)
+				if got := acbTable(p); !reflect.DeepEqual(got, want) {
+					t.Fatal("optimization changed a primary output")
+				}
+				acbCheckLinks(t, p)
+			})
+		}
+	}
+}

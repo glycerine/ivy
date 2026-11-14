@@ -1,6 +1,7 @@
 package acb
 
 import (
+	"bytes"
 	"fmt"
 	baseabc "github.com/glycerine/abcgo/base/abc"
 	basemain "github.com/glycerine/abcgo/base/main"
@@ -2426,7 +2427,6 @@ func Acb_GenerateInstance(p *Acb_Ntk_t, vDivs *Vec_Int_t, vUsed *Vec_Int_t, vTar
 }
 func Acb_GenerateSignalNames(p *Acb_Ntk_t, vDivs *Vec_Int_t, vUsed *Vec_Int_t, nNodes int32, vTars *Vec_Int_t, vGates *Vec_Wec_t) *Vec_Ptr_t {
 	var vRes *Vec_Ptr_t = Vec_PtrStart(Vec_IntSize(vUsed) + nNodes)
-	var vStr *Vec_Str_t = Vec_StrAlloc(1000)
 	var i int32
 	var iObj int32
 	var nWires int32 = 1
@@ -2447,13 +2447,10 @@ func Acb_GenerateSignalNames(p *Acb_Ntk_t, vDivs *Vec_Int_t, vUsed *Vec_Int_t, n
 	}
 	for i = Vec_IntSize(vUsed); i < Vec_IntSize(vUsed)+nNodes; i++ {
 		if Vec_PtrEntry(vRes, i) == nil {
-			Vec_StrPrintF(vStr, "ww%d", nWires)
+			Vec_PtrWriteEntry(vRes, i, fmt.Sprintf("ww%d", nWires))
 			nWires++
-			Vec_StrPush(vStr, 0)
-			Vec_PtrWriteEntry(vRes, i, Vec_StrReleaseArray(vStr))
 		}
 	}
-	Vec_StrFree(vStr)
 	return vRes
 }
 func Acb_GetUsedDivs(vDivs *Vec_Int_t, vUsed *Vec_Int_t) *Vec_Int_t {
@@ -2483,13 +2480,20 @@ func Acb_GeneratePatch(p *Acb_Ntk_t, vDivs *Vec_Int_t, vUsed *Vec_Int_t, vSops *
 	} else {
 		vGates = Abc_SopSynthesize(vSops)
 	}
-	var vGate *Vec_Int_t
 	var nOuts int32
 	if vGias != nil {
 		nOuts = Vec_PtrSize(vGias)
 	} else {
 		nOuts = Vec_PtrSize(vSops)
 	}
+	return acbGeneratePatchFromGates(p, vDivs, vUsed, vTars, vGates, nOuts)
+}
+
+// acbGeneratePatchFromGates emits the source patch format after technology
+// mapping. Keeping serialization separate lets it be checked independently of
+// ABCI's application-wide command registry.
+func acbGeneratePatchFromGates(p *Acb_Ntk_t, vDivs, vUsed, vTars *Vec_Int_t, vGates *Vec_Wec_t, nOuts int32) *Vec_Str_t {
+	var vGate *Vec_Int_t
 	var i int32
 	var k int32
 	var iObj int32
@@ -2696,7 +2700,6 @@ func Acb_GenerateSignalNames2(vGates *Vec_Wec_t, vIns *Vec_Ptr_t, vOuts *Vec_Ptr
 	var nNodes int32 = Vec_WecSize(vGates) - nIns - nOuts
 	var vRes *Vec_Ptr_t = Vec_PtrStart(Vec_WecSize(vGates))
 	var pName string
-	var vStr *Vec_Str_t = Vec_StrAlloc(1000)
 	var i int32
 	var nWires int32 = 1
 	// create input names
@@ -2715,17 +2718,17 @@ func Acb_GenerateSignalNames2(vGates *Vec_Wec_t, vIns *Vec_Ptr_t, vOuts *Vec_Ptr
 	}
 	for i = nIns; i < nIns+nNodes; i++ {
 		if Vec_PtrEntry(vRes, i) == nil {
-			Vec_StrPrintF(vStr, "ww%d", nWires)
+			Vec_PtrWriteEntry(vRes, i, fmt.Sprintf("ww%d", nWires))
 			nWires++
-			Vec_StrPush(vStr, 0)
-			Vec_PtrWriteEntry(vRes, i, Vec_StrReleaseArray(vStr))
 		}
 	}
-	Vec_StrFree(vStr)
 	return vRes
 }
 func Acb_GeneratePatch2(pGia *Gia_Man_t, vIns *Vec_Ptr_t, vOuts *Vec_Ptr_t) *Vec_Str_t {
-	var vGates *Vec_Wec_t = Abc_GiaSynthesize(nil, pGia)
+	return acbGeneratePatchFromGates2(Abc_GiaSynthesize(nil, pGia), vIns, vOuts)
+}
+
+func acbGeneratePatchFromGates2(vGates *Vec_Wec_t, vIns, vOuts *Vec_Ptr_t) *Vec_Str_t {
 	var vGate *Vec_Int_t
 	var nIns int32 = Vec_PtrSize(vIns)
 	var nOuts int32 = Vec_PtrSize(vOuts)
@@ -2862,12 +2865,21 @@ func Acb_GenerateFile2(pGia *Gia_Man_t, vIns *Vec_Ptr_t, vOuts *Vec_Ptr_t, pFile
 
 **********************************************************************
 */
+// acbCStringBytes preserves fprintf("%s") semantics for source string vectors.
+func acbCStringBytes(v *Vec_Str_t) []byte {
+	b := Vec_StrArray(v)
+	if end := bytes.IndexByte(b, 0); end >= 0 {
+		return b[:end]
+	}
+	return b
+}
+
 func Acb_GenerateFilePatch(p *Vec_Str_t, pFileNamePatch string) {
 	pFile, err := os.OpenFile(pFileNamePatch, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
 	if err != nil {
 		return
 	}
-	_, _ = pFile.Write(Vec_StrArray(p))
+	_, _ = pFile.Write(acbCStringBytes(p))
 	_ = pFile.Close()
 }
 func Acb_GenerateFileOut(vPatchLine *Vec_Str_t, pFileNameF string, pFileNameOut string, vPatch *Vec_Str_t) {
@@ -2885,10 +2897,10 @@ func Acb_GenerateFileOut(vPatchLine *Vec_Str_t, pFileNameF string, pFileNameOut 
 		return
 	}
 	_, _ = fmt.Fprint(pFileOut, pBuffer[:nFirst])
-	_, _ = fmt.Fprintf(pFileOut, "\n%s", Vec_StrArray(vPatchLine))
+	_, _ = fmt.Fprintf(pFileOut, "\n%s", acbCStringBytes(vPatchLine))
 	_, _ = fmt.Fprint(pFileOut, pBuffer[nFirst:])
 	if vPatch != nil {
-		_, _ = fmt.Fprintf(pFileOut, "\n%s\n", Vec_StrArray(vPatch))
+		_, _ = fmt.Fprintf(pFileOut, "\n%s\n", acbCStringBytes(vPatch))
 	}
 }
 

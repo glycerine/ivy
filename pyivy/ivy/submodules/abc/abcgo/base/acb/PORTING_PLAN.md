@@ -110,3 +110,22 @@ provides a counterexample. The Go port keeps the original support-search and
 construction algorithms but SAT-checks a proposed two-node rewrite before
 accepting it. Rejected candidates leave the original circuit and links intact.
 This is an intentional correctness repair, not an alternative optimizer.
+
+### ECO and file-flow coverage
+
+Added 160 seeded multi-output optimization runs, each checked over all 64 input
+assignments; six-variable SAT truth extraction including high-bit patterns;
+SAToko support selection and insufficient-divisor rejection; support-set
+minimization; two-target miter substitution; universal target quantification;
+ECO synthesis equivalence; interpolation implications; an unsolvable ECO driver
+case; common support remapping; Verilog insertion/extraction; and mapped-patch
+serialization with constants and internal wires.
+
+These tests caught incorrect inserted-wire separators, C NUL bytes emitted into
+Verilog, and internal wire names stored as byte slices then asserted as Go
+strings. All three are repaired. Patch serialization is now a private helper
+following the original mapping call so its behavior can be tested independently
+of ABCI command registration; mapping was not replaced or mocked.
+
+`go test -race ./base/acb` passed before the final serializer tranche. Final
+coverage, race/checkptr and diff checks will be recorded after that tranche.

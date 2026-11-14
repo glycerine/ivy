@@ -168,3 +168,26 @@ func TestCandidateFunctionValidation(t *testing.T) {
 		}
 	}
 }
+
+func TestSixVariableFunctionExtraction(t *testing.T) {
+	for _, truth := range []uint64{0, ^uint64(0), 1 << 63, 1, 0xFEDCBA9876543210, 0x8000000000000001, 0x9669699669969669} {
+		s := sat_solver_new()
+		sat_solver_setnvars(s, 8)
+		var cover Vec_Int_t
+		var cnf Vec_Str_t
+		var clause []int32
+		Acb_DeriveCnfFromTruth(truth, 6, &cover, &cnf)
+		for _, lit := range Vec_StrArray(&cnf) {
+			if lit == 255 {
+				sat_solver_addclause(s, clause)
+				clause = nil
+			} else {
+				clause = append(clause, int32(lit))
+			}
+		}
+		if got := Acb_ComputeFunction(s, 6, 7, Vec_IntStartNatural(6), 0); got != truth {
+			t.Fatalf("six-input truth %x became %x", truth, got)
+		}
+		sat_solver_delete(s)
+	}
+}
