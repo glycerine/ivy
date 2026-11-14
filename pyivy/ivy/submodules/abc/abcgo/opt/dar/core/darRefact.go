@@ -130,7 +130,7 @@ func Dar_ManRefactor(g *aig.Graph, params *RefactorParams) error {
 		aig.Aig_ObjReplace(g, root, replacement, 0)
 		aig.Aig_ManCleanup(g)
 		if p.UpdateLevel {
-			aig.Aig_ManUpdateReverseLevel(g, g.Const1())
+			g.RefreshReverseLevels()
 		}
 	}
 	return g.Check()

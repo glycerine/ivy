@@ -39,7 +39,7 @@ func (m *Manager) Rewrite() error {
 	}
 	refreshRequiredLevels := func() {
 		if m.Params.UpdateLevel {
-			aig.Aig_ManUpdateReverseLevel(g, g.Const1())
+			g.RefreshReverseLevels()
 		}
 	}
 	cuts := NewCutEnumerator(g, m.Params.CutsMax)
