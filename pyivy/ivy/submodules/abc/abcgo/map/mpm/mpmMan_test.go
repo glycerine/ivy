@@ -10,7 +10,7 @@ func TestMappingManagerInitializesCutsAndTruths(t *testing.T) {
 	for _, truth := range []int32{0, 1} {
 		mig := Mig_ManStart()
 		Mig_ManAppendCi(mig)
-		pars := &Mpm_Par_t{pLib: Mpm_LibLutSetSimple(6), nNumCuts: 8, fUseTruth: truth}
+		pars := &Mpm_Par_t{PLib: Mpm_LibLutSetSimple(6), NNumCuts: 8, FUseTruth: truth}
 		p := Mpm_ManStart(mig, pars)
 		if mig.pMan != p || vec.Vec_PtrSize(&p.vFreeUnits) != 9 || vec.Vec_IntSize(&p.vCutBests) != int(mig.nObjs) {
 			t.Fatalf("truth=%d manager storage not initialized", truth)

@@ -65,12 +65,12 @@ func Mpm_ManPerformLutMapping(pMig *Mig_Man_t, pPars *Mpm_Par_t) *gia.Gia_Man_t 
 	var pNew *gia.Gia_Man_t
 	var p *Mpm_Man_t
 	p = Mpm_ManStart(pMig, pPars)
-	if p.pPars.fVerbose != 0 {
+	if p.pPars.FVerbose != 0 {
 		Mpm_ManPrintStatsInit(p)
 	}
 	Mpm_ManPrepare(p)
 	Mpm_ManPerform(p)
-	if p.pPars.fVerbose != 0 {
+	if p.pPars.FVerbose != 0 {
 		Mpm_ManPrintStats(p)
 	}
 	if mapped := Mpm_ManFromIfLogic(p); mapped != nil {
@@ -82,9 +82,9 @@ func Mpm_ManPerformLutMapping(pMig *Mig_Man_t, pPars *Mpm_Par_t) *gia.Gia_Man_t 
 func Mpm_ManLutMapping(pGia *gia.Gia_Man_t, pPars *Mpm_Par_t) *gia.Gia_Man_t {
 	var p *Mig_Man_t
 	var pNew *gia.Gia_Man_t
-	assert(pPars.pLib.LutMax <= MPM_VAR_MAX, "pPars.pLib.LutMax <= MPM_VAR_MAX")
-	assert(pPars.nNumCuts <= MPM_CUT_MAX, "pPars.nNumCuts <= MPM_CUT_MAX")
-	if pPars.fUseGates != 0 {
+	assert(pPars.PLib.LutMax <= MPM_VAR_MAX, "pPars.pLib.LutMax <= MPM_VAR_MAX")
+	assert(pPars.NNumCuts <= MPM_CUT_MAX, "pPars.nNumCuts <= MPM_CUT_MAX")
+	if pPars.FUseGates != 0 {
 		pGia = gia.Gia_ManDupMuxes(pGia, 2)
 		p = Mig_ManCreate(pGia)
 		gia.Gia_ManStop(pGia)

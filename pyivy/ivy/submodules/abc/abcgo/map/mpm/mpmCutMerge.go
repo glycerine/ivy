@@ -27,7 +27,7 @@ func Mpm_ManMergeCuts(p *Mpm_Man_t, first, second, third *Mpm_Cut_t) *Mpm_Cut_t 
 			break
 		}
 		slot := c + 1
-		if p.pPars.fUseDsd != 0 {
+		if p.pPars.FUseDsd != 0 {
 			p.uPermMask[slot] = 0x3ffff
 			p.uComplMask[slot] = 0
 		}
@@ -40,7 +40,7 @@ func Mpm_ManMergeCuts(p *Mpm_Man_t, first, second, third *Mpm_Cut_t) *Mpm_Cut_t 
 				cut.pLeaves = append(cut.pLeaves, lit)
 				cut.nLeaves++
 			}
-			if p.pPars.fUseDsd != 0 {
+			if p.pPars.FUseDsd != 0 {
 				p.uPermMask[slot] ^= uint32((i&7)^7) << uint(3*place)
 				if lit != cut.pLeaves[place] {
 					p.uComplMask[slot] |= 1 << uint(place)
@@ -60,7 +60,7 @@ func Mpm_ManMergeCuts(p *Mpm_Man_t, first, second, third *Mpm_Cut_t) *Mpm_Cut_t 
 	}
 	p.nCutsMerged++
 	p.nCutsMergedAll++
-	if p.pPars.fUseTruth != 0 {
+	if p.pPars.FUseTruth != 0 {
 		slices.Sort(cut.pLeaves[:cut.nLeaves])
 	}
 	return cut

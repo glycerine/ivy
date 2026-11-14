@@ -11,12 +11,12 @@ import (
 
 // Mpm_ManStart initializes mapping storage and the selected truth or DSD mode.
 func Mpm_ManStart(mig *Mig_Man_t, pars *Mpm_Par_t) *Mpm_Man_t {
-	assert(pars.nNumCuts <= MPM_CUT_MAX, "cut count")
-	assert(pars.fUseTruth == 0 || pars.pLib.LutMax <= 16, "truth LUT size")
-	assert(pars.fUseDsd == 0 || pars.pLib.LutMax <= 6, "DSD LUT size")
+	assert(pars.NNumCuts <= MPM_CUT_MAX, "cut count")
+	assert(pars.FUseTruth == 0 || pars.PLib.LutMax <= 16, "truth LUT size")
+	assert(pars.FUseDsd == 0 || pars.PLib.LutMax <= 6, "DSD LUT size")
 	Mig_ManSetRefs(mig)
-	p := &Mpm_Man_t{pMig: mig, pPars: pars, pLibLut: pars.pLib, nLutSize: pars.pLib.LutMax, nNumCuts: pars.nNumCuts}
-	if pars.fUseTruth != 0 {
+	p := &Mpm_Man_t{pMig: mig, pPars: pars, pLibLut: pars.PLib, nLutSize: pars.PLib.LutMax, nNumCuts: pars.NNumCuts}
+	if pars.FUseTruth != 0 {
 		p.nTruWords = util.Abc_Truth6WordNum(p.nLutSize)
 	}
 	assert(Mpm_CutWordNum(32) < 32, "cut size bits")
@@ -32,14 +32,14 @@ func Mpm_ManStart(mig *Mig_Man_t, pars *Mpm_Par_t) *Mpm_Man_t {
 		vec.Vec_IntFill(v, n, 0)
 	}
 	vec.Vec_IntFill(&p.vRequireds, n, util.ABC_INFINITY)
-	assert(pars.fUseTruth == 0 || pars.fUseDsd == 0, "truth and DSD are exclusive")
-	if pars.fUseTruth != 0 {
+	assert(pars.FUseTruth == 0 || pars.FUseDsd == 0, "truth and DSD are exclusive")
+	if pars.FUseTruth != 0 {
 		p.vTtMem = vec.Vec_MemAlloc(int(p.nTruWords), 12)
 		vec.Vec_MemHashAlloc(p.vTtMem, 10000)
 		p.funcCst0 = int32(vec.Vec_MemHashInsert(p.vTtMem, p.Truth[:]))
 		util.Abc_TtUnit(p.Truth[:], p.nTruWords, 0)
 		p.funcVar0 = int32(vec.Vec_MemHashInsert(p.vTtMem, p.Truth[:]))
-	} else if pars.fUseDsd != 0 {
+	} else if pars.FUseDsd != 0 {
 		Mpm_ManPrecomputePerms(p)
 		p.funcVar0 = 1
 	}
@@ -48,7 +48,7 @@ func Mpm_ManStart(mig *Mig_Man_t, pars *Mpm_Par_t) *Mpm_Man_t {
 	return p
 }
 func Mpm_ManStop(p *Mpm_Man_t) {
-	if p.pPars.fUseTruth != 0 && p.pPars.fVeryVerbose != 0 {
+	if p.pPars.FUseTruth != 0 && p.pPars.FVeryVerbose != 0 {
 		file, err := os.Create("truths.txt")
 		if err != nil {
 			panic(err)
@@ -60,7 +60,7 @@ func Mpm_ManStop(p *Mpm_Man_t) {
 		count := vec.Vec_MemEntryNum(p.vTtMem)
 		fmt.Printf("Dumped %d %d-var truth tables into file \"truths.txt\" (%.2f MB).\n", count, p.nLutSize, (16.0*float64(p.nTruWords)+1)*float64(count)/(1<<20))
 	}
-	if p.pPars.fUseDsd != 0 && p.pPars.fVerbose != 0 {
+	if p.pPars.FUseDsd != 0 && p.pPars.FVerbose != 0 {
 		Mpm_ManPrintDsdStats(p)
 	}
 	if p.vTtMem != nil {
@@ -79,7 +79,7 @@ func Mpm_ManStop(p *Mpm_Man_t) {
 	*p = Mpm_Man_t{}
 }
 func Mpm_ManPrintStatsInit(p *Mpm_Man_t) {
-	fmt.Printf("K = %d.  C = %d.  Cand = %d. XOR = %d. MUX = %d. Choice = %d.  CutMin = %d. Truth = %d. DSD = %d.\n", p.nLutSize, p.nNumCuts, Mig_ManCandNum(p.pMig), Mig_ManXorNum(p.pMig), Mig_ManMuxNum(p.pMig), p.pMig.nChoices, p.pPars.fCutMin, p.pPars.fUseTruth, p.pPars.fUseDsd)
+	fmt.Printf("K = %d.  C = %d.  Cand = %d. XOR = %d. MUX = %d. Choice = %d.  CutMin = %d. Truth = %d. DSD = %d.\n", p.nLutSize, p.nNumCuts, Mig_ManCandNum(p.pMig), Mig_ManXorNum(p.pMig), Mig_ManMuxNum(p.pMig), p.pMig.nChoices, p.pPars.FCutMin, p.pPars.FUseTruth, p.pPars.FUseDsd)
 }
 func Mpm_ManPrintStats(p *Mpm_Man_t) {
 	mig := float64(Mig_ManObjNum(p.pMig)) * 16 / (1 << 20)

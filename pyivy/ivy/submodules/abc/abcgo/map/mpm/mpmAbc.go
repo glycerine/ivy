@@ -288,8 +288,8 @@ func Mpm_ManFromIfLogic(pMan *Mpm_Man_t) any {
 				pFanin = Mig_ManObj(pMan.pMig, Abc_Lit2Var(pCutBest.pLeaves[k]))
 				vec.Vec_IntPush(vLeaves, Mig_ObjCopy(pFanin))
 			}
-			if pMan.pPars.fDeriveLuts != 0 && (pMan.pPars.fUseTruth != 0 || pMan.pPars.fUseDsd != 0) {
-				if pMan.pPars.fUseTruth != 0 {
+			if pMan.pPars.FDeriveLuts != 0 && (pMan.pPars.FUseTruth != 0 || pMan.pPars.FUseDsd != 0) {
+				if pMan.pPars.FUseTruth != 0 {
 					pTruth = Mpm_CutTruth(pMan, Abc_Lit2Var(int32(pCutBest.iFunc)))
 				} else {
 					uTruth = Mpm_CutTruthFromDsd(pMan, pCutBest, Abc_Lit2Var(int32(pCutBest.iFunc)))

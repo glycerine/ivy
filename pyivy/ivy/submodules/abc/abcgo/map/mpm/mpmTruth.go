@@ -111,7 +111,7 @@ func Mpm_CutComputeTruth6(p *Mpm_Man_t, cut, a, b, c *Mpm_Cut_t, ca, cb, cc, typ
 		t = ^t
 	}
 	cut.iFunc = uint32(util.Abc_Var2Lit(int32(vec.Vec_MemHashInsert(p.vTtMem, []word{t})), complement))
-	if p.pPars.fCutMin != 0 {
+	if p.pPars.FCutMin != 0 {
 		return Mpm_CutTruthMinimize6(p, cut)
 	}
 	return 1
@@ -140,7 +140,7 @@ func Mpm_CutComputeTruth7(p *Mpm_Man_t, cut, a, b, c *Mpm_Cut_t, ca, cb, cc, typ
 		util.Abc_TtNot(p.Truth[:], p.nTruWords)
 	}
 	cut.iFunc = uint32(util.Abc_Var2Lit(int32(vec.Vec_MemHashInsert(p.vTtMem, p.Truth[:])), complement))
-	if p.pPars.fCutMin != 0 {
+	if p.pPars.FCutMin != 0 {
 		return Mpm_CutTruthMinimize7(p, cut)
 	}
 	return 1

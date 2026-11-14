@@ -63,7 +63,7 @@ import (
 **********************************************************************
 */
 func Mpm_ManFindDsdMatches(p *Mpm_Man_t, pScl any) *Vec_Wec_t {
-	var fVerbose int32 = p.pPars.fVeryVerbose
+	var fVerbose int32 = p.pPars.FVeryVerbose
 	pLib, ok := pScl.(*scl.SC_Lib)
 	assert(ok, "pScl is *scl.SC_Lib")
 	var vClasses *Vec_Wec_t
@@ -197,7 +197,7 @@ func Mpm_ManDeriveMappedAbcNtk(p *Mpm_Man_t, pMio *mio.Mio_Library_t) *Abc_Ntk_t
 	var i, k, iNode, iMigLit, fCompl, Config int32
 
 	// find mapping of SCL cells into MIO cells
-	pScl, ok := p.pPars.pScl.(*scl.SC_Lib)
+	pScl, ok := p.pPars.PScl.(*scl.SC_Lib)
 	assert(ok, "p.pPars.pScl is *scl.SC_Lib")
 	vNpnGatesMio = Mpm_ManFindCells(pMio, pScl, p.vNpnConfigs)
 	if vNpnGatesMio == nil {
@@ -299,15 +299,15 @@ func Mpm_ManDeriveMappedAbcNtk(p *Mpm_Man_t, pMio *mio.Mio_Library_t) *Abc_Ntk_t
 func Mpm_ManPerformCellMapping(pMig *Mig_Man_t, pPars *Mpm_Par_t, pMio *mio.Mio_Library_t) *Abc_Ntk_t {
 	var pNew *Abc_Ntk_t
 	var p *Mpm_Man_t
-	assert(pPars.fMap4Gates != 0, "pPars.fMap4Gates")
+	assert(pPars.FMap4Gates != 0, "pPars.fMap4Gates")
 	p = Mpm_ManStart(pMig, pPars)
-	if p.pPars.fVerbose != 0 {
+	if p.pPars.FVerbose != 0 {
 		Mpm_ManPrintStatsInit(p)
 	}
-	p.vNpnConfigs = Mpm_ManFindDsdMatches(p, p.pPars.pScl)
+	p.vNpnConfigs = Mpm_ManFindDsdMatches(p, p.pPars.PScl)
 	Mpm_ManPrepare(p)
 	Mpm_ManPerform(p)
-	if p.pPars.fVerbose != 0 {
+	if p.pPars.FVerbose != 0 {
 		Mpm_ManPrintStats(p)
 	}
 	pNew = Mpm_ManDeriveMappedAbcNtk(p, pMio)
@@ -318,9 +318,9 @@ func Mpm_ManCellMapping(pGia *Gia_Man_t, pPars *Mpm_Par_t, pMio any) *Abc_Ntk_t 
 	var p *Mig_Man_t
 	var pNew *Abc_Ntk_t
 	assert(pMio != nil, "pMio != nil")
-	assert(pPars.pLib.LutMax <= MPM_VAR_MAX, "pPars.pLib.LutMax <= MPM_VAR_MAX")
-	assert(pPars.nNumCuts <= MPM_CUT_MAX, "pPars.nNumCuts <= MPM_CUT_MAX")
-	if pPars.fUseGates != 0 {
+	assert(pPars.PLib.LutMax <= MPM_VAR_MAX, "pPars.pLib.LutMax <= MPM_VAR_MAX")
+	assert(pPars.NNumCuts <= MPM_CUT_MAX, "pPars.nNumCuts <= MPM_CUT_MAX")
+	if pPars.FUseGates != 0 {
 		pGia = gia.Gia_ManDupMuxes(pGia, 2)
 		p = Mig_ManCreate(pGia)
 		gia.Gia_ManStop(pGia)

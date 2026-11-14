@@ -20,10 +20,10 @@ func cutMergeSourceCases() string {
 			p.nLutSize = 2
 		}
 		if mode == 1 {
-			p.pPars.fUseDsd = 1
+			p.pPars.FUseDsd = 1
 		}
 		if mode == 2 {
-			p.pPars.fUseTruth = 1
+			p.pPars.FUseTruth = 1
 		}
 		unit := &Mpm_Uni_t{}
 		vec.Vec_PtrPush(&p.vFreeUnits, unit)

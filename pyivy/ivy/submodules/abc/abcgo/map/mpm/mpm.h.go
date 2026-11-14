@@ -11,7 +11,7 @@ package mpm
   Synopsis    [External declarations.]
 
   Author      [Alan Mishchenko]
-  
+
   Affiliation [UC Berkeley]
 
   Date        [Ver. 1.0. Started - June 1, 2013.]
@@ -19,15 +19,11 @@ package mpm
   Revision    [$Id: mpm.h,v 1.00 2013/06/01 00:00:00 alanmi Exp $]
 
 ***********************************************************************/
- 
-
-
-
 
 ////////////////////////////////////////////////////////////////////////
 ///                          INCLUDES                                ///
 ////////////////////////////////////////////////////////////////////////
- 
+
 //#include <stdio.h>
 //#include <stdlib.h>
 //#include <string.h>
@@ -39,44 +35,41 @@ package mpm
 ///                         PARAMETERS                               ///
 ////////////////////////////////////////////////////////////////////////
 
-const MPM_VAR_MAX =  12  
+const MPM_VAR_MAX = 12
 
 ////////////////////////////////////////////////////////////////////////
 ///                         BASIC TYPES                              ///
 ////////////////////////////////////////////////////////////////////////
 
-   
 type Mpm_LibLut_t struct {
-    pName            string;                                     // the name of the LUT library
-    LutMax              int32;                                    // the maximum LUT size 
-    fVarPinDelays              int32;                             // set to 1 if variable pin delays are specified
-    pLutAreas [MPM_VAR_MAX+1]int32;                  // the areas of LUTs
-    pLutDelays [MPM_VAR_MAX+1][MPM_VAR_MAX+1]int32;  // the delays of LUTs
+	pName         string                                  // the name of the LUT library
+	LutMax        int32                                   // the maximum LUT size
+	fVarPinDelays int32                                   // set to 1 if variable pin delays are specified
+	pLutAreas     [MPM_VAR_MAX + 1]int32                  // the areas of LUTs
+	pLutDelays    [MPM_VAR_MAX + 1][MPM_VAR_MAX + 1]int32 // the delays of LUTs
 }
 
-   
 type Mpm_Par_t struct {
-    pLib    *Mpm_LibLut_t;
-    pScl            any;
-    nNumCuts              int32;
-    DelayTarget              int32;
-    fUseGates              int32;
-    fUseTruth              int32;
-    fUseDsd              int32;
-    fCutMin              int32;
-    fOneRound              int32;
-    fDeriveLuts              int32;
-    fMap4Cnf              int32;
-    fMap4Aig              int32;
-    fMap4Gates              int32;
-    fVerbose              int32;
-    fVeryVerbose              int32;
+	PLib         *Mpm_LibLut_t
+	PScl         any
+	NNumCuts     int32
+	DelayTarget  int32
+	FUseGates    int32
+	FUseTruth    int32
+	FUseDsd      int32
+	FCutMin      int32
+	FOneRound    int32
+	FDeriveLuts  int32
+	FMap4Cnf     int32
+	FMap4Aig     int32
+	FMap4Gates   int32
+	FVerbose     int32
+	FVeryVerbose int32
 }
 
 ////////////////////////////////////////////////////////////////////////
 ///                      MACRO DEFINITIONS                           ///
 ////////////////////////////////////////////////////////////////////////
-
 
 ////////////////////////////////////////////////////////////////////////
 ///                    FUNCTION DECLARATIONS                         ///
@@ -90,12 +83,8 @@ type Mpm_Par_t struct {
 
 // extern void           Mpm_LibLutFree( Mpm_LibLut_t * pLib );
 
-
 //ABC_NAMESPACE_HEADER_END
-
-
 
 ////////////////////////////////////////////////////////////////////////
 ///                       END OF FILE                                ///
 ////////////////////////////////////////////////////////////////////////
-

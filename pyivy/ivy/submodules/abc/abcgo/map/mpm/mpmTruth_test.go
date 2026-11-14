@@ -35,7 +35,7 @@ func TestCutTruthOperationsAndSupport(t *testing.T) {
 				}
 			}
 		}
-		p.pPars.fCutMin = 1
+		p.pPars.FCutMin = 1
 		cut := &Mpm_Cut_t{nLeaves: 1, pLeaves: []int32{2}}
 		Mpm_CutComputeTruth(p, cut, a, a, nil, 0, 0, 0, 2)
 		if cut.nLeaves != 0 || p.nSmallSupp != 1 {

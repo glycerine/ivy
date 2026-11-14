@@ -31,9 +31,9 @@ func TestSimpleLUTLibraryMatchesSource(t *testing.T) {
 	Mpm_LibLutFree(nil)
 }
 func TestMappingDefaultsResetAllFields(t *testing.T) {
-	p := Mpm_Par_t{pLib: Mpm_LibLutSetSimple(4), nNumCuts: 17, DelayTarget: 42, fUseTruth: 1, fVerbose: 1}
+	p := Mpm_Par_t{PLib: Mpm_LibLutSetSimple(4), NNumCuts: 17, DelayTarget: 42, FUseTruth: 1, FVerbose: 1}
 	Mpm_ManSetParsDefault(&p)
-	if p != (Mpm_Par_t{nNumCuts: 8, DelayTarget: -1}) {
+	if p != (Mpm_Par_t{NNumCuts: 8, DelayTarget: -1}) {
 		t.Fatalf("defaults %+v", p)
 	}
 }

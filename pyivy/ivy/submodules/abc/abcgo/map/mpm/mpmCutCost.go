@@ -39,13 +39,13 @@ func Mpm_CutIsContained(p *Mpm_Man_t, base, cut *Mpm_Cut_t) int32 {
 }
 func Mpm_CutGetArea(p *Mpm_Man_t, cut *Mpm_Cut_t) int32 {
 	class := int32(cut.iFunc) >> 1
-	if p.pPars.fMap4Cnf != 0 {
+	if p.pPars.FMap4Cnf != 0 {
 		return MPM_UNIT_AREA * p.pDsd6[class].nClauses
 	}
-	if p.pPars.fMap4Aig != 0 {
+	if p.pPars.FMap4Aig != 0 {
 		return MPM_UNIT_AREA * p.pDsd6[class].nAnds
 	}
-	if p.pPars.fMap4Gates != 0 {
+	if p.pPars.FMap4Gates != 0 {
 		return MPM_UNIT_AREA
 	}
 	return p.pLibLut.pLutAreas[cut.nLeaves]

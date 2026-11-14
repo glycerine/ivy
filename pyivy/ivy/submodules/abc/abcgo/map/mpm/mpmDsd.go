@@ -16,7 +16,7 @@ func Mpm_ManPrintDsdStats(p *Mpm_Man_t) {
 			absent++
 			continue
 		}
-		if p.pPars.fVeryVerbose != 0 {
+		if p.pPars.FVeryVerbose != 0 {
 			fmt.Printf("%5d  :  %-20s   %8d \n", i, p.pDsd6[i].pStr, n)
 		}
 	}
@@ -194,7 +194,7 @@ func Mpm_CutComputeDsd6(p *Mpm_Man_t, cut, a, b, c *Mpm_Cut_t, ca, cb, cc, typ i
 	}
 	class, compl := config>>17, (config>>16)&1
 	config &= 0xffff
-	if p.pPars.fMap4Gates != 0 && vec.Vec_IntSize(vec.Vec_WecEntry(p.vNpnConfigs, int(class))) == 0 {
+	if p.pPars.FMap4Gates != 0 && vec.Vec_IntSize(vec.Vec_WecEntry(p.vNpnConfigs, int(class))) == 0 {
 		p.nNoMatch++
 		return 0
 	}

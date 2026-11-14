@@ -161,9 +161,9 @@ func Mpm_ManExploreNewCut(p *Mpm_Man_t, pObj *Mig_Obj_t, pCut0 *Mpm_Cut_t, pCut1
 		if pCut == nil {
 			return 1
 		}
-		if p.pPars.fUseTruth != 0 {
+		if p.pPars.FUseTruth != 0 {
 			Mpm_CutComputeTruth(p, pCut, pCut0, pCut1, pCut2, Mig_ObjFaninC0(pObj), Mig_ObjFaninC1(pObj), Mig_ObjFaninC2(pObj), Mig_ObjNodeType(pObj))
-		} else if p.pPars.fUseDsd != 0 {
+		} else if p.pPars.FUseDsd != 0 {
 			if Mpm_CutComputeDsd6(p, pCut, pCut0, pCut1, pCut2, Mig_ObjFaninC0(pObj), Mig_ObjFaninC1(pObj), Mig_ObjFaninC2(pObj), Mig_ObjNodeType(pObj)) == 0 {
 				return 1
 			}
@@ -174,9 +174,9 @@ func Mpm_ManExploreNewCut(p *Mpm_Man_t, pObj *Mig_Obj_t, pCut0 *Mpm_Cut_t, pCut1
 		if pCut == nil {
 			return 1
 		}
-		if p.pPars.fUseTruth != 0 {
+		if p.pPars.FUseTruth != 0 {
 			Mpm_CutComputeTruth(p, pCut, pCut1, pCut0, pCut2, Mig_ObjFaninC1(pObj), Mig_ObjFaninC0(pObj), 1^Mig_ObjFaninC2(pObj), Mig_ObjNodeType(pObj))
-		} else if p.pPars.fUseDsd != 0 {
+		} else if p.pPars.FUseDsd != 0 {
 			if Mpm_CutComputeDsd6(p, pCut, pCut1, pCut0, pCut2, Mig_ObjFaninC1(pObj), Mig_ObjFaninC0(pObj), 1^Mig_ObjFaninC2(pObj), Mig_ObjNodeType(pObj)) == 0 {
 				return 1
 			}
@@ -644,7 +644,7 @@ func Mpm_ManPerformRound(p *Mpm_Man_t) {
 	assert(Mig_ManCandNum(p.pMig) == mem.Mmr_StepEntryNum(p.pManCuts), "Mig_ManCandNum(p.pMig) == mem.Mmr_StepEntryNum(p.pManCuts)")
 	Mpm_ManFinalizeRound(p)
 	// report results
-	if p.pPars.fVerbose != 0 {
+	if p.pPars.FVerbose != 0 {
 		ttEntries := int32(0)
 		if p.vTtMem != nil {
 			ttEntries = int32(Vec_MemEntryNum(p.vTtMem))
@@ -654,14 +654,14 @@ func Mpm_ManPerformRound(p *Mpm_Man_t) {
 	}
 }
 func Mpm_ManPerform(p *Mpm_Man_t) {
-	if p.pPars.fMap4Cnf != 0 {
+	if p.pPars.FMap4Cnf != 0 {
 		p.pCutCmp = Mpm_CutCompareArea
 		Mpm_ManPerformRound(p)
 
 	} else {
 		p.pCutCmp = Mpm_CutCompareDelay
 		Mpm_ManPerformRound(p)
-		if p.pPars.fOneRound != 0 {
+		if p.pPars.FOneRound != 0 {
 			return
 		}
 
