@@ -3,6 +3,7 @@ package abci
 import map_mio "github.com/glycerine/abcgo/map/mio"
 
 import proof_pdr "github.com/glycerine/abcgo/proof/pdr"
+import "github.com/glycerine/abcgo/proof/aiginterp"
 
 import aig_ioa "github.com/glycerine/abcgo/aig/ioa"
 
@@ -3346,7 +3347,7 @@ func Abc_NtkInterOne(pNtkOn *Abc_Ntk_t, pNtkOff *Abc_Ntk_t, fRelation int32, fVe
 		return nil
 	}
 	// derive the interpolant
-	pManAig = aiggraph.Aig_ManInter(pManOn, pManOff, fRelation, fVerbose)
+	pManAig = aiginterp.Aig_ManInter(pManOn, pManOff, fRelation, fVerbose)
 	if pManAig == nil {
 		Abc_Print(1, "Interpolant computation failed.\n")
 		return nil
@@ -3380,7 +3381,7 @@ func Gia_ManInterOne(pNtkOn *Gia_Man_t, pNtkOff *Gia_Man_t, fVerbose int32) *Gia
 		return nil
 	}
 	// derive the interpolant
-	pManAig = aiggraph.Aig_ManInter(pManOn, pManOff, 0, fVerbose)
+	pManAig = aiginterp.Aig_ManInter(pManOn, pManOff, 0, fVerbose)
 	if pManAig == nil {
 		Abc_Print(1, "Interpolant computation failed.\n")
 		return nil
@@ -3417,7 +3418,7 @@ func Abc_NtkInterFast(pNtkOn *Abc_Ntk_t, pNtkOff *Abc_Ntk_t, fVerbose int32) {
 	if pManOff == nil {
 		return
 	}
-	aiggraph.Aig_ManInterFast(pManOn, pManOff, fVerbose)
+	aiginterp.Aig_ManInterFast(pManOn, pManOff, fVerbose)
 	Aig_ManStop(pManOn)
 	Aig_ManStop(pManOff)
 }
