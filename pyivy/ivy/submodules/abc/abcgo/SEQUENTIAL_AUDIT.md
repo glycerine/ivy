@@ -237,3 +237,28 @@ The implementation retains Graph.Check as the separate graph-validity API.
 Full AIG race tests pass with both repairs. Sequential downstream checks for
 SSW, FRA and ABCI also pass for the output-selection changes. The
 remaining algorithm families still require review; aig/aig is not complete.
+
+### aig/aig: cuts and buffered supergates
+
+Inspected all of `aigCuts.go` and its existing tests. Compared cut cost,
+replacement-slot selection, ordered merging, dominance, truth stretching,
+support minimization and computation loops with `src/aig/aig/aigCuts.c`.
+Existing tests include exhaustive small ordered merges, original-C merge/phase
+comparisons, random truth and completeness oracles, constant cuts and failed
+merge preservation. Added independent six-input truth validation across all
+64 assignments, explicit XORs, inverted buffers and multiword tables; it passes.
+No new cut-computation bug found in this review. Existing Go extensions include
+explicit zero-support cut validity and buffer/XOR handling.
+
+Found that supergate collection stopped at buffer objects rather than following
+the source's Aig_ObjReal_rec calls on both fanins (`aigDfs.c:1092-1093`). Added
+positive and negative two-buffer-chain regressions before the repair; both
+failed with the buffer retained as a leaf. Collection now uses the existing
+phase-aware buffer resolver on each child. Tests check leaf membership and
+all eight input assignments without changing the graph's function.
+
+Full AIG race tests pass with the new cut and supergate regressions. The SAIG
+caller also passes its full uncached package tests. Remaining families include dominators, factoring,
+fanout/timing, memory, partitioning, representatives, retiming, simulation,
+canonicalization and visualization; their earlier reviews still require
+inspection in this sequential audit.

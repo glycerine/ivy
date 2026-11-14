@@ -552,3 +552,41 @@ func TestPriorityCutCostsAndParameterValidation(t *testing.T) {
 	checkPanic(func() { Aig_ComputeCuts(g, 3, 2, 0, 0) })
 	Aig_ManCutStop(attached)
 }
+
+func TestPriorityCutsXorAndBufferTruthAcrossWordBoundary(t *testing.T) {
+	g := NewGraph()
+	inputs := make([]Edge, 6)
+	for i := range inputs {
+		inputs[i] = g.NewInput()
+	}
+	root := g.NewXor(inputs[0], inputs[1].Not())
+	for _, input := range inputs[2:] {
+		root = g.NewXor(root, input)
+	}
+	buffer := Aig_ObjCreate(g, &Node{Kind: Buffer, Fanins: [2]Edge{root.Not(), InvalidEdge}})
+	g.AddOutput(buffer.Not())
+	g.AddOutput(g.AND(buffer, inputs[0]))
+	manager := Aig_ComputeCuts(g, 16, 6, 1, 0)
+	defer Aig_ManCutStop(manager)
+	foundWide := false
+	for assignment := 0; assignment < 64; assignment++ {
+		values := independentNodeValues(g, assignment)
+		for _, edge := range g.LiveEdges() {
+			for _, cut := range manager.Cuts(edge) {
+				foundWide = foundWide || len(cut.pFanins) == 6
+				index := 0
+				for bit, leaf := range cut.pFanins {
+					if values[leaf] {
+						index |= 1 << bit
+					}
+				}
+				if got := cutTruthBit(cut.truth, index); got != values[edge.NodeID()] {
+					t.Fatalf("assignment=%d node=%d leaves=%v got=%v want=%v", assignment, edge.NodeID(), cut.pFanins, got, values[edge.NodeID()])
+				}
+			}
+		}
+	}
+	if !foundWide {
+		t.Fatal("did not exercise a truth table spanning multiple words")
+	}
+}

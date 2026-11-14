@@ -418,8 +418,8 @@ func Aig_ObjCollectSuper_rec(p *Graph, root, e Edge, super *[]Edge) int32 {
 	if n.Kind != And && n.Kind != ExclusiveOr {
 		panic(fmt.Sprintf("aig: invalid supergate node %d", e))
 	}
-	a := Aig_ObjCollectSuper_rec(p, root, n.Fanins[0], super)
-	b := Aig_ObjCollectSuper_rec(p, root, n.Fanins[1], super)
+	a := Aig_ObjCollectSuper_rec(p, root, p.real(n.Fanins[0]), super)
+	b := Aig_ObjCollectSuper_rec(p, root, p.real(n.Fanins[1]), super)
 	if a < 0 || b < 0 {
 		return -1
 	}
