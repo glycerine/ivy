@@ -1118,3 +1118,53 @@ This completes the current source comparison of aigTsim.go itself, not the
 shared multivalued engine or the complete AIG package. Review of
 aigMvSim.go against saigSimMv.c is next, followed by the remaining AIG
 families. Original package-audit completion remains 1/131.
+
+### Multivalued simulation source review
+
+Compared all of aigMvSim.go with saigSimMv.c: compact graph/manager creation,
+symbolic literal/hash/AND behavior, frame transfer, state hashing and repeat
+indices, history classification, oscillator search, retirement/skip masks,
+equivalence mapping, diagnostics and symbolic/saturation driver boundaries.
+Original unused level/accounting arrays remain omitted; typed values and Go
+maps replace C's allocator-backed node and state tables. The simulator is
+still the source symbolic algorithm, not a SAT or reachability substitute.
+
+A red test exposed PI symbols allocated ahead of intervening gates. For a
+gate followed by a later PI, Go assigned literals 8/6 instead of C's 6/8.
+Restored allocation at the object's visit. The complete C fixture now includes
+the original saigSimMv.c and memory implementation and compares every frame
+value, symbolic count, repeat index, classification, skip mask, direct mapping
+and full-driver mapping across symbolic cutover. Only console/bridge hooks
+are stubbed; no simulation, hashing, history or mapping routine is replaced.
+
+For compactness, manager setup now computes one dependency order, excluding
+LOs from per-frame updates. It preserves numeric object order on source
+topological graphs and resolves dependencies for Go's rewritten DAGs. The
+frame loop reuses that order and one next-state buffer, eliminating per-frame
+traversal flags and recursive walking. A forward-buffer regression passed
+before and after the refactor and verifies correct known/undefined values and
+unchanged graph fields. The graph/interface must remain fixed during manager
+use, consistent with C's compact graph snapshot.
+
+An independent original-C query fixture checks oscillator candidate periods
+and state hashes over 4,367 histories: all binary prefixes through length ten,
+three-symbol prefixes through length eight, and wider symbolic histories that
+exercise uint32 overflow and sixteen-prime wraparound. These pass. The
+postprocessor's actual-history classification is retained deliberately: C's
+pRegsUndef counters are never populated. A focused output test checks its
+defined-history count, equivalence groups, undefined exclusion and lasso marks.
+
+Full AIG, SAIG and ABCI race suites pass after the cached-order refactor (log
+`/tmp/abcgo-mv-frame-review.log`). A final AIG race run covers the expanded
+hash cases as well. This closes the current multivalued-simulator review,
+including its thin SAIG delegation boundary, without counting SAIG as a fully
+audited package. AIG's canonicalization, retiming, visualization/property
+splitting and other outstanding source families still need review; the full
+original 131-package objective remains active.
+
+The final driver coverage also includes a six-register delay chain with no
+PIs and saturation at frames two/four. It converges only after aggressive
+retirement, so the original-C comparison checks the complete state trace
+through both thresholds and the final nil mapping. Undefined values in this
+no-PI fixture can arise only from retirement. This test passed without a
+production fix. The final full AIG race run includes it.
