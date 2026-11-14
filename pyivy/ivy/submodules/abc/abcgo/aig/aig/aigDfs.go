@@ -166,13 +166,16 @@ func Aig_ManDfsArray(p *Graph, nodes []Edge, n int32) []Edge {
 	return result
 }
 func Aig_ManDfsAll(p *Graph) []Edge {
-	roots := make([]Edge, 0, len(p.nodes))
-	for id := range p.nodes {
-		if !p.deleted[id] {
-			roots = append(roots, Edge(id)<<1)
+	nodes := Aig_ManDfsArray(p, p.outputs, int32(len(p.outputs)))
+	for _, e := range p.inputs {
+		if p.node(e).TravID != p.travID {
+			nodes = append(nodes, e)
 		}
 	}
-	return p.dfs(roots, false, false, false)
+	if int32(len(nodes)) != Aig_ManObjNum(p) {
+		panic("aig: DFS all object count differs from manager count")
+	}
+	return nodes
 }
 func Aig_ManDfsPreorder_rec(p *Graph, e Edge, nodes *[]Edge) {
 	if e == InvalidEdge {

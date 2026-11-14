@@ -426,6 +426,16 @@ func (g *Graph) LiveEdges() []Edge {
 	}
 	return edges
 }
+
+// TopologicalObjects returns every live object, including dangling logic, with
+// fanins before users. Rewrites may make object IDs non-topological. This is
+// the Go counterpart of an all-object pass that needs dependency order; unlike
+// source Aig_ManDfsAll it includes unreachable gates and supports buffers.
+// It does not change traversal IDs, object marks or the graph.
+func (g *Graph) TopologicalObjects() []Edge {
+	return g.dfs(g.LiveEdges(), false, false, false)
+}
+
 func (g *Graph) ValidEdge(e Edge) bool { return g.valid(e) }
 
 // Node returns a read-only snapshot of one live object's payload in O(1).
