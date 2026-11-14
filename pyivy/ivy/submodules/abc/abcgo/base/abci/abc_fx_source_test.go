@@ -85,6 +85,8 @@ func TestAbcNtkFxPerformReconstructsSharedNetworkNode(t *testing.T) {
 		}
 		old = append(old, node)
 	}
+	abc.Abc_NtkAddDummyPiNames(n)
+	abc.Abc_NtkAddDummyPoNames(n)
 	if changed := Abc_NtkFxPerform(n, 4, 4, 0, 0, 0); changed != 1 {
 		t.Fatalf("Abc_NtkFxPerform returned %d", changed)
 	}

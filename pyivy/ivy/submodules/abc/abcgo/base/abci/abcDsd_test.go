@@ -26,6 +26,13 @@ func TestDsdGlobalPreservesTruthTable(t *testing.T) {
 		t.Fatal("global DSD conversion failed")
 	}
 	defer abc.Abc_NtkDelete(got)
+	dd := got.FunctionManager.(*core.DdManager)
+	for _, node := range got.ObjectsOfKind(abc.ObjectNode) {
+		f, ok := node.Data.(*core.DdNode)
+		if !ok || core.Cudd_ExternalRefCount(dd, f) == 0 {
+			t.Fatalf("node %d has no owned BDD reference", node.ID)
+		}
+	}
 	for mask := 0; mask < 8; mask++ {
 		inputs := got.Inputs()
 		values := map[*abc.Object]bool{inputs[0]: mask&1 != 0, inputs[1]: mask&2 != 0, inputs[2]: mask&4 != 0}
@@ -54,6 +61,7 @@ func makeDsdBDDNetwork(t *testing.T) *abc.Network {
 	}
 	node := n.NewObject(abc.ObjectNode)
 	node.Data = f
+	core.Cudd_Ref(f)
 	for _, input := range inputs {
 		if err := n.AddFanin(node, abc.Edge{Object: input}); err != nil {
 			t.Fatal(err)
@@ -98,6 +106,26 @@ func TestDsdLocalAndSparsifyTruthTables(t *testing.T) {
 			if got != want {
 				t.Errorf("sparsify output %d mask %03b = %v, want %v", i, mask, got, want)
 			}
+		}
+	}
+}
+
+func TestRecursiveDsdReducesCofactorSupportAndOwnsFunctions(t *testing.T) {
+	n := makeDsdBDDNetwork(t)
+	defer abc.Abc_NtkDelete(n)
+	if Abc_NtkDsdLocal(n, 0, 1) == 0 {
+		t.Fatal("recursive DSD failed")
+	}
+	for bits := 0; bits < 8; bits++ {
+		if got := evaluateNetwork(t, n, bits)[0]; got != (bits != 0) {
+			t.Fatalf("bits=%d got=%v", bits, got)
+		}
+	}
+	dd := n.FunctionManager.(*core.DdManager)
+	for _, node := range n.ObjectsOfKind(abc.ObjectNode) {
+		f, ok := node.Data.(*core.DdNode)
+		if !ok || core.Cudd_ExternalRefCount(dd, f) == 0 {
+			t.Fatalf("node %d has no owned BDD reference", node.ID)
 		}
 	}
 }

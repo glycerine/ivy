@@ -10,7 +10,8 @@ import (
 )
 
 func TestFrameGiaUpdateTransfersNamesAndBackup(t *testing.T) {
-	frame := &abcmain.Frame{}
+	frame := abcmain.NewFrame()
+	defer frame.Close()
 	old := giapkg.Gia_ManStart(4)
 	ci := giapkg.Gia_ManAppendCi(old)
 	giapkg.Gia_ManAppendCo(old, ci)
@@ -48,7 +49,8 @@ func TestFrameGiaUpdateTransfersNamesAndBackup(t *testing.T) {
 }
 
 func TestFrameOpaqueCexAndVerificationState(t *testing.T) {
-	frame := &abcmain.Frame{}
+	frame := abcmain.NewFrame()
+	defer frame.Close()
 	cex := &util.Abc_Cex_t{NPis: 1, NBits: 1, PData: []uint32{1}}
 	abcFrameSetCex(frame, cex)
 	if abcFrameCex(frame) != cex {

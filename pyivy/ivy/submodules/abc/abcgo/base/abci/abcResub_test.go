@@ -44,11 +44,45 @@ func TestResubSimulationTruthAndComplementedFanin(t *testing.T) {
 	vec.Vec_PtrPush(divs, b)
 	vec.Vec_PtrPush(divs, root)
 	Abc_ManResubSimulate(divs, 2, m.vSims, m.nLeavesMax, m.nWords)
-	words := root.Data.([]uint32)
+	words := root.CopyData.([]uint32)
 	if got, want := words[0], uint32(0x4); got != want {
 		t.Fatalf("simulation of !a & b = %#08x, want %#08x", got, want)
 	}
 	if root.Phase {
 		t.Fatal("simulation phase should be zero after normalization")
+	}
+}
+
+func TestResubstitutePreservesFunctionsAndLatchInitialization(t *testing.T) {
+	for _, odc := range []int32{0, 1} {
+		for _, truth := range []uint64{0x88, 0x96, 0xe8, 0xfe} {
+			n := truthNetwork(t, 3, truth, ^truth&255)
+			state := abc.Abc_NtkAddLatch(n, nil, abc.ABC_INIT_ONE)
+			latch := abc.Abc_ObjFanin0(state)
+			li := abc.Abc_ObjFanin0(latch)
+			state.SetName("state")
+			latch.SetName("reg")
+			li.SetName("next")
+			abc.Abc_ObjAddFanin(li, abc.Abc_ObjFanin0(abc.Abc_NtkPo(n, 0)))
+			abc.Abc_NtkOrderCisCos(n)
+			want := make([][]bool, 16)
+			for bits := range want {
+				want[bits] = evaluateNetwork(t, n, bits)
+			}
+			if Abc_NtkResubstitute(n, 6, 3, odc, 1, 0, 0) != 1 {
+				t.Fatalf("resubstitution failed for truth=%x odc=%d", truth, odc)
+			}
+			if abc.Abc_LatchIsInit1(latch) == 0 {
+				t.Fatal("resubstitution erased latch initialization")
+			}
+			for bits := range want {
+				for i, got := range evaluateNetwork(t, n, bits) {
+					if got != want[bits][i] {
+						t.Fatalf("truth=%x odc=%d bits=%d output=%d got=%v want=%v", truth, odc, bits, i, got, want[bits][i])
+					}
+				}
+			}
+			abc.Abc_NtkDelete(n)
+		}
 	}
 }

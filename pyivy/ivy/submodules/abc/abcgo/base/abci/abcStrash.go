@@ -10,6 +10,8 @@ import (
 	"github.com/glycerine/abcgo/misc/vec"
 )
 
+func strashSetCopy(object *abc.Object, edge abc.Edge) { object.SetCopyEdge(edge) }
+
 func strashAig(n *abc.Network) *abc.Abc_Aig_t {
 	m, _ := n.FunctionManager.(*abc.Abc_Aig_t)
 	return m
@@ -25,7 +27,7 @@ func strashCopyChild(o *abc.Object, index int32) abc.Edge {
 }
 
 func strashNodeCopy(n *abc.Network, o *abc.Object) {
-	abc.Abc_ObjSetCopyData(o, abc.Abc_AigAnd(strashAig(n), strashCopyChild(o, 0), strashCopyChild(o, 1)))
+	strashSetCopy(o, abc.Abc_AigAnd(strashAig(n), strashCopyChild(o, 0), strashCopyChild(o, 1)))
 }
 
 func abcStrashRandBit() uint32 {
@@ -127,7 +129,7 @@ func Abc_NtkRestrashZero(pNtk *Abc_Ntk_t, fCleanup int32) *Abc_Ntk_t {
 			counter++
 		} else if abc.Abc_LatchIsInit1(latch) != 0 && len(latch.Fanouts()) != 0 {
 			bo := latch.Fanouts()[0]
-			abc.Abc_ObjSetCopyData(bo, abc.Abc_ObjNot(abc.Abc_ObjCopyEdge(bo)))
+			strashSetCopy(bo, abc.Abc_ObjNot(abc.Abc_ObjCopyEdge(bo)))
 		}
 	}
 	if counter != 0 {
@@ -216,7 +218,7 @@ func Abc_NtkAppend(pNtk1, pNtk2 *Abc_Ntk_t, fAddPos int32) int32 {
 	}
 	abc.Abc_NtkCleanCopy(pNtk2)
 	if abc.Abc_NtkIsStrash(pNtk2) != 0 {
-		abc.Abc_ObjSetCopyData(abc.Abc_AigConst1(pNtk2).Object, abc.Abc_AigConst1(pNtk1))
+		strashSetCopy(abc.Abc_AigConst1(pNtk2).Object, abc.Abc_AigConst1(pNtk1))
 	}
 	newCIs := 0
 	for _, ci := range pNtk2.Inputs() {
@@ -225,7 +227,7 @@ func Abc_NtkAppend(pNtk1, pNtk2 *Abc_Ntk_t, fAddPos int32) int32 {
 			copy = abc.Abc_NtkDupObj(pNtk1, ci, 1)
 			newCIs++
 		}
-		abc.Abc_ObjSetCopyData(ci, copy)
+		strashSetCopy(ci, copy.Signal())
 	}
 	if newCIs != 0 {
 		fmt.Printf("Warning: Procedure Abc_NtkAppend() added %d new CIs.\n", newCIs)
@@ -280,9 +282,9 @@ func Abc_NtkStrashPerform(pNtkOld, pNtkNew *Abc_Ntk_t, fAllNodes, fRecord int32)
 	assert(abc.Abc_NtkIsStrash(pNtkNew) != 0, "Abc_NtkIsStrash(pNtkNew)")
 	for _, node := range abc.Abc_NtkDfsIter(pNtkOld, fAllNodes) {
 		if abc.Abc_ObjIsBarBuf(node) != 0 {
-			abc.Abc_ObjSetCopyData(node, strashCopyChild(node, 0))
+			strashSetCopy(node, strashCopyChild(node, 0))
 		} else {
-			abc.Abc_ObjSetCopyData(node, Abc_NodeStrash(pNtkNew, node, fRecord))
+			strashSetCopy(node, Abc_NodeStrash(pNtkNew, node, fRecord))
 		}
 	}
 }
@@ -312,7 +314,7 @@ func Abc_NodeStrash(pNtkNew *Abc_Ntk_t, pNodeOld *Abc_Obj_t, fRecord int32) abc.
 		return abc.Abc_ObjNotCond(abc.Abc_AigConst1(pNtkNew), hop.Hop_IsComplement(pRoot))
 	}
 	for i, fanin := range pNodeOld.Fanins() {
-		hop.Hop_ObjSetData(hop.Hop_IthVar(pMan, int32(i)), abc.Abc_ObjCopyEdge(fanin.Object))
+		hop.Hop_ObjSetData(hop.Hop_IthVar(pMan, int32(i)), abc.Abc_ObjNotCond(abc.Abc_ObjCopyEdge(fanin.Object), boolInt(fanin.Complement)))
 	}
 	hop.Hop_ObjSetData(hop.Hop_ManConst1(pMan), abc.Abc_AigConst1(pNtkNew))
 	root := hop.Hop_Regular(pRoot)
@@ -329,13 +331,13 @@ func Abc_NtkTopmost_rec(pNtkNew *Abc_Ntk_t, pNode *Abc_Obj_t, levelCut int32) ab
 	}
 	if pNode.Level <= int(levelCut) {
 		pi := abc.Abc_NtkCreatePi(pNtkNew)
-		abc.Abc_ObjSetCopyData(pNode, pi)
+		strashSetCopy(pNode, pi.Signal())
 		return pi.Signal()
 	}
 	Abc_NtkTopmost_rec(pNtkNew, abc.Abc_ObjFanin0(pNode), levelCut)
 	Abc_NtkTopmost_rec(pNtkNew, abc.Abc_ObjFanin1(pNode), levelCut)
 	copy := abc.Abc_AigAnd(strashAig(pNtkNew), strashCopyChild(pNode, 0), strashCopyChild(pNode, 1))
-	abc.Abc_ObjSetCopyData(pNode, copy)
+	strashSetCopy(pNode, copy)
 	return copy
 }
 
@@ -348,7 +350,7 @@ func Abc_NtkTopmost(pNtk *Abc_Ntk_t, nLevels int32) *Abc_Ntk_t {
 	out := abc.Abc_NtkAlloc(abc.ABC_NTK_STRASH, abc.ABC_FUNC_AIG, 1)
 	out.Name = pNtk.Name
 	abc.Abc_NtkCleanCopy(pNtk)
-	abc.Abc_ObjSetCopyData(abc.Abc_AigConst1(pNtk).Object, abc.Abc_AigConst1(out))
+	strashSetCopy(abc.Abc_AigConst1(pNtk).Object, abc.Abc_AigConst1(out))
 	for _, co := range pNtk.Outputs() {
 		if len(co.Fanins()) == 0 {
 			continue
@@ -357,7 +359,7 @@ func Abc_NtkTopmost(pNtk *Abc_Ntk_t, nLevels int32) *Abc_Ntk_t {
 		copy := abc.Abc_ObjNotCond(driver, abc.Abc_ObjFaninC0(co))
 		po := abc.Abc_NtkCreatePo(out)
 		abc.Abc_ObjAddFanin(po, copy)
-		abc.Abc_ObjSetCopyData(co, po)
+		strashSetCopy(co, po.Signal())
 	}
 	abc.Abc_NtkAddDummyPiNames(out)
 	for _, co := range pNtk.Outputs() {
@@ -383,7 +385,7 @@ func Abc_NtkBottommost_rec(pNtkNew *Abc_Ntk_t, pNode *Abc_Obj_t, levelCut int32)
 		return abc.Edge{}
 	}
 	copy := abc.Abc_AigAnd(strashAig(pNtkNew), strashCopyChild(pNode, 0), strashCopyChild(pNode, 1))
-	abc.Abc_ObjSetCopyData(pNode, copy)
+	strashSetCopy(pNode, copy)
 	return copy
 }
 
@@ -393,9 +395,9 @@ func Abc_NtkBottommost(pNtk *Abc_Ntk_t, nLevels int32) *Abc_Ntk_t {
 	out := abc.Abc_NtkAlloc(abc.ABC_NTK_STRASH, abc.ABC_FUNC_AIG, 1)
 	out.Name = pNtk.Name
 	abc.Abc_NtkCleanCopy(pNtk)
-	abc.Abc_ObjSetCopyData(abc.Abc_AigConst1(pNtk).Object, abc.Abc_AigConst1(out))
+	strashSetCopy(abc.Abc_AigConst1(pNtk).Object, abc.Abc_AigConst1(out))
 	for _, ci := range pNtk.Inputs() {
-		abc.Abc_ObjSetCopyData(ci, abc.Abc_NtkCreatePi(out))
+		strashSetCopy(ci, abc.Abc_NtkCreatePi(out).Signal())
 	}
 	for _, co := range pNtk.Outputs() {
 		if len(co.Fanins()) != 0 {
@@ -470,7 +472,7 @@ func Abc_NtkTopAnd(pNtk *Abc_Ntk_t) *Abc_Ntk_t {
 	abc.Abc_NtkCleanCopy(pNtk)
 	out := abc.Abc_NtkAlloc(abc.ABC_NTK_STRASH, abc.ABC_FUNC_AIG, 1)
 	out.Name, out.Spec = pNtk.Name, pNtk.Spec
-	abc.Abc_ObjSetCopyData(abc.Abc_AigConst1(pNtk).Object, abc.Abc_AigConst1(out))
+	strashSetCopy(abc.Abc_AigConst1(pNtk).Object, abc.Abc_AigConst1(out))
 	for _, pi := range pNtk.ObjectsOfKind(abc.ObjectPI) {
 		abc.Abc_NtkDupObj(out, pi, 1)
 	}
@@ -607,7 +609,7 @@ func Abc_NtkPutOnTop(pNtk, pNtk2 *Abc_Ntk_t) *Abc_Ntk_t {
 		}
 	}
 	for i, pi := range pNtk2.ObjectsOfKind(abc.ObjectPI) {
-		abc.Abc_ObjSetCopyData(pi, strashCopyChild(abc.Abc_NtkPo(pNtk, int32(i)), 0))
+		strashSetCopy(pi, strashCopyChild(abc.Abc_NtkPo(pNtk, int32(i)), 0))
 	}
 	for _, node := range abc.Abc_NtkDfs(pNtk2, 0) {
 		copy := abc.Abc_NtkDupObj(out, node, 0)

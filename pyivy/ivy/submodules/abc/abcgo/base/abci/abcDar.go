@@ -46,6 +46,7 @@ import (
 	hoppkg "github.com/glycerine/abcgo/aig/hop"
 	"github.com/glycerine/abcgo/base/abc"
 	"github.com/glycerine/abcgo/map/amap"
+	"github.com/glycerine/abcgo/misc/vec"
 )
 
 /**CFile****************************************************************
@@ -563,61 +564,128 @@ func Abc_NtkFromMappedGia_rec(pNtkNew *Abc_Ntk_t, p *Gia_Man_t, iObj int32, fAdd
 	return pObjNew
 }
 func Abc_NtkFromMappedGia(p *Gia_Man_t, fFindEnables int32, fUseBuffs int32) *Abc_Ntk_t {
-	// The GIA's value field is the C pObj->Value mapping.  This reconstruction
-	// follows the topological AND representation; mapped LUT and mux managers
-	// are rejected here because their cut metadata is required to preserve the
-	// mapped node function.
-	if p == nil || giapkg.Gia_ManHasMapping(p) == 0 || fFindEnables != 0 || giapkg.Gia_ManHasMuxData(p) {
+	if p == nil {
 		return nil
 	}
-	n := abc.Abc_NtkAlloc(abc.ABC_NTK_LOGIC, abc.ABC_FUNC_AIG, 1)
-	if n == nil {
-		return nil
+	mapped, muxes := giapkg.Gia_ManHasMapping(p) != 0, giapkg.Gia_ManHasMuxData(p)
+	assert(mapped || muxes || fFindEnables != 0, "mapped GIA, mux data or enable extraction is required")
+	assert(fFindEnables == 0 || !muxes, "enable extraction requires an ordinary AIG")
+	function := abc.ABC_FUNC_SOP
+	if mapped {
+		function = abc.ABC_FUNC_AIG
 	}
+	n := abc.Abc_NtkAlloc(abc.ABC_NTK_LOGIC, function, 1)
+	n.Name, n.Spec = p.Identity()
 	giapkg.Gia_ManFillValue(p)
-	c0 := abc.Abc_NtkCreateNodeConst0(n)
-	giapkg.Gia_ObjSetValue(giapkg.Gia_ManConst0(p), abc.Abc_ObjId(c0))
+	constant := abc.Abc_NtkCreateNodeConst0(n)
+	giapkg.Gia_ObjSetValue(giapkg.Gia_ManConst0(p), abc.Abc_ObjId(constant))
 	for i := int32(0); i < giapkg.Gia_ManPiNum(p); i++ {
 		giapkg.Gia_ObjSetValue(giapkg.Gia_ManPi(p, i), abc.Abc_ObjId(abc.Abc_NtkCreatePi(n)))
 	}
 	for i := int32(0); i < giapkg.Gia_ManPoNum(p); i++ {
-		abc.Abc_NtkCreatePo(n)
+		giapkg.Gia_ObjSetValue(giapkg.Gia_ManPo(p, i), abc.Abc_ObjId(abc.Abc_NtkCreatePo(n)))
 	}
 	for i := int32(0); i < giapkg.Gia_ManRegNum(p); i++ {
-		l := abc.Abc_NtkCreateLatch(n)
+		latch := abc.Abc_NtkCreateLatch(n)
 		li, lo := abc.Abc_NtkCreateBi(n), abc.Abc_NtkCreateBo(n)
-		abc.Abc_ObjAddFanin(l, li)
-		abc.Abc_ObjAddFanin(lo, l)
-		abc.Abc_LatchSetInit0(l)
+		abc.Abc_ObjAddFanin(latch, li)
+		abc.Abc_ObjAddFanin(lo, latch)
+		abc.Abc_LatchSetInit0(latch)
 		giapkg.Gia_ObjSetValue(giapkg.Gia_ManRi(p, i), abc.Abc_ObjId(li))
 		giapkg.Gia_ObjSetValue(giapkg.Gia_ManRo(p, i), abc.Abc_ObjId(lo))
 	}
-	for id := int32(1); id < giapkg.Gia_ManObjNum(p); id++ {
-		o := giapkg.Gia_ManObj(p, id)
-		if giapkg.Gia_ObjIsAnd(o) == 0 {
-			continue
+	object := func(id int32) *abc.Object { return abc.Abc_NtkObj(n, giapkg.Gia_ObjValue(giapkg.Gia_ManObj(p, id))) }
+	switch {
+	case fFindEnables != 0:
+		for i := int32(0); i < giapkg.Gia_ManCoNum(p); i++ {
+			co := giapkg.Gia_ManCo(p, i)
+			coID := giapkg.Gia_ObjId(p, co)
+			driverID := giapkg.Gia_ObjFaninId0(co, coID)
+			var driver *abc.Object
+			if giapkg.Gia_ObjIsRi(p, co) != 0 && giapkg.Gia_ObjIsMuxType(giapkg.Gia_ManObj(p, driverID)) != 0 {
+				ro := giapkg.Gia_ObjRiToRoId(p, coID)
+				var yes, no int32
+				control := giapkg.Gia_ObjRecognizeMuxLits(p, giapkg.Gia_ManObj(p, driverID), &yes, &no)
+				yes ^= giapkg.Gia_ObjFaninC0(co)
+				no ^= giapkg.Gia_ObjFaninC0(co)
+				if yes>>1 == ro {
+					yes, no = no, yes
+					control ^= 1
+				}
+				if no>>1 == ro {
+					driver = abc.Abc_NtkCreateNode(n)
+					for _, lit := range []int32{control, yes, no} {
+						abc.Abc_ObjAddFanin(driver, Abc_NtkFromMappedGia_rec(n, p, lit>>1, lit&1))
+					}
+					driver.Data = abc.Abc_SopCreateMux(nil)
+				}
+			}
+			if driver == nil {
+				driver = Abc_NtkFromMappedGia_rec(n, p, driverID, giapkg.Gia_ObjFaninC0(co))
+			}
+			abc.Abc_ObjAddFanin(abc.Abc_NtkCo(n, i), driver)
 		}
-		node := abc.Abc_NtkCreateNode(n)
-		f0 := Abc_NtkObj(n, giapkg.Gia_ObjValue(giapkg.Gia_ManObj(p, giapkg.Gia_ObjFaninId0(o, id))))
-		f1 := Abc_NtkObj(n, giapkg.Gia_ObjValue(giapkg.Gia_ManObj(p, giapkg.Gia_ObjFaninId1(o, id))))
-		abc.Abc_ObjAddFanin(node, f0)
-		abc.Abc_ObjAddFanin(node, f1)
-		node.Data = abc.Abc_SopCreateAnd2(nil, giapkg.Gia_ObjFaninC0(o), giapkg.Gia_ObjFaninC1(o))
-		giapkg.Gia_ObjSetValue(o, abc.Abc_ObjId(node))
+	case muxes:
+		for id := int32(1); id < giapkg.Gia_ManObjNum(p); id++ {
+			a, b, c, kind := p.Gate(id)
+			if kind != 2 && kind != 3 && kind != 4 {
+				continue
+			}
+			node := abc.Abc_NtkCreateNode(n)
+			literals := []int32{a, b}
+			sop := abc.Abc_SopCreateAnd(nil, 2, nil)
+			if kind == 3 {
+				sop = abc.Abc_SopCreateXor(nil, 2)
+			}
+			if kind == 4 {
+				sop = abc.Abc_SopCreateMux(nil)
+				literals = []int32{a, b, c}
+			}
+			for pin, lit := range literals {
+				abc.Abc_ObjAddFanin(node, object(lit>>1))
+				if lit&1 != 0 {
+					sop = abc.Abc_SopComplementVar(sop, int32(pin))
+				}
+			}
+			node.Data = sop
+			giapkg.Gia_ObjSetValue(giapkg.Gia_ManObj(p, id), abc.Abc_ObjId(node))
+		}
+	default:
+		copies := vec.Vec_PtrStart(int(giapkg.Gia_ManObjNum(p)))
+		defer Vec_PtrFree(copies)
+		for id := int32(1); id < giapkg.Gia_ManObjNum(p); id++ {
+			if giapkg.Gia_ObjIsLut(p, id) == 0 {
+				continue
+			}
+			if giapkg.Gia_ObjLutSize(p, id) == 0 {
+				giapkg.Gia_ObjSetValue(giapkg.Gia_ManObj(p, id), abc.Abc_ObjId(constant))
+				continue
+			}
+			node := abc.Abc_NtkCreateNode(n)
+			for _, leaf := range giapkg.Gia_ObjLutFanins(p, id) {
+				abc.Abc_ObjAddFanin(node, object(leaf))
+			}
+			node.Data = Abc_ObjHopFromGia(n.FunctionManager.(*Hop_Man_t), p, id, copies)
+			giapkg.Gia_ObjSetValue(giapkg.Gia_ManObj(p, id), abc.Abc_ObjId(node))
+		}
 	}
-	for i := int32(0); i < giapkg.Gia_ManPoNum(p)+giapkg.Gia_ManRegNum(p); i++ {
-		co := giapkg.Gia_ManCo(p, i)
-		dst := abc.Abc_NtkCo(n, i)
-		driver := Abc_NtkObj(n, giapkg.Gia_ObjValue(giapkg.Gia_ManObj(p, giapkg.Gia_ObjFaninId0(co, giapkg.Gia_ObjId(p, co))))).Signal()
-		if giapkg.Gia_ObjFaninC0(co) != 0 {
-			driver = abc.Abc_ObjNot(driver)
+	if fFindEnables == 0 {
+		for i := int32(0); i < giapkg.Gia_ManCoNum(p); i++ {
+			co := giapkg.Gia_ManCo(p, i)
+			driver := object(giapkg.Gia_ObjFaninId0(co, giapkg.Gia_ObjId(p, co))).Signal()
+			abc.Abc_ObjAddFanin(abc.Abc_NtkCo(n, i), abc.Abc_ObjNotCond(driver, giapkg.Gia_ObjFaninC0(co)))
 		}
-		abc.Abc_ObjAddFanin(dst, driver)
 	}
 	abc.Abc_NtkAddDummyPiNames(n)
 	abc.Abc_NtkAddDummyPoNames(n)
 	abc.Abc_NtkAddDummyBoxNames(n)
 	abc.Abc_NtkLogicMakeSimpleCos(n, boolInt(fUseBuffs == 0))
+	if constant.Kind != abc.ObjectNone && len(constant.Fanouts()) == 0 {
+		abc.Abc_NtkDeleteObj(constant)
+	}
+	if abc.Abc_NtkCheck(n) == 0 {
+		fmt.Println("Abc_NtkFromMappedGia(): Network check has failed.")
+	}
 	return n
 }
 
@@ -3691,11 +3759,14 @@ func Abc_NtkDarClockGate(pNtk *Abc_Ntk_t, pCare *Abc_Ntk_t, pPars *Cgt_Par_t) *A
 	if pMan2 != nil {
 		Aig_ManStop(pMan2)
 	}
-	if pMan == nil {
-		return nil
-	}
 	if err != nil {
 		Abc_Print(1, "%s\n", err)
+		if pMan != nil {
+			Aig_ManStop(pMan)
+		}
+		return nil
+	}
+	if pMan == nil {
 		return nil
 	}
 	pNtkAig = Abc_NtkFromDar(pNtk, pMan)

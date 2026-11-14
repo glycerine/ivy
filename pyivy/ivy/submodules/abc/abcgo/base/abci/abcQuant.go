@@ -97,22 +97,25 @@ func Abc_NtkQuantify(pNtk *Abc_Ntk_t, fUniv int32, iVar int32, fVerbose int32) i
 	pivot := baseabc.Abc_NtkCi(pNtk, iVar)
 	levels := baseabc.Abc_NtkDfsReverseNodes(pNtk, []*Abc_Obj_t{pivot}, 1)
 	manager := pNtk.FunctionManager.(*baseabc.Abc_Aig_t)
-	pivot.SetCopyEdge(pNtk.One().Not())
-	pivot.Data = pNtk.One()
-	// The reverse DFS links nodes at each level through Copy. Save the next
-	// link before replacing it with the node's zero cofactor.
+	// C uses pCopy and pData as two cofactor slots. Go's Data also owns
+	// the node function, so keep the same two values in local maps.
+	zero := map[*Abc_Obj_t]baseabc.Edge{pivot: pNtk.One().Not()}
+	one := map[*Abc_Obj_t]baseabc.Edge{pivot: pNtk.One()}
+	cofactor := func(values map[*Abc_Obj_t]baseabc.Edge, edge baseabc.Edge) baseabc.Edge {
+		result, found := values[edge.Object]
+		if !found {
+			result = edge.Object.Signal()
+		}
+		if edge.Complement {
+			result = result.Not()
+		}
+		return result
+	}
 	for _, head := range levels {
-		for node := head; node != nil; {
-			next := node.Copy
-			for _, fanin := range []*Abc_Obj_t{Abc_ObjFanin0(node), Abc_ObjFanin1(node)} {
-				if baseabc.Abc_NodeIsTravIdCurrent(fanin) == 0 {
-					fanin.SetCopyEdge(fanin.Signal())
-					fanin.Data = fanin.Signal()
-				}
-			}
-			node.SetCopyEdge(baseabc.Abc_AigAnd(manager, Abc_ObjChild0Copy(node), Abc_ObjChild1Copy(node)))
-			node.Data = baseabc.Abc_AigAnd(manager, Abc_ObjChild0Data(node), Abc_ObjChild1Data(node))
-			node = next
+		for node := head; node != nil; node = node.Copy {
+			fanins := node.Fanins()
+			zero[node] = baseabc.Abc_AigAnd(manager, cofactor(zero, fanins[0]), cofactor(zero, fanins[1]))
+			one[node] = baseabc.Abc_AigAnd(manager, cofactor(one, fanins[0]), cofactor(one, fanins[1]))
 		}
 	}
 	for _, output := range pNtk.Outputs() {
@@ -122,9 +125,9 @@ func Abc_NtkQuantify(pNtk *Abc_Ntk_t, fUniv int32, iVar int32, fVerbose int32) i
 		fanin := Abc_ObjFanin0(output)
 		var result baseabc.Edge
 		if fUniv != 0 {
-			result = baseabc.Abc_AigAnd(manager, Abc_ObjChild0Copy(output), Abc_ObjChild0Data(output))
+			result = baseabc.Abc_AigAnd(manager, cofactor(zero, output.Fanins()[0]), cofactor(one, output.Fanins()[0]))
 		} else {
-			result = baseabc.Abc_AigOr(manager, Abc_ObjChild0Copy(output), Abc_ObjChild0Data(output))
+			result = baseabc.Abc_AigOr(manager, cofactor(zero, output.Fanins()[0]), cofactor(one, output.Fanins()[0]))
 		}
 		result = baseabc.Abc_ObjNotCond(result, baseabc.Abc_ObjFaninC0(output))
 		if result.Object != fanin {
@@ -227,7 +230,7 @@ func Abc_NtkTransRel(pNtk *Abc_Ntk_t, fInputs int32, fVerbose int32) *Abc_Ntk_t 
 			Abc_NtkQuantify(pNtkNew, 0, i, fVerbose)
 			//            if ( fSynthesis && (i % 3 == 2) )
 			if fSynthesis != 0 {
-				baseabc.Abc_NtkCleanData(pNtkNew)
+
 				baseabc.Abc_AigCleanup(pNtkNew.FunctionManager.(*baseabc.Abc_Aig_t))
 				Abc_NtkSynthesize(&pNtkNew, 1)
 			}
@@ -235,7 +238,7 @@ func Abc_NtkTransRel(pNtk *Abc_Ntk_t, fInputs int32, fVerbose int32) *Abc_Ntk_t 
 			//            printf( "Var = %3d. Nodes = %6d. ", i - 2*nLatches, Abc_NtkNodeNum(pNtkNew) );
 		}
 		//        printf( "\n" );
-		baseabc.Abc_NtkCleanData(pNtkNew)
+
 		baseabc.Abc_AigCleanup(pNtkNew.FunctionManager.(*baseabc.Abc_Aig_t))
 		for i = Abc_NtkPiNum(pNtkNew) - 1; i >= 2*nLatches; i-- {
 			pObj = Abc_NtkPi(pNtkNew, i)
@@ -374,12 +377,12 @@ func Abc_NtkReachability(pNtkRel *Abc_Ntk_t, nIters int32, fVerbose int32) *Abc_
 		for v = 0; v < nVars; v++ {
 			Abc_NtkQuantify(pNtkNext, 0, v, fVerbose)
 			if fSynthesis != 0 && v%3 == 2 {
-				baseabc.Abc_NtkCleanData(pNtkNext)
+
 				baseabc.Abc_AigCleanup(pNtkNext.FunctionManager.(*baseabc.Abc_Aig_t))
 				Abc_NtkSynthesize(&pNtkNext, fMoreEffort)
 			}
 		}
-		baseabc.Abc_NtkCleanData(pNtkNext)
+
 		baseabc.Abc_AigCleanup(pNtkNext.FunctionManager.(*baseabc.Abc_Aig_t))
 		if fSynthesis != 0 {
 			Abc_NtkSynthesize(&pNtkNext, 1)
@@ -391,6 +394,12 @@ func Abc_NtkReachability(pNtkRel *Abc_Ntk_t, nIters int32, fVerbose int32) *Abc_
 		// check the termination condition
 		if Abc_ObjFanin0(Abc_NtkPo(pNtkNext, 0)) == baseabc.Abc_AigConst1(pNtkNext).Object {
 			fFixedPoint = 1
+			// A constant-one image reaches every state. The C source stops
+			// before merging it, incorrectly returning the old reached set.
+			if !Abc_NtkPo(pNtkNext, 0).Fanins()[0].Complement {
+				Abc_NtkDelete(pNtkReached)
+				pNtkReached = Abc_NtkDup(pNtkNext)
+			}
 			fmt.Printf("Fixed point is reached!\n")
 			Abc_NtkDelete(pNtkNext)
 			break

@@ -93,3 +93,30 @@ func TestTimingManagerDupAndNetworkDelete(t *testing.T) {
 		t.Fatal("network deletion did not stop timing manager")
 	}
 }
+
+func TestTimingFloatArraysWithoutManagerAndWithDefaults(t *testing.T) {
+	n := baseabc.Abc_NtkAlloc(baseabc.ABC_NTK_STRASH, baseabc.ABC_FUNC_AIG, 1)
+	defer baseabc.Abc_NtkDelete(n)
+	input := baseabc.Abc_NtkCreatePi(n)
+	baseabc.Abc_ObjAddFanin(baseabc.Abc_NtkCreatePo(n), input)
+	if got := Abc_NtkGetCiArrivalFloats(n); len(got) != 1 || got[0] != 0 {
+		t.Fatalf("default arrival %v", got)
+	}
+	if got := Abc_NtkGetCoRequiredFloats(n); got != nil {
+		t.Fatalf("absent required times %v", got)
+	}
+	Abc_NtkTimeSetDefaultArrival(n, 2, 6)
+	Abc_NtkTimeSetDefaultRequired(n, 8, 12)
+	if got := Abc_NtkReadDefaultArrivalWorst(n); got != 4 {
+		t.Fatalf("C default arrival average=%g", got)
+	}
+	if got := Abc_NtkReadDefaultRequiredWorst(n); got != 10 {
+		t.Fatalf("C default required average=%g", got)
+	}
+	if got := Abc_NtkGetCiArrivalFloats(n); len(got) != 1 || got[0] != 6 {
+		t.Fatalf("arrival %v", got)
+	}
+	if got := Abc_NtkGetCoRequiredFloats(n); len(got) != 1 || got[0] != 8 {
+		t.Fatalf("required %v", got)
+	}
+}

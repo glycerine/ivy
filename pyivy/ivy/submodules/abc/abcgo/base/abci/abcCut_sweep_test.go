@@ -111,6 +111,8 @@ func TestSweepBDDNodeReferencesRemainBalanced(t *testing.T) {
 	po := abc.Abc_NtkCreatePo(network)
 	abc.Abc_ObjAddFanin(po, root)
 
+	abc.Abc_NtkAddDummyPiNames(network)
+	abc.Abc_NtkAddDummyPoNames(network)
 	if removed := abc.Abc_NtkSweep(network, 0); removed != 1 {
 		t.Fatalf("sweep removed %d nodes, want 1", removed)
 	}

@@ -38,6 +38,7 @@ func TestAbcNtkToIfCopiesAIGAndComplementedOutput(t *testing.T) {
 
 	pars := &ifpkg.If_Par_t{}
 	ifpkg.If_ManSetDefaultPars(pars)
+	pars.NLutSize = 6
 	manager := Abc_NtkToIf(n, pars)
 	if manager == nil {
 		t.Fatal("Abc_NtkToIf returned nil")

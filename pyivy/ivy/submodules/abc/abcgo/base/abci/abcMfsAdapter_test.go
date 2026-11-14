@@ -40,6 +40,9 @@ func TestMfsABCAdapterPreservesNetworkAndCoherence(t *testing.T) {
 	po := abc.Abc_NtkCreatePo(n)
 	abc.Abc_ObjAddFanin(po, second)
 
+	// A valid ABC logic network has names for all interface terminals.
+	abc.Abc_NtkAddDummyPiNames(n)
+	abc.Abc_NtkAddDummyPoNames(n)
 	before, err := mfsImportABC(n)
 	if err != nil {
 		t.Fatalf("import before optimization: %v", err)

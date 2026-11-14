@@ -45,8 +45,9 @@ func TestAbcMvReadScannerBuildsValueSetsAndEncodedFunctions(t *testing.T) {
 		t.Fatal("PLA value sets do not add the complement of the specified domain")
 	}
 	for value := 0; value < 4; value++ {
-		if p.bValues[1][value] != core.Cudd_ReadOne(dd) {
-			t.Fatalf("don't-care value set output=1 value=%d is not unconstrained", value)
+		// C expands only values with a nonempty observed onset.
+		if p.bValues[1][value] != core.Cudd_ReadLogicZero(dd) {
+			t.Fatalf("unobserved value output=1 value=%d gained an onset", value)
 		}
 	}
 	want := core.Cudd_bddAnd(dd, core.Cudd_bddIthVar(dd, 30), core.Cudd_Not(core.Cudd_bddIthVar(dd, 31)))

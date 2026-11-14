@@ -15,6 +15,10 @@ func Abc_NtkPrintMeasures(pTruth []uint32, nVars int32) {
 	// The C routine counts an uninitialized stack buffer here. Use the input
 	// truth table, which is the only deterministic interpretation of the total.
 	nOnes := count(pTruth)
+	// Small Kit tables repeat across a full word; count assignments once.
+	if nVars < 5 {
+		nOnes >>= uint(5 - nVars)
+	}
 	fmt.Printf("Total = %d.\n", nOnes*((1<<nVars)-nOnes))
 	for i := int32(0); i < nVars; i++ {
 		kit.Kit_TruthUniqueNew(cof[0][:], pTruth, nVars, i)

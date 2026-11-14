@@ -127,12 +127,14 @@ func TestSesStoreWriteSynthesizedRecordAndCategoryFilter(t *testing.T) {
 	put32 := func(v int32) { _ = binary.Write(&want, binary.NativeEndian, v) }
 	put64(1)
 	put64(uint64(truth[0]))
-	put64(uint64(truth[1]))
+	// Two variables use one truth word; the unused three slots stay zero.
+	put64(0)
 	put64(0)
 	put64(0)
 	put32(2)
 	put32(0)
-	put32(3)
+	// Network-aware normalization balances both gate inputs.
+	put32(0)
 	for range 6 {
 		put32(0)
 	}

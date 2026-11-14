@@ -1353,15 +1353,17 @@ func Abc_FrameUpdateGia(pAbc *Abc_Frame_t, pNew *Gia_Man_t) {
 	}
 	// transfer names
 	pOld := abcFrameGia(pAbc)
-	newInputs, oldInputs := abcGiaInputNames(pNew), abcGiaInputNames(pOld)
-	if newInputs == nil && oldInputs != nil && Gia_ManCiNum(pNew) == Vec_PtrSize(oldInputs) {
-		abcGiaSetInputNames(pNew, oldInputs)
-		abcGiaSetInputNames(pOld, nil)
-	}
-	newOutputs, oldOutputs := abcGiaOutputNames(pNew), abcGiaOutputNames(pOld)
-	if newOutputs == nil && oldOutputs != nil && Gia_ManCoNum(pNew) == Vec_PtrSize(oldOutputs) {
-		abcGiaSetOutputNames(pNew, oldOutputs)
-		abcGiaSetOutputNames(pOld, nil)
+	if pOld != nil {
+		newInputs, oldInputs := abcGiaInputNames(pNew), abcGiaInputNames(pOld)
+		if newInputs == nil && oldInputs != nil && Gia_ManCiNum(pNew) == Vec_PtrSize(oldInputs) {
+			abcGiaSetInputNames(pNew, oldInputs)
+			abcGiaSetInputNames(pOld, nil)
+		}
+		newOutputs, oldOutputs := abcGiaOutputNames(pNew), abcGiaOutputNames(pOld)
+		if newOutputs == nil && oldOutputs != nil && Gia_ManCoNum(pNew) == Vec_PtrSize(oldOutputs) {
+			abcGiaSetOutputNames(pNew, oldOutputs)
+			abcGiaSetOutputNames(pOld, nil)
+		}
 	}
 	// update
 	abcFrameStopGia(pAbc, "pGia2")
@@ -40059,7 +40061,7 @@ func Abc_CommandAbc9Dch(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		pTemp = giapkg.Gia_ManEquivReduce(abcFrameGia(pAbc), 1, 0, 0, 0)
 
 	} else {
-		pTemp = giapkg.Gia_ManPerformDch(abcFrameGia(pAbc), pPars)
+		pTemp = giapkg.Gia_ManPerformDch(abcFrameGia(pAbc), pPars.native())
 		Abc_FrameUpdateGia(pAbc, pTemp)
 		if fMinLevel != 0 {
 			pTemp = giapkg.Gia_ManEquivReduce2(abcFrameGia(pAbc))
@@ -44941,6 +44943,7 @@ func Abc_CommandAbc9Exorcism(pAbc *Abc_Frame_t, argc int32, argv []string) int32
 			fmt.Printf("Reading PLA file has failed.\n")
 			return 1
 		}
+		defer Abc_NtkDelete(pNtk)
 		nInputs = Abc_NtkCiNum(pNtk)
 		nOutputs = Abc_NtkCoNum(pNtk)
 		vEsop = abcNtkESOP(pNtk)
@@ -44958,8 +44961,12 @@ func Abc_CommandAbc9Exorcism(pAbc *Abc_Frame_t, argc int32, argv []string) int32
 
 	if vEsop != nil {
 		// run minimization
-		base_exor.Abc_ExorcismMain(abcESOPRows(vEsop), int(nInputs), int(nOutputs), pFileNameOut, int(Quality), int(Verbosity), int(nCubesMax), (fUseQCost != 0))
+		_, err := base_exor.Abc_ExorcismMain(abcESOPRows(vEsop), int(nInputs), int(nOutputs), pFileNameOut, int(Quality), int(Verbosity), int(nCubesMax), (fUseQCost != 0))
 		giapkg.Vec_WecFree(vEsop)
+		if err != nil {
+			Abc_Print(-1, "ESOP minimization failed: %s\n", err)
+			return 1
+		}
 	}
 	return 0
 

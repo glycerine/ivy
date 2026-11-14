@@ -44,7 +44,7 @@ func TestAbcCommandIfifNetworkAndLibraryErrors(t *testing.T) {
 	status, output := captureIfifPrint(t, func() int32 {
 		return Abc_CommandIfif(frame, 1, []string{"ifif"})
 	})
-	if status != 1 || output != "Empty network.\n" {
+	if status != 1 || output != "Error: Empty network.\n" {
 		t.Fatalf("empty network status=%d output=%q", status, output)
 	}
 
@@ -56,7 +56,7 @@ func TestAbcCommandIfifNetworkAndLibraryErrors(t *testing.T) {
 	status, output = captureIfifPrint(t, func() int32 {
 		return Abc_CommandIfif(frame, 1, []string{"ifif"})
 	})
-	if status != 1 || output != "LUT library is not given.\n" {
+	if status != 1 || output != "Error: LUT library is not given.\n" {
 		t.Fatalf("missing library status=%d output=%q", status, output)
 	}
 }

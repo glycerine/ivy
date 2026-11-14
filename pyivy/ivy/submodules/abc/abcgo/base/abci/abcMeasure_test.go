@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"io"
 	"os"
+	"reflect"
 	"strings"
 	"testing"
 
@@ -39,7 +40,7 @@ func TestAbcNtkPrintMeasures(t *testing.T) {
 	if !strings.HasPrefix(output, "Total = 3.\n") {
 		t.Fatalf("expected deterministic total pair count of 3; output:\n%s", output)
 	}
-	if !strings.Contains(output, "        \n     32 \n     32         \n") {
+	if !strings.Contains(output, "             32 \n     32         \n") {
 		t.Fatalf("expected the pair measure matrix to contain 32 in both off-diagonal cells; output:\n%s", output)
 	}
 }
@@ -49,13 +50,14 @@ func TestAbcNtk4VarObj(t *testing.T) {
 	a, b := abc.Abc_NtkCreatePi(network), abc.Abc_NtkCreatePi(network)
 	a.CopyData, b.CopyData = uint32(0xAAAAAAAA), uint32(0xCCCCCCCC)
 	node := abc.Abc_NtkCreateNodeAnd(network, []*abc.Object{a, b})
+	original := reflect.ValueOf(node.Data).Pointer()
 	if got := Abc_Ntk4VarObj([]*abc.Object{node}); got != 0x88888888 {
 		t.Fatalf("AND truth table = %#08x, want %#08x", got, uint32(0x88888888))
 	}
 	if node.CopyData != uint32(0x88888888) {
 		t.Fatalf("node copy scratch = %#v, want truth table", node.CopyData)
 	}
-	if node.Data != nil {
+	if reflect.ValueOf(node.Data).Pointer() != original {
 		t.Fatalf("truth evaluation clobbered the network's Data field: %#v", node.Data)
 	}
 }

@@ -100,9 +100,9 @@ func Abc_SopFromEspresso(cover pset_family) string {
 		set := cover.Row(i)
 		for v := int32(0); v < nVars; v++ {
 			zero, one := set.Contains(2*v), set.Contains(2*v+1)
-			if !zero && one {
+			if zero && !one {
 				bytes[int(i)*lineSize+int(v)] = '0'
-			} else if zero && !one {
+			} else if !zero && one {
 				bytes[int(i)*lineSize+int(v)] = '1'
 			}
 		}

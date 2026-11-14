@@ -230,7 +230,7 @@ func Abc_ManResubCleanup(p *Abc_ManRes_t) {
 	}
 	for i := 0; i < vec.Vec_PtrSize(p.vDivs); i++ {
 		if n, ok := vec.Vec_PtrEntry(p.vDivs, i).(*Abc_Obj_t); ok {
-			n.Data = nil
+			n.CopyData = nil
 		}
 	}
 	Vec_PtrClear(p.vDivs)
@@ -353,18 +353,6 @@ func Abc_NtkResubstitute(n *Abc_Ntk_t, cutMax, stepsMax, levelsOdc, updateLevel,
 	if updateLevel != 0 {
 		abc.Abc_NtkStartReverseLevels(n, 0)
 	}
-	savedLatchData := make(map[*abc.Object]any)
-	if abc.Abc_NtkLatchNum(n) != 0 {
-		for i := int32(0); i < abc.Abc_NtkObjNumMax(n); i++ {
-			node := n.Object(int(i))
-			if node != nil && abc.Abc_ObjIsLatch(node) != 0 {
-				savedLatchData[node] = node.Data
-				if prior, ok := node.Data.(*abc.Object); ok {
-					node.Next = prior
-				}
-			}
-		}
-	}
 	res.nNodesBeg = abc.Abc_NtkNodeNum(n)
 	count := abc.Abc_NtkObjNumMax(n)
 	progress := extra.Extra_ProgressBarStart(os.Stdout, count)
@@ -412,19 +400,10 @@ func Abc_NtkResubstitute(n *Abc_Ntk_t, cutMax, stepsMax, levelsOdc, updateLevel,
 	if odc != nil {
 		Abc_NtkDontCareFree(odc)
 	}
-	for i := int32(0); i < abc.Abc_NtkObjNumMax(n); i++ {
-		if node := n.Object(int(i)); node != nil {
-			node.Data = nil
-		}
-	}
-	if abc.Abc_NtkLatchNum(n) != 0 {
-		for i := int32(0); i < abc.Abc_NtkObjNumMax(n); i++ {
-			node := n.Object(int(i))
-			if node != nil && abc.Abc_ObjIsLatch(node) != 0 {
-				node.Data = savedLatchData[node]
-				node.Next = nil
-			}
-		}
+	// Simulation uses CopyData; retain Data, which owns Go node functions
+	// and latch initialization values.
+	for _, node := range n.Objects() {
+		node.CopyData = nil
 	}
 	abc.Abc_NtkReassignIds(n)
 	if updateLevel != 0 {
@@ -433,7 +412,7 @@ func Abc_NtkResubstitute(n *Abc_Ntk_t, cutMax, stepsMax, levelsOdc, updateLevel,
 		abc.Abc_NtkLevel(n)
 	}
 	if abc.Abc_NtkCheck(n) == 0 {
-		fmt.Println("Abc_NtkRefactor: The network check has failed.")
+		fmt.Println("Abc_NtkResubstitute: The network check has failed.")
 		return 0
 	}
 	s_ResubTime = int64(time.Since(clkStart))

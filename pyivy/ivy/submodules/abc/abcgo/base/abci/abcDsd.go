@@ -216,6 +216,7 @@ func abcDsdBuildNetwork(src *abc.Network, dd *core.DdManager, functions []*core.
 			return nil, fmt.Errorf("unsupported DSD node kind %d", typ)
 		}
 		node.Data = local
+		core.Cudd_Ref(local)
 		copies[regular] = node
 		return node, nil
 	}
@@ -493,7 +494,9 @@ func Abc_NodeDecompDsdAndMux(node *abc.Object, pending *[]*abc.Object, manager *
 		_ = node.Network().AddFanin(node, control)
 		_ = node.Network().AddFanin(node, abc.Edge{Object: high})
 		_ = node.Network().AddFanin(node, abc.Edge{Object: low})
+		core.Cudd_RecursiveDeref(dd, f)
 		node.Data = core.Cudd_bddIte(dd, core.Cudd_bddIthVar(dd, 0), core.Cudd_bddIthVar(dd, 1), core.Cudd_bddIthVar(dd, 2))
+		core.Cudd_Ref(node.Data.(*core.DdNode))
 		if pending != nil {
 			if Abc_NodeIsForDsd(low) != 0 {
 				*pending = append(*pending, low)
@@ -583,6 +586,7 @@ func abcDsdAppendLocal(n *abc.Network, dd *core.DdManager, manager *dsd.Dsd_Mana
 		default:
 			return nil, fmt.Errorf("unsupported local DSD node type %d", typ)
 		}
+		core.Cudd_Ref(f)
 		out.Data = f
 		copies[regular] = out
 		_ = recursive
@@ -601,7 +605,9 @@ func abcDsdAppendLocal(n *abc.Network, dd *core.DdManager, manager *dsd.Dsd_Mana
 		return nil, err
 	}
 	base := core.Cudd_bddIthVar(dd, 0)
+	core.Cudd_RecursiveDeref(dd, node.Data.(*core.DdNode))
 	node.Data = core.Cudd_NotCond(base, dsd.Dsd_IsComplement(root))
+	core.Cudd_Ref(node.Data.(*core.DdNode))
 	return driver, nil
 }
 

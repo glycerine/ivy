@@ -32,7 +32,7 @@ func resubPhase(value any) int32 {
 }
 
 func resubSetGraphLeaf(g *dec.Dec_Graph_t, i int32, value any) {
-	dec.Dec_GraphSetNodeFunc(g, i, resubRegular(value))
+	dec.Dec_GraphSetNodeFunc(g, i, resubRegular(value).Signal())
 }
 
 func resubFinishGraph(root *Abc_Obj_t, g *dec.Dec_Graph_t, edge dec.Dec_Edge_t) *dec.Dec_Graph_t {
@@ -51,13 +51,13 @@ func Abc_ManResubSimulate(vDivs *Vec_Ptr_t, nLeaves int32, vSims *Vec_Ptr_t, nLe
 	for i := int32(0); i < Vec_PtrSize(vDivs); i++ {
 		obj := Vec_PtrEntry(vDivs, i).(*Abc_Obj_t)
 		if i < nLeaves {
-			obj.Data = Vec_PtrEntry(vSims, i)
+			obj.CopyData = Vec_PtrEntry(vSims, i)
 			continue
 		}
-		obj.Data = Vec_PtrEntry(vSims, i-nLeaves+nLeavesMax)
-		out := resubWords(obj.Data)
-		in0 := resubWords(abc.Abc_ObjData(abc.Abc_ObjFanin0(obj)))
-		in1 := resubWords(abc.Abc_ObjData(abc.Abc_ObjFanin1(obj)))
+		obj.CopyData = Vec_PtrEntry(vSims, i-nLeaves+nLeavesMax)
+		out := resubWords(obj.CopyData)
+		in0 := resubWords(abc.Abc_ObjCopyData(abc.Abc_ObjFanin0(obj)))
+		in1 := resubWords(abc.Abc_ObjCopyData(abc.Abc_ObjFanin1(obj)))
 		for k := int32(0); k < nWords; k++ {
 			a, b := in0[k], in1[k]
 			if abc.Abc_ObjFaninC0(obj) != 0 {
@@ -71,7 +71,7 @@ func Abc_ManResubSimulate(vDivs *Vec_Ptr_t, nLeaves int32, vSims *Vec_Ptr_t, nLe
 	}
 	for i := int32(0); i < Vec_PtrSize(vDivs); i++ {
 		obj := Vec_PtrEntry(vDivs, i).(*Abc_Obj_t)
-		words := resubWords(obj.Data)
+		words := resubWords(obj.CopyData)
 		obj.Phase = words[0]&1 != 0
 		if obj.Phase {
 			for k := int32(0); k < nWords; k++ {
@@ -83,7 +83,7 @@ func Abc_ManResubSimulate(vDivs *Vec_Ptr_t, nLeaves int32, vSims *Vec_Ptr_t, nLe
 
 func Abc_ManResubQuit0(pRoot *Abc_Obj_t, pObj any) *dec.Dec_Graph_t {
 	g := dec.Dec_GraphCreate(1)
-	dec.Dec_GraphSetNodeFunc(g, 0, pObj)
+	resubSetGraphLeaf(g, 0, pObj)
 	return resubFinishGraph(pRoot, g, dec.Dec_EdgeCreate(0, resubBoolInt(resubRegular(pObj).Phase)))
 }
 
@@ -205,14 +205,14 @@ func Abc_ManResubDivsS(p *Abc_ManRes_t, Required int32) {
 	vec.Vec_PtrClear(p.vDivs1UP)
 	vec.Vec_PtrClear(p.vDivs1UN)
 	vec.Vec_PtrClear(p.vDivs1B)
-	root := resubWords(p.pRoot.Data)
+	root := resubWords(p.pRoot.CopyData)
 	for i := int32(0); i < p.nDivs; i++ {
 		value := vec.Vec_PtrEntry(p.vDivs, int(i))
 		obj := resubRegular(value)
 		if int32(obj.Level) > Required-1 {
 			continue
 		}
-		data := resubWords(obj.Data)
+		data := resubWords(obj.CopyData)
 		positive, negative := true, true
 		for w := int32(0); w < p.nWords; w++ {
 			positive = positive && data[w]&^root[w]&p.pCareSet[w] == 0
@@ -258,21 +258,21 @@ func Abc_ManResubDivsD(p *Abc_ManRes_t, Required int32) {
 	vec.Vec_PtrClear(p.vDivs2UP1)
 	vec.Vec_PtrClear(p.vDivs2UN0)
 	vec.Vec_PtrClear(p.vDivs2UN1)
-	root := resubWords(p.pRoot.Data)
+	root := resubWords(p.pRoot.CopyData)
 	for i := 0; i < vec.Vec_PtrSize(p.vDivs1B); i++ {
 		v0 := vec.Vec_PtrEntry(p.vDivs1B, i)
 		o0 := resubRegular(v0)
 		if int32(o0.Level) > Required-2 {
 			continue
 		}
-		d0 := resubWords(o0.Data)
+		d0 := resubWords(o0.CopyData)
 		for j := i + 1; j < vec.Vec_PtrSize(p.vDivs1B); j++ {
 			v1 := vec.Vec_PtrEntry(p.vDivs1B, j)
 			o1 := resubRegular(v1)
 			if int32(o1.Level) > Required-2 {
 				continue
 			}
-			d1 := resubWords(o1.Data)
+			d1 := resubWords(o1.CopyData)
 			if vec.Vec_PtrSize(p.vDivs2UP0) < ABC_RS_DIV2_MAX {
 				for _, flags := range [][2]bool{{false, false}, {true, false}, {false, true}, {true, true}} {
 					if resubPairRelation(d0, d1, root, p.pCareSet, p.nWords, flags[0], flags[1], true) {
@@ -343,7 +343,7 @@ func resubLiteral(words []uint32, value any, word int) uint32 {
 }
 
 func Abc_ManResubQuit(p *Abc_ManRes_t) *dec.Dec_Graph_t {
-	root := resubWords(p.pRoot.Data)
+	root := resubWords(p.pRoot.CopyData)
 	for w := int32(0); w < p.nWords; w++ {
 		if root[w]&p.pCareSet[w] != 0 {
 			return nil
@@ -356,10 +356,10 @@ func Abc_ManResubQuit(p *Abc_ManRes_t) *dec.Dec_Graph_t {
 }
 
 func Abc_ManResubDivs0(p *Abc_ManRes_t) *dec.Dec_Graph_t {
-	root := resubWords(p.pRoot.Data)
+	root := resubWords(p.pRoot.CopyData)
 	for i := int32(0); i < p.nDivs; i++ {
 		value := vec.Vec_PtrEntry(p.vDivs, int(i))
-		data := resubWords(resubRegular(value).Data)
+		data := resubWords(resubRegular(value).CopyData)
 		if resubEqual(data, root, p.pCareSet, p.nWords) {
 			return Abc_ManResubQuit0(p.pRoot, value)
 		}
@@ -368,13 +368,13 @@ func Abc_ManResubDivs0(p *Abc_ManRes_t) *dec.Dec_Graph_t {
 }
 
 func Abc_ManResubDivs1(p *Abc_ManRes_t, _ int32) *dec.Dec_Graph_t {
-	root := resubWords(p.pRoot.Data)
+	root := resubWords(p.pRoot.CopyData)
 	for i := 0; i < vec.Vec_PtrSize(p.vDivs1UP); i++ {
 		a := vec.Vec_PtrEntry(p.vDivs1UP, i)
-		wa := resubWords(resubRegular(a).Data)
+		wa := resubWords(resubRegular(a).CopyData)
 		for j := i + 1; j < vec.Vec_PtrSize(p.vDivs1UP); j++ {
 			b := vec.Vec_PtrEntry(p.vDivs1UP, j)
-			wb := resubWords(resubRegular(b).Data)
+			wb := resubWords(resubRegular(b).CopyData)
 			if resubPairEqual(wa, wb, a, b, root, p.pCareSet, p.nWords, true) {
 				p.nUsedNode1Or++
 				return Abc_ManResubQuit1(p.pRoot, a, b, 1)
@@ -383,10 +383,10 @@ func Abc_ManResubDivs1(p *Abc_ManRes_t, _ int32) *dec.Dec_Graph_t {
 	}
 	for i := 0; i < vec.Vec_PtrSize(p.vDivs1UN); i++ {
 		a := vec.Vec_PtrEntry(p.vDivs1UN, i)
-		wa := resubWords(resubRegular(a).Data)
+		wa := resubWords(resubRegular(a).CopyData)
 		for j := i + 1; j < vec.Vec_PtrSize(p.vDivs1UN); j++ {
 			b := vec.Vec_PtrEntry(p.vDivs1UN, j)
-			wb := resubWords(resubRegular(b).Data)
+			wb := resubWords(resubRegular(b).CopyData)
 			// Preserve the source's sequential if statements: the last matching
 			// complemented-pattern check determines the returned candidate.
 			match := false
@@ -442,18 +442,18 @@ func resubPairWordsEqual(a, b, root, care []uint32, nWords int32, flags int, isO
 }
 
 func Abc_ManResubDivs12(p *Abc_ManRes_t, Required int32) *dec.Dec_Graph_t {
-	root := resubWords(p.pRoot.Data)
+	root := resubWords(p.pRoot.CopyData)
 	for _, list := range []*Vec_Ptr_t{p.vDivs1UP, p.vDivs1UN} {
 		isOr := list == p.vDivs1UP
 		for i := 0; i < vec.Vec_PtrSize(list); i++ {
 			a := vec.Vec_PtrEntry(list, i)
-			wa := resubWords(resubRegular(a).Data)
+			wa := resubWords(resubRegular(a).CopyData)
 			for j := i + 1; j < vec.Vec_PtrSize(list); j++ {
 				b := vec.Vec_PtrEntry(list, j)
-				wb := resubWords(resubRegular(b).Data)
+				wb := resubWords(resubRegular(b).CopyData)
 				for k := j + 1; k < vec.Vec_PtrSize(list); k++ {
 					c := vec.Vec_PtrEntry(list, k)
-					wc := resubWords(resubRegular(c).Data)
+					wc := resubWords(resubRegular(c).CopyData)
 					if !resubTripleEqual(wa, wb, wc, a, b, c, root, p.pCareSet, p.nWords, isOr) {
 						continue
 					}
@@ -512,7 +512,7 @@ func resubMax32(a, b int32) int32 {
 }
 
 func Abc_ManResubDivs2(p *Abc_ManRes_t, _ int32) *dec.Dec_Graph_t {
-	root := resubWords(p.pRoot.Data)
+	root := resubWords(p.pRoot.CopyData)
 	if graph := resubDivs2Pass(p, p.vDivs1UP, p.vDivs2UP0, p.vDivs2UP1, root, true); graph != nil {
 		return graph
 	}
@@ -522,10 +522,10 @@ func Abc_ManResubDivs2(p *Abc_ManRes_t, _ int32) *dec.Dec_Graph_t {
 func resubDivs2Pass(p *Abc_ManRes_t, singles, pair0, pair1 *Vec_Ptr_t, root []uint32, positive bool) *dec.Dec_Graph_t {
 	for i := 0; i < vec.Vec_PtrSize(singles); i++ {
 		a := vec.Vec_PtrEntry(singles, i)
-		wa := resubWords(resubRegular(a).Data)
+		wa := resubWords(resubRegular(a).CopyData)
 		for j := 0; j < vec.Vec_PtrSize(pair0); j++ {
 			b, c := vec.Vec_PtrEntry(pair0, j), vec.Vec_PtrEntry(pair1, j)
-			wb, wc := resubWords(resubRegular(b).Data), resubWords(resubRegular(c).Data)
+			wb, wc := resubWords(resubRegular(b).CopyData), resubWords(resubRegular(c).CopyData)
 			if !resubDivs2Equal(wa, wb, wc, a, b, c, root, p.pCareSet, p.nWords, positive) {
 				continue
 			}
@@ -577,11 +577,11 @@ func resubDivs2Equal(a, b, c []uint32, va, vb, vc any, root, care []uint32, nWor
 func Abc_ManResubDivs3(p *Abc_ManRes_t, _ int32) *dec.Dec_Graph_t {
 	for i := 0; i < vec.Vec_PtrSize(p.vDivs2UP0); i++ {
 		a, b := vec.Vec_PtrEntry(p.vDivs2UP0, i), vec.Vec_PtrEntry(p.vDivs2UP1, i)
-		wa, wb := resubWords(resubRegular(a).Data), resubWords(resubRegular(b).Data)
+		wa, wb := resubWords(resubRegular(a).CopyData), resubWords(resubRegular(b).CopyData)
 		for j := i + 1; j < vec.Vec_PtrSize(p.vDivs2UP0); j++ {
 			c, d := vec.Vec_PtrEntry(p.vDivs2UP0, j), vec.Vec_PtrEntry(p.vDivs2UP1, j)
-			wc, wd := resubWords(resubRegular(c).Data), resubWords(resubRegular(d).Data)
-			if !resubDivs3Equal(wa, wb, wc, wd, a, b, c, d, p.pRoot.Data, p.pCareSet, p.nWords) {
+			wc, wd := resubWords(resubRegular(c).CopyData), resubWords(resubRegular(d).CopyData)
+			if !resubDivs3Equal(wa, wb, wc, wd, a, b, c, d, p.pRoot.CopyData, p.pCareSet, p.nWords) {
 				continue
 			}
 			p.nUsedNode3OrAnd++

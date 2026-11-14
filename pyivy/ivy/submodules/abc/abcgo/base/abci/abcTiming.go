@@ -185,14 +185,14 @@ func Abc_NtkReadDefaultArrivalWorst(n *Abc_Ntk_t) float32 {
 	if t == nil {
 		return 0
 	}
-	return maxF(t.Rise, t.Fall)
+	return 0.5*t.Rise + 0.5*t.Fall
 }
 func Abc_NtkReadDefaultRequiredWorst(n *Abc_Ntk_t) float32 {
 	t := Abc_NtkReadDefaultRequired(n)
 	if t == nil {
 		return 0
 	}
-	return minF(t.Rise, t.Fall)
+	return 0.5*t.Rise + 0.5*t.Fall
 }
 func Abc_NodeReadArrivalAve(o *Abc_Obj_t) float32 {
 	t := Abc_NodeReadArrival(o)

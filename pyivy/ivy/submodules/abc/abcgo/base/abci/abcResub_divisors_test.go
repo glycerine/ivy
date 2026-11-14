@@ -39,7 +39,7 @@ func TestAbcManResubSimulateAndNormalize(t *testing.T) {
 	if leaf0[0] != ^uint32(0x97) || leaf1[0] != ^uint32(0x3d) {
 		t.Fatalf("leaf simulations were not normalized in-place: %08x %08x", leaf0[0], leaf1[0])
 	}
-	data, ok := abc.Abc_ObjData(and).([]uint32)
+	data, ok := abc.Abc_ObjCopyData(and).([]uint32)
 	if !ok || len(data) == 0 || &data[0] != &internal[0] {
 		t.Fatal("simulation slice was not associated with the object scratch field")
 	}
@@ -52,11 +52,11 @@ func TestAbcManResubDivsSUsesCareSetAndComplementedCandidate(t *testing.T) {
 		objects[i] = abc.Abc_NtkCreatePi(n)
 	}
 	root := &Abc_ManRes_t{pRoot: abc.Abc_NtkCreatePi(n), nDivs: 4, nWords: 1, pCareSet: []uint32{0xf}}
-	root.pRoot.Data = []uint32{0x3}
+	root.pRoot.CopyData = []uint32{0x3}
 	root.vDivs = vec.Vec_PtrAlloc(4)
 	root.vDivs1UP, root.vDivs1UN, root.vDivs1B = vec.Vec_PtrAlloc(4), vec.Vec_PtrAlloc(4), vec.Vec_PtrAlloc(4)
 	for i, words := range [][]uint32{{0x3}, {0xc}, {0x7}, {0x5}} {
-		objects[i].Data = words
+		objects[i].CopyData = words
 		vec.Vec_PtrPush(root.vDivs, objects[i])
 	}
 	Abc_ManResubDivsS(root, 9)
@@ -192,13 +192,13 @@ func resubSourceDivs3Word(a, b, c, d uint32, f0, f1, f2, f3 bool) uint32 {
 func TestAbcManResubDivsDUsesCareSet(t *testing.T) {
 	n := resubTestNetwork()
 	a, b := abc.Abc_NtkCreatePi(n), abc.Abc_NtkCreatePi(n)
-	a.Data, b.Data = []uint32{0x3}, []uint32{0x5}
+	a.CopyData, b.CopyData = []uint32{0x3}, []uint32{0x5}
 	root := &Abc_ManRes_t{
 		pRoot: abc.Abc_NtkCreatePi(n), nWords: 1, pCareSet: []uint32{0xf},
 		vDivs1B: vec.Vec_PtrAlloc(2), vDivs2UP0: vec.Vec_PtrAlloc(8), vDivs2UP1: vec.Vec_PtrAlloc(8),
 		vDivs2UN0: vec.Vec_PtrAlloc(8), vDivs2UN1: vec.Vec_PtrAlloc(8),
 	}
-	root.pRoot.Data = []uint32{0x7}
+	root.pRoot.CopyData = []uint32{0x7}
 	vec.Vec_PtrPush(root.vDivs1B, a)
 	vec.Vec_PtrPush(root.vDivs1B, b)
 	Abc_ManResubDivsD(root, 10)
@@ -262,7 +262,7 @@ func TestAbcManResubQuitRecognizesCareSetConstant(t *testing.T) {
 	n := resubTestNetwork()
 	root := abc.Abc_NtkCreatePi(n)
 	manager := &Abc_ManRes_t{pRoot: root, nWords: 1, pCareSet: []uint32{0xf}}
-	root.Data = []uint32{0xf0}
+	root.CopyData = []uint32{0xf0}
 	if graph := Abc_ManResubQuit(manager); graph == nil {
 		t.Fatal("bits outside the care set should allow a constant-zero replacement")
 	} else if got := dec.Dec_GraphDeriveTruth(graph); got != 0 {
@@ -281,12 +281,12 @@ func TestAbcManResubDivisorSearchStages(t *testing.T) {
 	vars := []*abc.Abc_Obj_t{abc.Abc_NtkCreatePi(n), abc.Abc_NtkCreatePi(n), abc.Abc_NtkCreatePi(n), abc.Abc_NtkCreatePi(n)}
 	data := []uint32{0xaaaaaaaa, 0xcccccccc, 0xf0f0f0f0, 0xff00ff00}
 	for i := range vars {
-		vars[i].Data = []uint32{data[i]}
+		vars[i].CopyData = []uint32{data[i]}
 	}
 	root := abc.Abc_NtkCreatePi(n)
 	care := []uint32{^uint32(0)}
 	newManager := func(result uint32) *Abc_ManRes_t {
-		root.Data = []uint32{result}
+		root.CopyData = []uint32{result}
 		return &Abc_ManRes_t{
 			pRoot: root, nWords: 1, pCareSet: care,
 			vDivs: vec.Vec_PtrAlloc(4), vDivs1UP: vec.Vec_PtrAlloc(4), vDivs1UN: vec.Vec_PtrAlloc(4),
@@ -301,7 +301,7 @@ func TestAbcManResubDivisorSearchStages(t *testing.T) {
 	if graph := Abc_ManResubDivs0(manager); graph != nil {
 		t.Fatal("divisor search accepted a nonmatching root truth table")
 	}
-	manager.pRoot.Data = []uint32{data[0]}
+	manager.pRoot.CopyData = []uint32{data[0]}
 	if graph := Abc_ManResubDivs0(manager); graph == nil || dec.Dec_GraphDeriveTruth(graph) != data[0] {
 		t.Fatal("divisor search did not return a matching one-node graph")
 	}
