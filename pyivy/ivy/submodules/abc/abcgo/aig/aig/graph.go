@@ -186,7 +186,7 @@ func (g *Graph) AddOutput(driver Edge) Edge {
 		driver = g.outputDriver(driver)
 	}
 	e := Edge(len(g.nodes)) << 1
-	n := Node{Kind: Output, Fanins: [2]Edge{driver, InvalidEdge}, Level: g.node(driver).Level, Phase: Aig_ObjPhaseReal(g, driver), Refs: 1}
+	n := Node{Kind: Output, Fanins: [2]Edge{driver, InvalidEdge}, Level: g.node(driver).Level, Phase: Aig_ObjPhaseReal(g, driver)}
 	g.nodes = append(g.nodes, n)
 	g.outputs = append(g.outputs, e)
 	g.node(driver).Refs++
@@ -353,7 +353,10 @@ func (g *Graph) Check() error {
 		if !g.valid(e) {
 			return fmt.Errorf("aig: invalid output")
 		}
-		refs[e.NodeID()]++
+		if g.node(e).Kind != Output {
+			// Legacy raw output edges represent an implicit CO consumer.
+			refs[e.NodeID()]++
+		}
 	}
 	for id, n := range g.nodes {
 		if n.Refs != refs[id] {

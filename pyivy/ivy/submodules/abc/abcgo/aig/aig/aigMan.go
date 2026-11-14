@@ -133,7 +133,9 @@ func (p *Graph) recountReferences() {
 		}
 	}
 	for _, e := range p.outputs {
-		p.node(e).Refs++
+		if p.node(e).Kind != Output {
+			p.node(e).Refs++
+		}
 	}
 }
 func Aig_ManAntiCleanup(p *Graph) int32 {

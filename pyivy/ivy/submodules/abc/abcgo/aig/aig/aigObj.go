@@ -89,6 +89,13 @@ func Aig_ObjDelete(p *Graph, e Edge) {
 	if n.Kind == Input || n.Kind == Constant {
 		panic("aig: cannot delete terminal directly")
 	}
+	if n.Kind == Output {
+		for _, out := range p.outputs {
+			if out.NodeID() == e.NodeID() {
+				panic("aig: use output deletion for an attached CO")
+			}
+		}
+	}
 	if n.Kind == And || n.Kind == ExclusiveOr {
 		table := p.nodeTable(n.Kind)
 		if table[tableKey(n)] == e {
@@ -137,10 +144,11 @@ func Aig_ObjDeletePo(p *Graph, e Edge) {
 		panic("aig: output not found")
 	}
 	p.outputs = append(p.outputs[:index], p.outputs[index+1:]...)
-	p.node(e).Refs--
 	if p.node(e).Kind == Output {
 		Aig_ObjDisconnect(p, e)
 		Aig_ObjDelete(p, e)
+	} else {
+		p.node(e).Refs--
 	}
 	p.refreshFanouts()
 }

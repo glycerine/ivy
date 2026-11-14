@@ -383,17 +383,8 @@ func Aig_ObjSetLevel(p *Graph, e Edge, l int32) int32 {
 }
 func Aig_ObjClean(p *Graph, e Edge) { *p.node(e) = Node{} }
 func Aig_ObjFanout0(p *Graph, e Edge) Edge {
-	for id, n := range p.nodes {
-		if p.deleted[id] {
-			continue
-		}
-		for _, x := range nodeFanins(n) {
-			if x.NodeID() == e.NodeID() {
-				return Edge(id) << 1
-			}
-		}
-	}
-	return InvalidEdge
+	first := Aig_ObjFanout0Int(p, int32(e.NodeID()))
+	return Aig_ManObj(p, first>>1)
 }
 func Aig_ObjEquiv(p *Graph, e Edge) Edge {
 	if x, ok := p.equivs[e.NodeID()]; ok {

@@ -59,7 +59,9 @@ func Aig_ManResetRefs(p *Graph) {
 		}
 	}
 	for _, e := range p.outputs {
-		p.node(e).Refs++
+		if p.node(e).Kind != Output {
+			p.node(e).Refs++
+		}
 	}
 }
 func Aig_ManCleanMarkA(p *Graph) {
