@@ -21,6 +21,12 @@ func Gia_ManDupNormalize(src *Gia_Man_t, hash int32) *Gia_Man_t {
 	Gia_ManFillValue(src)
 	dst := Gia_ManStart(src.nObjs)
 	dst.CopyIdentityFrom(src)
+	// Without hashing, retain simple-mode ANDs with repeated fanins. In
+	// particular x & !x must remain an AND, not the buffer C mistakes it for.
+	// Hashed copies instead simplify these nodes through Gia_ManHashAnd.
+	if hash == 0 {
+		dst.fGiaSimple = src.fGiaSimple
+	}
 	src.pObjs[0].Value = 0
 	if src.PMuxes != nil {
 		dst.EnableMuxes()

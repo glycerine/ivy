@@ -2570,3 +2570,31 @@ the existing native choice-miter test expects real XOR/MUX nodes to turn into
 stored-fanin ANDs to match C; its green result is not Boolean-correctness
 evidence. Check the intended source preconditions and callers before treating
 such a compatibility test as a correctness contract.
+
+Continued object/link/append review into network.go, levels.go, references.go,
+normalize.go and the dynamic/static fanout infrastructure against gia.h,
+giaUtil.c, giaTim.c and giaFanout.c. These families are not yet closed.
+The existing opposite-phase repeated-fanin correction in Gia_ObjIsBuf is
+necessary: simple-mode x & !x is false, not a buffer. A new red normalization
+regression exposed a consequence that remained unfixed: DupNormalize creates
+a manager without simple mode and panics when appending that legitimate AND.
+Without hashing it now retains the source simple-mode flag, matching the
+other Go duplicate entry points. With hashing the destination stays in normal
+mode and HashAnd simplifies the repeated pins. This intentionally preserves
+Boolean correctness beyond C's buffer misclassification, rather than copying
+that upstream error. No alternative normalization algorithm was introduced.
+
+The regression exercises all four repeated-input polarities with/without
+hashing, interleaved CI/CO ordering, and every two-input assignment (32 rows).
+Before the repair, hash0/signs1 panicked in AppendAnd; all cases pass after it.
+The full uncached GIA race suite passes in 15.731s, and direct normalization
+consumers base/wlc and map/if pass uncached. Logs:
+`/tmp/abcgo-gia-normalize-simple-red.log`,
+`/tmp/abcgo-gia-normalize-simple-race.log`, and
+`/tmp/abcgo-gia-normalize-consumers.log`.
+
+Next checks include dynamic fanout insertion/removal with repeated pins and
+special gates: the source's two-slot edge encoding cannot represent a MUX
+control edge, and AddFanout chooses the first matching slot for repeated
+fanins. Establish supported caller domains before changing that structure.
+Original package audit completion remains 2/131.
