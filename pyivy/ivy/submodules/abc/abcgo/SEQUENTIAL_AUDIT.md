@@ -3792,3 +3792,48 @@ mutation and other GIA duplication families still need review; original
 package completion remains 2/131 and the sequential audit stays active.
 Full uncached race tests pass for GIA (86.846s) and its BMC caller (25.693s),
 recorded in `/tmp/abcgo-input-dual-race.log`.
+
+Randomized CI-edge mutation review: compared Gia_ManDupPiPerm directly with
+its giaDup.c experiment and the &permute command caller. It is not a shared PI
+bijection: each copied gate edge gets an independent draw, the eligibility
+range includes constants and fanins simplified to CIs, and direct CO edges
+are not randomized. Both draws are consumed for every ordinary AND, even
+when neither copied edge is eligible. The source resets its RNG on entry and
+includes register-output CIs in that range. Preserve these counterintuitive
+source choices rather than replacing them with a different permutation.
+
+New independent truth tables and compiled original C agree for 100 cases and
+1,546 input/state rows. Thirty-two phase combinations and zero/two/four
+registers exercise interleaved COs, duplicate ANDs, copied internal fanins,
+hashing to a CI/constant, and constant resampling. Comparisons include exact
+object counts, complete outputs and the next RNG word. Tests perturb caller
+RNG state before mutation and require unchanged identity/interface, stopped
+hashing and no dangling logic. Fixed source goldens remain available without
+a C compiler, including the transformation of a constant-zero AND into a
+nonconstant function and untouched direct CI outputs.
+
+Separate independent Go checks cover all eight polarity variants of the
+existing logical-pin XOR/MUX/buffer extension (128 rows) and its exact draw
+count. They do not claim native C supports real gates in this AND-only
+experiment. A no-CI physical buffer/opposite-phase AND case checks the existing
+Go zero-CI fallback and correct copying of literals collapsed by earlier gates;
+C would divide by zero for such internal gates. This review introduces no new
+extension. No correctness defect was found in the mutation routine.
+
+Compactness: combine copied-literal lookup into the local randomize helper,
+removing a per-loop read closure and nested read wrappers without changing
+draw order or gate construction. Initial focused tests pass in 1.810s; expanded
+independent tables pass in 1.817s; final compact-helper/no-CI coverage passes in
+1.784s. Logs are `/tmp/abcgo-random-mutation-focused.log`,
+`/tmp/abcgo-random-mutation-final-focused.log`, and
+`/tmp/abcgo-random-mutation-compact-focused.log`.
+
+Full uncached race tests pass for GIA (90.558s) and its base/abci caller
+(28.710s), recorded in `/tmp/abcgo-random-mutation-race.log`. GIA vet passes
+(`/tmp/abcgo-random-mutation-vet.log`). Together with the preceding checkpoints,
+this closes the current dup_permutation.go family review, not GIA as a whole.
+A core follow-up identified during inspection remains: check raw MUX constant
+controls whose canonical control tag becomes zero, the same value used for
+no-MUX metadata. Add a red truth-table regression before any constructor
+repair. Other duplication/core families remain open; original completion is
+still 2/131 and the sequential audit stays active.

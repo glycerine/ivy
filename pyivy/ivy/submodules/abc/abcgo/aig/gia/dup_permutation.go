@@ -226,7 +226,8 @@ func Gia_ManDupPiPerm(src *Gia_Man_t) *Gia_Man_t {
 	for i := int32(0); i < count; i++ {
 		Gia_ManCi(src, i).Value = uint32(Gia_ManAppendCi(out))
 	}
-	randomize := func(lit int32) int32 {
+	randomize := func(sourceLit int32) int32 {
+		lit := Gia_ObjLitCopy(src, sourceLit)
 		if count == 0 {
 			return lit
 		}
@@ -241,17 +242,16 @@ func Gia_ManDupPiPerm(src *Gia_Man_t) *Gia_Man_t {
 			continue
 		}
 		a, b, c, kind := src.Gate(obj.id)
-		read := func(lit int32) int32 { return Gia_ObjLitCopy(src, lit) }
 		var lit int32
 		switch kind {
 		case 2:
-			lit = Gia_ManHashAnd(out, randomize(read(a)), randomize(read(b)))
+			lit = Gia_ManHashAnd(out, randomize(a), randomize(b))
 		case 3:
-			lit = Gia_ManHashXor(out, randomize(read(a)), randomize(read(b)))
+			lit = Gia_ManHashXor(out, randomize(a), randomize(b))
 		case 4:
-			lit = Gia_ManHashMux(out, randomize(read(a)), randomize(read(b)), randomize(read(c)))
+			lit = Gia_ManHashMux(out, randomize(a), randomize(b), randomize(c))
 		case 5:
-			lit = randomize(read(a))
+			lit = randomize(a)
 		default:
 			panic("gia: invalid random mutation gate")
 		}
