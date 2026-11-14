@@ -36,6 +36,9 @@ func cec2SweepEquivalences(g *gia.Gia_Man_t, opts cec2SweepSettings) (*gia.Gia_M
 	gia.Gia_ManFillValue(g)
 	gia.Gia_ObjSetValue(gia.Gia_ManObj(g, 0), 0)
 	reduced := gia.Gia_ManStart(int32(n))
+	// Cec2_ManPerformSweeping always destroys pNew in its finalize block,
+	// including early miter exits and after producing the cleaned return graph.
+	defer gia.Gia_ManStop(reduced)
 	for i := int32(0); i < gia.Gia_ManCiNum(g); i++ {
 		id := gia.Gia_ManCiIdToId(g, i)
 		copies[id] = gia.Gia_ManAppendCi(reduced)

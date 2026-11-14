@@ -8,7 +8,7 @@ import (
 	"github.com/glycerine/abcgo/sat/glucose"
 )
 
-// cec3SweepSettings holds the controls used by Cec2_ManPerformSweeping.
+// cec3SweepSettings holds the controls used by Cec3_ManPerformSweeping.
 type cec3SweepSettings struct {
 	words, rounds, iterations int
 	conflictLimit             int64

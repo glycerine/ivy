@@ -210,6 +210,24 @@ indices (which C treats as assertion failures), and exhaustive combinations of
 SCORR/LCORR options and limits. Native XOR partitioning remains the known
 source-inherited semantic defect described above.
 
+The zero-round/zero-iteration CEC2/CEC3 case now checks the returned graph on
+every input assignment. CEC4 recycle tests exercise the SAT-variable threshold
+off/on boundary and the strict call-count comparison while confirming UNSAT
+proof queries ran. The CEC4 entry test also checks that an early miter witness
+leaves the caller's preexisting output pointer untouched. Overlapping clock
+domains cover the A~B then B~C class chain and verify normalization to A. A
+compiled-ABC oracle compares that chain and a complemented-phase chain,
+confirming that opposite-phase registers are not merged through the shared
+register. CEC2's private reduced manager is stopped on every return path,
+matching `Cec2_ManDestroy` in C.
+
+Still uncovered are constant-valued class transfer across overlapping
+partitions and CEC4 recycle boundary combinations where SAT or UNKNOWN
+precedes recycling. CEC2/CEC3 detailed conflict-limit status combinations and
+source diagnostic output also remain selective. CEC2/3/4 sweep code has no
+time-limit branch; timeout parity applies to the separate classic CEC sweep
+path documented above.
+
 The source circuit-SAT output solver checks that its entire counterexample
 store was consumed even when `fCheckMiter` stops after the first SAT output.
 With multiple SAT outputs, the original asserts on trailing records; the Go

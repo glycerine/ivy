@@ -18,6 +18,24 @@ func TestCec4EntryStoresZeroPatternMiterWitness(t *testing.T) {
 		t.Fatalf("witness %+v", cex)
 	}
 }
+
+func TestCec4EarlyMiterFailureLeavesOutputPointerUntouched(t *testing.T) {
+	g := gia.Gia_ManStart(8)
+	gia.Gia_ManAppendCi(g)
+	gia.Gia_ManAppendCo(g, 1)
+	sentinel := gia.Gia_ManStart(4)
+	out := sentinel
+	pars := Cec_ParFra_t{nWords: 1, nItersMax: 1, fCheckMiter: 1}
+	if status := Cec4_ManPerformSweeping(g, &pars, &out, 0); status != 0 {
+		t.Fatalf("status = %d", status)
+	}
+	if out != sentinel {
+		t.Fatal("early miter exit overwrote caller's output pointer")
+	}
+	if cex := g.SequentialCounterexample(); cex == nil || cex.IPo != 0 {
+		t.Fatalf("missing miter witness: %+v", cex)
+	}
+}
 func TestCec4EntryReturnsEquivalentReducedGraph(t *testing.T) {
 	g := gia.Gia_ManStart(10)
 	a, b := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)

@@ -78,3 +78,80 @@ func TestSequentialSynthesisEmptyClockDomainVector(t *testing.T) {
 		t.Fatal("empty vector should complete with empty classes")
 	}
 }
+
+func TestSequentialSynthesisTransfersClassesAcrossDomains(t *testing.T) {
+	g := gia.Gia_ManStart(16)
+	pi0, pi1 := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
+	ros := make([]int32, 4)
+	for i := range ros {
+		ros[i] = gia.Gia_ManAppendCi(g)
+	}
+	for _, lit := range []int32{pi0, pi0, pi1, pi1} {
+		gia.Gia_ManAppendCo(g, lit)
+	}
+	gia.Gia_ManSetRegNum(g, int32(len(ros)))
+	g.SetClockDomains([][]int32{{0, 1}, {2, 3}})
+	var pars Cec_ParSeq_t
+	Cec_SeqSynthesisSetDefaultParams(&pars)
+	if status := Cec_SequentialSynthesisPart(g, &pars); status != 1 {
+		t.Fatalf("status = %d", status)
+	}
+	for _, pair := range [][2]int{{0, 1}, {2, 3}} {
+		repr := gia.Gia_ObjRepr(g, ros[pair[1]]>>1)
+		if repr != ros[pair[0]]>>1 {
+			t.Fatalf("domain %v representative = %d, want %d", pair, repr, ros[pair[0]]>>1)
+		}
+	}
+}
+
+func TestSequentialSynthesisNormalizesClassesAcrossOverlappingDomains(t *testing.T) {
+	g := gia.Gia_ManStart(16)
+	input := gia.Gia_ManAppendCi(g)
+	ros := make([]int32, 3)
+	for i := range ros {
+		ros[i] = gia.Gia_ManAppendCi(g)
+	}
+	for range ros {
+		gia.Gia_ManAppendCo(g, input)
+	}
+	gia.Gia_ManSetRegNum(g, int32(len(ros)))
+	// The second partition shares register 1 with the first. Its new class
+	// should normalize through register 1 to register 0.
+	g.SetClockDomains([][]int32{{0, 1}, {1, 2}})
+	var pars Cec_ParSeq_t
+	Cec_SeqSynthesisSetDefaultParams(&pars)
+	if status := Cec_SequentialSynthesisPart(g, &pars); status != 1 {
+		t.Fatalf("status = %d", status)
+	}
+	if got := gia.Gia_ObjRepr(g, ros[1]>>1); got != ros[0]>>1 {
+		t.Fatalf("shared register representative = %d, want %d", got, ros[0]>>1)
+	}
+	if got := gia.Gia_ObjRepr(g, ros[2]>>1); got != ros[0]>>1 {
+		t.Fatalf("later-domain class did not normalize through shared register: got %d want %d", got, ros[0]>>1)
+	}
+}
+
+func TestSequentialSynthesisDoesNotMergeComplementaryClassesAcrossDomains(t *testing.T) {
+	g := gia.Gia_ManStart(20)
+	x, y := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
+	ros := make([]int32, 3)
+	for i := range ros {
+		ros[i] = gia.Gia_ManAppendCi(g)
+	}
+	f := gia.Gia_ManAppendAnd(g, x, y)
+	for _, lit := range []int32{f, f ^ 1, f} {
+		gia.Gia_ManAppendCo(g, lit)
+	}
+	gia.Gia_ManSetRegNum(g, int32(len(ros)))
+	g.SetClockDomains([][]int32{{0, 1}, {1, 2}})
+	var pars Cec_ParSeq_t
+	Cec_SeqSynthesisSetDefaultParams(&pars)
+	if status := Cec_SequentialSynthesisPart(g, &pars); status != 1 {
+		t.Fatalf("status = %d", status)
+	}
+	for i, ro := range ros {
+		if repr := gia.Gia_ObjRepr(g, ro>>1); repr != gia.GIA_VOID {
+			t.Fatalf("register %d in phase-separated chain got representative %d", i, repr)
+		}
+	}
+}
