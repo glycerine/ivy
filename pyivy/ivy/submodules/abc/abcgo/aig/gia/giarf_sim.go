@@ -8,11 +8,11 @@ import (
 
 // Hcd_Man_t owns the combinational equivalence simulation workspace.
 type Hcd_Man_t struct {
-	pGia                                        *Gia_Man_t
-	nBTLimit, fVerbose                          int32
-	pSimInfo                                    []uint32
-	vSimInfo, vSimPres                          *Vec_Ptr_t
-	vClassOld, vClassNew, vClassTemp, vRefinedC *Vec_Int_t
+	pGia                            *Gia_Man_t
+	nBTLimit, fVerbose              int32
+	pSimInfo                        []uint32
+	vSimInfo, vSimPres              *Vec_Ptr_t
+	vClassOld, vClassNew, vRefinedC *Vec_Int_t
 }
 
 func Hcd_ObjSim(p *Hcd_Man_t, id int32) uint32                  { return p.pSimInfo[id] }
@@ -20,7 +20,7 @@ func Hcd_ObjSimP(p *Hcd_Man_t, id int32) []uint32               { return p.pSimI
 func Hcd_ObjSetSim(p *Hcd_Man_t, id int32, value uint32) uint32 { p.pSimInfo[id] = value; return value }
 
 func Gia_ManEquivStart(g *Gia_Man_t, limit, verbose int32) *Hcd_Man_t {
-	p := &Hcd_Man_t{pGia: g, nBTLimit: limit, fVerbose: verbose, pSimInfo: make([]uint32, g.nObjs), vClassOld: Vec_IntAlloc(100), vClassNew: Vec_IntAlloc(100), vClassTemp: Vec_IntAlloc(100), vRefinedC: Vec_IntAlloc(100), vSimInfo: Vec_PtrAlloc(int(Gia_ManCiNum(g)))}
+	p := &Hcd_Man_t{pGia: g, nBTLimit: limit, fVerbose: verbose, pSimInfo: make([]uint32, g.nObjs), vClassOld: Vec_IntAlloc(100), vClassNew: Vec_IntAlloc(100), vRefinedC: Vec_IntAlloc(100), vSimInfo: Vec_PtrAlloc(int(Gia_ManCiNum(g)))}
 	for i := int32(0); i < Gia_ManCiNum(g); i++ {
 		Vec_PtrPush(p.vSimInfo, Hcd_ObjSimP(p, Gia_ManCi(g, i).id))
 	}
@@ -60,7 +60,9 @@ func Hcd_ManClassClassRemoveOne(p *Hcd_Man_t, id int32) int32 {
 	if head == GIA_VOID {
 		head = id
 	}
-	old, newClass := Vec_IntAlloc(8), Vec_IntAlloc(1)
+	old, newClass := p.vClassOld, p.vClassNew
+	Vec_IntClear(old)
+	Vec_IntClear(newClass)
 	for member := head; member != 0; member = Gia_ObjNext(g, member) {
 		if member == id {
 			Vec_IntPush(newClass, member)
@@ -73,7 +75,9 @@ func Hcd_ManClassClassRemoveOne(p *Hcd_Man_t, id int32) int32 {
 	return 1
 }
 func Hcd_ManClassRefineOne(p *Hcd_Man_t, head int32) int32 {
-	old, newClass := Vec_IntAlloc(8), Vec_IntAlloc(8)
+	old, newClass := p.vClassOld, p.vClassNew
+	Vec_IntClear(old)
+	Vec_IntClear(newClass)
 	Vec_IntPush(old, head)
 	for id := Gia_ObjNext(p.pGia, head); id != 0; id = Gia_ObjNext(p.pGia, id) {
 		if Hcd_ManCompareEqual(Hcd_ObjSim(p, head), Hcd_ObjSim(p, id)) != 0 {
@@ -167,20 +171,41 @@ func Hcd_ManSimulationInit(p *Hcd_Man_t) {
 		Hcd_ObjSetSim(p, Gia_ManCi(p.pGia, i).id, Gia_ManRandom(0)<<1)
 	}
 }
+
+// The original simulator assumes ordinary ANDs. Read logical fanins so real
+// gates and buffers retain their functions in both simulation entry points.
+func giarfSimulateGate(g *Gia_Man_t, obj *Gia_Obj_t, read func(int32) uint32) uint32 {
+	a, b, c, kind := g.Gate(obj.id)
+	lit := func(literal int32) uint32 {
+		value := read(literal >> 1)
+		if literal&1 != 0 {
+			value = ^value
+		}
+		return value
+	}
+	switch kind {
+	case 2:
+		return lit(a) & lit(b)
+	case 3:
+		return lit(a) ^ lit(b)
+	case 4:
+		control := lit(a)
+		return control&lit(b) | ^control&lit(c)
+	case 5:
+		return lit(a)
+	default:
+		panic("gia: invalid internal simulation node")
+	}
+}
+
 func Hcd_ManSimulateSimple(p *Hcd_Man_t) {
+	read := func(id int32) uint32 { return Hcd_ObjSim(p, id) }
 	for id := int32(1); id < p.pGia.nObjs; id++ {
 		obj := p.pGia.pObjs[id]
 		if Gia_ObjIsAnd(obj) == 0 {
 			continue
 		}
-		a, b := Hcd_ObjSim(p, Gia_ObjFaninId0(obj, id)), Hcd_ObjSim(p, Gia_ObjFaninId1(obj, id))
-		if obj.fCompl0 != 0 {
-			a = ^a
-		}
-		if obj.fCompl1 != 0 {
-			b = ^b
-		}
-		Hcd_ObjSetSim(p, id, a&b)
+		Hcd_ObjSetSim(p, id, giarfSimulateGate(p.pGia, obj, read))
 	}
 }
 func Gia_Resimulate_rec(p *Hcd_Man_t, id int32) uint32 {
@@ -196,14 +221,8 @@ func Gia_Resimulate_rec(p *Hcd_Man_t, id int32) uint32 {
 	if Gia_ObjIsAnd(obj) == 0 {
 		panic("gia: invalid resimulation node")
 	}
-	a, b := Gia_Resimulate_rec(p, Gia_ObjFaninId0(obj, id)), Gia_Resimulate_rec(p, Gia_ObjFaninId1(obj, id))
-	if obj.fCompl0 != 0 {
-		a = ^a
-	}
-	if obj.fCompl1 != 0 {
-		b = ^b
-	}
-	return Hcd_ObjSetSim(p, id, a&b)
+	value := giarfSimulateGate(g, obj, func(fanin int32) uint32 { return Gia_Resimulate_rec(p, fanin) })
+	return Hcd_ObjSetSim(p, id, value)
 }
 func Gia_ResimulateAndRefine(p *Hcd_Man_t, head int32) {
 	Gia_ManIncrementTravId(p.pGia)

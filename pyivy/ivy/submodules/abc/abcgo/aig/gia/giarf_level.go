@@ -46,7 +46,22 @@ func Gia_GenerateReducedLevel(p *Gia_Man_t, level int32, roots **Vec_Ptr_t) *Gia
 				continue
 			}
 		}
-		obj.Value = uint32(Gia_ManHashAnd(result, Gia_ObjFanin0Copy(obj), Gia_ObjFanin1Copy(obj)))
+		a, b, c, kind := p.Gate(id)
+		copyLit := func(lit int32) int32 { return Gia_ObjLitCopy(p, lit) }
+		var literal int32
+		switch kind {
+		case 2:
+			literal = Gia_ManHashAnd(result, copyLit(a), copyLit(b))
+		case 3:
+			literal = Gia_ManHashXor(result, copyLit(a), copyLit(b))
+		case 4:
+			literal = Gia_ManHashMux(result, copyLit(a), copyLit(b), copyLit(c))
+		case 5:
+			literal = copyLit(a)
+		default:
+			panic("gia: invalid reduced-level gate")
+		}
+		obj.Value = uint32(literal)
 	}
 	Gia_ManCreateRefs(result)
 	Gia_ManFillValue(result)

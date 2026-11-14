@@ -2833,3 +2833,52 @@ suite passes in 17.369s and vet passes; final logs are
 Next review includes Giarf simulation/refinement, reduced-level copying and
 their typed-gate assumptions, followed by remaining equivalence metadata and
 transfer families. Original package audit completion remains 2/131.
+
+Giarf typed-gate review found a stronger failure than an inaccurate simulation:
+both simulation entry points and reduced-level copying treated real XOR/MUX
+nodes as ANDs. The red end-to-end case put real XOR and ordinary AND on the
+same inputs; the driver reported two successful proofs, then returned true
+for both outputs at input [true, false]. The AND output should be false. Its SAT
+queries had validated the wrong reduced functions, so proof-status filtering
+alone could not prevent the incorrect rewrite. The same red file also catches
+incorrect recursive/full-word simulation and a wrong MUX root in the reduced
+graph (`/tmp/abcgo-gia-giarf-typed-red.log`).
+
+Both simulation routines now share the same logical-fanin word evaluator:
+AND, XOR, bitwise MUX selection and buffer forwarding preserve phases and
+control dependencies. The reduced-level builder dispatches on gate kind and
+uses the already-ported source HashXor/HashMux AND expansions, leaving the
+SAT graph in ordinary-AND form. Level filtering, proof-gated temporary
+substitution, root collection and source Value mappings remain unchanged.
+The typed simulation matrix checks 3,072 node-bit results across two rounds,
+all eight input phases and both simulation modes; reduced truth and the full
+equivalence/choice path add analytical checks for both SAT backends.
+
+A fresh standalone giaGiarf.c fixture verifies the ordinary-AND domain. It
+matches all seven simulation words, split counts, representative/next tables
+and head/tail removal results in 32 repeated-round snapshots. No simulation
+or class algorithms are stubbed, and no ABC object archive is required. The
+fixture assigns CI words explicitly; it does not claim equivalence with C's
+Hcd_ManSimulationInit, which writes CI ordinal indexes rather than object IDs.
+Go already uses actual CI object IDs and zero-initializes constant storage.
+
+The refinement/removal routines now reuse the manager's existing old/new
+scratch vectors, matching C's scratch lifetime, rather than allocating two
+new vectors per split/removal. Recursive splitting completes its writes before
+the next recursive split reuses the storage; the native snapshots exercise
+that recursion and reuse. Removed the unused vClassTemp field/allocation;
+no algorithm reads it. Focused typed/native tests pass in 0.185s. The full
+uncached GIA race suite passes in 17.391s and vet passes, with logs
+`/tmp/abcgo-gia-giarf-typed-final-race.log` and
+`/tmp/abcgo-gia-giarf-typed-final-vet.log`. All 133 module packages and their
+tests also compile after the private HCD record change
+(`/tmp/abcgo-gia-giarf-layout-module-build.log`, exit zero). This compile gate
+does not rerun unrelated test bodies.
+
+Remaining review includes broader class rehashing/pattern-packing boundaries,
+SAT-manager reuse, equivalence metadata/transfers and the other GIA algorithm
+families. Original completion remains 2/131; this does not close the GIA audit.
+In particular, giarfSolver currently reconstructs the CEC manager per query
+and adds a synthetic AND for two assumptions, although the current CEC core
+already exposes CheckConjunction. Check its incremental-query contract before
+reusing one manager per reduced level, as C does.
