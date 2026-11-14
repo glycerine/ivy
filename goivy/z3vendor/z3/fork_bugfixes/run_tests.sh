@@ -10,6 +10,7 @@
 #   qe_rec_free_boolean      segmentation fault
 #   qe_rec_real_disjunction  unsound result (the existential becomes false)
 #   pb_strengthening_proof   free(): invalid pointer / abort
+#   bv_smul_noovfl_fold      wrong folds (#xa*#x3 false, #b1*#b1 true)
 #
 # The C++ unit test for the same fixes is src/test/fork_bugfixes.cpp
 # (run: test-z3 fork_bugfixes).

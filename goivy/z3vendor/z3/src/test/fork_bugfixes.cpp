@@ -14,6 +14,9 @@ Abstract:
       qe_rec     - segmentation fault (free Boolean constant)
       qe_rec_lra - unsound result (exists ... false)
       pb_proof   - free(): invalid pointer at context destruction
+      bvsmul     - bvsmul_noovfl folded over unsigned values (#xa * #x3
+                   gave false) and both signed predicates folded a width-1
+                   operand #b1 (that is, -1) to true
 
     Run with:  test-z3 fork_bugfixes
 
@@ -225,6 +228,27 @@ namespace {
         ENSURE(contains(proof, "(th-lemma"));
         std::cout << "fork_bugfixes: pb_strengthening_proof ok\n";
     }
+
+    // Backport of upstream mk_bvsmul_no_overflow (z3 4.17.0), which also
+    // replaces mk_bvsmul_no_underflow: constant signed products fold by
+    // magnitude and sign, and the "operand is 1" shortcut is skipped at
+    // width 1.
+    void test_bvsmul_noovfl_fold() {
+        check("bv_smul_noovfl_fold",
+              "(simplify (bvsmul_noovfl #b1 #b1))\n"
+              "(simplify (bvsmul_noovfl #b1 #b0))\n"
+              "(simplify (bvsmul_noovfl #xa #x3))\n"
+              "(simplify (bvsmul_noovfl #xa #xa))\n"
+              "(simplify (bvsmul_noovfl #x3 #x3))\n"
+              "(simplify (bvsmul_noovfl #x7 #x2))\n"
+              "(simplify (bvsmul_noovfl #x8 #xf))\n"
+              "(simplify (bvsmul_noudfl #xa #x3))\n"
+              "(simplify (bvsmul_noudfl #b1 #b1))\n"
+              "(simplify (bvsmul_noudfl #x8 #x1))\n"
+              "(simplify (bvsmul_noudfl #xc #x2))\n"
+              "(simplify (bvsmul_noudfl #xc #x3))\n",
+              "false\ntrue\ntrue\nfalse\nfalse\nfalse\nfalse\nfalse\ntrue\ntrue\ntrue\nfalse\n");
+    }
 }
 
 void tst_fork_bugfixes() {
@@ -233,4 +257,5 @@ void tst_fork_bugfixes() {
     test_qe_rec_free_boolean();
     test_qe_rec_real_disjunction();
     test_pb_strengthening_proof();
+    test_bvsmul_noovfl_fold();
 }

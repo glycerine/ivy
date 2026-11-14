@@ -7,6 +7,7 @@ the g3 fork's `src/` tree:
 
 * g3 commit c3c0016bd: relevancy and pareto backports
 * g3 commit d91cef3ad: qsat/qe and theory_pb fixes
+* g3 commit 0c41ffbae: bvsmul_noovfl/noudfl folding backport
 
 They are copied here unchanged.
 
@@ -16,6 +17,7 @@ They are copied here unchanged.
 | 2 | Pareto optimization never terminates | backport of upstream e18702330 (#1699) | `opt/opt_context.cpp` |
 | 3 | `qe_rec` segfaults on formulas with free constants and can return unsound results | backport of upstream 1ce0d7512 / 8ad939a10 (#2974, #2990) | `qe/qsat.cpp`, `qe/qe.cpp` |
 | 4 | `free(): invalid pointer` abort in theory_pb with proofs on | local fix (upstream rewrote this code in 4.8.5) | `smt/theory_pb.cpp` |
+| 5 | `bvsmul_noovfl`/`bvsmul_noudfl` fold constant operands to the wrong value | backport of upstream (z3 4.17.0) `mk_bvsmul_no_overflow` | `ast/rewriter/bv_rewriter.{h,cpp}` |
 
 Every changed site has a comment that starts with "backport of upstream",
 "BACKPORT upstream", or "FORK FIX".
@@ -63,6 +65,7 @@ fork_bugfixes: pareto_model_completion ok
 fork_bugfixes: qe_rec_free_boolean ok
 fork_bugfixes: qe_rec_real_disjunction ok
 fork_bugfixes: pb_strengthening_proof ok
+fork_bugfixes: bv_smul_noovfl_fold ok
 PASS
 ```
 
@@ -81,8 +84,12 @@ PASS
   | theory_pb | `free(): invalid pointer` |
   | relevancy | `relevancy_update_scopes FAILED` |
 
-* **Unpatched binary.** All five `run_tests.sh` vectors fail on an unpatched
-  4.7.1 binary.
+* **Unpatched binary.** All five `run_tests.sh` vectors for fixes 1-4 fail
+  on an unpatched 4.7.1 binary.
+* **Fix 5.** I built a scratch copy of this tree from the existing
+  `native.build`. `test-z3 fork_bugfixes` and `run_tests.sh` both pass
+  (6 of 6). The previous `native.build/z3` fails `bv_smul_noovfl_fold`:
+  it prints `true` for `#b1 * #b1` and `false` for `#xa * #x3`.
 
 ---
 
@@ -216,6 +223,37 @@ other lemma sites in the file already do. When proofs are off, pass
 
 ---
 
+## 5. `bvsmul_noovfl` / `bvsmul_noudfl` constant folding
+
+**Upstream:** the current `bv_rewriter::mk_bvsmul_no_overflow` (checked
+against z3 4.17.0). It takes an `is_overflow` flag and replaces
+`mk_bvsmul_no_underflow`. The new code is upstream's, unchanged.
+
+**Symptom.** `(simplify (bvsmul_noovfl #xa #x3))` gives `false`. Signed,
+that is -6 * 3 = -18. That is an underflow at width 4, not an overflow, so
+z3 4.17.0 gives `true`. At width 1, `(bvsmul_noovfl #b1 #b1)` and
+`(bvsmul_noudfl #b1 #b1)` both give `true`, although `#b1` is -1 and
+(-1) * (-1) = 1 overflows. The vector is
+`test_vectors/bv_smul_noovfl_fold.smt2`, with 12 cases.
+
+**Cause.**
+* `mk_bvsmul_no_overflow` multiplies the numerals' unsigned values and
+  compares the product with 2^(w-1). This ignores the signs.
+* Both functions fold "an operand is 1" to `true`. At width 1, bit pattern
+  1 is -1, so that shortcut is wrong there.
+
+**Fix.**
+* Replace the overflow function with upstream's version, and route
+  `OP_BSMUL_NO_UDFL` to it with `is_overflow == false`.
+  * Each operand becomes a magnitude plus a sign flag.
+  * Overflow holds when the signs are equal and the product is at least
+    2^(w-1). Underflow holds when the signs differ and the product is more
+    than 2^(w-1).
+* The "operand is 1" shortcut is skipped when `bv_sz == 1`.
+* Delete `mk_bvsmul_no_underflow` and its TRACE.
+
+---
+
 ## Known 4.7.1 bugs that are not fixed here
 
 The g3 fork documents these only in comments; no code changed for them.
@@ -226,8 +264,6 @@ They are listed so their behaviour isn't mistaken for a regression.
   `maximize`/`minimize` is verified against the wrong term, and maxres
   reports the stale initial cost. Upstream fixed this; z3 4.17.0 prints the
   optimum.
-* **`ast/rewriter/bv_rewriter.cpp` `mk_bvsmul_no_overflow`.** It doesn't
-  fold constant signed products; z3 4.17.0 does.
 * **`ast/rewriter/rewriter_def.h`.** Model evaluation of mutually recursive
   `define-fun-rec` predicates does not terminate (for example, `get-value`
   of `(even 0)`). Upstream replaced this with its recfun theory.
