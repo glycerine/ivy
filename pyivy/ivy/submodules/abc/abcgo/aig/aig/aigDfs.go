@@ -173,13 +173,14 @@ func Aig_ManDfsReverse(p *Graph) []Edge {
 }
 func Aig_ManDfsReverse_rec(p *Graph, e Edge, nodes *[]Edge) { *nodes = p.reverseDfs([]Edge{e}, *nodes) }
 func Aig_ManLevelize(p *Graph) [][]Edge {
-	var levels [][]Edge
+	maxLevel := int(Aig_ManLevelNum(p))
+	levels := make([][]Edge, maxLevel+1)
 	for id, n := range p.nodes {
-		if p.deleted[id] || n.Kind != And && n.Kind != ExclusiveOr {
+		if p.deleted[id] {
 			continue
 		}
-		for len(levels) <= n.Level {
-			levels = append(levels, nil)
+		if n.Level < 0 || n.Level > maxLevel {
+			panic("aig: object level exceeds manager level")
 		}
 		levels[n.Level] = append(levels[n.Level], Edge(id)<<1)
 	}
