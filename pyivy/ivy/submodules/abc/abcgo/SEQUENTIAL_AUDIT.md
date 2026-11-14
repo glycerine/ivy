@@ -1008,3 +1008,23 @@ A compiled fixture includes original aigFact.c and verifies collected order
 and final marks. The full AIG race suite is the checkpoint gate. Other
 factoring helpers, support-minimization representation/heuristic differences
 and the remaining AIG families are still under review.
+
+### Packed support-minimization truth tables
+
+Replaced the one-bool-per-assignment representation with C-style packed uint32
+tables and existing Kit truth primitives. The sixteen-variable boundary test
+passed before the refactor and afterward: it checks the exact cofactor list
+and reconstruction. Added direct packed-table checks for all 65,536
+assignments at that boundary, plus phase-aware AND/XOR/CO truth checks for
+two through six variables across the first word boundary. Existing random
+care-equivalence, native XOR and progressive-cofactor regressions still pass.
+
+Each sixteen-variable node table now occupies 2048 uint32 words (8 KiB),
+rather than 65,536 bools (64 KiB). One reusable cofactor buffer replaces
+per-accepted-variable allocations. Care construction, cofactor generation
+and equality checks use Kit, following the source implementation more
+closely. The regression-backed progressive update deliberately remains:
+independently legal cofactors in the original C can jointly change the
+function on its care set. Full AIG race tests pass. This compactness change
+does not close the remaining factoring-helper/source-state review or the
+overall AIG/package inventory audit.
