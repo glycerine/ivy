@@ -3066,3 +3066,22 @@ uncached GIA race tests (21.984s,
 tests compile (`/tmp/abcgo-gia-compact-reprs-module-build.log`); this compile
 gate does not run unrelated test bodies. Further GIA algorithm families and
 representative/name remapping still need audit. Completion remains 2/131.
+
+Representative/name remapping follow-up: reviewed the shared boundary used by
+normalization, marked duplication and CEC graph rebuilding. Added an independent
+connectivity-closure oracle over 2,500 object maps across four partitions,
+including constants, singletons, dropped class heads, collapsed objects and
+reordered IDs. Every destination representative and sorted next link matches;
+source metadata remains unchanged. Invalid map lengths/IDs and representative
+storage/order leave the destination storage and contents intact. Another 256
+input/output name-map combinations cover missing names, omitted entries and
+reordering; output-validation failure cannot partially install input names,
+and copied/exposed name storage is independent. These checks found no bug in
+the existing remapping implementation. The MiniLUT/MiniAIG name mapper was
+also compared by inspection with giaMini.c; broader polarity-specific coverage
+of that mapper is still pending.
+
+Focused remapping tests pass. The full uncached GIA race suite passes in
+23.667s (`/tmp/abcgo-identity-mini-review-race.log`) and GIA vet passes
+(`/tmp/abcgo-identity-mini-review-vet.log`). GIA remains under audit; original
+completion is still 2/131.
