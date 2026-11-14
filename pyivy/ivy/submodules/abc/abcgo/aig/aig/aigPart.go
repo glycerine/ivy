@@ -287,7 +287,9 @@ func Aig_ManPartitionSmartFindPart(supports, parts [][]int32, bitmaps [][]uint32
 		repulse := int32(1)
 		if len(support) >= 100 {
 			difference := len(support) - 100
-			if difference > 1 {
+			if difference < 2 {
+				repulse += int32(difference)
+			} else {
 				repulse += int32(bits.Len(uint(difference - 1)))
 			}
 		}

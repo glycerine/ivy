@@ -2035,3 +2035,58 @@ This closes the reopened whole-support propagation, register-support and
 component-caller contracts. Other partition-driver and remaining file/function
 inventory still need final reconciliation. The audit remains on aig/aig,
 with 1/131 original packages completed.
+
+### Smart partition scoring and driver boundary review
+
+Read the bitmap helpers, attraction/repulsion selection, smart output/register
+wrappers, support-size ordering, compaction and naive grouping against
+`aigPart.c`. A new red regression found the size-101 score was wrong:
+C's Abc_Base2Log(1) returns 1, so repulsion is 2; Go treated that argument as
+zero, making repulsion 1. With one common variable out of ten, Go accepted a
+partition at score 100 while C rejects it at 50. Corrected the zero/one special
+case without changing the remaining scoring formula.
+
+A native fixture executes the real bitmap/scoring helpers for 8,190 cases:
+empty supports, full containment, disjoint/partial overlaps, word boundaries,
+size 99/100/101/102 and larger supports, one/two candidates, support caps,
+negative/default limits, and exact score-75 acceptance. Another fixture executes
+complete C smart partitioning on 25 graphs around size 101 with disabled,
+default and explicit compaction limits. Selected partitions and their support
+contents match exactly for these cases; output coverage and Go support-vector
+lengths are independently checked.
+
+The original compactor shrinks the parts vector twice, leaving extra tail rows
+in its returned support vector. The C fixture observes the valid prefix of
+support rows just as the original clients do. Go retains the earlier repair
+that keeps both returned vectors aligned, as well as the pending-small-before-
+large coverage repair. No attempt was made to reproduce those source container
+bugs. Naive grouping's quotient/remainder calculation matches the Go grouping;
+existing miter tests exercise its output maps and positive-size domain.
+
+Full AIG/FRA/ABCI race suites pass in 66.038s/12.146s/29.273s
+(`/tmp/abcgo-partition-scoring-review.log`). The subsequently expanded scalar
+case matrix and both native fixtures pass focused race checks in 5.530s
+(`/tmp/abcgo-partition-scoring-final.log`). This closes the current scoring and
+these smart-driver boundary checks, not every partition-copy contract.
+
+### Remaining typed-XOR partition-copy defect
+
+Source inspection and independent probes expose another real correctness issue
+in the existing copy compatibility path. A partitioned miter comparing native
+XOR(a,b) with AND(a,b) returns truth zero in both smart and naive modes, instead
+of the correct truth nibble 14. The existing TestDupPartNativeXorMatchesCAndCopy
+explicitly expects XOR to turn into AND, so its green result is not correctness
+evidence. A compiled original-C probe confirms the upstream limitation: with
+fCatchExor=0 (expanded AND representation) its miter is truth 14; with
+fCatchExor=1 (native EXOR node) it incorrectly becomes truth zero in both modes.
+Logs: `/tmp/abcgo-partition-xor-probe.log` and
+`/tmp/abcgo-partition-xor-source-probe.log`.
+
+Reopen the typed-XOR copy path next. First add a red functional miter/clone
+regression; preserve the AND-only fragment representation expected by the
+partition backends while expanding native XORs with their actual Boolean
+semantics. Keep the original-C bug explicitly demonstrated rather than
+silently claiming source parity proves correctness. Review reverse copy maps
+for any expansion nodes and cover direct/inverse duplication, whole-part copies,
+partitioned miters and FRA/choice transfer before closing that repair. The
+package audit remains active on aig/aig, completed count 1/131.

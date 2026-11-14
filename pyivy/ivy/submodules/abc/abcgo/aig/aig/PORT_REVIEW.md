@@ -306,3 +306,17 @@ cleanup. Wide shared-cone/row-ownership checks pass. Full AIG race checks and
 FRA/SSW/ABCI caller checks pass; latest focused native/race checks also cover
 the final shared helper. See SEQUENTIAL_AUDIT.md for the precise validation
 order and remaining partition/file inventory scope.
+
+Smart partition scoring checkpoint: a red regression exposed the incorrect
+Base2Log(1) special case at 101 support variables. Native comparison now matches
+8,190 scalar choices and 25 complete smart-partition boundary cases. Full
+AIG/FRA/ABCI race checks pass, followed by the expanded focused native/race
+checks. Original compaction container bugs remain safely repaired in Go.
+
+Open correctness defect: the source-compatibility partition copier turns native
+XOR into AND. Independent Go and original-C probes show a false-equivalence
+miter for XOR versus AND when EXOR is represented natively; expanded C XOR is
+correct. The existing native-XOR copy test enshrines that error and must be
+replaced with an explicit upstream-bug demonstration plus red/green functional
+regressions. AND-only backend compatibility and reverse mapping of expansion
+nodes need verification in the next repair. Package review is not complete.
