@@ -355,3 +355,28 @@ final review/validation; it does not reduce the original 131-package scope.
 Required next steps are to move the remaining callers, remove the replacement
 algorithms, port the solver2/proof reparameterization driver, and add C-oracle
 and broader integration evidence. No optional callback fallback is introduced.
+
+### Native interpolation: ABCI and incremental driver migration
+
+Added a red ABCI regression for the source's inconsistent-partition insertion
+failure, then changed both ABCI single-interpolant callers to the native proof
+driver. The full ABCI package passes after the switch. Added the incremental
+source workflow: mapped CNFs with exposed CO variables, variable lifting,
+shared-input equality clauses, simplification, and per-output assumptions on
+one persistent BSAT solver. All 256 two-input predicate pairs are checked with
+four output roles each (ordinary, complemented, constant one and constant zero).
+The driver race tests pass before final migration validation.
+
+Removed the old projection-based Aig_ManInter/Aig_ManInterFast implementations
+from aig/aig. Their public entry points now live in proof/aiginterp; all
+repository callers were migrated. This is an API ownership relocation needed
+to break graph/CNF/solver cycles, not an optional backend. The original semantic
+tests moved with the functions. Their relation check now tests A=>I and I=>!B,
+not equality to a particular strongest projection; C's proof interpolation
+need not choose that strongest interpolant. Inconsistent partitions follow the
+verified source failure behavior rather than producing a constant graph.
+
+Aig_ManInterTest and Aig_ManInterRepar still contain replacement algorithms and
+remain required repair work. Their presence keeps the AIG audit incomplete.
+Full driver, ACB and ABCI race tests pass after migration. The final AIG race
+check also covers removal of unused projection helpers.
