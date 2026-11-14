@@ -310,6 +310,16 @@ func Abc_NodeIsInv(o *Object) int32 {
 	return abcBool(fn([]bool{false}) && !fn([]bool{true}))
 }
 func Abc_NodeComplement(o *Object) {
+	if manager, ok := o.network.FunctionManager.(*core.DdManager); ok {
+		if old, ok := o.Data.(*core.DdNode); ok {
+			next := core.Cudd_Not(old)
+			core.Cudd_Ref(next)
+			core.Cudd_RecursiveDeref(manager, old)
+			o.Data = next
+			clear(o.network.hashed)
+			return
+		}
+	}
 	fn := localFunction(o)
 	o.Data = func(v []bool) bool { return !fn(v) }
 	clear(o.network.hashed)
@@ -318,6 +328,20 @@ func Abc_NodeComplementInput(o, fanin *Object) {
 	index := Abc_ObjFanoutFaninNum(o, fanin)
 	if index < 0 {
 		panic("missing fanin")
+	}
+	if manager, ok := o.network.FunctionManager.(*core.DdManager); ok {
+		if old, ok := o.Data.(*core.DdNode); ok {
+			variable := core.Cudd_bddIthVar(manager, int(index))
+			next := core.Cudd_bddCompose(manager, old, core.Cudd_Not(variable), int(index))
+			if next == nil {
+				panic("BDD input complement failed")
+			}
+			core.Cudd_Ref(next)
+			core.Cudd_RecursiveDeref(manager, old)
+			o.Data = next
+			clear(o.network.hashed)
+			return
+		}
 	}
 	fn := localFunction(o)
 	o.Data = func(v []bool) bool {
@@ -335,10 +359,22 @@ func sopConstructor(n *Network, node *Object, text string) *Object {
 	return node
 }
 func Abc_NtkCreateNodeConst0(n *Network) *Object {
-	return sopConstructor(n, createLogicNode(n, nil, func([]bool) bool { return false }), Abc_SopCreateConst0(nil))
+	node := createLogicNode(n, nil, func([]bool) bool { return false })
+	if manager, ok := n.FunctionManager.(*core.DdManager); ok {
+		value := core.Cudd_Not(core.Cudd_ReadOne(manager))
+		core.Cudd_Ref(value)
+		node.Data = value
+	}
+	return sopConstructor(n, node, Abc_SopCreateConst0(nil))
 }
 func Abc_NtkCreateNodeConst1(n *Network) *Object {
-	return sopConstructor(n, createLogicNode(n, nil, func([]bool) bool { return true }), Abc_SopCreateConst1(nil))
+	node := createLogicNode(n, nil, func([]bool) bool { return true })
+	if manager, ok := n.FunctionManager.(*core.DdManager); ok {
+		value := core.Cudd_ReadOne(manager)
+		core.Cudd_Ref(value)
+		node.Data = value
+	}
+	return sopConstructor(n, node, Abc_SopCreateConst1(nil))
 }
 func Abc_NtkCreateNodeInv(n *Network, fanin *Object) *Object {
 	node := createLogicNode(n, nil, func(v []bool) bool { return !v[0] })
@@ -360,6 +396,11 @@ func Abc_NtkCreateNodeBuf(n *Network, fanin *Object) *Object {
 	node := createLogicNode(n, nil, func(v []bool) bool { return v[0] })
 	if fanin != nil {
 		Abc_ObjAddFanin(node, fanin)
+	}
+	if manager, ok := n.FunctionManager.(*core.DdManager); ok {
+		value := core.Cudd_bddIthVar(manager, 0)
+		core.Cudd_Ref(value)
+		node.Data = value
 	}
 	return sopConstructor(n, node, Abc_SopCreateBuf(nil))
 }
