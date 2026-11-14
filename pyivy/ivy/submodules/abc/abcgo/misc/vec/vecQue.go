@@ -29,7 +29,9 @@ func Vec_QueFree(p *Vec_Que_t) {
 }
 func Vec_QueFreeP(p **Vec_Que_t) { Vec_QueFree(*p); *p = nil }
 func Vec_QueSetPriority(p *Vec_Que_t, costs *[]float32) {
-	if p.pCostsFlt != nil {
+	// ACB reattaches the same vector after growth; its slice-header address
+	// is stable in Go. Changing to another priority source still needs a rebuild.
+	if p.pCostsFlt != nil && p.pCostsFlt != costs {
 		panic("priority already assigned")
 	}
 	p.pCostsFlt = costs
@@ -54,11 +56,16 @@ func Vec_QueClear(p *Vec_Que_t) {
 func Vec_QueSize(p *Vec_Que_t) int { return len(p.pHeap) - 1 }
 func Vec_QueTop(p *Vec_Que_t) int {
 	if len(p.pHeap) <= 1 {
-		panic("empty queue")
+		return -1
 	}
 	return p.pHeap[1]
 }
-func Vec_QueTopPriority(p *Vec_Que_t) float32 { return Vec_QuePrio(p, Vec_QueTop(p)) }
+func Vec_QueTopPriority(p *Vec_Que_t) float32 {
+	if Vec_QueSize(p) == 0 {
+		return -1000000000
+	} // -ABC_INFINITY
+	return Vec_QuePrio(p, Vec_QueTop(p))
+}
 func Vec_QueMoveUp(p *Vec_Que_t, v int) int {
 	i := p.pOrder[v]
 	if i < 1 {
