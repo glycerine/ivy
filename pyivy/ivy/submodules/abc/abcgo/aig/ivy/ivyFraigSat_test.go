@@ -18,8 +18,8 @@ func ivySatFixture(inputs int) (*Ivy_Man_t, *Ivy_FraigMan_t) {
 	}
 	var params Ivy_FraigParams_t
 	Ivy_FraigParamsDefault(&params)
-	params.nBTLimitNode = 0
-	params.nBTLimitMiter = 0
+	params.NBTLimitNode = 0
+	params.NBTLimitMiter = 0
 	return source, Ivy_FraigStartSimple(source, &params)
 }
 func TestFraigSatEquivalenceAndCounterexample(t *testing.T) {
@@ -128,8 +128,8 @@ func TestFraigMiterSatisfiableAndUnsatisfiable(t *testing.T) {
 		Ivy_ObjCreatePo(graph, root)
 		var params Ivy_FraigParams_t
 		Ivy_FraigParamsDefault(&params)
-		params.fProve = 1
-		params.nBTLimitMiter = 0
+		params.FProve = 1
+		params.NBTLimitMiter = 0
 		result := Ivy_FraigMiter(graph, &params)
 		status := Ivy_FraigMiterStatus(result)
 		if satisfiable {

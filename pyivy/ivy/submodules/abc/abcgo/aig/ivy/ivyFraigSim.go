@@ -78,7 +78,7 @@ func Ivy_ObjSetSatNum(n *Ivy_Obj_t, v int32)          { ivyFraigState(n).satNum 
 func Ivy_ObjSetFaninVec(n *Ivy_Obj_t, v []*Ivy_Obj_t) { ivyFraigState(n).fanins = v }
 func Ivy_ObjRandomSim() uint32                        { return rand.Uint32() }
 func Ivy_FraigParamsDefault(params *Ivy_FraigParams_t) {
-	*params = Ivy_FraigParams_t{nSimWords: 32, dSimSatur: 0.005, MaxScore: 25, fDoSparse: 1, dActConeRatio: 0.3, dActConeBumpMax: 10, nBTLimitNode: 100, nBTLimitMiter: 500000}
+	*params = Ivy_FraigParams_t{nSimWords: 32, dSimSatur: 0.005, MaxScore: 25, FDoSparse: 1, dActConeRatio: 0.3, dActConeBumpMax: 10, NBTLimitNode: 100, NBTLimitMiter: 500000}
 }
 
 // Ivy_FraigParamsSetBmc configures the FRAIG options used by ABC's bounded
@@ -88,9 +88,9 @@ func Ivy_FraigParamsSetBmc(params *Ivy_FraigParams_t, nodeLimit int32, verbose, 
 	if params == nil {
 		panic("ivy: nil FRAIG parameters")
 	}
-	params.nBTLimitNode = nodeLimit
-	params.fVerbose = verbose
-	params.fProve = prove
+	params.NBTLimitNode = nodeLimit
+	params.FVerbose = verbose
+	params.FProve = prove
 }
 
 // This allocator preserves the real graph fanout lists: FRAIG owns typed state
@@ -505,7 +505,7 @@ func Ivy_FraigCheckOutputSims(p *Ivy_FraigMan_t) int32 {
 	return 0
 }
 func Ivy_FraigRefineClasses(p *Ivy_FraigMan_t) int32 {
-	if p.pParams.fProve != 0 {
+	if p.pParams.FProve != 0 {
 		Ivy_FraigCheckOutputSims(p)
 	}
 	if p.pManFraig.pData != nil {

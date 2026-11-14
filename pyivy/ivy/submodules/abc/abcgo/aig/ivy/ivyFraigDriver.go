@@ -25,7 +25,7 @@ func Ivy_FraigStop(p *Ivy_FraigMan_t) {
 	if p == nil {
 		return
 	}
-	if p.pParams.fVerbose != 0 {
+	if p.pParams.FVerbose != 0 {
 		Ivy_FraigPrint(p)
 	}
 	if p.nSimWords > 0 {
@@ -45,7 +45,7 @@ func Ivy_FraigPrint(p *Ivy_FraigMan_t) {
 func Ivy_FraigAnd(p *Ivy_FraigMan_t, old *Ivy_Obj_t) *Ivy_Obj_t {
 	candidate := Ivy_Oper(p.pManFraig, Ivy_ObjChild0Equiv(old), Ivy_ObjChild1Equiv(old), old.Type)
 	representative := Ivy_ObjClassNodeRepr(old)
-	if representative == nil || (p.pParams.fDoSparse == 0 && representative == p.pManAig.pConst1) {
+	if representative == nil || (p.pParams.FDoSparse == 0 && representative == p.pManAig.pConst1) {
 		return candidate
 	}
 	mapped := Ivy_ObjFraig(representative)
@@ -127,7 +127,7 @@ func Ivy_FraigSweep(p *Ivy_FraigMan_t) {
 	}
 	p.nClassesEnd = p.lClasses.nItems
 	p.nNodesMiter = Ivy_ManNodeNum(p.pManFraig)
-	if p.pParams.fProve != 0 && p.pManFraig.pData == nil {
+	if p.pParams.FProve != 0 && p.pManFraig.pData == nil {
 		Ivy_FraigMiterProve(p)
 	}
 	for _, n := range p.pManAig.vPos {
@@ -243,18 +243,18 @@ func Ivy_FraigProve(graph **Ivy_Man_t, params *Prove_Params_t) int32 {
 	}
 	var options Ivy_FraigParams_t
 	Ivy_FraigParamsDefault(&options)
-	options.fVerbose = params.fVerbose
-	options.fProve = 1
+	options.FVerbose = params.fVerbose
+	options.FProve = 1
 	current := *graph
 	replace := func(next *Ivy_Man_t) { Ivy_ManStop(current); current = next; *graph = current }
 	divide := func(limit int32) int32 { return limit / max(int32(1), Ivy_ManPoNum(current)) }
 	if params.fUseRewriting == 0 && params.fUseFraiging == 0 {
-		options.nBTLimitMiter = divide(params.nMiteringLimitLast)
+		options.NBTLimitMiter = divide(params.nMiteringLimitLast)
 		replace(Ivy_FraigMiter(current, &options))
 		return Ivy_FraigMiterStatus(current)
 	}
 	if Ivy_ManNodeNum(current) < 500 {
-		options.nBTLimitMiter = divide(params.nMiteringLimitStart)
+		options.NBTLimitMiter = divide(params.nMiteringLimitStart)
 		replace(Ivy_FraigMiter(current, &options))
 		if status := Ivy_FraigMiterStatus(current); status >= 0 {
 			return status
@@ -268,8 +268,8 @@ func Ivy_FraigProve(graph **Ivy_Man_t, params *Prove_Params_t) int32 {
 			break
 		}
 		if params.fUseFraiging != 0 {
-			options.nBTLimitNode = int32(float64(params.nFraigingLimitStart) * math.Pow(float64(params.nFraigingLimitMulti), float64(iteration)))
-			options.nBTLimitMiter = 1 + divide(int32(float64(params.nMiteringLimitStart)*math.Pow(float64(params.nMiteringLimitMulti), float64(iteration))))
+			options.NBTLimitNode = int32(float64(params.nFraigingLimitStart) * math.Pow(float64(params.nFraigingLimitMulti), float64(iteration)))
+			options.NBTLimitMiter = 1 + divide(int32(float64(params.nMiteringLimitStart)*math.Pow(float64(params.nMiteringLimitMulti), float64(iteration))))
 			var conflicts, inspections int64
 			replace(Ivy_FraigPerform_int(current, &options, params.nTotalBacktrackLimit, params.nTotalInspectLimit, &conflicts, &inspections))
 			status = Ivy_FraigMiterStatus(current)

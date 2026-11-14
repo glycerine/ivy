@@ -77,7 +77,7 @@ type Ivy_FraigParams_t_ struct {
 	dSimSatur                                                float64
 	fPatScores, MaxScore                                     int32
 	dActConeRatio, dActConeBumpMax                           float64
-	fProve, fVerbose, fDoSparse, nBTLimitNode, nBTLimitMiter int32
+	FProve, FVerbose, FDoSparse, NBTLimitNode, NBTLimitMiter int32
 }
 
 // Ivy_ManTakeData transfers the source C pData payload to the caller.

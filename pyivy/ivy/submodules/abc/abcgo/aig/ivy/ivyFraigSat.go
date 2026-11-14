@@ -249,7 +249,7 @@ func Ivy_FraigNodesAreEquiv(p *Ivy_FraigMan_t, old, next *Ivy_Obj_t) int32 {
 	if old == next {
 		return 1
 	}
-	limit := p.pParams.nBTLimitNode
+	limit := p.pParams.NBTLimitNode
 	if limit > 0 && (old.fFailTfo != 0 || next.fFailTfo != 0) {
 		p.nSatFails++
 		if limit <= 10 {
@@ -292,7 +292,7 @@ func Ivy_FraigNodeIsConst(p *Ivy_FraigMan_t, n *Ivy_Obj_t) int32 {
 	if n.fPhase != 0 {
 		literal = ivyFraigNeg(literal)
 	}
-	result := ivyFraigSolve(p, []bsat.Literal{literal}, p.pParams.nBTLimitMiter)
+	result := ivyFraigSolve(p, []bsat.Literal{literal}, p.pParams.NBTLimitMiter)
 	if result == bsat.Unsatisfiable {
 		p.nSatProof++
 		return 1
