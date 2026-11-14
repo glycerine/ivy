@@ -9,8 +9,37 @@ func Gia_ManSetInputNames(p *Gia_Man_t, names *Vec_Ptr_t)   { p.vNamesIn = names
 func Gia_ManOutputNames(p *Gia_Man_t) *Vec_Ptr_t            { return p.vNamesOut }
 func Gia_ManSetOutputNames(p *Gia_Man_t, names *Vec_Ptr_t)  { p.vNamesOut = names }
 func Gia_ManSetRegClasses(p *Gia_Man_t, classes *Vec_Int_t) { p.vRegClasses = classes }
-func Gia_ManSimWordNum(p *Gia_Man_t) int32                  { return p.nSimWords }
-func Gia_ManSimData(p *Gia_Man_t) []uint64                  { return vec.Vec_WrdArray(p.vSims) }
+
+// Gia_ManReadSeqModelVec returns the manager's borrowed raw sequential-model
+// vector. Callers that need to own it should use Gia_ManTakeSeqModelVec.
+func Gia_ManReadSeqModelVec(p *Gia_Man_t) *Vec_Ptr_t {
+	if p == nil {
+		return nil
+	}
+	return p.vSeqModelVec
+}
+
+// Gia_ManSetSeqModelVec transfers ownership of models to the manager.
+func Gia_ManSetSeqModelVec(p *Gia_Man_t, models *Vec_Ptr_t) {
+	if p == nil {
+		return
+	}
+	p.vSeqModelVec = models
+}
+
+// Gia_ManTakeSeqModelVec transfers the manager's model vector to the caller
+// and clears the manager's reference.
+func Gia_ManTakeSeqModelVec(p *Gia_Man_t) *Vec_Ptr_t {
+	if p == nil {
+		return nil
+	}
+	models := p.vSeqModelVec
+	p.vSeqModelVec = nil
+	return models
+}
+
+func Gia_ManSimWordNum(p *Gia_Man_t) int32 { return p.nSimWords }
+func Gia_ManSimData(p *Gia_Man_t) []uint64 { return vec.Vec_WrdArray(p.vSims) }
 
 // Gia_ManSimObjectData returns the mutable simulation words for one object.
 // The caller must have installed simulation storage with Gia_ManSetSimData.
