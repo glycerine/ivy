@@ -125,6 +125,20 @@ func Aig_ManPartSplitOne(source *Graph, nodes []Edge) (*Graph, []int32) {
 		}
 		source.node(node).TravID = source.travID
 	}
+	// Count crossings in the original graph. A buffer may collapse into its
+	// driver and simplify a later AND, so copied reference counts cannot tell
+	// which original object IDs still need boundary terminals.
+	externalRefs := make(map[int]int, len(nodes))
+	for _, e := range nodes {
+		externalRefs[e.NodeID()] = source.node(e).Refs
+	}
+	for _, e := range nodes {
+		for _, fanin := range nodeFanins(*source.node(e)) {
+			if _, selected := externalRefs[fanin.NodeID()]; selected {
+				externalRefs[fanin.NodeID()]--
+			}
+		}
+	}
 	destination := NewGraph()
 	var pio []int32
 	for _, node := range nodes {
@@ -132,7 +146,7 @@ func Aig_ManPartSplitOne(source *Graph, nodes []Edge) (*Graph, []int32) {
 	}
 	for _, node := range nodes {
 		copy := source.copies[node.NodeID()]
-		if destination.node(copy).Refs < source.node(node).Refs {
+		if externalRefs[node.NodeID()] > 0 {
 			Aig_ObjCreateCo(destination, copy)
 			pio = append(pio, int32(node.NodeID()))
 		}

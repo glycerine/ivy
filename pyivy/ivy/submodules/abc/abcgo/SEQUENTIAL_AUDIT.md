@@ -2211,3 +2211,25 @@ mapped-CNF/BSAT driver using the higher-layer pattern already applied to
 proof/aiginterp if package cycles require it. Do not call the current SAT path
 fully source-reviewed based on green functional tests. Completed count 1/131;
 aig/aig remains active.
+
+### SAT partition boundary alias repair
+
+A new red typed-buffer regression found PartSplitOne dropped an original
+boundary object when a buffer and a later AND simplified to the same copied
+node. Copied reference counts no longer identify original cut crossings in
+that situation. Count physical crossings in the original selected-node set
+instead; retain separate CO terminals for distinct original IDs even when
+their copied drivers alias. The complete partitioned solve regression now
+returns a valid model through every partition/alignment mode.
+
+A compiled native fixture checks all seven nonempty subsets of a shared
+three-gate cone in forward and reverse selection orders (14 cases): exact
+PIO vectors, object/fanin IDs, refs and copied restriction marks match the
+original C. Thus the ordinary source AND-only boundary contract is preserved.
+Full uncached AIG race tests pass in 72.483s
+(`/tmp/abcgo-sat-boundary-final.log`).
+
+The next mapped-CNF regression is deliberately red: on a six-input AND chain,
+the old per-node helper allocates 15 solver variables instead of Cnf_Derive's
+11, with different terminal IDs. This test is pending migration with the
+mapped-CNF/BSAT driver. It is not part of the boundary-only checkpoint.

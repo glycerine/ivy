@@ -357,3 +357,9 @@ Tseitin/SATOKO is not the source mapped-CNF/BSAT workflow. Green Boolean tests
 must not be used to claim source algorithm fidelity or identical bounded solves.
 Full AIG/ABCI race suites pass in 70.761s/29.622s; final focused native-label,
 choice-traversal and rollover race checks pass in 2.187s.
+
+PartSplitOne now determines original graph cut crossings before copying,
+fixing a red buffer/AND alias case that lost a distinct source terminal ID.
+Fourteen native-C subset/order cases match exact PIO vectors, graph refs,
+fanins and restriction marks. Full AIG race checks pass in 72.483s. The
+mapped-CNF/BSAT migration remains open, with a new red variable-layout test.
