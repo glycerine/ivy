@@ -632,3 +632,10 @@ Full uncached AIG, SAIG, SSW, abstraction and cut-sweeping race suites pass.
 The caller migrations are integration changes, not completed audits of those
 four packages. Reverse DFS, cone/support/composition helpers and the remaining
 AIG algorithm families still require source review; aig/aig remains in progress.
+
+Integration validation after the DFS checkpoints: an uncached, sequential
+`go test -p 1 ./... -count=1 -timeout 180s` completed successfully across the
+entire module: 129 packages passed tests and three packages have no tests.
+The additional proof/aiginterp package accounts for the difference from the
+original 131-package inventory. Passing this integration gate does not mark
+the still-pending package reviews complete.
