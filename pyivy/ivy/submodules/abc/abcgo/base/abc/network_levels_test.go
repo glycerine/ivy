@@ -76,3 +76,37 @@ func TestNetworkUpdateMaintainsForwardAndReverseLevels(t *testing.T) {
 	Abc_NtkStopReverseLevels(n)
 	vec.Vec_VecFree(levels)
 }
+
+// abcTiming.c schedules fanouts/fanins by their old levels, so reconvergent
+// paths must settle correctly when a branch both grows and shrinks.
+func TestIncrementalLevelsReconvergentGrowthAndShrink(t *testing.T) {
+	n := NewNetwork("reconvergent")
+	pi := Abc_NtkCreatePi(n)
+	first := Abc_NtkCreateNode(n)
+	long := Abc_NtkCreateNode(n)
+	branch := Abc_NtkCreateNode(n)
+	join := Abc_NtkCreateNode(n)
+	po := Abc_NtkCreatePo(n)
+	Abc_ObjAddFanin(first, pi)
+	Abc_ObjAddFanin(long, first)
+	Abc_ObjAddFanin(branch, pi)
+	Abc_ObjAddFanin(join, long)
+	Abc_ObjAddFanin(join, branch)
+	Abc_ObjAddFanin(po, join)
+	Abc_NtkStartReverseLevels(n, 0)
+	defer Abc_NtkStopReverseLevels(n)
+	work := vec.Vec_VecStart(4)
+	defer vec.Vec_VecFree(work)
+	Abc_ObjPatchFanin(branch, pi, long)
+	Abc_NtkUpdateLevel(branch, work)
+	Abc_NtkUpdateReverseLevel(long, work)
+	if branch.Level != 3 || join.Level != 4 || long.reverseLevel != 3 || first.reverseLevel != 4 {
+		t.Fatalf("grown levels branch=%d join=%d reverse=%d/%d", branch.Level, join.Level, long.reverseLevel, first.reverseLevel)
+	}
+	Abc_ObjPatchFanin(branch, long, pi)
+	Abc_NtkUpdateLevel(branch, work)
+	Abc_NtkUpdateReverseLevel(long, work)
+	if branch.Level != 1 || join.Level != 3 || long.reverseLevel != 2 || first.reverseLevel != 3 {
+		t.Fatalf("shrunk levels branch=%d join=%d reverse=%d/%d", branch.Level, join.Level, long.reverseLevel, first.reverseLevel)
+	}
+}

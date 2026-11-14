@@ -114,6 +114,8 @@ func Abc_ObjLevel(o *Object) int32            { return int32(o.Level) }
 func Abc_ObjSetLevel(o *Object, level int32)  { o.Level = int(level) }
 func Abc_ObjData(o *Object) any               { return o.Data }
 func Abc_ObjSetData(o *Object, data any)      { o.Data = data; clear(o.network.hashed) }
+func Abc_ObjCopyData(o *Object) any           { return o.CopyData }
+func Abc_ObjSetCopyData(o *Object, data any)  { o.CopyData = data }
 func Abc_NtkObj(n *Network, id int32) *Object { return n.Object(int(id)) }
 func Abc_NtkObjNum(n *Network) int32          { return int32(len(n.Objects())) }
 func Abc_NtkObjNumMax(n *Network) int32       { return int32(len(n.objects)) }

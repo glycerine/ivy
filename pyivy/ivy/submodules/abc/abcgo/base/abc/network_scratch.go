@@ -7,7 +7,7 @@ import (
 
 func Abc_NtkCleanCopy(n *Network) {
 	for _, o := range n.Objects() {
-		o.Copy, o.CopyEdge = nil, Edge{}
+		o.Copy, o.CopyEdge, o.CopyData = nil, Edge{}, nil
 	}
 }
 

@@ -43,6 +43,9 @@ func Abc_ObjRequiredLevel(o *Object) int32 {
 	return int32(o.network.levelMax+1) - Abc_ObjReverseLevel(o)
 }
 
+// Abc_NtkReverseLevelMax returns the maximum level stored by reverse-level setup.
+func Abc_NtkReverseLevelMax(n *Network) int { return n.levelMax }
+
 func Abc_NtkStartReverseLevels(n *Network, maxLevelIncrease int32) {
 	if n.reverseLevelsActive {
 		panic("abc: reverse levels already active")

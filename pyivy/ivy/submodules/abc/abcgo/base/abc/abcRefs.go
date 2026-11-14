@@ -196,5 +196,26 @@ func Abc_NodeMffcLabel(o *Object, nodes *[]*Object) int32 {
 	return before
 }
 
+// Abc_NodeMffcLabelWithLeaves labels the MFFC with each cut leaf held by one
+// extra reference, matching ABC's temporary fanout-count increments.
+func Abc_NodeMffcLabelWithLeaves(o *Object, leaves []*Object, nodes *[]*Object) int32 {
+	n := o.network
+	for _, leaf := range leaves {
+		if !n.contains(leaf) {
+			panic("foreign MFFC leaf")
+		}
+	}
+	refs := n.referenceCounts()
+	for _, leaf := range leaves {
+		refs[leaf]++
+	}
+	result := Abc_NodeMffcLabel(o, nodes)
+	for _, leaf := range leaves {
+		refs[leaf]--
+	}
+	n.finishReferences()
+	return result
+}
+
 func Abc_NodeIsTravIdPrevious(o *Object) int32 { return abcBool(o.travID == o.network.travID-1) }
 func Abc_NodeSetTravIdPrevious(o *Object)      { o.travID = o.network.travID - 1 }

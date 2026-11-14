@@ -41,6 +41,7 @@ type Object struct {
 	// hierarchical gate strashing interface.
 	BoxInputPolarity    []uint32
 	CopyEdge            Edge
+	CopyData            any // temporary non-object copy payload (e.g. a mapped gate)
 	Barrier             bool
 	Choice              *Object
 	Next                *Object
