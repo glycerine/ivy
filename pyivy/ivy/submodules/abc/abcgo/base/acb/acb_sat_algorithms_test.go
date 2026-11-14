@@ -120,3 +120,51 @@ func TestCheaperSupportReplacementAcrossWords(t *testing.T) {
 		t.Fatalf("replacement=%v", Vec_IntArray(support))
 	}
 }
+
+func TestEnabledBufferAllPhases(t *testing.T) {
+	for complement := int32(0); complement < 2; complement++ {
+		s := sat_solver_new()
+		sat_solver_setnvars(s, 3)
+		if sat_solver_add_buffer_enable(s, 0, 1, 2, complement) != 2 {
+			t.Fatal("clause creation")
+		}
+		for a := int32(0); a < 8; a++ {
+			assumptions := []int32{Abc_Var2Lit(0, 1^(a&1)), Abc_Var2Lit(1, 1^((a>>1)&1)), Abc_Var2Lit(2, 1^((a>>2)&1))}
+			got := sat_solver_solve(s, assumptions, nil, 0, 0, 0, 0) == l_True
+			want := a&4 == 0 || a&1 == ((a>>1)&1)^complement
+			if got != want {
+				t.Fatalf("phase%d assignment%b got%v want%v", complement, a, got, want)
+			}
+		}
+		sat_solver_delete(s)
+	}
+}
+
+func TestCandidateFunctionValidation(t *testing.T) {
+	for f := uint64(0); f < 16; f++ {
+		for candidate := uint64(0); candidate < 16; candidate++ {
+			s := sat_solver_new()
+			sat_solver_setnvars(s, 4)
+			var cover Vec_Int_t
+			var cnf Vec_Str_t
+			var clause []int32
+			truth := stretchTruth(f, 2)
+			Acb_DeriveCnfFromTruth(truth, 2, &cover, &cnf)
+			for _, lit := range Vec_StrArray(&cnf) {
+				if lit == 255 {
+					sat_solver_addclause(s, clause)
+					clause = nil
+				} else {
+					clause = append(clause, int32(lit))
+				}
+			}
+			support := Vec_IntStartNatural(2)
+			// First enumerate, leaving guarded blocking clauses in the solver.
+			Acb_ComputeFunction(s, 2, 3, support, 0)
+			if got := acbCheckFunction(s, 2, 3, support, stretchTruth(candidate, 2)); got != (f == candidate) {
+				t.Fatalf("original%x candidate%x accepted%v", f, candidate, got)
+			}
+			sat_solver_delete(s)
+		}
+	}
+}

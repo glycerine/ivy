@@ -426,3 +426,38 @@ func TestMfsAshenhurstAndPushDrivers(t *testing.T) {
 		}
 	}
 }
+
+// This is test_vectors/ashen_unreachable.blif, also rejected by native C CEC
+// after the original C mfse -d rewrite. All six input bits are enumerated.
+func TestAshenhurstRejectsUnreachableDivisorRewrite(t *testing.T) {
+	p := acbNetwork(t, 6)
+	n7 := acbNode(p, stretchTruth(14, 2), 6, 5)
+	n8 := acbNode(p, stretchTruth(8, 2), n7, 2)
+	n11 := acbNode(p, stretchTruth(0xbd, 3), n8, 6, 5)
+	n14 := acbNode(p, stretchTruth(0x4c, 3), n11, n7, 1)
+	n15 := acbNode(p, stretchTruth(14, 2), n14, 4)
+	n17 := acbNode(p, stretchTruth(0x6c, 3), n15, n11, 1)
+	pivot := acbNode(p, stretchTruth(9, 2), n17, n14)
+	acbOutput(p, pivot)
+	want := acbTable(p)
+	var pars Acb_Par_t
+	Acb_ParSetDefault(&pars)
+	pars.nLutSize = 3
+	pars.fUseAshen = 1
+	m := Acb_MfsStart(p, &pars)
+	defer Acb_MfsStop(m)
+	Acb_NtkCreateFanout(p)
+	Acb_NtkCleanObjFuncs(p)
+	Acb_NtkCleanObjCnfs(p)
+	Acb_NtkUpdateLevelD(p, -1)
+	if changed := Acb_NtkOptNode(m, pivot); changed != 0 {
+		t.Fatalf("invalid candidate accepted: %d", changed)
+	}
+	if m.nTwoNodes != 1 {
+		t.Fatal("did not exercise decomposition")
+	}
+	if !reflect.DeepEqual(acbTable(p), want) {
+		t.Fatal("rejected candidate changed network")
+	}
+	acbCheckLinks(t, p)
+}

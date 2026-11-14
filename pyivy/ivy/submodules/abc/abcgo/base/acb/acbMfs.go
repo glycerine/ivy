@@ -21,24 +21,11 @@ func Cnf_DataCollectFlipLits(p *Cnf_Dat_t, pivot int32, flips *Vec_Int_t) {
 	cnf.Cnf_DataCollectFlipLits(p, pivot, flips)
 }
 func sat_solver_add_buffer_enable(s *sat_solver, a, b, enable, complement int32) int32 {
-	first := bsat.Positive(a)
-	if complement != 0 {
-		first = bsat.Negative(a)
-	}
-	second := bsat.Positive(b)
-	if complement == 0 {
-		second = bsat.Negative(b)
-	}
-	if !s.AddClause(first, second, bsat.Negative(enable)) {
+	// enable implies a == (b XOR complement).
+	if !s.AddClause(Abc_Var2Lit(a, 0), Abc_Var2Lit(b, complement^1), Abc_Var2Lit(enable, 1)) {
 		return 0
 	}
-	first = bsat.Negative(a)
-	if complement == 0 {
-		second = bsat.Positive(b)
-	} else {
-		second = bsat.Negative(b)
-	}
-	if !s.AddClause(first, second, bsat.Negative(enable)) {
+	if !s.AddClause(Abc_Var2Lit(a, 1), Abc_Var2Lit(b, complement), Abc_Var2Lit(enable, 1)) {
 		return 0
 	}
 	return 2
@@ -558,6 +545,33 @@ func Acb_ComputeFunction(pSat *sat_solver, PivotVar int32, FreeVar int32, vDivVa
 
 **********************************************************************
 */
+// acbCheckFunction checks a proposed LUT against the original window relation.
+// ComputeFunction's enumeration clauses are disabled by clearing freeVar.
+// The C Ashenhurst implementation can propose an invalid decomposition when
+// divisor combinations are unreachable; require UNSAT of the mismatch before
+// committing that rewrite. This consumes the solver, which is reset by cleanup.
+func acbCheckFunction(s *sat_solver, pivot, freeVar int32, support *Vec_Int_t, truth word) bool {
+	output := sat_solver_nvars(s)
+	sat_solver_setnvars(s, output+1)
+	var cover Vec_Int_t
+	var encoded Vec_Str_t
+	Acb_DeriveCnfFromTruth(truth, Vec_IntSize(support), &cover, &encoded)
+	vars := append(append([]int32(nil), Vec_IntArray(support)...), output)
+	var clause []int32
+	for _, b := range Vec_StrArray(&encoded) {
+		if b == 255 {
+			sat_solver_addclause(s, clause)
+			clause = clause[:0]
+		} else {
+			clause = append(clause, Abc_Var2Lit(vars[b>>1], int32(b&1)))
+		}
+	}
+	// XOR(output, pivot) = 1.
+	sat_solver_addclause(s, []int32{Abc_Var2Lit(output, 0), Abc_Var2Lit(pivot, 0)})
+	sat_solver_addclause(s, []int32{Abc_Var2Lit(output, 1), Abc_Var2Lit(pivot, 1)})
+	return sat_solver_solve(s, []int32{Abc_Var2Lit(freeVar, 1)}, nil, 0, 0, 0, 0) == l_False
+}
+
 func Acb_NtkPrintVec(p *Acb_Ntk_t, vVec *Vec_Int_t, pName string) {
 	var i int32
 	fmt.Printf("%s: ", pName)
@@ -1891,7 +1905,6 @@ func Acb_NtkOptNode(p *Acb_Mfs_t, Pivot int32) int32 {
 				}
 				goto cleanup
 			}
-			p.nChanges[3]++
 			// create new node
 			Vec_IntRemap(p.vSupp, vWin)
 			Vec_IntLits2Vars(p.vSupp, 0)
@@ -1918,6 +1931,15 @@ func Acb_NtkOptNode(p *Acb_Mfs_t, Pivot int32) int32 {
 			if fVerbose != 0 || p.pPars.fVerbose != 0 {
 				fmt.Printf("\n")
 			}
+			if !acbCheckFunction(p.pSat[0], PivotVar, sat_solver_nvars(p.pSat[0])-1, p.vSupp, uTruth) {
+				// The new intermediate has no users yet. Remove its edges without
+				// touching the original cone or the window's SAT-variable map.
+				Acb_ObjRemoveFaninFanout(p.pNtk, NodeNew)
+				Acb_ObjRemoveFanins(p.pNtk, NodeNew)
+				Acb_ObjCleanType(p.pNtk, NodeNew)
+				goto cleanup
+			}
+			p.nChanges[3]++
 			// create support in terms of nodes
 			Vec_IntPop(p.vSupp)
 			Vec_IntRemap(p.vSupp, vWin)

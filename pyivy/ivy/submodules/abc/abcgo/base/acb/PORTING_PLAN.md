@@ -84,3 +84,29 @@ The end-to-end ECO mapped-file test and the original Ivy prover bridge live in
 `base/abci` because they require that package's command registration. They are
 not yet verified: ABCI still has independent compile errors beginning in
 `abc.go`. This is a remaining integration requirement, not a passing test.
+
+### Decomposition and SAT review
+
+The full package now passes at **56.6%** statement coverage. Added exhaustive
+SAT function extraction, prime-cube patch generation, candidate validation and
+conditional-buffer polarity checks; ABC/SOP round trips; graph metadata and box
+output tests; and seeded Ashenhurst/push runs checked on all input assignments.
+
+Additional fixes:
+
+- Use mutable slices for multiword support masks; passing an array through an
+  interface copied it and either lost writes or panicked beyond one word.
+- Snapshot the SAT model before adding Ashenhurst constraints; Go correctly
+  invalidates public model access when the formula changes.
+- Include constant roots in full timing traversal, and support-minimize nodes
+  after pushing logic before classifying them as buffers/inverters.
+- Remove redundant constant LUT fanins when returning an ABC SOP network.
+- Count a box's last output and remember its kind before deleting its outputs.
+- Correct the conditional-buffer encoding for complemented buffers.
+
+**Confirmed original C defect:** the native executable's `mfse -d` produces a
+non-equivalent result for `test_vectors/ashen_unreachable.blif`; native `cec`
+provides a counterexample. The Go port keeps the original support-search and
+construction algorithms but SAT-checks a proposed two-node rewrite before
+accepting it. Rejected candidates leave the original circuit and links intact.
+This is an intentional correctness repair, not an alternative optimizer.

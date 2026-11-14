@@ -870,12 +870,13 @@ func Acb_ObjDup(pNew *Acb_Ntk_t, p *Acb_Ntk_t, i int32) int32 {
 }
 func Acb_ObjDelete(p *Acb_Ntk_t, iObj int32) {
 	var i int32
+	// Remember the kind before clearing it, so a box's output objects are
+	// deleted as well (the C source checks the already-cleared kind).
+	isBox := Acb_ObjIsBox(p, iObj) != 0
 	Acb_ObjCleanType(p, iObj)
-	if !(Acb_ObjIsBox(p, iObj) != 0) {
+	if !isBox {
 		return
 	}
-	// inlining of macro Acb_ObjForEachFon
-	assert(Acb_ObjIsBox(p, iObj) != 0, "Acb_ObjIsBox(p, iObj)")
 	for i = iObj + 1; i < Acb_NtkObjNumMax(p) && (Acb_ObjIsFon(p, i) != 0); i++ {
 		Acb_ObjCleanType(p, i)
 	}

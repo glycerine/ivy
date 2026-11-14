@@ -352,6 +352,8 @@ func Acb_ObjPushToFanins(p *Acb_Ntk_t, iObj int32, nLutSize int32) int32 {
 		}
 		//printf( "Object %4d : Pushing fanin %d (%d) into fanin %d.\n", iObj, Acb_ObjFanin(p, iObj, k2), k2, iFanin );
 		Acb_ObjPushToFanin(p, iObj, k2, iFanin)
+		Acb_ObjSuppMin(p, iObj)
+		Acb_ObjSuppMin(p, iFanin)
 		return 1
 	}
 	if Acb_ObjFaninNum(p, iObj) == 2 && Acb_ObjFanoutNum(p, iObj) == 1 {
@@ -359,7 +361,12 @@ func Acb_ObjPushToFanins(p *Acb_Ntk_t, iObj int32, nLutSize int32) int32 {
 		if (Acb_ObjIsCo(p, iFanout) == 0) && Acb_ObjFaninNum(p, iFanout) < nLutSize {
 			k2 = Acb_ObjFindFanoutPushableIndex(p, iObj)
 			//printf( "Object %4d : Pushing fanin %d (%d) into fanout %d.\n", iObj, Acb_ObjFanin(p, iObj, k2), k2, iFanout );
+			if k2 < 0 {
+				return 0
+			}
 			Acb_ObjPushToFanout(p, iObj, k2, iFanout)
+			Acb_ObjSuppMin(p, iObj)
+			Acb_ObjSuppMin(p, iFanout)
 			return 1
 		}
 	}
@@ -407,7 +414,9 @@ func Acb_NtkPushLogic(p *Acb_Ntk_t, nLutSize int32, fVerbose int32) {
 				for Acb_ObjPushToFanins(p, iObj, nLutSize) != 0 {
 					nPushes++
 				}
-				if Acb_ObjFaninNum(p, iObj) == 1 {
+				if Acb_ObjFaninNum(p, iObj) == 0 {
+					Acb_ObjRemoveConst(p, iObj)
+				} else if Acb_ObjFaninNum(p, iObj) == 1 {
 					Acb_ObjRemoveBufInv(p, iObj)
 				}
 			}
