@@ -144,7 +144,7 @@ func Saig_ManSetAndDriveImplications_rec(graph *aig.Graph, object aig.Edge, fram
 		}
 		return
 	}
-	for fan := aig.Aig_ObjFanout0Int(graph, int32(object.NodeID())); fan != 0; fan = aig.Aig_ObjFanoutNext(graph, fan) {
+	for i, fan := int32(0), aig.Aig_ObjFanout0Int(graph, int32(object.NodeID())); i < aig.Aig_ObjRefs(graph, object); i, fan = i+1, aig.Aig_ObjFanoutNext(graph, fan) {
 		fanout := aig.Edge(uint32(fan>>1) << 1)
 		value = Saig_ManSimInfo2Get(info, &fanout, frame)
 		if Saig_ManSimInfo2IsOld(value) != 0 {
