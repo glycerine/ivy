@@ -260,8 +260,8 @@ func Gia_ManSolveProblem(g *Gia_Man_t, pars *Emb_Par_t) {
 	if g.nObjs == p.nObjs && p.pPlacement != nil {
 		g.pPlacement = make([]Gia_Plc_t, p.nObjs)
 		for i := range g.pPlacement {
-			g.pPlacement[i].xCoord = uint32(p.pPlacement[2*i])
-			g.pPlacement[i].yCoord = uint32(p.pPlacement[2*i+1])
+			g.pPlacement[i].xCoord = p.pPlacement[2*i]
+			g.pPlacement[i].yCoord = p.pPlacement[2*i+1]
 		}
 	}
 	Emb_ManStop(p)

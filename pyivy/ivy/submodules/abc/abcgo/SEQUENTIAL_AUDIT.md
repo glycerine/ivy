@@ -3161,3 +3161,25 @@ No production defect was found in these paths. Focused native tests pass in
 pass in 29.634s (`/tmp/abcgo-mini-name-equiv-race.log`), and GIA vet passes.
 Remaining GIA algorithm families still await review; original completion is
 2/131 and the sequential audit remains active.
+
+Placement metadata compactness: Gia_Plc_t used four uint32 fields for two
+15-bit coordinates and two one-bit flags, occupying 16 bytes per object.
+Store coordinates as uint16 and flags as uint8, ordered to avoid padding;
+the Go record now measures 6 bytes (62.5% smaller). Named fields and their
+valid domains are unchanged. Embedding can directly copy its uint16 coordinate
+array; placement totals still accumulate in uint32. AIGER encoding explicitly
+widens every field before shifting, retaining the source's 32-bit packed wire
+format independently of Go's struct layout. Existing overflow rejection is
+retained, including the otherwise representable coordinate value 0x8000.
+
+Before/after tests measure 16/6 bytes and check all 36 combinations of
+coordinate boundary values 0, 1, 0x7fff and the two flag bits through complete
+AIGER round trips. Raw placement bytes and decoded fields match. Separate
+tests reject out-of-range coordinates and flags. Existing AIGER native decoder,
+normalization and embedding/placement tests pass. Focused tests pass in 0.121s
+(`/tmp/abcgo-placement-metadata-focused.log`); full uncached GIA race tests
+pass in 29.758s (`/tmp/abcgo-placement-metadata-race.log`), and GIA vet passes.
+All 133 module packages/tests compile
+(`/tmp/abcgo-placement-metadata-module-build.log`); unrelated test bodies were
+not run by that gate. Full placement algorithms and other remaining GIA
+families still need review. Original completion remains 2/131.

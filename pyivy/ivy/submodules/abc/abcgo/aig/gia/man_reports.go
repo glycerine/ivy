@@ -29,8 +29,8 @@ func Gia_ManPrintPlacement(p *Gia_Man_t) {
 	}
 	var fixed, undef uint32
 	for _, place := range p.pPlacement[:p.nObjs] {
-		fixed += place.fFixed
-		undef += place.fUndef
+		fixed += uint32(place.fFixed)
+		undef += uint32(place.fUndef)
 	}
 	fmt.Printf("Placement:  Objects = %8d.  Fixed = %8d.  Undef = %8d.\n", p.nObjs, fixed, undef)
 }

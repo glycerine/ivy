@@ -591,7 +591,7 @@ func aigerDecodeExtension(p *Gia_Man_t, tag byte, payload []byte, opts AigerRead
 		placement := make([]Gia_Plc_t, p.nObjs)
 		for i := range placement {
 			word := binary.LittleEndian.Uint32(data[i*4:])
-			placement[i] = Gia_Plc_t{fFixed: word & 1, xCoord: word >> 1 & 0x7fff, fUndef: word >> 16 & 1, yCoord: word >> 17 & 0x7fff}
+			placement[i] = Gia_Plc_t{fFixed: uint8(word & 1), xCoord: uint16(word >> 1 & 0x7fff), fUndef: uint8(word >> 16 & 1), yCoord: uint16(word >> 17 & 0x7fff)}
 		}
 		p.pPlacement = placement
 	case 'b':
@@ -1040,7 +1040,7 @@ func aigerEncodeExtensions(p *Gia_Man_t, wire *aigerWireModel, opts AigerWriteOp
 			if value.fFixed > 1 || value.fUndef > 1 || value.xCoord > 0x7fff || value.yCoord > 0x7fff {
 				return nil, fmt.Errorf("gia: placement field overflow")
 			}
-			word := value.fFixed | value.xCoord<<1 | value.fUndef<<16 | value.yCoord<<17
+			word := uint32(value.fFixed) | uint32(value.xCoord)<<1 | uint32(value.fUndef)<<16 | uint32(value.yCoord)<<17
 			encoded = binary.LittleEndian.AppendUint32(encoded, word)
 		}
 		data['p'] = encoded
