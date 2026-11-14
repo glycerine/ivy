@@ -1211,3 +1211,50 @@ write retry. Full AIG race tests pass after the changes.
 This closes the current aigCanon.go review, not its dependency packages or
 the complete AIG package. Retiming and the other outstanding AIG families
 remain next in the sequential audit; completed package count remains 1/131.
+
+### Edge-retiming manager and driver checkpoint
+
+Compared manager construction, object capacity/role fields, fanin/fanout
+connection order, forward/backward movement, autonomous marking,
+reconstruction and the main driver against aigRet.c. New red regressions
+exposed graph-ID allocation instead of C's constant/PI/PO/LO/LI/logic groups,
+missing construction capacities and PO flags, unchecked extra connections,
+retained dangling logic, omitted final register sharing and manager cleanup
+that retained the borrowed graph and latch objects.
+
+Restored source object grouping and connection order, constructor Num/Temp
+capacity checks, and the transition from Num capacity to retiming depth before
+queue processing. Removed the two unused duplicate capacity fields. Manager
+free now releases all Go-owned references while leaving its borrowed source
+graph intact. Reconstruction runs the source cleanup pass, and the driver
+finishes with Aig_ManReduceLaches. Depth zero and negative depth now retain
+C's initial unary latch-transfer/sharing pass rather than returning early;
+the limit applies to subsequently scheduled moves. Trace tests cover all
+three depth cases and the regression proves duplicate registers are shared.
+The zero-register Go convenience path remains a plain ordered copy.
+
+A compiled fixture includes original aigRet.c and memory routines. It
+compares every source-to-retiming object ID, PO flags, capacities, fanin
+complements and ordered fanouts, both autonomous-marking passes, maximum
+latch count and every edge value after moving two LOs and a gate with both
+inputs complemented. Go reconstruction then passes sequential trace checks,
+including the resulting ONE initialization's normalization to zero-reset Go
+latches. No graph construction or retiming algorithm is stubbed; only
+standalone console/bridge hooks are supplied.
+
+A further red metadata regression found one-hot claims about old registers
+surviving identity replacement. After actual moves the driver now clears
+register-based/mixed claims and retains only groups over unchanged true PIs,
+without changing the source annotations. Existing flop-number/representative
+invalidation remains. This is a Go metadata correction, not a change to C's
+retiming algorithm.
+
+Full AIG and ABCI race suites pass after the manager/driver repair; final AIG
+and ABCI race runs also pass after the one-hot fix. Logs are
+`/tmp/abcgo-retiming-manager-review.log` and
+`/tmp/abcgo-retiming-abci-final.log`. This is not completion of retiming:
+packed/overflow latch-storage behavior, queue edge cases and backward VOID
+initialization still need detailed source evidence. Also review the frontier
+implementation against aigRetF.c and its metadata separately. The edge
+manager retains typed local source mapping rather than publishing C's pData
+pointers that become dangling when its manager is freed.
