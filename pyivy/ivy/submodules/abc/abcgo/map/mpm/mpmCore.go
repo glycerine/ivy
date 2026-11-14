@@ -1,5 +1,7 @@
 package mpm
 
+import "github.com/glycerine/abcgo/aig/gia"
+
 /**CFile****************************************************************
 
   FileName    [mpmCore.c]
@@ -11,7 +13,7 @@ package mpm
   Synopsis    [Core procedures.]
 
   Author      [Alan Mishchenko]
-  
+
   Affiliation [UC Berkeley]
 
   Date        [Ver. 1.0. Started - June 1, 2013.]
@@ -25,7 +27,6 @@ package mpm
 
 //ABC_NAMESPACE_IMPL_START
 
-
 ////////////////////////////////////////////////////////////////////////
 ///                        DECLARATIONS                              ///
 ////////////////////////////////////////////////////////////////////////
@@ -34,67 +35,70 @@ package mpm
 ///                     FUNCTION DEFINITIONS                         ///
 ////////////////////////////////////////////////////////////////////////
 
-/**Function*************************************************************
+/*
+*Function*************************************************************
 
-  Synopsis    []
+	Synopsis    []
 
-  Description []
-               
-  SideEffects []
+	Description []
 
-  SeeAlso     []
+	SideEffects []
 
-***********************************************************************/
-func Mpm_ManSetParsDefault(p *Mpm_Par_t) {
-    *p = Mpm_Par_t{nNumCuts: 8, DelayTarget: -1}
+	SeeAlso     []
+
+**********************************************************************
+*/
+/*
+*Function*************************************************************
+
+	Synopsis    []
+
+	Description []
+
+	SideEffects []
+
+	SeeAlso     []
+
+**********************************************************************
+*/
+func Mpm_ManPerformLutMapping(pMig *Mig_Man_t, pPars *Mpm_Par_t) *gia.Gia_Man_t {
+	var pNew *gia.Gia_Man_t
+	var p *Mpm_Man_t
+	p = Mpm_ManStart(pMig, pPars)
+	if p.pPars.fVerbose != 0 {
+		Mpm_ManPrintStatsInit(p)
+	}
+	Mpm_ManPrepare(p)
+	Mpm_ManPerform(p)
+	if p.pPars.fVerbose != 0 {
+		Mpm_ManPrintStats(p)
+	}
+	if mapped := Mpm_ManFromIfLogic(p); mapped != nil {
+		pNew = mapped.(*gia.Gia_Man_t)
+	}
+	Mpm_ManStop(p)
+	return pNew
 }
+func Mpm_ManLutMapping(pGia *gia.Gia_Man_t, pPars *Mpm_Par_t) *gia.Gia_Man_t {
+	var p *Mig_Man_t
+	var pNew *gia.Gia_Man_t
+	assert(pPars.pLib.LutMax <= MPM_VAR_MAX, "pPars.pLib.LutMax <= MPM_VAR_MAX")
+	assert(pPars.nNumCuts <= MPM_CUT_MAX, "pPars.nNumCuts <= MPM_CUT_MAX")
+	if pPars.fUseGates != 0 {
+		pGia = gia.Gia_ManDupMuxes(pGia, 2)
+		p = Mig_ManCreate(pGia)
+		gia.Gia_ManStop(pGia)
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Mpm_ManPerformLutMapping(pMig *Mig_Man_t, pPars *Mpm_Par_t) *Gia_Man_t {
-    var pNew *Gia_Man_t;
-    var p *Mpm_Man_t;
-    p = Mpm_ManStart( pMig, pPars );
-    if p.pPars.fVerbose { 
-        Mpm_ManPrintStatsInit( p ); }
-    Mpm_ManPrepare( p );
-    Mpm_ManPerform( p );
-    if p.pPars.fVerbose { 
-        Mpm_ManPrintStats( p ); }
-    pNew = (Gia_Man_t *)Mpm_ManFromIfLogic( p );
-    Mpm_ManStop( p );
-    return pNew;
-}
-func Mpm_ManLutMapping(pGia *Gia_Man_t, pPars *Mpm_Par_t) *Gia_Man_t {
-    var p *Mig_Man_t;
-    var pNew *Gia_Man_t;
-    assert(pPars.pLib.LutMax <= MPM_VAR_MAX, "pPars.pLib.LutMax <= MPM_VAR_MAX");
-    assert(pPars.nNumCuts <= MPM_CUT_MAX, "pPars.nNumCuts <= MPM_CUT_MAX");
-    if pPars.fUseGates {
-        pGia = Gia_ManDupMuxes( pGia, 2 );
-        p = Mig_ManCreate( pGia );
-        Gia_ManStop( pGia );
-    
-    } else {
-        p = Mig_ManCreate( pGia ); }
-    pNew = Mpm_ManPerformLutMapping( p, pPars );
-    Mig_ManStop( p );
-    return pNew;
+	} else {
+		p = Mig_ManCreate(pGia)
+	}
+	pNew = Mpm_ManPerformLutMapping(p, pPars)
+	Mig_ManStop(p)
+	return pNew
 }
 
 ////////////////////////////////////////////////////////////////////////
 ///                       END OF FILE                                ///
 ////////////////////////////////////////////////////////////////////////
 
-
 //ABC_NAMESPACE_IMPL_END
-

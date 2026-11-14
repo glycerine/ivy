@@ -1,208 +1,92 @@
 package mpm
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/glycerine/abcgo/misc/util"
+	"github.com/glycerine/abcgo/misc/vec"
+)
 
-/**CFile****************************************************************
-
-  FileName    [mpmMig.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Configurable technology mapper.]
-
-  Synopsis    [Subject graph data structure.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 1, 2013.]
-
-  Revision    [$Id: mpmMig.c,v 1.00 2013/06/01 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "mpmInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+// Mig_ManStart and Mig_ManStop implement the subject-graph manager lifecycle.
 func Mig_ManStart() *Mig_Man_t {
-    
-    assert(sizeof(Mig_Obj_t) >= 16, "sizeof(Mig_Obj_t) >= 16");
-    assert((1 << MIG_BASE) == MIG_MASK + 1, "(1 << MIG_BASE) == MIG_MASK + 1");
-    // inlining of macro ABC_CALLOC
-    p := &Mig_Man_t{};
-    Vec_IntGrow( &p.vCis, 1024 );
-    Vec_IntGrow( &p.vCos, 1024 );
-    Mig_ManAppendObj( p ); // const0
-    return p;
+	assert(1<<MIG_BASE == MIG_MASK+1, "MIG page size")
+	p := &Mig_Man_t{}
+	vec.Vec_IntGrow(&p.vCis, 1024)
+	vec.Vec_IntGrow(&p.vCos, 1024)
+	Mig_ManAppendObj(p)
+	return p
 }
 func Mig_ManStop(p *Mig_Man_t) {
-    if false {
-    fmt.Printf("Subject graph uses %d pages of %d objects with %d entries. Total memory = %.2f MB.\n", Vec_PtrSize(&p.vPages), MIG_MASK + 1, p.nObjs, 1.0 * Vec_PtrSize(&p.vPages) * (MIG_MASK + 1) * 16 / (1 << 20)); }
-    // attributes
-    p.vTravIds.pArray = nil;
-    p.vCopies.pArray = nil;
-    p.vLevels.pArray = nil;
-    p.vRefs.pArray = nil;
-    p.vSibls.pArray = nil;
-    // pages
-    // inlining of macro Vec_PtrForEachEntry
-    for  p.iPage = 0; (p.iPage < Vec_PtrSize(&p.vPages)) && (((p.pPage) = (Mig_Obj_t *)Vec_PtrEntry(&p.vPages, p.iPage)), 1); p.iPage++  {
-        --p.pPage, p.pPage = nil;
-    }
-    // objects
-    p.vPages.pArray = nil;
-    p.vCis.pArray = nil;
-    p.vCos.pArray = nil;
-    p.pName = nil;
-    p = nil;
+	if p != nil {
+		*p = Mig_Man_t{}
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Mig_ManTypeNum(p *Mig_Man_t, Type int32) int32 {
-    var pObj *Mig_Obj_t;
-    var Counter int32;
-    // inlining of macro Mig_ManForEachNode
-    // inlining of macro Mig_ManForEachObj
-    for  p.iPage = 0; p.iPage < Vec_PtrSize(&p.vPages) &&                   ((p.pPage) = (Mig_Obj_t *)Vec_PtrEntry(&p.vPages, p.iPage)); p.iPage++  {         for  pObj = p.pPage; !Mig_ObjIsNone(pObj); pObj++  { if !Mig_ObjIsNode(pObj) {} else {
-        Counter += (Mig_ObjNodeType(pObj) == Type); }
-    }
-    }
-    return Counter;
+func Mig_ManTypeNum(p *Mig_Man_t, typ int32) int32 {
+	var count int32
+	for i := int32(0); i < p.nObjs; i++ {
+		obj := Mig_ManObj(p, i)
+		if Mig_ObjIsNode(obj) != 0 && Mig_ObjNodeType(obj) == typ {
+			count++
+		}
+	}
+	return count
 }
-func Mig_ManAndNum(p *Mig_Man_t) int32 {
-    return Mig_ManTypeNum(p, 1);
-}
-func Mig_ManXorNum(p *Mig_Man_t) int32 {
-    return Mig_ManTypeNum(p, 2);
-}
-func Mig_ManMuxNum(p *Mig_Man_t) int32 {
-    return Mig_ManTypeNum(p, 3);
-}
-
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+func Mig_ManAndNum(p *Mig_Man_t) int32 { return Mig_ManTypeNum(p, 1) }
+func Mig_ManXorNum(p *Mig_Man_t) int32 { return Mig_ManTypeNum(p, 2) }
+func Mig_ManMuxNum(p *Mig_Man_t) int32 { return Mig_ManTypeNum(p, 3) }
 func Mig_ManSetRefs(p *Mig_Man_t) {
-    var pObj *Mig_Obj_t;
-    var i, iFanin int32;
-    // increment references
-    Vec_IntFill( &p.vRefs, Mig_ManObjNum(p), 0 );
-    // inlining of macro Mig_ManForEachObj
-    for  p.iPage = 0; p.iPage < Vec_PtrSize(&p.vPages) &&                   ((p.pPage) = (Mig_Obj_t *)Vec_PtrEntry(&p.vPages, p.iPage)); p.iPage++  {         for  pObj = p.pPage; !Mig_ObjIsNone(pObj); pObj++  {
-        // inlining of macro Mig_ObjForEachFaninId
-        for  i = 0; Mig_ObjHasFanin(pObj, i) && ((iFanin) = Mig_ObjFaninId(pObj, i)); i++  {
-            Vec_IntAddToEntry( &p.vRefs, iFanin, 1 );
-        }
-        if Mig_ObjSiblId(pObj) {
-            Vec_IntAddToEntry( &p.vRefs, Mig_ObjSiblId(pObj), 1 ); }
-    }
-    }
+	vec.Vec_IntFill(&p.vRefs, int(p.nObjs), 0)
+	for id := int32(0); id < p.nObjs; id++ {
+		obj := Mig_ManObj(p, id)
+		for i := int32(0); i < 3 && Mig_ObjHasFanin(obj, i) != 0; i++ {
+			fanin := Mig_ObjFaninId(obj, i)
+			// The C iterator uses the assigned ID as its loop condition.
+			if fanin == 0 {
+				break
+			}
+			vec.Vec_IntAddToEntry(&p.vRefs, int(fanin), 1)
+		}
+		if sibling := Mig_ObjSiblId(obj); sibling != 0 {
+			vec.Vec_IntAddToEntry(&p.vRefs, int(sibling), 1)
+		}
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Mig_ManSuppSize_rec(pObj *Mig_Obj_t) int32 {
-    if pObj == nil {
-        return 0; }
-    if Mig_ObjIsTravIdCurrent(pObj) {
-        return 0; }
-    Mig_ObjSetTravIdCurrent(pObj);
-    if Mig_ObjIsCi(pObj) {
-        return 1; }
-    assert(Mig_ObjIsNode(pObj), "Mig_ObjIsNode(pObj)");
-    return Mig_ManSuppSize_rec( Mig_ObjFanin0(pObj) ) +
-           Mig_ManSuppSize_rec( Mig_ObjFanin1(pObj) ) +
-           Mig_ManSuppSize_rec( Mig_ObjFanin2(pObj) );
+func Mig_ManSuppSize_rec(obj *Mig_Obj_t) int32 {
+	if obj == nil || Mig_ObjIsTravIdCurrent(obj) != 0 {
+		return 0
+	}
+	Mig_ObjSetTravIdCurrent(obj)
+	if Mig_ObjIsCi(obj) != 0 {
+		return 1
+	}
+	assert(Mig_ObjIsNode(obj) != 0, "Mig_ObjIsNode(obj)")
+	return Mig_ManSuppSize_rec(Mig_ObjFanin0(obj)) + Mig_ManSuppSize_rec(Mig_ObjFanin1(obj)) + Mig_ManSuppSize_rec(Mig_ObjFanin2(obj))
 }
-func Mig_ManSuppSize2_rec(p *Mig_Man_t, iObj int32) int32 {
-    var pObj *Mig_Obj_t;
-    if iObj == MIG_NONE {
-        return 0; }
-    if Mig_ObjIsTravIdCurrentId(p, iObj) {
-        return 0; }
-    Mig_ObjSetTravIdCurrentId(p, iObj);
-    pObj = Mig_ManObj( p, iObj );
-    if Mig_ObjIsCi(pObj) {
-        return 1; }
-    assert(Mig_ObjIsNode(pObj), "Mig_ObjIsNode(pObj)");
-    return Mig_ManSuppSize2_rec( p, Mig_ObjFaninId0(pObj) ) +
-           Mig_ManSuppSize2_rec( p, Mig_ObjFaninId1(pObj) ) +
-           Mig_ManSuppSize2_rec( p, Mig_ObjFaninId2(pObj) );
+func Mig_ManSuppSize2_rec(p *Mig_Man_t, id int32) int32 {
+	if id == MIG_NONE || Mig_ObjIsTravIdCurrentId(p, id) != 0 {
+		return 0
+	}
+	Mig_ObjSetTravIdCurrentId(p, id)
+	obj := Mig_ManObj(p, id)
+	if Mig_ObjIsCi(obj) != 0 {
+		return 1
+	}
+	assert(Mig_ObjIsNode(obj) != 0, "Mig_ObjIsNode(obj)")
+	return Mig_ManSuppSize2_rec(p, Mig_ObjFaninId0(obj)) + Mig_ManSuppSize2_rec(p, Mig_ObjFaninId1(obj)) + Mig_ManSuppSize2_rec(p, Mig_ObjFaninId2(obj))
 }
-func Mig_ManSuppSizeOne(pObj *Mig_Obj_t) int32 {
-    Mig_ObjIncrementTravId( pObj );
-//    return Mig_ManSuppSize_rec( pObj );
-    return Mig_ManSuppSize2_rec( Mig_ObjMan(pObj), Mig_ObjId(pObj) );
+func Mig_ManSuppSizeOne(obj *Mig_Obj_t) int32 {
+	Mig_ObjIncrementTravId(obj)
+	return Mig_ManSuppSize2_rec(Mig_ObjMan(obj), Mig_ObjId(obj))
 }
 func Mig_ManSuppSizeTest(p *Mig_Man_t) int32 {
-    var pObj *Mig_Obj_t;
-    var Counter int32;
-    var clk abctime  = Abc_Clock();
-    // inlining of macro Mig_ManForEachObj
-    for  p.iPage = 0; p.iPage < Vec_PtrSize(&p.vPages) &&                   ((p.pPage) = (Mig_Obj_t *)Vec_PtrEntry(&p.vPages, p.iPage)); p.iPage++  {         for  pObj = p.pPage; !Mig_ObjIsNone(pObj); pObj++  {
-        if Mig_ObjIsNode(pObj) {
-            Counter += (Mig_ManSuppSizeOne(pObj) <= 16); }
-    }
-    }
-    fmt.Printf("Nodes with small support %d (out of %d)\n", Counter, Mig_ManNodeNum(p));
-    Abc_PrintTime( 1, "Time", Abc_Clock() - clk );
-    return Counter;
+	start := util.Abc_Clock()
+	var count int32
+	for i := int32(0); i < p.nObjs; i++ {
+		obj := Mig_ManObj(p, i)
+		if Mig_ObjIsNode(obj) != 0 && Mig_ManSuppSizeOne(obj) <= 16 {
+			count++
+		}
+	}
+	fmt.Printf("Nodes with small support %d (out of %d)\n", count, Mig_ManNodeNum(p))
+	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-start)
+	return count
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
