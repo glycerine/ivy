@@ -79,7 +79,10 @@ func (o *Object) IsCO() bool { return o.Kind == ObjectPO || o.Kind == ObjectBI }
 // Network owns objects with stable IDs; deletion leaves holes, as in ABC.
 // Mutations must be serialized by the caller.
 type Network struct {
-	Faults                    []int32
+	Faults []int32
+	// vFins stores fault assignments as alternating object ID / fault type
+	// entries, matching Abc_Ntk_t's source vFins field.
+	vFins                     *vec.Vec_Int_t
 	Constraints               int32
 	Exdc, Excare              *Network
 	Onehots                   [][]int32
@@ -90,21 +93,23 @@ type Network struct {
 	Topo                      []int32
 	AndGateDelay              float64
 	MappingTiming             *MappingTiming
-	WireLoad                  string
-	LTLProperties             []string
-	Model                     []int32
-	Data                      any
-	Attributes                []*vec.Vec_Att_t
-	Step                      int32
-	DTemp                     float64
-	FunctionManager           any
-	timingMapping             any
-	phaseTracking             bool
-	mvVars                    map[*Object]*MVVariable
-	Design                    *Design
-	Copy, AltView             *Network
-	Type, Function            uint8
-	Barriers                  int
+	// lutTimes is ABC's temporary per-object arrival/required/slack storage.
+	lutTimes        []float32
+	WireLoad        string
+	LTLProperties   []string
+	Model           []int32
+	Data            any
+	Attributes      []*vec.Vec_Att_t
+	Step            int32
+	DTemp           float64
+	FunctionManager any
+	timingMapping   any
+	phaseTracking   bool
+	mvVars          map[*Object]*MVVariable
+	Design          *Design
+	Copy, AltView   *Network
+	Type, Function  uint8
+	Barriers        int
 	// CILevel supplies timing-derived initial levels when a timing manager is attached.
 	CILevel             func(*Object) int
 	kindOrder           map[ObjectKind][]*Object

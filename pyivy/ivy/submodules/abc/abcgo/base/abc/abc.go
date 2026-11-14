@@ -169,6 +169,13 @@ func Abc_NtkPi(n *Network, i int32) *Object { return n.ObjectsOfKind(ObjectPI)[i
 func Abc_NtkPo(n *Network, i int32) *Object { return n.ObjectsOfKind(ObjectPO)[i] }
 func Abc_NtkBarBufNum(n *Network) int32     { return int32(n.Barriers) }
 func Abc_NtkNodes(n *Network) []*Object     { return n.ObjectsOfKind(ObjectNode) }
+func Abc_NtkBoxes(n *Network) []*Object {
+	boxes := n.ObjectsOfKind(ObjectWhitebox)
+	boxes = append(boxes, n.ObjectsOfKind(ObjectBlackbox)...)
+	boxes = append(boxes, n.ObjectsOfKind(ObjectLatch)...)
+	return boxes
+}
+func Abc_ObjModel(o *Object) *Network { return boxModel(o) }
 
 func Abc_AigNodeIsAnd(o *Object) int32 {
 	return abcBool(o != nil && o.Kind == ObjectNode && o.Data == aigANDMarker && len(o.fanins) == 2)

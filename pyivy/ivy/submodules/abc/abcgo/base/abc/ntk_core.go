@@ -8,6 +8,7 @@ import (
 	"github.com/glycerine/abcgo/map/scl"
 	"github.com/glycerine/abcgo/misc/mem"
 	"github.com/glycerine/abcgo/misc/util"
+	"github.com/glycerine/abcgo/misc/vec"
 	"strings"
 )
 
@@ -40,6 +41,9 @@ func ntkCopyMetadata(dst, src *Network) {
 	dst.ObjectPermutation = append([]int32(nil), src.ObjectPermutation...)
 	dst.Phases = append([]int32(nil), src.Phases...)
 	dst.LTLProperties = append([]string(nil), src.LTLProperties...)
+	if src.vFins != nil {
+		dst.vFins = vec.Vec_IntDup(src.vFins)
+	}
 	if src.SequenceModel != nil {
 		dst.SequenceModel = util.Abc_CexDup(src.SequenceModel, src.SequenceModel.NRegs)
 	}

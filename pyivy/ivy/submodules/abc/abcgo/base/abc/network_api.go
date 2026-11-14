@@ -1,6 +1,9 @@
 package abc
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/glycerine/abcgo/misc/vec"
+)
 
 // Public inline predicates use the original integer truth convention.
 func Abc_NtkIsNetlist(n *Network) int32       { return abcBool(n.Type == uint8(ABC_NTK_NETLIST)) }
@@ -45,8 +48,22 @@ func Abc_NtkHasOnlyLatchBoxes(n *Network) int32 {
 func Abc_NtkCi(n *Network, index int32) *Object  { return n.cis[index] }
 func Abc_NtkCo(n *Network, index int32) *Object  { return n.cos[index] }
 func Abc_NtkBox(n *Network, index int32) *Object { return n.boxes[index] }
-func Abc_NtkSetName(n *Network, name string)     { n.Name = name }
-func Abc_NtkSetSpec(n *Network, spec string)     { n.Spec = spec }
+
+// Abc_NtkReadFins and Abc_NtkSetFins expose the source fault-list metadata.
+func Abc_NtkReadFins(n *Network) *vec.Vec_Int_t      { return n.vFins }
+func Abc_NtkSetFins(n *Network, fins *vec.Vec_Int_t) { n.vFins = fins }
+func Abc_NtkSetName(n *Network, name string)         { n.Name = name }
+func Abc_NtkSetSpec(n *Network, spec string)         { n.Spec = spec }
+
+// Abc_NtkSetLutTimes allocates ABC's temporary three-float timing tuple per
+// object. Arrival, required time, and slack occupy offsets 0, 1, and 2.
+func Abc_NtkSetLutTimes(n *Network, values []float32) {
+	if len(values) != 3*len(n.objects) {
+		panic("LUT timing storage must contain three values per object")
+	}
+	n.lutTimes = values
+}
+func Abc_NtkLutTimes(n *Network) []float32 { return n.lutTimes }
 func setLatchInit(o *Object, value Abc_InitType_t) {
 	if o.Kind != ObjectLatch {
 		panic("initialization requires latch")

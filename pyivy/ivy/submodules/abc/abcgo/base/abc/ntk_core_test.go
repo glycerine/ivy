@@ -1,12 +1,15 @@
 package abc
 
 import (
+	"os"
+	"path/filepath"
+	"reflect"
+	"testing"
+
 	"github.com/glycerine/abcgo/aig/hop"
 	"github.com/glycerine/abcgo/bdd/cudd/core"
 	"github.com/glycerine/abcgo/misc/util"
-	"os"
-	"path/filepath"
-	"testing"
+	"github.com/glycerine/abcgo/misc/vec"
 )
 
 func ntkFixture() *Network {
@@ -42,6 +45,9 @@ func ntkCheckSame(t *testing.T, a, b *Network) {
 }
 func TestNetworkDupMetadataAndIsolation(t *testing.T) {
 	n := ntkFixture()
+	n.vFins = vec.Vec_IntAlloc(2)
+	vec.Vec_IntPush(n.vFins, 4)
+	vec.Vec_IntPush(n.vFins, 7)
 	n.Constraints = 1
 	n.Onehots = [][]int32{{1, 2}}
 	n.ObjectPermutation = []int32{0, 1}
@@ -65,6 +71,13 @@ func TestNetworkDupMetadataAndIsolation(t *testing.T) {
 	}
 	if copy.SequenceModel == n.SequenceModel {
 		t.Fatal("counterexample shared")
+	}
+	if copy.vFins == n.vFins || !reflect.DeepEqual(vec.Vec_IntArray(copy.vFins), vec.Vec_IntArray(n.vFins)) {
+		t.Fatal("fault metadata was not copied independently")
+	}
+	vec.Vec_IntWriteEntry(copy.vFins, 0, 99)
+	if vec.Vec_IntEntry(n.vFins, 0) != 4 {
+		t.Fatal("fault metadata is shared")
 	}
 	for i, o := range copy.cis {
 		if copy.CILevel(o) != n.CILevel(n.cis[i]) {
