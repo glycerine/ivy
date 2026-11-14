@@ -93,7 +93,7 @@ func Lpk_MapPrime(p *Lpk_Man_t, pTruth []uint32, nVars int32, ppLeaves []*If_Obj
 	var pGraph *Kit_Graph_t
 	var pRes *If_Obj_t
 	// derive the factored form
-	pGraph = kit.Kit_TruthToGraph(pTruth, nVars, nil)
+	pGraph = kit.Kit_TruthToGraph(pTruth, nVars, &p.graphMemory)
 	if pGraph == nil {
 		return nil
 	}

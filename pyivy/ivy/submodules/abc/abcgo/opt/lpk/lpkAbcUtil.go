@@ -104,9 +104,10 @@ func Lpk_FunSuppMinimize(p *Lpk_Fun_t) int32 {
 }
 
 func Lpk_FunComputeCofSupps(p *Lpk_Fun_t) {
-	if p == nil || p.fSupports != 0 {
+	if p == nil {
 		return
 	}
+	assert(p.fSupports == 0, "p.fSupports == 0")
 	truth, cof0, cof1 := Lpk_FunTruth(p, 0), Lpk_FunTruth(p, 1), Lpk_FunTruth(p, 2)
 	for variable := int32(0); variable < int32(p.nVars); variable++ {
 		kit.Kit_TruthCofactor0New(cof0, truth, int32(p.nVars), variable)

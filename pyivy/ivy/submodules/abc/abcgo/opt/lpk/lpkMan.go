@@ -117,6 +117,7 @@ func Lpk_ManStop(p *Lpk_Man_t) {
 	p.vTtElems = nil
 	vec.Vec_PtrFree(p.vTtNodes)
 	p.vTtNodes = nil
+	p.graphMemory = nil
 	p.ppTruths = [5][16][]uint32{}
 	p.pPars = nil
 }

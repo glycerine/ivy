@@ -137,7 +137,11 @@ func Abc_NtkLutMinDecompose(network *Abc_Ntk_t, leaves *Vec_Ptr_t, truth []uint3
 		copyNode.Level = 0
 		for _, edge := range node.Fanins() {
 			fanin := edge.Object.Copy
-			abc.Abc_ObjAddFanin(copyNode, fanin)
+			faninEdge := fanin.Signal()
+			if edge.Complement {
+				faninEdge = faninEdge.Not()
+			}
+			abc.Abc_ObjAddFanin(copyNode, faninEdge)
 			if copyNode.Level < fanin.Level {
 				copyNode.Level = fanin.Level
 			}

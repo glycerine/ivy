@@ -25,6 +25,28 @@ func TestCutSignatureAndDuplicateFiltering(t *testing.T) {
 	}
 }
 
+func TestCutDominanceFiltersSupersets(t *testing.T) {
+	makeCut := func(leaves ...int32) Lpk_Cut_t {
+		cut := Lpk_Cut_t{nLeaves: uint32(len(leaves))}
+		copy(cut.pLeaves[:], leaves)
+		Lpk_NodeCutSignature(&cut)
+		return cut
+	}
+	large := makeCut(3, 9, 20)
+	small := makeCut(3, 20)
+	cuts := []Lpk_Cut_t{large}
+	if Lpk_NodeCutsOneFilter(cuts, 1, &small) != 0 {
+		t.Fatal("new smaller cut should be kept")
+	}
+	if cuts[0].nLeaves != 0 {
+		t.Fatal("larger existing cut was not discarded by its subset")
+	}
+	cuts = []Lpk_Cut_t{small}
+	if Lpk_NodeCutsOneFilter(cuts, 1, &large) != 1 {
+		t.Fatal("existing smaller cut should dominate the new superset")
+	}
+}
+
 func TestLpkPackTruthWordsPreservesWideAndOddTables(t *testing.T) {
 	got := lpkPackTruthWords([]uint32{0x01234567, 0x89abcdef, 0xfedcba98})
 	want := []uint64{0x89abcdef01234567, 0x00000000fedcba98}

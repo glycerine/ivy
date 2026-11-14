@@ -89,13 +89,14 @@ type Lpk_Man_t_ struct {
 	vLeaves      *Vec_Ptr_t
 	vTemp        *Vec_Ptr_t
 	// truth table representation
-	vTtElems *Vec_Ptr_t // elementary truth tables
-	vTtNodes *Vec_Ptr_t // storage for temporary truth tables of the nodes
-	vMemory  *Vec_Int_t
-	vBddDir  *Vec_Int_t
-	vBddInv  *Vec_Int_t
-	puSupps  [32]uint32 // the supports of the cofactors
-	ppTruths [5][16][]uint32
+	vTtElems    *Vec_Ptr_t // elementary truth tables
+	vTtNodes    *Vec_Ptr_t // storage for temporary truth tables of the nodes
+	graphMemory []uint32   // reusable Kit_TruthToGraph scratch (C's vCover workspace)
+	vMemory     *Vec_Int_t
+	vBddDir     *Vec_Int_t
+	vBddInv     *Vec_Int_t
+	puSupps     [32]uint32 // the supports of the cofactors
+	ppTruths    [5][16][]uint32
 	// variable sets
 	vSets   [8]*Vec_Int_t
 	pDsdMan *Kit_DsdMan_t

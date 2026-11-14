@@ -1,0 +1,14 @@
+{
+  "source": "src/opt/lpk/lpkMux.c:Lpk_MapTreeBestCofVar",
+  "description": "The C implementation scans variables in ascending order and replaces the best candidate only on a strictly smaller combined cofactor support.",
+  "cases": [
+    {
+      "name": "first-variable-wins-support-tie",
+      "n_vars": 3,
+      "lut_size": 2,
+      "truth_words": ["66666666"],
+      "expected_variable": 0,
+      "expected_cofactor_supports": [1, 1]
+    }
+  ]
+}
