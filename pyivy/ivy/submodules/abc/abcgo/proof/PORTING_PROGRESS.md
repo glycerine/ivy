@@ -8,36 +8,37 @@ rather than silently substituting another algorithm.
 
 ## Current checkpoint (2026-11-13)
 
-Proof-package source audit remains in progress. The current uncached
-`GOCACHE=/tmp/abcgo-proof-final-gate go test -race -count=1 -p 8 ./proof/...`
-gate and `go vet ./proof/...` pass. `go build ./proof/...` also passes. The
-cover snapshot below was collected immediately after these changes. Passing
-build and test gates do not prove complete source parity: INT2 contains
-incomplete C routines, CEC's broader sweep/partition matrix is still selective,
-FRACOMB exposes a DAR `balance2` ordering difference, and SAIG retains the
-documented backward-driver caveat below.
+The proof packages pass `go build ./proof/...`, uncached tests,
+`go test -race -count=1 -p 8 ./proof/...`, and `go vet ./proof/...` as of this
+checkpoint. The coverage command below also passed on 2026-11-13. These gates
+do not prove complete C parity: INT2's checked-in C routines are incomplete;
+the Go scalable-BMC engine rebuilds each depth instead of using C's incremental
+dynamic unroller; CEC's remaining constant-transfer cases are selective;
+FRACOMB's ordered DAR fixtures establish parity only for tested graph shapes;
+and SAIG retains the documented backward-driver caveat below.
 
-The uncached `go test -cover -count=1 -p 8 ./proof/...` snapshot below measures
-executed Go statements, not C fidelity or algorithm completeness. Use it to
-find untested behavior, not as a completion threshold.
+The `GOCACHE=/tmp/abcgo-proof-final-cover go test -cover -count=1 -p 8
+./proof/...` snapshot was collected on 2026-11-13. It measures executed Go
+statements, not C fidelity or algorithm completeness. Use it to find untested
+behavior, not as a completion threshold.
 
 | Package | Statements |
 | --- | ---: |
-| `abs` | 76.8% |
-| `acec` | 77.0% |
-| `cec` | 80.3% |
+| `abs` | 77.5% |
+| `acec` | 77.2% |
+| `cec` | 80.5% |
 | `cec/core` | 93.0% |
-| `dch` | 92.2% |
-| `fra` | 75.1% |
-| `fracomb` | 92.4% |
+| `dch` | 93.3% |
+| `fra` | 75.2% |
+| `fracomb` | 93.9% |
 | `fraig` | 77.7% |
-| `framgr` | 85.7% |
-| `int` | 87.3% |
+| `framgr` | 87.2% |
+| `int` | 86.9% |
 | `int2` | 90.8% |
-| `live` | 87.4% |
-| `pdr` | 78.8% |
-| `ssc` | 88.8% |
-| `ssw` | 79.9% |
+| `live` | 87.7% |
+| `pdr` | 79.7% |
+| `ssc` | 91.8% |
+| `ssw` | 80.4% |
 
 ## Source API inventory
 
@@ -102,12 +103,21 @@ and representation limits described in its package notes.
   limits, UNKNOWN candidate IDs, interleaved inputs, and timer behavior. CEC4
   out-of-range failure-bitmap behavior now follows C's assertion. A sweep
   diagnostic omission was fixed and checked against compiled C. Tests record
-  C's native XOR-to-AND behavior in partition construction. The broader source
-  matrix remains selective; package race tests and vet pass.
+  C's native XOR-to-AND behavior in partition construction. CEC2/CEC3 sweep
+  tests exercise random graphs with cone mode on/off, merges, miter witnesses,
+  and graph finishing on/off. Sequential partition tests cover cleanup/SCORR/
+  LCORR, empty and self-only domains, traversal epochs, and multiple out-of-
+  order selected registers with mapping checks. New cases cover zero-round and
+  zero-iteration output preservation, CEC4 recycle thresholds/call counts,
+  early miter exits, and overlapping-domain class normalization, including a
+  phase-separated case, with compiled-C comparisons. Constant-valued transfer,
+  verbose statistics, and malformed selected-register indices remain open;
+  package race tests and vet pass.
   The sequential synthesis entry also preserves C's failure boundary for a
   missing clock-domain vector. Tests cover C's incomplete Cec4 builder return
   and partial construction failure instead of substituting a working builder.
-  Broader sweep/partition review remains selective.
+  Sweep/partition coverage and remaining diagnostic, resource-limit, and
+  cross-domain interaction gaps are mapped in `proof/cec/PORTING.md`.
   The lower `opt/dar` facade wires its source default through the CEC adapter,
   and the GIA default uses the GIA miter/skip-three/DCH path. CEC/Cec4 modes are
   exposed through a higher-layer wrapper to avoid an import cycle.
@@ -120,7 +130,7 @@ and representation limits described in its package notes.
   behavior. Non-TFO/TFO refinement scope, class counters, SAT-cone values, and
   random completion now match C. Shared RNG side effects and allocated-choice
   representative preconditions also match C. Tests cover support and metadata
-  boundaries; current statement coverage is 92.2%. Negative SAT and recycle
+  boundaries; current statement coverage is 93.3%. Negative SAT and recycle
   thresholds now preserve C's signed-budget behavior. Native XOR/buffer and
   non-topological inputs outside the C source contract are rejected.
 * `fra`: SEC, clause and BMC paths follow the active source's timeout, budget,
@@ -135,15 +145,16 @@ and representation limits described in its package notes.
   interpolation, global conflict limits, zero-frame behavior, and result-pointer
   preservation. Deadline paths use the source CPU clock and preserve C's float32
   timeout rounding. Broader option combinations remain open.
-* `fracomb`: AIG deadlines now propagate through DAR rewrite stages as in C.
-  Its SAT path uses the source-mapped CNF writer and source Solver2
+* `fracomb`: AIG deadlines now propagate through DAR rewrite stages as in C;
+  the default rewrite wrapper preserves C's partial-result behavior when its
+  void rewrite stops at a deadline. Its SAT path uses the source-mapped CNF writer and source Solver2
   simplification. A multi-sweep SAT fallback test replays witnesses on original
   and rewritten graphs. C's zero-model shortcut, raw flipped SAT model, and
   lack of final witness revalidation are now preserved and characterized.
-  Ordered C/Go stage fixtures cover XOR/factoring and MUX rewrites. One MUX
-  fixture still differs at `balance2`: C recursively rebuilds sharing-aware
-  cones while Go uses in-place pairwise balancing; node counts match, but the
-  structure and ordering do not. The final rewrite stage matches again.
+  Ordered C/Go stage fixtures cover XOR/factoring and MUX rewrites. The
+  two-XOR, larger ordered graph, and C-backed 24-MUX stage oracles now match
+  node-for-node through both balance stages, including `balance2`. These
+  fixtures establish parity for the tested structures, not all DAR inputs.
 * `fraig`: source behavior has been restored for miter checks, external clauses,
   feedback compression, pointer-based hashing/order, and MSAT behavior. Several
   upstream limitations, including witnesses that violate external clauses,
@@ -159,10 +170,13 @@ and representation limits described in its package notes.
   output-ID witness layout, SAT root simplification, constant-implication
   behavior, and the uncomplemented-parent assertion follow C. Tests now cover
   class-copy/latch-correlation state, BMC adapters, sequential simulation,
-  counterexample/model extraction and one-hot reporting/RNG behavior. The
-  current statement coverage is 85.7%. Remaining
-  branches include some BMC/FRAIG sweep and SAT model paths; this is not a proof
-  of complete algorithm coverage.
+  counterexample/model extraction and one-hot reporting/RNG behavior. A new
+  SAT-query regression exercises solver-model packing across a
+  32-bit word boundary, and a latch-correlation sweep regression checks the
+  early return after latch outputs. Current statement coverage is 87.2%.
+  Remaining gaps are uncommon level-limited sweep ordering, verbose reporting,
+  and additional SAT outcome combinations; see `framgr/TEST_COVERAGE.md` for
+  the per-algorithm test map.
 * `int`: MiniSat 1.14p has exhaustive Craig-interpolant checks and option/error
   coverage. Proof-root validation now builds its annotation in one ordered
   pass, preserving clause order. Partition-assembly tests now cover restoration
@@ -170,8 +184,12 @@ and representation limits described in its package notes.
   after rejecting a B clause. A finite enumeration checks multi-frame
   induction for every two-register predicate across four transition relations.
   INT deadlines share the C clock domain; deadlines are not injected into
-  source stages that do not receive them. The Go BMC witness builder remains a
-  reconstruction, not the C scalable-BMC path.
+  source stages that do not receive them. The source INT path invokes scalable
+  BMC with C's start frame and conflict limit, and keeps the proof result/frame
+  when witness reconstruction finds no model. Go scalable BMC still rebuilds
+  the graph and SAT solver per depth instead of using C's incremental dynamic
+  unroller. Constraint-aware reconstruction is a separate Go-only helper; the
+  C path treats ordinary outputs as BMC targets.
 * `int2`: the checked-in C interpolation driver is uncompilably incomplete, so
   the Go driver returns undecided and does not invent a bounded reachability
   fallback. Helper tests characterize source behavior. The suffix constructor
@@ -194,7 +212,7 @@ and representation limits described in its package notes.
   now traverse all nodes in source order and set copy mappings, including for
   unused nodes. Compiled-C tests also cover source parser cursor semantics,
   usage ordering, incomplete-source boundaries and wrapper behavior. Race
-  tests and vet pass at 87.4% statement coverage. Compiled-C regressions now
+  tests and vet pass at 87.7% statement coverage. Compiled-C regressions now
   verify source builders include every PO and retain or clear constraint
   metadata according to the specific C constructor. Native Go convenience
   paths preserve their separate constraint behavior. Command parsing now stops
@@ -209,8 +227,8 @@ and representation limits described in its package notes.
   assertion on a first restart with no saved clauses and an interrupted push
   that can be treated as proof. SAT solvers now restart in place to preserve the
   pointer identity exposed by the C API. Gap timeout now takes priority over
-  per-output drops as in C, with injected-clock boundary tests. Further timeout
-  combinations remain open.
+  per-output drops as in C, with injected-clock boundary tests. Current
+  statement coverage is 79.7%; further timeout combinations remain open.
 * `ssc`: evolving FRAIG substitutions, BSAT frontier encoding, source-style
   class refinement, native-input lowering, random stream, equivalence
   reduction, and CEC verification have source tests. Verbose mode performs the
@@ -243,8 +261,8 @@ an explicit higher-layer wrapper. Compiled ABC option-matrix checks pass.
 `Aig_ObjReplace` matches C's transplant-versus-buffer behavior: unused positive
 AND/XOR replacements move into the old object ID, while complemented, referenced,
 or terminal replacements retain a buffer. Compiled-C tests cover the branches,
-and the correction closes a FRACOMB MUX-rewrite divergence. A separate DAR
-`balance2` ordering difference remains, as recorded under `fracomb`.
+and the correction closes a FRACOMB MUX-rewrite divergence. DAR `balance2`
+ordering now matches the tested C stage oracles, as recorded under `fracomb`.
 
 The shared AIG/SAIG migration stores C's true terminal counts and per-object
 CioIds instead of deriving them from current terminal slices. Duplication,
