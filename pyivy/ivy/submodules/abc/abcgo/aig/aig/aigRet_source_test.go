@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math/rand/v2"
 	"runtime"
+	"slices"
 	"strings"
 	"testing"
 	"weak"
@@ -180,6 +181,76 @@ func TestEdgeRetimingDropsStaleRegisterOneHotAnnotations(t *testing.T) {
 	}
 	if len(g.OneHotGroups) != 1 || len(g.OneHotInputGroups) != 3 {
 		t.Error("retiming changed source annotations")
+	}
+}
+
+func TestRetimingDirectReconstructionMetadata(t *testing.T) {
+	for _, move := range []bool{false, true} {
+		t.Run(fmt.Sprintf("move=%t", move), func(t *testing.T) {
+			g := retFExample(1, false, false, false)
+			g.FlopNumbers = []int32{17, 29}
+			g.FlopReprs = []int32{17, 29}
+			g.ClockDomains = [][]int32{{0, 1}}
+			g.OneHotGroups = [][]int32{{0, 1}}
+			g.OneHotInputGroups = [][]int32{{0, 1}, {2, 3}}
+			p := Rtm_ManFromAig(g)
+			for _, lo := range p.latchObjs {
+				Rtm_ObjAddFirst(p, lo.edges[0], RTM_VAL_ZERO)
+			}
+			if move {
+				for _, lo := range p.latchObjs {
+					Rtm_ObjRetimeFwd(p, lo)
+				}
+				for _, o := range p.vObjs {
+					if len(o.edges) == 2 {
+						Rtm_ObjRetimeFwd(p, o)
+					}
+				}
+			}
+			out := Rtm_ManToAig(p)
+			if move {
+				if out.FlopNumbers != nil || out.FlopReprs != nil || !out.RetimingChanged || len(out.OneHotGroups) != 0 || len(out.OneHotInputGroups) != 1 {
+					t.Errorf("direct reconstruction retained claims about replaced registers")
+				}
+				if len(out.ClockDomains) != 1 || !slices.Equal(out.ClockDomains[0], []int32{0}) {
+					t.Errorf("direct reconstruction domain = %v, want [[0]]", out.ClockDomains)
+				}
+			} else if !slices.Equal(out.FlopNumbers, g.FlopNumbers) || !slices.Equal(out.FlopReprs, g.FlopReprs) || out.RetimingChanged || len(out.OneHotGroups) != 1 || len(out.OneHotInputGroups) != 2 {
+				t.Error("unchanged reconstruction lost original register metadata")
+			}
+			if len(g.ClockDomains[0]) != 2 || g.FlopNumbers[0] != 17 || len(g.OneHotGroups) != 1 {
+				t.Error("reconstruction changed source metadata")
+			}
+			if !t.Failed() {
+				checkRetFTraces(t, g, out)
+			}
+		})
+	}
+}
+
+func TestRetimingReconstructionInitialEncodingMetadata(t *testing.T) {
+	for _, value := range []Rtm_Init_t{RTM_VAL_ZERO, RTM_VAL_ONE, RTM_VAL_VOID} {
+		t.Run(fmt.Sprint(value), func(t *testing.T) {
+			g := NewGraph()
+			a, q := g.NewInput(), g.NewInput()
+			g.AddOutput(q)
+			g.AddOutput(a)
+			g.nRegs = 1
+			g.FlopNumbers = []int32{19}
+			p := Rtm_ManFromAig(g)
+			Rtm_ObjAddFirst(p, p.latchObjs[0].edges[0], value)
+			out := Rtm_ManToAig(p)
+			if value == RTM_VAL_ONE {
+				if out.FlopNumbers != nil || !out.RetimingChanged {
+					t.Error("complemented register encoding retained original flop identity")
+				}
+			} else if !slices.Equal(out.FlopNumbers, g.FlopNumbers) || out.RetimingChanged {
+				t.Error("unchanged zero encoding lost original flop identity")
+			}
+			if got := retFTrace(t, out, [][]bool{{false}})[0][0]; got != (value == RTM_VAL_ONE) {
+				t.Errorf("initial output = %t for initialization %d", got, value)
+			}
+		})
 	}
 }
 

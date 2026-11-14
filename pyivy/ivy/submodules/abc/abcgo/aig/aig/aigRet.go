@@ -285,8 +285,49 @@ func Rtm_ManToAig(p *Rtm_Man_t) *Graph {
 		dupMetadata(g, p.source)
 	}
 	Aig_ManSetRegNum(g, n-int32(len(p.vPis)))
+	if p.source != nil && !rtmOriginalRegisterLayout(p, g.nRegs) {
+		rtmCheckClockDomains(p.source)
+		g.RetimingChanged = true
+		g.FlopNumbers, g.FlopReprs, g.OneHotGroups = nil, nil, nil
+		// Only groups over unchanged true PIs retain their meaning.
+		var inputGroups [][]int32
+		for _, group := range g.OneHotInputGroups {
+			keep := true
+			for _, input := range group {
+				if input < 0 || int(input) >= len(p.vPis) {
+					keep = false
+					break
+				}
+			}
+			if keep {
+				inputGroups = append(inputGroups, group)
+			}
+		}
+		g.OneHotInputGroups = inputGroups
+		if len(g.ClockDomains) == 1 {
+			g.ClockDomains[0] = make([]int32, g.nRegs)
+			for i := range g.ClockDomains[0] {
+				g.ClockDomains[0][i] = int32(i)
+			}
+		}
+	}
 	Aig_ManCleanup(g)
 	return g
+}
+
+// Register IDs survive reconstruction only when the sole latch on each
+// original LO edge remains in place and no other edge has acquired latches.
+func rtmOriginalRegisterLayout(p *Rtm_Man_t, registers int32) bool {
+	if registers != p.source.nRegs || len(p.latchObjs) != int(registers) {
+		return false
+	}
+	for _, lo := range p.latchObjs {
+		e := lo.edges[0]
+		if e.nLats != 1 || Rtm_ObjGetFirst(p, e) == RTM_VAL_ONE {
+			return false
+		}
+	}
+	return true
 }
 
 // Rtm_ManRetime follows ABC's edge-retiming driver. Forward mode preserves
@@ -297,23 +338,7 @@ func Rtm_ManRetime(g *Graph, forward, steps, verbose int32) *Graph {
 	if g.nRegs == 0 {
 		return Aig_ManDupOrdered(g)
 	}
-	if len(g.ClockDomains) > 1 {
-		panic("aig: edge retiming requires a single clock domain")
-	}
-	if len(g.ClockDomains) == 1 {
-		// The edge algorithm cannot track different domains through a move.
-		// A partial list must not silently absorb previously unassigned latches.
-		seen := make([]bool, g.nRegs)
-		for _, reg := range g.ClockDomains[0] {
-			if reg < 0 || reg >= g.nRegs || seen[reg] {
-				panic("aig: invalid edge-retiming clock-domain membership")
-			}
-			seen[reg] = true
-		}
-		if len(g.ClockDomains[0]) != len(seen) {
-			panic("aig: edge retiming requires every register in its clock domain")
-		}
-	}
+	rtmCheckClockDomains(g)
 	p := Rtm_ManFromAig(g)
 	defer Rtm_ManFree(p)
 	for _, o := range p.latchObjs {
@@ -379,34 +404,29 @@ func Rtm_ManRetime(g *Graph, forward, steps, verbose int32) *Graph {
 	out := Rtm_ManToAig(p)
 	if moves > 0 {
 		out.RetimingChanged = true
-		out.FlopNumbers = nil
-		out.FlopReprs = nil
-		// Edge retiming replaces register identities. Only one-hot groups
-		// consisting entirely of unchanged true PIs retain their meaning.
-		out.OneHotGroups = nil
-		var inputGroups [][]int32
-		for _, group := range out.OneHotInputGroups {
-			keep := true
-			for _, input := range group {
-				if input < 0 || int(input) >= len(p.vPis) {
-					keep = false
-					break
-				}
-			}
-			if keep {
-				inputGroups = append(inputGroups, group)
-			}
-		}
-		out.OneHotInputGroups = inputGroups
-		if len(out.ClockDomains) == 1 {
-			out.ClockDomains[0] = make([]int32, out.nRegs)
-			for i := range out.ClockDomains[0] {
-				out.ClockDomains[0][i] = int32(i)
-			}
-		}
 	}
 	if verbose != 0 {
 		fmt.Printf("Retiming: %d moves, %d registers\n", moves, out.nRegs)
 	}
 	return Aig_ManReduceLaches(out, verbose)
+}
+
+func rtmCheckClockDomains(g *Graph) {
+	if len(g.ClockDomains) > 1 {
+		panic("aig: edge retiming requires a single clock domain")
+	}
+	if len(g.ClockDomains) == 1 {
+		// The edge algorithm cannot track different domains through a move.
+		// A partial list must not silently absorb previously unassigned latches.
+		seen := make([]bool, g.nRegs)
+		for _, reg := range g.ClockDomains[0] {
+			if reg < 0 || reg >= g.nRegs || seen[reg] {
+				panic("aig: invalid edge-retiming clock-domain membership")
+			}
+			seen[reg] = true
+		}
+		if len(g.ClockDomains[0]) != len(seen) {
+			panic("aig: edge retiming requires every register in its clock domain")
+		}
+	}
 }
