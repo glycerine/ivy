@@ -1,4 +1,5 @@
 package core
+
 import (
 	"context"
 	"errors"
@@ -19,6 +20,11 @@ func TestRewriteReleasesReverseLevelsOnCancellation(t *testing.T) {
 		t.Fatalf("rewrite error %v, want cancellation", err)
 	}
 	// Starting timing again panics if the rewrite leaked reverse-level state.
+	if aig.Aig_ManHasFanout(g) {
+		t.Fatal("rewrite leaked its fanout index")
+	}
+	aig.Aig_ManFanoutStart(g)
+	defer aig.Aig_ManFanoutStop(g)
 	aig.Aig_ManStartReverseLevels(g, 0)
 	aig.Aig_ManStopReverseLevels(g)
 }

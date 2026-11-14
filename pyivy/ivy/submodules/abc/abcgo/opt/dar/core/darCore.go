@@ -1,4 +1,5 @@
 package core
+
 import (
 	"github.com/glycerine/abcgo/aig/aig"
 )
@@ -24,12 +25,15 @@ func Dar_ManRewrite(g *aig.Graph, params *RewriteParams) error {
 }
 func (m *Manager) Rewrite() error {
 	g := m.Graph
+	// C removes dangling logic before establishing fanout and timing state.
+	aig.Aig_ManCleanup(g)
+	if m.Params.Fanout {
+		aig.Aig_ManFanoutStart(g)
+		defer aig.Aig_ManFanoutStop(g)
+	}
 	if m.Params.UpdateLevel {
 		// ABC fixes the global level bound for the whole rewrite and uses
 		// reverse levels to allow individual nodes to consume available slack.
-		// Remove dangling logic before timing, as ABC does; otherwise its
-		// fanouts would falsely consume required-level slack.
-		aig.Aig_ManCleanup(g)
 		aig.Aig_ManStartReverseLevels(g, 0)
 		defer aig.Aig_ManStopReverseLevels(g)
 	}

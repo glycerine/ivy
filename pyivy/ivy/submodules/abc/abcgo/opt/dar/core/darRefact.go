@@ -1,4 +1,5 @@
 package core
+
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/aig"
@@ -23,6 +24,8 @@ func Dar_ManRefactor(g *aig.Graph, params *RefactorParams) error {
 		return err
 	}
 	aig.Aig_ManCleanup(g)
+	aig.Aig_ManFanoutStart(g)
+	defer aig.Aig_ManFanoutStop(g)
 	if p.UpdateLevel {
 		aig.Aig_ManStartReverseLevels(g, 0)
 		defer aig.Aig_ManStopReverseLevels(g)
