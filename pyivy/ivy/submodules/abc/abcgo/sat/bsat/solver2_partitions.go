@@ -22,9 +22,15 @@ func (p *Solver2) SetVariablePartitionA(variable int32, partA bool) {
 // must be nonempty and not already contradicted by root units. It marks the
 // returned clause after insertion, exactly as the source interpolation driver.
 func (p *Solver2) AddPartitionClause(partA bool, literals ...Literal) {
+	p.AddPartitionClauseWithID(p.nextID, partA, literals...)
+}
+
+// AddPartitionClauseWithID preserves the explicit source clause-ID contract,
+// including solver2's rejection of ID zero.
+func (p *Solver2) AddPartitionClauseWithID(id int32, partA bool, literals ...Literal) {
 	p.solver.lastStatus = Unknown
-	handle := sat_solver2_addclause(p.solver, literals, p.nextID)
-	p.nextID++
+	handle := sat_solver2_addclause(p.solver, literals, id)
+	p.nextID = max(p.nextID, id+1)
 	clause2_set_partA(p.solver, handle, solver2Bool(partA))
 }
 

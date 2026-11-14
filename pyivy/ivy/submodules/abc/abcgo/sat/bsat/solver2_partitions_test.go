@@ -36,3 +36,15 @@ func TestSolver2SourceVariableGrowthInvalidatesOldModel(t *testing.T) {
 		t.Fatalf("model for fewer variables remained visible: %v", model)
 	}
 }
+
+func TestSourcePartitionClauseRejectsZeroID(t *testing.T) {
+	s := NewSolver2()
+	defer s.Close()
+	s.SetNumVars(1)
+	defer func() {
+		if recover() == nil {
+			t.Fatal("source forbids clause ID zero")
+		}
+	}()
+	s.AddPartitionClauseWithID(0, true, Positive(0))
+}
