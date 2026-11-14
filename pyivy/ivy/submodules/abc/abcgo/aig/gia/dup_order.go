@@ -90,7 +90,18 @@ func Gia_ManDupOrderDfs_rec(dst, src *Gia_Man_t, obj *Gia_Obj_t) int32 {
 	case 3:
 		result = Gia_ManAppendXorReal(dst, literal(a), literal(b))
 	case 4:
-		result = Gia_ManAppendMuxReal(dst, literal(a), literal(b), literal(c))
+		control, then, otherwise := literal(a), literal(b), literal(c)
+		phase := int32(0)
+		if Gia_ManHashStarted(dst) != 0 {
+			if otherwise>>1 > then>>1 {
+				then, otherwise = otherwise, then
+				control ^= 1
+			}
+			// Keep the high data pin regular, as the active hash requires.
+			// Complementing both data pins complements the MUX output.
+			phase = then & 1
+		}
+		result = Gia_ManAppendMuxReal(dst, control, then^phase, otherwise^phase) ^ phase
 	case 5:
 		result = Gia_ManAppendBuf(dst, literal(a))
 	case 6:

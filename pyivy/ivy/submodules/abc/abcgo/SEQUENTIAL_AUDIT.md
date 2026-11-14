@@ -3562,3 +3562,30 @@ Final full uncached GIA race tests pass in 70.657s
 (`/tmp/abcgo-append-shared-final-vet.log`). Raw-MUX arm-phase handling during
 unhashed append with an active table remains an inspection follow-up, along
 with property/constraint composition; this checkpoint does not close GIA.
+
+Raw MUX phase follow-up: a new red regression confirms that ordinary append
+panics when copying a valid real MUX with a complemented high data arm into
+its active-hash destination (`/tmp/abcgo-append-mux-phase-red.log`). DFS copying
+passed that arm directly to AppendMuxReal, whose source-compatible active-hash
+precondition requires a regular then arm. In the active-table case, order the
+mapped data arms, invert the control if swapped, and move the high arm's phase
+to both data edges and the returned literal. This is the same Boolean phase
+identity used by the existing source hash-MUX routine; it performs no hash
+lookup, simplification, gate expansion or change in node count. Copying into
+an inactive-table destination retains the existing raw phase behavior.
+
+Coverage checks all sixteen data/control/output phase combinations, parent
+AND use of the copied MUX and repeated memoized DFS calls. Reversed source-to-
+destination leaf mappings exercise the data-arm swap with both active and
+inactive tables. Tests require one real MUX and exact source object counts.
+Independent truth tables cover 256 append rows and 256 reversed-leaf DFS rows.
+A compiled-original-C ordinary-AND expansion matches all sixteen append cases
+and their 256 rows. Go real-MUX handling is an extension of that original
+AND-only append driver; no unsupported native real-MUX behavior is asserted.
+Focused tests pass in 1.858s (`/tmp/abcgo-append-mux-phase-focused.log`).
+Final GIA/caller race and GIA vet verification follows below. This closes the
+specific phase follow-up from the prior checkpoint; property/constraint and
+other GIA families remain open. Original completion remains 2/131.
+Full uncached race tests pass for GIA (59.249s) and its base/abci caller
+(28.582s), recorded in `/tmp/abcgo-append-mux-phase-race.log`. GIA vet passes
+(`/tmp/abcgo-append-mux-phase-vet.log`). The sequential audit stays active.
