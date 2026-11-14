@@ -210,7 +210,7 @@ func Res_UpdateNetwork(pObj *Abc_Obj_t, vFanins *Vec_Ptr_t, pFunc *Hop_Obj_t, vL
 	//printf( "Replacing node " ); Abc_ObjPrint( stdout, pObj );
 	//printf( "Inserting node " ); Abc_ObjPrint( stdout, pObjNew );
 	// update the level of the node
-	Abc_NtkUpdate(pObj, pObjNew, vLevels)
+	abc.Abc_NtkUpdate(pObj, pObjNew, vLevels)
 }
 
 /*
@@ -249,7 +249,7 @@ func Abc_NtkResynthesize(pNtk *Abc_Ntk_t, pPars *Res_Par_t) int32 {
 	}
 
 	// perform the network sweep
-	Abc_NtkSweep(pNtk, 0)
+	abc.Abc_NtkSweep(pNtk, 0)
 
 	// convert into the AIG
 	if abc.Abc_NtkToAig(pNtk) == 0 {
@@ -261,13 +261,16 @@ func Abc_NtkResynthesize(pNtk *Abc_Ntk_t, pPars *Res_Par_t) int32 {
 
 	// set the number of levels
 	abc.Abc_NtkLevel(pNtk)
-	Abc_NtkStartReverseLevels(pNtk, pPars.nGrowthLevel)
+	abc.Abc_NtkStartReverseLevels(pNtk, pPars.nGrowthLevel)
 
 	// try resynthesizing nodes in the topological order
 	nNodesOld = abc.Abc_NtkObjNumMax(pNtk)
 	pProgress = extra.Extra_ProgressBarStart(os.Stdout, nNodesOld)
 	for i = 0; i < abc.Abc_NtkObjNumMax(pNtk); i++ {
 		pObj = abc.Abc_NtkObj(pNtk, i)
+		if pObj == nil {
+			continue
+		}
 		extra.Extra_ProgressBarUpdate(pProgress, i, "")
 		if abc.Abc_ObjIsNode(pObj) == 0 {
 			continue
@@ -295,7 +298,7 @@ func Abc_NtkResynthesize(pNtk *Abc_Ntk_t, pPars *Res_Par_t) int32 {
 
 		// collect the divisors
 		clk = util.Abc_Clock()
-		Res_WinDivisors(p.pWin, Abc_ObjRequiredLevel(pObj)-1)
+		Res_WinDivisors(p.pWin, abc.Abc_ObjRequiredLevel(pObj)-1)
 		p.timeDiv += util.Abc_Clock() - clk
 
 		p.nWins++
@@ -423,7 +426,7 @@ func Abc_NtkResynthesize(pNtk *Abc_Ntk_t, pPars *Res_Par_t) int32 {
 		//        printf( "\n" );
 	}
 	extra.Extra_ProgressBarStop(pProgress)
-	Abc_NtkStopReverseLevels(pNtk)
+	abc.Abc_NtkStopReverseLevels(pNtk)
 
 	p.timeSatSim += p.pSim.timeSat
 	p.timeSatTotal = p.timeSatSat + p.timeSatUnsat + p.timeSatSim

@@ -28,39 +28,59 @@ func Llb_ManConstructGroupBdd(p *Llb_Man_t, group *Llb_Grp_t) *DdNode {
 	if p == nil || p.dd == nil || p.pAig == nil || p.vObj2Var == nil || group == nil {
 		return nil
 	}
-	variables := make([]*core.DdNode, len(p.pAig.Inputs()))
-	for i, edge := range p.pAig.Inputs() {
-		id := int(aig.Aig_ObjId(edge))
-		if id < 0 || id >= int(vec.Vec_IntSize(p.vObj2Var)) {
-			return nil
+	functions := make([]*DdNode, len(p.pAig.Nodes()))
+	functions[0] = core.Cudd_ReadOne(p.dd)
+	if group.vIns != nil {
+		for i := 0; i < vec.Vec_PtrSize(group.vIns); i++ {
+			edge := llbGroupEdge(group.vIns, i)
+			id := edge.NodeID()
+			if id < 0 || id >= len(functions) || id >= vec.Vec_IntSize(p.vObj2Var) {
+				return nil
+			}
+			index := vec.Vec_IntEntry(p.vObj2Var, id)
+			if index < 0 || int(index) >= len(p.dd.Vars) {
+				return nil
+			}
+			functions[id] = core.Cudd_bddIthVar(p.dd, int(index))
 		}
-		index := vec.Vec_IntEntry(p.vObj2Var, id)
-		if index < 0 || int(index) >= len(p.dd.Vars) {
-			return nil
-		}
-		variables[i] = core.Cudd_bddIthVar(p.dd, int(index))
 	}
-	functions := llbBuildBDDTable(p.pAig, p.dd, variables)
-	if functions == nil {
-		return nil
+	if group.vNodes != nil {
+		for i := 0; i < vec.Vec_PtrSize(group.vNodes); i++ {
+			edge := llbGroupEdge(group.vNodes, i)
+			node := p.pAig.Node(edge)
+			left := llbBDDForEdge(p.pAig, functions, node.Fanins[0])
+			right := llbBDDForEdge(p.pAig, functions, node.Fanins[1])
+			if left == nil || right == nil {
+				return nil
+			}
+			functions[edge.NodeID()] = core.Cudd_bddAnd(p.dd, left, right)
+			if functions[edge.NodeID()] == nil {
+				return nil
+			}
+		}
 	}
 	result := core.Cudd_ReadOne(p.dd)
+	if group.vOuts == nil {
+		return result
+	}
 	for i := 0; i < vec.Vec_PtrSize(group.vOuts); i++ {
 		edge := llbGroupEdge(group.vOuts, i)
-		id := int(aig.Aig_ObjId(edge))
-		if id < 0 || id >= len(functions) || functions[id] == nil || id >= int(vec.Vec_IntSize(p.vObj2Var)) {
+		id := edge.NodeID()
+		if id < 0 || id >= len(functions) || id >= vec.Vec_IntSize(p.vObj2Var) {
 			return nil
 		}
 		index := vec.Vec_IntEntry(p.vObj2Var, id)
 		if index < 0 || int(index) >= len(p.dd.Vars) {
 			return nil
 		}
-		output := functions[id]
-		if edge.Complemented() {
-			output = core.Cudd_Not(output)
+		output := llbBDDForEdge(p.pAig, functions, edge)
+		if p.pAig.Node(edge).Kind == aig.Output {
+			output = llbBDDForEdge(p.pAig, functions, p.pAig.Node(edge).Fanins[0])
 		}
-		equation := core.Cudd_bddXnor(p.dd, output, core.Cudd_bddIthVar(p.dd, int(index)))
-		result = core.Cudd_bddAnd(p.dd, result, equation)
+		if output == nil {
+			return nil
+		}
+		result = core.Cudd_bddAnd(p.dd, result, core.Cudd_bddXnor(p.dd, output, core.Cudd_bddIthVar(p.dd, int(index))))
 		if result == nil {
 			return nil
 		}

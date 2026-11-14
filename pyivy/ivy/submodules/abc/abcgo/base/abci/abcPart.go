@@ -2,1215 +2,724 @@ package abci
 
 import (
 	"fmt"
+	"math"
 	"os"
+	"sort"
 	"time"
+
+	"github.com/glycerine/abcgo/aig/hop"
+	"github.com/glycerine/abcgo/base/abc"
+	"github.com/glycerine/abcgo/base/cmd"
+	abcmain "github.com/glycerine/abcgo/base/main"
+	"github.com/glycerine/abcgo/misc/extra"
+	"github.com/glycerine/abcgo/misc/util"
+	"github.com/glycerine/abcgo/misc/vec"
 )
 
-/**CFile****************************************************************
-
-  FileName    [abcPart.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Network and node package.]
-
-  Synopsis    [Output partitioning package.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: abcPart.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "base/abc/abc.h"
-//#include "base/main/main.h"
-//#include "base/cmd/cmd.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-       
 type Supp_Man_t struct {
-    nChunkSize              int32;    // the size of one chunk of memory (~1 MB)
-    nStepSize              int32;     // the step size in saving memory (~64 bytes)
-    pFreeBuf            string;      // the pointer to free memory
-    nFreeSize              int32;     // the size of remaining free memory
-    vMemory       *Vec_Ptr_t;       // the memory allocated
-    vFree       *Vec_Ptr_t;         // the vector of free pieces of memory
+	nChunkSize, nStepSize int32
+	pFreeBuf              []byte
+	nFreeSize             int32
+	vMemory               *Vec_Ptr_t
+	vFree                 *Vec_Ptr_t
+	freeEntries           map[int][]*Supp_One_t
 }
 
-       
 type Supp_One_t struct {
-    nRefs              int32;         // the number of references
-    nOuts              int32;         // the number of outputs
-    nOutsAlloc              int32;    // the array size
-    pOuts [0]int32;      // the array of outputs
+	nRefs, nOuts, nOutsAlloc int32
+	pOuts                    []int32
+	next                     *Supp_One_t
 }
 
-func Supp_SizeType(nSize int32, nStepSize int32) int32 { return nSize / nStepSize + ((nSize % nStepSize) > 0); }
-func Supp_OneNext(pPart string) string { return *((char **)pPart);                             }
-func Supp_OneSetNext(pPart string, pNext string) { *((char **)pPart) = pNext;                            }
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Start the memory manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Supp_ManStart(nChunkSize int32, nStepSize int32) *Supp_Man_t {
-    var p *Supp_Man_t;
-    // inlining of macro ABC_ALLOC
-    p = ((Supp_Man_t *) malloc(sizeof(Supp_Man_t) * (size_t)(1)));
-    memset( p, 0, sizeof(Supp_Man_t) );
-    p.nChunkSize = nChunkSize;
-    p.nStepSize  = nStepSize;
-    p.vMemory    = Vec_PtrAlloc( 1000 );
-    p.vFree      = Vec_PtrAlloc( 1000 );
-    return p;
+func Supp_SizeType(nSize, nStepSize int32) int32 {
+	if nSize <= 0 || nStepSize <= 0 {
+		return 0
+	}
+	return nSize/nStepSize + boolInt32(nSize%nStepSize != 0)
 }
+func Supp_OneNext(part *Supp_One_t) *Supp_One_t { return part.next }
+func Supp_OneSetNext(part, next *Supp_One_t)    { part.next = next }
 
-/**Function*************************************************************
-
-  Synopsis    [Stops the memory manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+func Supp_ManStart(chunkSize, stepSize int32) *Supp_Man_t {
+	if chunkSize <= 0 || stepSize <= 0 {
+		panic("support allocator requires positive chunk and step sizes")
+	}
+	return &Supp_Man_t{nChunkSize: chunkSize, nStepSize: stepSize, vMemory: vec.Vec_PtrAlloc(1000), vFree: vec.Vec_PtrAlloc(1000), freeEntries: make(map[int][]*Supp_One_t)}
+}
 func Supp_ManStop(p *Supp_Man_t) {
-    var pMemory any;
-    var i int32;
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vMemory)) && (((pMemory) = (void *)Vec_PtrEntry(p.vMemory, i)), 1); i++  {
-        pMemory = nil;
-    }
-    Vec_PtrFree( p.vMemory );
-    Vec_PtrFree( p.vFree );
-    p = nil;
+	if p == nil {
+		return
+	}
+	vec.Vec_PtrFree(p.vMemory)
+	vec.Vec_PtrFree(p.vFree)
+	clear(p.freeEntries)
+	p.pFreeBuf = nil
+	p.nFreeSize = 0
+}
+func Supp_ManFetch(p *Supp_Man_t, size int32) []byte {
+	if size <= 0 {
+		panic("support allocator fetch requires positive size")
+	}
+	typ := Supp_SizeType(size, p.nStepSize)
+	vec.Vec_PtrFillExtra(p.vFree, int(typ+1), nil)
+	if pool, ok := vec.Vec_PtrEntry(p.vFree, int(typ)).([][]byte); ok && len(pool) != 0 {
+		block := pool[len(pool)-1]
+		vec.Vec_PtrWriteEntry(p.vFree, int(typ), pool[:len(pool)-1])
+		return block[:size]
+	}
+	realSize := typ * p.nStepSize
+	if p.nFreeSize < realSize {
+		chunkSize := p.nChunkSize
+		if chunkSize < realSize {
+			chunkSize = realSize
+		}
+		chunk := make([]byte, chunkSize)
+		vec.Vec_PtrPush(p.vMemory, chunk)
+		p.pFreeBuf, p.nFreeSize = chunk, chunkSize
+	}
+	out := p.pFreeBuf[:realSize]
+	p.pFreeBuf = p.pFreeBuf[realSize:]
+	p.nFreeSize -= realSize
+	return out[:size]
+}
+func Supp_ManRecycle(p *Supp_Man_t, memory []byte, size int32) {
+	typ := Supp_SizeType(size, p.nStepSize)
+	vec.Vec_PtrFillExtra(p.vFree, int(typ+1), nil)
+	if int32(len(memory)) < size {
+		panic("support recycle buffer is too short")
+	}
+	pool, _ := vec.Vec_PtrEntry(p.vFree, int(typ)).([][]byte)
+	vec.Vec_PtrWriteEntry(p.vFree, int(typ), append(pool, memory[:typ*p.nStepSize]))
+}
+func Supp_ManFetchEntry(p *Supp_Man_t, words, refs int32) *Supp_One_t {
+	if words < 0 || refs < 0 {
+		panic("negative support-entry size or reference count")
+	}
+	capacity := int(words)
+	pool := p.freeEntries[capacity]
+	var entry *Supp_One_t
+	if len(pool) != 0 {
+		entry = pool[len(pool)-1]
+		p.freeEntries[capacity] = pool[:len(pool)-1]
+		entry.nOuts = 0
+		entry.nRefs = refs
+		entry.next = nil
+	} else {
+		entry = &Supp_One_t{nRefs: refs, nOutsAlloc: words, pOuts: make([]int32, 0, capacity)}
+	}
+	return entry
+}
+func Supp_ManRecycleEntry(p *Supp_Man_t, entry *Supp_One_t) {
+	if entry == nil || entry.nOuts > entry.nOutsAlloc || entry.nOuts < entry.nOutsAlloc/2 {
+		panic("invalid support entry recycle")
+	}
+	entry.pOuts = entry.pOuts[:0]
+	p.freeEntries[int(entry.nOutsAlloc)] = append(p.freeEntries[int(entry.nOutsAlloc)], entry)
+}
+func Supp_ManMergeEntry(manager *Supp_Man_t, left, right *Supp_One_t, refs int32) *Supp_One_t {
+	if left == nil || right == nil {
+		panic("nil support entry")
+	}
+	merged := make([]int32, 0, int(left.nOuts+right.nOuts))
+	i, j := 0, 0
+	for i < int(left.nOuts) && j < int(right.nOuts) {
+		a, b := left.pOuts[i], right.pOuts[j]
+		switch {
+		case a == b:
+			merged = append(merged, a)
+			i++
+			j++
+		case a < b:
+			merged = append(merged, a)
+			i++
+		default:
+			merged = append(merged, b)
+			j++
+		}
+	}
+	merged = append(merged, left.pOuts[i:int(left.nOuts)]...)
+	merged = append(merged, right.pOuts[j:int(right.nOuts)]...)
+	entry := Supp_ManFetchEntry(manager, int32(len(merged)), refs)
+	entry.pOuts = append(entry.pOuts, merged...)
+	entry.nOuts = int32(len(merged))
+	if entry.nOuts < left.nOuts || entry.nOuts < right.nOuts {
+		panic("support merge lost entries")
+	}
+	return entry
+}
+func Supp_ManTransferEntry(entry *Supp_One_t) *Vec_Int_t {
+	out := vec.Vec_IntAlloc(int(entry.nOuts))
+	for _, index := range entry.pOuts[:entry.nOuts] {
+		vec.Vec_IntPush(out, index)
+	}
+	return out
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Fetches the memory entry of the given size.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Supp_ManFetch(p *Supp_Man_t, nSize int32) string {
-    var Type, nSizeReal int32;
-    var pMemory string;
-    assert(nSize > 0, "nSize > 0");
-    Type = Supp_SizeType( nSize, p.nStepSize );
-    Vec_PtrFillExtra( p.vFree, Type + 1, nil );
-    if pMemory = (char *)Vec_PtrEntry( p.vFree, Type ) {
-        Vec_PtrWriteEntry( p.vFree, Type, Supp_OneNext(pMemory) );
-        return pMemory;
-    }
-    nSizeReal = p.nStepSize * Type;
-    if p.nFreeSize < nSizeReal {
-        // inlining of macro ABC_ALLOC
-        p.pFreeBuf = ((char *) malloc(sizeof(char) * (size_t)(p.nChunkSize)));
-        p.nFreeSize = p.nChunkSize;
-        Vec_PtrPush( p.vMemory, p.pFreeBuf );
-    }
-    assert(p.nFreeSize >= nSizeReal, "p.nFreeSize >= nSizeReal");
-    pMemory = p.pFreeBuf;
-    p.pFreeBuf  += nSizeReal;
-    p.nFreeSize -= nSizeReal;
-    return pMemory;
+func Abc_NtkDfsNatural(network *Abc_Ntk_t) *Vec_Ptr_t {
+	if abc.Abc_NtkIsStrash(network) == 0 {
+		panic("support DFS requires a strashed network")
+	}
+	out := vec.Vec_PtrAlloc(int(abc.Abc_NtkObjNum(network)))
+	seen := make(map[*Abc_Obj_t]bool)
+	constant := abc.Abc_AigConst1(network).Object
+	seen[constant] = true
+	vec.Vec_PtrPush(out, constant)
+	for _, node := range network.Objects() {
+		if abc.Abc_ObjIsNode(node) == 0 {
+			continue
+		}
+		for _, fanin := range node.Fanins() {
+			if abc.Abc_ObjIsCi(fanin.Object) != 0 && !seen[fanin.Object] {
+				seen[fanin.Object] = true
+				vec.Vec_PtrPush(out, fanin.Object)
+			}
+		}
+		vec.Vec_PtrPush(out, node)
+		for _, fanout := range node.Fanouts() {
+			if abc.Abc_ObjIsCo(fanout) != 0 && !seen[fanout] {
+				seen[fanout] = true
+				vec.Vec_PtrPush(out, fanout)
+			}
+		}
+	}
+	return out
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Recycles the memory entry of the given size.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Supp_ManRecycle(p *Supp_Man_t, pMemory string, nSize int32) {
-    var Type int32;
-    Type = Supp_SizeType( nSize, p.nStepSize );
-    Vec_PtrFillExtra( p.vFree, Type + 1, nil );
-    Supp_OneSetNext( pMemory, (char *)Vec_PtrEntry(p.vFree, Type) );
-    Vec_PtrWriteEntry( p.vFree, Type, pMemory );
+func Abc_NtkComputeSupportsSmart(network *Abc_Ntk_t) *Vec_Ptr_t {
+	ciIndex := make(map[*Abc_Obj_t]int32)
+	for i := int32(0); i < abc.Abc_NtkCiNum(network); i++ {
+		ciIndex[abc.Abc_NtkCi(network, i)] = i
+	}
+	coIndex := make(map[*Abc_Obj_t]int32)
+	for i := int32(0); i < abc.Abc_NtkCoNum(network); i++ {
+		coIndex[abc.Abc_NtkCo(network, i)] = i
+	}
+	supports := vec.Vec_PtrAlloc(int(abc.Abc_NtkCoNum(network)))
+	manager := Supp_ManStart(1<<20, 1<<6)
+	defer Supp_ManStop(manager)
+	entries := make(map[*Abc_Obj_t]*Supp_One_t)
+	order := Abc_NtkDfsNatural(network)
+	for _, object := range vec.Vec_PtrArray(order) {
+		node := object.(*Abc_Obj_t)
+		switch {
+		case abc.Abc_ObjIsNode(node) != 0:
+			fanins := node.Fanins()
+			left, right := entries[fanins[0].Object], entries[fanins[1].Object]
+			entries[node] = Supp_ManMergeEntry(manager, left, right, abc.Abc_ObjFanoutNum(node))
+			for _, entry := range []*Supp_One_t{left, right} {
+				if entry == nil || entry.nRefs <= 0 {
+					panic("support entry reference underflow")
+				}
+				entry.nRefs--
+				if entry.nRefs == 0 {
+					Supp_ManRecycleEntry(manager, entry)
+				}
+			}
+		case abc.Abc_ObjIsCo(node) != 0:
+			fanins := node.Fanins()
+			entry := entries[fanins[0].Object]
+			if abc.Abc_ObjIsNode(fanins[0].Object) != 0 {
+				support := Supp_ManTransferEntry(entry)
+				vec.Vec_IntPush(support, coIndex[node])
+				vec.Vec_PtrPush(supports, support)
+			}
+			if entry != nil {
+				if entry.nRefs <= 0 {
+					panic("support entry reference underflow")
+				}
+				entry.nRefs--
+				if entry.nRefs == 0 {
+					Supp_ManRecycleEntry(manager, entry)
+				}
+			}
+		case abc.Abc_ObjIsCi(node) != 0:
+			if fanouts := abc.Abc_ObjFanoutNum(node); fanouts != 0 {
+				entry := Supp_ManFetchEntry(manager, 1, fanouts)
+				entry.pOuts = append(entry.pOuts, ciIndex[node])
+				entry.nOuts = 1
+				entries[node] = entry
+			}
+		case node == abc.Abc_AigConst1(network).Object:
+			if fanouts := abc.Abc_ObjFanoutNum(node); fanouts != 0 {
+				entries[node] = Supp_ManFetchEntry(manager, 0, fanouts)
+			}
+		default:
+			panic("unexpected object in natural support order")
+		}
+	}
+	vec.Vec_PtrFree(order)
+	sortSupportVectors(supports)
+	return supports
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Fetches the memory entry of the given size.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Supp_ManFetchEntry(p *Supp_Man_t, nWords int32, nRefs int32) *Supp_One_t {
-    var pPart *Supp_One_t;
-    pPart = (Supp_One_t *)Supp_ManFetch( p, sizeof(Supp_One_t) + sizeof(int) * nWords );
-    pPart.nRefs = nRefs;
-    pPart.nOuts = 0;
-    pPart.nOutsAlloc = nWords;
-    return pPart;
+func sortSupportVectors(vectors *Vec_Ptr_t) {
+	sort.SliceStable(vec.Vec_PtrArray(vectors), func(i, j int) bool {
+		a := vec.Vec_PtrEntry(vectors, i).(*Vec_Int_t)
+		b := vec.Vec_PtrEntry(vectors, j).(*Vec_Int_t)
+		return vec.Vec_IntSize(a) > vec.Vec_IntSize(b)
+	})
+}
+func freeIntVectorList(vectors *Vec_Ptr_t) {
+	for _, item := range vec.Vec_PtrArray(vectors) {
+		if v, ok := item.(*Vec_Int_t); ok && v != nil {
+			vec.Vec_IntFree(v)
+		}
+	}
+	vec.Vec_PtrFree(vectors)
+}
+func Abc_NtkComputeSupportsNaive(network *Abc_Ntk_t) *Vec_Ptr_t {
+	ciIndex := make(map[*Abc_Obj_t]int32)
+	for i := int32(0); i < abc.Abc_NtkCiNum(network); i++ {
+		ciIndex[abc.Abc_NtkCi(network, i)] = i
+	}
+	out := vec.Vec_PtrAlloc(int(abc.Abc_NtkCoNum(network)))
+	for i := int32(0); i < abc.Abc_NtkCoNum(network); i++ {
+		co := abc.Abc_NtkCo(network, i)
+		root := abc.Abc_ObjFanin0(co)
+		if abc.Abc_ObjIsNode(root) == 0 {
+			continue
+		}
+		supportObjects := abc.Abc_NtkNodeSupport(network, []*Abc_Obj_t{co}, 1)
+		support := vec.Vec_IntAlloc(len(supportObjects) + 1)
+		for _, input := range supportObjects {
+			if index, ok := ciIndex[input]; ok {
+				vec.Vec_IntPush(support, index)
+			}
+		}
+		vec.Vec_IntSort(support, 0)
+		vec.Vec_IntPush(support, i)
+		vec.Vec_PtrPush(out, support)
+	}
+	sortSupportVectors(out)
+	return out
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Recycles the memory entry of the given size.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Supp_ManRecycleEntry(p *Supp_Man_t, pEntry *Supp_One_t) {
-    assert(pEntry.nOuts <= pEntry.nOutsAlloc, "pEntry.nOuts <= pEntry.nOutsAlloc");
-    assert(pEntry.nOuts >= pEntry.nOutsAlloc/2, "pEntry.nOuts >= pEntry.nOutsAlloc/2");
-    Supp_ManRecycle( p, (char *)pEntry, sizeof(Supp_One_t) + sizeof(int) * pEntry.nOutsAlloc );
+func Abc_NtkSuppCharStart(support *Vec_Int_t, nPis int32) []uint32 {
+	buffer := make([]uint32, int(util.Abc_BitWordNum(nPis)))
+	for i := 0; i < vec.Vec_IntSize(support); i++ {
+		entry := vec.Vec_IntEntry(support, i)
+		if entry < 0 || entry >= nPis {
+			panic("support input index out of range")
+		}
+		util.Abc_InfoSetBit(buffer, entry)
+	}
+	return buffer
+}
+func Abc_NtkSuppCharAdd(buffer []uint32, support *Vec_Int_t, nPis int32) {
+	for i := 0; i < vec.Vec_IntSize(support); i++ {
+		entry := vec.Vec_IntEntry(support, i)
+		if entry < 0 || entry >= nPis {
+			panic("support input index out of range")
+		}
+		util.Abc_InfoSetBit(buffer, entry)
+	}
+}
+func Abc_NtkSuppCharCommon(buffer []uint32, support *Vec_Int_t) int32 {
+	var common int32
+	for i := 0; i < vec.Vec_IntSize(support); i++ {
+		if util.Abc_InfoHasBit(buffer, vec.Vec_IntEntry(support, i)) {
+			common++
+		}
+	}
+	return common
+}
+func Abc_NtkPartitionSmartFindPart(allSupports, allParts, charSupports *Vec_Ptr_t, sizeLimit int32, support *Vec_Int_t) int32 {
+	var best int32 = -1
+	bestValue := int32(0)
+	for i := 0; i < vec.Vec_PtrSize(allSupports); i++ {
+		partSupport := vec.Vec_PtrEntry(allSupports, i).(*Vec_Int_t)
+		common := Abc_NtkSuppCharCommon(vec.Vec_PtrEntry(charSupports, i).([]uint32), support)
+		if common == 0 {
+			continue
+		}
+		if common == int32(vec.Vec_IntSize(support)) {
+			return int32(i)
+		}
+		if sizeLimit > 0 && int32(vec.Vec_IntSize(partSupport)) >= 2*sizeLimit {
+			continue
+		}
+		attract := 1000 * common / int32(vec.Vec_IntSize(support))
+		repulse := int32(1)
+		if vec.Vec_IntSize(partSupport) >= 100 {
+			repulse += int32(math.Log2(float64(vec.Vec_IntSize(partSupport) - 100)))
+		}
+		value := attract / repulse
+		if value > bestValue {
+			best, bestValue = int32(i), value
+		}
+	}
+	if bestValue < 75 {
+		return -1
+	}
+	return best
+}
+func Abc_NtkPartitionPrint(network *Abc_Ntk_t, parts, allSupports *Vec_Ptr_t) {
+	var total int32
+	for i := 0; i < vec.Vec_PtrSize(allSupports); i++ {
+		support := vec.Vec_PtrEntry(allSupports, i).(*Vec_Int_t)
+		part := vec.Vec_PtrEntry(parts, i).(*Vec_Int_t)
+		fmt.Printf("%d=(%d,%d) ", i, vec.Vec_IntSize(support), vec.Vec_IntSize(part))
+		total += int32(vec.Vec_IntSize(part))
+	}
+	fmt.Printf("\nTotal = %d. Outputs = %d.\n", total, abc.Abc_NtkCoNum(network))
+}
+func Abc_NtkPartitionCompact(parts, allSupports *Vec_Ptr_t, sizeLimit int32) {
+	if sizeLimit == 0 {
+		sizeLimit = 200
+	}
+	write := 0
+	var pendingPart, pendingSupport *Vec_Int_t
+	for read := 0; read < vec.Vec_PtrSize(allSupports); read++ {
+		support := vec.Vec_PtrEntry(allSupports, read).(*Vec_Int_t)
+		part := vec.Vec_PtrEntry(parts, read).(*Vec_Int_t)
+		if int32(vec.Vec_IntSize(support)) < sizeLimit {
+			if pendingSupport == nil {
+				pendingSupport = vec.Vec_IntDup(support)
+				pendingPart = part
+			} else {
+				mergedSupport := vec.Vec_IntTwoMerge(pendingSupport, support)
+				vec.Vec_IntFree(pendingSupport)
+				pendingSupport = mergedSupport
+				mergedPart := vec.Vec_IntTwoMerge(pendingPart, part)
+				vec.Vec_IntFree(pendingPart)
+				vec.Vec_IntFree(part)
+				pendingPart = mergedPart
+			}
+			if int32(vec.Vec_IntSize(pendingSupport)) < sizeLimit {
+				continue
+			}
+		} else {
+			pendingPart = part
+		}
+		vec.Vec_PtrWriteEntry(parts, write, pendingPart)
+		if pendingSupport != nil {
+			vec.Vec_IntFree(vec.Vec_PtrEntry(allSupports, write).(*Vec_Int_t))
+			vec.Vec_PtrWriteEntry(allSupports, write, pendingSupport)
+			pendingSupport = nil
+		}
+		pendingPart = nil
+		write++
+	}
+	if pendingPart != nil {
+		vec.Vec_PtrWriteEntry(parts, write, pendingPart)
+		if pendingSupport == nil {
+			panic("final compacted support missing")
+		}
+		vec.Vec_IntFree(vec.Vec_PtrEntry(allSupports, write).(*Vec_Int_t))
+		vec.Vec_PtrWriteEntry(allSupports, write, pendingSupport)
+		write++
+	}
+	vec.Vec_PtrShrink(parts, write)
+	vec.Vec_PtrShrink(allSupports, write)
+}
+func Abc_NtkPartitionSmart(network *Abc_Ntk_t, sizeLimit, verbose int32) *Vec_Ptr_t {
+	started := time.Now()
+	supports := Abc_NtkComputeSupportsSmart(network)
+	if verbose != 0 {
+		fmt.Printf("Supps = %9.2f sec\n", time.Since(started).Seconds())
+	}
+	parts := vec.Vec_PtrAlloc(256)
+	partSupports := vec.Vec_PtrAlloc(256)
+	charSupports := vec.Vec_PtrAlloc(256)
+	progress := extra.Extra_ProgressBarStart(os.Stdout, int32(vec.Vec_PtrSize(supports)))
+	for i := 0; i < vec.Vec_PtrSize(supports); i++ {
+		support := vec.Vec_PtrEntry(supports, i).(*Vec_Int_t)
+		extra.Extra_ProgressBarUpdate(progress, int32(i), "")
+		output := vec.Vec_IntPop(support)
+		partIndex := Abc_NtkPartitionSmartFindPart(partSupports, parts, charSupports, sizeLimit, support)
+		if partIndex < 0 {
+			part := vec.Vec_IntAlloc(32)
+			vec.Vec_IntPush(part, output)
+			union := vec.Vec_IntDup(support)
+			vec.Vec_PtrPush(parts, part)
+			vec.Vec_PtrPush(partSupports, union)
+			vec.Vec_PtrPush(charSupports, Abc_NtkSuppCharStart(support, abc.Abc_NtkCiNum(network)))
+			continue
+		}
+		part := vec.Vec_PtrEntry(parts, int(partIndex)).(*Vec_Int_t)
+		vec.Vec_IntPush(part, output)
+		oldSupport := vec.Vec_PtrEntry(partSupports, int(partIndex)).(*Vec_Int_t)
+		union := vec.Vec_IntTwoMerge(oldSupport, support)
+		vec.Vec_IntFree(oldSupport)
+		vec.Vec_PtrWriteEntry(partSupports, int(partIndex), union)
+		Abc_NtkSuppCharAdd(vec.Vec_PtrEntry(charSupports, int(partIndex)).([]uint32), support, abc.Abc_NtkCiNum(network))
+	}
+	extra.Extra_ProgressBarStop(progress)
+	vec.Vec_PtrFree(charSupports)
+	if verbose != 0 {
+		fmt.Printf("Parts = %9.2f sec\n", time.Since(started).Seconds())
+	}
+	// Attach each old index to its support. Sorting supports then sorts the
+	// corresponding output partitions without a second sort structure.
+	for i := 0; i < vec.Vec_PtrSize(partSupports); i++ {
+		vec.Vec_IntPush(vec.Vec_PtrEntry(partSupports, i).(*Vec_Int_t), int32(i))
+	}
+	sort.SliceStable(vec.Vec_PtrArray(partSupports), func(i, j int) bool {
+		a := vec.Vec_PtrEntry(partSupports, i).(*Vec_Int_t)
+		b := vec.Vec_PtrEntry(partSupports, j).(*Vec_Int_t)
+		return vec.Vec_IntSize(a) > vec.Vec_IntSize(b)
+	})
+	sortedParts := vec.Vec_PtrAlloc(vec.Vec_PtrSize(parts))
+	for i := 0; i < vec.Vec_PtrSize(partSupports); i++ {
+		support := vec.Vec_PtrEntry(partSupports, i).(*Vec_Int_t)
+		originalIndex := vec.Vec_IntPop(support)
+		vec.Vec_PtrPush(sortedParts, vec.Vec_PtrEntry(parts, int(originalIndex)))
+	}
+	vec.Vec_PtrFree(parts)
+	Abc_NtkPartitionCompact(sortedParts, partSupports, sizeLimit)
+	if verbose != 0 {
+		fmt.Printf("Comps = %9.2f sec\nCreated %d partitions.\n", time.Since(started).Seconds(), vec.Vec_PtrSize(sortedParts))
+	}
+	freeIntVectorList(supports)
+	freeIntVectorList(partSupports)
+	return sortedParts
+}
+func Abc_NtkPartitionNaive(network *Abc_Ntk_t, partSize int32) *Vec_Ptr_t {
+	if partSize <= 0 {
+		panic("partition size must be positive")
+	}
+	count := (abc.Abc_NtkCoNum(network) + partSize - 1) / partSize
+	parts := vec.Vec_PtrAlloc(int(count))
+	for i := int32(0); i < count; i++ {
+		vec.Vec_PtrPush(parts, vec.Vec_IntAlloc(int(partSize)))
+	}
+	for i := int32(0); i < abc.Abc_NtkCoNum(network); i++ {
+		part := vec.Vec_PtrEntry(parts, int(i/partSize)).(*Vec_Int_t)
+		vec.Vec_IntPush(part, i)
+	}
+	return parts
+}
+func Abc_NtkConvertCos(network *Abc_Ntk_t, outputs *Vec_Int_t, outputObjects *Vec_Ptr_t) {
+	vec.Vec_PtrClear(outputObjects)
+	for i := 0; i < vec.Vec_IntSize(outputs); i++ {
+		index := vec.Vec_IntEntry(outputs, i)
+		vec.Vec_PtrPush(outputObjects, abc.Abc_NtkCo(network, index))
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Merges two entries.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Supp_ManMergeEntry(pMan *Supp_Man_t, p1 *Supp_One_t, p2 *Supp_One_t, nRefs int32) *Supp_One_t {
-    var p *Supp_One_t  = Supp_ManFetchEntry( pMan, p1.nOuts + p2.nOuts, nRefs );
-    var pBeg1 *int32  = p1.pOuts;
-    var pBeg2 *int32  = p2.pOuts;
-    var pBeg *int32   = p.pOuts;
-    var pEnd1 *int32  = p1.pOuts + p1.nOuts;
-    var pEnd2 *int32  = p2.pOuts + p2.nOuts;
-    for  pBeg1 < pEnd1 && pBeg2 < pEnd2  {
-        if *pBeg1 == *pBeg2 {
-            *pBeg++ = *pBeg1++, pBeg2++;
-        } else if *pBeg1 < *pBeg2 {
-            *pBeg++ = *pBeg1++;
-        } else { 
-            *pBeg++ = *pBeg2++; }
-    }
-    for  pBeg1 < pEnd1  {
-        *pBeg++ = *pBeg1++;
-    }
-    for  pBeg2 < pEnd2  {
-        *pBeg++ = *pBeg2++;
-    }
-    p.nOuts = pBeg - p.pOuts;
-    assert(p.nOuts <= p.nOutsAlloc, "p.nOuts <= p.nOutsAlloc");
-    assert(p.nOuts >= p1.nOuts, "p.nOuts >= p1.nOuts");
-    assert(p.nOuts >= p2.nOuts, "p.nOuts >= p2.nOuts");
-    return p;
+func Abc_NtkPartStitchFindRepr_rec(equivalents *Vec_Ptr_t, object *Abc_Obj_t) *Abc_Obj_t {
+	seen := map[*Abc_Obj_t]bool{}
+	for {
+		if seen[object] {
+			panic("cycle in partition representative map")
+		}
+		seen[object] = true
+		repr, _ := vec.Vec_PtrEntry(equivalents, int(object.ID)).(*Abc_Obj_t)
+		if repr == nil || repr == object {
+			return object
+		}
+		object = repr
+	}
+}
+func Abc_NtkPartStitchCopy0(equivalents *Vec_Ptr_t, object *Abc_Obj_t) abc.Edge {
+	fanin := object.Fanins()[0]
+	repr := Abc_NtkPartStitchFindRepr_rec(equivalents, fanin.Object)
+	return abc.Abc_ObjNotCond(repr.CopyEdge, boolInt32(repr.Phase != fanin.Object.Phase)^abc.Abc_ObjFaninC1(object))
+}
+func Abc_NtkPartStitchCopy1(equivalents *Vec_Ptr_t, object *Abc_Obj_t) abc.Edge {
+	fanin := object.Fanins()[1]
+	repr := Abc_NtkPartStitchFindRepr_rec(equivalents, fanin.Object)
+	return abc.Abc_ObjNotCond(repr.CopyEdge, boolInt32(repr.Phase != fanin.Object.Phase)^abc.Abc_ObjFaninC1(object))
+}
+func Hop_ObjChild0Next(object *Abc_Obj_t, mapping map[*Abc_Obj_t]*Hop_Obj_t) *Hop_Obj_t {
+	fanin := object.Fanins()[0]
+	return hop.Hop_NotCond(mapping[fanin.Object], boolInt32(fanin.Complement))
+}
+func Hop_ObjChild1Next(object *Abc_Obj_t, mapping map[*Abc_Obj_t]*Hop_Obj_t) *Hop_Obj_t {
+	fanin := object.Fanins()[1]
+	return hop.Hop_NotCond(mapping[fanin.Object], boolInt32(fanin.Complement))
+}
+func Abc_NtkPartStartHop(network *Abc_Ntk_t) *Hop_Man_t {
+	manager := hop.Hop_ManStartWithObjects(int(abc.Abc_NtkObjNum(network)) + 1)
+	mapping := map[*Abc_Obj_t]*Hop_Obj_t{abc.Abc_AigConst1(network).Object: hop.Hop_ManConst1(manager)}
+	for _, ci := range network.Inputs() {
+		mapping[ci] = hop.Hop_ObjCreatePi(manager)
+	}
+	for _, node := range abc.Abc_NtkNodes(network) {
+		if abc.Abc_AigNodeIsAnd(node) == 0 {
+			continue
+		}
+		mapping[node] = hop.Hop_And(manager, Hop_ObjChild0Next(node, mapping), Hop_ObjChild1Next(node, mapping))
+	}
+	for _, node := range abc.Abc_NtkNodes(network) {
+		if choice := abc.Abc_ObjChoice(node); choice != nil && mapping[node] != nil && mapping[choice] != nil {
+			hop.Hop_ObjSetData(hop.Hop_Regular(mapping[node]), hop.Hop_Regular(mapping[choice]))
+		}
+	}
+	for _, co := range network.Outputs() {
+		hop.Hop_ObjCreatePo(manager, Hop_ObjChild0Next(co, mapping))
+	}
+	if hop.Hop_ManCheck(manager) == 0 {
+		fmt.Println("Abc_NtkPartStartHop: HOP manager check has failed.")
+	}
+	return manager
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Tranfers the entry.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Supp_ManTransferEntry(p *Supp_One_t) *Vec_Int_t {
-    var vSupp *Vec_Int_t;
-    var i int32;
-    vSupp = Vec_IntAlloc( p.nOuts );
-    for  i = 0; i < p.nOuts; i++  {
-        Vec_IntPush( vSupp, p.pOuts[i] );
-    }
-    return vSupp;
+func Abc_NtkPartStitchChoices(network *Abc_Ntk_t, parts *Vec_Ptr_t) *Abc_Ntk_t {
+	if abc.Abc_NtkIsStrash(network) == 0 {
+		panic("partition stitching requires a strashed network")
+	}
+	stitched := abc.Abc_NtkStartFrom(network, abc.ABC_NTK_STRASH, abc.ABC_FUNC_AIG)
+	aig, ok := stitched.FunctionManager.(*abc.Abc_Aig_t)
+	if !ok {
+		panic("stitched strashed network has no AIG manager")
+	}
+	for partIndex := 0; partIndex < vec.Vec_PtrSize(parts); partIndex++ {
+		partition := vec.Vec_PtrEntry(parts, partIndex).(*Abc_Ntk_t)
+		if abc.Abc_NtkIsStrash(partition) == 0 {
+			panic("partition is not strashed")
+		}
+		abc.Abc_NtkCleanCopy(partition)
+		abc.Abc_AigConst1(partition).Object.CopyEdge = abc.Abc_AigConst1(stitched)
+		for _, ci := range partition.Inputs() {
+			var target *Abc_Obj_t
+			for _, candidate := range stitched.Inputs() {
+				if candidate.Name() == ci.Name() {
+					target = candidate
+					break
+				}
+			}
+			if target == nil {
+				fmt.Printf("Cannot find CI node %s in the original network.\n", ci.Name())
+				abc.Abc_NtkDelete(stitched)
+				return nil
+			}
+			ci.CopyEdge = target.Signal()
+		}
+		for _, node := range abc.Abc_AigDfs(partition, 1, 0) {
+			fanins := node.Fanins()
+			a := abc.Abc_ObjNotCond(fanins[0].Object.CopyEdge, boolInt32(fanins[0].Complement))
+			b := abc.Abc_ObjNotCond(fanins[1].Object.CopyEdge, boolInt32(fanins[1].Complement))
+			node.CopyEdge = abc.Abc_AigAnd(aig, a, b)
+			if node.Choice != nil {
+				for choice := node.Choice; choice != nil; choice = choice.Choice {
+					choice.CopyEdge = node.CopyEdge
+				}
+			}
+		}
+		for _, co := range partition.Outputs() {
+			var target *Abc_Obj_t
+			for _, candidate := range stitched.Outputs() {
+				if candidate.Name() == co.Name() {
+					target = candidate
+					break
+				}
+			}
+			if target == nil {
+				fmt.Printf("Cannot find CO node %s in the original network.\n", co.Name())
+				abc.Abc_NtkDelete(stitched)
+				return nil
+			}
+			co.CopyEdge = target.Signal()
+			fanin := co.Fanins()[0]
+			edge := abc.Abc_ObjNotCond(fanin.Object.CopyEdge, boolInt32(fanin.Complement))
+			if err := target.Network().AddFanin(target, edge); err != nil {
+				panic(err)
+			}
+		}
+	}
+	for _, co := range network.Outputs() {
+		target := abc.Abc_ObjRegular(co.CopyEdge.Object)
+		if target != nil && len(target.Fanins()) == 0 {
+			fanin := co.Fanins()[0]
+			edge := abc.Abc_ObjNotCond(fanin.Object.CopyEdge, boolInt32(fanin.Complement))
+			if err := target.Network().AddFanin(target, edge); err != nil {
+				panic(err)
+			}
+		}
+	}
+	history := Abc_NtkPartStartHop(stitched)
+	result := Abc_NtkHopRemoveLoops(stitched, history)
+	abc.Abc_NtkDelete(stitched)
+	if result == nil || abc.Abc_NtkCheck(result) == 0 {
+		fmt.Println("Abc_NtkPartStitchChoices: The network check has failed.")
+		if result != nil {
+			abc.Abc_NtkDelete(result)
+		}
+		return nil
+	}
+	return result
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Computes supports of the POs in the multi-output AIG.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkDfsNatural(pNtk *Abc_Ntk_t) *Vec_Ptr_t {
-    var vNodes *Vec_Ptr_t;
-    var pObj, pNext *Abc_Obj_t;
-    var i, k int32;
-    assert(Abc_NtkIsStrash(pNtk), "Abc_NtkIsStrash(pNtk)");
-    vNodes = Vec_PtrAlloc( Abc_NtkObjNum(pNtk) );
-    Abc_NtkIncrementTravId( pNtk );
-    // add the constant-1 nodes
-    pObj = Abc_AigConst1(pNtk);
-    Abc_NodeSetTravIdCurrent( pObj );
-    Vec_PtrPush( vNodes, pObj );
-    // add the CIs/nodes/COs in the topological order
-    // inlining of macro Abc_NtkForEachNode
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {
-        // check the fanins and add CIs
-        // inlining of macro Abc_ObjForEachFanin
-        for  k = 0; (k < Abc_ObjFaninNum(pObj)) && (((pNext) = Abc_ObjFanin(pObj, k)), 1); k++  {
-            if Abc_ObjIsCi(pNext) && !Abc_NodeIsTravIdCurrent(pNext) {
-                Abc_NodeSetTravIdCurrent( pNext );
-                Vec_PtrPush( vNodes, pNext );
-            }
-        }
-        // add the node
-        Vec_PtrPush( vNodes, pObj );
-        // check the fanouts and add COs
-        // inlining of macro Abc_ObjForEachFanout
-        for  k = 0; (k < Abc_ObjFanoutNum(pObj)) && (((pNext) = Abc_ObjFanout(pObj, k)), 1); k++  {
-            if Abc_ObjIsCo(pNext) && !Abc_NodeIsTravIdCurrent(pNext) {
-                Abc_NodeSetTravIdCurrent( pNext );
-                Vec_PtrPush( vNodes, pNext );
-            }
-        }
-    }
-    }
-    return vNodes;
+func Abc_NtkFraigPartitioned(store *Vec_Ptr_t, params any) *Abc_Ntk_t {
+	if vec.Vec_PtrSize(store) == 0 {
+		return nil
+	}
+	original, ok := vec.Vec_PtrEntry(store, 0).(*Abc_Ntk_t)
+	if !ok || abc.Abc_NtkIsStrash(original) == 0 {
+		panic("fraig partition store must begin with a strashed network")
+	}
+	parts := Abc_NtkPartitionSmart(original, 300, 0)
+	cmd.Cmd_CommandExecute(abcmain.Abc_FrameGetGlobalFrame(), "unset progressbar")
+	roots := vec.Vec_PtrAlloc(1000)
+	fraigs := vec.Vec_PtrAlloc(vec.Vec_PtrSize(parts))
+	for i := 0; i < vec.Vec_PtrSize(parts); i++ {
+		outputs := vec.Vec_PtrEntry(parts, i).(*Vec_Int_t)
+		Abc_NtkConvertCos(original, outputs, roots)
+		partition := abc.Abc_NtkCreateConeArray(original, objectSlice(roots), 0)
+		for j := 1; j < vec.Vec_PtrSize(store); j++ {
+			network := vec.Vec_PtrEntry(store, j).(*Abc_Ntk_t)
+			Abc_NtkConvertCos(network, outputs, roots)
+			abc.Abc_NtkAppendToCone(partition, network, objectSlice(roots))
+		}
+		fmt.Printf("Fraiging part %4d  (out of %4d)  PI = %5d. PO = %5d. And = %6d. Lev = %4d.\r", i+1, vec.Vec_PtrSize(parts), abc.Abc_NtkPiNum(partition), abc.Abc_NtkPoNum(partition), abc.Abc_NtkNodeNum(partition), abc.Abc_AigLevel(partition))
+		fraigged := Abc_NtkFraig(partition, params, 1, 0)
+		vec.Vec_PtrPush(fraigs, fraigged)
+		abc.Abc_NtkDelete(partition)
+	}
+	fmt.Print("                                                                                          \r")
+	freeIntVectorList(parts)
+	cmd.Cmd_CommandExecute(abcmain.Abc_FrameGetGlobalFrame(), "set progressbar")
+	result := Abc_NtkPartStitchChoices(original, fraigs)
+	for _, item := range vec.Vec_PtrArray(fraigs) {
+		if network, ok := item.(*Abc_Ntk_t); ok && network != nil {
+			abc.Abc_NtkDelete(network)
+		}
+	}
+	vec.Vec_PtrFree(fraigs)
+	vec.Vec_PtrFree(roots)
+	return result
+}
+func Abc_NtkFraigPartitionedTime(network *Abc_Ntk_t, params any) {
+	started := time.Now()
+	if abc.Abc_NtkIsStrash(network) == 0 {
+		panic("partitioned fraiging requires a strashed network")
+	}
+	parts := Abc_NtkPartitionSmart(network, 300, 0)
+	cmd.Cmd_CommandExecute(abcmain.Abc_FrameGetGlobalFrame(), "unset progressbar")
+	roots := vec.Vec_PtrAlloc(1000)
+	fraigs := vec.Vec_PtrAlloc(vec.Vec_PtrSize(parts))
+	for i := 0; i < vec.Vec_PtrSize(parts); i++ {
+		outputs := vec.Vec_PtrEntry(parts, i).(*Vec_Int_t)
+		Abc_NtkConvertCos(network, outputs, roots)
+		partition := abc.Abc_NtkCreateConeArray(network, objectSlice(roots), 0)
+		fraigged := Abc_NtkFraig(partition, params, 0, 0)
+		vec.Vec_PtrPush(fraigs, fraigged)
+		abc.Abc_NtkDelete(partition)
+		fmt.Printf("Finished part %5d (out of %5d)\r", i+1, vec.Vec_PtrSize(parts))
+	}
+	freeIntVectorList(parts)
+	cmd.Cmd_CommandExecute(abcmain.Abc_FrameGetGlobalFrame(), "set progressbar")
+	for _, item := range vec.Vec_PtrArray(fraigs) {
+		if n, ok := item.(*Abc_Ntk_t); ok && n != nil {
+			abc.Abc_NtkDelete(n)
+		}
+	}
+	vec.Vec_PtrFree(fraigs)
+	vec.Vec_PtrFree(roots)
+	fmt.Printf("Partitioned fraiging time = %9.2f sec\n", time.Since(started).Seconds())
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Computes supports of the POs.]
-
-  Description [Returns the ptr-vector of int-vectors.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkComputeSupportsSmart(pNtk *Abc_Ntk_t) *Vec_Ptr_t {
-    var vSupports *Vec_Ptr_t;
-    var vNodes *Vec_Ptr_t;
-    var vSupp *Vec_Int_t;
-    var p *Supp_Man_t;
-    var pPart0, pPart1 *Supp_One_t;
-    var pObj *Abc_Obj_t;
-    var i int32;
-    // set the number of PIs/POs
-    // inlining of macro Abc_NtkForEachCi
-    for  i = 0; (i < Abc_NtkCiNum(pNtk)) && (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {
-        pObj.pNext = (Abc_Obj_t *)(ABC_PTRINT_T)i;
-    }
-    // inlining of macro Abc_NtkForEachCo
-    for  i = 0; (i < Abc_NtkCoNum(pNtk)) && (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {
-        pObj.pNext = (Abc_Obj_t *)(ABC_PTRINT_T)i;
-    }
-    // start the support computation manager
-    p = Supp_ManStart( 1 << 20, 1 << 6 );
-    // consider objects in the topological order
-    vSupports = Vec_PtrAlloc( Abc_NtkCoNum(pNtk) );
-    Abc_NtkCleanCopy(pNtk);
-    // order the nodes so that the PIs and POs follow naturally
-    vNodes = Abc_NtkDfsNatural( pNtk );
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vNodes)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {
-        if Abc_ObjIsNode(pObj) {
-            pPart0 = (Supp_One_t *)Abc_ObjFanin0(pObj).pCopy;
-            pPart1 = (Supp_One_t *)Abc_ObjFanin1(pObj).pCopy;
-            pObj.pCopy = (Abc_Obj_t *)Supp_ManMergeEntry( p, pPart0, pPart1, Abc_ObjFanoutNum(pObj) );
-            assert(pPart0.nRefs > 0, "pPart0.nRefs > 0");
-            if --pPart0.nRefs == 0 {
-                Supp_ManRecycleEntry( p, pPart0 ); }
-            assert(pPart1.nRefs > 0, "pPart1.nRefs > 0");
-            if --pPart1.nRefs == 0 {
-                Supp_ManRecycleEntry( p, pPart1 ); }
-            continue;
-        }
-        if Abc_ObjIsCo(pObj) {
-            pPart0 = (Supp_One_t *)Abc_ObjFanin0(pObj).pCopy;
-            // only save the CO if it is non-trivial
-            if Abc_ObjIsNode(Abc_ObjFanin0(pObj)) {
-                vSupp = Supp_ManTransferEntry(pPart0);
-                Vec_IntPush( vSupp, int32((ABC_PTRINT_T))pObj.pNext );
-                Vec_PtrPush( vSupports, vSupp );
-            }
-            assert(pPart0.nRefs > 0, "pPart0.nRefs > 0");
-            if --pPart0.nRefs == 0 {
-                Supp_ManRecycleEntry( p, pPart0 ); }
-            continue;
-        }
-        if Abc_ObjIsCi(pObj) {
-            if Abc_ObjFanoutNum(pObj) {
-                pPart0 = (Supp_One_t *)Supp_ManFetchEntry( p, 1, Abc_ObjFanoutNum(pObj) );
-                pPart0.pOuts[ pPart0.nOuts++ ] = int32((ABC_PTRINT_T))pObj.pNext;
-                pObj.pCopy = (Abc_Obj_t *)pPart0;
-            }
-            continue;
-        }
-        if pObj == Abc_AigConst1(pNtk) {
-            if Abc_ObjFanoutNum(pObj) {
-                pObj.pCopy = (Abc_Obj_t *)Supp_ManFetchEntry( p, 0, Abc_ObjFanoutNum(pObj) ); }
-            continue;
-        }
-        assert(false, "0");
-    }
-    Vec_PtrFree( vNodes );
-//printf( "Memory usage = %d MB.\n", Vec_PtrSize(p->vMemory) * p->nChunkSize / (1<<20) );
-    Supp_ManStop( p );
-    // sort supports by size
-    Vec_VecSort( (Vec_Vec_t *)vSupports, 1 );
-    // clear the number of PIs/POs
-    // inlining of macro Abc_NtkForEachCi
-    for  i = 0; (i < Abc_NtkCiNum(pNtk)) && (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {
-        pObj.pNext = nil;
-    }
-    // inlining of macro Abc_NtkForEachCo
-    for  i = 0; (i < Abc_NtkCoNum(pNtk)) && (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {
-        pObj.pNext = nil;
-    }
-/*
-    Vec_PtrForEachEntry( Vec_Int_t *, vSupports, vSupp, i )
-        printf( "%d ", Vec_IntSize(vSupp) );
-    printf( "\n" );
-*/
-    return vSupports;
+func objectSlice(objects *Vec_Ptr_t) []*Abc_Obj_t {
+	result := make([]*Abc_Obj_t, vec.Vec_PtrSize(objects))
+	for i, item := range vec.Vec_PtrArray(objects) {
+		result[i] = item.(*Abc_Obj_t)
+	}
+	return result
 }
-
-
-/**Function*************************************************************
-
-  Synopsis    [Computes supports of the POs using naive method.]
-
-  Description [Returns the ptr-vector of int-vectors.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkComputeSupportsNaive(pNtk *Abc_Ntk_t) *Vec_Ptr_t {
-    var vSupp, vSupports *Vec_Ptr_t;
-    var vSuppI *Vec_Int_t;
-    var pObj, pTemp *Abc_Obj_t;
-    var i, k int32;
-    // set the PI numbers
-    // inlining of macro Abc_NtkForEachCi
-    for  i = 0; (i < Abc_NtkCiNum(pNtk)) && (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {
-        pObj.pNext = (Abc_Obj_t *)(ABC_PTRINT_T)i;
-    }
-    // save the CI numbers
-    vSupports = Vec_PtrAlloc( Abc_NtkCoNum(pNtk) );
-    // inlining of macro Abc_NtkForEachCo
-    for  i = 0; (i < Abc_NtkCoNum(pNtk)) && (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {
-        if !Abc_ObjIsNode(Abc_ObjFanin0(pObj)) {
-            continue; }
-        vSupp = Abc_NtkNodeSupport( pNtk, &pObj, 1 );
-        vSuppI = (Vec_Int_t *)vSupp;
-        // inlining of macro Vec_PtrForEachEntry
-        for  k = 0; (k < Vec_PtrSize(vSupp)) && (((pTemp) = (Abc_Obj_t *)Vec_PtrEntry(vSupp, k)), 1); k++  {
-            Vec_IntWriteEntry( vSuppI, k, int32((ABC_PTRINT_T))pTemp.pNext );
-        }
-        Vec_IntSort( vSuppI, 0 );
-        // append the number of this output
-        Vec_IntPush( vSuppI, i );
-        // save the support in the vector
-        Vec_PtrPush( vSupports, vSuppI );
-    }
-    // clean the CI numbers
-    // inlining of macro Abc_NtkForEachCi
-    for  i = 0; (i < Abc_NtkCiNum(pNtk)) && (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {
-        pObj.pNext = nil;
-    }
-    // sort supports by size
-    Vec_VecSort( (Vec_Vec_t *)vSupports, 1 );
-/*
-    Vec_PtrForEachEntry( Vec_Int_t *, vSupports, vSuppI, i )
-        printf( "%d ", Vec_IntSize(vSuppI) );
-    printf( "\n" );
-*/
-    return vSupports;
+func boolInt32(value bool) int32 {
+	if value {
+		return 1
+	}
+	return 0
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Start bitwise support representation.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkSuppCharStart(vOne *Vec_Int_t, nPis int32) *uint32 {
-    var pBuffer *uint32;
-    var i, Entry int32;
-    var nWords int32  = Abc_BitWordNum(nPis);
-    // inlining of macro ABC_ALLOC
-    pBuffer = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(nWords)));
-    memset( pBuffer, 0, sizeof(unsigned) * nWords );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vOne)) && (((Entry) = Vec_IntEntry(vOne, i)), 1); i++  {
-        assert(Entry < nPis, "Entry < nPis");
-        Abc_InfoSetBit( pBuffer, Entry );
-    }
-    return pBuffer;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Add to bitwise support representation.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkSuppCharAdd(pBuffer *uint32, vOne *Vec_Int_t, nPis int32) {
-    var i, Entry int32;
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vOne)) && (((Entry) = Vec_IntEntry(vOne, i)), 1); i++  {
-        assert(Entry < nPis, "Entry < nPis");
-        Abc_InfoSetBit( pBuffer, Entry );
-    }
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Find the common variables using bitwise support representation.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkSuppCharCommon(pBuffer *uint32, vOne *Vec_Int_t) int32 {
-    var i, Entry, nCommon int32;
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vOne)) && (((Entry) = Vec_IntEntry(vOne, i)), 1); i++  {
-        nCommon += Abc_InfoHasBit(pBuffer, Entry);
-    }
-    return nCommon;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Find the best partition.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkPartitionSmartFindPart(vPartSuppsAll *Vec_Ptr_t, vPartsAll *Vec_Ptr_t, vPartSuppsChar *Vec_Ptr_t, nSuppSizeLimit int32, vOne *Vec_Int_t) int32 {
-/*
-    Vec_Int_t * vPartSupp, * vPart;
-    double Attract, Repulse, Cost, CostBest;
-    int i, nCommon, iBest;
-    iBest = -1;
-    CostBest = 0.0;
-    Vec_PtrForEachEntry( Vec_Int_t *, vPartSuppsAll, vPartSupp, i )
-    {
-        vPart = Vec_PtrEntry( vPartsAll, i );
-        if ( nPartSizeLimit > 0 && Vec_IntSize(vPart) >= nPartSizeLimit )
-            continue;
-        nCommon = Vec_IntTwoCountCommon( vPartSupp, vOne );
-        if ( nCommon == 0 )
-            continue;
-        if ( nCommon == Vec_IntSize(vOne) )
-            return i;
-        Attract = 1.0 * nCommon / Vec_IntSize(vOne);
-        if ( Vec_IntSize(vPartSupp) < 100 )
-            Repulse = 1.0;
-        else
-            Repulse = log10( Vec_IntSize(vPartSupp) / 10.0 );
-        Cost = pow( Attract, pow(Repulse, 5.0) );
-        if ( CostBest < Cost )
-        {
-            CostBest = Cost;
-            iBest = i;
-        }
-    }
-    if ( CostBest < 0.6 )
-        return -1;
-    return iBest;
-*/
-
-    var vPartSupp *Vec_Int_t;//, * vPart;
-    var Attract, Repulse, Value, ValueBest int32;
-    var i, nCommon, iBest int32;
-//    int nCommon2;
-    iBest = -1;
-    ValueBest = 0;
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vPartSuppsAll)) && (((vPartSupp) = (Vec_Int_t *)Vec_PtrEntry(vPartSuppsAll, i)), 1); i++  {
-        // skip partitions with too many outputs
-//        vPart = Vec_PtrEntry( vPartsAll, i );
-//        if ( nSuppSizeLimit > 0 && Vec_IntSize(vPart) >= nSuppSizeLimit )
-//            continue;
-        // find the number of common variables between this output and the partitions
-//        nCommon2 = Vec_IntTwoCountCommon( vPartSupp, vOne );
-        nCommon = Abc_NtkSuppCharCommon( (unsigned *)Vec_PtrEntry(vPartSuppsChar, i), vOne );
-//        assert( nCommon2 == nCommon );
-        // if no common variables, continue searching
-        if nCommon == 0 {
-            continue; }
-        // if all variables are common, the best partition if found
-        if nCommon == Vec_IntSize(vOne) {
-            return i; }
-        // skip partitions whose size exceeds the limit
-        if nSuppSizeLimit > 0 && Vec_IntSize(vPartSupp) >= 2 * nSuppSizeLimit {
-            continue; }
-        // figure out might be the good partition for this one
-        Attract = 1000 * nCommon / Vec_IntSize(vOne);
-        if Vec_IntSize(vPartSupp) < 100 {
-            Repulse = 1;
-        } else {
-            Repulse = 1+Abc_Base2Log(Vec_IntSize(vPartSupp)-100); }
-        Value = Attract/Repulse;
-        if ValueBest < Value {
-            ValueBest = Value;
-            iBest = i;
-        }
-    }
-    if ValueBest < 75 {
-        return -1; }
-    return iBest;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Perform the smart partitioning.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkPartitionPrint(pNtk *Abc_Ntk_t, vPartsAll *Vec_Ptr_t, vPartSuppsAll *Vec_Ptr_t) {
-    var vOne *Vec_Int_t;
-    var i, nOutputs, Counter int32;
-
-    Counter = 0;
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vPartSuppsAll)) && (((vOne) = (Vec_Int_t *)Vec_PtrEntry(vPartSuppsAll, i)), 1); i++  {
-        nOutputs = Vec_IntSize((Vec_Int_t *)Vec_PtrEntry(vPartsAll, i));
-        fmt.Printf("%d=(%d,%d) ", i, Vec_IntSize(vOne), nOutputs);
-        Counter += nOutputs;
-        if i == Vec_PtrSize(vPartsAll) - 1 {
-            break; }
-    }
-//    assert( Counter == Abc_NtkCoNum(pNtk) );
-    fmt.Printf("\nTotal = %d. Outputs = %d.\n", Counter, Abc_NtkCoNum(pNtk));
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Perform the smart partitioning.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkPartitionCompact(vPartsAll *Vec_Ptr_t, vPartSuppsAll *Vec_Ptr_t, nSuppSizeLimit int32) {
-    var vOne, vPart, vPartSupp, vTemp *Vec_Int_t;
-    var i, iPart int32;
-
-    if nSuppSizeLimit == 0 {
-        nSuppSizeLimit = 200; }
-
-    // pack smaller partitions into larger blocks
-    iPart = 0;
-    vPart = vPartSupp = nil;
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vPartSuppsAll)) && (((vOne) = (Vec_Int_t *)Vec_PtrEntry(vPartSuppsAll, i)), 1); i++  {
-        if Vec_IntSize(vOne) < nSuppSizeLimit {
-            if vPartSupp == nil {
-                assert(vPart == nil, "vPart == nil");
-                vPartSupp = Vec_IntDup(vOne);
-                vPart = (Vec_Int_t *)Vec_PtrEntry(vPartsAll, i);
-            
-            } else {
-                vPartSupp = Vec_IntTwoMerge( vTemp = vPartSupp, vOne );
-                Vec_IntFree( vTemp );
-                vPart = Vec_IntTwoMerge( vTemp = vPart, (Vec_Int_t *)Vec_PtrEntry(vPartsAll, i) );
-                Vec_IntFree( vTemp );
-                Vec_IntFree( (Vec_Int_t *)Vec_PtrEntry(vPartsAll, i) );
-            }
-            if Vec_IntSize(vPartSupp) < nSuppSizeLimit {
-                continue; }
-        
-        } else {
-            vPart = (Vec_Int_t *)Vec_PtrEntry(vPartsAll, i); }
-        // add the partition 
-        Vec_PtrWriteEntry( vPartsAll, iPart, vPart );  
-        vPart = nil;
-        if vPartSupp != nil {
-            Vec_IntFree( (Vec_Int_t *)Vec_PtrEntry(vPartSuppsAll, iPart) );
-            Vec_PtrWriteEntry( vPartSuppsAll, iPart, vPartSupp );  
-            vPartSupp = nil;
-        }
-        iPart++;
-    }
-    // add the last one
-    if vPart {
-        Vec_PtrWriteEntry( vPartsAll, iPart, vPart );  
-        vPart = nil;
-
-        assert(vPartSupp != nil, "vPartSupp != nil");
-        Vec_IntFree( (Vec_Int_t *)Vec_PtrEntry(vPartSuppsAll, iPart) );
-        Vec_PtrWriteEntry( vPartSuppsAll, iPart, vPartSupp );  
-        vPartSupp = nil;
-        iPart++;
-    }
-    Vec_PtrShrink( vPartsAll, iPart );
-    Vec_PtrShrink( vPartsAll, iPart );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Perform the smart partitioning.]
-
-  Description [Returns the ptr-vector of int-vectors.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkPartitionSmart(pNtk *Abc_Ntk_t, nSuppSizeLimit int32, fVerbose int32) *Vec_Ptr_t {
-    var pProgress *ProgressBar;
-    var vPartSuppsChar *Vec_Ptr_t;
-    var vSupps, vPartsAll, vPartsAll2, vPartSuppsAll *Vec_Ptr_t;
-    var vOne, vPart, vPartSupp, vTemp *Vec_Int_t;
-    var i, iPart, iOut, timeFind int32;
-    var clk, clk2 abctime;
-
-    // compute the supports for all outputs
-clk = Abc_Clock();
-//    vSupps = Abc_NtkComputeSupportsNaive( pNtk );
-    vSupps = Abc_NtkComputeSupportsSmart( pNtk );
-if fVerbose != 0 {
-// inlining of macro ABC_PRT
-Abc_Print(1, "%s =", ("Supps"));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;
-}
-    // start char-based support representation
-    vPartSuppsChar = Vec_PtrAlloc( 1000 );
-
-    // create partitions
-clk = Abc_Clock();
-    vPartsAll = Vec_PtrAlloc( 256 );
-    vPartSuppsAll = Vec_PtrAlloc( 256 );
-    pProgress = Extra_ProgressBarStart( os.Stdout, Vec_PtrSize(vSupps) );
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vSupps)) && (((vOne) = (Vec_Int_t *)Vec_PtrEntry(vSupps, i)), 1); i++  {
-        Extra_ProgressBarUpdate( pProgress, i, nil );
-//        if ( i % 1000 == 0 )
-//            printf( "CIs = %6d. COs = %6d. Processed = %6d (out of %6d). Parts = %6d.\r", 
-//                Abc_NtkCiNum(pNtk), Abc_NtkCoNum(pNtk), i, Vec_PtrSize(vSupps), Vec_PtrSize(vPartsAll) ); 
-        // get the output number
-        iOut = Vec_IntPop(vOne);
-        // find closely matching part
-clk2 = Abc_Clock();
-        iPart = Abc_NtkPartitionSmartFindPart( vPartSuppsAll, vPartsAll, vPartSuppsChar, nSuppSizeLimit, vOne );
-timeFind += Abc_Clock() - clk2;
-        if iPart == -1 {
-            // create new partition
-            vPart = Vec_IntAlloc( 32 );
-            Vec_IntPush( vPart, iOut );
-            // create new partition support
-            vPartSupp = Vec_IntDup( vOne );
-            // add this partition and its support
-            Vec_PtrPush( vPartsAll, vPart );
-            Vec_PtrPush( vPartSuppsAll, vPartSupp );
-
-            Vec_PtrPush( vPartSuppsChar, Abc_NtkSuppCharStart(vOne, Abc_NtkCiNum(pNtk)) );
-        
-        } else {
-            // add output to this partition
-            vPart = (Vec_Int_t *)Vec_PtrEntry( vPartsAll, iPart );
-            Vec_IntPush( vPart, iOut );
-            // merge supports
-            vPartSupp = (Vec_Int_t *)Vec_PtrEntry( vPartSuppsAll, iPart );
-            vPartSupp = Vec_IntTwoMerge( vTemp = vPartSupp, vOne );
-            Vec_IntFree( vTemp );
-            // reinsert new support
-            Vec_PtrWriteEntry( vPartSuppsAll, iPart, vPartSupp );
-
-            Abc_NtkSuppCharAdd( (unsigned *)Vec_PtrEntry(vPartSuppsChar, iPart), vOne, Abc_NtkCiNum(pNtk) );
-        }
-    }
-    Extra_ProgressBarStop( pProgress );
-
-    // stop char-based support representation
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vPartSuppsChar)) && (((vTemp) = (Vec_Int_t *)Vec_PtrEntry(vPartSuppsChar, i)), 1); i++  {
-        vTemp = nil;
-    }
-    Vec_PtrFree( vPartSuppsChar );
-
-//printf( "\n" );
-if fVerbose != 0 {
-// inlining of macro ABC_PRT
-Abc_Print(1, "%s =", ("Parts"));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;
-//ABC_PRT( "Find ", timeFind );
-}
-
-clk = Abc_Clock();
-    // remember number of supports
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vPartSuppsAll)) && (((vOne) = (Vec_Int_t *)Vec_PtrEntry(vPartSuppsAll, i)), 1); i++  {
-        Vec_IntPush( vOne, i );
-    }
-    // sort the supports in the decreasing order
-    Vec_VecSort( (Vec_Vec_t *)vPartSuppsAll, 1 );
-    // reproduce partitions
-    vPartsAll2 = Vec_PtrAlloc( 256 );
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vPartSuppsAll)) && (((vOne) = (Vec_Int_t *)Vec_PtrEntry(vPartSuppsAll, i)), 1); i++  {
-        Vec_PtrPush( vPartsAll2, Vec_PtrEntry(vPartsAll, Vec_IntPop(vOne)) );
-    }
-    Vec_PtrFree( vPartsAll );
-    vPartsAll = vPartsAll2;
-
-    // compact small partitions
-//    Abc_NtkPartitionPrint( pNtk, vPartsAll, vPartSuppsAll );
-    Abc_NtkPartitionCompact( vPartsAll, vPartSuppsAll, nSuppSizeLimit );
-
-if fVerbose != 0 {
-// inlining of macro ABC_PRT
-Abc_Print(1, "%s =", ("Comps"));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;
-}
-    if fVerbose != 0 {
-    fmt.Printf("Created %d partitions.\n", Vec_PtrSize(vPartsAll)); }
-//    Abc_NtkPartitionPrint( pNtk, vPartsAll, vPartSuppsAll );
-
-    // cleanup
-    Vec_VecFree( (Vec_Vec_t *)vSupps );
-    Vec_VecFree( (Vec_Vec_t *)vPartSuppsAll );
-/*
-    // converts from intergers to nodes
-    Vec_PtrForEachEntry( Vec_Int_t *, vPartsAll, vPart, iPart )
-    {
-        vPartPtr = Vec_PtrAlloc( Vec_IntSize(vPart) );
-        Vec_IntForEachEntry( vPart, iOut, i )
-            Vec_PtrPush( vPartPtr, Abc_NtkCo(pNtk, iOut) );
-        Vec_IntFree( vPart );
-        Vec_PtrWriteEntry( vPartsAll, iPart, vPartPtr );
-    }
-*/
-    return vPartsAll;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Perform the naive partitioning.]
-
-  Description [Returns the ptr-vector of int-vectors.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkPartitionNaive(pNtk *Abc_Ntk_t, nPartSize int32) *Vec_Ptr_t {
-    var vParts *Vec_Ptr_t;
-    var pObj *Abc_Obj_t;
-    var nParts, i int32;
-    nParts = (Abc_NtkCoNum(pNtk) / nPartSize) + ((Abc_NtkCoNum(pNtk) % nPartSize) > 0);
-    vParts = (Vec_Ptr_t *)Vec_VecStart( nParts );
-    // inlining of macro Abc_NtkForEachCo
-    for  i = 0; (i < Abc_NtkCoNum(pNtk)) && (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {
-        Vec_IntPush( (Vec_Int_t *)Vec_PtrEntry(vParts, i / nPartSize), i );
-    }
-    return vParts;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Converts from intergers to pointers for the given network.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkConvertCos(pNtk *Abc_Ntk_t, vOuts *Vec_Int_t, vOutsPtr *Vec_Ptr_t) {
-    var Out, i int32;
-    Vec_PtrClear( vOutsPtr );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vOuts)) && (((Out) = Vec_IntEntry(vOuts, i)), 1); i++  {
-        Vec_PtrPush( vOutsPtr, Abc_NtkCo(pNtk, Out) );
-    }
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Returns representative of the given node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkPartStitchFindRepr_rec(vEquiv *Vec_Ptr_t, pObj *Abc_Obj_t) *Abc_Obj_t {
-    var pRepr *Abc_Obj_t;
-    pRepr = (Abc_Obj_t *)Vec_PtrEntry( vEquiv, pObj.Id );
-    if pRepr == nil || pRepr == pObj {
-        return pObj; }
-    return Abc_NtkPartStitchFindRepr_rec( vEquiv, pRepr );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Returns the representative of the fanin.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkPartStitchCopy0(vEquiv *Vec_Ptr_t, pObj *Abc_Obj_t) *Abc_Obj_t {
-    var pFan *Abc_Obj_t  = Abc_ObjFanin0( pObj );
-    var pRepr *Abc_Obj_t  = Abc_NtkPartStitchFindRepr_rec( vEquiv, pFan );
-    return Abc_ObjNotCond( pRepr.pCopy, pRepr.fPhase ^ pFan.fPhase ^ int32(Abc_ObjFaninC1(pObj)) );
-}
-func Abc_NtkPartStitchCopy1(vEquiv *Vec_Ptr_t, pObj *Abc_Obj_t) *Abc_Obj_t {
-    var pFan *Abc_Obj_t  = Abc_ObjFanin1( pObj );
-    var pRepr *Abc_Obj_t  = Abc_NtkPartStitchFindRepr_rec( vEquiv, pFan );
-    return Abc_ObjNotCond( pRepr.pCopy, pRepr.fPhase ^ pFan.fPhase ^ int32(Abc_ObjFaninC1(pObj)) );
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Hop_ObjChild0Next(pObj *Abc_Obj_t) *Hop_Obj_t { return Hop_NotCond( (Hop_Obj_t *)Abc_ObjFanin0(pObj).pNext, Abc_ObjFaninC0(pObj) ); }
-func Hop_ObjChild1Next(pObj *Abc_Obj_t) *Hop_Obj_t { return Hop_NotCond( (Hop_Obj_t *)Abc_ObjFanin1(pObj).pNext, Abc_ObjFaninC1(pObj) ); }
-
-
-/**Function*************************************************************
-
-  Synopsis    [Stitches together several networks with choice nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkPartStartHop(pNtk *Abc_Ntk_t) *Hop_Man_t {
-    var pMan *Hop_Man_t;
-    var pObj *Abc_Obj_t;
-    var i int32;
-    // start the HOP package
-    pMan = Hop_ManStart();
-    pMan.vObjs = Vec_PtrAlloc( Abc_NtkObjNumMax(pNtk) + 1  );
-    Vec_PtrPush( pMan.vObjs, Hop_ManConst1(pMan) );
-    // map constant node and PIs
-    Abc_AigConst1(pNtk).pNext = (Abc_Obj_t *)Hop_ManConst1(pMan);
-    // inlining of macro Abc_NtkForEachCi
-    for  i = 0; (i < Abc_NtkCiNum(pNtk)) && (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {
-        pObj.pNext = (Abc_Obj_t *)Hop_ObjCreatePi(pMan);
-    }
-    // map the internal nodes
-    // inlining of macro Abc_AigForEachAnd
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_AigNodeIsAnd(pObj) {} else {
-        pObj.pNext = (Abc_Obj_t *)Hop_And( pMan, Hop_ObjChild0Next(pObj), Hop_ObjChild1Next(pObj) );
-        assert(!Abc_ObjIsComplement(pObj.pNext), "!Abc_ObjIsComplement(pObj.pNext)");
-    }
-    }
-    // set the choice nodes
-    // inlining of macro Abc_AigForEachAnd
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_AigNodeIsAnd(pObj) {} else {
-        if pObj.pCopy {
-            ((Hop_Obj_t *)pObj.pNext).pData = pObj.pCopy.pNext; }
-    }
-    }
-    // transfer the POs
-    // inlining of macro Abc_NtkForEachCo
-    for  i = 0; (i < Abc_NtkCoNum(pNtk)) && (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {
-        Hop_ObjCreatePo( pMan, Hop_ObjChild0Next(pObj) );
-    }
-    // check the new manager
-    if !Hop_ManCheck(pMan) {
-        fmt.Printf("Abc_NtkPartStartHop: HOP manager check has failed.\n"); }
-    return pMan;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Stitches together several networks with choice nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkPartStitchChoices(pNtk *Abc_Ntk_t, vParts *Vec_Ptr_t) *Abc_Ntk_t {
-    extern Abc_Ntk_t * Abc_NtkHopRemoveLoops( Abc_Ntk_t * pNtk, Hop_Man_t * pMan );
-    var pMan *Hop_Man_t;
-    var vNodes *Vec_Ptr_t;
-    var pNtkNew, pNtkTemp *Abc_Ntk_t;
-    var pObj, pFanin *Abc_Obj_t;
-    var i, k, iNodeId int32;
-
-    // start a new network similar to the original one
-    assert(Abc_NtkIsStrash(pNtk), "Abc_NtkIsStrash(pNtk)");
-    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_STRASH, ABC_FUNC_AIG );
-
-    // annotate parts to point to the new network
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vParts)) && (((pNtkTemp) = (Abc_Ntk_t *)Vec_PtrEntry(vParts, i)), 1); i++  {
-        assert(Abc_NtkIsStrash(pNtkTemp), "Abc_NtkIsStrash(pNtkTemp)");
-        Abc_NtkCleanCopy( pNtkTemp );
-
-        // map the CI nodes
-        Abc_AigConst1(pNtkTemp).pCopy = Abc_AigConst1(pNtkNew);
-        // inlining of macro Abc_NtkForEachCi
-        for  k = 0; (k < Abc_NtkCiNum(pNtkTemp)) && (((pObj) = Abc_NtkCi(pNtkTemp, k)), 1); k++  {
-            iNodeId = Nm_ManFindIdByNameTwoTypes( pNtkNew.pManName, Abc_ObjName(pObj), ABC_OBJ_PI, ABC_OBJ_BO );
-            if iNodeId == -1 {
-                fmt.Printf("Cannot find CI node %s in the original network.\n", Abc_ObjName(pObj));
-                return nil;
-            }
-            pObj.pCopy = Abc_NtkObj( pNtkNew, iNodeId );
-        }
-
-        // add the internal nodes while saving representatives
-        vNodes = Abc_AigDfs( pNtkTemp, 1, 0 );
-        // inlining of macro Vec_PtrForEachEntry
-        for  k = 0; (k < Vec_PtrSize(vNodes)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, k)), 1); k++  {
-            pObj.pCopy = Abc_AigAnd( (Abc_Aig_t *)pNtkNew.pManFunc, Abc_ObjChild0Copy(pObj), Abc_ObjChild1Copy(pObj) );
-            assert(!Abc_ObjIsComplement(pObj.pCopy), "!Abc_ObjIsComplement(pObj.pCopy)");
-            if Abc_AigNodeIsChoice(pObj) {
-                for  pFanin = (Abc_Obj_t *)pObj.pData; (pFanin != nil); pFanin = (Abc_Obj_t *)pFanin.pData  {
-                    pFanin.pCopy.pCopy = pObj.pCopy;
-                } }
-        }
-        Vec_PtrFree( vNodes );
-
-        // map the CO nodes
-        // inlining of macro Abc_NtkForEachCo
-        for  k = 0; (k < Abc_NtkCoNum(pNtkTemp)) && (((pObj) = Abc_NtkCo(pNtkTemp, k)), 1); k++  {
-            iNodeId = Nm_ManFindIdByNameTwoTypes( pNtkNew.pManName, Abc_ObjName(pObj), ABC_OBJ_PO, ABC_OBJ_BI );
-            if iNodeId == -1 {
-                fmt.Printf("Cannot find CO node %s in the original network.\n", Abc_ObjName(pObj));
-                return nil;
-            }
-            pObj.pCopy = Abc_NtkObj( pNtkNew, iNodeId );
-            Abc_ObjAddFanin( pObj.pCopy, Abc_ObjChild0Copy(pObj) );
-        }
-    }
-
-    // connect the remaining POs
-/*
-    Abc_AigConst1(pNtk)->pCopy = Abc_AigConst1(pNtkNew);
-    Abc_NtkForEachCi( pNtk, pObj, i )
-        pObj->pCopy = Abc_NtkCi( pNtkNew, i );
-    Abc_NtkForEachCo( pNtk, pObj, i )
-        pObj->pCopy = Abc_NtkCo( pNtkNew, i );
-*/
-    // inlining of macro Abc_NtkForEachCo
-    for  i = 0; (i < Abc_NtkCoNum(pNtk)) && (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {
-        if Abc_ObjFaninNum(pObj.pCopy) == 0 {
-            Abc_ObjAddFanin( pObj.pCopy, Abc_ObjChild0Copy(pObj) ); }
-    }
-
-    // transform into the HOP manager
-    pMan = Abc_NtkPartStartHop( pNtkNew );
-    pNtkNew = Abc_NtkHopRemoveLoops( pNtkTemp = pNtkNew, pMan );
-    Abc_NtkDelete( pNtkTemp );
-
-    // check correctness of the new network
-    if !Abc_NtkCheck( pNtkNew ) {
-        fmt.Printf("Abc_NtkPartStitchChoices: The network check has failed.\n");
-        Abc_NtkDelete( pNtkNew );
-        return nil;
-    }
-    return pNtkNew;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Stitches together several networks with choice nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkFraigPartitioned(vStore *Vec_Ptr_t, pParams any) *Abc_Ntk_t {
-    var vParts, vFraigs, vOnePtr *Vec_Ptr_t;
-    var vOne *Vec_Int_t;
-    var pNtk, pNtk2, pNtkAig, pNtkFraig *Abc_Ntk_t;
-    var i, k int32;
-
-    // perform partitioning
-    pNtk = (Abc_Ntk_t *)Vec_PtrEntry( vStore, 0 );
-    assert(Abc_NtkIsStrash(pNtk), "Abc_NtkIsStrash(pNtk)");
-//    vParts = Abc_NtkPartitionNaive( pNtk, 20 );
-    vParts = Abc_NtkPartitionSmart( pNtk, 300, 0 );
-
-    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), "unset progressbar" );
-
-    // fraig each partition
-    vOnePtr = Vec_PtrAlloc( 1000 );
-    vFraigs = Vec_PtrAlloc( Vec_PtrSize(vParts) );
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vParts)) && (((vOne) = (Vec_Int_t *)Vec_PtrEntry(vParts, i)), 1); i++  {
-        // start the partition 
-        Abc_NtkConvertCos( pNtk, vOne, vOnePtr );
-        pNtkAig = Abc_NtkCreateConeArray( pNtk, vOnePtr, 0 );
-        // add nodes to the partition
-        // inlining of macro Vec_PtrForEachEntryStart
-        for  k = 1; (k < Vec_PtrSize(vStore)) && (((pNtk2) = (Abc_Ntk_t *)Vec_PtrEntry(vStore, k)), 1); k++  {
-            Abc_NtkConvertCos( pNtk2, vOne, vOnePtr );
-            Abc_NtkAppendToCone( pNtkAig, pNtk2, vOnePtr );
-        }
-        fmt.Printf("Fraiging part %4d  (out of %4d)  PI = %5d. PO = %5d. And = %6d. Lev = %4d.\r", i+1, Vec_PtrSize(vParts), Abc_NtkPiNum(pNtkAig), Abc_NtkPoNum(pNtkAig), Abc_NtkNodeNum(pNtkAig), Abc_AigLevel(pNtkAig));
-        // fraig the partition
-        pNtkFraig = Abc_NtkFraig( pNtkAig, pParams, 1, 0 );
-        Vec_PtrPush( vFraigs, pNtkFraig );
-        Abc_NtkDelete( pNtkAig );
-    }
-    fmt.Printf("                                                                                          \r");
-    Vec_VecFree( (Vec_Vec_t *)vParts );
-
-    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), "set progressbar" );
-
-    // derive the final network
-    pNtkFraig = Abc_NtkPartStitchChoices( pNtk, vFraigs );
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vFraigs)) && (((pNtkAig) = (Abc_Ntk_t *)Vec_PtrEntry(vFraigs, i)), 1); i++  {
-        Abc_NtkDelete( pNtkAig );
-    }
-    Vec_PtrFree( vFraigs );
-    Vec_PtrFree( vOnePtr );
-    return pNtkFraig;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Stitches together several networks with choice nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkFraigPartitionedTime(pNtk *Abc_Ntk_t, pParams any) {
-    var vParts, vFraigs, vOnePtr *Vec_Ptr_t;
-    var vOne *Vec_Int_t;
-    var pNtkAig, pNtkFraig *Abc_Ntk_t;
-    var i int32;
-    var clk abctime  = Abc_Clock();
-
-    // perform partitioning
-    assert(Abc_NtkIsStrash(pNtk), "Abc_NtkIsStrash(pNtk)");
-//    vParts = Abc_NtkPartitionNaive( pNtk, 20 );
-    vParts = Abc_NtkPartitionSmart( pNtk, 300, 0 );
-
-    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), "unset progressbar" );
-
-    // fraig each partition
-    vOnePtr = Vec_PtrAlloc( 1000 );
-    vFraigs = Vec_PtrAlloc( Vec_PtrSize(vParts) );
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vParts)) && (((vOne) = (Vec_Int_t *)Vec_PtrEntry(vParts, i)), 1); i++  {
-        Abc_NtkConvertCos( pNtk, vOne, vOnePtr );
-        pNtkAig = Abc_NtkCreateConeArray( pNtk, vOnePtr, 0 );
-        pNtkFraig = Abc_NtkFraig( pNtkAig, pParams, 0, 0 );
-        Vec_PtrPush( vFraigs, pNtkFraig );
-        Abc_NtkDelete( pNtkAig );
-
-        fmt.Printf("Finished part %5d (out of %5d)\r", i+1, Vec_PtrSize(vParts));
-    }
-    Vec_VecFree( (Vec_Vec_t *)vParts );
-
-    Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), "set progressbar" );
-
-    // derive the final network
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vFraigs)) && (((pNtkAig) = (Abc_Ntk_t *)Vec_PtrEntry(vFraigs, i)), 1); i++  {
-        Abc_NtkDelete( pNtkAig );
-    }
-    Vec_PtrFree( vFraigs );
-    Vec_PtrFree( vOnePtr );
-    // inlining of macro ABC_PRT
-    Abc_Print(1, "%s =", ("Partitioned fraiging time"));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;
-}
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

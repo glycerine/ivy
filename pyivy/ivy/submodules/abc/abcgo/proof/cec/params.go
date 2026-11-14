@@ -15,6 +15,8 @@ func Cec_ManFraSetDefaultParams(p *Cec_ParFra_t) {
 	*p = Cec_ParFra_t{nWords: 15, nRounds: 15, nItersMax: 10, nBTLimit: 100, nDepthMax: 1, iOutFail: -1}
 }
 func Cec_ManCecSetDefaultParams(p *Cec_ParCec_t) { *p = Cec_ParCec_t{nBTLimit: 1000, iOutFail: -1} }
+func Cec_ParCecSetVerbose(p *Cec_ParCec_t, value int32) { p.fVerbose = value }
+func Cec_ParCecVerbose(p *Cec_ParCec_t) int32 { return p.fVerbose }
 func Cec_ManCorSetDefaultParams(p *Cec_ParCor_t) {
 	*p = Cec_ParCor_t{nWords: 15, nRounds: 15, nFrames: 1, nBTLimit: 100, nLevelMax: -1, nStepsMax: -1, fUseRings: 1, fUseCSat: 1}
 }

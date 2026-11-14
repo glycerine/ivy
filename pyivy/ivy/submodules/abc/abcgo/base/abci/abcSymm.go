@@ -2,356 +2,219 @@ package abci
 
 import (
 	"fmt"
-	"os"
+	"strings"
+
+	"github.com/glycerine/abcgo/base/abc"
+	"github.com/glycerine/abcgo/bdd/cudd/core"
+	"github.com/glycerine/abcgo/bdd/extrab"
+	"github.com/glycerine/abcgo/misc/extra"
+	"github.com/glycerine/abcgo/misc/util"
+	"github.com/glycerine/abcgo/misc/vec"
+	"github.com/glycerine/abcgo/opt/sim"
 )
 
-/**CFile****************************************************************
-
-  FileName    [abcSymm.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Network and node package.]
-
-  Synopsis    [Computation of two-variable symmetries.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: abcSymm.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "base/abc/abc.h"
-//#include "opt/sim/sim.h"
-//#include "opt/dau/dau.h"
-//#include "misc/util/utilTruth.h"
-
-#ifdef ABC_USE_CUDD
-#include "bdd/extrab/extraBdd.h"
-#endif
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
- 
-#ifdef ABC_USE_CUDD
-
-static void Abc_NtkSymmetriesUsingBdds( Abc_Ntk_t * pNtk, int fNaive, int fReorder, int fVerbose );
-static void Abc_NtkSymmetriesUsingSandS( Abc_Ntk_t * pNtk, int fVerbose );
-static void Ntk_NetworkSymmsBdd( DdManager * dd, Abc_Ntk_t * pNtk, int fNaive, int fVerbose );
-static void Ntk_NetworkSymmsPrint( Abc_Ntk_t * pNtk, Extra_SymmInfo_t * pSymms );
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [The top level procedure to compute symmetries.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-void Abc_NtkSymmetries( Abc_Ntk_t * pNtk, int fUseBdds, int fNaive, int fReorder, int fVerbose )
-{
-    if ( fUseBdds || fNaive )
-        Abc_NtkSymmetriesUsingBdds( pNtk, fNaive, fReorder, fVerbose );
-    else
-        Abc_NtkSymmetriesUsingSandS( pNtk, fVerbose );
+func Abc_NtkSymmetries(n *Abc_Ntk_t, useBdds, naive, reorder, verbose int32) {
+	if useBdds != 0 || naive != 0 {
+		Abc_NtkSymmetriesUsingBdds(n, naive, reorder, verbose)
+		return
+	}
+	Abc_NtkSymmetriesUsingSandS(n, verbose)
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Symmetry computation using simulation and SAT.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-void Abc_NtkSymmetriesUsingSandS( Abc_Ntk_t * pNtk, int fVerbose )
-{
-//    extern int Sim_ComputeTwoVarSymms( Abc_Ntk_t * pNtk, int fVerbose );
-    int nSymms = Sim_ComputeTwoVarSymms( pNtk, fVerbose );
-    printf( "The total number of symmetries is %d.\n", nSymms );
+func Abc_NtkSymmetriesUsingSandS(n *Abc_Ntk_t, verbose int32) {
+	if n == nil {
+		return
+	}
+	if abc.Abc_NtkIsStrash(n) == 0 {
+		panic("Abc_NtkSymmetriesUsingSandS requires a strashed network")
+	}
+	graph := abc.Abc_NtkStrashToGia(n)
+	count := sim.Sim_ComputeTwoVarSymms(graph, verbose != 0)
+	fmt.Printf("The total number of symmetries is %d.\n", count)
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Symmetry computation using BDDs (both naive and smart).]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-void Abc_NtkSymmetriesUsingBdds( Abc_Ntk_t * pNtk, int fNaive, int fReorder, int fVerbose )
-{
-    DdManager * dd;
-    abctime clk, clkBdd, clkSym;
-    int fGarbCollect = 1;
-
-    // compute the global functions
-clk = Abc_Clock();
-    dd = (DdManager *)Abc_NtkBuildGlobalBdds( pNtk, 10000000, 1, fReorder, 0, fVerbose );
-    printf( "Shared BDD size = %d nodes.\n", Abc_NtkSizeOfGlobalBdds(pNtk) ); 
-    Cudd_AutodynDisable( dd );
-    if ( !fGarbCollect )
-        Cudd_DisableGarbageCollection( dd );
-    Cudd_zddVarsFromBddVars( dd, 2 );
-clkBdd = Abc_Clock() - clk;
-    // create the collapsed network
-clk = Abc_Clock();
-    Ntk_NetworkSymmsBdd( dd, pNtk, fNaive, fVerbose );
-clkSym = Abc_Clock() - clk;
-    // undo the global functions
-    Abc_NtkFreeGlobalBdds( pNtk, 1 );
-printf( "Statistics of BDD-based symmetry detection:\n" );
-printf( "Algorithm = %s. Reordering = %s. Garbage collection = %s.\n", 
-       fNaive? "naive" : "fast", fReorder? "yes" : "no", fGarbCollect? "yes" : "no" );
-ABC_PRT( "Constructing BDDs", clkBdd );
-ABC_PRT( "Computing symms  ", clkSym );
-ABC_PRT( "TOTAL            ", clkBdd + clkSym );
+func Abc_NtkSymmetriesUsingBdds(n *Abc_Ntk_t, naive, reorder, verbose int32) {
+	if n == nil {
+		return
+	}
+	clk := util.Abc_Clock()
+	dd := Abc_NtkBuildGlobalBdds(n, 10000000, 1, reorder, 0, verbose)
+	if dd == nil {
+		return
+	}
+	fmt.Printf("Shared BDD size = %d nodes.\n", Abc_NtkSizeOfGlobalBdds(n))
+	core.Cudd_AutodynDisable(dd)
+	core.Cudd_zddVarsFromBddVars(dd, 2)
+	bddTime := util.Abc_Clock() - clk
+	clk = util.Abc_Clock()
+	Ntk_NetworkSymmsBdd(dd, n, naive, verbose)
+	symmTime := util.Abc_Clock() - clk
+	Abc_NtkFreeGlobalBdds(n, 1)
+	abcNtkSymmPrintBddStats(naive, reorder, bddTime, symmTime)
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Symmetry computation using BDDs (both naive and smart).]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-void Ntk_NetworkSymmsBdd( DdManager * dd, Abc_Ntk_t * pNtk, int fNaive, int fVerbose )
-{
-    Extra_SymmInfo_t * pSymms;
-    Abc_Obj_t * pNode;
-    DdNode * bFunc;
-    int nSymms = 0;
-    int nSupps = 0;
-    int i;
-
-    // compute symmetry info for each PO
-    Abc_NtkForEachCo( pNtk, pNode, i )
-    {
-//      bFunc = pNtk->vFuncsGlob->pArray[i];
-        bFunc = (DdNode *)Abc_ObjGlobalBdd( pNode );
-        nSupps += Cudd_SupportSize( dd, bFunc );
-        if ( Cudd_IsConstant(bFunc) )
-            continue;
-        if ( fNaive )
-            pSymms = Extra_SymmPairsComputeNaive( dd, bFunc );
-        else
-            pSymms = Extra_SymmPairsCompute( dd, bFunc );
-        nSymms += pSymms->nSymms;
-        if ( fVerbose )
-        {
-            printf( "Output %6s (%d): ", Abc_ObjName(pNode), pSymms->nSymms );
-            Ntk_NetworkSymmsPrint( pNtk, pSymms );
-        }
-//Extra_SymmPairsPrint( pSymms );
-        Extra_SymmPairsDissolve( pSymms );
-    }
-    printf( "Total number of vars in functional supports = %8d.\n", nSupps );
-    printf( "Total number of two-variable symmetries     = %8d.\n", nSymms );
+func abcNtkSymmPrintBddStats(naive, reorder int32, bddTime, symmTime int64) {
+	fmt.Println("Statistics of BDD-based symmetry detection:")
+	fmt.Printf("Algorithm = %s. Reordering = %s. Garbage collection = yes.\n", abcSelect(naive, "naive", "fast"), abcSelect(reorder, "yes", "no"))
+	util.Abc_PrintTime(1, "Constructing BDDs", bddTime)
+	util.Abc_PrintTime(1, "Computing symms  ", symmTime)
+	util.Abc_PrintTime(1, "TOTAL            ", bddTime+symmTime)
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Printing symmetry groups from the symmetry data structure.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-void Ntk_NetworkSymmsPrint( Abc_Ntk_t * pNtk, Extra_SymmInfo_t * pSymms )
-{
-    char ** pInputNames;
-    int * pVarTaken;
-    int i, k, nVars, nSize, fStart;
-
-    // get variable names
-    nVars = Abc_NtkCiNum(pNtk);
-    pInputNames = Abc_NtkCollectCioNames( pNtk, 0 );
-
-    // alloc the array of marks
-    pVarTaken = ABC_ALLOC( int, nVars );
-    memset( pVarTaken, 0, sizeof(int) * nVars );
-
-    // print the groups
-    fStart = 1;
-    nSize = pSymms->nVars;
-    for ( i = 0; i < nSize; i++ )
-    {
-        // skip the variable already considered
-        if ( pVarTaken[i] )
-            continue;
-        // find all the vars symmetric with this one
-        for ( k = 0; k < nSize; k++ )
-        {
-            if ( k == i )
-                continue;
-            if ( pSymms->pSymms[i][k] == 0 )
-                continue;
-            // vars i and k are symmetric
-            assert( pVarTaken[k] == 0 );
-            // there is a new symmetry pair 
-            if ( fStart == 1 )
-            {  // start a new symmetry class
-                fStart = 0;
-                printf( "  { %s", pInputNames[ pSymms->pVars[i] ] );
-                // mark the var as taken
-                pVarTaken[i] = 1;
-            }
-            printf( " %s", pInputNames[ pSymms->pVars[k] ] );
-            // mark the var as taken
-            pVarTaken[k] = 1;
-        }
-        if ( fStart == 0 )
-        {
-            printf( " }" );
-            fStart = 1; 
-        }   
-    }   
-    printf( "\n" );
-
-    ABC_FREE( pInputNames );
-    ABC_FREE( pVarTaken );
+func Ntk_NetworkSymmsBdd(dd *core.DdManager, n *Abc_Ntk_t, naive, verbose int32) {
+	if dd == nil || n == nil {
+		return
+	}
+	var symms, supports int
+	for _, co := range n.Objects() {
+		if !co.IsCO() {
+			continue
+		}
+		f := Abc_ObjGlobalBdd(co)
+		if f == nil {
+			continue
+		}
+		supports += core.Cudd_SupportSize(dd, f)
+		if core.Cudd_IsConstant(f) {
+			continue
+		}
+		var info *extrab.Extra_SymmInfo_t
+		if naive != 0 {
+			info = extrab.Extra_SymmPairsComputeNaive(dd, f)
+		} else {
+			info = extrab.Extra_SymmPairsCompute(dd, f)
+		}
+		if info == nil {
+			continue
+		}
+		symms += info.NSymms
+		if verbose != 0 {
+			fmt.Printf("Output %6s (%d): ", co.Name(), info.NSymms)
+			Ntk_NetworkSymmsPrint(n, info)
+		}
+		extrab.Extra_SymmPairsDissolve(info)
+	}
+	fmt.Printf("Total number of vars in functional supports = %8d.\n", supports)
+	fmt.Printf("Total number of two-variable symmetries     = %8d.\n", symms)
 }
 
-#else
-
-void Abc_NtkSymmetries( Abc_Ntk_t * pNtk, int fUseBdds, int fNaive, int fReorder, int fVerbose ) {}
-
-#endif
-
-/**Function*************************************************************
-
-  Synopsis    [Try different permutations.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ntk_SymTryRandomFlips(pFun *word, pNpn *word, nVars int32) {
-    var Rand [16]int32 = [16]int32{ 17290, 20203, 19027, 12035, 14687, 10920, 10413, 261, 2072, 16899, 4480, 6192, 3978, 8343, 745, 1370 };
-    var i int32;
-    var nWords int32 = Abc_TtWordNum(nVars);
-    var pFunT *word  = ABC_CALLOC( word, nWords );
-    Abc_TtCopy( pFunT, pFun, nWords, 0 );
-    for  i = 0; i < 16; i++  {
-        Abc_TtFlip( pFunT, nWords, Rand[i] % (nVars-1) );
-    }
-    assert(Abc_TtCompareRev(pNpn, pFunT, nWords) != 1, "Abc_TtCompareRev(pNpn, pFunT, nWords) != 1");
-    ABC_FREE( pFunT );
+func Ntk_NetworkSymmsPrint(n *Abc_Ntk_t, info *extrab.Extra_SymmInfo_t) {
+	if n == nil || info == nil {
+		fmt.Println()
+		return
+	}
+	names := abc.Abc_NtkCollectCioNames(n, 0)
+	taken := make([]bool, info.NVars)
+	start := true
+	for i := 0; i < info.NVars; i++ {
+		if taken[i] {
+			continue
+		}
+		group := []string{}
+		for k := 0; k < info.NVars; k++ {
+			if k == i || !info.Symms[i][k] {
+				continue
+			}
+			if k < len(taken) && taken[k] {
+				continue
+			}
+			if start {
+				if info.Vars[i] >= 0 && info.Vars[i] < len(names) {
+					group = append(group, names[info.Vars[i]])
+				}
+				taken[i] = true
+				start = false
+			}
+			if info.Vars[k] >= 0 && info.Vars[k] < len(names) {
+				group = append(group, names[info.Vars[k]])
+			}
+			taken[k] = true
+		}
+		if len(group) != 0 {
+			fmt.Printf("  { %s }", strings.Join(group, " "))
+			start = true
+		}
+	}
+	fmt.Println()
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Find canonical form of symmetric function.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ntk_SymFunDeriveNpn(pFun *word, nVars int32, pComp *int32) {
-    var i int32;
-    var nWords int32 = Abc_TtWordNum(nVars);
-    var pFunB *word  = ABC_CALLOC( word, nWords );
-    Abc_TtCopy( pFunB, pFun, nWords, 1 );
-    if Abc_TtCompareRev(pFunB, pFun, nWords) == 1 {
-        Abc_TtCopy( pFunB, pFun, nWords, 0 ); }
-    for  i = 0; i < (1 << nVars); i++  {
-        Abc_TtFlip( pFun, nWords, pComp[i] );
-        if Abc_TtCompareRev(pFunB, pFun, nWords) == 1 {
-            Abc_TtCopy( pFunB, pFun, nWords, 0 ); }
-        Abc_TtNot( pFun, nWords );
-        if Abc_TtCompareRev(pFunB, pFun, nWords) == 1 {
-            Abc_TtCopy( pFunB, pFun, nWords, 0 ); }
-    }
-    //Ntk_SymTryRandomFlips( pFun, pFunB, nVars );
-    Abc_TtCopy( pFun, pFunB, nWords, 0 );
-    ABC_FREE( pFunB );
+func Ntk_SymTryRandomFlips(fun, npn []uint64, nVars int32) {
+	rand := [...]int32{17290, 20203, 19027, 12035, 14687, 10920, 10413, 261, 2072, 16899, 4480, 6192, 3978, 8343, 745, 1370}
+	words := int(util.Abc_TtWordNum(nVars))
+	tmp := make([]uint64, words)
+	util.Abc_TtCopy(tmp, fun, int32(words), 0)
+	for _, v := range rand {
+		if nVars > 1 {
+			util.Abc_TtFlip(tmp, int32(words), v%(nVars-1))
+		}
+	}
+	if util.Abc_TtCompareRev(npn, tmp, int32(words)) == 1 {
+		panic("Ntk_SymTryRandomFlips: canonical truth table mismatch")
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Generating NPN classes of all symmetric function of N variables.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ntk_SymFunGenerate(nVars int32, fVerbose int32) {
-    var k, m, Class int32;
-    var pComp *int32  = Extra_GreyCodeSchedule( nVars );
-    var vTtMem *Vec_Mem_t  = Vec_MemAlloc( Abc_Truth6WordNum(nVars), 12 );
-    Vec_MemHashAlloc( vTtMem, 10000 );
-    assert(!(nVars < 1 || nVars > 16), "!(nVars < 1 || nVars > 16)");
-    fmt.Printf("Generating truth tables of all symmetric functions of %d variables.\n", nVars);
-    for  m = 0; m < (1 << (nVars+1)); m++  {
-        var pFun *word;
-        var Ones [100]byte ;
-        for  k = 0; k <= nVars; k++  {
-            Ones[k] = '0' + ((m >> k) & 1);
-        }
-        if fVerbose != 0 {
-            printf( "%s : ", Ones ); }
-        pFun = Abc_TtSymFunGenerate( Ones, nVars );
-        if nVars < 6 {
-            pFun[0] = Abc_Tt6Stretch( pFun[0], nVars ); }
-        if fVerbose != 0 {
-            Extra_PrintHex( os.Stdout, (unsigned *)pFun, nVars ); }
-        Ntk_SymFunDeriveNpn( pFun, nVars, pComp );
-        Class = Vec_MemHashInsert( vTtMem, pFun );
-        if fVerbose != 0 {
-            fmt.Printf(" : NPN ");
-            Extra_PrintHex( os.Stdout, (unsigned *)pFun, nVars );
-            fmt.Printf("  Class %3d", Class);
-            fmt.Printf("\n");
-        }
-        ABC_FREE( pFun );
-    }
-    fmt.Printf("The number of different NPN classes is %d.\n", Vec_MemEntryNum(vTtMem));
-    Vec_MemHashFree( vTtMem );
-    Vec_MemFreeP( &vTtMem );
-    ABC_FREE( pComp );
+func Ntk_SymFunDeriveNpn(fun []uint64, nVars int32, comp []int32) {
+	words := int(util.Abc_TtWordNum(nVars))
+	best := make([]uint64, words)
+	tmp := make([]uint64, words)
+	util.Abc_TtCopy(best, fun, int32(words), 1)
+	if util.Abc_TtCompareRev(best, fun, int32(words)) == 1 {
+		util.Abc_TtCopy(best, fun, int32(words), 0)
+	}
+	for _, v := range comp {
+		util.Abc_TtFlip(fun, int32(words), v)
+		if util.Abc_TtCompareRev(best, fun, int32(words)) == 1 {
+			util.Abc_TtCopy(best, fun, int32(words), 0)
+		}
+		util.Abc_TtNot(fun, int32(words))
+		if util.Abc_TtCompareRev(best, fun, int32(words)) == 1 {
+			util.Abc_TtCopy(best, fun, int32(words), 0)
+		}
+	}
+	copy(tmp, best)
+	copy(fun, tmp)
 }
 
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
+func Ntk_SymFunGenerate(nVars, verbose int32) {
+	if nVars < 1 || nVars > 16 {
+		panic("Ntk_SymFunGenerate: variable count must be in [1,16]")
+	}
+	fmt.Printf("Generating truth tables of all symmetric functions of %d variables.\n", nVars)
+	comp := extra.Extra_GreyCodeSchedule(nVars)
+	mem := vec.Vec_MemAllocForTTSimple(int(nVars))
+	for m := int32(0); m < (1 << (nVars + 1)); m++ {
+		ones := make([]byte, nVars+1)
+		for k := int32(0); k <= nVars; k++ {
+			ones[k] = byte('0' + ((m >> k) & 1))
+		}
+		fun := util.Abc_TtSymFunGenerate(string(ones), nVars)
+		if nVars < 6 {
+			fun[0] = util.Abc_Tt6Stretch(fun[0], nVars)
+		}
+		if verbose != 0 {
+			fmt.Printf("%s : ", string(ones))
+			extra.Extra_PrintHex(&symmStdout{}, symmWords32(fun), nVars)
+		}
+		Ntk_SymFunDeriveNpn(fun, nVars, comp)
+		class := vec.Vec_MemHashInsert(mem, fun)
+		if verbose != 0 {
+			fmt.Printf(" : NPN ")
+			extra.Extra_PrintHex(&symmStdout{}, symmWords32(fun), nVars)
+			fmt.Printf("  Class %3d\n", class)
+		}
+	}
+	fmt.Printf("The number of different NPN classes is %d.\n", vec.Vec_MemEntryNum(mem))
+	vec.Vec_MemHashFree(mem)
+	vec.Vec_MemFree(mem)
+}
 
+type symmStdout struct{}
 
-//ABC_NAMESPACE_IMPL_END
-
+func (*symmStdout) Write(p []byte) (int, error) { return fmt.Print(string(p)) }
+func symmWords32(words []uint64) []uint32 {
+	out := make([]uint32, 2*len(words))
+	for i, w := range words {
+		out[2*i], out[2*i+1] = uint32(w), uint32(w>>32)
+	}
+	return out
+}

@@ -88,6 +88,39 @@ type Cnf_Dat_t_ struct {
 	vMapping    *Vec_Int_t
 }
 
+// Cnf_DataVarNum, Cnf_DataClauseNum, and Cnf_DataClause expose the read-only
+// portions of a CNF needed by packages that cannot access this package's
+// source-compatible private fields.
+func Cnf_DataVarNum(p *Cnf_Dat_t) int32            { return p.nVars }
+func Cnf_DataClauseNum(p *Cnf_Dat_t) int32         { return p.nClauses }
+func Cnf_DataClause(p *Cnf_Dat_t, i int32) []int32 { return p.pClauses[i] }
+func Cnf_DataSetManNil(p *Cnf_Dat_t)               { p.pMan = nil }
+
+// Cnf_DataSetPackedClauses imports ABC's packed clause representation. offsets
+// has one entry per clause plus a final end offset; literals is copied into
+// independent clause slices so subsequent Cnf_DataLift calls remain safe.
+func Cnf_DataSetPackedClauses(p *Cnf_Dat_t, variables int32, offsets, literals []int32) {
+	if p == nil || variables < 0 || len(offsets) == 0 || offsets[0] != 0 || offsets[len(offsets)-1] != int32(len(literals)) {
+		panic("cnf: invalid packed clauses")
+	}
+	clauses := make([][]int32, len(offsets)-1)
+	for i := range clauses {
+		beg, end := offsets[i], offsets[i+1]
+		if beg < 0 || end < beg || end > int32(len(literals)) {
+			panic("cnf: invalid clause offsets")
+		}
+		clauses[i] = append([]int32(nil), literals[beg:end]...)
+	}
+	p.nVars, p.Variables = variables, int(variables)
+	p.nClauses = int32(len(clauses))
+	p.nLiterals = int32(len(literals))
+	p.Clauses, p.pClauses = clauses, clauses
+}
+
+// Cnf_DataClauses returns the CNF's clauses in order. The slices are borrowed
+// and reflect literal lifting performed on the CNF.
+func Cnf_DataClauses(p *Cnf_Dat_t) [][]int32 { return p.pClauses }
+
 // the cut used to represent node in the AIG
 type Cnf_Cut_t_ struct {
 	nFanins byte  // the number of leaves

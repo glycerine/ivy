@@ -215,17 +215,11 @@ func Faig_ManSimulateFrames(p *Faig_Man_t, frames, prefix, transitions int32) []
 	return counts
 }
 func Faig_ManComputeSwitching(ones, words int32) float32 {
-	if words <= 0 {
-		panic("saig: empty probability sample")
-	}
-	p := float32(ones) / (32 * float32(words))
-	return 2 * p * (1 - p)
+	total := float32(32 * words)
+	return 2 * float32(ones) / total * (total - float32(ones)) / total
 }
 func Faig_ManComputeProbOne(ones, words int32) float32 {
-	if words <= 0 {
-		panic("saig: empty probability sample")
-	}
-	return float32(ones) / (32 * float32(words))
+	return float32(ones) / float32(32*words)
 }
 
 // SwitchingProbabilities returns one probability per original object ID. It
@@ -243,15 +237,15 @@ func SwitchingProbabilities(graph *aig.Graph, frames, prefix int32, probabilityO
 	p := Faig_ManCreate(graph)
 	aig.Aig_ManRandom(1)
 	transitions := int32(1)
-	samples := float32(16) * float32(frames-prefix)
+	words := (frames - prefix) / 2
 	if probabilityOne {
 		transitions = 0
-		samples *= 2
+		words = frames - prefix
 	}
 	counts := Faig_ManSimulateFrames(p, frames, prefix, transitions)
 	result := make([]float32, aig.Aig_ManObjNumMax(graph))
 	for id, edge := range p.ids {
-		result[edge.NodeID()] = float32(counts[id]) / samples
+		result[edge.NodeID()] = Faig_ManComputeProbOne(counts[id], words)
 	}
 	return result, nil
 }

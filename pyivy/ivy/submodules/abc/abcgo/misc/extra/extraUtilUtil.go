@@ -127,6 +127,12 @@ func Extra_UtilGetoptIndex() int32 {
 	defer legacyOptionMu.Unlock()
 	return globalUtilOptind
 }
+func Extra_UtilGetoptSetIndex(index int32) {
+	legacyOptionMu.Lock()
+	defer legacyOptionMu.Unlock()
+	globalUtilOptind = index
+	legacyOptionParser.Index = int(index)
+}
 func Extra_UtilPrintTime(milliseconds int64) string {
 	return fmt.Sprintf("%d.%02d sec", milliseconds/1000, milliseconds%1000/10)
 }

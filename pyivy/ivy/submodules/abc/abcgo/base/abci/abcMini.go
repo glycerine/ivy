@@ -2,141 +2,77 @@ package abci
 
 import (
 	"fmt"
-	"os"
+
+	"github.com/glycerine/abcgo/aig/miniaig"
+	baseabc "github.com/glycerine/abcgo/base/abc"
+	abcmain "github.com/glycerine/abcgo/base/main"
 )
 
-/**CFile****************************************************************
-
-  FileName    [abcMini.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Network and node package.]
-
-  Synopsis    [Interface to the minimalistic AIG package.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: abcMini.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "base/abc/abc.h"
-//#include "base/main/main.h"
-//#include "aig/miniaig/miniaig.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-
-/**Function*************************************************************
-
-  Synopsis    [Converts the network from the AIG manager into ABC.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-// MiniAIG conversion functions are translated in mini_convert.go.
-
-/**Function*************************************************************
-
-  Synopsis    [Procedures to update internal ABC network using AIG node array.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkInputMiniAig(pAbc *Abc_Frame_t, p any) {
-    var pNtk *Abc_Ntk_t;
-    if pAbc == nil {
-        fmt.Printf("ABC framework is not initialized by calling Abc_Start()\n"); }
-    pNtk = Abc_NtkFromMiniAig( (Mini_Aig_t *)p );
-    Abc_FrameReplaceCurrentNetwork( pAbc, pNtk );
-//    Abc_NtkDelete( pNtk );
-}
-func Abc_NtkOutputMiniAig(pAbc *Abc_Frame_t) any {
-    var pNtk *Abc_Ntk_t;
-    if pAbc == nil {
-        fmt.Printf("ABC framework is not initialized by calling Abc_Start()\n"); }
-    pNtk = Abc_FrameReadNtk( pAbc );
-    if pNtk == nil {
-        fmt.Printf("Current network in ABC framework is not defined.\n"); }
-    return Abc_NtkToMiniAig( pNtk );
-}
-func Abc_NtkSetFlopNum(pAbc *Abc_Frame_t, nFlops int32) {
-    extern void Abc_NtkMakeSeq( Abc_Ntk_t * pNtk, int nFlops );
-    var pNtk *Abc_Ntk_t;
-    if pAbc == nil {
-        fmt.Printf("ABC framework is not initialized by calling Abc_Start()\n"); }
-    pNtk = Abc_FrameReadNtk( pAbc );
-    if pNtk == nil {
-        fmt.Printf("Current network in ABC framework is not defined.\n"); }
-    Abc_NtkMakeSeq( pNtk, nFlops );
+// Abc_NtkInputMiniAig imports a MiniAIG into the frame as an ABC network.
+// The input manager remains owned by the caller, matching the C API.
+func Abc_NtkInputMiniAig(frame *Abc_Frame_t, value any) {
+	if frame == nil {
+		fmt.Printf("ABC framework is not initialized by calling Abc_Start()\n")
+		return
+	}
+	p, ok := value.(*miniaig.Mini_Aig_t)
+	if !ok || p == nil {
+		fmt.Printf("Input value is not a MiniAIG.\n")
+		return
+	}
+	network := Abc_NtkFromMiniAig(p)
+	if network != nil {
+		abcmain.Abc_FrameReplaceCurrentNetwork(frame, network)
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Testing the above code.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkMiniAigTest(pNtk *Abc_Ntk_t) {
-    var pNtkNew *Abc_Ntk_t;
-    var p *Mini_Aig_t;
-    p = Abc_NtkToMiniAig( pNtk );
-    pNtkNew = Abc_NtkFromMiniAig( p );
-    Mini_AigStop( p );
-    Abc_NtkPrintStats( pNtkNew, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
-    Abc_NtkDelete( pNtkNew );
-
-    // test dumping
-    p = Abc_NtkToMiniAig( pNtk );
-    Mini_AigDump( p, "miniaig.data" );
-    Mini_AigPrintStats( p );
-    Mini_AigStop( p );
-
-    p = Mini_AigLoad( "miniaig.data" );
-    Mini_AigPrintStats( p );
-    Mini_AigStop( p );
+// Abc_NtkOutputMiniAig exports the current strashed network. The returned
+// manager is owned by the caller and must be released with Mini_AigStop.
+func Abc_NtkOutputMiniAig(frame *Abc_Frame_t) any {
+	if frame == nil {
+		fmt.Printf("ABC framework is not initialized by calling Abc_Start()\n")
+		return nil
+	}
+	network := Abc_FrameReadNtk(frame)
+	if network == nil {
+		fmt.Printf("Current network in ABC framework is not defined.\n")
+		return nil
+	}
+	return Abc_NtkToMiniAig(network)
 }
 
-/*
-    if ( pNtk )
-    {
-        extern void Abc_NtkMiniAigTest( Abc_Ntk_t * pNtk );
-        Abc_NtkMiniAigTest( pNtk );
+func Abc_NtkSetFlopNum(frame *Abc_Frame_t, nFlops int32) {
+	if frame == nil {
+		fmt.Printf("ABC framework is not initialized by calling Abc_Start()\n")
+		return
+	}
+	network := Abc_FrameReadNtk(frame)
+	if network == nil {
+		fmt.Printf("Current network in ABC framework is not defined.\n")
+		return
+	}
+	baseabc.Abc_NtkMakeSeq(network, nFlops)
+}
 
-    }
-*/
+// Abc_NtkMiniAigTest exercises conversion and the MiniAIG file roundtrip.
+func Abc_NtkMiniAigTest(network *Abc_Ntk_t) {
+	if network == nil {
+		return
+	}
+	mini := Abc_NtkToMiniAig(network)
+	converted := Abc_NtkFromMiniAig(mini)
+	miniaig.Mini_AigStop(mini)
+	Abc_NtkPrintStats(converted, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+	Abc_NtkDelete(converted)
 
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
+	mini = Abc_NtkToMiniAig(network)
+	miniaig.Mini_AigDump(mini, "miniaig.data")
+	miniaig.Mini_AigPrintStats(mini)
+	miniaig.Mini_AigStop(mini)
 
-
-//ABC_NAMESPACE_IMPL_END
-
+	mini = miniaig.Mini_AigLoad("miniaig.data")
+	if mini != nil {
+		miniaig.Mini_AigPrintStats(mini)
+		miniaig.Mini_AigStop(mini)
+	}
+}

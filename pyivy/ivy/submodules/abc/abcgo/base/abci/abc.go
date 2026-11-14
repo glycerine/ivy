@@ -3,10 +3,15 @@ package abci
 import (
 	"encoding/binary"
 	"fmt"
+	"math"
 	"math/rand"
 	"strconv"
 	"strings"
 	"time"
+
+	baseabc "github.com/glycerine/abcgo/base/abc"
+	ifpkg "github.com/glycerine/abcgo/map/if"
+	"github.com/glycerine/abcgo/misc/util"
 )
 
 import "os"
@@ -18569,131 +18574,165 @@ usage:
 
 **********************************************************************
 */
+func abcAtof(value string) float32 {
+	value = strings.TrimLeft(value, " \t\n\r\v\f")
+	end := 0
+	if end < len(value) && (value[end] == '+' || value[end] == '-') {
+		end++
+	}
+	sign := 1.0
+	if len(value) > 0 && value[0] == '-' {
+		sign = -1
+	}
+	special := strings.ToLower(value[end:])
+	if strings.HasPrefix(special, "inf") {
+		return float32(math.Inf(int(sign)))
+	}
+	if strings.HasPrefix(special, "nan") {
+		return float32(math.Copysign(math.NaN(), sign))
+	}
+	startDigits := end
+	for end < len(value) && value[end] >= '0' && value[end] <= '9' {
+		end++
+	}
+	if end < len(value) && value[end] == '.' {
+		end++
+		for end < len(value) && value[end] >= '0' && value[end] <= '9' {
+			end++
+		}
+	}
+	if end == startDigits || (end == startDigits+1 && value[startDigits] == '.') {
+		return 0
+	}
+	if end < len(value) && (value[end] == 'e' || value[end] == 'E') {
+		exponent := end
+		end++
+		if end < len(value) && (value[end] == '+' || value[end] == '-') {
+			end++
+		}
+		digits := end
+		for end < len(value) && value[end] >= '0' && value[end] <= '9' {
+			end++
+		}
+		if digits == end {
+			end = exponent
+		}
+	}
+	n, err := strconv.ParseFloat(value[:end], 32)
+	if err != nil {
+		return 0
+	}
+	return float32(n)
+}
+
 func Abc_CommandIfif(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
-
-	var pNtk *Abc_Ntk_t = Abc_FrameReadNtk(pAbc)
-	var Pars Ifif_Par_t
-	var pPars *Ifif_Par_t = &Pars
-	var c, fError int32
-
-	pPars.nLutSize = -1                                     // the LUT size
-	pPars.pLutLib, _ = Abc_FrameReadLibLut().(*If_LibLut_t) // the LUT library
-	pPars.DelayWire = float32(0.5)                          // wire delay
-	pPars.nDegree = 0                                       // structure degree
-	pPars.fCascade = 0                                      // cascade
-	pPars.fVerbose = 0                                      // verbose
-	pPars.fVeryVerbose = 0                                  // verbose
+	pNtk := Abc_FrameReadNtk(pAbc)
+	pars := &Ifif_Par_t{}
+	ifpkg.IfifSetLibrary(pars, ifpkg.Abc_FrameReadLibLut())
+	params := ifpkg.IfifParams{LUTSize: -1, WireDelay: 0.5}
+	ifpkg.IfifSetParams(pars, params)
 
 	Extra_UtilGetoptReset()
-	for c = Extra_UtilGetopt(argc, argv, "DNcvwh"); c != -1; c = Extra_UtilGetopt(argc, argv, "DNcvwh") {
+	for c := Extra_UtilGetopt(argc, argv, "DNcvwh"); c != -1; c = Extra_UtilGetopt(argc, argv, "DNcvwh") {
+		params = ifpkg.IfifReadParams(pars)
 		switch c {
 		case 'D':
 			if globalUtilOptind >= argc {
-				Abc_Print(-1, "Command line switch \"-D\" should be followed by a floating point number.\n")
-				goto usage
+				util.Abc_Print(-1, "Command line switch \"-D\" should be followed by a floating point number.\n")
+				return abcCommandIfifUsage(pars)
 			}
-			pPars.DelayWire = atof(argv[globalUtilOptind])
+			params.WireDelay = abcAtof(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.DelayWire < 0.0 {
-				goto usage
+			if params.WireDelay < 0 {
+				return abcCommandIfifUsage(pars)
 			}
-			break
+			ifpkg.IfifSetParams(pars, params)
 		case 'N':
 			if globalUtilOptind >= argc {
-				Abc_Print(-1, "Command line switch \"-N\" should be followed by a floating point number.\n")
-				goto usage
+				util.Abc_Print(-1, "Command line switch \"-N\" should be followed by a floating point number.\n")
+				return abcCommandIfifUsage(pars)
 			}
-			pPars.nDegree = abcAtoi(argv[globalUtilOptind])
+			params.Degree = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nDegree < 0 {
-				goto usage
+			if params.Degree < 0 {
+				return abcCommandIfifUsage(pars)
 			}
-			break
+			ifpkg.IfifSetParams(pars, params)
 		case 'c':
-			pPars.fCascade ^= 1
-			break
+			params.Cascade ^= 1
+			ifpkg.IfifSetParams(pars, params)
 		case 'v':
-			pPars.fVerbose ^= 1
-			break
+			params.Verbose ^= 1
+			ifpkg.IfifSetParams(pars, params)
 		case 'w':
-			pPars.fVeryVerbose ^= 1
-			break
+			params.VeryVerbose ^= 1
+			ifpkg.IfifSetParams(pars, params)
 		case 'h':
-			goto usage
+			return abcCommandIfifUsage(pars)
 		default:
-			goto usage
+			return abcCommandIfifUsage(pars)
 		}
 	}
 
 	if pNtk == nil {
-		Abc_Print(-1, "Empty network.\n")
+		util.Abc_Print(-1, "Empty network.\n")
 		return 1
 	}
-	if !Abc_NtkIsLogic(pNtk) {
-		Abc_Print(-1, "Need mapped network.\n")
+	if baseabc.Abc_NtkIsLogic(pNtk) == 0 {
+		util.Abc_Print(-1, "Need mapped network.\n")
 		return 1
 	}
-	if pPars.pLutLib == nil {
-		Abc_Print(-1, "LUT library is not given.\n")
+	lib := ifpkg.IfifReadLibrary(pars)
+	if lib == nil {
+		util.Abc_Print(-1, "LUT library is not given.\n")
 		return 1
 	}
-
-	pPars.nLutSize = Abc_NtkGetFaninMax(pNtk)
-	if pPars.nLutSize > pPars.pLutLib.LutMax {
-		Abc_Print(-1, "The max node size (%d) exceeds the LUT size (%d).\n", pPars.nLutSize, pPars.pLutLib.LutMax)
+	lutMax := ifpkg.If_LibLutMaxSize(lib)
+	params = ifpkg.IfifReadParams(pars)
+	params.LUTSize = baseabc.Abc_NtkGetFaninMax(pNtk)
+	ifpkg.IfifSetParams(pars, params)
+	if params.LUTSize > lutMax {
+		util.Abc_Print(-1, "The max node size (%d) exceeds the LUT size (%d).\n", params.LUTSize, lutMax)
 		return 1
 	}
-	if pPars.nLutSize < pPars.pLutLib.LutMax {
-		Abc_Print(0, "Node size (%d) is less than LUT size (%d).\n", pPars.nLutSize, pPars.pLutLib.LutMax)
+	if params.LUTSize < lutMax {
+		util.Abc_Print(0, "Node size (%d) is less than LUT size (%d).\n", params.LUTSize, lutMax)
 	}
-	// check delay information
-	fError = 0
-	for c = 0; c < pPars.pLutLib.LutMax; c++ {
-		delayPin := 0
-		if pPars.pLutLib.fVarPinDelays != 0 {
-			delayPin = int(c)
+	fError := false
+	for pin := int32(0); pin < lutMax; pin++ {
+		delayPin := int32(0)
+		if ifpkg.If_LibLutHasVariablePinDelays(lib) {
+			delayPin = pin
 		}
-		pPars.pLutDelays[c] = pPars.pLutLib.pLutDelays[pPars.pLutLib.LutMax][delayPin]
-		if pPars.DelayWire >= pPars.pLutDelays[c] {
-			fError = 1
-			fmt.Printf(" Wire delay (%.2f) exceeds pin+wire delay (%.2f) for pin %d in the LUT library.\n", pPars.DelayWire, pPars.pLutDelays[c], c)
+		pinDelay := ifpkg.If_LibLutDelay(lib, lutMax, delayPin)
+		ifpkg.IfifSetPinDelay(pars, pin, pinDelay)
+		if params.WireDelay >= pinDelay {
+			fError = true
+			fmt.Printf(" Wire delay (%.2f) exceeds pin+wire delay (%.2f) for pin %d in the LUT library.\n", params.WireDelay, pinDelay, pin)
 		}
 	}
-	if fError != 0 {
+	if fError {
 		return 1
 	}
-
-	// call the mapper
-	Abc_NtkPerformIfif(pNtk, pPars)
+	Abc_NtkPerformIfif(pNtk, pars)
 	return 0
+}
 
-usage:
-	Abc_Print(-2, "usage: ifif [-DNcvwh]\n")
-	Abc_Print(-2, "\t           technology mapper into N-node K-LUT structures\n")
-	Abc_Print(-2, "\t           (takes a LUT network and maps it into a delay-optimal network\n")
-	Abc_Print(-2, "\t            of N-node K-LUT structures using the current LUT library)\n")
-	Abc_Print(-2, "\t-D float : wire delay (should be less than the LUT delay) [default = %.2f]\n", pPars.DelayWire)
-	Abc_Print(-2, "\t-N num   : degree of the LUT structure [default = %d]\n", pPars.nDegree)
-	Abc_Print(-2, "\t-c       : toggles using LUT cascade vs LUT cluster [default = %s]\n", abcSelect(fCascade, "cascade", "cluster"))
-	Abc_Print(-2, "\t-v       : toggles verbose output [default = %s]\n", abcSelect(fVerbose, "yes", "no"))
-	Abc_Print(-2, "\t-w       : toggles very verbose output [default = %s]\n", abcSelect(fVeryVerbose, "yes", "no"))
-	Abc_Print(-2, "\t-h       : print the command usage\n")
+func abcCommandIfifUsage(pars *Ifif_Par_t) int32 {
+	params := ifpkg.IfifReadParams(pars)
+	util.Abc_Print(-2, "usage: ifif [-DNcvwh]\n")
+	util.Abc_Print(-2, "\t           technology mapper into N-node K-LUT structures\n")
+	util.Abc_Print(-2, "\t           (takes a LUT network and maps it into a delay-optimal network\n")
+	util.Abc_Print(-2, "\t            of N-node K-LUT structures using the current LUT library)\n")
+	util.Abc_Print(-2, "\t-D float : wire delay (should be less than the LUT delay) [default = %.2f]\n", params.WireDelay)
+	util.Abc_Print(-2, "\t-N num   : degree of the LUT structure [default = %d]\n", params.Degree)
+	util.Abc_Print(-2, "\t-c       : toggles using LUT cascade vs LUT cluster [default = %s]\n", abcSelect(params.Cascade, "cascade", "cluster"))
+	util.Abc_Print(-2, "\t-v       : toggles verbose output [default = %s]\n", abcSelect(params.Verbose, "yes", "no"))
+	util.Abc_Print(-2, "\t-w       : toggles very verbose output [default = %s]\n", abcSelect(params.VeryVerbose, "yes", "no"))
+	util.Abc_Print(-2, "\t-h       : print the command usage\n")
 	return 1
 }
 
-/*
-*Function*************************************************************
-
-	Synopsis    []
-
-	Description []
-
-	SideEffects []
-
-	SeeAlso     []
-
-**********************************************************************
-*/
 func Abc_CommandDsdSave(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	var FileName string
 	var pArgvNew *string

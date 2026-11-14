@@ -29,6 +29,7 @@ func Dec_IntToEdge(e uint32) Dec_Edge_t                      { return Dec_EdgeCr
 func Dec_EdgeToInt_(e Dec_Edge_t) uint32                     { return Dec_EdgeToInt(e) }
 func Dec_IntToEdge_(e uint32) Dec_Edge_t                     { return Dec_IntToEdge(e) }
 func Dec_GraphCreate(leaves int32) *Dec_Graph_t              { return dec.Dec_GraphCreate(leaves) }
+func Dec_Factor(sop string) *Dec_Graph_t                    { return dec.Dec_Factor(sop) }
 func Dec_GraphCreateConst0() *Dec_Graph_t                    { return dec.Dec_GraphCreateConst0() }
 func Dec_GraphCreateConst1() *Dec_Graph_t                    { return dec.Dec_GraphCreateConst1() }
 func Dec_GraphCreateLeaf(i, n, c int32) *Dec_Graph_t         { return dec.Dec_GraphCreateLeaf(i, n, c) }

@@ -1,10 +1,48 @@
 package abci
 
 import (
+	"encoding/binary"
 	"fmt"
 	"os"
+	"strings"
 	"time"
+	"unsafe"
+
+	baseabc "github.com/glycerine/abcgo/base/abc"
+	"github.com/glycerine/abcgo/map/mapper"
+	"github.com/glycerine/abcgo/map/mio"
+	"github.com/glycerine/abcgo/map/scl"
+	"github.com/glycerine/abcgo/misc/extra"
+	"github.com/glycerine/abcgo/opt/sim"
 )
+
+type Map_Man_t = mapper.Map_Man_t
+type Map_Node_t = mapper.Map_Node_t
+type Map_Time_t = mapper.Map_Time_t
+type Map_Cut_t = mapper.Map_Cut_t
+type Map_Super_t = mapper.Map_Super_t
+type Mio_Library_t = mio.Mio_Library_t
+type Mio_Gate_t = mio.Mio_Gate_t
+type Map_SuperLib_t = mapper.Map_SuperLib_t
+type ProgressBar = extra.ProgressBar
+
+func mapMaxFloat(a, b float32) float32 {
+	if a > b {
+		return a
+	}
+	return b
+}
+
+func mapCopyNode(object *Abc_Obj_t) *Map_Node_t {
+	node, _ := object.CopyData.(*Map_Node_t)
+	return node
+}
+func mapGenlib() *mio.Mio_Library_t { lib, _ := Abc_FrameReadLibGen().(*mio.Mio_Library_t); return lib }
+func mapSuperlib() *mapper.Map_SuperLib_t {
+	lib, _ := Abc_FrameReadLibSuper().(*mapper.Map_SuperLib_t)
+	return lib
+}
+func mapScllib() *scl.SC_Lib { lib, _ := Abc_FrameReadLibScl().(*scl.SC_Lib); return lib }
 
 /**CFile****************************************************************
 
@@ -17,7 +55,7 @@ import (
   Synopsis    [Interface with the SC mapping package.]
 
   Author      [Alan Mishchenko]
-  
+
   Affiliation [UC Berkeley]
 
   Date        [Ver. 1.0. Started - June 20, 2005.]
@@ -35,7 +73,6 @@ import (
 
 //ABC_NAMESPACE_IMPL_START
 
-
 ////////////////////////////////////////////////////////////////////////
 ///                        DECLARATIONS                              ///
 ////////////////////////////////////////////////////////////////////////
@@ -48,7 +85,6 @@ import (
 
 // static Abc_Obj_t *  Abc_NodeFromMapPhase_rec( Abc_Ntk_t * pNtkNew, Map_Node_t * pNodeMap, int fPhase );
 
-
 // static Abc_Ntk_t *  Abc_NtkFromMapSuperChoice( Map_Man_t * pMan, Abc_Ntk_t * pNtk );
 
 // static void         Abc_NodeSuperChoice( Abc_Ntk_t * pNtkNew, Abc_Obj_t * pNode );
@@ -57,1020 +93,1144 @@ import (
 
 // static Abc_Obj_t *  Abc_NodeFromMapSuperChoice_rec( Abc_Ntk_t * pNtkNew, Map_Super_t * pSuper, Abc_Obj_t * pNodePis[], int nNodePis );
 
-
- 
 ////////////////////////////////////////////////////////////////////////
 ///                     FUNCTION DEFINITIONS                         ///
 ////////////////////////////////////////////////////////////////////////
 
-/**Function*************************************************************
+/*
+*Function*************************************************************
 
-  Synopsis    [Interface with the mapping package.]
+	Synopsis    [Interface with the mapping package.]
 
-  Description []
-               
-  SideEffects []
+	Description []
 
-  SeeAlso     []
+	SideEffects []
 
-***********************************************************************/
-var spStatic_Abc_NtkMap_fUseMulti int32;
+	SeeAlso     []
+
+**********************************************************************
+*/
+var spStatic_Abc_NtkMap_fUseMulti int32
+
 func Abc_NtkMap(pNtk *Abc_Ntk_t, DelayTarget float64, AreaMulti float64, DelayMulti float64, LogFan float32, Slew float32, Gain float32, nGatesMin int32, fRecovery int32, fSwitching int32, fSkipFanout int32, fUseProfile int32, fUseBuffs int32, fVerbose int32) *Abc_Ntk_t {
-    
-    var fShowSwitching int32  = 1;
-    var pNtkNew *Abc_Ntk_t;
-    var pMan *Map_Man_t;
-    var vSwitching *Vec_Int_t  = nil;
-    var pSwitching *float32  = nil;
-    var clk abctime;
-    var clkTotal abctime = Abc_Clock();
-    var pLib *Mio_Library_t  = (Mio_Library_t *)Abc_FrameReadLibGen();
 
-    assert(Abc_NtkIsStrash(pNtk), "Abc_NtkIsStrash(pNtk)");
-    // derive library from SCL
-    // if the library is created here, it will be deleted when pSuperLib is deleted in Map_SuperLibFree()
-    if Abc_FrameReadLibScl() && Abc_SclHasDelayInfo( Abc_FrameReadLibScl() ) {
-        if (pLib != nil) && Mio_LibraryHasProfile(pLib) {
-            pLib = Abc_SclDeriveGenlib( Abc_FrameReadLibScl(), pLib, Slew, Gain, nGatesMin, fVerbose );
-        } else {
-            pLib = Abc_SclDeriveGenlib( Abc_FrameReadLibScl(), nil, Slew, Gain, nGatesMin, fVerbose ); }
-        if Abc_FrameReadLibGen() {
-            Mio_LibraryTransferDelays( (Mio_Library_t *)Abc_FrameReadLibGen(), pLib );
-            Mio_LibraryTransferProfile( pLib, (Mio_Library_t *)Abc_FrameReadLibGen() );
-        }
-        // remove supergate library
-        Map_SuperLibFree( (Map_SuperLib_t *)Abc_FrameReadLibSuper() );
-        Abc_FrameSetLibSuper( nil );
-    }
-    // quit if there is no library
-    if pLib == nil {
-        fmt.Printf("The current library is not available.\n");
-        return 0;
-    }
-    if AreaMulti != 0.0 {
-        spStatic_Abc_NtkMap_fUseMulti = 1;
-fmt.Printf("The cell areas are multiplied by the factor: <num_fanins> ^ (%.2f).\n", AreaMulti); }
-    if DelayMulti != 0.0 {
-        spStatic_Abc_NtkMap_fUseMulti = 1;
-fmt.Printf("The cell delays are multiplied by the factor: <num_fanins> ^ (%.2f).\n", DelayMulti); }
+	var fShowSwitching int32 = 1
+	var pNtkNew *Abc_Ntk_t
+	var pMan *Map_Man_t
+	var vSwitching []float32
+	var pSwitching *float32 = nil
+	var clk abctime
+	var clkTotal abctime = Abc_Clock()
+	pLib := mapGenlib()
 
-    // penalize large gates by increasing their area
-    if AreaMulti != 0.0 {
-        Mio_LibraryMultiArea( pLib, AreaMulti ); }
-    if DelayMulti != 0.0 {
-        Mio_LibraryMultiDelay( pLib, DelayMulti ); }
+	assert(baseabc.Abc_NtkIsStrash(pNtk) != 0, "baseabc.Abc_NtkIsStrash(pNtk)")
+	// derive library from SCL
+	// if the library is created here, it will be deleted when pSuperLib is deleted in mapper.Map_SuperLibFree()
+	if mapScllib() != nil && scl.Abc_SclHasDelayInfo(mapScllib()) {
+		var err error
+		if pLib != nil && mio.Mio_LibraryHasProfile(pLib) {
+			pLib, err = scl.Abc_SclDeriveGenlib(mapScllib(), pLib, Slew, Gain, int(nGatesMin), fVerbose)
+		} else {
+			pLib, err = scl.Abc_SclDeriveGenlib(mapScllib(), nil, Slew, Gain, int(nGatesMin), fVerbose)
+		}
+		if err != nil {
+			return nil
+		}
+		if mapGenlib() != nil {
+			mio.Mio_LibraryTransferDelays(mapGenlib(), pLib)
+			mio.Mio_LibraryTransferProfile(pLib, mapGenlib())
+		}
+		// remove supergate library
+		mapper.Map_SuperLibFree(mapSuperlib())
+		Abc_FrameSetLibSuper(nil)
+	}
+	// quit if there is no library
+	if pLib == nil {
+		fmt.Printf("The current library is not available.\n")
+		return nil
+	}
+	if AreaMulti != 0.0 {
+		spStatic_Abc_NtkMap_fUseMulti = 1
+		fmt.Printf("The cell areas are multiplied by the factor: <num_fanins> ^ (%.2f).\n", AreaMulti)
+	}
+	if DelayMulti != 0.0 {
+		spStatic_Abc_NtkMap_fUseMulti = 1
+		fmt.Printf("The cell delays are multiplied by the factor: <num_fanins> ^ (%.2f).\n", DelayMulti)
+	}
 
-    // derive the supergate library
-    if (spStatic_Abc_NtkMap_fUseMulti != 0) || Abc_FrameReadLibSuper() == nil {
-        if fVerbose != 0 {
-            fmt.Printf("Converting \"%s\" into supergate library \"%s\".\n", Mio_LibraryReadName(pLib), Extra_FileNameGenericAppend(Mio_LibraryReadName(pLib), ".super")); }
-        // compute supergate library to be used for mapping
-        if Mio_LibraryHasProfile(pLib) {
-            fmt.Printf("Abc_NtkMap(): Genlib library has profile.\n"); }
-        Map_SuperLibDeriveFromGenlib( pLib, fVerbose );
-    }
+	// penalize large gates by increasing their area
+	if AreaMulti != 0.0 {
+		mio.Mio_LibraryMultiArea(pLib, AreaMulti)
+	}
+	if DelayMulti != 0.0 {
+		mio.Mio_LibraryMultiDelay(pLib, DelayMulti)
+	}
 
-    // return the library to normal
-    if AreaMulti != 0.0 {
-        Mio_LibraryMultiArea( (Mio_Library_t *)Abc_FrameReadLibGen(), -AreaMulti ); }
-    if DelayMulti != 0.0 {
-        Mio_LibraryMultiDelay( (Mio_Library_t *)Abc_FrameReadLibGen(), -DelayMulti ); }
+	// derive the supergate library
+	if spStatic_Abc_NtkMap_fUseMulti != 0 || mapSuperlib() == nil {
+		if fVerbose != 0 {
+			fmt.Printf("Converting \"%s\" into supergate library \"%s\".\n", mio.Mio_LibraryReadName(pLib), extra.Extra_FileNameGenericAppend(mio.Mio_LibraryReadName(pLib), ".super"))
+		}
+		// compute supergate library to be used for mapping
+		if mio.Mio_LibraryHasProfile(pLib) != 0 {
+			fmt.Printf("Abc_NtkMap(): Genlib library has profile.\n")
+		}
+		mapper.Map_SuperLibDeriveFromGenlib(pLib, fVerbose)
+	}
 
-    // print a warning about choice nodes
-    if (fVerbose != 0) && Abc_NtkGetChoiceNum( pNtk ) {
-        fmt.Printf("Performing mapping with choices.\n"); }
+	// return the library to normal
+	if AreaMulti != 0.0 {
+		mio.Mio_LibraryMultiArea(mapGenlib(), -AreaMulti)
+	}
+	if DelayMulti != 0.0 {
+		mio.Mio_LibraryMultiDelay(mapGenlib(), -DelayMulti)
+	}
 
-    // compute switching activity
-    fShowSwitching |= fSwitching;
-    if fShowSwitching != 0 {
-        extern Vec_Int_t * Sim_NtkComputeSwitching( Abc_Ntk_t * pNtk, int nPatterns );
-        vSwitching = Sim_NtkComputeSwitching( pNtk, 4096 );
-        pSwitching = (float *)vSwitching.pArray;
-    }
+	// print a warning about choice nodes
+	if fVerbose != 0 && baseabc.Abc_NtkGetChoiceNum(pNtk) != 0 {
+		fmt.Printf("Performing mapping with choices.\n")
+	}
 
-    // perform the mapping
-    pMan = Abc_NtkToMap( pNtk, DelayTarget, fRecovery, pSwitching, fVerbose );
-    if pSwitching != nil { Vec_IntFree( vSwitching ); }
-    if pMan == nil {
-        return nil; }
-clk = Abc_Clock();
-    Map_ManSetSwitching( pMan, fSwitching );
-    Map_ManSetSkipFanout( pMan, fSkipFanout );
-    if fUseProfile != 0 {
-        Map_ManSetUseProfile( pMan ); }
-    if LogFan != 0 {
-        Map_ManCreateNodeDelays( pMan, LogFan ); }
-    if !Map_Mapping( pMan ) {
-        Map_ManFree( pMan );
-        return nil;
-    }
-//    Map_ManPrintStatsToFile( pNtk->pSpec, Map_ManReadAreaFinal(pMan), Map_ManReadRequiredGlo(pMan), Abc_Clock()-clk );
+	// compute switching activity
+	fShowSwitching |= fSwitching
+	if fShowSwitching != 0 {
+		// Sim_NtkComputeSwitching is provided by the simulation package.
+		vSwitching = sim.Sim_NtkComputeSwitching(baseabc.Abc_NtkToDar(pNtk, 0, 0), 4096)
+		if len(vSwitching) > 0 {
+			pSwitching = &vSwitching[0]
+		}
+	}
 
-    // reconstruct the network after mapping (use buffers when user requested or in the area mode)
-    pNtkNew = Abc_NtkFromMap( pMan, pNtk, fUseBuffs || (DelayTarget == float64(ABC_INFINITY)) );
-    if Mio_LibraryHasProfile(pLib) {
-        Mio_LibraryTransferProfile2( (Mio_Library_t *)Abc_FrameReadLibGen(), pLib ); }
-    Map_ManFree( pMan );
-    if pNtkNew == nil {
-        return nil; }
+	// perform the mapping
+	pMan = Abc_NtkToMap(pNtk, DelayTarget, fRecovery, pSwitching, fVerbose)
+	if pMan == nil {
+		return nil
+	}
+	clk = Abc_Clock()
+	mapper.Map_ManSetSwitching(pMan, fSwitching)
+	mapper.Map_ManSetSkipFanout(pMan, fSkipFanout)
+	if fUseProfile != 0 {
+		mapper.Map_ManSetUseProfile(pMan)
+	}
+	if LogFan != 0 {
+		mapper.Map_ManCreateNodeDelays(pMan, int32(LogFan))
+	}
+	if !mapper.Map_Mapping(pMan) {
+		mapper.Map_ManFree(pMan)
+		return nil
+	}
+	//    mapper.Map_ManPrintStatsToFile( pNtk->pSpec, mapper.Map_ManReadAreaFinal(pMan), mapper.Map_ManReadRequiredGlo(pMan), Abc_Clock()-clk );
 
-    if pNtk.pExdc {
-        pNtkNew.pExdc = Abc_NtkDup( pNtk.pExdc ); }
-if fVerbose != 0 {
-// inlining of macro ABC_PRT
-Abc_Print(1, "%s =", ("Total runtime"));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clkTotal)))/(float64(int64(time.Second))));;
+	// reconstruct the network after mapping (use buffers when user requested or in the area mode)
+	pNtkNew = Abc_NtkFromMap(pMan, pNtk, fUseBuffs != 0 || (DelayTarget == float64(ABC_INFINITY)))
+	if mio.Mio_LibraryHasProfile(pLib) != 0 {
+		mio.Mio_LibraryTransferProfile2(mapGenlib(), pLib)
+	}
+	mapper.Map_ManFree(pMan)
+	if pNtkNew == nil {
+		return nil
+	}
+
+	if pNtk.Exdc != nil {
+		pNtkNew.Exdc = baseabc.Abc_NtkDup(pNtk.Exdc)
+	}
+	if fVerbose != 0 {
+		// inlining of macro ABC_PRT
+		Abc_Print(1, "%s =", ("Total runtime"))
+		Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clkTotal)))/(float64(int64(time.Second))))
+	}
+
+	// make sure that everything is okay
+	if baseabc.Abc_NtkCheck(pNtkNew) == 0 {
+		fmt.Printf("Abc_NtkMap: The network check has failed.\n")
+		Abc_NtkDelete(pNtkNew)
+		return nil
+	}
+	return pNtkNew
 }
 
-    // make sure that everything is okay
-    if !Abc_NtkCheck( pNtkNew ) {
-        fmt.Printf("Abc_NtkMap: The network check has failed.\n");
-        Abc_NtkDelete( pNtkNew );
-        return nil;
-    }
-    return pNtkNew;
+/*
+*Function*************************************************************
+
+	Synopsis    [Load the network into manager.]
+
+	Description []
+
+	SideEffects []
+
+	SeeAlso     []
+
+**********************************************************************
+*/
+func Abc_NtkMapCopyCiArrival(pNtk *Abc_Ntk_t, ppTimes *Abc_Time_t) []Map_Time_t {
+	var i int32
+	// inlining of macro ABC_CALLOC
+	p := make([]Map_Time_t, int(Abc_NtkCiNum(pNtk)))
+	for i = 0; i < Abc_NtkCiNum(pNtk); i++ {
+		p[i].Fall = unsafe.Slice(ppTimes, int(Abc_NtkCiNum(pNtk)))[i].Fall
+		p[i].Rise = unsafe.Slice(ppTimes, int(Abc_NtkCiNum(pNtk)))[i].Rise
+		p[i].Worst = mapMaxFloat(p[i].Fall, p[i].Rise)
+	}
+	ppTimes = nil
+	return p
+}
+func Abc_NtkMapCopyCoRequired(pNtk *Abc_Ntk_t, ppTimes *Abc_Time_t) []Map_Time_t {
+	var i int32
+	// inlining of macro ABC_CALLOC
+	p := make([]Map_Time_t, int(Abc_NtkCoNum(pNtk)))
+	for i = 0; i < Abc_NtkCoNum(pNtk); i++ {
+		p[i].Fall = unsafe.Slice(ppTimes, int(Abc_NtkCoNum(pNtk)))[i].Fall
+		p[i].Rise = unsafe.Slice(ppTimes, int(Abc_NtkCoNum(pNtk)))[i].Rise
+		p[i].Worst = mapMaxFloat(p[i].Fall, p[i].Rise)
+	}
+	ppTimes = nil
+	return p
 }
 
-/**Function*************************************************************
+/*
+*Function*************************************************************
 
-  Synopsis    [Load the network into manager.]
+	Synopsis    [Load the network into manager.]
 
-  Description []
-               
-  SideEffects []
+	Description []
 
-  SeeAlso     []
+	SideEffects []
 
-***********************************************************************/
-func Abc_NtkMapCopyCiArrival(pNtk *Abc_Ntk_t, ppTimes *Abc_Time_t) *Map_Time_t {
-    var p *Map_Time_t;
-    var i int32;
-    // inlining of macro ABC_CALLOC
-    p = ((Map_Time_t *) calloc((size_t)(Abc_NtkCiNum(pNtk)), sizeof(Map_Time_t)));
-    for  i = 0; i < Abc_NtkCiNum(pNtk); i++  {
-        p[i].Fall = ppTimes[i].Fall;
-        p[i].Rise = ppTimes[i].Rise;
-        p[i].Worst = Abc_MaxFloat( p[i].Fall, p[i].Rise );
-    }
-    ppTimes = nil;
-    return p;
+	SeeAlso     []
+
+**********************************************************************
+*/
+func Abc_NtkMapCopyCiArrivalCon(pNtk *Abc_Ntk_t) []Map_Time_t {
+	var i int32
+	// inlining of macro ABC_CALLOC
+	p := make([]Map_Time_t, int(Abc_NtkCiNum(pNtk)))
+	for i = 0; i < Abc_NtkCiNum(pNtk); i++ {
+		p[i].Fall = scl.Scl_Int2Flt(scl.Scl_ConGetInArr(int(i)))
+		p[i].Rise = p[i].Fall
+		p[i].Worst = p[i].Fall
+	}
+	return p
 }
-func Abc_NtkMapCopyCoRequired(pNtk *Abc_Ntk_t, ppTimes *Abc_Time_t) *Map_Time_t {
-    var p *Map_Time_t;
-    var i int32;
-    // inlining of macro ABC_CALLOC
-    p = ((Map_Time_t *) calloc((size_t)(Abc_NtkCoNum(pNtk)), sizeof(Map_Time_t)));
-    for  i = 0; i < Abc_NtkCoNum(pNtk); i++  {
-        p[i].Fall = ppTimes[i].Fall;
-        p[i].Rise = ppTimes[i].Rise;
-        p[i].Worst = Abc_MaxFloat( p[i].Fall, p[i].Rise );
-    }
-    ppTimes = nil;
-    return p;
+func Abc_NtkMapCopyCoRequiredCon(pNtk *Abc_Ntk_t) []Map_Time_t {
+	var i int32
+	// inlining of macro ABC_CALLOC
+	p := make([]Map_Time_t, int(Abc_NtkCoNum(pNtk)))
+	for i = 0; i < Abc_NtkCoNum(pNtk); i++ {
+		p[i].Fall = scl.Scl_Int2Flt(scl.Scl_ConGetOutReq(int(i)))
+		p[i].Rise = p[i].Fall
+		p[i].Worst = p[i].Fall
+	}
+	return p
 }
 
-/**Function*************************************************************
+/*
+*Function*************************************************************
 
-  Synopsis    [Load the network into manager.]
+	Synopsis    [Load the network into manager.]
 
-  Description []
-               
-  SideEffects []
+	Description []
 
-  SeeAlso     []
+	SideEffects []
 
-***********************************************************************/
-func Abc_NtkMapCopyCiArrivalCon(pNtk *Abc_Ntk_t) *Map_Time_t {
-    var p *Map_Time_t; var i int32;
-    // inlining of macro ABC_CALLOC
-    p = ((Map_Time_t *) calloc((size_t)(Abc_NtkCiNum(pNtk)), sizeof(Map_Time_t)));
-    for  i = 0; i < Abc_NtkCiNum(pNtk); i++  {
-        p[i].Fall = p[i].Rise = p[i].Worst = Scl_Int2Flt( Scl_ConGetInArr(i) );
-    }
-    return p;
-}
-func Abc_NtkMapCopyCoRequiredCon(pNtk *Abc_Ntk_t) *Map_Time_t {
-    var p *Map_Time_t; var i int32;
-    // inlining of macro ABC_CALLOC
-    p = ((Map_Time_t *) calloc((size_t)(Abc_NtkCoNum(pNtk)), sizeof(Map_Time_t)));
-    for  i = 0; i < Abc_NtkCoNum(pNtk); i++  {
-        p[i].Fall = p[i].Rise = p[i].Worst = Scl_Int2Flt( Scl_ConGetOutReq(i) );
-    }
-    return p;
-}
+	SeeAlso     []
 
-/**Function*************************************************************
-
-  Synopsis    [Load the network into manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+**********************************************************************
+*/
 func Abc_NtkToMap(pNtk *Abc_Ntk_t, DelayTarget float64, fRecovery int32, pSwitching *float32, fVerbose int32) *Map_Man_t {
-    var pMan *Map_Man_t;
-    var pNodeMap *Map_Node_t;
-    var vNodes *Vec_Ptr_t;
-    var pNode, pFanin, pPrev *Abc_Obj_t;
-    var i int32;
+	var pMan *Map_Man_t
+	var pNodeMap *Map_Node_t
+	var vNodes []*Abc_Obj_t
+	var pNode, pFanin, pPrev *Abc_Obj_t
+	var i int32
 
-    assert(Abc_NtkIsStrash(pNtk), "Abc_NtkIsStrash(pNtk)");
+	assert(baseabc.Abc_NtkIsStrash(pNtk) != 0, "baseabc.Abc_NtkIsStrash(pNtk)")
 
-    // start the mapping manager and set its parameters
-    pMan = Map_ManCreate( Abc_NtkPiNum(pNtk) + Abc_NtkLatchNum(pNtk) - pNtk.nBarBufs, Abc_NtkPoNum(pNtk) + Abc_NtkLatchNum(pNtk) - pNtk.nBarBufs, fVerbose );
-    if pMan == nil {
-        return nil; }
-    Map_ManSetAreaRecovery( pMan, fRecovery );
-    Map_ManSetOutputNames( pMan, Abc_NtkCollectCioNames(pNtk, 1) );
-    Map_ManSetDelayTarget( pMan, float32(DelayTarget) );
+	// start the mapping manager and set its parameters
+	pMan = mapper.Map_ManCreate(Abc_NtkPiNum(pNtk)+Abc_NtkLatchNum(pNtk)-baseabc.Abc_NtkBarBufNum(pNtk), Abc_NtkPoNum(pNtk)+Abc_NtkLatchNum(pNtk)-baseabc.Abc_NtkBarBufNum(pNtk), fVerbose)
+	if pMan == nil {
+		return nil
+	}
+	mapper.Map_ManSetAreaRecovery(pMan, fRecovery)
+	mapper.Map_ManSetOutputNames(pMan, baseabc.Abc_NtkCollectCioNames(pNtk, 1))
+	mapper.Map_ManSetDelayTarget(pMan, float32(DelayTarget))
 
-    // set arrival and requireds
-    if Scl_ConIsRunning() && Scl_ConHasInArrs() {
-        Map_ManSetInputArrivals( pMan, Abc_NtkMapCopyCiArrivalCon(pNtk) );
-    } else {
-        Map_ManSetInputArrivals( pMan, Abc_NtkMapCopyCiArrival(pNtk, Abc_NtkGetCiArrivalTimes(pNtk)) ); }
-    if Scl_ConIsRunning() && Scl_ConHasOutReqs() {
-        Map_ManSetOutputRequireds( pMan, Abc_NtkMapCopyCoRequiredCon(pNtk) );
-    } else {
-        Map_ManSetOutputRequireds( pMan, Abc_NtkMapCopyCoRequired(pNtk, Abc_NtkGetCoRequiredTimes(pNtk)) ); }
+	// set arrival and requireds
+	if mapper.Scl_ConIsRunning() && mapper.Scl_ConHasInArrs() {
+		mapper.Map_ManSetInputArrivals(pMan, Abc_NtkMapCopyCiArrivalCon(pNtk))
+	} else {
+		mapper.Map_ManSetInputArrivals(pMan, Abc_NtkMapCopyCiArrival(pNtk, Abc_NtkGetCiArrivalTimes(pNtk)))
+	}
+	if mapper.Scl_ConIsRunning() && mapper.Scl_ConHasOutReqs() {
+		mapper.Map_ManSetOutputRequireds(pMan, Abc_NtkMapCopyCoRequiredCon(pNtk))
+	} else {
+		mapper.Map_ManSetOutputRequireds(pMan, Abc_NtkMapCopyCoRequired(pNtk, Abc_NtkGetCoRequiredTimes(pNtk)))
+	}
 
-    // create PIs and remember them in the old nodes
-    Abc_NtkCleanCopy( pNtk );
-    Abc_AigConst1(pNtk).pCopy = (Abc_Obj_t *)Map_ManReadConst1(pMan);
-    // inlining of macro Abc_NtkForEachCi
-    for  i = 0; (i < Abc_NtkCiNum(pNtk)) && (((pNode) = Abc_NtkCi(pNtk, i)), 1); i++  {
-        if i == Abc_NtkCiNum(pNtk) - pNtk.nBarBufs {
-            break; }
-        pNodeMap = Map_ManReadInputs(pMan)[i];
-        pNode.pCopy = (Abc_Obj_t *)pNodeMap;
-        if pSwitching != nil {
-            Map_NodeSetSwitching( pNodeMap, pSwitching[pNode.Id] ); }
-    }
+	// create PIs and remember them in the old nodes
+	baseabc.Abc_NtkCleanCopy(pNtk)
+	baseabc.Abc_AigConst1(pNtk).CopyData = mapper.Map_ManReadConst1(pMan)
+	// inlining of macro Abc_NtkForEachCi
+	for i = int32(0); i < Abc_NtkCiNum(pNtk); i++ {
+		pNode := baseabc.Abc_NtkCi(pNtk, i)
+		if i == Abc_NtkCiNum(pNtk)-baseabc.Abc_NtkBarBufNum(pNtk) {
+			break
+		}
+		pNodeMap = mapper.Map_ManReadInputs(pMan)[i]
+		pNode.CopyData = pNodeMap
+		if pSwitching != nil {
+			mapper.Map_NodeSetSwitching(pNodeMap, pSwitching[pNode.ID])
+		}
+	}
 
-    // load the AIG into the mapper
-    vNodes = Abc_AigDfsMap( pNtk );
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vNodes)) && (((pNode) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {
-        if Abc_ObjIsLatch(pNode) {
-            pFanin = Abc_ObjFanin0(pNode);
-            // inlining of macro Map_NotCond
-            pNodeMap = Map_NodeBuf( pMan, ((Map_Node_t *)((ABC_PTRUINT_T)(Abc_ObjFanin0(pFanin).pCopy) ^ (int32(Abc_ObjFaninC0(pFanin))))) );
-            Abc_ObjFanout0(pNode).pCopy = (Abc_Obj_t *)pNodeMap;
-            continue;
-        }
-        assert(Abc_ObjIsNode(pNode), "Abc_ObjIsNode(pNode)");
-        // add the node to the mapper
-        pNodeMap = Map_NodeAnd( pMan, 
-            // inlining of macro Map_NotCond
-            ((Map_Node_t *)((ABC_PTRUINT_T)(Abc_ObjFanin0(pNode).pCopy) ^ (int32(Abc_ObjFaninC0(pNode))))),
-            // inlining of macro Map_NotCond
-            ((Map_Node_t *)((ABC_PTRUINT_T)(Abc_ObjFanin1(pNode).pCopy) ^ (int32(Abc_ObjFaninC1(pNode))))) );
-        assert(pNode.pCopy == nil, "pNode.pCopy == nil");
-        // remember the node
-        pNode.pCopy = (Abc_Obj_t *)pNodeMap;
-        if pSwitching != nil {
-            Map_NodeSetSwitching( pNodeMap, pSwitching[pNode.Id] ); }
-        // set up the choice node
-        if Abc_AigNodeIsChoice( pNode ) {
-            for  pPrev = pNode, pFanin = (Abc_Obj_t *)pNode.pData; (pFanin != nil); pPrev = pFanin, pFanin = (Abc_Obj_t *)pFanin.pData  {
-                Map_NodeSetNextE( (Map_Node_t *)pPrev.pCopy, (Map_Node_t *)pFanin.pCopy );
-                Map_NodeSetRepr( (Map_Node_t *)pFanin.pCopy, (Map_Node_t *)pNode.pCopy );
-            } }
-    }
-    assert(Map_ManReadBufNum(pMan) == pNtk.nBarBufs, "Map_ManReadBufNum(pMan) == pNtk.nBarBufs");
-    Vec_PtrFree( vNodes );
+	// load the AIG into the mapper
+	vNodes = baseabc.Abc_AigDfsMap(pNtk)
+	// inlining of macro Vec_PtrForEachEntry
+	for i := 0; i < len(vNodes); i++ {
+		pNode := vNodes[i]
+		if baseabc.Abc_ObjIsLatch(pNode) != 0 {
+			pFanin = baseabc.Abc_ObjFanin0(pNode)
+			// inlining of macro mapper.Map_NotCond
+			pNodeMap = mapper.Map_NodeBuf(pMan, mapper.Map_NotCond(mapCopyNode(baseabc.Abc_ObjFanin0(pFanin)), baseabc.Abc_ObjFaninC0(pFanin) != 0))
+			baseabc.Abc_ObjFanout0(pNode).CopyData = pNodeMap
+			continue
+		}
+		assert(baseabc.Abc_ObjIsNode(pNode) != 0, "baseabc.Abc_ObjIsNode(pNode)")
+		// add the node to the mapper
+		pNodeMap = mapper.Map_NodeAnd(pMan,
+			// inlining of macro mapper.Map_NotCond
+			mapper.Map_NotCond(mapCopyNode(baseabc.Abc_ObjFanin0(pNode)), baseabc.Abc_ObjFaninC0(pNode) != 0),
+			// inlining of macro mapper.Map_NotCond
+			mapper.Map_NotCond(mapCopyNode(baseabc.Abc_ObjFanin1(pNode)), baseabc.Abc_ObjFaninC1(pNode) != 0))
+		assert(pNode.CopyData == nil, "pNode.CopyData == nil")
+		// remember the node
+		pNode.CopyData = pNodeMap
+		if pSwitching != nil {
+			mapper.Map_NodeSetSwitching(pNodeMap, pSwitching[pNode.ID])
+		}
+		// set up the choice node
+		if baseabc.Abc_AigNodeIsChoice(pNode) != 0 {
+			for pPrev, pFanin = pNode, pNode.Choice; pFanin != nil; pPrev, pFanin = pFanin, pFanin.Choice {
+				mapper.Map_NodeSetNextE(mapCopyNode(pPrev), mapCopyNode(pFanin))
+				mapper.Map_NodeSetRepr(mapCopyNode(pFanin), mapCopyNode(pNode))
+			}
+		}
+	}
+	assert(mapper.Map_ManReadBufNum(pMan) == baseabc.Abc_NtkBarBufNum(pNtk), "mapper.Map_ManReadBufNum(pMan) == baseabc.Abc_NtkBarBufNum(pNtk)")
 
-    // set the primary outputs in the required phase
-    // inlining of macro Abc_NtkForEachCo
-    for  i = 0; (i < Abc_NtkCoNum(pNtk)) && (((pNode) = Abc_NtkCo(pNtk, i)), 1); i++  {
-        if i == Abc_NtkCoNum(pNtk) - pNtk.nBarBufs {
-            break; }
-        // inlining of macro Map_NotCond
-        Map_ManReadOutputs(pMan)[i] = ((Map_Node_t *)((ABC_PTRUINT_T)((Map_Node_t *)Abc_ObjFanin0(pNode).pCopy) ^ (int32(Abc_ObjFaninC0(pNode)))));
-    }
-    return pMan;
+	// set the primary outputs in the required phase
+	// inlining of macro Abc_NtkForEachCo
+	for i = int32(0); i < Abc_NtkCoNum(pNtk); i++ {
+		pNode := baseabc.Abc_NtkCo(pNtk, i)
+		if i == Abc_NtkCoNum(pNtk)-baseabc.Abc_NtkBarBufNum(pNtk) {
+			break
+		}
+		// inlining of macro mapper.Map_NotCond
+		mapper.Map_ManReadOutputs(pMan)[i] = mapper.Map_NotCond(mapCopyNode(baseabc.Abc_ObjFanin0(pNode)), baseabc.Abc_ObjFaninC0(pNode) != 0)
+	}
+	return pMan
 }
 
-/**Function*************************************************************
+/*
+*Function*************************************************************
 
-  Synopsis    [Creates the mapped network.]
+	Synopsis    [Creates the mapped network.]
 
-  Description []
-               
-  SideEffects []
+	Description []
 
-  SeeAlso     []
+	SideEffects []
 
-***********************************************************************/
+	SeeAlso     []
+
+**********************************************************************
+*/
 func Abc_NodeFromMapSuper_rec(pNtkNew *Abc_Ntk_t, pNodeMap *Map_Node_t, pSuper *Map_Super_t, pNodePis []*Abc_Obj_t, nNodePis int32) *Abc_Obj_t {
-    var pLib *Mio_Library_t  = (Mio_Library_t *)Abc_FrameReadLibGen();
-    var pRoot *Mio_Gate_t;
-    var ppFanins **Map_Super_t;
-    var pNodeNew, pNodeFanin *Abc_Obj_t;
-    var nFanins, Number, i int32;
+	pLib := mapGenlib()
+	var pRoot *Mio_Gate_t
+	var ppFanins []*Map_Super_t
+	var pNodeNew, pNodeFanin *Abc_Obj_t
+	var nFanins, Number, i int32
 
-    // get the parameters of the supergate
-    pRoot = Map_SuperReadRoot(pSuper);
-    if pRoot == nil {
-        Number = Map_SuperReadNum(pSuper);
-        if Number < nNodePis {
-            return pNodePis[Number];
-        
-        } else {  
-//            assert( 0 );
-            /* It might happen that a super gate with 5 inputs is constructed that
-             * actually depends only on the first four variables; i.e the fifth is a
-             * don't care -- in that case we connect constant node for the fifth
-             * (since the cut only has 4 variables). An interesting question is what
-             * if the first variable (and not the fifth one is the redundant one;
-             * can that happen?) */
-            return Abc_NtkCreateNodeConst0(pNtkNew);
-        }
-    }
-    pRoot = Mio_LibraryReadGateByName( pLib, Mio_GateReadName(pRoot), nil );
+	// get the parameters of the supergate
+	pRoot = mapper.Map_SuperReadRoot(pSuper)
+	if pRoot == nil {
+		Number = mapper.Map_SuperReadNum(pSuper)
+		if Number < nNodePis {
+			return pNodePis[Number]
 
-    // get information about the fanins of the supergate
-    nFanins  = Map_SuperReadFaninNum( pSuper );
-    ppFanins = Map_SuperReadFanins( pSuper );
-    // create a new node with these fanins
-    pNodeNew = Abc_NtkCreateNode( pNtkNew );
-    for  i = 0; i < nFanins; i++  {
-        pNodeFanin = Abc_NodeFromMapSuper_rec( pNtkNew, pNodeMap, ppFanins[i], pNodePis, nNodePis );
-        Abc_ObjAddFanin( pNodeNew, pNodeFanin );
-    }
-    pNodeNew.pData = pRoot;
-    return pNodeNew;
+		} else {
+			//            assert( 0 );
+			/* It might happen that a super gate with 5 inputs is constructed that
+			 * actually depends only on the first four variables; i.e the fifth is a
+			 * don't care -- in that case we connect constant node for the fifth
+			 * (since the cut only has 4 variables). An interesting question is what
+			 * if the first variable (and not the fifth one is the redundant one;
+			 * can that happen?) */
+			return baseabc.Abc_NtkCreateNodeConst0(pNtkNew)
+		}
+	}
+	pRoot = mio.Mio_LibraryReadGateByName(pLib, mio.Mio_GateReadName(pRoot), nil)
+
+	// get information about the fanins of the supergate
+	nFanins = mapper.Map_SuperReadFaninNum(pSuper)
+	ppFanins = mapper.Map_SuperReadFanins(pSuper)
+	// create a new node with these fanins
+	pNodeNew = baseabc.Abc_NtkCreateNode(pNtkNew)
+	for i = 0; i < nFanins; i++ {
+		pNodeFanin = Abc_NodeFromMapSuper_rec(pNtkNew, pNodeMap, ppFanins[i], pNodePis, nNodePis)
+		baseabc.Abc_ObjAddFanin(pNodeNew, pNodeFanin)
+	}
+	pNodeNew.Data = pRoot
+	return pNodeNew
 }
 func Abc_NodeFromMapPhase_rec(pNtkNew *Abc_Ntk_t, pNodeMap *Map_Node_t, fPhase int32) *Abc_Obj_t {
-    var pNodePIs [10]*Abc_Obj_t;
-    var pNodeNew *Abc_Obj_t;
-    var ppLeaves **Map_Node_t;
-    var pCutBest *Map_Cut_t;
-    var pSuperBest *Map_Super_t;
-    var uPhaseBest uint32;
-    var i, fInvPin, nLeaves int32;
+	var pNodePIs [10]*Abc_Obj_t
+	var pNodeNew *Abc_Obj_t
+	var ppLeaves []*Map_Node_t
+	var pCutBest *Map_Cut_t
+	var pSuperBest *Map_Super_t
+	var uPhaseBest uint32
+	var i, fInvPin, nLeaves int32
 
-    // make sure the node can be implemented in this phase
-    assert(Map_NodeReadCutBest(pNodeMap, fPhase) != nil || Map_NodeIsConst(pNodeMap), "Map_NodeReadCutBest(pNodeMap, fPhase) != nil || Map_NodeIsConst(pNodeMap)");
-    // check if the phase is already implemented
-    pNodeNew = (Abc_Obj_t *)Map_NodeReadData( pNodeMap, fPhase );
-    if pNodeNew != nil {
-        return pNodeNew; }
+	// make sure the node can be implemented in this phase
+	assert(mapper.Map_NodeReadCutBest(pNodeMap, fPhase) != nil || mapper.Map_NodeIsConst(pNodeMap) != 0, "mapper.Map_NodeReadCutBest(pNodeMap, fPhase) != nil || mapper.Map_NodeIsConst(pNodeMap) != 0")
+	// check if the phase is already implemented
+	pNodeNew, _ = mapper.Map_NodeReadData(pNodeMap, fPhase).(*Abc_Obj_t)
+	if pNodeNew != nil {
+		return pNodeNew
+	}
 
-    // get the information about the best cut 
-    pCutBest   = Map_NodeReadCutBest( pNodeMap, fPhase );
-    pSuperBest = Map_CutReadSuperBest( pCutBest, fPhase );
-    uPhaseBest = Map_CutReadPhaseBest( pCutBest, fPhase );
-    nLeaves    = Map_CutReadLeavesNum( pCutBest );
-    ppLeaves   = Map_CutReadLeaves( pCutBest );
+	// get the information about the best cut
+	pCutBest = mapper.Map_NodeReadCutBest(pNodeMap, fPhase)
+	pSuperBest = mapper.Map_CutReadSuperBest(pCutBest, fPhase)
+	uPhaseBest = mapper.Map_CutReadPhaseBest(pCutBest, fPhase)
+	nLeaves = mapper.Map_CutReadLeavesNum(pCutBest)
+	ppLeaves = mapper.Map_CutReadLeaves(pCutBest)
 
-    // collect the PI nodes
-    for  i = 0; i < nLeaves; i++  {
-        fInvPin = ((uPhaseBest & (1 << i)) > 0);
-        pNodePIs[i] = Abc_NodeFromMap_rec( pNtkNew, ppLeaves[i], !fInvPin );
-        assert(pNodePIs[i] != nil, "pNodePIs[i] != nil");
-    }
+	// collect the PI nodes
+	for i = 0; i < nLeaves; i++ {
+		fInvPin = boolToInt32((uPhaseBest & (1 << i)) > 0)
+		pNodePIs[i] = Abc_NodeFromMap_rec(pNtkNew, ppLeaves[i], fInvPin^1)
+		assert(pNodePIs[i] != nil, "pNodePIs[i] != nil")
+	}
 
-    // implement the supergate
-    pNodeNew = Abc_NodeFromMapSuper_rec( pNtkNew, pNodeMap, pSuperBest, pNodePIs, nLeaves );
-    Map_NodeSetData( pNodeMap, fPhase, (char *)pNodeNew );
-    return pNodeNew;
+	// implement the supergate
+	pNodeNew = Abc_NodeFromMapSuper_rec(pNtkNew, pNodeMap, pSuperBest, pNodePIs[:], nLeaves)
+	mapper.Map_NodeSetData(pNodeMap, fPhase, pNodeNew)
+	return pNodeNew
 }
 func Abc_NodeFromMap_rec(pNtkNew *Abc_Ntk_t, pNodeMap *Map_Node_t, fPhase int32) *Abc_Obj_t {
-    var pNodeNew, pNodeInv *Abc_Obj_t;
+	var pNodeNew, pNodeInv *Abc_Obj_t
 
-    // check the case of constant node
-    if Map_NodeIsConst(pNodeMap) {
-        if fPhase != 0 {
-            pNodeNew = Abc_NtkCreateNodeConst1(pNtkNew);
-        } else {
-            pNodeNew = Abc_NtkCreateNodeConst0(pNtkNew);
-        }
-        if pNodeNew.pData == nil {
-            fmt.Printf("Error creating mapped network: Library does not have a constant %d gate.\n", fPhase); }
-        return pNodeNew;
-    }
+	// check the case of constant node
+	if mapper.Map_NodeIsConst(pNodeMap) != 0 {
+		if fPhase != 0 {
+			pNodeNew = baseabc.Abc_NtkCreateNodeConst1(pNtkNew)
+		} else {
+			pNodeNew = baseabc.Abc_NtkCreateNodeConst0(pNtkNew)
+		}
+		if pNodeNew.Data == nil {
+			fmt.Printf("Error creating mapped network: Library does not have a constant %d gate.\n", fPhase)
+		}
+		return pNodeNew
+	}
 
-    // check if the phase is already implemented
-    pNodeNew = (Abc_Obj_t *)Map_NodeReadData( pNodeMap, fPhase );
-    if pNodeNew != nil {
-        return pNodeNew; }
+	// check if the phase is already implemented
+	pNodeNew, _ = mapper.Map_NodeReadData(pNodeMap, fPhase).(*Abc_Obj_t)
+	if pNodeNew != nil {
+		return pNodeNew
+	}
 
-    // implement the node if the best cut is assigned
-    if Map_NodeReadCutBest(pNodeMap, fPhase) != nil {
-        return Abc_NodeFromMapPhase_rec( pNtkNew, pNodeMap, fPhase ); }
+	// implement the node if the best cut is assigned
+	if mapper.Map_NodeReadCutBest(pNodeMap, fPhase) != nil {
+		return Abc_NodeFromMapPhase_rec(pNtkNew, pNodeMap, fPhase)
+	}
 
-    // if the cut is not assigned, implement the node
-    assert(Map_NodeReadCutBest(pNodeMap, !fPhase) != nil || Map_NodeIsConst(pNodeMap), "Map_NodeReadCutBest(pNodeMap, !fPhase) != nil || Map_NodeIsConst(pNodeMap)");
-    pNodeNew = Abc_NodeFromMapPhase_rec( pNtkNew, pNodeMap, !fPhase );
+	// if the cut is not assigned, implement the node
+	assert(mapper.Map_NodeReadCutBest(pNodeMap, fPhase^1) != nil || mapper.Map_NodeIsConst(pNodeMap) != 0, "mapper.Map_NodeReadCutBest(pNodeMap, !fPhase) != nil || mapper.Map_NodeIsConst(pNodeMap) != 0")
+	pNodeNew = Abc_NodeFromMapPhase_rec(pNtkNew, pNodeMap, fPhase^1)
 
-    // add the inverter
-    pNodeInv = Abc_NtkCreateNode( pNtkNew );
-    Abc_ObjAddFanin( pNodeInv, pNodeNew );
-    pNodeInv.pData = Mio_LibraryReadInv((Mio_Library_t *)Abc_FrameReadLibGen());
+	// add the inverter
+	pNodeInv = baseabc.Abc_NtkCreateNode(pNtkNew)
+	baseabc.Abc_ObjAddFanin(pNodeInv, pNodeNew)
+	pNodeInv.Data = mio.Mio_LibraryReadInv(mapGenlib())
 
-    // set the inverter
-    Map_NodeSetData( pNodeMap, fPhase, (char *)pNodeInv );
-    return pNodeInv;
+	// set the inverter
+	mapper.Map_NodeSetData(pNodeMap, fPhase, pNodeInv)
+	return pNodeInv
 }
 func Abc_NtkFromMap(pMan *Map_Man_t, pNtk *Abc_Ntk_t, fUseBuffs int32) *Abc_Ntk_t {
-    var pNtkNew *Abc_Ntk_t;
-    var pNodeMap *Map_Node_t;
-    var pNode, pNodeNew *Abc_Obj_t;
-    var i, nDupGates int32;
-    assert(Map_ManReadBufNum(pMan) == pNtk.nBarBufs, "Map_ManReadBufNum(pMan) == pNtk.nBarBufs");
-    // create the new network
-    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_LOGIC, ABC_FUNC_MAP );
-    // make the mapper point to the new network
-    Map_ManCleanData( pMan );
-    // inlining of macro Abc_NtkForEachCi
-    for  i = 0; (i < Abc_NtkCiNum(pNtk)) && (((pNode) = Abc_NtkCi(pNtk, i)), 1); i++  {
-        if i >= Abc_NtkCiNum(pNtk) - pNtk.nBarBufs {
-            break; }
-        Map_NodeSetData( Map_ManReadInputs(pMan)[i], 1, (char *)pNode.pCopy );
-    }
-    // inlining of macro Abc_NtkForEachCi
-    for  i = 0; (i < Abc_NtkCiNum(pNtk)) && (((pNode) = Abc_NtkCi(pNtk, i)), 1); i++  {
-        if i < Abc_NtkCiNum(pNtk) - pNtk.nBarBufs {
-            continue; }
-        Map_NodeSetData( Map_ManReadBufs(pMan)[i - (Abc_NtkCiNum(pNtk) - pNtk.nBarBufs)], 1, (char *)pNode.pCopy );
-    }
-    // assign the mapping of the required phase to the POs
-    // inlining of macro Abc_NtkForEachCo
-    for  i = 0; (i < Abc_NtkCoNum(pNtk)) && (((pNode) = Abc_NtkCo(pNtk, i)), 1); i++  {
-        if i < Abc_NtkCoNum(pNtk) - pNtk.nBarBufs {
-            continue; }
-        pNodeMap = Map_ManReadBufDriver( pMan, i - (Abc_NtkCoNum(pNtk) - pNtk.nBarBufs) );
-        // inlining of macro Map_Regular
-        // inlining of macro Map_IsComplement
-        pNodeNew = Abc_NodeFromMap_rec( pNtkNew, ((Map_Node_t *)((ABC_PTRUINT_T)(pNodeMap) & ~01)) , !((int32(((ABC_PTRUINT_T) (pNodeMap) & 01)))) );
-        assert(!Abc_ObjIsComplement(pNodeNew), "!Abc_ObjIsComplement(pNodeNew)");
-        Abc_ObjAddFanin( pNode.pCopy, pNodeNew );
-    }
-    // inlining of macro Abc_NtkForEachCo
-    for  i = 0; (i < Abc_NtkCoNum(pNtk)) && (((pNode) = Abc_NtkCo(pNtk, i)), 1); i++  {
-        if i >= Abc_NtkCoNum(pNtk) - pNtk.nBarBufs {
-            break; }
-        pNodeMap = Map_ManReadOutputs(pMan)[i];
-        // inlining of macro Map_Regular
-        // inlining of macro Map_IsComplement
-        pNodeNew = Abc_NodeFromMap_rec( pNtkNew, ((Map_Node_t *)((ABC_PTRUINT_T)(pNodeMap) & ~01)) , !((int32(((ABC_PTRUINT_T) (pNodeMap) & 01)))) );
-        assert(!Abc_ObjIsComplement(pNodeNew), "!Abc_ObjIsComplement(pNodeNew)");
-        Abc_ObjAddFanin( pNode.pCopy, pNodeNew );
-    }
-    // decouple the PO driver nodes to reduce the number of levels
-    nDupGates = Abc_NtkLogicMakeSimpleCos( pNtkNew, !fUseBuffs );
-//    if ( nDupGates && Map_ManReadVerbose(pMan) )
-//        printf( "Duplicated %d gates to decouple the CO drivers.\n", nDupGates );
-    return pNtkNew;
+	var pNtkNew *Abc_Ntk_t
+	var pNodeMap *Map_Node_t
+	var pNode, pNodeNew *Abc_Obj_t
+	var i, nDupGates int32
+	assert(mapper.Map_ManReadBufNum(pMan) == baseabc.Abc_NtkBarBufNum(pNtk), "mapper.Map_ManReadBufNum(pMan) == baseabc.Abc_NtkBarBufNum(pNtk)")
+	// create the new network
+	pNtkNew = baseabc.Abc_NtkStartFrom(pNtk, ABC_NTK_LOGIC, ABC_FUNC_MAP)
+	// make the mapper point to the new network
+	mapper.Map_ManCleanData(pMan)
+	// inlining of macro Abc_NtkForEachCi
+	for i = int32(0); i < Abc_NtkCiNum(pNtk); i++ {
+		pNode := baseabc.Abc_NtkCi(pNtk, i)
+		if i >= Abc_NtkCiNum(pNtk)-baseabc.Abc_NtkBarBufNum(pNtk) {
+			break
+		}
+		mapper.Map_NodeSetData(mapper.Map_ManReadInputs(pMan)[i], 1, pNode.Copy)
+	}
+	// inlining of macro Abc_NtkForEachCi
+	for i = int32(0); i < Abc_NtkCiNum(pNtk); i++ {
+		pNode := baseabc.Abc_NtkCi(pNtk, i)
+		if i < Abc_NtkCiNum(pNtk)-baseabc.Abc_NtkBarBufNum(pNtk) {
+			continue
+		}
+		mapper.Map_NodeSetData(mapper.Map_ManReadBufs(pMan)[i-(Abc_NtkCiNum(pNtk)-baseabc.Abc_NtkBarBufNum(pNtk))], 1, pNode.Copy)
+	}
+	// assign the mapping of the required phase to the POs
+	// inlining of macro Abc_NtkForEachCo
+	for i = int32(0); i < Abc_NtkCoNum(pNtk); i++ {
+		pNode := baseabc.Abc_NtkCo(pNtk, i)
+		if i < Abc_NtkCoNum(pNtk)-baseabc.Abc_NtkBarBufNum(pNtk) {
+			continue
+		}
+		pNodeMap = mapper.Map_ManReadBufDriver(pMan, i-(Abc_NtkCoNum(pNtk)-baseabc.Abc_NtkBarBufNum(pNtk)))
+		// inlining of macro mapper.Map_Regular
+		// inlining of macro mapper.Map_IsComplement
+		pNodeNew = Abc_NodeFromMap_rec(pNtkNew, mapper.Map_Regular(pNodeMap), boolToInt32(!mapper.Map_IsComplement(pNodeMap)))
+		assert(baseabc.Abc_ObjIsComplement(pNodeNew) == 0, "!baseabc.Abc_ObjIsComplement(pNodeNew)")
+		baseabc.Abc_ObjAddFanin(pNode.Copy, pNodeNew)
+	}
+	// inlining of macro Abc_NtkForEachCo
+	for i = int32(0); i < Abc_NtkCoNum(pNtk); i++ {
+		pNode := baseabc.Abc_NtkCo(pNtk, i)
+		if i >= Abc_NtkCoNum(pNtk)-baseabc.Abc_NtkBarBufNum(pNtk) {
+			break
+		}
+		pNodeMap = mapper.Map_ManReadOutputs(pMan)[i]
+		// inlining of macro mapper.Map_Regular
+		// inlining of macro mapper.Map_IsComplement
+		pNodeNew = Abc_NodeFromMap_rec(pNtkNew, mapper.Map_Regular(pNodeMap), boolToInt32(!mapper.Map_IsComplement(pNodeMap)))
+		assert(baseabc.Abc_ObjIsComplement(pNodeNew) == 0, "!baseabc.Abc_ObjIsComplement(pNodeNew)")
+		baseabc.Abc_ObjAddFanin(pNode.Copy, pNodeNew)
+	}
+	// decouple the PO driver nodes to reduce the number of levels
+	nDupGates = baseabc.Abc_NtkLogicMakeSimpleCos(pNtkNew, boolToInt32(fUseBuffs == 0))
+	//    if ( nDupGates && mapper.Map_ManReadVerbose(pMan) )
+	//        printf( "Duplicated %d gates to decouple the CO drivers.\n", nDupGates );
+	return pNtkNew
 }
 
-/**Function*************************************************************
+/*
+*Function*************************************************************
 
-  Synopsis    [Interface with the mapping package.]
+	Synopsis    [Interface with the mapping package.]
 
-  Description []
-               
-  SideEffects []
+	Description []
 
-  SeeAlso     []
+	SideEffects []
 
-***********************************************************************/
+	SeeAlso     []
+
+**********************************************************************
+*/
 func Abc_NtkSuperChoice(pNtk *Abc_Ntk_t) *Abc_Ntk_t {
-    var pNtkNew *Abc_Ntk_t;
+	var pNtkNew *Abc_Ntk_t
 
-    var pMan *Map_Man_t;
+	var pMan *Map_Man_t
 
-    assert(Abc_NtkIsStrash(pNtk), "Abc_NtkIsStrash(pNtk)");
+	assert(baseabc.Abc_NtkIsStrash(pNtk) != 0, "baseabc.Abc_NtkIsStrash(pNtk)")
 
-    // check that the library is available
-    if Abc_FrameReadLibGen() == nil {
-        fmt.Printf("The current library is not available.\n");
-        return 0;
-    }
+	// check that the library is available
+	if Abc_FrameReadLibGen() == nil {
+		fmt.Printf("The current library is not available.\n")
+		return 0
+	}
 
-    // derive the supergate library
-    if Abc_FrameReadLibSuper() == nil && Abc_FrameReadLibGen() {
-//        printf( "A simple supergate library is derived from gate library \"%s\".\n", 
-//            Mio_LibraryReadName((Mio_Library_t *)Abc_FrameReadLibGen()) );
-        Map_SuperLibDeriveFromGenlib( (Mio_Library_t *)Abc_FrameReadLibGen(), 0 );
-    }
+	// derive the supergate library
+	if Abc_FrameReadLibSuper() == nil && Abc_FrameReadLibGen() != nil {
+		//        printf( "A simple supergate library is derived from gate library \"%s\".\n",
+		//            mio.Mio_LibraryReadName((Mio_Library_t *)Abc_FrameReadLibGen()) );
+		mapper.Map_SuperLibDeriveFromGenlib(mapGenlib(), 0)
+	}
 
-    // print a warning about choice nodes
-    if Abc_NtkGetChoiceNum( pNtk ) {
-        fmt.Printf("Performing mapping with choices.\n"); }
+	// print a warning about choice nodes
+	if baseabc.Abc_NtkGetChoiceNum(pNtk) != 0 {
+		fmt.Printf("Performing mapping with choices.\n")
+	}
 
-    // perform the mapping
-    pMan = Abc_NtkToMap( pNtk, -1, 1, nil, 0 );
-    if pMan == nil {
-        return nil; }
-    if !Map_Mapping( pMan ) {
-        Map_ManFree( pMan );
-        return nil;
-    }
+	// perform the mapping
+	pMan = Abc_NtkToMap(pNtk, -1, 1, nil, 0)
+	if pMan == nil {
+		return nil
+	}
+	if !mapper.Map_Mapping(pMan) {
+		mapper.Map_ManFree(pMan)
+		return nil
+	}
 
-    // reconstruct the network after mapping
-    pNtkNew = Abc_NtkFromMapSuperChoice( pMan, pNtk );
-    if pNtkNew == nil {
-        return nil; }
-    Map_ManFree( pMan );
+	// reconstruct the network after mapping
+	pNtkNew = Abc_NtkFromMapSuperChoice(pMan, pNtk)
+	if pNtkNew == nil {
+		return nil
+	}
+	mapper.Map_ManFree(pMan)
 
-    // make sure that everything is okay
-    if !Abc_NtkCheck( pNtkNew ) {
-        fmt.Printf("Abc_NtkMap: The network check has failed.\n");
-        Abc_NtkDelete( pNtkNew );
-        return nil;
-    }
-    return pNtkNew;
+	// make sure that everything is okay
+	if baseabc.Abc_NtkCheck(pNtkNew) == 0 {
+		fmt.Printf("Abc_NtkMap: The network check has failed.\n")
+		Abc_NtkDelete(pNtkNew)
+		return nil
+	}
+	return pNtkNew
 }
 
+/*
+*Function*************************************************************
 
-/**Function*************************************************************
+	Synopsis    [Creates the mapped network.]
 
-  Synopsis    [Creates the mapped network.]
+	Description []
 
-  Description []
-               
-  SideEffects []
+	SideEffects []
 
-  SeeAlso     []
+	SeeAlso     []
 
-***********************************************************************/
+**********************************************************************
+*/
 func Abc_NtkFromMapSuperChoice(pMan *Map_Man_t, pNtk *Abc_Ntk_t) *Abc_Ntk_t {
-    extern Abc_Ntk_t * Abc_NtkMulti( Abc_Ntk_t * pNtk, int nThresh, int nFaninMax, int fCnf, int fMulti, int fSimple, int fFactor );
-    var pProgress *ProgressBar;
-    var pNtkNew, pNtkNew2 *Abc_Ntk_t;
-    var pNode *Abc_Obj_t;
-    var i int32;
+	var pProgress *ProgressBar
+	var pNtkNew, pNtkNew2 *Abc_Ntk_t
+	var pNode *Abc_Obj_t
+	var i int32
 
-    // save the pointer to the mapped nodes
-    // inlining of macro Abc_NtkForEachCi
-    for  i = 0; (i < Abc_NtkCiNum(pNtk)) && (((pNode) = Abc_NtkCi(pNtk, i)), 1); i++  {
-        pNode.pNext = pNode.pCopy;
-    }
-    // inlining of macro Abc_NtkForEachPo
-    for  i = 0; (i < Abc_NtkPoNum(pNtk)) && (((pNode) = Abc_NtkPo(pNtk, i)), 1); i++  {
-        pNode.pNext = pNode.pCopy;
-    }
-    // inlining of macro Abc_NtkForEachNode
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {
-        pNode.pNext = pNode.pCopy; }
-    }
+	// save the pointer to the mapped nodes
+	// inlining of macro Abc_NtkForEachCi
+	for i = int32(0); i < Abc_NtkCiNum(pNtk); i++ {
+		pNode := baseabc.Abc_NtkCi(pNtk, i)
+		// Mapper node remains in CopyData; Next carries only network object links.
+	}
+	// inlining of macro Abc_NtkForEachPo
+	for i = int32(0); i < Abc_NtkPoNum(pNtk); i++ {
+		pNode = Abc_NtkPo(pNtk, i)
+		// Mapper node remains in CopyData; Next carries only network object links.
+	}
+	// inlining of macro Abc_NtkForEachNode
+	for i = int32(0); i < baseabc.Abc_NtkObjNumMax(pNtk); i++ {
+		pNode = baseabc.Abc_NtkObj(pNtk, i)
 
-    // duplicate the network
-    pNtkNew2 = Abc_NtkDup( pNtk );
-    pNtkNew  = Abc_NtkMulti( pNtkNew2, 0, 20, 0, 0, 1, 0 );
-    if !Abc_NtkBddToSop( pNtkNew, -1, ABC_INFINITY ) {
-        fmt.Printf("Abc_NtkFromMapSuperChoice(): Converting to SOPs has failed.\n");
-        return nil;
-    }
+	}
 
-    // set the old network to point to the new network
-    // inlining of macro Abc_NtkForEachCi
-    for  i = 0; (i < Abc_NtkCiNum(pNtk)) && (((pNode) = Abc_NtkCi(pNtk, i)), 1); i++  {
-        pNode.pCopy = pNode.pCopy.pCopy;
-    }
-    // inlining of macro Abc_NtkForEachPo
-    for  i = 0; (i < Abc_NtkPoNum(pNtk)) && (((pNode) = Abc_NtkPo(pNtk, i)), 1); i++  {
-        pNode.pCopy = pNode.pCopy.pCopy;
-    }
-    // inlining of macro Abc_NtkForEachNode
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {
-        pNode.pCopy = pNode.pCopy.pCopy; }
-    }
-    Abc_NtkDelete( pNtkNew2 );
+	// duplicate the network
+	pNtkNew2 = baseabc.Abc_NtkDup(pNtk)
+	pNtkNew = Abc_NtkMulti(pNtkNew2, 0, 20, 0, 0, 1, 0)
+	if baseabc.Abc_NtkBddToSop(pNtkNew, -1, ABC_INFINITY) == 0 {
+		fmt.Printf("Abc_NtkFromMapSuperChoice(): Converting to SOPs has failed.\n")
+		return nil
+	}
 
-    // set the pointers from the mapper to the new nodes
-    // inlining of macro Abc_NtkForEachCi
-    for  i = 0; (i < Abc_NtkCiNum(pNtk)) && (((pNode) = Abc_NtkCi(pNtk, i)), 1); i++  {
-        Map_NodeSetData( Map_ManReadInputs(pMan)[i], 0, (char *)Abc_NtkCreateNodeInv(pNtkNew,pNode.pCopy) );
-        Map_NodeSetData( Map_ManReadInputs(pMan)[i], 1, (char *)pNode.pCopy );
-    }
-    // inlining of macro Abc_NtkForEachNode
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {
-//        if ( Abc_NodeIsConst(pNode) )
-//            continue;
-        Map_NodeSetData( (Map_Node_t *)pNode.pNext, 0, (char *)Abc_NtkCreateNodeInv(pNtkNew,pNode.pCopy) );
-        Map_NodeSetData( (Map_Node_t *)pNode.pNext, 1, (char *)pNode.pCopy );
-    }
-    }
+	// set the old network to point to the new network
+	// inlining of macro Abc_NtkForEachCi
+	for i = int32(0); i < Abc_NtkCiNum(pNtk); i++ {
+		pNode := baseabc.Abc_NtkCi(pNtk, i)
+		pNode.Copy = pNode.Copy.Copy
+	}
+	// inlining of macro Abc_NtkForEachPo
+	for i = int32(0); i < Abc_NtkPoNum(pNtk); i++ {
+		pNode = Abc_NtkPo(pNtk, i)
+		pNode.Copy = pNode.Copy.Copy
+	}
+	// inlining of macro Abc_NtkForEachNode
+	for i = int32(0); i < baseabc.Abc_NtkObjNumMax(pNtk); i++ {
+		pNode = baseabc.Abc_NtkObj(pNtk, i)
+		if pNode != nil && baseabc.Abc_ObjIsNode(pNode) != 0 {
+			pNode.Copy = pNode.Copy.Copy
+		}
+	}
+	Abc_NtkDelete(pNtkNew2)
 
-    // assign the mapping of the required phase to the POs
-    pProgress = Extra_ProgressBarStart( os.Stdout, Abc_NtkObjNumMax(pNtk) );
-    // inlining of macro Abc_NtkForEachNode
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {
-        Extra_ProgressBarUpdate( pProgress, i, nil );
-//        if ( Abc_NodeIsConst(pNode) )
-//            continue;
-        Abc_NodeSuperChoice( pNtkNew, pNode );
-    }
-    }
-    Extra_ProgressBarStop( pProgress );
-    return pNtkNew;
+	// set the pointers from the mapper to the new nodes
+	// inlining of macro Abc_NtkForEachCi
+	for i = int32(0); i < Abc_NtkCiNum(pNtk); i++ {
+		pNode := baseabc.Abc_NtkCi(pNtk, i)
+		mapper.Map_NodeSetData(mapper.Map_ManReadInputs(pMan)[i], 0, baseabc.Abc_NtkCreateNodeInv(pNtkNew, pNode.Copy))
+		mapper.Map_NodeSetData(mapper.Map_ManReadInputs(pMan)[i], 1, pNode.Copy)
+	}
+	// inlining of macro Abc_NtkForEachNode
+	for i = int32(0); i < baseabc.Abc_NtkObjNumMax(pNtk); i++ {
+		pNode = baseabc.Abc_NtkObj(pNtk, i)
+		if pNode == nil || baseabc.Abc_ObjIsNode(pNode) == 0 {
+			continue
+		}
+		//        if ( baseabc.Abc_NodeIsConst(pNode) )
+		//            continue;
+		pMapNode := mapCopyNode(pNode)
+		mapper.Map_NodeSetData(pMapNode, 0, baseabc.Abc_NtkCreateNodeInv(pNtkNew, pNode.Copy))
+		mapper.Map_NodeSetData(pMapNode, 1, pNode.Copy)
+	}
+
+	// assign the mapping of the required phase to the POs
+	pProgress = extra.Extra_ProgressBarStart(os.Stdout, baseabc.Abc_NtkObjNumMax(pNtk))
+	// inlining of macro Abc_NtkForEachNode
+	for i = int32(0); i < baseabc.Abc_NtkObjNumMax(pNtk); i++ {
+		pNode = baseabc.Abc_NtkObj(pNtk, i)
+		if pNode == nil || baseabc.Abc_ObjIsNode(pNode) == 0 {
+			continue
+		}
+		extra.Extra_ProgressBarUpdate(pProgress, i, nil)
+		//        if ( baseabc.Abc_NodeIsConst(pNode) )
+		//            continue;
+		Abc_NodeSuperChoice(pNtkNew, pNode)
+	}
+	extra.Extra_ProgressBarStop(pProgress)
+	return pNtkNew
 }
 
+/*
+*Function*************************************************************
 
-/**Function*************************************************************
+	Synopsis    [Creates the mapped network.]
 
-  Synopsis    [Creates the mapped network.]
+	Description []
 
-  Description []
-               
-  SideEffects []
+	SideEffects []
 
-  SeeAlso     []
+	SeeAlso     []
 
-***********************************************************************/
+**********************************************************************
+*/
 func Abc_NodeSuperChoice(pNtkNew *Abc_Ntk_t, pNode *Abc_Obj_t) {
-    var pMapNode *Map_Node_t  = (Map_Node_t *)pNode.pNext;
-    var pCuts, pTemp *Map_Cut_t;
+	pMapNode := mapCopyNode(pNode)
+	var pCuts, pTemp *Map_Cut_t
 
-    pCuts = Map_NodeReadCuts(pMapNode);
-    for  pTemp = Map_CutReadNext(pCuts); (pTemp != nil); pTemp = Map_CutReadNext(pTemp)  {
-        Abc_NodeFromMapCutPhase( pNtkNew, pTemp, 0 );
-        Abc_NodeFromMapCutPhase( pNtkNew, pTemp, 1 );
-    }
+	pCuts = mapper.Map_NodeReadCuts(pMapNode)
+	for pTemp = mapper.Map_CutReadNext(pCuts); pTemp != nil; pTemp = mapper.Map_CutReadNext(pTemp) {
+		Abc_NodeFromMapCutPhase(pNtkNew, pTemp, 0)
+		Abc_NodeFromMapCutPhase(pNtkNew, pTemp, 1)
+	}
 }
 
+/*
+*Function*************************************************************
 
-/**Function*************************************************************
+	Synopsis    [Constructs the nodes corrresponding to one node.]
 
-  Synopsis    [Constructs the nodes corrresponding to one node.]
+	Description []
 
-  Description []
-               
-  SideEffects []
+	SideEffects []
 
-  SeeAlso     []
+	SeeAlso     []
 
-***********************************************************************/
+**********************************************************************
+*/
 func Abc_NodeFromMapCutPhase(pNtkNew *Abc_Ntk_t, pCut *Map_Cut_t, fPhase int32) {
-    var pNodePIs [10]*Abc_Obj_t;
-    var ppLeaves **Map_Node_t;
-    var pSuperBest *Map_Super_t;
-    var uPhaseBest uint32;
-    var i, fInvPin, nLeaves int32;
+	var pNodePIs [10]*Abc_Obj_t
+	var ppLeaves []*Map_Node_t
+	var pSuperBest *Map_Super_t
+	var uPhaseBest uint32
+	var i, fInvPin, nLeaves int32
 
-    pSuperBest = Map_CutReadSuperBest( pCut, fPhase );
-    if pSuperBest == nil {
-        return; }
+	pSuperBest = mapper.Map_CutReadSuperBest(pCut, fPhase)
+	if pSuperBest == nil {
+		return
+	}
 
-    // get the information about the best cut 
-    uPhaseBest = Map_CutReadPhaseBest( pCut, fPhase );
-    nLeaves    = Map_CutReadLeavesNum( pCut );
-    ppLeaves   = Map_CutReadLeaves( pCut );
+	// get the information about the best cut
+	uPhaseBest = mapper.Map_CutReadPhaseBest(pCut, fPhase)
+	nLeaves = mapper.Map_CutReadLeavesNum(pCut)
+	ppLeaves = mapper.Map_CutReadLeaves(pCut)
 
-    // collect the PI nodes
-    for  i = 0; i < nLeaves; i++  {
-        fInvPin = ((uPhaseBest & (1 << i)) > 0);
-        pNodePIs[i] = (Abc_Obj_t *)Map_NodeReadData( ppLeaves[i], !fInvPin );
-        assert(pNodePIs[i] != nil, "pNodePIs[i] != nil");
-    }
+	// collect the PI nodes
+	for i = 0; i < nLeaves; i++ {
+		fInvPin = boolToInt32((uPhaseBest & (1 << i)) > 0)
+		pNodePIs[i], _ = mapper.Map_NodeReadData(ppLeaves[i], fInvPin^1).(*Abc_Obj_t)
+		assert(pNodePIs[i] != nil, "pNodePIs[i] != nil")
+	}
 
-    // implement the supergate
-    Abc_NodeFromMapSuperChoice_rec( pNtkNew, pSuperBest, pNodePIs, nLeaves );
+	// implement the supergate
+	Abc_NodeFromMapSuperChoice_rec(pNtkNew, pSuperBest, pNodePIs[:], nLeaves)
 }
 
+/*
+*Function*************************************************************
 
-/**Function*************************************************************
+	Synopsis    [Constructs the nodes corrresponding to one supergate.]
 
-  Synopsis    [Constructs the nodes corrresponding to one supergate.]
+	Description []
 
-  Description []
-               
-  SideEffects []
+	SideEffects []
 
-  SeeAlso     []
+	SeeAlso     []
 
-***********************************************************************/
+**********************************************************************
+*/
 func Abc_NodeFromMapSuperChoice_rec(pNtkNew *Abc_Ntk_t, pSuper *Map_Super_t, pNodePis []*Abc_Obj_t, nNodePis int32) *Abc_Obj_t {
-    var pLib *Mio_Library_t  = (Mio_Library_t *)Abc_FrameReadLibGen();
-    var pRoot *Mio_Gate_t;
-    var ppFanins **Map_Super_t;
-    var pNodeNew, pNodeFanin *Abc_Obj_t;
-    var nFanins, Number, i int32;
+	pLib := mapGenlib()
+	var pRoot *Mio_Gate_t
+	var ppFanins []*Map_Super_t
+	var pNodeNew, pNodeFanin *Abc_Obj_t
+	var nFanins, Number, i int32
 
-    // get the parameters of the supergate
-    pRoot = Map_SuperReadRoot(pSuper);
-    if pRoot == nil {
-        Number = Map_SuperReadNum(pSuper);
-        if Number < nNodePis {
-            return pNodePis[Number];
-        
-        } else {  
-//            assert( 0 );
-            /* It might happen that a super gate with 5 inputs is constructed that
-             * actually depends only on the first four variables; i.e the fifth is a
-             * don't care -- in that case we connect constant node for the fifth
-             * (since the cut only has 4 variables). An interesting question is what
-             * if the first variable (and not the fifth one is the redundant one;
-             * can that happen?) */
-            return Abc_NtkCreateNodeConst0(pNtkNew);
-        }
-    }
-    pRoot = Mio_LibraryReadGateByName( pLib, Mio_GateReadName(pRoot), nil );
+	// get the parameters of the supergate
+	pRoot = mapper.Map_SuperReadRoot(pSuper)
+	if pRoot == nil {
+		Number = mapper.Map_SuperReadNum(pSuper)
+		if Number < nNodePis {
+			return pNodePis[Number]
 
-    // get information about the fanins of the supergate
-    nFanins  = Map_SuperReadFaninNum( pSuper );
-    ppFanins = Map_SuperReadFanins( pSuper );
-    // create a new node with these fanins
-    pNodeNew = Abc_NtkCreateNode( pNtkNew );
-    for  i = 0; i < nFanins; i++  {
-        pNodeFanin = Abc_NodeFromMapSuperChoice_rec( pNtkNew, ppFanins[i], pNodePis, nNodePis );
-        Abc_ObjAddFanin( pNodeNew, pNodeFanin );
-    }
-    pNodeNew.pData = Abc_SopRegister( (Mem_Flex_t *)pNtkNew.pManFunc, Mio_GateReadSop(pRoot) );
-    return pNodeNew;
+		} else {
+			//            assert( 0 );
+			/* It might happen that a super gate with 5 inputs is constructed that
+			 * actually depends only on the first four variables; i.e the fifth is a
+			 * don't care -- in that case we connect constant node for the fifth
+			 * (since the cut only has 4 variables). An interesting question is what
+			 * if the first variable (and not the fifth one is the redundant one;
+			 * can that happen?) */
+			return baseabc.Abc_NtkCreateNodeConst0(pNtkNew)
+		}
+	}
+	pRoot = mio.Mio_LibraryReadGateByName(pLib, mio.Mio_GateReadName(pRoot), nil)
+
+	// get information about the fanins of the supergate
+	nFanins = mapper.Map_SuperReadFaninNum(pSuper)
+	ppFanins = mapper.Map_SuperReadFanins(pSuper)
+	// create a new node with these fanins
+	pNodeNew = baseabc.Abc_NtkCreateNode(pNtkNew)
+	for i = 0; i < nFanins; i++ {
+		pNodeFanin = Abc_NodeFromMapSuperChoice_rec(pNtkNew, ppFanins[i], pNodePis, nNodePis)
+		baseabc.Abc_ObjAddFanin(pNodeNew, pNodeFanin)
+	}
+	pNodeNew.Data = baseabc.Abc_SopRegister(nil, mio.Mio_GateReadSop(pRoot))
+	return pNodeNew
 }
 
-/**Function*************************************************************
+/*
+*Function*************************************************************
 
-  Synopsis    [Returns the twin node if it exists.]
+	Synopsis    [Returns the twin node if it exists.]
 
-  Description []
-               
-  SideEffects []
+	Description []
 
-  SeeAlso     []
+	SideEffects []
 
-***********************************************************************/
+	SeeAlso     []
+
+**********************************************************************
+*/
 func Abc_NtkFetchTwinNode(pNode *Abc_Obj_t) *Abc_Obj_t {
-    var pNode2 *Abc_Obj_t;
-    var pGate *Mio_Gate_t  = (Mio_Gate_t *)pNode.pData;
-    assert(Abc_NtkHasMapping(pNode.pNtk), "Abc_NtkHasMapping(pNode.pNtk)");
-    if pGate == nil || Mio_GateReadTwin(pGate) == nil {
-        return nil; }
-    // assuming the twin node is following next
-    if int32(Abc_ObjId(pNode)) == Abc_NtkObjNumMax(pNode.pNtk) - 1 {
-        return nil; }
-    pNode2 = Abc_NtkObj( pNode.pNtk, Abc_ObjId(pNode) + 1 );
-    if pNode2 == nil || !Abc_ObjIsNode(pNode2) || Abc_ObjFaninNum(pNode) != Abc_ObjFaninNum(pNode2) {
-        return nil; }
-    if Mio_GateReadTwin(pGate) != (Mio_Gate_t *)pNode2.pData {
-        return nil; }
-    return pNode2;
+	var pNode2 *Abc_Obj_t
+	pGate, _ := pNode.Data.(*Mio_Gate_t)
+	assert(baseabc.Abc_NtkHasMapping(pNode.Network()) != 0, "baseabc.Abc_NtkHasMapping(pNode.Network())")
+	if pGate == nil || mio.Mio_GateReadTwin(pGate) == nil {
+		return nil
+	}
+	// assuming the twin node is following next
+	if int32(baseabc.Abc_ObjId(pNode)) == baseabc.Abc_NtkObjNumMax(pNode.Network())-1 {
+		return nil
+	}
+	pNode2 = baseabc.Abc_NtkObj(pNode.Network(), baseabc.Abc_ObjId(pNode)+1)
+	if pNode2 == nil || baseabc.Abc_ObjIsNode(pNode2) == 0 || baseabc.Abc_ObjFaninNum(pNode) != baseabc.Abc_ObjFaninNum(pNode2) {
+		return nil
+	}
+	pGate2, _ := pNode2.Data.(*Mio_Gate_t)
+	if mio.Mio_GateReadTwin(pGate) != pGate2 {
+		return nil
+	}
+	return pNode2
 }
 
+/*
+*Function*************************************************************
 
-/**Function*************************************************************
+	Synopsis    [Dumps mapped network in the mini-mapped format.]
 
-  Synopsis    [Dumps mapped network in the mini-mapped format.]
+	Description []
 
-  Description []
-               
-  SideEffects []
+	SideEffects []
 
-  SeeAlso     []
+	SeeAlso     []
 
-***********************************************************************/
+**********************************************************************
+*/
 func Abc_NtkWriteMiniMapping(pNtk *Abc_Ntk_t) *Vec_Int_t {
-    var vNodes *Vec_Ptr_t;
-    var vMapping *Vec_Int_t;
-    var vGates *Vec_Str_t;
-    var pObj, pFanin *Abc_Obj_t;
-    var i int32;
-    var k int32;
-    var nNodes int32;
-    var nFanins int32;
-    var nExtra int32;
-    var pArray *int32;
-    assert(Abc_NtkHasMapping(pNtk), "Abc_NtkHasMapping(pNtk)");
-    // collect nodes in the DFS order
-    vNodes = Abc_NtkDfs( pNtk, 0 );
-    // assign unique numbers
-    nNodes = nFanins = 0;
-    // inlining of macro Abc_NtkForEachCi
-    for  i = 0; (i < Abc_NtkCiNum(pNtk)) && (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {
-        pObj.iTemp = nNodes++;
-    }
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vNodes)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {
-        pObj.iTemp = nNodes++, nFanins += Abc_ObjFaninNum(pObj);
-    }
-    // allocate attay to store mapping (4 counters + fanins for each node + PO drivers + gate names)
-    vMapping = Vec_IntAlloc( 4 + Abc_NtkNodeNum(pNtk) + nFanins + Abc_NtkCoNum(pNtk) + 10000 );
-    // write the numbers of CI/CO/Node/FF
-    Vec_IntPush( vMapping, Abc_NtkCiNum(pNtk) );
-    Vec_IntPush( vMapping, Abc_NtkCoNum(pNtk) );
-    Vec_IntPush( vMapping, Abc_NtkNodeNum(pNtk) );
-    Vec_IntPush( vMapping, Abc_NtkLatchNum(pNtk) );
-    // write the nodes
-    vGates = Vec_StrAlloc( 10000 );
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vNodes)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {
-        Vec_IntPush( vMapping, Abc_ObjFaninNum(pObj) );
-        // inlining of macro Abc_ObjForEachFanin
-        for  k = 0; (k < Abc_ObjFaninNum(pObj)) && (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {
-            Vec_IntPush( vMapping, pFanin.iTemp );
-        }
-        // remember this gate (to be added to the mapping later)
-        Vec_StrPrintStr( vGates, Mio_GateReadName((Mio_Gate_t *)pObj.pData) );
-        Vec_StrPush( vGates, '\0' );
-    }
-    // write the COs literals
-    // inlining of macro Abc_NtkForEachCo
-    for  i = 0; (i < Abc_NtkCoNum(pNtk)) && (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {
-        Vec_IntPush( vMapping, Abc_ObjFanin0(pObj).iTemp );
-    }
-    // finish off the array
-    nExtra = 4 - Vec_StrSize(vGates) % 4;
-    for  i = 0; i < nExtra; i++  {
-        Vec_StrPush( vGates, '\0' );
-    }
-    // add gates to the array
-    assert(Vec_StrSize(vGates) % 4 == 0, "Vec_StrSize(vGates) % 4 == 0");
-    nExtra = Vec_StrSize(vGates) / 4;
-    pArray = (int *)Vec_StrArray(vGates);
-    for  i = 0; i < nExtra; i++  {
-        Vec_IntPush( vMapping, pArray[i] );
-    }
-    // cleanup and return
-    Vec_PtrFree( vNodes );
-    Vec_StrFree( vGates );
-    return vMapping;
+	var vNodes []*Abc_Obj_t
+	var vMapping *Vec_Int_t
+	var vGates *Vec_Str_t
+	var pObj, pFanin *Abc_Obj_t
+	var i int32
+	var k int32
+	var nNodes int32
+	var nFanins int32
+	var nExtra int32
+	var pArray []int32
+	assert(baseabc.Abc_NtkHasMapping(pNtk) != 0, "baseabc.Abc_NtkHasMapping(pNtk)")
+	// collect nodes in the DFS order
+	vNodes = baseabc.Abc_NtkDfs(pNtk, 0)
+	// assign unique numbers
+	nNodes, nFanins = 0, 0
+	// inlining of macro Abc_NtkForEachCi
+	for i = int32(0); i < Abc_NtkCiNum(pNtk); i++ {
+		pObj = baseabc.Abc_NtkCi(pNtk, i)
+		pObj.Temp = nNodes
+		nNodes++
+	}
+	// inlining of macro Vec_PtrForEachEntry
+	for i = 0; i < len(vNodes); i++ {
+		pObj = vNodes[i]
+		pObj.Temp = nNodes
+		nNodes++
+		nFanins += baseabc.Abc_ObjFaninNum(pObj)
+	}
+	// allocate attay to store mapping (4 counters + fanins for each node + PO drivers + gate names)
+	vMapping = Vec_IntAlloc(4 + int(baseabc.Abc_NtkNodeNum(pNtk)+nFanins+Abc_NtkCoNum(pNtk)) + 10000)
+	// write the numbers of CI/CO/Node/FF
+	Vec_IntPush(vMapping, Abc_NtkCiNum(pNtk))
+	Vec_IntPush(vMapping, Abc_NtkCoNum(pNtk))
+	Vec_IntPush(vMapping, baseabc.Abc_NtkNodeNum(pNtk))
+	Vec_IntPush(vMapping, Abc_NtkLatchNum(pNtk))
+	// write the nodes
+	vGates = Vec_StrAlloc(10000)
+	// inlining of macro Vec_PtrForEachEntry
+	for i = 0; i < len(vNodes); i++ {
+		pObj = vNodes[i]
+		Vec_IntPush(vMapping, baseabc.Abc_ObjFaninNum(pObj))
+		// inlining of macro Abc_ObjForEachFanin
+		for k = int32(0); k < baseabc.Abc_ObjFaninNum(pObj); k++ {
+			pFanin = baseabc.Abc_ObjFanin(pObj, k)
+			Vec_IntPush(vMapping, pFanin.Temp)
+		}
+		// remember this gate (to be added to the mapping later)
+		gate, _ := pObj.Data.(*Mio_Gate_t)
+		Vec_StrPrintStr(vGates, mio.Mio_GateReadName(gate))
+		Vec_StrPush(vGates, 0)
+	}
+	// write the COs literals
+	// inlining of macro Abc_NtkForEachCo
+	for i = int32(0); i < Abc_NtkCoNum(pNtk); i++ {
+		pObj = baseabc.Abc_NtkCo(pNtk, i)
+		Vec_IntPush(vMapping, baseabc.Abc_ObjFanin0(pObj).Temp)
+	}
+	// finish off the array
+	nExtra = int32(4 - Vec_StrSize(vGates)%4)
+	for i = 0; i < nExtra; i++ {
+		Vec_StrPush(vGates, 0)
+	}
+	// add gates to the array
+	assert(Vec_StrSize(vGates)%4 == 0, "Vec_StrSize(vGates) % 4 == 0")
+	nExtra = int32(Vec_StrSize(vGates) / 4)
+	gateBytes := Vec_StrArray(vGates)
+	for i = int32(0); i < nExtra; i++ {
+		j := int(i * 4)
+		packed := int32(binary.NativeEndian.Uint32(gateBytes[j : j+4]))
+		Vec_IntPush(vMapping, packed)
+	}
+	// cleanup and return
+	Vec_StrFree(vGates)
+	return vMapping
 }
 
-/**Function*************************************************************
+/*
+*Function*************************************************************
 
-  Synopsis    [Prints mapped network represented in mini-mapped format.]
+	Synopsis    [Prints mapped network represented in mini-mapped format.]
 
-  Description []
-               
-  SideEffects []
+	Description []
 
-  SeeAlso     []
+	SideEffects []
 
-***********************************************************************/
-func Abc_NtkPrintMiniMapping(pArray *int32) {
-    var nCis, nCos, nNodes, nFlops int32;
-    var i int32;
-    var k int32;
-    var nLeaves int32;
-    var Pos int32 = 4;
-    var pBuffer, pName string;
-    nCis = pArray[0];
-    nCos = pArray[1];
-    nNodes = pArray[2];
-    nFlops = pArray[3];
-    fmt.Printf("Mapped network has %d CIs, %d COs, %d gates, and %d flops.\n", nCis, nCos, nNodes, nFlops);
-    fmt.Printf("The first %d object IDs (from 0 to %d) are reserved for the CIs.\n", nCis, nCis - 1);
-    for  i = 0; i < nNodes; i++  {
-        fmt.Printf("Node %d has fanins {", nCis + i);
-        nLeaves = pArray[Pos]; Pos++;
-        for  k = 0; k < nLeaves; k++  {
-            fmt.Printf(" %d", pArray[Pos++]);
-        }
-        fmt.Printf(" }\n");
-    }
-    for  i = 0; i < nCos; i++  {
-        fmt.Printf("CO %d is driven by node %d\n", i, pArray[Pos++]);
-    }
-    pBuffer = (char *)(pArray + Pos);
-    for  i = 0; i < nNodes; i++  {
-        pName = pBuffer;
-        pBuffer += len(pName) + 1;
-        fmt.Printf("Node %d has gate \"%s\"\n", nCis + i, pName);
-    }
+	SeeAlso     []
+
+**********************************************************************
+*/
+func Abc_NtkPrintMiniMapping(pArray []int32) {
+	var nCis, nCos, nNodes, nFlops int32
+	var i int32
+	var k int32
+	var nLeaves int32
+	var Pos int32 = 4
+	var pBuffer, pName string
+	nCis = pArray[0]
+	nCos = pArray[1]
+	nNodes = pArray[2]
+	nFlops = pArray[3]
+	fmt.Printf("Mapped network has %d CIs, %d COs, %d gates, and %d flops.\n", nCis, nCos, nNodes, nFlops)
+	fmt.Printf("The first %d object IDs (from 0 to %d) are reserved for the CIs.\n", nCis, nCis-1)
+	for i = int32(0); i < nNodes; i++ {
+		fmt.Printf("Node %d has fanins {", nCis+i)
+		nLeaves = pArray[Pos]
+		Pos++
+		for k = int32(0); k < nLeaves; k++ {
+			fmt.Printf(" %d", pArray[Pos])
+			Pos++
+		}
+		fmt.Printf(" }\n")
+	}
+	for i = int32(0); i < nCos; i++ {
+		fmt.Printf("CO %d is driven by node %d\n", i, pArray[Pos])
+		Pos++
+	}
+	raw := make([]byte, 0, (len(pArray)-int(Pos))*4)
+	for _, word := range pArray[Pos:] {
+		var bytes [4]byte
+		binary.NativeEndian.PutUint32(bytes[:], uint32(word))
+		raw = append(raw, bytes[:]...)
+	}
+	pBuffer = string(raw)
+	for i = int32(0); i < nNodes; i++ {
+		nul := strings.IndexByte(pBuffer, 0)
+		if nul < 0 {
+			nul = len(pBuffer)
+		}
+		pName = pBuffer[:nul]
+		if nul < len(pBuffer) {
+			pBuffer = pBuffer[nul+1:]
+		} else {
+			pBuffer = ""
+		}
+		fmt.Printf("Node %d has gate \"%s\"\n", nCis+i, pName)
+	}
 }
 
-/**Function*************************************************************
+/*
+*Function*************************************************************
 
-  Synopsis    [This procedure outputs an array representing mini-mapped network.]
+	Synopsis    [This procedure outputs an array representing mini-mapped network.]
 
-  Description []
-               
-  SideEffects []
+	Description []
 
-  SeeAlso     []
+	SideEffects []
 
-***********************************************************************/
-func Abc_NtkOutputMiniMapping(pAbc *Abc_Frame_t) *int32 {
-    //Abc_Frame_t * pAbc = (Abc_Frame_t *)pAbc0;
-    var pNtk *Abc_Ntk_t;
-    var vMapping *Vec_Int_t;
-    var pArray *int32;
-    if pAbc == nil {
-        fmt.Printf("ABC framework is not initialized by calling Abc_Start()\n"); }
-    pNtk = Abc_FrameReadNtk( pAbc );
-    if pNtk == nil {
-        fmt.Printf("Current network in ABC framework is not defined.\n"); }
-    if !Abc_NtkHasMapping(pNtk) {
-        fmt.Printf("Current network in ABC framework is not mapped.\n"); }
-    // derive mini-mapping
-    vMapping = Abc_NtkWriteMiniMapping( pNtk );
-    pArray = Vec_IntArray( vMapping );
-    vMapping = nil;
-    // print mini-mapping (optional)
-//    Abc_NtkPrintMiniMapping( pArray );
-    // return the array representation of mini-mapping
-    return pArray;
+	SeeAlso     []
+
+**********************************************************************
+*/
+func Abc_NtkOutputMiniMapping(pAbc *Abc_Frame_t) []int32 {
+	//Abc_Frame_t * pAbc = (Abc_Frame_t *)pAbc0;
+	var pNtk *Abc_Ntk_t
+	var vMapping *Vec_Int_t
+	var pArray []int32
+	if pAbc == nil {
+		fmt.Printf("ABC framework is not initialized by calling Abc_Start()\n")
+	}
+	pNtk = Abc_FrameReadNtk(pAbc)
+	if pNtk == nil {
+		fmt.Printf("Current network in ABC framework is not defined.\n")
+	}
+	if baseabc.Abc_NtkHasMapping(pNtk) == 0 {
+		fmt.Printf("Current network in ABC framework is not mapped.\n")
+	}
+	// derive mini-mapping
+	vMapping = Abc_NtkWriteMiniMapping(pNtk)
+	pArray = Vec_IntArray(vMapping)
+	vMapping = nil
+	// print mini-mapping (optional)
+	//    Abc_NtkPrintMiniMapping( pArray );
+	// return the array representation of mini-mapping
+	return pArray
 }
 
-/**Function*************************************************************
+/*
+*Function*************************************************************
 
-  Synopsis    [Test for mini-mapped format.]
+	Synopsis    [Test for mini-mapped format.]
 
-  Description []
-               
-  SideEffects []
+	Description []
 
-  SeeAlso     []
+	SideEffects []
 
-***********************************************************************/
+	SeeAlso     []
+
+**********************************************************************
+*/
 func Abc_NtkTestMiniMapping(p *Abc_Ntk_t) {
-    var vMapping *Vec_Int_t;
-    vMapping = Abc_NtkWriteMiniMapping( p );
-    Abc_NtkPrintMiniMapping( Vec_IntArray(vMapping) );
-    fmt.Printf("Array has size %d ints.\n", Vec_IntSize(vMapping));
-    Vec_IntFree( vMapping );
+	var vMapping *Vec_Int_t
+	vMapping = Abc_NtkWriteMiniMapping(p)
+	Abc_NtkPrintMiniMapping(Vec_IntArray(vMapping))
+	fmt.Printf("Array has size %d ints.\n", Vec_IntSize(vMapping))
+	Vec_IntFree(vMapping)
 }
 
-/**Function*************************************************************
+/*
+*Function*************************************************************
 
-  Synopsis    [These APIs set arrival/required times of CIs/COs.]
+	Synopsis    [These APIs set arrival/required times of CIs/COs.]
 
-  Description []
-               
-  SideEffects []
+	Description []
 
-  SeeAlso     []
+	SideEffects []
 
-***********************************************************************/
+	SeeAlso     []
+
+**********************************************************************
+*/
 func Abc_NtkSetCiArrivalTime(pAbc *Abc_Frame_t, iCi int32, Rise float32, Fall float32) {
-    //Abc_Frame_t * pAbc = (Abc_Frame_t *)pAbc0;
-    var pNtk *Abc_Ntk_t;
-    var pNode *Abc_Obj_t;
-    if pAbc == nil {
-        fmt.Printf("ABC framework is not initialized by calling Abc_Start()\n");
-        return;
-    }
-    pNtk = Abc_FrameReadNtk( pAbc );
-    if pNtk == nil {
-        fmt.Printf("Current network in ABC framework is not defined.\n");
-        return;
-    }
-    if iCi < 0 || iCi >= Abc_NtkCiNum(pNtk) {
-        fmt.Printf("CI index is not valid.\n");
-        return;
-    }
-    pNode = Abc_NtkCi( pNtk, iCi );
-    Abc_NtkTimeSetArrival( pNtk, Abc_ObjId(pNode), Rise, Fall );
+	//Abc_Frame_t * pAbc = (Abc_Frame_t *)pAbc0;
+	var pNtk *Abc_Ntk_t
+	var pNode *Abc_Obj_t
+	if pAbc == nil {
+		fmt.Printf("ABC framework is not initialized by calling Abc_Start()\n")
+		return
+	}
+	pNtk = Abc_FrameReadNtk(pAbc)
+	if pNtk == nil {
+		fmt.Printf("Current network in ABC framework is not defined.\n")
+		return
+	}
+	if iCi < 0 || iCi >= Abc_NtkCiNum(pNtk) {
+		fmt.Printf("CI index is not valid.\n")
+		return
+	}
+	pNode = baseabc.Abc_NtkCi(pNtk, iCi)
+	Abc_NtkTimeSetArrival(pNtk, baseabc.Abc_ObjId(pNode), Rise, Fall)
 }
 func Abc_NtkSetCoRequiredTime(pAbc *Abc_Frame_t, iCo int32, Rise float32, Fall float32) {
-    //Abc_Frame_t * pAbc = (Abc_Frame_t *)pAbc0;
-    var pNtk *Abc_Ntk_t;
-    var pNode *Abc_Obj_t;
-    if ( pAbc == nil )\
-    {
-        fmt.Printf("ABC framework is not initialized by calling Abc_Start()\n");
-        return;
-    }
-    pNtk = Abc_FrameReadNtk( pAbc );
-    if pNtk == nil {
-        fmt.Printf("Current network in ABC framework is not defined.\n");
-        return;
-    }
-    if iCo < 0 || iCo >= Abc_NtkCoNum(pNtk) {
-        fmt.Printf("CO index is not valid.\n");
-        return;
-    }
-    pNode = Abc_NtkCo( pNtk, iCo );
-    Abc_NtkTimeSetRequired( pNtk, Abc_ObjId(pNode), Rise, Fall );
+	//Abc_Frame_t * pAbc = (Abc_Frame_t *)pAbc0;
+	var pNtk *Abc_Ntk_t
+	var pNode *Abc_Obj_t
+	if pAbc == nil {
+		fmt.Printf("ABC framework is not initialized by calling Abc_Start()\n")
+		return
+	}
+	pNtk = Abc_FrameReadNtk(pAbc)
+	if pNtk == nil {
+		fmt.Printf("Current network in ABC framework is not defined.\n")
+		return
+	}
+	if iCo < 0 || iCo >= Abc_NtkCoNum(pNtk) {
+		fmt.Printf("CO index is not valid.\n")
+		return
+	}
+	pNode = baseabc.Abc_NtkCo(pNtk, iCo)
+	Abc_NtkTimeSetRequired(pNtk, baseabc.Abc_ObjId(pNode), Rise, Fall)
 }
 
-/**Function*************************************************************
+/*
+*Function*************************************************************
 
-  Synopsis    [This APIs set AND gate delay.]
+	Synopsis    [This APIs set AND gate delay.]
 
-  Description []
-               
-  SideEffects []
+	Description []
 
-  SeeAlso     []
+	SideEffects []
 
-***********************************************************************/
+	SeeAlso     []
+
+**********************************************************************
+*/
 func Abc_NtkSetAndGateDelay(pAbc *Abc_Frame_t, Delay float32) {
-    //Abc_Frame_t * pAbc = (Abc_Frame_t *)pAbc0;
-    var pNtk *Abc_Ntk_t;
-    if pAbc == nil {
-        fmt.Printf("ABC framework is not initialized by calling Abc_Start()\n");
-        return;
-    }
-    pNtk = Abc_FrameReadNtk( pAbc );
-    if pNtk == nil {
-        fmt.Printf("Current network in ABC framework is not defined.\n");
-        return;
-    }
-    pNtk.AndGateDelay = Delay;
+	//Abc_Frame_t * pAbc = (Abc_Frame_t *)pAbc0;
+	var pNtk *Abc_Ntk_t
+	if pAbc == nil {
+		fmt.Printf("ABC framework is not initialized by calling Abc_Start()\n")
+		return
+	}
+	pNtk = Abc_FrameReadNtk(pAbc)
+	if pNtk == nil {
+		fmt.Printf("Current network in ABC framework is not defined.\n")
+		return
+	}
+	pNtk.AndGateDelay = float64(Delay)
 }
 
 ////////////////////////////////////////////////////////////////////////
 ///                       END OF FILE                                ///
 ////////////////////////////////////////////////////////////////////////
 
-
 //ABC_NAMESPACE_IMPL_END
-

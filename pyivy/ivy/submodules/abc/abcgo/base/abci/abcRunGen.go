@@ -11,7 +11,7 @@ package abci
   Synopsis    [Interface to experimental procedures.]
 
   Author      [Alan Mishchenko]
-  
+
   Affiliation [UC Berkeley]
 
   Date        [Ver. 1.0. Started - June 20, 2005.]
@@ -33,24 +33,27 @@ package abci
 ///                     FUNCTION DEFINITIONS                         ///
 ////////////////////////////////////////////////////////////////////////
 
-/**Function*************************************************************
+/*
+*Function*************************************************************
 
-  Synopsis    []
+	Synopsis    []
 
-  Description []
-               
-  SideEffects []
+	Description []
 
-  SeeAlso     []
+	SideEffects []
 
-***********************************************************************/
+	SeeAlso     []
+
+**********************************************************************
+*/
 func Acb_NtkRunGen(pFileNames []string, fVerbose int32) {
+	// The corresponding C routine is an intentionally empty experimental stub.
+	// Keep this as a no-op: the command wrapper still validates options and
+	// forwards its two filenames, but this routine has no network or file effects.
 }
 
 ////////////////////////////////////////////////////////////////////////
 ///                       END OF FILE                                ///
 ////////////////////////////////////////////////////////////////////////
 
-
 //ABC_NAMESPACE_IMPL_END
-

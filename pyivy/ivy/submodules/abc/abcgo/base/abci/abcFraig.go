@@ -2,847 +2,496 @@ package abci
 
 import (
 	"fmt"
-	"os"
-	"strings"
+	"github.com/glycerine/abcgo/base/abc"
+	abcmain "github.com/glycerine/abcgo/base/main"
+	"github.com/glycerine/abcgo/misc/vec"
+	"github.com/glycerine/abcgo/proof/fraig"
 )
 
-/**CFile****************************************************************
+type Fraig_Man_t = fraig.Fraig_Man_t
+type Fraig_Node_t = fraig.Fraig_Node_t
+type Fraig_Params_t = fraig.Fraig_Params_t
 
-  FileName    [abcFraig.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Network and node package.]
-
-  Synopsis    [Procedures interfacing with the FRAIG package.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: abcFraig.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "base/abc/abc.h"
-//#include "proof/fraig/fraig.h"
-//#include "base/main/main.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-// extern Abc_Ntk_t *    Abc_NtkFromFraig( Fraig_Man_t * pMan, Abc_Ntk_t * pNtk );
-
-// static Abc_Ntk_t *    Abc_NtkFromFraig2( Fraig_Man_t * pMan, Abc_Ntk_t * pNtk );
-
-// static Abc_Obj_t *    Abc_NodeFromFraig_rec( Abc_Ntk_t * pNtkNew, Fraig_Node_t * pNodeFraig );
-
-// static void           Abc_NtkFromFraig2_rec( Abc_Ntk_t * pNtkNew, Abc_Obj_t * pNode, Vec_Ptr_t * vNodeReprs );
-
-// extern Fraig_Node_t * Abc_NtkToFraigExdc( Fraig_Man_t * pMan, Abc_Ntk_t * pNtkMain, Abc_Ntk_t * pNtkExdc );
-
-// static void           Abc_NtkFraigRemapUsingExdc( Fraig_Man_t * pMan, Abc_Ntk_t * pNtk );
-
-
-// static int            Abc_NtkFraigTrustCheck( Abc_Ntk_t * pNtk );
-
-// static void           Abc_NtkFraigTrustOne( Abc_Ntk_t * pNtk, Abc_Ntk_t * pNtkNew );
-
-// static Abc_Obj_t *    Abc_NodeFraigTrust( Abc_Ntk_t * pNtkNew, Abc_Obj_t * pNode );
-
- 
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Interfaces the network with the FRAIG package.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkFraig(pNtk *Abc_Ntk_t, pParams any, fAllNodes int32, fExdc int32) *Abc_Ntk_t {
-    var pPars *Fraig_Params_t  = (Fraig_Params_t *)pParams;
-    var pNtkNew *Abc_Ntk_t;
-    var pMan *Fraig_Man_t; 
-    // check if EXDC is present
-    if (fExdc != 0) && pNtk.pExdc == nil {
-        fExdc = 0;
-fmt.Printf("Warning: Networks has no EXDC.\n"); }
-    // perform fraiging
-    pMan = (Fraig_Man_t *)Abc_NtkToFraig( pNtk, pParams, fAllNodes, fExdc ); 
-    // add algebraic choices
-//    if ( pPars->fChoicing )
-//        Fraig_ManAddChoices( pMan, 0, 6 );
-    // prove the miter if asked to
-    if pPars.fTryProve {
-        Fraig_ManProveMiter( pMan ); }
-    // reconstruct FRAIG in the new network
-    if fExdc != 0 { 
-        pNtkNew = Abc_NtkFromFraig2( pMan, pNtk );
-    } else {
-        pNtkNew = Abc_NtkFromFraig( pMan, pNtk ); }
-    Fraig_ManFree( pMan );
-    if pNtk.pExdc {
-        pNtkNew.pExdc = Abc_NtkDup( pNtk.pExdc ); }
-    // make sure that everything is okay
-    if !Abc_NtkCheck( pNtkNew ) {
-        fmt.Printf("Abc_NtkFraig: The network check has failed.\n");
-        Abc_NtkDelete( pNtkNew );
-        return nil;
-    }
-    return pNtkNew;
+// Abc_NtkFraig runs the CUDD-era ABC interface over a strashed network.
+func Abc_NtkFraig(network *Abc_Ntk_t, params any, allNodes, useExdc int32) *Abc_Ntk_t {
+	p, ok := params.(*Fraig_Params_t)
+	if !ok || p == nil {
+		panic("Abc_NtkFraig requires *Fraig_Params_t")
+	}
+	if useExdc != 0 && network.Exdc == nil {
+		fmt.Println("Warning: Networks has no EXDC.")
+		useExdc = 0
+	}
+	manager := Abc_NtkToFraig(network, p, allNodes, useExdc).(*Fraig_Man_t)
+	if p.FTryProve != 0 {
+		fraig.Fraig_ManProveMiter(manager)
+	}
+	var result *Abc_Ntk_t
+	if useExdc != 0 {
+		result = Abc_NtkFromFraig2(manager, network)
+	} else {
+		result = Abc_NtkFromFraig(manager, network)
+	}
+	fraig.Fraig_ManFree(manager)
+	if network.Exdc != nil && result != nil {
+		result.Exdc = abc.Abc_NtkDup(network.Exdc)
+	}
+	if result == nil || abc.Abc_NtkCheck(result) == 0 {
+		fmt.Println("Abc_NtkFraig: The network check has failed.")
+		if result != nil {
+			abc.Abc_NtkDelete(result)
+		}
+		return nil
+	}
+	return result
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Transforms the strashed network into FRAIG.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkToFraig(pNtk *Abc_Ntk_t, pParams any, fAllNodes int32, fExdc int32) any {
-    var fInternal int32  = ((Fraig_Params_t *)pParams).fInternal;
-    var pMan *Fraig_Man_t;
-    var pProgress *ProgressBar  = nil;
-    var vNodes *Vec_Ptr_t;
-    var pNode *Abc_Obj_t;
-    var i int32;
-
-    assert(Abc_NtkIsStrash(pNtk), "Abc_NtkIsStrash(pNtk)");
-
-    // create the FRAIG manager
-    pMan = Fraig_ManCreate( (Fraig_Params_t *)pParams );
-
-    // map the constant node
-    Abc_NtkCleanCopy( pNtk );
-    Abc_AigConst1(pNtk).pCopy = (Abc_Obj_t *)Fraig_ManReadConst1(pMan);
-    // create PIs and remember them in the old nodes
-    // inlining of macro Abc_NtkForEachCi
-    for  i = 0; (i < Abc_NtkCiNum(pNtk)) && (((pNode) = Abc_NtkCi(pNtk, i)), 1); i++  {
-        pNode.pCopy = (Abc_Obj_t *)Fraig_ManReadIthVar(pMan, i);
-    }
- 
-    // perform strashing
-    vNodes = Abc_AigDfs( pNtk, fAllNodes, 0 );
-    if !(fInternal != 0) {
-        pProgress = Extra_ProgressBarStart( os.Stdout, vNodes.nSize ); }
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vNodes)) && (((pNode) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {
-        if Abc_ObjFaninNum(pNode) == 0 {
-            continue; }
-        if pProgress != nil { 
-            Extra_ProgressBarUpdate( pProgress, i, nil ); }
-        pNode.pCopy = (Abc_Obj_t *)Fraig_NodeAnd( pMan, 
-                // inlining of macro Fraig_NotCond
-                ((Fraig_Node_t *)((ABC_PTRUINT_T)(Abc_ObjFanin0(pNode).pCopy) ^ (int32(Abc_ObjFaninC0(pNode))))),
-                // inlining of macro Fraig_NotCond
-                ((Fraig_Node_t *)((ABC_PTRUINT_T)(Abc_ObjFanin1(pNode).pCopy) ^ (int32(Abc_ObjFaninC1(pNode))))) );
-    }
-    if pProgress != nil {
-        Extra_ProgressBarStop( pProgress ); }
-    Vec_PtrFree( vNodes );
-
-    // use EXDC to change the mapping of nodes into FRAIG nodes
-    if fExdc != 0 {
-        Abc_NtkFraigRemapUsingExdc( pMan, pNtk ); }
-
-    // set the primary outputs
-    // inlining of macro Abc_NtkForEachCo
-    for  i = 0; (i < Abc_NtkCoNum(pNtk)) && (((pNode) = Abc_NtkCo(pNtk, i)), 1); i++  {
-        Fraig_ManSetPo( pMan, (Fraig_Node_t *)Abc_ObjNotCond( Abc_ObjFanin0(pNode).pCopy, Abc_ObjFaninC0(pNode) ) );
-    }
-    return pMan;
+// Abc_NtkToFraig translates each AIG edge without discarding fanin polarity.
+func Abc_NtkToFraig(network *Abc_Ntk_t, params any, allNodes, useExdc int32) any {
+	if abc.Abc_NtkIsStrash(network) == 0 {
+		panic("Abc_NtkToFraig requires a strashed network")
+	}
+	p, ok := params.(*Fraig_Params_t)
+	if !ok {
+		panic("Abc_NtkToFraig requires *Fraig_Params_t")
+	}
+	manager := fraig.Fraig_ManCreate(p)
+	mapping := make(map[*Abc_Obj_t]*Fraig_Node_t)
+	for _, node := range abc.Abc_NtkNodes(network) {
+		node.CopyData = nil
+	}
+	mapping[abc.Abc_AigConst1(network).Object] = fraig.Fraig_ManReadConst1(manager)
+	for i, ci := range network.Inputs() {
+		mapping[ci] = fraig.Fraig_ManReadIthVar(manager, int32(i))
+	}
+	for _, node := range abc.Abc_AigDfs(network, allNodes, 0) {
+		if abc.Abc_AigNodeIsAnd(node) == 0 {
+			continue
+		}
+		f := node.Fanins()
+		a, b := mapping[f[0].Object], mapping[f[1].Object]
+		if a == nil || b == nil {
+			panic("AIG traversal encountered an unmapped fanin")
+		}
+		mapping[node] = fraig.Fraig_NodeAnd(manager, fraig.Fraig_NotCond(a, f[0].Complement), fraig.Fraig_NotCond(b, f[1].Complement))
+		node.CopyData = mapping[node]
+	}
+	if useExdc != 0 {
+		Abc_NtkFraigRemapUsingExdc(manager, network, mapping)
+	}
+	for _, co := range network.Outputs() {
+		f := co.Fanins()[0]
+		mapped := mapping[f.Object]
+		if mapped == nil {
+			panic("unmapped AIG output")
+		}
+		fraig.Fraig_ManSetPo(manager, fraig.Fraig_NotCond(mapped, f.Complement))
+	}
+	return manager
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Derives EXDC node for the given network.]
-
-  Description [Assumes that EXDCs of all POs are the same.
-  Returns the EXDC of the first PO.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkToFraigExdc(pMan *Fraig_Man_t, pNtkMain *Abc_Ntk_t, pNtkExdc *Abc_Ntk_t) *Fraig_Node_t {
-    var pNtkStrash *Abc_Ntk_t;
-    var pObj *Abc_Obj_t;
-    var gResult *Fraig_Node_t;
-    var ppNames *string;
-    var i, k int32;
-    // strash the EXDC network
-    pNtkStrash = Abc_NtkStrash( pNtkExdc, 0, 0, 0 );
-    Abc_NtkCleanCopy( pNtkStrash );
-    Abc_AigConst1(pNtkStrash).pCopy = (Abc_Obj_t *)Fraig_ManReadConst1(pMan);
-    // set the mapping of the PI nodes
-    ppNames = Abc_NtkCollectCioNames( pNtkMain, 0 );
-    // inlining of macro Abc_NtkForEachCi
-    for  i = 0; (i < Abc_NtkCiNum(pNtkStrash)) && (((pObj) = Abc_NtkCi(pNtkStrash, i)), 1); i++  {
-        for  k = 0; k < Abc_NtkCiNum(pNtkMain); k++  {
-            if int32(strings.Compare(Abc_ObjName(pObj), ppNames[k])) == 0 {
-                pObj.pCopy = (Abc_Obj_t *)Fraig_ManReadIthVar(pMan, k);
-                break;
-            }
-        }
-        assert(pObj.pCopy != nil, "pObj.pCopy != nil");
-    }
-    ppNames = nil;
-    // build FRAIG for each node
-    // inlining of macro Abc_AigForEachAnd
-    for  i = 0; (i < Vec_PtrSize((pNtkStrash).vObjs)) && (((pObj) = Abc_NtkObj(pNtkStrash, i)), 1); i++  {           if (pObj) == nil || !Abc_AigNodeIsAnd(pObj) {} else {
-        pObj.pCopy = (Abc_Obj_t *)Fraig_NodeAnd( pMan, 
-                // inlining of macro Fraig_NotCond
-                ((Fraig_Node_t *)((ABC_PTRUINT_T)(Abc_ObjFanin0(pObj).pCopy) ^ (int32(Abc_ObjFaninC0(pObj))))),
-                // inlining of macro Fraig_NotCond
-                ((Fraig_Node_t *)((ABC_PTRUINT_T)(Abc_ObjFanin1(pObj).pCopy) ^ (int32(Abc_ObjFaninC1(pObj))))) ); }
-    }
-    // get the EXDC to be returned
-    pObj = Abc_NtkPo( pNtkStrash, 0 );
-    // inlining of macro Fraig_NotCond
-    gResult = ((Fraig_Node_t *)((ABC_PTRUINT_T)(Abc_ObjFanin0(pObj).pCopy) ^ (int32(Abc_ObjFaninC0(pObj)))));
-    Abc_NtkDelete( pNtkStrash );
-    return gResult;
+// Abc_NtkToFraigExdc returns the first EXDC output, matching the source contract.
+func Abc_NtkToFraigExdc(manager *Fraig_Man_t, main, exdc *Abc_Ntk_t) *Fraig_Node_t {
+	strashed := abc.Abc_NtkStrash(exdc, 0, 0, 0)
+	defer abc.Abc_NtkDelete(strashed)
+	byName := make(map[string]int32)
+	for i, ci := range main.Inputs() {
+		byName[ci.Name()] = int32(i)
+	}
+	mapping := map[*Abc_Obj_t]*Fraig_Node_t{abc.Abc_AigConst1(strashed).Object: fraig.Fraig_ManReadConst1(manager)}
+	for _, ci := range strashed.Inputs() {
+		i, ok := byName[ci.Name()]
+		if !ok {
+			panic("EXDC input does not match a main-network CI: " + ci.Name())
+		}
+		mapping[ci] = fraig.Fraig_ManReadIthVar(manager, i)
+	}
+	for _, node := range abc.Abc_AigDfs(strashed, 1, 0) {
+		if abc.Abc_AigNodeIsAnd(node) == 0 {
+			continue
+		}
+		f := node.Fanins()
+		mapping[node] = fraig.Fraig_NodeAnd(manager, fraig.Fraig_NotCond(mapping[f[0].Object], f[0].Complement), fraig.Fraig_NotCond(mapping[f[1].Object], f[1].Complement))
+	}
+	co := strashed.Outputs()[0].Fanins()[0]
+	return fraig.Fraig_NotCond(mapping[co.Object], co.Complement)
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Changes mapping of the old nodes into FRAIG nodes using EXDC.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkFraigRemapUsingExdc(pMan *Fraig_Man_t, pNtk *Abc_Ntk_t) {
-    var gNodeNew, gNodeExdc *Fraig_Node_t;
-    var tTable *stmm_table;
-    var gen *stmm_generator;
-    var pNode, pNodeBest *Abc_Obj_t;
-    var pClass *Abc_Obj_t;
-    var ppSlot **Abc_Obj_t;
-    var vNexts *Vec_Ptr_t;
-    var i int32;
-
-    // get the global don't-cares
-    assert(pNtk.pExdc, "pNtk.pExdc");
-    gNodeExdc = Abc_NtkToFraigExdc( pMan, pNtk, pNtk.pExdc );
-
-    // save the next pointers
-    vNexts = Vec_PtrStart( Abc_NtkObjNumMax(pNtk) );
-    // inlining of macro Abc_NtkForEachNode
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {
-        Vec_PtrWriteEntry( vNexts, pNode.Id, pNode.pNext ); }
-    }
-
-    // find the classes of AIG nodes which have FRAIG nodes assigned
-    Abc_NtkCleanNext( pNtk );
-    tTable = stmm_init_table(stmm_ptrcmp,stmm_ptrhash);
-    // inlining of macro Abc_NtkForEachNode
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else
-        if pNode.pCopy {
-            // inlining of macro Fraig_Not
-            gNodeNew = Fraig_NodeAnd( pMan, (Fraig_Node_t *)pNode.pCopy, ((Fraig_Node_t *)((ABC_PTRUINT_T)(gNodeExdc) ^ 01))  );
-            // inlining of macro Fraig_Regular
-            if !stmm_find_or_add( tTable, (char *)((Fraig_Node_t *)((ABC_PTRUINT_T)(gNodeNew) & ~01)) , (char ***)&ppSlot ) {
-                *ppSlot = nil; }
-            pNode.pNext = *ppSlot;
-            *ppSlot = pNode;
-        }
-    }
-
-    // for reach non-trival class, find the node with minimum level, and replace other nodes by it
-    Abc_AigSetNodePhases( pNtk );
-    // inlining of macro stmm_foreach_item
-    for gen=stmm_init_gen(tTable); stmm_gen(gen,(char **)&gNodeNew,(char **)&pClass) || (stmm_free_gen(gen),0); {
-        if pClass.pNext == nil {
-            continue; }
-        // find the node with minimum level
-        pNodeBest = pClass;
-        for  pNode = pClass.pNext; (pNode != nil); pNode = pNode.pNext  {
-            if pNodeBest.Level > pNode.Level {
-                 pNodeBest = pNode; }
-        }
-        // remap the class nodes
-        for  pNode = pClass; (pNode != nil); pNode = pNode.pNext  {
-            pNode.pCopy = Abc_ObjNotCond( pNodeBest.pCopy, pNode.fPhase ^ pNodeBest.fPhase );
-        }
-    }
-    stmm_free_table( tTable );
-
-    // restore the next pointers
-    Abc_NtkCleanNext( pNtk );
-    // inlining of macro Abc_NtkForEachNode
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {
-        pNode.pNext = (Abc_Obj_t *)Vec_PtrEntry( vNexts, pNode.Id ); }
-    }
-    Vec_PtrFree( vNexts );
+// Abc_NtkFraigRemapUsingExdc groups nodes by their function under the global don't-care.
+func Abc_NtkFraigRemapUsingExdc(manager *Fraig_Man_t, network *Abc_Ntk_t, mapping map[*Abc_Obj_t]*Fraig_Node_t) {
+	if network.Exdc == nil {
+		return
+	}
+	dc := Abc_NtkToFraigExdc(manager, network, network.Exdc)
+	classes := make(map[*Fraig_Node_t][]*Abc_Obj_t)
+	for _, node := range abc.Abc_NtkNodes(network) {
+		if n := mapping[node]; n != nil {
+			key := fraig.Fraig_Regular(fraig.Fraig_NodeAnd(manager, n, fraig.Fraig_Not(dc)))
+			classes[key] = append(classes[key], node)
+		}
+	}
+	abc.Abc_AigSetNodePhases(network)
+	for _, members := range classes {
+		if len(members) < 2 {
+			continue
+		}
+		best := members[0]
+		for _, node := range members[1:] {
+			if node.Level < best.Level {
+				best = node
+			}
+		}
+		for _, node := range members {
+			mapping[node] = abcFraigNotCond(mapping[best], node.Phase != best.Phase)
+			node.CopyData = mapping[node]
+		}
+	}
 }
 
-/**Function*************************************************************
+func abcFraigNotCond(n *Fraig_Node_t, neg bool) *Fraig_Node_t { return fraig.Fraig_NotCond(n, neg) }
 
-  Synopsis    [Transforms FRAIG into strashed network with choices.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkFromFraig(pMan *Fraig_Man_t, pNtk *Abc_Ntk_t) *Abc_Ntk_t {
-    var pProgress *ProgressBar;
-    var pNtkNew *Abc_Ntk_t;
-    var pNode, pNodeNew *Abc_Obj_t;
-    var i int32;
-    // create the new network
-    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_STRASH, ABC_FUNC_AIG );
-    // make the mapper point to the new network
-    // inlining of macro Abc_NtkForEachCi
-    for  i = 0; (i < Abc_NtkCiNum(pNtk)) && (((pNode) = Abc_NtkCi(pNtk, i)), 1); i++  {
-        Fraig_NodeSetData1( Fraig_ManReadIthVar(pMan, i), (Fraig_Node_t *)pNode.pCopy );
-    }
-    // set the constant node
-    Fraig_NodeSetData1( Fraig_ManReadConst1(pMan), (Fraig_Node_t *)Abc_AigConst1(pNtkNew) );
-    // process the nodes in topological order
-    pProgress = Extra_ProgressBarStart( os.Stdout, Abc_NtkCoNum(pNtk) );
-    // inlining of macro Abc_NtkForEachCo
-    for  i = 0; (i < Abc_NtkCoNum(pNtk)) && (((pNode) = Abc_NtkCo(pNtk, i)), 1); i++  {
-        Extra_ProgressBarUpdate( pProgress, i, nil );
-        pNodeNew = Abc_NodeFromFraig_rec( pNtkNew, Fraig_ManReadOutputs(pMan)[i] );
-        Abc_ObjAddFanin( pNode.pCopy, pNodeNew );
-    }
-    Extra_ProgressBarStop( pProgress );
-    Abc_NtkReassignIds( pNtkNew );
-    return pNtkNew;
+func Abc_NtkFromFraig(manager *Fraig_Man_t, network *Abc_Ntk_t) *Abc_Ntk_t {
+	result := abc.Abc_NtkStartFrom(network, abc.ABC_NTK_STRASH, abc.ABC_FUNC_AIG)
+	aig, ok := result.FunctionManager.(*abc.Abc_Aig_t)
+	if !ok {
+		panic("strashed network has no AIG manager")
+	}
+	memo := make(map[*Fraig_Node_t]abc.Edge)
+	memo[fraig.Fraig_ManReadConst1(manager)] = abc.Abc_AigConst1(result)
+	fraig.Fraig_NodeSetData1Copy(fraig.Fraig_ManReadConst1(manager), abc.Abc_AigConst1(result))
+	for i, ci := range network.Inputs() {
+		copy := abc.Abc_ObjCopyEdge(ci)
+		memo[fraig.Fraig_ManReadIthVar(manager, int32(i))] = copy
+		fraig.Fraig_NodeSetData1Copy(fraig.Fraig_ManReadIthVar(manager, int32(i)), copy)
+	}
+	for i := range network.Outputs() {
+		edge := abcFraigBuildAIG(manager, fraig.Fraig_ManReadOutputs(manager)[i], aig, memo)
+		if err := result.Outputs()[i].Network().AddFanin(result.Outputs()[i], edge); err != nil {
+			panic(err)
+		}
+	}
+	fraig.Fraig_NodeSetData1Copy(fraig.Fraig_ManReadConst1(manager), abc.Abc_AigConst1(result))
+	abc.Abc_NtkReassignIds(result)
+	abcFraigClearNodeScratch(network)
+	return result
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Transforms into AIG one node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NodeFromFraig_rec(pNtkNew *Abc_Ntk_t, pNodeFraig *Fraig_Node_t) *Abc_Obj_t {
-    var pRes, pRes0, pRes1, pResMin, pResCur *Abc_Obj_t;
-    // inlining of macro Fraig_Regular
-    Fraig_Node_t * pNodeTemp, * pNodeFraigR = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNodeFraig) & ~01)) ;
-    var ppTail *any;
-    // check if the node was already considered
-    if pRes = (Abc_Obj_t *)Fraig_NodeReadData1(pNodeFraigR) {
-        // inlining of macro Fraig_IsComplement
-        return Abc_ObjNotCond( pRes, ((int32(((ABC_PTRUINT_T) (pNodeFraig) & 01)))) ); }
-    // solve the children
-    pRes0 = Abc_NodeFromFraig_rec( pNtkNew, Fraig_NodeReadOne(pNodeFraigR) );
-    pRes1 = Abc_NodeFromFraig_rec( pNtkNew, Fraig_NodeReadTwo(pNodeFraigR) );
-    // derive the new node
-    pRes = Abc_AigAnd( (Abc_Aig_t *)pNtkNew.pManFunc, pRes0, pRes1 );
-    pRes.fPhase = Fraig_NodeReadSimInv( pNodeFraigR );
-    // if the node has an equivalence class, find its representative
-    if Fraig_NodeReadRepr(pNodeFraigR) == nil && Fraig_NodeReadNextE(pNodeFraigR) != nil {
-        // go through the FRAIG nodes belonging to this equivalence class
-        // and find the representative node (the node with the smallest level)
-        pResMin = pRes;
-        for  pNodeTemp = Fraig_NodeReadNextE(pNodeFraigR); pNodeTemp; pNodeTemp = Fraig_NodeReadNextE(pNodeTemp)  {
-            assert(Fraig_NodeReadData1(pNodeTemp) == nil, "Fraig_NodeReadData1(pNodeTemp) == nil");
-            pResCur = Abc_NodeFromFraig_rec( pNtkNew, pNodeTemp );
-            if pResMin.Level > pResCur.Level {
-                pResMin = pResCur; }
-        }
-        // link the nodes in such a way that representative goes first
-        ppTail = &pResMin.pData;
-        if pRes != pResMin {
-            *ppTail = pRes;
-            ppTail = &pRes.pData;
-        }
-        for  pNodeTemp = Fraig_NodeReadNextE(pNodeFraigR); pNodeTemp; pNodeTemp = Fraig_NodeReadNextE(pNodeTemp)  {
-            pResCur = (Abc_Obj_t *)Fraig_NodeReadData1(pNodeTemp);
-            assert((pResCur != nil), "pResCur");
-            if pResMin == pResCur {
-                continue; }
-            *ppTail = pResCur;
-            ppTail = &pResCur.pData;
-        }
-        assert(*ppTail == nil, "*ppTail == nil");
-
-        // update the phase of the node
-        pRes = Abc_ObjNotCond( pResMin, (pRes.fPhase ^ pResMin.fPhase) );
-    }
-    Fraig_NodeSetData1( pNodeFraigR, (Fraig_Node_t *)pRes );
-    // inlining of macro Fraig_IsComplement
-    return Abc_ObjNotCond( pRes, ((int32(((ABC_PTRUINT_T) (pNodeFraig) & 01)))) );
+func abcFraigBuildAIG(manager *Fraig_Man_t, node *Fraig_Node_t, aig *abc.Abc_Aig_t, memo map[*Fraig_Node_t]abc.Edge) abc.Edge {
+	regular := fraig.Fraig_Regular(node)
+	if edge, ok := memo[regular]; ok {
+		return abc.Abc_ObjNotCond(edge, boolInt32(fraig.Fraig_IsComplement(node)))
+	}
+	if fraig.Fraig_NodeIsVar(regular) != 0 {
+		panic("FRAIG input is absent from the source network")
+	}
+	a := abcFraigBuildAIG(manager, fraig.Fraig_NodeReadOne(regular), aig, memo)
+	b := abcFraigBuildAIG(manager, fraig.Fraig_NodeReadTwo(regular), aig, memo)
+	edge := abc.Abc_AigAnd(aig, a, b)
+	edge.Object.Phase = fraig.Fraig_NodeReadSimInv(regular) != 0
+	memo[regular] = edge
+	fraig.Fraig_NodeSetData1Copy(regular, edge)
+	if fraig.Fraig_NodeReadRepr(regular) == nil {
+		var alternatives []abc.Edge
+		for next := fraig.Fraig_NodeReadNextE(regular); next != nil; next = fraig.Fraig_NodeReadNextE(next) {
+			alternatives = append(alternatives, abcFraigBuildAIG(manager, next, aig, memo))
+		}
+		best := edge
+		for _, alt := range alternatives {
+			if alt.Object.Level < best.Object.Level {
+				best = alt
+			}
+		}
+		tail := best.Object
+		choices := append([]abc.Edge{edge}, alternatives...)
+		for _, alt := range choices {
+			if alt.Object == best.Object {
+				continue
+			}
+			if tail.Choice == nil {
+				tail.Choice = alt.Object
+				tail = alt.Object
+			}
+		}
+		if best.Object != edge.Object {
+			representative := abc.Abc_ObjNotCond(best, boolInt32(edge.Object.Phase != best.Object.Phase))
+			memo[regular] = representative
+			fraig.Fraig_NodeSetData1Copy(regular, representative)
+		}
+	}
+	return abc.Abc_ObjNotCond(edge, boolInt32(fraig.Fraig_IsComplement(node)))
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Transforms FRAIG into strashed network without choices.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkFromFraig2(pMan *Fraig_Man_t, pNtk *Abc_Ntk_t) *Abc_Ntk_t {
-    var pProgress *ProgressBar;
-    var tTable *stmm_table;
-    var vNodeReprs *Vec_Ptr_t;
-    var pNtkNew *Abc_Ntk_t;
-    var pNode *Abc_Obj_t;
-    var pRepr *Abc_Obj_t;
-    var ppSlot **Abc_Obj_t;
-    var i int32;
-
-    // map the nodes into their lowest level representives
-    tTable = stmm_init_table(stmm_ptrcmp,stmm_ptrhash);
-    pNode = Abc_AigConst1(pNtk);
-    // inlining of macro Fraig_Regular
-    if !stmm_find_or_add( tTable, (char *)((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.pCopy) & ~01)) , (char ***)&ppSlot ) {
-        *ppSlot = pNode; }
-    // inlining of macro Abc_NtkForEachCi
-    for  i = 0; (i < Abc_NtkCiNum(pNtk)) && (((pNode) = Abc_NtkCi(pNtk, i)), 1); i++  {
-        // inlining of macro Fraig_Regular
-        if !stmm_find_or_add( tTable, (char *)((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.pCopy) & ~01)) , (char ***)&ppSlot ) {
-            *ppSlot = pNode; }
-    }
-    // inlining of macro Abc_NtkForEachNode
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else
-        if pNode.pCopy {
-            // inlining of macro Fraig_Regular
-            if !stmm_find_or_add( tTable, (char *)((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.pCopy) & ~01)) , (char ***)&ppSlot ) {
-                *ppSlot = pNode;
-            } else if (*ppSlot).Level > pNode.Level {
-                *ppSlot = pNode; }
-        }
-    }
-    // save representatives for each node
-    vNodeReprs = Vec_PtrStart( Abc_NtkObjNumMax(pNtk) );
-    // inlining of macro Abc_NtkForEachNode
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else
-        if pNode.pCopy {           
-            // inlining of macro Fraig_Regular
-            if !stmm_lookup( tTable, (char *)((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.pCopy) & ~01)) , (char **)&pRepr ) {
-                assert(false, "0"); }
-            if pNode != pRepr {
-                Vec_PtrWriteEntry( vNodeReprs, pNode.Id, pRepr ); }
-        }
-    }
-    stmm_free_table( tTable );
-
-    // create the new network
-    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_STRASH, ABC_FUNC_AIG );
-
-    // perform strashing
-    Abc_AigSetNodePhases( pNtk );
-    Abc_NtkIncrementTravId( pNtk );
-    pProgress = Extra_ProgressBarStart( os.Stdout, Abc_NtkCoNum(pNtk) );
-    // inlining of macro Abc_NtkForEachCo
-    for  i = 0; (i < Abc_NtkCoNum(pNtk)) && (((pNode) = Abc_NtkCo(pNtk, i)), 1); i++  {
-        Extra_ProgressBarUpdate( pProgress, i, nil );
-        Abc_NtkFromFraig2_rec( pNtkNew, Abc_ObjFanin0(pNode), vNodeReprs );
-    }
-    Extra_ProgressBarStop( pProgress );
-    Vec_PtrFree( vNodeReprs );
-
-    // finalize the network
-    Abc_NtkFinalize( pNtk, pNtkNew );
-    return pNtkNew;
+// The no-choice reconstruction preserves the source network's output functions
+// while using the FRAIG representative graph as the shared AIG.
+func Abc_NtkFromFraig2(manager *Fraig_Man_t, network *Abc_Ntk_t) *Abc_Ntk_t {
+	best := make(map[*Fraig_Node_t]*Abc_Obj_t)
+	for i, ci := range network.Inputs() {
+		best[fraig.Fraig_Regular(fraig.Fraig_ManReadIthVar(manager, int32(i)))] = ci
+	}
+	best[fraig.Fraig_Regular(fraig.Fraig_ManReadConst1(manager))] = abc.Abc_AigConst1(network).Object
+	for _, node := range abc.Abc_NtkNodes(network) {
+		if f, ok := node.CopyData.(*Fraig_Node_t); ok && f != nil {
+			k := fraig.Fraig_Regular(f)
+			if old := best[k]; old == nil || node.Level < old.Level {
+				best[k] = node
+			}
+		}
+	}
+	reprs := vec.Vec_PtrStart(int(abc.Abc_NtkObjNumMax(network)))
+	for _, node := range abc.Abc_NtkNodes(network) {
+		if f, ok := node.CopyData.(*Fraig_Node_t); ok && f != nil {
+			if r := best[fraig.Fraig_Regular(f)]; r != nil && r != node {
+				vec.Vec_PtrWriteEntry(reprs, node.ID, r)
+			}
+		}
+	}
+	result := abc.Abc_NtkStartFrom(network, abc.ABC_NTK_STRASH, abc.ABC_FUNC_AIG)
+	aig, ok := result.FunctionManager.(*abc.Abc_Aig_t)
+	if !ok {
+		panic("strashed network has no AIG manager")
+	}
+	for i, ci := range network.Inputs() {
+		ci.CopyEdge = abc.Abc_NtkCi(result, int32(i)).Signal()
+	}
+	for _, co := range network.Outputs() {
+		fan := co.Fanins()[0]
+		abcFraigFrom2Rec(network, fan.Object, reprs, aig, make(map[*Abc_Obj_t]bool))
+	}
+	vec.Vec_PtrFree(reprs)
+	abc.Abc_NtkFinalize(network, result)
+	abcFraigClearNodeScratch(network)
+	return result
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Transforms into AIG one node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkFromFraig2_rec(pNtkNew *Abc_Ntk_t, pNode *Abc_Obj_t, vNodeReprs *Vec_Ptr_t) {
-    var pRepr *Abc_Obj_t;
-    // skip the PIs and constants
-    if Abc_ObjFaninNum(pNode) < 2 {
-        return; }
-    // if this node is already visited, skip
-    if Abc_NodeIsTravIdCurrent( pNode ) {
-        return; }
-    // mark the node as visited
-    Abc_NodeSetTravIdCurrent( pNode );
-    assert(Abc_ObjIsNode( pNode ), "Abc_ObjIsNode( pNode )");
-    // get the node's representative
-    if pRepr = (Abc_Obj_t *)Vec_PtrEntry(vNodeReprs, pNode.Id) {
-        Abc_NtkFromFraig2_rec( pNtkNew, pRepr, vNodeReprs );
-        pNode.pCopy = Abc_ObjNotCond( pRepr.pCopy, pRepr.fPhase ^ pNode.fPhase );
-        return;
-    }
-    Abc_NtkFromFraig2_rec( pNtkNew, Abc_ObjFanin0(pNode), vNodeReprs );
-    Abc_NtkFromFraig2_rec( pNtkNew, Abc_ObjFanin1(pNode), vNodeReprs );
-    pNode.pCopy = Abc_AigAnd( (Abc_Aig_t *)pNtkNew.pManFunc, Abc_ObjChild0Copy(pNode), Abc_ObjChild1Copy(pNode) );
+func abcFraigClearNodeScratch(network *Abc_Ntk_t) {
+	for _, node := range abc.Abc_NtkNodes(network) {
+		node.CopyData = nil
+	}
+}
+func Abc_NodeFromFraig_rec(network *Abc_Ntk_t, node *Fraig_Node_t) abc.Edge {
+	return abcFraigNodeFromFraig(network, node)
+}
+func Abc_NtkFromFraig2_rec(network *Abc_Ntk_t, node *Abc_Obj_t, reprs *Vec_Ptr_t) {
+	aig, ok := network.FunctionManager.(*abc.Abc_Aig_t)
+	if !ok {
+		panic("strashed network has no AIG manager")
+	}
+	abcFraigFrom2Rec(network, node, reprs, aig, make(map[*Abc_Obj_t]bool))
 }
 
-
-
-/**Function*************************************************************
-
-  Synopsis    [Interfaces the network with the FRAIG package.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkFraigTrust(pNtk *Abc_Ntk_t) *Abc_Ntk_t {
-    var pNtkNew *Abc_Ntk_t;
-
-    if !Abc_NtkIsSopLogic(pNtk) {
-        fmt.Printf("Abc_NtkFraigTrust: Trust mode works for netlists and logic SOP networks.\n");
-        return nil;
-    }
-
-    if !(Abc_NtkFraigTrustCheck(pNtk) != 0) {
-        fmt.Printf("Abc_NtkFraigTrust: The network does not look like an AIG with choice nodes.\n");
-        return nil;
-    }
-    
-    // perform strashing
-    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_STRASH, ABC_FUNC_AIG );
-    Abc_NtkFraigTrustOne( pNtk, pNtkNew );
-    Abc_NtkFinalize( pNtk, pNtkNew );
-    Abc_NtkReassignIds( pNtkNew );
-
-    // print a warning about choice nodes
-    fmt.Printf("Warning: The resulting AIG contains %d choice nodes.\n", Abc_NtkGetChoiceNum( pNtkNew ));
-
-    // make sure that everything is okay
-    if !Abc_NtkCheck( pNtkNew ) {
-        fmt.Printf("Abc_NtkFraigTrust: The network check has failed.\n");
-        Abc_NtkDelete( pNtkNew );
-        return nil;
-    }
-    return pNtkNew;
+func abcFraigNodeFromFraig(network *Abc_Ntk_t, node *Fraig_Node_t) abc.Edge {
+	r := fraig.Fraig_Regular(node)
+	if value := fraig.Fraig_NodeReadData1Copy(r); value != nil {
+		if edge, ok := value.(abc.Edge); ok {
+			return abc.Abc_ObjNotCond(edge, boolInt32(fraig.Fraig_IsComplement(node)))
+		}
+		if edge, ok := value.(*Abc_Obj_t); ok {
+			return abc.Abc_ObjNotCond(edge, boolInt32(fraig.Fraig_IsComplement(node)))
+		}
+	}
+	aig, ok := network.FunctionManager.(*abc.Abc_Aig_t)
+	if !ok {
+		panic("strashed network has no AIG manager")
+	}
+	a := abcFraigNodeFromFraig(network, fraig.Fraig_NodeReadOne(r))
+	b := abcFraigNodeFromFraig(network, fraig.Fraig_NodeReadTwo(r))
+	edge := abc.Abc_AigAnd(aig, a, b)
+	edge.Object.Phase = fraig.Fraig_NodeReadSimInv(r) != 0
+	fraig.Fraig_NodeSetData1Copy(r, edge)
+	return abc.Abc_ObjNotCond(edge, boolInt32(fraig.Fraig_IsComplement(node)))
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Checks whether the node can be processed in the trust mode.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkFraigTrustCheck(pNtk *Abc_Ntk_t) int32 {
-    var pNode *Abc_Obj_t;
-    var i, nFanins int32;
-    // inlining of macro Abc_NtkForEachNode
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {
-        nFanins = Abc_ObjFaninNum(pNode);
-        if nFanins < 2 {
-            continue; }
-        if nFanins == 2 && Abc_SopIsAndType((char *)pNode.pData) {
-            continue; }
-        if !Abc_SopIsOrType((char *)pNode.pData) {
-            return 0; }
-    }
-    }
-    return 1;
+func abcFraigFrom2Rec(_ *Abc_Ntk_t, node *Abc_Obj_t, reprs *Vec_Ptr_t, aig *abc.Abc_Aig_t, visited map[*Abc_Obj_t]bool) {
+	if node == nil || len(node.Fanins()) < 2 || visited[node] {
+		return
+	}
+	visited[node] = true
+	if r, ok := vec.Vec_PtrEntry(reprs, node.ID).(*Abc_Obj_t); ok && r != nil {
+		abcFraigFrom2Rec(nil, r, reprs, aig, visited)
+		node.CopyEdge = abc.Abc_ObjNotCond(r.CopyEdge, boolInt32(node.Phase != r.Phase))
+		return
+	}
+	f := node.Fanins()
+	for _, e := range f {
+		abcFraigFrom2Rec(nil, e.Object, reprs, aig, visited)
+	}
+	node.CopyEdge = abc.Abc_AigAnd(aig, abc.Abc_ObjNotCond(f[0].Object.CopyEdge, boolInt32(f[0].Complement)), abc.Abc_ObjNotCond(f[1].Object.CopyEdge, boolInt32(f[1].Complement)))
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Interfaces the network with the FRAIG package.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkFraigTrustOne(pNtk *Abc_Ntk_t, pNtkNew *Abc_Ntk_t) {
-    var pProgress *ProgressBar;
-    var vNodes *Vec_Ptr_t;
-    var pNode, pNodeNew, pObj *Abc_Obj_t;
-    var i int32;
-
-    // perform strashing
-    vNodes = Abc_NtkDfs( pNtk, 0 );
-    pProgress = Extra_ProgressBarStart( os.Stdout, vNodes.nSize );
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vNodes)) && (((pNode) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {
-        Extra_ProgressBarUpdate( pProgress, i, nil );
-        // get the node
-        assert(Abc_ObjIsNode(pNode), "Abc_ObjIsNode(pNode)");
-         // strash the node
-        pNodeNew = Abc_NodeFraigTrust( pNtkNew, pNode );
-        // get the old object
-        if Abc_NtkIsNetlist(pNtk) {
-            pObj = Abc_ObjFanout0( pNode ); // the fanout net 
-        } else { 
-            pObj = pNode; } // the node itself
-        // make sure the node is not yet strashed
-        assert(pObj.pCopy == nil, "pObj.pCopy == nil");
-        // mark the old object with the new AIG node
-        pObj.pCopy = pNodeNew;
-    }
-    Vec_PtrFree( vNodes );
-    Extra_ProgressBarStop( pProgress );
+func Abc_NtkFraigTrust(network *Abc_Ntk_t) *Abc_Ntk_t {
+	if abc.Abc_NtkIsSopLogic(network) == 0 || Abc_NtkFraigTrustCheck(network) == 0 {
+		return nil
+	}
+	result := abc.Abc_NtkStartFrom(network, abc.ABC_NTK_STRASH, abc.ABC_FUNC_AIG)
+	Abc_NtkFraigTrustOne(network, result)
+	abc.Abc_NtkFinalize(network, result)
+	abc.Abc_NtkReassignIds(result)
+	if abc.Abc_NtkCheck(result) == 0 {
+		abc.Abc_NtkDelete(result)
+		return nil
+	}
+	return result
+}
+func Abc_NtkFraigTrustCheck(network *Abc_Ntk_t) int32 {
+	for _, node := range abc.Abc_NtkNodes(network) {
+		n := len(node.Fanins())
+		if n < 2 {
+			continue
+		}
+		sop, _ := node.Data.(string)
+		if n == 2 && abc.Abc_SopIsAndType(sop) != 0 {
+			continue
+		}
+		if abc.Abc_SopIsOrType(sop) == 0 {
+			return 0
+		}
+	}
+	return 1
+}
+func Abc_NtkFraigTrustOne(network, result *Abc_Ntk_t) {
+	if _, ok := result.FunctionManager.(*abc.Abc_Aig_t); !ok {
+		panic("strashed network has no AIG manager")
+	}
+	for _, node := range abc.Abc_NtkDfs(network, 0) {
+		if abc.Abc_ObjIsNode(node) == 0 {
+			continue
+		}
+		edge := Abc_NodeFraigTrust(result, node)
+		old := node
+		if abc.Abc_NtkIsNetlist(network) != 0 && len(node.Fanouts()) != 0 {
+			old = node.Fanouts()[0]
+		}
+		old.CopyEdge = edge
+	}
+}
+func Abc_NodeFraigTrust(network *Abc_Ntk_t, node *Abc_Obj_t) abc.Edge {
+	aig, ok := network.FunctionManager.(*abc.Abc_Aig_t)
+	if !ok {
+		panic("strashed network has no AIG manager")
+	}
+	f := node.Fanins()
+	sop, _ := node.Data.(string)
+	n := len(f)
+	copyFanin := func(i int) abc.Edge {
+		return abc.Abc_ObjNotCond(abc.Abc_ObjCopyEdge(f[i].Object), boolInt32(f[i].Complement))
+	}
+	switch n {
+	case 0:
+		return abc.Abc_ObjNotCond(abc.Abc_AigConst1(network), abc.Abc_SopIsConst0(sop))
+	case 1:
+		return abc.Abc_ObjNotCond(copyFanin(0), abc.Abc_SopIsInv(sop))
+	case 2:
+		if abc.Abc_SopIsAndType(sop) != 0 {
+			return abc.Abc_AigAnd(aig, abc.Abc_ObjNotCond(copyFanin(0), 1-abc.Abc_SopGetIthCareLit(sop, 0)), abc.Abc_ObjNotCond(copyFanin(1), 1-abc.Abc_SopGetIthCareLit(sop, 1)))
+		}
+	}
+	if abc.Abc_SopIsOrType(sop) == 0 {
+		panic("unsupported SOP in trust reconstruction")
+	}
+	result := copyFanin(0)
+	phase := abc.Abc_SopGetIthCareLit(sop, 0)
+	tail := result.Object
+	for i := 1; i < n; i++ {
+		lit := copyFanin(i)
+		if tail.Choice != nil {
+			panic("choice tail already linked")
+		}
+		tail.Choice = lit.Object
+		tail = lit.Object
+		if phase != abc.Abc_SopGetIthCareLit(sop, int32(i)) {
+			lit.Object.Phase = true
+		}
+	}
+	return result
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Transforms one node into a FRAIG in the trust mode.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NodeFraigTrust(pNtkNew *Abc_Ntk_t, pNode *Abc_Obj_t) *Abc_Obj_t {
-    var pSum, pFanin *Abc_Obj_t;
-    var ppTail *any;
-    var i, nFanins, fCompl int32;
-
-    assert(Abc_ObjIsNode(pNode), "Abc_ObjIsNode(pNode)");
-    // get the number of node's fanins
-    nFanins = Abc_ObjFaninNum( pNode );
-    assert(nFanins == Abc_SopGetVarNum((char *)pNode.pData), "nFanins == Abc_SopGetVarNum((char *)pNode.pData)");
-    // check if it is a constant
-    if nFanins == 0 {
-        return Abc_ObjNotCond( Abc_AigConst1(pNtkNew), Abc_SopIsConst0((char *)pNode.pData) ); }
-    if nFanins == 1 {
-        return Abc_ObjNotCond( Abc_ObjFanin0(pNode).pCopy, Abc_SopIsInv((char *)pNode.pData) ); }
-    if nFanins == 2 && Abc_SopIsAndType((char *)pNode.pData) {
-        return Abc_AigAnd( (Abc_Aig_t *)pNtkNew.pManFunc, 
-            Abc_ObjNotCond( Abc_ObjFanin0(pNode).pCopy, !Abc_SopGetIthCareLit((char *)pNode.pData,0) ),
-            Abc_ObjNotCond( Abc_ObjFanin1(pNode).pCopy, !Abc_SopGetIthCareLit((char *)pNode.pData,1) )  ); }
-    assert(Abc_SopIsOrType((char *)pNode.pData), "Abc_SopIsOrType((char *)pNode.pData)");
-    fCompl = Abc_SopGetIthCareLit((char *)pNode.pData,0);
-    // get the root of the choice node (the first fanin)
-    pSum = Abc_ObjFanin0(pNode).pCopy;
-    // connect other fanins
-    ppTail = &pSum.pData;
-    // inlining of macro Abc_ObjForEachFanin
-    for  i = 0; (i < Abc_ObjFaninNum(pNode)) && (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {
-        if i == 0 {
-            continue; }
-        *ppTail = pFanin.pCopy;
-        ppTail = &pFanin.pCopy.pData;
-        // set the complemented bit of this cut
-        if fCompl ^ Abc_SopGetIthCareLit((char *)pNode.pData, i) {
-            pFanin.pCopy.fPhase = 1; }
-    }
-    assert(*ppTail == nil, "*ppTail == nil");
-    return pSum;
+func Abc_NtkFraigStore(network *Abc_Ntk_t) int32 {
+	strashed := abc.Abc_NtkStrash(network, 0, 0, 0)
+	if strashed == nil {
+		return 0
+	}
+	stored := abcmain.Abc_FrameReadStore()
+	if len(stored) != 0 {
+		first, ok := stored[0].(*Abc_Ntk_t)
+		if !ok {
+			Abc_NtkFraigStoreClean()
+		} else if abc.Abc_NodeCompareCiCo(strashed, first) == 0 && abc.Abc_NtkCompareSignals(strashed, first, 1, 1) == 0 {
+			fmt.Println("Trying to store the network with different primary inputs.")
+			fmt.Println("The previously stored networks are deleted and this one is added.")
+			Abc_NtkFraigStoreClean()
+		}
+	}
+	abcmain.Abc_FrameSetNtkStore(strashed)
+	return 1
 }
-
-
-
-
-/**Function*************************************************************
-
-  Synopsis    [Interfaces the network with the FRAIG package.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkFraigStore(pNtkAdd *Abc_Ntk_t) int32 {
-    var vStore *Vec_Ptr_t;
-    var pNtk *Abc_Ntk_t;
-    // create the network to be stored
-    pNtk = Abc_NtkStrash( pNtkAdd, 0, 0, 0 );
-    if pNtk == nil {
-        fmt.Printf("Abc_NtkFraigStore: Initial strashing has failed.\n");
-        return 0;
-    }
-    // get the network currently stored
-    vStore = Abc_FrameReadStore();
-    if Vec_PtrSize(vStore) > 0 {
-        // check that the networks have the same PIs
-        extern int Abc_NodeCompareCiCo( Abc_Ntk_t * pNtkOld, Abc_Ntk_t * pNtkNew );
-        if !Abc_NodeCompareCiCo(pNtk, (Abc_Ntk_t *)Vec_PtrEntry(vStore, 0)) {
-            // reorder PIs of pNtk2 according to pNtk1
-            if !Abc_NtkCompareSignals( pNtk, (Abc_Ntk_t *)Vec_PtrEntry(vStore, 0), 1, 1 ) {
-                fmt.Printf("Trying to store the network with different primary inputs.\n");
-                fmt.Printf("The previously stored networks are deleted and this one is added.\n");
-                Abc_NtkFraigStoreClean();
-            }
-        }
-    }
-    Vec_PtrPush( vStore, pNtk );
-//    printf( "The number of AIG nodes added to storage = %5d.\n", Abc_NtkNodeNum(pNtk) );
-    return 1;
+func Abc_NtkFraigRestore(randomPatterns, dynamicPatterns, backtrackLimit int32) *Abc_Ntk_t {
+	stored := abcmain.Abc_FrameReadStore()
+	if len(stored) == 0 {
+		fmt.Println("There are no network currently in storage.")
+		return nil
+	}
+	if len(stored) > 1 {
+		first := stored[0]
+		stored[0] = stored[len(stored)-1]
+		stored[len(stored)-1] = first
+		abcmain.Abc_FrameSetNtkStoreSize(0)
+		for _, n := range stored {
+			abcmain.Abc_FrameSetNtkStore(n)
+		}
+	}
+	network := stored[0].(*Abc_Ntk_t)
+	words := int32(32)
+	denominator := abc.Abc_NtkNodeNum(network) + abc.Abc_NtkCiNum(network)
+	if denominator > 0 {
+		words = min(words, int32((1<<27)/denominator))
+	}
+	p := &Fraig_Params_t{}
+	fraig.Fraig_ParamsSetDefault(p)
+	p.NPatsRand = choosePatternCount(randomPatterns, words*32)
+	p.NPatsDyna = choosePatternCount(dynamicPatterns, words*32)
+	p.NBTLimit = backtrackLimit
+	p.FFuncRed, p.FFeedBack, p.FDist1Pats, p.FDoSparse, p.FChoicing = 1, 1, 1, 1, 1
+	p.FTryProve, p.FInternal, p.FVerbose = 0, 1, 0
+	store := abcFraigStoreVec(stored)
+	result := Abc_NtkFraigPartitioned(store, p)
+	vec.Vec_PtrFree(store)
+	Abc_NtkFraigStoreClean()
+	return result
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Interfaces the network with the FRAIG package.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkFraigRestore(nPatsRand int32, nPatsDyna int32, nBTLimit int32) *Abc_Ntk_t {
-    extern Abc_Ntk_t * Abc_NtkFraigPartitioned( Vec_Ptr_t * vStore, void * pParams );
-    var Params Fraig_Params_t;
-    var vStore *Vec_Ptr_t;
-    var pNtk, pFraig *Abc_Ntk_t;
-    var nWords1, nWords2, nWordsMin int32;
-//    abctime clk = Abc_Clock();
-
-    // get the stored network
-    vStore = Abc_FrameReadStore();
-    if Vec_PtrSize(vStore) == 0 {
-        fmt.Printf("There are no network currently in storage.\n");
-        return nil;
-    }
-//    printf( "Currently stored %d networks will be fraiged.\n", Vec_PtrSize(vStore) );
-    pNtk = (Abc_Ntk_t *)Vec_PtrEntry( vStore, 0 );
-
-    // swap the first and last network
-    // this should lead to the primary choice being "better" because of synthesis
-    if Vec_PtrSize(vStore) > 1 {
-        pNtk = (Abc_Ntk_t *)Vec_PtrPop( vStore );
-        Vec_PtrPush( vStore, Vec_PtrEntry(vStore,0) );
-        Vec_PtrWriteEntry( vStore, 0, pNtk );
-    }
-
-    // to determine the number of simulation patterns
-    // use the following strategy
-    // at least 64 words (32 words random and 32 words dynamic)
-    // no more than 256M for one circuit (128M + 128M)
-    nWords1 = 32;
-    nWords2 = (1<<27) / (Abc_NtkNodeNum(pNtk) + Abc_NtkCiNum(pNtk));
-    nWordsMin = Abc_MinInt( nWords1, nWords2 );
-
-    // set parameters for fraiging
-    Fraig_ParamsSetDefault( &Params );
-    if nPatsRand != 0 {
-        Params.nPatsRand = nPatsRand;
-    } else {
-        Params.nPatsRand = nWordsMin * 32;
-    }    // the number of words of random simulation info
-    if nPatsDyna != 0 {
-        Params.nPatsDyna = nPatsDyna;
-    } else {
-        Params.nPatsDyna = nWordsMin * 32;
-    }    // the number of words of dynamic simulation info
-    Params.nBTLimit   = nBTLimit;          // the max number of backtracks to perform
-    Params.fFuncRed   =    1;              // performs only one level hashing
-    Params.fFeedBack  =    1;              // enables solver feedback
-    Params.fDist1Pats =    1;              // enables distance-1 patterns
-    Params.fDoSparse  =    1;              // performs equiv tests for sparse functions 
-    Params.fChoicing  =    1;              // enables recording structural choices
-    Params.fTryProve  =    0;              // tries to solve the final miter
-    Params.fInternal  =    1;              // does not show progress bar
-    Params.fVerbose   =    0;              // the verbosiness flag
-
-    // perform partitioned computation of structural choices
-    pFraig = Abc_NtkFraigPartitioned( vStore, &Params );
-    Abc_NtkFraigStoreClean();
-//ABC_PRT( "Total choicing time", Abc_Clock() - clk );
-    return pFraig;
+func choosePatternCount(value, fallback int32) int32 {
+	if value != 0 {
+		return value
+	}
+	return fallback
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Interfaces the network with the FRAIG package.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+func abcFraigStoreVec(values []any) *Vec_Ptr_t {
+	v := vec.Vec_PtrAlloc(len(values))
+	for _, x := range values {
+		vec.Vec_PtrPush(v, x)
+	}
+	return v
+}
 func Abc_NtkFraigStoreClean() {
-    var vStore *Vec_Ptr_t;
-    var pNtk *Abc_Ntk_t;
-    var i int32;
-    vStore = Abc_FrameReadStore();
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vStore)) && (((pNtk) = (Abc_Ntk_t *)Vec_PtrEntry(vStore, i)), 1); i++  {
-        Abc_NtkDelete( pNtk );
-    }
-    Vec_PtrClear( vStore );
+	for _, value := range abcmain.Abc_FrameReadStore() {
+		if n, ok := value.(*Abc_Ntk_t); ok && n != nil {
+			abc.Abc_NtkDelete(n)
+		}
+	}
+	abcmain.Abc_FrameSetNtkStoreSize(0)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Checks the correctness of stored networks.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkFraigStoreCheck(pFraig *Abc_Ntk_t) {
-    var pNode0, pNode1 *Abc_Obj_t;
-    var nPoOrig, nPoFinal, nStored int32; 
-    var i, k int32;
-    // check that the PO functions are correct
-    nPoFinal = Abc_NtkPoNum(pFraig);
-    nStored  = Abc_FrameReadStoreSize();
-    assert(nPoFinal % nStored == 0, "nPoFinal % nStored == 0");
-    nPoOrig  = nPoFinal / nStored;
-    for  i = 0; i < nPoOrig; i++  {
-        pNode0 = Abc_ObjFanin0( Abc_NtkPo(pFraig, i) ); 
-        for  k = 1; k < nStored; k++  {
-            pNode1 = Abc_ObjFanin0( Abc_NtkPo(pFraig, k*nPoOrig+i) ); 
-            if pNode0 != pNode1 {
-                fmt.Printf("Verification for PO #%d of network #%d has failed. The PO function is not used.\n", i+1, k+1); }
-        }
-    }
+func Abc_NtkFraigStoreCheck(network *Abc_Ntk_t) {
+	stored := len(abcmain.Abc_FrameReadStore())
+	poCount := int(abc.Abc_NtkPoNum(network))
+	if stored == 0 || poCount%stored != 0 {
+		return
+	}
+	per := poCount / stored
+	for i := 0; i < per; i++ {
+		first := abc.Abc_NtkPo(network, int32(i)).Fanins()[0].Object
+		for k := 1; k < stored; k++ {
+			if abc.Abc_NtkPo(network, int32(k*per+i)).Fanins()[0].Object != first {
+				fmt.Printf("Verification for PO #%d of network #%d has failed. The PO function is not used.\n", i+1, k+1)
+			}
+		}
+	}
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

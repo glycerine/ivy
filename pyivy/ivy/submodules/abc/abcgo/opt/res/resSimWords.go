@@ -20,3 +20,21 @@ func clearResBytes(words []uint32, start, end int32) {
 		setResByte(words, i, 0)
 	}
 }
+
+type resRandomStream interface{ next() uint32 }
+
+// Abc_InfoRandomBytes mirrors the source's byte construction; its caller owns
+// the random stream.
+func Abc_InfoRandomBytes(p []uint32, nWords int32, rng resRandomStream) {
+	for i := nWords - 1; i >= 0; i-- {
+		num := rng.next()
+		var word uint32
+		for bit := uint(0); bit < 4; bit++ {
+			word <<= 8
+			if num&(1<<bit) != 0 {
+				word |= 0xff
+			}
+		}
+		p[i] = word
+	}
+}

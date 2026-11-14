@@ -13,7 +13,7 @@ func Kit_DsdManAlloc(nVars, nNodes int32) *Kit_DsdMan_t {
 	if nVars < 0 || nVars > 16 || nNodes < 0 {
 		panic("kit: invalid DSD manager size")
 	}
-	p := &Kit_DsdMan_t{nVars: nVars, vTtElems: make([][]uint32, nVars), vTtNodes: make([][]uint32, nNodes)}
+	p := &Kit_DsdMan_t{nVars: nVars, vTtElems: make([][]uint32, nVars), vTtNodes: make([][]uint32, nNodes), dd: Cloud_Init(16, 14)}
 	for i := range p.vTtElems {
 		p.vTtElems[i] = make([]uint32, Kit_TruthWordNum(p.nVars))
 		Kit_TruthIthVar(p.vTtElems[i], nVars, int32(i))
@@ -25,9 +25,13 @@ func Kit_DsdManAlloc(nVars, nNodes int32) *Kit_DsdMan_t {
 }
 func Kit_DsdManFree(p *Kit_DsdMan_t) {
 	if p != nil {
+		Cloud_Quit(p.dd)
 		*p = Kit_DsdMan_t{}
 	}
 }
+
+// Kit_DsdCloud returns the Cloud manager owned by the DSD manager.
+func Kit_DsdCloud(p *Kit_DsdMan_t) *CloudManager { return p.dd }
 func Kit_DsdObjAlloc(ntk *Kit_DsdNtk_t, kind Kit_Dsd_t, nFans int32) *Kit_DsdObj_t {
 	if nFans < 0 || nFans > 16 || int(ntk.nVars)+len(ntk.pNodes) >= 32767 {
 		panic("kit: DSD object dimensions exceed literal representation")

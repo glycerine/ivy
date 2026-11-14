@@ -153,3 +153,12 @@ type Gia_Man_t struct {
 	vVarMap    Vec_Int_t  // used variables
 	pUData     *Gia_Dat_t
 }
+
+// Gia_ManBarBufs exposes the barrier-buffer map used by clients which build
+// and later consume barrier buffers on a manager.
+func Gia_ManBarBufs(p *Gia_Man_t) *Vec_Int_t {
+	if p.vBarBufs == nil {
+		p.vBarBufs = Vec_IntAlloc(0)
+	}
+	return p.vBarBufs
+}

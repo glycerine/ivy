@@ -1,742 +1,522 @@
 package abci
 
-/**CFile****************************************************************
+// LUT minimization routines translated from src/base/abci/abcLutmin.c.
+import (
+	"fmt"
+	"math/bits"
+	"sort"
+	"unsafe"
 
-  FileName    [abcLutmin.c]
+	"github.com/glycerine/abcgo/base/abc"
+	"github.com/glycerine/abcgo/bdd/cudd/core"
+	"github.com/glycerine/abcgo/bdd/extrab"
+)
 
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Network and node package.]
-
-  Synopsis    [Minimization of the number of LUTs.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: abcLutmin.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "base/abc/abc.h"
-
-#ifdef ABC_USE_CUDD
-#include "bdd/extrab/extraBdd.h"
-#endif
-
-//ABC_NAMESPACE_IMPL_START
-
-
-/* 
-    Implememented here is the algorithm for minimal-LUT decomposition
-    described in the paper: T. Sasao et al. "On the number of LUTs 
-    to implement logic functions", To appear in Proc. IWLS'09.
-*/
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-#ifdef ABC_USE_CUDD
-
-/**Function*************************************************************
-
-  Synopsis    [Check if a LUT can absort a fanin.]
-
-  Description [The fanins are (c, d0, d1).]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-// Abc_ObjCheckAbsorb is translated in lutmin_absorb.go.
-
-/**Function*************************************************************
-
-  Synopsis    [Check how many times a LUT can absorb a fanin.]
-
-  Description [The fanins are (c, d0, d1).]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-// Abc_NtkCheckAbsorb is translated in lutmin_absorb.go.
-
-/**Function*************************************************************
-
-  Synopsis    [Implements 2:1 MUX using one 3-LUT.]
-
-  Description [The fanins are (c, d0, d1).]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-Abc_Obj_t * Abc_NtkBddMux21( Abc_Ntk_t * pNtkNew, Abc_Obj_t * pFanins[] )
-{
-    DdManager * dd = (DdManager *)pNtkNew->pManFunc;
-    Abc_Obj_t * pNode;
-    DdNode * bSpin, * bCof0, * bCof1;
-    pNode = Abc_NtkCreateNode( pNtkNew );
-    Abc_ObjAddFanin( pNode, pFanins[0] );
-    Abc_ObjAddFanin( pNode, pFanins[1] );
-    Abc_ObjAddFanin( pNode, pFanins[2] );
-    bSpin = Cudd_bddIthVar(dd, 0);
-    bCof0 = Cudd_bddIthVar(dd, 1); 
-    bCof1 = Cudd_bddIthVar(dd, 2); 
-    pNode->pData = Cudd_bddIte( dd, bSpin, bCof1, bCof0 );  Cudd_Ref( (DdNode *)pNode->pData ); 
-    return pNode;
+func lutManager(n *abc.Network) *core.DdManager {
+	if n == nil {
+		return nil
+	}
+	dd, _ := n.FunctionManager.(*core.DdManager)
+	return dd
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Implements 4:1 MUX using one 6-LUT.]
-
-  Description [The fanins are (c0, c1, d00, d01, d10, d11).]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-Abc_Obj_t * Abc_NtkBddMux411( Abc_Ntk_t * pNtkNew, Abc_Obj_t * pFanins[] )
-{
-    DdManager * dd = (DdManager *)pNtkNew->pManFunc;
-    Abc_Obj_t * pNode;
-    DdNode * bSpin, * bCof0, * bCof1;
-    pNode = Abc_NtkCreateNode( pNtkNew );
-    Abc_ObjAddFanin( pNode, pFanins[0] );
-    Abc_ObjAddFanin( pNode, pFanins[1] );
-    Abc_ObjAddFanin( pNode, pFanins[2] );
-    Abc_ObjAddFanin( pNode, pFanins[3] );
-    Abc_ObjAddFanin( pNode, pFanins[4] );
-    Abc_ObjAddFanin( pNode, pFanins[5] );
-    bSpin = Cudd_bddIthVar(dd, 1);
-    bCof0 = Cudd_bddIte( dd, bSpin, Cudd_bddIthVar(dd, 3), Cudd_bddIthVar(dd, 2) ); Cudd_Ref( bCof0 );
-    bCof1 = Cudd_bddIte( dd, bSpin, Cudd_bddIthVar(dd, 5), Cudd_bddIthVar(dd, 4) ); Cudd_Ref( bCof1 );
-    bSpin = Cudd_bddIthVar(dd, 0);
-    pNode->pData = Cudd_bddIte( dd, bSpin, bCof1, bCof0 );  Cudd_Ref( (DdNode *)pNode->pData ); 
-    Cudd_RecursiveDeref( dd, bCof0 );
-    Cudd_RecursiveDeref( dd, bCof1 );
-    return pNode;
+func lutAddNode(n *abc.Network, fanins ...*abc.Object) *abc.Object {
+	obj := abc.Abc_NtkCreateNode(n)
+	for _, fanin := range fanins {
+		abc.Abc_ObjAddFanin(obj, fanin)
+	}
+	return obj
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Implementes 4:1 MUX using two 4-LUTs.]
-
-  Description [The fanins are (c0, c1, d00, d01, d10, d11).]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-Abc_Obj_t * Abc_NtkBddMux412( Abc_Ntk_t * pNtkNew, Abc_Obj_t * pFanins[] )
-{
-    DdManager * dd = (DdManager *)pNtkNew->pManFunc;
-    Abc_Obj_t * pNodeBot, * pNodeTop;
-    DdNode * bSpin, * bCof0, * bCof1;
-    // bottom node
-    pNodeBot = Abc_NtkCreateNode( pNtkNew );
-    Abc_ObjAddFanin( pNodeBot, pFanins[0] );
-    Abc_ObjAddFanin( pNodeBot, pFanins[1] );
-    Abc_ObjAddFanin( pNodeBot, pFanins[2] );
-    Abc_ObjAddFanin( pNodeBot, pFanins[3] );
-    bSpin = Cudd_bddIthVar(dd, 0);
-    bCof0 = Cudd_bddIte( dd, Cudd_bddIthVar(dd, 1), Cudd_bddIthVar(dd, 3), Cudd_bddIthVar(dd, 2) ); Cudd_Ref( bCof0 );
-    bCof1 = Cudd_bddIthVar(dd, 1);
-    pNodeBot->pData = Cudd_bddIte( dd, bSpin, bCof1, bCof0 );  Cudd_Ref( (DdNode *)pNodeBot->pData ); 
-    Cudd_RecursiveDeref( dd, bCof0 );
-    // top node
-    pNodeTop = Abc_NtkCreateNode( pNtkNew );
-    Abc_ObjAddFanin( pNodeTop, pFanins[0] );
-    Abc_ObjAddFanin( pNodeTop, pNodeBot   );
-    Abc_ObjAddFanin( pNodeTop, pFanins[4] );
-    Abc_ObjAddFanin( pNodeTop, pFanins[5] );
-    bSpin = Cudd_bddIthVar(dd, 0);
-    bCof0 = Cudd_bddIthVar(dd, 1);
-    bCof1 = Cudd_bddIte( dd, Cudd_bddIthVar(dd, 1), Cudd_bddIthVar(dd, 3), Cudd_bddIthVar(dd, 2) ); Cudd_Ref( bCof1 );
-    pNodeTop->pData = Cudd_bddIte( dd, bSpin, bCof1, bCof0 );  Cudd_Ref( (DdNode *)pNodeTop->pData ); 
-    Cudd_RecursiveDeref( dd, bCof1 );
-    return pNodeTop;
+// Abc_NtkBddMux21 implements c ? d1 : d0 with the three-variable LUT BDD.
+func Abc_NtkBddMux21(n *Abc_Ntk_t, fanins []*Abc_Obj_t) *Abc_Obj_t {
+	if n == nil || len(fanins) < 3 {
+		return nil
+	}
+	dd := lutManager(n)
+	if dd == nil {
+		return nil
+	}
+	obj := lutAddNode(n, fanins[0], fanins[1], fanins[2])
+	obj.Data = core.Cudd_bddIte(dd, core.Cudd_bddIthVar(dd, 0), core.Cudd_bddIthVar(dd, 2), core.Cudd_bddIthVar(dd, 1))
+	core.Cudd_Ref(obj.Data.(*core.DdNode))
+	return obj
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Implementes 4:1 MUX using two 4-LUTs.]
-
-  Description [The fanins are (c0, c1, d00, d01, d10, d11).]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-Abc_Obj_t * Abc_NtkBddMux412a( Abc_Ntk_t * pNtkNew, Abc_Obj_t * pFanins[] )
-{
-    DdManager * dd = (DdManager *)pNtkNew->pManFunc;
-    Abc_Obj_t * pNodeBot, * pNodeTop;
-    DdNode * bSpin, * bCof0, * bCof1;
-    // bottom node
-    pNodeBot = Abc_NtkCreateNode( pNtkNew );
-    Abc_ObjAddFanin( pNodeBot, pFanins[1] );
-    Abc_ObjAddFanin( pNodeBot, pFanins[2] );
-    Abc_ObjAddFanin( pNodeBot, pFanins[3] );
-    bSpin = Cudd_bddIthVar(dd, 0);
-    bCof0 = Cudd_bddIthVar(dd, 1);
-    bCof1 = Cudd_bddIthVar(dd, 2);
-    pNodeBot->pData = Cudd_bddIte( dd, bSpin, bCof1, bCof0 );  Cudd_Ref( (DdNode *)pNodeBot->pData ); 
-    // top node
-    pNodeTop = Abc_NtkCreateNode( pNtkNew );
-    Abc_ObjAddFanin( pNodeTop, pFanins[0] );
-    Abc_ObjAddFanin( pNodeTop, pFanins[1] );
-    Abc_ObjAddFanin( pNodeTop, pNodeBot   );
-    Abc_ObjAddFanin( pNodeTop, pFanins[4] );
-    Abc_ObjAddFanin( pNodeTop, pFanins[5] );
-    bSpin = Cudd_bddIthVar(dd, 0);
-    bCof0 = Cudd_bddIthVar(dd, 2);
-    bCof1 = Cudd_bddIte( dd, Cudd_bddIthVar(dd, 1), Cudd_bddIthVar(dd, 4), Cudd_bddIthVar(dd, 3) ); Cudd_Ref( bCof1 );
-    pNodeTop->pData = Cudd_bddIte( dd, bSpin, bCof1, bCof0 );  Cudd_Ref( (DdNode *)pNodeTop->pData ); 
-    Cudd_RecursiveDeref( dd, bCof1 );
-    return pNodeTop;
+// Abc_NtkBddMux411 implements the six-input mux in one 6-LUT.
+func Abc_NtkBddMux411(n *Abc_Ntk_t, fanins []*Abc_Obj_t) *Abc_Obj_t {
+	if n == nil || len(fanins) < 6 {
+		return nil
+	}
+	dd := lutManager(n)
+	if dd == nil {
+		return nil
+	}
+	obj := lutAddNode(n, fanins[:6]...)
+	s := core.Cudd_bddIthVar(dd, 1)
+	c0 := core.Cudd_bddIte(dd, s, core.Cudd_bddIthVar(dd, 3), core.Cudd_bddIthVar(dd, 2))
+	core.Cudd_Ref(c0)
+	c1 := core.Cudd_bddIte(dd, s, core.Cudd_bddIthVar(dd, 5), core.Cudd_bddIthVar(dd, 4))
+	core.Cudd_Ref(c1)
+	obj.Data = core.Cudd_bddIte(dd, core.Cudd_bddIthVar(dd, 0), c1, c0)
+	core.Cudd_Ref(obj.Data.(*core.DdNode))
+	core.Cudd_RecursiveDeref(dd, c0)
+	core.Cudd_RecursiveDeref(dd, c1)
+	return obj
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Implements 4:1 MUX using three 2:1 MUXes.]
-
-  Description [The fanins are (c0, c1, d00, d01, d10, d11).]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-Abc_Obj_t * Abc_NtkBddMux413( Abc_Ntk_t * pNtkNew, Abc_Obj_t * pFanins[] )
-{
-    Abc_Obj_t * pNodesBot[3], * pNodesTop[3];
-    // left bottom
-    pNodesBot[0] = pFanins[1];
-    pNodesBot[1] = pFanins[2];
-    pNodesBot[2] = pFanins[3];
-    pNodesTop[1] = Abc_NtkBddMux21( pNtkNew, pNodesBot );
-    // right bottom
-    pNodesBot[0] = pFanins[1];
-    pNodesBot[1] = pFanins[4];
-    pNodesBot[2] = pFanins[5];
-    pNodesTop[2] = Abc_NtkBddMux21( pNtkNew, pNodesBot );
-    // top node
-    pNodesTop[0] = pFanins[0];
-    return Abc_NtkBddMux21( pNtkNew, pNodesTop );
+// Abc_NtkBddMux412 implements the source's two-LUT decomposition.
+func Abc_NtkBddMux412(n *Abc_Ntk_t, f []*Abc_Obj_t) *Abc_Obj_t {
+	if n == nil || len(f) < 6 {
+		return nil
+	}
+	dd := lutManager(n)
+	if dd == nil {
+		return nil
+	}
+	bot := lutAddNode(n, f[0], f[1], f[2], f[3])
+	spin := core.Cudd_bddIthVar(dd, 0)
+	c0 := core.Cudd_bddIte(dd, core.Cudd_bddIthVar(dd, 1), core.Cudd_bddIthVar(dd, 3), core.Cudd_bddIthVar(dd, 2))
+	core.Cudd_Ref(c0)
+	bot.Data = core.Cudd_bddIte(dd, spin, core.Cudd_bddIthVar(dd, 1), c0)
+	core.Cudd_Ref(bot.Data.(*core.DdNode))
+	core.Cudd_RecursiveDeref(dd, c0)
+	top := lutAddNode(n, f[0], bot, f[4], f[5])
+	c1 := core.Cudd_bddIte(dd, core.Cudd_bddIthVar(dd, 1), core.Cudd_bddIthVar(dd, 3), core.Cudd_bddIthVar(dd, 2))
+	core.Cudd_Ref(c1)
+	top.Data = core.Cudd_bddIte(dd, spin, c1, core.Cudd_bddIthVar(dd, 1))
+	core.Cudd_Ref(top.Data.(*core.DdNode))
+	core.Cudd_RecursiveDeref(dd, c1)
+	return top
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Finds unique cofactors of the function on the given level.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-DdNode * Abc_NtkBddCofactors_rec( DdManager * dd, DdNode * bNode, int iCof, int iLevel, int nLevels )
-{
-    DdNode * bNode0, * bNode1;
-    if ( Cudd_IsConstant(bNode) || iLevel == nLevels )
-        return bNode;
-    if ( Cudd_ReadPerm( dd, Cudd_NodeReadIndex(bNode) ) > iLevel )
-    {
-        bNode0 = bNode;
-        bNode1 = bNode;
-    }
-    else if ( Cudd_IsComplement(bNode) )
-    {
-        bNode0 = Cudd_Not(cuddE(Cudd_Regular(bNode)));
-        bNode1 = Cudd_Not(cuddT(Cudd_Regular(bNode)));
-    }
-    else
-    {
-        bNode0 = cuddE(bNode);
-        bNode1 = cuddT(bNode);
-    }
-    if ( (iCof >> (nLevels-1-iLevel)) & 1 )
-        return Abc_NtkBddCofactors_rec( dd, bNode1, iCof, iLevel + 1, nLevels );
-    return Abc_NtkBddCofactors_rec( dd, bNode0, iCof, iLevel + 1, nLevels );
+// Abc_NtkBddMux412a preserves the source's distinct five-input selector layout.
+func Abc_NtkBddMux412a(n *Abc_Ntk_t, f []*Abc_Obj_t) *Abc_Obj_t {
+	if n == nil || len(f) < 6 {
+		return nil
+	}
+	dd := lutManager(n)
+	if dd == nil {
+		return nil
+	}
+	bot := lutAddNode(n, f[1], f[2], f[3])
+	bot.Data = core.Cudd_bddIte(dd, core.Cudd_bddIthVar(dd, 0), core.Cudd_bddIthVar(dd, 2), core.Cudd_bddIthVar(dd, 1))
+	core.Cudd_Ref(bot.Data.(*core.DdNode))
+	top := lutAddNode(n, f[0], f[1], bot, f[4], f[5])
+	c1 := core.Cudd_bddIte(dd, core.Cudd_bddIthVar(dd, 1), core.Cudd_bddIthVar(dd, 4), core.Cudd_bddIthVar(dd, 3))
+	core.Cudd_Ref(c1)
+	top.Data = core.Cudd_bddIte(dd, core.Cudd_bddIthVar(dd, 0), c1, core.Cudd_bddIthVar(dd, 2))
+	core.Cudd_Ref(top.Data.(*core.DdNode))
+	core.Cudd_RecursiveDeref(dd, c1)
+	return top
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Finds unique cofactors of the function on the given level.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-Vec_Ptr_t * Abc_NtkBddCofactors( DdManager * dd, DdNode * bNode, int Level )
-{
-    Vec_Ptr_t * vCofs;
-    int i, nCofs = (1<<Level);
-    assert( Level > 0 && Level < 10 );
-    vCofs = Vec_PtrAlloc( 8 );
-    for ( i = 0; i < nCofs; i++ )
-        Vec_PtrPush( vCofs, Abc_NtkBddCofactors_rec( dd, bNode, i, 0, Level ) );
-    return vCofs;
+// Abc_NtkBddMux413 implements a 4:1 mux with three 2:1 mux nodes.
+func Abc_NtkBddMux413(n *Abc_Ntk_t, f []*Abc_Obj_t) *Abc_Obj_t {
+	if len(f) < 6 {
+		return nil
+	}
+	left := Abc_NtkBddMux21(n, []*Abc_Obj_t{f[1], f[2], f[3]})
+	right := Abc_NtkBddMux21(n, []*Abc_Obj_t{f[1], f[4], f[5]})
+	return Abc_NtkBddMux21(n, []*Abc_Obj_t{f[0], left, right})
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Comparison procedure for two integers.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-static int Vec_PtrSortCompare( void ** pp1, void ** pp2 )
-{
-    if ( *pp1 < *pp2 )
-        return -1;
-    if ( *pp1 > *pp2 )
-        return 1;
-    return 0;
+// Abc_NtkBddCofactors_rec returns the selected cofactor over the first levels.
+func Abc_NtkBddCofactors_rec(dd *core.DdManager, node *core.DdNode, code, level, levels int32) *core.DdNode {
+	if dd == nil || node == nil || core.Cudd_IsConstant(node) || level == levels {
+		return node
+	}
+	regular := core.Cudd_Regular(node)
+	var low, high *core.DdNode
+	if core.Cudd_ReadPerm(dd, int(regular.Index)) > int(level) {
+		low, high = node, node
+	} else {
+		low, high = regular.E, regular.T
+		if core.Cudd_IsComplement(node) {
+			low, high = core.Cudd_Not(low), core.Cudd_Not(high)
+		}
+	}
+	shift := uint(levels - 1 - level)
+	if code&(int32(1)<<shift) != 0 {
+		return Abc_NtkBddCofactors_rec(dd, high, code, level+1, levels)
+	}
+	return Abc_NtkBddCofactors_rec(dd, low, code, level+1, levels)
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Converts the node to MUXes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-Abc_Obj_t * Abc_NtkCreateCofLut( Abc_Ntk_t * pNtkNew, DdManager * dd, DdNode * bCof, Abc_Obj_t * pNode, int Level )
-{
-    int fVerbose = 0;
-    DdNode * bFuncNew;
-    Abc_Obj_t * pNodeNew;
-    int i;
-    assert( Abc_ObjFaninNum(pNode) > Level );
-    // create a new node
-    pNodeNew = Abc_NtkCreateNode( pNtkNew );
-    // add the fanins in the order, in which they appear in the reordered manager
-    for ( i = Level; i < Abc_ObjFaninNum(pNode); i++ )
-        Abc_ObjAddFanin( pNodeNew, Abc_ObjFanin(pNode, i)->pCopy );
-if ( fVerbose )
-{
-Extra_bddPrint( dd, bCof );
-printf( "\n" );
-printf( "\n" );
-}
-    // transfer the function
-    bFuncNew = Extra_bddMove( dd, bCof, -Level );  Cudd_Ref( bFuncNew );
-if ( fVerbose )
-{
-Extra_bddPrint( dd, bFuncNew );
-printf( "\n" );
-printf( "\n" );
-}
-    pNodeNew->pData = Extra_TransferLevelByLevel( dd, (DdManager *)pNtkNew->pManFunc, bFuncNew );  Cudd_Ref( (DdNode *)pNodeNew->pData );
-//Extra_bddPrint( pNtkNew->pManFunc, pNodeNew->pData );
-//printf( "\n" );
-//printf( "\n" );
-    Cudd_RecursiveDeref( dd, bFuncNew );
-    return pNodeNew;
+func Abc_NtkBddCofactors(dd *core.DdManager, node *core.DdNode, levels int32) []*core.DdNode {
+	if dd == nil || node == nil || levels <= 0 || levels >= 10 {
+		return nil
+	}
+	count := 1 << uint(levels)
+	out := make([]*core.DdNode, count)
+	for i := range out {
+		out[i] = Abc_NtkBddCofactors_rec(dd, node, int32(i), 0, levels)
+	}
+	return out
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Performs one step of Ashenhurst-Curtis decomposition.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-Abc_Obj_t * Abc_NtkBddCurtis( Abc_Ntk_t * pNtkNew, Abc_Obj_t * pNode, Vec_Ptr_t * vCofs, Vec_Ptr_t * vUniq )
-{
-    DdManager * ddOld = (DdManager *)pNode->pNtk->pManFunc;
-    DdManager * ddNew = (DdManager *)pNtkNew->pManFunc;
-    DdNode * bCof, * bUniq, * bMint, * bTemp, * bFunc, * bBits[10], ** pbCodeVars;
-    Abc_Obj_t * pNodeNew = NULL, * pNodeBS[10];
-    int nLutSize = Abc_Base2Log( Vec_PtrSize(vCofs) );
-    int nBits    = Abc_Base2Log( Vec_PtrSize(vUniq) );
-    int b, c, u, i;
-    assert( nBits + 2 <= nLutSize );
-    assert( nLutSize < Abc_ObjFaninNum(pNode) );
-    // start BDDs for the decompoosed blocks
-    for ( b = 0; b < nBits; b++ )
-        bBits[b] = Cudd_ReadLogicZero(ddNew), Cudd_Ref( bBits[b] );
-    // add each bound set minterm to one of the blccks
-    Vec_PtrForEachEntry( DdNode *, vCofs, bCof, c )
-    {
-        Vec_PtrForEachEntry( DdNode *, vUniq, bUniq, u )
-            if ( bUniq == bCof )
-                break;
-        assert( u < Vec_PtrSize(vUniq) );
-        for ( b = 0; b < nBits; b++ )
-        {
-            if ( ((u >> b) & 1) == 0 )
-                continue;
-            bMint = Extra_bddBitsToCube( ddNew, c, nLutSize, ddNew->vars, 1 );  Cudd_Ref( bMint );
-            bBits[b] = Cudd_bddOr( ddNew, bTemp = bBits[b], bMint );  Cudd_Ref( bBits[b] );
-            Cudd_RecursiveDeref( ddNew, bTemp );
-            Cudd_RecursiveDeref( ddNew, bMint );
-        }
-    }
-    // create bound set nodes
-    for ( b = 0; b < nBits; b++ )
-    {
-        pNodeBS[b] = Abc_NtkCreateNode( pNtkNew );
-        for ( i = 0; i < nLutSize; i++ )
-            Abc_ObjAddFanin( pNodeBS[b], Abc_ObjFanin(pNode, i)->pCopy );
-        pNodeBS[b]->pData = bBits[b]; // takes ref
-    }
-    // create composition node
-    pNodeNew = Abc_NtkCreateNode( pNtkNew );
-    // add free set variables first
-    for ( i = nLutSize; i < Abc_ObjFaninNum(pNode); i++ )
-        Abc_ObjAddFanin( pNodeNew, Abc_ObjFanin(pNode, i)->pCopy );
-    // add code bit variables next
-    for ( b = 0; b < nBits; b++ )
-        Abc_ObjAddFanin( pNodeNew, pNodeBS[b] );
-    // derive function of the composition node
-    bFunc = Cudd_ReadLogicZero(ddNew); Cudd_Ref( bFunc );
-    pbCodeVars = ddNew->vars + Abc_ObjFaninNum(pNode) - nLutSize;
-    Vec_PtrForEachEntry( DdNode *, vUniq, bUniq, u )
-    {
-        bUniq = Extra_bddMove( ddOld, bUniq, -nLutSize );                   Cudd_Ref( bUniq );
-        bUniq = Extra_TransferLevelByLevel( ddOld, ddNew, bTemp = bUniq );  Cudd_Ref( bUniq );
-        Cudd_RecursiveDeref( ddOld, bTemp );
-
-        bMint = Extra_bddBitsToCube( ddNew, u, nBits, pbCodeVars, 0 );  Cudd_Ref( bMint );
-        bMint = Cudd_bddAnd( ddNew, bTemp = bMint, bUniq );  Cudd_Ref( bMint );
-        Cudd_RecursiveDeref( ddNew, bTemp );
-        Cudd_RecursiveDeref( ddNew, bUniq );
-
-        bFunc = Cudd_bddOr( ddNew, bTemp = bFunc, bMint );  Cudd_Ref( bFunc );
-        Cudd_RecursiveDeref( ddNew, bTemp );
-        Cudd_RecursiveDeref( ddNew, bMint );
-    }
-    pNodeNew->pData = bFunc; // takes ref
-    return pNodeNew;
+// Abc_NtkCreateCofLut transfers one cofactor to a new node's local fanin order.
+func Abc_NtkCreateCofLut(dst *Abc_Ntk_t, dd *core.DdManager, cof *core.DdNode, old *Abc_Obj_t, level int32) *Abc_Obj_t {
+	if dst == nil || dd == nil || cof == nil || old == nil || int(level) >= len(old.Fanins()) {
+		return nil
+	}
+	fanins := old.Fanins()
+	obj := abc.Abc_NtkCreateNode(dst)
+	for _, edge := range fanins[level:] {
+		if edge.Object.Copy == nil {
+			return nil
+		}
+		abc.Abc_ObjAddFanin(obj, edge.Object.Copy)
+	}
+	moved := extrab.Extra_bddMove(dd, cof, -int(level))
+	if moved == nil {
+		return nil
+	}
+	core.Cudd_Ref(moved)
+	newDD := lutManager(dst)
+	if newDD == nil {
+		core.Cudd_RecursiveDeref(dd, moved)
+		return nil
+	}
+	obj.Data = extrab.Extra_TransferLevelByLevel(dd, newDD, moved)
+	core.Cudd_RecursiveDeref(dd, moved)
+	if obj.Data == nil {
+		return nil
+	}
+	core.Cudd_Ref(obj.Data.(*core.DdNode))
+	return obj
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Tries to decompose using cofactoring into two LUTs.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-Abc_Obj_t * Abc_NtkBddFindCofactor( Abc_Ntk_t * pNtkNew, Abc_Obj_t * pNode, int nLutSize )
-{
-    Abc_Obj_t * pNodeBot, * pNodeTop;
-    DdManager * ddOld = (DdManager *)pNode->pNtk->pManFunc;
-    DdManager * ddNew = (DdManager *)pNtkNew->pManFunc;
-    DdNode * bCof0 = NULL, * bCof1 = NULL, * bSupp, * bTemp, * bVar;
-    DdNode * bCof0n, * bCof1n;
-    int i, iCof, iFreeVar, fCof1Smaller = -1;
-    assert( Abc_ObjFaninNum(pNode) == nLutSize + 1 );
-    for ( iCof = 0; iCof < Abc_ObjFaninNum(pNode); iCof++ )
-    {
-        bVar  = Cudd_bddIthVar( ddOld, iCof );
-        bCof0 = Cudd_Cofactor( ddOld, (DdNode *)pNode->pData, Cudd_Not(bVar) );  Cudd_Ref( bCof0 );
-        bCof1 = Cudd_Cofactor( ddOld, (DdNode *)pNode->pData, bVar  );           Cudd_Ref( bCof1 );
-        if ( Cudd_SupportSize( ddOld, bCof0 ) <= nLutSize - 2 )
-        {
-            fCof1Smaller = 0;
-            break;
-        }
-        if ( Cudd_SupportSize( ddOld, bCof1 ) <= nLutSize - 2 )
-        {
-            fCof1Smaller = 1;
-            break;
-        }
-        Cudd_RecursiveDeref( ddOld, bCof0 );
-        Cudd_RecursiveDeref( ddOld, bCof1 );
-    }
-    if ( iCof == Abc_ObjFaninNum(pNode) )
-        return NULL;
-    // find unused variable
-    bSupp = Cudd_Support( ddOld, fCof1Smaller? bCof1 : bCof0 );   Cudd_Ref( bSupp );
-    iFreeVar = -1;
-    for ( i = 0; i < Abc_ObjFaninNum(pNode); i++ )
-    {
-        assert( i == Cudd_ReadPerm(ddOld, i) );
-        if ( i == iCof )
-            continue;
-        for ( bTemp = bSupp; !Cudd_IsConstant(bTemp); bTemp = cuddT(bTemp) )
-            if ( i == (int)Cudd_NodeReadIndex(bTemp) )
-                break;
-        if ( Cudd_IsConstant(bTemp) )
-        {
-            iFreeVar = i;
-            break;
-        }
-    }
-    assert( iFreeVar != iCof && iFreeVar < Abc_ObjFaninNum(pNode) );
-    Cudd_RecursiveDeref( ddOld, bSupp );
-    // transfer the cofactors
-    bCof0n = Extra_TransferLevelByLevel( ddOld, ddNew, bCof0 ); Cudd_Ref( bCof0n );
-    bCof1n = Extra_TransferLevelByLevel( ddOld, ddNew, bCof1 ); Cudd_Ref( bCof1n );
-    Cudd_RecursiveDeref( ddOld, bCof0 );
-    Cudd_RecursiveDeref( ddOld, bCof1 );
-    // create bottom node
-    pNodeBot = Abc_NtkCreateNode( pNtkNew );
-    for ( i = 0; i < Abc_ObjFaninNum(pNode); i++ )
-        Abc_ObjAddFanin( pNodeBot, Abc_ObjFanin(pNode, i)->pCopy );
-    pNodeBot->pData = fCof1Smaller? bCof0n : bCof1n;
-    // create top node
-    pNodeTop = Abc_NtkCreateNode( pNtkNew );
-    for ( i = 0; i < Abc_ObjFaninNum(pNode); i++ )
-        if ( i == iFreeVar )           
-            Abc_ObjAddFanin( pNodeTop, pNodeBot );
-        else
-            Abc_ObjAddFanin( pNodeTop, Abc_ObjFanin(pNode, i)->pCopy );
-    // derive the new function
-    pNodeTop->pData = Cudd_bddIte( ddNew, 
-        Cudd_bddIthVar(ddNew, iCof), 
-        fCof1Smaller? bCof1n : Cudd_bddIthVar(ddNew, iFreeVar), 
-        fCof1Smaller? Cudd_bddIthVar(ddNew, iFreeVar) : bCof0n );
-    Cudd_Ref( (DdNode *)pNodeTop->pData );
-    Cudd_RecursiveDeref( ddNew, fCof1Smaller? bCof1n : bCof0n );
-    return pNodeTop;
+// Abc_NtkBddCurtis performs the source's Ashenhurst-Curtis decomposition.
+func Abc_NtkBddCurtis(dst *Abc_Ntk_t, old *Abc_Obj_t, cofactors, unique []*core.DdNode) *Abc_Obj_t {
+	if dst == nil || old == nil || len(cofactors) == 0 || len(unique) == 0 {
+		return nil
+	}
+	ddOld := lutManager(old.Network())
+	ddNew := lutManager(dst)
+	if ddOld == nil || ddNew == nil {
+		return nil
+	}
+	k := int32(utilLog2(uint32(len(cofactors))))
+	nBits := int32(utilLog2(uint32(len(unique))))
+	if nBits+2 > k || k >= int32(len(old.Fanins())) || k > 10 || nBits > 10 {
+		return nil
+	}
+	bound := old.Fanins()[:k]
+	bits := make([]*core.DdNode, nBits)
+	for i := range bits {
+		bits[i] = ddNew.LogicZero
+		core.Cudd_Ref(bits[i])
+	}
+	for c, cof := range cofactors {
+		u := -1
+		for i, item := range unique {
+			if item == cof {
+				u = i
+				break
+			}
+		}
+		if u < 0 {
+			return nil
+		}
+		for b := range bits {
+			if u&(1<<uint(b)) == 0 {
+				continue
+			}
+			mint := extrab.Extra_bddBitsToCube(ddNew, c, int(k), ddNew.Vars, true)
+			core.Cudd_Ref(mint)
+			oldBit := bits[b]
+			bits[b] = core.Cudd_bddOr(ddNew, oldBit, mint)
+			core.Cudd_Ref(bits[b])
+			core.Cudd_RecursiveDeref(ddNew, oldBit)
+			core.Cudd_RecursiveDeref(ddNew, mint)
+		}
+	}
+	bitNodes := make([]*abc.Object, nBits)
+	for b := range bitNodes {
+		bitNodes[b] = abc.Abc_NtkCreateNode(dst)
+		for _, edge := range bound {
+			abc.Abc_ObjAddFanin(bitNodes[b], edge.Object.Copy)
+		}
+		bitNodes[b].Data = bits[b]
+	}
+	composition := abc.Abc_NtkCreateNode(dst)
+	for _, edge := range old.Fanins()[k:] {
+		abc.Abc_ObjAddFanin(composition, edge.Object.Copy)
+	}
+	for _, node := range bitNodes {
+		abc.Abc_ObjAddFanin(composition, node)
+	}
+	funcNode := ddNew.LogicZero
+	core.Cudd_Ref(funcNode)
+	codeVars := ddNew.Vars[len(old.Fanins())-int(k):]
+	for u, item := range unique {
+		moved := extrab.Extra_bddMove(ddOld, item, -int(k))
+		if moved == nil {
+			return nil
+		}
+		core.Cudd_Ref(moved)
+		translated := extrab.Extra_TransferLevelByLevel(ddOld, ddNew, moved)
+		if translated == nil {
+			return nil
+		}
+		core.Cudd_Ref(translated)
+		core.Cudd_RecursiveDeref(ddOld, moved)
+		mint := extrab.Extra_bddBitsToCube(ddNew, u, int(nBits), codeVars, false)
+		core.Cudd_Ref(mint)
+		term := core.Cudd_bddAnd(ddNew, mint, translated)
+		core.Cudd_Ref(term)
+		core.Cudd_RecursiveDeref(ddNew, mint)
+		core.Cudd_RecursiveDeref(ddNew, translated)
+		oldFunc := funcNode
+		funcNode = core.Cudd_bddOr(ddNew, oldFunc, term)
+		core.Cudd_Ref(funcNode)
+		core.Cudd_RecursiveDeref(ddNew, oldFunc)
+		core.Cudd_RecursiveDeref(ddNew, term)
+	}
+	composition.Data = funcNode
+	return composition
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Decompose the function once.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-Abc_Obj_t * Abc_NtkBddDecompose( Abc_Ntk_t * pNtkNew, Abc_Obj_t * pNode, int nLutSize, int fVerbose )
-{
-    Vec_Ptr_t * vCofs, * vUniq;
-    DdManager * dd = (DdManager *)pNode->pNtk->pManFunc;
-    DdNode * bCof;
-    Abc_Obj_t * pNodeNew = NULL;
-    Abc_Obj_t * pCofs[20];
-    int i;
-    assert( Abc_ObjFaninNum(pNode) > nLutSize );
-    // try to decompose with two LUTs (the best case for Supp = LutSize + 1)
-    if ( Abc_ObjFaninNum(pNode) == nLutSize + 1 )
-    {
-
-        pNodeNew = Abc_NtkBddFindCofactor( pNtkNew, pNode, nLutSize );
-        if ( pNodeNew != NULL )
-        {
-            if ( fVerbose )
-            printf( "Decomposing %d-input node %d using MUX.\n",
-                Abc_ObjFaninNum(pNode), Abc_ObjId(pNode) );
-            return pNodeNew;
-        }
-
-    }
-    // cofactor w.r.t. the bound set variables
-    vCofs = Abc_NtkBddCofactors( dd, (DdNode *)pNode->pData, nLutSize );
-    vUniq = Vec_PtrDup( vCofs );
-    Vec_PtrUniqify( vUniq, (int (*)())Vec_PtrSortCompare );
-    // only perform decomposition with it is support reduring with two less vars
-    if( Vec_PtrSize(vUniq) > (1 << (nLutSize-2)) )
-    {
-        Vec_PtrFree( vCofs );
-        vCofs = Abc_NtkBddCofactors( dd, (DdNode *)pNode->pData, 2 );
-        if ( fVerbose )
-        printf( "Decomposing %d-input node %d using cofactoring with %d cofactors.\n",
-            Abc_ObjFaninNum(pNode), Abc_ObjId(pNode), Vec_PtrSize(vCofs) );
-        // implement the cofactors
-        pCofs[0] = Abc_ObjFanin(pNode, 0)->pCopy;
-        pCofs[1] = Abc_ObjFanin(pNode, 1)->pCopy;
-        Vec_PtrForEachEntry( DdNode *, vCofs, bCof, i )
-            pCofs[2+i] = Abc_NtkCreateCofLut( pNtkNew, dd, bCof, pNode, 2 );
-        if ( nLutSize == 4 )
-            pNodeNew = Abc_NtkBddMux412( pNtkNew, pCofs );
-        else if ( nLutSize == 5 )
-            pNodeNew = Abc_NtkBddMux412a( pNtkNew, pCofs );
-        else if ( nLutSize == 6 )
-            pNodeNew = Abc_NtkBddMux411( pNtkNew, pCofs );
-        else  assert( 0 );
-    }
-    // alternative decompose using MUX-decomposition
-    else
-    {
-        if ( fVerbose )
-        printf( "Decomposing %d-input node %d using Curtis with %d unique columns.\n",
-            Abc_ObjFaninNum(pNode), Abc_ObjId(pNode), Vec_PtrSize(vUniq) );
-        pNodeNew = Abc_NtkBddCurtis( pNtkNew, pNode, vCofs, vUniq );
-    }
-    Vec_PtrFree( vCofs );
-    Vec_PtrFree( vUniq );
-    return pNodeNew;
+func utilLog2(n uint32) int { // ABC's Base2Log: ceil(log2(n)), with 0/1 preserved.
+	if n < 2 {
+		return int(n)
+	}
+	return bits.Len32(n - 1)
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-void Abc_NtkLutminConstruct( Abc_Ntk_t * pNtkClp, Abc_Ntk_t * pNtkDec, int nLutSize, int fVerbose )
-{
-    Vec_Ptr_t * vNodes;
-    Abc_Obj_t * pNode, * pFanin;
-    int i, k;
-    vNodes = Abc_NtkDfs( pNtkClp, 0 );
-    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pNode, i )
-    {
-        if ( Abc_ObjFaninNum(pNode) <= nLutSize )
-        {
-            pNode->pCopy = Abc_NtkDupObj( pNtkDec, pNode, 0 );
-            Abc_ObjForEachFanin( pNode, pFanin, k )
-                Abc_ObjAddFanin( pNode->pCopy, pFanin->pCopy );
-        }
-        else
-            pNode->pCopy = Abc_NtkBddDecompose( pNtkDec, pNode, nLutSize, fVerbose );
-    }
-    Vec_PtrFree( vNodes );
+func lutUniqueCofactors(cofs []*core.DdNode) []*core.DdNode {
+	seen := make(map[*core.DdNode]struct{}, len(cofs))
+	out := make([]*core.DdNode, 0, len(cofs))
+	for _, cof := range cofs {
+		if _, ok := seen[cof]; !ok {
+			seen[cof] = struct{}{}
+			out = append(out, cof)
+		}
+	}
+	sort.Slice(out, func(i, j int) bool {
+		return uintptr(unsafe.Pointer(out[i])) < uintptr(unsafe.Pointer(out[j]))
+	})
+	return out
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-Abc_Ntk_t * Abc_NtkLutminInt( Abc_Ntk_t * pNtk, int nLutSize, int fVerbose )
-{
-    extern void Abc_NtkBddReorder( Abc_Ntk_t * pNtk, int fVerbose );
-    Abc_Ntk_t * pNtkDec;
-    // minimize BDDs
-//    Abc_NtkBddReorder( pNtk, fVerbose );
-    Abc_NtkBddReorder( pNtk, 0 );
-    // decompose one output at a time
-    pNtkDec = Abc_NtkStartFrom( pNtk, ABC_NTK_LOGIC, ABC_FUNC_BDD );
-    // make sure the new manager has enough inputs
-    Cudd_bddIthVar( (DdManager *)pNtkDec->pManFunc, Abc_NtkGetFaninMax(pNtk) );
-    // put the results into the new network (save new CO drivers in old CO drivers)
-    Abc_NtkLutminConstruct( pNtk, pNtkDec, nLutSize, fVerbose );
-    // finalize the new network
-    Abc_NtkFinalize( pNtk, pNtkDec );
-    // make the network minimum base
-    Abc_NtkMinimumBase( pNtkDec );
-    return pNtkDec;
+// Abc_NtkBddFindCofactor tries the source's two-LUT decomposition for K+1 fanins.
+func Abc_NtkBddFindCofactor(dst *Abc_Ntk_t, node *Abc_Obj_t, lutSize int32) *Abc_Obj_t {
+	if dst == nil || node == nil || int32(len(node.Fanins())) != lutSize+1 {
+		return nil
+	}
+	oldDD, newDD := lutManager(node.Network()), lutManager(dst)
+	if oldDD == nil || newDD == nil {
+		return nil
+	}
+	n := len(node.Fanins())
+	f, ok := node.Data.(*core.DdNode)
+	if !ok || f == nil {
+		return nil
+	}
+	iCof, smaller := -1, -1
+	var cof0, cof1 *core.DdNode
+	for i := 0; i < n; i++ {
+		v := core.Cudd_bddIthVar(oldDD, i)
+		cof0 = core.Cudd_Cofactor(oldDD, f, core.Cudd_Not(v))
+		core.Cudd_Ref(cof0)
+		cof1 = core.Cudd_Cofactor(oldDD, f, v)
+		core.Cudd_Ref(cof1)
+		if core.Cudd_SupportSize(oldDD, cof0) <= int(lutSize-2) {
+			iCof, smaller = i, 0
+			break
+		}
+		if core.Cudd_SupportSize(oldDD, cof1) <= int(lutSize-2) {
+			iCof, smaller = i, 1
+			break
+		}
+		core.Cudd_RecursiveDeref(oldDD, cof0)
+		core.Cudd_RecursiveDeref(oldDD, cof1)
+	}
+	if iCof < 0 {
+		return nil
+	}
+	small := cof0
+	if smaller == 1 {
+		small = cof1
+	}
+	support := make(map[int]struct{})
+	for _, index := range oldDD.Support(small) {
+		support[index] = struct{}{}
+	}
+	free := -1
+	for i := 0; i < n; i++ {
+		if i == iCof {
+			continue
+		}
+		if _, found := support[i]; !found {
+			free = i
+			break
+		}
+	}
+	if free < 0 {
+		return nil
+	}
+	cof0n := extrab.Extra_TransferLevelByLevel(oldDD, newDD, cof0)
+	core.Cudd_Ref(cof0n)
+	cof1n := extrab.Extra_TransferLevelByLevel(oldDD, newDD, cof1)
+	core.Cudd_Ref(cof1n)
+	core.Cudd_RecursiveDeref(oldDD, cof0)
+	core.Cudd_RecursiveDeref(oldDD, cof1)
+	fanins := node.Fanins()
+	bot := abc.Abc_NtkCreateNode(dst)
+	for _, edge := range fanins {
+		abc.Abc_ObjAddFanin(bot, edge.Object.Copy)
+	}
+	if smaller == 1 {
+		bot.Data = cof0n
+	} else {
+		bot.Data = cof1n
+	}
+	top := abc.Abc_NtkCreateNode(dst)
+	for i, edge := range fanins {
+		if i == free {
+			abc.Abc_ObjAddFanin(top, bot)
+		} else {
+			abc.Abc_ObjAddFanin(top, edge.Object.Copy)
+		}
+	}
+	selector := core.Cudd_bddIthVar(newDD, iCof)
+	freeVar := core.Cudd_bddIthVar(newDD, free)
+	if smaller == 1 {
+		top.Data = core.Cudd_bddIte(newDD, selector, cof1n, freeVar)
+		core.Cudd_RecursiveDeref(newDD, cof0n)
+	} else {
+		top.Data = core.Cudd_bddIte(newDD, selector, freeVar, cof0n)
+		core.Cudd_RecursiveDeref(newDD, cof1n)
+	}
+	core.Cudd_Ref(top.Data.(*core.DdNode))
+	return top
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Performs minimum-LUT decomposition of the network.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-Abc_Ntk_t * Abc_NtkLutmin( Abc_Ntk_t * pNtkInit, int nLutSize, int fVerbose )
-{
-    extern int Abc_NtkFraigSweep( Abc_Ntk_t * pNtk, int fUseInv, int fExdc, int fVerbose, int fVeryVerbose );
-    Abc_Ntk_t * pNtkNew, * pTemp;
-    int i;
-    if ( nLutSize < 4 )
-    {
-        printf( "The LUT count (%d) should be at least 4.\n", nLutSize );
-        return NULL;
-    }
-    if ( nLutSize > 6 )
-    {
-        printf( "The LUT count (%d) should not exceed 6.\n", nLutSize );
-        return NULL;
-    }
-    // create internal representation
-    if ( Abc_NtkIsStrash(pNtkInit) )
-        pNtkNew = Abc_NtkDup( pNtkInit );
-    else
-        pNtkNew = Abc_NtkStrash( pNtkInit, 0, 1, 0 );
-    // collapse the network 
-    pNtkNew = Abc_NtkCollapse( pTemp = pNtkNew, 10000, 0, 1, 0, 0, 0 );
-    Abc_NtkDelete( pTemp );
-    if ( pNtkNew == NULL )
-        return NULL;
-    // convert it to BDD
-    if ( !Abc_NtkIsBddLogic(pNtkNew) )
-        Abc_NtkToBdd( pNtkNew );
-    // iterate decomposition
-    for ( i = 0; Abc_NtkGetFaninMax(pNtkNew) > nLutSize; i++ )
-    {
-        if ( fVerbose )
-            printf( "*** Iteration %d:\n", i+1 );
-        if ( fVerbose )
-            printf( "Decomposing network with %d nodes and %d max fanin count for K = %d.\n", 
-                Abc_NtkNodeNum(pNtkNew), Abc_NtkGetFaninMax(pNtkNew), nLutSize );
-        pNtkNew = Abc_NtkLutminInt( pTemp = pNtkNew, nLutSize, fVerbose );
-        Abc_NtkDelete( pTemp );
-    }
-    // fix the problem with complemented and duplicated CO edges
-    Abc_NtkLogicMakeSimpleCos( pNtkNew, 0 );
-    // merge functionally equivalent nodes
-    Abc_NtkFraigSweep( pNtkNew, 1, 0, 0, 0 );
-    // make sure everything is okay
-    if ( !Abc_NtkCheck( pNtkNew ) )
-    {
-        printf( "Abc_NtkLutmin: The network check has failed.\n" );
-        return 0;
-    }
-    return pNtkNew;
+func Abc_NtkBddDecompose(dst *Abc_Ntk_t, node *Abc_Obj_t, lutSize, verbose int32) *Abc_Obj_t {
+	if node == nil || dst == nil || int32(len(node.Fanins())) <= lutSize {
+		return nil
+	}
+	if int32(len(node.Fanins())) == lutSize+1 {
+		if result := Abc_NtkBddFindCofactor(dst, node, lutSize); result != nil {
+			if verbose != 0 {
+				fmt.Printf("Decomposing %d-input node %d using MUX.\n", len(node.Fanins()), node.ID)
+			}
+			return result
+		}
+	}
+	dd := lutManager(node.Network())
+	f, _ := node.Data.(*core.DdNode)
+	cofs := Abc_NtkBddCofactors(dd, f, lutSize)
+	uniq := lutUniqueCofactors(cofs)
+	if len(uniq) > 1<<uint(lutSize-2) {
+		cofs = Abc_NtkBddCofactors(dd, f, 2)
+		if verbose != 0 {
+			fmt.Printf("Decomposing %d-input node %d using cofactoring with %d cofactors.\n", len(node.Fanins()), node.ID, len(cofs))
+		}
+		fanins := make([]*abc.Object, 6)
+		fanins[0], fanins[1] = node.Fanins()[0].Object.Copy, node.Fanins()[1].Object.Copy
+		for i, cof := range cofs {
+			fanins[i+2] = Abc_NtkCreateCofLut(dst, dd, cof, node, 2)
+		}
+		switch lutSize {
+		case 4:
+			return Abc_NtkBddMux412(dst, fanins)
+		case 5:
+			return Abc_NtkBddMux412a(dst, fanins)
+		case 6:
+			return Abc_NtkBddMux411(dst, fanins)
+		}
+		return nil
+	}
+	if verbose != 0 {
+		fmt.Printf("Decomposing %d-input node %d using Curtis with %d unique columns.\n", len(node.Fanins()), node.ID, len(uniq))
+	}
+	return Abc_NtkBddCurtis(dst, node, cofs, uniq)
 }
 
-#else
+func Abc_NtkLutminConstruct(collapsed, decomposed *Abc_Ntk_t, lutSize, verbose int32) {
+	if collapsed == nil || decomposed == nil {
+		return
+	}
+	for _, node := range abc.Abc_NtkDfs(collapsed, 0) {
+		if int32(len(node.Fanins())) <= lutSize {
+			node.Copy = abc.Abc_NtkDupObj(decomposed, node, 0)
+			for _, edge := range node.Fanins() {
+				abc.Abc_ObjAddFanin(node.Copy, edge.Object.Copy)
+			}
+		} else {
+			node.Copy = Abc_NtkBddDecompose(decomposed, node, lutSize, verbose)
+		}
+	}
+}
 
-Abc_Ntk_t * Abc_NtkLutmin( Abc_Ntk_t * pNtkInit, int nLutSize, int fVerbose ) { return NULL; }
+func Abc_NtkLutminInt(n *Abc_Ntk_t, lutSize, verbose int32) *Abc_Ntk_t {
+	if n == nil {
+		return nil
+	}
+	Abc_NtkBddReorder(n, 0)
+	out := abc.Abc_NtkStartFrom(n, abc.ABC_NTK_LOGIC, abc.ABC_FUNC_BDD)
+	if out == nil {
+		return nil
+	}
+	dd := lutManager(out)
+	if dd == nil {
+		return nil
+	}
+	core.Cudd_bddIthVar(dd, int(abc.Abc_NtkGetFaninMax(n)))
+	Abc_NtkLutminConstruct(n, out, lutSize, verbose)
+	abc.Abc_NtkFinalize(n, out)
+	abc.Abc_NtkMinimumBase(out)
+	return out
+}
 
-#endif
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func Abc_NtkLutmin(initial *Abc_Ntk_t, lutSize, verbose int32) *Abc_Ntk_t {
+	if lutSize < 4 {
+		fmt.Printf("The LUT count (%d) should be at least 4.\n", lutSize)
+		return nil
+	}
+	if lutSize > 6 {
+		fmt.Printf("The LUT count (%d) should not exceed 6.\n", lutSize)
+		return nil
+	}
+	if initial == nil {
+		return nil
+	}
+	var work *abc.Network
+	if abc.Abc_NtkIsStrash(initial) != 0 {
+		work = abc.Abc_NtkDup(initial)
+	} else {
+		work = Abc_NtkStrash(initial, 0, 1, 0)
+	}
+	if work == nil {
+		return nil
+	}
+	collapsed := Abc_NtkCollapse(work, 10000, 0, 1, 0, 0, 0)
+	abc.Abc_NtkDelete(work)
+	if collapsed == nil {
+		return nil
+	}
+	if abc.Abc_NtkIsBddLogic(collapsed) == 0 {
+		abc.Abc_NtkToBdd(collapsed)
+	}
+	for i := int32(0); abc.Abc_NtkGetFaninMax(collapsed) > lutSize; i++ {
+		if verbose != 0 {
+			fmt.Printf("*** Iteration %d:\nDecomposing network with %d nodes and %d max fanin count for K = %d.\n", i+1, abc.Abc_NtkNodeNum(collapsed), abc.Abc_NtkGetFaninMax(collapsed), lutSize)
+		}
+		next := Abc_NtkLutminInt(collapsed, lutSize, verbose)
+		abc.Abc_NtkDelete(collapsed)
+		if next == nil {
+			return nil
+		}
+		collapsed = next
+	}
+	abc.Abc_NtkLogicMakeSimpleCos(collapsed, 0)
+	Abc_NtkFraigSweep(collapsed, 1, 0, 0, 0)
+	if abc.Abc_NtkCheck(collapsed) == 0 {
+		fmt.Println("Abc_NtkLutmin: The network check has failed.")
+		return nil
+	}
+	return collapsed
+}

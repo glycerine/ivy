@@ -1,119 +1,45 @@
 package abci
 
-/**CFile****************************************************************
+import (
+	"fmt"
 
-  FileName    [abcReorder.c]
+	"github.com/glycerine/abcgo/base/abc"
+	"github.com/glycerine/abcgo/bdd/cudd/core"
+	"github.com/glycerine/abcgo/bdd/reo"
+)
 
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Network and node package.]
-
-  Synopsis    [Reordering local BDDs of the nodes.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: abcReorder.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "base/abc/abc.h"
-
-#ifdef ABC_USE_CUDD
-#include "bdd/reo/reo.h"
-#endif
-
-//ABC_NAMESPACE_IMPL_START
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-#ifdef ABC_USE_CUDD
-
-/**Function*************************************************************
-
-  Synopsis    [Reorders BDD of the local function of the node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-void Abc_NodeBddReorder( reo_man * p, Abc_Obj_t * pNode )
-{
-    Abc_Obj_t * pFanin;
-    DdNode * bFunc;
-    int * pOrder, i;
-    // create the temporary array for the variable order
-    pOrder = ABC_ALLOC( int, Abc_ObjFaninNum(pNode) );
-    for ( i = 0; i < Abc_ObjFaninNum(pNode); i++ )
-        pOrder[i] = -1;
-    // reorder the BDD
-    bFunc = Extra_Reorder( p, (DdManager *)pNode->pNtk->pManFunc, (DdNode *)pNode->pData, pOrder ); Cudd_Ref( bFunc );
-    Cudd_RecursiveDeref( (DdManager *)pNode->pNtk->pManFunc, (DdNode *)pNode->pData );
-    pNode->pData = bFunc;
-    // update the fanin order
-    Abc_ObjForEachFanin( pNode, pFanin, i )
-        pOrder[i] = pNode->vFanins.pArray[ pOrder[i] ];
-    Abc_ObjForEachFanin( pNode, pFanin, i )
-        pNode->vFanins.pArray[i] = pOrder[i];
-    ABC_FREE( pOrder );
+// Abc_NodeBddReorder reorders the local BDD of node and applies the resulting
+// variable permutation to the node's fanins. The shared implementation in
+// base/abc owns the network and object representation.
+func Abc_NodeBddReorder(reorder *reo.Manager, node *Abc_Obj_t) {
+	abc.Abc_NodeBddReorder(reorder, node)
 }
 
-/**Function*************************************************************
+// Abc_NtkBddReorder reorders the local BDDs of all nodes with at least three
+// fanins. Duplicate fanins are removed and each node's BDD support is reduced
+// before running the REO engine, matching the C implementation.
+func Abc_NtkBddReorder(network *Abc_Ntk_t, verbose int32) {
+	abc.Abc_NtkRemoveDupFanins(network)
+	abc.Abc_NtkMinimumBase(network)
 
-  Synopsis    [Reorders BDDs of the local functions.]
+	maxFanins := int(abc.Abc_NtkGetFaninMax(network))
+	reorder := reo.Extra_ReorderInit(maxFanins, 100)
+	defer reo.Extra_ReorderQuit(reorder)
 
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-void Abc_NtkBddReorder( Abc_Ntk_t * pNtk, int fVerbose )
-{
-    reo_man * p;
-    Abc_Obj_t * pNode;
-    int i;
-    Abc_NtkRemoveDupFanins( pNtk );
-    Abc_NtkMinimumBase( pNtk );
-    p = Extra_ReorderInit( Abc_NtkGetFaninMax(pNtk), 100 );
-    Abc_NtkForEachNode( pNtk, pNode, i )
-    {
-        if ( Abc_ObjFaninNum(pNode) < 3 )
-            continue;
-        if ( fVerbose )
-            fprintf( stdout, "%10s: ", Abc_ObjName(pNode) );
-        if ( fVerbose )
-            fprintf( stdout, "Before = %5d  BDD nodes.  ", Cudd_DagSize((DdNode *)pNode->pData) );
-        Abc_NodeBddReorder( p, pNode );
-        if ( fVerbose )
-            fprintf( stdout, "After = %5d  BDD nodes.\n", Cudd_DagSize((DdNode *)pNode->pData) );
-    }
-    Extra_ReorderQuit( p );
+	for _, node := range network.ObjectsOfKind(abc.ObjectNode) {
+		if len(node.Fanins()) < 3 {
+			continue
+		}
+		before := 0
+		if verbose != 0 {
+			fmt.Printf("%10s: ", node.Name())
+			before = core.Cudd_DagSize(node.Data.(*core.DdNode))
+			fmt.Printf("Before = %5d  BDD nodes.  ", before)
+		}
+		Abc_NodeBddReorder(reorder, node)
+		if verbose != 0 {
+			after := core.Cudd_DagSize(node.Data.(*core.DdNode))
+			fmt.Printf("After = %5d  BDD nodes.\n", after)
+		}
+	}
 }
-
-#else
-
-void Abc_NtkBddReorder( Abc_Ntk_t * pNtk, int fVerbose ) {}
-
-#endif
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

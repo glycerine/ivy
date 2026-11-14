@@ -1,8 +1,41 @@
 package abci
 
-import "fmt"
+import (
+	"bytes"
+	"fmt"
+	"os"
 
-import "os"
+	aig "github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/aig/miniaig"
+	"github.com/glycerine/abcgo/misc/util"
+	"github.com/glycerine/abcgo/misc/vec"
+)
+
+func boolToInt(v bool) int32 {
+	if v {
+		return 1
+	}
+	return 0
+}
+func abcComma(last bool) string {
+	if last {
+		return ""
+	}
+	return ","
+}
+func abcST(s bool) string {
+	if s {
+		return "s"
+	}
+	return "t"
+}
+func abcInt32Choice(cond bool, yes, no int32) int32 {
+	if cond {
+		return yes
+	}
+	return no
+}
 
 /**CFile****************************************************************
 
@@ -15,7 +48,7 @@ import "os"
   Synopsis    [Procedures to generate various type of circuits.]
 
   Author      [Alan Mishchenko]
-  
+
   Affiliation [UC Berkeley]
 
   Date        [Ver. 1.0. Started - June 20, 2005.]
@@ -37,673 +70,723 @@ import "os"
 ///                     FUNCTION DEFINITIONS                         ///
 ////////////////////////////////////////////////////////////////////////
 
-/**Function*************************************************************
+/*
+*Function*************************************************************
 
-  Synopsis    []
+	Synopsis    []
 
-  Description []
-               
-  SideEffects []
+	Description []
 
-  SeeAlso     []
+	SideEffects []
 
-***********************************************************************/
+	SeeAlso     []
+
+**********************************************************************
+*/
 func Abc_WriteFullAdder(pFile *os.File) {
-    var fNaive int32;
-    fmt.Fprintf(pFile, ".model FA\n");
-    fmt.Fprintf(pFile, ".inputs a b cin\n"); 
-    fmt.Fprintf(pFile, ".outputs s cout\n"); 
-    if fNaive != 0 {
-        fmt.Fprintf(pFile, ".names a b k\n"); 
-        fmt.Fprintf(pFile, "10 1\n"); 
-        fmt.Fprintf(pFile, "01 1\n"); 
-        fmt.Fprintf(pFile, ".names k cin s\n"); 
-        fmt.Fprintf(pFile, "10 1\n"); 
-        fmt.Fprintf(pFile, "01 1\n"); 
-        fmt.Fprintf(pFile, ".names a b cin cout\n"); 
-        fmt.Fprintf(pFile, "11- 1\n"); 
-        fmt.Fprintf(pFile, "1-1 1\n"); 
-        fmt.Fprintf(pFile, "-11 1\n"); 
-    
-    } else {
-        fmt.Fprintf(pFile, ".names a b and1\n"); 
-        fmt.Fprintf(pFile, "11 1\n"); 
-        fmt.Fprintf(pFile, ".names a b and1_\n"); 
-        fmt.Fprintf(pFile, "00 1\n"); 
-        fmt.Fprintf(pFile, ".names and1 and1_ xor\n"); 
-        fmt.Fprintf(pFile, "00 1\n"); 
+	var fNaive int32
+	fmt.Fprintf(pFile, ".model FA\n")
+	fmt.Fprintf(pFile, ".inputs a b cin\n")
+	fmt.Fprintf(pFile, ".outputs s cout\n")
+	if fNaive != 0 {
+		fmt.Fprintf(pFile, ".names a b k\n")
+		fmt.Fprintf(pFile, "10 1\n")
+		fmt.Fprintf(pFile, "01 1\n")
+		fmt.Fprintf(pFile, ".names k cin s\n")
+		fmt.Fprintf(pFile, "10 1\n")
+		fmt.Fprintf(pFile, "01 1\n")
+		fmt.Fprintf(pFile, ".names a b cin cout\n")
+		fmt.Fprintf(pFile, "11- 1\n")
+		fmt.Fprintf(pFile, "1-1 1\n")
+		fmt.Fprintf(pFile, "-11 1\n")
 
-        fmt.Fprintf(pFile, ".names cin xor and2\n"); 
-        fmt.Fprintf(pFile, "11 1\n"); 
-        fmt.Fprintf(pFile, ".names cin xor and2_\n"); 
-        fmt.Fprintf(pFile, "00 1\n"); 
-        fmt.Fprintf(pFile, ".names and2 and2_ s\n"); 
-        fmt.Fprintf(pFile, "00 1\n"); 
+	} else {
+		fmt.Fprintf(pFile, ".names a b and1\n")
+		fmt.Fprintf(pFile, "11 1\n")
+		fmt.Fprintf(pFile, ".names a b and1_\n")
+		fmt.Fprintf(pFile, "00 1\n")
+		fmt.Fprintf(pFile, ".names and1 and1_ xor\n")
+		fmt.Fprintf(pFile, "00 1\n")
 
-        fmt.Fprintf(pFile, ".names and1 and2 cout\n"); 
-        fmt.Fprintf(pFile, "00 0\n"); 
-    }
-    fmt.Fprintf(pFile, ".end\n"); 
-    fmt.Fprintf(pFile, "\n"); 
+		fmt.Fprintf(pFile, ".names cin xor and2\n")
+		fmt.Fprintf(pFile, "11 1\n")
+		fmt.Fprintf(pFile, ".names cin xor and2_\n")
+		fmt.Fprintf(pFile, "00 1\n")
+		fmt.Fprintf(pFile, ".names and2 and2_ s\n")
+		fmt.Fprintf(pFile, "00 1\n")
+
+		fmt.Fprintf(pFile, ".names and1 and2 cout\n")
+		fmt.Fprintf(pFile, "00 0\n")
+	}
+	fmt.Fprintf(pFile, ".end\n")
+	fmt.Fprintf(pFile, "\n")
 }
 func Abc_WriteAdder(pFile *os.File, nVars int32) {
-    var i int32;
-    var nDigits int32 = Abc_Base10Log( nVars );
+	var i int32
+	var nDigits int32 = Abc_Base10Log(nVars)
 
-    assert(nVars > 0, "nVars > 0");
-    fmt.Fprintf(pFile, ".model ADD%d\n", nVars);
+	assert(nVars > 0, "nVars > 0")
+	fmt.Fprintf(pFile, ".model ADD%d\n", nVars)
 
-    fmt.Fprintf(pFile, ".inputs");
-    for  i = 0; i < nVars; i++  {
-        fmt.Fprintf(pFile, " a%0*d", nDigits, i);
-    }
-    for  i = 0; i < nVars; i++  {
-        fmt.Fprintf(pFile, " b%0*d", nDigits, i);
-    }
-    fmt.Fprintf(pFile, "\n");
+	fmt.Fprintf(pFile, ".inputs")
+	for i = 0; i < nVars; i++ {
+		fmt.Fprintf(pFile, " a%0*d", nDigits, i)
+	}
+	for i = 0; i < nVars; i++ {
+		fmt.Fprintf(pFile, " b%0*d", nDigits, i)
+	}
+	fmt.Fprintf(pFile, "\n")
 
-    fmt.Fprintf(pFile, ".outputs");
-    for  i = 0; i <= nVars; i++  {
-        fmt.Fprintf(pFile, " s%0*d", nDigits, i);
-    }
-    fmt.Fprintf(pFile, "\n");
+	fmt.Fprintf(pFile, ".outputs")
+	for i = 0; i <= nVars; i++ {
+		fmt.Fprintf(pFile, " s%0*d", nDigits, i)
+	}
+	fmt.Fprintf(pFile, "\n")
 
-    fmt.Fprintf(pFile, ".names c\n");
-    if nVars == 1 {
-        fmt.Fprintf(pFile, ".subckt FA a=a0 b=b0 cin=c s=y0 cout=s1\n");
-    } else {
-        fmt.Fprintf(pFile, ".subckt FA a=a%0*d b=b%0*d cin=c s=s%0*d cout=%0*d\n", nDigits, 0, nDigits, 0, nDigits, 0, nDigits, 0);
-        for  i = 1; i < nVars-1; i++  {
-            fmt.Fprintf(pFile, ".subckt FA a=a%0*d b=b%0*d cin=%0*d s=s%0*d cout=%0*d\n", nDigits, i, nDigits, i, nDigits, i-1, nDigits, i, nDigits, i);
-        }
-        fmt.Fprintf(pFile, ".subckt FA a=a%0*d b=b%0*d cin=%0*d s=s%0*d cout=s%0*d\n", nDigits, i, nDigits, i, nDigits, i-1, nDigits, i, nDigits, i+1);
-    }
-    fmt.Fprintf(pFile, ".end\n"); 
-    fmt.Fprintf(pFile, "\n");
-    Abc_WriteFullAdder( pFile );
+	fmt.Fprintf(pFile, ".names c\n")
+	if nVars == 1 {
+		fmt.Fprintf(pFile, ".subckt FA a=a0 b=b0 cin=c s=y0 cout=s1\n")
+	} else {
+		fmt.Fprintf(pFile, ".subckt FA a=a%0*d b=b%0*d cin=c s=s%0*d cout=%0*d\n", nDigits, 0, nDigits, 0, nDigits, 0, nDigits, 0)
+		for i = 1; i < nVars-1; i++ {
+			fmt.Fprintf(pFile, ".subckt FA a=a%0*d b=b%0*d cin=%0*d s=s%0*d cout=%0*d\n", nDigits, i, nDigits, i, nDigits, i-1, nDigits, i, nDigits, i)
+		}
+		fmt.Fprintf(pFile, ".subckt FA a=a%0*d b=b%0*d cin=%0*d s=s%0*d cout=s%0*d\n", nDigits, i, nDigits, i, nDigits, i-1, nDigits, i, nDigits, i+1)
+	}
+	fmt.Fprintf(pFile, ".end\n")
+	fmt.Fprintf(pFile, "\n")
+	Abc_WriteFullAdder(pFile)
 }
 func Abc_GenAdder(pFileName string, nVars int32) {
-    var pFile *os.File;
-    assert(nVars > 0, "nVars > 0");
-    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);
-    fmt.Fprintf(pFile, "# %d-bit ripple-carry adder generated by ABC on %s\n", nVars, Extra_TimeStamp());
-    Abc_WriteAdder( pFile, nVars );
-    _ = (pFile).Close();
+	var pFile *os.File
+	assert(nVars > 0, "nVars > 0")
+	pFile = abcGenCreateFile(pFileName)
+	defer pFile.Close()
+	fmt.Fprintf(pFile, "# %d-bit ripple-carry adder generated by ABC on %s\n", nVars, Extra_TimeStamp())
+	Abc_WriteAdder(pFile, nVars)
 }
 
-/**Function*************************************************************
+func abcGenCreateFile(name string) *os.File {
+	f, err := os.OpenFile(name, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
+	if err != nil {
+		panic(err)
+	}
+	return f
+}
 
-  Synopsis    []
+func abcGenCString(data []byte) string {
+	if i := bytes.IndexByte(data, 0); i >= 0 {
+		return string(data[:i])
+	}
+	return string(data)
+}
 
-  Description []
-               
-  SideEffects []
+/*
+*Function*************************************************************
 
-  SeeAlso     []
+	Synopsis    []
 
-***********************************************************************/
+	Description []
+
+	SideEffects []
+
+	SeeAlso     []
+
+**********************************************************************
+*/
 func Abc_WriteMulti(pFile *os.File, nVars int32) {
-    var i int32;
-    var k int32;
-    var nDigits int32 = Abc_Base10Log( nVars );
-    var nDigits2 int32 = Abc_Base10Log( 2*nVars );
+	var i int32
+	var k int32
+	var nDigits int32 = Abc_Base10Log(nVars)
+	var nDigits2 int32 = Abc_Base10Log(2 * nVars)
 
-    assert(nVars > 0, "nVars > 0");
-    fmt.Fprintf(pFile, ".model Multi%d\n", nVars);
+	assert(nVars > 0, "nVars > 0")
+	fmt.Fprintf(pFile, ".model Multi%d\n", nVars)
 
-    fmt.Fprintf(pFile, ".inputs");
-    for  i = 0; i < nVars; i++  {
-        fmt.Fprintf(pFile, " a%0*d", nDigits, i);
-    }
-    for  i = 0; i < nVars; i++  {
-        fmt.Fprintf(pFile, " b%0*d", nDigits, i);
-    }
-    fmt.Fprintf(pFile, "\n");
+	fmt.Fprintf(pFile, ".inputs")
+	for i = 0; i < nVars; i++ {
+		fmt.Fprintf(pFile, " a%0*d", nDigits, i)
+	}
+	for i = 0; i < nVars; i++ {
+		fmt.Fprintf(pFile, " b%0*d", nDigits, i)
+	}
+	fmt.Fprintf(pFile, "\n")
 
-    fmt.Fprintf(pFile, ".outputs");
-    for  i = 0; i < 2*nVars; i++  {
-        fmt.Fprintf(pFile, " m%0*d", nDigits2, i);
-    }
-    fmt.Fprintf(pFile, "\n");
+	fmt.Fprintf(pFile, ".outputs")
+	for i = 0; i < 2*nVars; i++ {
+		fmt.Fprintf(pFile, " m%0*d", nDigits2, i)
+	}
+	fmt.Fprintf(pFile, "\n")
 
-    for  i = 0; i < 2*nVars; i++  {
-        fmt.Fprintf(pFile, ".names x%0*d_%0*d\n", nDigits, 0, nDigits2, i);
-    }
-    for  k = 0; k < nVars; k++  {
-        for  i = 0; i < 2 * nVars; i++  {
-            if i >= k && i < k + nVars {
-                fmt.Fprintf(pFile, ".names b%0*d a%0*d y%0*d_%0*d\n11 1\n", nDigits, k, nDigits, i-k, nDigits, k, nDigits2, i);
-            } else {
-                fmt.Fprintf(pFile, ".names y%0*d_%0*d\n", nDigits, k, nDigits2, i); }
-        }
-        fmt.Fprintf(pFile, ".subckt ADD%d", 2*nVars);
-        for  i = 0; i < 2*nVars; i++  {
-            fmt.Fprintf(pFile, " a%0*d=x%0*d_%0*d", nDigits2, i, nDigits, k, nDigits2, i);
-        }
-        for  i = 0; i < 2*nVars; i++  {
-            fmt.Fprintf(pFile, " b%0*d=y%0*d_%0*d", nDigits2, i, nDigits, k, nDigits2, i);
-        }
-        for  i = 0; i <= 2*nVars; i++  {
-            fmt.Fprintf(pFile, " s%0*d=x%0*d_%0*d", nDigits2, i, nDigits, k+1, nDigits2, i);
-        }
-        fmt.Fprintf(pFile, "\n");
-    }
-    for  i = 0; i < 2 * nVars; i++  {
-        fmt.Fprintf(pFile, ".names x%0*d_%0*d m%0*d\n1 1\n", nDigits, k, nDigits2, i, nDigits2, i);
-    }
-    fmt.Fprintf(pFile, ".end\n"); 
-    fmt.Fprintf(pFile, "\n");
-    Abc_WriteAdder( pFile, 2*nVars );
+	for i = 0; i < 2*nVars; i++ {
+		fmt.Fprintf(pFile, ".names x%0*d_%0*d\n", nDigits, 0, nDigits2, i)
+	}
+	for k = 0; k < nVars; k++ {
+		for i = 0; i < 2*nVars; i++ {
+			if i >= k && i < k+nVars {
+				fmt.Fprintf(pFile, ".names b%0*d a%0*d y%0*d_%0*d\n11 1\n", nDigits, k, nDigits, i-k, nDigits, k, nDigits2, i)
+			} else {
+				fmt.Fprintf(pFile, ".names y%0*d_%0*d\n", nDigits, k, nDigits2, i)
+			}
+		}
+		fmt.Fprintf(pFile, ".subckt ADD%d", 2*nVars)
+		for i = 0; i < 2*nVars; i++ {
+			fmt.Fprintf(pFile, " a%0*d=x%0*d_%0*d", nDigits2, i, nDigits, k, nDigits2, i)
+		}
+		for i = 0; i < 2*nVars; i++ {
+			fmt.Fprintf(pFile, " b%0*d=y%0*d_%0*d", nDigits2, i, nDigits, k, nDigits2, i)
+		}
+		for i = 0; i <= 2*nVars; i++ {
+			fmt.Fprintf(pFile, " s%0*d=x%0*d_%0*d", nDigits2, i, nDigits, k+1, nDigits2, i)
+		}
+		fmt.Fprintf(pFile, "\n")
+	}
+	for i = 0; i < 2*nVars; i++ {
+		fmt.Fprintf(pFile, ".names x%0*d_%0*d m%0*d\n1 1\n", nDigits, k, nDigits2, i, nDigits2, i)
+	}
+	fmt.Fprintf(pFile, ".end\n")
+	fmt.Fprintf(pFile, "\n")
+	Abc_WriteAdder(pFile, 2*nVars)
 }
 func Abc_GenMulti(pFileName string, nVars int32) {
-    var pFile *os.File;
-    assert(nVars > 0, "nVars > 0");
-    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);
-    fmt.Fprintf(pFile, "# %d-bit multiplier generated by ABC on %s\n", nVars, Extra_TimeStamp());
-    Abc_WriteMulti( pFile, nVars );
-    _ = (pFile).Close();
+	var pFile *os.File
+	assert(nVars > 0, "nVars > 0")
+	pFile = abcGenCreateFile(pFileName)
+	defer pFile.Close()
+	fmt.Fprintf(pFile, "# %d-bit multiplier generated by ABC on %s\n", nVars, Extra_TimeStamp())
+	Abc_WriteMulti(pFile, nVars)
 }
 
-/**Function*************************************************************
+/*
+*Function*************************************************************
 
-  Synopsis    []
+	Synopsis    []
 
-  Description []
-               
-  SideEffects []
+	Description []
 
-  SeeAlso     []
+	SideEffects []
 
-***********************************************************************/
+	SeeAlso     []
+
+**********************************************************************
+*/
 func Abc_WriteComp(pFile *os.File) {
-    fmt.Fprintf(pFile, ".model Comp\n");
-    fmt.Fprintf(pFile, ".inputs a b\n"); 
-    fmt.Fprintf(pFile, ".outputs x y\n"); 
-    fmt.Fprintf(pFile, ".names a b x\n"); 
-    fmt.Fprintf(pFile, "11 1\n"); 
-    fmt.Fprintf(pFile, ".names a b y\n"); 
-    fmt.Fprintf(pFile, "1- 1\n"); 
-    fmt.Fprintf(pFile, "-1 1\n"); 
-    fmt.Fprintf(pFile, ".end\n"); 
-    fmt.Fprintf(pFile, "\n"); 
+	fmt.Fprintf(pFile, ".model Comp\n")
+	fmt.Fprintf(pFile, ".inputs a b\n")
+	fmt.Fprintf(pFile, ".outputs x y\n")
+	fmt.Fprintf(pFile, ".names a b x\n")
+	fmt.Fprintf(pFile, "11 1\n")
+	fmt.Fprintf(pFile, ".names a b y\n")
+	fmt.Fprintf(pFile, "1- 1\n")
+	fmt.Fprintf(pFile, "-1 1\n")
+	fmt.Fprintf(pFile, ".end\n")
+	fmt.Fprintf(pFile, "\n")
 }
 func Abc_WriteLayer(pFile *os.File, nVars int32, fSkip1 int32) {
-    var i int32;
-    fmt.Fprintf(pFile, ".model Layer%d\n", fSkip1);
-    fmt.Fprintf(pFile, ".inputs"); 
-    for  i = 0; i < nVars; i++  {
-        fmt.Fprintf(pFile, " x%02d", i);
-    } 
-    fmt.Fprintf(pFile, "\n"); 
-    fmt.Fprintf(pFile, ".outputs"); 
-    for  i = 0; i < nVars; i++  {
-        fmt.Fprintf(pFile, " y%02d", i);
-    } 
-    fmt.Fprintf(pFile, "\n"); 
-    if fSkip1 != 0 {
-        fmt.Fprintf(pFile, ".names x00 y00\n"); 
-        fmt.Fprintf(pFile, "1 1\n"); 
-        i = 1;
-    
-    } else {
-        i = 0; }
-    for  ; i + 1 < nVars; i += 2  {
-        fmt.Fprintf(pFile, ".subckt Comp a=x%02d b=x%02d x=y%02d y=y%02d\n", i, i+1, i, i+1);
-    }
-    if i < nVars {
-        fmt.Fprintf(pFile, ".names x%02d y%02d\n", i, i); 
-        fmt.Fprintf(pFile, "1 1\n"); 
-    }
-    fmt.Fprintf(pFile, ".end\n"); 
-    fmt.Fprintf(pFile, "\n"); 
+	var i int32
+	fmt.Fprintf(pFile, ".model Layer%d\n", fSkip1)
+	fmt.Fprintf(pFile, ".inputs")
+	for i = 0; i < nVars; i++ {
+		fmt.Fprintf(pFile, " x%02d", i)
+	}
+	fmt.Fprintf(pFile, "\n")
+	fmt.Fprintf(pFile, ".outputs")
+	for i = 0; i < nVars; i++ {
+		fmt.Fprintf(pFile, " y%02d", i)
+	}
+	fmt.Fprintf(pFile, "\n")
+	if fSkip1 != 0 {
+		fmt.Fprintf(pFile, ".names x00 y00\n")
+		fmt.Fprintf(pFile, "1 1\n")
+		i = 1
+
+	} else {
+		i = 0
+	}
+	for ; i+1 < nVars; i += 2 {
+		fmt.Fprintf(pFile, ".subckt Comp a=x%02d b=x%02d x=y%02d y=y%02d\n", i, i+1, i, i+1)
+	}
+	if i < nVars {
+		fmt.Fprintf(pFile, ".names x%02d y%02d\n", i, i)
+		fmt.Fprintf(pFile, "1 1\n")
+	}
+	fmt.Fprintf(pFile, ".end\n")
+	fmt.Fprintf(pFile, "\n")
 }
 
-/**Function*************************************************************
+/*
+*Function*************************************************************
 
-  Synopsis    []
+	Synopsis    []
 
-  Description []
-               
-  SideEffects []
+	Description []
 
-  SeeAlso     []
+	SideEffects []
 
-***********************************************************************/
+	SeeAlso     []
+
+**********************************************************************
+*/
 func Abc_GenSorter(pFileName string, nVars int32) {
-    var pFile *os.File;
-    var i, k, Counter, nDigits int32;
+	var pFile *os.File
+	var i, k, Counter, nDigits int32
 
-    assert(nVars > 1, "nVars > 1");
+	assert(nVars > 1, "nVars > 1")
 
-    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);
-    fmt.Fprintf(pFile, "# %d-bit sorter generated by ABC on %s\n", nVars, Extra_TimeStamp());
-    fmt.Fprintf(pFile, ".model Sorter%02d\n", nVars);
+	pFile = abcGenCreateFile(pFileName)
+	defer pFile.Close()
+	fmt.Fprintf(pFile, "# %d-bit sorter generated by ABC on %s\n", nVars, Extra_TimeStamp())
+	fmt.Fprintf(pFile, ".model Sorter%02d\n", nVars)
 
-    fmt.Fprintf(pFile, ".inputs");
-    for  i = 0; i < nVars; i++  {
-        fmt.Fprintf(pFile, " x%02d", i);
-    }
-    fmt.Fprintf(pFile, "\n");
+	fmt.Fprintf(pFile, ".inputs")
+	for i = 0; i < nVars; i++ {
+		fmt.Fprintf(pFile, " x%02d", i)
+	}
+	fmt.Fprintf(pFile, "\n")
 
-    fmt.Fprintf(pFile, ".outputs");
-    for  i = 0; i < nVars; i++  {
-        fmt.Fprintf(pFile, " y%02d", i);
-    }
-    fmt.Fprintf(pFile, "\n");
+	fmt.Fprintf(pFile, ".outputs")
+	for i = 0; i < nVars; i++ {
+		fmt.Fprintf(pFile, " y%02d", i)
+	}
+	fmt.Fprintf(pFile, "\n")
 
-    Counter = 0;
-    nDigits = Abc_Base10Log( (nVars-2)*nVars );
-    if nVars == 2 {
-        fmt.Fprintf(pFile, ".subckt Comp a=x00 b=x01 x=y00 y=y01\n");
-    } else {
-        fmt.Fprintf(pFile, ".subckt Layer0");
-        for  k = 0; k < nVars; k++  {
-            fmt.Fprintf(pFile, " x%02d=x%02d", k, k);
-        }
-        for  k = 0; k < nVars; k++  {
-            fmt.Fprintf(pFile, " y%02d=%0*d", k, nDigits, Counter++);
-        }
-        fmt.Fprintf(pFile, "\n");
-        Counter -= nVars;
-        for  i = 1; i < 2*nVars-2; i++  {
-            fmt.Fprintf(pFile, ".subckt Layer%d", (i&1));
-            for  k = 0; k < nVars; k++  {
-                fmt.Fprintf(pFile, " x%02d=%0*d", k, nDigits, Counter++);
-            }
-            for  k = 0; k < nVars; k++  {
-                fmt.Fprintf(pFile, " y%02d=%0*d", k, nDigits, Counter++);
-            }
-            fmt.Fprintf(pFile, "\n");
-            Counter -= nVars;
-        }
-        fmt.Fprintf(pFile, ".subckt Layer%d", (i&1));
-        for  k = 0; k < nVars; k++  {
-            fmt.Fprintf(pFile, " x%02d=%0*d", k, nDigits, Counter++);
-        }
-        for  k = 0; k < nVars; k++  {
-            fmt.Fprintf(pFile, " y%02d=y%02d", k, k);
-        }
-        fmt.Fprintf(pFile, "\n");
-    }
-    fmt.Fprintf(pFile, ".end\n"); 
-    fmt.Fprintf(pFile, "\n");
+	Counter = 0
+	nDigits = Abc_Base10Log((nVars - 2) * nVars)
+	if nVars == 2 {
+		fmt.Fprintf(pFile, ".subckt Comp a=x00 b=x01 x=y00 y=y01\n")
+	} else {
+		fmt.Fprintf(pFile, ".subckt Layer0")
+		for k = 0; k < nVars; k++ {
+			fmt.Fprintf(pFile, " x%02d=x%02d", k, k)
+		}
+		for k = 0; k < nVars; k++ {
+			fmt.Fprintf(pFile, " y%02d=%0*d", k, nDigits, Counter)
+			Counter++
+		}
+		fmt.Fprintf(pFile, "\n")
+		Counter -= nVars
+		for i = 1; i < 2*nVars-2; i++ {
+			fmt.Fprintf(pFile, ".subckt Layer%d", (i & 1))
+			for k = 0; k < nVars; k++ {
+				fmt.Fprintf(pFile, " x%02d=%0*d", k, nDigits, Counter)
+				Counter++
+			}
+			for k = 0; k < nVars; k++ {
+				fmt.Fprintf(pFile, " y%02d=%0*d", k, nDigits, Counter)
+				Counter++
+			}
+			fmt.Fprintf(pFile, "\n")
+			Counter -= nVars
+		}
+		fmt.Fprintf(pFile, ".subckt Layer%d", (i & 1))
+		for k = 0; k < nVars; k++ {
+			fmt.Fprintf(pFile, " x%02d=%0*d", k, nDigits, Counter)
+			Counter++
+		}
+		for k = 0; k < nVars; k++ {
+			fmt.Fprintf(pFile, " y%02d=y%02d", k, k)
+		}
+		fmt.Fprintf(pFile, "\n")
+	}
+	fmt.Fprintf(pFile, ".end\n")
+	fmt.Fprintf(pFile, "\n")
 
-    Abc_WriteLayer( pFile, nVars, 0 );
-    Abc_WriteLayer( pFile, nVars, 1 );
-    Abc_WriteComp( pFile );
-    _ = (pFile).Close();
+	Abc_WriteLayer(pFile, nVars, 0)
+	Abc_WriteLayer(pFile, nVars, 1)
+	Abc_WriteComp(pFile)
 }
 
-/**Function*************************************************************
+/*
+*Function*************************************************************
 
-  Synopsis    []
+	Synopsis    []
 
-  Description []
-               
-  SideEffects []
+	Description []
 
-  SeeAlso     []
+	SideEffects []
 
-***********************************************************************/
+	SeeAlso     []
+
+**********************************************************************
+*/
 func Abc_WriteCell(pFile *os.File) {
-    fmt.Fprintf(pFile, ".model cell\n");
-    fmt.Fprintf(pFile, ".inputs px1 px2 py1 py2 x y\n"); 
-    fmt.Fprintf(pFile, ".outputs fx fy\n"); 
-    fmt.Fprintf(pFile, ".names x y a\n"); 
-    fmt.Fprintf(pFile, "11 1\n"); 
-    fmt.Fprintf(pFile, ".names px1 a x nx\n"); 
-    fmt.Fprintf(pFile, "11- 1\n"); 
-    fmt.Fprintf(pFile, "0-1 1\n"); 
-    fmt.Fprintf(pFile, ".names py1 a y ny\n"); 
-    fmt.Fprintf(pFile, "11- 1\n"); 
-    fmt.Fprintf(pFile, "0-1 1\n"); 
-    fmt.Fprintf(pFile, ".names px2 nx fx\n"); 
-    fmt.Fprintf(pFile, "10 1\n"); 
-    fmt.Fprintf(pFile, "01 1\n"); 
-    fmt.Fprintf(pFile, ".names py2 ny fy\n"); 
-    fmt.Fprintf(pFile, "10 1\n"); 
-    fmt.Fprintf(pFile, "01 1\n"); 
-    fmt.Fprintf(pFile, ".end\n"); 
-    fmt.Fprintf(pFile, "\n"); 
+	fmt.Fprintf(pFile, ".model cell\n")
+	fmt.Fprintf(pFile, ".inputs px1 px2 py1 py2 x y\n")
+	fmt.Fprintf(pFile, ".outputs fx fy\n")
+	fmt.Fprintf(pFile, ".names x y a\n")
+	fmt.Fprintf(pFile, "11 1\n")
+	fmt.Fprintf(pFile, ".names px1 a x nx\n")
+	fmt.Fprintf(pFile, "11- 1\n")
+	fmt.Fprintf(pFile, "0-1 1\n")
+	fmt.Fprintf(pFile, ".names py1 a y ny\n")
+	fmt.Fprintf(pFile, "11- 1\n")
+	fmt.Fprintf(pFile, "0-1 1\n")
+	fmt.Fprintf(pFile, ".names px2 nx fx\n")
+	fmt.Fprintf(pFile, "10 1\n")
+	fmt.Fprintf(pFile, "01 1\n")
+	fmt.Fprintf(pFile, ".names py2 ny fy\n")
+	fmt.Fprintf(pFile, "10 1\n")
+	fmt.Fprintf(pFile, "01 1\n")
+	fmt.Fprintf(pFile, ".end\n")
+	fmt.Fprintf(pFile, "\n")
 }
 
-/**Function*************************************************************
+/*
+*Function*************************************************************
 
-  Synopsis    []
+	Synopsis    []
 
-  Description []
-               
-  SideEffects []
+	Description []
 
-  SeeAlso     []
+	SideEffects []
 
-***********************************************************************/
+	SeeAlso     []
+
+**********************************************************************
+*/
 func Abc_GenMesh(pFileName string, nVars int32) {
-    var pFile *os.File;
-    var i, k int32;
+	var pFile *os.File
+	var i, k int32
 
-    assert(nVars > 0, "nVars > 0");
+	assert(nVars > 0, "nVars > 0")
 
-    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);
-    fmt.Fprintf(pFile, "# %dx%d mesh generated by ABC on %s\n", nVars, nVars, Extra_TimeStamp());
-    fmt.Fprintf(pFile, ".model mesh%d\n", nVars);
+	pFile = abcGenCreateFile(pFileName)
+	defer pFile.Close()
+	fmt.Fprintf(pFile, "# %dx%d mesh generated by ABC on %s\n", nVars, nVars, Extra_TimeStamp())
+	fmt.Fprintf(pFile, ".model mesh%d\n", nVars)
 
-    for  i = 0; i < nVars; i++  {
-        for  k = 0; k < nVars; k++  {
-            fmt.Fprintf(pFile, ".inputs");
-            fmt.Fprintf(pFile, " p%d%dx1", i, k);
-            fmt.Fprintf(pFile, " p%d%dx2", i, k);
-            fmt.Fprintf(pFile, " p%d%dy1", i, k);
-            fmt.Fprintf(pFile, " p%d%dy2", i, k);
-            fmt.Fprintf(pFile, "\n");
-        }
-    }
-    fmt.Fprintf(pFile, ".inputs");
-    for  i = 0; i < nVars; i++  {
-        fmt.Fprintf(pFile, " v%02d v%02d", 2*i, 2*i+1);
-    }
-    fmt.Fprintf(pFile, "\n");
+	for i = 0; i < nVars; i++ {
+		for k = 0; k < nVars; k++ {
+			fmt.Fprintf(pFile, ".inputs")
+			fmt.Fprintf(pFile, " p%d%dx1", i, k)
+			fmt.Fprintf(pFile, " p%d%dx2", i, k)
+			fmt.Fprintf(pFile, " p%d%dy1", i, k)
+			fmt.Fprintf(pFile, " p%d%dy2", i, k)
+			fmt.Fprintf(pFile, "\n")
+		}
+	}
+	fmt.Fprintf(pFile, ".inputs")
+	for i = 0; i < nVars; i++ {
+		fmt.Fprintf(pFile, " v%02d v%02d", 2*i, 2*i+1)
+	}
+	fmt.Fprintf(pFile, "\n")
 
-    fmt.Fprintf(pFile, ".outputs");
-    fmt.Fprintf(pFile, " fx00");
-    fmt.Fprintf(pFile, "\n");
+	fmt.Fprintf(pFile, ".outputs")
+	fmt.Fprintf(pFile, " fx00")
+	fmt.Fprintf(pFile, "\n")
 
-    for  i = 0; i < nVars; i++  { // horizontal
-        for  k = 0; k < nVars; k++  { // vertical
-        
-            fmt.Fprintf(pFile, ".subckt cell");
-            fmt.Fprintf(pFile, " px1=p%d%dx1", i, k);
-            fmt.Fprintf(pFile, " px2=p%d%dx2", i, k);
-            fmt.Fprintf(pFile, " py1=p%d%dy1", i, k);
-            fmt.Fprintf(pFile, " py2=p%d%dy2", i, k);
-            if k == nVars - 1 {
-                fmt.Fprintf(pFile, " x=v%02d", i);
-            } else {
-                fmt.Fprintf(pFile, " x=fx%d%d", i, k+1); }
-            if i == nVars - 1 {
-                fmt.Fprintf(pFile, " y=v%02d", nVars+k);
-            } else {
-                fmt.Fprintf(pFile, " y=fy%d%d", i+1, k); }
-            // outputs
-            fmt.Fprintf(pFile, " fx=fx%d%d", i, k);
-            fmt.Fprintf(pFile, " fy=fy%d%d", i, k);
-            fmt.Fprintf(pFile, "\n");
-        }
-    }
-    fmt.Fprintf(pFile, ".end\n"); 
-    fmt.Fprintf(pFile, "\n");
-    fmt.Fprintf(pFile, "\n");
+	for i = 0; i < nVars; i++ { // horizontal
+		for k = 0; k < nVars; k++ { // vertical
 
-    Abc_WriteCell( pFile );
-    _ = (pFile).Close();
+			fmt.Fprintf(pFile, ".subckt cell")
+			fmt.Fprintf(pFile, " px1=p%d%dx1", i, k)
+			fmt.Fprintf(pFile, " px2=p%d%dx2", i, k)
+			fmt.Fprintf(pFile, " py1=p%d%dy1", i, k)
+			fmt.Fprintf(pFile, " py2=p%d%dy2", i, k)
+			if k == nVars-1 {
+				fmt.Fprintf(pFile, " x=v%02d", i)
+			} else {
+				fmt.Fprintf(pFile, " x=fx%d%d", i, k+1)
+			}
+			if i == nVars-1 {
+				fmt.Fprintf(pFile, " y=v%02d", nVars+k)
+			} else {
+				fmt.Fprintf(pFile, " y=fy%d%d", i+1, k)
+			}
+			// outputs
+			fmt.Fprintf(pFile, " fx=fx%d%d", i, k)
+			fmt.Fprintf(pFile, " fy=fy%d%d", i, k)
+			fmt.Fprintf(pFile, "\n")
+		}
+	}
+	fmt.Fprintf(pFile, ".end\n")
+	fmt.Fprintf(pFile, "\n")
+	fmt.Fprintf(pFile, "\n")
+
+	Abc_WriteCell(pFile)
 }
 
+/*
+*Function*************************************************************
 
-/**Function*************************************************************
+	Synopsis    []
 
-  Synopsis    []
+	Description []
 
-  Description []
-               
-  SideEffects []
+	SideEffects []
 
-  SeeAlso     []
+	SeeAlso     []
 
-***********************************************************************/
+**********************************************************************
+*/
 func Abc_WriteKLut(pFile *os.File, nLutSize int32) {
-    var i int32;
-    var iVar int32;
-    var iNext int32;
-    var nPars int32 = (1 << nLutSize);
-    fmt.Fprintf(pFile, "\n"); 
-    fmt.Fprintf(pFile, ".model lut%d\n", nLutSize);
-    fmt.Fprintf(pFile, ".inputs");
-    for  i = 0; i < nPars; i++  {
-        fmt.Fprintf(pFile, " p%02d", i);
-    }
-    fmt.Fprintf(pFile, "\n");
-    fmt.Fprintf(pFile, ".inputs");
-    for  i = 0; i < nLutSize; i++  {
-        fmt.Fprintf(pFile, " i%d", i);
-    }
-    fmt.Fprintf(pFile, "\n");
-    fmt.Fprintf(pFile, ".outputs o\n"); 
-    fmt.Fprintf(pFile, ".names n01 o\n"); 
-    fmt.Fprintf(pFile, "1 1\n"); 
-    // write internal MUXes
-    iVar = 0;
-    iNext = 2;
-    for  i = 1; i < nPars; i++  {
-        if i == iNext {
-            iNext *= 2;
-            iVar++; 
-        }
-        if iVar == nLutSize - 1 {
-            fmt.Fprintf(pFile, ".names i%d p%02d p%02d n%02d\n", iVar, 2*(i-nPars/2), 2*(i-nPars/2)+1, i); 
-        } else {
-            fmt.Fprintf(pFile, ".names i%d n%02d n%02d n%02d\n", iVar, 2*i, 2*i+1, i); } 
-        fmt.Fprintf(pFile, "01- 1\n"); 
-        fmt.Fprintf(pFile, "1-1 1\n"); 
-    }
-    fmt.Fprintf(pFile, ".end\n"); 
-    fmt.Fprintf(pFile, "\n"); 
+	var i int32
+	var iVar int32
+	var iNext int32
+	var nPars int32 = (1 << nLutSize)
+	fmt.Fprintf(pFile, "\n")
+	fmt.Fprintf(pFile, ".model lut%d\n", nLutSize)
+	fmt.Fprintf(pFile, ".inputs")
+	for i = 0; i < nPars; i++ {
+		fmt.Fprintf(pFile, " p%02d", i)
+	}
+	fmt.Fprintf(pFile, "\n")
+	fmt.Fprintf(pFile, ".inputs")
+	for i = 0; i < nLutSize; i++ {
+		fmt.Fprintf(pFile, " i%d", i)
+	}
+	fmt.Fprintf(pFile, "\n")
+	fmt.Fprintf(pFile, ".outputs o\n")
+	fmt.Fprintf(pFile, ".names n01 o\n")
+	fmt.Fprintf(pFile, "1 1\n")
+	// write internal MUXes
+	iVar = 0
+	iNext = 2
+	for i = 1; i < nPars; i++ {
+		if i == iNext {
+			iNext *= 2
+			iVar++
+		}
+		if iVar == nLutSize-1 {
+			fmt.Fprintf(pFile, ".names i%d p%02d p%02d n%02d\n", iVar, 2*(i-nPars/2), 2*(i-nPars/2)+1, i)
+		} else {
+			fmt.Fprintf(pFile, ".names i%d n%02d n%02d n%02d\n", iVar, 2*i, 2*i+1, i)
+		}
+		fmt.Fprintf(pFile, "01- 1\n")
+		fmt.Fprintf(pFile, "1-1 1\n")
+	}
+	fmt.Fprintf(pFile, ".end\n")
+	fmt.Fprintf(pFile, "\n")
 }
 
-/**Function*************************************************************
+/*
+*Function*************************************************************
 
-  Synopsis    [Generates structure of L K-LUTs implementing an N-var function.]
+	Synopsis    [Generates structure of L K-LUTs implementing an N-var function.]
 
-  Description []
-               
-  SideEffects []
+	Description []
 
-  SeeAlso     []
+	SideEffects []
 
-***********************************************************************/
+	SeeAlso     []
+
+**********************************************************************
+*/
 func Abc_GenFpga(pFileName string, nLutSize int32, nLuts int32, nVars int32) {
-    var fGenerateFunc int32  = 1;
-    var pFile *os.File;
-    var nVarsLut int32  = (1 << nLutSize);                     // the number of LUT variables
-    var nVarsLog int32  = Abc_Base2Log( nVars + nLuts - 1 ); // the number of encoding vars
-    var nVarsDeg int32  = (1 << nVarsLog);                     // the number of LUT variables (total)
-    var nParsLut int32  = nLuts * (1 << nLutSize);             // the number of LUT params
-    var nParsVar int32  = nLuts * nLutSize * nVarsLog;         // the number of var params
-    var i, j, k int32;
+	var fGenerateFunc int32 = 1
+	var pFile *os.File
+	var nVarsLut int32 = (1 << nLutSize)                 // the number of LUT variables
+	var nVarsLog int32 = Abc_Base2Log(nVars + nLuts - 1) // the number of encoding vars
+	var nVarsDeg int32 = (1 << nVarsLog)                 // the number of LUT variables (total)
+	var nParsLut int32 = nLuts * (1 << nLutSize)         // the number of LUT params
+	var nParsVar int32 = nLuts * nLutSize * nVarsLog     // the number of var params
+	var i, j, k int32
 
-    assert(nVars > 0, "nVars > 0");
+	assert(nVars > 0, "nVars > 0")
 
-    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);
-    fmt.Fprintf(pFile, "# Structure with %d %d-LUTs for %d-var function generated by ABC on %s\n", nLuts, nLutSize, nVars, Extra_TimeStamp());
-    fmt.Fprintf(pFile, ".model struct%dx%d_%d\n", nLuts, nLutSize, nVars);
+	pFile = abcGenCreateFile(pFileName)
+	defer pFile.Close()
+	fmt.Fprintf(pFile, "# Structure with %d %d-LUTs for %d-var function generated by ABC on %s\n", nLuts, nLutSize, nVars, Extra_TimeStamp())
+	fmt.Fprintf(pFile, ".model struct%dx%d_%d\n", nLuts, nLutSize, nVars)
 
-    fmt.Fprintf(pFile, ".inputs");
-    for  i = 0; i < nParsLut; i++  {
-//        if ( i % (1 << nLutSize) == 0 && i != (nLuts - 1) * (1 << nLutSize) )
-//            continue;
-        fmt.Fprintf(pFile, " pl%02d", i);
-    }
-    fmt.Fprintf(pFile, "\n");
+	fmt.Fprintf(pFile, ".inputs")
+	for i = 0; i < nParsLut; i++ {
+		//        if ( i % (1 << nLutSize) == 0 && i != (nLuts - 1) * (1 << nLutSize) )
+		//            continue;
+		fmt.Fprintf(pFile, " pl%02d", i)
+	}
+	fmt.Fprintf(pFile, "\n")
 
-    fmt.Fprintf(pFile, ".inputs");
-    for  i = 0; i < nParsVar; i++  {
-        fmt.Fprintf(pFile, " pv%02d", i);
-    }
-    fmt.Fprintf(pFile, "\n");
+	fmt.Fprintf(pFile, ".inputs")
+	for i = 0; i < nParsVar; i++ {
+		fmt.Fprintf(pFile, " pv%02d", i)
+	}
+	fmt.Fprintf(pFile, "\n")
 
-    fmt.Fprintf(pFile, ".inputs");
-    for  i = 0; i < nVars; i++  {
-        fmt.Fprintf(pFile, " v%02d", i);
-    }
-    fmt.Fprintf(pFile, "\n");
+	fmt.Fprintf(pFile, ".inputs")
+	for i = 0; i < nVars; i++ {
+		fmt.Fprintf(pFile, " v%02d", i)
+	}
+	fmt.Fprintf(pFile, "\n")
 
-    fmt.Fprintf(pFile, ".outputs");
-//    fprintf( pFile, " v%02d", nVars + nLuts - 1 );
-    fmt.Fprintf(pFile, " out");
-    fmt.Fprintf(pFile, "\n");
-    fmt.Fprintf(pFile, ".names Gnd\n"); 
-    fmt.Fprintf(pFile, " 0\n"); 
+	fmt.Fprintf(pFile, ".outputs")
+	//    fprintf( pFile, " v%02d", nVars + nLuts - 1 );
+	fmt.Fprintf(pFile, " out")
+	fmt.Fprintf(pFile, "\n")
+	fmt.Fprintf(pFile, ".names Gnd\n")
+	fmt.Fprintf(pFile, " 0\n")
 
-    // generate function
-    if fGenerateFunc != 0 {
-        fmt.Fprintf(pFile, ".names v%02d func out\n", nVars + nLuts - 1);
-        fmt.Fprintf(pFile, "00 1\n11 1\n");
-        fmt.Fprintf(pFile, ".names");
-        for  i = 0; i < nVars; i++  {
-            fmt.Fprintf(pFile, " v%02d", i);
-        }
-        fmt.Fprintf(pFile, " func\n");
-        for  i = 0; i < nVars; i++  {
-            fmt.Fprintf(pFile, "1");
-        }
-        fmt.Fprintf(pFile, " 1\n");
-    
-    } else {
-        fmt.Fprintf(pFile, ".names v%02d out\n1 1\n", nVars + nLuts - 1); }
+	// generate function
+	if fGenerateFunc != 0 {
+		fmt.Fprintf(pFile, ".names v%02d func out\n", nVars+nLuts-1)
+		fmt.Fprintf(pFile, "00 1\n11 1\n")
+		fmt.Fprintf(pFile, ".names")
+		for i = 0; i < nVars; i++ {
+			fmt.Fprintf(pFile, " v%02d", i)
+		}
+		fmt.Fprintf(pFile, " func\n")
+		for i = 0; i < nVars; i++ {
+			fmt.Fprintf(pFile, "1")
+		}
+		fmt.Fprintf(pFile, " 1\n")
 
-    // generate LUTs
-    for  i = 0; i < nLuts; i++  {
-        fmt.Fprintf(pFile, ".subckt lut%d", nLutSize);
-        // generate config parameters
-        for  k = 0; k < nVarsLut; k++  {
-            fmt.Fprintf(pFile, " p%02d=pl%02d", k, i * nVarsLut + k);
-        }
-        // generate the inputs
-        for  k = 0; k < nLutSize; k++  {
-            fmt.Fprintf(pFile, " i%d=s%02d", k, i * nLutSize + k);
-        }
-        // generate the output
-        fmt.Fprintf(pFile, " o=v%02d", nVars + i);
-        fmt.Fprintf(pFile, "\n");
-    }
+	} else {
+		fmt.Fprintf(pFile, ".names v%02d out\n1 1\n", nVars+nLuts-1)
+	}
 
-    // generate LUT inputs
-    for  i = 0; i < nLuts; i++  {
-        for  j = 0; j < nLutSize; j++  {
-            fmt.Fprintf(pFile, ".subckt lut%d", nVarsLog);
-            // generate config parameters
-            for  k = 0; k < nVarsDeg; k++  {
-                if k < nVars + nLuts - 1 && k < nVars + i {
-                    fmt.Fprintf(pFile, " p%02d=v%02d", k, k);
-                } else {
-                    fmt.Fprintf(pFile, " p%02d=Gnd", k); }
-            }
-            // generate the inputs
-            for  k = 0; k < nVarsLog; k++  {
-                fmt.Fprintf(pFile, " i%d=pv%02d", k, (i * nLutSize + j) * nVarsLog + k);
-            }
-            // generate the output
-            fmt.Fprintf(pFile, " o=s%02d", i * nLutSize + j);
-            fmt.Fprintf(pFile, "\n");
-        }
-    }
+	// generate LUTs
+	for i = 0; i < nLuts; i++ {
+		fmt.Fprintf(pFile, ".subckt lut%d", nLutSize)
+		// generate config parameters
+		for k = 0; k < nVarsLut; k++ {
+			fmt.Fprintf(pFile, " p%02d=pl%02d", k, i*nVarsLut+k)
+		}
+		// generate the inputs
+		for k = 0; k < nLutSize; k++ {
+			fmt.Fprintf(pFile, " i%d=s%02d", k, i*nLutSize+k)
+		}
+		// generate the output
+		fmt.Fprintf(pFile, " o=v%02d", nVars+i)
+		fmt.Fprintf(pFile, "\n")
+	}
 
-    fmt.Fprintf(pFile, ".end\n"); 
-    fmt.Fprintf(pFile, "\n"); 
+	// generate LUT inputs
+	for i = 0; i < nLuts; i++ {
+		for j = 0; j < nLutSize; j++ {
+			fmt.Fprintf(pFile, ".subckt lut%d", nVarsLog)
+			// generate config parameters
+			for k = 0; k < nVarsDeg; k++ {
+				if k < nVars+nLuts-1 && k < nVars+i {
+					fmt.Fprintf(pFile, " p%02d=v%02d", k, k)
+				} else {
+					fmt.Fprintf(pFile, " p%02d=Gnd", k)
+				}
+			}
+			// generate the inputs
+			for k = 0; k < nVarsLog; k++ {
+				fmt.Fprintf(pFile, " i%d=pv%02d", k, (i*nLutSize+j)*nVarsLog+k)
+			}
+			// generate the output
+			fmt.Fprintf(pFile, " o=s%02d", i*nLutSize+j)
+			fmt.Fprintf(pFile, "\n")
+		}
+	}
 
-    // generate LUTs
-    Abc_WriteKLut( pFile, nLutSize );
-    if nVarsLog != nLutSize {
-        Abc_WriteKLut( pFile, nVarsLog ); }
-    _ = (pFile).Close();
+	fmt.Fprintf(pFile, ".end\n")
+	fmt.Fprintf(pFile, "\n")
+
+	// generate LUTs
+	Abc_WriteKLut(pFile, nLutSize)
+	if nVarsLog != nLutSize {
+		Abc_WriteKLut(pFile, nVarsLog)
+	}
 }
 
-/**Function*************************************************************
+/*
+*Function*************************************************************
 
-  Synopsis    [Generates structure of L K-LUTs implementing an N-var function.]
+	Synopsis    [Generates structure of L K-LUTs implementing an N-var function.]
 
-  Description []
-               
-  SideEffects []
+	Description []
 
-  SeeAlso     []
+	SideEffects []
 
-***********************************************************************/
+	SeeAlso     []
+
+**********************************************************************
+*/
 func Abc_GenOneHot(pFileName string, nVars int32) {
-    var pFile *os.File;
-    var i, k, Counter, nDigitsIn, nDigitsOut int32;
-    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);
-    fmt.Fprintf(pFile, "# One-hotness condition for %d vars generated by ABC on %s\n", nVars, Extra_TimeStamp());
-    fmt.Fprintf(pFile, ".model 1hot_%dvars\n", nVars);
-    fmt.Fprintf(pFile, ".inputs");
-    nDigitsIn = Abc_Base10Log( nVars );
-    for  i = 0; i < nVars; i++  {
-        fmt.Fprintf(pFile, " i%0*d", nDigitsIn, i);
-    }
-    fmt.Fprintf(pFile, "\n");
-    fmt.Fprintf(pFile, ".outputs");
-    nDigitsOut = Abc_Base10Log( nVars * (nVars - 1) / 2 );
-    for  i = 0; i < nVars * (nVars - 1) / 2; i++  {
-        fmt.Fprintf(pFile, " o%0*d", nDigitsOut, i);
-    }
-    fmt.Fprintf(pFile, "\n");
-    Counter = 0;
-    for  i = 0; i < nVars; i++  {
-        for  k = i+1; k < nVars; k++  {
-            fmt.Fprintf(pFile, ".names i%0*d i%0*d o%0*d\n", nDigitsIn, i, nDigitsIn, k, nDigitsOut, Counter); 
-            fmt.Fprintf(pFile, "11 0\n"); 
-            Counter++;
-        }
-    }
-    fmt.Fprintf(pFile, ".end\n"); 
-    fmt.Fprintf(pFile, "\n"); 
-    _ = (pFile).Close();
+	var pFile *os.File
+	var i, k, Counter, nDigitsIn, nDigitsOut int32
+	pFile = abcGenCreateFile(pFileName)
+	defer pFile.Close()
+	fmt.Fprintf(pFile, "# One-hotness condition for %d vars generated by ABC on %s\n", nVars, Extra_TimeStamp())
+	fmt.Fprintf(pFile, ".model 1hot_%dvars\n", nVars)
+	fmt.Fprintf(pFile, ".inputs")
+	nDigitsIn = Abc_Base10Log(nVars)
+	for i = 0; i < nVars; i++ {
+		fmt.Fprintf(pFile, " i%0*d", nDigitsIn, i)
+	}
+	fmt.Fprintf(pFile, "\n")
+	fmt.Fprintf(pFile, ".outputs")
+	nDigitsOut = Abc_Base10Log(nVars * (nVars - 1) / 2)
+	for i = 0; i < nVars*(nVars-1)/2; i++ {
+		fmt.Fprintf(pFile, " o%0*d", nDigitsOut, i)
+	}
+	fmt.Fprintf(pFile, "\n")
+	Counter = 0
+	for i = 0; i < nVars; i++ {
+		for k = i + 1; k < nVars; k++ {
+			fmt.Fprintf(pFile, ".names i%0*d i%0*d o%0*d\n", nDigitsIn, i, nDigitsIn, k, nDigitsOut, Counter)
+			fmt.Fprintf(pFile, "11 0\n")
+			Counter++
+		}
+	}
+	fmt.Fprintf(pFile, ".end\n")
+	fmt.Fprintf(pFile, "\n")
 }
 
-/**Function*************************************************************
+/*
+*Function*************************************************************
 
-  Synopsis    [Generates structure of L K-LUTs implementing an N-var function.]
+	Synopsis    [Generates structure of L K-LUTs implementing an N-var function.]
 
-  Description []
-               
-  SideEffects []
+	Description []
 
-  SeeAlso     []
+	SideEffects []
 
-***********************************************************************/
+	SeeAlso     []
+
+**********************************************************************
+*/
 func Abc_GenOneHotIntervals(pFileName string, nPis int32, nRegs int32, vOnehots *Vec_Ptr_t) {
-    var vLine *Vec_Int_t;
-    var pFile *os.File;
-    var i, j, k, iReg1, iReg2, Counter, Counter2, nDigitsIn, nDigitsOut int32;
-    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);
-    fmt.Fprintf(pFile, "# One-hotness with %d vars and %d regs generated by ABC on %s\n", nPis, nRegs, Extra_TimeStamp());
-    fmt.Fprintf(pFile, "# Used %d intervals of 1-hot registers: { ", Vec_PtrSize(vOnehots));
-    Counter = 0;
-    // inlining of macro Vec_PtrForEachEntry
-    for  k = 0; (k < Vec_PtrSize(vOnehots)) && (((vLine) = (Vec_Int_t *)Vec_PtrEntry(vOnehots, k)), 1); k++  {
-        fmt.Fprintf(pFile, "%d ", Vec_IntSize(vLine));
-        Counter += Vec_IntSize(vLine) * (Vec_IntSize(vLine) - 1) / 2;
-    }
-    fmt.Fprintf(pFile, "}\n");
-    fmt.Fprintf(pFile, ".model 1hot_%dvars_%dregs\n", nPis, nRegs);
-    fmt.Fprintf(pFile, ".inputs");
-    nDigitsIn = Abc_Base10Log( nPis+nRegs );
-    for  i = 0; i < nPis+nRegs; i++  {
-        fmt.Fprintf(pFile, " i%0*d", nDigitsIn, i);
-    }
-    fmt.Fprintf(pFile, "\n");
-    fmt.Fprintf(pFile, ".outputs");
-    nDigitsOut = Abc_Base10Log( Counter );
-    for  i = 0; i < Counter; i++  {
-        fmt.Fprintf(pFile, " o%0*d", nDigitsOut, i);
-    }
-    fmt.Fprintf(pFile, "\n");
-    Counter2 = 0;
-    // inlining of macro Vec_PtrForEachEntry
-    for  k = 0; (k < Vec_PtrSize(vOnehots)) && (((vLine) = (Vec_Int_t *)Vec_PtrEntry(vOnehots, k)), 1); k++  {
-        // inlining of macro Vec_IntForEachEntry
-        for  i = 0; (i < Vec_IntSize(vLine)) && (((iReg1) = Vec_IntEntry(vLine, i)), 1); i++  {
-        // inlining of macro Vec_IntForEachEntryStart
-        for  j = i+1; (j < Vec_IntSize(vLine)) && (((iReg2) = Vec_IntEntry(vLine, j)), 1); j++  {
-            fmt.Fprintf(pFile, ".names i%0*d i%0*d o%0*d\n", nDigitsIn, nPis+iReg1, nDigitsIn, nPis+iReg2, nDigitsOut, Counter2); 
-            fmt.Fprintf(pFile, "11 0\n"); 
-            Counter2++;
-        }
-        }
-    }
-    assert(Counter == Counter2, "Counter == Counter2");
-    fmt.Fprintf(pFile, ".end\n"); 
-    fmt.Fprintf(pFile, "\n"); 
-    _ = (pFile).Close();
+	var vLine *Vec_Int_t
+	var pFile *os.File
+	var i, j, k, iReg1, iReg2, Counter, Counter2, nDigitsIn, nDigitsOut int32
+	pFile = abcGenCreateFile(pFileName)
+	defer pFile.Close()
+	fmt.Fprintf(pFile, "# One-hotness with %d vars and %d regs generated by ABC on %s\n", nPis, nRegs, Extra_TimeStamp())
+	fmt.Fprintf(pFile, "# Used %d intervals of 1-hot registers: { ", Vec_PtrSize(vOnehots))
+	Counter = 0
+	// inlining of macro Vec_PtrForEachEntry
+	for k = 0; k < Vec_PtrSize(vOnehots); k++ {
+		vLine, _ = Vec_PtrEntry(vOnehots, k).(*Vec_Int_t)
+		fmt.Fprintf(pFile, "%d ", Vec_IntSize(vLine))
+		Counter += Vec_IntSize(vLine) * (Vec_IntSize(vLine) - 1) / 2
+	}
+	fmt.Fprintf(pFile, "}\n")
+	fmt.Fprintf(pFile, ".model 1hot_%dvars_%dregs\n", nPis, nRegs)
+	fmt.Fprintf(pFile, ".inputs")
+	nDigitsIn = Abc_Base10Log(nPis + nRegs)
+	for i = 0; i < nPis+nRegs; i++ {
+		fmt.Fprintf(pFile, " i%0*d", nDigitsIn, i)
+	}
+	fmt.Fprintf(pFile, "\n")
+	fmt.Fprintf(pFile, ".outputs")
+	nDigitsOut = Abc_Base10Log(Counter)
+	for i = 0; i < Counter; i++ {
+		fmt.Fprintf(pFile, " o%0*d", nDigitsOut, i)
+	}
+	fmt.Fprintf(pFile, "\n")
+	Counter2 = 0
+	// inlining of macro Vec_PtrForEachEntry
+	for k = 0; k < Vec_PtrSize(vOnehots); k++ {
+		vLine, _ = Vec_PtrEntry(vOnehots, k).(*Vec_Int_t)
+		// inlining of macro Vec_IntForEachEntry
+		for i = 0; i < Vec_IntSize(vLine); i++ {
+			iReg1 = Vec_IntEntry(vLine, i)
+			// inlining of macro Vec_IntForEachEntryStart
+			for j = i + 1; j < Vec_IntSize(vLine); j++ {
+				iReg2 = Vec_IntEntry(vLine, j)
+				fmt.Fprintf(pFile, ".names i%0*d i%0*d o%0*d\n", nDigitsIn, nPis+iReg1, nDigitsIn, nPis+iReg2, nDigitsOut, Counter2)
+				fmt.Fprintf(pFile, "11 0\n")
+				Counter2++
+			}
+		}
+	}
+	assert(Counter == Counter2, "Counter == Counter2")
+	fmt.Fprintf(pFile, ".end\n")
+	fmt.Fprintf(pFile, "\n")
 }
 
 //ABC_NAMESPACE_IMPL_END
@@ -712,242 +795,252 @@ func Abc_GenOneHotIntervals(pFileName string, nPis int32, nRegs int32, vOnehots 
 
 //ABC_NAMESPACE_IMPL_START
 
+/*
+*Function*************************************************************
 
-/**Function*************************************************************
+	Synopsis    [Generates structure of L K-LUTs implementing an N-var function.]
 
-  Synopsis    [Generates structure of L K-LUTs implementing an N-var function.]
+	Description []
 
-  Description []
-               
-  SideEffects []
+	SideEffects []
 
-  SeeAlso     []
+	SeeAlso     []
 
-***********************************************************************/
+**********************************************************************
+*/
 func Abc_GenRandom(pFileName string, nPis int32) {
-    var pFile *os.File;
-    var pTruth *uint32;
-    var i int32;
-    var b int32;
-    var w int32;
-    var nWords int32 = Abc_TruthWordNum( nPis );
-    var nDigitsIn int32;
-    Aig_ManRandom( 1 );
-    // inlining of macro ABC_ALLOC
-    pTruth = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(nWords)));
-    for  w = 0; w < nWords; w++  {
-        pTruth[w] = Aig_ManRandom( 0 );
-    }
-    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);
-    fmt.Fprintf(pFile, "# Random function with %d inputs generated by ABC on %s\n", nPis, Extra_TimeStamp());
-    fmt.Fprintf(pFile, ".model rand%d\n", nPis);
-    fmt.Fprintf(pFile, ".inputs");
-    nDigitsIn = Abc_Base10Log( nPis );
-    for  i = 0; i < nPis; i++  {
-        fmt.Fprintf(pFile, " i%0*d", nDigitsIn, i);
-    }
-    fmt.Fprintf(pFile, "\n");
-    fmt.Fprintf(pFile, ".outputs f\n");
-    fmt.Fprintf(pFile, ".names");
-    nDigitsIn = Abc_Base10Log( nPis );
-    for  i = 0; i < nPis; i++  {
-        fmt.Fprintf(pFile, " i%0*d", nDigitsIn, i);
-    }
-    fmt.Fprintf(pFile, " f\n");
-    for  i = 0; i < (1<<nPis); i++  {
-        if Abc_InfoHasBit(pTruth, i) {
-            for  b = nPis-1; b >= 0; b--  {
-                fmt.Fprintf(pFile, "%d", (i>>b)&1);
-            }
-            fmt.Fprintf(pFile, " 1\n");
-        }
-    }
-    fmt.Fprintf(pFile, ".end\n"); 
-    fmt.Fprintf(pFile, "\n"); 
-    _ = (pFile).Close();
-    pTruth = nil;
+	var pFile *os.File
+	var pTruth []uint32
+	var i int32
+	var b int32
+	var w int32
+	var nWords int32 = util.Abc_TruthWordNum(nPis)
+	var nDigitsIn int32
+	aig.Aig_ManRandom(1)
+	// inlining of macro ABC_ALLOC
+	pTruth = make([]uint32, int(nWords))
+	for w = 0; w < nWords; w++ {
+		pTruth[w] = uint32(aig.Aig_ManRandom(0))
+	}
+	pFile = abcGenCreateFile(pFileName)
+	defer pFile.Close()
+	fmt.Fprintf(pFile, "# Random function with %d inputs generated by ABC on %s\n", nPis, Extra_TimeStamp())
+	fmt.Fprintf(pFile, ".model rand%d\n", nPis)
+	fmt.Fprintf(pFile, ".inputs")
+	nDigitsIn = Abc_Base10Log(nPis)
+	for i = 0; i < nPis; i++ {
+		fmt.Fprintf(pFile, " i%0*d", nDigitsIn, i)
+	}
+	fmt.Fprintf(pFile, "\n")
+	fmt.Fprintf(pFile, ".outputs f\n")
+	fmt.Fprintf(pFile, ".names")
+	nDigitsIn = Abc_Base10Log(nPis)
+	for i = 0; i < nPis; i++ {
+		fmt.Fprintf(pFile, " i%0*d", nDigitsIn, i)
+	}
+	fmt.Fprintf(pFile, " f\n")
+	for i = 0; i < (1 << nPis); i++ {
+		if util.Abc_InfoHasBit(pTruth, i) {
+			for b = nPis - 1; b >= 0; b-- {
+				fmt.Fprintf(pFile, "%d", (i>>b)&1)
+			}
+			fmt.Fprintf(pFile, " 1\n")
+		}
+	}
+	fmt.Fprintf(pFile, ".end\n")
+	fmt.Fprintf(pFile, "\n")
+	pTruth = nil
 }
 
+/*
+*Function*************************************************************
 
-/**Function*************************************************************
+	Synopsis    [Generates structure of L K-LUTs implementing an N-var function.]
 
-  Synopsis    [Generates structure of L K-LUTs implementing an N-var function.]
+	Description []
 
-  Description []
-               
-  SideEffects []
+	SideEffects []
 
-  SeeAlso     []
+	SeeAlso     []
 
-***********************************************************************/
-func Abc_GenFsmCond(vCond *Vec_Str_t, nPis int32, Prob int32) {
-    var i, Rand int32;
-    Vec_StrClear( vCond );
-    for  i = 0; i < nPis; i++  {
-        Rand = Aig_ManRandom( 0 );
-        if Rand % 100 > Prob {
-            Vec_StrPush( vCond, '-' );
-        } else if Rand & 1 {
-            Vec_StrPush( vCond, '1' );
-        } else {
-            Vec_StrPush( vCond, '0' ); }
-    }
-    Vec_StrPush( vCond, '\0' );
+**********************************************************************
+*/
+func Abc_GenFsmCond(vCond *vec.Vec_Str_t, nPis int32, Prob int32) {
+	var i, Rand int32
+	vec.Vec_StrClear(vCond)
+	for i = 0; i < nPis; i++ {
+		Rand = int32(aig.Aig_ManRandom(0))
+		if Rand%100 > Prob {
+			vec.Vec_StrPush(vCond, '-')
+		} else if Rand&1 != 0 {
+			vec.Vec_StrPush(vCond, '1')
+		} else {
+			vec.Vec_StrPush(vCond, '0')
+		}
+	}
+	vec.Vec_StrPush(vCond, 0)
 }
 func Abc_GenFsm(pFileName string, nPis int32, nPos int32, nStates int32, nLines int32, ProbI int32, ProbO int32) {
-    var pFile *os.File;
-    var vStates *Vec_Wrd_t;
-    var vCond *Vec_Str_t;
-    var i, iState, iState2 int32;
-    var nDigits int32  = Abc_Base10Log( nStates );
-    Aig_ManRandom( 1 );
-    vStates = Vec_WrdAlloc( nLines );
-    vCond = Vec_StrAlloc( 1000 );
-    for  i = 0; i < nStates;  {
-        iState = Aig_ManRandom( 0 ) % nStates;
-        if iState == i {
-            continue; }
-        Vec_WrdPush( vStates, ((word)i << 32) | iState );
-        i++;
-    }
-    for i < nLines {
-        iState = Aig_ManRandom( 0 ) % nStates;
-        iState2 = Aig_ManRandom( 0 ) % nStates;
-        if iState2 == iState {
-            continue; }
-        Vec_WrdPush( vStates, ((word)iState << 32) | iState2 );
-        i++;
-    }
-    Vec_WrdSort( vStates, 0 );
-    // write the file
-    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);
-    fmt.Fprintf(pFile, "# This random FSM was generated by ABC on %s\n", Extra_TimeStamp());
-    fmt.Fprintf(pFile, "# Command line was: \"genfsm -I %d -O %d -S %d -L %d -P %d -Q %d %s\"\n", nPis, nPos, nStates, nLines, ProbI, ProbO, pFileName);
-    fmt.Fprintf(pFile, "# FSM has %d inputs, %d outputs, %d states, and %d products\n", nPis, nPos, nStates, nLines);
-    fmt.Fprintf(pFile, ".i %d\n", nPis);
-    fmt.Fprintf(pFile, ".o %d\n", nPos);
-    fmt.Fprintf(pFile, ".p %d\n", nLines);
-    fmt.Fprintf(pFile, ".s %d\n", nStates);
-    for  i = 0; i < nLines; i++  {
-        Abc_GenFsmCond( vCond, nPis, ProbI );
-        fmt.Fprintf(pFile, "%s ", Vec_StrArray(vCond));
-        fmt.Fprintf(pFile, "%0*d ", nDigits, int32((Vec_WrdEntry(vStates, i) >> 32)));
-        fmt.Fprintf(pFile, "%0*d ", nDigits, int32((Vec_WrdEntry(vStates, i))));
-        if nPos > 0 {
-            Abc_GenFsmCond( vCond, nPos, ProbO );
-            fmt.Fprintf(pFile, "%s", Vec_StrArray(vCond));
-        }
-        fmt.Fprintf(pFile, "\n");
-    }
-    fmt.Fprintf(pFile, ".e");
-    fmt.Fprintf(pFile, "\n");
-    _ = (pFile).Close();
-    Vec_WrdFree( vStates );
-    Vec_StrFree( vCond );
+	var pFile *os.File
+	var vStates *vec.Vec_Wrd_t
+	var vCond *vec.Vec_Str_t
+	var i, iState, iState2 int32
+	var nDigits int32 = Abc_Base10Log(nStates)
+	aig.Aig_ManRandom(1)
+	vStates = vec.Vec_WrdAlloc(int(nLines))
+	vCond = vec.Vec_StrAlloc(1000)
+	for i = 0; i < nStates; {
+		iState = int32(aig.Aig_ManRandom(0) % uint32(nStates))
+		if iState == i {
+			continue
+		}
+		vec.Vec_WrdPush(vStates, (uint64(i)<<32)|uint64(iState))
+		i++
+	}
+	for i < nLines {
+		iState = int32(aig.Aig_ManRandom(0) % uint32(nStates))
+		iState2 = int32(aig.Aig_ManRandom(0) % uint32(nStates))
+		if iState2 == iState {
+			continue
+		}
+		vec.Vec_WrdPush(vStates, (uint64(iState)<<32)|uint64(iState2))
+		i++
+	}
+	vec.Vec_WrdSort(vStates, 0)
+	// write the file
+	pFile = abcGenCreateFile(pFileName)
+	defer pFile.Close()
+	fmt.Fprintf(pFile, "# This random FSM was generated by ABC on %s\n", Extra_TimeStamp())
+	fmt.Fprintf(pFile, "# Command line was: \"genfsm -I %d -O %d -S %d -L %d -P %d -Q %d %s\"\n", nPis, nPos, nStates, nLines, ProbI, ProbO, pFileName)
+	fmt.Fprintf(pFile, "# FSM has %d inputs, %d outputs, %d states, and %d products\n", nPis, nPos, nStates, nLines)
+	fmt.Fprintf(pFile, ".i %d\n", nPis)
+	fmt.Fprintf(pFile, ".o %d\n", nPos)
+	fmt.Fprintf(pFile, ".p %d\n", nLines)
+	fmt.Fprintf(pFile, ".s %d\n", nStates)
+	for i = 0; i < nLines; i++ {
+		Abc_GenFsmCond(vCond, nPis, ProbI)
+		fmt.Fprintf(pFile, "%s ", abcGenCString(vec.Vec_StrArray(vCond)))
+		fmt.Fprintf(pFile, "%0*d ", nDigits, int32(vec.Vec_WrdEntry(vStates, int(i))>>32))
+		fmt.Fprintf(pFile, "%0*d ", nDigits, int32(vec.Vec_WrdEntry(vStates, int(i))))
+		if nPos > 0 {
+			Abc_GenFsmCond(vCond, nPos, ProbO)
+			fmt.Fprintf(pFile, "%s", abcGenCString(vec.Vec_StrArray(vCond)))
+		}
+		fmt.Fprintf(pFile, "\n")
+	}
+	fmt.Fprintf(pFile, ".e")
+	fmt.Fprintf(pFile, "\n")
+	vec.Vec_WrdFree(vStates)
+	vec.Vec_StrFree(vCond)
 }
 
-/**Function*************************************************************
+/*
+*Function*************************************************************
 
-  Synopsis    []
+	Synopsis    []
 
-  Description []
-               
-  SideEffects []
+	Description []
 
-  SeeAlso     []
+	SideEffects []
 
-***********************************************************************/
+	SeeAlso     []
+
+**********************************************************************
+*/
 func Abc_AdderTree(pFile *os.File, nArgs int32, nBits int32) {
-    var i int32;
-    var k int32;
-    var nDigits int32 = Abc_Base10Log( nBits );
-    var Log2 int32 = Abc_Base2Log( nArgs );
-    assert(nArgs > 1 && nBits > 1, "nArgs > 1 && nBits > 1");
-    fmt.Fprintf(pFile, "module adder_tree_%d_%d (\n   ", nArgs, nBits);
-    for  i = 0; i < nBits; i++, fprintf(pFile, "\n   ")  {
-        for  k = 0; k < nArgs; k++  {
-            fmt.Fprintf(pFile, " i%0*d_%0*d,", nDigits, k, nDigits, nBits-1-i);
-        }
-    }
-    fmt.Fprintf(pFile, " z\n");
-    fmt.Fprintf(pFile, "  );\n");
-    for  i = 0; i < nBits; i++  {
-        fmt.Fprintf(pFile, "  input");
-        for  k = 0; k < nArgs; k++  {
-            fmt.Fprintf(pFile, " i%0*d_%0*d%s", nDigits, k, nDigits, nBits-1-i, k==nArgs-1 ? "":",");
-        }
-        fmt.Fprintf(pFile, ";\n");
-    }
-    fmt.Fprintf(pFile, "  output [%d:0] z;\n", nBits+Log2-1);
-    for  i = 0; i < nArgs; i++  {
-        fmt.Fprintf(pFile, "  wire [%d:0] t%d = {", nBits-1, i);
-        for  k = 0; k < nBits; k++  {
-            fmt.Fprintf(pFile, " i%0*d_%0*d%s", nDigits, i, nDigits, nBits-1-k, k==nBits-1 ? "":",");
-        }
-        fmt.Fprintf(pFile, " };\n");
-    }
-    for  i = 0; i < nArgs-1; i++  {
-        fmt.Fprintf(pFile, "  wire [%d:0] s%d = t%d + %s%d;\n", nBits+Log2-1, i+1, i+1, i ? "s":"t", i);
-    }
-    fmt.Fprintf(pFile, "  assign z = s%d;\n", nArgs-1);
-    fmt.Fprintf(pFile, "endmodule\n\n"); 
+	var i int32
+	var k int32
+	var nDigits int32 = Abc_Base10Log(nBits)
+	var Log2 int32 = Abc_Base2Log(nArgs)
+	assert(nArgs > 1 && nBits > 1, "nArgs > 1 && nBits > 1")
+	fmt.Fprintf(pFile, "module adder_tree_%d_%d (\n   ", nArgs, nBits)
+	for i = 0; i < nBits; i++ {
+		for k = 0; k < nArgs; k++ {
+			fmt.Fprintf(pFile, " i%0*d_%0*d,", nDigits, k, nDigits, nBits-1-i)
+		}
+		fmt.Fprintf(pFile, "\n   ")
+	}
+	fmt.Fprintf(pFile, " z\n")
+	fmt.Fprintf(pFile, "  );\n")
+	for i = 0; i < nBits; i++ {
+		fmt.Fprintf(pFile, "  input")
+		for k = 0; k < nArgs; k++ {
+			fmt.Fprintf(pFile, " i%0*d_%0*d%s", nDigits, k, nDigits, nBits-1-i, abcComma(k == nArgs-1))
+		}
+		fmt.Fprintf(pFile, ";\n")
+	}
+	fmt.Fprintf(pFile, "  output [%d:0] z;\n", nBits+Log2-1)
+	for i = 0; i < nArgs; i++ {
+		fmt.Fprintf(pFile, "  wire [%d:0] t%d = {", nBits-1, i)
+		for k = 0; k < nBits; k++ {
+			fmt.Fprintf(pFile, " i%0*d_%0*d%s", nDigits, i, nDigits, nBits-1-k, abcComma(k == nBits-1))
+		}
+		fmt.Fprintf(pFile, " };\n")
+	}
+	for i = 0; i < nArgs-1; i++ {
+		fmt.Fprintf(pFile, "  wire [%d:0] s%d = t%d + %s%d;\n", nBits+Log2-1, i+1, i+1, abcST(i != 0), i)
+	}
+	fmt.Fprintf(pFile, "  assign z = s%d;\n", nArgs-1)
+	fmt.Fprintf(pFile, "endmodule\n\n")
 }
 func Abc_GenAdderTree(pFileName string, nArgs int32, nBits int32) {
-    var pFile *os.File  = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);
-    fmt.Fprintf(pFile, "// %d-argument %d-bit adder-tree generated by ABC on %s\n", nArgs, nBits, Extra_TimeStamp());
-    Abc_AdderTree( pFile, nArgs, nBits );
-    _ = (pFile).Close();
+	pFile := abcGenCreateFile(pFileName)
+	defer pFile.Close()
+	fmt.Fprintf(pFile, "// %d-argument %d-bit adder-tree generated by ABC on %s\n", nArgs, nBits, Extra_TimeStamp())
+	Abc_AdderTree(pFile, nArgs, nBits)
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Generating signed Booth multiplier.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_GenSignedBoothPP(p *Gia_Man_t, a int32, b int32, c int32, d int32, e int32) int32 {
 /*
-    abc>  lutexact -I 5 -N 7 -g F335ACC0
+*Function*************************************************************
 
-    05 = 4'b0110( d e )
-    06 = 4'b0110( c d )
-    07 = 4'b0100( a 06 )
-    08 = 4'b1000( b 06 )
-    09 = 4'b0100( 05 07 )
-    10 = 4'b0110( 08 09 )
-    11 = 4'b0110( d 10 )
+	Synopsis    [Generating signed Booth multiplier.]
+
+	Description []
+
+	SideEffects []
+
+	SeeAlso     []
+
+**********************************************************************
 */
-    var n05 int32  = Gia_ManHashXor( p, d,   e   );
-    var n06 int32  = Gia_ManHashXor( p, c,   d   );
-    var n07 int32  = Gia_ManHashAnd( p, a,   Abc_LitNot(n06) );
-    var n08 int32  = Gia_ManHashAnd( p, b,   n06 );
-    var n09 int32  = Gia_ManHashAnd( p, n05, Abc_LitNot(n07) );
-    var n10 int32  = Gia_ManHashXor( p, n08, n09 );
-    var n11 int32  = Gia_ManHashXor( p, d,   n10 );
-    return n11;
+func Abc_GenSignedBoothPP(p *Gia_Man_t, a int32, b int32, c int32, d int32, e int32) int32 {
+	/*
+	   abc>  lutexact -I 5 -N 7 -g F335ACC0
+
+	   05 = 4'b0110( d e )
+	   06 = 4'b0110( c d )
+	   07 = 4'b0100( a 06 )
+	   08 = 4'b1000( b 06 )
+	   09 = 4'b0100( 05 07 )
+	   10 = 4'b0110( 08 09 )
+	   11 = 4'b0110( d 10 )
+	*/
+	var n05 int32 = gia.Gia_ManHashXor(p, d, e)
+	var n06 int32 = gia.Gia_ManHashXor(p, c, d)
+	var n07 int32 = gia.Gia_ManHashAnd(p, a, util.Abc_LitNot(n06))
+	var n08 int32 = gia.Gia_ManHashAnd(p, b, n06)
+	var n09 int32 = gia.Gia_ManHashAnd(p, n05, util.Abc_LitNot(n07))
+	var n10 int32 = gia.Gia_ManHashXor(p, n08, n09)
+	var n11 int32 = gia.Gia_ManHashXor(p, d, n10)
+	return n11
 }
 func Abc_GenSignedBoothPPTest(nArgA int32, nArgB int32) *Gia_Man_t {
-    var pNew *Gia_Man_t; var i, iLit int32;
-    pNew = Gia_ManStart( 1000 );
-    pNew.pName = Abc_UtilStrsav( "booth" );
-    for  i = 0; i < 5; i++  {
-         Gia_ManAppendCi(pNew);
-    }
-    iLit = Abc_GenSignedBoothPP( pNew, 2, 4, 6, 8, 10 );
-    Gia_ManAppendCo(pNew, iLit);
-    return pNew;
+	var pNew *Gia_Man_t
+	var i, iLit int32
+	pNew = gia.Gia_ManStart(1000)
+	gia.Gia_ManSetNameSpec(pNew, "booth", "")
+	for i = 0; i < 5; i++ {
+		gia.Gia_ManAppendCi(pNew)
+	}
+	iLit = Abc_GenSignedBoothPP(pNew, 2, 4, 6, 8, 10)
+	gia.Gia_ManAppendCo(pNew, iLit)
+	return pNew
 }
 
 /*
 // parametrized implementation of signed Booth multiplier
 module booth #(
-     parameter N = 4      // bit-width of input a 
+     parameter N = 4      // bit-width of input a
     ,parameter M = 4      // bit-width of input b
 )(
      input  [N-1:0]   a    // input data
@@ -1002,182 +1095,186 @@ endmodule
 */
 
 func Abc_GenSignedBooth(nArgN int32, nArgM int32) *Gia_Man_t {
-    var nWidth int32  = nArgN + nArgM + 1;
-    var Length int32  = (nArgM + 1) / 2;
-    var i, k, iLit int32;
+	var nWidth int32 = nArgN + nArgM + 1
+	var Length int32 = (nArgM + 1) / 2
+	var i, k, iLit int32
 
-    var vPPs *Vec_Int_t   = Vec_IntAlloc( nWidth * (Length + 1) );
-    var vArgN *Vec_Int_t  = Vec_IntAlloc( nArgN + 2 );
-    var vArgM *Vec_Int_t  = Vec_IntAlloc( nArgM + 2 );
-    var pArgN *int32  = Vec_IntArray( vArgN );
-    var pArgM *int32  = Vec_IntArray( vArgM );
+	var vPPs *Vec_Int_t = Vec_IntAlloc(nWidth * (Length + 1))
+	var vArgN *Vec_Int_t = Vec_IntAlloc(nArgN + 2)
+	var vArgM *Vec_Int_t = Vec_IntAlloc(nArgM + 2)
 
-    var pTemp, pNew *Gia_Man_t; 
-    pNew = Gia_ManStart( 1000 );
-    pNew.pName = Abc_UtilStrsav( "booth" );
+	var pTemp, pNew *Gia_Man_t
+	pNew = gia.Gia_ManStart(1000)
+	gia.Gia_ManSetNameSpec(pNew, "booth", "")
 
-    Vec_IntPush( vArgN, 0 );
-    for  i = 0; i < nArgN; i++  {
-        Vec_IntPush( vArgN, Gia_ManAppendCi(pNew) );
-    }
-    Vec_IntPush( vArgN, Vec_IntEntryLast(vArgN) );
+	Vec_IntPush(vArgN, 0)
+	for i = 0; i < nArgN; i++ {
+		Vec_IntPush(vArgN, gia.Gia_ManAppendCi(pNew))
+	}
+	Vec_IntPush(vArgN, Vec_IntEntryLast(vArgN))
 
-    Vec_IntPush( vArgM, 0 );
-    for  i = 0; i < nArgM; i++  {
-        Vec_IntPush( vArgM, Gia_ManAppendCi(pNew) );
-    }
-    Vec_IntPush( vArgM, Vec_IntEntryLast(vArgM) );
+	Vec_IntPush(vArgM, 0)
+	for i = 0; i < nArgM; i++ {
+		Vec_IntPush(vArgM, gia.Gia_ManAppendCi(pNew))
+	}
+	Vec_IntPush(vArgM, Vec_IntEntryLast(vArgM))
 
-    for  i = 0; i < nWidth; i++  {
-        Vec_IntPush( vPPs, (i%2 == 0 && i/2 < Length) ? pArgM[i+2] : 0 );
-    }
+	for i = 0; i < nWidth; i++ {
+		lit := int32(0)
+		if i%2 == 0 && i/2 < Length {
+			lit = Vec_IntEntry(vArgM, i+2)
+		}
+		Vec_IntPush(vPPs, lit)
+	}
 
-    Gia_ManHashAlloc( pNew );
-    for  k = 0; k < 2*Length; k += 2  {
-        for  i = 0; i < k; i++  {
-            Vec_IntPush( vPPs, 0 );
-        }
-        for  i = 0; i <= nArgN; i++  {
-            iLit = Abc_GenSignedBoothPP( pNew, pArgN[i], pArgN[i+1], pArgM[k], pArgM[k+1], pArgM[k+2] );
-            Vec_IntPush( vPPs, Abc_LitNotCond( iLit, k > 0 && i == nArgN ) );
-        }
-        iLit = Vec_IntEntryLast(vPPs);
-        Vec_IntPush( vPPs, k > 0 ? 1 : iLit );
-        for  i = k+nArgN+2; i < nWidth; i++  {
-            Vec_IntPush( vPPs, (k > 0 || i > k+nArgN+2) ? 0 : Abc_LitNot(iLit) );
-        }
-    }
-    Gia_ManHashStop( pNew );
+	gia.Gia_ManHashAlloc(pNew)
+	for k = 0; k < 2*Length; k += 2 {
+		for i = 0; i < k; i++ {
+			Vec_IntPush(vPPs, 0)
+		}
+		for i = 0; i <= nArgN; i++ {
+			iLit = Abc_GenSignedBoothPP(pNew, Vec_IntEntry(vArgN, i), Vec_IntEntry(vArgN, i+1), Vec_IntEntry(vArgM, k), Vec_IntEntry(vArgM, k+1), Vec_IntEntry(vArgM, k+2))
+			Vec_IntPush(vPPs, util.Abc_LitNotCond(iLit, boolToInt(k > 0 && i == nArgN)))
+		}
+		iLit = Vec_IntEntryLast(vPPs)
+		Vec_IntPush(vPPs, abcInt32Choice(k > 0, 1, iLit))
+		for i = k + nArgN + 2; i < nWidth; i++ {
+			Vec_IntPush(vPPs, abcInt32Choice(k > 0 || i > k+nArgN+2, 0, util.Abc_LitNot(iLit)))
+		}
+	}
+	gia.Gia_ManHashStop(pNew)
 
-    for  k = 0; k <= Length; k++  {
-        for  i = 0; i < nArgN+nArgM; i++  {
-            Gia_ManAppendCo( pNew, Vec_IntEntry(vPPs, k*(nArgN+nArgM+1) + i) );
-        }
-    }
-    Vec_IntFree( vPPs );
-    Vec_IntFree( vArgN );
-    Vec_IntFree( vArgM );
+	for k = 0; k <= Length; k++ {
+		for i = 0; i < nArgN+nArgM; i++ {
+			gia.Gia_ManAppendCo(pNew, Vec_IntEntry(vPPs, k*(nArgN+nArgM+1)+i))
+		}
+	}
+	Vec_IntFree(vPPs)
+	Vec_IntFree(vArgN)
+	Vec_IntFree(vArgM)
 
-    pNew = Gia_ManCleanup( pTemp = pNew );
-    Gia_ManStop( pTemp );
-    return pNew;
+	pTemp = pNew
+	pNew = gia.Gia_ManCleanup(pTemp)
+	gia.Gia_ManStop(pTemp)
+	return pNew
 }
-func Abc_GenSignedBoothMini(nArgN int32, nArgM int32) *Mini_Aig_t {
-    extern Mini_Aig_t * Gia_ManToMiniAig( Gia_Man_t * pGia );
-    var pGia *Gia_Man_t  = Abc_GenSignedBooth( nArgN, nArgM );
-    var pMini *Mini_Aig_t  = Gia_ManToMiniAig( pGia );
-    Gia_ManStop( pGia );
-    return pMini;
+func Abc_GenSignedBoothMini(nArgN int32, nArgM int32) *miniaig.Mini_Aig_t {
+
+	var pGia *Gia_Man_t = Abc_GenSignedBooth(nArgN, nArgM)
+	var pMini *miniaig.Mini_Aig_t = gia.Gia_ManToMiniAig(pGia)
+	gia.Gia_ManStop(pGia)
+	return pMini
 }
 
+/*
+*Function*************************************************************
 
-/**Function*************************************************************
+	Synopsis    []
 
-  Synopsis    []
+	Description []
 
-  Description []
-               
-  SideEffects []
+	SideEffects []
 
-  SeeAlso     []
+	SeeAlso     []
 
-***********************************************************************/
+**********************************************************************
+*/
 func Abc_WriteBoothPartialProducts(pFile *os.File, nVars int32) {
-    var p *Mini_Aig_t  = Abc_GenSignedBoothMini( nVars, nVars );
-    var i int32;
-    var nNodes int32 = Mini_AigNodeNum(p);
-    var nDigits int32    = Abc_Base10Log( nVars );
-    var nDigits2 int32   = Abc_Base10Log( 2*nVars );
-    var nDigits3 int32   = Abc_Base10Log( nNodes );
-    var nOut int32;
-    fmt.Fprintf(pFile, ".names pp%0*d\n", nDigits3, 0);
-    for  i = 1; i < nNodes; i++  {
-        if Mini_AigNodeIsPi( p, i ) {
-            if i > 0 && i <= nVars {
-                fmt.Fprintf(pFile, ".names a%0*d pp%0*d\n1 1\n", nDigits, i-1, nDigits3, i);
-            } else if i > nVars && i <= 2*nVars {
-                fmt.Fprintf(pFile, ".names b%0*d pp%0*d\n1 1\n", nDigits, i-1-nVars, nDigits3, i);
-            } else { assert(false, "0"); }
-        
-        } else if Mini_AigNodeIsPo( p, i ) {
-            var Lit int32  = Mini_AigNodeFanin0( p, i );
-            fmt.Fprintf(pFile, ".names pp%0*d y%0*d_%0*d\n%d 1\n", nDigits3, Abc_Lit2Var(Lit), nDigits, nOut/(2*nVars), nDigits2, nOut%(2*nVars), !Abc_LitIsCompl(Lit));
-            nOut++;
-        
-        } else if Mini_AigNodeIsAnd( p, i ) {
-            var Lit0 int32  = Mini_AigNodeFanin0( p, i );
-            var Lit1 int32  = Mini_AigNodeFanin1( p, i );
-            fmt.Fprintf(pFile, ".names pp%0*d pp%0*d pp%0*d\n%d%d 1\n", nDigits3, Abc_Lit2Var(Lit0), nDigits3, Abc_Lit2Var(Lit1), nDigits3, i, !Abc_LitIsCompl(Lit0), !Abc_LitIsCompl(Lit1));
-        
-        } else { assert(false, "0"); }
-    }
-    Mini_AigStop( p );
+	var p *miniaig.Mini_Aig_t = Abc_GenSignedBoothMini(nVars, nVars)
+	var i int32
+	var nNodes int32 = int32(miniaig.Mini_AigNodeNum(p))
+	var nDigits int32 = Abc_Base10Log(nVars)
+	var nDigits2 int32 = Abc_Base10Log(2 * nVars)
+	var nDigits3 int32 = Abc_Base10Log(nNodes)
+	var nOut int32
+	fmt.Fprintf(pFile, ".names pp%0*d\n", nDigits3, 0)
+	for i = 1; i < nNodes; i++ {
+		if miniaig.Mini_AigNodeIsPi(p, int(i)) {
+			if i > 0 && i <= nVars {
+				fmt.Fprintf(pFile, ".names a%0*d pp%0*d\n1 1\n", nDigits, i-1, nDigits3, i)
+			} else if i > nVars && i <= 2*nVars {
+				fmt.Fprintf(pFile, ".names b%0*d pp%0*d\n1 1\n", nDigits, i-1-nVars, nDigits3, i)
+			} else {
+				assert(false, "0")
+			}
+
+		} else if miniaig.Mini_AigNodeIsPo(p, int(i)) {
+			var Lit int32 = int32(miniaig.Mini_AigNodeFanin0(p, int(i)))
+			fmt.Fprintf(pFile, ".names pp%0*d y%0*d_%0*d\n%d 1\n", nDigits3, util.Abc_Lit2Var(Lit), nDigits, nOut/(2*nVars), nDigits2, nOut%(2*nVars), 1-util.Abc_LitIsCompl(Lit))
+			nOut++
+
+		} else if miniaig.Mini_AigNodeIsAnd(p, int(i)) {
+			var Lit0 int32 = int32(miniaig.Mini_AigNodeFanin0(p, int(i)))
+			var Lit1 int32 = int32(miniaig.Mini_AigNodeFanin1(p, int(i)))
+			fmt.Fprintf(pFile, ".names pp%0*d pp%0*d pp%0*d\n%d%d 1\n", nDigits3, util.Abc_Lit2Var(Lit0), nDigits3, util.Abc_Lit2Var(Lit1), nDigits3, i, 1-util.Abc_LitIsCompl(Lit0), 1-util.Abc_LitIsCompl(Lit1))
+
+		} else {
+			assert(false, "0")
+		}
+	}
+	miniaig.Mini_AigStop(p)
 }
 func Abc_WriteBooth(pFile *os.File, nVars int32) {
-    var i int32;
-    var k int32;
-    var nDigits int32 = Abc_Base10Log( nVars );
-    var nDigits2 int32 = Abc_Base10Log( 2*nVars );
-    var Length int32  = 1+(nVars + 1)/2;
+	var i int32
+	var k int32
+	var nDigits int32 = Abc_Base10Log(nVars)
+	var nDigits2 int32 = Abc_Base10Log(2 * nVars)
+	var Length int32 = 1 + (nVars+1)/2
 
-    assert(nVars > 0, "nVars > 0");
-    fmt.Fprintf(pFile, ".model Multi%d\n", nVars);
+	assert(nVars > 0, "nVars > 0")
+	fmt.Fprintf(pFile, ".model Multi%d\n", nVars)
 
-    fmt.Fprintf(pFile, ".inputs");
-    for  i = 0; i < nVars; i++  {
-        fmt.Fprintf(pFile, " a%0*d", nDigits, i);
-    }
-    for  i = 0; i < nVars; i++  {
-        fmt.Fprintf(pFile, " b%0*d", nDigits, i);
-    }
-    fmt.Fprintf(pFile, "\n");
+	fmt.Fprintf(pFile, ".inputs")
+	for i = 0; i < nVars; i++ {
+		fmt.Fprintf(pFile, " a%0*d", nDigits, i)
+	}
+	for i = 0; i < nVars; i++ {
+		fmt.Fprintf(pFile, " b%0*d", nDigits, i)
+	}
+	fmt.Fprintf(pFile, "\n")
 
-    fmt.Fprintf(pFile, ".outputs");
-    for  i = 0; i < 2*nVars; i++  {
-        fmt.Fprintf(pFile, " m%0*d", nDigits2, i);
-    }
-    fmt.Fprintf(pFile, "\n");
+	fmt.Fprintf(pFile, ".outputs")
+	for i = 0; i < 2*nVars; i++ {
+		fmt.Fprintf(pFile, " m%0*d", nDigits2, i)
+	}
+	fmt.Fprintf(pFile, "\n")
 
-    Abc_WriteBoothPartialProducts( pFile, nVars );
+	Abc_WriteBoothPartialProducts(pFile, nVars)
 
-    for  i = 0; i < 2*nVars; i++  {
-        fmt.Fprintf(pFile, ".names x%0*d_%0*d\n", nDigits, 0, nDigits2, i);
-    }
-    for  k = 0; k < Length; k++  {
-        fmt.Fprintf(pFile, ".subckt ADD%d", 2*nVars);
-        for  i = 0; i < 2*nVars; i++  {
-            fmt.Fprintf(pFile, " a%0*d=x%0*d_%0*d", nDigits2, i, nDigits, k, nDigits2, i);
-        }
-        for  i = 0; i < 2*nVars; i++  {
-            fmt.Fprintf(pFile, " b%0*d=y%0*d_%0*d", nDigits2, i, nDigits, k, nDigits2, i);
-        }
-        for  i = 0; i <= 2*nVars; i++  {
-            fmt.Fprintf(pFile, " s%0*d=x%0*d_%0*d", nDigits2, i, nDigits, k+1, nDigits2, i);
-        }
-        fmt.Fprintf(pFile, "\n");
-    }
-    for  i = 0; i < 2 * nVars; i++  {
-        fmt.Fprintf(pFile, ".names x%0*d_%0*d m%0*d\n1 1\n", nDigits, k, nDigits2, i, nDigits2, i);
-    }
-    fmt.Fprintf(pFile, ".end\n"); 
-    fmt.Fprintf(pFile, "\n");
-    Abc_WriteAdder( pFile, 2*nVars );
+	for i = 0; i < 2*nVars; i++ {
+		fmt.Fprintf(pFile, ".names x%0*d_%0*d\n", nDigits, 0, nDigits2, i)
+	}
+	for k = 0; k < Length; k++ {
+		fmt.Fprintf(pFile, ".subckt ADD%d", 2*nVars)
+		for i = 0; i < 2*nVars; i++ {
+			fmt.Fprintf(pFile, " a%0*d=x%0*d_%0*d", nDigits2, i, nDigits, k, nDigits2, i)
+		}
+		for i = 0; i < 2*nVars; i++ {
+			fmt.Fprintf(pFile, " b%0*d=y%0*d_%0*d", nDigits2, i, nDigits, k, nDigits2, i)
+		}
+		for i = 0; i <= 2*nVars; i++ {
+			fmt.Fprintf(pFile, " s%0*d=x%0*d_%0*d", nDigits2, i, nDigits, k+1, nDigits2, i)
+		}
+		fmt.Fprintf(pFile, "\n")
+	}
+	for i = 0; i < 2*nVars; i++ {
+		fmt.Fprintf(pFile, ".names x%0*d_%0*d m%0*d\n1 1\n", nDigits, k, nDigits2, i, nDigits2, i)
+	}
+	fmt.Fprintf(pFile, ".end\n")
+	fmt.Fprintf(pFile, "\n")
+	Abc_WriteAdder(pFile, 2*nVars)
 }
 func Abc_GenBooth(pFileName string, nVars int32) {
-    var pFile *os.File;
-    assert(nVars > 0, "nVars > 0");
-    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);
-    fmt.Fprintf(pFile, "# %d-bit signed Booth multiplier generated by ABC on %s\n", nVars, Extra_TimeStamp());
-    Abc_WriteBooth( pFile, nVars );
-    _ = (pFile).Close();
+	var pFile *os.File
+	assert(nVars > 0, "nVars > 0")
+	pFile = abcGenCreateFile(pFileName)
+	defer pFile.Close()
+	fmt.Fprintf(pFile, "# %d-bit signed Booth multiplier generated by ABC on %s\n", nVars, Extra_TimeStamp())
+	Abc_WriteBooth(pFile, nVars)
 }
-
-
 
 ////////////////////////////////////////////////////////////////////////
 ///                       END OF FILE                                ///
 ////////////////////////////////////////////////////////////////////////
 
-
 //ABC_NAMESPACE_IMPL_END
-

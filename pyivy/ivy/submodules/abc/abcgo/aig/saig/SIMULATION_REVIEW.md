@@ -20,7 +20,9 @@ Manager-local scratch state avoids mutating graph traversal, marks, data, or ter
 
 Reviewed constant polarity, complemented fanins, simultaneous latch transfer, reference recycling order, unused inputs, random replay ordering, sparse IDs, recurrence indices, retirement thresholds, constraint ordering and counterexample bounds. Regressions cover:
 
-- Odd numbers of measured frames use the actual 16 transition samples per frame; the C integer division could yield probabilities above one.
+- Odd numbers of measured frames use C's integer-divided word count when
+  normalizing transition activity. This source behavior can yield values above
+  one; a single measured frame has a zero denominator and yields NaN for 0/0.
 - Simulation count overflow is rejected before accumulating into source-shaped int32 counters.
 - Random simulation allocates a result before dereferencing operands, preventing reuse while an operand is still being read. Non-miter POs with no users are immediately recycled instead of violating the source's reference assertion.
 - The top-level random simulator clears stale witnesses; constant-one failures receive an independently checked witness rather than merely returning success.

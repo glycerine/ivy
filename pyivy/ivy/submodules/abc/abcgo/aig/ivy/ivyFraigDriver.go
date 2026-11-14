@@ -202,6 +202,41 @@ type Prove_Params_t struct {
 	nTotalBacktrackLimit, nTotalInspectLimit, nTotalBacktracksMade, nTotalInspectsMade                                        int64
 }
 
+// Ivy_ProveParams exposes only the command-level proof settings shared with
+// base/abci. The source C code passes Prove_Params_t directly across packages.
+type Ivy_ProveParams struct {
+	FUseFraiging, FUseRewriting, FUseBdds, FVerbose                           int32
+	NItersMax, NMiteringLimitStart, NRewritingLimitStart, NFraigingLimitStart int32
+	NBddSizeLimit, FBddReorder, NMiteringLimitLast                            int32
+	NMiteringLimitMulti, NRewritingLimitMulti, NFraigingLimitMulti            float32
+	NTotalBacktrackLimit, NTotalInspectLimit                                  int64
+	NTotalBacktracksMade, NTotalInspectsMade                                  int64
+}
+
+// Ivy_FraigProveWithParams matches the cross-package C Prove_Params_t call and
+// reflects mutable counters/settings back into the caller's parameter object.
+func Ivy_FraigProveWithParams(graph **Ivy_Man_t, params *Ivy_ProveParams) int32 {
+	if params == nil {
+		panic("ivy: prove parameters required")
+	}
+	p := Prove_Params_t{
+		fUseFraiging: params.FUseFraiging, fUseRewriting: params.FUseRewriting,
+		fUseBdds: params.FUseBdds, fVerbose: params.FVerbose,
+		nItersMax: params.NItersMax, nMiteringLimitStart: params.NMiteringLimitStart,
+		nMiteringLimitMulti: params.NMiteringLimitMulti, nRewritingLimitStart: params.NRewritingLimitStart,
+		nRewritingLimitMulti: params.NRewritingLimitMulti, nFraigingLimitStart: params.NFraigingLimitStart,
+		nFraigingLimitMulti: params.NFraigingLimitMulti, nBddSizeLimit: params.NBddSizeLimit,
+		fBddReorder: params.FBddReorder, nMiteringLimitLast: params.NMiteringLimitLast,
+		nTotalBacktrackLimit: params.NTotalBacktrackLimit, nTotalInspectLimit: params.NTotalInspectLimit,
+		nTotalBacktracksMade: params.NTotalBacktracksMade, nTotalInspectsMade: params.NTotalInspectsMade,
+	}
+	result := Ivy_FraigProve(graph, &p)
+	params.FUseRewriting = p.fUseRewriting
+	params.NTotalBacktracksMade = p.nTotalBacktracksMade
+	params.NTotalInspectsMade = p.nTotalInspectsMade
+	return result
+}
+
 func Ivy_FraigProve(graph **Ivy_Man_t, params *Prove_Params_t) int32 {
 	if graph == nil || *graph == nil || params == nil {
 		panic("ivy: graph and prove parameters required")

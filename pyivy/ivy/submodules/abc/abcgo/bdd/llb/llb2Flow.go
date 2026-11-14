@@ -186,14 +186,14 @@ func Llb_ManCutMap(g *Aig_Man_t, cuts, supports *Vec_Ptr_t) *Vec_Ptr_t {
 	for i := 0; i < vec.Vec_PtrSize(cuts); i++ {
 		m := vec.Vec_IntStart(int(aig.Aig_ManObjNumMax(g)))
 		for _, edge := range llbEdges(Vec_PtrEntry(cuts, int32(i)).(*Vec_Ptr_t)) {
-			if !aig.Aig_ObjIsCi(g, edge) {
+			if !aig.Aig_ObjIsCi(g, edge) || int(aig.Aig_ObjCioId(g, edge)) >= int(g.TruePiCount()) {
 				vec.Vec_IntWriteEntry(m, edge.NodeID(), 1)
 			}
 		}
 		vec.Vec_PtrPush(maps, m)
 	}
 	vec.Vec_PtrPush(maps, vec.Vec_IntStart(int(aig.Aig_ManObjNumMax(g))))
-	first, last := make([]int, len(g.Inputs())), make([]int, len(g.Inputs()))
+	first, last := make([]int, g.TruePiCount()), make([]int, g.TruePiCount())
 	for i := range first {
 		first[i], last[i] = -1, -1
 	}
@@ -226,11 +226,11 @@ func Llb_ManCutMap(g *Aig_Man_t, cuts, supports *Vec_Ptr_t) *Vec_Ptr_t {
 		if aig.Aig_ObjIsCi(g, driver) {
 			index := int(aig.Aig_ObjCioId(g, driver))
 			if index >= 0 && index < len(last) {
-				last[index] = lastPartition - 1
+				last[index] = lastPartition
 			}
 		}
 	}
-	for index, edge := range g.Inputs() {
+	for index, edge := range g.Inputs()[:g.TruePiCount()] {
 		if first[index] < 0 {
 			continue
 		}

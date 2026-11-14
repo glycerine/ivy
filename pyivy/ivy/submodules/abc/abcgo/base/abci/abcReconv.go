@@ -1,752 +1,379 @@
 package abci
 
-/**CFile****************************************************************
+import (
+	"github.com/glycerine/abcgo/base/abc"
+	"github.com/glycerine/abcgo/bdd/cudd/core"
+	"github.com/glycerine/abcgo/bdd/extrab"
+	"github.com/glycerine/abcgo/misc/vec"
+)
 
-  FileName    [abcReconv.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Network and node package.]
-
-  Synopsis    [Computation of reconvergence-driven cuts.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: abcReconv.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "base/abc/abc.h"
-
-#ifdef ABC_USE_CUDD
-#include "bdd/extrab/extraBdd.h"
-#endif
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-type Abc_ManCut_t_ struct {
-    // user specified parameters
-    nNodeSizeMax              int32;  // the limit on the size of the supernode
-    nConeSizeMax              int32;  // the limit on the size of the containing cone
-    nNodeFanStop              int32;  // the limit on the size of the supernode
-    nConeFanStop              int32;  // the limit on the size of the containing cone
-    // internal parameters
-    vNodeLeaves       *Vec_Ptr_t;   // fanins of the collapsed node (the cut)
-    vConeLeaves       *Vec_Ptr_t;   // fanins of the containing cone
-    vVisited       *Vec_Ptr_t;      // the visited nodes
-    vLevels       *Vec_Vec_t;       // the data structure to compute TFO nodes
-    vNodesTfo       *Vec_Ptr_t;     // the nodes in the TFO of the cut
+// Abc_ManCut_t owns the scratch vectors used by the reconvergence cut routines.
+type Abc_ManCut_t struct {
+	nNodeSizeMax, nConeSizeMax, nNodeFanStop, nConeFanStop int32
+	vNodeLeaves, vConeLeaves, vVisited, vNodesTfo          *Vec_Ptr_t
+	vLevels                                                *Vec_Vec_t
 }
 
-// static int   Abc_NodeBuildCutLevelOne_int( Vec_Ptr_t * vVisited, Vec_Ptr_t * vLeaves, int nSizeLimit, int nFaninLimit );
-
-// static int   Abc_NodeBuildCutLevelTwo_int( Vec_Ptr_t * vVisited, Vec_Ptr_t * vLeaves, int nFaninLimit );
-
-// static void  Abc_NodeConeMarkCollect_rec( Abc_Obj_t * pNode, Vec_Ptr_t * vVisited );
-
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Unmarks the TFI cone.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NodesMark(vVisited *Vec_Ptr_t) {
-    var pNode *Abc_Obj_t;
-    var i int32;
-    Vec_PtrForEachEntry( Abc_Obj_t *, vVisited, pNode, i )
-        pNode.fMarkA = 1;
+func Abc_NodesMark(v *Vec_Ptr_t) {
+	for _, x := range vec.Vec_PtrArray(v) {
+		x.(*Abc_Obj_t).MarkA = true
+	}
+}
+func Abc_NodesUnmark(v *Vec_Ptr_t) {
+	for _, x := range vec.Vec_PtrArray(v) {
+		x.(*Abc_Obj_t).MarkA = false
+	}
+}
+func Abc_NodesUnmarkB(v *Vec_Ptr_t) {
+	for _, x := range vec.Vec_PtrArray(v) {
+		x.(*Abc_Obj_t).MarkB = false
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Unmarks the TFI cone.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NodesUnmark(vVisited *Vec_Ptr_t) {
-    var pNode *Abc_Obj_t;
-    var i int32;
-    Vec_PtrForEachEntry( Abc_Obj_t *, vVisited, pNode, i )
-        pNode.fMarkA = 0;
+func Abc_NodeGetLeafCostOne(n *Abc_Obj_t, faninLimit int32) int32 {
+	assert(n != nil && n.MarkB, "leaf-cost candidate must be marked")
+	if abc.Abc_ObjIsCi(n) != 0 {
+		return 999
+	}
+	f0, f1 := abc.Abc_ObjFanin0(n), abc.Abc_ObjFanin1(n)
+	cost := int32(0)
+	if !f0.MarkB {
+		cost++
+	}
+	if !f1.MarkB {
+		cost++
+	}
+	if cost < 2 {
+		return cost
+	}
+	if abc.Abc_ObjFanoutNum(n) > faninLimit {
+		return 999
+	}
+	return cost
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Unmarks the TFI cone.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NodesUnmarkB(vVisited *Vec_Ptr_t) {
-    var pNode *Abc_Obj_t;
-    var i int32;
-    Vec_PtrForEachEntry( Abc_Obj_t *, vVisited, pNode, i )
-        pNode.fMarkB = 0;
+// Abc_NodeGetLeafCostTwo tests the C two-level expansion cases and returns
+// the candidate leaf and the internal nodes that become marked.
+func Abc_NodeGetLeafCostTwo(n *Abc_Obj_t, _ int32, leaf **Abc_Obj_t, mark1, mark2 **Abc_Obj_t) int32 {
+	if n == nil {
+		return 999
+	}
+	assert(n.MarkB, "two-level candidate must be marked")
+	if abc.Abc_ObjIsCi(n) != 0 {
+		return 999
+	}
+	a, b := abc.Abc_ObjFanin0(n), abc.Abc_ObjFanin1(n)
+	// The candidate itself belongs to the cut, while both immediate fanins
+	// are outside it. This is the precondition used by the C implementation.
+	assert(!a.MarkB && !b.MarkB, "candidate fanins must be outside the cut")
+	if abc.Abc_ObjIsCi(a) != 0 && abc.Abc_ObjIsCi(b) != 0 {
+		return 999
+	}
+	if abc.Abc_ObjIsCi(a) == 0 && abc.Abc_ObjFanin0(a).MarkB && abc.Abc_ObjFanin1(a).MarkB {
+		*leaf = b
+		*mark1 = a
+		*mark2 = nil
+		return 1
+	}
+	if abc.Abc_ObjIsCi(b) == 0 && abc.Abc_ObjFanin0(b).MarkB && abc.Abc_ObjFanin1(b).MarkB {
+		*leaf = a
+		*mark1 = b
+		*mark2 = nil
+		return 1
+	}
+	if abc.Abc_ObjIsCi(b) != 0 {
+		a, b = b, a
+	}
+	var toAdd *Abc_Obj_t
+	m1 := (*Abc_Obj_t)(nil)
+	if abc.Abc_ObjIsCi(a) != 0 {
+		toAdd = a
+	} else {
+		m1 = a
+		for _, g := range []*Abc_Obj_t{abc.Abc_ObjFanin0(a), abc.Abc_ObjFanin1(a)} {
+			if !g.MarkB {
+				if toAdd != nil && toAdd != g {
+					return 999
+				}
+				toAdd = g
+			}
+		}
+	}
+	m2 := b
+	for _, g := range []*Abc_Obj_t{abc.Abc_ObjFanin0(b), abc.Abc_ObjFanin1(b)} {
+		if !g.MarkB {
+			if toAdd != nil && toAdd != g {
+				return 999
+			}
+			toAdd = g
+		}
+	}
+	if toAdd == nil {
+		return 999
+	}
+	*leaf, *mark1, *mark2 = toAdd, m1, m2
+	return 1
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Evaluate the cost of removing the node from the set of leaves.]
-
-  Description [Returns the number of new leaves that will be brought in.
-  Returns large number if the node cannot be removed from the set of leaves.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NodeGetLeafCostOne(pNode *Abc_Obj_t, nFaninLimit int32) int32 {
-    var Cost int32;
-    // make sure the node is in the construction zone
-    assert(pNode.fMarkB == 1, "pNode.fMarkB == 1");  
-    // cannot expand over the PI node
-    if Abc_ObjIsCi(pNode) {
-        return 999; }
-    // get the cost of the cone
-    Cost = (!Abc_ObjFanin0(pNode).fMarkB) + (!Abc_ObjFanin1(pNode).fMarkB);
-    // always accept if the number of leaves does not increase
-    if Cost < 2 {
-        return Cost; }
-    // skip nodes with many fanouts
-    if Abc_ObjFanoutNum(pNode) > nFaninLimit {
-        return 999; }
-    // return the number of nodes that will be on the leaves if this node is removed
-    return Cost;
+func Abc_NodeFindCut(m *Abc_ManCut_t, root *Abc_Obj_t, contain int32) *Vec_Ptr_t {
+	if root == nil || abc.Abc_ObjIsComplement(root) != 0 || abc.Abc_ObjIsNode(root) == 0 {
+		panic("Abc_NodeFindCut: root must be a regular node")
+	}
+	vec.Vec_PtrClear(m.vVisited)
+	vec.Vec_PtrPush(m.vVisited, root)
+	f0, f1 := abc.Abc_ObjFanin0(root), abc.Abc_ObjFanin1(root)
+	vec.Vec_PtrPush(m.vVisited, f0)
+	vec.Vec_PtrPush(m.vVisited, f1)
+	root.MarkB = true
+	f0.MarkB = true
+	f1.MarkB = true
+	vec.Vec_PtrClear(m.vNodeLeaves)
+	vec.Vec_PtrPush(m.vNodeLeaves, f0)
+	vec.Vec_PtrPush(m.vNodeLeaves, f1)
+	for Abc_NodeBuildCutLevelOne_int(m.vVisited, m.vNodeLeaves, m.nNodeSizeMax, m.nNodeFanStop) != 0 {
+	}
+	assert(vec.Vec_PtrSize(m.vNodeLeaves) <= int(m.nNodeSizeMax), "node cut exceeds configured size")
+	if contain == 0 {
+		Abc_NodesUnmarkB(m.vVisited)
+		return m.vNodeLeaves
+	}
+	assert(m.nNodeSizeMax < m.nConeSizeMax, "containing cut limit must exceed node cut limit")
+	vec.Vec_PtrClear(m.vConeLeaves)
+	for _, x := range vec.Vec_PtrArray(m.vNodeLeaves) {
+		vec.Vec_PtrPush(m.vConeLeaves, x)
+	}
+	for Abc_NodeBuildCutLevelOne_int(m.vVisited, m.vConeLeaves, m.nConeSizeMax, m.nConeFanStop) != 0 {
+	}
+	assert(vec.Vec_PtrSize(m.vConeLeaves) <= int(m.nConeSizeMax), "containing cut exceeds configured size")
+	Abc_NodesUnmarkB(m.vVisited)
+	return m.vNodeLeaves
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Evaluate the cost of removing the node from the set of leaves.]
-
-  Description [Returns the number of new leaves that will be brought in.
-  Returns large number if the node cannot be removed from the set of leaves.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NodeGetLeafCostTwo(pNode *Abc_Obj_t, nFaninLimit int32, ppLeafToAdd **Abc_Obj_t, pNodeToMark1 **Abc_Obj_t, pNodeToMark2 **Abc_Obj_t) int32 {
-    var pFanin0, pFanin1, pTemp *Abc_Obj_t;
-    var pGrand, pGrandToAdd *Abc_Obj_t;
-    // make sure the node is in the construction zone
-    assert(pNode.fMarkB == 1, "pNode.fMarkB == 1");  
-    // cannot expand over the PI node
-    if Abc_ObjIsCi(pNode) {
-        return 999; }
-    // skip nodes with many fanouts
-//    if ( Abc_ObjFanoutNum(pNode) > nFaninLimit )
-//        return 999;
-    // get the children
-    pFanin0 = Abc_ObjFanin0(pNode);
-    pFanin1 = Abc_ObjFanin1(pNode);
-    assert(!pFanin0.fMarkB && !pFanin1.fMarkB, "!pFanin0.fMarkB && !pFanin1.fMarkB");
-    // count the number of unique grandchildren that will be included
-    // return infinite cost if this number if more than 1
-    if Abc_ObjIsCi(pFanin0) && Abc_ObjIsCi(pFanin1) {
-        return 999; }
-    // consider the special case when a non-CI fanin can be dropped
-    if !Abc_ObjIsCi(pFanin0) && Abc_ObjFanin0(pFanin0).fMarkB && Abc_ObjFanin1(pFanin0).fMarkB {
-        *ppLeafToAdd  = pFanin1;
-        *pNodeToMark1 = pFanin0;
-        *pNodeToMark2 = nil;
-        return 1;
-    }
-    if !Abc_ObjIsCi(pFanin1) && Abc_ObjFanin0(pFanin1).fMarkB && Abc_ObjFanin1(pFanin1).fMarkB {
-        *ppLeafToAdd  = pFanin0;
-        *pNodeToMark1 = pFanin1;
-        *pNodeToMark2 = nil;
-        return 1;
-    }
-
-    // make the first node CI if any
-    if Abc_ObjIsCi(pFanin1) {
-        pTemp = pFanin0;
-pFanin0 = pFanin1;
-pFanin1 = pTemp; }
-    // consider the first node
-    pGrandToAdd = nil;
-    if Abc_ObjIsCi(pFanin0) {
-        *pNodeToMark1 = nil;
-        pGrandToAdd = pFanin0;
-    
-    } else {
-        *pNodeToMark1 = pFanin0;
-        pGrand = Abc_ObjFanin0(pFanin0);
-        if !pGrand.fMarkB {
-            if (pGrandToAdd != nil) && pGrandToAdd != pGrand {
-                return 999; }
-            pGrandToAdd = pGrand;
-        }
-        pGrand = Abc_ObjFanin1(pFanin0);
-        if !pGrand.fMarkB {
-            if (pGrandToAdd != nil) && pGrandToAdd != pGrand {
-                return 999; }
-            pGrandToAdd = pGrand;
-        }
-    }
-    // consider the second node
-    *pNodeToMark2 = pFanin1;
-    pGrand = Abc_ObjFanin0(pFanin1);
-    if !pGrand.fMarkB {
-        if (pGrandToAdd != nil) && pGrandToAdd != pGrand {
-            return 999; }
-        pGrandToAdd = pGrand;
-    }
-    pGrand = Abc_ObjFanin1(pFanin1);
-    if !pGrand.fMarkB {
-        if (pGrandToAdd != nil) && pGrandToAdd != pGrand {
-            return 999; }
-        pGrandToAdd = pGrand;
-    }
-    assert(pGrandToAdd != nil, "pGrandToAdd != nil");
-    *ppLeafToAdd = pGrandToAdd;
-    return 1;
+func Abc_NodeBuildCutLevelOne_int(visited, leaves *Vec_Ptr_t, sizeLimit, faninLimit int32) int32 {
+	best, costBest := -1, int32(100)
+	for i, x := range vec.Vec_PtrArray(leaves) {
+		n := x.(*Abc_Obj_t)
+		cost := Abc_NodeGetLeafCostOne(n, faninLimit)
+		if cost < costBest || cost == costBest && best >= 0 && n.Level > vec.Vec_PtrEntry(leaves, best).(*Abc_Obj_t).Level {
+			best, costBest = i, cost
+		}
+		if costBest == 0 {
+			break
+		}
+	}
+	if best < 0 || int32(vec.Vec_PtrSize(leaves))-1+costBest > sizeLimit {
+		return 0
+	}
+	n := vec.Vec_PtrEntry(leaves, best).(*Abc_Obj_t)
+	assert(abc.Abc_ObjIsNode(n) != 0, "selected cut leaf is not a node")
+	vec.Vec_PtrRemove(leaves, n)
+	for _, child := range []*Abc_Obj_t{abc.Abc_ObjFanin0(n), abc.Abc_ObjFanin1(n)} {
+		if !child.MarkB {
+			child.MarkB = true
+			vec.Vec_PtrPush(leaves, child)
+			vec.Vec_PtrPush(visited, child)
+		}
+	}
+	assert(vec.Vec_PtrSize(leaves) <= int(sizeLimit), "cut exceeds configured size")
+	return 1
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Finds a fanin-limited, reconvergence-driven cut for the node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NodeFindCut(p *Abc_ManCut_t, pRoot *Abc_Obj_t, fContain int32) *Vec_Ptr_t {
-    var pNode *Abc_Obj_t;
-    var i int32;
-
-    assert(!Abc_ObjIsComplement(pRoot), "!Abc_ObjIsComplement(pRoot)");
-    assert(Abc_ObjIsNode(pRoot), "Abc_ObjIsNode(pRoot)");
-
-    // start the visited nodes and mark them
-    Vec_PtrClear( p.vVisited );
-    Vec_PtrPush( p.vVisited, pRoot );
-    Vec_PtrPush( p.vVisited, Abc_ObjFanin0(pRoot) );
-    Vec_PtrPush( p.vVisited, Abc_ObjFanin1(pRoot) );
-    pRoot.fMarkB = 1;
-    Abc_ObjFanin0(pRoot).fMarkB = 1;
-    Abc_ObjFanin1(pRoot).fMarkB = 1;
-
-    // start the cut 
-    Vec_PtrClear( p.vNodeLeaves );
-    Vec_PtrPush( p.vNodeLeaves, Abc_ObjFanin0(pRoot) );
-    Vec_PtrPush( p.vNodeLeaves, Abc_ObjFanin1(pRoot) );
-
-    // compute the cut
-    for  Abc_NodeBuildCutLevelOne_int( p.vVisited, p.vNodeLeaves, p.nNodeSizeMax, p.nNodeFanStop ) != 0  {; }
-    assert(Vec_PtrSize(p.vNodeLeaves) <= p.nNodeSizeMax, "Vec_PtrSize(p.vNodeLeaves) <= p.nNodeSizeMax");
-
-    // return if containing cut is not requested
-    if !(fContain != 0) {
-        // unmark both fMarkA and fMarkB in tbe TFI
-        Abc_NodesUnmarkB( p.vVisited );
-        return p.vNodeLeaves;
-    }
-
-//printf( "\n\n\n" );
-    // compute the containing cut
-    assert(p.nNodeSizeMax < p.nConeSizeMax, "p.nNodeSizeMax < p.nConeSizeMax");
-    // copy the current boundary
-    Vec_PtrClear( p.vConeLeaves );
-    Vec_PtrForEachEntry( Abc_Obj_t *, p.vNodeLeaves, pNode, i )
-        Vec_PtrPush( p.vConeLeaves, pNode );
-    // compute the containing cut
-    for  Abc_NodeBuildCutLevelOne_int( p.vVisited, p.vConeLeaves, p.nConeSizeMax, p.nConeFanStop ) != 0  {; }
-    assert(Vec_PtrSize(p.vConeLeaves) <= p.nConeSizeMax, "Vec_PtrSize(p.vConeLeaves) <= p.nConeSizeMax");
-    // unmark TFI using fMarkA and fMarkB
-    Abc_NodesUnmarkB( p.vVisited );
-    return p.vNodeLeaves;
+func Abc_NodeBuildCutLevelTwo_int(visited, leaves *Vec_Ptr_t, faninLimit int32) int32 {
+	var n, leaf, m1, m2 *Abc_Obj_t
+	cost := int32(999)
+	for _, x := range vec.Vec_PtrArray(leaves) {
+		n = x.(*Abc_Obj_t)
+		cost = Abc_NodeGetLeafCostTwo(n, faninLimit, &leaf, &m1, &m2)
+		if cost < 2 {
+			break
+		}
+	}
+	if cost > 2 {
+		return 0
+	}
+	vec.Vec_PtrRemove(leaves, n)
+	if leaf != nil {
+		assert(!leaf.MarkB, "candidate leaf already marked")
+		leaf.MarkB = true
+		vec.Vec_PtrPush(leaves, leaf)
+		vec.Vec_PtrPush(visited, leaf)
+	}
+	for _, x := range []*Abc_Obj_t{m1, m2} {
+		if x != nil {
+			assert(!x.MarkB, "candidate node already marked")
+			x.MarkB = true
+			vec.Vec_PtrPush(visited, x)
+		}
+	}
+	return 1
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Builds reconvergence-driven cut by changing one leaf at a time.]
-
-  Description [This procedure looks at the current leaves and tries to change 
-  one leaf at a time in such a way that the cut grows as little as possible.
-  In evaluating the fanins, this procedure looks only at their immediate 
-  predecessors (this is why it is called a one-level construction procedure).]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NodeBuildCutLevelOne_int(vVisited *Vec_Ptr_t, vLeaves *Vec_Ptr_t, nSizeLimit int32, nFaninLimit int32) int32 {
-    var pNode, pFaninBest, pNext *Abc_Obj_t;
-    var CostBest, CostCur, i int32;
-    // find the best fanin
-    CostBest   = 100;
-    pFaninBest = nil;
-//printf( "Evaluating fanins of the cut:\n" );
-    Vec_PtrForEachEntry( Abc_Obj_t *, vLeaves, pNode, i )
-    {
-        CostCur = Abc_NodeGetLeafCostOne( pNode, nFaninLimit );
-//printf( "    Fanin %s has cost %d.\n", Abc_ObjName(pNode), CostCur );
-//        if ( CostBest > CostCur ) // performance improvement: expand the variable with the smallest level
-        if CostBest > CostCur ||
-             (CostBest == CostCur && pNode.Level > pFaninBest.Level) {
-            CostBest   = CostCur;
-            pFaninBest = pNode;
-        }
-        if CostBest == 0 {
-            break; }
-    }
-    if pFaninBest == nil {
-        return 0; }
-//        return Abc_NodeBuildCutLevelTwo_int( vVisited, vLeaves, nFaninLimit );
-
-    assert(CostBest < 3, "CostBest < 3");
-    if vLeaves.nSize - 1 + CostBest > nSizeLimit {
-        return 0; }
-//        return Abc_NodeBuildCutLevelTwo_int( vVisited, vLeaves, nFaninLimit );
-
-    assert(Abc_ObjIsNode(pFaninBest), "Abc_ObjIsNode(pFaninBest)");
-    // remove the node from the array
-    Vec_PtrRemove( vLeaves, pFaninBest );
-//printf( "Removing fanin %s.\n", Abc_ObjName(pFaninBest) );
-
-    // add the left child to the fanins
-    pNext = Abc_ObjFanin0(pFaninBest);
-    if !pNext.fMarkB {
-//printf( "Adding fanin %s.\n", Abc_ObjName(pNext) );
-        pNext.fMarkB = 1;
-        Vec_PtrPush( vLeaves, pNext );
-        Vec_PtrPush( vVisited, pNext );
-    }
-    // add the right child to the fanins
-    pNext = Abc_ObjFanin1(pFaninBest);
-    if !pNext.fMarkB {
-//printf( "Adding fanin %s.\n", Abc_ObjName(pNext) );
-        pNext.fMarkB = 1;
-        Vec_PtrPush( vLeaves, pNext );
-        Vec_PtrPush( vVisited, pNext );
-    }
-    assert(vLeaves.nSize <= nSizeLimit, "vLeaves.nSize <= nSizeLimit");
-    // keep doing this
-    return 1;
+func Abc_NodeConeCollect(roots []*Abc_Obj_t, leaves, visited *Vec_Ptr_t, includeFanins int32) {
+	Abc_NodesMark(leaves)
+	vec.Vec_PtrClear(visited)
+	if includeFanins != 0 {
+		for _, x := range vec.Vec_PtrArray(leaves) {
+			vec.Vec_PtrPush(visited, x)
+		}
+	}
+	for _, r := range roots {
+		Abc_NodeConeMarkCollect_rec(r, visited)
+	}
+	Abc_NodesUnmark(leaves)
+	Abc_NodesUnmark(visited)
+}
+func Abc_NodeConeMarkCollect_rec(n *Abc_Obj_t, visited *Vec_Ptr_t) {
+	if n.MarkA {
+		return
+	}
+	if abc.Abc_ObjIsNode(n) != 0 {
+		Abc_NodeConeMarkCollect_rec(abc.Abc_ObjFanin0(n), visited)
+		Abc_NodeConeMarkCollect_rec(abc.Abc_ObjFanin1(n), visited)
+	}
+	assert(!n.MarkA, "duplicate DFS visit")
+	n.MarkA = true
+	vec.Vec_PtrPush(visited, n)
 }
 
-/**Function*************************************************************
+func Abc_NtkManCutStart(nodeMax, coneMax, nodeFanStop, coneFanStop int32) *Abc_ManCut_t {
+	return &Abc_ManCut_t{nodeMax, coneMax, nodeFanStop, coneFanStop, vec.Vec_PtrAlloc(100), vec.Vec_PtrAlloc(100), vec.Vec_PtrAlloc(100), vec.Vec_PtrAlloc(100), vec.Vec_VecAlloc(100)}
+}
+func Abc_NtkManCutStop(m *Abc_ManCut_t) {
+	if m == nil {
+		return
+	}
+	vec.Vec_PtrFree(m.vNodeLeaves)
+	vec.Vec_PtrFree(m.vConeLeaves)
+	vec.Vec_PtrFree(m.vVisited)
+	vec.Vec_PtrFree(m.vNodesTfo)
+	vec.Vec_VecFree(m.vLevels)
+}
+func Abc_NtkManCutReadCutLarge(m *Abc_ManCut_t) *Vec_Ptr_t { return m.vConeLeaves }
+func Abc_NtkManCutReadCutSmall(m *Abc_ManCut_t) *Vec_Ptr_t { return m.vNodeLeaves }
+func Abc_NtkManCutReadVisited(m *Abc_ManCut_t) *Vec_Ptr_t  { return m.vVisited }
 
-  Synopsis    [Builds reconvergence-driven cut by changing one leaf at a time.]
-
-  Description [This procedure looks at the current leaves and tries to change 
-  one leaf at a time in such a way that the cut grows as little as possible.
-  In evaluating the fanins, this procedure looks across two levels of fanins
-  (this is why it is called a two-level construction procedure).]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NodeBuildCutLevelTwo_int(vVisited *Vec_Ptr_t, vLeaves *Vec_Ptr_t, nFaninLimit int32) int32 {
-    var pNode *Abc_Obj_t = nil;
-    var pLeafToAdd *Abc_Obj_t;
-    var pNodeToMark1 *Abc_Obj_t;
-    var pNodeToMark2 *Abc_Obj_t;
-    var CostCur, i int32;
-    // find the best fanin
-    Vec_PtrForEachEntry( Abc_Obj_t *, vLeaves, pNode, i )
-    {
-        CostCur = Abc_NodeGetLeafCostTwo( pNode, nFaninLimit, &pLeafToAdd, &pNodeToMark1, &pNodeToMark2 );
-        if CostCur < 2 {
-            break; }
-    }
-    if CostCur > 2 {
-        return 0; }
-    // remove the node from the array
-    Vec_PtrRemove( vLeaves, pNode );
-    // add the node to the leaves
-    if pLeafToAdd != nil {
-        assert(!pLeafToAdd.fMarkB, "!pLeafToAdd.fMarkB");
-        pLeafToAdd.fMarkB = 1;
-        Vec_PtrPush( vLeaves, pLeafToAdd );
-        Vec_PtrPush( vVisited, pLeafToAdd );
-    }
-    // mark the other nodes
-    if pNodeToMark1 != nil {
-        assert(!pNodeToMark1.fMarkB, "!pNodeToMark1.fMarkB");
-        pNodeToMark1.fMarkB = 1;
-        Vec_PtrPush( vVisited, pNodeToMark1 );
-    }
-    if pNodeToMark2 != nil {
-        assert(!pNodeToMark2.fMarkB, "!pNodeToMark2.fMarkB");
-        pNodeToMark2.fMarkB = 1;
-        Vec_PtrPush( vVisited, pNodeToMark2 );
-    }
-    // keep doing this
-    return 1;
+func Abc_NodeCollectTfoCands(m *Abc_ManCut_t, root *Abc_Obj_t, leaves *Vec_Ptr_t, levelMax int32) *Vec_Ptr_t {
+	n := root.Network()
+	assert(abc.Abc_NtkIsStrash(n) != 0, "TFO requires strashed network")
+	for i := 0; i < vec.Vec_VecSize(m.vLevels); i++ {
+		assert(vec.Vec_PtrSize(vec.Vec_VecEntry(m.vLevels, i)) == 0, "TFO level scratch not empty")
+	}
+	abc.Abc_NtkIncrementTravId(n)
+	levelMin := -1
+	for _, x := range vec.Vec_PtrArray(leaves) {
+		leaf := x.(*Abc_Obj_t)
+		if leaf.Level > int(levelMax) {
+			continue
+		}
+		abc.Abc_NodeSetTravIdCurrent(leaf)
+		vec.Vec_VecPush(m.vLevels, leaf.Level, leaf)
+		levelMin = max(levelMin, leaf.Level)
+	}
+	assert(levelMin >= 0, "no cut leaves under level bound")
+	abc.Abc_NodeMffcLabelAig(root)
+	vec.Vec_PtrClear(m.vNodesTfo)
+	for level := levelMin; level <= int(levelMax); level++ {
+		if level >= vec.Vec_VecSize(m.vLevels) {
+			break
+		}
+		v := vec.Vec_VecEntry(m.vLevels, level)
+		for _, x := range vec.Vec_PtrArray(v) {
+			node := x.(*Abc_Obj_t)
+			if abc.Abc_NodeIsTravIdCurrent(node) == 0 {
+				if abc.Abc_NodeIsTravIdCurrent(abc.Abc_ObjFanin0(node)) == 0 || abc.Abc_NodeIsTravIdCurrent(abc.Abc_ObjFanin1(node)) == 0 {
+					continue
+				}
+				vec.Vec_PtrPush(m.vNodesTfo, node)
+				abc.Abc_NodeSetTravIdCurrent(node)
+			}
+			for _, fo := range node.Fanouts() {
+				if abc.Abc_ObjIsCo(fo) != 0 || fo.Level > int(levelMax) || abc.Abc_NodeIsTravIdCurrent(fo) != 0 {
+					continue
+				}
+				vec.Vec_VecPushUnique(m.vLevels, fo.Level, fo)
+			}
+		}
+		vec.Vec_PtrClear(v)
+	}
+	return m.vNodesTfo
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Get the nodes contained in the cut.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NodeConeCollect(ppRoots **Abc_Obj_t, nRoots int32, vLeaves *Vec_Ptr_t, vVisited *Vec_Ptr_t, fIncludeFanins int32) {
-    var pTemp *Abc_Obj_t;
-    var i int32;
-    // mark the fanins of the cone
-    Abc_NodesMark( vLeaves );
-    // collect the nodes in the DFS order
-    Vec_PtrClear( vVisited );
-    // add the fanins
-    if fIncludeFanins != 0 {
-        Vec_PtrForEachEntry( Abc_Obj_t *, vLeaves, pTemp, i )
-            Vec_PtrPush( vVisited, pTemp ); }
-    // add other nodes
-    for  i = 0; i < nRoots; i++  {
-        Abc_NodeConeMarkCollect_rec( ppRoots[i], vVisited );
-    }
-    // unmark both sets
-    Abc_NodesUnmark( vLeaves );
-    Abc_NodesUnmark( vVisited );
+func Abc_NodeConeBdd(dd *core.DdManager, vars []*core.DdNode, root *Abc_Obj_t, leaves, visited *Vec_Ptr_t) *core.DdNode {
+	Abc_NodeConeCollect([]*Abc_Obj_t{root}, leaves, visited, 0)
+	for i, x := range vec.Vec_PtrArray(leaves) {
+		x.(*Abc_Obj_t).CopyData = vars[i]
+	}
+	var result *core.DdNode
+	for _, x := range vec.Vec_PtrArray(visited) {
+		n := x.(*Abc_Obj_t)
+		f0 := abcBddNotCond(abc.Abc_ObjFanin0(n).CopyData.(*core.DdNode), abc.Abc_ObjFaninC0(n))
+		f1 := abcBddNotCond(abc.Abc_ObjFanin1(n).CopyData.(*core.DdNode), abc.Abc_ObjFaninC1(n))
+		result = core.Cudd_bddAnd(dd, f0, f1)
+		if result == nil {
+			return nil
+		}
+		core.Cudd_Ref(result)
+		n.CopyData = result
+	}
+	if result == nil {
+		return nil
+	}
+	core.Cudd_Ref(result)
+	for _, x := range vec.Vec_PtrArray(visited) {
+		core.Cudd_RecursiveDeref(dd, x.(*Abc_Obj_t).CopyData.(*core.DdNode))
+	}
+	core.Cudd_Deref(result)
+	return result
 }
+func abcBddNotCond(f *core.DdNode, c int32) *core.DdNode { return core.Cudd_NotCond(f, c != 0) }
 
-/**Function*************************************************************
-
-  Synopsis    [Marks the TFI cone.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NodeConeMarkCollect_rec(pNode *Abc_Obj_t, vVisited *Vec_Ptr_t) {
-    if pNode.fMarkA == 1 {
-        return; }
-    // visit transitive fanin 
-    if Abc_ObjIsNode(pNode) {
-        Abc_NodeConeMarkCollect_rec( Abc_ObjFanin0(pNode), vVisited );
-        Abc_NodeConeMarkCollect_rec( Abc_ObjFanin1(pNode), vVisited );
-    }
-    assert(pNode.fMarkA == 0, "pNode.fMarkA == 0");
-    pNode.fMarkA = 1;
-    Vec_PtrPush( vVisited, pNode );
+func Abc_NodeConeDcs(dd *core.DdManager, varsX, varsY []*core.DdNode, leaves, roots, visited *Vec_Ptr_t) *core.DdNode {
+	rootList := make([]*Abc_Obj_t, vec.Vec_PtrSize(roots))
+	for i, x := range vec.Vec_PtrArray(roots) {
+		rootList[i] = x.(*Abc_Obj_t)
+	}
+	Abc_NodeConeCollect(rootList, leaves, visited, 0)
+	for i, x := range vec.Vec_PtrArray(leaves) {
+		x.(*Abc_Obj_t).CopyData = varsX[i]
+	}
+	for _, x := range vec.Vec_PtrArray(visited) {
+		n := x.(*Abc_Obj_t)
+		a := abcBddNotCond(abc.Abc_ObjFanin0(n).CopyData.(*core.DdNode), abc.Abc_ObjFaninC0(n))
+		b := abcBddNotCond(abc.Abc_ObjFanin1(n).CopyData.(*core.DdNode), abc.Abc_ObjFaninC1(n))
+		f := core.Cudd_bddAnd(dd, a, b)
+		if f == nil {
+			return nil
+		}
+		core.Cudd_Ref(f)
+		n.CopyData = f
+	}
+	trans := dd.One
+	core.Cudd_Ref(trans)
+	for i, x := range vec.Vec_PtrArray(roots) {
+		n := x.(*Abc_Obj_t)
+		f := core.Cudd_bddXnor(dd, n.CopyData.(*core.DdNode), varsY[i])
+		if f == nil {
+			return nil
+		}
+		core.Cudd_Ref(f)
+		old := trans
+		trans = core.Cudd_bddAnd(dd, old, f)
+		if trans == nil {
+			return nil
+		}
+		core.Cudd_Ref(trans)
+		core.Cudd_RecursiveDeref(dd, old)
+		core.Cudd_RecursiveDeref(dd, f)
+	}
+	for _, x := range vec.Vec_PtrArray(visited) {
+		core.Cudd_RecursiveDeref(dd, x.(*Abc_Obj_t).CopyData.(*core.DdNode))
+	}
+	cube := extrab.Extra_bddComputeRangeCube(dd, vec.Vec_PtrSize(roots), vec.Vec_PtrSize(roots)+vec.Vec_PtrSize(leaves))
+	core.Cudd_Ref(cube)
+	res := core.Cudd_Not(core.Cudd_bddExistAbstract(dd, trans, cube))
+	core.Cudd_Ref(res)
+	core.Cudd_RecursiveDeref(dd, cube)
+	core.Cudd_RecursiveDeref(dd, trans)
+	core.Cudd_Deref(res)
+	return res
 }
-
-#ifdef ABC_USE_CUDD
-
-/**Function*************************************************************
-
-  Synopsis    [Returns BDD representing the logic function of the cone.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-DdNode * Abc_NodeConeBdd( DdManager * dd, DdNode ** pbVars, Abc_Obj_t * pRoot, Vec_Ptr_t * vLeaves, Vec_Ptr_t * vVisited )
-{
-    Abc_Obj_t * pNode;
-    DdNode * bFunc0, * bFunc1, * bFunc = NULL;
-    int i;
-    // get the nodes in the cut without fanins in the DFS order
-    Abc_NodeConeCollect( &pRoot, 1, vLeaves, vVisited, 0 );
-    // set the elementary BDDs
-    Vec_PtrForEachEntry( Abc_Obj_t *, vLeaves, pNode, i )
-        pNode->pCopy = (Abc_Obj_t *)pbVars[i];
-    // compute the BDDs for the collected nodes
-    Vec_PtrForEachEntry( Abc_Obj_t *, vVisited, pNode, i )
-    {
-        assert( !Abc_ObjIsPi(pNode) );
-        bFunc0 = Cudd_NotCond( Abc_ObjFanin0(pNode)->pCopy, (int)Abc_ObjFaninC0(pNode) );
-        bFunc1 = Cudd_NotCond( Abc_ObjFanin1(pNode)->pCopy, (int)Abc_ObjFaninC1(pNode) );
-        bFunc  = Cudd_bddAnd( dd, bFunc0, bFunc1 );    Cudd_Ref( bFunc );
-        pNode->pCopy = (Abc_Obj_t *)bFunc;
-    }
-    assert(bFunc);
-    Cudd_Ref( bFunc );
-    // dereference the intermediate ones
-    Vec_PtrForEachEntry( Abc_Obj_t *, vVisited, pNode, i )
-        Cudd_RecursiveDeref( dd, (DdNode *)pNode->pCopy );
-    Cudd_Deref( bFunc );
-    return bFunc;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Returns BDD representing the transition relation of the cone.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-DdNode * Abc_NodeConeDcs( DdManager * dd, DdNode ** pbVarsX, DdNode ** pbVarsY, Vec_Ptr_t * vLeaves, Vec_Ptr_t * vRoots, Vec_Ptr_t * vVisited )
-{
-    DdNode * bFunc0, * bFunc1, * bFunc, * bTrans, * bTemp, * bCube, * bResult;
-    Abc_Obj_t * pNode;
-    int i;
-    // get the nodes in the cut without fanins in the DFS order
-    Abc_NodeConeCollect( (Abc_Obj_t **)vRoots->pArray, vRoots->nSize, vLeaves, vVisited, 0 );
-    // set the elementary BDDs
-    Vec_PtrForEachEntry( Abc_Obj_t *, vLeaves, pNode, i )
-        pNode->pCopy = (Abc_Obj_t *)pbVarsX[i];
-    // compute the BDDs for the collected nodes
-    Vec_PtrForEachEntry( Abc_Obj_t *, vVisited, pNode, i )
-    {
-        bFunc0 = Cudd_NotCond( Abc_ObjFanin0(pNode)->pCopy, (int)Abc_ObjFaninC0(pNode) );
-        bFunc1 = Cudd_NotCond( Abc_ObjFanin1(pNode)->pCopy, (int)Abc_ObjFaninC1(pNode) );
-        bFunc  = Cudd_bddAnd( dd, bFunc0, bFunc1 );    Cudd_Ref( bFunc );
-        pNode->pCopy = (Abc_Obj_t *)bFunc;
-    }
-    // compute the transition relation of the cone
-    bTrans = b1;    Cudd_Ref( bTrans );
-    Vec_PtrForEachEntry( Abc_Obj_t *, vRoots, pNode, i )
-    {
-        bFunc = Cudd_bddXnor( dd, (DdNode *)pNode->pCopy, pbVarsY[i] );  Cudd_Ref( bFunc );
-        bTrans = Cudd_bddAnd( dd, bTemp = bTrans, bFunc );               Cudd_Ref( bTrans );
-        Cudd_RecursiveDeref( dd, bTemp );
-        Cudd_RecursiveDeref( dd, bFunc );
-    }
-    // dereference the intermediate ones
-    Vec_PtrForEachEntry( Abc_Obj_t *, vVisited, pNode, i )
-        Cudd_RecursiveDeref( dd, (DdNode *)pNode->pCopy );
-    // compute don't-cares
-    bCube = Extra_bddComputeRangeCube( dd, vRoots->nSize, vRoots->nSize + vLeaves->nSize );  Cudd_Ref( bCube );
-    bResult = Cudd_bddExistAbstract( dd, bTrans, bCube );                Cudd_Ref( bResult );
-    bResult = Cudd_Not( bResult );
-    Cudd_RecursiveDeref( dd, bCube );
-    Cudd_RecursiveDeref( dd, bTrans );
-    Cudd_Deref( bResult );
-    return bResult;
-}
- 
-#endif
-
-/**Function*************************************************************
-
-  Synopsis    [Starts the resynthesis manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkManCutStart(nNodeSizeMax int32, nConeSizeMax int32, nNodeFanStop int32, nConeFanStop int32) *Abc_ManCut_t {
-    var p *Abc_ManCut_t;
-    p = new(Abc_ManCut_t);
-    memset( p, 0, sizeof(Abc_ManCut_t) );
-    p.vNodeLeaves  = Vec_PtrAlloc( 100 );
-    p.vConeLeaves  = Vec_PtrAlloc( 100 );
-    p.vVisited     = Vec_PtrAlloc( 100 );
-    p.vLevels      = Vec_VecAlloc( 100 );
-    p.vNodesTfo    = Vec_PtrAlloc( 100 );
-    p.nNodeSizeMax = nNodeSizeMax;
-    p.nConeSizeMax = nConeSizeMax;
-    p.nNodeFanStop = nNodeFanStop;
-    p.nConeFanStop = nConeFanStop;
-    return p;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Stops the resynthesis manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkManCutStop(p *Abc_ManCut_t) {
-    Vec_PtrFree( p.vNodeLeaves );
-    Vec_PtrFree( p.vConeLeaves );
-    Vec_PtrFree( p.vVisited    );
-    Vec_VecFree( p.vLevels );
-    Vec_PtrFree( p.vNodesTfo );
-    ABC_FREE( p );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Returns the leaves of the cone.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkManCutReadCutLarge(p *Abc_ManCut_t) *Vec_Ptr_t {
-    return p.vConeLeaves;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Returns the leaves of the cone.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkManCutReadCutSmall(p *Abc_ManCut_t) *Vec_Ptr_t {
-    return p.vNodeLeaves;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Returns the leaves of the cone.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkManCutReadVisited(p *Abc_ManCut_t) *Vec_Ptr_t {
-    return p.vVisited;
-}
-
-
-
-/**Function*************************************************************
-
-  Synopsis    [Collects the TFO of the cut in the topological order.]
-
-  Description [TFO of the cut is defined as a set of nodes, for which the cut
-  is a cut, that is, every path from the collected nodes to the CIs goes through 
-  a node in the cut. The nodes are collected if their level does not exceed
-  the given number (LevelMax). The nodes are returned in the topological order.
-  If the root node is given, its MFFC is marked, so that the collected nodes
-  do not contain any nodes in the MFFC.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NodeCollectTfoCands(p *Abc_ManCut_t, pRoot *Abc_Obj_t, vLeaves *Vec_Ptr_t, LevelMax int32) *Vec_Ptr_t {
-    var pNtk *Abc_Ntk_t  = pRoot.pNtk;
-    var vVec *Vec_Ptr_t;
-    var pNode, pFanout *Abc_Obj_t;
-    var i, k, v, LevelMin int32;
-    assert(Abc_NtkIsStrash(pNtk), "Abc_NtkIsStrash(pNtk)");
-
-    // assuming that the structure is clean
-    Vec_VecForEachLevel( p.vLevels, vVec, i )
-        assert(vVec.nSize == 0, "vVec.nSize == 0");
-
-    // put fanins into the structure while labeling them
-    Abc_NtkIncrementTravId( pNtk );
-    LevelMin = -1;
-    Vec_PtrForEachEntry( Abc_Obj_t *, vLeaves, pNode, i )
-    {
-        if pNode.Level > uint32(LevelMax) {
-            continue; }
-        Abc_NodeSetTravIdCurrent( pNode );
-        Vec_VecPush( p.vLevels, pNode.Level, pNode );
-        if LevelMin < int32(pNode.Level) {
-            LevelMin = pNode.Level; }
-    }
-    assert(LevelMin >= 0, "LevelMin >= 0");
-
-    // mark MFFC 
-    if pRoot != nil {
-        Abc_NodeMffcLabelAig( pRoot ); }
-
-    // go through the levels up
-    Vec_PtrClear( p.vNodesTfo );
-    Vec_VecForEachEntryStart( Abc_Obj_t *, p.vLevels, pNode, i, k, LevelMin )
-    {
-        if i > LevelMax {
-            break; }
-        // if the node is not marked, it is not a fanin
-        if !Abc_NodeIsTravIdCurrent(pNode) {
-            // check if it belongs to the TFO
-            if !Abc_NodeIsTravIdCurrent(Abc_ObjFanin0(pNode)) || 
-                 !Abc_NodeIsTravIdCurrent(Abc_ObjFanin1(pNode)) {
-                 continue; }
-            // save the node in the TFO and label it
-            Vec_PtrPush( p.vNodesTfo, pNode );
-            Abc_NodeSetTravIdCurrent( pNode );
-        }
-        // go through the fanouts and add them to the structure if they meet the conditions
-        Abc_ObjForEachFanout( pNode, pFanout, v )
-        {
-            // skip if fanout is a CO or its level exceeds
-            if Abc_ObjIsCo(pFanout) || pFanout.Level > uint32(LevelMax) {
-                continue; }
-            // skip if it is already added or if it is in MFFC
-            if Abc_NodeIsTravIdCurrent(pFanout) {
-                continue; }
-            // add it to the structure but do not mark it (until tested later)
-            Vec_VecPushUnique( p.vLevels, pFanout.Level, pFanout );
-        }
-    }
-
-    // clear the levelized structure
-    Vec_VecForEachLevelStart( p.vLevels, vVec, i, LevelMin )
-    {
-        if i > LevelMax {
-            break; }
-        Vec_PtrClear( vVec );
-    }
-    return p.vNodesTfo;
-}
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

@@ -21,6 +21,7 @@ func IfifReadLibrary(p *Ifif_Par_t) *If_LibLut_t              { return p.pLutLib
 func IfifSetPinDelay(p *Ifif_Par_t, pin int32, delay float32) { p.pLutDelays[pin] = delay }
 func IfifPinDelay(p *Ifif_Par_t, pin int32) float32           { return p.pLutDelays[pin] }
 func If_LibLutHasVariablePinDelays(lib *If_LibLut_t) bool     { return lib.fVarPinDelays != 0 }
+func If_LibLutMaxSize(lib *If_LibLut_t) int32                 { return lib.LutMax }
 func If_LibLutDelay(lib *If_LibLut_t, lutSize, pin int32) float32 {
 	return lib.pLutDelays[lutSize][pin]
 }

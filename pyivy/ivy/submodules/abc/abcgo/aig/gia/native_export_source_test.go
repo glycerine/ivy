@@ -42,18 +42,22 @@ func TestSimpleExportPreservesInterleavedSourceObjectIDs(t *testing.T) {
 		t.Fatal("late CI ID changed")
 	}
 }
-func TestSimpleExportRejectsCollapsedObjectID(t *testing.T) {
+func TestSimpleExportMapsCollapsedObjectID(t *testing.T) {
 	g := Gia_ManStart(12)
 	a, b := Gia_ManAppendCi(g), Gia_ManAppendCi(g)
 	Gia_ManAppendAnd(g, a, b)
 	x := Gia_ManAppendAnd(g, a, b)
 	Gia_ManAppendCo(g, x)
-	defer func() {
-		if got := recover(); got != "gia: simple export changed object ID" {
-			t.Fatalf("panic %v", got)
+	out := Gia_ManToAigSimple(g)
+	if Gia_ObjValue(Gia_ManObj(g, x>>1)) != int32(aig.Aig_And(out, aig.Aig_ManCi(out, 0), aig.Aig_ManCi(out, 1))) {
+		t.Fatal("simple export did not retain the actual edge mapping")
+	}
+	for _, input := range [][]bool{{false, false}, {false, true}, {true, false}, {true, true}} {
+		values, err := out.Evaluate(input)
+		if err != nil || len(values) != 1 || values[0] != (input[0] && input[1]) {
+			t.Fatalf("input %v got %v err %v", input, values, err)
 		}
-	}()
-	Gia_ManToAigSimple(g)
+	}
 }
 
 func TestDFSAndSimpleExportSourceScratchAndLevels(t *testing.T) {

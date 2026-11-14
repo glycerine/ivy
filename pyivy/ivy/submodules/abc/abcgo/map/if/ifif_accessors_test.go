@@ -15,7 +15,7 @@ func TestIfifAccessorsPreserveExperimentParameters(t *testing.T) {
 		t.Fatalf("params = %+v", got)
 	}
 	IfifSetPinDelay(p, 2, .5)
-	if IfifReadLibrary(p) != lib || IfifPinDelay(p, 2) != .5 || !If_LibLutHasVariablePinDelays(lib) || If_LibLutDelay(lib, 4, 2) != 1.75 {
+	if IfifReadLibrary(p) != lib || IfifPinDelay(p, 2) != .5 || !If_LibLutHasVariablePinDelays(lib) || If_LibLutMaxSize(lib) != 4 || If_LibLutDelay(lib, 4, 2) != 1.75 {
 		t.Fatal("IFIF library/delay accessors lost a field")
 	}
 }

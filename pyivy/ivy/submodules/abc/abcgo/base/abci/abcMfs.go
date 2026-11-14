@@ -3,7 +3,21 @@ package abci
 import (
 	"fmt"
 	"os"
+
+	baseabc "github.com/glycerine/abcgo/base/abc"
+	baseio "github.com/glycerine/abcgo/base/io"
+	"github.com/glycerine/abcgo/misc/extra"
+	"github.com/glycerine/abcgo/misc/mem"
+	"github.com/glycerine/abcgo/misc/util"
+	"github.com/glycerine/abcgo/misc/vec"
+	"github.com/glycerine/abcgo/opt/sfm"
 )
+
+type Vec_Wec_t = vec.Vec_Wec_t
+type Vec_Wrd_t = vec.Vec_Wrd_t
+type Vec_Str_t = vec.Vec_Str_t
+type Sfm_Ntk_t = sfm.Sfm_Ntk_t
+type Sfm_Par_t = sfm.Sfm_Par_t
 
 /**CFile****************************************************************
 
@@ -16,7 +30,7 @@ import (
   Synopsis    [Optimization with don't-cares.]
 
   Author      [Alan Mishchenko]
-  
+
   Affiliation [UC Berkeley]
 
   Date        [Ver. 1.0. Started - June 20, 2005.]
@@ -32,547 +46,442 @@ import (
 
 //ABC_NAMESPACE_IMPL_START
 
-
 ////////////////////////////////////////////////////////////////////////
 ///                        DECLARATIONS                              ///
 ////////////////////////////////////////////////////////////////////////
- 
+
 ////////////////////////////////////////////////////////////////////////
 ///                     FUNCTION DEFINITIONS                         ///
 ////////////////////////////////////////////////////////////////////////
 
-/**Function*************************************************************
+/*
+*Function*************************************************************
 
-  Synopsis    []
+	Synopsis    []
 
-  Description []
-               
-  SideEffects []
+	Description []
 
-  SeeAlso     []
+	SideEffects []
 
-***********************************************************************/
+	SeeAlso     []
+
+**********************************************************************
+*/
 func Abc_NtkAssignIDs(pNtk *Abc_Ntk_t) *Vec_Ptr_t {
-    var vNodes *Vec_Ptr_t;
-    var pObj *Abc_Obj_t;
-    var i int32;
-    vNodes = Abc_NtkDfs( pNtk, 0 );
-    Abc_NtkCleanCopy( pNtk );
-    Abc_NtkForEachCi( pNtk, pObj, i )
-        pObj.iTemp = i;
-    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )
-        pObj.iTemp = Abc_NtkCiNum(pNtk) + i;
-    Abc_NtkForEachCo( pNtk, pObj, i )
-        pObj.iTemp = Abc_NtkCiNum(pNtk) + Vec_PtrSize(vNodes) + i;
-    return vNodes;
+	nodes := baseabc.Abc_NtkDfs(pNtk, 0)
+	vNodes := vec.Vec_PtrAlloc(len(nodes))
+	baseabc.Abc_NtkCleanCopy(pNtk)
+	for i := int32(0); i < baseabc.Abc_NtkCiNum(pNtk); i++ {
+		baseabc.Abc_NtkCi(pNtk, i).Temp = int(i)
+	}
+	for i, pObj := range nodes {
+		pObj.Temp = int(baseabc.Abc_NtkCiNum(pNtk)) + i
+		vec.Vec_PtrPush(vNodes, pObj)
+	}
+	for i := int32(0); i < baseabc.Abc_NtkCoNum(pNtk); i++ {
+		baseabc.Abc_NtkCo(pNtk, i).Temp = int(baseabc.Abc_NtkCiNum(pNtk) + int32(len(nodes)) + i)
+	}
+	return vNodes
 }
 func Abc_NtkAssignIDs2(pNtk *Abc_Ntk_t) *Vec_Ptr_t {
-    var vNodes *Vec_Ptr_t;
-    var pObj *Abc_Obj_t;
-    var i int32;
-    Abc_NtkCleanCopy( pNtk );
-    Abc_NtkForEachCi( pNtk, pObj, i )
-        pObj.iTemp = i;
-    vNodes = Vec_PtrAlloc( Abc_NtkNodeNum(pNtk) );
-    Abc_NtkForEachNode( pNtk, pObj, i )
-    {
-        pObj.iTemp = Abc_NtkCiNum(pNtk) + Vec_PtrSize(vNodes);
-        Vec_PtrPush( vNodes, pObj );
-    }
-    assert(Vec_PtrSize(vNodes) == Abc_NtkNodeNum(pNtk), "Vec_PtrSize(vNodes) == Abc_NtkNodeNum(pNtk)");
-    Abc_NtkForEachCo( pNtk, pObj, i )
-        pObj.iTemp = Abc_NtkCiNum(pNtk) + Vec_PtrSize(vNodes) + i;
-    return vNodes;
+	baseabc.Abc_NtkCleanCopy(pNtk)
+	for i := int32(0); i < baseabc.Abc_NtkCiNum(pNtk); i++ {
+		baseabc.Abc_NtkCi(pNtk, i).Temp = int(i)
+	}
+	vNodes := vec.Vec_PtrAlloc(len(pNtk.ObjectsOfKind(baseabc.ObjectNode)))
+	for _, pObj := range pNtk.ObjectsOfKind(baseabc.ObjectNode) {
+		pObj.Temp = int(baseabc.Abc_NtkCiNum(pNtk)) + vec.Vec_PtrSize(vNodes)
+		vec.Vec_PtrPush(vNodes, pObj)
+	}
+	assert(int32(vec.Vec_PtrSize(vNodes)) == baseabc.Abc_NtkNodeNum(pNtk), "Vec_PtrSize(vNodes) == Abc_NtkNodeNum(pNtk)")
+	for i := int32(0); i < baseabc.Abc_NtkCoNum(pNtk); i++ {
+		baseabc.Abc_NtkCo(pNtk, i).Temp = int(baseabc.Abc_NtkCiNum(pNtk) + int32(vec.Vec_PtrSize(vNodes)) + i)
+	}
+	return vNodes
 }
 
-/**Function*************************************************************
+/*
+*Function*************************************************************
 
-  Synopsis    [Assign truth table sizes.]
+	Synopsis    [Assign truth table sizes.]
 
-  Description []
-               
-  SideEffects []
+	Description []
 
-  SeeAlso     []
+	SideEffects []
 
-***********************************************************************/
+	SeeAlso     []
+
+**********************************************************************
+*/
 func Abc_NtkAssignStarts(pNtk *Abc_Ntk_t, vNodes *Vec_Ptr_t, pnTotal *int32) *Vec_Int_t {
-    var pObj *Abc_Obj_t; var i, Counter int32;
-    var vStarts *Vec_Int_t  = Vec_IntStart( Abc_NtkObjNum(pNtk) );
-    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )
-    {
-        Vec_IntWriteEntry( vStarts, pObj.iTemp, Counter );
-        Counter += Abc_Truth6WordNum( Abc_ObjFaninNum(pObj) );
-    }
-    *pnTotal = Counter;
-    return vStarts;
+	var Counter int32
+	vStarts := vec.Vec_IntStart(int(baseabc.Abc_NtkObjNum(pNtk)))
+	for i := int32(0); i < Vec_PtrSize(vNodes); i++ {
+		pObj := Vec_PtrEntry(vNodes, i).(*Abc_Obj_t)
+		vec.Vec_IntWriteEntry(vStarts, pObj.Temp, Counter)
+		Counter += util.Abc_Truth6WordNum(baseabc.Abc_ObjFaninNum(pObj))
+	}
+	*pnTotal = Counter
+	return vStarts
 }
 
 var spStatic_Abc_NtkFillTruthStore_Truth6 [6]word = [6]word{
-            0xAAAAAAAAAAAAAAAA,
-            0xCCCCCCCCCCCCCCCC,
-            0xF0F0F0F0F0F0F0F0,
-            0xFF00FF00FF00FF00,
-            0xFFFF0000FFFF0000,
-            0xFFFFFFFF00000000,
-        };
-func Abc_NtkFillTruthStore(TruthStore [][1<<10]word) {
-    if TruthStore[0][0] == 0 {
-        
-        var nVarsMax int32  = 16;
-        var nWordsMax int32  = (1 << 10);
-        var i, k int32;
-        assert(nVarsMax <= 16, "nVarsMax <= 16");
-        for  i = 0; i < 6; i++  {
-            for  k = 0; k < nWordsMax; k++  {
-                TruthStore[i][k] = spStatic_Abc_NtkFillTruthStore_Truth6[i];
-            }
-        }
-        for  i = 6; i < nVarsMax; i++  {
-            for  k = 0; k < nWordsMax; k++  {
-                TruthStore[i][k] = ((k >> (i-6)) & 1) ? ~(word)0 : 0;
-            }
-        }
-    }
+	0xAAAAAAAAAAAAAAAA,
+	0xCCCCCCCCCCCCCCCC,
+	0xF0F0F0F0F0F0F0F0,
+	0xFF00FF00FF00FF00,
+	0xFFFF0000FFFF0000,
+	0xFFFFFFFF00000000,
 }
 
-/**Function*************************************************************
+func Abc_NtkFillTruthStore(TruthStore [][1 << 10]word) {
+	if TruthStore[0][0] == 0 {
 
-  Synopsis    [Extracts information about the network.]
+		var nVarsMax int32 = 16
+		var nWordsMax int32 = (1 << 10)
+		var i, k int32
+		assert(nVarsMax <= 16, "nVarsMax <= 16")
+		for i = 0; i < 6; i++ {
+			for k = 0; k < nWordsMax; k++ {
+				TruthStore[i][k] = spStatic_Abc_NtkFillTruthStore_Truth6[i]
+			}
+		}
+		for i = 6; i < nVarsMax; i++ {
+			for k = 0; k < nWordsMax; k++ {
+				if ((k >> (i - 6)) & 1) != 0 {
+					TruthStore[i][k] = ^word(0)
+				} else {
+					TruthStore[i][k] = 0
+				}
+			}
+		}
+	}
+}
 
-  Description []
-               
-  SideEffects []
+/*
+*Function*************************************************************
 
-  SeeAlso     []
+	Synopsis    [Extracts information about the network.]
 
-***********************************************************************/
+	Description []
+
+	SideEffects []
+
+	SeeAlso     []
+
+**********************************************************************
+*/
 func Abc_NtkExtractMfs(pNtk *Abc_Ntk_t, nFirstFixed int32) *Sfm_Ntk_t {
-    var TruthStore [16][1<<10]word = [16][1<<10]word{{0}};
-    var pTruths [16]*word = [16]*word{nil};
-    var pCube [1<<10]word ;
-    var vNodes *Vec_Ptr_t;
-    var vFanins *Vec_Wec_t;
-    var vFixed *Vec_Str_t;
-    var vTruths *Vec_Wrd_t;
-    var vArray *Vec_Int_t;
-    var vStarts *Vec_Int_t;
-    var vTruths2 *Vec_Wrd_t;
-    var pObj, pFanin *Abc_Obj_t;
-    var i, k, nObjs, nTotal int32;
-    if nFirstFixed != 0 {
-        vNodes = Abc_NtkAssignIDs2(pNtk);
-    } else {
-        vNodes = Abc_NtkAssignIDs(pNtk);
-    }
-    nObjs   = Abc_NtkCiNum(pNtk) + Vec_PtrSize(vNodes) + Abc_NtkCoNum(pNtk);
-    vFanins = Vec_WecStart( nObjs );
-    vFixed  = Vec_StrStart( nObjs );
-    vTruths = Vec_WrdStart( nObjs );
-    vStarts = Abc_NtkAssignStarts( pNtk, vNodes, &nTotal );
-    vTruths2= Vec_WrdStart( nTotal );
-    Abc_NtkFillTruthStore( TruthStore );
-    for  i = 0; i < 16; i++  {
-        pTruths[i] = TruthStore[i];
-    }
-    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )
-    {
-        if Abc_ObjFaninNum(pObj) <= 6 {
-            var uTruth word  = Abc_SopToTruth((char *)pObj.pData, Abc_ObjFaninNum(pObj));
-            Vec_WrdWriteEntry( vTruths, pObj.iTemp, uTruth );
-            if uTruth == 0 || ~uTruth == 0 {
-                continue; }
-        
-        } else {
-            var nWords int32   = Abc_Truth6WordNum( Abc_ObjFaninNum(pObj) );
-            var Offset int32   = Vec_IntEntry( vStarts, pObj.iTemp );
-            var pRes *word  = Vec_WrdEntryP( vTruths2, Offset );
-            Abc_SopToTruthBig( (char *)pObj.pData, Abc_ObjFaninNum(pObj), pTruths, pCube, pRes );
-            // check const0
-            for  k = 0; k < nWords; k++  {
-                if pRes[k] {
-                    break; }
-            }
-            if k == nWords {
-                continue; }
-            // check const1
-            for  k = 0; k < nWords; k++  {
-                if ~pRes[k] {
-                    break; }
-            }
-            if k == nWords {
-                continue; }
-        }
-        vArray = Vec_WecEntry( vFanins, pObj.iTemp );
-        Vec_IntGrow( vArray, Abc_ObjFaninNum(pObj) );
-        Abc_ObjForEachFanin( pObj, pFanin, k )
-            Vec_IntPush( vArray, pFanin.iTemp );
-        //Vec_IntPrint( vArray );
-    }
-    Abc_NtkForEachCo( pNtk, pObj, i )
-    {
-        vArray = Vec_WecEntry( vFanins, pObj.iTemp );
-        Vec_IntGrow( vArray, Abc_ObjFaninNum(pObj) );
-        Abc_ObjForEachFanin( pObj, pFanin, k )
-            Vec_IntPush( vArray, pFanin.iTemp );
-    }
-    Vec_PtrFree( vNodes );
-    for  i = Abc_NtkCiNum(pNtk); i < Abc_NtkCiNum(pNtk) + nFirstFixed; i++  {
-        Vec_StrWriteEntry( vFixed, i, byte(1) );
-    }
-    // update fixed
-    assert(nFirstFixed >= 0 && nFirstFixed < Abc_NtkNodeNum(pNtk), "nFirstFixed >= 0 && nFirstFixed < Abc_NtkNodeNum(pNtk)");
-//    for ( i = Abc_NtkCiNum(pNtk); i + Abc_NtkCoNum(pNtk) < Abc_NtkObjNum(pNtk); i++ )
-//        if ( rand() % 10 == 0 )
-//            Vec_StrWriteEntry( vFixed, i, (char)1 );
-    return Sfm_NtkConstruct( vFanins, Abc_NtkCiNum(pNtk), Abc_NtkCoNum(pNtk), vFixed, nil, vTruths, vStarts, vTruths2 );
+	assert(nFirstFixed >= 0 && nFirstFixed < baseabc.Abc_NtkNodeNum(pNtk), "nFirstFixed >= 0 && nFirstFixed < Abc_NtkNodeNum(pNtk)")
+	var nodes *Vec_Ptr_t
+	if nFirstFixed == 0 {
+		nodes = Abc_NtkAssignIDs(pNtk)
+	} else {
+		nodes = Abc_NtkAssignIDs2(pNtk)
+	}
+	return mfsExtract(pNtk, nodes, nFirstFixed, false)
 }
 func Abc_NtkExtractMfs2(pNtk *Abc_Ntk_t, iPivot int32) *Sfm_Ntk_t {
-    var TruthStore [16][1<<10]word = [16][1<<10]word{{0}};
-    var pTruths [16]*word = [16]*word{nil};
-    var pCube [1<<10]word ;
-    var vNodes *Vec_Ptr_t;
-    var vFanins *Vec_Wec_t;
-    var vFixed *Vec_Str_t;
-    var vTruths *Vec_Wrd_t;
-    var vArray *Vec_Int_t;
-    var vStarts *Vec_Int_t;
-    var vTruths2 *Vec_Wrd_t;
-    var pObj, pFanin *Abc_Obj_t;
-    var i, k, nObjs, nTotal int32;
-    vNodes  = Abc_NtkAssignIDs2(pNtk);
-    nObjs   = Abc_NtkCiNum(pNtk) + Vec_PtrSize(vNodes) + Abc_NtkCoNum(pNtk);
-    vFanins = Vec_WecStart( nObjs );
-    vFixed  = Vec_StrStart( nObjs );
-    vTruths = Vec_WrdStart( nObjs );
-    vStarts = Abc_NtkAssignStarts( pNtk, vNodes, &nTotal );
-    vTruths2= Vec_WrdAlloc( nTotal );
-    Abc_NtkFillTruthStore( TruthStore );
-    for  i = 0; i < 16; i++  {
-        pTruths[i] = TruthStore[i];
-    }
-    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )
-    {
-        if Abc_ObjFaninNum(pObj) <= 6 {
-            var uTruth word  = Abc_SopToTruth((char *)pObj.pData, Abc_ObjFaninNum(pObj));
-            Vec_WrdWriteEntry( vTruths, pObj.iTemp, uTruth );
-            if uTruth == 0 || ~uTruth == 0 {
-                continue; }
-        
-        } else {
-            var nWords int32   = Abc_Truth6WordNum( Abc_ObjFaninNum(pObj) );
-            var Offset int32   = Vec_IntEntry( vStarts, pObj.iTemp );
-            var pRes *word  = Vec_WrdEntryP( vTruths2, Offset );
-            Abc_SopToTruthBig( (char *)pObj.pData, Abc_ObjFaninNum(pObj), pTruths, pCube, pRes );
-            // check const0
-            for  k = 0; k < nWords; k++  {
-                if pRes[k] {
-                    break; }
-            }
-            if k == nWords {
-                continue; }
-            // check const1
-            for  k = 0; k < nWords; k++  {
-                if ~pRes[k] {
-                    break; }
-            }
-            if k == nWords {
-                continue; }
-        }
-        vArray = Vec_WecEntry( vFanins, pObj.iTemp );
-        Vec_IntGrow( vArray, Abc_ObjFaninNum(pObj) );
-        Abc_ObjForEachFanin( pObj, pFanin, k )
-            Vec_IntPush( vArray, pFanin.iTemp );
-    }
-    Abc_NtkForEachCo( pNtk, pObj, i )
-    {
-        vArray = Vec_WecEntry( vFanins, pObj.iTemp );
-        Vec_IntGrow( vArray, Abc_ObjFaninNum(pObj) );
-        Abc_ObjForEachFanin( pObj, pFanin, k )
-            Vec_IntPush( vArray, pFanin.iTemp );
-    }
-    Vec_PtrFree( vNodes );
-    // set fixed attributes
-    Abc_NtkForEachNode( pNtk, pObj, i )
-        if ( i >= iPivot )
-            Vec_StrWriteEntry( vFixed, pObj.iTemp, byte(1) );
-    return Sfm_NtkConstruct( vFanins, Abc_NtkCiNum(pNtk), Abc_NtkCoNum(pNtk), vFixed, nil, vTruths, vStarts, vTruths2 );
+	return mfsExtract(pNtk, Abc_NtkAssignIDs2(pNtk), iPivot, true)
 }
 
-/**Function*************************************************************
+func mfsExtract(pNtk *Abc_Ntk_t, nodes *Vec_Ptr_t, fixedFrom int32, fixedByObjectID bool) *Sfm_Ntk_t {
+	nObjects := int(Abc_NtkCiNum(pNtk) + Vec_PtrSize(nodes) + Abc_NtkCoNum(pNtk))
+	fanins := make([][]int, nObjects)
+	fixed := make([]bool, nObjects)
+	truths := make([]uint64, nObjects)
+	starts := make([]int, nObjects)
 
-  Synopsis    []
+	var total int
+	for i := int32(0); i < Vec_PtrSize(nodes); i++ {
+		object := Vec_PtrEntry(nodes, i).(*Abc_Obj_t)
+		starts[object.Temp] = total
+		total += int(util.Abc_Truth6WordNum(baseabc.Abc_ObjFaninNum(object)))
+	}
+	largeTruths := make([]uint64, total)
+	truthStore := [16][1 << 10]uint64{}
+	Abc_NtkFillTruthStore(truthStore[:])
+	truthVars := make([][]uint64, len(truthStore))
+	for i := range truthStore {
+		truthVars[i] = truthStore[i][:]
+	}
+	var cube [1 << 10]uint64
 
-  Description []
-               
-  SideEffects []
+	for i := int32(0); i < Vec_PtrSize(nodes); i++ {
+		object := Vec_PtrEntry(nodes, i).(*Abc_Obj_t)
+		faninCount := baseabc.Abc_ObjFaninNum(object)
+		sop, ok := object.Data.(string)
+		if !ok {
+			panic("abcMfs: node data is not an SOP string")
+		}
+		if faninCount <= 6 {
+			truth := baseabc.Abc_SopToTruth(sop, faninCount)
+			truths[object.Temp] = truth
+			if truth == 0 || ^truth == 0 {
+				continue
+			}
+		} else {
+			nWords := int(util.Abc_Truth6WordNum(faninCount))
+			truth := largeTruths[starts[object.Temp] : starts[object.Temp]+nWords]
+			baseabc.Abc_SopToTruthBig(sop, faninCount, truthVars, cube[:], truth)
+			allZero, allOne := true, true
+			for _, word := range truth {
+				allZero = allZero && word == 0
+				allOne = allOne && word == ^uint64(0)
+			}
+			if allZero || allOne {
+				continue
+			}
+		}
+		faninIDs := make([]int, faninCount)
+		for k := range faninIDs {
+			faninIDs[k] = int(baseabc.Abc_ObjFanin(object, int32(k)).Temp)
+		}
+		fanins[object.Temp] = faninIDs
+	}
+	for i := int32(0); i < Abc_NtkCoNum(pNtk); i++ {
+		object := baseabc.Abc_NtkCo(pNtk, i)
+		faninIDs := make([]int, baseabc.Abc_ObjFaninNum(object))
+		for k := range faninIDs {
+			faninIDs[k] = int(baseabc.Abc_ObjFanin(object, int32(k)).Temp)
+		}
+		fanins[object.Temp] = faninIDs
+	}
+	if fixedByObjectID {
+		for objectID := int32(0); objectID < baseabc.Abc_NtkObjNumMax(pNtk); objectID++ {
+			object := baseabc.Abc_NtkObj(pNtk, objectID)
+			if object != nil && object.Kind == baseabc.ObjectNode && objectID >= fixedFrom {
+				fixed[object.Temp] = true
+			}
+		}
+	} else {
+		for i := Abc_NtkCiNum(pNtk); i < Abc_NtkCiNum(pNtk)+fixedFrom; i++ {
+			fixed[i] = true
+		}
+	}
+	model, err := sfm.Sfm_NtkConstruct(fanins, int(baseabc.Abc_NtkCiNum(pNtk)), int(baseabc.Abc_NtkCoNum(pNtk)), fixed, nil, truths, starts, largeTruths)
+	if err != nil {
+		panic(fmt.Sprintf("abcMfs: construct SFM network: %v", err))
+	}
+	Vec_PtrFree(nodes)
+	return model
+}
 
-  SeeAlso     []
+/*
+*Function*************************************************************
 
-***********************************************************************/
+	Synopsis    []
+
+	Description []
+
+	SideEffects []
+
+	SeeAlso     []
+
+**********************************************************************
+*/
 func Abc_NtkInsertMfs(pNtk *Abc_Ntk_t, p *Sfm_Ntk_t) {
-    var vCover, vMap, vArray *Vec_Int_t;
-    var pNode *Abc_Obj_t;
-    var pTruth *word;
-    var i, k, Fanin int32;
-    // map new IDs into old nodes
-    vMap = Vec_IntStart( Abc_NtkObjNumMax(pNtk) );
-    Abc_NtkForEachCi( pNtk, pNode, i )
-        Vec_IntWriteEntry( vMap, pNode.iTemp, Abc_ObjId(pNode) );
-    Abc_NtkForEachNode( pNtk, pNode, i )
-        if ( pNode.iTemp > 0 )
-            Vec_IntWriteEntry( vMap, pNode.iTemp, Abc_ObjId(pNode) );
-    // remove old fanins
-    Abc_NtkForEachNode( pNtk, pNode, i )
-        if ( !Sfm_NodeReadFixed(p, pNode.iTemp) )
-            Abc_ObjRemoveFanins( pNode );
-    // create new fanins
-    vCover = Vec_IntAlloc( 1 << 16 );
-    Abc_NtkForEachNode( pNtk, pNode, i )
-    {
-        if pNode.iTemp == 0 || Sfm_NodeReadFixed(p, pNode.iTemp) {
-            continue; }
-        if !Sfm_NodeReadUsed(p, pNode.iTemp) {
-            Abc_NtkDeleteObj( pNode );
-            continue;
-        }
-        // update fanins
-        vArray = Sfm_NodeReadFanins( p, pNode.iTemp );
-        Vec_IntForEachEntry( vArray, Fanin, k )
-            Abc_ObjAddFanin( pNode, Abc_NtkObj(pNtk, Vec_IntEntry(vMap, Fanin)) );
-        pTruth = Sfm_NodeReadTruth( p, pNode.iTemp );
-        pNode.pData = Abc_SopCreateFromTruthIsop( (Mem_Flex_t *)pNtk.pManFunc, Vec_IntSize(vArray), pTruth, vCover );
-        assert(Abc_SopGetVarNum((char *)pNode.pData) == Vec_IntSize(vArray), "Abc_SopGetVarNum((char *)pNode.pData) == Vec_IntSize(vArray)");
-    }
-    Vec_IntFree( vCover );
-    Vec_IntFree( vMap );
+	vMap := make([]int32, int(baseabc.Abc_NtkObjNumMax(pNtk)))
+	for i := int32(0); i < Abc_NtkCiNum(pNtk); i++ {
+		pNode := baseabc.Abc_NtkCi(pNtk, i)
+		vMap[pNode.Temp] = int32(pNode.ID)
+	}
+	nodes := pNtk.ObjectsOfKind(baseabc.ObjectNode)
+	for _, pNode := range nodes {
+		if pNode.Temp > 0 {
+			vMap[pNode.Temp] = int32(pNode.ID)
+		}
+	}
+	for _, pNode := range nodes {
+		if !sfm.Sfm_NodeReadFixed(p, int(pNode.Temp)) {
+			baseabc.Abc_ObjRemoveFanins(pNode)
+		}
+	}
+	cover := vec.Vec_IntAlloc(1 << 16)
+	defer vec.Vec_IntFree(cover)
+	for _, pNode := range nodes {
+		id := int(pNode.Temp)
+		if id == 0 || sfm.Sfm_NodeReadFixed(p, id) {
+			continue
+		}
+		if !sfm.Sfm_NodeReadUsed(p, id) {
+			baseabc.Abc_NtkDeleteObj(pNode)
+			continue
+		}
+		faninIDs := sfm.Sfm_NodeReadFanins(p, id)
+		for _, fanin := range faninIDs {
+			baseabc.Abc_ObjAddFanin(pNode, baseabc.Abc_NtkObj(pNtk, vMap[fanin]))
+		}
+		truth := sfm.Sfm_NodeReadTruth(p, id)
+		faninCount := int32(len(faninIDs))
+		pNode.Data = baseabc.Abc_SopCreateFromTruthIsop(pNtk.FunctionManager.(*mem.Mem_Flex_t), faninCount, truth, cover)
+		assert(baseabc.Abc_SopGetVarNum(pNode.Data.(string)) == faninCount, "Abc_SopGetVarNum(pNode.Data) == faninCount")
+	}
 }
 
-/**Function*************************************************************
+/*
+*Function*************************************************************
 
-  Synopsis    []
+	Synopsis    []
 
-  Description []
-               
-  SideEffects []
+	Description []
 
-  SeeAlso     []
+	SideEffects []
 
-***********************************************************************/
-func Abc_NtkPerformMfs(pNtk *Abc_Ntk_t, pPars *Sfm_Par_t) int32 {
-    var p *Sfm_Ntk_t;
-    var nFaninMax, nNodes int32;
-    assert(Abc_NtkIsLogic(pNtk), "Abc_NtkIsLogic(pNtk)");
-    Abc_NtkSweep( pNtk, 0 );
-    // count fanouts
-    nFaninMax = Abc_NtkGetFaninMax( pNtk );
-    if nFaninMax > 15 {
-        Abc_Print( 1, "Currently \"mfs\" cannot process the network containing nodes with more than 15 fanins.\n" );
-        return 1;
-    }
-    if !Abc_NtkHasSop(pNtk) {
-        if !Abc_NtkToSop( pNtk, -1, ABC_INFINITY ) {
-            fmt.Printf("Conversion to SOP has failed due to low resource limit.\n");
-            return 0;
-        } }
-    // collect information
-    p = Abc_NtkExtractMfs( pNtk, pPars.nFirstFixed );
-    // perform optimization
-    nNodes = Sfm_NtkPerform( p, pPars );
-    if nNodes == 0 {
-//        Abc_Print( 1, "The network is not changed by \"mfs\".\n" );
-    
-    } else {
-        Abc_NtkInsertMfs( pNtk, p );
-        if pPars.fVerbose {
-            Abc_Print( 1, "The network has %d nodes changed by \"mfs\".\n", nNodes ); }
-    }
-    Sfm_NtkFree( p );
-    return 1;
+	SeeAlso     []
+
+**********************************************************************
+*/
+func Abc_NtkPerformMfs(pNtk *Abc_Ntk_t, pars *Sfm_Par_t) int32 {
+	if baseabc.Abc_NtkIsLogic(pNtk) == 0 {
+		panic("Abc_NtkPerformMfs requires a logic network")
+	}
+	baseabc.Abc_NtkSweep(pNtk, 0)
+	if faninMax := baseabc.Abc_NtkGetFaninMax(pNtk); faninMax > 15 {
+		fmt.Println("Currently \"mfs\" cannot process the network containing nodes with more than 15 fanins.")
+		return 1
+	}
+	if baseabc.Abc_NtkHasSop(pNtk) == 0 && baseabc.Abc_NtkToSop(pNtk, -1, util.ABC_INFINITY) == 0 {
+		fmt.Println("Conversion to SOP has failed due to low resource limit.")
+		return 0
+	}
+	model := Abc_NtkExtractMfs(pNtk, int32(pars.FirstFixed))
+	nodesChanged := sfm.Sfm_NtkPerform(model, pars)
+	if nodesChanged != 0 {
+		Abc_NtkInsertMfs(pNtk, model)
+		if pars.Verbose {
+			fmt.Printf("The network has %d nodes changed by \"mfs\".\n", nodesChanged)
+		}
+	}
+	sfm.Sfm_NtkFree(model)
+	return 1
 }
 
-
-
-/**Function*************************************************************
-
-  Synopsis    [Unrolls logic network while dropping some next-state functions.]
-
-  Description [Returns the unrolled network.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkUnrollAndDrop(p *Abc_Ntk_t, nFrames int32, nFramesAdd int32, vFlops *Vec_Int_t, piPivot *int32) *Abc_Ntk_t {
-    var pNtk *Abc_Ntk_t; 
-    var pFanin, pNode *Abc_Obj_t;
-    var vNodes *Vec_Ptr_t;
-    var i, k, f, Value int32;
-    assert(nFramesAdd >= 0, "nFramesAdd >= 0");
-    assert(Abc_NtkIsLogic(p), "Abc_NtkIsLogic(p)");
-    assert(Vec_IntSize(vFlops) == Abc_NtkLatchNum(p), "Vec_IntSize(vFlops) == Abc_NtkLatchNum(p)");
-    *piPivot = -1;
-    // start the network
-    pNtk = Abc_NtkAlloc( p.ntkType, p.ntkFunc, 1 );
-    pNtk.pName = Extra_UtilStrsav(Abc_NtkName(p));
-    // add CIs for the new network
-    Abc_NtkForEachCi( p, pNode, i )
-        pNode.pCopy = Abc_NtkCreatePi( pNtk );
-    // iterate unrolling
-    vNodes = Abc_NtkDfs( p, 0 );
-    for  f = 0; f <= nFrames + nFramesAdd; f++  {
-        if f > 0 {
-            Abc_NtkForEachPi( p, pNode, i )
-                pNode.pCopy = Abc_NtkCreatePi( pNtk );
-        }
-        Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pNode, i )
-        {
-            Abc_NtkDupObj( pNtk, pNode, 0 );
-            Abc_ObjForEachFanin( pNode, pFanin, k )
-                Abc_ObjAddFanin( pNode.pCopy, pFanin.pCopy );
-        }
-        Abc_NtkForEachCo( p, pNode, i )
-            pNode.pCopy = Abc_ObjFanin0(pNode).pCopy;
-        Abc_NtkForEachPo( p, pNode, i )
-            Abc_ObjAddFanin( Abc_NtkCreatePo(pNtk), pNode.pCopy );
-        // add buffers
-        if f == 0 {
-            *piPivot = Abc_NtkObjNum(pNtk);
-//            Abc_NtkForEachLatchInput( p, pNode, i )
-//                pNode->pCopy = Abc_NtkCreateNodeBuf( pNtk, pNode->pCopy );
-        }
-        // transfer to flop outputs
-        Abc_NtkForEachLatch( p, pNode, i )
-            Abc_ObjFanout0(pNode).pCopy = Abc_ObjFanin0(pNode).pCopy;
-        // add final POs
-        if f > nFramesAdd {
-            Vec_IntForEachEntry( vFlops, Value, i )
-            {
-                if Value == 0 {
-                    continue; }
-                pNode = Abc_NtkCo( p, Abc_NtkPoNum(p) + i );
-                Abc_ObjAddFanin( Abc_NtkCreatePo(pNtk), pNode.pCopy );
-            }
-        }
-    }
-    Vec_PtrFree( vNodes );
-    Abc_NtkAddDummyPiNames( pNtk );
-    Abc_NtkAddDummyPoNames( pNtk );
-    // perform combinational cleanup
-    Abc_NtkCleanup( pNtk, 0 );
-    if !Abc_NtkCheck( pNtk ) {
-        fmt.Fprintf(os.Stdout, "Abc_NtkCreateFromNode(): Network check has failed.\n"); }
-    return pNtk;
+// Abc_NtkUnrollAndDrop unrolls the logic network while dropping selected
+// next-state functions, retaining ABC's frame and CO ordering.
+func Abc_NtkUnrollAndDrop(p *Abc_Ntk_t, nFrames, nFramesAdd int32, vFlops *Vec_Int_t, piPivot *int32) *Abc_Ntk_t {
+	assert(nFramesAdd >= 0, "nFramesAdd >= 0")
+	assert(baseabc.Abc_NtkIsLogic(p) != 0, "Abc_NtkIsLogic(p)")
+	assert(Vec_IntSize(vFlops) == baseabc.Abc_NtkLatchNum(p), "Vec_IntSize(vFlops) == Abc_NtkLatchNum(p)")
+	*piPivot = -1
+	pNtk := baseabc.Abc_NtkAlloc(baseabc.Abc_NtkType_t(p.Type), baseabc.Abc_NtkFunc_t(p.Function), 1)
+	pNtk.Name = extra.Extra_UtilStrsav(baseabc.Abc_NtkName(p))
+	for i := int32(0); i < baseabc.Abc_NtkCiNum(p); i++ {
+		baseabc.Abc_NtkCi(p, i).Copy = baseabc.Abc_NtkCreatePi(pNtk)
+	}
+	nodes := baseabc.Abc_NtkDfs(p, 0)
+	for frame := int32(0); frame <= nFrames+nFramesAdd; frame++ {
+		if frame > 0 {
+			for i := int32(0); i < baseabc.Abc_NtkPiNum(p); i++ {
+				baseabc.Abc_NtkPi(p, i).Copy = baseabc.Abc_NtkCreatePi(pNtk)
+			}
+		}
+		for _, node := range nodes {
+			baseabc.Abc_NtkDupObj(pNtk, node, 0)
+			for _, fanin := range node.Fanins() {
+				baseabc.Abc_ObjAddFanin(node.Copy, fanin.Object.Copy)
+			}
+		}
+		for i := int32(0); i < baseabc.Abc_NtkCoNum(p); i++ {
+			co := baseabc.Abc_NtkCo(p, i)
+			co.Copy = baseabc.Abc_ObjFanin0(co).Copy
+		}
+		for i := int32(0); i < baseabc.Abc_NtkPoNum(p); i++ {
+			po := baseabc.Abc_NtkPo(p, i)
+			baseabc.Abc_ObjAddFanin(baseabc.Abc_NtkCreatePo(pNtk), po.Copy)
+		}
+		if frame == 0 {
+			*piPivot = baseabc.Abc_NtkObjNum(pNtk)
+		}
+		for _, latch := range p.ObjectsOfKind(baseabc.ObjectLatch) {
+			baseabc.Abc_ObjFanout0(latch).Copy = baseabc.Abc_ObjFanin0(latch).Copy
+		}
+		if frame > nFramesAdd {
+			for i := int32(0); i < Vec_IntSize(vFlops); i++ {
+				if Vec_IntEntry(vFlops, i) == 0 {
+					continue
+				}
+				co := baseabc.Abc_NtkCo(p, baseabc.Abc_NtkPoNum(p)+i)
+				baseabc.Abc_ObjAddFanin(baseabc.Abc_NtkCreatePo(pNtk), co.Copy)
+			}
+		}
+	}
+	baseabc.Abc_NtkAddDummyPiNames(pNtk)
+	baseabc.Abc_NtkAddDummyPoNames(pNtk)
+	baseabc.Abc_NtkCleanup(pNtk, 0)
+	if baseabc.Abc_NtkCheck(pNtk) == 0 {
+		fmt.Fprintln(os.Stdout, "Abc_NtkCreateFromNode(): Network check has failed.")
+	}
+	return pNtk
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Updates the original network to include optimized nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkReinsertNodes(p *Abc_Ntk_t, pNtk *Abc_Ntk_t, iPivot int32) {
-    var pNode, pNodeNew, pFaninNew *Abc_Obj_t;
-    var vNodes *Vec_Ptr_t;
-    var i, k int32;
-    assert(Abc_NtkIsLogic(p), "Abc_NtkIsLogic(p)");
-    assert(Abc_NtkCiNum(p) <= Abc_NtkCiNum(pNtk), "Abc_NtkCiNum(p) <= Abc_NtkCiNum(pNtk)");
-    vNodes = Abc_NtkDfs( p, 0 );
-    // clean old network
-    Abc_NtkCleanCopy( p );
-    Abc_NtkForEachNode( p, pNode, i )
-    {
-        Abc_ObjRemoveFanins( pNode );
-        pNode.pData = Abc_SopRegister( (Mem_Flex_t *)p.pManFunc, (char *)" 0\n" );
-    }
-    // map CIs
-    Abc_NtkForEachCi( p, pNode, i )
-        Abc_NtkCi(pNtk, i).pCopy = pNode;
-    // map internal nodes
-    assert(Vec_PtrSize(vNodes) + Abc_NtkCiNum(p) + Abc_NtkPoNum(p) == iPivot, "Vec_PtrSize(vNodes) + Abc_NtkCiNum(p) + Abc_NtkPoNum(p) == iPivot");
-    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pNode, i )
-    {
-        pNodeNew = Abc_NtkObj( pNtk, Abc_NtkCiNum(p) + i + 1 );
-        if pNodeNew == nil {
-            continue; }
-        pNodeNew.pCopy = pNode;
-    }
-    // connect internal nodes
-    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pNode, i )
-    {
-        pNodeNew = Abc_NtkObj( pNtk, Abc_NtkCiNum(p) + i + 1 );
-        if pNodeNew == nil {
-            continue; }
-        assert(pNodeNew.pCopy == pNode, "pNodeNew.pCopy == pNode");
-        Abc_ObjForEachFanin( pNodeNew, pFaninNew, k )
-            Abc_ObjAddFanin( pNodeNew.pCopy, pFaninNew.pCopy );
-        pNode.pData = Abc_SopRegister( (Mem_Flex_t *)p.pManFunc, (char *)pNodeNew.pData );
-    }
-    Vec_PtrFree( vNodes );
+// Abc_NtkReinsertNodes maps optimized unrolled nodes back to their originals.
+func Abc_NtkReinsertNodes(p, pNtk *Abc_Ntk_t, iPivot int32) {
+	assert(baseabc.Abc_NtkIsLogic(p) != 0, "Abc_NtkIsLogic(p)")
+	assert(baseabc.Abc_NtkCiNum(p) <= baseabc.Abc_NtkCiNum(pNtk), "Abc_NtkCiNum(p) <= Abc_NtkCiNum(pNtk)")
+	nodes := baseabc.Abc_NtkDfs(p, 0)
+	baseabc.Abc_NtkCleanCopy(p)
+	for _, node := range p.ObjectsOfKind(baseabc.ObjectNode) {
+		baseabc.Abc_ObjRemoveFanins(node)
+		node.Data = baseabc.Abc_SopRegister(p.FunctionManager.(*mem.Mem_Flex_t), " 0\n")
+	}
+	for i := int32(0); i < baseabc.Abc_NtkCiNum(p); i++ {
+		baseabc.Abc_NtkCi(pNtk, i).Copy = baseabc.Abc_NtkCi(p, i)
+	}
+	assert(int32(len(nodes))+baseabc.Abc_NtkCiNum(p)+baseabc.Abc_NtkPoNum(p) == iPivot, "DFS node count + CIs + POs == pivot")
+	for i, node := range nodes {
+		newNode := baseabc.Abc_NtkObj(pNtk, baseabc.Abc_NtkCiNum(p)+int32(i)+1)
+		if newNode != nil {
+			newNode.Copy = node
+		}
+	}
+	for i, node := range nodes {
+		newNode := baseabc.Abc_NtkObj(pNtk, baseabc.Abc_NtkCiNum(p)+int32(i)+1)
+		if newNode == nil {
+			continue
+		}
+		assert(newNode.Copy == node, "newNode.Copy == node")
+		for _, fanin := range newNode.Fanins() {
+			baseabc.Abc_ObjAddFanin(newNode.Copy, fanin.Object.Copy)
+		}
+		node.Data = baseabc.Abc_SopRegister(p.FunctionManager.(*mem.Mem_Flex_t), newNode.Data.(string))
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Performs MFS for the unrolled network.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkMfsAfterICheck(p *Abc_Ntk_t, nFrames int32, nFramesAdd int32, vFlops *Vec_Int_t, pPars *Sfm_Par_t) int32 {
-    var pp *Sfm_Ntk_t;
-    var nFaninMax, nNodes int32;
-    var pNtk *Abc_Ntk_t;
-    var iPivot int32;
-    assert(Abc_NtkIsLogic(p), "Abc_NtkIsLogic(p)");
-    // count fanouts
-    nFaninMax = Abc_NtkGetFaninMax( p );
-    if nFaninMax > 15 {
-        Abc_Print( 1, "Currently \"mfs\" cannot process the network containing nodes with more than 15 fanins.\n" );
-        return 0;
-    }
-    if !Abc_NtkHasSop(p) {
-        Abc_NtkToSop( p, -1, ABC_INFINITY ); }
-    // derive unfolded network
-    pNtk = Abc_NtkUnrollAndDrop( p, nFrames, nFramesAdd, vFlops, &iPivot );
-    Io_WriteBlifLogic( pNtk, "unroll_dump.blif", 0 );
-    // collect information
-    pp = Abc_NtkExtractMfs2( pNtk, iPivot );
-    // perform optimization
-    nNodes = Sfm_NtkPerform( pp, pPars );
-    if nNodes == 0 {
-//        Abc_Print( 1, "The network is not changed by \"mfs\".\n" );
-    
-    } else {
-        Abc_NtkInsertMfs( pNtk, pp );
-        if pPars.fVerbose {
-            Abc_Print( 1, "The network has %d nodes changed by \"mfs\".\n", nNodes ); }
-        Abc_NtkReinsertNodes( p, pNtk, iPivot );
-    }
-    Abc_NtkDelete( pNtk );
-    Sfm_NtkFree( pp );
-    // perform final sweep
-    Abc_NtkSweep( p, 0 );
-    if !Abc_NtkHasSop(p) {
-        Abc_NtkToSop( p, -1, ABC_INFINITY ); }
-    return 1;
-
+// Abc_NtkMfsAfterICheck performs MFS on a dropped-flop unrolling and copies
+// the optimized logic back to the original network.
+func Abc_NtkMfsAfterICheck(p *Abc_Ntk_t, nFrames, nFramesAdd int32, vFlops *Vec_Int_t, pars *Sfm_Par_t) int32 {
+	assert(baseabc.Abc_NtkIsLogic(p) != 0, "Abc_NtkIsLogic(p)")
+	if baseabc.Abc_NtkGetFaninMax(p) > 15 {
+		fmt.Println("Currently \"mfs\" cannot process the network containing nodes with more than 15 fanins.")
+		return 0
+	}
+	if baseabc.Abc_NtkHasSop(p) == 0 {
+		baseabc.Abc_NtkToSop(p, -1, util.ABC_INFINITY)
+	}
+	var pivot int32
+	unrolled := Abc_NtkUnrollAndDrop(p, nFrames, nFramesAdd, vFlops, &pivot)
+	_ = baseio.Io_WriteBlifLogic(unrolled, "unroll_dump.blif", 0)
+	model := Abc_NtkExtractMfs2(unrolled, pivot)
+	nodesChanged := sfm.Sfm_NtkPerform(model, pars)
+	if nodesChanged != 0 {
+		Abc_NtkInsertMfs(unrolled, model)
+		if pars.Verbose {
+			fmt.Printf("The network has %d nodes changed by \"mfs\".\n", nodesChanged)
+		}
+		Abc_NtkReinsertNodes(p, unrolled, pivot)
+	}
+	baseabc.Abc_NtkDelete(unrolled)
+	sfm.Sfm_NtkFree(model)
+	baseabc.Abc_NtkSweep(p, 0)
+	if baseabc.Abc_NtkHasSop(p) == 0 {
+		baseabc.Abc_NtkToSop(p, -1, util.ABC_INFINITY)
+	}
+	return 1
 }
-
 
 ////////////////////////////////////////////////////////////////////////
 ///                       END OF FILE                                ///
 ////////////////////////////////////////////////////////////////////////
 
-
 //ABC_NAMESPACE_IMPL_END
-

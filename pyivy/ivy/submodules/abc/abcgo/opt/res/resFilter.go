@@ -53,7 +53,7 @@ import "github.com/glycerine/abcgo/base/abc"
 **********************************************************************
 */
 func Res_FilterCandidates(pWin *Res_Win_t, pAig *Abc_Ntk_t, pSim *Res_Sim_t, vResubs *Vec_Vec_t, vResubsW *Vec_Vec_t, nFaninsMax int32, fArea int32) int32 {
-	var pFanin, pFanin2, pFaninTemp *Abc_Obj_t
+	var pFanin, pFaninTemp *Abc_Obj_t
 	var pInfo, pInfoDiv, pInfoDiv2 []uint32
 	var Counter, RetValue, i, i2, d, d2, iDiv, iDiv2, k int32
 
@@ -66,7 +66,7 @@ func Res_FilterCandidates(pWin *Res_Win_t, pAig *Abc_Ntk_t, pSim *Res_Sim_t, vRe
 	}
 
 	// collect the fanin info
-	pInfo = Res_FilterCollectFaninInfo(pWin, pSim, ~0)
+	pInfo = Res_FilterCollectFaninInfo(pWin, pSim, ^uint32(0))
 	RetValue = Abc_InfoIsOne(pInfo, pSim.nWordsOut)
 	if RetValue == 0 {
 		//        printf( "Failed 2!\n" );
@@ -85,9 +85,9 @@ func Res_FilterCandidates(pWin *Res_Win_t, pAig *Abc_Ntk_t, pSim *Res_Sim_t, vRe
 			continue
 		}
 		// get simulation info without this fanin
-		pInfo = Res_FilterCollectFaninInfo(pWin, pSim, ~(1 << i))
+		pInfo = Res_FilterCollectFaninInfo(pWin, pSim, ^(uint32(1) << uint(i)))
 		RetValue = Abc_InfoIsOne(pInfo, pSim.nWordsOut)
-		if RetValue {
+		if RetValue != 0 {
 			//            printf( "Node %4d. Candidate fanin %4d.\n", pWin->pNode->Id, pFanin->Id );
 			// collect the nodes
 			Vec_VecPush(vResubs, Counter, abc.Abc_NtkPo(pAig, 0))
@@ -115,7 +115,7 @@ func Res_FilterCandidates(pWin *Res_Win_t, pAig *Abc_Ntk_t, pSim *Res_Sim_t, vRe
 			continue
 		}
 		// get simulation info without this fanin
-		pInfo = Res_FilterCollectFaninInfo(pWin, pSim, ~(1 << i))
+		pInfo = Res_FilterCollectFaninInfo(pWin, pSim, ^(uint32(1) << uint(i)))
 		// go over the set of divisors
 		for d = abc.Abc_ObjFaninNum(pWin.pNode) + 2; d < abc.Abc_NtkPoNum(pAig); d++ {
 			pInfoDiv = resWords(Vec_PtrEntryAny(pSim.vOuts, d))
@@ -155,7 +155,7 @@ func Res_FilterCandidates(pWin *Res_Win_t, pAig *Abc_Ntk_t, pSim *Res_Sim_t, vRe
 				continue
 			}
 			// get simulation info without this fanin
-			pInfo = Res_FilterCollectFaninInfo(pWin, pSim, ~(1 << i))
+			pInfo = Res_FilterCollectFaninInfo(pWin, pSim, ^(uint32(1) << uint(i)))
 			// go over the set of divisors
 			for d = abc.Abc_ObjFaninNum(pWin.pNode) + 2; d < abc.Abc_NtkPoNum(pAig); d++ {
 				pInfoDiv = resWords(Vec_PtrEntryAny(pSim.vOuts, d))
@@ -199,9 +199,9 @@ func Res_FilterCandidates(pWin *Res_Win_t, pAig *Abc_Ntk_t, pSim *Res_Sim_t, vRe
 		for i = 0; i < abc.Abc_ObjFaninNum(pWin.pNode); i++ {
 			pFanin = abc.Abc_ObjFanin(pWin.pNode, i)
 			for i2 = i + 1; i2 < abc.Abc_ObjFaninNum(pWin.pNode); i2++ {
-				pFanin2 = abc.Abc_ObjFanin(pWin.pNode, i2)
+				_ = abc.Abc_ObjFanin(pWin.pNode, i2)
 				// get simulation info without these fanins
-				pInfo = Res_FilterCollectFaninInfo(pWin, pSim, (~(1 << i))&(~(1 << i2)))
+				pInfo = Res_FilterCollectFaninInfo(pWin, pSim, (^(uint32(1) << uint(i)))&(^(uint32(1) << uint(i2))))
 				// go over the set of divisors
 				for d = abc.Abc_ObjFaninNum(pWin.pNode) + 2; d < abc.Abc_NtkPoNum(pAig); d++ {
 					pInfoDiv = resWords(Vec_PtrEntryAny(pSim.vOuts, d))
@@ -262,7 +262,7 @@ func Res_FilterCandidatesArea(pWin *Res_Win_t, pAig *Abc_Ntk_t, pSim *Res_Sim_t,
 	}
 
 	// collect the fanin info
-	pInfo = Res_FilterCollectFaninInfo(pWin, pSim, ~0)
+	pInfo = Res_FilterCollectFaninInfo(pWin, pSim, ^uint32(0))
 	RetValue = Abc_InfoIsOne(pInfo, pSim.nWordsOut)
 	if RetValue == 0 {
 		//        printf( "Failed 2!\n" );
@@ -281,9 +281,9 @@ func Res_FilterCandidatesArea(pWin *Res_Win_t, pAig *Abc_Ntk_t, pSim *Res_Sim_t,
 	}
 
 	// get the info without the critical fanin
-	pInfo = Res_FilterCollectFaninInfo(pWin, pSim, ~(1 << iBest))
+	pInfo = Res_FilterCollectFaninInfo(pWin, pSim, ^(uint32(1) << uint(iBest)))
 	RetValue = Abc_InfoIsOne(pInfo, pSim.nWordsOut)
-	if RetValue {
+	if RetValue != 0 {
 		//        printf( "Can be done without one!\n" );
 		// collect the nodes
 		Vec_VecPush(vResubs, Counter, abc.Abc_NtkPo(pAig, 0))
@@ -392,15 +392,13 @@ func Res_FilterCandidatesArea(pWin *Res_Win_t, pAig *Abc_Ntk_t, pSim *Res_Sim_t,
 **********************************************************************
 */
 func Res_FilterCollectFaninInfo(pWin *Res_Win_t, pSim *Res_Sim_t, uMask uint32) []uint32 {
-	var pFanin *Abc_Obj_t
 	var pInfo []uint32
 	var i int32
 	pInfo = resWords(Vec_PtrEntryAny(pSim.vOuts, 0))
 	Abc_InfoClear(pInfo, pSim.nWordsOut)
 	// inlining of macro Abc_ObjForEachFanin
 	for i = 0; i < abc.Abc_ObjFaninNum(pWin.pNode); i++ {
-		pFanin = abc.Abc_ObjFanin(pWin.pNode, i)
-		if uMask & (1 << i) {
+		if uMask&(uint32(1)<<uint(i)) != 0 {
 			Abc_InfoOr(pInfo, resWords(Vec_PtrEntryAny(pSim.vOuts, 2+i)), pSim.nWordsOut)
 		}
 	}
@@ -429,7 +427,7 @@ func Res_FilterCriticalFanin(pNode *Abc_Obj_t) int32 {
 	// inlining of macro Abc_ObjForEachFanin
 	for i = 0; i < abc.Abc_ObjFaninNum(pNode); i++ {
 		pFanin = abc.Abc_ObjFanin(pNode, i)
-		if !abc.Abc_ObjIsNode(pFanin) {
+		if abc.Abc_ObjIsNode(pFanin) == 0 {
 			continue
 		}
 		if abc.Abc_ObjFanoutNum(pFanin) > 1 {

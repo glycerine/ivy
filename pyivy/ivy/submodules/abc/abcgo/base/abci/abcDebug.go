@@ -3,227 +3,119 @@ package abci
 import (
 	"fmt"
 	"time"
+
+	"github.com/glycerine/abcgo/base/abc"
+	abcIO "github.com/glycerine/abcgo/base/io"
+	"github.com/glycerine/abcgo/misc/util"
+	"github.com/glycerine/abcgo/opt/ret"
 )
 
-/**CFile****************************************************************
+// glibcRand reproduces the Linux/glibc rand() TYPE_3 sequence used by ABC's
+// srand/rand pair. ABC's deterministic debug ordering depends on that sequence.
+// Other libc implementations can use a different rand algorithm.
+type glibcRand struct {
+	state [31]uint32
+	index uint64
+}
 
-  FileName    [abcDebug.c]
+func newGlibcRand(seed uint32) *glibcRand {
+	if seed == 0 {
+		seed = 1
+	}
+	seq := make([]uint32, 344)
+	seq[0] = seed
+	for i := 1; i < 31; i++ {
+		// glibc initializes the additive generator with Park-Miller values.
+		seq[i] = uint32((uint64(16807) * uint64(seq[i-1])) % 2147483647)
+	}
+	seq[31], seq[32], seq[33] = seq[0], seq[1], seq[2]
+	for i := 34; i < len(seq); i++ {
+		seq[i] = seq[i-31] + seq[i-3]
+	}
+	r := &glibcRand{index: 344}
+	// Keep each value in the slot addressed by its absolute sequence index;
+	// the recurrence below uses i modulo 31 just like glibc's front/rear
+	// pointers. A plain copy loses that three-slot offset (313 % 31).
+	for i := 313; i < 344; i++ {
+		r.state[i%31] = seq[i]
+	}
+	return r
+}
 
-  SystemName  [ABC: Logic synthesis and verification system.]
+func (r *glibcRand) next() uint32 {
+	i := r.index
+	value := r.state[(i-31)%31] + r.state[(i-3)%31]
+	r.state[i%31] = value
+	r.index++
+	return value >> 1
+}
 
-  PackageName [Network and node package.]
-
-  Synopsis    [Automated debugging procedures.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: abcDebug.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "base/abc/abc.h"
-//#include "base/io/ioAbc.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-// static int Abc_NtkCountFaninsTotal( Abc_Ntk_t * pNtk );
-
-// static Abc_Ntk_t * Abc_NtkAutoDebugModify( Abc_Ntk_t * pNtk, int ObjNum, int fConst1 );
-
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Takes a network and a procedure to test.]
-
-  Description [The network demonstrates the bug in the procedure.
-  Procedure should return 1 if the bug is demonstrated.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+// Abc_NtkAutoDebug repeatedly simplifies a network while a caller supplied
+// predicate continues to demonstrate a bug. The original network is never
+// modified; the internal duplicate is always deleted before return.
 func Abc_NtkAutoDebug(pNtk *Abc_Ntk_t, pFuncError func(*Abc_Ntk_t) int32) {
-    var pNtkMod *Abc_Ntk_t;
-    var pFileName string  = "bug_found.blif";
-    var i int32;
-    var nSteps int32;
-    var nIter int32;
-    var ModNum int32;
-    var RandNum int32 = 1;
-    var clk abctime;
-    var clkTotal abctime = Abc_Clock();
-    assert(Abc_NtkIsLogic(pNtk), "Abc_NtkIsLogic(pNtk)");
-    srand( 0x123123 );
-    // create internal copy of the network
-    pNtk = Abc_NtkDup(pNtk);
-    if !(*pFuncError)( pNtk ) {
-        fmt.Printf("The original network does not cause the bug. Quitting.\n");
-        Abc_NtkDelete( pNtk );
-        return;
-    }
-    // perform incremental modifications
-    for  nIter = 0; ; nIter++  {
-        clk = Abc_Clock();
-        // count how many ways of modifying the network exists
-        nSteps = 2 * Abc_NtkCountFaninsTotal(pNtk);
-        // try modifying the network as many times
-        RandNum ^= rand();
-        for  i = 0; i < nSteps; i++  {
-            // get the shifted number of bug
-            ModNum = (i + RandNum) % nSteps;
-            // get the modified network
-            pNtkMod = Abc_NtkAutoDebugModify( pNtk, ModNum/2, ModNum%2 );
-            // write the network
-            Io_WriteBlifLogic( pNtk, "bug_temp.blif", 1 );   
-            // check if the bug is still there
-            if (*pFuncError)( pNtkMod ) { // bug is still there
-            
-                Abc_NtkDelete( pNtk );
-                pNtk = pNtkMod;
-                break;
-            
-            } else { // no bug
-                Abc_NtkDelete( pNtkMod ); }
-        }
-        fmt.Printf("Iter %6d : Latches = %6d. Nodes = %6d. Steps = %6d. Error step = %3d.  ", nIter, Abc_NtkLatchNum(pNtk), Abc_NtkNodeNum(pNtk), nSteps, i);
-        // inlining of macro ABC_PRT
-        Abc_Print(1, "%s =", ("Time"));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;
-        if i == nSteps { // could not modify it while preserving the bug
-            break; }
-    }
-    // write out the final network
-    Io_WriteBlifLogic( pNtk, pFileName, 1 );
-    fmt.Printf("Final network written into file \"%s\". ", pFileName);
-    // inlining of macro ABC_PRT
-    Abc_Print(1, "%s =", ("Total time"));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clkTotal)))/(float64(int64(time.Second))));;
-    Abc_NtkDelete( pNtk );
+	assert(abc.Abc_NtkIsLogic(pNtk) != 0, "Abc_NtkIsLogic(pNtk)")
+	rng := newGlibcRand(0x123123)
+	pNtk = abc.Abc_NtkDup(pNtk)
+	if pFuncError(pNtk) == 0 {
+		fmt.Printf("The original network does not cause the bug. Quitting.\n")
+		abc.Abc_NtkDelete(pNtk)
+		return
+	}
+	for nIter := int32(0); ; nIter++ {
+		clk := util.Abc_Clock()
+		nSteps := 2 * Abc_NtkCountFaninsTotal(pNtk)
+		randNum := int32(1) ^ int32(rng.next())
+		i := int32(0)
+		for ; i < nSteps; i++ {
+			modNum := (i + randNum) % nSteps
+			pNtkMod := Abc_NtkAutoDebugModify(pNtk, modNum/2, modNum%2)
+			_ = abcIO.Io_WriteBlifLogic(pNtk, "bug_temp.blif", 1)
+			if pFuncError(pNtkMod) != 0 {
+				abc.Abc_NtkDelete(pNtk)
+				pNtk = pNtkMod
+				break
+			}
+			abc.Abc_NtkDelete(pNtkMod)
+		}
+		fmt.Printf("Iter %6d : Latches = %6d. Nodes = %6d. Steps = %6d. Error step = %3d.  ", nIter, abc.Abc_NtkLatchNum(pNtk), abc.Abc_NtkNodeNum(pNtk), nSteps, i)
+		util.Abc_Print(1, "%s =%9.2f sec\n", "Time", float64(util.Abc_Clock()-clk)/float64(time.Second))
+		if i == nSteps {
+			break
+		}
+	}
+	const filename = "bug_found.blif"
+	_ = abcIO.Io_WriteBlifLogic(pNtk, filename, 1)
+	fmt.Printf("Final network written into file \"%s\". ", filename)
+	util.Abc_Print(1, "%s =%9.2f sec\n", "Total time", float64(util.Abc_Clock())/float64(time.Second))
+	abc.Abc_NtkDelete(pNtk)
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Counts the total number of fanins.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkCountFaninsTotal(pNtk *Abc_Ntk_t) int32 {
-    var pObj, pFanin *Abc_Obj_t;
-    var i, k, Counter int32;
-    // inlining of macro Abc_NtkForEachObj
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else {
-        // inlining of macro Abc_ObjForEachFanin
-        for  k = 0; (k < Abc_ObjFaninNum(pObj)) && (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {
-            if !Abc_ObjIsNode(pObj) && !Abc_ObjIsPo(pObj) {
-                continue; }
-            if Abc_ObjIsPo(pObj) && Abc_NtkPoNum(pNtk) == 1 {
-                continue; }
-            if Abc_ObjIsNode(pObj) && Abc_NodeIsConst(pFanin) {
-                continue; }
-            Counter++;
-        } }
-    }
-    return Counter;
+// Abc_NtkAutoDebugModify replaces the selected fanin with a constant in a
+// duplicate network and performs the same cleanup/initial-state cycle as ABC.
+func Abc_NtkAutoDebugModify(pNtkInit *Abc_Ntk_t, step, fConst1 int32) *Abc_Ntk_t {
+	pNtk := abc.Abc_NtkDup(pNtkInit)
+	assert(abc.Abc_NtkNodeNum(pNtk) == abc.Abc_NtkNodeNum(pNtkInit), "Abc_NtkNodeNum(pNtk) == Abc_NtkNodeNum(pNtkInit)")
+	var pObj, pFanin *Abc_Obj_t
+	if Abc_NtkFindGivenFanin(pNtk, step, &pObj, &pFanin) == 0 {
+		abc.Abc_NtkDelete(pNtk)
+		return nil
+	}
+	if abc.Abc_ObjIsPo(pObj) != 0 && abc.Abc_NodeIsConst(pFanin) != 0 {
+		abc.Abc_NtkDeleteAll_rec(pObj)
+		return pNtk
+	}
+	var pConst *Abc_Obj_t
+	if fConst1 != 0 {
+		pConst = abc.Abc_NtkCreateNodeConst1(pNtk)
+	} else {
+		pConst = abc.Abc_NtkCreateNodeConst0(pNtk)
+	}
+	abc.Abc_ObjTransferFanout(pFanin, pConst)
+	abc.Abc_NtkDeleteAll_rec(pFanin)
+	abc.Abc_NtkSweep(pNtk, 0)
+	Abc_NtkCleanupSeq(pNtk, 0, 0, 0)
+	abc.Abc_NtkToSop(pNtk, -1, 1_000_000_000)
+	ret.Abc_NtkCycleInitStateSop(pNtk, 50, 0)
+	return pNtk
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Returns the node and fanin to be modified.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkFindGivenFanin(pNtk *Abc_Ntk_t, Step int32, ppObj **Abc_Obj_t, ppFanin **Abc_Obj_t) int32 {
-    var pObj, pFanin *Abc_Obj_t;
-    var i, k, Counter int32;
-    // inlining of macro Abc_NtkForEachObj
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else {
-        // inlining of macro Abc_ObjForEachFanin
-        for  k = 0; (k < Abc_ObjFaninNum(pObj)) && (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {
-            if !Abc_ObjIsNode(pObj) && !Abc_ObjIsPo(pObj) {
-                continue; }
-            if Abc_ObjIsPo(pObj) && Abc_NtkPoNum(pNtk) == 1 {
-                continue; }
-            if Abc_ObjIsNode(pObj) && Abc_NodeIsConst(pFanin) {
-                continue; }
-            if Counter++ == Step {
-                *ppObj   = pObj;
-                *ppFanin = pFanin;
-                return 1;
-            }
-        } }
-    }
-    return 0;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Perform modification with the given number.]
-
-  Description [Modification consists of replacing the node by a constant.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkAutoDebugModify(pNtkInit *Abc_Ntk_t, Step int32, fConst1 int32) *Abc_Ntk_t {
-    extern void Abc_NtkCycleInitStateSop( Abc_Ntk_t * pNtk, int nFrames, int fVerbose );
-    var pNtk *Abc_Ntk_t;
-    var pObj, pFanin, pConst *Abc_Obj_t;
-    // copy the network
-    pNtk = Abc_NtkDup( pNtkInit );
-    assert(Abc_NtkNodeNum(pNtk) == Abc_NtkNodeNum(pNtkInit), "Abc_NtkNodeNum(pNtk) == Abc_NtkNodeNum(pNtkInit)");
-    // find the object number
-    Abc_NtkFindGivenFanin( pNtk, Step, &pObj, &pFanin );
-    // consider special case 
-    if Abc_ObjIsPo(pObj) && Abc_NodeIsConst(pFanin) {
-        Abc_NtkDeleteAll_rec( pObj );
-        return pNtk;
-    }
-    // plug in a constant node
-    if fConst1 != 0 {
-        pConst = Abc_NtkCreateNodeConst1(pNtk);
-    } else {
-        pConst = Abc_NtkCreateNodeConst0(pNtk);
-    }
-    Abc_ObjTransferFanout( pFanin, pConst );
-    Abc_NtkDeleteAll_rec( pFanin );
-
-    Abc_NtkSweep( pNtk, 0 );
-    Abc_NtkCleanupSeq( pNtk, 0, 0, 0 );
-    Abc_NtkToSop( pNtk, -1, ABC_INFINITY );
-    Abc_NtkCycleInitStateSop( pNtk, 50, 0 );
-    return pNtk;
-}
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

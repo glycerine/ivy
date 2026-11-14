@@ -2,7 +2,21 @@ package abci
 
 import (
 	"fmt"
+	"math"
 	"os"
+	"sort"
+	"unsafe"
+
+	hoppkg "github.com/glycerine/abcgo/aig/hop"
+	"github.com/glycerine/abcgo/base/abc"
+	abcmain "github.com/glycerine/abcgo/base/main"
+	"github.com/glycerine/abcgo/bdd/cudd/core"
+	"github.com/glycerine/abcgo/bool/kit"
+	ifpkg "github.com/glycerine/abcgo/map/if"
+	"github.com/glycerine/abcgo/map/mio"
+	"github.com/glycerine/abcgo/misc/extra"
+	"github.com/glycerine/abcgo/misc/mem"
+	"github.com/glycerine/abcgo/misc/vec"
 )
 
 /**CFile****************************************************************
@@ -16,7 +30,7 @@ import (
   Synopsis    [Interface with the FPGA mapping package.]
 
   Author      [Alan Mishchenko]
-  
+
   Affiliation [UC Berkeley]
 
   Date        [Ver. 1.0. Started - November 21, 2006.]
@@ -34,7 +48,6 @@ import (
 
 //ABC_NAMESPACE_IMPL_START
 
-
 ////////////////////////////////////////////////////////////////////////
 ///                        DECLARATIONS                              ///
 ////////////////////////////////////////////////////////////////////////
@@ -49,764 +62,805 @@ import (
 
 // static Vec_Ptr_t * Abc_NtkFindGoodOrder( Abc_Ntk_t * pNtk );
 
-
 // extern void Abc_NtkBddReorder( Abc_Ntk_t * pNtk, int fVerbose );
 
 // extern void Abc_NtkBidecResyn( Abc_Ntk_t * pNtk, int fVerbose );
 
- 
 ////////////////////////////////////////////////////////////////////////
 ///                     FUNCTION DEFINITIONS                         ///
 ////////////////////////////////////////////////////////////////////////
 
-/**Function*************************************************************
+/*
+*Function*************************************************************
 
-  Synopsis    [Interface with the FPGA mapping package.]
+	Synopsis    [Interface with the FPGA mapping package.]
 
-  Description []
-               
-  SideEffects []
+	Description []
 
-  SeeAlso     []
+	SideEffects []
 
-***********************************************************************/
+	SeeAlso     []
+
+**********************************************************************
+*/
 func If_ManComputeSwitching(pIfMan *If_Man_t) {
-    var clk abctime  = Abc_Clock();
-    var pNew *Gia_Man_t;
-    var vCopy *Vec_Int_t;
-    var pIfObj *If_Obj_t;
-    var i int32;
-    assert(pIfMan.vSwitching == nil, "pIfMan.vSwitching == nil");
-    // create the new manager
-    pNew = Gia_ManStart( If_ManObjNum(pIfMan) );
-    vCopy = Vec_IntAlloc( If_ManObjNum(pIfMan) );
-    // constant and inputs
-    Vec_IntPush( vCopy, 1 );
-    If_ManForEachCi( pIfMan, pIfObj, i )
-        Vec_IntPush( vCopy, Gia_ManAppendCi(pNew) );
-    // internal nodes
-    If_ManForEachNode( pIfMan, pIfObj, i )
-    {
-        var iLit0 int32  = Abc_LitNotCond( Vec_IntEntry(vCopy, If_ObjFanin0(pIfObj).Id), If_ObjFaninC0(pIfObj) );
-        var iLit1 int32  = Abc_LitNotCond( Vec_IntEntry(vCopy, If_ObjFanin1(pIfObj).Id), If_ObjFaninC1(pIfObj) );
-        Vec_IntPush( vCopy, Gia_ManAppendAnd(pNew, iLit0, iLit1) );
-    }
-    // outputs
-    If_ManForEachCo( pIfMan, pIfObj, i )
-    {
-        var iLit0 int32  = Abc_LitNotCond( Vec_IntEntry(vCopy, If_ObjFanin0(pIfObj).Id), If_ObjFaninC0(pIfObj) );
-        Vec_IntPush( vCopy, Gia_ManAppendCo(pNew, iLit0) );
-    }
-    assert(Vec_IntSize(vCopy) == If_ManObjNum(pIfMan), "Vec_IntSize(vCopy) == If_ManObjNum(pIfMan)");
-    Vec_IntFree( vCopy );
-    // compute switching activity
-    pIfMan.vSwitching = Gia_ManComputeSwitchProbs( pNew, 48, 16, 0 );
-    Gia_ManStop( pNew );
-    if pIfMan.pPars.fVerbose {
-        Abc_PrintTime( 1, "Computing switching activity", Abc_Clock() - clk ); }
+	clk := Abc_Clock()
+	assert(!pIfMan.HasSwitchingVector(), "pIfMan.vSwitching == nil")
+	pNew := Gia_ManStart(If_ManObjNum(pIfMan))
+	vCopy := Vec_IntAlloc(If_ManObjNum(pIfMan))
+	Vec_IntPush(vCopy, 1)
+	for i := int32(0); i < If_ManCiNum(pIfMan); i++ {
+		Vec_IntPush(vCopy, Gia_ManAppendCi(pNew))
+	}
+	for i := int32(0); i < If_ManObjNum(pIfMan); i++ {
+		pIfObj := ifpkg.If_ManObj(pIfMan, i)
+		if ifpkg.If_ObjIsAnd(pIfObj) == 0 {
+			continue
+		}
+		iLit0 := Abc_LitNotCond(Vec_IntEntry(vCopy, ifpkg.If_ObjId(ifpkg.If_ObjFanin0(pIfObj))), ifpkg.If_ObjFaninC0(pIfObj))
+		iLit1 := Abc_LitNotCond(Vec_IntEntry(vCopy, ifpkg.If_ObjId(ifpkg.If_ObjFanin1(pIfObj))), ifpkg.If_ObjFaninC1(pIfObj))
+		Vec_IntPush(vCopy, Gia_ManAppendAnd(pNew, iLit0, iLit1))
+	}
+	for i := int32(0); i < If_ManCoNum(pIfMan); i++ {
+		pIfObj := If_ManCo(pIfMan, i)
+		iLit0 := Abc_LitNotCond(Vec_IntEntry(vCopy, ifpkg.If_ObjId(ifpkg.If_ObjFanin0(pIfObj))), ifpkg.If_ObjFaninC0(pIfObj))
+		Vec_IntPush(vCopy, Gia_ManAppendCo(pNew, iLit0))
+	}
+	assert(Vec_IntSize(vCopy) == If_ManObjNum(pIfMan), "Vec_IntSize(vCopy) == If_ManObjNum(pIfMan)")
+	Vec_IntFree(vCopy)
+	probabilities := Gia_ManComputeSwitchProbs(pNew, 48, 16, 0)
+	values := make([]float32, Vec_IntSize(probabilities))
+	for i := range values {
+		values[i] = math.Float32frombits(uint32(Vec_IntEntry(probabilities, i)))
+	}
+	Vec_IntFree(probabilities)
+	pIfMan.SetSwitchingProbabilities(values)
+	Gia_ManStop(pNew)
+	if pIfMan.Parameters().Verbose() {
+		Abc_PrintTime(1, "Computing switching activity", Abc_Clock()-clk)
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Interface with the FPGA mapping package.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkIf(pNtk *Abc_Ntk_t, pPars *If_Par_t) *Abc_Ntk_t {
-    var pNtkNew, pTemp *Abc_Ntk_t;
-    var pIfMan *If_Man_t;
-
-    assert(Abc_NtkIsStrash(pNtk), "Abc_NtkIsStrash(pNtk)");
-
-    // get timing information
-    pPars.pTimesArr = Abc_NtkGetCiArrivalFloats(pNtk);
-    pPars.pTimesReq = Abc_NtkGetCoRequiredFloats(pNtk);
-
-    // update timing info to reflect logic level
-    if (pPars.fDelayOpt || pPars.fDsdBalance || pPars.fUserRecLib || pPars.fUserSesLib) && pNtk.pManTime {
-        var c int32;
-        if pNtk.AndGateDelay == 0.0 {
-            if Abc_FrameReadLibGen() {
-                pNtk.AndGateDelay = Mio_LibraryReadDelayAigNode((Mio_Library_t *)Abc_FrameReadLibGen()); }
-            if pNtk.AndGateDelay == 0.0 {
-                pNtk.AndGateDelay = 1.0;
-                fmt.Printf("The AIG-node delay is not set. Assuming unit-delay.\n");
-            }
-        }
-        for  c = 0; c < Abc_NtkCiNum(pNtk); c++  {
-            pPars.pTimesArr[c] /= pNtk.AndGateDelay;
-        }
-        for  c = 0; c < Abc_NtkCoNum(pNtk); c++  {
-            pPars.pTimesReq[c] /= pNtk.AndGateDelay;
-        }
-    }
-
-    // set the latch paths
-    if pPars.fLatchPaths && pPars.pTimesArr {
-        var c int32;
-        for  c = 0; c < Abc_NtkPiNum(pNtk); c++  {
-            pPars.pTimesArr[c] = -ABC_INFINITY;
-        }
-    }
-
-    // create FPGA mapper
-    pIfMan = Abc_NtkToIf( pNtk, pPars );    
-    if pIfMan == nil {
-        return nil; }
-    if pPars.fPower {
-        If_ManComputeSwitching( pIfMan ); }
-
-    // create DSD manager
-    if pPars.fUseDsd {
-        var p *If_DsdMan_t  = (If_DsdMan_t *)Abc_FrameReadManDsd();
-        assert(pPars.nLutSize <= If_DsdManVarNum(p), "pPars.nLutSize <= If_DsdManVarNum(p)");
-        assert((pPars.pLutStruct == nil && If_DsdManLutSize(p) == 0) || (pPars.pLutStruct && pPars.pLutStruct[0] - '0' == If_DsdManLutSize(p)), "(pPars.pLutStruct == nil && If_DsdManLutSize(p) == 0) || (pPars.pLutStruct && pPars.pLutStruct[0] - '0' == If_DsdManLutSize(p))");
-        pIfMan.pIfDsdMan = (If_DsdMan_t *)Abc_FrameReadManDsd();
-        if pPars.fDsdBalance {
-            If_DsdManAllocIsops( pIfMan.pIfDsdMan, pPars.nLutSize ); }
-    }
-
-    // perform FPGA mapping
-    if !If_ManPerformMapping( pIfMan ) {
-        If_ManStop( pIfMan );
-        return nil;
-    }
-
-    // transform the result of mapping into the new network
-    pNtkNew = Abc_NtkFromIf( pIfMan, pNtk );
-    if pNtkNew == nil {
-        return nil; }
-    If_ManStop( pIfMan );
-    if pPars.fDelayOpt || pPars.fDsdBalance || pPars.fUserRecLib {
-        pNtkNew = Abc_NtkStrash( pTemp = pNtkNew, 0, 0, 0 );
-        Abc_NtkDelete( pTemp );
-    
-    } else if pPars.fBidec && pPars.nLutSize <= 8 {
-        Abc_NtkBidecResyn( pNtkNew, 0 ); }
-
-    // duplicate EXDC
-    if pNtk.pExdc {
-        pNtkNew.pExdc = Abc_NtkDup( pNtk.pExdc ); }
-    // make sure that everything is okay
-    if !Abc_NtkCheck( pNtkNew ) {
-        fmt.Printf("Abc_NtkIf: The network check has failed.\n");
-        Abc_NtkDelete( pNtkNew );
-        return nil;
-    }
-    return pNtkNew;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Load the network into FPGA manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_ObjIfCopy(pNode *Abc_Obj_t) *If_Obj_t { return (If_Obj_t *)pNode.pCopy; } 
-func Abc_NtkToIf(pNtk *Abc_Ntk_t, pPars *If_Par_t) *If_Man_t {
-    var pProgress *ProgressBar;
-    var pIfMan *If_Man_t;
-    var vNodes *Vec_Ptr_t;
-    var pNode, pPrev *Abc_Obj_t;
-    var i int32;
-
-    assert(Abc_NtkIsStrash(pNtk), "Abc_NtkIsStrash(pNtk)");
-
-    // start the mapping manager and set its parameters
-    pIfMan = If_ManStart( pPars );
-    pIfMan.pName = Abc_UtilStrsav( Abc_NtkName(pNtk) );
-
-    // print warning about excessive memory usage
-    if 1.0 * Abc_NtkObjNum(pNtk) * pIfMan.nObjBytes / (1<<30) > 1.0 {
-        fmt.Printf("Warning: The mapper will allocate %.1f GB for to represent the subject graph with %d AIG nodes.\n", 1.0 * Abc_NtkObjNum(pNtk) * pIfMan.nObjBytes / (1<<30), Abc_NtkObjNum(pNtk)); }
-
-    // create PIs and remember them in the old nodes
-    Abc_NtkCleanCopy( pNtk );
-    Abc_AigConst1(pNtk).pCopy = (Abc_Obj_t *)If_ManConst1( pIfMan );
-    Abc_NtkForEachCi( pNtk, pNode, i )
-    {
-        pNode.pCopy = (Abc_Obj_t *)If_ManCreateCi( pIfMan );
-        // transfer logic level information
-        Abc_ObjIfCopy(pNode).Level = pNode.Level;
-    }
-
-    // load the AIG into the mapper
-    pProgress = Extra_ProgressBarStart( os.Stdout, Abc_NtkObjNumMax(pNtk) );
-    vNodes = Abc_AigDfs( pNtk, 0, 0 );
-    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pNode, i )
-    {
-        Extra_ProgressBarUpdate( pProgress, i, "Initial" );
-        // add the node to the mapper
-        pNode.pCopy = (Abc_Obj_t *)If_ManCreateAnd( pIfMan, 
-            If_NotCond( Abc_ObjIfCopy(Abc_ObjFanin0(pNode)), Abc_ObjFaninC0(pNode) ), 
-            If_NotCond( Abc_ObjIfCopy(Abc_ObjFanin1(pNode)), Abc_ObjFaninC1(pNode) ) );
-        // set up the choice node
-        if Abc_AigNodeIsChoice( pNode ) {
-            var pEquiv *Abc_Obj_t;
-//            int Counter = 0;
-            assert(If_ObjId(Abc_ObjIfCopy(pNode)) > If_ObjId(Abc_ObjIfCopy(Abc_ObjEquiv(pNode))), "If_ObjId(Abc_ObjIfCopy(pNode)) > If_ObjId(Abc_ObjIfCopy(Abc_ObjEquiv(pNode)))");
-            for  pPrev = pNode, pEquiv = Abc_ObjEquiv(pPrev); (pEquiv != nil); pPrev = pEquiv, pEquiv = Abc_ObjEquiv(pPrev)  {
-                If_ObjSetChoice( Abc_ObjIfCopy(pPrev), Abc_ObjIfCopy(pEquiv) );
-            }//, Counter++;
-//            printf( "%d ", Counter );
-            If_ManCreateChoice( pIfMan, Abc_ObjIfCopy(pNode) );
-        }
-    }
-    Extra_ProgressBarStop( pProgress );
-    Vec_PtrFree( vNodes );
-
-    // set the primary outputs without copying the phase
-    Abc_NtkForEachCo( pNtk, pNode, i )
-        pNode.pCopy = (Abc_Obj_t *)If_ManCreateCo( pIfMan, If_NotCond( Abc_ObjIfCopy(Abc_ObjFanin0(pNode)), Abc_ObjFaninC0(pNode) ) );
-    return pIfMan;
-}
-
-
-/**Function*************************************************************
-
-  Synopsis    [Box mapping procedures.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_MapBoxSetPrevNext(vDrivers *Vec_Ptr_t, vMapIn *Vec_Int_t, vMapOut *Vec_Int_t, Id int32) {
-    var pNode *Abc_Obj_t;
-    pNode = (Abc_Obj_t *)Vec_PtrEntry(vDrivers, Id+2);
-    Vec_IntWriteEntry( vMapIn, Abc_ObjId(Abc_ObjFanin0(pNode)), Id );
-    pNode = (Abc_Obj_t *)Vec_PtrEntry(vDrivers, Id+4);
-    Vec_IntWriteEntry( vMapOut, Abc_ObjId(Abc_ObjFanin0(pNode)), Id );
-}
-func Abc_MapBox2Next(vDrivers *Vec_Ptr_t, vMapIn *Vec_Int_t, vMapOut *Vec_Int_t, Id int32) int32 {
-    var pNode *Abc_Obj_t  = (Abc_Obj_t *)Vec_PtrEntry(vDrivers, Id+4);
-    return Vec_IntEntry( vMapIn, Abc_ObjId(Abc_ObjFanin0(pNode)) );
-}
-func Abc_MapBox2Prev(vDrivers *Vec_Ptr_t, vMapIn *Vec_Int_t, vMapOut *Vec_Int_t, Id int32) int32 {
-    var pNode *Abc_Obj_t  = (Abc_Obj_t *)Vec_PtrEntry(vDrivers, Id+2);
-    return Vec_IntEntry( vMapOut, Abc_ObjId(Abc_ObjFanin0(pNode)) );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Creates the mapped network.]
-
-  Description [Assuming the copy field of the mapped nodes are NULL.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkFromIf(pIfMan *If_Man_t, pNtk *Abc_Ntk_t) *Abc_Ntk_t {
-    var pProgress *ProgressBar;
-    var pNtkNew *Abc_Ntk_t;
-    var pNode, pNodeNew *Abc_Obj_t;
-    var vCover *Vec_Int_t;
-    var i, nDupGates int32;
-    // create the new network
-    if pIfMan.pPars.fUseBdds || pIfMan.pPars.fUseCnfs || pIfMan.pPars.fUseMv {
-        pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_LOGIC, ABC_FUNC_BDD );
-    } else if pIfMan.pPars.fUseSops || pIfMan.pPars.fUserSesLib || pIfMan.pPars.nGateSize > 0 {
-        pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_LOGIC, ABC_FUNC_SOP );
-    } else {
-        pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_LOGIC, ABC_FUNC_AIG ); }
-    // prepare the mapping manager
-    If_ManCleanNodeCopy( pIfMan );
-    If_ManCleanCutData( pIfMan );
-    // make the mapper point to the new network
-    If_ObjSetCopy( If_ManConst1(pIfMan), Abc_NtkCreateNodeConst1(pNtkNew) );
-    Abc_NtkForEachCi( pNtk, pNode, i )
-        If_ObjSetCopy( If_ManCi(pIfMan, i), pNode.pCopy );
-
-    // process the nodes in topological order
-    vCover = Vec_IntAlloc( 1 << 16 );
-    pProgress = Extra_ProgressBarStart( os.Stdout, Abc_NtkCoNum(pNtk) );
-    Abc_NtkForEachCo( pNtk, pNode, i )
-    {
-        Extra_ProgressBarUpdate( pProgress, i, "Final" );
-        pNodeNew = Abc_NodeFromIf_rec( pNtkNew, pIfMan, If_ObjFanin0(If_ManCo(pIfMan, i)), vCover );
-        pNodeNew = Abc_ObjNotCond( pNodeNew, If_ObjFaninC0(If_ManCo(pIfMan, i)) );
-        Abc_ObjAddFanin( pNode.pCopy, pNodeNew );
-    }
-    Extra_ProgressBarStop( pProgress );
-    Vec_IntFree( vCover );
-
-    // remove the constant node if not used
-    pNodeNew = (Abc_Obj_t *)If_ObjCopy( If_ManConst1(pIfMan) );
-    if Abc_ObjFanoutNum(pNodeNew) == 0 && !Abc_ObjIsNone(pNodeNew) {
-        Abc_NtkDeleteObj( pNodeNew ); }
-    // minimize the node
-    if pIfMan.pPars.fUseBdds || pIfMan.pPars.fUseCnfs || pIfMan.pPars.fUseMv {
-        Abc_NtkSweep( pNtkNew, 0 ); }
-    if pIfMan.pPars.fUseBdds {
-        Abc_NtkBddReorder( pNtkNew, 0 ); }
-    // decouple the PO driver nodes to reduce the number of levels
-    nDupGates = Abc_NtkLogicMakeSimpleCos( pNtkNew, !pIfMan.pPars.fUseBuffs );
-    if (nDupGates != 0) && pIfMan.pPars.fVerbose && !Abc_FrameReadFlag("silentmode") {
-        if pIfMan.pPars.fUseBuffs {
-            fmt.Printf("Added %d buffers/inverters to decouple the CO drivers.\n", nDupGates);
-        } else {
-            fmt.Printf("Duplicated %d gates to decouple the CO drivers.\n", nDupGates); }
-    }
-    return pNtkNew;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Rebuilds GIA from mini AIG.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NodeBuildFromMiniInt(pMan *Hop_Man_t, vAig *Vec_Int_t, nLeaves int32) *Hop_Obj_t {
-    assert(Vec_IntSize(vAig) > 0, "Vec_IntSize(vAig) > 0");
-    assert(Vec_IntEntryLast(vAig) < 2, "Vec_IntEntryLast(vAig) < 2");
-    if Vec_IntSize(vAig) == 1 { // const
-    
-        assert(nLeaves == 0, "nLeaves == 0");
-        return Hop_NotCond( Hop_ManConst0(pMan), Vec_IntEntry(vAig, 0) );
-    }
-    if Vec_IntSize(vAig) == 2 { // variable
-    
-        assert(Vec_IntEntry(vAig, 0) == 0, "Vec_IntEntry(vAig, 0) == 0");
-        assert(nLeaves == 1, "nLeaves == 1");
-        return Hop_NotCond( Hop_IthVar(pMan, 0), Vec_IntEntry(vAig, 1) );
-    
-    } else {
-        var i, iVar0, iVar1, iLit0, iLit1 int32;
-        var piLit0 *Hop_Obj_t;
-        var piLit1 *Hop_Obj_t;
-        var piLit *Hop_Obj_t = nil;
-        assert(Vec_IntSize(vAig) & 1, "Vec_IntSize(vAig) & 1");
-        Vec_IntForEachEntryDouble( vAig, iLit0, iLit1, i )
-        {
-            iVar0 = Abc_Lit2Var( iLit0 );
-            iVar1 = Abc_Lit2Var( iLit1 );
-            piLit0 = Hop_NotCond( iVar0 < nLeaves ? Hop_IthVar(pMan, iVar0) : (Hop_Obj_t *)Vec_PtrEntry((Vec_Ptr_t *)vAig, iVar0 - nLeaves), Abc_LitIsCompl(iLit0) );
-            piLit1 = Hop_NotCond( iVar1 < nLeaves ? Hop_IthVar(pMan, iVar1) : (Hop_Obj_t *)Vec_PtrEntry((Vec_Ptr_t *)vAig, iVar1 - nLeaves), Abc_LitIsCompl(iLit1) );
-            piLit  = Hop_And( pMan, piLit0, piLit1 );
-            assert((i & 1) == 0, "(i & 1) == 0");
-            Vec_PtrWriteEntry( (Vec_Ptr_t *)vAig, Abc_Lit2Var(i), piLit );  // overwriting entries
-        }
-        assert(i == Vec_IntSize(vAig) - 1, "i == Vec_IntSize(vAig) - 1");
-        piLit = Hop_NotCond( piLit, Vec_IntEntry(vAig, i) );
-        Vec_IntClear( vAig ); // useless
-        return piLit;
-    }
-}
-func Abc_NodeBuildFromMini(pMan *Hop_Man_t, p *If_Man_t, pCut *If_Cut_t, fUseDsd int32) *Hop_Obj_t {
-    var Delay int32;
-    if fUseDsd != 0 {
-        Delay = If_CutDsdBalanceEval( p, pCut, p.vArray );
-    } else {
-        Delay = If_CutSopBalanceEval( p, pCut, p.vArray ); }
-    assert(Delay >= 0, "Delay >= 0");
-    return Abc_NodeBuildFromMiniInt( pMan, p.vArray, If_CutLeaveNum(pCut) );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Derive one node after FPGA mapping.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NodeFromIf_rec(pNtkNew *Abc_Ntk_t, pIfMan *If_Man_t, pIfObj *If_Obj_t, vCover *Vec_Int_t) *Abc_Obj_t {
-    var pNodeNew *Abc_Obj_t;
-    var pCutBest *If_Cut_t;
-    var pIfLeaf *If_Obj_t;
-    var i int32;
-    // return if the result if known
-    pNodeNew = (Abc_Obj_t *)If_ObjCopy( pIfObj );
-    if pNodeNew != nil {
-        return pNodeNew; }
-    assert(pIfObj.Type == IF_AND, "pIfObj.Type == IF_AND");
-    // get the parameters of the best cut
-    pCutBest = If_ObjCutBest( pIfObj );
-    if pIfMan.pPars.fUserSesLib {
-        // create the subgraph composed of Abc_Obj_t nodes based on the given cut
-        var pFanins [IF_MAX_FUNC_LUTSIZE]*Abc_Obj_t;
-        If_CutForEachLeaf( pIfMan, pCutBest, pIfLeaf, i )
-            pFanins[i] = Abc_NodeFromIf_rec(pNtkNew, pIfMan, pIfLeaf, vCover);
-        pNodeNew = Abc_ExactBuildNode( If_CutTruthW(pIfMan, pCutBest), If_CutLeaveNum(pCutBest), If_CutArrTimeProfile(pIfMan, pCutBest), pFanins, pNtkNew );
-        If_ObjSetCopy( pIfObj, pNodeNew );
-        return pNodeNew;
-    }
-    // create a new node 
-    pNodeNew = Abc_NtkCreateNode( pNtkNew );
-//    if ( pIfMan->pPars->pLutLib && pIfMan->pPars->pLutLib->fVarPinDelays )
-    if !pIfMan.pPars.fDelayOpt && !pIfMan.pPars.fDelayOptLut && !pIfMan.pPars.fDsdBalance && !pIfMan.pPars.fUseTtPerm && 
-         !pIfMan.pPars.pLutStruct && !pIfMan.pPars.fUserRecLib && !pIfMan.pPars.fUserSesLib && !pIfMan.pPars.nGateSize {
-        If_CutRotatePins( pIfMan, pCutBest ); }
-    if pIfMan.pPars.fUseCnfs || pIfMan.pPars.fUseMv {
-        If_CutForEachLeafReverse( pIfMan, pCutBest, pIfLeaf, i )
-            Abc_ObjAddFanin( pNodeNew, Abc_NodeFromIf_rec(pNtkNew, pIfMan, pIfLeaf, vCover) );
-    
-    } else {
-        If_CutForEachLeaf( pIfMan, pCutBest, pIfLeaf, i )
-            Abc_ObjAddFanin( pNodeNew, Abc_NodeFromIf_rec(pNtkNew, pIfMan, pIfLeaf, vCover) );
-    }
-    // set the level of the new node
-    pNodeNew.Level = Abc_ObjLevelNew( pNodeNew );
-    // derive the function of this node
-    if pIfMan.pPars.fTruth {
-        if pIfMan.pPars.fUseBdds { 
-            // transform truth table into the BDD 
-#ifdef ABC_USE_CUDD
-            pNodeNew->pData = Kit_TruthToBdd( (DdManager *)pNtkNew->pManFunc, If_CutTruth(pIfMan, pCutBest), If_CutLeaveNum(pCutBest), 0 );  Cudd_Ref((DdNode *)pNodeNew->pData); 
-#endif
-        
-        } else if pIfMan.pPars.fUseCnfs || pIfMan.pPars.fUseMv { 
-            // transform truth table into the BDD 
-#ifdef ABC_USE_CUDD
-            pNodeNew->pData = Kit_TruthToBdd( (DdManager *)pNtkNew->pManFunc, If_CutTruth(pIfMan, pCutBest), If_CutLeaveNum(pCutBest), 1 );  Cudd_Ref((DdNode *)pNodeNew->pData); 
-#endif
-        
-        } else if pIfMan.pPars.fUseSops || pIfMan.pPars.nGateSize > 0 {
-            // transform truth table into the SOP
-            var RetValue int32  = Kit_TruthIsop( If_CutTruth(pIfMan, pCutBest), If_CutLeaveNum(pCutBest), vCover, 1 );
-            assert(RetValue == 0 || RetValue == 1, "RetValue == 0 || RetValue == 1");
-            // check the case of constant cover
-            if Vec_IntSize(vCover) == 0 || (Vec_IntSize(vCover) == 1 && Vec_IntEntry(vCover,0) == 0) {
-                assert(RetValue == 0, "RetValue == 0");
-                pNodeNew.pData = Abc_SopCreateAnd( (Mem_Flex_t *)pNtkNew.pManFunc, If_CutLeaveNum(pCutBest), nil );
-                if Vec_IntSize(vCover) == 0 {
-                    pNodeNew = Abc_NtkCreateNodeConst0(pNtkNew);
-                } else {
-                    pNodeNew = Abc_NtkCreateNodeConst1(pNtkNew);
-                }
-            
-            } else {
-                // derive the AIG for that tree
-                pNodeNew.pData = Abc_SopCreateFromIsop( (Mem_Flex_t *)pNtkNew.pManFunc, If_CutLeaveNum(pCutBest), vCover );
-                if RetValue != 0 {
-                    Abc_SopComplement( (char *)pNodeNew.pData ); }
-            }
-        
-        } else if pIfMan.pPars.fDelayOpt {
-            pNodeNew.pData = Abc_NodeBuildFromMini( (Hop_Man_t *)pNtkNew.pManFunc, pIfMan, pCutBest, 0 );
-        } else if pIfMan.pPars.fDsdBalance {
-            pNodeNew.pData = Abc_NodeBuildFromMini( (Hop_Man_t *)pNtkNew.pManFunc, pIfMan, pCutBest, 1 );
-        } else if pIfMan.pPars.fUserRecLib {
-            extern Hop_Obj_t * Abc_RecToHop3( Hop_Man_t * pMan, If_Man_t * pIfMan, If_Cut_t * pCut, If_Obj_t * pIfObj );
-            pNodeNew.pData = Abc_RecToHop3( (Hop_Man_t *)pNtkNew.pManFunc, pIfMan, pCutBest, pIfObj ); 
-        
-        } else {
-            extern Hop_Obj_t * Kit_TruthToHop( Hop_Man_t * pMan, unsigned * pTruth, int nVars, Vec_Int_t * vMemory );
-            var pTruth *word  = If_CutTruthW(pIfMan, pCutBest);
-            if pIfMan.pPars.fUseTtPerm {
-                for  i = 0; i < int32(pCutBest.nLeaves); i++  {
-                    if If_CutLeafBit(pCutBest, i) {
-                        Abc_TtFlip( pTruth, Abc_TtWordNum(pCutBest.nLeaves), i ); }
-                } }
-            pNodeNew.pData = Kit_TruthToHop( (Hop_Man_t *)pNtkNew.pManFunc, (unsigned *)pTruth, If_CutLeaveNum(pCutBest), vCover );
-//            if ( pIfMan->pPars->fUseBat )
-//                Bat_ManFuncPrintCell( *pTruth );
-        }
-        // complement the node if the cut was complemented
-        if pCutBest.fCompl && !pIfMan.pPars.fDelayOpt && !pIfMan.pPars.fDsdBalance {
-            Abc_NodeComplement( pNodeNew ); }
-    
-    } else {
-        pNodeNew.pData = Abc_NodeIfToHop( (Hop_Man_t *)pNtkNew.pManFunc, pIfMan, pIfObj );
-    }
-    If_ObjSetCopy( pIfObj, pNodeNew );
-    return pNodeNew;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Recursively derives the truth table for the cut.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NodeIfToHop_rec(pHopMan *Hop_Man_t, pIfMan *If_Man_t, pIfObj *If_Obj_t, vVisited *Vec_Ptr_t) *Hop_Obj_t {
-    var pCut *If_Cut_t;
-    var gFunc, gFunc0, gFunc1 *Hop_Obj_t;
-    // get the best cut
-    pCut = If_ObjCutBest(pIfObj);
-    // if the cut is visited, return the result
-    if If_CutData(pCut) {
-        return (Hop_Obj_t *)If_CutData(pCut); }
-    // compute the functions of the children
-    gFunc0 = Abc_NodeIfToHop_rec( pHopMan, pIfMan, pIfObj.pFanin0, vVisited );
-    gFunc1 = Abc_NodeIfToHop_rec( pHopMan, pIfMan, pIfObj.pFanin1, vVisited );
-    // get the function of the cut
-    gFunc  = Hop_And( pHopMan, Hop_NotCond(gFunc0, pIfObj.fCompl0), Hop_NotCond(gFunc1, pIfObj.fCompl1) );  
-    assert(If_CutData(pCut) == nil, "If_CutData(pCut) == nil");
-    If_CutSetData( pCut, gFunc );
-    // add this cut to the visited list
-    Vec_PtrPush( vVisited, pCut );
-    return gFunc;
-}
-
-
-/**Function*************************************************************
-
-  Synopsis    [Recursively derives the truth table for the cut.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NodeIfToHop2_rec(pHopMan *Hop_Man_t, pIfMan *If_Man_t, pIfObj *If_Obj_t, vVisited *Vec_Ptr_t) *Hop_Obj_t {
-    var pCut *If_Cut_t;
-    var pTemp *If_Obj_t;
-    var gFunc, gFunc0, gFunc1 *Hop_Obj_t;
-    // get the best cut
-    pCut = If_ObjCutBest(pIfObj);
-    // if the cut is visited, return the result
-    if If_CutData(pCut) {
-        return (Hop_Obj_t *)If_CutData(pCut); }
-    // mark the node as visited
-    Vec_PtrPush( vVisited, pCut );
-    // insert the worst case
-    If_CutSetData( pCut, (void *)1 );
-    // skip in case of primary input
-    if If_ObjIsCi(pIfObj) {
-        return (Hop_Obj_t *)If_CutData(pCut); }
-    // compute the functions of the children
-    for  pTemp = pIfObj; pTemp; pTemp = pTemp.pEquiv  {
-        gFunc0 = Abc_NodeIfToHop2_rec( pHopMan, pIfMan, pTemp.pFanin0, vVisited );
-        if gFunc0 == (void *)1 {
-            continue; }
-        gFunc1 = Abc_NodeIfToHop2_rec( pHopMan, pIfMan, pTemp.pFanin1, vVisited );
-        if gFunc1 == (void *)1 {
-            continue; }
-        // both branches are solved
-        gFunc = Hop_And( pHopMan, Hop_NotCond(gFunc0, pTemp.fCompl0), Hop_NotCond(gFunc1, pTemp.fCompl1) ); 
-        if pTemp.fPhase != pIfObj.fPhase {
-            gFunc = Hop_Not(gFunc); }
-        If_CutSetData( pCut, gFunc );
-        break;
-    }
-    return (Hop_Obj_t *)If_CutData(pCut);
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Derives the truth table for one cut.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NodeIfToHop(pHopMan *Hop_Man_t, pIfMan *If_Man_t, pIfObj *If_Obj_t) *Hop_Obj_t {
-    var pCut *If_Cut_t;
-    var gFunc *Hop_Obj_t;
-    var pLeaf *If_Obj_t;
-    var i int32;
-    // get the best cut
-    pCut = If_ObjCutBest(pIfObj);
-    assert(pCut.nLeaves > 1, "pCut.nLeaves > 1");
-    // set the leaf variables
-    If_CutForEachLeaf( pIfMan, pCut, pLeaf, i )
-        If_CutSetData( If_ObjCutBest(pLeaf), Hop_IthVar(pHopMan, i) );
-    // recursively compute the function while collecting visited cuts
-    Vec_PtrClear( pIfMan.vTemp );
-    gFunc = Abc_NodeIfToHop2_rec( pHopMan, pIfMan, pIfObj, pIfMan.vTemp ); 
-    if gFunc == (void *)1 {
-        fmt.Printf("Abc_NodeIfToHop(): Computing local AIG has failed.\n");
-        return nil;
-    }
-    // clean the cuts
-    If_CutForEachLeaf( pIfMan, pCut, pLeaf, i )
-        If_CutSetData( If_ObjCutBest(pLeaf), nil );
-    Vec_PtrForEachEntry( If_Cut_t *, pIfMan.vTemp, pCut, i )
-        If_CutSetData( pCut, nil );
-    return gFunc;
-}
-
-
-/**Function*************************************************************
-
-  Synopsis    [Comparison for two nodes with the flow.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_ObjCompareFlow(ppNode0 **Abc_Obj_t, ppNode1 **Abc_Obj_t) int32 {
-    var Flow0 float32  = Abc_Int2Float(int32((ABC_PTRINT_T)(*ppNode0).pCopy));
-    var Flow1 float32  = Abc_Int2Float(int32((ABC_PTRINT_T)(*ppNode1).pCopy));
-    if Flow0 > Flow1 {
-        return -1; }
-    if Flow0 < Flow1 {
-        return 1; }
-    return 0;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Orders AIG nodes so that nodes from larger cones go first.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkFindGoodOrder_rec(pNode *Abc_Obj_t, vNodes *Vec_Ptr_t) {
-    if !Abc_ObjIsNode(pNode) {
-        return; }
-    assert(Abc_ObjIsNode( pNode ), "Abc_ObjIsNode( pNode )");
-    // if this node is already visited, skip
-    if Abc_NodeIsTravIdCurrent( pNode ) {
-        return; }
-    // mark the node as visited
-    Abc_NodeSetTravIdCurrent( pNode );
-    // visit the transitive fanin of the node
-    Abc_NtkFindGoodOrder_rec( Abc_ObjFanin0(pNode), vNodes );
-    Abc_NtkFindGoodOrder_rec( Abc_ObjFanin1(pNode), vNodes );
-    // add the node after the fanins have been added
-    Vec_PtrPush( vNodes, pNode );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Orders AIG nodes so that nodes from larger cones go first.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkFindGoodOrder(pNtk *Abc_Ntk_t) *Vec_Ptr_t {
-    var vNodes, vCos *Vec_Ptr_t;
-    var pNode, pFanin0, pFanin1 *Abc_Obj_t;
-    var Flow0, Flow1 float32;
-    var i int32;
-
-    // initialize the flow
-    Abc_AigConst1(pNtk).pCopy = nil;
-    Abc_NtkForEachCi( pNtk, pNode, i )
-        pNode.pCopy = nil;
-    // compute the flow
-    Abc_AigForEachAnd( pNtk, pNode, i )
-    {
-        pFanin0 = Abc_ObjFanin0(pNode);
-        pFanin1 = Abc_ObjFanin1(pNode);
-        Flow0 = Abc_Int2Float(int32((ABC_PTRINT_T))pFanin0.pCopy)/Abc_ObjFanoutNum(pFanin0);
-        Flow1 = Abc_Int2Float(int32((ABC_PTRINT_T))pFanin1.pCopy)/Abc_ObjFanoutNum(pFanin1);
-        pNode.pCopy = (Abc_Obj_t *)(ABC_PTRINT_T)Abc_Float2Int(Flow0 + Flow1+float32(1.0));
-    }
-    // find the flow of the COs
-    vCos = Vec_PtrAlloc( Abc_NtkCoNum(pNtk) );
-    Abc_NtkForEachCo( pNtk, pNode, i )
-    {
-        pNode.pCopy = Abc_ObjFanin0(pNode).pCopy;
-//        pNode->pCopy = (Abc_Obj_t *)Abc_Float2Int((float)Abc_ObjFanin0(pNode)->Level);
-        Vec_PtrPush( vCos, pNode );
-    }
-
-    // sort nodes in the increasing order of the flow
-    qsort( (Abc_Obj_t **)Vec_PtrArray(vCos), (size_t)Abc_NtkCoNum(pNtk), 
-            sizeof(Abc_Obj_t *), (int (*)(void *, void *))Abc_ObjCompareFlow );
-    // verify sorting
-    pFanin0 = (Abc_Obj_t *)Vec_PtrEntry(vCos, 0);
-    pFanin1 = (Abc_Obj_t *)Vec_PtrEntryLast(vCos);
-    assert(Abc_Int2Float(int32((ABC_PTRINT_T))pFanin0.pCopy) >= Abc_Int2Float(int32((ABC_PTRINT_T))pFanin1.pCopy), "Abc_Int2Float(int32((ABC_PTRINT_T))pFanin0.pCopy) >= Abc_Int2Float(int32((ABC_PTRINT_T))pFanin1.pCopy)");
-
-    // collect the nodes in the topological order from the new array
-    Abc_NtkIncrementTravId( pNtk );
-    vNodes = Vec_PtrAlloc( 100 );
-    Vec_PtrForEachEntry( Abc_Obj_t *, vCos, pNode, i )
-        Abc_NtkFindGoodOrder_rec( Abc_ObjFanin0(pNode), vNodes );
-    Vec_PtrFree( vCos );
-    return vNodes;
-}
-
-
-/**Function*************************************************************
-
-  Synopsis    [Sets PO drivers.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkMarkMux(pDriver *Abc_Obj_t, ppNode1 **Abc_Obj_t, ppNode2 **Abc_Obj_t) {
-    var pNodeC, pNodeT, pNodeE *Abc_Obj_t;
-    var pIfObj *If_Obj_t;
-
-    *ppNode1 = nil;
-    *ppNode2 = nil;
-    if pDriver == nil {
-        return; }
-    if !Abc_NodeIsMuxType(pDriver) {
-        return; }
-
-    pNodeC = Abc_NodeRecognizeMux( pDriver, &pNodeT, &pNodeE );
-
-    pIfObj = If_Regular( (If_Obj_t *)Abc_ObjFanin0(pDriver).pCopy );
-    if If_ObjIsAnd(pIfObj) {
-        pIfObj.fSkipCut = 1; }
-    pIfObj = If_Regular( (If_Obj_t *)Abc_ObjFanin1(pDriver).pCopy );
-    if If_ObjIsAnd(pIfObj) {
-        pIfObj.fSkipCut = 1; }
-
-    pIfObj = If_Regular( (If_Obj_t *)Abc_ObjRegular(pNodeC).pCopy );
-    if If_ObjIsAnd(pIfObj) {
-        pIfObj.fSkipCut = 1; }
 
 /*
-    pIfObj = If_Regular( (If_Obj_t *)Abc_ObjRegular(pNodeT)->pCopy );
-    if ( If_ObjIsAnd(pIfObj) )
-        pIfObj->fSkipCut = 1;
-    pIfObj = If_Regular( (If_Obj_t *)Abc_ObjRegular(pNodeE)->pCopy );
-    if ( If_ObjIsAnd(pIfObj) )
-        pIfObj->fSkipCut = 1;
+*Function*************************************************************
+
+	Synopsis    [Interface with the FPGA mapping package.]
+
+	Description []
+
+	SideEffects []
+
+	SeeAlso     []
+
+**********************************************************************
 */
-    *ppNode1 = Abc_ObjRegular(pNodeC);
-    *ppNode2 = Abc_ObjRegular(pNodeT);
+func Abc_NtkIf(pNtk *Abc_Ntk_t, pPars *If_Par_t) *Abc_Ntk_t {
+	assert(abc.Abc_NtkIsStrash(pNtk) != 0, "Abc_NtkIsStrash(pNtk)")
+	pPars.SetArrivalTimes(abc.Abc_NtkMappingArrivalTimes(pNtk))
+	pPars.SetRequiredTimes(abc.Abc_NtkMappingRequiredTimes(pNtk))
+	delaySensitive := pPars.DelayOptimization() || pPars.DsdBalance() || pPars.UserRecLibrary() || pPars.UsesUserSesLib()
+	if delaySensitive && abc.Abc_NtkHasMappingTiming(pNtk) {
+		if pNtk.AndGateDelay == 0 {
+			if library, ok := abcmain.Abc_FrameReadLibGen().(*mio.Mio_Library_t); ok && library != nil {
+				pNtk.AndGateDelay = float64(mio.Mio_LibraryReadDelayAigNode(library))
+			}
+			if pNtk.AndGateDelay == 0 {
+				pNtk.AndGateDelay = 1
+				fmt.Printf("The AIG-node delay is not set. Assuming unit-delay.\n")
+			}
+		}
+		arrivals, required := pPars.ArrivalTimes(), pPars.RequiredTimes()
+		for i := range arrivals {
+			arrivals[i] /= float32(pNtk.AndGateDelay)
+		}
+		for i := range required {
+			required[i] /= float32(pNtk.AndGateDelay)
+		}
+		pPars.SetArrivalTimes(arrivals)
+		pPars.SetRequiredTimes(required)
+	}
+	if pPars.LatchPaths() {
+		arrivals := pPars.ArrivalTimes()
+		for i := 0; i < int(abc.Abc_NtkPiNum(pNtk)) && i < len(arrivals); i++ {
+			arrivals[i] = -float32(ifpkg.IF_INFINITY)
+		}
+		pPars.SetArrivalTimes(arrivals)
+	}
+	pIfMan := Abc_NtkToIf(pNtk, pPars)
+	if pIfMan == nil {
+		return nil
+	}
+	if pPars.Power() {
+		If_ManComputeSwitching(pIfMan)
+	}
+	if pPars.UsesDsd() {
+		p, ok := abcmain.Abc_FrameReadManDsd().(*ifpkg.If_DsdMan_t)
+		assert(ok && p != nil, "DSD manager is available")
+		assert(pPars.LUTSize() <= ifpkg.If_DsdManVarNum(p), "pPars.nLutSize <= If_DsdManVarNum(p)")
+		structure := pPars.LUTStructure()
+		assert((structure == "" && ifpkg.If_DsdManLutSize(p) == 0) || (structure != "" && int32(structure[0]-'0') == ifpkg.If_DsdManLutSize(p)), "valid LUT structure")
+		pIfMan.SetDsdManager(p)
+		pPars.SetDsdManager(p)
+		if pPars.DsdBalance() {
+			ifpkg.If_DsdManAllocIsops(p, pPars.LUTSize())
+		}
+	}
+	if ifpkg.If_ManPerformMapping(pIfMan) == 0 {
+		ifpkg.If_ManStop(pIfMan)
+		return nil
+	}
+	pNtkNew := Abc_NtkFromIf(pIfMan, pNtk)
+	if pNtkNew == nil {
+		return nil
+	}
+	ifpkg.If_ManStop(pIfMan)
+	if pPars.DelayOptimization() || pPars.DsdBalance() || pPars.UserRecLibrary() {
+		pTemp := pNtkNew
+		pNtkNew = abc.Abc_NtkStrash(pTemp, 0, 0, 0)
+		abc.Abc_NtkDelete(pTemp)
+	} else if pPars.Bidec() && pPars.LUTSize() <= 8 {
+		Abc_NtkBidecResyn(pNtkNew, 0)
+	}
+	if pNtk.Exdc != nil {
+		pNtkNew.Exdc = abc.Abc_NtkDup(pNtk.Exdc)
+	}
+	if abc.Abc_NtkCheck(pNtkNew) == 0 {
+		fmt.Printf("Abc_NtkIf: The network check has failed.\n")
+		abc.Abc_NtkDelete(pNtkNew)
+		return nil
+	}
+	return pNtkNew
 }
 
+/*
+*Function*************************************************************
+
+	Synopsis    [Load the network into FPGA manager.]
+
+	Description []
+
+	SideEffects []
+
+	SeeAlso     []
+
+**********************************************************************
+*/
+func Abc_ObjIfCopy(pNode *Abc_Obj_t) *If_Obj_t {
+	p, _ := abc.Abc_ObjCopyData(pNode).(*ifpkg.If_Obj_t)
+	return p
+}
+func Abc_NtkToIf(pNtk *Abc_Ntk_t, pPars *If_Par_t) *If_Man_t {
+	assert(abc.Abc_NtkIsStrash(pNtk) != 0, "Abc_NtkIsStrash(pNtk)")
+
+	man := ifpkg.If_ManStart(pPars)
+	ifpkg.If_ManSetName(man, abc.Abc_NtkName(pNtk))
+	objects := abc.Abc_NtkObjNum(pNtk)
+	bytes := ifpkg.If_ManObjBytes(man)
+	if float64(objects)*float64(bytes)/(1<<30) > 1 {
+		fmt.Printf("Warning: The mapper will allocate %.1f GB for to represent the subject graph with %d AIG nodes.\n", float64(objects)*float64(bytes)/(1<<30), objects)
+	}
+
+	abc.Abc_NtkCleanCopy(pNtk)
+	constOne := abc.Abc_AigConst1(pNtk).Object
+	abc.Abc_ObjSetCopyData(constOne, ifpkg.If_ManConst1(man))
+	for i := int32(0); i < abc.Abc_NtkCiNum(pNtk); i++ {
+		ci := abc.Abc_NtkCi(pNtk, i)
+		mapped := ifpkg.If_ManCreateCi(man)
+		ifpkg.If_ObjSetLevel(mapped, abc.Abc_ObjLevel(ci))
+		abc.Abc_ObjSetCopyData(ci, mapped)
+	}
+
+	progress := extra.Extra_ProgressBarStart(os.Stdout, abc.Abc_NtkObjNumMax(pNtk))
+	nodes := abc.Abc_AigDfs(pNtk, 0, 0)
+	for i, node := range nodes {
+		extra.Extra_ProgressBarUpdate(progress, int32(i), "Initial")
+		fanin0 := abc.Abc_ObjCopyData(abc.Abc_ObjFanin0(node)).(*ifpkg.If_Obj_t)
+		fanin1 := abc.Abc_ObjCopyData(abc.Abc_ObjFanin1(node)).(*ifpkg.If_Obj_t)
+		mapped := ifpkg.If_ManCreateAnd(man,
+			ifpkg.If_NotCond(fanin0, abc.Abc_ObjFaninC0(node)),
+			ifpkg.If_NotCond(fanin1, abc.Abc_ObjFaninC1(node)))
+		abc.Abc_ObjSetCopyData(node, mapped)
+		if abc.Abc_AigNodeIsChoice(node) != 0 {
+			for prev, equiv := node, abc.Abc_ObjChoice(node); equiv != nil; prev, equiv = equiv, abc.Abc_ObjChoice(equiv) {
+				prevMapped := abc.Abc_ObjCopyData(prev).(*ifpkg.If_Obj_t)
+				equivMapped := abc.Abc_ObjCopyData(equiv).(*ifpkg.If_Obj_t)
+				assert(ifpkg.If_ObjId(prevMapped) > ifpkg.If_ObjId(equivMapped), "choice nodes are topologically ordered")
+				ifpkg.If_ObjSetChoice(prevMapped, equivMapped)
+			}
+			ifpkg.If_ManCreateChoice(man, mapped)
+		}
+	}
+	extra.Extra_ProgressBarStop(progress)
+
+	for i := int32(0); i < abc.Abc_NtkCoNum(pNtk); i++ {
+		co := abc.Abc_NtkCo(pNtk, i)
+		driver := abc.Abc_ObjCopyData(abc.Abc_ObjFanin0(co)).(*ifpkg.If_Obj_t)
+		mapped := ifpkg.If_ManCreateCo(man, ifpkg.If_NotCond(driver, abc.Abc_ObjFaninC0(co)))
+		abc.Abc_ObjSetCopyData(co, mapped)
+	}
+	return man
+}
+
+/*
+*Function*************************************************************
+
+	Synopsis    [Box mapping procedures.]
+
+	Description []
+
+	SideEffects []
+
+	SeeAlso     []
+
+**********************************************************************
+*/
+func Abc_MapBoxSetPrevNext(vDrivers *Vec_Ptr_t, vMapIn *Vec_Int_t, vMapOut *Vec_Int_t, Id int32) {
+	input := vec.Vec_PtrEntry(vDrivers, int(Id+2)).(*Abc_Obj_t)
+	output := vec.Vec_PtrEntry(vDrivers, int(Id+4)).(*Abc_Obj_t)
+	vec.Vec_IntWriteEntry(vMapIn, int(abc.Abc_ObjId(abc.Abc_ObjFanin0(input))), Id)
+	vec.Vec_IntWriteEntry(vMapOut, int(abc.Abc_ObjId(abc.Abc_ObjFanin0(output))), Id)
+}
+func Abc_MapBox2Next(vDrivers *Vec_Ptr_t, vMapIn *Vec_Int_t, vMapOut *Vec_Int_t, Id int32) int32 {
+	node := vec.Vec_PtrEntry(vDrivers, int(Id+4)).(*Abc_Obj_t)
+	return vec.Vec_IntEntry(vMapIn, int(abc.Abc_ObjId(abc.Abc_ObjFanin0(node))))
+}
+func Abc_MapBox2Prev(vDrivers *Vec_Ptr_t, vMapIn *Vec_Int_t, vMapOut *Vec_Int_t, Id int32) int32 {
+	node := vec.Vec_PtrEntry(vDrivers, int(Id+2)).(*Abc_Obj_t)
+	return vec.Vec_IntEntry(vMapOut, int(abc.Abc_ObjId(abc.Abc_ObjFanin0(node))))
+}
+
+/*
+*Function*************************************************************
+
+	Synopsis    [Creates the mapped network.]
+
+	Description [Assuming the copy field of the mapped nodes are NULL.]
+
+	SideEffects []
+
+	SeeAlso     []
+
+**********************************************************************
+*/
+func Abc_NtkFromIf(pIfMan *If_Man_t, pNtk *Abc_Ntk_t) *Abc_Ntk_t {
+	pars := pIfMan.Parameters()
+	kind := abc.ABC_FUNC_AIG
+	if pars.UsesBdds() || pars.UsesCnfs() || pars.UsesMv() {
+		kind = abc.ABC_FUNC_BDD
+	} else if pars.UsesSops() || pars.UsesUserSesLib() || pars.GateSize() > 0 {
+		kind = abc.ABC_FUNC_SOP
+	}
+	ntkNew := abc.Abc_NtkStartFrom(pNtk, abc.ABC_NTK_LOGIC, kind)
+	ifpkg.If_ManCleanNodeCopy(pIfMan)
+	ifpkg.If_ManCleanCutData(pIfMan)
+	ifpkg.If_ObjSetCopy(ifpkg.If_ManConst1(pIfMan), abc.Abc_NtkCreateNodeConst1(ntkNew))
+	for i := int32(0); i < abc.Abc_NtkCiNum(pNtk); i++ {
+		ifpkg.If_ObjSetCopy(ifpkg.If_ManCi(pIfMan, i), abc.Abc_ObjCopyEdge(abc.Abc_NtkCi(pNtk, i)).Object)
+	}
+
+	cover := vec.Vec_IntAlloc(1 << 16)
+	progress := extra.Extra_ProgressBarStart(os.Stdout, abc.Abc_NtkCoNum(pNtk))
+	for i := int32(0); i < abc.Abc_NtkCoNum(pNtk); i++ {
+		extra.Extra_ProgressBarUpdate(progress, i, "Final")
+		coIf := ifpkg.If_ManCo(pIfMan, i)
+		driver := Abc_NodeFromIf_rec(ntkNew, pIfMan, ifpkg.If_ObjFanin0(coIf), cover)
+		abc.Abc_ObjAddFanin(abc.Abc_ObjCopyEdge(abc.Abc_NtkCo(pNtk, i)).Object, abc.Abc_ObjNotCond(driver, ifpkg.If_ObjFaninC0(coIf)))
+	}
+	extra.Extra_ProgressBarStop(progress)
+	vec.Vec_IntFree(cover)
+
+	constNode, _ := ifpkg.If_ObjCopy(ifpkg.If_ManConst1(pIfMan)).(*Abc_Obj_t)
+	if constNode != nil && abc.Abc_ObjFanoutNum(constNode) == 0 {
+		abc.Abc_NtkDeleteObj(constNode)
+	}
+	if pars.UsesBdds() || pars.UsesCnfs() || pars.UsesMv() {
+		abc.Abc_NtkSweep(ntkNew, 0)
+	}
+	if pars.UsesBdds() {
+		Abc_NtkBddReorder(ntkNew, 0)
+	}
+	duplicateCOs := int32(1)
+	if pars.UsesBuffs() {
+		duplicateCOs = 0
+	}
+	duplicates := abc.Abc_NtkLogicMakeSimpleCos(ntkNew, duplicateCOs)
+	if duplicates != 0 && pars.Verbose() && abcmain.Abc_FrameIsFlagEnabled("silentmode") == 0 {
+		if pars.UsesBuffs() {
+			fmt.Printf("Added %d buffers/inverters to decouple the CO drivers.\n", duplicates)
+		} else {
+			fmt.Printf("Duplicated %d gates to decouple the CO drivers.\n", duplicates)
+		}
+	}
+	return ntkNew
+}
+
+/*
+*Function*************************************************************
+
+	Synopsis    [Rebuilds GIA from mini AIG.]
+
+	Description []
+
+	SideEffects []
+
+	SeeAlso     []
+
+**********************************************************************
+*/
+func Abc_NodeBuildFromMiniInt(pMan *Hop_Man_t, vAig *Vec_Int_t, nLeaves int32) *Hop_Obj_t {
+	size := vec.Vec_IntSize(vAig)
+	assert(size > 0, "mini AIG is nonempty")
+	last := vec.Vec_IntEntry(vAig, size-1)
+	assert(last < 2, "mini AIG last literal is a complement bit")
+	if size == 1 {
+		assert(nLeaves == 0, "constant mini AIG has no leaves")
+		return hoppkg.Hop_NotCond(hoppkg.Hop_ManConst0(pMan), last)
+	}
+	if size == 2 {
+		assert(vec.Vec_IntEntry(vAig, 0) == 0 && nLeaves == 1, "single-leaf mini AIG encoding")
+		return hoppkg.Hop_NotCond(hoppkg.Hop_IthVar(pMan, 0), last)
+	}
+	assert(size&1 == 1, "AND mini AIG has an odd number of entries")
+	objects := make([]*Hop_Obj_t, nLeaves+(size-1)/2)
+	for i := int32(0); i < nLeaves; i++ {
+		objects[i] = hoppkg.Hop_IthVar(pMan, i)
+	}
+	for i := int32(0); i < size-1; i += 2 {
+		lit0, lit1 := vec.Vec_IntEntry(vAig, int(i)), vec.Vec_IntEntry(vAig, int(i+1))
+		var0, var1 := lit0>>1, lit1>>1
+		assert(var0 >= 0 && var0 < int32(len(objects)) && var1 >= 0 && var1 < int32(len(objects)), "mini AIG fanin is already defined")
+		fan0 := hoppkg.Hop_NotCond(objects[var0], lit0&1)
+		fan1 := hoppkg.Hop_NotCond(objects[var1], lit1&1)
+		id := int32(nLeaves) + i/2
+		objects[id] = hoppkg.Hop_And(pMan, fan0, fan1)
+	}
+	return hoppkg.Hop_NotCond(objects[len(objects)-1], last)
+}
+func Abc_NodeBuildFromMini(pMan *Hop_Man_t, p *If_Man_t, pCut *If_Cut_t, fUseDsd int32) *Hop_Obj_t {
+	var delay int32
+	if fUseDsd != 0 {
+		delay = ifpkg.If_CutDsdBalanceEval(p, pCut, ifpkg.If_ManArray(p))
+	} else {
+		delay = ifpkg.If_CutSopBalanceEval(p, pCut, ifpkg.If_ManArray(p))
+	}
+	assert(delay >= 0, "mini AIG balancing succeeded")
+	return Abc_NodeBuildFromMiniInt(pMan, ifpkg.If_ManArray(p), ifpkg.If_CutLeaveNum(pCut))
+}
+
+/*
+*Function*************************************************************
+
+	Synopsis    [Derive one node after FPGA mapping.]
+
+	Description []
+
+	SideEffects []
+
+	SeeAlso     []
+
+**********************************************************************
+*/
+func Abc_NodeFromIf_rec(pNtkNew *Abc_Ntk_t, pIfMan *If_Man_t, pIfObj *If_Obj_t, vCover *Vec_Int_t) *Abc_Obj_t {
+	if cached, ok := ifpkg.If_ObjCopy(pIfObj).(*Abc_Obj_t); ok && cached != nil {
+		return cached
+	}
+	assert(ifpkg.If_ObjIsAnd(pIfObj) != 0, "uncached mapping objects are AND nodes")
+	cut := ifpkg.If_ObjCutBest(pIfObj)
+	leaves := ifpkg.If_CutLeaves(cut)
+	n := ifpkg.If_CutLeaveNum(cut)
+	if n < 0 || len(leaves) < int(n) {
+		panic("abcIf: invalid best-cut leaf list")
+	}
+	pars := pIfMan.Parameters()
+	if pars.UsesUserSesLib() {
+		fanins := make([]*Abc_Obj_t, n)
+		for i := int32(0); i < n; i++ {
+			fanins[i] = Abc_NodeFromIf_rec(pNtkNew, pIfMan, ifpkg.If_ManObj(pIfMan, leaves[i]), vCover)
+		}
+		assert(n > 0, "exact mapper has at least one leaf")
+		built := Abc_ExactBuildNode((*word)(unsafe.Pointer(ifpkg.If_CutTruth(pIfMan, cut))), n, ifpkg.If_CutArrTimeProfile(pIfMan, cut), (**Abc_Obj_t)(unsafe.Pointer(&fanins[0])), pNtkNew)
+		if built != nil {
+			ifpkg.If_ObjSetCopy(pIfObj, built)
+		}
+		return built
+	}
+	if pars.UserRecLibrary() {
+		if pNtkNew.Function != uint8(abc.ABC_FUNC_AIG) {
+			panic("abcIf: recursive library requires AIG network")
+		}
+	}
+	if n > 0 && !pars.DelayOptimization() && !pars.DsdBalance() && !pars.UsesTtPerm() && !pars.UsesUserRecLib() && !pars.UsesUserSesLib() && pars.LUTStructure() == "" && pars.GateSize() == 0 {
+		ifpkg.If_CutRotatePins(pIfMan, cut)
+		leaves = ifpkg.If_CutLeaves(cut)
+	}
+	// CNF and multi-valued BDD encodings reverse the leaf order in the source.
+	reverseLeaves := pars.UsesCnfs() || pars.UsesMv()
+	node := abc.Abc_NtkCreateNode(pNtkNew)
+	for i := int32(0); i < n; i++ {
+		index := i
+		if reverseLeaves {
+			index = n - i - 1
+		}
+		leaf := ifpkg.If_ManObj(pIfMan, leaves[index])
+		abc.Abc_ObjAddFanin(node, Abc_NodeFromIf_rec(pNtkNew, pIfMan, leaf, vCover))
+	}
+	abc.Abc_ObjSetLevel(node, abc.Abc_ObjLevelNew(node))
+	truthWords := kit.Kit_TruthWordNum(n)
+	truth := unsafe.Slice(ifpkg.If_CutTruth(pIfMan, cut), int(truthWords))
+	params := pars
+	var function any
+	if params.TruthMode() {
+		if params.DelayOptimization() || params.DsdBalance() {
+			mode := int32(0)
+			if params.DsdBalance() {
+				mode = 1
+			}
+			function = Abc_NodeBuildFromMini(pNtkNew.FunctionManager.(*hoppkg.Hop_Man_t), pIfMan, cut, mode)
+		} else if params.UsesBdds() || params.UsesCnfs() || params.UsesMv() {
+			manager := pNtkNew.FunctionManager.(*core.DdManager)
+			function = ifTruthToBDD(manager, truth, n, reverseLeaves)
+			core.Cudd_Ref(function.(*core.DdNode))
+		} else if params.UsesSops() || params.GateSize() > 0 {
+			var cubes []uint32
+			compl := kit.Kit_TruthIsop(truth, n, &cubes, 1)
+			assert(compl == 0 || compl == 1, "ISOP complement is binary")
+			cover := vec.Vec_IntAlloc(int32(len(cubes)))
+			for _, cube := range cubes {
+				vec.Vec_IntPush(cover, int32(cube))
+			}
+			if len(cubes) == 0 || len(cubes) == 1 && cubes[0] == 0 {
+				assert(compl == 0, "constant cover is not complemented")
+				if len(cubes) == 0 {
+					function = abc.Abc_NtkCreateNodeConst0(pNtkNew)
+				} else {
+					function = abc.Abc_NtkCreateNodeConst1(pNtkNew)
+				}
+			} else {
+				sop := abc.Abc_SopCreateFromIsop(pNtkNew.FunctionManager.(*mem.Mem_Flex_t), n, cover)
+				if compl != 0 {
+					sop = abc.Abc_SopComplement(sop)
+				}
+				function = sop
+			}
+			vec.Vec_IntFree(cover)
+		} else if params.UserRecLibrary() {
+			function = Abc_RecToHop3(pNtkNew.FunctionManager.(*hoppkg.Hop_Man_t), pIfMan, cut, pIfObj)
+		} else {
+			if params.UsesTtPerm() {
+				truth = ifTruthPermute(truth, n, cut)
+			}
+			hopMan := pNtkNew.FunctionManager.(*hoppkg.Hop_Man_t)
+			var memory []uint32
+			function = kit.Kit_TruthToHop(hopMan, truth, n, &memory)
+		}
+		if cutComplement := ifpkg.If_CutTruthIsCompl(cut) != 0; cutComplement && !params.DelayOptimization() && !params.DsdBalance() {
+			if hop, ok := function.(*hoppkg.Hop_Obj_t); ok {
+				function = hoppkg.Hop_Not(hop)
+			} else if bdd, ok := function.(*core.DdNode); ok {
+				function = core.Cudd_Not(bdd)
+			} else if sop, ok := function.(string); ok {
+				function = abc.Abc_SopComplement(sop)
+			} else if constant, ok := function.(*Abc_Obj_t); ok {
+				if abc.Abc_NodeIsConst0(constant) != 0 {
+					function = abc.Abc_NtkCreateNodeConst1(pNtkNew)
+				} else if abc.Abc_NodeIsConst1(constant) != 0 {
+					function = abc.Abc_NtkCreateNodeConst0(pNtkNew)
+				}
+			}
+		}
+	} else {
+		function = Abc_NodeIfToHop(pNtkNew.FunctionManager.(*hoppkg.Hop_Man_t), pIfMan, pIfObj)
+	}
+	if obj, ok := function.(*Abc_Obj_t); ok && obj != node {
+		ifpkg.If_ObjSetCopy(pIfObj, obj)
+		return obj
+	}
+	abc.Abc_ObjSetData(node, function)
+	ifpkg.If_ObjSetCopy(pIfObj, node)
+	return node
+}
+
+func ifTruthToBDD(dd *core.DdManager, truth []uint32, n int32, reverse bool) *core.DdNode {
+	var build func(int32, uint32) *core.DdNode
+	build = func(vars int32, base uint32) *core.DdNode {
+		if vars == 0 {
+			if kit.Kit_TruthHasBit(truth, int32(base)) != 0 {
+				return dd.One
+			}
+			return dd.LogicZero
+		}
+		low := build(vars-1, base)
+		high := build(vars-1, base+(1<<uint(vars-1)))
+		index := vars - 1
+		if reverse {
+			index = n - vars
+		}
+		return core.Cudd_bddIte(dd, core.Cudd_bddIthVar(dd, int(index)), high, low)
+	}
+	return build(n, 0)
+}
+
+func ifTruthPermute(truth []uint32, n int32, cut *If_Cut_t) []uint32 {
+	words := kit.Kit_TruthWordNum(n)
+	result := make([]uint32, words)
+	for assignment := uint32(0); assignment < uint32(1)<<uint(n); assignment++ {
+		source := assignment
+		for variable := int32(0); variable < n; variable++ {
+			if ifpkg.If_CutLeafBit(cut, variable) != 0 {
+				source ^= 1 << uint(variable)
+			}
+		}
+		if kit.Kit_TruthHasBit(truth, int32(source)) != 0 {
+			kit.Kit_TruthSetBit(result, int32(assignment))
+		}
+	}
+	return result
+}
+
+/*
+*Function*************************************************************
+
+	Synopsis    [Recursively derives the truth table for the cut.]
+
+	Description []
+
+	SideEffects []
+
+	SeeAlso     []
+
+**********************************************************************
+*/
+// Abc_NodeFromIfRec exposes the C helper used by opt/lpk to rebuild one
+// mapped node recursively. Keep this as a forwarding API so both callers use
+// the same implementation and copy-cache behavior.
+func Abc_NodeFromIfRec(pNtkNew *Abc_Ntk_t, pIfMan *If_Man_t, pIfObj *If_Obj_t, vCover *Vec_Int_t) *Abc_Obj_t {
+	return Abc_NodeFromIf_rec(pNtkNew, pIfMan, pIfObj, vCover)
+}
+
+/*
+*Function*************************************************************
+
+	Synopsis    [Recursively derives the truth table for the cut.]
+
+	Description []
+
+	SideEffects []
+
+	SeeAlso     []
+
+**********************************************************************
+*/
+func Abc_NodeIfToHop_rec(pHopMan *Hop_Man_t, pIfMan *If_Man_t, pIfObj *If_Obj_t, vVisited *Vec_Ptr_t) *Hop_Obj_t {
+	cut := ifpkg.If_ObjCutBest(pIfObj)
+	if cached, ok := ifpkg.If_CutData(cut).(*hoppkg.Hop_Obj_t); ok && cached != nil {
+		return cached
+	}
+	if ifpkg.If_ObjIsCi(pIfObj) != 0 {
+		return nil
+	}
+	left := Abc_NodeIfToHop_rec(pHopMan, pIfMan, ifpkg.If_ObjFanin0(pIfObj), vVisited)
+	right := Abc_NodeIfToHop_rec(pHopMan, pIfMan, ifpkg.If_ObjFanin1(pIfObj), vVisited)
+	if left == nil || right == nil {
+		return nil
+	}
+	result := hoppkg.Hop_And(pHopMan, hoppkg.Hop_NotCond(left, ifpkg.If_ObjFaninC0(pIfObj)), hoppkg.Hop_NotCond(right, ifpkg.If_ObjFaninC1(pIfObj)))
+	ifpkg.If_CutSetData(cut, result)
+	vec.Vec_PtrPush(vVisited, cut)
+	return result
+}
+
+/*
+*Function*************************************************************
+
+	Synopsis    [Recursively derives the truth table for the cut.]
+
+	Description []
+
+	SideEffects []
+
+	SeeAlso     []
+
+**********************************************************************
+*/
+func Abc_NodeIfToHop2_rec(pHopMan *Hop_Man_t, pIfMan *If_Man_t, pIfObj *If_Obj_t, vVisited *Vec_Ptr_t) *Hop_Obj_t {
+	cut := ifpkg.If_ObjCutBest(pIfObj)
+	if value := ifpkg.If_CutData(cut); value != nil {
+		if result, ok := value.(*hoppkg.Hop_Obj_t); ok {
+			return result
+		}
+		return nil
+	}
+	vec.Vec_PtrPush(vVisited, cut)
+	ifpkg.If_CutSetData(cut, int32(1))
+	if ifpkg.If_ObjIsCi(pIfObj) != 0 {
+		return nil
+	}
+	for alternative := pIfObj; alternative != nil; alternative = alternative.Equivalent() {
+		left := Abc_NodeIfToHop2_rec(pHopMan, pIfMan, ifpkg.If_ObjFanin0(alternative), vVisited)
+		if left == nil {
+			continue
+		}
+		right := Abc_NodeIfToHop2_rec(pHopMan, pIfMan, ifpkg.If_ObjFanin1(alternative), vVisited)
+		if right == nil {
+			continue
+		}
+		result := hoppkg.Hop_And(pHopMan,
+			hoppkg.Hop_NotCond(left, ifpkg.If_ObjFaninC0(alternative)),
+			hoppkg.Hop_NotCond(right, ifpkg.If_ObjFaninC1(alternative)))
+		if alternative.Phase() != pIfObj.Phase() {
+			result = hoppkg.Hop_Not(result)
+		}
+		ifpkg.If_CutSetData(cut, result)
+		return result
+	}
+	return nil
+}
+
+/*
+*Function*************************************************************
+
+	Synopsis    [Derives the truth table for one cut.]
+
+	Description []
+
+	SideEffects []
+
+	SeeAlso     []
+
+**********************************************************************
+*/
+func Abc_NodeIfToHop(pHopMan *Hop_Man_t, pIfMan *If_Man_t, pIfObj *If_Obj_t) *Hop_Obj_t {
+	cut := ifpkg.If_ObjCutBest(pIfObj)
+	leaves := ifpkg.If_CutLeaves(cut)
+	n := ifpkg.If_CutLeaveNum(cut)
+	if n <= 1 || len(leaves) < int(n) {
+		return nil
+	}
+	for i := int32(0); i < n; i++ {
+		leaf := ifpkg.If_ManObj(pIfMan, leaves[i])
+		ifpkg.If_CutSetData(ifpkg.If_ObjCutBest(leaf), hoppkg.Hop_IthVar(pHopMan, i))
+	}
+	visited := vec.Vec_PtrAlloc(16)
+	result := Abc_NodeIfToHop2_rec(pHopMan, pIfMan, pIfObj, visited)
+	for i := 0; i < vec.Vec_PtrSize(visited); i++ {
+		if c, ok := vec.Vec_PtrEntry(visited, i).(*ifpkg.If_Cut_t); ok {
+			ifpkg.If_CutSetData(c, nil)
+		}
+	}
+	for i := int32(0); i < n; i++ {
+		leaf := ifpkg.If_ManObj(pIfMan, leaves[i])
+		ifpkg.If_CutSetData(ifpkg.If_ObjCutBest(leaf), nil)
+	}
+	vec.Vec_PtrFree(visited)
+	if result == nil {
+		fmt.Printf("Abc_NodeIfToHop(): Computing local AIG has failed.\n")
+	}
+	return result
+}
+
+/*
+*Function*************************************************************
+
+	Synopsis    [Comparison for two nodes with the flow.]
+
+	Description []
+
+	SideEffects []
+
+	SeeAlso     []
+
+**********************************************************************
+*/
+func Abc_ObjCompareFlow(a, b *Abc_Obj_t, flows map[*Abc_Obj_t]float32) bool {
+	return flows[a] > flows[b]
+}
+
+/*
+*Function*************************************************************
+
+	Synopsis    [Orders AIG nodes so that nodes from larger cones go first.]
+
+	Description []
+
+	SideEffects []
+
+	SeeAlso     []
+
+**********************************************************************
+*/
+func Abc_NtkFindGoodOrder_rec(pNode *Abc_Obj_t, vNodes *Vec_Ptr_t) {
+	if pNode == nil || pNode.Kind != abc.ObjectNode || abc.Abc_AigNodeIsAnd(pNode) == 0 || abc.Abc_NodeIsTravIdCurrent(pNode) != 0 {
+		return
+	}
+	abc.Abc_NodeSetTravIdCurrent(pNode)
+	Abc_NtkFindGoodOrder_rec(abc.Abc_ObjFanin0(pNode), vNodes)
+	Abc_NtkFindGoodOrder_rec(abc.Abc_ObjFanin1(pNode), vNodes)
+	vec.Vec_PtrPush(vNodes, pNode)
+}
+
+/*
+*Function*************************************************************
+
+	Synopsis    [Orders AIG nodes so that nodes from larger cones go first.]
+
+	Description []
+
+	SideEffects []
+
+	SeeAlso     []
+
+**********************************************************************
+*/
+func Abc_NtkFindGoodOrder(pNtk *Abc_Ntk_t) *Vec_Ptr_t {
+	flows := make(map[*Abc_Obj_t]float32, abc.Abc_NtkObjNum(pNtk))
+	for _, node := range abc.Abc_AigDfs(pNtk, 1, 0) {
+		if abc.Abc_AigNodeIsAnd(node) == 0 {
+			continue
+		}
+		flow := float32(1)
+		for i := int32(0); i < abc.Abc_ObjFaninNum(node); i++ {
+			fanin := abc.Abc_ObjFanin(node, i)
+			fanoutCount := abc.Abc_ObjFanoutNum(fanin)
+			if fanoutCount > 0 {
+				flow += flows[fanin] / float32(fanoutCount)
+			}
+		}
+		flows[node] = flow
+	}
+	cos := make([]*Abc_Obj_t, abc.Abc_NtkCoNum(pNtk))
+	for i := range cos {
+		co := abc.Abc_NtkCo(pNtk, int32(i))
+		cos[i] = co
+		flows[co] = flows[abc.Abc_ObjFanin0(co)]
+	}
+	sort.SliceStable(cos, func(i, j int) bool { return Abc_ObjCompareFlow(cos[i], cos[j], flows) })
+	abc.Abc_NtkIncrementTravId(pNtk)
+	result := vec.Vec_PtrAlloc(100)
+	for _, co := range cos {
+		Abc_NtkFindGoodOrder_rec(abc.Abc_ObjFanin0(co), result)
+	}
+	return result
+}
+
+/*
+*Function*************************************************************
+
+	Synopsis    [Sets PO drivers.]
+
+	Description []
+
+	SideEffects []
+
+	SeeAlso     []
+
+**********************************************************************
+*/
+func Abc_NtkMarkMux(pDriver *Abc_Obj_t, ppNode1 **Abc_Obj_t, ppNode2 **Abc_Obj_t) {
+	*ppNode1, *ppNode2 = nil, nil
+	if pDriver == nil || abc.Abc_NodeIsMuxType(pDriver) == 0 {
+		return
+	}
+	var thenEdge, elseEdge abc.Edge
+	control := abc.Abc_NodeRecognizeMux(pDriver, &thenEdge, &elseEdge)
+	markSkipped := func(node *Abc_Obj_t) {
+		mapped, ok := abc.Abc_ObjCopyData(node).(*ifpkg.If_Obj_t)
+		if !ok || mapped == nil {
+			return
+		}
+		mapped = ifpkg.If_Regular(mapped)
+		if ifpkg.If_ObjIsAnd(mapped) != 0 {
+			ifpkg.If_ObjSetSkipCut(mapped, true)
+		}
+	}
+	markSkipped(abc.Abc_ObjFanin0(pDriver))
+	markSkipped(abc.Abc_ObjFanin1(pDriver))
+	markSkipped(control)
+	*ppNode1 = abc.Abc_ObjRegular(control)
+	*ppNode2 = abc.Abc_ObjRegular(thenEdge)
+}
 
 ////////////////////////////////////////////////////////////////////////
 ///                       END OF FILE                                ///
 ////////////////////////////////////////////////////////////////////////
 
-
 //ABC_NAMESPACE_IMPL_END
-

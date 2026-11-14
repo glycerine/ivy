@@ -3,289 +3,245 @@ package abci
 import (
 	"fmt"
 	"os"
+	"unsafe"
+
+	baseabc "github.com/glycerine/abcgo/base/abc"
+	"github.com/glycerine/abcgo/bdd/cudd/core"
+	"github.com/glycerine/abcgo/map/fpga"
+	"github.com/glycerine/abcgo/misc/extra"
+	"github.com/glycerine/abcgo/opt/sim"
 )
 
-/**CFile****************************************************************
+// fpgaBDDBuilder adapts CUDD's BDD operations to the FPGA mapper's Boolean
+// builder interface.
+type fpgaBDDBuilder struct{ manager *core.DdManager }
 
-  FileName    [abcFpga.c]
+var abcFpgaSimulationRNG = newGlibcRand(1)
 
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Network and node package.]
-
-  Synopsis    [Interface with the FPGA mapping package.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: abcFpga.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "base/abc/abc.h"
-//#include "map/fpga/fpgaInt.h"
-
-#ifdef ABC_USE_CUDD
-#include "bdd/extrab/extraBdd.h"
-#endif
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-// static Fpga_Man_t * Abc_NtkToFpga( Abc_Ntk_t * pNtk, int fRecovery, float * pSwitching, int fLatchPaths, int fVerbose );
-
-// static Abc_Ntk_t *  Abc_NtkFromFpga( Fpga_Man_t * pMan, Abc_Ntk_t * pNtk );
-
-// static Abc_Obj_t *  Abc_NodeFromFpga_rec( Abc_Ntk_t * pNtkNew, Fpga_Node_t * pNodeFpga );
-
- 
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Interface with the FPGA mapping package.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkFpga(pNtk *Abc_Ntk_t, DelayTarget float32, fRecovery int32, fSwitching int32, fLatchPaths int32, fVerbose int32) *Abc_Ntk_t {
-    var fShowSwitching int32  = 1;
-    var pNtkNew *Abc_Ntk_t;
-    var pMan *Fpga_Man_t;
-    var vSwitching *Vec_Int_t  = nil;
-    var pSwitching *float32  = nil;
-    var Num int32;
-
-    assert(Abc_NtkIsStrash(pNtk), "Abc_NtkIsStrash(pNtk)");
-
-    // print a warning about choice nodes
-    if Num = Abc_NtkGetChoiceNum( pNtk ) {
-        Abc_Print( 0, "Performing LUT mapping with %d choices.\n", Num ); }
-
-    // compute switching activity
-    fShowSwitching |= fSwitching;
-    if fShowSwitching != 0 {
-        extern Vec_Int_t * Sim_NtkComputeSwitching( Abc_Ntk_t * pNtk, int nPatterns );
-        vSwitching = Sim_NtkComputeSwitching( pNtk, 4096 );
-        pSwitching = (float *)vSwitching.pArray;
-    }
-
-    // perform FPGA mapping
-    pMan = Abc_NtkToFpga( pNtk, fRecovery, pSwitching, fLatchPaths, fVerbose );    
-    if pSwitching != nil { assert((vSwitching != nil), "vSwitching"); Vec_IntFree( vSwitching ); }
-    if pMan == nil {
-        return nil; }
-    Fpga_ManSetSwitching( pMan, fSwitching );
-    Fpga_ManSetLatchPaths( pMan, fLatchPaths );
-    Fpga_ManSetLatchNum( pMan, Abc_NtkLatchNum(pNtk) );
-    Fpga_ManSetDelayTarget( pMan, DelayTarget );
-    if !Fpga_Mapping( pMan ) {
-        Fpga_ManFree( pMan );
-        return nil;
-    }
-
-    // transform the result of mapping into a BDD network
-    pNtkNew = Abc_NtkFromFpga( pMan, pNtk );
-    if pNtkNew == nil {
-        return nil; }
-    Fpga_ManFree( pMan );
-
-    // make the network minimum base
-    Abc_NtkMinimumBase( pNtkNew );
-
-    if pNtk.pExdc {
-        pNtkNew.pExdc = Abc_NtkDup( pNtk.pExdc ); }
-
-    // make sure that everything is okay
-    if !Abc_NtkCheck( pNtkNew ) {
-        fmt.Printf("Abc_NtkFpga: The network check has failed.\n");
-        Abc_NtkDelete( pNtkNew );
-        return nil;
-    }
-    return pNtkNew;
+func (b fpgaBDDBuilder) ConstantOne() any { return core.Cudd_ReadOne(b.manager) }
+func (b fpgaBDDBuilder) Complement(value any) any {
+	return core.Cudd_Not(value.(*core.DdNode))
+}
+func (b fpgaBDDBuilder) Variable(index int) any {
+	return core.Cudd_bddIthVar(b.manager, index)
+}
+func (b fpgaBDDBuilder) And(left, right any) any {
+	return core.Cudd_bddAnd(b.manager, left.(*core.DdNode), right.(*core.DdNode))
 }
 
-/**Function*************************************************************
+// Abc_NtkFpga runs the FPGA cut mapper on a structurally hashed network and
+// returns the mapped BDD network.
+func Abc_NtkFpga(ntk *Abc_Ntk_t, delayTarget float32, recovery, switching, latchPaths, verbose int32) *Abc_Ntk_t {
+	assert(baseabc.Abc_NtkIsStrash(ntk) != 0, "Abc_NtkIsStrash(ntk)")
+	if choices := baseabc.Abc_NtkGetChoiceNum(ntk); choices != 0 {
+		fmt.Printf("Performing LUT mapping with %d choices.\n", choices)
+	}
 
-  Synopsis    [Load the network into FPGA manager.]
+	// C initializes fShowSwitching to one, so activity is computed even when
+	// the switching-aware mapping option is off.
+	showSwitching := int32(1) | switching
+	var activity []float32
+	if showSwitching != 0 {
+		activity = abcFpgaSwitching(ntk)
+	}
+	manager := Abc_NtkToFpga(ntk, recovery, activity, latchPaths, verbose)
+	if manager == nil {
+		return nil
+	}
+	defer fpga.Fpga_ManFree(manager)
+	fpga.Fpga_ManSetSwitching(manager, switching)
+	fpga.Fpga_ManSetLatchPaths(manager, latchPaths)
+	fpga.Fpga_ManSetLatchNum(manager, baseabc.Abc_NtkLatchNum(ntk))
+	fpga.Fpga_ManSetDelayTarget(manager, delayTarget)
+	if fpga.Fpga_Mapping(manager) == 0 {
+		return nil
+	}
 
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkToFpga(pNtk *Abc_Ntk_t, fRecovery int32, pSwitching *float32, fLatchPaths int32, fVerbose int32) *Fpga_Man_t {
-    var pMan *Fpga_Man_t;
-    var pProgress *ProgressBar;
-    var pNodeFpga *Fpga_Node_t;
-    var vNodes *Vec_Ptr_t;
-    var pNode, pFanin, pPrev *Abc_Obj_t;
-    var pfArrivals *float32;
-    var i int32;
-
-    assert(Abc_NtkIsStrash(pNtk), "Abc_NtkIsStrash(pNtk)");
-
-    // start the mapping manager and set its parameters
-    pMan = Fpga_ManCreate( Abc_NtkCiNum(pNtk), Abc_NtkCoNum(pNtk), fVerbose );
-    if pMan == nil {
-        return nil; }
-    Fpga_ManSetAreaRecovery( pMan, fRecovery );
-    Fpga_ManSetOutputNames( pMan, Abc_NtkCollectCioNames(pNtk, 1) );
-    pfArrivals = Abc_NtkGetCiArrivalFloats(pNtk);
-    if fLatchPaths != 0 {
-        for  i = 0; i < Abc_NtkPiNum(pNtk); i++  {
-            pfArrivals[i] = -FPGA_FLOAT_LARGE;
-        }
-    }
-    Fpga_ManSetInputArrivals( pMan, pfArrivals );
-
-    // create PIs and remember them in the old nodes
-    Abc_NtkCleanCopy( pNtk );
-    Abc_AigConst1(pNtk).pCopy = (Abc_Obj_t *)Fpga_ManReadConst1(pMan);
-    Abc_NtkForEachCi( pNtk, pNode, i )
-    {
-        pNodeFpga = Fpga_ManReadInputs(pMan)[i];
-        pNode.pCopy = (Abc_Obj_t *)pNodeFpga;
-        if pSwitching != nil {
-            Fpga_NodeSetSwitching( pNodeFpga, pSwitching[pNode.Id] ); }
-    }
-
-    // load the AIG into the mapper
-    vNodes = Abc_AigDfs( pNtk, 0, 0 );
-    pProgress = Extra_ProgressBarStart( os.Stdout, vNodes.nSize );
-    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pNode, i )
-    {
-        Extra_ProgressBarUpdate( pProgress, i, nil );
-        // add the node to the mapper
-        pNodeFpga = Fpga_NodeAnd( pMan, 
-            Fpga_NotCond( Abc_ObjFanin0(pNode).pCopy, Abc_ObjFaninC0(pNode) ),
-            Fpga_NotCond( Abc_ObjFanin1(pNode).pCopy, Abc_ObjFaninC1(pNode) ) );
-        assert(pNode.pCopy == nil, "pNode.pCopy == nil");
-        // remember the node
-        pNode.pCopy = (Abc_Obj_t *)pNodeFpga;
-        if pSwitching != nil {
-            Fpga_NodeSetSwitching( pNodeFpga, pSwitching[pNode.Id] ); }
-        // set up the choice node
-        if Abc_AigNodeIsChoice( pNode ) {
-            for  pPrev = pNode, pFanin = (Abc_Obj_t *)pNode.pData; pFanin; pPrev = pFanin, pFanin = (Abc_Obj_t *)pFanin.pData  {
-                Fpga_NodeSetNextE( (Fpga_Node_t *)pPrev.pCopy, (Fpga_Node_t *)pFanin.pCopy );
-                Fpga_NodeSetRepr( (Fpga_Node_t *)pFanin.pCopy, (Fpga_Node_t *)pNode.pCopy );
-            } }
-    }
-    Extra_ProgressBarStop( pProgress );
-    Vec_PtrFree( vNodes );
-
-    // set the primary outputs without copying the phase
-    Abc_NtkForEachCo( pNtk, pNode, i )
-        Fpga_ManReadOutputs(pMan)[i] = (Fpga_Node_t *)Abc_ObjFanin0(pNode).pCopy;
-    return pMan;
+	mapped := Abc_NtkFromFpga(manager, ntk)
+	if mapped == nil {
+		return nil
+	}
+	baseabc.Abc_NtkMinimumBase(mapped)
+	if ntk.Exdc != nil {
+		mapped.Exdc = baseabc.Abc_NtkDup(ntk.Exdc)
+	}
+	if baseabc.Abc_NtkCheck(mapped) == 0 {
+		fmt.Println("Abc_NtkFpga: The network check has failed.")
+		baseabc.Abc_NtkDelete(mapped)
+		return nil
+	}
+	return mapped
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Creates the mapped network.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkFromFpga(pMan *Fpga_Man_t, pNtk *Abc_Ntk_t) *Abc_Ntk_t {
-    var pProgress *ProgressBar;
-    var pNtkNew *Abc_Ntk_t;
-    var pNode, pNodeNew *Abc_Obj_t;
-    var i, nDupGates int32;
-    // create the new network
-    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_LOGIC, ABC_FUNC_BDD );
-    // make the mapper point to the new network
-    Fpga_CutsCleanSign( pMan );
-    Fpga_ManCleanData0( pMan );
-    Abc_NtkForEachCi( pNtk, pNode, i )
-        Fpga_NodeSetData0( Fpga_ManReadInputs(pMan)[i], (char *)pNode.pCopy );
-    // set the constant node
-//    if ( Fpga_NodeReadRefs(Fpga_ManReadConst1(pMan)) > 0 )
-        Fpga_NodeSetData0( Fpga_ManReadConst1(pMan), (char *)Abc_NtkCreateNodeConst1(pNtkNew) );
-    // process the nodes in topological order
-    pProgress = Extra_ProgressBarStart( os.Stdout, Abc_NtkCoNum(pNtk) );
-    Abc_NtkForEachCo( pNtk, pNode, i )
-    {
-        Extra_ProgressBarUpdate( pProgress, i, nil );
-        pNodeNew = Abc_NodeFromFpga_rec( pNtkNew, Fpga_ManReadOutputs(pMan)[i] );
-        assert(!Abc_ObjIsComplement(pNodeNew), "!Abc_ObjIsComplement(pNodeNew)");
-        Abc_ObjFanin0(pNode).pCopy = pNodeNew;
-    }
-    Extra_ProgressBarStop( pProgress );
-    // finalize the new network
-    Abc_NtkFinalize( pNtk, pNtkNew );
-    // remove the constant node if not used
-    pNodeNew = (Abc_Obj_t *)Fpga_NodeReadData0(Fpga_ManReadConst1(pMan));
-    if Abc_ObjFanoutNum(pNodeNew) == 0 {
-        Abc_NtkDeleteObj( pNodeNew ); }
-    // decouple the PO driver nodes to reduce the number of levels
-    nDupGates = Abc_NtkLogicMakeSimpleCos( pNtkNew, 1 );
-    if (nDupGates != 0) && Fpga_ManReadVerbose(pMan) {
-        fmt.Printf("Duplicated %d gates to decouple the CO drivers.\n", nDupGates); }
-    return pNtkNew;
+func abcFpgaSwitching(ntk *Abc_Ntk_t) []float32 {
+	const patterns, words = 4096, 4096 / 32
+	values := make([]float32, int(baseabc.Abc_NtkObjNumMax(ntk)))
+	info := make([][]uint32, len(values))
+	for i := range info {
+		info[i] = make([]uint32, words)
+	}
+	for i := int32(0); i < baseabc.Abc_NtkCiNum(ntk); i++ {
+		node := baseabc.Abc_NtkCi(ntk, i)
+		abcFpgaSetRandom(info[node.ID], abcFpgaSimulationRNG)
+	}
+	for _, node := range baseabc.Abc_AigDfs(ntk, 1, 0) {
+		if node.Kind != baseabc.ObjectNode || len(node.Fanins()) != 2 {
+			continue
+		}
+		fanins := node.Fanins()
+		left, right := info[fanins[0].Object.ID], info[fanins[1].Object.ID]
+		for w := 0; w < words; w++ {
+			a, b := left[w], right[w]
+			if fanins[0].Complement {
+				a = ^a
+			}
+			if fanins[1].Complement {
+				b = ^b
+			}
+			info[node.ID][w] = a & b
+		}
+	}
+	for _, node := range ntk.Objects() {
+		if node.ID >= len(values) || (node.Kind != baseabc.ObjectPI && node.Kind != baseabc.ObjectBO && node.Kind != baseabc.ObjectNode) {
+			continue
+		}
+		ones := sim.Sim_UtilCountOnes(info[node.ID], words)
+		total := float32(patterns)
+		values[node.ID] = 2 * float32(ones) / total * (total - float32(ones)) / total
+	}
+	return values
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Derive one node after FPGA mapping.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NodeFromFpga_rec(pNtkNew *Abc_Ntk_t, pNodeFpga *Fpga_Node_t) *Abc_Obj_t {
-    var pCutBest *Fpga_Cut_t;
-    var ppLeaves **Fpga_Node_t; 
-    var pNodeNew *Abc_Obj_t;
-    var i, nLeaves int32;
-    assert(!Fpga_IsComplement(pNodeFpga), "!Fpga_IsComplement(pNodeFpga)");
-    // return if the result if known
-    pNodeNew = (Abc_Obj_t *)Fpga_NodeReadData0( pNodeFpga );
-    if pNodeNew != nil {
-        return pNodeNew; }
-    assert(Fpga_NodeIsAnd(pNodeFpga), "Fpga_NodeIsAnd(pNodeFpga)");
-    // get the parameters of the best cut
-    pCutBest = Fpga_NodeReadCutBest( pNodeFpga );
-    ppLeaves = Fpga_CutReadLeaves( pCutBest );
-    nLeaves  = Fpga_CutReadLeavesNum( pCutBest ); 
-    // create a new node 
-    pNodeNew = Abc_NtkCreateNode( pNtkNew );
-    for  i = 0; i < nLeaves; i++  {
-        Abc_ObjAddFanin( pNodeNew, Abc_NodeFromFpga_rec(pNtkNew, ppLeaves[i]) );
-    }
-    // derive the function of this node
-    pNodeNew.pData = Fpga_TruthsCutBdd( pNtkNew.pManFunc, pCutBest );   Cudd_Ref( (DdNode *)pNodeNew.pData );
-    Fpga_NodeSetData0( pNodeFpga, (char *)pNodeNew );
-    return pNodeNew;
+// abcFpgaSetRandom matches SIM_RANDOM_UNSIGNED: three glibc rand() values
+// shifted and XORed for each simulation word.
+func abcFpgaSetRandom(words []uint32, rng *glibcRand) {
+	for i := range words {
+		words[i] = (rng.next() << 24) ^ (rng.next() << 12) ^ rng.next()
+	}
 }
 
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
+// Abc_NtkToFpga imports the source AIG and its choice chains into an FPGA
+// mapping manager. Activity values, when supplied, are indexed by ABC object ID.
+func Abc_NtkToFpga(ntk *Abc_Ntk_t, recovery int32, switching []float32, latchPaths, verbose int32) *fpga.Fpga_Man_t {
+	assert(baseabc.Abc_NtkIsStrash(ntk) != 0, "Abc_NtkIsStrash(ntk)")
+	manager := fpga.Fpga_ManCreate(baseabc.Abc_NtkCiNum(ntk), baseabc.Abc_NtkCoNum(ntk), verbose)
+	if manager == nil {
+		return nil
+	}
+	fpga.Fpga_ManSetAreaRecovery(manager, recovery)
+	fpga.Fpga_ManSetOutputNames(manager, baseabc.Abc_NtkCollectCioNames(ntk, 1))
+	arrivalPtr := Abc_NtkGetCiArrivalFloats(ntk)
+	ciCount := int(baseabc.Abc_NtkCiNum(ntk))
+	var arrivals []float32
+	if ciCount != 0 && arrivalPtr != nil {
+		arrivals = unsafe.Slice(arrivalPtr, ciCount)
+	}
+	if latchPaths != 0 {
+		for i := 0; i < int(baseabc.Abc_NtkPiNum(ntk)) && i < len(arrivals); i++ {
+			arrivals[i] = -fpga.FPGA_FLOAT_LARGE
+		}
+	}
+	fpga.Fpga_ManSetInputArrivals(manager, arrivals)
 
+	baseabc.Abc_NtkCleanCopy(ntk)
+	baseabc.Abc_ObjSetCopyData(baseabc.Abc_AigConst1(ntk).Object, fpga.Fpga_ManReadConst1(manager))
+	for i := int32(0); i < baseabc.Abc_NtkCiNum(ntk); i++ {
+		node := baseabc.Abc_NtkCi(ntk, i)
+		fpgaNode := fpga.Fpga_ManReadInputs(manager)[i]
+		baseabc.Abc_ObjSetCopyData(node, fpgaNode)
+		if switching != nil && node.ID < len(switching) {
+			fpga.Fpga_NodeSetSwitching(fpgaNode, switching[node.ID])
+		}
+	}
 
-//ABC_NAMESPACE_IMPL_END
+	nodes := baseabc.Abc_AigDfs(ntk, 0, 0)
+	progress := extra.Extra_ProgressBarStart(os.Stdout, int32(len(nodes)))
+	for i, node := range nodes {
+		extra.Extra_ProgressBarUpdate(progress, int32(i), "")
+		fanin0, ok0 := baseabc.Abc_ObjCopyData(baseabc.Abc_ObjFanin0(node)).(*fpga.Fpga_Node_t)
+		fanin1, ok1 := baseabc.Abc_ObjCopyData(baseabc.Abc_ObjFanin1(node)).(*fpga.Fpga_Node_t)
+		assert(ok0 && ok1, "FPGA fanins are mapped in DFS order")
+		fpgaNode := fpga.Fpga_NodeAnd(manager,
+			fpga.Fpga_NotCond(fanin0, baseabc.Abc_ObjFaninC0(node)),
+			fpga.Fpga_NotCond(fanin1, baseabc.Abc_ObjFaninC1(node)))
+		assert(baseabc.Abc_ObjCopyData(node) == nil, "node copy data is initially clear")
+		baseabc.Abc_ObjSetCopyData(node, fpgaNode)
+		if switching != nil && node.ID < len(switching) {
+			fpga.Fpga_NodeSetSwitching(fpgaNode, switching[node.ID])
+		}
+		if baseabc.Abc_AigNodeIsChoice(node) != 0 {
+			previous := node
+			for choice := node.Choice; choice != nil; choice = choice.Choice {
+				previousNode, okPrev := baseabc.Abc_ObjCopyData(previous).(*fpga.Fpga_Node_t)
+				choiceNode, okChoice := baseabc.Abc_ObjCopyData(choice).(*fpga.Fpga_Node_t)
+				assert(okPrev && okChoice, "choice alternatives are mapped in DFS order")
+				fpga.Fpga_NodeSetNextE(previousNode, choiceNode)
+				fpga.Fpga_NodeSetRepr(choiceNode, fpgaNode)
+				previous = choice
+			}
+		}
+	}
+	extra.Extra_ProgressBarStop(progress)
+	progress = extra.Extra_ProgressBarStart(os.Stdout, baseabc.Abc_NtkCoNum(ntk))
+	for i := int32(0); i < baseabc.Abc_NtkCoNum(ntk); i++ {
+		extra.Extra_ProgressBarUpdate(progress, i, "")
+		co := baseabc.Abc_NtkCo(ntk, i)
+		fanin := baseabc.Abc_ObjFanin0(co)
+		mapped, ok := baseabc.Abc_ObjCopyData(fanin).(*fpga.Fpga_Node_t)
+		assert(ok, "CO driver has an FPGA mapping")
+		fpga.Fpga_ManReadOutputs(manager)[i] = mapped
+	}
+	return manager
+}
 
+// Abc_NtkFromFpga converts mapped cuts into nodes of a BDD logic network.
+func Abc_NtkFromFpga(manager *fpga.Fpga_Man_t, ntk *Abc_Ntk_t) *Abc_Ntk_t {
+	mapped := baseabc.Abc_NtkStartFrom(ntk, baseabc.ABC_NTK_LOGIC, baseabc.ABC_FUNC_BDD)
+	fpga.Fpga_CutsCleanSign(manager)
+	fpga.Fpga_ManCleanData0(manager)
+	for i := int32(0); i < baseabc.Abc_NtkCiNum(ntk); i++ {
+		source := baseabc.Abc_NtkCi(ntk, i)
+		fpga.Fpga_NodeSetData0(fpga.Fpga_ManReadInputs(manager)[i], source.Copy)
+	}
+	constant := baseabc.Abc_NtkCreateNodeConst1(mapped)
+	fpga.Fpga_NodeSetData0(fpga.Fpga_ManReadConst1(manager), constant)
+	progress := extra.Extra_ProgressBarStart(os.Stdout, baseabc.Abc_NtkCoNum(ntk))
+	for i := int32(0); i < baseabc.Abc_NtkCoNum(ntk); i++ {
+		co := baseabc.Abc_NtkCo(ntk, i)
+		newDriver := Abc_NodeFromFpga_rec(mapped, fpga.Fpga_ManReadOutputs(manager)[i])
+		assert(newDriver != nil, "mapped output node exists")
+		assert(baseabc.Abc_ObjIsComplement(newDriver) == 0, "mapped output is regular")
+		baseabc.Abc_ObjFanin0(co).Copy = newDriver
+	}
+	extra.Extra_ProgressBarStop(progress)
+	baseabc.Abc_NtkFinalize(ntk, mapped)
+	if baseabc.Abc_ObjFanoutNum(constant) == 0 {
+		baseabc.Abc_NtkDeleteObj(constant)
+	}
+	dupGates := baseabc.Abc_NtkLogicMakeSimpleCos(mapped, 1)
+	if dupGates != 0 && fpga.Fpga_ManReadVerbose(manager) != 0 {
+		fmt.Printf("Duplicated %d gates to decouple the CO drivers.\n", dupGates)
+	}
+	return mapped
+}
+
+func Abc_NodeFromFpga_rec(ntk *Abc_Ntk_t, node *fpga.Fpga_Node_t) *Abc_Obj_t {
+	assert(fpga.Fpga_IsComplement(node) == 0, "FPGA cut node is regular")
+	if known, ok := fpga.Fpga_NodeReadData0(node).(*Abc_Obj_t); ok && known != nil {
+		return known
+	}
+	assert(fpga.Fpga_NodeIsAnd(node) != 0, "nonterminal FPGA node is an AND")
+	cut := fpga.Fpga_NodeReadCutBest(node)
+	leaves := fpga.Fpga_CutReadLeaves(cut)
+	newNode := baseabc.Abc_NtkCreateNode(ntk)
+	for _, leaf := range leaves {
+		baseabc.Abc_ObjAddFanin(newNode, Abc_NodeFromFpga_rec(ntk, leaf))
+	}
+	manager, ok := ntk.FunctionManager.(*core.DdManager)
+	assert(ok, "mapped network has a CUDD manager")
+	function := fpga.Fpga_TruthsCutBdd(fpgaBDDBuilder{manager}, cut).(*core.DdNode)
+	core.Cudd_Ref(function)
+	baseabc.Abc_ObjSetData(newNode, function)
+	fpga.Fpga_NodeSetData0(node, newNode)
+	return newNode
+}

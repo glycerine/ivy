@@ -3,983 +3,490 @@ package abci
 import (
 	"fmt"
 	"os"
-	"strings"
+	"sort"
+
+	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/base/abc"
+	"github.com/glycerine/abcgo/bdd/cudd/core"
+	"github.com/glycerine/abcgo/bdd/extrab"
+	"github.com/glycerine/abcgo/misc/vec"
+	"github.com/glycerine/abcgo/sat/bmc"
+	"github.com/glycerine/abcgo/sat/bsat"
 )
 
-/**CFile****************************************************************
+// Abc_NodeMinimumBase2 compacts a BDD node to its actual support.
+func Abc_NodeMinimumBase2(node *Abc_Obj_t) int32 { return abc.Abc_NodeMinimumBase(node) }
+func Abc_NtkMinimumBase2(n *Abc_Ntk_t) int32     { return abc.Abc_NtkMinimumBase(n) }
 
-  FileName    [abcCollapse.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Network and node package.]
-
-  Synopsis    [Collapsing the network into two-levels.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: abcCollapse.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "base/abc/abc.h"
-//#include "aig/gia/gia.h"
-//#include "misc/vec/vecWec.h"
-//#include "sat/cnf/cnf.h"
-//#include "sat/bsat/satStore.h"
-
-#ifdef ABC_USE_CUDD
-#include "bdd/extrab/extraBdd.h"
-#endif
-
-//ABC_NAMESPACE_IMPL_START
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-#ifdef ABC_USE_CUDD
-
-extern int Abc_NodeSupport( DdNode * bFunc, Vec_Str_t * vSupport, int nVars );
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Makes nodes minimum base.]
-
-  Description [Returns the number of changed nodes.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-int Abc_NodeMinimumBase2( Abc_Obj_t * pNode )
-{
-    Vec_Str_t * vSupport;
-    Vec_Ptr_t * vFanins;
-    DdNode * bTemp;
-    int i, nVars;
-
-    assert( Abc_NtkIsBddLogic(pNode->pNtk) );
-    assert( Abc_ObjIsNode(pNode) );
-
-    // compute support
-    vSupport = Vec_StrAlloc( 10 );
-    nVars = Abc_NodeSupport( Cudd_Regular(pNode->pData), vSupport, Abc_ObjFaninNum(pNode) );
-    if ( nVars == Abc_ObjFaninNum(pNode) )
-    {
-        Vec_StrFree( vSupport );
-        return 0;
-    }
-
-    // add fanins
-    vFanins = Vec_PtrAlloc( Abc_ObjFaninNum(pNode) );
-    Abc_NodeCollectFanins( pNode, vFanins );
-    Vec_IntClear( &pNode->vFanins );
-    for ( i = 0; i < vFanins->nSize; i++ )
-        if ( vSupport->pArray[i] != 0 ) // useful
-            Vec_IntPush( &pNode->vFanins, Abc_ObjId((Abc_Obj_t *)vFanins->pArray[i]) );
-    assert( nVars == Abc_ObjFaninNum(pNode) );
-
-    // update the function of the node
-    pNode->pData = Extra_bddRemapUp( (DdManager *)pNode->pNtk->pManFunc, bTemp = (DdNode *)pNode->pData );   Cudd_Ref( (DdNode *)pNode->pData );
-    Cudd_RecursiveDeref( (DdManager *)pNode->pNtk->pManFunc, bTemp );
-    Vec_PtrFree( vFanins );
-    Vec_StrFree( vSupport );
-    return 1;
-}
-int Abc_NtkMinimumBase2( Abc_Ntk_t * pNtk )
-{
-    Abc_Obj_t * pNode, * pFanin;
-    int i, k, Counter;
-    assert( Abc_NtkIsBddLogic(pNtk) );
-    // remove all fanouts
-    Abc_NtkForEachObj( pNtk, pNode, i )
-        Vec_IntClear( &pNode->vFanouts );
-    // add useful fanins
-    Counter = 0;
-    Abc_NtkForEachNode( pNtk, pNode, i )
-        Counter += Abc_NodeMinimumBase2( pNode );
-    // add fanouts
-    Abc_NtkForEachObj( pNtk, pNode, i )
-        Abc_ObjForEachFanin( pNode, pFanin, k )
-            Vec_IntPush( &pFanin->vFanouts, Abc_ObjId(pNode) );
-    return Counter;
+// Abc_NodeFromGlobalBdds transfers one global BDD to a local BDD manager and
+// attaches the fanins in the current variable order.
+func Abc_NodeFromGlobalBdds(dst *Abc_Ntk_t, src *core.DdManager, f *core.DdNode, reverse int32) *Abc_Obj_t {
+	if dst == nil || src == nil || f == nil {
+		return nil
+	}
+	manager, ok := dst.FunctionManager.(*core.DdManager)
+	if !ok {
+		return nil
+	}
+	node := abc.Abc_NtkCreateNode(dst)
+	count := int32(abc.Abc_NtkCiNum(dst))
+	for _, index := range src.InvPerm {
+		ci := int32(index)
+		if reverse != 0 {
+			ci = count - 1 - ci
+		}
+		if ci < 0 || ci >= count {
+			return nil
+		}
+		abc.Abc_ObjAddFanin(node, abc.Abc_NtkCi(dst, ci))
+	}
+	local := extrab.Extra_TransferLevelByLevel(src, manager, f)
+	if local == nil {
+		return nil
+	}
+	core.Cudd_Ref(local)
+	node.Data = local
+	return node
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Collapses the network.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-Abc_Obj_t * Abc_NodeFromGlobalBdds( Abc_Ntk_t * pNtkNew, DdManager * dd, DdNode * bFunc, int fReverse )
-{
-    Abc_Obj_t * pNodeNew, * pTemp;
-    int i;
-    // create a new node
-    pNodeNew = Abc_NtkCreateNode( pNtkNew );
-    // add the fanins in the order, in which they appear in the reordered manager
-    Abc_NtkForEachCi( pNtkNew, pTemp, i )
-        Abc_ObjAddFanin( pNodeNew, Abc_NtkCi(pNtkNew, fReverse ? Abc_NtkCiNum(pNtkNew)-1-dd->invperm[i] : dd->invperm[i]) );
-    // transfer the function
-    pNodeNew->pData = Extra_TransferLevelByLevel( dd, (DdManager *)pNtkNew->pManFunc, bFunc );  Cudd_Ref( (DdNode *)pNodeNew->pData );
-    return pNodeNew;
-}
-Abc_Ntk_t * Abc_NtkFromGlobalBdds( Abc_Ntk_t * pNtk, int fReverse )
-{
-    ProgressBar * pProgress;
-    Abc_Ntk_t * pNtkNew;
-    Abc_Obj_t * pNode, * pDriver, * pNodeNew;
-    DdManager * dd = (DdManager *)Abc_NtkGlobalBddMan( pNtk );
-    int i;
-
-    // extract don't-care and compute ISOP
-    if ( pNtk->pExdc )
-    {
-        DdManager * ddExdc = NULL;
-        DdNode * bBddMin, * bBddDc, * bBddL, * bBddU;
-        assert( Abc_NtkIsStrash(pNtk->pExdc) );
-        assert( Abc_NtkCoNum(pNtk->pExdc) == 1 );
-        // compute the global BDDs
-        if ( Abc_NtkBuildGlobalBdds(pNtk->pExdc, 10000000, 1, 1, 0, 0) == NULL )
-            return NULL;
-        // transfer tot the same manager
-        ddExdc = (DdManager *)Abc_NtkGlobalBddMan( pNtk->pExdc );
-        bBddDc = (DdNode *)Abc_ObjGlobalBdd(Abc_NtkCo(pNtk->pExdc, 0));
-        bBddDc = Cudd_bddTransfer( ddExdc, dd, bBddDc );  Cudd_Ref( bBddDc );
-        Abc_NtkFreeGlobalBdds( pNtk->pExdc, 1 );
-        // minimize the output
-        Abc_NtkForEachCo( pNtk, pNode, i )
-        {
-            bBddMin = (DdNode *)Abc_ObjGlobalBdd(pNode);
-            // derive lower and uppwer bound
-            bBddL = Cudd_bddAnd( dd, bBddMin,           Cudd_Not(bBddDc) );  Cudd_Ref( bBddL );
-            bBddU = Cudd_bddAnd( dd, Cudd_Not(bBddMin), Cudd_Not(bBddDc) );  Cudd_Ref( bBddU );
-            Cudd_RecursiveDeref( dd, bBddMin );
-            // compute new one
-            bBddMin = Cudd_bddIsop( dd, bBddL, Cudd_Not(bBddU) );            Cudd_Ref( bBddMin );
-            Cudd_RecursiveDeref( dd, bBddL );
-            Cudd_RecursiveDeref( dd, bBddU );
-            // update global BDD
-            Abc_ObjSetGlobalBdd( pNode, bBddMin );
-            //Extra_bddPrint( dd, bBddMin ); printf( "\n" );
-        }
-        Cudd_RecursiveDeref( dd, bBddDc );
-    }
-
-    // start the new network
-    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_LOGIC, ABC_FUNC_BDD );
-    // make sure the new manager has the same number of inputs
-    Cudd_bddIthVar( (DdManager *)pNtkNew->pManFunc, dd->size-1 );
-    // process the POs
-    pProgress = Extra_ProgressBarStart( stdout, Abc_NtkCoNum(pNtk) );
-    Abc_NtkForEachCo( pNtk, pNode, i )
-    {
-        Extra_ProgressBarUpdate( pProgress, i, NULL );
-        pDriver = Abc_ObjFanin0(pNode);
-        if ( Abc_ObjIsCi(pDriver) && !strcmp(Abc_ObjName(pNode), Abc_ObjName(pDriver)) )
-        {
-            Abc_ObjAddFanin( pNode->pCopy, pDriver->pCopy );
-            continue;
-        }
-        pNodeNew = Abc_NodeFromGlobalBdds( pNtkNew, dd, (DdNode *)Abc_ObjGlobalBdd(pNode), fReverse );
-        Abc_ObjAddFanin( pNode->pCopy, pNodeNew );
-
-    }
-    Extra_ProgressBarStop( pProgress );
-    return pNtkNew;
-}
-void Abc_NtkDumpVariableOrder( Abc_Ntk_t * pNtk )
-{
-    DdManager * dd = (DdManager *)Abc_NtkGlobalBddMan( pNtk );
-    FILE * pFile = fopen( "order.txt", "wb" ); int i;
-    for ( i = 0; i < dd->size; i++ )
-        fprintf( pFile, "%d ", dd->invperm[i] );
-    fprintf( pFile, "\n" );
-    fclose( pFile );
-}
-Abc_Ntk_t * Abc_NtkCollapse( Abc_Ntk_t * pNtk, int fBddSizeMax, int fDualRail, int fReorder, int fReverse, int fDumpOrder, int fVerbose )
-{
-    Abc_Ntk_t * pNtkNew;
-    abctime clk = Abc_Clock();
-
-    assert( Abc_NtkIsStrash(pNtk) );
-    // compute the global BDDs
-    if ( Abc_NtkBuildGlobalBdds(pNtk, fBddSizeMax, 1, fReorder, fReverse, fVerbose) == NULL )
-        return NULL;
-    if ( fVerbose )
-    {
-        DdManager * dd = (DdManager *)Abc_NtkGlobalBddMan( pNtk );
-        printf( "Shared BDD size = %6d nodes.  ", Cudd_ReadKeys(dd) - Cudd_ReadDead(dd) );
-        ABC_PRT( "BDD construction time", Abc_Clock() - clk );
-    }
-    if ( fDumpOrder ) 
-        Abc_NtkDumpVariableOrder( pNtk );
-
-    // create the new network
-    pNtkNew = Abc_NtkFromGlobalBdds( pNtk, fReverse );
-    Abc_NtkFreeGlobalBdds( pNtk, 1 );
-    if ( pNtkNew == NULL )
-        return NULL;
-
-    // make the network minimum base
-    Abc_NtkMinimumBase2( pNtkNew );
-
-    if ( pNtk->pExdc )
-        pNtkNew->pExdc = Abc_NtkDup( pNtk->pExdc );
-
-    // make sure that everything is okay
-    if ( !Abc_NtkCheck( pNtkNew ) )
-    {
-        printf( "Abc_NtkCollapse: The network check has failed.\n" );
-        Abc_NtkDelete( pNtkNew );
-        return NULL;
-    }
-    return pNtkNew;
+// Abc_NtkFromGlobalBdds builds the BDD logic network from output functions.
+func Abc_NtkFromGlobalBdds(n *Abc_Ntk_t, reverse int32) *Abc_Ntk_t {
+	if n == nil {
+		return nil
+	}
+	dd := Abc_NtkGlobalBddMan(n)
+	if dd == nil {
+		return nil
+	}
+	if n.Exdc != nil {
+		if abc.Abc_NtkIsStrash(n.Exdc) == 0 || abc.Abc_NtkCoNum(n.Exdc) != 1 {
+			return nil
+		}
+		dcManager := Abc_NtkBuildGlobalBdds(n.Exdc, 10_000_000, 1, 1, 0, 0)
+		if dcManager == nil {
+			return nil
+		}
+		dc := Abc_ObjGlobalBdd(abc.Abc_NtkCo(n.Exdc, 0))
+		mapped := core.Cudd_bddTransfer(dcManager, dd, dc)
+		if mapped == nil {
+			Abc_NtkFreeGlobalBdds(n.Exdc, 1)
+			return nil
+		}
+		core.Cudd_Ref(mapped)
+		Abc_NtkFreeGlobalBdds(n.Exdc, 1)
+		for _, co := range n.ObjectsOfKind(abc.ObjectPO) {
+			min := Abc_ObjGlobalBdd(co)
+			if min == nil {
+				continue
+			}
+			lo := core.Cudd_bddAnd(dd, min, core.Cudd_Not(mapped))
+			if lo == nil {
+				return nil
+			}
+			core.Cudd_Ref(lo)
+			u := core.Cudd_bddAnd(dd, core.Cudd_Not(min), core.Cudd_Not(mapped))
+			if u == nil {
+				return nil
+			}
+			core.Cudd_Ref(u)
+			core.Cudd_RecursiveDeref(dd, min)
+			min = core.Cudd_bddIsop(dd, lo, core.Cudd_Not(u))
+			if min == nil {
+				return nil
+			}
+			core.Cudd_Ref(min)
+			core.Cudd_RecursiveDeref(dd, lo)
+			core.Cudd_RecursiveDeref(dd, u)
+			Abc_ObjSetGlobalBdd(co, min)
+		}
+		core.Cudd_RecursiveDeref(dd, mapped)
+	}
+	out := abc.Abc_NtkStartFrom(n, abc.ABC_NTK_LOGIC, abc.ABC_FUNC_BDD)
+	if out == nil {
+		return nil
+	}
+	newDD, ok := out.FunctionManager.(*core.DdManager)
+	if !ok {
+		abc.Abc_NtkDelete(out)
+		return nil
+	}
+	if len(dd.Vars) > 0 {
+		core.Cudd_bddIthVar(newDD, len(dd.Vars)-1)
+	}
+	for i, co := range n.ObjectsOfKind(abc.ObjectPO) {
+		if i >= int(abc.Abc_NtkCoNum(n)) {
+			break
+		}
+		driver := abc.Abc_ObjFanin0(co)
+		if driver.IsCI() && abc.Abc_ObjName(co) == abc.Abc_ObjName(driver) {
+			abc.Abc_ObjAddFanin(co.Copy, abc.Edge{Object: driver.Copy, Complement: co.Fanins()[0].Complement})
+			continue
+		}
+		f := Abc_ObjGlobalBdd(co)
+		node := Abc_NodeFromGlobalBdds(out, dd, f, reverse)
+		if node == nil {
+			abc.Abc_NtkDelete(out)
+			return nil
+		}
+		abc.Abc_ObjAddFanin(co.Copy, node)
+	}
+	return out
 }
 
-
-#else
-
-Abc_Ntk_t * Abc_NtkCollapse( Abc_Ntk_t * pNtk, int fBddSizeMax, int fDualRail, int fReorder, int fReverse, int fDumpOrder, int fVerbose )
-{
-    return NULL;
+func Abc_NtkDumpVariableOrder(n *Abc_Ntk_t) {
+	dd := Abc_NtkGlobalBddMan(n)
+	if dd == nil {
+		return
+	}
+	f, err := os.Create("order.txt")
+	if err != nil {
+		return
+	}
+	defer f.Close()
+	for _, idx := range dd.InvPerm {
+		fmt.Fprintf(f, "%d ", idx)
+	}
+	fmt.Fprintln(f)
 }
 
-#endif
-
-
-     
-
-                                                                        
-
-                                                                            
-
-                
-               
-                
-
-                
-
-                                                                        
-                                                               
- 
-                     
-                                                                                              
-                            
-                                     
-                                      
-                                                               
-                                                               
-                                                           
-                                                           
-                                                               
- 
-                                                                            
- 
-                     
-                      
-                              
-                                
-                                                
-                                                
-                             
-                     
-                                   
-                                        
-                                                            
-                            
-                                   
-                                   
-                                                              
-                                                         
-                                  
-                      
-                                          
-                         
-                
- 
-                                                                                                                                             
- 
-                     
-                              
-                                                                                                                            
-                                                             
-                   
-                                                                                                        
-                                                                                   
-                        
-                       
-                    
-                                             
-                            
-                   
-                                                      
-                 
- 
-
-                                                                        
-
-                                                         
-
-                
-               
-                
-
-                
-
-                                                                        
-                                                                  
- 
-                              
-                             
-                                                                
-                                      
-                                                          
-                                        
-                                                                          
-                                                                          
-                                                             
-                   
-                                                                     
-                  
- 
-
-                                                                        
-
-                                                                             
-
-                
-               
-                
-
-                
-
-                                                                        
-                                                               
- 
-                                             
-                   
-                  
-                    
-                 
-                                                          
-                   
-                  
-                    
-                 
-              
- 
-                                                                        
- 
-                             
-                                                            
-                                      
-     
-                                                                                   
-                                     
-     
-                                   
-                                                                                           
-                                                                      
-              
-                                                          
-                                                               
-                     
-                  
- 
-
-                                                                        
-
-                                     
-
-                
-               
-                
-
-                
-
-                                                                        
-                                                                                                                                                                       
- 
-                         
-                     
-               
-                              
-                                                                                             
-                       
-                    
-                        
-                                            
-                 
-                                                    
-                                            
-                                                                 
-                            
-                                                                                             
-                        
-                    
- 
-                                                                                                                                 
- 
-                            
-                        
-                                             
-                                                     
-                                     
-                       
-           
-
-                                        
-                                                   
-                     
-
-                                  
-                                                    
-                                     
-                                                    
-                                       
-                       
-     
-                  
-                                                             
-                                                       
-                                                                   
-                                                                                              
-                                    
-         
-                                                                                                   
-                                                                                  
-                                     
-                                    
-                                  
-                        
-         
-                                 
-     
-                                   
-                                                    
-                                      
-                         
-                                                          
-                                                
-
-                            
-                                                                    
-                            
-                                                     
-                                        
-                                                          
-                                                                
-                      
-                                                                     
-                                        
-                                                          
-     
-                                                      
-                                       
-                                                                                        
-         
-                                                                                       
-                     
-         
-                                   
-         
-                                                    
-                                                                                    
-                                                                                                                            
-                                                      
-                     
-         
-                                             
-         
-                                                    
-                                                                                                                          
-                                                      
-                     
-         
-                                                                                                                                                                                            
-                               
-         
-                                     
-                           
-                  
-         
-                                                  
-     
-                               
-                            
-                              
-                          
-                                       
-                   
- 
-                                                                                                                                    
- 
-                        
-                                    
-                             
-                                                                                                
-                          
-                    
-                      
-                                                   
-                                        
-                                   
-     
-                                                                        
-                                 
-                    
-     
-                   
- 
-
-      
-
-
-
-// extern Vec_Wec_t * Gia_ManCreateCoSupps( Gia_Man_t * p, int fVerbose );
-
-// extern int         Gia_ManCoLargestSupp( Gia_Man_t * p, Vec_Wec_t * vSupps );
-
-// extern Vec_Wec_t * Gia_ManIsoStrashReduceInt( Gia_Man_t * p, Vec_Wec_t * vSupps, int fVerbose );
-
-
-/**Function*************************************************************
-
-  Synopsis    [Derives GIA for the network.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkClpGia_rec(pNew *Gia_Man_t, pNode *Abc_Obj_t) int32 {
-    var iLit0, iLit1 int32;
-    if pNode.iTemp >= 0 {
-        return pNode.iTemp; }
-    assert(Abc_ObjIsNode( pNode ), "Abc_ObjIsNode( pNode )");
-    iLit0 = Abc_NtkClpGia_rec( pNew, Abc_ObjFanin0(pNode) );
-    iLit1 = Abc_NtkClpGia_rec( pNew, Abc_ObjFanin1(pNode) );
-    iLit0 = Abc_LitNotCond( iLit0, Abc_ObjFaninC0(pNode) );
-    iLit1 = Abc_LitNotCond( iLit1, Abc_ObjFaninC1(pNode) );
-    return (pNode.iTemp = Gia_ManAppendAnd(pNew, iLit0, iLit1));
-}
-func Abc_NtkClpGia(pNtk *Abc_Ntk_t) *Gia_Man_t {
-    var i, iLit int32;
-    var pNew *Gia_Man_t;
-    var pNode *Abc_Obj_t;
-    assert(Abc_NtkIsStrash(pNtk), "Abc_NtkIsStrash(pNtk)");
-    pNew = Gia_ManStart( 1000 );
-    pNew.pName = Abc_UtilStrsav( pNtk.pName );
-    pNew.pSpec = Abc_UtilStrsav( pNtk.pSpec );
-    Abc_NtkForEachObj( pNtk, pNode, i )
-        pNode.iTemp = -1;
-    Abc_AigConst1(pNtk).iTemp = 1;
-    Abc_NtkForEachCi( pNtk, pNode, i )
-        pNode.iTemp = Gia_ManAppendCi(pNew);
-    Abc_NtkForEachCo( pNtk, pNode, i )
-    {
-        iLit = Abc_NtkClpGia_rec( pNew, Abc_ObjFanin0(pNode) );
-        iLit = Abc_LitNotCond( iLit, Abc_ObjFaninC0(pNode) );
-        Gia_ManAppendCo( pNew, iLit );
-    }
-    return pNew;
+func Abc_NtkCollapse(n *Abc_Ntk_t, bddSizeMax, dualRail, reorder, reverse, dumpOrder, verbose int32) *Abc_Ntk_t {
+	if n == nil || abc.Abc_NtkIsStrash(n) == 0 {
+		return nil
+	}
+	start := Abc_Clock()
+	if Abc_NtkBuildGlobalBdds(n, bddSizeMax, 1, reorder, reverse, verbose) == nil {
+		return nil
+	}
+	if verbose != 0 {
+		fmt.Printf("Shared BDD size = %6d nodes.  ", Abc_NtkSizeOfGlobalBdds(n))
+		Abc_PrintTime(1, "BDD construction time", Abc_Clock()-start)
+	}
+	if dumpOrder != 0 {
+		Abc_NtkDumpVariableOrder(n)
+	}
+	out := Abc_NtkFromGlobalBdds(n, reverse)
+	Abc_NtkFreeGlobalBdds(n, 1)
+	if out == nil {
+		return nil
+	}
+	Abc_NtkMinimumBase2(out)
+	if n.Exdc != nil {
+		out.Exdc = abc.Abc_NtkDup(n.Exdc)
+	}
+	if abc.Abc_NtkCheck(out) == 0 {
+		fmt.Println("Abc_NtkCollapse: The network check has failed.")
+		abc.Abc_NtkDelete(out)
+		return nil
+	}
+	return out
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Minimize SOP by removing redundant variables.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-// Original macro:
-// #define Abc_NtkSopForEachCube( pSop, nVars, pCube )  for ( pCube = (pSop); *pCube; pCube += (nVars) + 3 )
-
-
-func Abc_NtkCollapseReduce(vSop *Vec_Str_t, vSupp *Vec_Int_t, vClass *Vec_Int_t, vSupps *Vec_Wec_t) int32 {
-    var j int32;
-    var i int32;
-    var k int32;
-    var iCo int32;
-    var iVar int32;
-    var nVars int32 = Vec_IntSize(vSupp);
-    var pCube string;
-    var pSop string = Vec_StrArray(vSop);
-    var vPres *Vec_Int_t;
-    if Vec_StrSize(vSop) == 4 { // constant
-    
-        Vec_IntForEachEntry( vClass, iCo, i )
-            Vec_IntClear( Vec_WecEntry(vSupps, iCo) );
-        return 1;
-    }
-    vPres = Vec_IntStart( nVars );
-    // inlining of macro Abc_NtkSopForEachCube
-    for  pCube = (pSop); *pCube; pCube += (nVars) + 3  {
-        for  k = 0; k < nVars; k++  {
-            if pCube[k] != '-' {
-                Vec_IntWriteEntry( vPres, k, 1 ); }
-        }
-    }
-    if Vec_IntCountZero(vPres) == 0 {
-        Vec_IntFree( vPres );
-        return 0;
-    }
-    // reduce cubes
-    // inlining of macro Abc_NtkSopForEachCube
-    for  pCube = (pSop); *pCube; pCube += (nVars) + 3  {
-        for  k = 0; k < nVars + 3; k++  {
-            if k >= nVars || Vec_IntEntry(vPres, k) {
-                Vec_StrWriteEntry( vSop, j++, pCube[k] ); }
-        }
-    }
-    Vec_StrWriteEntry( vSop, j++, '\0' );
-    Vec_StrShrink( vSop, j );
-    // reduce support
-    Vec_IntForEachEntry( vClass, iCo, i )
-    {
-        j = 0;
-        vSupp = Vec_WecEntry( vSupps, iCo );
-        Vec_IntForEachEntry( vSupp, iVar, k )
-            if ( Vec_IntEntry(vPres, k) )
-                Vec_IntWriteEntry( vSupp, j++, iVar );
-        Vec_IntShrink( vSupp, j );
-    }
-    Vec_IntFree( vPres );
-//    if ( Vec_IntSize(vSupp) != Abc_SopGetVarNum(Vec_StrArray(vSop)) )
-//        printf( "Mismatch!!!\n" );
-    return 1;
+// Abc_NtkCollapseReduce removes literals unused by any cube and updates each
+// output's support list in the matching order.
+func Abc_NtkCollapseReduce(sop *vec.Vec_Str_t, support, class *vec.Vec_Int_t, supports *vec.Vec_Wec_t) int32 {
+	n := int(vec.Vec_IntSize(support))
+	text := vec.Vec_StrArray(sop)
+	if len(text) == 4 {
+		for i := 0; i < vec.Vec_IntSize(class); i++ {
+			vec.Vec_IntClear(vec.Vec_WecEntry(supports, int(vec.Vec_IntEntry(class, i))))
+		}
+		return 1
+	}
+	present := make([]bool, n)
+	stride := n + 3
+	for off := 0; off+stride-1 < len(text) && text[off] != '\x00'; off += stride {
+		for k := 0; k < n; k++ {
+			if text[off+k] != '-' {
+				present[k] = true
+			}
+		}
+	}
+	kept := 0
+	for _, v := range present {
+		if v {
+			kept++
+		}
+	}
+	if kept == n {
+		return 0
+	}
+	out := make([]byte, 0, len(text))
+	for off := 0; off+stride <= len(text) && text[off] != '\x00'; off += stride {
+		for k := 0; k < stride; k++ {
+			if k >= n || present[k] {
+				out = append(out, text[off+k])
+			}
+		}
+	}
+	out = append(out, 0)
+	vec.Vec_StrClear(sop)
+	for _, b := range out {
+		vec.Vec_StrPush(sop, b)
+	}
+	for i := 0; i < vec.Vec_IntSize(class); i++ {
+		co := int(vec.Vec_IntEntry(class, i))
+		v := vec.Vec_WecEntry(supports, co)
+		write := 0
+		for k := 0; k < vec.Vec_IntSize(v); k++ {
+			if present[k] {
+				vec.Vec_IntWriteEntry(v, write, vec.Vec_IntEntry(v, k))
+				write++
+			}
+		}
+		vec.Vec_IntShrink(v, write)
+	}
+	return 1
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Derives SAT solver for one output from the shared CNF.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkClpDeriveSatSolver(pCnf *Cnf_Dat_t, iCoObjId int32, vSupp *Vec_Int_t, vAnds *Vec_Int_t, vMap *Vec_Int_t, ppSat1 **sat_solver, ppSat2 **sat_solver, ppSat3 **sat_solver) *sat_solver {
-    var i int32;
-    var k int32;
-    var iObj int32;
-    var status int32;
-    var nVars int32 = 2;
-//    int i, k, iObj, status, nVars = 1;
-    var vLits *Vec_Int_t  = Vec_IntAlloc( 16 );
-    var pSat *sat_solver  = sat_solver_new();
-    if ppSat1 { *ppSat1 = sat_solver_new(); }
-    if ppSat2 { *ppSat2 = sat_solver_new(); }
-    if ppSat3 { *ppSat3 = sat_solver_new(); }
-    // assign SAT variable numbers
-    Vec_IntWriteEntry( vMap, iCoObjId, nVars++ );
-    Vec_IntForEachEntry( vSupp, iObj, k )
-        Vec_IntWriteEntry( vMap, iObj, nVars++ );
-    Vec_IntForEachEntry( vAnds, iObj, k )
-        if ( pCnf.pObj2Clause[iObj] != -1 )
-            Vec_IntWriteEntry( vMap, iObj, nVars++ );
-//    Vec_IntForEachEntry( vSupp, iObj, k )
-//        Vec_IntWriteEntry( vMap, iObj, nVars++ );
-    // create clauses for the internal nodes and for the output
-    sat_solver_setnvars( pSat, nVars );
-    if ppSat1 { sat_solver_setnvars( *ppSat1, nVars ); }
-    if ppSat2 { sat_solver_setnvars( *ppSat2, nVars ); }
-    if ppSat3 { sat_solver_setnvars( *ppSat3, nVars ); }
-    Vec_IntPush( vAnds, iCoObjId );
-    Vec_IntForEachEntry( vAnds, iObj, k )
-    {
-        var iClaBeg int32;
-        var iClaEnd int32;
-        var pLit *int32;
-        if pCnf.pObj2Clause[iObj] == -1 {
-            continue; }
-        iClaBeg = pCnf.pObj2Clause[iObj];
-        iClaEnd = iClaBeg + pCnf.pObj2Count[iObj];
-        assert(iClaBeg < iClaEnd, "iClaBeg < iClaEnd");
-        for  i = iClaBeg; i < iClaEnd; i++  {
-            Vec_IntClear( vLits );
-            for  pLit = pCnf.pClauses[i]; pLit < pCnf.pClauses[i+1]; pLit++  {
-                Vec_IntPush( vLits, Abc_Lit2LitV(Vec_IntArray(vMap), *pLit) );
-            }
-            status = sat_solver_addclause( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits)+Vec_IntSize(vLits) );
-            assert((status != 0), "status");
-            (void) status;
-            if ppSat1 { sat_solver_addclause( *ppSat1, Vec_IntArray(vLits), Vec_IntArray(vLits)+Vec_IntSize(vLits) ); }
-            if ppSat2 { sat_solver_addclause( *ppSat2, Vec_IntArray(vLits), Vec_IntArray(vLits)+Vec_IntSize(vLits) ); }
-            if ppSat3 { sat_solver_addclause( *ppSat3, Vec_IntArray(vLits), Vec_IntArray(vLits)+Vec_IntSize(vLits) ); }
-        }
-    }
-    Vec_IntPop( vAnds );
-    Vec_IntFree( vLits );
-    assert(nVars == sat_solver_nvars(pSat), "nVars == sat_solver_nvars(pSat)");
-    return pSat;
+func Abc_NtkCollapseSat(n *Abc_Ntk_t, cubeLimit, conflictLimit, costMax, canonical, reverse, cnfShared, verbose int32) *Abc_Ntk_t {
+	if n == nil || abc.Abc_NtkIsStrash(n) == 0 {
+		return nil
+	}
+	g := Abc_NtkClpGia(n)
+	if g == nil {
+		return nil
+	}
+	supports := gia.Gia_ManCreateCoSupps(g, verbose)
+	if supports == nil {
+		gia.Gia_ManStop(g)
+		return nil
+	}
+	if cubeLimit > 0 && costMax > 0 {
+		largest := gia.Gia_ManCoLargestSupp(g, supports)
+		if largest < 0 {
+			gia.Gia_ManStop(g)
+			vec.Vec_WecFree(supports)
+			return nil
+		}
+		root := gia.Gia_ManCo(g, largest)
+		coneSize := gia.Gia_ManConeSize(g, []int32{gia.Gia_ObjId(g, root)}, 1)
+		suppSize := vec.Vec_IntSize(vec.Vec_WecEntry(supports, int(largest)))
+		if int64(coneSize)*int64(suppSize)*int64(cubeLimit) > int64(costMax) {
+			gia.Gia_ManStop(g)
+			vec.Vec_WecFree(supports)
+			return nil
+		}
+	}
+	out := abc.Abc_NtkStartFrom(n, abc.ABC_NTK_LOGIC, abc.ABC_FUNC_SOP)
+	if out == nil {
+		gia.Gia_ManStop(g)
+		vec.Vec_WecFree(supports)
+		return nil
+	}
+	sops := Abc_GiaDeriveSops(out, g, supports, cubeLimit, conflictLimit, costMax, canonical, reverse, cnfShared, verbose)
+	gia.Gia_ManStop(g)
+	if sops == nil {
+		abc.Abc_NtkDelete(out)
+		vec.Vec_WecFree(supports)
+		return nil
+	}
+	for i, co := range n.ObjectsOfKind(abc.ObjectPO) {
+		if i >= len(sops) {
+			break
+		}
+		edge := co.Fanins()[0]
+		driver := edge.Object
+		if driver.IsCI() && abc.Abc_ObjName(co) == abc.Abc_ObjName(driver) {
+			abc.Abc_ObjAddFanin(co.Copy, abc.Edge{Object: driver.Copy, Complement: edge.Complement})
+			continue
+		}
+		node := abc.Abc_NtkCreateNode(out)
+		if driver.IsCI() {
+			abc.Abc_ObjAddFanin(node, driver.Copy)
+			if edge.Complement {
+				node.Data = "0 1\n"
+			} else {
+				node.Data = "1 1\n"
+			}
+		} else if driver.Kind == abc.ObjectConst1 {
+			if edge.Complement {
+				node.Data = " 0\n"
+			} else {
+				node.Data = " 1\n"
+			}
+		} else {
+			supp := vec.Vec_WecEntry(supports, i)
+			for k := 0; k < vec.Vec_IntSize(supp); k++ {
+				abc.Abc_ObjAddFanin(node, abc.Abc_NtkCi(out, vec.Vec_IntEntry(supp, k)))
+			}
+			node.Data = abc.Abc_SopRegister(nil, sops[i])
+		}
+		abc.Abc_ObjAddFanin(co.Copy, node)
+	}
+	vec.Vec_WecFree(supports)
+	abc.Abc_NtkSortSops(out)
+	if n.Exdc != nil {
+		out.Exdc = abc.Abc_NtkDup(n.Exdc)
+	}
+	if abc.Abc_NtkCheck(out) == 0 {
+		abc.Abc_NtkDelete(out)
+		return nil
+	}
+	return out
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Computes SOPs for each output.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkClpGiaOne(p *Gia_Man_t, iCo int32, nCubeLim int32, nBTLimit int32, fCanon int32, fReverse int32, vSupp *Vec_Int_t, fVerbose int32, vClass *Vec_Int_t, vSupps *Vec_Wec_t) *Vec_Str_t {
-    var vSop *Vec_Str_t;
-    var clk abctime  = Abc_Clock();
-    extern Vec_Str_t * Bmc_CollapseOneOld( Gia_Man_t * p, int nCubeLim, int nBTLimit, int fCanon, int fReverse, int fVerbose );
-    var pGia *Gia_Man_t   = Gia_ManDupCones( p, &iCo, 1, 1 );
-    if fVerbose != 0 {
-        fmt.Printf("Output %4d:  Supp = %4d. Cone =%6d.\n", iCo, Vec_IntSize(vSupp), Gia_ManAndNum(pGia)); }
-    vSop = Bmc_CollapseOneOld( pGia, nCubeLim, nBTLimit, fCanon, fReverse, fVerbose );
-    Gia_ManStop( pGia );
-    if vSop == nil {
-        return nil; }
-    Abc_NtkCollapseReduce( vSop, vSupp, vClass, vSupps );
-    if fVerbose != 0 {
-        fmt.Printf("Supp new = %4d. Sop = %4d.  ", Vec_IntSize(vSupp), Vec_StrSize(vSop)/(Vec_IntSize(vSupp) +3)); }
-    if fVerbose != 0 {
-        Abc_PrintTime( 1, "Time", Abc_Clock() - clk ); }
-    return vSop; 
-}
-func Abc_NtkClpGiaOne2(pCnf *Cnf_Dat_t, p *Gia_Man_t, iCo int32, nCubeLim int32, nBTLimit int32, fCanon int32, fReverse int32, vSupp *Vec_Int_t, vMap *Vec_Int_t, fVerbose int32, vClass *Vec_Int_t, vSupps *Vec_Wec_t) *Vec_Str_t {
-    var vSop *Vec_Str_t;
-    var pSat *sat_solver;
-    var pSat1 *sat_solver = nil;
-    var pSat2 *sat_solver = nil;
-    var pSat3 *sat_solver = nil;
-    var pObj *Gia_Obj_t;
-    var clk abctime  = Abc_Clock();
-    extern Vec_Str_t * Bmc_CollapseOne_int( sat_solver * pSat, int nVars, int nCubeLim, int nBTLimit, int fCanon, int fReverse, int fVerbose );
-    extern Vec_Str_t * Bmc_CollapseOne_int2( sat_solver * pSat, sat_solver * pSat2, int nVars, int nCubeLim, int nBTLimit, int fCanon, int fReverse, int fVerbose );
-    extern Vec_Str_t * Bmc_CollapseOne_int3( sat_solver * pSat, sat_solver * pSat1, sat_solver * pSat2, sat_solver * pSat3, int nVars, int nCubeLim, int nBTLimit, int fCanon, int fReverse, int fVerbose );
-    var i int32;
-    var iCoObjId int32 = Gia_ObjId( p, Gia_ManCo(p, iCo) );
-    var vAnds *Vec_Int_t  = Vec_IntAlloc( 100 );
-    var vSuppObjs *Vec_Int_t  = Vec_IntAlloc( 100 );
-    Gia_ManForEachCiVec( vSupp, p, pObj, i )
-        Vec_IntPush( vSuppObjs, Gia_ObjId(p, pObj) );
-    Gia_ManIncrementTravId( p );
-    Gia_ManCollectAnds( p, &iCoObjId, 1, vAnds, nil );
-    assert(Vec_IntSize(vAnds) > 0, "Vec_IntSize(vAnds) > 0");
-//    pSat = Abc_NtkClpDeriveSatSolver( pCnf, iCoObjId, vSuppObjs, vAnds, vMap, &pSat1, &pSat2, &pSat3 );
-    pSat = Abc_NtkClpDeriveSatSolver( pCnf, iCoObjId, vSuppObjs, vAnds, vMap, nil, nil, nil );
-    Vec_IntFree( vSuppObjs );
-    if fVerbose != 0 {
-        fmt.Printf("Output %4d:  Supp = %4d. Cone =%6d.\n", iCo, Vec_IntSize(vSupp), Vec_IntSize(vAnds)); }
-//    vSop = Bmc_CollapseOne_int3( pSat, pSat1, pSat2, pSat3, Vec_IntSize(vSupp), nCubeLim, nBTLimit, fCanon, fReverse, fVerbose );
-//    vSop = Bmc_CollapseOne_int2( pSat, pSat1, Vec_IntSize(vSupp), nCubeLim, nBTLimit, fCanon, fReverse, fVerbose );
-    vSop = Bmc_CollapseOne_int( pSat, Vec_IntSize(vSupp), nCubeLim, nBTLimit, fCanon, fReverse, fVerbose );
-    sat_solver_delete( pSat );
-    if pSat1 != nil { sat_solver_delete( pSat1 ); }
-    if pSat2 != nil { sat_solver_delete( pSat2 ); }
-    if pSat3 != nil { sat_solver_delete( pSat3 ); }
-    Vec_IntFree( vAnds );
-    if vSop == nil {
-        return nil; }
-    Abc_NtkCollapseReduce( vSop, vSupp, vClass, vSupps );
-    if fVerbose != 0 {
-        fmt.Printf("Supp new = %4d. Sop = %4d.  ", Vec_IntSize(vSupp), Vec_StrSize(vSop)/(Vec_IntSize(vSupp) +3)); }
-    if fVerbose != 0 {
-        Abc_PrintTime( 1, "Time", Abc_Clock() - clk ); }
-    return vSop; 
-}
-func Abc_GiaDeriveSops(pNtkNew *Abc_Ntk_t, p *Gia_Man_t, vSupps *Vec_Wec_t, nCubeLim int32, nBTLimit int32, nCostMax int32, fCanon int32, fReverse int32, fCnfShared int32, fVerbose int32) *Vec_Ptr_t {
-    var pProgress *ProgressBar;
-    var clk abctime  = Abc_Clock();
-    var vSops *Vec_Ptr_t = nil;
-    var vSopsRepr *Vec_Ptr_t;
-    var vReprs, vClass, vReprSuppSizes *Vec_Int_t;
-    var i int32;
-    var k int32;
-    var Entry int32;
-    var iCo int32;
-    var pOrder *int32;
-    var vClasses *Vec_Wec_t;
-    var pCnf *Cnf_Dat_t  = nil;
-    var vMap *Vec_Int_t  = nil;
-    // derive classes of outputs
-    vClasses = Gia_ManIsoStrashReduceInt( p, vSupps, 0 );
-    if fVerbose != 0 {
-        fmt.Printf("Considering %d (out of %d) outputs. ", Vec_WecSize(vClasses), Gia_ManCoNum(p));
-        Abc_PrintTime( 1, "Reduction time", Abc_Clock() - clk );
-    }
-    // derive representatives
-    vReprs = Vec_WecCollectFirsts( vClasses );
-    vReprSuppSizes = Vec_IntAlloc( Vec_IntSize(vReprs) );
-    Vec_IntForEachEntry( vReprs, Entry, i )
-        Vec_IntPush( vReprSuppSizes, Vec_IntSize(Vec_WecEntry(vSupps, Entry)) );
-    pOrder = Abc_MergeSortCost( Vec_IntArray(vReprSuppSizes), Vec_IntSize(vReprSuppSizes) );
-    Vec_IntFree( vReprSuppSizes );
-    // consider SOPs for representatives
-    if fCnfShared != 0 {
-        vMap = Vec_IntStartFull( Gia_ManObjNum(p) );
-        pCnf = (Cnf_Dat_t *)Mf_ManGenerateCnf( p, 8, 1, 0, 0, 0 );
-    }
-    vSopsRepr = Vec_PtrStart( Vec_IntSize(vReprs) );
-    pProgress = Extra_ProgressBarStart( os.Stdout, Vec_IntSize(vReprs) );
-    Extra_ProgressBarUpdate( pProgress, 0, nil );
-    for  i = 0; i < Vec_IntSize(vReprs); i++  {
-        var iEntry int32         = pOrder[Vec_IntSize(vReprs) - 1 - i];
-        var iCoThis int32        = Vec_IntEntry( vReprs, iEntry );
-        var vSupp *Vec_Int_t  = Vec_WecEntry( vSupps, iCoThis );
-        var vSop *Vec_Str_t;
-        if Vec_IntSize(vSupp) < 2 {
-            Vec_PtrWriteEntry( vSopsRepr, iEntry, (void *)(ABC_PTRINT_T)1 );
-            continue;
-        }
-        if (fCnfShared != 0) && !(fCanon != 0) {
-            vSop = Abc_NtkClpGiaOne2( pCnf, p, iCoThis, nCubeLim, nBTLimit, fCanon, fReverse, vSupp, vMap, i ? 0 : fVerbose, Vec_WecEntry(vClasses, iEntry), vSupps );
-        } else {
-            vSop = Abc_NtkClpGiaOne( p, iCoThis, nCubeLim, nBTLimit, fCanon, fReverse, vSupp, i ? 0 : fVerbose, Vec_WecEntry(vClasses, iEntry), vSupps ); }
-        if vSop == nil {
-            goto finish; }
-        assert(Vec_IntSize( Vec_WecEntry(vSupps, iCoThis) ) == Abc_SopGetVarNum(Vec_StrArray(vSop)), "Vec_IntSize( Vec_WecEntry(vSupps, iCoThis) ) == Abc_SopGetVarNum(Vec_StrArray(vSop))");
-        Extra_ProgressBarUpdate( pProgress, i, nil );
-        Vec_PtrWriteEntry( vSopsRepr, iEntry, Abc_SopRegister( (Mem_Flex_t *)pNtkNew.pManFunc, Vec_StrArray(vSop) ) );
-        Vec_StrFree( vSop );
-    }
-    Extra_ProgressBarStop( pProgress );
-    if fCnfShared != 0 {
-        Cnf_DataFree( pCnf );
-        Vec_IntFree( vMap );
-    }
-    // derive SOPs for each output
-    vSops = Vec_PtrStart( Gia_ManCoNum(p) );
-    Vec_WecForEachLevel ( vClasses, vClass, i )
-        Vec_IntForEachEntry( vClass, iCo, k )
-            Vec_PtrWriteEntry( vSops, iCo, Vec_PtrEntry(vSopsRepr, i) );
-    assert(Vec_PtrCountZero(vSops) == 0, "Vec_PtrCountZero(vSops) == 0");
-/*
-    // verify
-    for ( i = 0; i < Gia_ManCoNum(p); i++ )
-    {
-        Vec_Int_t * vSupp = Vec_WecEntry( vSupps, i );
-        char * pSop = (char *)Vec_PtrEntry( vSops, i );
-        assert( Vec_IntSize(vSupp) == Abc_SopGetVarNum(pSop) );
-    }
-*/
-    // cleanup
-finish:
-    ABC_FREE( pOrder );
-    Vec_IntFree( vReprs );
-    Vec_WecFree( vClasses );
-    Vec_PtrFree( vSopsRepr );
-    return vSops;
-}
-func Abc_NtkFromSopsInt(pNtk *Abc_Ntk_t, nCubeLim int32, nBTLimit int32, nCostMax int32, fCanon int32, fReverse int32, fCnfShared int32, fVerbose int32) *Abc_Ntk_t {
-    var pNtkNew *Abc_Ntk_t;
-    var pGia *Gia_Man_t;
-    var vSupps *Vec_Wec_t;
-    var vSupp *Vec_Int_t;
-    var vSops *Vec_Ptr_t;
-    var pNode, pNodeNew, pDriver *Abc_Obj_t;
-    var i, k, iCi int32; 
-    pGia    = Abc_NtkClpGia( pNtk );
-    vSupps  = Gia_ManCreateCoSupps( pGia, fVerbose );
-    // check the largest output
-    if nCubeLim > 0 && nCostMax > 0 {
-        var iCoMax int32    = Gia_ManCoLargestSupp( pGia, vSupps );
-        var iObjMax int32   = Gia_ObjId( pGia, Gia_ManCo(pGia, iCoMax) );
-        var nSuppMax int32  = Vec_IntSize( Vec_WecEntry(vSupps, iCoMax) );
-        var nNodeMax int32  = Gia_ManConeSize( pGia, &iObjMax, 1 );
-        var Cost word  = (word)nNodeMax * (word)nSuppMax * (word)nCubeLim;
-        if Cost > (word)nCostMax {
-            fmt.Printf("Cost of the largest output cone exceeded the limit (%d * %d * %d  >  %d).\n", nNodeMax, nSuppMax, nCubeLim, nCostMax);
-            Gia_ManStop( pGia );
-            Vec_WecFree( vSupps );
-            return nil;
-        }
-    }
-    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_LOGIC, ABC_FUNC_SOP );
-    vSops   = Abc_GiaDeriveSops( pNtkNew, pGia, vSupps, nCubeLim, nBTLimit, nCostMax, fCanon, fReverse, fCnfShared, fVerbose );
-    Gia_ManStop( pGia );
-    if vSops == nil {
-        Vec_WecFree( vSupps );
-        Abc_NtkDelete( pNtkNew );
-        return nil;
-    }
-    Abc_NtkForEachCo( pNtk, pNode, i )
-    {
-        pDriver = Abc_ObjFanin0(pNode);
-        if Abc_ObjIsCi(pDriver) && !(int32(strings.Compare(Abc_ObjName(pNode), Abc_ObjName(pDriver))) != 0) {
-            Abc_ObjAddFanin( pNode.pCopy, pDriver.pCopy );
-            continue;
-        }
-        if Abc_ObjIsCi(pDriver) {
-            pNodeNew = Abc_NtkCreateNode( pNtkNew );
-            Abc_ObjAddFanin( pNodeNew, pDriver.pCopy ); 
-            pNodeNew.pData = Abc_SopRegister( (Mem_Flex_t *)pNtkNew.pManFunc, Abc_ObjFaninC0(pNode) ? "0 1\n" : "1 1\n" );
-            Abc_ObjAddFanin( pNode.pCopy, pNodeNew );
-            continue;
-        }
-        if pDriver == Abc_AigConst1(pNtk) {
-            pNodeNew = Abc_NtkCreateNode( pNtkNew );
-            pNodeNew.pData = Abc_SopRegister( (Mem_Flex_t *)pNtkNew.pManFunc, Abc_ObjFaninC0(pNode) ? " 0\n" : " 1\n" );
-            Abc_ObjAddFanin( pNode.pCopy, pNodeNew );
-            continue;
-        }
-        pNodeNew = Abc_NtkCreateNode( pNtkNew );
-        vSupp = Vec_WecEntry( vSupps, i );
-        Vec_IntForEachEntry( vSupp, iCi, k )
-            Abc_ObjAddFanin( pNodeNew, Abc_NtkCi(pNtkNew, iCi) );
-        pNodeNew.pData = Abc_SopRegister( (Mem_Flex_t *)pNtkNew.pManFunc, (char*)Vec_PtrEntry( vSops, i ) );
-        assert(pNodeNew.pData != (void *)(ABC_PTRINT_T)1, "pNodeNew.pData != (void *)(ABC_PTRINT_T)1");
-        Abc_ObjAddFanin( pNode.pCopy, pNodeNew );
-    }
-    Vec_WecFree( vSupps );
-    Vec_PtrFree( vSops );
-    Abc_NtkSortSops( pNtkNew );
-    return pNtkNew;
-}
-func Abc_NtkCollapseSat(pNtk *Abc_Ntk_t, nCubeLim int32, nBTLimit int32, nCostMax int32, fCanon int32, fReverse int32, fCnfShared int32, fVerbose int32) *Abc_Ntk_t {
-    var pNtkNew *Abc_Ntk_t;
-    assert(Abc_NtkIsStrash(pNtk), "Abc_NtkIsStrash(pNtk)");
-    pNtkNew = Abc_NtkFromSopsInt( pNtk, nCubeLim, nBTLimit, nCostMax, fCanon, fReverse, fCnfShared, fVerbose );
-    if pNtkNew == nil {
-        return nil; }
-    if pNtk.pExdc {
-        pNtkNew.pExdc = Abc_NtkDup( pNtk.pExdc ); }
-    if !Abc_NtkCheck( pNtkNew ) {
-        fmt.Printf("Abc_NtkCollapseSat: The network check has failed.\n");
-        Abc_NtkDelete( pNtkNew );
-        return nil;
-    }
-    return pNtkNew;
+// collapseDeriveSops ports the representative-output and equivalence-class
+// workflow in Abc_GiaDeriveSops. The optional shared-CNF path maps only the
+// representative's cone and support into the SAT solver, as in C.
+func Abc_GiaDeriveSops(dst *Abc_Ntk_t, g *gia.Gia_Man_t, supports *vec.Vec_Wec_t, cubeLimit, conflictLimit, costMax, canonical, reverse, cnfShared, verbose int32) []string {
+	classes := gia.Gia_ManIsoStrashReduceInt(g, supports, 0)
+	defer vec.Vec_WecFree(classes)
+	reprs := vec.Vec_WecCollectFirsts(classes)
+	defer vec.Vec_IntFree(reprs)
+	type ranked struct {
+		index   int
+		support int
+	}
+	rank := make([]ranked, vec.Vec_IntSize(reprs))
+	for i, output := range vec.Vec_IntArray(reprs) {
+		rank[i] = ranked{i, vec.Vec_IntSize(vec.Vec_WecEntry(supports, int(output)))}
+	}
+	sort.SliceStable(rank, func(i, j int) bool { return rank[i].support < rank[j].support })
+	var cnf *gia.Cnf_Dat_t
+	if cnfShared != 0 && canonical == 0 {
+		cnf = gia.Mf_ManGenerateCnf(g, 8, 1, 0, 0, 0)
+		if cnf == nil {
+			return nil
+		}
+	}
+	reprSops := make([]string, vec.Vec_IntSize(reprs))
+	for order := len(rank) - 1; order >= 0; order-- {
+		entry := rank[order].index
+		coIndex := vec.Vec_IntEntry(reprs, entry)
+		supp := vec.Vec_WecEntry(supports, int(coIndex))
+		if vec.Vec_IntSize(supp) < 2 {
+			reprSops[entry] = "\x01"
+			continue
+		}
+		var sop *vec.Vec_Str_t
+		currentVerbose := int32(0)
+		if order == len(rank)-1 {
+			currentVerbose = verbose
+		}
+		if cnf != nil {
+			sop = Abc_NtkClpGiaOne2(cnf, g, int(coIndex), supp, vec.Vec_WecEntry(classes, entry), supports, cubeLimit, conflictLimit, canonical, reverse, currentVerbose)
+		} else {
+			sop = Abc_NtkClpGiaOne(g, int(coIndex), cubeLimit, conflictLimit, canonical, reverse, supp, currentVerbose, vec.Vec_WecEntry(classes, entry), supports)
+		}
+		if sop == nil {
+			return nil
+		}
+		reprSops[entry] = string(vec.Vec_StrArray(sop))
+		vec.Vec_StrFree(sop)
+	}
+	result := make([]string, gia.Gia_ManCoNum(g))
+	for class := 0; class < vec.Vec_WecSize(classes); class++ {
+		for _, output := range vec.Vec_IntArray(vec.Vec_WecEntry(classes, class)) {
+			result[output] = reprSops[class]
+		}
+	}
+	_ = dst
+	_ = costMax
+	return result
 }
 
+func Abc_NtkClpGiaOne(g *gia.Gia_Man_t, coIndex int, cubeLimit, conflictLimit, canonical, reverse int32, support, class *vec.Vec_Int_t, verbose int32, supports *vec.Vec_Wec_t) *vec.Vec_Str_t {
+	cone := gia.Gia_ManDupCones(g, []int32{int32(coIndex)}, 1, 1)
+	if cone == nil {
+		return nil
+	}
+	sop := bmc.Bmc_CollapseOneOld(cone, cubeLimit, conflictLimit, canonical, reverse, verbose)
+	gia.Gia_ManStop(cone)
+	if sop != nil {
+		Abc_NtkCollapseReduce(sop, support, class, supports)
+	}
+	return sop
+}
 
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
+func Abc_NtkClpGiaOne2(cnf *gia.Cnf_Dat_t, g *gia.Gia_Man_t, coIndex int, support, class *vec.Vec_Int_t, supports *vec.Vec_Wec_t, cubeLimit, conflictLimit, canonical, reverse, verbose int32) *vec.Vec_Str_t {
+	coObj := gia.Gia_ManCo(g, int32(coIndex))
+	coID := gia.Gia_ObjId(g, coObj)
+	ands := vec.Vec_IntAlloc(100)
+	gia.Gia_ManIncrementTravId(g)
+	gia.Gia_ManCollectAnds(g, []int32{coID}, 1, ands, nil)
+	if int(coID) >= len(cnf.VarNums) || int(coID) >= len(cnf.Obj2Clause) {
+		vec.Vec_IntFree(ands)
+		return nil
+	}
+	supportObjects := make([]int32, vec.Vec_IntSize(support))
+	for i, ci := range vec.Vec_IntArray(support) {
+		supportObjects[i] = gia.Gia_ObjId(g, gia.Gia_ManCi(g, ci))
+	}
+	mapping := make([]int32, len(cnf.VarNums))
+	for i := range mapping {
+		mapping[i] = -1
+	}
+	solver := Abc_NtkClpDeriveSatSolver(cnf, coID, supportObjects, vec.Vec_IntArray(ands), &mapping)
+	vec.Vec_IntFree(ands)
+	if solver == nil {
+		return nil
+	}
+	defer solver.Close()
+	sop := bmc.Bmc_CollapseOne_int(solver, int32(vec.Vec_IntSize(support)), cubeLimit, conflictLimit, canonical, reverse, verbose)
+	if sop == nil {
+		return nil
+	}
+	Abc_NtkCollapseReduce(sop, support, class, supports)
+	return sop
+}
 
+func Abc_NtkClpDeriveSatSolver(cnf *gia.Cnf_Dat_t, coID int32, supportObjects, ands []int32, mapping *[]int32) *bsat.Solver {
+	if cnf == nil || mapping == nil || coID < 0 || int(coID) >= len(cnf.Obj2Clause) || int(coID) >= len(cnf.Obj2Count) {
+		return nil
+	}
+	ids := *mapping
+	if len(ids) < len(cnf.VarNums) || int(coID) >= len(ids) {
+		return nil
+	}
+	nVars := int32(2)
+	ids[coID] = nVars
+	nVars++
+	for _, objID := range supportObjects {
+		if objID < 0 || int(objID) >= len(ids) {
+			return nil
+		}
+		ids[objID] = nVars
+		nVars++
+	}
+	for _, objID := range ands {
+		if objID >= 0 && int(objID) < len(cnf.Obj2Clause) && cnf.Obj2Clause[objID] != -1 {
+			ids[objID] = nVars
+			nVars++
+		}
+	}
+	solver := bsat.NewSolver()
+	solver.SetNumVars(nVars)
+	work := append(append([]int32(nil), ands...), coID)
+	for _, objID := range work {
+		if objID < 0 || int(objID) >= len(cnf.Obj2Clause) || cnf.Obj2Clause[objID] == -1 {
+			continue
+		}
+		begin, count := cnf.Obj2Clause[objID], cnf.Obj2Count[objID]
+		for ci := begin; ci < begin+count; ci++ {
+			clause := cnf.Clauses[ci]
+			lits := make([]bsat.Literal, len(clause))
+			for i, lit := range clause {
+				id := lit >> 1
+				if id < 0 || int(id) >= len(ids) || ids[id] < 0 {
+					solver.Close()
+					return nil
+				}
+				if lit&1 != 0 {
+					lits[i] = bsat.Negative(ids[id])
+				} else {
+					lits[i] = bsat.Positive(ids[id])
+				}
+			}
+			if !solver.AddClause(lits...) {
+				solver.Close()
+				return nil
+			}
+		}
+	}
+	return solver
+}
 
-//ABC_NAMESPACE_IMPL_END
-
+// Kept for C API compatibility; BMC derivation is centralized in bmc.
+func Abc_NtkFromSopsInt(n *Abc_Ntk_t, cubeLimit, conflictLimit, costMax, canonical, reverse, cnfShared, verbose int32) *Abc_Ntk_t {
+	return Abc_NtkCollapseSat(n, cubeLimit, conflictLimit, costMax, canonical, reverse, cnfShared, verbose)
+}

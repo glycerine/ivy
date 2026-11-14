@@ -20,6 +20,8 @@ points still need source-faithful implementations and regression coverage:
   need comparison with `src/bdd/llb/llb4Sweep.c`. In particular, sweep ordering
   ignores `saveAll`, cutpoint selection ignores its limit, and sweep
   partitioning bypasses the source sweep traversal.
+- `Llb_AigMap` in `llb4Map.go` estimates cuts from transitive support instead
+  of invoking the mapping algorithm in `src/bdd/llb/llb4Map.c`.
 - `Llb_NonlinTrySubsetting` in `llb3Nonlin.go` is empty; review it and the
   remaining nonlinear drivers against `src/bdd/llb/llb3Nonlin.c` and
   `src/bdd/llb/llb4Nonlin.c`.

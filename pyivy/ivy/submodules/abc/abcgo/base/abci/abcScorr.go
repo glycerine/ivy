@@ -1,441 +1,337 @@
 package abci
 
-import "fmt"
+import (
+	"fmt"
+	"os"
 
-import "os"
+	aiggraph "github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/aig/saig"
+	baseabc "github.com/glycerine/abcgo/base/abc"
+	abcio "github.com/glycerine/abcgo/base/io"
+	"github.com/glycerine/abcgo/misc/extra"
+	"github.com/glycerine/abcgo/misc/vec"
+	"github.com/glycerine/abcgo/proof/cec"
+	"github.com/glycerine/abcgo/proof/ssw"
+)
 
-/**CFile****************************************************************
-
-  FileName    [abcScorr.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Network and node package.]
-
-  Synopsis    [Signal correspondence testing procedures.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: abcScorr.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
- 
-//#include "base/abc/abc.h"
-//#include "base/io/ioAbc.h"
-//#include "aig/saig/saig.h"
-//#include "proof/ssw/ssw.h"
-//#include "aig/gia/gia.h"
-//#include "proof/cec/cec.h"
-//#include "aig/gia/giaAig.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-   
 type Tst_Dat_t struct {
-    pNetlist  *Abc_Ntk_t;
-    pAig  *Aig_Man_t;
-    pGia  *Gia_Man_t;
-    vId2Name  *Vec_Int_t;
-    pFileNameOut       string;
-    fFlopOnly         int32;
-    fFfNdOnly         int32;
-    fDumpBmc         int32;      
+	pNetlist     *Abc_Ntk_t
+	pAig         *Aig_Man_t
+	pGia         *Gia_Man_t
+	vId2Name     *Vec_Int_t
+	pFileNameOut string
+	fFlopOnly    int32
+	fFfNdOnly    int32
+	fDumpBmc     int32
 }
 
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+// Abc_NtkMapGiaIntoNameId maps each GIA/AIG object to the source netlist ID
+// associated with its net.  Later CI/CO passes intentionally overwrite names
+// assigned by the general-net pass, matching ABC's precedence.
 func Abc_NtkMapGiaIntoNameId(pNetlist *Abc_Ntk_t, pAig *Aig_Man_t, pGia *Gia_Man_t) *Vec_Int_t {
-    var vId2Name *Vec_Int_t;
-    var pNet, pNode, pAnd *Abc_Obj_t;
-    var pObjAig *Aig_Obj_t;
-    var i int32;
-    vId2Name = Vec_IntAlloc( 0 );
-    Vec_IntFill( vId2Name, pGia ? Gia_ManObjNum(pGia) : Aig_ManObjNumMax(pAig), ~0 );
-    // copy all names
-    // inlining of macro Abc_NtkForEachNet
-    for  i = 0; (i < Vec_PtrSize((pNetlist).vObjs)) && (((pNet) = Abc_NtkObj(pNetlist, i)), 1); i++  {            if (pNet) == nil || !Abc_ObjIsNet(pNet) {} else {
-        pNode = Abc_ObjFanin0(pNet).pCopy; 
-        if pNode && (pAnd = Abc_ObjRegular(pNode.pCopy)) && 
-            (pObjAig = (Aig_Obj_t *)Abc_ObjRegular(pAnd.pCopy)) && 
-             Aig_ObjType(pObjAig) != AIG_OBJ_NONE {
-            if pGia == nil {
-                Vec_IntWriteEntry( vId2Name, Aig_ObjId(pObjAig), Abc_ObjId(pNet) );
-            } else {
-                Vec_IntWriteEntry( vId2Name, Abc_Lit2Var(pObjAig.iData), Abc_ObjId(pNet) ); }
-        }
-    }
-    }
-    // overwrite CO names
-    // inlining of macro Abc_NtkForEachCo
-    for  i = 0; (i < Abc_NtkCoNum(pNetlist)) && (((pNode) = Abc_NtkCo(pNetlist, i)), 1); i++  {
-        pNet = Abc_ObjFanin0(pNode);
-        pNode = pNode.pCopy;
-        if pNode && (pAnd = Abc_ObjRegular(pNode.pCopy)) && 
-            (pObjAig = (Aig_Obj_t *)Abc_ObjRegular(pAnd.pCopy)) && 
-             Aig_ObjType(pObjAig) != AIG_OBJ_NONE {
-            if pGia == nil {
-                Vec_IntWriteEntry( vId2Name, Aig_ObjId(pObjAig), Abc_ObjId(pNet) );
-            } else {
-                Vec_IntWriteEntry( vId2Name, Abc_Lit2Var(pObjAig.iData), Abc_ObjId(pNet) ); }
-        }
-    }
-    // overwrite CI names
-    // inlining of macro Abc_NtkForEachCi
-    for  i = 0; (i < Abc_NtkCiNum(pNetlist)) && (((pNode) = Abc_NtkCi(pNetlist, i)), 1); i++  {
-        pNet = Abc_ObjFanout0(pNode);
-        pNode = pNode.pCopy;
-        if pNode && (pAnd = Abc_ObjRegular(pNode.pCopy)) && 
-            (pObjAig = (Aig_Obj_t *)Abc_ObjRegular(pAnd.pCopy)) && 
-             Aig_ObjType(pObjAig) != AIG_OBJ_NONE {
-            if pGia == nil {
-                Vec_IntWriteEntry( vId2Name, Aig_ObjId(pObjAig), Abc_ObjId(pNet) );
-            } else {
-                Vec_IntWriteEntry( vId2Name, Abc_Lit2Var(pObjAig.iData), Abc_ObjId(pNet) ); }
-        }
-    }
-    return vId2Name;
+	if pNetlist == nil || pAig == nil {
+		return nil
+	}
+	size := int32(0)
+	if pGia != nil {
+		size = gia.Gia_ManObjNum(pGia)
+	} else {
+		size = aiggraph.Aig_ManObjNumMax(pAig)
+	}
+	mapping := vec.Vec_IntAlloc(int(size))
+	vec.Vec_IntFill(mapping, int(size), -1)
+	mapObject := func(obj *Abc_Obj_t) (int32, bool) {
+		lit, ok := Abc_NtkDarMappedObjLit(obj)
+		if !ok {
+			return 0, false
+		}
+		if pGia == nil {
+			return int32(lit.NodeID()), true
+		}
+		copy := aiggraph.Aig_ObjCopy(pAig, aiggraph.Aig_Regular(lit))
+		if copy == aiggraph.InvalidEdge {
+			return 0, false
+		}
+		return int32(copy) >> 1, true
+	}
+	put := func(net *Abc_Obj_t) {
+		if net == nil || net.Kind != baseabc.ABC_OBJ_NET {
+			return
+		}
+		fanins := net.Fanins()
+		if len(fanins) == 0 {
+			return
+		}
+		// ABC names the AIG node driving a net, not the net object itself.
+		// For PI and output passes this also preserves the source's net ID while
+		// associating it with the corresponding CI/CO driver node.
+		id, ok := mapObject(fanins[0].Object)
+		if ok && id >= 0 && id < size {
+			vec.Vec_IntWriteEntry(mapping, int(id), int32(net.ID))
+		}
+	}
+	for _, object := range pNetlist.ObjectsOfKind(baseabc.ABC_OBJ_NET) {
+		put(object)
+	}
+	for i := int32(0); i < baseabc.Abc_NtkCoNum(pNetlist); i++ {
+		co := baseabc.Abc_NtkCo(pNetlist, i)
+		fanins := co.Fanins()
+		if len(fanins) != 0 {
+			put(fanins[0].Object)
+		}
+	}
+	for i := int32(0); i < baseabc.Abc_NtkCiNum(pNetlist); i++ {
+		ci := baseabc.Abc_NtkCi(pNetlist, i)
+		fanouts := ci.Fanouts()
+		if len(fanouts) != 0 {
+			put(fanouts[0])
+		}
+	}
+	return mapping
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkTestScorrGetName(pNetlist *Abc_Ntk_t, vId2Name *Vec_Int_t, Id int32) string {
-//    Abc_Obj_t * pObj;
-//printf( "trying to get name for %d\n", Id );
-    if Vec_IntEntry(vId2Name, Id) == ~0 {
-        return nil; }
-//    pObj = Abc_NtkObj( pNetlist, Vec_IntEntry(vId2Name, Id) );
-//    pObj = Abc_ObjFanin0(pObj);
-//    assert( Abc_ObjIsCi(pObj) );
-    return Nm_ManFindNameById( pNetlist.pManName, Vec_IntEntry(vId2Name, Id) );
+func Abc_NtkTestScorrGetName(pNetlist *Abc_Ntk_t, vId2Name *Vec_Int_t, id int32) string {
+	if pNetlist == nil || vId2Name == nil || id < 0 || id >= Vec_IntSize(vId2Name) {
+		return ""
+	}
+	netID := Vec_IntEntry(vId2Name, id)
+	if netID < 0 {
+		return ""
+	}
+	obj := baseabc.Abc_NtkObj(pNetlist, netID)
+	if obj == nil {
+		return ""
+	}
+	return baseabc.Abc_ObjName(obj)
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkTestScorrWriteEquivPair(pNetlist *Abc_Ntk_t, vId2Name *Vec_Int_t, Id1 int32, Id2 int32, pFile *os.File, fPol int32) int32 {
-    var pName1 string  = Abc_NtkTestScorrGetName( pNetlist, vId2Name, Id1 );
-    var pName2 string  = Abc_NtkTestScorrGetName( pNetlist, vId2Name, Id2 );
-    if pName1 == nil || pName2 == nil {
-        return 0; }
-    fmt.Fprintf(pFile, "%s=%s%s\n", pName1, fPol? "~": "", pName2);
-    return 1;
+func Abc_NtkTestScorrWriteEquivPair(pNetlist *Abc_Ntk_t, vId2Name *Vec_Int_t, id1, id2 int32, file *os.File, polarity int32) int32 {
+	name1 := Abc_NtkTestScorrGetName(pNetlist, vId2Name, id1)
+	name2 := Abc_NtkTestScorrGetName(pNetlist, vId2Name, id2)
+	if name1 == "" || name2 == "" || file == nil {
+		return 0
+	}
+	if polarity != 0 {
+		fmt.Fprintf(file, "%s=~%s\n", name1, name2)
+	} else {
+		fmt.Fprintf(file, "%s=%s\n", name1, name2)
+	}
+	return 1
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkTestScorrWriteEquivConst(pNetlist *Abc_Ntk_t, vId2Name *Vec_Int_t, Id1 int32, pFile *os.File, fPol int32) int32 {
-    var pName1 string  = Abc_NtkTestScorrGetName( pNetlist, vId2Name, Id1 );
-    if pName1 == nil {
-        return 0; }
-    fmt.Fprintf(pFile, "%s=%s%s\n", pName1, fPol? "~": "", "const0");
-    return 1;
+func Abc_NtkTestScorrWriteEquivConst(pNetlist *Abc_Ntk_t, vId2Name *Vec_Int_t, id int32, file *os.File, polarity int32) int32 {
+	name := Abc_NtkTestScorrGetName(pNetlist, vId2Name, id)
+	if name == "" || file == nil {
+		return 0
+	}
+	if polarity != 0 {
+		fmt.Fprintf(file, "%s=~const0\n", name)
+	} else {
+		fmt.Fprintf(file, "%s=const0\n", name)
+	}
+	return 1
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-var spStatic_Abc_NtkBmcFileName_Buffer string // was [1000]byte in C
-
-func Abc_NtkBmcFileName(pName string) string {
-    
-    var pNameGeneric string  = Extra_FileNameGeneric( pName );
-    spStatic_Abc_NtkBmcFileName_Buffer = fmt.Sprintf("%s_bmc%s", pNameGeneric, pName + len(pNameGeneric));
-    pNameGeneric = nil;
-    return spStatic_Abc_NtkBmcFileName_Buffer;
+func Abc_NtkBmcFileName(name string) string {
+	generic := extra.Extra_FileNameGeneric(name)
+	if len(generic) > len(name) {
+		return name + "_bmc"
+	}
+	return generic + "_bmc" + name[len(generic):]
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkTestScorrWriteEquivGia(pData *Tst_Dat_t) int32 {
-    var pNetlist *Abc_Ntk_t  = pData.pNetlist;
-    var vId2Name *Vec_Int_t  = pData.vId2Name;
-    var pGia *Gia_Man_t      = pData.pGia;
-    var pFileNameOut string   = pData.pFileNameOut;
-    var pFile *os.File;
-    var pObj, pRepr *Gia_Obj_t;
-    var i, Counter int32;
-    if pData.fDumpBmc {
-        pData.fDumpBmc = 0;
-        pFileNameOut = Abc_NtkBmcFileName( pFileNameOut );
-    }
-    pFile = os.OpenFile(pFileNameOut, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);
-    Gia_ManSetPhase( pGia );
-    // inlining of macro Gia_ManForEachObj
-    for  i = 0; (i < pGia.nObjs) && ((pObj) = Gia_ManObj(pGia, i)); i++  {
-        if !Gia_ObjHasRepr(pGia, i) {
-            continue; }
-        pRepr = Gia_ManObj( pGia,Gia_ObjRepr(pGia, i) );
-        if pData.fFlopOnly {
-            if !Gia_ObjIsRo(pGia, pObj) || !(Gia_ObjIsRo(pGia, pRepr)||Gia_ObjIsConst0(pRepr)) {
-                continue; }
-        
-        } else if pData.fFfNdOnly {
-            if !Gia_ObjIsRo(pGia, pObj) && !(Gia_ObjIsRo(pGia, pRepr)||Gia_ObjIsConst0(pRepr)) {
-                continue; }
-        }
-        if Gia_ObjRepr(pGia, i) == 0 {
-            Counter += Abc_NtkTestScorrWriteEquivConst( pNetlist, vId2Name, i, pFile, Gia_ObjPhase(pObj) );
-        } else {
-            Counter += Abc_NtkTestScorrWriteEquivPair( pNetlist, vId2Name, Gia_ObjRepr(pGia, i), i, pFile, 
-                Gia_ObjPhase(pRepr) ^ Gia_ObjPhase(pObj) ); }
-    }
-    _ = (pFile).Close();
-    fmt.Printf("%d pairs of sequentially equivalent nodes are written into file \"%s\".\n", Counter, pFileNameOut);
-    return Counter;
+func scorrOpenOutput(data *Tst_Dat_t) (*os.File, string) {
+	filename := data.pFileNameOut
+	if data.fDumpBmc != 0 {
+		data.fDumpBmc = 0
+		filename = Abc_NtkBmcFileName(filename)
+	}
+	file, err := os.OpenFile(filename, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
+	if err != nil {
+		fmt.Printf("Cannot open equivalence output file %q: %v\n", filename, err)
+		return nil, filename
+	}
+	return file, filename
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkTestScorrWriteEquivAig(pData *Tst_Dat_t) int32 {
-    var pNetlist *Abc_Ntk_t  = pData.pNetlist;
-    var vId2Name *Vec_Int_t  = pData.vId2Name;
-    var pAig *Aig_Man_t      = pData.pAig;
-    var pFileNameOut string   = pData.pFileNameOut;
-    var pFile *os.File;
-    var pObj, pRepr *Aig_Obj_t;
-    var i, Counter int32;
-    if pData.fDumpBmc {
-        pData.fDumpBmc = 0;
-        pFileNameOut = Abc_NtkBmcFileName( pFileNameOut );
-    }
-    pFile = os.OpenFile(pFileNameOut, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);
-    // inlining of macro Aig_ManForEachObj
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(pAig.vObjs)) && (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {
-        if (pRepr = Aig_ObjRepr(pAig, pObj)) == nil {
-            continue; }
-        if pData.fFlopOnly {
-            if !Saig_ObjIsLo(pAig, pObj) || !(Saig_ObjIsLo(pAig, pRepr)||pRepr==Aig_ManConst1(pAig)) {
-                continue; }
-        
-        } else if pData.fFfNdOnly {
-            if !Saig_ObjIsLo(pAig, pObj) && !(Saig_ObjIsLo(pAig, pRepr)||pRepr==Aig_ManConst1(pAig)) {
-                continue; }
-        }
-        if pRepr == Aig_ManConst1(pAig) {
-            Counter += Abc_NtkTestScorrWriteEquivConst( pNetlist, vId2Name, Aig_ObjId(pObj), pFile, Aig_ObjPhase(pObj) );
-        } else {
-            Counter += Abc_NtkTestScorrWriteEquivPair( pNetlist, vId2Name, Aig_ObjId(pRepr), Aig_ObjId(pObj), pFile, 
-                Aig_ObjPhase(pRepr) ^ Aig_ObjPhase(pObj) ); }
-    }
-    }
-    _ = (pFile).Close();
-    fmt.Printf("%d pairs of sequentially equivalent nodes are written into file \"%s\".\n", Counter, pFileNameOut);
-    return Counter;
+func Abc_NtkTestScorrWriteEquivGia(data *Tst_Dat_t) int32 {
+	if data == nil || data.pGia == nil {
+		return 0
+	}
+	file, filename := scorrOpenOutput(data)
+	if file == nil {
+		return 0
+	}
+	defer file.Close()
+	gia.Gia_ManSetPhase(data.pGia)
+	var count int32
+	for id := int32(0); id < gia.Gia_ManObjNum(data.pGia); id++ {
+		if gia.Gia_ObjHasRepr(data.pGia, id) == 0 {
+			continue
+		}
+		reprID := gia.Gia_ObjRepr(data.pGia, id)
+		obj, repr := gia.Gia_ManObj(data.pGia, id), gia.Gia_ManObj(data.pGia, reprID)
+		if data.fFlopOnly != 0 {
+			if gia.Gia_ObjIsRo(data.pGia, obj) == 0 || (gia.Gia_ObjIsRo(data.pGia, repr) == 0 && gia.Gia_ObjIsConst0(repr) == 0) {
+				continue
+			}
+		} else if data.fFfNdOnly != 0 {
+			if gia.Gia_ObjIsRo(data.pGia, obj) == 0 && (gia.Gia_ObjIsRo(data.pGia, repr) == 0 && gia.Gia_ObjIsConst0(repr) == 0) {
+				continue
+			}
+		}
+		if reprID == 0 {
+			count += Abc_NtkTestScorrWriteEquivConst(data.pNetlist, data.vId2Name, id, file, gia.Gia_ObjPhase(obj))
+		} else {
+			count += Abc_NtkTestScorrWriteEquivPair(data.pNetlist, data.vId2Name, reprID, id, file, gia.Gia_ObjPhase(repr)^gia.Gia_ObjPhase(obj))
+		}
+	}
+	fmt.Printf("%d pairs of sequentially equivalent nodes are written into file %q.\n", count, filename)
+	return count
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkTestScorr(pFileNameIn string, pFileNameOut string, nStepsMax int32, nBTLimit int32, fNewAlgo int32, fFlopOnly int32, fFfNdOnly int32, fVerbose int32) *Abc_Ntk_t {
-    extern Aig_Man_t * Abc_NtkToDar( Abc_Ntk_t * pNtk, int fExors, int fRegisters );
-    extern Abc_Ntk_t * Abc_NtkFromDarSeqSweep( Abc_Ntk_t * pNtkOld, Aig_Man_t * pMan );
-
-    var pFile *os.File;
-    var Data Tst_Dat_t;
-    var pData *Tst_Dat_t = &Data;
-    var vId2Name *Vec_Int_t;
-    var pNetlist, pLogic, pStrash, pResult *Abc_Ntk_t;
-    var pAig, pTempAig *Aig_Man_t;
-    var pGia, pTempGia *Gia_Man_t;
-//    int Counter = 0;
-    // check the files
-    pFile = os.Open(pFileNameIn);
-    if pFile == nil {
-        fmt.Printf("Input file \"%s\" cannot be opened.\n", pFileNameIn);
-        return nil;
-    }
-    _ = (pFile).Close();
-    // check the files
-    pFile = os.OpenFile(pFileNameOut, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);
-    if pFile == nil {
-        fmt.Printf("Output file \"%s\" cannot be opened.\n", pFileNameOut);
-        return nil;
-    }
-    _ = (pFile).Close();
-    // derive AIG for signal correspondence
-    pNetlist = Io_ReadNetlist( pFileNameIn, Io_ReadFileType(pFileNameIn), 1 );
-    if pNetlist == nil {
-        fmt.Printf("Reading input file \"%s\" has failed.\n", pFileNameIn);
-        return nil;
-    }
-    pLogic = Abc_NtkToLogic( pNetlist );
-    if pLogic == nil {
-        Abc_NtkDelete( pNetlist );
-        fmt.Printf("Deriving logic network from input file %s has failed.\n", pFileNameIn);
-        return nil;
-    }
-    if Extra_FileIsType( pFileNameIn, ".bench", ".BENCH", nil ) {
-        // get the init file name
-        var pFileNameInit string  = Extra_FileNameGenericAppend( pLogic.pSpec, ".init" );
-        pFile = os.Open(pFileNameInit);
-        if pFile == nil {
-            fmt.Printf("Init file \"%s\" cannot be opened.\n", pFileNameInit);
-            return nil;
-        }
-        Io_ReadBenchInit( pLogic, pFileNameInit );
-        Abc_NtkConvertDcLatches( pLogic );
-        if fVerbose != 0 {
-            fmt.Printf("Initial state was derived from file \"%s\".\n", pFileNameInit); }
-    }
-    pStrash = Abc_NtkStrash( pLogic, 0, 1, 0 );
-    if pStrash == nil {
-        Abc_NtkDelete( pLogic );
-        Abc_NtkDelete( pNetlist );
-        fmt.Printf("Deriving strashed network from input file %s has failed.\n", pFileNameIn);
-        return nil;
-    }
-    pAig = Abc_NtkToDar( pStrash, 0, 1 ); // performs "zero" internally
-    // the newer computation (&scorr)
-    if fNewAlgo != 0 {
-        var CorPars Cec_ParCor_t;
-        var pCorPars *Cec_ParCor_t = &CorPars;
-        Cec_ManCorSetDefaultParams( pCorPars );
-        pCorPars.nBTLimit  = nBTLimit;
-        pCorPars.nStepsMax = nStepsMax;
-        pCorPars.fVerbose  = fVerbose;
-        pCorPars.fUseCSat  = 1;
-        pGia = Gia_ManFromAig( pAig );
-        // prepare the data-structure
-        *pData = Tst_Dat_t{};
-        pData.pNetlist     = pNetlist;
-        pData.pAig         = nil;
-        pData.pGia         = pGia;
-        pData.vId2Name     = vId2Name = Abc_NtkMapGiaIntoNameId( pNetlist, pAig, pGia );
-        pData.pFileNameOut = pFileNameOut;
-        pData.fFlopOnly    = fFlopOnly;
-        pData.fFfNdOnly    = fFfNdOnly;
-        pData.fDumpBmc     = 1;
-        pCorPars.pData     = pData;
-        pCorPars.pFunc     = (void *)Abc_NtkTestScorrWriteEquivGia;
-        // call signal correspondence
-        pTempGia = Cec_ManLSCorrespondence( pGia, pCorPars );
-        pTempAig = Gia_ManToAigSimple( pTempGia );
-        Gia_ManStop( pTempGia );
-        Gia_ManStop( pGia );
-    
-    // the older computation (scorr)
-    } else {
-        var SswPars Ssw_Pars_t;
-        var pSswPars *Ssw_Pars_t = &SswPars;
-        Ssw_ManSetDefaultParams( pSswPars );
-        pSswPars.nBTLimit  = nBTLimit;
-        pSswPars.nStepsMax = nStepsMax;
-        pSswPars.fVerbose  = fVerbose;
-        // preSswPare the data-structure
-        *pData = Tst_Dat_t{};
-        pData.pNetlist     = pNetlist;
-        pData.pAig         = pAig;
-        pData.pGia         = nil;
-        pData.vId2Name     = vId2Name = Abc_NtkMapGiaIntoNameId( pNetlist, pAig, nil );
-        pData.pFileNameOut = pFileNameOut;
-        pData.fFlopOnly    = fFlopOnly;
-        pData.fFfNdOnly    = fFfNdOnly;
-        pData.fDumpBmc     = 1;
-        pSswPars.pData     = pData;
-        pSswPars.pFunc     = (void *)Abc_NtkTestScorrWriteEquivAig;
-        // call signal correspondence
-        pTempAig = Ssw_SignalCorrespondence( pAig, pSswPars );
-    }
-    // create the resulting AIG
-    pResult = Abc_NtkFromDarSeqSweep( pStrash, pTempAig );
-    // cleanup
-    Vec_IntFree( vId2Name );
-    Aig_ManStop( pAig );
-    Aig_ManStop( pTempAig );
-    Abc_NtkDelete( pStrash );
-    Abc_NtkDelete( pLogic );
-    Abc_NtkDelete( pNetlist );
-    return pResult;
+func Abc_NtkTestScorrWriteEquivAig(data *Tst_Dat_t) int32 {
+	if data == nil || data.pAig == nil {
+		return 0
+	}
+	file, filename := scorrOpenOutput(data)
+	if file == nil {
+		return 0
+	}
+	defer file.Close()
+	var count int32
+	for id := int32(0); id < aiggraph.Aig_ManObjNumMax(data.pAig); id++ {
+		obj := aiggraph.Aig_ManObj(data.pAig, id)
+		if aiggraph.Aig_ObjIsNone(data.pAig, obj) {
+			continue
+		}
+		repr := aiggraph.Aig_ObjRepr(data.pAig, obj)
+		if repr == aiggraph.InvalidEdge {
+			continue
+		}
+		repr = aiggraph.Aig_Regular(repr)
+		if data.fFlopOnly != 0 {
+			if !saig.Saig_ObjIsLo(data.pAig, obj) || (!saig.Saig_ObjIsLo(data.pAig, repr) && repr != aiggraph.Aig_ManConst1(data.pAig)) {
+				continue
+			}
+		} else if data.fFfNdOnly != 0 {
+			if !saig.Saig_ObjIsLo(data.pAig, obj) && (!saig.Saig_ObjIsLo(data.pAig, repr) && repr != aiggraph.Aig_ManConst1(data.pAig)) {
+				continue
+			}
+		}
+		if repr == aiggraph.Aig_ManConst1(data.pAig) {
+			count += Abc_NtkTestScorrWriteEquivConst(data.pNetlist, data.vId2Name, id, file, scorrPolarity(aiggraph.Aig_ObjPhase(data.pAig, obj)))
+		} else {
+			polarity := scorrPolarity(aiggraph.Aig_ObjPhase(data.pAig, repr) != aiggraph.Aig_ObjPhase(data.pAig, obj))
+			count += Abc_NtkTestScorrWriteEquivPair(data.pNetlist, data.vId2Name, int32(repr.NodeID()), id, file, polarity)
+		}
+	}
+	fmt.Printf("%d pairs of sequentially equivalent nodes are written into file %q.\n", count, filename)
+	return count
 }
 
+func scorrPolarity(value bool) int32 {
+	if value {
+		return 1
+	}
+	return 0
+}
 
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
+// Abc_NtkTestScorr runs either the Gia/Cec or AIG/Ssw sequential
+// correspondence engine and returns the sequentially swept network.
+func Abc_NtkTestScorr(inputFile, outputFile string, stepsMax, backtrackLimit, newAlgo, flopOnly, ffNodeOnly, verbose int32) *Abc_Ntk_t {
+	if file, err := os.Open(inputFile); err != nil {
+		fmt.Printf("Input file %q cannot be opened.\n", inputFile)
+		return nil
+	} else {
+		file.Close()
+	}
+	if file, err := os.OpenFile(outputFile, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666); err != nil {
+		fmt.Printf("Output file %q cannot be opened.\n", outputFile)
+		return nil
+	} else {
+		file.Close()
+	}
 
-
-//ABC_NAMESPACE_IMPL_END
-
+	netlist := abcio.Io_ReadNetlist(inputFile, abcio.Io_ReadFileType(inputFile), 1)
+	if netlist == nil {
+		fmt.Printf("Reading input file %q has failed.\n", inputFile)
+		return nil
+	}
+	logic := baseabc.Abc_NtkToLogic(netlist)
+	if logic == nil {
+		baseabc.Abc_NtkDelete(netlist)
+		fmt.Printf("Deriving logic network from input file %s has failed.\n", inputFile)
+		return nil
+	}
+	cleanup := func() {
+		baseabc.Abc_NtkDelete(logic)
+		baseabc.Abc_NtkDelete(netlist)
+	}
+	if extra.Extra_FileIsType(inputFile, ".bench", ".BENCH", "") != 0 {
+		initFile := extra.Extra_FileNameGenericAppend(baseabc.Abc_NtkSpec(logic), ".init")
+		file, err := os.Open(initFile)
+		if err != nil {
+			cleanup()
+			fmt.Printf("Init file %q cannot be opened.\n", initFile)
+			return nil
+		}
+		file.Close()
+		abcio.Io_ReadBenchInit(logic, initFile)
+		baseabc.Abc_NtkConvertDcLatches(logic)
+		if verbose != 0 {
+			fmt.Printf("Initial state was derived from file %q.\n", initFile)
+		}
+	}
+	strash := Abc_NtkStrash(logic, 0, 1, 0)
+	if strash == nil {
+		cleanup()
+		fmt.Printf("Deriving strashed network from input file %s has failed.\n", inputFile)
+		return nil
+	}
+	aig := Abc_NtkToDar(strash, 0, 1)
+	if aig == nil {
+		baseabc.Abc_NtkDelete(strash)
+		cleanup()
+		return nil
+	}
+	var resultAig *Aig_Man_t
+	var resultGia *Gia_Man_t
+	data := &Tst_Dat_t{pNetlist: netlist, pFileNameOut: outputFile, fFlopOnly: flopOnly, fFfNdOnly: ffNodeOnly, fDumpBmc: 1}
+	if newAlgo != 0 {
+		params := &cec.Cec_ParCor_t{}
+		cec.Cec_ManCorSetDefaultParams(params)
+		giaMan := gia.Gia_ManFromAig(aig)
+		data.pGia = giaMan
+		data.vId2Name = Abc_NtkMapGiaIntoNameId(netlist, aig, giaMan)
+		callback := func(value any) { Abc_NtkTestScorrWriteEquivGia(value.(*Tst_Dat_t)) }
+		cec.Cec_ParCorSetScorr(params, backtrackLimit, stepsMax, verbose, data, callback)
+		resultGia = cec.Cec_ManLSCorrespondence(giaMan, params)
+		if resultGia != nil {
+			resultAig = gia.Gia_ManToAigSimple(resultGia)
+			gia.Gia_ManStop(resultGia)
+		}
+		gia.Gia_ManStop(giaMan)
+	} else {
+		params := &ssw.Ssw_Pars_t{}
+		ssw.Ssw_ManSetDefaultParams(params)
+		data.pAig = aig
+		data.vId2Name = Abc_NtkMapGiaIntoNameId(netlist, aig, nil)
+		callback := func(value any) { Abc_NtkTestScorrWriteEquivAig(value.(*Tst_Dat_t)) }
+		ssw.Ssw_ParsSetScorr(params, backtrackLimit, stepsMax, verbose, data, callback)
+		resultAig = ssw.Ssw_SignalCorrespondence(aig, params)
+	}
+	var result *Abc_Ntk_t
+	if resultAig != nil {
+		result = Abc_NtkFromDarSeqSweep(strash, resultAig)
+	}
+	Vec_IntFree(data.vId2Name)
+	if resultAig != nil {
+		aiggraph.Aig_ManStop(resultAig)
+	}
+	aiggraph.Aig_ManStop(aig)
+	baseabc.Abc_NtkDelete(strash)
+	cleanup()
+	return result
+}

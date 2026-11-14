@@ -1,8 +1,6 @@
 package res
 
 import (
-	"math/rand"
-
 	"github.com/glycerine/abcgo/aig/hop"
 	"github.com/glycerine/abcgo/base/abc"
 	"github.com/glycerine/abcgo/bool/kit"
@@ -106,7 +104,7 @@ type Res_Sim_t struct {
 	vCands *vec.Vec_Vec_t // resubstitution candidates
 	// statistics
 	timeSat abctime
-	rng     *rand.Rand
+	rng     *resCRand
 }
 
 ////////////////////////////////////////////////////////////////////////

@@ -12,6 +12,7 @@ package wln
 
   Author      [Alan Mishchenko]
   
+
   Affiliation [UC Berkeley]
 
   Date        [Ver. 1.0. Started - September 23, 2018.]
@@ -38,12 +39,12 @@ package wln
 
   Description []
                
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
-
 
 ////////////////////////////////////////////////////////////////////////
 ///                       END OF FILE                                ///

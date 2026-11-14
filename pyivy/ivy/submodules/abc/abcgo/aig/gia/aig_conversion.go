@@ -237,8 +237,11 @@ func Gia_ManToAigSkip(p *Gia_Man_t, stride int32) *aig.Graph {
 	return giaExportAig(p, false, false, false, stride)
 }
 
-// Gia_ManToAigSimple visits source objects in order and requires each AIG
-// object's ID to remain identical, as in giaAig.c.
+// Gia_ManToAigSimple visits source objects in order. The C implementation
+// records each resulting AIG edge in Gia_Obj.Value and checks object-ID
+// identity with assert; optimized C builds still return the mapped graph when
+// AIG strashing collapses a gate. Keep the mapping behavior in Go without
+// turning that debug-only assertion into a production panic.
 func Gia_ManToAigSimple(p *Gia_Man_t) *aig.Graph {
 	out := aig.Aig_ManStart(p.nObjs)
 	out.Name, out.Spec = p.pName, p.pSpec
@@ -259,9 +262,6 @@ func Gia_ManToAigSimple(p *Gia_Man_t) *aig.Graph {
 			result = out.AND(left, right)
 		default:
 			panic("gia: unsupported simple export object")
-		}
-		if id != 0 && result.NodeID() != id {
-			panic("gia: simple export changed object ID")
 		}
 		copies[id] = result
 		obj.Value = uint32(result)

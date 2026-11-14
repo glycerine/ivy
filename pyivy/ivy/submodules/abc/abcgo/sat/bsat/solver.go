@@ -17,6 +17,19 @@ func NewSolver() *Solver                   { return sat_solver_new() }
 func (s *sat_solver_t) NewVariable() int32 { s.lastStatus = Unknown; return sat_solver_addvar(s) }
 func (s *sat_solver_t) NumVars() int32     { return s.size }
 
+// Close releases the solver's internal clauses and vectors.
+func (s *sat_solver_t) Close() { sat_solver_delete(s) }
+
+// SetNumVars ensures that variable IDs below n exist, preserving existing
+// assignments and clauses.
+func (s *sat_solver_t) SetNumVars(n int32) {
+	if n < 0 {
+		panic("negative SAT variable count")
+	}
+	s.lastStatus = Unknown
+	sat_solver_setnvars(s, n)
+}
+
 // AddClause copies literals and automatically introduces referenced variables.
 // False means the formula is already inconsistent; later Solve calls return UNSAT.
 func (s *sat_solver_t) AddClause(literals ...Literal) bool {
@@ -29,6 +42,41 @@ func (s *sat_solver_t) AddClause(literals ...Literal) bool {
 		return false
 	}
 	return true
+}
+
+// AddXor constrains output to a XOR b, optionally complemented.
+func (s *sat_solver_t) AddXor(output, a, b int32, complement bool) bool {
+	return sat_solver_add_xor(s, output, a, b, boolInt32(complement)) != 0
+}
+
+func (s *sat_solver_t) Push(literal Literal) bool { return sat_solver_push(s, literal) != 0 }
+func (s *sat_solver_t) Pop()                      { sat_solver_pop(s) }
+func (s *sat_solver_t) Delete()                   { sat_solver_delete(s) }
+
+// SetUserVariables configures the legacy user-variable trace used by ACB's
+// optional optimization diagnostics.
+func (s *sat_solver_t) SetUserVariables(variables []int32) {
+	veci_resize(&s.user_vars, 0)
+	for _, v := range variables {
+		veci_push(&s.user_vars, v)
+	}
+}
+func (s *sat_solver_t) ClearUserVariables()   { veci_resize(&s.user_vars, 0) }
+func (s *sat_solver_t) UserValues() []int32   { return veci_begin(&s.user_values) }
+func (s *sat_solver_t) UserValueCount() int32 { return veci_size(&s.user_values) }
+func (s *sat_solver_t) ClearUserValues()      { veci_resize(&s.user_values, 0) }
+
+func boolInt32(v bool) int32 {
+	if v {
+		return 1
+	}
+	return 0
+}
+
+// MinimizeAssumptions shortens an UNSAT assumption prefix in place and returns
+// the number of retained assumptions.
+func (s *sat_solver_t) MinimizeAssumptions(literals []Literal, budget int32) int32 {
+	return sat_solver_minimize_assumptions(s, literals, int32(len(literals)), budget)
 }
 
 // Solve preserves clauses and learned information between calls. Assumptions

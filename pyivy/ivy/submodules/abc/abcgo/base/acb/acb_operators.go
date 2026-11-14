@@ -1,0 +1,41 @@
+package acb
+
+import "github.com/glycerine/abcgo/aig/miniaig"
+
+// Operator values share ABC's source definitions.
+const (
+	ABC_OPER_ARI_ABS   = miniaig.ABC_OPER_ARI_ABS
+	ABC_OPER_ARI_MIN   = miniaig.ABC_OPER_ARI_MIN
+	ABC_OPER_ARI_SQRT  = miniaig.ABC_OPER_ARI_SQRT
+	ABC_OPER_BIT_AND   = miniaig.ABC_OPER_BIT_AND
+	ABC_OPER_BIT_BUF   = miniaig.ABC_OPER_BIT_BUF
+	ABC_OPER_BIT_INV   = miniaig.ABC_OPER_BIT_INV
+	ABC_OPER_BIT_MUX   = miniaig.ABC_OPER_BIT_MUX
+	ABC_OPER_BIT_NAND  = miniaig.ABC_OPER_BIT_NAND
+	ABC_OPER_BIT_NOR   = miniaig.ABC_OPER_BIT_NOR
+	ABC_OPER_BIT_NXOR  = miniaig.ABC_OPER_BIT_NXOR
+	ABC_OPER_BIT_OR    = miniaig.ABC_OPER_BIT_OR
+	ABC_OPER_BIT_XOR   = miniaig.ABC_OPER_BIT_XOR
+	ABC_OPER_BOX       = miniaig.ABC_OPER_BOX
+	ABC_OPER_CI        = miniaig.ABC_OPER_CI
+	ABC_OPER_CO        = miniaig.ABC_OPER_CO
+	ABC_OPER_CONCAT    = miniaig.ABC_OPER_CONCAT
+	ABC_OPER_CONST_F   = miniaig.ABC_OPER_CONST_F
+	ABC_OPER_CONST_T   = miniaig.ABC_OPER_CONST_T
+	ABC_OPER_CONST_X   = miniaig.ABC_OPER_CONST_X
+	ABC_OPER_DFFLAST   = miniaig.ABC_OPER_DFFLAST
+	ABC_OPER_FON       = miniaig.ABC_OPER_FON
+	ABC_OPER_GATE      = miniaig.ABC_OPER_GATE
+	ABC_OPER_LAST      = miniaig.ABC_OPER_LAST
+	ABC_OPER_LOGIC_NOT = miniaig.ABC_OPER_LOGIC_NOT
+	ABC_OPER_LUT       = miniaig.ABC_OPER_LUT
+	ABC_OPER_NONE      = miniaig.ABC_OPER_NONE
+	ABC_OPER_RAM       = miniaig.ABC_OPER_RAM
+	ABC_OPER_RED_AND   = miniaig.ABC_OPER_RED_AND
+	ABC_OPER_RED_NXOR  = miniaig.ABC_OPER_RED_NXOR
+	ABC_OPER_SEL_NMUX  = miniaig.ABC_OPER_SEL_NMUX
+	ABC_OPER_SEL_PSEL  = miniaig.ABC_OPER_SEL_PSEL
+	ABC_OPER_SEL_SEL   = miniaig.ABC_OPER_SEL_SEL
+	ABC_OPER_SLICE     = miniaig.ABC_OPER_SLICE
+	ABC_OPER_TRI       = miniaig.ABC_OPER_TRI
+)

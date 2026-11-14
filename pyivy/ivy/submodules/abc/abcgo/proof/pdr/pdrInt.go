@@ -158,6 +158,12 @@ type Pdr_Man_t struct {
 	tTotal    abctime
 }
 
+// AddTotalTime adds elapsed wall-clock ticks from a caller outside pdr.
+func (p *Pdr_Man_t) AddTotalTime(t int64) { p.tTotal += abctime(t) }
+
+// TotalTime reports accumulated PDR ticks.
+func (p *Pdr_Man_t) TotalTime() int64 { return int64(p.tTotal) }
+
 ////////////////////////////////////////////////////////////////////////
 ///                      MACRO DEFINITIONS                           ///
 ////////////////////////////////////////////////////////////////////////

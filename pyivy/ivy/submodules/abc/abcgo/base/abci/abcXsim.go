@@ -1,233 +1,170 @@
 package abci
 
-import "fmt"
+import (
+	"fmt"
+	"os"
 
-import "os"
+	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/base/abc"
+)
 
-/**CFile****************************************************************
+// X-valued simulation uses Object.Temp as the Go representation of ABC's
+// pCopy scratch slot, which otherwise stores an integer cast to a pointer.
+func Abc_ObjSetXsim(obj *Abc_Obj_t, value int32) { abc.Abc_ObjSetTemp(obj, value) }
+func Abc_ObjGetXsim(obj *Abc_Obj_t) int32        { return abc.Abc_ObjTemp(obj) }
 
-  FileName    [abcXsim.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Network and node package.]
-
-  Synopsis    [Using X-valued simulation.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: abcXsim.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "base/abc/abc.h"
-//#include "aig/gia/gia.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-#define XVS0   ABC_INIT_ZERO
-#define XVS1   ABC_INIT_ONE
-#define XVSX   ABC_INIT_DC
-
-func Abc_ObjSetXsim(pObj *Abc_Obj_t, Value int32) { pObj.pCopy = (Abc_Obj_t *)(ABC_PTRINT_T)Value;  }
-func Abc_ObjGetXsim(pObj *Abc_Obj_t) int32 { return int32((ABC_PTRINT_T))pObj.pCopy;           }
-// Three-valued helpers are translated in xsim_value.go.
-func Abc_ObjGetXsimFanin0(pObj *Abc_Obj_t) int32 { 
-    var RetValue int32;
-    RetValue = Abc_ObjGetXsim(Abc_ObjFanin0(pObj));
-    if Abc_ObjFaninC0(pObj) {
-        return Abc_XsimInv(RetValue);
-    } else {
-        return RetValue;
-    }
-}
-func Abc_ObjGetXsimFanin1(pObj *Abc_Obj_t) int32 { 
-    var RetValue int32;
-    RetValue = Abc_ObjGetXsim(Abc_ObjFanin1(pObj));
-    if Abc_ObjFaninC1(pObj) {
-        return Abc_XsimInv(RetValue);
-    } else {
-        return RetValue;
-    }
-}
-func Abc_XsimPrint(pFile *os.File, Value int32) { 
-    if Value == XVS0 {
-        fmt.Fprintf(pFile, "0");
-        return;
-    }
-    if Value == XVS1 {
-        fmt.Fprintf(pFile, "1");
-        return;
-    }
-    assert(Value == XVSX, "Value == XVSX");       
-    fmt.Fprintf(pFile, "x");
+func Abc_ObjGetXsimFanin0(obj *Abc_Obj_t) int32 {
+	value := Abc_ObjGetXsim(abc.Abc_ObjFanin0(obj))
+	if abc.Abc_ObjFaninC0(obj) != 0 {
+		return Abc_XsimInv(value)
+	}
+	return value
 }
 
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Performs X-valued simulation of the sequential network.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkXValueSimulate(pNtk *Abc_Ntk_t, nFrames int32, fXInputs int32, fXState int32, fVerbose int32) {
-    var pObj *Abc_Obj_t;
-    var i, f int32;
-    assert(Abc_NtkIsStrash(pNtk), "Abc_NtkIsStrash(pNtk)");
-//    srand( 0x12341234 );
-    Gia_ManRandom( 1 );
-    // start simulation
-    Abc_ObjSetXsim( Abc_AigConst1(pNtk), XVS1 );
-    if fXInputs != 0 {
-        // inlining of macro Abc_NtkForEachPi
-        for  i = 0; (i < Abc_NtkPiNum(pNtk)) && (((pObj) = Abc_NtkPi(pNtk, i)), 1); i++  {
-            Abc_ObjSetXsim( pObj, XVSX );
-        }
-    
-    } else {
-        // inlining of macro Abc_NtkForEachPi
-        for  i = 0; (i < Abc_NtkPiNum(pNtk)) && (((pObj) = Abc_NtkPi(pNtk, i)), 1); i++  {
-            Abc_ObjSetXsim( pObj, Abc_XsimRand2() );
-        }
-    }
-    if fXState != 0 {
-        // inlining of macro Abc_NtkForEachLatch
-        for  i = 0; (i < Vec_PtrSize((pNtk).vBoxes)) && (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pObj) {} else {
-            Abc_ObjSetXsim( Abc_ObjFanout0(pObj), XVSX ); }
-        }
-    
-    } else {
-        // inlining of macro Abc_NtkForEachLatch
-        for  i = 0; (i < Vec_PtrSize((pNtk).vBoxes)) && (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pObj) {} else {
-            Abc_ObjSetXsim( Abc_ObjFanout0(pObj), Abc_LatchInit(pObj) ); }
-        }
-    }
-    // simulate and print the result
-    fmt.Fprintf(os.Stdout, "Frame : Inputs : Latches : Outputs\n");
-    for  f = 0; f < nFrames; f++  {
-        // inlining of macro Abc_AigForEachAnd
-        for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_AigNodeIsAnd(pObj) {} else {
-            Abc_ObjSetXsim( pObj, Abc_XsimAnd(Abc_ObjGetXsimFanin0(pObj), Abc_ObjGetXsimFanin1(pObj)) ); }
-        }
-        // inlining of macro Abc_NtkForEachCo
-        for  i = 0; (i < Abc_NtkCoNum(pNtk)) && (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {
-            Abc_ObjSetXsim( pObj, Abc_ObjGetXsimFanin0(pObj) );
-        }
-        // print out
-        fmt.Fprintf(os.Stdout, "%2d : ", f);
-        // inlining of macro Abc_NtkForEachPi
-        for  i = 0; (i < Abc_NtkPiNum(pNtk)) && (((pObj) = Abc_NtkPi(pNtk, i)), 1); i++  {
-            Abc_XsimPrint( os.Stdout, Abc_ObjGetXsim(pObj) );
-        }
-        fmt.Fprintf(os.Stdout, " : ");
-        // inlining of macro Abc_NtkForEachLatch
-        for  i = 0; (i < Vec_PtrSize((pNtk).vBoxes)) && (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pObj) {} else {
-//            if ( Abc_ObjGetXsim(Abc_ObjFanout0(pObj)) != XVSX )
-//                printf( " %s=", Abc_ObjName(pObj) );
-            Abc_XsimPrint( os.Stdout, Abc_ObjGetXsim(Abc_ObjFanout0(pObj)) );
-        }
-        }
-        fmt.Fprintf(os.Stdout, " : ");
-        // inlining of macro Abc_NtkForEachPo
-        for  i = 0; (i < Abc_NtkPoNum(pNtk)) && (((pObj) = Abc_NtkPo(pNtk, i)), 1); i++  {
-            Abc_XsimPrint( os.Stdout, Abc_ObjGetXsim(pObj) );
-        }
-        fmt.Fprintf(os.Stdout, "\n");
-        // assign input values
-        if fXInputs != 0 {
-            // inlining of macro Abc_NtkForEachPi
-            for  i = 0; (i < Abc_NtkPiNum(pNtk)) && (((pObj) = Abc_NtkPi(pNtk, i)), 1); i++  {
-                Abc_ObjSetXsim( pObj, XVSX );
-            }
-        
-        } else {
-            // inlining of macro Abc_NtkForEachPi
-            for  i = 0; (i < Abc_NtkPiNum(pNtk)) && (((pObj) = Abc_NtkPi(pNtk, i)), 1); i++  {
-                Abc_ObjSetXsim( pObj, Abc_XsimRand2() );
-            }
-        }
-        // transfer the latch values
-        // inlining of macro Abc_NtkForEachLatch
-        for  i = 0; (i < Vec_PtrSize((pNtk).vBoxes)) && (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pObj) {} else {
-            Abc_ObjSetXsim( Abc_ObjFanout0(pObj), Abc_ObjGetXsim(Abc_ObjFanin0(pObj)) ); }
-        }
-    }
+func Abc_ObjGetXsimFanin1(obj *Abc_Obj_t) int32 {
+	value := Abc_ObjGetXsim(abc.Abc_ObjFanin1(obj))
+	if abc.Abc_ObjFaninC1(obj) != 0 {
+		return Abc_XsimInv(value)
+	}
+	return value
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Cycles the circuit to create a new initial state.]
-
-  Description [Simulates the circuit with random (or ternary) input 
-  for the given number of timeframes to get a better initial state.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkCycleInitState(pNtk *Abc_Ntk_t, nFrames int32, fUseXval int32, fVerbose int32) { 
-    var pObj *Abc_Obj_t;
-    var i, f int32;
-    assert(Abc_NtkIsStrash(pNtk), "Abc_NtkIsStrash(pNtk)");
-//    srand( 0x12341234 );
-    Gia_ManRandom( 1 );
-    // initialize the values
-    Abc_ObjSetXsim( Abc_AigConst1(pNtk), XVS1 );
-    // inlining of macro Abc_NtkForEachLatch
-    for  i = 0; (i < Vec_PtrSize((pNtk).vBoxes)) && (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pObj) {} else {
-        Abc_ObjSetXsim( Abc_ObjFanout0(pObj), Abc_LatchInit(pObj) ); }
-    }
-    // simulate for the given number of timeframes
-    for  f = 0; f < nFrames; f++  {
-        // inlining of macro Abc_NtkForEachPi
-        for  i = 0; (i < Abc_NtkPiNum(pNtk)) && (((pObj) = Abc_NtkPi(pNtk, i)), 1); i++  {
-            Abc_ObjSetXsim( pObj, fUseXval? ABC_INIT_DC : Abc_XsimRand2() );
-        }
-//            Abc_ObjSetXsim( pObj, ABC_INIT_ONE );
-        // inlining of macro Abc_AigForEachAnd
-        for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_AigNodeIsAnd(pObj) {} else {
-            Abc_ObjSetXsim( pObj, Abc_XsimAnd(Abc_ObjGetXsimFanin0(pObj), Abc_ObjGetXsimFanin1(pObj)) ); }
-        }
-        // inlining of macro Abc_NtkForEachCo
-        for  i = 0; (i < Abc_NtkCoNum(pNtk)) && (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {
-            Abc_ObjSetXsim( pObj, Abc_ObjGetXsimFanin0(pObj) );
-        }
-        // inlining of macro Abc_NtkForEachLatch
-        for  i = 0; (i < Vec_PtrSize((pNtk).vBoxes)) && (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pObj) {} else {
-            Abc_ObjSetXsim( Abc_ObjFanout0(pObj), Abc_ObjGetXsim(Abc_ObjFanin0(pObj)) ); }
-        }
-    }
-    // set the final values
-    // inlining of macro Abc_NtkForEachLatch
-    for  i = 0; (i < Vec_PtrSize((pNtk).vBoxes)) && (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pObj) {} else {
-        pObj.pData = (void *)(ABC_PTRINT_T)Abc_ObjGetXsim(Abc_ObjFanout0(pObj));
-//        printf( "%d", Abc_LatchIsInit1(pObj) );
-    }
-    }
-//    printf( "\n" );
+func Abc_XsimPrint(file *os.File, value int32) {
+	switch value {
+	case XVS0:
+		_, _ = fmt.Fprint(file, "0")
+	case XVS1:
+		_, _ = fmt.Fprint(file, "1")
+	case XVSX:
+		_, _ = fmt.Fprint(file, "x")
+	default:
+		panic("abci: invalid X simulation value")
+	}
 }
 
-///////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
+func abcXsimLatches(n *Abc_Ntk_t) []*Abc_Obj_t {
+	boxes := n.ObjectsOfKind(abc.ObjectLatch)
+	return boxes
+}
 
+func abcXsimAndNodes(n *Abc_Ntk_t) []*Abc_Obj_t {
+	nodes := make([]*Abc_Obj_t, 0, len(n.ObjectsOfKind(abc.ObjectNode)))
+	// ABC's Abc_AigForEachAnd walks the object vector in ID order and filters
+	// the AIG AND nodes; preserve that order for deterministic simulation.
+	for id := int32(0); id < abc.Abc_NtkObjNumMax(n); id++ {
+		obj := abc.Abc_NtkObj(n, id)
+		if obj != nil && abc.Abc_AigNodeIsAnd(obj) != 0 {
+			nodes = append(nodes, obj)
+		}
+	}
+	return nodes
+}
 
-//ABC_NAMESPACE_IMPL_END
+func abcXsimLatchInit(latch *Abc_Obj_t) int32 {
+	switch {
+	case abc.Abc_LatchIsInit0(latch) != 0:
+		return XVS0
+	case abc.Abc_LatchIsInit1(latch) != 0:
+		return XVS1
+	case abc.Abc_LatchIsInitDc(latch) != 0:
+		return XVSX
+	default:
+		panic("abci: latch has no supported initial value")
+	}
+}
 
+func abcXsimInputValue(xInputs int32) int32 {
+	if xInputs != 0 {
+		return XVSX
+	}
+	return Abc_XsimRand2()
+}
+
+func Abc_NtkXValueSimulate(n *Abc_Ntk_t, frames, xInputs, xState, verbose int32) {
+	if abc.Abc_NtkIsStrash(n) == 0 {
+		panic("Abc_NtkXValueSimulate requires a strashed network")
+	}
+	gia.Gia_ManRandom(1)
+	Abc_ObjSetXsim(abc.Abc_AigConst1(n).Object, XVS1)
+	for i := int32(0); i < abc.Abc_NtkPiNum(n); i++ {
+		Abc_ObjSetXsim(abc.Abc_NtkPi(n, i), abcXsimInputValue(xInputs))
+	}
+	for _, latch := range abcXsimLatches(n) {
+		value := abcXsimLatchInit(latch)
+		if xState != 0 {
+			value = XVSX
+		}
+		Abc_ObjSetXsim(abc.Abc_ObjFanout0(latch), value)
+	}
+
+	fmt.Fprintln(os.Stdout, "Frame : Inputs : Latches : Outputs")
+	andNodes := abcXsimAndNodes(n)
+	for frame := int32(0); frame < frames; frame++ {
+		for _, node := range andNodes {
+			Abc_ObjSetXsim(node, Abc_XsimAnd(Abc_ObjGetXsimFanin0(node), Abc_ObjGetXsimFanin1(node)))
+		}
+		for i := int32(0); i < abc.Abc_NtkCoNum(n); i++ {
+			co := abc.Abc_NtkCo(n, i)
+			Abc_ObjSetXsim(co, Abc_ObjGetXsimFanin0(co))
+		}
+		fmt.Fprintf(os.Stdout, "%2d : ", frame)
+		for i := int32(0); i < abc.Abc_NtkPiNum(n); i++ {
+			Abc_XsimPrint(os.Stdout, Abc_ObjGetXsim(abc.Abc_NtkPi(n, i)))
+		}
+		fmt.Fprint(os.Stdout, " : ")
+		for _, latch := range abcXsimLatches(n) {
+			Abc_XsimPrint(os.Stdout, Abc_ObjGetXsim(abc.Abc_ObjFanout0(latch)))
+		}
+		fmt.Fprint(os.Stdout, " : ")
+		for i := int32(0); i < abc.Abc_NtkPoNum(n); i++ {
+			Abc_XsimPrint(os.Stdout, Abc_ObjGetXsim(abc.Abc_NtkPo(n, i)))
+		}
+		fmt.Fprintln(os.Stdout)
+
+		for i := int32(0); i < abc.Abc_NtkPiNum(n); i++ {
+			Abc_ObjSetXsim(abc.Abc_NtkPi(n, i), abcXsimInputValue(xInputs))
+		}
+		for _, latch := range abcXsimLatches(n) {
+			Abc_ObjSetXsim(abc.Abc_ObjFanout0(latch), Abc_ObjGetXsim(abc.Abc_ObjFanin0(latch)))
+		}
+	}
+}
+
+func Abc_NtkCycleInitState(n *Abc_Ntk_t, frames, useXVal, verbose int32) {
+	if abc.Abc_NtkIsStrash(n) == 0 {
+		panic("Abc_NtkCycleInitState requires a strashed network")
+	}
+	gia.Gia_ManRandom(1)
+	Abc_ObjSetXsim(abc.Abc_AigConst1(n).Object, XVS1)
+	for _, latch := range abcXsimLatches(n) {
+		Abc_ObjSetXsim(abc.Abc_ObjFanout0(latch), abcXsimLatchInit(latch))
+	}
+	andNodes := abcXsimAndNodes(n)
+	for frame := int32(0); frame < frames; frame++ {
+		for i := int32(0); i < abc.Abc_NtkPiNum(n); i++ {
+			Abc_ObjSetXsim(abc.Abc_NtkPi(n, i), abcXsimInputValue(useXVal))
+		}
+		for _, node := range andNodes {
+			Abc_ObjSetXsim(node, Abc_XsimAnd(Abc_ObjGetXsimFanin0(node), Abc_ObjGetXsimFanin1(node)))
+		}
+		for i := int32(0); i < abc.Abc_NtkCoNum(n); i++ {
+			co := abc.Abc_NtkCo(n, i)
+			Abc_ObjSetXsim(co, Abc_ObjGetXsimFanin0(co))
+		}
+		for _, latch := range abcXsimLatches(n) {
+			Abc_ObjSetXsim(abc.Abc_ObjFanout0(latch), Abc_ObjGetXsim(abc.Abc_ObjFanin0(latch)))
+		}
+	}
+	for _, latch := range abcXsimLatches(n) {
+		switch Abc_ObjGetXsim(abc.Abc_ObjFanout0(latch)) {
+		case XVS0:
+			abc.Abc_LatchSetInit0(latch)
+		case XVS1:
+			abc.Abc_LatchSetInit1(latch)
+		case XVSX:
+			abc.Abc_LatchSetInitDc(latch)
+		default:
+			panic("abci: invalid simulated latch state")
+		}
+	}
+}

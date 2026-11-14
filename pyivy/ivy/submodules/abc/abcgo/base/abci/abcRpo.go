@@ -1,478 +1,252 @@
 package abci
 
 import (
+	"encoding/binary"
 	"fmt"
+	"os"
+	"strings"
 	"time"
+
+	"github.com/glycerine/abcgo/bool/rpo"
+	"github.com/glycerine/abcgo/misc/util"
 )
 
-import "os"
-
-/**CFile****************************************************************
-
-  FileName    [abcRpo.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Rpo package.]
-
-  Synopsis    [Procedures for executing RPO.]
-
-  Author      [Mayler G. A. Martins / Vinicius Callegaro]
-  
-  Affiliation [UFRGS]
-
-  Date        [Ver. 1.0. Started - May 08, 2013.]
-
-  Revision    [$Id: abcRpo.c,v 1.00 2013/05/08 00:00:00 mgamartins Exp $]
-
- ***********************************************************************/
-
-//#include "misc/extra/extra.h"
-
-//#include "bool/rpo/rpo.h"
-//#include "bool/rpo/literal.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-// data-structure to store a bunch of truth tables
-   
-
+// Rpo_TtStore_t holds the same 64-bit truth-table words used by ABC's word
+// representation. The backing slice is contiguous for owned tables; pFuncs
+// provides the per-function views used by the original C pointer table.
 type Rpo_TtStore_t struct {
-    nVars int32;
-    nWords int32;
-    nFuncs int32;
-    pFuncs  **word;
+	nVars, nWords, nFuncs int32
+	pFuncs                [][]word
+	backing               []word
+	ownsBacking           bool
 }
 
-
-// read/write/flip i-th bit of a bit string table:
-
-func Abc_TruthGetBit(p *word, i int32) int32 {
-    return int32( (p[i >> 6] >> (i & 63))) & 1;
+func rpoTruthWordNum64(nVars int32) int32 {
+	if nVars < 7 {
+		return 1
+	}
+	return int32(1) << uint(nVars-6)
 }
 
-func Abc_TruthSetBit(p *word, i int32) {
-    p[i >> 6] |= (((word) 1) << (i & 63));
+func Abc_RpoTruthStoreAlloc(nVars, nFuncs int32) *Rpo_TtStore_t {
+	if nVars < 2 || nVars > 16 || nFuncs < 0 {
+		return nil
+	}
+	nWords := rpoTruthWordNum64(nVars)
+	backing := make([]word, int(nWords)*int(nFuncs))
+	p := &Rpo_TtStore_t{nVars: nVars, nWords: nWords, nFuncs: nFuncs, backing: backing, ownsBacking: true}
+	p.pFuncs = make([][]word, int(nFuncs))
+	for i := range p.pFuncs {
+		p.pFuncs[i] = backing[i*int(nWords) : (i+1)*int(nWords)]
+	}
+	return p
 }
 
-func Abc_TruthXorBit(p *word, i int32) {
-    p[i >> 6] ^= (((word) 1) << (i & 63));
+// Alloc2 wraps caller-owned words, matching the C routine's borrowed-buffer
+// path. The wrapper never mutates the supplied tables while creating views.
+func Abc_RpoTruthStoreAlloc2(nVars, nFuncs int32, buffer []word) *Rpo_TtStore_t {
+	if nVars < 2 || nVars > 16 || nFuncs < 0 {
+		return nil
+	}
+	nWords := rpoTruthWordNum64(nVars)
+	need := int(nWords) * int(nFuncs)
+	if len(buffer) < need {
+		return nil
+	}
+	p := &Rpo_TtStore_t{nVars: nVars, nWords: nWords, nFuncs: nFuncs, backing: buffer[:need]}
+	p.pFuncs = make([][]word, int(nFuncs))
+	for i := range p.pFuncs {
+		p.pFuncs[i] = p.backing[i*int(nWords) : (i+1)*int(nWords)]
+	}
+	return p
 }
 
-// read/write k-th digit d of a hexadecimal number:
-
-func Abc_TruthGetHex(p *word, k int32) int32 {
-    return int32( (p[k >> 4] >> ((k << 2) & 63))) & 15;
+func Abc_RpoTtStoreFree(p *Rpo_TtStore_t, nVarNum int32) {
+	if p == nil {
+		return
+	}
+	// C frees the table chunk only for nonnegative nVarNum. Go releases owned
+	// memory by dropping references; borrowed storage remains with its caller.
+	if nVarNum >= 0 && p.ownsBacking {
+		p.backing = nil
+	}
+	p.pFuncs = nil
+	p.backing = nil
+	p.nFuncs = 0
 }
 
-func Abc_TruthSetHex(p *word, k int32, d int32) {
-    p[k >> 4] |= (((word) d) << ((k << 2) & 63));
+func Abc_RpoTruthStoreRead(fileName string, p *Rpo_TtStore_t) {
+	if p == nil || p.nFuncs == 0 {
+		return
+	}
+	contents := Abc_FileRead(fileName)
+	if contents == "" {
+		return
+	}
+	count := int32(0)
+	for _, line := range strings.Split(contents, "\n") {
+		if line == "" || line[0] == 0 {
+			break
+		}
+		if count >= int32(len(p.pFuncs)) {
+			break
+		}
+		if len(p.pFuncs[count]) == 0 {
+			break
+		}
+		Abc_TruthReadHex(&p.pFuncs[count][0], line, p.nVars)
+		count++
+	}
+	p.nFuncs = count
 }
 
-func Abc_TruthXorHex(p *word, k int32, d int32) {
-    p[k >> 4] ^= (((word) d) << ((k << 2) & 63));
+func Abc_RpoTtStoreWrite(fileName string, p *Rpo_TtStore_t, binaryOutput int32) {
+	if p == nil {
+		return
+	}
+	f, err := os.OpenFile(fileName, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
+	if err != nil {
+		fmt.Printf("Cannot open file %q for writing.\n", fileName)
+		return
+	}
+	defer f.Close()
+	for _, truth := range p.pFuncs[:p.nFuncs] {
+		if binaryOutput != 0 {
+			var encoded [8]byte
+			for _, w := range truth {
+				binary.LittleEndian.PutUint64(encoded[:], uint64(w))
+				_, _ = f.Write(encoded[:])
+			}
+			continue
+		}
+		if len(truth) != 0 {
+			Abc_TruthWriteHex(f, &truth[0], p.nVars)
+		}
+		_, _ = fmt.Fprintln(f)
+	}
 }
 
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-// read one hex character
-
-func Abc_TruthReadHexDigit(HexChar byte) int32 {
-    if HexChar >= '0' && HexChar <= '9' {
-        return HexChar - '0'; }
-    if HexChar >= 'A' && HexChar <= 'F' {
-        return HexChar - 'A' + 10; }
-    if HexChar >= 'a' && HexChar <= 'f' {
-        return HexChar - 'a' + 10; }
-    assert(false, "0"); // not a hexadecimal symbol
-    return -1; // return value which makes no sense
+func Abc_RpoTtStoreLoad(fileName string, nVarNum int32) *Rpo_TtStore_t {
+	if nVarNum < 0 {
+		var nVars, nTruths int32
+		Abc_TruthGetParams(fileName, &nVars, &nTruths)
+		if nVars < 2 || nVars > 16 || nTruths == 0 {
+			return nil
+		}
+		p := Abc_RpoTruthStoreAlloc(nVars, nTruths)
+		if p == nil {
+			return nil
+		}
+		Abc_RpoTruthStoreRead(fileName, p)
+		return p
+	}
+	if nVarNum < 6 || nVarNum > 16 {
+		return nil
+	}
+	nFileSize := Abc_FileSize(fileName)
+	if nFileSize < 0 {
+		return nil
+	}
+	// Preserve the source's byte count: binary tables are sized by 2^(n-3).
+	nBytes := int32(1) << uint(nVarNum-3)
+	if nBytes <= 0 {
+		return nil
+	}
+	nTruths := nFileSize / nBytes
+	if nFileSize%nBytes != 0 {
+		util.Abc_Print(0, "The file size (%d) is divided by the truth table size (%d) with remainder (%d).\n", nFileSize, nBytes, nFileSize%nBytes)
+	}
+	data, err := os.ReadFile(fileName)
+	if err != nil {
+		return nil
+	}
+	p := Abc_RpoTruthStoreAlloc(nVarNum, nTruths)
+	if p == nil {
+		return nil
+	}
+	for i := int32(0); i < nTruths; i++ {
+		start := int(i * nBytes)
+		end := start + int(nBytes)
+		if end > len(data) {
+			end = len(data)
+		}
+		truthBytes := data[start:end]
+		for j := 0; j < len(p.pFuncs[i]) && j*8 < len(truthBytes); j++ {
+			var wordBytes [8]byte
+			copy(wordBytes[:], truthBytes[j*8:min(j*8+8, len(truthBytes))])
+			p.pFuncs[i][j] = word(binary.LittleEndian.Uint64(wordBytes[:]))
+		}
+	}
+	return p
 }
 
-// write one hex character
-
-func Abc_TruthWriteHexDigit(pFile *os.File, HexDigit int32) {
-    assert(HexDigit >= 0 && HexDigit < 16, "HexDigit >= 0 && HexDigit < 16");
-    if HexDigit < 10 {
-        fmt.Fprintf(pFile, "%d", HexDigit);
-    } else {
-        fmt.Fprintf(pFile, "%c", 'A' + HexDigit - 10); }
+// RPO's factorizer consumes ABC's uint32 truth layout. C passes a word* as an
+// unsigned*, which means the low then high halves of each 64-bit word; for up
+// to five variables only the first 32-bit word is significant in RPO's layout.
+func rpoTruth32(truth []word, nVars int32) []uint32 {
+	nWords := 1
+	if nVars > 5 {
+		nWords = 1 << uint(nVars-5)
+	}
+	result := make([]uint32, nWords)
+	for i := range result {
+		wordIndex := i / 2
+		if wordIndex >= len(truth) {
+			break
+		}
+		if i&1 == 0 {
+			result[i] = uint32(truth[wordIndex])
+		} else {
+			result[i] = uint32(truth[wordIndex] >> 32)
+		}
+	}
+	return result
 }
 
-// read one truth table in hexadecimal
-
-func Abc_TruthReadHex(pTruth *word, pString string, nVars int32) {
-    var nWords int32;
-    if nVars < 7 {
-        nWords = 1;
-    } else {
-        nWords = (1 << (nVars - 6));
-    }
-    var k int32;
-    var Digit int32;
-    var nDigits int32;
-    if nVars < 7 {
-        nDigits = (1 << (nVars-2));
-    } else {
-        nDigits = (nWords << 4);
-    }
-    var EndSymbol byte;
-    // skip the first 2 symbols if they are "0x"
-    if pString[0] == '0' && pString[1] == 'x' {
-        pString += 2; }
-    // get the last symbol
-    EndSymbol = pString[nDigits];
-    // the end symbol of the TT (the one immediately following hex digits)
-    // should be one of the following: space, a new-line, or a zero-terminator
-    // (note that on Windows symbols '\r' can be inserted before each '\n')
-    assert(EndSymbol == ' ' || EndSymbol == '\n' || EndSymbol == '\r' || EndSymbol == '\0', "EndSymbol == ' ' || EndSymbol == '\\n' || EndSymbol == '\\r' || EndSymbol == '\\0'");
-    // read hexadecimal digits in the reverse order
-    // (the last symbol in the string is the least significant digit)
-    for k = 0; k < nDigits; k++ {
-        Digit = Abc_TruthReadHexDigit(pString[nDigits - 1 - k]);
-        assert(Digit >= 0 && Digit < 16, "Digit >= 0 && Digit < 16");
-        Abc_TruthSetHex(pTruth, k, Digit);
-    }
+func Abc_TruthRpoPerform(p *Rpo_TtStore_t, nThreshold, fVerbose int32) {
+	if p == nil || p.nFuncs == 0 {
+		return
+	}
+	start := time.Now()
+	rpoCount := int32(0)
+	for i := int32(0); i < p.nFuncs; i++ {
+		if fVerbose != 0 {
+			util.Abc_Print(-2, "%d: ", i+1)
+		}
+		literal := rpo.Rpo_Factorize(rpoTruth32(p.pFuncs[i], p.nVars), p.nVars, nThreshold, fVerbose)
+		if literal == nil {
+			if fVerbose != 0 {
+				util.Abc_Print(-2, "null\n\n")
+			}
+			continue
+		}
+		if fVerbose != 0 {
+			util.Abc_Print(-2, "Solution : %s\n\n", literal.Expression)
+		}
+		rpo.Lit_Free(literal)
+		rpoCount++
+	}
+	percent := float64(rpoCount) * 100.0 / float64(p.nFuncs)
+	util.Abc_Print(-2, "%d of %d (%.2f %%) functions are RPO.\n", rpoCount, p.nFuncs, percent)
+	util.Abc_PrintTime(1, "Time", time.Since(start).Nanoseconds())
 }
 
-// write one truth table in hexadecimal (do not add end-of-line!)
-
-func Abc_TruthWriteHex(pFile *os.File, pTruth *word, nVars int32) {
-    var nDigits, Digit, k int32;
-    nDigits = (1 << (nVars - 2));
-    for k = 0; k < nDigits; k++ {
-        Digit = Abc_TruthGetHex(pTruth, k);
-        assert(Digit >= 0 && Digit < 16, "Digit >= 0 && Digit < 16");
-        Abc_TruthWriteHexDigit(pFile, Digit);
-    }
+func Abc_TruthRpoTest(fileName string, nVarNum, nThreshold, fVerbose int32) {
+	p := Abc_RpoTtStoreLoad(fileName, nVarNum)
+	if p == nil {
+		return
+	}
+	defer Abc_RpoTtStoreFree(p, nVarNum)
+	if fVerbose != 0 {
+		util.Abc_Print(-2, "Number of variables = %d\n", p.nVars)
+	}
+	Abc_TruthRpoPerform(p, nThreshold, fVerbose)
 }
 
-
-
-/**Function*************************************************************
-
-  Synopsis    [Allocate/Deallocate storage for truth tables..]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
- ***********************************************************************/
-func Abc_TruthStoreAlloc(nVars int32, nFuncs int32) *Rpo_TtStore_t {
-    var p *Rpo_TtStore_t;
-    var i int32;
-    p = (Rpo_TtStore_t *) malloc(sizeof (Rpo_TtStore_t));
-    p.nVars = nVars;
-    if nVars < 7 {
-        p.nWords = 1;
-    } else {
-        p.nWords = (1 << (nVars - 6));
-    }
-    p.nFuncs = nFuncs;
-    // alloc storage for 'nFuncs' truth tables as one chunk of memory
-    p.pFuncs = (word **) malloc((sizeof (word *) + sizeof (word) * p.nWords) * p.nFuncs);
-    // assign and clean the truth table storage
-    p.pFuncs[0] = (word *) (p.pFuncs + p.nFuncs);
-    memset(p.pFuncs[0], 0, sizeof (word) * p.nWords * p.nFuncs);
-    // split it up into individual truth tables
-    for i = 1; i < p.nFuncs; i++ {
-        p.pFuncs[i] = p.pFuncs[i - 1] + p.nWords;
-    }
-    return p;
+func Abc_RpoTest(fileName string, nVarNum, nThreshold, fVerbose int32) int32 {
+	if fVerbose != 0 {
+		fmt.Printf("Using truth tables from file %q...\n", fileName)
+	}
+	Abc_TruthRpoTest(fileName, nVarNum, nThreshold, fVerbose)
+	return 0
 }
-
-func Abc_TruthStoreAlloc2(nVars int32, nFuncs int32, pBuffer *word) *Rpo_TtStore_t {
-    var p *Rpo_TtStore_t;
-    var i int32;
-    p = (Rpo_TtStore_t *) malloc(sizeof (Rpo_TtStore_t));
-    p.nVars = nVars;
-    if nVars < 7 {
-        p.nWords = 1;
-    } else {
-        p.nWords = (1 << (nVars - 6));
-    }
-    p.nFuncs = nFuncs;
-    // alloc storage for 'nFuncs' truth tables as one chunk of memory
-    p.pFuncs = (word **) malloc(sizeof (word *) * p.nFuncs);
-    // assign and clean the truth table storage
-    p.pFuncs[0] = pBuffer;
-    // split it up into individual truth tables
-    for i = 1; i < p.nFuncs; i++ {
-        p.pFuncs[i] = p.pFuncs[i - 1] + p.nWords;
-    }
-    return p;
-}
-
-func Abc_TtStoreFree(p *Rpo_TtStore_t, nVarNum int32) {
-    if nVarNum >= 0 {
-        ABC_FREE(p.pFuncs[0]); }
-    ABC_FREE(p.pFuncs);
-    ABC_FREE(p);
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Read file contents.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
- ***********************************************************************/
-// extern int Abc_FileSize(char * pFileName);
-
-
-/**Function*************************************************************
-
-  Synopsis    [Read file contents.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
- ***********************************************************************/
-// extern char * Abc_FileRead(char * pFileName);
-
-
-/**Function*************************************************************
-
-  Synopsis    [Determine the number of variables by reading the first line.]
-
-  Description [Determine the number of functions by counting the lines.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
- ***********************************************************************/
-// extern void Abc_TruthGetParams(char * pFileName, int * pnVars, int * pnTruths);
-
-
-
-/**Function*************************************************************
-
-  Synopsis    [Read truth tables from file.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
- ***********************************************************************/
-func Abc_TruthStoreRead(pFileName string, p *Rpo_TtStore_t) {
-    var pContents string;
-    var i, nLines int32;
-    pContents = Abc_FileRead(pFileName);
-    if pContents == nil {
-        return; }
-    // here it is assumed (without checking!) that each line of the file 
-    // begins with a string of hexadecimal chars followed by space
-
-    // the file will be read till the first empty line (pContents[i] == '\n')
-    // (note that Abc_FileRead() added several empty lines at the end of the file contents)
-    for nLines = i = 0; pContents[i] != '\n'; {
-        // read one line
-        Abc_TruthReadHex(p.pFuncs[nLines++], &pContents[i], p.nVars);
-        // skip till after the end-of-line symbol
-        // (note that end-of-line symbol is also skipped)
-        for pContents[i++] != '\n' {; }
-    }
-    // adjust the number of functions read 
-    // (we may have allocated more storage because some lines in the file were empty)
-    assert(p.nFuncs >= nLines, "p.nFuncs >= nLines");
-    p.nFuncs = nLines;
-    ABC_FREE(pContents);
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Write truth tables into file.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
- ***********************************************************************/
-func Abc_TtStoreWrite(pFileName string, p *Rpo_TtStore_t, fBinary int32) {
-    var pFile *os.File;
-    var i int32;
-    var nBytes int32 = 8 * Abc_Truth6WordNum(p.nVars);
-    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);
-    if pFile == nil {
-        fmt.Printf("Cannot open file \"%s\" for writing.\n", pFileName);
-        return;
-    }
-    for i = 0; i < p.nFuncs; i++ {
-        if fBinary != 0 {
-            fwrite(p.pFuncs[i], nBytes, 1, pFile);
-        } else {
-            Abc_TruthWriteHex(pFile, p.pFuncs[i], p.nVars);
-fmt.Fprintf(pFile, "\n"); }
-    }
-    _ = (pFile).Close();
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Read truth tables from input file and write them into output file.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
- ***********************************************************************/
-func Abc_TtStoreLoad(pFileName string, nVarNum int32) *Rpo_TtStore_t {
-    var p *Rpo_TtStore_t;
-    if nVarNum < 0 {
-        var nVars, nTruths int32;
-        // figure out how many truth table and how many variables
-        Abc_TruthGetParams(pFileName, &nVars, &nTruths);
-        if nVars < 2 || nVars > 16 || nTruths == 0 {
-            return nil; }
-        // allocate data-structure
-        p = Abc_TruthStoreAlloc(nVars, nTruths);
-        // read info from file
-        Abc_TruthStoreRead(pFileName, p);
-    } else {
-        var pBuffer string;
-        var nFileSize int32  = Abc_FileSize(pFileName);
-        var nBytes int32  = (1 << (nVarNum - 3)); // why mishchencko put -3? ###
-        var nTruths int32  = nFileSize / nBytes;
-        //Abc_Print(-2,"nFileSize=%d,nTruths=%d\n",nFileSize, nTruths);
-        if nFileSize == -1 {
-            return nil; }
-        assert(nVarNum >= 6, "nVarNum >= 6");
-        if nFileSize % nBytes != 0 {
-            Abc_Print(0, "The file size (%d) is divided by the truth table size (%d) with remainder (%d).\n",
-                nFileSize, nBytes, nFileSize % nBytes); }
-        // read file contents
-        pBuffer = Abc_FileRead(pFileName);
-        // allocate data-structure
-        p = Abc_TruthStoreAlloc2(nVarNum, nTruths, (word *) pBuffer);
-    }
-    return p;
-}
-
-
-/**Function*************************************************************
-
-  Synopsis    [Apply decomposition to the truth table.]
-
-  Description [Returns the number of AIG nodes.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
- ***********************************************************************/
-func Abc_TruthRpoPerform(p *Rpo_TtStore_t, nThreshold int32, fVerbose int32) {
-    var clk int64  = time.Now().UnixNano();
-    var i int32;
-    var rpoCount int32;
-    var lit *Literal_t;
-    var percent float32;
-    for i = 0; i < p.nFuncs; i++ {
-//        if(i>1000) {
-//            continue;
-//        }
-////        
-//        if(i!= 2196 ) { //5886
-//            continue;
-//        }
-        if fVerbose != 0 {
-            Abc_Print(-2,"%d: ", i+1);
-        }
-            
-        lit = Rpo_Factorize((unsigned *) p.pFuncs[i], p.nVars, nThreshold, fVerbose);
-        if lit != nil {
-            if fVerbose != 0 {
-                Abc_Print(-2, "Solution : %s\n", lit.expression.pArray);
-                Abc_Print(-2, "\n\n");
-            }
-            Lit_Free(lit);
-            rpoCount++;
-        } else {
-            if fVerbose != 0 {
-                Abc_Print(-2, "null\n");
-                Abc_Print(-2, "\n\n");
-            }
-        }
-    }
-    percent = (rpoCount * 100.0) / p.nFuncs;
-    Abc_Print(-2,"%d of %d (%.2f %%) functions are RPO.\n", rpoCount,p.nFuncs,percent);
-    Abc_PrintTime(1, "Time", time.Now().UnixNano() - clk);
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Apply decomposition to truth tables.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
- ***********************************************************************/
-func Abc_TruthRpoTest(pFileName string, nVarNum int32, nThreshold int32, fVerbose int32) {
-    var p *Rpo_TtStore_t;
-
-    // allocate data-structure
-//    if (fVerbose) {
-//        Abc_Print(-2, "Number of variables = %d\n", nVarNum);
-//    }
-    p = Abc_TtStoreLoad(pFileName, nVarNum);
-
-    if fVerbose != 0 {
-        Abc_Print(-2, "Number of variables = %d\n", p.nVars);
-    }
-    // consider functions from the file
-    Abc_TruthRpoPerform(p, nThreshold, fVerbose);
-
-    // delete data-structure
-    Abc_TtStoreFree(p, nVarNum);
-    //    printf( "Finished decomposing truth tables from file \"%s\".\n", pFileName );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Testbench for decomposition algorithms.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
- ***********************************************************************/
-func Abc_RpoTest(pFileName string, nVarNum int32, nThreshold int32, fVerbose int32) int32 {
-    if fVerbose != 0 {
-        fmt.Printf("Using truth tables from file \"%s\"...\n", pFileName);
-    }
-    Abc_TruthRpoTest(pFileName, nVarNum, nThreshold, fVerbose);
-    fflush(os.Stdout);
-    return 0;
-}
-
-
-/////////////////////ert truth table to ///////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
-

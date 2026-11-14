@@ -88,6 +88,13 @@ type Ssw_Pars_t struct {
 	pFunc any
 }
 
+// SetStopWhenGone configures the correspondence sweep to stop once no
+// equivalent pairs remain, and sets its induction depth.
+func (p *Ssw_Pars_t) SetStopWhenGone(enabled int32, frames int32) {
+	p.fStopWhenGone = enabled
+	p.nFramesK = frames
+}
+
 type Ssw_RarPars_t struct {
 	nFrames        int32
 	nWords         int32

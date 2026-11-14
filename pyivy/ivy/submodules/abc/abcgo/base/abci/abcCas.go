@@ -1,130 +1,102 @@
 package abci
 
-/**CFile****************************************************************
+import (
+	"fmt"
 
-  FileName    [abcCas.c]
+	"github.com/glycerine/abcgo/base/abc"
+	"github.com/glycerine/abcgo/bdd/cas"
+	"github.com/glycerine/abcgo/bdd/cudd"
+	"github.com/glycerine/abcgo/bdd/cudd/core"
+	"github.com/glycerine/abcgo/misc/extra"
+)
 
-  SystemName  [ABC: Logic synthesis and verification system.]
+// Abc_NtkCascade decomposes the shared output BDDs into a LUT cascade.
+// As in ABC's original implementation, this currently returns a checked copy
+// of the input network; the experiment emits the cascade files as a side effect.
+func Abc_NtkCascade(pNtk *Abc_Ntk_t, nLutSize, fCheck, fVerbose int32) *Abc_Ntk_t {
+	if pNtk == nil || abc.Abc_NtkIsStrash(pNtk) == 0 {
+		return nil
+	}
 
-  PackageName [Network and node package.]
+	inputs := pNtk.Inputs()
+	outputs := pNtk.Outputs()
 
-  Synopsis    [Decomposition of shared BDDs into LUT cascade.]
+	// Build the same global BDD representation used by the other ABC BDD
+	// commands. The 500000-node guard and dynamic reordering match abcCas.c.
+	dd := core.Cudd_Init(uint32(len(inputs)), 0, core.CUDD_UNIQUE_SLOTS, core.CUDD_CACHE_SLOTS, 0)
+	if dd == nil {
+		return nil
+	}
+	defer core.Cudd_Quit(dd)
+	cudd.Cudd_AutodynEnable(dd, cudd.CUDD_REORDER_SYMM_SIFT)
 
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
+	values := make(map[*abc.Object]*cudd.DdNode, len(pNtk.Objects()))
+	for i, input := range inputs {
+		values[input] = cudd.Cudd_bddIthVar(dd, int32(i))
+	}
+	objects, err := pNtk.Topological(outputs)
+	if err != nil {
+		return nil
+	}
+	one := cudd.Cudd_ReadOne(dd)
+	for _, object := range objects {
+		if object.Kind == abc.ObjectConst1 {
+			values[object] = one
+			continue
+		}
+		if object.IsCI() {
+			continue
+		}
+		fanins := object.Fanins()
+		if object.IsCO() {
+			if len(fanins) != 1 {
+				return nil
+			}
+			values[object] = bddEdgeValue(values, fanins[0], one)
+			continue
+		}
+		if len(fanins) == 0 {
+			values[object] = one
+			continue
+		}
+		value := one
+		for _, fanin := range fanins {
+			value = core.Cudd_bddAnd(dd, value, bddEdgeValue(values, fanin, one))
+			if value == nil {
+				return nil
+			}
+		}
+		values[object] = value
+		if cudd.Cudd_ReadKeys(dd)-cudd.Cudd_ReadDead(dd) > 500000 {
+			return nil
+		}
+	}
 
-  Date        [Ver. 1.0. Started - June 20, 2005.]
+	globalOutputs := make([]*cudd.DdNode, len(outputs))
+	for i, output := range outputs {
+		value, ok := values[output]
+		if !ok || value == nil {
+			return nil
+		}
+		globalOutputs[i] = value
+	}
+	if fVerbose != 0 {
+		fmt.Printf("Shared BDD size = %6d nodes.\n", cudd.Cudd_ReadKeys(dd)-cudd.Cudd_ReadDead(dd))
+	}
+	base := extra.Extra_FileNameGeneric(pNtk.Spec)
+	cas.Abc_CascadeExperiment(base, dd, globalOutputs, len(inputs), len(outputs), int(nLutSize), fCheck != 0, fVerbose != 0)
 
-  Revision    [$Id: abcCas.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "base/abc/abc.h"
-
-#ifdef ABC_USE_CUDD
-#include "bdd/extrab/extraBdd.h"
-#endif
-
-//ABC_NAMESPACE_IMPL_START
-
-
-/* 
-    This LUT cascade synthesis algorithm is described in the paper:
-    A. Mishchenko and T. Sasao, "Encoding of Boolean functions and its 
-    application to LUT cascade synthesis", Proc. IWLS '02, pp. 115-120.
-    http://www.eecs.berkeley.edu/~alanmi/publications/2002/iwls02_enc.pdf
-*/
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-#ifdef ABC_USE_CUDD
-
-extern int Abc_CascadeExperiment( char * pFileGeneric, DdManager * dd, DdNode ** pOutputs, int nInputs, int nOutputs, int nLutSize, int fCheck, int fVerbose );
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-Abc_Ntk_t * Abc_NtkCascade( Abc_Ntk_t * pNtk, int nLutSize, int fCheck, int fVerbose )
-{
-    DdManager * dd;
-    DdNode ** ppOutputs;
-    Abc_Ntk_t * pNtkNew;
-    Abc_Obj_t * pNode;
-    char * pFileGeneric;
-    int fBddSizeMax = 500000;
-    int i, fReorder = 1;
-    abctime clk = Abc_Clock();
-
-    assert( Abc_NtkIsStrash(pNtk) );
-    // compute the global BDDs
-    if ( Abc_NtkBuildGlobalBdds(pNtk, fBddSizeMax, 1, fReorder, 0, fVerbose) == NULL )
-        return NULL;
-
-    if ( fVerbose )
-    {
-        DdManager * dd = (DdManager *)Abc_NtkGlobalBddMan( pNtk );
-        printf( "Shared BDD size = %6d nodes.  ", Cudd_ReadKeys(dd) - Cudd_ReadDead(dd) );
-        ABC_PRT( "BDD construction time", Abc_Clock() - clk );
-    }
-
-    // collect global BDDs
-    dd = (DdManager *)Abc_NtkGlobalBddMan( pNtk );
-    ppOutputs = ABC_ALLOC( DdNode *, Abc_NtkCoNum(pNtk) );
-    Abc_NtkForEachCo( pNtk, pNode, i )
-        ppOutputs[i] = (DdNode *)Abc_ObjGlobalBdd(pNode);
-
-    // call the decomposition
-    pFileGeneric = Extra_FileNameGeneric( pNtk->pSpec );
-    if ( !Abc_CascadeExperiment( pFileGeneric, dd, ppOutputs, Abc_NtkCiNum(pNtk), Abc_NtkCoNum(pNtk), nLutSize, fCheck, fVerbose ) )
-    {
-        // the LUT size is too small
-    }
-
-    // for now, duplicate the network
-    pNtkNew = Abc_NtkDup( pNtk );
-
-    // cleanup
-    Abc_NtkFreeGlobalBdds( pNtk, 1 );
-    ABC_FREE( ppOutputs );
-    ABC_FREE( pFileGeneric );
-
-//    if ( pNtk->pExdc )
-//        pNtkNew->pExdc = Abc_NtkDup( pNtk->pExdc );
-    // make sure that everything is okay
-    if ( !Abc_NtkCheck( pNtkNew ) )
-    {
-        printf( "Abc_NtkCollapse: The network check has failed.\n" );
-        Abc_NtkDelete( pNtkNew );
-        return NULL;
-    }
-    return pNtkNew;
+	result := abc.Abc_NtkDup(pNtk)
+	if result == nil || result.Check() != nil {
+		return nil
+	}
+	return result
 }
 
-#else
-
-Abc_Ntk_t * Abc_NtkCascade( Abc_Ntk_t * pNtk, int nLutSize, int fCheck, int fVerbose ) { return NULL; }
-
-#endif
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func bddEdgeValue(values map[*abc.Object]*cudd.DdNode, edge abc.Edge, _ *cudd.DdNode) *cudd.DdNode {
+	value := values[edge.Object]
+	if value == nil {
+		return nil
+	}
+	return core.Cudd_NotCond(value, edge.Complement)
+}

@@ -153,23 +153,34 @@ func ResNetworkFromGraph(graph *aig.Graph) (*abc.Network, error) {
 		}
 		copies[input.NodeID()] = pi.Signal()
 	}
-	for id := 1; id < len(nodes); id++ {
-		regular := aig.Edge(id << 1)
-		if !graph.ValidEdge(regular) {
-			continue
+	visiting := make([]bool, len(nodes))
+	var convert func(aig.Edge) (abc.Edge, error)
+	convert = func(edge aig.Edge) (abc.Edge, error) {
+		id := edge.NodeID()
+		if id < 0 || id >= len(nodes) || !graph.ValidEdge(aig.Edge(id<<1)) {
+			return abc.Edge{}, fmt.Errorf("res: invalid graph edge %d", id)
 		}
-		node := graph.Node(regular)
-		switch node.Kind {
-		case aig.Constant, aig.Input, aig.Output:
-			continue
-		case aig.And, aig.ExclusiveOr:
-			a, ok := resABCEdge(copies, node.Fanins[0])
-			if !ok {
-				return nil, fmt.Errorf("res: missing ABC copy for node %d fanin 0", id)
+		if copies[id].Object != nil {
+			result := copies[id]
+			if edge.Complemented() {
+				result = result.Not()
 			}
-			b, ok := resABCEdge(copies, node.Fanins[1])
-			if !ok {
-				return nil, fmt.Errorf("res: missing ABC copy for node %d fanin 1", id)
+			return result, nil
+		}
+		if visiting[id] {
+			return abc.Edge{}, fmt.Errorf("res: graph cycle at node %d", id)
+		}
+		visiting[id] = true
+		node := nodes[id]
+		switch node.Kind {
+		case aig.And, aig.ExclusiveOr:
+			a, err := convert(node.Fanins[0])
+			if err != nil {
+				return abc.Edge{}, err
+			}
+			b, err := convert(node.Fanins[1])
+			if err != nil {
+				return abc.Edge{}, err
 			}
 			if node.Kind == aig.ExclusiveOr {
 				copies[id] = abc.Abc_AigXor(manager, a, b)
@@ -177,19 +188,26 @@ func ResNetworkFromGraph(graph *aig.Graph) (*abc.Network, error) {
 				copies[id] = abc.Abc_AigAnd(manager, a, b)
 			}
 		case aig.Buffer:
-			value, ok := resABCEdge(copies, node.Fanins[0])
-			if !ok {
-				return nil, fmt.Errorf("res: missing ABC copy for buffer %d", id)
+			value, err := convert(node.Fanins[0])
+			if err != nil {
+				return abc.Edge{}, err
 			}
 			copies[id] = value
 		default:
-			return nil, fmt.Errorf("res: unsupported graph node kind %d at %d", node.Kind, id)
+			return abc.Edge{}, fmt.Errorf("res: unsupported graph node kind %d at %d", node.Kind, id)
 		}
+		visiting[id] = false
+		result := copies[id]
+		if edge.Complemented() {
+			result = result.Not()
+		}
+		return result, nil
 	}
+
 	for i, output := range graph.Outputs() {
-		driver, ok := resABCEdge(copies, graph.Node(output).Fanins[0])
-		if !ok {
-			return nil, fmt.Errorf("res: missing ABC copy for output %d", i)
+		driver, err := convert(graph.Node(output).Fanins[0])
+		if err != nil {
+			return nil, fmt.Errorf("res: output %d: %w", i, err)
 		}
 		po := network.NewObject(abc.ObjectPO)
 		if err := network.AddFanin(po, driver); err != nil {
@@ -206,15 +224,4 @@ func ResNetworkFromGraph(graph *aig.Graph) (*abc.Network, error) {
 		return nil, fmt.Errorf("res: rebuilt ABC network violates strashing invariants")
 	}
 	return network, nil
-}
-
-func resABCEdge(copies []abc.Edge, edge aig.Edge) (abc.Edge, bool) {
-	if edge.NodeID() < 0 || edge.NodeID() >= len(copies) || copies[edge.NodeID()].Object == nil {
-		return abc.Edge{}, false
-	}
-	value := copies[edge.NodeID()]
-	if edge.Complemented() {
-		value = value.Not()
-	}
-	return value, true
 }

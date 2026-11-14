@@ -1,1362 +1,1051 @@
 package abci
 
 import (
+	"bufio"
 	"fmt"
+	"os"
+	"strconv"
 	"strings"
+
+	"github.com/glycerine/abcgo/aig/gia"
+	baseabc "github.com/glycerine/abcgo/base/abc"
+	"github.com/glycerine/abcgo/map/mio"
+	"github.com/glycerine/abcgo/misc/vec"
+	"github.com/glycerine/abcgo/sat/bsat"
+	"github.com/glycerine/abcgo/sat/cnf"
 )
 
-import "os"
+type Abc_FinType_t int32
 
-/**CFile****************************************************************
-
-  FileName    [abcDetect.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Network and node package.]
-
-  Synopsis    [Detect conditions.]
-
-  Author      [Alan Mishchenko, Dao Ai Quoc]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 7, 2016.]
-
-  Revision    [$Id: abcDetect.c,v 1.00 2016/06/07 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "base/abc/abc.h"
-//#include "misc/vec/vecHsh.h"
-//#include "misc/util/utilNam.h"
-//#include "sat/cnf/cnf.h"
-//#include "sat/bsat/satStore.h"
-//#include "map/mio/mio.h"
-//#include "map/mio/exp.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
- type Abc_FinType_t int32
-const ( 
-    ABC_FIN_NONE Abc_FinType_t = -100
-   //  0:  unknown
-    ABC_FIN_SA0 Abc_FinType_t = ABC_FIN_NONE + 1
-           //  1:
-    ABC_FIN_SA1 Abc_FinType_t = ABC_FIN_SA0 + 1
-           //  2:
-    ABC_FIN_NEG Abc_FinType_t = ABC_FIN_SA1 + 1
-           //  3:
-    ABC_FIN_RDOB_AND Abc_FinType_t = ABC_FIN_NEG + 1
-      //  4:
-    ABC_FIN_RDOB_NAND Abc_FinType_t = ABC_FIN_RDOB_AND + 1
-     //  5:
-    ABC_FIN_RDOB_OR Abc_FinType_t = ABC_FIN_RDOB_NAND + 1
-       //  6:
-    ABC_FIN_RDOB_NOR Abc_FinType_t = ABC_FIN_RDOB_OR + 1
-      //  7:
-    ABC_FIN_RDOB_XOR Abc_FinType_t = ABC_FIN_RDOB_NOR + 1
-      //  8:
-    ABC_FIN_RDOB_NXOR Abc_FinType_t = ABC_FIN_RDOB_XOR + 1
-     //  9:
-    ABC_FIN_RDOB_NOT Abc_FinType_t = ABC_FIN_RDOB_NXOR + 1
-      // 10:
-    ABC_FIN_RDOB_BUFF Abc_FinType_t = ABC_FIN_RDOB_NOT + 1
-     // 11:
-    ABC_FIN_RDOB_LAST Abc_FinType_t = ABC_FIN_RDOB_BUFF + 1      // 12:
-
+const (
+	ABC_FIN_NONE      Abc_FinType_t = -100
+	ABC_FIN_SA0       Abc_FinType_t = -99
+	ABC_FIN_SA1       Abc_FinType_t = -98
+	ABC_FIN_NEG       Abc_FinType_t = -97
+	ABC_FIN_RDOB_AND  Abc_FinType_t = -96
+	ABC_FIN_RDOB_NAND Abc_FinType_t = -95
+	ABC_FIN_RDOB_OR   Abc_FinType_t = -94
+	ABC_FIN_RDOB_NOR  Abc_FinType_t = -93
+	ABC_FIN_RDOB_XOR  Abc_FinType_t = -92
+	ABC_FIN_RDOB_NXOR Abc_FinType_t = -91
+	ABC_FIN_RDOB_NOT  Abc_FinType_t = -90
+	ABC_FIN_RDOB_BUFF Abc_FinType_t = -89
+	ABC_FIN_RDOB_LAST Abc_FinType_t = -88
 )
 
- 
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Generates fault list for the given mapped network.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkGenFaultList(pNtk *Abc_Ntk_t, pFileName string, fStuckAt int32) {
-    var pLib *Mio_Library_t  = (Mio_Library_t *)pNtk.pManFunc;
-    var pGate *Mio_Gate_t;
-    var pObj *Abc_Obj_t;
-    var i int32;
-    var Count int32 = 1;
-    var pFile *os.File  = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);
-    if pFile == nil {
-        fmt.Printf("Cannot open file \"%s\" for writing.\n", pFileName);
-        return;
-    }
-    assert(Abc_NtkIsMappedLogic(pNtk), "Abc_NtkIsMappedLogic(pNtk)");
-    // inlining of macro Abc_NtkForEachNode
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {
-        var pGateObj *Mio_Gate_t  = (Mio_Gate_t *)pObj.pData;
-        var nInputs int32  = Mio_GateReadPinNum(pGateObj);
-        // add basic faults (SA0, SA1, NEG)
-        fmt.Fprintf(pFile, "%d %s %s\n", Count, Abc_ObjName(pObj), "SA0");
-Count++;
-        fmt.Fprintf(pFile, "%d %s %s\n", Count, Abc_ObjName(pObj), "SA1");
-Count++;
-        fmt.Fprintf(pFile, "%d %s %s\n", Count, Abc_ObjName(pObj), "NEG");
-Count++;
-        if fStuckAt != 0 {
-            continue; }
-        // add other faults, which correspond to changing the given gate
-        // by another gate with the same support-size from the same library
-        // inlining of macro Mio_LibraryForEachGate
-        for  pGate = Mio_LibraryReadGates(pLib);                             (pGate != nil);                                                         pGate = Mio_GateReadNext(pGate)  {
-            if pGate != pGateObj && Mio_GateReadPinNum(pGate) == nInputs {
-                fmt.Fprintf(pFile, "%d %s %s\n", Count, Abc_ObjName(pObj), Mio_GateReadName(pGate));
-Count++; }
-        }
-    }
-    }
-    fmt.Printf("Generated fault list \"%s\" for network \"%s\" with %d nodes and %d %sfaults.\n", pFileName, Abc_NtkName(pNtk), Abc_NtkNodeNum(pNtk), Count-1, fStuckAt ? "stuck-at ":"");
-    _ = (pFile).Close();
+func Io_ReadFinType(name string) int32 {
+	switch name {
+	case "SA0":
+		return int32(ABC_FIN_SA0)
+	case "SA1":
+		return int32(ABC_FIN_SA1)
+	case "NEG":
+		return int32(ABC_FIN_NEG)
+	case "RDOB_AND":
+		return int32(ABC_FIN_RDOB_AND)
+	case "RDOB_NAND":
+		return int32(ABC_FIN_RDOB_NAND)
+	case "RDOB_OR":
+		return int32(ABC_FIN_RDOB_OR)
+	case "RDOB_NOR":
+		return int32(ABC_FIN_RDOB_NOR)
+	case "RDOB_XOR":
+		return int32(ABC_FIN_RDOB_XOR)
+	case "RDOB_NXOR":
+		return int32(ABC_FIN_RDOB_NXOR)
+	case "RDOB_NOT":
+		return int32(ABC_FIN_RDOB_NOT)
+	case "RDOB_BUFF":
+		return int32(ABC_FIN_RDOB_BUFF)
+	default:
+		return int32(ABC_FIN_NONE)
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Recognize type.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Io_ReadFinTypeMapped(pLib *Mio_Library_t, pThis string) int32 {
-    var pGate *Mio_Gate_t  = Mio_LibraryReadGateByName( pLib, pThis, nil );
-    if pGate == nil {
-        fmt.Printf("Cannot find gate \"%s\" in the current library.\n", pThis);
-        return ABC_FIN_NONE;
-    }
-    return Mio_GateReadCell( pGate );
-}
-func Io_ReadFinType(pThis string) int32 {
-    if !(int32(strings.Compare(pThis, "SA0")) != 0) {        return ABC_FIN_SA0; }
-    if !(int32(strings.Compare(pThis, "SA1")) != 0) {        return ABC_FIN_SA1; }
-    if !(int32(strings.Compare(pThis, "NEG")) != 0) {        return ABC_FIN_NEG; }
-    if !(int32(strings.Compare(pThis, "RDOB_AND")) != 0) {   return ABC_FIN_RDOB_AND; }
-    if !(int32(strings.Compare(pThis, "RDOB_NAND")) != 0) {  return ABC_FIN_RDOB_NAND; }
-    if !(int32(strings.Compare(pThis, "RDOB_OR")) != 0) {    return ABC_FIN_RDOB_OR; }
-    if !(int32(strings.Compare(pThis, "RDOB_NOR")) != 0) {   return ABC_FIN_RDOB_NOR; }
-    if !(int32(strings.Compare(pThis, "RDOB_XOR")) != 0) {   return ABC_FIN_RDOB_XOR; }
-    if !(int32(strings.Compare(pThis, "RDOB_NXOR")) != 0) {  return ABC_FIN_RDOB_NXOR; }
-    if !(int32(strings.Compare(pThis, "RDOB_NOT")) != 0) {   return ABC_FIN_RDOB_NOT; }
-    if !(int32(strings.Compare(pThis, "RDOB_BUFF")) != 0) {  return ABC_FIN_RDOB_BUFF; }
-    return ABC_FIN_NONE;
-}
-func Io_WriteFinType(Type int32) string {
-    if Type == ABC_FIN_SA0 {          return "SA0"; }
-    if Type == ABC_FIN_SA1 {          return "SA1"; }
-    if Type == ABC_FIN_NEG {          return "NEG"; }
-    if Type == ABC_FIN_RDOB_AND {    return "RDOB_AND" ; }
-    if Type == ABC_FIN_RDOB_NAND {    return "RDOB_NAND"; }
-    if Type == ABC_FIN_RDOB_OR {    return "RDOB_OR"  ; }
-    if Type == ABC_FIN_RDOB_NOR {    return "RDOB_NOR" ; }
-    if Type == ABC_FIN_RDOB_XOR {    return "RDOB_XOR" ; }
-    if Type == ABC_FIN_RDOB_NXOR {    return "RDOB_NXOR"; }
-    if Type == ABC_FIN_RDOB_NOT {    return "RDOB_NOT" ; }
-    if Type == ABC_FIN_RDOB_BUFF {    return "RDOB_BUFF"; }
-    return "Unknown";
+func Io_WriteFinType(kind int32) string {
+	switch Abc_FinType_t(kind) {
+	case ABC_FIN_SA0:
+		return "SA0"
+	case ABC_FIN_SA1:
+		return "SA1"
+	case ABC_FIN_NEG:
+		return "NEG"
+	case ABC_FIN_RDOB_AND:
+		return "RDOB_AND"
+	case ABC_FIN_RDOB_NAND:
+		return "RDOB_NAND"
+	case ABC_FIN_RDOB_OR:
+		return "RDOB_OR"
+	case ABC_FIN_RDOB_NOR:
+		return "RDOB_NOR"
+	case ABC_FIN_RDOB_XOR:
+		return "RDOB_XOR"
+	case ABC_FIN_RDOB_NXOR:
+		return "RDOB_NXOR"
+	case ABC_FIN_RDOB_NOT:
+		return "RDOB_NOT"
+	case ABC_FIN_RDOB_BUFF:
+		return "RDOB_BUFF"
+	default:
+		return "Unknown"
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Read information from file.]
-
-  Description [Returns information as a set of pairs: (ObjId, TypeId).
-  Uses the current network to map ObjName given in the file into ObjId.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Io_ReadFins(pNtk *Abc_Ntk_t, pFileName string, fVerbose int32) *Vec_Int_t {
-    var pLib *Mio_Library_t  = (Mio_Library_t *)pNtk.pManFunc;
-    var Buffer [1000]byte;
-    var pObj *Abc_Obj_t;
-    var pNam *Abc_Nam_t;
-    var vMap *Vec_Int_t; 
-    var vPairs *Vec_Int_t  = nil;
-    var i int32;
-    var Type int32;
-    var iObj int32;
-    var fFound int32;
-    var nLines int32 = 1;
-    var pFile *os.File  = os.Open(pFileName);
-    if pFile == nil {
-        fmt.Printf("Cannot open input file \"%s\" for reading.\n", pFileName);
-        return nil;
-    }
-    // map CI/node names into their IDs
-    pNam = Abc_NamStart( 1000, 10 );
-    vMap = Vec_IntAlloc( 1000 );
-    Vec_IntPush( vMap, -1 );
-    // inlining of macro Abc_NtkForEachObj
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else {
-        if !Abc_ObjIsCi(pObj) && !Abc_ObjIsNode(pObj) {
-            continue; }
-        Abc_NamStrFindOrAdd( pNam, Abc_ObjName(pObj), &fFound );
-        if fFound != 0 {
-            fmt.Printf("The same name \"%s\" appears twice among CIs and internal nodes.\n", Abc_ObjName(pObj));
-            goto finish;
-        }
-        Vec_IntPush( vMap, Abc_ObjId(pObj) );
-    }
-    }
-    assert(Vec_IntSize(vMap) == Abc_NamObjNumMax(pNam), "Vec_IntSize(vMap) == Abc_NamObjNumMax(pNam)");
-    // read file lines
-    vPairs = Vec_IntAlloc( 1000 );
-    Vec_IntPushTwo( vPairs, -1, -1 );
-    for  fgets(Buffer, 1000, pFile) != nil  {
-        // read line number
-        var pToken string  = strtok( Buffer, " \n\r\t" );
-        if pToken == nil {
-            break; }
-        if nLines++ != atoi(pToken) {
-            fmt.Printf("Line numbers are not consecutive. Quitting.\n");
-            Vec_IntFreeP( &vPairs );
-            goto finish;
-        }
-        // read object name and find its ID
-        pToken = strtok( nil, " \n\r\t" );
-        iObj = Abc_NamStrFind( pNam, pToken );
-        if !(iObj != 0) {
-            fmt.Printf("Cannot find object with name \"%s\".\n", pToken);
-            continue;
-        }
-        // read type
-        pToken = strtok( nil, " \n\r\t" );
-        if Abc_NtkIsMappedLogic(pNtk) {
-            if !(int32(strings.Compare(pToken, "SA0")) != 0) || !(int32(strings.Compare(pToken, "SA1")) != 0) || !(int32(strings.Compare(pToken, "NEG")) != 0) {
-                Type = Io_ReadFinType( pToken );
-            } else {
-                Type = Io_ReadFinTypeMapped( pLib, pToken ); }
-        
-        } else {
-            Type = Io_ReadFinType( pToken ); }
-        if Type == ABC_FIN_NONE {
-            fmt.Printf("Cannot read type \"%s\" of object \"%s\".\n", pToken, Abc_ObjName(Abc_NtkObj(pNtk, iObj)));
-            continue;
-        }
-        Vec_IntPushTwo( vPairs, Vec_IntEntry(vMap, iObj), Type );
-    }
-    assert(Vec_IntSize(vPairs) == 2 * nLines, "Vec_IntSize(vPairs) == 2 * nLines");
-    fmt.Printf("Finished reading %d lines from the fault list file \"%s\".\n", nLines - 1, pFileName);
-
-    // verify the reader by printing the results
-    if fVerbose != 0 {
-        // inlining of macro Vec_IntForEachEntryDoubleStart
-        for  i = 2; (i+1 < Vec_IntSize(vPairs)) && (((iObj) = Vec_IntEntry(vPairs, i)), 1) && (((Type) = Vec_IntEntry(vPairs, i+1)), 1); i += 2  {
-            fmt.Printf("%-10d%-10s%-10s\n", i/2, Abc_ObjName(Abc_NtkObj(pNtk, iObj)), Io_WriteFinType(Type));
-        } }
-
-finish:
-    Vec_IntFree( vMap );
-    Abc_NamDeref( pNam );
-    _ = (pFile).Close();
-    return vPairs;
+func finLibrary(network *Abc_Ntk_t) *mio.Mio_Library_t {
+	if network == nil {
+		return nil
+	}
+	if library, ok := network.FunctionManager.(*mio.Mio_Library_t); ok {
+		return library
+	}
+	if library, ok := network.Data.(*mio.Mio_Library_t); ok {
+		return library
+	}
+	return nil
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Extend the network by adding second timeframe.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkFrameExtend(pNtk *Abc_Ntk_t) {
-    var vFanins, vNodes *Vec_Ptr_t;
-    var pObj, pFanin, pReset, pEnable, pSignal *Abc_Obj_t;
-    var pResetN, pEnableN, pAnd0, pAnd1, pMux *Abc_Obj_t;
-    var i int32;
-    var k int32;
-    var iStartPo int32;
-    var nPisOld int32 = Abc_NtkPiNum(pNtk);
-    var nPosOld int32 = Abc_NtkPoNum(pNtk);
-    // skip if there are no flops
-    if pNtk.nConstrs == 0 {
-        return; }
-    assert(Abc_NtkPiNum(pNtk) >= pNtk.nConstrs, "Abc_NtkPiNum(pNtk) >= pNtk.nConstrs");
-    assert(Abc_NtkPoNum(pNtk) >= pNtk.nConstrs * 4, "Abc_NtkPoNum(pNtk) >= pNtk.nConstrs * 4");
-    // collect nodes
-    vNodes = Vec_PtrAlloc( Abc_NtkNodeNum(pNtk) );
-    // inlining of macro Abc_NtkForEachNode
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {
-        Vec_PtrPush( vNodes, pObj ); }
-    }
-    // duplicate PIs
-    vFanins = Vec_PtrAlloc( 2 );
-    // inlining of macro Abc_NtkForEachPi
-    for  i = 0; (i < Abc_NtkPiNum(pNtk)) && (((pObj) = Abc_NtkPi(pNtk, i)), 1); i++  {
-        if i == nPisOld {
-            break; }
-        if i < nPisOld - pNtk.nConstrs {
-            Abc_NtkDupObj( pNtk, pObj, 0 );
-            Abc_ObjAssignName( pObj.pCopy, Abc_ObjName(pObj), "_frame1" );
-            continue;
-        }
-        // create flop input
-        iStartPo = nPosOld + 4 * (i - nPisOld);
-        pReset   = Abc_ObjFanin0( Abc_NtkPo( pNtk, iStartPo + 1 ) );
-        pEnable  = Abc_ObjFanin0( Abc_NtkPo( pNtk, iStartPo + 2 ) );
-        pSignal  = Abc_ObjFanin0( Abc_NtkPo( pNtk, iStartPo + 3 ) );
-        pResetN  = Abc_NtkCreateNodeInv( pNtk, pReset );
-        pEnableN = Abc_NtkCreateNodeInv( pNtk, pEnable );
-        Vec_PtrFillTwo( vFanins, 2, pEnableN, pObj );
-        pAnd0    = Abc_NtkCreateNodeAnd( pNtk, vFanins );
-        Vec_PtrFillTwo( vFanins, 2, pEnable, pSignal );
-        pAnd1    = Abc_NtkCreateNodeAnd( pNtk, vFanins );
-        Vec_PtrFillTwo( vFanins, 2, pAnd0, pAnd1 );
-        pMux     = Abc_NtkCreateNodeOr( pNtk, vFanins );
-        Vec_PtrFillTwo( vFanins, 2, pResetN, pMux );
-        pObj.pCopy = Abc_NtkCreateNodeAnd( pNtk, vFanins );
-    }
-    // duplicate internal nodes
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vNodes)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {
-        Abc_NtkDupObj( pNtk, pObj, 0 );
-    }
-    // connect objects
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vNodes)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {
-        // inlining of macro Abc_ObjForEachFanin
-        for  k = 0; (k < Abc_ObjFaninNum(pObj)) && (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {
-            Abc_ObjAddFanin( pObj.pCopy, pFanin.pCopy );
-        }
-    }
-    // create new POs and reconnect flop inputs
-    // inlining of macro Abc_NtkForEachPo
-    for  i = 0; (i < Abc_NtkPoNum(pNtk)) && (((pObj) = Abc_NtkPo(pNtk, i)), 1); i++  {
-        if i == nPosOld {
-            break; }
-        if i < nPosOld - 4 * pNtk.nConstrs {
-            Abc_NtkDupObj( pNtk, pObj, 0 );
-            Abc_ObjAssignName( pObj.pCopy, Abc_ObjName(pObj), "_frame1" );
-            Abc_ObjAddFanin( pObj.pCopy, Abc_ObjFanin0(pObj).pCopy );
-            continue;
-        }
-        Abc_ObjPatchFanin( pObj, Abc_ObjFanin0(pObj), Abc_ObjFanin0(pObj).pCopy );
-    }
-    Vec_PtrFree( vFanins );
-    Vec_PtrFree( vNodes );
+func Io_ReadFinTypeMapped(library *mio.Mio_Library_t, name string) int32 {
+	if library == nil {
+		return int32(ABC_FIN_NONE)
+	}
+	gate := mio.Mio_LibraryReadGateByName(library, name, "")
+	if gate == nil {
+		return int32(ABC_FIN_NONE)
+	}
+	return mio.Mio_GateReadCell(gate)
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Detect equivalence classes of nodes in terms of their TFO.]
-
-  Description [Given is the logic network (pNtk) and the set of objects
-  (primary inputs or internal nodes) to be considered (vObjs), this function
-  returns a set of equivalence classes of these objects in terms of their 
-  transitive fanout (TFO). Two objects belong to the same class if the set 
-  of COs they feed into are the same.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkDetectObjClasses_rec(pObj *Abc_Obj_t, vMap *Vec_Int_t, pHash *Hsh_VecMan_t, vTemp *Vec_Int_t) int32 {
-    var vArray, vSet *Vec_Int_t;
-    var pNext *Abc_Obj_t; var i int32;
-    // get the CO set for this object
-    var Entry int32  = Vec_IntEntry(vMap, Abc_ObjId(pObj));
-    if Entry != -1 { // the set is already computed
-        return Entry; }
-    // compute a new CO set
-    assert(Abc_ObjIsCi(pObj) || Abc_ObjIsNode(pObj), "Abc_ObjIsCi(pObj) || Abc_ObjIsNode(pObj)");
-    // if there is no fanouts, the set of COs is empty
-    if Abc_ObjFanoutNum(pObj) == 0 {
-        Vec_IntWriteEntry( vMap, Abc_ObjId(pObj), 0 );
-        return 0;
-    }
-    // compute the set for the first fanout
-    Entry = Abc_NtkDetectObjClasses_rec( Abc_ObjFanout0(pObj), vMap, pHash, vTemp );
-    if Abc_ObjFanoutNum(pObj) == 1 {
-        Vec_IntWriteEntry( vMap, Abc_ObjId(pObj), Entry );
-        return Entry;
-    }
-    vSet = Vec_IntAlloc( 16 );
-    // initialize the set with that of first fanout
-    vArray = Hsh_VecReadEntry( pHash, Entry );
-    Vec_IntClear( vSet );
-    Vec_IntAppend( vSet, vArray );
-    // iteratively add sets of other fanouts
-    // inlining of macro Abc_ObjForEachFanout
-    for  i = 0; (i < Abc_ObjFanoutNum(pObj)) && (((pNext) = Abc_ObjFanout(pObj, i)), 1); i++  {
-        if i == 0 { 
-            continue; }
-        Entry = Abc_NtkDetectObjClasses_rec( pNext, vMap, pHash, vTemp );
-        vArray = Hsh_VecReadEntry( pHash, Entry );
-        Vec_IntTwoMerge2( vSet, vArray, vTemp );
-        // inlining of macro ABC_SWAP
-        { var t Vec_Int_t  = *vSet; *vSet = *vTemp; *vTemp = t; };
-    }
-    // create or find new set and map the object into it
-    Entry = Hsh_VecManAdd( pHash, vSet );
-    Vec_IntWriteEntry( vMap, Abc_ObjId(pObj), Entry );
-    Vec_IntFree( vSet );
-    return Entry;
-}
-func Abc_NtkDetectObjClasses(pNtk *Abc_Ntk_t, vObjs *Vec_Int_t, pvCos **Vec_Wec_t) *Vec_Wec_t {
-    var vClasses *Vec_Wec_t;   // classes of equivalence objects from vObjs
-    var vClassMap *Vec_Int_t;  // mapping of each CO set into its class in vClasses
-    var vClass *Vec_Int_t;     // one equivalence class     
-    var pObj *Abc_Obj_t; 
-    var i, iObj, SetId, ClassId int32;
-    // create hash table to hash sets of CO indexes
-    var pHash *Hsh_VecMan_t  = Hsh_VecManStart( 1000 );
-    // create elementary sets (each composed of one CO) and map COs into them
-    var vMap *Vec_Int_t  = Vec_IntStartFull( Abc_NtkObjNumMax(pNtk) );
-    var vSet *Vec_Int_t  = Vec_IntAlloc( 16 );
-    assert(Abc_NtkIsLogic(pNtk), "Abc_NtkIsLogic(pNtk)");
-    // compute empty set
-    SetId = Hsh_VecManAdd( pHash, vSet );
-    assert(SetId == 0, "SetId == 0");
-    // inlining of macro Abc_NtkForEachCo
-    for  i = 0; (i < Abc_NtkCoNum(pNtk)) && (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {
-        Vec_IntFill( vSet, 1, Abc_ObjId(pObj) );
-        SetId = Hsh_VecManAdd( pHash, vSet );
-        Vec_IntWriteEntry( vMap, Abc_ObjId(pObj), SetId );
-    }
-    // make sure the array of objects is sorted
-    Vec_IntSort( vObjs, 0 );
-    // begin from the objects and map their IDs into sets of COs
-    // inlining of macro Abc_NtkForEachObjVec
-    for  i = 0; i < Vec_IntSize(vObjs) && (((pObj) = Abc_NtkObj(pNtk, Vec_IntEntry(vObjs,i))), 1); i++  {         if (pObj) == nil {} else {
-        Abc_NtkDetectObjClasses_rec( pObj, vMap, pHash, vSet ); }
-    }
-    Vec_IntFree( vSet );
-    // create map for mapping CO set its their classes
-    vClassMap = Vec_IntStartFull( Hsh_VecSize(pHash) + 1 );
-    // collect classes of objects
-    vClasses = Vec_WecAlloc( 1000 );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vObjs)) && (((iObj) = Vec_IntEntry(vObjs, i)), 1); i++  {
-        //char * pName = Abc_ObjName( Abc_NtkObj(pNtk, iObj) );
-        // for a given object (iObj), find the ID of its COs set
-        SetId = Vec_IntEntry( vMap, iObj );
-        assert(SetId >= 0, "SetId >= 0");
-        // for the given CO set, finds its equivalence class
-        ClassId = Vec_IntEntry( vClassMap, SetId );
-        if ClassId == -1 {  // there is no equivalence class
-        
-            // map this CO set into a new equivalence class
-            Vec_IntWriteEntry( vClassMap, SetId, Vec_WecSize(vClasses) );
-            vClass = Vec_WecPushLevel( vClasses );
-        
-        } else { // get hold of the equivalence class
-            vClass = Vec_WecEntry( vClasses, ClassId ); }
-        // add objects to the class
-        Vec_IntPush( vClass, iObj );
-        // print the set for this object
-        //printf( "Object %5d : ", iObj );
-        //Vec_IntPrint( Hsh_VecReadEntry(pHash, SetId) );
-    }
-    // collect arrays of COs for each class
-    *pvCos = Vec_WecStart( Vec_WecSize(vClasses) );
-    // inlining of macro Vec_WecForEachLevel
-    for  i = 0; (i < Vec_WecSize(vClasses)) && (((vClass) = Vec_WecEntry(vClasses, i)), 1); i++  {
-        iObj = Vec_IntEntry( vClass, 0 );
-        // for a given object (iObj), find the ID of its COs set
-        SetId = Vec_IntEntry( vMap, iObj );
-        assert(SetId >= 0, "SetId >= 0");
-        // for the given CO set ID, find the set
-        vSet = Hsh_VecReadEntry( pHash, SetId );
-        Vec_IntAppend( Vec_WecEntry(*pvCos, i), vSet );
-    }
-    Hsh_VecManStop( pHash );
-    Vec_IntFree( vClassMap );
-    Vec_IntFree( vMap );
-    return vClasses;
-}
-func Abc_NtkDetectClassesTest2(pNtk *Abc_Ntk_t, fVerbose int32, fVeryVerbose int32) {
-    var vObjs *Vec_Int_t;
-    var vRes, vCos *Vec_Wec_t;
-    // for testing, create the set of object IDs for all combinational inputs (CIs)
-    var pObj *Abc_Obj_t; var i int32;
-    vObjs = Vec_IntAlloc( Abc_NtkCiNum(pNtk) );
-    // inlining of macro Abc_NtkForEachCi
-    for  i = 0; (i < Abc_NtkCiNum(pNtk)) && (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {
-        Vec_IntPush( vObjs, Abc_ObjId(pObj) );
-    }
-    // compute equivalence classes of CIs and print them
-    vRes = Abc_NtkDetectObjClasses( pNtk, vObjs, &vCos );
-    Vec_WecPrint( vRes, 0 );
-    Vec_WecPrint( vCos, 0 );
-    // clean up
-    Vec_IntFree( vObjs );
-    Vec_WecFree( vRes );
-    Vec_WecFree( vCos );
+func Abc_NtkGenFaultList(network *Abc_Ntk_t, fileName string, stuckOnly int32) {
+	file, err := os.OpenFile(fileName, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
+	if err != nil {
+		fmt.Printf("Cannot open file %q for writing.\n", fileName)
+		return
+	}
+	defer file.Close()
+	if baseabc.Abc_NtkIsMappedLogic(network) == 0 {
+		panic("Abc_NtkGenFaultList requires a mapped logic network")
+	}
+	library := finLibrary(network)
+	count := 1
+	for id := int32(0); id < baseabc.Abc_NtkObjNumMax(network); id++ {
+		obj := baseabc.Abc_NtkObj(network, id)
+		if obj == nil || baseabc.Abc_ObjIsNode(obj) == 0 {
+			continue
+		}
+		gate, _ := obj.Data.(*mio.Mio_Gate_t)
+		if gate == nil {
+			continue
+		}
+		for _, fault := range []string{"SA0", "SA1", "NEG"} {
+			fmt.Fprintf(file, "%d %s %s\n", count, baseabc.Abc_ObjName(obj), fault)
+			count++
+		}
+		if stuckOnly != 0 || library == nil {
+			continue
+		}
+		for other := mio.Mio_LibraryReadGates(library); other != nil; other = mio.Mio_GateReadNext(other) {
+			if other == gate || mio.Mio_GateReadPinNum(other) != mio.Mio_GateReadPinNum(gate) {
+				continue
+			}
+			fmt.Fprintf(file, "%d %s %s\n", count, baseabc.Abc_ObjName(obj), mio.Mio_GateReadName(other))
+			count++
+		}
+	}
+	fmt.Printf("Generated fault list %q for network %q with %d nodes and %d %sfaults.\n", fileName, baseabc.Abc_NtkName(network), baseabc.Abc_NtkNodeNum(network), count-1, abcSelect(stuckOnly, "stuck-at ", ""))
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Collecting objects.]
-
-  Description [Collects combinational inputs (vCIs) and internal nodes (vNodes)
-  reachable from the given set of combinational outputs (vCOs).]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkFinMiterCollect_rec(pObj *Abc_Obj_t, vCis *Vec_Int_t, vNodes *Vec_Int_t) {
-    if Abc_NodeIsTravIdCurrent(pObj) {
-        return; }
-    Abc_NodeSetTravIdCurrent(pObj);
-    if Abc_ObjIsCi(pObj) {
-        Vec_IntPush( vCis, Abc_ObjId(pObj) );
-    } else {
-        var pFanin *Abc_Obj_t; var i int32;
-        assert(Abc_ObjIsNode( pObj ), "Abc_ObjIsNode( pObj )");
-        // inlining of macro Abc_ObjForEachFanin
-        for  i = 0; (i < Abc_ObjFaninNum(pObj)) && (((pFanin) = Abc_ObjFanin(pObj, i)), 1); i++  {
-            Abc_NtkFinMiterCollect_rec( pFanin, vCis, vNodes );
-        }
-        Vec_IntPush( vNodes, Abc_ObjId(pObj) );
-    }
-}
-func Abc_NtkFinMiterCollect(pNtk *Abc_Ntk_t, vCos *Vec_Int_t, vCis *Vec_Int_t, vNodes *Vec_Int_t) {
-    var pObj *Abc_Obj_t; var i int32;
-    Vec_IntClear( vCis );
-    Vec_IntClear( vNodes );
-    Abc_NtkIncrementTravId( pNtk );
-    // inlining of macro Abc_NtkForEachObjVec
-    for  i = 0; i < Vec_IntSize(vCos) && (((pObj) = Abc_NtkObj(pNtk, Vec_IntEntry(vCos,i))), 1); i++  {         if (pObj) == nil {} else {
-        Abc_NtkFinMiterCollect_rec( Abc_ObjFanin0(pObj), vCis, vNodes ); }
-    }
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Simulates expression using given simulation info.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Mio_LibGateSimulate(pGate *Mio_Gate_t, ppFaninSims []*word, nWords int32, pObjSim *word) {
-    var i int32;
-    var w int32;
-    var nVars int32 = Mio_GateReadPinNum(pGate);
-    var vExpr *Vec_Int_t  = Mio_GateReadExpr( pGate );
-    assert(nVars <= 6, "nVars <= 6");
-    for  w = 0; w < nWords; w++  {
-        var uFanins [6]word;
-        for  i = 0; i < nVars; i++  {
-            uFanins[i] = ppFaninSims[i][w];
-        }
-        pObjSim[w] = Exp_Truth6( nVars, vExpr, uFanins );
-    }
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Simulates expression for one simulation pattern.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Mio_LibGateSimulateOne(pGate *Mio_Gate_t, iBits []int32) int32 {
-    var nVars int32  = Mio_GateReadPinNum(pGate);
-    var i, iMint int32;
-    for  i = 0; i < nVars; i++  {
-        if iBits[i] {
-            iMint |= (1 << i); }
-    }
-    return Abc_InfoHasBit( (unsigned *)Mio_GateReadTruthP(pGate), iMint );
+func Io_ReadFins(network *Abc_Ntk_t, fileName string, verbose int32) *Vec_Int_t {
+	file, err := os.Open(fileName)
+	if err != nil {
+		fmt.Printf("Cannot open input file %q for reading.\n", fileName)
+		return nil
+	}
+	defer file.Close()
+	nameToID := make(map[string]int32)
+	for id := int32(0); id < baseabc.Abc_NtkObjNumMax(network); id++ {
+		obj := baseabc.Abc_NtkObj(network, id)
+		if obj == nil || (baseabc.Abc_ObjIsCi(obj) == 0 && baseabc.Abc_ObjIsNode(obj) == 0) {
+			continue
+		}
+		name := baseabc.Abc_ObjName(obj)
+		if _, exists := nameToID[name]; exists {
+			fmt.Printf("The same name %q appears twice among CIs and internal nodes.\n", name)
+			return nil
+		}
+		nameToID[name] = id
+	}
+	pairs := Vec_IntAlloc(1000)
+	Vec_IntPush(pairs, -1)
+	Vec_IntPush(pairs, -1)
+	scanner := bufio.NewScanner(file)
+	scanner.Buffer(make([]byte, 1024), 1<<20)
+	expectedLine := 1
+	library := finLibrary(network)
+	for scanner.Scan() {
+		fields := strings.Fields(scanner.Text())
+		if len(fields) == 0 {
+			break
+		}
+		line, parseErr := strconv.Atoi(fields[0])
+		if parseErr != nil || line != expectedLine {
+			fmt.Println("Line numbers are not consecutive. Quitting.")
+			Vec_IntFree(pairs)
+			return nil
+		}
+		expectedLine++
+		if len(fields) < 3 {
+			continue
+		}
+		id, found := nameToID[fields[1]]
+		if !found {
+			fmt.Printf("Cannot find object with name %q.\n", fields[1])
+			continue
+		}
+		kind := Io_ReadFinType(fields[2])
+		if baseabc.Abc_NtkIsMappedLogic(network) != 0 && kind != int32(ABC_FIN_SA0) && kind != int32(ABC_FIN_SA1) && kind != int32(ABC_FIN_NEG) {
+			kind = Io_ReadFinTypeMapped(library, fields[2])
+		}
+		if kind == int32(ABC_FIN_NONE) {
+			fmt.Printf("Cannot read type %q of object %q.\n", fields[2], baseabc.Abc_ObjName(baseabc.Abc_NtkObj(network, id)))
+			continue
+		}
+		Vec_IntPush(pairs, id)
+		Vec_IntPush(pairs, kind)
+	}
+	if err := scanner.Err(); err != nil {
+		Vec_IntFree(pairs)
+		return nil
+	}
+	if verbose != 0 {
+		for i := int32(2); i+1 < Vec_IntSize(pairs); i += 2 {
+			id, kind := Vec_IntEntry(pairs, i), Vec_IntEntry(pairs, i+1)
+			fmt.Printf("%-10d%-10s%-10s\n", i/2, baseabc.Abc_ObjName(baseabc.Abc_NtkObj(network, id)), Io_WriteFinType(kind))
+		}
+	}
+	fmt.Printf("Finished reading %d lines from the fault list file %q.\n", expectedLine-1, fileName)
+	return pairs
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Simulated expression with one bit.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Mio_LibGateSimulateGia(pGia *Gia_Man_t, pGate *Mio_Gate_t, iLits []int32, vLits *Vec_Int_t) int32 {
-    var i int32;
-    var nVars int32 = Mio_GateReadPinNum(pGate);
-    var vExpr *Vec_Int_t  = Mio_GateReadExpr( pGate );
-    if Exp_IsConst0(vExpr) {
-        return 0; }
-    if Exp_IsConst1(vExpr) {
-        return 1; }
-    if Exp_IsLit(vExpr) {
-        var Index0 int32   = Vec_IntEntry(vExpr,0) >> 1;
-        var fCompl0 int32  = Vec_IntEntry(vExpr,0) & 1;
-        assert(Index0 < nVars, "Index0 < nVars");
-        return Abc_LitNotCond( iLits[Index0], fCompl0 );
-    }
-    Vec_IntClear( vLits );
-    for  i = 0; i < nVars; i++  {
-        Vec_IntPush( vLits, iLits[i] );
-    }
-    for  i = 0; i < Exp_NodeNum(vExpr); i++  {
-        var Index0 int32   = Vec_IntEntry( vExpr, 2*i+0 ) >> 1;
-        var Index1 int32   = Vec_IntEntry( vExpr, 2*i+1 ) >> 1;
-        var fCompl0 int32  = Vec_IntEntry( vExpr, 2*i+0 ) & 1;
-        var fCompl1 int32  = Vec_IntEntry( vExpr, 2*i+1 ) & 1;
-        Vec_IntPush( vLits, Gia_ManHashAnd( pGia, Abc_LitNotCond(Vec_IntEntry(vLits, Index0), fCompl0), Abc_LitNotCond(Vec_IntEntry(vLits, Index1), fCompl1) ) );
-    }
-    return Abc_LitNotCond( Vec_IntEntryLast(vLits), Vec_IntEntryLast(vExpr) & 1 );
+func Abc_NtkDetectObjClasses_rec(obj *Abc_Obj_t, mapping *Vec_Int_t, hash *vec.Hsh_VecMan_t, temp *Vec_Int_t) int32 {
+	entry := Vec_IntEntry(mapping, int32(obj.ID))
+	if entry != -1 {
+		return entry
+	}
+	if baseabc.Abc_ObjIsCi(obj) == 0 && baseabc.Abc_ObjIsNode(obj) == 0 {
+		panic("CO-set recursion expects a CI or node")
+	}
+	if baseabc.Abc_ObjFanoutNum(obj) == 0 {
+		Vec_IntWriteEntry(mapping, int32(obj.ID), 0)
+		return 0
+	}
+	entry = Abc_NtkDetectObjClasses_rec(baseabc.Abc_ObjFanout(obj, 0), mapping, hash, temp)
+	if baseabc.Abc_ObjFanoutNum(obj) == 1 {
+		Vec_IntWriteEntry(mapping, int32(obj.ID), entry)
+		return entry
+	}
+	set := Vec_IntAlloc(16)
+	vec.Vec_IntAppend(set, vec.Hsh_VecReadEntry(hash, entry))
+	for i := int32(1); i < baseabc.Abc_ObjFanoutNum(obj); i++ {
+		entry = Abc_NtkDetectObjClasses_rec(baseabc.Abc_ObjFanout(obj, i), mapping, hash, temp)
+		vec.Vec_IntTwoMerge2(set, vec.Hsh_VecReadEntry(hash, entry), temp)
+		*set, *temp = *temp, *set
+	}
+	entry = vec.Hsh_VecManAdd(hash, set)
+	Vec_IntWriteEntry(mapping, int32(obj.ID), entry)
+	Vec_IntFree(set)
+	return entry
 }
 
-/**Function*************************************************************
-
-  Synopsis    [AIG construction and simulation.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkFinSimOneLit(pNew *Gia_Man_t, pObj *Abc_Obj_t, Type int32, vMap *Vec_Int_t, n int32, vTemp *Vec_Int_t) int32 {
-    if Abc_NtkIsMappedLogic(pObj.pNtk) && Type >= 0 {
-        extern int Mio_LibGateSimulateGia( Gia_Man_t * pGia, Mio_Gate_t * pGate, int iLits[6], Vec_Int_t * vLits );
-        var pLib *Mio_Library_t  = (Mio_Library_t *)pObj.pNtk.pManFunc;
-        var i int32;
-        var Lits [6]int32;
-        for  i = 0; i < Abc_ObjFaninNum(pObj); i++  {
-            Lits[i] = Vec_IntEntry( vMap, Abc_Var2Lit(Abc_ObjFaninId(pObj, i), n) );
-        }
-        return Mio_LibGateSimulateGia( pNew, Mio_LibraryReadGateById(pLib, Type), Lits, vTemp );
-    
-    } else {
-        var iLit0 int32;
-        if Abc_ObjFaninNum(pObj) > 0 {
-            iLit0 = Vec_IntEntry( vMap, Abc_Var2Lit(Abc_ObjFaninId0(pObj), n) );
-        } else {
-            iLit0 = -1;
-        }
-        var iLit1 int32;
-        if Abc_ObjFaninNum(pObj) > 1 {
-            iLit1 = Vec_IntEntry( vMap, Abc_Var2Lit(Abc_ObjFaninId1(pObj), n) );
-        } else {
-            iLit1 = -1;
-        }
-        assert(Type != ABC_FIN_NEG, "Type != ABC_FIN_NEG");
-        if Type == ABC_FIN_SA0 {            return 0; }
-        if Type == ABC_FIN_SA1 {            return 1; }
-        if Type == ABC_FIN_RDOB_BUFF {      return iLit0; }
-        if Type == ABC_FIN_RDOB_NOT {       return Abc_LitNot( iLit0 ); }
-        if Type == ABC_FIN_RDOB_AND {       return Gia_ManHashAnd( pNew, iLit0, iLit1 ); }
-        if Type == ABC_FIN_RDOB_OR {        return Gia_ManHashOr( pNew, iLit0, iLit1 ); }
-        if Type == ABC_FIN_RDOB_XOR {       return Gia_ManHashXor( pNew, iLit0, iLit1 ); }
-        if Type == ABC_FIN_RDOB_NAND {      return Abc_LitNot(Gia_ManHashAnd( pNew, iLit0, iLit1 )); }
-        if Type == ABC_FIN_RDOB_NOR {       return Abc_LitNot(Gia_ManHashOr( pNew, iLit0, iLit1 )); }
-        if Type == ABC_FIN_RDOB_NXOR {      return Abc_LitNot(Gia_ManHashXor( pNew, iLit0, iLit1 )); }
-        assert(false, "0");
-        return -1;
-    }
-}
-func Abc_NtkFinSimOneBit(pObj *Abc_Obj_t, Type int32, vSims *Vec_Wrd_t, nWords int32, iBit int32) int32 {
-    if Abc_NtkIsMappedLogic(pObj.pNtk) && Type >= 0 {
-        extern int Mio_LibGateSimulateOne( Mio_Gate_t * pGate, int iBits[6] );
-        var pLib *Mio_Library_t  = (Mio_Library_t *)pObj.pNtk.pManFunc;
-        var i int32;
-        var iBits [6]int32;
-        for  i = 0; i < Abc_ObjFaninNum(pObj); i++  {
-            var pSim0 *word  = Vec_WrdEntryP( vSims, nWords * Abc_ObjFaninId(pObj, i) );
-            iBits[i] = Abc_InfoHasBit( (unsigned*)pSim0, iBit );
-        }
-        return Mio_LibGateSimulateOne( Mio_LibraryReadGateById(pLib, Type), iBits );
-    
-    } else {
-        var pSim0 *word;
-        if Abc_ObjFaninNum(pObj) > 0 {
-            pSim0 = Vec_WrdEntryP( vSims, nWords * Abc_ObjFaninId0(pObj) );
-        } else {
-            pSim0 = nil;
-        }
-        var pSim1 *word;
-        if Abc_ObjFaninNum(pObj) > 1 {
-            pSim1 = Vec_WrdEntryP( vSims, nWords * Abc_ObjFaninId1(pObj) );
-        } else {
-            pSim1 = nil;
-        }
-        var iBit0 int32;
-        if Abc_ObjFaninNum(pObj) > 0 {
-            iBit0 = Abc_InfoHasBit( (unsigned*)pSim0, iBit );
-        } else {
-            iBit0 = -1;
-        }
-        var iBit1 int32;
-        if Abc_ObjFaninNum(pObj) > 1 {
-            iBit1 = Abc_InfoHasBit( (unsigned*)pSim1, iBit );
-        } else {
-            iBit1 = -1;
-        }
-        assert(Type != ABC_FIN_NEG, "Type != ABC_FIN_NEG");
-        if Type == ABC_FIN_SA0 {            return 0; }
-        if Type == ABC_FIN_SA1 {            return 1; }
-        if Type == ABC_FIN_RDOB_BUFF {      return iBit0; }
-        if Type == ABC_FIN_RDOB_NOT {       return !iBit0; }
-        if Type == ABC_FIN_RDOB_AND {       return iBit0 & iBit1; }
-        if Type == ABC_FIN_RDOB_OR {        return iBit0 | iBit1; }
-        if Type == ABC_FIN_RDOB_XOR {       return iBit0 ^ iBit1; }
-        if Type == ABC_FIN_RDOB_NAND {      return !(iBit0 & iBit1); }
-        if Type == ABC_FIN_RDOB_NOR {       return !(iBit0 | iBit1); }
-        if Type == ABC_FIN_RDOB_NXOR {      return !(iBit0 ^ iBit1); }
-        assert(false, "0");
-        return -1;
-    }
-}
-func Abc_NtkFinSimOneWord(pObj *Abc_Obj_t, Type int32, vSims *Vec_Wrd_t, nWords int32) {
-    if Abc_NtkIsMappedLogic(pObj.pNtk) {
-        extern void Mio_LibGateSimulate( Mio_Gate_t * pGate, word * ppFaninSims[6], int nWords, word * pObjSim );
-        var ppSims [6]*word; var i int32;
-        var pSim *word  = Vec_WrdEntryP( vSims, nWords * Abc_ObjId(pObj) );
-        assert(Type == -1, "Type == -1");
-        for  i = 0; i < Abc_ObjFaninNum(pObj); i++  {
-            ppSims[i] = Vec_WrdEntryP( vSims, nWords * Abc_ObjFaninId(pObj, i) );
-        }
-        Mio_LibGateSimulate( (Mio_Gate_t *)pObj.pData, ppSims, nWords, pSim );
-    
-    } else {
-        var pSim *word   = Vec_WrdEntryP( vSims, nWords * Abc_ObjId(pObj) );  var w int32;
-        var pSim0 *word;
-        if Abc_ObjFaninNum(pObj) > 0 {
-            pSim0 = Vec_WrdEntryP( vSims, nWords * Abc_ObjFaninId0(pObj) );
-        } else {
-            pSim0 = nil;
-        }
-        var pSim1 *word;
-        if Abc_ObjFaninNum(pObj) > 1 {
-            pSim1 = Vec_WrdEntryP( vSims, nWords * Abc_ObjFaninId1(pObj) );
-        } else {
-            pSim1 = nil;
-        }
-        assert(Type != ABC_FIN_NEG, "Type != ABC_FIN_NEG");
-        if Type == ABC_FIN_SA0 {            for  w = 0; w < nWords; w++  { pSim[w] = 0; }
-        } else if Type == ABC_FIN_SA1 {       for  w = 0; w < nWords; w++  { pSim[w] = ~((word)0); }
-        } else if Type == ABC_FIN_RDOB_BUFF { for  w = 0; w < nWords; w++  { pSim[w] = pSim0[w]; }
-        } else if Type == ABC_FIN_RDOB_NOT {  for  w = 0; w < nWords; w++  { pSim[w] = ~pSim0[w]; }
-        } else if Type == ABC_FIN_RDOB_AND {  for  w = 0; w < nWords; w++  { pSim[w] = pSim0[w] & pSim1[w]; }
-        } else if Type == ABC_FIN_RDOB_OR {   for  w = 0; w < nWords; w++  { pSim[w] = pSim0[w] | pSim1[w]; }
-        } else if Type == ABC_FIN_RDOB_XOR {  for  w = 0; w < nWords; w++  { pSim[w] = pSim0[w] ^ pSim1[w]; }
-        } else if Type == ABC_FIN_RDOB_NAND { for  w = 0; w < nWords; w++  { pSim[w] = ~(pSim0[w] & pSim1[w]); }
-        } else if Type == ABC_FIN_RDOB_NOR {  for  w = 0; w < nWords; w++  { pSim[w] = ~(pSim0[w] | pSim1[w]); }
-        } else if Type == ABC_FIN_RDOB_NXOR { for  w = 0; w < nWords; w++  { pSim[w] = ~(pSim0[w] ^ pSim1[w]); }
-        } else { assert(false, "0"); }
-    }
+func Abc_NtkDetectObjClasses(network *Abc_Ntk_t, objects *Vec_Int_t, coSetsOut **Vec_Wec_t) *Vec_Wec_t {
+	if network == nil || objects == nil || baseabc.Abc_NtkIsLogic(network) == 0 {
+		panic("object-class detection requires a logic network and object IDs")
+	}
+	hash := vec.Hsh_VecManStart(1000)
+	mapping := vec.Vec_IntStartFull(int(baseabc.Abc_NtkObjNumMax(network)))
+	empty := Vec_IntAlloc(16)
+	if id := vec.Hsh_VecManAdd(hash, empty); id != 0 {
+		panic("empty CO set did not receive ID zero")
+	}
+	for i := int32(0); i < baseabc.Abc_NtkCoNum(network); i++ {
+		co := baseabc.Abc_NtkCo(network, i)
+		vec.Vec_IntClear(empty)
+		Vec_IntPush(empty, int32(co.ID))
+		setID := vec.Hsh_VecManAdd(hash, empty)
+		Vec_IntWriteEntry(mapping, int32(co.ID), setID)
+	}
+	vec.Vec_IntSort(objects, 0)
+	temp := Vec_IntAlloc(16)
+	for _, id := range vec.Vec_IntArray(objects) {
+		obj := baseabc.Abc_NtkObj(network, id)
+		if obj != nil {
+			Abc_NtkDetectObjClasses_rec(obj, mapping, hash, temp)
+		}
+	}
+	classMap := vec.Vec_IntStartFull(vec.Hsh_VecSize(hash) + 1)
+	classes := vec.Vec_WecAlloc(1000)
+	for _, id := range vec.Vec_IntArray(objects) {
+		setID := Vec_IntEntry(mapping, id)
+		if setID < 0 {
+			panic("object did not receive a CO-set ID")
+		}
+		classID := Vec_IntEntry(classMap, setID)
+		var class *Vec_Int_t
+		if classID == -1 {
+			Vec_IntWriteEntry(classMap, setID, int32(vec.Vec_WecSize(classes)))
+			class = vec.Vec_WecPushLevel(classes)
+		} else {
+			class = vec.Vec_WecEntry(classes, int(classID))
+		}
+		Vec_IntPush(class, id)
+	}
+	coSets := vec.Vec_WecStart(vec.Vec_WecSize(classes))
+	for i, class := range vec.Vec_WecArray(classes) {
+		if Vec_IntSize(&class) == 0 {
+			continue
+		}
+		id := Vec_IntEntry(&class, 0)
+		setID := Vec_IntEntry(mapping, id)
+		vec.Vec_IntAppend(vec.Vec_WecEntry(coSets, i), vec.Hsh_VecReadEntry(hash, setID))
+	}
+	vec.Hsh_VecManStop(hash)
+	Vec_IntFree(classMap)
+	Vec_IntFree(mapping)
+	Vec_IntFree(empty)
+	Vec_IntFree(temp)
+	*coSetsOut = coSets
+	return classes
 }
 
-
-// returns 1 if the functionality with indexes i1 and i2 is the same
-func Abc_NtkFinCompareSimTwo(pNtk *Abc_Ntk_t, vCos *Vec_Int_t, vSims *Vec_Wrd_t, nWords int32, i1 int32, i2 int32) int32 {
-    var pObj *Abc_Obj_t; var i int32;
-    assert(i1 != i2, "i1 != i2");
-    // inlining of macro Abc_NtkForEachObjVec
-    for  i = 0; i < Vec_IntSize(vCos) && (((pObj) = Abc_NtkObj(pNtk, Vec_IntEntry(vCos,i))), 1); i++  {         if (pObj) == nil {} else {
-        var pSim0 *word  = Vec_WrdEntryP( vSims, nWords * Abc_ObjFaninId0(pObj) );
-        if Abc_InfoHasBit((unsigned*)pSim0, i1) != Abc_InfoHasBit((unsigned*)pSim0, i2) {
-            return 0; }
-    }
-    }
-    return 1;
+func Abc_NtkFinMiterCollect_rec(obj *Abc_Obj_t, cis, nodes *Vec_Int_t) {
+	if baseabc.Abc_NodeIsTravIdCurrent(obj) != 0 {
+		return
+	}
+	baseabc.Abc_NodeSetTravIdCurrent(obj)
+	if baseabc.Abc_ObjIsCi(obj) != 0 {
+		Vec_IntPush(cis, int32(obj.ID))
+		return
+	}
+	if baseabc.Abc_ObjIsNode(obj) == 0 {
+		return
+	}
+	for _, edge := range obj.Fanins() {
+		Abc_NtkFinMiterCollect_rec(edge.Object, cis, nodes)
+	}
+	Vec_IntPush(nodes, int32(obj.ID))
 }
 
-func Abc_NtkFinMiterToGia(pNtk *Abc_Ntk_t, vTypes *Vec_Int_t, vCos *Vec_Int_t, vCis *Vec_Int_t, vNodes *Vec_Int_t, iObjs []int32, Types []int32, vLits *Vec_Int_t) *Gia_Man_t {
-    var pNew *Gia_Man_t = nil;
-    var pTemp *Gia_Man_t;
-    var pObj *Abc_Obj_t; 
-    var vTemp *Vec_Int_t  = Vec_IntAlloc( 100 );
-    var n int32;
-    var i int32;
-    var Type int32;
-    var iMiter int32;
-    var iLit int32;
-    var pLits *int32;
-    // create AIG manager
-    pNew = Gia_ManStart( 1000 );
-    pNew.pName = Abc_UtilStrsav( pNtk.pName );
-    pNew.pSpec = Abc_UtilStrsav( pNtk.pSpec );
-    Gia_ManHashStart( pNew );
-    // create inputs
-    // inlining of macro Abc_NtkForEachObjVec
-    for  i = 0; i < Vec_IntSize(vCis) && (((pObj) = Abc_NtkObj(pNtk, Vec_IntEntry(vCis,i))), 1); i++  {         if (pObj) == nil {} else {
-        iLit = Gia_ManAppendCi(pNew);
-        for  n = 0; n < 2; n++  {
-            if iObjs[n] != int32(Abc_ObjId(pObj)) {
-                Vec_IntWriteEntry( vLits, Abc_Var2Lit(Abc_ObjId(pObj), n), iLit );
-            } else if Types[n] != ABC_FIN_NEG {
-                Vec_IntWriteEntry( vLits, Abc_Var2Lit(Abc_ObjId(pObj), n), Abc_NtkFinSimOneLit(pNew, pObj, Types[n], vLits, n, vTemp) );
-            } else { // if ( iObjs[n] == (int)Abc_ObjId(pObj) && Types[n] == ABC_FIN_NEG )
-                Vec_IntWriteEntry( vLits, Abc_Var2Lit(Abc_ObjId(pObj), n), Abc_LitNot(iLit) ); }
-        }
-    }
-    }
-    // create internal nodes
-    // inlining of macro Abc_NtkForEachObjVec
-    for  i = 0; i < Vec_IntSize(vNodes) && (((pObj) = Abc_NtkObj(pNtk, Vec_IntEntry(vNodes,i))), 1); i++  {         if (pObj) == nil {} else {
-        if Abc_NtkIsMappedLogic(pNtk) {
-            Type = Mio_GateReadCell((Mio_Gate_t *)pObj.pData);
-        } else {
-            Type = Vec_IntEntry(vTypes, Abc_ObjId(pObj));
-        }
-        for  n = 0; n < 2; n++  {
-            if iObjs[n] != int32(Abc_ObjId(pObj)) {
-                Vec_IntWriteEntry( vLits, Abc_Var2Lit(Abc_ObjId(pObj), n), Abc_NtkFinSimOneLit(pNew, pObj, Type, vLits, n, vTemp) );
-            } else if Types[n] != ABC_FIN_NEG {
-                Vec_IntWriteEntry( vLits, Abc_Var2Lit(Abc_ObjId(pObj), n), Abc_NtkFinSimOneLit(pNew, pObj, Types[n], vLits, n, vTemp) );
-            } else { // if ( iObjs[n] == (int)Abc_ObjId(pObj) && Types[n] == ABC_FIN_NEG )
-                Vec_IntWriteEntry( vLits, Abc_Var2Lit(Abc_ObjId(pObj), n), Abc_LitNot(Abc_NtkFinSimOneLit(pNew, pObj, Type, vLits, n, vTemp)) ); }
-        }
-    }
-    }
-    // create comparator
-    iMiter = 0;
-    // inlining of macro Abc_NtkForEachObjVec
-    for  i = 0; i < Vec_IntSize(vCos) && (((pObj) = Abc_NtkObj(pNtk, Vec_IntEntry(vCos,i))), 1); i++  {         if (pObj) == nil {} else {
-        pLits  = Vec_IntEntryP( vLits, Abc_Var2Lit(Abc_ObjFaninId0(pObj), 0) );
-        iLit   = Gia_ManHashXor( pNew, pLits[0], pLits[1] );
-        iMiter = Gia_ManHashOr( pNew, iMiter, iLit );
-    }
-    }
-    Gia_ManAppendCo( pNew, iMiter );
-    // perform cleanup
-    pNew = Gia_ManCleanup( pTemp = pNew );
-    Gia_ManStop( pTemp );
-    Vec_IntFree( vTemp );
-    return pNew;
-}
-func Abc_NtkFinSimulateOne(pNtk *Abc_Ntk_t, vTypes *Vec_Int_t, vCos *Vec_Int_t, vCis *Vec_Int_t, vNodes *Vec_Int_t, vMap2 *Vec_Wec_t, vPat *Vec_Int_t, vSims *Vec_Wrd_t, nWords int32, vPairs *Vec_Int_t, vRes *Vec_Wec_t, iLevel int32, iItem int32) {
-    var pObj *Abc_Obj_t; 
-    var vClass, vArray *Vec_Int_t;
-    var i, Counter int32;
-    var nItems int32  = Vec_WecSizeSize(vRes);
-    assert(nItems == Vec_WecSizeSize(vMap2), "nItems == Vec_WecSizeSize(vMap2)");
-    assert(nItems <= 128 * nWords, "nItems <= 128 * nWords");
-    // assign inputs
-    assert(Vec_IntSize(vPat) == Vec_IntSize(vCis), "Vec_IntSize(vPat) == Vec_IntSize(vCis)");
-    // inlining of macro Abc_NtkForEachObjVec
-    for  i = 0; i < Vec_IntSize(vCis) && (((pObj) = Abc_NtkObj(pNtk, Vec_IntEntry(vCis,i))), 1); i++  {         if (pObj) == nil {} else {
-        var w int32;
-        var iObj int32 = Abc_ObjId( pObj );
-        var Init word;
-        if Vec_IntEntry(vPat, i) {
-            Init = ~((word)0);
-        } else {
-            Init = 0;
-        }
-        var pSim *word  = Vec_WrdEntryP( vSims, nWords * Abc_ObjId(pObj) );
-        for  w = 0; w < nWords; w++  {
-            pSim[w] = Init;
-        }
-        vArray = Vec_WecEntry(vMap2, iObj);
-        if Vec_IntSize(vArray) > 0 {
-            var k, iFin, Index, iObj, Type int32;
-            // inlining of macro Vec_IntForEachEntryDouble
-            for  k = 0; (k+1 < Vec_IntSize(vArray)) && (((iFin) = Vec_IntEntry(vArray, k)), 1) && (((Index) = Vec_IntEntry(vArray, k+1)), 1); k += 2  {
-                assert(Index < 64, "Index < 64");
-                iObj = Vec_IntEntry( vPairs, 2*iFin );
-                assert(iObj == int32(Abc_ObjId(pObj)), "iObj == int32(Abc_ObjId(pObj))");
-                Type = Vec_IntEntry( vPairs, 2*iFin+1 );
-                assert(Type == ABC_FIN_NEG || Type == ABC_FIN_SA0 || Type == ABC_FIN_SA1, "Type == ABC_FIN_NEG || Type == ABC_FIN_SA0 || Type == ABC_FIN_SA1");
-                if Type == ABC_FIN_NEG || Abc_InfoHasBit((unsigned *)pSim, Index) != Abc_NtkFinSimOneBit(pObj, Type, vSims, nWords, Index) {
-                    Abc_InfoXorBit( (unsigned *)pSim, Index ); }
-                Counter++;
-            }
-        }
-    }
-    }
-    // simulate internal nodes
-    // inlining of macro Abc_NtkForEachObjVec
-    for  i = 0; i < Vec_IntSize(vNodes) && (((pObj) = Abc_NtkObj(pNtk, Vec_IntEntry(vNodes,i))), 1); i++  {         if (pObj) == nil {} else {
-        var iObj int32  = Abc_ObjId( pObj );
-        var Type int32;
-        if Abc_NtkIsMappedLogic(pNtk) {
-            Type = -1;
-        } else {
-            Type = Vec_IntEntry( vTypes, iObj );
-        }
-        var pSim *word  = Vec_WrdEntryP( vSims, nWords * Abc_ObjId(pObj) );
-        Abc_NtkFinSimOneWord( pObj, Type, vSims, nWords );
-        vArray = Vec_WecEntry(vMap2, iObj);
-        if Vec_IntSize(vArray) > 0 {
-            var k, iFin, Index, iObj, Type int32;
-            // inlining of macro Vec_IntForEachEntryDouble
-            for  k = 0; (k+1 < Vec_IntSize(vArray)) && (((iFin) = Vec_IntEntry(vArray, k)), 1) && (((Index) = Vec_IntEntry(vArray, k+1)), 1); k += 2  {
-                assert(Index < 64 * nWords, "Index < 64 * nWords");
-                iObj = Vec_IntEntry( vPairs, 2*iFin );
-                assert(iObj == int32(Abc_ObjId(pObj)), "iObj == int32(Abc_ObjId(pObj))");
-                Type = Vec_IntEntry( vPairs, 2*iFin+1 );
-                if Type == ABC_FIN_NEG || Abc_InfoHasBit((unsigned *)pSim, Index) != Abc_NtkFinSimOneBit(pObj, Type, vSims, nWords, Index) {
-                    Abc_InfoXorBit( (unsigned *)pSim, Index ); }
-                Counter++;
-            }
-        }
-    }
-    }
-    assert(nItems == 2*Counter, "nItems == 2*Counter");
-
-    // confirm no refinement
-    // inlining of macro Vec_WecForEachLevelStop
-    for  i = 0; (i < iLevel+1) && (((vClass) = Vec_WecEntry(vRes, i)), 1); i++  {
-        var k, iFin, Index, Value int32;
-        var Index0 int32  = Vec_IntEntry( vClass, 1 );
-        // inlining of macro Vec_IntForEachEntryDoubleStart
-        for  k = 2; (k+1 < Vec_IntSize(vClass)) && (((iFin) = Vec_IntEntry(vClass, k)), 1) && (((Index) = Vec_IntEntry(vClass, k+1)), 1); k += 2  {
-            if i == iLevel && k/2 >= iItem {
-                break; }
-            //printf( "Double-checking pair %d and %d\n", iFin0, iFin );
-            Value = Abc_NtkFinCompareSimTwo( pNtk, vCos, vSims, nWords, Index0, Index );
-            assert((Value != 0), "Value"); // the same value
-        }
-    }
-
-    // check refinement
-    // inlining of macro Vec_WecForEachLevelStart
-    for  i = iLevel; (i < Vec_WecSize(vRes)) && (((vClass) = Vec_WecEntry(vRes, i)), 1); i++  {
-        var k int32;
-        var iFin int32;
-        var Index int32;
-        var Value int32;
-        var Index0 int32 = Vec_IntEntry(vClass, 1);
-        var j int32;
-        if i == iLevel {
-            j = 2*iItem;
-        } else {
-            j = 2;
-        }
-        var vNewClass *Vec_Int_t  = nil;
-        // inlining of macro Vec_IntForEachEntryDoubleStart
-        for  k = j; (k+1 < Vec_IntSize(vClass)) && (((iFin) = Vec_IntEntry(vClass, k)), 1) && (((Index) = Vec_IntEntry(vClass, k+1)), 1); k += 2  {
-            Value = Abc_NtkFinCompareSimTwo( pNtk, vCos, vSims, nWords, Index0, Index );
-            if Value != 0 {  // the same value
-            
-                Vec_IntWriteEntry( vClass, j++, iFin );
-                Vec_IntWriteEntry( vClass, j++, Index );
-                continue;
-            }
-            // create new class
-            if vNewClass != nil {
-                vNewClass = vNewClass;
-            } else {
-                vNewClass = Vec_WecPushLevel( vRes );
-            }
-            Vec_IntPushTwo( vNewClass, iFin, Index );  // index and first entry
-            vClass = Vec_WecEntry( vRes, i );
-        }
-        Vec_IntShrink( vClass, j );
-    }
+func Abc_NtkFinMiterCollect(network *Abc_Ntk_t, coIDs, cis, nodes *Vec_Int_t) {
+	vec.Vec_IntClear(cis)
+	vec.Vec_IntClear(nodes)
+	baseabc.Abc_NtkIncrementTravId(network)
+	for _, id := range vec.Vec_IntArray(coIDs) {
+		co := baseabc.Abc_NtkObj(network, id)
+		if co != nil && baseabc.Abc_ObjFaninNum(co) > 0 {
+			Abc_NtkFinMiterCollect_rec(baseabc.Abc_ObjFanin0(co), cis, nodes)
+		}
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Check equivalence using SAT solver.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkFinCheckPair(pNtk *Abc_Ntk_t, vTypes *Vec_Int_t, vCos *Vec_Int_t, vCis *Vec_Int_t, vNodes *Vec_Int_t, iObjs []int32, Types []int32, vLits *Vec_Int_t) *Vec_Int_t {
-    var pGia *Gia_Man_t  = Abc_NtkFinMiterToGia( pNtk, vTypes, vCos, vCis, vNodes, iObjs, Types, vLits );
-    if Gia_ManAndNum(pGia) == 0 && Gia_ObjIsConst0(Gia_ObjFanin0(Gia_ManCo(pGia, 0))) {
-        var vPat *Vec_Int_t;
-        if Gia_ObjFaninC0(Gia_ManCo(pGia, 0)) {
-            vPat = Vec_IntStart(Vec_IntSize(vCis));
-        } else {
-            vPat = nil;
-        }
-        Gia_ManStop( pGia );
-        return vPat;
-    
-    } else {
-        var pCnf *Cnf_Dat_t  = (Cnf_Dat_t *)Mf_ManGenerateCnf( pGia, 8, 0, 1, 0, 0 );
-        var pSat *sat_solver  = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );
-        if pSat == nil {
-            Gia_ManStop( pGia );
-            Cnf_DataFree( pCnf );
-            return nil;
-        
-        } else {
-            var i int32;
-            var nConfLimit int32 = 10000;
-            var vPat *Vec_Int_t  = nil;
-            var status int32;
-            var iVarBeg int32 = pCnf.nVars - Gia_ManPiNum(pGia);// - 1;
-            //Gia_AigerWrite( pGia, "temp_detect.aig", 0, 0, 0 );
-            Gia_ManStop( pGia );
-            Cnf_DataFree( pCnf );
-            status = sat_solver_solve( pSat, nil, nil, (ABC_INT64_T)nConfLimit, 0, 0, 0 );
-            if status == l_Undef {
-                vPat = Vec_IntAlloc(0);
-            } else if status == l_True {
-                vPat = Vec_IntAlloc( Vec_IntSize(vCis) );
-                for  i = 0; i < Vec_IntSize(vCis); i++  {
-                    Vec_IntPush( vPat, sat_solver_var_value(pSat, iVarBeg+i) );
-                }
-            }
-            //printf( "%d ", sat_solver_nconflicts(pSat) );
-            sat_solver_delete( pSat );
-            return vPat;
-        }
-    }
+func Abc_ObjFinGateType(node *Abc_Obj_t) int32 {
+	sop, _ := node.Data.(string)
+	switch sop {
+	case "1 1\n":
+		return int32(ABC_FIN_RDOB_BUFF)
+	case "0 1\n":
+		return int32(ABC_FIN_RDOB_NOT)
+	case "11 1\n":
+		return int32(ABC_FIN_RDOB_AND)
+	case "11 0\n":
+		return int32(ABC_FIN_RDOB_NAND)
+	case "00 0\n":
+		return int32(ABC_FIN_RDOB_OR)
+	case "00 1\n":
+		return int32(ABC_FIN_RDOB_NOR)
+	case "01 1\n10 1\n":
+		return int32(ABC_FIN_RDOB_XOR)
+	case "11 1\n00 1\n":
+		return int32(ABC_FIN_RDOB_NXOR)
+	default:
+		return int32(ABC_FIN_NONE)
+	}
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Refinement of equivalence classes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkFinLocalSetup(vPairs *Vec_Int_t, vList *Vec_Int_t, vMap2 *Vec_Wec_t, vResArray *Vec_Int_t) {
-    var i, iFin int32;
-    Vec_IntClear( vResArray );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vList)) && (((iFin) = Vec_IntEntry(vList, i)), 1); i++  {
-        var iObj int32  = Vec_IntEntry( vPairs, 2*iFin );
-        var vArray *Vec_Int_t  = Vec_WecEntry( vMap2, iObj );
-        Vec_IntPushTwo( vArray, iFin, i );
-        Vec_IntPushTwo( vResArray, iFin, i );
-    }
-}
-func Abc_NtkFinLocalSetdown(vPairs *Vec_Int_t, vList *Vec_Int_t, vMap2 *Vec_Wec_t) {
-    var i, iFin int32;
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vList)) && (((iFin) = Vec_IntEntry(vList, i)), 1); i++  {
-        var iObj int32  = Vec_IntEntry( vPairs, 2*iFin );
-        var vArray *Vec_Int_t  = Vec_WecEntry( vMap2, iObj );
-        Vec_IntClear( vArray );
-    }
-}
-func Abc_NtkFinRefinement(pNtk *Abc_Ntk_t, vTypes *Vec_Int_t, vCos *Vec_Int_t, vCis *Vec_Int_t, vNodes *Vec_Int_t, vPairs *Vec_Int_t, vList *Vec_Int_t, vMap2 *Vec_Wec_t, vResult *Vec_Wec_t) int32 {
-    var vRes *Vec_Wec_t   = Vec_WecAlloc( 100 );
-    var nWords int32  = Abc_Bit6WordNum( Vec_IntSize(vList) );
-    var vSims *Vec_Wrd_t  = Vec_WrdStart( nWords * Abc_NtkObjNumMax(pNtk) );  // simulation info for each object
-    var vLits *Vec_Int_t  = Vec_IntStart( 2*Abc_NtkObjNumMax(pNtk) );         // two literals for each object
-    var vPat, vClass, vArray *Vec_Int_t;  
-    var i, k, iFin, Index, nCalls int32;
-    // prepare
-    vArray = Vec_WecPushLevel( vRes );
-    Abc_NtkFinLocalSetup( vPairs, vList, vMap2, vArray );
-    // try all-0/all-1 pattern
-    for  i = 0; i < 2; i++  {
-        vPat = Vec_IntAlloc( Vec_IntSize(vCis) );
-        Vec_IntFill( vPat, Vec_IntSize(vCis), i );
-        Abc_NtkFinSimulateOne( pNtk, vTypes, vCos, vCis, vNodes, vMap2, vPat, vSims, nWords, vPairs, vRes, 0, 1 );
-        Vec_IntFree( vPat );
-    }
-    // explore the classes
-    //Vec_WecPrint( vRes, 0 );
-    // inlining of macro Vec_WecForEachLevel
-    for  i = 0; (i < Vec_WecSize(vRes)) && (((vClass) = Vec_WecEntry(vRes, i)), 1); i++  {
-        var iFin0 int32   = Vec_IntEntry( vClass, 0 );
-        // inlining of macro Vec_IntForEachEntryDoubleStart
-        for  k = 2; (k+1 < Vec_IntSize(vClass)) && (((iFin) = Vec_IntEntry(vClass, k)), 1) && (((Index) = Vec_IntEntry(vClass, k+1)), 1); k += 2  {
-            var Objs [2]int32 = [2]int32{ Vec_IntEntry(vPairs, 2*iFin0),   Vec_IntEntry(vPairs, 2*iFin)   }; 
-            var Types [2]int32 = [2]int32{ Vec_IntEntry(vPairs, 2*iFin0+1), Vec_IntEntry(vPairs, 2*iFin+1) }; 
-            nCalls++;
-            //printf( "Checking pair %d and %d.\n", iFin0, iFin );
-            vPat = Abc_NtkFinCheckPair( pNtk, vTypes, vCos, vCis, vNodes, Objs, Types, vLits );
-            if vPat == nil { // proved
-                continue; }
-            assert(Vec_IntEntry(vClass, k) == iFin, "Vec_IntEntry(vClass, k) == iFin");
-            if Vec_IntSize(vPat) == 0 {
-                var vNewClass *Vec_Int_t  = Vec_WecPushLevel( vRes );
-                Vec_IntPushTwo( vNewClass, iFin, Index );  // index and first entry
-                vClass = Vec_WecEntry( vRes, i );
-                Vec_IntDrop( vClass, k+1 );
-                Vec_IntDrop( vClass, k );
-            
-            } else { // resimulate and refine
-                Abc_NtkFinSimulateOne( pNtk, vTypes, vCos, vCis, vNodes, vMap2, vPat, vSims, nWords, vPairs, vRes, i, k/2 ); }
-            Vec_IntFree( vPat );
-            // make sure refinement happened (k'th entry is now absent or different)
-            vClass = Vec_WecEntry( vRes, i );
-            assert(Vec_IntSize(vClass) <= k || Vec_IntEntry(vClass, k) != iFin, "Vec_IntSize(vClass) <= k || Vec_IntEntry(vClass, k) != iFin");
-            k -= 2;
-            //Vec_WecPrint( vRes, 0 );
-        }
-    }
-    // unprepare
-    Abc_NtkFinLocalSetdown( vPairs, vList, vMap2 );
-    // reload proved equivs into the final array
-    // inlining of macro Vec_WecForEachLevel
-    for  i = 0; (i < Vec_WecSize(vRes)) && (((vArray) = Vec_WecEntry(vRes, i)), 1); i++  {
-        assert(Vec_IntSize(vArray) % 2 == 0, "Vec_IntSize(vArray) % 2 == 0");
-        if Vec_IntSize(vArray) <= 2 {
-            continue; }
-        vClass = Vec_WecPushLevel( vResult );
-        // inlining of macro Vec_IntForEachEntryDouble
-        for  k = 0; (k+1 < Vec_IntSize(vArray)) && (((iFin) = Vec_IntEntry(vArray, k)), 1) && (((Index) = Vec_IntEntry(vArray, k+1)), 1); k += 2  {
-            Vec_IntPush( vClass, iFin );
-        }
-    }
-    Vec_WecFree( vRes );
-    Vec_WrdFree( vSims );
-    Vec_IntFree( vLits );
-    return nCalls;
+func Abc_NtkFinCheckTypesOk(network *Abc_Ntk_t) int32 {
+	for id := int32(0); id < baseabc.Abc_NtkObjNumMax(network); id++ {
+		obj := baseabc.Abc_NtkObj(network, id)
+		if obj != nil && baseabc.Abc_ObjIsNode(obj) != 0 && Abc_ObjFinGateType(obj) == int32(ABC_FIN_NONE) {
+			return id
+		}
+	}
+	return 0
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Detecting classes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_ObjFinGateType(pNode *Abc_Obj_t) int32 {
-    var pSop string  = (char *)pNode.pData;
-    if !(int32(strings.Compare(pSop, "1 1\n")) != 0) {         return ABC_FIN_RDOB_BUFF; }
-    if !(int32(strings.Compare(pSop, "0 1\n")) != 0) {         return ABC_FIN_RDOB_NOT; }
-    if !(int32(strings.Compare(pSop, "11 1\n")) != 0) {        return ABC_FIN_RDOB_AND; }
-    if !(int32(strings.Compare(pSop, "11 0\n")) != 0) {        return ABC_FIN_RDOB_NAND; }
-    if !(int32(strings.Compare(pSop, "00 0\n")) != 0) {        return ABC_FIN_RDOB_OR; }
-    if !(int32(strings.Compare(pSop, "00 1\n")) != 0) {        return ABC_FIN_RDOB_NOR; }
-    if !(int32(strings.Compare(pSop, "01 1\n10 1\n")) != 0) {  return ABC_FIN_RDOB_XOR; }
-    if !(int32(strings.Compare(pSop, "11 1\n00 1\n")) != 0) {  return ABC_FIN_RDOB_NXOR; }
-    return ABC_FIN_NONE;
-}
-func Abc_NtkFinCheckTypesOk(pNtk *Abc_Ntk_t) int32 {
-    var pObj *Abc_Obj_t; var i int32;
-    // inlining of macro Abc_NtkForEachNode
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else
-        if Abc_ObjFinGateType(pObj) == ABC_FIN_NONE {
-            return i; }
-    }
-    return 0;
-}
-func Abc_NtkFinCheckTypesOk2(pNtk *Abc_Ntk_t) int32 {
-    var pLib *Mio_Library_t  = (Mio_Library_t *)pNtk.pManFunc;
-    var i, iObj, Type int32;
-    // inlining of macro Vec_IntForEachEntryDoubleStart
-    for  i = 2; (i+1 < Vec_IntSize(pNtk.vFins)) && (((iObj) = Vec_IntEntry(pNtk.vFins, i)), 1) && (((Type) = Vec_IntEntry(pNtk.vFins, i+1)), 1); i += 2  {
-        var pObj *Abc_Obj_t  = Abc_NtkObj( pNtk, iObj );
-        var pGateFlt *Mio_Gate_t;
-        var pGateObj *Mio_Gate_t = (Mio_Gate_t *)pObj.pData;
-        if Type < 0 { // SA0, SA1, NEG
-            continue; }
-        pGateFlt = Mio_LibraryReadGateById( pLib, Type );
-        if Mio_GateReadPinNum(pGateFlt) < 1 {
-            continue; }
-        if Mio_GateReadPinNum(pGateObj) != Mio_GateReadPinNum(pGateFlt) {
-            return iObj; }
-    }
-    return 0;
-}
-func Abc_NtkFinComputeTypes(pNtk *Abc_Ntk_t) *Vec_Int_t {
-    var pObj *Abc_Obj_t; var i int32;
-    var vObjs *Vec_Int_t  = Vec_IntStart( Abc_NtkObjNumMax(pNtk) );
-    // inlining of macro Abc_NtkForEachNode
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {
-        Vec_IntWriteEntry( vObjs, Abc_ObjId(pObj), Abc_ObjFinGateType(pObj) ); }
-    }
-    return vObjs;
-}
-func Abc_NtkFinComputeObjects(vPairs *Vec_Int_t, pvMap **Vec_Wec_t, nObjs int32) *Vec_Int_t {
-    var i, iObj, Type int32;
-    var vObjs *Vec_Int_t  = Vec_IntAlloc( 100 );
-    *pvMap = Vec_WecStart( nObjs );
-    // inlining of macro Vec_IntForEachEntryDoubleStart
-    for  i = 2; (i+1 < Vec_IntSize(vPairs)) && (((iObj) = Vec_IntEntry(vPairs, i)), 1) && (((Type) = Vec_IntEntry(vPairs, i+1)), 1); i += 2  {
-        Vec_IntPush( vObjs, iObj );
-        Vec_WecPush( *pvMap, iObj, i/2 );
-    }
-    Vec_IntUniqify( vObjs );
-    return vObjs;
-}
-func Abc_NtkFinCreateList(vMap *Vec_Wec_t, vClass *Vec_Int_t) *Vec_Int_t {
-    var i, iObj int32;
-    var vList *Vec_Int_t  = Vec_IntAlloc( 100 );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vClass)) && (((iObj) = Vec_IntEntry(vClass, i)), 1); i++  {
-        Vec_IntAppend( vList, Vec_WecEntry(vMap, iObj) );
-    }
-    return vList;
-}
-func Abc_NtkFinCountPairs(vClasses *Vec_Wec_t) int32 {
-    var i, Counter int32;
-    var vLevel *Vec_Int_t;
-    // inlining of macro Vec_WecForEachLevel
-    for  i = 0; (i < Vec_WecSize(vClasses)) && (((vLevel) = Vec_WecEntry(vClasses, i)), 1); i++  {
-        Counter += Vec_IntSize(vLevel) - 1;
-    }
-    return Counter;
-}
-func Abc_NtkDetectFinClasses(pNtk *Abc_Ntk_t, fVerbose int32) *Vec_Wec_t {
-    var vTypes *Vec_Int_t  = nil; // gate types
-    var vPairs *Vec_Int_t;        // original info as a set of pairs (ObjId, TypeId)
-    var vObjs *Vec_Int_t;         // all those objects that have some fin 
-    var vMap *Vec_Wec_t;          // for each object, the set of fins
-    var vMap2 *Vec_Wec_t;         // for each local object, the set of pairs (Info, Index)
-    var vClasses *Vec_Wec_t;      // classes of objects
-    var vCoSets *Vec_Wec_t;       // corresponding CO sets
-    var vClass *Vec_Int_t;        // one class
-    var vCoSet *Vec_Int_t;        // one set of COs
-    var vCiSet *Vec_Int_t;        // one set of CIs
-    var vNodeSet *Vec_Int_t;      // one set of nodes
-    var vList *Vec_Int_t;         // one info list
-    var vResult *Vec_Wec_t;       // resulting equivalences
-    var i, iObj, nCalls int32;
-    if pNtk.vFins == nil {
-        fmt.Printf("Current network does not have the required info.\n");
-        return nil;
-    }
-    assert(Abc_NtkIsSopLogic(pNtk) || Abc_NtkIsMappedLogic(pNtk), "Abc_NtkIsSopLogic(pNtk) || Abc_NtkIsMappedLogic(pNtk)");
-    if Abc_NtkIsSopLogic(pNtk) {
-        iObj = Abc_NtkFinCheckTypesOk(pNtk);
-        if iObj != 0 {
-            fmt.Printf("Current network contains unsupported gate types (for example, see node \"%s\").\n", Abc_ObjName(Abc_NtkObj(pNtk, iObj)));
-            return nil;
-        }
-        vTypes   = Abc_NtkFinComputeTypes( pNtk );
-    
-    } else if Abc_NtkIsMappedLogic(pNtk) {
-        iObj = Abc_NtkFinCheckTypesOk2(pNtk);
-        if iObj != 0 {
-            fmt.Printf("Current network has mismatch between mapped gate size and fault gate size (for example, see node \"%s\").\n", Abc_ObjName(Abc_NtkObj(pNtk, iObj)));
-            return nil;
-        }
-    
-    } else { assert(false, "0"); }
-    //Abc_NtkFrameExtend( pNtk );
-    // collect data
-    vPairs   = pNtk.vFins;
-    vObjs    = Abc_NtkFinComputeObjects( vPairs, &vMap, Abc_NtkObjNumMax(pNtk) );
-    vClasses = Abc_NtkDetectObjClasses( pNtk, vObjs, &vCoSets );
-    // refine classes
-    vCiSet   = Vec_IntAlloc( 1000 );
-    vNodeSet = Vec_IntAlloc( 1000 );
-    vMap2    = Vec_WecStart( Abc_NtkObjNumMax(pNtk) );
-    vResult  = Vec_WecAlloc( 1000 );
-    // inlining of macro Vec_WecForEachLevel
-    for  i = 0; (i < Vec_WecSize(vClasses)) && (((vClass) = Vec_WecEntry(vClasses, i)), 1); i++  {
-        // extract one window
-        vCoSet = Vec_WecEntry( vCoSets, i );
-        Abc_NtkFinMiterCollect( pNtk, vCoSet, vCiSet, vNodeSet );
-        // refine one class
-        vList = Abc_NtkFinCreateList( vMap, vClass );
-        nCalls = Abc_NtkFinRefinement( pNtk, vTypes, vCoSet, vCiSet, vNodeSet, vPairs, vList, vMap2, vResult );
-        if fVerbose != 0 {
-            fmt.Printf("Group %4d :  Obj =%4d. Fins =%4d.  CI =%5d. CO =%5d. Node =%6d.  SAT calls =%5d.\n", i, Vec_IntSize(vClass), Vec_IntSize(vList), Vec_IntSize(vCiSet), Vec_IntSize(vCoSet), Vec_IntSize(vNodeSet), nCalls); }
-        Vec_IntFree( vList );
-    }
-    // sort entries in each array
-    // inlining of macro Vec_WecForEachLevel
-    for  i = 0; (i < Vec_WecSize(vResult)) && (((vClass) = Vec_WecEntry(vResult, i)), 1); i++  {
-        Vec_IntSort( vClass, 0 );
-    }
-    // sort by the index of the first entry
-    Vec_WecSortByFirstInt( vResult, 0 ); 
-    // cleanup
-    Vec_IntFreeP( & vTypes );
-    Vec_IntFree( vObjs );
-    Vec_WecFree( vClasses );
-    Vec_WecFree( vMap );
-    Vec_WecFree( vMap2 );
-    Vec_WecFree( vCoSets );
-    Vec_IntFree( vCiSet );
-    Vec_IntFree( vNodeSet );
-    return vResult;
+func Abc_NtkFinCheckTypesOk2(network *Abc_Ntk_t) int32 {
+	library := finLibrary(network)
+	fins := baseabc.Abc_NtkReadFins(network)
+	if library == nil || fins == nil {
+		return 0
+	}
+	for i := int32(2); i+1 < Vec_IntSize(fins); i += 2 {
+		id, kind := Vec_IntEntry(fins, i), Vec_IntEntry(fins, i+1)
+		if kind < 0 {
+			continue
+		}
+		obj := baseabc.Abc_NtkObj(network, id)
+		fault := mio.Mio_LibraryReadGateById(library, kind)
+		gate, _ := obj.Data.(*mio.Mio_Gate_t)
+		if fault == nil || gate == nil || mio.Mio_GateReadPinNum(fault) >= 1 && mio.Mio_GateReadPinNum(gate) != mio.Mio_GateReadPinNum(fault) {
+			return id
+		}
+	}
+	return 0
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Print results.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkPrintFinResults(vClasses *Vec_Wec_t) {
-    var vClass *Vec_Int_t;
-    var i, k, Entry int32;
-    // inlining of macro Vec_WecForEachLevel
-    for  i = 0; (i < Vec_WecSize(vClasses)) && (((vClass) = Vec_WecEntry(vClasses, i)), 1); i++  {
-        // inlining of macro Vec_IntForEachEntryStart
-        for  k = 1; (k < Vec_IntSize(vClass)) && (((Entry) = Vec_IntEntry(vClass, k)), 1); k++  {
-            fmt.Printf("%d %d\n", Vec_IntEntry(vClass, 0), Entry);
-        }
-    }
+func Abc_NtkFinComputeTypes(network *Abc_Ntk_t) *Vec_Int_t {
+	types := vec.Vec_IntStart(int(baseabc.Abc_NtkObjNumMax(network)))
+	for id := int32(0); id < baseabc.Abc_NtkObjNumMax(network); id++ {
+		obj := baseabc.Abc_NtkObj(network, id)
+		if obj != nil && baseabc.Abc_ObjIsNode(obj) != 0 {
+			Vec_IntWriteEntry(types, id, Abc_ObjFinGateType(obj))
+		}
+	}
+	return types
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Top-level procedure.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkDetectClassesTest(pNtk *Abc_Ntk_t, fSeq int32, fVerbose int32, fVeryVerbose int32) {
-    var vResult *Vec_Wec_t;
-    var clk abctime  = Abc_Clock();
-    if fSeq != 0 { 
-        Abc_NtkFrameExtend( pNtk ); }
-    vResult = Abc_NtkDetectFinClasses( pNtk, fVerbose );
-    fmt.Printf("Computed %d equivalence classes with %d item pairs.  ", Vec_WecSize(vResult), Abc_NtkFinCountPairs(vResult));
-    Abc_PrintTime( 1, "Time", Abc_Clock() - clk );
-    if fVeryVerbose != 0 {
-        Vec_WecPrint( vResult, 1 ); }
-//    if ( fVerbose )
-//        Abc_NtkPrintFinResults( vResult );
-    Vec_WecFree( vResult );
+func Abc_NtkFinComputeObjects(pairs *Vec_Int_t, mapOut **Vec_Wec_t, objectCount int32) *Vec_Int_t {
+	objects := Vec_IntAlloc(100)
+	*mapOut = vec.Vec_WecStart(int(objectCount))
+	for i := int32(2); i+1 < Vec_IntSize(pairs); i += 2 {
+		id := Vec_IntEntry(pairs, i)
+		Vec_IntPush(objects, id)
+		vec.Vec_WecPush(*mapOut, int(id), i/2)
+	}
+	vec.Vec_IntSort(objects, 0)
+	vec.Vec_IntUniqify(objects)
+	return objects
 }
 
+func Abc_NtkFinCreateList(mapping *Vec_Wec_t, class *Vec_Int_t) *Vec_Int_t {
+	list := Vec_IntAlloc(100)
+	for _, id := range vec.Vec_IntArray(class) {
+		vec.Vec_IntAppend(list, vec.Vec_WecEntry(mapping, int(id)))
+	}
+	return list
+}
 
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
+func Abc_NtkDetectClassesTest2(network *Abc_Ntk_t, verbose, veryVerbose int32) {
+	objects := Vec_IntAlloc(baseabc.Abc_NtkCiNum(network))
+	for i := int32(0); i < baseabc.Abc_NtkCiNum(network); i++ {
+		Vec_IntPush(objects, int32(baseabc.Abc_NtkCi(network, i).ID))
+	}
+	classes := Abc_NtkDetectObjClasses(network, objects, new(*Vec_Wec_t))
+	if verbose != 0 || veryVerbose != 0 {
+		vec.Vec_WecPrint(classes, 0)
+	}
+	Vec_IntFree(objects)
+	vec.Vec_WecFree(classes)
+}
 
+// Fault-class helpers use the source's one-based fault indices (pair zero is
+// the sentinel reserved by Io_ReadFins).
+func Abc_NtkFinCountPairs(classes *Vec_Wec_t) int32 {
+	count := 0
+	for i := 0; i < vec.Vec_WecSize(classes); i++ {
+		count += vec.Vec_IntSize(vec.Vec_WecEntry(classes, i)) - 1
+	}
+	return int32(count)
+}
 
-//ABC_NAMESPACE_IMPL_END
+// finGiaLit builds the source gate's Gia expression from the per-variant
+// fanin literals. The expression format is the same variable/complement AIG
+// encoding consumed by Mio_LibGateSimulateGia in ABC.
+func finGiaLit(manager *gia.Gia_Man_t, library *mio.Mio_Library_t, node *Abc_Obj_t, gateType int32, inputs []int32) int32 {
+	if gateType == int32(ABC_FIN_SA0) {
+		return gia.Gia_ManConst0Lit()
+	}
+	if gateType == int32(ABC_FIN_SA1) {
+		return gia.Gia_ManConst1Lit()
+	}
+	if gateType == int32(ABC_FIN_NEG) {
+		if len(inputs) == 0 {
+			panic("NEG fault requires an existing object function")
+		}
+		return inputs[0] ^ 1
+	}
+	if gateType >= 0 {
+		gate := mio.Mio_LibraryReadGateById(library, gateType)
+		if gate == nil {
+			panic("mapped fault simulation gate id is absent from the library")
+		}
+		expression := mio.Mio_GateReadExpr(gate)
+		if mio.Exp_IsConst0(expression) != 0 {
+			return gia.Gia_ManConst0Lit()
+		}
+		if mio.Exp_IsConst1(expression) != 0 {
+			return gia.Gia_ManConst1Lit()
+		}
+		readLit := func(lit int32, values []int32) int32 {
+			value := values[lit>>1]
+			if lit&1 != 0 {
+				value ^= 1
+			}
+			return value
+		}
+		if mio.Exp_IsLit(expression) != 0 {
+			return readLit(Vec_IntEntry(expression, 0), inputs)
+		}
+		values := append([]int32(nil), inputs...)
+		for i := int32(0); i < mio.Exp_NodeNum(expression); i++ {
+			left := readLit(Vec_IntEntry(expression, 2*i), values)
+			right := readLit(Vec_IntEntry(expression, 2*i+1), values)
+			values = append(values, gia.Gia_ManHashAnd(manager, left, right))
+		}
+		return readLit(Vec_IntEntry(expression, Vec_IntSize(expression)-1), values)
+	}
+	switch Abc_FinType_t(gateType) {
+	case ABC_FIN_RDOB_BUFF:
+		return inputs[0]
+	case ABC_FIN_RDOB_NOT:
+		return inputs[0] ^ 1
+	case ABC_FIN_RDOB_AND:
+		return gia.Gia_ManHashAnd(manager, inputs[0], inputs[1])
+	case ABC_FIN_RDOB_NAND:
+		return gia.Gia_ManHashAnd(manager, inputs[0], inputs[1]) ^ 1
+	case ABC_FIN_RDOB_OR:
+		return gia.Gia_ManHashOr(manager, inputs[0], inputs[1])
+	case ABC_FIN_RDOB_NOR:
+		return gia.Gia_ManHashOr(manager, inputs[0], inputs[1]) ^ 1
+	case ABC_FIN_RDOB_XOR:
+		return gia.Gia_ManHashXor(manager, inputs[0], inputs[1])
+	case ABC_FIN_RDOB_NXOR:
+		return gia.Gia_ManHashXor(manager, inputs[0], inputs[1]) ^ 1
+	default:
+		panic(fmt.Sprintf("unsupported fault/gate type %d", gateType))
+	}
+}
 
+func finNodeLiteral(manager *gia.Gia_Man_t, library *mio.Mio_Library_t, node *Abc_Obj_t, types *Vec_Int_t, literals []int32, faultObject int32, faultType int32) int32 {
+	inputs := make([]int32, 0, baseabc.Abc_ObjFaninNum(node))
+	for _, edge := range node.Fanins() {
+		lit := literals[baseabc.Abc_ObjId(edge.Object)]
+		if edge.Complement {
+			lit ^= 1
+		}
+		inputs = append(inputs, lit)
+	}
+	normalType := faultType
+	if baseabc.Abc_ObjId(node) != faultObject || faultType == int32(ABC_FIN_NEG) {
+		if library != nil {
+			gate, _ := node.Data.(*mio.Mio_Gate_t)
+			normalType = mio.Mio_GateReadCell(gate)
+		} else {
+			normalType = Vec_IntEntry(types, baseabc.Abc_ObjId(node))
+		}
+	}
+	if baseabc.Abc_ObjId(node) == faultObject && faultType == int32(ABC_FIN_NEG) {
+		return finGiaLit(manager, library, node, normalType, inputs) ^ 1
+	}
+	return finGiaLit(manager, library, node, normalType, inputs)
+}
+
+func finSimGate(kind int32, fanins []bool, library *mio.Mio_Library_t) bool {
+	if kind >= 0 {
+		gate := mio.Mio_LibraryReadGateById(library, kind)
+		if gate == nil {
+			panic("mapped fault gate is absent from library")
+		}
+		index := 0
+		for i, value := range fanins {
+			if value {
+				index |= 1 << i
+			}
+		}
+		truth := mio.Mio_GateReadTruthP(gate)
+		return (truth[index>>6]>>(uint(index)&63))&1 != 0
+	}
+	switch Abc_FinType_t(kind) {
+	case ABC_FIN_RDOB_BUFF:
+		return fanins[0]
+	case ABC_FIN_RDOB_NOT:
+		return !fanins[0]
+	case ABC_FIN_RDOB_AND:
+		return fanins[0] && fanins[1]
+	case ABC_FIN_RDOB_NAND:
+		return !(fanins[0] && fanins[1])
+	case ABC_FIN_RDOB_OR:
+		return fanins[0] || fanins[1]
+	case ABC_FIN_RDOB_NOR:
+		return !(fanins[0] || fanins[1])
+	case ABC_FIN_RDOB_XOR:
+		return fanins[0] != fanins[1]
+	case ABC_FIN_RDOB_NXOR:
+		return fanins[0] == fanins[1]
+	default:
+		panic(fmt.Sprintf("unsupported simulated gate type %d", kind))
+	}
+}
+
+// finSimOutputs performs the source detector's all-zero/all-one pattern
+// pre-refinement for one fault and its structural CO set.
+func finSimOutputs(network *Abc_Ntk_t, coSet, ciSet, pairs *Vec_Int_t, fault int32, pattern *Vec_Int_t) []bool {
+	faultObject, faultType := Vec_IntEntry(pairs, 2*fault), Vec_IntEntry(pairs, 2*fault+1)
+	values := make([]bool, int(baseabc.Abc_NtkObjNumMax(network)))
+	for i := int32(0); i < Vec_IntSize(ciSet); i++ {
+		ci := baseabc.Abc_NtkObj(network, Vec_IntEntry(ciSet, i))
+		value := Vec_IntEntry(pattern, i) != 0
+		if baseabc.Abc_ObjId(ci) == faultObject {
+			switch Abc_FinType_t(faultType) {
+			case ABC_FIN_SA0:
+				value = false
+			case ABC_FIN_SA1:
+				value = true
+			case ABC_FIN_NEG:
+				value = !value
+			default:
+				panic("non-stuck-at fault on a CI")
+			}
+		}
+		values[baseabc.Abc_ObjId(ci)] = value
+	}
+	library := finLibrary(network)
+	for _, node := range network.ObjectsOfKind(baseabc.ObjectNode) {
+		id := baseabc.Abc_ObjId(node)
+		fanins := make([]bool, 0, baseabc.Abc_ObjFaninNum(node))
+		for _, edge := range node.Fanins() {
+			value := values[baseabc.Abc_ObjId(edge.Object)]
+			if edge.Complement {
+				value = !value
+			}
+			fanins = append(fanins, value)
+		}
+		kind := int32(Abc_ObjFinGateType(node))
+		if library != nil {
+			gate, _ := node.Data.(*mio.Mio_Gate_t)
+			kind = mio.Mio_GateReadCell(gate)
+		}
+		value := finSimGate(kind, fanins, library)
+		if id == faultObject {
+			switch Abc_FinType_t(faultType) {
+			case ABC_FIN_SA0:
+				value = false
+			case ABC_FIN_SA1:
+				value = true
+			case ABC_FIN_NEG:
+				value = !value
+			default:
+				value = finSimGate(faultType, fanins, library)
+			}
+		}
+		values[id] = value
+	}
+	outputs := make([]bool, Vec_IntSize(coSet))
+	for i := int32(0); i < Vec_IntSize(coSet); i++ {
+		co := baseabc.Abc_NtkObj(network, Vec_IntEntry(coSet, i))
+		edge := co.Fanins()[0]
+		outputs[i] = values[baseabc.Abc_ObjId(edge.Object)] != edge.Complement
+	}
+	return outputs
+}
+
+func finSameBits(a, b []bool) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for i := range a {
+		if a[i] != b[i] {
+			return false
+		}
+	}
+	return true
+}
+
+type finClassItem struct {
+	fault int32
+	index int32
+}
+
+// finRefineByPattern applies one SAT counterexample or random simulation
+// pattern to the source worklist. It splits each class into the members that
+// agree with its first member and one appended class of mismatches.
+func finRefineByPattern(network *Abc_Ntk_t, coSet, ciSet, pairs *Vec_Int_t, classes *[][]finClassItem, pattern *Vec_Int_t, level, item int) {
+	cache := make(map[int32][]bool)
+	outputs := func(fault int32) []bool {
+		if value, ok := cache[fault]; ok {
+			return value
+		}
+		value := finSimOutputs(network, coSet, ciSet, pairs, fault, pattern)
+		cache[fault] = value
+		return value
+	}
+	for i := 0; i < level; i++ {
+		class := (*classes)[i]
+		if len(class) < 2 {
+			continue
+		}
+		reference := outputs(class[0].fault)
+		for _, member := range class[1:] {
+			if !finSameBits(reference, outputs(member.fault)) {
+				panic("SAT counterexample refined an already-proved fault class")
+			}
+		}
+	}
+	for i := level; i < len(*classes); i++ {
+		class := (*classes)[i]
+		if len(class) < 2 {
+			continue
+		}
+		start := 1
+		if i == level {
+			start = item
+		}
+		if start >= len(class) {
+			continue
+		}
+		reference := outputs(class[0].fault)
+		for _, member := range class[1:start] {
+			if !finSameBits(reference, outputs(member.fault)) {
+				panic("SAT counterexample refined a previously retained fault prefix")
+			}
+		}
+		kept := append([]finClassItem(nil), class[:start]...)
+		mismatches := make([]finClassItem, 0)
+		for _, candidate := range class[start:] {
+			if finSameBits(reference, outputs(candidate.fault)) {
+				kept = append(kept, candidate)
+			} else {
+				mismatches = append(mismatches, candidate)
+			}
+		}
+		(*classes)[i] = kept
+		if len(mismatches) != 0 {
+			*classes = append(*classes, mismatches)
+		}
+	}
+}
+
+// Abc_NtkFinCheckPair builds and solves the source pairwise XOR miter. A nil
+// result means proved equivalent; an empty vector means SAT resource limit;
+// otherwise the vector contains a counterexample over the window CIs.
+func Abc_NtkFinCheckPair(network *Abc_Ntk_t, types, coSet, ciSet, nodeSet *Vec_Int_t, objects, faultTypes [2]int32, scratch *Vec_Int_t) *Vec_Int_t {
+	_ = nodeSet
+	_ = scratch
+	firstObject, firstType := objects[0], faultTypes[0]
+	secondObject, secondType := objects[1], faultTypes[1]
+	manager := gia.Gia_ManStart(1000)
+	gia.Gia_ManHashStart(manager)
+	library := finLibrary(network)
+	firstLits := make([]int32, int(baseabc.Abc_NtkObjNumMax(network)))
+	secondLits := make([]int32, len(firstLits))
+	for i := range firstLits {
+		firstLits[i], secondLits[i] = -1, -1
+	}
+	for _, id := range vec.Vec_IntArray(ciSet) {
+		ci := baseabc.Abc_NtkObj(network, id)
+		objID := baseabc.Abc_ObjId(ci)
+		lit := gia.Gia_ManAppendCi(manager)
+		firstLits[objID], secondLits[objID] = lit, lit
+		if objID == firstObject {
+			if firstType == int32(ABC_FIN_NEG) {
+				firstLits[objID] = lit ^ 1
+			} else {
+				firstLits[objID] = finGiaLit(manager, library, ci, firstType, nil)
+			}
+		}
+		if objID == secondObject {
+			if secondType == int32(ABC_FIN_NEG) {
+				secondLits[objID] = lit ^ 1
+			} else {
+				secondLits[objID] = finGiaLit(manager, library, ci, secondType, nil)
+			}
+		}
+	}
+	for _, id := range vec.Vec_IntArray(nodeSet) {
+		node := baseabc.Abc_NtkObj(network, id)
+		objID := baseabc.Abc_ObjId(node)
+		var typ int32
+		if baseabc.Abc_NtkIsMappedLogic(network) != 0 {
+			gate, _ := node.Data.(*mio.Mio_Gate_t)
+			typ = mio.Mio_GateReadCell(gate)
+		} else {
+			typ = Vec_IntEntry(types, objID)
+		}
+		firstTypeHere, secondTypeHere := typ, typ
+		if objID == firstObject {
+			firstTypeHere = firstType
+		}
+		if objID == secondObject {
+			secondTypeHere = secondType
+		}
+		firstLits[objID] = finNodeLiteral(manager, library, node, types, firstLits, firstObject, firstTypeHere)
+		secondLits[objID] = finNodeLiteral(manager, library, node, types, secondLits, secondObject, secondTypeHere)
+	}
+	var mismatch int32
+	for i := int32(0); i < Vec_IntSize(coSet); i++ {
+		co := baseabc.Abc_NtkObj(network, Vec_IntEntry(coSet, i))
+		edge := co.Fanins()[0]
+		a, b := firstLits[baseabc.Abc_ObjId(edge.Object)], secondLits[baseabc.Abc_ObjId(edge.Object)]
+		if edge.Complement {
+			a, b = a^1, b^1
+		}
+		mismatch = gia.Gia_ManHashOr(manager, mismatch, gia.Gia_ManHashXor(manager, a, b))
+	}
+	gia.Gia_ManAppendCo(manager, mismatch)
+	clean := gia.Gia_ManCleanup(manager)
+	gia.Gia_ManStop(manager)
+	defer gia.Gia_ManStop(clean)
+	if gia.Gia_ManAndNum(clean) == 0 && gia.Gia_ObjIsConst0(gia.Gia_ObjFanin0(gia.Gia_ManCo(clean, 0))) != 0 {
+		if gia.Gia_ObjFaninC0(gia.Gia_ManCo(clean, 0)) == 0 {
+			return nil
+		}
+		pattern := Vec_IntAlloc(Vec_IntSize(ciSet))
+		for i := int32(0); i < Vec_IntSize(ciSet); i++ {
+			Vec_IntPush(pattern, 0)
+		}
+		return pattern
+	}
+	generated := gia.Mf_ManGenerateCnf(clean, 8, 0, 1, 0, 0)
+	if generated == nil {
+		return Vec_IntAlloc(0)
+	}
+	cnfData := cnf.Cnf_DataAlloc(nil, int32(generated.Variables), int32(len(generated.Clauses)), 0)
+	cnfData.Clauses = generated.Clauses
+	solver := cnf.Cnf_DataWriteIntoSolver(cnfData, 1, 0)
+	cnf.Cnf_DataFree(cnfData)
+	if solver == nil {
+		return nil // root propagation proved the miter contradictory
+	}
+	status := solver.SolveWithResourceLimits(nil, 10000, 0, 0, 0)
+	if status == bsat.Unsatisfiable {
+		return nil
+	}
+	if status != bsat.Satisfiable {
+		return Vec_IntAlloc(0)
+	}
+	pattern := Vec_IntAlloc(Vec_IntSize(ciSet))
+	begin := int32(generated.Variables) - int32(gia.Gia_ManPiNum(clean))
+	for i := int32(0); i < Vec_IntSize(ciSet); i++ {
+		value, ok := solver.Value(begin + i)
+		if !ok {
+			return Vec_IntAlloc(0)
+		}
+		if value {
+			Vec_IntPush(pattern, 1)
+		} else {
+			Vec_IntPush(pattern, 0)
+		}
+	}
+	return pattern
+}
+
+// finRefineFaultClass mirrors Abc_NtkFinRefinement's mutable class worklist.
+// It returns the exact SAT-call count along with the refined source-order
+// classes, whose members are one-based indices into vFins.
+func finRefineFaultClass(network *Abc_Ntk_t, types, coSet, ciSet, nodeSet, pairs, faultList *Vec_Int_t) ([][]finClassItem, int) {
+	classes := [][]finClassItem{{}}
+	for i := int32(0); i < Vec_IntSize(faultList); i++ {
+		classes[0] = append(classes[0], finClassItem{fault: Vec_IntEntry(faultList, i), index: i})
+	}
+	for _, bit := range []int32{0, 1} {
+		pattern := Vec_IntAlloc(Vec_IntSize(ciSet))
+		for i := int32(0); i < Vec_IntSize(ciSet); i++ {
+			Vec_IntPush(pattern, bit)
+		}
+		finRefineByPattern(network, coSet, ciSet, pairs, &classes, pattern, 0, 1)
+		Vec_IntFree(pattern)
+	}
+	nCalls := 0
+	for i := 0; i < len(classes); i++ {
+		for k := 1; k < len(classes[i]); {
+			class := classes[i]
+			first, candidate := class[0].fault, class[k].fault
+			objects := [2]int32{Vec_IntEntry(pairs, 2*first), Vec_IntEntry(pairs, 2*candidate)}
+			faultTypes := [2]int32{Vec_IntEntry(pairs, 2*first+1), Vec_IntEntry(pairs, 2*candidate+1)}
+			pattern := Abc_NtkFinCheckPair(network, types, coSet, ciSet, nodeSet, objects, faultTypes, nil)
+			nCalls++
+			if pattern == nil {
+				k++
+				continue
+			}
+			if Vec_IntSize(pattern) == 0 {
+				moved := class[k]
+				classes[i] = append(class[:k], class[k+1:]...)
+				classes = append(classes, []finClassItem{moved})
+				Vec_IntFree(pattern)
+			} else {
+				finRefineByPattern(network, coSet, ciSet, pairs, &classes, pattern, i, k)
+				Vec_IntFree(pattern)
+				if k < len(classes[i]) && classes[i][k].fault == candidate {
+					panic("SAT counterexample did not refine the compared fault")
+				}
+			}
+		}
+	}
+	return classes, nCalls
+}
+
+func Abc_NtkDetectFinClasses(network *Abc_Ntk_t, verbose int32) *Vec_Wec_t {
+	fins := baseabc.Abc_NtkReadFins(network)
+	if fins == nil {
+		fmt.Println("Current network does not have the required info.")
+		return nil
+	}
+	if baseabc.Abc_NtkIsSopLogic(network) == 0 && baseabc.Abc_NtkIsMappedLogic(network) == 0 {
+		panic("Abc_NtkDetectFinClasses requires SOP or mapped logic")
+	}
+	var types *Vec_Int_t
+	if baseabc.Abc_NtkIsSopLogic(network) != 0 {
+		if id := Abc_NtkFinCheckTypesOk(network); id != 0 {
+			fmt.Printf("Current network contains unsupported gate types (for example, see node %q).\n", baseabc.Abc_ObjName(baseabc.Abc_NtkObj(network, id)))
+			return nil
+		}
+		types = Abc_NtkFinComputeTypes(network)
+	} else if id := Abc_NtkFinCheckTypesOk2(network); id != 0 {
+		fmt.Printf("Current network has mismatch between mapped gate size and fault gate size (for example, see node %q).\n", baseabc.Abc_ObjName(baseabc.Abc_NtkObj(network, id)))
+		return nil
+	}
+	if types != nil {
+		defer Vec_IntFree(types)
+	}
+
+	// First group fault sites by their structural TFO CO set. Faults at the
+	// same object remain distinct entries and are refined by exact equivalence.
+	var mapping *Vec_Wec_t
+	objects := Abc_NtkFinComputeObjects(fins, &mapping, baseabc.Abc_NtkObjNumMax(network))
+	defer Vec_IntFree(objects)
+	defer vec.Vec_WecFree(mapping)
+	var coSets *Vec_Wec_t
+	objectClasses := Abc_NtkDetectObjClasses(network, objects, &coSets)
+	defer vec.Vec_WecFree(objectClasses)
+	defer vec.Vec_WecFree(coSets)
+	results := vec.Vec_WecAlloc(1000)
+	for classID := 0; classID < vec.Vec_WecSize(objectClasses); classID++ {
+		objectClass := vec.Vec_WecEntry(objectClasses, classID)
+		coSet := vec.Vec_WecEntry(coSets, classID)
+		faultList := Abc_NtkFinCreateList(mapping, objectClass)
+		ciSet, nodeSet := vec.Vec_IntAlloc(1000), vec.Vec_IntAlloc(1000)
+		Abc_NtkFinMiterCollect(network, coSet, ciSet, nodeSet)
+
+		classes, nCalls := finRefineFaultClass(network, types, coSet, ciSet, nodeSet, fins, faultList)
+		for _, class := range classes {
+			if len(class) < 2 {
+				continue
+			}
+			level := vec.Vec_WecPushLevel(results)
+			for _, item := range class {
+				vec.Vec_IntPush(level, item.fault)
+			}
+		}
+		if verbose != 0 {
+			fmt.Printf("Group %4d : Obj =%4d. Fins =%4d. CI =%5d. CO =%5d. Node =%6d. SAT calls =%5d.\n", classID, Vec_IntSize(objectClass), Vec_IntSize(faultList), Vec_IntSize(ciSet), Vec_IntSize(coSet), Vec_IntSize(nodeSet), nCalls)
+		}
+		Vec_IntFree(faultList)
+		Vec_IntFree(ciSet)
+		Vec_IntFree(nodeSet)
+	}
+	for i := 0; i < vec.Vec_WecSize(results); i++ {
+		vec.Vec_IntSort(vec.Vec_WecEntry(results, i), 0)
+	}
+	vec.Vec_WecSortByFirstInt(results, 0)
+	return results
+}
+
+func Abc_NtkPrintFinResults(classes *Vec_Wec_t) {
+	for i := 0; i < vec.Vec_WecSize(classes); i++ {
+		class := vec.Vec_WecEntry(classes, i)
+		if Vec_IntSize(class) == 0 {
+			continue
+		}
+		first := Vec_IntEntry(class, 0)
+		for j := int32(1); j < Vec_IntSize(class); j++ {
+			fmt.Printf("%d %d\n", first, Vec_IntEntry(class, j))
+		}
+	}
+}
+
+func Abc_NtkDetectClassesTest(network *Abc_Ntk_t, sequential, verbose, veryVerbose int32) {
+	if sequential != 0 {
+		Abc_NtkFrameExtend(network)
+	}
+	classes := Abc_NtkDetectFinClasses(network, verbose)
+	if classes == nil {
+		return
+	}
+	fmt.Printf("Computed %d equivalence classes with %d item pairs.\n", vec.Vec_WecSize(classes), Abc_NtkFinCountPairs(classes))
+	if veryVerbose != 0 {
+		vec.Vec_WecPrint(classes, 1)
+	}
+	vec.Vec_WecFree(classes)
+}
+
+func Abc_NtkFrameExtend(network *Abc_Ntk_t) {
+	// Mirror the ABC detector's two-frame expansion for networks whose final
+	// inputs and outputs encode latch reset, enable, and signal functions.
+	nPisOld := baseabc.Abc_NtkPiNum(network)
+	nPosOld := baseabc.Abc_NtkPoNum(network)
+	nConstr := network.Constraints
+	if nConstr == 0 {
+		return
+	}
+	if nConstr < 0 || nPisOld < nConstr || nPosOld < 4*nConstr {
+		panic("Abc_NtkFrameExtend: malformed sequential network")
+	}
+	nodes := append([]*Abc_Obj_t(nil), network.ObjectsOfKind(baseabc.ObjectNode)...)
+	pis := append([]*Abc_Obj_t(nil), network.ObjectsOfKind(baseabc.ObjectPI)...)
+	pos := append([]*Abc_Obj_t(nil), network.ObjectsOfKind(baseabc.ObjectPO)...)
+	// Duplicate ordinary primary inputs. For each latch input, build the
+	// next-state function !(reset) & ((enable & signal) | (!enable & state)).
+	for i, pi := range pis {
+		if int32(i) < nPisOld-nConstr {
+			copy := baseabc.Abc_NtkDupObj(network, pi, 0)
+			baseabc.Abc_ObjAssignName(copy, baseabc.Abc_ObjName(pi), "_frame1")
+			pi.SetCopyEdge(copy.Signal())
+			continue
+		}
+		start := int(nPosOld + 4*(int32(i)-nPisOld))
+		reset := pos[start+1].Fanins()[0].Object
+		enable := pos[start+2].Fanins()[0].Object
+		signal := pos[start+3].Fanins()[0].Object
+		resetN := baseabc.Abc_NtkCreateNodeInv(network, reset)
+		enableN := baseabc.Abc_NtkCreateNodeInv(network, enable)
+		and0 := baseabc.Abc_NtkCreateNodeAnd(network, []*Abc_Obj_t{enableN, pi})
+		and1 := baseabc.Abc_NtkCreateNodeAnd(network, []*Abc_Obj_t{enable, signal})
+		mux := baseabc.Abc_NtkCreateNodeOr(network, []*Abc_Obj_t{and0, and1})
+		pi.SetCopyEdge(baseabc.Abc_NtkCreateNodeAnd(network, []*Abc_Obj_t{resetN, mux}).Signal())
+	}
+	// Duplicate the old logic and connect it through the second-frame copies.
+	for _, node := range nodes {
+		copy := baseabc.Abc_NtkDupObj(network, node, 0)
+		node.SetCopyEdge(copy.Signal())
+	}
+	for _, node := range nodes {
+		copy := node.ReadCopyEdge().Object
+		for _, edge := range node.Fanins() {
+			mapped := edge.Object.ReadCopyEdge()
+			if edge.Complement {
+				mapped = mapped.Not()
+			}
+			baseabc.Abc_ObjAddFanin(copy, mapped)
+		}
+	}
+	// Duplicate ordinary outputs and reconnect encoded latch-input outputs to
+	// the copies of their original drivers.
+	for i, po := range pos {
+		if int32(i) < nPosOld-4*nConstr {
+			copy := baseabc.Abc_NtkDupObj(network, po, 0)
+			baseabc.Abc_ObjAssignName(copy, baseabc.Abc_ObjName(po), "_frame1")
+			old := po.Fanins()[0]
+			mapped := old.Object.ReadCopyEdge()
+			if old.Complement {
+				mapped = mapped.Not()
+			}
+			baseabc.Abc_ObjAddFanin(copy, mapped)
+			continue
+		}
+		old := po.Fanins()[0]
+		mapped := old.Object.ReadCopyEdge()
+		if old.Complement {
+			mapped = mapped.Not()
+		}
+		baseabc.Abc_ObjPatchFanin(po, old.Object, mapped)
+	}
+}

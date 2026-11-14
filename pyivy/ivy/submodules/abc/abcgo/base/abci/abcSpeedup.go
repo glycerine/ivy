@@ -1,1008 +1,611 @@
 package abci
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+	"math/bits"
 
-/**CFile****************************************************************
+	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/aig/gia"
+	baseabc "github.com/glycerine/abcgo/base/abc"
+	ifpkg "github.com/glycerine/abcgo/map/if"
+	"github.com/glycerine/abcgo/misc/vec"
+)
 
-  FileName    [abcSpeedup.c]
+func speedupLutTimes(n *Abc_Ntk_t) []float32     { return baseabc.Abc_NtkLutTimes(n) }
+func speedupTime(o *Abc_Obj_t, slot int) float32 { return speedupLutTimes(o.Network())[3*o.ID+slot] }
+func setSpeedupTime(o *Abc_Obj_t, slot int, value float32) {
+	speedupLutTimes(o.Network())[3*o.ID+slot] = value
+}
+func Abc_ObjArrival(o *Abc_Obj_t) float32        { return speedupTime(o, 0) }
+func Abc_ObjRequired(o *Abc_Obj_t) float32       { return speedupTime(o, 1) }
+func Abc_ObjSlack(o *Abc_Obj_t) float32          { return speedupTime(o, 2) }
+func Abc_ObjSetArrival(o *Abc_Obj_t, v float32)  { setSpeedupTime(o, 0, v) }
+func Abc_ObjSetRequired(o *Abc_Obj_t, v float32) { setSpeedupTime(o, 1, v) }
+func Abc_ObjSetSlack(o *Abc_Obj_t, v float32)    { setSpeedupTime(o, 2, v) }
 
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Network and node package.]
-
-  Synopsis    [Delay trace and speedup.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: abcSpeedup.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "base/abc/abc.h"
-//#include "base/main/main.h"
-//#include "map/if/if.h"
-//#include "aig/aig/aig.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-func Abc_ObjArrival(pNode *Abc_Obj_t) float32 { return pNode.pNtk.pLutTimes[3*pNode.Id+0]; }
-func Abc_ObjRequired(pNode *Abc_Obj_t) float32 { return pNode.pNtk.pLutTimes[3*pNode.Id+1]; }
-func Abc_ObjSlack(pNode *Abc_Obj_t) float32 { return pNode.pNtk.pLutTimes[3*pNode.Id+2]; }
-
-func Abc_ObjSetArrival(pNode *Abc_Obj_t, Time float32) { pNode.pNtk.pLutTimes[3*pNode.Id+0] = Time; }
-func Abc_ObjSetRequired(pNode *Abc_Obj_t, Time float32) { pNode.pNtk.pLutTimes[3*pNode.Id+1] = Time; }
-func Abc_ObjSetSlack(pNode *Abc_Obj_t, Time float32) { pNode.pNtk.pLutTimes[3*pNode.Id+2] = Time; }
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Sorts the pins in the decreasing order of delays.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkDelayTraceSortPins(pNode *Abc_Obj_t, pPinPerm *int32, pPinDelays *float32) {
-    var pFanin *Abc_Obj_t;
-    var i, j, best_i, temp int32;
-    // start the trivial permutation and collect pin delays
-    // inlining of macro Abc_ObjForEachFanin
-    for  i = 0; (i < Abc_ObjFaninNum(pNode)) && (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {
-        pPinPerm[i] = i;
-        pPinDelays[i] = Abc_ObjArrival(pFanin);
-    }
-    // selection sort the pins in the decreasible order of delays
-    // this order will match the increasing order of LUT input pins
-    for  i = 0; i < Abc_ObjFaninNum(pNode)-1; i++  {
-        best_i = i;
-        for  j = i+1; j < Abc_ObjFaninNum(pNode); j++  {
-            if pPinDelays[pPinPerm[j]] > pPinDelays[pPinPerm[best_i]] {
-                best_i = j; }
-        }
-        if best_i == i {
-            continue; }
-        temp = pPinPerm[i]; 
-        pPinPerm[i] = pPinPerm[best_i]; 
-        pPinPerm[best_i] = temp;
-    }
-    // verify
-    assert(Abc_ObjFaninNum(pNode) == 0 || pPinPerm[0] < Abc_ObjFaninNum(pNode), "Abc_ObjFaninNum(pNode) == 0 || pPinPerm[0] < Abc_ObjFaninNum(pNode)");
-    for  i = 1; i < Abc_ObjFaninNum(pNode); i++  {
-        assert(pPinPerm[i] < Abc_ObjFaninNum(pNode), "pPinPerm[i] < Abc_ObjFaninNum(pNode)");
-        assert(pPinDelays[pPinPerm[i-1]] >= pPinDelays[pPinPerm[i]], "pPinDelays[pPinPerm[i-1]] >= pPinDelays[pPinPerm[i]]");
-    }
+func Abc_NtkDelayTraceSortPins(node *Abc_Obj_t, perm []int32, delays []float32) {
+	n := int(baseabc.Abc_ObjFaninNum(node))
+	if len(perm) < n || len(delays) < n {
+		panic("delay-trace pin workspace too small")
+	}
+	for i := 0; i < n; i++ {
+		perm[i] = int32(i)
+		delays[i] = Abc_ObjArrival(baseabc.Abc_ObjFanin(node, int32(i)))
+	}
+	for i := 0; i < n-1; i++ {
+		best := i
+		for j := i + 1; j < n; j++ {
+			if delays[perm[j]] > delays[perm[best]] {
+				best = j
+			}
+		}
+		perm[i], perm[best] = perm[best], perm[i]
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkDelayTraceLut(pNtk *Abc_Ntk_t, fUseLutLib int32) float32 {
-    var fUseSorting int32  = 1;
-    var pPinPerm [32]int32;
-    var pPinDelays [32]float32;
-    var pLutLib *If_LibLut_t;
-    var pNode, pFanin *Abc_Obj_t;
-    var vNodes *Vec_Ptr_t;
-    var tArrival float32;
-    var tRequired float32;
-    var tSlack float32;
-    var pDelays *float32;
-    var i, k int32;
-
-    assert(Abc_NtkIsLogic(pNtk), "Abc_NtkIsLogic(pNtk)");
-    // get the library
-    if fUseLutLib != 0 {
-        pLutLib = (If_LibLut_t *)Abc_FrameReadLibLut();
-    } else {
-        pLutLib = nil;
-    }
-    if (pLutLib != nil) && pLutLib.LutMax < Abc_NtkGetFaninMax(pNtk) {
-        fmt.Printf("The max LUT size (%d) is less than the max fanin count (%d).\n", pLutLib.LutMax, Abc_NtkGetFaninMax(pNtk));
-        return -ABC_INFINITY;
-    }
-
-    // initialize the arrival times
-    pNtk.pLutTimes = nil;
-    // inlining of macro ABC_ALLOC
-    pNtk.pLutTimes = ((float *) malloc(sizeof(float) * (size_t)(3 * Abc_NtkObjNumMax(pNtk))));
-    for  i = 0; i < Abc_NtkObjNumMax(pNtk); i++  {
-        pNtk.pLutTimes[3*i+0] = pNtk.pLutTimes[3*i+2] = 0;
-        pNtk.pLutTimes[3*i+1] = ABC_INFINITY;
-    }
-
-    // propagate arrival times
-    vNodes = Abc_NtkDfs( pNtk, 1 );
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vNodes)) && (((pNode) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {
-        tArrival = -ABC_INFINITY;
-        if pLutLib == nil {
-            // inlining of macro Abc_ObjForEachFanin
-            for  k = 0; (k < Abc_ObjFaninNum(pNode)) && (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {
-                if tArrival < Abc_ObjArrival(pFanin) + 1.0 {
-                    tArrival = Abc_ObjArrival(pFanin) + 1.0; }
-            }
-        
-        } else if !pLutLib.fVarPinDelays {
-            pDelays = pLutLib.pLutDelays[Abc_ObjFaninNum(pNode)];
-            // inlining of macro Abc_ObjForEachFanin
-            for  k = 0; (k < Abc_ObjFaninNum(pNode)) && (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {
-                if tArrival < Abc_ObjArrival(pFanin) + pDelays[0] {
-                    tArrival = Abc_ObjArrival(pFanin) + pDelays[0]; }
-            }
-        
-        } else {
-            pDelays = pLutLib.pLutDelays[Abc_ObjFaninNum(pNode)];
-            if fUseSorting != 0 {
-                Abc_NtkDelayTraceSortPins( pNode, pPinPerm, pPinDelays );
-                // inlining of macro Abc_ObjForEachFanin
-                for  k = 0; (k < Abc_ObjFaninNum(pNode)) && (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  { 
-                    if tArrival < Abc_ObjArrival(Abc_ObjFanin(pNode,pPinPerm[k])) + pDelays[k] {
-                        tArrival = Abc_ObjArrival(Abc_ObjFanin(pNode,pPinPerm[k])) + pDelays[k]; }
-                }
-            
-            } else {
-                // inlining of macro Abc_ObjForEachFanin
-                for  k = 0; (k < Abc_ObjFaninNum(pNode)) && (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {
-                    if tArrival < Abc_ObjArrival(pFanin) + pDelays[k] {
-                        tArrival = Abc_ObjArrival(pFanin) + pDelays[k]; }
-                }
-            }
-        }
-        if Abc_ObjFaninNum(pNode) == 0 {
-            tArrival = 0.0; }
-        Abc_ObjSetArrival( pNode, tArrival );
-    }
-    Vec_PtrFree( vNodes );
-
-    // get the latest arrival times
-    tArrival = -ABC_INFINITY;
-    // inlining of macro Abc_NtkForEachCo
-    for  i = 0; (i < Abc_NtkCoNum(pNtk)) && (((pNode) = Abc_NtkCo(pNtk, i)), 1); i++  {
-        if tArrival < Abc_ObjArrival(Abc_ObjFanin0(pNode)) {
-            tArrival = Abc_ObjArrival(Abc_ObjFanin0(pNode)); }
-    }
-
-    // initialize the required times
-    // inlining of macro Abc_NtkForEachCo
-    for  i = 0; (i < Abc_NtkCoNum(pNtk)) && (((pNode) = Abc_NtkCo(pNtk, i)), 1); i++  {
-        if Abc_ObjRequired(Abc_ObjFanin0(pNode)) > tArrival {
-            Abc_ObjSetRequired( Abc_ObjFanin0(pNode), tArrival ); }
-    }
-
-    // propagate the required times
-    vNodes = Abc_NtkDfsReverse( pNtk );
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vNodes)) && (((pNode) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {
-        if pLutLib == nil {
-            tRequired = Abc_ObjRequired(pNode) - float32(1.0);
-            // inlining of macro Abc_ObjForEachFanin
-            for  k = 0; (k < Abc_ObjFaninNum(pNode)) && (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {
-                if Abc_ObjRequired(pFanin) > tRequired {
-                    Abc_ObjSetRequired( pFanin, tRequired ); }
-            }
-        
-        } else if !pLutLib.fVarPinDelays {
-            pDelays = pLutLib.pLutDelays[Abc_ObjFaninNum(pNode)];
-            tRequired = Abc_ObjRequired(pNode) - pDelays[0];
-            // inlining of macro Abc_ObjForEachFanin
-            for  k = 0; (k < Abc_ObjFaninNum(pNode)) && (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {
-                if Abc_ObjRequired(pFanin) > tRequired {
-                    Abc_ObjSetRequired( pFanin, tRequired ); }
-            }
-        
-        } else {
-            pDelays = pLutLib.pLutDelays[Abc_ObjFaninNum(pNode)];
-            if fUseSorting != 0 {
-                Abc_NtkDelayTraceSortPins( pNode, pPinPerm, pPinDelays );
-                // inlining of macro Abc_ObjForEachFanin
-                for  k = 0; (k < Abc_ObjFaninNum(pNode)) && (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {
-                    tRequired = Abc_ObjRequired(pNode) - pDelays[k];
-                    if Abc_ObjRequired(Abc_ObjFanin(pNode,pPinPerm[k])) > tRequired {
-                        Abc_ObjSetRequired( Abc_ObjFanin(pNode,pPinPerm[k]), tRequired ); }
-                }
-            
-            } else {
-                // inlining of macro Abc_ObjForEachFanin
-                for  k = 0; (k < Abc_ObjFaninNum(pNode)) && (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {
-                    tRequired = Abc_ObjRequired(pNode) - pDelays[k];
-                    if Abc_ObjRequired(pFanin) > tRequired {
-                        Abc_ObjSetRequired( pFanin, tRequired ); }
-                }
-            }
-        }
-        // set slack for this object
-        tSlack = Abc_ObjRequired(pNode) - Abc_ObjArrival(pNode);
-        assert(tSlack + 0.001 > 0.0, "tSlack + 0.001 > 0.0");
-        Abc_ObjSetSlack( pNode, tSlack < 0.0 ? 0.0 : tSlack );
-    }
-    Vec_PtrFree( vNodes );
-    return tArrival;
+func speedupLut() *ifpkg.If_LibLut_t {
+	p, _ := ifpkg.Abc_FrameReadLibLut().(*ifpkg.If_LibLut_t)
+	return p
+}
+func speedupDelay(lib *ifpkg.If_LibLut_t, n, pin int32) float32 {
+	return ifpkg.If_CutLutDelay(lib, n, pin)
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Delay tracing of the LUT mapped network.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkDelayTracePrint(pNtk *Abc_Ntk_t, fUseLutLib int32, fVerbose int32) {
-    var pNode *Abc_Obj_t;
-    var pLutLib *If_LibLut_t;
-    var i int32;
-    var Nodes int32;
-    var pCounters *int32;
-    var tArrival, tDelta, nSteps, Num float32;
-    // get the library
-    if fUseLutLib != 0 {
-        pLutLib = (If_LibLut_t *)Abc_FrameReadLibLut();
-    } else {
-        pLutLib = nil;
-    }
-    if (pLutLib != nil) && pLutLib.LutMax < Abc_NtkGetFaninMax(pNtk) {
-        fmt.Printf("The max LUT size (%d) is less than the max fanin count (%d).\n", pLutLib.LutMax, Abc_NtkGetFaninMax(pNtk));
-        return;
-    }
-    // decide how many steps
-    if fUseLutLib != 0 {
-        nSteps = 20;
-    } else {
-        nSteps = Abc_NtkLevel(pNtk);
-    }
-    // inlining of macro ABC_ALLOC
-    pCounters = ((int *) malloc(sizeof(int) * (size_t)(nSteps + 1)));
-    memset( pCounters, 0, sizeof(int)*(nSteps + 1) );
-    // perform delay trace
-    tArrival = Abc_NtkDelayTraceLut( pNtk, fUseLutLib );
-    tDelta = tArrival / nSteps;
-    // count how many nodes have slack in the corresponding intervals
-    // inlining of macro Abc_NtkForEachNode
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {
-        if Abc_ObjFaninNum(pNode) == 0 {
-            continue; }
-        Num = Abc_ObjSlack(pNode) / tDelta;
-        assert(Num >=0 && Num <= nSteps, "Num >=0 && Num <= nSteps");
-        pCounters[int32(Num)]++;
-    }
-    }
-    // print the results
-    fmt.Printf("Max delay = %6.2f. Delay trace using %s model:\n", tArrival, fUseLutLib? "LUT library" : "unit-delay");
-    Nodes = 0;
-    for  i = 0; i < nSteps; i++  {
-        Nodes += pCounters[i];
-        fmt.Printf("%3d %s : %5d  (%6.2f %%)\n", fUseLutLib? 5*(i+1) : i+1, fUseLutLib? "%":"lev", Nodes, 100.0*Nodes/Abc_NtkNodeNum(pNtk));
-    }
-    pCounters = nil;
+func Abc_NtkDelayTraceLut(n *Abc_Ntk_t, useLib int32) float32 {
+	if baseabc.Abc_NtkIsLogic(n) == 0 {
+		panic("delay trace requires a logic network")
+	}
+	var lib *ifpkg.If_LibLut_t
+	if useLib != 0 {
+		lib = speedupLut()
+	}
+	if lib != nil && lib.LutMax < baseabc.Abc_NtkGetFaninMax(n) {
+		fmt.Printf("The max LUT size (%d) is less than the max fanin count (%d).\n", lib.LutMax, baseabc.Abc_NtkGetFaninMax(n))
+		return -float32(1e9)
+	}
+	times := make([]float32, 3*baseabc.Abc_NtkObjNumMax(n))
+	for i := 0; i < int(baseabc.Abc_NtkObjNumMax(n)); i++ {
+		times[3*i+1] = float32(1e9)
+	}
+	baseabc.Abc_NtkSetLutTimes(n, times)
+	for _, node := range baseabc.Abc_NtkDfs(n, 1) {
+		arrival := float32(-float32(1e9))
+		count := baseabc.Abc_ObjFaninNum(node)
+		var perm [32]int32
+		var delays [32]float32
+		if lib != nil && lib.VariablePinDelays() {
+			Abc_NtkDelayTraceSortPins(node, perm[:], delays[:])
+		}
+		for k := int32(0); k < count; k++ {
+			fanin := baseabc.Abc_ObjFanin(node, k)
+			pin := int32(0)
+			if lib == nil {
+				pin = 0
+			} else if lib.VariablePinDelays() {
+				pin = k
+			}
+			candidate := Abc_ObjArrival(fanin) + 1
+			if lib != nil && lib.VariablePinDelays() {
+				candidate = Abc_ObjArrival(baseabc.Abc_ObjFanin(node, perm[k])) + speedupDelay(lib, count, k)
+			} else if lib != nil {
+				candidate = Abc_ObjArrival(fanin) + speedupDelay(lib, count, pin)
+			}
+			if candidate > arrival {
+				arrival = candidate
+			}
+		}
+		if count == 0 {
+			arrival = 0
+		}
+		Abc_ObjSetArrival(node, arrival)
+	}
+	arrival := float32(-float32(1e9))
+	for i := int32(0); i < baseabc.Abc_NtkCoNum(n); i++ {
+		co := baseabc.Abc_NtkCo(n, i)
+		if len(co.Fanins()) == 0 {
+			continue
+		}
+		fanin := baseabc.Abc_ObjFanin0(co)
+		if Abc_ObjArrival(fanin) > arrival {
+			arrival = Abc_ObjArrival(fanin)
+		}
+	}
+	for i := int32(0); i < baseabc.Abc_NtkCoNum(n); i++ {
+		co := baseabc.Abc_NtkCo(n, i)
+		if len(co.Fanins()) != 0 {
+			f := baseabc.Abc_ObjFanin0(co)
+			if Abc_ObjRequired(f) > arrival {
+				Abc_ObjSetRequired(f, arrival)
+			}
+		}
+	}
+	for _, node := range baseabc.Abc_NtkDfsReverse(n) {
+		count := baseabc.Abc_ObjFaninNum(node)
+		var perm [32]int32
+		var delays [32]float32
+		if lib != nil && lib.VariablePinDelays() {
+			Abc_NtkDelayTraceSortPins(node, perm[:], delays[:])
+		}
+		for k := int32(0); k < count; k++ {
+			fanin := baseabc.Abc_ObjFanin(node, k)
+			pin := int32(0)
+			if lib != nil && lib.VariablePinDelays() {
+				pin = k
+			}
+			d := float32(1)
+			if lib != nil {
+				d = speedupDelay(lib, count, pin)
+			}
+			target := Abc_ObjRequired(node) - d
+			if lib != nil && lib.VariablePinDelays() {
+				fanin = baseabc.Abc_ObjFanin(node, perm[k])
+			}
+			if Abc_ObjRequired(fanin) > target {
+				Abc_ObjSetRequired(fanin, target)
+			}
+		}
+		slack := Abc_ObjRequired(node) - Abc_ObjArrival(node)
+		if slack < 0 {
+			slack = 0
+		}
+		Abc_ObjSetSlack(node, slack)
+	}
+	return arrival
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Returns 1 if pOld is in the TFI of pNew.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_AigCheckTfi_rec(pNode *Abc_Obj_t, pOld *Abc_Obj_t) int32 {
-    // check the trivial cases
-    if pNode == nil {
-        return 0; }
-    if Abc_ObjIsCi(pNode) {
-        return 0; }
-    if pNode == pOld {
-        return 1; }
-    // skip the visited node
-    if Abc_NodeIsTravIdCurrent( pNode ) {
-        return 0; }
-    Abc_NodeSetTravIdCurrent( pNode );
-    // check the children
-    if Abc_AigCheckTfi_rec( Abc_ObjFanin0(pNode), pOld ) != 0 {
-        return 1; }
-    if Abc_AigCheckTfi_rec( Abc_ObjFanin1(pNode), pOld ) != 0 {
-        return 1; }
-    // check equivalent nodes
-    return Abc_AigCheckTfi_rec( (Abc_Obj_t *)pNode.pData, pOld );
+func Abc_NtkDelayTracePrint(n *Abc_Ntk_t, useLib, verbose int32) {
+	steps := baseabc.Abc_NtkLevel(n)
+	if useLib != 0 {
+		steps = 20
+	}
+	if steps <= 0 {
+		return
+	}
+	arrival := Abc_NtkDelayTraceLut(n, useLib)
+	delta := arrival / float32(steps)
+	if delta <= 0 {
+		return
+	}
+	counts := make([]int, steps+1)
+	for _, node := range n.ObjectsOfKind(baseabc.ObjectNode) {
+		if baseabc.Abc_ObjFaninNum(node) == 0 {
+			continue
+		}
+		bin := int(Abc_ObjSlack(node) / delta)
+		if bin < 0 {
+			bin = 0
+		}
+		if bin > int(steps) {
+			bin = int(steps)
+		}
+		counts[bin]++
+	}
+	fmt.Printf("Max delay = %6.2f. Delay trace using %s model:\n", arrival, abcSelect(useLib, "LUT library", "unit-delay"))
+	nodes := 0
+	for i := int32(0); i < steps; i++ {
+		nodes += counts[i]
+		unit, label := i+1, "lev"
+		if useLib != 0 {
+			unit, label = 5*(i+1), "%"
+		}
+		denom := max(1, int(baseabc.Abc_NtkNodeNum(n)))
+		fmt.Printf("%3d %s : %5d  (%6.2f %%)\n", unit, label, nodes, 100*float64(nodes)/float64(denom))
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Returns 1 if pOld is in the TFI of pNew.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_AigCheckTfi(pNew *Abc_Obj_t, pOld *Abc_Obj_t) int32 {
-    assert(!Abc_ObjIsComplement(pNew), "!Abc_ObjIsComplement(pNew)");
-    assert(!Abc_ObjIsComplement(pOld), "!Abc_ObjIsComplement(pOld)");
-    Abc_NtkIncrementTravId( pNew.pNtk );
-    return Abc_AigCheckTfi_rec( pNew, pOld );
+func Abc_AigCheckTfiRec(node, old *Abc_Obj_t) int32 {
+	if node == nil || baseabc.Abc_ObjIsCi(node) != 0 {
+		return 0
+	}
+	if node == old {
+		return 1
+	}
+	if baseabc.Abc_NodeIsTravIdCurrent(node) != 0 {
+		return 0
+	}
+	baseabc.Abc_NodeSetTravIdCurrent(node)
+	if Abc_AigCheckTfiRec(baseabc.Abc_ObjFanin0(node), old) != 0 || Abc_AigCheckTfiRec(baseabc.Abc_ObjFanin1(node), old) != 0 {
+		return 1
+	}
+	if choice := baseabc.Abc_ObjChoice(node); choice != nil {
+		return Abc_AigCheckTfiRec(choice, old)
+	}
+	return 0
+}
+func Abc_AigCheckTfi_rec(node, old *Abc_Obj_t) int32 { return Abc_AigCheckTfiRec(node, old) }
+func Abc_AigCheckTfi(newNode, old *Abc_Obj_t) int32 {
+	baseabc.Abc_NtkIncrementTravId(newNode.Network())
+	return Abc_AigCheckTfiRec(newNode, old)
+}
+func Abc_NtkSpeedupNodeRec(node *Abc_Obj_t, nodes *[]*Abc_Obj_t) int32 {
+	if baseabc.Abc_NodeIsTravIdCurrent(node) != 0 {
+		return 1
+	}
+	if baseabc.Abc_ObjIsCi(node) != 0 {
+		return 0
+	}
+	baseabc.Abc_NodeSetTravIdCurrent(node)
+	if Abc_NtkSpeedupNodeRec(baseabc.Abc_ObjFanin0(node), nodes) == 0 || Abc_NtkSpeedupNodeRec(baseabc.Abc_ObjFanin1(node), nodes) == 0 {
+		return 0
+	}
+	*nodes = append(*nodes, node)
+	return 1
+}
+func Abc_NtkSpeedupNode_rec(node *Abc_Obj_t, nodes *Vec_Ptr_t) int32 {
+	collected := make([]*Abc_Obj_t, 0)
+	result := Abc_NtkSpeedupNodeRec(node, &collected)
+	for _, current := range collected {
+		Vec_PtrPush(nodes, current)
+	}
+	return result
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Adds strashed nodes for one node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkSpeedupNode_rec(pNode *Abc_Obj_t, vNodes *Vec_Ptr_t) int32 {
-    if Abc_NodeIsTravIdCurrent(pNode) {
-        return 1; }
-    if Abc_ObjIsCi(pNode) {
-        return 0; }
-    assert(Abc_ObjIsNode(pNode), "Abc_ObjIsNode(pNode)");
-    Abc_NodeSetTravIdCurrent( pNode );
-    if !(Abc_NtkSpeedupNode_rec( Abc_ObjFanin0(pNode), vNodes ) != 0) {
-        return 0; }
-    if !(Abc_NtkSpeedupNode_rec( Abc_ObjFanin1(pNode), vNodes ) != 0) {
-        return 0; }
-    Vec_PtrPush( vNodes, pNode );
-    return 1;
+func speedupMap(node *Abc_Obj_t) baseabc.Edge { return baseabc.Abc_ObjCopyEdge(node) }
+func Abc_NtkSpeedupNode(ntk, aigNtk *Abc_Ntk_t, node *Abc_Obj_t, leaves, times *Vec_Ptr_t) {
+	leafNodes := make([]*Abc_Obj_t, Vec_PtrSize(leaves))
+	timeNodes := make([]*Abc_Obj_t, Vec_PtrSize(times))
+	for i := range leafNodes {
+		leafNodes[i], _ = Vec_PtrEntry(leaves, int32(i)).(*Abc_Obj_t)
+	}
+	for i := range timeNodes {
+		timeNodes[i], _ = Vec_PtrEntry(times, int32(i)).(*Abc_Obj_t)
+	}
+	for i, a := range leafNodes {
+		for j, b := range leafNodes {
+			if i != j && speedupMap(a).Object == speedupMap(b).Object {
+				return
+			}
+		}
+	}
+	var nodes []*Abc_Obj_t
+	baseabc.Abc_NtkIncrementTravId(aigNtk)
+	baseabc.Abc_NodeSetTravIdCurrent(aigNtk.One().Object)
+	for _, leaf := range leafNodes {
+		if mapped := speedupMap(leaf); mapped.Object != nil {
+			baseabc.Abc_NodeSetTravIdCurrent(mapped.Object)
+		}
+	}
+	root := speedupMap(node)
+	if root.Object == nil || Abc_NtkSpeedupNodeRec(root.Object, &nodes) == 0 {
+		return
+	}
+	if len(timeNodes) > 5 {
+		return
+	}
+	nCofs := 1 << len(timeNodes)
+	if nCofs > 32 {
+		return
+	}
+	manager := aigNtk.FunctionManager.(*baseabc.Abc_Aig_t)
+	cofs := make([]baseabc.Edge, nCofs)
+	for assignment := 0; assignment < nCofs; assignment++ {
+		for _, leaf := range leafNodes {
+			if mapped := speedupMap(leaf); mapped.Object != nil {
+				mapped.Object.SetCopyEdge(mapped.Object.Signal())
+			}
+		}
+		for i, timed := range timeNodes {
+			var edge baseabc.Edge
+			if assignment&(1<<i) != 0 {
+				edge = aigNtk.One()
+			} else {
+				edge = aigNtk.One().Not()
+			}
+			if mapped := speedupMap(timed); mapped.Object != nil {
+				mapped.Object.SetCopyEdge(edge)
+			}
+		}
+		for _, current := range nodes {
+			a, b := baseabc.Abc_ObjChild0(current), baseabc.Abc_ObjChild1(current)
+			x := a.Object.ReadCopyEdge()
+			y := b.Object.ReadCopyEdge()
+			if a.Complement {
+				x = x.Not()
+			}
+			if b.Complement {
+				y = y.Not()
+			}
+			current.SetCopyEdge(baseabc.Abc_AigAnd(manager, x, y))
+		}
+		cofs[assignment] = root.Object.ReadCopyEdge()
+		if root.Complement {
+			cofs[assignment] = cofs[assignment].Not()
+		}
+	}
+	for k, timed := range timeNodes {
+		skip := 1 << k
+		for i := 0; i < nCofs; i += 2 * skip {
+			selector := speedupMap(timed)
+			cofs[i] = baseabc.Abc_AigMux(manager, selector.Object.Signal(), cofs[i+skip], cofs[i])
+		}
+	}
+	repr, alt := speedupMap(node).Object, cofs[0].Object
+	if repr != nil && alt != nil && baseabc.Abc_ObjIsConst1(alt) == 0 && repr.Choice == nil && alt.Choice == nil && repr != alt && Abc_AigCheckTfi(alt, repr) == 0 {
+		alt.Choice = repr.Choice
+		repr.Choice = alt
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Adds strashed nodes for one node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkSpeedupNode(pNtk *Abc_Ntk_t, pAig *Abc_Ntk_t, pNode *Abc_Obj_t, vLeaves *Vec_Ptr_t, vTimes *Vec_Ptr_t) {
-    var vNodes *Vec_Ptr_t;
-    var pObj, pObj2, pAnd *Abc_Obj_t;
-    var ppCofs [32]*Abc_Obj_t;
-    var nCofs, i, k, nSkip int32;
-
-    // quit of regulars are the same
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vLeaves)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vLeaves, i)), 1); i++  {
-    // inlining of macro Vec_PtrForEachEntry
-    for  k = 0; (k < Vec_PtrSize(vLeaves)) && (((pObj2) = (Abc_Obj_t *)Vec_PtrEntry(vLeaves, k)), 1); k++  {
-        if i != k && Abc_ObjRegular(pObj.pCopy) == Abc_ObjRegular(pObj2.pCopy) {
-//            printf( "Identical after structural hashing!!!\n" );
-            return;
-        }
-    }
-    }
-
-    // collect the AIG nodes
-    vNodes = Vec_PtrAlloc( 100 );
-    Abc_NtkIncrementTravId( pAig );
-    Abc_NodeSetTravIdCurrent( Abc_AigConst1(pAig) );
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vLeaves)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vLeaves, i)), 1); i++  {
-        pAnd = pObj.pCopy;
-        Abc_NodeSetTravIdCurrent( Abc_ObjRegular(pAnd) );
-    }
-    // traverse from the root node
-    pAnd = pNode.pCopy;
-    if !(Abc_NtkSpeedupNode_rec( Abc_ObjRegular(pAnd), vNodes ) != 0) {
-//        printf( "Bad node!!!\n" );
-        Vec_PtrFree( vNodes );
-        return;
-    }
-
-    // derive cofactors
-    nCofs = (1 << Vec_PtrSize(vTimes));
-    for  i = 0; i < nCofs; i++  {
-        // inlining of macro Vec_PtrForEachEntry
-        for  k = 0; (k < Vec_PtrSize(vLeaves)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vLeaves, k)), 1); k++  {
-            pAnd = pObj.pCopy;
-            Abc_ObjRegular(pAnd).pCopy = Abc_ObjRegular(pAnd);
-        }
-        // inlining of macro Vec_PtrForEachEntry
-        for  k = 0; (k < Vec_PtrSize(vTimes)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vTimes, k)), 1); k++  {
-            pAnd = pObj.pCopy;
-            Abc_ObjRegular(pAnd).pCopy = Abc_ObjNotCond( Abc_AigConst1(pAig), ((i & (1<<k)) == 0) );
-        }
-        // inlining of macro Vec_PtrForEachEntry
-        for  k = 0; (k < Vec_PtrSize(vNodes)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, k)), 1); k++  {
-            pObj.pCopy = Abc_AigAnd( (Abc_Aig_t *)pAig.pManFunc, Abc_ObjChild0Copy(pObj), Abc_ObjChild1Copy(pObj) );
-        }
-        // save the result
-        pAnd = pNode.pCopy;
-        ppCofs[i] = Abc_ObjNotCond( Abc_ObjRegular(pAnd).pCopy, Abc_ObjIsComplement(pAnd) );
-    }
-    Vec_PtrFree( vNodes );
-
-//Abc_ObjAddFanin( Abc_NtkCreatePo(pAig), ppCofs[0] );
-//Abc_ObjAddFanin( Abc_NtkCreatePo(pAig), ppCofs[1] );
-
-    // collect the resulting tree
-    // inlining of macro Vec_PtrForEachEntry
-    for  k = 0; (k < Vec_PtrSize(vTimes)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vTimes, k)), 1); k++  {
-        for  nSkip = (1<<k), i = 0; i < nCofs; i += 2*nSkip  {
-            pAnd = pObj.pCopy;
-            ppCofs[i] = Abc_AigMux( (Abc_Aig_t *)pAig.pManFunc, Abc_ObjRegular(pAnd), ppCofs[i+nSkip], ppCofs[i] );
-        }
-    }
-//Abc_ObjAddFanin( Abc_NtkCreatePo(pAig), ppCofs[0] );
-
-    // create choice node
-    pAnd = Abc_ObjRegular(pNode.pCopy); // repr
-    pObj = Abc_ObjRegular(ppCofs[0]);    // new
-    if pAnd.pData == nil && pObj.pData == nil && !Abc_AigNodeIsConst(pObj) && !(Abc_AigCheckTfi(pObj, pAnd) != 0) {
-        pObj.pData = pAnd.pData;
-        pAnd.pData = pObj;
-    }
-
+func Abc_NtkDelayTraceTCEdges(n *Abc_Ntk_t, node *Abc_Obj_t, delta float32, useLib int32) uint32 {
+	var lib *ifpkg.If_LibLut_t
+	if useLib != 0 {
+		lib = speedupLut()
+	}
+	var perm [32]int32
+	var delays [32]float32
+	if lib != nil && lib.VariablePinDelays() {
+		Abc_NtkDelayTraceSortPins(node, perm[:], delays[:])
+	}
+	var result uint32
+	for k := int32(0); k < baseabc.Abc_ObjFaninNum(node); k++ {
+		f := baseabc.Abc_ObjFanin(node, k)
+		d := float32(1)
+		if lib != nil {
+			pin := int32(0)
+			if lib.VariablePinDelays() {
+				pin = k
+				f = baseabc.Abc_ObjFanin(node, perm[k])
+			}
+			d = speedupDelay(lib, baseabc.Abc_ObjFaninNum(node), pin)
+		}
+		if Abc_ObjRequired(node) < Abc_ObjArrival(f)+d+delta {
+			idx := k
+			if lib != nil && lib.VariablePinDelays() {
+				idx = perm[k]
+			}
+			result |= uint32(1) << idx
+		}
+	}
+	return result
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Determines timing-critical edges of the node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkDelayTraceTCEdges(pNtk *Abc_Ntk_t, pNode *Abc_Obj_t, tDelta float32, fUseLutLib int32) uint32 {
-    var pPinPerm [32]int32;
-    var pPinDelays [32]float32;
-    var pLutLib *If_LibLut_t;
-    var pFanin *Abc_Obj_t;
-    var uResult uint32;
-    var tRequired float32;
-    var pDelays *float32;
-    var k int32;
-    if fUseLutLib != 0 {
-        pLutLib = (If_LibLut_t *)Abc_FrameReadLibLut();
-    } else {
-        pLutLib = nil;
-    }
-    tRequired = Abc_ObjRequired(pNode);
-    if pLutLib == nil {
-        // inlining of macro Abc_ObjForEachFanin
-        for  k = 0; (k < Abc_ObjFaninNum(pNode)) && (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {
-            if tRequired < Abc_ObjArrival(pFanin) + 1.0 + tDelta {
-                uResult |= (1 << k); }
-        }
-    
-    } else if !pLutLib.fVarPinDelays {
-        pDelays = pLutLib.pLutDelays[Abc_ObjFaninNum(pNode)];
-        // inlining of macro Abc_ObjForEachFanin
-        for  k = 0; (k < Abc_ObjFaninNum(pNode)) && (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {
-            if tRequired < Abc_ObjArrival(pFanin) + pDelays[0] + tDelta {
-                uResult |= (1 << k); }
-        }
-    
-    } else {
-        pDelays = pLutLib.pLutDelays[Abc_ObjFaninNum(pNode)];
-        Abc_NtkDelayTraceSortPins( pNode, pPinPerm, pPinDelays );
-        // inlining of macro Abc_ObjForEachFanin
-        for  k = 0; (k < Abc_ObjFaninNum(pNode)) && (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {
-            if tRequired < Abc_ObjArrival(Abc_ObjFanin(pNode,pPinPerm[k])) + pDelays[k] + tDelta {
-                uResult |= (1 << pPinPerm[k]); }
-        }
-    }
-    return uResult;
+func speedupBuild(n *Abc_Ntk_t, power bool, useLib, percentage, degree, verbose, veryVerbose int32) *Abc_Ntk_t {
+	var probs *Vec_Int_t
+	var probability []float32
+	var delta float32
+	if power {
+		probs = Abc_NtkPowerEstimate(n, 0)
+		raw := vec.Vec_IntArray(probs)
+		probability = float32FromVecIntBits(raw)
+		if verbose != 0 {
+			Abc_NtkPowerPrint(n, probs)
+		}
+	} else {
+		arrival := Abc_NtkDelayTraceLut(n, useLib)
+		if useLib != 0 {
+			delta = arrival * float32(percentage) / 100
+		} else {
+			delta = 1
+		}
+		if verbose != 0 {
+			fmt.Printf("Max delay = %.2f. Delta = %.2f. Using %s model. ", arrival, delta, abcSelect(useLib, "LUT library", "unit-delay"))
+			if useLib != 0 {
+				fmt.Printf("Percentage = %d. ", percentage)
+			}
+			fmt.Println()
+		}
+	}
+	critical := make([]uint32, baseabc.Abc_NtkObjNumMax(n))
+	counter, counterRes := 0, 0
+	for _, node := range n.ObjectsOfKind(baseabc.ObjectNode) {
+		if !power && Abc_ObjSlack(node) >= delta {
+			continue
+		}
+		if power {
+			critical[node.ID] = Abc_NtkPowerCriticalEdges(n, node, .5-float32(percentage)/100, probs)
+		} else {
+			critical[node.ID] = Abc_NtkDelayTraceTCEdges(n, node, delta, useLib)
+		}
+	}
+	if !power && verbose != 0 {
+		zeroSlack, criticalEdges := 0, 0
+		for _, node := range n.ObjectsOfKind(baseabc.ObjectNode) {
+			for k := int32(0); k < baseabc.Abc_ObjFaninNum(node); k++ {
+				fanin := baseabc.Abc_ObjFanin(node, k)
+				if baseabc.Abc_ObjIsCi(fanin) == 0 && Abc_ObjSlack(fanin) < delta {
+					zeroSlack++
+				}
+			}
+			criticalEdges += bits.OnesCount32(critical[node.ID])
+		}
+		total := baseabc.Abc_NtkGetTotalFanins(n)
+		fmt.Printf("Edges: Total = %7d. 0-slack = %7d. Critical = %7d. Ratio = %4.2f\n", total, zeroSlack, criticalEdges, float64(criticalEdges)/float64(max(1, zeroSlack)))
+	}
+	result := Abc_NtkStrash(n, 0, 1, 0)
+	if result == nil {
+		if probs != nil {
+			Vec_IntFree(probs)
+		}
+		return nil
+	}
+	cries, fanins := Vec_PtrAlloc(16), Vec_PtrAlloc(16)
+	defer Vec_PtrFree(cries)
+	defer Vec_PtrFree(fanins)
+	for _, node := range n.ObjectsOfKind(baseabc.ObjectNode) {
+		marked := critical[node.ID]
+		count := 0
+		for k := int32(0); k < baseabc.Abc_ObjFaninNum(node); k++ {
+			f := baseabc.Abc_ObjFanin(node, k)
+			if baseabc.Abc_ObjIsCi(f) == 0 && marked&(uint32(1)<<k) != 0 {
+				count++
+			}
+		}
+		if count == 0 && veryVerbose == 0 {
+			continue
+		}
+		counter++
+		Vec_PtrClear(cries)
+		for k := int32(0); k < baseabc.Abc_ObjFaninNum(node); k++ {
+			f := baseabc.Abc_ObjFanin(node, k)
+			if baseabc.Abc_ObjIsCi(f) != 0 || marked&(uint32(1)<<k) == 0 {
+				continue
+			}
+			for j := int32(0); j < baseabc.Abc_ObjFaninNum(f); j++ {
+				g := baseabc.Abc_ObjFanin(f, j)
+				if critical[f.ID]&(uint32(1)<<j) != 0 {
+					vec.Vec_PtrPushUnique(cries, g)
+				}
+			}
+		}
+		nc := Vec_PtrSize(cries)
+		if nc == 0 || nc > degree {
+			continue
+		}
+		counterRes++
+		Vec_PtrClear(fanins)
+		for k := int32(0); k < baseabc.Abc_ObjFaninNum(node); k++ {
+			f := baseabc.Abc_ObjFanin(node, k)
+			if baseabc.Abc_ObjIsCi(f) != 0 {
+				vec.Vec_PtrPushUnique(fanins, f)
+			} else {
+				for j := int32(0); j < baseabc.Abc_ObjFaninNum(f); j++ {
+					vec.Vec_PtrPushUnique(fanins, baseabc.Abc_ObjFanin(f, j))
+				}
+			}
+		}
+		if veryVerbose != 0 {
+			fmt.Printf("%5d Node %5d : %d %2d %2d  ", counter, node.ID, count, Vec_PtrSize(cries), Vec_PtrSize(fanins))
+			for k := int32(0); k < baseabc.Abc_ObjFaninNum(node); k++ {
+				fanin := baseabc.Abc_ObjFanin(node, k)
+				value := Abc_ObjSlack(fanin)
+				if power {
+					value = probability[fanin.ID]
+				}
+				mark := " "
+				if marked&(uint32(1)<<k) != 0 {
+					mark = "*"
+				}
+				fmt.Printf("%d(%.2f)%s ", fanin.ID, value, mark)
+			}
+			fmt.Println()
+		}
+		values := make([]*Abc_Obj_t, nc)
+		for i := range values {
+			values[i], _ = Vec_PtrEntry(cries, int32(i)).(*Abc_Obj_t)
+		}
+		metric := func(o *Abc_Obj_t) float32 {
+			if power {
+				return probability[o.ID]
+			}
+			return Abc_ObjSlack(o)
+		}
+		for i := 1; i < len(values) && i < 3; i++ {
+			for j := i; j > 0 && ((!power && metric(values[j-1]) < metric(values[j])) || (power && metric(values[j-1]) > metric(values[j]))); j-- {
+				values[j], values[j-1] = values[j-1], values[j]
+			}
+		}
+		for i, v := range values {
+			vec.Vec_PtrWriteEntry(cries, i, v)
+		}
+		Abc_NtkSpeedupNode(n, result, node, fanins, cries)
+	}
+	if probs != nil {
+		Vec_IntFree(probs)
+	}
+	if verbose != 0 {
+		label := "0-slack"
+		if power {
+			label = "Power-critical"
+		}
+		fmt.Printf("Nodes: Total = %7d. %s = %7d. Workable = %7d. Ratio = %4.2f\n", baseabc.Abc_NtkNodeNum(n), label, counter, counterRes, float64(counterRes)/float64(max(1, counter)))
+	}
+	for _, node := range result.ObjectsOfKind(baseabc.ObjectNode) {
+		if node.Choice != nil && baseabc.Abc_ObjFanoutNum(node.Choice) > 0 {
+			node.Choice = nil
+		}
+	}
+	return result
+}
+func Abc_NtkSpeedup(n *Abc_Ntk_t, useLib, percentage, degree, verbose, veryVerbose int32) *Abc_Ntk_t {
+	return speedupBuild(n, false, useLib, percentage, degree, verbose, veryVerbose)
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Adds choices to speed up the network by the given percentage.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkSpeedup(pNtk *Abc_Ntk_t, fUseLutLib int32, Percentage int32, Degree int32, fVerbose int32, fVeryVerbose int32) *Abc_Ntk_t {
-    var pNtkNew *Abc_Ntk_t;
-    var vTimeCries, vTimeFanins *Vec_Ptr_t;
-    var pNode, pFanin, pFanin2 *Abc_Obj_t;
-    var tDelta, tArrival float32;
-    var i, k, k2, Counter, CounterRes, nTimeCris int32;
-    var puTCEdges *uint32;
-    // perform delay trace
-    tArrival = Abc_NtkDelayTraceLut( pNtk, fUseLutLib );
-    if fUseLutLib != 0 {
-        tDelta = tArrival*Percentage/100.0;
-    } else {
-        tDelta = 1.0;
-    }
-    if fVerbose != 0 {
-        fmt.Printf("Max delay = %.2f. Delta = %.2f. ", tArrival, tDelta);
-        fmt.Printf("Using %s model. ", fUseLutLib? "LUT library" : "unit-delay");
-        if fUseLutLib != 0 {
-            fmt.Printf("Percentage = %d. ", Percentage); }
-        fmt.Printf("\n");
-    }
-    // mark the timing critical nodes and edges
-    // inlining of macro ABC_ALLOC
-    puTCEdges = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(Abc_NtkObjNumMax(pNtk))));
-    memset( puTCEdges, 0, sizeof(unsigned) * Abc_NtkObjNumMax(pNtk) );
-    // inlining of macro Abc_NtkForEachNode
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {
-        if Abc_ObjSlack(pNode) >= tDelta {
-            continue; }
-        puTCEdges[pNode.Id] = Abc_NtkDelayTraceTCEdges( pNtk, pNode, tDelta, fUseLutLib );
-    }
-    }
-    if fVerbose != 0 {
-        Counter = CounterRes = 0;
-        // inlining of macro Abc_NtkForEachNode
-        for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {
-            // inlining of macro Abc_ObjForEachFanin
-            for  k = 0; (k < Abc_ObjFaninNum(pNode)) && (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {
-                if !Abc_ObjIsCi(pFanin) && Abc_ObjSlack(pFanin) < tDelta {
-                    Counter++; }
-            }
-            CounterRes += Extra_WordCountOnes( puTCEdges[pNode.Id] );
-        }
-        }
-        fmt.Printf("Edges: Total = %7d. 0-slack = %7d. Critical = %7d. Ratio = %4.2f\n", Abc_NtkGetTotalFanins(pNtk), Counter, CounterRes, 1.0*CounterRes/Counter);
-    }
-    // start the resulting network
-    pNtkNew = Abc_NtkStrash( pNtk, 0, 1, 0 );
-
-    // collect nodes to be used for resynthesis
-    Counter = CounterRes = 0;
-    vTimeCries = Vec_PtrAlloc( 16 );
-    vTimeFanins = Vec_PtrAlloc( 16 );
-    // inlining of macro Abc_NtkForEachNode
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {
-        if Abc_ObjSlack(pNode) >= tDelta {
-            continue; }
-        // count the number of non-PI timing-critical nodes
-        nTimeCris = 0;
-        // inlining of macro Abc_ObjForEachFanin
-        for  k = 0; (k < Abc_ObjFaninNum(pNode)) && (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {
-            if !Abc_ObjIsCi(pFanin) && (puTCEdges[pNode.Id] & (1<<k)) {
-                nTimeCris++; }
-        }
-        if !(fVeryVerbose != 0) && nTimeCris == 0 {
-            continue; }
-        Counter++;
-        // count the total number of timing critical second-generation nodes
-        Vec_PtrClear( vTimeCries );
-        if nTimeCris != 0 {
-            // inlining of macro Abc_ObjForEachFanin
-            for  k = 0; (k < Abc_ObjFaninNum(pNode)) && (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {
-                if !Abc_ObjIsCi(pFanin) && (puTCEdges[pNode.Id] & (1<<k)) {
-                    // inlining of macro Abc_ObjForEachFanin
-                    for  k2 = 0; (k2 < Abc_ObjFaninNum(pFanin)) && (((pFanin2) = Abc_ObjFanin(pFanin, k2)), 1); k2++  {
-                        if puTCEdges[pFanin.Id] & (1<<k2) {
-                            Vec_PtrPushUnique( vTimeCries, pFanin2 ); }
-                    } }
-            }
-        }
-//        if ( !fVeryVerbose && (Vec_PtrSize(vTimeCries) == 0 || Vec_PtrSize(vTimeCries) > Degree) )
-        if Vec_PtrSize(vTimeCries) == 0 || Vec_PtrSize(vTimeCries) > Degree {
-            continue; }
-        CounterRes++;
-        // collect second generation nodes
-        Vec_PtrClear( vTimeFanins );
-        // inlining of macro Abc_ObjForEachFanin
-        for  k = 0; (k < Abc_ObjFaninNum(pNode)) && (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {
-            if Abc_ObjIsCi(pFanin) {
-                Vec_PtrPushUnique( vTimeFanins, pFanin );
-            } else {
-                // inlining of macro Abc_ObjForEachFanin
-                for  k2 = 0; (k2 < Abc_ObjFaninNum(pFanin)) && (((pFanin2) = Abc_ObjFanin(pFanin, k2)), 1); k2++  {
-                    Vec_PtrPushUnique( vTimeFanins, pFanin2 );
-                } }                    
-        }
-        // print the results
-        if fVeryVerbose != 0 {
-        fmt.Printf("%5d Node %5d : %d %2d %2d  ", Counter, pNode.Id, nTimeCris, Vec_PtrSize(vTimeCries), Vec_PtrSize(vTimeFanins));
-        // inlining of macro Abc_ObjForEachFanin
-        for  k = 0; (k < Abc_ObjFaninNum(pNode)) && (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {
-            fmt.Printf("%d(%.2f)%s ", pFanin.Id, Abc_ObjSlack(pFanin), (puTCEdges[pNode.Id] & (1<<k))? "*":"");
-        }
-        fmt.Printf("\n");
-        }
-        // add the node to choices
-        if Vec_PtrSize(vTimeCries) == 0 || Vec_PtrSize(vTimeCries) > Degree {
-            continue; }
-        // order the fanins in the increasing order of criticalily
-        if Vec_PtrSize(vTimeCries) > 1 {
-            pFanin = (Abc_Obj_t *)Vec_PtrEntry( vTimeCries, 0 );
-            pFanin2 = (Abc_Obj_t *)Vec_PtrEntry( vTimeCries, 1 );
-            if Abc_ObjSlack(pFanin) < Abc_ObjSlack(pFanin2) {
-                Vec_PtrWriteEntry( vTimeCries, 0, pFanin2 );
-                Vec_PtrWriteEntry( vTimeCries, 1, pFanin );
-            }
-        }
-        if Vec_PtrSize(vTimeCries) > 2 {
-            pFanin = (Abc_Obj_t *)Vec_PtrEntry( vTimeCries, 1 );
-            pFanin2 = (Abc_Obj_t *)Vec_PtrEntry( vTimeCries, 2 );
-            if Abc_ObjSlack(pFanin) < Abc_ObjSlack(pFanin2) {
-                Vec_PtrWriteEntry( vTimeCries, 1, pFanin2 );
-                Vec_PtrWriteEntry( vTimeCries, 2, pFanin );
-            }
-            pFanin = (Abc_Obj_t *)Vec_PtrEntry( vTimeCries, 0 );
-            pFanin2 = (Abc_Obj_t *)Vec_PtrEntry( vTimeCries, 1 );
-            if Abc_ObjSlack(pFanin) < Abc_ObjSlack(pFanin2) {
-                Vec_PtrWriteEntry( vTimeCries, 0, pFanin2 );
-                Vec_PtrWriteEntry( vTimeCries, 1, pFanin );
-            }
-        }
-        // add choice
-        Abc_NtkSpeedupNode( pNtk, pNtkNew, pNode, vTimeFanins, vTimeCries );
-    }
-    }
-    Vec_PtrFree( vTimeCries );
-    Vec_PtrFree( vTimeFanins );
-    puTCEdges = nil;
-    if fVerbose != 0 {
-        fmt.Printf("Nodes: Total = %7d. 0-slack = %7d. Workable = %7d. Ratio = %4.2f\n", Abc_NtkNodeNum(pNtk), Counter, CounterRes, 1.0*CounterRes/Counter); } 
-
-    // remove invalid choice nodes
-    // inlining of macro Abc_AigForEachAnd
-    for  i = 0; (i < Vec_PtrSize((pNtkNew).vObjs)) && (((pNode) = Abc_NtkObj(pNtkNew, i)), 1); i++  {           if (pNode) == nil || !Abc_AigNodeIsAnd(pNode) {} else
-        if pNode.pData {
-            if Abc_ObjFanoutNum((Abc_Obj_t *)pNode.pData) > 0 {
-                pNode.pData = nil; }
-        }
-    }
-
-    // return the result
-    return pNtkNew;
+func Abc_NtkPowerEstimate(n *Abc_Ntk_t, probOne int32) *Vec_Int_t {
+	v := vec.Vec_IntStart(int(baseabc.Abc_NtkObjNumMax(n)))
+	strashed := Abc_NtkStrash(n, 0, 1, 0)
+	if strashed == nil {
+		return v
+	}
+	graph := baseabc.Abc_NtkToDar(strashed, 0, boolToInt32(baseabc.Abc_NtkLatchNum(n) > 0))
+	switching := gia.Saig_ManComputeSwitchProbs(graph, 48, 16, probOne)
+	values := vec.Vec_IntArray(switching)
+	for _, obj := range n.Objects() {
+		edge := obj.ReadCopyEdge()
+		if edge.Object == nil {
+			continue
+		}
+		mapped := edge.Object.ReadCopyEdge()
+		if mapped.Object != nil && mapped.Object.Temp >= 0 && mapped.Object.Temp < len(values) {
+			vec.Vec_IntWriteEntry(v, obj.ID, values[mapped.Object.Temp])
+		}
+	}
+	Vec_IntFree(switching)
+	aig.Aig_ManStop(graph)
+	baseabc.Abc_NtkDelete(strashed)
+	return v
+}
+func Abc_NtkPowerPrint(n *Abc_Ntk_t, probs *Vec_Int_t) {
+	data := float32FromVecIntBits(vec.Vec_IntArray(probs))
+	var total float64
+	buckets := [6]int{}
+	powers := [6]float64{}
+	nodes, edges := 0, 0
+	for _, o := range n.Objects() {
+		if baseabc.Abc_ObjIsNode(o) == 0 && baseabc.Abc_ObjIsPi(o) == 0 {
+			continue
+		}
+		nodes++
+		edges += int(baseabc.Abc_ObjFanoutNum(o))
+		p := data[o.ID]
+		total += float64(p) * float64(baseabc.Abc_ObjFanoutNum(o))
+		b := int(p * 10)
+		if b >= 5 {
+			b = 5
+		}
+		buckets[b]++
+		powers[b] += float64(p) * float64(baseabc.Abc_ObjFanoutNum(o))
+	}
+	fmt.Printf("Node  distribution: ")
+	for i := 0; i < 6; i++ {
+		fmt.Printf("n%d%d = %6.2f%%  ", i, i+1, 100*float64(buckets[i])/float64(max(1, nodes)))
+	}
+	fmt.Printf("\nPower distribution: ")
+	for i := 0; i < 6; i++ {
+		fmt.Printf("p%d%d = %6.2f%%  ", i, i+1, 100*powers[i]/maxFloat(1, total))
+	}
+	fmt.Printf("\nTotal probs = %7.2f. Total edges = %d. Average = %7.2f.\n", total, edges, total/float64(max(1, edges)))
+}
+func Abc_NtkPowerCriticalEdges(n *Abc_Ntk_t, node *Abc_Obj_t, limit float32, probs *Vec_Int_t) uint32 {
+	data := float32FromVecIntBits(vec.Vec_IntArray(probs))
+	var result uint32
+	for k := int32(0); k < baseabc.Abc_ObjFaninNum(node); k++ {
+		if data[baseabc.Abc_ObjFanin(node, k).ID] >= limit {
+			result |= uint32(1) << k
+		}
+	}
+	return result
+}
+func Abc_NtkPowerdown(n *Abc_Ntk_t, useLib, percentage, degree, verbose, veryVerbose int32) *Abc_Ntk_t {
+	return speedupBuild(n, true, useLib, percentage, degree, verbose, veryVerbose)
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Marks nodes for power-optimization.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkPowerEstimate(pNtk *Abc_Ntk_t, fProbOne int32) *Vec_Int_t {
-    extern Aig_Man_t * Abc_NtkToDar( Abc_Ntk_t * pNtk, int fExors, int fRegisters );
-    extern Vec_Int_t * Saig_ManComputeSwitchProbs( Aig_Man_t * p, int nFrames, int nPref, int fProbOne );
-    var vProbs *Vec_Int_t;
-    var vSwitching *Vec_Int_t;
-    var pProbability *float32;
-    var pSwitching *float32;
-    var pNtkStr *Abc_Ntk_t;
-    var pAig *Aig_Man_t;
-    var pObjAig *Aig_Obj_t;
-    var pObjAbc, pObjAbc2 *Abc_Obj_t;
-    var i int32;
-    // start the resulting array
-    vProbs = Vec_IntStart( Abc_NtkObjNumMax(pNtk) );
-    pProbability = (float *)vProbs.pArray;
-    // strash the network
-    pNtkStr = Abc_NtkStrash( pNtk, 0, 1, 0 );
-    // inlining of macro Abc_NtkForEachObj
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pObjAbc) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObjAbc) == nil {} else
-        if Abc_ObjRegular((Abc_Obj_t *)pObjAbc.pTemp).Type == ABC_FUNC_NONE {
-            pObjAbc.pTemp = nil; }
-    }
-    // map network into an AIG
-    pAig = Abc_NtkToDar( pNtkStr, 0, int32((Abc_NtkLatchNum(pNtk) > 0)) );
-    vSwitching = Saig_ManComputeSwitchProbs( pAig, 48, 16, fProbOne );
-    pSwitching = (float *)vSwitching.pArray;
-    // inlining of macro Abc_NtkForEachObj
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pObjAbc) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObjAbc) == nil {} else {
-        if (pObjAbc2 = Abc_ObjRegular((Abc_Obj_t *)pObjAbc.pTemp)) && (pObjAig = Aig_Regular((Aig_Obj_t *)pObjAbc2.pTemp)) {
-            pProbability[pObjAbc.Id] = pSwitching[pObjAig.Id]; }
-    }
-    }
-    Vec_IntFree( vSwitching );
-    Aig_ManStop( pAig );
-    Abc_NtkDelete( pNtkStr );
-    return vProbs;
+func float32FromVecIntBits(values []int32) []float32 {
+	result := make([]float32, len(values))
+	for i, value := range values {
+		result[i] = math.Float32frombits(uint32(value))
+	}
+	return result
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Marks nodes for power-optimization.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkPowerPrint(pNtk *Abc_Ntk_t, vProbs *Vec_Int_t) {
-    var pObj *Abc_Obj_t;
-    var pProb *float32;
-    var TotalProb float32 = 0.0;
-    var ProbThis float32;
-    var Probs [6]float32 = [6]float32{0.0};
-    var i int32;
-    var nNodes int32;
-    var nEdges int32;
-    var Counter [6]int32 ;
-    pProb = (float *)vProbs.pArray;
-    assert(Vec_IntSize(vProbs) >= Abc_NtkObjNumMax(pNtk), "Vec_IntSize(vProbs) >= Abc_NtkObjNumMax(pNtk)");
-    // inlining of macro Abc_NtkForEachObj
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else {
-        if !Abc_ObjIsNode(pObj) && !Abc_ObjIsPi(pObj) {
-            continue; }
-        nNodes++;
-        nEdges += Abc_ObjFanoutNum(pObj);
-        ProbThis = pProb[i] * Abc_ObjFanoutNum(pObj);
-        TotalProb += ProbThis;
-        assert(pProb[i] >= 0.0 && pProb[i] <= 1.0, "pProb[i] >= 0.0 && pProb[i] <= 1.0");
-        if pProb[i] >= 0.5 {
-            Counter[5]++;
-            Probs[5] += ProbThis;
-        
-        } else if pProb[i] >= 0.4 {
-            Counter[4]++;
-            Probs[4] += ProbThis;
-        
-        } else if pProb[i] >= 0.3 {
-            Counter[3]++;
-            Probs[3] += ProbThis;
-        
-        } else if pProb[i] >= 0.2 {
-            Counter[2]++;
-            Probs[2] += ProbThis;
-        
-        } else if pProb[i] >= 0.1 {
-            Counter[1]++;
-            Probs[1] += ProbThis;
-        
-        } else {
-            Counter[0]++;
-            Probs[0] += ProbThis;
-        }
-    }
-    }
-    fmt.Printf("Node  distribution: ");
-    for  i = 0; i < 6; i++  {
-        fmt.Printf("n%d%d = %6.2f%%  ", i, i+1, 100.0 * Counter[i]/nNodes);
-    }
-    fmt.Printf("\n");
-    fmt.Printf("Power distribution: ");
-    for  i = 0; i < 6; i++  {
-        fmt.Printf("p%d%d = %6.2f%%  ", i, i+1, 100.0 * Probs[i]/TotalProb);
-    }
-    fmt.Printf("\n");
-    fmt.Printf("Total probs = %7.2f. ", TotalProb);
-    fmt.Printf("Total edges = %d. ", nEdges);
-    fmt.Printf("Average = %7.2f. ", TotalProb / nEdges);
-    fmt.Printf("\n");
+func maxFloat(a, b float64) float64 {
+	if a > b {
+		return a
+	}
+	return b
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Determines timing-critical edges of the node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkPowerCriticalEdges(pNtk *Abc_Ntk_t, pNode *Abc_Obj_t, Limit float32, vProbs *Vec_Int_t) uint32 {
-    var pFanin *Abc_Obj_t;
-    var pProb *float32  = (float *)vProbs.pArray;
-    var uResult uint32;
-    var k int32;
-    // inlining of macro Abc_ObjForEachFanin
-    for  k = 0; (k < Abc_ObjFaninNum(pNode)) && (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {
-        if pProb[pFanin.Id] >= Limit {
-            uResult |= (1 << k); }
-    }
-    return uResult;
+func boolToInt32(v bool) int32 {
+	if v {
+		return 1
+	}
+	return 0
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Adds choices to speed up the network by the given percentage.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkPowerdown(pNtk *Abc_Ntk_t, fUseLutLib int32, Percentage int32, Degree int32, fVerbose int32, fVeryVerbose int32) *Abc_Ntk_t {
-    var pNtkNew *Abc_Ntk_t;
-    var vProbs *Vec_Int_t;
-    var vTimeCries, vTimeFanins *Vec_Ptr_t;
-    var pNode, pFanin, pFanin2 *Abc_Obj_t;
-    var pProb *float32;
-    var Limit float32;
-    var i, k, k2, Counter, CounterRes, nTimeCris int32;
-    var puPCEdges *uint32;
-    // compute the limit
-    Limit = 0.5 - (1.0 * Percentage / 100);
-    // perform computation of switching probability
-    vProbs = Abc_NtkPowerEstimate( pNtk, 0 );
-    pProb = (float *)vProbs.pArray;
-    // compute percentage of wires of each type
-    if fVerbose != 0 {
-        Abc_NtkPowerPrint( pNtk, vProbs ); }
-    // mark the power critical nodes and edges
-    // inlining of macro ABC_ALLOC
-    puPCEdges = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(Abc_NtkObjNumMax(pNtk))));
-    memset( puPCEdges, 0, sizeof(unsigned) * Abc_NtkObjNumMax(pNtk) );
-    // inlining of macro Abc_NtkForEachNode
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {
-        if pProb[pNode.Id] < Limit {
-            continue; }
-        puPCEdges[pNode.Id] = Abc_NtkPowerCriticalEdges( pNtk, pNode, Limit, vProbs );
-    }
-    }
-/*
-    if ( fVerbose )
-    {
-        Counter = CounterRes = 0;
-        Abc_NtkForEachNode( pNtk, pNode, i )
-        {
-            Counter += Abc_ObjFaninNum(pNode);
-            CounterRes += Extra_WordCountOnes( puPCEdges[pNode->Id] );
-        }
-        printf( "Edges: Total = %7d. Critical = %7d. Ratio = %4.2f\n", 
-            Counter, CounterRes, 1.0*CounterRes/Counter );
-    }
-*/
-    // start the resulting network
-    pNtkNew = Abc_NtkStrash( pNtk, 0, 1, 0 );
-
-    // collect nodes to be used for resynthesis
-    Counter = CounterRes = 0;
-    vTimeCries = Vec_PtrAlloc( 16 );
-    vTimeFanins = Vec_PtrAlloc( 16 );
-    // inlining of macro Abc_NtkForEachNode
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {
-//        if ( pProb[pNode->Id] < Limit )
-//            continue;
-        // count the number of non-PI power-critical nodes
-        nTimeCris = 0;
-        // inlining of macro Abc_ObjForEachFanin
-        for  k = 0; (k < Abc_ObjFaninNum(pNode)) && (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {
-            if !Abc_ObjIsCi(pFanin) && (puPCEdges[pNode.Id] & (1<<k)) {
-                nTimeCris++; }
-        }
-        if !(fVeryVerbose != 0) && nTimeCris == 0 {
-            continue; }
-        Counter++;
-        // count the total number of power-critical second-generation nodes
-        Vec_PtrClear( vTimeCries );
-        if nTimeCris != 0 {
-            // inlining of macro Abc_ObjForEachFanin
-            for  k = 0; (k < Abc_ObjFaninNum(pNode)) && (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {
-                if !Abc_ObjIsCi(pFanin) && (puPCEdges[pNode.Id] & (1<<k)) {
-                    // inlining of macro Abc_ObjForEachFanin
-                    for  k2 = 0; (k2 < Abc_ObjFaninNum(pFanin)) && (((pFanin2) = Abc_ObjFanin(pFanin, k2)), 1); k2++  {
-                        if puPCEdges[pFanin.Id] & (1<<k2) {
-                            Vec_PtrPushUnique( vTimeCries, pFanin2 ); }
-                    } }
-            }
-        }
-//        if ( !fVeryVerbose && (Vec_PtrSize(vTimeCries) == 0 || Vec_PtrSize(vTimeCries) > Degree) )
-        if Vec_PtrSize(vTimeCries) == 0 || Vec_PtrSize(vTimeCries) > Degree {
-            continue; }
-        CounterRes++;
-        // collect second generation nodes
-        Vec_PtrClear( vTimeFanins );
-        // inlining of macro Abc_ObjForEachFanin
-        for  k = 0; (k < Abc_ObjFaninNum(pNode)) && (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {
-            if Abc_ObjIsCi(pFanin) {
-                Vec_PtrPushUnique( vTimeFanins, pFanin );
-            } else {
-                // inlining of macro Abc_ObjForEachFanin
-                for  k2 = 0; (k2 < Abc_ObjFaninNum(pFanin)) && (((pFanin2) = Abc_ObjFanin(pFanin, k2)), 1); k2++  {
-                    Vec_PtrPushUnique( vTimeFanins, pFanin2 );
-                } }                    
-        }
-        // print the results
-        if fVeryVerbose != 0 {
-        fmt.Printf("%5d Node %5d : %d %2d %2d  ", Counter, pNode.Id, nTimeCris, Vec_PtrSize(vTimeCries), Vec_PtrSize(vTimeFanins));
-        // inlining of macro Abc_ObjForEachFanin
-        for  k = 0; (k < Abc_ObjFaninNum(pNode)) && (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {
-            fmt.Printf("%d(%.2f)%s ", pFanin.Id, pProb[pFanin.Id], (puPCEdges[pNode.Id] & (1<<k))? "*":"");
-        }
-        fmt.Printf("\n");
-        }
-        // add the node to choices
-        if Vec_PtrSize(vTimeCries) == 0 || Vec_PtrSize(vTimeCries) > Degree {
-            continue; }
-        // order the fanins in the increasing order of criticalily
-        if Vec_PtrSize(vTimeCries) > 1 {
-            pFanin = (Abc_Obj_t *)Vec_PtrEntry( vTimeCries, 0 );
-            pFanin2 = (Abc_Obj_t *)Vec_PtrEntry( vTimeCries, 1 );
-//            if ( Abc_ObjSlack(pFanin) < Abc_ObjSlack(pFanin2) )
-            if pProb[pFanin.Id] > pProb[pFanin2.Id] {
-                Vec_PtrWriteEntry( vTimeCries, 0, pFanin2 );
-                Vec_PtrWriteEntry( vTimeCries, 1, pFanin );
-            }
-        }
-        if Vec_PtrSize(vTimeCries) > 2 {
-            pFanin = (Abc_Obj_t *)Vec_PtrEntry( vTimeCries, 1 );
-            pFanin2 = (Abc_Obj_t *)Vec_PtrEntry( vTimeCries, 2 );
-//            if ( Abc_ObjSlack(pFanin) < Abc_ObjSlack(pFanin2) )
-            if pProb[pFanin.Id] > pProb[pFanin2.Id] {
-                Vec_PtrWriteEntry( vTimeCries, 1, pFanin2 );
-                Vec_PtrWriteEntry( vTimeCries, 2, pFanin );
-            }
-            pFanin = (Abc_Obj_t *)Vec_PtrEntry( vTimeCries, 0 );
-            pFanin2 = (Abc_Obj_t *)Vec_PtrEntry( vTimeCries, 1 );
-//            if ( Abc_ObjSlack(pFanin) < Abc_ObjSlack(pFanin2) )
-            if pProb[pFanin.Id] > pProb[pFanin2.Id] {
-                Vec_PtrWriteEntry( vTimeCries, 0, pFanin2 );
-                Vec_PtrWriteEntry( vTimeCries, 1, pFanin );
-            }
-        }
-        // add choice
-        Abc_NtkSpeedupNode( pNtk, pNtkNew, pNode, vTimeFanins, vTimeCries );
-    }
-    }
-    Vec_PtrFree( vTimeCries );
-    Vec_PtrFree( vTimeFanins );
-    puPCEdges = nil;
-    if fVerbose != 0 {
-        fmt.Printf("Nodes: Total = %7d. Power-critical = %7d. Workable = %7d. Ratio = %4.2f\n", Abc_NtkNodeNum(pNtk), Counter, CounterRes, 1.0*CounterRes/Counter); } 
-
-    // remove invalid choice nodes
-    // inlining of macro Abc_AigForEachAnd
-    for  i = 0; (i < Vec_PtrSize((pNtkNew).vObjs)) && (((pNode) = Abc_NtkObj(pNtkNew, i)), 1); i++  {           if (pNode) == nil || !Abc_AigNodeIsAnd(pNode) {} else
-        if pNode.pData {
-            if Abc_ObjFanoutNum((Abc_Obj_t *)pNode.pData) > 0 {
-                pNode.pData = nil; }
-        }
-    }
-
-    // return the result
-    Vec_IntFree( vProbs );
-    return pNtkNew;
-}
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

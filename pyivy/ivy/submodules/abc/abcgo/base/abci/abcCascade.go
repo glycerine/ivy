@@ -1,1064 +1,626 @@
 package abci
 
-/**CFile****************************************************************
+// Characteristic-function and cofactor partition routines translated from
+// src/base/abci/abcCascade.c. The four pure partition primitives live in
+// cascade_partition.go and are shared with their source-derived tests.
+import (
+	"fmt"
+	"math/bits"
+	"sync"
 
-  FileName    [abcCascade.c]
+	"github.com/glycerine/abcgo/base/abc"
+	"github.com/glycerine/abcgo/bdd/cudd/core"
+	"github.com/glycerine/abcgo/bdd/extrab"
+	"github.com/glycerine/abcgo/bdd/extrab/cascade"
+	"github.com/glycerine/abcgo/bdd/reo"
+)
 
-  SystemName  [ABC: Logic synthesis and verification system.]
+const BDD_FUNC_MAX = 256
 
-  PackageName [Network and node package.]
+var cascadeRandState = struct {
+	sync.Mutex
+	rng *cascadeCRand
+}{rng: newCascadeCRand(1)}
 
-  Synopsis    [Collapsing the network into two-levels.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: abcCollapse.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "base/abc/abc.h"
-
-#ifdef ABC_USE_CUDD
-#include "bdd/reo/reo.h"
-#include "bdd/extrab/extraBdd.h"
-#endif
-
-//ABC_NAMESPACE_IMPL_START
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-#ifdef ABC_USE_CUDD
-
-#define BDD_FUNC_MAX 256
-
-//extern void Abc_NodeShowBddOne( DdManager * dd, DdNode * bFunc );
-extern DdNode * Abc_ConvertSopToBdd( DdManager * dd, char * pSop, DdNode ** pbVars );
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Derive BDD of the characteristic function.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-DdNode * Abc_ResBuildBdd( Abc_Ntk_t * pNtk, DdManager * dd )
-{
-    Vec_Ptr_t * vNodes, * vBdds, * vLocals;
-    Abc_Obj_t * pObj, * pFanin;
-    DdNode * bFunc, * bPart, * bTemp, * bVar;
-    int i, k;
-    assert( Abc_NtkIsSopLogic(pNtk) );
-    assert( Abc_NtkCoNum(pNtk) <= 3 );
-    vBdds = Vec_PtrStart( Abc_NtkObjNumMax(pNtk) );
-    Abc_NtkForEachCi( pNtk, pObj, i )
-        Vec_PtrWriteEntry( vBdds, Abc_ObjId(pObj), Cudd_bddIthVar(dd, i) );
-    // create internal node BDDs
-    vNodes = Abc_NtkDfs( pNtk, 0 );
-    vLocals = Vec_PtrAlloc( 6 );
-    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )
-    {
-        if ( Abc_ObjFaninNum(pObj) == 0 )
-        {
-            bFunc = Cudd_NotCond( Cudd_ReadOne(dd), Abc_SopIsConst0((char *)pObj->pData) );  Cudd_Ref( bFunc );
-            Vec_PtrWriteEntry( vBdds, Abc_ObjId(pObj), bFunc );
-            continue;
-        }
-        Vec_PtrClear( vLocals );
-        Abc_ObjForEachFanin( pObj, pFanin, k )
-            Vec_PtrPush( vLocals, Vec_PtrEntry(vBdds, Abc_ObjId(pFanin)) );
-        bFunc = Abc_ConvertSopToBdd( dd, (char *)pObj->pData, (DdNode **)Vec_PtrArray(vLocals) );  Cudd_Ref( bFunc );
-        Vec_PtrWriteEntry( vBdds, Abc_ObjId(pObj), bFunc );
-    }
-    Vec_PtrFree( vLocals );
-    // create char function
-    bFunc = Cudd_ReadOne( dd );  Cudd_Ref( bFunc );
-    Abc_NtkForEachCo( pNtk, pObj, i )
-    {
-        bVar  = Cudd_bddIthVar( dd, i + Abc_NtkCiNum(pNtk) );
-        bTemp = (DdNode *)Vec_PtrEntry( vBdds, Abc_ObjFaninId0(pObj) );
-        bPart = Cudd_bddXnor( dd, bTemp, bVar );          Cudd_Ref( bPart );
-        bFunc = Cudd_bddAnd( dd, bTemp = bFunc, bPart );  Cudd_Ref( bFunc );
-        Cudd_RecursiveDeref( dd, bTemp );
-        Cudd_RecursiveDeref( dd, bPart );
-    }
-    // dereference
-    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )
-        Cudd_RecursiveDeref( dd, (DdNode *)Vec_PtrEntry(vBdds, Abc_ObjId(pObj)) );
-    Vec_PtrFree( vBdds );
-    Vec_PtrFree( vNodes );
-    // reorder
-    Cudd_ReduceHeap( dd, CUDD_REORDER_SYMM_SIFT, 1 );
-    Cudd_Deref( bFunc );
-    return bFunc;
-}
- 
-/**Function*************************************************************
-
-  Synopsis    [Initializes variable partition.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-void Abc_ResStartPart( int nInputs, unsigned uParts[], int nParts )
-{
-    int i, Group, Left, Shift = 0, Count = 0;
-    Group = nInputs / nParts;
-    Left  = nInputs % nParts;
-    for ( i = 0; i < Left; i++ )
-    {
-        uParts[i] = (~((~0) << (Group+1))) << Shift;
-        Shift += Group+1;
-    }
-    for (      ; i < nParts; i++ )
-    {
-        uParts[i] = (~((~0) << Group)) << Shift;
-        Shift += Group;
-    }
-    for ( i = 0; i < nParts; i++ )
-        Count += Extra_WordCountOnes( uParts[i] );
-    assert( Count == nInputs );
-}
- 
-/**Function*************************************************************
-
-  Synopsis    [Initializes variable partition.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-void Abc_ResStartPart2( int nInputs, unsigned uParts[], int nParts )
-{
-    int i, Count = 0;
-    for ( i = 0; i < nParts; i++ )
-        uParts[i] = 0;
-    for ( i = 0; i < nInputs; i++ )
-        uParts[i % nParts] |= (1 << i);
-    for ( i = 0; i < nParts; i++ )
-        Count += Extra_WordCountOnes( uParts[i] );
-    assert( Count == nInputs );
-}
- 
-/**Function*************************************************************
-
-  Synopsis    [Returns one if unique pattern.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-int Abc_ResCheckUnique( char Pats[], int nPats, int pat )
-{
-    int i;
-    for ( i = 0; i < nPats; i++ )
-        if ( Pats[i] == pat )
-            return 0;
-    return 1;
-}
- 
-/**Function*************************************************************
-
-  Synopsis    [Check if pattern is decomposable with non-strict.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-int Abc_ResCheckNonStrict( char Pattern[], int nVars, int nBits )
-{
-    static char Pat0[256], Pat1[256];
-    int v, m, nPats0, nPats1, nNumber = (1 << (nBits - 1));
-    int Result = 0;
-    for ( v = 0; v < nVars; v++ )
-    {
-        nPats0 = nPats1 = 0;
-        for ( m = 0; m < (1<<nVars); m++ )
-        {
-            if ( (m & (1 << v)) == 0 )
-            {
-                if ( Abc_ResCheckUnique( Pat0, nPats0, Pattern[m] ) )
-                {
-                    Pat0[ nPats0++ ] = Pattern[m];
-                    if ( nPats0 > nNumber )
-                        break;
-                }
-            }
-            else
-            {
-                if ( Abc_ResCheckUnique( Pat1, nPats1, Pattern[m] ) )
-                {
-                    Pat1[ nPats1++ ] = Pattern[m];
-                    if ( nPats1 > nNumber )
-                        break;
-                }
-            }
-        }
-        if ( m == (1<<nVars) )
-            Result++;
-    }
-    return Result;
+// cascadeCRand matches the glibc TYPE_3 rand() stream used by ABC on the
+// supported Linux build. C rand() starts with seed 1 unless srand() was called.
+type cascadeCRand struct {
+	state [31]uint32
+	index uint64
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Compute the number of distinct cofactors in the BDD.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-int Abc_ResCofCount( DdManager * dd, DdNode * bFunc, unsigned uMask, int * pCheck )
-{
-    static char Pattern[256];
-    DdNode * pbVars[32];
-    Vec_Ptr_t * vCofs;
-    DdNode * bCof, * bCube, * bTemp;
-    int i, k, Result, nVars = 0;
-    // collect variables
-    for ( i = 0; i < 32; i++ )
-        if ( uMask & (1 << i) )
-            pbVars[nVars++] = dd->vars[i];
-    assert( nVars <= 8 );
-    // compute cofactors
-    vCofs = Vec_PtrAlloc( 100 );
-    for ( i = 0; i < (1 << nVars); i++ )
-    {
-        bCube = Extra_bddBitsToCube( dd, i, nVars, pbVars, 1 );  Cudd_Ref( bCube );
-        bCof  = Cudd_Cofactor( dd, bFunc, bCube );               Cudd_Ref( bCof );
-        Cudd_RecursiveDeref( dd, bCube );
-        Vec_PtrForEachEntry( DdNode *, vCofs, bTemp, k )
-            if ( bTemp == bCof )
-                break;
-        if ( k < Vec_PtrSize(vCofs) )
-            Cudd_RecursiveDeref( dd, bCof );
-        else
-            Vec_PtrPush( vCofs, bCof );
-        Pattern[i] = k;
-    }
-    Result = Vec_PtrSize( vCofs );
-    Vec_PtrForEachEntry( DdNode *, vCofs, bCof, i )
-        Cudd_RecursiveDeref( dd, bCof );
-    Vec_PtrFree( vCofs );
-    if ( pCheck )
-    {
-        *pCheck = Abc_ResCheckNonStrict( Pattern, nVars, Abc_Base2Log(Result) );
-/*
-        if ( *pCheck == 1 && nVars == 4 && Result == 8 )
-        {
-            for ( i = 0; i < (1 << nVars); i++ )
-                printf( "%d ", Pattern[i] );
-            i = 0;
-        }
-*/
-    }
-    return Result;
+func newCascadeCRand(seed uint32) *cascadeCRand {
+	if seed == 0 {
+		seed = 1
+	}
+	sequence := make([]uint32, 344)
+	sequence[0] = seed
+	for i := 1; i < 31; i++ {
+		sequence[i] = uint32(uint64(16807) * uint64(sequence[i-1]) % 2147483647)
+	}
+	sequence[31], sequence[32], sequence[33] = sequence[0], sequence[1], sequence[2]
+	for i := 34; i < len(sequence); i++ {
+		sequence[i] = sequence[i-31] + sequence[i-3]
+	}
+	rng := &cascadeCRand{index: 344}
+	for i := 313; i < 344; i++ {
+		rng.state[i%31] = sequence[i]
+	}
+	return rng
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Computes cost of the partition.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-int Abc_ResCost( DdManager * dd, DdNode * bFunc, unsigned uMask, int * pnCofs, int * pCheck )
-{
-    int nCofs = Abc_ResCofCount( dd, bFunc, uMask, pCheck );
-    int n2Log = Abc_Base2Log( nCofs );
-    if ( pnCofs ) *pnCofs = nCofs;
-    return 10000 * n2Log + (nCofs - (1 << (n2Log-1))) * (nCofs - (1 << (n2Log-1)));
+func (rng *cascadeCRand) next() uint32 {
+	i := rng.index
+	value := rng.state[(i-31)%31] + rng.state[(i-3)%31]
+	rng.state[i%31] = value
+	rng.index++
+	return value >> 1
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Migrates variables between the two groups.]
-
-  Description [Returns 1 if there is change.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-int Abc_ResMigrate( DdManager * dd, DdNode * bFunc, int nInputs, unsigned uParts[], int iPart1, int iPart2 )
-{
-    unsigned uParts2[2] = { uParts[iPart1], uParts[iPart2] };
-    int i, k, CostCur, CostBest, fChange = 0;
-    assert( (uParts[iPart1] & uParts[iPart2]) == 0 );
-    CostBest = Abc_ResCost( dd, bFunc, uParts[iPart1], NULL, NULL ) 
-             + Abc_ResCost( dd, bFunc, uParts[iPart2], NULL, NULL );
-    for ( i = 0; i < nInputs; i++ )
-    if ( uParts[iPart1] & (1 << i) )
-    {
-        for ( k = 0; k < nInputs; k++ )
-        if ( uParts[iPart2] & (1 << k) )
-        {
-            if ( i == k )
-                continue;
-            uParts[iPart1] ^= (1 << i) | (1 << k);
-            uParts[iPart2] ^= (1 << i) | (1 << k);
-            CostCur = Abc_ResCost( dd, bFunc, uParts[iPart1], NULL, NULL ) + Abc_ResCost( dd, bFunc, uParts[iPart2], NULL, NULL );
-            if ( CostCur < CostBest )
-            {
-                CostCur    = CostBest;
-                uParts2[0] = uParts[iPart1];
-                uParts2[1] = uParts[iPart2];
-                fChange = 1;
-            }
-            uParts[iPart1] ^= (1 << i) | (1 << k);
-            uParts[iPart2] ^= (1 << i) | (1 << k);
-        }
-    }
-    uParts[iPart1] = uParts2[0];
-    uParts[iPart2] = uParts2[1];
-    return fChange;
+func cascadeRandN(n int) int {
+	cascadeRandState.Lock()
+	defer cascadeRandState.Unlock()
+	return int(cascadeRandState.rng.next() % uint32(n))
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Migrates variables between the two groups.]
-
-  Description [Returns 1 if there is change.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-void Abc_ResPrint( DdManager * dd, DdNode * bFunc, int nInputs, unsigned uParts[], int nParts )
-{
-    int i, k, nCofs, Cost, CostAll = 0, fCheck;
-    for ( i = 0; i < nParts; i++ )
-    {
-        Cost = Abc_ResCost( dd, bFunc, uParts[i], &nCofs, &fCheck );
-        CostAll += Cost;
-        for ( k = 0; k < nInputs; k++ )
-            printf( "%c", (uParts[i] & (1 << k))? 'a' + k : '-' );
-        printf( " %2d %d-%d %6d   ", nCofs, Abc_Base2Log(nCofs), fCheck, Cost );
-    }
-    printf( "%4d\n", CostAll );
+func Abc_ResBuildBdd(n *Abc_Ntk_t, dd *core.DdManager) *core.DdNode {
+	if n == nil || dd == nil || abc.Abc_NtkIsSopLogic(n) == 0 || abc.Abc_NtkCoNum(n) > 3 {
+		return nil
+	}
+	values := make(map[*abc.Object]*core.DdNode, len(n.Objects()))
+	for i, ci := range n.Inputs() {
+		values[ci] = core.Cudd_bddIthVar(dd, i)
+	}
+	for _, node := range abc.Abc_NtkDfs(n, 0) {
+		if len(node.Fanins()) == 0 {
+			sop, _ := node.Data.(string)
+			values[node] = core.Cudd_NotCond(dd.One, abc.Abc_SopIsConst0(sop) != 0)
+			core.Cudd_Ref(values[node])
+			continue
+		}
+		locals := make([]*core.DdNode, 0, len(node.Fanins()))
+		for _, edge := range node.Fanins() {
+			f := values[edge.Object]
+			if f == nil {
+				return nil
+			}
+			locals = append(locals, f)
+		}
+		sop, ok := node.Data.(string)
+		if !ok {
+			return nil
+		}
+		values[node] = abc.Abc_ConvertSopToBdd(dd, sop, locals)
+		if values[node] == nil {
+			return nil
+		}
+		core.Cudd_Ref(values[node])
+	}
+	result := dd.One
+	core.Cudd_Ref(result)
+	for i, co := range n.Outputs() {
+		fanins := co.Fanins()
+		if len(fanins) != 1 {
+			return nil
+		}
+		f := values[fanins[0].Object]
+		if f == nil {
+			return nil
+		}
+		out := core.Cudd_bddIthVar(dd, i+len(n.Inputs()))
+		part := core.Cudd_bddXnor(dd, f, out)
+		core.Cudd_Ref(part)
+		old := result
+		result = core.Cudd_bddAnd(dd, old, part)
+		if result == nil {
+			return nil
+		}
+		core.Cudd_Ref(result)
+		core.Cudd_RecursiveDeref(dd, old)
+		core.Cudd_RecursiveDeref(dd, part)
+	}
+	for _, node := range abc.Abc_NtkDfs(n, 0) {
+		core.Cudd_RecursiveDeref(dd, values[node])
+	}
+	core.Cudd_ReduceHeap(dd, core.CUDD_REORDER_SYMM_SIFT, 1)
+	core.Cudd_Deref(result)
+	return result
 }
 
-/**Function*************************************************************
-
-  Synopsis    [PrintCompute the number of distinct cofactors in the BDD.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-void Abc_ResPrintAllCofs( DdManager * dd, DdNode * bFunc, int nInputs, int nCofMax )
-{
-    int i, k, nBits, nCofs, Cost, fCheck;
-    for ( i = 0; i < (1<<nInputs); i++ )
-    {
-        nBits = Extra_WordCountOnes( i );
-        if ( nBits < 3 || nBits > 6 )
-            continue;
-        Cost = Abc_ResCost( dd, bFunc, i, &nCofs, &fCheck );
-        if ( nCofs > nCofMax )
-            continue;
-        for ( k = 0; k < nInputs; k++ )
-            printf( "%c", (i & (1 << k))? 'a' + k : '-' );
-        printf( "  n=%2d  c=%2d  l=%d-%d   %6d\n", 
-            Extra_WordCountOnes(i), nCofs, Abc_Base2Log(nCofs), fCheck, Cost );
-    }
+func Abc_ResCofCount(dd *core.DdManager, function *core.DdNode, mask uint32, check *int32) int32 {
+	if dd == nil || function == nil {
+		return 0
+	}
+	vars := make([]*core.DdNode, 0, 8)
+	for i := 0; i < 32; i++ {
+		if mask&(uint32(1)<<uint(i)) != 0 {
+			if i >= len(dd.Vars) {
+				return 0
+			}
+			vars = append(vars, core.Cudd_bddIthVar(dd, i))
+		}
+	}
+	if len(vars) > 8 {
+		return 0
+	}
+	pattern := make([]int8, 1<<uint(len(vars)))
+	unique := make(map[*core.DdNode]int32)
+	count := int32(0)
+	for i := range pattern {
+		cube := cascade.Extra_bddBitsToCube(dd, i, len(vars), vars, true)
+		core.Cudd_Ref(cube)
+		cofactor := core.Cudd_Cofactor(dd, function, cube)
+		core.Cudd_Ref(cofactor)
+		core.Cudd_RecursiveDeref(dd, cube)
+		index, found := unique[cofactor]
+		if !found {
+			index = count
+			unique[cofactor] = index
+			count++
+		} else {
+			core.Cudd_RecursiveDeref(dd, cofactor)
+		}
+		pattern[i] = int8(index)
+	}
+	for cof := range unique {
+		core.Cudd_RecursiveDeref(dd, cof)
+	}
+	if check != nil {
+		*check = Abc_ResCheckNonStrict(pattern, int32(len(vars)), int32(abcBase2Log(int(count))))
+	}
+	return count
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Compute the number of distinct cofactors in the BDD.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-void Abc_ResSwapRandom( DdManager * dd, DdNode * bFunc, int nInputs, unsigned uParts[], int nParts, int nTimes )
-{
-    int i, k, n, iPart1, iPart2;
-    for ( n = 0; n < nTimes; )
-    {
-        // get the vars
-        i = k = 0;
-        while ( i == k )
-        {
-            i = rand() % nInputs;
-            k = rand() % nInputs;
-        }
-        // find the groups
-        for ( iPart1 = 0; iPart1 < nParts; iPart1++ )
-            if ( uParts[iPart1] & (1 << i) )
-                break;
-        for ( iPart2 = 0; iPart2 < nParts; iPart2++ )
-            if ( uParts[iPart2] & (1 << k) )
-                break;
-        if ( iPart1 == iPart2 )
-            continue;
-        // swap the vars
-        uParts[iPart1] ^= (1 << i) | (1 << k);
-        uParts[iPart2] ^= (1 << i) | (1 << k);
-        n++;
-//printf( "   " );
-//Abc_ResPrint( dd, bFunc, nInputs, uParts, nParts );
-    }
+func abcBase2Log(n int) int { // exact Abc_Base2Log semantics (0->0, 1->1).
+	if n < 2 {
+		return n
+	}
+	return bits.Len(uint(n - 1))
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Compute the number of distinct cofactors in the BDD.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-void Abc_ResPartition( DdManager * dd, DdNode * bFunc, int nInputs )
-{
-    int nIters = 5;
-    unsigned uParts[10];
-    int i, fChange = 1;
-    int nSuppSize = Cudd_SupportSize( dd, bFunc );
-    printf( "Ins =%3d. Outs =%2d. Nodes =%3d. Supp =%2d.\n", 
-        nInputs, dd->size-nInputs, Cudd_DagSize(bFunc), nSuppSize );
-//Abc_ResPrintAllCofs( dd, bFunc, nInputs, 4 );
-
-    if ( nSuppSize <= 6 )
-    {
-        printf( "Support is less or equal than 6\n" );
-        return;
-    }
-    if ( nInputs <= 12 )
-    {
-        Abc_ResStartPart( nInputs, uParts, 2 );
-        Abc_ResPrint( dd, bFunc, nInputs, uParts, 2 );
-        for ( i = 0; i < nIters; i++ )
-        {
-            if ( i ) 
-            {
-                printf( "Randomizing... \n" );
-                Abc_ResSwapRandom( dd, bFunc, nInputs, uParts, 2, 20 );
-                Abc_ResPrint( dd, bFunc, nInputs, uParts, 2 );
-            }
-            fChange = 1;
-            while ( fChange )
-            {
-                fChange  = Abc_ResMigrate( dd, bFunc, nInputs, uParts, 0, 1 );
-                Abc_ResPrint( dd, bFunc, nInputs, uParts, 2 );
-            }
-        }
-    }
-    else if ( nInputs > 12 && nInputs <= 18 )
-    {
-        Abc_ResStartPart( nInputs, uParts, 3 );
-        Abc_ResPrint( dd, bFunc, nInputs, uParts, 3 );
-        for ( i = 0; i < nIters; i++ )
-        {
-            if ( i ) 
-            {
-                printf( "Randomizing... \n" );
-                Abc_ResSwapRandom( dd, bFunc, nInputs, uParts, 3, 20 );
-                Abc_ResPrint( dd, bFunc, nInputs, uParts, 3 );
-            }
-            fChange = 1;
-            while ( fChange )
-            {
-                fChange  = Abc_ResMigrate( dd, bFunc, nInputs, uParts, 0, 1 );
-                Abc_ResPrint( dd, bFunc, nInputs, uParts, 3 );
-                fChange |= Abc_ResMigrate( dd, bFunc, nInputs, uParts, 0, 2 );
-                Abc_ResPrint( dd, bFunc, nInputs, uParts, 3 );
-                fChange |= Abc_ResMigrate( dd, bFunc, nInputs, uParts, 1, 2 );
-                Abc_ResPrint( dd, bFunc, nInputs, uParts, 3 );
-            }
-        }
-    }
-    else if ( nInputs > 18 && nInputs <= 24 )
-    {
-        Abc_ResStartPart( nInputs, uParts, 4 );
-        Abc_ResPrint( dd, bFunc, nInputs, uParts, 4 );
-        for ( i = 0; i < nIters; i++ )
-        {
-            if ( i )
-            {
-                printf( "Randomizing... \n" );
-                Abc_ResSwapRandom( dd, bFunc, nInputs, uParts, 4, 20 );
-                Abc_ResPrint( dd, bFunc, nInputs, uParts, 4 );
-            }
-            fChange = 1;
-            while ( fChange )
-            {
-                fChange  = Abc_ResMigrate( dd, bFunc, nInputs, uParts, 0, 1 );
-                Abc_ResPrint( dd, bFunc, nInputs, uParts, 4 );
-                fChange |= Abc_ResMigrate( dd, bFunc, nInputs, uParts, 0, 2 );
-                Abc_ResPrint( dd, bFunc, nInputs, uParts, 4 );
-                fChange |= Abc_ResMigrate( dd, bFunc, nInputs, uParts, 0, 3 );
-                Abc_ResPrint( dd, bFunc, nInputs, uParts, 4 );
-                fChange |= Abc_ResMigrate( dd, bFunc, nInputs, uParts, 1, 2 );
-                Abc_ResPrint( dd, bFunc, nInputs, uParts, 4 );
-                fChange |= Abc_ResMigrate( dd, bFunc, nInputs, uParts, 1, 3 );
-                Abc_ResPrint( dd, bFunc, nInputs, uParts, 4 );
-                fChange |= Abc_ResMigrate( dd, bFunc, nInputs, uParts, 2, 3 );
-                Abc_ResPrint( dd, bFunc, nInputs, uParts, 4 );
-            }
-        }
-    }
-//    else assert( 0 );
+func Abc_ResCost(dd *core.DdManager, function *core.DdNode, mask uint32, cofactors, check *int32) int32 {
+	n := Abc_ResCofCount(dd, function, mask, check)
+	log := abcBase2Log(int(n))
+	if cofactors != nil {
+		*cofactors = n
+	}
+	delta := int64(n) - (int64(1) << uint(log-1))
+	return int32(10000*log + int(delta*delta))
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Compute the number of distinct cofactors in the BDD.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-void Abc_ResPartitionTest( Abc_Ntk_t * pNtk )
-{
-    DdManager * dd;
-    DdNode * bFunc;
-    dd = Cudd_Init( Abc_NtkCiNum(pNtk) + Abc_NtkCoNum(pNtk), 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );
-    bFunc = Abc_ResBuildBdd( pNtk, dd );   Cudd_Ref( bFunc );
-    Abc_ResPartition( dd, bFunc, Abc_NtkCiNum(pNtk) );
-    Cudd_RecursiveDeref( dd, bFunc );
-    Extra_StopManager( dd );
+func Abc_ResMigrate(dd *core.DdManager, function *core.DdNode, inputs int32, parts []uint32, part1, part2 int32) int32 {
+	if dd == nil || function == nil || part1 < 0 || part2 < 0 || int(part1) >= len(parts) || int(part2) >= len(parts) {
+		return 0
+	}
+	initial := [2]uint32{parts[part1], parts[part2]}
+	bestParts := initial
+	best := Abc_ResCost(dd, function, initial[0], nil, nil) + Abc_ResCost(dd, function, initial[1], nil, nil)
+	changed := int32(0)
+	for i := int32(0); i < inputs; i++ {
+		if parts[part1]&(uint32(1)<<uint(i)) == 0 {
+			continue
+		}
+		for k := int32(0); k < inputs; k++ {
+			if parts[part2]&(uint32(1)<<uint(k)) == 0 || i == k {
+				continue
+			}
+			bitsToSwap := (uint32(1) << uint(i)) | (uint32(1) << uint(k))
+			parts[part1] ^= bitsToSwap
+			parts[part2] ^= bitsToSwap
+			cost := Abc_ResCost(dd, function, parts[part1], nil, nil) + Abc_ResCost(dd, function, parts[part2], nil, nil)
+			// Preserve the original update order: each candidate is compared to
+			// the starting cost, and the last improving candidate is retained.
+			if cost < best {
+				bestParts = [2]uint32{parts[part1], parts[part2]}
+				changed = 1
+			}
+			parts[part1] ^= bitsToSwap
+			parts[part2] ^= bitsToSwap
+		}
+	}
+	parts[part1], parts[part2] = bestParts[0], bestParts[1]
+	return changed
 }
 
-
-
-
-
-
-
-/**Function*************************************************************
-
-  Synopsis    [Compute the number of distinct cofactors in the BDD.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-int Abc_NtkBddCofCount( DdManager * dd, DdNode * bFunc, DdNode ** pbVars, int nVars )
-{
-    Vec_Ptr_t * vCofs;
-    DdNode * bCof, * bCube;
-    int i, Result;
-    vCofs = Vec_PtrAlloc( 100 );
-    for ( i = 0; i < (1 << nVars); i++ )
-    {
-        bCube = Extra_bddBitsToCube( dd, i, nVars, pbVars, 1 );  Cudd_Ref( bCube );
-        bCof  = Cudd_Cofactor( dd, bFunc, bCube );               Cudd_Ref( bCof );
-        Cudd_RecursiveDeref( dd, bCube );
-        if ( Vec_PtrPushUnique( vCofs, bCof ) )
-            Cudd_RecursiveDeref( dd, bCof );
-    }
-    Result = Vec_PtrSize( vCofs );
-    Vec_PtrForEachEntry( DdNode *, vCofs, bCof, i )
-        Cudd_RecursiveDeref( dd, bCof );
-    Vec_PtrFree( vCofs );
-    return Result;
+func Abc_ResPrint(dd *core.DdManager, function *core.DdNode, inputs int32, parts []uint32, count int32) {
+	costAll := int32(0)
+	for i := int32(0); i < count; i++ {
+		var cofactors, check int32
+		cost := Abc_ResCost(dd, function, parts[i], &cofactors, &check)
+		costAll += cost
+		for k := int32(0); k < inputs; k++ {
+			if parts[i]&(uint32(1)<<uint(k)) != 0 {
+				fmt.Printf("%c", 'a'+k)
+			} else {
+				fmt.Print("-")
+			}
+		}
+		fmt.Printf(" %2d %d-%d %6d   ", cofactors, abcBase2Log(int(cofactors)), check, cost)
+	}
+	fmt.Printf("%4d\n", costAll)
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Compute the number of distinct cofactors in the BDD.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-void Abc_NtkExploreCofs2( DdManager * dd, DdNode * bFunc, DdNode ** pbVars, int nIns, int nLutSize )
-{
-    int i;
-    printf( "Inputs = %2d.  Nodes = %2d.  LutSize = %2d.\n", nIns, Cudd_DagSize(bFunc), nLutSize );
-    for ( i = 0; i <= nIns - nLutSize; i++ )
-        printf( "[%2d %2d] : %3d\n", i, i+nLutSize-1, Abc_NtkBddCofCount(dd, bFunc, dd->vars+i, nLutSize) );
+func Abc_ResPrintAllCofs(dd *core.DdManager, function *core.DdNode, inputs, maxCofs int32) {
+	for mask := 0; mask < (1 << uint(inputs)); mask++ {
+		weight := bits.OnesCount(uint(mask))
+		if weight < 3 || weight > 6 {
+			continue
+		}
+		var cofactors, check int32
+		cost := Abc_ResCost(dd, function, uint32(mask), &cofactors, &check)
+		if cofactors > maxCofs {
+			continue
+		}
+		for k := int32(0); k < inputs; k++ {
+			if uint32(mask)&(uint32(1)<<uint(k)) != 0 {
+				fmt.Printf("%c", 'a'+k)
+			} else {
+				fmt.Print("-")
+			}
+		}
+		fmt.Printf("  n=%2d  c=%2d  l=%d-%d   %6d\n", weight, cofactors, abcBase2Log(int(cofactors)), check, cost)
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Compute the number of distinct cofactors in the BDD.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-void Abc_NtkExploreCofs( DdManager * dd, DdNode * bFunc, DdNode ** pbVars, int nIns, int nLutSize )
-{
-    DdManager * ddNew;
-    DdNode * bFuncNew;
-    DdNode * pbVarsNew[32];
-    int i, k, c, nCofs, nBits;
-
-    ddNew = Cudd_Init( dd->size, 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );
-    Cudd_ShuffleHeap( ddNew, dd->invperm );
-    bFuncNew = Cudd_bddTransfer( dd, ddNew, bFunc );  Cudd_Ref( bFuncNew );
-
-    for ( i = 0; i < (1 << nIns); i++ )
-    {
-        nBits = Extra_WordCountOnes(i);
-        if ( nBits != nLutSize && nBits != nLutSize -1 && nBits != nLutSize -2  )
-            continue;
-        for ( c = k = 0; k < nIns; k++ )
-        {
-            if ( (i & (1 << k)) == 0 )
-                continue;
-//            pbVarsNew[c++] = pbVars[k];
-            pbVarsNew[c++] = ddNew->vars[k];
-        }
-        nCofs = Abc_NtkBddCofCount(ddNew, bFuncNew, pbVarsNew, c);
-        if ( nCofs > 8 )
-            continue;
-
-        for ( c = k = 0; k < nIns; k++ )
-        {
-            if ( (i & (1 << k)) == 0 )
-            {
-                printf( "-" );
-                continue;
-            }
-            printf( "%c", k + 'a' );
-        }
-        printf( " : %2d\n", nCofs );
-    }
-
-    Cudd_RecursiveDeref( ddNew, bFuncNew );
-    Extra_StopManager( ddNew );
+func Abc_ResSwapRandom(dd *core.DdManager, function *core.DdNode, inputs int32, parts []uint32, count, times int32) {
+	if inputs < 2 {
+		return
+	}
+	for swaps := int32(0); swaps < times; {
+		i, k := cascadeRandN(int(inputs)), cascadeRandN(int(inputs))
+		if i == k {
+			continue
+		}
+		p1, p2 := -1, -1
+		for p := 0; p < int(count); p++ {
+			if parts[p]&(uint32(1)<<uint(i)) != 0 {
+				p1 = p
+			}
+			if parts[p]&(uint32(1)<<uint(k)) != 0 {
+				p2 = p
+			}
+		}
+		if p1 == p2 || p1 < 0 || p2 < 0 {
+			continue
+		}
+		mask := uint32(1)<<uint(i) | uint32(1)<<uint(k)
+		parts[p1] ^= mask
+		parts[p2] ^= mask
+		swaps++
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Find the constant node corresponding to the encoded output value.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-DdNode * Abc_NtkBddFindAddConst( DdManager * dd, DdNode * bFunc, int nOuts )
-{
-    int i, TermMask = 0;
-    DdNode * bFunc0, * bFunc1, * bConst0, * bConst1;
-    bConst0 = Cudd_ReadLogicZero( dd );
-    bConst1 = Cudd_ReadOne( dd );
-    for ( i = 0; i < nOuts; i++ )
-    {
-        if ( Cudd_IsComplement(bFunc) )
-        {
-            bFunc0 = Cudd_Not(Cudd_E(bFunc));
-            bFunc1 = Cudd_Not(Cudd_T(bFunc));
-        }
-        else
-        {
-            bFunc0 = Cudd_E(bFunc);
-            bFunc1 = Cudd_T(bFunc);
-        }
-        assert( bFunc0 == bConst0 || bFunc1 == bConst0 );
-        if ( bFunc0 == bConst0 )
-        {
-            TermMask ^= (1 << i);
-            bFunc = bFunc1;
-        }
-        else
-            bFunc = bFunc0;
-    }
-    assert( bFunc == bConst1 );
-    return Cudd_addConst( dd, TermMask );
+func Abc_ResPartition(dd *core.DdManager, function *core.DdNode, inputs int32) {
+	if dd == nil || function == nil || inputs < 0 {
+		return
+	}
+	fmt.Printf("Ins =%3d. Outs =%2d. Nodes =%3d. Supp =%2d.\n", inputs, len(dd.Vars)-int(inputs), core.Cudd_DagSize(function), core.Cudd_SupportSize(dd, function))
+	if core.Cudd_SupportSize(dd, function) <= 6 {
+		fmt.Println("Support is less or equal than 6")
+		return
+	}
+	if inputs > 24 {
+		return
+	}
+	nParts := int32(2)
+	if inputs > 12 {
+		nParts = 3
+	}
+	if inputs > 18 {
+		nParts = 4
+	}
+	parts := make([]uint32, 10)
+	Abc_ResStartPart(inputs, parts, nParts)
+	Abc_ResPrint(dd, function, inputs, parts, nParts)
+	for iter := 0; iter < 5; iter++ {
+		if iter > 0 {
+			fmt.Println("Randomizing... ")
+			Abc_ResSwapRandom(dd, function, inputs, parts, nParts, 20)
+			Abc_ResPrint(dd, function, inputs, parts, nParts)
+		}
+		changed := int32(1)
+		for changed != 0 {
+			changed = 0
+			for i := int32(0); i < nParts; i++ {
+				for j := i + 1; j < nParts; j++ {
+					changed |= Abc_ResMigrate(dd, function, inputs, parts, i, j)
+					Abc_ResPrint(dd, function, inputs, parts, nParts)
+				}
+			}
+		}
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Recursively construct ADD for BDD.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-DdNode * Abc_NtkBddToAdd_rec( DdManager * dd, DdNode * bFunc, int nOuts, stmm_table * tTable, int fCompl )
-{
-    DdNode * aFunc0, * aFunc1, * aFunc;
-    DdNode ** ppSlot;
-    assert( !Cudd_IsComplement(bFunc) );
-    if ( stmm_find_or_add( tTable, (char *)bFunc, (char ***)&ppSlot ) )
-        return *ppSlot;
-    if ( (int)bFunc->index >= Cudd_ReadSize(dd) - nOuts )
-    {
-        assert( Cudd_ReadPerm(dd, bFunc->index) >= Cudd_ReadSize(dd) - nOuts );
-        aFunc = Abc_NtkBddFindAddConst( dd, Cudd_NotCond(bFunc, fCompl), nOuts ); Cudd_Ref( aFunc );
-    }
-    else
-    {
-        aFunc0 = Abc_NtkBddToAdd_rec( dd, Cudd_Regular(cuddE(bFunc)), nOuts, tTable, fCompl ^ Cudd_IsComplement(cuddE(bFunc)) );
-        aFunc1 = Abc_NtkBddToAdd_rec( dd, cuddT(bFunc), nOuts, tTable, fCompl );                                                
-        aFunc  = Cudd_addIte( dd, Cudd_addIthVar(dd, bFunc->index), aFunc1, aFunc0 );  Cudd_Ref( aFunc );
-    }
-    return (*ppSlot = aFunc);
+func Abc_ResPartitionTest(n *Abc_Ntk_t) {
+	if n == nil {
+		return
+	}
+	dd := core.Cudd_Init(uint32(abc.Abc_NtkCiNum(n)+abc.Abc_NtkCoNum(n)), 0, core.CUDD_UNIQUE_SLOTS, core.CUDD_CACHE_SLOTS, 0)
+	if dd == nil {
+		return
+	}
+	function := Abc_ResBuildBdd(n, dd)
+	if function != nil {
+		core.Cudd_Ref(function)
+		Abc_ResPartition(dd, function, abc.Abc_NtkCiNum(n))
+		core.Cudd_RecursiveDeref(dd, function)
+	}
+	extrab.Extra_StopManager(dd)
 }
 
-/**Function*************************************************************
-
-  Synopsis    [R]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-DdNode * Abc_NtkBddToAdd( DdManager * dd, DdNode * bFunc, int nOuts )
-{
-    DdNode * aFunc, * aTemp, * bTemp;
-    stmm_table * tTable;
-    stmm_generator * gen;
-    tTable = stmm_init_table( st__ptrcmp, st__ptrhash );
-    aFunc = Abc_NtkBddToAdd_rec( dd, Cudd_Regular(bFunc), nOuts, tTable, Cudd_IsComplement(bFunc) );  
-    stmm_foreach_item( tTable, gen, (char **)&bTemp, (char **)&aTemp )
-        Cudd_RecursiveDeref( dd, aTemp );
-    stmm_free_table( tTable );
-    Cudd_Deref( aFunc );
-    return aFunc;
+func Abc_NtkBddCofCount(dd *core.DdManager, function *core.DdNode, vars []*core.DdNode, count int32) int32 {
+	if dd == nil || function == nil || count < 0 || int(count) > len(vars) || count > 20 {
+		return 0
+	}
+	seen := make(map[*core.DdNode]struct{})
+	for code := 0; code < 1<<uint(count); code++ {
+		cube := cascade.Extra_bddBitsToCube(dd, code, int(count), vars, true)
+		core.Cudd_Ref(cube)
+		cofactor := core.Cudd_Cofactor(dd, function, cube)
+		core.Cudd_Ref(cofactor)
+		core.Cudd_RecursiveDeref(dd, cube)
+		if _, exists := seen[cofactor]; exists {
+			core.Cudd_RecursiveDeref(dd, cofactor)
+		} else {
+			seen[cofactor] = struct{}{}
+		}
+	}
+	for cofactor := range seen {
+		core.Cudd_RecursiveDeref(dd, cofactor)
+	}
+	return int32(len(seen))
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Recursively construct ADD for BDD.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-DdNode * Abc_NtkAddToBdd_rec( DdManager * dd, DdNode * aFunc, int nIns, int nOuts, stmm_table * tTable )
-{
-    DdNode * bFunc0, * bFunc1, * bFunc;
-    DdNode ** ppSlot;
-    assert( !Cudd_IsComplement(aFunc) );
-    if ( stmm_find_or_add( tTable, (char *)aFunc, (char ***)&ppSlot ) )
-        return *ppSlot;
-    if ( Cudd_IsConstant(aFunc) )
-    {
-        assert( Cudd_ReadSize(dd) >= nIns + nOuts );
-        bFunc  = Extra_bddBitsToCube( dd, (int)Cudd_V(aFunc), nOuts, dd->vars + nIns, 1 );  Cudd_Ref( bFunc );
-    }
-    else
-    {
-        assert( aFunc->index < nIns );
-        bFunc0 = Abc_NtkAddToBdd_rec( dd, cuddE(aFunc), nIns, nOuts, tTable );
-        bFunc1 = Abc_NtkAddToBdd_rec( dd, cuddT(aFunc), nIns, nOuts, tTable );                                                
-        bFunc  = Cudd_bddIte( dd, Cudd_bddIthVar(dd, aFunc->index), bFunc1, bFunc0 );  Cudd_Ref( bFunc );
-    }
-    return (*ppSlot = bFunc);
+func Abc_NtkExploreCofs2(dd *core.DdManager, function *core.DdNode, vars []*core.DdNode, inputs, lutSize int32) {
+	fmt.Printf("Inputs = %2d.  Nodes = %2d.  LutSize = %2d.\n", inputs, core.Cudd_DagSize(function), lutSize)
+	for i := int32(0); i <= inputs-lutSize; i++ {
+		fmt.Printf("[%2d %2d] : %3d\n", i, i+lutSize-1, Abc_NtkBddCofCount(dd, function, vars[i:i+lutSize], lutSize))
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [R]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-DdNode * Abc_NtkAddToBdd( DdManager * dd, DdNode * aFunc, int nIns, int nOuts )
-{
-    DdNode * bFunc, * bTemp, * aTemp;
-    stmm_table * tTable;
-    stmm_generator * gen;
-    tTable = stmm_init_table( st__ptrcmp, st__ptrhash );
-    bFunc = Abc_NtkAddToBdd_rec( dd, aFunc, nIns, nOuts, tTable );  
-    stmm_foreach_item( tTable, gen, (char **)&aTemp, (char **)&bTemp )
-        Cudd_RecursiveDeref( dd, bTemp );
-    stmm_free_table( tTable );
-    Cudd_Deref( bFunc );
-    return bFunc;
+func Abc_NtkExploreCofs(dd *core.DdManager, function *core.DdNode, vars []*core.DdNode, inputs, lutSize int32) {
+	if dd == nil || function == nil {
+		return
+	}
+	newDD := core.Cudd_Init(uint32(len(dd.Vars)), 0, core.CUDD_UNIQUE_SLOTS, core.CUDD_CACHE_SLOTS, 0)
+	if newDD == nil {
+		return
+	}
+	defer core.Cudd_Quit(newDD)
+	core.Cudd_ShuffleHeap(newDD, dd.InvPerm)
+	copyFunc := core.Cudd_bddTransfer(dd, newDD, function)
+	if copyFunc == nil {
+		return
+	}
+	for mask := 0; mask < 1<<uint(inputs); mask++ {
+		weight := bits.OnesCount(uint(mask))
+		if weight != int(lutSize) && weight != int(lutSize-1) && weight != int(lutSize-2) {
+			continue
+		}
+		selected := make([]*core.DdNode, 0, weight)
+		for k := int32(0); k < inputs; k++ {
+			if mask&(1<<uint(k)) != 0 {
+				selected = append(selected, core.Cudd_bddIthVar(newDD, int(k)))
+			}
+		}
+		cofs := Abc_NtkBddCofCount(newDD, copyFunc, selected, int32(len(selected)))
+		if cofs > 8 {
+			continue
+		}
+		for k := int32(0); k < inputs; k++ {
+			if mask&(1<<uint(k)) == 0 {
+				fmt.Print("-")
+			} else {
+				fmt.Printf("%c", 'a'+k)
+			}
+		}
+		fmt.Printf(" : %2d\n", cofs)
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Computes the characteristic function.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-DdNode * Abc_NtkBddDecCharFunc( DdManager * dd, DdNode ** pFuncs, int nOuts, int Mask, int nBits )
-{
-    DdNode * bFunc, * bTemp, * bExor, * bVar;
-    int i, Count = 0;
-    bFunc = Cudd_ReadOne( dd );  Cudd_Ref( bFunc );
-    for ( i = 0; i < nOuts; i++ )
-    {
-        if ( (Mask & (1 << i)) == 0 )
-            continue;
-        Count++;
-        bVar  = Cudd_bddIthVar( dd, dd->size - nOuts + i );
-        bExor = Cudd_bddXor( dd, pFuncs[i], bVar );                  Cudd_Ref( bExor );
-        bFunc = Cudd_bddAnd( dd, bTemp = bFunc, Cudd_Not(bExor) );   Cudd_Ref( bFunc );
-        Cudd_RecursiveDeref( dd, bTemp );
-        Cudd_RecursiveDeref( dd, bExor );
-    }
-    Cudd_Deref( bFunc );
-    assert( Count == nBits );
-    return bFunc;
+func Abc_NtkBddFindAddConst(dd *core.DdManager, function *core.DdNode, outputs int32) *core.DdNode {
+	mask := 0
+	for i := int32(0); i < outputs; i++ {
+		if function == nil || core.Cudd_IsConstant(function) {
+			return nil
+		}
+		low, high := core.Cudd_E(function), core.Cudd_T(function)
+		if core.Cudd_IsComplement(function) {
+			low, high = core.Cudd_Not(low), core.Cudd_Not(high)
+		}
+		if low == dd.LogicZero {
+			mask ^= 1 << uint(i)
+			function = high
+		} else if high == dd.LogicZero {
+			function = low
+		} else {
+			return nil
+		}
+	}
+	if function != dd.One {
+		return nil
+	}
+	return core.Cudd_addConst(dd, float64(mask))
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Evaluate Sasao's decomposition.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-DdNode * Abc_NtkBddDecTry( reo_man * pReo, DdManager * dd, DdNode ** pFuncs, int nIns, int nOuts, int Mask, int nBits )
-{
-//    int fReorder = 0;
-    DdNode * bFunc;//, * aFunc, * aFuncNew;
-    // derive the characteristic function
-    bFunc = Abc_NtkBddDecCharFunc( dd, pFuncs, nOuts, Mask, nBits );    Cudd_Ref( bFunc );
-/*
-    // transfer to ADD
-    aFunc = Abc_NtkBddToAdd( dd, bFunc, nOuts );                        Cudd_Ref( aFunc );
-    Cudd_RecursiveDeref( dd, bFunc );
-//Abc_NodeShowBddOne( dd, aFunc );
-
-    // perform reordering for BDD width
-    if ( fReorder )
-    {
-        aFuncNew = Extra_Reorder( pReo, dd, aFunc, NULL );              Cudd_Ref( aFuncNew );
-        printf( "Before = %d.  After = %d.\n", Cudd_DagSize(aFunc), Cudd_DagSize(aFuncNew) );
-        Cudd_RecursiveDeref( dd, aFunc );
-    }
-    else
-        aFuncNew = aFunc;
-
-    // get back to BDD
-    bFunc = Abc_NtkAddToBdd( dd, aFuncNew, nIns, nOuts );  Cudd_Ref( bFunc );
-    Cudd_RecursiveDeref( dd, aFuncNew );
-//Abc_NodeShowBddOne( dd, bFunc );
-    // print the result
-//    reoProfileWidthPrint( pReo );
-*/
-    Cudd_Deref( bFunc );
-    return bFunc;
+func Abc_NtkBddToAdd_rec(dd *core.DdManager, function *core.DdNode, outputs int32, table map[*core.DdNode]*core.DdNode, complement bool) *core.DdNode {
+	if function == nil {
+		return nil
+	}
+	if cached, ok := table[function]; ok {
+		return cached
+	}
+	if int(function.Index) >= len(dd.Vars)-int(outputs) {
+		result := Abc_NtkBddFindAddConst(dd, core.Cudd_NotCond(function, complement), outputs)
+		core.Cudd_Ref(result)
+		table[function] = result
+		return result
+	}
+	low, high := function.E, function.T
+	lowF := core.Cudd_IsComplement(low)
+	if core.Cudd_IsComplement(function) {
+		low, high = core.Cudd_Not(low), core.Cudd_Not(high)
+	}
+	low = core.Cudd_Regular(low)
+	high = core.Cudd_Regular(high)
+	a0 := Abc_NtkBddToAdd_rec(dd, low, outputs, table, complement != lowF)
+	a1 := Abc_NtkBddToAdd_rec(dd, high, outputs, table, complement)
+	result := core.Cudd_addIte(dd, core.Cudd_addIthVar(dd, int(function.Index)), a1, a0)
+	core.Cudd_Ref(result)
+	table[function] = result
+	return result
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Evaluate Sasao's decomposition.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-DdNode * Abc_NtkBddDecInt( reo_man * pReo, DdManager * dd, DdNode ** pFuncs, int nIns, int nOuts )
-{
-/*
-    int i, k;
-    for ( i = 1; i <= nOuts; i++ )
-    {
-        for ( k = 0; k < (1<<nOuts); k++ )
-            if ( Extra_WordCountOnes(k) == i )
-            {
-                Extra_PrintBinary( stdout, (unsigned *)&k, nOuts );
-                Abc_NtkBddDecTry( pReo, dd, pFuncs, nOuts, k, i );
-                printf( "\n" );
-            }
-    }
-*/
-    return Abc_NtkBddDecTry( pReo, dd, pFuncs, nIns, nOuts, ~(1<<(32-nOuts)), nOuts );
-
+func Abc_NtkBddToAdd(dd *core.DdManager, function *core.DdNode, outputs int32) *core.DdNode {
+	if dd == nil || function == nil {
+		return nil
+	}
+	table := make(map[*core.DdNode]*core.DdNode)
+	result := Abc_NtkBddToAdd_rec(dd, core.Cudd_Regular(function), outputs, table, core.Cudd_IsComplement(function))
+	for _, cached := range table {
+		core.Cudd_RecursiveDeref(dd, cached)
+	}
+	core.Cudd_Deref(result)
+	return result
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Evaluate Sasao's decomposition.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-Abc_Ntk_t * Abc_NtkCreateFromCharFunc( Abc_Ntk_t * pNtk, DdManager * dd, DdNode * bFunc )
-{    
-    Abc_Ntk_t * pNtkNew; 
-    Abc_Obj_t * pNode, * pNodeNew, * pNodePo;
-    int i;
-    // start the network
-    pNtkNew = Abc_NtkAlloc( ABC_NTK_LOGIC, ABC_FUNC_BDD, 1 );
-    pNtkNew->pName = Extra_UtilStrsav(pNtk->pName);
-    // create inputs for CIs
-    pNodeNew = Abc_NtkCreateNode( pNtkNew );
-    Abc_NtkForEachCi( pNtk, pNode, i )
-    {
-        pNode->pCopy = Abc_NtkCreatePi( pNtkNew );
-        Abc_ObjAddFanin( pNodeNew, pNode->pCopy );
-        Abc_ObjAssignName( pNode->pCopy, Abc_ObjName(pNode), NULL );
-    }
-    // create inputs for COs
-    Abc_NtkForEachCo( pNtk, pNode, i )
-    {
-        pNode->pCopy = Abc_NtkCreatePi( pNtkNew );
-        Abc_ObjAddFanin( pNodeNew, pNode->pCopy );
-        Abc_ObjAssignName( pNode->pCopy, Abc_ObjName(pNode), NULL );
-    }
-    // transfer BDD
-    pNodeNew->pData = Extra_TransferLevelByLevel( dd, (DdManager *)pNtkNew->pManFunc, bFunc ); Cudd_Ref( (DdNode *)pNodeNew->pData );
-    // transfer BDD into to be the local function
-    pNodePo = Abc_NtkCreatePo( pNtkNew );
-    Abc_ObjAddFanin( pNodePo, pNodeNew );
-    Abc_ObjAssignName( pNodePo, "out", NULL );
-    if ( !Abc_NtkCheck( pNtkNew ) )
-        fprintf( stdout, "Abc_NtkCreateFromCharFunc(): Network check has failed.\n" );
-    return pNtkNew;
+func Abc_NtkAddToBdd_rec(dd *core.DdManager, function *core.DdNode, inputs, outputs int32, table map[*core.DdNode]*core.DdNode) *core.DdNode {
+	if function == nil {
+		return nil
+	}
+	if result, ok := table[function]; ok {
+		return result
+	}
+	if core.Cudd_IsConstant(function) {
+		result := cascade.Extra_bddBitsToCube(dd, int(function.Value), int(outputs), dd.Vars[inputs:], true)
+		core.Cudd_Ref(result)
+		table[function] = result
+		return result
+	}
+	if int32(function.Index) >= inputs {
+		return nil
+	}
+	low := Abc_NtkAddToBdd_rec(dd, function.E, inputs, outputs, table)
+	high := Abc_NtkAddToBdd_rec(dd, function.T, inputs, outputs, table)
+	result := core.Cudd_bddIte(dd, core.Cudd_bddIthVar(dd, int(function.Index)), high, low)
+	core.Cudd_Ref(result)
+	table[function] = result
+	return result
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Evaluate Sasao's decomposition.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-Abc_Ntk_t * Abc_NtkBddDec( Abc_Ntk_t * pNtk, int fVerbose )
-{
-    int nBddSizeMax   = 1000000;
-    int fDropInternal =       0;
-    int fReorder      =       1;
-    Abc_Ntk_t * pNtkNew;
-    reo_man * pReo;
-    DdManager * dd;
-    DdNode * pFuncs[BDD_FUNC_MAX];
-    DdNode * bFunc;
-    Abc_Obj_t * pNode;
-    int i;
-    assert( Abc_NtkIsStrash(pNtk) );
-    assert( Abc_NtkCoNum(pNtk) <= BDD_FUNC_MAX );
-    dd = (DdManager *)Abc_NtkBuildGlobalBdds( pNtk, nBddSizeMax, fDropInternal, fReorder, 0, fVerbose );
-    if ( dd == NULL )
-    {
-        Abc_Print( -1, "Construction of global BDDs has failed.\n" );
-        return NULL;
-    }
-    // collect global BDDs
-    Abc_NtkForEachCo( pNtk, pNode, i )
-        pFuncs[i] = (DdNode *)Abc_ObjGlobalBdd(pNode);
-
-    // create new variables at the bottom
-    assert( dd->size == Abc_NtkCiNum(pNtk) );
-    for ( i = 0; i < Abc_NtkCoNum(pNtk); i++ )
-        Cudd_addNewVarAtLevel( dd, dd->size );
-
-    // prepare reordering engine
-    pReo = Extra_ReorderInit( Abc_NtkCiNum(pNtk), 1000 );
-    Extra_ReorderSetMinimizationType( pReo, REO_MINIMIZE_WIDTH );
-    Extra_ReorderSetVerification( pReo, 1 );
-    Extra_ReorderSetVerbosity( pReo, 1 );
-
-    // derive characteristic function
-    bFunc = Abc_NtkBddDecInt( pReo, dd, pFuncs, Abc_NtkCiNum(pNtk), Abc_NtkCoNum(pNtk) );  Cudd_Ref( bFunc );
-    Extra_ReorderQuit( pReo );
-
-Abc_NtkExploreCofs( dd, bFunc, dd->vars, Abc_NtkCiNum(pNtk), 6 );
-
-    // create new network
-//    pNtkNew = Abc_NtkCreateFromCharFunc( pNtk, dd, bFunc );
-    pNtkNew = Abc_NtkDup( pNtk );
-
-    // cleanup
-    Cudd_RecursiveDeref( dd, bFunc );
-    Abc_NtkFreeGlobalBdds( pNtk, 1 );
-    return pNtkNew;
+func Abc_NtkAddToBdd(dd *core.DdManager, function *core.DdNode, inputs, outputs int32) *core.DdNode {
+	if dd == nil || function == nil {
+		return nil
+	}
+	table := make(map[*core.DdNode]*core.DdNode)
+	result := Abc_NtkAddToBdd_rec(dd, function, inputs, outputs, table)
+	for _, cached := range table {
+		core.Cudd_RecursiveDeref(dd, cached)
+	}
+	core.Cudd_Deref(result)
+	return result
 }
 
-#else
+func Abc_NtkBddDecCharFunc(dd *core.DdManager, functions []*core.DdNode, outputs int32, mask uint32, nBits int32) *core.DdNode {
+	if dd == nil || outputs < 0 || int(outputs) > len(functions) || int(outputs) > len(dd.Vars) {
+		return nil
+	}
+	result := dd.One
+	count := int32(0)
+	for i := int32(0); i < outputs; i++ {
+		if mask&(uint32(1)<<uint(i)) == 0 {
+			continue
+		}
+		if functions[i] == nil {
+			return nil
+		}
+		count++
+		out := core.Cudd_bddIthVar(dd, len(dd.Vars)-int(outputs)+int(i))
+		result = core.Cudd_bddAnd(dd, result, core.Cudd_Not(core.Cudd_bddXor(dd, functions[i], out)))
+		if result == nil {
+			return nil
+		}
+	}
+	if count != nBits {
+		return nil
+	}
+	return result
+}
 
-Abc_Ntk_t * Abc_NtkBddDec( Abc_Ntk_t * pNtk, int fVerbose ) { return NULL; }
+func Abc_NtkBddDecTry(reorder *reo.Manager, dd *core.DdManager, functions []*core.DdNode, inputs, outputs int32, mask uint32, nBits int32) *core.DdNode {
+	return Abc_NtkBddDecCharFunc(dd, functions, outputs, mask, nBits)
+}
 
-#endif
+func Abc_NtkBddDecInt(reorder *reo.Manager, dd *core.DdManager, functions []*core.DdNode, inputs, outputs int32) *core.DdNode {
+	if outputs <= 0 || outputs >= 32 {
+		return nil
+	}
+	return Abc_NtkBddDecTry(reorder, dd, functions, inputs, outputs, ^(uint32(1) << uint(32-outputs)), outputs)
+}
 
-//ABC_NAMESPACE_IMPL_END
+func Abc_NtkCreateFromCharFunc(n *Abc_Ntk_t, dd *core.DdManager, function *core.DdNode) *Abc_Ntk_t {
+	if n == nil || dd == nil || function == nil {
+		return nil
+	}
+	out := abc.Abc_NtkAlloc(abc.ABC_NTK_LOGIC, abc.ABC_FUNC_BDD, 1)
+	out.Name = n.Name
+	root := abc.Abc_NtkCreateNode(out)
+	for _, old := range n.Inputs() {
+		pi := abc.Abc_NtkCreatePi(out)
+		abc.Abc_ObjAddFanin(root, pi)
+		abc.Abc_ObjAssignName(pi, old.Name(), "")
+	}
+	for _, old := range n.Outputs() {
+		pi := abc.Abc_NtkCreatePi(out)
+		abc.Abc_ObjAddFanin(root, pi)
+		abc.Abc_ObjAssignName(pi, old.Name(), "")
+	}
+	newDD := out.FunctionManager.(*core.DdManager)
+	root.Data = extrab.Extra_TransferLevelByLevel(dd, newDD, function)
+	if root.Data == nil {
+		return nil
+	}
+	core.Cudd_Ref(root.Data.(*core.DdNode))
+	po := abc.Abc_NtkCreatePo(out)
+	abc.Abc_ObjAddFanin(po, root)
+	abc.Abc_ObjAssignName(po, "out", "")
+	if abc.Abc_NtkCheck(out) == 0 {
+		fmt.Println("Abc_NtkCreateFromCharFunc(): Network check has failed.")
+	}
+	return out
+}
 
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
+func Abc_NtkBddDec(n *Abc_Ntk_t, verbose int32) *Abc_Ntk_t {
+	if n == nil || abc.Abc_NtkIsStrash(n) == 0 || abc.Abc_NtkCoNum(n) > BDD_FUNC_MAX {
+		return nil
+	}
+	dd := Abc_NtkBuildGlobalBdds(n, 1000000, 0, 1, 0, verbose)
+	if dd == nil {
+		Abc_Print(-1, "Construction of global BDDs has failed.\n")
+		return nil
+	}
+	defer Abc_NtkFreeGlobalBdds(n, 1)
+	functions := make([]*core.DdNode, abc.Abc_NtkCoNum(n))
+	for i, co := range n.Outputs() {
+		functions[i] = Abc_ObjGlobalBdd(co)
+	}
+	if len(dd.Vars) != len(n.Inputs()) {
+		return nil
+	}
+	for i := 0; i < len(functions); i++ {
+		core.Cudd_addNewVarAtLevel(dd, len(dd.Vars))
+	}
+	reorder := reo.Extra_ReorderInit(len(n.Inputs()), 1000)
+	defer reo.Extra_ReorderQuit(reorder)
+	reo.Extra_ReorderSetMinimizationType(reorder, reo.REO_MINIMIZE_WIDTH)
+	reo.Extra_ReorderSetVerification(reorder, 1)
+	reo.Extra_ReorderSetVerbosity(reorder, 1)
+	characteristic := Abc_NtkBddDecInt(reorder, dd, functions, int32(len(n.Inputs())), int32(len(functions)))
+	if characteristic == nil {
+		return nil
+	}
+	core.Cudd_Ref(characteristic)
+	defer core.Cudd_RecursiveDeref(dd, characteristic)
+	Abc_NtkExploreCofs(dd, characteristic, dd.Vars, int32(len(n.Inputs())), 6)
+	return abc.Abc_NtkDup(n)
+}

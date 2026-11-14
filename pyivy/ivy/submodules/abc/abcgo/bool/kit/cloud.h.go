@@ -53,6 +53,11 @@ type CloudCacheEntry1 struct {
 	s    CloudSign
 	a, r *CloudNode
 }
+
+// Cloud_One and Cloud_Var return nodes owned by the supplied manager.
+func Cloud_One(dd *CloudManager) *CloudNode          { return dd.one }
+func Cloud_Var(dd *CloudManager, i int32) *CloudNode { return dd.vars[i] }
+
 type CloudCacheEntry2 struct {
 	s       CloudSign
 	a, b, r *CloudNode

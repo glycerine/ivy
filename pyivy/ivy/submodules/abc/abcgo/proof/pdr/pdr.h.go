@@ -83,6 +83,28 @@ type Pdr_Par_t struct {
 	pInvFileName     string                             // invariable file name
 }
 
+// SetVerbose updates the main PDR verbosity flag from dependent packages.
+func (p *Pdr_Par_t) SetVerbose(value int32)  { p.fVerbose = value }
+func (p *Pdr_Par_t) SetUseAbs(value int32)   { p.fUseAbs = value }
+func (p *Pdr_Par_t) SetCtgs(value int32)     { p.fCtgs = value }
+func (p *Pdr_Par_t) SetSkipDown(value int32) { p.fSkipDown = value }
+
+// SetStopFunc installs the caller's cancellation callback and run identifier.
+func (p *Pdr_Par_t) SetStopFunc(runID int32, stop func(int32) int32) {
+	p.RunId = runID
+	p.pFuncStop = stop
+}
+
+// ConfigureWlc applies the word-level abstraction client's PDR options.
+func (p *Pdr_Par_t) ConfigureWlc(verbose, runID int32, stop func(int32) int32, abstraction int32) {
+	p.fVerbose = verbose
+	p.fVeryVerbose = 0
+	p.RunId, p.pFuncStop = runID, stop
+	if abstraction != 0 {
+		p.fUseAbs, p.fCtgs, p.fSkipDown, p.nRestLimit = 1, 1, 0, 500
+	}
+}
+
 ////////////////////////////////////////////////////////////////////////
 ///                      MACRO DEFINITIONS                           ///
 ////////////////////////////////////////////////////////////////////////

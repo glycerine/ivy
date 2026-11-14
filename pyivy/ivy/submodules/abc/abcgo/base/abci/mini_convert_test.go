@@ -53,6 +53,11 @@ func TestMiniAigSourceConversionRoundTrip(t *testing.T) {
 	if miniaig.Mini_AigPiNum(q) != 2 || miniaig.Mini_AigPoNum(q) != 2 {
 		t.Fatalf("roundtrip interface PI=%d PO=%d", miniaig.Mini_AigPiNum(q), miniaig.Mini_AigPoNum(q))
 	}
+	// Original C Abc_NtkFromMiniAig/Abc_NtkToMiniAig emits this exact
+	// object order and fanin encoding for the fixture.
+	if miniaig.Mini_AigNodeNum(q) != 6 || miniaig.Mini_AigNodeFanin0(q, 3) != 2 || miniaig.Mini_AigNodeFanin1(q, 3) != 5 || miniaig.Mini_AigNodeFanin0(q, 4) != 6 || miniaig.Mini_AigNodeFanin0(q, 5) != 1 {
+		t.Fatal("MiniAIG object order differs from original C")
+	}
 	for mask := 0; mask < 4; mask++ {
 		values := []bool{mask&1 != 0, mask&2 != 0}
 		want := evalMiniForTest(p, values)

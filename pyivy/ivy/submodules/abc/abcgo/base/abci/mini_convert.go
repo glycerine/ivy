@@ -34,6 +34,9 @@ func miniCopiedFanin(copies []abc.Edge, literal int) abc.Edge {
 	return edge
 }
 func Abc_NtkFromMiniAig(p *miniaig.Mini_Aig_t) *abc.Network {
+	if p == nil {
+		return nil
+	}
 	n := abc.Abc_NtkAlloc(abc.ABC_NTK_STRASH, abc.ABC_FUNC_AIG, 1)
 	n.Name = "MiniAig"
 	copies := make([]abc.Edge, 1, miniaig.Mini_AigNodeNum(p))
@@ -61,7 +64,9 @@ func Abc_NtkFromMiniAig(p *miniaig.Mini_Aig_t) *abc.Network {
 		fmt.Println("Abc_NtkFromMini(): Network check has failed.")
 	}
 	if miniaig.Mini_AigRegNum(p) > 0 {
-		n = abc.Abc_NtkRestrashWithLatches(n, int32(miniaig.Mini_AigRegNum(p)))
+		temp := n
+		n = abc.Abc_NtkRestrashWithLatches(temp, int32(miniaig.Mini_AigRegNum(p)))
+		abc.Abc_NtkDelete(temp)
 	}
 	return n
 }

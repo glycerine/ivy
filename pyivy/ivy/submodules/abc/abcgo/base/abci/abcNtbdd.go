@@ -1,678 +1,442 @@
 package abci
 
-/**CFile****************************************************************
+import (
+	"fmt"
 
-  FileName    [abcNtbdd.c]
+	"github.com/glycerine/abcgo/base/abc"
+	"github.com/glycerine/abcgo/bdd/cudd/core"
+	"github.com/glycerine/abcgo/misc/extra"
+	"github.com/glycerine/abcgo/misc/util"
+	"github.com/glycerine/abcgo/misc/vec"
+)
 
-  SystemName  [ABC: Logic synthesis and verification system.]
+const abcGlobalBddAttr = int(vec.VEC_ATTR_GLOBAL_BDD)
 
-  PackageName [Network and node package.]
-
-  Synopsis    [Procedures to translate between the BDD and the network.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: abcNtbdd.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "base/abc/abc.h"
-//#include "aig/saig/saig.h"
-
-#ifdef ABC_USE_CUDD
-#include "bdd/extrab/extraBdd.h"
-#endif
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-#ifdef ABC_USE_CUDD
-
-static int         Abc_NtkBddToMuxesPerformGlo( Abc_Ntk_t * pNtk, Abc_Ntk_t * pNtkNew, int Limit );
-static void        Abc_NtkBddToMuxesPerform( Abc_Ntk_t * pNtk, Abc_Ntk_t * pNtkNew );
-static Abc_Obj_t * Abc_NodeBddToMuxes( Abc_Obj_t * pNodeOld, Abc_Ntk_t * pNtkNew );
-static Abc_Obj_t * Abc_NodeBddToMuxes_rec( DdManager * dd, DdNode * bFunc, Abc_Ntk_t * pNtkNew, st__table * tBdd2Node );
-static DdNode *    Abc_NodeGlobalBdds_rec( DdManager * dd, Abc_Obj_t * pNode, int nBddSizeMax, int fDropInternal, ProgressBar * pProgress, int * pCounter, int fVerbose );
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Constructs the network isomorphic to the given BDD.]
-
-  Description [Assumes that the BDD depends on the variables whose indexes
-  correspond to the names in the array (pNamesPi). Otherwise, returns NULL.
-  The resulting network comes with one node, whose functionality is
-  equal to the given BDD. To decompose this BDD into the network of
-  multiplexers use Abc_NtkBddToMuxes(). To decompose this BDD into
-  an And-Inverter Graph, use Abc_NtkStrash().]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-Abc_Ntk_t * Abc_NtkDeriveFromBdd( void * dd0, void * bFunc, char * pNamePo, Vec_Ptr_t * vNamesPi )
-{
-    DdManager * dd = (DdManager *)dd0;
-    Abc_Ntk_t * pNtk; 
-    Vec_Ptr_t * vNamesPiFake = NULL;
-    Abc_Obj_t * pNode, * pNodePi, * pNodePo;
-    DdNode * bSupp, * bTemp;
-    char * pName;
-    int i;
-
-    // supply fake names if real names are not given
-    if ( pNamePo == NULL )
-        pNamePo = "F";
-    if ( vNamesPi == NULL )
-    {
-        vNamesPiFake = Abc_NodeGetFakeNames( dd->size );
-        vNamesPi = vNamesPiFake;
-    }
-
-    // make sure BDD depends on the variables whose index 
-    // does not exceed the size of the array with PI names
-    bSupp = Cudd_Support( dd, (DdNode *)bFunc );   Cudd_Ref( bSupp );
-    for ( bTemp = bSupp; bTemp != Cudd_ReadOne(dd); bTemp = cuddT(bTemp) )
-        if ( (int)Cudd_NodeReadIndex(bTemp) >= Vec_PtrSize(vNamesPi) )
-            break;
-    Cudd_RecursiveDeref( dd, bSupp );
-    if ( bTemp != Cudd_ReadOne(dd) )
-        return NULL;
-
-    // start the network
-    pNtk = Abc_NtkAlloc( ABC_NTK_LOGIC, ABC_FUNC_BDD, 1 );
-    pNtk->pName = Extra_UtilStrsav(pNamePo);
-    // make sure the new manager has enough inputs
-    Cudd_bddIthVar( (DdManager *)pNtk->pManFunc, Vec_PtrSize(vNamesPi) );
-    // add the PIs corresponding to the names
-    Vec_PtrForEachEntry( char *, vNamesPi, pName, i )
-        Abc_ObjAssignName( Abc_NtkCreatePi(pNtk), pName, NULL );
-    // create the node
-    pNode = Abc_NtkCreateNode( pNtk );
-    pNode->pData = (DdNode *)Cudd_bddTransfer( dd, (DdManager *)pNtk->pManFunc, (DdNode *)bFunc ); Cudd_Ref((DdNode *)pNode->pData);
-    Abc_NtkForEachPi( pNtk, pNodePi, i )
-        Abc_ObjAddFanin( pNode, pNodePi );
-    // create the only PO
-    pNodePo = Abc_NtkCreatePo( pNtk );
-    Abc_ObjAddFanin( pNodePo, pNode );
-    Abc_ObjAssignName( pNodePo, pNamePo, NULL );
-    // make the network minimum base
-    Abc_NtkMinimumBase( pNtk );
-    if ( vNamesPiFake )
-        Abc_NodeFreeNames( vNamesPiFake );
-    if ( !Abc_NtkCheck( pNtk ) )
-        fprintf( stdout, "Abc_NtkDeriveFromBdd(): Network check has failed.\n" );
-    return pNtk;
+func abcGlobalBddAttrManager(n *abc.Network) *core.DdManager {
+	if n == nil || abcGlobalBddAttr >= len(n.Attributes) || n.Attributes[abcGlobalBddAttr] == nil {
+		return nil
+	}
+	manager, _ := vec.Vec_AttMan(n.Attributes[abcGlobalBddAttr]).(*core.DdManager)
+	return manager
 }
 
-
-
-/**Function*************************************************************
-
-  Synopsis    [Creates the network isomorphic to the union of local BDDs of the nodes.]
-
-  Description [The nodes of the local BDDs are converted into the network nodes 
-  with logic functions equal to the MUX.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-Abc_Ntk_t * Abc_NtkBddToMuxes( Abc_Ntk_t * pNtk, int fGlobal, int Limit )
-{
-    Abc_Ntk_t * pNtkNew;
-    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_LOGIC, ABC_FUNC_SOP );
-    if ( fGlobal ) 
-    {
-        if ( !Abc_NtkBddToMuxesPerformGlo( pNtk, pNtkNew, Limit ) )
-        {
-            Abc_NtkDelete( pNtkNew );
-            return NULL;
-        }
-    }
-    else
-    {
-        Abc_NtkBddToMuxesPerform( pNtk, pNtkNew );
-        Abc_NtkFinalize( pNtk, pNtkNew );
-    }
-    // make sure everything is okay
-    if ( !Abc_NtkCheck( pNtkNew ) )
-    {
-        printf( "Abc_NtkBddToMuxes: The network check has failed.\n" );
-        Abc_NtkDelete( pNtkNew );
-        return NULL;
-    }
-    return pNtkNew;
+func Abc_NtkGlobalBddMan(n *Abc_Ntk_t) *core.DdManager { return abcGlobalBddAttrManager(n) }
+func Abc_ObjGlobalBdd(o *Abc_Obj_t) *core.DdNode {
+	if o == nil || o.Network() == nil {
+		return nil
+	}
+	att := abcGlobalBddAttrManager(o.Network())
+	if att == nil {
+		return nil
+	}
+	value := vec.Vec_AttEntry(o.Network().Attributes[abcGlobalBddAttr], o.ID)
+	bdd, _ := value.(*core.DdNode)
+	return bdd
+}
+func Abc_ObjSetGlobalBdd(o *Abc_Obj_t, bdd *core.DdNode) {
+	if o == nil || o.Network() == nil {
+		return
+	}
+	att := abcGlobalBddAttrManager(o.Network())
+	if att == nil {
+		panic("Abc_ObjSetGlobalBdd: global BDD manager is not attached")
+	}
+	vec.Vec_AttWriteEntry(o.Network().Attributes[abcGlobalBddAttr], o.ID, bdd)
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Converts the network to MUXes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-void Abc_NtkBddToMuxesPerform( Abc_Ntk_t * pNtk, Abc_Ntk_t * pNtkNew )
-{
-    ProgressBar * pProgress;
-    Abc_Obj_t * pNode, * pNodeNew;
-    Vec_Ptr_t * vNodes;
-    int i;
-    assert( Abc_NtkIsBddLogic(pNtk) );
-    // perform conversion in the topological order
-    vNodes = Abc_NtkDfs( pNtk, 0 );
-    pProgress = Extra_ProgressBarStart( stdout, vNodes->nSize );
-    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pNode, i )
-    {
-        Extra_ProgressBarUpdate( pProgress, i, NULL );
-        // convert one node
-        assert( Abc_ObjIsNode(pNode) );
-        pNodeNew = Abc_NodeBddToMuxes( pNode, pNtkNew );
-        // mark the old node with the new one
-        assert( pNode->pCopy == NULL );
-        pNode->pCopy = pNodeNew;
-    }
-    Vec_PtrFree( vNodes );
-    Extra_ProgressBarStop( pProgress );
+// Abc_NtkBuildGlobalBdds computes a shared BDD for each CO in an AIG network.
+// As in ABC, internal BDD references can be dropped once all fanouts consumed them.
+func Abc_NtkBuildGlobalBdds(n *Abc_Ntk_t, sizeMax, dropInternal, reorder, reverse, verbose int32) *core.DdManager {
+	if n == nil || abc.Abc_NtkIsStrash(n) == 0 {
+		return nil
+	}
+	if abcGlobalBddAttrManager(n) != nil {
+		panic("Abc_NtkBuildGlobalBdds: global BDDs already exist")
+	}
+	if mgr, ok := n.FunctionManager.(*abc.Abc_Aig_t); ok {
+		abc.Abc_AigCleanup(mgr)
+	}
+	d := core.Cudd_Init(uint32(abc.Abc_NtkCiNum(n)), 0, core.CUDD_UNIQUE_SLOTS, core.CUDD_CACHE_SLOTS, 0)
+	if d == nil {
+		return nil
+	}
+	att := vec.Vec_AttAlloc(int(abc.Abc_NtkObjNumMax(n))+1, d,
+		func(v any) {
+			if m, ok := v.(*core.DdManager); ok {
+				core.Cudd_Quit(m)
+			}
+		}, nil,
+		func(m, v any) {
+			if dd, ok := m.(*core.DdManager); ok {
+				if node, ok := v.(*core.DdNode); ok {
+					core.Cudd_RecursiveDeref(dd, node)
+				}
+			}
+		})
+	for len(n.Attributes) <= abcGlobalBddAttr {
+		n.Attributes = append(n.Attributes, nil)
+	}
+	n.Attributes[abcGlobalBddAttr] = att
+	if reorder != 0 {
+		core.Cudd_AutodynEnable(d, core.CUDD_REORDER_SYMM_SIFT)
+	}
+	remaining := make(map[*abc.Object]int32)
+	for _, obj := range n.Objects() {
+		remaining[obj] = abc.Abc_ObjFanoutNum(obj)
+	}
+	var constant *abc.Object
+	for _, obj := range n.Objects() {
+		if obj.Kind == abc.ObjectConst1 {
+			constant = obj
+			break
+		}
+	}
+	if constant != nil && remaining[constant] > 0 {
+		core.Cudd_Ref(d.One)
+		Abc_ObjSetGlobalBdd(constant, d.One)
+	}
+	ciIndex := 0
+	for _, ci := range n.Objects() {
+		if !ci.IsCI() {
+			continue
+		}
+		idx := ciIndex
+		ciIndex++
+		if remaining[ci] == 0 {
+			continue
+		}
+		if reverse != 0 {
+			idx = int(abc.Abc_NtkCiNum(n)) - 1 - idx
+		}
+		if idx < 0 || idx >= len(d.Vars) {
+			idx = ci.TerminalIndex
+		}
+		if idx < 0 || idx >= len(d.Vars) {
+			continue
+		}
+		v := d.Vars[idx]
+		core.Cudd_Ref(v)
+		Abc_ObjSetGlobalBdd(ci, v)
+	}
+	progress := extra.Extra_ProgressBarStart(nil, abc.Abc_NtkNodeNum(n))
+	counter := int32(0)
+	for _, co := range n.Objects() {
+		if !co.IsCO() {
+			continue
+		}
+		fanins := co.Fanins()
+		if len(fanins) == 0 {
+			continue
+		}
+		f := fanins[0]
+		bdd := abcNodeGlobalBddRec(d, f.Object, sizeMax, dropInternal != 0, remaining, progress, &counter, verbose != 0)
+		if bdd == nil {
+			Abc_NtkFreeGlobalBdds(n, 1)
+			return nil
+		}
+		bdd = core.Cudd_NotCond(bdd, f.Complement)
+		core.Cudd_Ref(bdd)
+		Abc_ObjSetGlobalBdd(co, bdd)
+	}
+	extra.Extra_ProgressBarStop(progress)
+	if reorder != 0 {
+		core.Cudd_ReduceHeap(d, core.CUDD_REORDER_SYMM_SIFT, 1)
+		core.Cudd_AutodynDisable(d)
+	}
+	return d
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Converts the node to MUXes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-Abc_Obj_t * Abc_NodeBddToMuxes( Abc_Obj_t * pNodeOld, Abc_Ntk_t * pNtkNew )
-{
-    DdManager * dd = (DdManager *)pNodeOld->pNtk->pManFunc;
-    DdNode * bFunc = (DdNode *)pNodeOld->pData;
-    Abc_Obj_t * pFaninOld, * pNodeNew;
-    st__table * tBdd2Node;
-    int i;
-    // create the table mapping BDD nodes into the ABC nodes
-    tBdd2Node = st__init_table( st__ptrcmp, st__ptrhash );
-    // add the constant and the elementary vars
-    Abc_ObjForEachFanin( pNodeOld, pFaninOld, i )
-        st__insert( tBdd2Node, (char *)Cudd_bddIthVar(dd, i), (char *)pFaninOld->pCopy );
-    // create the new nodes recursively
-    pNodeNew = Abc_NodeBddToMuxes_rec( dd, Cudd_Regular(bFunc), pNtkNew, tBdd2Node );
-    st__free_table( tBdd2Node );
-    if ( Cudd_IsComplement(bFunc) )
-        pNodeNew = Abc_NtkCreateNodeInv( pNtkNew, pNodeNew );
-    return pNodeNew;
+func abcNodeGlobalBddRec(d *core.DdManager, node *abc.Object, limit int32, drop bool, remaining map[*abc.Object]int32, progress *extra.ProgressBar, counter *int32, verbose bool) *core.DdNode {
+	if node == nil {
+		return nil
+	}
+	if old := Abc_ObjGlobalBdd(node); old != nil {
+		remaining[node]--
+		if drop && remaining[node] == 0 {
+			core.Cudd_Deref(old)
+			Abc_ObjSetGlobalBdd(node, nil)
+		}
+		return old
+	}
+	if limit > 0 && int64(core.Cudd_ReadKeys(d)-core.Cudd_ReadDead(d)) > int64(limit) {
+		extra.Extra_ProgressBarStop(progress)
+		if verbose {
+			fmt.Printf("The number of live nodes reached %d.\n", limit)
+		}
+		return nil
+	}
+	fanins := node.Fanins()
+	if len(fanins) != 2 {
+		return nil
+	}
+	f0 := abcNodeGlobalBddRec(d, fanins[0].Object, limit, drop, remaining, progress, counter, verbose)
+	if f0 == nil {
+		return nil
+	}
+	core.Cudd_Ref(f0)
+	f1 := abcNodeGlobalBddRec(d, fanins[1].Object, limit, drop, remaining, progress, counter, verbose)
+	if f1 == nil {
+		core.Cudd_RecursiveDeref(d, f0)
+		return nil
+	}
+	core.Cudd_Ref(f1)
+	f0 = core.Cudd_NotCond(f0, fanins[0].Complement)
+	f1 = core.Cudd_NotCond(f1, fanins[1].Complement)
+	f := core.Cudd_bddAndLimit(d, f0, f1, uint32(max(int32(0), limit)))
+	core.Cudd_RecursiveDeref(d, f0)
+	core.Cudd_RecursiveDeref(d, f1)
+	if f == nil {
+		return nil
+	}
+	core.Cudd_Ref(f)
+	Abc_ObjSetGlobalBdd(node, f)
+	*counter++
+	extra.Extra_ProgressBarUpdate(progress, *counter, "")
+	remaining[node]--
+	if drop && remaining[node] == 0 {
+		core.Cudd_Deref(f)
+		Abc_ObjSetGlobalBdd(node, nil)
+	}
+	return f
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Converts the node to MUXes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-Abc_Obj_t * Abc_NodeBddToMuxes_rec( DdManager * dd, DdNode * bFunc, Abc_Ntk_t * pNtkNew, st__table * tBdd2Node )
-{
-    Abc_Obj_t * pNodeNew, * pNodeNew0, * pNodeNew1, * pNodeNewC;
-    assert( !Cudd_IsComplement(bFunc) );
-    if ( bFunc == b1 )
-        return Abc_NtkCreateNodeConst1(pNtkNew);
-    if ( st__lookup( tBdd2Node, (char *)bFunc, (char **)&pNodeNew ) )
-        return pNodeNew;
-    // solve for the children nodes
-    pNodeNew0 = Abc_NodeBddToMuxes_rec( dd, Cudd_Regular(cuddE(bFunc)), pNtkNew, tBdd2Node );
-    if ( Cudd_IsComplement(cuddE(bFunc)) )
-        pNodeNew0 = Abc_NtkCreateNodeInv( pNtkNew, pNodeNew0 );
-    pNodeNew1 = Abc_NodeBddToMuxes_rec( dd, cuddT(bFunc), pNtkNew, tBdd2Node );
-    if ( ! st__lookup( tBdd2Node, (char *)Cudd_bddIthVar(dd, bFunc->index), (char **)&pNodeNewC ) )
-        assert( 0 );
-    // create the MUX node
-    pNodeNew = Abc_NtkCreateNodeMux( pNtkNew, pNodeNewC, pNodeNew1, pNodeNew0 );
-    st__insert( tBdd2Node, (char *)bFunc, (char *)pNodeNew );
-    return pNodeNew;
+func Abc_NtkFreeGlobalBdds(n *Abc_Ntk_t, freeManager int32) *core.DdManager {
+	if n == nil || abcGlobalBddAttrManager(n) == nil {
+		return nil
+	}
+	value := abc.Abc_NtkAttrFree(n, int32(abcGlobalBddAttr), freeManager)
+	manager, _ := value.(*core.DdManager)
+	return manager
+}
+func Abc_NtkSizeOfGlobalBdds(n *Abc_Ntk_t) int32 {
+	if n == nil {
+		return 0
+	}
+	var roots []*core.DdNode
+	for _, o := range n.Objects() {
+		if o.IsCO() {
+			if f := Abc_ObjGlobalBdd(o); f != nil {
+				roots = append(roots, f)
+			}
+		}
+	}
+	seen := make(map[*core.DdNode]struct{})
+	var visit func(*core.DdNode)
+	visit = func(f *core.DdNode) {
+		if f == nil {
+			return
+		}
+		f = core.Cudd_Regular(f)
+		if _, ok := seen[f]; ok {
+			return
+		}
+		seen[f] = struct{}{}
+		if !core.Cudd_IsConstant(f) {
+			visit(f.T)
+			visit(f.E)
+		}
+	}
+	for _, f := range roots {
+		visit(f)
+	}
+	return int32(len(seen))
 }
 
-/**Function*************************************************************
+// C source currently leaves this experimental metric disabled.
+func Abc_NtkSpacePercentage(node *Abc_Obj_t) float64 { return 0 }
 
-  Synopsis    [Converts the node to MUXes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-int Abc_NtkBddToMuxesPerformGlo( Abc_Ntk_t * pNtk, Abc_Ntk_t * pNtkNew, int Limit )
-{
-    DdManager * dd;
-    Abc_Obj_t * pObj, * pObjNew; int i;
-    st__table * tBdd2Node;
-    assert( Abc_NtkIsStrash(pNtk) );
-    dd = (DdManager *)Abc_NtkBuildGlobalBdds( pNtk, Limit, 1, 1, 0, 0 );
-    if ( dd == NULL )
-    {
-        printf( "Construction of global BDDs has failed.\n" );
-        return 0;
-    }
-    //printf( "Shared BDD size = %6d nodes.\n", Cudd_ReadKeys(dd) - Cudd_ReadDead(dd) );
-
-    tBdd2Node = st__init_table( st__ptrcmp, st__ptrhash );
-    Abc_NtkForEachCi( pNtkNew, pObjNew, i )
-        st__insert( tBdd2Node, (char *)Cudd_bddIthVar(dd, i), (char *)pObjNew );
-
-    // complement the global functions
-    Abc_NtkForEachCo( pNtk, pObj, i )
-    {
-        DdNode * bFunc = (DdNode *)Abc_ObjGlobalBdd(pObj);
-        pObjNew = Abc_NodeBddToMuxes_rec( dd, Cudd_Regular(bFunc), pNtkNew, tBdd2Node );
-        if ( Cudd_IsComplement(bFunc) )
-            pObjNew = Abc_NtkCreateNodeInv( pNtkNew, pObjNew );
-        Abc_ObjAddFanin( pObj->pCopy, pObjNew );
-    }
-
-    // cleanup
-    st__free_table( tBdd2Node );
-    Abc_NtkFreeGlobalBdds( pNtk, 0 );
-    Extra_StopManager( dd );
-    Abc_NtkCleanCopy( pNtk );
-    return 1;
+// BDD-to-MUX conversion is available for local BDD networks and shared AIG BDDs.
+func Abc_NtkBddToMuxes(n *Abc_Ntk_t, global int32, limit int32) *Abc_Ntk_t {
+	if n == nil {
+		return nil
+	}
+	out := abc.Abc_NtkStartFrom(n, abc.ABC_NTK_LOGIC, abc.ABC_FUNC_SOP)
+	finalize := false
+	if global != 0 {
+		dd := Abc_NtkBuildGlobalBdds(n, limit, 1, 1, 0, 0)
+		if dd == nil {
+			abc.Abc_NtkDelete(out)
+			return nil
+		}
+		mapping := make(map[*core.DdNode]*abc.Object)
+		ciIndex := 0
+		for _, ci := range out.Objects() {
+			if ci.IsCI() && ciIndex < len(dd.Vars) {
+				mapping[dd.Vars[ciIndex]] = ci
+				ciIndex++
+			}
+		}
+		for _, co := range n.Objects() {
+			if !co.IsCO() {
+				continue
+			}
+			b := Abc_ObjGlobalBdd(co)
+			if b == nil {
+				continue
+			}
+			fanins := co.Fanins()
+			if len(fanins) == 0 {
+				continue
+			}
+			dst := fanins[0].Object.Copy
+			x := abcBddToMuxRec(dd, core.Cudd_Regular(b), out, mapping)
+			if core.Cudd_IsComplement(b) {
+				x = abc.Abc_NtkCreateNodeInv(out, x)
+			}
+			abc.Abc_ObjAddFanin(dst, x)
+		}
+		Abc_NtkFreeGlobalBdds(n, 0)
+		core.Cudd_Quit(dd)
+		abc.Abc_NtkCleanCopy(n)
+	} else {
+		if abc.Abc_NtkIsBddLogic(n) == 0 {
+			abc.Abc_NtkDelete(out)
+			return nil
+		}
+		finalize = true
+		for _, old := range abc.Abc_NtkDfs(n, 0) {
+			if old.Kind != abc.ObjectNode {
+				continue
+			}
+			b, ok := old.Data.(*core.DdNode)
+			if !ok || b == nil {
+				abc.Abc_NtkCleanCopy(n)
+				abc.Abc_NtkDelete(out)
+				return nil
+			}
+			cache := make(map[*core.DdNode]*abc.Object)
+			for i, edge := range old.Fanins() {
+				cache[core.Cudd_bddIthVar(n.FunctionManager.(*core.DdManager), i)] = edge.Object.Copy
+			}
+			x := abcBddToMuxRec(n.FunctionManager.(*core.DdManager), core.Cudd_Regular(b), out, cache)
+			if core.Cudd_IsComplement(b) {
+				x = abc.Abc_NtkCreateNodeInv(out, x)
+			}
+			old.Copy = x
+		}
+	}
+	if finalize {
+		abc.Abc_NtkFinalize(n, out)
+		abc.Abc_NtkCleanCopy(n)
+	}
+	if abc.Abc_NtkCheck(out) == 0 {
+		abc.Abc_NtkDelete(out)
+		return nil
+	}
+	return out
+}
+func abcBddToMuxRec(dd *core.DdManager, f *core.DdNode, n *abc.Network, cache map[*core.DdNode]*abc.Object) *abc.Object {
+	if f == nil {
+		return nil
+	}
+	f = core.Cudd_Regular(f)
+	if f == dd.One {
+		return abc.Abc_NtkCreateNodeConst1(n)
+	}
+	if x := cache[f]; x != nil {
+		return x
+	}
+	e := f.E
+	t := f.T
+	low := abcBddToMuxRec(dd, core.Cudd_Regular(e), n, cache)
+	if core.Cudd_IsComplement(e) {
+		low = abc.Abc_NtkCreateNodeInv(n, low)
+	}
+	high := abcBddToMuxRec(dd, core.Cudd_Regular(t), n, cache)
+	control := cache[dd.Vars[f.Index]]
+	x := abc.Abc_NtkCreateNodeMux(n, control, high, low)
+	cache[f] = x
+	return x
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Derives global BDDs for the COs of the network.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-void * Abc_NtkBuildGlobalBdds( Abc_Ntk_t * pNtk, int nBddSizeMax, int fDropInternal, int fReorder, int fReverse, int fVerbose )
-{
-    ProgressBar * pProgress;
-    Abc_Obj_t * pObj, * pFanin;
-    Vec_Att_t * pAttMan;
-    DdManager * dd;
-    DdNode * bFunc;
-    int i, k, Counter;
-
-    // remove dangling nodes
-    Abc_AigCleanup( (Abc_Aig_t *)pNtk->pManFunc );
-
-    // start the manager
-    assert( Abc_NtkGlobalBdd(pNtk) == NULL );
-    dd = Cudd_Init( Abc_NtkCiNum(pNtk), 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );
-    pAttMan = Vec_AttAlloc( Abc_NtkObjNumMax(pNtk) + 1, dd, (void (*)(void*))Extra_StopManager, NULL, (void (*)(void*,void*))Cudd_RecursiveDeref );
-    Vec_PtrWriteEntry( pNtk->vAttrs, VEC_ATTR_GLOBAL_BDD, pAttMan );
-
-    // set reordering
-    if ( fReorder )
-        Cudd_AutodynEnable( dd, CUDD_REORDER_SYMM_SIFT );
-
-    // assign the constant node BDD
-    pObj = Abc_AigConst1(pNtk);
-    if ( Abc_ObjFanoutNum(pObj) > 0 )
-    {
-        bFunc = dd->one;
-        Abc_ObjSetGlobalBdd( pObj, bFunc );   Cudd_Ref( bFunc );
-    }
-    // set the elementary variables
-    Abc_NtkForEachCi( pNtk, pObj, i )
-        if ( Abc_ObjFanoutNum(pObj) > 0 )
-        {
-            bFunc = fReverse ? dd->vars[Abc_NtkCiNum(pNtk) - 1 - i] : dd->vars[i];
-            Abc_ObjSetGlobalBdd( pObj, bFunc );  Cudd_Ref( bFunc );
-        }
-
-    // collect the global functions of the COs
-    Counter = 0;
-    // construct the BDDs
-    pProgress = Extra_ProgressBarStart( stdout, Abc_NtkNodeNum(pNtk) );
-    Abc_NtkForEachCo( pNtk, pObj, i )
-    {
-        bFunc = Abc_NodeGlobalBdds_rec( dd, Abc_ObjFanin0(pObj), nBddSizeMax, fDropInternal, pProgress, &Counter, fVerbose );
-        if ( bFunc == NULL )
-        {
-            if ( fVerbose )
-            printf( "Constructing global BDDs is aborted.\n" );
-            Abc_NtkFreeGlobalBdds( pNtk, 0 );
-            Cudd_Quit( dd ); 
-
-            // reset references
-            Abc_NtkForEachObj( pNtk, pObj, i )
-                if ( !Abc_ObjIsBox(pObj) && !Abc_ObjIsBi(pObj) )
-                    pObj->vFanouts.nSize = 0;
-            Abc_NtkForEachObj( pNtk, pObj, i )
-                if ( !Abc_ObjIsBox(pObj) && !Abc_ObjIsBo(pObj) )
-                    Abc_ObjForEachFanin( pObj, pFanin, k )
-                        pFanin->vFanouts.nSize++;
-            return NULL;
-        }
-        bFunc = Cudd_NotCond( bFunc, (int)Abc_ObjFaninC0(pObj) );  Cudd_Ref( bFunc ); 
-        Abc_ObjSetGlobalBdd( pObj, bFunc );
-    }
-    Extra_ProgressBarStop( pProgress );
-
-/*
-    // derefence the intermediate BDDs
-    Abc_NtkForEachNode( pNtk, pObj, i )
-        if ( pObj->pCopy ) 
-        {
-            Cudd_RecursiveDeref( dd, (DdNode *)pObj->pCopy );
-            pObj->pCopy = NULL;
-        }
-*/
-/*
-    // make sure all nodes are derefed
-    Abc_NtkForEachObj( pNtk, pObj, i )
-    {
-        if ( pObj->pCopy != NULL )
-            printf( "Abc_NtkBuildGlobalBdds() error: Node %d has BDD assigned\n", pObj->Id );
-        if ( pObj->vFanouts.nSize > 0 )
-            printf( "Abc_NtkBuildGlobalBdds() error: Node %d has refs assigned\n", pObj->Id );
-    }
-*/
-    // reset references
-    Abc_NtkForEachObj( pNtk, pObj, i )
-        if ( !Abc_ObjIsBox(pObj) && !Abc_ObjIsBi(pObj) )
-            pObj->vFanouts.nSize = 0;
-    Abc_NtkForEachObj( pNtk, pObj, i )
-        if ( !Abc_ObjIsBox(pObj) && !Abc_ObjIsBo(pObj) )
-            Abc_ObjForEachFanin( pObj, pFanin, k )
-                pFanin->vFanouts.nSize++;
-
-    // reorder one more time
-    if ( fReorder )
-    {
-        Cudd_ReduceHeap( dd, CUDD_REORDER_SYMM_SIFT, 1 );
-        Cudd_AutodynDisable( dd );
-    }
-//    Cudd_PrintInfo( dd, stdout );
-    return dd;
+func Abc_NtkDeriveFromBdd(dd *core.DdManager, f *core.DdNode, poName string, piNames *vec.Vec_Ptr_t) *abc.Network {
+	if dd == nil || f == nil {
+		return nil
+	}
+	if poName == "" {
+		poName = "F"
+	}
+	fakeNames := piNames == nil
+	if fakeNames {
+		piNames = abc.Abc_NodeGetFakeNames(int32(len(dd.Vars)))
+		defer abc.Abc_NodeFreeNames(piNames)
+	}
+	supp := dd.Support(f)
+	for _, i := range supp {
+		if i >= vec.Vec_PtrSize(piNames) {
+			return nil
+		}
+	}
+	n := abc.Abc_NtkAlloc(abc.ABC_NTK_LOGIC, abc.ABC_FUNC_BDD, 1)
+	n.Name = poName
+	dst, ok := n.FunctionManager.(*core.DdManager)
+	if !ok || dst == nil {
+		return nil
+	}
+	core.Cudd_bddIthVar(dst, vec.Vec_PtrSize(piNames))
+	pis := make([]*abc.Object, vec.Vec_PtrSize(piNames))
+	for i := range pis {
+		pis[i] = abc.Abc_NtkCreatePi(n)
+		name, _ := vec.Vec_PtrEntry(piNames, i).(string)
+		pis[i].SetName(name)
+	}
+	node := abc.Abc_NtkCreateNode(n)
+	node.Data = core.Cudd_bddTransfer(dd, dst, f)
+	if node.Data == nil {
+		return nil
+	}
+	core.Cudd_Ref(node.Data.(*core.DdNode))
+	for _, pi := range pis {
+		abc.Abc_ObjAddFanin(node, pi)
+	}
+	po := abc.Abc_NtkCreatePo(n)
+	abc.Abc_ObjAddFanin(po, node)
+	po.SetName(poName)
+	abc.Abc_NtkMinimumBase(n)
+	if abc.Abc_NtkCheck(n) == 0 {
+		return nil
+	}
+	return n
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Derives the global BDD for one AIG node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-DdNode * Abc_NodeGlobalBdds_rec( DdManager * dd, Abc_Obj_t * pNode, int nBddSizeMax, int fDropInternal, ProgressBar * pProgress, int * pCounter, int fVerbose )
-{
-    DdNode * bFunc, * bFunc0, * bFunc1, * bFuncC;
-    int fDetectMuxes = 0;
-    assert( !Abc_ObjIsComplement(pNode) );
-    if ( Cudd_ReadKeys(dd)-Cudd_ReadDead(dd) > (unsigned)nBddSizeMax )
-    {
-        Extra_ProgressBarStop( pProgress );
-        if ( fVerbose )
-        printf( "The number of live nodes reached %d.\n", nBddSizeMax );
-        fflush( stdout );
-        return NULL;
-    }
-    // if the result is available return
-    if ( Abc_ObjGlobalBdd(pNode) == NULL )
-    {
-        Abc_Obj_t * pNodeC, * pNode0, * pNode1;
-        pNode0 = Abc_ObjFanin0(pNode);
-        pNode1 = Abc_ObjFanin1(pNode);
-        // check for the special case when it is MUX/EXOR
-        if ( fDetectMuxes && 
-             Abc_ObjGlobalBdd(pNode0) == NULL && Abc_ObjGlobalBdd(pNode1) == NULL &&
-             Abc_ObjIsNode(pNode0) && Abc_ObjFanoutNum(pNode0) == 1 && 
-             Abc_ObjIsNode(pNode1) && Abc_ObjFanoutNum(pNode1) == 1 && 
-             Abc_NodeIsMuxType(pNode) )
-        {
-            // deref the fanins
-            pNode0->vFanouts.nSize--;
-            pNode1->vFanouts.nSize--;
-            // recognize the MUX
-            pNodeC = Abc_NodeRecognizeMux( pNode, &pNode1, &pNode0 );
-            assert( Abc_ObjFanoutNum(pNodeC) > 1 );
-            // dereference the control once (the second time it will be derefed when BDDs are computed)
-            pNodeC->vFanouts.nSize--;
-
-            // compute the result for all branches
-            bFuncC = Abc_NodeGlobalBdds_rec( dd, pNodeC, nBddSizeMax, fDropInternal, pProgress, pCounter, fVerbose ); 
-            if ( bFuncC == NULL )
-                return NULL;
-            Cudd_Ref( bFuncC );
-            bFunc0 = Abc_NodeGlobalBdds_rec( dd, Abc_ObjRegular(pNode0), nBddSizeMax, fDropInternal, pProgress, pCounter, fVerbose ); 
-            if ( bFunc0 == NULL )
-                return NULL;
-            Cudd_Ref( bFunc0 );
-            bFunc1 = Abc_NodeGlobalBdds_rec( dd, Abc_ObjRegular(pNode1), nBddSizeMax, fDropInternal, pProgress, pCounter, fVerbose ); 
-            if ( bFunc1 == NULL )
-                return NULL;
-            Cudd_Ref( bFunc1 );
-
-            // complement the branch BDDs
-            bFunc0 = Cudd_NotCond( bFunc0, (int)Abc_ObjIsComplement(pNode0) );
-            bFunc1 = Cudd_NotCond( bFunc1, (int)Abc_ObjIsComplement(pNode1) );
-            // get the final result
-            bFunc = Cudd_bddIte( dd, bFuncC, bFunc1, bFunc0 );   Cudd_Ref( bFunc );
-            Cudd_RecursiveDeref( dd, bFunc0 );
-            Cudd_RecursiveDeref( dd, bFunc1 );
-            Cudd_RecursiveDeref( dd, bFuncC );
-            // add the number of used nodes
-            (*pCounter) += 3;
-        }
-        else
-        {
-            // compute the result for both branches
-            bFunc0 = Abc_NodeGlobalBdds_rec( dd, Abc_ObjFanin(pNode,0), nBddSizeMax, fDropInternal, pProgress, pCounter, fVerbose ); 
-            if ( bFunc0 == NULL )
-                return NULL;
-            Cudd_Ref( bFunc0 );
-            bFunc1 = Abc_NodeGlobalBdds_rec( dd, Abc_ObjFanin(pNode,1), nBddSizeMax, fDropInternal, pProgress, pCounter, fVerbose ); 
-            if ( bFunc1 == NULL )
-                return NULL;
-            Cudd_Ref( bFunc1 );
-            bFunc0 = Cudd_NotCond( bFunc0, (int)Abc_ObjFaninC0(pNode) );
-            bFunc1 = Cudd_NotCond( bFunc1, (int)Abc_ObjFaninC1(pNode) );
-            // get the final result
-            bFunc = Cudd_bddAndLimit( dd, bFunc0, bFunc1, nBddSizeMax );
-            if ( bFunc == NULL )
-                return NULL;
-            Cudd_Ref( bFunc );
-            Cudd_RecursiveDeref( dd, bFunc0 );
-            Cudd_RecursiveDeref( dd, bFunc1 );
-            // add the number of used nodes
-            (*pCounter)++;
-        }
-        // set the result
-        assert( Abc_ObjGlobalBdd(pNode) == NULL );
-        Abc_ObjSetGlobalBdd( pNode, bFunc );
-        // increment the progress bar
-        if ( pProgress )
-            Extra_ProgressBarUpdate( pProgress, *pCounter, NULL );
-    }
-    // prepare the return value
-    bFunc = (DdNode *)Abc_ObjGlobalBdd(pNode);
-    // dereference BDD at the node
-    if ( --pNode->vFanouts.nSize == 0 && fDropInternal )
-    {
-        Cudd_Deref( bFunc );
-        Abc_ObjSetGlobalBdd( pNode, NULL );
-    }
-    return bFunc;
+func Abc_NtkBddImplicationTest() {
+	const nVars, nImps = 200, 200
+	start := util.Abc_Clock()
+	dd := core.Cudd_Init(nVars, 0, core.CUDD_UNIQUE_SLOTS, core.CUDD_CACHE_SLOTS, 0)
+	if dd == nil {
+		return
+	}
+	core.Cudd_AutodynEnable(dd, core.CUDD_REORDER_SIFT)
+	sum := dd.LogicZero
+	core.Cudd_Ref(sum)
+	rng := newGlibcRand(1) // C's initial libc RNG state is equivalent to srand(1).
+	for i := 0; i < nImps; i++ {
+		fmt.Print(".")
+		i0, i1 := abcBddImplicationVars(rng, nVars)
+		imp := core.Cudd_bddAnd(dd, dd.Vars[i0], dd.Vars[i1])
+		if imp == nil {
+			break
+		}
+		core.Cudd_Ref(imp)
+		old := sum
+		sum = core.Cudd_bddOr(dd, old, imp)
+		if sum == nil {
+			core.Cudd_RecursiveDeref(dd, old)
+			core.Cudd_RecursiveDeref(dd, imp)
+			break
+		}
+		core.Cudd_Ref(sum)
+		core.Cudd_RecursiveDeref(dd, old)
+		core.Cudd_RecursiveDeref(dd, imp)
+	}
+	fmt.Printf("The BDD before = %d.\n", core.Cudd_DagSize(sum))
+	core.Cudd_ReduceHeap(dd, core.CUDD_REORDER_SIFT, 1)
+	fmt.Printf("The BDD after  = %d.\n", core.Cudd_DagSize(sum))
+	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-start)
+	core.Cudd_RecursiveDeref(dd, sum)
+	core.Cudd_Quit(dd)
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Frees the global BDDs of the network.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-void * Abc_NtkFreeGlobalBdds( Abc_Ntk_t * pNtk, int fFreeMan ) 
-{ 
-    return Abc_NtkAttrFree( pNtk, VEC_ATTR_GLOBAL_BDD, fFreeMan ); 
+func abcBddImplicationVars(rng *glibcRand, nVars uint32) (int, int) {
+	return int(rng.next() % nVars), int(rng.next() % nVars)
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Returns the shared size of global BDDs of the COs.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-int Abc_NtkSizeOfGlobalBdds( Abc_Ntk_t * pNtk ) 
-{
-    Vec_Ptr_t * vFuncsGlob;
-    Abc_Obj_t * pObj;
-    int RetValue, i;
-    // complement the global functions
-    vFuncsGlob = Vec_PtrAlloc( Abc_NtkCoNum(pNtk) );
-    Abc_NtkForEachCo( pNtk, pObj, i )
-        Vec_PtrPush( vFuncsGlob, Abc_ObjGlobalBdd(pObj) );
-    RetValue = Cudd_SharingSize( (DdNode **)Vec_PtrArray(vFuncsGlob), Vec_PtrSize(vFuncsGlob) );
-    Vec_PtrFree( vFuncsGlob );
-    return RetValue;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Computes the BDD of the logic cone of the node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-double Abc_NtkSpacePercentage( Abc_Obj_t * pNode )
-{
-    /*
-    Vec_Ptr_t * vNodes;
-    Abc_Obj_t * pObj, * pNodeR;
-    DdManager * dd;
-    DdNode * bFunc;
-    double Result;
-    int i;
-    pNodeR = Abc_ObjRegular(pNode);
-    assert( Abc_NtkIsStrash(pNodeR->pNtk) );
-    Abc_NtkCleanCopy( pNodeR->pNtk );
-    // get the CIs in the support of the node
-    vNodes = Abc_NtkNodeSupport( pNodeR->pNtk, &pNodeR, 1 );
-    // start the manager
-    dd = Cudd_Init( Vec_PtrSize(vNodes), 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );
-    Cudd_AutodynEnable( dd, CUDD_REORDER_SYMM_SIFT );
-    // assign elementary BDDs for the CIs
-    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )
-        pObj->pCopy = (Abc_Obj_t *)dd->vars[i];
-    // build the BDD of the cone
-    bFunc = Abc_NodeGlobalBdds_rec( dd, pNodeR, 10000000, 1, NULL, NULL, 1 );  Cudd_Ref( bFunc );
-    bFunc = Cudd_NotCond( bFunc, pNode != pNodeR );
-    // count minterms
-    Result = Cudd_CountMinterm( dd, bFunc, dd->size );
-    // get the percentagle
-    Result *= 100.0;
-    for ( i = 0; i < dd->size; i++ )
-        Result /= 2;
-    // clean up
-    Cudd_Quit( dd );
-    Vec_PtrFree( vNodes );
-    return Result;
-    */
-    return 0.0;
-}
-
-
-
-
-/**Function*************************************************************
-
-  Synopsis    [Experiment with BDD-based representation of implications.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-void Abc_NtkBddImplicationTest()
-{
-    DdManager * dd;
-    DdNode * bImp, * bSum, * bTemp;
-    int nVars = 200;
-    int nImps = 200;
-    int i;
-    abctime clk;
-clk = Abc_Clock();
-    dd = Cudd_Init( nVars, 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );
-    Cudd_AutodynEnable( dd, CUDD_REORDER_SIFT );
-    bSum = b0;   Cudd_Ref( bSum );
-    for ( i = 0; i < nImps; i++ )
-    {
-        printf( "." );
-        bImp = Cudd_bddAnd( dd, dd->vars[rand()%nVars], dd->vars[rand()%nVars] );  Cudd_Ref( bImp );
-        bSum = Cudd_bddOr( dd, bTemp = bSum, bImp );     Cudd_Ref( bSum );
-        Cudd_RecursiveDeref( dd, bTemp );
-        Cudd_RecursiveDeref( dd, bImp );
-    }
-    printf( "The BDD before = %d.\n", Cudd_DagSize(bSum) );
-    Cudd_ReduceHeap( dd, CUDD_REORDER_SIFT, 1 );
-    printf( "The BDD after  = %d.\n", Cudd_DagSize(bSum) );
-ABC_PRT( "Time", Abc_Clock() - clk );
-    Cudd_RecursiveDeref( dd, bSum );
-    Cudd_Quit( dd );
-}
-
-#else
-
-double Abc_NtkSpacePercentage( Abc_Obj_t * pNode ) { return 0.0; }
-Abc_Ntk_t * Abc_NtkBddToMuxes( Abc_Ntk_t * pNtk, int fGlobal, int Limit ) { return NULL; }
-
-
-#endif
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

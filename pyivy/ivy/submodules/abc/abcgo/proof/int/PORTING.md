@@ -101,9 +101,19 @@ path follows that behavior. Constraint-aware trace replay is available through
 the explicitly Go-only `Inter_ManGetCounterExampleConstrained` helper; it is
 not used by `Inter_ManPerformInterpolation`.
 
-The Go BMC implementation still differs internally from C's incremental
-dynamic unroller: it rebuilds the bounded graph and SAT solver at each frame,
-and its default large-register bound and timeout accounting are Go-specific.
+The Go BMC implementation now uses a dynamic frame/object literal map and
+source-mapped ≤4-leaf cut CNF with ternary pruning, clause hash reuse, and one
+persistent SAT solver. It retains C variable/literal numbering and clause
+ordering; in solve-all mode it pre-encodes eligible outputs in PO order before
+the solve loop, as C does. It also follows the source completeness cutoff, jump
+and conflict-limit transition, global/gap/per-output timeout state, solve-all
+dropouts, bridge output, same-model output propagation, and CEX storage/callback
+ownership. Differential tests compare cut variable/clause counts and witness
+semantics against compiled C, including tight-conflict multi-output cases.
+BSAT, Satoko, and Glucose selection follows C precedence. Remaining differences
+are the solver backend algorithms themselves and Go wall-clock timeout
+accounting where ABC uses CPU ticks. The source-declared `fDropSatOuts` and
+`nPisAbstract` fields have no active use in this C routine.
 `TestCounterexampleFromUnrolling` and
 `TestScalableBmcWitnessStartsAtRequestedFrameAndMapsPis` cover start-frame
 behavior, earliest counterexample frame, PI layout, and the finite

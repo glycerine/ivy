@@ -4,6 +4,7 @@ package abci
 import (
 	"bufio"
 	"fmt"
+	"io"
 	"os"
 
 	"github.com/glycerine/abcgo/base/abc"
@@ -22,13 +23,13 @@ func Abc_NtkImplementCiOrder(n *abc.Network, filename string, reverse, verbose i
 	var order []*abc.Object
 	r := bufio.NewReader(file)
 	for {
-		var name string
-		if _, err := fmt.Fscan(r, &name); err != nil {
+		name, err := abcReadCiOrderToken(r)
+		if err != nil {
 			break
 		}
 		node := abc.Abc_NtkFindCi(n, name)
 		if node == nil || !node.IsCI() {
-			fmt.Printf("Name %q is not a PI name. Cannot use this order.\n", name)
+			fmt.Printf("Name \"%s\" is not a PI name. Cannot use this order.\n", name)
 			return
 		}
 		order = append(order, node)
@@ -39,6 +40,36 @@ func Abc_NtkImplementCiOrder(n *abc.Network, filename string, reverse, verbose i
 	}
 	abc.Abc_NtkSetCiOrderSource(n, order, reverse)
 }
+
+// abcReadCiOrderToken matches fscanf("%s") whitespace handling: only the
+// ASCII C whitespace bytes delimit names.
+func abcReadCiOrderToken(r *bufio.Reader) (string, error) {
+	var token []byte
+	for {
+		c, err := r.ReadByte()
+		if err != nil {
+			return "", err
+		}
+		if !abcCiOrderSpace(c) {
+			token = append(token, c)
+			break
+		}
+	}
+	for {
+		c, err := r.ReadByte()
+		if err == io.EOF {
+			return string(token), nil
+		}
+		if err != nil {
+			return "", err
+		}
+		if abcCiOrderSpace(c) {
+			return string(token), nil
+		}
+		token = append(token, c)
+	}
+}
+func abcCiOrderSpace(c byte) bool { return c == ' ' || (c >= '\t' && c <= '\r') }
 func Abc_NtkChangeCiOrder(n *abc.Network, support *vec.Vec_Ptr_t, reverse int32) {
 	order := make([]*abc.Object, vec.Vec_PtrSize(support))
 	for i, v := range vec.Vec_PtrArray(support) {

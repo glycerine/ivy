@@ -4,355 +4,213 @@ import (
 	"fmt"
 	"math"
 	"os"
+
+	"github.com/glycerine/abcgo/proof/fraig"
 )
 
-/**CFile****************************************************************
+// Prove_Params_t is the command-facing form of ABC's proving options. The
+// original C fields are package local in proof/fraig, so the integration layer
+// keeps the source names here and translates only the parameters it consumes.
+type Prove_Params_t struct {
+	fUseFraiging, fUseRewriting, fUseBdds, fVerbose int32
+	nItersMax                                       int32
+	nMiteringLimitStart                             int32
+	nMiteringLimitMulti                             float32
+	nRewritingLimitStart                            int32
+	nRewritingLimitMulti                            float32
+	nFraigingLimitStart                             int32
+	nFraigingLimitMulti                             float32
+	nBddSizeLimit                                   int32
+	fBddReorder                                     int32
+	nMiteringLimitLast                              int32
+	nTotalBacktrackLimit, nTotalInspectLimit        int64
+	nTotalBacktracksMade, nTotalInspectsMade        int64
+}
 
-  FileName    [abcProve.c]
+// Prove_ParamsSetDefault matches proof/fraig/fraigMan.c field-for-field.
+func Prove_ParamsSetDefault(p *Prove_Params_t) {
+	*p = Prove_Params_t{fUseFraiging: 1, fUseRewriting: 1, nItersMax: 6,
+		nMiteringLimitStart: 5000, nMiteringLimitMulti: 2,
+		nRewritingLimitStart: 3, nRewritingLimitMulti: 1,
+		nFraigingLimitStart: 2, nFraigingLimitMulti: 8,
+		nBddSizeLimit: 1000000, fBddReorder: 1}
+}
 
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Network and node package.]
-
-  Synopsis    [Proves the miter using AIG rewriting, FRAIGing, and SAT solving.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: abcProve.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include <math.h>
-
-//#include "base/abc/abc.h"
-//#include "proof/fraig/fraig.h"
-
-#ifdef ABC_USE_CUDD
-#include "bdd/extrab/extraBdd.h"
-#endif
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-// extern int  Abc_NtkRefactor( Abc_Ntk_t * pNtk, int nNodeSizeMax, int nConeSizeMax, int fUpdateLevel, int fUseZeros, int fUseDcs, int fVerbose );
-
-// extern Abc_Ntk_t * Abc_NtkFromFraig( Fraig_Man_t * pMan, Abc_Ntk_t * pNtk );
-
-
-// static Abc_Ntk_t * Abc_NtkMiterFraig( Abc_Ntk_t * pNtk, int nBTLimit, ABC_INT64_T nInspLimit, int * pRetValue, int * pNumFails, ABC_INT64_T * pNumConfs, ABC_INT64_T * pNumInspects );
-
-// static void Abc_NtkMiterPrint( Abc_Ntk_t * pNtk, char * pString, abctime clk, int fVerbose );
-
-
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-  
-/**Function*************************************************************
-
-  Synopsis    [Attempts to solve the miter using a number of tricks.]
-
-  Description [Returns -1 if timed out; 0 if SAT; 1 if UNSAT. Returns
-  a simplified version of the original network (or a constant 0 network).
-  In case the network is not a constant zero and a SAT assignment is found,
-  pNtk->pModel contains a satisfying assignment.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+// Abc_NtkMiterProve attempts to prove a one-output strashed miter. It returns
+// -1 when resource limits prevent a result, 0 for SAT, and 1 for UNSAT.
 func Abc_NtkMiterProve(ppNtk **Abc_Ntk_t, pPars any) int32 {
-    var pParams *Prove_Params_t  = (Prove_Params_t *)pPars;
-    var pNtk, pNtkTemp *Abc_Ntk_t;
-    var RetValue int32 = -1;
-    var nIter int32;
-    var nSatFails int32;
-    var Counter int32;
-    var clk abctime; //, timeStart = Abc_Clock();
-    var nSatConfs, nSatInspects, nInspectLimit ABC_INT64_T;
-
-    // get the starting network
-    pNtk = *ppNtk;
-    assert(Abc_NtkIsStrash(pNtk), "Abc_NtkIsStrash(pNtk)");
-    assert(Abc_NtkPoNum(pNtk) == 1, "Abc_NtkPoNum(pNtk) == 1");
- 
-    if pParams.fVerbose {
-        fmt.Printf("RESOURCE LIMITS: Iterations = %d. Rewriting = %s. Fraiging = %s.\n", pParams.nItersMax, pParams.fUseRewriting? "yes":"no", pParams.fUseFraiging? "yes":"no");
-        fmt.Printf("Miter = %d (%3.1f).  Rwr = %d (%3.1f).  Fraig = %d (%3.1f).  Last = %d.\n", pParams.nMiteringLimitStart, pParams.nMiteringLimitMulti, pParams.nRewritingLimitStart, pParams.nRewritingLimitMulti, pParams.nFraigingLimitStart, pParams.nFraigingLimitMulti, pParams.nMiteringLimitLast);
-    }
-
-    // if SAT only, solve without iteration
-    if !pParams.fUseRewriting && !pParams.fUseFraiging {
-        clk = Abc_Clock();
-        RetValue = Abc_NtkMiterSat( pNtk, (ABC_INT64_T)pParams.nMiteringLimitLast, (ABC_INT64_T)0, 0, nil, nil );
-        Abc_NtkMiterPrint( pNtk, "SAT solving", clk, pParams.fVerbose );
-        *ppNtk = pNtk;
-        return RetValue;
-    }
-
-    // check the current resource limits
-    for  nIter = 0; nIter < pParams.nItersMax; nIter++  {
-        if pParams.fVerbose {
-            fmt.Printf("ITERATION %2d : Confs = %6d. FraigBTL = %3d. \n", nIter+1, int32((pParams.nMiteringLimitStart * math.Pow(float64(pParams.nMiteringLimitMulti), float64(nIter)))), int32((pParams.nFraigingLimitStart * math.Pow(float64(pParams.nFraigingLimitMulti), float64(nIter)))));
-            fflush( os.Stdout );
-        }
-
-        // try brute-force SAT
-        clk = Abc_Clock();
-        if pParams.nTotalInspectLimit {
-            nInspectLimit = pParams.nTotalInspectLimit - pParams.nTotalInspectsMade;
-        } else {
-            nInspectLimit = 0;
-        }
-        RetValue = Abc_NtkMiterSat( pNtk, (ABC_INT64_T)(pParams.nMiteringLimitStart * math.Pow(float64(pParams.nMiteringLimitMulti), float64(nIter))), (ABC_INT64_T)nInspectLimit, 0, &nSatConfs, &nSatInspects );
-        Abc_NtkMiterPrint( pNtk, "SAT solving", clk, pParams.fVerbose );
-        if RetValue >= 0 {
-            break; }
-
-        // add to the number of backtracks and inspects
-        pParams.nTotalBacktracksMade += nSatConfs;
-        pParams.nTotalInspectsMade   += nSatInspects;
-        // check if global resource limit is reached
-        if (pParams.nTotalBacktrackLimit && pParams.nTotalBacktracksMade >= pParams.nTotalBacktrackLimit) ||
-             (pParams.nTotalInspectLimit   && pParams.nTotalInspectsMade   >= pParams.nTotalInspectLimit) {
-            fmt.Printf("Reached global limit on conflicts/inspects. Quitting.\n");
-            *ppNtk = pNtk;
-            return -1;
-        }
-
-        // try rewriting
-        if pParams.fUseRewriting {
-            clk = Abc_Clock();
-            Counter = int32((pParams.nRewritingLimitStart * math.Pow(float64(pParams.nRewritingLimitMulti), float64(nIter))));
-//            Counter = 1;
-            for {
-/*
-                extern Abc_Ntk_t * Abc_NtkIvyResyn( Abc_Ntk_t * pNtk, int fUpdateLevel, int fVerbose );
-                pNtk = Abc_NtkIvyResyn( pNtkTemp = pNtk, 0, 0 );  Abc_NtkDelete( pNtkTemp );
-                if ( (RetValue = Abc_NtkMiterIsConstant(pNtk)) >= 0 )
-                    break;
-                if ( --Counter == 0 )
-                    break;
-*/
-/*
-                Abc_NtkRewrite( pNtk, 0, 0, 0, 0, 0 );
-                if ( (RetValue = Abc_NtkMiterIsConstant(pNtk)) >= 0 )
-                    break;
-                if ( --Counter == 0 )
-                    break;
-*/
-                Abc_NtkRewrite( pNtk, 0, 0, 0, 0, 0 );
-                if (RetValue = Abc_NtkMiterIsConstant(pNtk)) >= 0 {
-                    break; }
-                if Counter--; Counter == 0 {
-                    break; }
-                Abc_NtkRefactor( pNtk, 10, 16, 0, 0, 0, 0 );
-                if (RetValue = Abc_NtkMiterIsConstant(pNtk)) >= 0 {
-                    break; }
-                if Counter--; Counter == 0 {
-                    break; }
-                pNtk = Abc_NtkBalance( pNtkTemp = pNtk, 0, 0, 0 );  Abc_NtkDelete( pNtkTemp );
-                if (RetValue = Abc_NtkMiterIsConstant(pNtk)) >= 0 {
-                    break; }
-                if Counter--; Counter == 0 {
-                    break; }
-            }
-            Abc_NtkMiterPrint( pNtk, "Rewriting  ", clk, pParams.fVerbose );
-        }
- 
-        if pParams.fUseFraiging {
-            // try FRAIGing
-            clk = Abc_Clock();
-            if pParams.nTotalInspectLimit {
-                nInspectLimit = pParams.nTotalInspectLimit - pParams.nTotalInspectsMade;
-            } else {
-                nInspectLimit = 0;
-            }
-            pNtk = Abc_NtkMiterFraig( pNtkTemp = pNtk, int32((pParams.nFraigingLimitStart * math.Pow(float64(pParams.nFraigingLimitMulti), float64(nIter)))), nInspectLimit, &RetValue, &nSatFails, &nSatConfs, &nSatInspects );  Abc_NtkDelete( pNtkTemp );
-            Abc_NtkMiterPrint( pNtk, "FRAIGing   ", clk, pParams.fVerbose );
-//            printf( "NumFails = %d\n", nSatFails );
-            if RetValue >= 0 {
-                break; }
-
-            // add to the number of backtracks and inspects
-            pParams.nTotalBacktracksMade += nSatConfs;
-            pParams.nTotalInspectsMade += nSatInspects;
-            // check if global resource limit is reached
-            if (pParams.nTotalBacktrackLimit && pParams.nTotalBacktracksMade >= pParams.nTotalBacktrackLimit) ||
-                 (pParams.nTotalInspectLimit   && pParams.nTotalInspectsMade   >= pParams.nTotalInspectLimit) {
-                fmt.Printf("Reached global limit on conflicts/inspects. Quitting.\n");
-                *ppNtk = pNtk;
-                return -1;
-            }
-        }
-
-    }    
-
-    // try to prove it using brute force SAT
-#ifdef ABC_USE_CUDD
-    if ( RetValue < 0 && pParams->fUseBdds )
-    {
-        if ( pParams->fVerbose )
-        {
-            printf( "Attempting BDDs with node limit %d ...\n", pParams->nBddSizeLimit );
-            fflush( stdout );
-        }
-        clk = Abc_Clock();
-        pNtk = Abc_NtkCollapse( pNtkTemp = pNtk, pParams->nBddSizeLimit, 0, pParams->fBddReorder, 0, 0, 0 );
-        if ( pNtk )   
-        {
-            Abc_NtkDelete( pNtkTemp );
-            RetValue = ( (Abc_NtkNodeNum(pNtk) == 1) && (Abc_ObjFanin0(Abc_NtkPo(pNtk,0))->pData == Cudd_ReadLogicZero((DdManager *)pNtk->pManFunc)) );
-        }
-        else 
-            pNtk = pNtkTemp;
-        Abc_NtkMiterPrint( pNtk, "BDD building", clk, pParams->fVerbose );
-    }
-#endif
-
-    if RetValue < 0 {
-        if pParams.fVerbose {
-            fmt.Printf("Attempting SAT with conflict limit %d ...\n", pParams.nMiteringLimitLast);
-            fflush( os.Stdout );
-        }
-        clk = Abc_Clock();
-        if pParams.nTotalInspectLimit {
-            nInspectLimit = pParams.nTotalInspectLimit - pParams.nTotalInspectsMade;
-        } else {
-            nInspectLimit = 0;
-        }
-        RetValue = Abc_NtkMiterSat( pNtk, (ABC_INT64_T)pParams.nMiteringLimitLast, (ABC_INT64_T)nInspectLimit, 0, nil, nil );
-        Abc_NtkMiterPrint( pNtk, "SAT solving", clk, pParams.fVerbose );
-    }
-
-    // assign the model if it was proved by rewriting (const 1 miter)
-    if RetValue == 0 && pNtk.pModel == nil {
-        pNtk.pModel = ABC_ALLOC( int, Abc_NtkCiNum(pNtk) );
-        memset( pNtk.pModel, 0, sizeof(int) * Abc_NtkCiNum(pNtk) );
-    }
-    *ppNtk = pNtk;
-    return RetValue;
+	p := pPars.(*Prove_Params_t)
+	n := *ppNtk
+	assert(Abc_NtkIsStrash(n) != 0, "Abc_NtkIsStrash(pNtk)")
+	assert(Abc_NtkPoNum(n) == 1, "Abc_NtkPoNum(pNtk) == 1")
+	ret := int32(-1)
+	var satConfs, satInspects, inspectLimit int64
+	if p.fVerbose != 0 {
+		fmt.Printf("RESOURCE LIMITS: Iterations = %d. Rewriting = %s. Fraiging = %s.\n", p.nItersMax, abcYesNo(p.fUseRewriting), abcYesNo(p.fUseFraiging))
+		fmt.Printf("Miter = %d (%3.1f).  Rwr = %d (%3.1f).  Fraig = %d (%3.1f).  Last = %d.\n", p.nMiteringLimitStart, p.nMiteringLimitMulti, p.nRewritingLimitStart, p.nRewritingLimitMulti, p.nFraigingLimitStart, p.nFraigingLimitMulti, p.nMiteringLimitLast)
+	}
+	if p.fUseRewriting == 0 && p.fUseFraiging == 0 {
+		clk := Abc_Clock()
+		ret = Abc_NtkMiterSat(n, int64(p.nMiteringLimitLast), 0, 0, nil, nil)
+		Abc_NtkMiterPrint(n, "SAT solving", clk, p.fVerbose)
+		*ppNtk = n
+		return ret
+	}
+	for iter := int32(0); iter < p.nItersMax; iter++ {
+		if p.fVerbose != 0 {
+			fmt.Printf("ITERATION %2d : Confs = %6d. FraigBTL = %3d. \n", iter+1, int32(float64(p.nMiteringLimitStart)*math.Pow(float64(p.nMiteringLimitMulti), float64(iter))), int32(float64(p.nFraigingLimitStart)*math.Pow(float64(p.nFraigingLimitMulti), float64(iter))))
+			_, _ = fmt.Fprintln(os.Stdout)
+		}
+		clk := Abc_Clock()
+		inspectLimit = 0
+		if p.nTotalInspectLimit != 0 {
+			inspectLimit = p.nTotalInspectLimit - p.nTotalInspectsMade
+		}
+		ret = Abc_NtkMiterSat(n, int64(float64(p.nMiteringLimitStart)*math.Pow(float64(p.nMiteringLimitMulti), float64(iter))), inspectLimit, 0, &satConfs, &satInspects)
+		Abc_NtkMiterPrint(n, "SAT solving", clk, p.fVerbose)
+		if ret >= 0 {
+			break
+		}
+		p.nTotalBacktracksMade += satConfs
+		p.nTotalInspectsMade += satInspects
+		if resourceLimitReached(p) {
+			fmt.Println("Reached global limit on conflicts/inspects. Quitting.")
+			*ppNtk = n
+			return -1
+		}
+		if p.fUseRewriting != 0 {
+			clk = Abc_Clock()
+			counter := int32(float64(p.nRewritingLimitStart) * math.Pow(float64(p.nRewritingLimitMulti), float64(iter)))
+			for {
+				Abc_NtkRewrite(n, 0, 0, 0, 0, 0)
+				if ret = Abc_NtkMiterIsConstant(n); ret >= 0 {
+					break
+				}
+				counter--
+				if counter == 0 {
+					break
+				}
+				Abc_NtkRefactor(n, 10, 16, 0, 0, 0, 0)
+				if ret = Abc_NtkMiterIsConstant(n); ret >= 0 {
+					break
+				}
+				counter--
+				if counter == 0 {
+					break
+				}
+				tmp := n
+				n = Abc_NtkBalance(tmp, 0, 0, 0)
+				Abc_NtkDelete(tmp)
+				if ret = Abc_NtkMiterIsConstant(n); ret >= 0 {
+					break
+				}
+				counter--
+				if counter == 0 {
+					break
+				}
+			}
+			Abc_NtkMiterPrint(n, "Rewriting  ", clk, p.fVerbose)
+		}
+		if p.fUseFraiging != 0 {
+			clk = Abc_Clock()
+			inspectLimit = 0
+			if p.nTotalInspectLimit != 0 {
+				inspectLimit = p.nTotalInspectLimit - p.nTotalInspectsMade
+			}
+			tmp := n
+			n = Abc_NtkMiterFraig(tmp, int32(float64(p.nFraigingLimitStart)*math.Pow(float64(p.nFraigingLimitMulti), float64(iter))), inspectLimit, &ret, new(int32), &satConfs, &satInspects)
+			Abc_NtkDelete(tmp)
+			Abc_NtkMiterPrint(n, "FRAIGing   ", clk, p.fVerbose)
+			if ret >= 0 {
+				break
+			}
+			p.nTotalBacktracksMade += satConfs
+			p.nTotalInspectsMade += satInspects
+			if resourceLimitReached(p) {
+				fmt.Println("Reached global limit on conflicts/inspects. Quitting.")
+				*ppNtk = n
+				return -1
+			}
+		}
+	}
+	if ret < 0 && p.fUseBdds != 0 && proveBddEnabled {
+		if p.fVerbose != 0 {
+			fmt.Printf("Attempting BDDs with node limit %d ...\n", p.nBddSizeLimit)
+		}
+		clk := Abc_Clock()
+		if collapsed, result, ok := proveBddFallback(n, p); ok {
+			Abc_NtkDelete(n)
+			n, ret = collapsed, result
+		}
+		Abc_NtkMiterPrint(n, "BDD building", clk, p.fVerbose)
+	}
+	if ret < 0 {
+		if p.fVerbose != 0 {
+			fmt.Printf("Attempting SAT with conflict limit %d ...\n", p.nMiteringLimitLast)
+		}
+		clk := Abc_Clock()
+		inspectLimit = 0
+		if p.nTotalInspectLimit != 0 {
+			inspectLimit = p.nTotalInspectLimit - p.nTotalInspectsMade
+		}
+		ret = Abc_NtkMiterSat(n, int64(p.nMiteringLimitLast), inspectLimit, 0, nil, nil)
+		Abc_NtkMiterPrint(n, "SAT solving", clk, p.fVerbose)
+	}
+	if ret == 0 && n.pModel == nil {
+		n.pModel = make([]int32, Abc_NtkCiNum(n))
+	}
+	*ppNtk = n
+	return ret
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Attempts to solve the miter using a number of tricks.]
-
-  Description [Returns -1 if timed out; 0 if SAT; 1 if UNSAT.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkMiterFraig(pNtk *Abc_Ntk_t, nBTLimit int32, nInspLimit ABC_INT64_T, pRetValue *int32, pNumFails *int32, pNumConfs *ABC_INT64_T, pNumInspects *ABC_INT64_T) *Abc_Ntk_t {
-    var pNtkNew *Abc_Ntk_t;
-    var Params Fraig_Params_t;
-    var pParams *Fraig_Params_t = &Params;
-    var pMan *Fraig_Man_t;
-    var nWords1, nWords2, nWordsMin, RetValue int32;
-    var pModel *int32;
-
-    // to determine the number of simulation patterns
-    // use the following strategy
-    // at least 64 words (32 words random and 32 words dynamic)
-    // no more than 256M for one circuit (128M + 128M)
-    nWords1 = 32;
-    nWords2 = (1<<27) / (Abc_NtkNodeNum(pNtk) + Abc_NtkCiNum(pNtk));
-    nWordsMin = Abc_MinInt( nWords1, nWords2 );
-
-    // set the FRAIGing parameters
-    Fraig_ParamsSetDefault( pParams );
-    pParams.nPatsRand  = nWordsMin * 32; // the number of words of random simulation info
-    pParams.nPatsDyna  = nWordsMin * 32; // the number of words of dynamic simulation info
-    pParams.nBTLimit   = nBTLimit;       // the max number of backtracks
-    pParams.nSeconds   = -1;             // the runtime limit
-    pParams.fTryProve  = 0;              // do not try to prove the final miter
-    pParams.fDoSparse  = 1;              // try proving sparse functions
-    pParams.fVerbose   = 0;
-    pParams.nInspLimit = nInspLimit;
-
-    // transform the target into a fraig
-    pMan = (Fraig_Man_t *)Abc_NtkToFraig( pNtk, pParams, 0, 0 ); 
-    Fraig_ManProveMiter( pMan );
-    RetValue = Fraig_ManCheckMiter( pMan );
-
-    // create the network 
-    pNtkNew = Abc_NtkFromFraig( pMan, pNtk );
-
-    // save model
-    if RetValue == 0 {
-        pModel = Fraig_ManReadModel( pMan );
-        ABC_FREE( pNtkNew.pModel );
-        pNtkNew.pModel = ABC_ALLOC( int, Abc_NtkCiNum(pNtkNew) );
-        memcpy( pNtkNew.pModel, pModel, sizeof(int) * Abc_NtkCiNum(pNtkNew) );
-    }
-
-    // save the return values
-    *pRetValue = RetValue;
-    *pNumFails = Fraig_ManReadSatFails( pMan );
-    *pNumConfs = Fraig_ManReadConflicts( pMan );
-    *pNumInspects = Fraig_ManReadInspects( pMan );
-
-    // delete the fraig manager
-    Fraig_ManFree( pMan );
-    return pNtkNew;
+func resourceLimitReached(p *Prove_Params_t) bool {
+	return (p.nTotalBacktrackLimit != 0 && p.nTotalBacktracksMade >= p.nTotalBacktrackLimit) || (p.nTotalInspectLimit != 0 && p.nTotalInspectsMade >= p.nTotalInspectLimit)
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Attempts to solve the miter using a number of tricks.]
-
-  Description [Returns -1 if timed out; 0 if SAT; 1 if UNSAT.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkMiterPrint(pNtk *Abc_Ntk_t, pString string, clk abctime, fVerbose int32) {
-    if !(fVerbose != 0) {
-        return; }
-    fmt.Printf("Nodes = %7d.  Levels = %4d.  ", Abc_NtkNodeNum(pNtk), Abc_NtkIsStrash(pNtk)? Abc_AigLevel(pNtk) : Abc_NtkLevel(pNtk));
-    ABC_PRT( pString, Abc_Clock() - clk );
+func Abc_NtkMiterFraig(n *Abc_Ntk_t, btLimit int32, inspectLimit int64, ret, fails *int32, confs, inspects *int64) *Abc_Ntk_t {
+	words := int32(32)
+	denom := Abc_NtkNodeNum(n) + Abc_NtkCiNum(n)
+	if denom > 0 && (int64(1)<<27)/int64(denom) < int64(words) {
+		words = int32((int64(1) << 27) / int64(denom))
+	}
+	params := fraig.Fraig_Params_t{}
+	fraig.Fraig_ParamsSetDefault(&params)
+	params.NPatsRand, params.NPatsDyna = words*32, words*32
+	params.NBTLimit, params.NSeconds, params.FTryProve, params.FDoSparse = btLimit, -1, 0, 1
+	params.FVerbose, params.NInspLimit = 0, inspectLimit
+	man := fraig.Abc_NtkToFraig(n, &params, 0, 0).(*fraig.Fraig_Man_t)
+	fraig.Fraig_ManProveMiter(man)
+	*ret = fraig.Fraig_ManCheckMiter(man)
+	newNtk := Abc_NtkFromFraig(man, n)
+	if *ret == 0 {
+		model := fraig.Fraig_ManReadModel(man)
+		newNtk.pModel = append([]int32(nil), model...)
+	}
+	*fails = fraig.Fraig_ManReadSatFails(man)
+	*confs = int64(fraig.Fraig_ManReadConflicts(man))
+	*inspects = int64(fraig.Fraig_ManReadInspects(man))
+	fraig.Fraig_ManFree(man)
+	return newNtk
 }
 
-  
-/**Function*************************************************************
-
-  Synopsis    [Implements resynthesis for CEC.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkMiterRwsat(pNtk *Abc_Ntk_t) *Abc_Ntk_t {
-    var pNtkTemp *Abc_Ntk_t;
-    Abc_NtkRewrite( pNtk, 0, 0, 0, 0, 0 );
-    pNtk = Abc_NtkBalance( pNtkTemp = pNtk, 0, 0, 0 );  Abc_NtkDelete( pNtkTemp );
-    Abc_NtkRewrite( pNtk, 0, 0, 0, 0, 0 );
-    Abc_NtkRefactor( pNtk, 10, 16, 0, 0, 0, 0 );
-    return pNtk;
+func Abc_NtkMiterPrint(n *Abc_Ntk_t, label string, clk int64, verbose int32) {
+	if verbose == 0 {
+		return
+	}
+	level := Abc_NtkLevel(n)
+	if Abc_NtkIsStrash(n) != 0 {
+		level = Abc_AigLevel(n)
+	}
+	fmt.Printf("Nodes = %7d.  Levels = %4d.  ", Abc_NtkNodeNum(n), level)
+	ABC_PRT(label, Abc_Clock()-clk)
 }
 
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func Abc_NtkMiterRwsat(n *Abc_Ntk_t) *Abc_Ntk_t {
+	Abc_NtkRewrite(n, 0, 0, 0, 0, 0)
+	tmp := n
+	n = Abc_NtkBalance(tmp, 0, 0, 0)
+	Abc_NtkDelete(tmp)
+	Abc_NtkRewrite(n, 0, 0, 0, 0, 0)
+	Abc_NtkRefactor(n, 10, 16, 0, 0, 0, 0)
+	return n
+}

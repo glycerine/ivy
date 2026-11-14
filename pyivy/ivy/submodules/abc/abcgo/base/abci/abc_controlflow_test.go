@@ -9,3 +9,9 @@ func TestAbcCommandLoadUsagePath(t *testing.T) {
 		t.Fatalf("help command returned %d, want 1", got)
 	}
 }
+
+func TestAbcCommandIfifUsagePath(t *testing.T) {
+	if got := Abc_CommandIfif(nil, 2, []string{"ifif", "-h"}); got != 1 {
+		t.Fatalf("help command returned %d, want 1", got)
+	}
+}

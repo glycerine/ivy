@@ -17,13 +17,17 @@ clearing Go parser errors.
   option parsing where a C `goto usage` could otherwise jump over their Go
   declarations. The usage branches still return the same command status and
   print the existing usage text.
+- `Abc_CommandIfif` now routes option failures directly through a local usage
+  closure. The closure reloads the current parameter record before printing,
+  matching the C label's state at every `goto usage` site while avoiding a
+  jump over later declarations such as the LUT library.
 - `gofmt` completes for `base/abci/abc.go`. A package build proceeds beyond
   that file; it currently encounters independent parser errors in sibling
   files such as `abcBidec.go` and `abcDar.go`.
 
 ## Validation
 
-The `Abc_CommandAbcLoad` help-path test covers the early usage exit without a
-frame. The full `base/abci` test command cannot currently compile the package
+The `Abc_CommandAbcLoad` and `Abc_CommandIfif` help-path tests cover early
+usage exits without a frame. The full `base/abci` test command cannot currently compile the package
 because of the sibling-file parser errors above, so the new test awaits that
 frontier being cleared.

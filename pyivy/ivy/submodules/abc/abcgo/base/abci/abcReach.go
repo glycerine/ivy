@@ -1,329 +1,284 @@
 package abci
 
-/**CFile****************************************************************
+import (
+	"fmt"
+	"math"
+	"time"
 
-  FileName    [abcReach.c]
+	"github.com/glycerine/abcgo/base/abc"
+	"github.com/glycerine/abcgo/bdd/cudd/core"
+	"github.com/glycerine/abcgo/bdd/extrab"
+)
 
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Network and node package.]
-
-  Synopsis    [Performs reachability analysis.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: abcReach.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "base/abc/abc.h"
-
-#ifdef ABC_USE_CUDD
-#include "bdd/extrab/extraBdd.h"
-#endif
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-#ifdef ABC_USE_CUDD
-
-/**Function*************************************************************
-
-  Synopsis    [Computes the initial state and sets up the variable map.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-DdNode * Abc_NtkInitStateVarMap( DdManager * dd, Abc_Ntk_t * pNtk, int fVerbose )
-{
-    DdNode ** pbVarsX, ** pbVarsY;
-    DdNode * bTemp, * bProd, * bVar;
-    Abc_Obj_t * pLatch;
-    int i;
-
-    // set the variable mapping for Cudd_bddVarMap()
-    pbVarsX = ABC_ALLOC( DdNode *, dd->size );
-    pbVarsY = ABC_ALLOC( DdNode *, dd->size );
-    bProd = b1;         Cudd_Ref( bProd );
-    Abc_NtkForEachLatch( pNtk, pLatch, i )
-    {
-        pbVarsX[i] = dd->vars[ Abc_NtkPiNum(pNtk) + i ];
-        pbVarsY[i] = dd->vars[ Abc_NtkCiNum(pNtk) + i ];
-        // get the initial value of the latch
-        bVar  = Cudd_NotCond( pbVarsX[i], !Abc_LatchIsInit1(pLatch) );
-        bProd = Cudd_bddAnd( dd, bTemp = bProd, bVar );      Cudd_Ref( bProd );
-        Cudd_RecursiveDeref( dd, bTemp ); 
-    }
-    Cudd_SetVarMap( dd, pbVarsX, pbVarsY, Abc_NtkLatchNum(pNtk) );
-    ABC_FREE( pbVarsX );
-    ABC_FREE( pbVarsY );
-
-    Cudd_Deref( bProd );
-    return bProd;
+func abcReachVarMap(dd *core.DdManager, piNum, ciNum, latchNum int, function *core.DdNode) *core.DdNode {
+	mapping := make([]int, len(dd.Vars))
+	for i := range mapping {
+		mapping[i] = i
+	}
+	for i := 0; i < latchNum; i++ {
+		x, y := piNum+i, ciNum+i
+		if x >= len(mapping) || y >= len(mapping) {
+			return nil
+		}
+		mapping[x], mapping[y] = y, x
+	}
+	return core.Cudd_bddPermute(dd, function, mapping)
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-DdNode ** Abc_NtkCreatePartitions( DdManager * dd, Abc_Ntk_t * pNtk, int fReorder, int fVerbose )
-{
-    DdNode ** pbParts;
-    DdNode * bVar;
-    Abc_Obj_t * pNode;
-    int i;
-
-    // extand the BDD manager to represent NS variables
-    assert( dd->size == Abc_NtkCiNum(pNtk) );
-    Cudd_bddIthVar( dd, Abc_NtkCiNum(pNtk) + Abc_NtkLatchNum(pNtk) - 1 );
-
-    // enable reordering
-    if ( fReorder )
-        Cudd_AutodynEnable( dd, CUDD_REORDER_SYMM_SIFT );
-    else
-        Cudd_AutodynDisable( dd );
-
-    // compute the transition relation
-    pbParts = ABC_ALLOC( DdNode *, Abc_NtkLatchNum(pNtk) );
-    Abc_NtkForEachLatch( pNtk, pNode, i )
-    {
-        bVar  = Cudd_bddIthVar( dd, Abc_NtkCiNum(pNtk) + i );
-        pbParts[i] = Cudd_bddXnor( dd, bVar, (DdNode *)Abc_ObjGlobalBdd(Abc_ObjFanin0(pNode)) );  Cudd_Ref( pbParts[i] );
-    }
-    // free the global BDDs
-    Abc_NtkFreeGlobalBdds( pNtk, 0 );
-
-    // reorder and disable reordering
-    if ( fReorder )
-    {
-        if ( fVerbose )
-            fprintf( stdout, "BDD nodes in the partitions before reordering %d.\n", Cudd_SharingSize(pbParts,Abc_NtkLatchNum(pNtk)) );
-        Cudd_ReduceHeap( dd, CUDD_REORDER_SYMM_SIFT, 100 );
-        Cudd_AutodynDisable( dd );
-        if ( fVerbose )
-            fprintf( stdout, "BDD nodes in the partitions after reordering %d.\n", Cudd_SharingSize(pbParts,Abc_NtkLatchNum(pNtk)) );
-    }
-    return pbParts;
+// Abc_NtkInitStateVarMap returns the source-defined initial-state cube and
+// configures the present/next-state variable swap used by image iteration.
+func Abc_NtkInitStateVarMap(dd *core.DdManager, network *abc.Network, verbose int32) *core.DdNode {
+	if dd == nil || network == nil {
+		return nil
+	}
+	piNum, ciNum, latches := len(network.ObjectsOfKind(abc.ObjectPI)), len(network.Inputs()), network.ObjectsOfKind(abc.ObjectLatch)
+	for i := 0; i < ciNum+len(latches); i++ {
+		core.Cudd_bddIthVar(dd, i)
+	}
+	initial := core.Cudd_ReadOne(dd)
+	core.Cudd_Ref(initial)
+	for i, latch := range latches {
+		variable := core.Cudd_bddIthVar(dd, piNum+i)
+		if abc.Abc_LatchIsInit1(latch) == 0 {
+			variable = core.Cudd_Not(variable)
+		}
+		next := core.Cudd_bddAnd(dd, initial, variable)
+		core.Cudd_Ref(next)
+		core.Cudd_RecursiveDeref(dd, initial)
+		initial = next
+	}
+	_ = verbose
+	core.Cudd_Deref(initial)
+	return initial
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Computes the set of unreachable states.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-DdNode * Abc_NtkComputeReachable( DdManager * dd, Abc_Ntk_t * pNtk, DdNode ** pbParts, DdNode * bInitial, DdNode * bOutput, int nBddMax, int nIterMax, int fPartition, int fReorder, int fVerbose )
-{
-    int fInternalReorder = 0;
-    Extra_ImageTree_t * pTree = NULL;
-    Extra_ImageTree2_t * pTree2 = NULL;
-    DdNode * bReached, * bCubeCs;
-    DdNode * bCurrent, * bNext = NULL, * bTemp;
-    DdNode ** pbVarsY;
-    Abc_Obj_t * pLatch;
-    int i, nIters, nBddSize;
-    int nThreshold = 10000;
-
-    // collect the NS variables
-    // set the variable mapping for Cudd_bddVarMap()
-    pbVarsY = ABC_ALLOC( DdNode *, dd->size );
-    Abc_NtkForEachLatch( pNtk, pLatch, i )
-        pbVarsY[i] = dd->vars[ Abc_NtkCiNum(pNtk) + i ];
-
-    // start the image computation
-    bCubeCs  = Extra_bddComputeRangeCube( dd, Abc_NtkPiNum(pNtk), Abc_NtkCiNum(pNtk) );    Cudd_Ref( bCubeCs );
-    if ( fPartition )
-        pTree = Extra_bddImageStart( dd, bCubeCs, Abc_NtkLatchNum(pNtk), pbParts, Abc_NtkLatchNum(pNtk), pbVarsY, fVerbose );
-    else
-        pTree2 = Extra_bddImageStart2( dd, bCubeCs, Abc_NtkLatchNum(pNtk), pbParts, Abc_NtkLatchNum(pNtk), pbVarsY, fVerbose );
-    ABC_FREE( pbVarsY );
-    Cudd_RecursiveDeref( dd, bCubeCs );
-
-    // perform reachability analisys
-    bCurrent = bInitial;   Cudd_Ref( bCurrent );
-    bReached = bInitial;   Cudd_Ref( bReached );
-    assert( nIterMax > 1 ); // required to not deref uninitialized bNext
-    for ( nIters = 1; nIters <= nIterMax; nIters++ )
-    {
-        // compute the next states
-        if ( fPartition )
-            bNext = Extra_bddImageCompute( pTree, bCurrent );           
-        else
-            bNext = Extra_bddImageCompute2( pTree2, bCurrent );         
-        Cudd_Ref( bNext );
-        Cudd_RecursiveDeref( dd, bCurrent );
-        // remap these states into the current state vars
-        bNext = Cudd_bddVarMap( dd, bTemp = bNext );                    Cudd_Ref( bNext );
-        Cudd_RecursiveDeref( dd, bTemp );
-        // check if there are any new states
-        if ( Cudd_bddLeq( dd, bNext, bReached ) )
-            break;
-        // check the BDD size
-        nBddSize = Cudd_DagSize(bNext);
-        if ( nBddSize > nBddMax )
-            break;
-        // check the result
-        if ( !Cudd_bddLeq( dd, bNext, Cudd_Not(bOutput) ) )
-        {
-            printf( "The miter is proved REACHABLE in %d iterations.  ", nIters );
-            Cudd_RecursiveDeref( dd, bReached );
-            bReached = NULL;
-            break;
-        }
-        // get the new states
-        bCurrent = Cudd_bddAnd( dd, bNext, Cudd_Not(bReached) );        Cudd_Ref( bCurrent );
-        // minimize the new states with the reached states
-//        bCurrent = Cudd_bddConstrain( dd, bTemp = bCurrent, Cudd_Not(bReached) ); Cudd_Ref( bCurrent );
-//        Cudd_RecursiveDeref( dd, bTemp );
-        // add to the reached states
-        bReached = Cudd_bddOr( dd, bTemp = bReached, bNext );           Cudd_Ref( bReached );
-        Cudd_RecursiveDeref( dd, bTemp );
-        Cudd_RecursiveDeref( dd, bNext );
-        if ( fVerbose )
-            fprintf( stdout, "Iteration = %3d. BDD = %5d. ", nIters, nBddSize );
-        if ( fInternalReorder && fReorder && nBddSize > nThreshold )
-        {
-            if ( fVerbose )
-                fprintf( stdout, "Reordering... Before = %5d. ", Cudd_DagSize(bReached) );
-            Cudd_ReduceHeap( dd, CUDD_REORDER_SYMM_SIFT, 100 );
-            Cudd_AutodynDisable( dd );
-            if ( fVerbose )
-                fprintf( stdout, "After = %5d.\r", Cudd_DagSize(bReached) );
-            nThreshold *= 2;
-        }
-        if ( fVerbose )
-            fprintf( stdout, "\r" );
-    }
-    Cudd_RecursiveDeref( dd, bNext );
-    // undo the image tree
-    if ( fPartition )
-        Extra_bddImageTreeDelete( pTree );
-    else
-        Extra_bddImageTreeDelete2( pTree2 );
-    if ( bReached == NULL )
-        return NULL;
-    // report the stats
-    if ( fVerbose )
-    {
-        double nMints = Cudd_CountMinterm(dd, bReached, Abc_NtkLatchNum(pNtk) );
-        if ( nIters > nIterMax || Cudd_DagSize(bReached) > nBddMax )
-            fprintf( stdout, "Reachability analysis is stopped after %d iterations.\n", nIters );
-        else
-            fprintf( stdout, "Reachability analysis completed in %d iterations.\n", nIters );
-        fprintf( stdout, "Reachable states = %.0f. (Ratio = %.4f %%)\n", nMints, 100.0*nMints/pow(2.0, Abc_NtkLatchNum(pNtk)) );
-        fflush( stdout );
-    }
-//ABC_PRB( dd, bReached );
-    Cudd_Deref( bReached );
-    if ( nIters > nIterMax || Cudd_DagSize(bReached) > nBddMax )
-         printf( "Verified ONLY FOR STATES REACHED in %d iterations. \n", nIters );
-    printf( "The miter is proved unreachable in %d iteration.  ", nIters );
-    return bReached;
+// Abc_NtkCreatePartitions builds one XNOR partition per latch and releases
+// global object BDD references after extracting the transition functions.
+func Abc_NtkCreatePartitions(dd *core.DdManager, network *abc.Network, reorder, verbose int32) []*core.DdNode {
+	if dd == nil || network == nil {
+		return nil
+	}
+	ciNum := len(network.Inputs())
+	latches := network.ObjectsOfKind(abc.ObjectLatch)
+	for i := 0; i < ciNum+len(latches); i++ {
+		core.Cudd_bddIthVar(dd, i)
+	}
+	if reorder != 0 {
+		core.Cudd_AutodynEnable(dd, core.CUDD_REORDER_SYMM_SIFT)
+	} else {
+		core.Cudd_AutodynDisable(dd)
+	}
+	parts := make([]*core.DdNode, len(latches))
+	for i, latch := range latches {
+		if len(latch.Fanins()) != 1 {
+			Abc_NtkFreeGlobalBdds(network, 0)
+			return nil
+		}
+		bi := latch.Fanins()[0].Object
+		function := Abc_ObjGlobalBdd(bi)
+		if function == nil {
+			Abc_NtkFreeGlobalBdds(network, 0)
+			return nil
+		}
+		parts[i] = core.Cudd_bddXnor(dd, core.Cudd_bddIthVar(dd, ciNum+i), function)
+		core.Cudd_Ref(parts[i])
+	}
+	Abc_NtkFreeGlobalBdds(network, 0)
+	if reorder != 0 {
+		if verbose != 0 {
+			fmt.Printf("BDD nodes in the partitions before reordering %d.\n", abcBDDSharingSize(parts))
+		}
+		core.Cudd_ReduceHeap(dd, core.CUDD_REORDER_SYMM_SIFT, 100)
+		core.Cudd_AutodynDisable(dd)
+		if verbose != 0 {
+			fmt.Printf("BDD nodes in the partitions after reordering %d.\n", abcBDDSharingSize(parts))
+		}
+	}
+	return parts
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Performs reachability to see if any .]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-void Abc_NtkVerifyUsingBdds( Abc_Ntk_t * pNtk, int nBddMax, int nIterMax, int fPartition, int fReorder, int fVerbose )
-{
-    DdManager * dd;
-    DdNode ** pbParts;
-    DdNode * bOutput, * bReached, * bInitial;
-    int i;
-    abctime clk = Abc_Clock();
-
-    assert( Abc_NtkIsStrash(pNtk) );
-    assert( Abc_NtkPoNum(pNtk) == 1 );
-    assert( Abc_ObjFanoutNum(Abc_NtkPo(pNtk,0)) == 0 ); // PO should go first
-
-    // compute the global BDDs of the latches
-    dd = (DdManager *)Abc_NtkBuildGlobalBdds( pNtk, nBddMax, 1, fReorder, 0, fVerbose );    
-    if ( dd == NULL )
-    {
-        printf( "The number of intermediate BDD nodes exceeded the limit (%d).\n", nBddMax );
-        return;
-    }
-    if ( fVerbose )
-        printf( "Shared BDD size is %6d nodes.\n", Cudd_ReadKeys(dd) - Cudd_ReadDead(dd) );
-
-    // save the output BDD
-    bOutput = (DdNode *)Abc_ObjGlobalBdd(Abc_NtkPo(pNtk,0)); Cudd_Ref( bOutput );
-
-    // create partitions
-    pbParts = Abc_NtkCreatePartitions( dd, pNtk, fReorder, fVerbose );
-
-    // create the initial state and the variable map
-    bInitial  = Abc_NtkInitStateVarMap( dd, pNtk, fVerbose );  Cudd_Ref( bInitial );
-
-    // check the result
-    if ( !Cudd_bddLeq( dd, bInitial, Cudd_Not(bOutput) ) )
-        printf( "The miter is proved REACHABLE in the initial state.  " );
-    else
-    {
-        // compute the reachable states
-        bReached = Abc_NtkComputeReachable( dd, pNtk, pbParts, bInitial, bOutput, nBddMax, nIterMax, fPartition, fReorder, fVerbose ); 
-        if ( bReached != NULL )
-        {
-            Cudd_Ref( bReached );
-            Cudd_RecursiveDeref( dd, bReached );
-        }
-    }
-
-    // cleanup
-    Cudd_RecursiveDeref( dd, bOutput );
-    Cudd_RecursiveDeref( dd, bInitial );
-    for ( i = 0; i < Abc_NtkLatchNum(pNtk); i++ )
-        Cudd_RecursiveDeref( dd, pbParts[i] );
-    ABC_FREE( pbParts );
-    Extra_StopManager( dd );
-
-    // report the runtime
-    ABC_PRT( "Time", Abc_Clock() - clk );
-    fflush( stdout );
+func abcBDDSharingSize(functions []*core.DdNode) int {
+	seen := map[*core.DdNode]bool{}
+	var visit func(*core.DdNode)
+	visit = func(edge *core.DdNode) {
+		node := core.Cudd_Regular(edge)
+		if node == nil || core.Cudd_IsConstant(node) || seen[node] {
+			return
+		}
+		seen[node] = true
+		visit(node.T)
+		visit(node.E)
+	}
+	for _, f := range functions {
+		visit(f)
+	}
+	return len(seen)
 }
 
-#endif
+// Abc_NtkComputeReachable performs the C partitioned or monolithic image loop
+// and returns the computed reached-state BDD.
+func Abc_NtkComputeReachable(dd *core.DdManager, network *abc.Network, parts []*core.DdNode, initial, output *core.DdNode, maxBDD, maxIterations, partitioned, reorder, verbose int32) *core.DdNode {
+	if dd == nil || network == nil || initial == nil || output == nil || maxIterations <= 1 || len(parts) != len(network.ObjectsOfKind(abc.ObjectLatch)) {
+		return nil
+	}
+	piNum, ciNum, latches := len(network.ObjectsOfKind(abc.ObjectPI)), len(network.Inputs()), network.ObjectsOfKind(abc.ObjectLatch)
+	care := extrab.Extra_bddComputeRangeCube(dd, piNum, ciNum)
+	if care == nil {
+		return nil
+	}
+	core.Cudd_Ref(care)
+	vars := make([]*core.DdNode, len(latches))
+	for i := range vars {
+		vars[i] = core.Cudd_bddIthVar(dd, ciNum+i)
+	}
+	var tree *extrab.Extra_ImageTree_t
+	var mono *extrab.Extra_ImageTree2_t
+	if partitioned != 0 {
+		tree = extrab.Extra_bddImageStart(dd, care, len(parts), parts, len(vars), vars, verbose != 0)
+		if tree == nil {
+			core.Cudd_RecursiveDeref(dd, care)
+			return nil
+		}
+		defer extrab.Extra_bddImageTreeDelete(tree)
+	} else {
+		mono = extrab.Extra_bddImageStart2(dd, care, len(parts), parts, len(vars), vars, verbose != 0)
+		if mono == nil {
+			core.Cudd_RecursiveDeref(dd, care)
+			return nil
+		}
+		defer extrab.Extra_bddImageTreeDelete2(mono)
+	}
+	core.Cudd_RecursiveDeref(dd, care)
+	current, reached := initial, initial
+	core.Cudd_Ref(current)
+	core.Cudd_Ref(reached)
+	var next *core.DdNode
+	hasCurrent := true
+	iterations := 0
+	converged := false
+	for iteration := 1; iteration <= int(maxIterations); iteration++ {
+		iterations = iteration
+		if tree != nil {
+			next = extrab.Extra_bddImageCompute(tree, current)
+		} else {
+			next = extrab.Extra_bddImageCompute2(mono, current)
+		}
+		if next == nil {
+			core.Cudd_RecursiveDeref(dd, current)
+			core.Cudd_RecursiveDeref(dd, reached)
+			return nil
+		}
+		core.Cudd_Ref(next)
+		core.Cudd_RecursiveDeref(dd, current)
+		hasCurrent = false
+		mapped := abcReachVarMap(dd, piNum, ciNum, len(latches), next)
+		if mapped == nil {
+			core.Cudd_RecursiveDeref(dd, next)
+			core.Cudd_RecursiveDeref(dd, reached)
+			return nil
+		}
+		core.Cudd_Ref(mapped)
+		core.Cudd_RecursiveDeref(dd, next)
+		next = mapped
+		if core.Cudd_bddLeq(dd, next, reached) {
+			converged = true
+			break
+		}
+		nextSize := core.Cudd_DagSize(next)
+		if nextSize > int(maxBDD) {
+			break
+		}
+		current = core.Cudd_bddAnd(dd, next, core.Cudd_Not(reached))
+		core.Cudd_Ref(current)
+		hasCurrent = true
+		newReached := core.Cudd_bddOr(dd, reached, next)
+		core.Cudd_Ref(newReached)
+		core.Cudd_RecursiveDeref(dd, reached)
+		reached = newReached
+		core.Cudd_RecursiveDeref(dd, next)
+		next = nil
+		if verbose != 0 {
+			fmt.Printf("Iteration = %3d. BDD = %5d. ", iteration, nextSize)
+		}
+	}
+	exhausted := !converged && iterations == int(maxIterations) && next == nil
+	reportedIterations := iterations
+	if exhausted {
+		reportedIterations++
+	}
+	if next != nil {
+		core.Cudd_RecursiveDeref(dd, next)
+	}
+	if hasCurrent {
+		core.Cudd_RecursiveDeref(dd, current)
+	}
+	if verbose != 0 {
+		minterms := core.Cudd_CountMinterm(dd, reached, len(latches))
+		if exhausted || core.Cudd_DagSize(reached) > int(maxBDD) {
+			fmt.Printf("Reachability analysis is stopped after %d iterations.\n", reportedIterations)
+		} else {
+			fmt.Printf("Reachability analysis completed in %d iterations.\n", iterations)
+		}
+		fmt.Printf("Reachable states = %.0f. (Ratio = %.4f %%)\n", minterms, 100*minterms/math.Pow(2, float64(len(latches))))
+	}
+	if exhausted || core.Cudd_DagSize(reached) > int(maxBDD) {
+		fmt.Printf("Verified ONLY FOR STATES REACHED in %d iterations. \n", reportedIterations)
+	}
+	fmt.Printf("The miter is proved unreachable in %d iteration.  ", reportedIterations)
+	core.Cudd_Deref(reached)
+	return reached
+}
 
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
+func Abc_NtkVerifyUsingBdds(network *abc.Network, maxBDD, maxIterations, partitioned, reorder, verbose int32) {
+	started := time.Now()
+	if network == nil || abc.Abc_NtkIsStrash(network) == 0 || len(network.ObjectsOfKind(abc.ObjectPO)) != 1 || len(network.ObjectsOfKind(abc.ObjectLatch)) == 0 {
+		return
+	}
+	if abc.Abc_ObjFanoutNum(network.ObjectsOfKind(abc.ObjectPO)[0]) != 0 {
+		return
+	}
+	dd := Abc_NtkBuildGlobalBdds(network, maxBDD, 1, reorder, 0, verbose)
+	if dd == nil {
+		fmt.Printf("The number of intermediate BDD nodes exceeded the limit (%d).\n", maxBDD)
+		return
+	}
+	defer func() { Abc_NtkFreeGlobalBdds(network, 1) }()
+	if verbose != 0 {
+		fmt.Printf("Shared BDD size is %6d nodes.\n", core.Cudd_ReadKeys(dd)-core.Cudd_ReadDead(dd))
+	}
+	outputs := network.ObjectsOfKind(abc.ObjectPO)
+	function := Abc_ObjGlobalBdd(outputs[0])
+	if function == nil {
+		return
+	}
+	core.Cudd_Ref(function)
+	parts := Abc_NtkCreatePartitions(dd, network, reorder, verbose)
+	if parts == nil {
+		core.Cudd_RecursiveDeref(dd, function)
+		return
+	}
+	initial := Abc_NtkInitStateVarMap(dd, network, verbose)
+	if initial == nil {
+		core.Cudd_RecursiveDeref(dd, function)
+		for _, part := range parts {
+			core.Cudd_RecursiveDeref(dd, part)
+		}
+		return
+	}
+	core.Cudd_Ref(initial)
+	if !core.Cudd_bddLeq(dd, initial, core.Cudd_Not(function)) {
+		fmt.Print("The miter is proved REACHABLE in the initial state.  ")
+	} else {
+		reached := Abc_NtkComputeReachable(dd, network, parts, initial, function, maxBDD, maxIterations, partitioned, reorder, verbose)
+		if reached != nil {
+			core.Cudd_Ref(reached)
+			core.Cudd_RecursiveDeref(dd, reached)
+		}
+	}
+	core.Cudd_RecursiveDeref(dd, function)
+	core.Cudd_RecursiveDeref(dd, initial)
+	for _, part := range parts {
+		core.Cudd_RecursiveDeref(dd, part)
+	}
+	fmt.Printf("Time: %.2fs\n", time.Since(started).Seconds())
+}

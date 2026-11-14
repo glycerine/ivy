@@ -12,7 +12,7 @@ import (
 	"github.com/glycerine/abcgo/misc/util"
 )
 
-func Abc_NtkWriteLogFile(name string, cex *util.Abc_Cex_t, status, frames int32, command string) {
+func Abc_NtkWriteLogFile(name string, cex *util.Abc_Cex_t, status, frames int32, command any) {
 	f, err := os.Create(name)
 	if err != nil {
 		fmt.Printf("Cannot open log file for writing %q.\n", name)
@@ -29,7 +29,17 @@ func Abc_NtkWriteLogFile(name string, cex *util.Abc_Cex_t, status, frames int32,
 	default:
 		fmt.Println("Abc_NtkWriteLogFile(): Cannot recognize solving status.")
 	}
-	fmt.Fprintf(f, " %d %s", frames, command)
+	commandName := "unknown"
+	switch value := command.(type) {
+	case nil:
+	case string:
+		commandName = value
+	case []byte:
+		commandName = string(value)
+	default:
+		panic("abci: command must be a string or nil")
+	}
+	fmt.Fprintf(f, " %d %s", frames, commandName)
 	if cex != nil && status == 0 {
 		fmt.Fprintf(f, " %d", cex.IPo)
 	}
