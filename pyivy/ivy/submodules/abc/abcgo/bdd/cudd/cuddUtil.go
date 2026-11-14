@@ -1694,45 +1694,29 @@ func Cudd_PrintVersion(fp *os.File) {
 
 *****************************************************************************
 */
-// Cudd_AverageDistance is an architectural fidelity gap. The C routine measures
-// byte distances between nodes in unique-table buckets and collision chains.
-// Go's manager stores nodes in maps without stable slot addresses or those
-// chains, so this implementation can only approximate the report from graph
-// edges; it must not be used as a C-equivalent statistic.
+// Cudd_AverageDistance follows the C diagnostic over every live BDD unique
+// table entry, including deterministic collision-chain links supplied by the
+// core manager. Its numeric result is allocator-layout-dependent in both C
+// and Go; Go uses stable-ID-derived buckets because its canonical tables are
+// maps rather than CUDD's physical slot arrays.
 func Cudd_AverageDistance(dd *DdManager) float64 {
 	if dd == nil || len(dd.Vars) == 0 {
 		return 0
 	}
-	seen := make(map[*DdNode]struct{})
-	stack := append([]*DdNode(nil), dd.Vars...)
 	var distance float64
-	var measured int64
-	for len(stack) > 0 {
-		last := len(stack) - 1
-		node := Cudd_Regular(stack[last])
-		stack = stack[:last]
-		if Cudd_IsConstant(node) {
-			continue
-		}
-		if _, ok := seen[node]; ok {
-			continue
-		}
-		seen[node] = struct{}{}
-		for _, child := range []*DdNode{Cudd_T(node), Cudd_Regular(Cudd_E(node))} {
-			a, b := uintptr(unsafe.Pointer(node)), uintptr(unsafe.Pointer(child))
-			if a > b {
-				distance += float64(a - b)
-			} else {
-				distance += float64(b - a)
-			}
-			measured++
-			stack = append(stack, child)
+	links := core.Cudd_AverageDistanceLinks(dd)
+	for _, link := range links {
+		a, b := uintptr(unsafe.Pointer(link[0])), uintptr(unsafe.Pointer(link[1]))
+		if a > b {
+			distance += float64(a - b)
+		} else {
+			distance += float64(b - a)
 		}
 	}
-	if measured == 0 {
+	if len(links) == 0 {
 		return 0
 	}
-	return distance / float64(measured)
+	return distance / float64(len(links))
 
 } /* end of Cudd_AverageDistance */
 
