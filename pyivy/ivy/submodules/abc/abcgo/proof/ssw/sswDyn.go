@@ -67,7 +67,7 @@ func Ssw_ManCollectPos_rec(p *Ssw_Man_t, obj aig.Edge, newPos *vec.Vec_Int_t) {
 		vec.Vec_IntPush(newPos, id/2)
 		return
 	}
-	for fan := aig.Aig_ObjFanout0Int(g, int32(obj.NodeID())); fan != 0; fan = aig.Aig_ObjFanoutNext(g, fan) {
+	for i, fan := int32(0), aig.Aig_ObjFanout0Int(g, int32(obj.NodeID())); i < aig.Aig_ObjRefs(g, obj); i, fan = i+1, aig.Aig_ObjFanoutNext(g, fan) {
 		Ssw_ManCollectPos_rec(p, aig.Aig_ManObj(g, fan>>1), newPos)
 	}
 }
