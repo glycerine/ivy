@@ -69,6 +69,14 @@ func TestCec4SparseModelAgainstABC(t *testing.T) {
 	if out, err := exec.Command(binary, "unknown").CombinedOutput(); err != nil || strings.TrimSpace(string(out)) != "unknown=2 candidate=31 marked=1" {
 		t.Fatalf("C unknown: %v %s", err, out)
 	}
+	recycled, err := exec.Command(binary, "recycle").CombinedOutput()
+	if err != nil || !strings.Contains(string(recycled), "SAT calls = 56:  P = 1") || !strings.Contains(string(recycled), "D = 45") || !strings.Contains(string(recycled), "F = 10") || !strings.Contains(string(recycled), "Recyc = 55") {
+		t.Fatalf("C unknown/recycle sweep: %v\n%s", err, recycled)
+	}
+	limited, err := exec.Command(binary, "recycle", "1").CombinedOutput()
+	if err != nil || !strings.Contains(string(limited), "SAT calls = 56:  P = 1") || !strings.Contains(string(limited), "D = 42") || !strings.Contains(string(limited), "F = 13") || !strings.Contains(string(limited), "Recyc = 55") {
+		t.Fatalf("C one-conflict recycle sweep: %v\n%s", err, limited)
+	}
 	for _, mode := range []string{"1", "2"} {
 		out, err := exec.Command(binary, mode).CombinedOutput()
 		if err != nil || strings.TrimSpace(string(out)) != "result=0 c=1 pattern=3,4" {

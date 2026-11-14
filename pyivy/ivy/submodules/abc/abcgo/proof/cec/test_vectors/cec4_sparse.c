@@ -25,9 +25,28 @@ static int pack_case(int cursor) {
  Gia_ManAppendCi(g);Cec4_ManSimAlloc(g,1);Vec_IntPush(lits,2);g->iPatsPi=cursor;
  result=Cec4_ManPackAddPatternTry(g,1,lits);printf("pack=%d\n",result);return 0;
 }
+static int recycle_case(int conflictLimit) {
+ int i,j,h,a[6][5],clause,formula,x,y,z,xy,yz,left,right,status;
+ Gia_Man_t *g=Gia_ManStart(1024),*out=NULL; Cec_ParFra_t pars;
+ for(i=0;i<30;i++) Gia_ManAppendCi(g);
+ x=Gia_ManAppendCi(g);y=Gia_ManAppendCi(g);z=Gia_ManAppendCi(g);
+ Gia_ManHashAlloc(g);
+ for(i=0;i<6;i++)for(j=0;j<5;j++)a[i][j]=2*(1+5*i+j);
+ formula=1;
+ for(i=0;i<6;i++){clause=0;for(j=0;j<5;j++)clause=Gia_ManHashOr(g,clause,a[i][j]);formula=Gia_ManHashAnd(g,formula,clause);}
+ for(h=0;h<5;h++)for(i=0;i<6;i++)for(j=0;j<i;j++){clause=Gia_ManHashOr(g,a[i][h]^1,a[j][h]^1);formula=Gia_ManHashAnd(g,formula,clause);}
+ xy=Gia_ManHashAnd(g,x,y);yz=Gia_ManHashAnd(g,y,z);
+ left=Gia_ManHashAnd(g,xy,z);right=Gia_ManHashAnd(g,x,yz);
+ Gia_ManAppendCo(g,formula);Gia_ManAppendCo(g,left);Gia_ManAppendCo(g,right);
+ Cec4_ManSetParams(&pars);pars.jType=0;pars.nWords=1;pars.nRounds=1;pars.nGenIters=0;pars.nItersMax=10;pars.nBTLimit=conflictLimit;pars.nSatVarMax=1;pars.nCallsRecycle=0;pars.nLevelMax=0;pars.fVerbose=1;
+ status=Cec4_ManPerformSweeping(g,&pars,&out,0);
+ printf("recycle-status=%d out=%d\n",status,out!=NULL);
+ Gia_ManStop(out);Gia_ManStop(g);return 0;
+}
 int main(int argc, char **argv) {
  if(argc>1 && !strcmp(argv[1],"pack")) return pack_case(atoi(argv[2]));
  if(argc>1 && !strcmp(argv[1],"unknown")) return unknown_case();
+ if(argc>1 && !strcmp(argv[1],"recycle")) return recycle_case(argc>2?atoi(argv[2]):2);
  int mode=atoi(argv[1]), a,b,c,x,y,i,lit,ret;
  Gia_Man_t *g=Gia_ManStart(16); Cec_ParFra_t pars; Cec4_Man_t *p;
  a=Gia_ManAppendCi(g);b=Gia_ManAppendCi(g);c=Gia_ManAppendCi(g);

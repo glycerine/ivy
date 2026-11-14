@@ -53,6 +53,7 @@ func TestSequentialSynthesisOptionsAgainstABC(t *testing.T) {
 int main(void){int mode;for(mode=0;mode<3;mode++){Gia_Man_t *g=Gia_ManStart(12);Cec_ParSeq_t p;Vec_Ptr_t *domains=Vec_PtrAlloc(1);Vec_Int_t *part=Vec_IntAlloc(2);int a=Gia_ManAppendCi(g),r0=Gia_ManAppendCi(g),r1=Gia_ManAppendCi(g);Gia_ManAppendCo(g,a);Gia_ManAppendCo(g,a);Gia_ManAppendCo(g,a);Gia_ManSetRegNum(g,2);Vec_IntPush(part,0);Vec_IntPush(part,1);Vec_PtrPush(domains,part);g->vClockDoms=domains;Cec_SeqSynthesisSetDefaultParams(&p);p.fUseScorr=mode==1;p.fUseLcorr=mode==2;int status=Cec_SequentialSynthesisPart(g,&p);printf("case:%d status:%d repr:%d expected:%d\n",mode,status,Gia_ObjRepr(g,r1>>1),r0>>1);Gia_ManStop(g);}
 {Gia_Man_t *g=Gia_ManStart(20);Cec_ParSeq_t p;Vec_Ptr_t *domains=Vec_PtrAlloc(2);Vec_Int_t *p0=Vec_IntAlloc(2),*p1=Vec_IntAlloc(2);int x=Gia_ManAppendCi(g),y=Gia_ManAppendCi(g),r0=Gia_ManAppendCi(g),r1=Gia_ManAppendCi(g),r2=Gia_ManAppendCi(g),f=Gia_ManAppendAnd(g,x,y);Gia_ManAppendCo(g,f);Gia_ManAppendCo(g,f);Gia_ManAppendCo(g,f);Gia_ManSetRegNum(g,3);Vec_IntPush(p0,0);Vec_IntPush(p0,1);Vec_IntPush(p1,1);Vec_IntPush(p1,2);Vec_PtrPush(domains,p0);Vec_PtrPush(domains,p1);g->vClockDoms=domains;Cec_SeqSynthesisSetDefaultParams(&p);Cec_SequentialSynthesisPart(g,&p);printf("overlap:%d,%d,%d\n",Gia_ObjRepr(g,r0>>1),Gia_ObjRepr(g,r1>>1),Gia_ObjRepr(g,r2>>1));Gia_ManStop(g);}
 {Gia_Man_t *g=Gia_ManStart(20);Cec_ParSeq_t p;Vec_Ptr_t *domains=Vec_PtrAlloc(2);Vec_Int_t *p0=Vec_IntAlloc(2),*p1=Vec_IntAlloc(2);int x=Gia_ManAppendCi(g),y=Gia_ManAppendCi(g),r0=Gia_ManAppendCi(g),r1=Gia_ManAppendCi(g),r2=Gia_ManAppendCi(g),f=Gia_ManAppendAnd(g,x,y);Gia_ManAppendCo(g,f);Gia_ManAppendCo(g,f^1);Gia_ManAppendCo(g,f);Gia_ManSetRegNum(g,3);Vec_IntPush(p0,0);Vec_IntPush(p0,1);Vec_IntPush(p1,1);Vec_IntPush(p1,2);Vec_PtrPush(domains,p0);Vec_PtrPush(domains,p1);g->vClockDoms=domains;Cec_SeqSynthesisSetDefaultParams(&p);Cec_SequentialSynthesisPart(g,&p);printf("phase:%d,%d,%d\n",Gia_ObjRepr(g,r0>>1),Gia_ObjRepr(g,r1>>1),Gia_ObjRepr(g,r2>>1));Gia_ManStop(g);}
+{Gia_Man_t *g=Gia_ManStart(16);Cec_ParSeq_t p;Vec_Ptr_t *domains=Vec_PtrAlloc(2);Vec_Int_t *p0=Vec_IntAlloc(2),*p1=Vec_IntAlloc(2);int x=Gia_ManAppendCi(g),r0=Gia_ManAppendCi(g),r1=Gia_ManAppendCi(g),r2=Gia_ManAppendCi(g);Gia_ManAppendCo(g,0);Gia_ManAppendCo(g,x);Gia_ManAppendCo(g,0);Gia_ManSetRegNum(g,3);Vec_IntPush(p0,0);Vec_IntPush(p0,1);Vec_IntPush(p1,1);Vec_IntPush(p1,2);Vec_PtrPush(domains,p0);Vec_PtrPush(domains,p1);g->vClockDoms=domains;Cec_SeqSynthesisSetDefaultParams(&p);Cec_SequentialSynthesisPart(g,&p);printf("const:%d,%d,%d\n",Gia_ObjRepr(g,r0>>1),Gia_ObjRepr(g,r1>>1),Gia_ObjRepr(g,r2>>1));Gia_ManStop(g);}
 return 0;}`
 	cfile, binary := filepath.Join(dir, "oracle.c"), filepath.Join(dir, "oracle")
 	if err := os.WriteFile(cfile, []byte(program), 0600); err != nil {
@@ -70,7 +71,7 @@ return 0;}`
 			t.Fatalf("ABC missing %q: %s", want, out)
 		}
 	}
-	for _, want := range []string{"overlap:268435455,3,3", "phase:268435455,268435455,268435455"} {
+	for _, want := range []string{"overlap:268435455,3,3", "phase:268435455,268435455,268435455", "const:0,268435455,0"} {
 		if !strings.Contains(string(out), want) {
 			t.Fatalf("ABC missing %q: %s", want, out)
 		}

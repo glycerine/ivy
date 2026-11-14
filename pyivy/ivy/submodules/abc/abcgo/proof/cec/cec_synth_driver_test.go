@@ -155,3 +155,30 @@ func TestSequentialSynthesisDoesNotMergeComplementaryClassesAcrossDomains(t *tes
 		}
 	}
 }
+
+func TestSequentialSynthesisTransfersConstantOutputsAcrossOverlappingDomains(t *testing.T) {
+	g := gia.Gia_ManStart(16)
+	input := gia.Gia_ManAppendCi(g)
+	ros := make([]int32, 3)
+	for i := range ros {
+		ros[i] = gia.Gia_ManAppendCi(g)
+	}
+	for _, next := range []int32{0, input, 0} {
+		gia.Gia_ManAppendCo(g, next)
+	}
+	gia.Gia_ManSetRegNum(g, int32(len(ros)))
+	g.SetClockDomains([][]int32{{0, 1}, {1, 2}})
+	var pars Cec_ParSeq_t
+	Cec_SeqSynthesisSetDefaultParams(&pars)
+	if status := Cec_SequentialSynthesisPart(g, &pars); status != 1 {
+		t.Fatalf("status = %d", status)
+	}
+	// The input-driven middle register keeps both overlapping partitions on
+	// the synthesis path while the first and last next-state functions are 0.
+	for _, i := range []int{0, 2} {
+		ro := ros[i]
+		if repr := gia.Gia_ObjRepr(g, ro>>1); repr != 0 {
+			t.Fatalf("constant-next-state register %d representative = %d, want 0", i, repr)
+		}
+	}
+}

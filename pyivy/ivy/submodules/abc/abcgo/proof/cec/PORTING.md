@@ -218,13 +218,21 @@ leaves the caller's preexisting output pointer untouched. Overlapping clock
 domains cover the A~B then B~C class chain and verify normalization to A. A
 compiled-ABC oracle compares that chain and a complemented-phase chain,
 confirming that opposite-phase registers are not merged through the shared
-register. CEC2's private reduced manager is stopped on every return path,
-matching `Cec2_ManDestroy` in C.
+register. It also checks constant-valued next-state functions on the two
+overlapping endpoints; the middle input-driven register keeps both partitions
+on the synthesis path, and C plus Go map the endpoint registers to constant 0.
+CEC2's private reduced manager is stopped on every return path, matching
+`Cec2_ManDestroy` in C.
 
-Still uncovered are constant-valued class transfer across overlapping
-partitions and CEC4 recycle boundary combinations where SAT or UNKNOWN
-precedes recycling. CEC2/CEC3 detailed conflict-limit status combinations and
-source diagnostic output also remain selective. CEC2/3/4 sweep code has no
+The source-backed CEC4 recycle fixture sets `nSatVarMax=1` and
+`nCallsRecycle=0`; C and Go both make 56 queries and recycle 55 times. At a
+two-conflict limit, both report 45 SAT, one UNSAT, and 10 UNKNOWN results. At
+one conflict, C reports 42 SAT, one UNSAT, and 13 UNKNOWN while Go reports 42
+SAT and 14 UNKNOWN. The single boundary result is solver-dependent under the
+tight conflict budget; the UNKNOWN result is conservative, and no equivalence
+is claimed for that candidate. The variable and call threshold boundaries are
+also covered separately. CEC2/CEC3 detailed conflict-limit status combinations
+and source diagnostic output remain selective. CEC2/3/4 sweep code has no
 time-limit branch; timeout parity applies to the separate classic CEC sweep
 path documented above.
 
