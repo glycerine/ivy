@@ -28,7 +28,7 @@ func llbIsPo(graph *aig.Graph, edge aig.Edge) bool {
 
 func llbFanouts(graph *aig.Graph, edge aig.Edge) []aig.Edge {
 	var result []aig.Edge
-	for fan := aig.Aig_ObjFanout0Int(graph, int32(edge.NodeID())); fan != 0; fan = aig.Aig_ObjFanoutNext(graph, fan) {
+	for i, fan := int32(0), aig.Aig_ObjFanout0Int(graph, int32(edge.NodeID())); i < aig.Aig_ObjRefs(graph, edge); i, fan = i+1, aig.Aig_ObjFanoutNext(graph, fan) {
 		result = append(result, aig.Aig_ManObj(graph, fan>>1))
 	}
 	return result
