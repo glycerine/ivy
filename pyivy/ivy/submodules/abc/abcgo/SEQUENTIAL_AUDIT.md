@@ -976,3 +976,35 @@ packages needed changes. This checkpoint does not complete AIG review. The
 remaining dominator representation/edge-case questions include legacy raw
 output boundaries and the widened signature cache. Other AIG families and
 the rest of the package inventory remain open.
+
+### Dominator representation cleanup and factoring frontier state
+
+Closed the raw-output question by enforcing C's explicit CO-object domain at
+dominator-manager creation. The old synthetic boundaries were not connected
+to the source fanout index and could not participate correctly in its driver.
+A red regression demonstrates their previous silent acceptance. All public
+Go output constructors create explicit COs; only legacy internal raw-edge
+states are rejected. Removed the two adjacency snapshots and synthetic-ID
+storage. Diagnostics read actual fanins; cofactoring counts follow the actual
+reference-bounded fanout list. The path-enumeration test now builds its own
+adjacency independently of production storage.
+
+Kept the 64-bit signature cache as a defined, safe set-membership accelerator:
+each bit represents an ID modulo 63, so its population count is a lower bound
+on exact union size. It can reject only unions already over the limit. Exact
+sorted node sets remain authoritative for merges and containment. Added
+23,814 bounded-union comparisons over IDs 0,31,32,62,63,126, including signature
+collisions and IDs beyond C's int-shift width. These pass with the compiled
+driver comparison and full AIG race suite; no source undefined shifts are
+used as an oracle for large IDs.
+
+Started a fresh review of aigFact.go against aigFact.c rather than relying on
+its historical review report. Red tests exposed support collection ignoring
+already-current frontier nodes and reconstruction hiding the source's object
+copy results in a local map. Collection now follows graph traversal marks,
+removing an extra membership map; reconstruction publishes support, cofactor
+and internal-node copies in the graph map while preserving unrelated entries.
+A compiled fixture includes original aigFact.c and verifies collected order
+and final marks. The full AIG race suite is the checkpoint gate. Other
+factoring helpers, support-minimization representation/heuristic differences
+and the remaining AIG families are still under review.
