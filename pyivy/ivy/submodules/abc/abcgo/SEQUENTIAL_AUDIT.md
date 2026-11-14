@@ -1530,3 +1530,71 @@ race suites pass in 24.361s and 29.114s, recorded in
 This closes the current packing family review, not the AIG package. The
 justification/experimental driver and visualization/printing families remain
 next; the complete-package count is still 1/131.
+
+### Justification core source checkpoint
+
+Compared aigJust.go with the low-level operators, eight-attempt greedy search
+and ternary simulation in aigJust.c. Four new regressions failed before
+repairs: the public output wrapper marked CO scratch instead of transparently
+delegating to its driver; unsuccessful searches discarded C's last partial
+support; justification's duplicate traversal counter bypassed the shared
+bounded rollover; and stale/invalid CioIDs could produce a literal naming the
+wrong CI while returning success.
+
+Restored source CO delegation and retention of the last failed attempt's
+partial support. Failure remains a failed greedy attempt, not an UNSAT proof,
+and that partial support is not a satisfying certificate. Removed the private
+counter implementation and use Aig_ManIncrementTravId for search and ternary
+simulation. Rollover tests now use the shared generation convention, including
+the (1<<30)-1 boundary and the old maximum-int case. This preserves the already
+reviewed safe Go rollover rather than C's ineffective high-counter pData clear.
+When collecting a witness, each CI index must identify that same input in the
+current interface. Invalid, negative and out-of-range indices now panic instead
+of silently producing a wrong witness. Callers still explicitly initialize CI
+scratch indices with Aig_ManSetCioIds; the port does not reindex them implicitly.
+
+The new fixture executes original justification and ternary routines with the
+source traversal helper. All 4,310 queries on ten directed/seeded four-input
+graphs match results, support literal order, manager generation and every
+object's MarkA/MarkB/TravID state. Queries cover all eight heuristics, direct
+recursion and the eight-attempt wrapper, failed attempts, output inversion,
+reconvergence, and all 81 partial assignments in mixed search/simulation order.
+Independent Boolean evaluation checks all assignments consistent with each
+successful output witness or known ternary output. Unknown ternary values do
+not assert a complete Boolean classification.
+
+Retained the existing Go correction for impossible constant targets: C's
+recursive search returns true for constant one regardless of requested value.
+The native comparison excludes those invalid source certificates; independent
+Go tests require failure for them. Explicit XOR/buffer/complemented-Edge support
+and conflicting-partial-assignment guards remain Go extensions covered by the
+existing tests. The bounded greedy algorithm has not been replaced by a SAT
+solver or a completeness claim.
+
+The focused regressions and native comparison pass. Full AIG and ABCI race
+suites pass in 24.255s and 28.353s, in
+`/tmp/abcgo-justification-source-review.log`. The expanded full AIG race suite
+with the 4,310-query fixture passes in 25.300s, in
+`/tmp/abcgo-justification-final-review.log`.
+
+### Justification experiment driver source review
+
+Read aigJust_experiment.go against the original driver: initial packing and
+candidate order, opposite-phase target choice, separate target/failure counts,
+support-length accumulation, pattern insertion, summary, mark cleanup and final
+packing simulation/free. No additional driver bug was found. The Go driver
+uses elapsed wall time and guards empty denominators; C uses CPU time and can
+print NaNs. These diagnostic differences do not replace the source search.
+
+Extended the native fixture to execute the actual C experiment and packing
+implementations on a twelve-input graph with positive/negative AND chains and
+a logically impossible reconvergent cone. Initial and final 33-bin histograms,
+all summary fields except elapsed time, final pattern tally, manager generation
+and every object's final scratch state match C. The impossible cone explicitly
+exercises one failed target-one justification. The borrowed Go graph remains
+valid and all live scratch flags are cleared. Focused race tests pass for both
+the 4,310-query comparison and the complete experiment after this addition.
+
+This closes the current justification core/experiment family review. The AIG
+package audit remains open, including visualization/printing and the remaining
+source inventory; the completed-package count is still 1/131.
