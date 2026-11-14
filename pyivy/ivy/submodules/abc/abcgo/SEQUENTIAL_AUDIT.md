@@ -481,3 +481,26 @@ functional classes where source SAT conflict controls are ignored; those
 paths require the same fidelity scrutiny before aig/aig can be completed.
 
 Full uncached BSAT, native-driver and AIG race suites pass for this checkpoint.
+
+### Constructive choice source contract
+
+Reviewed the partition FRAIG/choice driver loops against aigPart.c. Contrary
+to the historical PORT_REVIEW description, the current partitioned drivers
+already use an explicit FRA backend and forward conflict/level limits. The
+saved partition copy maps and representative transfer match the source loop;
+the existing backend-forwarding regression covers those controls. Corrected
+the obsolete report rather than replacing this working backend.
+
+Constructive choicing still had an invented Shannon equivalence search and
+omitted the source's previous-version copy-map validation. Added three tests
+for missing, invalid and unreachable-object destination mappings; all failed
+before the repair. Restored the source check for every live previous object
+and removed the extra equivalence search. Equivalent versions remain a caller
+precondition, as in C. Added a three-version regression checking each live copy
+map, CO identity, representative links, complemented output and all eight input
+assignments. This avoids introducing a separate potentially exponential proof
+algorithm into a structural accumulation operation.
+
+Uncached AIG, FRA and ABCI race suites pass. The AIG race suite was rerun after
+adding the three-version regression. This checkpoint does not complete the
+AIG package audit; the remaining families listed above still require review.
