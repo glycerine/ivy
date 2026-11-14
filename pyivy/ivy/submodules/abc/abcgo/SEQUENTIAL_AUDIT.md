@@ -607,3 +607,28 @@ Full uncached AIG, AMAP and ABCI race suites pass. Ordinary/preorder DFS finding
 are closed for this checkpoint. DfsAll still needs a distinct all-live-object
 iterator for ports that use its current behavior; source DfsAll assumes no
 dangling gates. The rest of the AIG algorithm review remains incomplete.
+
+### DfsAll and all-object caller separation
+
+Compared DfsAll and all seventeen production Go call sites with their source
+object passes. The C routine traverses CO cones, appends unused CIs afterward
+without marking them and asserts that every live object was collected. Go's
+routine instead enumerated every live object, including dangling gates, and
+left traversal IDs unchanged. New tests failed on ordering, traversal setup
+and the missing dangling-gate rejection before restoring the C contract.
+
+The callers in SAIG, SSW, abstraction and cut sweeping implement all-node or
+all-object passes; none of their corresponding C files calls Aig_ManDfsAll.
+They need the former Go behavior, including support for buffers and rewritten
+object order. Moved that unchanged traversal into Graph.TopologicalObjects and
+migrated all seventeen calls. It visits every live object in dependency order
+without changing traversal IDs or object marks. Direct tests cover dangling
+logic, deletion holes, a buffer with a forward object-ID reference, regular
+unique results, fanin-before-user ordering, preserved scratch fields and cycle
+rejection. This names the Go iteration utility explicitly rather than changing
+the source algorithm or dropping objects needed by the caller passes.
+
+Full uncached AIG, SAIG, SSW, abstraction and cut-sweeping race suites pass.
+The caller migrations are integration changes, not completed audits of those
+four packages. Reverse DFS, cone/support/composition helpers and the remaining
+AIG algorithm families still require source review; aig/aig remains in progress.
