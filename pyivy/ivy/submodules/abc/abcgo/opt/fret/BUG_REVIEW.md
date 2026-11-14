@@ -21,6 +21,35 @@ the timing, initialization, main-loop, and latch-box code with
 - Init-to-original mapping had discarded constants even though the C code maps
   them to their original constant object. Conflict extraction can select a
   constant, so those mappings are preserved; a regression test covers lookup.
+- Backward-init remapping set the latch's generic object data but omitted its
+  flow-data mapping. The recursive init-network rebuild reads the latter, so it
+  could hit a nil mapping. Both mappings are now set, with a regression test.
+- Partial-SAT conflict candidates were ordered as DFS nodes then PIs, although
+  the C code rotates the appended PI segment to the front. The order now matches
+  C, and each candidate's temporary level index is also written as in C.
+- Bias propagation used a distinct visit per object and relative lag. C visits
+  each object once; its `lag - isLatch ? 1 : 0` expression also produces a
+  zero/one lag toggle for the tracked lag states. The port now mirrors that
+  traversal and expression, with tests for the boundary path and lag transition.
+- HOP initial-state simulation accepted XOR nodes even though the source only
+  handles constants, PIs, POs, and ANDs. Unsupported HOP nodes now follow the
+  source assertion path.
+- HOP PI initial-state propagation now converts the network's `INIT_CARE`
+  meaning (the input is known) into the evaluator's don't-care meaning. The C
+  code copies `INIT_CARE` directly into `fMarkB`, then treats `fMarkB` as a
+  don't-care bit in `Abc_FlowRetime_EvalHop_rec`; this makes a known HOP input
+  appear unknown. The Go evaluator keeps the intended known/unknown behavior,
+  covered for known values, DC propagation, controlling zero, and complemented
+  outputs in `TestHopInitialStateSimulationTracksCareAndComplement`.
+- Named type aliases in `fretime.go` collided with dot imports from the flow
+  source files. The flow files now use qualified owning-package APIs, preserving
+  the exported aliases without import-scope collisions.
+- The `trace2` debug helper from `fretTime.c` was missing. It now follows the
+  first fanin on a longest-level path and has a regression test for traversal
+  order.
+- The minimum-retiming entry point omitted the verbose max-delay setting and
+  the `DEBUG_CHECK` network validation enabled by `fretime.h`. Both source
+  behaviors are restored; a test covers the rejected-delay report.
 
 ## Review coverage
 
@@ -34,14 +63,17 @@ the timing, initialization, main-loop, and latch-box code with
 - Checked backward-init conflict extraction and partial-SAT polarity against
   the C return convention: SAT is zero at `Abc_NtkMiterSat`; the helper
   `Abc_FlowRetime_PartialSat` returns true for SAT.
+- Compared PI/DFS ordering, temporary object levels, latch init mappings, and
+  init-bias traversal with `fretInit.c`.
 - Checked latch bubble handling, flow-block marking, and latch-box restoration
   against their C counterparts.
 
 ## Verification still pending
 
-`gofmt` and `git diff --check` pass for the FRET files. Package tests, race
-tests, and vet cannot yet reach FRET: the current module build stops on raw C
-syntax in `base/abc/abcLatch.go` and `base/abci/abc.go`. The SAT API is also
-being ported in `base/abci/abcSat.go`; once its package parses, rerun all three
-gates and review the resulting compiler diagnostics before treating this port
-as complete.
+The Go files parse cleanly under `gofmt`, and `git diff --check` passes for
+this directory. `go test ./aig/hop` passes. `go test ./opt/fret` has not yet
+reached FRET type-checking: it currently stops on syntax errors in the
+transitively imported `base/abci` package (`abcMap.go`, with errors around
+lines 424–568 at the latest run). The FRET tests added here remain
+unverified until that dependency builds; rerun the complete FRET suite after
+the `base/abci` parser errors are resolved.

@@ -41,8 +41,8 @@ const (
 
 type Flow_Data_t struct {
 	mark                  int32
-	pred, pInitObj, pCopy *Abc_Obj_t
-	vNodes                *Vec_Ptr_t
+	pred, pInitObj, pCopy *abc.Abc_Obj_t
+	vNodes                *vec.Vec_Ptr_t
 	e_dist, r_dist        int32
 }
 
@@ -51,30 +51,30 @@ type NodeLag_t struct {
 }
 
 type InitConstraint_t struct {
-	pBiasNode *Abc_Obj_t
-	vNodes    *Vec_Int_t
-	vLags     *Vec_Int_t
+	pBiasNode *abc.Abc_Obj_t
+	vNodes    *vec.Vec_Int_t
+	vLags     *vec.Vec_Int_t
 }
 
 type MinRegMan_t struct {
 	maxDelay, fComputeInitState, fGuaranteeInitState, fBlockConst int32
 	nNodes, nLatches, fForwardOnly, fBackwardOnly                 int32
 	fConservTimingOnly, nMaxIters, fVerbose                       int32
-	pNtk                                                          *Abc_Ntk_t
+	pNtk                                                          *abc.Abc_Ntk_t
 	nPreRefine                                                    int32
 	fIsForward, fSinkDistTerminate                                int32
 	nExactConstraints, nConservConstraints                        int32
 	fSolutionIsDc, constraintMask, iteration, subIteration        int32
-	vLags, vSinkDistHist                                          *Vec_Int_t
+	vLags, vSinkDistHist                                          *vec.Vec_Int_t
 	pDataArray                                                    []Flow_Data_t
-	vTimeEdges                                                    []Vec_Ptr_t
-	vExactNodes, vInitConstraints, vNodes                         *Vec_Ptr_t
-	pInitNtk                                                      *Abc_Ntk_t
+	vTimeEdges                                                    []vec.Vec_Ptr_t
+	vExactNodes, vInitConstraints, vNodes                         *vec.Vec_Ptr_t
+	pInitNtk                                                      *abc.Abc_Ntk_t
 	pInitToOrig                                                   []NodeLag_t
 }
 
-func flowData(obj *Abc_Obj_t) *Flow_Data_t {
-	return &pManMR.pDataArray[Abc_ObjId(obj)]
+func flowData(obj *abc.Abc_Obj_t) *Flow_Data_t {
+	return &pManMR.pDataArray[abc.Abc_ObjId(obj)]
 }
 
 func ensureInitToOrig(id int32) {
@@ -108,16 +108,36 @@ func updateSinkDistanceHistogram(oldDistance, newDistance int32) {
 	}
 }
 
-func FSET(obj *Abc_Obj_t, mask int32)        { flowData(obj).mark |= mask }
-func FUNSET(obj *Abc_Obj_t, mask int32)      { flowData(obj).mark &^= mask }
-func FTEST(obj *Abc_Obj_t, mask int32) int32 { return flowData(obj).mark & mask }
-func FSETPRED(obj, pred *Abc_Obj_t) {
+func FSET(obj *abc.Abc_Obj_t, mask int32)        { flowData(obj).mark |= mask }
+func FUNSET(obj *abc.Abc_Obj_t, mask int32)      { flowData(obj).mark &^= mask }
+func FTEST(obj *abc.Abc_Obj_t, mask int32) int32 { return flowData(obj).mark & mask }
+func FSETPRED(obj, pred *abc.Abc_Obj_t) {
 	if abc.Abc_ObjIsLatch(obj) != 0 {
 		panic("FSETPRED: latch data is reserved for init-state mapping")
 	}
 	flowData(obj).pred = pred
 }
-func FGETPRED(obj *Abc_Obj_t) *Abc_Obj_t { return flowData(obj).pred }
-func FTIMEEDGES(obj *Abc_Obj_t) *Vec_Ptr_t {
-	return &pManMR.vTimeEdges[Abc_ObjId(obj)]
+func FGETPRED(obj *abc.Abc_Obj_t) *abc.Abc_Obj_t { return flowData(obj).pred }
+func FTIMEEDGES(obj *abc.Abc_Obj_t) *vec.Vec_Ptr_t {
+	return &pManMR.vTimeEdges[abc.Abc_ObjId(obj)]
+}
+
+// initConflictNodeOrder mirrors the C sequence of appending PIs to the DFS
+// vector and rotating its original DFS segment to the end.
+func initConflictNodeOrder(dfsNodes, primaryInputs []*abc.Abc_Obj_t) []*abc.Abc_Obj_t {
+	ordered := make([]*abc.Abc_Obj_t, 0, len(primaryInputs)+len(dfsNodes))
+	ordered = append(ordered, primaryInputs...)
+	return append(ordered, dfsNodes...)
+}
+
+// biasNextLag mirrors C's `lag - isLatch ? 1 : 0` conditional expression.
+func biasNextLag(lag int32, nextIsLatch bool) int32 {
+	isLatch := int32(0)
+	if nextIsLatch {
+		isLatch = 1
+	}
+	if lag-isLatch != 0 {
+		return 1
+	}
+	return 0
 }

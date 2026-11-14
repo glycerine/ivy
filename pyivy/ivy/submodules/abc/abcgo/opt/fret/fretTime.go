@@ -8,16 +8,29 @@ import (
 	vec "github.com/glycerine/abcgo/misc/vec"
 )
 
+// trace2 prints a node and follows the first fanin whose level can lie on a
+// longest path to it. This is the debug helper from fretTime.c.
+func trace2(obj *abc.Abc_Obj_t) {
+	print_node(obj)
+	for _, edge := range obj.Fanins() {
+		next := edge.Object
+		if next.Level >= obj.Level-1 {
+			trace2(next)
+			break
+		}
+	}
+}
+
 // Timing constraints are stored per object ID. Each edge points to a node on
 // the critical path from the constrained object to a latch boundary.
-func Abc_FlowRetime_InitTiming(ntk *Abc_Ntk_t) {
+func Abc_FlowRetime_InitTiming(ntk *abc.Abc_Ntk_t) {
 	pManMR.nConservConstraints = 0
 	pManMR.nExactConstraints = 0
 	pManMR.vExactNodes = vec.Vec_PtrAlloc(1000)
-	pManMR.vTimeEdges = make([]Vec_Ptr_t, int(abc.Abc_NtkObjNumMax(ntk)+1))
+	pManMR.vTimeEdges = make([]vec.Vec_Ptr_t, int(abc.Abc_NtkObjNumMax(ntk)+1))
 }
 
-func Abc_FlowRetime_ConstrainConserv(ntk *Abc_Ntk_t) {
+func Abc_FlowRetime_ConstrainConserv(ntk *abc.Abc_Ntk_t) {
 	clearExactConstraints()
 	if pManMR.fIsForward != 0 {
 		Abc_FlowRetime_ConstrainConserv_forw(ntk)
@@ -32,13 +45,13 @@ func Abc_FlowRetime_ConstrainConserv(ntk *Abc_Ntk_t) {
 func clearExactConstraints() {
 	pManMR.nExactConstraints = 0
 	for vec.Vec_PtrSize(pManMR.vExactNodes) > 0 {
-		obj, ok := vec.Vec_PtrPop(pManMR.vExactNodes).(*Abc_Obj_t)
+		obj, ok := vec.Vec_PtrPop(pManMR.vExactNodes).(*abc.Abc_Obj_t)
 		assert(ok && obj != nil, "exact-node list contains an object")
 		vec.Vec_PtrClear(FTIMEEDGES(obj))
 	}
 }
 
-func Abc_FlowRetime_ConstrainConserv_forw(ntk *Abc_Ntk_t) {
+func Abc_FlowRetime_ConstrainConserv_forw(ntk *abc.Abc_Ntk_t) {
 	assert(vec.Vec_PtrSize(pManMR.vNodes) == 0, "scratch node vector is empty")
 	pManMR.nConservConstraints = 0
 
@@ -117,7 +130,7 @@ func Abc_FlowRetime_ConstrainConserv_forw(ntk *Abc_Ntk_t) {
 	vec.Vec_PtrClear(pManMR.vNodes)
 }
 
-func Abc_FlowRetime_ConstrainConserv_back(ntk *Abc_Ntk_t) {
+func Abc_FlowRetime_ConstrainConserv_back(ntk *abc.Abc_Ntk_t) {
 	assert(vec.Vec_PtrSize(pManMR.vNodes) == 0, "scratch node vector is empty")
 	pManMR.nConservConstraints = 0
 
@@ -191,10 +204,10 @@ func Abc_FlowRetime_ConstrainConserv_back(ntk *Abc_Ntk_t) {
 	vec.Vec_PtrClear(pManMR.vNodes)
 }
 
-func objectLevel(obj *Abc_Obj_t) int32           { return int32(obj.Level) }
-func setObjectLevel(obj *Abc_Obj_t, level int32) { obj.Level = int(level) }
+func objectLevel(obj *abc.Abc_Obj_t) int32           { return int32(obj.Level) }
+func setObjectLevel(obj *abc.Abc_Obj_t, level int32) { obj.Level = int(level) }
 
-func maxFaninLevel(obj *Abc_Obj_t, onlyCurrent bool) int32 {
+func maxFaninLevel(obj *abc.Abc_Obj_t, onlyCurrent bool) int32 {
 	var level int32
 	for _, edge := range obj.Fanins() {
 		fanin := edge.Object
@@ -211,7 +224,7 @@ func maxFaninLevel(obj *Abc_Obj_t, onlyCurrent bool) int32 {
 	return level
 }
 
-func maxFanoutLevel(obj *Abc_Obj_t, onlyCurrent bool) int32 {
+func maxFanoutLevel(obj *abc.Abc_Obj_t, onlyCurrent bool) int32 {
 	var level int32
 	for _, fanout := range obj.Fanouts() {
 		if onlyCurrent && abc.Abc_NodeIsTravIdCurrent(fanout) == 0 {
@@ -228,17 +241,17 @@ func maxFanoutLevel(obj *Abc_Obj_t, onlyCurrent bool) int32 {
 	return level
 }
 
-func reverseVecObjects(nodes *Vec_Ptr_t) []*Abc_Obj_t {
-	result := make([]*Abc_Obj_t, 0, vec.Vec_PtrSize(nodes))
+func reverseVecObjects(nodes *vec.Vec_Ptr_t) []*abc.Abc_Obj_t {
+	result := make([]*abc.Abc_Obj_t, 0, vec.Vec_PtrSize(nodes))
 	for i := vec.Vec_PtrSize(nodes) - 1; i >= 0; i-- {
-		obj, ok := vec.Vec_PtrEntry(nodes, i).(*Abc_Obj_t)
+		obj, ok := vec.Vec_PtrEntry(nodes, i).(*abc.Abc_Obj_t)
 		assert(ok && obj != nil, "DFS node vector contains an object")
 		result = append(result, obj)
 	}
 	return result
 }
 
-func checkForwardOrder(nodes *Vec_Ptr_t) {
+func checkForwardOrder(nodes *vec.Vec_Ptr_t) {
 	ordered := reverseVecObjects(nodes)
 	for _, obj := range ordered {
 		obj.MarkB = true
@@ -256,7 +269,7 @@ func checkForwardOrder(nodes *Vec_Ptr_t) {
 	}
 }
 
-func checkBackwardOrder(nodes *Vec_Ptr_t) {
+func checkBackwardOrder(nodes *vec.Vec_Ptr_t) {
 	ordered := reverseVecObjects(nodes)
 	for _, obj := range ordered {
 		obj.MarkB = true
@@ -273,7 +286,7 @@ func checkBackwardOrder(nodes *Vec_Ptr_t) {
 	}
 }
 
-func Abc_FlowRetime_ConstrainExact(obj *Abc_Obj_t) {
+func Abc_FlowRetime_ConstrainExact(obj *abc.Abc_Obj_t) {
 	if FTEST(obj, CONSERVATIVE) != 0 {
 		pManMR.nConservConstraints--
 		FUNSET(obj, CONSERVATIVE)
@@ -286,11 +299,11 @@ func Abc_FlowRetime_ConstrainExact(obj *Abc_Obj_t) {
 }
 
 type timingPathNode struct {
-	obj          *Abc_Obj_t
+	obj          *abc.Abc_Obj_t
 	throughLatch bool
 }
 
-func constrainExact(root *Abc_Obj_t, forward bool) {
+func constrainExact(root *abc.Abc_Obj_t, forward bool) {
 	assert(vec.Vec_PtrSize(pManMR.vNodes) == 0, "scratch node vector is empty")
 	assert(abc.Abc_ObjIsLatch(root) == 0, "exact timing root is not a latch")
 	assert(vec.Vec_PtrSize(FTIMEEDGES(root)) == 0, "exact timing edges were cleared")
@@ -306,6 +319,8 @@ func constrainExact(root *Abc_Obj_t, forward bool) {
 		}
 		propagateExactLevel(path.obj, forward, false)
 		assert(objectLevel(path.obj) <= pManMR.maxDelay, "unregistered path is within max delay")
+		path.obj.Level = 0
+		path.obj.MarkA, path.obj.MarkB = false, false
 	}
 	for i := len(paths) - 1; i >= 0; i-- {
 		path := paths[i]
@@ -317,14 +332,12 @@ func constrainExact(root *Abc_Obj_t, forward bool) {
 			vec.Vec_PtrPush(FTIMEEDGES(root), path.obj)
 			pManMR.nExactConstraints++
 		}
-	}
-	for _, path := range paths {
 		path.obj.Level = 0
 		path.obj.MarkA, path.obj.MarkB = false, false
 	}
 }
 
-func propagateExactLevel(obj *Abc_Obj_t, forward, skipLatchNeighbors bool) {
+func propagateExactLevel(obj *abc.Abc_Obj_t, forward, skipLatchNeighbors bool) {
 	level := objectLevel(obj)
 	if abc.Abc_ObjIsNode(obj) != 0 {
 		level++
@@ -339,15 +352,15 @@ func propagateExactLevel(obj *Abc_Obj_t, forward, skipLatchNeighbors bool) {
 	}
 }
 
-func collectTimingPaths(root *Abc_Obj_t, forward bool) []timingPathNode {
+func collectTimingPaths(root *abc.Abc_Obj_t, forward bool) []timingPathNode {
 	type visitKey struct {
-		obj          *Abc_Obj_t
+		obj          *abc.Abc_Obj_t
 		throughLatch bool
 	}
 	visited := make(map[visitKey]bool)
 	var ordered []timingPathNode
-	var visit func(*Abc_Obj_t, bool)
-	visit = func(obj *Abc_Obj_t, crossed bool) {
+	var visit func(*abc.Abc_Obj_t, bool)
+	visit = func(obj *abc.Abc_Obj_t, crossed bool) {
 		if abc.Abc_ObjIsLatch(obj) != 0 {
 			if crossed {
 				return
@@ -363,7 +376,7 @@ func collectTimingPaths(root *Abc_Obj_t, forward bool) []timingPathNode {
 		obj.MarkA = !crossed
 		obj.MarkB = crossed
 		for _, next := range timingNeighbors(obj, forward) {
-			visit(next.obj, crossed || next.throughLatch)
+			visit(next.obj, crossed)
 		}
 		ordered = append(ordered, timingPathNode{obj: obj, throughLatch: crossed})
 	}
@@ -371,8 +384,8 @@ func collectTimingPaths(root *Abc_Obj_t, forward bool) []timingPathNode {
 	return ordered
 }
 
-func timingNeighbors(obj *Abc_Obj_t, forward bool) []timingPathNode {
-	var neighbors []*Abc_Obj_t
+func timingNeighbors(obj *abc.Abc_Obj_t, forward bool) []timingPathNode {
+	var neighbors []*abc.Abc_Obj_t
 	if forward {
 		neighbors = faninObjects(obj)
 	} else {
@@ -380,15 +393,15 @@ func timingNeighbors(obj *Abc_Obj_t, forward bool) []timingPathNode {
 	}
 	result := make([]timingPathNode, 0, len(neighbors))
 	for _, next := range neighbors {
-		result = append(result, timingPathNode{obj: next, throughLatch: abc.Abc_ObjIsLatch(next) != 0})
+		result = append(result, timingPathNode{obj: next})
 	}
 	return result
 }
 
-func Abc_FlowRetime_ConstrainExact_forw(obj *Abc_Obj_t) { constrainExact(obj, true) }
-func Abc_FlowRetime_ConstrainExact_back(obj *Abc_Obj_t) { constrainExact(obj, false) }
+func Abc_FlowRetime_ConstrainExact_forw(obj *abc.Abc_Obj_t) { constrainExact(obj, true) }
+func Abc_FlowRetime_ConstrainExact_back(obj *abc.Abc_Obj_t) { constrainExact(obj, false) }
 
-func Abc_FlowRetime_ConstrainExactAll(ntk *Abc_Ntk_t) {
+func Abc_FlowRetime_ConstrainExactAll(ntk *abc.Abc_Ntk_t) {
 	for _, obj := range ntk.Objects() {
 		vec.Vec_PtrClear(FTIMEEDGES(obj))
 	}
@@ -400,14 +413,14 @@ func Abc_FlowRetime_ConstrainExactAll(ntk *Abc_Ntk_t) {
 	}
 }
 
-func Abc_FlowRetime_FreeTiming(ntk *Abc_Ntk_t) {
+func Abc_FlowRetime_FreeTiming(ntk *abc.Abc_Ntk_t) {
 	clearExactConstraints()
 	pManMR.vExactNodes = nil
 	pManMR.vTimeEdges = nil
 	_ = ntk
 }
 
-func Abc_FlowRetime_Dfs_forw(obj *Abc_Obj_t, nodes *Vec_Ptr_t) {
+func Abc_FlowRetime_Dfs_forw(obj *abc.Abc_Obj_t, nodes *vec.Vec_Ptr_t) {
 	if abc.Abc_ObjIsLatch(obj) != 0 || abc.Abc_NodeIsTravIdCurrent(obj) != 0 {
 		return
 	}
@@ -418,7 +431,7 @@ func Abc_FlowRetime_Dfs_forw(obj *Abc_Obj_t, nodes *Vec_Ptr_t) {
 	vec.Vec_PtrPush(nodes, obj)
 }
 
-func Abc_FlowRetime_Dfs_back(obj *Abc_Obj_t, nodes *Vec_Ptr_t) {
+func Abc_FlowRetime_Dfs_back(obj *abc.Abc_Obj_t, nodes *vec.Vec_Ptr_t) {
 	if abc.Abc_ObjIsLatch(obj) != 0 || abc.Abc_NodeIsTravIdCurrent(obj) != 0 {
 		return
 	}
@@ -474,8 +487,8 @@ func fretPrintf(format string, args ...any) {
 	}
 }
 
-func faninObjects(obj *Abc_Obj_t) []*Abc_Obj_t {
-	result := make([]*Abc_Obj_t, 0, abc.Abc_ObjFaninNum(obj))
+func faninObjects(obj *abc.Abc_Obj_t) []*abc.Abc_Obj_t {
+	result := make([]*abc.Abc_Obj_t, 0, abc.Abc_ObjFaninNum(obj))
 	for _, edge := range obj.Fanins() {
 		result = append(result, edge.Object)
 	}

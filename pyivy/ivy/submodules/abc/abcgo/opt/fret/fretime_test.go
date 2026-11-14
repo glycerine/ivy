@@ -1,8 +1,10 @@
 package fret
 
 import (
+	"fmt"
 	"testing"
 
+	hop "github.com/glycerine/abcgo/aig/hop"
 	abc "github.com/glycerine/abcgo/base/abc"
 	core "github.com/glycerine/abcgo/bdd/cudd/core"
 	vec "github.com/glycerine/abcgo/misc/vec"
@@ -87,7 +89,7 @@ func TestInitToOrigLookupReturnsMappedObjectAndLag(t *testing.T) {
 	ensureInitToOrig(abc.Abc_ObjId(initObj))
 	pManMR.pInitToOrig[abc.Abc_ObjId(initObj)] = NodeLag_t{id: abc.Abc_ObjId(originalObj), lag: 7}
 
-	var gotObj *Abc_Obj_t
+	var gotObj *abc.Abc_Obj_t
 	var gotLag int32
 	Abc_FlowRetime_GetInitToOrig(initObj, &gotObj, &gotLag)
 	if gotObj != originalObj || gotLag != 7 {
@@ -164,6 +166,51 @@ func TestInitTimingAllocatesAnEdgeVectorPerObjectID(t *testing.T) {
 	}
 }
 
+func TestForwardConservativeTimingMarksOverlongLatchCone(t *testing.T) {
+	network := abc.NewNetwork("conservative-forward-latch-cone")
+	pi := abc.Abc_NtkCreatePi(network)
+	upstream := abc.Abc_NtkCreateNode(network)
+	bi := abc.Abc_NtkCreateBi(network)
+	latch := abc.Abc_NtkCreateLatch(network)
+	bo := abc.Abc_NtkCreateBo(network)
+	downstream1 := abc.Abc_NtkCreateNode(network)
+	downstream2 := abc.Abc_NtkCreateNode(network)
+	for _, edge := range [][2]*abc.Abc_Obj_t{
+		{upstream, pi},
+		{bi, upstream},
+		{latch, bi},
+		{bo, latch},
+		{downstream1, bo},
+		{downstream2, downstream1},
+	} {
+		abc.Abc_ObjAddFanin(edge[0], edge[1])
+	}
+	pManMR = &MinRegMan_t{
+		fIsForward: 1,
+		maxDelay:   1,
+		pNtk:       network,
+		pDataArray: make([]Flow_Data_t, abc.Abc_NtkObjNumMax(network)+1),
+		vNodes:     vec.Vec_PtrAlloc(8),
+	}
+	t.Cleanup(func() { pManMR = nil })
+	Abc_FlowRetime_InitTiming(network)
+
+	Abc_FlowRetime_ConstrainConserv_forw(network)
+
+	if got := FTEST(downstream2, BLOCK); got == 0 {
+		t.Fatal("overlong latch cone node was not blocked by hard delay")
+	}
+	if got := FTEST(downstream2, CONSERVATIVE); got == 0 {
+		t.Fatal("overlong latch cone node was not marked conservative")
+	}
+	if pManMR.nConservConstraints == 0 {
+		t.Fatal("conservative constraint count = 0, want a positive count")
+	}
+	if got := vec.Vec_PtrSize(pManMR.vNodes); got != 0 {
+		t.Fatalf("scratch node count after timing pass = %d, want 0", got)
+	}
+}
+
 func TestExactForwardTimingFindsBoundaryAfterLatch(t *testing.T) {
 	network := abc.NewNetwork("exact-forward-latch-boundary")
 	pi := abc.Abc_NtkCreatePi(network)
@@ -211,6 +258,83 @@ func TestExactForwardTimingFindsBoundaryAfterLatch(t *testing.T) {
 	for _, obj := range network.Objects() {
 		if obj.Level != 0 || obj.MarkA || obj.MarkB {
 			t.Fatalf("timing traversal leaked temporary state on object %d: level=%d marks=(%v,%v)", obj.ID, obj.Level, obj.MarkA, obj.MarkB)
+		}
+	}
+}
+
+// The source recursion crosses the first latch and stops at the second.
+func TestExactTimingTraversalCrossesOnlyOneLatch(t *testing.T) {
+	ntk := abc.NewNetwork("two-latch-path")
+	pi := abc.Abc_NtkCreatePi(ntk)
+	bi1, latch1, bo1 := abc.Abc_NtkCreateBi(ntk), abc.Abc_NtkCreateLatch(ntk), abc.Abc_NtkCreateBo(ntk)
+	middle := abc.Abc_NtkCreateNode(ntk)
+	bi2, latch2, bo2 := abc.Abc_NtkCreateBi(ntk), abc.Abc_NtkCreateLatch(ntk), abc.Abc_NtkCreateBo(ntk)
+	end := abc.Abc_NtkCreateNode(ntk)
+	for _, edge := range [][2]*abc.Abc_Obj_t{{bi1, pi}, {latch1, bi1}, {bo1, latch1}, {middle, bo1}, {bi2, middle}, {latch2, bi2}, {bo2, latch2}, {end, bo2}} {
+		abc.Abc_ObjAddFanin(edge[0], edge[1])
+	}
+	for _, tc := range []struct {
+		root, firstLatch, beyond, secondLatch *abc.Abc_Obj_t
+		forward                               bool
+	}{
+		{end, latch2, middle, latch1, true},
+		{pi, latch1, middle, latch2, false},
+	} {
+		paths := collectTimingPaths(tc.root, tc.forward)
+		seen := make(map[*abc.Abc_Obj_t]bool)
+		for _, path := range paths {
+			seen[path.obj] = true
+			path.obj.MarkA, path.obj.MarkB = false, false
+		}
+		if !seen[tc.firstLatch] || !seen[tc.beyond] || seen[tc.secondLatch] {
+			t.Fatalf("forward=%v: first=%v beyond=%v second=%v", tc.forward, seen[tc.firstLatch], seen[tc.beyond], seen[tc.secondLatch])
+		}
+	}
+}
+
+// A PI appears on both an unregistered path of length three and a path
+// crossing one latch with length one. C clears the first-pass level before
+// processing the latter, so the PI is not an exact-delay boundary.
+func TestExactTimingClearsLevelsBetweenLatchPasses(t *testing.T) {
+	ntk := abc.NewNetwork("reconvergent-timing")
+	pi := abc.Abc_NtkCreatePi(ntk)
+	bi, latch, bo := abc.Abc_NtkCreateBi(ntk), abc.Abc_NtkCreateLatch(ntk), abc.Abc_NtkCreateBo(ntk)
+	first, second, root := abc.Abc_NtkCreateNode(ntk), abc.Abc_NtkCreateNode(ntk), abc.Abc_NtkCreateNode(ntk)
+	for _, edge := range [][2]*abc.Abc_Obj_t{{bi, pi}, {latch, bi}, {bo, latch}, {first, pi}, {second, first}, {root, second}, {root, bo}} {
+		abc.Abc_ObjAddFanin(edge[0], edge[1])
+	}
+	pManMR = &MinRegMan_t{fIsForward: 1, maxDelay: 3, pNtk: ntk, pDataArray: make([]Flow_Data_t, abc.Abc_NtkObjNumMax(ntk)+1), vNodes: vec.Vec_PtrAlloc(8)}
+	t.Cleanup(func() { pManMR = nil })
+	Abc_FlowRetime_InitTiming(ntk)
+	Abc_FlowRetime_ConstrainExact(root)
+	if got := vec.Vec_PtrSize(FTIMEEDGES(root)); got != 0 {
+		t.Fatalf("found %d spurious timing edges across the latch", got)
+	}
+}
+
+func TestSilentRestrashRetainsLatchAndComplement(t *testing.T) {
+	for _, cleanup := range []int32{0, 1} {
+		ntk := abc.Abc_NtkAlloc(abc.ABC_NTK_STRASH, abc.ABC_FUNC_AIG, 1)
+		input := abc.Abc_NtkCreatePi(ntk)
+		bi, latch, bo := abc.Abc_NtkCreateBi(ntk), abc.Abc_NtkCreateLatch(ntk), abc.Abc_NtkCreateBo(ntk)
+		output := abc.Abc_NtkCreatePo(ntk)
+		for i, obj := range []*abc.Abc_Obj_t{input, bi, latch, bo, output} {
+			obj.SetName(fmt.Sprintf("n%d", i))
+		}
+		abc.Abc_ObjAddFanin(latch, bi)
+		abc.Abc_ObjAddFanin(bo, latch)
+		abc.Abc_LatchSetInit1(latch)
+		node := ntk.AndEdges(input.Signal().Not(), bo.Signal())
+		abc.Abc_ObjAddFanin(bi, node)
+		abc.Abc_ObjAddFanin(output, bo)
+		abc.Abc_NtkOrderCisCos(ntk)
+		result := Abc_FlowRetime_NtkSilentRestrash(ntk, cleanup)
+		if result == nil || abc.Abc_NtkLatchNum(result) != 1 || abc.Abc_LatchIsInit1(result.ObjectsOfKind(abc.ABC_OBJ_LATCH)[0]) == 0 {
+			t.Fatalf("cleanup=%d: latch lost", cleanup)
+		}
+		nodes := result.ObjectsOfKind(abc.ABC_OBJ_NODE)
+		if len(nodes) != 1 || !nodes[0].Fanins()[0].Complement && !nodes[0].Fanins()[1].Complement {
+			t.Fatalf("cleanup=%d: complemented input lost", cleanup)
 		}
 	}
 }
@@ -408,32 +532,82 @@ func TestBddInitialStateSimulationUsesCofactors(t *testing.T) {
 	}
 }
 
-func TestFastFlowPreorderDistancesOnSimpleAIGPath(t *testing.T) {
-	network := abc.NewNetwork("flow-preorder-path")
+func TestHopInitialStateSimulationTracksCareAndComplement(t *testing.T) {
+	manager := hop.Hop_ManStart()
+	defer hop.Hop_ManStop(manager)
+	a, b := hop.Hop_IthVar(manager, 0), hop.Hop_IthVar(manager, 1)
+	and := hop.Hop_And(manager, a, b)
+	for _, tc := range []struct {
+		name string
+		root *hop.Hop_Obj_t
+		in   map[*hop.Hop_Obj_t][2]int32 // value, care
+		want [2]int32                    // value, don't-care
+	}{
+		{"known_one", and, map[*hop.Hop_Obj_t][2]int32{a: {1, 1}, b: {1, 1}}, [2]int32{1, 0}},
+		{"known_zero_dominates_unknown", and, map[*hop.Hop_Obj_t][2]int32{a: {0, 1}, b: {0, 0}}, [2]int32{0, 0}},
+		{"unknown_and_one", and, map[*hop.Hop_Obj_t][2]int32{a: {0, 0}, b: {1, 1}}, [2]int32{0, 1}},
+		{"complemented_known_one", hop.Hop_Not(and), map[*hop.Hop_Obj_t][2]int32{a: {1, 1}, b: {1, 1}}, [2]int32{0, 0}},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			value, dc := evalHopInit(tc.root, tc.in)
+			if got := [2]int32{value, dc}; got != tc.want {
+				t.Fatalf("evalHopInit() = %v, want %v", got, tc.want)
+			}
+		})
+	}
+}
+
+func TestBackwardInitStoresLatchInitNetworkMapping(t *testing.T) {
+	network := abc.NewNetwork("backward-init-latch-mapping")
 	pi := abc.Abc_NtkCreatePi(network)
-	node := abc.Abc_NtkCreateNode(network)
-	po := abc.Abc_NtkCreatePo(network)
-	abc.Abc_ObjAddFanin(node, pi)
-	abc.Abc_ObjAddFanin(po, node)
+	bi, latch, bo := abc.Abc_NtkCreateBi(network), abc.Abc_NtkCreateLatch(network), abc.Abc_NtkCreateBo(network)
+	for _, edge := range [][2]*abc.Abc_Obj_t{{bi, pi}, {latch, bi}, {bo, latch}} {
+		abc.Abc_ObjAddFanin(edge[0], edge[1])
+	}
+	initNetwork := abc.Abc_NtkAlloc(abc.ABC_NTK_LOGIC, abc.ABC_FUNC_SOP, 1)
+	initPI := abc.Abc_NtkCreatePi(initNetwork)
 	pManMR = &MinRegMan_t{
-		fIsForward:    1,
-		pNtk:          network,
-		nNodes:        abc.Abc_NtkObjNum(network),
-		pDataArray:    make([]Flow_Data_t, abc.Abc_NtkObjNum(network)),
-		vSinkDistHist: vec.Vec_IntStart(20),
+		fComputeInitState: 1,
+		pNtk:              network,
+		pInitNtk:          initNetwork,
+		pDataArray:        make([]Flow_Data_t, abc.Abc_NtkObjNumMax(network)+1),
+	}
+	pManMR.pDataArray[abc.Abc_ObjId(bo)].pInitObj = initPI
+	t.Cleanup(func() { pManMR = nil })
+
+	Abc_FlowRetime_UpdateBackwardInit(network)
+
+	if got := flowData(latch).pInitObj; got != initPI {
+		t.Fatalf("latch init-network mapping = %p, want %p", got, initPI)
+	}
+	if got := abc.Abc_ObjData(latch); got != initPI {
+		t.Fatalf("latch object data mapping = %v, want %p", got, initPI)
+	}
+}
+
+func TestConnectBiasNodeFollowsBoxAndLatchBoundaries(t *testing.T) {
+	network := abc.NewNetwork("bias-box-boundaries")
+	root := abc.Abc_NtkCreateNode(network)
+	bi, latch, bo := abc.Abc_NtkCreateBi(network), abc.Abc_NtkCreateLatch(network), abc.Abc_NtkCreateBo(network)
+	afterLatch := abc.Abc_NtkCreateNode(network)
+	for _, edge := range [][2]*abc.Abc_Obj_t{{bi, root}, {latch, bi}, {bo, latch}, {afterLatch, bo}} {
+		abc.Abc_ObjAddFanin(edge[0], edge[1])
+	}
+	pManMR = &MinRegMan_t{
+		pNtk:       network,
+		pDataArray: make([]Flow_Data_t, abc.Abc_NtkObjNumMax(network)+1),
+		vLags:      vec.Vec_IntStart(abc.Abc_NtkObjNumMax(network)),
 	}
 	t.Cleanup(func() { pManMR = nil })
 
-	dfsfast_preorder(network)
-	want := map[*abc.Abc_Obj_t]Flow_Data_t{
-		pi:   {e_dist: 1, r_dist: 2},
-		node: {e_dist: 2, r_dist: 3},
-		po:   {r_dist: 1},
+	Abc_FlowRetime_ConnectBiasNode(nil, root, 1)
+	if FTEST(afterLatch, BLOCK) == 0 {
+		t.Fatal("bias did not reach the node after the latch boundary")
 	}
-	for obj, expected := range want {
-		got := pManMR.pDataArray[abc.Abc_ObjId(obj)]
-		if got.e_dist != expected.e_dist || got.r_dist != expected.r_dist {
-			t.Errorf("object %d distances=(%d,%d), want (%d,%d)", abc.Abc_ObjId(obj), got.e_dist, got.r_dist, expected.e_dist, expected.r_dist)
-		}
+	if FTEST(root, BLOCK) != 0 {
+		t.Fatal("bias for lag one unexpectedly marked the lag-zero root")
+	}
+	if abc.Abc_NodeIsTravIdCurrent(afterLatch) == 0 {
+		t.Fatal("bias traversal did not mark the reachable node with the network traversal ID")
 	}
 }
