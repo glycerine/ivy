@@ -1,201 +1,111 @@
 package abci
 
-import "fmt"
+import (
+	"fmt"
 
-/**CFile****************************************************************
+	"github.com/glycerine/abcgo/aig/hop"
+	"github.com/glycerine/abcgo/aig/ivy"
+	"github.com/glycerine/abcgo/base/abc"
+	"github.com/glycerine/abcgo/misc/vec"
+)
 
-  FileName    [abcFpgaFast.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Network and node package.]
-
-  Synopsis    [Fast FPGA mapper.]
-
-  Author      [Sungmin Cho]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: abcFpgaFast.c,v 1.00 2006/09/02 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "base/abc/abc.h"
-//#include "aig/ivy/ivy.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-// extern Ivy_Man_t * Abc_NtkIvyBefore( Abc_Ntk_t * pNtk, int fSeq, int fUseDc );
-
-
-// static Abc_Ntk_t * Ivy_ManFpgaToAbc( Abc_Ntk_t * pNtk, Ivy_Man_t * pMan );
-
-// static Abc_Obj_t * Ivy_ManToAbcFast_rec( Abc_Ntk_t * pNtkNew, Ivy_Man_t * pMan, Ivy_Obj_t * pObjIvy, Vec_Int_t * vNodes );
-
-
-func Abc_ObjSetIvy2Abc(p *Ivy_Man_t, IvyId int32, pObjAbc *Abc_Obj_t) {  assert(Vec_PtrEntry((Vec_Ptr_t *)p.pCopy, IvyId) == nil, "Vec_PtrEntry((Vec_Ptr_t *)p.pCopy, IvyId) == nil"); assert(!Abc_ObjIsComplement(pObjAbc), "!Abc_ObjIsComplement(pObjAbc)"); Vec_PtrWriteEntry( (Vec_Ptr_t *)p.pCopy, IvyId, pObjAbc );  }
-func Abc_ObjGetIvy2Abc(p *Ivy_Man_t, IvyId int32) *Abc_Obj_t {  return (Abc_Obj_t *)Vec_PtrEntry( (Vec_Ptr_t *)p.pCopy, IvyId );         }
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Performs fast FPGA mapping of the network.]
-
-  Description [Takes the AIG to be mapped, the LUT size, and verbosity
-  flag. Produces the new network by fast FPGA mapping of the current 
-  network. If the current network in ABC in not an AIG, the user should 
-  run command "strash" to make sure that the current network into an AIG 
-  before calling this procedure.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkFpgaFast(pNtk *Abc_Ntk_t, nLutSize int32, fRecovery int32, fVerbose int32) *Abc_Ntk_t {
-    var pMan *Ivy_Man_t;
-    var pNtkNew *Abc_Ntk_t;
-    // make sure the network is an AIG
-    assert(Abc_NtkIsStrash(pNtk), "Abc_NtkIsStrash(pNtk)");
-    // convert the network into the AIG
-    pMan = Abc_NtkIvyBefore( pNtk, 0, 0 );
-    // perform fast FPGA mapping
-    Ivy_FastMapPerform( pMan, nLutSize, fRecovery, fVerbose );
-    // convert back into the ABC network
-    pNtkNew = Ivy_ManFpgaToAbc( pNtk, pMan );
-    Ivy_FastMapStop( pMan );
-    Ivy_ManStop( pMan );  
-    // make sure that the final network passes the test
-    if pNtkNew != nil && !Abc_NtkCheck( pNtkNew ) {
-        fmt.Printf("Abc_NtkFastMap: The network check has failed.\n");
-        Abc_NtkDelete( pNtkNew );
-        return nil;
-    }
-    return pNtkNew;
+// Abc_NtkFpgaFast maps a strashed network to LUTs and reconstructs the
+// mapped cuts as local AIG functions in an ABC logic network.
+func Abc_NtkFpgaFast(network *abc.Network, lutSize, recovery, verbose int32) *abc.Network {
+	assert(abc.Abc_NtkIsStrash(network) != 0, "Abc_NtkIsStrash(network)")
+	manager := Abc_NtkIvyBefore(network, 0, 0)
+	if manager == nil {
+		return nil
+	}
+	ivy.Ivy_FastMapPerform(manager, lutSize, recovery, verbose)
+	mapped := Ivy_ManFpgaToAbc(network, manager)
+	ivy.Ivy_FastMapStop(manager)
+	ivy.Ivy_ManStop(manager)
+	if mapped != nil && abc.Abc_NtkCheck(mapped) == 0 {
+		fmt.Println("Abc_NtkFastMap: The network check has failed.")
+		abc.Abc_NtkDelete(mapped)
+		return nil
+	}
+	return mapped
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Constructs the ABC network after mapping.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ivy_ManFpgaToAbc(pNtk *Abc_Ntk_t, pMan *Ivy_Man_t) *Abc_Ntk_t {
-    var pNtkNew *Abc_Ntk_t;
-    var pObjAbc, pObj *Abc_Obj_t;
-    var pObjIvy *Ivy_Obj_t;
-    var vNodes *Vec_Int_t;
-    var i int32;
-    // start mapping from Ivy into Abc
-    pMan.pCopy = Vec_PtrStart( Ivy_ManObjIdMax(pMan) + 1 );
-    // start the new ABC network
-    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_LOGIC, ABC_FUNC_AIG );
-    // transfer the pointers to the basic nodes
-    Abc_ObjSetIvy2Abc( pMan, Ivy_ManConst1(pMan).Id, Abc_NtkCreateNodeConst1(pNtkNew) );
-    // inlining of macro Abc_NtkForEachCi
-    for  i = 0; (i < Abc_NtkCiNum(pNtkNew)) && (((pObjAbc) = Abc_NtkCi(pNtkNew, i)), 1); i++  {
-        Abc_ObjSetIvy2Abc( pMan, Ivy_ManPi(pMan, i).Id, pObjAbc );
-    } 
-    // recursively construct the network
-    vNodes = Vec_IntAlloc( 100 );
-    // inlining of macro Ivy_ManForEachPo
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(pMan.vPos)) && (((pObjIvy) = (Ivy_Obj_t *)Vec_PtrEntry(pMan.vPos, i)), 1); i++  {
-        // get the new ABC node corresponding to the old fanin of the PO in IVY
-        pObjAbc = Ivy_ManToAbcFast_rec( pNtkNew, pMan, Ivy_ObjFanin0(pObjIvy), vNodes );
-        // consider the case of complemented fanin of the PO
-        if Ivy_ObjFaninC0(pObjIvy) { // complement
-        
-            if Abc_ObjIsCi(pObjAbc) {
-                pObjAbc = Abc_NtkCreateNodeInv( pNtkNew, pObjAbc );
-            } else {
-                // clone the node
-                pObj = Abc_NtkCloneObj( pObjAbc );
-                // set complemented functions
-                pObj.pData = Hop_Not( (Hop_Obj_t *)pObjAbc.pData );
-                // return the new node
-                pObjAbc = pObj;
-            }
-        }
-        Abc_ObjAddFanin( Abc_NtkCo(pNtkNew, i), pObjAbc );
-    }
-    Vec_IntFree( vNodes );
-    Vec_PtrFree( (Vec_Ptr_t *)pMan.pCopy ); 
-    pMan.pCopy = nil;
-    // remove dangling nodes
-    Abc_NtkCleanup( pNtkNew, 0 );
-    // fix CIs feeding directly into COs
-    Abc_NtkLogicMakeSimpleCos( pNtkNew, 0 );
-    return pNtkNew;
+// Ivy_ManFpgaToAbc reconstructs the mapper's LUT cuts in ABC's Hop functions.
+func Ivy_ManFpgaToAbc(source *abc.Network, manager *ivy.Ivy_Man_t) *abc.Network {
+	manager.pCopy = vec.Vec_PtrStart(int(ivy.Ivy_ManObjIdMax(manager) + 1))
+	mapped := abc.Abc_NtkStartFrom(source, abc.ABC_NTK_LOGIC, abc.ABC_FUNC_AIG)
+	Abc_ObjSetIvy2Abc(manager, ivy.Ivy_ManConst1(manager).Id, abc.Abc_NtkCreateNodeConst1(mapped))
+	for i := int32(0); i < abc.Abc_NtkCiNum(mapped); i++ {
+		Abc_ObjSetIvy2Abc(manager, ivy.Ivy_ManPi(manager, i).Id, abc.Abc_NtkCi(mapped, i))
+	}
+	cutNodes := vec.Vec_IntAlloc(100)
+	for i := int32(0); i < int32(vec.Vec_PtrSize(manager.vPos)); i++ {
+		po := vec.Vec_PtrEntry(manager.vPos, int(i)).(*ivy.Ivy_Obj_t)
+		driver := Ivy_ManToAbcFast_rec(mapped, manager, ivy.Ivy_ObjFanin0(po), cutNodes)
+		if ivy.Ivy_ObjFaninC0(po) != 0 {
+			if abc.Abc_ObjIsCi(driver) != 0 {
+				driver = abc.Abc_NtkCreateNodeInv(mapped, driver)
+			} else {
+				inverted := abc.Abc_NtkCloneObj(driver)
+				function, ok := driver.Data.(*hop.Hop_Obj_t)
+				assert(ok, "mapped node has a Hop function")
+				inverted.Data = hop.Hop_Not(function)
+				driver = inverted
+			}
+		}
+		abc.Abc_ObjAddFanin(abc.Abc_NtkCo(mapped, i), driver)
+	}
+	vec.Vec_IntFree(cutNodes)
+	vec.Vec_PtrFree(manager.pCopy.(*vec.Vec_Ptr_t))
+	manager.pCopy = nil
+	abc.Abc_NtkCleanup(mapped, 0)
+	abc.Abc_NtkLogicMakeSimpleCos(mapped, 0)
+	return mapped
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Recursively construct the new node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Ivy_ManToAbcFast_rec(pNtkNew *Abc_Ntk_t, pMan *Ivy_Man_t, pObjIvy *Ivy_Obj_t, vNodes *Vec_Int_t) *Abc_Obj_t {
-    var Supp Vec_Int_t;
-    var vSupp *Vec_Int_t = &Supp;
-    var pObjAbc, pFaninAbc *Abc_Obj_t;
-    var pNodeIvy *Ivy_Obj_t;
-    var i, Entry int32;
-    // skip the node if it is a constant or already processed
-    pObjAbc = Abc_ObjGetIvy2Abc( pMan, pObjIvy.Id );
-    if pObjAbc != nil {
-        return pObjAbc; }
-    assert(Ivy_ObjIsAnd(pObjIvy) || Ivy_ObjIsExor(pObjIvy), "Ivy_ObjIsAnd(pObjIvy) || Ivy_ObjIsExor(pObjIvy)");
-    // get the support of K-LUT
-    Ivy_FastMapReadSupp( pMan, pObjIvy, vSupp );
-    // create new ABC node and its fanins
-    pObjAbc = Abc_NtkCreateNode( pNtkNew );
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vSupp)) && (((Entry) = Vec_IntEntry(vSupp, i)), 1); i++  {
-        pFaninAbc = Ivy_ManToAbcFast_rec( pNtkNew, pMan, Ivy_ManObj(pMan, Entry), vNodes );
-        Abc_ObjAddFanin( pObjAbc, pFaninAbc );
-    }
-    // collect the nodes used in the cut
-    Ivy_ManCollectCut( pMan, pObjIvy, vSupp, vNodes );
-    // create the local function
-    // inlining of macro Ivy_ManForEachNodeVec
-    for  i = 0; i < Vec_IntSize(vNodes) && ((pNodeIvy) = Ivy_ManObj(pMan, Vec_IntEntry(vNodes,i))); i++  {
-        if i < Vec_IntSize(vSupp) {
-            pNodeIvy.pEquiv = (Ivy_Obj_t *)Hop_IthVar( (Hop_Man_t *)pNtkNew.pManFunc, i );
-        } else {
-            pNodeIvy.pEquiv = (Ivy_Obj_t *)Hop_And( (Hop_Man_t *)pNtkNew.pManFunc, (Hop_Obj_t *)Ivy_ObjChild0Equiv(pNodeIvy), (Hop_Obj_t *)Ivy_ObjChild1Equiv(pNodeIvy) ); }
-    }
-    // set the local function
-    pObjAbc.pData = (Abc_Obj_t *)pObjIvy.pEquiv;
-    // set the node
-    Abc_ObjSetIvy2Abc( pMan, pObjIvy.Id, pObjAbc ); 
-    return pObjAbc;
+// Ivy_ManToAbcFast_rec recursively reconstructs one LUT root. The scratch
+// vector is the source-compatible cut worklist reused by all output cones.
+func Ivy_ManToAbcFast_rec(network *abc.Network, manager *ivy.Ivy_Man_t, root *ivy.Ivy_Obj_t, cutNodes *vec.Vec_Int_t) *abc.Object {
+	if mapped := Abc_ObjGetIvy2Abc(manager, root.Id); mapped != nil {
+		return mapped
+	}
+	assert(ivy.Ivy_ObjIsAnd(root) != 0 || ivy.Ivy_ObjIsExor(root) != 0, "root is an Ivy AND or XOR")
+	var support []int32
+	ivy.Ivy_FastMapReadSupp(manager, root, &support)
+	leaves := vec.Vec_IntAllocArrayCopy(support, len(support))
+	node := abc.Abc_NtkCreateNode(network)
+	functions := make(map[int32]*hop.Hop_Obj_t, len(support))
+	for index, leafID := range support {
+		fanin := Ivy_ManToAbcFast_rec(network, manager, ivy.Ivy_ManObj(manager, leafID), cutNodes)
+		abc.Abc_ObjAddFanin(node, fanin)
+		functions[leafID] = hop.Hop_IthVar(network.FunctionManager.(*hop.Hop_Man_t), int32(index))
+	}
+	ivy.Ivy_ManCollectCut(manager, root, leaves, cutNodes)
+	for i := int32(len(support)); i < int32(vec.Vec_IntSize(cutNodes)); i++ {
+		ivyNode := ivy.Ivy_ManObj(manager, vec.Vec_IntEntry(cutNodes, int(i)))
+		left := functions[ivy.Ivy_ObjFanin0(ivyNode).Id]
+		right := functions[ivy.Ivy_ObjFanin1(ivyNode).Id]
+		assert(left != nil && right != nil, "cut fanins have local functions")
+		left = hop.Hop_NotCond(left, ivy.Ivy_ObjFaninC0(ivyNode))
+		right = hop.Hop_NotCond(right, ivy.Ivy_ObjFaninC1(ivyNode))
+		function := hop.Hop_And(network.FunctionManager.(*hop.Hop_Man_t), left, right)
+		functions[ivyNode.Id] = function
+	}
+	function := functions[root.Id]
+	assert(function != nil, "root local function was derived")
+	node.Data = function
+	Abc_ObjSetIvy2Abc(manager, root.Id, node)
+	vec.Vec_IntFree(leaves)
+	return node
 }
 
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
+func Abc_ObjSetIvy2Abc(manager *ivy.Ivy_Man_t, ivyID int32, object *abc.Object) {
+	copy := manager.pCopy.(*vec.Vec_Ptr_t)
+	assert(vec.Vec_PtrEntry(copy, int(ivyID)) == nil, "Ivy object has no prior ABC copy")
+	assert(abc.Abc_ObjIsComplement(object) == 0, "ABC copy is regular")
+	vec.Vec_PtrWriteEntry(copy, int(ivyID), object)
+}
 
-
-//ABC_NAMESPACE_IMPL_END
-
+func Abc_ObjGetIvy2Abc(manager *ivy.Ivy_Man_t, ivyID int32) *abc.Object {
+	object, _ := vec.Vec_PtrEntry(manager.pCopy.(*vec.Vec_Ptr_t), int(ivyID)).(*abc.Object)
+	return object
+}
