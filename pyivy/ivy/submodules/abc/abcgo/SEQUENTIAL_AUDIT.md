@@ -1258,3 +1258,35 @@ initialization still need detailed source evidence. Also review the frontier
 implementation against aigRetF.c and its metadata separately. The edge
 manager retains typed local source mapping rather than publishing C's pData
 pointers that become dangling when its manager is freed.
+
+### Edge-retiming packed storage checkpoint
+
+Reviewed the compact ten-latch representation, overflow two-bit words, carry
+propagation, padding, and transitions in both directions against aigRet.c.
+The new compiled `retiming_storage_compare.c` fixture calls the original
+storage routines directly. All 3,200 operations match the Go implementation,
+including each removed value and the complete contents of three interleaved
+edges after every operation. Two deterministic grow/drain cycles cross six
+word boundaries and repeatedly return to compact storage; 2,000 seeded mixed
+operations exercise insertion/removal at both ends with ZERO, ONE and VOID.
+The existing independent slice-oracle and explicit-boundary tests remain.
+
+A new regression failed for both growth and compacting: the Go manager kept
+every superseded overflow slice in an unused allocation history. Removed that
+history, its cumulative counter and its allocation wrapper. Each edge now
+owns only its current buffer. Unlike C's shared offset-based pool, these Go
+buffers do not require obsolete allocations to remain live. The regression
+keeps both manager and edge alive and checks a weak pointer to a retired
+28-byte backing array after GC, avoiding tiny-allocation batching. Both cases
+pass across 20 repetitions after the repair. Manager-free ownership checks
+now inspect its actual graph, object and mapping references.
+
+Full AIG and ABCI race suites pass after this repair (8.338s and 29.054s),
+recorded in `/tmp/abcgo-retiming-storage-review.log`. Separately, the fresh
+uncached module check prompted by log.red passed all 129 tested packages
+and three packages without tests; its log is
+`/tmp/abcgo-log-red-verification.log`.
+
+This completes the current packed-storage review, not the retiming family.
+Queue/autonomous corner cases, backward VOID initialization and the separate
+frontier implementation still need the source review described above.
