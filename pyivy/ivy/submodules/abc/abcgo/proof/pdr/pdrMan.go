@@ -11,7 +11,7 @@ import (
 )
 
 func Pdr_ManDeriveCexAbs(p *Pdr_Man_t) *util.Abc_Cex_t {
-	if p.pPars.fUseAbs == 0 || p.vMapPpi2Ff == nil {
+	if p.pPars.FUseAbs == 0 || p.vMapPpi2Ff == nil {
 		return Pdr_ManDeriveCex(p)
 	}
 	nPis := saig.Saig_ManPiNum(p.pAig)
@@ -39,7 +39,7 @@ func Pdr_ManDeriveCexAbs(p *Pdr_Man_t) *util.Abc_Cex_t {
 		return Pdr_ManDeriveCex(p)
 	}
 	var refined int32
-	if p.pPars.fUseSimpleRef != 0 {
+	if p.pPars.FUseSimpleRef != 0 {
 		for _, flop := range vec.Vec_IntArray(p.vMapPpi2Ff) {
 			if vec.Vec_IntEntry(p.vAbsFlops, int(flop)) != 0 {
 				panic("pdr: expected abstract flop")

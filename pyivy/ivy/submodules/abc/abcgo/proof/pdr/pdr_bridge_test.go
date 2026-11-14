@@ -18,8 +18,8 @@ func TestPdrBridgeReportsEachOutputAndAbort(t *testing.T) {
 		aig.Aig_ManSetRegNum(g, 0)
 		var pars Pdr_Par_t
 		Pdr_ManSetDefaultParams(&pars)
-		pars.fSilent, pars.fSolveAll, pars.fStoreCex, pars.fUseBridge = 1, 1, 1, 1
-		pars.fNotVerbose = 1
+		pars.FSilent, pars.FSolveAll, pars.FStoreCex, pars.FUseBridge = 1, 1, 1, 1
+		pars.FNotVerbose = 1
 		file, err := os.CreateTemp(t.TempDir(), "bridge")
 		if err != nil {
 			t.Fatal(err)

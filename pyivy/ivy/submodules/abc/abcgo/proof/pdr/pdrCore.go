@@ -66,8 +66,8 @@ import (
 */
 func Pdr_ManSetDefaultParams(pPars *Pdr_Par_t) {
 	*pPars = Pdr_Par_t{
-		nRecycle: 300, nFrameMax: 10000, nRandomSeed: 91648253,
-		fUseSupp: 1, fUsePropOut: 1, fSkipDown: 1, iFrame: -1,
+		NRecycle: 300, NFrameMax: 10000, NRandomSeed: 91648253,
+		FUseSupp: 1, FUsePropOut: 1, FSkipDown: 1, IFrame: -1,
 	}
 }
 
@@ -139,7 +139,7 @@ func Pdr_ManPushClauses(p *Pdr_Man_t) int32 {
 	start := util.Abc_Clock()
 	last := len(p.vSolvers) - 1
 	first := 1
-	if p.pPars.fShiftStart != 0 {
+	if p.pPars.FShiftStart != 0 {
 		first = int(p.iUseFrame)
 	}
 	sortCubes := func(frame *vec.Vec_Ptr_t) {
@@ -273,7 +273,7 @@ func Pdr_ManSortByPriority(p *Pdr_Man_t, cube *Pdr_Set_t) []int32 {
 **********************************************************************
 */
 func ZPdr_ManSimpleMic(p *Pdr_Man_t, k int32, cube **Pdr_Set_t) int32 {
-	if p.pPars.fSkipGeneral != 0 {
+	if p.pPars.FSkipGeneral != 0 {
 		return 0
 	}
 	order := Pdr_ManSortByPriority(p, *cube)
@@ -287,7 +287,7 @@ func ZPdr_ManSimpleMic(p *Pdr_Man_t, k int32, cube **Pdr_Set_t) int32 {
 		}
 		lit := (*cube).Lits[i]
 		(*cube).Lits[i] = -1
-		status := Pdr_ManCheckCube(p, k, *cube, nil, p.pPars.nConfLimit, 0, 1)
+		status := Pdr_ManCheckCube(p, k, *cube, nil, p.pPars.NConfLimit, 0, 1)
 		if status == -1 {
 			return -1
 		}
@@ -329,7 +329,7 @@ func ZPdr_ManDown(p *Pdr_Man_t, k int32, cube **Pdr_Set_t, pred *Pdr_Set_t, keep
 		}
 	}()
 	for {
-		for attempts := 0; p.pPars.fCtgs != 0 && k > 1 && attempts < 3; attempts++ {
+		for attempts := 0; p.pPars.FCtgs != 0 && k > 1 && attempts < 3; attempts++ {
 			ctg := Pdr_SetDup(pred)
 			if Pdr_SetIsInit(ctg, -1) != 0 {
 				Pdr_SetDeref(ctg)
@@ -341,7 +341,7 @@ func ZPdr_ManDown(p *Pdr_Man_t, k int32, cube **Pdr_Set_t, pred *Pdr_Set_t, keep
 				}
 				*added = 1
 			}
-			status := Pdr_ManCheckCube(p, k-1, ctg, nil, p.pPars.nConfLimit, 0, 1)
+			status := Pdr_ManCheckCube(p, k-1, ctg, nil, p.pPars.NConfLimit, 0, 1)
 			if status != 1 {
 				Pdr_SetDeref(ctg)
 				break
@@ -360,7 +360,7 @@ func ZPdr_ManDown(p *Pdr_Man_t, k int32, cube **Pdr_Set_t, pred *Pdr_Set_t, keep
 			if ZPdr_ManSimpleMic(p, frame-1, &minimum) == -1 {
 				panic("pdr: CTG MIC returned unknown")
 			}
-			if p.pPars.fVeryVerbose != 0 {
+			if p.pPars.FVeryVerbose != 0 {
 				fmt.Fprint(os.Stdout, "Adding cube ")
 				Pdr_SetPrint(os.Stdout, minimum, aig.Aig_ManRegNum(p.pAig), nil)
 				fmt.Fprintf(os.Stdout, " to frame %d.\n", frame)
@@ -382,7 +382,7 @@ func ZPdr_ManDown(p *Pdr_Man_t, k int32, cube **Pdr_Set_t, pred *Pdr_Set_t, keep
 			}
 			Pdr_SetDeref(pred)
 			pred = nil
-			status = Pdr_ManCheckCube(p, k, *cube, &pred, p.pPars.nConfLimit, 0, 1)
+			status = Pdr_ManCheckCube(p, k, *cube, &pred, p.pPars.NConfLimit, 0, 1)
 			if status == -1 {
 				panic("pdr: post-CTG cube query returned unknown")
 			}
@@ -391,7 +391,7 @@ func ZPdr_ManDown(p *Pdr_Man_t, k int32, cube **Pdr_Set_t, pred *Pdr_Set_t, keep
 				return 1
 			}
 		}
-		if p.pPars.fVeryVerbose != 0 {
+		if p.pPars.FVeryVerbose != 0 {
 			fmt.Println("Cube:")
 			ZPdr_SetPrint(*cube)
 			fmt.Println("Pred:")
@@ -405,18 +405,18 @@ func ZPdr_ManDown(p *Pdr_Man_t, k int32, cube **Pdr_Set_t, pred *Pdr_Set_t, keep
 		if *cube == nil {
 			return 0
 		}
-		if p.pPars.fVeryVerbose != 0 {
+		if p.pPars.FVeryVerbose != 0 {
 			fmt.Println("Intersection:")
 			ZPdr_SetPrint(*cube)
 		}
 		if Pdr_SetIsInit(*cube, -1) != 0 {
-			if p.pPars.fVeryVerbose != 0 {
+			if p.pPars.FVeryVerbose != 0 {
 				fmt.Println("Failed initiation")
 			}
 			return 0
 		}
 		pred = nil
-		status := Pdr_ManCheckCube(p, k, *cube, &pred, p.pPars.nConfLimit, 0, 1)
+		status := Pdr_ManCheckCube(p, k, *cube, &pred, p.pPars.NConfLimit, 0, 1)
 		if status == -1 {
 			return -1
 		}
@@ -490,11 +490,11 @@ func Pdr_ManGeneralize2(_ *Pdr_Man_t, _ int32, _ *Pdr_Set_t, _ **Pdr_Set_t) int3
 func Pdr_ManGeneralize(p *Pdr_Man_t, k int32, cube *Pdr_Set_t, predecessor **Pdr_Set_t, minimum **Pdr_Set_t) int32 {
 	started := util.Abc_Clock()
 	*minimum = nil
-	if p.pPars.fFlopOrder != 0 {
+	if p.pPars.FFlopOrder != 0 {
 		Vec_IntSelectSortPrioReverseLit(cube.Lits, cube.nLits, p.vPrio)
 	}
-	status := Pdr_ManCheckCube(p, k, cube, predecessor, p.pPars.nConfLimit, 0, 1)
-	if p.pPars.fFlopOrder != 0 {
+	status := Pdr_ManCheckCube(p, k, cube, predecessor, p.pPars.NConfLimit, 0, 1)
+	if p.pPars.FFlopOrder != 0 {
 		slices.Sort(cube.Lits[:cube.nLits])
 	}
 	if status == -1 {
@@ -511,7 +511,7 @@ func Pdr_ManGeneralize(p *Pdr_Man_t, k int32, cube *Pdr_Set_t, predecessor **Pdr
 	if current.nLits == 0 {
 		panic("pdr: empty generalized cube")
 	}
-	if p.pPars.fSimpleGeneral != 0 {
+	if p.pPars.FSimpleGeneral != 0 {
 		// ABC's alternative body is compiled out. Its caller still discards
 		// the reduced cube when it contains more than one literal.
 		if current.nLits > 1 {
@@ -524,12 +524,12 @@ func Pdr_ManGeneralize(p *Pdr_Man_t, k int32, cube *Pdr_Set_t, predecessor **Pdr
 		return 1
 	}
 	var keep *hash.Hash_Int_t
-	if p.pPars.fSkipDown == 0 {
+	if p.pPars.FSkipDown == 0 {
 		keep = hash.Hash_IntAlloc(1)
 		defer hash.Hash_IntFree(keep)
 	}
 	added := int32(0)
-	if p.pPars.fSkipGeneral == 0 {
+	if p.pPars.FSkipGeneral == 0 {
 		order := Pdr_ManSortByPriority(p, current)
 		for j := 0; j < int(current.nLits); j++ {
 			i := order[j]
@@ -546,22 +546,22 @@ func Pdr_ManGeneralize(p *Pdr_Man_t, k int32, cube *Pdr_Set_t, predecessor **Pdr
 			current.Lits[i] = -1
 			var pred *Pdr_Set_t
 			var predOut **Pdr_Set_t
-			if p.pPars.fSkipDown == 0 {
+			if p.pPars.FSkipDown == 0 {
 				predOut = &pred
 			}
-			status = Pdr_ManCheckCube(p, k, current, predOut, p.pPars.nConfLimit, 1, 1)
+			status = Pdr_ManCheckCube(p, k, current, predOut, p.pPars.NConfLimit, 1, 1)
 			current.Lits[i] = lit
 			if status == -1 {
 				Pdr_SetDeref(current)
 				return -1
 			}
 			if status == 0 {
-				if p.pPars.fSkipDown != 0 {
+				if p.pPars.FSkipDown != 0 {
 					continue
 				}
 				candidate := Pdr_SetCreateFrom(current, i)
 				status = ZPdr_ManDown(p, k, &candidate, pred, keep, current, &added)
-				if p.pPars.fCtgs != 0 {
+				if p.pPars.FCtgs != 0 {
 					order = Pdr_ManSortByPriority(p, current)
 				}
 				if status == -1 {
@@ -600,14 +600,14 @@ func Pdr_ManGeneralize(p *Pdr_Man_t, k int32, cube *Pdr_Set_t, predecessor **Pdr
 			order = Pdr_ManSortByPriority(p, current)
 			j--
 		}
-		if p.pPars.fTwoRounds != 0 {
+		if p.pPars.FTwoRounds != 0 {
 			if ZPdr_ManSimpleMic(p, k, &current) == -1 {
 				Pdr_SetDeref(current)
 				return -1
 			}
 		}
 	}
-	if p.pPars.fVeryVerbose != 0 {
+	if p.pPars.FVeryVerbose != 0 {
 		fmt.Println("Cube:")
 		ZPdr_SetPrint(current)
 	}
@@ -638,7 +638,7 @@ func Pdr_ManBlockCube(p *Pdr_Man_t, cube *Pdr_Set_t) int32 {
 	Pdr_QueuePush(p, obligation)
 	for Pdr_QueueIsEmpty(p) == 0 {
 		obligation = Pdr_QueueHead(p)
-		if obligation.iFrame == 0 || (p.pPars.fUseAbs != 0 && Pdr_SetIsInit(obligation.pState, -1) != 0) {
+		if obligation.iFrame == 0 || (p.pPars.FUseAbs != 0 && Pdr_SetIsInit(obligation.pState, -1) != 0) {
 			return 0
 		}
 		if obligation.iFrame > lastFrame {
@@ -697,7 +697,7 @@ func Pdr_ManBlockCube(p *Pdr_Man_t, cube *Pdr_Set_t) int32 {
 					break
 				}
 			}
-			if p.pPars.fVeryVerbose != 0 {
+			if p.pPars.FVeryVerbose != 0 {
 				fmt.Print("Adding cube ")
 				Pdr_SetPrint(os.Stdout, minimum, aig.Aig_ManRegNum(p.pAig), nil)
 				fmt.Printf(" to frame %d.\n", k)
@@ -714,7 +714,7 @@ func Pdr_ManBlockCube(p *Pdr_Man_t, cube *Pdr_Set_t) int32 {
 			for i := int32(1); i <= k; i++ {
 				Pdr_ManSolverAddClause(p, i, minimum)
 			}
-			if (k < lastFrame || p.pPars.fReuseProofOblig != 0) && p.pPars.fShortest == 0 {
+			if (k < lastFrame || p.pPars.FReuseProofOblig != 0) && p.pPars.FShortest == 0 {
 				obligation.iFrame = k + 1
 				obligation.prio = priority
 				priority--
@@ -738,7 +738,7 @@ func Pdr_ManBlockCube(p *Pdr_Man_t, cube *Pdr_Set_t) int32 {
 		}
 		now := pdrNow(p)
 		if p.timeToStop != 0 && now > p.timeToStop || p.timeToStopOne != 0 && now > p.timeToStopOne ||
-			p.pPars.nTimeOutGap != 0 && p.pPars.timeLastSolved != 0 && now > p.pPars.timeLastSolved+int64(p.pPars.nTimeOutGap)*int64(time.Second) {
+			p.pPars.NTimeOutGap != 0 && p.pPars.timeLastSolved != 0 && now > p.pPars.timeLastSolved+int64(p.pPars.NTimeOutGap)*int64(time.Second) {
 			return -1
 		}
 	}
@@ -765,8 +765,8 @@ func Pdr_ManSolveInt(p *Pdr_Man_t) int32 {
 	outputs := graph.TruePoCount()
 	inputs := graph.TruePiCount()
 	started := util.Abc_Clock()
-	if pars.nTimeOut != 0 {
-		p.timeToStop = pdrNow(p) + int64(pars.nTimeOut)*int64(time.Second)
+	if pars.NTimeOut != 0 {
+		p.timeToStop = pdrNow(p) + int64(pars.NTimeOut)*int64(time.Second)
 	} else {
 		p.timeToStop = 0
 	}
@@ -774,12 +774,12 @@ func Pdr_ManSolveInt(p *Pdr_Man_t) int32 {
 		panic("pdr: solver already initialized")
 	}
 	outputEdges := graph.Outputs()[:outputs]
-	if pars.fSolveAll != 0 {
+	if pars.FSolveAll != 0 {
 		for i, output := range outputEdges {
 			if aig.Aig_ObjChild0(graph, output) == graph.Const0() {
-				vec.Vec_IntWriteEntry(pars.vOutMap, i, 1)
-				pars.nProveOuts++
-				if pars.fUseBridge != 0 {
+				vec.Vec_IntWriteEntry(pars.VOutMap, i, 1)
+				pars.NProveOuts++
+				if pars.FUseBridge != 0 {
 					util.Gia_ManToBridgeResult(os.Stdout, 1, nil, int32(i))
 				}
 			}
@@ -790,7 +790,7 @@ func Pdr_ManSolveInt(p *Pdr_Man_t) int32 {
 	Pdr_ManCreateSolver(p, frame)
 	for {
 		refined := false
-		if pars.fUseAbs != 0 && p.vAbsFlops == nil && frame == 1 {
+		if pars.FUseAbs != 0 && p.vAbsFlops == nil && frame == 1 {
 			regs := int(aig.Aig_ManRegNum(graph))
 			p.vAbsFlops = vec.Vec_IntStart(regs)
 			p.vMapFf2Ppi = vec.Vec_IntStartFull(regs)
@@ -812,23 +812,23 @@ func Pdr_ManSolveInt(p *Pdr_Man_t) int32 {
 			}
 			if driver == graph.Const1() {
 				var witness *util.Abc_Cex_t
-				if pars.fSolveAll == 0 || pars.fUseBridge != 0 || pars.fStoreCex != 0 {
+				if pars.FSolveAll == 0 || pars.FUseBridge != 0 || pars.FStoreCex != 0 {
 					witness = util.Abc_CexMakeTriv(aig.Aig_ManRegNum(graph), inputs, outputs, frame*outputs+int32(index))
 				}
-				if pars.fSolveAll == 0 {
+				if pars.FSolveAll == 0 {
 					if err := graph.SetSequentialCounterexample(witness); err != nil {
 						panic(err)
 					}
 					return 0
 				}
-				pars.nFailOuts++
-				if pars.vOutMap != nil {
-					vec.Vec_IntWriteEntry(pars.vOutMap, index, 0)
+				pars.NFailOuts++
+				if pars.VOutMap != nil {
+					vec.Vec_IntWriteEntry(pars.VOutMap, index, 0)
 				}
-				if pars.fNotVerbose == 0 {
-					fmt.Printf("Output %d was trivially asserted in frame %d (solved %d out of %d outputs).\n", index, frame, pars.nFailOuts, outputs)
+				if pars.FNotVerbose == 0 {
+					fmt.Printf("Output %d was trivially asserted in frame %d (solved %d out of %d outputs).\n", index, frame, pars.NFailOuts, outputs)
 				}
-				if pars.fUseBridge != 0 {
+				if pars.FUseBridge != 0 {
 					util.Gia_ManToBridgeResult(os.Stdout, 0, witness, int32(index))
 				}
 				var stored any = witness
@@ -838,16 +838,16 @@ func Pdr_ManSolveInt(p *Pdr_Man_t) int32 {
 				vec.Vec_PtrWriteEntry(p.vCexes, index, stored)
 				if pars.pFuncOnFail != nil {
 					callbackWitness := witness
-					if pars.fStoreCex == 0 {
+					if pars.FStoreCex == 0 {
 						callbackWitness = nil
 					}
 					if pars.pFuncOnFail(int32(index), callbackWitness) != 0 {
-						pars.iFrame = frame
+						pars.IFrame = frame
 						return -1
 					}
 				}
-				if pars.nFailOuts+pars.nDropOuts == outputs {
-					if pars.nFailOuts != 0 {
+				if pars.NFailOuts+pars.NDropOuts == outputs {
+					if pars.NFailOuts != 0 {
 						return 0
 					}
 					return -1
@@ -861,12 +861,12 @@ func Pdr_ManSolveInt(p *Pdr_Man_t) int32 {
 				p.timeToStopOne = oneStarted + p.pTime4Outs[index]
 			}
 			for {
-				if pars.nTimeOutGap != 0 && pars.timeLastSolved != 0 && pdrNow(p) > pars.timeLastSolved+int64(pars.nTimeOutGap)*int64(time.Second) {
-					pars.iFrame = frame
+				if pars.NTimeOutGap != 0 && pars.timeLastSolved != 0 && pdrNow(p) > pars.timeLastSolved+int64(pars.NTimeOutGap)*int64(time.Second) {
+					pars.IFrame = frame
 					return -1
 				}
 				var cube *Pdr_Set_t
-				status := Pdr_ManCheckCube(p, frame, nil, &cube, pars.nConfLimit, 0, 1)
+				status := Pdr_ManCheckCube(p, frame, nil, &cube, pars.NConfLimit, 0, 1)
 				if status == 1 {
 					break
 				}
@@ -878,12 +878,12 @@ func Pdr_ManSolveInt(p *Pdr_Man_t) int32 {
 						Pdr_QueueClean(p)
 						break
 					}
-					pars.iFrame = frame
+					pars.IFrame = frame
 					return -1
 				}
 				if status == 0 {
-					pars.iFrame = frame
-					if pars.fSolveAll == 0 {
+					pars.IFrame = frame
+					if pars.FSolveAll == 0 {
 						before := util.Abc_Clock()
 						witness := Pdr_ManDeriveCexAbs(p)
 						p.tAbs += util.Abc_Clock() - before
@@ -897,15 +897,15 @@ func Pdr_ManSolveInt(p *Pdr_Man_t) int32 {
 						}
 						return 0
 					}
-					pars.nFailOuts++
+					pars.NFailOuts++
 					var witness *util.Abc_Cex_t
-					if pars.fUseBridge != 0 || pars.fStoreCex != 0 {
+					if pars.FUseBridge != 0 || pars.FStoreCex != 0 {
 						witness = Pdr_ManDeriveCex(p)
 					}
-					if pars.vOutMap != nil {
-						vec.Vec_IntWriteEntry(pars.vOutMap, index, 0)
+					if pars.VOutMap != nil {
+						vec.Vec_IntWriteEntry(pars.VOutMap, index, 0)
 					}
-					if pars.fUseBridge != 0 {
+					if pars.FUseBridge != 0 {
 						util.Gia_ManToBridgeResult(os.Stdout, 0, witness, int32(index))
 					}
 					var stored any = witness
@@ -915,24 +915,24 @@ func Pdr_ManSolveInt(p *Pdr_Man_t) int32 {
 					vec.Vec_PtrWriteEntry(p.vCexes, index, stored)
 					if pars.pFuncOnFail != nil {
 						callbackWitness := witness
-						if pars.fStoreCex == 0 {
+						if pars.FStoreCex == 0 {
 							callbackWitness = nil
 						}
 						if pars.pFuncOnFail(int32(index), callbackWitness) != 0 {
-							pars.iFrame = frame
+							pars.IFrame = frame
 							return -1
 						}
 					}
-					if pars.fNotVerbose == 0 {
-						fmt.Printf("Output %d was asserted in frame %d (solved %d out of %d outputs).\n", index, frame, pars.nFailOuts, outputs)
+					if pars.FNotVerbose == 0 {
+						fmt.Printf("Output %d was asserted in frame %d (solved %d out of %d outputs).\n", index, frame, pars.NFailOuts, outputs)
 					}
-					if pars.nFailOuts == outputs {
+					if pars.NFailOuts == outputs {
 						return 0
 					}
 					Pdr_QueueClean(p)
 					break
 				}
-				if pars.fVerbose != 0 {
+				if pars.FVerbose != 0 {
 					Pdr_ManPrintProgress(p, 0, util.Abc_Clock()-started)
 				}
 			}
@@ -947,25 +947,25 @@ func Pdr_ManSolveInt(p *Pdr_Man_t) int32 {
 					p.pTime4Outs[index] = 0
 				}
 				if p.pTime4Outs[index] == 0 && vec.Vec_PtrEntry(p.vCexes, index) == nil {
-					pars.nDropOuts++
-					if pars.vOutMap != nil {
-						vec.Vec_IntWriteEntry(pars.vOutMap, index, -1)
+					pars.NDropOuts++
+					if pars.VOutMap != nil {
+						vec.Vec_IntWriteEntry(pars.VOutMap, index, -1)
 					}
-					if pars.fNotVerbose == 0 {
+					if pars.FNotVerbose == 0 {
 						fmt.Printf("Timing out on output %d in frame %d.\n", index, frame)
 					}
 				}
 				p.timeToStopOne = 0
 			}
 		}
-		if pars.fUseAbs != 0 && p.vAbsFlops != nil && !refined {
+		if pars.FUseAbs != 0 && p.vAbsFlops != nil && !refined {
 			for i, used := range vec.Vec_IntArray(p.vAbsFlops) {
 				if used != 0 && vec.Vec_IntEntry(p.vPrio, i)>>p.nPrioShift == 0 {
 					vec.Vec_IntWriteEntry(p.vAbsFlops, i, 0)
 				}
 			}
 		}
-		if pars.fVerbose != 0 {
+		if pars.FVerbose != 0 {
 			var closeLine int32 = 1
 			if refined {
 				closeLine = 0
@@ -975,49 +975,49 @@ func Pdr_ManSolveInt(p *Pdr_Man_t) int32 {
 		if refined {
 			continue
 		}
-		p.nQueLim = pars.nRestLimit
+		p.nQueLim = pars.NRestLimit
 		Pdr_ManSetPropertyOutput(p, frame)
 		frame++
 		Pdr_ManCreateSolver(p, frame)
 		status := Pdr_ManPushClauses(p)
 		if status == -1 {
-			pars.iFrame = frame
+			pars.IFrame = frame
 			return -1
 		}
 		if status != 0 {
-			if pars.fVerbose != 0 {
+			if pars.FVerbose != 0 {
 				Pdr_ManPrintProgress(p, 1, util.Abc_Clock()-started)
 			}
-			if pars.fSilent == 0 {
+			if pars.FSilent == 0 {
 				Pdr_ManReportInvariant(p)
 				Pdr_ManVerifyInvariant(p)
 			}
-			pars.iFrame = frame
-			pars.nProveOuts = outputs - pars.nFailOuts - pars.nDropOuts
-			if pars.vOutMap != nil {
+			pars.IFrame = frame
+			pars.NProveOuts = outputs - pars.NFailOuts - pars.NDropOuts
+			if pars.VOutMap != nil {
 				for i := int32(0); i < outputs; i++ {
-					if vec.Vec_IntEntry(pars.vOutMap, int(i)) == -2 {
-						vec.Vec_IntWriteEntry(pars.vOutMap, int(i), 1)
-						if pars.fUseBridge != 0 {
+					if vec.Vec_IntEntry(pars.VOutMap, int(i)) == -2 {
+						vec.Vec_IntWriteEntry(pars.VOutMap, int(i), 1)
+						if pars.FUseBridge != 0 {
 							util.Gia_ManToBridgeResult(os.Stdout, 1, nil, i)
 						}
 					}
 				}
 			}
-			if pars.nProveOuts == outputs {
+			if pars.NProveOuts == outputs {
 				return 1
 			}
-			if pars.nFailOuts > 0 {
+			if pars.NFailOuts > 0 {
 				return 0
 			}
 			return -1
 		}
-		if pars.fVerbose != 0 {
+		if pars.FVerbose != 0 {
 			Pdr_ManPrintProgress(p, 0, util.Abc_Clock()-started)
 		}
 		now := pdrNow(p)
-		if pars.pFuncStop != nil && pars.pFuncStop(pars.RunId) != 0 || p.timeToStop != 0 && now > p.timeToStop || pars.nTimeOutGap != 0 && pars.timeLastSolved != 0 && now > pars.timeLastSolved+int64(pars.nTimeOutGap)*int64(time.Second) || pars.nFrameMax != 0 && frame >= pars.nFrameMax {
-			pars.iFrame = frame
+		if pars.pFuncStop != nil && pars.pFuncStop(pars.RunId) != 0 || p.timeToStop != 0 && now > p.timeToStop || pars.NTimeOutGap != 0 && pars.timeLastSolved != 0 && now > pars.timeLastSolved+int64(pars.NTimeOutGap)*int64(time.Second) || pars.NFrameMax != 0 && frame >= pars.NFrameMax {
+			pars.IFrame = frame
 			return -1
 		}
 	}
@@ -1028,19 +1028,19 @@ type pdrNoCounterexample struct{}
 
 func Pdr_ManSolve(graph *aig.Graph, pars *Pdr_Par_t) int32 {
 	// ABC's updated justification assumes dynamic-CNF reverse mappings.
-	if pars.fNewXSim != 0 && pars.fMonoCnf != 0 {
+	if pars.FNewXSim != 0 && pars.FMonoCnf != 0 {
 		return -1
 	}
 	started := util.Abc_Clock()
 	outputs := graph.TruePoCount()
-	if pars.nTimeOutOne != 0 && pars.fSolveAll == 0 {
-		pars.nTimeOutOne = 0
+	if pars.NTimeOutOne != 0 && pars.FSolveAll == 0 {
+		pars.NTimeOutOne = 0
 	}
-	if pars.nTimeOutOne != 0 && pars.nTimeOut == 0 {
-		pars.nTimeOut = (pars.nTimeOutOne*outputs + 999) / 1000
+	if pars.NTimeOutOne != 0 && pars.NTimeOut == 0 {
+		pars.NTimeOut = (pars.NTimeOutOne*outputs + 999) / 1000
 	}
-	if pars.fVerbose != 0 {
-		fmt.Printf("VarMax = %d. FrameMax = %d. QueMax = %d. TimeMax = %d. MonoCNF = %t. SkipGen = %t. SolveAll = %t.\n", pars.nRecycle, pars.nFrameMax, pars.nRestLimit, pars.nTimeOut, pars.fMonoCnf != 0, pars.fSkipGeneral != 0, pars.fSolveAll != 0)
+	if pars.FVerbose != 0 {
+		fmt.Printf("VarMax = %d. FrameMax = %d. QueMax = %d. TimeMax = %d. MonoCNF = %t. SkipGen = %t. SolveAll = %t.\n", pars.NRecycle, pars.NFrameMax, pars.NRestLimit, pars.NTimeOut, pars.FMonoCnf != 0, pars.FSkipGeneral != 0, pars.FSolveAll != 0)
 	}
 	graph.ClearSequentialCounterexample()
 	p := Pdr_ManStart(graph, pars, nil)
@@ -1052,14 +1052,14 @@ func Pdr_ManSolve(graph *aig.Graph, pars *Pdr_Par_t) int32 {
 		graph.SetSequentialCounterexamples(p.vCexes)
 		p.vCexes = nil
 	}
-	if pars.fDumpInv != 0 || result == 1 {
+	if pars.FDumpInv != 0 || result == 1 {
 		var reduce int32
 		if result != 1 {
 			reduce = 1
 		}
 		abcmain.Abc_FrameSetInv(vec.Vec_IntArray(Pdr_ManDeriveInfinityClauses(p, reduce)))
-		if pars.fDumpInv != 0 {
-			filename := pars.pInvFileName
+		if pars.FDumpInv != 0 {
+			filename := pars.PInvFileName
 			if filename == "" {
 				filename = aig.Aig_FileNameGenericAppend(graph.Name, "_inv.pla")
 			}
@@ -1073,15 +1073,15 @@ func Pdr_ManSolve(graph *aig.Graph, pars *Pdr_Par_t) int32 {
 	}
 	p.tTotal += util.Abc_Clock() - started
 	Pdr_ManStop(p)
-	pars.iFrame--
-	if pars.vOutMap != nil {
+	pars.IFrame--
+	if pars.VOutMap != nil {
 		for i := int32(0); i < outputs; i++ {
-			if vec.Vec_IntEntry(pars.vOutMap, int(i)) == -2 {
-				vec.Vec_IntWriteEntry(pars.vOutMap, int(i), -1)
+			if vec.Vec_IntEntry(pars.VOutMap, int(i)) == -2 {
+				vec.Vec_IntWriteEntry(pars.VOutMap, int(i), -1)
 			}
 		}
 	}
-	if pars.fUseBridge != 0 {
+	if pars.FUseBridge != 0 {
 		util.Gia_ManToBridgeAbort(os.Stdout, 7, []byte("timeout"))
 	}
 	return result

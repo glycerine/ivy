@@ -61,14 +61,14 @@ func TestPdrThreeRegisterReachability(t *testing.T) {
 		}
 		var pars Pdr_Par_t
 		Pdr_ManSetDefaultParams(&pars)
-		pars.fSilent = 1
-		pars.fMonoCnf = int32(trial & 1)
+		pars.FSilent = 1
+		pars.FMonoCnf = int32(trial & 1)
 		// ABC’s updated simulator can produce invalid witnesses; see PORTING.md.
-		pars.fNewXSim = 0
-		pars.fUseAbs = int32((trial >> 2) & 1)
-		pars.fFlopPrio = int32((trial >> 3) & 1)
-		pars.fShiftStart = int32((trial >> 4) & 1)
-		pars.fReuseProofOblig = int32((trial >> 5) & 1)
+		pars.FNewXSim = 0
+		pars.FUseAbs = int32((trial >> 2) & 1)
+		pars.FFlopPrio = int32((trial >> 3) & 1)
+		pars.FShiftStart = int32((trial >> 4) & 1)
+		pars.FReuseProofOblig = int32((trial >> 5) & 1)
 		var result int32
 		if trial&64 != 0 {
 			result = IPdr_ManSolve(g, &pars)

@@ -26,7 +26,7 @@ func TestOutputTimeoutPriorityMatchesSource(t *testing.T) {
 		{"output at boundary", 0, now, 0, 0, false},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			p := &Pdr_Man_t{timeToStop: tc.global, timeToStopOne: tc.output, pPars: &Pdr_Par_t{nTimeOutGap: tc.gap, timeLastSolved: tc.lastSolved}}
+			p := &Pdr_Man_t{timeToStop: tc.global, timeToStopOne: tc.output, pPars: &Pdr_Par_t{NTimeOutGap: tc.gap, timeLastSolved: tc.lastSolved}}
 			if got := pdrOnlyOutputTimedOut(p, now); got != tc.want {
 				t.Fatalf("got %v, want %v", got, tc.want)
 			}
@@ -46,8 +46,8 @@ func TestGapTimeoutPrecedesOutputDropInBothDrivers(t *testing.T) {
 		aig.Aig_ManSetRegNum(g, 1)
 		var pars Pdr_Par_t
 		Pdr_ManSetDefaultParams(&pars)
-		pars.fSolveAll, pars.fSilent, pars.fNotVerbose = 1, 1, 1
-		pars.nTimeOut, pars.nTimeOutGap, pars.nTimeOutOne = 5, 1, 1
+		pars.FSolveAll, pars.FSilent, pars.FNotVerbose = 1, 1, 1
+		pars.NTimeOut, pars.NTimeOutGap, pars.NTimeOutOne = 5, 1, 1
 		calls := 0
 		now := int64(time.Second)
 		pars.pFuncStop = func(int32) int32 {
@@ -63,8 +63,8 @@ func TestGapTimeoutPrecedesOutputDropInBothDrivers(t *testing.T) {
 		} else {
 			result = Pdr_ManSolveInt(p)
 		}
-		if result != -1 || calls == 0 || pars.nDropOuts != 0 || pars.iFrame != 0 {
-			t.Fatalf("incremental=%v result=%d calls=%d dropped=%d frame=%d", incremental, result, calls, pars.nDropOuts, pars.iFrame)
+		if result != -1 || calls == 0 || pars.NDropOuts != 0 || pars.IFrame != 0 {
+			t.Fatalf("incremental=%v result=%d calls=%d dropped=%d frame=%d", incremental, result, calls, pars.NDropOuts, pars.IFrame)
 		}
 		Pdr_ManStop(p)
 	}

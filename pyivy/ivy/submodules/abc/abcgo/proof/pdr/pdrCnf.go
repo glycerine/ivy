@@ -116,7 +116,7 @@ func Pdr_ObjSatVar2(p *Pdr_Man_t, k int32, object aig.Edge, level, polarity int3
 }
 
 func Pdr_ObjSatVar(p *Pdr_Man_t, k, polarity int32, object aig.Edge) int32 {
-	if p.pPars.fMonoCnf != 0 {
+	if p.pPars.FMonoCnf != 0 {
 		return Pdr_ObjSatVar1(p, k, object)
 	}
 	return Pdr_ObjSatVar2(p, k, object, 0, polarity)
@@ -153,14 +153,14 @@ func Pdr_ObjRegNum2(p *Pdr_Man_t, k, variable int32) int32 {
 }
 
 func Pdr_ObjRegNum(p *Pdr_Man_t, k, variable int32) int32 {
-	if p.pPars.fMonoCnf != 0 {
+	if p.pPars.FMonoCnf != 0 {
 		return Pdr_ObjRegNum1(p, k, variable)
 	}
 	return Pdr_ObjRegNum2(p, k, variable)
 }
 
 func Pdr_ManFreeVar(p *Pdr_Man_t, k int32) int32 {
-	if p.pPars.fMonoCnf != 0 {
+	if p.pPars.FMonoCnf != 0 {
 		return p.vSolvers[k].NumVars()
 	}
 	reverse := p.vVar2Ids[k]
@@ -254,7 +254,7 @@ func Pdr_ManNewSolver2(solver *bsat.Solver, p *Pdr_Man_t, k, initialize int32) *
 }
 
 func Pdr_ManNewSolver(solver *bsat.Solver, p *Pdr_Man_t, k, initialize int32) *bsat.Solver {
-	if p.pPars.fMonoCnf != 0 {
+	if p.pPars.FMonoCnf != 0 {
 		return Pdr_ManNewSolver1(solver, p, k, initialize)
 	}
 	return Pdr_ManNewSolver2(solver, p, k, initialize)

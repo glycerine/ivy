@@ -146,7 +146,7 @@ func TestPdrSolveRestoresPreviousClockDomain(t *testing.T) {
 func TestPdrGeneralizationExpiredDeadlineMatchesC(t *testing.T) {
 	for _, tc := range []struct{ tryConf, genLimit int32 }{{0, 1}, {1, 0}, {1, 1}} {
 		p, _ := pdrTestSATManager(t, false)
-		p.pPars.nConfGenLimit = tc.genLimit
+		p.pPars.NConfGenLimit = tc.genLimit
 		p.timeToStop = util.Abc_Clock() - 1
 		cube := testPdrSet([]int32{0}, nil)
 		got := Pdr_ManCheckCube(p, 0, cube, nil, 0, tc.tryConf, 0)
@@ -184,7 +184,7 @@ func TestPdrGeneralizationConflictLimitMatchesC(t *testing.T) {
 	for _, tryConf := range []int32{0, 1} {
 		p, cube, _, _, _ := pdrCtgLateTimeoutFixture(t, []int32{0, 2})
 		p.vSolvers[1].SetStopFunc(0, nil)
-		p.pPars.nConfGenLimit = 1
+		p.pPars.NConfGenLimit = 1
 		p.timeToStop = 0
 		got := Pdr_ManCheckCube(p, 1, cube, nil, 1, tryConf, 1)
 		want, satCalls := int32(-1), int32(0)

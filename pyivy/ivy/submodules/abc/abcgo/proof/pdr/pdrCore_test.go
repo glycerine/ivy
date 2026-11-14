@@ -13,12 +13,12 @@ import (
 )
 
 func TestPdrDefaultParametersResetPriorState(t *testing.T) {
-	params := Pdr_Par_t{nConfLimit: 91, fVerbose: 1, nFailOuts: 7}
+	params := Pdr_Par_t{NConfLimit: 91, FVerbose: 1, NFailOuts: 7}
 	Pdr_ManSetDefaultParams(&params)
-	if params.nRecycle != 300 || params.nFrameMax != 10000 || params.nRandomSeed != 91648253 || params.iFrame != -1 || params.fUseSupp != 1 || params.fUsePropOut != 1 || params.fSkipDown != 1 {
+	if params.NRecycle != 300 || params.NFrameMax != 10000 || params.NRandomSeed != 91648253 || params.IFrame != -1 || params.FUseSupp != 1 || params.FUsePropOut != 1 || params.FSkipDown != 1 {
 		t.Fatalf("unexpected defaults: %+v", params)
 	}
-	if params.nConfLimit != 0 || params.fVerbose != 0 || params.nFailOuts != 0 {
+	if params.NConfLimit != 0 || params.FVerbose != 0 || params.NFailOuts != 0 {
 		t.Fatal("old parameter state survived reset")
 	}
 }
@@ -29,7 +29,7 @@ func TestPdrUnsupportedMonolithicUpdatedSimulation(t *testing.T) {
 		g.AddOutput(g.Const0())
 		var pars Pdr_Par_t
 		Pdr_ManSetDefaultParams(&pars)
-		pars.fMonoCnf, pars.fNewXSim = 1, 1
+		pars.FMonoCnf, pars.FNewXSim = 1, 1
 		var got int32
 		if incremental {
 			got = IPdr_ManSolve(g, &pars)
@@ -50,7 +50,7 @@ func TestPdrRejectsExistingMultiOutputWitnessVector(t *testing.T) {
 			g.SetSequentialCounterexamples(vec.Vec_PtrStart(1))
 			var pars Pdr_Par_t
 			Pdr_ManSetDefaultParams(&pars)
-			pars.fSolveAll, pars.fSilent = 1, 1
+			pars.FSolveAll, pars.FSilent = 1, 1
 			defer func() {
 				if recover() == nil {
 					t.Fatal("expected the C source's existing-vector assertion")
@@ -91,7 +91,7 @@ func TestPdrSimpleGeneralizationLosesMultiLiteralCubeAsInC(t *testing.T) {
 	aig.Aig_ManSetRegNum(g, 2)
 	var pars Pdr_Par_t
 	Pdr_ManSetDefaultParams(&pars)
-	pars.fSimpleGeneral = 1
+	pars.FSimpleGeneral = 1
 	p := Pdr_ManStart(g, &pars, nil)
 	defer Pdr_ManStop(p)
 	Pdr_ManCreateSolver(p, 0)
@@ -176,7 +176,7 @@ func TestPdrSolveSimpleSequentialCircuits(t *testing.T) {
 			aig.Aig_ManSetRegNum(g, 1)
 			var pars Pdr_Par_t
 			Pdr_ManSetDefaultParams(&pars)
-			pars.fSilent = 1
+			pars.FSilent = 1
 			got := Pdr_ManSolve(g, &pars)
 			if got != tc.want {
 				t.Fatalf("got %d, want %d", got, tc.want)
@@ -240,7 +240,7 @@ func TestPdrSolveAgainstExhaustiveReachability(t *testing.T) {
 			}
 			var pars Pdr_Par_t
 			Pdr_ManSetDefaultParams(&pars)
-			pars.fSilent = 1
+			pars.FSilent = 1
 			got := Pdr_ManSolve(g, &pars)
 			want := int32(1)
 			if bad {
@@ -268,14 +268,14 @@ func TestPdrSolveAllReportsEachOutput(t *testing.T) {
 		aig.Aig_ManSetRegNum(g, 1)
 		var pars Pdr_Par_t
 		Pdr_ManSetDefaultParams(&pars)
-		pars.fSolveAll = 1
-		pars.fStoreCex = store
-		pars.fSilent = 1
-		pars.fNotVerbose = 1
+		pars.FSolveAll = 1
+		pars.FStoreCex = store
+		pars.FSilent = 1
+		pars.FNotVerbose = 1
 		if got := Pdr_ManSolve(g, &pars); got != 0 {
 			t.Fatalf("store %d: result %d", store, got)
 		}
-		if got := vec.Vec_IntArray(pars.vOutMap); !reflect.DeepEqual(got, []int32{1, 0, 0}) {
+		if got := vec.Vec_IntArray(pars.VOutMap); !reflect.DeepEqual(got, []int32{1, 0, 0}) {
 			t.Fatalf("store %d: outcomes %v", store, got)
 		}
 		models := g.SequentialCounterexamples()
@@ -348,20 +348,20 @@ func TestPdrSolveTwoRegisterReachability(t *testing.T) {
 		}
 		var pars Pdr_Par_t
 		Pdr_ManSetDefaultParams(&pars)
-		pars.fSilent = 1
+		pars.FSilent = 1
 		if trial%2 == 0 {
-			pars.fSkipDown = 0
-			pars.fCtgs = 1
+			pars.FSkipDown = 0
+			pars.FCtgs = 1
 		}
 		if trial%3 == 0 {
-			pars.fTwoRounds = 1
+			pars.FTwoRounds = 1
 		}
 		if trial%5 == 0 {
-			pars.fFlopOrder = 1
+			pars.FFlopOrder = 1
 		}
 		if trial%7 == 0 {
-			pars.fUseAbs = 1
-			pars.fUseSimpleRef = 1
+			pars.FUseAbs = 1
+			pars.FUseSimpleRef = 1
 		}
 		got := Pdr_ManSolve(g, &pars)
 		want := int32(1)
@@ -396,7 +396,7 @@ func TestPdrShortestTraceForLatchChain(t *testing.T) {
 		aig.Aig_ManSetRegNum(g, 2)
 		var pars Pdr_Par_t
 		Pdr_ManSetDefaultParams(&pars)
-		pars.fSilent, pars.fShortest = 1, 1
+		pars.FSilent, pars.FShortest = 1, 1
 		var status int32
 		if incremental {
 			status = IPdr_ManSolve(g, &pars)
@@ -462,20 +462,20 @@ func testAdditionalPdrModes(t *testing.T, incremental bool, trials int) {
 		}
 		var pars Pdr_Par_t
 		Pdr_ManSetDefaultParams(&pars)
-		pars.fSilent = 1
-		pars.fMonoCnf = int32(trial % 2)
-		pars.fNewXSim = int32((trial / 2) % 2)
-		pars.fUseAbs = int32((trial / 4) % 2)
-		if pars.fNewXSim != 0 && (pars.fMonoCnf != 0 || pars.fUseAbs != 0) {
+		pars.FSilent = 1
+		pars.FMonoCnf = int32(trial % 2)
+		pars.FNewXSim = int32((trial / 2) % 2)
+		pars.FUseAbs = int32((trial / 4) % 2)
+		if pars.FNewXSim != 0 && (pars.FMonoCnf != 0 || pars.FUseAbs != 0) {
 			continue // ABC's updated-simulation combinations can assert or crash.
 		}
-		pars.fUseSimpleRef = 0
-		pars.fShortest = int32((trial / 8) % 2)
-		pars.fFlopPrio = int32((trial / 16) % 2)
-		pars.fShiftStart = int32((trial / 32) % 2)
-		pars.fReuseProofOblig = int32((trial / 64) % 2)
-		pars.fSkipDown = int32((trial / 128) % 2)
-		pars.fCtgs = int32((trial / 256) % 2)
+		pars.FUseSimpleRef = 0
+		pars.FShortest = int32((trial / 8) % 2)
+		pars.FFlopPrio = int32((trial / 16) % 2)
+		pars.FShiftStart = int32((trial / 32) % 2)
+		pars.FReuseProofOblig = int32((trial / 64) % 2)
+		pars.FSkipDown = int32((trial / 128) % 2)
+		pars.FCtgs = int32((trial / 256) % 2)
 		var got int32
 		if incremental {
 			got = IPdr_ManSolve(g, &pars)
@@ -504,7 +504,7 @@ func TestPdrHonorsStopCallback(t *testing.T) {
 	aig.Aig_ManSetRegNum(g, 1)
 	var pars Pdr_Par_t
 	Pdr_ManSetDefaultParams(&pars)
-	pars.fSilent = 1
+	pars.FSilent = 1
 	calls := 0
 	pars.RunId = 42
 	pars.pFuncStop = func(id int32) int32 {

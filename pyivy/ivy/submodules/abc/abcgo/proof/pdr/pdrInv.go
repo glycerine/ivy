@@ -100,15 +100,15 @@ func Pdr_ManPrintProgress(p *Pdr_Man_t, closeLine int32, elapsed abctime) {
 		flops = int32(vec.Vec_IntCountPositive(p.vAbsFlops))
 	}
 	fmt.Printf("%5d%6d", p.nQueMax, flops)
-	if p.pPars.fUseAbs != 0 {
+	if p.pPars.FUseAbs != 0 {
 		fmt.Printf("%4d", p.nCexes)
 	}
 	fmt.Printf("%10.2f sec", time.Duration(elapsed).Seconds())
-	if p.pPars.fSolveAll != 0 {
-		fmt.Printf("  CEX =%4d", p.pPars.nFailOuts)
+	if p.pPars.FSolveAll != 0 {
+		fmt.Printf("  CEX =%4d", p.pPars.NFailOuts)
 	}
-	if p.pPars.nTimeOutOne != 0 {
-		fmt.Printf("  T/O =%3d", p.pPars.nDropOuts)
+	if p.pPars.NTimeOutOne != 0 {
+		fmt.Printf("  T/O =%3d", p.pPars.NDropOuts)
 	}
 	if closeLine != 0 {
 		fmt.Println()
@@ -310,7 +310,7 @@ func Pdr_ManDumpClauses(p *Pdr_Man_t, fileName string, proved int32) {
 	}
 	var counts *Vec_Int_t
 	nInputs := aig.Aig_ManRegNum(p.pAig)
-	if p.pPars.fUseSupp != 0 {
+	if p.pPars.FUseSupp != 0 {
 		counts = Pdr_ManCountFlops(p, cubes)
 		nInputs = Pdr_ManCountVariables(p, start)
 	}
@@ -369,7 +369,7 @@ func Pdr_ManDumpString(p *Pdr_Man_t) *Vec_Str_t {
 		return int(Pdr_SetCompare(&x, &y))
 	})
 	var counts *Vec_Int_t
-	if p.pPars.fUseSupp != 0 {
+	if p.pPars.FUseSupp != 0 {
 		counts = Pdr_ManCountFlops(p, cubes)
 	}
 	result := vec.Vec_StrAlloc(1000)

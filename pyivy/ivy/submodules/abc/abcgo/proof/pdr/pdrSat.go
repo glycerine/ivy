@@ -15,7 +15,7 @@ func Pdr_ManCreateSolver(p *Pdr_Man_t, k int32) *bsat.Solver {
 	if int(k) != len(p.vSolvers) || int(k) != vec.Vec_VecSize(p.vClauses) || int(k) != vec.Vec_IntSize(p.vActVars) {
 		panic("pdr: inconsistent solver frame count")
 	}
-	solver := Pdr_ManNewSolver(bsat.NewSolverSeed(float64(p.pPars.nRandomSeed)), p, k, pdrBool(k == 0))
+	solver := Pdr_ManNewSolver(bsat.NewSolverSeed(float64(p.pPars.NRandomSeed)), p, k, pdrBool(k == 0))
 	if solver == nil {
 		return nil
 	}
@@ -30,7 +30,7 @@ func Pdr_ManCreateSolver(p *Pdr_Man_t, k int32) *bsat.Solver {
 
 func Pdr_ManFetchSolver(p *Pdr_Man_t, k int32) *bsat.Solver {
 	solver := Pdr_ManSolver(p, k)
-	if vec.Vec_IntEntry(p.vActVars, int(k)) < p.pPars.nRecycle {
+	if vec.Vec_IntEntry(p.vActVars, int(k)) < p.pPars.NRecycle {
 		return solver
 	}
 	if int(k) >= len(p.vSolvers)-1 {
@@ -38,7 +38,7 @@ func Pdr_ManFetchSolver(p *Pdr_Man_t, k int32) *bsat.Solver {
 	}
 	p.nStarts++
 	// ABC restarts the existing solver, preserving its identity and controls.
-	solver.RestartSeed(float64(p.pPars.nRandomSeed))
+	solver.RestartSeed(float64(p.pPars.NRandomSeed))
 	solver = Pdr_ManNewSolver(solver, p, k, pdrBool(k == 0))
 	if solver == nil {
 		return nil
@@ -99,7 +99,7 @@ func Pdr_ManCubeToLits(p *Pdr_Man_t, k int32, cube *Pdr_Set_t, complement, next 
 }
 
 func Pdr_ManSetPropertyOutput(p *Pdr_Man_t, k int32) {
-	if p.pPars.fUsePropOut == 0 {
+	if p.pPars.FUsePropOut == 0 {
 		return
 	}
 	solver := Pdr_ManSolver(p, k)
@@ -107,7 +107,7 @@ func Pdr_ManSetPropertyOutput(p *Pdr_Man_t, k int32) {
 		if p.vCexes != nil && vec.Vec_PtrEntry(p.vCexes, int(i)) != nil {
 			continue
 		}
-		if p.pPars.vOutMap != nil && vec.Vec_IntEntry(p.pPars.vOutMap, int(i)) == -1 {
+		if p.pPars.VOutMap != nil && vec.Vec_IntEntry(p.pPars.VOutMap, int(i)) == -1 {
 			continue
 		}
 		variable := Pdr_ObjSatVar(p, k, 1, aig.Aig_ManCo(p.pAig, i))
@@ -126,7 +126,7 @@ func pdrLiterals(v *vec.Vec_Int_t) []bsat.Literal {
 // values for cone objects, including nodes omitted by CNF cuts; adding their
 // SAT variables after Solve would invalidate the model in the Go solver.
 func pdrPrepareModel(p *Pdr_Man_t, k int32, cube *Pdr_Set_t) {
-	if p.pPars.fMonoCnf != 0 {
+	if p.pPars.FMonoCnf != 0 {
 		return
 	}
 	var stack []aig.Edge
@@ -235,13 +235,13 @@ func Pdr_ManCheckCube(p *Pdr_Man_t, k int32, cube *Pdr_Set_t, predecessor **Pdr_
 			assumptions = append(assumptions, activation^1)
 		}
 		if tryConf != 0 {
-			limit = p.pPars.nConfGenLimit
+			limit = p.pPars.NConfGenLimit
 		}
 	}
 	start := util.Abc_Clock()
 	status := pdrSolve(p, solver, assumptions, limit)
 	if status == bsat.Unknown {
-		if cube != nil && tryConf != 0 && p.pPars.nConfGenLimit != 0 {
+		if cube != nil && tryConf != 0 && p.pPars.NConfGenLimit != 0 {
 			// ABC treats an exhausted generalization budget as SAT, even
 			// when the caller requests a predecessor.
 			status = bsat.Satisfiable
@@ -263,7 +263,7 @@ func Pdr_ManCheckCube(p *Pdr_Man_t, k int32, cube *Pdr_Set_t, predecessor **Pdr_
 	p.nCallsS++
 	if predecessor != nil {
 		start = util.Abc_Clock()
-		if p.pPars.fNewXSim != 0 {
+		if p.pPars.FNewXSim != 0 {
 			*predecessor = Txs3_ManTernarySim(p.pTxs3, k, cube)
 		} else {
 			*predecessor = Pdr_ManTernarySim(p, k, cube)

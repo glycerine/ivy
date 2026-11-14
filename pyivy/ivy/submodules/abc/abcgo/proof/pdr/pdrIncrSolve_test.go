@@ -17,7 +17,7 @@ func TestIncrementalRestoredPushTreatsUnknownAsNonzeroLikeC(t *testing.T) {
 	aig.Aig_ManSetRegNum(g, 1)
 	var pars Pdr_Par_t
 	Pdr_ManSetDefaultParams(&pars)
-	pars.fSilent = 1
+	pars.FSilent = 1
 	p := Pdr_ManStart(g, &pars, nil)
 	defer Pdr_ManStop(p)
 	for k := int32(0); k < 3; k++ {
@@ -39,7 +39,7 @@ func TestIncrementalRestoredClauseCheckIgnoresUnknownLikeC(t *testing.T) {
 	aig.Aig_ManSetRegNum(g, 1)
 	var pars Pdr_Par_t
 	Pdr_ManSetDefaultParams(&pars)
-	pars.fSilent = 1
+	pars.FSilent = 1
 	p := Pdr_ManStart(g, &pars, nil)
 	defer Pdr_ManStop(p)
 	for k := int32(0); k < 3; k++ {
@@ -61,7 +61,7 @@ func TestIncrementalFirstRestartAssertsOnNilSavedClauses(t *testing.T) {
 	aig.Aig_ManSetRegNum(g, 2)
 	var pars Pdr_Par_t
 	Pdr_ManSetDefaultParams(&pars)
-	pars.fSilent, pars.nFrameMax = 1, 1
+	pars.FSilent, pars.NFrameMax = 1, 1
 	defer func() {
 		if recover() == nil {
 			t.Fatal("expected C's nil saved-clause assertion")
@@ -83,7 +83,7 @@ func TestIncrementalPdrSafeAndUnsafe(t *testing.T) {
 		aig.Aig_ManSetRegNum(g, 1)
 		var pars Pdr_Par_t
 		Pdr_ManSetDefaultParams(&pars)
-		pars.fSilent = 1
+		pars.FSilent = 1
 		result := IPdr_ManSolve(g, &pars)
 		want := int32(1)
 		if bad {
@@ -104,17 +104,17 @@ func TestIncrementalRestartRecreatesOutputStateAsInC(t *testing.T) {
 	aig.Aig_ManSetRegNum(g, 0)
 	var pars Pdr_Par_t
 	Pdr_ManSetDefaultParams(&pars)
-	pars.fSolveAll, pars.nTimeOutOne = 1, 50
+	pars.FSolveAll, pars.NTimeOutOne = 1, 50
 	first := Pdr_ManStart(g, &pars, nil)
 	vec.Vec_PtrWriteEntry(first.vCexes, 0, "solved")
-	vec.Vec_IntWriteEntry(pars.vOutMap, 0, 0)
+	vec.Vec_IntWriteEntry(pars.VOutMap, 0, 0)
 	first.pTime4Outs[0] = 0
-	pars.nFailOuts = 1
+	pars.NFailOuts = 1
 	Pdr_ManStop(first)
 	second := Pdr_ManStart(g, &pars, nil)
 	defer Pdr_ManStop(second)
-	if vec.Vec_PtrEntry(second.vCexes, 0) != nil || vec.Vec_IntEntry(pars.vOutMap, 0) != -2 || second.pTime4Outs[0] == 0 || pars.nFailOuts != 1 {
-		t.Fatalf("restart state: witness=%v map=%d budget=%d failed=%d", vec.Vec_PtrEntry(second.vCexes, 0), vec.Vec_IntEntry(pars.vOutMap, 0), second.pTime4Outs[0], pars.nFailOuts)
+	if vec.Vec_PtrEntry(second.vCexes, 0) != nil || vec.Vec_IntEntry(pars.VOutMap, 0) != -2 || second.pTime4Outs[0] == 0 || pars.NFailOuts != 1 {
+		t.Fatalf("restart state: witness=%v map=%d budget=%d failed=%d", vec.Vec_PtrEntry(second.vCexes, 0), vec.Vec_IntEntry(pars.VOutMap, 0), second.pTime4Outs[0], pars.NFailOuts)
 	}
 }
 
@@ -125,7 +125,7 @@ func TestIncrementalFreshManagerRecountsTrivialOutputsAsInC(t *testing.T) {
 	aig.Aig_ManSetRegNum(g, 0)
 	var pars Pdr_Par_t
 	Pdr_ManSetDefaultParams(&pars)
-	pars.fSolveAll, pars.fNotVerbose, pars.fSilent = 1, 1, 1
+	pars.FSolveAll, pars.FNotVerbose, pars.FSilent = 1, 1, 1
 	for run := 0; run < 2; run++ {
 		manager := Pdr_ManStart(g, &pars, nil)
 		if got := IPdr_ManSolveInt(manager, 0, 0); got != 0 {
@@ -133,8 +133,8 @@ func TestIncrementalFreshManagerRecountsTrivialOutputsAsInC(t *testing.T) {
 		}
 		Pdr_ManStop(manager)
 	}
-	if pars.nProveOuts != 2 || pars.nFailOuts != 2 {
-		t.Fatalf("source counters after fresh managers: proved=%d failed=%d", pars.nProveOuts, pars.nFailOuts)
+	if pars.NProveOuts != 2 || pars.NFailOuts != 2 {
+		t.Fatalf("source counters after fresh managers: proved=%d failed=%d", pars.NProveOuts, pars.NFailOuts)
 	}
 }
 
@@ -188,7 +188,7 @@ func TestIncrementalPdrAgainstExhaustiveReachability(t *testing.T) {
 			}
 			var pars Pdr_Par_t
 			Pdr_ManSetDefaultParams(&pars)
-			pars.fSilent = 1
+			pars.FSilent = 1
 			got := IPdr_ManSolve(g, &pars)
 			want := int32(1)
 			if bad {

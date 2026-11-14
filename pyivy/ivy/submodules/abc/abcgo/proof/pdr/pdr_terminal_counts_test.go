@@ -17,15 +17,15 @@ func TestPdrUsesStoredTrueOutputCount(t *testing.T) {
 		g.SetTruePoCount(1)
 		var pars Pdr_Par_t
 		Pdr_ManSetDefaultParams(&pars)
-		pars.fSolveAll, pars.fSilent, pars.fNotVerbose = 1, 1, 1
+		pars.FSolveAll, pars.FSilent, pars.FNotVerbose = 1, 1, 1
 		var got int32
 		if incremental {
 			got = IPdr_ManSolve(g, &pars)
 		} else {
 			got = Pdr_ManSolve(g, &pars)
 		}
-		if got != 1 || pars.nProveOuts != 1 || pars.nFailOuts != 0 || vec.Vec_IntSize(pars.vOutMap) != 1 || vec.Vec_IntEntry(pars.vOutMap, 0) != 1 {
-			t.Fatalf("incremental=%v result=%d proved=%d failed=%d map=%v", incremental, got, pars.nProveOuts, pars.nFailOuts, vec.Vec_IntArray(pars.vOutMap))
+		if got != 1 || pars.NProveOuts != 1 || pars.NFailOuts != 0 || vec.Vec_IntSize(pars.VOutMap) != 1 || vec.Vec_IntEntry(pars.VOutMap, 0) != 1 {
+			t.Fatalf("incremental=%v result=%d proved=%d failed=%d map=%v", incremental, got, pars.NProveOuts, pars.NFailOuts, vec.Vec_IntArray(pars.VOutMap))
 		}
 	}
 }

@@ -18,7 +18,7 @@ func TestTxs3UsesExistingSolverLimits(t *testing.T) {
 		output := g.AddOutput(g.AND(input, latch))
 		g.AddOutput(latch)
 		aig.Aig_ManSetRegNum(g, 1)
-		p := Pdr_ManStart(g, &Pdr_Par_t{fNewXSim: 1, nRecycle: 100}, nil)
+		p := Pdr_ManStart(g, &Pdr_Par_t{FNewXSim: 1, NRecycle: 100}, nil)
 		Pdr_ManCreateSolver(p, 0)
 		solver := Pdr_ManCreateSolver(p, 1)
 		pdrPrepareModel(p, 1, nil)

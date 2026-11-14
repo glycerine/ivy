@@ -219,7 +219,7 @@ func Txs3_ManTernarySim(p *Txs3_Man_t, k int32, cube *Pdr_Set_t) *Pdr_Set_t {
 	if vec.Vec_IntSize(p.vTemp) != vec.Vec_IntSize(p.vPiLits)+vec.Vec_IntSize(p.vFfLits)+1 {
 		panic("pdr: missing activation assumption in core")
 	}
-	if p.pMan.pPars.fUseAbs != 0 && p.pMan.vAbsFlops != nil {
+	if p.pMan.pPars.FUseAbs != 0 && p.pMan.vAbsFlops != nil {
 		kept := 0
 		for _, lit := range vec.Vec_IntArray(p.vFfLits) {
 			if vec.Vec_IntEntry(p.pMan.vAbsFlops, int(lit>>1)) != 0 {

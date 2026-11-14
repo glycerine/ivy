@@ -18,7 +18,7 @@ func TestIPdrReduceUnsatCore(t *testing.T) {
 			g.AddOutput(necessary)
 			g.AddOutput(irrelevant)
 			aig.Aig_ManSetRegNum(g, 2)
-			p := Pdr_ManStart(g, &Pdr_Par_t{fMonoCnf: mono}, nil)
+			p := Pdr_ManStart(g, &Pdr_Par_t{FMonoCnf: mono}, nil)
 			defer Pdr_ManStop(p)
 			Pdr_ManCreateSolver(p, 0)
 			Pdr_ManCreateSolver(p, 1)

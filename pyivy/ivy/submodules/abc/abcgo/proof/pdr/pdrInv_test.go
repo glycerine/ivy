@@ -65,7 +65,7 @@ func TestInvariantDumpStringSourceBranches(t *testing.T) {
 	for _, cube := range []*Pdr_Set_t{first, ignored, second} {
 		vec.Vec_VecPush(frames, 2, cube)
 	}
-	pars := &Pdr_Par_t{fUseSupp: 1}
+	pars := &Pdr_Par_t{FUseSupp: 1}
 	p := &Pdr_Man_t{pAig: g, pPars: pars, vClauses: frames, vSolvers: make([]*bsat.Solver, 3)}
 	if got := vec.Vec_IntArray(Pdr_ManCountFlopsInv(p)); !reflect.DeepEqual(got, []int32{1, 0, 2}) {
 		t.Fatalf("flop counts = %v", got)
@@ -80,7 +80,7 @@ func TestInvariantDumpStringSourceBranches(t *testing.T) {
 	if got := string(vec.Vec_StrArray(Pdr_ManDumpString(p))); got != "-1 1\n10 1\n\x00" {
 		t.Fatalf("stored invariant = %q", got)
 	}
-	pars.fUseSupp = 0
+	pars.FUseSupp = 0
 	// Pdr_SetPrintStr in C emits no pattern when its filter is nil.
 	if got := string(vec.Vec_StrArray(Pdr_ManDumpString(p))); got != " 1\n 1\n\x00" {
 		t.Fatalf("unfiltered source output = %q", got)
@@ -290,7 +290,7 @@ func TestInvariantDumpWithoutGlobalFrame(t *testing.T) {
 	aig.Aig_ManSetRegNum(g, 2)
 	frames := vec.Vec_VecStart(2)
 	vec.Vec_VecPush(frames, 1, Pdr_SetCreate(pdrInvVector(0), pdrInvVector()))
-	p := &Pdr_Man_t{pAig: g, pPars: &Pdr_Par_t{fUseSupp: 1}, vClauses: frames, vSolvers: make([]*bsat.Solver, 2)}
+	p := &Pdr_Man_t{pAig: g, pPars: &Pdr_Par_t{FUseSupp: 1}, vClauses: frames, vSolvers: make([]*bsat.Solver, 2)}
 	path := filepath.Join(t.TempDir(), "inv.pla")
 	Pdr_ManDumpClauses(p, path, 1)
 	data, err := os.ReadFile(path)

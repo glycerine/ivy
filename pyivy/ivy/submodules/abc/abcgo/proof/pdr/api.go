@@ -134,36 +134,36 @@ func Solve(graph *aig.Graph, opts *Options) (Result, error) {
 	}
 	var pars Pdr_Par_t
 	Pdr_ManSetDefaultParams(&pars)
-	pars.nFrameMax = options.MaxFrames
-	pars.nConfLimit = options.ConflictLimit
-	pars.nRestLimit = options.RestartLimit
-	pars.nRecycle = options.RecycleLimit
-	if pars.nRecycle == 0 {
-		pars.nRecycle = math.MaxInt32
+	pars.NFrameMax = options.MaxFrames
+	pars.NConfLimit = options.ConflictLimit
+	pars.NRestLimit = options.RestartLimit
+	pars.NRecycle = options.RecycleLimit
+	if pars.NRecycle == 0 {
+		pars.NRecycle = math.MaxInt32
 	}
-	pars.nTimeOut = timeout
-	pars.nTimeOutGap = gap
-	pars.nTimeOutOne = each
+	pars.NTimeOut = timeout
+	pars.NTimeOutGap = gap
+	pars.NTimeOutOne = each
 	if each != 0 && timeout == 0 {
 		outputs := int64(graph.TruePoCount())
 		total := (int64(each)*outputs + 999) / 1000
 		if total > math.MaxInt32 {
 			return Result{}, fmt.Errorf("pdr: combined output timeout too large")
 		}
-		pars.nTimeOut = int32(total)
+		pars.NTimeOut = int32(total)
 	}
-	pars.fSolveAll = pdrFlag(options.SolveAll)
-	pars.fStoreCex = pdrFlag(options.StoreCounterexamples)
-	pars.fUseAbs = pdrFlag(options.UseAbstraction)
-	pars.fUseSimpleRef = pdrFlag(options.SimpleRefinement)
-	pars.fSkipDown = pdrFlag(!options.UseDown)
-	pars.fCtgs = pdrFlag(options.UseCTGs)
-	pars.fTwoRounds = pdrFlag(options.TwoRounds)
-	pars.fFlopOrder = pdrFlag(options.FlopOrder)
-	pars.fShortest = pdrFlag(options.Shortest)
-	pars.fVerbose = pdrFlag(options.Verbose)
-	pars.fSilent = pdrFlag(options.Silent)
-	pars.fNotVerbose = pdrFlag(options.Silent)
+	pars.FSolveAll = pdrFlag(options.SolveAll)
+	pars.FStoreCex = pdrFlag(options.StoreCounterexamples)
+	pars.FUseAbs = pdrFlag(options.UseAbstraction)
+	pars.FUseSimpleRef = pdrFlag(options.SimpleRefinement)
+	pars.FSkipDown = pdrFlag(!options.UseDown)
+	pars.FCtgs = pdrFlag(options.UseCTGs)
+	pars.FTwoRounds = pdrFlag(options.TwoRounds)
+	pars.FFlopOrder = pdrFlag(options.FlopOrder)
+	pars.FShortest = pdrFlag(options.Shortest)
+	pars.FVerbose = pdrFlag(options.Verbose)
+	pars.FSilent = pdrFlag(options.Silent)
+	pars.FNotVerbose = pdrFlag(options.Silent)
 	pars.RunId = options.RunID
 	if options.Stop != nil {
 		pars.pFuncStop = func(id int32) int32 { return pdrFlag(options.Stop(id)) }
@@ -181,7 +181,7 @@ func Solve(graph *aig.Graph, opts *Options) (Result, error) {
 	if options.SolveAll {
 		models := graph.SequentialCounterexamples()
 		for i := range results {
-			results[i].Status = Status(vec.Vec_IntEntry(pars.vOutMap, i))
+			results[i].Status = Status(vec.Vec_IntEntry(pars.VOutMap, i))
 			if models != nil {
 				results[i].Witness, _ = vec.Vec_PtrEntry(models, i).(*util.Abc_Cex_t)
 			}
@@ -195,5 +195,5 @@ func Solve(graph *aig.Graph, opts *Options) (Result, error) {
 			results[cex.IPo] = OutputResult{Status: Failed, Witness: cex}
 		}
 	}
-	return Result{Status: status, Outputs: results, Frame: pars.iFrame, FailedCount: pars.nFailOuts, DroppedCount: pars.nDropOuts, ProvedCount: pars.nProveOuts}, nil
+	return Result{Status: status, Outputs: results, Frame: pars.IFrame, FailedCount: pars.NFailOuts, DroppedCount: pars.NDropOuts, ProvedCount: pars.NProveOuts}, nil
 }

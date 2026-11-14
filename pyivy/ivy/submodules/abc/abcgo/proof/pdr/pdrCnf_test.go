@@ -73,7 +73,7 @@ func TestPdrFrameCNFEncodesSequentialCone(t *testing.T) {
 		li := g.AddOutput(pi.Not())
 		aig.Aig_ManSetRegNum(g, 1)
 		solver := bsat.NewSolver()
-		manager := &Pdr_Man_t{pAig: g, pPars: &Pdr_Par_t{fMonoCnf: mono}, pCnfMan: cnf.Cnf_ManStart(), vSolvers: []*bsat.Solver{nil, solver}}
+		manager := &Pdr_Man_t{pAig: g, pPars: &Pdr_Par_t{FMonoCnf: mono}, pCnfMan: cnf.Cnf_ManStart(), vSolvers: []*bsat.Solver{nil, solver}}
 		if Pdr_ManNewSolver(solver, manager, 1, 0) == nil {
 			t.Fatalf("mono=%d: no solver", mono)
 		}

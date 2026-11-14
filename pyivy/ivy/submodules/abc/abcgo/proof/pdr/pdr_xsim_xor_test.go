@@ -60,11 +60,11 @@ func TestPdrNewJustificationNativeXorAgainstReachability(t *testing.T) {
 		}
 		var pars Pdr_Par_t
 		Pdr_ManSetDefaultParams(&pars)
-		pars.fSilent, pars.fSolveAll, pars.fStoreCex, pars.fNewXSim = 1, 1, 1, 1
+		pars.FSilent, pars.FSolveAll, pars.FStoreCex, pars.FNewXSim = 1, 1, 1, 1
 		Pdr_ManSolve(g, &pars)
 		models := g.SequentialCounterexamples()
 		for i, expectedFailure := range fails {
-			status := vec.Vec_IntEntry(pars.vOutMap, i)
+			status := vec.Vec_IntEntry(pars.VOutMap, i)
 			witness, _ := vec.Vec_PtrEntry(models, i).(*util.Abc_Cex_t)
 			if expectedFailure {
 				if status != 0 || witness == nil || saig.Saig_ManVerifyCex(g, witness) != 1 {

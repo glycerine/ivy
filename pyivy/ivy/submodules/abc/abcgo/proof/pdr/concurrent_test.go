@@ -67,7 +67,7 @@ func TestConcurrentDirectSolves(t *testing.T) {
 				aig.Aig_ManSetRegNum(g, int32(regs))
 				var pars Pdr_Par_t
 				Pdr_ManSetDefaultParams(&pars)
-				pars.fSilent = 1
+				pars.FSilent = 1
 				got := int32(-1)
 				if worker%2 == 0 {
 					got = Pdr_ManSolve(g, &pars)

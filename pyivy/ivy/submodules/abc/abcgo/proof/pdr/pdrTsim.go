@@ -237,7 +237,7 @@ func Pdr_ManTernarySim(p *Pdr_Man_t, k int32, cube *Pdr_Set_t) *Pdr_Set_t {
 			}
 		}
 	}
-	if p.pPars.fVeryVerbose != 0 {
+	if p.pPars.FVeryVerbose != 0 {
 		fmt.Print("Trying to justify cube ")
 		if cube != nil {
 			Pdr_SetPrint(os.Stdout, cube, aig.Aig_ManRegNum(g), nil)
@@ -249,7 +249,7 @@ func Pdr_ManTernarySim(p *Pdr_Man_t, k int32, cube *Pdr_Set_t) *Pdr_Set_t {
 	Pdr_ManCollectCone(g, cos, cis, nodes)
 	Pdr_ManCollectValues(p, k, cis, vals)
 	Pdr_ManCollectValues(p, k, cos, outvals)
-	if p.pPars.fVeryVerbose != 0 {
+	if p.pPars.FVeryVerbose != 0 {
 		Pdr_ManPrintCex(g, cis, vals, nil)
 	}
 	if Pdr_ManSimDataInit(g, cis, vals, nodes, cos, outvals, nil) == 0 {
@@ -264,7 +264,7 @@ func Pdr_ManTernarySim(p *Pdr_Man_t, k int32, cube *Pdr_Set_t) *Pdr_Set_t {
 			Pdr_ManExtendUndo(g, p.vUndo)
 		}
 	}
-	if p.pPars.fFlopPrio != 0 {
+	if p.pPars.FFlopPrio != 0 {
 		vec.Vec_IntClear(p.vRes)
 		for _, id := range vec.Vec_IntArray(cis) {
 			e := aig.Aig_ManObj(g, id)
@@ -292,14 +292,14 @@ func Pdr_ManTernarySim(p *Pdr_Man_t, k int32, cube *Pdr_Set_t) *Pdr_Set_t {
 			}
 		}
 	}
-	if p.pPars.fVeryVerbose != 0 {
+	if p.pPars.FVeryVerbose != 0 {
 		Pdr_ManPrintCex(g, cis, vals, removed)
 	}
 	if Pdr_ManSimDataInit(g, cis, vals, nodes, cos, outvals, removed) == 0 {
 		panic("pdr: generalized cube fails ternary simulation")
 	}
 	Pdr_ManDeriveResult(g, cis, vals, removed, p.vRes, p.vLits)
-	if p.pPars.fUseAbs != 0 && p.vAbsFlops != nil {
+	if p.pPars.FUseAbs != 0 && p.vAbsFlops != nil {
 		n := 0
 		for _, lit := range vec.Vec_IntArray(p.vRes) {
 			if vec.Vec_IntEntry(p.vAbsFlops, int(lit>>1)) != 0 {

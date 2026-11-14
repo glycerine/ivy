@@ -16,9 +16,9 @@ func pdrTestSATManager(t *testing.T, mono bool) (*Pdr_Man_t, aig.Edge) {
 	g.AddOutput(x)
 	g.AddOutput(lo.Not())
 	aig.Aig_ManSetRegNum(g, 1)
-	p := &Pdr_Man_t{pAig: g, pPars: &Pdr_Par_t{nRecycle: 100}, vLits: vec.Vec_IntAlloc(0), vClauses: vec.Vec_VecAlloc(0), vActVars: vec.Vec_IntAlloc(0)}
+	p := &Pdr_Man_t{pAig: g, pPars: &Pdr_Par_t{NRecycle: 100}, vLits: vec.Vec_IntAlloc(0), vClauses: vec.Vec_VecAlloc(0), vActVars: vec.Vec_IntAlloc(0)}
 	if mono {
-		p.pPars.fMonoCnf = 1
+		p.pPars.FMonoCnf = 1
 	}
 	if Pdr_ManCreateSolver(p, 0) == nil {
 		t.Fatal("failed to create initial frame")
@@ -55,7 +55,7 @@ func TestPdrSATRecyclesAndRestoresFrameClauses(t *testing.T) {
 	cube := testPdrSet([]int32{0}, nil)
 	vec.Vec_VecPush(p.vClauses, 0, cube)
 	Pdr_ManSolverAddClause(p, 0, cube)
-	p.pPars.nRecycle = 1
+	p.pPars.NRecycle = 1
 	vec.Vec_IntWriteEntry(p.vActVars, 0, 1)
 	solver := Pdr_ManFetchSolver(p, 0)
 	if solver == nil || p.nStarts != 1 || vec.Vec_IntEntry(p.vActVars, 0) != 0 {
@@ -85,7 +85,7 @@ func TestPdrRecycleRestoresPropertyAndCurrentAndLaterFrames(t *testing.T) {
 		aig.Aig_ManSetRegNum(g, 3)
 		var pars Pdr_Par_t
 		Pdr_ManSetDefaultParams(&pars)
-		pars.nRecycle, pars.fMonoCnf = 1, pdrBool(mono)
+		pars.NRecycle, pars.FMonoCnf = 1, pdrBool(mono)
 		p := Pdr_ManStart(g, &pars, nil)
 		for frame := int32(0); frame < 3; frame++ {
 			if Pdr_ManCreateSolver(p, frame) == nil {
@@ -132,7 +132,7 @@ func TestPdrSATPropertyConstraint(t *testing.T) {
 	for _, mono := range []bool{false, true} {
 		p, _ := pdrTestSATManager(t, mono)
 		Pdr_ManCreateSolver(p, 1)
-		p.pPars.fUsePropOut = 1
+		p.pPars.FUsePropOut = 1
 		Pdr_ManSetPropertyOutput(p, 1)
 		if got := Pdr_ManCheckCube(p, 1, nil, nil, 0, 0, 0); got != 1 {
 			t.Fatalf("mono=%v constrained property result %d, want UNSAT", mono, got)
@@ -147,7 +147,7 @@ func TestPdrSATPrepareModelMaterializesStructuralCone(t *testing.T) {
 	root := g.AND(inner, z)
 	g.AddOutput(root)
 	aig.Aig_ManSetRegNum(g, 0)
-	p := &Pdr_Man_t{pAig: g, pPars: &Pdr_Par_t{nRecycle: 100}, vLits: vec.Vec_IntAlloc(0), vClauses: vec.Vec_VecAlloc(0), vActVars: vec.Vec_IntAlloc(0)}
+	p := &Pdr_Man_t{pAig: g, pPars: &Pdr_Par_t{NRecycle: 100}, vLits: vec.Vec_IntAlloc(0), vClauses: vec.Vec_VecAlloc(0), vActVars: vec.Vec_IntAlloc(0)}
 	Pdr_ManCreateSolver(p, 0)
 	// Represent the root as a three-input cut. Its intermediate AND is then
 	// absent from the lazy SAT cone, although ternary simulation may read it.
@@ -177,7 +177,7 @@ func TestPdrSATPrepareModelMaterializesStructuralCone(t *testing.T) {
 func TestPdrSATUnknownGeneralizationIsTreatedAsSAT(t *testing.T) {
 	p, _ := pdrTestSATManager(t, false)
 	Pdr_ManCreateSolver(p, 1)
-	p.pPars.nConfGenLimit = 1
+	p.pPars.NConfGenLimit = 1
 	p.timeToStop = util.Abc_Clock() - 1
 	if got := Pdr_ManCheckCube(p, 1, testPdrSet([]int32{0}, nil), nil, 0, 1, 0); got != 0 {
 		t.Fatalf("timed out generalization returned %d, want source's SAT result", got)

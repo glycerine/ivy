@@ -20,13 +20,13 @@ func pdrOnlyOutputTimedOut(p *Pdr_Man_t, now int64) bool {
 	if p.timeToStop != 0 && now > p.timeToStop {
 		return false
 	}
-	if p.pPars.nTimeOutGap != 0 && p.pPars.timeLastSolved != 0 && now > p.pPars.timeLastSolved+int64(p.pPars.nTimeOutGap)*int64(time.Second) {
+	if p.pPars.NTimeOutGap != 0 && p.pPars.timeLastSolved != 0 && now > p.pPars.timeLastSolved+int64(p.pPars.NTimeOutGap)*int64(time.Second) {
 		return false
 	}
 	return p.timeToStopOne != 0 && now > p.timeToStopOne
 }
 func pdrStartTimedClock(p *Pdr_Man_t) func() {
-	if p.pPars.nTimeOut == 0 && p.pPars.nTimeOutOne == 0 && p.pPars.nTimeOutGap == 0 {
+	if p.pPars.NTimeOut == 0 && p.pPars.NTimeOutOne == 0 && p.pPars.NTimeOutGap == 0 {
 		return func() {}
 	}
 	unpin := pdrPinClock()

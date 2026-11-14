@@ -19,19 +19,19 @@ func Pdr_ManStart(graph *aig.Graph, pars *Pdr_Par_t, initialPriority *vec.Vec_In
 		panic("pdr: manager needs graph and parameters")
 	}
 	p := &Pdr_Man_t{pPars: pars, pAig: graph, vClauses: vec.Vec_VecAlloc(0)}
-	if pars.fFlopPrio != 0 || pars.fNewXSim != 0 || pars.fUseAbs != 0 {
+	if pars.FFlopPrio != 0 || pars.FNewXSim != 0 || pars.FUseAbs != 0 {
 		p.pGia = gia.Gia_ManFromAigSimple(graph)
 	}
 	regs := aig.Aig_ManRegNum(graph)
 	p.pOrder = make([]int32, regs)
 	p.vActVars = vec.Vec_IntAlloc(256)
-	if pars.fMonoCnf == 0 {
+	if pars.FMonoCnf == 0 {
 		p.vVLits = vec.Vec_WecStart(int(1 + max(int32(1), aig.Aig_ManLevels(graph))))
 	}
 	p.nPrioShift = util.Abc_Base2Log(uint32(regs))
 	if initialPriority != nil {
 		p.vPrio = initialPriority
-	} else if pars.fFlopPrio != 0 {
+	} else if pars.FFlopPrio != 0 {
 		p.vPrio = Pdr_ManDeriveFlopPriorities2(p.pGia, 1)
 	} else {
 		p.vPrio = vec.Vec_IntStart(int(regs))
@@ -40,23 +40,23 @@ func Pdr_ManStart(graph *aig.Graph, pars *Pdr_Par_t, initialPriority *vec.Vec_In
 	p.vCiVals, p.vCoVals, p.vNodes = vec.Vec_IntAlloc(100), vec.Vec_IntAlloc(100), vec.Vec_IntAlloc(100)
 	p.vUndo, p.vVisits, p.vCi2Rem, p.vRes = vec.Vec_IntAlloc(100), vec.Vec_IntAlloc(100), vec.Vec_IntAlloc(100), vec.Vec_IntAlloc(100)
 	p.pCnfMan = cnf.Cnf_ManStart()
-	if pars.fNewXSim != 0 {
+	if pars.FNewXSim != 0 {
 		p.pTxs3 = Txs3_ManStart(p, graph, p.vPrio)
 	}
 	if !aig.Aig_ManHasFanout(graph) {
 		aig.Aig_ManFanoutStart(graph)
 	}
 	outputs := saig.Saig_ManPoNum(graph)
-	if pars.nTimeOutOne > 0 {
+	if pars.NTimeOutOne > 0 {
 		p.pTime4Outs = make([]abctime, outputs)
 		for i := range p.pTime4Outs {
-			p.pTime4Outs[i] = int64(pars.nTimeOutOne)*int64(time.Second)/1000 + pdrClockQuantum
+			p.pTime4Outs[i] = int64(pars.NTimeOutOne)*int64(time.Second)/1000 + pdrClockQuantum
 		}
 	}
-	if pars.fSolveAll != 0 {
+	if pars.FSolveAll != 0 {
 		p.vCexes = vec.Vec_PtrStart(int(outputs))
-		pars.vOutMap = vec.Vec_IntStart(int(outputs))
-		vec.Vec_IntFill(pars.vOutMap, int(outputs), -2)
+		pars.VOutMap = vec.Vec_IntStart(int(outputs))
+		vec.Vec_IntFill(pars.VOutMap, int(outputs), -2)
 	}
 	return p
 }

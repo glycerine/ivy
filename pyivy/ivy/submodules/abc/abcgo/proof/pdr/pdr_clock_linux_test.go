@@ -35,7 +35,7 @@ func TestPdrTimedSolveKeepsDeadlineDomainForDirectQuery(t *testing.T) {
 	aig.Aig_ManSetRegNum(g, 1)
 	var pars Pdr_Par_t
 	Pdr_ManSetDefaultParams(&pars)
-	pars.nTimeOut, pars.fSilent = 1, 1
+	pars.NTimeOut, pars.FSilent = 1, 1
 	p := Pdr_ManStart(g, &pars, nil)
 	defer Pdr_ManStop(p)
 	if got := Pdr_ManSolveInt(p); got != 0 || p.runtimeClock == nil || p.timeToStop == 0 {

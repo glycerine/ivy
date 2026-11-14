@@ -213,7 +213,7 @@ func IPdr_ManSetSolver(p *Pdr_Man_t, k, property int32) *sat_solver {
 	if k == 0 {
 		initial = 1
 	}
-	solver := Pdr_ManNewSolver(bsat.NewSolverSeed(float64(p.pPars.nRandomSeed)), p, k, initial)
+	solver := Pdr_ManNewSolver(bsat.NewSolverSeed(float64(p.pPars.NRandomSeed)), p, k, initial)
 	p.vSolvers = append(p.vSolvers, solver)
 	vec.Vec_IntPush(p.vActVars, 0)
 	if property != 0 {
@@ -331,7 +331,7 @@ func IPdr_ManCheckCombUnsat(p *Pdr_Man_t) int32 {
 	Pdr_ManCreateSolver(p, 0)
 	Pdr_ManCreateSolver(p, 1)
 	p.nFrames, p.iUseFrame = 1, 1
-	return Pdr_ManCheckCube(p, 1, nil, nil, p.pPars.nConfLimit, 0, 1)
+	return Pdr_ManCheckCube(p, 1, nil, nil, p.pPars.NConfLimit, 0, 1)
 }
 
 func IPdr_ManReduceClauses(p *Pdr_Man_t, clauses *Vec_Vec_t) int32 {
@@ -339,7 +339,7 @@ func IPdr_ManReduceClauses(p *Pdr_Man_t, clauses *Vec_Vec_t) int32 {
 	Pdr_ManCreateSolver(p, 1)
 	p.nFrames, p.iUseFrame = 1, 1
 	last := vec.Vec_VecEntry(clauses, vec.Vec_VecSize(clauses)-1)
-	return IPdr_ManCheckCubeReduce(p, last, nil, p.pPars.nConfLimit)
+	return IPdr_ManCheckCubeReduce(p, last, nil, p.pPars.NConfLimit)
 }
 
 /**Function*************************************************************

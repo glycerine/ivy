@@ -52,7 +52,7 @@ func pdrCtgLateTimeoutFixture(t *testing.T, literals []int32) (*Pdr_Man_t, *Pdr_
 	aig.Aig_ManSetRegNum(g, 2)
 	var pars Pdr_Par_t
 	Pdr_ManSetDefaultParams(&pars)
-	pars.fCtgs = 1
+	pars.FCtgs = 1
 	var p *Pdr_Man_t
 	calls := 0
 	pars.pFuncStop = func(int32) int32 {
@@ -136,7 +136,7 @@ func TestDownCtgTimeoutContinuesToJoinAsInC(t *testing.T) {
 	aig.Aig_ManSetRegNum(g, 3)
 	var pars Pdr_Par_t
 	Pdr_ManSetDefaultParams(&pars)
-	pars.fCtgs = 1
+	pars.FCtgs = 1
 	p := Pdr_ManStart(g, &pars, nil)
 	defer Pdr_ManStop(p)
 	for i := int32(0); i < 3; i++ {

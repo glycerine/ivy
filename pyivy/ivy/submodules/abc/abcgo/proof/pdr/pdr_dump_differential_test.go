@@ -39,8 +39,8 @@ func TestInvariantDumpAgainstLocalABC(t *testing.T) {
 	aig.Aig_ManSetRegNum(g, 1)
 	var pars Pdr_Par_t
 	Pdr_ManSetDefaultParams(&pars)
-	pars.fSilent, pars.fDumpInv = 1, 1
-	pars.pInvFileName = filepath.Join(dir, "go.pla")
+	pars.FSilent, pars.FDumpInv = 1, 1
+	pars.PInvFileName = filepath.Join(dir, "go.pla")
 	if got := Pdr_ManSolve(g, &pars); got != 1 {
 		t.Fatalf("Go result %d", got)
 	}
@@ -59,7 +59,7 @@ func TestInvariantDumpAgainstLocalABC(t *testing.T) {
 		}
 		return strings.Join(result, "\n")
 	}
-	if c, goCover := cover(cfile), cover(pars.pInvFileName); c != goCover {
+	if c, goCover := cover(cfile), cover(pars.PInvFileName); c != goCover {
 		t.Fatalf("C cover:\n%s\nGo cover:\n%s", c, goCover)
 	}
 }
@@ -74,8 +74,8 @@ func TestIncrementalInvariantDumpPrintsSourceNoticeOnce(t *testing.T) {
 	aig.Aig_ManSetRegNum(g, 1)
 	var pars Pdr_Par_t
 	Pdr_ManSetDefaultParams(&pars)
-	pars.fSilent, pars.fDumpInv = 1, 1
-	pars.pInvFileName = filepath.Join(t.TempDir(), "inv.pla")
+	pars.FSilent, pars.FDumpInv = 1, 1
+	pars.PInvFileName = filepath.Join(t.TempDir(), "inv.pla")
 	file, err := os.CreateTemp(t.TempDir(), "stdout")
 	if err != nil {
 		t.Fatal(err)

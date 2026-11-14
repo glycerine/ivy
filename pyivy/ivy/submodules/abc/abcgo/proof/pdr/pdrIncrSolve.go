@@ -18,19 +18,19 @@ func IPdr_ManSolveInt(p *Pdr_Man_t, checkClauses, pushClauses int32) int32 {
 	outputs := graph.TruePoCount()
 	inputs := graph.TruePiCount()
 	started := util.Abc_Clock()
-	if pars.nTimeOut != 0 {
-		p.timeToStop = pdrNow(p) + int64(pars.nTimeOut)*int64(time.Second)
+	if pars.NTimeOut != 0 {
+		p.timeToStop = pdrNow(p) + int64(pars.NTimeOut)*int64(time.Second)
 	} else {
 		p.timeToStop = 0
 	}
 
 	outputEdges := graph.Outputs()[:outputs]
-	if pars.fSolveAll != 0 {
+	if pars.FSolveAll != 0 {
 		for i, output := range outputEdges {
 			if aig.Aig_ObjChild0(graph, output) == graph.Const0() {
-				vec.Vec_IntWriteEntry(pars.vOutMap, i, 1)
-				pars.nProveOuts++
-				if pars.fUseBridge != 0 {
+				vec.Vec_IntWriteEntry(pars.VOutMap, i, 1)
+				pars.NProveOuts++
+				if pars.FUseBridge != 0 {
 					util.Gia_ManToBridgeResult(os.Stdout, 1, nil, int32(i))
 				}
 			}
@@ -54,7 +54,7 @@ func IPdr_ManSolveInt(p *Pdr_Man_t, checkClauses, pushClauses int32) int32 {
 				return 1
 			}
 		}
-		if pars.fUseAbs != 0 && p.vAbsFlops == nil && frame >= 1 {
+		if pars.FUseAbs != 0 && p.vAbsFlops == nil && frame >= 1 {
 			regs := int(aig.Aig_ManRegNum(graph))
 			p.vAbsFlops = vec.Vec_IntStart(regs)
 			p.vMapFf2Ppi = vec.Vec_IntStartFull(regs)
@@ -64,7 +64,7 @@ func IPdr_ManSolveInt(p *Pdr_Man_t, checkClauses, pushClauses int32) int32 {
 	}
 	for {
 		refined := false
-		if pars.fUseAbs != 0 && p.vAbsFlops == nil && frame == 1 {
+		if pars.FUseAbs != 0 && p.vAbsFlops == nil && frame == 1 {
 			regs := int(aig.Aig_ManRegNum(graph))
 			p.vAbsFlops = vec.Vec_IntStart(regs)
 			p.vMapFf2Ppi = vec.Vec_IntStartFull(regs)
@@ -86,23 +86,23 @@ func IPdr_ManSolveInt(p *Pdr_Man_t, checkClauses, pushClauses int32) int32 {
 			}
 			if driver == graph.Const1() {
 				var witness *util.Abc_Cex_t
-				if pars.fSolveAll == 0 || pars.fUseBridge != 0 || pars.fStoreCex != 0 {
+				if pars.FSolveAll == 0 || pars.FUseBridge != 0 || pars.FStoreCex != 0 {
 					witness = util.Abc_CexMakeTriv(aig.Aig_ManRegNum(graph), inputs, outputs, frame*outputs+int32(index))
 				}
-				if pars.fSolveAll == 0 {
+				if pars.FSolveAll == 0 {
 					if err := graph.SetSequentialCounterexample(witness); err != nil {
 						panic(err)
 					}
 					return 0
 				}
-				pars.nFailOuts++
-				if pars.vOutMap != nil {
-					vec.Vec_IntWriteEntry(pars.vOutMap, index, 0)
+				pars.NFailOuts++
+				if pars.VOutMap != nil {
+					vec.Vec_IntWriteEntry(pars.VOutMap, index, 0)
 				}
-				if pars.fNotVerbose == 0 {
-					fmt.Printf("Output %d was trivially asserted in frame %d (solved %d out of %d outputs).\n", index, frame, pars.nFailOuts, outputs)
+				if pars.FNotVerbose == 0 {
+					fmt.Printf("Output %d was trivially asserted in frame %d (solved %d out of %d outputs).\n", index, frame, pars.NFailOuts, outputs)
 				}
-				if pars.fUseBridge != 0 {
+				if pars.FUseBridge != 0 {
 					util.Gia_ManToBridgeResult(os.Stdout, 0, witness, int32(index))
 				}
 				var stored any = witness
@@ -112,16 +112,16 @@ func IPdr_ManSolveInt(p *Pdr_Man_t, checkClauses, pushClauses int32) int32 {
 				vec.Vec_PtrWriteEntry(p.vCexes, index, stored)
 				if pars.pFuncOnFail != nil {
 					callbackWitness := witness
-					if pars.fStoreCex == 0 {
+					if pars.FStoreCex == 0 {
 						callbackWitness = nil
 					}
 					if pars.pFuncOnFail(int32(index), callbackWitness) != 0 {
-						pars.iFrame = frame
+						pars.IFrame = frame
 						return -1
 					}
 				}
-				if pars.nFailOuts+pars.nDropOuts == outputs {
-					if pars.nFailOuts != 0 {
+				if pars.NFailOuts+pars.NDropOuts == outputs {
+					if pars.NFailOuts != 0 {
 						return 0
 					}
 					return -1
@@ -135,12 +135,12 @@ func IPdr_ManSolveInt(p *Pdr_Man_t, checkClauses, pushClauses int32) int32 {
 				p.timeToStopOne = oneStarted + p.pTime4Outs[index]
 			}
 			for {
-				if pars.nTimeOutGap != 0 && pars.timeLastSolved != 0 && pdrNow(p) > pars.timeLastSolved+int64(pars.nTimeOutGap)*int64(time.Second) {
-					pars.iFrame = frame
+				if pars.NTimeOutGap != 0 && pars.timeLastSolved != 0 && pdrNow(p) > pars.timeLastSolved+int64(pars.NTimeOutGap)*int64(time.Second) {
+					pars.IFrame = frame
 					return -1
 				}
 				var cube *Pdr_Set_t
-				status := Pdr_ManCheckCube(p, frame, nil, &cube, pars.nConfLimit, 0, 1)
+				status := Pdr_ManCheckCube(p, frame, nil, &cube, pars.NConfLimit, 0, 1)
 				if status == 1 {
 					break
 				}
@@ -152,12 +152,12 @@ func IPdr_ManSolveInt(p *Pdr_Man_t, checkClauses, pushClauses int32) int32 {
 						Pdr_QueueClean(p)
 						break
 					}
-					pars.iFrame = frame
+					pars.IFrame = frame
 					return -1
 				}
 				if status == 0 {
-					pars.iFrame = frame
-					if pars.fSolveAll == 0 {
+					pars.IFrame = frame
+					if pars.FSolveAll == 0 {
 						before := util.Abc_Clock()
 						witness := Pdr_ManDeriveCexAbs(p)
 						p.tAbs += util.Abc_Clock() - before
@@ -171,15 +171,15 @@ func IPdr_ManSolveInt(p *Pdr_Man_t, checkClauses, pushClauses int32) int32 {
 						}
 						return 0
 					}
-					pars.nFailOuts++
+					pars.NFailOuts++
 					var witness *util.Abc_Cex_t
-					if pars.fUseBridge != 0 || pars.fStoreCex != 0 {
+					if pars.FUseBridge != 0 || pars.FStoreCex != 0 {
 						witness = Pdr_ManDeriveCex(p)
 					}
-					if pars.vOutMap != nil {
-						vec.Vec_IntWriteEntry(pars.vOutMap, index, 0)
+					if pars.VOutMap != nil {
+						vec.Vec_IntWriteEntry(pars.VOutMap, index, 0)
 					}
-					if pars.fUseBridge != 0 {
+					if pars.FUseBridge != 0 {
 						util.Gia_ManToBridgeResult(os.Stdout, 0, witness, int32(index))
 					}
 					var stored any = witness
@@ -189,24 +189,24 @@ func IPdr_ManSolveInt(p *Pdr_Man_t, checkClauses, pushClauses int32) int32 {
 					vec.Vec_PtrWriteEntry(p.vCexes, index, stored)
 					if pars.pFuncOnFail != nil {
 						callbackWitness := witness
-						if pars.fStoreCex == 0 {
+						if pars.FStoreCex == 0 {
 							callbackWitness = nil
 						}
 						if pars.pFuncOnFail(int32(index), callbackWitness) != 0 {
-							pars.iFrame = frame
+							pars.IFrame = frame
 							return -1
 						}
 					}
-					if pars.fNotVerbose == 0 {
-						fmt.Printf("Output %d was asserted in frame %d (solved %d out of %d outputs).\n", index, frame, pars.nFailOuts, outputs)
+					if pars.FNotVerbose == 0 {
+						fmt.Printf("Output %d was asserted in frame %d (solved %d out of %d outputs).\n", index, frame, pars.NFailOuts, outputs)
 					}
-					if pars.nFailOuts == outputs {
+					if pars.NFailOuts == outputs {
 						return 0
 					}
 					Pdr_QueueClean(p)
 					break
 				}
-				if pars.fVerbose != 0 {
+				if pars.FVerbose != 0 {
 					Pdr_ManPrintProgress(p, 0, util.Abc_Clock()-started)
 				}
 			}
@@ -221,18 +221,18 @@ func IPdr_ManSolveInt(p *Pdr_Man_t, checkClauses, pushClauses int32) int32 {
 					p.pTime4Outs[index] = 0
 				}
 				if p.pTime4Outs[index] == 0 && vec.Vec_PtrEntry(p.vCexes, index) == nil {
-					pars.nDropOuts++
-					if pars.vOutMap != nil {
-						vec.Vec_IntWriteEntry(pars.vOutMap, index, -1)
+					pars.NDropOuts++
+					if pars.VOutMap != nil {
+						vec.Vec_IntWriteEntry(pars.VOutMap, index, -1)
 					}
-					if pars.fNotVerbose == 0 {
+					if pars.FNotVerbose == 0 {
 						fmt.Printf("Timing out on output %d in frame %d.\n", index, frame)
 					}
 				}
 				p.timeToStopOne = 0
 			}
 		}
-		if pars.fUseAbs != 0 && p.vAbsFlops != nil && !refined {
+		if pars.FUseAbs != 0 && p.vAbsFlops != nil && !refined {
 			vec.Vec_IntFill(p.vAbsFlops, vec.Vec_IntSize(p.vAbsFlops), 0)
 			for k := 0; k < vec.Vec_VecSize(p.vClauses); k++ {
 				for _, item := range vec.Vec_PtrArray(vec.Vec_VecEntry(p.vClauses, k)) {
@@ -243,7 +243,7 @@ func IPdr_ManSolveInt(p *Pdr_Man_t, checkClauses, pushClauses int32) int32 {
 				}
 			}
 		}
-		if pars.fVerbose != 0 {
+		if pars.FVerbose != 0 {
 			var closeLine int32 = 1
 			if refined {
 				closeLine = 0
@@ -253,82 +253,82 @@ func IPdr_ManSolveInt(p *Pdr_Man_t, checkClauses, pushClauses int32) int32 {
 		if refined {
 			continue
 		}
-		p.nQueLim = pars.nRestLimit
+		p.nQueLim = pars.NRestLimit
 		Pdr_ManSetPropertyOutput(p, frame)
 		frame++
 		Pdr_ManCreateSolver(p, frame)
 		status := Pdr_ManPushClauses(p)
 		if status == -1 {
-			pars.iFrame = frame
+			pars.IFrame = frame
 			return -1
 		}
 		if status != 0 {
-			if pars.fVerbose != 0 {
+			if pars.FVerbose != 0 {
 				Pdr_ManPrintProgress(p, 1, util.Abc_Clock()-started)
 			}
-			if pars.fSilent == 0 {
+			if pars.FSilent == 0 {
 				Pdr_ManReportInvariant(p)
 				Pdr_ManVerifyInvariant(p)
 			}
-			pars.iFrame = frame
-			pars.nProveOuts = outputs - pars.nFailOuts - pars.nDropOuts
-			if pars.vOutMap != nil {
+			pars.IFrame = frame
+			pars.NProveOuts = outputs - pars.NFailOuts - pars.NDropOuts
+			if pars.VOutMap != nil {
 				for i := int32(0); i < outputs; i++ {
-					if vec.Vec_IntEntry(pars.vOutMap, int(i)) == -2 {
-						vec.Vec_IntWriteEntry(pars.vOutMap, int(i), 1)
-						if pars.fUseBridge != 0 {
+					if vec.Vec_IntEntry(pars.VOutMap, int(i)) == -2 {
+						vec.Vec_IntWriteEntry(pars.VOutMap, int(i), 1)
+						if pars.FUseBridge != 0 {
 							util.Gia_ManToBridgeResult(os.Stdout, 1, nil, i)
 						}
 					}
 				}
 			}
-			if pars.nProveOuts == outputs {
+			if pars.NProveOuts == outputs {
 				return 1
 			}
-			if pars.nFailOuts > 0 {
+			if pars.NFailOuts > 0 {
 				return 0
 			}
 			return -1
 		}
-		if pars.fVerbose != 0 {
+		if pars.FVerbose != 0 {
 			Pdr_ManPrintProgress(p, 0, util.Abc_Clock()-started)
 		}
 		now := pdrNow(p)
-		if pars.pFuncStop != nil && pars.pFuncStop(pars.RunId) != 0 || p.timeToStop != 0 && now > p.timeToStop || pars.nTimeOutGap != 0 && pars.timeLastSolved != 0 && now > pars.timeLastSolved+int64(pars.nTimeOutGap)*int64(time.Second) || pars.nFrameMax != 0 && frame >= pars.nFrameMax {
-			pars.iFrame = frame
+		if pars.pFuncStop != nil && pars.pFuncStop(pars.RunId) != 0 || p.timeToStop != 0 && now > p.timeToStop || pars.NTimeOutGap != 0 && pars.timeLastSolved != 0 && now > pars.timeLastSolved+int64(pars.NTimeOutGap)*int64(time.Second) || pars.NFrameMax != 0 && frame >= pars.NFrameMax {
+			pars.IFrame = frame
 			return -1
 		}
 	}
 }
 
 func IPdr_ManSolve(graph *aig.Graph, pars *Pdr_Par_t) int32 {
-	if pars.fNewXSim != 0 && pars.fMonoCnf != 0 {
+	if pars.FNewXSim != 0 && pars.FMonoCnf != 0 {
 		return -1
 	}
 	started := util.Abc_Clock()
 	outputs := graph.TruePoCount()
-	if pars.nTimeOutOne != 0 && pars.fSolveAll == 0 {
-		pars.nTimeOutOne = 0
+	if pars.NTimeOutOne != 0 && pars.FSolveAll == 0 {
+		pars.NTimeOutOne = 0
 	}
-	if pars.nTimeOutOne != 0 && pars.nTimeOut == 0 {
-		pars.nTimeOut = (pars.nTimeOutOne*outputs + 999) / 1000
+	if pars.NTimeOutOne != 0 && pars.NTimeOut == 0 {
+		pars.NTimeOut = (pars.NTimeOutOne*outputs + 999) / 1000
 	}
-	if pars.fVerbose != 0 {
-		fmt.Printf("VarMax = %d. FrameMax = %d. QueMax = %d. TimeMax = %d. MonoCNF = %t. SkipGen = %t. SolveAll = %t.\n", pars.nRecycle, pars.nFrameMax, pars.nRestLimit, pars.nTimeOut, pars.fMonoCnf != 0, pars.fSkipGeneral != 0, pars.fSolveAll != 0)
+	if pars.FVerbose != 0 {
+		fmt.Printf("VarMax = %d. FrameMax = %d. QueMax = %d. TimeMax = %d. MonoCNF = %t. SkipGen = %t. SolveAll = %t.\n", pars.NRecycle, pars.NFrameMax, pars.NRestLimit, pars.NTimeOut, pars.FMonoCnf != 0, pars.FSkipGeneral != 0, pars.FSolveAll != 0)
 	}
 	graph.ClearSequentialCounterexample()
 	p := Pdr_ManStart(graph, pars, nil)
 	var result int32
 	for {
 		result = IPdr_ManSolveInt(p, 1, 0)
-		if result != -1 || pars.iFrame != pars.nFrameMax {
+		if result != -1 || pars.IFrame != pars.NFrameMax {
 			break
 		}
 		saved := IPdr_ManSaveClauses(p, 1)
 		Pdr_ManStop(p)
 		p = Pdr_ManStart(graph, pars, nil)
 		IPdr_ManRestoreClauses(p, saved, nil)
-		pars.nFrameMax <<= 1
+		pars.NFrameMax <<= 1
 	}
 	if p.vCexes != nil {
 		if graph.SequentialCounterexamples() != nil {
@@ -337,14 +337,14 @@ func IPdr_ManSolve(graph *aig.Graph, pars *Pdr_Par_t) int32 {
 		graph.SetSequentialCounterexamples(p.vCexes)
 		p.vCexes = nil
 	}
-	if pars.fDumpInv != 0 || result == 1 {
+	if pars.FDumpInv != 0 || result == 1 {
 		var reduce int32
 		if result != 1 {
 			reduce = 1
 		}
 		abcmain.Abc_FrameSetInv(vec.Vec_IntArray(Pdr_ManDeriveInfinityClauses(p, reduce)))
-		if pars.fDumpInv != 0 {
-			filename := pars.pInvFileName
+		if pars.FDumpInv != 0 {
+			filename := pars.PInvFileName
 			if filename == "" {
 				filename = aig.Aig_FileNameGenericAppend(graph.Name, "_inv.pla")
 			}
@@ -357,15 +357,15 @@ func IPdr_ManSolve(graph *aig.Graph, pars *Pdr_Par_t) int32 {
 	}
 	p.tTotal += util.Abc_Clock() - started
 	Pdr_ManStop(p)
-	pars.iFrame--
-	if pars.vOutMap != nil {
+	pars.IFrame--
+	if pars.VOutMap != nil {
 		for i := int32(0); i < outputs; i++ {
-			if vec.Vec_IntEntry(pars.vOutMap, int(i)) == -2 {
-				vec.Vec_IntWriteEntry(pars.vOutMap, int(i), -1)
+			if vec.Vec_IntEntry(pars.VOutMap, int(i)) == -2 {
+				vec.Vec_IntWriteEntry(pars.VOutMap, int(i), -1)
 			}
 		}
 	}
-	if pars.fUseBridge != 0 {
+	if pars.FUseBridge != 0 {
 		util.Gia_ManToBridgeAbort(os.Stdout, 7, []byte("timeout"))
 	}
 	return result

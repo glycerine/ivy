@@ -45,15 +45,15 @@ func TestPdrAgainstLocalABC(t *testing.T) {
 		}
 		var pars Pdr_Par_t
 		Pdr_ManSetDefaultParams(&pars)
-		pars.fSilent = 1
+		pars.FSilent = 1
 		var switches strings.Builder
 		for bit, option := range []struct {
 			flag  string
 			field *int32
 		}{
-			{" -m", &pars.fMonoCnf}, {" -t", &pars.fUseAbs},
-			{" -i", &pars.fShiftStart}, {" -p", &pars.fReuseProofOblig},
-			{" -q", &pars.fShortest}, {" -f", &pars.fFlopOrder},
+			{" -m", &pars.FMonoCnf}, {" -t", &pars.FUseAbs},
+			{" -i", &pars.FShiftStart}, {" -p", &pars.FReuseProofOblig},
+			{" -q", &pars.FShortest}, {" -f", &pars.FFlopOrder},
 		} {
 			if trial&(1<<bit) != 0 {
 				switches.WriteString(option.flag)
@@ -62,19 +62,19 @@ func TestPdrAgainstLocalABC(t *testing.T) {
 		}
 		if trial%3 == 0 {
 			switches.WriteString(" -n -c")
-			pars.fSkipDown, pars.fCtgs = 0, 1
+			pars.FSkipDown, pars.FCtgs = 0, 1
 		}
 		if trial%5 == 0 {
 			switches.WriteString(" -r")
-			pars.fTwoRounds = 1
+			pars.FTwoRounds = 1
 		}
 		if trial%7 == 0 {
 			switches.WriteString(" -o -g")
-			pars.fUsePropOut, pars.fSkipGeneral = 0, 1
+			pars.FUsePropOut, pars.FSkipGeneral = 0, 1
 		}
 		if trial%11 == 0 {
 			switches.WriteString(" -y -e")
-			pars.fFlopPrio, pars.fUseSupp = 1, 0
+			pars.FFlopPrio, pars.FUseSupp = 1, 0
 		}
 		output, err := exec.Command(abc, "-c", "read_blif "+path+"; strash; pdr"+switches.String()).CombinedOutput()
 		if err != nil {

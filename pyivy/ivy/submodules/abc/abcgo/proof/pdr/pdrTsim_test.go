@@ -85,7 +85,7 @@ func TestPdrTsimSATModelGeneralization(t *testing.T) {
 				g.AddOutput(required)
 				g.AddOutput(removable)
 				aig.Aig_ManSetRegNum(g, 2)
-				p := Pdr_ManStart(g, &Pdr_Par_t{fMonoCnf: mono, fFlopPrio: priority}, nil)
+				p := Pdr_ManStart(g, &Pdr_Par_t{FMonoCnf: mono, FFlopPrio: priority}, nil)
 				defer Pdr_ManStop(p)
 				Pdr_ManCreateSolver(p, 0)
 				solver := Pdr_ManCreateSolver(p, 1)

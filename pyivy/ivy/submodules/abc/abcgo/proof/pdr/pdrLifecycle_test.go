@@ -21,7 +21,7 @@ func lifecycleGraph() *aig.Graph {
 
 func TestAbstractCounterexampleRefinesUsedFlop(t *testing.T) {
 	g := lifecycleGraph()
-	p := Pdr_ManStart(g, &Pdr_Par_t{fUseAbs: 1, fUseSimpleRef: 1}, nil)
+	p := Pdr_ManStart(g, &Pdr_Par_t{FUseAbs: 1, FUseSimpleRef: 1}, nil)
 	p.vMapPpi2Ff = vec.Vec_IntAlloc(1)
 	p.vMapFf2Ppi = vec.Vec_IntStart(1)
 	vec.Vec_IntWriteEntry(p.vMapFf2Ppi, 0, -1)
@@ -35,7 +35,7 @@ func TestAbstractCounterexampleRefinesUsedFlop(t *testing.T) {
 
 func TestAbstractCounterexampleRejectsInconsistentPriorMap(t *testing.T) {
 	g := lifecycleGraph()
-	p := Pdr_ManStart(g, &Pdr_Par_t{fUseAbs: 1, fUseSimpleRef: 1}, nil)
+	p := Pdr_ManStart(g, &Pdr_Par_t{FUseAbs: 1, FUseSimpleRef: 1}, nil)
 	defer Pdr_ManStop(p)
 	p.vMapPpi2Ff = vec.Vec_IntAllocArrayCopy([]int32{0}, 1)
 	p.vMapFf2Ppi = vec.Vec_IntAllocArrayCopy([]int32{-1}, 1)
@@ -54,7 +54,7 @@ func TestAbstractCounterexampleUsesCareMinimization(t *testing.T) {
 	g.AddOutput(latch)
 	g.AddOutput(latch)
 	aig.Aig_ManSetRegNum(g, 1)
-	p := Pdr_ManStart(g, &Pdr_Par_t{fUseAbs: 1}, nil)
+	p := Pdr_ManStart(g, &Pdr_Par_t{FUseAbs: 1}, nil)
 	p.vMapPpi2Ff = vec.Vec_IntAlloc(1)
 	p.vMapFf2Ppi = vec.Vec_IntStart(1)
 	vec.Vec_IntWriteEntry(p.vMapFf2Ppi, 0, -1)
@@ -76,7 +76,7 @@ func TestAbstractCounterexampleRefinesOnlyCareFlops(t *testing.T) {
 	g.AddOutput(first)
 	g.AddOutput(second)
 	aig.Aig_ManSetRegNum(g, 2)
-	p := Pdr_ManStart(g, &Pdr_Par_t{fUseAbs: 1}, nil)
+	p := Pdr_ManStart(g, &Pdr_Par_t{FUseAbs: 1}, nil)
 	defer Pdr_ManStop(p)
 	p.vMapPpi2Ff = vec.Vec_IntAlloc(2)
 	p.vMapFf2Ppi = vec.Vec_IntStart(2)
@@ -97,7 +97,7 @@ func TestAbstractCounterexampleRefinesOnlyCareFlops(t *testing.T) {
 
 func TestAbstractCounterexampleWithoutCarePPIIsConcrete(t *testing.T) {
 	g := lifecycleGraph()
-	p := Pdr_ManStart(g, &Pdr_Par_t{fUseAbs: 1}, nil)
+	p := Pdr_ManStart(g, &Pdr_Par_t{FUseAbs: 1}, nil)
 	defer Pdr_ManStop(p)
 	p.vMapPpi2Ff = vec.Vec_IntAlloc(1)
 	p.vMapFf2Ppi = vec.Vec_IntStart(1)

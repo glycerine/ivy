@@ -22,7 +22,7 @@ func TestIncrementalPushSubsumesAndSeparatesCubes(t *testing.T) {
 		aig.Aig_ManSetRegNum(g, 2)
 		var pars Pdr_Par_t
 		Pdr_ManSetDefaultParams(&pars)
-		pars.fMonoCnf = mono
+		pars.FMonoCnf = mono
 		p := Pdr_ManStart(g, &pars, nil)
 		Pdr_ManCreateSolver(p, 0)
 		Pdr_ManCreateSolver(p, 1)

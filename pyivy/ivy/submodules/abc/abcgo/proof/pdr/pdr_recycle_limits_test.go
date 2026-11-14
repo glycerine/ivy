@@ -11,7 +11,7 @@ import (
 func TestRecycleLimitBoundaryAndLastFrameAssertion(t *testing.T) {
 	p, _ := pdrTestSATManager(t, false)
 	Pdr_ManCreateSolver(p, 1)
-	p.pPars.nRecycle = 2
+	p.pPars.NRecycle = 2
 	original := p.vSolvers[0]
 	vec.Vec_IntWriteEntry(p.vActVars, 0, 1)
 	if got := Pdr_ManFetchSolver(p, 0); got != original || p.nStarts != 0 {
