@@ -827,7 +827,7 @@ func Abc_FlowRetime_NtkSilentRestrash(ntk *abc.Abc_Ntk_t, cleanup int32) *abc.Ab
 	for _, obj := range ntk.ObjectsOfKind(abc.ABC_OBJ_NODE) {
 		fanins := obj.Fanins()
 		assert(len(fanins) == 2, "strashed node has two fanins")
-		first, second := fanins[0].Object.CopyEdge, fanins[1].Object.CopyEdge
+		first, second := fanins[0].Object.ReadCopyEdge(), fanins[1].Object.ReadCopyEdge()
 		first.Complement = first.Complement != fanins[0].Complement
 		second.Complement = second.Complement != fanins[1].Complement
 		copy := abc.Abc_AigAnd(manager, first, second)
@@ -892,10 +892,10 @@ func Abc_FlowRetime_UpdateLags() {
 }
 
 func Abc_FlowRetime_GetLag(pObj *abc.Abc_Obj_t) int32 {
-	assert(!abc.Abc_ObjIsLatch(pObj), "!abc.Abc_ObjIsLatch(pObj)")
-	assert(int32(abc.Abc_ObjId(pObj)) < vec.Vec_IntSize(pManMR.vLags), "int32(abc.Abc_ObjId(pObj)) < vec.Vec_IntSize(pManMR.vLags)")
+	assert(abc.Abc_ObjIsLatch(pObj) == 0, "abc.Abc_ObjIsLatch(pObj) == 0")
+	assert(int(abc.Abc_ObjId(pObj)) < vec.Vec_IntSize(pManMR.vLags), "int(abc.Abc_ObjId(pObj)) < vec.Vec_IntSize(pManMR.vLags)")
 
-	return vec.Vec_IntEntry(pManMR.vLags, abc.Abc_ObjId(pObj))
+	return vec.Vec_IntEntry(pManMR.vLags, int(abc.Abc_ObjId(pObj)))
 }
 
 /*
@@ -912,10 +912,10 @@ func Abc_FlowRetime_GetLag(pObj *abc.Abc_Obj_t) int32 {
 **********************************************************************
 */
 func Abc_FlowRetime_SetLag(pObj *abc.Abc_Obj_t, lag int32) {
-	assert(abc.Abc_ObjIsNode(pObj), "abc.Abc_ObjIsNode(pObj)")
-	assert(int32(abc.Abc_ObjId(pObj)) < vec.Vec_IntSize(pManMR.vLags), "int32(abc.Abc_ObjId(pObj)) < vec.Vec_IntSize(pManMR.vLags)")
+	assert(abc.Abc_ObjIsNode(pObj) != 0, "abc.Abc_ObjIsNode(pObj)")
+	assert(int(abc.Abc_ObjId(pObj)) < vec.Vec_IntSize(pManMR.vLags), "int(abc.Abc_ObjId(pObj)) < vec.Vec_IntSize(pManMR.vLags)")
 
-	vec.Vec_IntWriteEntry(pManMR.vLags, abc.Abc_ObjId(pObj), lag)
+	vec.Vec_IntWriteEntry(pManMR.vLags, int(abc.Abc_ObjId(pObj)), lag)
 }
 
 func Abc_ObjPrintNeighborhood_rec(pObj *abc.Abc_Obj_t, vNodes *vec.Vec_Ptr_t, depth int32) {

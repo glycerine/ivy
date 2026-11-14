@@ -7,7 +7,6 @@ import (
 
 	hop "github.com/glycerine/abcgo/aig/hop"
 	abc "github.com/glycerine/abcgo/base/abc"
-	abci "github.com/glycerine/abcgo/base/abci"
 	core "github.com/glycerine/abcgo/bdd/cudd/core"
 	mio "github.com/glycerine/abcgo/map/mio"
 	vec "github.com/glycerine/abcgo/misc/vec"
@@ -561,7 +560,7 @@ func Abc_FlowRetime_SolveBackwardInit(ntk *abc.Abc_Ntk_t) int32 {
 		return 0
 	}
 	fmt.Fprintf(os.Stdout, "\tsolving for init state (%d nodes)... ", abc.Abc_NtkObjNum(pManMR.pInitNtk))
-	result := abci.abc.Abc_NtkMiterSat(pManMR.pInitNtk, int64(500000), int64(50000000), 0, nil, nil)
+	result := abc.Abc_NtkMiterSat(pManMR.pInitNtk, int64(500000), int64(50000000), 0, nil, nil)
 	if result != 0 {
 		fmt.Fprintln(os.Stdout, "FAILURE")
 		return 0
@@ -755,7 +754,7 @@ func Abc_FlowRetime_PartialSat(vNodes []*abc.Abc_Obj_t, cut int32) int32 {
 		for _, edge := range obj.Fanins() {
 			fanin := copies[edge.Object]
 			assert(fanin != nil, "fanin appears before its consumer in DFS order")
-			if err := part.AddFanin(copy, Edge{Object: fanin, Complement: edge.Complement}); err != nil {
+			if err := part.AddFanin(copy, abc.Edge{Object: fanin, Complement: edge.Complement}); err != nil {
 				panic(err)
 			}
 		}
@@ -766,10 +765,10 @@ func Abc_FlowRetime_PartialSat(vNodes []*abc.Abc_Obj_t, cut int32) int32 {
 	poEdge := po.Fanins()[0]
 	output := copies[poEdge.Object]
 	assert(output != nil, "init output driver copied")
-	if err := part.AddFanin(abc.Abc_NtkCreatePo(part), Edge{Object: output, Complement: poEdge.Complement}); err != nil {
+	if err := part.AddFanin(abc.Abc_NtkCreatePo(part), abc.Edge{Object: output, Complement: poEdge.Complement}); err != nil {
 		panic(err)
 	}
-	result := abci.abc.Abc_NtkMiterSat(part, int64(500000), int64(50000000), 0, nil, nil)
+	result := abc.Abc_NtkMiterSat(part, int64(500000), int64(50000000), 0, nil, nil)
 	return boolInt(result == 0)
 }
 
@@ -827,7 +826,7 @@ func Abc_FlowRetime_ConstrainInit() {
 
 func Abc_FlowRetime_RemoveInitBias() {
 	for i := 0; i < vec.Vec_PtrSize(pManMR.vInitConstraints); i++ {
-		constraint, ok := vec.Vec_PtrEntry(pManMR.vInitConstraints, int32(i)).(*InitConstraint_t)
+		constraint, ok := vec.Vec_PtrEntry(pManMR.vInitConstraints, i).(*InitConstraint_t)
 		assert(ok && constraint != nil, "init constraint has expected type")
 		if constraint.pBiasNode != nil {
 			abc.Abc_NtkDeleteObj(constraint.pBiasNode)
@@ -867,7 +866,7 @@ func Abc_FlowRetime_ConnectBiasNode(_ *abc.Abc_Obj_t, start *abc.Abc_Obj_t, bias
 
 func Abc_FlowRetime_AddInitBias() {
 	for i := 0; i < vec.Vec_PtrSize(pManMR.vInitConstraints); i++ {
-		constraint, ok := vec.Vec_PtrEntry(pManMR.vInitConstraints, int32(i)).(*InitConstraint_t)
+		constraint, ok := vec.Vec_PtrEntry(pManMR.vInitConstraints, i).(*InitConstraint_t)
 		assert(ok && constraint != nil, "init constraint has expected type")
 		if constraint.pBiasNode != nil {
 			continue

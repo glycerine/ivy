@@ -100,7 +100,7 @@ func TestInitToOrigLookupReturnsMappedObjectAndLag(t *testing.T) {
 func TestInitToOrigCanMapConstantConflictNode(t *testing.T) {
 	original := abc.NewNetwork("original-constant")
 	initNetwork := abc.NewNetwork("init-constant")
-	pManMR = &MinRegMan_t{pNtk: original, vLags: vec.Vec_IntStart(abc.Abc_NtkObjNumMax(original) + 1)}
+	pManMR = &MinRegMan_t{pNtk: original, vLags: vec.Vec_IntStart(int(abc.Abc_NtkObjNumMax(original)) + 1)}
 	t.Cleanup(func() { pManMR = nil })
 	initConstant := initNetwork.ObjectsOfKind(abc.ABC_OBJ_CONST1)[0]
 	originalConstant := original.ObjectsOfKind(abc.ABC_OBJ_CONST1)[0]
@@ -146,7 +146,7 @@ func TestTimingEdgesUsePerObjectStorage(t *testing.T) {
 
 func TestInitTimingAllocatesAnEdgeVectorPerObjectID(t *testing.T) {
 	network := abc.NewNetwork("flow-timing-init")
-	obj := abc.Abc_NtkCreatePi(network)
+	abc.Abc_NtkCreatePi(network)
 	pManMR = &MinRegMan_t{
 		nExactConstraints:   4,
 		nConservConstraints: 3,
@@ -249,10 +249,12 @@ func TestExactForwardTimingFindsBoundaryAfterLatch(t *testing.T) {
 		}
 		got = append(got, obj)
 	}
-	if len(got) != 1 || got[0] != upstream {
-		t.Fatalf("exact forward boundary edges = %v, want [%p]", got, upstream)
+	// C records every object at the limiting level, including the zero-delay
+	// latch and BI terminals, before the upstream logic increments the level.
+	if len(got) != 3 || got[0] != latch || got[1] != bi || got[2] != upstream {
+		t.Fatalf("exact forward boundary edges = %v, want latch, BI, upstream", got)
 	}
-	if pManMR.nExactConstraints != 1 {
+	if pManMR.nExactConstraints != 3 {
 		t.Fatalf("exact constraint count = %d, want 1", pManMR.nExactConstraints)
 	}
 	for _, obj := range network.Objects() {
@@ -368,11 +370,14 @@ func TestExactBackwardTimingFindsBoundaryAfterLatch(t *testing.T) {
 	Abc_FlowRetime_InitTiming(network)
 
 	Abc_FlowRetime_ConstrainExact(upstream)
-	if got := vec.Vec_PtrSize(FTIMEEDGES(upstream)); got != 1 {
-		t.Fatalf("exact backward edge count = %d, want 1", got)
+	// Match the C pass: the latch and BO also lie at the limiting level.
+	if got := vec.Vec_PtrSize(FTIMEEDGES(upstream)); got != 3 {
+		t.Fatalf("exact backward edge count = %d, want 3", got)
 	}
-	if got := vec.Vec_PtrEntry(FTIMEEDGES(upstream), 0); got != downstream {
-		t.Fatalf("exact backward edge = %v, want downstream node %d", got, downstream.ID)
+	for i, want := range []*abc.Abc_Obj_t{latch, bo, downstream} {
+		if got := vec.Vec_PtrEntry(FTIMEEDGES(upstream), i); got != want {
+			t.Fatalf("exact backward edge %d = %v, want object %d", i, got, want.ID)
+		}
 	}
 }
 
@@ -596,7 +601,7 @@ func TestConnectBiasNodeFollowsBoxAndLatchBoundaries(t *testing.T) {
 	pManMR = &MinRegMan_t{
 		pNtk:       network,
 		pDataArray: make([]Flow_Data_t, abc.Abc_NtkObjNumMax(network)+1),
-		vLags:      vec.Vec_IntStart(abc.Abc_NtkObjNumMax(network)),
+		vLags:      vec.Vec_IntStart(int(abc.Abc_NtkObjNumMax(network))),
 	}
 	t.Cleanup(func() { pManMR = nil })
 
