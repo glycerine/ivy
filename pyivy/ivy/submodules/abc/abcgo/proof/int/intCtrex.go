@@ -7,6 +7,7 @@ import (
 
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/misc/util"
+	"github.com/glycerine/abcgo/sat/bmc"
 	"github.com/glycerine/abcgo/sat/bsat"
 	"github.com/glycerine/abcgo/sat/cnf"
 )
@@ -64,13 +65,44 @@ func interManFramesBmc(src *aig.Graph, nFrames int32, deadline int64) *aig.Graph
 	return dst
 }
 
-// Inter_ManGetCounterExample returns a frame-major trace when the unrolled
-// final-frame property is satisfiable, and nil on UNSAT or resource exhaustion.
-func Inter_ManGetCounterExample(src *aig.Graph, nFrames, verbose int32) *util.Abc_Cex_t {
-	return interManGetCounterExample(src, nFrames, verbose, 0)
+// Inter_ManGetCounterExample searches from startFrame and returns the first
+// witness produced by ABC's scalable BMC entry point.
+func Inter_ManGetCounterExample(src *aig.Graph, startFrame, verbose int32) *util.Abc_Cex_t {
+	return interManGetCounterExample(src, startFrame, verbose, 0)
 }
 
-func interManGetCounterExample(src *aig.Graph, nFrames, verbose int32, deadline int64) *util.Abc_Cex_t {
+func interManGetCounterExample(src *aig.Graph, startFrame, verbose int32, deadline int64) *util.Abc_Cex_t {
+	if src == nil || startFrame < 0 {
+		return nil
+	}
+	// The C intCore caller uses the scalable BMC defaults, then overrides
+	// exactly these three parameters. It uses the same path for constraint
+	// graphs; ordinary outputs are targets in this BMC entry point.
+	var params bmc.Saig_ParBmc_t
+	bmc.Saig_ParBmcSetDefaultParams(&params)
+	params.SetInterpolationOptions(startFrame, 100000000, verbose)
+	status := bmc.Saig_ManBmcScalable(src, &params)
+	if status == 1 {
+		fmt.Println("Error: The problem should be SAT but it is UNSAT.")
+	}
+	if status == -1 {
+		fmt.Println("Error: The problem timed out.")
+	}
+	if status != 0 {
+		return nil
+	}
+	return src.SequentialCounterexample()
+}
+
+// Inter_ManGetCounterExampleConstrained is a Go-only extension that searches
+// an exact bounded unrolling while enforcing each declared constraint in all
+// frames. The C INT path instead calls scalable BMC and treats each ordinary
+// output as a target.
+func Inter_ManGetCounterExampleConstrained(src *aig.Graph, nFrames, verbose int32) *util.Abc_Cex_t {
+	return interManGetConstrainedCounterExample(src, nFrames, verbose, 0)
+}
+
+func interManGetConstrainedCounterExample(src *aig.Graph, nFrames, verbose int32, deadline int64) *util.Abc_Cex_t {
 	started := time.Now()
 	frames := interManFramesBmc(src, nFrames, deadline)
 	if frames == nil || deadline != 0 && util.Abc_Clock() >= deadline {

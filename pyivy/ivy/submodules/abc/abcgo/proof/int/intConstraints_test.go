@@ -51,7 +51,7 @@ func TestConstrainedInterpolation(t *testing.T) {
 	}
 }
 
-func TestConstrainedSequentialWitness(t *testing.T) {
+func TestConstrainedSequentialWitnessExtension(t *testing.T) {
 	g := aig.NewGraph()
 	x, state := g.NewInput(), g.NewInput()
 	g.AddOutput(state)
@@ -66,7 +66,7 @@ func TestConstrainedSequentialWitness(t *testing.T) {
 	if got := Inter_ManPerformInterpolation(g, &pars, &frame); got != 0 || frame != 1 {
 		t.Fatalf("got %d frame %d", got, frame)
 	}
-	cex := g.SequentialCounterexample()
+	cex := Inter_ManGetCounterExampleConstrained(g, 2, 0)
 	if cex == nil {
 		t.Fatal("missing witness")
 	}
@@ -108,7 +108,7 @@ func TestConstrainedWitnessHonorsExpiredDeadline(t *testing.T) {
 	g.AddOutput(x)
 	aig.Aig_ManSetRegNum(g, 1)
 	aig.Aig_ManSetConstrNum(g, 1)
-	if got := interManGetCounterExample(g, 2, 0, util.Abc_Clock()-1); got != nil {
+	if got := interManGetConstrainedCounterExample(g, 2, 0, util.Abc_Clock()-1); got != nil {
 		t.Fatalf("expired deadline yielded witness %+v", got)
 	}
 }
@@ -121,7 +121,7 @@ func TestWitnessChecksEveryConstraintInEveryFrame(t *testing.T) {
 	baseline.AddOutput(bx)
 	aig.Aig_ManSetRegNum(baseline, 1)
 	aig.Aig_ManSetConstrNum(baseline, 1)
-	if got := Inter_ManGetCounterExample(baseline, 2, 0); got == nil {
+	if got := Inter_ManGetCounterExampleConstrained(baseline, 2, 0); got == nil {
 		t.Fatal("first constraint alone should permit a witness")
 	}
 	g := aig.NewGraph()
@@ -132,7 +132,7 @@ func TestWitnessChecksEveryConstraintInEveryFrame(t *testing.T) {
 	g.AddOutput(x)
 	aig.Aig_ManSetRegNum(g, 1)
 	aig.Aig_ManSetConstrNum(g, 2)
-	if got := Inter_ManGetCounterExample(g, 2, 0); got != nil {
+	if got := Inter_ManGetCounterExampleConstrained(g, 2, 0); got != nil {
 		t.Fatalf("contradictory constraints produced witness %+v", got)
 	}
 }

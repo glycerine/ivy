@@ -89,18 +89,29 @@ DAR rewriting, initial-state check, and subsequent BMC witness search do not
 receive that deadline. A proof can therefore complete after the nominal limit
 before the driver's next timeout check.
 
-The Go witness builder is a bounded reconstruction, not a port of the
-`Saig_ManBmcScalable` call in `intCore.c`: it solves exactly the requested
-unrolling with a 1,000,000-conflict limit, while the C caller configures
-scalable BMC with a 100,000,000-conflict limit and starts at the current
-interpolation frame. The Go reconstruction also handles constraint outputs,
-which the C helper in `intCtrex.c` does not cover. Extracted Go witnesses are
-replayed across every frame and rejected if the property, transition, or
-constraint check fails. `TestCounterexampleUnrollingBoundAndConstrainedTrace`
-records the exact-horizon behavior and frame-major PI layout; it does not
-claim equivalence to scalable BMC. Tests cover the BSAT clock domain, MiniSat's
-proof-before-timeout boundary, an exhausted MiniSat conflict budget, and
-backend cleanup. Exhaustive tests are limited to small formulas and state
-spaces; they do not establish performance or completion on large instances.
-Several reported timing counters still use Go elapsed time rather than the C
-CPU clock.
+The INT witness path now calls the Go `Saig_ManBmcScalable` entry point, as
+`intCore.c` calls its C counterpart. It uses BMC defaults with `nStart` set to
+the current interpolation frame, `nConfLimit` set to 100,000,000, and
+verbosity copied from INT; the INT result and frame are retained even if
+witness reconstruction returns no model, as in C. For constrained graphs the
+C caller passes the original graph unchanged. Scalable BMC treats each
+ordinary output, including trailing constraint outputs, as an independent
+target and does not enforce the interpolation constraint polarity. The Go INT
+path follows that behavior. Constraint-aware trace replay is available through
+the explicitly Go-only `Inter_ManGetCounterExampleConstrained` helper; it is
+not used by `Inter_ManPerformInterpolation`.
+
+The Go BMC implementation still differs internally from C's incremental
+dynamic unroller: it rebuilds the bounded graph and SAT solver at each frame,
+and its default large-register bound and timeout accounting are Go-specific.
+`TestCounterexampleFromUnrolling` and
+`TestScalableBmcWitnessStartsAtRequestedFrameAndMapsPis` cover start-frame
+behavior, earliest counterexample frame, PI layout, and the finite
+one-register state-space cutoff. `TestScalableBmcSourceContractTreatsConstraintOutputAsTarget`
+pins the C output-target behavior. `TestCounterexampleUnrollingBoundAndConstrainedTrace`
+covers the separate constraint-aware Go extension. Tests cover the BSAT clock
+domain, MiniSat's proof-before-timeout boundary, an exhausted MiniSat conflict
+budget, and backend cleanup. Exhaustive tests are limited to small formulas
+and state spaces; they do not establish performance or completion on large
+instances. Several reported timing counters still use Go elapsed time rather
+than the C CPU clock.

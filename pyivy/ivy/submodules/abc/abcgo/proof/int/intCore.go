@@ -119,11 +119,10 @@ func Inter_ManPerformInterpolation(graph *aig.Graph, pars *Inter_ManParams_t, fr
 			if result == 0 {
 				if i == 0 {
 					*frame = p.nFrames
-					cex := interManGetCounterExample(graph, p.nFrames+1, pars.FVerbose, 0)
-					if cex == nil || graph.SetSequentialCounterexample(cex) != nil {
-						*frame = -1
-						return finish(-1, 0)
-					}
+					// C intCore.c ignores the scalable-BMC return value: interpolation
+					// has already established a counterexample, and BMC only attempts
+					// to reconstruct its trace starting at p.nFrames.
+					_ = interManGetCounterExample(graph, p.nFrames, pars.FVerbose, 0)
 					return finish(0, 0)
 				}
 				p.nFrames += i

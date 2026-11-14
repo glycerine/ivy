@@ -65,8 +65,13 @@ func TestConstrainedInterpolationModesAgainstReachability(t *testing.T) {
 				continue
 			}
 			cex := g.SequentialCounterexample()
-			if cex == nil || cex.IFrame != frame {
+			if cex == nil {
 				t.Fatalf("trial=%d mode=%s missing witness", trial, m.name)
+			}
+			if m.backward == 0 {
+				// Source INT sends constraint POs to scalable BMC as ordinary
+				// targets and does not enforce them as assumptions.
+				continue
 			}
 			state := []bool{false, false}
 			for f := int32(0); f <= frame; f++ {
