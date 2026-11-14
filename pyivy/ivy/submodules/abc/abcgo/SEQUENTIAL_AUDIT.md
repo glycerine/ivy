@@ -504,3 +504,32 @@ algorithm into a structural accumulation operation.
 Uncached AIG, FRA and ABCI race suites pass. The AIG race suite was rerun after
 adding the three-version regression. This checkpoint does not complete the
 AIG package audit; the remaining families listed above still require review.
+
+### Register partition and DFS source contracts
+
+Compared aigPartReg.go with aigPartReg.c, including seed/frontier costs,
+support collection, partition construction, one-hot projection and traversal.
+Found that Aig_ManDfsNodes returned only gates and did not start or mark a
+traversal. C returns reachable PIs and gates, visits choice alternatives first,
+pre-marks the constant and skips COs. Two new red regressions exposed the
+missing inputs, missing choice cones/order and stale traversal generation.
+Restored that specialized helper without changing other DFS entry points.
+
+A separate red register-partition test exposed the missing constant/internal
+cone marks in Aig_ManRegCreatePart. It now calls the repaired source helper,
+replacing its duplicate recursive walk, and constructs the reverse map in C's
+DFS order followed by the selected register outputs. Tests check mark scope,
+CI/internal reverse mappings and unmapped fake/real COs, alongside existing
+truth tables, interface counts and one-hot projection coverage.
+
+Aig_ManRegPartitionLinear had invented a complete partitioning algorithm.
+The source only performs a traversal and returns NULL; no production Go
+callers exist. A new red test showed invented nonnil results for sizes 1, 2
+and 100 (and an extra size-zero panic). Restored the explicit nil result and
+source traversal, retained a comment identifying the unfinished upstream
+routine, and replaced the old test that demanded the invented behavior.
+
+Full uncached AIG and SSW race suites pass. SSW's existing second cone walk
+still warrants review when that package's sequential audit is reached; it
+was a workaround for the old helper and has not been counted as audited here.
+The general DFS functions and remaining AIG algorithm families remain open.
