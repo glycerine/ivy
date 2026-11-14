@@ -2,9 +2,9 @@ package lpk
 
 import (
 	"fmt"
-	abc "github.com/glycerine/abcgo/base/abc"
 	kit "github.com/glycerine/abcgo/bool/kit"
 	ifpkg "github.com/glycerine/abcgo/map/if"
+	util "github.com/glycerine/abcgo/misc/util"
 	"os"
 )
 
@@ -55,21 +55,22 @@ import (
 */
 func Lpk_CreateVarOrder(pNtk *Kit_DsdNtk_t, pTable [][16]byte) {
 	var pObj *Kit_DsdObj_t
-	var uSuppFanins, k uint32
+	var uSuppFanins uint32
+	var k int32
 	var Above, Below [16]int32
-	var nAbove, nBelow, iFaninLit, i, x, y int32
+	var nAbove, nBelow, iFaninLit, x, y int32
 	// iterate through the nodes
 	// inlining of macro Kit_DsdNtkForEachObj
-	for i = 0; i < (pNtk).nNodes; i++ {
-		pObj = (pNtk).pNodes[i]
+	for _, node := range kit.Kit_DsdNtkForEachObj(pNtk) {
+		pObj = node
 		// collect fanin support of this node
 		nAbove = 0
 		uSuppFanins = 0
 		// inlining of macro Kit_DsdObjForEachFanin
-		for k = 0; k < int32((pObj).nFans); k++ {
-			iFaninLit = int32(pObj.pFans[k])
+		for k = 0; k < kit.Kit_DsdObjFanNum(pObj); k++ {
+			iFaninLit = int32(kit.Kit_DsdObjFans(pObj)[k])
 			if kit.Kit_DsdLitIsLeaf(pNtk, iFaninLit) != 0 {
-				Above[nAbove] = abc.Abc_Lit2Var(iFaninLit)
+				Above[nAbove] = util.Abc_Lit2Var(iFaninLit)
 				nAbove++
 			} else {
 				uSuppFanins |= kit.Kit_DsdLitSupport(pNtk, iFaninLit)
@@ -125,10 +126,10 @@ func Lpk_CreateCommonOrder(pTable [][16]byte, piCofVar []int32, nCBars int32, pP
 			continue
 		}
 		for y = 0; y < nVars; y++ {
-			Score[i] += pTable[i][y]
+			Score[i] += int32(pTable[i][y])
 		}
 		for x = 0; x < nVars; x++ {
-			Score[i] -= pTable[x][i]
+			Score[i] -= int32(pTable[x][i])
 		}
 	}
 
@@ -225,19 +226,19 @@ func Lpk_FindHighest(ppNtks []*Kit_DsdNtk_t, piLits []int32, nSize int32, pPrio 
 		} else if kit.Kit_DsdLitIsLeaf(ppNtks[i], piLits[i]) != 0 {
 			uSupps[i] = kit.Kit_DsdLitSupport(ppNtks[i], piLits[i])
 		} else {
-			pObj = kit.Kit_DsdNtkObj(ppNtks[i], abc.Abc_Lit2Var(piLits[i]))
-			if pObj.Type == KIT_DSD_PRIME {
+			pObj = kit.Kit_DsdNtkObj(ppNtks[i], util.Abc_Lit2Var(piLits[i]))
+			if pObj.Type == kit.KIT_DSD_PRIME {
 				pTriv[i] = 0
-				uSuppFanin = kit.Kit_DsdLitSupport(ppNtks[i], int32(pObj.pFans[0]))
+				uSuppFanin = kit.Kit_DsdLitSupport(ppNtks[i], int32(kit.Kit_DsdObjFans(pObj)[0]))
 
 			} else {
-				assert(pObj.nFans == 2, "pObj.nFans == 2")
-				if kit.Kit_DsdLitIsLeaf(ppNtks[i], int32(pObj.pFans[0])) == 0 {
+				assert(kit.Kit_DsdObjFanNum(pObj) == 2, "kit.Kit_DsdObjFanNum(pObj) == 2")
+				if kit.Kit_DsdLitIsLeaf(ppNtks[i], int32(kit.Kit_DsdObjFans(pObj)[0])) == 0 {
 					pTriv[i] = 0
 				}
-				uSuppFanin = kit.Kit_DsdLitSupport(ppNtks[i], int32(pObj.pFans[1]))
+				uSuppFanin = kit.Kit_DsdLitSupport(ppNtks[i], int32(kit.Kit_DsdObjFans(pObj)[1]))
 			}
-			uSupps[i] = kit.Kit_DsdLitSupport(ppNtks[i], piLits[i]) & ~uSuppFanin
+			uSupps[i] = kit.Kit_DsdLitSupport(ppNtks[i], piLits[i]) & ^uSuppFanin
 		}
 		assert(uSupps[i] <= 0xFFFF, "uSupps[i] <= 0xFFFF")
 		uSuppTotal |= uSupps[i]
@@ -247,7 +248,7 @@ func Lpk_FindHighest(ppNtks []*Kit_DsdNtk_t, piLits []int32, nSize int32, pPrio 
 	}
 
 	// find one support variable with the highest priority
-	PrioMin = ABC_INFINITY
+	PrioMin = util.ABC_INFINITY
 	iVarMax = -1
 	for i = 0; i < 16; i++ {
 		if (uSuppTotal & (1 << i)) != 0 {
@@ -265,7 +266,7 @@ func Lpk_FindHighest(ppNtks []*Kit_DsdNtk_t, piLits []int32, nSize int32, pPrio 
 	uSuppLarge = 0
 	for i = 0; i < nSize; i++ {
 		if (uSupps[i] & (1 << iVarMax)) != 0 {
-			if pTriv[i] || !(fOneNonTriv != 0) {
+			if pTriv[i] != 0 || fOneNonTriv == 0 {
 				if pTriv[i] == 0 {
 					uSuppLarge = uSupps[i]
 					fOneNonTriv = 1
@@ -285,7 +286,7 @@ func Lpk_FindHighest(ppNtks []*Kit_DsdNtk_t, piLits []int32, nSize int32, pPrio 
 	// add other non-trivial not-taken components whose support is contained in the current large component support
 	if fOneNonTriv != 0 {
 		for i = 0; i < nSize; i++ {
-			if pTriv[i] == 0 && pDecision[i] == 0 && (uSupps[i]&~uSuppLarge) == 0 {
+			if pTriv[i] == 0 && pDecision[i] == 0 && (uSupps[i]&^uSuppLarge) == 0 {
 				pDecision[i] = 1
 				nComps++
 			}
@@ -317,7 +318,7 @@ func Lpk_MapTreeMulti_rec(p *Lpk_Man_t, ppNtks []*Kit_DsdNtk_t, piLits []int32, 
 
 	// find which of the variables is highest in the order
 	nSize = (1 << nCBars)
-	nComps = Lpk_FindHighest(ppNtks[:], piLits, nSize, pPrio, pDecision)
+	nComps = Lpk_FindHighest(ppNtks[:], piLits, nSize, pPrio, pDecision[:])
 	if nComps == 0 {
 		return ifpkg.If_Not(ifpkg.If_ManConst1(p.pIfMan))
 	}
@@ -332,13 +333,13 @@ func Lpk_MapTreeMulti_rec(p *Lpk_Man_t, ppNtks []*Kit_DsdNtk_t, piLits []int32, 
 				fmt.Printf("%d ", i)
 			}
 			assert(piLits[i] >= 0, "piLits[i] >= 0")
-			pObj = kit.Kit_DsdNtkObj(ppNtks[i], abc.Abc_Lit2Var(piLits[i]))
+			pObj = kit.Kit_DsdNtkObj(ppNtks[i], util.Abc_Lit2Var(piLits[i]))
 			if pObj == nil {
 				piLitsNew[i] = -2
-			} else if pObj.Type == KIT_DSD_PRIME {
-				piLitsNew[i] = int32(pObj.pFans[0])
+			} else if pObj.Type == kit.KIT_DSD_PRIME {
+				piLitsNew[i] = int32(kit.Kit_DsdObjFans(pObj)[0])
 			} else {
-				piLitsNew[i] = int32(pObj.pFans[1])
+				piLitsNew[i] = int32(kit.Kit_DsdObjFans(pObj)[1])
 			}
 
 		} else {
@@ -350,7 +351,7 @@ func Lpk_MapTreeMulti_rec(p *Lpk_Man_t, ppNtks []*Kit_DsdNtk_t, piLits []int32, 
 	}
 
 	// call again
-	pResPrev = Lpk_MapTreeMulti_rec(p, ppNtks[:], piLitsNew, piCofVar, nCBars, ppLeaves[:], nLeaves, pPrio)
+	pResPrev = Lpk_MapTreeMulti_rec(p, ppNtks[:], piLitsNew[:], piCofVar, nCBars, ppLeaves[:], nLeaves, pPrio)
 
 	// create new set of nodes
 	for i = 0; i < nSize; i++ {
@@ -422,7 +423,7 @@ func Lpk_MapTreeMulti(p *Lpk_Man_t, pTruth []uint32, nVars int32, ppLeaves []*If
 		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	}
-	var fVerbose int32 = p.pPars.fVeryVerbose != 0
+	var fVerbose int32 = p.pPars.fVeryVerbose
 
 	spStatic_Lpk_MapTreeMulti_Counter++
 	//    printf( "Run %d.\n", Counter );
@@ -440,7 +441,7 @@ func Lpk_MapTreeMulti(p *Lpk_Man_t, pTruth []uint32, nVars int32, ppLeaves []*If
 	assert(nSize == 32, "nSize == 32")
 
 	// find the best cofactoring variables
-	nCBars = kit.Kit_DsdCofactoring(pTruth, nVars, piCofVar, p.pPars.nVarsShared, 0)
+	nCBars = kit.Kit_DsdCofactoring(pTruth, nVars, piCofVar[:], p.pPars.nVarsShared, 0)
 	//    nCBars = 2;
 	//    piCofVar[0] = 0;
 	//    piCofVar[1] = 1;
@@ -482,9 +483,9 @@ func Lpk_MapTreeMulti(p *Lpk_Man_t, pTruth []uint32, nVars int32, ppLeaves []*If
 	// find common variable order
 	for i = 0; i < nSize; i++ {
 		kit.Kit_DsdGetSupports(ppNtks[i])
-		Lpk_CreateVarOrder(ppNtks[i], pTable)
+		Lpk_CreateVarOrder(ppNtks[i], pTable[:])
 	}
-	Lpk_CreateCommonOrder(pTable, piCofVar, nCBars, pPrios, nVars, fVerbose)
+	Lpk_CreateCommonOrder(pTable[:], piCofVar[:], nCBars, pPrios[:], nVars, fVerbose)
 	// update priorities with frequences
 	for i = 0; i < nVars; i++ {
 		pPrios[i] = pPrios[i]*256 + (16-pFreqs[i])*16 + i
@@ -497,12 +498,12 @@ func Lpk_MapTreeMulti(p *Lpk_Man_t, pTruth []uint32, nVars int32, ppLeaves []*If
 	// transform all networks according to the variable order
 	for i = 0; i < nSize; i++ {
 		pTemp = ppNtks[i]
-		ppNtks[i] = kit.Kit_DsdShrink(pTemp, pPrios)
+		ppNtks[i] = kit.Kit_DsdShrink(pTemp, pPrios[:])
 		kit.Kit_DsdNtkFree(pTemp)
 		kit.Kit_DsdGetSupports(ppNtks[i])
-		assert(ppNtks[i].pSupps[0] <= 0xFFFF, "ppNtks[i].pSupps[0] <= 0xFFFF")
+		assert(kit.Kit_DsdLitSupport(ppNtks[i], kit.Kit_DsdNtkRootLit(ppNtks[i])) <= 0xFFFF, "kit.Kit_DsdLitSupport(ppNtks[i], kit.Kit_DsdNtkRootLit(ppNtks[i])) <= 0xFFFF")
 		// undec nodes should be rotated in such a way that the first input has as many shared inputs as possible
-		kit.Kit_DsdRotate(ppNtks[i], pFreqs)
+		kit.Kit_DsdRotate(ppNtks[i], pFreqs[:])
 		// print the resulting networks
 		if fVerbose != 0 {
 			fmt.Printf("Cof%d%d: ", nCBars, i)
@@ -513,15 +514,15 @@ func Lpk_MapTreeMulti(p *Lpk_Man_t, pTruth []uint32, nVars int32, ppLeaves []*If
 	for i = 0; i < nSize; i++ {
 		// collect the roots
 		pRoot = kit.Kit_DsdNtkRoot(ppNtks[i])
-		if pRoot.Type == KIT_DSD_CONST1 {
+		if pRoot.Type == kit.KIT_DSD_CONST1 {
 			piLits[i] = func() int32 {
-				if abc.Abc_LitIsCompl(int32(ppNtks[i].Root)) != 0 {
+				if util.Abc_LitIsCompl(int32(ppNtks[i].Root)) != 0 {
 					return -2
 				}
 				return -1
 			}()
-		} else if pRoot.Type == KIT_DSD_VAR {
-			piLits[i] = abc.Abc_LitNotCond(int32(pRoot.pFans[0]), abc.Abc_LitIsCompl(int32(ppNtks[i].Root)))
+		} else if pRoot.Type == kit.KIT_DSD_VAR {
+			piLits[i] = util.Abc_LitNotCond(int32(kit.Kit_DsdObjFans(pRoot)[0]), util.Abc_LitIsCompl(int32(ppNtks[i].Root)))
 		} else {
 			piLits[i] = int32(ppNtks[i].Root)
 		}
@@ -529,7 +530,7 @@ func Lpk_MapTreeMulti(p *Lpk_Man_t, pTruth []uint32, nVars int32, ppLeaves []*If
 
 	// recursively construct AIG for mapping
 	p.fCofactoring = 1
-	pResult = Lpk_MapTreeMulti_rec(p, ppNtks[:], piLits, piCofVar, nCBars, ppLeaves[:], nVars, pPrios)
+	pResult = Lpk_MapTreeMulti_rec(p, ppNtks[:], piLits[:], piCofVar[:], nCBars, ppLeaves[:], nVars, pPrios[:])
 	p.fCofactoring = 0
 
 	if fVerbose != 0 {
@@ -548,7 +549,7 @@ func Lpk_MapTreeMulti(p *Lpk_Man_t, pTruth []uint32, nVars int32, ppLeaves []*If
 			kit.Kit_TruthMuxVar(ppCofs[k][i], ppCofs[k+1][2*i+0], ppCofs[k+1][2*i+1], nVars, piCofVar[k])
 		}
 	}
-	if !Extra_TruthIsEqual(pTruth, ppCofs[0][0], nVars) {
+	if kit.Kit_TruthIsEqual(pTruth, ppCofs[0][0], nVars) == 0 {
 		fmt.Printf("Verification failed.\n")
 	}
 

@@ -2,8 +2,8 @@ package lpk
 
 import (
 	"fmt"
-	abc "github.com/glycerine/abcgo/base/abc"
 	kit "github.com/glycerine/abcgo/bool/kit"
+	util "github.com/glycerine/abcgo/misc/util"
 	vec "github.com/glycerine/abcgo/misc/vec"
 	"os"
 )
@@ -63,46 +63,47 @@ type Lpk_Set_t struct {
 **********************************************************************
 */
 func Lpk_ComputeSets_rec(p *Kit_DsdNtk_t, iLit int32, vSets *Vec_Int_t) uint32 {
-	var i, iLitFanin, uSupport, uSuppCur uint32
+	var i, uSupport, uSuppCur uint32
+	var iLitFanin int32
 	var pObj *Kit_DsdObj_t
 	// consider the case of simple gate
-	pObj = kit.Kit_DsdNtkObj(p, abc.Abc_Lit2Var(iLit))
+	pObj = kit.Kit_DsdNtkObj(p, util.Abc_Lit2Var(iLit))
 	if pObj == nil {
-		return (1 << abc.Abc_Lit2Var(iLit))
+		return (1 << util.Abc_Lit2Var(iLit))
 	}
-	if pObj.Type == KIT_DSD_AND || pObj.Type == KIT_DSD_XOR {
+	if pObj.Type == kit.KIT_DSD_AND || pObj.Type == kit.KIT_DSD_XOR {
 		var uSupps [16]uint32
 		var Limit uint32
 		var s uint32
 		uSupport = 0
 		// inlining of macro Kit_DsdObjForEachFanin
-		for i = 0; i < int32((pObj).nFans); i++ {
-			iLitFanin = uint32(pObj.pFans[i])
+		for i = 0; i < uint32(kit.Kit_DsdObjFanNum(pObj)); i++ {
+			iLitFanin = int32(kit.Kit_DsdObjFans(pObj)[i])
 			uSupps[i] = Lpk_ComputeSets_rec(p, iLitFanin, vSets)
 			uSupport |= uSupps[i]
 		}
 		// create all subsets, except empty and full
-		Limit = (1 << pObj.nFans) - 1
+		Limit = (1 << uint32(kit.Kit_DsdObjFanNum(pObj))) - 1
 		for s = 1; s < Limit; s++ {
 			uSuppCur = 0
-			for i = 0; i < pObj.nFans; i++ {
+			for i = 0; i < uint32(kit.Kit_DsdObjFanNum(pObj)); i++ {
 				if (s & (1 << i)) != 0 {
 					uSuppCur |= uSupps[i]
 				}
 			}
-			vec.Vec_IntPush(vSets, uSuppCur)
+			vec.Vec_IntPush(vSets, int32(uSuppCur))
 		}
 		return uSupport
 	}
-	assert(pObj.Type == KIT_DSD_PRIME, "pObj.Type == KIT_DSD_PRIME")
+	assert(pObj.Type == kit.KIT_DSD_PRIME, "pObj.Type == kit.KIT_DSD_PRIME")
 	// get the cumulative support of all fanins
 	uSupport = 0
 	// inlining of macro Kit_DsdObjForEachFanin
-	for i = 0; i < int32((pObj).nFans); i++ {
-		iLitFanin = uint32(pObj.pFans[i])
+	for i = 0; i < uint32(kit.Kit_DsdObjFanNum(pObj)); i++ {
+		iLitFanin = int32(kit.Kit_DsdObjFans(pObj)[i])
 		uSuppCur = Lpk_ComputeSets_rec(p, iLitFanin, vSets)
 		uSupport |= uSuppCur
-		vec.Vec_IntPush(vSets, uSuppCur)
+		vec.Vec_IntPush(vSets, int32(uSuppCur))
 	}
 	return uSupport
 }
@@ -123,25 +124,25 @@ func Lpk_ComputeSets_rec(p *Kit_DsdNtk_t, iLit int32, vSets *Vec_Int_t) uint32 {
 func Lpk_ComputeSets(p *Kit_DsdNtk_t, vSets *Vec_Int_t) uint32 {
 	var uSupport, Entry uint32
 	var Number, i int32
-	assert(p.nVars <= 16, "p.nVars <= 16")
+	assert(kit.Kit_DsdNtkVarNum(p) <= 16, "p.nVars <= 16")
 	vec.Vec_IntClear(vSets)
 	vec.Vec_IntPush(vSets, 0)
-	if kit.Kit_DsdNtkRoot(p).Type == KIT_DSD_CONST1 {
+	if kit.Kit_DsdNtkRoot(p).Type == kit.KIT_DSD_CONST1 {
 		return 0
 	}
-	if kit.Kit_DsdNtkRoot(p).Type == KIT_DSD_VAR {
-		uSupport = (1 << abc.Abc_Lit2Var(kit.Kit_DsdNtkRoot(p).pFans[0]))
-		vec.Vec_IntPush(vSets, uSupport)
+	if kit.Kit_DsdNtkRoot(p).Type == kit.KIT_DSD_VAR {
+		uSupport = (1 << util.Abc_Lit2Var(int32(kit.Kit_DsdObjFans(kit.Kit_DsdNtkRoot(p))[0])))
+		vec.Vec_IntPush(vSets, int32(uSupport))
 		return uSupport
 	}
 	uSupport = Lpk_ComputeSets_rec(p, int32(p.Root), vSets)
 	assert((uSupport&0xFFFF0000) == 0, "(uSupport & 0xFFFF0000) == 0")
-	vec.Vec_IntPush(vSets, uSupport)
+	vec.Vec_IntPush(vSets, int32(uSupport))
 	// set the remaining variables
 	for i = 0; i < int32(vec.Vec_IntSize(vSets)); i++ {
 		Number = vec.Vec_IntEntry(vSets, int(i))
-		Entry = Number
-		vec.Vec_IntWriteEntry(vSets, i, Entry|((uSupport&~Entry)<<16))
+		Entry = uint32(Number)
+		vec.Vec_IntWriteEntry(vSets, int(i), int32(Entry|((uSupport&^Entry)<<16)))
 	}
 	return uSupport
 }
@@ -188,8 +189,8 @@ func Lpk_PrintSets(vSets *Vec_Int_t) {
 	fmt.Printf("Subsets(%d): ", vec.Vec_IntSize(vSets))
 	for i = 0; i < int32(vec.Vec_IntSize(vSets)); i++ {
 		Number = vec.Vec_IntEntry(vSets, int(i))
-		uSupport = Number
-		Lpk_PrintSetOne(uSupport)
+		uSupport = uint32(Number)
+		Lpk_PrintSetOne(int32(uSupport))
 	}
 	fmt.Printf("\n")
 }
@@ -213,7 +214,7 @@ var spStatic_Lpk_ComposeSets_SRed [1 << 16]byte
 var spStatic_Lpk_ComposeSets_Over [1 << 16]byte
 var spStatic_Lpk_ComposeSets_Parents [1 << 16]uint32
 
-func Lpk_ComposeSets(vSets0 *Vec_Int_t, vSets1 *Vec_Int_t, nVars int32, iCofVar int32, pStore *Lpk_Set_t, pSize *int32, nSizeLimit int32) {
+func Lpk_ComposeSets(vSets0 *Vec_Int_t, vSets1 *Vec_Int_t, nVars int32, iCofVar int32, pStore []Lpk_Set_t, pSize *int32, nSizeLimit int32) {
 	// the number of the times this is visited
 	// last visited
 	// best support reduction
@@ -232,18 +233,18 @@ func Lpk_ComposeSets(vSets0 *Vec_Int_t, vSets1 *Vec_Int_t, nVars int32, iCofVar 
 	// collect support reducing subsets
 	nUsed = 0
 	spStatic_Lpk_ComposeSets_nTravId++
-	uSuppTotal = kit.Kit_BitMask(nVars) & ~(1 << iCofVar)
+	uSuppTotal = kit.Kit_BitMask(nVars) & ^(1 << iCofVar)
 	for i = 0; i < int32(vec.Vec_IntSize(vSets0)); i++ {
-		Entry0 = vec.Vec_IntEntry(vSets0, int(i))
+		Entry0 = uint32(vec.Vec_IntEntry(vSets0, int(i)))
 		for k = 0; k < int32(vec.Vec_IntSize(vSets1)); k++ {
-			Entry1 = vec.Vec_IntEntry(vSets1, int(k))
+			Entry1 = uint32(vec.Vec_IntEntry(vSets1, int(k)))
 			uSupp0 = (Entry0 & 0xFFFF)
 			uSupp1 = (Entry1 & 0xFFFF)
 			// skip trivial
 			if uSupp0 == 0 || uSupp1 == 0 || (uSupp0|uSupp1) == uSuppTotal {
 				continue
 			}
-			if kit.Kit_WordHasOneBit(uSupp0) && kit.Kit_WordHasOneBit(uSupp1) {
+			if kit.Kit_WordHasOneBit(uSupp0) != 0 && kit.Kit_WordHasOneBit(uSupp1) != 0 {
 				continue
 			}
 			// get the entry
@@ -265,15 +266,15 @@ func Lpk_ComposeSets(vSets0 *Vec_Int_t, vSets1 *Vec_Int_t, nVars int32, iCofVar 
 				nUsed++
 
 				spStatic_Lpk_ComposeSets_TravId[uSupp] = spStatic_Lpk_ComposeSets_nTravId
-				spStatic_Lpk_ComposeSets_SRed[uSupp] = nSuppRed
-				spStatic_Lpk_ComposeSets_Over[uSupp] = nSuppOver
-				spStatic_Lpk_ComposeSets_Parents[uSupp] = (k << 16) | i
+				spStatic_Lpk_ComposeSets_SRed[uSupp] = byte(nSuppRed)
+				spStatic_Lpk_ComposeSets_Over[uSupp] = byte(nSuppOver)
+				spStatic_Lpk_ComposeSets_Parents[uSupp] = uint32((k << 16) | i)
 
-			} else if spStatic_Lpk_ComposeSets_TravId[uSupp] == spStatic_Lpk_ComposeSets_nTravId && spStatic_Lpk_ComposeSets_SRed[uSupp] < nSuppRed {
+			} else if spStatic_Lpk_ComposeSets_TravId[uSupp] == spStatic_Lpk_ComposeSets_nTravId && spStatic_Lpk_ComposeSets_SRed[uSupp] < byte(nSuppRed) {
 				spStatic_Lpk_ComposeSets_TravId[uSupp] = spStatic_Lpk_ComposeSets_nTravId
-				spStatic_Lpk_ComposeSets_SRed[uSupp] = nSuppRed
-				spStatic_Lpk_ComposeSets_Over[uSupp] = nSuppOver
-				spStatic_Lpk_ComposeSets_Parents[uSupp] = (k << 16) | i
+				spStatic_Lpk_ComposeSets_SRed[uSupp] = byte(nSuppRed)
+				spStatic_Lpk_ComposeSets_Over[uSupp] = byte(nSuppOver)
+				spStatic_Lpk_ComposeSets_Parents[uSupp] = uint32((k << 16) | i)
 			}
 		}
 	}
@@ -281,14 +282,14 @@ func Lpk_ComposeSets(vSets0 *Vec_Int_t, vSets1 *Vec_Int_t, nVars int32, iCofVar 
 	// find the minimum overlap
 	nMinOver = 1000
 	for s = 0; s < nUsed; s++ {
-		if nMinOver > spStatic_Lpk_ComposeSets_Over[Used[s]] {
-			nMinOver = spStatic_Lpk_ComposeSets_Over[Used[s]]
+		if nMinOver > int32(spStatic_Lpk_ComposeSets_Over[Used[s]]) {
+			nMinOver = int32(spStatic_Lpk_ComposeSets_Over[Used[s]])
 		}
 	}
 
 	// collect the accumulated ones
 	for s = 0; s < nUsed; s++ {
-		if spStatic_Lpk_ComposeSets_Over[Used[s]] == nMinOver {
+		if spStatic_Lpk_ComposeSets_Over[Used[s]] == byte(nMinOver) {
 			// save the entry
 			if *pSize == nSizeLimit {
 				return
@@ -296,19 +297,19 @@ func Lpk_ComposeSets(vSets0 *Vec_Int_t, vSets1 *Vec_Int_t, nVars int32, iCofVar 
 			pEntry = &pStore[int(*pSize)]
 			*pSize++
 
-			i = spStatic_Lpk_ComposeSets_Parents[Used[s]] & 0xFFFF
-			k = spStatic_Lpk_ComposeSets_Parents[Used[s]] >> 16
+			i = int32(spStatic_Lpk_ComposeSets_Parents[Used[s]] & 0xFFFF)
+			k = int32(spStatic_Lpk_ComposeSets_Parents[Used[s]] >> 16)
 
-			pEntry.uSubset0 = vec.Vec_IntEntry(vSets0, i)
-			pEntry.uSubset1 = vec.Vec_IntEntry(vSets1, k)
+			pEntry.uSubset0 = uint32(vec.Vec_IntEntry(vSets0, int(i)))
+			pEntry.uSubset1 = uint32(vec.Vec_IntEntry(vSets1, int(k)))
 			Entry = pEntry.uSubset0 | pEntry.uSubset1
 
 			// record the cofactoring variable
-			pEntry.iVar = iCofVar
+			pEntry.iVar = byte(iCofVar)
 			// set the bound set size
-			pEntry.Size = kit.Kit_WordCountOnes(Entry & 0xFFFF)
+			pEntry.Size = byte(kit.Kit_WordCountOnes(Entry & 0xFFFF))
 			// get the number of overlapping vars
-			pEntry.Over = kit.Kit_WordCountOnes(Entry & (Entry >> 16))
+			pEntry.Over = byte(kit.Kit_WordCountOnes(Entry & (Entry >> 16)))
 			// get the support reduction
 			pEntry.SRed = pEntry.Size - 1 - pEntry.Over
 			assert(pEntry.SRed > 0, "pEntry.SRed > 0")
@@ -337,9 +338,9 @@ func Lpk_MapSuppPrintSet(pSet *Lpk_Set_t, i int32) {
 	fmt.Printf("Size = %2d  ", pSet.Size)
 	fmt.Printf("Over = %2d  ", pSet.Over)
 	fmt.Printf("SRed = %2d  ", pSet.SRed)
-	Lpk_PrintSetOne(Entry)
+	Lpk_PrintSetOne(int32(Entry))
 	fmt.Printf("              ")
-	Lpk_PrintSetOne(Entry >> 16)
+	Lpk_PrintSetOne(int32(Entry >> 16))
 	fmt.Printf("\n")
 }
 
@@ -367,11 +368,12 @@ func Lpk_MapSuppRedDecSelect(p *Lpk_Man_t, pTruth []uint32, nVars int32, piVar *
 	var pTemp *Kit_DsdNtk_t
 	var vSets0 *Vec_Int_t = p.vSets[0]
 	var vSets1 *Vec_Int_t = p.vSets[1]
-	var pCof0 []uint32 = vec.Vec_PtrEntry(p.vTtNodes, 0)
-	var pCof1 []uint32 = vec.Vec_PtrEntry(p.vTtNodes, 1)
-	var nSets, i, SizeMax int32 //, SRedMax;
+	var pCof0 []uint32 = vec.Vec_PtrEntry(p.vTtNodes, 0).([]uint32)
+	var pCof1 []uint32 = vec.Vec_PtrEntry(p.vTtNodes, 1).([]uint32)
+	var nSets, i, SizeMax int32
+	var bestIndex int32 //, SRedMax;
 	var Entry uint32
-	var fVerbose int32 = p.pPars.fVeryVerbose != 0
+	var fVerbose int32 = p.pPars.fVeryVerbose
 	//    int fVerbose = 0;
 
 	// collect decomposable subsets for each pair of cofactors
@@ -416,7 +418,7 @@ func Lpk_MapSuppRedDecSelect(p *Lpk_Man_t, pTruth []uint32, nVars int32, piVar *
 		kit.Kit_DsdNtkFree(ppNtks[0])
 		kit.Kit_DsdNtkFree(ppNtks[1])
 		// evaluate the pair
-		Lpk_ComposeSets(vSets0, vSets1, nVars, i, spStatic_Lpk_MapSuppRedDecSelect_pStore, &nSets, spStatic_Lpk_MapSuppRedDecSelect_nStoreSize)
+		Lpk_ComposeSets(vSets0, vSets1, nVars, i, spStatic_Lpk_MapSuppRedDecSelect_pStore[:], &nSets, spStatic_Lpk_MapSuppRedDecSelect_nStoreSize)
 	}
 
 	// print the results
@@ -425,7 +427,7 @@ func Lpk_MapSuppRedDecSelect(p *Lpk_Man_t, pTruth []uint32, nVars int32, piVar *
 	}
 	if fVerbose != 0 {
 		for i = 0; i < nSets; i++ {
-			Lpk_MapSuppPrintSet(spStatic_Lpk_MapSuppRedDecSelect_pStore+i, i)
+			Lpk_MapSuppPrintSet(&spStatic_Lpk_MapSuppRedDecSelect_pStore[i], i)
 		}
 	}
 
@@ -434,12 +436,13 @@ func Lpk_MapSuppRedDecSelect(p *Lpk_Man_t, pTruth []uint32, nVars int32, piVar *
 	spStatic_Lpk_MapSuppRedDecSelect_pSetBest = nil
 	for i = 0; i < nSets; i++ {
 		spStatic_Lpk_MapSuppRedDecSelect_pSet = &spStatic_Lpk_MapSuppRedDecSelect_pStore[i]
-		if spStatic_Lpk_MapSuppRedDecSelect_pSet.Size > p.pPars.nLutSize-1 {
+		if int32(spStatic_Lpk_MapSuppRedDecSelect_pSet.Size) > p.pPars.nLutSize-1 {
 			continue
 		}
-		if SizeMax < spStatic_Lpk_MapSuppRedDecSelect_pSet.Size {
+		if SizeMax < int32(spStatic_Lpk_MapSuppRedDecSelect_pSet.Size) {
 			spStatic_Lpk_MapSuppRedDecSelect_pSetBest = spStatic_Lpk_MapSuppRedDecSelect_pSet
-			SizeMax = spStatic_Lpk_MapSuppRedDecSelect_pSet.Size
+			bestIndex = i
+			SizeMax = int32(spStatic_Lpk_MapSuppRedDecSelect_pSet.Size)
 		}
 	}
 	/*
@@ -469,7 +472,7 @@ func Lpk_MapSuppRedDecSelect(p *Lpk_Man_t, pTruth []uint32, nVars int32, piVar *
 			fmt.Printf("Selected the following subset:\n")
 		}
 		if fVerbose != 0 {
-			Lpk_MapSuppPrintSet(spStatic_Lpk_MapSuppRedDecSelect_pSetBest, spStatic_Lpk_MapSuppRedDecSelect_pSetBest-spStatic_Lpk_MapSuppRedDecSelect_pStore)
+			Lpk_MapSuppPrintSet(spStatic_Lpk_MapSuppRedDecSelect_pSetBest, bestIndex)
 		}
 	}
 
@@ -477,12 +480,12 @@ func Lpk_MapSuppRedDecSelect(p *Lpk_Man_t, pTruth []uint32, nVars int32, piVar *
 	// get the remaining variables
 	Entry = ((spStatic_Lpk_MapSuppRedDecSelect_pSetBest.uSubset0 >> 16) | (spStatic_Lpk_MapSuppRedDecSelect_pSetBest.uSubset1 >> 16))
 	// get the variables to be removed
-	Entry = kit.Kit_BitMask(nVars) & ~(1 << spStatic_Lpk_MapSuppRedDecSelect_pSetBest.iVar) & ~Entry
+	Entry = kit.Kit_BitMask(nVars) & ^(1 << spStatic_Lpk_MapSuppRedDecSelect_pSetBest.iVar) & ^Entry
 	// make sure there are some - otherwise it is not supp-red
 	assert((Entry != 0), "Entry")
 	// remember the first such variable
 	*piVarReused = kit.Kit_WordFindFirstBit(Entry)
-	*piVar = spStatic_Lpk_MapSuppRedDecSelect_pSetBest.iVar
+	*piVar = int32(spStatic_Lpk_MapSuppRedDecSelect_pSetBest.iVar)
 	return (spStatic_Lpk_MapSuppRedDecSelect_pSetBest.uSubset1 << 16) | (spStatic_Lpk_MapSuppRedDecSelect_pSetBest.uSubset0 & 0xFFFF)
 }
 

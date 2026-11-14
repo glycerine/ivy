@@ -57,23 +57,23 @@ import (
 func Lpk_CutTruthBdd_rec(dd *CloudManager, pMan *Hop_Man_t, pObj *Hop_Obj_t, nVars int32) *CloudNode {
 	var pTruth, pTruth0, pTruth1 *CloudNode
 	assert(hop.Hop_IsComplement(pObj) == 0, "hop.Hop_IsComplement(pObj) == 0")
-	if cached, ok := pObj.pData.(*CloudNode); ok && cached != nil {
+	if cached, ok := hop.Hop_ObjData(pObj).(*CloudNode); ok && cached != nil {
 		return cached
 	}
 	// get the plan for a new truth table
 	if hop.Hop_ObjIsConst1(pObj) != 0 {
-		pTruth = dd.one
+		pTruth = kit.Cloud_One(dd)
 	} else {
 		assert(hop.Hop_ObjIsAnd(pObj), "hop.Hop_ObjIsAnd(pObj)")
 		// compute the truth tables of the fanins
 		pTruth0 = Lpk_CutTruthBdd_rec(dd, pMan, hop.Hop_ObjFanin0(pObj), nVars)
 		pTruth1 = Lpk_CutTruthBdd_rec(dd, pMan, hop.Hop_ObjFanin1(pObj), nVars)
-		pTruth0 = kit.Cloud_NotCond(pTruth0, hop.Hop_ObjFaninC0(pObj))
-		pTruth1 = kit.Cloud_NotCond(pTruth1, hop.Hop_ObjFaninC1(pObj))
+		pTruth0 = kit.Cloud_NotCond(pTruth0, hop.Hop_ObjFaninC0(pObj) != 0)
+		pTruth1 = kit.Cloud_NotCond(pTruth1, hop.Hop_ObjFaninC1(pObj) != 0)
 		// creat the truth table of the node
 		pTruth = kit.Cloud_bddAnd(dd, pTruth0, pTruth1)
 	}
-	pObj.pData = pTruth
+	hop.Hop_ObjSetData(pObj, pTruth)
 	return pTruth
 }
 
@@ -91,7 +91,7 @@ func Lpk_CutTruthBdd_rec(dd *CloudManager, pMan *Hop_Man_t, pObj *Hop_Obj_t, nVa
 **********************************************************************
 */
 func Lpk_CutTruthBdd(p *Lpk_Man_t, pCut *Lpk_Cut_t) *CloudNode {
-	var dd *CloudManager = p.pDsdMan.dd
+	var dd *CloudManager = kit.Kit_DsdCloud(p.pDsdMan)
 	pManHop, _ := p.pNtk.FunctionManager.(*hop.Hop_Man_t)
 	var pObjHop *Hop_Obj_t
 	var pObj, pFanin *Abc_Obj_t
@@ -104,7 +104,7 @@ func Lpk_CutTruthBdd(p *Lpk_Man_t, pCut *Lpk_Cut_t) *CloudNode {
 	// inlining of macro Lpk_CutForEachLeaf
 	for i = 0; i < int32(pCut.nLeaves); i++ {
 		pObj = abc.Abc_NtkObj(p.pNtk, pCut.pLeaves[i])
-		pObj.Copy = &abc.Object{Data: dd.vars[pCut.nLeaves-1-i]}
+		pObj.Copy = &abc.Object{Data: kit.Cloud_Var(dd, int32(pCut.nLeaves)-1-i)}
 	}
 
 	// construct truth table in the topological order
@@ -118,10 +118,10 @@ func Lpk_CutTruthBdd(p *Lpk_Man_t, pCut *Lpk_Cut_t) *CloudNode {
 		// set the initial truth tables at the fanins
 		for k = 0; k < int32(len(pObj.Fanins())); k++ {
 			pFanin = pObj.Fanins()[k].Object
-			hop.Hop_ManPi(pManHop, k).pData = pFanin.Copy.Data
+			hop.Hop_ObjSetData(hop.Hop_ManPi(pManHop, k), pFanin.Copy.Data)
 		}
 		// compute the truth table of internal nodes
-		pTruth = Lpk_CutTruthBdd_rec(dd, pManHop, pObjHop, pCut.nLeaves)
+		pTruth = Lpk_CutTruthBdd_rec(dd, pManHop, pObjHop, int32(pCut.nLeaves))
 		if hop.Hop_IsComplement(pObj.Data.(*hop.Hop_Obj_t)) != 0 {
 			pTruth = kit.Cloud_Not(pTruth)
 		}
@@ -151,7 +151,7 @@ func Lpk_CutTruthBdd(p *Lpk_Man_t, pCut *Lpk_Cut_t) *CloudNode {
 func Lpk_CutTruth_rec(pMan *Hop_Man_t, pObj *Hop_Obj_t, nVars int32, vTtNodes *Vec_Ptr_t, piCount *int32) []uint32 {
 	var pTruth, pTruth0, pTruth1 []uint32
 	assert(hop.Hop_IsComplement(pObj) == 0, "hop.Hop_IsComplement(pObj) == 0")
-	if cached, ok := pObj.pData.([]uint32); ok && cached != nil {
+	if cached, ok := hop.Hop_ObjData(pObj).([]uint32); ok && cached != nil {
 		return cached
 	}
 	// get the plan for a new truth table
@@ -167,7 +167,7 @@ func Lpk_CutTruth_rec(pMan *Hop_Man_t, pObj *Hop_Obj_t, nVars int32, vTtNodes *V
 		// creat the truth table of the node
 		kit.Kit_TruthAndPhase(pTruth, pTruth0, pTruth1, nVars, hop.Hop_ObjFaninC0(pObj), hop.Hop_ObjFaninC1(pObj))
 	}
-	pObj.pData = pTruth
+	hop.Hop_ObjSetData(pObj, pTruth)
 	return pTruth
 }
 
@@ -217,12 +217,12 @@ func Lpk_CutTruth(p *Lpk_Man_t, pCut *Lpk_Cut_t, fInv int32) []uint32 {
 		// set the initial truth tables at the fanins
 		for k = 0; k < int32(len(pObj.Fanins())); k++ {
 			pFanin = pObj.Fanins()[k].Object
-			hop.Hop_ManPi(pManHop, k).pData = pFanin.Copy.Data
+			hop.Hop_ObjSetData(hop.Hop_ManPi(pManHop, k), pFanin.Copy.Data)
 		}
 		// compute the truth table of internal nodes
-		pTruth = Lpk_CutTruth_rec(pManHop, pObjHop, pCut.nLeaves, p.vTtNodes, &iCount)
+		pTruth = Lpk_CutTruth_rec(pManHop, pObjHop, int32(pCut.nLeaves), p.vTtNodes, &iCount)
 		if hop.Hop_IsComplement(pObj.Data.(*hop.Hop_Obj_t)) != 0 {
-			kit.Kit_TruthNot(pTruth, pTruth, pCut.nLeaves)
+			kit.Kit_TruthNot(pTruth, pTruth, int32(pCut.nLeaves))
 		}
 		// set the truth table at the node
 		pObj.Copy = &abc.Object{Data: pTruth}
@@ -232,9 +232,9 @@ func Lpk_CutTruth(p *Lpk_Man_t, pCut *Lpk_Cut_t, fInv int32) []uint32 {
 	if fInv == 0 {
 		pTruth = vec.Vec_PtrEntry(p.vTtNodes, int(iCount)).([]uint32)
 		iCount++
-		kit.Kit_TruthCopy(pTruth, pObj.Copy.Data.([]uint32), pCut.nLeaves)
+		kit.Kit_TruthCopy(pTruth, pObj.Copy.Data.([]uint32), int32(pCut.nLeaves))
 	}
-	assert(iCount <= vec.Vec_PtrSize(p.vTtNodes), "iCount <= vec.Vec_PtrSize(p.vTtNodes)")
+	assert(int(iCount) <= vec.Vec_PtrSize(p.vTtNodes), "iCount <= vec.Vec_PtrSize(p.vTtNodes)")
 	return pTruth
 }
 
@@ -253,8 +253,8 @@ func Lpk_CutTruth(p *Lpk_Man_t, pCut *Lpk_Cut_t, fInv int32) []uint32 {
 */
 func Lpk_NodeRecordImpact(p *Lpk_Man_t) {
 	var pCut *Lpk_Cut_t
-	var vNodes *Vec_Ptr_t = vec.Vec_VecEntry(p.vVisited, p.pObj.Id)
-	var pNode, pNode2 *Abc_Obj_t
+	var vNodes *Vec_Ptr_t = vec.Vec_VecEntry(p.vVisited, p.pObj.ID)
+	var pNode *Abc_Obj_t
 	var i, k int32
 	// collect the nodes that impact the given node
 	vec.Vec_PtrClear(vNodes)
@@ -262,19 +262,18 @@ func Lpk_NodeRecordImpact(p *Lpk_Man_t) {
 		pCut = &p.pCuts[i]
 		for k = 0; k < int32(pCut.nLeaves); k++ {
 			pNode = abc.Abc_NtkObj(p.pNtk, pCut.pLeaves[k])
-			if pNode.MarkC != 0 {
+			if pNode.MarkC {
 				continue
 			}
 			pNode.MarkC = true
-			vec.Vec_PtrPush(vNodes, pNode.Id)
+			vec.Vec_PtrPush(vNodes, pNode.ID)
 			vec.Vec_PtrPush(vNodes, abc.Abc_ObjFanoutNum(pNode))
 		}
 	}
 	// clear the marks
 	for i = 0; i+1 < int32(vec.Vec_PtrSize(vNodes)); i += 2 {
-		if pNode, ok := vec.Vec_PtrEntry(vNodes, int(i)).(*abc.Object); ok {
-			pNode.MarkC = false
-		}
+		pNode = abc.Abc_NtkObj(p.pNtk, int32(vec.Vec_PtrEntry(vNodes, int(i)).(int)))
+		pNode.MarkC = false
 	}
 	// printf( "%d ", Vec_PtrSize(vNodes) );
 }
@@ -302,7 +301,7 @@ func Lpk_NodeCutsCheckDsd(p *Lpk_Man_t, pCut *Lpk_Cut_t) int32 {
 	// inlining of macro Lpk_CutForEachLeaf
 	for i = 0; i < int32(pCut.nLeaves); i++ {
 		pObj = abc.Abc_NtkObj(p.pNtk, pCut.pLeaves[i])
-		assert(pObj.MarkA == 0, "pObj.MarkA == 0")
+		assert(!pObj.MarkA, "pObj.MarkA == 0")
 		pObj.MarkA = true
 		pObj.Temp = int(i)
 	}
@@ -315,13 +314,13 @@ func Lpk_NodeCutsCheckDsd(p *Lpk_Man_t, pCut *Lpk_Cut_t) int32 {
 		for k = 0; k < int32(len(pObj.Fanins())); k++ {
 			pFanin = pObj.Fanins()[k].Object
 			if pFanin.MarkA {
-				p.pRefs[int32(pFanin.Copy.(int32))]++
+				p.pRefs[pFanin.Temp]++
 			} else {
 				fLeavesOnly = 0
 			}
 		}
 		if fLeavesOnly != 0 {
-			p.pCands[nCands] = int32(pObj.Id)
+			p.pCands[nCands] = int32(pObj.ID)
 			nCands++
 		}
 	}
@@ -331,7 +330,7 @@ func Lpk_NodeCutsCheckDsd(p *Lpk_Man_t, pCut *Lpk_Cut_t) int32 {
 		pObj = abc.Abc_NtkObj(p.pNtk, p.pCands[i])
 		for k = 0; k < int32(len(pObj.Fanins())); k++ {
 			pFanin = pObj.Fanins()[k].Object
-			assert(pFanin.MarkA == 1, "pFanin.MarkA == 1")
+			assert(pFanin.MarkA, "pFanin.MarkA == 1")
 			if p.pRefs[int32(pFanin.Temp)] > 1 {
 				break
 			}
@@ -392,13 +391,13 @@ func Lpk_NodeCutsOneDominance(pDom *Lpk_Cut_t, pCut *Lpk_Cut_t) int32 {
 
 **********************************************************************
 */
-func Lpk_NodeCutsOneFilter(pCuts *Lpk_Cut_t, nCuts int32, pCutNew *Lpk_Cut_t) int32 {
+func Lpk_NodeCutsOneFilter(pCuts []Lpk_Cut_t, nCuts int32, pCutNew *Lpk_Cut_t) int32 {
 	var pCut *Lpk_Cut_t
 	var i, k int32
-	assert(pCutNew.uSign[0] || pCutNew.uSign[1], "pCutNew.uSign[0] || pCutNew.uSign[1]")
+	assert(pCutNew.uSign[0] != 0 || pCutNew.uSign[1] != 0, "pCutNew.uSign[0] || pCutNew.uSign[1]")
 	// try to find the cut
 	for i = 0; i < nCuts; i++ {
-		pCut = pCuts + i
+		pCut = &pCuts[i]
 		if pCut.nLeaves == 0 {
 			continue
 		}
@@ -468,14 +467,14 @@ func Lpk_NodePrintCut(p *Lpk_Man_t, pCut *Lpk_Cut_t, fLeavesOnly int32) {
 	// inlining of macro Lpk_CutForEachLeaf
 	for i = 0; i < int32(pCut.nLeaves); i++ {
 		pObj = abc.Abc_NtkObj(p.pNtk, pCut.pLeaves[i])
-		fmt.Printf("%d,", pObj.Id)
+		fmt.Printf("%d,", pObj.ID)
 	}
 	if !(fLeavesOnly != 0) {
 		fmt.Printf("\nNODES:\n")
 		// inlining of macro Lpk_CutForEachNode
 		for i = 0; i < int32(pCut.nNodes); i++ {
 			pObj = abc.Abc_NtkObj(p.pNtk, pCut.pNodes[i])
-			fmt.Printf("%d,", pObj.Id)
+			fmt.Printf("%d,", pObj.ID)
 			assert(abc.Abc_ObjIsNode(pObj), "abc.Abc_ObjIsNode(pObj)")
 		}
 		fmt.Printf("\n")
@@ -500,7 +499,7 @@ func Lpk_NodeCutSignature(pCut *Lpk_Cut_t) {
 	pCut.uSign[0] = 0
 	pCut.uSign[1] = 0
 	for i = 0; i < pCut.nLeaves; i++ {
-		pCut.uSign[(pCut.pLeaves[i]&32) > 0] |= (1 << (pCut.pLeaves[i] & 31))
+		pCut.uSign[(pCut.pLeaves[i]>>5)&1] |= (1 << (pCut.pLeaves[i] & 31))
 		if i != pCut.nLeaves-1 {
 			assert(pCut.pLeaves[i] < pCut.pLeaves[i+1], "pCut.pLeaves[i] < pCut.pLeaves[i+1]")
 		}
@@ -551,10 +550,10 @@ func Lpk_NodeCutsOne(p *Lpk_Man_t, pCut *Lpk_Cut_t, Node int32) {
 	}
 
 	// check the possibility of adding this node using the signature
-	nLeavesNew = pCut.nLeaves - 1
+	nLeavesNew = int32(pCut.nLeaves) - 1
 	for i = 0; i < int32(len(pObj.Fanins())); i++ {
 		pFanin = pObj.Fanins()[i].Object
-		if pCut.uSign[int((pFanin.Id&32) > 0)]&(1<<(pFanin.Id&31)) != 0 {
+		if pCut.uSign[(pFanin.ID>>5)&1]&(1<<(pFanin.ID&31)) != 0 {
 			continue
 		}
 		nLeavesNew++
@@ -579,11 +578,11 @@ func Lpk_NodeCutsOne(p *Lpk_Man_t, pCut *Lpk_Cut_t, Node int32) {
 		pFanin = pObj.Fanins()[i].Object
 		// find the place where this node belongs
 		for k = 0; k < int32(pCutNew.nLeaves); k++ {
-			if pCutNew.pLeaves[k] >= pFanin.Id {
+			if pCutNew.pLeaves[k] >= int32(pFanin.ID) {
 				break
 			}
 		}
-		if k < int32(pCutNew.nLeaves) && pCutNew.pLeaves[k] == pFanin.Id {
+		if k < int32(pCutNew.nLeaves) && pCutNew.pLeaves[k] == int32(pFanin.ID) {
 			continue
 		}
 		// check if there is room
@@ -591,10 +590,10 @@ func Lpk_NodeCutsOne(p *Lpk_Man_t, pCut *Lpk_Cut_t, Node int32) {
 			return
 		}
 		// move all the nodes
-		for j = pCutNew.nLeaves; j > k; j-- {
+		for j = int32(pCutNew.nLeaves); j > k; j-- {
 			pCutNew.pLeaves[j] = pCutNew.pLeaves[j-1]
 		}
-		pCutNew.pLeaves[k] = pFanin.Id
+		pCutNew.pLeaves[k] = int32(pFanin.ID)
 		pCutNew.nLeaves++
 		assert(pCutNew.nLeaves <= LPK_SIZE_MAX, "pCutNew.nLeaves <= LPK_SIZE_MAX")
 
@@ -626,10 +625,12 @@ func Lpk_NodeCutsOne(p *Lpk_Man_t, pCut *Lpk_Cut_t, Node int32) {
 
 		pCutNew.pNodes[pCutNew.nNodes] = Node
 		pCutNew.nNodes++
-		pCutNew.nNodesDup += !abc.Abc_NodeIsTravIdCurrent(pObj)
+		if abc.Abc_NodeIsTravIdCurrent(pObj) == 0 {
+			pCutNew.nNodesDup++
+		}
 	}
 	// the number of nodes does not exceed MFFC plus duplications
-	assert(pCutNew.nNodes <= p.nMffc+pCutNew.nNodesDup, "pCutNew.nNodes <= p.nMffc + pCutNew.nNodesDup")
+	assert(int32(pCutNew.nNodes) <= p.nMffc+int32(pCutNew.nNodesDup), "pCutNew.nNodes <= p.nMffc + pCutNew.nNodesDup")
 	// add the cut to storage
 	assert(p.nCuts < LPK_CUTS_MAX, "p.nCuts < LPK_CUTS_MAX")
 	p.nCuts++
@@ -650,7 +651,7 @@ func Lpk_NodeCutsOne(p *Lpk_Man_t, pCut *Lpk_Cut_t, Node int32) {
 */
 func Lpk_CountSupp(p *Abc_Ntk_t, vNodes *Vec_Ptr_t) int32 {
 	var pObj, pFanin *Abc_Obj_t
-	var i, k, Count int32
+	var i, Count int32
 	for i = 0; i < int32(vec.Vec_PtrSize(vNodes)); i++ {
 		pObj = vec.Vec_PtrEntry(vNodes, int(i)).(*abc.Object)
 		for _, edge := range pObj.Fanins() {
@@ -692,7 +693,11 @@ func Lpk_NodeCuts(p *Lpk_Man_t) int32 {
 
 	// mark the MFFC of the node with the current trav ID
 	vec.Vec_PtrClear(p.vTemp)
-	nMffc = abc.Abc_NodeMffcLabel(p.pObj, p.vTemp)
+	var mffcNodes []*abc.Object
+	nMffc = abc.Abc_NodeMffcLabel(p.pObj, &mffcNodes)
+	for _, node := range mffcNodes {
+		vec.Vec_PtrPush(p.vTemp, node)
+	}
 	p.nMffc = nMffc
 	assert(nMffc > 0, "nMffc > 0")
 	if nMffc == 1 {
@@ -705,12 +710,12 @@ func Lpk_NodeCuts(p *Lpk_Man_t) int32 {
 	       printf( "Obj = %4d : Supp = %4d. Mffc = %4d.\n", p->pObj->Id, nSupp, nMffc );
 	*/
 	// initialize the first cut
-	pCut = p.pCuts
+	pCut = &p.pCuts[0]
 	p.nCuts = 1
 	pCut.nNodes = 0
 	pCut.nNodesDup = 0
 	pCut.nLeaves = 1
-	pCut.pLeaves[0] = p.pObj.Id
+	pCut.pLeaves[0] = int32(p.pObj.ID)
 	// assign the signature
 	Lpk_NodeCutSignature(pCut)
 
@@ -752,14 +757,14 @@ func Lpk_NodeCuts(p *Lpk_Man_t) int32 {
 		}
 		// compute the minimum number of LUTs needed to implement this cut
 		// V = N * (K-1) + 1  ~~~~~  N = Ceiling[(V-1)/(K-1)] = (V-1)/(K-1) + [(V-1)%(K-1) > 0]
-		pCut.nLuts = Lpk_LutNumLuts(pCut.nLeaves, p.pPars.nLutSize)
+		pCut.nLuts = uint32(Lpk_LutNumLuts(int32(pCut.nLeaves), p.pPars.nLutSize))
 		//        pCut->Weight = 1.0 * (pCut->nNodes - pCut->nNodesDup - 1) / pCut->nLuts; //p->pPars->nLutsMax;
-		pCut.Weight = float32(1.0) * (pCut.nNodes - pCut.nNodesDup) / pCut.nLuts //p->pPars->nLutsMax;
+		pCut.Weight = float32(pCut.nNodes-pCut.nNodesDup) / float32(pCut.nLuts) //p->pPars->nLutsMax;
 		if pCut.Weight <= 1.001 {
 			//        if ( pCut->Weight <= 0.999 )
 			continue
 		}
-		pCut.fHasDsd = Lpk_NodeCutsCheckDsd(p, pCut)
+		pCut.fHasDsd = uint32(Lpk_NodeCutsCheckDsd(p, pCut))
 		if pCut.fHasDsd != 0 {
 			continue
 		}

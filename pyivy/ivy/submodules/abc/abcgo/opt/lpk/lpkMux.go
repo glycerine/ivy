@@ -56,7 +56,7 @@ func Lpk_MapTreeBestCofVar(p *Lpk_Man_t, pTruth []uint32, nVars int32, pCof0 []u
 	var i, iBestVar, nSuppSizeCur0, nSuppSizeCur1, nSuppSizeCur, nSuppSizeMin int32
 	// iterate through variables
 	iBestVar = -1
-	nSuppSizeMin = KIT_INFINITY
+	nSuppSizeMin = kit.KIT_INFINITY
 	for i = 0; i < nVars; i++ {
 		// cofactor the functiona and get support sizes
 		kit.Kit_TruthCofactor0New(pCof0, pTruth, nVars, i)
@@ -96,8 +96,8 @@ func Lpk_MapTreeBestCofVar(p *Lpk_Man_t, pTruth []uint32, nVars int32, pCof0 []u
 **********************************************************************
 */
 func Lpk_MapTreeMux_rec(p *Lpk_Man_t, pTruth []uint32, nVars int32, ppLeaves []*If_Obj_t) *If_Obj_t {
-	var pCof0 []uint32 = vec.Vec_PtrEntry(p.vTtNodes, 0)
-	var pCof1 []uint32 = vec.Vec_PtrEntry(p.vTtNodes, 1)
+	var pCof0 []uint32 = vec.Vec_PtrEntry(p.vTtNodes, 0).([]uint32)
+	var pCof1 []uint32 = vec.Vec_PtrEntry(p.vTtNodes, 1).([]uint32)
 	var pObj0, pObj1 *If_Obj_t
 	var ppNtks [2]*Kit_DsdNtk_t
 	var iBestVar int32
@@ -143,20 +143,21 @@ func Lpk_MapSuppRedDec_rec(p *Lpk_Man_t, pTruth []uint32, nVars int32, ppLeaves 
 	var ppNtks [2]*Kit_DsdNtk_t
 	var pTemp *Kit_DsdNtk_t
 	var pObjNew *If_Obj_t
-	var pCof0 []uint32 = vec.Vec_PtrEntry(p.vTtNodes, 0)
-	var pCof1 []uint32 = vec.Vec_PtrEntry(p.vTtNodes, 1)
-	var pDec0 []uint32 = vec.Vec_PtrEntry(p.vTtNodes, 2)
-	var pDec1 []uint32 = vec.Vec_PtrEntry(p.vTtNodes, 3)
-	var pDec []uint32 = vec.Vec_PtrEntry(p.vTtNodes, 4)
-	var pCo00 []uint32 = vec.Vec_PtrEntry(p.vTtNodes, 5)
-	var pCo01 []uint32 = vec.Vec_PtrEntry(p.vTtNodes, 6)
-	var pCo10 []uint32 = vec.Vec_PtrEntry(p.vTtNodes, 7)
-	var pCo11 []uint32 = vec.Vec_PtrEntry(p.vTtNodes, 8)
-	var pCo0 []uint32 = vec.Vec_PtrEntry(p.vTtNodes, 9)
-	var pCo1 []uint32 = vec.Vec_PtrEntry(p.vTtNodes, 10)
-	var pCo []uint32 = vec.Vec_PtrEntry(p.vTtNodes, 11)
+	var pCof0 []uint32 = vec.Vec_PtrEntry(p.vTtNodes, 0).([]uint32)
+	var pCof1 []uint32 = vec.Vec_PtrEntry(p.vTtNodes, 1).([]uint32)
+	var pDec0 []uint32 = vec.Vec_PtrEntry(p.vTtNodes, 2).([]uint32)
+	var pDec1 []uint32 = vec.Vec_PtrEntry(p.vTtNodes, 3).([]uint32)
+	var pDec []uint32 = vec.Vec_PtrEntry(p.vTtNodes, 4).([]uint32)
+	var pCo00 []uint32 = vec.Vec_PtrEntry(p.vTtNodes, 5).([]uint32)
+	var pCo01 []uint32 = vec.Vec_PtrEntry(p.vTtNodes, 6).([]uint32)
+	var pCo10 []uint32 = vec.Vec_PtrEntry(p.vTtNodes, 7).([]uint32)
+	var pCo11 []uint32 = vec.Vec_PtrEntry(p.vTtNodes, 8).([]uint32)
+	var pCo0 []uint32 = vec.Vec_PtrEntry(p.vTtNodes, 9).([]uint32)
+	var pCo1 []uint32 = vec.Vec_PtrEntry(p.vTtNodes, 10).([]uint32)
+	var pCo []uint32 = vec.Vec_PtrEntry(p.vTtNodes, 11).([]uint32)
 	var TrueMint0, TrueMint1, FalseMint0, FalseMint1 int32
-	var uSubsets, uSubset0, uSubset1, iVar, iVarReused, i int32
+	var uSubsets, uSubset0, uSubset1 uint32
+	var iVar, iVarReused, i int32
 
 	// determine if supp-red decomposition exists
 	uSubsets = Lpk_MapSuppRedDecSelect(p, pTruth, nVars, &iVar, &iVarReused)

@@ -2,7 +2,6 @@ package lpk
 
 import (
 	"fmt"
-	abc "github.com/glycerine/abcgo/base/abc"
 	kit "github.com/glycerine/abcgo/bool/kit"
 	util "github.com/glycerine/abcgo/misc/util"
 	vec "github.com/glycerine/abcgo/misc/vec"
@@ -79,10 +78,10 @@ func Lpk_FunComputeMinSuppSizeVar(p *Lpk_Fun_t, ppTruths [][]uint32, nTruths int
 					nSuppSize1 = kit.Kit_WordCountOnes(p.puSupps[2*Var+1])
 
 				} else {
-					kit.Kit_TruthCofactor0New(ppCofs[2*i+0], ppTruths[i], p.nVars, Var)
-					kit.Kit_TruthCofactor1New(ppCofs[2*i+1], ppTruths[i], p.nVars, Var)
-					nSuppSize0 = kit.Kit_TruthSupportSize(ppCofs[2*i+0], p.nVars)
-					nSuppSize1 = kit.Kit_TruthSupportSize(ppCofs[2*i+1], p.nVars)
+					kit.Kit_TruthCofactor0New(ppCofs[2*i+0], ppTruths[i], int32(p.nVars), Var)
+					kit.Kit_TruthCofactor1New(ppCofs[2*i+1], ppTruths[i], int32(p.nVars), Var)
+					nSuppSize0 = kit.Kit_TruthSupportSize(ppCofs[2*i+0], int32(p.nVars))
+					nSuppSize1 = kit.Kit_TruthSupportSize(ppCofs[2*i+1], int32(p.nVars))
 				}
 				nSuppMaxCur = util.Abc_MaxInt(nSuppMaxCur, nSuppSize0)
 				nSuppMaxCur = util.Abc_MaxInt(nSuppMaxCur, nSuppSize1)
@@ -98,8 +97,8 @@ func Lpk_FunComputeMinSuppSizeVar(p *Lpk_Fun_t, ppTruths [][]uint32, nTruths int
 	}
 	// recompute cofactors for the best var
 	for i = 0; i < nTruths; i++ {
-		kit.Kit_TruthCofactor0New(ppCofs[2*i+0], ppTruths[i], p.nVars, VarBest)
-		kit.Kit_TruthCofactor1New(ppCofs[2*i+1], ppTruths[i], p.nVars, VarBest)
+		kit.Kit_TruthCofactor0New(ppCofs[2*i+0], ppTruths[i], int32(p.nVars), VarBest)
+		kit.Kit_TruthCofactor1New(ppCofs[2*i+1], ppTruths[i], int32(p.nVars), VarBest)
 	}
 	return VarBest
 }
@@ -118,49 +117,50 @@ func Lpk_FunComputeMinSuppSizeVar(p *Lpk_Fun_t, ppTruths [][]uint32, nTruths int
 **********************************************************************
 */
 func Lpk_ComputeBoundSets_rec(p *Kit_DsdNtk_t, iLit int32, vSets *Vec_Int_t, nSizeMax int32) uint32 {
-	var i, iLitFanin, uSupport, uSuppCur uint32
+	var i, uSupport, uSuppCur uint32
+	var iLitFanin int32
 	var pObj *Kit_DsdObj_t
 	// consider the case of simple gate
-	pObj = kit.Kit_DsdNtkObj(p, abc.Abc_Lit2Var(iLit))
+	pObj = kit.Kit_DsdNtkObj(p, util.Abc_Lit2Var(iLit))
 	if pObj == nil {
-		return (1 << abc.Abc_Lit2Var(iLit))
+		return (1 << util.Abc_Lit2Var(iLit))
 	}
-	if pObj.Type == KIT_DSD_AND || pObj.Type == KIT_DSD_XOR {
+	if pObj.Type == kit.KIT_DSD_AND || pObj.Type == kit.KIT_DSD_XOR {
 		var uSupps [16]uint32
 		var Limit uint32
 		var s uint32
 		uSupport = 0
 		// inlining of macro Kit_DsdObjForEachFanin
-		for i = 0; i < pObj.nFans; i++ {
-			iLitFanin = uint32(pObj.pFans[i])
+		for i = 0; i < uint32(kit.Kit_DsdObjFanNum(pObj)); i++ {
+			iLitFanin = int32(kit.Kit_DsdObjFans(pObj)[i])
 			uSupps[i] = Lpk_ComputeBoundSets_rec(p, iLitFanin, vSets, nSizeMax)
 			uSupport |= uSupps[i]
 		}
 		// create all subsets, except empty and full
-		Limit = (1 << pObj.nFans) - 1
+		Limit = (1 << uint32(kit.Kit_DsdObjFanNum(pObj))) - 1
 		for s = 1; s < Limit; s++ {
 			uSuppCur = 0
-			for i = 0; i < pObj.nFans; i++ {
+			for i = 0; i < uint32(kit.Kit_DsdObjFanNum(pObj)); i++ {
 				if (s & (1 << i)) != 0 {
 					uSuppCur |= uSupps[i]
 				}
 			}
 			if kit.Kit_WordCountOnes(uSuppCur) <= nSizeMax {
-				vec.Vec_IntPush(vSets, uSuppCur)
+				vec.Vec_IntPush(vSets, int32(uSuppCur))
 			}
 		}
 		return uSupport
 	}
-	assert(pObj.Type == KIT_DSD_PRIME, "pObj.Type == KIT_DSD_PRIME")
+	assert(pObj.Type == kit.KIT_DSD_PRIME, "pObj.Type == kit.KIT_DSD_PRIME")
 	// get the cumulative support of all fanins
 	uSupport = 0
 	// inlining of macro Kit_DsdObjForEachFanin
-	for i = 0; i < pObj.nFans; i++ {
-		iLitFanin = uint32(pObj.pFans[i])
+	for i = 0; i < uint32(kit.Kit_DsdObjFanNum(pObj)); i++ {
+		iLitFanin = int32(kit.Kit_DsdObjFans(pObj)[i])
 		uSuppCur = Lpk_ComputeBoundSets_rec(p, iLitFanin, vSets, nSizeMax)
 		uSupport |= uSuppCur
 		if kit.Kit_WordCountOnes(uSuppCur) <= nSizeMax {
-			vec.Vec_IntPush(vSets, uSuppCur)
+			vec.Vec_IntPush(vSets, int32(uSuppCur))
 		}
 	}
 	return uSupport
@@ -183,16 +183,16 @@ func Lpk_ComputeBoundSets(p *Kit_DsdNtk_t, nSizeMax int32) *Vec_Int_t {
 	var vSets *Vec_Int_t
 	var uSupport, Entry uint32
 	var Number, i int32
-	assert(p.nVars <= 16, "p.nVars <= 16")
+	assert(kit.Kit_DsdNtkVarNum(p) <= 16, "p.nVars <= 16")
 	vSets = vec.Vec_IntAlloc(100)
 	vec.Vec_IntPush(vSets, 0)
-	if kit.Kit_DsdNtkRoot(p).Type == KIT_DSD_CONST1 {
+	if kit.Kit_DsdNtkRoot(p).Type == kit.KIT_DSD_CONST1 {
 		return vSets
 	}
-	if kit.Kit_DsdNtkRoot(p).Type == KIT_DSD_VAR {
-		uSupport = (1 << abc.Abc_Lit2Var(kit.Kit_DsdNtkRoot(p).pFans[0]))
+	if kit.Kit_DsdNtkRoot(p).Type == kit.KIT_DSD_VAR {
+		uSupport = (1 << util.Abc_Lit2Var(int32(kit.Kit_DsdObjFans(kit.Kit_DsdNtkRoot(p))[0])))
 		if kit.Kit_WordCountOnes(uSupport) <= nSizeMax {
-			vec.Vec_IntPush(vSets, uSupport)
+			vec.Vec_IntPush(vSets, int32(uSupport))
 		}
 		return vSets
 	}
@@ -200,13 +200,13 @@ func Lpk_ComputeBoundSets(p *Kit_DsdNtk_t, nSizeMax int32) *Vec_Int_t {
 	assert((uSupport&0xFFFF0000) == 0, "(uSupport & 0xFFFF0000) == 0")
 	// add the total support of the network
 	if kit.Kit_WordCountOnes(uSupport) <= nSizeMax {
-		vec.Vec_IntPush(vSets, uSupport)
+		vec.Vec_IntPush(vSets, int32(uSupport))
 	}
 	// set the remaining variables
 	for i = 0; i < int32(vec.Vec_IntSize(vSets)); i++ {
 		Number = vec.Vec_IntEntry(vSets, int(i))
-		Entry = Number
-		vec.Vec_IntWriteEntry(vSets, i, Entry|((uSupport&~Entry)<<16))
+		Entry = uint32(Number)
+		vec.Vec_IntWriteEntry(vSets, int(i), int32(Entry|((uSupport&^Entry)<<16)))
 	}
 	return vSets
 }
@@ -253,8 +253,8 @@ func lpkDsdPrintSets(vSets *Vec_Int_t) {
 	fmt.Printf("Subsets(%d): ", vec.Vec_IntSize(vSets))
 	for i = 0; i < int32(vec.Vec_IntSize(vSets)); i++ {
 		Number = vec.Vec_IntEntry(vSets, int(i))
-		uSupport = Number
-		lpkDsdPrintSetOne(uSupport)
+		uSupport = uint32(Number)
+		lpkDsdPrintSetOne(int32(uSupport))
 	}
 	fmt.Printf("\n")
 }
@@ -285,7 +285,7 @@ func Lpk_MergeBoundSets(vSets0 *Vec_Int_t, vSets1 *Vec_Int_t, nSizeMax int32) *V
 			if Entry&(Entry>>16) != 0 {
 				continue
 			}
-			if kit.Kit_WordCountOnes(Entry&0xffff) <= nSizeMax {
+			if kit.Kit_WordCountOnes(uint32(Entry&0xffff)) <= nSizeMax {
 				vec.Vec_IntPush(vSets, Entry)
 			}
 		}
@@ -314,7 +314,7 @@ func Lpk_FunCompareBoundSets(p *Lpk_Fun_t, vBSets *Vec_Int_t, nCofDepth int32, u
 	// compare the resulting boundsets
 	*pRes = Lpk_Res_t{}
 	for i = 0; i < int32(vec.Vec_IntSize(vBSets)); i++ {
-		uBoundSet = vec.Vec_IntEntry(vBSets, int(i))
+		uBoundSet = uint32(vec.Vec_IntEntry(vBSets, int(i)))
 		if (uBoundSet & 0xFFFF) == 0 { // skip empty boundset
 			continue
 		}
@@ -325,7 +325,7 @@ func Lpk_FunCompareBoundSets(p *Lpk_Fun_t, vBSets *Vec_Int_t, nCofDepth int32, u
 			continue
 		}
 		if fVerbose != 0 {
-			lpkDsdPrintSetOne(uBoundSet & 0xFFFF)
+			lpkDsdPrintSetOne(int32(uBoundSet & 0xFFFF))
 			// printf( "\n" );
 			// lpkDsdPrintSetOne( uBoundSet >> 16 );
 			// printf( "\n" );
@@ -336,9 +336,9 @@ func Lpk_FunCompareBoundSets(p *Lpk_Fun_t, vBSets *Vec_Int_t, nCofDepth int32, u
 			continue
 		}
 		assert(nVarsBS <= int32(p.nLutK)-nCofDepth, "nVarsBS <= int32(p.nLutK) - nCofDepth")
-		nVarsRem = p.nVars - nVarsBS + 1
-		Area = 1 + Lpk_LutNumLuts(nVarsRem, p.nLutK)
-		Delay = 1 + Lpk_SuppDelay(uBoundSet&0xFFFF, p.pDelays)
+		nVarsRem = int32(p.nVars) - nVarsBS + 1
+		Area = 1 + Lpk_LutNumLuts(nVarsRem, int32(p.nLutK))
+		Delay = 1 + Lpk_SuppDelay(uBoundSet&0xFFFF, p.pDelays[:])
 		if fVerbose != 0 {
 			fmt.Printf("area = %d limit = %d  delay = %d limit = %d\n", Area, int32(p.nAreaLim), Delay, int32(p.nDelayLim))
 		}
@@ -355,9 +355,9 @@ func Lpk_FunCompareBoundSets(p *Lpk_Fun_t, vBSets *Vec_Int_t, nCofDepth int32, u
 		}
 	}
 	if fVerbose != 0 {
-		if pRes.BSVars {
+		if pRes.BSVars != 0 {
 			fmt.Printf("Found bound set ")
-			lpkDsdPrintSetOne(pRes.BSVars)
+			lpkDsdPrintSetOne(int32(pRes.BSVars))
 			fmt.Printf("\n")
 
 		} else {
@@ -365,7 +365,7 @@ func Lpk_FunCompareBoundSets(p *Lpk_Fun_t, vBSets *Vec_Int_t, nCofDepth int32, u
 		}
 		fmt.Printf("\n")
 	}
-	if pRes.BSVars {
+	if pRes.BSVars != 0 {
 		assert(pRes.DelayEst <= int32(p.nDelayLim), "pRes.DelayEst <= int32(p.nDelayLim)")
 		assert(pRes.AreaEst <= int32(p.nAreaLim), "pRes.AreaEst <= int32(p.nAreaLim)")
 	}
@@ -435,30 +435,30 @@ func Lpk_DsdAnalizeOne(p *Lpk_Fun_t, ppTruths [][16][]uint32, pNtks []*Kit_DsdNt
 	// remove those variables that cannot be used because of delay constraints
 	// if variables arrival time is more than p->DelayLim - 2, it cannot be used
 	uLateArrSupp = Lpk_DsdLateArriving(p)
-	if (uNonDecSupp & ~uLateArrSupp) == 0 {
+	if (uNonDecSupp & ^uLateArrSupp) == 0 {
 		*pRes = Lpk_Res_t{}
 		return 0
 	}
 
 	// find the next cofactoring variable
-	pCofVars[nCofDepth-1] = Lpk_FunComputeMinSuppSizeVar(p, ppTruths[nCofDepth-1], 1<<(nCofDepth-1), ppTruths[nCofDepth], uNonDecSupp&~uLateArrSupp)
+	pCofVars[nCofDepth-1] = byte(Lpk_FunComputeMinSuppSizeVar(p, ppTruths[nCofDepth-1][:], 1<<(nCofDepth-1), ppTruths[nCofDepth][:], uNonDecSupp&^uLateArrSupp))
 
 	// derive decomposed networks
 	for i = 0; i < (1 << nCofDepth); i++ {
-		if pNtks[i] {
+		if pNtks[i] != nil {
 			kit.Kit_DsdNtkFree(pNtks[i])
 		}
-		pNtks[i] = kit.Kit_DsdDecomposeExpand(ppTruths[nCofDepth][i], p.nVars)
+		pNtks[i] = kit.Kit_DsdDecomposeExpand(ppTruths[nCofDepth][i], int32(p.nVars))
 		if fVerbose != 0 {
 			kit.Kit_DsdPrint(os.Stdout, pNtks[i])
 		}
-		pvBSets[nCofDepth][i] = Lpk_ComputeBoundSets(pNtks[i], p.nLutK-nCofDepth) // try restricting to those in uNonDecSupp!!!
+		pvBSets[nCofDepth][i] = Lpk_ComputeBoundSets(pNtks[i], int32(p.nLutK)-nCofDepth) // try restricting to those in uNonDecSupp!!!
 	}
 
 	// derive the set of feasible boundsets
 	for i = nCofDepth - 1; i >= 0; i-- {
 		for k = 0; k < (1 << i); k++ {
-			pvBSets[i][k] = Lpk_MergeBoundSets(pvBSets[i+1][2*k+0], pvBSets[i+1][2*k+1], p.nLutK-nCofDepth)
+			pvBSets[i][k] = Lpk_MergeBoundSets(pvBSets[i+1][2*k+0], pvBSets[i+1][2*k+1], int32(p.nLutK)-nCofDepth)
 		}
 	}
 	// compare bound-sets
@@ -471,7 +471,7 @@ func Lpk_DsdAnalizeOne(p *Lpk_Fun_t, ppTruths [][16][]uint32, pNtks []*Kit_DsdNt
 	}
 
 	// copy the cofactoring variables
-	if pRes.BSVars {
+	if pRes.BSVars != 0 {
 		pRes.nCofVars = nCofDepth
 		for i = 0; i < nCofDepth; i++ {
 			pRes.pCofVars[i] = pCofVars[i]
@@ -513,14 +513,14 @@ func Lpk_DsdAnalize(pMan *Lpk_Man_t, p *Lpk_Fun_t, nShared int32) *Lpk_Res_t {
 
 	assert(p.nLutK >= 3, "p.nLutK >= 3")
 	assert(nShared >= 0 && nShared <= 3, "nShared >= 0 && nShared <= 3")
-	assert(p.uSupp == kit.Kit_BitMask(p.nVars), "p.uSupp == kit.Kit_BitMask(p.nVars)")
+	assert(p.uSupp == kit.Kit_BitMask(int32(p.nVars)), "p.uSupp == kit.Kit_BitMask(int32(p.nVars))")
 
 	// try decomposition without cofactoring
-	pNtks[0] = kit.Kit_DsdDecomposeExpand(Lpk_FunTruth(p, 0), p.nVars)
+	pNtks[0] = kit.Kit_DsdDecomposeExpand(Lpk_FunTruth(p, 0), int32(p.nVars))
 	if pMan.pPars.fVerbose != 0 {
 		pMan.nBlocks[kit.Kit_DsdNonDsdSizeMax(pNtks[0])]++
 	}
-	vBSets = Lpk_ComputeBoundSets(pNtks[0], p.nLutK)
+	vBSets = Lpk_ComputeBoundSets(pNtks[0], int32(p.nLutK))
 	Lpk_FunCompareBoundSets(p, vBSets, 0, 0xFFFF, Lpk_DsdLateArriving(p), spStatic_Lpk_DsdAnalize_pRes0)
 	vec.Vec_IntFree(vBSets)
 
@@ -538,10 +538,10 @@ func Lpk_DsdAnalize(pMan *Lpk_Man_t, p *Lpk_Fun_t, nShared int32) *Lpk_Res_t {
 	}
 
 	// prepare storage
-	kit.Kit_TruthCopy(pMan.ppTruths[0][0], Lpk_FunTruth(p, 0), p.nVars)
+	kit.Kit_TruthCopy(pMan.ppTruths[0][0], Lpk_FunTruth(p, 0), int32(p.nVars))
 
 	// cofactor 1 time
-	if !(Lpk_DsdAnalizeOne(p, pMan.ppTruths, pNtks, pCofVars, 1, spStatic_Lpk_DsdAnalize_pRes1) != 0) {
+	if !(Lpk_DsdAnalizeOne(p, pMan.ppTruths[:], pNtks[:], pCofVars[:], 1, spStatic_Lpk_DsdAnalize_pRes1) != 0) {
 		goto finish
 	}
 	assert(spStatic_Lpk_DsdAnalize_pRes1.nBSVars <= int32(p.nLutK)-1, "spStatic_Lpk_DsdAnalize_pRes1.nBSVars <= int32(p.nLutK) - 1")
@@ -563,7 +563,7 @@ func Lpk_DsdAnalize(pMan *Lpk_Man_t, p *Lpk_Fun_t, nShared int32) *Lpk_Res_t {
 
 	// cofactor 2 times
 	if p.nLutK >= 4 {
-		if !(Lpk_DsdAnalizeOne(p, pMan.ppTruths, pNtks, pCofVars, 2, spStatic_Lpk_DsdAnalize_pRes2) != 0) {
+		if !(Lpk_DsdAnalizeOne(p, pMan.ppTruths[:], pNtks[:], pCofVars[:], 2, spStatic_Lpk_DsdAnalize_pRes2) != 0) {
 			goto finish
 		}
 		assert(spStatic_Lpk_DsdAnalize_pRes2.nBSVars <= int32(p.nLutK)-2, "spStatic_Lpk_DsdAnalize_pRes2.nBSVars <= int32(p.nLutK) - 2")
@@ -593,7 +593,7 @@ func Lpk_DsdAnalize(pMan *Lpk_Man_t, p *Lpk_Fun_t, nShared int32) *Lpk_Res_t {
 
 	// cofactor 3 times
 	if p.nLutK >= 5 {
-		if !(Lpk_DsdAnalizeOne(p, pMan.ppTruths, pNtks, pCofVars, 3, spStatic_Lpk_DsdAnalize_pRes3) != 0) {
+		if !(Lpk_DsdAnalizeOne(p, pMan.ppTruths[:], pNtks[:], pCofVars[:], 3, spStatic_Lpk_DsdAnalize_pRes3) != 0) {
 			goto finish
 		}
 		assert(spStatic_Lpk_DsdAnalize_pRes3.nBSVars <= int32(p.nLutK)-3, "spStatic_Lpk_DsdAnalize_pRes3.nBSVars <= int32(p.nLutK) - 3")
@@ -624,7 +624,7 @@ func Lpk_DsdAnalize(pMan *Lpk_Man_t, p *Lpk_Fun_t, nShared int32) *Lpk_Res_t {
 finish:
 	// free the networks
 	for i = 0; i < (1 << nShared); i++ {
-		if pNtks[i] {
+		if pNtks[i] != nil {
 			kit.Kit_DsdNtkFree(pNtks[i])
 		}
 	}
@@ -645,48 +645,48 @@ finish:
 
 **********************************************************************
 */
-func Lpk_DsdSplit(pMan *Lpk_Man_t, p *Lpk_Fun_t, pCofVars string, nCofVars int32, uBoundSet uint32) *Lpk_Fun_t {
+func Lpk_DsdSplit(pMan *Lpk_Man_t, p *Lpk_Fun_t, pCofVars []byte, nCofVars int32, uBoundSet uint32) *Lpk_Fun_t {
 	var pNew *Lpk_Fun_t
 	var pNtkDec *Kit_DsdNtk_t
 	var i, k, iVacVar, nCofs int32
 	// prepare storage
-	kit.Kit_TruthCopy(pMan.ppTruths[0][0], Lpk_FunTruth(p, 0), p.nVars)
+	kit.Kit_TruthCopy(pMan.ppTruths[0][0], Lpk_FunTruth(p, 0), int32(p.nVars))
 	// get the vacuous variable
 	iVacVar = kit.Kit_WordFindFirstBit(uBoundSet)
 	// compute the cofactors
 	for i = 0; i < nCofVars; i++ {
 		for k = 0; k < (1 << i); k++ {
-			kit.Kit_TruthCofactor0New(pMan.ppTruths[i+1][2*k+0], pMan.ppTruths[i][k], p.nVars, pCofVars[i])
-			kit.Kit_TruthCofactor1New(pMan.ppTruths[i+1][2*k+1], pMan.ppTruths[i][k], p.nVars, pCofVars[i])
+			kit.Kit_TruthCofactor0New(pMan.ppTruths[i+1][2*k+0], pMan.ppTruths[i][k], int32(p.nVars), int32(pCofVars[i]))
+			kit.Kit_TruthCofactor1New(pMan.ppTruths[i+1][2*k+1], pMan.ppTruths[i][k], int32(p.nVars), int32(pCofVars[i]))
 		}
 	}
 	// decompose each cofactor w.r.t. the bound set
 	nCofs = (1 << nCofVars)
 	for k = 0; k < nCofs; k++ {
-		pNtkDec = kit.Kit_DsdDecomposeExpand(pMan.ppTruths[nCofVars][k], p.nVars)
+		pNtkDec = kit.Kit_DsdDecomposeExpand(pMan.ppTruths[nCofVars][k], int32(p.nVars))
 		kit.Kit_DsdTruthPartialTwo(pMan.pDsdMan, pNtkDec, uBoundSet, iVacVar, pMan.ppTruths[nCofVars+1][k], pMan.ppTruths[nCofVars+1][nCofs+k])
 		kit.Kit_DsdNtkFree(pNtkDec)
 	}
 	// compute the composition/decomposition functions (they will be in pMan->ppTruths[1][0]/pMan->ppTruths[1][1])
 	for i = nCofVars; i >= 1; i-- {
 		for k = 0; k < (1 << i); k++ {
-			kit.Kit_TruthMuxVar(pMan.ppTruths[i][k], pMan.ppTruths[i+1][2*k+0], pMan.ppTruths[i+1][2*k+1], p.nVars, pCofVars[i-1])
+			kit.Kit_TruthMuxVar(pMan.ppTruths[i][k], pMan.ppTruths[i+1][2*k+0], pMan.ppTruths[i+1][2*k+1], int32(p.nVars), int32(pCofVars[i-1]))
 		}
 	}
 
 	// derive the new component (decomposition function)
 	pNew = Lpk_FunDup(p, pMan.ppTruths[1][1])
 	// update the old component (composition function)
-	kit.Kit_TruthCopy(Lpk_FunTruth(p, 0), pMan.ppTruths[1][0], p.nVars)
-	p.uSupp = kit.Kit_TruthSupport(Lpk_FunTruth(p, 0), p.nVars)
-	p.pFanins[iVacVar] = pNew.Id
-	p.pDelays[iVacVar] = Lpk_SuppDelay(pNew.uSupp, pNew.pDelays)
+	kit.Kit_TruthCopy(Lpk_FunTruth(p, 0), pMan.ppTruths[1][0], int32(p.nVars))
+	p.uSupp = kit.Kit_TruthSupport(Lpk_FunTruth(p, 0), int32(p.nVars))
+	p.pFanins[iVacVar] = byte(pNew.Id)
+	p.pDelays[iVacVar] = Lpk_SuppDelay(pNew.uSupp, pNew.pDelays[:])
 	// support minimize both
 	p.fSupports = 0
 	Lpk_FunSuppMinimize(p)
 	Lpk_FunSuppMinimize(pNew)
 	// update delay and area requirements
-	pNew.nDelayLim = p.pDelays[iVacVar]
+	pNew.nDelayLim = uint32(p.pDelays[iVacVar])
 	pNew.nAreaLim = 1
 	p.nAreaLim = p.nAreaLim - 1
 	return pNew

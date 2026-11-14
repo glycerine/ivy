@@ -1,7 +1,6 @@
 package lpk
 
 import (
-	abc "github.com/glycerine/abcgo/base/abc"
 	kit "github.com/glycerine/abcgo/bool/kit"
 	ifpkg "github.com/glycerine/abcgo/map/if"
 	vec "github.com/glycerine/abcgo/misc/vec"
@@ -90,6 +89,12 @@ func Lpk_ManStop(p *Lpk_Man_t) {
 		p.vSets[i] = nil
 	}
 	kit.Kit_DsdManFree(p.pDsdMan)
+	vec.Vec_IntFree(p.vMemory)
+	p.vMemory = nil
+	vec.Vec_IntFree(p.vBddDir)
+	p.vBddDir = nil
+	vec.Vec_IntFree(p.vBddInv)
+	p.vBddInv = nil
 	if p.pIfMan != nil {
 		ifpkg.If_ManStop(p.pIfMan)
 		p.pIfMan = nil

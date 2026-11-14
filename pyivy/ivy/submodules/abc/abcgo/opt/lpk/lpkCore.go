@@ -1,13 +1,18 @@
 package lpk
 
 import (
+	"fmt"
 	hop "github.com/glycerine/abcgo/aig/hop"
 	abc "github.com/glycerine/abcgo/base/abc"
+	abci "github.com/glycerine/abcgo/base/abci"
+	abcmain "github.com/glycerine/abcgo/base/main"
 	kit "github.com/glycerine/abcgo/bool/kit"
 	ifpkg "github.com/glycerine/abcgo/map/if"
+	extra "github.com/glycerine/abcgo/misc/extra"
 	"github.com/glycerine/abcgo/misc/mem"
 	util "github.com/glycerine/abcgo/misc/util"
 	vec "github.com/glycerine/abcgo/misc/vec"
+	"os"
 )
 
 /**CFile****************************************************************
@@ -58,25 +63,41 @@ import (
 **********************************************************************
 */
 func Abc_NtkDecFromTruth(truth []uint32, nVars, nLutSize int32) *Abc_Ntk_t {
-	if len(truth) == 0 || nVars < 0 || nVars > 16 || nLutSize < 1 {
+	if nVars < 0 || nVars >= 16 || int32(len(truth)) < kit.Kit_TruthWordNum(nVars) || nLutSize < 1 {
 		return nil
 	}
 	cover := vec.Vec_IntAlloc(1 << 16)
 	defer vec.Vec_IntFree(cover)
-	manager := abc.Abc_NtkAlloc(ABC_NTK_LOGIC, ABC_FUNC_SOP, 1)
+	manager := abc.Abc_NtkAlloc(abc.ABC_NTK_LOGIC, abc.ABC_FUNC_SOP, 1)
 	functionManager, ok := manager.FunctionManager.(*mem.Mem_Flex_t)
 	if !ok || functionManager == nil {
 		abc.Abc_NtkDelete(manager)
 		return nil
 	}
-	sop := abc.Abc_SopCreateFromTruthIsop(functionManager, nVars, &truth[0], cover)
+	// ABC's C API accepts word* (uint64); LPK stores truth tables as
+	// uint32 words, so pack adjacent halves into the API's word layout.
+	truthWords := lpkPackTruthWords(truth)
+	sop := abc.Abc_SopCreateFromTruthIsop(functionManager, nVars, truthWords, cover)
 	abc.Abc_NtkDelete(manager)
-	network := abc.Abc_NtkCreateWithNode(sop)
+	initial := abc.Abc_NtkCreateWithNode(sop)
+	network := abci.Abc_NtkLutmin(initial, nLutSize, 0)
+	abc.Abc_NtkDelete(initial)
+	if network == nil {
+		return nil
+	}
 	if abc.Abc_NtkToAig(network) == 0 {
 		abc.Abc_NtkDelete(network)
 		return nil
 	}
 	return network
+}
+
+func lpkPackTruthWords(truth []uint32) []uint64 {
+	words := make([]uint64, (len(truth)+1)/2)
+	for i, value := range truth {
+		words[i/2] |= uint64(value) << uint((i%2)*32)
+	}
+	return words
 }
 
 func Abc_NtkLutMinDecompose(network *Abc_Ntk_t, leaves *Vec_Ptr_t, truth []uint32, nLutSize, required int32) *Abc_Obj_t {
@@ -94,7 +115,9 @@ func Abc_NtkLutMinDecompose(network *Abc_Ntk_t, leaves *Vec_Ptr_t, truth []uint3
 	}
 	for i := 0; i < vec.Vec_PtrSize(leaves); i++ {
 		newNetworkCI := abc.Abc_NtkCi(newNetwork, int32(i))
-		newNetworkCI.Copy = vec.Vec_PtrEntry(leaves, i).(*abc.Object)
+		leaf := vec.Vec_PtrEntry(leaves, i).(*abc.Object)
+		newNetworkCI.Level = leaf.Level
+		newNetworkCI.Copy = leaf
 	}
 	for _, node := range nodes {
 		var level int32
@@ -111,11 +134,15 @@ func Abc_NtkLutMinDecompose(network *Abc_Ntk_t, leaves *Vec_Ptr_t, truth []uint3
 	var result *abc.Object
 	for _, node := range nodes {
 		copyNode := abc.Abc_NtkDupObj(network, node, 0)
+		copyNode.Level = 0
 		for _, edge := range node.Fanins() {
-			if edge.Object != nil && edge.Object.Copy != nil {
-				abc.Abc_ObjAddFanin(copyNode, edge.Object.Copy)
+			fanin := edge.Object.Copy
+			abc.Abc_ObjAddFanin(copyNode, fanin)
+			if copyNode.Level < fanin.Level {
+				copyNode.Level = fanin.Level
 			}
 		}
+		copyNode.Level++
 		node.Copy = copyNode
 		result = copyNode
 	}
@@ -136,40 +163,13 @@ func Abc_NtkLutMinDecompose(network *Abc_Ntk_t, leaves *Vec_Ptr_t, truth []uint3
 **********************************************************************
 */
 func Lpk_IfManStart(p *Lpk_Man_t) {
-	var pPars *If_Par_t
 	assert(p.pIfMan == nil, "p.pIfMan == nil")
-	// set defaults
-	pPars = new(If_Par_t)
-	// new(If_Par_t) is already zero-initialized.
-	// user-controlable paramters
-	pPars.nLutSize = p.pPars.nLutSize
-	pPars.nCutsMax = 16
-	pPars.nFlowIters = 0 // 1
-	pPars.nAreaIters = 0 // 1
-	pPars.DelayTarget = -1
-	pPars.Epsilon = float32(0.005)
-	pPars.fPreprocess = 0
-	pPars.fArea = 1
-	pPars.fFancy = 0
-	pPars.fExpRed = 0 //
-	pPars.fLatchPaths = 0
-	pPars.fVerbose = 0
-	// internal parameters
-	pPars.fTruth = 1
-	pPars.fUsePerm = 0
-	pPars.nLatchesCi = 0
-	pPars.nLatchesCo = 0
-	pPars.pLutLib = nil // abc.Abc_FrameReadLibLut();
-	pPars.pTimesArr = nil
-	pPars.pTimesArr = nil
-	pPars.fUseBdds = 0
-	pPars.fUseSops = 0
-	pPars.fUseCnfs = 0
-	pPars.fUseMv = 0
+	pPars := new(If_Par_t)
+	ifpkg.If_ManSetLpkPars(pPars, p.pPars.nLutSize)
 	// start the mapping manager and set its parameters
 	p.pIfMan = ifpkg.If_ManStart(pPars)
 	ifpkg.If_ManSetupSetAll(p.pIfMan, 1000)
-	p.pIfMan.pPars.pTimesArr = make([]float32, 32)
+	pPars.SetArrivalTimes(make([]float32, 32))
 }
 
 /*
@@ -194,11 +194,16 @@ func Lpk_NodeHasChanged(p *Lpk_Man_t, iNode int32) int32 {
 		return 1
 	}
 	for i := 0; i < vec.Vec_PtrSize(nodes); i += 2 {
-		id, ok := vec.Vec_PtrEntry(nodes, i).(uint32)
-		if !ok {
+		var id int32
+		switch value := vec.Vec_PtrEntry(nodes, i).(type) {
+		case int:
+			id = int32(value)
+		case int32:
+			id = value
+		default:
 			return 1
 		}
-		if abc.Abc_NtkObj(p.pNtk, int32(id)) == nil {
+		if abc.Abc_NtkObj(p.pNtk, id) == nil {
 			return 1
 		}
 	}
@@ -231,26 +236,26 @@ func Lpk_ExploreCut(p *Lpk_Man_t, pCut *Lpk_Cut_t, pNtk *Kit_DsdNtk_t) int32 {
 
 	// check special cases
 	pRoot = kit.Kit_DsdNtkRoot(pNtk)
-	if pRoot.Type == KIT_DSD_CONST1 {
-		if abc.Abc_LitIsCompl(pNtk.Root) != 0 {
+	if pRoot.Type == kit.KIT_DSD_CONST1 {
+		if util.Abc_LitIsCompl(int32(pNtk.Root)) != 0 {
 			pObjNew = abc.Abc_NtkCreateNodeConst0(p.pNtk)
 		} else {
 			pObjNew = abc.Abc_NtkCreateNodeConst1(p.pNtk)
 		}
 		abc.Abc_NtkUpdate(p.pObj, pObjNew, p.vLevels)
-		p.nGainTotal += pCut.nNodes - pCut.nNodesDup
+		p.nGainTotal += int32(pCut.nNodes) - int32(pCut.nNodesDup)
 		return 1
 	}
-	if pRoot.Type == KIT_DSD_VAR {
-		pObjNew = abc.Abc_NtkObj(p.pNtk, pCut.pLeaves[abc.Abc_Lit2Var(int32(pRoot.pFans[0]))])
-		if abc.Abc_LitIsCompl(pNtk.Root)^abc.Abc_LitIsCompl(int32(pRoot.pFans[0])) != 0 {
+	if pRoot.Type == kit.KIT_DSD_VAR {
+		pObjNew = abc.Abc_NtkObj(p.pNtk, pCut.pLeaves[util.Abc_Lit2Var(int32(kit.Kit_DsdObjFans(pRoot)[0]))])
+		if util.Abc_LitIsCompl(int32(pNtk.Root))^util.Abc_LitIsCompl(int32(kit.Kit_DsdObjFans(pRoot)[0])) != 0 {
 			pObjNew = abc.Abc_NtkCreateNodeInv(p.pNtk, pObjNew)
 		}
 		abc.Abc_NtkUpdate(p.pObj, pObjNew, p.vLevels)
-		p.nGainTotal += pCut.nNodes - pCut.nNodesDup
+		p.nGainTotal += int32(pCut.nNodes) - int32(pCut.nNodesDup)
 		return 1
 	}
-	assert(pRoot.Type == KIT_DSD_AND || pRoot.Type == KIT_DSD_XOR || pRoot.Type == KIT_DSD_PRIME, "pRoot.Type == KIT_DSD_AND || pRoot.Type == KIT_DSD_XOR || pRoot.Type == KIT_DSD_PRIME")
+	assert(pRoot.Type == kit.KIT_DSD_AND || pRoot.Type == kit.KIT_DSD_XOR || pRoot.Type == kit.KIT_DSD_PRIME, "pRoot.Type == kit.KIT_DSD_AND || pRoot.Type == kit.KIT_DSD_XOR || pRoot.Type == kit.KIT_DSD_PRIME")
 
 	// start the mapping manager
 	if p.pIfMan == nil {
@@ -267,7 +272,7 @@ func Lpk_ExploreCut(p *Lpk_Man_t, pCut *Lpk_Cut_t, pNtk *Kit_DsdNtk_t) int32 {
 	// inlining of macro Lpk_CutForEachLeaf
 	for i = 0; i < int32(pCut.nLeaves); i++ {
 		pLeaf = abc.Abc_NtkObj(p.pNtk, pCut.pLeaves[i])
-		p.pIfMan.pPars.pTimesArr[i] = float32(pLeaf.Level)
+		p.pIfMan.Parameters().SetArrivalTime(int(i), float32(pLeaf.Level))
 	}
 	// prepare the PI cuts
 	ifpkg.If_ManSetupCiCutSets(p.pIfMan)
@@ -282,13 +287,13 @@ func Lpk_ExploreCut(p *Lpk_Man_t, pCut *Lpk_Cut_t, pNtk *Kit_DsdNtk_t) int32 {
 	ifpkg.If_ManCreateCo(p.pIfMan, ifpkg.If_Regular(pDriver))
 
 	// perform mapping
-	p.pIfMan.pPars.fAreaOnly = 1
-	clk = util.Abc_Clock()
+	p.pIfMan.Parameters().SetAreaOnly(true)
+	clk = abctime(util.Abc_Clock())
 	ifpkg.If_ManPerformMappingComb(p.pIfMan)
-	p.timeMap += util.Abc_Clock() - clk
+	p.timeMap += abctime(util.Abc_Clock()) - clk
 
 	// compute the gain in area
-	nGain = pCut.nNodes - pCut.nNodesDup - int32(p.pIfMan.AreaGlo)
+	nGain = int32(pCut.nNodes) - int32(pCut.nNodesDup) - int32(p.pIfMan.AreaGlo)
 	if p.pPars.fVeryVerbose != 0 {
 		fmt.Printf("       Mffc = %2d. Mapped = %2d. Gain = %3d. Depth increase = %d. SReds = %d.\n", pCut.nNodes-pCut.nNodesDup, int32(p.pIfMan.AreaGlo), nGain, int32(p.pIfMan.RequiredGlo)-int32(p.pObj.Level), p.nCalledSRed)
 	}
@@ -306,11 +311,12 @@ func Lpk_ExploreCut(p *Lpk_Man_t, pCut *Lpk_Cut_t, pNtk *Kit_DsdNtk_t) int32 {
 	// perform replacement
 	p.nGainTotal += nGain
 	p.nChanges++
-	if p.nCalledSRed {
+	if p.nCalledSRed != 0 {
 		p.nBenefited++
 	}
 
 	nNodesBef = abc.Abc_NtkNodeNum(p.pNtk)
+	_ = nNodesBef
 	// prepare the mapping manager
 	ifpkg.If_ManCleanNodeCopy(p.pIfMan)
 	ifpkg.If_ManCleanCutData(p.pIfMan)
@@ -321,8 +327,8 @@ func Lpk_ExploreCut(p *Lpk_Man_t, pCut *Lpk_Cut_t, pNtk *Kit_DsdNtk_t) int32 {
 		ifpkg.If_ObjSetCopy(ifpkg.If_ManCi(p.pIfMan, i), pLeaf)
 	}
 	// get the area of mapping
-	pObjNew = abc.Abc_NodeFromIf_rec(p.pNtk, p.pIfMan, ifpkg.If_Regular(pDriver), p.vCover)
-	pObjNew.Data = hop.Hop_NotCond(pObjNew.Data, ifpkg.If_IsComplement(pDriver))
+	pObjNew = abci.Abc_NodeFromIfRec(p.pNtk, p.pIfMan, ifpkg.If_Regular(pDriver), p.vCover)
+	pObjNew.Data = hop.Hop_NotCond(pObjNew.Data.(*hop.Hop_Obj_t), ifpkg.If_IsComplement(pDriver))
 	// perform replacement
 	abc.Abc_NtkUpdate(p.pObj, pObjNew, p.vLevels)
 	//printf( "%3d : %d-%d=%d(%d) \n", p->nChanges, nNodesBef, Abc_NtkNodeNum(p->pNtk), nNodesBef-Abc_NtkNodeNum(p->pNtk), nGain );
@@ -351,17 +357,17 @@ func Lpk_ResynthesizeNode(p *Lpk_Man_t) int32 {
 	var clk abctime
 
 	// compute the cuts
-	clk = util.Abc_Clock()
-	if !Lpk_NodeCuts(p) {
-		p.timeCuts += util.Abc_Clock() - clk
+	clk = abctime(util.Abc_Clock())
+	if Lpk_NodeCuts(p) == 0 {
+		p.timeCuts += abctime(util.Abc_Clock()) - clk
 		return 0
 	}
-	p.timeCuts += util.Abc_Clock() - clk
+	p.timeCuts += abctime(util.Abc_Clock()) - clk
 
 	//return 0;
 
 	if p.pPars.fVeryVerbose != 0 {
-		fmt.Printf("Node %5d : Mffc size = %5d. Cuts = %5d.\n", p.pObj.Id, p.nMffc, p.nEvals)
+		fmt.Printf("Node %5d : Mffc size = %5d. Cuts = %5d.\n", p.pObj.ID, p.nMffc, p.nEvals)
 	}
 	// try the good cuts
 	p.nCutsTotal += p.nCuts
@@ -375,14 +381,11 @@ func Lpk_ResynthesizeNode(p *Lpk_Man_t) int32 {
 
 		// skip bad cuts
 		//        printf( "Mffc size = %d.  ", Abc_NodeMffcLabel(p->pObj) );
+		leaves := make([]*Abc_Obj_t, pCut.nLeaves)
 		for k = 0; k < int32(pCut.nLeaves); k++ {
-			abc.Abc_NtkObj(p.pNtk, pCut.pLeaves[k]).vFanouts.nSize++
+			leaves[k] = abc.Abc_NtkObj(p.pNtk, pCut.pLeaves[k])
 		}
-		nCutNodes = abc.Abc_NodeMffcLabel(p.pObj, nil)
-		//        printf( "Mffc with cut = %d.  ", nCutNodes );
-		for k = 0; k < int32(pCut.nLeaves); k++ {
-			abc.Abc_NtkObj(p.pNtk, pCut.pLeaves[k]).vFanouts.nSize--
-		}
+		nCutNodes = abc.Abc_NodeMffcLabelWithLeaves(p.pObj, leaves, nil)
 		//        printf( "Mffc cut = %d.  ", pCut->nNodes - pCut->nNodesDup );
 		//        printf( "\n" );
 		if nCutNodes != int32(pCut.nNodes)-int32(pCut.nNodesDup) {
@@ -390,15 +393,15 @@ func Lpk_ResynthesizeNode(p *Lpk_Man_t) int32 {
 		}
 
 		// compute the truth table
-		clk = util.Abc_Clock()
+		clk = abctime(util.Abc_Clock())
 		pTruth = Lpk_CutTruth(p, pCut, 0)
-		nSuppSize = Extra_TruthSupportSize(pTruth, pCut.nLeaves)
-		p.timeTruth += util.Abc_Clock() - clk
+		nSuppSize = kit.Kit_TruthSupportSize(pTruth, int32(pCut.nLeaves))
+		p.timeTruth += abctime(util.Abc_Clock()) - clk
 
-		pDsdNtk = kit.Kit_DsdDecompose(pTruth, pCut.nLeaves)
+		pDsdNtk = kit.Kit_DsdDecompose(pTruth, int32(pCut.nLeaves))
 		//        Kit_DsdVerify( pDsdNtk, pTruth, pCut->nLeaves );
 		// skip 16-input non-DSD because ISOP will not work
-		if kit.Kit_DsdNtkRoot(pDsdNtk).nFans == 16 {
+		if kit.Kit_DsdObjFanNum(kit.Kit_DsdNtkRoot(pDsdNtk)) == 16 {
 			kit.Kit_DsdNtkFree(pDsdNtk)
 			continue
 		}
@@ -416,15 +419,15 @@ func Lpk_ResynthesizeNode(p *Lpk_Man_t) int32 {
 			//            char * pFileName;
 			fmt.Printf("  C%02d: L= %2d/%2d  V= %2d/%d  N= %d  W= %4.2f  ", i, pCut.nLeaves, nSuppSize, pCut.nNodes, pCut.nNodesDup, pCut.nLuts, pCut.Weight)
 			kit.Kit_DsdPrint(os.Stdout, pDsdNtk)
-			kit.Kit_DsdPrintFromTruth(pTruth, pCut.nLeaves)
+			kit.Kit_DsdPrintFromTruth(pTruth, int32(pCut.nLeaves))
 			//            pFileName = Kit_TruthDumpToFile( pTruth, pCut->nLeaves, Count++ );
 			//            printf( "Saved truth table in file \"%s\".\n", pFileName );
 		}
 
 		// update the network
-		clk = util.Abc_Clock()
+		clk = abctime(util.Abc_Clock())
 		RetValue = Lpk_ExploreCut(p, pCut, pDsdNtk)
-		p.timeEval += util.Abc_Clock() - clk
+		p.timeEval += abctime(util.Abc_Clock()) - clk
 		kit.Kit_DsdNtkFree(pDsdNtk)
 		if RetValue != 0 {
 			break
@@ -450,10 +453,11 @@ func Lpk_ComputeSupports(p *Lpk_Man_t, pCut *Lpk_Cut_t, pTruth []uint32) {
 	var pTruthInv []uint32
 	var RetValue1, RetValue2 int32
 	pTruthInv = Lpk_CutTruth(p, pCut, 1)
-	RetValue1 = kit.Kit_CreateCloudFromTruth(p.pDsdMan.dd, pTruth, pCut.nLeaves, p.vBddDir)
-	RetValue2 = kit.Kit_CreateCloudFromTruth(p.pDsdMan.dd, pTruthInv, pCut.nLeaves, p.vBddInv)
+	RetValue1 = kit.Kit_CreateCloudFromTruth(kit.Kit_DsdCloud(p.pDsdMan), pTruth, int32(pCut.nLeaves), vec.Vec_IntArrayP(p.vBddDir))
+	RetValue2 = kit.Kit_CreateCloudFromTruth(kit.Kit_DsdCloud(p.pDsdMan), pTruthInv, int32(pCut.nLeaves), vec.Vec_IntArrayP(p.vBddInv))
 	if RetValue1 != 0 && (RetValue2 != 0) && vec.Vec_IntSize(p.vBddDir) > 1 && vec.Vec_IntSize(p.vBddInv) > 1 {
-		kit.Kit_TruthCofSupports(p.vBddDir, p.vBddInv, pCut.nLeaves, p.vMemory, p.puSupps)
+		var scratch []uint32
+		kit.Kit_TruthCofSupports(vec.Vec_IntArray(p.vBddDir), vec.Vec_IntArray(p.vBddInv), int32(pCut.nLeaves), &scratch, p.puSupps[:])
 	} else {
 		p.puSupps[0], p.puSupps[1] = 0, 0
 	}
@@ -485,15 +489,15 @@ func Lpk_ResynthesizeNodeNew(p *Lpk_Man_t) int32 {
 	//    CloudNode * pFun2;//, * pFun1;
 
 	// compute the cuts
-	clk = util.Abc_Clock()
-	if !Lpk_NodeCuts(p) {
-		p.timeCuts += util.Abc_Clock() - clk
+	clk = abctime(util.Abc_Clock())
+	if Lpk_NodeCuts(p) == 0 {
+		p.timeCuts += abctime(util.Abc_Clock()) - clk
 		return 0
 	}
-	p.timeCuts += util.Abc_Clock() - clk
+	p.timeCuts += abctime(util.Abc_Clock()) - clk
 
 	if p.pPars.fVeryVerbose != 0 {
-		fmt.Printf("Node %5d : Mffc size = %5d. Cuts = %5d.  Level = %2d. Req = %2d.\n", p.pObj.Id, p.nMffc, p.nEvals, p.pObj.Level, Required)
+		fmt.Printf("Node %5d : Mffc size = %5d. Cuts = %5d.  Level = %2d. Req = %2d.\n", p.pObj.ID, p.nMffc, p.nEvals, p.pObj.Level, Required)
 	}
 	// try the good cuts
 	p.nCutsTotal += p.nCuts
@@ -509,14 +513,11 @@ func Lpk_ResynthesizeNodeNew(p *Lpk_Man_t) int32 {
 
 		// skip bad cuts
 		//        printf( "Mffc size = %d.  ", Abc_NodeMffcLabel(p->pObj) );
+		leaves := make([]*Abc_Obj_t, pCut.nLeaves)
 		for k = 0; k < int32(pCut.nLeaves); k++ {
-			abc.Abc_NtkObj(p.pNtk, pCut.pLeaves[k]).vFanouts.nSize++
+			leaves[k] = abc.Abc_NtkObj(p.pNtk, pCut.pLeaves[k])
 		}
-		nCutNodes = abc.Abc_NodeMffcLabel(p.pObj, nil)
-		//        printf( "Mffc with cut = %d.  ", nCutNodes );
-		for k = 0; k < int32(pCut.nLeaves); k++ {
-			abc.Abc_NtkObj(p.pNtk, pCut.pLeaves[k]).vFanouts.nSize--
-		}
+		nCutNodes = abc.Abc_NodeMffcLabelWithLeaves(p.pObj, leaves, nil)
 		//        printf( "Mffc cut = %d.  ", pCut->nNodes - pCut->nNodesDup );
 		//        printf( "\n" );
 		if nCutNodes != int32(pCut.nNodes)-int32(pCut.nNodesDup) {
@@ -530,21 +531,21 @@ func Lpk_ResynthesizeNodeNew(p *Lpk_Man_t) int32 {
 		}
 
 		// compute the truth table
-		clk = util.Abc_Clock()
+		clk = abctime(util.Abc_Clock())
 		pTruth = Lpk_CutTruth(p, pCut, 0)
-		p.timeTruth += util.Abc_Clock() - clk
-		clk = util.Abc_Clock()
+		p.timeTruth += abctime(util.Abc_Clock()) - clk
+		clk = abctime(util.Abc_Clock())
 		Lpk_ComputeSupports(p, pCut, pTruth)
-		p.timeSupps += util.Abc_Clock() - clk
+		p.timeSupps += abctime(util.Abc_Clock()) - clk
 		//clk = Abc_Clock();
 		//        pFun1 = Lpk_CutTruthBdd( p, pCut );
 		//p->timeTruth2 += Abc_Clock() - clk;
 		/*
-		   clk = util.Abc_Clock();
+		   clk = abctime(util.Abc_Clock());
 		           kit.Cloud_Restart( p->pDsdMan->dd );
 		           pFun2 = kit.Kit_TruthToCloud( p->pDsdMan->dd, pTruth, pCut->nLeaves );
 		           RetValue = kit.Kit_CreateCloud( p->pDsdMan->dd, pFun2, p->vBddNodes );
-		   p->timeTruth3 += util.Abc_Clock() - clk;
+		   p->timeTruth3 += abctime(util.Abc_Clock()) - clk;
 		*/
 		//        if ( pFun1 != pFun2 )
 		//            printf( "Truth tables do not agree!\n" );
@@ -553,14 +554,14 @@ func Lpk_ResynthesizeNodeNew(p *Lpk_Man_t) int32 {
 
 		if p.pPars.fVeryVerbose != 0 {
 			//            char * pFileName;
-			var nSuppSize int32 = Extra_TruthSupportSize(pTruth, pCut.nLeaves)
+			var nSuppSize int32 = kit.Kit_TruthSupportSize(pTruth, int32(pCut.nLeaves))
 			fmt.Printf("  C%02d: L= %2d/%2d  V= %2d/%d  N= %d  W= %4.2f  ", i, pCut.nLeaves, nSuppSize, pCut.nNodes, pCut.nNodesDup, pCut.nLuts, pCut.Weight)
 			for k = 0; k < int32(vec.Vec_PtrSize(p.vLeaves)); k++ {
 				pLeaf = vec.Vec_PtrEntry(p.vLeaves, int(k)).(*abc.Object)
 				fmt.Printf("%c=%d ", 'a'+k, abc.Abc_ObjLevel(pLeaf))
 			}
 			fmt.Printf("\n")
-			kit.Kit_DsdPrintFromTruth(pTruth, pCut.nLeaves)
+			kit.Kit_DsdPrintFromTruth(pTruth, int32(pCut.nLeaves))
 			fmt.Printf("\n")
 			//            pFileName = Kit_TruthDumpToFile( pTruth, pCut->nLeaves, Count++ );
 			//            printf( "Saved truth table in file \"%s\".\n", pFileName );
@@ -568,13 +569,13 @@ func Lpk_ResynthesizeNodeNew(p *Lpk_Man_t) int32 {
 
 		// update the network
 		nNodesBef = abc.Abc_NtkNodeNum(p.pNtk)
-		clk = util.Abc_Clock()
-		pObjNew = Lpk_Decompose(p, p.pNtk, p.vLeaves, pTruth, p.puSupps, p.pPars.nLutSize,
-			int32(pCut.nNodes)-int32(pCut.nNodesDup)-1+int32((p.pPars.fZeroCost != 0 > 0)), Required)
-		if pObjNew == nil && p.pPars.nLutSize == 4 && int32(pCut.nNodes) > NodeCounts[vec.Vec_PtrSize(p.vLeaves)]+int32(p.pPars.fZeroCost == 0) {
-			pObjNew = abc.Abc_NtkLutMinDecompose(p.pNtk, p.vLeaves, pTruth, p.pPars.nLutSize, Required)
+		clk = abctime(util.Abc_Clock())
+		pObjNew = Lpk_Decompose(p, p.pNtk, p.vLeaves, pTruth, p.puSupps[:], p.pPars.nLutSize,
+			int32(pCut.nNodes)-int32(pCut.nNodesDup)-1+lpkBoolInt(p.pPars.fZeroCost > 0), Required)
+		if pObjNew == nil && p.pPars.nLutSize == 4 && int32(pCut.nNodes) > NodeCounts[vec.Vec_PtrSize(p.vLeaves)]+lpkBoolInt(p.pPars.fZeroCost == 0) {
+			pObjNew = Abc_NtkLutMinDecompose(p.pNtk, p.vLeaves, pTruth, p.pPars.nLutSize, Required)
 		}
-		p.timeEval += util.Abc_Clock() - clk
+		p.timeEval += abctime(util.Abc_Clock()) - clk
 		nNodesAft = abc.Abc_NtkNodeNum(p.pNtk)
 
 		// perform replacement
@@ -619,21 +620,21 @@ func Lpk_ResynthesizeNodeNew(p *Lpk_Man_t) int32 {
 **********************************************************************
 */
 func Lpk_Resynthesize(pNtk *Abc_Ntk_t, pPars *Lpk_Par_t) int32 {
-	var pProgress *ProgressBar = nil // Suppress "might be used uninitialized"
+	var pProgress *extra.ProgressBar = nil // Suppress "might be used uninitialized"
 	var p *Lpk_Man_t
 	var pObj *Abc_Obj_t
 	var Delta float64
 	//    int * pnFanouts, nObjMax;
 	var i, Iter, nNodes, nNodesPrev int32
-	var clk abctime = util.Abc_Clock()
+	var clk abctime = abctime(util.Abc_Clock())
 	assert(abc.Abc_NtkIsLogic(pNtk), "abc.Abc_NtkIsLogic(pNtk)")
 
 	// sweep dangling nodes as a preprocessing step
 	abc.Abc_NtkSweep(pNtk, 0)
 
 	// get the number of inputs
-	if abc.Abc_FrameReadLibLut() != nil {
-		pPars.nLutSize = (abc.Abc_FrameReadLibLut()).LutMax
+	if lib := abcmain.Abc_FrameReadLibLut(); lib != nil {
+		pPars.nLutSize = lib.(*If_LibLut_t).LutMax
 	} else {
 		pPars.nLutSize = abc.Abc_NtkGetFaninMax(pNtk)
 	}
@@ -673,7 +674,7 @@ func Lpk_Resynthesize(pNtk *Abc_Ntk_t, pPars *Lpk_Par_t) int32 {
 	p = Lpk_ManStart(pPars)
 	p.pNtk = pNtk
 	p.nNodesTotal = abc.Abc_NtkNodeNum(pNtk)
-	p.vLevels = vec.Vec_VecStart(pNtk.LevelMax)
+	p.vLevels = vec.Vec_VecStart(abc.Abc_NtkReverseLevelMax(pNtk))
 	if p.pPars.fSatur != 0 {
 		p.vVisited = vec.Vec_VecStart(0)
 	}
@@ -695,16 +696,19 @@ func Lpk_Resynthesize(pNtk *Abc_Ntk_t, pPars *Lpk_Par_t) int32 {
 	for Iter = 1; ; Iter++ {
 		// expand storage for changed nodes
 		if p.pPars.fSatur != 0 {
-			vec.Vec_VecExpand(p.vVisited, abc.Abc_NtkObjNumMax(pNtk)+1)
+			vec.Vec_VecExpand(p.vVisited, int(abc.Abc_NtkObjNumMax(pNtk)+1))
 		}
 
 		// consider all nodes
 		nNodes = abc.Abc_NtkObjNumMax(pNtk)
 		if !(pPars.fVeryVerbose != 0) {
-			pProgress = Extra_ProgressBarStart(os.Stdout, nNodes)
+			pProgress = extra.Extra_ProgressBarStart(os.Stdout, nNodes)
 		}
-		abc.Abc_NtkForEachNode(pNtk, pObj, i)
-		{
+		for i = 0; i < abc.Abc_NtkObjNumMax(pNtk); i++ {
+			pObj = abc.Abc_NtkObj(pNtk, i)
+			if pObj == nil || abc.Abc_ObjIsNode(pObj) == 0 {
+				continue
+			}
 			// skip all except the final node
 			if pPars.fFirst != 0 {
 				if abc.Abc_ObjIsCo(abc.Abc_ObjFanout0(pObj)) == 0 {
@@ -715,10 +719,10 @@ func Lpk_Resynthesize(pNtk *Abc_Ntk_t, pPars *Lpk_Par_t) int32 {
 				break
 			}
 			if !(pPars.fVeryVerbose != 0) {
-				Extra_ProgressBarUpdate(pProgress, i, nil)
+				extra.Extra_ProgressBarUpdate(pProgress, i, "")
 			}
 			// skip the nodes that did not change
-			if p.pPars.fSatur != 0 && !(Lpk_NodeHasChanged(p, pObj.Id) != 0) {
+			if p.pPars.fSatur != 0 && !(Lpk_NodeHasChanged(p, int32(pObj.ID)) != 0) {
 				continue
 			}
 			// resynthesize
@@ -730,11 +734,11 @@ func Lpk_Resynthesize(pNtk *Abc_Ntk_t, pPars *Lpk_Par_t) int32 {
 			}
 		}
 		if !(pPars.fVeryVerbose != 0) {
-			Extra_ProgressBarStop(pProgress)
+			extra.Extra_ProgressBarStop(pProgress)
 		}
 
 		// check the increase
-		Delta = 100.00 * (nNodesPrev - abc.Abc_NtkNodeNum(pNtk)) / p.nNodesTotal
+		Delta = 100.00 * float64(nNodesPrev-abc.Abc_NtkNodeNum(pNtk)) / float64(p.nNodesTotal)
 		if Delta < 0.05 {
 			break
 		}
@@ -765,35 +769,35 @@ func Lpk_Resynthesize(pNtk *Abc_Ntk_t, pPars *Lpk_Par_t) int32 {
 		//        Cloud_PrintInfo( p->pDsdMan->dd );
 		p.nTotalNets2 = abc.Abc_NtkGetTotalFanins(pNtk)
 		p.nTotalNodes2 = abc.Abc_NtkNodeNum(pNtk)
-		fmt.Printf("Node gain = %5d. (%.2f %%)  ", p.nTotalNodes-p.nTotalNodes2, 100.0*(p.nTotalNodes-p.nTotalNodes2)/p.nTotalNodes)
-		fmt.Printf("Edge gain = %5d. (%.2f %%)  ", p.nTotalNets-p.nTotalNets2, 100.0*(p.nTotalNets-p.nTotalNets2)/p.nTotalNets)
+		fmt.Printf("Node gain = %5d. (%.2f %%)  ", p.nTotalNodes-p.nTotalNodes2, 100.0*float64(p.nTotalNodes-p.nTotalNodes2)/float64(p.nTotalNodes))
+		fmt.Printf("Edge gain = %5d. (%.2f %%)  ", p.nTotalNets-p.nTotalNets2, 100.0*float64(p.nTotalNets-p.nTotalNets2)/float64(p.nTotalNets))
 		fmt.Printf("Muxes = %4d. Dsds = %4d.", p.nMuxes, p.nDsds)
 		fmt.Printf("\n")
 		fmt.Printf("Nodes = %5d (%3d)  Cuts = %5d (%4d)  Changes = %5d  Iter = %2d  Benefit = %d.\n", p.nNodesTotal, p.nNodesOver, p.nCutsTotal, p.nCutsUseful, p.nChanges, Iter, p.nBenefited)
 
 		fmt.Printf("Non-DSD:")
 		for i = 3; i <= pPars.nVarsMax; i++ {
-			if p.nBlocks[i] {
+			if p.nBlocks[i] != 0 {
 				fmt.Printf(" %d=%d", i, p.nBlocks[i])
 			}
 		}
 		fmt.Printf("\n")
 
-		p.timeTotal = util.Abc_Clock() - clk
+		p.timeTotal = abctime(util.Abc_Clock()) - clk
 		p.timeEval = p.timeEval - p.timeMap
 		p.timeOther = p.timeTotal - p.timeCuts - p.timeTruth - p.timeEval - p.timeMap
-		ABC_PRTP("Cuts  ", p.timeCuts, p.timeTotal)
-		ABC_PRTP("Truth ", p.timeTruth, p.timeTotal)
-		ABC_PRTP("CSupps", p.timeSupps, p.timeTotal)
-		ABC_PRTP("Eval  ", p.timeEval, p.timeTotal)
-		ABC_PRTP(" MuxAn", p.timeEvalMuxAn, p.timeEval)
-		ABC_PRTP(" MuxSp", p.timeEvalMuxSp, p.timeEval)
-		ABC_PRTP(" DsdAn", p.timeEvalDsdAn, p.timeEval)
-		ABC_PRTP(" DsdSp", p.timeEvalDsdSp, p.timeEval)
-		ABC_PRTP(" Other", p.timeEval-p.timeEvalMuxAn-p.timeEvalMuxSp-p.timeEvalDsdAn-p.timeEvalDsdSp, p.timeEval)
-		ABC_PRTP("Map   ", p.timeMap, p.timeTotal)
-		ABC_PRTP("Other ", p.timeOther, p.timeTotal)
-		ABC_PRTP("TOTAL ", p.timeTotal, p.timeTotal)
+		lpkPrintTimePercent("Cuts  ", p.timeCuts, p.timeTotal)
+		lpkPrintTimePercent("Truth ", p.timeTruth, p.timeTotal)
+		lpkPrintTimePercent("CSupps", p.timeSupps, p.timeTotal)
+		lpkPrintTimePercent("Eval  ", p.timeEval, p.timeTotal)
+		lpkPrintTimePercent(" MuxAn", p.timeEvalMuxAn, p.timeEval)
+		lpkPrintTimePercent(" MuxSp", p.timeEvalMuxSp, p.timeEval)
+		lpkPrintTimePercent(" DsdAn", p.timeEvalDsdAn, p.timeEval)
+		lpkPrintTimePercent(" DsdSp", p.timeEvalDsdSp, p.timeEval)
+		lpkPrintTimePercent(" Other", p.timeEval-p.timeEvalMuxAn-p.timeEvalMuxSp-p.timeEvalDsdAn-p.timeEvalDsdSp, p.timeEval)
+		lpkPrintTimePercent("Map   ", p.timeMap, p.timeTotal)
+		lpkPrintTimePercent("Other ", p.timeOther, p.timeTotal)
+		lpkPrintTimePercent("TOTAL ", p.timeTotal, p.timeTotal)
 	}
 
 	Lpk_ManStop(p)
@@ -810,3 +814,13 @@ func Lpk_Resynthesize(pNtk *Abc_Ntk_t, pPars *Lpk_Par_t) int32 {
 ////////////////////////////////////////////////////////////////////////
 
 //ABC_NAMESPACE_IMPL_END
+
+func lpkBoolInt(value bool) int32 {
+	if value {
+		return 1
+	}
+	return 0
+}
+func lpkPrintTimePercent(label string, elapsed, total abctime) {
+	util.Abc_PrintTimeP(1, label, int64(elapsed), int64(total))
+}
