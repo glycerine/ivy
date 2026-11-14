@@ -50,6 +50,18 @@ func Gia_ManHashStarted(p *Gia_Man_t) int32 {
 	return 0
 }
 
+// Gia_ManEnsureTruthWorkspace mirrors the explicit C lifecycle initializer
+// while allowing callers to share an already initialized workspace.
+func Gia_ManEnsureTruthWorkspace(p *Gia_Man_t, nVars int32) {
+	if p.vTtMemory == nil {
+		Gia_ObjComputeTruthTableStart(p, nVars)
+		return
+	}
+	if p.nTtVars != nVars {
+		panic("gia: truth workspace variable count mismatch")
+	}
+}
+
 func Gia_ManSetSimple(p *Gia_Man_t, simple int32) { p.fGiaSimple = simple }
 func Gia_ManCiNum(p *Gia_Man_t) int32             { return int32(vec.Vec_IntSize(p.vCis)) }
 func Gia_ManCoNum(p *Gia_Man_t) int32             { return int32(vec.Vec_IntSize(p.vCos)) }

@@ -12,7 +12,8 @@ func TestGiaManagerTruthTableNodeSnapshotAndHashState(t *testing.T) {
 	if Gia_ManHashStarted(p) == 0 {
 		t.Fatal("hash table state was not reported after initialization")
 	}
-	Gia_ObjComputeTruthTableStart(p, 3)
+	Gia_ManEnsureTruthWorkspace(p, 3)
+	Gia_ManEnsureTruthWorkspace(p, 3)
 	defer Gia_ObjComputeTruthTableStop(p)
 
 	a := Gia_ManAppendCi(p)
