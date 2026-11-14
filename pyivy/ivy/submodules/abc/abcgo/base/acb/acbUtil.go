@@ -2,6 +2,9 @@ package acb
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/aig/gia"
+	baseabc "github.com/glycerine/abcgo/base/abc"
+	baseio "github.com/glycerine/abcgo/base/io"
 	"strings"
 )
 
@@ -98,7 +101,7 @@ func Acb_ObjCollectTfo_rec(p *Acb_Ntk_t, iObj, fTerm int32) {
 	if fTerm == 0 && Acb_ObjIsCo(p, iObj) != 0 {
 		return
 	}
-	for _, fanout := range Vec_IntArray(Vec_WecEntry(&p.vFanouts, int(iObj))) {
+	for _, fanout := range Vec_IntArray(Vec_WecEntry(&p.vFanouts, iObj)) {
 		if Acb_ObjType(p, fanout) != 0 {
 			Acb_ObjCollectTfo_rec(p, fanout, fTerm)
 		}
@@ -326,7 +329,7 @@ func Acb_NamesToIds(pNtk *Acb_Ntk_t, vNamesInv *Vec_Int_t, vNames *Vec_Ptr_t) *V
 	return vRes
 }
 func Acb_NtkCollectMfsGates(pFileName string, vNamesRefed *Vec_Ptr_t, vNamesDerefed *Vec_Ptr_t, nGates []int32) int32 {
-	var pNtkF *Acb_Ntk_t = Acb_VerilogSimpleRead(pFileName, nil)
+	var pNtkF *Acb_Ntk_t = Acb_VerilogSimpleRead(pFileName, "")
 	var vNamesInv *Vec_Int_t = Vec_IntInvert(&pNtkF.vObjName, 0)
 	var vObjsRefed *Vec_Int_t = Acb_NamesToIds(pNtkF, vNamesInv, vNamesRefed)
 	var vObjsDerefed *Vec_Int_t = Acb_NamesToIds(pNtkF, vNamesInv, vNamesDerefed)
@@ -344,7 +347,7 @@ func Acb_NtkCollectMfsGates(pFileName string, vNamesRefed *Vec_Ptr_t, vNamesDere
 	for i = 0; i < Vec_IntSize(vNodes); i++ {
 		iObj = Vec_IntEntry(vNodes, i)
 		var nFan int32 = Acb_ObjFaninNum(pNtkF, iObj)
-		var Type int32 = Acb_ObjType(pNtkF, iObj)
+		Type := Acb_ObjType(pNtkF, iObj)
 		if Type == ABC_OPER_CONST_F {
 			nGates[0]++
 		} else if Type == ABC_OPER_CONST_T {
@@ -364,7 +367,7 @@ func Acb_NtkCollectMfsGates(pFileName string, vNamesRefed *Vec_Ptr_t, vNamesDere
 }
 func Acb_NtkReturnMfsGates(pFileName string, vNodes *Vec_Ptr_t) *Vec_Ptr_t {
 	var vMffc *Vec_Ptr_t = Vec_PtrAlloc(100)
-	var pNtkF *Acb_Ntk_t = Acb_VerilogSimpleRead(pFileName, nil)
+	var pNtkF *Acb_Ntk_t = Acb_VerilogSimpleRead(pFileName, "")
 	var vNamesInv *Vec_Int_t = Vec_IntInvert(&pNtkF.vObjName, 0)
 	var vNodeObjs *Vec_Int_t = Acb_NamesToIds(pNtkF, vNamesInv, vNodes)
 	var vNodeMffc *Vec_Int_t = Acb_NtkCollectMffc(pNtkF, nil, vNodeObjs)
@@ -430,7 +433,7 @@ func Acb_NtkComputeLevelD(p *Acb_Ntk_t, vTfo *Vec_Int_t) int32 {
 }
 
 func Acb_ObjComputeLevelR(p *Acb_Ntk_t, iObj int32) int32 {
-	var iFanout, k, Level int32
+	var iFanout, Level int32
 	// inlining of macro Acb_ObjForEachFanout
 	// inlining of macro Vec_IntForEachEntry
 	for k := int32(0); k < Vec_IntSize(Vec_WecEntry(&p.vFanouts, iObj)); k++ {
@@ -847,7 +850,7 @@ func Acb_NtkUpdateNode(p *Acb_Ntk_t, Pivot int32, uTruth word, vSupp *Vec_Int_t)
 **********************************************************************
 */
 func Acb_NtkFindNodes2_rec(p *Acb_Ntk_t, iObj int32, vNodes *Vec_Int_t) {
-	var pFanin *int32
+	var pFanin []int32
 	var iFanin int32
 	var i int32
 	if Acb_ObjSetTravIdCur(p, iObj) != 0 {
@@ -878,10 +881,10 @@ func Acb_NtkFindNodes2(p *Acb_Ntk_t) *Vec_Int_t {
 }
 func Acb_ObjToGia2(pNew *Gia_Man_t, fUseBuf int32, p *Acb_Ntk_t, iObj int32, vTemp *Vec_Int_t, fUseXors int32) int32 {
 	//char * pName = Abc_NamStr( p->pDesign->pStrs, Acb_ObjName(p, iObj) );
-	var pFanin *int32
+	var pFanin []int32
 	var iFanin int32
 	var k int32
-	var Type int32
+	var Type Acb_ObjType_t
 	var Res int32
 	assert(Acb_ObjIsCio(p, iObj) == 0, "Acb_ObjIsCio(p, iObj) == 0")
 	Vec_IntClear(vTemp)
@@ -946,7 +949,7 @@ func Acb_NtkToGia2(p *Acb_Ntk_t, fUseBuf int32, fUseXors int32, vTargets *Vec_In
 	var vFanins, vNodes *Vec_Int_t
 	var i, iObj int32
 	pNew = Gia_ManStart(2*Acb_NtkObjNum(p) + 1000)
-	pNew.pName = Abc_UtilStrsav(Acb_NtkName(p))
+	gia.Gia_ManSetNameSpec(pNew, Acb_NtkName(p), "")
 	Acb_NtkCleanObjCopies(p)
 	// inlining of macro Acb_NtkForEachCi
 	for i = 0; i < Acb_NtkCiNum(p); i++ {
@@ -1085,15 +1088,15 @@ func Acb_NtkCollectUser(p *Acb_Ntk_t, vUser *Vec_Ptr_t) *Vec_Int_t {
 **********************************************************************
 */
 func Acb_NtkExtract(pFileName0 string, pFileName1 string, fUseXors int32, fVerbose int32, ppGiaF **Gia_Man_t, ppGiaG **Gia_Man_t, fUseBuf int32, pvNodes **Vec_Int_t, pvNodesR **Vec_Ptr_t, pvPolar **Vec_Bit_t) int32 {
-	var pNtkF *Acb_Ntk_t = Acb_VerilogSimpleRead(pFileName0, nil)
-	var pNtkG *Acb_Ntk_t = Acb_VerilogSimpleRead(pFileName1, nil)
+	var pNtkF *Acb_Ntk_t = Acb_VerilogSimpleRead(pFileName0, "")
+	var pNtkG *Acb_Ntk_t = Acb_VerilogSimpleRead(pFileName1, "")
 	var RetValue int32 = -1
-	if pNtkF && pNtkG {
+	if pNtkF != nil && pNtkG != nil {
 		var nTargets int32 = Vec_IntSize(&pNtkF.vTargets)
 		var pGiaF *Gia_Man_t = Acb_NtkToGia2(pNtkF, fUseBuf, fUseXors, &pNtkF.vTargets, 0)
 		var pGiaG *Gia_Man_t = Acb_NtkToGia2(pNtkG, 0, 0, nil, nTargets)
-		pGiaF.pSpec = Abc_UtilStrsav(pNtkF.pDesign.pSpec)
-		pGiaG.pSpec = Abc_UtilStrsav(pNtkG.pDesign.pSpec)
+		gia.Gia_ManSetNameSpec(pGiaF, gia.Gia_ManName(pGiaF), pNtkF.pDesign.pSpec)
+		gia.Gia_ManSetNameSpec(pGiaG, gia.Gia_ManName(pGiaG), pNtkG.pDesign.pSpec)
 		assert(Acb_NtkCiNum(pNtkF) == Acb_NtkCiNum(pNtkG), "Acb_NtkCiNum(pNtkF) == Acb_NtkCiNum(pNtkG)")
 		assert(Acb_NtkCoNum(pNtkF) == Acb_NtkCoNum(pNtkG), "Acb_NtkCoNum(pNtkF) == Acb_NtkCoNum(pNtkG)")
 		*ppGiaF = pGiaF
@@ -1101,10 +1104,10 @@ func Acb_NtkExtract(pFileName0 string, pFileName1 string, fUseXors int32, fVerbo
 		*pvNodes = Acb_NtkCollectCopies(pNtkF, pGiaF, pvNodesR, pvPolar)
 		RetValue = nTargets
 	}
-	if pNtkF {
+	if pNtkF != nil {
 		Acb_ManFree(pNtkF.pDesign)
 	}
-	if pNtkG {
+	if pNtkG != nil {
 		Acb_ManFree(pNtkG.pDesign)
 	}
 	return RetValue
@@ -1126,7 +1129,7 @@ func Acb_NtkExtract(pFileName0 string, pFileName1 string, fUseXors int32, fVerbo
 func Abc_NtkCollectCopies(p *Abc_Ntk_t, pGia *Gia_Man_t, pvNodesR **Vec_Ptr_t, pvPolar **Vec_Bit_t) *Vec_Int_t {
 	var i, iObj, iLit int32
 	var pObj *Abc_Obj_t
-	var vObjs *Vec_Ptr_t = Abc_NtkDfs(p, 0)
+	vObjs := Abc_NtkDfs(p, 0)
 	var vNodes *Vec_Int_t = Vec_IntAlloc(Abc_NtkObjNumMax(p))
 	var vNodesR *Vec_Ptr_t = Vec_PtrStart(Gia_ManObjNum(pGia))
 	var vDriver *Vec_Bit_t = Vec_BitStart(Gia_ManObjNum(pGia))
@@ -1142,9 +1145,8 @@ func Abc_NtkCollectCopies(p *Abc_Ntk_t, pGia *Gia_Man_t, pvNodesR **Vec_Ptr_t, p
 		Vec_IntPush(vNodes, iObj)
 	}
 	// inlining of macro Vec_PtrForEachEntry
-	for i = 0; i < Vec_PtrSize(vObjs); i++ {
-		pObj = Vec_PtrEntry(vObjs, i).(*Abc_Obj_t)
-		iLit = pObj.Temp
+	for _, pObj = range vObjs {
+		iLit = int32(pObj.Temp)
 		if iLit >= 0 && Gia_ObjIsAnd(Gia_ManObj(pGia, Abc_Lit2Var(iLit))) != 0 {
 			if Vec_BitEntry(vDriver, Abc_Lit2Var(iLit)) == 0 && Vec_PtrEntry(vNodesR, Abc_Lit2Var(iLit)) == nil {
 				Vec_PtrWriteEntry(vNodesR, Abc_Lit2Var(iLit), Abc_UtilStrsav(Abc_ObjName(pObj)))
@@ -1154,7 +1156,6 @@ func Abc_NtkCollectCopies(p *Abc_Ntk_t, pGia *Gia_Man_t, pvNodesR **Vec_Ptr_t, p
 		}
 	}
 	Vec_BitFree(vDriver)
-	Vec_PtrFree(vObjs)
 	Vec_IntSort(vNodes, 0)
 	*pvNodesR = vNodesR
 	*pvPolar = vPolar
@@ -1163,23 +1164,23 @@ func Abc_NtkCollectCopies(p *Abc_Ntk_t, pGia *Gia_Man_t, pvNodesR **Vec_Ptr_t, p
 func Abc_ObjToGia2(pNew *Gia_Man_t, p *Abc_Ntk_t, pObj *Abc_Obj_t, vTemp *Vec_Int_t, fUseXors int32) int32 {
 	var pFanin *Abc_Obj_t
 	var k int32
-	assert(Abc_ObjIsNode(pObj), "Abc_ObjIsNode(pObj)")
+	assert(Abc_ObjIsNode(pObj) != 0, "Abc_ObjIsNode(pObj)")
 	Vec_IntClear(vTemp)
 	// inlining of macro Abc_ObjForEachFanin
 	for k = 0; k < Abc_ObjFaninNum(pObj); k++ {
 		pFanin = Abc_ObjFanin(pObj, k)
 		assert(pFanin.Temp >= 0, "pFanin.Temp >= 0")
-		Vec_IntPush(vTemp, pFanin.Temp)
+		Vec_IntPush(vTemp, int32(pFanin.Temp))
 	}
 	if Abc_ObjFaninNum(pObj) == 0 {
-		if Abc_SopIsConst0(pObj.pData.(string)) {
+		if baseabc.Abc_SopIsConst0(pObj.Data.(string)) != 0 {
 			return 0
 		} else {
 			return 1
 		}
 	}
 	if Abc_ObjFaninNum(pObj) == 1 {
-		if Abc_SopIsBuf(pObj.pData.(string)) {
+		if baseabc.Abc_SopIsBuf(pObj.Data.(string)) != 0 {
 			return Vec_IntEntry(vTemp, 0)
 		} else {
 			return Abc_LitNot(Vec_IntEntry(vTemp, 0))
@@ -1194,13 +1195,13 @@ func Abc_ObjToGia2(pNew *Gia_Man_t, p *Abc_Ntk_t, pObj *Abc_Obj_t, vTemp *Vec_In
 func Abc_NtkToGia2(p *Abc_Ntk_t, fUseXors int32) *Gia_Man_t {
 	var pNew, pOne *Gia_Man_t
 	var vFanins *Vec_Int_t
-	var vNodes *Vec_Ptr_t
+	var vNodes []*Abc_Obj_t
 	var pObj *Abc_Obj_t
 	var i int32
 	pNew = Gia_ManStart(2*Abc_NtkObjNumMax(p) + 1000)
-	pNew.pName = Abc_UtilStrsav(Abc_NtkName(p))
+	gia.Gia_ManSetNameSpec(pNew, Abc_NtkName(p), "")
 	// inlining of macro Abc_NtkForEachObj
-	for i = 0; i < Vec_PtrSize(&p.vObjs); i++ {
+	for i = 0; i < Abc_NtkObjNumMax(p); i++ {
 		pObj = Abc_NtkObj(p, i)
 		if pObj != nil {
 			pObj.Temp = -1
@@ -1209,21 +1210,19 @@ func Abc_NtkToGia2(p *Abc_Ntk_t, fUseXors int32) *Gia_Man_t {
 	// inlining of macro Abc_NtkForEachCi
 	for i = 0; i < Abc_NtkCiNum(p); i++ {
 		pObj = Abc_NtkCi(p, i)
-		pObj.Temp = Gia_ManAppendCi(pNew)
+		pObj.Temp = int(Gia_ManAppendCi(pNew))
 	}
 	vFanins = Vec_IntAlloc(4)
 	vNodes = Abc_NtkDfs(p, 0)
 	// inlining of macro Vec_PtrForEachEntry
-	for i = 0; i < Vec_PtrSize(vNodes); i++ {
-		pObj = Vec_PtrEntry(vNodes, i).(*Abc_Obj_t)
-		pObj.Temp = Abc_ObjToGia2(pNew, p, pObj, vFanins, fUseXors)
+	for _, pObj = range vNodes {
+		pObj.Temp = int(Abc_ObjToGia2(pNew, p, pObj, vFanins, fUseXors))
 	}
-	Vec_PtrFree(vNodes)
 	Vec_IntFree(vFanins)
 	// inlining of macro Abc_NtkForEachCo
 	for i = 0; i < Abc_NtkCoNum(p); i++ {
 		pObj = Abc_NtkCo(p, i)
-		Gia_ManAppendCo(pNew, Abc_ObjFanin0(pObj).Temp)
+		Gia_ManAppendCo(pNew, int32(Abc_ObjFanin0(pObj).Temp))
 	}
 	pOne = pNew
 	pNew = Gia_ManCleanup(pOne)
@@ -1232,25 +1231,25 @@ func Abc_NtkToGia2(p *Abc_Ntk_t, fUseXors int32) *Gia_Man_t {
 	return pNew
 }
 func Abc_NtkExtract(pFileName0 string, pFileName1 string, fUseXors int32, fVerbose int32, ppGiaF **Gia_Man_t, ppGiaG **Gia_Man_t, pvNodes **Vec_Int_t, pvNodesR **Vec_Ptr_t, pvPolar **Vec_Bit_t) int32 {
-	var pNtkF *Abc_Ntk_t = Io_Read(pFileName0, Io_ReadFileType(pFileName0), 1, 0)
-	var pNtkG *Abc_Ntk_t = Io_Read(pFileName1, Io_ReadFileType(pFileName1), 1, 0)
+	var pNtkF *Abc_Ntk_t = baseio.Io_Read(pFileName0, baseio.Io_ReadFileType(pFileName0), 1, 0)
+	var pNtkG *Abc_Ntk_t = baseio.Io_Read(pFileName1, baseio.Io_ReadFileType(pFileName1), 1, 0)
 	var RetValue int32 = -1
-	if pNtkF && pNtkG {
+	if pNtkF != nil && pNtkG != nil {
 		var pGiaF *Gia_Man_t = Abc_NtkToGia2(pNtkF, fUseXors)
 		var pGiaG *Gia_Man_t = Abc_NtkToGia2(pNtkG, 0)
 		assert(Abc_NtkCiNum(pNtkF) == Abc_NtkCiNum(pNtkG), "Abc_NtkCiNum(pNtkF) == Abc_NtkCiNum(pNtkG)")
 		assert(Abc_NtkCoNum(pNtkF) == Abc_NtkCoNum(pNtkG), "Abc_NtkCoNum(pNtkF) == Abc_NtkCoNum(pNtkG)")
-		pGiaF.pSpec = Abc_UtilStrsav(pNtkF.pSpec)
-		pGiaG.pSpec = Abc_UtilStrsav(pNtkG.pSpec)
+		gia.Gia_ManSetNameSpec(pGiaF, gia.Gia_ManName(pGiaF), pNtkF.Spec)
+		gia.Gia_ManSetNameSpec(pGiaG, gia.Gia_ManName(pGiaG), pNtkG.Spec)
 		*ppGiaF = pGiaF
 		*ppGiaG = pGiaG
 		*pvNodes = Abc_NtkCollectCopies(pNtkF, pGiaF, pvNodesR, pvPolar)
 		RetValue = 0
 	}
-	if pNtkF {
+	if pNtkF != nil {
 		Abc_NtkDelete(pNtkF)
 	}
-	if pNtkG {
+	if pNtkG != nil {
 		Abc_NtkDelete(pNtkG)
 	}
 	return RetValue
@@ -1446,7 +1445,7 @@ func Acb_Ntk4CollectRing(pNtk *Acb_Ntk_t, vStart *Vec_Int_t, vRes *Vec_Int_t, vD
 		for k = 0; k < Acb_ObjFaninNum(pNtk, iObj); k++ {
 			pFanins = Acb_ObjFanins(pNtk, iObj)
 			iFanin = pFanins[k+1]
-			Acb_Ntk4CollectAdd(pNtk, iFanin, vRes, vDists, Weight+1*(Acb_ObjFaninNum(pNtk, iObj) > 1))
+			Acb_Ntk4CollectAdd(pNtk, iFanin, vRes, vDists, Weight+boolInt(Acb_ObjFaninNum(pNtk, iObj) > 1, 1, 0))
 		}
 		// inlining of macro Acb_ObjForEachFanout
 		// inlining of macro Vec_IntForEachEntry
@@ -1531,7 +1530,7 @@ func Acb_Ntk4DumpWeights(pFileNameIn string, vObjNames *Vec_Ptr_t, pFileName str
 	var pName string
 	var i, iObj int32
 	var vObjs *Vec_Int_t = Vec_IntAlloc(Vec_PtrSize(vObjNames))
-	var pNtkF *Acb_Ntk_t = Acb_VerilogSimpleRead(pFileNameIn, nil)
+	var pNtkF *Acb_Ntk_t = Acb_VerilogSimpleRead(pFileNameIn, "")
 	Acb_NtkCreateFanout(pNtkF)
 	// inlining of macro Vec_PtrForEachEntry
 	for i = 0; i < Vec_PtrSize(vObjNames); i++ {
@@ -1564,8 +1563,8 @@ func Acb_Ntk4DumpWeights(pFileNameIn string, vObjNames *Vec_Ptr_t, pFileName str
 */
 func Acb_NtkRunSim(pFileName []string, nTimeout int32, nWords int32, nBeam int32, LevL int32, LevU int32, fOrder int32, fFancy int32, fUseBuf int32, fRandom int32, fUseWeights int32, fInputs int32, fSkipMffc int32, fVerbose int32, fVeryVerbose int32) {
 	var pFileNames [4]string = [4]string{pFileName[2], pFileName[1], map[bool]string{true: "weights.txt", false: ""}[fUseWeights != 0], pFileName[2]}
-	if Gia_Sim4Try(pFileName[0], pFileName[1], pFileName[2], nTimeout, nWords, nBeam, LevL, LevU, fOrder, fFancy, fUseBuf, fSkipMffc, fVerbose) {
-		Acb_NtkRunEco(pFileNames, nTimeout, 1, fRandom, fInputs, fVerbose, fVeryVerbose)
+	if gia.Gia_Sim4Try(pFileName[0], pFileName[1], pFileName[2], nTimeout, nWords, nBeam, LevL, LevU, fOrder, fFancy, fUseBuf, fSkipMffc, fVerbose) != 0 {
+		Acb_NtkRunEco(pFileNames[:], nTimeout, 1, fRandom, fInputs, fVerbose, fVeryVerbose)
 	}
 }
 

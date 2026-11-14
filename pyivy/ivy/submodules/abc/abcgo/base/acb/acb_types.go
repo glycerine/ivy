@@ -1,10 +1,10 @@
 package acb
 
 import (
+	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/aig/gia"
 	miniaig "github.com/glycerine/abcgo/aig/miniaig"
 	baseabc "github.com/glycerine/abcgo/base/abc"
-	baseabci "github.com/glycerine/abcgo/base/abci"
 	basemain "github.com/glycerine/abcgo/base/main"
 	"github.com/glycerine/abcgo/map/mio"
 	"github.com/glycerine/abcgo/misc/extra"
@@ -18,9 +18,12 @@ import (
 	"unsafe"
 )
 
+var s_Truths6 = [6]word{0xAAAAAAAAAAAAAAAA, 0xCCCCCCCCCCCCCCCC, 0xF0F0F0F0F0F0F0F0, 0xFF00FF00FF00FF00, 0xFFFF0000FFFF0000, 0xFFFFFFFF00000000}
+
 // These names are the vector and name-manager types used by ABC's acb.h.
 // Keep the underlying Go implementations shared with their owning packages.
 type (
+	Aig_Man_t     = aig.Graph
 	Abc_Ntk_t     = baseabc.Abc_Ntk_t
 	Abc_Obj_t     = baseabc.Abc_Obj_t
 	Cnf_Dat_t     = cnf.Cnf_Dat_t
@@ -224,16 +227,65 @@ func Gia_ManDupCofactorVar(p *Gia_Man_t, variable, value int32) *Gia_Man_t {
 func Gia_ManDupMux(variable int32, positive, negative *Gia_Man_t) *Gia_Man_t {
 	return gia.Gia_ManDupMux(variable, positive, negative)
 }
+func Gia_ManSetSimInputs(p *Gia_Man_t, inputs *Vec_Wrd_t) { gia.Gia_ManSetSimInputs(p, inputs) }
+func Gia_ManSimPatSim(p *Gia_Man_t) *Vec_Wrd_t            { return gia.Gia_ManSimPatSim(p) }
+func Gia_ManSetNameSpec(p *Gia_Man_t, name, spec string)  { gia.Gia_ManSetNameSpec(p, name, spec) }
+func Gia_ManToAig(p *Gia_Man_t, choices int32) *Aig_Man_t { return gia.Gia_ManToAig(p, choices) }
+func Aig_ManStop(p *Aig_Man_t)                            { aig.Aig_ManStop(p) }
+func Gia_ManHashMux(p *Gia_Man_t, control, then, otherwise int32) int32 {
+	return gia.Gia_ManHashMux(p, control, then, otherwise)
+}
+func Vec_WrdStartRandom(n int32) *Vec_Wrd_t { return vec.Vec_WrdStartRandom(int(n)) }
+func Vec_WrdDup(p *Vec_Wrd_t) *Vec_Wrd_t    { return vec.Vec_WrdDup(p) }
+func Abc_TtCountOnesVec(data *word, n int32) int32 {
+	return util.Abc_TtCountOnesVec(unsafe.Slice(data, int(n)), n)
+}
 func Gia_ManDupRemovePis(p *Gia_Man_t, n int32) *Gia_Man_t { return gia.Gia_ManDupRemovePis(p, n) }
 func Gia_ManInterOne(on, off *Gia_Man_t, verbose int32) *Gia_Man_t {
-	return baseabci.Gia_ManInterOne(on, off, verbose)
+	if on == nil || off == nil || gia.Gia_ManCiNum(on) != gia.Gia_ManCiNum(off) || gia.Gia_ManCoNum(on) != 1 || gia.Gia_ManCoNum(off) != 1 {
+		return nil
+	}
+	pManOn := gia.Gia_ManToAigSimple(on)
+	if pManOn == nil {
+		return nil
+	}
+	pManOff := gia.Gia_ManToAigSimple(off)
+	if pManOff == nil {
+		aig.Aig_ManStop(pManOn)
+		return nil
+	}
+	pManAig := aig.Aig_ManInter(pManOn, pManOff, 0, verbose)
+	aig.Aig_ManStop(pManOn)
+	aig.Aig_ManStop(pManOff)
+	if pManAig == nil {
+		return nil
+	}
+	pNtkAig := gia.Gia_ManFromAigSimple(pManAig)
+	aig.Aig_ManStop(pManAig)
+	return pNtkAig
 }
 func Abc_GiaSynthesizeInter(p *Gia_Man_t) *Gia_Man_t { return baseabc.Abc_GiaSynthesizeInter(p) }
 func Gia_AigerWrite(p *Gia_Man_t, name string, symbols, compact, newline int32) {
 	_ = gia.Gia_AigerWrite(p, name, symbols, compact, newline)
 }
 func Mf_ManGenerateCnf(p *Gia_Man_t, lutSize, objectIDs, addOr, withMapping, verbose int32) *Cnf_Dat_t {
-	return gia.Mf_ManGenerateCnf(p, lutSize, objectIDs, addOr, withMapping, verbose)
+	generated := gia.Mf_ManGenerateCnf(p, lutSize, objectIDs, addOr, withMapping, verbose)
+	if generated == nil {
+		return nil
+	}
+	offsets := []int32{0}
+	var literals []int32
+	for _, clause := range generated.Clauses {
+		literals = append(literals, clause...)
+		offsets = append(offsets, int32(len(literals)))
+	}
+	data := new(Cnf_Dat_t)
+	cnf.Cnf_DataSetPackedClauses(data, int32(generated.Variables), offsets, literals)
+	data.VarNums = append([]int32(nil), generated.VarNums...)
+	data.Mapping = append([]int32(nil), generated.Mapping...)
+	data.Obj2Clause = append([]int32(nil), generated.Obj2Clause...)
+	data.Obj2Count = append([]int32(nil), generated.Obj2Count...)
+	return data
 }
 func Gia_ObjIsCi(p *Gia_Obj_t) int32                         { return gia.Gia_ObjIsCi(p) }
 func Gia_ObjCioId(p *Gia_Obj_t) int32                        { return gia.Gia_ObjCioId(p) }
@@ -319,9 +371,35 @@ func Cnf_DataClauseNum(p *Cnf_Dat_t) int32         { return cnf.Cnf_DataClauseNu
 func Cnf_DataClause(p *Cnf_Dat_t, i int32) []int32 { return cnf.Cnf_DataClause(p, i) }
 func Cnf_DataClauses(p *Cnf_Dat_t) [][]int32       { return cnf.Cnf_DataClauses(p) }
 func Cnf_DataSetManNil(p *Cnf_Dat_t)               { cnf.Cnf_DataSetManNil(p) }
+func Cnf_DataFree(p *Cnf_Dat_t)                    { cnf.Cnf_DataFree(p) }
+func Cnf_DataWriteIntoSolver(p *Cnf_Dat_t, frames, init int32) *sat_solver {
+	return cnf.Cnf_DataWriteIntoSolver(p, frames, init)
+}
 func Cnf_DataSetPackedClauses(p *Cnf_Dat_t, variables int32, offsets, literals []int32) {
 	cnf.Cnf_DataSetPackedClauses(p, variables, offsets, literals)
 }
+func Abc_Tt6Cofactor0(t word, v int32) word { return util.Abc_Tt6Cofactor0(t, v) }
+func Abc_Tt6Cofactor1(t word, v int32) word { return util.Abc_Tt6Cofactor1(t, v) }
+func Abc_Tt6RemoveVar(t word, v int32) word { return util.Abc_Tt6RemoveVar(t, v) }
+func Abc_Tt6HasVar(t word, v int32) int32   { return util.Abc_Tt6HasVar(t, v) }
+func Abc_Tt6Flip(t word, v int32) word      { return util.Abc_Tt6Flip(t, v) }
+func Abc_Tt6CheckOutDec(t word, v int32, out *word) int32 {
+	var result [1]word
+	phase := util.Abc_Tt6CheckOutDec(t, v, result[:])
+	if out != nil {
+		*out = result[0]
+	}
+	return phase
+}
+func Abc_TtCheckDsdAnd(t word, i, j int32, out *word) int32 {
+	var result [1]word
+	kind := util.Abc_TtCheckDsdAnd(t, i, j, result[:])
+	if out != nil {
+		*out = result[0]
+	}
+	return kind
+}
+func Abc_Random(reset int32) uint32 { return util.Abc_Random(reset) }
 func sat_solver_add_xor(s *bsat.Solver, out, a, b, complement int32) bool {
 	return s.AddXor(out, a, b, complement != 0)
 }
@@ -472,3 +550,11 @@ func Abc_TtEqual(a, b any, n int32) bool {
 	return util.Abc_TtEqual(asWords(a, n), asWords(b, n), n) != 0
 }
 func Abc_Clock() int64 { return util.Abc_Clock() }
+
+var Gia_ManAppendBuf = gia.Gia_ManAppendBuf
+var Gia_ManAppendAnd2 = gia.Gia_ManAppendAnd2
+var Gia_ManAppendOr2 = gia.Gia_ManAppendOr2
+var Gia_ManAppendXor2 = gia.Gia_ManAppendXor2
+var Gia_ManAppendXorReal2 = gia.Gia_ManAppendXorReal2
+var Gia_ManUpdateCopy = gia.Gia_ManUpdateCopy
+var Gia_ObjFaninId0 = gia.Gia_ObjFaninId0

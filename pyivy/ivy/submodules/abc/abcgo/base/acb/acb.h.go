@@ -1415,7 +1415,7 @@ func Acb_ManPrintStats(p *Acb_Man_t, nModules int32, fVerbose int32) {
 	fmt.Printf("box =%5d  ", nPrims+nUsers)
 	fmt.Printf("prim =%5d  ", nPrims)
 	fmt.Printf("user =%5d  ", nUsers)
-	fmt.Printf("mem =%6.3f MB", 1.0*Acb_ManMemory(p)/(1<<20))
+	fmt.Printf("mem =%6.3f MB", float64(Acb_ManMemory(p))/(1<<20))
 	fmt.Printf("\n")
 	// inlining of macro Acb_ManForEachNtk
 	for i = 1; i <= Acb_ManNtkNum(p); i++ {

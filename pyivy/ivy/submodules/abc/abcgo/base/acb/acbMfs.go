@@ -4,11 +4,59 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/glycerine/abcgo/bool/kit"
+	"github.com/glycerine/abcgo/misc/extra"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/sat/bsat"
+	"github.com/glycerine/abcgo/sat/cnf"
 )
 
 type sat_solver = bsat.Solver
 type abctime = int64
+
+func Cnf_DataLiftAndFlipLits(p *Cnf_Dat_t, offset int32, flips *Vec_Int_t) {
+	cnf.Cnf_DataLiftAndFlipLits(p, offset, flips)
+}
+func Cnf_DataCollectFlipLits(p *Cnf_Dat_t, pivot int32, flips *Vec_Int_t) {
+	cnf.Cnf_DataCollectFlipLits(p, pivot, flips)
+}
+func sat_solver_add_buffer_enable(s *sat_solver, a, b, enable, complement int32) int32 {
+	first := bsat.Positive(a)
+	if complement != 0 {
+		first = bsat.Negative(a)
+	}
+	second := bsat.Positive(b)
+	if complement == 0 {
+		second = bsat.Negative(b)
+	}
+	if !s.AddClause(first, second, bsat.Negative(enable)) {
+		return 0
+	}
+	first = bsat.Negative(a)
+	if complement == 0 {
+		second = bsat.Positive(b)
+	} else {
+		second = bsat.Negative(b)
+	}
+	if !s.AddClause(first, second, bsat.Negative(enable)) {
+		return 0
+	}
+	return 2
+}
+func sat_solver_simplify(s *sat_solver) int32 {
+	if s.Simplify() {
+		return 1
+	}
+	return 0
+}
+func sat_solver_restart(s *sat_solver) { s.RestartSearch() }
+func ABC_PRTP(name string, elapsed, total int64) {
+	percent := 0.0
+	if total != 0 {
+		percent = 100 * float64(elapsed) / float64(total)
+	}
+	fmt.Printf("%s = %9.2f sec (%6.2f %%)\n", name, float64(elapsed)/1e9, percent)
+}
 
 /**CFile****************************************************************
 
@@ -57,6 +105,19 @@ func Acb_ObjIsCritical(p *Acb_Ntk_t, i int32, f int32, fDel int32) int32 {
 	}
 }
 
+// Kit_TruthIsop adapts ABC's word truth table and cube vector to the shared
+// Kit implementation. Kit stores the same two-bit-per-variable cube encoding.
+func Kit_TruthIsop(truth *word, nVars int32, cover *Vec_Int_t, tryBoth int32) int32 {
+	words := []uint32{uint32(*truth), uint32(*truth >> 32)}
+	var cubes []uint32
+	phase := kit.Kit_TruthIsop(words, nVars, &cubes, tryBoth)
+	Vec_IntClear(cover)
+	for _, cube := range cubes {
+		Vec_IntPush(cover, int32(cube))
+	}
+	return phase
+}
+
 ////////////////////////////////////////////////////////////////////////
 ///                     FUNCTION DEFINITIONS                         ///
 ////////////////////////////////////////////////////////////////////////
@@ -76,9 +137,9 @@ func Acb_ObjIsCritical(p *Acb_Ntk_t, i int32, f int32, fDel int32) int32 {
 */
 func Acb_DeriveCnfFromTruth(Truth word, nVars int32, vCover *Vec_Int_t, vCnf *Vec_Str_t) int32 {
 	Vec_StrClear(vCnf)
-	if Truth == 0 || ~Truth == 0 {
+	if Truth == 0 || ^Truth == 0 {
 		//        assert( nVars == 0 );
-		Vec_StrPush(vCnf, byte((Truth == 0)))
+		Vec_StrPush(vCnf, byte(boolInt(Truth == 0, 1, 0)))
 		Vec_StrPush(vCnf, byte(255))
 		return 1
 
@@ -87,7 +148,7 @@ func Acb_DeriveCnfFromTruth(Truth word, nVars int32, vCover *Vec_Int_t, vCnf *Ve
 		assert(nVars > 0, "nVars > 0")
 		for c = 0; c < 2; c++ {
 			if c != 0 {
-				Truth = ~Truth
+				Truth = ^Truth
 			} else {
 				Truth = Truth
 			}
@@ -121,8 +182,10 @@ func Acb_DeriveCnfForWindowOne(p *Acb_Ntk_t, iObj int32) {
 	assert(len(vCnfs) == int(Acb_NtkObjNumMax(p)), "len(vCnfs) == int(Acb_NtkObjNumMax(p))")
 	Acb_DeriveCnfFromTruth(Acb_ObjTruth(p, iObj), Acb_ObjFaninNum(p, iObj), &p.vCover, &p.vCnf)
 	Vec_StrGrow(vCnfBase, Vec_StrSize(&p.vCnf))
-	copy(Vec_StrArray(vCnfBase), Vec_StrArray(&p.vCnf))
-	vCnfBase.nSize = Vec_StrSize(&p.vCnf)
+	Vec_StrClear(vCnfBase)
+	for _, entry := range Vec_StrArray(&p.vCnf)[:Vec_StrSize(&p.vCnf)] {
+		Vec_StrPush(vCnfBase, entry)
+	}
 }
 func Acb_DeriveCnfForWindow(p *Acb_Ntk_t, vWin *Vec_Int_t, PivotVar int32) []Vec_Str_t {
 	var vCnfs []Vec_Str_t = p.vCnfs
@@ -164,15 +227,14 @@ func Acb_DeriveCnfForWindow(p *Acb_Ntk_t, vWin *Vec_Int_t, PivotVar int32) []Vec
 **********************************************************************
 */
 func Acb_TranslateCnf(vClas *Vec_Int_t, vLits *Vec_Int_t, vCnf *Vec_Str_t, vSatVars *Vec_Int_t, iPivotVar int32) {
-	var Entry int8
 	var i, Lit int32
 	for i = 0; i < Vec_StrSize(vCnf); i++ {
-		Entry = int8(Vec_StrEntry(vCnf, i))
+		Entry := int8(Vec_StrEntry(vCnf, i))
 		if int32(Entry) == -1 {
 			Vec_IntPush(vClas, Vec_IntSize(vLits))
 			continue
 		}
-		Lit = Abc_Lit2LitV(Vec_IntArray(vSatVars), int32(Entry))
+		Lit = util.Abc_Lit2LitV(Vec_IntArray(vSatVars), int32(Entry))
 		Lit = Abc_LitNotCond(Lit, Abc_Lit2Var(Lit) == iPivotVar)
 		Vec_IntPush(vLits, Lit)
 	}
@@ -232,7 +294,6 @@ func Acb_NtkWindow2Cnf(p *Acb_Ntk_t, vWinObjs *Vec_Int_t, Pivot int32) *Cnf_Dat_
 	var iObjLit int32
 	var iFanin int32
 	var pFanins []int32
-	var Entry int32
 	var vCnfs []Vec_Str_t = Acb_DeriveCnfForWindow(p, vWinObjs, PivotVar)
 	var vClas *Vec_Int_t = Vec_IntAlloc(100)
 	var vLits *Vec_Int_t = Vec_IntAlloc(1000)
@@ -271,7 +332,7 @@ func Acb_NtkWindow2Cnf(p *Acb_Ntk_t, vWinObjs *Vec_Int_t, Pivot int32) *Cnf_Dat_
 		for k = 0; k < Acb_ObjFaninNum(p, iObj); k++ {
 			pFanins = Acb_ObjFanins(p, iObj)
 			iFanin = pFanins[k+1]
-			Vec_IntPush(vFaninVars, Acb_ObjFunc(p, iFanin)+(Acb_ObjFunc(p, iFanin) > PivotVar)*nTfoSize)
+			Vec_IntPush(vFaninVars, Acb_ObjFunc(p, iFanin)+boolInt(Acb_ObjFunc(p, iFanin) > PivotVar, nTfoSize, 0))
 		}
 		Vec_IntPush(vFaninVars, Acb_ObjFunc(p, iObj)+nTfoSize)
 		// derive CNF for the node
@@ -357,7 +418,7 @@ func Acb_NtkWindow2Solver(pSat *sat_solver, pCnf *Cnf_Dat_t, vFlip *Vec_Int_t, P
 	sat_solver_setnvars(pSat, nTimes*Cnf_DataVarNum(pCnf)+nGroups*nDivs+2)
 	assert(nTimes == 1 || nTimes == 2 || nTimes == 6, "nTimes == 1 || nTimes == 2 || nTimes == 6")
 	for n = 0; n < nTimes; n++ {
-		if n & 1 {
+		if n&1 != 0 {
 			Cnf_DataLiftAndFlipLits(pCnf, -Cnf_DataVarNum(pCnf), vFlip)
 		}
 		for i = 0; i < Cnf_DataClauseNum(pCnf); i++ {
@@ -365,7 +426,7 @@ func Acb_NtkWindow2Solver(pSat *sat_solver, pCnf *Cnf_Dat_t, vFlip *Vec_Int_t, P
 				fmt.Printf("Error: SAT solver became UNSAT at a wrong place.\n")
 			}
 		}
-		if n & 1 {
+		if n&1 != 0 {
 			Cnf_DataLiftAndFlipLits(pCnf, Cnf_DataVarNum(pCnf), vFlip)
 		}
 		if n < nTimes-1 {
@@ -472,8 +533,7 @@ func Acb_ComputeFunction(pSat *sat_solver, PivotVar int32, FreeVar int32, vDivVa
 			}
 		}
 		uTruth |= uCube
-		status = sat_solver_addclause(pSat, Vec_IntArray(vTempLits)[:Vec_IntSize(vTempLits)])
-		if status == 0 {
+		if !sat_solver_addclause(pSat, Vec_IntArray(vTempLits)[:Vec_IntSize(vTempLits)]) {
 			Vec_IntFree(vTempLits)
 			return uTruth
 		}
@@ -499,24 +559,24 @@ func Acb_ComputeFunction(pSat *sat_solver, PivotVar int32, FreeVar int32, vDivVa
 func Acb_NtkPrintVec(p *Acb_Ntk_t, vVec *Vec_Int_t, pName string) {
 	var i int32
 	fmt.Printf("%s: ", pName)
-	for i = 0; i < vVec.nSize; i++ {
-		fmt.Printf("%d ", vVec.pArray[i])
+	for i = 0; i < Vec_IntSize(vVec); i++ {
+		fmt.Printf("%d ", Vec_IntEntry(vVec, i))
 	}
 	fmt.Printf("\n")
 }
 func Acb_NtkPrintVec2(p *Acb_Ntk_t, vVec *Vec_Int_t, pName string) {
 	var i int32
 	fmt.Printf("%s: \n", pName)
-	for i = 0; i < vVec.nSize; i++ {
-		Acb_NtkPrintNode(p, vVec.pArray[i])
+	for i = 0; i < Vec_IntSize(vVec); i++ {
+		Acb_NtkPrintNode(p, Vec_IntEntry(vVec, i))
 	}
 	fmt.Printf("\n")
 }
 func Acb_NtkPrintVecWin(p *Acb_Ntk_t, vVec *Vec_Int_t, pName string) {
 	var i int32
 	fmt.Printf("%s: \n", pName)
-	for i = 0; i < vVec.nSize; i++ {
-		Acb_NtkPrintNode(p, Abc_Lit2Var(vVec.pArray[i]))
+	for i = 0; i < Vec_IntSize(vVec); i++ {
+		Acb_NtkPrintNode(p, Abc_Lit2Var(Vec_IntEntry(vVec, i)))
 	}
 	fmt.Printf("\n")
 }
@@ -1007,26 +1067,26 @@ func Acb_NtkWindow(p *Acb_Ntk_t, Pivot int32, nTfiLevs int32, nTfoLevs int32, nF
 */
 func Vec_IntVars2Vars(p *Vec_Int_t, Shift int32) {
 	var i int32
-	for i = 0; i < p.nSize; i++ {
-		p.pArray[i] += Shift
+	for i = 0; i < Vec_IntSize(p); i++ {
+		Vec_IntWriteEntry(p, i, Vec_IntEntry(p, i)+Shift)
 	}
 }
 func Vec_IntVars2Lits(p *Vec_Int_t, Shift int32, fCompl int32) {
 	var i int32
-	for i = 0; i < p.nSize; i++ {
-		p.pArray[i] = Abc_Var2Lit(p.pArray[i]+Shift, fCompl)
+	for i = 0; i < Vec_IntSize(p); i++ {
+		Vec_IntWriteEntry(p, i, Abc_Var2Lit(Vec_IntEntry(p, i)+Shift, fCompl))
 	}
 }
 func Vec_IntLits2Vars(p *Vec_Int_t, Shift int32) {
 	var i int32
-	for i = 0; i < p.nSize; i++ {
-		p.pArray[i] = Abc_Lit2Var(p.pArray[i]) + Shift
+	for i = 0; i < Vec_IntSize(p); i++ {
+		Vec_IntWriteEntry(p, i, Abc_Lit2Var(Vec_IntEntry(p, i))+Shift)
 	}
 }
 func Vec_IntRemap(p *Vec_Int_t, vMap *Vec_Int_t) {
 	var i int32
-	for i = 0; i < p.nSize; i++ {
-		p.pArray[i] = Vec_IntEntry(vMap, p.pArray[i])
+	for i = 0; i < Vec_IntSize(p); i++ {
+		Vec_IntWriteEntry(p, i, Vec_IntEntry(vMap, Vec_IntEntry(p, i)))
 	}
 }
 
@@ -1158,7 +1218,7 @@ func Acb_NtkFindSupp2(p *Acb_Ntk_t, Pivot int32, pSat *sat_solver, nVars int32, 
 		}
 		assert(nNonCrits < Vec_IntSize(vSupp), "nNonCrits < Vec_IntSize(vSupp)")
 		// sort additional fanins by level
-		Vec_IntSelectSortCost(Vec_IntArray(vSupp)+nNonCrits, Vec_IntSize(vSupp)-nNonCrits, &p.vLevelD)
+		Vec_IntSelectSortCost(Vec_IntArray(vSupp)[nNonCrits:], Vec_IntSize(vSupp)-nNonCrits, &p.vLevelD)
 		// translate to SAT vars
 		for k = 0; k < Vec_IntSize(vSupp); k++ {
 			iFanin = Vec_IntEntry(vSupp, k)
@@ -1280,7 +1340,7 @@ func Acb_NtkFindSupp3(p *Acb_Ntk_t, Pivot int32, pSat *sat_solver, nVars int32, 
 				assert(Acb_ObjFunc(p, iFanin3) >= 0, "Acb_ObjFunc(p, iFanin3) >= 0")
 				Vec_IntPushUnique(vSupp, Abc_Var2Lit(Acb_ObjFunc(p, iFanin3)+6*nVars+nDivs, 0))
 			}
-			assert(Vec_IntCheckUniqueSmall(vSupp), "Vec_IntCheckUniqueSmall(vSupp)")
+			assert(Vec_IntCheckUniqueSmall(vSupp) != 0, "Vec_IntCheckUniqueSmall(vSupp)")
 
 			// sort fanins by level
 			//Vec_IntSelectSortCost( Vec_IntArray(vSupp) + NodeMark, Vec_IntSize(vSupp) - NodeMark, &p->vLevelD );
@@ -1357,7 +1417,7 @@ func Acb_NtkFindSupp3(p *Acb_Ntk_t, Pivot int32, pSat *sat_solver, nVars int32, 
 				assert(Acb_ObjFunc(p, iFanin3) >= 0, "Acb_ObjFunc(p, iFanin3) >= 0")
 				Vec_IntPushUnique(vSupp, Abc_Var2Lit(Acb_ObjFunc(p, iFanin3)+6*nVars+nDivs, 0))
 			}
-			assert(Vec_IntCheckUniqueSmall(vSupp), "Vec_IntCheckUniqueSmall(vSupp)")
+			assert(Vec_IntCheckUniqueSmall(vSupp) != 0, "Vec_IntCheckUniqueSmall(vSupp)")
 
 			// sort fanins by level
 			//Vec_IntSelectSortCost( Vec_IntArray(vSupp) + NodeMark, Vec_IntSize(vSupp) - NodeMark, &p->vLevelD );
@@ -1535,10 +1595,10 @@ func Acb_NtkOptNodeAnalyze(p *Acb_Mfs_t, PivotVar int32, nDivs int32, nValues in
 		fmt.Printf("\n")
 
 		for s = start; s < stop; s++ {
-			if pOnSet[s] {
+			if pOnSet[s] != 0 {
 				OnSet[f] |= word(1) << uint(s-start)
 			}
-			if pOffSet[s] {
+			if pOffSet[s] != 0 {
 				OffSet[f] |= word(1) << uint(s-start)
 			}
 		}
@@ -1606,19 +1666,19 @@ func Acb_NtkOptNode(p *Acb_Mfs_t, Pivot int32) int32 {
 
 	// compute divisors and window for this target node with these taboo nodes
 	clk = Abc_Clock()
-	vWin = Acb_NtkWindow(p.pNtk, Pivot, p.pPars.nTfiLevMax, p.pPars.nTfoLevMax, p.pPars.nFanoutMax, !p.pPars.fArea, &nDivs)
+	vWin = Acb_NtkWindow(p.pNtk, Pivot, p.pPars.nTfiLevMax, p.pPars.nTfoLevMax, p.pPars.nFanoutMax, boolInt(p.pPars.fArea == 0, 1, 0), &nDivs)
 	p.nWinsAll += Vec_IntSize(vWin)
 	p.nDivsAll += nDivs
 	p.timeWin += Abc_Clock() - clk
 	PivotVar = Vec_IntFind(vWin, Abc_Var2Lit(Pivot, 0))
-	if p.pPars.fVerbose {
+	if p.pPars.fVerbose != 0 {
 		fmt.Printf("Node %d: Window contains %d objects and %d divisors.  ", Pivot, Vec_IntSize(vWin), nDivs)
 	}
 	//    Acb_WinPrint( p->pNtk, vWin, Pivot, nDivs );
 	//    Acb_NtkPrintVecWin( p->pNtk, vWin, "Win" );
 	if Vec_IntSize(vWin) > p.pPars.nWinNodeMax {
 		p.nOvers++
-		if p.pPars.fVerbose {
+		if p.pPars.fVerbose != 0 {
 			fmt.Printf("Too many divisors.\n")
 		}
 		goto cleanup
@@ -1641,10 +1701,10 @@ func Acb_NtkOptNode(p *Acb_Mfs_t, Pivot int32) int32 {
 		var status int32 = sat_solver_solve(p.pSat[0], []int32{Lit}, nil, 0, 0, 0, 0)
 		if status == l_False {
 			p.nChanges[0]++
-			if p.pPars.fVerbose {
+			if p.pPars.fVerbose != 0 {
 				fmt.Printf("Found constant %d.\n", c)
 			}
-			Acb_NtkUpdateNode(p.pNtk, Pivot, word(boolInt(c != 0, int32(^word(0)), 0)), nil)
+			Acb_NtkUpdateNode(p.pNtk, Pivot, word(boolInt(c != 0, -1, 0)), nil)
 			RetValue = 1
 			goto cleanup
 		}
@@ -1657,7 +1717,7 @@ func Acb_NtkOptNode(p *Acb_Mfs_t, Pivot int32) int32 {
 	p.timeSol += Abc_Clock() - clk
 
 	// try to remove useless fanins
-	if p.pPars.fArea {
+	if p.pPars.fArea != 0 {
 		var fEnableProfile int32
 		if fEnableProfile != 0 {
 			userVars := make([]int32, 0, 1+2*nDivs)
@@ -1677,21 +1737,21 @@ func Acb_NtkOptNode(p *Acb_Mfs_t, Pivot int32) int32 {
 		p.timeSat += Abc_Clock() - clk
 		// undo variables
 		p.pSat[1].ClearUserVariables()
-		if Result {
+		if Result != 0 {
 			if Vec_IntSize(p.vSupp) == 0 {
 				p.nChanges[0]++
 			} else {
 				p.nChanges[1]++
 			}
 			assert(Vec_IntSize(p.vSupp) < p.pPars.nLutSize, "Vec_IntSize(p.vSupp) < p.pPars.nLutSize")
-			if p.pPars.fVerbose {
+			if p.pPars.fVerbose != 0 {
 				fmt.Printf("Found %d inputs: ", Vec_IntSize(p.vSupp))
 			}
 			uTruth = Acb_ComputeFunction(p.pSat[0], PivotVar, sat_solver_nvars(p.pSat[0])-1, p.vSupp, 0)
-			if p.pPars.fVerbose {
-				Extra_PrintHex(os.Stdout, []uint32{uint32(uTruth)}, Vec_IntSize(p.vSupp))
+			if p.pPars.fVerbose != 0 {
+				extra.Extra_PrintHex(os.Stdout, []uint32{uint32(uTruth)}, Vec_IntSize(p.vSupp))
 			}
-			if p.pPars.fVerbose {
+			if p.pPars.fVerbose != 0 {
 				fmt.Printf("\n")
 			}
 			// create support in terms of nodes
@@ -1711,19 +1771,19 @@ func Acb_NtkOptNode(p *Acb_Mfs_t, Pivot int32) int32 {
 	if Acb_NtkObjMffcEstimate(p.pNtk, Pivot) >= 1 {
 		// check for one-node implementation
 		clk = Abc_Clock()
-		Result = Acb_NtkFindSupp2(p.pNtk, Pivot, p.pSat[1], Cnf_DataVarNum(pCnf), nDivs, vWin, p.vSupp, p.pPars.nLutSize, !p.pPars.fArea)
+		Result = Acb_NtkFindSupp2(p.pNtk, Pivot, p.pSat[1], Cnf_DataVarNum(pCnf), nDivs, vWin, p.vSupp, p.pPars.nLutSize, boolInt(p.pPars.fArea == 0, 1, 0))
 		p.timeSat += Abc_Clock() - clk
-		if Result {
+		if Result != 0 {
 			p.nChanges[2]++
 			assert(Vec_IntSize(p.vSupp) <= p.pPars.nLutSize, "Vec_IntSize(p.vSupp) <= p.pPars.nLutSize")
-			if p.pPars.fVerbose {
+			if p.pPars.fVerbose != 0 {
 				fmt.Printf("Found %d inputs: ", Vec_IntSize(p.vSupp))
 			}
 			uTruth = Acb_ComputeFunction(p.pSat[0], PivotVar, sat_solver_nvars(p.pSat[0])-1, p.vSupp, 0)
-			if p.pPars.fVerbose {
-				Extra_PrintHex(os.Stdout, []uint32{uint32(uTruth)}, Vec_IntSize(p.vSupp))
+			if p.pPars.fVerbose != 0 {
+				extra.Extra_PrintHex(os.Stdout, []uint32{uint32(uTruth)}, Vec_IntSize(p.vSupp))
 			}
-			if p.pPars.fVerbose {
+			if p.pPars.fVerbose != 0 {
 				fmt.Printf("\n")
 			}
 			// create support in terms of nodes
@@ -1736,7 +1796,7 @@ func Acb_NtkOptNode(p *Acb_Mfs_t, Pivot int32) int32 {
 	}
 
 	//#if 0
-	if p.pPars.fUseAshen && Acb_NtkObjMffcEstimate(p.pNtk, Pivot) >= 2 { // && Pivot != 70 )
+	if p.pPars.fUseAshen != 0 && Acb_NtkObjMffcEstimate(p.pNtk, Pivot) >= 2 { // && Pivot != 70 )
 
 		p.nTwoNodes++
 		// derive SAT solver
@@ -1746,14 +1806,14 @@ func Acb_NtkOptNode(p *Acb_Mfs_t, Pivot int32) int32 {
 
 		// check for two-node implementation
 		clk = Abc_Clock()
-		Result = Acb_NtkFindSupp3(p.pNtk, Pivot, p.pSat[2], Cnf_DataVarNum(pCnf), nDivs, vWin, p.vSupp, p.pPars.nLutSize, !p.pPars.fArea)
+		Result = Acb_NtkFindSupp3(p.pNtk, Pivot, p.pSat[2], Cnf_DataVarNum(pCnf), nDivs, vWin, p.vSupp, p.pPars.nLutSize, boolInt(p.pPars.fArea == 0, 1, 0))
 		p.timeSat += Abc_Clock() - clk
-		if Result {
+		if Result != 0 {
 			var fVerbose int32 = 1
 			var i, k, Lit, Var, Var2, status, NodeNew, fBecameUnsat, fCompl int32
 			assert(Result < p.pPars.nLutSize, "Result                       <  p.pPars.nLutSize")
 			assert(Vec_IntSize(p.vSupp)-Result <= p.pPars.nLutSize, "Vec_IntSize(p.vSupp)-Result <= p.pPars.nLutSize")
-			if fVerbose != 0 || p.pPars.fVerbose {
+			if fVerbose != 0 || p.pPars.fVerbose != 0 {
 				fmt.Printf("Obj %5d: Found %d Hvars and %d Gvars: ", Pivot, Result, Vec_IntSize(p.vSupp)-Result)
 			}
 			// p->vSupp contains G variables (Vec_IntSize(p->vSupp)-Result) followed by H variables (Result)
@@ -1767,7 +1827,7 @@ func Acb_NtkOptNode(p *Acb_Mfs_t, Pivot int32) int32 {
 				assert(Var+2*Cnf_DataVarNum(pCnf) < sat_solver_nvars(p.pSat[1]), "Var + 2*Cnf_DataVarNum(pCnf) < sat_solver_nvars(p.pSat[1])")
 				Lit = Abc_Var2Lit(Var+2*Cnf_DataVarNum(pCnf), 0) // HVars are the same
 				if !sat_solver_addclause(p.pSat[1], []int32{Lit}) {
-					if fVerbose != 0 || p.pPars.fVerbose {
+					if fVerbose != 0 || p.pPars.fVerbose != 0 {
 						fmt.Printf("Error: SAT solver became UNSAT at a wrong place (place 2).  ")
 					}
 					fBecameUnsat = 1
@@ -1777,7 +1837,7 @@ func Acb_NtkOptNode(p *Acb_Mfs_t, Pivot int32) int32 {
 			status = sat_solver_solve(p.pSat[1], nil, nil, 0, 0, 0, 0)
 			assert(status == l_True, "status == l_True")
 			// get assignment of the function
-			fCompl = !sat_solver_var_value(p.pSat[1], PivotVar)
+			fCompl = boolInt(sat_solver_var_value(p.pSat[1], PivotVar) == 0, 1, 0)
 			// constrain second set of G-vars to have values equal to the assignment
 			for i = 0; i < Vec_IntSize(p.vSupp)-Result && i < Vec_IntSize(p.vSupp); i++ {
 				Var = Vec_IntEntry(p.vSupp, i)
@@ -1790,7 +1850,7 @@ func Acb_NtkOptNode(p *Acb_Mfs_t, Pivot int32) int32 {
 				}
 				if k < Vec_IntSize(p.vSupp) { // do not constrain a C-var
 
-					if fVerbose != 0 || p.pPars.fVerbose {
+					if fVerbose != 0 || p.pPars.fVerbose != 0 {
 						fmt.Printf("Found C-var in object %d.  ", Pivot)
 					}
 					continue
@@ -1798,28 +1858,30 @@ func Acb_NtkOptNode(p *Acb_Mfs_t, Pivot int32) int32 {
 				assert(Var >= 0 && Var < nDivs, "Var >= 0 && Var < nDivs")
 				Lit = sat_solver_var_literal(p.pSat[1], Var+Cnf_DataVarNum(pCnf))
 				if !sat_solver_addclause(p.pSat[1], []int32{Lit}) {
-					if fVerbose != 0 || p.pPars.fVerbose {
+					if fVerbose != 0 || p.pPars.fVerbose != 0 {
 						fmt.Printf("Error: SAT solver became UNSAT at a wrong place (place 1).  ")
 					}
 					fBecameUnsat = 1
 				}
 			}
-			if fBecameUnsat {
+			if fBecameUnsat != 0 {
 				StrCount++
-				if fVerbose != 0 || p.pPars.fVerbose {
+				if fVerbose != 0 || p.pPars.fVerbose != 0 {
 					fmt.Printf(" Quitting.\n")
 				}
 				goto cleanup
 			}
 			// consider only G variables
-			p.vSupp.nSize -= Result
+			oldSupport := Vec_IntSize(p.vSupp)
+			preservedTail := append([]int32(nil), Vec_IntArray(p.vSupp)[oldSupport-Result:]...)
+			Vec_IntShrink(p.vSupp, oldSupport-Result)
 			// truth table
 			uTruth = Acb_ComputeFunction(p.pSat[1], PivotVar, sat_solver_nvars(p.pSat[1])-1, p.vSupp, fCompl)
-			if fVerbose != 0 || p.pPars.fVerbose {
-				Extra_PrintHex(os.Stdout, []uint32{uint32(uTruth)}, Vec_IntSize(p.vSupp))
+			if fVerbose != 0 || p.pPars.fVerbose != 0 {
+				extra.Extra_PrintHex(os.Stdout, []uint32{uint32(uTruth)}, Vec_IntSize(p.vSupp))
 			}
-			if uTruth == 0 || ~uTruth == 0 {
-				if fVerbose != 0 || p.pPars.fVerbose {
+			if uTruth == 0 || ^uTruth == 0 {
+				if fVerbose != 0 || p.pPars.fVerbose != 0 {
 					fmt.Printf(" Quitting.\n")
 				}
 				goto cleanup
@@ -1831,7 +1893,7 @@ func Acb_NtkOptNode(p *Acb_Mfs_t, Pivot int32) int32 {
 			NodeNew = Acb_NtkCreateNode(p.pNtk, uTruth, p.vSupp)
 			Acb_DeriveCnfForWindowOne(p.pNtk, NodeNew)
 			Acb_DeriveCnfForNode(p.pNtk, NodeNew, p.pSat[0], sat_solver_nvars(p.pSat[0])-2)
-			p.vSupp.nSize += Result
+			Vec_IntPushArray(p.vSupp, preservedTail, int32(len(preservedTail)))
 			// collect new variables
 			for i = Vec_IntSize(p.vSupp) - Result; i < Vec_IntSize(p.vSupp); i++ {
 				Var = Vec_IntEntry(p.vSupp, i)
@@ -1842,13 +1904,13 @@ func Acb_NtkOptNode(p *Acb_Mfs_t, Pivot int32) int32 {
 			// truth table
 			uTruth = Acb_ComputeFunction(p.pSat[0], PivotVar, sat_solver_nvars(p.pSat[0])-1, p.vSupp, 0)
 			// create new fanins of the node
-			if fVerbose != 0 || p.pPars.fVerbose {
+			if fVerbose != 0 || p.pPars.fVerbose != 0 {
 				fmt.Printf("  ")
 			}
-			if fVerbose != 0 || p.pPars.fVerbose {
-				Extra_PrintHex(os.Stdout, []uint32{uint32(uTruth)}, Vec_IntSize(p.vSupp))
+			if fVerbose != 0 || p.pPars.fVerbose != 0 {
+				extra.Extra_PrintHex(os.Stdout, []uint32{uint32(uTruth)}, Vec_IntSize(p.vSupp))
 			}
-			if fVerbose != 0 || p.pPars.fVerbose {
+			if fVerbose != 0 || p.pPars.fVerbose != 0 {
 				fmt.Printf("\n")
 			}
 			// create support in terms of nodes
@@ -1863,7 +1925,7 @@ func Acb_NtkOptNode(p *Acb_Mfs_t, Pivot int32) int32 {
 	}
 	//#endif
 
-	if p.pPars.fVerbose {
+	if p.pPars.fVerbose != 0 {
 		fmt.Printf("\n")
 	}
 
@@ -1894,16 +1956,19 @@ cleanup:
 */
 func Acb_NtkOpt(pNtk *Acb_Ntk_t, pPars *Acb_Par_t) {
 	var pMan *Acb_Mfs_t = Acb_MfsStart(pNtk, pPars)
-	if pPars.fVerbose {
-		fmt.Printf("%s-optimization parameters: TfiLev(I) = %d  TfoLev(O) = %d  WinMax(W) = %d  LutSize = %d\n", map[bool]string{true: "Area", false: "Delay"}[pMan.pPars.fArea], pMan.pPars.nTfiLevMax, pMan.pPars.nTfoLevMax, pMan.pPars.nWinNodeMax, pMan.pPars.nLutSize)
+	if pPars.fVerbose != 0 {
+		mode := "Delay"
+		if pMan.pPars.fArea != 0 {
+			mode = "Area"
+		}
+		fmt.Printf("%s-optimization parameters: TfiLev(I) = %d  TfoLev(O) = %d  WinMax(W) = %d  LutSize = %d\n", mode, pMan.pPars.nTfiLevMax, pMan.pPars.nTfoLevMax, pMan.pPars.nWinNodeMax, pMan.pPars.nLutSize)
 	}
 	Acb_NtkCreateFanout(pNtk)  // fanout data structure
 	Acb_NtkCleanObjFuncs(pNtk) // SAT variables
 	Acb_NtkCleanObjCnfs(pNtk)  // CNF representations
-	if pMan.pPars.fArea {
+	if pMan.pPars.fArea != 0 {
 		var n int32
 		var iObj int32
-		var RetValue int32
 		var nNodes int32 = Acb_NtkObjNumMax(pNtk)
 		var vVisited *Vec_Bit_t = Vec_BitStart(Acb_NtkObjNumMax(pNtk))
 		Acb_NtkUpdateLevelD(pNtk, -1) // compute forward logic level
@@ -1938,7 +2003,7 @@ func Acb_NtkOpt(pNtk *Acb_Ntk_t, pPars *Acb_Par_t) {
 			Acb_NtkOptNode(pMan, iObj)
 		}
 	}
-	if pPars.fVerbose {
+	if pPars.fVerbose != 0 {
 		pMan.timeTotal = Abc_Clock() - pMan.timeTotal
 		fmt.Printf("Node = %d  Win = %d (Ave = %d)  DivAve = %d   Change = %d  C = %d  N1 = %d  N2 = %d  N3 = %d   Over = %d  Str = %d  2Node = %d.\n", pMan.nNodes, pMan.nWins, pMan.nWinsAll/Abc_MaxInt(1, pMan.nWins), pMan.nDivsAll/Abc_MaxInt(1, pMan.nWins), pMan.nChanges[0]+pMan.nChanges[1]+pMan.nChanges[2]+pMan.nChanges[3], pMan.nChanges[0], pMan.nChanges[1], pMan.nChanges[2], pMan.nChanges[3], pMan.nOvers, StrCount, pMan.nTwoNodes)
 		ABC_PRTP("Windowing  ", pMan.timeWin, pMan.timeTotal)
@@ -1948,7 +2013,7 @@ func Acb_NtkOpt(pNtk *Acb_Ntk_t, pPars *Acb_Par_t) {
 		//        ABC_PRTP( "  unsat    ", pMan->timeSatU,   pMan->timeTotal );
 		//        ABC_PRTP( "  sat      ", pMan->timeSatS,   pMan->timeTotal );
 		ABC_PRTP("TOTAL      ", pMan.timeTotal, pMan.timeTotal)
-		fflush(os.Stdout)
+		// fmt.Printf writes directly to os.Stdout, so no explicit flush is needed.
 	}
 	Acb_MfsStop(pMan)
 	StrCount = 0

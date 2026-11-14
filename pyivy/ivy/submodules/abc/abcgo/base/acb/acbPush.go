@@ -184,7 +184,7 @@ func Acb_ObjSuppMin_int(p *Acb_Ntk_t, iObj int32) int32 {
 	pFanins = Acb_ObjFanins(p, iObj)
 	for k = 0; k < pFanins[0]; k++ {
 		iFanin = pFanins[k+1]
-		if Abc_Tt6HasVar(uTruth, k) {
+		if Abc_Tt6HasVar(uTruth, k) != 0 {
 			continue
 		}
 		Acb_ObjDeleteFaninIndex(p, iObj, k)

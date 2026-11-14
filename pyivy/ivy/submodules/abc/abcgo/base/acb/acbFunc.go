@@ -2,6 +2,9 @@ package acb
 
 import (
 	"fmt"
+	baseabc "github.com/glycerine/abcgo/base/abc"
+	basemain "github.com/glycerine/abcgo/base/main"
+	"github.com/glycerine/abcgo/misc/extra"
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"strconv"
@@ -1536,7 +1539,7 @@ func Acb_FindReplace(pSat *sat_solver, iFirstDiv int32, vWeights *Vec_Int_t, vPa
 		}
 		// consider any cheaper ones that this one
 		for k = 0; k < iDiv; k++ {
-			if Vec_IntEntry(vWeights, k) == Vec_IntEntry(vWeights, iDiv) != 0 {
+			if Vec_IntEntry(vWeights, k) == Vec_IntEntry(vWeights, iDiv) {
 				continue
 			}
 			assert(Vec_IntEntry(vWeights, k) < Vec_IntEntry(vWeights, iDiv), "Vec_IntEntry(vWeights, k) < Vec_IntEntry(vWeights, iDiv)")
@@ -3254,17 +3257,16 @@ func Acb_TransformPatchFunctions(vSops *Vec_Ptr_t, vSupps *Vec_Wec_t, pvUsed **V
 	for i = 0; i < Vec_WecSize(vSupps); i++ {
 		vLevel = Vec_WecEntry(vSupps, i)
 		pSop := Vec_PtrEntry(vSops, i).(string)
-		var pStrCopy string = Abc_UtilStrsav(pSop)
-		var pToken string = strtok(pStrCopy, "\n")
-		for pToken != nil {
+		for _, pToken := range strings.Split(pSop, "\n") {
+			if pToken == "" {
+				continue
+			}
 			for k = 0; pToken[k] != ' '; k++ {
 				if pToken[k] != '-' {
 					Vec_IntWriteEntry(vPres, Vec_IntEntry(vLevel, k), 1)
 				}
 			}
-			pToken = strtok(nil, "\n")
 		}
-		pStrCopy = nil
 	}
 	// create common order
 	// inlining of macro Vec_WecForEachLevel
@@ -3362,7 +3364,8 @@ func Acb_NtkEcoPerform(pNtkF *Acb_Ntk_t, pNtkG *Acb_Ntk_t, pFileName []string, n
 	var vInst *Vec_Str_t = nil
 	var vPatch *Vec_Str_t = nil
 
-	var pSop string = nil
+	var pSop string
+	var outFile string
 	var i int32
 
 	if fVerbose != 0 {
@@ -3386,8 +3389,7 @@ func Acb_NtkEcoPerform(pNtkF *Acb_Ntk_t, pNtkG *Acb_Ntk_t, pFileName []string, n
 		Cnf_DataFree(pCnf)
 		// add output clause
 		Lit = Abc_Var2Lit(1, 0)
-		status = sat_solver_addclause(pSat, []int32{Lit})
-		if status == 0 {
+		if !sat_solver_addclause(pSat, []int32{Lit}) {
 			status = l_False
 		} else {
 			status = sat_solver_solve(pSat, nil, nil, 0, 0, 0, 0)
@@ -3442,20 +3444,20 @@ func Acb_NtkEcoPerform(pNtkF *Acb_Ntk_t, pNtkG *Acb_Ntk_t, pFileName []string, n
 			// derive function of this target
 			pSop = Acb_DeriveOnePatchFunction(pCnf, i, nTargets, Vec_IntSize(vDivs), vSupp, fCisOnly)
 			Cnf_DataFree(pCnf)
-			if pSop == nil {
+			if pSop == "" {
 				RetValue = 0
 				goto cleanup
 			}
-			if (nTimeout != 0) && (Abc_Clock()-clkStart)/int64(time.Second) >= nTimeout {
+			if (nTimeout != 0) && int32((Abc_Clock()-clkStart)/int64(time.Second)) >= nTimeout {
 				Vec_IntFreeP(&vSupp)
-				pSop = nil
+				pSop = ""
 				fmt.Printf("The target computation timed out after %d seconds.\n", nTimeout)
 				RetValue = 0
 				goto cleanup
 			}
 
 			// add new function to the miter
-			pOne = Abc_SopSynthesizeOne(pSop, 1)
+			pOne = baseabc.Abc_SopSynthesizeOne(pSop, 1)
 			fmt.Printf("Tar%02d: ", i)
 			Gia_ManPrintStats(pOne, nil)
 
@@ -3573,7 +3575,7 @@ cleanup:
 **********************************************************************
 */
 func Acb_NtkTestRun2(pFileNames []string, fVerbose int32) {
-	var pFileNameOut string = Extra_FileNameGenericAppend(pFileNames[0], "_w.v")
+	var pFileNameOut string = extra.Extra_FileNameGenericAppend(pFileNames[0], "_w.v")
 	var pNtk *Acb_Ntk_t = Acb_VerilogSimpleRead(pFileNames[0], pFileNames[2])
 	Acb_VerilogSimpleWrite(pNtk, pFileNameOut)
 	Acb_ManFree(pNtk.pDesign)
@@ -3597,7 +3599,7 @@ func Acb_NtkRunEco(pFileNames []string, nTimeout int32, fCheck int32, fRandom in
 	var Command string // was [1000]byte in C
 	var Result int32 = 1
 	var pNtkF *Acb_Ntk_t = Acb_VerilogSimpleRead(pFileNames[0], pFileNames[2])
-	var pNtkG *Acb_Ntk_t = Acb_VerilogSimpleRead(pFileNames[1], nil)
+	var pNtkG *Acb_Ntk_t = Acb_VerilogSimpleRead(pFileNames[1], "")
 	if !(pNtkF != nil) || !(pNtkG != nil) {
 		return
 	}
@@ -3613,7 +3615,11 @@ func Acb_NtkRunEco(pFileNames []string, nTimeout int32, fCheck int32, fRandom in
 	assert(Acb_NtkCiNum(pNtkF) == Acb_NtkCiNum(pNtkG), "Acb_NtkCiNum(pNtkF) == Acb_NtkCiNum(pNtkG)")
 	assert(Acb_NtkCoNum(pNtkF) == Acb_NtkCoNum(pNtkG), "Acb_NtkCoNum(pNtkF) == Acb_NtkCoNum(pNtkG)")
 
-	Acb_IntallLibrary(Abc_FrameReadSignalNames() != nil)
+	if Abc_FrameReadSignalNames() != nil {
+		Acb_IntallLibrary(1)
+	} else {
+		Acb_IntallLibrary(0)
+	}
 
 	if !(Acb_NtkEcoPerform(pNtkF, pNtkG, pFileNames, nTimeout, 0, fInputs, fCheck, fVerbose, fVeryVerbose) != 0) {
 		//        printf( "General computation timed out. Trying inputs only.\n\n" );
@@ -3632,8 +3638,8 @@ func Acb_NtkRunEco(pFileNames []string, nTimeout int32, fCheck int32, fRandom in
 		output = "out.v"
 	}
 	Command = fmt.Sprintf("read %s; strash; write temp1.aig; read %s; strash; write temp2.aig; &cec temp1.aig temp2.aig", pFileNames[1], output)
-	if (Result != 0) && Cmd_CommandExecute(Abc_FrameGetGlobalFrame(), Command) {
-		fprintf(os.Stdout, "Cannot execute command \"%s\".\n", Command)
+	if (Result != 0) && basemain.Cmd_CommandExecute(basemain.Abc_FrameGetGlobalFrame(), Command) != 0 {
+		fmt.Fprintf(os.Stdout, "Cannot execute command \"%s\".\n", Command)
 	}
 	fmt.Printf("\n")
 }

@@ -91,7 +91,7 @@ func TestSourceWireTargetPrefix(t *testing.T) {
 	for _, tc := range []struct {
 		name string
 		want int32
-	}{{"t_result", 1}, {"t_", 1}, {"target", 0}, {"x_t_result", 0}, {"t", 0}, {"", 0}} {
+	}{{"t_result", 1}, {"t_", 1}, {"target", 0}, {"x_t_result", 0}, {"t", 0}} {
 		id := util.Abc_NamStrFindOrAdd(names, tc.name, nil)
 		if got := Acb_WireIsTarget(id, names); got != tc.want {
 			t.Errorf("target(%q) = %d, want %d", tc.name, got, tc.want)

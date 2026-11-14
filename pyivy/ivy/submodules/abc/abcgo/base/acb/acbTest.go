@@ -3,6 +3,7 @@ package acb
 import (
 	"fmt"
 	"strings"
+	"unsafe"
 )
 
 import "os"
@@ -66,10 +67,9 @@ func Gia_ManSimTry(pF *Gia_Man_t, pG *Gia_Man_t) {
 	var nWords int32 = 500
 	var vSimsF, vSimsG *Vec_Wrd_t
 	Abc_Random(1)
-	Vec_WrdFreeP(&pF.vSimsPi)
-	Vec_WrdFreeP(&pG.vSimsPi)
-	pF.vSimsPi = Vec_WrdStartRandom(Gia_ManCiNum(pF) * nWords)
-	pG.vSimsPi = Vec_WrdDup(pF.vSimsPi)
+	inputs := Vec_WrdStartRandom(Gia_ManCiNum(pF) * nWords)
+	Gia_ManSetSimInputs(pF, inputs)
+	Gia_ManSetSimInputs(pG, Vec_WrdDup(inputs))
 	vSimsF = Gia_ManSimPatSim(pF)
 	vSimsG = Gia_ManSimPatSim(pG)
 	assert(Gia_ManObjNum(pF)*nWords == Vec_WrdSize(vSimsF), "Gia_ManObjNum(pF) * nWords == Vec_WrdSize(vSimsF)")
@@ -94,14 +94,14 @@ func Gia_ManSimTry(pF *Gia_Man_t, pG *Gia_Man_t) {
 		fmt.Printf("Output %4d : ", i)
 
 		fmt.Printf("    RF :  ")
-		fmt.Printf("0 =%7.3f %%  ", 100.0*nBitsF0/64/nWords)
-		fmt.Printf("1 =%7.3f %%  ", 100.0*nBitsF1/64/nWords)
-		fmt.Printf("X =%7.3f %%  ", 100.0*nBitsFx/64/nWords)
+		fmt.Printf("0 =%7.3f %%  ", 100.0*float64(nBitsF0)/64/float64(nWords))
+		fmt.Printf("1 =%7.3f %%  ", 100.0*float64(nBitsF1)/64/float64(nWords))
+		fmt.Printf("X =%7.3f %%  ", 100.0*float64(nBitsFx)/64/float64(nWords))
 
 		fmt.Printf("   GF :  ")
-		fmt.Printf("0 =%7.3f %%  ", 100.0*nBitsG0/64/nWords)
-		fmt.Printf("1 =%7.3f %%  ", 100.0*nBitsG1/64/nWords)
-		fmt.Printf("X =%7.3f %%  ", 100.0*nBitsGx/64/nWords)
+		fmt.Printf("0 =%7.3f %%  ", 100.0*float64(nBitsG0)/64/float64(nWords))
+		fmt.Printf("1 =%7.3f %%  ", 100.0*float64(nBitsG1)/64/float64(nWords))
+		fmt.Printf("X =%7.3f %%  ", 100.0*float64(nBitsGx)/64/float64(nWords))
 
 		fmt.Printf("\n")
 		if i == 20 {
@@ -300,7 +300,7 @@ func Acb_ObjToGiaDual(pNew *Gia_Man_t, p *Acb_Ntk_t, iObj int32, vTemp *Vec_Int_
 		assert(pLits[0] >= 0 && pLits[1] >= 0, "pLits[0] >= 0 && pLits[1] >= 0")
 		Vec_IntPushTwo(vTemp, pLits[0], pLits[1])
 	}
-	Type = Acb_ObjType(p, iObj)
+	Type = int32(Acb_ObjType(p, iObj))
 	if Type == ABC_OPER_CONST_F {
 		pRes[0] = 0
 		pRes[1] = 0
@@ -359,7 +359,7 @@ func Acb_ObjToGiaDual(pNew *Gia_Man_t, p *Acb_Ntk_t, iObj int32, vTemp *Vec_Int_
 		return
 	}
 	if Type == ABC_OPER_BIT_OR || Type == ABC_OPER_BIT_NOR {
-		var pArray *int32 = Vec_IntArray(vTemp)
+		pArray := Vec_IntArray(vTemp)
 		for k = 0; k < Vec_IntSize(vTemp)/2; k++ {
 			pArray[2*k] = Abc_LitNot(pArray[2*k])
 		}
@@ -388,7 +388,7 @@ func Acb_NtkGiaDeriveDual(p *Acb_Ntk_t) *Gia_Man_t {
 	var iObj int32
 	var pLits []int32
 	pNew = Gia_ManStart(5 * Acb_NtkObjNum(p))
-	pNew.pName = Abc_UtilStrsav(Acb_NtkName(p))
+	Gia_ManSetNameSpec(pNew, Abc_UtilStrsav(Acb_NtkName(p)), "")
 	Gia_ManHashAlloc(pNew)
 	pLits = Vec_IntArray(vCopies)[:2]
 	pLits[0] = 0
@@ -410,7 +410,7 @@ func Acb_NtkGiaDeriveDual(p *Acb_Ntk_t) *Gia_Man_t {
 	Vec_IntFree(vFanins)
 	for i = 0; i < Acb_NtkCoNum(p); i++ {
 		iObj = Acb_NtkCo(p, i)
-		pLits = Vec_IntEntryP(vCopies, 2*Acb_ObjFanin(p, iObj, 0))
+		pLits = Vec_IntArray(vCopies)[2*Acb_ObjFanin(p, iObj, 0):]
 		Gia_ManAppendCo(pNew, pLits[0])
 		Gia_ManAppendCo(pNew, pLits[1])
 	}
@@ -441,8 +441,7 @@ func Acb_NtkGiaDeriveMiter(pOne *Gia_Man_t, pTwo *Gia_Man_t, Type int32) *Gia_Ma
 	assert(Gia_ManCiNum(pOne) == Gia_ManCiNum(pTwo), "Gia_ManCiNum(pOne) == Gia_ManCiNum(pTwo)")
 	assert(Gia_ManCoNum(pOne) == Gia_ManCoNum(pTwo), "Gia_ManCoNum(pOne) == Gia_ManCoNum(pTwo)")
 	pNew = Gia_ManStart(Gia_ManObjNum(pOne) + Gia_ManObjNum(pTwo) + 5*Gia_ManCoNum(pOne)/2)
-	pNew.pName = Abc_UtilStrsav("miter")
-	pNew.pSpec = nil
+	Gia_ManSetNameSpec(pNew, Abc_UtilStrsav("miter"), "")
 	Gia_ManHashAlloc(pNew)
 	Gia_ManConst0(pOne).Value = 0
 	Gia_ManConst0(pTwo).Value = 0
@@ -477,8 +476,8 @@ func Acb_NtkGiaDeriveMiter(pOne *Gia_Man_t, pTwo *Gia_Man_t, Type int32) *Gia_Ma
 	if Type == 0 { // only main circuit
 
 		for i = 0; i < Gia_ManCoNum(pOne); i += 2 {
-			var pLitsF [2]int32 = [2]int32{Gia_ManCo(pOne, i).Value, Gia_ManCo(pOne, i+1).Value}
-			var pLitsS [2]int32 = [2]int32{Gia_ManCo(pTwo, i).Value, Gia_ManCo(pTwo, i+1).Value}
+			var pLitsF [2]int32 = [2]int32{int32(Gia_ManCo(pOne, i).Value), int32(Gia_ManCo(pOne, i+1).Value)}
+			var pLitsS [2]int32 = [2]int32{int32(Gia_ManCo(pTwo, i).Value), int32(Gia_ManCo(pTwo, i+1).Value)}
 			Gia_ManAppendCo(pNew, pLitsF[0])
 			Gia_ManAppendCo(pNew, pLitsS[0])
 		}
@@ -486,8 +485,8 @@ func Acb_NtkGiaDeriveMiter(pOne *Gia_Man_t, pTwo *Gia_Man_t, Type int32) *Gia_Ma
 	} else if Type == 1 { // only shadow circuit
 
 		for i = 0; i < Gia_ManCoNum(pOne); i += 2 {
-			var pLitsF [2]int32 = [2]int32{Gia_ManCo(pOne, i).Value, Gia_ManCo(pOne, i+1).Value}
-			var pLitsS [2]int32 = [2]int32{Gia_ManCo(pTwo, i).Value, Gia_ManCo(pTwo, i+1).Value}
+			var pLitsF [2]int32 = [2]int32{int32(Gia_ManCo(pOne, i).Value), int32(Gia_ManCo(pOne, i+1).Value)}
+			var pLitsS [2]int32 = [2]int32{int32(Gia_ManCo(pTwo, i).Value), int32(Gia_ManCo(pTwo, i+1).Value)}
 			Gia_ManAppendCo(pNew, pLitsF[1])
 			Gia_ManAppendCo(pNew, pLitsS[1])
 		}
@@ -495,9 +494,9 @@ func Acb_NtkGiaDeriveMiter(pOne *Gia_Man_t, pTwo *Gia_Man_t, Type int32) *Gia_Ma
 	} else { // comparator of the two
 
 		for i = 0; i < Gia_ManCoNum(pOne); i += 2 {
-			var pLitsF [2]int32 = [2]int32{Gia_ManCo(pOne, i).Value, Gia_ManCo(pOne, i+1).Value}
-			var pLitsS [2]int32 = [2]int32{Gia_ManCo(pTwo, i).Value, Gia_ManCo(pTwo, i+1).Value}
-			Gia_ManAppendCo(pNew, Gia_ManDualCompare(pNew, pLitsF, pLitsS))
+			var pLitsF [2]int32 = [2]int32{int32(Gia_ManCo(pOne, i).Value), int32(Gia_ManCo(pOne, i+1).Value)}
+			var pLitsS [2]int32 = [2]int32{int32(Gia_ManCo(pTwo, i).Value), int32(Gia_ManCo(pTwo, i+1).Value)}
+			Gia_ManAppendCo(pNew, Gia_ManDualCompare(pNew, pLitsF[:], pLitsS[:]))
 		}
 	}
 	Gia_ManHashStop(pNew)
@@ -522,13 +521,13 @@ func Acb_NtkGiaDeriveMiter(pOne *Gia_Man_t, pTwo *Gia_Man_t, Type int32) *Gia_Ma
 */
 func Acb_OutputFile(pFileName string, pNtkF *Acb_Ntk_t, pModel *int32) {
 	var pFileName0 string
-	if pFileName {
+	if pFileName != "" {
 		pFileName0 = pFileName
 	} else {
 		pFileName0 = "output"
 	}
-	var pFile *os.File = os.OpenFile(pFileName0, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
-	if pFile == nil {
+	pFile, err := os.OpenFile(pFileName0, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
+	if err != nil {
 		fmt.Printf("Cannot open results file \"%s\".\n", pFileName0)
 		return
 	}
@@ -545,35 +544,24 @@ func Acb_OutputFile(pFileName string, pNtkF *Acb_Ntk_t, pModel *int32) {
 		fmt.Fprintf(pFile, "NEQ\n")
 		for i = 0; i < Acb_NtkPiNum(pNtkF); i++ {
 			iObj = Acb_NtkCi(pNtkF, i)
-			fmt.Fprintf(pFile, "%s %d\n", Acb_ObjNameStr(pNtkF, iObj), pModel[i])
+			fmt.Fprintf(pFile, "%s %d\n", Acb_ObjNameStr(pNtkF, iObj), unsafe.Slice(pModel, int(Acb_NtkPiNum(pNtkF)))[i])
 		}
 	}
 	_ = (pFile).Close()
 	fmt.Printf("Produced output file \"%s\".\n\n", pFileName0)
 }
-func Acb_NtkSolve(p *Gia_Man_t) *int32 {
 
-	var pMan *Aig_Man_t = Gia_ManToAig(p, 0)
-	var pNtkTemp *Abc_Ntk_t = Abc_NtkFromAigPhase(pMan)
-	var Params Prove_Params_t
-	var pParams *Prove_Params_t = &Params
-	Prove_ParamsSetDefault(pParams)
-	pParams.fUseRewriting = 1
-	pParams.fVerbose = 0
-	Aig_ManStop(pMan)
-	if pNtkTemp != nil {
-		var clk abctime = Abc_Clock()
-		var RetValue int32 = Abc_NtkIvyProve(&pNtkTemp, pParams)
-		var pModel *int32 = pNtkTemp.pModel
-		pNtkTemp.pModel = nil
-		Abc_NtkDelete(pNtkTemp)
-		fmt.Printf("The networks are %s.  ", map[int32]string{1: "equivalent", 0: "NOT equivalent"}[RetValue])
-		Abc_PrintTime(1, "Time", Abc_Clock()-clk)
-		if RetValue == 0 {
-			return pModel
-		}
+// Acb_ProveMiter is installed by the ABCI integration package. The C source
+// calls ABCI's AIG conversion and Ivy proving driver; a callback preserves
+// that call chain without the forbidden Go import cycle ACB -> ABCI -> ACB.
+// Applications using Acb_NtkSolve must install this dependency at startup.
+var Acb_ProveMiter func(*Gia_Man_t) *int32
+
+func Acb_NtkSolve(p *Gia_Man_t) *int32 {
+	if Acb_ProveMiter == nil {
+		panic("acb: ABCI miter prover is not installed")
 	}
-	return nil
+	return Acb_ProveMiter(p)
 }
 
 /*
@@ -689,8 +677,8 @@ func Acb_NtkRunTest(pFileNames []string, fFancy int32, fVerbose int32) {
 	var pGiaF *Gia_Man_t = nil
 	var pGiaG *Gia_Man_t = nil
 	var pGia *Gia_Man_t = nil
-	var pNtkF *Acb_Ntk_t = Acb_VerilogSimpleRead(pFileNames[0], nil)
-	var pNtkG *Acb_Ntk_t = Acb_VerilogSimpleRead(pFileNames[1], nil)
+	var pNtkF *Acb_Ntk_t = Acb_VerilogSimpleRead(pFileNames[0], "")
+	var pNtkG *Acb_Ntk_t = Acb_VerilogSimpleRead(pFileNames[1], "")
 	if !(pNtkF != nil) || !(pNtkG != nil) {
 		return
 	}

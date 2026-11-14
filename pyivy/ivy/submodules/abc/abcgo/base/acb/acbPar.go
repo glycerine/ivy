@@ -64,3 +64,22 @@ type Acb_Par_t struct {
 func Acb_ParSetDefault(p *Acb_Par_t) {
 	*p = Acb_Par_t{nLutSize: 4, nTfoLevMax: 2, nTfiLevMax: 3, nFanoutMax: 20, nWinNodeMax: 100, fArea: 1}
 }
+
+// Acb_ParSetCommand copies the fields accepted by the legacy mfse command.
+// The native parameter representation stays private to this package.
+func Acb_ParSetCommand(p *Acb_Par_t, lutSize, tfoLevels, tfiLevels, fanoutMax, windowMax, growthLevel, btLimit, nodesMax, nodeOne int32, area, useAshen, moreEffort, verbose, veryVerbose int32) {
+	p.nLutSize = lutSize
+	p.nTfoLevMax = tfoLevels
+	p.nTfiLevMax = tfiLevels
+	p.nFanoutMax = fanoutMax
+	p.nWinNodeMax = windowMax
+	p.nGrowthLevel = growthLevel
+	p.nBTLimit = btLimit
+	p.nNodesMax = nodesMax
+	p.iNodeOne = nodeOne
+	p.fArea = area
+	p.fUseAshen = useAshen
+	p.fMoreEffort = moreEffort
+	p.fVerbose = verbose
+	p.fVeryVerbose = veryVerbose
+}

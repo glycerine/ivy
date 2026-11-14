@@ -64,6 +64,26 @@ func Vec_StrArray(v *Vec_Str_t) []byte                   { return vec.Vec_StrArr
 func Vec_StrClear(v *Vec_Str_t)                          { vec.Vec_StrClear(v) }
 func Vec_StrReleaseArray(v *Vec_Str_t) []byte            { return vec.Vec_StrReleaseArray(v) }
 func Vec_IntAppend(v, q *Vec_Int_t)                      { vec.Vec_IntAppend(v, q) }
+func Vec_IntTwoMerge(v, q *Vec_Int_t) *Vec_Int_t         { return vec.Vec_IntTwoMerge(v, q) }
+func Vec_WecAlloc(n int32) *Vec_Wec_t                    { return vec.Vec_WecAlloc(int(n)) }
+func Vec_IntStartNatural(n int32) *Vec_Int_t             { return vec.Vec_IntStartNatural(int(n)) }
+func Vec_PtrReverseOrder(v *Vec_Ptr_t)                   { vec.Vec_PtrReverseOrder(v) }
+func Vec_StrFreeP(v **Vec_Str_t)                         { vec.Vec_StrFreeP(v) }
+func Vec_BitFreeP(v **Vec_Bit_t)                         { vec.Vec_BitFreeP(v) }
+func Vec_BitFree(v *Vec_Bit_t)                           { vec.Vec_BitFree(v) }
+func Vec_IntPrint(v *Vec_Int_t)                          { vec.Vec_IntPrint(v) }
+func Vec_IntPushThree(v *Vec_Int_t, a, b, c int32)       { vec.Vec_IntPushThree(v, a, b, c) }
+func Vec_IntPushTwo(v *Vec_Int_t, a, b int32)            { vec.Vec_IntPushTwo(v, a, b) }
+func Vec_WrdFree(v *Vec_Wrd_t)                           { vec.Vec_WrdFree(v) }
+func Vec_IntEntryLast(v *Vec_Int_t) int32                { return vec.Vec_IntEntryLast(v) }
+func Vec_IntPop(v *Vec_Int_t) int32                      { return vec.Vec_IntPop(v) }
+func Vec_IntReverseOrder(v *Vec_Int_t)                   { vec.Vec_IntReverseOrder(v) }
+func Vec_IntPushUnique(v *Vec_Int_t, x int32) int32      { return int32(vec.Vec_IntPushUnique(v, x)) }
+func Vec_IntCheckUniqueSmall(v *Vec_Int_t) int32         { return int32(vec.Vec_IntCheckUniqueSmall(v)) }
+func Vec_IntUniqify(v *Vec_Int_t) int32                  { return int32(vec.Vec_IntUniqify(v)) }
+func Vec_IntInvert(v *Vec_Int_t, fill int32) *Vec_Int_t  { return vec.Vec_IntInvert(v, fill) }
+func Vec_QueTopPriority(v *Vec_Que_t) float32            { return vec.Vec_QueTopPriority(v) }
+func Vec_QuePop(v *Vec_Que_t) int32                      { return int32(vec.Vec_QuePop(v)) }
 func Vec_IntRemapArray(mapping, old, new *Vec_Int_t, n int32) {
 	vec.Vec_IntRemapArray(mapping, old, new, int(n))
 }
@@ -101,3 +121,10 @@ func Vec_IntLimit(v *Vec_Int_t) []int32          { return vec.Vec_IntLimit(v) }
 func Vec_IntSelectSort(a []int32, n int32)       { vec.Vec_IntSelectSort(a, int(n)) }
 func Vec_IntDrop(v *Vec_Int_t, i int32)          { vec.Vec_IntDrop(v, int(i)) }
 func Vec_IntInsert(v *Vec_Int_t, i, value int32) { vec.Vec_IntInsert(v, int(i), value) }
+
+func Vec_QueAlloc(n int32) *Vec_Que_t               { return vec.Vec_QueAlloc(int(n)) }
+func Vec_QueIsMember(p *Vec_Que_t, n int32) int32   { return int32(vec.Vec_QueIsMember(p, int(n))) }
+func Vec_QueUpdate(p *Vec_Que_t, n int32)           { vec.Vec_QueUpdate(p, int(n)) }
+func Vec_QuePush(p *Vec_Que_t, n int32)             { vec.Vec_QuePush(p, int(n)) }
+func Vec_QueClear(p *Vec_Que_t)                     { vec.Vec_QueClear(p) }
+func Vec_WrdSetEntry(p *Vec_Wrd_t, i int32, w word) { vec.Vec_WrdSetEntry(p, int(i), w) }
