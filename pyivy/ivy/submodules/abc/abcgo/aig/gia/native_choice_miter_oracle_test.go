@@ -11,6 +11,12 @@ import (
 )
 
 func TestNativeChoiceMiterAgainstCompiledABC(t *testing.T) {
+	exe := compileGiaSourceOracle(t, "native_choice_miter_oracle.c")
+	testNativeChoiceMiter(t, exe)
+}
+
+func compileGiaSourceOracle(t *testing.T, fixtureName string) string {
+	t.Helper()
 	if runtime.GOOS != "linux" {
 		t.Skip("ABC oracle requires Linux")
 	}
@@ -57,10 +63,15 @@ func TestNativeChoiceMiterAgainstCompiledABC(t *testing.T) {
 		t.Fatalf("archive: %v %s", e, out)
 	}
 	exe := filepath.Join(dir, "oracle")
-	fixture := filepath.Join(filepath.Dir(file), "test_vectors/native_choice_miter_oracle.c")
+	fixture := filepath.Join(filepath.Dir(file), "test_vectors", fixtureName)
 	if out, e := exec.Command(cc, "-DABC_USE_STDINT_H", "-I", src, fixture, lib, "-Wl,--gc-sections", "-lstdc++", "-lm", "-ldl", "-lpthread", "-lreadline", "-o", exe).CombinedOutput(); e != nil {
 		t.Fatalf("link: %v %s", e, out)
 	}
+	return exe
+}
+
+func testNativeChoiceMiter(t *testing.T, exe string) {
+	t.Helper()
 	source, e := exec.Command(exe).CombinedOutput()
 	if e != nil {
 		t.Fatalf("run: %v %s", e, source)

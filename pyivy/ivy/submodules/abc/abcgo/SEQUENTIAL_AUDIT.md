@@ -2941,3 +2941,47 @@ Giarf still uses its old adapter at this checkpoint. Its new clause-count
 regression fails with seven clauses versus the source supergate's four
 (`/tmp/abcgo-giarf-source-backend-red.log`); it will accompany the subsequent
 BSAT wiring change rather than being included in this green extraction commit.
+
+Source-BSAT integration, second checkpoint: Giarf's selected CEC path now
+uses the shared source CNF builder and the ported BSAT solver directly. The
+Satoko-backed generic CEC manager is no longer used for these queries. Solver
+state remains incremental per reduced level; default 2000-variable/200-call
+strict recycling boundaries and disabled polarity flipping match the CEC
+parameters used in giaGiarf.c. SAT/UNSAT/unknown statuses and learned negated
+assumption clauses follow the source query path. Returned CI assignments are
+independently replayed before becoming refinement patterns. TAS is unchanged.
+The shared encoder remains the single implementation used by the source-shaped
+parent CEC wrapper; this does not add another CNF algorithm or SAT substitute.
+
+The red seven-versus-four clause regression now passes, including the exact
+source frontier IDs and omission of the supergate's internal node. A compiled
+original-CEC fixture with Giarf's parameters checks ten mixed unary/pair
+queries through a supergate and recognized MUX: statuses, active variable
+counts, clause counts, call-since-recycle counters and every node's SAT ID
+all match. Its native records are collected directly from the source manager;
+no SAT/CNF functions are stubbed. The source oracle archive builder is shared
+with the existing choice-miter oracle rather than copied into another test.
+The native source query check passes in 1.777s
+(`/tmp/abcgo-giarf-source-native-verified.log`).
+
+Additional source-boundary coverage runs 202 queries on a 2000-input cone:
+recycling occurs only when both strict default limits have been crossed, and
+full witnesses remain valid afterward. The 840 cross-query status/witness
+matrix, rare outputs, typed gates, highest-level proofs and positive/exhausted
+budget cases all pass on the actual source backend. The warmed 500-query
+microbenchmark now measures 4,239 ns/query, 1,848 bytes/query and 12 allocations
+(`/tmp/abcgo-giarf-source-manager-benchmark.log`), without a claim about complete
+application runtime.
+
+Full uncached race suites pass for GIA (19.991s), CEC (41.165s) and CEC core
+(1.310s), and vet passes for all three. Logs are
+`/tmp/abcgo-giarf-source-backend-final-race.log` and
+`/tmp/abcgo-giarf-source-backend-vet.log`. All 133 module packages and their
+tests compile (`/tmp/abcgo-shared-source-cnf-module-build.log`, exit zero);
+unrelated test bodies were not rerun by that compile gate.
+
+The specific Giarf source-backend mismatch recorded above is resolved. Broader
+CEC packages still await their own sequential audits; these adjacent changes
+do not count them complete. GIA class rehashing/pattern boundaries, metadata
+and transfer algorithms and the remaining algorithm families are still
+pending. Original completion remains 2/131 and the full goal stays active.

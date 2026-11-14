@@ -4,16 +4,20 @@ import (
 	"fmt"
 
 	ceccore "github.com/glycerine/abcgo/proof/cec/core"
+	"github.com/glycerine/abcgo/sat/bsat"
 )
 
 // giarfSolver checks conjunctions of one or two literals using either the
-// native TAS solver or the CEC SAT manager, returning ABC's status convention.
+// native TAS solver or the source CEC CNF/BSAT engine, using ABC's status codes.
+// Its graph is the ordinary AND-inverter graph from Gia_GenerateReducedLevel;
+// real gates are expanded before this SAT boundary.
 type giarfSolver struct {
-	graph *Gia_Man_t
-	limit int32
-	mini  bool
-	tas   *Tas_Man_t
-	cec   *ceccore.Manager
+	graph    *Gia_Man_t
+	limit    int32
+	mini     bool
+	tas      *Tas_Man_t
+	cec      *ceccore.SourceCNF
+	cecSince int32
 }
 
 func newGiarfSolver(graph *Gia_Man_t, limit int32, mini bool) *giarfSolver {
@@ -44,35 +48,60 @@ func (s *giarfSolver) check(a int32, b *int32) (int32, *Vec_Int_t, error) {
 		}
 		return status, nil, nil
 	}
+	if s.limit < 0 {
+		return -1, nil, fmt.Errorf("gia: negative CEC conflict limit")
+	}
+	// These source CEC trivial cases do not allocate a SAT cone.
+	if a == 0 || b != nil && (*b == 0 || a == *b^1) {
+		return 1, nil, nil
+	}
 	if s.cec == nil {
-		options := ceccore.DefaultSATOptions()
-		options.ConflictLimit = int64(s.limit)
-		options.PolarFlip = false
-		options.TreatRegistersAsInputs = true
-		var err error
-		s.cec, err = ceccore.NewManager(s.graph, options)
-		if err != nil {
-			return -1, nil, err
+		s.cec = ceccore.NewSourceCNF(s.graph.SourceCNFGraph(), nil)
+	}
+	s.cecSince++
+	// Defaults from Cec_ManSatSetDefaultParams, with Giarf polarity flipping
+	// disabled. Keep the source's strict variable/call recycling boundaries.
+	if s.cec.Solver() == nil || s.cec.Solver().NumVars() > 2000 && s.cecSince > 200 {
+		s.cec.Reset()
+		s.cecSince = 0
+	}
+	s.cec.AddNode(a >> 1)
+	assumptions := []int32{s.cec.Literal(a)}
+	if b != nil {
+		s.cec.AddNode(*b >> 1)
+		assumptions = append(assumptions, s.cec.Literal(*b))
+	}
+	solver := s.cec.Solver()
+	switch solver.SolveWithResourceLimits(assumptions, int64(s.limit), 0, 0, 0) {
+	case bsat.Unsatisfiable:
+		for i := range assumptions {
+			assumptions[i] ^= 1
+		}
+		s.cec.AddClause(assumptions...)
+		return 1, nil, nil
+	case bsat.Unknown:
+		return -1, nil, nil
+	}
+	inputs := make([]bool, Gia_ManCiNum(s.graph))
+	for i, id := range Vec_IntArray(s.graph.vCis) {
+		if variable := s.cec.IDs()[id]; variable != 0 {
+			value, ok := solver.Value(variable)
+			if !ok {
+				return -1, nil, fmt.Errorf("gia: SAT model missing")
+			}
+			inputs[i] = value
 		}
 	}
-	var result ceccore.Result
-	var err error
-	if b == nil {
-		result, err = s.cec.CheckLiteral(a)
-	} else {
-		result, err = s.cec.CheckConjunction(a, *b)
-	}
+	values, _, err := s.graph.evaluateObjects(inputs)
 	if err != nil {
 		return -1, nil, err
 	}
-	if result.Status != ceccore.Different {
-		return int32(result.Status), nil, nil
+	value := func(lit int32) bool { return values[lit>>1] != (lit&1 != 0) }
+	if !value(a) || b != nil && !value(*b) {
+		return -1, nil, fmt.Errorf("gia: source SAT witness failed independent simulation")
 	}
-	if result.Counterexample == nil {
-		return -1, nil, fmt.Errorf("gia: SAT model missing")
-	}
-	cex := Vec_IntAlloc(len(result.Counterexample.Inputs))
-	for i, value := range result.Counterexample.Inputs {
+	cex := Vec_IntAlloc(len(inputs))
+	for i, value := range inputs {
 		literal := int32(i) << 1
 		if !value {
 			literal |= 1
