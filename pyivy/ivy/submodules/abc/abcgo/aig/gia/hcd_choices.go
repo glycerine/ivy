@@ -54,32 +54,7 @@ func Hcd_ManEquivToChoices_rec(dst, src *Gia_Man_t, obj *Gia_Obj_t) {
 	obj.Value = uint32(Gia_ManHashAnd(dst, Gia_ObjFanin0Copy(obj), Gia_ObjFanin1Copy(obj)))
 }
 func Hcd_ManRemoveBadChoices(p *Gia_Man_t) {
-	for _, obj := range p.pObjs {
-		obj.fMark0 = 0
-	}
-	for _, obj := range p.pObjs {
-		if Gia_ObjIsAnd(obj) != 0 {
-			Gia_ObjFanin0(obj).fMark0 = 1
-			Gia_ObjFanin1(obj).fMark0 = 1
-		} else if Gia_ObjIsCo(obj) != 0 {
-			Gia_ObjFanin0(obj).fMark0 = 1
-		}
-	}
-	for id := int32(1); id < p.nObjs; id++ {
-		if Gia_ObjIsHead(p, id) == 0 {
-			continue
-		}
-		for prev, next := id, Gia_ObjNext(p, id); next != 0; next = Gia_ObjNext(p, prev) {
-			if p.pObjs[next].fMark0 == 0 {
-				prev = next
-				continue
-			}
-			Gia_ObjSetRepr(p, next, GIA_VOID)
-			Gia_ObjSetNext(p, prev, Gia_ObjNext(p, next))
-			Gia_ObjSetNext(p, next, 0)
-		}
-	}
-	Gia_ManCleanMark0(p)
+	Gia_ManRemoveBadChoices(p)
 }
 func Hcd_ManEquivToChoices(p *Gia_Man_t, snapshots int32) *Gia_Man_t {
 	if snapshots <= 0 || Gia_ManCoNum(p)%snapshots != 0 || p.PReprs == nil {

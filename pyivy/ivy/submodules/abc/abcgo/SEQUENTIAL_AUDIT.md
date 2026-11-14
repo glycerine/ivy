@@ -2693,3 +2693,46 @@ uncached GIA race suite passes in 16.109s and vet passes; logs are
 
 The remainder of the HCD family (including TFI/choice-link cycle checks) is
 still pending inspection; the miter repair alone does not close that review.
+
+Continued the HCD/GIA choice review into hcd_miter.go, hcd_choices.go and
+equiv_choices.go against giaHcd.c and giaEquiv.c. Two red regressions exposed
+missing MUX-control dependencies in both TFI/cycle queries and bad-choice
+pruning. A third case exposed GIA's attempt to descend through the constant
+object's nonexistent fanin, which panicked. The TFI regression log is
+`/tmp/abcgo-gia-tfi-red.log`; the pruning regression log is
+`/tmp/abcgo-gia-choice-remove-red.log`.
+
+The shared DFS now stops at constant leaves, follows real MUX controls in
+addition to the stored data pins, handles COs without reading a second fanin,
+and skips choice traversal when no next table is installed. It retains the
+source's identity/CI checks, visited marks, next-link search and wrapper mark
+cleanup. The HCD recursive checker delegates to that implementation instead
+of retaining a second copy. Source callers construct ordinary AND choice
+graphs, but the Go object API also represents real gates and explicit outputs;
+these repairs preserve their actual structural dependencies rather than
+requiring the AND-only assumption at this helper boundary.
+
+Bad-choice pruning now marks control fanouts as well, retaining the original
+topological marking pass and chain-splicing algorithm without temporary
+per-object fanin slices. HCD delegates to the same implementation, eliminating
+its duplicate pruning loop. The positive regression verifies that an unused
+equivalent alternative survives when the used member is removed. This changes
+neither the higher wrappers' register behavior nor equivalence-class policy.
+
+A standalone fixture compiles the real giaEquiv.c, giaHcd.c and giaUtil.c
+sources with section collection, requiring no ABC object archive or algorithm
+stubs. GIA/HCD agree with C on 1,408 TFI queries through ordinary AND graphs,
+zero/one/two-hop equivalent-choice links and NULL roots, including cleared
+marks. Eight pruning cases cover retaining alternatives, removing the first
+or last member, and removing both; representatives, next links and marks are
+compared. Constants and typed-gate extensions are covered separately rather
+than claiming that the source's AND-only recursion supports them. An
+independent adjacency/BFS test covers another 208 mixed-gate queries, including
+XORs, buffers, real MUX controls, output nodes, constant leaves and absent
+choice tables, and checks both scratch cleanup and preservation of mark1.
+
+The full uncached GIA race suite passes in 17.088s and vet passes; logs are
+`/tmp/abcgo-gia-choice-checks-verified-race.log` and
+`/tmp/abcgo-gia-choice-checks-verified-vet.log`.
+Choice-class construction/transfer and the remaining HCD synthesis routines
+still need review; original package completion remains 2/131.

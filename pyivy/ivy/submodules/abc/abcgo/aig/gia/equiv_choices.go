@@ -9,15 +9,24 @@ func Gia_ObjCheckTfi_rec(p *Gia_Man_t, old, node *Gia_Obj_t, visited *Vec_Ptr_t)
 	if node == old {
 		return 1
 	}
-	if node.fMark0 != 0 {
+	if node.id == 0 || node.fMark0 != 0 {
 		return 0
 	}
 	node.fMark0 = 1
 	vec.Vec_PtrPush(visited, node)
-	if Gia_ObjCheckTfi_rec(p, old, Gia_ObjFanin0(node), visited) != 0 || Gia_ObjCheckTfi_rec(p, old, Gia_ObjFanin1(node), visited) != 0 {
+	if Gia_ObjCheckTfi_rec(p, old, Gia_ObjFanin0(node), visited) != 0 {
 		return 1
 	}
-	return Gia_ObjCheckTfi_rec(p, old, Gia_ObjNextObj(p, node.id), visited)
+	if Gia_ObjIsAnd(node) != 0 && Gia_ObjCheckTfi_rec(p, old, Gia_ObjFanin1(node), visited) != 0 {
+		return 1
+	}
+	if Gia_ObjIsMux(p, node) != 0 && Gia_ObjCheckTfi_rec(p, old, Gia_ObjFanin2(p, node), visited) != 0 {
+		return 1
+	}
+	if p.PNexts != nil {
+		return Gia_ObjCheckTfi_rec(p, old, Gia_ObjNextObj(p, node.id), visited)
+	}
+	return 0
 }
 func Gia_ObjCheckTfi(p *Gia_Man_t, old, node *Gia_Obj_t) int32 {
 	if Gia_IsComplement(old) != 0 || Gia_IsComplement(node) != 0 {
@@ -89,6 +98,9 @@ func Gia_ManRemoveBadChoices(p *Gia_Man_t) {
 		if Gia_ObjIsAnd(obj) != 0 {
 			Gia_ObjFanin0(obj).fMark0 = 1
 			Gia_ObjFanin1(obj).fMark0 = 1
+			if Gia_ObjIsMux(p, obj) != 0 {
+				Gia_ObjFanin2(p, obj).fMark0 = 1
+			}
 		} else if Gia_ObjIsCo(obj) != 0 {
 			Gia_ObjFanin0(obj).fMark0 = 1
 		}
