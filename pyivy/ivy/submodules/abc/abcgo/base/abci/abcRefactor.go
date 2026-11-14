@@ -3,430 +3,332 @@ package abci
 import (
 	"fmt"
 	"os"
+	"time"
+
+	"github.com/glycerine/abcgo/base/abc"
+	"github.com/glycerine/abcgo/bool/dec"
+	"github.com/glycerine/abcgo/bool/kit"
+	"github.com/glycerine/abcgo/misc/extra"
+	"github.com/glycerine/abcgo/misc/util"
+	"github.com/glycerine/abcgo/misc/vec"
 )
 
-/**CFile****************************************************************
-
-  FileName    [abcRefactor.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Network and node package.]
-
-  Synopsis    [Resynthesis based on collapsing and refactoring.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: abcRefactor.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "base/abc/abc.h"
-//#include "bool/dec/dec.h"
-//#include "bool/kit/kit.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-     
 type Abc_ManRef_t struct {
-    // user specified parameters
-    nNodeSizeMax              int32;      // the limit on the size of the supernode
-    nConeSizeMax              int32;      // the limit on the size of the containing cone
-    fVerbose              int32;          // the verbosity flag
-    // internal data structures
-    vVars       *Vec_Ptr_t;             // truth tables
-    vFuncs       *Vec_Ptr_t;            // functions
-    vMemory       *Vec_Int_t;           // memory
-    vCube       *Vec_Str_t;             // temporary
-    vForm       *Vec_Int_t;             // temporary
-    vVisited       *Vec_Ptr_t;          // temporary
-    vLeaves       *Vec_Ptr_t;           // temporary
-    // node statistics
-    nLastGain              int32;
-    nNodesConsidered              int32;
-    nNodesRefactored              int32;
-    nNodesGained              int32;
-    nNodesBeg              int32;
-    nNodesEnd              int32;
-    // runtime statistics
-    timeCut          abctime;
-    timeTru          abctime;
-    timeDcs          abctime;
-    timeSop          abctime;
-    timeFact          abctime;
-    timeEval          abctime;
-    timeRes          abctime;
-    timeNtk          abctime;
-    timeTotal          abctime;
+	nNodeSizeMax, nConeSizeMax, fVerbose                                                int32
+	vVars, vFuncs, vVisited, vLeaves                                                    *Vec_Ptr_t
+	vMemory                                                                             []uint32
+	vCube                                                                               *vec.Vec_Str_t
+	nLastGain, nNodesConsidered, nNodesRefactored, nNodesGained                         int32
+	nNodesBeg, nNodesEnd                                                                int32
+	timeCut, timeTru, timeDcs, timeSop, timeFact, timeEval, timeRes, timeNtk, timeTotal int64
+	vMffc                                                                               []*abc.Object
+	vMffcMarks                                                                          map[*abc.Object]bool
 }
 
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Returns function of the cone.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NodeConeTruth(vVars *Vec_Ptr_t, vFuncs *Vec_Ptr_t, nWordsMax int32, pRoot *Abc_Obj_t, vLeaves *Vec_Ptr_t, vVisited *Vec_Ptr_t) *word {
-    var pNode *Abc_Obj_t;
-    var pTruth0 *word;
-    var pTruth1 *word;
-    var pTruth *word = nil;
-    var i int32;
-    var k int32;
-    var nWords int32 = Abc_Truth6WordNum( Vec_PtrSize(vLeaves) );
-    // get nodes in the cut without fanins in the DFS order
-    Abc_NodeConeCollect( &pRoot, 1, vLeaves, vVisited, 0 );
-    // set elementary functions
-    Vec_PtrForEachEntry( Abc_Obj_t *, vLeaves, pNode, i )
-        pNode.pCopy = (Abc_Obj_t *)Vec_PtrEntry( vVars, i );
-    // prepare functions
-    for  i = Vec_PtrSize(vFuncs); i < Vec_PtrSize(vVisited); i++  {
-        Vec_PtrPush( vFuncs, ABC_ALLOC(word, nWordsMax) );
-    }
-    // compute functions for the collected nodes
-    Vec_PtrForEachEntry( Abc_Obj_t *, vVisited, pNode, i )
-    {
-        assert(!Abc_ObjIsPi(pNode), "!Abc_ObjIsPi(pNode)");
-        pTruth0 = (word *)Abc_ObjFanin0(pNode).pCopy;
-        pTruth1 = (word *)Abc_ObjFanin1(pNode).pCopy;
-        pTruth  = (word *)Vec_PtrEntry( vFuncs, i );
-        if Abc_ObjFaninC0(pNode) {
-            if Abc_ObjFaninC1(pNode) {
-                for  k = 0; k < nWords; k++  {
-                    pTruth[k] = ~pTruth0[k] & ~pTruth1[k];
-                }
-            } else {
-                for  k = 0; k < nWords; k++  {
-                    pTruth[k] = ~pTruth0[k] &  pTruth1[k];
-                } }
-        
-        } else {
-            if Abc_ObjFaninC1(pNode) {
-                for  k = 0; k < nWords; k++  {
-                    pTruth[k] =  pTruth0[k] & ~pTruth1[k];
-                }
-            } else {
-                for  k = 0; k < nWords; k++  {
-                    pTruth[k] =  pTruth0[k] &  pTruth1[k];
-                } }
-        }
-        pNode.pCopy = (Abc_Obj_t *)pTruth;
-    }
-    return pTruth;
+func refactorClearMffc(p *Abc_ManRef_t) {
+	for _, node := range p.vMffc {
+		node.MarkA = p.vMffcMarks[node]
+	}
+	p.vMffc = nil
+	p.vMffcMarks = nil
 }
-func Abc_NodeConeIsConst0(pTruth *word, nVars int32) int32 {
-    var k int32;
-    var nWords int32 = Abc_Truth6WordNum( nVars );
-    for  k = 0; k < nWords; k++  {
-        if pTruth[k] {
-            return 0; }
-    }
-    return 1;
-}
-func Abc_NodeConeIsConst1(pTruth *word, nVars int32) int32 {
-    var k int32;
-    var nWords int32 = Abc_Truth6WordNum( nVars );
-    for  k = 0; k < nWords; k++  {
-        if ~pTruth[k] {
-            return 0; }
-    }
-    return 1;
+func refactorLabelMffc(p *Abc_ManRef_t, root *Abc_Obj_t, leaves *Vec_Ptr_t) int32 {
+	refactorClearMffc(p)
+	cutLeaves := make([]*abc.Object, Vec_PtrSize(leaves))
+	for i := range cutLeaves {
+		cutLeaves[i], _ = Vec_PtrEntry(leaves, int32(i)).(*Abc_Obj_t)
+	}
+	var cone []*abc.Object
+	size := abc.Abc_NodeMffcInside(root, cutLeaves, &cone)
+	p.vMffcMarks = make(map[*abc.Object]bool, len(cone))
+	for _, node := range cone {
+		p.vMffcMarks[node] = node.MarkA
+		node.MarkA = true
+	}
+	p.vMffc = cone
+	return size
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Resynthesizes the node using refactoring.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NodeRefactor(p *Abc_ManRef_t, pNode *Abc_Obj_t, vFanins *Vec_Ptr_t, fUpdateLevel int32, fUseZeros int32, fUseDcs int32, fVerbose int32) *Dec_Graph_t {
-    extern int    Dec_GraphToNetworkCount( Abc_Obj_t * pRoot, Dec_Graph_t * pGraph, int NodeMax, int LevelMax );
-    var fVeryVerbose int32;
-    var nVars int32  = Vec_PtrSize(vFanins);
-    var nWordsMax int32  = Abc_Truth6WordNum(p.nNodeSizeMax);
-    var pFForm *Dec_Graph_t;
-    var pFanin *Abc_Obj_t;
-    var pTruth *word;
-    var clk abctime;
-    var i, nNodesSaved, nNodesAdded, Required int32;
-
-    p.nNodesConsidered++;
-
-    if fUpdateLevel != 0 {
-        Required = Abc_ObjRequiredLevel(pNode);
-    } else {
-        Required = ABC_INFINITY;
-    }
-
-    // get the function of the cut
-clk = Abc_Clock();
-    pTruth = Abc_NodeConeTruth( p.vVars, p.vFuncs, nWordsMax, pNode, vFanins, p.vVisited );
-p.timeTru += Abc_Clock() - clk;
-    if pTruth == nil {
-        return nil; }
-
-    // always accept the case of constant node
-    if (Abc_NodeConeIsConst0(pTruth, nVars) != 0) || (Abc_NodeConeIsConst1(pTruth, nVars) != 0) {
-        p.nLastGain = Abc_NodeMffcSize( pNode );
-        p.nNodesGained += p.nLastGain;
-        p.nNodesRefactored++;
-        if Abc_NodeConeIsConst0(pTruth, nVars) != 0 {
-            return Dec_GraphCreateConst0();
-        } else {
-            return Dec_GraphCreateConst1();
-        }
-    }
-
-    // get the factored form
-clk = Abc_Clock();
-    pFForm = (Dec_Graph_t *)Kit_TruthToGraph( (unsigned *)pTruth, nVars, p.vMemory );
-p.timeFact += Abc_Clock() - clk;
-
-    // mark the fanin boundary 
-    // (can mark only essential fanins, belonging to bNodeFunc!)
-    Vec_PtrForEachEntry( Abc_Obj_t *, vFanins, pFanin, i )
-        pFanin.vFanouts.nSize++;
-    // label MFFC with current traversal ID
-    Abc_NtkIncrementTravId( pNode.pNtk );
-    nNodesSaved = Abc_NodeMffcLabelAig( pNode );
-    // unmark the fanin boundary and set the fanins as leaves in the form
-    Vec_PtrForEachEntry( Abc_Obj_t *, vFanins, pFanin, i )
-    {
-        pFanin.vFanouts.nSize--;
-        Dec_GraphNode(pFForm, i).pFunc = pFanin;
-    }
-
-    // detect how many new nodes will be added (while taking into account reused nodes)
-clk = Abc_Clock();
-    nNodesAdded = Dec_GraphToNetworkCount( pNode, pFForm, nNodesSaved, Required );
-p.timeEval += Abc_Clock() - clk;
-    // quit if there is no improvement
-    if nNodesAdded == -1 || (nNodesAdded == nNodesSaved && !(fUseZeros != 0)) {
-        Dec_GraphFree( pFForm );
-        return nil;
-    }
-
-    // compute the total gain in the number of nodes
-    p.nLastGain = nNodesSaved - nNodesAdded;
-    p.nNodesGained += p.nLastGain;
-    p.nNodesRefactored++;
-
-    // report the progress
-    if fVeryVerbose != 0 {
-        fmt.Printf("Node %6s : ", Abc_ObjName(pNode));
-        fmt.Printf("Cone = %2d. ", vFanins.nSize);
-        fmt.Printf("FF = %2d. ", 1 + Dec_GraphNodeNum(pFForm));
-        fmt.Printf("MFFC = %2d. ", nNodesSaved);
-        fmt.Printf("Add = %2d. ", nNodesAdded);
-        fmt.Printf("GAIN = %2d. ", p.nLastGain);
-        fmt.Printf("\n");
-    }
-    return pFForm;
+func refTruthWords(vars int32) int { return int(util.Abc_Truth6WordNum(vars)) }
+func refVariableTruth(vars, index int32) []uint64 {
+	words := refTruthWords(vars)
+	truth := make([]uint64, words)
+	for bit := 0; bit < words*64; bit++ {
+		if (bit>>index)&1 != 0 {
+			truth[bit>>6] |= uint64(1) << uint(bit&63)
+		}
+	}
+	return truth
+}
+func refTruthFromKit(truth []uint64, vars int32) []uint32 {
+	words := 1
+	if vars > 5 {
+		words = 1 << uint(vars-5)
+	}
+	result := make([]uint32, words)
+	for i := range result {
+		w := truth[i>>1]
+		if i&1 != 0 {
+			w >>= 32
+		}
+		result[i] = uint32(w)
+	}
+	return result
+}
+func refactorCollectCone(root *Abc_Obj_t, leaves, visited *Vec_Ptr_t) {
+	network := root.Network()
+	marks := make([]bool, int(abc.Abc_NtkObjNumMax(network)))
+	for i := range marks {
+		if node := network.Object(i); node != nil {
+			marks[i] = node.MarkA
+			node.MarkA = false
+		}
+	}
+	Abc_NodeConeCollect([]*Abc_Obj_t{root}, leaves, visited, 0)
+	for i, marked := range marks {
+		if node := network.Object(i); node != nil {
+			node.MarkA = marked
+		}
+	}
+}
+func refKitToDec(g *kit.Kit_Graph_t) *dec.Dec_Graph_t {
+	if kit.Kit_GraphIsConst(g) != 0 {
+		if kit.Kit_GraphIsConst0(g) != 0 {
+			return dec.Dec_GraphCreateConst0()
+		}
+		return dec.Dec_GraphCreateConst1()
+	}
+	root := kit.Kit_GraphRootEdge(g)
+	rootBits := kit.Kit_EdgeToInt(root)
+	if kit.Kit_GraphIsVar(g) != 0 {
+		return dec.Dec_GraphCreateLeaf(int32(rootBits>>1), kit.Kit_GraphLeaveNum(g), int32(rootBits&1))
+	}
+	out := dec.Dec_GraphCreate(kit.Kit_GraphLeaveNum(g))
+	for i := kit.Kit_GraphLeaveNum(g); i < kit.Kit_GraphLeaveNum(g)+kit.Kit_GraphNodeNum(g); i++ {
+		a, b := kit.Kit_NodeEdges(kit.Kit_GraphNode(g, i))
+		x, y := kit.Kit_EdgeToInt(a), kit.Kit_EdgeToInt(b)
+		dec.Dec_GraphAddNodeAnd(out, dec.Dec_EdgeCreate(int32(x>>1), int32(x&1)), dec.Dec_EdgeCreate(int32(y>>1), int32(y&1)))
+	}
+	dec.Dec_GraphSetRoot(out, dec.Dec_EdgeCreate(int32(rootBits>>1), int32(rootBits&1)))
+	return out
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Starts the resynthesis manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkManRefStart(nNodeSizeMax int32, nConeSizeMax int32, fUseDcs int32, fVerbose int32) *Abc_ManRef_t {
-    var p *Abc_ManRef_t;
-    p = new(Abc_ManRef_t);
-    *p = Abc_ManRef_t{};
-    p.vCube        = Vec_StrAlloc( 100 );
-    p.vVisited     = Vec_PtrAlloc( 100 );
-    p.nNodeSizeMax = nNodeSizeMax;
-    p.nConeSizeMax = nConeSizeMax;
-    p.fVerbose     = fVerbose;
-    p.vVars        = Vec_PtrAllocTruthTables( Abc_MaxInt(nNodeSizeMax, 6) );
-    p.vFuncs       = Vec_PtrAlloc( 100 );
-    p.vMemory      = Vec_IntAlloc( 1 << 16 );
-    return p;
+// Abc_NodeConeTruth returns the exact truth table of root relative to leaves.
+func Abc_NodeConeTruth(vVars, vFuncs *Vec_Ptr_t, nWordsMax int32, root *Abc_Obj_t, leaves, visited *Vec_Ptr_t) []uint64 {
+	refactorCollectCone(root, leaves, visited)
+	functions := make(map[*Abc_Obj_t][]uint64, Vec_PtrSize(leaves)+Vec_PtrSize(visited))
+	for i := int32(0); i < Vec_PtrSize(leaves); i++ {
+		leaf, _ := Vec_PtrEntry(leaves, i).(*Abc_Obj_t)
+		variable, _ := Vec_PtrEntry(vVars, i).([]uint64)
+		functions[leaf] = variable
+	}
+	for Vec_PtrSize(vFuncs) < Vec_PtrSize(visited) {
+		Vec_PtrPush(vFuncs, make([]uint64, nWordsMax))
+	}
+	words := refTruthWords(Vec_PtrSize(leaves))
+	var result []uint64
+	for i := int32(0); i < Vec_PtrSize(visited); i++ {
+		node, _ := Vec_PtrEntry(visited, i).(*Abc_Obj_t)
+		if node == nil || Abc_ObjIsNode(node) == 0 {
+			continue
+		}
+		left, right := functions[Abc_ObjFanin0(node)], functions[Abc_ObjFanin1(node)]
+		truth, _ := Vec_PtrEntry(vFuncs, i).([]uint64)
+		if len(left) == 0 || len(right) == 0 || len(truth) < words {
+			return nil
+		}
+		for k := 0; k < words; k++ {
+			a, b := left[k], right[k]
+			if Abc_ObjFaninC0(node) != 0 {
+				a = ^a
+			}
+			if Abc_ObjFaninC1(node) != 0 {
+				b = ^b
+			}
+			truth[k] = a & b
+		}
+		functions[node] = truth
+		result = truth
+	}
+	return result
+}
+func Abc_NodeConeIsConst0(truth []uint64, vars int32) int32 {
+	for _, word := range truth[:refTruthWords(vars)] {
+		if word != 0 {
+			return 0
+		}
+	}
+	return 1
+}
+func Abc_NodeConeIsConst1(truth []uint64, vars int32) int32 {
+	for _, word := range truth[:refTruthWords(vars)] {
+		if word != ^uint64(0) {
+			return 0
+		}
+	}
+	return 1
 }
 
-/**Function*************************************************************
+func Abc_NodeRefactor(p *Abc_ManRef_t, node *Abc_Obj_t, fanins *Vec_Ptr_t, updateLevel, useZeros, useDcs, verbose int32) *dec.Dec_Graph_t {
+	p.nNodesConsidered++
+	required := int32(util.ABC_INFINITY)
+	if updateLevel != 0 {
+		required = abc.Abc_ObjRequiredLevel(node)
+	}
+	started := time.Now()
+	truth := Abc_NodeConeTruth(p.vVars, p.vFuncs, int32(refTruthWords(p.nNodeSizeMax)), node, fanins, p.vVisited)
+	p.timeTru += int64(time.Since(started))
+	if truth == nil {
+		return nil
+	}
+	vars := Vec_PtrSize(fanins)
+	if Abc_NodeConeIsConst0(truth, vars) != 0 || Abc_NodeConeIsConst1(truth, vars) != 0 {
+		p.nLastGain = refactorLabelMffc(p, node, fanins)
+		p.nNodesGained += p.nLastGain
+		p.nNodesRefactored++
+		if Abc_NodeConeIsConst0(truth, vars) != 0 {
+			return dec.Dec_GraphCreateConst0()
+		}
+		return dec.Dec_GraphCreateConst1()
+	}
+	started = time.Now()
+	kitGraph := kit.Kit_TruthToGraph(refTruthFromKit(truth, vars), vars, &p.vMemory)
+	p.timeFact += int64(time.Since(started))
+	if kitGraph == nil {
+		return nil
+	}
+	graph := refKitToDec(kitGraph)
+	kit.Kit_GraphFree(kitGraph)
+	for i := int32(0); i < vars; i++ {
+		fanin, _ := Vec_PtrEntry(fanins, i).(*Abc_Obj_t)
+		dec.Dec_GraphSetLeafFunc(graph, i, fanin.Signal())
+	}
+	abc.Abc_NtkIncrementTravId(node.Network())
+	saved := refactorLabelMffc(p, node, fanins)
+	started = time.Now()
+	added := dec.Dec_GraphToNetworkCount(abc.DecNetwork{Network: node.Network()}, node.Signal(), graph, saved, required)
+	p.timeEval += int64(time.Since(started))
+	if added == -1 || (added == saved && useZeros == 0) {
+		dec.Dec_GraphFree(graph)
+		refactorClearMffc(p)
+		return nil
+	}
+	p.nLastGain = saved - added
+	p.nNodesGained += p.nLastGain
+	p.nNodesRefactored++
+	return graph
+}
 
-  Synopsis    [Stops the resynthesis manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+func Abc_NtkManRefStart(nodeSizeMax, coneSizeMax, useDcs, verbose int32) *Abc_ManRef_t {
+	p := &Abc_ManRef_t{nNodeSizeMax: nodeSizeMax, nConeSizeMax: coneSizeMax, fVerbose: verbose}
+	p.vCube = vec.Vec_StrAlloc(100)
+	p.vVisited = Vec_PtrAlloc(100)
+	p.vFuncs = Vec_PtrAlloc(100)
+	p.vVars = Vec_PtrAlloc(0)
+	varCount := nodeSizeMax
+	if varCount < 6 {
+		varCount = 6
+	}
+	for i := int32(0); i < varCount; i++ {
+		Vec_PtrPush(p.vVars, refVariableTruth(varCount, i))
+	}
+	p.vMemory = make([]uint32, 0, 1<<16)
+	return p
+}
 func Abc_NtkManRefStop(p *Abc_ManRef_t) {
-    Vec_PtrFreeFree( p.vFuncs );
-    Vec_PtrFree( p.vVars );
-    Vec_IntFree( p.vMemory );
-    Vec_PtrFree( p.vVisited );
-    Vec_StrFree( p.vCube );
-    ABC_FREE( p );
+	if p == nil {
+		return
+	}
+	refactorClearMffc(p)
+	for i := 0; i < int(Vec_PtrSize(p.vFuncs)); i++ {
+		vec.Vec_PtrWriteEntry(p.vFuncs, i, nil)
+	}
+	Vec_PtrFree(p.vFuncs)
+	Vec_PtrFree(p.vVars)
+	Vec_PtrFree(p.vVisited)
+	vec.Vec_StrFree(p.vCube)
+	p.vFuncs, p.vVars, p.vVisited = nil, nil, nil
+	p.vCube = nil
+	p.vMemory = nil
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Stops the resynthesis manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Abc_NtkManRefPrintStats(p *Abc_ManRef_t) {
-    fmt.Printf("Refactoring statistics:\n");
-    fmt.Printf("Nodes considered  = %8d.\n", p.nNodesConsidered);
-    fmt.Printf("Nodes refactored  = %8d.\n", p.nNodesRefactored);
-    fmt.Printf("Gain              = %8d. (%6.2f %%).\n", p.nNodesBeg-p.nNodesEnd, 100.0*(p.nNodesBeg-p.nNodesEnd)/p.nNodesBeg);
-    ABC_PRT( "Cuts       ", p.timeCut );
-    ABC_PRT( "Resynthesis", p.timeRes );
-    ABC_PRT( "    BDD    ", p.timeTru );
-    ABC_PRT( "    DCs    ", p.timeDcs );
-    ABC_PRT( "    SOP    ", p.timeSop );
-    ABC_PRT( "    FF     ", p.timeFact );
-    ABC_PRT( "    Eval   ", p.timeEval );
-    ABC_PRT( "AIG update ", p.timeNtk );
-    ABC_PRT( "TOTAL      ", p.timeTotal );
+	fmt.Println("Refactoring statistics:")
+	fmt.Printf("Nodes considered  = %8d.\n", p.nNodesConsidered)
+	fmt.Printf("Nodes refactored  = %8d.\n", p.nNodesRefactored)
+	gain := p.nNodesBeg - p.nNodesEnd
+	pct := 0.0
+	if p.nNodesBeg != 0 {
+		pct = 100 * float64(gain) / float64(p.nNodesBeg)
+	}
+	fmt.Printf("Gain              = %8d. (%6.2f %%).\n", gain, pct)
+	for _, stat := range []struct {
+		name    string
+		elapsed int64
+	}{{"Cuts", p.timeCut}, {"Resynthesis", p.timeRes}, {"BDD", p.timeTru}, {"DCs", p.timeDcs}, {"SOP", p.timeSop}, {"FF", p.timeFact}, {"Eval", p.timeEval}, {"AIG update", p.timeNtk}, {"TOTAL", p.timeTotal}} {
+		fmt.Printf("%-12s %9.2f sec\n", stat.name, time.Duration(stat.elapsed).Seconds())
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Performs incremental resynthesis of the AIG.]
-
-  Description [Starting from each node, computes a reconvergence-driven cut, 
-  derives BDD of the cut function, constructs ISOP, factors the ISOP, 
-  and replaces the current implementation of the MFFC of the node by the 
-  new factored form, if the number of AIG nodes is reduced and the total
-  number of levels of the AIG network is not increated. Returns the
-  number of AIG nodes saved.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkRefactor(pNtk *Abc_Ntk_t, nNodeSizeMax int32, nConeSizeMax int32, fUpdateLevel int32, fUseZeros int32, fUseDcs int32, fVerbose int32) int32 {
-    extern void           Dec_GraphUpdateNetwork( Abc_Obj_t * pRoot, Dec_Graph_t * pGraph, int fUpdateLevel, int nGain );
-    var pProgress *ProgressBar;
-    var pManRef *Abc_ManRef_t;
-    var pManCut *Abc_ManCut_t;
-    var pFForm *Dec_Graph_t;
-    var vFanins *Vec_Ptr_t;
-    var pNode *Abc_Obj_t;
-    var clk abctime;
-    var clkStart abctime = Abc_Clock();
-    var i, nNodes int32;
-
-    assert(Abc_NtkIsStrash(pNtk), "Abc_NtkIsStrash(pNtk)");
-    // cleanup the AIG
-    Abc_AigCleanup((Abc_Aig_t *)pNtk.pManFunc);
-    // start the managers
-    pManCut = Abc_NtkManCutStart( nNodeSizeMax, nConeSizeMax, 2, 1000 );
-    pManRef = Abc_NtkManRefStart( nNodeSizeMax, nConeSizeMax, fUseDcs, fVerbose );
-    pManRef.vLeaves   = Abc_NtkManCutReadCutLarge( pManCut );
-    // compute the reverse levels if level update is requested
-    if fUpdateLevel != 0 {
-        Abc_NtkStartReverseLevels( pNtk, 0 ); }
-
-    // resynthesize each node once
-    pManRef.nNodesBeg = Abc_NtkNodeNum(pNtk);
-    nNodes = Abc_NtkObjNumMax(pNtk);
-    pProgress = Extra_ProgressBarStart( os.Stdout, nNodes );
-    Abc_NtkForEachNode( pNtk, pNode, i )
-    {
-        Extra_ProgressBarUpdate( pProgress, i, nil );
-        // skip the constant node
-//        if ( Abc_NodeIsConst(pNode) )
-//            continue;
-        // skip persistant nodes
-        if Abc_NodeIsPersistant(pNode) {
-            continue; }
-        // skip the nodes with many fanouts
-        if Abc_ObjFanoutNum(pNode) > 1000 {
-            continue; }
-        // stop if all nodes have been tried once
-        if i >= nNodes {
-            break; }
-        // compute a reconvergence-driven cut
-clk = Abc_Clock();
-        vFanins = Abc_NodeFindCut( pManCut, pNode, fUseDcs );
-pManRef.timeCut += Abc_Clock() - clk;
-        // evaluate this cut
-clk = Abc_Clock();
-        pFForm = Abc_NodeRefactor( pManRef, pNode, vFanins, fUpdateLevel, fUseZeros, fUseDcs, fVerbose );
-pManRef.timeRes += Abc_Clock() - clk;
-        if pFForm == nil {
-            continue; }
-        // acceptable replacement found, update the graph
-clk = Abc_Clock();
-        Dec_GraphUpdateNetwork( pNode, pFForm, fUpdateLevel, pManRef.nLastGain );
-pManRef.timeNtk += Abc_Clock() - clk;
-        Dec_GraphFree( pFForm );
-    }
-    Extra_ProgressBarStop( pProgress );
-pManRef.timeTotal = Abc_Clock() - clkStart;
-    pManRef.nNodesEnd = Abc_NtkNodeNum(pNtk);
-
-    // print statistics of the manager
-    if fVerbose != 0 {
-        Abc_NtkManRefPrintStats( pManRef ); }
-    // delete the managers
-    Abc_NtkManCutStop( pManCut );
-    Abc_NtkManRefStop( pManRef );
-    // put the nodes into the DFS order and reassign their IDs
-    Abc_NtkReassignIds( pNtk );
-//    Abc_AigCheckFaninOrder( pNtk->pManFunc );
-    // fix the levels
-    if fUpdateLevel != 0 {
-        Abc_NtkStopReverseLevels( pNtk );
-    } else {
-        Abc_NtkLevel( pNtk ); }
-    // check
-    if !Abc_NtkCheck( pNtk ) {
-        fmt.Printf("Abc_NtkRefactor: The network check has failed.\n");
-        return 0;
-    }
-    return 1;
+func Abc_NtkRefactor(n *Abc_Ntk_t, nodeSizeMax, coneSizeMax, updateLevel, useZeros, useDcs, verbose int32) int32 {
+	if abc.Abc_NtkIsStrash(n) == 0 {
+		panic("Abc_NtkRefactor requires a strashed network")
+	}
+	started := time.Now()
+	manager, ok := n.FunctionManager.(*abc.Abc_Aig_t)
+	if !ok || manager == nil {
+		panic("Abc_NtkRefactor requires AIG manager")
+	}
+	abc.Abc_AigCleanup(manager)
+	cut := Abc_NtkManCutStart(nodeSizeMax, coneSizeMax, 2, 1000)
+	ref := Abc_NtkManRefStart(nodeSizeMax, coneSizeMax, useDcs, verbose)
+	ref.vLeaves = Abc_NtkManCutReadCutLarge(cut)
+	if updateLevel != 0 {
+		abc.Abc_NtkStartReverseLevels(n, 0)
+	}
+	ref.nNodesBeg = abc.Abc_NtkNodeNum(n)
+	limit := abc.Abc_NtkObjNumMax(n)
+	progress := extra.Extra_ProgressBarStart(os.Stdout, limit)
+	for i := int32(0); i < limit; i++ {
+		node := n.Object(int(i))
+		if node == nil || abc.Abc_ObjIsNode(node) == 0 {
+			continue
+		}
+		extra.Extra_ProgressBarUpdate(progress, i, "")
+		if node.Persist || abc.Abc_ObjFanoutNum(node) > 1000 {
+			continue
+		}
+		clk := time.Now()
+		fanins := Abc_NodeFindCut(cut, node, useDcs)
+		ref.timeCut += int64(time.Since(clk))
+		clk = time.Now()
+		graph := Abc_NodeRefactor(ref, node, fanins, updateLevel, useZeros, useDcs, verbose)
+		ref.timeRes += int64(time.Since(clk))
+		if graph == nil {
+			continue
+		}
+		clk = time.Now()
+		Dec_GraphUpdateNetwork(node, graph, updateLevel, ref.nLastGain)
+		ref.timeNtk += int64(time.Since(clk))
+		refactorClearMffc(ref)
+		dec.Dec_GraphFree(graph)
+	}
+	extra.Extra_ProgressBarStop(progress)
+	ref.timeTotal = int64(time.Since(started))
+	ref.nNodesEnd = abc.Abc_NtkNodeNum(n)
+	if verbose != 0 {
+		Abc_NtkManRefPrintStats(ref)
+	}
+	Abc_NtkManCutStop(cut)
+	Abc_NtkManRefStop(ref)
+	abc.Abc_NtkReassignIds(n)
+	if updateLevel != 0 {
+		abc.Abc_NtkStopReverseLevels(n)
+	} else {
+		abc.Abc_NtkLevel(n)
+	}
+	if abc.Abc_NtkCheck(n) == 0 {
+		fmt.Println("Abc_NtkRefactor: The network check has failed.")
+		return 0
+	}
+	return 1
 }
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
