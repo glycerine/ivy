@@ -163,16 +163,24 @@ func mfsImportABC(pNtk *Abc_Ntk_t) (*mfsABCMap, error) {
 	}
 	n.Registers = int(baseabc.Abc_NtkLatchNum(pNtk))
 	if pNtk.Excare != nil {
-		careNtk := Abc_NtkStrash(pNtk.Excare, 0, 0, 0)
-		if careNtk == nil {
-			return nil, fmt.Errorf("MFS: converting external care network to AIG failed")
+		carePIs := baseabc.Abc_NtkPiNum(pNtk.Excare)
+		if carePIs != baseabc.Abc_NtkCiNum(pNtk) {
+			fmt.Printf("The PI count of careset (%d) and logic network (%d) differ. Careset is not used.\n", carePIs, baseabc.Abc_NtkCiNum(pNtk))
+		} else {
+			careNtk := Abc_NtkStrash(pNtk.Excare, 0, 0, 0)
+			if careNtk == nil {
+				return nil, fmt.Errorf("MFS: converting external care network to AIG failed")
+			}
+			care := baseabc.Abc_NtkToDar(careNtk, 0, 0)
+			baseabc.Abc_NtkDelete(careNtk)
+			if care == nil {
+				return nil, fmt.Errorf("MFS: converting external care network to AIG failed")
+			}
+			if care.InputCount() != len(n.Inputs) {
+				return nil, fmt.Errorf("MFS: external care CI count %d differs from network CI count %d", care.InputCount(), len(n.Inputs))
+			}
+			n.Care = care
 		}
-		care := baseabc.Abc_NtkToDar(careNtk, 0, 0)
-		baseabc.Abc_NtkDelete(careNtk)
-		if care.InputCount() != len(n.Inputs) {
-			return nil, fmt.Errorf("MFS: external care CI count %d differs from network CI count %d", care.InputCount(), len(n.Inputs))
-		}
-		n.Care = care
 	}
 	if err := n.Check(); err != nil {
 		return nil, fmt.Errorf("MFS: invalid imported network: %w", err)
