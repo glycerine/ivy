@@ -530,8 +530,6 @@ func asWords(v any, n int32) []word {
 		return x
 	case *word:
 		return unsafe.Slice(x, int(n))
-	case [256]word:
-		return x[:]
 	default:
 		panic("unsupported truth words")
 	}

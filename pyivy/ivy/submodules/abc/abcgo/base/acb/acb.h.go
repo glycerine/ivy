@@ -709,7 +709,7 @@ func Acb_ObjFonNum(p *Acb_Ntk_t, iObj int32) int32 {
 	}
 	// inlining of macro Acb_ObjForEachFon
 	assert(Acb_ObjIsBox(p, iObj) != 0, "Acb_ObjIsBox(p, iObj)")
-	for i = iObj + 1; i < Acb_NtkObjNum(p) && (Acb_ObjIsFon(p, i) != 0); i++ {
+	for i = iObj + 1; i < Acb_NtkObjNumMax(p) && (Acb_ObjIsFon(p, i) != 0); i++ {
 		Count++
 	}
 	return Count
@@ -876,7 +876,7 @@ func Acb_ObjDelete(p *Acb_Ntk_t, iObj int32) {
 	}
 	// inlining of macro Acb_ObjForEachFon
 	assert(Acb_ObjIsBox(p, iObj) != 0, "Acb_ObjIsBox(p, iObj)")
-	for i = iObj + 1; i < Acb_NtkObjNum(p) && (Acb_ObjIsFon(p, i) != 0); i++ {
+	for i = iObj + 1; i < Acb_NtkObjNumMax(p) && (Acb_ObjIsFon(p, i) != 0); i++ {
 		Acb_ObjCleanType(p, i)
 	}
 }

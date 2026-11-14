@@ -390,3 +390,39 @@ func TestEcoSupportAndPatchFunction(t *testing.T) {
 		t.Fatalf("patch SOP %q has truth %x, want AND", sop, got)
 	}
 }
+
+func TestMfsAshenhurstAndPushDrivers(t *testing.T) {
+	for _, mode := range []string{"ashen_area", "ashen_delay", "push"} {
+		for seed := int64(0); seed < 10; seed++ {
+			t.Run(fmt.Sprintf("%s_%d", mode, seed), func(t *testing.T) {
+				p := acbNetwork(t, 6)
+				r := rand.New(rand.NewSource(seed))
+				functions := []uint64{8, 14, 6, 7, 9}
+				for j := 0; j < 12; j++ {
+					a := Acb_NtkObjNum(p)
+					b := int32(1 + r.Intn(int(a-1)))
+					acbNode(p, stretchTruth(functions[r.Intn(len(functions))], 2), a, b)
+				}
+				acbOutput(p, Acb_NtkObjNum(p))
+				want := acbTable(p)
+				if mode == "push" {
+					Acb_NtkPushLogic(p, 3, 0)
+				} else {
+					var pars Acb_Par_t
+					Acb_ParSetDefault(&pars)
+					pars.nLutSize = 3
+					pars.fUseAshen = 1
+					pars.fMoreEffort = 1
+					if mode == "ashen_delay" {
+						pars.fArea = 0
+					}
+					Acb_NtkOpt(p, &pars)
+				}
+				if got := acbTable(p); !reflect.DeepEqual(got, want) {
+					t.Fatalf("%s changed function", mode)
+				}
+				acbCheckLinks(t, p)
+			})
+		}
+	}
+}

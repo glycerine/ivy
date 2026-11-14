@@ -1360,7 +1360,7 @@ func Acb_FindSupportStart(pSat *sat_solver, iFirstDiv int32, vWeights *Vec_Int_t
 	Vec_IntSort(vSupp, 0)
 	return vSupp
 }
-func Acb_FindArgMaxUnderMask(vPats *Vec_Wrd_t, Mask any, vWeights *Vec_Int_t, nPats int32) int32 {
+func Acb_FindArgMaxUnderMask(vPats *Vec_Wrd_t, Mask []word, vWeights *Vec_Int_t, nPats int32) int32 {
 	var nDivs int32 = Vec_WrdSize(vPats) / NWORDS
 	var nWords int32 = Abc_Bit6WordNum(nPats)
 	var i int32
@@ -1380,7 +1380,7 @@ func Acb_FindArgMaxUnderMask(vPats *Vec_Wrd_t, Mask any, vWeights *Vec_Int_t, nP
 	}
 	return iBest
 }
-func Acb_FindArgMaxUnderMask2(vPats *Vec_Wrd_t, Mask any, vWeights *Vec_Int_t, nPats int32) int32 {
+func Acb_FindArgMaxUnderMask2(vPats *Vec_Wrd_t, Mask []word, vWeights *Vec_Int_t, nPats int32) int32 {
 	var nDivs int32 = Vec_WrdSize(vPats) / NWORDS
 	var i int32
 	var b int32
@@ -1421,7 +1421,7 @@ func Acb_FindSupportNext(pSat *sat_solver, iFirstDiv int32, vWeights *Vec_Int_t,
 	var nDivs int32 = Vec_IntSize(vWeights)
 	var vSupp *Vec_Int_t = Vec_IntAlloc(100)
 	var pMask *word
-	var Mask [NWORDS]word
+	Mask := make([]word, NWORDS)
 	Abc_TtConst(Mask, NWORDS, 1)
 	for {
 		var iDivBest int32 = Acb_FindArgMaxUnderMask(vPats, Mask, vWeights, *pnPats)
@@ -1511,9 +1511,9 @@ func Acb_FindReplace(pSat *sat_solver, iFirstDiv int32, vWeights *Vec_Int_t, vPa
 	var iLit2 int32
 	var status int32
 	var nWords int32 = Abc_Bit6WordNum(nPats)
-	var Covered [NWORDS]word
-	var Both [NWORDS]word
-	var Mask [NWORDS]word
+	Covered := make([]word, NWORDS)
+	Both := make([]word, NWORDS)
+	Mask := make([]word, NWORDS)
 	var pMask *word
 	assert(nWords <= NWORDS, "nWords <= NWORDS")
 	// prepare constant pattern

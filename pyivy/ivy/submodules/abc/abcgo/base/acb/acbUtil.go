@@ -114,8 +114,12 @@ func Acb_ObjCollectTfo(p *Acb_Ntk_t, iObj, fTerm int32) *Vec_Int_t {
 	if iObj > 0 {
 		Acb_ObjCollectTfo_rec(p, iObj, fTerm)
 	} else {
-		for i := int32(0); i < Acb_NtkCiNum(p); i++ {
-			Acb_ObjCollectTfo_rec(p, Acb_NtkCi(p, i), fTerm)
+		// Constants are roots too: optimization can disconnect an entire
+		// output cone from the primary inputs.
+		for obj := int32(1); obj < Acb_NtkObjNumMax(p); obj++ {
+			if Acb_ObjType(p, obj) != 0 && Acb_ObjFaninNum(p, obj) == 0 {
+				Acb_ObjCollectTfo_rec(p, obj, fTerm)
+			}
 		}
 	}
 	return &p.vArray1
@@ -456,9 +460,10 @@ func Acb_NtkComputeLevelR(p *Acb_Ntk_t, vTfi *Vec_Int_t) int32 {
 		Acb_ObjComputeLevelR(p, iObj)
 	}
 	// inlining of macro Acb_NtkForEachCi
-	for i = 0; i < Acb_NtkCiNum(p); i++ {
-		iObj = Acb_NtkCi(p, i)
-		Level = Abc_MaxInt(Level, Acb_ObjLevelR(p, iObj))
+	for iObj = 1; iObj < Acb_NtkObjNumMax(p); iObj++ {
+		if Acb_ObjType(p, iObj) != 0 && Acb_ObjFaninNum(p, iObj) == 0 {
+			Level = Abc_MaxInt(Level, Acb_ObjLevelR(p, iObj))
+		}
 	}
 	//    assert( p->LevelMax == Level );
 	p.LevelMax = Level

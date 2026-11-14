@@ -201,6 +201,11 @@ func Acb_NtkToAbc(pNtk *Abc_Ntk_t, p *Acb_Ntk_t) *Abc_Ntk_t {
 		if Acb_ObjType(p, iObj) == 0 || Acb_ObjIsCio(p, iObj) != 0 {
 		} else {
 			var pObjNew *Abc_Obj_t = Abc_NtkObj(pNtkNew, Acb_ObjCopy(p, iObj))
+			// ISOP represents constants with zero inputs even if the source
+			// LUT still has redundant fanins.
+			if Abc_SopGetVarNum(pObjNew.Data.(string)) == 0 {
+				continue
+			}
 			// inlining of macro Acb_ObjForEachFanin
 			for k = 0; k < Acb_ObjFaninNum(p, iObj); k++ {
 				iFanin = Acb_ObjFanin(p, iObj, k)

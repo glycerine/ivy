@@ -1751,7 +1751,7 @@ func Acb_NtkOptNode(p *Acb_Mfs_t, Pivot int32) int32 {
 			}
 			uTruth = Acb_ComputeFunction(p.pSat[0], PivotVar, sat_solver_nvars(p.pSat[0])-1, p.vSupp, 0)
 			if p.pPars.fVerbose != 0 {
-				extra.Extra_PrintHex(os.Stdout, []uint32{uint32(uTruth)}, Vec_IntSize(p.vSupp))
+				extra.Extra_PrintHex(os.Stdout, []uint32{uint32(uTruth), uint32(uTruth >> 32)}, Vec_IntSize(p.vSupp))
 			}
 			if p.pPars.fVerbose != 0 {
 				fmt.Printf("\n")
@@ -1783,7 +1783,7 @@ func Acb_NtkOptNode(p *Acb_Mfs_t, Pivot int32) int32 {
 			}
 			uTruth = Acb_ComputeFunction(p.pSat[0], PivotVar, sat_solver_nvars(p.pSat[0])-1, p.vSupp, 0)
 			if p.pPars.fVerbose != 0 {
-				extra.Extra_PrintHex(os.Stdout, []uint32{uint32(uTruth)}, Vec_IntSize(p.vSupp))
+				extra.Extra_PrintHex(os.Stdout, []uint32{uint32(uTruth), uint32(uTruth >> 32)}, Vec_IntSize(p.vSupp))
 			}
 			if p.pPars.fVerbose != 0 {
 				fmt.Printf("\n")
@@ -1840,6 +1840,9 @@ func Acb_NtkOptNode(p *Acb_Mfs_t, Pivot int32) int32 {
 			assert(status == l_True, "status == l_True")
 			// get assignment of the function
 			fCompl = boolInt(sat_solver_var_value(p.pSat[1], PivotVar) == 0, 1, 0)
+			// The C solver retains its model while clauses are added. The Go
+			// API invalidates model access on mutation, so save this assignment.
+			model := p.pSat[1].Model()
 			// constrain second set of G-vars to have values equal to the assignment
 			for i = 0; i < Vec_IntSize(p.vSupp)-Result && i < Vec_IntSize(p.vSupp); i++ {
 				Var = Vec_IntEntry(p.vSupp, i)
@@ -1858,7 +1861,7 @@ func Acb_NtkOptNode(p *Acb_Mfs_t, Pivot int32) int32 {
 					continue
 				}
 				assert(Var >= 0 && Var < nDivs, "Var >= 0 && Var < nDivs")
-				Lit = sat_solver_var_literal(p.pSat[1], Var+Cnf_DataVarNum(pCnf))
+				Lit = Abc_Var2Lit(Var+Cnf_DataVarNum(pCnf), boolInt(!model[Var+Cnf_DataVarNum(pCnf)], 1, 0))
 				if !sat_solver_addclause(p.pSat[1], []int32{Lit}) {
 					if fVerbose != 0 || p.pPars.fVerbose != 0 {
 						fmt.Printf("Error: SAT solver became UNSAT at a wrong place (place 1).  ")
@@ -1880,7 +1883,7 @@ func Acb_NtkOptNode(p *Acb_Mfs_t, Pivot int32) int32 {
 			// truth table
 			uTruth = Acb_ComputeFunction(p.pSat[1], PivotVar, sat_solver_nvars(p.pSat[1])-1, p.vSupp, fCompl)
 			if fVerbose != 0 || p.pPars.fVerbose != 0 {
-				extra.Extra_PrintHex(os.Stdout, []uint32{uint32(uTruth)}, Vec_IntSize(p.vSupp))
+				extra.Extra_PrintHex(os.Stdout, []uint32{uint32(uTruth), uint32(uTruth >> 32)}, Vec_IntSize(p.vSupp))
 			}
 			if uTruth == 0 || ^uTruth == 0 {
 				if fVerbose != 0 || p.pPars.fVerbose != 0 {
@@ -1910,7 +1913,7 @@ func Acb_NtkOptNode(p *Acb_Mfs_t, Pivot int32) int32 {
 				fmt.Printf("  ")
 			}
 			if fVerbose != 0 || p.pPars.fVerbose != 0 {
-				extra.Extra_PrintHex(os.Stdout, []uint32{uint32(uTruth)}, Vec_IntSize(p.vSupp))
+				extra.Extra_PrintHex(os.Stdout, []uint32{uint32(uTruth), uint32(uTruth >> 32)}, Vec_IntSize(p.vSupp))
 			}
 			if fVerbose != 0 || p.pPars.fVerbose != 0 {
 				fmt.Printf("\n")
