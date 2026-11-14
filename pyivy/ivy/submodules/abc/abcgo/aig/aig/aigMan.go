@@ -193,13 +193,21 @@ func Aig_ManCoCleanup(p *Graph) int32 {
 	return int32(old - len(keep))
 }
 func Aig_ManPrintStats(p *Graph) {
-	level := 0
-	for _, e := range p.outputs {
-		if l := p.node(e).Level; l > level {
-			level = l
-		}
+	fmt.Printf("%-15s : pi = %5d  po = %5d  ", p.Name, len(p.inputs)-int(p.nRegs), len(p.outputs)-int(p.nRegs))
+	if p.nRegs != 0 {
+		fmt.Printf("lat = %5d  ", p.nRegs)
 	}
-	fmt.Printf("%-15s : pi = %5d  po = %5d  lat = %5d  and = %7d  lev = %3d\n", p.Name, len(p.inputs)-int(p.nRegs), len(p.outputs)-int(p.nRegs), p.nRegs, Aig_ManAndNum(p), level)
+	fmt.Printf("and = %7d  ", Aig_ManAndNum(p))
+	if count := Aig_ManExorNum(p); count != 0 {
+		fmt.Printf("xor = %5d  ", count)
+	}
+	if count := Aig_ManChoiceNum(p); count != 0 {
+		fmt.Printf("ch = %5d  ", count)
+	}
+	if count := Aig_ManBufNum(p); count != 0 {
+		fmt.Printf("buf = %5d  ", count)
+	}
+	fmt.Printf("lev = %3d\n", Aig_ManLevels(p))
 }
 func Aig_ManReportImprovement(p, q *Graph) {
 	reduction := func(a, b int32) float64 {

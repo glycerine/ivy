@@ -1761,3 +1761,35 @@ is recorded in the same `/tmp/abcgo-first-po-flip-review.log`.
 The adjacent statistics/live-object predicate review has newly red source
 regressions and remains the next repair checkpoint. These do not change the
 first-PO fix or establish that the whole AIG package is complete.
+
+### Manager statistics and live-object predicate source repair
+
+Red regressions exposed two more source mismatches. Aig_ManPrintStats used
+cached CO levels (e.g. 99) instead of actual driver depth (1), always emitted
+lat=0 and omitted live XOR/choice/buffer fields. It now delegates depth to the
+existing Aig_ManLevels helper and uses the source conditional fields. This
+removes the duplicate depth scan and preserves object-type counts and source
+formatting. Aig_ManReportImprovement already matches the source count/reduction
+formulas, including zero denominator handling; no repair was needed there.
+
+Aig_ManHasNoGaps additionally required an empty deleted-slot map, but C's
+predicate compares live object counts. The regression failed after deleting
+one dangling AND despite the live-object equation holding. Removed that extra
+condition and documented the actual contract. A separate buffer case remains
+false, since buffers are excluded from the right side of C's equation. A search
+found no production Go callers beyond the entry point itself.
+
+A compiled fixture checks byte-identical statistics and predicate results for
+ordinary graphs, a deletion hole, sequential dimensions and explicit XOR,
+buffer and a valid equivalent choice alternative; it also has a deliberately
+stale CO level. Focused source regressions pass under the race detector
+(`/tmp/abcgo-manager-stats-review.log`). Full AIG tests on this state pass in
+30.759s, with the ABCI result recorded alongside in
+`/tmp/abcgo-manager-current-review.log`. The final equivalent-choice test
+fixture refinement passes separately. The preceding output-flip repair also
+passes the full ABCI race suite (28.718s).
+
+The remaining manager/cleanup and file-by-file inventory need reconciliation
+before closing aig/aig. In particular, recheck cleanup's typed buffer handling
+against C rather than assuming the earlier ordinary-AND tests cover it. The
+full sequential goal remains active, with 1/131 packages completed.

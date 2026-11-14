@@ -230,3 +230,12 @@ structural regression and independent BLIF/Verilog readbacks failed. Sixteen
 compiled-C flips, all input assignments, reference ownership and double-flip
 restoration now pass; full AIG/FRA/interpolation race checks pass. Adjacent
 statistics/live-object predicate regressions are the next open checkpoint.
+
+Manager diagnostics follow-up: red regressions exposed stale CO depths,
+missing conditional type counts, and an extra deleted-slot restriction in
+Aig_ManHasNoGaps. Statistics now reuse Aig_ManLevels and match source fields;
+the predicate now uses C's live-object equation. A compiled-C fixture matches
+ordinary/deleted/sequential/typed-choice diagnostic cases byte for byte, and
+focused race tests pass. Full AIG tests pass on this state; ABCI verification
+is logged in /tmp/abcgo-manager-current-review.log. Manager cleanup's typed
+buffer behavior and final file inventory remain open audit work.

@@ -33,8 +33,11 @@ func Aig_ManIncrementTravId(p *Graph) {
 	p.travID++
 }
 func Aig_TimeStamp() string { return time.Now().Format("Mon Jan _2 15:04:05 2006") }
+
+// Aig_ManHasNoGaps matches C's live-object count equation. Deleted object
+// slots are excluded from that count.
 func Aig_ManHasNoGaps(p *Graph) int32 {
-	if len(p.deleted) == 0 && int(Aig_ManObjNum(p)) == len(p.inputs)+len(p.outputs)+int(Aig_ManNodeNum(p))+1 {
+	if int(Aig_ManObjNum(p)) == len(p.inputs)+len(p.outputs)+int(Aig_ManNodeNum(p))+1 {
 		return 1
 	}
 	return 0
