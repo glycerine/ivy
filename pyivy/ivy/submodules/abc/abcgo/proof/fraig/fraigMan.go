@@ -240,3 +240,9 @@ func Fraig_ManAddClause(p *Fraig_Man_t, nodes []*Fraig_Node_t, n int32) {
 	}
 	assert(msat.Msat_SolverAddClause(p.pSat, p.vProj) != 0, "clause accepted")
 }
+
+// Prove_ParamsSetItersMax applies the C parameter field nItersMax.
+func Prove_ParamsSetItersMax(p *Prove_Params_t, value int32) { p.nItersMax = value }
+
+// Prove_ParamsSetVerbose applies the C parameter field fVerbose.
+func Prove_ParamsSetVerbose(p *Prove_Params_t, value int32) { p.fVerbose = value }
