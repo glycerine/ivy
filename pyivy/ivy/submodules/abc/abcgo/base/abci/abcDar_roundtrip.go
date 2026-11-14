@@ -28,18 +28,20 @@ func abcGraphSetMapped(g *aig.Graph, e aig.Edge, mapped abc.Edge) {
 }
 
 func darReachableNodes(g *aig.Graph) []aig.Edge {
-	var nodes []aig.Edge
-	for _, output := range g.Outputs() {
-		aig.Aig_ManDfs_rec(g, output, &nodes)
-	}
-	return nodes
+	return aig.Aig_ManDfs(g, 1)
 }
 
 func darAllNodes(g *aig.Graph) []aig.Edge {
+	aig.Aig_ManIncrementTravId(g)
+	aig.Aig_ObjSetTravIdCurrent(g, g.Const1())
+	for _, input := range g.Inputs() {
+		aig.Aig_ObjSetTravIdCurrent(g, input)
+	}
 	var nodes []aig.Edge
-	for id, node := range g.Nodes() {
+	for _, e := range g.LiveEdges() {
+		node := g.Node(e)
 		if node.Kind == aig.And || node.Kind == aig.ExclusiveOr {
-			aig.Aig_ManDfs_rec(g, aig.Edge(id)<<1, &nodes)
+			aig.Aig_ManDfs_rec(g, e, &nodes)
 		}
 	}
 	return nodes
