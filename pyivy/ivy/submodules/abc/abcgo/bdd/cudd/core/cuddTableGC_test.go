@@ -82,6 +82,9 @@ func TestCuddTableGCPreHookCancellationDoesNotCountCollection(t *testing.T) {
 
 func TestCuddUniqueConstantUsesManagerEpsilon(t *testing.T) {
 	dd := NewBDDManager(0)
+	if Cudd_addConst(dd, 0.5e-12) != dd.Zero {
+		t.Fatal("constant below epsilon was not canonicalized to zero")
+	}
 	base := Cudd_addConst(dd, 7)
 	if got := Cudd_addConst(dd, 7+0.5e-12); got != base {
 		t.Fatal("constants within epsilon were not interned together")
@@ -99,6 +102,9 @@ func TestCuddUniqueConstantUsesManagerEpsilon(t *testing.T) {
 	Cudd_SetEpsilon(dd, 0)
 	if Cudd_ReadEpsilon(dd) != 0 {
 		t.Fatal("epsilon setter did not update the manager")
+	}
+	if Cudd_addConst(dd, 0.5e-12) == dd.Zero {
+		t.Fatal("zero epsilon still collapsed a nonzero constant to zero")
 	}
 }
 

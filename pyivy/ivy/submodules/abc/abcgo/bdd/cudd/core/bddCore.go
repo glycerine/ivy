@@ -68,7 +68,7 @@ type DdManager struct {
 	gcEnabled                         int32
 	countDead                         uint32
 	recomb, symmviolation             int32
-	arcviolation, populationSize       int32
+	arcviolation, populationSize      int32
 	numberXovers                      int32
 	closed                            bool
 	linearMatrix                      []uint64
@@ -1006,6 +1006,9 @@ func Cudd_CountMinterm(dd *DdManager, f *DdNode, nvars int) float64 {
 }
 
 func (dd *DdManager) constant(value float64) *DdNode {
+	if math.Abs(value) < dd.epsilon {
+		value = 0
+	}
 	if value == 0 {
 		value = 0
 	} // Canonicalize IEEE negative zero.

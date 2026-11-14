@@ -65,25 +65,25 @@ type DdApaNumber = []DdApaDigit
 type DdChildren struct{ T, E *DdNode }
 
 const (
-	CUDD_VERSION                 = "2.4.2"
-	CUDD_OUT_OF_MEM              = -1
-	CUDD_UNIQUE_SLOTS            = 256
-	CUDD_CACHE_SLOTS             = 262144
-	DD_MAX_LOOSE_FRACTION        = 5
-	DD_MAX_CACHE_FRACTION        = 3
-	DD_MAX_CACHE_TO_SLOTS_RATIO  = 4 // src/bdd/cudd/cuddInt.h
-	DD_GC_FRAC_HI                = 4.0 // src/bdd/cudd/cuddInt.h
-	DD_GC_FRAC_LO                = 1.0 // src/bdd/cudd/cuddInt.h
-	DD_GC_FRAC_MIN               = 0.2 // src/bdd/cudd/cuddInt.h
-	CUDD_RESIDUE_DEFAULT         = 0
-	CUDD_RESIDUE_MSB             = 1
-	CUDD_RESIDUE_TC              = 2
-	CUDD_MAXINDEX         uint32 = 0x7fffffff
-	CUDD_CONST_INDEX             = CUDD_MAXINDEX
-	DD_APA_BITS                  = 32
-	DD_APA_BASE           uint64 = 1 << DD_APA_BITS
-	DD_APA_MASK                  = DD_APA_BASE - 1
-	DD_APA_HEXPRINT              = "%08x"
+	CUDD_VERSION                       = "2.4.2"
+	CUDD_OUT_OF_MEM                    = -1
+	CUDD_UNIQUE_SLOTS                  = 256
+	CUDD_CACHE_SLOTS                   = 262144
+	DD_MAX_LOOSE_FRACTION              = 5
+	DD_MAX_CACHE_FRACTION              = 3
+	DD_MAX_CACHE_TO_SLOTS_RATIO        = 4   // src/bdd/cudd/cuddInt.h
+	DD_GC_FRAC_HI                      = 4.0 // src/bdd/cudd/cuddInt.h
+	DD_GC_FRAC_LO                      = 1.0 // src/bdd/cudd/cuddInt.h
+	DD_GC_FRAC_MIN                     = 0.2 // src/bdd/cudd/cuddInt.h
+	CUDD_RESIDUE_DEFAULT               = 0
+	CUDD_RESIDUE_MSB                   = 1
+	CUDD_RESIDUE_TC                    = 2
+	CUDD_MAXINDEX               uint32 = 0x7fffffff
+	CUDD_CONST_INDEX                   = CUDD_MAXINDEX
+	DD_APA_BITS                        = 32
+	DD_APA_BASE                 uint64 = 1 << DD_APA_BITS
+	DD_APA_MASK                        = DD_APA_BASE - 1
+	DD_APA_HEXPRINT                    = "%08x"
 )
 
 type Cudd_ReorderingType int32
