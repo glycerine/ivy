@@ -3,6 +3,7 @@ package aig
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/misc/tim"
+	"github.com/glycerine/abcgo/misc/util"
 )
 
 func Aig_ManVerifyTopoOrder(p *Graph) int32 {
@@ -414,44 +415,87 @@ func Aig_DagSize(p *Graph, e Edge) int32 {
 	return count
 }
 func Aig_Support(p *Graph, e Edge) []Edge {
-	var result []Edge
-	for _, x := range p.dfs([]Edge{e}, false, false, false) {
-		if p.node(x).Kind == Input {
-			result = append(result, x)
-		}
+	if e.Complemented() || p.node(e).Kind == Output {
+		panic("aig: support requires a regular non-output root")
 	}
+	Aig_ManIncrementTravId(p)
+	var result []Edge
+	Aig_Support_rec(p, e, &result)
 	return result
 }
-func Aig_SupportSize(p *Graph, e Edge) int32 { return int32(len(Aig_Support(p, e))) }
+func Aig_SupportSize(p *Graph, e Edge) int32 {
+	if e.Complemented() || p.node(e).Kind == Output {
+		panic("aig: support size requires a regular non-output root")
+	}
+	Aig_ManIncrementTravId(p)
+	var count int32
+	Aig_SupportSize_rec(p, e, &count)
+	return count
+}
 func Aig_SupportSize_rec(p *Graph, e Edge, count *int32) {
-	for _, x := range Aig_Support(p, e) {
-		if p.node(x).TravID != p.travID {
-			p.node(x).TravID = p.travID
-			*count++
-		}
+	n := p.node(e)
+	if n.TravID == p.travID {
+		return
+	}
+	n.TravID = p.travID
+	if n.Kind == Input {
+		*count++
+		return
+	}
+	if n.Kind != And && n.Kind != ExclusiveOr && n.Kind != Buffer {
+		panic("aig: support size recursion requires a CI, node or buffer")
+	}
+	for _, fanin := range nodeFanins(*n) {
+		Aig_SupportSize_rec(p, Aig_Regular(fanin), count)
 	}
 }
 func Aig_SupportSizeTest(p *Graph) int32 {
+	started := util.Abc_Clock()
 	var total int32
-	for _, e := range p.outputs {
-		total += Aig_SupportSize(p, e)
+	for id, node := range p.nodes {
+		if !p.deleted[id] && (node.Kind == And || node.Kind == ExclusiveOr) && Aig_SupportSize(p, Edge(id)<<1) <= 16 {
+			total++
+		}
 	}
+	fmt.Printf("Nodes with small support %d (out of %d)\n", total, Aig_ManNodeNum(p))
+	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-started)
 	return total
 }
-func Aig_Support_rec(p *Graph, e Edge, support *[]Edge) { Aig_SupportNodes(p, []Edge{e}, 1, support) }
+func Aig_Support_rec(p *Graph, e Edge, support *[]Edge) {
+	n := p.node(e)
+	if n.TravID == p.travID {
+		return
+	}
+	n.TravID = p.travID
+	if n.Kind == Constant {
+		return
+	}
+	if n.Kind == Input {
+		*support = append(*support, Aig_Regular(e))
+		return
+	}
+	if n.Kind != And && n.Kind != ExclusiveOr && n.Kind != Buffer {
+		panic("aig: support recursion requires a CI, node or buffer")
+	}
+	for _, fanin := range nodeFanins(*n) {
+		Aig_Support_rec(p, Aig_Regular(fanin), support)
+	}
+}
 func Aig_SupportNodes(p *Graph, roots []Edge, n int32, support *[]Edge) {
 	if n < 0 || int(n) > len(roots) {
 		panic("aig: invalid support range")
 	}
-	seen := make(map[int]bool)
-	for _, e := range *support {
-		seen[e.NodeID()] = true
-	}
-	for _, e := range p.dfs(roots[:n], false, false, false) {
-		if p.node(e).Kind == Input && !seen[e.NodeID()] {
-			*support = append(*support, e)
-			seen[e.NodeID()] = true
+	*support = (*support)[:0]
+	Aig_ManIncrementTravId(p)
+	p.node(p.Const1()).TravID = p.travID
+	for _, e := range roots[:n] {
+		if e.Complemented() {
+			panic("aig: support roots must be regular objects")
 		}
+		if p.node(e).Kind == Output {
+			e = p.outputDriver(e)
+		}
+		Aig_Support_rec(p, Aig_Regular(e), support)
 	}
 }
 func Aig_Transfer_rec(source, destination *Graph, root Edge) {

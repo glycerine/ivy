@@ -11,7 +11,7 @@ func TestTraversalSupportAndComposition(t *testing.T) {
 	ab := p.AND(a, b)
 	root := p.OR(ab, c)
 	p.AddOutput(root)
-	if Aig_DagSize(p, root) != 2 || Aig_SupportSize(p, root) != 3 {
+	if Aig_DagSize(p, root) != 2 || Aig_SupportSize(p, Aig_Regular(root)) != 3 {
 		t.Fatal("wrong cone metrics")
 	}
 	order := Aig_ManDfs(p, 1)

@@ -198,7 +198,7 @@ func Aig_ManSplit(p *Graph, variables, verbose int32) *Graph {
 		fmt.Println("The number of cofactoring variables must be between 1 and 16.")
 		return nil
 	}
-	support := Aig_Support(p, p.outputDriver(p.outputs[0]))
+	support := Aig_Support(p, Aig_Regular(p.outputDriver(p.outputs[0])))
 	if len(support) == 0 {
 		fmt.Println("Property output function is a constant.")
 		return nil

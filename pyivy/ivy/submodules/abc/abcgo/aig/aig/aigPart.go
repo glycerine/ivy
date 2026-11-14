@@ -131,7 +131,7 @@ func Part_ManMergeEntry(p *Part_Man_t, a, b *Part_One_t, refs int32) *Part_One_t
 }
 func Part_ManTransferEntry(entry *Part_One_t) []int32 { return append([]int32(nil), entry.pOuts...) }
 func partOutputSupport(p *Graph, output Edge) []int32 {
-	support := Aig_Support(p, p.outputDriver(output))
+	support := Aig_Support(p, Aig_Regular(p.outputDriver(output)))
 	result := make([]int32, len(support))
 	for i, e := range support {
 		result[i] = Aig_ObjCioId(p, e)
@@ -520,7 +520,7 @@ func Aig_ManSupportNodes(p *Graph, parts [][]int32) [][]int32 {
 			if index < 0 || int(index) >= len(p.outputs) {
 				panic("aig: partition output index outside graph")
 			}
-			Aig_ManSupportNodes_rec(p, p.outputDriver(p.outputs[index]), &supports[i])
+			Aig_ManSupportNodes_rec(p, Aig_Regular(p.outputDriver(p.outputs[index])), &supports[i])
 		}
 	}
 	return supports

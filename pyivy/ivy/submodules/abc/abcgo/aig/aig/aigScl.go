@@ -353,7 +353,7 @@ func RegisterComponents(p *Graph) [][]int32 {
 	}
 	neighbors := make([][]int, registers)
 	for output, e := range p.outputs[pos:] {
-		for _, input := range Aig_Support(p, p.outputDriver(e)) {
+		for _, input := range Aig_Support(p, Aig_Regular(p.outputDriver(e))) {
 			if source, ok := index[input.NodeID()]; ok {
 				neighbors[output] = append(neighbors[output], source)
 				neighbors[source] = append(neighbors[source], output)
