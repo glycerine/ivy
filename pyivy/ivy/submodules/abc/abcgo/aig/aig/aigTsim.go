@@ -145,6 +145,12 @@ func Aig_TsiStateOrAll(p *Aig_Tsi_t, state []uint32) {
 }
 
 func ternarySimulateFrame(p *Graph) {
+	ternarySimulateOutputs(p, p.outputs)
+}
+
+// Simulate all logic and the selected COs. The source sequential driver
+// transfers LI values only; ordinary POs retain their existing scratch data.
+func ternarySimulateOutputs(p *Graph, outputs []Edge) {
 	done, active := make([]bool, len(p.nodes)), make([]bool, len(p.nodes))
 	for _, e := range p.inputs {
 		done[e.NodeID()] = true
@@ -189,10 +195,13 @@ func ternarySimulateFrame(p *Graph) {
 		}
 		return ternaryEdgeValue(p, e)
 	}
-	for id := range p.nodes {
-		if !p.deleted[id] {
+	for id, n := range p.nodes {
+		if !p.deleted[id] && n.Kind != Output {
 			visit(Edge(id) << 1)
 		}
+	}
+	for _, e := range outputs {
+		visit(e)
 	}
 }
 
@@ -204,9 +213,6 @@ func Aig_ManTernarySimulate(p *Graph, verbose, veryVerbose int32) []Edge {
 func ternarySimulate(p *Graph, maxRounds, oneSeries int, verbose, veryVerbose int32) []Edge {
 	manager := Aig_TsiStart(p)
 	defer Aig_TsiStop(manager)
-	if p.nRegs == 0 {
-		return nil
-	}
 	if maxRounds <= 0 || oneSeries < 0 {
 		panic("aig: invalid simulation round limits")
 	}
@@ -216,6 +222,7 @@ func ternarySimulate(p *Graph, maxRounds, oneSeries int, verbose, veryVerbose in
 	p.nodes[0].Xsim = AIG_XVS1
 	piCount := len(p.inputs) - int(p.nRegs)
 	poCount := len(p.outputs) - int(p.nRegs)
+	next := make([]int32, p.nRegs)
 	for _, e := range p.inputs[piCount:] {
 		p.node(e).Xsim = AIG_XVS0
 	}
@@ -235,8 +242,7 @@ func ternarySimulate(p *Graph, maxRounds, oneSeries int, verbose, veryVerbose in
 			break
 		}
 		Aig_TsiStateInsert(manager, state, int32(len(state)))
-		ternarySimulateFrame(p)
-		next := make([]int32, p.nRegs)
+		ternarySimulateOutputs(p, p.outputs[poCount:])
 		for i, e := range p.outputs[poCount:] {
 			next[i] = ternaryEdgeValue(p, e)
 		}

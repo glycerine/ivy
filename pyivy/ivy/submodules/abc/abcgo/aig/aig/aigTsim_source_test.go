@@ -79,3 +79,116 @@ func TestTernaryMappingAcrossPackedWordsAgainstSource(t *testing.T) {
 		t.Fatalf("Go simulation:\n%sC simulation:\n%s", got.String(), out)
 	}
 }
+
+func TestTernarySimulationSourceScratchScope(t *testing.T) {
+	for _, regs := range []int32{0, 1} {
+		p := NewGraph()
+		a, b := p.NewInput(), p.NewInput()
+		gate := p.AND(a, b)
+		po := p.AddOutput(gate)
+		Aig_ObjSetXsim(p, po, AIG_XVS1)
+		if regs != 0 {
+			p.AddOutput(b)
+		}
+		p.nRegs = regs
+		Aig_ManTernarySimulate(p, 0, 0)
+		if p.node(po).Xsim != AIG_XVS1 {
+			t.Errorf("regs=%d: PO scratch overwritten by source LI-only transfer", regs)
+		}
+		wantGate := AIG_XVSX
+		if regs != 0 {
+			wantGate = AIG_XVS0
+		}
+		if p.node(p.Const1()).Xsim != AIG_XVS1 || p.node(a).Xsim != AIG_XVSX || p.node(gate).Xsim != wantGate {
+			t.Errorf("regs=%d: source initialization/logic scratch missing: const=%d PI=%d gate=%d", regs, p.node(p.Const1()).Xsim, p.node(a).Xsim, p.node(gate).Xsim)
+		}
+	}
+}
+
+func TestTernaryScratchScopeAgainstCompiledSource(t *testing.T) {
+	out := runAigSourceFixture(t, "ternary_scope_compare.c", "aigMem.c")
+	var got strings.Builder
+	for _, regs := range []int32{0, 1} {
+		p := NewGraph()
+		a, b := p.NewInput(), p.NewInput()
+		po := p.AddOutput(p.AND(a, b))
+		Aig_ObjSetXsim(p, po, AIG_XVS1)
+		if regs != 0 {
+			p.AddOutput(b)
+		}
+		p.nRegs = regs
+		mapping := Aig_ManTernarySimulate(p, 0, 0)
+		fmt.Fprintf(&got, "mode %d mapping:", regs)
+		for _, e := range mapping {
+			fmt.Fprintf(&got, " %d", e)
+		}
+		got.WriteString("\nvalues:")
+		for _, n := range p.nodes {
+			fmt.Fprintf(&got, " %d", n.Xsim)
+		}
+		got.WriteByte('\n')
+	}
+	if got.String() != out {
+		t.Fatalf("Go scratch state:\n%sC scratch state:\n%s", got.String(), out)
+	}
+}
+
+func TestConstantReductionRepeatsAndPreservesLastManager(t *testing.T) {
+	p := NewGraph()
+	los := []Edge{p.NewInput(), p.NewInput(), p.NewInput()}
+	for _, e := range los {
+		p.AddOutput(e)
+	}
+	for _, e := range los {
+		p.AddOutput(e)
+	}
+	p.nRegs = 3
+	var calls []*Graph
+	engine := func(g *Graph, symbolic, satur, verbose, veryVerbose int32) []Edge {
+		if symbolic != 5 || satur != 7 || verbose != 0 || veryVerbose != 1 {
+			t.Fatal("engine options changed")
+		}
+		calls = append(calls, g)
+		if len(calls) == 3 {
+			return nil
+		}
+		mapping := g.Inputs()
+		mapping[0] = g.Const0()
+		return mapping
+	}
+	result := Aig_ManConstReduce(p, 1, 5, 7, 0, 1, engine)
+	if len(calls) != 3 || calls[2] != result || result.nRegs != 1 {
+		t.Fatalf("driver failed repeated reductions: calls=%d registers=%d", len(calls), result.nRegs)
+	}
+	for _, old := range calls[:2] {
+		if old.nodes != nil {
+			t.Error("replaced manager was not stopped")
+		}
+	}
+	for _, state := range []bool{false, true} {
+		values, err := result.Evaluate([]bool{state})
+		if err != nil || len(values) != 4 || values[0] || values[1] || values[2] != state || values[3] != state {
+			t.Fatalf("reduced outputs %v, error %v", values, err)
+		}
+	}
+	if err := result.Check(); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestConstantReductionWithoutMappingKeepsSourceManager(t *testing.T) {
+	p := NewGraph()
+	lo := p.NewInput()
+	p.AddOutput(lo.Not())
+	p.AddOutput(lo.Not())
+	p.nRegs = 1
+	engine := func(g *Graph, _, _, _, _ int32) []Edge {
+		if g != p {
+			t.Fatal("wrong manager")
+		}
+		return nil
+	}
+	if got := Aig_ManConstReduce(p, 1, 0, 0, 0, 0, engine); got != p || len(p.nodes) == 0 {
+		t.Fatal("mapping-free reduction replaced/stopped the source")
+	}
+}
