@@ -114,9 +114,13 @@ manager duplicator when copying explicit XOR, Buffer and Output nodes.
 Interpolation contracts were checked against Cnf_DeriveSimple and
 Sto_ManChangeLastClause: ordinary mode asserts every A/B output; relation mode
 moves the last A unit to B and shares that unit's regular node variable first.
-The stdlib backend computes exact Shannon projection, returning graph semantics
-rather than a resolution proof trace. Exhaustive tests check Craig implications,
-complemented relation roots/variable ordering, overlaps and per-output checks.
+The earlier Shannon projection backend was rejected by the sequential audit
+and removed. Drivers now live in proof/aiginterp and use the original CNF,
+BSAT/solver2 and proof-interpolation workflows. Reparameterization preserves
+the original zero-clause-ID assertion; a C oracle additionally confirms SAT
+after repairing only those IDs. It is an upstream experimental routine that
+does not currently provide a usable reparameterization. See SEQUENTIAL_AUDIT.md
+for the source evidence, migration and remaining package review scope.
 
 Partition design uses typed pooled blocks/support records, sorted support sets,
 bitmap scoring and explicit forward/inverse CI maps. Smart register/output
