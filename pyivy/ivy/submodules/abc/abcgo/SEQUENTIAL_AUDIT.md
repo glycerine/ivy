@@ -423,3 +423,30 @@ already violate its UNSAT assertion on a nonconstant one-output function.
 This remains a hypothesis requiring a C fixture; no replacement constraints
 or algorithm have been invented to make it pass. Next verify the initial
 formula against original solver2 and clause helpers before porting the driver.
+
+### Reparameterization: original-C initial-stage oracle
+
+Added a compiled-C oracle using the exact clause helpers and initial solver
+setup extracted from current `src/aig/aig/aigRepar.c`, linked against original
+solver2/SAT/memory/proof/store sources. Its fixture provides the valid free-CO
+CNF for an identity function (output v0 equals input v1; v2 is constant one).
+Unused interpolation callbacks are link stubs; the SAT implementation and all
+constraints under investigation are original C. Core reporting is disabled
+only in the fixture process; timeouts remain failures.
+
+The unmodified source prefix aborts in sat_solver2_addclause on `Id != 0`:
+aigRepar.c supplies the now-forbidden zero root-clause IDs. A second diagnostic
+build replaces only those IDs with increasing positive IDs, leaving the
+original constraints unchanged. It returns status=1 (SAT) under the original
+first equality assumption, contradicting the subsequent source assertion that
+status is l_False. Both outcomes are now regression-tested, and the full native-driver race
+suite passes. The production C
+and Go algorithms were not changed to manufacture UNSAT.
+
+This verifies two upstream failures before proof extraction, rather than
+merely guessing that the indexing looks wrong. It also proves that the
+existing Go image-preserving projection does not represent this source
+execution. Required follow-up: replace that substitute with a clearly traced
+source port preserving demonstrated failure behavior, or repair the original
+algorithm only with sufficient specification/evidence. Do not silently invent
+new reparameterization constraints. AIG remains in progress.
