@@ -363,3 +363,15 @@ fixing a red buffer/AND alias case that lost a distinct source terminal ID.
 Fourteen native-C subset/order cases match exact PIO vectors, graph refs,
 fanins and restriction marks. Full AIG race checks pass in 72.483s. The
 mapped-CNF/BSAT migration remains open, with a new red variable-layout test.
+
+The per-node Tseitin/SATOKO path is removed. Partitioned solving now resides
+in proof/aigpartsat with actual mapped CNF, polarity transformation, lifting,
+BSAT incremental solving and DAR synthesis, avoiding graph/CNF import cycles.
+ABCI uses that driver. Red variable-layout and synthesis-flag regressions pass.
+A compiled original-C incremental helper matches complete clause streams and
+11/22-variable maps for two additions in both polarity modes. Typed graph and
+rewritten-buffer normalization uses the existing AIGER adapter. Legacy Boolean
+and model tests moved to the higher layer and pass. Correctness repairs for
+isolated/constant outputs, sparse labels and conflict accounting remain explicit;
+source edge-case/limit demonstrations and final inventory remain open. The new
+package's full race suite passes in 8.768s; AIG/ABCI race checks are pending.

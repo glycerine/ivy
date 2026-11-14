@@ -1,14 +1,15 @@
-package aig
+package aigpartsat
 
 import (
 	"errors"
+	"github.com/glycerine/abcgo/aig/aig"
 	"math/rand"
 	"testing"
 )
 
-func exhaustivePartSAT(g *Graph) (bool, []bool) {
-	for assignment := 0; assignment < 1<<len(g.inputs); assignment++ {
-		in := make([]bool, len(g.inputs))
+func exhaustivePartSAT(g *aig.Graph) (bool, []bool) {
+	for assignment := 0; assignment < 1<<g.InputCount(); assignment++ {
+		in := make([]bool, g.InputCount())
 		for i := range in {
 			in[i] = assignment&(1<<i) != 0
 		}
@@ -26,7 +27,7 @@ func exhaustivePartSAT(g *Graph) (bool, []bool) {
 	}
 	return false, nil
 }
-func checkPartitionedSAT(t *testing.T, g *Graph) {
+func checkPartitionedSAT(t *testing.T, g *aig.Graph) {
 	t.Helper()
 	want, _ := exhaustivePartSAT(g)
 	for algo := int32(0); algo < 4; algo++ {
@@ -40,7 +41,7 @@ func checkPartitionedSAT(t *testing.T, g *Graph) {
 			}
 			if status == 0 {
 				model, ok := g.Data.([]int32)
-				if !ok || len(model) != len(g.inputs) {
+				if !ok || len(model) != g.InputCount() {
 					t.Fatal("missing model", g.Data)
 				}
 				in := make([]bool, len(model))
@@ -63,7 +64,7 @@ func checkPartitionedSAT(t *testing.T, g *Graph) {
 func TestPartitionedSATDegenerate(t *testing.T) {
 	for _, kind := range []string{"empty", "true", "false", "pi", "negative pi", "conflicting pis", "isolated pi with gates"} {
 		t.Run(kind, func(t *testing.T) {
-			g := NewGraph()
+			g := aig.NewGraph()
 			switch kind {
 			case "true":
 				g.AddOutput(g.Const1())
@@ -89,8 +90,8 @@ func TestPartitionedSATDegenerate(t *testing.T) {
 func TestPartitionedSATRandomGraphs(t *testing.T) {
 	r := rand.New(rand.NewSource(861))
 	for sample := 0; sample < 24; sample++ {
-		g := NewGraph()
-		edges := []Edge{g.Const0(), g.Const1()}
+		g := aig.NewGraph()
+		edges := []aig.Edge{g.Const0(), g.Const1()}
 		for i := 0; i < 4; i++ {
 			edges = append(edges, g.NewInput())
 		}
@@ -99,7 +100,7 @@ func TestPartitionedSATRandomGraphs(t *testing.T) {
 			if r.Intn(2) == 0 {
 				a = a.Not()
 			}
-			var e Edge
+			var e aig.Edge
 			switch r.Intn(3) {
 			case 0:
 				e = g.AND(a, b)
@@ -117,15 +118,15 @@ func TestPartitionedSATRandomGraphs(t *testing.T) {
 	}
 }
 func TestPartitionSplitSparseLabelsAndMappings(t *testing.T) {
-	g := NewGraph()
+	g := aig.NewGraph()
 	a, b, c := g.NewInput(), g.NewInput(), g.NewInput()
 	x := g.AND(a, b)
 	y := g.NewXor(x, c)
 	g.AddOutput(y.Not())
-	labels := make([]int32, len(g.nodes))
+	labels := make([]int32, len(g.Nodes()))
 	labels[x.NodeID()] = 7
 	labels[y.NodeID()] = 91
-	parts, pio, outputs := Aig_ManPartSplit(g, labels)
+	parts, pio, outputs := aig.Aig_ManPartSplit(g, labels)
 	if len(parts) != 2 || len(pio) != 2 || len(outputs) != 2 || len(outputs[1]) != 1 {
 		t.Fatal(len(parts), pio, outputs)
 	}
@@ -144,15 +145,15 @@ type testPartSynth struct {
 	fail  bool
 }
 
-func (s *testPartSynth) SynthesizePart(g *Graph) (*Graph, error) {
+func (s *testPartSynth) SynthesizePart(g *aig.Graph) (*aig.Graph, error) {
 	s.calls++
 	if s.fail {
 		return nil, errors.New("test synthesis failure")
 	}
-	return Aig_ManDupSimple(g), nil
+	return aig.Aig_ManDupSimple(g), nil
 }
 func TestPartitionSATInjectedSynthesis(t *testing.T) {
-	g := NewGraph()
+	g := aig.NewGraph()
 	a, b := g.NewInput(), g.NewInput()
 	g.AddOutput(g.AND(a, b))
 	if status, err := PartitionedSAT(g, PartSATOptions{Synthesize: true}); status != -1 || err == nil {
@@ -170,30 +171,30 @@ func TestPartitionSATInjectedSynthesis(t *testing.T) {
 }
 func TestPartitionSATInvalidOptions(t *testing.T) {
 	for _, options := range []PartSATOptions{{Algorithm: 4}, {Algorithm: 1}, {PartConflictLimit: -1}, {TotalConflictLimit: -1}} {
-		if status, err := PartitionedSAT(NewGraph(), options); status != -1 || err == nil {
+		if status, err := PartitionedSAT(aig.NewGraph(), options); status != -1 || err == nil {
 			t.Fatal(options, status, err)
 		}
 	}
 }
 
 func TestPartitionSATPreservesClientMarks(t *testing.T) {
-	g := NewGraph()
+	g := aig.NewGraph()
 	a, b := g.NewInput(), g.NewInput()
 	root := g.AND(a, b)
 	g.AddOutput(root)
-	g.node(a).MarkA = true
-	g.node(b).MarkB = true
-	g.node(root).MarkA = true
+	aig.Aig_ObjSetMarkA(g, a)
+	aig.Aig_ObjSetMarkB(g, b)
+	aig.Aig_ObjSetMarkA(g, root)
 	checkPartitionedSAT(t, g)
-	if !g.node(a).MarkA || !g.node(b).MarkB || !g.node(root).MarkA {
+	if !g.Node(a).MarkA || !g.Node(b).MarkB || !g.Node(root).MarkA {
 		t.Fatal("client marks changed")
 	}
 }
 func TestPartitionSATOriginalConstantBoundary(t *testing.T) {
 	for _, negative := range []bool{false, true} {
-		g := NewGraph()
+		g := aig.NewGraph()
 		a := g.NewInput()
-		node := Aig_ObjCreate(g, &Node{Kind: ExclusiveOr, Fanins: [2]Edge{g.Const1(), a}})
+		node := aig.Aig_ObjCreate(g, &aig.Node{Kind: aig.ExclusiveOr, Fanins: [2]aig.Edge{g.Const1(), a}})
 		if negative {
 			node = node.Not()
 		}
@@ -202,18 +203,17 @@ func TestPartitionSATOriginalConstantBoundary(t *testing.T) {
 	}
 }
 func TestPartitionSATInputPhaseAndCounterexample(t *testing.T) {
-	g := NewGraph()
+	g := aig.NewGraph()
 	a, b := g.NewInput(), g.NewInput()
-	g.node(a).Phase = true
-	g.node(b).Phase = true
+	aig.Aig_ObjSetPhase(g, a, true)
+	aig.Aig_ObjSetPhase(g, b, true)
 	g.AddOutput(g.AND(a.Not(), b))
-	g.recomputeLevels()
 	checkPartitionedSAT(t, g)
 }
 func TestPartitionSATBoundedAnswersSound(t *testing.T) {
-	g := NewGraph()
+	g := aig.NewGraph()
 	a, b := g.NewInput(), g.NewInput()
-	for _, e := range []Edge{g.OR(a, b), g.OR(a, b.Not()), g.OR(a.Not(), b), g.OR(a.Not(), b.Not())} {
+	for _, e := range []aig.Edge{g.OR(a, b), g.OR(a, b.Not()), g.OR(a.Not(), b), g.OR(a.Not(), b.Not())} {
 		g.AddOutput(e)
 	}
 	for algorithm := int32(0); algorithm < 4; algorithm++ {
@@ -229,26 +229,29 @@ func TestPartitionSATBoundedAnswersSound(t *testing.T) {
 }
 
 func TestPartitionSATTransparentOutputFanins(t *testing.T) {
-	g := NewGraph()
+	g := aig.NewGraph()
 	a, b := g.NewInput(), g.NewInput()
 	g.AddOutput(a)
-	g.AddOutput(g.AND(g.outputs[0], b.Not()))
-	g.AddOutput(g.outputs[1])
+	g.AddOutput(g.AND(g.Outputs()[0], b.Not()))
+	g.AddOutput(g.Outputs()[1])
 	checkPartitionedSAT(t, g)
 }
 func TestPartitionSATInputContradictionThroughCO(t *testing.T) {
-	g := NewGraph()
+	g := aig.NewGraph()
 	a, b := g.NewInput(), g.NewInput()
 	g.AddOutput(a)
-	g.AddOutput(g.AND(g.outputs[0].Not(), b))
+	g.AddOutput(g.AND(g.Outputs()[0].Not(), b))
 	checkPartitionedSAT(t, g)
 }
 
 type mutatingPartSynth struct{}
 
-func (mutatingPartSynth) SynthesizePart(g *Graph) (*Graph, error) { g.NewInput(); return g, nil }
+func (mutatingPartSynth) SynthesizePart(g *aig.Graph) (*aig.Graph, error) {
+	g.NewInput()
+	return g, nil
+}
 func TestPartitionSATRejectsMutatingInterface(t *testing.T) {
-	g := NewGraph()
+	g := aig.NewGraph()
 	a, b := g.NewInput(), g.NewInput()
 	g.AddOutput(g.AND(a, b))
 	if status, err := PartitionedSAT(g, PartSATOptions{Synthesize: true, Synthesizer: mutatingPartSynth{}}); status != -1 || err == nil {
@@ -256,7 +259,7 @@ func TestPartitionSATRejectsMutatingInterface(t *testing.T) {
 	}
 }
 func TestPartitionSplitRejectsDuplicates(t *testing.T) {
-	g := NewGraph()
+	g := aig.NewGraph()
 	a, b := g.NewInput(), g.NewInput()
 	root := g.AND(a, b)
 	g.AddOutput(root)
@@ -265,5 +268,37 @@ func TestPartitionSplitRejectsDuplicates(t *testing.T) {
 			t.Fatal("accepted duplicate partition node")
 		}
 	}()
-	Aig_ManPartSplitOne(g, []Edge{root, root})
+	aig.Aig_ManPartSplitOne(g, []aig.Edge{root, root})
+}
+
+type bufferedPartSynth struct{}
+
+func (bufferedPartSynth) SynthesizePart(g *aig.Graph) (*aig.Graph, error) {
+	q := aig.Aig_ManDupSimple(g)
+	for _, output := range q.Outputs() {
+		driver := q.Node(output).Fanins[0]
+		buffer := aig.Aig_ObjCreate(q, &aig.Node{Kind: aig.Buffer, Fanins: [2]aig.Edge{driver, aig.InvalidEdge}})
+		aig.Aig_ObjPatchFanin0(q, output, buffer)
+	}
+	return q, nil
+}
+
+func TestPartitionSATNormalizesSynthesizedBuffers(t *testing.T) {
+	g := aig.NewGraph()
+	a, b := g.NewInput(), g.NewInput()
+	g.AddOutput(g.AND(a, b))
+	status, err := PartitionedSAT(g, PartSATOptions{Synthesize: true, Synthesizer: bufferedPartSynth{}})
+	if err != nil || status != 0 {
+		t.Fatalf("buffered rewrite solve: status %d, error %v", status, err)
+	}
+}
+
+func TestPartitionSATCollapsedBufferBoundary(t *testing.T) {
+	g := aig.NewGraph()
+	a, b := g.NewInput(), g.NewInput()
+	gate := g.AND(a, b)
+	buffer := aig.Aig_ObjCreate(g, &aig.Node{Kind: aig.Buffer, Fanins: [2]aig.Edge{gate, aig.InvalidEdge}})
+	g.AddOutput(gate)
+	g.AddOutput(g.AND(gate, buffer))
+	checkPartitionedSAT(t, g)
 }

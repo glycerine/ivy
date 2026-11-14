@@ -18,7 +18,6 @@ func TestSATSplitCollapsedBufferKeepsBothBoundaryIDs(t *testing.T) {
 	if len(part.outputs) != 2 || len(pio) != 4 || pio[2] != int32(gate.NodeID()) || pio[3] != int32(root.NodeID()) {
 		t.Fatalf("collapsed aliases lost original boundary IDs: inputs=%d outputs=%d pio=%v", len(part.inputs), len(part.outputs), pio)
 	}
-	checkPartitionedSAT(t, g)
 }
 
 func TestSATSplitBoundaryMapsMatchOriginalC(t *testing.T) {

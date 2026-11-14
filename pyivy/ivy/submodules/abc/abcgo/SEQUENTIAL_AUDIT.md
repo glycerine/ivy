@@ -2233,3 +2233,56 @@ The next mapped-CNF regression is deliberately red: on a six-input AND chain,
 the old per-node helper allocates 15 solver variables instead of Cnf_Derive's
 11, with different terminal IDs. This test is pending migration with the
 mapped-CNF/BSAT driver. It is not part of the boundary-only checkpoint.
+
+### Restore mapped-CNF and BSAT partition solving
+
+The red six-input layout test exposed 15 per-node SATOKO variables instead of
+11 mapped-CNF variables and incorrect terminal mappings. Another red test found
+the original synthesis flag simply returned an unsupported-backend error.
+Removed the per-node Tseitin/SATOKO implementation. The real driver now lives
+in proof/aigpartsat above AIG/CNF/BSAT/DAR, following the interpolation layering
+pattern to avoid dependency cycles. ABCI's partitioned-SAT command calls the new
+package; graph partitioning, boundary maps and polarity helpers stay in AIG.
+Moved its functional tests to the implementation layer using public graph APIs.
+
+The incremental helper now calls Cnf_Derive with free COs, transforms polarity,
+lifts into the existing solver namespace, creates the exact mapped variables,
+adds mapped clauses and terminal equalities, records the constant binding, then
+adds original-output and restriction units. BSAT retains clauses and learned
+state between partitions and supplies the model. Source entry synthesis calls
+the actual DAR Rwsat pass. Its nConfPart argument remains unused as in C;
+the modern options API can explicitly request a per-call cap.
+
+A compiled fixture links the actual source AIG, DAR cuts, mapped-CNF and BSAT
+implementations, then invokes the original incremental helper twice. Variable
+maps, 11/22-variable lifting, connector clauses and the complete recorded clause
+sequence match exactly in both polarity modes. No fake CNF or SAT algorithm is
+used in that oracle. Existing exhaustive small/random Boolean and model tests
+now exercise this pipeline, alongside synthesis failures/interface validation,
+constants, PI outputs, sparse labels and bounded results.
+
+Typed native XORs/buffers normalize through the already reviewed AIGER adapter
+before the AND-only mapper. A new red synthesis-callback regression found that
+normalization must also occur after a rewrite returning buffers; this is now
+covered. The collapsed-buffer boundary case also runs through every solver
+partition/alignment mode in the new package.
+
+Retained explicit correctness repairs outside the source's safe domain:
+isolated PI/constant outputs are constrained, shared constant boundary CIs are
+forced true, different terminal phases connect with the correct sign, total
+budgets subtract newly spent rather than cumulative conflicts, zero means
+unlimited, and an exhausted budget before the final partition returns unknown
+rather than a partial SAT answer. Original C's sparse-label grouping defect
+remains repaired in the graph helper. These are visible repairs/extensions,
+not claims that a source-equivalent substitute formula is the same algorithm.
+Native source demonstrations of remaining driver edge cases/conflict controls
+and final file/function reconciliation are still needed before closing AIG.
+
+Uncached migration integration passed AIG/aigpartsat/ABCI in
+42.212s/0.385s/14.428s before the final native/callback tests
+(`/tmp/abcgo-partsat-migration-integration.log`). The complete new package,
+including those tests, passes with the race detector in 8.768s. The subsequent
+AIG/ABCI race suites are still running and are not claimed finished here.
+The original 131-package audit remains active; this driver migration adds
+proof/aigpartsat to the package inventory, just as proof/aiginterp was added.
+Only the root package is marked complete.

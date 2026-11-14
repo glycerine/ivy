@@ -4,6 +4,7 @@ import map_mio "github.com/glycerine/abcgo/map/mio"
 
 import proof_pdr "github.com/glycerine/abcgo/proof/pdr"
 import "github.com/glycerine/abcgo/proof/aiginterp"
+import "github.com/glycerine/abcgo/proof/aigpartsat"
 
 import aig_ioa "github.com/glycerine/abcgo/aig/ioa"
 
@@ -1440,7 +1441,7 @@ func Abc_NtkPartitionedSat(pNtk *Abc_Ntk_t, nAlgo int32, nPartSize int32, nConfP
 	assert((Abc_NtkIsStrash(pNtk) != 0), "Abc_NtkIsStrash(pNtk)")
 	assert(Abc_NtkLatchNum(pNtk) == 0, "Abc_NtkLatchNum(pNtk) == 0")
 	pMan = Abc_NtkToDar(pNtk, 0, 0)
-	RetValue = aiggraph.Aig_ManPartitionedSat(pMan, nAlgo, nPartSize, nConfPart, nConfTotal, fAlignPol, fSynthesize, fVerbose)
+	RetValue = aigpartsat.Aig_ManPartitionedSat(pMan, nAlgo, nPartSize, nConfPart, nConfTotal, fAlignPol, fSynthesize, fVerbose)
 	Abc_NtkSetModel(pNtk, abcAigModel(pMan))
 	pMan.Data = nil
 	Aig_ManStop(pMan)
