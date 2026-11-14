@@ -24,6 +24,12 @@ func Abc_ObjAssignName(object *Object, name, suffix string) string {
 	}
 	return nm.Nm_ManStoreIdName(object.network.names, int32(object.ID), int32(object.Kind), name, suffix)
 }
+func Abc_ObjDeleteName(object *Object) {
+	if object == nil || object.network == nil {
+		panic("name deletion requires a live object")
+	}
+	nm.Nm_ManDeleteIdName(object.network.names, int32(object.ID))
+}
 func Abc_ObjNamePrefix(object *Object, prefix string) string { return prefix + Abc_ObjName(object) }
 func Abc_ObjNameSuffix(object *Object, suffix string) string { return Abc_ObjName(object) + suffix }
 func Abc_ObjNameDummy(prefix string, number, digits int32) string {
