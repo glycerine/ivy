@@ -15,8 +15,8 @@ import (
 // Abc_NtkQbf solves the bounded synthesis problem exists p forall x M(p,x)
 // using the counterexample-guided synthesis loop from ABC.
 func Abc_NtkQbf(pNtk *Abc_Ntk_t, nPars, nItersMax, fDumpCnf, fVerbose int32) {
-	assert(Abc_NtkIsStrash(pNtk), "Abc_NtkIsStrash(pNtk)")
-	assert(Abc_NtkIsComb(pNtk), "Abc_NtkIsComb(pNtk)")
+	assert((Abc_NtkIsStrash(pNtk) != 0), "Abc_NtkIsStrash(pNtk)")
+	assert((Abc_NtkIsComb(pNtk) != 0), "Abc_NtkIsComb(pNtk)")
 	assert(Abc_NtkPoNum(pNtk) == 1, "Abc_NtkPoNum(pNtk) == 1")
 	assert(nPars > 0 && nPars < Abc_NtkPiNum(pNtk), "nPars > 0 && nPars < Abc_NtkPiNum(pNtk)")
 	nInputs := Abc_NtkPiNum(pNtk) - nPars
@@ -102,7 +102,7 @@ func Abc_NtkQbf(pNtk *Abc_Ntk_t, nPars, nItersMax, fDumpCnf, fVerbose int32) {
 		if verification == nil {
 			break
 		}
-		Abc_ObjXorFaninC(Abc_NtkPo(verification, 0), 0)
+		baseabc.Abc_ObjXorFaninC(Abc_NtkPo(verification, 0), 0)
 		ret = Abc_NtkMiterSat(verification, 0, 0, 0, nil, nil)
 		if ret == 0 {
 			Abc_NtkModelToVector(verification, piValues)

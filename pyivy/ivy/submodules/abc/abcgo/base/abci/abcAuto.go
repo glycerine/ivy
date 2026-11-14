@@ -1,5 +1,7 @@
 package abci
 
+import base_abc "github.com/glycerine/abcgo/base/abc"
+
 import (
 	"fmt"
 	"time"
@@ -28,7 +30,7 @@ func Abc_NtkAutoPrint(pNtk *Abc_Ntk_t, output, naive, verbose int32) {
 
 	outputs := make([]*cudd.DdNode, nOutputs)
 	for i := int32(0); i < nOutputs; i++ {
-		outputs[i] = Abc_ObjGlobalBdd(Abc_NtkCo(pNtk, i))
+		outputs[i] = Abc_ObjGlobalBdd(base_abc.Abc_NtkCo(pNtk, i))
 	}
 
 	if verbose != 0 {

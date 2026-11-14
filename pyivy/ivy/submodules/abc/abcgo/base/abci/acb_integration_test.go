@@ -1,5 +1,7 @@
 package abci
 
+import base_main "github.com/glycerine/abcgo/base/main"
+
 import (
 	"github.com/glycerine/abcgo/base/acb"
 	"os"
@@ -9,7 +11,7 @@ import (
 
 // Exercises the original command-based mapping flow, which requires ABCI.
 func TestEcoRepairsSingleTarget(t *testing.T) {
-	Abc_Init(Abc_FrameGetGlobalFrame())
+	Abc_Init(base_main.Abc_FrameGetGlobalFrame())
 	dir := t.TempDir()
 	bad := filepath.Join(dir, "bad.v")
 	good := filepath.Join(dir, "good.v")

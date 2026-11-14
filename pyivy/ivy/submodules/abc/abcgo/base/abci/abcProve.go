@@ -1,5 +1,7 @@
 package abci
 
+import base_abc "github.com/glycerine/abcgo/base/abc"
+
 import (
 	"fmt"
 	"math"
@@ -197,7 +199,7 @@ func Abc_NtkMiterPrint(n *Abc_Ntk_t, label string, clk int64, verbose int32) {
 	if verbose == 0 {
 		return
 	}
-	level := Abc_NtkLevel(n)
+	level := base_abc.Abc_NtkLevel(n)
 	if Abc_NtkIsStrash(n) != 0 {
 		level = Abc_AigLevel(n)
 	}

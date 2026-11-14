@@ -1,0 +1,81 @@
+# Completing the ABCI port
+
+## Contract
+
+Complete `base/abci` against `src/base/abci`. Preserve the C algorithms,
+command options, return conventions, graph ownership, literal polarity and
+observable results. Use the existing Go implementations in owning packages;
+do not substitute algorithms, hide unfinished files behind build exclusions,
+or add success stubs. Correct source defects only with explicit evidence and
+regression tests. Fixtures use `test_vectors`, never `testdata`.
+
+## Initial assessment (2026-11-14)
+
+The package has 119 production Go files (95,732 lines) and 95 test files
+containing 264 test functions. Much prior porting and local review exists,
+but the whole package has not yet built. `abc.go` alone contains 47,031 lines
+of command dispatch and adapters. Older review documents describe historical
+compile frontiers, not current passing results.
+
+`go test ./base/abci -run '^$'` with compiler `-e` reports 3,657 diagnostic
+lines. Most are concentrated in `abc.go` (2,665), `abcDar.go` (403),
+`abcMiter.go` (307), and `abcQuant.go` (109). Many missing names already exist
+in owning packages; the remaining errors include C integer conditions,
+pointer/slice mismatches, private fields, untranslated iteration and memory
+operations, and invalid option/error paths. Three existing test compilation
+errors also prevent exercising previous tests.
+
+## Milestones
+
+- [x] Inventory source, tests, review notes and all compiler diagnostics.
+- [ ] Resolve API ownership and compatibility bridges against actual Go types.
+- [ ] Complete command, DAR, miter and quantification translations; compile
+      every production file and all existing tests together.
+- [ ] Run the complete suite; investigate every failure and unexpected
+      diagnostic, checking the corresponding C before changing behavior.
+- [ ] Review algorithms and adapters independently of compilation: ownership,
+      complemented edges, sequential interfaces, truth widths, SAT status,
+      command parameters and failure handling.
+- [ ] Add comprehensive behavioral tests for risky and uncovered paths:
+      independent exhaustive small-network evaluation, sequential examples,
+      command parsing/dispatch, conversion round trips, invalid inputs,
+      optimization/verification, and ACB/Ivy/ECO integration.
+- [ ] Run full verbose, race/checkptr and coverage checks; inspect coverage by
+      algorithm family and record gaps honestly.
+- [ ] Verify affected downstream packages, update source review and progress,
+      and commit coherent changes on the current branch.
+
+## Working sequence and verification
+
+First restore the complete compilation boundary. Group missing APIs by owner
+and use typed adapters only where representations differ. Then complete the
+remaining C expressions and control flow against the source. Run all existing
+tests before adding coverage driven by observed risks and coverage reports.
+Tests must verify behavior, rather than merely mirror implementation details.
+
+Use `GOCACHE=/tmp/abcgo-gocache` from `abcgo`. The package build and test gates
+always include all of `base/abci`; selected-file tests are not evidence that
+the package builds. Do not run `experiments/`. Save compact coherent changes
+at least about every ten minutes; commits made while the package still fails
+are labeled `red:`. Record commands, outcomes and findings below as work
+progresses.
+
+## Progress
+
+Initial diagnostic inventory saved to `/tmp/abci-build-initial.log` for this
+session. No passing-package claim is made at this stage.
+
+### API and parameter integration
+
+Resolved missing names to the existing owning Go packages. The command layer
+also exposed a broad API gap: C-visible solver/mapper parameter fields were
+private in their Go types. Exported the required fields and updated their
+uses by Go type identity, preserving a single parameter record and avoiding
+shadow configuration state. Full tests pass for `aig/gia`, `aig/ivy`,
+`map/amap`, `map/if`, `map/mpm`, `proof/abs`, `proof/acec`, `proof/cec`,
+`proof/fra`, `proof/pdr`, `proof/ssw`, and `sat/bmc` after these changes.
+
+Restored 368 parameter-qualified flag references dropped by prior ternary
+translation, checking the original command bodies. Converted 411 C truth
+tests according to their Go operand types. ABCI remains red while command
+arguments, representation conversions and graph algorithms are completed.

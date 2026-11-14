@@ -72,7 +72,7 @@ func Abc_NtkAttach(n *Abc_Ntk_t) int32 {
 		mem.Mem_FlexStop(manager, 0)
 	}
 	n.FunctionManager = lib
-	if !abc.Abc_NtkCheck(n) {
+	if (abc.Abc_NtkCheck(n) == 0) {
 		fmt.Println("Abc_NtkAttach: The network check has failed.")
 		return 0
 	}

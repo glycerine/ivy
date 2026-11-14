@@ -1883,7 +1883,7 @@ func Ses_CheckDepthConsistency(pSes *Ses_Man_t) int32 {
 			if Abc_TtIsStairDecomposable(pSes.pSpec, pSes.nSpecWords, &vars[0], int32(len(vars)), &pSes.pStairDecFunc[0]) == 0 {
 				if pSes.fReasonVerbose != 0 {
 					spFmt.Printf("give up due to impossible stair decomposition at level %d: ", level)
-					Vec_IntPrint(pSes.vStairDecVars)
+					gia.Vec_IntPrint(pSes.vStairDecVars)
 				}
 				return 0
 			}

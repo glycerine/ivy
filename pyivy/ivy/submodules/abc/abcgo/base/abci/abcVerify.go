@@ -1,5 +1,7 @@
 package abci
 
+import base_main "github.com/glycerine/abcgo/base/main"
+
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/aig"
@@ -229,7 +231,7 @@ func Abc_NtkCecFraigPart(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, nSeconds int32, nPa
 		abc.Abc_NtkDelete(pMiter)
 		return
 	}
-	Cmd_CommandExecute(Abc_FrameGetGlobalFrame(), "unset progressbar")
+	base_main.Cmd_CommandExecute(base_main.Abc_FrameGetGlobalFrame(), "unset progressbar")
 	status, nOutputs := int32(1), int32(0)
 	for i := int32(0); i < abc.Abc_NtkPoNum(pMiter); i++ {
 		pObj := abc.Abc_NtkPo(pMiter, i)
@@ -272,7 +274,7 @@ func Abc_NtkCecFraigPart(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, nSeconds int32, nPa
 			abc.Abc_NtkDelete(pMiterPart)
 		}
 	}
-	Cmd_CommandExecute(Abc_FrameGetGlobalFrame(), "set progressbar")
+	base_main.Cmd_CommandExecute(base_main.Abc_FrameGetGlobalFrame(), "set progressbar")
 	if status == 1 {
 		fmt.Printf("Networks are equivalent.                         \n")
 	} else if status == -1 {
@@ -316,7 +318,7 @@ func Abc_NtkCecFraigPartAuto(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, nSeconds int32,
 		abc.Abc_NtkDelete(pMiter)
 		return
 	}
-	Cmd_CommandExecute(Abc_FrameGetGlobalFrame(), "unset progressbar")
+	base_main.Cmd_CommandExecute(base_main.Abc_FrameGetGlobalFrame(), "unset progressbar")
 	vParts := Abc_NtkPartitionSmart(pMiter, 300, 0)
 	status, nOutputs := int32(1), int32(0)
 	vOnePtr := vec.Vec_PtrAlloc(1000)
@@ -366,7 +368,7 @@ func Abc_NtkCecFraigPartAuto(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, nSeconds int32,
 	}
 	vec.Vec_PtrFree(vParts)
 	vec.Vec_PtrFree(vOnePtr)
-	Cmd_CommandExecute(Abc_FrameGetGlobalFrame(), "set progressbar")
+	base_main.Cmd_CommandExecute(base_main.Abc_FrameGetGlobalFrame(), "set progressbar")
 	if status == 1 {
 		fmt.Printf("Networks are equivalent.                         \n")
 	} else if status == -1 {

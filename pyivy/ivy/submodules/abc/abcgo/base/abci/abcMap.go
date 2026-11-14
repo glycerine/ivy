@@ -1,5 +1,9 @@
 package abci
 
+import aig_gia "github.com/glycerine/abcgo/aig/gia"
+
+import base_main "github.com/glycerine/abcgo/base/main"
+
 import (
 	"encoding/binary"
 	"fmt"
@@ -37,12 +41,15 @@ func mapCopyNode(object *Abc_Obj_t) *Map_Node_t {
 	node, _ := object.CopyData.(*Map_Node_t)
 	return node
 }
-func mapGenlib() *mio.Mio_Library_t { lib, _ := Abc_FrameReadLibGen().(*mio.Mio_Library_t); return lib }
-func mapSuperlib() *mapper.Map_SuperLib_t {
-	lib, _ := Abc_FrameReadLibSuper().(*mapper.Map_SuperLib_t)
+func mapGenlib() *mio.Mio_Library_t {
+	lib, _ := base_main.Abc_FrameReadLibGen().(*mio.Mio_Library_t)
 	return lib
 }
-func mapScllib() *scl.SC_Lib { lib, _ := Abc_FrameReadLibScl().(*scl.SC_Lib); return lib }
+func mapSuperlib() *mapper.Map_SuperLib_t {
+	lib, _ := base_main.Abc_FrameReadLibSuper().(*mapper.Map_SuperLib_t)
+	return lib
+}
+func mapScllib() *scl.SC_Lib { lib, _ := base_main.Abc_FrameReadLibScl().(*scl.SC_Lib); return lib }
 
 /**CFile****************************************************************
 
@@ -127,7 +134,7 @@ func Abc_NtkMap(pNtk *Abc_Ntk_t, DelayTarget float64, AreaMulti float64, DelayMu
 	// if the library is created here, it will be deleted when pSuperLib is deleted in mapper.Map_SuperLibFree()
 	if mapScllib() != nil && scl.Abc_SclHasDelayInfo(mapScllib()) {
 		var err error
-		if pLib != nil && mio.Mio_LibraryHasProfile(pLib) {
+		if pLib != nil && (mio.Mio_LibraryHasProfile(pLib) != 0) {
 			pLib, err = scl.Abc_SclDeriveGenlib(mapScllib(), pLib, Slew, Gain, int(nGatesMin), fVerbose)
 		} else {
 			pLib, err = scl.Abc_SclDeriveGenlib(mapScllib(), nil, Slew, Gain, int(nGatesMin), fVerbose)
@@ -141,7 +148,7 @@ func Abc_NtkMap(pNtk *Abc_Ntk_t, DelayTarget float64, AreaMulti float64, DelayMu
 		}
 		// remove supergate library
 		mapper.Map_SuperLibFree(mapSuperlib())
-		Abc_FrameSetLibSuper(nil)
+		base_main.Abc_FrameSetLibSuper(nil)
 	}
 	// quit if there is no library
 	if pLib == nil {
@@ -213,7 +220,7 @@ func Abc_NtkMap(pNtk *Abc_Ntk_t, DelayTarget float64, AreaMulti float64, DelayMu
 	if LogFan != 0 {
 		mapper.Map_ManCreateNodeDelays(pMan, int32(LogFan))
 	}
-	if !mapper.Map_Mapping(pMan) {
+	if (mapper.Map_Mapping(pMan) == 0) {
 		mapper.Map_ManFree(pMan)
 		return nil
 	}
@@ -563,7 +570,7 @@ func Abc_NtkFromMap(pMan *Map_Man_t, pNtk *Abc_Ntk_t, fUseBuffs int32) *Abc_Ntk_
 	var i int32
 	assert(mapper.Map_ManReadBufNum(pMan) == baseabc.Abc_NtkBarBufNum(pNtk), "mapper.Map_ManReadBufNum(pMan) == baseabc.Abc_NtkBarBufNum(pNtk)")
 	// create the new network
-	pNtkNew = baseabc.Abc_NtkStartFrom(pNtk, ABC_NTK_LOGIC, ABC_FUNC_MAP)
+	pNtkNew = baseabc.Abc_NtkStartFrom(pNtk, baseabc.ABC_NTK_LOGIC, baseabc.ABC_FUNC_MAP)
 	// make the mapper point to the new network
 	mapper.Map_ManCleanData(pMan)
 	// inlining of macro Abc_NtkForEachCi
@@ -637,13 +644,13 @@ func Abc_NtkSuperChoice(pNtk *Abc_Ntk_t) *Abc_Ntk_t {
 	assert(baseabc.Abc_NtkIsStrash(pNtk) != 0, "baseabc.Abc_NtkIsStrash(pNtk)")
 
 	// check that the library is available
-	if Abc_FrameReadLibGen() == nil {
+	if base_main.Abc_FrameReadLibGen() == nil {
 		fmt.Printf("The current library is not available.\n")
 		return 0
 	}
 
 	// derive the supergate library
-	if Abc_FrameReadLibSuper() == nil && Abc_FrameReadLibGen() != nil {
+	if base_main.Abc_FrameReadLibSuper() == nil && base_main.Abc_FrameReadLibGen() != nil {
 		//        printf( "A simple supergate library is derived from gate library \"%s\".\n",
 		//            mio.Mio_LibraryReadName((Mio_Library_t *)Abc_FrameReadLibGen()) );
 		mapper.Map_SuperLibDeriveFromGenlib(mapGenlib(), 0)
@@ -659,7 +666,7 @@ func Abc_NtkSuperChoice(pNtk *Abc_Ntk_t) *Abc_Ntk_t {
 	if pMan == nil {
 		return nil
 	}
-	if !mapper.Map_Mapping(pMan) {
+	if (mapper.Map_Mapping(pMan) == 0) {
 		mapper.Map_ManFree(pMan)
 		return nil
 	}
@@ -996,7 +1003,7 @@ func Abc_NtkWriteMiniMapping(pNtk *Abc_Ntk_t) *Vec_Int_t {
 		}
 		// remember this gate (to be added to the mapping later)
 		gate, _ := pObj.Data.(*Mio_Gate_t)
-		Vec_StrPrintStr(vGates, mio.Mio_GateReadName(gate))
+		aig_gia.Vec_StrPrintStr(vGates, mio.Mio_GateReadName(gate))
 		Vec_StrPush(vGates, 0)
 	}
 	// write the COs literals
@@ -1013,7 +1020,7 @@ func Abc_NtkWriteMiniMapping(pNtk *Abc_Ntk_t) *Vec_Int_t {
 	// add gates to the array
 	assert(Vec_StrSize(vGates)%4 == 0, "Vec_StrSize(vGates) % 4 == 0")
 	nExtra = int32(Vec_StrSize(vGates) / 4)
-	gateBytes := Vec_StrArray(vGates)
+	gateBytes := aig_gia.Vec_StrArray(vGates)
 	for i = int32(0); i < nExtra; i++ {
 		j := int(i * 4)
 		packed := int32(binary.NativeEndian.Uint32(gateBytes[j : j+4]))

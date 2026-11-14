@@ -1,5 +1,7 @@
 package abci
 
+import aig_gia "github.com/glycerine/abcgo/aig/gia"
+
 import (
 	"fmt"
 	"math"
@@ -86,13 +88,13 @@ import (
 func If_ManComputeSwitching(pIfMan *If_Man_t) {
 	clk := Abc_Clock()
 	assert(!pIfMan.HasSwitchingVector(), "pIfMan.vSwitching == nil")
-	pNew := Gia_ManStart(If_ManObjNum(pIfMan))
-	vCopy := Vec_IntAlloc(If_ManObjNum(pIfMan))
+	pNew := Gia_ManStart(ifpkg.If_ManObjNum(pIfMan))
+	vCopy := Vec_IntAlloc(ifpkg.If_ManObjNum(pIfMan))
 	Vec_IntPush(vCopy, 1)
-	for i := int32(0); i < If_ManCiNum(pIfMan); i++ {
+	for i := int32(0); i < ifpkg.If_ManCiNum(pIfMan); i++ {
 		Vec_IntPush(vCopy, Gia_ManAppendCi(pNew))
 	}
-	for i := int32(0); i < If_ManObjNum(pIfMan); i++ {
+	for i := int32(0); i < ifpkg.If_ManObjNum(pIfMan); i++ {
 		pIfObj := ifpkg.If_ManObj(pIfMan, i)
 		if ifpkg.If_ObjIsAnd(pIfObj) == 0 {
 			continue
@@ -101,14 +103,14 @@ func If_ManComputeSwitching(pIfMan *If_Man_t) {
 		iLit1 := Abc_LitNotCond(Vec_IntEntry(vCopy, ifpkg.If_ObjId(ifpkg.If_ObjFanin1(pIfObj))), ifpkg.If_ObjFaninC1(pIfObj))
 		Vec_IntPush(vCopy, Gia_ManAppendAnd(pNew, iLit0, iLit1))
 	}
-	for i := int32(0); i < If_ManCoNum(pIfMan); i++ {
-		pIfObj := If_ManCo(pIfMan, i)
+	for i := int32(0); i < ifpkg.If_ManCoNum(pIfMan); i++ {
+		pIfObj := ifpkg.If_ManCo(pIfMan, i)
 		iLit0 := Abc_LitNotCond(Vec_IntEntry(vCopy, ifpkg.If_ObjId(ifpkg.If_ObjFanin0(pIfObj))), ifpkg.If_ObjFaninC0(pIfObj))
 		Vec_IntPush(vCopy, Gia_ManAppendCo(pNew, iLit0))
 	}
-	assert(Vec_IntSize(vCopy) == If_ManObjNum(pIfMan), "Vec_IntSize(vCopy) == If_ManObjNum(pIfMan)")
+	assert(Vec_IntSize(vCopy) == ifpkg.If_ManObjNum(pIfMan), "Vec_IntSize(vCopy) == If_ManObjNum(pIfMan)")
 	Vec_IntFree(vCopy)
-	probabilities := Gia_ManComputeSwitchProbs(pNew, 48, 16, 0)
+	probabilities := aig_gia.Gia_ManComputeSwitchProbs(pNew, 48, 16, 0)
 	values := make([]float32, Vec_IntSize(probabilities))
 	for i := range values {
 		values[i] = math.Float32frombits(uint32(Vec_IntEntry(probabilities, i)))

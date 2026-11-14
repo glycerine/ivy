@@ -139,10 +139,10 @@ func Abc_NodeConeTruth(vVars, vFuncs *Vec_Ptr_t, nWordsMax int32, root *Abc_Obj_
 		}
 		for k := 0; k < words; k++ {
 			a, b := left[k], right[k]
-			if Abc_ObjFaninC0(node) != 0 {
+			if abc.Abc_ObjFaninC0(node) != 0 {
 				a = ^a
 			}
-			if Abc_ObjFaninC1(node) != 0 {
+			if abc.Abc_ObjFaninC1(node) != 0 {
 				b = ^b
 			}
 			truth[k] = a & b

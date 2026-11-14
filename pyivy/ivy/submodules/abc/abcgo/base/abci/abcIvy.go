@@ -450,8 +450,8 @@ func Abc_NtkIvySat(pNtk *Abc_Ntk_t, nConfLimit int32, fVerbose int32) *Abc_Ntk_t
 		return nil
 	}
 	ivypkg.Ivy_FraigParamsDefault(pParams)
-	pParams.nBTLimitMiter = nConfLimit
-	pParams.fVerbose = fVerbose
+	pParams.NBTLimitMiter = nConfLimit
+	pParams.FVerbose = fVerbose
 	//    pTemp = pMan
 	pTemp = pMan
 	pMan = ivypkg.Ivy_FraigMiter(pTemp, pParams)
@@ -523,10 +523,10 @@ func Abc_NtkIvyFraig(pNtk *Abc_Ntk_t, nConfLimit int32, fDoSparse int32, fProve 
 		return nil
 	}
 	ivypkg.Ivy_FraigParamsDefault(pParams)
-	pParams.nBTLimitNode = nConfLimit
-	pParams.fVerbose = fVerbose
-	pParams.fProve = fProve
-	pParams.fDoSparse = fDoSparse
+	pParams.NBTLimitNode = nConfLimit
+	pParams.FVerbose = fVerbose
+	pParams.FProve = fProve
+	pParams.FDoSparse = fDoSparse
 	pTemp = pMan
 	pMan = ivypkg.Ivy_FraigPerform(pTemp, pParams)
 	// transfer the pointers

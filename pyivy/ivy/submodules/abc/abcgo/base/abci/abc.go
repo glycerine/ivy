@@ -1,5 +1,73 @@
 package abci
 
+import proof_pdr "github.com/glycerine/abcgo/proof/pdr"
+
+import aig_aig "github.com/glycerine/abcgo/aig/aig"
+
+import aig_hop "github.com/glycerine/abcgo/aig/hop"
+
+import aig_saig "github.com/glycerine/abcgo/aig/saig"
+
+import base_acb "github.com/glycerine/abcgo/base/acb"
+
+import base_cmd "github.com/glycerine/abcgo/base/cmd"
+
+import base_exor "github.com/glycerine/abcgo/base/exor"
+
+import base_io "github.com/glycerine/abcgo/base/io"
+
+import base_main "github.com/glycerine/abcgo/base/main"
+
+import bdd_bbr "github.com/glycerine/abcgo/bdd/bbr"
+
+import bool_kit "github.com/glycerine/abcgo/bool/kit"
+
+import map_amap "github.com/glycerine/abcgo/map/amap"
+
+import map_cov "github.com/glycerine/abcgo/map/cov"
+
+import map_mpm "github.com/glycerine/abcgo/map/mpm"
+
+import misc_extra "github.com/glycerine/abcgo/misc/extra"
+
+import opt_cgt "github.com/glycerine/abcgo/opt/cgt"
+
+import opt_cut "github.com/glycerine/abcgo/opt/cut"
+
+import opt_dar "github.com/glycerine/abcgo/opt/dar"
+
+import opt_dau "github.com/glycerine/abcgo/opt/dau"
+
+import opt_ret "github.com/glycerine/abcgo/opt/ret"
+
+import opt_rwr "github.com/glycerine/abcgo/opt/rwr"
+
+import opt_sbd "github.com/glycerine/abcgo/opt/sbd"
+
+import opt_sfm "github.com/glycerine/abcgo/opt/sfm"
+
+import proof_abs "github.com/glycerine/abcgo/proof/abs"
+
+import proof_acec "github.com/glycerine/abcgo/proof/acec"
+
+import proof_cec "github.com/glycerine/abcgo/proof/cec"
+
+import proof_dch "github.com/glycerine/abcgo/proof/dch"
+
+import proof_fra "github.com/glycerine/abcgo/proof/fra"
+
+import proof_int "github.com/glycerine/abcgo/proof/int"
+
+import proof_ssc "github.com/glycerine/abcgo/proof/ssc"
+
+import proof_ssw "github.com/glycerine/abcgo/proof/ssw"
+
+import sat_bmc "github.com/glycerine/abcgo/sat/bmc"
+
+import sat_cnf "github.com/glycerine/abcgo/sat/cnf"
+
+import sat_satoko "github.com/glycerine/abcgo/sat/satoko"
+
 import (
 	"encoding/binary"
 	"fmt"
@@ -6308,9 +6376,9 @@ func Abc_CommandLogicPush(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "This command can only be applied to a logic network.\n")
 		return 1
 	}
-	nLutSize = Abc_MaxInt(nLutSize, Abc_NtkGetFaninMax(pNtk))
-	Abc_NtkToSop(pNtk, -1, ABC_INFINITY)
-	pNtkRes = Abc_NtkOptPush(pNtk, nLutSize, fVerbose)
+	nLutSize = Abc_MaxInt(nLutSize, baseabc.Abc_NtkGetFaninMax(pNtk))
+	baseabc.Abc_NtkToSop(pNtk, -1, ABC_INFINITY)
+	pNtkRes = base_acb.Abc_NtkOptPush(pNtk, nLutSize, fVerbose)
 	Abc_FrameReplaceCurrentNetwork(pAbc, pNtkRes)
 	return 0
 usage:
@@ -6445,7 +6513,7 @@ func Abc_CommandGlitch(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "This command can only be applied to a mapped logic network.\n")
 		return 1
 	}
-	if (Abc_NtkIsMappedLogic(pNtk) != 0) || Abc_NtkGetFaninMax(pNtk) <= 6 {
+	if (Abc_NtkIsMappedLogic(pNtk) != 0) || baseabc.Abc_NtkGetFaninMax(pNtk) <= 6 {
 		Abc_Print(1, "Glitching adds %7.2f %% of signal transitions, compared to switching.\n", Abc_NtkMfsTotalGlitching(pNtk, nPats, Prob, fVerbose))
 	} else {
 		fmt.Printf("Currently computes glitching only for K-LUT networks with K <= 6.\n")
@@ -6734,7 +6802,7 @@ func Abc_CommandAddBuffs(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	}
 
 	// modify the current network
-	pNtkRes = Abc_NtkAddBuffs(pNtk, fDirect, fReverse, nImprove, fVerbose)
+	pNtkRes = baseabc.Abc_NtkAddBuffs(pNtk, fDirect, fReverse, nImprove, fVerbose)
 	if pNtkRes == nil {
 		Abc_Print(-1, "The command has failed.\n")
 		return 1
@@ -6879,8 +6947,8 @@ usage:
 	Abc_Print(-2, "\t-F <num> : the max number of fanouts to stop traversal (0 < num) [default = %d]\n", pPars.nMaxFanout)
 	Abc_Print(-2, "\t-s       : toggle the use of nodes without support overlap [default = %s]\n", abcSelect(pPars.fUseDiffSupp, "yes", "no"))
 	Abc_Print(-2, "\t-c       : toggle the use of TFI/TFO nodes as candidates [default = %s]\n", abcSelect(pPars.fUseTfiTfo, "yes", "no"))
-	Abc_Print(-2, "\t-w       : toggle printing detailed stats for each node [default = %s]\n", abcSelect(fVeryVerbose, "yes", "no"))
-	Abc_Print(-2, "\t-v       : toggle printing optimization summary [default = %s]\n", abcSelect(fVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-w       : toggle printing detailed stats for each node [default = %s]\n", abcSelect(pPars.fVeryVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-v       : toggle printing optimization summary [default = %s]\n", abcSelect(pPars.fVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h       : print the command usage\n")
 	return 1
 }
@@ -7193,7 +7261,7 @@ func Abc_CommandTestTruth(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(1, "Input file is not given.\n")
 		return 0
 	}
-	pResult = Kit_TruthTest(argv[globalUtilOptind])
+	pResult = bool_kit.Kit_TruthTest(argv[globalUtilOptind])
 	pResult = nil
 	return 0
 
@@ -7274,7 +7342,7 @@ func Abc_CommandRunEco(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		}
 		pFileNames[c] = argv[globalUtilOptind+c]
 	}
-	Acb_NtkRunEco(pFileNames, nTimeout, fCheck, fRandom, fInputs, fVerbose, fVeryVerbose)
+	base_acb.Acb_NtkRunEco(pFileNames, nTimeout, fCheck, fRandom, fInputs, fVerbose, fVeryVerbose)
 	return 0
 
 usage:
@@ -7469,7 +7537,7 @@ func Abc_CommandRunSim(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(1, "Expecting two or three file names on the command line.\n")
 		goto usage
 	}
-	Gia_ManRandom(1)
+	giapkg.Gia_ManRandom(1)
 	for c = 0; c < argc-globalUtilOptind; c++ {
 		pFileNames[c] = argv[globalUtilOptind+c]
 	}
@@ -7483,7 +7551,7 @@ func Abc_CommandRunSim(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			_ = pFile.Close()
 		}
 	}
-	Acb_NtkRunSim(pFileNames, nTimeout, nWords, nBeam, LevL, LevU, fOrder, fFancy, fUseBuf, fRandom, fUseWeights, fInputs, fSkipMffc, fVerbose, fVeryVerbose)
+	base_acb.Acb_NtkRunSim(pFileNames, nTimeout, nWords, nBeam, LevL, LevU, fOrder, fFancy, fUseBuf, fRandom, fUseWeights, fInputs, fSkipMffc, fVerbose, fVeryVerbose)
 	return 0
 
 usage:
@@ -7546,7 +7614,7 @@ func Abc_CommandRunTest(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	for c = 0; c < argc-globalUtilOptind; c++ {
 		pFileNames[c] = argv[globalUtilOptind+c]
 	}
-	Acb_NtkRunTest(pFileNames, fFancy, fVerbose)
+	base_acb.Acb_NtkRunTest(pFileNames, fFancy, fVerbose)
 	return 0
 
 usage:
@@ -7618,7 +7686,7 @@ func Abc_CommandRewrite(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	}
 
 	if fPrecompute != 0 {
-		Rwr_Precompute()
+		opt_rwr.Rwr_Precompute()
 		return 0
 	}
 
@@ -7630,13 +7698,13 @@ func Abc_CommandRewrite(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "This command can only be applied to an AIG (run \"strash\").\n")
 		return 1
 	}
-	if Abc_NtkGetChoiceNum(pNtk) {
+	if Abc_NtkGetChoiceNum(pNtk) != 0 {
 		Abc_Print(-1, "AIG resynthesis cannot be applied to AIGs with choice nodes.\n")
 		return 1
 	}
 
 	// modify the current network
-	if !Abc_NtkRewrite(pNtk, fUpdateLevel, fUseZeros, fVerbose, fVeryVerbose, fPlaceEnable) {
+	if Abc_NtkRewrite(pNtk, fUpdateLevel, fUseZeros, fVerbose, fVeryVerbose, fPlaceEnable) == 0 {
 		Abc_Print(-1, "Rewriting has failed.\n")
 		return 1
 	}
@@ -7736,7 +7804,7 @@ func Abc_CommandRefactor(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "This command can only be applied to an AIG (run \"strash\").\n")
 		return 1
 	}
-	if Abc_NtkGetChoiceNum(pNtk) {
+	if Abc_NtkGetChoiceNum(pNtk) != 0 {
 		Abc_Print(-1, "AIG resynthesis cannot be applied to AIGs with choice nodes.\n")
 		return 1
 	}
@@ -7751,7 +7819,7 @@ func Abc_CommandRefactor(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	}
 
 	// modify the current network
-	if !Abc_NtkRefactor(pNtk, nNodeSizeMax, nConeSizeMax, fUpdateLevel, fUseZeros, fUseDcs, fVerbose) {
+	if Abc_NtkRefactor(pNtk, nNodeSizeMax, nConeSizeMax, fUpdateLevel, fUseZeros, fUseDcs, fVerbose) == 0 {
 		Abc_Print(-1, "Refactoring has failed.\n")
 		return 1
 	}
@@ -7830,21 +7898,21 @@ func Abc_CommandRestructure(pAbc *Abc_Frame_t, argc int32, argv []string) int32 
 		Abc_Print(-1, "Empty network.\n")
 		return 1
 	}
-	if nCutsMax < 4 || nCutsMax > CUT_SIZE_MAX {
-		Abc_Print(-1, "Can only compute the cuts for %d <= K <= %d.\n", 4, CUT_SIZE_MAX)
+	if nCutsMax < 4 || nCutsMax > opt_cut.CUT_SIZE_MAX {
+		Abc_Print(-1, "Can only compute the cuts for %d <= K <= %d.\n", 4, opt_cut.CUT_SIZE_MAX)
 		return 1
 	}
 	if Abc_NtkIsStrash(pNtk) == 0 {
 		Abc_Print(-1, "This command can only be applied to an AIG (run \"strash\").\n")
 		return 1
 	}
-	if Abc_NtkGetChoiceNum(pNtk) {
+	if Abc_NtkGetChoiceNum(pNtk) != 0 {
 		Abc_Print(-1, "AIG resynthesis cannot be applied to AIGs with choice nodes.\n")
 		return 1
 	}
 
 	// modify the current network
-	if !Abc_NtkRestructure(pNtk, nCutsMax, fUpdateLevel, fUseZeros, fVerbose) {
+	if Abc_NtkRestructure(pNtk, nCutsMax, fUpdateLevel, fUseZeros, fVerbose) == 0 {
 		Abc_Print(-1, "Refactoring has failed.\n")
 		return 1
 	}
@@ -7853,7 +7921,7 @@ func Abc_CommandRestructure(pAbc *Abc_Frame_t, argc int32, argv []string) int32 
 usage:
 	Abc_Print(-2, "usage: restructure [-K <num>] [-lzvh]\n")
 	Abc_Print(-2, "\t           performs technology-independent restructuring of the AIG\n")
-	Abc_Print(-2, "\t-K <num> : the max cut size (%d <= num <= %d) [default = %d]\n", CUT_SIZE_MIN, CUT_SIZE_MAX, nCutsMax)
+	Abc_Print(-2, "\t-K <num> : the max cut size (%d <= num <= %d) [default = %d]\n", opt_cut.CUT_SIZE_MIN, opt_cut.CUT_SIZE_MAX, nCutsMax)
 	Abc_Print(-2, "\t-l       : toggle preserving the number of levels [default = %s]\n", abcSelect(fUpdateLevel, "yes", "no"))
 	Abc_Print(-2, "\t-z       : toggle using zero-cost replacements [default = %s]\n", abcSelect(fUseZeros, "yes", "no"))
 	Abc_Print(-2, "\t-v       : toggle verbose printout [default = %s]\n", abcSelect(fVerbose, "yes", "no"))
@@ -7966,13 +8034,13 @@ func Abc_CommandResubstitute(pAbc *Abc_Frame_t, argc int32, argv []string) int32
 		Abc_Print(-1, "This command can only be applied to an AIG (run \"strash\").\n")
 		return 1
 	}
-	if Abc_NtkGetChoiceNum(pNtk) {
+	if Abc_NtkGetChoiceNum(pNtk) != 0 {
 		Abc_Print(-1, "AIG resynthesis cannot be applied to AIGs with choice nodes.\n")
 		return 1
 	}
 
 	// modify the current network
-	if !Abc_NtkResubstitute(pNtk, nCutsMax, nNodesMax, nLevelsOdc, fUpdateLevel, fVerbose, fVeryVerbose) {
+	if Abc_NtkResubstitute(pNtk, nCutsMax, nNodesMax, nLevelsOdc, fUpdateLevel, fVerbose, fVeryVerbose) == 0 {
 		Abc_Print(-1, "Refactoring has failed.\n")
 		return 1
 	}
@@ -8061,13 +8129,13 @@ func Abc_CommandRr(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "This command can only be applied to an AIG (run \"strash\").\n")
 		return 1
 	}
-	if Abc_NtkGetChoiceNum(pNtk) {
+	if Abc_NtkGetChoiceNum(pNtk) != 0 {
 		Abc_Print(-1, "AIG resynthesis cannot be applied to AIGs with choice nodes.\n")
 		return 1
 	}
 
 	// modify the current network
-	if !Abc_NtkRR(pNtk, nFaninLevels, nFanoutLevels, fUseFanouts, fVerbose) {
+	if Abc_NtkRR(pNtk, nFaninLevels, nFanoutLevels, fUseFanouts, fVerbose) == 0 {
 		Abc_Print(-1, "Redundancy removal has failed.\n")
 		return 1
 	}
@@ -8316,10 +8384,10 @@ func Abc_CommandVarMin(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	}
 	// get the file name
 	if argc == globalUtilOptind+1 {
-		Abc_SuppReadMinTest(argv[globalUtilOptind])
+		misc_extra.Abc_SuppReadMinTest(argv[globalUtilOptind])
 		return 0
 	}
-	Abc_SuppTest(nOnes, nVars, fUseSimple, fCheck, fVerbose)
+	misc_extra.Abc_SuppTest(nOnes, nVars, fUseSimple, fCheck, fVerbose)
 	return 0
 
 usage:
@@ -8385,7 +8453,7 @@ func Abc_CommandFaultClasses(pAbc *Abc_Frame_t, argc int32, argv []string) int32
 		return 1
 	}
 	if fGen != 0 {
-		var pFileName string = Extra_FileNameGenericAppend(Abc_NtkSpec(pNtk), "_faults.txt")
+		var pFileName string = Extra_FileNameGenericAppend(baseabc.Abc_NtkSpec(pNtk), "_faults.txt")
 		Abc_NtkGenFaultList(pNtk, pFileName, fStuckAt)
 
 	} else {
@@ -8521,7 +8589,7 @@ func Abc_CommandExact(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		}
 		functionText := argv[globalUtilOptind]
 		globalUtilOptind++
-		nVarsTmp = Abc_TtReadHex(pTruth[nFunc<<2:], functionText)
+		nVarsTmp = util.Abc_TtReadHex(pTruth[nFunc<<2:], functionText)
 		nFunc++
 		if nVars == 0 {
 			nVars = nVarsTmp
@@ -8555,7 +8623,7 @@ func Abc_CommandExact(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		pNtkRes = Abc_NtkFindExact(pTruth, nVars, nFunc, nMaxDepth, pArrTimes, nBTLimit, nStartGates-1, fVerbose)
 		if pNtkRes != nil {
 			Abc_FrameReplaceCurrentNetwork(pAbc, pNtkRes)
-			Abc_FrameClearVerifStatus(pAbc)
+			base_main.Abc_FrameClearVerifStatus(pAbc)
 
 		} else {
 			Abc_Print(0, "Could not find network within given resource constraints, retry with different value for -C.\n")
@@ -8634,7 +8702,7 @@ func Abc_CommandBmsStart(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		globalUtilOptind++
 	}
 
-	if Abc_ExactIsRunning() {
+	if Abc_ExactIsRunning() != 0 {
 		Abc_Print(-1, "BMS manager is already started.")
 		return 1
 	}
@@ -8690,7 +8758,7 @@ func Abc_CommandBmsStop(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		globalUtilOptind++
 	}
 
-	if !Abc_ExactIsRunning() {
+	if Abc_ExactIsRunning() == 0 {
 		Abc_Print(-1, "BMS manager is not started.")
 		return 1
 	}
@@ -8736,7 +8804,7 @@ func Abc_CommandBmsPs(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		}
 	}
 
-	if !Abc_ExactIsRunning() {
+	if Abc_ExactIsRunning() == 0 {
 		Abc_Print(-1, "BMS manager is not started.")
 		return 1
 	}
@@ -8840,9 +8908,9 @@ func Abc_CommandMajExact(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 1
 	}
 	if fGlucose != 0 {
-		Maj_ManExactSynthesis(nVars, nNodes, fUseConst, fUseLine, fVerbose)
+		sat_bmc.Maj_ManExactSynthesis(nVars, nNodes, fUseConst, fUseLine, fVerbose)
 	} else {
-		Maj_ManExactSynthesis2(nVars, nNodes, fUseConst, fUseLine, fUseRand, nRands, fVerbose)
+		sat_bmc.Maj_ManExactSynthesis2(nVars, nNodes, fUseConst, fUseLine, fUseRand, nRands, fVerbose)
 	}
 	return 0
 
@@ -8877,9 +8945,9 @@ usage:
 func Abc_CommandTwoExact(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 
 	var c int32
-	var Pars Bmc_EsPar_t
-	var pPars *Bmc_EsPar_t = &Pars
-	Bmc_EsParSetDefault(pPars)
+	var Pars sat_bmc.Bmc_EsPar_t
+	var pPars *sat_bmc.Bmc_EsPar_t = &Pars
+	sat_bmc.Bmc_EsParSetDefault(pPars)
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "INTaogvh"); c != -1; c = Extra_UtilGetopt(argc, argv, "INTaogvh") {
 		switch c {
@@ -8888,9 +8956,9 @@ func Abc_CommandTwoExact(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-I\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nVars = abcAtoi(argv[globalUtilOptind])
+			pPars.NVars = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nVars < 0 {
+			if pPars.NVars < 0 {
 				goto usage
 			}
 			break
@@ -8899,9 +8967,9 @@ func Abc_CommandTwoExact(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-N\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nNodes = abcAtoi(argv[globalUtilOptind])
+			pPars.NNodes = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nNodes < 0 {
+			if pPars.NNodes < 0 {
 				goto usage
 			}
 			break
@@ -8917,16 +8985,16 @@ func Abc_CommandTwoExact(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			}
 			break
 		case 'a':
-			pPars.fOnlyAnd ^= 1
+			pPars.FOnlyAnd ^= 1
 			break
 		case 'o':
-			pPars.fFewerVars ^= 1
+			pPars.FFewerVars ^= 1
 			break
 		case 'g':
-			pPars.fGlucose ^= 1
+			pPars.FGlucose ^= 1
 			break
 		case 'v':
-			pPars.fVerbose ^= 1
+			pPars.FVerbose ^= 1
 			break
 		case 'h':
 			goto usage
@@ -8935,41 +9003,41 @@ func Abc_CommandTwoExact(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		}
 	}
 	if argc == globalUtilOptind+1 {
-		pPars.pTtStr = argv[globalUtilOptind]
+		pPars.PTtStr = argv[globalUtilOptind]
 	}
-	if pPars.pTtStr == nil {
+	if pPars.PTtStr == nil {
 		Abc_Print(-1, "Truth table should be given on the command line.\n")
 		return 1
 	}
-	if (1 << (pPars.nVars - 2)) != int32(len(pPars.pTtStr)) {
-		Abc_Print(-1, "Truth table is expected to have %d hex digits (instead of %d).\n", (1 << (pPars.nVars - 2)), len(pPars.pTtStr))
+	if (1 << (pPars.NVars - 2)) != int32(len(pPars.PTtStr)) {
+		Abc_Print(-1, "Truth table is expected to have %d hex digits (instead of %d).\n", (1 << (pPars.NVars - 2)), len(pPars.PTtStr))
 		return 1
 	}
-	if pPars.nVars > pPars.nNodes*(2-1)+1 {
-		Abc_Print(-1, "Function with %d variales cannot be implemented with %d two-input gates.\n", pPars.nVars, pPars.nNodes)
+	if pPars.NVars > pPars.NNodes*(2-1)+1 {
+		Abc_Print(-1, "Function with %d variales cannot be implemented with %d two-input gates.\n", pPars.NVars, pPars.NNodes)
 		return 1
 	}
-	if pPars.nVars > 10 {
+	if pPars.NVars > 10 {
 		Abc_Print(-1, "Function should not have more than 10 inputs.\n")
 		return 1
 	}
-	if pPars.fGlucose {
-		Exa_ManExactSynthesis(pPars)
+	if pPars.FGlucose != 0 {
+		sat_bmc.Exa_ManExactSynthesis(pPars)
 	} else {
-		Exa_ManExactSynthesis2(pPars)
+		sat_bmc.Exa_ManExactSynthesis2(pPars)
 	}
 	return 0
 
 usage:
 	Abc_Print(-2, "usage: twoexact [-INT <num>] [-aogvh] <hex>\n")
 	Abc_Print(-2, "\t           exact synthesis of multi-input function using two-input gates\n")
-	Abc_Print(-2, "\t-I <num> : the number of input variables [default = %d]\n", pPars.nVars)
-	Abc_Print(-2, "\t-N <num> : the number of two-input nodes [default = %d]\n", pPars.nNodes)
+	Abc_Print(-2, "\t-I <num> : the number of input variables [default = %d]\n", pPars.NVars)
+	Abc_Print(-2, "\t-N <num> : the number of two-input nodes [default = %d]\n", pPars.NNodes)
 	Abc_Print(-2, "\t-T <num> : the runtime limit in seconds [default = %d]\n", pPars.RuntimeLim)
-	Abc_Print(-2, "\t-a       : toggle using only AND-gates (without XOR-gates) [default = %s]\n", abcSelect(pPars.fOnlyAnd, "yes", "no"))
-	Abc_Print(-2, "\t-o       : toggle using additional optimizations [default = %s]\n", abcSelect(pPars.fFewerVars, "yes", "no"))
-	Abc_Print(-2, "\t-g       : toggle using Glucose 3.0 by Gilles Audemard and Laurent Simon [default = %s]\n", abcSelect(pPars.fGlucose, "yes", "no"))
-	Abc_Print(-2, "\t-v       : toggle verbose printout [default = %s]\n", abcSelect(pPars.fVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-a       : toggle using only AND-gates (without XOR-gates) [default = %s]\n", abcSelect(pPars.FOnlyAnd, "yes", "no"))
+	Abc_Print(-2, "\t-o       : toggle using additional optimizations [default = %s]\n", abcSelect(pPars.FFewerVars, "yes", "no"))
+	Abc_Print(-2, "\t-g       : toggle using Glucose 3.0 by Gilles Audemard and Laurent Simon [default = %s]\n", abcSelect(pPars.FGlucose, "yes", "no"))
+	Abc_Print(-2, "\t-v       : toggle verbose printout [default = %s]\n", abcSelect(pPars.FVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h       : print the command usage\n")
 	Abc_Print(-2, "\t<hex>    : truth table in hex notation\n")
 	Abc_Print(-2, "\t           \n")
@@ -8998,9 +9066,9 @@ usage:
 func Abc_CommandLutExact(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 
 	var c int32
-	var Pars Bmc_EsPar_t
-	var pPars *Bmc_EsPar_t = &Pars
-	Bmc_EsParSetDefault(pPars)
+	var Pars sat_bmc.Bmc_EsPar_t
+	var pPars *sat_bmc.Bmc_EsPar_t = &Pars
+	sat_bmc.Bmc_EsParSetDefault(pPars)
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "INKTiaogvh"); c != -1; c = Extra_UtilGetopt(argc, argv, "INKTiaogvh") {
 		switch c {
@@ -9009,9 +9077,9 @@ func Abc_CommandLutExact(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-I\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nVars = abcAtoi(argv[globalUtilOptind])
+			pPars.NVars = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nVars < 0 {
+			if pPars.NVars < 0 {
 				goto usage
 			}
 			break
@@ -9020,9 +9088,9 @@ func Abc_CommandLutExact(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-N\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nNodes = abcAtoi(argv[globalUtilOptind])
+			pPars.NNodes = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nNodes < 0 {
+			if pPars.NNodes < 0 {
 				goto usage
 			}
 			break
@@ -9031,9 +9099,9 @@ func Abc_CommandLutExact(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-K\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nLutSize = abcAtoi(argv[globalUtilOptind])
+			pPars.NLutSize = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nLutSize < 0 {
+			if pPars.NLutSize < 0 {
 				goto usage
 			}
 			break
@@ -9049,19 +9117,19 @@ func Abc_CommandLutExact(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			}
 			break
 		case 'i':
-			pPars.fUseIncr ^= 1
+			pPars.FUseIncr ^= 1
 			break
 		case 'a':
-			pPars.fOnlyAnd ^= 1
+			pPars.FOnlyAnd ^= 1
 			break
 		case 'o':
-			pPars.fFewerVars ^= 1
+			pPars.FFewerVars ^= 1
 			break
 		case 'g':
-			pPars.fGlucose ^= 1
+			pPars.FGlucose ^= 1
 			break
 		case 'v':
-			pPars.fVerbose ^= 1
+			pPars.FVerbose ^= 1
 			break
 		case 'h':
 			goto usage
@@ -9070,30 +9138,30 @@ func Abc_CommandLutExact(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		}
 	}
 	if argc == globalUtilOptind+1 {
-		pPars.pTtStr = argv[globalUtilOptind]
+		pPars.PTtStr = argv[globalUtilOptind]
 	}
-	if pPars.pTtStr == nil {
+	if pPars.PTtStr == nil {
 		Abc_Print(-1, "Truth table should be given on the command line.\n")
 		return 1
 	}
-	if (1 << (pPars.nVars - 2)) != int32(len(pPars.pTtStr)) {
-		Abc_Print(-1, "Truth table is expected to have %d hex digits (instead of %d).\n", (1 << (pPars.nVars - 2)), len(pPars.pTtStr))
+	if (1 << (pPars.NVars - 2)) != int32(len(pPars.PTtStr)) {
+		Abc_Print(-1, "Truth table is expected to have %d hex digits (instead of %d).\n", (1 << (pPars.NVars - 2)), len(pPars.PTtStr))
 		return 1
 	}
-	if pPars.nVars > pPars.nNodes*(pPars.nLutSize-1)+1 {
-		Abc_Print(-1, "Function with %d variales cannot be implemented with %d %d-input LUTs.\n", pPars.nVars, pPars.nNodes, pPars.nLutSize)
+	if pPars.NVars > pPars.NNodes*(pPars.NLutSize-1)+1 {
+		Abc_Print(-1, "Function with %d variales cannot be implemented with %d %d-input LUTs.\n", pPars.NVars, pPars.NNodes, pPars.NLutSize)
 		return 1
 	}
-	if pPars.nVars > 10 {
+	if pPars.NVars > 10 {
 		Abc_Print(-1, "Function should not have more than 10 inputs.\n")
 		return 1
 	}
-	if pPars.nLutSize > 6 {
+	if pPars.NLutSize > 6 {
 		Abc_Print(-1, "Node size should not be more than 6 inputs.\n")
 		return 1
 	}
-	if pPars.fGlucose {
-		Exa3_ManExactSynthesis(pPars)
+	if pPars.FGlucose != 0 {
+		sat_bmc.Exa3_ManExactSynthesis(pPars)
 	} else {
 		Exa3_ManExactSynthesis2(pPars)
 	}
@@ -9102,15 +9170,15 @@ func Abc_CommandLutExact(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 usage:
 	Abc_Print(-2, "usage: lutexact [-INKT <num>] [-iaogvh] <hex>\n")
 	Abc_Print(-2, "\t           exact synthesis of I-input function using N K-input gates\n")
-	Abc_Print(-2, "\t-I <num> : the number of input variables [default = %d]\n", pPars.nVars)
-	Abc_Print(-2, "\t-N <num> : the number of K-input nodes [default = %d]\n", pPars.nNodes)
-	Abc_Print(-2, "\t-K <num> : the number of node fanins [default = %d]\n", pPars.nLutSize)
+	Abc_Print(-2, "\t-I <num> : the number of input variables [default = %d]\n", pPars.NVars)
+	Abc_Print(-2, "\t-N <num> : the number of K-input nodes [default = %d]\n", pPars.NNodes)
+	Abc_Print(-2, "\t-K <num> : the number of node fanins [default = %d]\n", pPars.NLutSize)
 	Abc_Print(-2, "\t-T <num> : the runtime limit in seconds [default = %d]\n", pPars.RuntimeLim)
-	Abc_Print(-2, "\t-i       : toggle using incremental solving [default = %s]\n", abcSelect(pPars.fUseIncr, "yes", "no"))
-	Abc_Print(-2, "\t-a       : toggle using only AND-gates when K = 2 [default = %s]\n", abcSelect(pPars.fOnlyAnd, "yes", "no"))
-	Abc_Print(-2, "\t-o       : toggle using additional optimizations [default = %s]\n", abcSelect(pPars.fFewerVars, "yes", "no"))
-	Abc_Print(-2, "\t-g       : toggle using Glucose 3.0 by Gilles Audemard and Laurent Simon [default = %s]\n", abcSelect(pPars.fGlucose, "yes", "no"))
-	Abc_Print(-2, "\t-v       : toggle verbose printout [default = %s]\n", abcSelect(pPars.fVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-i       : toggle using incremental solving [default = %s]\n", abcSelect(pPars.FUseIncr, "yes", "no"))
+	Abc_Print(-2, "\t-a       : toggle using only AND-gates when K = 2 [default = %s]\n", abcSelect(pPars.FOnlyAnd, "yes", "no"))
+	Abc_Print(-2, "\t-o       : toggle using additional optimizations [default = %s]\n", abcSelect(pPars.FFewerVars, "yes", "no"))
+	Abc_Print(-2, "\t-g       : toggle using Glucose 3.0 by Gilles Audemard and Laurent Simon [default = %s]\n", abcSelect(pPars.FGlucose, "yes", "no"))
+	Abc_Print(-2, "\t-v       : toggle verbose printout [default = %s]\n", abcSelect(pPars.FVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h       : print the command usage\n")
 	Abc_Print(-2, "\t<hex>    : truth table in hex notation\n")
 	return 1
@@ -9132,9 +9200,9 @@ usage:
 func Abc_CommandAllExact(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 
 	var c int32
-	var Pars Bmc_EsPar_t
-	var pPars *Bmc_EsPar_t = &Pars
-	Bmc_EsParSetDefault(pPars)
+	var Pars sat_bmc.Bmc_EsPar_t
+	var pPars *sat_bmc.Bmc_EsPar_t = &Pars
+	sat_bmc.Bmc_EsParSetDefault(pPars)
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "MINKiaoegvh"); c != -1; c = Extra_UtilGetopt(argc, argv, "MINKiaoegvh") {
 		switch c {
@@ -9143,9 +9211,9 @@ func Abc_CommandAllExact(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-M\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nMajSupp = abcAtoi(argv[globalUtilOptind])
+			pPars.NMajSupp = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nMajSupp < 0 {
+			if pPars.NMajSupp < 0 {
 				goto usage
 			}
 			break
@@ -9154,9 +9222,9 @@ func Abc_CommandAllExact(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-I\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nVars = abcAtoi(argv[globalUtilOptind])
+			pPars.NVars = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nVars < 0 {
+			if pPars.NVars < 0 {
 				goto usage
 			}
 			break
@@ -9165,9 +9233,9 @@ func Abc_CommandAllExact(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-N\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nNodes = abcAtoi(argv[globalUtilOptind])
+			pPars.NNodes = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nNodes < 0 {
+			if pPars.NNodes < 0 {
 				goto usage
 			}
 			break
@@ -9176,29 +9244,29 @@ func Abc_CommandAllExact(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-K\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nLutSize = abcAtoi(argv[globalUtilOptind])
+			pPars.NLutSize = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nLutSize < 0 {
+			if pPars.NLutSize < 0 {
 				goto usage
 			}
 			break
 		case 'i':
-			pPars.fUseIncr ^= 1
+			pPars.FUseIncr ^= 1
 			break
 		case 'a':
-			pPars.fOnlyAnd ^= 1
+			pPars.FOnlyAnd ^= 1
 			break
 		case 'o':
-			pPars.fOrderNodes ^= 1
+			pPars.FOrderNodes ^= 1
 			break
 		case 'e':
-			pPars.fEnumSols ^= 1
+			pPars.FEnumSols ^= 1
 			break
 		case 'g':
-			pPars.fGlucose ^= 1
+			pPars.FGlucose ^= 1
 			break
 		case 'v':
-			pPars.fVerbose ^= 1
+			pPars.FVerbose ^= 1
 			break
 		case 'h':
 			goto usage
@@ -9206,86 +9274,86 @@ func Abc_CommandAllExact(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			goto usage
 		}
 	}
-	if pPars.nMajSupp > 0 {
-		if pPars.nMajSupp != 5 && pPars.nMajSupp != 7 && pPars.nMajSupp != 9 {
+	if pPars.NMajSupp > 0 {
+		if pPars.NMajSupp != 5 && pPars.NMajSupp != 7 && pPars.NMajSupp != 9 {
 			Abc_Print(-1, "Currently only support majority with 5, 7 or 9 inputs.\n")
 			return 1
 		}
-		pPars.nVars = pPars.nMajSupp
-		pPars.nLutSize = 3
-		pPars.fMajority = 1
-		pPars.fUseIncr = 1
-		if pPars.nNodes == 0 {
-			if pPars.nMajSupp == 5 {
-				pPars.nNodes = 4
+		pPars.NVars = pPars.NMajSupp
+		pPars.NLutSize = 3
+		pPars.FMajority = 1
+		pPars.FUseIncr = 1
+		if pPars.NNodes == 0 {
+			if pPars.NMajSupp == 5 {
+				pPars.NNodes = 4
 			}
-			if pPars.nMajSupp == 7 {
-				pPars.nNodes = 7
+			if pPars.NMajSupp == 7 {
+				pPars.NNodes = 7
 			}
-			if pPars.nMajSupp == 9 {
-				pPars.nNodes = 10
+			if pPars.NMajSupp == 9 {
+				pPars.NNodes = 10
 			}
 		}
 
 	} else {
-		if pPars.nVars == 0 {
+		if pPars.NVars == 0 {
 			Abc_Print(-1, "The number of variables (-I num) needs to be specified on the command line.\n")
 			return 1
 		}
-		if pPars.nNodes == 0 {
+		if pPars.NNodes == 0 {
 			Abc_Print(-1, "The number of nodes (-N num) needs to be specified on the command line.\n")
 			return 1
 		}
 		if argc == globalUtilOptind+1 {
-			pPars.pTtStr = argv[globalUtilOptind]
+			pPars.PTtStr = argv[globalUtilOptind]
 		}
-		if pPars.pTtStr == nil {
+		if pPars.PTtStr == nil {
 			Abc_Print(-1, "Truth table should be given on the command line.\n")
 			return 1
 		}
-		if (1 << (pPars.nVars - 2)) != int32(len(pPars.pTtStr)) {
-			Abc_Print(-1, "Truth table is expected to have %d hex digits (instead of %d).\n", (1 << (pPars.nVars - 2)), len(pPars.pTtStr))
+		if (1 << (pPars.NVars - 2)) != int32(len(pPars.PTtStr)) {
+			Abc_Print(-1, "Truth table is expected to have %d hex digits (instead of %d).\n", (1 << (pPars.NVars - 2)), len(pPars.PTtStr))
 			return 1
 		}
 	}
-	if pPars.nVars > pPars.nNodes*(pPars.nLutSize-1)+1 {
-		Abc_Print(-1, "Function with %d variales cannot be implemented with %d %d-input LUTs.\n", pPars.nVars, pPars.nNodes, pPars.nLutSize)
+	if pPars.NVars > pPars.NNodes*(pPars.NLutSize-1)+1 {
+		Abc_Print(-1, "Function with %d variales cannot be implemented with %d %d-input LUTs.\n", pPars.NVars, pPars.NNodes, pPars.NLutSize)
 		return 1
 	}
-	if pPars.nVars > 10 {
+	if pPars.NVars > 10 {
 		Abc_Print(-1, "Function should not have more than 10 inputs.\n")
 		return 1
 	}
-	if pPars.nLutSize > 6 {
+	if pPars.NLutSize > 6 {
 		Abc_Print(-1, "Node size should not be more than 6 inputs.\n")
 		return 1
 	}
-	if !pPars.fUseIncr {
-		if pPars.fMajority {
+	if pPars.FUseIncr == 0 {
+		if pPars.FMajority != 0 {
 			Abc_Print(-1, "Cannot synthesize majority in the non-incremental mode (use '-i').\n")
 			return 1
 		}
-		if pPars.nLutSize > 3 {
+		if pPars.NLutSize > 3 {
 			Abc_Print(-1, "Cannot synthesize LUT4 and larger in non-incremental mode (use '-i').\n")
 			return 1
 		}
 	}
-	Zyx_ManExactSynthesis(pPars)
+	sat_bmc.Zyx_ManExactSynthesis(pPars)
 	return 0
 
 usage:
 	Abc_Print(-2, "usage: allexact [-MIKN <num>] [-iaoevh] <hex>\n")
 	Abc_Print(-2, "\t           exact synthesis of I-input function using N K-input gates\n")
-	Abc_Print(-2, "\t-M <num> : the majority support size (overrides -I and -K) [default = %d]\n", pPars.nMajSupp)
-	Abc_Print(-2, "\t-I <num> : the number of input variables [default = %d]\n", pPars.nVars)
-	Abc_Print(-2, "\t-K <num> : the number of node fanins [default = %d]\n", pPars.nLutSize)
-	Abc_Print(-2, "\t-N <num> : the number of K-input nodes [default = %d]\n", pPars.nNodes)
-	Abc_Print(-2, "\t-i       : toggle using incremental solving [default = %s]\n", abcSelect(pPars.fUseIncr, "yes", "no"))
-	Abc_Print(-2, "\t-a       : toggle using only AND-gates when K = 2 [default = %s]\n", abcSelect(pPars.fOnlyAnd, "yes", "no"))
-	Abc_Print(-2, "\t-o       : toggle using node ordering by fanins [default = %s]\n", abcSelect(pPars.fOrderNodes, "yes", "no"))
-	Abc_Print(-2, "\t-e       : toggle enumerating all solutions [default = %s]\n", abcSelect(pPars.fEnumSols, "yes", "no"))
+	Abc_Print(-2, "\t-M <num> : the majority support size (overrides -I and -K) [default = %d]\n", pPars.NMajSupp)
+	Abc_Print(-2, "\t-I <num> : the number of input variables [default = %d]\n", pPars.NVars)
+	Abc_Print(-2, "\t-K <num> : the number of node fanins [default = %d]\n", pPars.NLutSize)
+	Abc_Print(-2, "\t-N <num> : the number of K-input nodes [default = %d]\n", pPars.NNodes)
+	Abc_Print(-2, "\t-i       : toggle using incremental solving [default = %s]\n", abcSelect(pPars.FUseIncr, "yes", "no"))
+	Abc_Print(-2, "\t-a       : toggle using only AND-gates when K = 2 [default = %s]\n", abcSelect(pPars.FOnlyAnd, "yes", "no"))
+	Abc_Print(-2, "\t-o       : toggle using node ordering by fanins [default = %s]\n", abcSelect(pPars.FOrderNodes, "yes", "no"))
+	Abc_Print(-2, "\t-e       : toggle enumerating all solutions [default = %s]\n", abcSelect(pPars.FEnumSols, "yes", "no"))
 	//    Abc_Print( -2, "\t-g       : toggle using Glucose 3.0 by Gilles Audemard and Laurent Simon [default = %s]\n", pPars->abcSelect(fGlucose, "yes", "no") );
-	Abc_Print(-2, "\t-v       : toggle verbose printout [default = %s]\n", abcSelect(pPars.fVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-v       : toggle verbose printout [default = %s]\n", abcSelect(pPars.FVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h       : print the command usage\n")
 	Abc_Print(-2, "\t<hex>    : truth table in hex notation\n")
 	return 1
@@ -9327,7 +9395,7 @@ func Abc_CommandTestExact(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "File name is not given on the command line.\n")
 		return 1
 	}
-	Zyx_TestExact(pFileName)
+	sat_bmc.Zyx_TestExact(pFileName)
 	return 0
 
 usage:
@@ -9384,7 +9452,7 @@ func Abc_CommandMajGen(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			goto usage
 		}
 	}
-	Gem_Enumerate(nVars, fDump, fVerbose)
+	misc_extra.Gem_Enumerate(nVars, fDump, fVerbose)
 	return 0
 
 usage:
@@ -9437,7 +9505,7 @@ func Abc_CommandLogic(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	}
 
 	// get the new network
-	pNtkRes = Abc_NtkToLogic(pNtk)
+	pNtkRes = baseabc.Abc_NtkToLogic(pNtk)
 	if pNtkRes == nil {
 		Abc_Print(-1, "Converting to a logic network has failed.\n")
 		return 1
@@ -9516,9 +9584,9 @@ func Abc_CommandComb(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	// get the new network
 	pNtkRes = Abc_NtkDup(pNtk)
 	if nLatchesToAdd != 0 {
-		Abc_NtkMakeSeq(pNtkRes, nLatchesToAdd)
+		baseabc.Abc_NtkMakeSeq(pNtkRes, nLatchesToAdd)
 	} else {
-		Abc_NtkMakeComb(pNtkRes, fRemoveLatches)
+		baseabc.Abc_NtkMakeComb(pNtkRes, fRemoveLatches)
 	}
 	// replace the current network
 	Abc_FrameReplaceCurrentNetwork(pAbc, pNtkRes)
@@ -9612,7 +9680,7 @@ func Abc_CommandMiter(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			return 0
 		}
 		// replace the current network
-		pNtkRes = Abc_NtkDupTransformMiter(pNtk)
+		pNtkRes = baseabc.Abc_NtkDupTransformMiter(pNtk)
 		Abc_FrameReplaceCurrentNetwork(pAbc, pNtkRes)
 		Abc_Print(1, "The miter (current network) is transformed by XORing POs pair-wise.\n")
 		return 0
@@ -9620,12 +9688,12 @@ func Abc_CommandMiter(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 
 	pArgvNew = argv + globalUtilOptind
 	nArgcNew = argc - globalUtilOptind
-	if !Abc_NtkPrepareTwoNtks(os.Stdout, pNtk, pArgvNew, nArgcNew, &pNtk1, &pNtk2, &fDelete1, &fDelete2, 1) {
+	if baseabc.Abc_NtkPrepareTwoNtks(os.Stdout, pNtk, pArgvNew, nArgcNew, &pNtk1, &pNtk2, &fDelete1, &fDelete2, 1) == 0 {
 		return 1
 	}
 
 	if fIgnoreNames != 0 {
-		if !fDelete1 {
+		if fDelete1 == 0 {
 			pNtk1 = Abc_NtkStrash(pNtk1, 0, 1, 0)
 			fDelete1 = 1
 		}
@@ -9633,8 +9701,8 @@ func Abc_CommandMiter(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			pNtk2 = Abc_NtkStrash(pNtk2, 0, 1, 0)
 			fDelete2 = 1
 		}
-		Abc_NtkShortNames(pNtk1)
-		Abc_NtkShortNames(pNtk2)
+		baseabc.Abc_NtkShortNames(pNtk1)
+		baseabc.Abc_NtkShortNames(pNtk2)
 	}
 	// compute the miter
 	pNtkRes = Abc_NtkMiter(pNtk1, pNtk2, fComb, nPartSize, fImplic, fMulti)
@@ -9786,11 +9854,11 @@ func Abc_CommandDemiter(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	}
 
 	if fDual != 0 {
-		if Abc_NtkPoNum(pNtk) & 1 {
+		if Abc_NtkPoNum(pNtk)&1 != 0 {
 			Abc_Print(-1, "The number of POs should be even.\n")
 			return 0
 		}
-		if !Abc_NtkDarDemiterDual(pNtk, fVerbose) {
+		if Abc_NtkDarDemiterDual(pNtk, fVerbose) == 0 {
 			Abc_Print(-1, "Demitering has failed.\n")
 			return 1
 		}
@@ -9814,7 +9882,7 @@ func Abc_CommandDemiter(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	   }
 	*/
 	// get the new network
-	if !Abc_NtkDarDemiter(pNtk) {
+	if Abc_NtkDarDemiter(pNtk) == 0 {
 		Abc_Print(-1, "Demitering has failed.\n")
 		return 1
 	}
@@ -9890,7 +9958,7 @@ func Abc_CommandOrPos(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			Abc_Print(1, "The output(s) cannot be structurally decomposed.\n")
 		}
 		// clear counter-example
-		if abcFrameCex(pAbc) {
+		if abcFrameCex(pAbc) != nil {
 			Abc_CexFree(abcFrameCex(pAbc))
 		}
 		// replace the current network
@@ -9898,12 +9966,12 @@ func Abc_CommandOrPos(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_FrameReplaceCurrentNetwork(pAbc, pNtkRes)
 
 	} else {
-		if !Abc_NtkCombinePos(pNtk, 0, fXor) {
+		if Abc_NtkCombinePos(pNtk, 0, fXor) == 0 {
 			Abc_Print(-1, "ORing the POs has failed.\n")
 			return 1
 		}
 		// update counter-example
-		if abcFrameCex(pAbc) {
+		if abcFrameCex(pAbc) != nil {
 			abcFrameCex(pAbc).IPo = 0
 		}
 		// replace the current network
@@ -9965,13 +10033,13 @@ func Abc_CommandAndPos(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 1
 	}
 
-	if Abc_NtkLatchNum(pNtk) {
+	if Abc_NtkLatchNum(pNtk) != 0 {
 		Abc_Print(-1, "The miter has latches. ORing is not performed.\n")
 		return 1
 	}
 
 	// get the new network
-	if !Abc_NtkCombinePos(pNtk, 1, 0) {
+	if Abc_NtkCombinePos(pNtk, 1, 0) == 0 {
 		Abc_Print(-1, "ANDing the POs has failed.\n")
 		return 1
 	}
@@ -10055,7 +10123,7 @@ func Abc_CommandZeroPo(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	//    pNtkRes = Abc_NtkDup( pNtk );
 	//    Abc_NtkDropOneOutput( pNtkRes, iOutput );
 	//    Abc_FrameReplaceCurrentNetwork( pAbc, pNtkRes );
-	Abc_NtkDropOneOutput(pNtk, iOutput, fSkipSweep, fUseConst1)
+	baseabc.Abc_NtkDropOneOutput(pNtk, iOutput, fSkipSweep, fUseConst1)
 	return 0
 
 usage:
@@ -10127,7 +10195,7 @@ func Abc_CommandSwapPos(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 
 	// get the new network
 	pNtkRes = Abc_NtkDup(pNtk)
-	Abc_NtkSwapOneOutput(pNtkRes, iOutput)
+	baseabc.Abc_NtkSwapOneOutput(pNtkRes, iOutput)
 	Abc_FrameReplaceCurrentNetwork(pAbc, pNtkRes)
 	return 0
 
@@ -10203,7 +10271,7 @@ func Abc_CommandRemovePo(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	//    pNtkRes = Abc_NtkDup( pNtk );
 	//    Abc_NtkRemovePo( pNtkRes, iOutput );
 	//    Abc_FrameReplaceCurrentNetwork( pAbc, pNtkRes );
-	Abc_NtkRemovePo(pNtk, iOutput, fRemoveConst0)
+	baseabc.Abc_NtkRemovePo(pNtk, iOutput, fRemoveConst0)
 	return 0
 
 usage:
@@ -10265,7 +10333,7 @@ func Abc_CommandDropSat(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "CEX array size (%d) does not match the number of outputs (%d).\n", Vec_PtrSize(abcFrameCexVector(pAbc)), Abc_NtkPoNum(pNtk))
 		return 1
 	}
-	Abc_NtkDropSatOutputs(pNtk, abcFrameCexVector(pAbc), fVerbose)
+	baseabc.Abc_NtkDropSatOutputs(pNtk, abcFrameCexVector(pAbc), fVerbose)
 	if !(fNoSweep != 0) {
 		pNtkRes = Abc_NtkDarLatchSweep(pNtk, 1, 1, 1, 0, -1, -1, 0, 0)
 		if pNtkRes == nil {
@@ -10322,9 +10390,9 @@ func Abc_CommandAddPi(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	// get the new network
 	pNtkRes = Abc_NtkDup(pNtk)
 	if Abc_NtkPiNum(pNtkRes) == 0 {
-		var pObj *Abc_Obj_t = Abc_NtkCreatePi(pNtkRes)
-		Abc_ObjAssignName(pObj, "dummy_pi", nil)
-		Abc_NtkOrderCisCos(pNtkRes)
+		var pObj *Abc_Obj_t = baseabc.Abc_NtkCreatePi(pNtkRes)
+		baseabc.Abc_ObjAssignName(pObj, "dummy_pi", nil)
+		baseabc.Abc_NtkOrderCisCos(pNtkRes)
 	}
 	Abc_FrameReplaceCurrentNetwork(pAbc, pNtkRes)
 	return 0
@@ -10387,22 +10455,22 @@ func Abc_CommandAppend(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	}
 
 	// check if the second network is combinational
-	if Abc_NtkLatchNum(pNtk2) {
+	if Abc_NtkLatchNum(pNtk2) != 0 {
 		Abc_NtkDelete(pNtk2)
 		Abc_Print(-1, "The second network has latches. Appending does not work for such networks.\n")
 		return 0
 	}
 
 	// get the new network
-	if !Abc_NtkAppend(pNtk, pNtk2, 1) {
+	if Abc_NtkAppend(pNtk, pNtk2, 1) == 0 {
 		Abc_NtkDelete(pNtk2)
 		Abc_Print(-1, "Appending the networks failed.\n")
 		return 1
 	}
 	Abc_NtkDelete(pNtk2)
 	// sweep dangling logic
-	if pMan, ok := pNtk.FunctionManager.(*Abc_Aig_t); ok {
-		Abc_AigCleanup(pMan)
+	if pMan, ok := pNtk.FunctionManager.(*baseabc.Abc_Aig_t); ok {
+		baseabc.Abc_AigCleanup(pMan)
 	}
 	// replace the current network
 	//    Abc_FrameReplaceCurrentNetwork( pAbc, pNtkRes );
@@ -10462,7 +10530,7 @@ func Abc_CommandPutOnTop(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	}
 
 	// check if the second network is combinational
-	if Abc_NtkLatchNum(pNtk) {
+	if Abc_NtkLatchNum(pNtk) != 0 {
 		Abc_Print(-1, "The current network has latches. This command does not work for such networks.\n")
 		return 0
 	}
@@ -10475,7 +10543,7 @@ func Abc_CommandPutOnTop(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	}
 
 	// check if the second network is combinational
-	if Abc_NtkLatchNum(pNtk2) {
+	if Abc_NtkLatchNum(pNtk2) != 0 {
 		Abc_NtkDelete(pNtk2)
 		Abc_Print(-1, "The second network has latches. This command does not work for such networks.\n")
 		return 0
@@ -10491,7 +10559,7 @@ func Abc_CommandPutOnTop(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	if Abc_NtkIsLogic(pNtk2) != 0 {
 		pNtkRes = Abc_NtkPutOnTop(pNtk, pNtk2)
 	} else if Abc_NtkIsStrash(pNtk2) != 0 {
-		var pLogic *Abc_Ntk_t = Abc_NtkToLogic(pNtk2)
+		var pLogic *Abc_Ntk_t = baseabc.Abc_NtkToLogic(pNtk2)
 		pNtkRes = Abc_NtkPutOnTop(pNtk, pLogic)
 		Abc_NtkDelete(pLogic)
 
@@ -10752,7 +10820,7 @@ func Abc_CommandSop(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Converting to SOP is possible only for logic networks.\n")
 		return 1
 	}
-	if !Abc_NtkToSop(pNtk, fMode, nCubeLimit) {
+	if baseabc.Abc_NtkToSop(pNtk, fMode, nCubeLimit) == 0 {
 		Abc_Print(-1, "Converting to SOP has failed.\n")
 		return 0
 	}
@@ -10812,13 +10880,13 @@ func Abc_CommandBdd(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 1
 	}
 	if (fBdd2Sop != 0) && (Abc_NtkHasSop(pNtk) != 0) {
-		return !Abc_NtkSopToBdd(pNtk)
+		return (baseabc.Abc_NtkSopToBdd(pNtk) == 0)
 	}
 	if Abc_NtkIsBddLogic(pNtk) != 0 {
 		Abc_Print(-1, "The logic network is already in the BDD form.\n")
 		return 0
 	}
-	if !Abc_NtkToBdd(pNtk) {
+	if Abc_NtkToBdd(pNtk) == 0 {
 		Abc_Print(-1, "Converting to BDD has failed.\n")
 		return 1
 	}
@@ -10868,11 +10936,11 @@ func Abc_CommandAig(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Converting to AIG is possible only for logic networks.\n")
 		return 1
 	}
-	if Abc_NtkIsAigLogic(pNtk) {
+	if baseabc.Abc_NtkIsAigLogic(pNtk) != 0 {
 		Abc_Print(-1, "The logic network is already in the AIG form.\n")
 		return 0
 	}
-	if !Abc_NtkToAig(pNtk) {
+	if Abc_NtkToAig(pNtk) == 0 {
 		Abc_Print(-1, "Converting to AIG has failed.\n")
 		return 1
 	}
@@ -10978,7 +11046,7 @@ func Abc_CommandBidec(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	}
 
 	// get the new network
-	if Abc_NtkIsAigLogic(pNtk) == 0 {
+	if baseabc.Abc_NtkIsAigLogic(pNtk) == 0 {
 		Abc_Print(-1, "Bi-decomposition only works when node functions are AIGs (run \"aig\").\n")
 		return 1
 	}
@@ -11197,7 +11265,7 @@ func Abc_CommandCubes(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	}
 
 	// get the new network
-	pNtkRes = Abc_NtkSopToCubes(pNtk, fXor)
+	pNtkRes = baseabc.Abc_NtkSopToCubes(pNtk, fXor)
 	if pNtkRes == nil {
 		Abc_Print(-1, "Converting to cubes has failed.\n")
 		return 1
@@ -11255,7 +11323,7 @@ func Abc_CommandExpand(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Only a SOP logic network can be transformed into cubes.\n")
 		return 1
 	}
-	if Abc_NtkLevel(pNtk) > 1 {
+	if baseabc.Abc_NtkLevel(pNtk) > 1 {
 		Abc_Print(-1, "The number of logic levels is more than 1 (collapse the network and try again).\n")
 		return 1
 	}
@@ -11280,7 +11348,7 @@ func Abc_CommandExpand(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	//Gia_AigerWrite( pGia, "aig_dump.aig", 0, 0, 0 );
 	Abc_NtkDelete(pStrash)
 	// get the new network
-	Abc_NtkExpandCubes(pNtk, pGia, fVerbose)
+	sat_bmc.Abc_NtkExpandCubes(pNtk, pGia, fVerbose)
 	Gia_ManStop(pGia)
 	return 0
 
@@ -11350,7 +11418,7 @@ func Abc_CommandSplitSop(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	}
 
 	// get the new network
-	pNtkRes = Abc_NtkSplitSop(pNtk, nCubesMax, fVerbose)
+	pNtkRes = baseabc.Abc_NtkSplitSop(pNtk, nCubesMax, fVerbose)
 	if pNtkRes == nil {
 		Abc_Print(-1, "Converting to cubes has failed.\n")
 		return 1
@@ -11414,7 +11482,7 @@ func Abc_CommandExtSeqDcs(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Extracting sequential don't-cares works only for AIGs (run \"strash\").\n")
 		return 0
 	}
-	if !Abc_NtkExtractSequentialDcs(pNtk, fVerbose) {
+	if Abc_NtkExtractSequentialDcs(pNtk, fVerbose) == 0 {
 		Abc_Print(-1, "Extracting sequential don't-cares has failed.\n")
 		return 1
 	}
@@ -11449,7 +11517,7 @@ func Abc_CommandReach(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	var pLogFileName string
 
 	// set defaults
-	Bbr_ManSetDefaultParams(pPars)
+	bdd_bbr.Bbr_ManSetDefaultParams(pPars)
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "TBFLproyvh"); c != -1; c = Extra_UtilGetopt(argc, argv, "TBFLproyvh") {
 		switch c {
@@ -11550,11 +11618,11 @@ usage:
 		logName = "no logging"
 	}
 	Abc_Print(-2, "\t-L file: the log file name [default = %s]\n", logName)
-	Abc_Print(-2, "\t-p     : enable partitioned image computation [default = %s]\n", abcSelect(fPartition, "yes", "no"))
-	Abc_Print(-2, "\t-r     : enable dynamic BDD variable reordering [default = %s]\n", abcSelect(fReorder, "yes", "no"))
-	Abc_Print(-2, "\t-o     : toggles BDD variable reordering during image computation [default = %s]\n", abcSelect(fReorderImage, "yes", "no"))
-	Abc_Print(-2, "\t-y     : skip checking property outputs [default = %s]\n", abcSelect(fSkipOutCheck, "yes", "no"))
-	Abc_Print(-2, "\t-v     : prints verbose information [default = %s]\n", abcSelect(fVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-p     : enable partitioned image computation [default = %s]\n", abcSelect(pPars.fPartition, "yes", "no"))
+	Abc_Print(-2, "\t-r     : enable dynamic BDD variable reordering [default = %s]\n", abcSelect(pPars.fReorder, "yes", "no"))
+	Abc_Print(-2, "\t-o     : toggles BDD variable reordering during image computation [default = %s]\n", abcSelect(pPars.fReorderImage, "yes", "no"))
+	Abc_Print(-2, "\t-y     : skip checking property outputs [default = %s]\n", abcSelect(pPars.fSkipOutCheck, "yes", "no"))
+	Abc_Print(-2, "\t-v     : prints verbose information [default = %s]\n", abcSelect(pPars.fVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h     : print the command usage\n")
 	return 1
 }
@@ -11653,9 +11721,9 @@ func Abc_CommandCone(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			return 1
 		}
 		if fUseMffc != 0 {
-			pNtkRes = Abc_NtkCreateMffc(pNtk, pNode, argv[globalUtilOptind])
+			pNtkRes = baseabc.Abc_NtkCreateMffc(pNtk, pNode, argv[globalUtilOptind])
 		} else {
-			pNtkRes = Abc_NtkCreateCone(pNtk, pNode, argv[globalUtilOptind], fUseAllCis)
+			pNtkRes = baseabc.Abc_NtkCreateCone(pNtk, pNode, argv[globalUtilOptind], fUseAllCis)
 		}
 
 	} else {
@@ -11667,16 +11735,16 @@ func Abc_CommandCone(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			Abc_Print(-1, "The 0-based output number (%d) is larger than the number of outputs (%d).\n", Output, Abc_NtkCoNum(pNtk))
 			return 1
 		}
-		pNodeCo = Abc_NtkCo(pNtk, Output)
+		pNodeCo = baseabc.Abc_NtkCo(pNtk, Output)
 		if fSeq != 0 {
-			pNtkRes = Abc_NtkMakeOnePo(pNtk, Output, nRange)
+			pNtkRes = baseabc.Abc_NtkMakeOnePo(pNtk, Output, nRange)
 		} else if fUseMffc != 0 {
-			pNtkRes = Abc_NtkCreateMffc(pNtk, Abc_ObjFanin0(pNodeCo), Abc_ObjName(pNodeCo))
+			pNtkRes = baseabc.Abc_NtkCreateMffc(pNtk, Abc_ObjFanin0(pNodeCo), Abc_ObjName(pNodeCo))
 		} else {
-			pNtkRes = Abc_NtkCreateCone(pNtk, Abc_ObjFanin0(pNodeCo), Abc_ObjName(pNodeCo), fUseAllCis)
+			pNtkRes = baseabc.Abc_NtkCreateCone(pNtk, Abc_ObjFanin0(pNodeCo), Abc_ObjName(pNodeCo), fUseAllCis)
 		}
 	}
-	if (pNodeCo != nil) && Abc_ObjFaninC0(pNodeCo) && !(fSeq != 0) {
+	if (pNodeCo != nil) && (baseabc.Abc_ObjFaninC0(pNodeCo) != 0) && !(fSeq != 0) {
 		Abc_NtkPo(pNtkRes, 0).fCompl0 ^= 1
 		//        Abc_Print( -1, "The extracted cone represents the complement function of the CO.\n" );
 	}
@@ -11752,7 +11820,7 @@ func Abc_CommandNode(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 1
 	}
 
-	pNtkRes = Abc_NtkCreateFromNode(pNtk, pNode)
+	pNtkRes = baseabc.Abc_NtkCreateFromNode(pNtk, pNode)
 	//    pNtkRes = Abc_NtkDeriveFromBdd( pNtk->pManFunc, pNode->pData, NULL, NULL );
 	if pNtkRes == nil {
 		Abc_Print(-1, "Splitting one node has failed.\n")
@@ -11814,7 +11882,7 @@ func Abc_CommandCof(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Wrong number of auguments.\n")
 		goto usage
 	}
-	pNode = Abc_NtkFindCi(pNtk, argv[globalUtilOptind])
+	pNode = baseabc.Abc_NtkFindCi(pNtk, argv[globalUtilOptind])
 	if pNode == nil {
 		pNode = Abc_NtkFindNode(pNtk, argv[globalUtilOptind])
 	}
@@ -11827,7 +11895,7 @@ func Abc_CommandCof(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Constant should be 0 or 1.\n", argv[globalUtilOptind+1])
 		return 1
 	}
-	Abc_ObjReplaceByConstant(pNode, Const)
+	baseabc.Abc_ObjReplaceByConstant(pNode, Const)
 	return 0
 
 usage:
@@ -12035,7 +12103,7 @@ func Abc_CommandTopAnd(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Currently expects a single-output miter.\n")
 		return 0
 	}
-	if Abc_ObjFaninC0(Abc_NtkPo(pNtk, 0)) {
+	if baseabc.Abc_ObjFaninC0(Abc_NtkPo(pNtk, 0)) != 0 {
 		Abc_Print(-1, "The PO driver is complemented. AND-decomposition is impossible.\n")
 		return 0
 	}
@@ -12101,7 +12169,7 @@ func Abc_CommandTrim(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	pGia = Gia_ManFromAigSimple(pAig)
 	Aig_ManStop(pAig)
 	// perform trimming
-	pNew = Gia_ManDupTrimmed(pGia, 1, 1, 0, -1)
+	pNew = giapkg.Gia_ManDupTrimmed(pGia, 1, 1, 0, -1)
 	Gia_ManStop(pGia)
 	// convert back
 	pAig = Gia_ManToAigSimple(pNew)
@@ -12110,7 +12178,7 @@ func Abc_CommandTrim(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	Aig_ManStop(pAig)
 	// duplicate the name and the spec
 	Abc_NtkSetName(pNtkRes, Extra_UtilStrsav(Abc_NtkName(pNtk)))
-	Abc_NtkSetSpec(pNtkRes, Extra_UtilStrsav(Abc_NtkSpec(pNtk)))
+	baseabc.Abc_NtkSetSpec(pNtkRes, Extra_UtilStrsav(baseabc.Abc_NtkSpec(pNtk)))
 	Abc_FrameReplaceCurrentNetwork(pAbc, pNtkRes)
 	return 0
 
@@ -12156,9 +12224,9 @@ func Abc_CommandShortNames(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 1
 	}
 	if fKeepIo != 0 {
-		Abc_NtkCleanNames(pNtk)
+		baseabc.Abc_NtkCleanNames(pNtk)
 	} else {
-		Abc_NtkShortNames(pNtk)
+		baseabc.Abc_NtkShortNames(pNtk)
 	}
 	return 0
 
@@ -12231,7 +12299,7 @@ func Abc_CommandMoveNames(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "The flop count (%d) of the first network is not equal to flop count (%d) of the second network.\n", Abc_NtkLatchNum(pNtk), Abc_NtkLatchNum(pNtk2))
 		return 0
 	}
-	Abc_NtkMoveNames(pNtk, pNtk2)
+	baseabc.Abc_NtkMoveNames(pNtk, pNtk2)
 	Abc_NtkDelete(pNtk2)
 	return 0
 
@@ -12630,8 +12698,8 @@ func Abc_CommandCut(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Cut computation is available only for AIGs (run \"strash\").\n")
 		return 1
 	}
-	if pParams.nVarsMax < CUT_SIZE_MIN || pParams.nVarsMax > CUT_SIZE_MAX {
-		Abc_Print(-1, "Can only compute the cuts for %d <= K <= %d.\n", CUT_SIZE_MIN, CUT_SIZE_MAX)
+	if pParams.nVarsMax < opt_cut.CUT_SIZE_MIN || pParams.nVarsMax > opt_cut.CUT_SIZE_MAX {
+		Abc_Print(-1, "Can only compute the cuts for %d <= K <= %d.\n", opt_cut.CUT_SIZE_MIN, opt_cut.CUT_SIZE_MAX)
 		return 1
 	}
 	if pParams.fDag && pParams.fTree {
@@ -12649,20 +12717,20 @@ func Abc_CommandCut(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	}
 	pCutMan = Abc_NtkCuts(pNtk, pParams)
 	if fOracle != 0 {
-		pCutOracle = Cut_OracleStart(pCutMan)
+		pCutOracle = opt_cut.Cut_OracleStart(pCutMan)
 	}
-	Cut_ManStop(pCutMan)
+	opt_cut.Cut_ManStop(pCutMan)
 	if fOracle != 0 {
 		assert((pCutOracle != nil), "pCutOracle")
 		Abc_NtkCutsOracle(pNtk, pCutOracle)
-		Cut_OracleStop(pCutOracle)
+		opt_cut.Cut_OracleStop(pCutOracle)
 	}
 	return 0
 
 usage:
 	Abc_Print(-2, "usage: cut [-K num] [-M num] [-tfdcovamjsvh]\n")
 	Abc_Print(-2, "\t         computes k-feasible cuts for the AIG\n")
-	Abc_Print(-2, "\t-K num : max number of leaves (%d <= num <= %d) [default = %d]\n", CUT_SIZE_MIN, CUT_SIZE_MAX, pParams.nVarsMax)
+	Abc_Print(-2, "\t-K num : max number of leaves (%d <= num <= %d) [default = %d]\n", opt_cut.CUT_SIZE_MIN, opt_cut.CUT_SIZE_MAX, pParams.nVarsMax)
 	Abc_Print(-2, "\t-M num : max number of cuts stored at a node [default = %d]\n", pParams.nKeepMax)
 	Abc_Print(-2, "\t-t     : toggle truth table computation [default = %s]\n", abcSelect(pParams.fTruth, "yes", "no"))
 	Abc_Print(-2, "\t-f     : toggle filtering of duplicated/dominated [default = %s]\n", abcSelect(pParams.fFilter, "yes", "no"))
@@ -12676,7 +12744,7 @@ usage:
 	Abc_Print(-2, "\t-m     : toggle delay-oriented FPGA mapping [default = %s]\n", abcSelect(pParams.fMap, "yes", "no"))
 	Abc_Print(-2, "\t-j     : toggle removing fanouts due to XOR/MUX [default = %s]\n", abcSelect(pParams.fAdjust, "yes", "no"))
 	Abc_Print(-2, "\t-s     : toggle creating library of 6-var functions [default = %s]\n", abcSelect(pParams.fNpnSave, "yes", "no"))
-	Abc_Print(-2, "\t-v     : toggle printing verbose information [default = %s]\n", abcSelect(fVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-v     : toggle printing verbose information [default = %s]\n", abcSelect(pParams.fVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h     : print the command usage\n")
 	return 1
 }
@@ -12758,22 +12826,22 @@ func Abc_CommandScut(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	       return 1;
 	   }
 	*/
-	if pParams.nVarsMax < CUT_SIZE_MIN || pParams.nVarsMax > CUT_SIZE_MAX {
-		Abc_Print(-1, "Can only compute the cuts for %d <= K <= %d.\n", CUT_SIZE_MIN, CUT_SIZE_MAX)
+	if pParams.nVarsMax < opt_cut.CUT_SIZE_MIN || pParams.nVarsMax > opt_cut.CUT_SIZE_MAX {
+		Abc_Print(-1, "Can only compute the cuts for %d <= K <= %d.\n", opt_cut.CUT_SIZE_MIN, opt_cut.CUT_SIZE_MAX)
 		return 1
 	}
 
 	pCutMan = Abc_NtkSeqCuts(pNtk, pParams)
-	Cut_ManStop(pCutMan)
+	opt_cut.Cut_ManStop(pCutMan)
 	return 0
 
 usage:
 	Abc_Print(-2, "usage: scut [-K num] [-M num] [-tvh]\n")
 	Abc_Print(-2, "\t         computes k-feasible cuts for the sequential AIG\n")
-	Abc_Print(-2, "\t-K num : max number of leaves (%d <= num <= %d) [default = %d]\n", CUT_SIZE_MIN, CUT_SIZE_MAX, pParams.nVarsMax)
+	Abc_Print(-2, "\t-K num : max number of leaves (%d <= num <= %d) [default = %d]\n", opt_cut.CUT_SIZE_MIN, opt_cut.CUT_SIZE_MAX, pParams.nVarsMax)
 	Abc_Print(-2, "\t-M num : max number of cuts stored at a node [default = %d]\n", pParams.nKeepMax)
 	Abc_Print(-2, "\t-t     : toggle truth table computation [default = %s]\n", abcSelect(pParams.fTruth, "yes", "no"))
-	Abc_Print(-2, "\t-v     : toggle printing verbose information [default = %s]\n", abcSelect(fVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-v     : toggle printing verbose information [default = %s]\n", abcSelect(pParams.fVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h     : print the command usage\n")
 	return 1
 }
@@ -12998,7 +13066,7 @@ func Abc_CommandGen(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		fmt.Printf("Generating adder tree with %d arguments and %d bits.\n", nArgs, nVars)
 		Abc_GenAdderTree(FileName, nArgs, nVars)
 		Command = fmt.Sprintf("%%read %s; %%blast; &put", FileName)
-		Cmd_CommandExecute(pAbc, Command)
+		base_main.Cmd_CommandExecute(pAbc, Command)
 		return 0
 
 	} else {
@@ -13007,7 +13075,7 @@ func Abc_CommandGen(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	}
 	// read the file just produced
 	Command = fmt.Sprintf("read %s", FileName)
-	Cmd_CommandExecute(pAbc, Command)
+	base_main.Cmd_CommandExecute(pAbc, Command)
 	return 0
 
 usage:
@@ -13248,7 +13316,7 @@ func Abc_CommandCover(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	}
 
 	// run the command
-	pNtkRes = Abc_NtkSopEsopCover(pNtk, nFaninMax, nCubesMax, fUseEsop, fUseSop, fUseInvs, fVerbose)
+	pNtkRes = map_cov.Abc_NtkSopEsopCover(pNtk, nFaninMax, nCubesMax, fUseEsop, fUseSop, fUseInvs, fVerbose)
 	if pNtkRes == nil {
 		Abc_Print(-1, "Command has failed.\n")
 		return 0
@@ -13317,7 +13385,7 @@ func Abc_CommandInter(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 
 	pArgvNew = argv + globalUtilOptind
 	nArgcNew = argc - globalUtilOptind
-	if !Abc_NtkPrepareTwoNtks(os.Stdout, pNtk, pArgvNew, nArgcNew, &pNtk1, &pNtk2, &fDelete1, &fDelete2, 1) {
+	if baseabc.Abc_NtkPrepareTwoNtks(os.Stdout, pNtk, pArgvNew, nArgcNew, &pNtk1, &pNtk2, &fDelete1, &fDelete2, 1) == 0 {
 		return 1
 	}
 	if nArgcNew == 0 {
@@ -13428,7 +13496,7 @@ func Abc_CommandDouble(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 1
 	}
 
-	pNtkRes = Abc_NtkDouble(pNtk)
+	pNtkRes = baseabc.Abc_NtkDouble(pNtk)
 	if pNtkRes == nil {
 		Abc_Print(-1, "Command has failed.\n")
 		return 0
@@ -13623,7 +13691,7 @@ func Abc_CommandNodeDup(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "The fanout limit should be more than 1.\n")
 		return 1
 	}
-	pNtkRes = Abc_NtkNodeDup(pNtk, nLimit, fVerbose)
+	pNtkRes = baseabc.Abc_NtkNodeDup(pNtk, nLimit, fVerbose)
 	if pNtkRes == nil {
 		Abc_Print(-1, "Command has failed.\n")
 		return 0
@@ -13655,7 +13723,7 @@ usage:
 */
 func Abc_CommandTestColor(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 
-	Abc_ColorTest()
+	util.Abc_ColorTest()
 	return 1
 }
 
@@ -13953,7 +14021,7 @@ func Abc_CommandQuaVar(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Empty network.\n")
 		return 1
 	}
-	if Abc_NtkGetChoiceNum(pNtk) {
+	if Abc_NtkGetChoiceNum(pNtk) != 0 {
 		Abc_Print(-1, "This command cannot be applied to an AIG with choice nodes.\n")
 		return 1
 	}
@@ -13962,9 +14030,9 @@ func Abc_CommandQuaVar(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	pNtkRes = Abc_NtkStrash(pNtk, 0, 1, 0)
 	RetValue = Abc_NtkQuantify(pNtkRes, fUniv, iVar, fVerbose)
 	// clean temporary storage for the cofactors
-	Abc_NtkCleanData(pNtkRes)
-	if pMan, ok := pNtkRes.FunctionManager.(*Abc_Aig_t); ok {
-		Abc_AigCleanup(pMan)
+	baseabc.Abc_NtkCleanData(pNtkRes)
+	if pMan, ok := pNtkRes.FunctionManager.(*baseabc.Abc_Aig_t); ok {
+		baseabc.Abc_AigCleanup(pMan)
 	}
 	// check the result
 	if !(RetValue != 0) {
@@ -14037,7 +14105,7 @@ func Abc_CommandQuaRel(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Empty network.\n")
 		return 1
 	}
-	if Abc_NtkGetChoiceNum(pNtk) {
+	if Abc_NtkGetChoiceNum(pNtk) != 0 {
 		Abc_Print(-1, "This command cannot be applied to an AIG with choice nodes.\n")
 		return 1
 	}
@@ -14122,7 +14190,7 @@ func Abc_CommandQuaReach(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Empty network.\n")
 		return 1
 	}
-	if Abc_NtkGetChoiceNum(pNtk) {
+	if Abc_NtkGetChoiceNum(pNtk) != 0 {
 		Abc_Print(-1, "This command cannot be applied to an AIG with choice nodes.\n")
 		return 1
 	}
@@ -14211,7 +14279,7 @@ func Abc_CommandSenseInput(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Empty network.\n")
 		return 1
 	}
-	if Abc_NtkGetChoiceNum(pNtk) {
+	if Abc_NtkGetChoiceNum(pNtk) != 0 {
 		Abc_Print(-1, "This command cannot be applied to an AIG with choice nodes.\n")
 		return 1
 	}
@@ -14445,7 +14513,7 @@ func Abc_CommandDRewrite(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 
 	pNtk = Abc_FrameReadNtk(pAbc)
 	// set defaults
-	Dar_ManDefaultRwrParams(pPars)
+	opt_dar.Dar_ManDefaultRwrParams(pPars)
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "CNflzrvwh"); c != -1; c = Extra_UtilGetopt(argc, argv, "CNflzrvwh") {
 		switch c {
@@ -14517,12 +14585,12 @@ usage:
 	Abc_Print(-2, "\t         performs combinational AIG rewriting\n")
 	Abc_Print(-2, "\t-C num : the max number of cuts at a node [default = %d]\n", pPars.nCutsMax)
 	Abc_Print(-2, "\t-N num : the max number of subgraphs tried [default = %d]\n", pPars.nSubgMax)
-	Abc_Print(-2, "\t-l     : toggle preserving the number of levels [default = %s]\n", abcSelect(fUpdateLevel, "yes", "no"))
-	Abc_Print(-2, "\t-f     : toggle representing fanouts [default = %s]\n", abcSelect(fFanout, "yes", "no"))
-	Abc_Print(-2, "\t-z     : toggle using zero-cost replacements [default = %s]\n", abcSelect(fUseZeros, "yes", "no"))
-	Abc_Print(-2, "\t-r     : toggle using cut recycling [default = %s]\n", abcSelect(fRecycle, "yes", "no"))
-	Abc_Print(-2, "\t-v     : toggle verbose printout [default = %s]\n", abcSelect(fVerbose, "yes", "no"))
-	Abc_Print(-2, "\t-w     : toggle very verbose printout [default = %s]\n", abcSelect(fVeryVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-l     : toggle preserving the number of levels [default = %s]\n", abcSelect(pPars.fUpdateLevel, "yes", "no"))
+	Abc_Print(-2, "\t-f     : toggle representing fanouts [default = %s]\n", abcSelect(pPars.fFanout, "yes", "no"))
+	Abc_Print(-2, "\t-z     : toggle using zero-cost replacements [default = %s]\n", abcSelect(pPars.fUseZeros, "yes", "no"))
+	Abc_Print(-2, "\t-r     : toggle using cut recycling [default = %s]\n", abcSelect(pPars.fRecycle, "yes", "no"))
+	Abc_Print(-2, "\t-v     : toggle verbose printout [default = %s]\n", abcSelect(pPars.fVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-w     : toggle very verbose printout [default = %s]\n", abcSelect(pPars.fVeryVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h     : print the command usage\n")
 	return 1
 }
@@ -14548,7 +14616,7 @@ func Abc_CommandDRefactor(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 
 	pNtk = Abc_FrameReadNtk(pAbc)
 	// set defaults
-	Dar_ManDefaultRefParams(pPars)
+	opt_dar.Dar_ManDefaultRefParams(pPars)
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "MKCelzvwh"); c != -1; c = Extra_UtilGetopt(argc, argv, "MKCelzvwh") {
 		switch c {
@@ -14633,11 +14701,11 @@ usage:
 	Abc_Print(-2, "\t-M num : the min MFFC size to attempt refactoring [default = %d]\n", pPars.nMffcMin)
 	Abc_Print(-2, "\t-K num : the max number of cuts leaves [default = %d]\n", pPars.nLeafMax)
 	Abc_Print(-2, "\t-C num : the max number of cuts to try at a node [default = %d]\n", pPars.nCutsMax)
-	Abc_Print(-2, "\t-e     : toggle extending tbe cut below MFFC [default = %s]\n", abcSelect(fExtend, "yes", "no"))
-	Abc_Print(-2, "\t-l     : toggle preserving the number of levels [default = %s]\n", abcSelect(fUpdateLevel, "yes", "no"))
-	Abc_Print(-2, "\t-z     : toggle using zero-cost replacements [default = %s]\n", abcSelect(fUseZeros, "yes", "no"))
-	Abc_Print(-2, "\t-v     : toggle verbose printout [default = %s]\n", abcSelect(fVerbose, "yes", "no"))
-	Abc_Print(-2, "\t-w     : toggle very verbose printout [default = %s]\n", abcSelect(fVeryVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-e     : toggle extending tbe cut below MFFC [default = %s]\n", abcSelect(pPars.fExtend, "yes", "no"))
+	Abc_Print(-2, "\t-l     : toggle preserving the number of levels [default = %s]\n", abcSelect(pPars.fUpdateLevel, "yes", "no"))
+	Abc_Print(-2, "\t-z     : toggle using zero-cost replacements [default = %s]\n", abcSelect(pPars.fUseZeros, "yes", "no"))
+	Abc_Print(-2, "\t-v     : toggle verbose printout [default = %s]\n", abcSelect(pPars.fVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-w     : toggle very verbose printout [default = %s]\n", abcSelect(pPars.fVeryVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h     : print the command usage\n")
 	return 1
 }
@@ -14929,14 +14997,14 @@ usage:
 	Abc_Print(-2, "\t-W num : the max number of simulation words [default = %d]\n", pPars.nWords)
 	Abc_Print(-2, "\t-C num : the max number of conflicts at a node [default = %d]\n", pPars.nBTLimit)
 	Abc_Print(-2, "\t-S num : the max number of SAT variables [default = %d]\n", pPars.nSatVarMax)
-	Abc_Print(-2, "\t-s     : toggle synthesizing three snapshots [default = %s]\n", abcSelect(fSynthesis, "yes", "no"))
-	Abc_Print(-2, "\t-p     : toggle power-aware rewriting [default = %s]\n", abcSelect(fPower, "yes", "no"))
-	Abc_Print(-2, "\t-t     : toggle simulation of the TFO classes [default = %s]\n", abcSelect(fSimulateTfo, "yes", "no"))
-	Abc_Print(-2, "\t-g     : toggle using GIA to prove equivalences [default = %s]\n", abcSelect(fUseGia, "yes", "no"))
-	Abc_Print(-2, "\t-c     : toggle using circuit-based SAT vs. MiniSat [default = %s]\n", abcSelect(fUseCSat, "yes", "no"))
-	Abc_Print(-2, "\t-f     : toggle using faster logic synthesis [default = %s]\n", abcSelect(fLightSynth, "yes", "no"))
-	Abc_Print(-2, "\t-r     : toggle skipping choices with redundant support [default = %s]\n", abcSelect(fSkipRedSupp, "yes", "no"))
-	Abc_Print(-2, "\t-v     : toggle verbose printout [default = %s]\n", abcSelect(fVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-s     : toggle synthesizing three snapshots [default = %s]\n", abcSelect(pPars.fSynthesis, "yes", "no"))
+	Abc_Print(-2, "\t-p     : toggle power-aware rewriting [default = %s]\n", abcSelect(pPars.fPower, "yes", "no"))
+	Abc_Print(-2, "\t-t     : toggle simulation of the TFO classes [default = %s]\n", abcSelect(pPars.fSimulateTfo, "yes", "no"))
+	Abc_Print(-2, "\t-g     : toggle using GIA to prove equivalences [default = %s]\n", abcSelect(pPars.fUseGia, "yes", "no"))
+	Abc_Print(-2, "\t-c     : toggle using circuit-based SAT vs. MiniSat [default = %s]\n", abcSelect(pPars.fUseCSat, "yes", "no"))
+	Abc_Print(-2, "\t-f     : toggle using faster logic synthesis [default = %s]\n", abcSelect(pPars.fLightSynth, "yes", "no"))
+	Abc_Print(-2, "\t-r     : toggle skipping choices with redundant support [default = %s]\n", abcSelect(pPars.fSkipRedSupp, "yes", "no"))
+	Abc_Print(-2, "\t-v     : toggle verbose printout [default = %s]\n", abcSelect(pPars.fVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h     : print the command usage\n")
 	return 1
 }
@@ -15659,7 +15727,7 @@ func Abc_CommandIProve(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		var i int32
 		var pSimInfo *int32 = Abc_NtkVerifySimulatePattern(pNtk, pNtkTemp.pModel)
 		for i = 0; i < Abc_NtkCoNum(pNtk); i++ {
-			pObj = Abc_NtkCo(pNtk, i)
+			pObj = baseabc.Abc_NtkCo(pNtk, i)
 			if pSimInfo[i] == 1 {
 				iOut = i
 				break
@@ -15685,7 +15753,7 @@ func Abc_CommandIProve(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	Abc_FrameReplaceCurrentNetwork(pAbc, pNtkTemp)
 	// update counter example
 	if RetValue == 0 && Abc_NtkLatchNum(pNtkTemp) == 0 {
-		var pCex *Abc_Cex_t = Abc_CexDeriveFromCombModel(pNtkTemp.pModel, Abc_NtkPiNum(pNtkTemp), 0, iOut)
+		var pCex *Abc_Cex_t = util.Abc_CexDeriveFromCombModel(pNtkTemp.pModel, Abc_NtkPiNum(pNtkTemp), 0, iOut)
 		Abc_FrameReplaceCex(pAbc, &pCex)
 	}
 	if pLogFileName != "" {
@@ -15703,10 +15771,10 @@ usage:
 	Abc_Print(-2, "\t-M num : max last-gasp number of conflicts in mitering [default = %d]\n", pParams.nMiteringLimitLast)
 	Abc_Print(-2, "\t-I num : max number of clause inspections in all SAT calls [default = %d]\n", int32(pParams.nTotalInspectLimit))
 	Abc_Print(-2, "\t-L file: the log file name [default = %s]\n", abcDefaultString(pLogFileName, "no logging"))
-	Abc_Print(-2, "\t-r     : toggle the use of rewriting [default = %s]\n", abcSelect(fUseRewriting, "yes", "no"))
-	Abc_Print(-2, "\t-f     : toggle the use of FRAIGing [default = %s]\n", abcSelect(fUseFraiging, "yes", "no"))
-	Abc_Print(-2, "\t-b     : toggle the use of BDDs [default = %s]\n", abcSelect(fUseBdds, "yes", "no"))
-	Abc_Print(-2, "\t-v     : prints verbose information [default = %s]\n", abcSelect(fVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-r     : toggle the use of rewriting [default = %s]\n", abcSelect(pParams.fUseRewriting, "yes", "no"))
+	Abc_Print(-2, "\t-f     : toggle the use of FRAIGing [default = %s]\n", abcSelect(pParams.fUseFraiging, "yes", "no"))
+	Abc_Print(-2, "\t-b     : toggle the use of BDDs [default = %s]\n", abcSelect(pParams.fUseBdds, "yes", "no"))
+	Abc_Print(-2, "\t-v     : prints verbose information [default = %s]\n", abcSelect(pParams.fVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h     : print the command usage\n")
 	return 1
 }
@@ -15733,7 +15801,7 @@ int Abc_CommandHaig( Abc_Frame_t * pAbc, int argc, char ** argv )
     int fRetimingOnly;
     int fAddBugs;
     int fUseCnf;
-    int fVerbose;
+    int pParams.fVerbose;
 
     pNtk = Abc_FrameReadNtk(pAbc);
 
@@ -15745,7 +15813,7 @@ int Abc_CommandHaig( Abc_Frame_t * pAbc, int argc, char ** argv )
     fRetimingOnly = 0;
     fAddBugs      = 0;
     fUseCnf       = 0;
-    fVerbose      = 0;
+    pParams.fVerbose      = 0;
     Extra_UtilGetoptReset();
     while ( ( c = Extra_UtilGetopt( argc, argv, "ISrbcvh" ) ) != EOF )
     {
@@ -15802,7 +15870,7 @@ int Abc_CommandHaig( Abc_Frame_t * pAbc, int argc, char ** argv )
         return 1;
     }
 
-    pNtkRes = Abc_NtkDarHaigRecord( pNtk, nIters, nSteps, fRetimingOnly, fAddBugs, fUseCnf, fVerbose );
+    pNtkRes = Abc_NtkDarHaigRecord( pNtk, nIters, nSteps, fRetimingOnly, fAddBugs, fUseCnf, pParams.fVerbose );
     if ( pNtkRes == NULL )
     {
         Abc_Print( -1, "Command has failed.\n" );
@@ -15824,7 +15892,7 @@ usage:
     Abc_Print( -2, "\t-r     : toggle the use of retiming only [default = %s]\n", abcSelect(fRetimingOnly, "yes", "no") );
     Abc_Print( -2, "\t-b     : toggle bug insertion [default = %s]\n", abcSelect(fAddBugs, "yes", "no") );
     Abc_Print( -2, "\t-c     : enable CNF-based proof (no speculative reduction) [default = %s]\n", abcSelect(fUseCnf, "yes", "no") );
-    Abc_Print( -2, "\t-v     : toggle verbose printout [default = %s]\n", abcSelect(fVerbose, "yes", "no") );
+    Abc_Print( -2, "\t-v     : toggle verbose printout [default = %s]\n", abcSelect(pParams.fVerbose, "yes", "no") );
     Abc_Print( -2, "\t-h     : print the command usage\n");
     return 1;
 }
@@ -16044,7 +16112,7 @@ func Abc_CommandSendAig(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			goto usage
 		}
 	}
-	if !Abc_FrameIsBridgeMode() {
+	if base_main.Abc_FrameIsBridgeMode() == 0 {
 		Abc_Print(-1, "The bridge mode is not available.\n")
 		return 1
 	}
@@ -16057,7 +16125,7 @@ func Abc_CommandSendAig(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		if fAbsNetlist != 0 {
 			mode = BRIDGE_ABS_NETLIST
 		}
-		Gia_ManToBridgeAbsNetlist(os.Stdout, abcFrameGia(pAbc), mode)
+		util.Gia_ManToBridgeAbsNetlist(os.Stdout, abcFrameGia(pAbc), mode)
 
 	} else {
 		var pAig *Aig_Man_t
@@ -16077,7 +16145,7 @@ func Abc_CommandSendAig(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		if fAbsNetlist != 0 {
 			mode = BRIDGE_ABS_NETLIST
 		}
-		Gia_ManToBridgeAbsNetlist(os.Stdout, pGia, mode)
+		util.Gia_ManToBridgeAbsNetlist(os.Stdout, pGia, mode)
 		Gia_ManStop(pGia)
 	}
 	return 0
@@ -16116,7 +16184,7 @@ func Abc_CommandSendStatus(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			goto usage
 		}
 	}
-	if !Abc_FrameIsBridgeMode() {
+	if base_main.Abc_FrameIsBridgeMode() == 0 {
 		Abc_Print(-1, "The bridge mode is not available.\n")
 		return 1
 	}
@@ -16124,7 +16192,7 @@ func Abc_CommandSendStatus(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Status is \"sat\", but current CEX is not available.\n")
 		return 1
 	}
-	Gia_ManToBridgeResult(os.Stdout, abcFrameStatus(pAbc), abcFrameCex(pAbc), 0)
+	util.Gia_ManToBridgeResult(os.Stdout, abcFrameStatus(pAbc), abcFrameCex(pAbc), 0)
 	return 0
 
 usage:
@@ -16165,7 +16233,7 @@ func Abc_CommandBackup(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Empty network.\n")
 		return 1
 	}
-	if abcFrameResource[*Abc_Ntk_t](pAbc, "pNtkBackup") {
+	if abcFrameResource[*Abc_Ntk_t](pAbc, "pNtkBackup") != nil {
 		Abc_NtkDelete(abcFrameResource[*Abc_Ntk_t](pAbc, "pNtkBackup"))
 	}
 	abcFrameSetResource(pAbc, "pNtkBackup", Abc_NtkDup(pNtk))
@@ -16354,7 +16422,7 @@ func Abc_CommandFraig(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		if Abc_NtkIsStrash(pNtk) != 0 {
 			Abc_NtkFraigPartitionedTime(pNtk, &Params)
 		} else {
-			pNtk = Abc_NtkStrash(pNtk, fAllNodes, !fAllNodes, 0)
+			pNtk = Abc_NtkStrash(pNtk, fAllNodes, (fAllNodes == 0), 0)
 			Abc_NtkFraigPartitionedTime(pNtk, &Params)
 			Abc_NtkDelete(pNtk)
 		}
@@ -16363,7 +16431,7 @@ func Abc_CommandFraig(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		if Abc_NtkIsStrash(pNtk) != 0 {
 			pNtkRes = Abc_NtkFraig(pNtk, &Params, fAllNodes, fExdc)
 		} else {
-			pNtk = Abc_NtkStrash(pNtk, fAllNodes, !fAllNodes, 0)
+			pNtk = Abc_NtkStrash(pNtk, fAllNodes, (fAllNodes == 0), 0)
 			pNtkRes = Abc_NtkFraig(pNtk, &Params, fAllNodes, fExdc)
 			Abc_NtkDelete(pNtk)
 		}
@@ -16394,10 +16462,10 @@ usage:
 		backtrackLimit = "infinity"
 	}
 	Abc_Print(-2, "\t-C num : number of backtracks for one SAT problem [default = %s]\n", backtrackLimit)
-	Abc_Print(-2, "\t-r     : toggle functional reduction [default = %s]\n", abcSelect(fFuncRed, "yes", "no"))
-	Abc_Print(-2, "\t-s     : toggle considering sparse functions [default = %s]\n", abcSelect(fDoSparse, "yes", "no"))
-	Abc_Print(-2, "\t-c     : toggle accumulation of choices [default = %s]\n", abcSelect(fChoicing, "yes", "no"))
-	Abc_Print(-2, "\t-p     : toggle proving the miter outputs [default = %s]\n", abcSelect(fTryProve, "yes", "no"))
+	Abc_Print(-2, "\t-r     : toggle functional reduction [default = %s]\n", abcSelect(pParams.fFuncRed, "yes", "no"))
+	Abc_Print(-2, "\t-s     : toggle considering sparse functions [default = %s]\n", abcSelect(pParams.fDoSparse, "yes", "no"))
+	Abc_Print(-2, "\t-c     : toggle accumulation of choices [default = %s]\n", abcSelect(pParams.fChoicing, "yes", "no"))
+	Abc_Print(-2, "\t-p     : toggle proving the miter outputs [default = %s]\n", abcSelect(pParams.fTryProve, "yes", "no"))
 	Abc_Print(-2, "\t-v     : toggle verbose output [default = %s]\n", abcSelect(pParams.fVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-e     : toggle functional sweeping using EXDC [default = %s]\n", abcSelect(fExdc, "yes", "no"))
 	Abc_Print(-2, "\t-a     : toggle between all nodes and DFS nodes [default = %s]\n", abcSelect(fAllNodes, "all", "dfs"))
@@ -16502,7 +16570,7 @@ func Abc_CommandFraigStore(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	}
 
 	// get the new network
-	if !Abc_NtkFraigStore(pNtk) {
+	if Abc_NtkFraigStore(pNtk) == 0 {
 		Abc_Print(-1, "Fraig storing has failed.\n")
 		return 1
 	}
@@ -16709,7 +16777,7 @@ func Abc_CommandFraigSweep(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 1
 	}
 	// modify the current network
-	if !Abc_NtkFraigSweep(pNtk, fUseInv, fExdc, fVerbose, fVeryVerbose) {
+	if Abc_NtkFraigSweep(pNtk, fUseInv, fExdc, fVerbose, fVeryVerbose) == 0 {
 		Abc_Print(-1, "Sweeping has failed.\n")
 		return 1
 	}
@@ -16783,7 +16851,7 @@ func Abc_CommandFraigDress(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	if argc != globalUtilOptind && argc != globalUtilOptind+1 {
 		goto usage
 	}
-	if argc == globalUtilOptind && Abc_NtkSpec(pNtk) == nil {
+	if argc == globalUtilOptind && baseabc.Abc_NtkSpec(pNtk) == nil {
 		Abc_Print(-1, "The current network has no spec.\n")
 		return 1
 	}
@@ -16791,7 +16859,7 @@ func Abc_CommandFraigDress(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	if argc == globalUtilOptind+1 {
 		pFileName = argv[globalUtilOptind]
 	} else {
-		pFileName = Abc_NtkSpec(pNtk)
+		pFileName = baseabc.Abc_NtkSpec(pNtk)
 	}
 	// modify the current network
 	//    Abc_NtkDress( pNtk, pFileName, fVerbose );
@@ -17486,7 +17554,7 @@ func Abc_CommandMap(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_NtkFraigSweep(pNtkRes, 0, 0, 0, 0)
 		if Abc_NtkHasMapping(pNtkRes) != 0 {
 			pNtk = pNtkRes
-			pNtkRes = Abc_NtkDupDfs(pNtk)
+			pNtkRes = baseabc.Abc_NtkDupDfs(pNtk)
 			Abc_NtkDelete(pNtk)
 		}
 	}
@@ -17545,7 +17613,7 @@ func Abc_CommandAmap(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	pNtk = Abc_FrameReadNtk(pAbc)
 	// set defaults
 	fSweep = 0
-	Amap_ManSetDefaultParams(pPars)
+	map_amap.Amap_ManSetDefaultParams(pPars)
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "FACEQmxisvh"); c != -1; c = Extra_UtilGetopt(argc, argv, "FACEQmxisvh") {
 		switch c {
@@ -17554,9 +17622,9 @@ func Abc_CommandAmap(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-F\" should be followed by a floating point number.\n")
 				goto usage
 			}
-			pPars.nIterFlow = abcAtoi(argv[globalUtilOptind])
+			pPars.NIterFlow = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nIterFlow < 0 {
+			if pPars.NIterFlow < 0 {
 				goto usage
 			}
 			break
@@ -17565,9 +17633,9 @@ func Abc_CommandAmap(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-A\" should be followed by a floating point number.\n")
 				goto usage
 			}
-			pPars.nIterArea = abcAtoi(argv[globalUtilOptind])
+			pPars.NIterArea = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nIterArea < 0 {
+			if pPars.NIterArea < 0 {
 				goto usage
 			}
 			break
@@ -17576,9 +17644,9 @@ func Abc_CommandAmap(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-C\" should be followed by a floating point number.\n")
 				goto usage
 			}
-			pPars.nCutsMax = abcAtoi(argv[globalUtilOptind])
+			pPars.NCutsMax = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nCutsMax < 0 {
+			if pPars.NCutsMax < 0 {
 				goto usage
 			}
 			break
@@ -17587,9 +17655,9 @@ func Abc_CommandAmap(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-E\" should be followed by a floating point number.\n")
 				goto usage
 			}
-			pPars.fEpsilon = float32(atof(argv[globalUtilOptind]))
+			pPars.FEpsilon = float32(atof(argv[globalUtilOptind]))
 			globalUtilOptind++
-			if pPars.fEpsilon < 0.0 || pPars.fEpsilon > 1.0 {
+			if pPars.FEpsilon < 0.0 || pPars.FEpsilon > 1.0 {
 				goto usage
 			}
 			break
@@ -17598,26 +17666,26 @@ func Abc_CommandAmap(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-Q\" should be followed by a floating point number.\n")
 				goto usage
 			}
-			pPars.fADratio = float32(atof(argv[globalUtilOptind]))
+			pPars.FADratio = float32(atof(argv[globalUtilOptind]))
 			globalUtilOptind++
-			if pPars.fADratio < 0.0 {
+			if pPars.FADratio < 0.0 {
 				goto usage
 			}
 			break
 		case 'm':
-			pPars.fUseMuxes ^= 1
+			pPars.FUseMuxes ^= 1
 			break
 		case 'x':
-			pPars.fUseXors ^= 1
+			pPars.FUseXors ^= 1
 			break
 		case 'i':
-			pPars.fFreeInvs ^= 1
+			pPars.FFreeInvs ^= 1
 			break
 		case 's':
 			fSweep ^= 1
 			break
 		case 'v':
-			pPars.fVerbose ^= 1
+			pPars.FVerbose ^= 1
 			break
 		case 'h':
 			goto usage
@@ -17667,7 +17735,7 @@ func Abc_CommandAmap(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_NtkFraigSweep(pNtkRes, 0, 0, 0, 0)
 		if Abc_NtkHasMapping(pNtkRes) != 0 {
 			pNtk = pNtkRes
-			pNtkRes = Abc_NtkDupDfs(pNtk)
+			pNtkRes = baseabc.Abc_NtkDupDfs(pNtk)
 			Abc_NtkDelete(pNtk)
 		}
 	}
@@ -17678,16 +17746,16 @@ func Abc_CommandAmap(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 usage:
 	Abc_Print(-2, "usage: amap [-FAC <num>] [-EQ <float>] [-mxisvh]\n")
 	Abc_Print(-2, "\t           performs standard cell mapping of the current network\n")
-	Abc_Print(-2, "\t-F num   : the number of iterations of area flow [default = %d]\n", pPars.nIterFlow)
-	Abc_Print(-2, "\t-A num   : the number of iterations of exact area [default = %d]\n", pPars.nIterArea)
-	Abc_Print(-2, "\t-C num   : the maximum number of cuts at a node [default = %d]\n", pPars.nCutsMax)
-	Abc_Print(-2, "\t-E float : sets epsilon used for tie-breaking [default = %f]\n", pPars.fEpsilon)
-	Abc_Print(-2, "\t-Q float : area/delay preference ratio [default = %.2f (area-only)] \n", pPars.fADratio)
-	Abc_Print(-2, "\t-m       : toggles using MUX matching [default = %s]\n", abcSelect(fUseMuxes, "yes", "no"))
-	Abc_Print(-2, "\t-x       : toggles using XOR matching [default = %s]\n", abcSelect(fUseXors, "yes", "no"))
-	Abc_Print(-2, "\t-i       : toggles assuming inverters are free [default = %s]\n", abcSelect(fFreeInvs, "yes", "no"))
+	Abc_Print(-2, "\t-F num   : the number of iterations of area flow [default = %d]\n", pPars.NIterFlow)
+	Abc_Print(-2, "\t-A num   : the number of iterations of exact area [default = %d]\n", pPars.NIterArea)
+	Abc_Print(-2, "\t-C num   : the maximum number of cuts at a node [default = %d]\n", pPars.NCutsMax)
+	Abc_Print(-2, "\t-E float : sets epsilon used for tie-breaking [default = %f]\n", pPars.FEpsilon)
+	Abc_Print(-2, "\t-Q float : area/delay preference ratio [default = %.2f (area-only)] \n", pPars.FADratio)
+	Abc_Print(-2, "\t-m       : toggles using MUX matching [default = %s]\n", abcSelect(pPars.FUseMuxes, "yes", "no"))
+	Abc_Print(-2, "\t-x       : toggles using XOR matching [default = %s]\n", abcSelect(pPars.FUseXors, "yes", "no"))
+	Abc_Print(-2, "\t-i       : toggles assuming inverters are free [default = %s]\n", abcSelect(pPars.FFreeInvs, "yes", "no"))
 	Abc_Print(-2, "\t-s       : toggles sweep after mapping [default = %s]\n", abcSelect(fSweep, "yes", "no"))
-	Abc_Print(-2, "\t-v       : toggles verbose output [default = %s]\n", abcSelect(fVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-v       : toggles verbose output [default = %s]\n", abcSelect(pPars.FVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h       : print the command usage\n")
 	return 1
 }
@@ -17731,7 +17799,7 @@ func Abc_CommandPhaseMap(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Cannot unmap the network that is not mapped.\n")
 		return 1
 	}
-	Abc_NtkChangePerform(pNtk, fVerbose)
+	opt_sfm.Abc_NtkChangePerform(pNtk, fVerbose)
 	return 0
 
 usage:
@@ -17779,7 +17847,7 @@ func Abc_CommandUnmap(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	}
 
 	// get the new network
-	if !Abc_NtkMapToSop(pNtk) {
+	if baseabc.Abc_NtkMapToSop(pNtk) == 0 {
 		Abc_Print(-1, "Unmapping has failed.\n")
 		return 1
 	}
@@ -17830,7 +17898,7 @@ func Abc_CommandAttach(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	}
 
 	// get the new network
-	if !Abc_NtkAttach(pNtk) {
+	if Abc_NtkAttach(pNtk) == 0 {
 		Abc_Print(-1, "Attaching gates has failed.\n")
 		return 1
 	}
@@ -17972,10 +18040,10 @@ func Abc_CommandSuperChoiceLut(pAbc *Abc_Frame_t, argc int32, argv []string) int
 	}
 
 	// convert the network into the SOP network
-	pNtkRes = Abc_NtkToLogic(pNtk)
+	pNtkRes = baseabc.Abc_NtkToLogic(pNtk)
 
 	// get the new network
-	if !Abc_NtkSuperChoiceLut(pNtkRes, nLutSize, nCutSizeMax, fVerbose) {
+	if Abc_NtkSuperChoiceLut(pNtkRes, nLutSize, nCutSizeMax, fVerbose) == 0 {
 		Abc_NtkDelete(pNtkRes)
 		Abc_Print(-1, "Superchoicing has failed.\n")
 		return 1
@@ -18096,8 +18164,8 @@ func Abc_CommandIf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	var pPars *If_Par_t = &Pars
 	var c int32
 	pNtk = Abc_FrameReadNtk(pAbc)
-	If_ManSetDefaultPars(pPars)
-	pPars.pLutLib, _ = Abc_FrameReadLibLut().(*If_LibLut_t)
+	ifpkg.If_ManSetDefaultPars(pPars)
+	pPars.PLutLib, _ = base_main.Abc_FrameReadLibLut().(*ifpkg.If_LibLut_t)
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "KCFAGRNTXYDEWSqaflepmrsdbgxyuojiktncvh"); c != -1; c = Extra_UtilGetopt(argc, argv, "KCFAGRNTXYDEWSqaflepmrsdbgxyuojiktncvh") {
 		switch c {
@@ -18106,22 +18174,22 @@ func Abc_CommandIf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-K\" should be followed by a positive integer.\n")
 				goto usage
 			}
-			pPars.nLutSize = abcAtoi(argv[globalUtilOptind])
+			pPars.NLutSize = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nLutSize < 0 {
+			if pPars.NLutSize < 0 {
 				goto usage
 			}
 			// if the LUT size is specified, disable library
-			pPars.pLutLib = nil
+			pPars.PLutLib = nil
 			break
 		case 'C':
 			if globalUtilOptind >= argc {
 				Abc_Print(-1, "Command line switch \"-C\" should be followed by a positive integer.\n")
 				goto usage
 			}
-			pPars.nCutsMax = abcAtoi(argv[globalUtilOptind])
+			pPars.NCutsMax = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nCutsMax < 0 {
+			if pPars.NCutsMax < 0 {
 				goto usage
 			}
 			break
@@ -18130,9 +18198,9 @@ func Abc_CommandIf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-F\" should be followed by a positive integer.\n")
 				goto usage
 			}
-			pPars.nFlowIters = abcAtoi(argv[globalUtilOptind])
+			pPars.NFlowIters = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nFlowIters < 0 {
+			if pPars.NFlowIters < 0 {
 				goto usage
 			}
 			break
@@ -18141,9 +18209,9 @@ func Abc_CommandIf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-A\" should be followed by a positive integer.\n")
 				goto usage
 			}
-			pPars.nAreaIters = abcAtoi(argv[globalUtilOptind])
+			pPars.NAreaIters = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nAreaIters < 0 {
+			if pPars.NAreaIters < 0 {
 				goto usage
 			}
 			break
@@ -18152,9 +18220,9 @@ func Abc_CommandIf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-G\" should be followed by a positive integer no less than 3.\n")
 				goto usage
 			}
-			pPars.nGateSize = abcAtoi(argv[globalUtilOptind])
+			pPars.NGateSize = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nGateSize < 2 {
+			if pPars.NGateSize < 2 {
 				goto usage
 			}
 			break
@@ -18163,9 +18231,9 @@ func Abc_CommandIf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(1, "Command line switch \"-R\" should be followed by a floating point number.\n")
 				return 0
 			}
-			pPars.nRelaxRatio = abcAtoi(argv[globalUtilOptind])
+			pPars.NRelaxRatio = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nRelaxRatio < 0 {
+			if pPars.NRelaxRatio < 0 {
 				goto usage
 			}
 			break
@@ -18174,9 +18242,9 @@ func Abc_CommandIf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-N\" should be followed by a positive integer no less than 3.\n")
 				goto usage
 			}
-			pPars.nNonDecLimit = abcAtoi(argv[globalUtilOptind])
+			pPars.NNonDecLimit = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nNonDecLimit < 2 {
+			if pPars.NNonDecLimit < 2 {
 				goto usage
 			}
 			break
@@ -18185,9 +18253,9 @@ func Abc_CommandIf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-T\" should be followed by a positive integer 0,1,or 2.\n")
 				goto usage
 			}
-			pPars.nStructType = abcAtoi(argv[globalUtilOptind])
+			pPars.NStructType = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nStructType < 0 || pPars.nStructType > 2 {
+			if pPars.NStructType < 0 || pPars.NStructType > 2 {
 				goto usage
 			}
 			break
@@ -18196,9 +18264,9 @@ func Abc_CommandIf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-X\" should be followed by a positive integer 0,1,or 2.\n")
 				goto usage
 			}
-			pPars.nAndDelay = abcAtoi(argv[globalUtilOptind])
+			pPars.NAndDelay = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nAndArea < 0 {
+			if pPars.NAndArea < 0 {
 				goto usage
 			}
 			break
@@ -18207,9 +18275,9 @@ func Abc_CommandIf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-Y\" should be followed by a positive integer 0,1,or 2.\n")
 				goto usage
 			}
-			pPars.nAndArea = abcAtoi(argv[globalUtilOptind])
+			pPars.NAndArea = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nAndDelay < 0 {
+			if pPars.NAndDelay < 0 {
 				goto usage
 			}
 			break
@@ -18251,81 +18319,81 @@ func Abc_CommandIf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-S\" should be followed by string.\n")
 				goto usage
 			}
-			pPars.pLutStruct = argv[globalUtilOptind]
+			pPars.PLutStruct = argv[globalUtilOptind]
 			globalUtilOptind++
-			if len(pPars.pLutStruct) != 2 && len(pPars.pLutStruct) != 3 {
+			if len(pPars.PLutStruct) != 2 && len(pPars.PLutStruct) != 3 {
 				Abc_Print(-1, "Command line switch \"-S\" should be followed by a 2- or 3-char string (e.g. \"44\" or \"555\").\n")
 				goto usage
 			}
 			break
 		case 'q':
-			pPars.fPreprocess ^= 1
+			pPars.FPreprocess ^= 1
 			break
 		case 'a':
-			pPars.fArea ^= 1
+			pPars.FArea ^= 1
 			break
 		case 'r':
-			pPars.fExpRed ^= 1
+			pPars.FExpRed ^= 1
 			break
 		case 'f':
-			pPars.fFancy ^= 1
+			pPars.FFancy ^= 1
 			break
 		case 'l':
-			pPars.fLatchPaths ^= 1
+			pPars.FLatchPaths ^= 1
 			break
 		case 'e':
-			pPars.fEdge ^= 1
+			pPars.FEdge ^= 1
 			break
 		case 'p':
-			pPars.fPower ^= 1
+			pPars.FPower ^= 1
 			break
 		case 'm':
-			pPars.fCutMin ^= 1
+			pPars.FCutMin ^= 1
 			break
 		case 's':
-			pPars.fDelayOptLut ^= 1
+			pPars.FDelayOptLut ^= 1
 			break
 		case 'd':
-			pPars.fBidec ^= 1
+			pPars.FBidec ^= 1
 			break
 		case 'b':
-			pPars.fUseBat ^= 1
+			pPars.FUseBat ^= 1
 			break
 		case 'g':
-			pPars.fDelayOpt ^= 1
+			pPars.FDelayOpt ^= 1
 			break
 		case 'x':
-			pPars.fDsdBalance ^= 1
+			pPars.FDsdBalance ^= 1
 			break
 		case 'y':
-			pPars.fUserRecLib ^= 1
+			pPars.FUserRecLib ^= 1
 			break
 		case 'u':
-			pPars.fUserSesLib ^= 1
+			pPars.FUserSesLib ^= 1
 			break
 		case 'o':
-			pPars.fUseBuffs ^= 1
+			pPars.FUseBuffs ^= 1
 			break
 		case 'j':
-			pPars.fEnableCheck07 ^= 1
+			pPars.FEnableCheck07 ^= 1
 			break
 		case 'i':
-			pPars.fUseCofVars ^= 1
+			pPars.FUseCofVars ^= 1
 			break
 		case 'k':
-			pPars.fUseDsdTune ^= 1
+			pPars.FUseDsdTune ^= 1
 			break
 		case 't':
-			pPars.fDoAverage ^= 1
+			pPars.FDoAverage ^= 1
 			break
 		case 'n':
-			pPars.fUseDsd ^= 1
+			pPars.FUseDsd ^= 1
 			break
 		case 'c':
-			pPars.fUseTtPerm ^= 1
+			pPars.FUseTtPerm ^= 1
 			break
 		case 'v':
-			pPars.fVerbose ^= 1
+			pPars.FVerbose ^= 1
 			break
 		case 'h':
 			fallthrough
@@ -18337,20 +18405,20 @@ func Abc_CommandIf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Empty network.\n")
 		return 1
 	}
-	if pPars.nLutSize == -1 {
-		if pPars.pLutLib == nil {
+	if pPars.NLutSize == -1 {
+		if pPars.PLutLib == nil {
 			Abc_Print(-1, "The LUT library is not given.\n")
 			return 1
 		}
-		pPars.nLutSize = pPars.pLutLib.LutMax
+		pPars.NLutSize = pPars.PLutLib.LutMax
 	}
 
-	if pPars.nLutSize < 2 || pPars.nLutSize > IF_MAX_LUTSIZE {
-		Abc_Print(-1, "Incorrect LUT size (%d).\n", pPars.nLutSize)
+	if pPars.NLutSize < 2 || pPars.NLutSize > ifpkg.IF_MAX_LUTSIZE {
+		Abc_Print(-1, "Incorrect LUT size (%d).\n", pPars.NLutSize)
 		return 1
 	}
 
-	if pPars.nCutsMax < 1 || pPars.nCutsMax >= (1<<12) {
+	if pPars.NCutsMax < 1 || pPars.NCutsMax >= (1<<12) {
 		Abc_Print(-1, "Incorrect number of cuts.\n")
 		return 1
 	}
@@ -18360,168 +18428,168 @@ func Abc_CommandIf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	if c != 0 {
 		//        if ( !Abc_FrameReadFlag("silentmode") )
 		//            Abc_Print( 0, "Performing LUT mapping with %d choices.\n", c );
-		pPars.fExpRed = 0
+		pPars.FExpRed = 0
 	}
 
-	if pPars.fUseBat {
-		if pPars.nLutSize < 4 || pPars.nLutSize > 6 {
+	if pPars.FUseBat != 0 {
+		if pPars.NLutSize < 4 || pPars.NLutSize > 6 {
 			Abc_Print(-1, "This feature only works for {4,5,6}-LUTs.\n")
 			return 1
 		}
-		pPars.fCutMin = 1
+		pPars.FCutMin = 1
 	}
 
-	if pPars.fEnableCheck07+pPars.fUseCofVars+pPars.fUseDsdTune+(pPars.pLutStruct != nil) > 1 {
+	if pPars.FEnableCheck07+pPars.FUseCofVars+pPars.FUseDsdTune+(pPars.PLutStruct != nil) > 1 {
 		Abc_Print(-1, "Only one additional check can be performed at the same time.\n")
 		return 1
 	}
-	if pPars.fEnableCheck07 {
-		if pPars.nLutSize < 6 || pPars.nLutSize > 7 {
+	if pPars.FEnableCheck07 != 0 {
+		if pPars.NLutSize < 6 || pPars.NLutSize > 7 {
 			Abc_Print(-1, "This feature only works for {6,7}-LUTs.\n")
 			return 1
 		}
-		pPars.pFuncCell = If_CutPerformCheck07
-		pPars.fCutMin = 1
+		pPars.PFuncCell = ifpkg.If_CutPerformCheck07
+		pPars.FCutMin = 1
 	}
-	if pPars.fUseCofVars {
-		if !(pPars.nLutSize & 1) {
+	if pPars.FUseCofVars != 0 {
+		if (pPars.NLutSize & 1) == 0 {
 			Abc_Print(-1, "This feature only works for odd-sized LUTs.\n")
 			return 1
 		}
-		pPars.fCutMin = 1
+		pPars.FCutMin = 1
 	}
-	if pPars.fUseDsdTune {
-		pDsdMan, _ := Abc_FrameReadManDsd().(*If_DsdMan_t)
+	if pPars.FUseDsdTune != 0 {
+		pDsdMan, _ := base_main.Abc_FrameReadManDsd().(*ifpkg.If_DsdMan_t)
 		if pDsdMan == nil {
 			Abc_Print(-1, "DSD manager is not available.\n")
 			return 1
 		}
-		if pPars.nLutSize > If_DsdManVarNum(pDsdMan) {
-			Abc_Print(-1, "LUT size (%d) is more than the number of variables in the DSD manager (%d).\n", pPars.nLutSize, If_DsdManVarNum(pDsdMan))
+		if pPars.NLutSize > ifpkg.If_DsdManVarNum(pDsdMan) {
+			Abc_Print(-1, "LUT size (%d) is more than the number of variables in the DSD manager (%d).\n", pPars.NLutSize, ifpkg.If_DsdManVarNum(pDsdMan))
 			return 1
 		}
-		if pPars.fDeriveLuts && If_DsdManGetCellStr(pDsdMan) == nil {
+		if (pPars.FDeriveLuts != 0) && ifpkg.If_DsdManGetCellStr(pDsdMan) == nil {
 			Abc_Print(-1, "DSD manager is not matched with any particular cell.\n")
 			return 1
 		}
-		pPars.fCutMin = 1
-		pPars.fUseDsd = 1
-		If_DsdManSetNewAsUseless(pDsdMan)
+		pPars.FCutMin = 1
+		pPars.FUseDsd = 1
+		ifpkg.If_DsdManSetNewAsUseless(pDsdMan)
 	}
-	if pPars.pLutStruct {
-		if pPars.fDsdBalance {
+	if pPars.PLutStruct {
+		if pPars.FDsdBalance != 0 {
 			Abc_Print(-1, "Incompatible options (-S and -x).\n")
 			return 1
 		}
-		if pPars.nLutSize < 6 || pPars.nLutSize > 16 {
+		if pPars.NLutSize < 6 || pPars.NLutSize > 16 {
 			Abc_Print(-1, "This feature only works for [6;16]-LUTs.\n")
 			return 1
 		}
-		if pPars.fDelayOptLut {
-			pPars.pFuncCell = nil
+		if pPars.FDelayOptLut != 0 {
+			pPars.PFuncCell = nil
 		} else {
-			pPars.pFuncCell = If_CutPerformCheck16
+			pPars.PFuncCell = ifpkg.If_CutPerformCheck16
 		}
-		pPars.fCutMin = 1
+		pPars.FCutMin = 1
 	}
 
 	// enable truth table computation if cut minimization is selected
-	if pPars.fCutMin {
-		pPars.fTruth = 1
-		pPars.fExpRed = 0
+	if pPars.FCutMin != 0 {
+		pPars.FTruth = 1
+		pPars.FExpRed = 0
 	}
 	// modify the subgraph recording
-	if pPars.fUserRecLib || pPars.fUserSesLib {
-		pPars.fTruth = 1
-		pPars.fCutMin = 1
-		pPars.fExpRed = 0
-		pPars.fUsePerm = 1
-		pPars.pLutLib = nil
+	if (pPars.FUserRecLib != 0) || (pPars.FUserSesLib != 0) {
+		pPars.FTruth = 1
+		pPars.FCutMin = 1
+		pPars.FExpRed = 0
+		pPars.FUsePerm = 1
+		pPars.PLutLib = nil
 	}
 	// modify for delay optimization
-	if pPars.fDelayOpt || pPars.fDsdBalance || pPars.fDelayOptLut {
-		pPars.fTruth = 1
-		pPars.fCutMin = 1
-		pPars.fExpRed = 0
-		pPars.fUseDsd = pPars.fDsdBalance || pPars.fDelayOptLut
-		pPars.pLutLib = nil
+	if (pPars.FDelayOpt != 0) || (pPars.FDsdBalance != 0) || (pPars.FDelayOptLut != 0) {
+		pPars.FTruth = 1
+		pPars.FCutMin = 1
+		pPars.FExpRed = 0
+		pPars.FUseDsd = (pPars.FDsdBalance != 0) || (pPars.FDelayOptLut != 0)
+		pPars.PLutLib = nil
 	}
 	// modify for delay optimization
-	if pPars.nGateSize > 0 {
-		pPars.fTruth = 1
-		pPars.fCutMin = 1
-		pPars.fExpRed = 0
-		pPars.fUsePerm = 1
-		pPars.pLutLib = nil
-		pPars.nLutSize = pPars.nGateSize
+	if pPars.NGateSize > 0 {
+		pPars.FTruth = 1
+		pPars.FCutMin = 1
+		pPars.FExpRed = 0
+		pPars.FUsePerm = 1
+		pPars.PLutLib = nil
+		pPars.NLutSize = pPars.NGateSize
 	}
 
-	if pPars.fUseDsd || pPars.fUseTtPerm {
-		pPars.fTruth = 1
-		pPars.fCutMin = 1
-		pPars.fExpRed = 0
+	if (pPars.FUseDsd != 0) || (pPars.FUseTtPerm != 0) {
+		pPars.FTruth = 1
+		pPars.FCutMin = 1
+		pPars.FExpRed = 0
 	}
 
-	if pPars.fUseDsd {
+	if pPars.FUseDsd != 0 {
 		var LutSize int32
-		if pPars.pLutStruct && pPars.pLutStruct[2] == 0 {
-			LutSize = pPars.pLutStruct[0] - '0'
+		if pPars.PLutStruct && pPars.PLutStruct[2] == 0 {
+			LutSize = pPars.PLutStruct[0] - '0'
 		} else {
 			LutSize = 0
 		}
-		p, _ := Abc_FrameReadManDsd().(*If_DsdMan_t)
-		if pPars.pLutStruct && pPars.pLutStruct[2] != 0 {
+		p, _ := base_main.Abc_FrameReadManDsd().(*ifpkg.If_DsdMan_t)
+		if pPars.PLutStruct && pPars.PLutStruct[2] != 0 {
 			fmt.Printf("DSD only works for LUT structures XY.\n")
 			return 0
 		}
-		if p && pPars.nLutSize > If_DsdManVarNum(p) {
+		if (p != nil) && pPars.NLutSize > ifpkg.If_DsdManVarNum(p) {
 			fmt.Printf("DSD manager has incompatible number of variables.\n")
 			return 0
 		}
-		if p && LutSize != If_DsdManLutSize(p) && !pPars.fDsdBalance {
+		if (p != nil) && LutSize != ifpkg.If_DsdManLutSize(p) && (pPars.FDsdBalance == 0) {
 			fmt.Printf("DSD manager has different LUT size.\n")
 			return 0
 		}
 		if p == nil {
-			if LutSize > DAU_MAX_VAR || pPars.nLutSize > DAU_MAX_VAR {
-				fmt.Printf("Size of required DSD manager (%d) exceeds the precompiled limit (%d) (change parameter DAU_MAX_VAR).\n", LutSize, DAU_MAX_VAR)
+			if LutSize > opt_dau.DAU_MAX_VAR || pPars.NLutSize > opt_dau.DAU_MAX_VAR {
+				fmt.Printf("Size of required DSD manager (%d) exceeds the precompiled limit (%d) (change parameter DAU_MAX_VAR).\n", LutSize, opt_dau.DAU_MAX_VAR)
 				return 0
 			}
-			Abc_FrameSetManDsd(If_DsdManAlloc(pPars.nLutSize, LutSize))
+			base_main.Abc_FrameSetManDsd(ifpkg.If_DsdManAlloc(pPars.NLutSize, LutSize))
 		}
 	}
 
-	if pPars.fUserRecLib {
+	if pPars.FUserRecLib != 0 {
 		if Abc_NtkRecIsRunning3() == 0 {
 			fmt.Printf("LMS manager is not running (use \"rec_start3\").\n")
 			return 0
 		}
-		if Abc_NtkRecInputNum3() != pPars.nLutSize {
-			fmt.Printf("The number of library inputs (%d) is different from the K parameters (%d).\n", Abc_NtkRecInputNum3(), pPars.nLutSize)
+		if Abc_NtkRecInputNum3() != pPars.NLutSize {
+			fmt.Printf("The number of library inputs (%d) is different from the K parameters (%d).\n", Abc_NtkRecInputNum3(), pPars.NLutSize)
 			return 0
 		}
 	}
 
-	if pPars.fUserSesLib {
-		if !Abc_ExactIsRunning() {
+	if pPars.FUserSesLib != 0 {
+		if Abc_ExactIsRunning() == 0 {
 			fmt.Printf("BMS manager is not running (use \"bms_start\").\n")
 			return 0
 		}
-		if Abc_ExactInputNum() < pPars.nLutSize {
-			fmt.Printf("The number of library inputs (%d) is smaller than the K parameters (%d).\n", Abc_ExactInputNum(), pPars.nLutSize)
+		if Abc_ExactInputNum() < pPars.NLutSize {
+			fmt.Printf("The number of library inputs (%d) is smaller than the K parameters (%d).\n", Abc_ExactInputNum(), pPars.NLutSize)
 			return 0
 		}
 	}
 
 	// complain if truth tables are requested but the cut size is too large
-	if pPars.fTruth && pPars.nLutSize > ifpkg.IF_MAX_FUNC_LUTSIZE {
+	if (pPars.FTruth != 0) && pPars.NLutSize > ifpkg.IF_MAX_FUNC_LUTSIZE {
 		Abc_Print(-1, "Truth tables cannot be computed for LUT larger than %d inputs.\n", ifpkg.IF_MAX_FUNC_LUTSIZE)
 		return 1
 	}
 
 	// disable cut-expansion if edge-based heuristics are selected
-	//    if ( pPars->fEdge )
-	//        pPars->fExpRed = 0;
+	//    if ( pPars->pPars.fEdge )
+	//        pPars->pPars.fExpRed = 0;
 
 	if Abc_NtkIsStrash(pNtk) == 0 {
 		// strash and balance the network
@@ -18537,7 +18605,7 @@ func Abc_CommandIf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			Abc_Print(-1, "Balancing before FPGA mapping has failed.\n")
 			return 1
 		}
-		if !Abc_FrameReadFlag("silentmode") {
+		if !base_main.Abc_FrameReadFlag("silentmode") {
 			Abc_Print(1, "The network was strashed and balanced before FPGA mapping.\n")
 		}
 		// get the new network
@@ -18567,49 +18635,49 @@ usage:
 	} else {
 		Buffer = fmt.Sprintf("%.2f", pPars.DelayTarget)
 	}
-	if pPars.nLutSize == -1 {
+	if pPars.NLutSize == -1 {
 		LutSize = fmt.Sprintf("library")
 	} else {
-		LutSize = fmt.Sprintf("%d", pPars.nLutSize)
+		LutSize = fmt.Sprintf("%d", pPars.NLutSize)
 	}
 	Abc_Print(-2, "usage: if [-KCFAGRNTXY num] [-DEW float] [-S str] [-qarlepmsdbgxyuojiktncvh]\n")
 	Abc_Print(-2, "\t           performs FPGA technology mapping of the network\n")
-	Abc_Print(-2, "\t-K num   : the number of LUT inputs (2 < num < %d) [default = %s]\n", IF_MAX_LUTSIZE+1, LutSize)
-	Abc_Print(-2, "\t-C num   : the max number of priority cuts (0 < num < 2^12) [default = %d]\n", pPars.nCutsMax)
-	Abc_Print(-2, "\t-F num   : the number of area flow recovery iterations (num >= 0) [default = %d]\n", pPars.nFlowIters)
-	Abc_Print(-2, "\t-A num   : the number of exact area recovery iterations (num >= 0) [default = %d]\n", pPars.nAreaIters)
-	Abc_Print(-2, "\t-G num   : the max AND/OR gate size for mapping (0 = unused) [default = %d]\n", pPars.nGateSize)
-	Abc_Print(-2, "\t-R num   : the delay relaxation ratio (num >= 0) [default = %d]\n", pPars.nRelaxRatio)
-	Abc_Print(-2, "\t-N num   : the max size of non-decomposable nodes [default = unused]\n", pPars.nNonDecLimit)
+	Abc_Print(-2, "\t-K num   : the number of LUT inputs (2 < num < %d) [default = %s]\n", ifpkg.IF_MAX_LUTSIZE+1, LutSize)
+	Abc_Print(-2, "\t-C num   : the max number of priority cuts (0 < num < 2^12) [default = %d]\n", pPars.NCutsMax)
+	Abc_Print(-2, "\t-F num   : the number of area flow recovery iterations (num >= 0) [default = %d]\n", pPars.NFlowIters)
+	Abc_Print(-2, "\t-A num   : the number of exact area recovery iterations (num >= 0) [default = %d]\n", pPars.NAreaIters)
+	Abc_Print(-2, "\t-G num   : the max AND/OR gate size for mapping (0 = unused) [default = %d]\n", pPars.NGateSize)
+	Abc_Print(-2, "\t-R num   : the delay relaxation ratio (num >= 0) [default = %d]\n", pPars.NRelaxRatio)
+	Abc_Print(-2, "\t-N num   : the max size of non-decomposable nodes [default = unused]\n", pPars.NNonDecLimit)
 	Abc_Print(-2, "\t-T num   : the type of LUT structures [default = any]\n")
-	Abc_Print(-2, "\t-X num   : delay of AND-gate in LUT library units [default = %d]\n", pPars.nAndDelay)
-	Abc_Print(-2, "\t-Y num   : area of AND-gate in LUT library units [default = %d]\n", pPars.nAndArea)
+	Abc_Print(-2, "\t-X num   : delay of AND-gate in LUT library units [default = %d]\n", pPars.NAndDelay)
+	Abc_Print(-2, "\t-Y num   : area of AND-gate in LUT library units [default = %d]\n", pPars.NAndArea)
 	Abc_Print(-2, "\t-D float : sets the delay constraint for the mapping [default = %s]\n", Buffer)
 	Abc_Print(-2, "\t-E float : sets epsilon used for tie-breaking [default = %f]\n", pPars.Epsilon)
 	Abc_Print(-2, "\t-W float : sets wire delay between adjects LUTs [default = %f]\n", pPars.WireDelay)
-	Abc_Print(-2, "\t-S str   : string representing the LUT structure [default = %s]\n", abcDefaultString(pPars.pLutStruct, "not used"))
-	Abc_Print(-2, "\t-q       : toggles preprocessing using several starting points [default = %s]\n", abcSelect(fPreprocess, "yes", "no"))
-	Abc_Print(-2, "\t-a       : toggles area-oriented mapping [default = %s]\n", abcSelect(fArea, "yes", "no"))
-	Abc_Print(-2, "\t-r       : enables expansion/reduction of the best cuts [default = %s]\n", abcSelect(fExpRed, "yes", "no"))
-	Abc_Print(-2, "\t-l       : optimizes latch paths for delay, other paths for area [default = %s]\n", abcSelect(fLatchPaths, "yes", "no"))
-	Abc_Print(-2, "\t-e       : uses edge-based cut selection heuristics [default = %s]\n", abcSelect(fEdge, "yes", "no"))
-	Abc_Print(-2, "\t-p       : uses power-aware cut selection heuristics [default = %s]\n", abcSelect(fPower, "yes", "no"))
-	Abc_Print(-2, "\t-m       : enables cut minimization by removing vacuous variables [default = %s]\n", abcSelect(fCutMin, "yes", "no"))
-	Abc_Print(-2, "\t-s       : toggles delay-oriented mapping used with -S <NN> [default = %s]\n", abcSelect(fDelayOptLut, "yes", "no"))
-	Abc_Print(-2, "\t-d       : toggles deriving local AIGs using bi-decomposition [default = %s]\n", abcSelect(fBidec, "yes", "no"))
-	Abc_Print(-2, "\t-b       : toggles the use of one special feature [default = %s]\n", abcSelect(fUseBat, "yes", "no"))
-	Abc_Print(-2, "\t-g       : toggles delay optimization by SOP balancing [default = %s]\n", abcSelect(fDelayOpt, "yes", "no"))
-	Abc_Print(-2, "\t-x       : toggles delay optimization by DSD balancing [default = %s]\n", abcSelect(fDsdBalance, "yes", "no"))
-	Abc_Print(-2, "\t-y       : toggles delay optimization with recorded library [default = %s]\n", abcSelect(fUserRecLib, "yes", "no"))
-	Abc_Print(-2, "\t-u       : toggles delay optimization with SAT-based library [default = %s]\n", abcSelect(fUserSesLib, "yes", "no"))
-	Abc_Print(-2, "\t-o       : toggles using buffers to decouple combinational outputs [default = %s]\n", abcSelect(fUseBuffs, "yes", "no"))
-	Abc_Print(-2, "\t-j       : toggles enabling additional check [default = %s]\n", abcSelect(fEnableCheck07, "yes", "no"))
-	Abc_Print(-2, "\t-i       : toggles using cofactoring variables [default = %s]\n", abcSelect(fUseCofVars, "yes", "no"))
-	Abc_Print(-2, "\t-k       : toggles matching based on precomputed DSD manager [default = %s]\n", abcSelect(fUseDsdTune, "yes", "no"))
-	Abc_Print(-2, "\t-t       : toggles optimizing average rather than maximum level [default = %s]\n", abcSelect(fDoAverage, "yes", "no"))
-	Abc_Print(-2, "\t-n       : toggles computing DSDs of the cut functions [default = %s]\n", abcSelect(fUseDsd, "yes", "no"))
-	Abc_Print(-2, "\t-c       : toggles computing truth tables in a new way [default = %s]\n", abcSelect(fUseTtPerm, "yes", "no"))
-	Abc_Print(-2, "\t-v       : toggles verbose output [default = %s]\n", abcSelect(fVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-S str   : string representing the LUT structure [default = %s]\n", abcDefaultString(pPars.PLutStruct, "not used"))
+	Abc_Print(-2, "\t-q       : toggles preprocessing using several starting points [default = %s]\n", abcSelect(pPars.FPreprocess, "yes", "no"))
+	Abc_Print(-2, "\t-a       : toggles area-oriented mapping [default = %s]\n", abcSelect(pPars.FArea, "yes", "no"))
+	Abc_Print(-2, "\t-r       : enables expansion/reduction of the best cuts [default = %s]\n", abcSelect(pPars.FExpRed, "yes", "no"))
+	Abc_Print(-2, "\t-l       : optimizes latch paths for delay, other paths for area [default = %s]\n", abcSelect(pPars.FLatchPaths, "yes", "no"))
+	Abc_Print(-2, "\t-e       : uses edge-based cut selection heuristics [default = %s]\n", abcSelect(pPars.FEdge, "yes", "no"))
+	Abc_Print(-2, "\t-p       : uses power-aware cut selection heuristics [default = %s]\n", abcSelect(pPars.FPower, "yes", "no"))
+	Abc_Print(-2, "\t-m       : enables cut minimization by removing vacuous variables [default = %s]\n", abcSelect(pPars.FCutMin, "yes", "no"))
+	Abc_Print(-2, "\t-s       : toggles delay-oriented mapping used with -S <NN> [default = %s]\n", abcSelect(pPars.FDelayOptLut, "yes", "no"))
+	Abc_Print(-2, "\t-d       : toggles deriving local AIGs using bi-decomposition [default = %s]\n", abcSelect(pPars.FBidec, "yes", "no"))
+	Abc_Print(-2, "\t-b       : toggles the use of one special feature [default = %s]\n", abcSelect(pPars.FUseBat, "yes", "no"))
+	Abc_Print(-2, "\t-g       : toggles delay optimization by SOP balancing [default = %s]\n", abcSelect(pPars.FDelayOpt, "yes", "no"))
+	Abc_Print(-2, "\t-x       : toggles delay optimization by DSD balancing [default = %s]\n", abcSelect(pPars.FDsdBalance, "yes", "no"))
+	Abc_Print(-2, "\t-y       : toggles delay optimization with recorded library [default = %s]\n", abcSelect(pPars.FUserRecLib, "yes", "no"))
+	Abc_Print(-2, "\t-u       : toggles delay optimization with SAT-based library [default = %s]\n", abcSelect(pPars.FUserSesLib, "yes", "no"))
+	Abc_Print(-2, "\t-o       : toggles using buffers to decouple combinational outputs [default = %s]\n", abcSelect(pPars.FUseBuffs, "yes", "no"))
+	Abc_Print(-2, "\t-j       : toggles enabling additional check [default = %s]\n", abcSelect(pPars.FEnableCheck07, "yes", "no"))
+	Abc_Print(-2, "\t-i       : toggles using cofactoring variables [default = %s]\n", abcSelect(pPars.FUseCofVars, "yes", "no"))
+	Abc_Print(-2, "\t-k       : toggles matching based on precomputed DSD manager [default = %s]\n", abcSelect(pPars.FUseDsdTune, "yes", "no"))
+	Abc_Print(-2, "\t-t       : toggles optimizing average rather than maximum level [default = %s]\n", abcSelect(pPars.FDoAverage, "yes", "no"))
+	Abc_Print(-2, "\t-n       : toggles computing DSDs of the cut functions [default = %s]\n", abcSelect(pPars.FUseDsd, "yes", "no"))
+	Abc_Print(-2, "\t-c       : toggles computing truth tables in a new way [default = %s]\n", abcSelect(pPars.FUseTtPerm, "yes", "no"))
+	Abc_Print(-2, "\t-v       : toggles verbose output [default = %s]\n", abcSelect(pPars.FVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h       : prints the command usage\n")
 	return 1
 }
@@ -18816,20 +18884,20 @@ func Abc_CommandDsdSave(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		FileName = nil
 	}
 	if fSecond != 0 {
-		if !Abc_FrameReadManDsd2() {
+		if base_main.Abc_FrameReadManDsd2() == nil {
 			Abc_Print(-1, "The DSD manager is not started.\n")
 			return 1
 		}
-		man, _ := Abc_FrameReadManDsd2().(*If_DsdMan_t)
-		If_DsdManSave(man, FileName)
+		man, _ := base_main.Abc_FrameReadManDsd2().(*ifpkg.If_DsdMan_t)
+		ifpkg.If_DsdManSave(man, FileName)
 
 	} else {
-		if !Abc_FrameReadManDsd() {
+		if base_main.Abc_FrameReadManDsd() == nil {
 			Abc_Print(-1, "The DSD manager is not started.\n")
 			return 1
 		}
-		man, _ := Abc_FrameReadManDsd().(*If_DsdMan_t)
-		If_DsdManSave(man, FileName)
+		man, _ := base_main.Abc_FrameReadManDsd().(*ifpkg.If_DsdMan_t)
+		ifpkg.If_DsdManSave(man, FileName)
 	}
 	return 0
 
@@ -18861,7 +18929,7 @@ func Abc_CommandDsdLoad(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	var c, nArgcNew, fSecond int32
 	var pFile *os.File
 	var err error
-	var pDsdMan *If_DsdMan_t
+	var pDsdMan *ifpkg.If_DsdMan_t
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "bh"); c != -1; c = Extra_UtilGetopt(argc, argv, "bh") {
 		switch c {
@@ -18895,20 +18963,20 @@ func Abc_CommandDsdLoad(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	}
 	_ = pFile.Close()
 	if fSecond != 0 {
-		Abc_FrameSetManDsd2(nil)
-		pDsdMan = If_DsdManLoad(FileName)
+		base_main.Abc_FrameSetManDsd2(nil)
+		pDsdMan = ifpkg.If_DsdManLoad(FileName)
 		if pDsdMan == nil {
 			return 1
 		}
-		Abc_FrameSetManDsd2(pDsdMan)
+		base_main.Abc_FrameSetManDsd2(pDsdMan)
 
 	} else {
-		Abc_FrameSetManDsd(nil)
-		pDsdMan = If_DsdManLoad(FileName)
+		base_main.Abc_FrameSetManDsd(nil)
+		pDsdMan = ifpkg.If_DsdManLoad(FileName)
 		if pDsdMan == nil {
 			return 1
 		}
-		Abc_FrameSetManDsd(pDsdMan)
+		base_main.Abc_FrameSetManDsd(pDsdMan)
 	}
 	return 0
 
@@ -18949,18 +19017,18 @@ func Abc_CommandDsdFree(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		}
 	}
 	if fSecond != 0 {
-		if !Abc_FrameReadManDsd2() {
+		if base_main.Abc_FrameReadManDsd2() == nil {
 			Abc_Print(-1, "The DSD manager is not started.\n")
 			return 0
 		}
-		Abc_FrameSetManDsd2(nil)
+		base_main.Abc_FrameSetManDsd2(nil)
 
 	} else {
-		if !Abc_FrameReadManDsd() {
+		if base_main.Abc_FrameReadManDsd() == nil {
 			Abc_Print(-1, "The DSD manager is not started.\n")
 			return 0
 		}
-		Abc_FrameSetManDsd(nil)
+		base_main.Abc_FrameSetManDsd(nil)
 	}
 	return 0
 
@@ -19031,20 +19099,20 @@ func Abc_CommandDsdPs(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		}
 	}
 	if fSecond != 0 {
-		if !Abc_FrameReadManDsd2() {
+		if base_main.Abc_FrameReadManDsd2() == nil {
 			Abc_Print(-1, "The DSD manager is not started.\n")
 			return 0
 		}
-		man, _ := Abc_FrameReadManDsd2().(*If_DsdMan_t)
-		If_DsdManPrint(man, nil, Number, Support, fOccurs, fTtDump, fVerbose)
+		man, _ := base_main.Abc_FrameReadManDsd2().(*ifpkg.If_DsdMan_t)
+		ifpkg.If_DsdManPrint(man, nil, Number, Support, fOccurs, fTtDump, fVerbose)
 
 	} else {
-		if !Abc_FrameReadManDsd() {
+		if base_main.Abc_FrameReadManDsd() == nil {
 			Abc_Print(-1, "The DSD manager is not started.\n")
 			return 0
 		}
-		man, _ := Abc_FrameReadManDsd().(*If_DsdMan_t)
-		If_DsdManPrint(man, nil, Number, Support, fOccurs, fTtDump, fVerbose)
+		man, _ := base_main.Abc_FrameReadManDsd().(*ifpkg.If_DsdMan_t)
+		ifpkg.If_DsdManPrint(man, nil, Number, Support, fOccurs, fTtDump, fVerbose)
 	}
 	return 0
 
@@ -19084,7 +19152,7 @@ func Abc_CommandDsdMatch(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	var LutSize int32
 	var nConfls int32 = 10000
 	var nProcs int32 = 1
-	pDsdMan, _ := Abc_FrameReadManDsd().(*If_DsdMan_t)
+	pDsdMan, _ := base_main.Abc_FrameReadManDsd().(*ifpkg.If_DsdMan_t)
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "KCPSfasvh"); c != -1; c = Extra_UtilGetopt(argc, argv, "KCPSfasvh") {
 		switch c {
@@ -19141,12 +19209,12 @@ func Abc_CommandDsdMatch(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			goto usage
 		}
 	}
-	if !Abc_FrameReadManDsd() {
+	if base_main.Abc_FrameReadManDsd() == nil {
 		Abc_Print(-1, "The DSD manager is not started.\n")
 		return 0
 	}
 	if pStruct != "" {
-		var pStructCur string = If_DsdManGetCellStr(pDsdMan)
+		var pStructCur string = ifpkg.If_DsdManGetCellStr(pDsdMan)
 		if pStructCur && (int32(strings.Compare(pStructCur, pStruct)) != 0) {
 			Abc_Print(-1, "DSD manager matched with cell %s should be cleaned by \"dsd_filter -m\" before matching with cell %s.\n", pStructCur, pStruct)
 			return 0
@@ -19191,7 +19259,7 @@ func Abc_CommandDsdMerge(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	var pArgvNew *string
 	var c, nArgcNew int32
 	var pFile *os.File
-	var pDsdMan, pMan *If_DsdMan_t
+	var pDsdMan, pMan *ifpkg.If_DsdMan_t
 	var err error
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "h"); c != -1; c = Extra_UtilGetopt(argc, argv, "h") {
@@ -19202,7 +19270,7 @@ func Abc_CommandDsdMerge(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			goto usage
 		}
 	}
-	if !Abc_FrameReadManDsd() {
+	if base_main.Abc_FrameReadManDsd() == nil {
 		Abc_Print(-1, "The DSD manager is not started.\n")
 		return 0
 	}
@@ -19226,13 +19294,13 @@ func Abc_CommandDsdMerge(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 1
 	}
 	_ = pFile.Close()
-	pDsdMan = If_DsdManLoad(FileName)
+	pDsdMan = ifpkg.If_DsdManLoad(FileName)
 	if pDsdMan == nil {
 		return 1
 	}
-	pMan, _ = Abc_FrameReadManDsd().(*If_DsdMan_t)
-	If_DsdManMerge(pMan, pDsdMan)
-	If_DsdManFree(pDsdMan, 0)
+	pMan, _ = base_main.Abc_FrameReadManDsd().(*ifpkg.If_DsdMan_t)
+	ifpkg.If_DsdManMerge(pMan, pDsdMan)
+	ifpkg.If_DsdManFree(pDsdMan, 0)
 	return 0
 
 usage:
@@ -19257,7 +19325,7 @@ usage:
 **********************************************************************
 */
 func Abc_CommandDsdFilter(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
-	pDsd, _ := Abc_FrameReadManDsd().(*If_DsdMan_t)
+	pDsd, _ := base_main.Abc_FrameReadManDsd().(*ifpkg.If_DsdMan_t)
 	var c int32
 	var nLimit int32
 	var nLutSize int32 = -1
@@ -19319,19 +19387,19 @@ func Abc_CommandDsdFilter(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 0
 	}
 	if nLimit > 0 {
-		Abc_FrameSetManDsd(If_DsdManFilter(pDsd, nLimit))
+		base_main.Abc_FrameSetManDsd(ifpkg.If_DsdManFilter(pDsd, nLimit))
 	}
 	if nLutSize >= 0 {
-		If_DsdManSetLutSize(pDsd, nLutSize)
+		ifpkg.If_DsdManSetLutSize(pDsd, nLutSize)
 	}
 	if fCleanOccur != 0 {
-		If_DsdManCleanOccur(pDsd, fVerbose)
+		ifpkg.If_DsdManCleanOccur(pDsd, fVerbose)
 	}
 	if fCleanMarks != 0 {
-		If_DsdManCleanMarks(pDsd, fVerbose)
+		ifpkg.If_DsdManCleanMarks(pDsd, fVerbose)
 	}
 	if fInvMarks != 0 {
-		If_DsdManInvertMarks(pDsd, fVerbose)
+		ifpkg.If_DsdManInvertMarks(pDsd, fVerbose)
 	}
 	// The optional CUDD-only tuning branch is unavailable in the default Go build.
 	return 0
@@ -19436,15 +19504,15 @@ func Abc_CommandInit(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		}
 		for i := int32(0); i < Abc_NtkObjNumMax(pNtk); i++ {
 			pObj = Abc_NtkObj(pNtk, i)
-			if pObj == nil || Abc_ObjIsLatch(pObj) == 0 {
+			if pObj == nil || baseabc.Abc_ObjIsLatch(pObj) == 0 {
 				continue
 			}
 			if pInitStr[i] == '0' {
-				Abc_LatchSetInit0(pObj)
+				baseabc.Abc_LatchSetInit0(pObj)
 			} else if pInitStr[i] == '1' {
-				Abc_LatchSetInit1(pObj)
+				baseabc.Abc_LatchSetInit1(pObj)
 			} else {
-				Abc_LatchSetInitDc(pObj)
+				baseabc.Abc_LatchSetInitDc(pObj)
 			}
 		}
 		return 0
@@ -19453,16 +19521,16 @@ func Abc_CommandInit(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	if fZeros != 0 {
 		for i := int32(0); i < Abc_NtkObjNumMax(pNtk); i++ {
 			pObj = Abc_NtkObj(pNtk, i)
-			if pObj != nil && Abc_ObjIsLatch(pObj) != 0 {
-				Abc_LatchSetInit0(pObj)
+			if pObj != nil && baseabc.Abc_ObjIsLatch(pObj) != 0 {
+				baseabc.Abc_LatchSetInit0(pObj)
 			}
 		}
 
 	} else if fOnes != 0 {
 		for i := int32(0); i < Abc_NtkObjNumMax(pNtk); i++ {
 			pObj = Abc_NtkObj(pNtk, i)
-			if pObj != nil && Abc_ObjIsLatch(pObj) != 0 {
-				Abc_LatchSetInit1(pObj)
+			if pObj != nil && baseabc.Abc_ObjIsLatch(pObj) != 0 {
+				baseabc.Abc_LatchSetInit1(pObj)
 			}
 		}
 
@@ -19470,11 +19538,11 @@ func Abc_CommandInit(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		rand.Seed(time.Now().Unix())
 		for i := int32(0); i < Abc_NtkObjNumMax(pNtk); i++ {
 			pObj = Abc_NtkObj(pNtk, i)
-			if pObj != nil && Abc_ObjIsLatch(pObj) != 0 {
+			if pObj != nil && baseabc.Abc_ObjIsLatch(pObj) != 0 {
 				if rand.Intn(2) != 0 {
-					Abc_LatchSetInit1(pObj)
+					baseabc.Abc_LatchSetInit1(pObj)
 				} else {
-					Abc_LatchSetInit0(pObj)
+					baseabc.Abc_LatchSetInit0(pObj)
 				}
 			}
 		}
@@ -19482,8 +19550,8 @@ func Abc_CommandInit(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	} else if fDontCare != 0 {
 		for i := int32(0); i < Abc_NtkObjNumMax(pNtk); i++ {
 			pObj = Abc_NtkObj(pNtk, i)
-			if pObj != nil && Abc_ObjIsLatch(pObj) != 0 {
-				Abc_LatchSetInitDc(pObj)
+			if pObj != nil && baseabc.Abc_ObjIsLatch(pObj) != 0 {
+				baseabc.Abc_LatchSetInitDc(pObj)
 			}
 		}
 
@@ -19504,19 +19572,19 @@ func Abc_CommandInit(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			return 0
 		}
 		pMan = Abc_NtkToDar(pNtk, 0, 1)
-		vFailState = Saig_ManReturnFailingState(pMan, abcFrameCex(pAbc), fUseCexNs)
+		vFailState = aig_saig.Saig_ManReturnFailingState(pMan, abcFrameCex(pAbc), fUseCexNs)
 		//Vec_IntPrint( vFailState );
 		Aig_ManStop(pMan)
 		i := int32(0)
 		for id := int32(0); id < Abc_NtkObjNumMax(pNtk); id++ {
 			pObj = Abc_NtkObj(pNtk, id)
-			if pObj == nil || Abc_ObjIsLatch(pObj) == 0 {
+			if pObj == nil || baseabc.Abc_ObjIsLatch(pObj) == 0 {
 				continue
 			}
 			if Vec_IntEntry(vFailState, i) != 0 {
-				Abc_LatchSetInit1(pObj)
+				baseabc.Abc_LatchSetInit1(pObj)
 			} else {
-				Abc_LatchSetInit0(pObj)
+				baseabc.Abc_LatchSetInit0(pObj)
 			}
 			i++
 		}
@@ -19644,7 +19712,7 @@ func Abc_CommandUndc(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			Abc_Print(-1, "Current CEX is not available.\n")
 			return 1
 		}
-		pInit = Abc_NtkCollectLatchValuesStr(abcFrameNtk(pAbc))
+		pInit = baseabc.Abc_NtkCollectLatchValuesStr(abcFrameNtk(pAbc))
 		// count the number of X-valued flops
 		for k = 0; k < Abc_NtkLatchNum(abcFrameNtk(pAbc)); k++ {
 			nFlopsX += int32((pInit[k] == 'x'))
@@ -19656,7 +19724,7 @@ func Abc_CommandUndc(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			return 1
 		}
 		pTemp = abcFrameCex(pAbc)
-		abcFrameSetCex(pAbc, Abc_CexTransformUndc(pTemp, pInit))
+		abcFrameSetCex(pAbc, util.Abc_CexTransformUndc(pTemp, pInit))
 		assert(abcFrameCex(pAbc).NPis == Abc_NtkPiNum(abcFrameNtk(pAbc)), "abcFrameCex(pAbc).NPis == Abc_NtkPiNum(abcFrameNtk(pAbc))")
 		assert(abcFrameCex(pAbc).nRegs == Abc_NtkLatchNum(abcFrameNtk(pAbc)), "abcFrameCex(pAbc).nRegs == Abc_NtkLatchNum(abcFrameNtk(pAbc))")
 		Abc_CexFree(pTemp)
@@ -19675,7 +19743,7 @@ func Abc_CommandUndc(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	}
 
 	// get the new network
-	Abc_NtkConvertDcLatches(pNtk)
+	baseabc.Abc_NtkConvertDcLatches(pNtk)
 	return 0
 
 usage:
@@ -19727,7 +19795,7 @@ func Abc_CommandOneHot(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 0
 	}
 	// get the new network
-	pNtkRes = Abc_NtkConvertOnehot(pNtk)
+	pNtkRes = baseabc.Abc_NtkConvertOnehot(pNtk)
 	if pNtkRes == nil {
 		Abc_Print(-1, "Converting to one-hot encoding has failed.\n")
 		return 1
@@ -19795,7 +19863,7 @@ func Abc_CommandPipe(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	}
 
 	// update the network
-	Abc_NtkLatchPipe(pNtk, nLatches)
+	baseabc.Abc_NtkLatchPipe(pNtk, nLatches)
 	return 0
 
 usage:
@@ -20027,7 +20095,7 @@ func Abc_CommandRetime(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 1
 	}
 
-	if !Abc_NtkLatchNum(pNtk) {
+	if Abc_NtkLatchNum(pNtk) == 0 {
 		//        Abc_Print( -1, "The network has no latches. Retiming is not performed.\n" );
 		return 0
 	}
@@ -20038,21 +20106,21 @@ func Abc_CommandRetime(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	}
 
 	if Abc_NtkIsStrash(pNtk) != 0 {
-		if Abc_NtkGetChoiceNum(pNtk) {
+		if Abc_NtkGetChoiceNum(pNtk) != 0 {
 			Abc_Print(-1, "Retiming with choice nodes is not implemented.\n")
 			return 0
 		}
 		// convert the network into an SOP network
-		pNtkRes = Abc_NtkToLogic(pNtk)
+		pNtkRes = baseabc.Abc_NtkToLogic(pNtk)
 		// perform the retiming
-		Abc_NtkRetime(pNtkRes, Mode, nDelayLim, fForward, fBackward, fOneStep, fUseOldNames, fVerbose)
+		opt_ret.Abc_NtkRetime(pNtkRes, Mode, nDelayLim, fForward, fBackward, fOneStep, fUseOldNames, fVerbose)
 		// replace the current network
 		Abc_FrameReplaceCurrentNetwork(pAbc, pNtkRes)
 		return 0
 	}
 
 	// get the network in the SOP form
-	if !Abc_NtkToSop(pNtk, -1, ABC_INFINITY) {
+	if baseabc.Abc_NtkToSop(pNtk, -1, ABC_INFINITY) == 0 {
 		Abc_Print(-1, "Converting to SOPs has failed.\n")
 		return 0
 	}
@@ -20063,7 +20131,7 @@ func Abc_CommandRetime(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	}
 
 	// perform the retiming
-	Abc_NtkRetime(pNtk, Mode, nDelayLim, fForward, fBackward, fOneStep, fUseOldNames, fVerbose)
+	opt_ret.Abc_NtkRetime(pNtk, Mode, nDelayLim, fForward, fBackward, fOneStep, fUseOldNames, fVerbose)
 	return 0
 
 usage:
@@ -20179,7 +20247,7 @@ func Abc_CommandDRetime(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 1
 	}
 
-	if !Abc_NtkLatchNum(pNtk) {
+	if Abc_NtkLatchNum(pNtk) == 0 {
 		//        Abc_Print( -1, "The network has no latches. Retiming is not performed.\n" );
 		return 0
 	}
@@ -20323,17 +20391,17 @@ func Abc_CommandFlowRetime(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 1
 	}
 
-	if fGuaranteeInit && !fComputeInit {
+	if (fGuaranteeInit != 0) && (fComputeInit == 0) {
 		Abc_Print(-1, "Initial state guarantee (-g) requires initial state computation (-i).\n")
 		return 1
 	}
 
-	if !Abc_NtkLatchNum(pNtk) {
+	if Abc_NtkLatchNum(pNtk) == 0 {
 		Abc_Print(-1, "The network has no latches. Retiming is not performed.\n")
 		return 0
 	}
 
-	if Abc_NtkGetChoiceNum(pNtk) {
+	if Abc_NtkGetChoiceNum(pNtk) != 0 {
 		Abc_Print(-1, "Retiming with choice nodes is not implemented.\n")
 		return 0
 	}
@@ -20407,12 +20475,12 @@ func Abc_CommandCRetime(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Only works for logic networks.\n")
 		return 1
 	}
-	if !Abc_NtkLatchNum(pNtk) {
+	if Abc_NtkLatchNum(pNtk) == 0 {
 		Abc_Print(-1, "The network is combinational.\n")
 		return 0
 	}
 	// modify the current network
-	pNtkRes = Abc_NtkCRetime(pNtk, fVerbose)
+	pNtkRes = baseabc.Abc_NtkCRetime(pNtk, fVerbose)
 	if pNtkRes == nil {
 		Abc_Print(-1, "Sequential cleanup has failed.\n")
 		return 1
@@ -20683,19 +20751,19 @@ func Abc_CommandSeqSweep(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 
 	pNtk = Abc_FrameReadNtk(pAbc)
 	// set defaults
-	pPars.nPartSize = 0
-	pPars.nOverSize = 0
-	pPars.nFramesP = 0
-	pPars.nFramesK = 1
-	pPars.nMaxImps = 5000
-	pPars.nMaxLevs = 0
-	pPars.fUseImps = 0
-	pPars.fRewrite = 0
-	pPars.fFraiging = 0
-	pPars.fLatchCorr = 0
-	pPars.fWriteImps = 0
-	pPars.fUse1Hot = 0
-	pPars.fVerbose = 0
+	pPars.NPartSize = 0
+	pPars.NOverSize = 0
+	pPars.NFramesP = 0
+	pPars.NFramesK = 1
+	pPars.NMaxImps = 5000
+	pPars.NMaxLevs = 0
+	pPars.FUseImps = 0
+	pPars.FRewrite = 0
+	pPars.FFraiging = 0
+	pPars.FLatchCorr = 0
+	pPars.FWriteImps = 0
+	pPars.FUse1Hot = 0
+	pPars.FVerbose = 0
 	pPars.TimeLimit = 0
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "PQNFILirfletvh"); c != -1; c = Extra_UtilGetopt(argc, argv, "PQNFILirfletvh") {
@@ -20705,9 +20773,9 @@ func Abc_CommandSeqSweep(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-P\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nPartSize = abcAtoi(argv[globalUtilOptind])
+			pPars.NPartSize = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nPartSize < 2 {
+			if pPars.NPartSize < 2 {
 				goto usage
 			}
 			break
@@ -20716,9 +20784,9 @@ func Abc_CommandSeqSweep(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-Q\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nOverSize = abcAtoi(argv[globalUtilOptind])
+			pPars.NOverSize = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nOverSize < 0 {
+			if pPars.NOverSize < 0 {
 				goto usage
 			}
 			break
@@ -20727,9 +20795,9 @@ func Abc_CommandSeqSweep(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-N\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nFramesP = abcAtoi(argv[globalUtilOptind])
+			pPars.NFramesP = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nFramesP < 0 {
+			if pPars.NFramesP < 0 {
 				goto usage
 			}
 			break
@@ -20738,9 +20806,9 @@ func Abc_CommandSeqSweep(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-F\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nFramesK = abcAtoi(argv[globalUtilOptind])
+			pPars.NFramesK = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nFramesK <= 0 {
+			if pPars.NFramesK <= 0 {
 				goto usage
 			}
 			break
@@ -20749,9 +20817,9 @@ func Abc_CommandSeqSweep(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-I\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nMaxImps = abcAtoi(argv[globalUtilOptind])
+			pPars.NMaxImps = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nMaxImps <= 0 {
+			if pPars.NMaxImps <= 0 {
 				goto usage
 			}
 			break
@@ -20760,32 +20828,32 @@ func Abc_CommandSeqSweep(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-L\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nMaxLevs = abcAtoi(argv[globalUtilOptind])
+			pPars.NMaxLevs = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nMaxLevs <= 0 {
+			if pPars.NMaxLevs <= 0 {
 				goto usage
 			}
 			break
 		case 'i':
-			pPars.fUseImps ^= 1
+			pPars.FUseImps ^= 1
 			break
 		case 'r':
-			pPars.fRewrite ^= 1
+			pPars.FRewrite ^= 1
 			break
 		case 'f':
-			pPars.fFraiging ^= 1
+			pPars.FFraiging ^= 1
 			break
 		case 'l':
-			pPars.fLatchCorr ^= 1
+			pPars.FLatchCorr ^= 1
 			break
 		case 'e':
-			pPars.fWriteImps ^= 1
+			pPars.FWriteImps ^= 1
 			break
 		case 't':
-			pPars.fUse1Hot ^= 1
+			pPars.FUse1Hot ^= 1
 			break
 		case 'v':
-			pPars.fVerbose ^= 1
+			pPars.FVerbose ^= 1
 			break
 		case 'h':
 			goto usage
@@ -20809,12 +20877,12 @@ func Abc_CommandSeqSweep(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 0
 	}
 
-	if pPars.nFramesK > 1 && pPars.fUse1Hot {
+	if pPars.NFramesK > 1 && (pPars.FUse1Hot != 0) {
 		Abc_Print(-1, "Currrently can only use one-hotness for simple induction (K=1).\n")
 		return 0
 	}
 
-	if pPars.nFramesP && pPars.fUse1Hot {
+	if (pPars.NFramesP != 0) && (pPars.FUse1Hot != 0) {
 		Abc_Print(-1, "Currrently can only use one-hotness without prefix.\n")
 		return 0
 	}
@@ -20832,19 +20900,19 @@ func Abc_CommandSeqSweep(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 usage:
 	Abc_Print(-2, "usage: ssweep [-PQNFL <num>] [-lrfetvh]\n")
 	Abc_Print(-2, "\t         performs sequential sweep using K-step induction\n")
-	Abc_Print(-2, "\t-P num : max partition size (0 = no partitioning) [default = %d]\n", pPars.nPartSize)
-	Abc_Print(-2, "\t-Q num : partition overlap (0 = no overlap) [default = %d]\n", pPars.nOverSize)
-	Abc_Print(-2, "\t-N num : number of time frames to use as the prefix [default = %d]\n", pPars.nFramesP)
-	Abc_Print(-2, "\t-F num : number of time frames for induction (1=simple) [default = %d]\n", pPars.nFramesK)
-	Abc_Print(-2, "\t-L num : max number of levels to consider (0=all) [default = %d]\n", pPars.nMaxLevs)
+	Abc_Print(-2, "\t-P num : max partition size (0 = no partitioning) [default = %d]\n", pPars.NPartSize)
+	Abc_Print(-2, "\t-Q num : partition overlap (0 = no overlap) [default = %d]\n", pPars.NOverSize)
+	Abc_Print(-2, "\t-N num : number of time frames to use as the prefix [default = %d]\n", pPars.NFramesP)
+	Abc_Print(-2, "\t-F num : number of time frames for induction (1=simple) [default = %d]\n", pPars.NFramesK)
+	Abc_Print(-2, "\t-L num : max number of levels to consider (0=all) [default = %d]\n", pPars.NMaxLevs)
 	//    Abc_Print( -2, "\t-I num : max number of implications to consider [default = %d]\n", pPars->nMaxImps );
 	//    Abc_Print( -2, "\t-i     : toggle using implications [default = %s]\n", pPars->abcSelect(fUseImps, "yes", "no") );
-	Abc_Print(-2, "\t-l     : toggle latch correspondence only [default = %s]\n", abcSelect(fLatchCorr, "yes", "no"))
-	Abc_Print(-2, "\t-r     : toggle AIG rewriting [default = %s]\n", abcSelect(fRewrite, "yes", "no"))
-	Abc_Print(-2, "\t-f     : toggle fraiging (combinational SAT sweeping) [default = %s]\n", abcSelect(fFraiging, "yes", "no"))
-	Abc_Print(-2, "\t-e     : toggle writing implications as assertions [default = %s]\n", abcSelect(fWriteImps, "yes", "no"))
-	Abc_Print(-2, "\t-t     : toggle using one-hotness conditions [default = %s]\n", abcSelect(fUse1Hot, "yes", "no"))
-	Abc_Print(-2, "\t-v     : toggle verbose output [default = %s]\n", abcSelect(fVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-l     : toggle latch correspondence only [default = %s]\n", abcSelect(pPars.FLatchCorr, "yes", "no"))
+	Abc_Print(-2, "\t-r     : toggle AIG rewriting [default = %s]\n", abcSelect(pPars.FRewrite, "yes", "no"))
+	Abc_Print(-2, "\t-f     : toggle fraiging (combinational SAT sweeping) [default = %s]\n", abcSelect(pPars.FFraiging, "yes", "no"))
+	Abc_Print(-2, "\t-e     : toggle writing implications as assertions [default = %s]\n", abcSelect(pPars.FWriteImps, "yes", "no"))
+	Abc_Print(-2, "\t-t     : toggle using one-hotness conditions [default = %s]\n", abcSelect(pPars.FUse1Hot, "yes", "no"))
+	Abc_Print(-2, "\t-v     : toggle verbose output [default = %s]\n", abcSelect(pPars.FVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h     : print the command usage\n")
 	return 1
 }
@@ -20871,7 +20939,7 @@ func Abc_CommandSeqSweep2(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 
 	pNtk = Abc_FrameReadNtk(pAbc)
 	// set defaults
-	Ssw_ManSetDefaultParams(pPars)
+	proof_ssw.Ssw_ManSetDefaultParams(pPars)
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "PQFCLSIVMNcmplkodsefqvwh"); c != -1; c = Extra_UtilGetopt(argc, argv, "PQFCLSIVMNcmplkodsefqvwh") {
 		switch c {
@@ -20880,9 +20948,9 @@ func Abc_CommandSeqSweep2(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-P\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nPartSize = abcAtoi(argv[globalUtilOptind])
+			pPars.NPartSize = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nPartSize < 2 {
+			if pPars.NPartSize < 2 {
 				goto usage
 			}
 			break
@@ -20891,9 +20959,9 @@ func Abc_CommandSeqSweep2(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-Q\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nOverSize = abcAtoi(argv[globalUtilOptind])
+			pPars.NOverSize = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nOverSize < 0 {
+			if pPars.NOverSize < 0 {
 				goto usage
 			}
 			break
@@ -20902,9 +20970,9 @@ func Abc_CommandSeqSweep2(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-F\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nFramesK = abcAtoi(argv[globalUtilOptind])
+			pPars.NFramesK = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nFramesK <= 0 {
+			if pPars.NFramesK <= 0 {
 				goto usage
 			}
 			break
@@ -20913,9 +20981,9 @@ func Abc_CommandSeqSweep2(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-C\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nBTLimit = abcAtoi(argv[globalUtilOptind])
+			pPars.NBTLimit = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nBTLimit <= 0 {
+			if pPars.NBTLimit <= 0 {
 				goto usage
 			}
 			break
@@ -20924,9 +20992,9 @@ func Abc_CommandSeqSweep2(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-L\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nMaxLevs = abcAtoi(argv[globalUtilOptind])
+			pPars.NMaxLevs = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nMaxLevs <= 0 {
+			if pPars.NMaxLevs <= 0 {
 				goto usage
 			}
 			break
@@ -20935,9 +21003,9 @@ func Abc_CommandSeqSweep2(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-S\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nFramesAddSim = abcAtoi(argv[globalUtilOptind])
+			pPars.NFramesAddSim = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nFramesAddSim < 0 {
+			if pPars.NFramesAddSim < 0 {
 				goto usage
 			}
 			break
@@ -20946,9 +21014,9 @@ func Abc_CommandSeqSweep2(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-I\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nItersStop = abcAtoi(argv[globalUtilOptind])
+			pPars.NItersStop = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nItersStop < 0 {
+			if pPars.NItersStop < 0 {
 				goto usage
 			}
 			break
@@ -20957,9 +21025,9 @@ func Abc_CommandSeqSweep2(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-V\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nSatVarMax2 = abcAtoi(argv[globalUtilOptind])
+			pPars.NSatVarMax2 = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nSatVarMax2 < 0 {
+			if pPars.NSatVarMax2 < 0 {
 				goto usage
 			}
 			break
@@ -20968,9 +21036,9 @@ func Abc_CommandSeqSweep2(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-M\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nRecycleCalls2 = abcAtoi(argv[globalUtilOptind])
+			pPars.NRecycleCalls2 = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nRecycleCalls2 < 0 {
+			if pPars.NRecycleCalls2 < 0 {
 				goto usage
 			}
 			break
@@ -20986,46 +21054,46 @@ func Abc_CommandSeqSweep2(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			}
 			break
 		case 'c':
-			pPars.fConstrs ^= 1
+			pPars.FConstrs ^= 1
 			break
 		case 'm':
-			pPars.fMergeFull ^= 1
+			pPars.FMergeFull ^= 1
 			break
 		case 'p':
-			pPars.fPolarFlip ^= 1
+			pPars.FPolarFlip ^= 1
 			break
 		case 'l':
-			pPars.fLatchCorr ^= 1
+			pPars.FLatchCorr ^= 1
 			break
 		case 'k':
-			pPars.fConstCorr ^= 1
+			pPars.FConstCorr ^= 1
 			break
 		case 'o':
-			pPars.fOutputCorr ^= 1
+			pPars.FOutputCorr ^= 1
 			break
 			//        case 'f':
 			//            pPars->fSemiFormal ^= 1;
 			//            break;
 		case 'd':
-			pPars.fDynamic ^= 1
+			pPars.FDynamic ^= 1
 			break
 		case 's':
-			pPars.fLocalSim ^= 1
+			pPars.FLocalSim ^= 1
 			break
 		case 'e':
-			pPars.fEquivDump ^= 1
+			pPars.FEquivDump ^= 1
 			break
 		case 'f':
-			pPars.fEquivDump2 ^= 1
+			pPars.FEquivDump2 ^= 1
 			break
 		case 'q':
-			pPars.fStopWhenGone ^= 1
+			pPars.FStopWhenGone ^= 1
 			break
 		case 'v':
-			pPars.fVerbose ^= 1
+			pPars.FVerbose ^= 1
 			break
 		case 'w':
-			pPars.fFlopVerbose ^= 1
+			pPars.FFlopVerbose ^= 1
 			break
 		case 'h':
 			goto usage
@@ -21066,7 +21134,7 @@ func Abc_CommandSeqSweep2(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		}
 	}
 
-	if pPars.fConstrs {
+	if pPars.FConstrs != 0 {
 		if Abc_NtkConstrNum(pNtk) == Abc_NtkPoNum(pNtk) {
 			Abc_Print(0, "Command cannot be applied because the network has only constraint outputs (no primary outputs).\n")
 			return 0
@@ -21075,10 +21143,10 @@ func Abc_CommandSeqSweep2(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			Abc_Print(0, "Performing scorr with %d constraints.\n", Abc_NtkConstrNum(pNtk))
 		} else {
 			Abc_Print(0, "Performing constraint-based scorr without constraints.\n")
-			pPars.fConstrs = 0
+			pPars.FConstrs = 0
 		}
 	}
-	if pPars.fEquivDump && pPars.fEquivDump2 {
+	if (pPars.FEquivDump != 0) && (pPars.FEquivDump2 != 0) {
 		Abc_Print(0, "Command line switches '-e' and '-f' cannot be used at the same time.\n")
 		return 0
 	}
@@ -21096,31 +21164,31 @@ func Abc_CommandSeqSweep2(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 usage:
 	Abc_Print(-2, "usage: scorr [-PQFCLSIVMN <num>] [-cmplkodsefqvwh]\n")
 	Abc_Print(-2, "\t         performs sequential sweep using K-step induction\n")
-	Abc_Print(-2, "\t-P num : max partition size (0 = no partitioning) [default = %d]\n", pPars.nPartSize)
-	Abc_Print(-2, "\t-Q num : partition overlap (0 = no overlap) [default = %d]\n", pPars.nOverSize)
-	Abc_Print(-2, "\t-F num : number of time frames for induction (1=simple) [default = %d]\n", pPars.nFramesK)
-	Abc_Print(-2, "\t-C num : max number of conflicts at a node (0=inifinite) [default = %d]\n", pPars.nBTLimit)
-	Abc_Print(-2, "\t-L num : max number of levels to consider (0=all) [default = %d]\n", pPars.nMaxLevs)
-	Abc_Print(-2, "\t-N num : number of last POs treated as constraints (0=none) [default = %d]\n", pPars.fConstrs)
-	Abc_Print(-2, "\t-S num : additional simulation frames for c-examples (0=none) [default = %d]\n", pPars.nFramesAddSim)
-	Abc_Print(-2, "\t-I num : iteration number to stop and output SR-model (-1=none) [default = %d]\n", pPars.nItersStop)
-	Abc_Print(-2, "\t-V num : min var num needed to recycle the SAT solver [default = %d]\n", pPars.nSatVarMax2)
-	Abc_Print(-2, "\t-M num : min call num needed to recycle the SAT solver [default = %d]\n", pPars.nRecycleCalls2)
+	Abc_Print(-2, "\t-P num : max partition size (0 = no partitioning) [default = %d]\n", pPars.NPartSize)
+	Abc_Print(-2, "\t-Q num : partition overlap (0 = no overlap) [default = %d]\n", pPars.NOverSize)
+	Abc_Print(-2, "\t-F num : number of time frames for induction (1=simple) [default = %d]\n", pPars.NFramesK)
+	Abc_Print(-2, "\t-C num : max number of conflicts at a node (0=inifinite) [default = %d]\n", pPars.NBTLimit)
+	Abc_Print(-2, "\t-L num : max number of levels to consider (0=all) [default = %d]\n", pPars.NMaxLevs)
+	Abc_Print(-2, "\t-N num : number of last POs treated as constraints (0=none) [default = %d]\n", pPars.FConstrs)
+	Abc_Print(-2, "\t-S num : additional simulation frames for c-examples (0=none) [default = %d]\n", pPars.NFramesAddSim)
+	Abc_Print(-2, "\t-I num : iteration number to stop and output SR-model (-1=none) [default = %d]\n", pPars.NItersStop)
+	Abc_Print(-2, "\t-V num : min var num needed to recycle the SAT solver [default = %d]\n", pPars.NSatVarMax2)
+	Abc_Print(-2, "\t-M num : min call num needed to recycle the SAT solver [default = %d]\n", pPars.NRecycleCalls2)
 	Abc_Print(-2, "\t-N num : set last <num> POs to be constraints (use with -c) [default = %d]\n", nConstrs)
-	Abc_Print(-2, "\t-c     : toggle using explicit constraints [default = %s]\n", abcSelect(fConstrs, "yes", "no"))
-	Abc_Print(-2, "\t-m     : toggle full merge if constraints are present [default = %s]\n", abcSelect(fMergeFull, "yes", "no"))
-	Abc_Print(-2, "\t-p     : toggle aligning polarity of SAT variables [default = %s]\n", abcSelect(fPolarFlip, "yes", "no"))
-	Abc_Print(-2, "\t-l     : toggle doing latch correspondence [default = %s]\n", abcSelect(fLatchCorr, "yes", "no"))
-	Abc_Print(-2, "\t-k     : toggle doing constant correspondence [default = %s]\n", abcSelect(fConstCorr, "yes", "no"))
-	Abc_Print(-2, "\t-o     : toggle doing 'PO correspondence' [default = %s]\n", abcSelect(fOutputCorr, "yes", "no"))
+	Abc_Print(-2, "\t-c     : toggle using explicit constraints [default = %s]\n", abcSelect(pPars.FConstrs, "yes", "no"))
+	Abc_Print(-2, "\t-m     : toggle full merge if constraints are present [default = %s]\n", abcSelect(pPars.FMergeFull, "yes", "no"))
+	Abc_Print(-2, "\t-p     : toggle aligning polarity of SAT variables [default = %s]\n", abcSelect(pPars.FPolarFlip, "yes", "no"))
+	Abc_Print(-2, "\t-l     : toggle doing latch correspondence [default = %s]\n", abcSelect(pPars.FLatchCorr, "yes", "no"))
+	Abc_Print(-2, "\t-k     : toggle doing constant correspondence [default = %s]\n", abcSelect(pPars.FConstCorr, "yes", "no"))
+	Abc_Print(-2, "\t-o     : toggle doing 'PO correspondence' [default = %s]\n", abcSelect(pPars.FOutputCorr, "yes", "no"))
 	//    Abc_Print( -2, "\t-f     : toggle filtering using iterative BMC [default = %s]\n", pPars->abcSelect(fSemiFormal, "yes", "no") );
-	Abc_Print(-2, "\t-d     : toggle dynamic addition of constraints [default = %s]\n", abcSelect(fDynamic, "yes", "no"))
-	Abc_Print(-2, "\t-s     : toggle local simulation in the cone of influence [default = %s]\n", abcSelect(fLocalSim, "yes", "no"))
-	Abc_Print(-2, "\t-e     : toggle dumping disproved internal equivalences [default = %s]\n", abcSelect(fEquivDump, "yes", "no"))
-	Abc_Print(-2, "\t-f     : toggle dumping proved internal equivalences [default = %s]\n", abcSelect(fEquivDump2, "yes", "no"))
-	Abc_Print(-2, "\t-q     : toggle quitting when PO is not a constant candidate [default = %s]\n", abcSelect(fStopWhenGone, "yes", "no"))
-	Abc_Print(-2, "\t-w     : toggle printout of flop equivalences [default = %s]\n", abcSelect(fFlopVerbose, "yes", "no"))
-	Abc_Print(-2, "\t-v     : toggle verbose output [default = %s]\n", abcSelect(fVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-d     : toggle dynamic addition of constraints [default = %s]\n", abcSelect(pPars.FDynamic, "yes", "no"))
+	Abc_Print(-2, "\t-s     : toggle local simulation in the cone of influence [default = %s]\n", abcSelect(pPars.FLocalSim, "yes", "no"))
+	Abc_Print(-2, "\t-e     : toggle dumping disproved internal equivalences [default = %s]\n", abcSelect(pPars.FEquivDump, "yes", "no"))
+	Abc_Print(-2, "\t-f     : toggle dumping proved internal equivalences [default = %s]\n", abcSelect(pPars.FEquivDump2, "yes", "no"))
+	Abc_Print(-2, "\t-q     : toggle quitting when PO is not a constant candidate [default = %s]\n", abcSelect(pPars.FStopWhenGone, "yes", "no"))
+	Abc_Print(-2, "\t-w     : toggle printout of flop equivalences [default = %s]\n", abcSelect(pPars.FFlopVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-v     : toggle verbose output [default = %s]\n", abcSelect(pPars.FVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h     : print the command usage\n")
 	return 1
 }
@@ -21146,19 +21214,19 @@ func Abc_CommandTestSeqSweep(pAbc *Abc_Frame_t, argc int32, argv []string) int32
 	//    extern Abc_Ntk_t * Abc_NtkDarSeqSweep( Abc_Ntk_t * pNtk, Fra_Ssw_t * pPars );
 
 	// set defaults
-	pPars.nPartSize = 0
-	pPars.nOverSize = 0
-	pPars.nFramesP = 0
-	pPars.nFramesK = 1
-	pPars.nMaxImps = 5000
-	pPars.nMaxLevs = 0
-	pPars.fUseImps = 0
-	pPars.fRewrite = 0
-	pPars.fFraiging = 0
-	pPars.fLatchCorr = 0
-	pPars.fWriteImps = 0
-	pPars.fUse1Hot = 0
-	pPars.fVerbose = 0
+	pPars.NPartSize = 0
+	pPars.NOverSize = 0
+	pPars.NFramesP = 0
+	pPars.NFramesK = 1
+	pPars.NMaxImps = 5000
+	pPars.NMaxLevs = 0
+	pPars.FUseImps = 0
+	pPars.FRewrite = 0
+	pPars.FFraiging = 0
+	pPars.FLatchCorr = 0
+	pPars.FWriteImps = 0
+	pPars.FUse1Hot = 0
+	pPars.FVerbose = 0
 	pPars.TimeLimit = 0
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "PQNFILirfletvh"); c != -1; c = Extra_UtilGetopt(argc, argv, "PQNFILirfletvh") {
@@ -21168,9 +21236,9 @@ func Abc_CommandTestSeqSweep(pAbc *Abc_Frame_t, argc int32, argv []string) int32
 				Abc_Print(-1, "Command line switch \"-P\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nPartSize = abcAtoi(argv[globalUtilOptind])
+			pPars.NPartSize = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nPartSize < 2 {
+			if pPars.NPartSize < 2 {
 				goto usage
 			}
 			break
@@ -21179,9 +21247,9 @@ func Abc_CommandTestSeqSweep(pAbc *Abc_Frame_t, argc int32, argv []string) int32
 				Abc_Print(-1, "Command line switch \"-Q\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nOverSize = abcAtoi(argv[globalUtilOptind])
+			pPars.NOverSize = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nOverSize < 0 {
+			if pPars.NOverSize < 0 {
 				goto usage
 			}
 			break
@@ -21190,9 +21258,9 @@ func Abc_CommandTestSeqSweep(pAbc *Abc_Frame_t, argc int32, argv []string) int32
 				Abc_Print(-1, "Command line switch \"-N\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nFramesP = abcAtoi(argv[globalUtilOptind])
+			pPars.NFramesP = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nFramesP < 0 {
+			if pPars.NFramesP < 0 {
 				goto usage
 			}
 			break
@@ -21201,9 +21269,9 @@ func Abc_CommandTestSeqSweep(pAbc *Abc_Frame_t, argc int32, argv []string) int32
 				Abc_Print(-1, "Command line switch \"-F\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nFramesK = abcAtoi(argv[globalUtilOptind])
+			pPars.NFramesK = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nFramesK <= 0 {
+			if pPars.NFramesK <= 0 {
 				goto usage
 			}
 			break
@@ -21212,9 +21280,9 @@ func Abc_CommandTestSeqSweep(pAbc *Abc_Frame_t, argc int32, argv []string) int32
 				Abc_Print(-1, "Command line switch \"-I\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nMaxImps = abcAtoi(argv[globalUtilOptind])
+			pPars.NMaxImps = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nMaxImps <= 0 {
+			if pPars.NMaxImps <= 0 {
 				goto usage
 			}
 			break
@@ -21223,32 +21291,32 @@ func Abc_CommandTestSeqSweep(pAbc *Abc_Frame_t, argc int32, argv []string) int32
 				Abc_Print(-1, "Command line switch \"-L\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nMaxLevs = abcAtoi(argv[globalUtilOptind])
+			pPars.NMaxLevs = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nMaxLevs <= 0 {
+			if pPars.NMaxLevs <= 0 {
 				goto usage
 			}
 			break
 		case 'i':
-			pPars.fUseImps ^= 1
+			pPars.FUseImps ^= 1
 			break
 		case 'r':
-			pPars.fRewrite ^= 1
+			pPars.FRewrite ^= 1
 			break
 		case 'f':
-			pPars.fFraiging ^= 1
+			pPars.FFraiging ^= 1
 			break
 		case 'l':
-			pPars.fLatchCorr ^= 1
+			pPars.FLatchCorr ^= 1
 			break
 		case 'e':
-			pPars.fWriteImps ^= 1
+			pPars.FWriteImps ^= 1
 			break
 		case 't':
-			pPars.fUse1Hot ^= 1
+			pPars.FUse1Hot ^= 1
 			break
 		case 'v':
-			pPars.fVerbose ^= 1
+			pPars.FVerbose ^= 1
 			break
 		case 'h':
 			goto usage
@@ -21263,26 +21331,26 @@ func Abc_CommandTestSeqSweep(pAbc *Abc_Frame_t, argc int32, argv []string) int32
 		Abc_Print(-1, "File name should be given on the command line.\n")
 		return 1
 	}
-	Fra_FraigInductionTest(pFileName, pPars)
+	proof_fra.Fra_FraigInductionTest(pFileName, pPars)
 	return 0
 
 usage:
 	Abc_Print(-2, "usage: testssw [-PQNFL num] [-lrfetvh] <file>\n")
 	Abc_Print(-2, "\t         performs sequential sweep using K-step induction\n")
 	Abc_Print(-2, "\t         (outputs a file with a set of pairs of equivalent nodes)\n")
-	Abc_Print(-2, "\t-P num : max partition size (0 = no partitioning) [default = %d]\n", pPars.nPartSize)
-	Abc_Print(-2, "\t-Q num : partition overlap (0 = no overlap) [default = %d]\n", pPars.nOverSize)
-	Abc_Print(-2, "\t-N num : number of time frames to use as the prefix [default = %d]\n", pPars.nFramesP)
-	Abc_Print(-2, "\t-F num : number of time frames for induction (1=simple) [default = %d]\n", pPars.nFramesK)
-	Abc_Print(-2, "\t-L num : max number of levels to consider (0=all) [default = %d]\n", pPars.nMaxLevs)
+	Abc_Print(-2, "\t-P num : max partition size (0 = no partitioning) [default = %d]\n", pPars.NPartSize)
+	Abc_Print(-2, "\t-Q num : partition overlap (0 = no overlap) [default = %d]\n", pPars.NOverSize)
+	Abc_Print(-2, "\t-N num : number of time frames to use as the prefix [default = %d]\n", pPars.NFramesP)
+	Abc_Print(-2, "\t-F num : number of time frames for induction (1=simple) [default = %d]\n", pPars.NFramesK)
+	Abc_Print(-2, "\t-L num : max number of levels to consider (0=all) [default = %d]\n", pPars.NMaxLevs)
 	//    Abc_Print( -2, "\t-I num : max number of implications to consider [default = %d]\n", pPars->nMaxImps );
 	//    Abc_Print( -2, "\t-i     : toggle using implications [default = %s]\n", pPars->abcSelect(fUseImps, "yes", "no") );
-	Abc_Print(-2, "\t-l     : toggle latch correspondence only [default = %s]\n", abcSelect(fLatchCorr, "yes", "no"))
-	Abc_Print(-2, "\t-r     : toggle AIG rewriting [default = %s]\n", abcSelect(fRewrite, "yes", "no"))
-	Abc_Print(-2, "\t-f     : toggle fraiging (combinational SAT sweeping) [default = %s]\n", abcSelect(fFraiging, "yes", "no"))
-	Abc_Print(-2, "\t-e     : toggle writing implications as assertions [default = %s]\n", abcSelect(fWriteImps, "yes", "no"))
-	Abc_Print(-2, "\t-t     : toggle using one-hotness conditions [default = %s]\n", abcSelect(fUse1Hot, "yes", "no"))
-	Abc_Print(-2, "\t-v     : toggle verbose output [default = %s]\n", abcSelect(fVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-l     : toggle latch correspondence only [default = %s]\n", abcSelect(pPars.FLatchCorr, "yes", "no"))
+	Abc_Print(-2, "\t-r     : toggle AIG rewriting [default = %s]\n", abcSelect(pPars.FRewrite, "yes", "no"))
+	Abc_Print(-2, "\t-f     : toggle fraiging (combinational SAT sweeping) [default = %s]\n", abcSelect(pPars.FFraiging, "yes", "no"))
+	Abc_Print(-2, "\t-e     : toggle writing implications as assertions [default = %s]\n", abcSelect(pPars.FWriteImps, "yes", "no"))
+	Abc_Print(-2, "\t-t     : toggle using one-hotness conditions [default = %s]\n", abcSelect(pPars.FUse1Hot, "yes", "no"))
+	Abc_Print(-2, "\t-v     : toggle verbose output [default = %s]\n", abcSelect(pPars.FVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h     : print the command usage\n")
 	return 1
 }
@@ -21596,7 +21664,7 @@ func Abc_CommandSeqCleanup(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Only works for structrally hashed networks.\n")
 		return 1
 	}
-	if !Abc_NtkLatchNum(pNtk) {
+	if Abc_NtkLatchNum(pNtk) == 0 {
 		Abc_Print(-1, "The network is combinational.\n")
 		return 0
 	}
@@ -21685,7 +21753,7 @@ func Abc_CommandCycle(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Only works for strashed networks or logic SOP networks.\n")
 		return 1
 	}
-	if !Abc_NtkLatchNum(pNtk) {
+	if Abc_NtkLatchNum(pNtk) == 0 {
 		Abc_Print(-1, "The network is combinational.\n")
 		return 0
 	}
@@ -21698,7 +21766,7 @@ func Abc_CommandCycle(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	} else if Abc_NtkIsStrash(pNtk) != 0 {
 		Abc_NtkCycleInitState(pNtk, nFrames, 0, fVerbose)
 	} else {
-		Abc_NtkCycleInitStateSop(pNtk, nFrames, fVerbose)
+		opt_ret.Abc_NtkCycleInitStateSop(pNtk, nFrames, fVerbose)
 	}
 	return 0
 
@@ -21777,7 +21845,7 @@ func Abc_CommandXsim(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Only works for strashed networks.\n")
 		return 1
 	}
-	if !Abc_NtkLatchNum(pNtk) {
+	if Abc_NtkLatchNum(pNtk) == 0 {
 		Abc_Print(-1, "The network is combinational.\n")
 		return 0
 	}
@@ -21905,7 +21973,7 @@ func Abc_CommandSim(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Only works for strashed networks.\n")
 		return 1
 	}
-	if pFileSim != nil && Abc_NtkLatchNum(pNtk) {
+	if pFileSim != nil && (Abc_NtkLatchNum(pNtk) != 0) {
 		Abc_Print(-1, "Currently simulation with user-specified patterns works only for comb miters.\n")
 		return 1
 	}
@@ -21955,7 +22023,7 @@ func Abc_CommandSim3(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	var vSeqModelVec *Vec_Ptr_t
 	var pLogFileName string
 	var c int32
-	Ssw_RarSetDefaultParams(pPars)
+	proof_ssw.Ssw_RarSetDefaultParams(pPars)
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "FWBRSNTGLadivzh"); c != -1; c = Extra_UtilGetopt(argc, argv, "FWBRSNTGLadivzh") {
 		switch c {
@@ -21964,9 +22032,9 @@ func Abc_CommandSim3(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-F\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nFrames = abcAtoi(argv[globalUtilOptind])
+			pPars.NFrames = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nFrames < 0 {
+			if pPars.NFrames < 0 {
 				goto usage
 			}
 			break
@@ -21975,9 +22043,9 @@ func Abc_CommandSim3(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-W\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nWords = abcAtoi(argv[globalUtilOptind])
+			pPars.NWords = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nWords < 0 {
+			if pPars.NWords < 0 {
 				goto usage
 			}
 			break
@@ -21986,9 +22054,9 @@ func Abc_CommandSim3(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-B\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nBinSize = abcAtoi(argv[globalUtilOptind])
+			pPars.NBinSize = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nBinSize < 0 {
+			if pPars.NBinSize < 0 {
 				goto usage
 			}
 			break
@@ -21997,9 +22065,9 @@ func Abc_CommandSim3(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-R\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nRounds = abcAtoi(argv[globalUtilOptind])
+			pPars.NRounds = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nRounds < 0 {
+			if pPars.NRounds < 0 {
 				goto usage
 			}
 			break
@@ -22008,9 +22076,9 @@ func Abc_CommandSim3(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-S\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nRestart = abcAtoi(argv[globalUtilOptind])
+			pPars.NRestart = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nRestart < 0 {
+			if pPars.NRestart < 0 {
 				goto usage
 			}
 			break
@@ -22019,9 +22087,9 @@ func Abc_CommandSim3(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-N\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nRandSeed = abcAtoi(argv[globalUtilOptind])
+			pPars.NRandSeed = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nRandSeed < 0 {
+			if pPars.NRandSeed < 0 {
 				goto usage
 			}
 			break
@@ -22056,19 +22124,19 @@ func Abc_CommandSim3(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			globalUtilOptind++
 			break
 		case 'a':
-			pPars.fSolveAll ^= 1
+			pPars.FSolveAll ^= 1
 			break
 		case 'd':
-			pPars.fDropSatOuts ^= 1
+			pPars.FDropSatOuts ^= 1
 			break
 		case 'i':
-			pPars.fSetLastState ^= 1
+			pPars.FSetLastState ^= 1
 			break
 		case 'v':
-			pPars.fVerbose ^= 1
+			pPars.FVerbose ^= 1
 			break
 		case 'z':
-			pPars.fNotVerbose ^= 1
+			pPars.FNotVerbose ^= 1
 			break
 		case 'h':
 			goto usage
@@ -22093,18 +22161,18 @@ func Abc_CommandSim3(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	abcFrameReplaceCexFromNetwork(pAbc, pNtk)
 	vSeqModelVec = baseabc.Abc_NtkReadSeqModelVec(pNtk)
 	baseabc.Abc_NtkSetSeqModelVec(pNtk, nil)
-	if pPars.fSetLastState && abcFrameNtk(pAbc).Data != nil {
+	if (pPars.FSetLastState != 0) && abcFrameNtk(pAbc).Data != nil {
 		var pObj *Abc_Obj_t
 		vInit, _ := Abc_ObjData(abcFrameNtk(pAbc)).(*Vec_Int_t)
 		abcFrameNtk(pAbc).Data = nil
 		latchIndex := int32(0)
 		for id := int32(0); id < Abc_NtkObjNumMax(abcFrameNtk(pAbc)); id++ {
 			pObj = Abc_NtkObj(abcFrameNtk(pAbc), id)
-			if pObj == nil || Abc_ObjIsLatch(pObj) == 0 {
+			if pObj == nil || baseabc.Abc_ObjIsLatch(pObj) == 0 {
 				continue
 			}
 			if Vec_IntEntry(vInit, latchIndex) != 0 {
-				Abc_LatchSetInit1(pObj)
+				baseabc.Abc_LatchSetInit1(pObj)
 			}
 			latchIndex++
 		}
@@ -22117,14 +22185,14 @@ func Abc_CommandSim3(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_FrameReplaceCurrentNetwork(pAbc, pNtkRes)
 		pNtk = Abc_FrameReadNtk(pAbc)
 	}
-	if pPars.fSolveAll && pPars.fDropSatOuts {
+	if (pPars.FSolveAll != 0) && (pPars.FDropSatOuts != 0) {
 		if vSeqModelVec == nil {
 			Abc_Print(1, "The array of counter-examples is not available.\n")
 		} else if Vec_PtrSize(vSeqModelVec) != Abc_NtkPoNum(pNtk) {
 			Abc_Print(1, "The array size does not match the number of outputs.\n")
 		} else {
 
-			Abc_NtkDropSatOutputs(pNtk, vSeqModelVec, pPars.fVerbose)
+			baseabc.Abc_NtkDropSatOutputs(pNtk, vSeqModelVec, pPars.FVerbose)
 			pNtkRes = Abc_NtkDarLatchSweep(pNtk, 1, 1, 1, 0, -1, -1, 0, 0)
 			if pNtkRes == nil {
 				Abc_Print(-1, "Removing SAT outputs has failed.\n")
@@ -22145,20 +22213,20 @@ func Abc_CommandSim3(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 usage:
 	Abc_Print(-2, "usage: sim3 [-FWBRSNTG num] [-L file] [-advzh]\n")
 	Abc_Print(-2, "\t         performs random simulation of the sequential miter\n")
-	Abc_Print(-2, "\t-F num : the number of frames to simulate [default = %d]\n", pPars.nFrames)
-	Abc_Print(-2, "\t-W num : the number of words to simulate [default = %d]\n", pPars.nWords)
-	Abc_Print(-2, "\t-B num : the number of flops in one bin [default = %d]\n", pPars.nBinSize)
-	Abc_Print(-2, "\t-R num : the number of simulation rounds [default = %d]\n", pPars.nRounds)
-	Abc_Print(-2, "\t-S num : the number of rounds before a restart [default = %d]\n", pPars.nRestart)
-	Abc_Print(-2, "\t-N num : random number seed (1 <= num <= 1000) [default = %d]\n", pPars.nRandSeed)
+	Abc_Print(-2, "\t-F num : the number of frames to simulate [default = %d]\n", pPars.NFrames)
+	Abc_Print(-2, "\t-W num : the number of words to simulate [default = %d]\n", pPars.NWords)
+	Abc_Print(-2, "\t-B num : the number of flops in one bin [default = %d]\n", pPars.NBinSize)
+	Abc_Print(-2, "\t-R num : the number of simulation rounds [default = %d]\n", pPars.NRounds)
+	Abc_Print(-2, "\t-S num : the number of rounds before a restart [default = %d]\n", pPars.NRestart)
+	Abc_Print(-2, "\t-N num : random number seed (1 <= num <= 1000) [default = %d]\n", pPars.NRandSeed)
 	Abc_Print(-2, "\t-T num : approximate runtime limit in seconds [default = %d]\n", pPars.TimeOut)
 	Abc_Print(-2, "\t-G num : approximate runtime gap in seconds since the last CEX [default = %d]\n", pPars.TimeOutGap)
 	Abc_Print(-2, "\t-L file: the log file name [default = %s]\n", abcDefaultString(pLogFileName, "no logging"))
-	Abc_Print(-2, "\t-a     : toggle solving all outputs (do not stop when one is SAT) [default = %s]\n", abcSelect(pPars.fSolveAll, "yes", "no"))
-	Abc_Print(-2, "\t-d     : toggle dropping (replacing by 0) SAT outputs [default = %s]\n", abcSelect(fDropSatOuts, "yes", "no"))
-	Abc_Print(-2, "\t-i     : toggle changing init state to a last rare state [default = %s]\n", abcSelect(pPars.fVerbose, "yes", "no"))
-	Abc_Print(-2, "\t-v     : toggle printing verbose information [default = %s]\n", abcSelect(pPars.fVerbose, "yes", "no"))
-	Abc_Print(-2, "\t-z     : toggle suppressing report about solved outputs [default = %s]\n", abcSelect(pPars.fNotVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-a     : toggle solving all outputs (do not stop when one is SAT) [default = %s]\n", abcSelect(pPars.FSolveAll, "yes", "no"))
+	Abc_Print(-2, "\t-d     : toggle dropping (replacing by 0) SAT outputs [default = %s]\n", abcSelect(pPars.FDropSatOuts, "yes", "no"))
+	Abc_Print(-2, "\t-i     : toggle changing init state to a last rare state [default = %s]\n", abcSelect(pPars.FVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-v     : toggle printing verbose information [default = %s]\n", abcSelect(pPars.FVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-z     : toggle suppressing report about solved outputs [default = %s]\n", abcSelect(pPars.FNotVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h     : print the command usage\n")
 	return 1
 }
@@ -22253,11 +22321,11 @@ func Abc_CommandDarPhase(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			Abc_Print(-1, "PI count of the CEX is not a multiple of PI count of the current AIG.\n")
 			return 1
 		}
-		pCexNew = Abc_CexTransformPhase(abcFrameCex(pAbc), Abc_NtkPiNum(pNtk), Abc_NtkPoNum(pNtk), Abc_NtkLatchNum(pNtk))
+		pCexNew = util.Abc_CexTransformPhase(abcFrameCex(pAbc), Abc_NtkPiNum(pNtk), Abc_NtkPoNum(pNtk), Abc_NtkLatchNum(pNtk))
 		{
 			var pAig *Aig_Man_t = Abc_NtkToDar(pNtk, 0, 1)
 			var pGia *Gia_Man_t = Gia_ManFromAig(pAig)
-			var iPo int32 = Gia_ManSetFailedPoCex(pGia, pCexNew)
+			var iPo int32 = giapkg.Gia_ManSetFailedPoCex(pGia, pCexNew)
 			Gia_ManStop(pGia)
 			Aig_ManStop(pAig)
 			if iPo == -1 {
@@ -22268,7 +22336,7 @@ func Abc_CommandDarPhase(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_FrameReplaceCex(pAbc, &pCexNew)
 		return 0
 	}
-	if !Abc_NtkLatchNum(pNtk) {
+	if Abc_NtkLatchNum(pNtk) == 0 {
 		Abc_Print(-1, "The network is combinational.\n")
 		return 0
 	}
@@ -22361,7 +22429,7 @@ func Abc_CommandSynch(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		pNtkRes = Abc_NtkDarSynchOne(pNtk, nWords, fVerbose)
 
 	} else {
-		if !Abc_NtkPrepareTwoNtks(os.Stdout, pNtk, pArgvNew, nArgcNew, &pNtk1, &pNtk2, &fDelete1, &fDelete2, 1) {
+		if baseabc.Abc_NtkPrepareTwoNtks(os.Stdout, pNtk, pArgvNew, nArgcNew, &pNtk1, &pNtk2, &fDelete1, &fDelete2, 1) == 0 {
 			return 1
 		}
 		if Abc_NtkLatchNum(pNtk1) == 0 || Abc_NtkLatchNum(pNtk2) == 0 {
@@ -22434,7 +22502,7 @@ func Abc_CommandClockGate(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 
 	pNtk = Abc_FrameReadNtk(pAbc)
 	// set defaults
-	Cgt_SetDefaultParams(pPars)
+	opt_cgt.Cgt_SetDefaultParams(pPars)
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "LNDCVKavwh"); c != -1; c = Extra_UtilGetopt(argc, argv, "LNDCVKavwh") {
 		switch c {
@@ -22558,9 +22626,9 @@ usage:
 	Abc_Print(-2, "\t-C num : max number of conflicts at a node [default = %d]\n", pPars.nConfMax)
 	Abc_Print(-2, "\t-V num : min number of vars to recycle SAT solver [default = %d]\n", pPars.nVarsMin)
 	Abc_Print(-2, "\t-K num : min number of flops to recycle SAT solver [default = %d]\n", pPars.nFlopsMin)
-	Abc_Print(-2, "\t-a     : toggle minimizing area-only [default = %s]\n", abcSelect(fAreaOnly, "yes", "no"))
-	Abc_Print(-2, "\t-v     : toggle verbose output [default = %s]\n", abcSelect(fVerbose, "yes", "no"))
-	Abc_Print(-2, "\t-w     : toggle even more detailed output [default = %s]\n", abcSelect(fVeryVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-a     : toggle minimizing area-only [default = %s]\n", abcSelect(pPars.fAreaOnly, "yes", "no"))
+	Abc_Print(-2, "\t-v     : toggle verbose output [default = %s]\n", abcSelect(pPars.fVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-w     : toggle even more detailed output [default = %s]\n", abcSelect(pPars.fVeryVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h     : print the command usage\n")
 	Abc_Print(-2, "\tfile   : (optional) constraints for primary inputs and register outputs\n")
 	return 1
@@ -22830,13 +22898,13 @@ func Abc_CommandSymFun(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 1
 	}
 	// generate and print one function
-	pFun = Abc_TtSymFunGenerate(pStr, nVars)
+	pFun = util.Abc_TtSymFunGenerate(pStr, nVars)
 	truthSize = 2
 	if nVars > 2 {
 		truthSize = (1 << (nVars - 2)) + 1
 	}
 	pTruth = ABC_CALLOC(char, truthSize)
-	Extra_PrintHexadecimalString(pTruth, pFun, nVars)
+	misc_extra.Extra_PrintHexadecimalString(pTruth, pFun, nVars)
 	pFun = nil
 	if fVerbose != 0 {
 		if nVars > 6 {
@@ -22851,7 +22919,7 @@ func Abc_CommandSymFun(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	// read the truth table to be the current network in ABC
 	pCommand = ABC_CALLOC(char, len(pTruth)+100)
 	pCommand = fmt.Sprintf("read_truth %s", pTruth)
-	Cmd_CommandExecute(pAbc, pCommand)
+	base_main.Cmd_CommandExecute(pAbc, pCommand)
 	pCommand = ""
 	pTruth = ""
 	return 0
@@ -22946,11 +23014,11 @@ func Abc_CommandPermute(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 1
 	}
 	if fFanout != 0 {
-		if Abc_NtkLatchNum(pNtk) {
+		if Abc_NtkLatchNum(pNtk) != 0 {
 			Abc_Print(-1, "Currently \"permute -x\" works only for combinational networks.\n")
 			return 1
 		}
-		Abc_NtkPermutePiUsingFanout(pNtk)
+		baseabc.Abc_NtkPermutePiUsingFanout(pNtk)
 		return 0
 	}
 	if (fNodes != 0) && (Abc_NtkIsStrash(pNtk) == 0) {
@@ -22966,7 +23034,7 @@ func Abc_CommandPermute(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Command \"permute\" has failed.\n")
 		return 1
 	}
-	Abc_NtkPermute(pNtkRes, fInputs, fOutputs, fFlops, pFlopPermFile)
+	baseabc.Abc_NtkPermute(pNtkRes, fInputs, fOutputs, fFlops, pFlopPermFile)
 	Abc_FrameReplaceCurrentNetwork(pAbc, pNtkRes)
 	return 0
 
@@ -23020,7 +23088,7 @@ func Abc_CommandUnpermute(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Command \"unpermute\" has failed.\n")
 		return 1
 	}
-	Abc_NtkUnpermute(pNtkRes)
+	baseabc.Abc_NtkUnpermute(pNtkRes)
 	Abc_FrameReplaceCurrentNetwork(pAbc, pNtkRes)
 	return 0
 
@@ -23064,9 +23132,9 @@ func Abc_CommandCubeEnum(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		}
 	}
 	if fZddAlgo != 0 {
-		Abc_EnumerateCubeStatesZdd()
+		misc_extra.Abc_EnumerateCubeStatesZdd()
 	} else {
-		Abc_EnumerateCubeStates()
+		misc_extra.Abc_EnumerateCubeStates()
 	}
 	return 0
 
@@ -23126,7 +23194,7 @@ func Abc_CommandPathEnum(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			goto usage
 		}
 	}
-	Abc_EnumerateFrontierTest(nSize)
+	misc_extra.Abc_EnumerateFrontierTest(nSize)
 	return 0
 
 usage:
@@ -23241,12 +23309,12 @@ func Abc_CommandFunEnum(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		if fDump != 0 {
 			dumpName = Buffer
 		}
-		Dtt_EnumerateLf(nVars, nNodeMax, fDelay, fMulti, fVerbose, dumpName)
+		opt_dau.Dtt_EnumerateLf(nVars, nNodeMax, fDelay, fMulti, fVerbose, dumpName)
 		if fDump != 0 {
 			var pTemp *Gia_Man_t
-			pTemp = Dau_ConstructAigFromFile(Buffer)
+			pTemp = opt_dau.Dau_ConstructAigFromFile(Buffer)
 			Abc_FrameUpdateGia(pAbc, pTemp)
-			Gia_DumpAiger(pTemp, "Lflib", nVars, 1)
+			giapkg.Gia_DumpAiger(pTemp, "Lflib", nVars, 1)
 		}
 
 	} else {
@@ -23258,7 +23326,7 @@ func Abc_CommandFunEnum(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			Abc_Print(-1, "The intermediate support size should be I <= S <= 6.\n")
 			goto usage
 		}
-		Dau_FunctionEnum(nInputs, nVars, nNodeMax, fUseTwo, fReduce, fVerbose)
+		opt_dau.Dau_FunctionEnum(nInputs, nVars, nNodeMax, fUseTwo, fReduce, fVerbose)
 	}
 	return 0
 
@@ -23390,12 +23458,12 @@ func Abc_CommandCec(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 
 	pArgvNew = argv + globalUtilOptind
 	nArgcNew = argc - globalUtilOptind
-	if !Abc_NtkPrepareTwoNtks(os.Stdout, pNtk, pArgvNew, nArgcNew, &pNtk1, &pNtk2, &fDelete1, &fDelete2, 1) {
+	if baseabc.Abc_NtkPrepareTwoNtks(os.Stdout, pNtk, pArgvNew, nArgcNew, &pNtk1, &pNtk2, &fDelete1, &fDelete2, 1) == 0 {
 		return 1
 	}
 
 	if fIgnoreNames != 0 {
-		if !fDelete1 {
+		if fDelete1 == 0 {
 			pNtk1 = Abc_NtkStrash(pNtk1, 0, 1, 0)
 			fDelete1 = 1
 		}
@@ -23403,8 +23471,8 @@ func Abc_CommandCec(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			pNtk2 = Abc_NtkStrash(pNtk2, 0, 1, 0)
 			fDelete2 = 1
 		}
-		Abc_NtkShortNames(pNtk1)
-		Abc_NtkShortNames(pNtk2)
+		baseabc.Abc_NtkShortNames(pNtk1)
+		baseabc.Abc_NtkShortNames(pNtk2)
 	}
 
 	// perform equivalence checking
@@ -23558,13 +23626,13 @@ func Abc_CommandDCec(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		fDelete2 = 0
 
 	} else {
-		if !Abc_NtkPrepareTwoNtks(os.Stdout, pNtk, pArgvNew, nArgcNew, &pNtk1, &pNtk2, &fDelete1, &fDelete2, 1) {
+		if baseabc.Abc_NtkPrepareTwoNtks(os.Stdout, pNtk, pArgvNew, nArgcNew, &pNtk1, &pNtk2, &fDelete1, &fDelete2, 1) == 0 {
 			return 1
 		}
 	}
 
-	if ((pNtk1 != nil) && Abc_NtkLatchNum(pNtk1)) || ((pNtk2 != nil) && Abc_NtkLatchNum(pNtk2)) {
-		if (pNtk1 != nil) && fDelete1 {
+	if ((pNtk1 != nil) && (Abc_NtkLatchNum(pNtk1) != 0)) || ((pNtk2 != nil) && (Abc_NtkLatchNum(pNtk2) != 0)) {
+		if (pNtk1 != nil) && (fDelete1 != 0) {
 			Abc_NtkDelete(pNtk1)
 		}
 		if (pNtk2 != nil) && (fDelete2 != 0) {
@@ -23633,7 +23701,7 @@ func Abc_CommandDSec(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 
 	pNtk = Abc_FrameReadNtk(pAbc)
 	// set defaults
-	Fra_SecSetDefaultParams(pSecPar)
+	proof_fra.Fra_SecSetDefaultParams(pSecPar)
 	pSecPar.TimeLimit = 0
 	fIgnoreNames = 0
 	Extra_UtilGetoptReset()
@@ -23644,9 +23712,9 @@ func Abc_CommandDSec(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-F\" should be followed by an integer.\n")
 				goto usage
 			}
-			pSecPar.nFramesMax = abcAtoi(argv[globalUtilOptind])
+			pSecPar.NFramesMax = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pSecPar.nFramesMax < 0 {
+			if pSecPar.NFramesMax < 0 {
 				goto usage
 			}
 			break
@@ -23662,16 +23730,16 @@ func Abc_CommandDSec(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			}
 			break
 		case 'a':
-			pSecPar.fPhaseAbstract ^= 1
+			pSecPar.FPhaseAbstract ^= 1
 			break
 		case 'r':
-			pSecPar.fRetimeFirst ^= 1
+			pSecPar.FRetimeFirst ^= 1
 			break
 		case 'm':
-			pSecPar.fRetimeRegs ^= 1
+			pSecPar.FRetimeRegs ^= 1
 			break
 		case 'f':
-			pSecPar.fFraiging ^= 1
+			pSecPar.FFraiging ^= 1
 			break
 		case 'n':
 			fIgnoreNames ^= 1
@@ -23680,10 +23748,10 @@ func Abc_CommandDSec(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			fCheck ^= 1
 			break
 		case 'v':
-			pSecPar.fVerbose ^= 1
+			pSecPar.FVerbose ^= 1
 			break
 		case 'w':
-			pSecPar.fVeryVerbose ^= 1
+			pSecPar.FVeryVerbose ^= 1
 			break
 		default:
 			goto usage
@@ -23692,7 +23760,7 @@ func Abc_CommandDSec(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 
 	pArgvNew = argv + globalUtilOptind
 	nArgcNew = argc - globalUtilOptind
-	if !Abc_NtkPrepareTwoNtks(os.Stdout, pNtk, pArgvNew, nArgcNew, &pNtk1, &pNtk2, &fDelete1, &fDelete2, fCheck) {
+	if baseabc.Abc_NtkPrepareTwoNtks(os.Stdout, pNtk, pArgvNew, nArgcNew, &pNtk1, &pNtk2, &fDelete1, &fDelete2, fCheck) == 0 {
 		return 1
 	}
 	if Abc_NtkLatchNum(pNtk1) == 0 || Abc_NtkLatchNum(pNtk2) == 0 {
@@ -23707,7 +23775,7 @@ func Abc_CommandDSec(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	}
 
 	if fIgnoreNames != 0 {
-		if !fDelete1 {
+		if fDelete1 == 0 {
 			pNtk1 = Abc_NtkStrash(pNtk1, 0, 1, 0)
 			fDelete1 = 1
 		}
@@ -23715,8 +23783,8 @@ func Abc_CommandDSec(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			pNtk2 = Abc_NtkStrash(pNtk2, 0, 1, 0)
 			fDelete2 = 1
 		}
-		Abc_NtkShortNames(pNtk1)
-		Abc_NtkShortNames(pNtk2)
+		baseabc.Abc_NtkShortNames(pNtk1)
+		baseabc.Abc_NtkShortNames(pNtk2)
 	}
 
 	// perform verification
@@ -23733,16 +23801,16 @@ func Abc_CommandDSec(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 usage:
 	Abc_Print(-2, "usage: dsec [-F num] [-T num] [-armfncvwh] <file1> <file2>\n")
 	Abc_Print(-2, "\t         performs inductive sequential equivalence checking\n")
-	Abc_Print(-2, "\t-F num : the limit on the depth of induction [default = %d]\n", pSecPar.nFramesMax)
+	Abc_Print(-2, "\t-F num : the limit on the depth of induction [default = %d]\n", pSecPar.NFramesMax)
 	Abc_Print(-2, "\t-T num : the approximate runtime limit (in seconds) [default = %d]\n", pSecPar.TimeLimit)
-	Abc_Print(-2, "\t-a     : toggles the use of phase abstraction [default = %s]\n", abcSelect(fPhaseAbstract, "yes", "no"))
-	Abc_Print(-2, "\t-r     : toggles forward retiming at the beginning [default = %s]\n", abcSelect(fRetimeFirst, "yes", "no"))
-	Abc_Print(-2, "\t-m     : toggles min-register retiming [default = %s]\n", abcSelect(fRetimeRegs, "yes", "no"))
-	Abc_Print(-2, "\t-f     : toggles the internal use of fraiging [default = %s]\n", abcSelect(fFraiging, "yes", "no"))
+	Abc_Print(-2, "\t-a     : toggles the use of phase abstraction [default = %s]\n", abcSelect(pSecPar.FPhaseAbstract, "yes", "no"))
+	Abc_Print(-2, "\t-r     : toggles forward retiming at the beginning [default = %s]\n", abcSelect(pSecPar.FRetimeFirst, "yes", "no"))
+	Abc_Print(-2, "\t-m     : toggles min-register retiming [default = %s]\n", abcSelect(pSecPar.FRetimeRegs, "yes", "no"))
+	Abc_Print(-2, "\t-f     : toggles the internal use of fraiging [default = %s]\n", abcSelect(pSecPar.FFraiging, "yes", "no"))
 	Abc_Print(-2, "\t-n     : toggles how CIs/COs are matched (by name or by order) [default = %s]\n", abcSelect(fIgnoreNames, "by order", "by name"))
 	Abc_Print(-2, "\t-c     : toggles performing internal netlist check [default = %s]\n", abcSelect(fCheck, "yes", "no"))
-	Abc_Print(-2, "\t-v     : toggles verbose output [default = %s]\n", abcSelect(fVerbose, "yes", "no"))
-	Abc_Print(-2, "\t-w     : toggles additional verbose output [default = %s]\n", abcSelect(fVeryVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-v     : toggles verbose output [default = %s]\n", abcSelect(pSecPar.FVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-w     : toggles additional verbose output [default = %s]\n", abcSelect(pSecPar.FVeryVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h     : print the command usage\n")
 	Abc_Print(-2, "\tfile1  : (optional) the file with the first network\n")
 	Abc_Print(-2, "\tfile2  : (optional) the file with the second network\n")
@@ -23774,16 +23842,16 @@ func Abc_CommandDProve(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	var nBmcConfMax int32 = 2000
 
 	// set defaults
-	Fra_SecSetDefaultParams(pSecPar)
+	proof_fra.Fra_SecSetDefaultParams(pSecPar)
 	//    pSecPar->TimeLimit = 300;
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "cbAEFCGDVBRTLarmfijkoupwvh"); c != -1; c = Extra_UtilGetopt(argc, argv, "cbAEFCGDVBRTLarmfijkoupwvh") {
 		switch c {
 		case 'c':
-			pSecPar.fTryComb ^= 1
+			pSecPar.FTryComb ^= 1
 			break
 		case 'b':
-			pSecPar.fTryBmc ^= 1
+			pSecPar.FTryBmc ^= 1
 			break
 		case 'A':
 			if globalUtilOptind >= argc {
@@ -23812,9 +23880,9 @@ func Abc_CommandDProve(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-F\" should be followed by an integer.\n")
 				goto usage
 			}
-			pSecPar.nFramesMax = abcAtoi(argv[globalUtilOptind])
+			pSecPar.NFramesMax = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pSecPar.nFramesMax < 0 {
+			if pSecPar.NFramesMax < 0 {
 				goto usage
 			}
 			break
@@ -23823,9 +23891,9 @@ func Abc_CommandDProve(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-C\" should be followed by an integer.\n")
 				goto usage
 			}
-			pSecPar.nBTLimit = abcAtoi(argv[globalUtilOptind])
+			pSecPar.NBTLimit = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pSecPar.nBTLimit < 0 {
+			if pSecPar.NBTLimit < 0 {
 				goto usage
 			}
 			break
@@ -23834,9 +23902,9 @@ func Abc_CommandDProve(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-G\" should be followed by an integer.\n")
 				goto usage
 			}
-			pSecPar.nBTLimitGlobal = abcAtoi(argv[globalUtilOptind])
+			pSecPar.NBTLimitGlobal = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pSecPar.nBTLimitGlobal < 0 {
+			if pSecPar.NBTLimitGlobal < 0 {
 				goto usage
 			}
 			break
@@ -23845,9 +23913,9 @@ func Abc_CommandDProve(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-D\" should be followed by an integer.\n")
 				goto usage
 			}
-			pSecPar.nBTLimitInter = abcAtoi(argv[globalUtilOptind])
+			pSecPar.NBTLimitInter = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pSecPar.nBTLimitInter < 0 {
+			if pSecPar.NBTLimitInter < 0 {
 				goto usage
 			}
 			break
@@ -23856,9 +23924,9 @@ func Abc_CommandDProve(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-V\" should be followed by an integer.\n")
 				goto usage
 			}
-			pSecPar.nBddVarsMax = abcAtoi(argv[globalUtilOptind])
+			pSecPar.NBddVarsMax = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pSecPar.nBddVarsMax < 0 {
+			if pSecPar.NBddVarsMax < 0 {
 				goto usage
 			}
 			break
@@ -23867,9 +23935,9 @@ func Abc_CommandDProve(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-B\" should be followed by an integer.\n")
 				goto usage
 			}
-			pSecPar.nBddMax = abcAtoi(argv[globalUtilOptind])
+			pSecPar.NBddMax = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pSecPar.nBddMax < 0 {
+			if pSecPar.NBddMax < 0 {
 				goto usage
 			}
 			break
@@ -23878,9 +23946,9 @@ func Abc_CommandDProve(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-R\" should be followed by an integer.\n")
 				goto usage
 			}
-			pSecPar.nBddIterMax = abcAtoi(argv[globalUtilOptind])
+			pSecPar.NBddIterMax = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pSecPar.nBddIterMax < 0 {
+			if pSecPar.NBddIterMax < 0 {
 				goto usage
 			}
 			break
@@ -23889,9 +23957,9 @@ func Abc_CommandDProve(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-T\" should be followed by an integer.\n")
 				goto usage
 			}
-			pSecPar.nPdrTimeout = abcAtoi(argv[globalUtilOptind])
+			pSecPar.NPdrTimeout = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pSecPar.nPdrTimeout < 0 {
+			if pSecPar.NPdrTimeout < 0 {
 				goto usage
 			}
 			break
@@ -23904,40 +23972,40 @@ func Abc_CommandDProve(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			globalUtilOptind++
 			break
 		case 'a':
-			pSecPar.fPhaseAbstract ^= 1
+			pSecPar.FPhaseAbstract ^= 1
 			break
 		case 'r':
-			pSecPar.fRetimeFirst ^= 1
+			pSecPar.FRetimeFirst ^= 1
 			break
 		case 'm':
-			pSecPar.fRetimeRegs ^= 1
+			pSecPar.FRetimeRegs ^= 1
 			break
 		case 'f':
-			pSecPar.fFraiging ^= 1
+			pSecPar.FFraiging ^= 1
 			break
 		case 'i':
-			pSecPar.fInduction ^= 1
+			pSecPar.FInduction ^= 1
 			break
 		case 'j':
-			pSecPar.fInterpolation ^= 1
+			pSecPar.FInterpolation ^= 1
 			break
 		case 'k':
-			pSecPar.fInterSeparate ^= 1
+			pSecPar.FInterSeparate ^= 1
 			break
 		case 'o':
-			pSecPar.fReorderImage ^= 1
+			pSecPar.FReorderImage ^= 1
 			break
 		case 'u':
-			pSecPar.fReadUnsolved ^= 1
+			pSecPar.FReadUnsolved ^= 1
 			break
 		case 'p':
-			pSecPar.fUsePdr ^= 1
+			pSecPar.FUsePdr ^= 1
 			break
 		case 'w':
-			pSecPar.fVeryVerbose ^= 1
+			pSecPar.FVeryVerbose ^= 1
 			break
 		case 'v':
-			pSecPar.fVerbose ^= 1
+			pSecPar.FVerbose ^= 1
 			break
 		default:
 			goto usage
@@ -23964,10 +24032,10 @@ func Abc_CommandDProve(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	}
 
 	// read back the resulting unsolved reduced sequential miter
-	if pSecPar.fReadUnsolved && pSecPar.nSMnumber >= 0 {
+	if (pSecPar.FReadUnsolved != 0) && pSecPar.NSMnumber >= 0 {
 		var FileName string // was [100]byte in C
 
-		FileName = fmt.Sprintf("sm%02d.aig", pSecPar.nSMnumber)
+		FileName = fmt.Sprintf("sm%02d.aig", pSecPar.NSMnumber)
 		pNtk = Io_Read(FileName, Io_ReadFileType(FileName), 1, 0)
 		if pNtk == nil {
 			Abc_Print(-1, "Cannot read back unsolved reduced sequential miter \"%s\",\n", FileName)
@@ -23982,29 +24050,29 @@ usage:
 	Abc_Print(-2, "\t         performs SEC on the sequential miter\n")
 	Abc_Print(-2, "\t-A num : the limit on the depth of BMC [default = %d]\n", nBmcFramesMax)
 	Abc_Print(-2, "\t-E num : the conflict limit during BMC [default = %d]\n", nBmcConfMax)
-	Abc_Print(-2, "\t-F num : the limit on the depth of induction [default = %d]\n", pSecPar.nFramesMax)
-	Abc_Print(-2, "\t-C num : the conflict limit at a node during induction [default = %d]\n", pSecPar.nBTLimit)
-	Abc_Print(-2, "\t-G num : the global conflict limit during induction [default = %d]\n", pSecPar.nBTLimitGlobal)
-	Abc_Print(-2, "\t-D num : the conflict limit during interpolation [default = %d]\n", pSecPar.nBTLimitInter)
-	Abc_Print(-2, "\t-V num : the flop count limit for BDD-based reachablity [default = %d]\n", pSecPar.nBddVarsMax)
-	Abc_Print(-2, "\t-B num : the BDD size limit in BDD-based reachablity [default = %d]\n", pSecPar.nBddMax)
-	Abc_Print(-2, "\t-R num : the max number of reachability iterations [default = %d]\n", pSecPar.nBddIterMax)
-	Abc_Print(-2, "\t-T num : the timeout for property directed reachability [default = %d]\n", pSecPar.nPdrTimeout)
+	Abc_Print(-2, "\t-F num : the limit on the depth of induction [default = %d]\n", pSecPar.NFramesMax)
+	Abc_Print(-2, "\t-C num : the conflict limit at a node during induction [default = %d]\n", pSecPar.NBTLimit)
+	Abc_Print(-2, "\t-G num : the global conflict limit during induction [default = %d]\n", pSecPar.NBTLimitGlobal)
+	Abc_Print(-2, "\t-D num : the conflict limit during interpolation [default = %d]\n", pSecPar.NBTLimitInter)
+	Abc_Print(-2, "\t-V num : the flop count limit for BDD-based reachablity [default = %d]\n", pSecPar.NBddVarsMax)
+	Abc_Print(-2, "\t-B num : the BDD size limit in BDD-based reachablity [default = %d]\n", pSecPar.NBddMax)
+	Abc_Print(-2, "\t-R num : the max number of reachability iterations [default = %d]\n", pSecPar.NBddIterMax)
+	Abc_Print(-2, "\t-T num : the timeout for property directed reachability [default = %d]\n", pSecPar.NPdrTimeout)
 	Abc_Print(-2, "\t-L file: the log file name [default = %s]\n", abcDefaultString(pLogFileName, "no logging"))
-	Abc_Print(-2, "\t-c     : toggles using CEC before attempting SEC [default = %s]\n", abcSelect(fTryComb, "yes", "no"))
-	Abc_Print(-2, "\t-b     : toggles using BMC before attempting SEC [default = %s]\n", abcSelect(fTryBmc, "yes", "no"))
-	Abc_Print(-2, "\t-a     : toggles the use of phase abstraction [default = %s]\n", abcSelect(fPhaseAbstract, "yes", "no"))
-	Abc_Print(-2, "\t-r     : toggles forward retiming at the beginning [default = %s]\n", abcSelect(fRetimeFirst, "yes", "no"))
-	Abc_Print(-2, "\t-m     : toggles min-register retiming [default = %s]\n", abcSelect(fRetimeRegs, "yes", "no"))
-	Abc_Print(-2, "\t-f     : toggles the internal use of fraiging [default = %s]\n", abcSelect(fFraiging, "yes", "no"))
-	Abc_Print(-2, "\t-i     : toggles the use of induction [default = %s]\n", abcSelect(fInduction, "yes", "no"))
-	Abc_Print(-2, "\t-j     : toggles the use of interpolation [default = %s]\n", abcSelect(fInterpolation, "yes", "no"))
-	Abc_Print(-2, "\t-k     : toggles applying interpolation to each output [default = %s]\n", abcSelect(fInterSeparate, "yes", "no"))
-	Abc_Print(-2, "\t-o     : toggles using BDD variable reordering during image computation [default = %s]\n", abcSelect(fReorderImage, "yes", "no"))
-	Abc_Print(-2, "\t-u     : toggles reading back unsolved reduced sequential miter [default = %s]\n", abcSelect(fReadUnsolved, "yes", "no"))
-	Abc_Print(-2, "\t-p     : toggles trying property directed reachability in the end [default = %s]\n", abcSelect(fUsePdr, "yes", "no"))
-	Abc_Print(-2, "\t-v     : toggles verbose output [default = %s]\n", abcSelect(fVerbose, "yes", "no"))
-	Abc_Print(-2, "\t-w     : toggles additional verbose output [default = %s]\n", abcSelect(fVeryVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-c     : toggles using CEC before attempting SEC [default = %s]\n", abcSelect(pSecPar.FTryComb, "yes", "no"))
+	Abc_Print(-2, "\t-b     : toggles using BMC before attempting SEC [default = %s]\n", abcSelect(pSecPar.FTryBmc, "yes", "no"))
+	Abc_Print(-2, "\t-a     : toggles the use of phase abstraction [default = %s]\n", abcSelect(pSecPar.FPhaseAbstract, "yes", "no"))
+	Abc_Print(-2, "\t-r     : toggles forward retiming at the beginning [default = %s]\n", abcSelect(pSecPar.FRetimeFirst, "yes", "no"))
+	Abc_Print(-2, "\t-m     : toggles min-register retiming [default = %s]\n", abcSelect(pSecPar.FRetimeRegs, "yes", "no"))
+	Abc_Print(-2, "\t-f     : toggles the internal use of fraiging [default = %s]\n", abcSelect(pSecPar.FFraiging, "yes", "no"))
+	Abc_Print(-2, "\t-i     : toggles the use of induction [default = %s]\n", abcSelect(pSecPar.FInduction, "yes", "no"))
+	Abc_Print(-2, "\t-j     : toggles the use of interpolation [default = %s]\n", abcSelect(pSecPar.FInterpolation, "yes", "no"))
+	Abc_Print(-2, "\t-k     : toggles applying interpolation to each output [default = %s]\n", abcSelect(pSecPar.FInterSeparate, "yes", "no"))
+	Abc_Print(-2, "\t-o     : toggles using BDD variable reordering during image computation [default = %s]\n", abcSelect(pSecPar.FReorderImage, "yes", "no"))
+	Abc_Print(-2, "\t-u     : toggles reading back unsolved reduced sequential miter [default = %s]\n", abcSelect(pSecPar.FReadUnsolved, "yes", "no"))
+	Abc_Print(-2, "\t-p     : toggles trying property directed reachability in the end [default = %s]\n", abcSelect(pSecPar.FUsePdr, "yes", "no"))
+	Abc_Print(-2, "\t-v     : toggles verbose output [default = %s]\n", abcSelect(pSecPar.FVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-w     : toggles additional verbose output [default = %s]\n", abcSelect(pSecPar.FVeryVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h     : print the command usage\n")
 	Abc_Print(-2, "\tCommand \"dprove\" can also be used for sequential synthesis (dprove -brjopu)\n")
 	return 1
@@ -24079,7 +24147,7 @@ func Abc_CommandAbSec(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	} else {
 		pArgvNew = argv + globalUtilOptind
 		nArgcNew = argc - globalUtilOptind
-		if !Abc_NtkPrepareTwoNtks(os.Stdout, pNtk, pArgvNew, nArgcNew, &pNtk1, &pNtk2, &fDelete1, &fDelete2, 1) {
+		if baseabc.Abc_NtkPrepareTwoNtks(os.Stdout, pNtk, pArgvNew, nArgcNew, &pNtk1, &pNtk2, &fDelete1, &fDelete2, 1) == 0 {
 			return 1
 		}
 		if Abc_NtkLatchNum(pNtk1) == 0 || Abc_NtkLatchNum(pNtk2) == 0 {
@@ -24145,9 +24213,9 @@ func Abc_CommandSimSec(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	pNtk = Abc_FrameReadNtk(pAbc)
 	// set defaults
 	fMiter = 1
-	Ssw_ManSetDefaultParams(pPars)
-	pPars.fPartSigCorr = 1
-	pPars.fVerbose = 1
+	proof_ssw.Ssw_ManSetDefaultParams(pPars)
+	pPars.FPartSigCorr = 1
+	pPars.FVerbose = 1
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "FDcymvh"); c != -1; c = Extra_UtilGetopt(argc, argv, "FDcymvh") {
 		switch c {
@@ -24156,9 +24224,9 @@ func Abc_CommandSimSec(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-F\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nFramesK = abcAtoi(argv[globalUtilOptind])
+			pPars.NFramesK = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nFramesK < 0 {
+			if pPars.NFramesK < 0 {
 				goto usage
 			}
 			break
@@ -24167,9 +24235,9 @@ func Abc_CommandSimSec(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-D\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nIsleDist = abcAtoi(argv[globalUtilOptind])
+			pPars.NIsleDist = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nIsleDist < 0 {
+			if pPars.NIsleDist < 0 {
 				goto usage
 			}
 			break
@@ -24177,13 +24245,13 @@ func Abc_CommandSimSec(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			fMiter ^= 1
 			break
 		case 'c':
-			pPars.fPartSigCorr ^= 1
+			pPars.FPartSigCorr ^= 1
 			break
 		case 'y':
-			pPars.fDumpSRInit ^= 1
+			pPars.FDumpSRInit ^= 1
 			break
 		case 'v':
-			pPars.fVerbose ^= 1
+			pPars.FVerbose ^= 1
 			break
 		default:
 			goto usage
@@ -24208,7 +24276,7 @@ func Abc_CommandSimSec(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	} else {
 		pArgvNew = argv + globalUtilOptind
 		nArgcNew = argc - globalUtilOptind
-		if !Abc_NtkPrepareTwoNtks(os.Stdout, pNtk, pArgvNew, nArgcNew, &pNtk1, &pNtk2, &fDelete1, &fDelete2, 1) {
+		if baseabc.Abc_NtkPrepareTwoNtks(os.Stdout, pNtk, pArgvNew, nArgcNew, &pNtk1, &pNtk2, &fDelete1, &fDelete2, 1) == 0 {
 			return 1
 		}
 		if Abc_NtkLatchNum(pNtk1) == 0 || Abc_NtkLatchNum(pNtk2) == 0 {
@@ -24235,12 +24303,12 @@ func Abc_CommandSimSec(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 usage:
 	Abc_Print(-2, "usage: simsec [-FD num] [-mcyv] <file1> <file2>\n")
 	Abc_Print(-2, "\t         performs SEC using structural similarity\n")
-	Abc_Print(-2, "\t-F num : the limit on the depth of induction [default = %d]\n", pPars.nFramesK)
-	Abc_Print(-2, "\t-D num : the distance for extending islands [default = %d]\n", pPars.nIsleDist)
+	Abc_Print(-2, "\t-F num : the limit on the depth of induction [default = %d]\n", pPars.NFramesK)
+	Abc_Print(-2, "\t-D num : the distance for extending islands [default = %d]\n", pPars.NIsleDist)
 	Abc_Print(-2, "\t-m     : toggles miter vs. two networks [default = %s]\n", abcSelect(fMiter, "miter", "two networks"))
-	Abc_Print(-2, "\t-c     : uses partial vs. full signal correspondence [default = %s]\n", abcSelect(fPartSigCorr, "partial", "full"))
-	Abc_Print(-2, "\t-y     : dumps speculatively reduced miter of the classes [default = %s]\n", abcSelect(fDumpSRInit, "yes", "no"))
-	Abc_Print(-2, "\t-v     : toggles verbose output [default = %s]\n", abcSelect(fVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-c     : uses partial vs. full signal correspondence [default = %s]\n", abcSelect(pPars.FPartSigCorr, "partial", "full"))
+	Abc_Print(-2, "\t-y     : dumps speculatively reduced miter of the classes [default = %s]\n", abcSelect(pPars.FDumpSRInit, "yes", "no"))
+	Abc_Print(-2, "\t-v     : toggles verbose output [default = %s]\n", abcSelect(pPars.FVerbose, "yes", "no"))
 	Abc_Print(-2, "\tfile1  : (optional) the file with the first network\n")
 	Abc_Print(-2, "\tfile2  : (optional) the file with the second network\n")
 	Abc_Print(-2, "\t         if no files are given, uses the current network and its spec\n")
@@ -24318,7 +24386,7 @@ func Abc_CommandMatch(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	} else {
 		pArgvNew = argv + globalUtilOptind
 		nArgcNew = argc - globalUtilOptind
-		if !Abc_NtkPrepareTwoNtks(os.Stdout, pNtk, pArgvNew, nArgcNew, &pNtk1, &pNtk2, &fDelete1, &fDelete2, 1) {
+		if baseabc.Abc_NtkPrepareTwoNtks(os.Stdout, pNtk, pArgvNew, nArgcNew, &pNtk1, &pNtk2, &fDelete1, &fDelete2, 1) == 0 {
 			return 1
 		}
 		if Abc_NtkLatchNum(pNtk1) == 0 || Abc_NtkLatchNum(pNtk2) == 0 {
@@ -24625,14 +24693,14 @@ func Abc_CommandDSat(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		if pNtk != nil {
 			piNum = Abc_NtkPiNum(pNtk)
 		}
-		Cnf_DataSolveFromFile(pFileName, nConfLimit, nLearnedStart, nLearnedDelta, nLearnedPerce, fVerbose, fShowPattern, &pModel, piNum)
+		sat_cnf.Cnf_DataSolveFromFile(pFileName, nConfLimit, nLearnedStart, nLearnedDelta, nLearnedPerce, fVerbose, fShowPattern, &pModel, piNum)
 		if (pModel != nil) && (pNtk != nil) {
 			pSimInfo := Abc_NtkVerifySimulatePattern(pNtk, pModel)
 			if *pSimInfo != 1 {
 				Abc_Print(1, "ERROR in mapping PIs into SAT vars: Generated CEX is invalid.\n")
 			}
 			pSimInfo = nil
-			abcFrameSetCex(pAbc, Abc_CexCreate(0, Abc_NtkPiNum(pNtk), pModel, 0, 0, 0))
+			abcFrameSetCex(pAbc, util.Abc_CexCreate(0, Abc_NtkPiNum(pNtk), pModel, 0, 0, 0))
 		}
 		pModel = nil
 		return 0
@@ -24664,7 +24732,7 @@ func Abc_CommandDSat(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			Abc_Print(1, "ERROR in Abc_NtkMiterSat(): Generated counter example is invalid.\n")
 		}
 		pSimInfo = nil
-		abcFrameSetCex(pAbc, Abc_CexCreate(0, Abc_NtkPiNum(pNtk), pNtk.pModel, 0, 0, 0))
+		abcFrameSetCex(pAbc, util.Abc_CexCreate(0, Abc_NtkPiNum(pNtk), pNtk.pModel, 0, 0, 0))
 	}
 	abcFrameSetStatus(pAbc, RetValue)
 	if !(fSilent != 0) {
@@ -24854,7 +24922,7 @@ func Abc_CommandSatoko(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	satoko_default_opts(&opts)
 
 	// override default options
-	popts = Cmd_DeriveOptionFromSettings(argc, argv)
+	popts = base_cmd.Cmd_DeriveOptionFromSettings(argc, argv)
 	if popts == nil {
 		goto usage
 	}
@@ -24871,13 +24939,13 @@ func Abc_CommandSatoko(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		satoko_configure(p, &opts)
 
 		clk = Abc_Clock()
-		if status == SATOKO_OK {
+		if status == sat_satoko.SATOKO_OK {
 			status = satoko_solve(p)
 		}
 
-		if status == SATOKO_UNDEC {
+		if status == sat_satoko.SATOKO_UNDEC {
 			Abc_Print(1, "UNDECIDED      ")
-		} else if status == SATOKO_SAT {
+		} else if status == sat_satoko.SATOKO_SAT {
 			Abc_Print(1, "SATISFIABLE    ")
 		} else {
 			Abc_Print(1, "UNSATISFIABLE  ")
@@ -24968,14 +25036,14 @@ func Abc_CommandAbc9Satoko(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		}
 	}
 	if argc == globalUtilOptind+1 {
-		Gia_ManSatokoDimacs(argv[globalUtilOptind], &opts)
+		giapkg.Gia_ManSatokoDimacs(argv[globalUtilOptind], &opts)
 		return 0
 	}
 	if abcFrameGia(pAbc) == nil {
 		Abc_Print(-1, "Abc_CommandAbc9Satoko(): There is no AIG.\n")
 		return 1
 	}
-	Gia_ManSatokoCall(abcFrameGia(pAbc), &opts, fSplit, fIncrem)
+	giapkg.Gia_ManSatokoCall(abcFrameGia(pAbc), &opts, fSplit, fIncrem)
 	return 0
 
 usage:
@@ -25043,7 +25111,7 @@ func Abc_CommandAbc9Sat3(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Sat3(): There is no AIG.\n")
 		return 1
 	}
-	Gia_ManSat3Call(abcFrameGia(pAbc), fSplit)
+	giapkg.Gia_ManSat3Call(abcFrameGia(pAbc), fSplit)
 	return 0
 
 usage:
@@ -25378,10 +25446,10 @@ usage:
 	Abc_Print(-2, "\t-G num : multiplicative coefficient for fraiging [default = %d]\n", int32(pParams.nFraigingLimitMulti))
 	Abc_Print(-2, "\t-L num : max last-gasp number of conflicts in mitering [default = %d]\n", pParams.nMiteringLimitLast)
 	Abc_Print(-2, "\t-I num : max number of clause inspections in all SAT calls [default = %d]\n", int32(pParams.nTotalInspectLimit))
-	Abc_Print(-2, "\t-r     : toggle the use of rewriting [default = %s]\n", abcSelect(fUseRewriting, "yes", "no"))
-	Abc_Print(-2, "\t-f     : toggle the use of FRAIGing [default = %s]\n", abcSelect(fUseFraiging, "yes", "no"))
-	Abc_Print(-2, "\t-b     : toggle the use of BDDs [default = %s]\n", abcSelect(fUseBdds, "yes", "no"))
-	Abc_Print(-2, "\t-v     : prints verbose information [default = %s]\n", abcSelect(fVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-r     : toggle the use of rewriting [default = %s]\n", abcSelect(pParams.fUseRewriting, "yes", "no"))
+	Abc_Print(-2, "\t-f     : toggle the use of FRAIGing [default = %s]\n", abcSelect(pParams.fUseFraiging, "yes", "no"))
+	Abc_Print(-2, "\t-b     : toggle the use of BDDs [default = %s]\n", abcSelect(pParams.fUseBdds, "yes", "no"))
+	Abc_Print(-2, "\t-v     : prints verbose information [default = %s]\n", abcSelect(pParams.fVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h     : print the command usage\n")
 	return 1
 }
@@ -25423,7 +25491,7 @@ func Abc_CommandDebug(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 1
 	}
 
-	Abc_NtkAutoDebug(pNtk, Abc_NtkRetimeDebug)
+	Abc_NtkAutoDebug(pNtk, opt_ret.Abc_NtkRetimeDebug)
 	return 0
 
 usage:
@@ -25872,7 +25940,7 @@ func Abc_CommandBmc3(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	var pLogFileName string
 	var fOrDecomp int32
 	var c int32
-	Saig_ParBmcSetDefaultParams(pPars)
+	sat_bmc.Saig_ParBmcSetDefaultParams(pPars)
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "SFTHGCDJIPQRLWaxdursgvzh"); c != -1; c = Extra_UtilGetopt(argc, argv, "SFTHGCDJIPQRLWaxdursgvzh") {
 		switch c {
@@ -25881,9 +25949,9 @@ func Abc_CommandBmc3(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-S\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nStart = abcAtoi(argv[globalUtilOptind])
+			pPars.NStart = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nStart < 0 {
+			if pPars.NStart < 0 {
 				goto usage
 			}
 			break
@@ -25892,9 +25960,9 @@ func Abc_CommandBmc3(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-F\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nFramesMax = abcAtoi(argv[globalUtilOptind])
+			pPars.NFramesMax = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nFramesMax < 0 {
+			if pPars.NFramesMax < 0 {
 				goto usage
 			}
 			break
@@ -25903,9 +25971,9 @@ func Abc_CommandBmc3(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-T\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nTimeOut = abcAtoi(argv[globalUtilOptind])
+			pPars.NTimeOut = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nTimeOut < 0 {
+			if pPars.NTimeOut < 0 {
 				goto usage
 			}
 			break
@@ -25914,9 +25982,9 @@ func Abc_CommandBmc3(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-H\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nTimeOutOne = abcAtoi(argv[globalUtilOptind])
+			pPars.NTimeOutOne = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nTimeOutOne < 0 {
+			if pPars.NTimeOutOne < 0 {
 				goto usage
 			}
 			break
@@ -25925,9 +25993,9 @@ func Abc_CommandBmc3(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-G\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nTimeOutGap = abcAtoi(argv[globalUtilOptind])
+			pPars.NTimeOutGap = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nTimeOutGap < 0 {
+			if pPars.NTimeOutGap < 0 {
 				goto usage
 			}
 			break
@@ -25936,9 +26004,9 @@ func Abc_CommandBmc3(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-C\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nConfLimit = abcAtoi(argv[globalUtilOptind])
+			pPars.NConfLimit = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nConfLimit < 0 {
+			if pPars.NConfLimit < 0 {
 				goto usage
 			}
 			break
@@ -25947,9 +26015,9 @@ func Abc_CommandBmc3(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-D\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nConfLimitJump = abcAtoi(argv[globalUtilOptind])
+			pPars.NConfLimitJump = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nConfLimitJump < 0 {
+			if pPars.NConfLimitJump < 0 {
 				goto usage
 			}
 			break
@@ -25958,9 +26026,9 @@ func Abc_CommandBmc3(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-J\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nFramesJump = abcAtoi(argv[globalUtilOptind])
+			pPars.NFramesJump = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nFramesJump < 0 {
+			if pPars.NFramesJump < 0 {
 				goto usage
 			}
 			break
@@ -25969,9 +26037,9 @@ func Abc_CommandBmc3(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-I\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nPisAbstract = abcAtoi(argv[globalUtilOptind])
+			pPars.NPisAbstract = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nPisAbstract < 0 {
+			if pPars.NPisAbstract < 0 {
 				goto usage
 			}
 			break
@@ -25980,9 +26048,9 @@ func Abc_CommandBmc3(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-P\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nLearnedStart = abcAtoi(argv[globalUtilOptind])
+			pPars.NLearnedStart = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nLearnedStart < 0 {
+			if pPars.NLearnedStart < 0 {
 				goto usage
 			}
 			break
@@ -25991,9 +26059,9 @@ func Abc_CommandBmc3(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-Q\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nLearnedDelta = abcAtoi(argv[globalUtilOptind])
+			pPars.NLearnedDelta = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nLearnedDelta < 0 {
+			if pPars.NLearnedDelta < 0 {
 				goto usage
 			}
 			break
@@ -26002,9 +26070,9 @@ func Abc_CommandBmc3(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-R\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nLearnedPerce = abcAtoi(argv[globalUtilOptind])
+			pPars.NLearnedPerce = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nLearnedPerce < 0 {
+			if pPars.NLearnedPerce < 0 {
 				goto usage
 			}
 			break
@@ -26021,35 +26089,35 @@ func Abc_CommandBmc3(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-W\" should be followed by a file name.\n")
 				goto usage
 			}
-			pPars.pLogFileName = argv[globalUtilOptind]
+			pPars.PLogFileName = argv[globalUtilOptind]
 			globalUtilOptind++
 			break
 		case 'a':
-			pPars.fSolveAll ^= 1
+			pPars.FSolveAll ^= 1
 			break
 		case 'x':
-			pPars.fStoreCex ^= 1
+			pPars.FStoreCex ^= 1
 			break
 		case 'd':
-			pPars.fDropSatOuts ^= 1
+			pPars.FDropSatOuts ^= 1
 			break
 		case 'u':
 			fOrDecomp ^= 1
 			break
 		case 'r':
-			pPars.fNoRestarts ^= 1
+			pPars.FNoRestarts ^= 1
 			break
 		case 's':
-			pPars.fUseSatoko ^= 1
+			pPars.FUseSatoko ^= 1
 			break
 		case 'g':
-			pPars.fUseGlucose ^= 1
+			pPars.FUseGlucose ^= 1
 			break
 		case 'v':
-			pPars.fVerbose ^= 1
+			pPars.FVerbose ^= 1
 			break
 		case 'z':
-			pPars.fNotVerbose ^= 1
+			pPars.FNotVerbose ^= 1
 			break
 		case 'h':
 			goto usage
@@ -26077,26 +26145,26 @@ func Abc_CommandBmc3(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(1, "The miters is already solved; skipping the command.\n")
 		return 0
 	}
-	pPars.fUseBridge = (abcFrameBridgeMode(pAbc) != 0)
+	pPars.FUseBridge = (abcFrameBridgeMode(pAbc) != 0)
 	abcFrameSetStatus(pAbc, Abc_NtkDarBmc3(pNtk, pPars, fOrDecomp))
 	if baseabc.Abc_NtkReadSeqModelVec(pNtk) != nil {
 		abcFrameSetNFrames(pAbc, -1)
 	} else {
-		abcFrameSetNFrames(pAbc, pPars.iFrame)
+		abcFrameSetNFrames(pAbc, pPars.IFrame)
 	}
 	if pLogFileName != "" {
 		Abc_NtkWriteLogFile(pLogFileName, abcFrameCex(pAbc), abcFrameStatus(pAbc), abcFrameNFrames(pAbc), "bmc3")
 	}
 	vSeqModelVec = baseabc.Abc_NtkReadSeqModelVec(pNtk)
 	baseabc.Abc_NtkSetSeqModelVec(pNtk, nil)
-	if pPars.fSolveAll && pPars.fDropSatOuts {
+	if (pPars.FSolveAll != 0) && (pPars.FDropSatOuts != 0) {
 		if vSeqModelVec == nil {
 			Abc_Print(1, "The array of counter-examples is not available.\n")
 		} else if Vec_PtrSize(vSeqModelVec) != Abc_NtkPoNum(pNtk) {
 			Abc_Print(1, "The array size does not match the number of outputs.\n")
 		} else {
 
-			Abc_NtkDropSatOutputs(pNtk, vSeqModelVec, pPars.fVerbose)
+			baseabc.Abc_NtkDropSatOutputs(pNtk, vSeqModelVec, pPars.FVerbose)
 			pNtkRes = Abc_NtkDarLatchSweep(pNtk, 1, 1, 1, 0, -1, -1, 0, 0)
 			if pNtkRes == nil {
 				Abc_Print(-1, "Removing SAT outputs has failed.\n")
@@ -26119,29 +26187,29 @@ func Abc_CommandBmc3(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 usage:
 	Abc_Print(-2, "usage: bmc3 [-SFTHGCDJIPQR num] [-LW file] [-axdursgvzh]\n")
 	Abc_Print(-2, "\t         performs bounded model checking with dynamic unrolling\n")
-	Abc_Print(-2, "\t-S num : the starting time frame [default = %d]\n", pPars.nStart)
-	Abc_Print(-2, "\t-F num : the max number of time frames (0 = unused) [default = %d]\n", pPars.nFramesMax)
-	Abc_Print(-2, "\t-T num : runtime limit, in seconds [default = %d]\n", pPars.nTimeOut)
-	Abc_Print(-2, "\t-H num : runtime limit per output, in miliseconds (with \"-a\") [default = %d]\n", pPars.nTimeOutOne)
-	Abc_Print(-2, "\t-G num : runtime gap since the last CEX, in seconds [default = %d]\n", pPars.nTimeOutGap)
-	Abc_Print(-2, "\t-C num : max conflicts at an output [default = %d]\n", pPars.nConfLimit)
-	Abc_Print(-2, "\t-D num : max conflicts after jumping (0 = infinity) [default = %d]\n", pPars.nConfLimitJump)
-	Abc_Print(-2, "\t-J num : the number of timeframes to jump (0 = not used) [default = %d]\n", pPars.nFramesJump)
-	Abc_Print(-2, "\t-I num : the number of PIs to abstract [default = %d]\n", pPars.nPisAbstract)
-	Abc_Print(-2, "\t-P num : the max number of learned clauses to keep (0=unused) [default = %d]\n", pPars.nLearnedStart)
-	Abc_Print(-2, "\t-Q num : delta value for learned clause removal [default = %d]\n", pPars.nLearnedDelta)
-	Abc_Print(-2, "\t-R num : percentage to keep for learned clause removal [default = %d]\n", pPars.nLearnedPerce)
+	Abc_Print(-2, "\t-S num : the starting time frame [default = %d]\n", pPars.NStart)
+	Abc_Print(-2, "\t-F num : the max number of time frames (0 = unused) [default = %d]\n", pPars.NFramesMax)
+	Abc_Print(-2, "\t-T num : runtime limit, in seconds [default = %d]\n", pPars.NTimeOut)
+	Abc_Print(-2, "\t-H num : runtime limit per output, in miliseconds (with \"-a\") [default = %d]\n", pPars.NTimeOutOne)
+	Abc_Print(-2, "\t-G num : runtime gap since the last CEX, in seconds [default = %d]\n", pPars.NTimeOutGap)
+	Abc_Print(-2, "\t-C num : max conflicts at an output [default = %d]\n", pPars.NConfLimit)
+	Abc_Print(-2, "\t-D num : max conflicts after jumping (0 = infinity) [default = %d]\n", pPars.NConfLimitJump)
+	Abc_Print(-2, "\t-J num : the number of timeframes to jump (0 = not used) [default = %d]\n", pPars.NFramesJump)
+	Abc_Print(-2, "\t-I num : the number of PIs to abstract [default = %d]\n", pPars.NPisAbstract)
+	Abc_Print(-2, "\t-P num : the max number of learned clauses to keep (0=unused) [default = %d]\n", pPars.NLearnedStart)
+	Abc_Print(-2, "\t-Q num : delta value for learned clause removal [default = %d]\n", pPars.NLearnedDelta)
+	Abc_Print(-2, "\t-R num : percentage to keep for learned clause removal [default = %d]\n", pPars.NLearnedPerce)
 	Abc_Print(-2, "\t-L file: the log file name [default = %s]\n", abcDefaultString(pLogFileName, "no logging"))
-	Abc_Print(-2, "\t-W file: the log file name with per-output details [default = %s]\n", abcDefaultString(pPars.pLogFileName, "no logging"))
-	Abc_Print(-2, "\t-a     : solve all outputs (do not stop when one is SAT) [default = %s]\n", abcSelect(fSolveAll, "yes", "no"))
-	Abc_Print(-2, "\t-x     : toggle storing CEXes when solving all outputs [default = %s]\n", abcSelect(fStoreCex, "yes", "no"))
-	Abc_Print(-2, "\t-d     : toggle dropping (replacing by 0) SAT outputs [default = %s]\n", abcSelect(fDropSatOuts, "yes", "no"))
+	Abc_Print(-2, "\t-W file: the log file name with per-output details [default = %s]\n", abcDefaultString(pPars.PLogFileName, "no logging"))
+	Abc_Print(-2, "\t-a     : solve all outputs (do not stop when one is SAT) [default = %s]\n", abcSelect(pPars.FSolveAll, "yes", "no"))
+	Abc_Print(-2, "\t-x     : toggle storing CEXes when solving all outputs [default = %s]\n", abcSelect(pPars.FStoreCex, "yes", "no"))
+	Abc_Print(-2, "\t-d     : toggle dropping (replacing by 0) SAT outputs [default = %s]\n", abcSelect(pPars.FDropSatOuts, "yes", "no"))
 	Abc_Print(-2, "\t-u     : toggle performing structural OR-decomposition [default = %s]\n", abcSelect(fOrDecomp, "yes", "not"))
-	Abc_Print(-2, "\t-r     : toggle disabling periodic restarts [default = %s]\n", abcSelect(fNoRestarts, "yes", "no"))
-	Abc_Print(-2, "\t-s     : toggle using Satoko by Bruno Schmitt [default = %s]\n", abcSelect(fUseSatoko, "yes", "no"))
-	Abc_Print(-2, "\t-g     : toggle using Glucose 3.0 by Gilles Audemard and Laurent Simon [default = %s]\n", abcSelect(fUseGlucose, "yes", "no"))
-	Abc_Print(-2, "\t-v     : toggle verbose output [default = %s]\n", abcSelect(fVerbose, "yes", "no"))
-	Abc_Print(-2, "\t-z     : toggle suppressing report about solved outputs [default = %s]\n", abcSelect(fNotVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-r     : toggle disabling periodic restarts [default = %s]\n", abcSelect(pPars.FNoRestarts, "yes", "no"))
+	Abc_Print(-2, "\t-s     : toggle using Satoko by Bruno Schmitt [default = %s]\n", abcSelect(pPars.FUseSatoko, "yes", "no"))
+	Abc_Print(-2, "\t-g     : toggle using Glucose 3.0 by Gilles Audemard and Laurent Simon [default = %s]\n", abcSelect(pPars.FUseGlucose, "yes", "no"))
+	Abc_Print(-2, "\t-v     : toggle verbose output [default = %s]\n", abcSelect(pPars.FVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-z     : toggle suppressing report about solved outputs [default = %s]\n", abcSelect(pPars.FNotVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h     : print the command usage\n")
 	return 1
 }
@@ -26168,7 +26236,7 @@ func Abc_CommandBmcInter(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	var pLogFileName string
 
 	// set defaults
-	Inter_ManSetDefaultParams(pPars)
+	proof_int.Inter_ManSetDefaultParams(pPars)
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "CFTKLIrtpomcgbqkdivh"); c != -1; c = Extra_UtilGetopt(argc, argv, "CFTKLIrtpomcgbqkdivh") {
 		switch c {
@@ -26317,7 +26385,7 @@ func Abc_CommandBmcInter(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		} else {
 			var pNtkNew *Abc_Ntk_t = Abc_NtkDup(pNtk)
 			Abc_Print(0, "All %d outputs will be ORed together.\n", Abc_NtkPoNum(pNtk))
-			if !Abc_NtkCombinePos(pNtkNew, 0, 0) {
+			if Abc_NtkCombinePos(pNtkNew, 0, 0) == 0 {
 				Abc_NtkDelete(pNtkNew)
 				Abc_Print(-1, "ORing outputs has failed.\n")
 				return 0
@@ -26325,7 +26393,7 @@ func Abc_CommandBmcInter(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			abcFrameSetStatus(pAbc, Abc_NtkDarBmcInter(pNtkNew, pPars, nil))
 			if abcFrameStatus(pAbc) == 0 {
 				var pMan *Aig_Man_t = Abc_NtkToDar(pNtk, 0, 1)
-				pNtkNew.pSeqModel.iPo = Saig_ManFindFailedPoCex(pMan, pNtkNew.pSeqModel)
+				pNtkNew.pSeqModel.iPo = aig_saig.Saig_ManFindFailedPoCex(pMan, pNtkNew.pSeqModel)
 				Aig_ManStop(pMan)
 			}
 			Abc_FrameReplaceCex(pAbc, &pNtkNew.pSeqModel)
@@ -26355,19 +26423,19 @@ usage:
 	Abc_Print(-2, "\t         (K = 1 works in all cases; K > 1 works without -t and -b)\n")
 	Abc_Print(-2, "\t-L file: the log file name [default = %s]\n", abcDefaultString(pLogFileName, "no logging"))
 	Abc_Print(-2, "\t-I file: the file name for dumping interpolant [default = \"%s\"]\n", abcDefaultString(pPars.pFileName, "invar.aig"))
-	Abc_Print(-2, "\t-i     : toggle dumping interpolant/invariant into a file [default = %s]\n", abcSelect(fDropInvar, "yes", "no"))
-	Abc_Print(-2, "\t-r     : toggle rewriting of the unrolled timeframes [default = %s]\n", abcSelect(fRewrite, "yes", "no"))
-	Abc_Print(-2, "\t-t     : toggle adding transition into the initial state [default = %s]\n", abcSelect(fTransLoop, "yes", "no"))
-	Abc_Print(-2, "\t-p     : toggle using original Pudlak's interpolation procedure [default = %s]\n", abcSelect(fUsePudlak, "yes", "no"))
-	Abc_Print(-2, "\t-o     : toggle using optimized Pudlak's interpolation procedure [default = %s]\n", abcSelect(fUseOther, "yes", "no"))
-	Abc_Print(-2, "\t-m     : toggle using MiniSat-1.14p (now, Windows-only) [default = %s]\n", abcSelect(fUseMiniSat, "yes", "no"))
-	Abc_Print(-2, "\t-c     : toggle using inductive containment check [default = %s]\n", abcSelect(fCheckKstep, "yes", "no"))
-	Abc_Print(-2, "\t-g     : toggle using bias for global variables using SAT [default = %s]\n", abcSelect(fUseBias, "yes", "no"))
-	Abc_Print(-2, "\t-b     : toggle using backward interpolation (works with -t) [default = %s]\n", abcSelect(fUseBackward, "yes", "no"))
-	Abc_Print(-2, "\t-q     : toggle using property in two last timeframes [default = %s]\n", abcSelect(fUseTwoFrames, "yes", "no"))
-	Abc_Print(-2, "\t-k     : toggle solving each output separately [default = %s]\n", abcSelect(fUseSeparate, "yes", "no"))
-	Abc_Print(-2, "\t-d     : toggle dropping (replacing by 0) SAT outputs (with -k is used) [default = %s]\n", abcSelect(fDropSatOuts, "yes", "no"))
-	Abc_Print(-2, "\t-v     : toggle verbose output [default = %s]\n", abcSelect(fVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-i     : toggle dumping interpolant/invariant into a file [default = %s]\n", abcSelect(pPars.fDropInvar, "yes", "no"))
+	Abc_Print(-2, "\t-r     : toggle rewriting of the unrolled timeframes [default = %s]\n", abcSelect(pPars.fRewrite, "yes", "no"))
+	Abc_Print(-2, "\t-t     : toggle adding transition into the initial state [default = %s]\n", abcSelect(pPars.fTransLoop, "yes", "no"))
+	Abc_Print(-2, "\t-p     : toggle using original Pudlak's interpolation procedure [default = %s]\n", abcSelect(pPars.fUsePudlak, "yes", "no"))
+	Abc_Print(-2, "\t-o     : toggle using optimized Pudlak's interpolation procedure [default = %s]\n", abcSelect(pPars.fUseOther, "yes", "no"))
+	Abc_Print(-2, "\t-m     : toggle using MiniSat-1.14p (now, Windows-only) [default = %s]\n", abcSelect(pPars.fUseMiniSat, "yes", "no"))
+	Abc_Print(-2, "\t-c     : toggle using inductive containment check [default = %s]\n", abcSelect(pPars.fCheckKstep, "yes", "no"))
+	Abc_Print(-2, "\t-g     : toggle using bias for global variables using SAT [default = %s]\n", abcSelect(pPars.fUseBias, "yes", "no"))
+	Abc_Print(-2, "\t-b     : toggle using backward interpolation (works with -t) [default = %s]\n", abcSelect(pPars.fUseBackward, "yes", "no"))
+	Abc_Print(-2, "\t-q     : toggle using property in two last timeframes [default = %s]\n", abcSelect(pPars.fUseTwoFrames, "yes", "no"))
+	Abc_Print(-2, "\t-k     : toggle solving each output separately [default = %s]\n", abcSelect(pPars.fUseSeparate, "yes", "no"))
+	Abc_Print(-2, "\t-d     : toggle dropping (replacing by 0) SAT outputs (with -k is used) [default = %s]\n", abcSelect(pPars.fDropSatOuts, "yes", "no"))
+	Abc_Print(-2, "\t-v     : toggle verbose output [default = %s]\n", abcSelect(pPars.fVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h     : print the command usage\n")
 	return 1
 }
@@ -26744,7 +26812,7 @@ func Abc_CommandTempor(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			Abc_Print(-1, "PI count of the CEX is not a multiple of PI count of the current AIG.\n")
 			return 1
 		}
-		pCexNew = Abc_CexTransformTempor(abcFrameCex(pAbc), Abc_NtkPiNum(pNtk), Abc_NtkPoNum(pNtk), Abc_NtkLatchNum(pNtk))
+		pCexNew = util.Abc_CexTransformTempor(abcFrameCex(pAbc), Abc_NtkPiNum(pNtk), Abc_NtkPoNum(pNtk), Abc_NtkLatchNum(pNtk))
 		Abc_FrameReplaceCex(pAbc, &pCexNew)
 		return 0
 	}
@@ -27052,7 +27120,7 @@ func Abc_CommandConstr(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	if Abc_NtkConstrNum(pNtk) > 0 {
 
 		if fInvert != 0 {
-			Abc_NtkInvertConstraints(pNtk)
+			baseabc.Abc_NtkInvertConstraints(pNtk)
 			if Abc_NtkConstrNum(pNtk) == 1 {
 				Abc_Print(1, "The output of %d constraint is complemented.\n", Abc_NtkConstrNum(pNtk))
 			} else {
@@ -27186,7 +27254,7 @@ func Abc_CommandUnfold(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		var pAig *Aig_Man_t = Abc_NtkToDar(pNtk, 0, 0)
 		var pGia *Gia_Man_t = Gia_ManFromAigSimple(pAig)
 		Aig_ManStop(pAig)
-		pNew = Gia_ManDupWithConstr(pGia)
+		pNew = giapkg.Gia_ManDupWithConstr(pGia)
 		Gia_ManStop(pGia)
 		if pNew == nil {
 			Abc_Print(-1, "Cannot extract constrains from the miter.\n")
@@ -27333,8 +27401,8 @@ func Abc_CommandBm(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	var p_equivalence int32 = FALSE
 
 	pNtk = Abc_FrameReadNtk(pAbc)
-	pOut = Abc_FrameReadOut(pAbc)
-	pErr = Abc_FrameReadErr(pAbc)
+	pOut = base_main.Abc_FrameReadOut(pAbc)
+	pErr = base_main.Abc_FrameReadErr(pAbc)
 
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "Ph"); c != -1; c = Extra_UtilGetopt(argc, argv, "Ph") {
@@ -27352,7 +27420,7 @@ func Abc_CommandBm(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 
 	pArgvNew = argv + globalUtilOptind
 	nArgcNew = argc - globalUtilOptind
-	if !Abc_NtkPrepareTwoNtks(pErr, pNtk, pArgvNew, nArgcNew, &pNtk1, &pNtk2, &fDelete1, &fDelete2, 1) {
+	if baseabc.Abc_NtkPrepareTwoNtks(pErr, pNtk, pArgvNew, nArgcNew, &pNtk1, &pNtk2, &fDelete1, &fDelete2, 1) == 0 {
 		return 1
 	}
 
@@ -27421,8 +27489,8 @@ func Abc_CommandBm2(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	// saucyGateWay belongs to the optional Saucy integration.
 
 	pNtk = Abc_FrameReadNtk(pAbc)
-	pOut = Abc_FrameReadOut(pAbc)
-	pErr = Abc_FrameReadErr(pAbc)
+	pOut = base_main.Abc_FrameReadOut(pAbc)
+	pErr = base_main.Abc_FrameReadErr(pAbc)
 
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "h"); c != -1; c = Extra_UtilGetopt(argc, argv, "h") {
@@ -27437,7 +27505,7 @@ func Abc_CommandBm2(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 
 	pArgvNew = argv + globalUtilOptind
 	nArgcNew = argc - globalUtilOptind
-	if !Abc_NtkPrepareTwoNtks(pErr, pNtk, pArgvNew, nArgcNew, &pNtk1, &pNtk2, &fDelete1, &fDelete2, 1) {
+	if baseabc.Abc_NtkPrepareTwoNtks(pErr, pNtk, pArgvNew, nArgcNew, &pNtk1, &pNtk2, &fDelete1, &fDelete2, 1) == 0 {
 		return 1
 	}
 
@@ -27454,45 +27522,45 @@ func Abc_CommandBm2(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 1
 	}
 
-	Abc_NtkPermute(pNtk2, 1, 1, 0, nil)
-	Abc_NtkShortNames(pNtk2)
+	baseabc.Abc_NtkPermute(pNtk2, 1, 1, 0, nil)
+	baseabc.Abc_NtkShortNames(pNtk2)
 
 	for i = 0; i < Abc_NtkObjNumMax(pNtk1); i++ {
 		pObj = Abc_NtkObj(pNtk1, i)
-		if pObj == nil || Abc_ObjIsCi(pObj) == 0 {
+		if pObj == nil || baseabc.Abc_ObjIsCi(pObj) == 0 {
 			continue
 		}
-		var newName string = Abc_ObjNamePrefix(pObj, "N1:")
+		var newName string = baseabc.Abc_ObjNamePrefix(pObj, "N1:")
 		baseabc.Abc_ObjDeleteName(pObj)
-		Abc_ObjAssignName(pObj, newName, nil)
+		baseabc.Abc_ObjAssignName(pObj, newName, nil)
 	}
 	for i = 0; i < Abc_NtkObjNumMax(pNtk1); i++ {
 		pObj = Abc_NtkObj(pNtk1, i)
-		if pObj == nil || Abc_ObjIsCo(pObj) == 0 {
+		if pObj == nil || baseabc.Abc_ObjIsCo(pObj) == 0 {
 			continue
 		}
-		var newName string = Abc_ObjNamePrefix(pObj, "N1:")
+		var newName string = baseabc.Abc_ObjNamePrefix(pObj, "N1:")
 		baseabc.Abc_ObjDeleteName(pObj)
-		Abc_ObjAssignName(pObj, newName, nil)
+		baseabc.Abc_ObjAssignName(pObj, newName, nil)
 	}
 
 	for i = 0; i < Abc_NtkObjNumMax(pNtk2); i++ {
 		pObj = Abc_NtkObj(pNtk2, i)
-		if pObj == nil || Abc_ObjIsCi(pObj) == 0 {
+		if pObj == nil || baseabc.Abc_ObjIsCi(pObj) == 0 {
 			continue
 		}
-		var newName string = Abc_ObjNamePrefix(pObj, "N2:")
+		var newName string = baseabc.Abc_ObjNamePrefix(pObj, "N2:")
 		baseabc.Abc_ObjDeleteName(pObj)
-		Abc_ObjAssignName(pObj, newName, nil)
+		baseabc.Abc_ObjAssignName(pObj, newName, nil)
 	}
 	for i = 0; i < Abc_NtkObjNumMax(pNtk2); i++ {
 		pObj = Abc_NtkObj(pNtk2, i)
-		if pObj == nil || Abc_ObjIsCo(pObj) == 0 {
+		if pObj == nil || baseabc.Abc_ObjIsCo(pObj) == 0 {
 			continue
 		}
-		var newName string = Abc_ObjNamePrefix(pObj, "N2:")
+		var newName string = baseabc.Abc_ObjNamePrefix(pObj, "N2:")
 		baseabc.Abc_ObjDeleteName(pObj)
-		Abc_ObjAssignName(pObj, newName, nil)
+		baseabc.Abc_ObjAssignName(pObj, newName, nil)
 	}
 
 	Abc_NtkAppend(pNtk1, pNtk2, 1)
@@ -27618,7 +27686,7 @@ func Abc_CommandSaucy(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	}
 
 	pNtk = Abc_NtkDup(pNtk)
-	Abc_NtkOrderObjsByName(pNtk, 1)
+	baseabc.Abc_NtkOrderObjsByName(pNtk, 1)
 
 	if fOutputsOneAtTime != 0 {
 		var i int32
@@ -27749,7 +27817,7 @@ func Abc_CommandTestCex(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		} else {
 
 			var iPoOld int32 = abcFrameCex(pAbc).IPo
-			abcFrameCex(pAbc).IPo = Abc_NtkVerifyCex(pNtk, abcFrameCex(pAbc))
+			abcFrameCex(pAbc).IPo = baseabc.Abc_NtkVerifyCex(pNtk, abcFrameCex(pAbc))
 			if abcFrameCex(pAbc).IPo == -1 {
 				Abc_Print(1, "Main AIG: The cex does not fail any outputs.\n")
 			} else if iPoOld != abcFrameCex(pAbc).IPo {
@@ -27767,7 +27835,7 @@ func Abc_CommandTestCex(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			Abc_Print(1, "And  AIG: The number of PIs (%d) is different from cex (%d).\n", Gia_ManPiNum(abcFrameGia(pAbc)), abcFrameCex(pAbc).NPis)
 		} else {
 			var iPoOld int32 = abcFrameCex(pAbc).IPo
-			abcFrameCex(pAbc).IPo = Gia_ManFindFailedPoCex(abcFrameGia(pAbc), abcFrameCex(pAbc), nOutputs)
+			abcFrameCex(pAbc).IPo = giapkg.Gia_ManFindFailedPoCex(abcFrameGia(pAbc), abcFrameCex(pAbc), nOutputs)
 			if abcFrameCex(pAbc).IPo == -1 {
 				Abc_Print(1, "And  AIG: The cex does not fail any outputs.\n")
 			} else if iPoOld != abcFrameCex(pAbc).IPo {
@@ -27810,7 +27878,7 @@ func Abc_CommandPdr(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	var pNtkFlop *Abc_Ntk_t = nil
 	var pLogFileName string
 	var c int32
-	Pdr_ManSetDefaultParams(pPars)
+	proof_pdr.Pdr_ManSetDefaultParams(pPars)
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "MFCDQTHGSLIaxrmuyfqipdegjonctkvwzh"); c != -1; c = Extra_UtilGetopt(argc, argv, "MFCDQTHGSLIaxrmuyfqipdegjonctkvwzh") {
 		switch c {
@@ -27819,9 +27887,9 @@ func Abc_CommandPdr(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-M\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nRecycle = abcAtoi(argv[globalUtilOptind])
+			pPars.NRecycle = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nRecycle < 0 {
+			if pPars.NRecycle < 0 {
 				goto usage
 			}
 			break
@@ -27830,9 +27898,9 @@ func Abc_CommandPdr(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-F\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nFrameMax = abcAtoi(argv[globalUtilOptind])
+			pPars.NFrameMax = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nFrameMax < 0 {
+			if pPars.NFrameMax < 0 {
 				goto usage
 			}
 			break
@@ -27841,9 +27909,9 @@ func Abc_CommandPdr(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-C\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nConfLimit = abcAtoi(argv[globalUtilOptind])
+			pPars.NConfLimit = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nConfLimit < 0 {
+			if pPars.NConfLimit < 0 {
 				goto usage
 			}
 			break
@@ -27852,9 +27920,9 @@ func Abc_CommandPdr(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-D\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nConfGenLimit = abcAtoi(argv[globalUtilOptind])
+			pPars.NConfGenLimit = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nConfGenLimit < 0 {
+			if pPars.NConfGenLimit < 0 {
 				goto usage
 			}
 			break
@@ -27863,9 +27931,9 @@ func Abc_CommandPdr(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-Q\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nRestLimit = abcAtoi(argv[globalUtilOptind])
+			pPars.NRestLimit = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nRestLimit < 0 {
+			if pPars.NRestLimit < 0 {
 				goto usage
 			}
 			break
@@ -27874,9 +27942,9 @@ func Abc_CommandPdr(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-T\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nTimeOut = abcAtoi(argv[globalUtilOptind])
+			pPars.NTimeOut = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nTimeOut < 0 {
+			if pPars.NTimeOut < 0 {
 				goto usage
 			}
 			break
@@ -27885,9 +27953,9 @@ func Abc_CommandPdr(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-H\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nTimeOutOne = abcAtoi(argv[globalUtilOptind])
+			pPars.NTimeOutOne = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nTimeOutOne < 0 {
+			if pPars.NTimeOutOne < 0 {
 				goto usage
 			}
 			break
@@ -27896,9 +27964,9 @@ func Abc_CommandPdr(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-G\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nTimeOutGap = abcAtoi(argv[globalUtilOptind])
+			pPars.NTimeOutGap = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nTimeOutGap < 0 {
+			if pPars.NTimeOutGap < 0 {
 				goto usage
 			}
 			break
@@ -27907,9 +27975,9 @@ func Abc_CommandPdr(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-S\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nRandomSeed = abcAtoi(argv[globalUtilOptind])
+			pPars.NRandomSeed = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nRandomSeed < 0 {
+			if pPars.NRandomSeed < 0 {
 				goto usage
 			}
 			break
@@ -27926,74 +27994,74 @@ func Abc_CommandPdr(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-I\" should be followed by a file name.\n")
 				goto usage
 			}
-			pPars.pInvFileName = argv[globalUtilOptind]
+			pPars.PInvFileName = argv[globalUtilOptind]
 			globalUtilOptind++
 			break
 		case 'a':
-			pPars.fSolveAll ^= 1
+			pPars.FSolveAll ^= 1
 			break
 		case 'x':
-			pPars.fStoreCex ^= 1
+			pPars.FStoreCex ^= 1
 			break
 		case 'r':
-			pPars.fTwoRounds ^= 1
+			pPars.FTwoRounds ^= 1
 			break
 		case 'm':
-			pPars.fMonoCnf ^= 1
+			pPars.FMonoCnf ^= 1
 			break
 		case 'u':
-			pPars.fNewXSim ^= 1
+			pPars.FNewXSim ^= 1
 			break
 		case 'y':
-			pPars.fFlopPrio ^= 1
+			pPars.FFlopPrio ^= 1
 			break
 		case 'f':
-			pPars.fFlopOrder ^= 1
+			pPars.FFlopOrder ^= 1
 			break
 		case 'q':
-			pPars.fShortest ^= 1
+			pPars.FShortest ^= 1
 			break
 		case 'i':
-			pPars.fShiftStart ^= 1
+			pPars.FShiftStart ^= 1
 			break
 		case 'p':
-			pPars.fReuseProofOblig ^= 1
+			pPars.FReuseProofOblig ^= 1
 			break
 		case 'd':
-			pPars.fDumpInv ^= 1
+			pPars.FDumpInv ^= 1
 			break
 		case 'e':
-			pPars.fUseSupp ^= 1
+			pPars.FUseSupp ^= 1
 			break
 		case 'g':
-			pPars.fSkipGeneral ^= 1
+			pPars.FSkipGeneral ^= 1
 			break
 		case 'j':
-			pPars.fSimpleGeneral ^= 1
+			pPars.FSimpleGeneral ^= 1
 			break
 		case 'o':
-			pPars.fUsePropOut ^= 1
+			pPars.FUsePropOut ^= 1
 			break
 		case 'n':
-			pPars.fSkipDown ^= 1
+			pPars.FSkipDown ^= 1
 			break
 		case 'c':
-			pPars.fCtgs ^= 1
+			pPars.FCtgs ^= 1
 			break
 		case 't':
-			pPars.fUseAbs ^= 1
+			pPars.FUseAbs ^= 1
 			break
 		case 'k':
-			pPars.fUseSimpleRef ^= 1
+			pPars.FUseSimpleRef ^= 1
 			break
 		case 'v':
-			pPars.fVerbose ^= 1
+			pPars.FVerbose ^= 1
 			break
 		case 'w':
-			pPars.fVeryVerbose ^= 1
+			pPars.FVeryVerbose ^= 1
 			break
 		case 'z':
-			pPars.fNotVerbose ^= 1
+			pPars.FNotVerbose ^= 1
 			break
 		case 'h':
 			fallthrough
@@ -28015,10 +28083,10 @@ func Abc_CommandPdr(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	}
 	if Abc_NtkLatchNum(pNtk) == 0 {
 		pNtkFlop = Abc_NtkDup(pNtk)
-		Abc_NtkAddLatch(pNtkFlop, Abc_AigConst1(pNtkFlop), ABC_INIT_ONE)
+		baseabc.Abc_NtkAddLatch(pNtkFlop, baseabc.Abc_AigConst1(pNtkFlop), baseabc.ABC_INIT_ONE)
 	}
 	// run the procedure
-	pPars.fUseBridge = (abcFrameBridgeMode(pAbc) != 0)
+	pPars.FUseBridge = (abcFrameBridgeMode(pAbc) != 0)
 	if pNtkFlop != nil {
 		pNtkUsed = pNtkFlop
 	} else {
@@ -28028,9 +28096,9 @@ func Abc_CommandPdr(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	if baseabc.Abc_NtkReadSeqModelVec(pNtkUsed) != nil {
 		abcFrameSetNFrames(pAbc, -1)
 	} else {
-		abcFrameSetNFrames(pAbc, pPars.iFrame)
+		abcFrameSetNFrames(pAbc, pPars.IFrame)
 	}
-	Abc_FrameReplacePoStatuses(pAbc, &pPars.vOutMap)
+	Abc_FrameReplacePoStatuses(pAbc, &pPars.VOutMap)
 	if baseabc.Abc_NtkReadSeqModelVec(pNtkUsed) != nil {
 		abcFrameReplaceCexVectorFromNetwork(pAbc, pNtkUsed)
 	} else {
@@ -28049,39 +28117,39 @@ usage:
 	Abc_Print(-2, "\t         model checking using property directed reachability (aka IC3)\n")
 	Abc_Print(-2, "\t         pioneered by Aaron R. Bradley (http://theory.stanford.edu/~arbrad/)\n")
 	Abc_Print(-2, "\t         with improvements by Niklas Een (http://een.se/niklas/)\n")
-	Abc_Print(-2, "\t-M num : limit on unused vars to trigger SAT solver recycling [default = %d]\n", pPars.nRecycle)
-	Abc_Print(-2, "\t-F num : limit on timeframes explored to stop computation [default = %d]\n", pPars.nFrameMax)
-	Abc_Print(-2, "\t-C num : limit on conflicts in one SAT call (0 = no limit) [default = %d]\n", pPars.nConfLimit)
-	Abc_Print(-2, "\t-D num : limit on conflicts during ind-generalization (0 = no limit) [default = %d]\n", pPars.nConfGenLimit)
-	Abc_Print(-2, "\t-Q num : limit on proof obligations before a restart (0 = no limit) [default = %d]\n", pPars.nRestLimit)
-	Abc_Print(-2, "\t-T num : runtime limit, in seconds (0 = no limit) [default = %d]\n", pPars.nTimeOut)
-	Abc_Print(-2, "\t-H num : runtime limit per output, in miliseconds (with \"-a\") [default = %d]\n", pPars.nTimeOutOne)
-	Abc_Print(-2, "\t-G num : runtime gap since the last CEX (0 = no limit) [default = %d]\n", pPars.nTimeOutGap)
-	Abc_Print(-2, "\t-S num : * value to seed the SAT solver with [default = %d]\n", pPars.nRandomSeed)
+	Abc_Print(-2, "\t-M num : limit on unused vars to trigger SAT solver recycling [default = %d]\n", pPars.NRecycle)
+	Abc_Print(-2, "\t-F num : limit on timeframes explored to stop computation [default = %d]\n", pPars.NFrameMax)
+	Abc_Print(-2, "\t-C num : limit on conflicts in one SAT call (0 = no limit) [default = %d]\n", pPars.NConfLimit)
+	Abc_Print(-2, "\t-D num : limit on conflicts during ind-generalization (0 = no limit) [default = %d]\n", pPars.NConfGenLimit)
+	Abc_Print(-2, "\t-Q num : limit on proof obligations before a restart (0 = no limit) [default = %d]\n", pPars.NRestLimit)
+	Abc_Print(-2, "\t-T num : runtime limit, in seconds (0 = no limit) [default = %d]\n", pPars.NTimeOut)
+	Abc_Print(-2, "\t-H num : runtime limit per output, in miliseconds (with \"-a\") [default = %d]\n", pPars.NTimeOutOne)
+	Abc_Print(-2, "\t-G num : runtime gap since the last CEX (0 = no limit) [default = %d]\n", pPars.NTimeOutGap)
+	Abc_Print(-2, "\t-S num : * value to seed the SAT solver with [default = %d]\n", pPars.NRandomSeed)
 	Abc_Print(-2, "\t-L file: the log file name [default = %s]\n", abcDefaultString(pLogFileName, "no logging"))
-	Abc_Print(-2, "\t-I file: the invariant file name [default = %s]\n", abcDefaultString(pPars.pInvFileName, "default name"))
-	Abc_Print(-2, "\t-a     : toggle solving all outputs even if one of them is SAT [default = %s]\n", abcSelect(fSolveAll, "yes", "no"))
-	Abc_Print(-2, "\t-x     : toggle storing CEXes when solving all outputs [default = %s]\n", abcSelect(fStoreCex, "yes", "no"))
-	Abc_Print(-2, "\t-r     : toggle using more effort in generalization [default = %s]\n", abcSelect(fTwoRounds, "yes", "no"))
-	Abc_Print(-2, "\t-m     : toggle using monolythic CNF computation [default = %s]\n", abcSelect(fMonoCnf, "yes", "no"))
-	Abc_Print(-2, "\t-u     : toggle updated X-valued simulation [default = %s]\n", abcSelect(fNewXSim, "yes", "no"))
-	Abc_Print(-2, "\t-y     : toggle using structural flop priorities [default = %s]\n", abcSelect(fFlopPrio, "yes", "no"))
-	Abc_Print(-2, "\t-f     : toggle ordering flops by cost before generalization [default = %s]\n", abcSelect(fFlopOrder, "yes", "no"))
-	Abc_Print(-2, "\t-q     : toggle creating only shortest counter-examples [default = %s]\n", abcSelect(fShortest, "yes", "no"))
-	Abc_Print(-2, "\t-i     : toggle clause pushing from an intermediate timeframe [default = %s]\n", abcSelect(fShiftStart, "yes", "no"))
-	Abc_Print(-2, "\t-p     : toggle reusing proof-obligations in the last timeframe [default = %s]\n", abcSelect(fReuseProofOblig, "yes", "no"))
-	Abc_Print(-2, "\t-d     : toggle dumping invariant (valid if init state is all-0) [default = %s]\n", abcSelect(fDumpInv, "yes", "no"))
-	Abc_Print(-2, "\t-e     : toggle using only support variables in the invariant [default = %s]\n", abcSelect(fUseSupp, "yes", "no"))
-	Abc_Print(-2, "\t-g     : toggle skipping expensive generalization step [default = %s]\n", abcSelect(fSkipGeneral, "yes", "no"))
-	Abc_Print(-2, "\t-j     : toggle using simplified generalization step [default = %s]\n", abcSelect(fSimpleGeneral, "yes", "no"))
-	Abc_Print(-2, "\t-o     : toggle using property output as inductive hypothesis [default = %s]\n", abcSelect(fUsePropOut, "yes", "no"))
-	Abc_Print(-2, "\t-n     : * toggle skipping 'down' in generalization [default = %s]\n", abcSelect(fSkipDown, "yes", "no"))
-	Abc_Print(-2, "\t-c     : * toggle handling CTGs in 'down' [default = %s]\n", abcSelect(fCtgs, "yes", "no"))
-	Abc_Print(-2, "\t-t     : toggle using abstraction [default = %s]\n", abcSelect(fUseAbs, "yes", "no"))
-	Abc_Print(-2, "\t-k     : toggle using simplified refinement [default = %s]\n", abcSelect(fUseSimpleRef, "yes", "no"))
-	Abc_Print(-2, "\t-v     : toggle printing optimization summary [default = %s]\n", abcSelect(fVerbose, "yes", "no"))
-	Abc_Print(-2, "\t-w     : toggle printing detailed stats default = %s]\n", abcSelect(fVeryVerbose, "yes", "no"))
-	Abc_Print(-2, "\t-z     : toggle suppressing report about solved outputs [default = %s]\n", abcSelect(fNotVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-I file: the invariant file name [default = %s]\n", abcDefaultString(pPars.PInvFileName, "default name"))
+	Abc_Print(-2, "\t-a     : toggle solving all outputs even if one of them is SAT [default = %s]\n", abcSelect(pPars.FSolveAll, "yes", "no"))
+	Abc_Print(-2, "\t-x     : toggle storing CEXes when solving all outputs [default = %s]\n", abcSelect(pPars.FStoreCex, "yes", "no"))
+	Abc_Print(-2, "\t-r     : toggle using more effort in generalization [default = %s]\n", abcSelect(pPars.FTwoRounds, "yes", "no"))
+	Abc_Print(-2, "\t-m     : toggle using monolythic CNF computation [default = %s]\n", abcSelect(pPars.FMonoCnf, "yes", "no"))
+	Abc_Print(-2, "\t-u     : toggle updated X-valued simulation [default = %s]\n", abcSelect(pPars.FNewXSim, "yes", "no"))
+	Abc_Print(-2, "\t-y     : toggle using structural flop priorities [default = %s]\n", abcSelect(pPars.FFlopPrio, "yes", "no"))
+	Abc_Print(-2, "\t-f     : toggle ordering flops by cost before generalization [default = %s]\n", abcSelect(pPars.FFlopOrder, "yes", "no"))
+	Abc_Print(-2, "\t-q     : toggle creating only shortest counter-examples [default = %s]\n", abcSelect(pPars.FShortest, "yes", "no"))
+	Abc_Print(-2, "\t-i     : toggle clause pushing from an intermediate timeframe [default = %s]\n", abcSelect(pPars.FShiftStart, "yes", "no"))
+	Abc_Print(-2, "\t-p     : toggle reusing proof-obligations in the last timeframe [default = %s]\n", abcSelect(pPars.FReuseProofOblig, "yes", "no"))
+	Abc_Print(-2, "\t-d     : toggle dumping invariant (valid if init state is all-0) [default = %s]\n", abcSelect(pPars.FDumpInv, "yes", "no"))
+	Abc_Print(-2, "\t-e     : toggle using only support variables in the invariant [default = %s]\n", abcSelect(pPars.FUseSupp, "yes", "no"))
+	Abc_Print(-2, "\t-g     : toggle skipping expensive generalization step [default = %s]\n", abcSelect(pPars.FSkipGeneral, "yes", "no"))
+	Abc_Print(-2, "\t-j     : toggle using simplified generalization step [default = %s]\n", abcSelect(pPars.FSimpleGeneral, "yes", "no"))
+	Abc_Print(-2, "\t-o     : toggle using property output as inductive hypothesis [default = %s]\n", abcSelect(pPars.FUsePropOut, "yes", "no"))
+	Abc_Print(-2, "\t-n     : * toggle skipping 'down' in generalization [default = %s]\n", abcSelect(pPars.FSkipDown, "yes", "no"))
+	Abc_Print(-2, "\t-c     : * toggle handling CTGs in 'down' [default = %s]\n", abcSelect(pPars.FCtgs, "yes", "no"))
+	Abc_Print(-2, "\t-t     : toggle using abstraction [default = %s]\n", abcSelect(pPars.FUseAbs, "yes", "no"))
+	Abc_Print(-2, "\t-k     : toggle using simplified refinement [default = %s]\n", abcSelect(pPars.FUseSimpleRef, "yes", "no"))
+	Abc_Print(-2, "\t-v     : toggle printing optimization summary [default = %s]\n", abcSelect(pPars.FVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-w     : toggle printing detailed stats default = %s]\n", abcSelect(pPars.FVeryVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-z     : toggle suppressing report about solved outputs [default = %s]\n", abcSelect(pPars.FNotVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h     : print the command usage\n\n")
 	Abc_Print(-2, "\t* Implementation of switches -S, -n, and -c is contributed by Zyad Hassan.\n")
 	Abc_Print(-2, "\t  The theory and experiments supporting this work can be found in the following paper:\n")
@@ -28235,7 +28303,7 @@ func Abc_CommandCexSave(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 1
 	}
 	Abc_CexFree(abcFrameCex2(pAbc))
-	abcFrameSetCex2(pAbc, Abc_CexDup(abcFrameCex(pAbc), -1))
+	abcFrameSetCex2(pAbc, util.Abc_CexDup(abcFrameCex(pAbc), -1))
 	return 0
 
 usage:
@@ -28274,7 +28342,7 @@ func Abc_CommandCexLoad(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 1
 	}
 	Abc_CexFree(abcFrameCex(pAbc))
-	abcFrameSetCex(pAbc, Abc_CexDup(abcFrameCex2(pAbc), -1))
+	abcFrameSetCex(pAbc, util.Abc_CexDup(abcFrameCex2(pAbc), -1))
 	// update status
 	abcFrameSetNFrames(pAbc, abcFrameCex2(pAbc).IFrame)
 	abcFrameSetStatus(pAbc, 0)
@@ -28371,7 +28439,7 @@ func Abc_CommandCexCut(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 
 	{
 		var pAig *Aig_Man_t = Abc_NtkToDar(abcFrameNtk(pAbc), 0, 1)
-		var pAigNew *Aig_Man_t = Bmc_AigTargetStates(pAig, abcFrameCex(pAbc), iFrStart, iFrStop, fCombOnly, fUseOne, fAllFrames, fVerbose)
+		var pAigNew *Aig_Man_t = sat_bmc.Bmc_AigTargetStates(pAig, abcFrameCex(pAbc), iFrStart, iFrStop, fCombOnly, fUseOne, fAllFrames, fVerbose)
 		Aig_ManStop(pAig)
 		if pAigNew == nil {
 			Abc_Print(1, "Command has failed.\n")
@@ -28474,7 +28542,7 @@ func Abc_CommandCexMerge(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(1, "Current CEX does not allow to shorten the saved CEX.\n")
 		return 0
 	}
-	pCexNew = Abc_CexMerge(abcFrameCex2(pAbc), abcFrameCex(pAbc), iFrStart, iFrStop)
+	pCexNew = util.Abc_CexMerge(abcFrameCex2(pAbc), abcFrameCex(pAbc), iFrStart, iFrStop)
 	if pCexNew == nil {
 		Abc_Print(1, "Merging CEXes has failed.\n")
 		return 0
@@ -28573,7 +28641,7 @@ func Abc_CommandCexMin(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		var pGia *Gia_Man_t = Gia_ManFromAigSimple(pAig)
 		//        if ( !Gia_ManVerifyCex( pGia, pAbc->pCex, 0 ) )
 		var iPoOld int32 = abcFrameCex(pAbc).IPo
-		abcFrameCex(pAbc).IPo = Gia_ManFindFailedPoCex(pGia, abcFrameCex(pAbc), 0)
+		abcFrameCex(pAbc).IPo = giapkg.Gia_ManFindFailedPoCex(pGia, abcFrameCex(pAbc), 0)
 		Gia_ManStop(pGia)
 		if abcFrameCex(pAbc).IPo == -1 {
 			abcFrameCex(pAbc).IPo = iPoOld
@@ -28584,7 +28652,7 @@ func Abc_CommandCexMin(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			Abc_Print(0, "Main AIG: The cex refined PO %d instead of PO %d.\n", abcFrameCex(pAbc).IPo, iPoOld)
 		}
 		// perform minimization
-		vCexNew = Saig_ManCexMinPerform(pAig, abcFrameCex(pAbc))
+		vCexNew = sat_bmc.Saig_ManCexMinPerform(pAig, abcFrameCex(pAbc))
 		Aig_ManStop(pAig)
 		Abc_CexFree(vCexNew)
 		//        Abc_FrameReplaceCex( pAbc, &vCexNew );
@@ -28691,7 +28759,7 @@ func Abc_CommandDualRail(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 
 	// transform
 	pAig = Abc_NtkToDar(pNtk, 0, 1)
-	pAigNew = Saig_ManDupDual(pAig, vDcFlops, nDualPis, fDualFfs, fMiterFfs, fComplPo, fCheckZero, fCheckOne)
+	pAigNew = aig_saig.Saig_ManDupDual(pAig, vDcFlops, nDualPis, fDualFfs, fMiterFfs, fComplPo, fCheckZero, fCheckOne)
 	Aig_ManStop(pAig)
 	pNtkNew = Abc_NtkFromAigPhase(pAigNew)
 	pNtkNew.pName = Extra_UtilStrsav(pNtk.pName)
@@ -28781,7 +28849,7 @@ func Abc_CommandBlockPo(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 
 	// transform
 	pAig = Abc_NtkToDar(pNtk, 0, 1)
-	Saig_ManBlockPo(pAig, nCycles)
+	aig_saig.Saig_ManBlockPo(pAig, nCycles)
 	pNtkNew = Abc_NtkFromAigPhase(pAig)
 	Aig_ManStop(pAig)
 	// transfer the name
@@ -28850,7 +28918,7 @@ func Abc_CommandIso(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 
 	// transform
 	pAig = Abc_NtkToDar(pNtk, 0, 1)
-	pTemp = Saig_ManIsoReduce(pAig, &vPosEquivs, fVerbose)
+	pTemp = aig_saig.Saig_ManIsoReduce(pAig, &vPosEquivs, fVerbose)
 	pNtkNew = Abc_NtkFromAigPhase(pTemp)
 	pNtkNew.pName = Extra_UtilStrsav(pNtk.pName)
 	Aig_ManStop(pTemp)
@@ -28992,10 +29060,10 @@ usage:
 **********************************************************************
 */
 func Abc_NtkCompareWithBest(pBest *Abc_Ntk_t, p *Abc_Ntk_t, pnBestNtkArea *float32, pnBestNtkDelay *float32, pnBestNtkNodes *int32, pnBestNtkLevels *int32, fArea int32) int32 {
-	var nNtkArea float32 = float32(Abc_NtkGetMappedArea(p))
+	var nNtkArea float32 = float32(baseabc.Abc_NtkGetMappedArea(p))
 	var nNtkDelay float32 = float32(Abc_NtkDelayTrace(p, nil, nil, 0))
 	var nNtkNodes int32 = Abc_NtkNodeNum(p)
-	var nNtkLevels int32 = Abc_NtkLevel(p)
+	var nNtkLevels int32 = baseabc.Abc_NtkLevel(p)
 
 	if pBest == nil ||
 		Abc_NtkPiNum(pBest) != Abc_NtkPiNum(p) ||
@@ -29055,7 +29123,7 @@ func Abc_CommandAbcSave(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 0
 	}
 	// save the design as best
-	if abcFrameResource[*Abc_Ntk_t](pAbc, "pNtkBest") {
+	if abcFrameResource[*Abc_Ntk_t](pAbc, "pNtkBest") != nil {
 		Abc_NtkDelete(abcFrameResource[*Abc_Ntk_t](pAbc, "pNtkBest"))
 	}
 	abcFrameSetResource(pAbc, "pNtkBest", Abc_NtkDup(abcFrameNtk(pAbc)))
@@ -29186,11 +29254,11 @@ func Abc_CommandAbc9Read(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	_ = pFile.Close()
 
 	if fMiniAig != 0 {
-		pAig = Gia_ManReadMiniAig(FileName)
+		pAig = giapkg.Gia_ManReadMiniAig(FileName)
 	} else if fMiniAig2 != 0 {
-		pAig = Gia_MiniAigSuperDerive(FileName, fVerbose)
+		pAig = giapkg.Gia_MiniAigSuperDerive(FileName, fVerbose)
 	} else if fMiniLut != 0 {
-		pAig = Gia_ManReadMiniLut(FileName)
+		pAig = giapkg.Gia_ManReadMiniLut(FileName)
 		//    else if ( Extra_FileIsType( FileName, ".v", NULL, NULL ) )
 		//        Abc3_ReadShowHie( FileName, fSkipStrash );
 	} else {
@@ -29269,7 +29337,7 @@ func Abc_CommandAbc9ReadBlif(pAbc *Abc_Frame_t, argc int32, argv []string) int32
 	}
 	_ = pFile.Close()
 
-	pAig = Abc_NtkHieCecTest(FileName, fVerbose)
+	pAig = baseabc.Abc_NtkHieCecTest(FileName, fVerbose)
 	Abc_FrameUpdateGia(pAbc, pAig)
 	return 0
 
@@ -29346,7 +29414,7 @@ func Abc_CommandAbc9ReadCBlif(pAbc *Abc_Frame_t, argc int32, argv []string) int3
 	}
 	_ = pFile.Close()
 
-	pAig = Abc_NtkHieCecTest2(FileName, pModelName, fVerbose)
+	pAig = baseabc.Abc_NtkHieCecTest2(FileName, pModelName, fVerbose)
 	Abc_FrameUpdateGia(pAbc, pAig)
 	return 0
 
@@ -29419,7 +29487,7 @@ func Abc_CommandAbc9ReadStg(pAbc *Abc_Frame_t, argc int32, argv []string) int32 
 	}
 	_ = pFile.Close()
 
-	pAig = Gia_ManStgRead(FileName, kHot, fVerbose)
+	pAig = giapkg.Gia_ManStgRead(FileName, kHot, fVerbose)
 	Abc_FrameUpdateGia(pAbc, pAig)
 	return 0
 
@@ -29487,12 +29555,12 @@ func Abc_CommandAbc9ReadVer(pAbc *Abc_Frame_t, argc int32, argv []string) int32 
 	}
 	_ = pFile.Close()
 	// read hierarchical Verilog
-	pNtk = Io_ReadNetlist(pFileName, Io_ReadFileType(pFileName), 0)
+	pNtk = base_io.Io_ReadNetlist(pFileName, Io_ReadFileType(pFileName), 0)
 	if pNtk == nil {
 		Abc_Print(-1, "Reading hierarchical Verilog has failed.\n")
 		return 1
 	}
-	pAig = Abc_NtkFlattenHierarchyGia(pNtk, nil, fVerbose)
+	pAig = baseabc.Abc_NtkFlattenHierarchyGia(pNtk, nil, fVerbose)
 	Abc_NtkDelete(pNtk)
 	Abc_FrameUpdateGia(pAbc, pAig)
 	return 0
@@ -29550,10 +29618,10 @@ func Abc_CommandAbc9Get(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 1
 	}
 	if Abc_NtkIsStrash(abcFrameNtk(pAbc)) == 0 {
-		if (fGiaSimple != 0) || fMapped {
+		if (fGiaSimple != 0) || (fMapped != 0) {
 			assert((Abc_NtkIsLogic(abcFrameNtk(pAbc)) != 0), "(Abc_NtkIsLogic(abcFrameNtk(pAbc)) != 0)")
 			Abc_NtkToAig(abcFrameNtk(pAbc))
-			pGia = Abc_NtkAigToGia(abcFrameNtk(pAbc), fGiaSimple)
+			pGia = baseabc.Abc_NtkAigToGia(abcFrameNtk(pAbc), fGiaSimple)
 
 		} else {
 			// derive comb GIA
@@ -29563,15 +29631,15 @@ func Abc_CommandAbc9Get(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			pGia = Gia_ManFromAig(pAig)
 			Aig_ManStop(pAig)
 			// perform undc/zero
-			pInits = Abc_NtkCollectLatchValuesStr(abcFrameNtk(pAbc))
+			pInits = baseabc.Abc_NtkCollectLatchValuesStr(abcFrameNtk(pAbc))
 			pTemp = pGia
-			pGia = Gia_ManDupZeroUndc(pTemp, pInits, 0, 0, fVerbose)
+			pGia = giapkg.Gia_ManDupZeroUndc(pTemp, pInits, 0, 0, fVerbose)
 			Gia_ManStop(pTemp)
 			pInits = ""
 		}
 
 	} else {
-		if Abc_NtkGetChoiceNum(abcFrameNtk(pAbc)) {
+		if Abc_NtkGetChoiceNum(abcFrameNtk(pAbc)) != 0 {
 			pAig = Abc_NtkToDarChoices(abcFrameNtk(pAbc))
 		} else {
 			pAig = Abc_NtkToDar(abcFrameNtk(pAbc), 0, 1)
@@ -29587,12 +29655,12 @@ func Abc_CommandAbc9Get(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	// copy user timing information
 	if abcFrameNtk(pAbc).pManTime != nil {
 		var pNtk *Abc_Ntk_t = abcFrameNtk(pAbc)
-		Vec_FltFreeP(&pGia.vInArrs)
-		Vec_FltFreeP(&pGia.vOutReqs)
+		giapkg.Vec_FltFreeP(&pGia.vInArrs)
+		giapkg.Vec_FltFreeP(&pGia.vOutReqs)
 		pGia.DefInArrs = Abc_NtkReadDefaultArrivalWorst(pNtk)
 		pGia.DefOutReqs = Abc_NtkReadDefaultRequiredWorst(pNtk)
-		pGia.vInArrs = Vec_FltAllocArray(Abc_NtkGetCiArrivalFloats(pNtk), Abc_NtkCiNum(pNtk))
-		pGia.vOutReqs = Vec_FltAllocArray(Abc_NtkGetCoRequiredFloats(pNtk), Abc_NtkCoNum(pNtk))
+		pGia.vInArrs = giapkg.Vec_FltAllocArray(Abc_NtkGetCiArrivalFloats(pNtk), Abc_NtkCiNum(pNtk))
+		pGia.vOutReqs = giapkg.Vec_FltAllocArray(Abc_NtkGetCoRequiredFloats(pNtk), Abc_NtkCoNum(pNtk))
 		pGia.And2Delay = pNtk.AndGateDelay
 	}
 	Abc_FrameUpdateGia(pAbc, pGia)
@@ -29661,12 +29729,12 @@ func Abc_CommandAbc9Put(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	}
 	if fFindEnables != 0 {
 		pNtk = Abc_NtkFromMappedGia(abcFrameGia(pAbc), 1, fUseBuffs)
-	} else if Gia_ManHasCellMapping(abcFrameGia(pAbc)) {
+	} else if giapkg.Gia_ManHasCellMapping(abcFrameGia(pAbc)) != 0 {
 		pNtk = Abc_NtkFromCellMappedGia(abcFrameGia(pAbc), fUseBuffs)
-	} else if Gia_ManHasMapping(abcFrameGia(pAbc)) || abcFrameGia(pAbc).pMuxes {
+	} else if (Gia_ManHasMapping(abcFrameGia(pAbc)) != 0) || abcFrameGia(pAbc).pMuxes {
 		pNtk = Abc_NtkFromMappedGia(abcFrameGia(pAbc), 0, fUseBuffs)
-	} else if Gia_ManHasDangling(abcFrameGia(pAbc)) == 0 {
-		pMan = Gia_ManToAig(abcFrameGia(pAbc), 0)
+	} else if giapkg.Gia_ManHasDangling(abcFrameGia(pAbc)) == 0 {
+		pMan = giapkg.Gia_ManToAig(abcFrameGia(pAbc), 0)
 		pNtk = Abc_NtkFromAigPhase(pMan)
 		pNtk.pName = Extra_UtilStrsav(pMan.pName)
 		Aig_ManStop(pMan)
@@ -29675,12 +29743,12 @@ func Abc_CommandAbc9Put(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		var pNtkNoCh *Abc_Ntk_t
 		//        Abc_Print( -1, "Transforming AIG with %d choice nodes.\n", Gia_ManEquivCountClasses(pAbc->pGia) );
 		// create network without choices
-		pMan = Gia_ManToAig(abcFrameGia(pAbc), 0)
+		pMan = giapkg.Gia_ManToAig(abcFrameGia(pAbc), 0)
 		pNtkNoCh = Abc_NtkFromAigPhase(pMan)
 		pNtkNoCh.pName = Extra_UtilStrsav(pMan.pName)
 		Aig_ManStop(pMan)
 		// derive network with choices
-		pMan = Gia_ManToAig(abcFrameGia(pAbc), 1)
+		pMan = giapkg.Gia_ManToAig(abcFrameGia(pAbc), 1)
 		pNtk = Abc_NtkFromDarChoices(pNtkNoCh, pMan)
 		Abc_NtkDelete(pNtkNoCh)
 		Aig_ManStop(pMan)
@@ -29691,12 +29759,12 @@ func Abc_CommandAbc9Put(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		var i int32
 		for i = 0; i < Abc_NtkObjNumMax(pNtk); i++ {
 			pObj = Abc_NtkObj(pNtk, i)
-			if pObj == nil || Abc_ObjIsCi(pObj) == 0 {
+			if pObj == nil || baseabc.Abc_ObjIsCi(pObj) == 0 {
 				continue
 			}
 			if i < Vec_PtrSize(abcFrameGia(pAbc).vNamesIn) {
 				baseabc.Abc_ObjDeleteName(pObj)
-				Abc_ObjAssignName(pObj, Vec_PtrEntry(abcFrameGia(pAbc).vNamesIn, i).(string), nil)
+				baseabc.Abc_ObjAssignName(pObj, Vec_PtrEntry(abcFrameGia(pAbc).vNamesIn, i).(string), nil)
 			}
 		}
 	}
@@ -29709,17 +29777,17 @@ func Abc_CommandAbc9Put(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		var nDigits int32 = Abc_Base10Log(Abc_NtkLatchNum(pNtk))
 		for i = 0; i < Abc_NtkObjNumMax(pNtk); i++ {
 			pObj = Abc_NtkObj(pNtk, i)
-			if pObj == nil || Abc_ObjIsCo(pObj) == 0 {
+			if pObj == nil || baseabc.Abc_ObjIsCo(pObj) == 0 {
 				continue
 			}
 			if i < Vec_PtrSize(abcFrameGia(pAbc).vNamesOut) {
 				baseabc.Abc_ObjDeleteName(pObj)
 				if Abc_ObjIsPo(pObj) != 0 {
-					Abc_ObjAssignName(pObj, Vec_PtrEntry(abcFrameGia(pAbc).vNamesOut, i).(string), nil)
+					baseabc.Abc_ObjAssignName(pObj, Vec_PtrEntry(abcFrameGia(pAbc).vNamesOut, i).(string), nil)
 				} else {
 					assert(i >= Abc_NtkPoNum(pNtk), "i >= Abc_NtkPoNum(pNtk)")
 					pSuffix = fmt.Sprintf("_li%0*d", nDigits, i-Abc_NtkPoNum(pNtk))
-					Abc_ObjAssignName(pObj, Vec_PtrEntry(abcFrameGia(pAbc).vNamesOut, i).(string), pSuffix)
+					baseabc.Abc_ObjAssignName(pObj, Vec_PtrEntry(abcFrameGia(pAbc).vNamesOut, i).(string), pSuffix)
 				}
 			}
 		}
@@ -29727,7 +29795,7 @@ func Abc_CommandAbc9Put(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 
 	// decouple CI/CO with the same name
 	if abcFrameGia(pAbc).vNamesIn || abcFrameGia(pAbc).vNamesOut {
-		Abc_NtkRedirectCiCo(pNtk)
+		baseabc.Abc_NtkRedirectCiCo(pNtk)
 	}
 
 	// transfer timing information
@@ -29739,18 +29807,18 @@ func Abc_CommandAbc9Put(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_NtkTimeSetDefaultRequired(pNtk, abcFrameGia(pAbc).DefOutReqs, abcFrameGia(pAbc).DefOutReqs)
 		if abcFrameGia(pAbc).vInArrs {
 			Abc_NtkForEachCi(pNtk, pObj, i)
-			Abc_NtkTimeSetArrival(pNtk, Abc_ObjId(pObj), Vec_FltEntry(abcFrameGia(pAbc).vInArrs, i), Vec_FltEntry(abcFrameGia(pAbc).vInArrs, i))
+			Abc_NtkTimeSetArrival(pNtk, baseabc.Abc_ObjId(pObj), giapkg.Vec_FltEntry(abcFrameGia(pAbc).vInArrs, i), giapkg.Vec_FltEntry(abcFrameGia(pAbc).vInArrs, i))
 		}
 		if abcFrameGia(pAbc).vOutReqs {
 			Abc_NtkForEachCo(pNtk, pObj, i)
-			Abc_NtkTimeSetRequired(pNtk, Abc_ObjId(pObj), Vec_FltEntry(abcFrameGia(pAbc).vOutReqs, i), Vec_FltEntry(abcFrameGia(pAbc).vOutReqs, i))
+			Abc_NtkTimeSetRequired(pNtk, baseabc.Abc_ObjId(pObj), giapkg.Vec_FltEntry(abcFrameGia(pAbc).vOutReqs, i), giapkg.Vec_FltEntry(abcFrameGia(pAbc).vOutReqs, i))
 		}
 	}
 
 	// replace the current network
 	Abc_FrameReplaceCurrentNetwork(pAbc, pNtk)
 	if fStatusClear != 0 {
-		Abc_FrameClearVerifStatus(pAbc)
+		base_main.Abc_FrameClearVerifStatus(pAbc)
 	}
 	return 0
 
@@ -29780,12 +29848,12 @@ usage:
 */
 func Gia_ManCompareWithBest(pBest *Gia_Man_t, p *Gia_Man_t, pnBestLuts *int32, pnBestEdges *int32, pnBestLevels *int32, fArea int32) int32 {
 	var nCurLuts, nCurEdges, nCurLevels int32
-	Gia_ManLutParams(p, &nCurLuts, &nCurEdges, &nCurLevels)
+	giapkg.Gia_ManLutParams(p, &nCurLuts, &nCurEdges, &nCurLevels)
 	if pBest == nil ||
 		Gia_ManPiNum(pBest) != Gia_ManPiNum(p) ||
 		Gia_ManPoNum(pBest) != Gia_ManPoNum(p) ||
 		Gia_ManRegNum(pBest) != Gia_ManRegNum(p) ||
-		(int32(strings.Compare(Gia_ManName(pBest), Gia_ManName(p))) != 0) ||
+		(int32(strings.Compare(giapkg.Gia_ManName(pBest), giapkg.Gia_ManName(p))) != 0) ||
 		(!(fArea != 0) && (*pnBestLevels > nCurLevels || (*pnBestLevels == nCurLevels && 2*(*pnBestLuts)+*pnBestEdges > 2*nCurLuts+nCurEdges))) ||
 		((fArea != 0) && (*pnBestLuts > nCurLuts || (*pnBestLuts == nCurLuts && *pnBestLevels > nCurLevels))) {
 		*pnBestLuts = nCurLuts
@@ -29828,7 +29896,7 @@ func Abc_CommandAbc9Save(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Empty network.\n")
 		return 1
 	}
-	if !Gia_ManHasMapping(abcFrameGia(pAbc)) {
+	if Gia_ManHasMapping(abcFrameGia(pAbc)) == 0 {
 		Abc_Print(-1, "GIA has no mapping.\n")
 		return 1
 	}
@@ -29837,7 +29905,7 @@ func Abc_CommandAbc9Save(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	}
 	// save the design as best
 	abcFrameStopGia(pAbc, "pGiaBest")
-	abcFrameSetResource(pAbc, "pGiaBest", Gia_ManDupWithAttributes(abcFrameGia(pAbc)))
+	abcFrameSetResource(pAbc, "pGiaBest", giapkg.Gia_ManDupWithAttributes(abcFrameGia(pAbc)))
 	return 0
 
 usage:
@@ -29879,7 +29947,7 @@ func Abc_CommandAbc9Save2(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Empty network.\n")
 		return 1
 	}
-	if !Gia_ManHasMapping(abcFrameGia(pAbc)) {
+	if Gia_ManHasMapping(abcFrameGia(pAbc)) == 0 {
 		Abc_Print(-1, "GIA has no mapping.\n")
 		return 1
 	}
@@ -29888,7 +29956,7 @@ func Abc_CommandAbc9Save2(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	}
 	// save the design as best
 	abcFrameStopGia(pAbc, "pGiaBest2")
-	abcFrameSetResource(pAbc, "pGiaBest2", Gia_ManDupWithAttributes(abcFrameGia(pAbc)))
+	abcFrameSetResource(pAbc, "pGiaBest2", giapkg.Gia_ManDupWithAttributes(abcFrameGia(pAbc)))
 	return 0
 
 usage:
@@ -29935,7 +30003,7 @@ func Abc_CommandAbc9SaveAig(pAbc *Abc_Frame_t, argc int32, argv []string) int32 
 	}
 	// save the design as best
 	abcFrameStopGia(pAbc, "pGiaSaved")
-	abcFrameSetResource(pAbc, "pGiaSaved", Gia_ManDupWithAttributes(abcFrameGia(pAbc)))
+	abcFrameSetResource(pAbc, "pGiaSaved", giapkg.Gia_ManDupWithAttributes(abcFrameGia(pAbc)))
 	return 0
 
 usage:
@@ -29976,7 +30044,7 @@ func Abc_CommandAbc9Load(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 1
 	}
 	abcFrameStopGia(pAbc, "pGia")
-	abcFrameSetGia(pAbc, Gia_ManDupWithAttributes(abcFrameResource[*Gia_Man_t](pAbc, "pGiaBest")))
+	abcFrameSetGia(pAbc, giapkg.Gia_ManDupWithAttributes(abcFrameResource[*Gia_Man_t](pAbc, "pGiaBest")))
 	return 0
 
 usage:
@@ -30062,7 +30130,7 @@ func Abc_CommandAbc9LoadAig(pAbc *Abc_Frame_t, argc int32, argv []string) int32 
 		return 1
 	}
 	abcFrameStopGia(pAbc, "pGia")
-	abcFrameSetGia(pAbc, Gia_ManDupWithAttributes(abcFrameResource[*Gia_Man_t](pAbc, "pGiaSaved")))
+	abcFrameSetGia(pAbc, giapkg.Gia_ManDupWithAttributes(abcFrameResource[*Gia_Man_t](pAbc, "pGiaSaved")))
 	return 0
 
 usage:
@@ -30127,13 +30195,13 @@ func Abc_CommandAbc9WriteVer(pAbc *Abc_Frame_t, argc int32, argv []string) int32
 		Abc_Print(-1, "The specification file is not given.\n")
 		return 1
 	}
-	pNtkSpec = Io_ReadNetlist(pFileSpec, Io_ReadFileType(pFileSpec), 0)
+	pNtkSpec = base_io.Io_ReadNetlist(pFileSpec, Io_ReadFileType(pFileSpec), 0)
 	if pNtkSpec == nil {
 		Abc_Print(-1, "Reading hierarchical Verilog for the specification has failed.\n")
 		return 1
 	}
-	Abc_NtkInsertHierarchyGia(pNtkSpec, abcFrameNtk(pAbc), fVerbose)
-	Io_WriteVerilog(pNtkSpec, pFileName, 0)
+	baseabc.Abc_NtkInsertHierarchyGia(pNtkSpec, abcFrameNtk(pAbc), fVerbose)
+	base_io.Io_WriteVerilog(pNtkSpec, pFileName, 0)
 	Abc_NtkDelete(pNtkSpec)
 	return 0
 
@@ -30209,16 +30277,16 @@ func Abc_CommandAbc9Write(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	}
 	pFileName = argv[globalUtilOptind]
 	if fUnique != 0 {
-		var pGia *Gia_Man_t = Gia_ManIsoCanonicize(abcFrameGia(pAbc), fVerbose)
-		Gia_AigerWriteSimple(pGia, pFileName)
+		var pGia *Gia_Man_t = giapkg.Gia_ManIsoCanonicize(abcFrameGia(pAbc), fVerbose)
+		giapkg.Gia_AigerWriteSimple(pGia, pFileName)
 		Gia_ManStop(pGia)
 
 	} else if fVerilog != 0 {
-		Gia_ManDumpVerilog(abcFrameGia(pAbc), pFileName, nil)
+		giapkg.Gia_ManDumpVerilog(abcFrameGia(pAbc), pFileName, nil)
 	} else if fMiniAig != 0 {
-		Gia_ManWriteMiniAig(abcFrameGia(pAbc), pFileName)
+		giapkg.Gia_ManWriteMiniAig(abcFrameGia(pAbc), pFileName)
 	} else if fMiniLut != 0 {
-		Gia_ManWriteMiniLut(abcFrameGia(pAbc), pFileName)
+		giapkg.Gia_ManWriteMiniLut(abcFrameGia(pAbc), pFileName)
 	} else {
 		Gia_AigerWrite(abcFrameGia(pAbc), pFileName, 0, 0, fWriteNewLine)
 	}
@@ -30280,11 +30348,11 @@ func Abc_CommandAbc9WriteLut(pAbc *Abc_Frame_t, argc int32, argv []string) int32
 		Abc_Print(-1, "Abc_CommandAbc9WriteLut(): There is no AIG to write.\n")
 		return 1
 	}
-	if !Gia_ManHasMapping(abcFrameGia(pAbc)) {
+	if Gia_ManHasMapping(abcFrameGia(pAbc)) == 0 {
 		Abc_Print(-1, "Abc_CommandAbc9WriteLut(): AIG has no mapping.\n")
 		return 1
 	}
-	Gia_AigerWriteLut(abcFrameGia(pAbc), pFileName)
+	giapkg.Gia_AigerWriteLut(abcFrameGia(pAbc), pFileName)
 	return 0
 
 usage:
@@ -30310,49 +30378,49 @@ usage:
 **********************************************************************
 */
 func Abc_CommandAbc9Ps(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
-	var Pars Gps_Par_t
-	var pPars *Gps_Par_t = &Pars
+	var Pars giapkg.Gps_Par_t
+	var pPars *giapkg.Gps_Par_t = &Pars
 	var c, fBest int32
-	memset(pPars, 0, sizeof(Gps_Par_t))
+	memset(pPars, 0, sizeof(giapkg.Gps_Par_t))
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "Dtpcnlmaszxbh"); c != -1; c = Extra_UtilGetopt(argc, argv, "Dtpcnlmaszxbh") {
 		switch c {
 		case 't':
-			pPars.fTents ^= 1
+			pPars.FTents ^= 1
 			break
 		case 'p':
-			pPars.fSwitch ^= 1
+			pPars.FSwitch ^= 1
 			break
 		case 'c':
-			pPars.fCut ^= 1
+			pPars.FCut ^= 1
 			break
 		case 'n':
-			pPars.fNpn ^= 1
+			pPars.FNpn ^= 1
 			break
 		case 'l':
-			pPars.fLutProf ^= 1
+			pPars.FLutProf ^= 1
 			break
 		case 'm':
-			pPars.fMuxXor ^= 1
+			pPars.FMuxXor ^= 1
 			break
 		case 'a':
-			pPars.fMiter ^= 1
+			pPars.FMiter ^= 1
 			break
 		case 's':
-			pPars.fSlacks ^= 1
+			pPars.FSlacks ^= 1
 			break
 		case 'z':
-			pPars.fSkipMap ^= 1
+			pPars.FSkipMap ^= 1
 			break
 		case 'x':
-			pPars.fNoColor ^= 1
+			pPars.FNoColor ^= 1
 			break
 		case 'D':
 			if globalUtilOptind >= argc {
 				Abc_Print(-1, "Command line switch \"-D\" should be followed by a file name.\n")
 				goto usage
 			}
-			pPars.pDumpFile = argv[globalUtilOptind]
+			pPars.PDumpFile = argv[globalUtilOptind]
 			globalUtilOptind++
 			break
 		case 'b':
@@ -30369,30 +30437,30 @@ func Abc_CommandAbc9Ps(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			Abc_Print(-1, "Abc_CommandAbc9Ps(): There is no AIG.\n")
 			return 1
 		}
-		Gia_ManPrintStats(abcFrameResource[*Gia_Man_t](pAbc, "pGiaBest"), pPars)
+		giapkg.Gia_ManPrintStats(abcFrameResource[*Gia_Man_t](pAbc, "pGiaBest"), pPars)
 
 	} else {
 		if abcFrameGia(pAbc) == nil {
 			Abc_Print(-1, "Abc_CommandAbc9Ps(): There is no AIG.\n")
 			return 1
 		}
-		Gia_ManPrintStats(abcFrameGia(pAbc), pPars)
+		giapkg.Gia_ManPrintStats(abcFrameGia(pAbc), pPars)
 	}
 	return 0
 
 usage:
 	Abc_Print(-2, "usage: &ps [-tpcnlmaszxbh] [-D file]\n")
 	Abc_Print(-2, "\t          prints stats of the current AIG\n")
-	Abc_Print(-2, "\t-t      : toggle printing BMC tents [default = %s]\n", abcSelect(fTents, "yes", "no"))
-	Abc_Print(-2, "\t-p      : toggle printing switching activity [default = %s]\n", abcSelect(fSwitch, "yes", "no"))
-	Abc_Print(-2, "\t-c      : toggle printing the size of frontier cut [default = %s]\n", abcSelect(fCut, "yes", "no"))
-	Abc_Print(-2, "\t-n      : toggle printing NPN classes of functions [default = %s]\n", abcSelect(fNpn, "yes", "no"))
-	Abc_Print(-2, "\t-l      : toggle printing LUT size profile [default = %s]\n", abcSelect(fLutProf, "yes", "no"))
-	Abc_Print(-2, "\t-m      : toggle printing MUX/XOR statistics [default = %s]\n", abcSelect(fMuxXor, "yes", "no"))
-	Abc_Print(-2, "\t-a      : toggle printing miter statistics [default = %s]\n", abcSelect(fMiter, "yes", "no"))
-	Abc_Print(-2, "\t-s      : toggle printing slack distribution [default = %s]\n", abcSelect(fSlacks, "yes", "no"))
-	Abc_Print(-2, "\t-z      : skip mapping statistics even if mapped [default = %s]\n", abcSelect(fSkipMap, "yes", "no"))
-	Abc_Print(-2, "\t-n      : toggle using no color in the printout [default = %s]\n", abcSelect(fNoColor, "yes", "no"))
+	Abc_Print(-2, "\t-t      : toggle printing BMC tents [default = %s]\n", abcSelect(pPars.FTents, "yes", "no"))
+	Abc_Print(-2, "\t-p      : toggle printing switching activity [default = %s]\n", abcSelect(pPars.FSwitch, "yes", "no"))
+	Abc_Print(-2, "\t-c      : toggle printing the size of frontier cut [default = %s]\n", abcSelect(pPars.FCut, "yes", "no"))
+	Abc_Print(-2, "\t-n      : toggle printing NPN classes of functions [default = %s]\n", abcSelect(pPars.FNpn, "yes", "no"))
+	Abc_Print(-2, "\t-l      : toggle printing LUT size profile [default = %s]\n", abcSelect(pPars.FLutProf, "yes", "no"))
+	Abc_Print(-2, "\t-m      : toggle printing MUX/XOR statistics [default = %s]\n", abcSelect(pPars.FMuxXor, "yes", "no"))
+	Abc_Print(-2, "\t-a      : toggle printing miter statistics [default = %s]\n", abcSelect(pPars.FMiter, "yes", "no"))
+	Abc_Print(-2, "\t-s      : toggle printing slack distribution [default = %s]\n", abcSelect(pPars.FSlacks, "yes", "no"))
+	Abc_Print(-2, "\t-z      : skip mapping statistics even if mapped [default = %s]\n", abcSelect(pPars.FSkipMap, "yes", "no"))
+	Abc_Print(-2, "\t-n      : toggle using no color in the printout [default = %s]\n", abcSelect(pPars.FNoColor, "yes", "no"))
 	Abc_Print(-2, "\t-x      : toggle printing saved AIG statistics [default = %s]\n", abcSelect(fBest, "yes", "no"))
 	Abc_Print(-2, "\t-D file : file name to dump statistics [default = none]\n")
 	Abc_Print(-2, "\t-h      : print the command usage\n")
@@ -30439,7 +30507,7 @@ func Abc_CommandAbc9PFan(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9PFan(): There is no AIG.\n")
 		return 1
 	}
-	Gia_ManPrintFanio(abcFrameGia(pAbc), nNodes)
+	giapkg.Gia_ManPrintFanio(abcFrameGia(pAbc), nNodes)
 	return 0
 
 usage:
@@ -30486,7 +30554,7 @@ func Abc_CommandAbc9PSig(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9PSigs(): Works only for sequential circuits.\n")
 		return 1
 	}
-	Gia_ManDetectSeqSignals(abcFrameGia(pAbc), fSetReset, 1)
+	giapkg.Gia_ManDetectSeqSignals(abcFrameGia(pAbc), fSetReset, 1)
 	return 0
 
 usage:
@@ -30525,7 +30593,7 @@ func Abc_CommandAbc9Status(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Status(): There is no AIG.\n")
 		return 1
 	}
-	Gia_ManPrintMiterStatus(abcFrameGia(pAbc))
+	giapkg.Gia_ManPrintMiterStatus(abcFrameGia(pAbc))
 	return 0
 
 usage:
@@ -30588,18 +30656,18 @@ func Abc_CommandAbc9MuxProfile(pAbc *Abc_Frame_t, argc int32, argv []string) int
 		return 1
 	}
 	if fNpn != 0 {
-		if !Gia_ManHasMapping(abcFrameGia(pAbc)) || Gia_ManLutSizeMax(abcFrameGia(pAbc)) >= 4 {
+		if (Gia_ManHasMapping(abcFrameGia(pAbc)) == 0) || Gia_ManLutSizeMax(abcFrameGia(pAbc)) >= 4 {
 			Abc_Print(-1, "Abc_CommandAbc9MuxProfile(): Expecting AIG mapped into 3-LUTs.\n")
 			return 1
 		}
-		Acec_StatsCollect(abcFrameGia(pAbc), fVerbose)
+		proof_acec.Acec_StatsCollect(abcFrameGia(pAbc), fVerbose)
 
 	} else if fMuxes != 0 {
-		Gia_ManMuxProfiling(abcFrameGia(pAbc))
+		giapkg.Gia_ManMuxProfiling(abcFrameGia(pAbc))
 	} else if fAdders != 0 {
-		Acec_ManProfile(abcFrameGia(pAbc), fVerbose)
+		proof_acec.Acec_ManProfile(abcFrameGia(pAbc), fVerbose)
 	} else {
-		Gia_ManProfileStructures(abcFrameGia(pAbc), nLimit, fVerbose)
+		giapkg.Gia_ManProfileStructures(abcFrameGia(pAbc), nLimit, fVerbose)
 	}
 	return 0
 
@@ -30648,7 +30716,7 @@ func Abc_CommandAbc9MuxPos(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9MuxPos(): There is no AIG.\n")
 		return 1
 	}
-	pGia = Gia_ManDupWithMuxPos(abcFrameGia(pAbc))
+	pGia = giapkg.Gia_ManDupWithMuxPos(abcFrameGia(pAbc))
 	Abc_FrameUpdateGia(pAbc, pGia)
 	return 0
 
@@ -30693,7 +30761,7 @@ func Abc_CommandAbc9MuxStr(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9MuxStr(): There is no AIG.\n")
 		return 1
 	}
-	pGia = Gia_ManCofStructure(abcFrameGia(pAbc))
+	pGia = giapkg.Gia_ManCofStructure(abcFrameGia(pAbc))
 	Abc_FrameUpdateGia(pAbc, pGia)
 	return 0
 
@@ -30776,9 +30844,9 @@ func Abc_CommandAbc9PrintTruth(pAbc *Abc_Frame_t, argc int32, argv []string) int
 		nOutRange = Gia_ManCoNum(abcFrameGia(pAbc))
 	}
 	for i = iOutNum; i < iOutNum+nOutRange; i++ {
-		Truth = Gia_LutComputeTruth6Simple(abcFrameGia(pAbc), i)
+		Truth = giapkg.Gia_LutComputeTruth6Simple(abcFrameGia(pAbc), i)
 		fmt.Printf("Output %8d : ", i)
-		Extra_PrintHex(os.Stdout, Truth[:], Gia_ManCiNum(abcFrameGia(pAbc)))
+		misc_extra.Extra_PrintHex(os.Stdout, Truth[:], Gia_ManCiNum(abcFrameGia(pAbc)))
 		fmt.Printf("\n")
 	}
 	return 0
@@ -30828,7 +30896,7 @@ func Abc_CommandAbc9Unate(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Unate(): There is no AIG.\n")
 		return 1
 	}
-	Gia_ManCheckUnateTest(abcFrameGia(pAbc), fComputeAll, fVerbose)
+	giapkg.Gia_ManCheckUnateTest(abcFrameGia(pAbc), fComputeAll, fVerbose)
 	return 0
 
 usage:
@@ -30884,7 +30952,7 @@ func Abc_CommandAbc9Rex2Gia(pAbc *Abc_Frame_t, argc int32, argv []string) int32 
 		return 1
 	}
 	pStr = pArgvNew[0]
-	pGia = Gia_ManRex2Gia(pStr, fOrder, fVerbose)
+	pGia = giapkg.Gia_ManRex2Gia(pStr, fOrder, fVerbose)
 	if pGia != nil {
 		Abc_FrameUpdateGia(pAbc, pGia)
 	}
@@ -30963,7 +31031,7 @@ func Abc_CommandAbc9RexWalk(pAbc *Abc_Frame_t, argc int32, argv []string) int32 
 		Abc_Print(-1, "Abc_CommandAbc9Show(): There is no AIG.\n")
 		return 1
 	}
-	Gia_ManAutomWalk(abcFrameGia(pAbc), nSteps, nWalks, fVerbose)
+	giapkg.Gia_ManAutomWalk(abcFrameGia(pAbc), nSteps, nWalks, fVerbose)
 	return 0
 
 usage:
@@ -31014,16 +31082,16 @@ func Abc_CommandAbc9Show(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Show(): There is no AIG.\n")
 		return 1
 	}
-	if Gia_ManBufNum(abcFrameGia(pAbc)) {
+	if Gia_ManBufNum(abcFrameGia(pAbc)) != 0 {
 		Abc_Print(-1, "Abc_CommandAbc9Show(): Cannot show GIA with barrier buffers.\n")
 		return 1
 	}
-	if !fAdders && Gia_ManHasMapping(abcFrameGia(pAbc)) {
+	if (fAdders == 0) && (Gia_ManHasMapping(abcFrameGia(pAbc)) != 0) {
 		vBold = Vec_IntAlloc(100)
 		Gia_ManForEachLut(abcFrameGia(pAbc), c)
 		Vec_IntPush(vBold, c)
 	}
-	Gia_ManShow(abcFrameGia(pAbc), vBold, fAdders, fFadds, fPath)
+	giapkg.Gia_ManShow(abcFrameGia(pAbc), vBold, fAdders, fFadds, fPath)
 	Vec_IntFreeP(&vBold)
 	return 0
 
@@ -31158,56 +31226,56 @@ func Abc_CommandAbc9Strash(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 1
 	}
 	if fStrMuxes != 0 {
-		if Gia_ManHasMapping(abcFrameGia(pAbc)) {
+		if Gia_ManHasMapping(abcFrameGia(pAbc)) != 0 {
 			Abc_Print(0, "Restructing the current AIG destroys the LUT mapping.\n")
 		}
 		Vec_IntFreeP(&abcFrameGia(pAbc).vMapping)
-		pTemp = Gia_ManDupMuxRestructure(abcFrameGia(pAbc))
+		pTemp = giapkg.Gia_ManDupMuxRestructure(abcFrameGia(pAbc))
 		Abc_Print(1, "Finished AIG restructing to enable efficient mapping of 4:1 MUXes into 4-LUTs.\n")
 
-	} else if Gia_ManHasMapping(abcFrameGia(pAbc)) && (fRehashMap != 0) {
-		pTemp = Gia_ManDupHashMapping(abcFrameGia(pAbc))
-		Gia_ManTransferPacking(pTemp, abcFrameGia(pAbc))
+	} else if (Gia_ManHasMapping(abcFrameGia(pAbc)) != 0) && (fRehashMap != 0) {
+		pTemp = giapkg.Gia_ManDupHashMapping(abcFrameGia(pAbc))
+		giapkg.Gia_ManTransferPacking(pTemp, abcFrameGia(pAbc))
 		Gia_ManTransferTiming(pTemp, abcFrameGia(pAbc))
 
-	} else if Gia_ManHasMapping(abcFrameGia(pAbc)) && abcFrameGia(pAbc).vConfigs {
-		pTemp = If_ManDeriveGiaFromCells(abcFrameGia(pAbc))
-	} else if Gia_ManHasMapping(abcFrameGia(pAbc)) {
-		pTemp = Dsm_ManDeriveGia(abcFrameGia(pAbc), fAddMuxes) // delay-oriented unmapping
+	} else if (Gia_ManHasMapping(abcFrameGia(pAbc)) != 0) && abcFrameGia(pAbc).vConfigs {
+		pTemp = ifpkg.If_ManDeriveGiaFromCells(abcFrameGia(pAbc))
+	} else if Gia_ManHasMapping(abcFrameGia(pAbc)) != 0 {
+		pTemp = opt_dau.Dsm_ManDeriveGia(abcFrameGia(pAbc), fAddMuxes) // delay-oriented unmapping
 	} else if fAddMuxes != 0 {
 		if abcFrameGia(pAbc).pMuxes {
 			Abc_Print(-1, "Abc_CommandAbc9Strash(): The AIG already has MUXes.\n")
 			return 1
 		}
-		pTemp = Gia_ManDupMuxes(abcFrameGia(pAbc), Limit)
-		if !Abc_FrameReadFlag("silentmode") {
+		pTemp = giapkg.Gia_ManDupMuxes(abcFrameGia(pAbc), Limit)
+		if !base_main.Abc_FrameReadFlag("silentmode") {
 			fmt.Printf("Generated AND/XOR/MUX graph.\n")
 		}
 
 	} else if (fCollapse != 0) && abcFrameGia(pAbc).pAigExtra {
-		assert(!Gia_ManBufNum(abcFrameGia(pAbc)), "!Gia_ManBufNum(abcFrameGia(pAbc))")
-		if Gia_ManIsSeqWithBoxes(abcFrameGia(pAbc)) || Gia_ManRegBoxNum(abcFrameGia(pAbc)) {
-			var pUnshuffled *Gia_Man_t = Gia_ManDupUnshuffleInputs(abcFrameGia(pAbc))
+		assert((Gia_ManBufNum(abcFrameGia(pAbc)) == 0), "!Gia_ManBufNum(abcFrameGia(pAbc))")
+		if (giapkg.Gia_ManIsSeqWithBoxes(abcFrameGia(pAbc)) != 0) || (giapkg.Gia_ManRegBoxNum(abcFrameGia(pAbc)) != 0) {
+			var pUnshuffled *Gia_Man_t = giapkg.Gia_ManDupUnshuffleInputs(abcFrameGia(pAbc))
 			Gia_ManTransferTiming(pUnshuffled, abcFrameGia(pAbc))
-			pTemp = Gia_ManDupCollapse(pUnshuffled, pUnshuffled.pAigExtra, nil, Gia_ManRegBoxNum(pUnshuffled) > 0)
+			pTemp = giapkg.Gia_ManDupCollapse(pUnshuffled, pUnshuffled.pAigExtra, nil, giapkg.Gia_ManRegBoxNum(pUnshuffled) > 0)
 			Gia_ManTransferTiming(abcFrameGia(pAbc), pUnshuffled)
 			Gia_ManStop(pUnshuffled)
 
 		} else {
-			pTemp = Gia_ManDupCollapse(abcFrameGia(pAbc), abcFrameGia(pAbc).pAigExtra, nil, 0)
+			pTemp = giapkg.Gia_ManDupCollapse(abcFrameGia(pAbc), abcFrameGia(pAbc).pAigExtra, nil, 0)
 		}
-		if !Abc_FrameReadFlag("silentmode") {
+		if !base_main.Abc_FrameReadFlag("silentmode") {
 			fmt.Printf("Collapsed AIG with boxes and logic of the boxes.\n")
 		}
 
 	} else if abcFrameGia(pAbc).pMuxes {
-		pTemp = Gia_ManDupNoMuxes(abcFrameGia(pAbc), 0)
-		if !Abc_FrameReadFlag("silentmode") {
+		pTemp = giapkg.Gia_ManDupNoMuxes(abcFrameGia(pAbc), 0)
+		if !base_main.Abc_FrameReadFlag("silentmode") {
 			fmt.Printf("Generated AIG from AND/XOR/MUX graph.\n")
 		}
 
 	} else {
-		pTemp = Gia_ManRehash(abcFrameGia(pAbc), fAddStrash)
+		pTemp = giapkg.Gia_ManRehash(abcFrameGia(pAbc), fAddStrash)
 		//        if ( !Abc_FrameReadFlag("silentmode") )
 		//            printf( "Rehashed the current AIG.\n" );
 	}
@@ -31272,7 +31340,7 @@ func Abc_CommandAbc9Topand(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Topand(): Can only be applied to a combinational miter.\n")
 		return 1
 	}
-	pTemp = Gia_ManDupTopAnd(abcFrameGia(pAbc), fVerbose)
+	pTemp = giapkg.Gia_ManDupTopAnd(abcFrameGia(pAbc), fVerbose)
 	Abc_FrameUpdateGia(pAbc, pTemp)
 	return 0
 
@@ -31317,7 +31385,7 @@ func Abc_CommandAbc9Add1Hot(pAbc *Abc_Frame_t, argc int32, argv []string) int32 
 		Abc_Print(-1, "Abc_CommandAbc9Add1Hot(): There is no AIG.\n")
 		return 1
 	}
-	pTemp = Gia_ManDupOneHot(abcFrameGia(pAbc))
+	pTemp = giapkg.Gia_ManDupOneHot(abcFrameGia(pAbc))
 	Abc_FrameUpdateGia(pAbc, pTemp)
 	return 0
 
@@ -31386,12 +31454,12 @@ func Abc_CommandAbc9Cof(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	}
 	if nLimFan != 0 {
 		Abc_Print(-1, "Cofactoring all variables whose fanout count is higher than %d.\n", nLimFan)
-		pTemp = Gia_ManDupCofAll(abcFrameGia(pAbc), nLimFan, fVerbose)
+		pTemp = giapkg.Gia_ManDupCofAll(abcFrameGia(pAbc), nLimFan, fVerbose)
 		Abc_FrameUpdateGia(pAbc, pTemp)
 
 	} else if iVar != 0 {
 		Abc_Print(-1, "Cofactoring one variable with object ID %d.\n", iVar)
-		pTemp = Gia_ManDupCof(abcFrameGia(pAbc), iVar)
+		pTemp = giapkg.Gia_ManDupCof(abcFrameGia(pAbc), iVar)
 		Abc_FrameUpdateGia(pAbc, pTemp)
 
 	} else {
@@ -31467,11 +31535,11 @@ func Abc_CommandAbc9Trim(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Trim(): There is no AIG.\n")
 		return 1
 	}
-	pTemp = Gia_ManDupTrimmed(abcFrameGia(pAbc), fTrimCis, fTrimCos, fDualOut, OutValue)
+	pTemp = giapkg.Gia_ManDupTrimmed(abcFrameGia(pAbc), fTrimCis, fTrimCos, fDualOut, OutValue)
 	if fPoFedByPi != 0 {
 
 		pTemp2 = pTemp
-		pTemp = Gia_ManDupTrimmed2(pTemp2)
+		pTemp = giapkg.Gia_ManDupTrimmed2(pTemp2)
 		Gia_ManStop(pTemp2)
 	}
 	Abc_FrameUpdateGia(pAbc, pTemp)
@@ -31531,19 +31599,19 @@ func Abc_CommandAbc9Dfs(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 1
 	}
 	if fNormal != 0 {
-		pTemp = Gia_ManDupOrderAiger(abcFrameGia(pAbc))
+		pTemp = giapkg.Gia_ManDupOrderAiger(abcFrameGia(pAbc))
 		if fVerbose != 0 {
 			Abc_Print(-1, "AIG objects are reordered as follows: CIs, ANDs, COs.\n")
 		}
 
 	} else if fReverse != 0 {
-		pTemp = Gia_ManDupOrderDfsReverse(abcFrameGia(pAbc))
+		pTemp = giapkg.Gia_ManDupOrderDfsReverse(abcFrameGia(pAbc))
 		if fVerbose != 0 {
 			Abc_Print(-1, "AIG objects are reordered in the reserve DFS order.\n")
 		}
 
 	} else {
-		pTemp = Gia_ManDupOrderDfs(abcFrameGia(pAbc))
+		pTemp = giapkg.Gia_ManDupOrderDfs(abcFrameGia(pAbc))
 		if fVerbose != 0 {
 			Abc_Print(-1, "AIG objects are reordered in the DFS order.\n")
 		}
@@ -31575,11 +31643,11 @@ usage:
 **********************************************************************
 */
 func Abc_CommandAbc9Sim(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
-	var Pars Gia_ParSim_t
-	var pPars *Gia_ParSim_t = &Pars
+	var Pars giapkg.Gia_ParSim_t
+	var pPars *giapkg.Gia_ParSim_t = &Pars
 	var pFileName string
 	var c int32
-	Gia_ManSimSetDefaultParams(pPars)
+	giapkg.Gia_ManSimSetDefaultParams(pPars)
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "FWNTImvh"); c != -1; c = Extra_UtilGetopt(argc, argv, "FWNTImvh") {
 		switch c {
@@ -31588,9 +31656,9 @@ func Abc_CommandAbc9Sim(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-F\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nIters = abcAtoi(argv[globalUtilOptind])
+			pPars.NIters = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nIters < 0 {
+			if pPars.NIters < 0 {
 				goto usage
 			}
 			break
@@ -31599,9 +31667,9 @@ func Abc_CommandAbc9Sim(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-W\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nWords = abcAtoi(argv[globalUtilOptind])
+			pPars.NWords = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nWords < 0 {
+			if pPars.NWords < 0 {
 				goto usage
 			}
 			break
@@ -31639,10 +31707,10 @@ func Abc_CommandAbc9Sim(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			}
 			break
 		case 'm':
-			pPars.fCheckMiter ^= 1
+			pPars.FCheckMiter ^= 1
 			break
 		case 'v':
-			pPars.fVerbose ^= 1
+			pPars.FVerbose ^= 1
 			break
 		case 'h':
 			goto usage
@@ -31664,14 +31732,14 @@ func Abc_CommandAbc9Sim(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 
 		var pNameGeneric string = Extra_FileNameGeneric(pFileName)
 		assert(len(pNameGeneric) < 900, "strlen(pNameGeneric) < 900")
-		pFileNameOut = fmt.Sprintf("%s_out.%s", pNameGeneric, Extra_FileNameExtension(pFileName))
+		pFileNameOut = fmt.Sprintf("%s_out.%s", pNameGeneric, misc_extra.Extra_FileNameExtension(pFileName))
 		pNameGeneric = ""
-		Gia_ManSimSimulatePattern(abcFrameGia(pAbc), pFileName, pFileNameOut)
+		giapkg.Gia_ManSimSimulatePattern(abcFrameGia(pAbc), pFileName, pFileNameOut)
 		return 1
 	}
 
 	abcFrameSetNFrames(pAbc, -1)
-	if Gia_ManSimSimulate(abcFrameGia(pAbc), pPars) {
+	if giapkg.Gia_ManSimSimulate(abcFrameGia(pAbc), pPars) != 0 {
 		abcFrameSetStatus(pAbc, 0)
 	} else {
 		abcFrameSetStatus(pAbc, -1)
@@ -31685,12 +31753,12 @@ usage:
 	Abc_Print(-2, "usage: &sim [-FWNT num] [-mvh] -I <file>\n")
 	Abc_Print(-2, "\t         performs random simulation of the sequential miter\n")
 	Abc_Print(-2, "\t         (if candidate equivalences are defined, performs refinement)\n")
-	Abc_Print(-2, "\t-F num : the number of frames to simulate [default = %d]\n", pPars.nIters)
-	Abc_Print(-2, "\t-W num : the number of words to simulate [default = %d]\n", pPars.nWords)
+	Abc_Print(-2, "\t-F num : the number of frames to simulate [default = %d]\n", pPars.NIters)
+	Abc_Print(-2, "\t-W num : the number of words to simulate [default = %d]\n", pPars.NWords)
 	Abc_Print(-2, "\t-N num : random number seed (1 <= num <= 1000) [default = %d]\n", pPars.RandSeed)
 	Abc_Print(-2, "\t-T num : approximate runtime limit in seconds [default = %d]\n", pPars.TimeLimit)
-	Abc_Print(-2, "\t-m     : toggle miter vs. any circuit [default = %s]\n", abcSelect(fCheckMiter, "miter", "circuit"))
-	Abc_Print(-2, "\t-v     : toggle printing verbose information [default = %s]\n", abcSelect(fVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-m     : toggle miter vs. any circuit [default = %s]\n", abcSelect(pPars.FCheckMiter, "miter", "circuit"))
+	Abc_Print(-2, "\t-v     : toggle printing verbose information [default = %s]\n", abcSelect(pPars.FVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h     : print the command usage\n")
 	Abc_Print(-2, "\t-I file: (optional) file with input patterns (one line per frame, as many as PIs)\n")
 	return 1
@@ -31714,7 +31782,7 @@ func Abc_CommandAbc9Sim3(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	var Pars Ssw_RarPars_t
 	var pPars *Ssw_RarPars_t = &Pars
 	var c int32
-	Ssw_RarSetDefaultParams(pPars)
+	proof_ssw.Ssw_RarSetDefaultParams(pPars)
 	// parse command line
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "FWBRSNTGgvh"); c != -1; c = Extra_UtilGetopt(argc, argv, "FWBRSNTGgvh") {
@@ -31724,9 +31792,9 @@ func Abc_CommandAbc9Sim3(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-F\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nFrames = abcAtoi(argv[globalUtilOptind])
+			pPars.NFrames = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nFrames < 0 {
+			if pPars.NFrames < 0 {
 				goto usage
 			}
 			break
@@ -31735,9 +31803,9 @@ func Abc_CommandAbc9Sim3(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-W\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nWords = abcAtoi(argv[globalUtilOptind])
+			pPars.NWords = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nWords < 0 {
+			if pPars.NWords < 0 {
 				goto usage
 			}
 			break
@@ -31746,9 +31814,9 @@ func Abc_CommandAbc9Sim3(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-B\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nBinSize = abcAtoi(argv[globalUtilOptind])
+			pPars.NBinSize = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nBinSize < 0 {
+			if pPars.NBinSize < 0 {
 				goto usage
 			}
 			break
@@ -31757,9 +31825,9 @@ func Abc_CommandAbc9Sim3(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-R\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nRounds = abcAtoi(argv[globalUtilOptind])
+			pPars.NRounds = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nRounds < 0 {
+			if pPars.NRounds < 0 {
 				goto usage
 			}
 			break
@@ -31768,9 +31836,9 @@ func Abc_CommandAbc9Sim3(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-S\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nRestart = abcAtoi(argv[globalUtilOptind])
+			pPars.NRestart = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nRestart < 0 {
+			if pPars.NRestart < 0 {
 				goto usage
 			}
 			break
@@ -31779,9 +31847,9 @@ func Abc_CommandAbc9Sim3(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-N\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nRandSeed = abcAtoi(argv[globalUtilOptind])
+			pPars.NRandSeed = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nRandSeed < 0 {
+			if pPars.NRandSeed < 0 {
 				goto usage
 			}
 			break
@@ -31808,10 +31876,10 @@ func Abc_CommandAbc9Sim3(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			}
 			break
 		case 'g':
-			pPars.fUseFfGrouping ^= 1
+			pPars.FUseFfGrouping ^= 1
 			break
 		case 'v':
-			pPars.fVerbose ^= 1
+			pPars.FVerbose ^= 1
 			break
 		case 'h':
 			goto usage
@@ -31827,22 +31895,22 @@ func Abc_CommandAbc9Sim3(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Sim3(): This command works only for sequential AIGs.\n")
 		return 0
 	}
-	abcFrameSetStatus(pAbc, Ssw_RarSimulateGia(abcFrameGia(pAbc), pPars))
+	abcFrameSetStatus(pAbc, proof_ssw.Ssw_RarSimulateGia(abcFrameGia(pAbc), pPars))
 	Abc_FrameReplaceCex(pAbc, &abcFrameGia(pAbc).pCexSeq)
 	return 0
 
 usage:
 	Abc_Print(-2, "usage: &sim3 [-FWBRNT num] [-gvh]\n")
 	Abc_Print(-2, "\t         performs random simulation of the sequential miter\n")
-	Abc_Print(-2, "\t-F num : the number of frames to simulate [default = %d]\n", pPars.nFrames)
-	Abc_Print(-2, "\t-W num : the number of words to simulate [default = %d]\n", pPars.nWords)
-	Abc_Print(-2, "\t-B num : the number of flops in one bin [default = %d]\n", pPars.nBinSize)
-	Abc_Print(-2, "\t-R num : the number of simulation rounds [default = %d]\n", pPars.nRounds)
-	Abc_Print(-2, "\t-S num : the number of rounds before a restart [default = %d]\n", pPars.nRestart)
-	Abc_Print(-2, "\t-N num : random number seed (1 <= num <= 1000) [default = %d]\n", pPars.nRandSeed)
+	Abc_Print(-2, "\t-F num : the number of frames to simulate [default = %d]\n", pPars.NFrames)
+	Abc_Print(-2, "\t-W num : the number of words to simulate [default = %d]\n", pPars.NWords)
+	Abc_Print(-2, "\t-B num : the number of flops in one bin [default = %d]\n", pPars.NBinSize)
+	Abc_Print(-2, "\t-R num : the number of simulation rounds [default = %d]\n", pPars.NRounds)
+	Abc_Print(-2, "\t-S num : the number of rounds before a restart [default = %d]\n", pPars.NRestart)
+	Abc_Print(-2, "\t-N num : random number seed (1 <= num <= 1000) [default = %d]\n", pPars.NRandSeed)
 	Abc_Print(-2, "\t-T num : approximate runtime limit in seconds [default = %d]\n", pPars.TimeOut)
-	Abc_Print(-2, "\t-g     : toggle heuristic flop grouping [default = %s]\n", abcSelect(fUseFfGrouping, "yes", "no"))
-	Abc_Print(-2, "\t-v     : toggle printing verbose information [default = %s]\n", abcSelect(fVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-g     : toggle heuristic flop grouping [default = %s]\n", abcSelect(pPars.FUseFfGrouping, "yes", "no"))
+	Abc_Print(-2, "\t-v     : toggle printing verbose information [default = %s]\n", abcSelect(pPars.FVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h     : print the command usage\n")
 	return 1
 }
@@ -31928,9 +31996,9 @@ func Abc_CommandAbc9MLGen(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 1
 	}
 	if fBinData != 0 {
-		Gia_ManDumpFiles(abcFrameGia(pAbc), nWords, nWords, Seed, pFileName)
+		giapkg.Gia_ManDumpFiles(abcFrameGia(pAbc), nWords, nWords, Seed, pFileName)
 	} else {
-		Gia_ManDumpPlaFiles(abcFrameGia(pAbc), nWords, nWords, Seed, pFileName)
+		giapkg.Gia_ManDumpPlaFiles(abcFrameGia(pAbc), nWords, nWords, Seed, pFileName)
 	}
 	return 0
 
@@ -32000,7 +32068,7 @@ func Abc_CommandAbc9MLTest(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9MLTest(): Expecting data file name on the command line.\n")
 		return 0
 	}
-	Gia_ManTestOneFile(abcFrameGia(pAbc), pArgvNew[0], pDumpFile)
+	giapkg.Gia_ManTestOneFile(abcFrameGia(pAbc), pArgvNew[0], pDumpFile)
 	return 0
 
 usage:
@@ -32075,7 +32143,7 @@ func Abc_CommandAbc9ReadSim(pAbc *Abc_Frame_t, argc int32, argv []string) int32 
 	}
 	if fOutputs != 0 {
 		Vec_WrdFreeP(&abcFrameGia(pAbc).vSimsPo)
-		abcFrameGia(pAbc).vSimsPo = Vec_WrdReadHex(pArgvNew[0], nil, 1)
+		abcFrameGia(pAbc).vSimsPo = giapkg.Vec_WrdReadHex(pArgvNew[0], nil, 1)
 		if Vec_WrdSize(abcFrameGia(pAbc).vSimsPo)%Gia_ManCoNum(abcFrameGia(pAbc)) != 0 {
 			Vec_WrdFreeP(&abcFrameGia(pAbc).vSimsPo)
 			Abc_Print(-1, "File size (%d words) does not match the number of AIG inputs (%d %% %d != %d).\n",
@@ -32087,7 +32155,7 @@ func Abc_CommandAbc9ReadSim(pAbc *Abc_Frame_t, argc int32, argv []string) int32 
 
 	} else {
 		Vec_WrdFreeP(&abcFrameGia(pAbc).vSimsPi)
-		abcFrameGia(pAbc).vSimsPi = Vec_WrdReadHex(pArgvNew[0], nil, 1)
+		abcFrameGia(pAbc).vSimsPi = giapkg.Vec_WrdReadHex(pArgvNew[0], nil, 1)
 		if Vec_WrdSize(abcFrameGia(pAbc).vSimsPi)%Gia_ManCiNum(abcFrameGia(pAbc)) != 0 {
 			Vec_WrdFreeP(&abcFrameGia(pAbc).vSimsPi)
 			Abc_Print(-1, "File size (%d words) does not match the number of AIG inputs (%d %% %d != %d).\n",
@@ -32168,11 +32236,11 @@ func Abc_CommandAbc9WriteSim(pAbc *Abc_Frame_t, argc int32, argv []string) int32
 	}
 	if fOutputs != 0 {
 		assert(Vec_WrdSize(abcFrameGia(pAbc).vSimsPo)%Gia_ManCoNum(abcFrameGia(pAbc)) == 0, "Vec_WrdSize(abcFrameGia(pAbc).vSimsPo) % Gia_ManCoNum(abcFrameGia(pAbc)) == 0")
-		Vec_WrdDumpHex(pArgvNew[0], abcFrameGia(pAbc).vSimsPo, Vec_WrdSize(abcFrameGia(pAbc).vSimsPo)/Gia_ManCoNum(abcFrameGia(pAbc)), 1)
+		giapkg.Vec_WrdDumpHex(pArgvNew[0], abcFrameGia(pAbc).vSimsPo, Vec_WrdSize(abcFrameGia(pAbc).vSimsPo)/Gia_ManCoNum(abcFrameGia(pAbc)), 1)
 
 	} else {
 		assert(Vec_WrdSize(abcFrameGia(pAbc).vSimsPi)%Gia_ManCiNum(abcFrameGia(pAbc)) == 0, "Vec_WrdSize(abcFrameGia(pAbc).vSimsPi) % Gia_ManCiNum(abcFrameGia(pAbc)) == 0")
-		Vec_WrdDumpHex(pArgvNew[0], abcFrameGia(pAbc).vSimsPi, Vec_WrdSize(abcFrameGia(pAbc).vSimsPi)/Gia_ManCiNum(abcFrameGia(pAbc)), 1)
+		giapkg.Vec_WrdDumpHex(pArgvNew[0], abcFrameGia(pAbc).vSimsPi, Vec_WrdSize(abcFrameGia(pAbc).vSimsPi)/Gia_ManCiNum(abcFrameGia(pAbc)), 1)
 	}
 	return 0
 
@@ -32226,7 +32294,7 @@ func Abc_CommandAbc9PrintSim(pAbc *Abc_Frame_t, argc int32, argv []string) int32
 		Abc_Print(-1, "Abc_CommandAbc9PrintSim(): Simulation patterns are not defined.\n")
 		return 0
 	}
-	Gia_ManSimProfile(abcFrameGia(pAbc))
+	giapkg.Gia_ManSimProfile(abcFrameGia(pAbc))
 	return 0
 
 usage:
@@ -32311,29 +32379,29 @@ func Abc_CommandAbc9GenSim(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			Abc_Print(-1, "Abc_CommandAbc9GenSim(): Does not have simulation information available.\n")
 			return 0
 		}
-		Gia_ManPatSatImprove(abcFrameGia(pAbc), nWords, fVerbose)
+		giapkg.Gia_ManPatSatImprove(abcFrameGia(pAbc), nWords, fVerbose)
 
 	} else if fDist != 0 {
 		if abcFrameGia(pAbc).vSimsPi == nil {
 			Abc_Print(-1, "Abc_CommandAbc9GenSim(): Does not have simulation information available.\n")
 			return 0
 		}
-		Gia_ManPatDistImprove(abcFrameGia(pAbc), fVerbose)
+		giapkg.Gia_ManPatDistImprove(abcFrameGia(pAbc), fVerbose)
 
 	} else if nRare >= 0 {
 		if abcFrameGia(pAbc).vSimsPi == nil {
 			Abc_Print(-1, "Abc_CommandAbc9GenSim(): Does not have simulation information available.\n")
 			return 0
 		}
-		Gia_ManPatRareImprove(abcFrameGia(pAbc), nRare, fVerbose)
+		giapkg.Gia_ManPatRareImprove(abcFrameGia(pAbc), nRare, fVerbose)
 
 	} else {
-		Abc_Random(1)
+		util.Abc_Random(1)
 		Vec_WrdFreeP(&abcFrameGia(pAbc).vSimsPi)
-		abcFrameGia(pAbc).vSimsPi = Vec_WrdStartRandom(Gia_ManCiNum(abcFrameGia(pAbc)) * nWords)
+		abcFrameGia(pAbc).vSimsPi = giapkg.Vec_WrdStartRandom(Gia_ManCiNum(abcFrameGia(pAbc)) * nWords)
 		fmt.Printf("Generated %d random patterns (%d 64-bit data words) for each input of the AIG.\n", 64*nWords, nWords)
 	}
-	Gia_ManSimProfile(abcFrameGia(pAbc))
+	giapkg.Gia_ManSimProfile(abcFrameGia(pAbc))
 	return 0
 
 usage:
@@ -32401,7 +32469,7 @@ func Abc_CommandAbc9SimRsb(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9SimRsb(): Does not have simulation information available.\n")
 		return 0
 	}
-	Gia_ManSimRsb(abcFrameGia(pAbc), nCands, fVerbose)
+	giapkg.Gia_ManSimRsb(abcFrameGia(pAbc), nCands, fVerbose)
 	return 0
 
 usage:
@@ -32427,10 +32495,10 @@ usage:
 **********************************************************************
 */
 func Abc_CommandAbc9Resim(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
-	var Pars Cec_ParSim_t
-	var pPars *Cec_ParSim_t = &Pars
+	var Pars proof_cec.Cec_ParSim_t
+	var pPars *proof_cec.Cec_ParSim_t = &Pars
 	var c, RetValue int32
-	Cec_ManSimSetDefaultParams(pPars)
+	proof_cec.Cec_ManSimSetDefaultParams(pPars)
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "Fmvh"); c != -1; c = Extra_UtilGetopt(argc, argv, "Fmvh") {
 		switch c {
@@ -32439,17 +32507,17 @@ func Abc_CommandAbc9Resim(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-F\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nFrames = abcAtoi(argv[globalUtilOptind])
+			pPars.NFrames = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nFrames < 0 {
+			if pPars.NFrames < 0 {
 				goto usage
 			}
 			break
 		case 'm':
-			pPars.fCheckMiter ^= 1
+			pPars.FCheckMiter ^= 1
 			break
 		case 'v':
-			pPars.fVerbose ^= 1
+			pPars.FVerbose ^= 1
 			break
 		case 'h':
 			goto usage
@@ -32461,7 +32529,7 @@ func Abc_CommandAbc9Resim(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Resim(): There is no AIG.\n")
 		return 1
 	}
-	RetValue = Cec_ManSeqResimulateCounter(abcFrameGia(pAbc), pPars, abcFrameCex(pAbc))
+	RetValue = proof_cec.Cec_ManSeqResimulateCounter(abcFrameGia(pAbc), pPars, abcFrameCex(pAbc))
 	if RetValue != 0 {
 		abcFrameSetStatus(pAbc, 0)
 	} else {
@@ -32474,9 +32542,9 @@ func Abc_CommandAbc9Resim(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 usage:
 	Abc_Print(-2, "usage: &resim [-F num] [-mvh]\n")
 	Abc_Print(-2, "\t         resimulates equivalence classes using counter-example\n")
-	Abc_Print(-2, "\t-F num : the number of additinal frames to simulate [default = %d]\n", pPars.nFrames)
-	Abc_Print(-2, "\t-m     : toggle miter vs. any circuit [default = %s]\n", abcSelect(fCheckMiter, "miter", "circuit"))
-	Abc_Print(-2, "\t-v     : toggle printing verbose information [default = %s]\n", abcSelect(fVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-F num : the number of additinal frames to simulate [default = %d]\n", pPars.NFrames)
+	Abc_Print(-2, "\t-m     : toggle miter vs. any circuit [default = %s]\n", abcSelect(pPars.FCheckMiter, "miter", "circuit"))
+	Abc_Print(-2, "\t-v     : toggle printing verbose information [default = %s]\n", abcSelect(pPars.FVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h     : print the command usage\n")
 	return 1
 }
@@ -32546,7 +32614,7 @@ func Abc_CommandAbc9SpecI(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9SpecI(): There is no AIG.\n")
 		return 1
 	}
-	Gia_CommandSpecI(abcFrameGia(pAbc), nFrames, nBTLimit, fUseStart, fCheckMiter, fVerbose)
+	proof_cec.Gia_CommandSpecI(abcFrameGia(pAbc), nFrames, nBTLimit, fUseStart, fCheckMiter, fVerbose)
 	return 0
 
 usage:
@@ -32575,10 +32643,10 @@ usage:
 **********************************************************************
 */
 func Abc_CommandAbc9Equiv(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
-	var Pars Cec_ParSim_t
-	var pPars *Cec_ParSim_t = &Pars
+	var Pars proof_cec.Cec_ParSim_t
+	var pPars *proof_cec.Cec_ParSim_t = &Pars
 	var c int32
-	Cec_ManSimSetDefaultParams(pPars)
+	proof_cec.Cec_ManSimSetDefaultParams(pPars)
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "WFRSTsmdvh"); c != -1; c = Extra_UtilGetopt(argc, argv, "WFRSTsmdvh") {
 		switch c {
@@ -32587,9 +32655,9 @@ func Abc_CommandAbc9Equiv(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-W\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nWords = abcAtoi(argv[globalUtilOptind])
+			pPars.NWords = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nWords < 0 {
+			if pPars.NWords < 0 {
 				goto usage
 			}
 			break
@@ -32598,9 +32666,9 @@ func Abc_CommandAbc9Equiv(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-F\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nFrames = abcAtoi(argv[globalUtilOptind])
+			pPars.NFrames = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nFrames < 0 {
+			if pPars.NFrames < 0 {
 				goto usage
 			}
 			break
@@ -32609,9 +32677,9 @@ func Abc_CommandAbc9Equiv(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-R\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nRounds = abcAtoi(argv[globalUtilOptind])
+			pPars.NRounds = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nRounds < 0 {
+			if pPars.NRounds < 0 {
 				goto usage
 			}
 			break
@@ -32620,9 +32688,9 @@ func Abc_CommandAbc9Equiv(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-S\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nNonRefines = abcAtoi(argv[globalUtilOptind])
+			pPars.NNonRefines = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nNonRefines < 0 {
+			if pPars.NNonRefines < 0 {
 				goto usage
 			}
 			break
@@ -32638,16 +32706,16 @@ func Abc_CommandAbc9Equiv(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			}
 			break
 		case 's':
-			pPars.fSeqSimulate ^= 1
+			pPars.FSeqSimulate ^= 1
 			break
 		case 'm':
-			pPars.fCheckMiter ^= 1
+			pPars.FCheckMiter ^= 1
 			break
 		case 'd':
-			pPars.fDualOut ^= 1
+			pPars.FDualOut ^= 1
 			break
 		case 'v':
-			pPars.fVerbose ^= 1
+			pPars.FVerbose ^= 1
 			break
 		case 'h':
 			goto usage
@@ -32659,21 +32727,21 @@ func Abc_CommandAbc9Equiv(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Equiv(): There is no AIG.\n")
 		return 1
 	}
-	Cec_ManSimulation(abcFrameGia(pAbc), pPars)
+	proof_cec.Cec_ManSimulation(abcFrameGia(pAbc), pPars)
 	return 0
 
 usage:
 	Abc_Print(-2, "usage: &equiv [-WFRST num] [-smdvh]\n")
 	Abc_Print(-2, "\t         computes candidate equivalence classes\n")
-	Abc_Print(-2, "\t-W num : the number of words to simulate [default = %d]\n", pPars.nWords)
-	Abc_Print(-2, "\t-F num : the number of frames to simulate [default = %d]\n", pPars.nFrames)
-	Abc_Print(-2, "\t-R num : the max number of simulation rounds [default = %d]\n", pPars.nRounds)
-	Abc_Print(-2, "\t-S num : the max number of rounds w/o refinement to stop [default = %d]\n", pPars.nNonRefines)
+	Abc_Print(-2, "\t-W num : the number of words to simulate [default = %d]\n", pPars.NWords)
+	Abc_Print(-2, "\t-F num : the number of frames to simulate [default = %d]\n", pPars.NFrames)
+	Abc_Print(-2, "\t-R num : the max number of simulation rounds [default = %d]\n", pPars.NRounds)
+	Abc_Print(-2, "\t-S num : the max number of rounds w/o refinement to stop [default = %d]\n", pPars.NNonRefines)
 	Abc_Print(-2, "\t-T num : approximate runtime limit in seconds [default = %d]\n", pPars.TimeLimit)
-	Abc_Print(-2, "\t-s     : toggle seq vs. comb simulation [default = %s]\n", abcSelect(fSeqSimulate, "yes", "no"))
-	Abc_Print(-2, "\t-m     : toggle miter vs. any circuit [default = %s]\n", abcSelect(fCheckMiter, "miter", "circuit"))
-	Abc_Print(-2, "\t-d     : toggle using two POs intead of XOR [default = %s]\n", abcSelect(fDualOut, "yes", "no"))
-	Abc_Print(-2, "\t-v     : toggle printing verbose information [default = %s]\n", abcSelect(fVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-s     : toggle seq vs. comb simulation [default = %s]\n", abcSelect(pPars.FSeqSimulate, "yes", "no"))
+	Abc_Print(-2, "\t-m     : toggle miter vs. any circuit [default = %s]\n", abcSelect(pPars.FCheckMiter, "miter", "circuit"))
+	Abc_Print(-2, "\t-d     : toggle using two POs intead of XOR [default = %s]\n", abcSelect(pPars.FDualOut, "yes", "no"))
+	Abc_Print(-2, "\t-v     : toggle printing verbose information [default = %s]\n", abcSelect(pPars.FVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h     : print the command usage\n")
 	return 1
 }
@@ -32797,7 +32865,7 @@ func Abc_CommandAbc9Equiv2(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	if fUseCex != 0 {
 		cex = abcFrameCex(pAbc)
 	}
-	Ssw_SignalFilterGia(abcFrameGia(pAbc), nFramesMax, nConfMax, nRounds, TimeLimit, TimeLimit2, cex, fLatchOnly, fVerbose)
+	proof_ssw.Ssw_SignalFilterGia(abcFrameGia(pAbc), nFramesMax, nConfMax, nRounds, TimeLimit, TimeLimit2, cex, fLatchOnly, fVerbose)
 	abcFrameSetStatus(pAbc, -1)
 	//    pAbc->nFrames = pAbc->pCex->iFrame;
 	//    Abc_FrameReplaceCex( pAbc, &pAbc->pCex );
@@ -32836,7 +32904,7 @@ func Abc_CommandAbc9Equiv3(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	var Pars Ssw_RarPars_t
 	var pPars *Ssw_RarPars_t = &Pars
 	var c int32
-	Ssw_RarSetDefaultParams(pPars)
+	proof_ssw.Ssw_RarSetDefaultParams(pPars)
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "FWBRSNTmxlvh"); c != -1; c = Extra_UtilGetopt(argc, argv, "FWBRSNTmxlvh") {
 		switch c {
@@ -32845,9 +32913,9 @@ func Abc_CommandAbc9Equiv3(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-F\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nFrames = abcAtoi(argv[globalUtilOptind])
+			pPars.NFrames = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nFrames < 0 {
+			if pPars.NFrames < 0 {
 				goto usage
 			}
 			break
@@ -32856,9 +32924,9 @@ func Abc_CommandAbc9Equiv3(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-W\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nWords = abcAtoi(argv[globalUtilOptind])
+			pPars.NWords = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nWords < 0 {
+			if pPars.NWords < 0 {
 				goto usage
 			}
 			break
@@ -32867,9 +32935,9 @@ func Abc_CommandAbc9Equiv3(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-B\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nBinSize = abcAtoi(argv[globalUtilOptind])
+			pPars.NBinSize = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nBinSize < 0 {
+			if pPars.NBinSize < 0 {
 				goto usage
 			}
 			break
@@ -32878,9 +32946,9 @@ func Abc_CommandAbc9Equiv3(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-R\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nRounds = abcAtoi(argv[globalUtilOptind])
+			pPars.NRounds = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nRounds < 0 {
+			if pPars.NRounds < 0 {
 				goto usage
 			}
 			break
@@ -32889,9 +32957,9 @@ func Abc_CommandAbc9Equiv3(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-S\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nRestart = abcAtoi(argv[globalUtilOptind])
+			pPars.NRestart = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nRestart < 0 {
+			if pPars.NRestart < 0 {
 				goto usage
 			}
 			break
@@ -32900,9 +32968,9 @@ func Abc_CommandAbc9Equiv3(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-N\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nRandSeed = abcAtoi(argv[globalUtilOptind])
+			pPars.NRandSeed = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nRandSeed < 0 {
+			if pPars.NRandSeed < 0 {
 				goto usage
 			}
 			break
@@ -32918,16 +32986,16 @@ func Abc_CommandAbc9Equiv3(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			}
 			break
 		case 'm':
-			pPars.fMiter ^= 1
+			pPars.FMiter ^= 1
 			break
 		case 'x':
-			pPars.fUseCex ^= 1
+			pPars.FUseCex ^= 1
 			break
 		case 'l':
-			pPars.fLatchOnly ^= 1
+			pPars.FLatchOnly ^= 1
 			break
 		case 'v':
-			pPars.fVerbose ^= 1
+			pPars.FVerbose ^= 1
 			break
 		case 'h':
 			goto usage
@@ -32943,10 +33011,10 @@ func Abc_CommandAbc9Equiv3(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(0, "Abc_CommandAbc9Equiv3(): There is no flops. Nothing is done.\n")
 		return 0
 	}
-	if pPars.fUseCex {
-		if pPars.fMiter {
+	if pPars.FUseCex != 0 {
+		if pPars.FMiter != 0 {
 			Abc_Print(0, "Abc_CommandAbc9Equiv3(): Considering the miter as a circuit because the CEX is given.\n")
-			pPars.fMiter = 0
+			pPars.FMiter = 0
 		}
 		if abcFrameCex(pAbc) == nil {
 			Abc_Print(0, "Abc_CommandAbc9Equiv3(): Counter-example is not available.\n")
@@ -32957,9 +33025,9 @@ func Abc_CommandAbc9Equiv3(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				abcFrameCex(pAbc).NPis, Gia_ManPiNum(abcFrameGia(pAbc)))
 			return 1
 		}
-		pPars.pCex = abcFrameCex(pAbc)
+		pPars.PCex = abcFrameCex(pAbc)
 	}
-	abcFrameSetStatus(pAbc, Ssw_RarSignalFilterGia(abcFrameGia(pAbc), pPars))
+	abcFrameSetStatus(pAbc, proof_ssw.Ssw_RarSignalFilterGia(abcFrameGia(pAbc), pPars))
 	//    pAbc->nFrames = pAbc->pGia->pCexSeq->iFrame;
 	Abc_FrameReplaceCex(pAbc, &abcFrameGia(pAbc).pCexSeq)
 	return 0
@@ -32967,16 +33035,16 @@ func Abc_CommandAbc9Equiv3(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 usage:
 	Abc_Print(-2, "usage: &equiv3 [-FWRSNT num] [-mxlvh]\n")
 	Abc_Print(-2, "\t         computes candidate equivalence classes\n")
-	Abc_Print(-2, "\t-F num : the max number of frames for BMC [default = %d]\n", pPars.nFrames)
-	Abc_Print(-2, "\t-W num : the number of words to simulate [default = %d]\n", pPars.nWords)
-	Abc_Print(-2, "\t-R num : the max number of simulation rounds [default = %d]\n", pPars.nRounds)
-	Abc_Print(-2, "\t-S num : the number of rounds before a restart [default = %d]\n", pPars.nRestart)
-	Abc_Print(-2, "\t-N num : random number seed (1 <= num <= 1000) [default = %d]\n", pPars.nRandSeed)
+	Abc_Print(-2, "\t-F num : the max number of frames for BMC [default = %d]\n", pPars.NFrames)
+	Abc_Print(-2, "\t-W num : the number of words to simulate [default = %d]\n", pPars.NWords)
+	Abc_Print(-2, "\t-R num : the max number of simulation rounds [default = %d]\n", pPars.NRounds)
+	Abc_Print(-2, "\t-S num : the number of rounds before a restart [default = %d]\n", pPars.NRestart)
+	Abc_Print(-2, "\t-N num : random number seed (1 <= num <= 1000) [default = %d]\n", pPars.NRandSeed)
 	Abc_Print(-2, "\t-T num : runtime limit in seconds for all rounds [default = %d]\n", pPars.TimeOut)
-	Abc_Print(-2, "\t-m     : toggle miter vs. any circuit [default = %s]\n", abcSelect(fMiter, "miter", "circuit"))
-	Abc_Print(-2, "\t-x     : toggle using the current CEX to perform refinement [default = %s]\n", abcSelect(fUseCex, "yes", "no"))
-	Abc_Print(-2, "\t-l     : toggle considering only latch output equivalences [default = %s]\n", abcSelect(fLatchOnly, "yes", "no"))
-	Abc_Print(-2, "\t-v     : toggle printing verbose information [default = %s]\n", abcSelect(fVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-m     : toggle miter vs. any circuit [default = %s]\n", abcSelect(pPars.FMiter, "miter", "circuit"))
+	Abc_Print(-2, "\t-x     : toggle using the current CEX to perform refinement [default = %s]\n", abcSelect(pPars.FUseCex, "yes", "no"))
+	Abc_Print(-2, "\t-l     : toggle considering only latch output equivalences [default = %s]\n", abcSelect(pPars.FLatchOnly, "yes", "no"))
+	Abc_Print(-2, "\t-v     : toggle printing verbose information [default = %s]\n", abcSelect(pPars.FVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h     : print the command usage\n")
 	return 1
 }
@@ -32995,10 +33063,10 @@ usage:
 **********************************************************************
 */
 func Abc_CommandAbc9Semi(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
-	var Pars Cec_ParSmf_t
-	var pPars *Cec_ParSmf_t = &Pars
+	var Pars proof_cec.Cec_ParSmf_t
+	var pPars *proof_cec.Cec_ParSmf_t = &Pars
 	var c int32
-	Cec_ManSmfSetDefaultParams(pPars)
+	proof_cec.Cec_ManSmfSetDefaultParams(pPars)
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "WRFSMCTmdvh"); c != -1; c = Extra_UtilGetopt(argc, argv, "WRFSMCTmdvh") {
 		switch c {
@@ -33007,9 +33075,9 @@ func Abc_CommandAbc9Semi(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-W\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nWords = abcAtoi(argv[globalUtilOptind])
+			pPars.NWords = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nWords < 0 {
+			if pPars.NWords < 0 {
 				goto usage
 			}
 			break
@@ -33018,9 +33086,9 @@ func Abc_CommandAbc9Semi(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-R\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nRounds = abcAtoi(argv[globalUtilOptind])
+			pPars.NRounds = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nRounds < 0 {
+			if pPars.NRounds < 0 {
 				goto usage
 			}
 			break
@@ -33029,9 +33097,9 @@ func Abc_CommandAbc9Semi(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-F\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nFrames = abcAtoi(argv[globalUtilOptind])
+			pPars.NFrames = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nFrames < 0 {
+			if pPars.NFrames < 0 {
 				goto usage
 			}
 			break
@@ -33040,9 +33108,9 @@ func Abc_CommandAbc9Semi(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-S\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nNonRefines = abcAtoi(argv[globalUtilOptind])
+			pPars.NNonRefines = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nNonRefines < 0 {
+			if pPars.NNonRefines < 0 {
 				goto usage
 			}
 			break
@@ -33051,9 +33119,9 @@ func Abc_CommandAbc9Semi(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-M\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nMinOutputs = abcAtoi(argv[globalUtilOptind])
+			pPars.NMinOutputs = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nMinOutputs < 0 {
+			if pPars.NMinOutputs < 0 {
 				goto usage
 			}
 			break
@@ -33062,9 +33130,9 @@ func Abc_CommandAbc9Semi(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-C\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nBTLimit = abcAtoi(argv[globalUtilOptind])
+			pPars.NBTLimit = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nBTLimit < 0 {
+			if pPars.NBTLimit < 0 {
 				goto usage
 			}
 			break
@@ -33080,13 +33148,13 @@ func Abc_CommandAbc9Semi(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			}
 			break
 		case 'm':
-			pPars.fCheckMiter ^= 1
+			pPars.FCheckMiter ^= 1
 			break
 		case 'd':
-			pPars.fDualOut ^= 1
+			pPars.FDualOut ^= 1
 			break
 		case 'v':
-			pPars.fVerbose ^= 1
+			pPars.FVerbose ^= 1
 			break
 		case 'h':
 			goto usage
@@ -33098,22 +33166,22 @@ func Abc_CommandAbc9Semi(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Resim(): There is no AIG.\n")
 		return 1
 	}
-	Cec_ManSeqSemiformal(abcFrameGia(pAbc), pPars)
+	proof_cec.Cec_ManSeqSemiformal(abcFrameGia(pAbc), pPars)
 	return 0
 
 usage:
 	Abc_Print(-2, "usage: &semi [-WRFSMCT num] [-mdvh]\n")
 	Abc_Print(-2, "\t         performs semiformal refinement of equivalence classes\n")
-	Abc_Print(-2, "\t-W num : the number of words to simulate [default = %d]\n", pPars.nWords)
-	Abc_Print(-2, "\t-R num : the max number of rounds to simulate [default = %d]\n", pPars.nRounds)
-	Abc_Print(-2, "\t-F num : the max number of frames to unroll [default = %d]\n", pPars.nFrames)
-	Abc_Print(-2, "\t-S num : the max number of rounds w/o refinement to stop [default = %d]\n", pPars.nNonRefines)
-	Abc_Print(-2, "\t-M num : the min number of outputs of bounded SRM [default = %d]\n", pPars.nMinOutputs)
-	Abc_Print(-2, "\t-C num : the max number of conflicts at a node [default = %d]\n", pPars.nBTLimit)
+	Abc_Print(-2, "\t-W num : the number of words to simulate [default = %d]\n", pPars.NWords)
+	Abc_Print(-2, "\t-R num : the max number of rounds to simulate [default = %d]\n", pPars.NRounds)
+	Abc_Print(-2, "\t-F num : the max number of frames to unroll [default = %d]\n", pPars.NFrames)
+	Abc_Print(-2, "\t-S num : the max number of rounds w/o refinement to stop [default = %d]\n", pPars.NNonRefines)
+	Abc_Print(-2, "\t-M num : the min number of outputs of bounded SRM [default = %d]\n", pPars.NMinOutputs)
+	Abc_Print(-2, "\t-C num : the max number of conflicts at a node [default = %d]\n", pPars.NBTLimit)
 	Abc_Print(-2, "\t-T num : approximate runtime limit in seconds [default = %d]\n", pPars.TimeLimit)
-	Abc_Print(-2, "\t-m     : toggle miter vs. any circuit [default = %s]\n", abcSelect(fCheckMiter, "miter", "circuit"))
-	Abc_Print(-2, "\t-d     : toggle using two POs intead of XOR [default = %s]\n", abcSelect(fDualOut, "yes", "no"))
-	Abc_Print(-2, "\t-v     : toggle printing verbose information [default = %s]\n", abcSelect(fVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-m     : toggle miter vs. any circuit [default = %s]\n", abcSelect(pPars.FCheckMiter, "miter", "circuit"))
+	Abc_Print(-2, "\t-d     : toggle using two POs intead of XOR [default = %s]\n", abcSelect(pPars.FDualOut, "yes", "no"))
+	Abc_Print(-2, "\t-v     : toggle printing verbose information [default = %s]\n", abcSelect(pPars.FVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h     : print the command usage\n")
 	return 1
 }
@@ -33163,7 +33231,7 @@ func Abc_CommandAbc9Times(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Times(): There is no AIG.\n")
 		return 1
 	}
-	pTemp = Gia_ManDupTimes(abcFrameGia(pAbc), nTimes)
+	pTemp = giapkg.Gia_ManDupTimes(abcFrameGia(pAbc), nTimes)
 	Abc_FrameUpdateGia(pAbc, pTemp)
 	return 0
 
@@ -33192,13 +33260,13 @@ usage:
 func Abc_CommandAbc9Frames(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 
 	var pTemp *Gia_Man_t
-	var Pars Gia_ParFra_t
-	var pPars *Gia_ParFra_t = &Pars
+	var Pars giapkg.Gia_ParFra_t
+	var pPars *giapkg.Gia_ParFra_t = &Pars
 	var c int32
 	var nCofFanLit int32
 	var fNewAlgo int32
 	var fInitSpecial int32
-	Gia_ManFraSetDefaultParams(pPars)
+	giapkg.Gia_ManFraSetDefaultParams(pPars)
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "FLsoibavh"); c != -1; c = Extra_UtilGetopt(argc, argv, "FLsoibavh") {
 		switch c {
@@ -33207,9 +33275,9 @@ func Abc_CommandAbc9Frames(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-F\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nFrames = abcAtoi(argv[globalUtilOptind])
+			pPars.NFrames = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nFrames < 0 {
+			if pPars.NFrames < 0 {
 				goto usage
 			}
 			break
@@ -33225,13 +33293,13 @@ func Abc_CommandAbc9Frames(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			}
 			break
 		case 's':
-			pPars.fDisableSt ^= 1
+			pPars.FDisableSt ^= 1
 			break
 		case 'o':
-			pPars.fOrPos ^= 1
+			pPars.FOrPos ^= 1
 			break
 		case 'i':
-			pPars.fInit ^= 1
+			pPars.FInit ^= 1
 			break
 		case 'b':
 			fInitSpecial ^= 1
@@ -33240,7 +33308,7 @@ func Abc_CommandAbc9Frames(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			fNewAlgo ^= 1
 			break
 		case 'v':
-			pPars.fVerbose ^= 1
+			pPars.FVerbose ^= 1
 			break
 		case 'h':
 			goto usage
@@ -33257,13 +33325,13 @@ func Abc_CommandAbc9Frames(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 0
 	}
 	if fInitSpecial != 0 {
-		pTemp = Gia_ManFramesInitSpecial(abcFrameGia(pAbc), pPars.nFrames, pPars.fVerbose)
+		pTemp = giapkg.Gia_ManFramesInitSpecial(abcFrameGia(pAbc), pPars.NFrames, pPars.FVerbose)
 	} else if nCofFanLit != 0 {
-		pTemp = Gia_ManUnrollAndCofactor(abcFrameGia(pAbc), pPars.nFrames, nCofFanLit, pPars.fVerbose)
+		pTemp = giapkg.Gia_ManUnrollAndCofactor(abcFrameGia(pAbc), pPars.NFrames, nCofFanLit, pPars.FVerbose)
 	} else if fNewAlgo != 0 {
-		pTemp = Gia_ManFrames2(abcFrameGia(pAbc), pPars)
+		pTemp = giapkg.Gia_ManFrames2(abcFrameGia(pAbc), pPars)
 	} else {
-		pTemp = Gia_ManFrames(abcFrameGia(pAbc), pPars)
+		pTemp = giapkg.Gia_ManFrames(abcFrameGia(pAbc), pPars)
 	}
 	Abc_FrameUpdateGia(pAbc, pTemp)
 	return 0
@@ -33271,14 +33339,14 @@ func Abc_CommandAbc9Frames(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 usage:
 	Abc_Print(-2, "usage: &frames [-FL <num>] [-soibavh]\n")
 	Abc_Print(-2, "\t         unrolls the design for several timeframes\n")
-	Abc_Print(-2, "\t-F num : the number of frames to unroll [default = %d]\n", pPars.nFrames)
+	Abc_Print(-2, "\t-F num : the number of frames to unroll [default = %d]\n", pPars.NFrames)
 	Abc_Print(-2, "\t-L num : the limit on fanout count of resets/enables to cofactor [default = %d]\n", nCofFanLit)
-	Abc_Print(-2, "\t-s     : toggle disabling structural hashing [default = %s]\n", abcSelect(fDisableSt, "yes", "no"))
-	Abc_Print(-2, "\t-o     : toggle ORing corresponding POs [default = %s]\n", abcSelect(fOrPos, "yes", "no"))
-	Abc_Print(-2, "\t-i     : toggle initializing registers [default = %s]\n", abcSelect(fInit, "yes", "no"))
+	Abc_Print(-2, "\t-s     : toggle disabling structural hashing [default = %s]\n", abcSelect(pPars.FDisableSt, "yes", "no"))
+	Abc_Print(-2, "\t-o     : toggle ORing corresponding POs [default = %s]\n", abcSelect(pPars.FOrPos, "yes", "no"))
+	Abc_Print(-2, "\t-i     : toggle initializing registers [default = %s]\n", abcSelect(pPars.FInit, "yes", "no"))
 	Abc_Print(-2, "\t-b     : toggle computing special AIG for BMC [default = %s]\n", abcSelect(fInitSpecial, "yes", "no"))
 	Abc_Print(-2, "\t-a     : toggle using new algorithm [default = %s]\n", abcSelect(fNewAlgo, "yes", "no"))
-	Abc_Print(-2, "\t-v     : toggle printing verbose information [default = %s]\n", abcSelect(fVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-v     : toggle printing verbose information [default = %s]\n", abcSelect(pPars.FVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h     : print the command usage\n")
 	return 1
 }
@@ -33332,7 +33400,7 @@ func Abc_CommandAbc9Retime(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "The network is combinational.\n")
 		return 0
 	}
-	pTemp = Gia_ManRetimeForward(abcFrameGia(pAbc), nMaxIters, fVerbose)
+	pTemp = giapkg.Gia_ManRetimeForward(abcFrameGia(pAbc), nMaxIters, fVerbose)
 	Abc_FrameUpdateGia(pAbc, pTemp)
 	return 0
 
@@ -33383,9 +33451,9 @@ func Abc_CommandAbc9Enable(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 1
 	}
 	if fRemove != 0 {
-		pTemp = Gia_ManRemoveEnables(abcFrameGia(pAbc))
+		pTemp = giapkg.Gia_ManRemoveEnables(abcFrameGia(pAbc))
 	} else {
-		pTemp = Gia_ManDupSelf(abcFrameGia(pAbc))
+		pTemp = giapkg.Gia_ManDupSelf(abcFrameGia(pAbc))
 	}
 	Abc_FrameUpdateGia(pAbc, pTemp)
 	return 0
@@ -33435,7 +33503,7 @@ func Abc_CommandAbc9Dc2(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Dc2(): There is no AIG.\n")
 		return 1
 	}
-	pTemp = Gia_ManCompress2(abcFrameGia(pAbc), fUpdateLevel, fVerbose)
+	pTemp = giapkg.Gia_ManCompress2(abcFrameGia(pAbc), fUpdateLevel, fVerbose)
 	Abc_FrameUpdateGia(pAbc, pTemp)
 	return 0
 
@@ -33485,7 +33553,7 @@ func Abc_CommandAbc9Dsd(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Dsd(): There is no AIG.\n")
 		return 1
 	}
-	pTemp = Gia_ManCollapseTest(abcFrameGia(pAbc), fVerbose)
+	pTemp = giapkg.Gia_ManCollapseTest(abcFrameGia(pAbc), fVerbose)
 	Abc_FrameUpdateGia(pAbc, pTemp)
 	return 0
 
@@ -33534,11 +33602,11 @@ func Abc_CommandAbc9Bidec(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Bidec(): There is no AIG.\n")
 		return 1
 	}
-	if !Gia_ManHasMapping(abcFrameGia(pAbc)) {
+	if Gia_ManHasMapping(abcFrameGia(pAbc)) == 0 {
 		Abc_Print(-1, "Abc_CommandAbc9Bidec(): Mapping of the AIG is not defined.\n")
 		return 1
 	}
-	pTemp = Gia_ManPerformBidec(abcFrameGia(pAbc), fVerbose)
+	pTemp = giapkg.Gia_ManPerformBidec(abcFrameGia(pAbc), fVerbose)
 	Abc_FrameUpdateGia(pAbc, pTemp)
 	return 0
 
@@ -33600,15 +33668,15 @@ func Abc_CommandAbc9Shrink(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Shrink(): There is no AIG.\n")
 		return 1
 	}
-	if !Gia_ManHasMapping(abcFrameGia(pAbc)) {
+	if Gia_ManHasMapping(abcFrameGia(pAbc)) == 0 {
 		Abc_Print(-1, "Abc_CommandAbc9Shrink(): Mapping of the AIG is not defined.\n")
 		return 1
 	}
 	nLutSize = Gia_ManLutSizeMax(abcFrameGia(pAbc))
 	if nLutSize <= 4 {
-		pTemp = Gia_ManMapShrink4(abcFrameGia(pAbc), fKeepLevel, fVerbose)
+		pTemp = giapkg.Gia_ManMapShrink4(abcFrameGia(pAbc), fKeepLevel, fVerbose)
 	} else if nLutSize <= 6 {
-		pTemp = Gia_ManMapShrink6(abcFrameGia(pAbc), nFanoutMax, fKeepLevel, fVerbose)
+		pTemp = giapkg.Gia_ManMapShrink6(abcFrameGia(pAbc), nFanoutMax, fKeepLevel, fVerbose)
 	} else {
 		Abc_Print(-1, "Abc_CommandAbc9Shrink(): Works only for 4-LUTs and 6-LUTs.\n")
 	}
@@ -33693,11 +33761,11 @@ func Abc_CommandAbc9Fx(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Shrink(): There is no AIG.\n")
 		return 1
 	}
-	if !Gia_ManHasMapping(abcFrameGia(pAbc)) {
+	if Gia_ManHasMapping(abcFrameGia(pAbc)) == 0 {
 		Abc_Print(-1, "Abc_CommandAbc9Shrink(): Mapping of the AIG is not defined.\n")
 		return 1
 	}
-	pTemp = Gia_ManPerformFx(abcFrameGia(pAbc), nNewNodesMax, LitCountMax, fReverse, fVerbose, fVeryVerbose)
+	pTemp = giapkg.Gia_ManPerformFx(abcFrameGia(pAbc), nNewNodesMax, LitCountMax, fReverse, fVerbose, fVeryVerbose)
 	if pTemp != nil {
 		Abc_FrameUpdateGia(pAbc, pTemp)
 	} else {
@@ -33782,9 +33850,9 @@ func Abc_CommandAbc9Balance(pAbc *Abc_Frame_t, argc int32, argv []string) int32 
 		return 1
 	}
 	if fDelayOnly != 0 {
-		pTemp = Gia_ManBalance(abcFrameGia(pAbc), fSimpleAnd, fStrict, fVerbose)
+		pTemp = giapkg.Gia_ManBalance(abcFrameGia(pAbc), fSimpleAnd, fStrict, fVerbose)
 	} else {
-		pTemp = Gia_ManAreaBalance(abcFrameGia(pAbc), fSimpleAnd, nNewNodesMax, fVerbose, fVeryVerbose)
+		pTemp = giapkg.Gia_ManAreaBalance(abcFrameGia(pAbc), fSimpleAnd, nNewNodesMax, fVerbose, fVeryVerbose)
 	}
 	Abc_FrameUpdateGia(pAbc, pTemp)
 	return 0
@@ -33880,9 +33948,9 @@ func Abc_CommandAbc9BalanceLut(pAbc *Abc_Frame_t, argc int32, argv []string) int
 		return 1
 	}
 	if fUseOld != 0 {
-		pTemp = Gia_ManBalanceLut(abcFrameGia(pAbc), nLutSize, nCutNum, fVerbose)
+		pTemp = giapkg.Gia_ManBalanceLut(abcFrameGia(pAbc), nLutSize, nCutNum, fVerbose)
 	} else {
-		pTemp = Gia_ManLutBalance(abcFrameGia(pAbc), nLutSize, fUseMuxes, fRecursive, fOptArea, fVerbose)
+		pTemp = giapkg.Gia_ManLutBalance(abcFrameGia(pAbc), nLutSize, fUseMuxes, fRecursive, fOptArea, fVerbose)
 	}
 	Abc_FrameUpdateGia(pAbc, pTemp)
 	return 0
@@ -33971,7 +34039,7 @@ func Abc_CommandAbc9Resub(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		}
 	}
 	if argc == globalUtilOptind+1 {
-		pTemp = Gia_ManResub1(argv[globalUtilOptind], nNodes, nSupp, nDivs, 0, 0, fVerbose, fVeryVerbose)
+		pTemp = giapkg.Gia_ManResub1(argv[globalUtilOptind], nNodes, nSupp, nDivs, 0, 0, fVerbose, fVeryVerbose)
 		Abc_FrameUpdateGia(pAbc, pTemp)
 		return 0
 	}
@@ -33979,7 +34047,7 @@ func Abc_CommandAbc9Resub(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Resub(): There is no AIG.\n")
 		return 1
 	}
-	pTemp = Gia_ManResub2(abcFrameGia(pAbc), nNodes, nSupp, nDivs, 0, 0, fVerbose, fVeryVerbose)
+	pTemp = giapkg.Gia_ManResub2(abcFrameGia(pAbc), nNodes, nSupp, nDivs, 0, 0, fVerbose, fVeryVerbose)
 	Abc_FrameUpdateGia(pAbc, pTemp)
 	return 0
 
@@ -34060,13 +34128,13 @@ func Abc_CommandAbc9Syn2(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 1
 	}
 	if fDelayMin != 0 {
-		p, _ := Abc_FrameReadManDsd().(*If_DsdMan_t)
-		if p != nil && If_DsdManVarNum(p) < 6 {
+		p, _ := base_main.Abc_FrameReadManDsd().(*ifpkg.If_DsdMan_t)
+		if p != nil && ifpkg.If_DsdManVarNum(p) < 6 {
 			fmt.Printf("DSD manager has incompatible number of variables. Delay minimization is not performed.\n")
 			fDelayMin = 0
 		}
 	}
-	pTemp = Gia_ManAigSyn2(abcFrameGia(pAbc), fOldAlgo, fCoarsen, fCutMin, nRelaxRatio, fDelayMin, fVerbose, fVeryVerbose)
+	pTemp = giapkg.Gia_ManAigSyn2(abcFrameGia(pAbc), fOldAlgo, fCoarsen, fCutMin, nRelaxRatio, fDelayMin, fVerbose, fVeryVerbose)
 	Abc_FrameUpdateGia(pAbc, pTemp)
 	return 0
 
@@ -34185,7 +34253,7 @@ func Abc_CommandAbc9Synch2(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Dch(): There is no AIG.\n")
 		return 1
 	}
-	pTemp = Gia_ManAigSynch2(abcFrameGia(pAbc), pPars, nLutSize, nRelaxRatio)
+	pTemp = giapkg.Gia_ManAigSynch2(abcFrameGia(pAbc), pPars, nLutSize, nRelaxRatio)
 	Abc_FrameUpdateGia(pAbc, pTemp)
 	return 0
 
@@ -34197,9 +34265,9 @@ usage:
 	Abc_Print(-2, "\t-S num : the max number of SAT variables [default = %d]\n", pPars.nSatVarMax)
 	Abc_Print(-2, "\t-K num : the target LUT size for downstream mapping [default = %d]\n", nLutSize)
 	Abc_Print(-2, "\t-R num : the delay relaxation ratio (num >= 0) [default = %d]\n", nRelaxRatio)
-	Abc_Print(-2, "\t-f     : toggle using lighter logic synthesis [default = %s]\n", abcSelect(fLightSynth, "yes", "no"))
-	Abc_Print(-2, "\t-r     : toggle skipping choices with redundant support [default = %s]\n", abcSelect(fSkipRedSupp, "yes", "no"))
-	Abc_Print(-2, "\t-v     : toggle verbose printout [default = %s]\n", abcSelect(fVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-f     : toggle using lighter logic synthesis [default = %s]\n", abcSelect(pPars.fLightSynth, "yes", "no"))
+	Abc_Print(-2, "\t-r     : toggle skipping choices with redundant support [default = %s]\n", abcSelect(pPars.fSkipRedSupp, "yes", "no"))
+	Abc_Print(-2, "\t-v     : toggle verbose printout [default = %s]\n", abcSelect(pPars.fVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h     : print the command usage\n")
 	return 1
 }
@@ -34240,7 +34308,7 @@ func Abc_CommandAbc9Syn3(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Syn3(): There is no AIG.\n")
 		return 1
 	}
-	pTemp = Gia_ManAigSyn3(abcFrameGia(pAbc), fVerbose, fVeryVerbose)
+	pTemp = giapkg.Gia_ManAigSyn3(abcFrameGia(pAbc), fVerbose, fVeryVerbose)
 	Abc_FrameUpdateGia(pAbc, pTemp)
 	return 0
 
@@ -34289,7 +34357,7 @@ func Abc_CommandAbc9Syn4(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Syn4(): There is no AIG.\n")
 		return 1
 	}
-	pTemp = Gia_ManAigSyn4(abcFrameGia(pAbc), fVerbose, fVeryVerbose)
+	pTemp = giapkg.Gia_ManAigSyn4(abcFrameGia(pAbc), fVerbose, fVeryVerbose)
 	Abc_FrameUpdateGia(pAbc, pTemp)
 	return 0
 
@@ -34363,7 +34431,7 @@ func Abc_CommandAbc9False(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9False(): There is no AIG.\n")
 		return 1
 	}
-	pTemp = Gia_ManCheckFalse(abcFrameGia(pAbc), nSlackMax, nTimeOut, fVerbose, fVeryVerbose)
+	pTemp = giapkg.Gia_ManCheckFalse(abcFrameGia(pAbc), nSlackMax, nTimeOut, fVerbose, fVeryVerbose)
 	Abc_FrameUpdateGia(pAbc, pTemp)
 	return 0
 
@@ -34459,20 +34527,20 @@ func Abc_CommandAbc9Miter(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			return 0
 		}
 		if fTrans != 0 {
-			pAux = Gia_ManTransformMiter(abcFrameGia(pAbc))
+			pAux = giapkg.Gia_ManTransformMiter(abcFrameGia(pAbc))
 			Abc_Print(1, "The miter (current AIG) is transformed by XORing POs pair-wise.\n")
 
 		} else if fTransX != 0 {
-			pAux = Gia_ManTransformMiter2(abcFrameGia(pAbc))
+			pAux = giapkg.Gia_ManTransformMiter2(abcFrameGia(pAbc))
 			Abc_Print(1, "The miter (current AIG) is transformed by XORing POs of two word-level outputs.\n")
 
 		} else if fTransZ != 0 {
 
-			pAux = Gia_ManTransformDualOutput(abcFrameGia(pAbc))
+			pAux = giapkg.Gia_ManTransformDualOutput(abcFrameGia(pAbc))
 			Abc_Print(1, "The dual-output miter (current AIG) is transformed by ordering sides.\n")
 
 		} else {
-			pAux = Gia_ManTransformTwoWord2DualOutput(abcFrameGia(pAbc))
+			pAux = giapkg.Gia_ManTransformTwoWord2DualOutput(abcFrameGia(pAbc))
 			Abc_Print(1, "The miter (current AIG) is transformed from two-word to dual-output.\n")
 		}
 		Abc_FrameUpdateGia(pAbc, pAux)
@@ -34506,7 +34574,7 @@ func Abc_CommandAbc9Miter(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 0
 	}
 	// compute the miter
-	pAux = Gia_ManMiter(abcFrameGia(pAbc), pSecond, nInsDup, fDualOut, fSeq, 0, fVerbose)
+	pAux = giapkg.Gia_ManMiter(abcFrameGia(pAbc), pSecond, nInsDup, fDualOut, fSeq, 0, fVerbose)
 	Gia_ManStop(pSecond)
 	Abc_FrameUpdateGia(pAbc, pAux)
 	return 0
@@ -34581,15 +34649,15 @@ func Abc_CommandAbc9Miter2(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	}
 	_ = pFile.Close()
 	// extract string
-	pInit = Extra_FileReadContents(FileName)
-	Extra_StringClean(pInit, "01xX")
+	pInit = misc_extra.Extra_FileReadContents(FileName)
+	misc_extra.Extra_StringClean(pInit, "01xX")
 	if int32(len(pInit)) != Gia_ManCiNum(abcFrameGia(pAbc)) {
 		Abc_Print(-1, "Init string length (%d) differs from PI and flop count (%d).\n", len(pInit), Gia_ManCiNum(abcFrameGia(pAbc)))
 		pInit = ""
 		return 1
 	}
 	// compute the miter
-	pAux = Gia_ManMiter2(abcFrameGia(pAbc), pInit, fVerbose)
+	pAux = giapkg.Gia_ManMiter2(abcFrameGia(pAbc), pInit, fVerbose)
 	pInit = ""
 	Abc_FrameUpdateGia(pAbc, pAux)
 	return 0
@@ -34665,7 +34733,7 @@ func Abc_CommandAbc9Append(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 0
 	}
 	// compute the miter
-	Gia_ManDupAppend(abcFrameGia(pAbc), pSecond)
+	giapkg.Gia_ManDupAppend(abcFrameGia(pAbc), pSecond)
 	Gia_ManStop(pSecond)
 	return 0
 
@@ -34721,12 +34789,12 @@ func Abc_CommandAbc9Scl(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Scl(): There is no AIG.\n")
 		return 1
 	}
-	if Gia_ManBoxNum(abcFrameGia(pAbc)) && Gia_ManRegBoxNum(abcFrameGia(pAbc)) {
+	if (giapkg.Gia_ManBoxNum(abcFrameGia(pAbc)) != 0) && (giapkg.Gia_ManRegBoxNum(abcFrameGia(pAbc)) != 0) {
 		if abcFrameGia(pAbc).pAigExtra == nil {
 			fmt.Printf("Timing manager is given but there is no GIA of boxes.\n")
 			return 0
 		}
-		pTemp = Gia_ManSweepWithBoxes(abcFrameGia(pAbc), nil, nil, fConst, fEquiv, fVerbose, fVerboseFlops)
+		pTemp = giapkg.Gia_ManSweepWithBoxes(abcFrameGia(pAbc), nil, nil, fConst, fEquiv, fVerbose, fVerboseFlops)
 		Abc_FrameUpdateGia(pAbc, pTemp)
 		return 0
 	}
@@ -34734,7 +34802,7 @@ func Abc_CommandAbc9Scl(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "The network is combinational.\n")
 		return 0
 	}
-	pTemp = Gia_ManSeqStructSweep(abcFrameGia(pAbc), fConst, fEquiv, fVerbose)
+	pTemp = giapkg.Gia_ManSeqStructSweep(abcFrameGia(pAbc), fConst, fEquiv, fVerbose)
 	Abc_FrameUpdateGia(pAbc, pTemp)
 	return 0
 
@@ -34763,12 +34831,12 @@ usage:
 **********************************************************************
 */
 func Abc_CommandAbc9Lcorr(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
-	var Pars Cec_ParCor_t
-	var pPars *Cec_ParCor_t = &Pars
+	var Pars proof_cec.Cec_ParCor_t
+	var pPars *proof_cec.Cec_ParCor_t = &Pars
 	var pTemp *Gia_Man_t
 	var c int32
-	Cec_ManCorSetDefaultParams(pPars)
-	pPars.fLatchCorr = 1
+	proof_cec.Cec_ManCorSetDefaultParams(pPars)
+	pPars.FLatchCorr = 1
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "FCPrcvwh"); c != -1; c = Extra_UtilGetopt(argc, argv, "FCPrcvwh") {
 		switch c {
@@ -34777,9 +34845,9 @@ func Abc_CommandAbc9Lcorr(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-F\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nFrames = abcAtoi(argv[globalUtilOptind])
+			pPars.NFrames = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nFrames < 0 {
+			if pPars.NFrames < 0 {
 				goto usage
 			}
 			break
@@ -34788,9 +34856,9 @@ func Abc_CommandAbc9Lcorr(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-C\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nBTLimit = abcAtoi(argv[globalUtilOptind])
+			pPars.NBTLimit = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nBTLimit < 0 {
+			if pPars.NBTLimit < 0 {
 				goto usage
 			}
 			break
@@ -34799,23 +34867,23 @@ func Abc_CommandAbc9Lcorr(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-P\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nPrefix = abcAtoi(argv[globalUtilOptind])
+			pPars.NPrefix = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nPrefix < 0 {
+			if pPars.NPrefix < 0 {
 				goto usage
 			}
 			break
 		case 'r':
-			pPars.fUseRings ^= 1
+			pPars.FUseRings ^= 1
 			break
 		case 'c':
-			pPars.fUseCSat ^= 1
+			pPars.FUseCSat ^= 1
 			break
 		case 'v':
-			pPars.fVerbose ^= 1
+			pPars.FVerbose ^= 1
 			break
 		case 'w':
-			pPars.fVerboseFlops ^= 1
+			pPars.FVerboseFlops ^= 1
 			break
 		default:
 			goto usage
@@ -34825,12 +34893,12 @@ func Abc_CommandAbc9Lcorr(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Lcorr(): There is no AIG.\n")
 		return 1
 	}
-	if Gia_ManBoxNum(abcFrameGia(pAbc)) && Gia_ManRegBoxNum(abcFrameGia(pAbc)) {
+	if (giapkg.Gia_ManBoxNum(abcFrameGia(pAbc)) != 0) && (giapkg.Gia_ManRegBoxNum(abcFrameGia(pAbc)) != 0) {
 		if abcFrameGia(pAbc).pAigExtra == nil {
 			fmt.Printf("Timing manager is given but there is no GIA of boxes.\n")
 			return 0
 		}
-		pTemp = Gia_ManSweepWithBoxes(abcFrameGia(pAbc), nil, pPars, 0, 0, pPars.fVerbose, pPars.fVerboseFlops)
+		pTemp = giapkg.Gia_ManSweepWithBoxes(abcFrameGia(pAbc), nil, pPars, 0, 0, pPars.FVerbose, pPars.FVerboseFlops)
 		Abc_FrameUpdateGia(pAbc, pTemp)
 		return 0
 	}
@@ -34838,20 +34906,20 @@ func Abc_CommandAbc9Lcorr(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "The network is combinational.\n")
 		return 0
 	}
-	pTemp = Cec_ManLSCorrespondence(abcFrameGia(pAbc), pPars)
+	pTemp = proof_cec.Cec_ManLSCorrespondence(abcFrameGia(pAbc), pPars)
 	Abc_FrameUpdateGia(pAbc, pTemp)
 	return 0
 
 usage:
 	Abc_Print(-2, "usage: &lcorr [-FCP num] [-rcvwh]\n")
 	Abc_Print(-2, "\t         performs latch correpondence computation\n")
-	Abc_Print(-2, "\t-C num : the max number of conflicts at a node [default = %d]\n", pPars.nBTLimit)
-	Abc_Print(-2, "\t-F num : the number of timeframes in inductive case [default = %d]\n", pPars.nFrames)
-	Abc_Print(-2, "\t-P num : the number of timeframes in the prefix [default = %d]\n", pPars.nPrefix)
-	Abc_Print(-2, "\t-r     : toggle using implication rings during refinement [default = %s]\n", abcSelect(fUseRings, "yes", "no"))
-	Abc_Print(-2, "\t-c     : toggle using circuit-based SAT solver [default = %s]\n", abcSelect(fUseCSat, "yes", "no"))
-	Abc_Print(-2, "\t-v     : toggle printing verbose information [default = %s]\n", abcSelect(fVerbose, "yes", "no"))
-	Abc_Print(-2, "\t-w     : toggle printing verbose info about equivalent flops [default = %s]\n", abcSelect(fVerboseFlops, "yes", "no"))
+	Abc_Print(-2, "\t-C num : the max number of conflicts at a node [default = %d]\n", pPars.NBTLimit)
+	Abc_Print(-2, "\t-F num : the number of timeframes in inductive case [default = %d]\n", pPars.NFrames)
+	Abc_Print(-2, "\t-P num : the number of timeframes in the prefix [default = %d]\n", pPars.NPrefix)
+	Abc_Print(-2, "\t-r     : toggle using implication rings during refinement [default = %s]\n", abcSelect(pPars.FUseRings, "yes", "no"))
+	Abc_Print(-2, "\t-c     : toggle using circuit-based SAT solver [default = %s]\n", abcSelect(pPars.FUseCSat, "yes", "no"))
+	Abc_Print(-2, "\t-v     : toggle printing verbose information [default = %s]\n", abcSelect(pPars.FVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-w     : toggle printing verbose info about equivalent flops [default = %s]\n", abcSelect(pPars.FVerboseFlops, "yes", "no"))
 	Abc_Print(-2, "\t-h     : print the command usage\n")
 	return 1
 }
@@ -34871,12 +34939,12 @@ usage:
 */
 func Abc_CommandAbc9Scorr(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 
-	var Pars Cec_ParCor_t
-	var pPars *Cec_ParCor_t = &Pars
+	var Pars proof_cec.Cec_ParCor_t
+	var pPars *proof_cec.Cec_ParCor_t = &Pars
 	var pTemp *Gia_Man_t
 	var fPartition int32
 	var c int32
-	Cec_ManCorSetDefaultParams(pPars)
+	proof_cec.Cec_ManCorSetDefaultParams(pPars)
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "FCPpkrecqwvh"); c != -1; c = Extra_UtilGetopt(argc, argv, "FCPpkrecqwvh") {
 		switch c {
@@ -34885,9 +34953,9 @@ func Abc_CommandAbc9Scorr(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-F\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nFrames = abcAtoi(argv[globalUtilOptind])
+			pPars.NFrames = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nFrames < 0 {
+			if pPars.NFrames < 0 {
 				goto usage
 			}
 			break
@@ -34896,9 +34964,9 @@ func Abc_CommandAbc9Scorr(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-C\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nBTLimit = abcAtoi(argv[globalUtilOptind])
+			pPars.NBTLimit = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nBTLimit < 0 {
+			if pPars.NBTLimit < 0 {
 				goto usage
 			}
 			break
@@ -34907,9 +34975,9 @@ func Abc_CommandAbc9Scorr(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-P\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nPrefix = abcAtoi(argv[globalUtilOptind])
+			pPars.NPrefix = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nPrefix < 0 {
+			if pPars.NPrefix < 0 {
 				goto usage
 			}
 			break
@@ -34917,25 +34985,25 @@ func Abc_CommandAbc9Scorr(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			fPartition ^= 1
 			break
 		case 'k':
-			pPars.fConstCorr ^= 1
+			pPars.FConstCorr ^= 1
 			break
 		case 'r':
-			pPars.fUseRings ^= 1
+			pPars.FUseRings ^= 1
 			break
 		case 'e':
-			pPars.fMakeChoices ^= 1
+			pPars.FMakeChoices ^= 1
 			break
 		case 'c':
-			pPars.fUseCSat ^= 1
+			pPars.FUseCSat ^= 1
 			break
 		case 'q':
-			pPars.fStopWhenGone ^= 1
+			pPars.FStopWhenGone ^= 1
 			break
 		case 'w':
-			pPars.fVerboseFlops ^= 1
+			pPars.FVerboseFlops ^= 1
 			break
 		case 'v':
-			pPars.fVerbose ^= 1
+			pPars.FVerbose ^= 1
 			break
 		default:
 			goto usage
@@ -34945,12 +35013,12 @@ func Abc_CommandAbc9Scorr(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Scorr(): There is no AIG.\n")
 		return 1
 	}
-	if Gia_ManBoxNum(abcFrameGia(pAbc)) && Gia_ManRegBoxNum(abcFrameGia(pAbc)) {
+	if (giapkg.Gia_ManBoxNum(abcFrameGia(pAbc)) != 0) && (giapkg.Gia_ManRegBoxNum(abcFrameGia(pAbc)) != 0) {
 		if abcFrameGia(pAbc).pAigExtra == nil {
 			fmt.Printf("Timing manager is given but there is no GIA of boxes.\n")
 			return 0
 		}
-		pTemp = Gia_ManSweepWithBoxes(abcFrameGia(pAbc), nil, pPars, 0, 0, pPars.fVerbose, pPars.fVerboseFlops)
+		pTemp = giapkg.Gia_ManSweepWithBoxes(abcFrameGia(pAbc), nil, pPars, 0, 0, pPars.FVerbose, pPars.FVerboseFlops)
 		Abc_FrameUpdateGia(pAbc, pTemp)
 		return 0
 	}
@@ -34959,9 +35027,9 @@ func Abc_CommandAbc9Scorr(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 0
 	}
 	if fPartition != 0 {
-		pTemp = Gia_ManScorrDivideTest(abcFrameGia(pAbc), pPars)
+		pTemp = proof_cec.Gia_ManScorrDivideTest(abcFrameGia(pAbc), pPars)
 	} else {
-		pTemp = Cec_ManLSCorrespondence(abcFrameGia(pAbc), pPars)
+		pTemp = proof_cec.Cec_ManLSCorrespondence(abcFrameGia(pAbc), pPars)
 	}
 	Abc_FrameUpdateGia(pAbc, pTemp)
 	return 0
@@ -34969,17 +35037,17 @@ func Abc_CommandAbc9Scorr(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 usage:
 	Abc_Print(-2, "usage: &scorr [-FCP num] [-pkrecqwvh]\n")
 	Abc_Print(-2, "\t         performs signal correpondence computation\n")
-	Abc_Print(-2, "\t-C num : the max number of conflicts at a node [default = %d]\n", pPars.nBTLimit)
-	Abc_Print(-2, "\t-F num : the number of timeframes in inductive case [default = %d]\n", pPars.nFrames)
-	Abc_Print(-2, "\t-P num : the number of timeframes in the prefix [default = %d]\n", pPars.nPrefix)
+	Abc_Print(-2, "\t-C num : the max number of conflicts at a node [default = %d]\n", pPars.NBTLimit)
+	Abc_Print(-2, "\t-F num : the number of timeframes in inductive case [default = %d]\n", pPars.NFrames)
+	Abc_Print(-2, "\t-P num : the number of timeframes in the prefix [default = %d]\n", pPars.NPrefix)
 	Abc_Print(-2, "\t-p     : toggle using partitioning for the input AIG [default = %s]\n", abcSelect(fPartition, "yes", "no"))
-	Abc_Print(-2, "\t-k     : toggle using constant correspondence [default = %s]\n", abcSelect(fConstCorr, "yes", "no"))
-	Abc_Print(-2, "\t-r     : toggle using implication rings during refinement [default = %s]\n", abcSelect(fUseRings, "yes", "no"))
-	Abc_Print(-2, "\t-e     : toggle using equivalences as choices [default = %s]\n", abcSelect(fMakeChoices, "yes", "no"))
-	Abc_Print(-2, "\t-c     : toggle using circuit-based SAT solver [default = %s]\n", abcSelect(fUseCSat, "yes", "no"))
-	Abc_Print(-2, "\t-q     : toggle quitting when PO is not a constant candidate [default = %s]\n", abcSelect(fStopWhenGone, "yes", "no"))
-	Abc_Print(-2, "\t-w     : toggle printing verbose info about equivalent flops [default = %s]\n", abcSelect(fVerboseFlops, "yes", "no"))
-	Abc_Print(-2, "\t-v     : toggle printing verbose information [default = %s]\n", abcSelect(fVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-k     : toggle using constant correspondence [default = %s]\n", abcSelect(pPars.FConstCorr, "yes", "no"))
+	Abc_Print(-2, "\t-r     : toggle using implication rings during refinement [default = %s]\n", abcSelect(pPars.FUseRings, "yes", "no"))
+	Abc_Print(-2, "\t-e     : toggle using equivalences as choices [default = %s]\n", abcSelect(pPars.FMakeChoices, "yes", "no"))
+	Abc_Print(-2, "\t-c     : toggle using circuit-based SAT solver [default = %s]\n", abcSelect(pPars.FUseCSat, "yes", "no"))
+	Abc_Print(-2, "\t-q     : toggle quitting when PO is not a constant candidate [default = %s]\n", abcSelect(pPars.FStopWhenGone, "yes", "no"))
+	Abc_Print(-2, "\t-w     : toggle printing verbose info about equivalent flops [default = %s]\n", abcSelect(pPars.FVerboseFlops, "yes", "no"))
+	Abc_Print(-2, "\t-v     : toggle printing verbose information [default = %s]\n", abcSelect(pPars.FVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h     : print the command usage\n")
 	return 1
 }
@@ -34998,11 +35066,11 @@ usage:
 **********************************************************************
 */
 func Abc_CommandAbc9Choice(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
-	var Pars Cec_ParChc_t
-	var pPars *Cec_ParChc_t = &Pars
+	var Pars proof_cec.Cec_ParChc_t
+	var pPars *proof_cec.Cec_ParChc_t = &Pars
 	var pTemp *Gia_Man_t
 	var c int32
-	Cec_ManChcSetDefaultParams(pPars)
+	proof_cec.Cec_ManChcSetDefaultParams(pPars)
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "Ccvh"); c != -1; c = Extra_UtilGetopt(argc, argv, "Ccvh") {
 		switch c {
@@ -35011,17 +35079,17 @@ func Abc_CommandAbc9Choice(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-C\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nBTLimit = abcAtoi(argv[globalUtilOptind])
+			pPars.NBTLimit = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nBTLimit < 0 {
+			if pPars.NBTLimit < 0 {
 				goto usage
 			}
 			break
 		case 'c':
-			pPars.fUseCSat ^= 1
+			pPars.FUseCSat ^= 1
 			break
 		case 'v':
-			pPars.fVerbose ^= 1
+			pPars.FVerbose ^= 1
 			break
 		default:
 			goto usage
@@ -35031,16 +35099,16 @@ func Abc_CommandAbc9Choice(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Choice(): There is no AIG.\n")
 		return 1
 	}
-	pTemp = Cec_ManChoiceComputation(abcFrameGia(pAbc), pPars)
+	pTemp = proof_cec.Cec_ManChoiceComputation(abcFrameGia(pAbc), pPars)
 	Abc_FrameUpdateGia(pAbc, pTemp)
 	return 0
 
 usage:
 	Abc_Print(-2, "usage: &choice [-C num] [-cvh]\n")
 	Abc_Print(-2, "\t         performs computation of structural choices\n")
-	Abc_Print(-2, "\t-C num : the max number of conflicts at a node [default = %d]\n", pPars.nBTLimit)
-	Abc_Print(-2, "\t-c     : toggle using circuit-based SAT solver [default = %s]\n", abcSelect(fUseCSat, "yes", "no"))
-	Abc_Print(-2, "\t-v     : toggle printing verbose information [default = %s]\n", abcSelect(fVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-C num : the max number of conflicts at a node [default = %d]\n", pPars.NBTLimit)
+	Abc_Print(-2, "\t-c     : toggle using circuit-based SAT solver [default = %s]\n", abcSelect(pPars.FUseCSat, "yes", "no"))
+	Abc_Print(-2, "\t-v     : toggle printing verbose information [default = %s]\n", abcSelect(pPars.FVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h     : print the command usage\n")
 	return 1
 }
@@ -35060,12 +35128,12 @@ usage:
 */
 func Abc_CommandAbc9Sat(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 
-	var ParsSat Cec_ParSat_t
-	var pPars *Cec_ParSat_t = &ParsSat
+	var ParsSat proof_cec.Cec_ParSat_t
+	var pPars *proof_cec.Cec_ParSat_t = &ParsSat
 	var pTemp *Gia_Man_t
 	var c int32
 	var fNewSolver, fCSat, f0Proved int32
-	Cec_ManSatSetDefaultParams(pPars)
+	proof_cec.Cec_ManSatSetDefaultParams(pPars)
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "JCSNanmtcxzvh"); c != -1; c = Extra_UtilGetopt(argc, argv, "JCSNanmtcxzvh") {
 		switch c {
@@ -35085,9 +35153,9 @@ func Abc_CommandAbc9Sat(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-C\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nBTLimit = abcAtoi(argv[globalUtilOptind])
+			pPars.NBTLimit = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nBTLimit < 0 {
+			if pPars.NBTLimit < 0 {
 				goto usage
 			}
 			break
@@ -35096,9 +35164,9 @@ func Abc_CommandAbc9Sat(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-S\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nSatVarMax = abcAtoi(argv[globalUtilOptind])
+			pPars.NSatVarMax = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nSatVarMax < 0 {
+			if pPars.NSatVarMax < 0 {
 				goto usage
 			}
 			break
@@ -35107,23 +35175,23 @@ func Abc_CommandAbc9Sat(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-N\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nCallsRecycle = abcAtoi(argv[globalUtilOptind])
+			pPars.NCallsRecycle = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nCallsRecycle < 0 {
+			if pPars.NCallsRecycle < 0 {
 				goto usage
 			}
 			break
 		case 'a':
-			pPars.fSaveCexes ^= 1
+			pPars.FSaveCexes ^= 1
 			break
 		case 'n':
-			pPars.fNonChrono ^= 1
+			pPars.FNonChrono ^= 1
 			break
 		case 'm':
-			pPars.fCheckMiter ^= 1
+			pPars.FCheckMiter ^= 1
 			break
 		case 't':
-			pPars.fLearnCls ^= 1
+			pPars.FLearnCls ^= 1
 			break
 		case 'c':
 			fCSat ^= 1
@@ -35135,7 +35203,7 @@ func Abc_CommandAbc9Sat(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			f0Proved ^= 1
 			break
 		case 'v':
-			pPars.fVerbose ^= 1
+			pPars.FVerbose ^= 1
 			break
 		default:
 			goto usage
@@ -35149,19 +35217,19 @@ func Abc_CommandAbc9Sat(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		var vCounters *Vec_Int_t
 		var vStatus *Vec_Str_t
 		if fNewSolver != 0 {
-			vCounters = Cbs2_ManSolveMiterNc(abcFrameGia(pAbc), pPars.nBTLimit, &vStatus, pPars.fVerbose)
-		} else if pPars.fLearnCls {
-			vCounters = Tas_ManSolveMiterNc(abcFrameGia(pAbc), pPars.nBTLimit, &vStatus, pPars.fVerbose)
-		} else if pPars.fNonChrono {
-			vCounters = Cbs_ManSolveMiterNc(abcFrameGia(pAbc), pPars.nBTLimit, &vStatus, f0Proved, pPars.fVerbose)
+			vCounters = giapkg.Cbs2_ManSolveMiterNc(abcFrameGia(pAbc), pPars.NBTLimit, &vStatus, pPars.FVerbose)
+		} else if pPars.FLearnCls != 0 {
+			vCounters = giapkg.Tas_ManSolveMiterNc(abcFrameGia(pAbc), pPars.NBTLimit, &vStatus, pPars.FVerbose)
+		} else if pPars.FNonChrono != 0 {
+			vCounters = giapkg.Cbs_ManSolveMiterNc(abcFrameGia(pAbc), pPars.NBTLimit, &vStatus, f0Proved, pPars.FVerbose)
 		} else {
-			vCounters = Cbs_ManSolveMiter(abcFrameGia(pAbc), pPars.nBTLimit, &vStatus, pPars.fVerbose)
+			vCounters = giapkg.Cbs_ManSolveMiter(abcFrameGia(pAbc), pPars.NBTLimit, &vStatus, pPars.FVerbose)
 		}
 		Vec_IntFree(vCounters)
 		Vec_StrFree(vStatus)
 
 	} else {
-		pTemp = Cec_ManSatSolving(abcFrameGia(pAbc), pPars, f0Proved)
+		pTemp = proof_cec.Cec_ManSatSolving(abcFrameGia(pAbc), pPars, f0Proved)
 		Abc_FrameUpdateGia(pAbc, pTemp)
 	}
 	if giapkg.Gia_ManReadSeqModelVec(abcFrameGia(pAbc)) != nil {
@@ -35173,17 +35241,17 @@ usage:
 	Abc_Print(-2, "usage: &sat [-JCSN <num>] [-anmctxzvh]\n")
 	Abc_Print(-2, "\t         performs SAT solving for the combinational outputs\n")
 	Abc_Print(-2, "\t-J num : the SAT solver type [default = %d]\n", pPars.SolverType)
-	Abc_Print(-2, "\t-C num : the max number of conflicts at a node [default = %d]\n", pPars.nBTLimit)
-	Abc_Print(-2, "\t-S num : the min number of variables to recycle the solver [default = %d]\n", pPars.nSatVarMax)
-	Abc_Print(-2, "\t-N num : the min number of calls to recycle the solver [default = %d]\n", pPars.nCallsRecycle)
-	Abc_Print(-2, "\t-a     : toggle solving all outputs and saving counter-examples [default = %s]\n", abcSelect(fSaveCexes, "yes", "no"))
-	Abc_Print(-2, "\t-n     : toggle using non-chronological backtracking [default = %s]\n", abcSelect(fNonChrono, "yes", "no"))
-	Abc_Print(-2, "\t-m     : toggle miter vs. any circuit [default = %s]\n", abcSelect(fCheckMiter, "miter", "circuit"))
+	Abc_Print(-2, "\t-C num : the max number of conflicts at a node [default = %d]\n", pPars.NBTLimit)
+	Abc_Print(-2, "\t-S num : the min number of variables to recycle the solver [default = %d]\n", pPars.NSatVarMax)
+	Abc_Print(-2, "\t-N num : the min number of calls to recycle the solver [default = %d]\n", pPars.NCallsRecycle)
+	Abc_Print(-2, "\t-a     : toggle solving all outputs and saving counter-examples [default = %s]\n", abcSelect(pPars.FSaveCexes, "yes", "no"))
+	Abc_Print(-2, "\t-n     : toggle using non-chronological backtracking [default = %s]\n", abcSelect(pPars.FNonChrono, "yes", "no"))
+	Abc_Print(-2, "\t-m     : toggle miter vs. any circuit [default = %s]\n", abcSelect(pPars.FCheckMiter, "miter", "circuit"))
 	Abc_Print(-2, "\t-c     : toggle using circuit-based SAT solver [default = %s]\n", abcSelect(fCSat, "yes", "no"))
-	Abc_Print(-2, "\t-t     : toggle using learning in curcuit-based solver [default = %s]\n", abcSelect(fLearnCls, "yes", "no"))
+	Abc_Print(-2, "\t-t     : toggle using learning in curcuit-based solver [default = %s]\n", abcSelect(pPars.FLearnCls, "yes", "no"))
 	Abc_Print(-2, "\t-x     : toggle using new solver [default = %s]\n", abcSelect(fNewSolver, "yes", "no"))
 	Abc_Print(-2, "\t-z     : toggle replacing proved cones by const0 [default = %s]\n", abcSelect(f0Proved, "yes", "no"))
-	Abc_Print(-2, "\t-v     : toggle printing verbose information [default = %s]\n", abcSelect(fVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-v     : toggle printing verbose information [default = %s]\n", abcSelect(pPars.FVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h     : print the command usage\n")
 	return 1
 }
@@ -35240,7 +35308,7 @@ func Abc_CommandAbc9SatEnum(pAbc *Abc_Frame_t, argc int32, argv []string) int32 
 		Abc_Print(-1, "Abc_CommandAbc9SatEnum(): There is no AIG.\n")
 		return 1
 	}
-	Gia_ManSatEnum(abcFrameGia(pAbc), nConfLimit, nTimeOut, fVerbose)
+	giapkg.Gia_ManSatEnum(abcFrameGia(pAbc), nConfLimit, nTimeOut, fVerbose)
 	return 0
 
 usage:
@@ -35268,11 +35336,11 @@ usage:
 */
 func Abc_CommandAbc9Fraig(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 
-	var ParsFra Cec_ParFra_t
-	var pPars *Cec_ParFra_t = &ParsFra
+	var ParsFra proof_cec.Cec_ParFra_t
+	var pPars *proof_cec.Cec_ParFra_t = &ParsFra
 	var pTemp *Gia_Man_t
 	var c, fUseAlgo, fUseAlgoG, fUseAlgoG2 int32
-	Cec4_ManSetParams(pPars)
+	proof_cec.Cec4_ManSetParams(pPars)
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "JWRILDCNPrmdckngxwvh"); c != -1; c = Extra_UtilGetopt(argc, argv, "JWRILDCNPrmdckngxwvh") {
 		switch c {
@@ -35281,9 +35349,9 @@ func Abc_CommandAbc9Fraig(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-J\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.jType = abcAtoi(argv[globalUtilOptind])
+			pPars.JType = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.jType < 0 {
+			if pPars.JType < 0 {
 				goto usage
 			}
 			break
@@ -35292,9 +35360,9 @@ func Abc_CommandAbc9Fraig(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-W\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nWords = abcAtoi(argv[globalUtilOptind])
+			pPars.NWords = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nWords < 0 {
+			if pPars.NWords < 0 {
 				goto usage
 			}
 			break
@@ -35303,9 +35371,9 @@ func Abc_CommandAbc9Fraig(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-R\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nRounds = abcAtoi(argv[globalUtilOptind])
+			pPars.NRounds = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nRounds < 0 {
+			if pPars.NRounds < 0 {
 				goto usage
 			}
 			break
@@ -35314,9 +35382,9 @@ func Abc_CommandAbc9Fraig(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-I\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nItersMax = abcAtoi(argv[globalUtilOptind])
+			pPars.NItersMax = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nItersMax < 0 {
+			if pPars.NItersMax < 0 {
 				goto usage
 			}
 			break
@@ -35325,9 +35393,9 @@ func Abc_CommandAbc9Fraig(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-L\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nLevelMax = abcAtoi(argv[globalUtilOptind])
+			pPars.NLevelMax = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nLevelMax < 0 {
+			if pPars.NLevelMax < 0 {
 				goto usage
 			}
 			break
@@ -35336,9 +35404,9 @@ func Abc_CommandAbc9Fraig(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-D\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nDepthMax = abcAtoi(argv[globalUtilOptind])
+			pPars.NDepthMax = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nDepthMax < 0 {
+			if pPars.NDepthMax < 0 {
 				goto usage
 			}
 			break
@@ -35347,9 +35415,9 @@ func Abc_CommandAbc9Fraig(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-C\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nBTLimit = abcAtoi(argv[globalUtilOptind])
+			pPars.NBTLimit = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nBTLimit < 0 {
+			if pPars.NBTLimit < 0 {
 				goto usage
 			}
 			break
@@ -35358,9 +35426,9 @@ func Abc_CommandAbc9Fraig(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-N\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nCallsRecycle = abcAtoi(argv[globalUtilOptind])
+			pPars.NCallsRecycle = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nCallsRecycle < 0 {
+			if pPars.NCallsRecycle < 0 {
 				goto usage
 			}
 			break
@@ -35369,26 +35437,26 @@ func Abc_CommandAbc9Fraig(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-P\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nGenIters = abcAtoi(argv[globalUtilOptind])
+			pPars.NGenIters = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nGenIters < 0 {
+			if pPars.NGenIters < 0 {
 				goto usage
 			}
 			break
 		case 'r':
-			pPars.fRewriting ^= 1
+			pPars.FRewriting ^= 1
 			break
 		case 'm':
-			pPars.fCheckMiter ^= 1
+			pPars.FCheckMiter ^= 1
 			break
 		case 'd':
-			pPars.fDualOut ^= 1
+			pPars.FDualOut ^= 1
 			break
 		case 'c':
-			pPars.fRunCSat ^= 1
+			pPars.FRunCSat ^= 1
 			break
 		case 'k':
-			pPars.fUseCones ^= 1
+			pPars.FUseCones ^= 1
 			break
 		case 'n':
 			fUseAlgo ^= 1
@@ -35400,10 +35468,10 @@ func Abc_CommandAbc9Fraig(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			fUseAlgoG2 ^= 1
 			break
 		case 'w':
-			pPars.fVeryVerbose ^= 1
+			pPars.FVeryVerbose ^= 1
 			break
 		case 'v':
-			pPars.fVerbose ^= 1
+			pPars.FVerbose ^= 1
 			break
 		default:
 			goto usage
@@ -35414,13 +35482,13 @@ func Abc_CommandAbc9Fraig(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 1
 	}
 	if fUseAlgo != 0 {
-		pTemp = Cec2_ManSimulateTest(abcFrameGia(pAbc), pPars)
+		pTemp = proof_cec.Cec2_ManSimulateTest(abcFrameGia(pAbc), pPars)
 	} else if fUseAlgoG != 0 {
-		pTemp = Cec3_ManSimulateTest(abcFrameGia(pAbc), pPars)
+		pTemp = proof_cec.Cec3_ManSimulateTest(abcFrameGia(pAbc), pPars)
 	} else if fUseAlgoG2 != 0 {
-		pTemp = Cec4_ManSimulateTest(abcFrameGia(pAbc), pPars)
+		pTemp = proof_cec.Cec4_ManSimulateTest(abcFrameGia(pAbc), pPars)
 	} else {
-		pTemp = Cec_ManSatSweeping(abcFrameGia(pAbc), pPars, 0)
+		pTemp = proof_cec.Cec_ManSatSweeping(abcFrameGia(pAbc), pPars, 0)
 	}
 	Abc_FrameUpdateGia(pAbc, pTemp)
 	return 0
@@ -35428,24 +35496,24 @@ func Abc_CommandAbc9Fraig(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 usage:
 	Abc_Print(-2, "usage: &fraig [-JWRILDCNP <num>] [-rmdckngwvh]\n")
 	Abc_Print(-2, "\t         performs combinational SAT sweeping\n")
-	Abc_Print(-2, "\t-J num : the solver type [default = %d]\n", pPars.jType)
-	Abc_Print(-2, "\t-W num : the number of simulation words [default = %d]\n", pPars.nWords)
-	Abc_Print(-2, "\t-R num : the number of simulation rounds [default = %d]\n", pPars.nRounds)
-	Abc_Print(-2, "\t-I num : the number of sweeping iterations [default = %d]\n", pPars.nItersMax)
-	Abc_Print(-2, "\t-L num : the max number of levels of nodes to consider [default = %d]\n", pPars.nLevelMax)
-	Abc_Print(-2, "\t-D num : the max number of steps of speculative reduction [default = %d]\n", pPars.nDepthMax)
-	Abc_Print(-2, "\t-C num : the max number of conflicts at a node [default = %d]\n", pPars.nBTLimit)
-	Abc_Print(-2, "\t-N num : the min number of calls to recycle the solver [default = %d]\n", pPars.nCallsRecycle)
-	Abc_Print(-2, "\t-P num : the number of pattern generation iterations [default = %d]\n", pPars.nGenIters)
-	Abc_Print(-2, "\t-r     : toggle the use of AIG rewriting [default = %s]\n", abcSelect(fRewriting, "yes", "no"))
-	Abc_Print(-2, "\t-m     : toggle miter vs. any circuit [default = %s]\n", abcSelect(fCheckMiter, "miter", "circuit"))
-	Abc_Print(-2, "\t-d     : toggle using double output miters [default = %s]\n", abcSelect(fDualOut, "yes", "no"))
-	Abc_Print(-2, "\t-c     : toggle using circuit-based solver [default = %s]\n", abcSelect(fRunCSat, "yes", "no"))
-	Abc_Print(-2, "\t-k     : toggle using logic cones in the SAT solver [default = %s]\n", abcSelect(fUseCones, "yes", "no"))
+	Abc_Print(-2, "\t-J num : the solver type [default = %d]\n", pPars.JType)
+	Abc_Print(-2, "\t-W num : the number of simulation words [default = %d]\n", pPars.NWords)
+	Abc_Print(-2, "\t-R num : the number of simulation rounds [default = %d]\n", pPars.NRounds)
+	Abc_Print(-2, "\t-I num : the number of sweeping iterations [default = %d]\n", pPars.NItersMax)
+	Abc_Print(-2, "\t-L num : the max number of levels of nodes to consider [default = %d]\n", pPars.NLevelMax)
+	Abc_Print(-2, "\t-D num : the max number of steps of speculative reduction [default = %d]\n", pPars.NDepthMax)
+	Abc_Print(-2, "\t-C num : the max number of conflicts at a node [default = %d]\n", pPars.NBTLimit)
+	Abc_Print(-2, "\t-N num : the min number of calls to recycle the solver [default = %d]\n", pPars.NCallsRecycle)
+	Abc_Print(-2, "\t-P num : the number of pattern generation iterations [default = %d]\n", pPars.NGenIters)
+	Abc_Print(-2, "\t-r     : toggle the use of AIG rewriting [default = %s]\n", abcSelect(pPars.FRewriting, "yes", "no"))
+	Abc_Print(-2, "\t-m     : toggle miter vs. any circuit [default = %s]\n", abcSelect(pPars.FCheckMiter, "miter", "circuit"))
+	Abc_Print(-2, "\t-d     : toggle using double output miters [default = %s]\n", abcSelect(pPars.FDualOut, "yes", "no"))
+	Abc_Print(-2, "\t-c     : toggle using circuit-based solver [default = %s]\n", abcSelect(pPars.FRunCSat, "yes", "no"))
+	Abc_Print(-2, "\t-k     : toggle using logic cones in the SAT solver [default = %s]\n", abcSelect(pPars.FUseCones, "yes", "no"))
 	Abc_Print(-2, "\t-n     : toggle using new implementation [default = %s]\n", abcSelect(fUseAlgo, "yes", "no"))
 	Abc_Print(-2, "\t-g     : toggle using another new implementation [default = %s]\n", abcSelect(fUseAlgoG, "yes", "no"))
-	Abc_Print(-2, "\t-w     : toggle printing even more verbose information [default = %s]\n", abcSelect(fVeryVerbose, "yes", "no"))
-	Abc_Print(-2, "\t-v     : toggle printing verbose information [default = %s]\n", abcSelect(fVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-w     : toggle printing even more verbose information [default = %s]\n", abcSelect(pPars.FVeryVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-v     : toggle printing verbose information [default = %s]\n", abcSelect(pPars.FVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h     : print the command usage\n")
 	return 1
 }
@@ -35466,9 +35534,9 @@ usage:
 func Abc_CommandAbc9CFraig(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	var pTemp *Gia_Man_t
 	var c int32
-	var Pars Ssc_Pars_t
-	var pPars *Ssc_Pars_t = &Pars
-	Ssc_ManSetDefaultParams(pPars)
+	var Pars proof_ssc.Ssc_Pars_t
+	var pPars *proof_ssc.Ssc_Pars_t = &Pars
+	proof_ssc.Ssc_ManSetDefaultParams(pPars)
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "WCacvh"); c != -1; c = Extra_UtilGetopt(argc, argv, "WCacvh") {
 		switch c {
@@ -35511,7 +35579,7 @@ func Abc_CommandAbc9CFraig(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9CFraig(): There is no AIG.\n")
 		return 1
 	}
-	pTemp = Ssc_PerformSweepingConstr(abcFrameGia(pAbc), pPars)
+	pTemp = proof_ssc.Ssc_PerformSweepingConstr(abcFrameGia(pAbc), pPars)
 	Abc_FrameUpdateGia(pAbc, pTemp)
 	return 0
 
@@ -35522,9 +35590,9 @@ usage:
 	Abc_Print(-2, "\t         (constraints are listed as last POs and true when they are 0)\n")
 	Abc_Print(-2, "\t-W num : the number of simulation words [default = %d]\n", pPars.nWords)
 	Abc_Print(-2, "\t-C num : the max number of conflicts at a node [default = %d]\n", pPars.nBTLimit)
-	Abc_Print(-2, "\t-a     : toggle appending constraints to the result [default = %s]\n", abcSelect(fAppend, "yes", "no"))
-	Abc_Print(-2, "\t-c     : toggle performing internal verification [default = %s]\n", abcSelect(fVerify, "yes", "no"))
-	Abc_Print(-2, "\t-v     : toggle printing verbose information [default = %s]\n", abcSelect(fVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-a     : toggle appending constraints to the result [default = %s]\n", abcSelect(pPars.fAppend, "yes", "no"))
+	Abc_Print(-2, "\t-c     : toggle performing internal verification [default = %s]\n", abcSelect(pPars.fVerify, "yes", "no"))
+	Abc_Print(-2, "\t-v     : toggle printing verbose information [default = %s]\n", abcSelect(pPars.fVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h     : print the command usage\n")
 	return 1
 }
@@ -35594,37 +35662,37 @@ func Abc_CommandAbc9Srm(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	}
 	if fComb != 0 {
 
-		var Result int32 = Cec4_ManSimulateOnlyTest(abcFrameGia(pAbc), fVerbose)
+		var Result int32 = proof_cec.Cec4_ManSimulateOnlyTest(abcFrameGia(pAbc), fVerbose)
 
-		pTemp = Gia_ManCombSpecReduce(abcFrameGia(pAbc))
+		pTemp = giapkg.Gia_ManCombSpecReduce(abcFrameGia(pAbc))
 		Abc_FrameUpdateGia(pAbc, pTemp)
 		Result = 0
 		return 0
 	}
 	pFileName = fmt.Sprintf("gsrm%s.aig", abcSelect(fSpeculate, "", "s"))
 	pFileName2 = fmt.Sprintf("gsyn%s.aig", abcSelect(fSpeculate, "", "s"))
-	pTemp = Gia_ManSpecReduce(abcFrameGia(pAbc), fDualOut, fSynthesis, fSpeculate, fSkipSome, fVerbose)
+	pTemp = giapkg.Gia_ManSpecReduce(abcFrameGia(pAbc), fDualOut, fSynthesis, fSpeculate, fSkipSome, fVerbose)
 	if pTemp != nil {
 		if fSpeculate != 0 {
 			pAux = pTemp
-			pTemp = Gia_ManSeqStructSweep(pAux, 1, 1, 0)
+			pTemp = giapkg.Gia_ManSeqStructSweep(pAux, 1, 1, 0)
 			Gia_ManStop(pAux)
 		}
 		Gia_AigerWrite(pTemp, abcDefaultString(pFileNameIn, pFileName), 0, 0, 0)
 		Abc_Print(1, "Speculatively reduced model was written into file \"%s\".\n", pFileName)
-		Gia_ManPrintStatsShort(pTemp)
+		giapkg.Gia_ManPrintStatsShort(pTemp)
 		Gia_ManStop(pTemp)
 	}
 	if fSynthesis != 0 {
-		pTemp = Gia_ManEquivReduce(abcFrameGia(pAbc), 1, fDualOut, 0, fVerbose)
+		pTemp = giapkg.Gia_ManEquivReduce(abcFrameGia(pAbc), 1, fDualOut, 0, fVerbose)
 		if pTemp != nil {
 			pAux = pTemp
-			pTemp = Gia_ManSeqStructSweep(pAux, 1, 1, 0)
+			pTemp = giapkg.Gia_ManSeqStructSweep(pAux, 1, 1, 0)
 			Gia_ManStop(pAux)
 
 			Gia_AigerWrite(pTemp, pFileName2, 0, 0, 0)
 			Abc_Print(1, "Reduced original network was written into file \"%s\".\n", pFileName2)
-			Gia_ManPrintStatsShort(pTemp)
+			giapkg.Gia_ManPrintStatsShort(pTemp)
 			Gia_ManStop(pTemp)
 		}
 	}
@@ -35700,31 +35768,31 @@ func Abc_CommandAbc9Srm2(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	pFileName2 = argv[globalUtilOptind+1]
 	// create file name
 	pFileName = fmt.Sprintf("gsrm.aig")
-	pTemp = Gia_ManDup(abcFrameGia(pAbc))
+	pTemp = giapkg.Gia_ManDup(abcFrameGia(pAbc))
 	// copy equivalences
-	pTemp.pReprs = ABC_ALLOC(Gia_Rpr_t, Gia_ManObjNum(pTemp))
-	memcpy(pTemp.pReprs, abcFrameGia(pAbc).pReprs, sizeof(Gia_Rpr_t)*Gia_ManObjNum(pTemp))
+	pTemp.pReprs = ABC_ALLOC(giapkg.Gia_Rpr_t, Gia_ManObjNum(pTemp))
+	memcpy(pTemp.pReprs, abcFrameGia(pAbc).pReprs, sizeof(giapkg.Gia_Rpr_t)*Gia_ManObjNum(pTemp))
 	pTemp.pNexts = ABC_ALLOC(int, Gia_ManObjNum(pTemp))
 	memcpy(pTemp.pNexts, abcFrameGia(pAbc).pNexts, sizeof(int)*Gia_ManObjNum(pTemp))
 	//Gia_ManPrintStats( pTemp, 0 );
 	// filter the classes
-	if !Gia_ManFilterEquivsForSpeculation(pTemp, pFileName1, pFileName2, fLatchA, fLatchB) {
+	if giapkg.Gia_ManFilterEquivsForSpeculation(pTemp, pFileName1, pFileName2, fLatchA, fLatchB) == 0 {
 		Gia_ManStop(pTemp)
 		Abc_Print(-1, "Filtering equivalences has failed.\n")
 		return 1
 	}
 	//Gia_ManPrintStats( pTemp, 0 );
 	pAux = pTemp
-	pTemp = Gia_ManSpecReduce(pAux, 0, 0, 1, 0, 0)
+	pTemp = giapkg.Gia_ManSpecReduce(pAux, 0, 0, 1, 0, 0)
 	Gia_ManStop(pAux)
 	if pTemp != nil {
 		pAux = pTemp
-		pTemp = Gia_ManSeqStructSweep(pAux, 1, 1, 0)
+		pTemp = giapkg.Gia_ManSeqStructSweep(pAux, 1, 1, 0)
 		Gia_ManStop(pAux)
 
 		Gia_AigerWrite(pTemp, pFileName, 0, 0, 0)
 		Abc_Print(1, "Speculatively reduced model was written into file \"%s\".\n", pFileName)
-		Gia_ManPrintStatsShort(pTemp)
+		giapkg.Gia_ManPrintStatsShort(pTemp)
 		Gia_ManStop(pTemp)
 	}
 	return 0
@@ -35792,14 +35860,14 @@ func Abc_CommandAbc9Filter(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 1
 	}
 	// filter using one of the choices
-	if fFlopsOnly ^ fFlopsWith {
-		Gia_ManFilterEquivsUsingLatches(abcFrameGia(pAbc), fFlopsOnly, fFlopsWith, fUseRiDrivers)
+	if fFlopsOnly^fFlopsWith != 0 {
+		giapkg.Gia_ManFilterEquivsUsingLatches(abcFrameGia(pAbc), fFlopsOnly, fFlopsWith, fUseRiDrivers)
 	}
 	// get the input file name
 	if argc == globalUtilOptind+2 {
 		pFileName1 = argv[globalUtilOptind]
 		pFileName2 = argv[globalUtilOptind+1]
-		if !Gia_ManFilterEquivsUsingParts(abcFrameGia(pAbc), pFileName1, pFileName2) {
+		if giapkg.Gia_ManFilterEquivsUsingParts(abcFrameGia(pAbc), pFileName1, pFileName2) == 0 {
 			Abc_Print(-1, "Filtering equivalences using PartA and PartB has failed.\n")
 			return 1
 		}
@@ -35859,13 +35927,13 @@ func Abc_CommandAbc9Reduce(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 1
 	}
 	if fUseAll != 0 {
-		pTemp = Gia_ManEquivReduce(abcFrameGia(pAbc), fUseAll, fDualOut, 0, fVerbose)
+		pTemp = giapkg.Gia_ManEquivReduce(abcFrameGia(pAbc), fUseAll, fDualOut, 0, fVerbose)
 		pTemp2 = pTemp
-		pTemp = Gia_ManSeqStructSweep(pTemp2, 1, 1, 0)
+		pTemp = giapkg.Gia_ManSeqStructSweep(pTemp2, 1, 1, 0)
 		Gia_ManStop(pTemp2)
 
 	} else {
-		pTemp = Gia_ManEquivReduceAndRemap(abcFrameGia(pAbc), 1, fDualOut)
+		pTemp = giapkg.Gia_ManEquivReduceAndRemap(abcFrameGia(pAbc), 1, fDualOut)
 	}
 	Abc_FrameUpdateGia(pAbc, pTemp)
 	return 0
@@ -35923,7 +35991,7 @@ func Abc_CommandAbc9EquivMark(pAbc *Abc_Frame_t, argc int32, argv []string) int3
 	// get the input file name
 	pFileName = argv[globalUtilOptind]
 	// mark equivalences
-	Gia_ManEquivMark(abcFrameGia(pAbc), pFileName, fSkipSome, fVerbose)
+	giapkg.Gia_ManEquivMark(abcFrameGia(pAbc), pFileName, fSkipSome, fVerbose)
 	return 0
 
 usage:
@@ -35976,7 +36044,7 @@ func Abc_CommandAbc9EquivFilter(pAbc *Abc_Frame_t, argc int32, argv []string) in
 		Abc_Print(-1, "Abc_CommandAbc9EquivFilter(): There is no AIG.\n")
 		return 1
 	}
-	Gia_ManEquivFilter(abcFrameGia(pAbc), abcFrameResource[*Vec_Int_t](pAbc, "vAbcObjIds"), fVerbose)
+	giapkg.Gia_ManEquivFilter(abcFrameGia(pAbc), abcFrameResource[*Vec_Int_t](pAbc, "vAbcObjIds"), fVerbose)
 	return 0
 
 usage:
@@ -36002,15 +36070,15 @@ usage:
 **********************************************************************
 */
 func Abc_CommandAbc9Cec(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
-	var ParsCec Cec_ParCec_t
-	var pPars *Cec_ParCec_t = &ParsCec
+	var ParsCec proof_cec.Cec_ParCec_t
+	var pPars *proof_cec.Cec_ParCec_t = &ParsCec
 	var pFile *os.File
 	var err error
 	var pGias [2]*Gia_Man_t = [2]*Gia_Man_t{nil, nil}
 	var pMiter *Gia_Man_t
 	var pArgvNew *string
 	var c, nArgcNew, fUseNew, fMiter, fDualOutput, fDumpMiter int32
-	Cec_ManCecSetDefaultParams(pPars)
+	proof_cec.Cec_ManCecSetDefaultParams(pPars)
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "CTnmdasxvwh"); c != -1; c = Extra_UtilGetopt(argc, argv, "CTnmdasxvwh") {
 		switch c {
@@ -36019,9 +36087,9 @@ func Abc_CommandAbc9Cec(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-C\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nBTLimit = abcAtoi(argv[globalUtilOptind])
+			pPars.NBTLimit = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nBTLimit < 0 {
+			if pPars.NBTLimit < 0 {
 				goto usage
 			}
 			break
@@ -36037,7 +36105,7 @@ func Abc_CommandAbc9Cec(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			}
 			break
 		case 'n':
-			pPars.fNaive ^= 1
+			pPars.FNaive ^= 1
 			break
 		case 'm':
 			fMiter ^= 1
@@ -36049,16 +36117,16 @@ func Abc_CommandAbc9Cec(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			fDumpMiter ^= 1
 			break
 		case 's':
-			pPars.fSilent ^= 1
+			pPars.FSilent ^= 1
 			break
 		case 'x':
 			fUseNew ^= 1
 			break
 		case 'v':
-			pPars.fVerbose ^= 1
+			pPars.FVerbose ^= 1
 			break
 		case 'w':
-			pPars.fVeryVerbose ^= 1
+			pPars.FVeryVerbose ^= 1
 			break
 		case 'h':
 			goto usage
@@ -36074,30 +36142,30 @@ func Abc_CommandAbc9Cec(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			return 1
 		}
 		if fDualOutput != 0 {
-			if Gia_ManPoNum(abcFrameGia(pAbc)) & 1 {
+			if Gia_ManPoNum(abcFrameGia(pAbc))&1 != 0 {
 				Abc_Print(-1, "The dual-output miter should have an even number of outputs.\n")
 				return 1
 			}
-			if !pPars.fSilent {
+			if pPars.FSilent == 0 {
 				Abc_Print(1, "Assuming the current network is a double-output miter.\n")
 			}
-			abcFrameSetStatus(pAbc, Cec_ManVerify(abcFrameGia(pAbc), pPars))
+			abcFrameSetStatus(pAbc, proof_cec.Cec_ManVerify(abcFrameGia(pAbc), pPars))
 
 		} else {
 			var clk abctime = Abc_Clock()
 			var pObj *Gia_Obj_t
 			var i int32
-			if !pPars.fSilent {
+			if pPars.FSilent == 0 {
 				Abc_Print(1, "Assuming the current network is a single-output miter.\n")
 			}
 			// handle the case when the output is disproved by an all-0 primary input pattern
 			abcFrameGia(pAbc).ClearCombinationalCounterexample()
-			Gia_ManSetPhase(abcFrameGia(pAbc))
+			giapkg.Gia_ManSetPhase(abcFrameGia(pAbc))
 			for i = 0; i < Gia_ManCoNum(abcFrameGia(pAbc)); i++ {
 				pObj = Gia_ManCo(abcFrameGia(pAbc), i)
 				if pObj.fPhase {
-					abcFrameGia(pAbc).pCexComb = Abc_CexAlloc(0, Gia_ManCiNum(abcFrameGia(pAbc)), 1)
-					if !pPars.fSilent {
+					abcFrameGia(pAbc).pCexComb = util.Abc_CexAlloc(0, Gia_ManCiNum(abcFrameGia(pAbc)), 1)
+					if pPars.FSilent == 0 {
 						Abc_Print(1, "Networks are NOT EQUIVALENT. Output %d trivially differs (different phase).  ", i)
 						Abc_PrintTime(1, "Time", Abc_Clock()-clk)
 					}
@@ -36106,8 +36174,8 @@ func Abc_CommandAbc9Cec(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				}
 			}
 			if abcFrameGia(pAbc).pCexComb == nil {
-				var pTemp *Gia_Man_t = Gia_ManDemiterToDual(abcFrameGia(pAbc))
-				abcFrameSetStatus(pAbc, Cec_ManVerify(pTemp, pPars))
+				var pTemp *Gia_Man_t = giapkg.Gia_ManDemiterToDual(abcFrameGia(pAbc))
+				abcFrameSetStatus(pAbc, proof_cec.Cec_ManVerify(pTemp, pPars))
 				abcFrameGia(pAbc).pCexComb, pTemp.pCexComb = pTemp.pCexComb, abcFrameGia(pAbc).pCexComb
 				Gia_ManStop(pTemp)
 			}
@@ -36183,20 +36251,20 @@ func Abc_CommandAbc9Cec(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		}
 	}
 	// compute the miter
-	pMiter = Gia_ManMiter(pGias[0], pGias[1], 0, !fUseNew, 0, 0, pPars.fVerbose)
+	pMiter = giapkg.Gia_ManMiter(pGias[0], pGias[1], 0, (fUseNew == 0), 0, 0, pPars.FVerbose)
 	if pMiter != nil {
 		if fDumpMiter != 0 {
 			Abc_Print(0, "The verification miter is written into file \"%s\".\n", "cec_miter.aig")
 			Gia_AigerWrite(pMiter, "cec_miter.aig", 0, 0, 0)
 		}
 		if pGias[0].vSimsPi {
-			pMiter.vSimsPi = Vec_WrdDup(pGias[0].vSimsPi)
+			pMiter.vSimsPi = giapkg.Vec_WrdDup(pGias[0].vSimsPi)
 			pMiter.nSimWords = pGias[0].nSimWords
 		}
 		if fUseNew != 0 {
 			var clk abctime = Abc_Clock()
 
-			var pNew *Gia_Man_t = Cec4_ManSimulateTest3(pMiter, pPars.nBTLimit, pPars.fVerbose)
+			var pNew *Gia_Man_t = proof_cec.Cec4_ManSimulateTest3(pMiter, pPars.NBTLimit, pPars.FVerbose)
 			if Gia_ManAndNum(pNew) == 0 {
 				Abc_Print(1, "Networks are equivalent.  ")
 			} else {
@@ -36206,7 +36274,7 @@ func Abc_CommandAbc9Cec(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			Gia_ManStop(pNew)
 
 		} else {
-			abcFrameSetStatus(pAbc, Cec_ManVerify(pMiter, pPars))
+			abcFrameSetStatus(pAbc, proof_cec.Cec_ManVerify(pMiter, pPars))
 			Abc_FrameReplaceCex(pAbc, &pGias[0].pCexComb)
 		}
 		Gia_ManStop(pMiter)
@@ -36220,16 +36288,16 @@ func Abc_CommandAbc9Cec(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 usage:
 	Abc_Print(-2, "usage: &cec [-CT num] [-nmdasxvwh]\n")
 	Abc_Print(-2, "\t         new combinational equivalence checker\n")
-	Abc_Print(-2, "\t-C num : the max number of conflicts at a node [default = %d]\n", pPars.nBTLimit)
+	Abc_Print(-2, "\t-C num : the max number of conflicts at a node [default = %d]\n", pPars.NBTLimit)
 	Abc_Print(-2, "\t-T num : approximate runtime limit in seconds [default = %d]\n", pPars.TimeLimit)
-	Abc_Print(-2, "\t-n     : toggle using naive SAT-based checking [default = %s]\n", abcSelect(pPars.fNaive, "yes", "no"))
+	Abc_Print(-2, "\t-n     : toggle using naive SAT-based checking [default = %s]\n", abcSelect(pPars.FNaive, "yes", "no"))
 	Abc_Print(-2, "\t-m     : toggle miter vs. two circuits [default = %s]\n", abcSelect(fMiter, "miter", "two circuits"))
 	Abc_Print(-2, "\t-d     : toggle using dual output miter [default = %s]\n", abcSelect(fDualOutput, "yes", "no"))
 	Abc_Print(-2, "\t-a     : toggle writing dual-output miter [default = %s]\n", abcSelect(fDumpMiter, "yes", "no"))
-	Abc_Print(-2, "\t-s     : toggle silent operation [default = %s]\n", abcSelect(pPars.fSilent, "yes", "no"))
+	Abc_Print(-2, "\t-s     : toggle silent operation [default = %s]\n", abcSelect(pPars.FSilent, "yes", "no"))
 	Abc_Print(-2, "\t-x     : toggle using new solver [default = %s]\n", abcSelect(fUseNew, "yes", "no"))
-	Abc_Print(-2, "\t-v     : toggle verbose output [default = %s]\n", abcSelect(pPars.fVerbose, "yes", "no"))
-	Abc_Print(-2, "\t-w     : toggle printing SAT solver statistics [default = %s]\n", abcSelect(pPars.fVeryVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-v     : toggle verbose output [default = %s]\n", abcSelect(pPars.FVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-w     : toggle printing SAT solver statistics [default = %s]\n", abcSelect(pPars.FVeryVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h     : print the command usage\n")
 	return 1
 }
@@ -36297,10 +36365,10 @@ func Abc_CommandAbc9Verify(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	}
 	if argc == globalUtilOptind+1 {
 		pFileSpec = argv[globalUtilOptind]
-		Extra_FileNameCorrectPath(pFileSpec)
+		misc_extra.Extra_FileNameCorrectPath(pFileSpec)
 		fmt.Printf("Taking spec from file \"%s\".\n", pFileSpec)
 	}
-	Gia_ManVerifyWithBoxes(abcFrameGia(pAbc), nBTLimit, nTimeLim, fSeq, fDumpFiles, fVerbose, pFileSpec)
+	giapkg.Gia_ManVerifyWithBoxes(abcFrameGia(pAbc), nBTLimit, nTimeLim, fSeq, fDumpFiles, fVerbose, pFileSpec)
 	return 0
 
 usage:
@@ -36387,14 +36455,14 @@ func Abc_CommandAbc9Sweep(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Sweep(): There is no AIG.\n")
 		return 1
 	}
-	if Gia_ManBoxNum(abcFrameGia(pAbc)) && abcFrameGia(pAbc).pAigExtra == nil {
+	if (giapkg.Gia_ManBoxNum(abcFrameGia(pAbc)) != 0) && abcFrameGia(pAbc).pAigExtra == nil {
 		fmt.Printf("Timing manager is given but there is no GIA of boxes.\n")
 		return 0
 	}
-	if Gia_ManBoxNum(abcFrameGia(pAbc)) {
-		pTemp = Gia_ManSweepWithBoxes(abcFrameGia(pAbc), pPars, nil, 0, 0, pPars.fVerbose, 0)
+	if giapkg.Gia_ManBoxNum(abcFrameGia(pAbc)) != 0 {
+		pTemp = giapkg.Gia_ManSweepWithBoxes(abcFrameGia(pAbc), pPars, nil, 0, 0, pPars.fVerbose, 0)
 	} else {
-		pTemp = Gia_ManFraigSweepSimple(abcFrameGia(pAbc), pPars)
+		pTemp = giapkg.Gia_ManFraigSweepSimple(abcFrameGia(pAbc), pPars)
 	}
 	Abc_FrameUpdateGia(pAbc, pTemp)
 	return 0
@@ -36405,8 +36473,8 @@ usage:
 	Abc_Print(-2, "\t-W num : the max number of simulation words [default = %d]\n", pPars.nWords)
 	Abc_Print(-2, "\t-C num : the max number of conflicts at a node [default = %d]\n", pPars.nBTLimit)
 	Abc_Print(-2, "\t-S num : the max number of SAT variables [default = %d]\n", pPars.nSatVarMax)
-	Abc_Print(-2, "\t-t     : toggle simulation of the TFO classes [default = %s]\n", abcSelect(fSimulateTfo, "yes", "no"))
-	Abc_Print(-2, "\t-v     : toggle verbose printout [default = %s]\n", abcSelect(fVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-t     : toggle simulation of the TFO classes [default = %s]\n", abcSelect(pPars.fSimulateTfo, "yes", "no"))
+	Abc_Print(-2, "\t-v     : toggle verbose printout [default = %s]\n", abcSelect(pPars.fVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h     : print the command usage\n")
 	return 1
 }
@@ -36459,7 +36527,7 @@ func Abc_CommandAbc9Force(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Force(): There is no AIG.\n")
 		return 1
 	}
-	For_ManExperiment(abcFrameGia(pAbc), nIters, fClustered, fVerbose)
+	giapkg.For_ManExperiment(abcFrameGia(pAbc), nIters, fClustered, fVerbose)
 	return 0
 
 usage:
@@ -36487,18 +36555,18 @@ usage:
 **********************************************************************
 */
 func Abc_CommandAbc9Embed(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
-	var Pars Emb_Par_t
-	var pPars *Emb_Par_t = &Pars
+	var Pars giapkg.Emb_Par_t
+	var pPars *giapkg.Emb_Par_t = &Pars
 	var c int32
-	pPars.nDims = 30
-	pPars.nIters = 10
-	pPars.nSols = 2
-	pPars.fRefine = 0
-	pPars.fCluster = 0
-	pPars.fDump = 0
-	pPars.fDumpLarge = 0
-	pPars.fShowImage = 0
-	pPars.fVerbose = 0
+	pPars.NDims = 30
+	pPars.NIters = 10
+	pPars.NSols = 2
+	pPars.FRefine = 0
+	pPars.FCluster = 0
+	pPars.FDump = 0
+	pPars.FDumpLarge = 0
+	pPars.FShowImage = 0
+	pPars.FVerbose = 0
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "DIrcdlsvh"); c != -1; c = Extra_UtilGetopt(argc, argv, "DIrcdlsvh") {
 		switch c {
@@ -36507,9 +36575,9 @@ func Abc_CommandAbc9Embed(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-D\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nDims = abcAtoi(argv[globalUtilOptind])
+			pPars.NDims = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nDims < 0 {
+			if pPars.NDims < 0 {
 				goto usage
 			}
 			break
@@ -36518,29 +36586,29 @@ func Abc_CommandAbc9Embed(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-D\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nIters = abcAtoi(argv[globalUtilOptind])
+			pPars.NIters = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nIters < 0 {
+			if pPars.NIters < 0 {
 				goto usage
 			}
 			break
 		case 'r':
-			pPars.fRefine ^= 1
+			pPars.FRefine ^= 1
 			break
 		case 'c':
-			pPars.fCluster ^= 1
+			pPars.FCluster ^= 1
 			break
 		case 'd':
-			pPars.fDump ^= 1
+			pPars.FDump ^= 1
 			break
 		case 'l':
-			pPars.fDumpLarge ^= 1
+			pPars.FDumpLarge ^= 1
 			break
 		case 's':
-			pPars.fShowImage ^= 1
+			pPars.FShowImage ^= 1
 			break
 		case 'v':
-			pPars.fVerbose ^= 1
+			pPars.FVerbose ^= 1
 			break
 		case 'h':
 			goto usage
@@ -36552,7 +36620,7 @@ func Abc_CommandAbc9Embed(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Embed(): There is no AIG.\n")
 		return 1
 	}
-	Gia_ManSolveProblem(abcFrameGia(pAbc), pPars)
+	giapkg.Gia_ManSolveProblem(abcFrameGia(pAbc), pPars)
 	return 0
 
 usage:
@@ -36560,14 +36628,14 @@ usage:
 	Abc_Print(-2, "\t         fast placement based on high-dimensional embedding from\n")
 	Abc_Print(-2, "\t         D. Harel and Y. Koren, \"Graph drawing by high-dimensional\n")
 	Abc_Print(-2, "\t         embedding\", J. Graph Algs & Apps, 2004, Vol 8(2), pp. 195-217\n")
-	Abc_Print(-2, "\t-D num : the number of dimensions for embedding [default = %d]\n", pPars.nDims)
-	Abc_Print(-2, "\t-I num : the number of refinement iterations [default = %d]\n", pPars.nIters)
-	Abc_Print(-2, "\t-r     : toggle the use of refinement [default = %s]\n", abcSelect(pPars.fRefine, "yes", "no"))
-	Abc_Print(-2, "\t-c     : toggle clustered representation [default = %s]\n", abcSelect(pPars.fCluster, "yes", "no"))
-	Abc_Print(-2, "\t-d     : toggle dumping placement into a Gnuplot file [default = %s]\n", abcSelect(pPars.fDump, "yes", "no"))
-	Abc_Print(-2, "\t-l     : toggle dumping Gnuplot for large placement [default = %s]\n", abcSelect(pPars.fDumpLarge, "yes", "no"))
-	Abc_Print(-2, "\t-s     : toggle showing image if Gnuplot is installed [default = %s]\n", abcSelect(pPars.fShowImage, "yes", "no"))
-	Abc_Print(-2, "\t-v     : toggle verbose output [default = %s]\n", abcSelect(pPars.fVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-D num : the number of dimensions for embedding [default = %d]\n", pPars.NDims)
+	Abc_Print(-2, "\t-I num : the number of refinement iterations [default = %d]\n", pPars.NIters)
+	Abc_Print(-2, "\t-r     : toggle the use of refinement [default = %s]\n", abcSelect(pPars.FRefine, "yes", "no"))
+	Abc_Print(-2, "\t-c     : toggle clustered representation [default = %s]\n", abcSelect(pPars.FCluster, "yes", "no"))
+	Abc_Print(-2, "\t-d     : toggle dumping placement into a Gnuplot file [default = %s]\n", abcSelect(pPars.FDump, "yes", "no"))
+	Abc_Print(-2, "\t-l     : toggle dumping Gnuplot for large placement [default = %s]\n", abcSelect(pPars.FDumpLarge, "yes", "no"))
+	Abc_Print(-2, "\t-s     : toggle showing image if Gnuplot is installed [default = %s]\n", abcSelect(pPars.FShowImage, "yes", "no"))
+	Abc_Print(-2, "\t-v     : toggle verbose output [default = %s]\n", abcSelect(pPars.FVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h     : print the command usage\n")
 	return 1
 }
@@ -36653,9 +36721,9 @@ func Abc_CommandAbc9Sopb(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 1
 	}
 	if (nLevelMax != 0) || (nTimeWindow != 0) {
-		pTemp = Gia_ManPerformSopBalanceWin(abcFrameGia(pAbc), nLevelMax, nTimeWindow, nCutNum, nRelaxRatio, fVerbose)
+		pTemp = giapkg.Gia_ManPerformSopBalanceWin(abcFrameGia(pAbc), nLevelMax, nTimeWindow, nCutNum, nRelaxRatio, fVerbose)
 	} else {
-		pTemp = Gia_ManPerformSopBalance(abcFrameGia(pAbc), nCutNum, nRelaxRatio, fVerbose)
+		pTemp = giapkg.Gia_ManPerformSopBalance(abcFrameGia(pAbc), nCutNum, nRelaxRatio, fVerbose)
 	}
 	Abc_FrameUpdateGia(pAbc, pTemp)
 	return 0
@@ -36764,21 +36832,21 @@ func Abc_CommandAbc9Dsdb(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Dsdb(): There is no AIG.\n")
 		return 1
 	}
-	if nLutSize > DAU_MAX_VAR {
-		fmt.Printf("Abc_CommandAbc9Dsdb(): Size of the required DSD manager (%d) exceeds the precompiled limit (%d) (change parameter DAU_MAX_VAR).\n", nLutSize, DAU_MAX_VAR)
+	if nLutSize > opt_dau.DAU_MAX_VAR {
+		fmt.Printf("Abc_CommandAbc9Dsdb(): Size of the required DSD manager (%d) exceeds the precompiled limit (%d) (change parameter DAU_MAX_VAR).\n", nLutSize, opt_dau.DAU_MAX_VAR)
 		return 0
 	}
-	if value := Abc_FrameReadManDsd2(); value != nil {
-		man, _ := value.(*If_DsdMan_t)
-		if nLutSize > If_DsdManVarNum(man) {
+	if value := base_main.Abc_FrameReadManDsd2(); value != nil {
+		man, _ := value.(*ifpkg.If_DsdMan_t)
+		if nLutSize > ifpkg.If_DsdManVarNum(man) {
 			fmt.Printf("Abc_CommandAbc9Dsdb(): Incompatible size of the DSD manager (run \"dsd_free -b\").\n")
 			return 0
 		}
 	}
 	if (nLevelMax != 0) || (nTimeWindow != 0) {
-		pTemp = Gia_ManPerformDsdBalanceWin(abcFrameGia(pAbc), nLevelMax, nTimeWindow, nLutSize, nCutNum, nRelaxRatio, fVerbose)
+		pTemp = giapkg.Gia_ManPerformDsdBalanceWin(abcFrameGia(pAbc), nLevelMax, nTimeWindow, nLutSize, nCutNum, nRelaxRatio, fVerbose)
 	} else {
-		pTemp = Gia_ManPerformDsdBalance(abcFrameGia(pAbc), nLutSize, nCutNum, nRelaxRatio, fVerbose)
+		pTemp = giapkg.Gia_ManPerformDsdBalance(abcFrameGia(pAbc), nLutSize, nCutNum, nRelaxRatio, fVerbose)
 	}
 	Abc_FrameUpdateGia(pAbc, pTemp)
 	return 0
@@ -36860,7 +36928,7 @@ func Abc_CommandAbc9Flow(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Flow(): There is no AIG.\n")
 		return 1
 	}
-	Gia_ManPerformFlow(Gia_ManHasMapping(abcFrameGia(pAbc)), Gia_ManAndNum(abcFrameGia(pAbc)), Gia_ManLevelNum(abcFrameGia(pAbc)), nLutSize, nCutNum, fMinAve, fUseMfs, fVerbose)
+	giapkg.Gia_ManPerformFlow(Gia_ManHasMapping(abcFrameGia(pAbc)), Gia_ManAndNum(abcFrameGia(pAbc)), giapkg.Gia_ManLevelNum(abcFrameGia(pAbc)), nLutSize, nCutNum, fMinAve, fUseMfs, fVerbose)
 	return 0
 
 usage:
@@ -36943,7 +37011,7 @@ func Abc_CommandAbc9Flow2(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Flow2(): There is no AIG.\n")
 		return 1
 	}
-	Gia_ManPerformFlow2(Gia_ManHasMapping(abcFrameGia(pAbc)), Gia_ManAndNum(abcFrameGia(pAbc)), Gia_ManLevelNum(abcFrameGia(pAbc)), nLutSize, nCutNum, fBalance, fMinAve, fUseMfs, fVerbose)
+	giapkg.Gia_ManPerformFlow2(Gia_ManHasMapping(abcFrameGia(pAbc)), Gia_ManAndNum(abcFrameGia(pAbc)), giapkg.Gia_ManLevelNum(abcFrameGia(pAbc)), nLutSize, nCutNum, fBalance, fMinAve, fUseMfs, fVerbose)
 	return 0
 
 usage:
@@ -37031,11 +37099,11 @@ func Abc_CommandAbc9Flow3(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Flow3(): There is no AIG.\n")
 		return 1
 	}
-	if (fUseLutLib != 0) && Abc_FrameReadLibLut() == nil {
+	if (fUseLutLib != 0) && base_main.Abc_FrameReadLibLut() == nil {
 		Abc_Print(-1, "Abc_CommandAbc9Flow3(): Please enter LUT library using 'read_lut'.\n")
 		return 1
 	}
-	Gia_ManPerformFlow3(nLutSize, nCutNum, fBalance, fMinAve, fUseMfs, fUseLutLib, fVerbose)
+	giapkg.Gia_ManPerformFlow3(nLutSize, nCutNum, fBalance, fMinAve, fUseMfs, fUseLutLib, fVerbose)
 	return 0
 
 usage:
@@ -37075,12 +37143,12 @@ func Abc_CommandAbc9If(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	var pPars *If_Par_t = &Pars
 	var c int32
 	// set defaults
-	Gia_ManSetIfParsDefault(pPars)
+	ifpkg.Gia_ManSetIfParsDefault(pPars)
 	if abcFrameResource[any](pAbc, "pLibLut") == nil {
 		Abc_Print(-1, "LUT library is not given. Using default LUT library.\n")
-		abcFrameSetResource(pAbc, "pLibLut", If_LibLutSetSimple(6))
+		abcFrameSetResource(pAbc, "pLibLut", ifpkg.If_LibLutSetSimple(6))
 	}
-	pPars.pLutLib, _ = abcFrameResource[any](pAbc, "pLibLut").(*If_LibLut_t)
+	pPars.PLutLib, _ = abcFrameResource[any](pAbc, "pLibLut").(*ifpkg.If_LibLut_t)
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "KCFAGRDEWSTXYqalepmrsdbgxyofuijkztncvwh"); c != -1; c = Extra_UtilGetopt(argc, argv, "KCFAGRDEWSTXYqalepmrsdbgxyofuijkztncvwh") {
 		switch c {
@@ -37089,22 +37157,22 @@ func Abc_CommandAbc9If(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-K\" should be followed by a positive integer.\n")
 				goto usage
 			}
-			pPars.nLutSize = abcAtoi(argv[globalUtilOptind])
+			pPars.NLutSize = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nLutSize < 0 {
+			if pPars.NLutSize < 0 {
 				goto usage
 			}
 			// if the LUT size is specified, disable library
-			pPars.pLutLib = nil
+			pPars.PLutLib = nil
 			break
 		case 'C':
 			if globalUtilOptind >= argc {
 				Abc_Print(-1, "Command line switch \"-C\" should be followed by a positive integer.\n")
 				goto usage
 			}
-			pPars.nCutsMax = abcAtoi(argv[globalUtilOptind])
+			pPars.NCutsMax = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nCutsMax < 0 {
+			if pPars.NCutsMax < 0 {
 				goto usage
 			}
 			break
@@ -37113,9 +37181,9 @@ func Abc_CommandAbc9If(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-F\" should be followed by a positive integer.\n")
 				goto usage
 			}
-			pPars.nFlowIters = abcAtoi(argv[globalUtilOptind])
+			pPars.NFlowIters = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nFlowIters < 0 {
+			if pPars.NFlowIters < 0 {
 				goto usage
 			}
 			break
@@ -37124,9 +37192,9 @@ func Abc_CommandAbc9If(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-A\" should be followed by a positive integer.\n")
 				goto usage
 			}
-			pPars.nAreaIters = abcAtoi(argv[globalUtilOptind])
+			pPars.NAreaIters = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nAreaIters < 0 {
+			if pPars.NAreaIters < 0 {
 				goto usage
 			}
 			break
@@ -37135,9 +37203,9 @@ func Abc_CommandAbc9If(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-G\" should be followed by a positive integer no less than 3.\n")
 				goto usage
 			}
-			pPars.nGateSize = abcAtoi(argv[globalUtilOptind])
+			pPars.NGateSize = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nGateSize < 2 {
+			if pPars.NGateSize < 2 {
 				goto usage
 			}
 			break
@@ -37146,9 +37214,9 @@ func Abc_CommandAbc9If(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(1, "Command line switch \"-R\" should be followed by a floating point number.\n")
 				return 0
 			}
-			pPars.nRelaxRatio = abcAtoi(argv[globalUtilOptind])
+			pPars.NRelaxRatio = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nRelaxRatio < 0 {
+			if pPars.NRelaxRatio < 0 {
 				goto usage
 			}
 			break
@@ -37157,9 +37225,9 @@ func Abc_CommandAbc9If(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-T\" should be followed by a positive integer 0,1,or 2.\n")
 				goto usage
 			}
-			pPars.nStructType = abcAtoi(argv[globalUtilOptind])
+			pPars.NStructType = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nStructType < 0 || pPars.nStructType > 2 {
+			if pPars.NStructType < 0 || pPars.NStructType > 2 {
 				goto usage
 			}
 			break
@@ -37168,9 +37236,9 @@ func Abc_CommandAbc9If(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-X\" should be followed by a positive integer 0,1,or 2.\n")
 				goto usage
 			}
-			pPars.nAndDelay = abcAtoi(argv[globalUtilOptind])
+			pPars.NAndDelay = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nAndArea < 0 {
+			if pPars.NAndArea < 0 {
 				goto usage
 			}
 			break
@@ -37179,9 +37247,9 @@ func Abc_CommandAbc9If(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-Y\" should be followed by a positive integer 0,1,or 2.\n")
 				goto usage
 			}
-			pPars.nAndArea = abcAtoi(argv[globalUtilOptind])
+			pPars.NAndArea = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nAndDelay < 0 {
+			if pPars.NAndDelay < 0 {
 				goto usage
 			}
 			break
@@ -37223,93 +37291,93 @@ func Abc_CommandAbc9If(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-S\" should be followed by string.\n")
 				goto usage
 			}
-			pPars.pLutStruct = argv[globalUtilOptind]
+			pPars.PLutStruct = argv[globalUtilOptind]
 			globalUtilOptind++
-			if len(pPars.pLutStruct) != 2 && len(pPars.pLutStruct) != 3 {
+			if len(pPars.PLutStruct) != 2 && len(pPars.PLutStruct) != 3 {
 				Abc_Print(-1, "Command line switch \"-S\" should be followed by a 2- or 3-char string (e.g. \"44\" or \"555\").\n")
 				goto usage
 			}
 			break
 		case 'q':
-			pPars.fPreprocess ^= 1
+			pPars.FPreprocess ^= 1
 			break
 		case 'a':
-			pPars.fArea ^= 1
+			pPars.FArea ^= 1
 			break
 		case 'r':
-			pPars.fExpRed ^= 1
+			pPars.FExpRed ^= 1
 			break
 		case 'l':
-			pPars.fLut6Filter ^= 1
+			pPars.FLut6Filter ^= 1
 			break
 		case 'e':
-			pPars.fEdge ^= 1
+			pPars.FEdge ^= 1
 			break
 		case 'p':
-			pPars.fPower ^= 1
+			pPars.FPower ^= 1
 			break
 		case 'm':
-			pPars.fCutMin ^= 1
+			pPars.FCutMin ^= 1
 			break
 		case 's':
-			pPars.fDelayOptLut ^= 1
+			pPars.FDelayOptLut ^= 1
 			break
 		case 'd':
-			pPars.fUse34Spec ^= 1
+			pPars.FUse34Spec ^= 1
 			break
 		case 'b':
-			pPars.fUseBat ^= 1
+			pPars.FUseBat ^= 1
 			break
 		case 'g':
-			pPars.fDelayOpt ^= 1
+			pPars.FDelayOpt ^= 1
 			break
 		case 'x':
-			pPars.fDsdBalance ^= 1
+			pPars.FDsdBalance ^= 1
 			break
 		case 'y':
-			pPars.fUserRecLib ^= 1
+			pPars.FUserRecLib ^= 1
 			break
 		case 'o':
-			pPars.fUseBuffs ^= 1
+			pPars.FUseBuffs ^= 1
 			break
 		case 'f':
-			pPars.fEnableCheck75 ^= 1
+			pPars.FEnableCheck75 ^= 1
 			break
 		case 'u':
-			pPars.fEnableCheck75u ^= 1
+			pPars.FEnableCheck75u ^= 1
 			break
 		case 'i':
-			pPars.fUseCofVars ^= 1
+			pPars.FUseCofVars ^= 1
 			break
 			//        case 'j':
 			//            pPars->fEnableCheck07 ^= 1;
 			//            break;
 		case 'j':
-			pPars.fUseAndVars ^= 1
+			pPars.FUseAndVars ^= 1
 			break
 		case 'k':
-			pPars.fUseDsdTune ^= 1
+			pPars.FUseDsdTune ^= 1
 			break
 		case 'z':
-			pPars.fDeriveLuts ^= 1
+			pPars.FDeriveLuts ^= 1
 			break
 		case 't':
-			pPars.fDoAverage ^= 1
+			pPars.FDoAverage ^= 1
 			break
 		case 'n':
-			pPars.fUseDsd ^= 1
+			pPars.FUseDsd ^= 1
 			break
 		case 'c':
-			pPars.fUseTtPerm ^= 1
+			pPars.FUseTtPerm ^= 1
 			break
 		case 'v':
-			pPars.fVerbose ^= 1
+			pPars.FVerbose ^= 1
 			break
 		case 'w':
-			pPars.fVerboseTrace ^= 1
+			pPars.FVerboseTrace ^= 1
 			break
 		case 'h':
-			pPars.fHashMapping ^= 1
+			pPars.FHashMapping ^= 1
 			break
 		default:
 			goto usage
@@ -37317,214 +37385,214 @@ func Abc_CommandAbc9If(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	}
 
 	if abcFrameGia(pAbc) == nil {
-		if !Abc_FrameReadFlag("silentmode") {
+		if !base_main.Abc_FrameReadFlag("silentmode") {
 			Abc_Print(-1, "Empty GIA network.\n")
 		}
 		return 0
 	}
-	if Gia_ManBufNum(abcFrameGia(pAbc)) {
+	if Gia_ManBufNum(abcFrameGia(pAbc)) != 0 {
 		Abc_Print(-1, "This command does not work with barrier buffers.\n")
 		return 1
 	}
-	if Gia_ManHasMapping(abcFrameGia(pAbc)) {
+	if Gia_ManHasMapping(abcFrameGia(pAbc)) != 0 {
 		Abc_Print(-1, "Current AIG has mapping. Run \"&st\".\n")
 		return 1
 	}
 
-	if pPars.nLutSize == -1 {
-		if pPars.pLutLib == nil {
+	if pPars.NLutSize == -1 {
+		if pPars.PLutLib == nil {
 			Abc_Print(-1, "The LUT library is not given.\n")
 			return 1
 		}
 		// get LUT size from the library
-		pPars.nLutSize = pPars.pLutLib.LutMax
+		pPars.NLutSize = pPars.PLutLib.LutMax
 		// if variable pin delay, force truth table computation
 		//        if ( pPars->pLutLib->fVarPinDelays )
 		//            pPars->fTruth = 1;
 	}
 
-	if pPars.nLutSize < 2 || pPars.nLutSize > IF_MAX_LUTSIZE {
-		Abc_Print(-1, "Incorrect LUT size (%d).\n", pPars.nLutSize)
+	if pPars.NLutSize < 2 || pPars.NLutSize > ifpkg.IF_MAX_LUTSIZE {
+		Abc_Print(-1, "Incorrect LUT size (%d).\n", pPars.NLutSize)
 		return 1
 	}
 
-	if pPars.nCutsMax < 1 || pPars.nCutsMax >= (1<<12) {
+	if pPars.NCutsMax < 1 || pPars.NCutsMax >= (1<<12) {
 		Abc_Print(-1, "Incorrect number of cuts.\n")
 		return 1
 	}
 
 	// enable truth table computation if choices are selected
-	if Gia_ManHasChoices(abcFrameGia(pAbc)) {
+	if giapkg.Gia_ManHasChoices(abcFrameGia(pAbc)) != 0 {
 		//        if ( !Abc_FrameReadFlag("silentmode") )
 		//            Abc_Print( 0, "Performing LUT mapping with choices.\n" );
-		pPars.fExpRed = 0
+		pPars.FExpRed = 0
 	}
 
-	if pPars.fUseBat {
-		if pPars.nLutSize < 4 || pPars.nLutSize > 6 {
+	if pPars.FUseBat != 0 {
+		if pPars.NLutSize < 4 || pPars.NLutSize > 6 {
 			Abc_Print(-1, "This feature only works for {4,5,6}-LUTs.\n")
 			return 1
 		}
-		pPars.fCutMin = 1
+		pPars.FCutMin = 1
 	}
 
-	if pPars.fEnableCheck07+pPars.fUseCofVars+pPars.fUseDsdTune+pPars.fEnableCheck75+pPars.fEnableCheck75u+(pPars.pLutStruct != nil) > 1 {
+	if pPars.FEnableCheck07+pPars.FUseCofVars+pPars.FUseDsdTune+pPars.FEnableCheck75+pPars.FEnableCheck75u+(pPars.PLutStruct != nil) > 1 {
 		Abc_Print(-1, "Only one additional check can be performed at the same time.\n")
 		return 1
 	}
-	if pPars.fEnableCheck07 {
-		if pPars.nLutSize < 6 || pPars.nLutSize > 7 {
+	if pPars.FEnableCheck07 != 0 {
+		if pPars.NLutSize < 6 || pPars.NLutSize > 7 {
 			Abc_Print(-1, "This feature only works for {6,7}-LUTs.\n")
 			return 1
 		}
-		pPars.pFuncCell = If_CutPerformCheck07
-		pPars.fCutMin = 1
+		pPars.PFuncCell = ifpkg.If_CutPerformCheck07
+		pPars.FCutMin = 1
 	}
-	if pPars.fUseCofVars {
-		if !(pPars.nLutSize & 1) {
+	if pPars.FUseCofVars != 0 {
+		if (pPars.NLutSize & 1) == 0 {
 			Abc_Print(-1, "This feature only works for odd-sized LUTs.\n")
 			return 1
 		}
-		pPars.fCutMin = 1
+		pPars.FCutMin = 1
 	}
-	if pPars.fUseAndVars {
-		pPars.fCutMin = 1
+	if pPars.FUseAndVars != 0 {
+		pPars.FCutMin = 1
 	}
-	if pPars.fUseDsdTune {
-		pDsdMan, _ := Abc_FrameReadManDsd().(*If_DsdMan_t)
+	if pPars.FUseDsdTune != 0 {
+		pDsdMan, _ := base_main.Abc_FrameReadManDsd().(*ifpkg.If_DsdMan_t)
 		if pDsdMan == nil {
 			Abc_Print(-1, "DSD manager is not available.\n")
 			return 1
 		}
-		if pPars.nLutSize > If_DsdManVarNum(pDsdMan) {
-			Abc_Print(-1, "LUT size (%d) is more than the number of variables in the DSD manager (%d).\n", pPars.nLutSize, If_DsdManVarNum(pDsdMan))
+		if pPars.NLutSize > ifpkg.If_DsdManVarNum(pDsdMan) {
+			Abc_Print(-1, "LUT size (%d) is more than the number of variables in the DSD manager (%d).\n", pPars.NLutSize, ifpkg.If_DsdManVarNum(pDsdMan))
 			return 1
 		}
-		if pPars.fDeriveLuts && If_DsdManGetCellStr(pDsdMan) == nil {
+		if (pPars.FDeriveLuts != 0) && ifpkg.If_DsdManGetCellStr(pDsdMan) == nil {
 			Abc_Print(-1, "DSD manager is not matched with any particular cell.\n")
 			return 1
 		}
-		pPars.fCutMin = 1
-		pPars.fUseDsd = 1
-		If_DsdManSetNewAsUseless(pDsdMan)
+		pPars.FCutMin = 1
+		pPars.FUseDsd = 1
+		ifpkg.If_DsdManSetNewAsUseless(pDsdMan)
 	}
-	if pPars.fEnableCheck75 || pPars.fEnableCheck75u {
-		if pPars.fEnableCheck75 && pPars.fEnableCheck75u {
+	if (pPars.FEnableCheck75 != 0) || (pPars.FEnableCheck75u != 0) {
+		if (pPars.FEnableCheck75 != 0) && (pPars.FEnableCheck75u != 0) {
 			Abc_Print(-1, "Switches -f and -u are not compatible.\n")
 			return 1
 		}
-		if pPars.nLutSize < 5 || pPars.nLutSize > 8 {
+		if pPars.NLutSize < 5 || pPars.NLutSize > 8 {
 			Abc_Print(-1, "This feature only works for {6,7,8}-LUTs.\n")
 			return 1
 		}
-		pPars.pFuncCell = If_CutPerformCheck75
-		pPars.fCutMin = 1
+		pPars.PFuncCell = ifpkg.If_CutPerformCheck75
+		pPars.FCutMin = 1
 	}
-	if pPars.pLutStruct {
-		if pPars.fDsdBalance {
+	if pPars.PLutStruct {
+		if pPars.FDsdBalance != 0 {
 			Abc_Print(-1, "Incompatible options (-S and -x).\n")
 			return 1
 		}
-		if pPars.nLutSize < 6 || pPars.nLutSize > 16 {
+		if pPars.NLutSize < 6 || pPars.NLutSize > 16 {
 			Abc_Print(-1, "This feature only works for [6;16]-LUTs.\n")
 			return 1
 		}
-		if pPars.fDelayOptLut {
-			pPars.pFuncCell = nil
+		if pPars.FDelayOptLut != 0 {
+			pPars.PFuncCell = nil
 		} else {
-			pPars.pFuncCell = If_CutPerformCheck16
+			pPars.PFuncCell = ifpkg.If_CutPerformCheck16
 		}
-		pPars.fCutMin = 1
+		pPars.FCutMin = 1
 	}
 
-	if pPars.fUse34Spec {
-		pPars.fTruth = 1
-		pPars.fCutMin = 1
-		pPars.nLutSize = 4
+	if pPars.FUse34Spec != 0 {
+		pPars.FTruth = 1
+		pPars.FCutMin = 1
+		pPars.NLutSize = 4
 	}
 
 	// enable truth table computation if cut minimization is selected
-	if pPars.fCutMin || pPars.fDeriveLuts {
-		pPars.fTruth = 1
-		pPars.fExpRed = 0
-		if pPars.pLutStruct == nil && !pPars.fUseDsdTune {
-			pPars.fDeriveLuts = 1
+	if (pPars.FCutMin != 0) || (pPars.FDeriveLuts != 0) {
+		pPars.FTruth = 1
+		pPars.FExpRed = 0
+		if pPars.PLutStruct == nil && (pPars.FUseDsdTune == 0) {
+			pPars.FDeriveLuts = 1
 		}
 	}
 	// modify the subgraph recording
-	if pPars.fUserRecLib {
-		pPars.fTruth = 1
-		pPars.fCutMin = 1
-		pPars.fExpRed = 0
-		pPars.fUsePerm = 1
-		pPars.pLutLib = nil
+	if pPars.FUserRecLib != 0 {
+		pPars.FTruth = 1
+		pPars.FCutMin = 1
+		pPars.FExpRed = 0
+		pPars.FUsePerm = 1
+		pPars.PLutLib = nil
 	}
 	// modify for delay optimization
-	if pPars.fDelayOpt || pPars.fDsdBalance || pPars.fDelayOptLut {
-		pPars.fTruth = 1
-		pPars.fCutMin = 1
-		pPars.fExpRed = 0
-		pPars.fUseDsd = pPars.fDsdBalance || pPars.fDelayOptLut
-		pPars.pLutLib = nil
+	if (pPars.FDelayOpt != 0) || (pPars.FDsdBalance != 0) || (pPars.FDelayOptLut != 0) {
+		pPars.FTruth = 1
+		pPars.FCutMin = 1
+		pPars.FExpRed = 0
+		pPars.FUseDsd = (pPars.FDsdBalance != 0) || (pPars.FDelayOptLut != 0)
+		pPars.PLutLib = nil
 	}
 	// modify for delay optimization
-	if pPars.nGateSize > 0 {
-		pPars.fTruth = 1
-		pPars.fCutMin = 1
-		pPars.fExpRed = 0
-		pPars.fUsePerm = 1
-		pPars.pLutLib = nil
-		pPars.nLutSize = pPars.nGateSize
+	if pPars.NGateSize > 0 {
+		pPars.FTruth = 1
+		pPars.FCutMin = 1
+		pPars.FExpRed = 0
+		pPars.FUsePerm = 1
+		pPars.PLutLib = nil
+		pPars.NLutSize = pPars.NGateSize
 	}
 
-	if pPars.fUseDsd || pPars.fUseTtPerm || pPars.fLut6Filter {
-		pPars.fTruth = 1
-		pPars.fCutMin = 1
-		pPars.fExpRed = 0
+	if (pPars.FUseDsd != 0) || (pPars.FUseTtPerm != 0) || (pPars.FLut6Filter != 0) {
+		pPars.FTruth = 1
+		pPars.FCutMin = 1
+		pPars.FExpRed = 0
 	}
 
-	if pPars.fUseDsd {
+	if pPars.FUseDsd != 0 {
 		var LutSize int32
-		if pPars.pLutStruct && pPars.pLutStruct[2] == 0 {
-			LutSize = pPars.pLutStruct[0] - '0'
+		if pPars.PLutStruct && pPars.PLutStruct[2] == 0 {
+			LutSize = pPars.PLutStruct[0] - '0'
 		} else {
 			LutSize = 0
 		}
-		p, _ := Abc_FrameReadManDsd().(*If_DsdMan_t)
-		if pPars.pLutStruct && pPars.pLutStruct[2] != 0 {
+		p, _ := base_main.Abc_FrameReadManDsd().(*ifpkg.If_DsdMan_t)
+		if pPars.PLutStruct && pPars.PLutStruct[2] != 0 {
 			fmt.Printf("DSD only works for LUT structures XY.\n")
 			return 0
 		}
-		if p != nil && pPars.nLutSize > If_DsdManVarNum(p) {
+		if p != nil && pPars.NLutSize > ifpkg.If_DsdManVarNum(p) {
 			fmt.Printf("DSD manager has incompatible number of variables.\n")
 			return 0
 		}
-		if p != nil && LutSize != If_DsdManLutSize(p) && !pPars.fDsdBalance {
+		if p != nil && LutSize != ifpkg.If_DsdManLutSize(p) && (pPars.FDsdBalance == 0) {
 			fmt.Printf("DSD manager has different LUT size.\n")
 			return 0
 		}
 		if p == nil {
-			if LutSize > DAU_MAX_VAR || pPars.nLutSize > DAU_MAX_VAR {
-				fmt.Printf("Size of required DSD manager (%d) exceeds the precompiled limit (%d) (change parameter DAU_MAX_VAR).\n", LutSize, DAU_MAX_VAR)
+			if LutSize > opt_dau.DAU_MAX_VAR || pPars.NLutSize > opt_dau.DAU_MAX_VAR {
+				fmt.Printf("Size of required DSD manager (%d) exceeds the precompiled limit (%d) (change parameter DAU_MAX_VAR).\n", LutSize, opt_dau.DAU_MAX_VAR)
 				return 0
 			}
-			Abc_FrameSetManDsd(If_DsdManAlloc(pPars.nLutSize, LutSize))
+			base_main.Abc_FrameSetManDsd(ifpkg.If_DsdManAlloc(pPars.NLutSize, LutSize))
 		}
 	}
 
-	if pPars.fUserRecLib {
+	if pPars.FUserRecLib != 0 {
 		if Abc_NtkRecIsRunning3() == 0 {
 			fmt.Printf("LMS manager is not running (use \"rec_start3\").\n")
 			return 0
 		}
-		if Abc_NtkRecInputNum3() != pPars.nLutSize {
-			fmt.Printf("The number of library inputs (%d) different from the K parameters (%d).\n", Abc_NtkRecInputNum3(), pPars.nLutSize)
+		if Abc_NtkRecInputNum3() != pPars.NLutSize {
+			fmt.Printf("The number of library inputs (%d) different from the K parameters (%d).\n", Abc_NtkRecInputNum3(), pPars.NLutSize)
 			return 0
 		}
 	}
 
 	// complain if truth tables are requested but the cut size is too large
-	if pPars.fTruth && pPars.nLutSize > ifpkg.IF_MAX_FUNC_LUTSIZE {
+	if (pPars.FTruth != 0) && pPars.NLutSize > ifpkg.IF_MAX_FUNC_LUTSIZE {
 		Abc_Print(-1, "Truth tables cannot be computed for LUT larger than %d inputs.\n", ifpkg.IF_MAX_FUNC_LUTSIZE)
 		return 1
 	}
@@ -37534,22 +37602,22 @@ func Abc_CommandAbc9If(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	}
 
 	// add wire delay to LUT library delays
-	if pPars.WireDelay > 0 && pPars.pLutLib {
+	if pPars.WireDelay > 0 && (pPars.PLutLib != nil) {
 		var i, k int32
-		for i = 0; i <= pPars.pLutLib.LutMax; i++ {
+		for i = 0; i <= pPars.PLutLib.LutMax; i++ {
 			for k = 0; k <= i; k++ {
-				pPars.pLutLib.pLutDelays[i][k] += pPars.WireDelay
+				pPars.PLutLib.pLutDelays[i][k] += pPars.WireDelay
 			}
 		}
 	}
 	// perform mapping
-	pNew = Gia_ManPerformMapping(abcFrameGia(pAbc), pPars)
+	pNew = ifpkg.Gia_ManPerformMapping(abcFrameGia(pAbc), pPars)
 	// subtract wire delay from LUT library delays
-	if pPars.WireDelay > 0 && pPars.pLutLib {
+	if pPars.WireDelay > 0 && (pPars.PLutLib != nil) {
 		var i, k int32
-		for i = 0; i <= pPars.pLutLib.LutMax; i++ {
+		for i = 0; i <= pPars.PLutLib.LutMax; i++ {
 			for k = 0; k <= i; k++ {
-				pPars.pLutLib.pLutDelays[i][k] -= pPars.WireDelay
+				pPars.PLutLib.pLutDelays[i][k] -= pPars.WireDelay
 			}
 		}
 	}
@@ -37566,54 +37634,54 @@ usage:
 	} else {
 		Buffer = fmt.Sprintf("%.2f", pPars.DelayTarget)
 	}
-	if pPars.nLutSize == -1 {
+	if pPars.NLutSize == -1 {
 		LutSize = fmt.Sprintf("library")
 	} else {
-		LutSize = fmt.Sprintf("%d", pPars.nLutSize)
+		LutSize = fmt.Sprintf("%d", pPars.NLutSize)
 	}
 	Abc_Print(-2, "usage: &if [-KCFAGRTXY num] [-DEW float] [-S str] [-qarlepmsdbgxyofuijkztnchvw]\n")
 	Abc_Print(-2, "\t           performs FPGA technology mapping of the network\n")
-	Abc_Print(-2, "\t-K num   : the number of LUT inputs (2 < num < %d) [default = %s]\n", IF_MAX_LUTSIZE+1, LutSize)
-	Abc_Print(-2, "\t-C num   : the max number of priority cuts (0 < num < 2^12) [default = %d]\n", pPars.nCutsMax)
-	Abc_Print(-2, "\t-F num   : the number of area flow recovery iterations (num >= 0) [default = %d]\n", pPars.nFlowIters)
-	Abc_Print(-2, "\t-A num   : the number of exact area recovery iterations (num >= 0) [default = %d]\n", pPars.nAreaIters)
-	Abc_Print(-2, "\t-G num   : the max AND/OR gate size for mapping (0 = unused) [default = %d]\n", pPars.nGateSize)
-	Abc_Print(-2, "\t-R num   : the delay relaxation ratio (num >= 0) [default = %d]\n", pPars.nRelaxRatio)
-	Abc_Print(-2, "\t-T num   : the type of LUT structures [default = any]\n", pPars.nStructType)
-	Abc_Print(-2, "\t-X num   : delay of AND-gate in LUT library units [default = %d]\n", pPars.nAndDelay)
-	Abc_Print(-2, "\t-Y num   : area of AND-gate in LUT library units [default = %d]\n", pPars.nAndArea)
+	Abc_Print(-2, "\t-K num   : the number of LUT inputs (2 < num < %d) [default = %s]\n", ifpkg.IF_MAX_LUTSIZE+1, LutSize)
+	Abc_Print(-2, "\t-C num   : the max number of priority cuts (0 < num < 2^12) [default = %d]\n", pPars.NCutsMax)
+	Abc_Print(-2, "\t-F num   : the number of area flow recovery iterations (num >= 0) [default = %d]\n", pPars.NFlowIters)
+	Abc_Print(-2, "\t-A num   : the number of exact area recovery iterations (num >= 0) [default = %d]\n", pPars.NAreaIters)
+	Abc_Print(-2, "\t-G num   : the max AND/OR gate size for mapping (0 = unused) [default = %d]\n", pPars.NGateSize)
+	Abc_Print(-2, "\t-R num   : the delay relaxation ratio (num >= 0) [default = %d]\n", pPars.NRelaxRatio)
+	Abc_Print(-2, "\t-T num   : the type of LUT structures [default = any]\n", pPars.NStructType)
+	Abc_Print(-2, "\t-X num   : delay of AND-gate in LUT library units [default = %d]\n", pPars.NAndDelay)
+	Abc_Print(-2, "\t-Y num   : area of AND-gate in LUT library units [default = %d]\n", pPars.NAndArea)
 	Abc_Print(-2, "\t-D float : sets the delay constraint for the mapping [default = %s]\n", Buffer)
 	Abc_Print(-2, "\t-E float : sets epsilon used for tie-breaking [default = %f]\n", pPars.Epsilon)
 	Abc_Print(-2, "\t-W float : sets wire delay between adjects LUTs [default = %f]\n", pPars.WireDelay)
-	Abc_Print(-2, "\t-S str   : string representing the LUT structure [default = %s]\n", abcDefaultString(pPars.pLutStruct, "not used"))
-	Abc_Print(-2, "\t-q       : toggles preprocessing using several starting points [default = %s]\n", abcSelect(fPreprocess, "yes", "no"))
-	Abc_Print(-2, "\t-a       : toggles area-oriented mapping [default = %s]\n", abcSelect(fArea, "yes", "no"))
-	Abc_Print(-2, "\t-r       : enables expansion/reduction of the best cuts [default = %s]\n", abcSelect(fExpRed, "yes", "no"))
+	Abc_Print(-2, "\t-S str   : string representing the LUT structure [default = %s]\n", abcDefaultString(pPars.PLutStruct, "not used"))
+	Abc_Print(-2, "\t-q       : toggles preprocessing using several starting points [default = %s]\n", abcSelect(pPars.FPreprocess, "yes", "no"))
+	Abc_Print(-2, "\t-a       : toggles area-oriented mapping [default = %s]\n", abcSelect(pPars.FArea, "yes", "no"))
+	Abc_Print(-2, "\t-r       : enables expansion/reduction of the best cuts [default = %s]\n", abcSelect(pPars.FExpRed, "yes", "no"))
 	//    Abc_Print( -2, "\t-l       : optimizes latch paths for delay, other paths for area [default = %s]\n", pPars->abcSelect(fLatchPaths, "yes", "no") );
-	Abc_Print(-2, "\t-l       : toggle restricting the type of 6-input lookup tables [default = %s]\n", abcSelect(fLut6Filter, "yes", "no"))
-	Abc_Print(-2, "\t-e       : uses edge-based cut selection heuristics [default = %s]\n", abcSelect(fEdge, "yes", "no"))
-	Abc_Print(-2, "\t-p       : uses power-aware cut selection heuristics [default = %s]\n", abcSelect(fPower, "yes", "no"))
-	Abc_Print(-2, "\t-m       : enables cut minimization by removing vacuous variables [default = %s]\n", abcSelect(fCutMin, "yes", "no"))
-	Abc_Print(-2, "\t-s       : toggles delay-oriented mapping used with -S <NN> [default = %s]\n", abcSelect(fDelayOptLut, "yes", "no"))
-	Abc_Print(-2, "\t-d       : toggles deriving specialized matching step [default = %s]\n", abcSelect(fUse34Spec, "yes", "no"))
-	Abc_Print(-2, "\t-b       : toggles the use of one special feature [default = %s]\n", abcSelect(fUseBat, "yes", "no"))
-	Abc_Print(-2, "\t-g       : toggles delay optimization by SOP balancing [default = %s]\n", abcSelect(fDelayOpt, "yes", "no"))
-	Abc_Print(-2, "\t-x       : toggles delay optimization by DSD balancing [default = %s]\n", abcSelect(fDsdBalance, "yes", "no"))
-	Abc_Print(-2, "\t-y       : toggles delay optimization with recorded library [default = %s]\n", abcSelect(fUserRecLib, "yes", "no"))
-	Abc_Print(-2, "\t-o       : toggles using buffers to decouple combinational outputs [default = %s]\n", abcSelect(fUseBuffs, "yes", "no"))
-	Abc_Print(-2, "\t-f       : toggles enabling additional check [default = %s]\n", abcSelect(fEnableCheck75, "yes", "no"))
-	Abc_Print(-2, "\t-u       : toggles enabling additional check [default = %s]\n", abcSelect(fEnableCheck75u, "yes", "no"))
-	Abc_Print(-2, "\t-i       : toggles using cofactoring variables [default = %s]\n", abcSelect(fUseCofVars, "yes", "no"))
+	Abc_Print(-2, "\t-l       : toggle restricting the type of 6-input lookup tables [default = %s]\n", abcSelect(pPars.FLut6Filter, "yes", "no"))
+	Abc_Print(-2, "\t-e       : uses edge-based cut selection heuristics [default = %s]\n", abcSelect(pPars.FEdge, "yes", "no"))
+	Abc_Print(-2, "\t-p       : uses power-aware cut selection heuristics [default = %s]\n", abcSelect(pPars.FPower, "yes", "no"))
+	Abc_Print(-2, "\t-m       : enables cut minimization by removing vacuous variables [default = %s]\n", abcSelect(pPars.FCutMin, "yes", "no"))
+	Abc_Print(-2, "\t-s       : toggles delay-oriented mapping used with -S <NN> [default = %s]\n", abcSelect(pPars.FDelayOptLut, "yes", "no"))
+	Abc_Print(-2, "\t-d       : toggles deriving specialized matching step [default = %s]\n", abcSelect(pPars.FUse34Spec, "yes", "no"))
+	Abc_Print(-2, "\t-b       : toggles the use of one special feature [default = %s]\n", abcSelect(pPars.FUseBat, "yes", "no"))
+	Abc_Print(-2, "\t-g       : toggles delay optimization by SOP balancing [default = %s]\n", abcSelect(pPars.FDelayOpt, "yes", "no"))
+	Abc_Print(-2, "\t-x       : toggles delay optimization by DSD balancing [default = %s]\n", abcSelect(pPars.FDsdBalance, "yes", "no"))
+	Abc_Print(-2, "\t-y       : toggles delay optimization with recorded library [default = %s]\n", abcSelect(pPars.FUserRecLib, "yes", "no"))
+	Abc_Print(-2, "\t-o       : toggles using buffers to decouple combinational outputs [default = %s]\n", abcSelect(pPars.FUseBuffs, "yes", "no"))
+	Abc_Print(-2, "\t-f       : toggles enabling additional check [default = %s]\n", abcSelect(pPars.FEnableCheck75, "yes", "no"))
+	Abc_Print(-2, "\t-u       : toggles enabling additional check [default = %s]\n", abcSelect(pPars.FEnableCheck75u, "yes", "no"))
+	Abc_Print(-2, "\t-i       : toggles using cofactoring variables [default = %s]\n", abcSelect(pPars.FUseCofVars, "yes", "no"))
 	//    Abc_Print( -2, "\t-j       : toggles enabling additional check [default = %s]\n", pPars->abcSelect(fEnableCheck07, "yes", "no") );
-	Abc_Print(-2, "\t-j       : toggles using AND bi-decomposition [default = %s]\n", abcSelect(fUseAndVars, "yes", "no"))
-	Abc_Print(-2, "\t-k       : toggles matching based on precomputed DSD manager [default = %s]\n", abcSelect(fUseDsdTune, "yes", "no"))
-	Abc_Print(-2, "\t-z       : toggles deriving LUTs when mapping into LUT structures [default = %s]\n", abcSelect(fDeriveLuts, "yes", "no"))
-	Abc_Print(-2, "\t-t       : toggles optimizing average rather than maximum level [default = %s]\n", abcSelect(fDoAverage, "yes", "no"))
-	Abc_Print(-2, "\t-n       : toggles computing DSDs of the cut functions [default = %s]\n", abcSelect(fUseDsd, "yes", "no"))
-	Abc_Print(-2, "\t-c       : toggles computing truth tables in a new way [default = %s]\n", abcSelect(fUseTtPerm, "yes", "no"))
-	Abc_Print(-2, "\t-h       : toggles rehashing AIG after mapping [default = %s]\n", abcSelect(fHashMapping, "yes", "no"))
-	Abc_Print(-2, "\t-v       : toggles verbose output [default = %s]\n", abcSelect(fVerbose, "yes", "no"))
-	Abc_Print(-2, "\t-w       : toggles printing delay trace [default = %s]\n", abcSelect(fVerboseTrace, "yes", "no"))
+	Abc_Print(-2, "\t-j       : toggles using AND bi-decomposition [default = %s]\n", abcSelect(pPars.FUseAndVars, "yes", "no"))
+	Abc_Print(-2, "\t-k       : toggles matching based on precomputed DSD manager [default = %s]\n", abcSelect(pPars.FUseDsdTune, "yes", "no"))
+	Abc_Print(-2, "\t-z       : toggles deriving LUTs when mapping into LUT structures [default = %s]\n", abcSelect(pPars.FDeriveLuts, "yes", "no"))
+	Abc_Print(-2, "\t-t       : toggles optimizing average rather than maximum level [default = %s]\n", abcSelect(pPars.FDoAverage, "yes", "no"))
+	Abc_Print(-2, "\t-n       : toggles computing DSDs of the cut functions [default = %s]\n", abcSelect(pPars.FUseDsd, "yes", "no"))
+	Abc_Print(-2, "\t-c       : toggles computing truth tables in a new way [default = %s]\n", abcSelect(pPars.FUseTtPerm, "yes", "no"))
+	Abc_Print(-2, "\t-h       : toggles rehashing AIG after mapping [default = %s]\n", abcSelect(pPars.FHashMapping, "yes", "no"))
+	Abc_Print(-2, "\t-v       : toggles verbose output [default = %s]\n", abcSelect(pPars.FVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-w       : toggles printing delay trace [default = %s]\n", abcSelect(pPars.FVerboseTrace, "yes", "no"))
 	return 1
 }
 
@@ -37633,7 +37701,7 @@ usage:
 func Abc_CommandAbc9Iff(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 
 	var c, fVerbose int32
-	var pLibLut *If_LibLut_t
+	var pLibLut *ifpkg.If_LibLut_t
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "vh"); c != -1; c = Extra_UtilGetopt(argc, argv, "vh") {
 		switch c {
@@ -37650,7 +37718,7 @@ func Abc_CommandAbc9Iff(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Iff(): There is no AIG to map.\n")
 		return 1
 	}
-	if !Gia_ManHasMapping(abcFrameGia(pAbc)) {
+	if Gia_ManHasMapping(abcFrameGia(pAbc)) == 0 {
 		Abc_Print(-1, "Abc_CommandAbc9Iff(): Mapping of the AIG is not defined.\n")
 		return 1
 	}
@@ -37658,8 +37726,8 @@ func Abc_CommandAbc9Iff(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Iff(): LUT library is not defined.\n")
 		return 1
 	}
-	pLibLut, _ = abcFrameResource[any](pAbc, "pLibLut").(*If_LibLut_t)
-	Gia_ManIffTest(abcFrameGia(pAbc), pLibLut, fVerbose)
+	pLibLut, _ = abcFrameResource[any](pAbc, "pLibLut").(*ifpkg.If_LibLut_t)
+	ifpkg.Gia_ManIffTest(abcFrameGia(pAbc), pLibLut, fVerbose)
 	return 0
 
 usage:
@@ -37737,7 +37805,7 @@ func Abc_CommandAbc9Iiff(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Iiff(): There is no AIG to map.\n")
 		return 1
 	}
-	pNew = Gia_ManIiffTest(pFileName, abcFrameGia(pAbc), nLutSize, nNumCuts, fUseGates, fUseCells, fUseLuts, fVerbose)
+	pNew = giapkg.Gia_ManIiffTest(pFileName, abcFrameGia(pAbc), nLutSize, nNumCuts, fUseGates, fUseCells, fUseLuts, fVerbose)
 	if pNew == nil {
 		Abc_Print(-1, "Abc_CommandAbc9Iiff(): Mapping has failed.\n")
 		return 1
@@ -37778,12 +37846,12 @@ func Abc_CommandAbc9If2(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 
 	var pTemp *Abc_Ntk_t
 	var pNew *Gia_Man_t
-	var Pars Mpm_Par_t
-	var pPars *Mpm_Par_t = &Pars
+	var Pars map_mpm.Mpm_Par_t
+	var pPars *map_mpm.Mpm_Par_t = &Pars
 	var c int32
 	var nLutSize int32 = 6
 	// set defaults
-	Mpm_ManSetParsDefault(pPars)
+	map_mpm.Mpm_ManSetParsDefault(pPars)
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "KCDtmzrcuxvwh"); c != -1; c = Extra_UtilGetopt(argc, argv, "KCDtmzrcuxvwh") {
 		switch c {
@@ -37804,9 +37872,9 @@ func Abc_CommandAbc9If2(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-C\" should be followed by a positive integer.\n")
 				goto usage
 			}
-			pPars.nNumCuts = abcAtoi(argv[globalUtilOptind])
+			pPars.NNumCuts = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nNumCuts < 0 {
+			if pPars.NNumCuts < 0 {
 				goto usage
 			}
 			break
@@ -37822,31 +37890,31 @@ func Abc_CommandAbc9If2(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			}
 			break
 		case 't':
-			pPars.fUseGates ^= 1
+			pPars.FUseGates ^= 1
 			break
 		case 'm':
-			pPars.fCutMin ^= 1
+			pPars.FCutMin ^= 1
 			break
 		case 'z':
-			pPars.fDeriveLuts ^= 1
+			pPars.FDeriveLuts ^= 1
 			break
 		case 'r':
-			pPars.fOneRound ^= 1
+			pPars.FOneRound ^= 1
 			break
 		case 'c':
-			pPars.fMap4Cnf ^= 1
+			pPars.FMap4Cnf ^= 1
 			break
 		case 'u':
-			pPars.fMap4Aig ^= 1
+			pPars.FMap4Aig ^= 1
 			break
 		case 'x':
-			pPars.fMap4Gates ^= 1
+			pPars.FMap4Gates ^= 1
 			break
 		case 'v':
-			pPars.fVerbose ^= 1
+			pPars.FVerbose ^= 1
 			break
 		case 'w':
-			pPars.fVeryVerbose ^= 1
+			pPars.FVeryVerbose ^= 1
 			break
 		case 'h':
 			fallthrough
@@ -37860,38 +37928,38 @@ func Abc_CommandAbc9If2(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 1
 	}
 
-	if pPars.fMap4Cnf {
-		pPars.fUseDsd = 1
+	if pPars.FMap4Cnf != 0 {
+		pPars.FUseDsd = 1
 	}
-	if pPars.fCutMin {
-		pPars.fUseDsd = 1
+	if pPars.FCutMin != 0 {
+		pPars.FUseDsd = 1
 	}
 	//        pPars->fUseTruth = 1;
-	if pPars.fMap4Gates {
-		pPars.fUseDsd = 1
+	if pPars.FMap4Gates != 0 {
+		pPars.FUseDsd = 1
 		if abcFrameResource[any](pAbc, "pLibScl") == nil {
 			Abc_Print(-1, "There is no SCL library available.\n")
 			return 1
 		}
-		pPars.pScl = abcFrameResource[any](pAbc, "pLibScl")
+		pPars.PScl = abcFrameResource[any](pAbc, "pLibScl")
 	}
-	if pPars.fUseDsd || pPars.fUseTruth {
-		pPars.fDeriveLuts = 1
+	if (pPars.FUseDsd != 0) || (pPars.FUseTruth != 0) {
+		pPars.FDeriveLuts = 1
 	}
-	if pPars.fUseDsd && nLutSize != 6 {
+	if (pPars.FUseDsd != 0) && nLutSize != 6 {
 		Abc_Print(-1, "Currently DSD can only be used with 6-input cuts.\n")
 		return 1
 	}
 	// perform mapping
-	assert(pPars.pLib == nil, "pPars.pLib == nil")
-	if pPars.fMap4Gates {
-		if Abc_FrameReadLibGen() == nil {
+	assert(pPars.PLib == nil, "pPars.pLib == nil")
+	if pPars.FMap4Gates != 0 {
+		if base_main.Abc_FrameReadLibGen() == nil {
 			Abc_Print(-1, "There is no GENLIB library available.\n")
 			return 1
 		}
-		pPars.pLib = Mpm_LibLutSetSimple(nLutSize)
-		pTemp = Mpm_ManCellMapping(abcFrameGia(pAbc), pPars, Abc_FrameReadLibGen())
-		Mpm_LibLutFree(pPars.pLib)
+		pPars.PLib = map_mpm.Mpm_LibLutSetSimple(nLutSize)
+		pTemp = map_mpm.Mpm_ManCellMapping(abcFrameGia(pAbc), pPars, base_main.Abc_FrameReadLibGen())
+		map_mpm.Mpm_LibLutFree(pPars.PLib)
 		if pTemp == nil {
 			Abc_Print(-1, "Abc_CommandAbc9If2(): Mapping into standard cells has failed.\n")
 			return 1
@@ -37899,9 +37967,9 @@ func Abc_CommandAbc9If2(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_FrameReplaceCurrentNetwork(pAbc, pTemp)
 
 	} else {
-		pPars.pLib = Mpm_LibLutSetSimple(nLutSize)
-		pNew = Mpm_ManLutMapping(abcFrameGia(pAbc), pPars)
-		Mpm_LibLutFree(pPars.pLib)
+		pPars.PLib = map_mpm.Mpm_LibLutSetSimple(nLutSize)
+		pNew = map_mpm.Mpm_ManLutMapping(abcFrameGia(pAbc), pPars)
+		map_mpm.Mpm_LibLutFree(pPars.PLib)
 		if pNew == nil {
 			Abc_Print(-1, "Abc_CommandAbc9If2(): Mapping into LUTs has failed.\n")
 			return 1
@@ -37919,17 +37987,17 @@ usage:
 	Abc_Print(-2, "usage: &if2 [-KCD num] [-tmzrcuxvwh]\n")
 	Abc_Print(-2, "\t           performs technology mapping of the network\n")
 	Abc_Print(-2, "\t-K num   : sets the LUT size for the mapping [default = %d]\n", nLutSize)
-	Abc_Print(-2, "\t-C num   : the max number of priority cuts (0 < num < 2^12) [default = %d]\n", pPars.nNumCuts)
+	Abc_Print(-2, "\t-C num   : the max number of priority cuts (0 < num < 2^12) [default = %d]\n", pPars.NNumCuts)
 	Abc_Print(-2, "\t-D num   : sets the delay constraint for the mapping [default = %s]\n", Buffer)
-	Abc_Print(-2, "\t-t       : enables using AND/XOR/MUX nodes instead of simple AIG [default = %s]\n", abcSelect(fUseGates, "yes", "no"))
-	Abc_Print(-2, "\t-m       : enables cut minimization by removing vacuous variables [default = %s]\n", abcSelect(fCutMin, "yes", "no"))
-	Abc_Print(-2, "\t-z       : toggles deriving LUTs when mapping into LUT structures [default = %s]\n", abcSelect(fDeriveLuts, "yes", "no"))
-	Abc_Print(-2, "\t-r       : toggles using one round of mapping [default = %s]\n", abcSelect(fOneRound, "yes", "no"))
-	Abc_Print(-2, "\t-c       : toggles mapping for CNF computation [default = %s]\n", abcSelect(fMap4Cnf, "yes", "no"))
-	Abc_Print(-2, "\t-u       : toggles mapping for AIG computation [default = %s]\n", abcSelect(fMap4Aig, "yes", "no"))
-	Abc_Print(-2, "\t-x       : toggles mapping for standard cells [default = %s]\n", abcSelect(fMap4Gates, "yes", "no"))
-	Abc_Print(-2, "\t-v       : toggles verbose output [default = %s]\n", abcSelect(fVerbose, "yes", "no"))
-	Abc_Print(-2, "\t-w       : toggles very verbose output [default = %s]\n", abcSelect(fVeryVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-t       : enables using AND/XOR/MUX nodes instead of simple AIG [default = %s]\n", abcSelect(pPars.FUseGates, "yes", "no"))
+	Abc_Print(-2, "\t-m       : enables cut minimization by removing vacuous variables [default = %s]\n", abcSelect(pPars.FCutMin, "yes", "no"))
+	Abc_Print(-2, "\t-z       : toggles deriving LUTs when mapping into LUT structures [default = %s]\n", abcSelect(pPars.FDeriveLuts, "yes", "no"))
+	Abc_Print(-2, "\t-r       : toggles using one round of mapping [default = %s]\n", abcSelect(pPars.FOneRound, "yes", "no"))
+	Abc_Print(-2, "\t-c       : toggles mapping for CNF computation [default = %s]\n", abcSelect(pPars.FMap4Cnf, "yes", "no"))
+	Abc_Print(-2, "\t-u       : toggles mapping for AIG computation [default = %s]\n", abcSelect(pPars.FMap4Aig, "yes", "no"))
+	Abc_Print(-2, "\t-x       : toggles mapping for standard cells [default = %s]\n", abcSelect(pPars.FMap4Gates, "yes", "no"))
+	Abc_Print(-2, "\t-v       : toggles verbose output [default = %s]\n", abcSelect(pPars.FVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-w       : toggles very verbose output [default = %s]\n", abcSelect(pPars.FVeryVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h       : prints the command usage\n")
 	return 1
 }
@@ -37950,11 +38018,11 @@ usage:
 func Abc_CommandAbc9Jf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	var Buffer string // was [200]byte in C
 
-	var Pars Jf_Par_t
-	var pPars *Jf_Par_t = &Pars
+	var Pars giapkg.Jf_Par_t
+	var pPars *giapkg.Jf_Par_t = &Pars
 	var pNew *Gia_Man_t
 	var c int32
-	Jf_ManSetDefaultPars(pPars)
+	giapkg.Jf_ManSetDefaultPars(pPars)
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "KCDWaekmdcgvwh"); c != -1; c = Extra_UtilGetopt(argc, argv, "KCDWaekmdcgvwh") {
 		switch c {
@@ -37963,10 +38031,10 @@ func Abc_CommandAbc9Jf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-K\" should be followed by a positive integer.\n")
 				goto usage
 			}
-			pPars.nLutSize = abcAtoi(argv[globalUtilOptind])
+			pPars.NLutSize = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nLutSize < 2 || pPars.nLutSize > pPars.nLutSizeMax {
-				Abc_Print(-1, "LUT size %d is not supported.\n", pPars.nLutSize)
+			if pPars.NLutSize < 2 || pPars.NLutSize > pPars.NLutSizeMax {
+				Abc_Print(-1, "LUT size %d is not supported.\n", pPars.NLutSize)
 				goto usage
 			}
 			break
@@ -37975,10 +38043,10 @@ func Abc_CommandAbc9Jf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-C\" should be followed by a positive integer.\n")
 				goto usage
 			}
-			pPars.nCutNum = abcAtoi(argv[globalUtilOptind])
+			pPars.NCutNum = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nCutNum < 1 || pPars.nCutNum > pPars.nCutNumMax {
-				Abc_Print(-1, "This number of cuts (%d) is not supported.\n", pPars.nCutNum)
+			if pPars.NCutNum < 1 || pPars.NCutNum > pPars.NCutNumMax {
+				Abc_Print(-1, "This number of cuts (%d) is not supported.\n", pPars.NCutNum)
 				goto usage
 			}
 			break
@@ -37998,38 +38066,38 @@ func Abc_CommandAbc9Jf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-W\" should be followed by a positive integer.\n")
 				goto usage
 			}
-			pPars.nVerbLimit = abcAtoi(argv[globalUtilOptind])
+			pPars.NVerbLimit = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nVerbLimit < 0 {
+			if pPars.NVerbLimit < 0 {
 				goto usage
 			}
 			break
 		case 'a':
-			pPars.fAreaOnly ^= 1
+			pPars.FAreaOnly ^= 1
 			break
 		case 'e':
-			pPars.fOptEdge ^= 1
+			pPars.FOptEdge ^= 1
 			break
 		case 'k':
-			pPars.fCoarsen ^= 1
+			pPars.FCoarsen ^= 1
 			break
 		case 'm':
-			pPars.fCutMin ^= 1
+			pPars.FCutMin ^= 1
 			break
 		case 'd':
-			pPars.fFuncDsd ^= 1
+			pPars.FFuncDsd ^= 1
 			break
 		case 'c':
-			pPars.fGenCnf ^= 1
+			pPars.FGenCnf ^= 1
 			break
 		case 'g':
-			pPars.fPureAig ^= 1
+			pPars.FPureAig ^= 1
 			break
 		case 'v':
-			pPars.fVerbose ^= 1
+			pPars.FVerbose ^= 1
 			break
 		case 'w':
-			pPars.fVeryVerbose ^= 1
+			pPars.FVeryVerbose ^= 1
 			break
 		case 'h':
 			fallthrough
@@ -38042,21 +38110,21 @@ func Abc_CommandAbc9Jf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Empty GIA network.\n")
 		return 1
 	}
-	if Gia_ManBufNum(abcFrameGia(pAbc)) {
+	if Gia_ManBufNum(abcFrameGia(pAbc)) != 0 {
 		Abc_Print(-1, "Abc_CommandAbc9Jf(): This command does not work with barrier buffers.\n")
 		return 1
 	}
-	if (pPars.fFuncDsd || pPars.fGenCnf) && pPars.nLutSize > 6 {
+	if ((pPars.FFuncDsd != 0) || (pPars.FGenCnf != 0)) && pPars.NLutSize > 6 {
 		Abc_Print(-1, "Abc_CommandAbc9Jf(): DSD computation works for LUT6 or less.\n")
 		return 1
 	}
 
-	if (pPars.fFuncDsd || pPars.fGenCnf) && !Sdm_ManCanRead() {
+	if ((pPars.FFuncDsd != 0) || (pPars.FGenCnf != 0)) && (misc_extra.Sdm_ManCanRead() == 0) {
 		Abc_Print(-1, "Abc_CommandAbc9Jf(): Cannot input DSD data from file.\n")
 		return 1
 	}
 
-	pNew = Jf_ManPerformMapping(abcFrameGia(pAbc), pPars)
+	pNew = giapkg.Jf_ManPerformMapping(abcFrameGia(pAbc), pPars)
 	if pNew == nil {
 		Abc_Print(-1, "Abc_CommandAbc9Jf(): Mapping into LUTs has failed.\n")
 		return 1
@@ -38072,19 +38140,19 @@ usage:
 	}
 	Abc_Print(-2, "usage: &jf [-KCDW num] [-akmdcgvwh]\n")
 	Abc_Print(-2, "\t           performs technology mapping of the network\n")
-	Abc_Print(-2, "\t-K num   : LUT size for the mapping (2 <= K <= %d) [default = %d]\n", pPars.nLutSizeMax, pPars.nLutSize)
-	Abc_Print(-2, "\t-C num   : the max number of priority cuts (1 <= C <= %d) [default = %d]\n", pPars.nCutNumMax, pPars.nCutNum)
+	Abc_Print(-2, "\t-K num   : LUT size for the mapping (2 <= K <= %d) [default = %d]\n", pPars.NLutSizeMax, pPars.NLutSize)
+	Abc_Print(-2, "\t-C num   : the max number of priority cuts (1 <= C <= %d) [default = %d]\n", pPars.NCutNumMax, pPars.NCutNum)
 	Abc_Print(-2, "\t-D num   : sets the delay constraint for the mapping [default = %s]\n", Buffer)
-	Abc_Print(-2, "\t-W num   : min frequency when printing functions with \"-w\" [default = %d]\n", pPars.nVerbLimit)
-	Abc_Print(-2, "\t-a       : toggles area-oriented mapping [default = %s]\n", abcSelect(fAreaOnly, "yes", "no"))
-	Abc_Print(-2, "\t-e       : toggles edge vs node minimization [default = %s]\n", abcSelect(fOptEdge, "yes", "no"))
-	Abc_Print(-2, "\t-k       : toggles coarsening the subject graph [default = %s]\n", abcSelect(fCoarsen, "yes", "no"))
-	Abc_Print(-2, "\t-m       : toggles cut minimization [default = %s]\n", abcSelect(fCutMin, "yes", "no"))
-	Abc_Print(-2, "\t-d       : toggles using DSD to represent cut functions [default = %s]\n", abcSelect(fFuncDsd, "yes", "no"))
-	Abc_Print(-2, "\t-c       : toggles mapping for CNF generation [default = %s]\n", abcSelect(fGenCnf, "yes", "no"))
-	Abc_Print(-2, "\t-g       : toggles generating AIG without mapping [default = %s]\n", abcSelect(fPureAig, "yes", "no"))
-	Abc_Print(-2, "\t-v       : toggles verbose output [default = %s]\n", abcSelect(fVerbose, "yes", "no"))
-	Abc_Print(-2, "\t-w       : toggles very verbose output [default = %s]\n", abcSelect(fVeryVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-W num   : min frequency when printing functions with \"-w\" [default = %d]\n", pPars.NVerbLimit)
+	Abc_Print(-2, "\t-a       : toggles area-oriented mapping [default = %s]\n", abcSelect(pPars.FAreaOnly, "yes", "no"))
+	Abc_Print(-2, "\t-e       : toggles edge vs node minimization [default = %s]\n", abcSelect(pPars.FOptEdge, "yes", "no"))
+	Abc_Print(-2, "\t-k       : toggles coarsening the subject graph [default = %s]\n", abcSelect(pPars.FCoarsen, "yes", "no"))
+	Abc_Print(-2, "\t-m       : toggles cut minimization [default = %s]\n", abcSelect(pPars.FCutMin, "yes", "no"))
+	Abc_Print(-2, "\t-d       : toggles using DSD to represent cut functions [default = %s]\n", abcSelect(pPars.FFuncDsd, "yes", "no"))
+	Abc_Print(-2, "\t-c       : toggles mapping for CNF generation [default = %s]\n", abcSelect(pPars.FGenCnf, "yes", "no"))
+	Abc_Print(-2, "\t-g       : toggles generating AIG without mapping [default = %s]\n", abcSelect(pPars.FPureAig, "yes", "no"))
+	Abc_Print(-2, "\t-v       : toggles verbose output [default = %s]\n", abcSelect(pPars.FVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-w       : toggles very verbose output [default = %s]\n", abcSelect(pPars.FVeryVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h       : prints the command usage\n")
 	return 1
 }
@@ -38106,11 +38174,11 @@ func Abc_CommandAbc9Kf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 
 	var Buffer string // was [200]byte in C
 
-	var Pars Jf_Par_t
-	var pPars *Jf_Par_t = &Pars
+	var Pars giapkg.Jf_Par_t
+	var pPars *giapkg.Jf_Par_t = &Pars
 	var pNew *Gia_Man_t
 	var c int32
-	Kf_ManSetDefaultPars(pPars)
+	giapkg.Kf_ManSetDefaultPars(pPars)
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "KCPDWaekmdcgtsvwh"); c != -1; c = Extra_UtilGetopt(argc, argv, "KCPDWaekmdcgtsvwh") {
 		switch c {
@@ -38119,10 +38187,10 @@ func Abc_CommandAbc9Kf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-K\" should be followed by a positive integer.\n")
 				goto usage
 			}
-			pPars.nLutSize = abcAtoi(argv[globalUtilOptind])
+			pPars.NLutSize = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nLutSize < 2 || pPars.nLutSize > pPars.nLutSizeMax {
-				Abc_Print(-1, "LUT size %d is not supported.\n", pPars.nLutSize)
+			if pPars.NLutSize < 2 || pPars.NLutSize > pPars.NLutSizeMax {
+				Abc_Print(-1, "LUT size %d is not supported.\n", pPars.NLutSize)
 				goto usage
 			}
 			break
@@ -38131,10 +38199,10 @@ func Abc_CommandAbc9Kf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-C\" should be followed by a positive integer.\n")
 				goto usage
 			}
-			pPars.nCutNum = abcAtoi(argv[globalUtilOptind])
+			pPars.NCutNum = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nCutNum < 1 || pPars.nCutNum > pPars.nCutNumMax {
-				Abc_Print(-1, "This number of cuts (%d) is not supported.\n", pPars.nCutNum)
+			if pPars.NCutNum < 1 || pPars.NCutNum > pPars.NCutNumMax {
+				Abc_Print(-1, "This number of cuts (%d) is not supported.\n", pPars.NCutNum)
 				goto usage
 			}
 			break
@@ -38143,9 +38211,9 @@ func Abc_CommandAbc9Kf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-P\" should be followed by a positive integer.\n")
 				goto usage
 			}
-			pPars.nProcNum = abcAtoi(argv[globalUtilOptind])
+			pPars.NProcNum = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nProcNum < 0 {
+			if pPars.NProcNum < 0 {
 				goto usage
 			}
 			break
@@ -38165,44 +38233,44 @@ func Abc_CommandAbc9Kf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-W\" should be followed by a positive integer.\n")
 				goto usage
 			}
-			pPars.nVerbLimit = abcAtoi(argv[globalUtilOptind])
+			pPars.NVerbLimit = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nVerbLimit < 0 {
+			if pPars.NVerbLimit < 0 {
 				goto usage
 			}
 			break
 		case 'a':
-			pPars.fAreaOnly ^= 1
+			pPars.FAreaOnly ^= 1
 			break
 		case 'e':
-			pPars.fOptEdge ^= 1
+			pPars.FOptEdge ^= 1
 			break
 		case 'k':
-			pPars.fCoarsen ^= 1
+			pPars.FCoarsen ^= 1
 			break
 		case 'm':
-			pPars.fCutMin ^= 1
+			pPars.FCutMin ^= 1
 			break
 		case 'd':
-			pPars.fFuncDsd ^= 1
+			pPars.FFuncDsd ^= 1
 			break
 		case 'c':
-			pPars.fGenCnf ^= 1
+			pPars.FGenCnf ^= 1
 			break
 		case 'g':
-			pPars.fPureAig ^= 1
+			pPars.FPureAig ^= 1
 			break
 		case 't':
-			pPars.fCutHashing ^= 1
+			pPars.FCutHashing ^= 1
 			break
 		case 's':
-			pPars.fCutSimple ^= 1
+			pPars.FCutSimple ^= 1
 			break
 		case 'v':
-			pPars.fVerbose ^= 1
+			pPars.FVerbose ^= 1
 			break
 		case 'w':
-			pPars.fVeryVerbose ^= 1
+			pPars.FVeryVerbose ^= 1
 			break
 		case 'h':
 			fallthrough
@@ -38216,7 +38284,7 @@ func Abc_CommandAbc9Kf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 1
 	}
 
-	pNew = Kf_ManPerformMapping(abcFrameGia(pAbc), pPars)
+	pNew = giapkg.Kf_ManPerformMapping(abcFrameGia(pAbc), pPars)
 	if pNew == nil {
 		Abc_Print(-1, "Abc_CommandAbc9Kf(): Mapping into LUTs has failed.\n")
 		return 1
@@ -38232,22 +38300,22 @@ usage:
 	}
 	Abc_Print(-2, "usage: &kf [-KCPDW num] [-akmdcgtsvwh]\n")
 	Abc_Print(-2, "\t           performs technology mapping of the network\n")
-	Abc_Print(-2, "\t-K num   : LUT size for the mapping (2 <= K <= %d) [default = %d]\n", pPars.nLutSizeMax, pPars.nLutSize)
-	Abc_Print(-2, "\t-C num   : the max number of priority cuts (1 <= C <= %d) [default = %d]\n", pPars.nCutNumMax, pPars.nCutNum)
-	Abc_Print(-2, "\t-P num   : the number of cut computation processes (0 <= P <= %d) [default = %d]\n", pPars.nProcNumMax, pPars.nProcNum)
+	Abc_Print(-2, "\t-K num   : LUT size for the mapping (2 <= K <= %d) [default = %d]\n", pPars.NLutSizeMax, pPars.NLutSize)
+	Abc_Print(-2, "\t-C num   : the max number of priority cuts (1 <= C <= %d) [default = %d]\n", pPars.NCutNumMax, pPars.NCutNum)
+	Abc_Print(-2, "\t-P num   : the number of cut computation processes (0 <= P <= %d) [default = %d]\n", pPars.NProcNumMax, pPars.NProcNum)
 	Abc_Print(-2, "\t-D num   : sets the delay constraint for the mapping [default = %s]\n", Buffer)
-	Abc_Print(-2, "\t-W num   : min frequency when printing functions with \"-w\" [default = %d]\n", pPars.nVerbLimit)
-	Abc_Print(-2, "\t-a       : toggles area-oriented mapping [default = %s]\n", abcSelect(fAreaOnly, "yes", "no"))
-	Abc_Print(-2, "\t-e       : toggles edge vs node minimization [default = %s]\n", abcSelect(fOptEdge, "yes", "no"))
-	Abc_Print(-2, "\t-k       : toggles coarsening the subject graph [default = %s]\n", abcSelect(fCoarsen, "yes", "no"))
-	Abc_Print(-2, "\t-m       : toggles cut minimization [default = %s]\n", abcSelect(fCutMin, "yes", "no"))
-	Abc_Print(-2, "\t-d       : toggles using DSD to represent cut functions [default = %s]\n", abcSelect(fFuncDsd, "yes", "no"))
-	Abc_Print(-2, "\t-c       : toggles mapping for CNF generation [default = %s]\n", abcSelect(fGenCnf, "yes", "no"))
-	Abc_Print(-2, "\t-g       : toggles generating AIG without mapping [default = %s]\n", abcSelect(fPureAig, "yes", "no"))
-	Abc_Print(-2, "\t-t       : toggles cut computation using hash table [default = %s]\n", abcSelect(fCutHashing, "yes", "no"))
-	Abc_Print(-2, "\t-s       : toggles cut computation using a simple method [default = %s]\n", abcSelect(fCutSimple, "yes", "no"))
-	Abc_Print(-2, "\t-v       : toggles verbose output [default = %s]\n", abcSelect(fVerbose, "yes", "no"))
-	Abc_Print(-2, "\t-w       : toggles very verbose output [default = %s]\n", abcSelect(fVeryVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-W num   : min frequency when printing functions with \"-w\" [default = %d]\n", pPars.NVerbLimit)
+	Abc_Print(-2, "\t-a       : toggles area-oriented mapping [default = %s]\n", abcSelect(pPars.FAreaOnly, "yes", "no"))
+	Abc_Print(-2, "\t-e       : toggles edge vs node minimization [default = %s]\n", abcSelect(pPars.FOptEdge, "yes", "no"))
+	Abc_Print(-2, "\t-k       : toggles coarsening the subject graph [default = %s]\n", abcSelect(pPars.FCoarsen, "yes", "no"))
+	Abc_Print(-2, "\t-m       : toggles cut minimization [default = %s]\n", abcSelect(pPars.FCutMin, "yes", "no"))
+	Abc_Print(-2, "\t-d       : toggles using DSD to represent cut functions [default = %s]\n", abcSelect(pPars.FFuncDsd, "yes", "no"))
+	Abc_Print(-2, "\t-c       : toggles mapping for CNF generation [default = %s]\n", abcSelect(pPars.FGenCnf, "yes", "no"))
+	Abc_Print(-2, "\t-g       : toggles generating AIG without mapping [default = %s]\n", abcSelect(pPars.FPureAig, "yes", "no"))
+	Abc_Print(-2, "\t-t       : toggles cut computation using hash table [default = %s]\n", abcSelect(pPars.FCutHashing, "yes", "no"))
+	Abc_Print(-2, "\t-s       : toggles cut computation using a simple method [default = %s]\n", abcSelect(pPars.FCutSimple, "yes", "no"))
+	Abc_Print(-2, "\t-v       : toggles verbose output [default = %s]\n", abcSelect(pPars.FVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-w       : toggles very verbose output [default = %s]\n", abcSelect(pPars.FVeryVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h       : prints the command usage\n")
 	return 1
 }
@@ -38268,11 +38336,11 @@ usage:
 func Abc_CommandAbc9Lf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	var Buffer string // was [200]byte in C
 
-	var Pars Jf_Par_t
-	var pPars *Jf_Par_t = &Pars
+	var Pars giapkg.Jf_Par_t
+	var pPars *giapkg.Jf_Par_t = &Pars
 	var pNew *Gia_Man_t
 	var c int32
-	Lf_ManSetDefaultPars(pPars)
+	giapkg.Lf_ManSetDefaultPars(pPars)
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "KCFARLEDWMekmupstgvwh"); c != -1; c = Extra_UtilGetopt(argc, argv, "KCFARLEDWMekmupstgvwh") {
 		switch c {
@@ -38281,10 +38349,10 @@ func Abc_CommandAbc9Lf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-K\" should be followed by a positive integer.\n")
 				goto usage
 			}
-			pPars.nLutSize = abcAtoi(argv[globalUtilOptind])
+			pPars.NLutSize = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nLutSize < 2 || pPars.nLutSize > pPars.nLutSizeMax {
-				Abc_Print(-1, "LUT size %d is not supported.\n", pPars.nLutSize)
+			if pPars.NLutSize < 2 || pPars.NLutSize > pPars.NLutSizeMax {
+				Abc_Print(-1, "LUT size %d is not supported.\n", pPars.NLutSize)
 				goto usage
 			}
 			break
@@ -38293,10 +38361,10 @@ func Abc_CommandAbc9Lf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-C\" should be followed by a positive integer.\n")
 				goto usage
 			}
-			pPars.nCutNum = abcAtoi(argv[globalUtilOptind])
+			pPars.NCutNum = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nCutNum < 1 || pPars.nCutNum > pPars.nCutNumMax {
-				Abc_Print(-1, "This number of cuts (%d) is not supported.\n", pPars.nCutNum)
+			if pPars.NCutNum < 1 || pPars.NCutNum > pPars.NCutNumMax {
+				Abc_Print(-1, "This number of cuts (%d) is not supported.\n", pPars.NCutNum)
 				goto usage
 			}
 			break
@@ -38305,9 +38373,9 @@ func Abc_CommandAbc9Lf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-F\" should be followed by a positive integer.\n")
 				goto usage
 			}
-			pPars.nRounds = abcAtoi(argv[globalUtilOptind])
+			pPars.NRounds = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nRounds < 0 {
+			if pPars.NRounds < 0 {
 				goto usage
 			}
 			break
@@ -38316,9 +38384,9 @@ func Abc_CommandAbc9Lf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-A\" should be followed by a positive integer.\n")
 				goto usage
 			}
-			pPars.nRoundsEla = abcAtoi(argv[globalUtilOptind])
+			pPars.NRoundsEla = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nRoundsEla < 0 {
+			if pPars.NRoundsEla < 0 {
 				goto usage
 			}
 			break
@@ -38327,9 +38395,9 @@ func Abc_CommandAbc9Lf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(1, "Command line switch \"-R\" should be followed by a floating point number.\n")
 				return 0
 			}
-			pPars.nRelaxRatio = abcAtoi(argv[globalUtilOptind])
+			pPars.NRelaxRatio = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nRelaxRatio < 0 {
+			if pPars.NRelaxRatio < 0 {
 				goto usage
 			}
 			break
@@ -38338,9 +38406,9 @@ func Abc_CommandAbc9Lf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(1, "Command line switch \"-R\" should be followed by a floating point number.\n")
 				return 0
 			}
-			pPars.nCoarseLimit = abcAtoi(argv[globalUtilOptind])
+			pPars.NCoarseLimit = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nCoarseLimit < 0 {
+			if pPars.NCoarseLimit < 0 {
 				goto usage
 			}
 			break
@@ -38349,9 +38417,9 @@ func Abc_CommandAbc9Lf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(1, "Command line switch \"-E\" should be followed by a floating point number.\n")
 				return 0
 			}
-			pPars.nAreaTuner = abcAtoi(argv[globalUtilOptind])
+			pPars.NAreaTuner = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nAreaTuner < 0 {
+			if pPars.NAreaTuner < 0 {
 				goto usage
 			}
 			break
@@ -38371,9 +38439,9 @@ func Abc_CommandAbc9Lf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-W\" should be followed by a positive integer.\n")
 				goto usage
 			}
-			pPars.nVerbLimit = abcAtoi(argv[globalUtilOptind])
+			pPars.NVerbLimit = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nVerbLimit < 0 {
+			if pPars.NVerbLimit < 0 {
 				goto usage
 			}
 			break
@@ -38382,45 +38450,45 @@ func Abc_CommandAbc9Lf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-M\" should be followed by a positive integer.\n")
 				goto usage
 			}
-			pPars.nLutSizeMux = abcAtoi(argv[globalUtilOptind])
+			pPars.NLutSizeMux = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nLutSizeMux < 2 || pPars.nLutSizeMux > pPars.nLutSizeMax {
-				Abc_Print(-1, "LUT size %d is not supported.\n", pPars.nLutSizeMux)
+			if pPars.NLutSizeMux < 2 || pPars.NLutSizeMux > pPars.NLutSizeMax {
+				Abc_Print(-1, "LUT size %d is not supported.\n", pPars.NLutSizeMux)
 				goto usage
 			}
 			break
 		case 'a':
-			pPars.fAreaOnly ^= 1
+			pPars.FAreaOnly ^= 1
 			break
 		case 'e':
-			pPars.fOptEdge ^= 1
+			pPars.FOptEdge ^= 1
 			break
 		case 'k':
-			pPars.fCoarsen ^= 1
+			pPars.FCoarsen ^= 1
 			break
 		case 'm':
-			pPars.fCutMin ^= 1
+			pPars.FCutMin ^= 1
 			break
 		case 'u':
-			pPars.fUseMux7 ^= 1
+			pPars.FUseMux7 ^= 1
 			break
 		case 'p':
-			pPars.fPower ^= 1
+			pPars.FPower ^= 1
 			break
 		case 's':
-			pPars.fPureAig ^= 1
+			pPars.FPureAig ^= 1
 			break
 		case 't':
-			pPars.fDoAverage ^= 1
+			pPars.FDoAverage ^= 1
 			break
 		case 'g':
-			pPars.fCutGroup ^= 1
+			pPars.FCutGroup ^= 1
 			break
 		case 'v':
-			pPars.fVerbose ^= 1
+			pPars.FVerbose ^= 1
 			break
 		case 'w':
-			pPars.fVeryVerbose ^= 1
+			pPars.FVeryVerbose ^= 1
 			break
 		case 'h':
 			fallthrough
@@ -38433,23 +38501,23 @@ func Abc_CommandAbc9Lf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Empty GIA network.\n")
 		return 1
 	}
-	if Gia_ManHasMapping(abcFrameGia(pAbc)) {
+	if Gia_ManHasMapping(abcFrameGia(pAbc)) != 0 {
 		Abc_Print(-1, "Current AIG has mapping. Run \"&st\".\n")
 		return 1
 	}
-	if pPars.nLutSizeMux && pPars.fUseMux7 {
+	if (pPars.NLutSizeMux != 0) && (pPars.FUseMux7 != 0) {
 		Abc_Print(-1, "Flags \"-M\" and \"-u\" are incompatible.\n")
 		return 1
 	}
-	if pPars.fCutGroup {
-		if pPars.nLutSize < 4 || pPars.nLutSize > 6 {
+	if pPars.FCutGroup != 0 {
+		if pPars.NLutSize < 4 || pPars.NLutSize > 6 {
 			Abc_Print(-1, "This feature works only for LUT size equal to 4, 5, and 6.\n")
 			return 1
 		}
-		fmt.Printf("Using cut grouping for %d-LUTs. Considering cuts up to %d.\n", pPars.nLutSize, 2*pPars.nLutSize+1)
-		pPars.nLutSize = 2*pPars.nLutSize + 1
+		fmt.Printf("Using cut grouping for %d-LUTs. Considering cuts up to %d.\n", pPars.NLutSize, 2*pPars.NLutSize+1)
+		pPars.NLutSize = 2*pPars.NLutSize + 1
 	}
-	pNew = Lf_ManPerformMapping(abcFrameGia(pAbc), pPars)
+	pNew = giapkg.Lf_ManPerformMapping(abcFrameGia(pAbc), pPars)
 	if pNew == nil {
 		Abc_Print(-1, "Abc_CommandAbc9Lf(): Mapping into LUTs has failed.\n")
 		return 1
@@ -38465,26 +38533,26 @@ usage:
 	}
 	Abc_Print(-2, "usage: &lf [-KCFARLEDM num] [-kmupstgvwh]\n")
 	Abc_Print(-2, "\t           performs technology mapping of the network\n")
-	Abc_Print(-2, "\t-K num   : LUT size for the mapping (2 <= K <= %d) [default = %d]\n", pPars.nLutSizeMax, pPars.nLutSize)
-	Abc_Print(-2, "\t-C num   : the max number of priority cuts (1 <= C <= %d) [default = %d]\n", pPars.nCutNumMax, pPars.nCutNum)
-	Abc_Print(-2, "\t-F num   : the number of area flow rounds [default = %d]\n", pPars.nRounds)
-	Abc_Print(-2, "\t-A num   : the number of exact area rounds [default = %d]\n", pPars.nRoundsEla)
-	Abc_Print(-2, "\t-R num   : the delay relaxation ratio (num >= 0) [default = %d]\n", pPars.nRelaxRatio)
-	Abc_Print(-2, "\t-L num   : the fanout limit for coarsening XOR/MUX (num >= 2) [default = %d]\n", pPars.nCoarseLimit)
-	Abc_Print(-2, "\t-E num   : the area/edge tradeoff parameter (0 <= num <= 100) [default = %d]\n", pPars.nAreaTuner)
+	Abc_Print(-2, "\t-K num   : LUT size for the mapping (2 <= K <= %d) [default = %d]\n", pPars.NLutSizeMax, pPars.NLutSize)
+	Abc_Print(-2, "\t-C num   : the max number of priority cuts (1 <= C <= %d) [default = %d]\n", pPars.NCutNumMax, pPars.NCutNum)
+	Abc_Print(-2, "\t-F num   : the number of area flow rounds [default = %d]\n", pPars.NRounds)
+	Abc_Print(-2, "\t-A num   : the number of exact area rounds [default = %d]\n", pPars.NRoundsEla)
+	Abc_Print(-2, "\t-R num   : the delay relaxation ratio (num >= 0) [default = %d]\n", pPars.NRelaxRatio)
+	Abc_Print(-2, "\t-L num   : the fanout limit for coarsening XOR/MUX (num >= 2) [default = %d]\n", pPars.NCoarseLimit)
+	Abc_Print(-2, "\t-E num   : the area/edge tradeoff parameter (0 <= num <= 100) [default = %d]\n", pPars.NAreaTuner)
 	Abc_Print(-2, "\t-D num   : sets the delay constraint for the mapping [default = %s]\n", Buffer)
-	Abc_Print(-2, "\t-M num   : LUT size when cofactoring is performed (0 <= num <= 100) [default = %d]\n", pPars.nLutSizeMux)
+	Abc_Print(-2, "\t-M num   : LUT size when cofactoring is performed (0 <= num <= 100) [default = %d]\n", pPars.NLutSizeMux)
 	//    Abc_Print( -2, "\t-a       : toggles area-oriented mapping [default = %s]\n", pPars->abcSelect(fAreaOnly, "yes", "no") );
-	Abc_Print(-2, "\t-e       : toggles edge vs node minimization [default = %s]\n", abcSelect(fOptEdge, "yes", "no"))
-	Abc_Print(-2, "\t-k       : toggles coarsening the subject graph [default = %s]\n", abcSelect(fCoarsen, "yes", "no"))
-	Abc_Print(-2, "\t-m       : toggles cut minimization [default = %s]\n", abcSelect(fCutMin, "yes", "no"))
-	Abc_Print(-2, "\t-u       : toggles using additional MUXes [default = %s]\n", abcSelect(fUseMux7, "yes", "no"))
-	Abc_Print(-2, "\t-p       : toggles power-aware cut selection heuristics [default = %s]\n", abcSelect(fPower, "yes", "no"))
-	Abc_Print(-2, "\t-s       : toggles generating AIG without mapping [default = %s]\n", abcSelect(fPureAig, "yes", "no"))
-	Abc_Print(-2, "\t-t       : toggles optimizing average rather than maximum level [default = %s]\n", abcSelect(fDoAverage, "yes", "no"))
-	Abc_Print(-2, "\t-g       : toggles using cut splitting [default = %s]\n", abcSelect(fCutGroup, "yes", "no"))
-	Abc_Print(-2, "\t-v       : toggles verbose output [default = %s]\n", abcSelect(fVerbose, "yes", "no"))
-	Abc_Print(-2, "\t-w       : toggles very verbose output [default = %s]\n", abcSelect(fVeryVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-e       : toggles edge vs node minimization [default = %s]\n", abcSelect(pPars.FOptEdge, "yes", "no"))
+	Abc_Print(-2, "\t-k       : toggles coarsening the subject graph [default = %s]\n", abcSelect(pPars.FCoarsen, "yes", "no"))
+	Abc_Print(-2, "\t-m       : toggles cut minimization [default = %s]\n", abcSelect(pPars.FCutMin, "yes", "no"))
+	Abc_Print(-2, "\t-u       : toggles using additional MUXes [default = %s]\n", abcSelect(pPars.FUseMux7, "yes", "no"))
+	Abc_Print(-2, "\t-p       : toggles power-aware cut selection heuristics [default = %s]\n", abcSelect(pPars.FPower, "yes", "no"))
+	Abc_Print(-2, "\t-s       : toggles generating AIG without mapping [default = %s]\n", abcSelect(pPars.FPureAig, "yes", "no"))
+	Abc_Print(-2, "\t-t       : toggles optimizing average rather than maximum level [default = %s]\n", abcSelect(pPars.FDoAverage, "yes", "no"))
+	Abc_Print(-2, "\t-g       : toggles using cut splitting [default = %s]\n", abcSelect(pPars.FCutGroup, "yes", "no"))
+	Abc_Print(-2, "\t-v       : toggles verbose output [default = %s]\n", abcSelect(pPars.FVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-w       : toggles very verbose output [default = %s]\n", abcSelect(pPars.FVeryVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h       : prints the command usage\n")
 	return 1
 }
@@ -38505,11 +38573,11 @@ usage:
 func Abc_CommandAbc9Mf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	var Buffer string // was [200]byte in C
 
-	var Pars Jf_Par_t
-	var pPars *Jf_Par_t = &Pars
+	var Pars giapkg.Jf_Par_t
+	var pPars *giapkg.Jf_Par_t = &Pars
 	var pNew *Gia_Man_t
 	var c int32
-	Mf_ManSetDefaultPars(pPars)
+	giapkg.Mf_ManSetDefaultPars(pPars)
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "KCFARLEDWaekmclgvwh"); c != -1; c = Extra_UtilGetopt(argc, argv, "KCFARLEDWaekmclgvwh") {
 		switch c {
@@ -38518,10 +38586,10 @@ func Abc_CommandAbc9Mf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-K\" should be followed by a positive integer.\n")
 				goto usage
 			}
-			pPars.nLutSize = abcAtoi(argv[globalUtilOptind])
+			pPars.NLutSize = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nLutSize < 2 || pPars.nLutSize > pPars.nLutSizeMax {
-				Abc_Print(-1, "LUT size %d is not supported.\n", pPars.nLutSize)
+			if pPars.NLutSize < 2 || pPars.NLutSize > pPars.NLutSizeMax {
+				Abc_Print(-1, "LUT size %d is not supported.\n", pPars.NLutSize)
 				goto usage
 			}
 			break
@@ -38530,10 +38598,10 @@ func Abc_CommandAbc9Mf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-C\" should be followed by a positive integer.\n")
 				goto usage
 			}
-			pPars.nCutNum = abcAtoi(argv[globalUtilOptind])
+			pPars.NCutNum = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nCutNum < 1 || pPars.nCutNum > pPars.nCutNumMax {
-				Abc_Print(-1, "This number of cuts (%d) is not supported.\n", pPars.nCutNum)
+			if pPars.NCutNum < 1 || pPars.NCutNum > pPars.NCutNumMax {
+				Abc_Print(-1, "This number of cuts (%d) is not supported.\n", pPars.NCutNum)
 				goto usage
 			}
 			break
@@ -38542,9 +38610,9 @@ func Abc_CommandAbc9Mf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-F\" should be followed by a positive integer.\n")
 				goto usage
 			}
-			pPars.nRounds = abcAtoi(argv[globalUtilOptind])
+			pPars.NRounds = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nRounds < 0 {
+			if pPars.NRounds < 0 {
 				goto usage
 			}
 			break
@@ -38553,9 +38621,9 @@ func Abc_CommandAbc9Mf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-A\" should be followed by a positive integer.\n")
 				goto usage
 			}
-			pPars.nRoundsEla = abcAtoi(argv[globalUtilOptind])
+			pPars.NRoundsEla = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nRoundsEla < 0 {
+			if pPars.NRoundsEla < 0 {
 				goto usage
 			}
 			break
@@ -38564,9 +38632,9 @@ func Abc_CommandAbc9Mf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(1, "Command line switch \"-R\" should be followed by a floating point number.\n")
 				return 0
 			}
-			pPars.nRelaxRatio = abcAtoi(argv[globalUtilOptind])
+			pPars.NRelaxRatio = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nRelaxRatio < 0 {
+			if pPars.NRelaxRatio < 0 {
 				goto usage
 			}
 			break
@@ -38575,9 +38643,9 @@ func Abc_CommandAbc9Mf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(1, "Command line switch \"-R\" should be followed by a floating point number.\n")
 				return 0
 			}
-			pPars.nCoarseLimit = abcAtoi(argv[globalUtilOptind])
+			pPars.NCoarseLimit = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nCoarseLimit < 0 {
+			if pPars.NCoarseLimit < 0 {
 				goto usage
 			}
 			break
@@ -38586,9 +38654,9 @@ func Abc_CommandAbc9Mf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(1, "Command line switch \"-E\" should be followed by a floating point number.\n")
 				return 0
 			}
-			pPars.nAreaTuner = abcAtoi(argv[globalUtilOptind])
+			pPars.NAreaTuner = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nAreaTuner < 0 {
+			if pPars.NAreaTuner < 0 {
 				goto usage
 			}
 			break
@@ -38608,38 +38676,38 @@ func Abc_CommandAbc9Mf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-W\" should be followed by a positive integer.\n")
 				goto usage
 			}
-			pPars.nVerbLimit = abcAtoi(argv[globalUtilOptind])
+			pPars.NVerbLimit = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nVerbLimit < 0 {
+			if pPars.NVerbLimit < 0 {
 				goto usage
 			}
 			break
 		case 'a':
-			pPars.fAreaOnly ^= 1
+			pPars.FAreaOnly ^= 1
 			break
 		case 'e':
-			pPars.fOptEdge ^= 1
+			pPars.FOptEdge ^= 1
 			break
 		case 'k':
-			pPars.fCoarsen ^= 1
+			pPars.FCoarsen ^= 1
 			break
 		case 'm':
-			pPars.fCutMin ^= 1
+			pPars.FCutMin ^= 1
 			break
 		case 'c':
-			pPars.fGenCnf ^= 1
+			pPars.FGenCnf ^= 1
 			break
 		case 'l':
-			pPars.fGenLit ^= 1
+			pPars.FGenLit ^= 1
 			break
 		case 'g':
-			pPars.fPureAig ^= 1
+			pPars.FPureAig ^= 1
 			break
 		case 'v':
-			pPars.fVerbose ^= 1
+			pPars.FVerbose ^= 1
 			break
 		case 'w':
-			pPars.fVeryVerbose ^= 1
+			pPars.FVeryVerbose ^= 1
 			break
 		case 'h':
 			fallthrough
@@ -38653,14 +38721,14 @@ func Abc_CommandAbc9Mf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 1
 	}
 
-	pNew = Mf_ManPerformMapping(abcFrameGia(pAbc), pPars)
+	pNew = giapkg.Mf_ManPerformMapping(abcFrameGia(pAbc), pPars)
 	if pNew == nil {
 		Abc_Print(-1, "Abc_CommandAbc9Lf(): Mapping into LUTs has failed.\n")
 		return 1
 	}
-	if pPars.fGenCnf {
-		cnf, _ := abcFrameGia(pAbc).Data().(*Cnf_Dat_t)
-		Cnf_DataFree(cnf)
+	if pPars.FGenCnf != 0 {
+		cnf, _ := abcFrameGia(pAbc).Data().(*giapkg.Cnf_Dat_t)
+		sat_cnf.Cnf_DataFree(cnf)
 		abcFrameGia(pAbc).SetData(nil)
 	}
 	Abc_FrameUpdateGia(pAbc, pNew)
@@ -38674,23 +38742,23 @@ usage:
 	}
 	Abc_Print(-2, "usage: &mf [-KCFARLED num] [-akmcgvwh]\n")
 	Abc_Print(-2, "\t           performs technology mapping of the network\n")
-	Abc_Print(-2, "\t-K num   : LUT size for the mapping (2 <= K <= %d) [default = %d]\n", pPars.nLutSizeMax, pPars.nLutSize)
-	Abc_Print(-2, "\t-C num   : the max number of priority cuts (1 <= C <= %d) [default = %d]\n", pPars.nCutNumMax, pPars.nCutNum)
-	Abc_Print(-2, "\t-F num   : the number of area flow rounds [default = %d]\n", pPars.nRounds)
-	Abc_Print(-2, "\t-A num   : the number of exact area rounds [default = %d]\n", pPars.nRoundsEla)
-	Abc_Print(-2, "\t-R num   : the delay relaxation ratio (num >= 0) [default = %d]\n", pPars.nRelaxRatio)
-	Abc_Print(-2, "\t-L num   : the fanout limit for coarsening XOR/MUX (num >= 2) [default = %d]\n", pPars.nCoarseLimit)
-	Abc_Print(-2, "\t-E num   : the area/edge tradeoff parameter (0 <= num <= 100) [default = %d]\n", pPars.nAreaTuner)
+	Abc_Print(-2, "\t-K num   : LUT size for the mapping (2 <= K <= %d) [default = %d]\n", pPars.NLutSizeMax, pPars.NLutSize)
+	Abc_Print(-2, "\t-C num   : the max number of priority cuts (1 <= C <= %d) [default = %d]\n", pPars.NCutNumMax, pPars.NCutNum)
+	Abc_Print(-2, "\t-F num   : the number of area flow rounds [default = %d]\n", pPars.NRounds)
+	Abc_Print(-2, "\t-A num   : the number of exact area rounds [default = %d]\n", pPars.NRoundsEla)
+	Abc_Print(-2, "\t-R num   : the delay relaxation ratio (num >= 0) [default = %d]\n", pPars.NRelaxRatio)
+	Abc_Print(-2, "\t-L num   : the fanout limit for coarsening XOR/MUX (num >= 2) [default = %d]\n", pPars.NCoarseLimit)
+	Abc_Print(-2, "\t-E num   : the area/edge tradeoff parameter (0 <= num <= 100) [default = %d]\n", pPars.NAreaTuner)
 	Abc_Print(-2, "\t-D num   : sets the delay constraint for the mapping [default = %s]\n", Buffer)
-	Abc_Print(-2, "\t-a       : toggles area-oriented mapping [default = %s]\n", abcSelect(fAreaOnly, "yes", "no"))
-	Abc_Print(-2, "\t-e       : toggles edge vs node minimization [default = %s]\n", abcSelect(fOptEdge, "yes", "no"))
-	Abc_Print(-2, "\t-k       : toggles coarsening the subject graph [default = %s]\n", abcSelect(fCoarsen, "yes", "no"))
-	Abc_Print(-2, "\t-m       : toggles cut minimization [default = %s]\n", abcSelect(fCutMin, "yes", "no"))
-	Abc_Print(-2, "\t-c       : toggles mapping for CNF generation [default = %s]\n", abcSelect(fGenCnf, "yes", "no"))
-	Abc_Print(-2, "\t-l       : toggles mapping for literals [default = %s]\n", abcSelect(fGenLit, "yes", "no"))
-	Abc_Print(-2, "\t-g       : toggles generating AIG without mapping [default = %s]\n", abcSelect(fPureAig, "yes", "no"))
-	Abc_Print(-2, "\t-v       : toggles verbose output [default = %s]\n", abcSelect(fVerbose, "yes", "no"))
-	Abc_Print(-2, "\t-w       : toggles very verbose output [default = %s]\n", abcSelect(fVeryVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-a       : toggles area-oriented mapping [default = %s]\n", abcSelect(pPars.FAreaOnly, "yes", "no"))
+	Abc_Print(-2, "\t-e       : toggles edge vs node minimization [default = %s]\n", abcSelect(pPars.FOptEdge, "yes", "no"))
+	Abc_Print(-2, "\t-k       : toggles coarsening the subject graph [default = %s]\n", abcSelect(pPars.FCoarsen, "yes", "no"))
+	Abc_Print(-2, "\t-m       : toggles cut minimization [default = %s]\n", abcSelect(pPars.FCutMin, "yes", "no"))
+	Abc_Print(-2, "\t-c       : toggles mapping for CNF generation [default = %s]\n", abcSelect(pPars.FGenCnf, "yes", "no"))
+	Abc_Print(-2, "\t-l       : toggles mapping for literals [default = %s]\n", abcSelect(pPars.FGenLit, "yes", "no"))
+	Abc_Print(-2, "\t-g       : toggles generating AIG without mapping [default = %s]\n", abcSelect(pPars.FPureAig, "yes", "no"))
+	Abc_Print(-2, "\t-v       : toggles verbose output [default = %s]\n", abcSelect(pPars.FVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-w       : toggles very verbose output [default = %s]\n", abcSelect(pPars.FVeryVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h       : prints the command usage\n")
 	return 1
 }
@@ -38712,11 +38780,11 @@ func Abc_CommandAbc9Nf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 
 	var Buffer string // was [200]byte in C
 
-	var Pars Jf_Par_t
-	var pPars *Jf_Par_t = &Pars
+	var Pars giapkg.Jf_Par_t
+	var pPars *giapkg.Jf_Par_t = &Pars
 	var pNew *Gia_Man_t
 	var c int32
-	Nf_ManSetDefaultPars(pPars)
+	giapkg.Nf_ManSetDefaultPars(pPars)
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "KCFARLEDQWakpqfvwh"); c != -1; c = Extra_UtilGetopt(argc, argv, "KCFARLEDQWakpqfvwh") {
 		switch c {
@@ -38725,10 +38793,10 @@ func Abc_CommandAbc9Nf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-K\" should be followed by a positive integer.\n")
 				goto usage
 			}
-			pPars.nLutSize = abcAtoi(argv[globalUtilOptind])
+			pPars.NLutSize = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nLutSize < 2 || pPars.nLutSize > pPars.nLutSizeMax {
-				Abc_Print(-1, "LUT size %d is not supported.\n", pPars.nLutSize)
+			if pPars.NLutSize < 2 || pPars.NLutSize > pPars.NLutSizeMax {
+				Abc_Print(-1, "LUT size %d is not supported.\n", pPars.NLutSize)
 				goto usage
 			}
 			break
@@ -38737,10 +38805,10 @@ func Abc_CommandAbc9Nf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-C\" should be followed by a positive integer.\n")
 				goto usage
 			}
-			pPars.nCutNum = abcAtoi(argv[globalUtilOptind])
+			pPars.NCutNum = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nCutNum < 1 || pPars.nCutNum > pPars.nCutNumMax {
-				Abc_Print(-1, "This number of cuts (%d) is not supported.\n", pPars.nCutNum)
+			if pPars.NCutNum < 1 || pPars.NCutNum > pPars.NCutNumMax {
+				Abc_Print(-1, "This number of cuts (%d) is not supported.\n", pPars.NCutNum)
 				goto usage
 			}
 			break
@@ -38749,9 +38817,9 @@ func Abc_CommandAbc9Nf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-F\" should be followed by a positive integer.\n")
 				goto usage
 			}
-			pPars.nRounds = abcAtoi(argv[globalUtilOptind])
+			pPars.NRounds = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nRounds < 0 {
+			if pPars.NRounds < 0 {
 				goto usage
 			}
 			break
@@ -38760,9 +38828,9 @@ func Abc_CommandAbc9Nf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-A\" should be followed by a positive integer.\n")
 				goto usage
 			}
-			pPars.nRoundsEla = abcAtoi(argv[globalUtilOptind])
+			pPars.NRoundsEla = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nRoundsEla < 0 {
+			if pPars.NRoundsEla < 0 {
 				goto usage
 			}
 			break
@@ -38771,9 +38839,9 @@ func Abc_CommandAbc9Nf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(1, "Command line switch \"-R\" should be followed by an integer number.\n")
 				return 0
 			}
-			pPars.nRelaxRatio = abcAtoi(argv[globalUtilOptind])
+			pPars.NRelaxRatio = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nRelaxRatio < 0 {
+			if pPars.NRelaxRatio < 0 {
 				goto usage
 			}
 			break
@@ -38782,9 +38850,9 @@ func Abc_CommandAbc9Nf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(1, "Command line switch \"-R\" should be followed by an integer number.\n")
 				return 0
 			}
-			pPars.nCoarseLimit = abcAtoi(argv[globalUtilOptind])
+			pPars.NCoarseLimit = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nCoarseLimit < 0 {
+			if pPars.NCoarseLimit < 0 {
 				goto usage
 			}
 			break
@@ -38793,9 +38861,9 @@ func Abc_CommandAbc9Nf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(1, "Command line switch \"-E\" should be followed by an integer number.\n")
 				return 0
 			}
-			pPars.nAreaTuner = abcAtoi(argv[globalUtilOptind])
+			pPars.NAreaTuner = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nAreaTuner < 0 {
+			if pPars.NAreaTuner < 0 {
 				goto usage
 			}
 			break
@@ -38815,9 +38883,9 @@ func Abc_CommandAbc9Nf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-D\" should be followed by an integer number.\n")
 				goto usage
 			}
-			pPars.nReqTimeFlex = abcAtoi(argv[globalUtilOptind])
+			pPars.NReqTimeFlex = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nReqTimeFlex < 0 {
+			if pPars.NReqTimeFlex < 0 {
 				goto usage
 			}
 			break
@@ -38826,32 +38894,32 @@ func Abc_CommandAbc9Nf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-W\" should be followed by a positive integer.\n")
 				goto usage
 			}
-			pPars.nVerbLimit = abcAtoi(argv[globalUtilOptind])
+			pPars.NVerbLimit = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nVerbLimit < 0 {
+			if pPars.NVerbLimit < 0 {
 				goto usage
 			}
 			break
 		case 'a':
-			pPars.fAreaOnly ^= 1
+			pPars.FAreaOnly ^= 1
 			break
 		case 'k':
-			pPars.fCoarsen ^= 1
+			pPars.FCoarsen ^= 1
 			break
 		case 'p':
-			pPars.fPinPerm ^= 1
+			pPars.FPinPerm ^= 1
 			break
 		case 'q':
-			pPars.fPinQuick ^= 1
+			pPars.FPinQuick ^= 1
 			break
 		case 'f':
-			pPars.fPinFilter ^= 1
+			pPars.FPinFilter ^= 1
 			break
 		case 'v':
-			pPars.fVerbose ^= 1
+			pPars.FVerbose ^= 1
 			break
 		case 'w':
-			pPars.fVeryVerbose ^= 1
+			pPars.FVeryVerbose ^= 1
 			break
 		case 'h':
 			fallthrough
@@ -38863,14 +38931,14 @@ func Abc_CommandAbc9Nf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Empty GIA network.\n")
 		return 1
 	}
-	if Abc_FrameReadLibGen() == nil {
+	if base_main.Abc_FrameReadLibGen() == nil {
 		Abc_Print(-1, "Current library is not available.\n")
 		return 1
 	}
-	//    if ( pPars->fAreaOnly )
+	//    if ( pPars->pPars.fAreaOnly )
 	//        pNew = Pf_ManPerformMapping( pAbc->pGia, pPars );
 	//    else
-	pNew = Nf_ManPerformMapping(abcFrameGia(pAbc), pPars)
+	pNew = giapkg.Nf_ManPerformMapping(abcFrameGia(pAbc), pPars)
 	if pNew == nil {
 		Abc_Print(-1, "Abc_CommandAbc9Nf(): Mapping into LUTs has failed.\n")
 		return 1
@@ -38886,22 +38954,22 @@ usage:
 	}
 	Abc_Print(-2, "usage: &nf [-KCFARLEDQ num] [-akpqfvwh]\n")
 	Abc_Print(-2, "\t           performs technology mapping of the network\n")
-	Abc_Print(-2, "\t-K num   : LUT size for the mapping (2 <= K <= %d) [default = %d]\n", pPars.nLutSizeMax, pPars.nLutSize)
-	Abc_Print(-2, "\t-C num   : the max number of priority cuts (1 <= C <= %d) [default = %d]\n", pPars.nCutNumMax, pPars.nCutNum)
-	Abc_Print(-2, "\t-F num   : the number of area flow rounds [default = %d]\n", pPars.nRounds)
-	Abc_Print(-2, "\t-A num   : the number of exact area rounds (when '-a' is used) [default = %d]\n", pPars.nRoundsEla)
-	Abc_Print(-2, "\t-R num   : the delay relaxation ratio (num >= 0) [default = %d]\n", pPars.nRelaxRatio)
-	Abc_Print(-2, "\t-L num   : the fanout limit for coarsening XOR/MUX (num >= 2) [default = %d]\n", pPars.nCoarseLimit)
-	Abc_Print(-2, "\t-E num   : the area/edge tradeoff parameter (0 <= num <= 100) [default = %d]\n", pPars.nAreaTuner)
+	Abc_Print(-2, "\t-K num   : LUT size for the mapping (2 <= K <= %d) [default = %d]\n", pPars.NLutSizeMax, pPars.NLutSize)
+	Abc_Print(-2, "\t-C num   : the max number of priority cuts (1 <= C <= %d) [default = %d]\n", pPars.NCutNumMax, pPars.NCutNum)
+	Abc_Print(-2, "\t-F num   : the number of area flow rounds [default = %d]\n", pPars.NRounds)
+	Abc_Print(-2, "\t-A num   : the number of exact area rounds (when '-a' is used) [default = %d]\n", pPars.NRoundsEla)
+	Abc_Print(-2, "\t-R num   : the delay relaxation ratio (num >= 0) [default = %d]\n", pPars.NRelaxRatio)
+	Abc_Print(-2, "\t-L num   : the fanout limit for coarsening XOR/MUX (num >= 2) [default = %d]\n", pPars.NCoarseLimit)
+	Abc_Print(-2, "\t-E num   : the area/edge tradeoff parameter (0 <= num <= 100) [default = %d]\n", pPars.NAreaTuner)
 	Abc_Print(-2, "\t-D num   : sets the delay constraint for the mapping [default = %s]\n", Buffer)
-	Abc_Print(-2, "\t-Q num   : internal parameter impacting area of the mapping [default = %d]\n", pPars.nReqTimeFlex)
-	Abc_Print(-2, "\t-a       : toggles SAT-based area-oriented mapping (experimental) [default = %s]\n", abcSelect(fAreaOnly, "yes", "no"))
-	Abc_Print(-2, "\t-k       : toggles coarsening the subject graph [default = %s]\n", abcSelect(fCoarsen, "yes", "no"))
-	Abc_Print(-2, "\t-p       : toggles pin permutation (more matches - better quality) [default = %s]\n", abcSelect(fPinPerm, "yes", "no"))
-	Abc_Print(-2, "\t-q       : toggles quick mapping (fewer matches - worse quality) [default = %s]\n", abcSelect(fPinQuick, "yes", "no"))
-	Abc_Print(-2, "\t-f       : toggles filtering matches (useful with unit delay model) [default = %s]\n", abcSelect(fPinFilter, "yes", "no"))
-	Abc_Print(-2, "\t-v       : toggles verbose output [default = %s]\n", abcSelect(fVerbose, "yes", "no"))
-	Abc_Print(-2, "\t-w       : toggles very verbose output [default = %s]\n", abcSelect(fVeryVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-Q num   : internal parameter impacting area of the mapping [default = %d]\n", pPars.NReqTimeFlex)
+	Abc_Print(-2, "\t-a       : toggles SAT-based area-oriented mapping (experimental) [default = %s]\n", abcSelect(pPars.FAreaOnly, "yes", "no"))
+	Abc_Print(-2, "\t-k       : toggles coarsening the subject graph [default = %s]\n", abcSelect(pPars.FCoarsen, "yes", "no"))
+	Abc_Print(-2, "\t-p       : toggles pin permutation (more matches - better quality) [default = %s]\n", abcSelect(pPars.FPinPerm, "yes", "no"))
+	Abc_Print(-2, "\t-q       : toggles quick mapping (fewer matches - worse quality) [default = %s]\n", abcSelect(pPars.FPinQuick, "yes", "no"))
+	Abc_Print(-2, "\t-f       : toggles filtering matches (useful with unit delay model) [default = %s]\n", abcSelect(pPars.FPinFilter, "yes", "no"))
+	Abc_Print(-2, "\t-v       : toggles verbose output [default = %s]\n", abcSelect(pPars.FVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-w       : toggles very verbose output [default = %s]\n", abcSelect(pPars.FVeryVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h       : prints the command usage\n")
 	return 1
 }
@@ -38923,11 +38991,11 @@ func Abc_CommandAbc9Of(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 
 	var Buffer string // was [200]byte in C
 
-	var Pars Jf_Par_t
-	var pPars *Jf_Par_t = &Pars
+	var Pars giapkg.Jf_Par_t
+	var pPars *giapkg.Jf_Par_t = &Pars
 	var pNew *Gia_Man_t
 	var c int32
-	Of_ManSetDefaultPars(pPars)
+	giapkg.Of_ManSetDefaultPars(pPars)
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "KCFARLEDNMQekmpgtvwh"); c != -1; c = Extra_UtilGetopt(argc, argv, "KCFARLEDNMQekmpgtvwh") {
 		switch c {
@@ -38936,10 +39004,10 @@ func Abc_CommandAbc9Of(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-K\" should be followed by a positive integer.\n")
 				goto usage
 			}
-			pPars.nLutSize = abcAtoi(argv[globalUtilOptind])
+			pPars.NLutSize = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nLutSize < 2 || pPars.nLutSize > pPars.nLutSizeMax {
-				Abc_Print(-1, "LUT size %d is not supported.\n", pPars.nLutSize)
+			if pPars.NLutSize < 2 || pPars.NLutSize > pPars.NLutSizeMax {
+				Abc_Print(-1, "LUT size %d is not supported.\n", pPars.NLutSize)
 				goto usage
 			}
 			break
@@ -38948,10 +39016,10 @@ func Abc_CommandAbc9Of(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-C\" should be followed by a positive integer.\n")
 				goto usage
 			}
-			pPars.nCutNum = abcAtoi(argv[globalUtilOptind])
+			pPars.NCutNum = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nCutNum < 1 || pPars.nCutNum > pPars.nCutNumMax {
-				Abc_Print(-1, "This number of cuts (%d) is not supported.\n", pPars.nCutNum)
+			if pPars.NCutNum < 1 || pPars.NCutNum > pPars.NCutNumMax {
+				Abc_Print(-1, "This number of cuts (%d) is not supported.\n", pPars.NCutNum)
 				goto usage
 			}
 			break
@@ -38960,9 +39028,9 @@ func Abc_CommandAbc9Of(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-F\" should be followed by a positive integer.\n")
 				goto usage
 			}
-			pPars.nRounds = abcAtoi(argv[globalUtilOptind])
+			pPars.NRounds = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nRounds < 0 {
+			if pPars.NRounds < 0 {
 				goto usage
 			}
 			break
@@ -38971,9 +39039,9 @@ func Abc_CommandAbc9Of(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-A\" should be followed by a positive integer.\n")
 				goto usage
 			}
-			pPars.nRoundsEla = abcAtoi(argv[globalUtilOptind])
+			pPars.NRoundsEla = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nRoundsEla < 0 {
+			if pPars.NRoundsEla < 0 {
 				goto usage
 			}
 			break
@@ -38982,9 +39050,9 @@ func Abc_CommandAbc9Of(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(1, "Command line switch \"-R\" should be followed by a floating point number.\n")
 				return 0
 			}
-			pPars.nRelaxRatio = abcAtoi(argv[globalUtilOptind])
+			pPars.NRelaxRatio = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nRelaxRatio < 0 {
+			if pPars.NRelaxRatio < 0 {
 				goto usage
 			}
 			break
@@ -38993,9 +39061,9 @@ func Abc_CommandAbc9Of(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(1, "Command line switch \"-R\" should be followed by a floating point number.\n")
 				return 0
 			}
-			pPars.nCoarseLimit = abcAtoi(argv[globalUtilOptind])
+			pPars.NCoarseLimit = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nCoarseLimit < 0 {
+			if pPars.NCoarseLimit < 0 {
 				goto usage
 			}
 			break
@@ -39004,9 +39072,9 @@ func Abc_CommandAbc9Of(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(1, "Command line switch \"-E\" should be followed by a floating point number.\n")
 				return 0
 			}
-			pPars.nAreaTuner = abcAtoi(argv[globalUtilOptind])
+			pPars.NAreaTuner = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nAreaTuner < 0 {
+			if pPars.NAreaTuner < 0 {
 				goto usage
 			}
 			break
@@ -39026,9 +39094,9 @@ func Abc_CommandAbc9Of(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-N\" should be followed by a positive integer.\n")
 				goto usage
 			}
-			pPars.nDelayLut1 = abcAtoi(argv[globalUtilOptind])
+			pPars.NDelayLut1 = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nDelayLut1 < 0 {
+			if pPars.NDelayLut1 < 0 {
 				goto usage
 			}
 			break
@@ -39037,9 +39105,9 @@ func Abc_CommandAbc9Of(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-M\" should be followed by a positive integer.\n")
 				goto usage
 			}
-			pPars.nDelayLut2 = abcAtoi(argv[globalUtilOptind])
+			pPars.NDelayLut2 = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nDelayLut2 < 0 {
+			if pPars.NDelayLut2 < 0 {
 				goto usage
 			}
 			break
@@ -39048,35 +39116,35 @@ func Abc_CommandAbc9Of(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-Q\" should be followed by a positive integer.\n")
 				goto usage
 			}
-			pPars.nFastEdges = abcAtoi(argv[globalUtilOptind])
+			pPars.NFastEdges = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nFastEdges < 0 {
+			if pPars.NFastEdges < 0 {
 				goto usage
 			}
 			break
 		case 'e':
-			pPars.fOptEdge ^= 1
+			pPars.FOptEdge ^= 1
 			break
 		case 'k':
-			pPars.fCoarsen ^= 1
+			pPars.FCoarsen ^= 1
 			break
 		case 'm':
-			pPars.fCutMin ^= 1
+			pPars.FCutMin ^= 1
 			break
 		case 'p':
-			pPars.fPower ^= 1
+			pPars.FPower ^= 1
 			break
 		case 'g':
-			pPars.fPureAig ^= 1
+			pPars.FPureAig ^= 1
 			break
 		case 't':
-			pPars.fDoAverage ^= 1
+			pPars.FDoAverage ^= 1
 			break
 		case 'v':
-			pPars.fVerbose ^= 1
+			pPars.FVerbose ^= 1
 			break
 		case 'w':
-			pPars.fVeryVerbose ^= 1
+			pPars.FVeryVerbose ^= 1
 			break
 		case 'h':
 			fallthrough
@@ -39089,12 +39157,12 @@ func Abc_CommandAbc9Of(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Empty GIA network.\n")
 		return 1
 	}
-	if Gia_ManHasMapping(abcFrameGia(pAbc)) {
+	if Gia_ManHasMapping(abcFrameGia(pAbc)) != 0 {
 		Abc_Print(-1, "Current AIG has mapping. Run \"&st\".\n")
 		return 1
 	}
 
-	pNew = Of_ManPerformMapping(abcFrameGia(pAbc), pPars)
+	pNew = giapkg.Of_ManPerformMapping(abcFrameGia(pAbc), pPars)
 	if pNew == nil {
 		Abc_Print(-1, "Abc_CommandAbc9Of(): Mapping into LUTs has failed.\n")
 		return 1
@@ -39110,25 +39178,25 @@ usage:
 	}
 	Abc_Print(-2, "usage: &of [-KCFARLEDNMQ num] [-kmpgtvwh]\n")
 	Abc_Print(-2, "\t           performs technology mapping of the network\n")
-	Abc_Print(-2, "\t-K num   : LUT size for the mapping (2 <= K <= %d) [default = %d]\n", pPars.nLutSizeMax, pPars.nLutSize)
-	Abc_Print(-2, "\t-C num   : the max number of priority cuts (1 <= C <= %d) [default = %d]\n", pPars.nCutNumMax, pPars.nCutNum)
-	Abc_Print(-2, "\t-F num   : the number of area flow rounds [default = %d]\n", pPars.nRounds)
-	Abc_Print(-2, "\t-A num   : the number of exact area rounds [default = %d]\n", pPars.nRoundsEla)
-	Abc_Print(-2, "\t-R num   : the delay relaxation ratio (num >= 0) [default = %d]\n", pPars.nRelaxRatio)
-	Abc_Print(-2, "\t-L num   : the fanout limit for coarsening XOR/MUX (num >= 2) [default = %d]\n", pPars.nCoarseLimit)
-	Abc_Print(-2, "\t-E num   : the area/edge tradeoff parameter (0 <= num <= 100) [default = %d]\n", pPars.nAreaTuner)
+	Abc_Print(-2, "\t-K num   : LUT size for the mapping (2 <= K <= %d) [default = %d]\n", pPars.NLutSizeMax, pPars.NLutSize)
+	Abc_Print(-2, "\t-C num   : the max number of priority cuts (1 <= C <= %d) [default = %d]\n", pPars.NCutNumMax, pPars.NCutNum)
+	Abc_Print(-2, "\t-F num   : the number of area flow rounds [default = %d]\n", pPars.NRounds)
+	Abc_Print(-2, "\t-A num   : the number of exact area rounds [default = %d]\n", pPars.NRoundsEla)
+	Abc_Print(-2, "\t-R num   : the delay relaxation ratio (num >= 0) [default = %d]\n", pPars.NRelaxRatio)
+	Abc_Print(-2, "\t-L num   : the fanout limit for coarsening XOR/MUX (num >= 2) [default = %d]\n", pPars.NCoarseLimit)
+	Abc_Print(-2, "\t-E num   : the area/edge tradeoff parameter (0 <= num <= 100) [default = %d]\n", pPars.NAreaTuner)
 	Abc_Print(-2, "\t-D num   : sets the delay constraint for the mapping [default = %s]\n", Buffer)
-	Abc_Print(-2, "\t-N num   : delay of the first LUT [default = %d]\n", pPars.nDelayLut1)
-	Abc_Print(-2, "\t-M num   : delay of the second LUT [default = %d]\n", pPars.nDelayLut2)
-	Abc_Print(-2, "\t-Q num   : the number of fast non-routable edges [default = %d]\n", pPars.nFastEdges)
-	Abc_Print(-2, "\t-e       : toggles edge vs node minimization [default = %s]\n", abcSelect(fOptEdge, "yes", "no"))
-	Abc_Print(-2, "\t-k       : toggles coarsening the subject graph [default = %s]\n", abcSelect(fCoarsen, "yes", "no"))
-	Abc_Print(-2, "\t-m       : toggles cut minimization [default = %s]\n", abcSelect(fCutMin, "yes", "no"))
-	Abc_Print(-2, "\t-p       : toggles power-aware cut selection heuristics [default = %s]\n", abcSelect(fPower, "yes", "no"))
-	Abc_Print(-2, "\t-g       : toggles generating AIG without mapping [default = %s]\n", abcSelect(fPureAig, "yes", "no"))
-	Abc_Print(-2, "\t-t       : toggles optimizing average rather than maximum level [default = %s]\n", abcSelect(fDoAverage, "yes", "no"))
-	Abc_Print(-2, "\t-v       : toggles verbose output [default = %s]\n", abcSelect(fVerbose, "yes", "no"))
-	Abc_Print(-2, "\t-w       : toggles very verbose output [default = %s]\n", abcSelect(fVeryVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-N num   : delay of the first LUT [default = %d]\n", pPars.NDelayLut1)
+	Abc_Print(-2, "\t-M num   : delay of the second LUT [default = %d]\n", pPars.NDelayLut2)
+	Abc_Print(-2, "\t-Q num   : the number of fast non-routable edges [default = %d]\n", pPars.NFastEdges)
+	Abc_Print(-2, "\t-e       : toggles edge vs node minimization [default = %s]\n", abcSelect(pPars.FOptEdge, "yes", "no"))
+	Abc_Print(-2, "\t-k       : toggles coarsening the subject graph [default = %s]\n", abcSelect(pPars.FCoarsen, "yes", "no"))
+	Abc_Print(-2, "\t-m       : toggles cut minimization [default = %s]\n", abcSelect(pPars.FCutMin, "yes", "no"))
+	Abc_Print(-2, "\t-p       : toggles power-aware cut selection heuristics [default = %s]\n", abcSelect(pPars.FPower, "yes", "no"))
+	Abc_Print(-2, "\t-g       : toggles generating AIG without mapping [default = %s]\n", abcSelect(pPars.FPureAig, "yes", "no"))
+	Abc_Print(-2, "\t-t       : toggles optimizing average rather than maximum level [default = %s]\n", abcSelect(pPars.FDoAverage, "yes", "no"))
+	Abc_Print(-2, "\t-v       : toggles verbose output [default = %s]\n", abcSelect(pPars.FVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-w       : toggles very verbose output [default = %s]\n", abcSelect(pPars.FVeryVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h       : prints the command usage\n")
 	return 1
 }
@@ -39206,14 +39274,14 @@ func Abc_CommandAbc9Pack(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Empty GIA network.\n")
 		return 1
 	}
-	if !Gia_ManHasMapping(abcFrameGia(pAbc)) {
+	if Gia_ManHasMapping(abcFrameGia(pAbc)) == 0 {
 		Abc_Print(-1, "Current AIG has no mapping. Run \"&if\".\n")
 		return 1
 	}
 	if Gia_ManLutSizeMax(abcFrameGia(pAbc)) > 6 {
 		Abc_Print(0, "Current AIG has mapping into %d-LUTs.\n", Gia_ManLutSizeMax(abcFrameGia(pAbc)))
 	} else {
-		Gia_ManLutPacking(abcFrameGia(pAbc), nBlock, DelayRoute, DelayDir, fVerbose)
+		giapkg.Gia_ManLutPacking(abcFrameGia(pAbc), nBlock, DelayRoute, DelayDir, fVerbose)
 	}
 	return 0
 
@@ -39322,10 +39390,10 @@ func Abc_CommandAbc9Edge(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 1
 	}
 	if fMapping != 0 {
-		Sle_ManExplore(abcFrameGia(pAbc), nBTLimit, DelayMax, fDynamic, nEdges == 2, fVerbose)
+		giapkg.Sle_ManExplore(abcFrameGia(pAbc), nBTLimit, DelayMax, fDynamic, nEdges == 2, fVerbose)
 		return 0
 	}
-	if !Gia_ManHasMapping(abcFrameGia(pAbc)) {
+	if Gia_ManHasMapping(abcFrameGia(pAbc)) == 0 {
 		Abc_Print(-1, "Current AIG has no mapping. Run \"&if\".\n")
 		return 1
 	}
@@ -39338,12 +39406,12 @@ func Abc_CommandAbc9Edge(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			Abc_Print(-1, "Packing information is not present.\n")
 			return 0
 		}
-		Gia_ManConvertPackingToEdges(abcFrameGia(pAbc))
+		giapkg.Gia_ManConvertPackingToEdges(abcFrameGia(pAbc))
 		return 0
 	}
 	if !(fUseOld != 0) {
 		//Edg_ManAssignEdgeNew( pAbc->pGia, nEdges, fVerbose );
-		Seg_ManComputeDelay(abcFrameGia(pAbc), DelayMax, nFanouts, nEdges == 2, fVerbose)
+		giapkg.Seg_ManComputeDelay(abcFrameGia(pAbc), DelayMax, nFanouts, nEdges == 2, fVerbose)
 		return 0
 	}
 	if abcFrameGia(pAbc).pManTime && (fReverse != 0) {
@@ -39351,9 +39419,9 @@ func Abc_CommandAbc9Edge(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 0
 	}
 	if fReverse != 0 {
-		DelayMax = Gia_ManComputeEdgeDelay2(abcFrameGia(pAbc))
+		DelayMax = giapkg.Gia_ManComputeEdgeDelay2(abcFrameGia(pAbc))
 	} else {
-		DelayMax = Gia_ManComputeEdgeDelay(abcFrameGia(pAbc), nEdges == 2)
+		DelayMax = giapkg.Gia_ManComputeEdgeDelay(abcFrameGia(pAbc), nEdges == 2)
 	}
 	//printf( "The number of edges = %d.  Delay = %d.\n", Gia_ManEvalEdgeCount(pAbc->pGia), DelayMax );
 	return 0
@@ -39468,7 +39536,7 @@ func Abc_CommandAbc9SatLut(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Empty GIA network.\n")
 		return 1
 	}
-	if !Gia_ManHasMapping(abcFrameGia(pAbc)) {
+	if Gia_ManHasMapping(abcFrameGia(pAbc)) == 0 {
 		Abc_Print(-1, "Current AIG has no mapping. Run \"&if\".\n")
 		return 1
 	}
@@ -39476,7 +39544,7 @@ func Abc_CommandAbc9SatLut(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	if LutSize > 6 {
 		Abc_Print(0, "Current AIG is mapped into %d-LUTs (only 6-LUT mapping is currently supported).\n", Gia_ManLutSizeMax(abcFrameGia(pAbc)))
 	} else {
-		Gia_ManLutSat(abcFrameGia(pAbc), LutSize, nNumber, nImproves, nBTLimit, DelayMax, nEdges, fDelay, fReverse, fVerbose, fVeryVerbose)
+		giapkg.Gia_ManLutSat(abcFrameGia(pAbc), LutSize, nNumber, nImproves, nBTLimit, DelayMax, nEdges, fDelay, fReverse, fVerbose, fVeryVerbose)
 	}
 	return 0
 
@@ -39576,7 +39644,7 @@ func Abc_CommandAbc9Struct(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Struct(): There is no AIG to map.\n")
 		return 1
 	}
-	if !Gia_ManHasMapping(abcFrameGia(pAbc)) {
+	if Gia_ManHasMapping(abcFrameGia(pAbc)) == 0 {
 		Abc_Print(-1, "Abc_CommandAbc9Struct(): Mapping of the AIG is not defined.\n")
 		return 1
 	}
@@ -39584,7 +39652,7 @@ func Abc_CommandAbc9Struct(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Struct(): Can only handle nodes with less than 8 inputs.\n")
 		return 1
 	}
-	Gia_ManTestStruct(abcFrameGia(pAbc))
+	ifpkg.Gia_ManTestStruct(abcFrameGia(pAbc))
 	return 0
 
 usage:
@@ -39634,7 +39702,7 @@ func Abc_CommandAbc9Trace(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Speedup(): There is no AIG to map.\n")
 		return 1
 	}
-	if !Gia_ManHasMapping(abcFrameGia(pAbc)) {
+	if Gia_ManHasMapping(abcFrameGia(pAbc)) == 0 {
 		Abc_Print(-1, "Abc_CommandAbc9Speedup(): Mapping of the AIG is not defined.\n")
 		return 1
 	}
@@ -39643,7 +39711,7 @@ func Abc_CommandAbc9Trace(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	} else {
 		abcFrameGia(pAbc).pLutLib = nil
 	}
-	Gia_ManDelayTraceLutPrint(abcFrameGia(pAbc), fVerbose)
+	giapkg.Gia_ManDelayTraceLutPrint(abcFrameGia(pAbc), fVerbose)
 	return 0
 
 usage:
@@ -39726,7 +39794,7 @@ func Abc_CommandAbc9Speedup(pAbc *Abc_Frame_t, argc int32, argv []string) int32 
 		Abc_Print(-1, "Abc_CommandAbc9Speedup(): There is no AIG to map.\n")
 		return 1
 	}
-	if !Gia_ManHasMapping(abcFrameGia(pAbc)) {
+	if Gia_ManHasMapping(abcFrameGia(pAbc)) == 0 {
 		Abc_Print(-1, "Abc_CommandAbc9Speedup(): Mapping of the AIG is not defined.\n")
 		return 1
 	}
@@ -39735,7 +39803,7 @@ func Abc_CommandAbc9Speedup(pAbc *Abc_Frame_t, argc int32, argv []string) int32 
 	} else {
 		abcFrameGia(pAbc).pLutLib = nil
 	}
-	pTemp = Gia_ManSpeedup(abcFrameGia(pAbc), Percentage, Degree, fVerbose, fVeryVerbose)
+	pTemp = giapkg.Gia_ManSpeedup(abcFrameGia(pAbc), Percentage, Degree, fVerbose, fVeryVerbose)
 	Abc_FrameUpdateGia(pAbc, pTemp)
 	return 0
 
@@ -39818,9 +39886,9 @@ func Abc_CommandAbc9Era(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 1
 	}
 	if (fUseCubes != 0) && !(fDumpFile != 0) {
-		abcFrameSetStatus(pAbc, Gia_ManArePerform(abcFrameGia(pAbc), nStatesMax, fMiter, fVerbose))
+		abcFrameSetStatus(pAbc, giapkg.Gia_ManArePerform(abcFrameGia(pAbc), nStatesMax, fMiter, fVerbose))
 	} else {
-		abcFrameSetStatus(pAbc, Gia_ManCollectReachable(abcFrameGia(pAbc), nStatesMax, fMiter, fDumpFile, fVerbose))
+		abcFrameSetStatus(pAbc, giapkg.Gia_ManCollectReachable(abcFrameGia(pAbc), nStatesMax, fMiter, fDumpFile, fVerbose))
 	}
 	Abc_FrameReplaceCex(pAbc, &abcFrameGia(pAbc).pCexSeq)
 	return 0
@@ -39937,23 +40005,23 @@ func Abc_CommandAbc9Dch(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Dch(): There is no AIG.\n")
 		return 1
 	}
-	if Gia_ManBufNum(abcFrameGia(pAbc)) {
+	if Gia_ManBufNum(abcFrameGia(pAbc)) != 0 {
 		Abc_Print(-1, "Abc_CommandAbc9Dch(): This command does not work with barrier buffers.\n")
 		return 1
 	}
 	if fEquiv != 0 {
 		var pNew *Aig_Man_t = Gia_ManToAigSimple(abcFrameGia(pAbc))
-		assert(Gia_ManObjNum(abcFrameGia(pAbc)) == Aig_ManObjNum(pNew), "Gia_ManObjNum(abcFrameGia(pAbc)) == Aig_ManObjNum(pNew)")
-		Dch_ComputeEquivalences(pNew, pPars)
-		Gia_ManReprFromAigRepr(pNew, abcFrameGia(pAbc))
+		assert(Gia_ManObjNum(abcFrameGia(pAbc)) == aig_aig.Aig_ManObjNum(pNew), "Gia_ManObjNum(abcFrameGia(pAbc)) == Aig_ManObjNum(pNew)")
+		proof_dch.Dch_ComputeEquivalences(pNew, pPars)
+		giapkg.Gia_ManReprFromAigRepr(pNew, abcFrameGia(pAbc))
 		Aig_ManStop(pNew)
-		pTemp = Gia_ManEquivReduce(abcFrameGia(pAbc), 1, 0, 0, 0)
+		pTemp = giapkg.Gia_ManEquivReduce(abcFrameGia(pAbc), 1, 0, 0, 0)
 
 	} else {
-		pTemp = Gia_ManPerformDch(abcFrameGia(pAbc), pPars)
+		pTemp = giapkg.Gia_ManPerformDch(abcFrameGia(pAbc), pPars)
 		Abc_FrameUpdateGia(pAbc, pTemp)
 		if fMinLevel != 0 {
-			pTemp = Gia_ManEquivReduce2(abcFrameGia(pAbc))
+			pTemp = giapkg.Gia_ManEquivReduce2(abcFrameGia(pAbc))
 		}
 	}
 	Abc_FrameUpdateGia(pAbc, pTemp)
@@ -39965,17 +40033,17 @@ usage:
 	Abc_Print(-2, "\t-W num : the max number of simulation words [default = %d]\n", pPars.nWords)
 	Abc_Print(-2, "\t-C num : the max number of conflicts at a node [default = %d]\n", pPars.nBTLimit)
 	Abc_Print(-2, "\t-S num : the max number of SAT variables [default = %d]\n", pPars.nSatVarMax)
-	Abc_Print(-2, "\t-s     : toggle synthesizing three snapshots [default = %s]\n", abcSelect(fSynthesis, "yes", "no"))
-	Abc_Print(-2, "\t-p     : toggle power-aware rewriting [default = %s]\n", abcSelect(fPower, "yes", "no"))
-	Abc_Print(-2, "\t-t     : toggle simulation of the TFO classes [default = %s]\n", abcSelect(fSimulateTfo, "yes", "no"))
-	Abc_Print(-2, "\t-f     : toggle using lighter logic synthesis [default = %s]\n", abcSelect(fLightSynth, "yes", "no"))
-	Abc_Print(-2, "\t-r     : toggle skipping choices with redundant support [default = %s]\n", abcSelect(fSkipRedSupp, "yes", "no"))
+	Abc_Print(-2, "\t-s     : toggle synthesizing three snapshots [default = %s]\n", abcSelect(pPars.fSynthesis, "yes", "no"))
+	Abc_Print(-2, "\t-p     : toggle power-aware rewriting [default = %s]\n", abcSelect(pPars.fPower, "yes", "no"))
+	Abc_Print(-2, "\t-t     : toggle simulation of the TFO classes [default = %s]\n", abcSelect(pPars.fSimulateTfo, "yes", "no"))
+	Abc_Print(-2, "\t-f     : toggle using lighter logic synthesis [default = %s]\n", abcSelect(pPars.fLightSynth, "yes", "no"))
+	Abc_Print(-2, "\t-r     : toggle skipping choices with redundant support [default = %s]\n", abcSelect(pPars.fSkipRedSupp, "yes", "no"))
 	Abc_Print(-2, "\t-e     : toggle computing and merging equivalences [default = %s]\n", abcSelect(fEquiv, "yes", "no"))
 	Abc_Print(-2, "\t-m     : toggle minimizing logic level after merging equivalences [default = %s]\n", abcSelect(fMinLevel, "yes", "no"))
-	Abc_Print(-2, "\t-g     : toggle using GIA to prove equivalences [default = %s]\n", abcSelect(fUseGia, "yes", "no"))
-	Abc_Print(-2, "\t-c     : toggle using circuit-based SAT vs. MiniSat [default = %s]\n", abcSelect(fUseCSat, "yes", "no"))
-	Abc_Print(-2, "\t-x     : toggle using new choice computation [default = %s]\n", abcSelect(fUseNew, "yes", "no"))
-	Abc_Print(-2, "\t-v     : toggle verbose printout [default = %s]\n", abcSelect(fVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-g     : toggle using GIA to prove equivalences [default = %s]\n", abcSelect(pPars.fUseGia, "yes", "no"))
+	Abc_Print(-2, "\t-c     : toggle using circuit-based SAT vs. MiniSat [default = %s]\n", abcSelect(pPars.fUseCSat, "yes", "no"))
+	Abc_Print(-2, "\t-x     : toggle using new choice computation [default = %s]\n", abcSelect(pPars.fUseNew, "yes", "no"))
+	Abc_Print(-2, "\t-v     : toggle verbose printout [default = %s]\n", abcSelect(pPars.fVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h     : print the command usage\n")
 	return 1
 }
@@ -40039,11 +40107,11 @@ func Abc_CommandAbc9Rpm(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 0
 	}
 	if fUseNaive != 0 {
-		pTemp = Gia_ManDupReplaceCut(abcFrameGia(pAbc))
+		pTemp = giapkg.Gia_ManDupReplaceCut(abcFrameGia(pAbc))
 	} else if fUseOldAlgo != 0 {
-		pTemp = Abs_RpmPerformOld(abcFrameGia(pAbc), fVerbose)
+		pTemp = proof_abs.Abs_RpmPerformOld(abcFrameGia(pAbc), fVerbose)
 	} else {
-		pTemp = Abs_RpmPerform(abcFrameGia(pAbc), nCutMax, fVerbose, fVeryVerbose)
+		pTemp = proof_abs.Abs_RpmPerform(abcFrameGia(pAbc), nCutMax, fVerbose, fVeryVerbose)
 	}
 	Abc_FrameUpdateGia(pAbc, pTemp)
 	return 0
@@ -40133,7 +40201,7 @@ func Abc_CommandAbc9BackReach(pAbc *Abc_Frame_t, argc int32, argv []string) int3
 		Abc_Print(-1, "Abc_CommandAbc9BackReach(): The number of POs is different from 1.\n")
 		return 1
 	}
-	pTemp = Gia_ManCofTest(abcFrameGia(pAbc), nFrameMax, nConfMax, nTimeMax, fVerbose)
+	pTemp = giapkg.Gia_ManCofTest(abcFrameGia(pAbc), nFrameMax, nConfMax, nTimeMax, fVerbose)
 	Abc_FrameUpdateGia(pAbc, pTemp)
 	return 0
 
@@ -40197,7 +40265,7 @@ func Abc_CommandAbc9Posplit(pAbc *Abc_Frame_t, argc int32, argv []string) int32 
 	}
 	pMan = Gia_ManToAigSimple(abcFrameGia(pAbc))
 	pAux = pMan
-	pMan = Aig_ManSplit(pAux, nVars, fVerbose)
+	pMan = aig_aig.Aig_ManSplit(pAux, nVars, fVerbose)
 	Aig_ManStop(pAux)
 	if pMan != nil {
 		pTemp = Gia_ManFromAigSimple(pMan)
@@ -40249,7 +40317,7 @@ func Abc_CommandAbc9Permute(pAbc *Abc_Frame_t, argc int32, argv []string) int32 
 		Abc_Print(-1, "Abc_CommandAbc9Posplit(): There is no AIG.\n")
 		return 1
 	}
-	pTemp = Gia_ManDupPiPerm(abcFrameGia(pAbc))
+	pTemp = giapkg.Gia_ManDupPiPerm(abcFrameGia(pAbc))
 	Abc_FrameUpdateGia(pAbc, pTemp)
 	return 0
 
@@ -41003,14 +41071,14 @@ func Abc_CommandAbc9Mesh(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Currently this command expects AIG with no more than 20 nodes.\n")
 		return 1
 	}
-	if Gia_ManLevelNum(abcFrameGia(pAbc)) > T {
-		Abc_Print(-1, "The depth of the AIG (%d) cannot be larger than the latency (%d).\n", Gia_ManLevelNum(abcFrameGia(pAbc)), T)
+	if giapkg.Gia_ManLevelNum(abcFrameGia(pAbc)) > T {
+		Abc_Print(-1, "The depth of the AIG (%d) cannot be larger than the latency (%d).\n", giapkg.Gia_ManLevelNum(abcFrameGia(pAbc)), T)
 		return 1
 	}
 	if fUseSatoko != 0 {
-		Bmc_MeshTest(abcFrameGia(pAbc), X, Y, T, fVerbose)
+		sat_bmc.Bmc_MeshTest(abcFrameGia(pAbc), X, Y, T, fVerbose)
 	} else {
-		Bmc_MeshTest2(abcFrameGia(pAbc), X, Y, T, fVerbose)
+		sat_bmc.Bmc_MeshTest2(abcFrameGia(pAbc), X, Y, T, fVerbose)
 	}
 	return 0
 
@@ -41086,9 +41154,9 @@ func Abc_CommandAbc9Iso(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 1
 	}
 	if fNewAlgo != 0 {
-		pAig = Gia_ManIsoReduce2(abcFrameGia(pAbc), &vPosEquivs, nil, fEstimate, fBetterQual, fDualOut, fVerbose, fVeryVerbose)
+		pAig = giapkg.Gia_ManIsoReduce2(abcFrameGia(pAbc), &vPosEquivs, nil, fEstimate, fBetterQual, fDualOut, fVerbose, fVeryVerbose)
 	} else {
-		pAig = Gia_ManIsoReduce(abcFrameGia(pAbc), &vPosEquivs, nil, fEstimate, fDualOut, fVerbose, fVeryVerbose)
+		pAig = giapkg.Gia_ManIsoReduce(abcFrameGia(pAbc), &vPosEquivs, nil, fEstimate, fDualOut, fVerbose, fVeryVerbose)
 	}
 	//    pAig = Gia_ManIsoReduce( pAbc->pGia, &vPosEquivs, &vPiPerms, 0, fDualOut, fVerbose, fVeryVerbose );
 	//    Vec_VecFree( (Vec_Vec_t *)vPiPerms );
@@ -41153,11 +41221,11 @@ func Abc_CommandAbc9IsoNpn(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9IsoNpn(): The AIG has only one PO. Isomorphism detection is not performed.\n")
 		return 1
 	}
-	if Gia_ManRegNum(abcFrameGia(pAbc)) {
+	if Gia_ManRegNum(abcFrameGia(pAbc)) != 0 {
 		Abc_Print(-1, "Abc_CommandAbc9IsoNpn(): ISO-NPN does not work with sequential AIGs.\n")
 		return 1
 	}
-	pAig = Gia_ManIsoNpnReduce(abcFrameGia(pAbc), &vPosEquivs, fVerbose)
+	pAig = giapkg.Gia_ManIsoNpnReduce(abcFrameGia(pAbc), &vPosEquivs, fVerbose)
 	if pAig == nil {
 		Abc_Print(-1, "Abc_CommandAbc9IsoNpn(): Transformation has failed.\n")
 		return 1
@@ -41215,11 +41283,11 @@ func Abc_CommandAbc9IsoSt(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9IsoSt(): The AIG has only one PO. Isomorphism detection is not performed.\n")
 		return 1
 	}
-	if Gia_ManRegNum(abcFrameGia(pAbc)) {
+	if Gia_ManRegNum(abcFrameGia(pAbc)) != 0 {
 		Abc_Print(-1, "Abc_CommandAbc9IsoSt(): ISO-ST does not work with sequential AIGs.\n")
 		return 1
 	}
-	pAig = Gia_ManIsoStrashReduce(abcFrameGia(pAbc), &vPosEquivs, fVerbose)
+	pAig = giapkg.Gia_ManIsoStrashReduce(abcFrameGia(pAbc), &vPosEquivs, fVerbose)
 	if pAig == nil {
 		Abc_Print(-1, "Abc_CommandAbc9IsoSt(): Transformation has failed.\n")
 		return 1
@@ -41282,7 +41350,7 @@ func Abc_CommandAbc9Compare(pAbc *Abc_Frame_t, argc int32, argv []string) int32 
 		Abc_Print(-1, "Abc_CommandAbc9Compare(): Reading input files did not work.\n")
 		return 1
 	}
-	Gia_Iso4TestTwo(pGia0, pGia1)
+	giapkg.Gia_Iso4TestTwo(pGia0, pGia1)
 	Gia_ManStop(pGia0)
 	Gia_ManStop(pGia1)
 	return 0
@@ -41334,7 +41402,7 @@ func Abc_CommandAbc9CexInfo(pAbc *Abc_Frame_t, argc int32, argv []string) int32 
 		Abc_Print(-1, "Abc_CommandAbc9CexInfo(): There is no CEX.\n")
 		return 1
 	}
-	Bmc_CexTest(abcFrameGia(pAbc), abcFrameCex(pAbc), fVerbose)
+	sat_bmc.Bmc_CexTest(abcFrameGia(pAbc), abcFrameCex(pAbc), fVerbose)
 	return 0
 
 usage:
@@ -41397,7 +41465,7 @@ func Abc_CommandAbc9Cycle(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	if fUseCex != 0 {
 		cex = abcFrameCex(pAbc)
 	}
-	pTemp = Gia_ManDupCycled(abcFrameGia(pAbc), cex, nFrames)
+	pTemp = giapkg.Gia_ManDupCycled(abcFrameGia(pAbc), cex, nFrames)
 	Abc_FrameUpdateGia(pAbc, pTemp)
 	return 0
 
@@ -41522,7 +41590,7 @@ func Abc_CommandAbc9Cone(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		var nDigits int32 = Abc_Base10Log(Gia_ManPoNum(abcFrameGia(pAbc)))
 		Gia_ManForEachPo(abcFrameGia(pAbc), pObj, i)
 		{
-			var pOne *Gia_Man_t = Gia_ManDupDfsCone(abcFrameGia(pAbc), pObj)
+			var pOne *Gia_Man_t = giapkg.Gia_ManDupDfsCone(abcFrameGia(pAbc), pObj)
 			Buffer = fmt.Sprintf("%s_%0*d.aig", Extra_FileNameGeneric(abcFrameGia(pAbc).pSpec), nDigits, i)
 			Gia_AigerWrite(pOne, Buffer, 0, 0, 0)
 			Gia_ManStop(pOne)
@@ -41536,7 +41604,7 @@ func Abc_CommandAbc9Cone(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			return 1
 
 		} else {
-			pTemp = Gia_ManExtractWindow(abcFrameGia(pAbc), nLevelMax, nTimeWindow, fVerbose)
+			pTemp = giapkg.Gia_ManExtractWindow(abcFrameGia(pAbc), nLevelMax, nTimeWindow, fVerbose)
 			Abc_FrameUpdateGia(pAbc, pTemp)
 			return 0
 		}
@@ -41548,12 +41616,12 @@ func Abc_CommandAbc9Cone(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			Abc_Print(-1, "Abc_CommandAbc9Cone(): Partitions are not defined.\n")
 			return 1
 		}
-		if iPartNum >= Vec_VecSize(vClasses) {
+		if iPartNum >= aig_hop.Vec_VecSize(vClasses) {
 			Abc_Print(-1, "Abc_CommandAbc9Cone(): Partition index exceed the array size.\n")
 			return 1
 		}
-		vClass = Vec_VecEntryInt(vClasses, iPartNum)
-		pTemp = Gia_ManDupCones(abcFrameGia(pAbc), Vec_IntArray(vClass), Vec_IntSize(vClass), !fUseAllCis)
+		vClass = vecpkg.Vec_VecEntryInt(vClasses, iPartNum)
+		pTemp = giapkg.Gia_ManDupCones(abcFrameGia(pAbc), Vec_IntArray(vClass), Vec_IntSize(vClass), (fUseAllCis == 0))
 		if pTemp != nil {
 			Abc_FrameUpdateGia(pAbc, pTemp)
 		}
@@ -41563,8 +41631,8 @@ func Abc_CommandAbc9Cone(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Cone(): Range of outputs to extract is incorrect.\n")
 		return 1
 	}
-	vPos = Vec_IntStartRange(iOutNum, nOutRange)
-	pTemp = Gia_ManDupCones(abcFrameGia(pAbc), Vec_IntArray(vPos), nOutRange, !fUseAllCis)
+	vPos = giapkg.Vec_IntStartRange(iOutNum, nOutRange)
+	pTemp = giapkg.Gia_ManDupCones(abcFrameGia(pAbc), Vec_IntArray(vPos), nOutRange, (fUseAllCis == 0))
 	Vec_IntFree(vPos)
 	if pTemp != nil {
 		Abc_FrameUpdateGia(pAbc, pTemp)
@@ -41631,7 +41699,7 @@ func Abc_CommandAbc9Slice(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Slice(): There is no AIG.\n")
 		return 1
 	}
-	pTemp = Gia_ManDupSliced(abcFrameGia(pAbc), nSuppSize)
+	pTemp = giapkg.Gia_ManDupSliced(abcFrameGia(pAbc), nSuppSize)
 	Abc_FrameUpdateGia(pAbc, pTemp)
 	return 0
 
@@ -41695,7 +41763,7 @@ func Abc_CommandAbc9PoPart(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9PoPart(): There is no AIG.\n")
 		return 1
 	}
-	pTemp = Gia_ManFindPoPartition(abcFrameGia(pAbc), SelectShift, fOnlyCis, fSetLargest, fVerbose, &vPosEquivs)
+	pTemp = giapkg.Gia_ManFindPoPartition(abcFrameGia(pAbc), SelectShift, fOnlyCis, fSetLargest, fVerbose, &vPosEquivs)
 	if pTemp != nil {
 		Abc_FrameUpdateGia(pAbc, pTemp)
 	}
@@ -41801,7 +41869,7 @@ func Abc_CommandAbc9PoPart2(pAbc *Abc_Frame_t, argc int32, argv []string) int32 
 		Abc_Print(-1, "Abc_CommandAbc9PoPart(): There is no AIG.\n")
 		return 1
 	}
-	pTemp = Gia_ManFindPoPartition2(abcFrameGia(pAbc), iStartNum, nDelta, nOutsMin, nOutsMax, fSetLargest, fVerbose, &vPosEquivs)
+	pTemp = giapkg.Gia_ManFindPoPartition2(abcFrameGia(pAbc), iStartNum, nDelta, nOutsMin, nOutsMax, fSetLargest, fVerbose, &vPosEquivs)
 	if pTemp != nil {
 		Abc_FrameUpdateGia(pAbc, pTemp)
 	}
@@ -41880,7 +41948,7 @@ func Abc_CommandAbc9GroupProve(pAbc *Abc_Frame_t, argc int32, argv []string) int
 		Abc_Print(-1, "Abc_CommandAbc9GroupProve(): Command line is not given.\n")
 		return 1
 	}
-	vStatus = Gia_ManGroupProve(abcFrameGia(pAbc), pCommLine, nGroupSize, fVerbose)
+	vStatus = giapkg.Gia_ManGroupProve(abcFrameGia(pAbc), pCommLine, nGroupSize, fVerbose)
 	Vec_IntFree(vStatus)
 	return 0
 
@@ -41911,9 +41979,9 @@ usage:
 func Abc_CommandAbc9MultiProve(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 
 	var c int32
-	var Pars Bmc_MulPar_t
-	var pPars *Bmc_MulPar_t = &Pars
-	memset(pPars, 0, sizeof(Bmc_MulPar_t))
+	var Pars sat_bmc.Bmc_MulPar_t
+	var pPars *sat_bmc.Bmc_MulPar_t = &Pars
+	memset(pPars, 0, sizeof(sat_bmc.Bmc_MulPar_t))
 	pPars.TimeOutGlo = 30
 	pPars.TimeOutLoc = 2
 	pPars.TimeOutInc = 100
@@ -41978,16 +42046,16 @@ func Abc_CommandAbc9MultiProve(pAbc *Abc_Frame_t, argc int32, argv []string) int
 			}
 			break
 		case 's':
-			pPars.fUseSyn ^= 1
+			pPars.FUseSyn ^= 1
 			break
 		case 'd':
-			pPars.fDumpFinal ^= 1
+			pPars.FDumpFinal ^= 1
 			break
 		case 'v':
-			pPars.fVerbose ^= 1
+			pPars.FVerbose ^= 1
 			break
 		case 'w':
-			pPars.fVeryVerbose ^= 1
+			pPars.FVeryVerbose ^= 1
 			break
 		case 'h':
 			goto usage
@@ -42003,7 +42071,7 @@ func Abc_CommandAbc9MultiProve(pAbc *Abc_Frame_t, argc int32, argv []string) int
 		Abc_Print(-1, "Abc_CommandAbc9MultiProve(): The problem is combinational.\n")
 		return 1
 	}
-	abcFrameSetStatus(pAbc, Gia_ManMultiProve(abcFrameGia(pAbc), pPars))
+	abcFrameSetStatus(pAbc, sat_bmc.Gia_ManMultiProve(abcFrameGia(pAbc), pPars))
 	abcFrameReplaceCexVectorFromGia(pAbc, abcFrameGia(pAbc), false)
 	return 0
 
@@ -42015,10 +42083,10 @@ usage:
 	Abc_Print(-2, "\t-M num : percentage of local runtime limit increase [default = %d]\n", pPars.TimeOutInc)
 	Abc_Print(-2, "\t-G num : approximate gap runtime limit in seconds [default = %d]\n", pPars.TimeOutGap)
 	Abc_Print(-2, "\t-H num : timeout per output in miliseconds [default = %d]\n", pPars.TimePerOut)
-	Abc_Print(-2, "\t-s     : toggle using combinational synthesis [default = %s]\n", abcSelect(pPars.fUseSyn, "yes", "no"))
-	Abc_Print(-2, "\t-d     : toggle dumping invariant into a file [default = %s]\n", abcSelect(pPars.fDumpFinal, "yes", "no"))
-	Abc_Print(-2, "\t-v     : toggle printing verbose information [default = %s]\n", abcSelect(pPars.fVerbose, "yes", "no"))
-	Abc_Print(-2, "\t-w     : toggle printing additional verbose information [default = %s]\n", abcSelect(fVeryVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-s     : toggle using combinational synthesis [default = %s]\n", abcSelect(pPars.FUseSyn, "yes", "no"))
+	Abc_Print(-2, "\t-d     : toggle dumping invariant into a file [default = %s]\n", abcSelect(pPars.FDumpFinal, "yes", "no"))
+	Abc_Print(-2, "\t-v     : toggle printing verbose information [default = %s]\n", abcSelect(pPars.FVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-w     : toggle printing additional verbose information [default = %s]\n", abcSelect(pPars.FVeryVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h     : print the command usage\n")
 	return 1
 }
@@ -42117,7 +42185,7 @@ func Abc_CommandAbc9SplitProve(pAbc *Abc_Frame_t, argc int32, argv []string) int
 		Abc_Print(-1, "Abc_CommandAbc9SplitProve(): The problem is sequential.\n")
 		return 1
 	}
-	abcFrameSetStatus(pAbc, Cec_GiaSplitTest(abcFrameGia(pAbc), nProcs, nTimeOut, nIterMax, LookAhead, fVerbose, fVeryVerbose, fSilent))
+	abcFrameSetStatus(pAbc, proof_cec.Cec_GiaSplitTest(abcFrameGia(pAbc), nProcs, nTimeOut, nIterMax, LookAhead, fVerbose, fVeryVerbose, fSilent))
 	abcFrameSetCex(pAbc, abcFrameGia(pAbc).pCexComb)
 	abcFrameGia(pAbc).pCexComb = nil
 	return 0
@@ -42151,26 +42219,26 @@ usage:
 */
 func Abc_CommandAbc9Bmc(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	var c int32
-	var Pars Bmc_AndPar_t
-	var pPars *Bmc_AndPar_t = &Pars
-	memset(pPars, 0, sizeof(Bmc_AndPar_t))
-	pPars.nStart = 0       // starting timeframe
-	pPars.nFramesMax = 0   // maximum number of timeframes
-	pPars.nFramesAdd = 50  // the number of additional frames
-	pPars.nConfLimit = 0   // maximum number of conflicts at a node
-	pPars.nTimeOut = 0     // timeout in seconds
-	pPars.nLutSize = 6     // max LUT size for CNF computation
-	pPars.nProcs = 1       // the number of parallel solvers
-	pPars.fLoadCnf = 0     // dynamic CNF loading
-	pPars.fDumpFrames = 0  // dump unrolled timeframes
-	pPars.fUseSynth = 0    // use synthesis
-	pPars.fUseOldCnf = 0   // use old CNF construction
-	pPars.fVerbose = 0     // verbose
-	pPars.fVeryVerbose = 0 // very verbose
-	pPars.fNotVerbose = 0  // skip line-by-line print-out
-	pPars.iFrame = 0       // explored up to this frame
-	pPars.nFailOuts = 0    // the number of failed outputs
-	pPars.nDropOuts = 0    // the number of dropped outputs
+	var Pars sat_bmc.Bmc_AndPar_t
+	var pPars *sat_bmc.Bmc_AndPar_t = &Pars
+	memset(pPars, 0, sizeof(sat_bmc.Bmc_AndPar_t))
+	pPars.NStart = 0       // starting timeframe
+	pPars.NFramesMax = 0   // maximum number of timeframes
+	pPars.NFramesAdd = 50  // the number of additional frames
+	pPars.NConfLimit = 0   // maximum number of conflicts at a node
+	pPars.NTimeOut = 0     // timeout in seconds
+	pPars.NLutSize = 6     // max LUT size for CNF computation
+	pPars.NProcs = 1       // the number of parallel solvers
+	pPars.FLoadCnf = 0     // dynamic CNF loading
+	pPars.FDumpFrames = 0  // dump unrolled timeframes
+	pPars.FUseSynth = 0    // use synthesis
+	pPars.FUseOldCnf = 0   // use old CNF construction
+	pPars.FVerbose = 0     // verbose
+	pPars.FVeryVerbose = 0 // very verbose
+	pPars.FNotVerbose = 0  // skip line-by-line print-out
+	pPars.IFrame = 0       // explored up to this frame
+	pPars.NFailOuts = 0    // the number of failed outputs
+	pPars.NDropOuts = 0    // the number of dropped outputs
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "SFATKdscvwh"); c != -1; c = Extra_UtilGetopt(argc, argv, "SFATKdscvwh") {
 		switch c {
@@ -42179,9 +42247,9 @@ func Abc_CommandAbc9Bmc(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-S\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nStart = abcAtoi(argv[globalUtilOptind])
+			pPars.NStart = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nStart < 0 {
+			if pPars.NStart < 0 {
 				goto usage
 			}
 			break
@@ -42190,9 +42258,9 @@ func Abc_CommandAbc9Bmc(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-F\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nFramesMax = abcAtoi(argv[globalUtilOptind])
+			pPars.NFramesMax = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nFramesMax < 0 {
+			if pPars.NFramesMax < 0 {
 				goto usage
 			}
 			break
@@ -42201,9 +42269,9 @@ func Abc_CommandAbc9Bmc(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-A\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nFramesAdd = abcAtoi(argv[globalUtilOptind])
+			pPars.NFramesAdd = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nFramesAdd < 0 {
+			if pPars.NFramesAdd < 0 {
 				goto usage
 			}
 			break
@@ -42212,9 +42280,9 @@ func Abc_CommandAbc9Bmc(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-T\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nTimeOut = abcAtoi(argv[globalUtilOptind])
+			pPars.NTimeOut = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nTimeOut < 0 {
+			if pPars.NTimeOut < 0 {
 				goto usage
 			}
 			break
@@ -42223,26 +42291,26 @@ func Abc_CommandAbc9Bmc(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-K\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nLutSize = abcAtoi(argv[globalUtilOptind])
+			pPars.NLutSize = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nLutSize < 0 {
+			if pPars.NLutSize < 0 {
 				goto usage
 			}
 			break
 		case 'd':
-			pPars.fDumpFrames ^= 1
+			pPars.FDumpFrames ^= 1
 			break
 		case 's':
-			pPars.fUseSynth ^= 1
+			pPars.FUseSynth ^= 1
 			break
 		case 'c':
-			pPars.fUseOldCnf ^= 1
+			pPars.FUseOldCnf ^= 1
 			break
 		case 'v':
-			pPars.fVerbose ^= 1
+			pPars.FVerbose ^= 1
 			break
 		case 'w':
-			pPars.fVeryVerbose ^= 1
+			pPars.FVeryVerbose ^= 1
 			break
 		case 'h':
 			goto usage
@@ -42254,24 +42322,24 @@ func Abc_CommandAbc9Bmc(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Bmc(): There is no AIG.\n")
 		return 0
 	}
-	abcFrameSetStatus(pAbc, Gia_ManBmcPerform(abcFrameGia(pAbc), pPars))
-	abcFrameSetNFrames(pAbc, pPars.iFrame)
+	abcFrameSetStatus(pAbc, sat_bmc.Gia_ManBmcPerform(abcFrameGia(pAbc), pPars))
+	abcFrameSetNFrames(pAbc, pPars.IFrame)
 	Abc_FrameReplaceCex(pAbc, &abcFrameGia(pAbc).pCexSeq)
 	return 0
 
 usage:
 	Abc_Print(-2, "usage: &bmc [-SFATK num] [-dscvwh]\n")
 	Abc_Print(-2, "\t         performs bounded model checking\n")
-	Abc_Print(-2, "\t-S num : the starting timeframe [default = %d]\n", pPars.nStart)
-	Abc_Print(-2, "\t-F num : the maximum number of timeframes [default = %d]\n", pPars.nFramesMax)
-	Abc_Print(-2, "\t-A num : the number of additional frames to unroll [default = %d]\n", pPars.nFramesAdd)
-	Abc_Print(-2, "\t-T num : approximate timeout in seconds [default = %d]\n", pPars.nTimeOut)
-	Abc_Print(-2, "\t-K num : the maximum cut size for CNF computation [default = %d]\n", pPars.nLutSize)
-	Abc_Print(-2, "\t-d     : toggle dumping unfolded timeframes [default = %s]\n", abcSelect(pPars.fDumpFrames, "yes", "no"))
-	Abc_Print(-2, "\t-s     : toggle synthesizing unrolled timeframes [default = %s]\n", abcSelect(pPars.fUseSynth, "yes", "no"))
-	Abc_Print(-2, "\t-c     : toggle using old CNF computation [default = %s]\n", abcSelect(pPars.fUseOldCnf, "yes", "no"))
-	Abc_Print(-2, "\t-v     : toggle printing verbose information [default = %s]\n", abcSelect(pPars.fVerbose, "yes", "no"))
-	Abc_Print(-2, "\t-w     : toggle printing information about unfolding [default = %s]\n", abcSelect(fVeryVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-S num : the starting timeframe [default = %d]\n", pPars.NStart)
+	Abc_Print(-2, "\t-F num : the maximum number of timeframes [default = %d]\n", pPars.NFramesMax)
+	Abc_Print(-2, "\t-A num : the number of additional frames to unroll [default = %d]\n", pPars.NFramesAdd)
+	Abc_Print(-2, "\t-T num : approximate timeout in seconds [default = %d]\n", pPars.NTimeOut)
+	Abc_Print(-2, "\t-K num : the maximum cut size for CNF computation [default = %d]\n", pPars.NLutSize)
+	Abc_Print(-2, "\t-d     : toggle dumping unfolded timeframes [default = %s]\n", abcSelect(pPars.FDumpFrames, "yes", "no"))
+	Abc_Print(-2, "\t-s     : toggle synthesizing unrolled timeframes [default = %s]\n", abcSelect(pPars.FUseSynth, "yes", "no"))
+	Abc_Print(-2, "\t-c     : toggle using old CNF computation [default = %s]\n", abcSelect(pPars.FUseOldCnf, "yes", "no"))
+	Abc_Print(-2, "\t-v     : toggle printing verbose information [default = %s]\n", abcSelect(pPars.FVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-w     : toggle printing information about unfolding [default = %s]\n", abcSelect(pPars.FVeryVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h     : print the command usage\n")
 	return 1
 }
@@ -42291,30 +42359,30 @@ usage:
 */
 func Abc_CommandAbc9SBmc(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 
-	var Pars Bmc_AndPar_t
-	var pPars *Bmc_AndPar_t = &Pars
+	var Pars sat_bmc.Bmc_AndPar_t
+	var pPars *sat_bmc.Bmc_AndPar_t = &Pars
 	var c int32
-	memset(pPars, 0, sizeof(Bmc_AndPar_t))
-	pPars.nStart = 0                                // starting timeframe
-	pPars.nFramesMax = 0                            // maximum number of timeframes
-	pPars.nFramesAdd = 1                            // the number of additional frames
-	pPars.nConfLimit = 0                            // maximum number of conflicts at a node
-	pPars.nTimeOut = 0                              // timeout in seconds
-	pPars.nLutSize = 0                              // max LUT size for CNF computation
-	pPars.nProcs = 1                                // the number of parallel solvers
-	pPars.fLoadCnf = 0                              // dynamic CNF loading
-	pPars.fDumpFrames = 0                           // dump unrolled timeframes
-	pPars.fUseSynth = 0                             // use synthesis
-	pPars.fUseOldCnf = 0                            // use old CNF construction
-	pPars.fUseGlucose = 0                           // use Glucose 3.0
-	pPars.fUseEliminate = 0                         // use variable elimination
-	pPars.fVerbose = 0                              // verbose
-	pPars.fVeryVerbose = 0                          // very verbose
-	pPars.fNotVerbose = 0                           // skip line-by-line print-out
-	pPars.iFrame = 0                                // explored up to this frame
-	pPars.nFailOuts = 0                             // the number of failed outputs
-	pPars.nDropOuts = 0                             // the number of dropped outputs
-	pPars.pFuncOnFrameDone = abcFrameCallback(pAbc) // frame done callback
+	memset(pPars, 0, sizeof(sat_bmc.Bmc_AndPar_t))
+	pPars.NStart = 0                                // starting timeframe
+	pPars.NFramesMax = 0                            // maximum number of timeframes
+	pPars.NFramesAdd = 1                            // the number of additional frames
+	pPars.NConfLimit = 0                            // maximum number of conflicts at a node
+	pPars.NTimeOut = 0                              // timeout in seconds
+	pPars.NLutSize = 0                              // max LUT size for CNF computation
+	pPars.NProcs = 1                                // the number of parallel solvers
+	pPars.FLoadCnf = 0                              // dynamic CNF loading
+	pPars.FDumpFrames = 0                           // dump unrolled timeframes
+	pPars.FUseSynth = 0                             // use synthesis
+	pPars.FUseOldCnf = 0                            // use old CNF construction
+	pPars.FUseGlucose = 0                           // use Glucose 3.0
+	pPars.FUseEliminate = 0                         // use variable elimination
+	pPars.FVerbose = 0                              // verbose
+	pPars.FVeryVerbose = 0                          // very verbose
+	pPars.FNotVerbose = 0                           // skip line-by-line print-out
+	pPars.IFrame = 0                                // explored up to this frame
+	pPars.NFailOuts = 0                             // the number of failed outputs
+	pPars.NDropOuts = 0                             // the number of dropped outputs
+	pPars.PFuncOnFrameDone = abcFrameCallback(pAbc) // frame done callback
 
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "PCFATgevwh"); c != -1; c = Extra_UtilGetopt(argc, argv, "PCFATgevwh") {
@@ -42324,9 +42392,9 @@ func Abc_CommandAbc9SBmc(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-P\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nProcs = abcAtoi(argv[globalUtilOptind])
+			pPars.NProcs = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nProcs < 0 {
+			if pPars.NProcs < 0 {
 				goto usage
 			}
 			break
@@ -42335,9 +42403,9 @@ func Abc_CommandAbc9SBmc(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-C\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nConfLimit = abcAtoi(argv[globalUtilOptind])
+			pPars.NConfLimit = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nConfLimit < 0 {
+			if pPars.NConfLimit < 0 {
 				goto usage
 			}
 			break
@@ -42346,9 +42414,9 @@ func Abc_CommandAbc9SBmc(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-F\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nFramesMax = abcAtoi(argv[globalUtilOptind])
+			pPars.NFramesMax = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nFramesMax < 0 {
+			if pPars.NFramesMax < 0 {
 				goto usage
 			}
 			break
@@ -42357,9 +42425,9 @@ func Abc_CommandAbc9SBmc(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-A\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nFramesAdd = abcAtoi(argv[globalUtilOptind])
+			pPars.NFramesAdd = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nFramesAdd < 0 {
+			if pPars.NFramesAdd < 0 {
 				goto usage
 			}
 			break
@@ -42368,23 +42436,23 @@ func Abc_CommandAbc9SBmc(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-T\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nTimeOut = abcAtoi(argv[globalUtilOptind])
+			pPars.NTimeOut = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nTimeOut < 0 {
+			if pPars.NTimeOut < 0 {
 				goto usage
 			}
 			break
 		case 'g':
-			pPars.fUseGlucose ^= 1
+			pPars.FUseGlucose ^= 1
 			break
 		case 'e':
-			pPars.fUseEliminate ^= 1
+			pPars.FUseEliminate ^= 1
 			break
 		case 'v':
-			pPars.fVerbose ^= 1
+			pPars.FVerbose ^= 1
 			break
 		case 'w':
-			pPars.fVeryVerbose ^= 1
+			pPars.FVeryVerbose ^= 1
 			break
 		case 'h':
 			goto usage
@@ -42396,31 +42464,31 @@ func Abc_CommandAbc9SBmc(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Bmcs(): There is no AIG.\n")
 		return 0
 	}
-	if pPars.nProcs > 4 {
+	if pPars.NProcs > 4 {
 		Abc_Print(-1, "Abc_CommandAbc9Bmcs(): Currently this command can run at most 4 concurrent solvers.\n")
 		return 0
 	}
-	if pPars.fUseGlucose {
-		abcFrameSetStatus(pAbc, Bmcg_ManPerform(abcFrameGia(pAbc), pPars))
+	if pPars.FUseGlucose != 0 {
+		abcFrameSetStatus(pAbc, sat_bmc.Bmcg_ManPerform(abcFrameGia(pAbc), pPars))
 	} else {
-		abcFrameSetStatus(pAbc, Bmcs_ManPerform(abcFrameGia(pAbc), pPars))
+		abcFrameSetStatus(pAbc, sat_bmc.Bmcs_ManPerform(abcFrameGia(pAbc), pPars))
 	}
-	abcFrameSetNFrames(pAbc, pPars.iFrame)
+	abcFrameSetNFrames(pAbc, pPars.IFrame)
 	Abc_FrameReplaceCex(pAbc, &abcFrameGia(pAbc).pCexSeq)
 	return 0
 
 usage:
 	Abc_Print(-2, "usage: &bmcs [-PCFAT num] [-gevwh]\n")
 	Abc_Print(-2, "\t         performs bounded model checking\n")
-	Abc_Print(-2, "\t-P num : the number of parallel solvers [default = %d]\n", pPars.nProcs)
-	Abc_Print(-2, "\t-C num : the SAT solver conflict limit [default = %d]\n", pPars.nConfLimit)
-	Abc_Print(-2, "\t-F num : the maximum number of timeframes [default = %d]\n", pPars.nFramesMax)
-	Abc_Print(-2, "\t-A num : the number of additional frames to unroll [default = %d]\n", pPars.nFramesAdd)
-	Abc_Print(-2, "\t-T num : approximate timeout in seconds [default = %d]\n", pPars.nTimeOut)
-	Abc_Print(-2, "\t-g     : toggle using Glucose 3.0 by Gilles Audemard and Laurent Simon [default = %s]\n", abcSelect(pPars.fUseGlucose, "Glucose", "Satoko"))
-	Abc_Print(-2, "\t-e     : toggle using variable eliminatation [default = %s]\n", abcSelect(pPars.fUseEliminate, "yes", "no"))
-	Abc_Print(-2, "\t-v     : toggle printing verbose information [default = %s]\n", abcSelect(pPars.fVerbose, "yes", "no"))
-	Abc_Print(-2, "\t-w     : toggle printing information about unfolding [default = %s]\n", abcSelect(fVeryVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-P num : the number of parallel solvers [default = %d]\n", pPars.NProcs)
+	Abc_Print(-2, "\t-C num : the SAT solver conflict limit [default = %d]\n", pPars.NConfLimit)
+	Abc_Print(-2, "\t-F num : the maximum number of timeframes [default = %d]\n", pPars.NFramesMax)
+	Abc_Print(-2, "\t-A num : the number of additional frames to unroll [default = %d]\n", pPars.NFramesAdd)
+	Abc_Print(-2, "\t-T num : approximate timeout in seconds [default = %d]\n", pPars.NTimeOut)
+	Abc_Print(-2, "\t-g     : toggle using Glucose 3.0 by Gilles Audemard and Laurent Simon [default = %s]\n", abcSelect(pPars.FUseGlucose, "Glucose", "Satoko"))
+	Abc_Print(-2, "\t-e     : toggle using variable eliminatation [default = %s]\n", abcSelect(pPars.FUseEliminate, "yes", "no"))
+	Abc_Print(-2, "\t-v     : toggle printing verbose information [default = %s]\n", abcSelect(pPars.FVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-w     : toggle printing information about unfolding [default = %s]\n", abcSelect(pPars.FVeryVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h     : print the command usage\n")
 	return 1
 }
@@ -42487,11 +42555,11 @@ func Abc_CommandAbc9ChainBmc(pAbc *Abc_Frame_t, argc int32, argv []string) int32
 		Abc_Print(-1, "Abc_CommandAbc9ChainBmc(): There is no AIG.\n")
 		return 0
 	}
-	if !Gia_ManRegNum(abcFrameGia(pAbc)) {
+	if Gia_ManRegNum(abcFrameGia(pAbc)) == 0 {
 		Abc_Print(-1, "Abc_CommandAbc9ChainBmc(): The AIG is combinational.\n")
 		return 0
 	}
-	Bmc_ChainTest(abcFrameGia(pAbc), nFrameMax, nConfMax, fVerbose, fVeryVerbose, &vCexes)
+	sat_bmc.Bmc_ChainTest(abcFrameGia(pAbc), nFrameMax, nConfMax, fVerbose, fVeryVerbose, &vCexes)
 	if vCexes != nil {
 		Vec_PtrFreeFree(vCexes)
 	}
@@ -42525,15 +42593,15 @@ usage:
 */
 func Abc_CommandAbc9BCore(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	var c int32
-	var Pars Bmc_BCorePar_t
-	var pPars *Bmc_BCorePar_t = &Pars
-	memset(pPars, 0, sizeof(Bmc_BCorePar_t))
-	pPars.iFrame = 10       // timeframe
-	pPars.iOutput = 0       // property output
-	pPars.nTimeOut = 0      // timeout in seconds
-	pPars.pFilePivots = nil // file name with AIG IDs of pivot objects
-	pPars.pFileProof = nil  // file name to write the resulting proof
-	pPars.fVerbose = 0      // verbose output
+	var Pars sat_bmc.Bmc_BCorePar_t
+	var pPars *sat_bmc.Bmc_BCorePar_t = &Pars
+	memset(pPars, 0, sizeof(sat_bmc.Bmc_BCorePar_t))
+	pPars.IFrame = 10       // timeframe
+	pPars.IOutput = 0       // property output
+	pPars.NTimeOut = 0      // timeout in seconds
+	pPars.PFilePivots = nil // file name with AIG IDs of pivot objects
+	pPars.PFileProof = nil  // file name to write the resulting proof
+	pPars.FVerbose = 0      // verbose output
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "FOTVvh"); c != -1; c = Extra_UtilGetopt(argc, argv, "FOTVvh") {
 		switch c {
@@ -42542,9 +42610,9 @@ func Abc_CommandAbc9BCore(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-F\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.iFrame = abcAtoi(argv[globalUtilOptind])
+			pPars.IFrame = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.iFrame < 0 {
+			if pPars.IFrame < 0 {
 				goto usage
 			}
 			break
@@ -42553,9 +42621,9 @@ func Abc_CommandAbc9BCore(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-O\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.iOutput = abcAtoi(argv[globalUtilOptind])
+			pPars.IOutput = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.iOutput < 0 {
+			if pPars.IOutput < 0 {
 				goto usage
 			}
 			break
@@ -42564,9 +42632,9 @@ func Abc_CommandAbc9BCore(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-T\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nTimeOut = abcAtoi(argv[globalUtilOptind])
+			pPars.NTimeOut = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nTimeOut < 0 {
+			if pPars.NTimeOut < 0 {
 				goto usage
 			}
 			break
@@ -42575,11 +42643,11 @@ func Abc_CommandAbc9BCore(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-V\" should be followed by a file name.\n")
 				goto usage
 			}
-			pPars.pFilePivots = argv[globalUtilOptind]
+			pPars.PFilePivots = argv[globalUtilOptind]
 			globalUtilOptind++
 			break
 		case 'v':
-			pPars.fVerbose ^= 1
+			pPars.FVerbose ^= 1
 			break
 		case 'h':
 			goto usage
@@ -42596,11 +42664,11 @@ func Abc_CommandAbc9BCore(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 0
 	}
 	// get the file name
-	if pPars.pFilePivots != nil {
+	if pPars.PFilePivots != nil {
 		var pFile *os.File
-		pFile = os.Open(pPars.pFilePivots)
+		pFile = os.Open(pPars.PFilePivots)
 		if pFile == nil {
-			Abc_Print(-1, "Abc_CommandAbc9BCore(): Cannot open file \"%s\" with pivot node IDs.\n", pPars.pFilePivots)
+			Abc_Print(-1, "Abc_CommandAbc9BCore(): Cannot open file \"%s\" with pivot node IDs.\n", pPars.PFilePivots)
 			return 0
 		}
 		_ = pFile.Close()
@@ -42608,25 +42676,25 @@ func Abc_CommandAbc9BCore(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	// get the file name
 	if argc == globalUtilOptind+1 {
 		var pFile *os.File
-		pPars.pFileProof = argv[globalUtilOptind]
-		pFile = os.OpenFile(pPars.pFileProof, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
+		pPars.PFileProof = argv[globalUtilOptind]
+		pFile = os.OpenFile(pPars.PFileProof, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
 		if pFile == nil {
-			Abc_Print(-1, "Abc_CommandAbc9BCore(): Cannot open file \"%s\" for writing the proof.\n", pPars.pFileProof)
+			Abc_Print(-1, "Abc_CommandAbc9BCore(): Cannot open file \"%s\" for writing the proof.\n", pPars.PFileProof)
 			return 0
 		}
 		_ = pFile.Close()
 	}
-	Bmc_ManBCorePerform(abcFrameGia(pAbc), pPars)
+	sat_bmc.Bmc_ManBCorePerform(abcFrameGia(pAbc), pPars)
 	return 0
 
 usage:
 	Abc_Print(-2, "usage: &bcore [-FOTV num] [-vh] <file>\n")
 	Abc_Print(-2, "\t         records UNSAT core of the BMC instance\n")
-	Abc_Print(-2, "\t-F num : the zero-based index of a timeframe [default = %d]\n", pPars.iFrame)
-	Abc_Print(-2, "\t-O num : the zero-based index of a primary output [default = %d]\n", pPars.iOutput)
-	Abc_Print(-2, "\t-T num : approximate timeout in seconds [default = %d]\n", pPars.nTimeOut)
+	Abc_Print(-2, "\t-F num : the zero-based index of a timeframe [default = %d]\n", pPars.IFrame)
+	Abc_Print(-2, "\t-O num : the zero-based index of a primary output [default = %d]\n", pPars.IOutput)
+	Abc_Print(-2, "\t-T num : approximate timeout in seconds [default = %d]\n", pPars.NTimeOut)
 	Abc_Print(-2, "\t-V file: file name with AIG IDs of pivot variables [default = no pivots]\n")
-	Abc_Print(-2, "\t-v     : toggle printing verbose information [default = %s]\n", abcSelect(pPars.fVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-v     : toggle printing verbose information [default = %s]\n", abcSelect(pPars.FVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h     : print the command usage\n")
 	Abc_Print(-2, "\t<file> : file name to write the resulting proof [default = stdout]\n")
 	return 1
@@ -42714,9 +42782,9 @@ func Abc_CommandAbc9ICheck(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	}
 	abcFrameFreeIntVec(pAbc, "vIndFlops")
 	if fSearch != 0 {
-		abcFrameSetResource(pAbc, "vIndFlops", Bmc_PerformISearch(abcFrameGia(pAbc), nFramesMax, nTimeOut, fReverse, fBackTopo, fDump, fVerbose))
+		abcFrameSetResource(pAbc, "vIndFlops", sat_bmc.Bmc_PerformISearch(abcFrameGia(pAbc), nFramesMax, nTimeOut, fReverse, fBackTopo, fDump, fVerbose))
 	} else {
-		Bmc_PerformICheck(abcFrameGia(pAbc), nFramesMax, nTimeOut, fEmpty, fVerbose)
+		sat_bmc.Bmc_PerformICheck(abcFrameGia(pAbc), nFramesMax, nTimeOut, fEmpty, fVerbose)
 	}
 	if abcFrameResource[*Vec_Int_t](pAbc, "vIndFlops") != nil {
 		abcFrameSetScalar(pAbc, "nIndFrames", nFramesMax)
@@ -42775,7 +42843,7 @@ func Abc_CommandAbc9SatTest(pAbc *Abc_Frame_t, argc int32, argv []string) int32 
 		Abc_Print(-1, "Abc_CommandAbc9SatTest(): There is no AIG.\n")
 		return 0
 	}
-	Bmc_LoadTest(abcFrameGia(pAbc), fLoadCnf, fVerbose)
+	sat_bmc.Bmc_LoadTest(abcFrameGia(pAbc), fLoadCnf, fVerbose)
 	return 0
 
 usage:
@@ -42802,14 +42870,14 @@ usage:
 */
 func Abc_CommandAbc9FFTest(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 
-	var Pars Bmc_ParFf_t
-	var pPars *Bmc_ParFf_t = &Pars
+	var Pars sat_bmc.Bmc_ParFf_t
+	var pPars *sat_bmc.Bmc_ParFf_t = &Pars
 	var pFileName string
 	var pFileName2 string
 	var pGold *Gia_Man_t = nil
 	var gold *Gia_Man_t
 	var c int32
-	Gia_ParFfSetDefault(pPars)
+	sat_bmc.Gia_ParFfSetDefault(pPars)
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "ATNKSGFkbsfcdeunvh"); c != -1; c = Extra_UtilGetopt(argc, argv, "ATNKSGFkbsfcdeunvh") {
 		switch c {
@@ -42829,9 +42897,9 @@ func Abc_CommandAbc9FFTest(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-T\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nTimeOut = abcAtoi(argv[globalUtilOptind])
+			pPars.NTimeOut = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nTimeOut < 0 {
+			if pPars.NTimeOut < 0 {
 				goto usage
 			}
 			break
@@ -42840,9 +42908,9 @@ func Abc_CommandAbc9FFTest(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-N\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nIterCheck = abcAtoi(argv[globalUtilOptind])
+			pPars.NIterCheck = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nIterCheck < 0 {
+			if pPars.NIterCheck < 0 {
 				goto usage
 			}
 			break
@@ -42851,9 +42919,9 @@ func Abc_CommandAbc9FFTest(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-K\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nCardConstr = abcAtoi(argv[globalUtilOptind])
+			pPars.NCardConstr = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nCardConstr <= 0 {
+			if pPars.NCardConstr <= 0 {
 				goto usage
 			}
 			break
@@ -42862,7 +42930,7 @@ func Abc_CommandAbc9FFTest(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-S\" should be followed by a string.\n")
 				goto usage
 			}
-			pPars.pFormStr = argv[globalUtilOptind]
+			pPars.PFormStr = argv[globalUtilOptind]
 			globalUtilOptind++
 			break
 		case 'F':
@@ -42882,34 +42950,34 @@ func Abc_CommandAbc9FFTest(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			globalUtilOptind++
 			break
 		case 'k':
-			pPars.fNonStrict ^= 1
+			pPars.FNonStrict ^= 1
 			break
 		case 'b':
-			pPars.fBasic ^= 1
+			pPars.FBasic ^= 1
 			break
 		case 's':
-			pPars.fStartPats ^= 1
+			pPars.FStartPats ^= 1
 			break
 		case 'f':
-			pPars.fFfOnly ^= 1
+			pPars.FFfOnly ^= 1
 			break
 		case 'c':
-			pPars.fCheckUntest ^= 1
+			pPars.FCheckUntest ^= 1
 			break
 		case 'd':
-			pPars.fDump ^= 1
+			pPars.FDump ^= 1
 			break
 		case 'e':
-			pPars.fDumpDelay ^= 1
+			pPars.FDumpDelay ^= 1
 			break
 		case 'u':
-			pPars.fDumpUntest ^= 1
+			pPars.FDumpUntest ^= 1
 			break
 		case 'n':
-			pPars.fDumpNewFaults ^= 1
+			pPars.FDumpNewFaults ^= 1
 			break
 		case 'v':
-			pPars.fVerbose ^= 1
+			pPars.FVerbose ^= 1
 			break
 		case 'h':
 			goto usage
@@ -42919,14 +42987,14 @@ func Abc_CommandAbc9FFTest(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	}
 	// read string from file
 	if pFileName2 != "" {
-		if !(int32(strings.Compare(Extra_FileNameExtension(pFileName2), "blif")) != 0) {
+		if !(int32(strings.Compare(misc_extra.Extra_FileNameExtension(pFileName2), "blif")) != 0) {
 
 			var pNtk2 *Abc_Ntk_t = Io_Read(pFileName2, Io_ReadFileType(pFileName2), 1, 0)
 			var pNtk3 *Abc_Ntk_t = Abc_NtkStrash(pNtk2, 0, 0, 0)
 			var pGia *Gia_Man_t = Abc_NtkClpGia(pNtk3)
-			var ppNamesIn *string = Abc_NtkCollectCioNames(pNtk2, 0)
+			var ppNamesIn *string = baseabc.Abc_NtkCollectCioNames(pNtk2, 0)
 			if Gia_ManCoNum(pGia) == 1 {
-				pPars.pFormStr = Gia_DeriveFormula(pGia, ppNamesIn)
+				pPars.PFormStr = sat_bmc.Gia_DeriveFormula(pGia, ppNamesIn)
 			} else {
 				fmt.Printf("The formula BLIF file contains the network with more one output.\n")
 			}
@@ -42934,7 +43002,7 @@ func Abc_CommandAbc9FFTest(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			Gia_ManStop(pGia)
 			Abc_NtkDelete(pNtk2)
 			Abc_NtkDelete(pNtk3)
-			if pPars.pFormStr == nil {
+			if pPars.PFormStr == nil {
 				goto usage
 			}
 
@@ -42944,36 +43012,36 @@ func Abc_CommandAbc9FFTest(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Abc_CommandAbc9FFTest(): File name \"%s\" with formula is invalid.\n", pFileName2)
 				return 0
 			}
-			pPars.pFormStr = Extra_FileRead(pFile)
+			pPars.PFormStr = misc_extra.Extra_FileRead(pFile)
 			_ = pFile.Close()
 			// skip spaces
 			for {
-				var Len int32 = len(pPars.pFormStr)
-				var Char byte = pPars.pFormStr[Len-1]
+				var Len int32 = len(pPars.PFormStr)
+				var Char byte = pPars.PFormStr[Len-1]
 				if Char == ' ' || Char == '\n' || Char == '\r' || Char == '\t' || Char == -51 {
-					pPars.pFormStr[Len-1] = 0
+					pPars.PFormStr[Len-1] = 0
 				} else {
 					break
 				}
 			}
 		}
-		fmt.Printf("Using formula \"%s\" from file \"%s\".\n", pPars.pFormStr, pFileName2)
+		fmt.Printf("Using formula \"%s\" from file \"%s\".\n", pPars.PFormStr, pFileName2)
 	}
-	if pPars.Algo == 0 && pPars.pFormStr == nil {
+	if pPars.Algo == 0 && pPars.PFormStr == nil {
 		Abc_Print(-1, "Formula string (-S <str>) should be selected when algorithm is 0 (-A 0).\n")
 		return 0
 	}
-	if pPars.Algo != 0 && pPars.pFormStr != nil {
+	if pPars.Algo != 0 && pPars.PFormStr != nil {
 		Abc_Print(-1, "Algorithm should be 0 (-A 0) when formula string is selected (-S <str>).\n")
 		return 0
 	}
 	// get the file name
 	if argc == globalUtilOptind+1 {
 		var pFile *os.File
-		pPars.pFileName = argv[globalUtilOptind]
-		pFile = os.Open(pPars.pFileName)
+		pPars.PFileName = argv[globalUtilOptind]
+		pFile = os.Open(pPars.PFileName)
 		if pFile == nil {
-			Abc_Print(-1, "Cannot open file \"%s\" with the input test patterns.\n", pPars.pFileName)
+			Abc_Print(-1, "Cannot open file \"%s\" with the input test patterns.\n", pPars.PFileName)
 			return 0
 		}
 		_ = pFile.Close()
@@ -43016,10 +43084,10 @@ func Abc_CommandAbc9FFTest(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	if pGold != nil {
 		gold = pGold
 	}
-	Gia_ManFaultTest(abcFrameGia(pAbc), gold, pPars)
+	sat_bmc.Gia_ManFaultTest(abcFrameGia(pAbc), gold, pPars)
 	Gia_ManStopP(&pGold)
 	if pFileName2 != "" {
-		pPars.pFormStr = nil
+		pPars.PFormStr = nil
 	}
 	return 0
 
@@ -43032,19 +43100,19 @@ usage:
 	Abc_Print(-2, "\t                2: traditional stuck-at fault: -S (((a&b)&~p)|q)\n")
 	Abc_Print(-2, "\t                3: complement fault: -S ((a&b)^p)\n")
 	Abc_Print(-2, "\t                4: functionally observable fault\n")
-	Abc_Print(-2, "\t-T num  : specifies approximate runtime limit in seconds [default = %d]\n", pPars.nTimeOut)
-	Abc_Print(-2, "\t-N num  : specifies iteration to check for fixed parameters [default = %d]\n", pPars.nIterCheck)
+	Abc_Print(-2, "\t-T num  : specifies approximate runtime limit in seconds [default = %d]\n", pPars.NTimeOut)
+	Abc_Print(-2, "\t-N num  : specifies iteration to check for fixed parameters [default = %d]\n", pPars.NIterCheck)
 	Abc_Print(-2, "\t-K num  : specifies cardinality constraint (num > 0) [default = unused]\n")
-	Abc_Print(-2, "\t-k      : toggles non-strict cardinality (n <= K, instead of n == K) [default = %s]\n", abcSelect(pPars.fNonStrict, "yes", "no"))
-	Abc_Print(-2, "\t-b      : toggles testing for single faults (the same as \"-K 1\") [default = %s]\n", abcSelect(pPars.fBasic, "yes", "no"))
-	Abc_Print(-2, "\t-s      : toggles starting with the all-0 and all-1 patterns [default = %s]\n", abcSelect(pPars.fStartPats, "yes", "no"))
-	Abc_Print(-2, "\t-f      : toggles faults at flop inputs only with \"-A 1\" and \"-S str\" [default = %s]\n", abcSelect(pPars.fFfOnly, "yes", "no"))
-	Abc_Print(-2, "\t-c      : toggles checking if there are untestable faults [default = %s]\n", abcSelect(fCheckUntest, "yes", "no"))
-	Abc_Print(-2, "\t-d      : toggles dumping test patterns into file \"<file>_tests.txt\" [default = %s]\n", abcSelect(pPars.fDump, "yes", "no"))
-	Abc_Print(-2, "\t-e      : toggles dumping test pattern pairs (delay faults only) [default = %s]\n", abcSelect(fDumpDelay, "yes", "no"))
-	Abc_Print(-2, "\t-u      : toggles dumping untestable faults into \"<file>_untest.txt\" [default = %s]\n", abcSelect(fDumpUntest, "yes", "no"))
-	Abc_Print(-2, "\t-n      : toggles dumping faults not detected by a given test set [default = %s]\n", abcSelect(fDumpNewFaults, "yes", "no"))
-	Abc_Print(-2, "\t-v      : toggles printing verbose information [default = %s]\n", abcSelect(pPars.fVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-k      : toggles non-strict cardinality (n <= K, instead of n == K) [default = %s]\n", abcSelect(pPars.FNonStrict, "yes", "no"))
+	Abc_Print(-2, "\t-b      : toggles testing for single faults (the same as \"-K 1\") [default = %s]\n", abcSelect(pPars.FBasic, "yes", "no"))
+	Abc_Print(-2, "\t-s      : toggles starting with the all-0 and all-1 patterns [default = %s]\n", abcSelect(pPars.FStartPats, "yes", "no"))
+	Abc_Print(-2, "\t-f      : toggles faults at flop inputs only with \"-A 1\" and \"-S str\" [default = %s]\n", abcSelect(pPars.FFfOnly, "yes", "no"))
+	Abc_Print(-2, "\t-c      : toggles checking if there are untestable faults [default = %s]\n", abcSelect(pPars.FCheckUntest, "yes", "no"))
+	Abc_Print(-2, "\t-d      : toggles dumping test patterns into file \"<file>_tests.txt\" [default = %s]\n", abcSelect(pPars.FDump, "yes", "no"))
+	Abc_Print(-2, "\t-e      : toggles dumping test pattern pairs (delay faults only) [default = %s]\n", abcSelect(pPars.FDumpDelay, "yes", "no"))
+	Abc_Print(-2, "\t-u      : toggles dumping untestable faults into \"<file>_untest.txt\" [default = %s]\n", abcSelect(pPars.FDumpUntest, "yes", "no"))
+	Abc_Print(-2, "\t-n      : toggles dumping faults not detected by a given test set [default = %s]\n", abcSelect(pPars.FDumpNewFaults, "yes", "no"))
+	Abc_Print(-2, "\t-v      : toggles printing verbose information [default = %s]\n", abcSelect(pPars.FVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h      : print the command usage\n")
 	Abc_Print(-2, "\t<file>  : (optional) file name with input test patterns\n\n")
 	Abc_Print(-2, "\t-G file : (optional) file name with the golden model\n\n")
@@ -43174,7 +43242,7 @@ func Abc_CommandAbc9Qbf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "There is no current GIA.\n")
 		return 1
 	}
-	if Gia_ManRegNum(abcFrameGia(pAbc)) {
+	if Gia_ManRegNum(abcFrameGia(pAbc)) != 0 {
 		Abc_Print(-1, "Works only for combinational networks.\n")
 		return 1
 	}
@@ -43187,9 +43255,9 @@ func Abc_CommandAbc9Qbf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 1
 	}
 	if fDumpCnf != 0 {
-		Gia_QbfDumpFile(abcFrameGia(pAbc), nPars)
+		giapkg.Gia_QbfDumpFile(abcFrameGia(pAbc), nPars)
 	} else {
-		Gia_QbfSolve(abcFrameGia(pAbc), nPars, nIterLimit, nConfLimit, nTimeOut, nEncVars, fGlucose, fVerbose)
+		giapkg.Gia_QbfSolve(abcFrameGia(pAbc), nPars, nIterLimit, nConfLimit, nTimeOut, nEncVars, fGlucose, fVerbose)
 	}
 	return 0
 
@@ -43262,7 +43330,7 @@ func Abc_CommandAbc9QVar(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "There is no current GIA.\n")
 		return 1
 	}
-	if Gia_ManRegNum(abcFrameGia(pAbc)) {
+	if Gia_ManRegNum(abcFrameGia(pAbc)) != 0 {
 		Abc_Print(-1, "Works only for combinational networks.\n")
 		return 1
 	}
@@ -43270,7 +43338,7 @@ func Abc_CommandAbc9QVar(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "The number of parameter variables is invalid (should be > 0 and < PI num).\n")
 		return 1
 	}
-	pTemp = Gia_QbfQuantifyAll(abcFrameGia(pAbc), nPars, fQuantU, fQuantE)
+	pTemp = giapkg.Gia_QbfQuantifyAll(abcFrameGia(pAbc), nPars, fQuantU, fQuantE)
 	Abc_FrameUpdateGia(pAbc, pTemp)
 	return 0
 
@@ -43349,7 +43417,7 @@ func Abc_CommandAbc9GenQbf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-S\" should be followed by a string.\n")
 				goto usage
 			}
-			pStr = Abc_UtilStrsav(argv[globalUtilOptind])
+			pStr = util.Abc_UtilStrsav(argv[globalUtilOptind])
 			globalUtilOptind++
 			if pStr == nil {
 				goto usage
@@ -43383,7 +43451,7 @@ func Abc_CommandAbc9GenQbf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Currently this commands works for one frame and one LUT.\n")
 		return 1
 	}
-	pTemp = Gia_GenQbfMiter(abcFrameGia(pAbc), nFrames, nLutNum, nLutSize, pStr, fUseOut, fVerbose)
+	pTemp = giapkg.Gia_GenQbfMiter(abcFrameGia(pAbc), nFrames, nLutNum, nLutSize, pStr, fUseOut, fVerbose)
 	Abc_FrameUpdateGia(pAbc, pTemp)
 	pStr = ""
 	return 0
@@ -43454,7 +43522,7 @@ func Abc_CommandAbc9HomoQbf(pAbc *Abc_Frame_t, argc int32, argv []string) int32 
 			goto usage
 		}
 	}
-	pTemp = Gia_Gen2CreateMiter(nLutSize, nLutNum)
+	pTemp = giapkg.Gia_Gen2CreateMiter(nLutSize, nLutNum)
 	Abc_FrameUpdateGia(pAbc, pTemp)
 	return 0
 
@@ -43530,9 +43598,9 @@ func Abc_CommandAbc9SatFx(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 0
 	}
 	if fDec != 0 {
-		Bmc_FxComputeOne(abcFrameGia(pAbc), nIterMax, nDiv2Add)
+		sat_bmc.Bmc_FxComputeOne(abcFrameGia(pAbc), nIterMax, nDiv2Add)
 	} else {
-		Bmc_FxCompute(abcFrameGia(pAbc))
+		sat_bmc.Bmc_FxCompute(abcFrameGia(pAbc))
 	}
 	return 0
 
@@ -43610,7 +43678,7 @@ func Abc_CommandAbc9SatClp(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9SatClp(): There is no AIG.\n")
 		return 0
 	}
-	vSop = Bmc_CollapseOne(abcFrameGia(pAbc), nCubeLim, nBTLimit, fCanon, 0, fVerbose)
+	vSop = sat_bmc.Bmc_CollapseOne(abcFrameGia(pAbc), nCubeLim, nBTLimit, fCanon, 0, fVerbose)
 	Vec_StrFree(vSop)
 	return 0
 
@@ -43706,7 +43774,7 @@ func Abc_CommandAbc9Inse(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(1, "Abc_CommandAbc9Inse(): All-0 initial state is assumed.\n")
 		Vec_IntFreeP(&abcFrameGia(pAbc).vInitClasses)
 	}
-	abcFrameGia(pAbc).vInitClasses = Gia_ManInseTest(abcFrameGia(pAbc), nil, nFrames, nWords, nTimeOut, fSim, fVerbose)
+	abcFrameGia(pAbc).vInitClasses = sat_bmc.Gia_ManInseTest(abcFrameGia(pAbc), nil, nFrames, nWords, nTimeOut, fSim, fVerbose)
 	return 0
 
 usage:
@@ -43800,7 +43868,7 @@ func Abc_CommandAbc9Maxi(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 0
 	}
 	vTemp = abcFrameGia(pAbc).vInitClasses
-	abcFrameGia(pAbc).vInitClasses = Gia_ManMaxiTest(abcFrameGia(pAbc), vTemp, nFrames, nWords, nTimeOut, fSim, fVerbose)
+	abcFrameGia(pAbc).vInitClasses = sat_bmc.Gia_ManMaxiTest(abcFrameGia(pAbc), vTemp, nFrames, nWords, nTimeOut, fSim, fVerbose)
 	Vec_IntFreeP(&vTemp)
 	return 0
 
@@ -43897,7 +43965,7 @@ func Abc_CommandAbc9Bmci(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Bmci(): Init array is not given.\n")
 		return 0
 	}
-	Gia_ManBmciTest(abcFrameGia(pAbc), abcFrameGia(pAbc).vInitClasses, nFrames, nWords, nTimeOut, fSim, fVerbose)
+	sat_bmc.Gia_ManBmciTest(abcFrameGia(pAbc), abcFrameGia(pAbc).vInitClasses, nFrames, nWords, nTimeOut, fSim, fVerbose)
 	return 0
 
 usage:
@@ -43962,7 +44030,7 @@ func Abc_CommandAbc9PoXsim(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 0
 	}
 	abcFrameFreeIntVec(pAbc, "vAbcObjIds")
-	abcFrameSetResource(pAbc, "vAbcObjIds", Gia_ManPoXSim(abcFrameGia(pAbc), nFrames, fVerbose))
+	abcFrameSetResource(pAbc, "vAbcObjIds", giapkg.Gia_ManPoXSim(abcFrameGia(pAbc), nFrames, fVerbose))
 	return 0
 
 usage:
@@ -44015,7 +44083,7 @@ func Abc_CommandAbc9Demiter(pAbc *Abc_Frame_t, argc int32, argv []string) int32 
 		Abc_Print(-1, "Abc_CommandAbc9Demiter(): There is no AIG.\n")
 		return 0
 	}
-	if (fDumpFiles != 0) || fDumpFilesTwo {
+	if (fDumpFiles != 0) || (fDumpFilesTwo != 0) {
 		var pName0 [1000]byte = "miter_part0.aig"
 		var pName1 [1000]byte = "miter_part1.aig"
 		var pPart1, pPart2 *Gia_Man_t
@@ -44024,9 +44092,9 @@ func Abc_CommandAbc9Demiter(pAbc *Abc_Frame_t, argc int32, argv []string) int32 
 			return 0
 		}
 		if fDumpFilesTwo != 0 {
-			Gia_ManDemiterTwoWords(abcFrameGia(pAbc), &pPart1, &pPart2)
+			giapkg.Gia_ManDemiterTwoWords(abcFrameGia(pAbc), &pPart1, &pPart2)
 		} else {
-			Gia_ManDemiterDual(abcFrameGia(pAbc), &pPart1, &pPart2)
+			giapkg.Gia_ManDemiterDual(abcFrameGia(pAbc), &pPart1, &pPart2)
 		}
 		if abcFrameGia(pAbc).pSpec {
 			var pGen string = Extra_FileNameGeneric(abcFrameGia(pAbc).pSpec)
@@ -44050,13 +44118,13 @@ func Abc_CommandAbc9Demiter(pAbc *Abc_Frame_t, argc int32, argv []string) int32 
 		return 0
 	}
 	if fDual != 0 {
-		pTemp = Gia_ManDemiterToDual(abcFrameGia(pAbc))
+		pTemp = giapkg.Gia_ManDemiterToDual(abcFrameGia(pAbc))
 	} else {
-		pTemp = Gia_ManDupDemiter(abcFrameGia(pAbc), fVerbose)
+		pTemp = giapkg.Gia_ManDupDemiter(abcFrameGia(pAbc), fVerbose)
 	}
 	Abc_FrameUpdateGia(pAbc, pTemp)
 	if fVerbose != 0 {
-		Gia_ManPrintStatsMiter(pTemp, 0)
+		giapkg.Gia_ManPrintStatsMiter(pTemp, 0)
 	}
 	return 0
 
@@ -44186,15 +44254,15 @@ func Abc_CommandAbc9Fadds(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 0
 	}
 	if fUseNat != 0 {
-		pTemp = Gia_ManDupWithNaturalBoxes(abcFrameGia(pAbc), nFaddMin, fVerbose)
+		pTemp = proof_acec.Gia_ManDupWithNaturalBoxes(abcFrameGia(pAbc), nFaddMin, fVerbose)
 	} else {
-		pTemp = Gia_ManDup(abcFrameGia(pAbc))
+		pTemp = giapkg.Gia_ManDup(abcFrameGia(pAbc))
 		Gia_ManTransferTiming(pTemp, abcFrameGia(pAbc))
 	}
 	if fUseArt != 0 {
-		pTemp2 = Gia_ManDupWithArtificialBoxes(pTemp, DelayC, nPathMin, nPathMax, nPathLimit, fUseFanout, fUseXorTrick, fIgnoreBoxDelays, fVerbose)
+		pTemp2 = proof_acec.Gia_ManDupWithArtificialBoxes(pTemp, DelayC, nPathMin, nPathMax, nPathLimit, fUseFanout, fUseXorTrick, fIgnoreBoxDelays, fVerbose)
 	} else {
-		pTemp2 = Gia_ManDup(pTemp)
+		pTemp2 = giapkg.Gia_ManDup(pTemp)
 		Gia_ManTransferTiming(pTemp2, pTemp)
 	}
 	Gia_ManStop(pTemp)
@@ -44260,7 +44328,7 @@ func Abc_CommandAbc9ATree(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Esop(): There is no AIG.\n")
 		return 0
 	}
-	pTemp = Gia_PolynCoreDetectTest(abcFrameGia(pAbc), fAddExtra, fAddCones, fVerbose)
+	pTemp = proof_acec.Gia_PolynCoreDetectTest(abcFrameGia(pAbc), fAddExtra, fAddCones, fVerbose)
 	Abc_FrameUpdateGia(pAbc, pTemp)
 	return 0
 
@@ -44354,13 +44422,13 @@ func Abc_CommandAbc9Polyn(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		if fSimple != 0 {
 			vOrder = nil
 		} else {
-			vOrder = Gia_PolynReorder(abcFrameGia(pAbc), fVerbose, fVeryVerbose)
+			vOrder = proof_acec.Gia_PolynReorder(abcFrameGia(pAbc), fVerbose, fVeryVerbose)
 		}
-		Gia_PolynBuild(abcFrameGia(pAbc), vOrder, fSigned, fVerbose, fVeryVerbose)
+		proof_acec.Gia_PolynBuild(abcFrameGia(pAbc), vOrder, fSigned, fVerbose, fVeryVerbose)
 		Vec_IntFreeP(&vOrder)
 
 	} else {
-		Gia_PolynBuild2Test(abcFrameGia(pAbc), pSign, nExtra, fSigned, fVerbose, fVeryVerbose)
+		proof_acec.Gia_PolynBuild2Test(abcFrameGia(pAbc), pSign, nExtra, fSigned, fVerbose, fVeryVerbose)
 	}
 	return 0
 
@@ -44405,11 +44473,11 @@ usage:
 func Abc_CommandAbc9Acec(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	var pFile *os.File
 	var err error
-	var ParsCec Acec_ParCec_t
-	var pPars *Acec_ParCec_t = &ParsCec
+	var ParsCec proof_acec.Acec_ParCec_t
+	var pPars *proof_acec.Acec_ParCec_t = &ParsCec
 	var pArgvNew *string
 	var c, nArgcNew int32
-	Acec_ManCecSetDefaultParams(pPars)
+	proof_acec.Acec_ManCecSetDefaultParams(pPars)
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "CTmdtbvh"); c != -1; c = Extra_UtilGetopt(argc, argv, "CTmdtbvh") {
 		switch c {
@@ -44418,9 +44486,9 @@ func Abc_CommandAbc9Acec(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-C\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nBTLimit = abcAtoi(argv[globalUtilOptind])
+			pPars.NBTLimit = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nBTLimit < 0 {
+			if pPars.NBTLimit < 0 {
 				goto usage
 			}
 			break
@@ -44436,19 +44504,19 @@ func Abc_CommandAbc9Acec(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			}
 			break
 		case 'm':
-			pPars.fMiter ^= 1
+			pPars.FMiter ^= 1
 			break
 		case 'd':
-			pPars.fDualOutput ^= 1
+			pPars.FDualOutput ^= 1
 			break
 		case 't':
-			pPars.fTwoOutput ^= 1
+			pPars.FTwoOutput ^= 1
 			break
 		case 'b':
-			pPars.fBooth ^= 1
+			pPars.FBooth ^= 1
 			break
 		case 'v':
-			pPars.fVerbose ^= 1
+			pPars.FVerbose ^= 1
 			break
 		case 'h':
 			goto usage
@@ -44456,7 +44524,7 @@ func Abc_CommandAbc9Acec(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			goto usage
 		}
 	}
-	if pPars.fMiter {
+	if pPars.FMiter != 0 {
 		var pGia0, pGia1, pDual *Gia_Man_t
 		if argc != globalUtilOptind {
 			Abc_Print(-1, "Abc_CommandAbc9Acec(): If the input is a miter, it cannot be given on the command line.\n")
@@ -44466,37 +44534,37 @@ func Abc_CommandAbc9Acec(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			Abc_Print(-1, "Abc_CommandAbc9Acec(): There is no AIG.\n")
 			return 1
 		}
-		if pPars.fDualOutput {
-			if Gia_ManPoNum(abcFrameGia(pAbc)) & 1 {
+		if pPars.FDualOutput != 0 {
+			if Gia_ManPoNum(abcFrameGia(pAbc))&1 != 0 {
 				Abc_Print(-1, "The dual-output miter should have an even number of outputs.\n")
 				return 1
 			}
-			if !pPars.fSilent {
-				Abc_Print(1, "Assuming the current network is a double-output miter. (Conflict limit = %d.)\n", pPars.nBTLimit)
+			if pPars.FSilent == 0 {
+				Abc_Print(1, "Assuming the current network is a double-output miter. (Conflict limit = %d.)\n", pPars.NBTLimit)
 			}
-			Gia_ManDemiterDual(abcFrameGia(pAbc), &pGia0, &pGia1)
-			abcFrameSetStatus(pAbc, Acec_Solve(pGia0, pGia1, pPars))
+			giapkg.Gia_ManDemiterDual(abcFrameGia(pAbc), &pGia0, &pGia1)
+			abcFrameSetStatus(pAbc, proof_acec.Acec_Solve(pGia0, pGia1, pPars))
 
-		} else if pPars.fTwoOutput {
-			if Gia_ManPoNum(abcFrameGia(pAbc)) & 1 {
+		} else if pPars.FTwoOutput != 0 {
+			if Gia_ManPoNum(abcFrameGia(pAbc))&1 != 0 {
 				Abc_Print(-1, "The two-output miter should have an even number of outputs.\n")
 				return 1
 			}
-			if !pPars.fSilent {
-				Abc_Print(1, "Assuming the current network is a two-word miter. (Conflict limit = %d.)\n", pPars.nBTLimit)
+			if pPars.FSilent == 0 {
+				Abc_Print(1, "Assuming the current network is a two-word miter. (Conflict limit = %d.)\n", pPars.NBTLimit)
 			}
-			Gia_ManDemiterTwoWords(abcFrameGia(pAbc), &pGia0, &pGia1)
-			abcFrameSetStatus(pAbc, Acec_Solve(pGia0, pGia1, pPars))
+			giapkg.Gia_ManDemiterTwoWords(abcFrameGia(pAbc), &pGia0, &pGia1)
+			abcFrameSetStatus(pAbc, proof_acec.Acec_Solve(pGia0, pGia1, pPars))
 
 		} else { // regular single- or multi-output miter
 
-			if !pPars.fSilent {
-				Abc_Print(1, "Assuming the current network is a regular single- or multi-output miter. (Conflict limit = %d.)\n", pPars.nBTLimit)
+			if pPars.FSilent == 0 {
+				Abc_Print(1, "Assuming the current network is a regular single- or multi-output miter. (Conflict limit = %d.)\n", pPars.NBTLimit)
 			}
-			pDual = Gia_ManDemiterToDual(abcFrameGia(pAbc))
-			Gia_ManDemiterDual(pDual, &pGia0, &pGia1)
+			pDual = giapkg.Gia_ManDemiterToDual(abcFrameGia(pAbc))
+			giapkg.Gia_ManDemiterDual(pDual, &pGia0, &pGia1)
 			Gia_ManStop(pDual)
-			abcFrameSetStatus(pAbc, Acec_Solve(pGia0, pGia1, pPars))
+			abcFrameSetStatus(pAbc, proof_acec.Acec_Solve(pGia0, pGia1, pPars))
 		}
 		Abc_FrameReplaceCex(pAbc, &pGia0.pCexComb)
 		Gia_ManStop(pGia0)
@@ -44542,7 +44610,7 @@ func Abc_CommandAbc9Acec(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			Abc_Print(-1, "Reading AIGER has failed.\n")
 			return 0
 		}
-		abcFrameSetStatus(pAbc, Acec_Solve(abcFrameGia(pAbc), pSecond, pPars))
+		abcFrameSetStatus(pAbc, proof_acec.Acec_Solve(abcFrameGia(pAbc), pSecond, pPars))
 		Abc_FrameReplaceCex(pAbc, &abcFrameGia(pAbc).pCexComb)
 		Gia_ManStop(pSecond)
 
@@ -44570,7 +44638,7 @@ func Abc_CommandAbc9Acec(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				return 0
 			}
 		}
-		abcFrameSetStatus(pAbc, Acec_Solve(pGias[0], pGias[1], pPars))
+		abcFrameSetStatus(pAbc, proof_acec.Acec_Solve(pGias[0], pGias[1], pPars))
 		Abc_FrameReplaceCex(pAbc, &pGias[0].pCexComb)
 		Gia_ManStop(pGias[0])
 		Gia_ManStop(pGias[1])
@@ -44584,13 +44652,13 @@ func Abc_CommandAbc9Acec(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 usage:
 	Abc_Print(-2, "usage: &acec [-CT num] [-mdtbvh] <file1> <file2>\n")
 	Abc_Print(-2, "\t         combinational equivalence checking for arithmetic circuits\n")
-	Abc_Print(-2, "\t-C num : the max number of conflicts at a node [default = %d]\n", pPars.nBTLimit)
+	Abc_Print(-2, "\t-C num : the max number of conflicts at a node [default = %d]\n", pPars.NBTLimit)
 	Abc_Print(-2, "\t-T num : approximate runtime limit in seconds [default = %d]\n", pPars.TimeLimit)
-	Abc_Print(-2, "\t-m     : toggle miter vs. two circuits [default = %s]\n", abcSelect(pPars.fMiter, "miter", "two circuits"))
-	Abc_Print(-2, "\t-d     : toggle using dual output miter [default = %s]\n", abcSelect(pPars.fDualOutput, "yes", "no"))
-	Abc_Print(-2, "\t-t     : toggle using two-word miter [default = %s]\n", abcSelect(pPars.fTwoOutput, "yes", "no"))
-	Abc_Print(-2, "\t-b     : toggle working with Booth multipliers [default = %s]\n", abcSelect(pPars.fBooth, "yes", "no"))
-	Abc_Print(-2, "\t-v     : toggle verbose output [default = %s]\n", abcSelect(pPars.fVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-m     : toggle miter vs. two circuits [default = %s]\n", abcSelect(pPars.FMiter, "miter", "two circuits"))
+	Abc_Print(-2, "\t-d     : toggle using dual output miter [default = %s]\n", abcSelect(pPars.FDualOutput, "yes", "no"))
+	Abc_Print(-2, "\t-t     : toggle using two-word miter [default = %s]\n", abcSelect(pPars.FTwoOutput, "yes", "no"))
+	Abc_Print(-2, "\t-b     : toggle working with Booth multipliers [default = %s]\n", abcSelect(pPars.FBooth, "yes", "no"))
+	Abc_Print(-2, "\t-v     : toggle verbose output [default = %s]\n", abcSelect(pPars.FVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h     : print the command usage\n")
 	Abc_Print(-2, "\tfile1  : (optional) the file with the first network\n")
 	Abc_Print(-2, "\tfile2  : (optional) the file with the second network\n")
@@ -44632,7 +44700,7 @@ func Abc_CommandAbc9Anorm(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Anorm(): There is no AIG.\n")
 		return 0
 	}
-	pTemp = Acec_Normalize(abcFrameGia(pAbc), fBooth, fVerbose)
+	pTemp = proof_acec.Acec_Normalize(abcFrameGia(pAbc), fBooth, fVerbose)
 	Abc_FrameUpdateGia(pAbc, pTemp)
 	return 0
 
@@ -44680,7 +44748,7 @@ func Abc_CommandAbc9Decla(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Decla(): There is no AIG.\n")
 		return 0
 	}
-	pTemp = Acec_ManDecla(abcFrameGia(pAbc), fBooth, fVerbose)
+	pTemp = proof_acec.Acec_ManDecla(abcFrameGia(pAbc), fBooth, fVerbose)
 	Abc_FrameUpdateGia(pAbc, pTemp)
 	return 0
 
@@ -44726,7 +44794,7 @@ func Abc_CommandAbc9Esop(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Esop(): There is no AIG.\n")
 		return 0
 	}
-	pTemp = Eso_ManCompute(abcFrameGia(pAbc), fVerbose, nil)
+	pTemp = giapkg.Eso_ManCompute(abcFrameGia(pAbc), fVerbose, nil)
 	Abc_FrameUpdateGia(pAbc, pTemp)
 	return 0
 
@@ -44833,30 +44901,30 @@ func Abc_CommandAbc9Exorcism(pAbc *Abc_Frame_t, argc int32, argv []string) int32
 	}
 
 	if pFileNameIn != "" {
-		pNtk = Io_ReadPla(pFileNameIn, 0, 0, 0 /* no preprocessing = */, 1 /* check = */, 1)
+		pNtk = base_io.Io_ReadPla(pFileNameIn, 0, 0, 0 /* no preprocessing = */, 1 /* check = */, 1)
 		if pNtk == nil {
 			fmt.Printf("Reading PLA file has failed.\n")
 			return 1
 		}
 		nInputs = Abc_NtkCiNum(pNtk)
 		nOutputs = Abc_NtkCoNum(pNtk)
-		vEsop = Abc_ExorcismNtk2Esop(pNtk)
+		vEsop = base_exor.Abc_ExorcismNtk2Esop(pNtk)
 		if vEsop == nil {
 			fmt.Printf("Converting PLA to ESOP failed.\n")
 			return 1
 		}
 
-	} else if abcFrameGia(pAbc) {
+	} else if abcFrameGia(pAbc) != nil {
 		// generate starting cover
 		nInputs = Gia_ManCiNum(abcFrameGia(pAbc))
 		nOutputs = Gia_ManCoNum(abcFrameGia(pAbc))
-		Eso_ManCompute(abcFrameGia(pAbc), fVerbose, &vEsop)
+		giapkg.Eso_ManCompute(abcFrameGia(pAbc), fVerbose, &vEsop)
 	}
 
 	if vEsop != nil {
 		// run minimization
-		Abc_ExorcismMain(vEsop, nInputs, nOutputs, pFileNameOut, Quality, Verbosity, nCubesMax, fUseQCost)
-		Vec_WecFree(vEsop)
+		base_exor.Abc_ExorcismMain(vEsop, nInputs, nOutputs, pFileNameOut, Quality, Verbosity, nCubesMax, fUseQCost)
+		giapkg.Vec_WecFree(vEsop)
 	}
 	return 0
 
@@ -45009,11 +45077,11 @@ func Abc_CommandAbc9Mfs(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Mfs(): There is no AIG.\n")
 		return 0
 	}
-	if Gia_ManBufNum(abcFrameGia(pAbc)) {
+	if Gia_ManBufNum(abcFrameGia(pAbc)) != 0 {
 		Abc_Print(-1, "Abc_CommandAbc9Mfs(): This command does not work with barrier buffers.\n")
 		return 1
 	}
-	if !Gia_ManHasMapping(abcFrameGia(pAbc)) {
+	if Gia_ManHasMapping(abcFrameGia(pAbc)) == 0 {
 		Abc_Print(-1, "Abc_CommandAbc9Mfs(): The current AIG has no mapping.\n")
 		return 0
 	}
@@ -45028,7 +45096,7 @@ func Abc_CommandAbc9Mfs(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	       return 0;
 	   }
 	*/
-	pTemp = Gia_ManPerformMfs(abcFrameGia(pAbc), pPars)
+	pTemp = giapkg.Gia_ManPerformMfs(abcFrameGia(pAbc), pPars)
 	Abc_FrameUpdateGia(pAbc, pTemp)
 	return 0
 
@@ -45042,13 +45110,13 @@ usage:
 	Abc_Print(-2, "\t-L <num> : the max increase in node level after resynthesis (0 <= num) [default = %d]\n", pPars.nGrowthLevel)
 	Abc_Print(-2, "\t-C <num> : the max number of conflicts in one SAT run (0 = no limit) [default = %d]\n", pPars.nBTLimit)
 	Abc_Print(-2, "\t-N <num> : the max number of nodes to try (0 = all) [default = %d]\n", pPars.nNodesMax)
-	Abc_Print(-2, "\t-d       : toggle performing redundancy removal [default = %s]\n", abcSelect(fRrOnly, "yes", "no"))
-	Abc_Print(-2, "\t-a       : toggle minimizing area or area+edges [default = %s]\n", abcSelect(fArea, "area", "area+edges"))
-	Abc_Print(-2, "\t-e       : toggle high-effort resubstitution [default = %s]\n", abcSelect(fMoreEffort, "yes", "no"))
-	Abc_Print(-2, "\t-b       : toggle preserving all white boxes [default = %s]\n", abcSelect(fAllBoxes, "yes", "no"))
-	Abc_Print(-2, "\t-l       : toggle deriving don't-cares [default = %s]\n", abcSelect(fUseDcs, "yes", "no"))
-	Abc_Print(-2, "\t-v       : toggle printing optimization summary [default = %s]\n", abcSelect(fVerbose, "yes", "no"))
-	Abc_Print(-2, "\t-w       : toggle printing detailed stats for each node [default = %s]\n", abcSelect(fVeryVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-d       : toggle performing redundancy removal [default = %s]\n", abcSelect(pPars.fRrOnly, "yes", "no"))
+	Abc_Print(-2, "\t-a       : toggle minimizing area or area+edges [default = %s]\n", abcSelect(pPars.fArea, "area", "area+edges"))
+	Abc_Print(-2, "\t-e       : toggle high-effort resubstitution [default = %s]\n", abcSelect(pPars.fMoreEffort, "yes", "no"))
+	Abc_Print(-2, "\t-b       : toggle preserving all white boxes [default = %s]\n", abcSelect(pPars.fAllBoxes, "yes", "no"))
+	Abc_Print(-2, "\t-l       : toggle deriving don't-cares [default = %s]\n", abcSelect(pPars.fUseDcs, "yes", "no"))
+	Abc_Print(-2, "\t-v       : toggle printing optimization summary [default = %s]\n", abcSelect(pPars.fVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-w       : toggle printing detailed stats for each node [default = %s]\n", abcSelect(pPars.fVeryVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h       : print the command usage\n")
 	return 1
 }
@@ -45070,9 +45138,9 @@ func Abc_CommandAbc9Mfsd(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 
 	var pTemp *Gia_Man_t
 	var c int32
-	var Pars Sbd_Par_t
-	var pPars *Sbd_Par_t = &Pars
-	Sbd_ParSetDefault(pPars)
+	var Pars opt_sbd.Sbd_Par_t
+	var pPars *opt_sbd.Sbd_Par_t = &Pars
+	opt_sbd.Sbd_ParSetDefault(pPars)
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "KSNPWFMCmcdpvwh"); c != -1; c = Extra_UtilGetopt(argc, argv, "KSNPWFMCmcdpvwh") {
 		switch c {
@@ -45192,14 +45260,14 @@ func Abc_CommandAbc9Mfsd(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Mfsd(): There is no AIG.\n")
 		return 0
 	}
-	if Gia_ManBufNum(abcFrameGia(pAbc)) {
+	if Gia_ManBufNum(abcFrameGia(pAbc)) != 0 {
 		Abc_Print(-1, "Abc_CommandAbc9Mfsd(): This command does not work with barrier buffers.\n")
 		return 1
 	}
-	if Gia_ManHasMapping(abcFrameGia(pAbc)) {
+	if Gia_ManHasMapping(abcFrameGia(pAbc)) != 0 {
 		Abc_Print(1, "The current AIG has mapping, which can be used to determine critical path if \"-p\" is selected.\n")
 	}
-	pTemp = Sbd_NtkPerform(abcFrameGia(pAbc), pPars)
+	pTemp = opt_sbd.Sbd_NtkPerform(abcFrameGia(pAbc), pPars)
 	Abc_FrameUpdateGia(pAbc, pTemp)
 	return 0
 
@@ -45214,12 +45282,12 @@ usage:
 	Abc_Print(-2, "\t-F <num> : the max number of fanouts to skip (1 <= num) [default = %d]\n", pPars.nTfoFanMax)
 	Abc_Print(-2, "\t-M <num> : the max node count of windows to consider (0 = no limit) [default = %d]\n", pPars.nWinSizeMax)
 	Abc_Print(-2, "\t-C <num> : the max number of conflicts in one SAT run (0 = no limit) [default = %d]\n", pPars.nBTLimit)
-	Abc_Print(-2, "\t-m       : toggle generating delay-oriented mapping [default = %s]\n", abcSelect(fMapping, "yes", "no"))
-	Abc_Print(-2, "\t-c       : toggle using several cuts at each node [default = %s]\n", abcSelect(fMoreCuts, "yes", "no"))
-	Abc_Print(-2, "\t-d       : toggle additional search for good divisors [default = %s]\n", abcSelect(fFindDivs, "yes", "no"))
-	Abc_Print(-2, "\t-p       : toggle optimizing critical path only [default = %s]\n", abcSelect(fUsePath, "yes", "no"))
-	Abc_Print(-2, "\t-v       : toggle printing optimization summary [default = %s]\n", abcSelect(fVerbose, "yes", "no"))
-	Abc_Print(-2, "\t-w       : toggle printing detailed stats for each node [default = %s]\n", abcSelect(fVeryVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-m       : toggle generating delay-oriented mapping [default = %s]\n", abcSelect(pPars.fMapping, "yes", "no"))
+	Abc_Print(-2, "\t-c       : toggle using several cuts at each node [default = %s]\n", abcSelect(pPars.fMoreCuts, "yes", "no"))
+	Abc_Print(-2, "\t-d       : toggle additional search for good divisors [default = %s]\n", abcSelect(pPars.fFindDivs, "yes", "no"))
+	Abc_Print(-2, "\t-p       : toggle optimizing critical path only [default = %s]\n", abcSelect(pPars.fUsePath, "yes", "no"))
+	Abc_Print(-2, "\t-v       : toggle printing optimization summary [default = %s]\n", abcSelect(pPars.fVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-w       : toggle printing detailed stats for each node [default = %s]\n", abcSelect(pPars.fVeryVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h       : print the command usage\n")
 	return 1
 }
@@ -45322,7 +45390,7 @@ func Abc_CommandAbc9DeepSyn(pAbc *Abc_Frame_t, argc int32, argv []string) int32 
 		Abc_Print(-1, "Abc_CommandAbc9DeepSyn(): There is no AIG.\n")
 		return 0
 	}
-	pTemp = Gia_ManDeepSyn(abcFrameGia(pAbc), nIters, nNoImpr, TimeOut, nAnds, Seed, fUseTwo, fVerbose)
+	pTemp = giapkg.Gia_ManDeepSyn(abcFrameGia(pAbc), nIters, nNoImpr, TimeOut, nAnds, Seed, fUseTwo, fVerbose)
 	Abc_FrameUpdateGia(pAbc, pTemp)
 	return 0
 
@@ -45424,7 +45492,7 @@ func Abc_CommandAbc9CexMerge(pAbc *Abc_Frame_t, argc int32, argv []string) int32
 		Abc_Print(1, "Current CEX does not allow to shorten the saved CEX.\n")
 		return 0
 	}
-	pCexNew = Abc_CexMerge(abcFrameCex2(pAbc), abcFrameCex(pAbc), iFrStart, iFrStop)
+	pCexNew = util.Abc_CexMerge(abcFrameCex2(pAbc), abcFrameCex(pAbc), iFrStart, iFrStop)
 	if pCexNew == nil {
 		Abc_Print(1, "Merging CEXes has failed.\n")
 		return 0
@@ -45518,7 +45586,7 @@ func Abc_CommandAbc9CexMin(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9CexMin(): There is no counter-example.\n")
 		return 1
 	}
-	pCexNew = Gia_ManCexMin(abcFrameGia(pAbc), abcFrameCex(pAbc), iFrameStart, nRealPis, fJustMax, fUseAll, fVerbose)
+	pCexNew = sat_bmc.Gia_ManCexMin(abcFrameGia(pAbc), abcFrameCex(pAbc), iFrameStart, nRealPis, fJustMax, fUseAll, fVerbose)
 	if pCexNew != nil {
 		Abc_FrameReplaceCex(pAbc, &pCexNew)
 	}
@@ -45642,7 +45710,7 @@ func Abc_CommandAbc9AbsDerive(pAbc *Abc_Frame_t, argc int32, argv []string) int3
 		Abc_Print(-1, "Abstraction flop map is missing.\n")
 		return 0
 	}
-	pTemp = Gia_ManDupAbsFlops(abcFrameGia(pAbc), abcFrameGia(pAbc).vFlopClasses)
+	pTemp = proof_abs.Gia_ManDupAbsFlops(abcFrameGia(pAbc), abcFrameGia(pAbc).vFlopClasses)
 	Abc_FrameUpdateGia(pAbc, pTemp)
 	return 0
 
@@ -45716,7 +45784,7 @@ func Abc_CommandAbc9AbsRefine(pAbc *Abc_Frame_t, argc int32, argv []string) int3
 		Abc_Print(-1, "Abc_CommandAbc9AbsRefine(): There is no counter-example.\n")
 		return 1
 	}
-	abcFrameSetStatus(pAbc, Gia_ManCexAbstractionRefine(abcFrameGia(pAbc), abcFrameCex(pAbc), nFfToAddMax, fTryFour, fSensePath, fVerbose))
+	abcFrameSetStatus(pAbc, proof_abs.Gia_ManCexAbstractionRefine(abcFrameGia(pAbc), abcFrameCex(pAbc), nFfToAddMax, fTryFour, fSensePath, fVerbose))
 	Abc_FrameReplaceCex(pAbc, &abcFrameGia(pAbc).pCexSeq)
 	return 0
 
@@ -45778,9 +45846,9 @@ func Abc_CommandAbc9GlaDerive(pAbc *Abc_Frame_t, argc int32, argv []string) int3
 		Abc_Print(-1, "Abstraction gate map is missing.\n")
 		return 0
 	}
-	pTemp = Gia_ManDupAbsGates(abcFrameGia(pAbc), abcFrameGia(pAbc).vGateClasses)
+	pTemp = proof_abs.Gia_ManDupAbsGates(abcFrameGia(pAbc), abcFrameGia(pAbc).vGateClasses)
 	Gia_ManStop(pTemp)
-	pTemp = Gia_ManDupAbsGates(abcFrameGia(pAbc), abcFrameGia(pAbc).vGateClasses)
+	pTemp = proof_abs.Gia_ManDupAbsGates(abcFrameGia(pAbc), abcFrameGia(pAbc).vGateClasses)
 	Abc_FrameUpdateGia(pAbc, pTemp)
 	//    Abc_Print( 1,"This command is currently not enabled.\n" );
 	return 0
@@ -45861,7 +45929,7 @@ func Abc_CommandAbc9GlaRefine(pAbc *Abc_Frame_t, argc int32, argv []string) int3
 		Abc_Print(-1, "Abc_CommandAbc9GlaRefine(): There is no counter-example.\n")
 		return 1
 	}
-	abcFrameSetStatus(pAbc, Gia_ManNewRefine(abcFrameGia(pAbc), abcFrameCex(pAbc), iFrameStart, iFrameExtra, fVerbose))
+	abcFrameSetStatus(pAbc, proof_abs.Gia_ManNewRefine(abcFrameGia(pAbc), abcFrameCex(pAbc), iFrameStart, iFrameExtra, fVerbose))
 	Abc_FrameReplaceCex(pAbc, &abcFrameGia(pAbc).pCexSeq)
 	return 0
 
@@ -45947,7 +46015,7 @@ func Abc_CommandAbc9GlaShrink(pAbc *Abc_Frame_t, argc int32, argv []string) int3
 		Abc_Print(-1, "Abc_CommandAbc9GlaShrink(): There is no gate-level abstraction.\n")
 		return 0
 	}
-	Gia_ManShrinkGla(abcFrameGia(pAbc), nFrameMax, nTimeOut, fUsePdr, fUseSat, fUseBdd, fVerbose)
+	proof_abs.Gia_ManShrinkGla(abcFrameGia(pAbc), nFrameMax, nTimeOut, fUsePdr, fUseSat, fUseBdd, fVerbose)
 	return 0
 
 usage:
@@ -45977,12 +46045,12 @@ usage:
 **********************************************************************
 */
 func Abc_CommandAbc9Gla(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
-	var Pars Abs_Par_t
-	var pPars *Abs_Par_t = &Pars
+	var Pars proof_abs.Abs_Par_t
+	var pPars *proof_abs.Abs_Par_t = &Pars
 	var c int32
 	var fNewAlgo int32 = 1
 	var pLogFileName string
-	Abs_ParSetDefaults(pPars)
+	proof_abs.Abs_ParSetDefaults(pPars)
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "FSCMDETRQPBALtfardmnscbpquwvh"); c != -1; c = Extra_UtilGetopt(argc, argv, "FSCMDETRQPBALtfardmnscbpquwvh") {
 		switch c {
@@ -45991,9 +46059,9 @@ func Abc_CommandAbc9Gla(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-F\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nFramesMax = abcAtoi(argv[globalUtilOptind])
+			pPars.NFramesMax = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nFramesMax < 0 {
+			if pPars.NFramesMax < 0 {
 				goto usage
 			}
 			break
@@ -46002,9 +46070,9 @@ func Abc_CommandAbc9Gla(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-S\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nFramesStart = abcAtoi(argv[globalUtilOptind])
+			pPars.NFramesStart = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nFramesStart < 0 {
+			if pPars.NFramesStart < 0 {
 				goto usage
 			}
 			break
@@ -46013,9 +46081,9 @@ func Abc_CommandAbc9Gla(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-C\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nConfLimit = abcAtoi(argv[globalUtilOptind])
+			pPars.NConfLimit = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nConfLimit < 0 {
+			if pPars.NConfLimit < 0 {
 				goto usage
 			}
 			break
@@ -46024,9 +46092,9 @@ func Abc_CommandAbc9Gla(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-M\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nLearnedStart = abcAtoi(argv[globalUtilOptind])
+			pPars.NLearnedStart = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nLearnedStart < 0 {
+			if pPars.NLearnedStart < 0 {
 				goto usage
 			}
 			break
@@ -46035,9 +46103,9 @@ func Abc_CommandAbc9Gla(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-D\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nLearnedDelta = abcAtoi(argv[globalUtilOptind])
+			pPars.NLearnedDelta = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nLearnedDelta < 0 {
+			if pPars.NLearnedDelta < 0 {
 				goto usage
 			}
 			break
@@ -46046,9 +46114,9 @@ func Abc_CommandAbc9Gla(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-P\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nLearnedPerce = abcAtoi(argv[globalUtilOptind])
+			pPars.NLearnedPerce = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nLearnedPerce < 0 {
+			if pPars.NLearnedPerce < 0 {
 				goto usage
 			}
 			break
@@ -46057,9 +46125,9 @@ func Abc_CommandAbc9Gla(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-T\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nTimeOut = abcAtoi(argv[globalUtilOptind])
+			pPars.NTimeOut = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nTimeOut < 0 {
+			if pPars.NTimeOut < 0 {
 				goto usage
 			}
 			break
@@ -46068,9 +46136,9 @@ func Abc_CommandAbc9Gla(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-R\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nRatioMin = abcAtoi(argv[globalUtilOptind])
+			pPars.NRatioMin = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nRatioMin < 0 {
+			if pPars.NRatioMin < 0 {
 				goto usage
 			}
 			break
@@ -46079,9 +46147,9 @@ func Abc_CommandAbc9Gla(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-Q\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nRatioMin2 = abcAtoi(argv[globalUtilOptind])
+			pPars.NRatioMin2 = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nRatioMin2 < 0 {
+			if pPars.NRatioMin2 < 0 {
 				goto usage
 			}
 			break
@@ -46090,9 +46158,9 @@ func Abc_CommandAbc9Gla(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-P\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nRatioMax = abcAtoi(argv[globalUtilOptind])
+			pPars.NRatioMax = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nRatioMax < 0 {
+			if pPars.NRatioMax < 0 {
 				goto usage
 			}
 			break
@@ -46101,9 +46169,9 @@ func Abc_CommandAbc9Gla(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-B\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nFramesNoChangeLim = abcAtoi(argv[globalUtilOptind])
+			pPars.NFramesNoChangeLim = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nFramesNoChangeLim < 0 {
+			if pPars.NFramesNoChangeLim < 0 {
 				goto usage
 			}
 			break
@@ -46112,7 +46180,7 @@ func Abc_CommandAbc9Gla(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-A\" should be followed by a file name.\n")
 				goto usage
 			}
-			pPars.pFileVabs = argv[globalUtilOptind]
+			pPars.PFileVabs = argv[globalUtilOptind]
 			globalUtilOptind++
 			break
 		case 'L':
@@ -46124,49 +46192,49 @@ func Abc_CommandAbc9Gla(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			globalUtilOptind++
 			break
 		case 't':
-			pPars.fUseTermVars ^= 1
+			pPars.FUseTermVars ^= 1
 			break
 		case 'f':
-			pPars.fPropFanout ^= 1
+			pPars.FPropFanout ^= 1
 			break
 		case 'a':
-			pPars.fAddLayer ^= 1
+			pPars.FAddLayer ^= 1
 			break
 		case 'r':
-			pPars.fNewRefine ^= 1
+			pPars.FNewRefine ^= 1
 			break
 		case 'd':
-			pPars.fDumpVabs ^= 1
+			pPars.FDumpVabs ^= 1
 			break
 		case 'm':
-			pPars.fDumpMabs ^= 1
+			pPars.FDumpMabs ^= 1
 			break
 		case 'n':
 			fNewAlgo ^= 1
 			break
 		case 's':
-			pPars.fUseSkip ^= 1
+			pPars.FUseSkip ^= 1
 			break
 		case 'c':
-			pPars.fUseSimple ^= 1
+			pPars.FUseSimple ^= 1
 			break
 		case 'b':
-			pPars.fSkipHash ^= 1
+			pPars.FSkipHash ^= 1
 			break
 		case 'p':
-			pPars.fUseFullProof ^= 1
+			pPars.FUseFullProof ^= 1
 			break
 		case 'q':
-			pPars.fCallProver ^= 1
+			pPars.FCallProver ^= 1
 			break
 		case 'u':
-			pPars.fSimpProver ^= 1
+			pPars.FSimpProver ^= 1
 			break
 		case 'v':
-			pPars.fVerbose ^= 1
+			pPars.FVerbose ^= 1
 			break
 		case 'w':
-			pPars.fVeryVerbose ^= 1
+			pPars.FVeryVerbose ^= 1
 			break
 		case 'h':
 			goto usage
@@ -46185,21 +46253,21 @@ func Abc_CommandAbc9Gla(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	       return 0;
 	   }
 	*/
-	if pPars.nFramesMax < 0 {
+	if pPars.NFramesMax < 0 {
 		Abc_Print(1, "The number of starting frames should be a positive integer.\n")
 		return 0
 	}
-	if pPars.nFramesMax && pPars.nFramesStart > pPars.nFramesMax {
+	if (pPars.NFramesMax != 0) && pPars.NFramesStart > pPars.NFramesMax {
 		Abc_Print(1, "The starting frame is larger than the max number of frames.\n")
 		return 0
 	}
 	if Gia_ManPoNum(abcFrameGia(pAbc)) == 1 {
 		if fNewAlgo != 0 {
-			abcFrameSetStatus(pAbc, Gia_ManPerformGla(abcFrameGia(pAbc), pPars))
+			abcFrameSetStatus(pAbc, proof_abs.Gia_ManPerformGla(abcFrameGia(pAbc), pPars))
 		} else {
-			abcFrameSetStatus(pAbc, Gia_ManPerformGlaOld(abcFrameGia(pAbc), pPars, 0))
+			abcFrameSetStatus(pAbc, proof_abs.Gia_ManPerformGlaOld(abcFrameGia(pAbc), pPars, 0))
 		}
-		abcFrameSetNFrames(pAbc, pPars.iFrame)
+		abcFrameSetNFrames(pAbc, pPars.IFrame)
 		Abc_FrameReplaceCex(pAbc, &abcFrameGia(pAbc).pCexSeq)
 		if pLogFileName != "" {
 			Abc_NtkWriteLogFile(pLogFileName, abcFrameCex(pAbc), abcFrameStatus(pAbc), abcFrameNFrames(pAbc), "&gla")
@@ -46209,19 +46277,19 @@ func Abc_CommandAbc9Gla(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 
 		var pObj *Gia_Obj_t
 		var o, Status int32
-		var vSeqModelVec *Vec_Ptr_t = Vec_PtrStart(Gia_ManPoNum(abcFrameGia(pAbc)))
+		var vSeqModelVec *Vec_Ptr_t = giapkg.Vec_PtrStart(Gia_ManPoNum(abcFrameGia(pAbc)))
 		var vStatuses *Vec_Int_t = Vec_IntAlloc(Gia_ManPoNum(abcFrameGia(pAbc)))
 		Gia_ManForEachPo(abcFrameGia(pAbc), pObj, o)
 		{
-			var pOne *Gia_Man_t = Gia_ManDupDfsOnePo(abcFrameGia(pAbc), o)
+			var pOne *Gia_Man_t = giapkg.Gia_ManDupDfsOnePo(abcFrameGia(pAbc), o)
 			if fNewAlgo != 0 {
-				Status = Gia_ManPerformGla(pOne, pPars)
+				Status = proof_abs.Gia_ManPerformGla(pOne, pPars)
 			} else {
-				Status = Gia_ManPerformGlaOld(pOne, pPars, 0)
+				Status = proof_abs.Gia_ManPerformGlaOld(pOne, pPars, 0)
 			}
 			Vec_IntPush(vStatuses, Status)
 			if pLogFileName != "" {
-				Abc_NtkWriteLogFile(pLogFileName, pOne.pCexSeq, Status, pPars.iFrame, "&gla")
+				Abc_NtkWriteLogFile(pLogFileName, pOne.pCexSeq, Status, pPars.IFrame, "&gla")
 			}
 			if pOne.pCexSeq {
 				Vec_PtrWriteEntry(vSeqModelVec, o, pOne.pCexSeq)
@@ -46239,33 +46307,33 @@ func Abc_CommandAbc9Gla(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 usage:
 	Abc_Print(-2, "usage: &gla [-FSCMDETRQPB num] [-AL file] [-fardmnscbpquwvh]\n")
 	Abc_Print(-2, "\t          fixed-time-frame gate-level proof- and cex-based abstraction\n")
-	Abc_Print(-2, "\t-F num  : the max number of timeframes to unroll [default = %d]\n", pPars.nFramesMax)
-	Abc_Print(-2, "\t-S num  : the starting time frame (0=unused) [default = %d]\n", pPars.nFramesStart)
-	Abc_Print(-2, "\t-C num  : the max number of SAT solver conflicts (0=unused) [default = %d]\n", pPars.nConfLimit)
-	Abc_Print(-2, "\t-M num  : the max number of learned clauses to keep (0=unused) [default = %d]\n", pPars.nLearnedStart)
-	Abc_Print(-2, "\t-D num  : delta value for learned clause removal [default = %d]\n", pPars.nLearnedDelta)
-	Abc_Print(-2, "\t-E num  : ratio percentage for learned clause removal [default = %d]\n", pPars.nLearnedPerce)
-	Abc_Print(-2, "\t-T num  : an approximate timeout, in seconds [default = %d]\n", pPars.nTimeOut)
-	Abc_Print(-2, "\t-R num  : stop when abstraction size exceeds num %% (0<=num<=100) [default = %d]\n", pPars.nRatioMin)
-	Abc_Print(-2, "\t-Q num  : stop when abstraction size exceeds num %% during refinement (0<=num<=100) [default = %d]\n", pPars.nRatioMin2)
-	Abc_Print(-2, "\t-P num  : maximum percentage of added objects before a restart (0<=num<=100) [default = %d]\n", pPars.nRatioMax)
-	Abc_Print(-2, "\t-B num  : the number of stable frames to call prover or dump abstraction [default = %d]\n", pPars.nFramesNoChangeLim)
+	Abc_Print(-2, "\t-F num  : the max number of timeframes to unroll [default = %d]\n", pPars.NFramesMax)
+	Abc_Print(-2, "\t-S num  : the starting time frame (0=unused) [default = %d]\n", pPars.NFramesStart)
+	Abc_Print(-2, "\t-C num  : the max number of SAT solver conflicts (0=unused) [default = %d]\n", pPars.NConfLimit)
+	Abc_Print(-2, "\t-M num  : the max number of learned clauses to keep (0=unused) [default = %d]\n", pPars.NLearnedStart)
+	Abc_Print(-2, "\t-D num  : delta value for learned clause removal [default = %d]\n", pPars.NLearnedDelta)
+	Abc_Print(-2, "\t-E num  : ratio percentage for learned clause removal [default = %d]\n", pPars.NLearnedPerce)
+	Abc_Print(-2, "\t-T num  : an approximate timeout, in seconds [default = %d]\n", pPars.NTimeOut)
+	Abc_Print(-2, "\t-R num  : stop when abstraction size exceeds num %% (0<=num<=100) [default = %d]\n", pPars.NRatioMin)
+	Abc_Print(-2, "\t-Q num  : stop when abstraction size exceeds num %% during refinement (0<=num<=100) [default = %d]\n", pPars.NRatioMin2)
+	Abc_Print(-2, "\t-P num  : maximum percentage of added objects before a restart (0<=num<=100) [default = %d]\n", pPars.NRatioMax)
+	Abc_Print(-2, "\t-B num  : the number of stable frames to call prover or dump abstraction [default = %d]\n", pPars.NFramesNoChangeLim)
 	Abc_Print(-2, "\t-A file : file name for dumping abstrated model (&gla -d) or abstraction map (&gla -m)\n")
 	Abc_Print(-2, "\t-L file : the log file name [default = %s]\n", abcDefaultString(pLogFileName, "no logging"))
-	Abc_Print(-2, "\t-f      : toggle propagating fanout implications [default = %s]\n", abcSelect(fPropFanout, "yes", "no"))
-	Abc_Print(-2, "\t-a      : toggle refinement by adding one layers of gates [default = %s]\n", abcSelect(fAddLayer, "yes", "no"))
-	Abc_Print(-2, "\t-r      : toggle using improved refinement heuristics [default = %s]\n", abcSelect(fNewRefine, "yes", "no"))
-	Abc_Print(-2, "\t-d      : toggle dumping abstracted model into a file [default = %s]\n", abcSelect(fDumpVabs, "yes", "no"))
-	Abc_Print(-2, "\t-m      : toggle dumping abstraction map into a file [default = %s]\n", abcSelect(fDumpMabs, "yes", "no"))
+	Abc_Print(-2, "\t-f      : toggle propagating fanout implications [default = %s]\n", abcSelect(pPars.FPropFanout, "yes", "no"))
+	Abc_Print(-2, "\t-a      : toggle refinement by adding one layers of gates [default = %s]\n", abcSelect(pPars.FAddLayer, "yes", "no"))
+	Abc_Print(-2, "\t-r      : toggle using improved refinement heuristics [default = %s]\n", abcSelect(pPars.FNewRefine, "yes", "no"))
+	Abc_Print(-2, "\t-d      : toggle dumping abstracted model into a file [default = %s]\n", abcSelect(pPars.FDumpVabs, "yes", "no"))
+	Abc_Print(-2, "\t-m      : toggle dumping abstraction map into a file [default = %s]\n", abcSelect(pPars.FDumpMabs, "yes", "no"))
 	Abc_Print(-2, "\t-n      : toggle using new algorithms [default = %s]\n", abcSelect(fNewAlgo, "yes", "no"))
-	Abc_Print(-2, "\t-s      : toggle skipping previously proved timeframes [default = %s]\n", abcSelect(fUseSkip, "yes", "no"))
-	Abc_Print(-2, "\t-c      : toggle using naive (2-input AND node) CNF encoding [default = %s]\n", abcSelect(fUseSimple, "yes", "no"))
-	Abc_Print(-2, "\t-b      : toggle CNF construction without hashing [default = %s]\n", abcSelect(fSkipHash, "yes", "no"))
-	Abc_Print(-2, "\t-p      : toggle using full-proof for UNSAT cores [default = %s]\n", abcSelect(fUseFullProof, "yes", "no"))
-	Abc_Print(-2, "\t-q      : toggle calling the prover [default = %s]\n", abcSelect(fCallProver, "yes", "no"))
-	Abc_Print(-2, "\t-u      : toggle enabling simplifation before calling the prover [default = %s]\n", abcSelect(fSimpProver, "yes", "no"))
-	Abc_Print(-2, "\t-v      : toggle printing verbose information [default = %s]\n", abcSelect(fVerbose, "yes", "no"))
-	Abc_Print(-2, "\t-w      : toggle printing more verbose information [default = %s]\n", abcSelect(fVeryVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-s      : toggle skipping previously proved timeframes [default = %s]\n", abcSelect(pPars.FUseSkip, "yes", "no"))
+	Abc_Print(-2, "\t-c      : toggle using naive (2-input AND node) CNF encoding [default = %s]\n", abcSelect(pPars.FUseSimple, "yes", "no"))
+	Abc_Print(-2, "\t-b      : toggle CNF construction without hashing [default = %s]\n", abcSelect(pPars.FSkipHash, "yes", "no"))
+	Abc_Print(-2, "\t-p      : toggle using full-proof for UNSAT cores [default = %s]\n", abcSelect(pPars.FUseFullProof, "yes", "no"))
+	Abc_Print(-2, "\t-q      : toggle calling the prover [default = %s]\n", abcSelect(pPars.FCallProver, "yes", "no"))
+	Abc_Print(-2, "\t-u      : toggle enabling simplifation before calling the prover [default = %s]\n", abcSelect(pPars.FSimpProver, "yes", "no"))
+	Abc_Print(-2, "\t-v      : toggle printing verbose information [default = %s]\n", abcSelect(pPars.FVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-w      : toggle printing more verbose information [default = %s]\n", abcSelect(pPars.FVeryVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h      : print the command usage\n")
 	return 1
 }
@@ -46284,10 +46352,10 @@ usage:
 **********************************************************************
 */
 func Abc_CommandAbc9Vta(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
-	var Pars Abs_Par_t
-	var pPars *Abs_Par_t = &Pars
+	var Pars proof_abs.Abs_Par_t
+	var pPars *proof_abs.Abs_Par_t = &Pars
 	var c int32
-	Abs_ParSetDefaults(pPars)
+	proof_abs.Abs_ParSetDefaults(pPars)
 	Extra_UtilGetoptReset()
 	for c = Extra_UtilGetopt(argc, argv, "FSPCLDETRAtradvh"); c != -1; c = Extra_UtilGetopt(argc, argv, "FSPCLDETRAtradvh") {
 		switch c {
@@ -46296,9 +46364,9 @@ func Abc_CommandAbc9Vta(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-F\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nFramesMax = abcAtoi(argv[globalUtilOptind])
+			pPars.NFramesMax = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nFramesMax < 0 {
+			if pPars.NFramesMax < 0 {
 				goto usage
 			}
 			break
@@ -46307,9 +46375,9 @@ func Abc_CommandAbc9Vta(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-S\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nFramesStart = abcAtoi(argv[globalUtilOptind])
+			pPars.NFramesStart = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nFramesStart < 0 {
+			if pPars.NFramesStart < 0 {
 				goto usage
 			}
 			break
@@ -46318,9 +46386,9 @@ func Abc_CommandAbc9Vta(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-P\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nFramesPast = abcAtoi(argv[globalUtilOptind])
+			pPars.NFramesPast = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nFramesPast < 0 {
+			if pPars.NFramesPast < 0 {
 				goto usage
 			}
 			break
@@ -46329,9 +46397,9 @@ func Abc_CommandAbc9Vta(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-C\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nConfLimit = abcAtoi(argv[globalUtilOptind])
+			pPars.NConfLimit = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nConfLimit < 0 {
+			if pPars.NConfLimit < 0 {
 				goto usage
 			}
 			break
@@ -46340,9 +46408,9 @@ func Abc_CommandAbc9Vta(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-L\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nLearnedStart = abcAtoi(argv[globalUtilOptind])
+			pPars.NLearnedStart = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nLearnedStart < 0 {
+			if pPars.NLearnedStart < 0 {
 				goto usage
 			}
 			break
@@ -46351,9 +46419,9 @@ func Abc_CommandAbc9Vta(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-D\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nLearnedDelta = abcAtoi(argv[globalUtilOptind])
+			pPars.NLearnedDelta = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nLearnedDelta < 0 {
+			if pPars.NLearnedDelta < 0 {
 				goto usage
 			}
 			break
@@ -46362,9 +46430,9 @@ func Abc_CommandAbc9Vta(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-E\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nLearnedPerce = abcAtoi(argv[globalUtilOptind])
+			pPars.NLearnedPerce = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nLearnedPerce < 0 {
+			if pPars.NLearnedPerce < 0 {
 				goto usage
 			}
 			break
@@ -46373,9 +46441,9 @@ func Abc_CommandAbc9Vta(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-T\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nTimeOut = abcAtoi(argv[globalUtilOptind])
+			pPars.NTimeOut = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nTimeOut < 0 {
+			if pPars.NTimeOut < 0 {
 				goto usage
 			}
 			break
@@ -46384,9 +46452,9 @@ func Abc_CommandAbc9Vta(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-R\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nRatioMin = abcAtoi(argv[globalUtilOptind])
+			pPars.NRatioMin = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.nRatioMin < 0 {
+			if pPars.NRatioMin < 0 {
 				goto usage
 			}
 			break
@@ -46395,23 +46463,23 @@ func Abc_CommandAbc9Vta(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-A\" should be followed by a file name.\n")
 				goto usage
 			}
-			pPars.pFileVabs = argv[globalUtilOptind]
+			pPars.PFileVabs = argv[globalUtilOptind]
 			globalUtilOptind++
 			break
 		case 't':
-			pPars.fUseTermVars ^= 1
+			pPars.FUseTermVars ^= 1
 			break
 		case 'r':
-			pPars.fUseRollback ^= 1
+			pPars.FUseRollback ^= 1
 			break
 		case 'a':
-			pPars.fAddLayer ^= 1
+			pPars.FAddLayer ^= 1
 			break
 		case 'd':
-			pPars.fDumpVabs ^= 1
+			pPars.FDumpVabs ^= 1
 			break
 		case 'v':
-			pPars.fVerbose ^= 1
+			pPars.FVerbose ^= 1
 			break
 		case 'h':
 			goto usage
@@ -46431,37 +46499,37 @@ func Abc_CommandAbc9Vta(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(1, "The network is more than one PO (run \"orpos\").\n")
 		return 0
 	}
-	if pPars.nFramesMax < 0 {
+	if pPars.NFramesMax < 0 {
 		Abc_Print(1, "The number of starting frames should be a positive integer.\n")
 		return 0
 	}
-	if pPars.nFramesMax && pPars.nFramesStart > pPars.nFramesMax {
+	if (pPars.NFramesMax != 0) && pPars.NFramesStart > pPars.NFramesMax {
 		Abc_Print(1, "The starting frame is larger than the max number of frames.\n")
 		return 0
 	}
-	abcFrameSetStatus(pAbc, Gia_VtaPerform(abcFrameGia(pAbc), pPars))
-	abcFrameSetNFrames(pAbc, pPars.iFrame)
+	abcFrameSetStatus(pAbc, proof_abs.Gia_VtaPerform(abcFrameGia(pAbc), pPars))
+	abcFrameSetNFrames(pAbc, pPars.IFrame)
 	Abc_FrameReplaceCex(pAbc, &abcFrameGia(pAbc).pCexSeq)
 	return 0
 
 usage:
 	Abc_Print(-2, "usage: &vta [-FSPCLDETR num] [-A file] [-tradvh]\n")
 	Abc_Print(-2, "\t          variable-time-frame gate-level proof- and cex-based abstraction\n")
-	Abc_Print(-2, "\t-F num  : the max number of timeframes to unroll [default = %d]\n", pPars.nFramesMax)
-	Abc_Print(-2, "\t-S num  : the starting time frame (0=unused) [default = %d]\n", pPars.nFramesStart)
-	Abc_Print(-2, "\t-P num  : the number of previous frames for UNSAT core [default = %d]\n", pPars.nFramesPast)
-	Abc_Print(-2, "\t-C num  : the max number of SAT solver conflicts (0=unused) [default = %d]\n", pPars.nConfLimit)
-	Abc_Print(-2, "\t-L num  : the max number of learned clauses to keep (0=unused) [default = %d]\n", pPars.nLearnedStart)
-	Abc_Print(-2, "\t-D num  : delta value for learned clause removal [default = %d]\n", pPars.nLearnedDelta)
-	Abc_Print(-2, "\t-E num  : ratio percentage for learned clause removal [default = %d]\n", pPars.nLearnedPerce)
-	Abc_Print(-2, "\t-T num  : an approximate timeout, in seconds [default = %d]\n", pPars.nTimeOut)
-	Abc_Print(-2, "\t-R num  : minimum percentage of abstracted objects (0<=num<=100) [default = %d]\n", pPars.nRatioMin)
+	Abc_Print(-2, "\t-F num  : the max number of timeframes to unroll [default = %d]\n", pPars.NFramesMax)
+	Abc_Print(-2, "\t-S num  : the starting time frame (0=unused) [default = %d]\n", pPars.NFramesStart)
+	Abc_Print(-2, "\t-P num  : the number of previous frames for UNSAT core [default = %d]\n", pPars.NFramesPast)
+	Abc_Print(-2, "\t-C num  : the max number of SAT solver conflicts (0=unused) [default = %d]\n", pPars.NConfLimit)
+	Abc_Print(-2, "\t-L num  : the max number of learned clauses to keep (0=unused) [default = %d]\n", pPars.NLearnedStart)
+	Abc_Print(-2, "\t-D num  : delta value for learned clause removal [default = %d]\n", pPars.NLearnedDelta)
+	Abc_Print(-2, "\t-E num  : ratio percentage for learned clause removal [default = %d]\n", pPars.NLearnedPerce)
+	Abc_Print(-2, "\t-T num  : an approximate timeout, in seconds [default = %d]\n", pPars.NTimeOut)
+	Abc_Print(-2, "\t-R num  : minimum percentage of abstracted objects (0<=num<=100) [default = %d]\n", pPars.NRatioMin)
 	Abc_Print(-2, "\t-A file : file name for dumping abstrated model [default = \"vabs.aig\"]\n")
-	Abc_Print(-2, "\t-t      : toggle using terminal variables [default = %s]\n", abcSelect(fUseTermVars, "yes", "no"))
-	Abc_Print(-2, "\t-r      : toggle using rollback after the starting frames [default = %s]\n", abcSelect(fUseRollback, "yes", "no"))
-	Abc_Print(-2, "\t-a      : toggle refinement by adding one layers of gates [default = %s]\n", abcSelect(fAddLayer, "yes", "no"))
-	Abc_Print(-2, "\t-d      : toggle dumping abstracted model into a file [default = %s]\n", abcSelect(fDumpVabs, "yes", "no"))
-	Abc_Print(-2, "\t-v      : toggle printing verbose information [default = %s]\n", abcSelect(fVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-t      : toggle using terminal variables [default = %s]\n", abcSelect(pPars.FUseTermVars, "yes", "no"))
+	Abc_Print(-2, "\t-r      : toggle using rollback after the starting frames [default = %s]\n", abcSelect(pPars.FUseRollback, "yes", "no"))
+	Abc_Print(-2, "\t-a      : toggle refinement by adding one layers of gates [default = %s]\n", abcSelect(pPars.FAddLayer, "yes", "no"))
+	Abc_Print(-2, "\t-d      : toggle dumping abstracted model into a file [default = %s]\n", abcSelect(pPars.FDumpVabs, "yes", "no"))
+	Abc_Print(-2, "\t-v      : toggle printing verbose information [default = %s]\n", abcSelect(pPars.FVerbose, "yes", "no"))
 	Abc_Print(-2, "\t-h      : print the command usage\n")
 	return 1
 }
@@ -46502,7 +46570,7 @@ func Abc_CommandAbc9Vta2Gla(pAbc *Abc_Frame_t, argc int32, argv []string) int32 
 		return 0
 	}
 	Vec_IntFreeP(&abcFrameGia(pAbc).vGateClasses)
-	abcFrameGia(pAbc).vGateClasses = Gia_VtaConvertToGla(abcFrameGia(pAbc), abcFrameGia(pAbc).vObjClasses)
+	abcFrameGia(pAbc).vGateClasses = proof_abs.Gia_VtaConvertToGla(abcFrameGia(pAbc), abcFrameGia(pAbc).vObjClasses)
 	Vec_IntFreeP(&abcFrameGia(pAbc).vObjClasses)
 	return 0
 
@@ -46566,7 +46634,7 @@ func Abc_CommandAbc9Gla2Vta(pAbc *Abc_Frame_t, argc int32, argv []string) int32 
 		return 0
 	}
 	Vec_IntFreeP(&abcFrameGia(pAbc).vObjClasses)
-	abcFrameGia(pAbc).vObjClasses = Gia_VtaConvertFromGla(abcFrameGia(pAbc), abcFrameGia(pAbc).vGateClasses, nFrames)
+	abcFrameGia(pAbc).vObjClasses = proof_abs.Gia_VtaConvertFromGla(abcFrameGia(pAbc), abcFrameGia(pAbc).vGateClasses, nFrames)
 	Vec_IntFreeP(&abcFrameGia(pAbc).vGateClasses)
 	return 0
 
@@ -46615,7 +46683,7 @@ func Abc_CommandAbc9Fla2Gla(pAbc *Abc_Frame_t, argc int32, argv []string) int32 
 		return 0
 	}
 	Vec_IntFreeP(&abcFrameGia(pAbc).vGateClasses)
-	abcFrameGia(pAbc).vGateClasses = Gia_FlaConvertToGla(abcFrameGia(pAbc), abcFrameGia(pAbc).vFlopClasses)
+	abcFrameGia(pAbc).vGateClasses = proof_abs.Gia_FlaConvertToGla(abcFrameGia(pAbc), abcFrameGia(pAbc).vFlopClasses)
 	Vec_IntFreeP(&abcFrameGia(pAbc).vFlopClasses)
 	return 0
 
@@ -46663,7 +46731,7 @@ func Abc_CommandAbc9Gla2Fla(pAbc *Abc_Frame_t, argc int32, argv []string) int32 
 		return 0
 	}
 	Vec_IntFreeP(&abcFrameGia(pAbc).vFlopClasses)
-	abcFrameGia(pAbc).vFlopClasses = Gia_GlaConvertToFla(abcFrameGia(pAbc), abcFrameGia(pAbc).vGateClasses)
+	abcFrameGia(pAbc).vFlopClasses = proof_abs.Gia_GlaConvertToFla(abcFrameGia(pAbc), abcFrameGia(pAbc).vGateClasses)
 	Vec_IntFreeP(&abcFrameGia(pAbc).vGateClasses)
 	return 0
 
@@ -46792,7 +46860,7 @@ func Abc_CommandAbc9Gen(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			goto usage
 		}
 	}
-	pTemp = Extra_CommandGen(Algo, LutSize, nLuts, nLevels, Limit, nBestTries, Multi, fXor, fVerbose)
+	pTemp = misc_extra.Extra_CommandGen(Algo, LutSize, nLuts, nLevels, Limit, nBestTries, Multi, fXor, fVerbose)
 	Abc_FrameUpdateGia(pAbc, pTemp)
 	return 0
 
@@ -46916,7 +46984,7 @@ func Abc_CommandAbc9Cfs(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Cfs(): There is no AIG.\n")
 		return 1
 	}
-	Extra_CommandCfs(abcFrameGia(pAbc), Limit, Reps, UnseenUse, RareUse, fReplaceRare, fConstSim, fDagNodes, FlipProb, fVerbose)
+	misc_extra.Extra_CommandCfs(abcFrameGia(pAbc), Limit, Reps, UnseenUse, RareUse, fReplaceRare, fConstSim, fDagNodes, FlipProb, fVerbose)
 	return 0
 
 usage:
@@ -47010,7 +47078,7 @@ func Abc_CommandAbc9Test(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	//    }
 	//    Abc_FrameUpdateGia( pAbc, Abc_Procedure(pAbc->pGia) );
 	//    Gia_ManTryResub( pAbc->pGia );
-	Gia_RsbEnumerateWindows(abcFrameGia(pAbc), 6, 5)
+	giapkg.Gia_RsbEnumerateWindows(abcFrameGia(pAbc), 6, 5)
 	return 0
 usage:
 	Abc_Print(-2, "usage: &test [-FW num] [-svh]\n")

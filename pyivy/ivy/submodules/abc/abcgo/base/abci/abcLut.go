@@ -1,5 +1,7 @@
 package abci
 
+import aig_gia "github.com/glycerine/abcgo/aig/gia"
+
 import (
 	"fmt"
 	"os"
@@ -739,7 +741,7 @@ func Abc_NodeDecomposeSort(pLeaves []any, nVars int32, pBSet []int32, nLutSize i
 		kBest = -1
 		LevelMin = LARGE_LEVEL
 		for k = 0; k < nVars; k++ {
-			if pTemp[k] && LevelMin > int32(pTemp[k].Level) {
+			if (pTemp[k] != nil) && LevelMin > int32(pTemp[k].Level) {
 				LevelMin = int32(pTemp[k].Level)
 				kBest = k
 			}
@@ -785,7 +787,7 @@ func Abc_NodeDecomposeStep(p *Abc_ManScl_t) int32 {
 	   qsort( (void *)p->pBSet, (size_t)nVars, sizeof(int),
 	           (int (*)(const void *, const void *)) Abc_NodeCompareLevelsInc );
 	*/
-	Abc_NodeDecomposeSort(Vec_PtrArray(p.vLeaves), Vec_PtrSize(p.vLeaves), p.pBSet[:], p.nLutSize)
+	Abc_NodeDecomposeSort(aig_gia.Vec_PtrArray(p.vLeaves), Vec_PtrSize(p.vLeaves), p.pBSet[:], p.nLutSize)
 	assert(Vec_PtrEntry(p.vLeaves, p.pBSet[0]).(*Abc_Obj_t).Level <= Vec_PtrEntry(p.vLeaves, p.pBSet[1]).(*Abc_Obj_t).Level, "leaves are level-sorted")
 	// cofactor w.r.t. the selected variables
 	extra.Extra_TruthCopy(p.uCofs[1], p.uTruth, nVars)
