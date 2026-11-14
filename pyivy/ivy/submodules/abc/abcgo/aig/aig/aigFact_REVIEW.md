@@ -7,7 +7,7 @@ slices. Cone frontiers are explicit collections; recursive reconstruction copies
 nodes before creating gates so slice growth cannot invalidate a node pointer.
 The public traversal helpers preserve ABC's current/previous generation protocol.
 The complete support cut is bounded to sixteen variables, as in the source.
-Local boolean truth tables replace Kit and untyped scratch-pointer storage;
+Packed uint32 truth tables use Kit operations without untyped scratch storage;
 reconstruction uses the graph's typed object-copy map. Cofactor Edge literals represent
 assignments forced true, so a complemented literal forces its node to zero.
 Named status constants retain the original 0/-1/-2/-3 outcomes. The two original

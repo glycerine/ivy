@@ -1,5 +1,7 @@
 package aig
 
+import "github.com/glycerine/abcgo/bool/kit"
+
 const (
 	// SupportMinSuccess means a care-equivalent cofactored cone was constructed.
 	SupportMinSuccess        int32 = 0
@@ -161,15 +163,16 @@ func Aig_ManFactorAlgebraicTest(p *Graph) Edge {
 
 // supportTruth builds cut truth tables with one bit per assignment. A support
 // node is an independent boundary variable even when it is an internal gate.
-func supportTruth(p *Graph, nodes, support []Edge) map[int][]bool {
+func supportTruth(p *Graph, nodes, support []Edge) map[int][]uint32 {
 	if len(support) > aigSupportLimit {
 		panic("aig: support truth limit is sixteen variables")
 	}
-	assignments := 1 << len(support)
-	tables := make(map[int][]bool, len(nodes)+len(support)+1)
-	one := make([]bool, assignments)
+	nVars := int32(len(support))
+	words := int(kit.Kit_TruthWordNum(nVars))
+	tables := make(map[int][]uint32, len(nodes)+len(support)+1)
+	one := make([]uint32, words)
 	for i := range one {
-		one[i] = true
+		one[i] = ^uint32(0)
 	}
 	tables[0] = one
 	seenSupport := map[int]bool{}
@@ -181,10 +184,8 @@ func supportTruth(p *Graph, nodes, support []Edge) map[int][]bool {
 		if e.Complemented() {
 			panic("aig: complemented support boundary")
 		}
-		values := make([]bool, assignments)
-		for mask := range values {
-			values[mask] = mask&(1<<i) != 0
-		}
+		values := make([]uint32, words)
+		kit.Kit_TruthIthVar(values, nVars, int32(i))
 		tables[e.NodeID()] = values
 	}
 	for _, e := range nodes {
@@ -197,26 +198,31 @@ func supportTruth(p *Graph, nodes, support []Edge) map[int][]bool {
 		if a == nil {
 			panic("aig: support does not bound the cone")
 		}
-		var b []bool
+		var b []uint32
 		if len(fanins) > 1 {
 			b = tables[fanins[1].NodeID()]
 			if b == nil {
 				panic("aig: support does not bound the cone")
 			}
 		}
-		values := make([]bool, assignments)
-		for mask := range values {
-			av := a[mask] != fanins[0].Complemented()
-			value := av
-			if len(fanins) > 1 {
-				bv := b[mask] != fanins[1].Complemented()
-				if n.Kind == ExclusiveOr {
-					value = av != bv
-				} else {
-					value = av && bv
+		values := make([]uint32, words)
+		if len(fanins) == 2 && n.Kind == And {
+			kit.Kit_TruthAndPhase(values, a, b, nVars, Aig_IsComplement(fanins[0]), Aig_IsComplement(fanins[1]))
+		} else {
+			for word := range values {
+				v := a[word]
+				if fanins[0].Complemented() {
+					v = ^v
 				}
+				if len(fanins) == 2 {
+					bv := b[word]
+					if fanins[1].Complemented() {
+						bv = ^bv
+					}
+					v ^= bv
+				}
+				values[word] = v
 			}
-			values[mask] = value
 		}
 		tables[e.NodeID()] = values
 	}
@@ -234,48 +240,28 @@ func Aig_SuppMinPerform(p *Graph, orGate, nodes, support []Edge) []Edge {
 	}
 	tables := supportTruth(p, nodes, support)
 	function := tables[nodes[len(nodes)-1].NodeID()]
-	care := make([]bool, len(function))
+	nVars := int32(len(support))
+	care := make([]uint32, len(function))
 	for _, e := range orGate {
 		values := tables[e.NodeID()]
 		if values == nil {
 			panic("aig: care gate outside support")
 		}
-		for mask, v := range values {
-			care[mask] = care[mask] || (v != e.Complemented())
-		}
+		kit.Kit_TruthOrPhase(care, care, values, nVars, 0, Aig_IsComplement(e))
 	}
 	cofactors := []Edge{}
+	cofactor := make([]uint32, len(function))
 	for i, e := range support {
-		bit := 1 << i
-		for _, value := range []bool{false, true} {
-			legal := true
-			for mask := range function {
-				cofactor := mask &^ bit
-				if value {
-					cofactor = mask | bit
-				}
-				if care[mask] && function[mask] != function[cofactor] {
-					legal = false
-					break
-				}
-			}
-			if !legal {
-				continue
-			}
-			next := make([]bool, len(function))
-			for mask := range next {
-				cofactor := mask &^ bit
-				if value {
-					cofactor = mask | bit
-				}
-				next[mask] = function[cofactor]
-			}
-			function = next
-			if !value {
-				e = e.Not()
-			}
+		kit.Kit_TruthCofactor0New(cofactor, function, nVars, int32(i))
+		if kit.Kit_TruthIsEqualWithCare(function, cofactor, care, nVars) != 0 {
+			cofactors = append(cofactors, e.Not())
+			copy(function, cofactor)
+			continue
+		}
+		kit.Kit_TruthCofactor1New(cofactor, function, nVars, int32(i))
+		if kit.Kit_TruthIsEqualWithCare(function, cofactor, care, nVars) != 0 {
 			cofactors = append(cofactors, e)
-			break
+			copy(function, cofactor)
 		}
 	}
 	return cofactors
