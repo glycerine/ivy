@@ -45,9 +45,8 @@ type Aig_Sto_t struct {
 	Times                                                  []int
 	DomNodes, Total, FilteredSupersets, FilteredCandidates int
 	fanins, fanouts                                        [][]int
-	active, marked                                         []bool
+	marked                                                 []bool
 	refs                                                   []int
-	order                                                  []int
 }
 
 func Aig_ManDomStart(g *Graph, limit int) *Aig_Sto_t {
@@ -60,7 +59,7 @@ func Aig_ManDomStart(g *Graph, limit int) *Aig_Sto_t {
 		Dominators: make([][]*Aig_Dom_t, count),
 		Times:      make([]int, count),
 		fanins:     make([][]int, count), fanouts: make([][]int, count),
-		active: make([]bool, count), marked: make([]bool, count), refs: make([]int, count),
+		marked: make([]bool, count), refs: make([]int, count),
 	}
 	for id, n := range g.nodes {
 		if g.deleted[id] {
@@ -93,30 +92,7 @@ func Aig_ManDomStart(g *Graph, limit int) *Aig_Sto_t {
 			s.refs[f]++
 		}
 	}
-	state := make([]uint8, count)
-	var visit func(int)
-	visit = func(id int) {
-		if state[id] == 2 {
-			return
-		}
-		if state[id] == 1 {
-			panic("aig: cycle in dominator graph")
-		}
-		state[id] = 1
-		for _, f := range s.fanins[id] {
-			visit(f)
-		}
-		state[id] = 2
-		s.order = append(s.order, id)
-	}
-	for id := range g.nodes {
-		if !g.deleted[id] {
-			visit(id)
-		}
-	}
-	for _, id := range s.OutputIDs {
-		visit(id)
-	}
+
 	return s
 }
 func Aig_ManDomStop(s *Aig_Sto_t) {
@@ -312,8 +288,13 @@ func Aig_ObjDomCompute(s *Aig_Sto_t, e Edge) {
 		s.DomNodes++
 	}
 	var fans []int
-	for _, f := range s.fanouts[id] {
-		if s.active[f] {
+	g := s.Graph
+	for i, fan := 0, Aig_ObjFanout0Int(g, int32(id)); i < g.node(e).Refs; i, fan = i+1, Aig_ObjFanoutNext(g, fan) {
+		f := int(fan >> 1)
+		if g.nodes[f].TravID == g.travID {
+			if s.Dominators[f] == nil {
+				panic("aig: missing fanout dominators; clean dangling logic before analysis")
+			}
 			fans = append(fans, f)
 		}
 	}
@@ -335,6 +316,9 @@ func domRegisterCount(g *Graph) int {
 	return n
 }
 func Aig_ManMarkFlopTfi_rec(g *Graph, e Edge) int {
+	if e.Complemented() {
+		panic("aig: flop TFI requires a regular object")
+	}
 	id := e.NodeID()
 	if g.nodes[id].TravID == g.travID {
 		return 0
@@ -345,57 +329,39 @@ func Aig_ManMarkFlopTfi_rec(g *Graph, e Edge) int {
 	case Constant, Input:
 		return 1
 	case And, ExclusiveOr:
-		return Aig_ManMarkFlopTfi_rec(g, n.Fanins[0]) + Aig_ManMarkFlopTfi_rec(g, n.Fanins[1])
+		return Aig_ManMarkFlopTfi_rec(g, Aig_Regular(n.Fanins[0])) + Aig_ManMarkFlopTfi_rec(g, Aig_Regular(n.Fanins[1]))
 	default:
-		return Aig_ManMarkFlopTfi_rec(g, n.Fanins[0])
+		return Aig_ManMarkFlopTfi_rec(g, Aig_Regular(n.Fanins[0]))
 	}
 }
 func Aig_ManMarkFlopTfi(g *Graph) {
-	g.travID++
+	Aig_ManIncrementTravId(g)
 	n := domRegisterCount(g)
 	for _, e := range g.outputs[len(g.outputs)-n:] {
 		Aig_ManMarkFlopTfi_rec(g, e)
 	}
 }
 func domCompute(g *Graph, limit int, mode string) *Aig_Sto_t {
+	if g.fanouts == nil {
+		panic("aig: dominator driver requires fanout allocation")
+	}
 	s := Aig_ManDomStart(g, limit)
 	regs := domRegisterCount(g)
 	boundaries := s.OutputIDs
 	if mode == "flops" {
 		boundaries = boundaries[len(boundaries)-regs:]
 	}
-	var activate func(int)
-	activate = func(id int) {
-		if s.active[id] {
-			return
-		}
-		s.active[id] = true
-		for _, f := range s.fanins[id] {
-			activate(f)
-		}
-	}
-	if mode == "nodes" {
-		for _, id := range s.OutputIDs {
-			activate(id)
-		}
-	} else {
-		for _, id := range s.OutputIDs[len(s.OutputIDs)-regs:] {
-			activate(id)
-		}
-	}
 	for _, id := range boundaries {
 		Aig_ObjAddTriv(s, id, nil)
 	}
-	for i := len(s.order) - 1; i >= 0; i-- {
-		id := s.order[i]
-		if id >= len(g.nodes) || g.deleted[id] || !s.active[id] || s.Dominators[id] != nil {
-			continue
+	nodes := Aig_ManDfsReverse(g)
+	if mode != "nodes" {
+		Aig_ManMarkFlopTfi(g)
+	}
+	for _, e := range nodes {
+		if mode == "nodes" || Aig_ObjIsTravIdCurrent(g, e) {
+			Aig_ObjDomCompute(s, e)
 		}
-		kind := g.nodes[id].Kind
-		if kind == Constant || kind == Input {
-			continue
-		}
-		Aig_ObjDomCompute(s, Edge(id)<<1)
 	}
 	inputs := g.inputs
 	if mode == "pis" {
@@ -568,11 +534,15 @@ func Aig_ObjDomFindGood(s *Aig_Sto_t) []DomAnalysis {
 	return result
 }
 func Aig_ManComputeDomsTest2(g *Graph, num int) []DomAnalysis {
+	Aig_ManFanoutStart(g)
+	defer Aig_ManFanoutStop(g)
 	s := Aig_ManComputeDomsFlops(g, num)
 	defer Aig_ManDomStop(s)
 	return Aig_ObjDomFindGood(s)
 }
 func Aig_ManComputeDomsTest(g *Graph) {
+	Aig_ManFanoutStart(g)
+	defer Aig_ManFanoutStop(g)
 	s := Aig_ManComputeDomsPis(g, 1)
 	defer Aig_ManDomStop(s)
 	Aig_ManDomPrint(s)
@@ -594,6 +564,8 @@ func Aig_ObjDomCount(s *Aig_Sto_t, e Edge) map[int]int {
 	return result
 }
 func Aig_ManComputeDomsForCofactoring(g *Graph) map[int]map[int]int {
+	Aig_ManFanoutStart(g)
+	defer Aig_ManFanoutStop(g)
 	s := Aig_ManComputeDomsNodes(g, 1)
 	defer Aig_ManDomStop(s)
 	result := map[int]map[int]int{}

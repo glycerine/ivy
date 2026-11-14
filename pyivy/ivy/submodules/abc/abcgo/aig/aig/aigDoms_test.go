@@ -12,6 +12,22 @@ import (
 	"testing"
 )
 
+func domTestFanouts(g *Graph) *Graph {
+	if g.fanouts == nil {
+		Aig_ManFanoutStart(g)
+	}
+	return g
+}
+
+// Check graph structure and values without imposing a non-source promise that
+// analysis leaves the traversal generation unchanged.
+func domTestWithoutTraversal(nodes []Node) []Node {
+	for i := range nodes {
+		nodes[i].TravID = 0
+	}
+	return nodes
+}
+
 func TestDominatorOrderedUnion(t *testing.T) {
 	for a := 0; a < 64; a++ {
 		for b := 0; b < 64; b++ {
@@ -78,7 +94,7 @@ func TestDominatorReconvergence(t *testing.T) {
 	z := g.AND(x, y)
 	g.AddOutput(z)
 	original := g.Nodes()
-	s := Aig_ManComputeDomsNodes(g, 2)
+	s := Aig_ManComputeDomsNodes(domTestFanouts(g), 2)
 	got := map[string]bool{}
 	for _, d := range s.Dominators[a.NodeID()] {
 		got[domSetKey(d.Nodes)] = true
@@ -91,7 +107,7 @@ func TestDominatorReconvergence(t *testing.T) {
 	if Aig_ObjDomVolume(s, newAigDom([]int{z.NodeID()})) != 3 {
 		t.Fatal("wrong boundary volume")
 	}
-	if !reflect.DeepEqual(original, g.Nodes()) {
+	if !reflect.DeepEqual(domTestWithoutTraversal(original), domTestWithoutTraversal(g.Nodes())) {
 		t.Fatal("analysis mutated graph")
 	}
 	sets := s.DominatorSets(a.NodeID())
@@ -118,21 +134,37 @@ func TestDominatorBruteForcePaths(t *testing.T) {
 		}
 		g.AddOutput(edges[len(edges)-1])
 		g.AddOutput(edges[len(edges)-2])
-		s := Aig_ManComputeDomsNodes(g, 2)
+		Aig_ManCleanup(g)
+		s := Aig_ManComputeDomsNodes(domTestFanouts(g), 2)
+		active := make([]bool, len(s.fanins))
+		var activate func(int)
+		activate = func(id int) {
+			if active[id] {
+				return
+			}
+			active[id] = true
+			for _, f := range s.fanins[id] {
+				activate(f)
+			}
+		}
+		for _, id := range s.OutputIDs {
+			activate(id)
+		}
+
 		terminals := map[int]bool{}
 		for _, id := range s.OutputIDs {
 			terminals[id] = true
 		}
 		for _, start := range g.inputs {
 			id := start.NodeID()
-			if !s.active[id] {
+			if !active[id] {
 				continue
 			}
 			candidates := []int{}
 			seen := map[int]bool{}
 			var reach func(int)
 			reach = func(n int) {
-				if seen[n] || !s.active[n] {
+				if seen[n] || !active[n] {
 					return
 				}
 				seen[n] = true
@@ -157,7 +189,7 @@ func TestDominatorBruteForcePaths(t *testing.T) {
 						return value
 					}
 					for _, f := range s.fanouts[n] {
-						if s.active[f] && !walk(f) {
+						if active[f] && !walk(f) {
 							memo[n] = false
 							return false
 						}
@@ -201,7 +233,7 @@ func TestDominatorFlopConeAndRefRestoration(t *testing.T) {
 	g.AddOutput(li)
 	g.nRegs = 1
 	nodes := g.Nodes()
-	s := Aig_ManComputeDomsFlops(g, 2)
+	s := Aig_ManComputeDomsFlops(domTestFanouts(g), 2)
 	if len(s.Dominators[a.NodeID()]) != 0 || len(s.Dominators[b.NodeID()]) == 0 || len(s.Dominators[lo.NodeID()]) == 0 {
 		t.Fatal("flop cone filtering")
 	}
@@ -215,7 +247,7 @@ func TestDominatorFlopConeAndRefRestoration(t *testing.T) {
 			t.Fatal(r)
 		}
 	}
-	if !reflect.DeepEqual(refs, s.refs) || !reflect.DeepEqual(nodes, g.Nodes()) {
+	if !reflect.DeepEqual(refs, s.refs) || !reflect.DeepEqual(domTestWithoutTraversal(nodes), domTestWithoutTraversal(g.Nodes())) {
 		t.Fatal("references or graph mutated")
 	}
 	for _, mark := range s.marked {
@@ -223,7 +255,7 @@ func TestDominatorFlopConeAndRefRestoration(t *testing.T) {
 			t.Fatal("mark leaked")
 		}
 	}
-	pis := Aig_ManComputeDomsPis(g, 1)
+	pis := Aig_ManComputeDomsPis(domTestFanouts(g), 1)
 	if len(pis.Dominators[lo.NodeID()]) != 0 || len(pis.Dominators[b.NodeID()]) == 0 {
 		t.Fatal("PI filtering")
 	}
@@ -240,7 +272,8 @@ func TestDominatorDanglingAndDuplicateOutputs(t *testing.T) {
 	_ = g.AND(a, c)
 	g.AddOutput(live)
 	g.AddOutput(live)
-	s := Aig_ManComputeDomsNodes(g, 2)
+	Aig_ManCleanup(g)
+	s := Aig_ManComputeDomsNodes(domTestFanouts(g), 2)
 	if len(s.Dominators[c.NodeID()]) != 0 {
 		t.Fatal("dangling input analyzed")
 	}
@@ -270,7 +303,7 @@ func TestDominatorCofactoringCounts(t *testing.T) {
 		root = g.AND(root, f)
 	}
 	g.AddOutput(root)
-	s := Aig_ManComputeDomsNodes(g, 1)
+	s := Aig_ManComputeDomsNodes(domTestFanouts(g), 1)
 	counts := Aig_ObjDomCount(s, a)
 	if counts[root.NodeID()] != 10 || counts[s.OutputIDs[0]] != 10 {
 		t.Fatal(counts)
@@ -280,6 +313,7 @@ func TestDominatorCofactoringCounts(t *testing.T) {
 			t.Fatal("counting scratch not reset")
 		}
 	}
+	Aig_ManFanoutStop(g)
 	result := Aig_ManComputeDomsForCofactoring(g)
 	if result[a.NodeID()][root.NodeID()] != 10 {
 		t.Fatal(result)
@@ -291,7 +325,7 @@ func TestDominatorExplicitOutputAndSignatures(t *testing.T) {
 	a, b := g.NewInput(), g.NewInput()
 	x := g.AND(a, b)
 	co := Aig_ObjCreateCo(g, x)
-	s := Aig_ManComputeDomsNodes(g, 1)
+	s := Aig_ManComputeDomsNodes(domTestFanouts(g), 1)
 	if len(s.OutputIDs) != 1 || s.OutputIDs[0] != co.NodeID() {
 		t.Fatal(s.OutputIDs, co)
 	}
@@ -323,7 +357,7 @@ func TestDominatorRelatedCutRefRestoration(t *testing.T) {
 	y := g.AND(x, a)
 	g.AddOutput(y)
 	g.nRegs = 1
-	s := Aig_ManComputeDomsFlops(g, 2)
+	s := Aig_ManComputeDomsFlops(domTestFanouts(g), 2)
 	Aig_ObjDomCollectLos(s)
 	before := append([]int(nil), s.refs...)
 	if got := Aig_ObjDomDomed(s, newAigDom([]int{x.NodeID(), y.NodeID()})); got != 1 {
@@ -421,7 +455,7 @@ func TestDominatorRepeatedExplicitOutput(t *testing.T) {
 	x := g.AND(a, b)
 	co := Aig_ObjCreateCo(g, x)
 	g.AddOutput(co)
-	s := Aig_ManComputeDomsNodes(g, 2)
+	s := Aig_ManComputeDomsNodes(domTestFanouts(g), 2)
 	if len(s.OutputIDs) != 2 || s.OutputIDs[0] == s.OutputIDs[1] {
 		t.Fatal(s.OutputIDs)
 	}
@@ -440,7 +474,7 @@ func TestDominatorAfterOutputRewire(t *testing.T) {
 	if err := g.Check(); err != nil {
 		t.Fatal(err)
 	}
-	s := Aig_ManComputeDomsNodes(g, 1)
+	s := Aig_ManComputeDomsNodes(domTestFanouts(g), 1)
 	if len(s.Dominators[b.NodeID()]) != 0 {
 		t.Fatal("deleted cone remained active")
 	}
