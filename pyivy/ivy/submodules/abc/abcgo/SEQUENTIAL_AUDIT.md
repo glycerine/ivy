@@ -402,3 +402,24 @@ the actual solver2 self-comparison and verify input graphs are unchanged.
 Reparameterization still requires the source solver2 proof interpolant driver;
 this audit is not complete. Full uncached BSAT, native driver and AIG race
 tests pass with these changes.
+
+### Stored solver2 proof interpolants
+
+Implemented Solver2.ProofInterpolant using satProof.c's proof-root/antecedent
+algorithm: collect reachable resolution nodes, form A-root disjunctions over
+shared literals (B roots are one), then combine each resolution chain with OR
+for A-local pivots and AND otherwise. Local edge maps replace temporary Id
+mutation, preserving clauses and proofs for incremental reuse. No projection
+or second SAT engine is used. Requested common-variable order, including
+unused inputs, is retained.
+
+Tests check an actual four-clause solver2 refutation, every shared assignment,
+repeated extraction with unchanged proof core, absence before refutation and
+reordered/unused common inputs. Full uncached BSAT race checks pass.
+This is a dependency for reparameterization, not completion of that driver.
+
+Source inspection suggests the reparameterization initial SAT formula may
+already violate its UNSAT assertion on a nonconstant one-output function.
+This remains a hypothesis requiring a C fixture; no replacement constraints
+or algorithm have been invented to make it pass. Next verify the initial
+formula against original solver2 and clause helpers before porting the driver.
