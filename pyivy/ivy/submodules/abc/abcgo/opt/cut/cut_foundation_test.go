@@ -54,3 +54,86 @@ func TestCutDroppingAndTruthPhase(t *testing.T) {
 		t.Fatal("phase")
 	}
 }
+
+func TestRecursiveEnumerationAreaAndManagerLifecycle(t *testing.T) {
+	network := cutTestNetwork{
+		{ID: 0, Input: true},
+		{ID: 1, Input: true},
+		{ID: 2, Fanins: [2]int32{0, 1}},
+	}
+	params := DefaultParams(4)
+	params.FTruth = 1
+	p := Cut_ManStart(params)
+	p.network, p.networkCounts = networkInventory(network)
+	list := Abc_NodeGetCutsRecursive(p, p.network[2], 0, 0)
+	foundCut := false
+	for c := list; c != nil; c = c.Next {
+		if len(c.leaves) == 2 && c.leaves[0] == 0 && c.leaves[1] == 1 {
+			foundCut = true
+		}
+	}
+	if !foundCut {
+		t.Fatalf("recursive enumeration did not produce cut [0 1]: %#v", list)
+	}
+	if p.stats.Current != p.stats.Allocated-p.stats.Recycled {
+		t.Fatalf("cut allocation accounting: %+v", p.stats)
+	}
+
+	p.best[2] = testCut(p, 0, 1)
+	p.best[0] = testCut(p, 0)
+	p.best[1] = testCut(p, 1)
+	if got := Cut_ManMappingArea_rec(p, 2); got != 1 {
+		t.Fatalf("mapping area = %d, want 1", got)
+	}
+	if _, remains := p.best[2]; remains {
+		t.Fatal("area recursion did not consume the root mapping")
+	}
+
+	Cut_ManStop(p)
+	if !p.stopped || p.owned != nil || p.newCuts != nil {
+		t.Fatal("manager stop did not release manager-owned state")
+	}
+}
+
+func TestCutManagerRejectsInvalidAllocation(t *testing.T) {
+	defer func() {
+		if recover() == nil {
+			t.Fatal("invalid cut parameters did not panic")
+		}
+	}()
+	Cut_ManStart(nil)
+}
+
+func TestNetworkOracleTraversalMatchesRecordedEnumeration(t *testing.T) {
+	network := cutTestNetwork{
+		{ID: 0, Input: true},
+		{ID: 1, Input: true},
+		{ID: 2, Fanins: [2]int32{0, 1}, Compl: [2]bool{true, false}},
+		{ID: 3, Fanins: [2]int32{2, 1}},
+		{ID: 4, Output: true, Fanins: [2]int32{3, 0}},
+	}
+	params := DefaultParams(4)
+	params.FTruth = 1
+	params.FRecord = 1
+	p := Abc_NtkCuts(network, params)
+	oracle := Cut_OracleStart(p)
+	Abc_NtkCutsOracle(network, oracle)
+	for id, original := range p.newCuts {
+		replayed := oracle.manager.newCuts[id]
+		for a, b := original, replayed; a != nil && b != nil; a, b = a.Next, b.Next {
+			if Cut_CutCompare(a, b) != 0 || len(a.truth) != len(b.truth) {
+				t.Fatalf("node %d cut structure differs", id)
+			}
+			for i := range a.truth {
+				if a.truth[i] != b.truth[i] {
+					t.Fatalf("node %d truth word %d differs", id, i)
+				}
+			}
+		}
+		if (original == nil) != (replayed == nil) || Cut_CutCountList(original) != Cut_CutCountList(replayed) {
+			t.Fatalf("node %d cut count differs", id)
+		}
+	}
+	Cut_OracleStop(oracle)
+	Cut_ManStop(p)
+}
