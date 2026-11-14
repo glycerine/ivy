@@ -763,3 +763,16 @@ Final uncached AIG, DAR core and DAR facade race suites pass. This is integratio
 work required by the AIG review, not a completed DAR package audit. Transfer,
 composition, incremental timing details and the remaining AIG families still
 require review; aig/aig remains in progress.
+
+Integration gate after reverse DFS/timing and DAR setup: the full uncached,
+sequential `go test -p 1 ./... -count=1 -timeout 180s` passes all 129 packages
+with tests; three packages have no tests. This validates the current integration
+state, not completion of the original 131-package audit.
+
+Next checkpoint findings from read-only source inspection: transfer resets
+the entire copy map and has stricter variable-count handling than C's bounded
+CI loop; its constant fast path also differs. Composition's recursive entry
+point delegates to the full wrapper instead of honoring C's seeded marks/copy
+state, and the wrapper panics where C returns NULL for an undefined PI index.
+These require failing regressions before repair, plus truth-table checks and
+care when composition appends to the graph's backing node slice.
