@@ -366,32 +366,53 @@ func (p *Graph) choiceLevels(roots []Edge) {
 	}
 }
 func Aig_ConeMark_rec(p *Graph, e Edge) {
-	for _, x := range p.dfs([]Edge{e}, false, false, false) {
-		p.node(x).MarkA = true
-	}
+	p.updateConeMarks(e, true, false)
 }
 func Aig_ConeCleanAndMark_rec(p *Graph, e Edge) {
-	for _, x := range p.dfs([]Edge{e}, false, false, false) {
-		p.node(x).MarkA = true
-		delete(p.copies, x.NodeID())
-	}
+	p.updateConeMarks(e, true, true)
 }
 func Aig_ConeCountAndMark_rec(p *Graph, e Edge) int32 {
-	var n int32
-	for _, x := range p.dfs([]Edge{e}, true, false, false) {
-		if !p.node(x).MarkA {
-			n++
-			p.node(x).MarkA = true
-		}
-	}
-	return n
+	return p.updateConeMarks(e, true, false)
 }
 func Aig_ConeUnmark_rec(p *Graph, e Edge) {
-	for _, x := range p.dfs([]Edge{e}, false, false, false) {
-		p.node(x).MarkA = false
-	}
+	p.updateConeMarks(e, false, false)
 }
-func Aig_DagSize(p *Graph, e Edge) int32 { return int32(len(p.dfs([]Edge{e}, true, false, false))) }
+
+// All four C cone routines stop at non-logic objects and gates already in
+// the requested mark state. Update in postorder, optionally clearing pData
+// (represented by the copy map and auxiliary payload map in Go).
+func (p *Graph) updateConeMarks(root Edge, marked, clean bool) int32 {
+	active := make(map[int]bool)
+	var visit func(Edge) int32
+	visit = func(e Edge) int32 {
+		if e.Complemented() {
+			panic("aig: cone marking requires a regular object")
+		}
+		n := p.node(e)
+		if n.Kind != And && n.Kind != ExclusiveOr || n.MarkA == marked {
+			return 0
+		}
+		if active[e.NodeID()] {
+			panic("aig: cyclic cone")
+		}
+		active[e.NodeID()] = true
+		count := 1 + visit(Aig_Regular(n.Fanins[0])) + visit(Aig_Regular(n.Fanins[1]))
+		delete(active, e.NodeID())
+		n.MarkA = marked
+		if clean {
+			delete(p.copies, e.NodeID())
+			delete(p.objectData, e.NodeID())
+		}
+		return count
+	}
+	return visit(root)
+}
+func Aig_DagSize(p *Graph, e Edge) int32 {
+	root := Aig_Regular(e)
+	count := Aig_ConeCountAndMark_rec(p, root)
+	Aig_ConeUnmark_rec(p, root)
+	return count
+}
 func Aig_Support(p *Graph, e Edge) []Edge {
 	var result []Edge
 	for _, x := range p.dfs([]Edge{e}, false, false, false) {
