@@ -11,6 +11,7 @@ import (
 	"github.com/glycerine/abcgo/misc/mem"
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
+	"github.com/glycerine/abcgo/proof/aiginterp"
 	"github.com/glycerine/abcgo/sat/bsat"
 	"github.com/glycerine/abcgo/sat/cnf"
 	"github.com/glycerine/abcgo/sat/satoko"
@@ -254,7 +255,7 @@ func Gia_ManInterOne(on, off *Gia_Man_t, verbose int32) *Gia_Man_t {
 		aig.Aig_ManStop(pManOn)
 		return nil
 	}
-	pManAig := aig.Aig_ManInter(pManOn, pManOff, 0, verbose)
+	pManAig := aiginterp.Aig_ManInter(pManOn, pManOff, 0, verbose)
 	aig.Aig_ManStop(pManOn)
 	aig.Aig_ManStop(pManOff)
 	if pManAig == nil {
