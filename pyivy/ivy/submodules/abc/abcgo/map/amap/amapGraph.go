@@ -177,7 +177,13 @@ func Amap_ManCreate(p *Amap_Man_t, source *aig.Graph) {
 		p.sourceCopies[input.NodeID()] = Amap_ManCreatePi(p)
 	}
 
-	for _, edge := range aig.Aig_ManDfsChoices(source) {
+	var nodes []aig.Edge
+	if aig.Aig_ManHasEquivs(source) != 0 {
+		nodes = aig.Aig_ManDfsChoices(source)
+	} else {
+		nodes = aig.Aig_ManDfs(source, 1)
+	}
+	for _, edge := range nodes {
 		id := edge.NodeID()
 		if p.sourceCopies[id] != nil {
 			continue
