@@ -33,6 +33,14 @@ func TestWlcPrsFindRangeAndEscapedName(t *testing.T) {
 	}
 }
 
+func TestWlcPrsStopClearsBuffer(t *testing.T) {
+	p := &Wlc_Prs_t{pBuffer: "module top; endmodule"}
+	Wlc_PrsStop(p)
+	if p.pBuffer != "" {
+		t.Fatalf("parser buffer after stop = %q, want empty", p.pBuffer)
+	}
+}
+
 func TestWlcPrsReadConstantBinaryAndHex(t *testing.T) {
 	p := &Wlc_Prs_t{pFileName: "test.v"}
 	v := vec.Vec_IntAlloc(0)

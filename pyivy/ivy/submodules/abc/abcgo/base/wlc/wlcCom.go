@@ -543,7 +543,7 @@ func Abc_CommandCone(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	pName = Wlc_NtkNewName(pNtk, iOutput, fSeq)
 	Wlc_NtkMarkCone(pNtk, iOutput, Range, fSeq, fAllPis)
 	pNtk = Wlc_NtkDupDfs(pNtk, 1, fSeq)
-	ABC_FREE(pNtk.pName)
+	pNtk.pName = ""
 	pNtk.pName = Abc_UtilStrsav(pName)
 	Wlc_AbcUpdateNtk(pAbc, pNtk)
 	return 0

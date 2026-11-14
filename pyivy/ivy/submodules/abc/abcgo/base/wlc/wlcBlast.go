@@ -225,7 +225,7 @@ func Wlc_BlastRotateRight(pNew *Gia_Man_t, pNum []int32, nNum int32, pShift []in
 		}
 		pRes = Wlc_VecCopy(vRes, pTemp, nNum)
 	}
-	ABC_FREE(pTemp)
+	pTemp = nil
 }
 func Wlc_BlastRotateLeft(pNew *Gia_Man_t, pNum []int32, nNum int32, pShift []int32, nShift int32, vRes *Vec_Int_t) {
 	var pRes []int32 = Wlc_VecCopy(vRes, pNum, nNum)
@@ -246,7 +246,7 @@ func Wlc_BlastRotateLeft(pNew *Gia_Man_t, pNum []int32, nNum int32, pShift []int
 		}
 		pRes = Wlc_VecCopy(vRes, pTemp, nNum)
 	}
-	ABC_FREE(pTemp)
+	pTemp = nil
 }
 func Wlc_BlastReduction(pNew *Gia_Man_t, pFans []int32, nFans int32, Type int32) int32 {
 	if Type == int32(WLC_OBJ_REDUCT_AND) || Type == int32(WLC_OBJ_REDUCT_NAND) {
@@ -316,7 +316,7 @@ func Wlc_BlastDivider2(pNew *Gia_Man_t, pNum []int32, nNum int32, pDiv []int32, 
 		}
 		Vec_IntShrink(vRes, nDiv)
 	}
-	ABC_FREE(pQuo)
+	pQuo = nil
 }
 func Wlc_BlastTable(pNew *Gia_Man_t, pTable *word, pFans []int32, nFans int32, nOuts int32, vRes *Vec_Int_t) {
 	var vMemory []uint32

@@ -301,8 +301,8 @@ func Wlc_PrsStop(p *Wlc_Prs_t) {
 	Vec_IntFree(p.vLines)
 	Vec_IntFree(p.vStarts)
 	Vec_IntFree(p.vFanins)
-	ABC_FREE(p.pBuffer)
-	ABC_FREE(p)
+	p.pBuffer = ""
+	p = nil
 }
 
 /*

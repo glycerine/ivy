@@ -576,7 +576,7 @@ func Smt_PrsBuildConstant(pNtk *Wlc_Ntk_t, pStr string, nBits int32, pName strin
 
 			Vec_IntFill(vFanins, (nBits+31)/32, 0)
 			nDigits = smtReadHexWords(Vec_IntArray(vFanins), pHex)
-			ABC_FREE(pHex)
+			pHex = ""
 
 			/*
 			   int w, nWords, Number = atoi( pStr );
@@ -1061,8 +1061,8 @@ func Smt_PrsBuild2_rec(pNtk *Wlc_Ntk_t, p *Smt_Prs_t, iNode int32, iObjPrev int3
 				Vec_IntFill(&p.vTempFans, 1, iObj)
 				iObj = Smt_PrsCreateNode(pNtk, int32(WLC_OBJ_BUF), 0, Wlc_ObjRange(Wlc_NtkObj(pNtk, iObj)), &p.vTempFans, pName)
 			}
-			ABC_FREE(pStr_glb)
-			ABC_FREE(pStr_loc)
+			pStr_glb = ""
+			pStr_loc = ""
 			return iObj
 		}
 
@@ -1110,7 +1110,7 @@ func Smt_PrsBuild2_rec(pNtk *Wlc_Ntk_t, p *Smt_Prs_t, iNode int32, iObjPrev int3
 					//assert( !Smt_EntryIsName(Fan3) );
 					// solve the problem
 					iObj = Smt_PrsBuild2_rec(pNtk, p, Fan3, -1, pName2) // NULL ); //pName2 );
-					ABC_FREE(temp)
+					temp = ""
 					if iObj == 0 {
 						return 0
 					}
@@ -1302,7 +1302,7 @@ func Smt_PrsBuild2(p *Smt_Prs_t) *Wlc_Ntk_t {
 			Vec_IntPush(&pNtk.vValues, nBits)
 			Vec_IntPush(&pNtk.vValues, Range)
 			nBits += Range
-			ABC_FREE(pName_glb)
+			pName_glb = ""
 
 			// create constants
 			/*
@@ -1424,7 +1424,7 @@ func Smt_PrsBuild2(p *Smt_Prs_t) *Wlc_Ntk_t {
 
 			iObj = Smt_PrsBuild2_rec(pNtk, p, Vec_IntEntry(vFans, 4), Range, pName)
 			assert((iObj != 0), "iObj")
-			ABC_FREE(pName_glb)
+			pName_glb = ""
 
 			// collect assertion outputs
 		} else if Abc_Lit2Var(Fan) == int32(SMT_PRS_ASSERT) {

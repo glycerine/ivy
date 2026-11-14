@@ -137,7 +137,7 @@ func Wlc_NtkToWln(p *Wlc_Ntk_t) *wln.Wln_Ntk_t {
 
 			var pString string = wln.Wln_ConstFromStr(Wlc_NtkInits(p)[iBit:], Wlc_ObjRange(pObj))
 			wln.Wln_ObjSetConst(pNew, iOutId, Abc_NamStrFindOrAdd(wln.Wln_NtkNameMan(pNew), pString, nil))
-			ABC_FREE(pString)
+			pString = ""
 		}
 		Buffer = fmt.Sprintf("ff_init_%d", Vec_IntSize(vInits))
 		wln.Wln_ObjSetNameId(pNew, iOutId, Abc_NamStrFindOrAdd(wln.Wln_NtkNameMan(pNew), Buffer, nil))
@@ -177,7 +177,7 @@ func Wlc_NtkToWln(p *Wlc_Ntk_t) *wln.Wln_Ntk_t {
 		} else if pObj.Type == uint32(WLC_OBJ_CONST) {
 			var pString string = wln.Wln_ConstFromBits(ptrSlice(Wlc_ObjConstValue(pObj), (Wlc_ObjRange(pObj)+31)/32), Wlc_ObjRange(pObj))
 			wln.Wln_ObjSetConst(pNew, iOutId, Abc_NamStrFindOrAdd(wln.Wln_NtkNameMan(pNew), pString, nil))
-			ABC_FREE(pString)
+			pString = ""
 		}
 		//        else if ( Type == ABC_OPER_BIT_MUX && Vec_IntSize(vFanins) == 3 )
 		//            ABC_SWAP( int, wln.Wln_ObjFanins(p, iObj)[1], wln.Wln_ObjFanins(p, iObj)[2] );

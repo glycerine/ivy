@@ -396,7 +396,6 @@ func boolToInt32(v bool) int32 {
 }
 
 func Abc_Print(_ int32, format string, args ...any) { fmt.Printf(format, args...) }
-func ABC_FREE(_ any)                                {}
 func ABC_PRTP(name string, t, total int64) {
 	percent := 0.0
 	if total != 0 {
