@@ -114,6 +114,7 @@ type Network struct {
 	Copy, AltView   *Network
 	Type, Function  uint8
 	Barriers        int
+	barBufs2        int32
 	// CILevel supplies timing-derived initial levels when a timing manager is attached.
 	CILevel             func(*Object) int
 	kindOrder           map[ObjectKind][]*Object

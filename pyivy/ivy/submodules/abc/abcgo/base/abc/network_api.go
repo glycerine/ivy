@@ -28,8 +28,14 @@ func Abc_NtkBiNum(n *Network) int32           { return int32(len(n.ObjectsOfKind
 func Abc_NtkBoNum(n *Network) int32           { return int32(len(n.ObjectsOfKind(ObjectBO))) }
 func Abc_NtkNetNum(n *Network) int32          { return int32(len(n.ObjectsOfKind(ObjectNet))) }
 func Abc_NtkLatchNum(n *Network) int32        { return int32(len(n.ObjectsOfKind(ObjectLatch))) }
-func Abc_NtkWhiteboxNum(n *Network) int32     { return int32(len(n.ObjectsOfKind(ObjectWhitebox))) }
-func Abc_NtkBlackboxNum(n *Network) int32     { return int32(len(n.ObjectsOfKind(ObjectBlackbox))) }
+
+// Abc_NtkIncrementBarBufs2 records the secondary barrier-buffer count used by
+// the cell-mapped GIA conversion path.
+func Abc_NtkIncrementBarBufs2(n *Network) { n.barBufs2++ }
+
+func Abc_NtkBarBufs2(n *Network) int32    { return n.barBufs2 }
+func Abc_NtkWhiteboxNum(n *Network) int32 { return int32(len(n.ObjectsOfKind(ObjectWhitebox))) }
+func Abc_NtkBlackboxNum(n *Network) int32 { return int32(len(n.ObjectsOfKind(ObjectBlackbox))) }
 
 // Abc_ObjBlackboxToWhitebox mirrors ABC's type conversion and keeps Go's
 // per-kind indexes synchronized with the object's new type.
