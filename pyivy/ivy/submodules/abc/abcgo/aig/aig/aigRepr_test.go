@@ -207,3 +207,30 @@ func TestRepresentativeCIAtGateFanout(t *testing.T) {
 		}
 	}
 }
+
+func TestRepresentativeChainsPreserveAlternatingPhases(t *testing.T) {
+	for _, ordered := range []int32{0, 1} {
+		g := NewGraph()
+		a, b := g.NewInput(), g.NewInput()
+		root := g.AND(a, b.Not())
+		inverse := Aig_ObjCreate(g, &Node{Kind: ExclusiveOr, Fanins: [2]Edge{g.Const1(), root}})
+		positive := Aig_ObjCreate(g, &Node{Kind: ExclusiveOr, Fanins: [2]Edge{g.Const1(), inverse}})
+		for _, e := range []Edge{root, inverse, positive, positive.Not()} {
+			g.AddOutput(e)
+		}
+		Aig_ManReprStart(g, int32(len(g.nodes)))
+		Aig_ObjCreateRepr(g, root, inverse)
+		Aig_ObjCreateRepr(g, inverse, positive)
+		copy := Aig_ManDupRepr(g, ordered)
+		for mask := 0; mask < 4; mask++ {
+			want := mask&1 != 0 && mask&2 == 0
+			values, err := copy.Evaluate([]bool{mask&1 != 0, mask&2 != 0})
+			if err != nil || len(values) != 4 || values[0] != want || values[1] == want || values[2] != want || values[3] == want {
+				t.Fatalf("ordered=%d mask=%d outputs=%v err=%v", ordered, mask, values, err)
+			}
+		}
+		if err := copy.Check(); err != nil {
+			t.Fatal(err)
+		}
+	}
+}

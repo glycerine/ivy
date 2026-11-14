@@ -292,3 +292,42 @@ per pool, and timing shares graph recomputation helpers. Go's whole-graph
 level recomputation costs more than C's incremental scheduling; replacing it
 requires a dedicated performance/correctness change rather than deleting
 checks during this audit. The package audit remains in progress.
+
+### aig/aig: representatives and interpolation fidelity gap
+
+Inspected `aigRepr.go` completely and compared representative linking,
+transitive lookup, copy precedence, phase conversion, transfer, recursive and
+ordered duplication, cleanup, rehashing, choice filtering and mapped classes
+against `src/aig/aig/aigRepr.c`. Existing tests cover constant representatives,
+chains, cycles, retained latches, transfer and choice-loop rejection. Added
+alternating-phase representative chains through both duplication modes,
+checking every input assignment and the output graph invariants. Full uncached
+AIG race tests pass with the added cases.
+
+Inspected `aigInter.go` and `aigRepar.go` against their complete C entry-point
+workflows. **Unresolved fidelity defect:** the Go interpolation and
+reparameterization functions substitute Shannon projection/self-comparison for
+C's CNF, incremental SAT and proof interpolation. Existing semantic tests
+cannot prove an original-algorithm port; these functions prevent completing
+the package audit under the user's explicit fidelity requirement.
+
+Repair dependencies identified from current code:
+
+- `sat/bsat` contains the original solver2 and interpolation machinery, including
+  partitioned clauses, on-line OR/AND resolution and proof records.
+- `sat/cnf` owns the source CNF derivation and imports AIG.
+- Five BSAT production files also import AIG (`satSolver2Graph.go`,
+  `satAigInterpolation.go`, `satSolver2i.go`, `satInterA.go`, `satInterB.go`).
+  Direct imports from AIG back into these owners would create cycles.
+- A dependency refactor is required before connecting the original drivers.
+  An optional callback with an absent default, another solver, or more
+  semantic-only tests would not resolve the required fidelity gap.
+- The source reparameterization driver itself contains suspicious indexing:
+  its PI creation loop calls Aig_IthVar(pBase,i) while iterating k; its
+  interpolant-connection clauses use the original pCnf mapping rather than
+  pCnfInter. These require focused source/C-oracle evidence during the port,
+  not silent reproduction or an invented replacement algorithm.
+
+This is active required work, not an accepted approximation or a reason to
+mark the package complete. Further inspection of the dependency boundary and
+red behavioral/source regressions is the next step for this family.
