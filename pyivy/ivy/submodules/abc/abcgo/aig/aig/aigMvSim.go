@@ -98,13 +98,8 @@ func Aig_MvSimulateFrame(p *MvManager, first, verbose int32) {
 	p.values[0] = 0
 	piCount := len(g.inputs) - int(g.nRegs)
 	for i, input := range g.inputs {
-		done[input.NodeID()] = true
-		if i < piCount {
-			if first != 0 {
-				p.values[input.NodeID()] = p.newLiteral()
-			} else {
-				p.values[input.NodeID()] = SAIG_UNDEF_VALUE
-			}
+		if i >= piCount {
+			done[input.NodeID()] = true
 		}
 	}
 	var visit func(Edge) int32
@@ -123,6 +118,11 @@ func Aig_MvSimulateFrame(p *MvManager, first, verbose int32) {
 			case Constant:
 				p.values[id] = 0
 			case Input:
+				if first != 0 {
+					p.values[id] = p.newLiteral()
+				} else {
+					p.values[id] = SAIG_UNDEF_VALUE
+				}
 			case And:
 				p.values[id] = p.and(visit(n.Fanins[0]), visit(n.Fanins[1]), first != 0)
 			case ExclusiveOr:
