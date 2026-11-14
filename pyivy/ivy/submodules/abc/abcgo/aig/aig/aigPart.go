@@ -103,7 +103,9 @@ func Part_ManRecycleEntry(p *Part_Man_t, entry *Part_One_t) {
 	p.entries[entry.nOutsAlloc] = append(p.entries[entry.nOutsAlloc], entry)
 }
 func partUnion(a, b []int32) []int32 {
-	result := make([]int32, 0, len(a)+len(b))
+	return partUnionInto(make([]int32, 0, len(a)+len(b)), a, b)
+}
+func partUnionInto(result, a, b []int32) []int32 {
 	i, j := 0, 0
 	for i < len(a) || j < len(b) {
 		var value int32
@@ -126,28 +128,80 @@ func partUnion(a, b []int32) []int32 {
 }
 func Part_ManMergeEntry(p *Part_Man_t, a, b *Part_One_t, refs int32) *Part_One_t {
 	entry := Part_ManFetchEntry(p, int32(len(a.pOuts)+len(b.pOuts)), refs)
-	entry.pOuts = append(entry.pOuts, partUnion(a.pOuts, b.pOuts)...)
+	entry.pOuts = partUnionInto(entry.pOuts, a.pOuts, b.pOuts)
 	return entry
 }
 func Part_ManTransferEntry(entry *Part_One_t) []int32 { return append([]int32(nil), entry.pOuts...) }
-func partOutputSupport(p *Graph, output Edge) []int32 {
-	support := Aig_Support(p, Aig_Regular(p.outputDriver(output)))
-	result := make([]int32, len(support))
-	for i, e := range support {
-		result[i] = Aig_ObjCioId(p, e)
-	}
-	sort.Slice(result, func(i, j int) bool { return result[i] < result[j] })
-	return result
-}
 
-// Aig_ManSupports appends the output index to each sorted support row, then
-// sorts rows by decreasing support size as in ABC's support propagation pass.
+// Aig_ManSupports propagates pooled support records once through the DAG,
+// recycling each record after its last consumer, as in aigPart.c. Rows end in
+// their output index and are sorted by decreasing support size.
 func Aig_ManSupports(p *Graph) [][]int32 {
 	Aig_ManSetCioIds(p)
 	defer Aig_ManCleanCioIds(p)
+	pool := Part_ManStart(1<<20, 1<<6)
+	defer Part_ManStop(pool)
+	data := make([]*Part_One_t, len(p.nodes))
+	ciIndex := make([]int32, len(p.nodes))
+	for i, input := range p.inputs {
+		ciIndex[input.NodeID()] = int32(i)
+	}
+	coIndex := make(map[int]int, len(p.outputs))
+	for i, output := range p.outputs {
+		if p.node(output).Kind == Output {
+			coIndex[output.NodeID()] = i
+		}
+	}
 	rows := make([][]int32, len(p.outputs))
+	release := func(e Edge) {
+		part := data[e.NodeID()]
+		if part == nil || part.nRefs <= 0 {
+			panic("aig: invalid support consumer reference")
+		}
+		part.nRefs--
+		if part.nRefs == 0 {
+			Part_ManRecycleEntry(pool, part)
+			data[e.NodeID()] = nil
+		}
+	}
+	for _, edge := range p.TopologicalObjects() {
+		id, node := edge.NodeID(), p.node(edge)
+		refs := int32(node.Refs)
+		switch node.Kind {
+		case Constant, Input:
+			if refs != 0 {
+				words := int32(0)
+				if node.Kind == Input {
+					words = 1
+				}
+				data[id] = Part_ManFetchEntry(pool, words, refs)
+				if words != 0 {
+					data[id].pOuts = append(data[id].pOuts, ciIndex[id])
+				}
+			}
+		case And, ExclusiveOr:
+			data[id] = Part_ManMergeEntry(pool, data[node.Fanins[0].NodeID()], data[node.Fanins[1].NodeID()], refs)
+			release(node.Fanins[0])
+			release(node.Fanins[1])
+		case Buffer, Output:
+			fanin := data[node.Fanins[0].NodeID()]
+			if index, attached := coIndex[id]; node.Kind == Output && attached {
+				rows[index] = append(Part_ManTransferEntry(fanin), int32(index))
+			}
+			// Transparent unary objects can themselves feed other Go objects.
+			if node.Kind == Buffer || refs != 0 {
+				data[id] = Part_ManFetchEntry(pool, int32(len(fanin.pOuts)), refs)
+				data[id].pOuts = append(data[id].pOuts, fanin.pOuts...)
+			}
+			release(node.Fanins[0])
+		}
+	}
+	// Legacy raw outputs act as implicit consumers rather than CO objects.
 	for i, e := range p.outputs {
-		rows[i] = append(partOutputSupport(p, e), int32(i))
+		if p.node(e).Kind != Output {
+			rows[i] = append(Part_ManTransferEntry(data[e.NodeID()]), int32(i))
+			release(e)
+		}
 	}
 	sort.SliceStable(rows, func(i, j int) bool { return len(rows[i]) > len(rows[j]) })
 	return rows
@@ -171,10 +225,14 @@ func Aig_ManSupportsInverse(p *Graph) [][]int32 {
 func Aig_ManSupportsRegisters(p *Graph) [][]int32 {
 	rows := make([][]int32, p.nRegs)
 	pi, po := len(p.inputs)-int(p.nRegs), len(p.outputs)-int(p.nRegs)
-	for i, e := range p.outputs[po:] {
-		for _, input := range partOutputSupport(p, e) {
+	for _, support := range Aig_ManSupports(p) {
+		output := int(support[len(support)-1]) - po
+		if output < 0 {
+			continue
+		}
+		for _, input := range support[:len(support)-1] {
 			if int(input) >= pi {
-				rows[i] = append(rows[i], input-int32(pi))
+				rows[output] = append(rows[output], input-int32(pi))
 			}
 		}
 	}

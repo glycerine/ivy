@@ -1979,3 +1979,59 @@ helpers being present. That substitutes an algorithm and changes traversal
 scratch. Reopen that specific partition-support entry point next, with a red
 scratch regression and the original C propagation as the implementation guide.
 The full AIG package remains in progress; completed count is 1/131.
+
+### Restore pooled support propagation and register matrices
+
+The inventory exposed a remaining algorithm substitution in Aig_ManSupports:
+Go reran cone DFS for every output rather than executing aigPart.c's pooled,
+reference-counted propagation. Red regressions showed traversal generation and
+node marks changed; source propagation leaves them alone. A raw-output case
+also failed because a CI's output index overwrote its input index in the
+terminal union. The native source implementations, not the old Go routine, now
+guide this entry point.
+
+Restored one propagation pass through dependency order. CI/constant support
+records carry consumer counts; binary gates merge sorted supports; each
+physical pin releases its record and the last release recycles it. Output rows
+copy their support before recycling and retain their explicit output index.
+Go uses local typed records instead of C's temporary pData pointers. Caller
+payloads/copies remain owned by the caller, and source-style CioID setup/cleanup
+is preserved. Dependency order supports existing forward-reference/buffer/CO
+extensions; legacy raw outputs are explicit final consumers and use stable
+input positions. No per-output DFS remains in this production path.
+
+Part_ManMergeEntry now merges directly into its fetched record's slice, avoiding
+an intermediate allocation. The old per-cone helper is confined to tests as an
+independent oracle. RegisterComponents reuses the register dependency matrix
+rather than building another support traversal/index map. A further red test
+showed Aig_ManSupportsRegisters returned empty dependencies after a previous
+whole-support call cleared CioIDs. It now filters the propagated, explicitly
+indexed rows as in C, and preserves traversal scratch.
+
+A compiled fixture executes original allocation, propagation, register-matrix
+and component routines on 256 graphs with physical AND/XOR nodes, shared and
+dangling cones, constants, shuffled CI/CO order and zero through five registers.
+All output supports, register dependency rows, component diagnostic text,
+manager/node traversal state, physical references and terminal cleanup match.
+The test checks decreasing row-size order, then compares rows by their explicit
+output indices; C qsort does not specify ordering among equal-size rows, while
+Go keeps its deterministic stable tie order.
+
+Additional tests cover transparent unary/CO fanins, a forward buffer reference,
+raw output indices, payload preservation, and independent ownership of 100
+returned rows sharing a 128-input cone, including a second propagation call
+following mutation of an earlier result. Graph invariants pass. Focused final
+race/native checks pass in 2.505s
+(`/tmp/abcgo-support-propagation-shared-final.log`). The complete AIG race suite
+passes in 63.845s before the last helper-only consolidation and wide-row test
+addition (`/tmp/abcgo-support-propagation-final.log`). Earlier caller checks
+pass FRA/SSW/ABCI in 35.227s/3.176s/28.618s
+(`/tmp/abcgo-support-propagation-review.log`); those preceded the final
+register-support helper correction, which is covered by the latest native
+matrix comparison. These scopes are recorded separately rather than claiming
+a fresh whole-repository run after this repair.
+
+This closes the reopened whole-support propagation, register-support and
+component-caller contracts. Other partition-driver and remaining file/function
+inventory still need final reconciliation. The audit remains on aig/aig,
+with 1/131 original packages completed.

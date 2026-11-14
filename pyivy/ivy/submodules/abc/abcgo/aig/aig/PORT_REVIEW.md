@@ -290,3 +290,19 @@ C's nonpositive soft-limit contract. Circular order matched source inspection;
 link and counter invariants. Focused race checks pass. The file inventory has
 reopened Aig_ManSupports: its per-output DFS is an algorithm substitution for
 C's pooled propagation and still needs repair before package completion.
+
+Pooled-support source repair: Aig_ManSupports' repeated per-output DFS was still
+an algorithm substitution. Red scratch/raw-index regressions preceded restoring
+C's reference-counted propagation with the existing typed pool. Rows own their
+copies; record release/reuse follows physical consumers, and merges fill the
+pooled slice directly. Forward/unary/raw-output extensions retain input-position
+semantics without overwriting caller payloads. Per-cone DFS is now test-only.
+
+A separate red test exposed stale-CioID dependence in register supports. The
+register matrix now filters whole-support rows as in C, and register grouping
+shares that matrix. Native comparison on 256 shuffled-interface graphs matches
+supports, register rows, diagnostics, traversal/reference state and terminal
+cleanup. Wide shared-cone/row-ownership checks pass. Full AIG race checks and
+FRA/SSW/ABCI caller checks pass; latest focused native/race checks also cover
+the final shared helper. See SEQUENTIAL_AUDIT.md for the precise validation
+order and remaining partition/file inventory scope.

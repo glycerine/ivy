@@ -1,6 +1,9 @@
 package aig
 
-import "testing"
+import (
+	"sort"
+	"testing"
+)
 
 func TestPartitionSupportsAndCoverage(t *testing.T) {
 	p := NewGraph()
@@ -263,4 +266,15 @@ func TestPartitionRepresentativeTransferCollisionOrder(t *testing.T) {
 	if got := Aig_ObjRepr(dst, shared); got != b {
 		t.Fatalf("collision representative %v, want later source mapping %v", got, b)
 	}
+}
+
+// Per-cone DFS is an independent oracle for pooled whole-graph propagation.
+func partOutputSupport(p *Graph, output Edge) []int32 {
+	support := Aig_Support(p, Aig_Regular(p.outputDriver(output)))
+	result := make([]int32, len(support))
+	for i, e := range support {
+		result[i] = Aig_ObjCioId(p, e)
+	}
+	sort.Slice(result, func(i, j int) bool { return result[i] < result[j] })
+	return result
 }

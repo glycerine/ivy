@@ -395,18 +395,13 @@ func Aig_ManReduceLaches(p *Graph, verbose int32) *Graph {
 // grouping. Despite its historical SCC name, it traverses both forward and
 // reverse edges and therefore computes weakly connected components.
 func RegisterComponents(p *Graph) [][]int32 {
-	registers, pis, pos := sclLayout(p)
-	index := make(map[int]int, registers)
-	for i, input := range p.inputs[pis:] {
-		index[input.NodeID()] = i
-	}
+	registers, _, _ := sclLayout(p)
 	neighbors := make([][]int, registers)
-	for output, e := range p.outputs[pos:] {
-		for _, input := range Aig_Support(p, Aig_Regular(p.outputDriver(e))) {
-			if source, ok := index[input.NodeID()]; ok {
-				neighbors[output] = append(neighbors[output], source)
-				neighbors[source] = append(neighbors[source], output)
-			}
+	for output, support := range Aig_ManSupportsRegisters(p) {
+		for _, input := range support {
+			source := int(input)
+			neighbors[output] = append(neighbors[output], source)
+			neighbors[source] = append(neighbors[source], output)
 		}
 	}
 	seen := make([]bool, registers)
