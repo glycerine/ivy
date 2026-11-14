@@ -45,6 +45,7 @@ type Object struct {
 	Choice              *Object
 	Next                *Object
 	Phase               bool
+	Persist             bool // ABC's fPersist flag
 	reverseLevel        int
 	travID              uint64
 	crossCutVisits      int
@@ -161,6 +162,43 @@ func (n *Network) Objects() []*Object {
 }
 func (n *Network) ObjectsOfKind(kind ObjectKind) []*Object {
 	return append([]*Object(nil), n.kindOrder[kind]...)
+}
+
+// ChangeObjectKind updates the per-kind index while preserving the object's
+// identity and its position in the combined box order.
+func (n *Network) ChangeObjectKind(o *Object, kind ObjectKind) error {
+	if n == nil || o == nil || o.network != n {
+		return fmt.Errorf("object does not belong to network")
+	}
+	if kind <= ObjectNone || kind > ObjectBlackbox {
+		return fmt.Errorf("invalid ABC object kind %d", kind)
+	}
+	old := o.Kind
+	if old == kind {
+		return nil
+	}
+	if old < ObjectLatch || kind < ObjectLatch {
+		return fmt.Errorf("object kind change must stay within box kinds")
+	}
+	oldOrder := n.kindOrder[old]
+	found := false
+	for _, candidate := range oldOrder {
+		if candidate == o {
+			found = true
+			break
+		}
+	}
+	if !found {
+		return fmt.Errorf("object kind index is inconsistent")
+	}
+	n.kindOrder[old] = removeObjectOrder(oldOrder, o)
+	o.Kind = kind
+	newOrder := append(n.kindOrder[kind], o)
+	for i := len(newOrder) - 1; i > 0 && newOrder[i].ID < newOrder[i-1].ID; i-- {
+		newOrder[i], newOrder[i-1] = newOrder[i-1], newOrder[i]
+	}
+	n.kindOrder[kind] = newOrder
+	return nil
 }
 func (n *Network) contains(o *Object) bool { return o != nil && o.network == n && n.Object(o.ID) == o }
 func (n *Network) AddFanin(o *Object, e Edge) error {

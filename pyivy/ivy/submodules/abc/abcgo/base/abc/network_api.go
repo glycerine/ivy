@@ -27,7 +27,18 @@ func Abc_NtkNetNum(n *Network) int32          { return int32(len(n.ObjectsOfKind
 func Abc_NtkLatchNum(n *Network) int32        { return int32(len(n.ObjectsOfKind(ObjectLatch))) }
 func Abc_NtkWhiteboxNum(n *Network) int32     { return int32(len(n.ObjectsOfKind(ObjectWhitebox))) }
 func Abc_NtkBlackboxNum(n *Network) int32     { return int32(len(n.ObjectsOfKind(ObjectBlackbox))) }
-func Abc_NtkIsComb(n *Network) int32          { return abcBool(Abc_NtkLatchNum(n) == 0) }
+
+// Abc_ObjBlackboxToWhitebox mirrors ABC's type conversion and keeps Go's
+// per-kind indexes synchronized with the object's new type.
+func Abc_ObjBlackboxToWhitebox(o *Object) {
+	if o == nil || o.Kind != ObjectBlackbox {
+		panic("Abc_ObjBlackboxToWhitebox requires a blackbox object")
+	}
+	if err := o.network.ChangeObjectKind(o, ObjectWhitebox); err != nil {
+		panic(err)
+	}
+}
+func Abc_NtkIsComb(n *Network) int32 { return abcBool(Abc_NtkLatchNum(n) == 0) }
 func Abc_NtkHasOnlyLatchBoxes(n *Network) int32 {
 	return abcBool(Abc_NtkLatchNum(n) == Abc_NtkBoxNum(n))
 }
