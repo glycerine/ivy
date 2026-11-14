@@ -88,6 +88,27 @@ func (dd *DdManager) validZdd(nodes ...*DdNode) bool {
 	}
 	return true
 }
+
+// Cudd_ZddNode returns the canonical ZDD node for an index and children.
+func Cudd_ZddNode(dd *DdManager, index int, t, e *DdNode) *DdNode {
+	if !dd.validZdd(t, e) || index < 0 || index >= len(dd.PermZ) {
+		return nil
+	}
+	level := func(n *DdNode) int {
+		if n == dd.One || n == dd.Zero {
+			return len(dd.InvPermZ)
+		}
+		if int(n.Index) >= len(dd.PermZ) {
+			return len(dd.InvPermZ)
+		}
+		return dd.PermZ[n.Index]
+	}
+	if dd.PermZ[index] >= level(t) || dd.PermZ[index] >= level(e) {
+		return nil
+	}
+	return dd.zddNode(uint32(index), t, e)
+}
+
 func (dd *DdManager) ensureZddVar(index int) bool {
 	if !dd.validZdd() || index < 0 || uint64(index) >= uint64(CUDD_MAXINDEX-1) {
 		return false

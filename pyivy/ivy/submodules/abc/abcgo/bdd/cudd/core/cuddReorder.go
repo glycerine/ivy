@@ -361,24 +361,43 @@ func Cudd_ReduceHeap(dd *DdManager, method Cudd_ReorderingType, minsize int) int
 		}
 		return Cudd_AnnealRange(dd, 0, len(dd.Vars)-1, minsize)
 	}
+	switch method {
+	case CUDD_REORDER_WINDOW2, CUDD_REORDER_WINDOW3, CUDD_REORDER_WINDOW4,
+		CUDD_REORDER_WINDOW2_CONV, CUDD_REORDER_WINDOW3_CONV, CUDD_REORDER_WINDOW4_CONV:
+		if len(dd.Vars) == 0 {
+			return 0
+		}
+		if windowPreprocessSize(dd) < minsize {
+			return 1
+		}
+		started, proceed := Cudd_BeginBDDReordering(dd, method)
+		if !proceed {
+			return 0
+		}
+		clear(dd.cache)
+		clear(dd.addCache)
+		clear(dd.computed)
+		return boolToInt(Cudd_EndBDDReordering(dd, started, Cudd_WindowReorder(dd, 0, len(dd.Vars)-1, method) != 0))
+	}
 	symmetric := method == CUDD_REORDER_SYMM_SIFT || method == CUDD_REORDER_SYMM_SIFT_CONV
 	converge := method == CUDD_REORDER_SIFT_CONVERGE || method == CUDD_REORDER_SYMM_SIFT_CONV
 	if method != CUDD_REORDER_SIFT && method != CUDD_REORDER_SIFT_CONVERGE && !symmetric {
 		return 0
 	}
-	started := time.Now()
 	roots := dd.liveReorderRoots()
 	order := append([]int(nil), dd.InvPerm...)
 	heap := reorderBuild(dd, roots, order)
 	if len(heap.nodes) < minsize {
 		return 1
 	}
-	defer func() { dd.reorderingTime += time.Since(started) }()
-	dd.reorderings++
+	started, proceed := Cudd_BeginBDDReordering(dd, method)
+	if !proceed {
+		return 0
+	}
 	dd.symmetryGroups = nil
 	if len(roots.active) == 0 {
 		reorderCommit(dd, roots, heap, order)
-		return 1
+		return boolToInt(Cudd_EndBDDReordering(dd, started, true))
 	}
 	groups := make([][]int, len(order))
 	for i, v := range order {
@@ -450,7 +469,14 @@ func Cudd_ReduceHeap(dd *DdManager, method Cudd_ReorderingType, minsize int) int
 	if symmetric {
 		dd.symmetryGroups = cloneGroups(groups)
 	}
-	return 1
+	return boolToInt(Cudd_EndBDDReordering(dd, started, true))
+}
+
+func boolToInt(ok bool) int {
+	if ok {
+		return 1
+	}
+	return 0
 }
 
 // Cudd_AnnealRange runs simulated annealing over variable orders in [lower,

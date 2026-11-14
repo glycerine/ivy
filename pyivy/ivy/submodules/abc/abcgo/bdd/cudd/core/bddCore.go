@@ -37,6 +37,10 @@ type DdManager struct {
 	Zero, PlusInfinity, MinusInfinity *DdNode
 	Background                        *DdNode
 	ZddSize                           int
+	tableBDDSize, tableZddSize        uint32
+	initSlots, slotCount              uint32
+	bddTableSlots, zddTableSlots      []uint32
+	tableGrowthFactor                 uint32
 	PermZ, InvPermZ                   []int
 	Univ                              []*DdNode
 	Tree, TreeZ                       *mtr.MtrNode
@@ -52,6 +56,7 @@ type DdManager struct {
 	interact                          []uint64
 	nextID                            uint64
 	cacheLookups, cacheHits           uint64
+	garbageCollections, gcTime        uint64
 	closed                            bool
 	linearMatrix                      []uint64
 	linearSize                        int
@@ -154,6 +159,15 @@ func Cudd_LinearMatrixState(dd *DdManager) ([]uint64, int) {
 		return nil, 0
 	}
 	return append([]uint64(nil), dd.linearMatrix...), dd.linearSize
+}
+
+// Cudd_ReadLinearMatrixSize returns the dimension currently represented by
+// the manager's linear transformation matrix.
+func Cudd_ReadLinearMatrixSize(dd *DdManager) int {
+	if dd == nil {
+		return 0
+	}
+	return dd.linearSize
 }
 
 // Cudd_XorLinearRows replaces row x with row x XOR row y in the packed
@@ -285,6 +299,7 @@ func NewBDDManager(variables int) *DdManager {
 		return nil
 	}
 	dd := &DdManager{unique: map[bddUniqueKey]*DdNode{}, cache: map[bddITEKey]*DdNode{}, computed: map[computedKey]*DdNode{}, nextID: 2, reorderMethod: CUDD_REORDER_SIFT, maxGrowth: 1.1, maxGrowthAlt: 1.1, minHit: 30.0 / 70.0, looseUpTo: 5 * CUDD_UNIQUE_SLOTS, maxCache: 2 * CUDD_CACHE_SLOTS, maxCacheHard: 3 * CUDD_CACHE_SLOTS, siftMaxVar: 1000, siftMaxSwap: 2000000, stdout: os.Stdout, stderr: os.Stderr}
+	dd.tableGrowthFactor = 1
 	dd.One = &DdNode{Index: bddConstantIndex, Value: 1, ID: 0, manager: dd}
 	dd.LogicZero = &DdNode{Index: bddConstantIndex, Value: 0, ID: 1, manager: dd, regular: dd.One, inverse: dd.One}
 	dd.One.inverse = dd.LogicZero
@@ -390,6 +405,63 @@ func Cudd_ReadInvPerm(dd *DdManager, level int) int {
 func Cudd_ReadNodeCount(dd *DdManager) int {
 	return len(dd.unique) + len(dd.zddUnique) + len(dd.addUnique) + len(dd.constants)
 }
+
+// Cudd_InitTable creates unique-table state before variables are added. Go
+// maps replace the C subtables and slabs; capacities and slot thresholds are
+// retained because they affect public statistics and later growth policy.
+func Cudd_InitTable(numVars, numVarsZ, numSlots, looseUpTo uint32) *DdManager {
+	if numVars >= CUDD_MAXINDEX || numVarsZ >= CUDD_MAXINDEX {
+		return nil
+	}
+	slots := uint32(8)
+	for slots < numSlots {
+		if slots > ^uint32(0)/2 {
+			return nil
+		}
+		slots <<= 1
+	}
+	totalSlots := (uint64(numVars) + uint64(numVarsZ) + 1) * uint64(slots)
+	if totalSlots > uint64(^uint32(0)) {
+		return nil
+	}
+	dd := NewBDDManager(0)
+	if dd == nil {
+		return nil
+	}
+	dd.ZddSize = int(numVarsZ)
+	dd.PermZ, dd.InvPermZ = make([]int, numVarsZ), make([]int, numVarsZ)
+	for i := range dd.PermZ {
+		dd.PermZ[i], dd.InvPermZ[i] = i, i
+	}
+	dd.tableBDDSize, dd.tableZddSize = numVars, numVarsZ
+	dd.initSlots, dd.slotCount = slots, uint32(totalSlots)
+	dd.bddTableSlots = make([]uint32, numVars)
+	dd.zddTableSlots = make([]uint32, numVarsZ)
+	for i := range dd.bddTableSlots {
+		dd.bddTableSlots[i] = slots
+	}
+	for i := range dd.zddTableSlots {
+		dd.zddTableSlots[i] = slots
+	}
+	dd.looseUpTo = looseUpTo
+	return dd
+}
+
+// Cudd_AllocNode allocates a manager-owned, initially empty node handle.
+// Go's heap replaces CUDD's platform-specific aligned slab; this operation
+// retains the manager's node-limit error behavior and ID accounting.
+func Cudd_AllocNode(dd *DdManager) *DdNode {
+	if dd == nil || dd.closed {
+		return nil
+	}
+	if dd.maxLive != 0 && uint32(Cudd_ReadNodeCount(dd)) >= dd.maxLive {
+		dd.errorCode = CUDD_TOO_MANY_NODES
+		return nil
+	}
+	n := &DdNode{ID: dd.nextID, manager: dd}
+	dd.nextID++
+	return n
+}
 func (dd *DdManager) valid(nodes ...*DdNode) bool {
 	if dd == nil || dd.closed {
 		return false
@@ -423,6 +495,15 @@ func (dd *DdManager) node(index uint32, t, e *DdNode) *DdNode {
 	}
 	return Cudd_NotCond(n, complemented)
 }
+
+// Cudd_BddNode returns the canonical BDD node for an index and children.
+func Cudd_BddNode(dd *DdManager, index int, t, e *DdNode) *DdNode {
+	if !dd.valid(t, e) || index < 0 || index >= len(dd.Vars) || dd.Perm[index] >= dd.level(t) || dd.Perm[index] >= dd.level(e) {
+		return nil
+	}
+	return dd.node(uint32(index), t, e)
+}
+
 func Cudd_bddIthVar(dd *DdManager, index int) *DdNode {
 	if !dd.valid() || index < 0 || uint64(index) >= uint64(bddConstantIndex) {
 		return nil

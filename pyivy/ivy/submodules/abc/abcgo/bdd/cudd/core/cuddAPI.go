@@ -202,6 +202,9 @@ func Cudd_ReadSlots(dd *DdManager) uint32 {
 	if dd == nil || dd.closed {
 		return 0
 	}
+	if dd.slotCount != 0 {
+		return dd.slotCount
+	}
 	return uint32((len(dd.Vars) + dd.ZddSize + 1) * CUDD_UNIQUE_SLOTS)
 }
 func Cudd_ReadKeys(dd *DdManager) uint32 {
@@ -227,12 +230,22 @@ func Cudd_ReadMinDead(dd *DdManager) uint32 {
 	}
 	return uint32(len(dd.unique) / 2)
 }
-func Cudd_ReadGarbageCollections(dd *DdManager) uint32   { return 0 }
-func Cudd_ReadGarbageCollectionTime(dd *DdManager) int64 { return 0 }
-func Cudd_ReadNodesFreed(dd *DdManager) float64          { return -1 }
-func Cudd_ReadNodesDropped(dd *DdManager) float64        { return -1 }
-func Cudd_ReadUniqueLookUps(dd *DdManager) float64       { return -1 }
-func Cudd_ReadUniqueLinks(dd *DdManager) float64         { return -1 }
+func Cudd_ReadGarbageCollections(dd *DdManager) uint32 {
+	if dd == nil || dd.closed {
+		return 0
+	}
+	return uint32(dd.garbageCollections)
+}
+func Cudd_ReadGarbageCollectionTime(dd *DdManager) int64 {
+	if dd == nil || dd.closed {
+		return 0
+	}
+	return int64(dd.gcTime / 1e6)
+}
+func Cudd_ReadNodesFreed(dd *DdManager) float64    { return -1 }
+func Cudd_ReadNodesDropped(dd *DdManager) float64  { return -1 }
+func Cudd_ReadUniqueLookUps(dd *DdManager) float64 { return -1 }
+func Cudd_ReadUniqueLinks(dd *DdManager) float64   { return -1 }
 func Cudd_ReadMemoryInUse(dd *DdManager) uint64 {
 	if dd == nil || dd.closed {
 		return 0
