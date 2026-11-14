@@ -8,6 +8,7 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
+	"strings"
 	"testing"
 )
 
@@ -67,7 +68,10 @@ func TestExorcismCommandRoundTripAndWriteError(t *testing.T) {
 		}
 	}
 	args[len(args)-1] = filepath.Join(dir, "missing", "output.pla")
-	if status := Abc_CommandAbc9Exorcism(frame, int32(len(args)), args); status != 1 {
-		t.Fatalf("write failure returned status %d", status)
+	status, message := captureIfifPrint(t, func() int32 {
+		return Abc_CommandAbc9Exorcism(frame, int32(len(args)), args)
+	})
+	if status != 1 || !strings.Contains(message, "ESOP minimization failed:") {
+		t.Fatalf("write failure returned status %d, message %q", status, message)
 	}
 }

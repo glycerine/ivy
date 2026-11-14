@@ -563,6 +563,9 @@ func Abc_NtkIvyFraig(pNtk *Abc_Ntk_t, nConfLimit int32, fDoSparse int32, fProve 
 func Abc_NtkIvyProve(ppNtk **Abc_Ntk_t, pPars any) int32 {
 	pParams := pPars.(*Prove_Params_t)
 	var pNtk *Abc_Ntk_t = *ppNtk
+	// Strashing may replace and delete the caller's network before any of
+	// the fast SAT exits. Always return the live network, including there.
+	defer func() { *ppNtk = pNtk }()
 	var pNtkTemp *Abc_Ntk_t
 	var pObj, pFanin *Abc_Obj_t
 	var pMan *ivypkg.Ivy_Man_t

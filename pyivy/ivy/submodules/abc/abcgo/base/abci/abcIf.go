@@ -535,7 +535,9 @@ func Abc_NodeFromIf_rec(pNtkNew *Abc_Ntk_t, pIfMan *If_Man_t, pIfObj *If_Obj_t, 
 			var memory []uint32
 			function = kit.Kit_TruthToHop(hopMan, truth, n, &memory)
 		}
-		if cutComplement := ifpkg.If_CutTruthIsCompl(cut) != 0; cutComplement && !params.DelayOptimization() && !params.DsdBalance() {
+		// If_CutTruth already restores the interned truth-table polarity.
+		// fCompl is the separate phase of a cut selected through a choice.
+		if cutComplement := ifpkg.If_CutComplement(cut) != 0; cutComplement && !params.DelayOptimization() && !params.DsdBalance() {
 			if hop, ok := function.(*hoppkg.Hop_Obj_t); ok {
 				function = hoppkg.Hop_Not(hop)
 			} else if bdd, ok := function.(*core.DdNode); ok {

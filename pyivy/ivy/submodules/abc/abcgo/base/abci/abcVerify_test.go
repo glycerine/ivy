@@ -74,3 +74,12 @@ func TestVerifySequentialModelMatchesCFrameAndLatchOrder(t *testing.T) {
 		t.Fatalf("latch state=%v, want [true false]", got)
 	}
 }
+
+func TestVerifyCleanModelClearsStaleZeroInputModel(t *testing.T) {
+	n := truthNetwork(t, 0, 1)
+	defer abc.Abc_NtkDelete(n)
+	n.Model = []int32{1}
+	if got := Abc_NtkVerifyGetCleanModel(n, 1); got != nil || n.Model != nil {
+		t.Fatalf("stale model retained: %v, %v", got, n.Model)
+	}
+}

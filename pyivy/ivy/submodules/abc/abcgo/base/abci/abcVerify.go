@@ -592,6 +592,7 @@ func abcVerifyModelPtr(pNtk *Abc_Ntk_t) *int32 {
 func Abc_NtkVerifyGetCleanModel(pNtk *Abc_Ntk_t, nFrames int32) []int32 {
 	n := int(abc.Abc_NtkCiNum(pNtk) * nFrames)
 	if n <= 0 {
+		pNtk.Model = nil
 		return nil
 	}
 	model := make([]int32, n)

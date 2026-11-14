@@ -4,6 +4,7 @@ import (
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/base/abc"
+	"github.com/glycerine/abcgo/misc/tim"
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/opt/dar"
 	"github.com/glycerine/abcgo/opt/sbd"
@@ -43,6 +44,58 @@ func TestDARTransformsPreserveExhaustiveOutputs(t *testing.T) {
 				}
 			}
 		})
+	}
+}
+
+func TestSbdBoxTimingPreservesDisabledArcsAndOwnership(t *testing.T) {
+	p := gia.Gia_ManStart(16)
+	defer gia.Gia_ManStop(p)
+	a, b, box := gia.Gia_ManAppendCi(p), gia.Gia_ManAppendCi(p), gia.Gia_ManAppendCi(p)
+	high := gia.Gia_ManAppendAnd(p, a, b)
+	root := gia.Gia_ManAppendAnd(p, box, b)
+	gia.Gia_ManAppendCo(p, high)
+	gia.Gia_ManAppendCo(p, a)
+	gia.Gia_ManAppendCo(p, root)
+	timing := tim.Tim_ManStart(3, 3)
+	tim.Tim_ManSetDelayTables(timing, [][]float32{{0, 2, 1, -tim.TIM_ETERNITY, 1}})
+	tim.Tim_ManCreateBox(timing, 0, 2, 2, 1, 0, 0)
+	extra := gia.Gia_ManStart(4)
+	p.SetBoxTiming(timing, extra)
+	imported, err := abcSbdImport(p)
+	if err != nil {
+		t.Fatal(err)
+	}
+	ci := int32(imported.Graph.Inputs()[2].NodeID())
+	co := int32(imported.Graph.Outputs()[1].NodeID())
+	if len(imported.BoxInputs[ci]) != 2 || len(imported.BoxLevelInputs[ci]) != 1 || imported.BoxLevelInputs[ci][0] != co {
+		t.Fatalf("box arcs: all=%v enabled=%v", imported.BoxInputs, imported.BoxLevelInputs)
+	}
+	aig.Aig_ManStop(imported.Graph)
+	var parameters sbd.Parameters
+	sbd.Sbd_ParSetDefault(&parameters)
+	parameters.Mapping = true
+	result, err := abcSbdPerform(p, &parameters)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer gia.Gia_ManStop(result)
+	if old, oldExtra := p.BoxTiming(); old != nil || oldExtra != nil {
+		t.Fatal("source retained transferred timing")
+	}
+	if got, gotExtra := result.BoxTiming(); got != timing || gotExtra != extra {
+		t.Fatal("box metadata lost")
+	}
+	g := gia.Gia_ManToAigSimple(result)
+	defer aig.Aig_ManStop(g)
+	for bits := 0; bits < 8; bits++ {
+		x, y, z := bits&1 != 0, bits&2 != 0, bits&4 != 0
+		got, err := g.Evaluate([]bool{x, y, z})
+		if err != nil {
+			t.Fatal(err)
+		}
+		if len(got) != 3 || got[0] != (x && y) || got[1] != x || got[2] != (z && y) {
+			t.Fatalf("bits=%d output=%v", bits, got)
+		}
 	}
 }
 

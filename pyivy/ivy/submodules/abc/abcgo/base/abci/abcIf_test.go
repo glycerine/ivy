@@ -55,3 +55,41 @@ func TestAbcNtkToIfCopiesAIGAndComplementedOutput(t *testing.T) {
 		t.Fatal("AIG node's mapper copy field was not populated")
 	}
 }
+
+func TestIFMappingPreservesTruthAcrossFunctionRepresentations(t *testing.T) {
+	for _, representation := range []string{"Hop", "BDD", "SOP", "CNF", "MV"} {
+		t.Run(representation, func(t *testing.T) {
+			n := truthNetwork(t, 4, 0x6996, 0xa1f7, 0xaaaa, 0, 0xffff)
+			defer abc.Abc_NtkDelete(n)
+			var pars ifpkg.If_Par_t
+			var bdds, sops, cnfs, mv int32
+			switch representation {
+			case "BDD":
+				bdds = 1
+			case "SOP":
+				sops = 1
+			case "CNF":
+				cnfs = 1
+			case "MV":
+				mv = 1
+			}
+			pars.SetRenodeConfig(3, 8, 1, 1, 0, bdds, sops, cnfs, mv, 0, nil, nil)
+			mapped := Abc_NtkIf(n, &pars)
+			if mapped == nil {
+				t.Fatal("mapping failed")
+			}
+			defer abc.Abc_NtkDelete(mapped)
+			for bits := 0; bits < 16; bits++ {
+				want, got := evaluateNetwork(t, n, bits), evaluateNetwork(t, mapped, bits)
+				if len(got) != len(want) {
+					t.Fatal("output count changed")
+				}
+				for i := range want {
+					if got[i] != want[i] {
+						t.Fatalf("bits=%d output=%d got=%v want=%v", bits, i, got, want)
+					}
+				}
+			}
+		})
+	}
+}
