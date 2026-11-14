@@ -111,12 +111,77 @@ func Cudd_InitLinearMatrix(dd *DdManager) bool {
 	return true
 }
 
+// Cudd_ResizeLinearMatrix preserves the existing rows and adds identity
+// entries for variables introduced since the matrix was initialized.
+func Cudd_ResizeLinearMatrix(dd *DdManager) bool {
+	if dd == nil || dd.closed {
+		if dd != nil {
+			dd.errorCode = CUDD_MEMORY_OUT
+		}
+		return false
+	}
+	nvars := len(dd.Vars)
+	oldNvars := dd.linearSize
+	oldWordsPerRow := (oldNvars + 63) / 64
+	wordsPerRow := (nvars + 63) / 64
+	maxInt := int(^uint(0) >> 1)
+	if wordsPerRow != 0 && nvars > maxInt/wordsPerRow {
+		dd.errorCode = CUDD_MEMORY_OUT
+		return false
+	}
+	words := wordsPerRow * nvars
+	if uint64(words) > ^uint64(0)/8 {
+		dd.errorCode = CUDD_MEMORY_OUT
+		return false
+	}
+	linear := make([]uint64, words)
+	for row := 0; row < oldNvars; row++ {
+		copy(linear[row*wordsPerRow:row*wordsPerRow+oldWordsPerRow], dd.linearMatrix[row*oldWordsPerRow:(row+1)*oldWordsPerRow])
+	}
+	for row := oldNvars; row < nvars; row++ {
+		linear[row*wordsPerRow+row/64] = uint64(1) << uint(row%64)
+	}
+	dd.linearMatrix = linear
+	dd.linearSize = nvars
+	dd.linearMemory = uint64(words) * 8
+	return true
+}
+
 // Cudd_LinearMatrixState returns a copy of the packed matrix and its dimension.
 func Cudd_LinearMatrixState(dd *DdManager) ([]uint64, int) {
 	if dd == nil {
 		return nil, 0
 	}
 	return append([]uint64(nil), dd.linearMatrix...), dd.linearSize
+}
+
+// Cudd_ReadLinear reads one bit from the packed linear transform matrix.
+// Like the C API, callers must provide row and column indices in range.
+func Cudd_ReadLinear(dd *DdManager, row, column int) int {
+	wordsPerRow := (dd.linearSize + 63) / 64
+	word := wordsPerRow*row + column/64
+	return int((dd.linearMatrix[word] >> uint(column%64)) & 1)
+}
+
+// Cudd_PrintLinear writes the matrix in the bit order and row width used by
+// cuddLinear.c on 64-bit platforms. It returns 0 if the writer fails.
+func Cudd_PrintLinear(dd *DdManager) int {
+	wordsPerRow := (dd.linearSize + 63) / 64
+	for row := 0; row < dd.linearSize; row++ {
+		for wordIndex := 0; wordIndex < wordsPerRow; wordIndex++ {
+			word := dd.linearMatrix[row*wordsPerRow+wordIndex]
+			for bit := 0; bit < 64; bit++ {
+				if _, err := fmt.Fprintf(dd.stdout, "%d", word&1); err != nil {
+					return 0
+				}
+				word >>= 1
+			}
+		}
+		if _, err := fmt.Fprintln(dd.stdout); err != nil {
+			return 0
+		}
+	}
+	return 1
 }
 
 // Cudd_ReadErrorCode returns the most recently recorded manager error.
