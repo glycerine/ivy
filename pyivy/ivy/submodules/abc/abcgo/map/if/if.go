@@ -390,8 +390,14 @@ func If_ObjSetLevel(pObj *If_Obj_t, level int32)     { pObj.Level = uint32(level
 func If_ObjSetCopy(pObj *If_Obj_t, pCopy any)        { pObj.pCopy = pCopy }
 func If_ObjSetChoice(pObj *If_Obj_t, pEqu *If_Obj_t) { pObj.pEquiv = pEqu }
 
-func If_CutLeaveNum(pCut *If_Cut_t) int32 { return int32(pCut.nLeaves) }
-func If_CutLeaves(pCut *If_Cut_t) []int32 { return pCut.pLeaves }
+func If_CutLeaveNum(pCut *If_Cut_t) int32          { return int32(pCut.nLeaves) }
+func If_CutLeaves(pCut *If_Cut_t) []int32          { return pCut.pLeaves }
+func If_CutLimit(pCut *If_Cut_t) int32             { return int32(pCut.nLimit) }
+func If_CutCost(pCut *If_Cut_t) uint32             { return pCut.Cost }
+func If_CutSetCost(pCut *If_Cut_t, cost uint32)    { pCut.Cost = cost }
+func If_CutSetUser(pCut *If_Cut_t, value int32)    { pCut.fUser = uint32(value) }
+func If_CutSetUseless(pCut *If_Cut_t, value int32) { pCut.fUseless = uint32(value) }
+func If_CutComplement(pCut *If_Cut_t) int32        { return int32(pCut.fCompl) }
 func If_CutLeaf(p *If_Man_t, pCut *If_Cut_t, i int32) *If_Obj_t {
 	assert(i >= 0 && i < int32(pCut.nLeaves), "i >= 0 && i < int32(pCut.nLeaves)")
 	id := pCut.pLeaves[i]
@@ -504,6 +510,38 @@ func If_CutTruthW(p *If_Man_t, pCut *If_Cut_t) *word {
 	}
 	return &p.puTempW[0]
 }
+
+// If_CutTruthWordSlice returns the word slice backing the current cut truth.
+// Calling it computes the truth using the same scratch buffer as If_CutTruthW.
+func If_CutTruthWordSlice(p *If_Man_t, pCut *If_Cut_t) []word {
+	If_CutTruthW(p, pCut)
+	n := int(p.nTruth6Words[pCut.nLeaves])
+	return p.puTempW[:n]
+}
+
+func If_ManCutMin(p *If_Man_t) int32  { return p.pPars.fCutMin }
+func If_ManLutSize(p *If_Man_t) int32 { return p.pPars.nLutSize }
+
+func If_ParSetRec3Defaults(p *If_Par_t, vars, cuts, useSOPB int32, userFunc func(*If_Man_t, *If_Obj_t, *If_Cut_t) int32) {
+	*p = If_Par_t{}
+	p.nLutSize = vars
+	p.nCutsMax = cuts
+	p.DelayTarget = -1
+	p.Epsilon = 0.005
+	p.fArea = 1
+	p.fTruth = 1
+	if useSOPB != 0 {
+		p.fCutMin, p.fUsePerm, p.fDelayOpt = 0, 1, 1
+	} else {
+		p.fCutMin, p.fUsePerm, p.fDelayOpt = 1, 0, 0
+	}
+	p.fSkipCutFilter = 0
+	p.pFuncCost = nil
+	p.pFuncUser = userFunc
+}
+
+func If_ObjCopyLit(pObj *If_Obj_t) int32              { return pObj.iCopy }
+func If_ObjSetCopyLit(pObj *If_Obj_t, lit int32)      { pObj.iCopy = lit }
 func If_CutTruth(p *If_Man_t, pCut *If_Cut_t) *uint32 { return If_CutTruthUR(p, pCut) }
 
 func If_CutDsdLit(p *If_Man_t, pCut *If_Cut_t) int32 {
