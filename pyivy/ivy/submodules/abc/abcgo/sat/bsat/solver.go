@@ -20,6 +20,14 @@ func (s *sat_solver_t) NumVars() int32     { return s.size }
 // Close releases the solver's internal clauses and vectors.
 func (s *sat_solver_t) Close() { sat_solver_delete(s) }
 
+// RestartSearch applies ABC's sat_solver_restart operation: it clears all
+// variables, clauses, learned clauses, and results so the solver can be reused.
+func (s *sat_solver_t) RestartSearch() {
+	sat_solver_restart(s)
+	s.fSolved = 0
+	s.lastStatus = Unknown
+}
+
 // SetNumVars ensures that variable IDs below n exist, preserving existing
 // assignments and clauses.
 func (s *sat_solver_t) SetNumVars(n int32) {
