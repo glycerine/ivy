@@ -1,5 +1,7 @@
 package aig
 
+import "fmt"
+
 // Port of aigOper.c. Pointer-tagged Aig_Obj_t values are represented by Edge;
 // callers pass slices in place of C pointer/vector ranges.
 
@@ -134,16 +136,72 @@ func Aig_ObjIsExorType(p *Graph, a, b Edge, fan0, fan1 *Edge) bool {
 	return true
 }
 
-// Aig_MuxTest checks the two ITE constructions over every three-input assignment.
-func Aig_MuxTest() {
+// muxExperimentGraph builds the source's 2,000-MUX seeded experiment.
+func muxExperimentGraph() *Graph {
 	p := NewGraph()
-	a, b, c := p.NewInput(), p.NewInput(), p.NewInput()
-	p.AddOutput(Aig_Mux(p, a, b, c))
-	p.AddOutput(Aig_Mux2(p, a, b, c))
-	for bits := 0; bits < 8; bits++ {
-		out, err := p.Evaluate([]bool{bits&1 != 0, bits&2 != 0, bits&4 != 0})
-		if err != nil || out[0] != out[1] {
-			panic("aig: ITE consistency failure")
-		}
+	const nPIs, nNodes = 20, 2000
+	for i := int32(0); i < nPIs; i++ {
+		Aig_IthVar(p, i)
 	}
+	random := newMuxExperimentRandom()
+	nodes := make([]Edge, 0, nNodes)
+	operand := func(i int) Edge {
+		var e Edge
+		switch {
+		case random()%10 == 0:
+			e = p.Const0()
+		case random()%10 == 0:
+			e = p.Const1()
+		case random()%3 == 0 || i < nPIs:
+			e = Aig_IthVar(p, int32(random()%nPIs))
+		default:
+			e = nodes[random()%i]
+		}
+		return dupPhase(e, random()%2 == 0)
+	}
+	for i := 0; i < nNodes; i++ {
+		control, yes, no := operand(i), operand(i), operand(i)
+		nodes = append(nodes, Aig_Mux(p, control, yes, no))
+	}
+	for _, e := range nodes {
+		p.AddOutput(e)
+	}
+	return p
+}
+
+// newMuxExperimentRandom reproduces Linux/glibc srand(321), privately so the
+// experiment does not reset random streams used by other packages. C rand
+// sequences on other platforms are implementation dependent.
+func newMuxExperimentRandom() func() int {
+	var state [31]uint32
+	value := int64(321)
+	state[0] = uint32(value)
+	for i := 1; i < len(state); i++ {
+		value = value * 16807 % 2147483647
+		state[i] = uint32(value)
+	}
+	front, rear := 3, 0
+	next := func() int {
+		state[front] += state[rear]
+		value := state[front] >> 1
+		front, rear = (front+1)%31, (rear+1)%31
+		return int(value)
+	}
+	for i := 0; i < 310; i++ {
+		next()
+	}
+	return next
+}
+
+// Aig_MuxTest constructs and cleans up the original seeded MUX experiment,
+// prints both object counts, and writes the resulting circuit to test1.blif.
+func Aig_MuxTest() {
+	p := muxExperimentGraph()
+	fmt.Printf("Number of nodes = %6d.\n", Aig_ManObjNum(p))
+	Aig_ManCleanup(p)
+	fmt.Printf("Number of nodes = %6d.\n", Aig_ManObjNum(p))
+	if err := Aig_ManDumpBlif(p, "test1.blif", nil, nil); err != nil {
+		fmt.Println(err)
+	}
+	Aig_ManStop(p)
 }

@@ -33,7 +33,6 @@ func TestOriginalAigOperations(t *testing.T) {
 	if err := p.Check(); err != nil {
 		t.Fatal(err)
 	}
-	Aig_MuxTest()
 }
 
 func TestExorTypeRequiresComplementedOperands(t *testing.T) {

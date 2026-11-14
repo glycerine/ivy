@@ -2124,3 +2124,45 @@ Validation: full AIG/FRA/ABCI race suites pass in
 expanded focused race tests, including buffer aliases and exact reverse-map
 ownership, pass in 2.316s (`/tmp/abcgo-partition-xor-final.log`). No fresh
 whole-repository run is claimed for this isolated repair.
+
+### AIGER snapshot and operation experiment reconciliation
+
+Read the entire AigerModel adapter and compared constant polarity, CI/register
+layout, zero initialization and constraint inversion against
+`src/aig/ioa/ioaWriteAig.c`. Its AND-only normalization is necessary for typed
+XORs, buffers and non-ID-ordered DAGs; it does not replace a synthesis algorithm.
+Added a deterministic matrix of 128 mixed four-input graphs, each with a forward
+buffer reference and CO-as-fanin, randomized AND/XOR/buffer cones, reordered
+interfaces, zero/one/two registers, all applicable constraint counts and deletion
+holes. Independent AIGER-literal evaluation checks all 16 assignments, both
+before and after binary serialization (4,096 snapshot evaluations). Node state,
+interface lists and copy scratch bindings remain unchanged; names, register
+counts and constraint counts are checked. No adapter bug found.
+
+Reconciled aigOper.go with every entry point in aigOper.c: elementary-variable
+creation, operations, source-default MUX path, majority, balanced multiargument
+construction, in-place miter compaction, constant reductions, hash lookup,
+EXOR recognition and n-variable constructors. These match their source flows;
+existing exhaustive small truth tables and mutation regressions cover them.
+Found Aig_MuxTest had instead become a tiny invented consistency check. A new
+red regression exposed missing object-count reports and missing test1.blif.
+Restored the actual source experiment: 20 inputs, 2,000 sequentially sampled
+MUXes, seed 321, cleanup, two object-count reports, BLIF export and manager
+release. A private 31-word additive generator reproduces Linux/glibc srand/rand
+without changing another package's RNG. Other C runtimes have different random
+sequences; this portability distinction is explicit.
+
+A compiled original-C experiment observes the final graph at its export
+boundary. All 2,000 output AND structures match after canonicalizing IDs (C
+argument evaluation order allocates sibling gates in a different order from
+Go). Both object counts are exactly 5,503. The public Go entry point separately
+writes a real BLIF in a temporary directory. Removed the old operation test's
+incidental experiment invocation; the dedicated artifact test owns this file
+side effect. Focused uncached tests pass. Full uncached AIG race tests pass
+in 69.915s (`/tmp/abcgo-aiger-mux-audit.log`); `go vet ./aig/aig` also passes.
+
+Inventory reconciliation also identifies aigPartSat.go as still requiring a
+complete source-backed review of partition labels, PIO mappings, incremental
+CNF/solver feedback and conflict budgets. Earlier representative/FRA review
+covered aigPart.go, not this separate SAT driver. Do not mark the package
+complete based on those earlier checkpoints. Completed count remains 1/131.

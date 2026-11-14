@@ -331,3 +331,17 @@ have no original-object binding. This closes the above XOR defect; the overall
 package audit and final function inventory remain incomplete.
 Full AIG/FRA/ABCI race checks pass (68.859s/12.335s/29.071s); the final focused
 signed-XOR/map/buffer/native-C checks pass with the race detector in 2.316s.
+
+AIGER snapshot adapter reviewed against the original writer's constants,
+register placement and inverted constraints. A new 128-graph mixed-representation
+matrix checks all four-input assignments before/after binary serialization,
+including reordered interfaces, forward references, CO fanins and registers.
+No adapter repair needed. Operation reconciliation found Aig_MuxTest was an
+invented small check; a red missing-artifact test preceded restoring C's actual
+seeded 2,000-MUX experiment, object reports, cleanup and test1.blif export. A
+compiled original-C boundary observer confirms identical canonical AND
+structures for all outputs and both 5,503-object reports. glibc random sequence
+compatibility is explicit; sibling node IDs need not match C evaluation order.
+Remaining reconciliation includes the separate aigPartSat.go source contracts.
+Full uncached AIG race suite passes in 69.915s, and go vet passes. No new
+whole-repository test claim is made for this experiment-only production change.
