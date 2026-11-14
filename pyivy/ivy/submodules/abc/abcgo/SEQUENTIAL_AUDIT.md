@@ -2516,6 +2516,16 @@ as audited merely because its integration tests passed.
 
 ## 3. aig/gia (in progress)
 
+The complemented-handle storage review removed the per-object boolean tag:
+inverse views use object ID -1, outside the valid nonnegative manager ID
+domain. Atomic pairing, stable aliases and regular-object fields are unchanged.
+On amd64 this reduces Gia_Obj_t from 64 to 56 bytes, measured with a temporary
+Sizeof probe (`/tmp/abcgo-gia-object-size-final.log`). Existing involution,
+conditional-complement and concurrent-pairing regressions pass with the full
+uncached GIA race suite (15.745s). `go vet ./aig/gia` passes, and all module
+packages including tests compile (`/tmp/abcgo-gia-core-layout-build.log`).
+These checks cover this representation change, not the remaining GIA audit.
+
 Inventoried 544 production files and 405 test files at the package root;
 subpackages mf/satcost remain separate pending audits. Historical GIA review
 reports and passing tests are context, not evidence that this sequential audit

@@ -12,14 +12,13 @@ type objectStore struct {
 }
 
 type Gia_Obj_t struct {
-	pair         atomic.Pointer[Gia_Obj_t]
-	complemented bool
-	store        *objectStore
-	id           int32  // stable object index in its owning manager
-	iDiff0       uint32 /* C bitfield: 29 bits; review packing and truncation */ // the diff of the first fanin
-	fCompl0      uint32 /* C bitfield: 1 bits; review packing and truncation */  // the complemented attribute
-	fMark0       uint32 /* C bitfield: 1 bits; review packing and truncation */  // first user-controlled mark
-	fTerm        uint32 /* C bitfield: 1 bits; review packing and truncation */  // terminal node (CI/CO)
+	pair    atomic.Pointer[Gia_Obj_t]
+	store   *objectStore
+	id      int32  // stable nonnegative index; inverse views use inverseObjectID
+	iDiff0  uint32 /* C bitfield: 29 bits; review packing and truncation */ // the diff of the first fanin
+	fCompl0 uint32 /* C bitfield: 1 bits; review packing and truncation */  // the complemented attribute
+	fMark0  uint32 /* C bitfield: 1 bits; review packing and truncation */  // first user-controlled mark
+	fTerm   uint32 /* C bitfield: 1 bits; review packing and truncation */  // terminal node (CI/CO)
 
 	iDiff1  uint32 /* C bitfield: 29 bits; review packing and truncation */ // the diff of the second fanin
 	fCompl1 uint32 /* C bitfield: 1 bits; review packing and truncation */  // the complemented attribute
@@ -30,6 +29,10 @@ type Gia_Obj_t struct {
 }
 
 const objectNoFanin uint32 = (1 << 29) - 1
+
+// Inverse handles have no object index of their own. Reusing that otherwise
+// invalid value avoids a separate tag and its per-object alignment padding.
+const inverseObjectID int32 = -1
 
 func giaBool(value bool) int32 {
 	if value {
@@ -98,23 +101,23 @@ func (p *Gia_Obj_t) fanin(diff uint32) *Gia_Obj_t {
 // Complemented edge handles replace C's tagged pointer bit. They are stable
 // paired views; callers unwrap with Gia_Regular before accessing object fields.
 func Gia_Regular(p *Gia_Obj_t) *Gia_Obj_t {
-	if p != nil && p.complemented {
+	if p != nil && p.id == inverseObjectID {
 		return p.pair.Load()
 	}
 	return p
 }
-func Gia_IsComplement(p *Gia_Obj_t) int32 { return giaBool(p != nil && p.complemented) }
+func Gia_IsComplement(p *Gia_Obj_t) int32 { return giaBool(p != nil && p.id == inverseObjectID) }
 func Gia_Not(p *Gia_Obj_t) *Gia_Obj_t {
 	if p == nil {
 		panic("gia: cannot complement a nil object")
 	}
-	if p.complemented {
+	if p.id == inverseObjectID {
 		return p.pair.Load()
 	}
 	if inverse := p.pair.Load(); inverse != nil {
 		return inverse
 	}
-	inverse := &Gia_Obj_t{complemented: true}
+	inverse := &Gia_Obj_t{id: inverseObjectID}
 	inverse.pair.Store(p)
 	if p.pair.CompareAndSwap(nil, inverse) {
 		return inverse
