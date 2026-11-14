@@ -887,3 +887,15 @@ corrected it to C's six levels for three XOR stages while retaining all 256
 functional assignments. Final AIG, DAR core and DAR facade race suites pass.
 This closes the XOR-cost finding; CO anchor/fanout reference semantics and the
 remaining AIG families are still pending.
+
+Full integration validation after the XOR timing repair completed successfully:
+`go test -p 1 ./... -count=1 -timeout 180s` passes all 129 packages with tests;
+three packages have no tests. No package-audit completion count is inferred
+from this regression gate.
+
+Next reference-access review should cover Aig_ObjRefs, Ref, Deref and ClearRef
+against Go's internal output-anchor ownership. Read-only caller inspection
+found reference mutations in CNF cuts and BBR, plus the previously migrated
+reference-bounded fanout loops. The non-integer Aig_ObjFanout0 helper also
+still scans by object ID rather than following the maintained head; it has no
+production repository callers and needs its own regression before repair.
