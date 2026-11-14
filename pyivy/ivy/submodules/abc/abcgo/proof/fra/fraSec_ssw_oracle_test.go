@@ -39,10 +39,10 @@ func TestSecCorrespondenceAgainstReachability(t *testing.T) {
 		var pars Fra_Sec_t
 		Fra_SecSetDefaultParams(&pars)
 		pars.fSilent = 1
-		pars.fRetimeFirst, pars.fRetimeRegs, pars.fFraiging = 0, 0, 0
-		pars.fInduction = 1
-		pars.nFramesMax = 2
-		pars.fInterpolation, pars.fReachability, pars.fUsePdr = 0, 0, 0
+		pars.FRetimeFirst, pars.FRetimeRegs, pars.FFraiging = 0, 0, 0
+		pars.FInduction = 1
+		pars.NFramesMax = 2
+		pars.FInterpolation, pars.fReachability, pars.FUsePdr = 0, 0, 0
 		status := Fra_FraigSecVerified(g, &pars, nil)
 		switch status {
 		case 1:

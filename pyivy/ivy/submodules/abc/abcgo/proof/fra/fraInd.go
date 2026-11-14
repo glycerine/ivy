@@ -15,20 +15,20 @@ import (
 
 func Fra_FraigInductionPart(g *aig.Graph, pars *Fra_Ssw_t) *aig.Graph {
 	started := time.Now()
-	size, verbose := pars.nPartSize, pars.fVerbose
-	pars.nPartSize, pars.fVerbose = 0, 0
-	defer func() { pars.nPartSize, pars.fVerbose = size, verbose }()
+	size, verbose := pars.NPartSize, pars.FVerbose
+	pars.NPartSize, pars.FVerbose = 0, 0
+	defer func() { pars.NPartSize, pars.FVerbose = size, verbose }()
 	var parts [][]int32
 	if len(g.ClockDomains) > 0 {
 		for _, domain := range g.ClockDomains {
 			if size != 0 && len(domain) > int(size) {
-				aig.Aig_ManPartDivide(&parts, domain, size, pars.nOverSize)
+				aig.Aig_ManPartDivide(&parts, domain, size, pars.NOverSize)
 			} else {
 				parts = append(parts, append([]int32(nil), domain...))
 			}
 		}
 	} else {
-		parts = aig.Aig_ManRegPartitionSimple(g, size, pars.nOverSize)
+		parts = aig.Aig_ManRegPartitionSimple(g, size, pars.NOverSize)
 	}
 	aig.Aig_ManReprStart(g, int32(len(g.Nodes())))
 	for i, part := range parts {
@@ -66,21 +66,21 @@ func Fra_FraigInduction(g *aig.Graph, params *Fra_Ssw_t) *aig.Graph {
 		aig.Aig_ManReprStart(g, int32(len(g.Nodes())))
 		return aig.Aig_ManDupOrdered(g)
 	}
-	if g.RegisterCount() <= 0 || params.nFramesK <= 0 {
+	if g.RegisterCount() <= 0 || params.NFramesK <= 0 {
 		panic("fra: induction requires registers and frames")
 	}
-	if params.fWriteImps != 0 && params.nPartSize > 0 {
-		params.nPartSize = 0
+	if params.FWriteImps != 0 && params.NPartSize > 0 {
+		params.NPartSize = 0
 		fmt.Println("Partitioning was disabled to allow implication writing.")
 	}
-	if (params.nPartSize > 0 && params.nPartSize < g.RegisterCount()) || len(g.ClockDomains) > 0 {
+	if (params.NPartSize > 0 && params.NPartSize < g.RegisterCount()) || len(g.ClockDomains) > 0 {
 		return Fra_FraigInductionPart(g, params)
 	}
 	var pars Fra_Par_t
 	Fra_ParamsDefaultSeq(&pars)
-	pars.NFramesP, pars.NFramesK, pars.NMaxImps, pars.NMaxLevs = params.nFramesP, params.nFramesK, params.nMaxImps, params.nMaxLevs
-	pars.FVerbose, pars.FRewrite, pars.FLatchCorr = params.fVerbose, params.fRewrite, params.fLatchCorr
-	pars.FUseImps, pars.FWriteImps, pars.FUse1Hot = params.fUseImps, params.fWriteImps, params.fUse1Hot
+	pars.NFramesP, pars.NFramesK, pars.NMaxImps, pars.NMaxLevs = params.NFramesP, params.NFramesK, params.NMaxImps, params.NMaxLevs
+	pars.FVerbose, pars.FRewrite, pars.FLatchCorr = params.FVerbose, params.FRewrite, params.FLatchCorr
+	pars.FUseImps, pars.FWriteImps, pars.FUse1Hot = params.FUseImps, params.FWriteImps, params.FUse1Hot
 	if pars.FUse1Hot != 0 && (pars.NFramesP > 0 || pars.NFramesK > 1) {
 		panic("fra: one-hot induction supports one frame without prefix")
 	}
@@ -264,7 +264,7 @@ func Fra_FraigInductionTest(filename string, pars *Fra_Ssw_t) int32 {
 		fmt.Fprintf(file, "%d %d %c\n", ids[edge.NodeID()], ids[repr.NodeID()], sign)
 		count++
 	}
-	if pars.fVerbose != 0 {
+	if pars.FVerbose != 0 {
 		fmt.Printf("Result: %d pairs of seq equiv nodes are written into file %q.\n", count, path)
 	}
 	return 1

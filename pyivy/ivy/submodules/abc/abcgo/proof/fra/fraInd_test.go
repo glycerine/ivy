@@ -13,7 +13,7 @@ func TestInductionPreservesReachableOutput(t *testing.T) {
 	g.AddOutput(input)
 	g.AddOutput(input)
 	aig.Aig_ManSetRegNum(g, 2)
-	pars := &Fra_Ssw_t{nFramesK: 1}
+	pars := &Fra_Ssw_t{NFramesK: 1}
 	got := Fra_FraigInduction(g, pars)
 	if got == nil {
 		t.Fatal("induction returned no graph")
@@ -74,7 +74,7 @@ func TestInductionOptionsPreserveReachableOutput(t *testing.T) {
 			g.AddOutput(input)
 			g.AddOutput(input)
 			aig.Aig_ManSetRegNum(g, 2)
-			result := Fra_FraigInduction(g, &Fra_Ssw_t{nFramesK: 1, fRewrite: tc.rewrite, fUse1Hot: tc.oneHot, fUseImps: tc.imps, nMaxImps: 16})
+			result := Fra_FraigInduction(g, &Fra_Ssw_t{NFramesK: 1, FRewrite: tc.rewrite, FUse1Hot: tc.oneHot, FUseImps: tc.imps, NMaxImps: 16})
 			if result == nil {
 				t.Fatal("no induction result")
 			}
@@ -122,7 +122,7 @@ func TestInductionExhaustiveOneRegisterTransitions(t *testing.T) {
 		g.AddOutput(g.XOR(input, latch))
 		g.AddOutput(next)
 		aig.Aig_ManSetRegNum(g, 1)
-		result := Fra_FraigInduction(g, &Fra_Ssw_t{nFramesK: 1})
+		result := Fra_FraigInduction(g, &Fra_Ssw_t{NFramesK: 1})
 		if result == nil {
 			t.Fatalf("transition %04b returned no graph", truth)
 		}
@@ -166,7 +166,7 @@ func TestInductionPrefixAndPartitionPreserveOutputs(t *testing.T) {
 			if tc.partition != 0 {
 				g.OneHotGroups = [][]int32{{0, 1}}
 			}
-			out := Fra_FraigInduction(g, &Fra_Ssw_t{nFramesK: tc.frames, nFramesP: tc.prefix, nPartSize: tc.partition})
+			out := Fra_FraigInduction(g, &Fra_Ssw_t{NFramesK: tc.frames, NFramesP: tc.prefix, NPartSize: tc.partition})
 			if out == nil {
 				t.Fatal("induction returned nil")
 			}
@@ -201,7 +201,7 @@ func TestInductionTimeoutReturnsNoResult(t *testing.T) {
 	g.AddOutput(g.AND(input, latch))
 	g.AddOutput(input)
 	aig.Aig_ManSetRegNum(g, 1)
-	pars := &Fra_Ssw_t{nFramesK: 1, TimeLimit: 1e-12, fSilent: 1}
+	pars := &Fra_Ssw_t{NFramesK: 1, TimeLimit: 1e-12, fSilent: 1}
 	if result := Fra_FraigInduction(g, pars); result != nil {
 		t.Fatal("expected timed-out induction to return no graph")
 	}
@@ -222,7 +222,7 @@ func TestInductionWithNontrivialOneHotCandidate(t *testing.T) {
 	if Fra_OneHotCount(probe, Fra_OneHotCompute(probe, sim)) == 0 {
 		t.Fatal("fixture produced no one-hot candidate")
 	}
-	result := Fra_FraigInduction(g, &Fra_Ssw_t{nFramesK: 1, fUse1Hot: 1})
+	result := Fra_FraigInduction(g, &Fra_Ssw_t{NFramesK: 1, FUse1Hot: 1})
 	if result == nil {
 		t.Fatal("one-hot induction returned no result")
 	}
@@ -265,7 +265,7 @@ func TestInductionWithNontrivialImplicationCandidate(t *testing.T) {
 	if !found {
 		t.Fatalf("fixture did not produce a => b: %v", vec.Vec_IntArray(imps))
 	}
-	result := Fra_FraigInduction(g, &Fra_Ssw_t{nFramesK: 1, fUseImps: 1, nMaxImps: 20})
+	result := Fra_FraigInduction(g, &Fra_Ssw_t{NFramesK: 1, FUseImps: 1, NMaxImps: 20})
 	if result == nil {
 		t.Fatal("implication induction returned no result")
 	}

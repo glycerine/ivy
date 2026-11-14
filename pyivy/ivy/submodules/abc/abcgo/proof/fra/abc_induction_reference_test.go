@@ -74,7 +74,7 @@ func TestABCInductionDifferential(t *testing.T) {
 					continue configs
 				}
 			}
-			reduced := Fra_FraigInduction(aig.Aig_ManDupOrdered(g), &Fra_Ssw_t{nFramesK: config.frames, nPartSize: config.partition, fLatchCorr: config.latch, fRewrite: config.rewrite, nFramesP: config.prefix, nMaxLevs: config.levels, fUse1Hot: config.onehot})
+			reduced := Fra_FraigInduction(aig.Aig_ManDupOrdered(g), &Fra_Ssw_t{NFramesK: config.frames, NPartSize: config.partition, FLatchCorr: config.latch, FRewrite: config.rewrite, NFramesP: config.prefix, NMaxLevs: config.levels, FUse1Hot: config.onehot})
 			if reduced == nil {
 				t.Fatalf("trial %d %s: Go reduction failed", trial, config.args)
 			}

@@ -32,7 +32,7 @@ func secSaveUnsolved(graph *aig.Graph) {
 }
 
 func Fra_SecSetDefaultParams(p *Fra_Sec_t) {
-	*p = Fra_Sec_t{fTryComb: 1, fTryBmc: 1, nFramesMax: 4, nBTLimit: 1000, nBTLimitGlobal: 5000000, nBTLimitInter: 10000, nBddVarsMax: 150, nBddMax: 50000, nBddIterMax: 1000000, fRetimeFirst: 1, fRetimeRegs: 1, fFraiging: 1, fInduction: 1, fInterpolation: 1, fReachability: 1, fReorderImage: 1, fStopOnFirstFail: 1, fUsePdr: 1, nPdrTimeout: 60}
+	*p = Fra_Sec_t{FTryComb: 1, FTryBmc: 1, NFramesMax: 4, NBTLimit: 1000, NBTLimitGlobal: 5000000, NBTLimitInter: 10000, NBddVarsMax: 150, NBddMax: 50000, NBddIterMax: 1000000, FRetimeFirst: 1, FRetimeRegs: 1, FFraiging: 1, FInduction: 1, FInterpolation: 1, fReachability: 1, FReorderImage: 1, fStopOnFirstFail: 1, FUsePdr: 1, NPdrTimeout: 60}
 }
 
 // secTransferWitness copies only a counterexample that replays on the original
@@ -132,7 +132,7 @@ func fraFraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph, verif
 	if original == nil || pars == nil {
 		panic("invalid sequential equivalence arguments")
 	}
-	pars.nSMnumber = -1
+	pars.NSMnumber = -1
 	graph := aig.Aig_ManDupSimple(original)
 	status := Fra_FraigMiterStatus(graph)
 	timedOut := false
@@ -154,7 +154,7 @@ func fraFraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph, verif
 		if status == -1 {
 			secSaveUnsolved(graph)
 		}
-		if pars.fReportSolution != 0 && pars.fRecursive == 0 {
+		if pars.FReportSolution != 0 && pars.fRecursive == 0 {
 			switch status {
 			case 1:
 				fmt.Println("SOLUTION: PASS")
@@ -166,7 +166,7 @@ func fraFraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph, verif
 		}
 		if status == -1 && !timedOut && pars.fSilent == 0 {
 			number := secUnsolvedNumber.Add(1)
-			pars.nSMnumber = number
+			pars.NSMnumber = number
 			name := fmt.Sprintf("sm%02d.aig", number)
 			if err := ioa.Ioa_WriteAiger(graph, name, 0, 0); err != nil {
 				fmt.Printf("Could not write unsolved reduced miter %q: %v\n", name, err)
@@ -202,11 +202,11 @@ func fraFraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph, verif
 	if status >= 0 {
 		return finish()
 	}
-	if pars.fPhaseAbstract != 0 {
+	if pars.FPhaseAbstract != 0 {
 		secRefreshTrueCounts(graph)
 		graph = saig.Saig_ManPhaseAbstractAuto(graph, 0)
 	}
-	if pars.fRetimeFirst != 0 && graph.RegisterCount() > 0 {
+	if pars.FRetimeFirst != 0 && graph.RegisterCount() > 0 {
 		graph = saig.Saig_ManRetimeForward(graph, 100, 0)
 	}
 	var sw ssw.Ssw_Pars_t
@@ -227,7 +227,7 @@ func fraFraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph, verif
 		}
 	}
 	ssw.Ssw_ManSetDefaultParams(&sw)
-	if pars.fFraiging != 0 {
+	if pars.FFraiging != 0 {
 		graph = Fra_FraigEquivence(graph, 100, 0)
 	}
 	if graph.RegisterCount() == 0 {
@@ -237,18 +237,18 @@ func fraFraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph, verif
 	if status >= 0 {
 		return finish()
 	}
-	if pars.fRetimeRegs != 0 && graph.RegisterCount() > 0 {
+	if pars.FRetimeRegs != 0 && graph.RegisterCount() > 0 {
 		secRefreshTrueCounts(graph)
 		graph = saig.Saig_ManRetimeMinArea(graph, 1000, 0, 0, 1, 0)
 		graph = aig.Aig_ManDupOrdered(graph)
 	}
 	status = Fra_FraigMiterStatus(graph)
-	if status == -1 && pars.fInduction != 0 {
-		for frames := int32(1); frames <= pars.nFramesMax && frames > 0; frames *= 2 {
+	if status == -1 && pars.FInduction != 0 {
+		for frames := int32(1); frames <= pars.NFramesMax && frames > 0; frames *= 2 {
 			ssw.Ssw_ParsSetFramesK(&sw, frames)
-			ssw.Ssw_ParsSetBTLimit(&sw, pars.nBTLimit)
-			ssw.Ssw_ParsSetBTLimitGlobal(&sw, pars.nBTLimitGlobal)
-			if ssw.Ssw_ParsConflicts(&sw) > pars.nBTLimitGlobal {
+			ssw.Ssw_ParsSetBTLimit(&sw, pars.NBTLimit)
+			ssw.Ssw_ParsSetBTLimitGlobal(&sw, pars.NBTLimitGlobal)
+			if ssw.Ssw_ParsConflicts(&sw) > pars.NBTLimitGlobal {
 				timedOut = true
 				break
 			}
@@ -301,17 +301,17 @@ func fraFraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph, verif
 	}
 	status = Fra_FraigMiterStatus(graph)
 	aig.Aig_ManSetRegNum(graph, graph.RegisterCount())
-	if pars.fInterpolation != 0 && status == -1 && graph.RegisterCount() > 0 {
+	if pars.FInterpolation != 0 && status == -1 && graph.RegisterCount() > 0 {
 		graph.ClearSequentialCounterexample()
 		var options interp.Inter_ManParams_t
 		interp.Inter_ManSetDefaultParams(&options)
-		options.NBTLimit = pars.nBTLimitInter
-		options.FVerbose = pars.fVeryVerbose
+		options.NBTLimit = pars.NBTLimitInter
+		options.FVerbose = pars.FVeryVerbose
 		var depth int32
 		outputs := graph.OutputCount() - int(graph.RegisterCount())
 		if outputs == 1 {
 			status = interp.Inter_ManPerformInterpolation(graph, &options, &depth)
-		} else if pars.fInterSeparate != 0 {
+		} else if pars.FInterSeparate != 0 {
 			remaining := 0
 			foundCex := false
 			for i, out := range graph.Outputs()[:outputs] {
@@ -356,11 +356,11 @@ func fraFraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph, verif
 			}
 		}
 	}
-	if pars.fReachability != 0 && status == -1 && graph.RegisterCount() > 0 && graph.RegisterCount() < pars.nBddVarsMax {
+	if pars.fReachability != 0 && status == -1 && graph.RegisterCount() > 0 && graph.RegisterCount() < pars.NBddVarsMax {
 		var options bbr.Saig_ParBbr_t
 		bbr.Bbr_ManSetDefaultParams(&options)
-		options.NBddMax = pars.nBddMax
-		options.NIterMax = pars.nBddIterMax
+		options.NBddMax = pars.NBddMax
+		options.NIterMax = pars.NBddIterMax
 		options.FPartition = 1
 		options.FReorder = 1
 		options.FReorderImage = 1
@@ -368,10 +368,10 @@ func fraFraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph, verif
 		secRefreshTrueCounts(graph)
 		status = bbr.Aig_ManVerifyUsingBdds(graph, &options)
 	}
-	if pars.fUsePdr != 0 && status == -1 && graph.RegisterCount() > 0 {
+	if pars.FUsePdr != 0 && status == -1 && graph.RegisterCount() > 0 {
 		options := pdr.DefaultOptions()
-		options.Timeout = time.Duration(pars.nPdrTimeout) * time.Second
-		options.Verbose = pars.fVerbose != 0
+		options.Timeout = time.Duration(pars.NPdrTimeout) * time.Second
+		options.Verbose = pars.FVerbose != 0
 		answer, err := pdr.Solve(graph, &options)
 		if err == nil {
 			status = int32(answer.Status)

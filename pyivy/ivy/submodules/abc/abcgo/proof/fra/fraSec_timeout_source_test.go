@@ -28,16 +28,16 @@ func TestSecGlobalBudgetAndResultSource(t *testing.T) {
 			var p Fra_Sec_t
 			Fra_SecSetDefaultParams(&p)
 			p.fSilent = 1
-			p.fRetimeFirst = 0
-			p.fRetimeRegs = 0
-			p.fFraiging = 0
-			p.fInduction = 1
-			p.nFramesMax = tc.frames
-			p.nBTLimitGlobal = tc.global
+			p.FRetimeFirst = 0
+			p.FRetimeRegs = 0
+			p.FFraiging = 0
+			p.FInduction = 1
+			p.NFramesMax = tc.frames
+			p.NBTLimitGlobal = tc.global
 			p.fReachability = 0
-			p.fUsePdr = 0
-			p.fInterpolation = 1
-			p.fInterSeparate = 0
+			p.FUsePdr = 0
+			p.FInterpolation = 1
+			p.FInterSeparate = 0
 			sentinel := aig.NewGraph()
 			result := sentinel
 			status := Fra_FraigSec(g, &p, &result)

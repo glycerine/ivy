@@ -68,13 +68,13 @@ func TestSecSeparateInterpolationAgainstReachability(t *testing.T) {
 		var pars Fra_Sec_t
 		Fra_SecSetDefaultParams(&pars)
 		pars.fSilent = 1
-		pars.fInterSeparate = 1
-		pars.fRetimeFirst = 0
-		pars.fRetimeRegs = 0
-		pars.fInduction = 0
-		pars.fFraiging = 0
+		pars.FInterSeparate = 1
+		pars.FRetimeFirst = 0
+		pars.FRetimeRegs = 0
+		pars.FInduction = 0
+		pars.FFraiging = 0
 		pars.fReachability = 0
-		pars.fUsePdr = 0
+		pars.FUsePdr = 0
 		status := Fra_FraigSecVerified(g, &pars, nil)
 		// These deterministic fixtures reach separate-output interpolation and
 		// produce a verified witness, rather than only an unknown result.

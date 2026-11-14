@@ -52,9 +52,9 @@ func TestSecSeparateInterpolationMatchesSourceWitness(t *testing.T) {
 	}
 	var pars Fra_Sec_t
 	Fra_SecSetDefaultParams(&pars)
-	pars.fSilent, pars.fInterSeparate = 1, 1
-	pars.fRetimeFirst, pars.fRetimeRegs, pars.fInduction, pars.fFraiging = 0, 0, 0, 0
-	pars.fReachability, pars.fUsePdr = 0, 0
+	pars.fSilent, pars.FInterSeparate = 1, 1
+	pars.FRetimeFirst, pars.FRetimeRegs, pars.FInduction, pars.FFraiging = 0, 0, 0, 0
+	pars.fReachability, pars.FUsePdr = 0, 0
 	var reduced *aig.Graph
 	status := Fra_FraigSec(g, &pars, &reduced)
 	cex := g.SequentialCounterexample()

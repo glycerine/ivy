@@ -39,7 +39,7 @@ func TestInductionGeneratedTwoRegisterCircuits(t *testing.T) {
 				g.AddOutput(e)
 			}
 			aig.Aig_ManSetRegNum(g, 2)
-			reduced := Fra_FraigInduction(g, &Fra_Ssw_t{nFramesK: frames, nPartSize: config.partition, fLatchCorr: config.latchOnly, fRewrite: config.rewrite, nMaxLevs: config.levels})
+			reduced := Fra_FraigInduction(g, &Fra_Ssw_t{NFramesK: frames, NPartSize: config.partition, FLatchCorr: config.latchOnly, FRewrite: config.rewrite, NMaxLevs: config.levels})
 			if reduced == nil {
 				// A stalled refinement returns unknown rather than an unsafe result.
 				continue

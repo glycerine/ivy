@@ -21,19 +21,19 @@ type abctime = time.Duration
 type Fra_Par_t = framgr.CombOptions
 
 type Fra_Ssw_t struct {
-	nPartSize, nOverSize, nFramesP, nFramesK, nMaxImps, nMaxLevs, nMinDomSize          int32
-	fUseImps, fRewrite, fFraiging, fLatchCorr, fWriteImps, fUse1Hot, fVerbose, fSilent int32
+	NPartSize, NOverSize, NFramesP, NFramesK, NMaxImps, NMaxLevs, nMinDomSize          int32
+	FUseImps, FRewrite, FFraiging, FLatchCorr, FWriteImps, FUse1Hot, FVerbose, fSilent int32
 	nIters                                                                             int32
 	TimeLimit                                                                          float32
 }
 
 type Fra_Sec_t struct {
-	fTryComb, fTryBmc, nFramesMax, nBTLimit, nBTLimitGlobal, nBTLimitInter    int32
-	nBddVarsMax, nBddMax, nBddIterMax, nPdrTimeout                            int32
-	fPhaseAbstract, fRetimeFirst, fRetimeRegs, fFraiging, fInduction          int32
-	fInterpolation, fInterSeparate, fReachability, fReorderImage              int32
-	fStopOnFirstFail, fUseNewProver, fUsePdr, fSilent, fVerbose, fVeryVerbose int32
-	TimeLimit, fReadUnsolved, nSMnumber, fRecursive, fReportSolution          int32
+	FTryComb, FTryBmc, NFramesMax, NBTLimit, NBTLimitGlobal, NBTLimitInter    int32
+	NBddVarsMax, NBddMax, NBddIterMax, NPdrTimeout                            int32
+	FPhaseAbstract, FRetimeFirst, FRetimeRegs, FFraiging, FInduction          int32
+	FInterpolation, FInterSeparate, fReachability, FReorderImage              int32
+	fStopOnFirstFail, FUseNewProver, FUsePdr, fSilent, FVerbose, FVeryVerbose int32
+	TimeLimit, FReadUnsolved, NSMnumber, fRecursive, FReportSolution          int32
 }
 
 type Fra_Cla_t = classPartition

@@ -29,15 +29,15 @@ func TestSecSingleOutputInterpolationSource(t *testing.T) {
 			var p Fra_Sec_t
 			Fra_SecSetDefaultParams(&p)
 			p.fSilent = 1
-			p.fRetimeFirst = 0
-			p.fRetimeRegs = 0
-			p.fFraiging = 0
-			p.fInduction = 0
+			p.FRetimeFirst = 0
+			p.FRetimeRegs = 0
+			p.FFraiging = 0
+			p.FInduction = 0
 			p.fReachability = 0
-			p.fUsePdr = 0
-			p.fInterpolation = tc.enable
-			p.fInterSeparate = tc.separate
-			p.nBTLimitInter = tc.limit
+			p.FUsePdr = 0
+			p.FInterpolation = tc.enable
+			p.FInterSeparate = tc.separate
+			p.NBTLimitInter = tc.limit
 			var reduced *aig.Graph
 			status := Fra_FraigSec(g, &p, &reduced)
 			cex := g.SequentialCounterexample()

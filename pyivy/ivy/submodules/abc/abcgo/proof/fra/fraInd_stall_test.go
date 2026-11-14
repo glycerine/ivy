@@ -23,7 +23,7 @@ func TestInductionStalledRefinementReturnsResult(t *testing.T) {
 		g.AddOutput(in)
 		g.AddOutput(in)
 		aig.Aig_ManSetRegNum(g, 2)
-		pars := &Fra_Ssw_t{nFramesK: 1}
+		pars := &Fra_Ssw_t{NFramesK: 1}
 		result := Fra_FraigInduction(g, pars)
 		if result == nil {
 			t.Fatal("stalled induction must return the current reduction")

@@ -9,7 +9,7 @@ import (
 func TestSecDefaultsAndTrivialMiter(t *testing.T) {
 	var opts Fra_Sec_t
 	Fra_SecSetDefaultParams(&opts)
-	if opts.nFramesMax != 4 || opts.nBTLimit != 1000 || opts.fUsePdr != 1 || opts.fInterpolation != 1 {
+	if opts.NFramesMax != 4 || opts.NBTLimit != 1000 || opts.FUsePdr != 1 || opts.FInterpolation != 1 {
 		t.Fatalf("defaults %+v", opts)
 	}
 	for _, fails := range []bool{false, true} {
@@ -62,8 +62,8 @@ func TestSecSequentialMiterSafeAndFailing(t *testing.T) {
 			var pars Fra_Sec_t
 			Fra_SecSetDefaultParams(&pars)
 			pars.fSilent = 1
-			pars.fRetimeFirst = 0
-			pars.fRetimeRegs = 0
+			pars.FRetimeFirst = 0
+			pars.FRetimeRegs = 0
 			if got := Fra_FraigSec(g, &pars, nil); got != tc.want {
 				t.Fatalf("status=%d want=%d", got, tc.want)
 			}
@@ -121,13 +121,13 @@ func TestSecGlobalConflictLimitReturnsUnknown(t *testing.T) {
 	var pars Fra_Sec_t
 	Fra_SecSetDefaultParams(&pars)
 	pars.fSilent = 1
-	pars.fRetimeFirst = 0
-	pars.fRetimeRegs = 0
-	pars.fFraiging = 0
-	pars.fInterpolation = 0
+	pars.FRetimeFirst = 0
+	pars.FRetimeRegs = 0
+	pars.FFraiging = 0
+	pars.FInterpolation = 0
 	pars.fReachability = 0
-	pars.fUsePdr = 0
-	pars.nBTLimitGlobal = -1
+	pars.FUsePdr = 0
+	pars.NBTLimitGlobal = -1
 	var reduced *aig.Graph
 	if got := Fra_FraigSec(g, &pars, &reduced); got != -1 {
 		t.Fatalf("status=%d, want unknown", got)
