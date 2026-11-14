@@ -239,3 +239,16 @@ ordinary/deleted/sequential/typed-choice diagnostic cases byte for byte, and
 focused race tests pass. Full AIG tests pass on this state; ABCI verification
 is logged in /tmp/abcgo-manager-current-review.log. Manager cleanup's typed
 buffer behavior and final file inventory remain open audit work.
+
+Manager cleanup source repair: two red regressions exposed output-reachability
+semantics and buffer-inclusive return counts in Aig_ManCleanup. It now uses C's
+zero-reference AND/XOR roots and the existing recursive pin-release helper,
+counting gates and batching fanout rebuilds. A native fixture matches 1,024
+cleanup calls across 512 graphs, including typed buffers/XORs, weak choices,
+reference holds, hash state and physical fanouts. Full AIG/ABCI/SAIG race suites
+and the expanded focused race test pass.
+
+Sequential cleanup's former general sweep is now local to sclCleanupLogic.
+Its typed-buffer, terminal-removal and Basic patch/delete boundaries remain an
+open source-fidelity review. The earlier sequential tests are not proof of
+matching those C boundaries; no claim of package completion is made here.

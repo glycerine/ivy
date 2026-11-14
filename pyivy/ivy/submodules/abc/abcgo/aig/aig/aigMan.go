@@ -74,48 +74,23 @@ func Aig_ManStopP(p **Graph) {
 	}
 }
 func Aig_ManCleanup(p *Graph) int32 {
-	live := make([]bool, len(p.nodes))
-	live[0] = true
-	for _, e := range p.inputs {
-		live[e.NodeID()] = true
-	}
-	var visit func(Edge)
-	visit = func(e Edge) {
-		id := e.NodeID()
-		if live[id] {
-			return
-		}
-		live[id] = true
-		n := p.nodes[id]
-		if n.Kind == And || n.Kind == ExclusiveOr || (n.Kind == Buffer || n.Kind == Output) {
-			visit(n.Fanins[0])
-			if n.Kind != Buffer && n.Kind != Output {
-				visit(n.Fanins[1])
-			}
+	before := Aig_ManNodeNum(p)
+	var roots []Edge
+	for id, node := range p.nodes {
+		if !p.deleted[id] && (node.Kind == And || node.Kind == ExclusiveOr) && node.Refs == 0 {
+			roots = append(roots, Edge(id)<<1)
 		}
 	}
-	for _, e := range p.outputs {
-		visit(e)
+	// Batch fanout rebuilding while the source recursive deletion updates each
+	// physical pin and reference count. Buffers are deleted only recursively.
+	p.editDepth++
+	defer func() { p.editDepth--; p.refreshFanouts() }()
+	for _, root := range roots {
+		Aig_ObjDelete_rec(p, root, 1)
 	}
-	var removed int32
-	for id, n := range p.nodes {
-		if p.deleted[id] || live[id] {
-			continue
-		}
-		p.deleted[id] = true
-		removed++
-		if n.Kind == And || n.Kind == ExclusiveOr {
-			a, b := n.Fanins[0], n.Fanins[1]
-			if a > b {
-				a, b = b, a
-			}
-			delete(p.nodeTable(n.Kind), edgePair{a, b})
-		}
-	}
-	p.recountReferences()
-	p.refreshFanouts()
-	return removed
+	return before - Aig_ManNodeNum(p)
 }
+
 func (p *Graph) recountReferences() {
 	for i := range p.nodes {
 		p.nodes[i].Refs = 0

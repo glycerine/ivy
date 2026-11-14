@@ -243,11 +243,49 @@ func Aig_ManSeqCleanup(p *Graph) int32 {
 	return sclCleanupLogic(p)
 }
 
-// The source APIs report removed gates, not terminal/buffer storage reclaimed
-// by the Go manager's more general reachability cleanup.
+// Register removal currently reclaims storage by reachability after dropping
+// interface entries. Its buffer boundary needs a separate source review; keep
+// this broader sweep separate from reference-driven Aig_ManCleanup.
 func sclCleanupLogic(p *Graph) int32 {
 	before := Aig_ManNodeNum(p)
-	Aig_ManCleanup(p)
+	live := make([]bool, len(p.nodes))
+	live[0] = true
+	for _, e := range p.inputs {
+		live[e.NodeID()] = true
+	}
+	var visit func(Edge)
+	visit = func(e Edge) {
+		id := e.NodeID()
+		if live[id] {
+			return
+		}
+		live[id] = true
+		n := p.nodes[id]
+		if n.Kind == And || n.Kind == ExclusiveOr || (n.Kind == Buffer || n.Kind == Output) {
+			visit(n.Fanins[0])
+			if n.Kind != Buffer && n.Kind != Output {
+				visit(n.Fanins[1])
+			}
+		}
+	}
+	for _, e := range p.outputs {
+		visit(e)
+	}
+	for id, n := range p.nodes {
+		if p.deleted[id] || live[id] {
+			continue
+		}
+		p.deleted[id] = true
+		if n.Kind == And || n.Kind == ExclusiveOr {
+			a, b := n.Fanins[0], n.Fanins[1]
+			if a > b {
+				a, b = b, a
+			}
+			delete(p.nodeTable(n.Kind), edgePair{a, b})
+		}
+	}
+	p.recountReferences()
+	p.refreshFanouts()
 	return before - Aig_ManNodeNum(p)
 }
 func Aig_ManSeqCleanupBasic(p *Graph) int32 {

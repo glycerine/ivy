@@ -1793,3 +1793,45 @@ The remaining manager/cleanup and file-by-file inventory need reconciliation
 before closing aig/aig. In particular, recheck cleanup's typed buffer handling
 against C rather than assuming the earlier ordinary-AND tests cover it. The
 full sequential goal remains active, with 1/131 packages completed.
+
+### Reference-driven manager cleanup source repair
+
+Read Aig_ManCleanup, AntiCleanup, CiCleanup and CoCleanup against aigMan.c,
+including recursive pin disconnection/deletion in aigObj.c. The manager cleanup
+was an output-reachability sweep instead of C's zero-reference AND/XOR-root
+collection and recursive reference release. Two minimal regressions failed:
+a standalone buffer plus its gate was removed (reported two instead of zero),
+and a dead AND cone containing a buffer reported three instead of two gates.
+
+Restored the source primitive using the existing Aig_ObjDelete_rec helper.
+Initial roots are collected before mutation; recursive deletion releases each
+physical pin, removes hash entries, and deletes buffers only when encountered
+inside a dead gate cone. The return value counts AND/XOR gates. A temporary
+reference hold now preserves its node as in C. Fanout rebuilds are batched
+around the entire operation instead of rebuilding after each recursive delete.
+The source primitive does not regard auxiliary choice links as references and
+does not rewrite caller-owned choice tables; callers must rebuild weak entries
+before subsequent choice traversal. Directed tests and native choice cases
+verify that boundary without inventing a choice-preserving cleanup algorithm.
+
+The compiled fixture uses production C allocation, pin connections, hash tables,
+fanouts and recursive deletion. Across 512 graphs and 1,024 cleanup calls,
+removed counts, remaining gates/hash entries, every object's liveness/fanins/
+references, and circular physical fanout lists match. Cases include ANDs,
+physical XORs, complemented pins, standalone/nested buffers, equivalent choice
+alternatives, a held reference and release followed by a second cleanup. Graph
+invariants pass after releasing the temporary hold. Focused race tests pass in
+2.385s (`/tmp/abcgo-cleanup-source-final.log`). Full AIG, ABCI and SAIG race
+suites pass in 58.246s/29.134s/5.903s
+(`/tmp/abcgo-cleanup-source-review.log`), before the final choice-only fixture
+extension; that extension is included in the focused check.
+
+The previous broader sweep remains confined to the existing sequential
+register-removal helper. Moved its body into sclCleanupLogic and removed the
+unused storage-removal tally while preserving its existing behavior. This is
+an explicitly OPEN fidelity issue, not a source-equivalent wrapper: the earlier
+sequential buffer test established the Go behavior without comparing that
+boundary against C. Next extend the native oracle to SeqCleanup/Basic, checking
+terminal disconnection, retained buffers, CioID refresh and the Basic patch's
+immediate deletion/return-count boundary. Recheck Aig_ManExtractMiter's source
+phase normalization afterward. The package-wide audit remains open at 1/131.
