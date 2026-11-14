@@ -11,7 +11,7 @@ package cba
   Synopsis    [Reading binary representation.]
 
   Author      [Alan Mishchenko]
-  
+
   Affiliation [UC Berkeley]
 
   Date        [Ver. 1.0. Started - July 21, 2015.]
@@ -32,19 +32,21 @@ package cba
 ///                     FUNCTION DEFINITIONS                         ///
 ////////////////////////////////////////////////////////////////////////
 
-/**Function*************************************************************
+/*
+*Function*************************************************************
 
-  Synopsis    []
+	Synopsis    []
 
-  Description []
-               
-  SideEffects []
+	Description []
 
-  SeeAlso     []
+	SideEffects []
 
-***********************************************************************/
+	SeeAlso     []
+
+**********************************************************************
+*/
 func Cba_ManReadCba(pFileName string) *Cba_Man_t {
-    return nil;
+	return nil
 }
 func Cba_ManWriteCba(pFileName string, p *Cba_Man_t) {
 }
@@ -53,6 +55,4 @@ func Cba_ManWriteCba(pFileName string, p *Cba_Man_t) {
 ///                       END OF FILE                                ///
 ////////////////////////////////////////////////////////////////////////
 
-
 //ABC_NAMESPACE_IMPL_END
-

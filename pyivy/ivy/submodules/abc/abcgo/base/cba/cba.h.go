@@ -3,6 +3,8 @@ package cba
 import (
 	"fmt"
 	"strconv"
+	"strings"
+	"unsafe"
 )
 
 /**CFile****************************************************************
@@ -122,7 +124,7 @@ type Cba_Man_t_ struct {
 func Cba_ManName(p *Cba_Man_t) string            { return p.pName }
 func Cba_ManSpec(p *Cba_Man_t) string            { return p.pSpec }
 func Cba_ManNtkNum(p *Cba_Man_t) int32           { return Vec_PtrSize(&p.vNtks) - 1 }
-func Cba_ManNtkIsOk(p *Cba_Man_t, i int32) int32 { return i > 0 && i <= Cba_ManNtkNum(p) }
+func Cba_ManNtkIsOk(p *Cba_Man_t, i int32) int32 { return boolToInt(i > 0 && i <= Cba_ManNtkNum(p)) }
 func Cba_ManNtk(p *Cba_Man_t, i int32) *Cba_Ntk_t {
 	if Cba_ManNtkIsOk(p, i) != 0 {
 		value := Vec_PtrEntry(&p.vNtks, i)
@@ -207,7 +209,7 @@ func Cba_NtkTypeNum(p *Cba_Ntk_t, Type int32) int32 {
 	return Vec_StrCountEntry(&p.vObjType, byte(Type))
 }
 func Cba_NtkBoxNum(p *Cba_Ntk_t) int32     { return Cba_NtkObjNum(p) - Cba_NtkPioNum(p) }
-func Cba_NtkBoxUserNum(p *Cba_Ntk_t) int32 { return Cba_NtkTypeNum(p, CBA_OBJ_BOX) }
+func Cba_NtkBoxUserNum(p *Cba_Ntk_t) int32 { return Cba_NtkTypeNum(p, int32(CBA_OBJ_BOX)) }
 func Cba_NtkBoxPrimNum(p *Cba_Ntk_t) int32 { return Vec_StrCountLarger(&p.vObjType, byte(CBA_OBJ_BOX)) }
 func Cba_NtkBoxSeqNum(p *Cba_Ntk_t) int32  { return Vec_IntSize(&p.vSeq) }
 
@@ -226,17 +228,17 @@ func Cba_NtkCleanFonNexts(p *Cba_Ntk_t)  { Vec_IntFill(&p.vFonNext, Vec_IntCap(&
 func Cba_NtkCleanFinFon0(p *Cba_Ntk_t)   { Vec_IntFill(&p.vFinFon0, Vec_IntCap(&p.vFinFon), 0) }
 func Cba_NtkCleanFinObjs(p *Cba_Ntk_t)   { Vec_IntFill(&p.vFinObj, Vec_IntCap(&p.vFinFon), 0) }
 
-func Cba_NtkHasObjCopies(p *Cba_Ntk_t) int32 { return Vec_IntSize(&p.vObjCopy) > 0 }
-func Cba_NtkHasObjFuncs(p *Cba_Ntk_t) int32  { return Vec_IntSize(&p.vObjFunc) > 0 }
-func Cba_NtkHasObjNames(p *Cba_Ntk_t) int32  { return Vec_IntSize(&p.vObjName) > 0 }
-func Cba_NtkHasObjAttrs(p *Cba_Ntk_t) int32  { return Vec_IntSize(&p.vObjAttr) > 0 }
-func Cba_NtkHasFonCopies(p *Cba_Ntk_t) int32 { return Vec_IntSize(&p.vFonCopy) > 0 }
-func Cba_NtkHasFonNames(p *Cba_Ntk_t) int32  { return Vec_IntSize(&p.vFonName) > 0 }
-func Cba_NtkHasFonRanges(p *Cba_Ntk_t) int32 { return Vec_IntSize(&p.vFonRange) > 0 }
-func Cba_NtkHasFonPrevs(p *Cba_Ntk_t) int32  { return Vec_IntSize(&p.vFonPrev) > 0 }
-func Cba_NtkHasFonNexts(p *Cba_Ntk_t) int32  { return Vec_IntSize(&p.vFonNext) > 0 }
-func Cba_NtkHasFinFon0(p *Cba_Ntk_t) int32   { return Vec_IntSize(&p.vFinFon0) > 0 }
-func Cba_NtkHasFinObjs(p *Cba_Ntk_t) int32   { return Vec_IntSize(&p.vFinObj) > 0 }
+func Cba_NtkHasObjCopies(p *Cba_Ntk_t) int32 { return boolToInt(Vec_IntSize(&p.vObjCopy) > 0) }
+func Cba_NtkHasObjFuncs(p *Cba_Ntk_t) int32  { return boolToInt(Vec_IntSize(&p.vObjFunc) > 0) }
+func Cba_NtkHasObjNames(p *Cba_Ntk_t) int32  { return boolToInt(Vec_IntSize(&p.vObjName) > 0) }
+func Cba_NtkHasObjAttrs(p *Cba_Ntk_t) int32  { return boolToInt(Vec_IntSize(&p.vObjAttr) > 0) }
+func Cba_NtkHasFonCopies(p *Cba_Ntk_t) int32 { return boolToInt(Vec_IntSize(&p.vFonCopy) > 0) }
+func Cba_NtkHasFonNames(p *Cba_Ntk_t) int32  { return boolToInt(Vec_IntSize(&p.vFonName) > 0) }
+func Cba_NtkHasFonRanges(p *Cba_Ntk_t) int32 { return boolToInt(Vec_IntSize(&p.vFonRange) > 0) }
+func Cba_NtkHasFonPrevs(p *Cba_Ntk_t) int32  { return boolToInt(Vec_IntSize(&p.vFonPrev) > 0) }
+func Cba_NtkHasFonNexts(p *Cba_Ntk_t) int32  { return boolToInt(Vec_IntSize(&p.vFonNext) > 0) }
+func Cba_NtkHasFinFon0(p *Cba_Ntk_t) int32   { return boolToInt(Vec_IntSize(&p.vFinFon0) > 0) }
+func Cba_NtkHasFinObjs(p *Cba_Ntk_t) int32   { return boolToInt(Vec_IntSize(&p.vFinObj) > 0) }
 
 func Cba_NtkFreeObjCopies(p *Cba_Ntk_t) { Vec_IntErase(&p.vObjCopy) }
 func Cba_NtkFreeObjFuncs(p *Cba_Ntk_t)  { Vec_IntErase(&p.vObjFunc) }
@@ -259,18 +261,26 @@ func Cba_ObjCleanType(p *Cba_Ntk_t, i int32) {
 	Vec_StrWriteEntry(&p.vObjType, i, byte(CBA_OBJ_NONE))
 }
 
-func Cba_ObjIsPi(p *Cba_Ntk_t, i int32) int32      { return Cba_ObjType(p, i) == CBA_OBJ_PI }
-func Cba_ObjIsPo(p *Cba_Ntk_t, i int32) int32      { return Cba_ObjType(p, i) == CBA_OBJ_PO }
-func Cba_ObjIsPio(p *Cba_Ntk_t, i int32) int32     { return Cba_ObjIsPi(p, i) || Cba_ObjIsPo(p, i) }
-func Cba_ObjIsBox(p *Cba_Ntk_t, i int32) int32     { return Cba_TypeIsBox(Cba_ObjType(p, i)) }
-func Cba_ObjIsBoxUser(p *Cba_Ntk_t, i int32) int32 { return Cba_ObjType(p, i) == CBA_OBJ_BOX }
-func Cba_ObjIsBoxPrim(p *Cba_Ntk_t, i int32) int32 {
-	return Cba_ObjType(p, i) > CBA_OBJ_BOX && Cba_ObjType(p, i) < CBA_BOX_LAST
+func Cba_ObjIsPi(p *Cba_Ntk_t, i int32) int32 { return boolToInt(Cba_ObjType(p, i) == CBA_OBJ_PI) }
+func Cba_ObjIsPo(p *Cba_Ntk_t, i int32) int32 { return boolToInt(Cba_ObjType(p, i) == CBA_OBJ_PO) }
+func Cba_ObjIsPio(p *Cba_Ntk_t, i int32) int32 {
+	return boolToInt(Cba_ObjIsPi(p, i) != 0 || Cba_ObjIsPo(p, i) != 0)
 }
-func Cba_ObjIsGate(p *Cba_Ntk_t, i int32) int32   { return Cba_ObjType(p, i) == CBA_BOX_GATE }
-func Cba_ObjIsSlice(p *Cba_Ntk_t, i int32) int32  { return Cba_ObjType(p, i) == CBA_BOX_SLICE }
-func Cba_ObjIsConcat(p *Cba_Ntk_t, i int32) int32 { return Cba_ObjType(p, i) == CBA_BOX_CONCAT }
-func Cba_ObjIsUnary(p *Cba_Ntk_t, i int32) int32  { return Cba_TypeIsUnary(Cba_ObjType(p, i)) }
+func Cba_ObjIsBox(p *Cba_Ntk_t, i int32) int32 { return Cba_TypeIsBox(Cba_ObjType(p, i)) }
+func Cba_ObjIsBoxUser(p *Cba_Ntk_t, i int32) int32 {
+	return boolToInt(Cba_ObjType(p, i) == CBA_OBJ_BOX)
+}
+func Cba_ObjIsBoxPrim(p *Cba_Ntk_t, i int32) int32 {
+	return boolToInt(Cba_ObjType(p, i) > CBA_OBJ_BOX && Cba_ObjType(p, i) < CBA_BOX_LAST)
+}
+func Cba_ObjIsGate(p *Cba_Ntk_t, i int32) int32 { return boolToInt(Cba_ObjType(p, i) == CBA_BOX_GATE) }
+func Cba_ObjIsSlice(p *Cba_Ntk_t, i int32) int32 {
+	return boolToInt(Cba_ObjType(p, i) == CBA_BOX_SLICE)
+}
+func Cba_ObjIsConcat(p *Cba_Ntk_t, i int32) int32 {
+	return boolToInt(Cba_ObjType(p, i) == CBA_BOX_CONCAT)
+}
+func Cba_ObjIsUnary(p *Cba_Ntk_t, i int32) int32 { return Cba_TypeIsUnary(Cba_ObjType(p, i)) }
 
 func Cba_ObjFin0(p *Cba_Ntk_t, i int32) int32 {
 	assert(i > 0, "i>0")
@@ -332,10 +342,10 @@ func Cba_ObjAttrSize(p *Cba_Ntk_t, i int32) int32 {
 		return 0
 	}
 }
-func Cba_ObjAttrArray(p *Cba_Ntk_t, i int32) *int32 {
+func Cba_ObjAttrArray(p *Cba_Ntk_t, i int32) []int32 {
 	assert(i >= 0, "i>=0")
 	if Cba_ObjAttr(p, i) != 0 {
-		return Vec_IntEntryP(&p.vAttrSto, Cba_ObjAttr(p, i)+1)
+		return Vec_IntArray(&p.vAttrSto)[Cba_ObjAttr(p, i)+1:]
 	} else {
 		return nil
 	}
@@ -343,7 +353,7 @@ func Cba_ObjAttrArray(p *Cba_Ntk_t, i int32) *int32 {
 func Cba_ObjAttrValue(p *Cba_Ntk_t, i int32, x int32) int32 {
 	var k int32
 	var s int32 = Cba_ObjAttrSize(p, i)
-	var a *int32 = Cba_ObjAttrArray(p, i)
+	a := Cba_ObjAttrArray(p, i)
 	for k = 0; k < s; k += 2 {
 		if a[k] == x {
 			return a[k+1]
@@ -364,14 +374,14 @@ func Cba_ObjSetName(p *Cba_Ntk_t, i int32, x int32) {
 	assert(Cba_ObjName(p, i) == 0, "Cba_ObjName(p, i) ==  0")
 	Vec_IntSetEntry(&p.vObjName, i, x)
 }
-func Cba_ObjSetAttrs(p *Cba_Ntk_t, i int32, a *int32, s int32) {
+func Cba_ObjSetAttrs(p *Cba_Ntk_t, i int32, a []int32, s int32) {
 	assert(Cba_ObjAttr(p, i) == 0, "Cba_ObjAttr(p, i) == 0")
 	if !(a != nil) {
 		return
 	}
 	Vec_IntSetEntry(&p.vObjAttr, i, Vec_IntSize(&p.vAttrSto))
 	Vec_IntPush(&p.vAttrSto, s)
-	Vec_IntPushArray(&p.vAttrSto, a, s)
+	Vec_IntPushArray(&p.vAttrSto, a[:s], s)
 }
 
 func Cba_FinFon(p *Cba_Ntk_t, f int32) int32 {
@@ -427,26 +437,20 @@ func Cba_ObjSetNtkId(p *Cba_Ntk_t, i int32, x int32) {
 func Cba_ObjIsSeq(p *Cba_Ntk_t, i int32) int32 {
 	assert(i > 0, "i>0")
 	if Cba_ObjIsBoxUser(p, i) != 0 {
-		return Cba_ObjNtk(p, i).fSeq
+		return int32(Cba_ObjNtk(p, i).fSeq)
 	} else {
 		return Cba_TypeIsSeq(Cba_ObjType(p, i))
 	}
 }
 
-func Cba_FonIsReal(f int32) int32  { return f > 0 }
-func Cba_FonIsConst(f int32) int32 { return f < 0 }
-func Cba_FonConst(f int32) int32 {
-	assert((Cba_FonIsConst(f) != 0), "Cba_FonIsConst(f)")
-	return -f - 1
-}
-func Cba_FonFromConst(c int32) int32 { assert(c >= 0, "c >= 0"); return -c - 1 }
 func Cba_FonConstRangeSize(p *Cba_Ntk_t, f int32) int32 {
 	assert((Cba_FonIsConst(f) != 0), "Cba_FonIsConst(f)")
-	return strconv.Atoi(Cba_NtkConst(p, Cba_FonConst(f)))
+	value, _ := strconv.Atoi(Cba_NtkConst(p, Cba_FonConst(f)))
+	return int32(value)
 }
 func Cba_FonConstSigned(p *Cba_Ntk_t, f int32) int32 {
 	assert((Cba_FonIsConst(f) != 0), "Cba_FonIsConst(f)")
-	return strchr(Cba_NtkConst(p, Cba_FonConst(f)), 's') != nil
+	return boolToInt(strings.Contains(Cba_NtkConst(p, Cba_FonConst(f)), "s"))
 }
 
 func Cba_FonObj(p *Cba_Ntk_t, f int32) int32 {
@@ -682,14 +686,14 @@ func Cba_ObjAlloc(p *Cba_Ntk_t, Type Cba_ObjType_t, nFins int32, nFons int32) in
 	for i = 0; i < nFins; i++ {
 		Vec_IntPush(&p.vFinFon, 0)
 	}
-	if Vec_IntSize(&p.vObjFin0) {
+	if Vec_IntSize(&p.vObjFin0) != 0 {
 		Vec_IntPush(&p.vObjFin0, Vec_IntSize(&p.vFinFon))
 	}
 	// add fons
 	for i = 0; i < nFons; i++ {
 		Vec_IntPush(&p.vFonObj, iObj)
 	}
-	if Vec_IntSize(&p.vObjFon0) {
+	if Vec_IntSize(&p.vObjFon0) != 0 {
 		Vec_IntPush(&p.vObjFon0, Vec_IntSize(&p.vFonObj))
 	}
 	return iObj
@@ -788,15 +792,14 @@ func Cba_NtkNewStrId(pNtk *Cba_Ntk_t, format string, args ...any) int32 {
 	return Abc_NamStrFindOrAdd(Cba_NtkNam(pNtk), fmt.Sprintf(format, args...), nil)
 }
 func Cba_ManNewConstId(p *Cba_Ntk_t, vBits *Vec_Str_t) int32 {
-	var vOut *Vec_Str_t = Abc_NamBuffer(Cba_NtkNam(p))
-	Vec_StrPrintF(vOut, "%d'b%s", Vec_StrSize(vBits)-1, Vec_StrArray(vBits))
-	return Abc_NamStrFindOrAdd(p.pDesign.pFuns, Vec_StrArray(vOut), nil)
+	value := fmt.Sprintf("%d'b%s", Vec_StrSize(vBits)-1, string(Vec_StrArray(vBits)))
+	return Abc_NamStrFindOrAdd(p.pDesign.pFuns, value, nil)
 }
 func Cba_ManNewConstZero(p *Cba_Ntk_t, nBits int32) int32 {
-	var vOut *Vec_Str_t = Abc_NamBuffer(Cba_NtkNam(p))
-	Vec_StrPrintF(vOut, "%d'b%0s", nBits, "")
-	return Abc_NamStrFindOrAdd(p.pDesign.pFuns, Vec_StrArray(vOut), nil)
+	value := fmt.Sprintf("%d'b", nBits)
+	return Abc_NamStrFindOrAdd(p.pDesign.pFuns, value, nil)
 }
+
 func Cba_NtkAdd(p *Cba_Man_t, pNtk *Cba_Ntk_t) {
 	var fFound int32
 	var NtkId int32 = Abc_NamStrFindOrAdd(p.pMods, Cba_NtkName(pNtk), &fFound)
@@ -821,7 +824,7 @@ func Cba_NtkCollect(p *Cba_Ntk_t) *Vec_Int_t {
 	var vObjs *Vec_Int_t = Vec_IntAlloc(Cba_NtkObjNum(p))
 	// inlining of macro Cba_NtkForEachObj
 	for iObj = 1; iObj < Vec_StrSize(&p.vObjType); iObj++ {
-		if !Cba_ObjType(p, iObj) {
+		if Cba_ObjType(p, iObj) == CBA_OBJ_NONE {
 		} else {
 			Vec_IntPush(vObjs, iObj)
 		}
@@ -830,13 +833,13 @@ func Cba_NtkCollect(p *Cba_Ntk_t) *Vec_Int_t {
 }
 func Cba_NtkIsSeq(p *Cba_Ntk_t) int32 {
 	var iObj int32
-	if p.fSeq {
+	if p.fSeq != 0 {
 		return 1
 	}
-	if p.fComb {
+	if p.fComb != 0 {
 		return 0
 	}
-	assert(!p.fSeq && !p.fComb, "!p.fSeq && !p.fComb")
+	assert(p.fSeq == 0 && p.fComb == 0, "!p.fSeq && !p.fComb")
 	// inlining of macro Cba_NtkForEachBox
 	for iObj = 1; iObj < Vec_StrSize(&p.vObjType); iObj++ {
 		if !(Cba_ObjIsBox(p, iObj) != 0) {
@@ -956,7 +959,7 @@ func Cba_NtkDupAttrs(pNew *Cba_Ntk_t, p *Cba_Ntk_t) {
 	}
 }
 func Cba_NtkMemory(p *Cba_Ntk_t) int32 {
-	var nMem int32 = sizeof(Cba_Ntk_t)
+	var nMem int32 = int32(unsafe.Sizeof(Cba_Ntk_t{}))
 	// interface
 	nMem += int32(Vec_IntMemory(&p.vInputs))
 	nMem += int32(Vec_IntMemory(&p.vOutputs))
@@ -997,7 +1000,7 @@ func Cba_NtkPrintStats(p *Cba_Ntk_t) {
 	fmt.Printf("user =%5d  ", Cba_NtkBoxUserNum(p))
 	//printf( "topo =%4s  ", Cba_NtkIsTopoOrder(p) ? "yes" : "no" );
 	fmt.Printf("  %s ", Cba_NtkName(p))
-	if Vec_IntSize(&p.vNtkObjs) {
+	if Vec_IntSize(&p.vNtkObjs) != 0 {
 		fmt.Printf("-> %s", Cba_NtkName(Cba_NtkNtk(p, Vec_IntEntry(&p.vNtkObjs, 0))))
 	}
 	fmt.Printf("\n")
@@ -1113,7 +1116,7 @@ func Cba_ManFree(p *Cba_Man_t) {
 		pNtk = Cba_ManNtk(p, i)
 		Cba_NtkFree(pNtk)
 	}
-	p.vNtks.pArray = nil
+	Vec_PtrErase(&p.vNtks)
 	Abc_NamDeref(p.pStrs)
 	Abc_NamDeref(p.pFuns)
 	Abc_NamDeref(p.pMods)
@@ -1124,8 +1127,8 @@ func Cba_ManFree(p *Cba_Man_t) {
 	Vec_IntErase(&p.vUsed2)
 	Vec_StrErase(&p.vOut)
 	Vec_StrErase(&p.vOut2)
-	p.pName = nil
-	p.pSpec = nil
+	p.pName = ""
+	p.pSpec = ""
 	p = nil
 }
 func Cba_ManGetMap(p *Cba_Man_t, i int32) int32 {
@@ -1181,7 +1184,7 @@ func Cba_NtkCleanMap2(p *Cba_Ntk_t)                 { Cba_ManCleanMap2(p.pDesign
 func Cba_ManMemory(p *Cba_Man_t) int32 {
 	var pNtk *Cba_Ntk_t
 	var i int32
-	var nMem int32 = sizeof(Cba_Man_t)
+	var nMem int32 = int32(unsafe.Sizeof(Cba_Man_t{}))
 	nMem += int32(len(p.pName))
 	nMem += int32(len(p.pSpec))
 	nMem += Abc_NamMemUsed(p.pStrs)
@@ -1228,7 +1231,7 @@ func Cba_ManBoxNumRec_rec(p *Cba_Ntk_t, pCountP []int32, pCountU []int32) {
 	pCountP[Id], pCountU[Id] = 0, 0
 	// inlining of macro Cba_NtkForEachObj
 	for iObj = 1; iObj < Vec_StrSize(&p.vObjType); iObj++ {
-		if !Cba_ObjType(p, iObj) {
+		if Cba_ObjType(p, iObj) == CBA_OBJ_NONE {
 		} else {
 			if Cba_ObjIsBoxUser(p, iObj) != 0 {
 				Cba_ManBoxNumRec_rec(Cba_ObjNtk(p, iObj), pCountP, pCountU)
@@ -1264,7 +1267,7 @@ func Cba_ManPrintStats(p *Cba_Man_t, nModules int32, fVerbose int32) {
 	fmt.Printf("box =%5d  ", nPrims+nUsers)
 	fmt.Printf("prim =%5d  ", nPrims)
 	fmt.Printf("user =%5d  ", nUsers)
-	fmt.Printf("mem =%6.3f MB", 1.0*Cba_ManMemory(p)/(1<<20))
+	fmt.Printf("mem =%6.3f MB", float64(Cba_ManMemory(p))/float64(1<<20))
 	fmt.Printf("\n")
 	// inlining of macro Cba_ManForEachNtk
 	for i = 1; i <= Cba_ManNtkNum(p); i++ {
