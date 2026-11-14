@@ -32,17 +32,19 @@ not proof of correct results or coverage of every option and input.
 
 ## Correctness work and test evidence
 
-The scalable BMC implementation now appends the sequential AIG frame by frame,
-preserves prior node/variable IDs, adds only the new CNF suffix, and retains one
-BSAT solver across output/frame queries. Finite-bound exhaustion returns `-1`
-like C; return `1` is reserved for the small-state completeness cutoff. It also
-implements source jump/conflict transitions, global/gap/per-output timeout
-accounting, solve-all dropouts, and CEX storage/callback ownership. Tests pin
-frame extension/CNF-prefix stability, persistent solver growth, `nStart`, and
-CEX frame/PI indexing and replacement; backend tests cover BSAT, Satoko,
-Glucose, and source precedence. The remaining BMC3 gaps are C's ternary
-simulation, cut/hash CNF synthesis, dynamic cone worklists, bridge output and
-same-model cross-output CEX propagation (details in `proof/int/PORTING.md`).
+The scalable BMC implementation now incrementally maps frame/object literals,
+uses C's ternary pruning and mapped ≤4-leaf cut CNF with cross-frame hash reuse,
+and retains one SAT solver across frame/output queries. It preserves source
+variable/literal numbering and clause order; in solve-all mode it pre-encodes
+unsolved outputs in PO order before solving, as `bmcBmc3.c` does. Finite-bound
+exhaustion returns `-1`; return `1` is reserved for the small-state completeness
+cutoff. It also implements source jump/conflict transitions, global/gap/per-
+output timeout accounting, solve-all dropouts, bridge output, same-model output
+propagation, and CEX storage/callback ownership. Tests pin mapped variable and
+clause counts against compiled C, multi-output ordering under conflict limits,
+frame/witness semantics, and backend selection. Remaining differences include
+the SAT backend implementations themselves and Go wall-clock timeout accounting
+where ABC uses CPU ticks; see `proof/int/PORTING.md` for the INT caller boundary.
 
 The scalable BMC checker now counts each failed output once in `fSolveAll`
 mode. Previously, repeated failures of one output on successive frames could

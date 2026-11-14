@@ -9,7 +9,6 @@ import (
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/sat/bsat"
-	"github.com/glycerine/abcgo/sat/cnf"
 )
 
 // Saig_ParBmc_t contains options and accumulated status for scalable BMC.
@@ -119,9 +118,35 @@ func Saig_ManBmcScalable(graph *aig.Graph, params *Saig_ParBmc_t) int32 {
 		defer graph.SetSequentialCounterexamples(storedCEX)
 	}
 	var jumpFrame int32
-	inc := newBmcIncrementalUnroller(graph, regs, pis, pos)
+	cutManager, err := newBmc3CutManager(graph, regs, pis, pos)
+	if err != nil {
+		return -1
+	}
 	solver := newBmc3Solver(params)
-	clausesAdded := 0
+	// C initializes each BMC3 backend with 1000 SAT variables; variable 0 is
+	// reserved, and the cut manager's literals keep their native variable IDs.
+	for solver.NumVars() < 1000 {
+		solver.NewVariable()
+	}
+	syncCutCNF := func() bool {
+		for solver.NumVars() <= cutManager.variableCount() {
+			solver.NewVariable()
+		}
+		for _, clause := range cutManager.drainClauses() {
+			lits := make([]bsat.Literal, len(clause))
+			for i, cLit := range clause {
+				lit, err := bmcCToBSATLiteral(cLit)
+				if err != nil {
+					return false
+				}
+				lits[i] = bsat.Literal(lit)
+			}
+			if !solver.AddClause(lits...) {
+				return false
+			}
+		}
+		return true
+	}
 	for frame := int32(0); frame < maxFrames; frame++ {
 		// C checks completeness before adding the frame at 2^nRegs.
 		if completeAt >= 0 && params.nFramesJump == 0 && frame == completeAt {
@@ -143,28 +168,25 @@ func Saig_ManBmcScalable(graph *aig.Graph, params *Saig_ParBmc_t) int32 {
 			}
 			return 1
 		}
-		if err := inc.addFrame(); err != nil {
-			return -1
-		}
-		data, err := cnf.EncodeAIG(inc.graph, 0)
-		if err != nil {
-			return -1
-		}
-		for solver.NumVars() < int32(data.Variables) {
-			solver.NewVariable()
-		}
-		if clausesAdded > len(data.Clauses) {
-			return -1
-		}
-		for _, clause := range data.Clauses[clausesAdded:] {
-			if !solver.AddClause(clause...) {
-				return 1
-			}
-		}
-		clausesAdded = len(data.Clauses)
 		if frame < params.nStart || frame < jumpFrame {
 			params.iFrame = frame
 			continue
+		}
+		targets := make([]int32, pos)
+		if params.fSolveAll != 0 {
+			for output := int32(0); output < pos; output++ {
+				if failed[output] || spent[output] < 0 {
+					continue
+				}
+				target, ok := cutManager.outputLiteral(int(frame), output)
+				if !ok {
+					return -1
+				}
+				targets[output] = target
+			}
+			if !syncCutCNF() {
+				return 1
+			}
 		}
 		for output := int32(0); output < pos; output++ {
 			if params.fSolveAll != 0 && (failed[output] || spent[output] < 0) {
@@ -178,6 +200,16 @@ func Saig_ManBmcScalable(graph *aig.Graph, params *Saig_ParBmc_t) int32 {
 			}
 			if params.pFuncStop != nil && params.pFuncStop(params.RunId) != 0 {
 				return resultFromFailures(params)
+			}
+			if params.fSolveAll == 0 {
+				target, ok := cutManager.outputLiteral(int(frame), output)
+				if !ok {
+					return -1
+				}
+				targets[output] = target
+				if !syncCutCNF() {
+					return 1
+				}
 			}
 			solveStart := time.Now()
 			solveDeadline := deadline
@@ -198,16 +230,16 @@ func Saig_ManBmcScalable(graph *aig.Graph, params *Saig_ParBmc_t) int32 {
 			}
 			solver.SetDeadline(solveDeadline)
 			solver.SetLimits(int64(params.nConfLimit), 0)
-			coIndex := int(frame)*int(pos) + int(output)
-			if coIndex < 0 || coIndex >= len(inc.outputs) {
-				return -1
+			variable := targets[output]
+			var status bsat.Status
+			switch variable {
+			case 0:
+				status = bsat.Unsatisfiable
+			case 1:
+				status = bsat.Satisfiable
+			default:
+				status = solver.Solve(bmcCToBSATAssumption(variable))
 			}
-			co := inc.outputs[coIndex]
-			variable := data.VarNums[co.NodeID()]
-			if variable < 0 {
-				return -1
-			}
-			status := solver.Solve(bsat.Positive(variable))
 			spent[output] += time.Since(solveStart)
 			params.iFrame = frame
 			jumped := false
@@ -216,7 +248,7 @@ func Saig_ManBmcScalable(graph *aig.Graph, params *Saig_ParBmc_t) int32 {
 				found = true
 				failed[output] = true
 				params.nFailOuts++
-				model := makeBmcCounterexample(graph, inc.graph, inc.mapping, data.VarNums, solver, frame, output, pis)
+				model := cutManager.counterexample(solver, frame, output)
 				if params.fSolveAll != 0 && params.fUseBridge != 0 && model != nil {
 					_ = writeBmcBridgeResult(bmcBridgeWriter(params.pBridgeWriter), 0, model, output)
 				}
@@ -243,16 +275,13 @@ func Saig_ManBmcScalable(graph *aig.Graph, params *Saig_ParBmc_t) int32 {
 					if failed[other] {
 						continue
 					}
-					otherIndex := int(frame)*int(pos) + int(other)
-					if otherIndex < 0 || otherIndex >= len(inc.outputs) {
-						return -1
+					otherLiteral := targets[other]
+					otherSat := otherLiteral == 1
+					if otherLiteral >= 2 {
+						value, known := solver.Value(otherLiteral >> 1)
+						otherSat = known && value != (otherLiteral&1 != 0)
 					}
-					otherVariable := data.VarNums[inc.outputs[otherIndex].NodeID()]
-					if otherVariable < 0 {
-						continue
-					}
-					value, known := solver.Value(otherVariable)
-					if !known || !value {
+					if !otherSat {
 						continue
 					}
 					failed[other] = true
@@ -260,6 +289,7 @@ func Saig_ManBmcScalable(graph *aig.Graph, params *Saig_ParBmc_t) int32 {
 					otherModel := model
 					if otherModel != nil {
 						copy := *otherModel
+						copy.PData = append([]uint32(nil), otherModel.PData...)
 						copy.IPo = other
 						otherModel = &copy
 					}
@@ -273,11 +303,17 @@ func Saig_ManBmcScalable(graph *aig.Graph, params *Saig_ParBmc_t) int32 {
 			case bsat.Unsatisfiable:
 				// C retains the failed target as a permanent unit so subsequent
 				// incremental solves need not rediscover this output/frame result.
-				if !solver.AddClause(bsat.Negative(variable)) {
-					return 1
-				}
-				if defaultSolver, ok := solver.(*bsat.Solver); ok && !transferBmcLearnedUnits(defaultSolver) {
-					return 1
+				if variable >= 2 {
+					unit, err := bmcCToBSATLiteral(variable ^ 1)
+					if err != nil {
+						return -1
+					}
+					if !solver.AddClause(bsat.Literal(unit)) {
+						return 1
+					}
+					if defaultSolver, ok := solver.(*bsat.Solver); ok && !transferBmcLearnedUnits(defaultSolver) {
+						return 1
+					}
 				}
 				if params.fUseBridge != 0 {
 					_ = writeBmcBridgeProgress(bmcBridgeWriter(params.pBridgeWriter), output, frame)
@@ -318,6 +354,14 @@ func resultFromFailures(params *Saig_ParBmc_t) int32 {
 		return 0
 	}
 	return -1
+}
+
+func bmcCToBSATAssumption(cLit int32) bsat.Literal {
+	variable := cLit >> 1
+	if cLit&1 != 0 {
+		return bsat.Negative(variable)
+	}
+	return bsat.Positive(variable)
 }
 
 // bmcIncrementalUnroller appends a single frame at a time. Node IDs and CNF
