@@ -190,14 +190,14 @@ func Lpk_MapTree_rec(p *Lpk_Man_t, pNtk *Kit_DsdNtk_t, ppLeaves []*If_Obj_t, iLi
 		}
 	}
 	/*
-	   if ( !p->fCofactoring && p->pPars->nVarsShared > 0 && pObj->nFans > p->pPars->nLutSize )
+	   if ( !p->fCofactoring && p->pPars->NVarsShared > 0 && pObj->nFans > p->pPars->NLutSize )
 	   {
 	       pObjNew = Lpk_MapTreeMulti( p, kit.Kit_DsdObjTruth(pObj), pObj->nFans, pFansNew );
 	       return ifpkg.If_NotCond( pObjNew, util.Abc_LitIsCompl(iLit) );
 	   }
 	*/
 	/*
-	       if ( pObj->nFans > p->pPars->nLutSize )
+	       if ( pObj->nFans > p->pPars->NLutSize )
 	       {
 	           pObjNew2 = Lpk_MapTreeMux_rec( p, kit.Kit_DsdObjTruth(pObj), pObj->nFans, pFansNew );
 	   //        if ( pObjNew2 )
@@ -206,7 +206,7 @@ func Lpk_MapTree_rec(p *Lpk_Man_t, pNtk *Kit_DsdNtk_t, ppLeaves []*If_Obj_t, iLi
 	*/
 
 	// find best cofactoring variable
-	if p.pPars.nVarsShared > 0 && int32(kit.Kit_DsdObjFanNum(pObj)) > p.pPars.nLutSize {
+	if p.pPars.NVarsShared > 0 && int32(kit.Kit_DsdObjFanNum(pObj)) > p.pPars.NLutSize {
 		pObjNew2 = Lpk_MapSuppRedDec_rec(p, kit.Kit_DsdObjTruth(pObj), kit.Kit_DsdObjFanNum(pObj), pFansNew[:])
 		if pObjNew2 != nil {
 			return ifpkg.If_NotCond(pObjNew2, util.Abc_LitIsCompl(iLit))

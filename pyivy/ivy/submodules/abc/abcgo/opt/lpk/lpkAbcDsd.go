@@ -307,7 +307,7 @@ func Lpk_MergeBoundSets(vSets0 *Vec_Int_t, vSets1 *Vec_Int_t, nSizeMax int32) *V
 **********************************************************************
 */
 func Lpk_FunCompareBoundSets(p *Lpk_Fun_t, vBSets *Vec_Int_t, nCofDepth int32, uNonDecSupp uint32, uLateArrSupp uint32, pRes *Lpk_Res_t) {
-	var fVerbose int32
+	var FVerbose int32
 	var uBoundSet uint32
 	var i, nVarsBS, nVarsRem, Delay, Area int32
 
@@ -324,7 +324,7 @@ func Lpk_FunCompareBoundSets(p *Lpk_Fun_t, vBSets *Vec_Int_t, nCofDepth int32, u
 		if uBoundSet&uLateArrSupp != 0 { // skip those boundsets that are late arriving
 			continue
 		}
-		if fVerbose != 0 {
+		if FVerbose != 0 {
 			lpkDsdPrintSetOne(int32(uBoundSet & 0xFFFF))
 			// printf( "\n" );
 			// lpkDsdPrintSetOne( uBoundSet >> 16 );
@@ -339,7 +339,7 @@ func Lpk_FunCompareBoundSets(p *Lpk_Fun_t, vBSets *Vec_Int_t, nCofDepth int32, u
 		nVarsRem = int32(p.nVars) - nVarsBS + 1
 		Area = 1 + Lpk_LutNumLuts(nVarsRem, int32(p.nLutK))
 		Delay = 1 + Lpk_SuppDelay(uBoundSet&0xFFFF, p.pDelays[:])
-		if fVerbose != 0 {
+		if FVerbose != 0 {
 			fmt.Printf("area = %d limit = %d  delay = %d limit = %d\n", Area, int32(p.nAreaLim), Delay, int32(p.nDelayLim))
 		}
 		if Area > int32(p.nAreaLim) || Delay > int32(p.nDelayLim) {
@@ -354,7 +354,7 @@ func Lpk_FunCompareBoundSets(p *Lpk_Fun_t, vBSets *Vec_Int_t, nCofDepth int32, u
 			pRes.AreaEst = Area
 		}
 	}
-	if fVerbose != 0 {
+	if FVerbose != 0 {
 		if pRes.BSVars != 0 {
 			fmt.Printf("Found bound set ")
 			lpkDsdPrintSetOne(int32(pRes.BSVars))
@@ -410,7 +410,7 @@ func Lpk_DsdLateArriving(p *Lpk_Fun_t) uint32 {
 **********************************************************************
 */
 func Lpk_DsdAnalizeOne(p *Lpk_Fun_t, ppTruths [][16][]uint32, pNtks []*Kit_DsdNtk_t, pCofVars []byte, nCofDepth int32, pRes *Lpk_Res_t) int32 {
-	var fVerbose int32
+	var FVerbose int32
 	var pvBSets [4][8]*Vec_Int_t
 	var uNonDecSupp, uLateArrSupp uint32
 	var i, k, nNonDecSize, nNonDecSizeMax int32
@@ -449,7 +449,7 @@ func Lpk_DsdAnalizeOne(p *Lpk_Fun_t, ppTruths [][16][]uint32, pNtks []*Kit_DsdNt
 			kit.Kit_DsdNtkFree(pNtks[i])
 		}
 		pNtks[i] = kit.Kit_DsdDecomposeExpand(ppTruths[nCofDepth][i], int32(p.nVars))
-		if fVerbose != 0 {
+		if FVerbose != 0 {
 			kit.Kit_DsdPrint(os.Stdout, pNtks[i])
 		}
 		pvBSets[nCofDepth][i] = Lpk_ComputeBoundSets(pNtks[i], int32(p.nLutK)-nCofDepth) // try restricting to those in uNonDecSupp!!!
@@ -517,7 +517,7 @@ func Lpk_DsdAnalize(pMan *Lpk_Man_t, p *Lpk_Fun_t, nShared int32) *Lpk_Res_t {
 
 	// try decomposition without cofactoring
 	pNtks[0] = kit.Kit_DsdDecomposeExpand(Lpk_FunTruth(p, 0), int32(p.nVars))
-	if pMan.pPars.fVerbose != 0 {
+	if pMan.pPars.FVerbose != 0 {
 		pMan.nBlocks[kit.Kit_DsdNonDsdSizeMax(pNtks[0])]++
 	}
 	vBSets = Lpk_ComputeBoundSets(pNtks[0], int32(p.nLutK))

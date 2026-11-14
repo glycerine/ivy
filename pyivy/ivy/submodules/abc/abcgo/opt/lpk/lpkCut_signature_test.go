@@ -60,19 +60,13 @@ func TestLpkPackTruthWordsPreservesWideAndOddTables(t *testing.T) {
 	}
 }
 
-func TestAbcNtkDecFromTruthAcceptsWidePackedTruth(t *testing.T) {
-	// x6 over seven variables is zero for the first 64 assignments and one
-	// for the next 64. This crosses both uint32 and uint64 word boundaries.
+func TestAbcNtkDecFromTruthRequiresAbcAPI(t *testing.T) {
 	truth := []uint32{0, 0, ^uint32(0), ^uint32(0)}
-	network := Abc_NtkDecFromTruth(truth, 7, 3)
-	if network == nil {
-		t.Fatal("wide truth table decomposition returned nil")
+	if network := Abc_NtkDecFromTruth(truth, 7, 4, nil); network != nil {
+		abc.Abc_NtkDelete(network)
+		t.Fatal("truth decomposition without abci integration unexpectedly returned a network")
 	}
-	abc.Abc_NtkDelete(network)
-}
-
-func TestAbcNtkDecFromTruthRejectsShortTruth(t *testing.T) {
-	if network := Abc_NtkDecFromTruth([]uint32{1}, 7, 3); network != nil {
+	if network := Abc_NtkDecFromTruth([]uint32{1}, 7, 4, nil); network != nil {
 		abc.Abc_NtkDelete(network)
 		t.Fatal("short truth table unexpectedly decomposed")
 	}
@@ -82,16 +76,20 @@ func TestNodeImpactUsesRecordedObjectIDs(t *testing.T) {
 	n := abc.Abc_NtkAlloc(abc.ABC_NTK_LOGIC, abc.ABC_FUNC_SOP, 1)
 	defer abc.Abc_NtkDelete(n)
 	input := abc.Abc_NtkCreatePi(n)
-	p := &Lpk_Man_t{pNtk: n, vVisited: vec.Vec_VecStart(input.ID + 1)}
-	record := vec.Vec_VecEntry(p.vVisited, input.ID)
-	vec.Vec_PtrPush(record, input.ID)
+	inputID := input.ID
+	p := &Lpk_Man_t{pNtk: n, vVisited: vec.Vec_VecStart(inputID + 1)}
+	record := vec.Vec_VecEntry(p.vVisited, inputID)
+	vec.Vec_PtrPush(record, inputID)
 	vec.Vec_PtrPush(record, int32(0))
-	if Lpk_NodeHasChanged(p, int32(input.ID)) != 0 {
+	if Lpk_NodeHasChanged(p, int32(inputID)) != 0 {
 		t.Fatal("existing recorded object was treated as changed")
 	}
 	abc.Abc_NtkDeleteObj(input)
-	if Lpk_NodeHasChanged(p, int32(input.ID)) != 1 {
+	if Lpk_NodeHasChanged(p, int32(inputID)) != 1 {
 		t.Fatal("deleted recorded object was not detected")
+	}
+	if Lpk_NodeHasChanged(p, -1) != 1 {
+		t.Fatal("negative object ID was not treated as changed")
 	}
 }
 

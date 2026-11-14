@@ -65,7 +65,7 @@ func Lpk_MapTreeBestCofVar(p *Lpk_Man_t, pTruth []uint32, nVars int32, pCof0 []u
 		nSuppSizeCur1 = kit.Kit_TruthSupportSize(pCof1, nVars)
 		nSuppSizeCur = nSuppSizeCur0 + nSuppSizeCur1
 		// skip cofactoring that goes above the limit
-		if nSuppSizeCur0 > p.pPars.nLutSize || nSuppSizeCur1 > p.pPars.nLutSize {
+		if nSuppSizeCur0 > p.pPars.NLutSize || nSuppSizeCur1 > p.pPars.NLutSize {
 			continue
 		}
 		// compare this variable with other variables
@@ -111,7 +111,7 @@ func Lpk_MapTreeMux_rec(p *Lpk_Man_t, pTruth []uint32, nVars int32, ppLeaves []*
 	// decompose the functions
 	ppNtks[0] = kit.Kit_DsdDecompose(pCof0, nVars)
 	ppNtks[1] = kit.Kit_DsdDecompose(pCof1, nVars)
-	if p.pPars.fVeryVerbose != 0 {
+	if p.pPars.FVeryVerbose != 0 {
 		fmt.Printf("Cofactoring w.r.t. var %c (%d -> %d+%d supp vars):\n", 'a'+iBestVar, nVars, kit.Kit_TruthSupportSize(pCof0, nVars), kit.Kit_TruthSupportSize(pCof1, nVars))
 		kit.Kit_DsdPrintExpanded(ppNtks[0])
 		kit.Kit_DsdPrintExpanded(ppNtks[1])
@@ -279,10 +279,10 @@ func Lpk_TryDec(pTruth []word, nVars int32) {
 
 	//int nWords = Abc_Truth6WordNum( nVars );
 	assert(nVars == 8, "nVars == 8")
-	fmt.Printf("%d", ifpkg.If_Dec6Perform(pTruth[0], 1) > 0)
-	fmt.Printf("%d", ifpkg.If_Dec6Perform(pTruth[1], 1) > 0)
-	fmt.Printf("%d", ifpkg.If_Dec6Perform(pTruth[2], 1) > 0)
-	fmt.Printf("%d", ifpkg.If_Dec6Perform(pTruth[3], 1) > 0)
+	fmt.Printf("%t", ifpkg.If_Dec6Perform(pTruth[0], 1) > 0)
+	fmt.Printf("%t", ifpkg.If_Dec6Perform(pTruth[1], 1) > 0)
+	fmt.Printf("%t", ifpkg.If_Dec6Perform(pTruth[2], 1) > 0)
+	fmt.Printf("%t", ifpkg.If_Dec6Perform(pTruth[3], 1) > 0)
 	fmt.Printf("\n")
 }
 func Lpk_TryDecTest() {

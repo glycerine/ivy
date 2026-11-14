@@ -36,19 +36,26 @@ package lpk
 
 type Lpk_Par_t struct {
 	// user-controlled parameters
-	nLutsMax     int32 // (N) the maximum number of LUTs in the structure
-	nLutsOver    int32 // (Q) the maximum number of LUTs not in the MFFC
-	nVarsShared  int32 // (S) the maximum number of shared variables (crossbars)
-	nGrowthLevel int32 // (L) the maximum increase in the node level after resynthesis
-	fSatur       int32 // iterate till saturation
-	fZeroCost    int32 // accept zero-cost replacements
-	fFirst       int32 // use root node and first cut only
-	fOldAlgo     int32 // use old algorithm
-	fVerbose     int32 // the verbosiness flag
-	fVeryVerbose int32 // additional verbose info printout
+	NLutsMax     int32 // (N) the maximum number of LUTs in the structure
+	NLutsOver    int32 // (Q) the maximum number of LUTs not in the MFFC
+	NVarsShared  int32 // (S) the maximum number of shared variables (crossbars)
+	NGrowthLevel int32 // (L) the maximum increase in the node level after resynthesis
+	FSatur       int32 // iterate till saturation
+	FZeroCost    int32 // accept zero-cost replacements
+	FFirst       int32 // use root node and first cut only
+	FOldAlgo     int32 // use old algorithm
+	FVerbose     int32 // the verbosiness flag
+	FVeryVerbose int32 // additional verbose info printout
 	// internal parameters
-	nLutSize int32 // (K) the LUT size (determined by the input network)
-	nVarsMax int32 // (V) the largest number of variables: V = N * (K-1) + 1
+	NLutSize int32 // (K) the LUT size (determined by the input network)
+	NVarsMax int32 // (V) the largest number of variables: V = N * (K-1) + 1
+}
+
+// Lpk_AbcAPI supplies the abci helpers that LPK needs without making the
+// optimization package depend back on base/abci.
+type Lpk_AbcAPI struct {
+	NtkLutmin     func(*Abc_Ntk_t, int32, int32) *Abc_Ntk_t
+	NodeFromIfRec func(*Abc_Ntk_t, *If_Man_t, *If_Obj_t, *Vec_Int_t) *Abc_Obj_t
 }
 
 ////////////////////////////////////////////////////////////////////////

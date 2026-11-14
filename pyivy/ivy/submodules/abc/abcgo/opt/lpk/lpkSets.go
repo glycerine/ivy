@@ -373,17 +373,17 @@ func Lpk_MapSuppRedDecSelect(p *Lpk_Man_t, pTruth []uint32, nVars int32, piVar *
 	var nSets, i, SizeMax int32
 	var bestIndex int32 //, SRedMax;
 	var Entry uint32
-	var fVerbose int32 = p.pPars.fVeryVerbose
-	//    int fVerbose = 0;
+	var FVerbose int32 = p.pPars.FVeryVerbose
+	//    int FVerbose = 0;
 
 	// collect decomposable subsets for each pair of cofactors
-	if fVerbose != 0 {
+	if FVerbose != 0 {
 		fmt.Printf("\nExploring support-reducing bound-sets of function:\n")
 		kit.Kit_DsdPrintFromTruth(pTruth, nVars)
 	}
 	nSets = 0
 	for i = 0; i < nVars; i++ {
-		if fVerbose != 0 {
+		if FVerbose != 0 {
 			fmt.Printf("Evaluating variable %c:\n", 'a'+i)
 		}
 		// evaluate the cofactor pair
@@ -398,20 +398,20 @@ func Lpk_MapSuppRedDecSelect(p *Lpk_Man_t, pTruth []uint32, nVars int32, piVar *
 		pTemp = ppNtks[1]
 		ppNtks[1] = kit.Kit_DsdExpand(pTemp)
 		kit.Kit_DsdNtkFree(pTemp)
-		if fVerbose != 0 {
+		if FVerbose != 0 {
 			kit.Kit_DsdPrint(os.Stdout, ppNtks[0])
 		}
-		if fVerbose != 0 {
+		if FVerbose != 0 {
 			kit.Kit_DsdPrint(os.Stdout, ppNtks[1])
 		}
 		// compute subsets
 		Lpk_ComputeSets(ppNtks[0], vSets0)
 		Lpk_ComputeSets(ppNtks[1], vSets1)
 		// print subsets
-		if fVerbose != 0 {
+		if FVerbose != 0 {
 			Lpk_PrintSets(vSets0)
 		}
-		if fVerbose != 0 {
+		if FVerbose != 0 {
 			Lpk_PrintSets(vSets1)
 		}
 		// free the networks
@@ -422,10 +422,10 @@ func Lpk_MapSuppRedDecSelect(p *Lpk_Man_t, pTruth []uint32, nVars int32, piVar *
 	}
 
 	// print the results
-	if fVerbose != 0 {
+	if FVerbose != 0 {
 		fmt.Printf("\n")
 	}
-	if fVerbose != 0 {
+	if FVerbose != 0 {
 		for i = 0; i < nSets; i++ {
 			Lpk_MapSuppPrintSet(&spStatic_Lpk_MapSuppRedDecSelect_pStore[i], i)
 		}
@@ -436,7 +436,7 @@ func Lpk_MapSuppRedDecSelect(p *Lpk_Man_t, pTruth []uint32, nVars int32, piVar *
 	spStatic_Lpk_MapSuppRedDecSelect_pSetBest = nil
 	for i = 0; i < nSets; i++ {
 		spStatic_Lpk_MapSuppRedDecSelect_pSet = &spStatic_Lpk_MapSuppRedDecSelect_pStore[i]
-		if int32(spStatic_Lpk_MapSuppRedDecSelect_pSet.Size) > p.pPars.nLutSize-1 {
+		if int32(spStatic_Lpk_MapSuppRedDecSelect_pSet.Size) > p.pPars.NLutSize-1 {
 			continue
 		}
 		if SizeMax < int32(spStatic_Lpk_MapSuppRedDecSelect_pSet.Size) {
@@ -462,16 +462,16 @@ func Lpk_MapSuppRedDecSelect(p *Lpk_Man_t, pTruth []uint32, nVars int32, piVar *
 	   }
 	*/
 	if spStatic_Lpk_MapSuppRedDecSelect_pSetBest == nil {
-		if fVerbose != 0 {
+		if FVerbose != 0 {
 			fmt.Printf("Could not select a subset.\n")
 		}
 		return 0
 
 	} else {
-		if fVerbose != 0 {
+		if FVerbose != 0 {
 			fmt.Printf("Selected the following subset:\n")
 		}
-		if fVerbose != 0 {
+		if FVerbose != 0 {
 			Lpk_MapSuppPrintSet(spStatic_Lpk_MapSuppRedDecSelect_pSetBest, bestIndex)
 		}
 	}

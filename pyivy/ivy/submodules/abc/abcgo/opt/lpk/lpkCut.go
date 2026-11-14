@@ -539,14 +539,14 @@ func Lpk_NodeCutsOne(p *Lpk_Man_t, pCut *Lpk_Cut_t, Node int32) {
 		return
 	}
 	assert(abc.Abc_ObjIsNode(pObj), "abc.Abc_ObjIsNode(pObj)")
-	//    assert( Abc_ObjFaninNum(pObj) <= p->pPars->nLutSize );
+	//    assert( Abc_ObjFaninNum(pObj) <= p->pPars->NLutSize );
 
 	// if the node is not in the MFFC, check the limit
 	if abc.Abc_NodeIsTravIdCurrent(pObj) == 0 {
-		if int32(pCut.nNodesDup) == p.pPars.nLutsOver {
+		if int32(pCut.nNodesDup) == p.pPars.NLutsOver {
 			return
 		}
-		assert(int32(pCut.nNodesDup) < p.pPars.nLutsOver, "int32(pCut.nNodesDup) < p.pPars.nLutsOver")
+		assert(int32(pCut.nNodesDup) < p.pPars.NLutsOver, "int32(pCut.nNodesDup) < p.pPars.NLutsOver")
 	}
 
 	// check the possibility of adding this node using the signature
@@ -557,7 +557,7 @@ func Lpk_NodeCutsOne(p *Lpk_Man_t, pCut *Lpk_Cut_t, Node int32) {
 			continue
 		}
 		nLeavesNew++
-		if nLeavesNew > p.pPars.nVarsMax {
+		if nLeavesNew > p.pPars.NVarsMax {
 			return
 		}
 	}
@@ -586,7 +586,7 @@ func Lpk_NodeCutsOne(p *Lpk_Man_t, pCut *Lpk_Cut_t, Node int32) {
 			continue
 		}
 		// check if there is room
-		if int32(pCutNew.nLeaves) == p.pPars.nVarsMax {
+		if int32(pCutNew.nLeaves) == p.pPars.NVarsMax {
 			return
 		}
 		// move all the nodes
@@ -744,7 +744,7 @@ func Lpk_NodeCuts(p *Lpk_Man_t) int32 {
 	}
 
 	// record the impact of this node
-	if p.pPars.fSatur != 0 {
+	if p.pPars.FSatur != 0 {
 		Lpk_NodeRecordImpact(p)
 	}
 
@@ -757,9 +757,9 @@ func Lpk_NodeCuts(p *Lpk_Man_t) int32 {
 		}
 		// compute the minimum number of LUTs needed to implement this cut
 		// V = N * (K-1) + 1  ~~~~~  N = Ceiling[(V-1)/(K-1)] = (V-1)/(K-1) + [(V-1)%(K-1) > 0]
-		pCut.nLuts = uint32(Lpk_LutNumLuts(int32(pCut.nLeaves), p.pPars.nLutSize))
-		//        pCut->Weight = 1.0 * (pCut->nNodes - pCut->nNodesDup - 1) / pCut->nLuts; //p->pPars->nLutsMax;
-		pCut.Weight = float32(pCut.nNodes-pCut.nNodesDup) / float32(pCut.nLuts) //p->pPars->nLutsMax;
+		pCut.nLuts = uint32(Lpk_LutNumLuts(int32(pCut.nLeaves), p.pPars.NLutSize))
+		//        pCut->Weight = 1.0 * (pCut->nNodes - pCut->nNodesDup - 1) / pCut->nLuts; //p->pPars->NLutsMax;
+		pCut.Weight = float32(pCut.nNodes-pCut.nNodesDup) / float32(pCut.nLuts) //p->pPars->NLutsMax;
 		if pCut.Weight <= 1.001 {
 			//        if ( pCut->Weight <= 0.999 )
 			continue

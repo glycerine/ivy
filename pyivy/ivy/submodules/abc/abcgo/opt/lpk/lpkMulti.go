@@ -106,7 +106,7 @@ func Lpk_CreateVarOrder(pNtk *Kit_DsdNtk_t, pTable [][16]byte) {
 
 **********************************************************************
 */
-func Lpk_CreateCommonOrder(pTable [][16]byte, piCofVar []int32, nCBars int32, pPrios []int32, nVars int32, fVerbose int32) {
+func Lpk_CreateCommonOrder(pTable [][16]byte, piCofVar []int32, nCBars int32, pPrios []int32, nVars int32, FVerbose int32) {
 	var Score [16]int32
 	var pPres [16]int32
 	var i, y, x, iVarBest, ScoreMax, PrioCount int32
@@ -134,7 +134,7 @@ func Lpk_CreateCommonOrder(pTable [][16]byte, piCofVar []int32, nCBars int32, pP
 	}
 
 	// print the scores
-	if fVerbose != 0 {
+	if FVerbose != 0 {
 		fmt.Printf("Scores: ")
 		for i = 0; i < nVars; i++ {
 			fmt.Printf("%c=%d ", 'a'+i, Score[i])
@@ -167,7 +167,7 @@ func Lpk_CreateCommonOrder(pTable [][16]byte, piCofVar []int32, nCBars int32, pP
 			break
 		}
 		// give the next priority to all vars having this score
-		if fVerbose != 0 {
+		if FVerbose != 0 {
 			fmt.Printf("%d=", PrioCount)
 		}
 		for i = 0; i < nVars; i++ {
@@ -177,16 +177,16 @@ func Lpk_CreateCommonOrder(pTable [][16]byte, piCofVar []int32, nCBars int32, pP
 			if Score[i] == ScoreMax {
 				pPrios[i] = PrioCount
 				pPres[i] = 0
-				if fVerbose != 0 {
+				if FVerbose != 0 {
 					fmt.Printf("%c", 'a'+i)
 				}
 			}
 		}
-		if fVerbose != 0 {
+		if FVerbose != 0 {
 			fmt.Printf(" ")
 		}
 	}
-	if fVerbose != 0 {
+	if FVerbose != 0 {
 		fmt.Printf("\n")
 	}
 }
@@ -324,12 +324,12 @@ func Lpk_MapTreeMulti_rec(p *Lpk_Man_t, ppNtks []*Kit_DsdNtk_t, piLits []int32, 
 	}
 
 	// iterate over the nodes
-	if p.pPars.fVeryVerbose != 0 {
+	if p.pPars.FVeryVerbose != 0 {
 		fmt.Printf("Decision: ")
 	}
 	for i = 0; i < nSize; i++ {
 		if pDecision[i] != 0 {
-			if p.pPars.fVeryVerbose != 0 {
+			if p.pPars.FVeryVerbose != 0 {
 				fmt.Printf("%d ", i)
 			}
 			assert(piLits[i] >= 0, "piLits[i] >= 0")
@@ -346,7 +346,7 @@ func Lpk_MapTreeMulti_rec(p *Lpk_Man_t, ppNtks []*Kit_DsdNtk_t, piLits []int32, 
 			piLitsNew[i] = piLits[i]
 		}
 	}
-	if p.pPars.fVeryVerbose != 0 {
+	if p.pPars.FVeryVerbose != 0 {
 		fmt.Printf("\n")
 	}
 
@@ -423,7 +423,7 @@ func Lpk_MapTreeMulti(p *Lpk_Man_t, pTruth []uint32, nVars int32, ppLeaves []*If
 		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	}
-	var fVerbose int32 = p.pPars.fVeryVerbose
+	var FVerbose int32 = p.pPars.FVeryVerbose
 
 	spStatic_Lpk_MapTreeMulti_Counter++
 	//    printf( "Run %d.\n", Counter );
@@ -441,7 +441,7 @@ func Lpk_MapTreeMulti(p *Lpk_Man_t, pTruth []uint32, nVars int32, ppLeaves []*If
 	assert(nSize == 32, "nSize == 32")
 
 	// find the best cofactoring variables
-	nCBars = kit.Kit_DsdCofactoring(pTruth, nVars, piCofVar[:], p.pPars.nVarsShared, 0)
+	nCBars = kit.Kit_DsdCofactoring(pTruth, nVars, piCofVar[:], p.pPars.NVarsShared, 0)
 	//    nCBars = 2;
 	//    piCofVar[0] = 0;
 	//    piCofVar[1] = 1;
@@ -464,7 +464,7 @@ func Lpk_MapTreeMulti(p *Lpk_Man_t, pTruth []uint32, nVars int32, ppLeaves []*If
 		pTemp = ppNtks[i]
 		ppNtks[i] = kit.Kit_DsdExpand(pTemp)
 		kit.Kit_DsdNtkFree(pTemp)
-		if fVerbose != 0 {
+		if FVerbose != 0 {
 			fmt.Printf("Cof%d%d: ", nCBars, i)
 			kit.Kit_DsdPrint(os.Stdout, ppNtks[i])
 		}
@@ -485,13 +485,13 @@ func Lpk_MapTreeMulti(p *Lpk_Man_t, pTruth []uint32, nVars int32, ppLeaves []*If
 		kit.Kit_DsdGetSupports(ppNtks[i])
 		Lpk_CreateVarOrder(ppNtks[i], pTable[:])
 	}
-	Lpk_CreateCommonOrder(pTable[:], piCofVar[:], nCBars, pPrios[:], nVars, fVerbose)
+	Lpk_CreateCommonOrder(pTable[:], piCofVar[:], nCBars, pPrios[:], nVars, FVerbose)
 	// update priorities with frequences
 	for i = 0; i < nVars; i++ {
 		pPrios[i] = pPrios[i]*256 + (16-pFreqs[i])*16 + i
 	}
 
-	if fVerbose != 0 {
+	if FVerbose != 0 {
 		fmt.Printf("After restructuring with priority:\n")
 	}
 
@@ -505,7 +505,7 @@ func Lpk_MapTreeMulti(p *Lpk_Man_t, pTruth []uint32, nVars int32, ppLeaves []*If
 		// undec nodes should be rotated in such a way that the first input has as many shared inputs as possible
 		kit.Kit_DsdRotate(ppNtks[i], pFreqs[:])
 		// print the resulting networks
-		if fVerbose != 0 {
+		if FVerbose != 0 {
 			fmt.Printf("Cof%d%d: ", nCBars, i)
 			kit.Kit_DsdPrint(os.Stdout, ppNtks[i])
 		}
@@ -533,7 +533,7 @@ func Lpk_MapTreeMulti(p *Lpk_Man_t, pTruth []uint32, nVars int32, ppLeaves []*If
 	pResult = Lpk_MapTreeMulti_rec(p, ppNtks[:], piLits[:], piCofVar[:], nCBars, ppLeaves[:], nVars, pPrios[:])
 	p.fCofactoring = 0
 
-	if fVerbose != 0 {
+	if FVerbose != 0 {
 		fmt.Printf("\n")
 	}
 

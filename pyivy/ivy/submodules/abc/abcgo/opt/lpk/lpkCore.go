@@ -4,7 +4,6 @@ import (
 	"fmt"
 	hop "github.com/glycerine/abcgo/aig/hop"
 	abc "github.com/glycerine/abcgo/base/abc"
-	abci "github.com/glycerine/abcgo/base/abci"
 	abcmain "github.com/glycerine/abcgo/base/main"
 	kit "github.com/glycerine/abcgo/bool/kit"
 	ifpkg "github.com/glycerine/abcgo/map/if"
@@ -62,8 +61,8 @@ import (
 
 **********************************************************************
 */
-func Abc_NtkDecFromTruth(truth []uint32, nVars, nLutSize int32) *Abc_Ntk_t {
-	if nVars < 0 || nVars >= 16 || int32(len(truth)) < kit.Kit_TruthWordNum(nVars) || nLutSize < 1 {
+func Abc_NtkDecFromTruth(truth []uint32, nVars, NLutSize int32, api *Lpk_AbcAPI) *Abc_Ntk_t {
+	if nVars < 0 || nVars >= 16 || int32(len(truth)) < kit.Kit_TruthWordNum(nVars) || NLutSize < 1 {
 		return nil
 	}
 	cover := vec.Vec_IntAlloc(1 << 16)
@@ -80,7 +79,11 @@ func Abc_NtkDecFromTruth(truth []uint32, nVars, nLutSize int32) *Abc_Ntk_t {
 	sop := abc.Abc_SopCreateFromTruthIsop(functionManager, nVars, truthWords, cover)
 	abc.Abc_NtkDelete(manager)
 	initial := abc.Abc_NtkCreateWithNode(sop)
-	network := abci.Abc_NtkLutmin(initial, nLutSize, 0)
+	if api == nil || api.NtkLutmin == nil {
+		abc.Abc_NtkDelete(initial)
+		return nil
+	}
+	network := api.NtkLutmin(initial, NLutSize, 0)
 	abc.Abc_NtkDelete(initial)
 	if network == nil {
 		return nil
@@ -100,11 +103,11 @@ func lpkPackTruthWords(truth []uint32) []uint64 {
 	return words
 }
 
-func Abc_NtkLutMinDecompose(network *Abc_Ntk_t, leaves *Vec_Ptr_t, truth []uint32, nLutSize, required int32) *Abc_Obj_t {
+func Abc_NtkLutMinDecompose(network *Abc_Ntk_t, leaves *Vec_Ptr_t, truth []uint32, NLutSize, required int32, api *Lpk_AbcAPI) *Abc_Obj_t {
 	if network == nil || leaves == nil {
 		return nil
 	}
-	newNetwork := Abc_NtkDecFromTruth(truth, int32(vec.Vec_PtrSize(leaves)), nLutSize)
+	newNetwork := Abc_NtkDecFromTruth(truth, int32(vec.Vec_PtrSize(leaves)), NLutSize, api)
 	if newNetwork == nil {
 		return nil
 	}
@@ -169,7 +172,7 @@ func Abc_NtkLutMinDecompose(network *Abc_Ntk_t, leaves *Vec_Ptr_t, truth []uint3
 func Lpk_IfManStart(p *Lpk_Man_t) {
 	assert(p.pIfMan == nil, "p.pIfMan == nil")
 	pPars := new(If_Par_t)
-	ifpkg.If_ManSetLpkPars(pPars, p.pPars.nLutSize)
+	ifpkg.If_ManSetLpkPars(pPars, p.pPars.NLutSize)
 	// start the mapping manager and set its parameters
 	p.pIfMan = ifpkg.If_ManStart(pPars)
 	ifpkg.If_ManSetupSetAll(p.pIfMan, 1000)
@@ -190,7 +193,7 @@ func Lpk_IfManStart(p *Lpk_Man_t) {
 **********************************************************************
 */
 func Lpk_NodeHasChanged(p *Lpk_Man_t, iNode int32) int32 {
-	if p == nil || p.vVisited == nil {
+	if p == nil || p.pNtk == nil || p.vVisited == nil || iNode < 0 || int(iNode) >= vec.Vec_VecSize(p.vVisited) {
 		return 1
 	}
 	nodes := vec.Vec_VecEntry(p.vVisited, int(iNode))
@@ -269,7 +272,7 @@ func Lpk_ExploreCut(p *Lpk_Man_t, pCut *Lpk_Cut_t, pNtk *Kit_DsdNtk_t) int32 {
 	// prepare the mapping manager
 	ifpkg.If_ManRestart(p.pIfMan)
 	// create the PI variables
-	for i = 0; i < p.pPars.nVarsMax; i++ {
+	for i = 0; i < p.pPars.NVarsMax; i++ {
 		ppLeaves[i] = ifpkg.If_ManCreateCi(p.pIfMan)
 	}
 	// set the arrival times
@@ -298,12 +301,12 @@ func Lpk_ExploreCut(p *Lpk_Man_t, pCut *Lpk_Cut_t, pNtk *Kit_DsdNtk_t) int32 {
 
 	// compute the gain in area
 	nGain = int32(pCut.nNodes) - int32(pCut.nNodesDup) - int32(p.pIfMan.AreaGlo)
-	if p.pPars.fVeryVerbose != 0 {
+	if p.pPars.FVeryVerbose != 0 {
 		fmt.Printf("       Mffc = %2d. Mapped = %2d. Gain = %3d. Depth increase = %d. SReds = %d.\n", pCut.nNodes-pCut.nNodesDup, int32(p.pIfMan.AreaGlo), nGain, int32(p.pIfMan.RequiredGlo)-int32(p.pObj.Level), p.nCalledSRed)
 	}
 
 	// quit if there is no gain
-	if !(nGain > 0 || (p.pPars.fZeroCost != 0 && nGain == 0)) {
+	if !(nGain > 0 || (p.pPars.FZeroCost != 0 && nGain == 0)) {
 		return 0
 	}
 
@@ -331,7 +334,7 @@ func Lpk_ExploreCut(p *Lpk_Man_t, pCut *Lpk_Cut_t, pNtk *Kit_DsdNtk_t) int32 {
 		ifpkg.If_ObjSetCopy(ifpkg.If_ManCi(p.pIfMan, i), pLeaf)
 	}
 	// get the area of mapping
-	pObjNew = abci.Abc_NodeFromIfRec(p.pNtk, p.pIfMan, ifpkg.If_Regular(pDriver), p.vCover)
+	pObjNew = p.pAbcAPI.NodeFromIfRec(p.pNtk, p.pIfMan, ifpkg.If_Regular(pDriver), p.vCover)
 	pObjNew.Data = hop.Hop_NotCond(pObjNew.Data.(*hop.Hop_Obj_t), ifpkg.If_IsComplement(pDriver))
 	// perform replacement
 	abc.Abc_NtkUpdate(p.pObj, pObjNew, p.vLevels)
@@ -370,7 +373,7 @@ func Lpk_ResynthesizeNode(p *Lpk_Man_t) int32 {
 
 	//return 0;
 
-	if p.pPars.fVeryVerbose != 0 {
+	if p.pPars.FVeryVerbose != 0 {
 		fmt.Printf("Node %5d : Mffc size = %5d. Cuts = %5d.\n", p.pObj.ID, p.nMffc, p.nEvals)
 	}
 	// try the good cuts
@@ -379,7 +382,7 @@ func Lpk_ResynthesizeNode(p *Lpk_Man_t) int32 {
 	for i = 0; i < p.nEvals; i++ {
 		// get the cut
 		pCut = &p.pCuts[p.pEvals[i]]
-		if p.pPars.fFirst != 0 && i == 1 {
+		if p.pPars.FFirst != 0 && i == 1 {
 			break
 		}
 
@@ -413,13 +416,13 @@ func Lpk_ResynthesizeNode(p *Lpk_Man_t) int32 {
 		// if DSD has nodes that require splitting to fit them into LUTs
 		// we can skip those cuts that cannot lead to improvement
 		// (a full DSD network requires  V = Nmin * (K-1) + 1 for improvement)
-		if kit.Kit_DsdNonDsdSizeMax(pDsdNtk) > p.pPars.nLutSize &&
-			nSuppSize >= (int32(pCut.nNodes)-int32(pCut.nNodesDup)-1)*(p.pPars.nLutSize-1)+1 {
+		if kit.Kit_DsdNonDsdSizeMax(pDsdNtk) > p.pPars.NLutSize &&
+			nSuppSize >= (int32(pCut.nNodes)-int32(pCut.nNodesDup)-1)*(p.pPars.NLutSize-1)+1 {
 			kit.Kit_DsdNtkFree(pDsdNtk)
 			continue
 		}
 
-		if p.pPars.fVeryVerbose != 0 {
+		if p.pPars.FVeryVerbose != 0 {
 			//            char * pFileName;
 			fmt.Printf("  C%02d: L= %2d/%2d  V= %2d/%d  N= %d  W= %4.2f  ", i, pCut.nLeaves, nSuppSize, pCut.nNodes, pCut.nNodesDup, pCut.nLuts, pCut.Weight)
 			kit.Kit_DsdPrint(os.Stdout, pDsdNtk)
@@ -500,7 +503,7 @@ func Lpk_ResynthesizeNodeNew(p *Lpk_Man_t) int32 {
 	}
 	p.timeCuts += abctime(util.Abc_Clock()) - clk
 
-	if p.pPars.fVeryVerbose != 0 {
+	if p.pPars.FVeryVerbose != 0 {
 		fmt.Printf("Node %5d : Mffc size = %5d. Cuts = %5d.  Level = %2d. Req = %2d.\n", p.pObj.ID, p.nMffc, p.nEvals, p.pObj.Level, Required)
 	}
 	// try the good cuts
@@ -509,7 +512,7 @@ func Lpk_ResynthesizeNodeNew(p *Lpk_Man_t) int32 {
 	for i = 0; i < p.nEvals; i++ {
 		// get the cut
 		pCut = &p.pCuts[p.pEvals[i]]
-		if p.pPars.fFirst != 0 && i == 1 {
+		if p.pPars.FFirst != 0 && i == 1 {
 			break
 		}
 		//        if ( pCut->Weight < 1.05 )
@@ -556,7 +559,7 @@ func Lpk_ResynthesizeNodeNew(p *Lpk_Man_t) int32 {
 		//        else
 		//            printf( "Fine!\n" );
 
-		if p.pPars.fVeryVerbose != 0 {
+		if p.pPars.FVeryVerbose != 0 {
 			//            char * pFileName;
 			var nSuppSize int32 = kit.Kit_TruthSupportSize(pTruth, int32(pCut.nLeaves))
 			fmt.Printf("  C%02d: L= %2d/%2d  V= %2d/%d  N= %d  W= %4.2f  ", i, pCut.nLeaves, nSuppSize, pCut.nNodes, pCut.nNodesDup, pCut.nLuts, pCut.Weight)
@@ -574,10 +577,10 @@ func Lpk_ResynthesizeNodeNew(p *Lpk_Man_t) int32 {
 		// update the network
 		nNodesBef = abc.Abc_NtkNodeNum(p.pNtk)
 		clk = abctime(util.Abc_Clock())
-		pObjNew = Lpk_Decompose(p, p.pNtk, p.vLeaves, pTruth, p.puSupps[:], p.pPars.nLutSize,
-			int32(pCut.nNodes)-int32(pCut.nNodesDup)-1+lpkBoolInt(p.pPars.fZeroCost > 0), Required)
-		if pObjNew == nil && p.pPars.nLutSize == 4 && int32(pCut.nNodes) > NodeCounts[vec.Vec_PtrSize(p.vLeaves)]+lpkBoolInt(p.pPars.fZeroCost == 0) {
-			pObjNew = Abc_NtkLutMinDecompose(p.pNtk, p.vLeaves, pTruth, p.pPars.nLutSize, Required)
+		pObjNew = Lpk_Decompose(p, p.pNtk, p.vLeaves, pTruth, p.puSupps[:], p.pPars.NLutSize,
+			int32(pCut.nNodes)-int32(pCut.nNodesDup)-1+lpkBoolInt(p.pPars.FZeroCost > 0), Required)
+		if pObjNew == nil && p.pPars.NLutSize == 4 && int32(pCut.nNodes) > NodeCounts[vec.Vec_PtrSize(p.vLeaves)]+lpkBoolInt(p.pPars.FZeroCost == 0) {
+			pObjNew = Abc_NtkLutMinDecompose(p.pNtk, p.vLeaves, pTruth, p.pPars.NLutSize, Required, p.pAbcAPI)
 		}
 		p.timeEval += abctime(util.Abc_Clock()) - clk
 		nNodesAft = abc.Abc_NtkNodeNum(p.pNtk)
@@ -585,7 +588,7 @@ func Lpk_ResynthesizeNodeNew(p *Lpk_Man_t) int32 {
 		// perform replacement
 		if pObjNew != nil {
 			var nGain int32 = int32(pCut.nNodes) - int32(pCut.nNodesDup) - (nNodesAft - nNodesBef)
-			//assert( nGain >= 1 - p->pPars->fZeroCost );
+			//assert( nGain >= 1 - p->pPars->FZeroCost );
 			assert(abc.Abc_ObjLevel(pObjNew) <= Required, "abc.Abc_ObjLevel(pObjNew) <= Required")
 			/*
 			   if ( nGain <= 0 )
@@ -599,7 +602,7 @@ func Lpk_ResynthesizeNodeNew(p *Lpk_Man_t) int32 {
 			*/
 			p.nGainTotal += nGain
 			p.nChanges++
-			if p.pPars.fVeryVerbose != 0 {
+			if p.pPars.FVeryVerbose != 0 {
 				fmt.Printf("Performed resynthesis: Gain = %2d. Level = %2d. Req = %2d.\n", nGain, abc.Abc_ObjLevel(pObjNew), Required)
 			}
 			abc.Abc_NtkUpdate(p.pObj, pObjNew, p.vLevels)
@@ -623,7 +626,7 @@ func Lpk_ResynthesizeNodeNew(p *Lpk_Man_t) int32 {
 
 **********************************************************************
 */
-func Lpk_Resynthesize(pNtk *Abc_Ntk_t, pPars *Lpk_Par_t) int32 {
+func Lpk_Resynthesize(pNtk *Abc_Ntk_t, pPars *Lpk_Par_t, api *Lpk_AbcAPI) int32 {
 	var pProgress *extra.ProgressBar = nil // Suppress "might be used uninitialized"
 	var p *Lpk_Man_t
 	var pObj *Abc_Obj_t
@@ -632,35 +635,38 @@ func Lpk_Resynthesize(pNtk *Abc_Ntk_t, pPars *Lpk_Par_t) int32 {
 	var i, Iter, nNodes, nNodesPrev int32
 	var clk abctime = abctime(util.Abc_Clock())
 	assert(abc.Abc_NtkIsLogic(pNtk), "abc.Abc_NtkIsLogic(pNtk)")
+	if api == nil || api.NodeFromIfRec == nil {
+		return 0
+	}
 
 	// sweep dangling nodes as a preprocessing step
 	abc.Abc_NtkSweep(pNtk, 0)
 
 	// get the number of inputs
 	if lib := abcmain.Abc_FrameReadLibLut(); lib != nil {
-		pPars.nLutSize = lib.(*If_LibLut_t).LutMax
+		pPars.NLutSize = lib.(*If_LibLut_t).LutMax
 	} else {
-		pPars.nLutSize = abc.Abc_NtkGetFaninMax(pNtk)
+		pPars.NLutSize = abc.Abc_NtkGetFaninMax(pNtk)
 	}
-	if pPars.nLutSize > 6 {
-		pPars.nLutSize = 6
+	if pPars.NLutSize > 6 {
+		pPars.NLutSize = 6
 	}
-	if pPars.nLutSize < 3 {
-		pPars.nLutSize = 3
+	if pPars.NLutSize < 3 {
+		pPars.NLutSize = 3
 	}
 	// adjust the number of crossbars based on LUT size
-	if pPars.nVarsShared > pPars.nLutSize-2 {
-		pPars.nVarsShared = pPars.nLutSize - 2
+	if pPars.NVarsShared > pPars.NLutSize-2 {
+		pPars.NVarsShared = pPars.NLutSize - 2
 	}
 	// get the max number of LUTs tried
-	pPars.nVarsMax = pPars.nLutsMax*(pPars.nLutSize-1) + 1 // V = N * (K-1) + 1
-	for pPars.nVarsMax > 16 {
-		pPars.nLutsMax--
-		pPars.nVarsMax = pPars.nLutsMax*(pPars.nLutSize-1) + 1
+	pPars.NVarsMax = pPars.NLutsMax*(pPars.NLutSize-1) + 1 // V = N * (K-1) + 1
+	for pPars.NVarsMax > 16 {
+		pPars.NLutsMax--
+		pPars.NVarsMax = pPars.NLutsMax*(pPars.NLutSize-1) + 1
 
 	}
-	if pPars.fVerbose != 0 {
-		fmt.Printf("Resynthesis for %d %d-LUTs with %d non-MFFC LUTs, %d crossbars, and %d-input cuts.\n", pPars.nLutsMax, pPars.nLutSize, pPars.nLutsOver, pPars.nVarsShared, pPars.nVarsMax)
+	if pPars.FVerbose != 0 {
+		fmt.Printf("Resynthesis for %d %d-LUTs with %d non-MFFC LUTs, %d crossbars, and %d-input cuts.\n", pPars.NLutsMax, pPars.NLutSize, pPars.NLutsOver, pPars.NVarsShared, pPars.NVarsMax)
 	}
 
 	// convert into the AIG
@@ -672,17 +678,18 @@ func Lpk_Resynthesize(pNtk *Abc_Ntk_t, pPars *Lpk_Par_t) int32 {
 
 	// set the number of levels
 	abc.Abc_NtkLevel(pNtk)
-	abc.Abc_NtkStartReverseLevels(pNtk, pPars.nGrowthLevel)
+	abc.Abc_NtkStartReverseLevels(pNtk, pPars.NGrowthLevel)
 
 	// start the manager
 	p = Lpk_ManStart(pPars)
+	p.pAbcAPI = api
 	p.pNtk = pNtk
 	p.nNodesTotal = abc.Abc_NtkNodeNum(pNtk)
 	p.vLevels = vec.Vec_VecStart(abc.Abc_NtkReverseLevelMax(pNtk))
-	if p.pPars.fSatur != 0 {
+	if p.pPars.FSatur != 0 {
 		p.vVisited = vec.Vec_VecStart(0)
 	}
-	if pPars.fVerbose != 0 {
+	if pPars.FVerbose != 0 {
 		p.nTotalNets = abc.Abc_NtkGetTotalFanins(pNtk)
 		p.nTotalNodes = abc.Abc_NtkNodeNum(pNtk)
 	}
@@ -699,13 +706,13 @@ func Lpk_Resynthesize(pNtk *Abc_Ntk_t, pPars *Lpk_Par_t) int32 {
 	nNodesPrev = p.nNodesTotal
 	for Iter = 1; ; Iter++ {
 		// expand storage for changed nodes
-		if p.pPars.fSatur != 0 {
+		if p.pPars.FSatur != 0 {
 			vec.Vec_VecExpand(p.vVisited, int(abc.Abc_NtkObjNumMax(pNtk)+1))
 		}
 
 		// consider all nodes
 		nNodes = abc.Abc_NtkObjNumMax(pNtk)
-		if !(pPars.fVeryVerbose != 0) {
+		if !(pPars.FVeryVerbose != 0) {
 			pProgress = extra.Extra_ProgressBarStart(os.Stdout, nNodes)
 		}
 		for i = 0; i < abc.Abc_NtkObjNumMax(pNtk); i++ {
@@ -714,7 +721,7 @@ func Lpk_Resynthesize(pNtk *Abc_Ntk_t, pPars *Lpk_Par_t) int32 {
 				continue
 			}
 			// skip all except the final node
-			if pPars.fFirst != 0 {
+			if pPars.FFirst != 0 {
 				if abc.Abc_ObjIsCo(abc.Abc_ObjFanout0(pObj)) == 0 {
 					continue
 				}
@@ -722,22 +729,22 @@ func Lpk_Resynthesize(pNtk *Abc_Ntk_t, pPars *Lpk_Par_t) int32 {
 			if i >= nNodes {
 				break
 			}
-			if !(pPars.fVeryVerbose != 0) {
+			if !(pPars.FVeryVerbose != 0) {
 				extra.Extra_ProgressBarUpdate(pProgress, i, "")
 			}
 			// skip the nodes that did not change
-			if p.pPars.fSatur != 0 && !(Lpk_NodeHasChanged(p, int32(pObj.ID)) != 0) {
+			if p.pPars.FSatur != 0 && !(Lpk_NodeHasChanged(p, int32(pObj.ID)) != 0) {
 				continue
 			}
 			// resynthesize
 			p.pObj = pObj
-			if p.pPars.fOldAlgo != 0 {
+			if p.pPars.FOldAlgo != 0 {
 				Lpk_ResynthesizeNode(p)
 			} else {
 				Lpk_ResynthesizeNodeNew(p)
 			}
 		}
-		if !(pPars.fVeryVerbose != 0) {
+		if !(pPars.FVeryVerbose != 0) {
 			extra.Extra_ProgressBarStop(pProgress)
 		}
 
@@ -747,11 +754,11 @@ func Lpk_Resynthesize(pNtk *Abc_Ntk_t, pPars *Lpk_Par_t) int32 {
 			break
 		}
 		nNodesPrev = abc.Abc_NtkNodeNum(pNtk)
-		if !(p.pPars.fSatur != 0) {
+		if !(p.pPars.FSatur != 0) {
 			break
 		}
 
-		if pPars.fFirst != 0 {
+		if pPars.FFirst != 0 {
 			break
 		}
 	}
@@ -769,7 +776,7 @@ func Lpk_Resynthesize(pNtk *Abc_Ntk_t, pPars *Lpk_Par_t) int32 {
 	   printf( "\n" );
 	*/
 
-	if pPars.fVerbose != 0 {
+	if pPars.FVerbose != 0 {
 		//        Cloud_PrintInfo( p->pDsdMan->dd );
 		p.nTotalNets2 = abc.Abc_NtkGetTotalFanins(pNtk)
 		p.nTotalNodes2 = abc.Abc_NtkNodeNum(pNtk)
@@ -780,7 +787,7 @@ func Lpk_Resynthesize(pNtk *Abc_Ntk_t, pPars *Lpk_Par_t) int32 {
 		fmt.Printf("Nodes = %5d (%3d)  Cuts = %5d (%4d)  Changes = %5d  Iter = %2d  Benefit = %d.\n", p.nNodesTotal, p.nNodesOver, p.nCutsTotal, p.nCutsUseful, p.nChanges, Iter, p.nBenefited)
 
 		fmt.Printf("Non-DSD:")
-		for i = 3; i <= pPars.nVarsMax; i++ {
+		for i = 3; i <= pPars.NVarsMax; i++ {
 			if p.nBlocks[i] != 0 {
 				fmt.Printf(" %d=%d", i, p.nBlocks[i])
 			}

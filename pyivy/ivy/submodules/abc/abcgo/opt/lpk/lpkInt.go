@@ -63,7 +63,8 @@ type Lpk_Cut_t struct {
 
 type Lpk_Man_t_ struct {
 	// parameters
-	pPars *Lpk_Par_t // the set of parameters
+	pPars   *Lpk_Par_t // the set of parameters
+	pAbcAPI *Lpk_AbcAPI
 	// current representation
 	pNtk *Abc_Ntk_t // the network
 	pObj *Abc_Obj_t // the node to resynthesize
@@ -173,16 +174,16 @@ func Lpk_LutNumVars(nLutsLim, nLutK int32) int32 {
 	return nLutsLim*(nLutK-1) + 1
 }
 
-func Lpk_LutNumLuts(nVarsMax, nLutK int32) int32 {
-	if nVarsMax <= 1 {
+func Lpk_LutNumLuts(NVarsMax, nLutK int32) int32 {
+	if NVarsMax <= 1 {
 		return 0
 	}
 	if nLutK < 2 {
 		return 0
 	}
 	divisor := nLutK - 1
-	count := (nVarsMax - 1) / divisor
-	if (nVarsMax-1)%divisor != 0 {
+	count := (NVarsMax - 1) / divisor
+	if (NVarsMax-1)%divisor != 0 {
 		count++
 	}
 	return count

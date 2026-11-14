@@ -95,7 +95,7 @@ func Lpk_Decompose_rec(pMan *Lpk_Man_t, p *Lpk_Fun_t) int32 {
 		Lpk_FunComputeCofSupps(p)
 	}
 	clk := time.Now()
-	resDSD := Lpk_DsdAnalize(pMan, p, pMan.pPars.nVarsShared)
+	resDSD := Lpk_DsdAnalize(pMan, p, pMan.pPars.NVarsShared)
 	pMan.timeEvalDsdAn += abctime(time.Since(clk))
 	if resDSD != nil && (resDSD.nBSVars == int32(p.nLutK) || resDSD.nBSVars == int32(p.nLutK)-1) && resDSD.AreaEst <= int32(p.nAreaLim) && resDSD.DelayEst <= int32(p.nDelayLim) {
 		clk = time.Now()
