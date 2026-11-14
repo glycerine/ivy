@@ -6,13 +6,7 @@ import "fmt"
 func Rtm_ManAlloc(p *Graph) *Rtm_Man_t {
 	return &Rtm_Man_t{source: p, sourceMap: make(map[int]*Rtm_Obj_t)}
 }
-func Rtm_ManFree(p *Rtm_Man_t) {
-	p.vObjs = nil
-	p.vPis = nil
-	p.vPos = nil
-	p.extra = nil
-	p.sourceMap = nil
-}
+func Rtm_ManFree(p *Rtm_Man_t) { *p = Rtm_Man_t{} }
 func Rtm_ManLatchMax(p *Rtm_Man_t) int32 {
 	var n int32
 	for _, o := range p.vObjs {
@@ -23,11 +17,14 @@ func Rtm_ManLatchMax(p *Rtm_Man_t) int32 {
 	return n
 }
 func Rtm_ObjAlloc(p *Rtm_Man_t, ni, no int32) *Rtm_Obj_t {
-	o := &Rtm_Obj_t{Id: int32(len(p.vObjs)), maxFanins: ni, maxFanouts: no, pCopy: InvalidEdge, Kind: And}
+	o := &Rtm_Obj_t{Id: int32(len(p.vObjs)), Num: ni, Temp: no, Type: ni == 1 && no == 0, pCopy: InvalidEdge, Kind: And}
 	p.vObjs = append(p.vObjs, o)
 	return o
 }
 func Rtm_ObjAddFanin(o, in *Rtm_Obj_t, complement int32) {
+	if len(o.fanins) >= 2 || int32(len(o.fanins)) >= o.Num || int32(len(in.fanouts)) >= in.Temp {
+		panic("aig: retiming connection exceeds construction capacity")
+	}
 	e := &Rtm_Edg_t{}
 	o.fanins = append(o.fanins, in)
 	o.edges = append(o.edges, e)
@@ -166,41 +163,44 @@ func Rtm_ManFromAig(g *Graph) *Rtm_Man_t {
 	p := Rtm_ManAlloc(g)
 	npi := len(g.inputs) - int(g.nRegs)
 	npo := len(g.outputs) - int(g.nRegs)
-	for id, n := range g.nodes {
-		if g.deleted[id] {
-			continue
-		}
-		o := Rtm_ObjAlloc(p, int32(len(nodeFanins(n))), int32(n.Refs))
-		o.Kind = n.Kind
-		p.sourceMap[id] = o
+	allocate := func(e Edge, ni, no int32) *Rtm_Obj_t {
+		o := Rtm_ObjAlloc(p, ni, no)
+		o.Kind = g.node(e).Kind
+		p.sourceMap[e.NodeID()] = o
+		return o
 	}
-	for i, e := range g.inputs {
-		o := p.sourceMap[e.NodeID()]
-		if i < npi {
-			p.vPis = append(p.vPis, o)
-		} else {
-			li := p.sourceMap[g.outputs[npo+i-npi].NodeID()]
-			Rtm_ObjAddFanin(o, li, 0)
-			p.latchObjs = append(p.latchObjs, o)
-		}
+	allocate(g.Const1(), 0, int32(g.node(g.Const1()).Refs))
+	for _, e := range g.inputs[:npi] {
+		p.vPis = append(p.vPis, allocate(e, 0, int32(g.node(e).Refs)))
 	}
-	for i, e := range g.outputs {
-		if i < npo {
-			o := p.sourceMap[e.NodeID()]
-			o.Type = true
-			p.vPos = append(p.vPos, o)
-		}
+	for _, e := range g.outputs[:npo] {
+		p.vPos = append(p.vPos, allocate(e, 1, 0))
+	}
+	for _, e := range g.inputs[npi:] {
+		p.latchObjs = append(p.latchObjs, allocate(e, 1, int32(g.node(e).Refs)))
+	}
+	for _, e := range g.outputs[npo:] {
+		allocate(e, 1, 1)
 	}
 	for id, n := range g.nodes {
-		if g.deleted[id] {
-			continue
+		if !g.deleted[id] && (n.Kind == And || n.Kind == ExclusiveOr || n.Kind == Buffer) {
+			allocate(Edge(id)<<1, int32(len(nodeFanins(n))), int32(n.Refs))
 		}
-		for _, f := range nodeFanins(n) {
-			c := int32(0)
-			if f.Complemented() {
-				c = 1
+	}
+	connect := func(e, f Edge) {
+		Rtm_ObjAddFanin(p.sourceMap[e.NodeID()], p.sourceMap[f.NodeID()], Aig_IsComplement(f))
+	}
+	for _, e := range g.outputs {
+		connect(e, g.node(e).Fanins[0])
+	}
+	for i, e := range g.inputs[npi:] {
+		connect(e, g.outputs[npo+i])
+	}
+	for id, n := range g.nodes {
+		if !g.deleted[id] && (n.Kind == And || n.Kind == ExclusiveOr || n.Kind == Buffer) {
+			for _, f := range nodeFanins(n) {
+				connect(Edge(id)<<1, f)
 			}
-			Rtm_ObjAddFanin(p.sourceMap[id], p.sourceMap[f.NodeID()], c)
 		}
 	}
 	return p
@@ -285,12 +285,13 @@ func Rtm_ManToAig(p *Rtm_Man_t) *Graph {
 		dupMetadata(g, p.source)
 	}
 	Aig_ManSetRegNum(g, n-int32(len(p.vPis)))
+	Aig_ManCleanup(g)
 	return g
 }
 
 // Backward mode retains ABC's unconstrained-initial-state contract (VOID latches).
 func Rtm_ManRetime(g *Graph, forward, steps, verbose int32) *Graph {
-	if g.nRegs == 0 || steps <= 0 {
+	if g.nRegs == 0 {
 		return Aig_ManDupOrdered(g)
 	}
 	if len(g.ClockDomains) > 1 {
@@ -304,6 +305,12 @@ func Rtm_ManRetime(g *Graph, forward, steps, verbose int32) *Graph {
 			v = RTM_VAL_VOID
 		}
 		Rtm_ObjAddFirst(p, o.edges[0], v)
+	}
+	for _, o := range p.vObjs {
+		if int32(len(o.fanins)) != o.Num || int32(len(o.fanouts)) != o.Temp {
+			panic("aig: incomplete retiming construction")
+		}
+		o.Num = 0
 	}
 	var queue []*Rtm_Obj_t
 	if forward != 0 {
@@ -357,6 +364,23 @@ func Rtm_ManRetime(g *Graph, forward, steps, verbose int32) *Graph {
 		out.RetimingChanged = true
 		out.FlopNumbers = nil
 		out.FlopReprs = nil
+		// Edge retiming replaces register identities. Only one-hot groups
+		// consisting entirely of unchanged true PIs retain their meaning.
+		out.OneHotGroups = nil
+		var inputGroups [][]int32
+		for _, group := range out.OneHotInputGroups {
+			keep := true
+			for _, input := range group {
+				if input < 0 || int(input) >= len(p.vPis) {
+					keep = false
+					break
+				}
+			}
+			if keep {
+				inputGroups = append(inputGroups, group)
+			}
+		}
+		out.OneHotInputGroups = inputGroups
 		if len(out.ClockDomains) == 1 {
 			out.ClockDomains[0] = make([]int32, out.nRegs)
 			for i := range out.ClockDomains[0] {
@@ -367,5 +391,5 @@ func Rtm_ManRetime(g *Graph, forward, steps, verbose int32) *Graph {
 	if verbose != 0 {
 		fmt.Printf("Retiming: %d moves, %d registers\n", moves, out.nRegs)
 	}
-	return out
+	return Aig_ManReduceLaches(out, verbose)
 }

@@ -17,14 +17,15 @@ type Rtm_Edg_t struct {
 	big   []uint32
 }
 type Rtm_Obj_t struct {
-	pCopy                 Edge
-	Kind                  NodeKind
-	Type, fMark, fAuto    bool
-	Num, Temp, Id         int32
-	fanins, fanouts       []*Rtm_Obj_t
-	edges, outEdges       []*Rtm_Edg_t
-	complements           []bool
-	maxFanins, maxFanouts int32
+	// Num is the fanin capacity during construction, then retiming depth.
+	// Temp holds the fanout capacity, matching the source construction checks.
+	pCopy              Edge
+	Kind               NodeKind
+	Type, fMark, fAuto bool
+	Num, Temp, Id      int32
+	fanins, fanouts    []*Rtm_Obj_t
+	edges, outEdges    []*Rtm_Edg_t
+	complements        []bool
 }
 type Rtm_Man_t struct {
 	vObjs, vPis, vPos, latchObjs []*Rtm_Obj_t
