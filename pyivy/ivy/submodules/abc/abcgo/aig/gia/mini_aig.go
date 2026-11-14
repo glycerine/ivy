@@ -61,7 +61,24 @@ func Gia_ManToMiniAig(g *Gia_Man_t) *miniaig.Mini_Aig_t {
 		if Gia_ObjIsAnd(obj) == 0 {
 			continue
 		}
-		obj.Value = uint32(miniaig.Mini_AigAnd(p, int(Gia_ObjFanin0Copy(obj)), int(Gia_ObjFanin1Copy(obj))))
+		// MiniAIG stores ordinary ANDs. Expand real gates using its existing
+		// constructors rather than treating their stored data fanins as ANDs.
+		a, b, c, kind := g.Gate(obj.id)
+		copyLit := func(lit int32) int { return int(Gia_ObjLitCopy(g, lit)) }
+		var literal int
+		switch kind {
+		case 2:
+			literal = miniaig.Mini_AigAnd(p, copyLit(a), copyLit(b))
+		case 3:
+			literal = miniaig.Mini_AigXor(p, copyLit(a), copyLit(b))
+		case 4:
+			literal = miniaig.Mini_AigMux(p, copyLit(a), copyLit(b), copyLit(c))
+		case 5:
+			literal = copyLit(a)
+		default:
+			panic("gia: invalid MiniAIG export gate")
+		}
+		obj.Value = uint32(literal)
 	}
 	for _, id := range vec.Vec_IntArray(g.vCos) {
 		obj := g.pObjs[id]

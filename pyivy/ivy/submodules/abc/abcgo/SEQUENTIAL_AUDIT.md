@@ -3085,3 +3085,23 @@ Focused remapping tests pass. The full uncached GIA race suite passes in
 23.667s (`/tmp/abcgo-identity-mini-review-race.log`) and GIA vet passes
 (`/tmp/abcgo-identity-mini-review-vet.log`). GIA remains under audit; original
 completion is still 2/131.
+
+MiniAIG export review: Gia_ManToMiniAig copied real XORs and MUXes as ANDs,
+changing exported functions. Added the failing regression before the fix
+(`/tmp/abcgo-mini-aig-export-red.log`). The exporter now dispatches logical
+gates through MiniAIG's existing AND/XOR/MUX constructors and forwards buffers.
+The original C giaMini.c routine assumes ordinary AND graphs; its ordinary
+AND path, input/output ordering, source Value updates and register count are
+preserved. This uses the existing expansion primitives, not a substitute
+export algorithm.
+
+The regression checks 32 signed XOR/buffer/MUX chains on all eight input
+assignments (256 rows), comparing all three round-trip outputs against direct
+Boolean expectations and checking graph/interface/register validity. A compiled
+original-C fixture checks eight signed ordinary AND graphs: complete MiniAIG
+fanin arrays and every source object's exported Value match exactly. Focused
+coverage passes in 1.820s (`/tmp/abcgo-identity-mini-review-focused.log`). Full
+uncached race suites pass for GIA (23.667s) and the base/abci exporter caller
+(28.848s), in `/tmp/abcgo-identity-mini-review-race.log`; GIA vet also passes.
+GIA export/import and other remaining algorithm families still need review.
+Original package completion remains 2/131; the sequential goal stays active.
