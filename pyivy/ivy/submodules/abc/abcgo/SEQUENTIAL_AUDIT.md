@@ -172,3 +172,25 @@ reports still mention incomplete conversion and selected-file validation;
 they cannot establish completion of this audit. Next review the graph/edge
 representation and mutation contracts, then the algorithm files and tests
 against src/aig/aig, recording source comparisons and any red regressions.
+
+### aig/aig: representation and mutation review checkpoint
+
+Inspected `graph.go`, `aigObj.go`, `aigInterface.go`, `aigConstruction.go`,
+`aigMan.go` (through cleanup/reference operations), `aigFrames.go`,
+`aigTruth.go`, `aigTable.go`, and `counterexample.go`; cross-checked terminal
+and mutation contracts in `src/aig/aig/aig.h`, `aigObj.c` and `aigMan.c`.
+The complete package audit remains in progress, including the other algorithm
+files and deeper source comparisons.
+
+Investigated apparently stale terminal indices after interface reordering.
+An initial proposed refresh passed local tests but failed the downstream
+`TestHideExposePreservesCioIDsAndBadListOrder`. Source inspection confirmed
+that register hiding deliberately preserves old CioIds until an explicit reset.
+Rejected the proposed behavior change, documented that contract, and added a
+regression for preservation followed by explicit index refresh and evaluation.
+This is not counted as a discovered production bug. Removed a redundant fanout
+rebuild in `Aig_ObjCreateCi`: `NewInput` already performs the rebuild.
+
+The package audit remains incomplete. Earlier full AIG race checks passed. Final sequential tests
+(`go test -p 1 ./aig/aig ./aig/saig ./proof/dch -count=1`) pass after the
+corrected contract test.

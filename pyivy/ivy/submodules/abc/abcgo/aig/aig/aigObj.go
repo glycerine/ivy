@@ -2,7 +2,7 @@ package aig
 
 import "fmt"
 
-func Aig_ObjCreateCi(p *Graph) Edge              { e := p.NewInput(); p.refreshFanouts(); return e }
+func Aig_ObjCreateCi(p *Graph) Edge              { return p.NewInput() }
 func Aig_ObjCreateCo(p *Graph, driver Edge) Edge { return p.AddOutput(driver) }
 
 func Aig_ObjCreate(p *Graph, ghost *Node) Edge {

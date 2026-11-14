@@ -5,6 +5,8 @@ import "fmt"
 // Aig_ManReorderCisCos reorders the graph's interface lists without changing
 // node IDs or logic. inputOrder and outputOrder must be permutations of the
 // existing interfaces; registers remain the final regCount CIs/COs.
+// Stored CioIDs and true-PI/PO counts are preserved for source-style retiming.
+// Call Aig_ManSetCioIds explicitly when current interface indices are needed.
 func Aig_ManReorderCisCos(g *Graph, inputOrder, outputOrder []Edge, regCount int32) error {
 	if g == nil {
 		return fmt.Errorf("aig: cannot reorder a nil graph")
