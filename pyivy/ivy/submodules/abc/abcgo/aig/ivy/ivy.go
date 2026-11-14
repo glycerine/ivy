@@ -79,6 +79,26 @@ type Ivy_FraigParams_t_ struct {
 	dActConeRatio, dActConeBumpMax                           float64
 	fProve, fVerbose, fDoSparse, nBTLimitNode, nBTLimitMiter int32
 }
+
+// Ivy_ManTakeData transfers the source C pData payload to the caller.
+func Ivy_ManTakeData(manager *Ivy_Man_t) any {
+	if manager == nil {
+		return nil
+	}
+	data := manager.pData
+	manager.pData = nil
+	return data
+}
+
+// Ivy_ManReadHaig returns the sequential equivalence graph created by
+// Ivy_ManHaigStart, matching the source pHaig field read by abcIvy.c.
+func Ivy_ManReadHaig(manager *Ivy_Man_t) *Ivy_Man_t {
+	if manager == nil {
+		return nil
+	}
+	return manager.pHaig
+}
+
 type Ivy_Cut_t struct {
 	nLatches        int32
 	nSize, nSizeMax int16
