@@ -2319,3 +2319,31 @@ all package test bodies ran. No experiments directories are in this module.
 The original sequential goal remains active with only root marked complete;
 AIG still needs final file/function inventory reconciliation and any remaining
 source control-flow gaps recorded by that check.
+
+### Final family coverage: frames, windows and standalone truth words
+
+Re-read all of aigFrames.go/aigFrames.c and added a 64-case source matrix:
+one through four frames and every combination of init/outs/regs/enlarge.
+Two inputs and two interacting registers exercise complemented next-state
+logic, reconvergence, ordinary outputs and an unused internal gate. Exact
+returned maps (including deleted copies), live object refs/levels/phases,
+terminal IDs, count metadata, name/spec and 13,600 exhaustive assignment
+results match the compiled original C. Source graph object state is unchanged.
+No frame bug found; native XOR/buffer support remains the existing typed
+extension, rather than reproducing C's EXOR-as-AND limitation.
+
+Read every window routine against aigWin.c: immediate frontier costs,
+high-fanout exception when the frontier cannot grow, level tie-breaking,
+stable removal order, marked construction zone and final mark cleanup.
+All 512 native cases match exact frontier/visited order and cleared marks:
+32 deterministic random AND graphs, four size limits and four fanout limits,
+with multiple output consumers and complemented pins. No window repair needed.
+
+Compared standalone truth-word combination against aigTruth.c for four word
+counts, all four AND pin phases and source-normalized XOR inputs (20 cases,
+120 words). The recursive Go wrapper retains owned truth tables and avoids
+source pData scratch aliasing; its error checks and constant/root-phase
+handling were read alongside existing truth, cut and factoring tests. No
+truth-word bug found in this checkpoint. Focused native frame tests pass in
+1.011s; window/truth tests pass in 1.115s. Header/allocation helper regressions
+from the subsequent inventory are being handled separately before closure.
