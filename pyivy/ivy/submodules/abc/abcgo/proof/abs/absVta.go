@@ -217,9 +217,9 @@ func Vga_ManDeriveCex(p *Vta_Man_t) *util.Abc_Cex_t {
 	var pThis *Vta_Obj_t
 	var pObj *gia.Gia_Obj_t
 	var i int32
-	pCex = util.Abc_CexAlloc(gia.Gia_ManRegNum(p.pGia), gia.Gia_ManPiNum(p.pGia), p.pPars.iFrame+1)
+	pCex = util.Abc_CexAlloc(gia.Gia_ManRegNum(p.pGia), gia.Gia_ManPiNum(p.pGia), p.pPars.IFrame+1)
 	pCex.IPo = 0
-	pCex.IFrame = p.pPars.iFrame
+	pCex.IFrame = p.pPars.IFrame
 	// inlining of macro Vta_ManForEachObjObj
 	for i = 1; i < p.nObjs; i++ {
 		pThis = Vta_ManObj(p, i)
@@ -463,13 +463,13 @@ func Vta_ManProfileAddition(p *Vta_Man_t, vTermsToAdd *vec.Vec_Int_t) {
 	// profile the added ones
 	// inlining of macro ABC_CALLOC
 	var i int32
-	pCounters := make([]int32, p.pPars.iFrame+1)
+	pCounters := make([]int32, p.pPars.IFrame+1)
 	// inlining of macro Vta_ManForEachObjObjVec
 	for i = 0; i < int32(vec.Vec_IntSize(vTermsToAdd)); i++ {
 		pThis = Vta_ManObj(p, vec.Vec_IntEntry(vTermsToAdd, int(i)))
 		pCounters[pThis.iFrame]++
 	}
-	for i = 0; i <= p.pPars.iFrame; i++ {
+	for i = 0; i <= p.pPars.IFrame; i++ {
 		util.Abc_Print(1, "%2d", pCounters[i])
 	}
 	util.Abc_Print(1, "***\n")
@@ -794,7 +794,7 @@ func Vta_ManRefineAbstraction(p *Vta_Man_t, f int32) *util.Abc_Cex_t {
 		}
 	}
 
-	if p.pPars.fAddLayer != 0 {
+	if p.pPars.FAddLayer != 0 {
 		// mark those currently included
 		// inlining of macro Vta_ManForEachObjVec
 		for i = 0; i < int32(vec.Vec_IntSize(vTermsToAdd)); i++ {
@@ -962,7 +962,7 @@ func Vga_ManStart(pGia *gia.Gia_Man_t, pPars *Abs_Par_t) *Vta_Man_t {
 	p.pSat = bsat.NewLabeledSolver2()
 	//    p->pSat->fVerbose = p->pPars->fVerbose;
 	//    sat_solver2_set_learntmax( p->pSat, pPars->nLearnedMax );
-	p.pSat.SetLearnedPolicy(p.pPars.nLearnedStart, p.pPars.nLearnedDelta, p.pPars.nLearnedPerce)
+	p.pSat.SetLearnedPolicy(p.pPars.NLearnedStart, p.pPars.NLearnedDelta, p.pPars.NLearnedPerce)
 	// start the abstraction
 	assert(gia.Gia_ManObjClasses(pGia) != nil, "gia.Gia_ManObjClasses(pGia) != nil")
 	p.vFrames = Gia_VtaAbsToFrames(gia.Gia_ManObjClasses(pGia))
@@ -984,7 +984,7 @@ func Vga_ManStart(pGia *gia.Gia_Man_t, pPars *Abs_Par_t) *Vta_Man_t {
 **********************************************************************
 */
 func Vga_ManStop(p *Vta_Man_t) {
-	if p.pPars.fVerbose != 0 {
+	if p.pPars.FVerbose != 0 {
 		util.Abc_Print(1, "SAT solver:  Var = %d  Cla = %d  Conf = %d  Lrn = %d  Reduce = %d  Cex = %d  Objs+ = %d\n",
 			p.pSat.NumVars(), int32(p.pSat.Statistics().Clauses), int32(p.pSat.Statistics().Conflicts),
 			int32(p.pSat.Statistics().Learned), p.pSat.Reductions(), p.nCexes, p.nObjAdded)
@@ -1212,7 +1212,7 @@ func Vga_ManAddClausesOne(p *Vta_Man_t, iObj int32, iFrame int32) {
 
 	} else if gia.Gia_ObjIsRo(p.pGia, pObj) != 0 {
 		if iFrame == 0 {
-			if p.pPars.fUseTermVars != 0 {
+			if p.pPars.FUseTermVars != 0 {
 				pThis0 = Vga_ManFindOrAdd(p, iObj, -1)
 				vtaSolverAddConstraint(p.pSat, iMainVar, Vta_ObjId(p, pThis0), 1, 0, iMainVar)
 
@@ -1371,8 +1371,8 @@ func Gia_VtaSendCancel(p *Vta_Man_t, fVerbose int32) {
 func Gia_VtaDumpAbsracted(p *Vta_Man_t, fVerbose int32) {
 	var pFileNameDef string = "vabs.aig"
 	var pFileName string
-	if p.pPars.pFileVabs != "" {
-		pFileName = p.pPars.pFileVabs
+	if p.pPars.PFileVabs != "" {
+		pFileName = p.pPars.PFileVabs
 	} else {
 		pFileName = pFileNameDef
 	}
@@ -1454,7 +1454,7 @@ func Gia_VtaPrintMemory(p *Vta_Man_t) {
 **********************************************************************
 */
 func Gia_VtaPerformInt(pAig *gia.Gia_Man_t, pPars *Abs_Par_t) int32 {
-	if pPars.nTimeOut != 0 {
+	if pPars.NTimeOut != 0 {
 		defer absPinClockThread()()
 	}
 	var p *Vta_Man_t
@@ -1472,7 +1472,7 @@ func Gia_VtaPerformInt(pAig *gia.Gia_Man_t, pPars *Abs_Par_t) int32 {
 	var clk2 int64
 	// preconditions
 	assert(gia.Gia_ManPoNum(pAig) == 1, "gia.Gia_ManPoNum(pAig) == 1")
-	assert(pPars.nFramesMax == 0 || pPars.nFramesStart <= pPars.nFramesMax, "pPars.nFramesMax == 0 || pPars.nFramesStart <= pPars.nFramesMax")
+	assert(pPars.NFramesMax == 0 || pPars.NFramesStart <= pPars.NFramesMax, "pPars.nFramesMax == 0 || pPars.nFramesStart <= pPars.nFramesMax")
 	// The source VTA propagation and refinement operate on AND-inverter
 	// graphs. Treat native XOR/MUX nodes as unsupported rather than deriving
 	// frame classes using the wrong gate semantics.
@@ -1504,25 +1504,25 @@ func Gia_VtaPerformInt(pAig *gia.Gia_Man_t, pPars *Abs_Par_t) int32 {
 	// start the manager
 	p = Vga_ManStart(pAig, pPars)
 	// set runtime limit
-	if p.pPars.nTimeOut != 0 {
-		p.deadline = absCPUClock() + int64(p.pPars.nTimeOut)*int64(time.Second)
+	if p.pPars.NTimeOut != 0 {
+		p.deadline = absCPUClock() + int64(p.pPars.NTimeOut)*int64(time.Second)
 		p.pSat.SetRuntimeDeadline(absCPUClock, p.deadline)
 	}
 	// perform initial abstraction
-	if p.pPars.fVerbose != 0 {
+	if p.pPars.FVerbose != 0 {
 		util.Abc_Print(1, "Running variable-timeframe abstraction (VTA) with the following parameters:\n")
 		util.Abc_Print(1, "FramePast = %d  FrameMax = %d  ConfMax = %d  Timeout = %d  RatioMin = %d %%\n",
-			pPars.nFramesPast, pPars.nFramesMax, pPars.nConfLimit, pPars.nTimeOut, pPars.nRatioMin)
+			pPars.NFramesPast, pPars.NFramesMax, pPars.NConfLimit, pPars.NTimeOut, pPars.NRatioMin)
 		util.Abc_Print(1, "LearnStart = %d  LearnDelta = %d  LearnRatio = %d %%.\n",
-			pPars.nLearnedStart, pPars.nLearnedDelta, pPars.nLearnedPerce)
+			pPars.NLearnedStart, pPars.NLearnedDelta, pPars.NLearnedPerce)
 		//        util.Abc_Print( 1, "Frame   %%   Abs   %%   Confl  Cex    SatVar   Core   F0   F1   F2  ...\n" );
 		util.Abc_Print(1, " Frame   %%   Abs   %%   Confl  Cex   Vars   Clas   Lrns   Core     Time      Mem\n")
 	}
 	assert(vec.Vec_PtrSize(p.vFrames) > 0, "vec.Vec_PtrSize(p.vFrames) > 0")
 	i = 0
-	for f = 0; p.pPars.nFramesMax == 0 || f < p.pPars.nFramesMax; f++ {
+	for f = 0; p.pPars.NFramesMax == 0 || f < p.pPars.NFramesMax; f++ {
 		var nConflsBeg int32 = int32(p.pSat.Statistics().Conflicts)
-		p.pPars.iFrame = f
+		p.pPars.IFrame = f
 		// realloc storage for abstraction marks
 		if f == p.nWords*32 {
 			p.nWords = Vec_IntDoubleWidth(p.vSeens, p.nWords)
@@ -1538,7 +1538,7 @@ func Gia_VtaPerformInt(pAig *gia.Gia_Man_t, pPars *Abs_Par_t) int32 {
 		if f < int32(vec.Vec_PtrSize(p.vFrames)) {
 			Vga_ManLoadSlice(p, vec.Vec_PtrEntry(p.vFrames, int(f)).(*vec.Vec_Int_t), 0)
 		} else {
-			for i = 1; i <= util.Abc_MinInt(p.pPars.nFramesPast, f); i++ {
+			for i = 1; i <= util.Abc_MinInt(p.pPars.NFramesPast, f); i++ {
 				Vga_ManLoadSlice(p, vec.Vec_PtrEntry(p.vCores, int(f-i)).(*vec.Vec_Int_t), i)
 			}
 		}
@@ -1546,7 +1546,7 @@ func Gia_VtaPerformInt(pAig *gia.Gia_Man_t, pPars *Abs_Par_t) int32 {
 		// iterate as long as there are counter-examples
 		for i = 0; ; i++ {
 			clk2 = util.Abc_Clock()
-			vCore = Vta_ManUnsatCore(Vga_ManGetOutLit(p, f), p.pSat, pPars.nConfLimit, pPars.fVerbose, &Status, &nConfls)
+			vCore = Vta_ManUnsatCore(Vga_ManGetOutLit(p, f), p.pSat, pPars.NConfLimit, pPars.FVerbose, &Status, &nConfls)
 			assert((vCore != nil) == (Status == 1), "(vCore != nil) == (Status == 1)")
 			if Status == -1 { // resource limit is reached
 
@@ -1573,7 +1573,7 @@ func Gia_VtaPerformInt(pAig *gia.Gia_Man_t, pPars *Abs_Par_t) int32 {
 				goto finish
 			}
 			// print the result (do not count it towards change)
-			Vta_ManAbsPrintFrame(p, nil, f+1, int32(p.pSat.Statistics().Conflicts)-nConflsBeg, i, util.Abc_Clock()-clk, p.pPars.fVerbose)
+			Vta_ManAbsPrintFrame(p, nil, f+1, int32(p.pSat.Statistics().Conflicts)-nConflsBeg, i, util.Abc_Clock()-clk, p.pPars.FVerbose)
 		}
 		assert(Status == 1, "Status == 1")
 		// valid core is obtained
@@ -1589,7 +1589,7 @@ func Gia_VtaPerformInt(pAig *gia.Gia_Man_t, pPars *Abs_Par_t) int32 {
 
 		// run SAT solver
 		clk2 = util.Abc_Clock()
-		vCore = Vta_ManUnsatCore(Vga_ManGetOutLit(p, f), p.pSat, pPars.nConfLimit, p.pPars.fVerbose, &Status, &nConfls)
+		vCore = Vta_ManUnsatCore(Vga_ManGetOutLit(p, f), p.pSat, pPars.NConfLimit, p.pPars.FVerbose, &Status, &nConfls)
 		p.timeUnsat += util.Abc_Clock() - clk2
 		assert((vCore != nil) == (Status == 1), "(vCore != nil) == (Status == 1)")
 		if Status == -1 { // resource limit is reached
@@ -1598,7 +1598,7 @@ func Gia_VtaPerformInt(pAig *gia.Gia_Man_t, pPars *Abs_Par_t) int32 {
 		if Status == 0 {
 			Vta_ManSatVerify(p)
 			// make sure, there was no initial abstraction (otherwise, it was invalid)
-			assert(gia.Gia_ManObjClasses(pAig) == nil && f < p.pPars.nFramesStart, "gia.Gia_ManObjClasses(pAig) == nil && f < p.pPars.nFramesStart")
+			assert(gia.Gia_ManObjClasses(pAig) == nil && f < p.pPars.NFramesStart, "gia.Gia_ManObjClasses(pAig) == nil && f < p.pPars.nFramesStart")
 			pCex = Vga_ManDeriveCex(p)
 			break
 		}
@@ -1608,7 +1608,7 @@ func Gia_VtaPerformInt(pAig *gia.Gia_Man_t, pPars *Abs_Par_t) int32 {
 		vec.Vec_IntSort(vCore, 1)
 		vec.Vec_PtrPush(p.vCores, vCore)
 		// print the result
-		if Vta_ManAbsPrintFrame(p, vCore, f+1, int32(p.pSat.Statistics().Conflicts)-nConflsBeg, i, util.Abc_Clock()-clk, p.pPars.fVerbose) != 0 {
+		if Vta_ManAbsPrintFrame(p, vCore, f+1, int32(p.pSat.Statistics().Conflicts)-nConflsBeg, i, util.Abc_Clock()-clk, p.pPars.FVerbose) != 0 {
 			// reset the counter of frames without change
 			nCountNoChange = 1
 			p.pPars.nFramesNoChange = 0
@@ -1619,30 +1619,30 @@ func Gia_VtaPerformInt(pAig *gia.Gia_Man_t, pPars *Abs_Par_t) int32 {
 			if abcmain.Abc_FrameIsBridgeMode() != 0 {
 				// cancel old one if it was sent
 				if fOneIsSent != 0 {
-					Gia_VtaSendCancel(p, pPars.fVerbose)
+					Gia_VtaSendCancel(p, pPars.FVerbose)
 				}
 				// send new one
-				Gia_VtaSendAbsracted(p, pPars.fVerbose)
+				Gia_VtaSendAbsracted(p, pPars.FVerbose)
 				fOneIsSent = 1
 			}
 		}
 		// dump the model
-		if (p.pPars.fDumpVabs != 0) && (f&1) != 0 {
+		if (p.pPars.FDumpVabs != 0) && (f&1) != 0 {
 			var Command string // was [1000]byte in C
 
 			abcmain.Abc_FrameSetStatus(-1)
 			abcmain.Abc_FrameSetCex(nil)
 			abcmain.Abc_FrameSetNFrames(f + 1)
-			fileName := p.pPars.pFileVabs
+			fileName := p.pPars.PFileVabs
 			if fileName == "" {
 				fileName = "vtabs.aig"
 			}
 			Command = fmt.Sprintf("write_status %s", extra.Extra_FileNameGenericAppend(fileName, ".status"))
 			abcmain.Cmd_CommandExecute(abcmain.Abc_FrameGetGlobalFrame(), Command)
-			Gia_VtaDumpAbsracted(p, pPars.fVerbose)
+			Gia_VtaDumpAbsracted(p, pPars.FVerbose)
 		}
 		// check if the number of objects is below limit
-		if p.nSeenGla >= gia.Gia_ManCandNum(pAig)*(100-pPars.nRatioMin)/100 {
+		if p.nSeenGla >= gia.Gia_ManCandNum(pAig)*(100-pPars.NRatioMin)/100 {
 			Status = -1
 			break
 		}
@@ -1650,7 +1650,7 @@ func Gia_VtaPerformInt(pAig *gia.Gia_Man_t, pPars *Abs_Par_t) int32 {
 finish:
 	// analize the results
 	if pCex == nil {
-		if (p.pPars.fVerbose != 0) && Status == -1 {
+		if (p.pPars.FVerbose != 0) && Status == -1 {
 			fmt.Printf("\n")
 		}
 		if vec.Vec_PtrSize(p.vCores) == 0 {
@@ -1663,23 +1663,23 @@ finish:
 			gia.Gia_ManSetObjClasses(pAig, Gia_VtaFramesToAbs(p.vCores))
 			if Status == -1 {
 				if p.deadline != 0 && absCPUClock() >= p.deadline {
-					util.Abc_Print(1, "Timeout %d sec in frame %d with a %d-stable abstraction.    ", p.pPars.nTimeOut, f, p.pPars.nFramesNoChange)
-				} else if pPars.nConfLimit != 0 && int32(p.pSat.Statistics().Conflicts) >= pPars.nConfLimit {
-					util.Abc_Print(1, "Exceeded %d conflicts in frame %d with a %d-stable abstraction.  ", pPars.nConfLimit, f, p.pPars.nFramesNoChange)
-				} else if p.nSeenGla >= gia.Gia_ManCandNum(pAig)*(100-pPars.nRatioMin)/100 {
-					util.Abc_Print(1, "The ratio of abstracted objects is less than %d %% in frame %d.  ", pPars.nRatioMin, f)
+					util.Abc_Print(1, "Timeout %d sec in frame %d with a %d-stable abstraction.    ", p.pPars.NTimeOut, f, p.pPars.nFramesNoChange)
+				} else if pPars.NConfLimit != 0 && int32(p.pSat.Statistics().Conflicts) >= pPars.NConfLimit {
+					util.Abc_Print(1, "Exceeded %d conflicts in frame %d with a %d-stable abstraction.  ", pPars.NConfLimit, f, p.pPars.nFramesNoChange)
+				} else if p.nSeenGla >= gia.Gia_ManCandNum(pAig)*(100-pPars.NRatioMin)/100 {
+					util.Abc_Print(1, "The ratio of abstracted objects is less than %d %% in frame %d.  ", pPars.NRatioMin, f)
 				} else {
 					util.Abc_Print(1, "Abstraction stopped for unknown reason in frame %d.  ", f)
 				}
 
 			} else {
-				p.pPars.iFrame++
+				p.pPars.IFrame++
 				util.Abc_Print(1, "VTA completed %d frames with a %d-stable abstraction.  ", f, p.pPars.nFramesNoChange)
 			}
 		}
 
 	} else {
-		if p.pPars.fVerbose != 0 {
+		if p.pPars.FVerbose != 0 {
 			fmt.Printf("\n")
 		}
 		// ABC's C implementation reports SAT even when this replay fails. In
@@ -1693,14 +1693,14 @@ finish:
 				panic(err)
 			}
 			util.Abc_Print(1, "Counter-example detected in frame %d.  ", f)
-			p.pPars.iFrame = pCex.IFrame - 1
+			p.pPars.IFrame = pCex.IFrame - 1
 			gia.Gia_ManSetObjClasses(pAig, nil)
 			RetValue = 0
 		}
 	}
 	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk)
 
-	if p.pPars.fVerbose != 0 {
+	if p.pPars.FVerbose != 0 {
 		p.timeOther = (util.Abc_Clock() - clk) - p.timeUnsat - p.timeSat - p.timeCex
 		// inlining of macro ABC_PRTP
 		util.Abc_Print(1, "%s =", ("Runtime: Solver UNSAT"))
@@ -1740,11 +1740,11 @@ finish:
 */
 func Gia_VtaPerform(pAig *gia.Gia_Man_t, pPars *Abs_Par_t) int32 {
 	var RetValue int32 = -1
-	if gia.Gia_ManObjClasses(pAig) == nil && (pPars.fUseRollback != 0) {
-		var nFramesMaxOld int32 = pPars.nFramesMax
-		pPars.nFramesMax = pPars.nFramesStart
+	if gia.Gia_ManObjClasses(pAig) == nil && (pPars.FUseRollback != 0) {
+		var nFramesMaxOld int32 = pPars.NFramesMax
+		pPars.NFramesMax = pPars.NFramesStart
 		RetValue = Gia_VtaPerformInt(pAig, pPars)
-		pPars.nFramesMax = nFramesMaxOld
+		pPars.NFramesMax = nFramesMaxOld
 	}
 	if RetValue == 0 {
 		return RetValue

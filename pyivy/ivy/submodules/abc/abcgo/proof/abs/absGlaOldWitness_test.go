@@ -22,7 +22,7 @@ func TestOldGlaClearsStaleWitnessOnUnresolvedRun(t *testing.T) {
 	}
 	var p Abs_Par_t
 	Abs_ParSetDefaults(&p)
-	p.nFramesMax = 1
+	p.NFramesMax = 1
 	if got := Gia_ManPerformGlaOld(g, &p, 0); got != -1 {
 		t.Fatalf("result=%d", got)
 	}

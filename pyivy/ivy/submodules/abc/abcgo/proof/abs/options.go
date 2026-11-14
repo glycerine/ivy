@@ -52,38 +52,38 @@ func flag(value bool) int32 {
 // Options reads the configuration without changing result fields.
 func (p *Abs_Par_t) Options() Options {
 	return Options{
-		FramesMax: p.nFramesMax, FramesStart: p.nFramesStart, FramesPast: p.nFramesPast,
-		ConflictLimit: p.nConfLimit, LearnedMax: p.nLearnedMax, LearnedStart: p.nLearnedStart,
-		LearnedDelta: p.nLearnedDelta, LearnedPercent: p.nLearnedPerce, TimeoutSeconds: p.nTimeOut,
-		RatioMin: p.nRatioMin, RatioMinRefine: p.nRatioMin2, RatioMax: p.nRatioMax,
-		UseTerminalVariables: p.fUseTermVars != 0, UseRollback: p.fUseRollback != 0,
-		PropagateFanout: p.fPropFanout != 0, AddLayer: p.fAddLayer != 0, NewRefinement: p.fNewRefine != 0,
-		SkipIntermediate: p.fUseSkip != 0, SimpleCNF: p.fUseSimple != 0, SkipHash: p.fSkipHash != 0,
-		UseFullProof: p.fUseFullProof != 0, DumpVariableAbstraction: p.fDumpVabs != 0,
-		DumpMappedAbstraction: p.fDumpMabs != 0, CallProver: p.fCallProver != 0,
-		SimplifyBeforeProver: p.fSimpProver != 0, VariableAbstractionFile: p.pFileVabs,
-		Verbose: p.fVerbose != 0, VeryVerbose: p.fVeryVerbose != 0, FramesNoChangeLimit: p.nFramesNoChangeLim,
+		FramesMax: p.NFramesMax, FramesStart: p.NFramesStart, FramesPast: p.NFramesPast,
+		ConflictLimit: p.NConfLimit, LearnedMax: p.nLearnedMax, LearnedStart: p.NLearnedStart,
+		LearnedDelta: p.NLearnedDelta, LearnedPercent: p.NLearnedPerce, TimeoutSeconds: p.NTimeOut,
+		RatioMin: p.NRatioMin, RatioMinRefine: p.NRatioMin2, RatioMax: p.NRatioMax,
+		UseTerminalVariables: p.FUseTermVars != 0, UseRollback: p.FUseRollback != 0,
+		PropagateFanout: p.FPropFanout != 0, AddLayer: p.FAddLayer != 0, NewRefinement: p.FNewRefine != 0,
+		SkipIntermediate: p.FUseSkip != 0, SimpleCNF: p.FUseSimple != 0, SkipHash: p.FSkipHash != 0,
+		UseFullProof: p.FUseFullProof != 0, DumpVariableAbstraction: p.FDumpVabs != 0,
+		DumpMappedAbstraction: p.FDumpMabs != 0, CallProver: p.FCallProver != 0,
+		SimplifyBeforeProver: p.FSimpProver != 0, VariableAbstractionFile: p.PFileVabs,
+		Verbose: p.FVerbose != 0, VeryVerbose: p.FVeryVerbose != 0, FramesNoChangeLimit: p.NFramesNoChangeLim,
 	}
 }
 
 // SetOptions replaces the configuration, preserving progress from prior runs.
 func (p *Abs_Par_t) SetOptions(o Options) {
-	p.nFramesMax, p.nFramesStart, p.nFramesPast = o.FramesMax, o.FramesStart, o.FramesPast
-	p.nConfLimit, p.nLearnedMax, p.nLearnedStart = o.ConflictLimit, o.LearnedMax, o.LearnedStart
-	p.nLearnedDelta, p.nLearnedPerce, p.nTimeOut = o.LearnedDelta, o.LearnedPercent, o.TimeoutSeconds
-	p.nRatioMin, p.nRatioMin2, p.nRatioMax = o.RatioMin, o.RatioMinRefine, o.RatioMax
-	p.fUseTermVars, p.fUseRollback = flag(o.UseTerminalVariables), flag(o.UseRollback)
-	p.fPropFanout, p.fAddLayer, p.fNewRefine = flag(o.PropagateFanout), flag(o.AddLayer), flag(o.NewRefinement)
-	p.fUseSkip, p.fUseSimple, p.fSkipHash = flag(o.SkipIntermediate), flag(o.SimpleCNF), flag(o.SkipHash)
-	p.fUseFullProof, p.fDumpVabs, p.fDumpMabs = flag(o.UseFullProof), flag(o.DumpVariableAbstraction), flag(o.DumpMappedAbstraction)
-	p.fCallProver, p.fSimpProver = flag(o.CallProver), flag(o.SimplifyBeforeProver)
-	p.pFileVabs, p.fVerbose, p.fVeryVerbose = o.VariableAbstractionFile, flag(o.Verbose), flag(o.VeryVerbose)
-	p.nFramesNoChangeLim = o.FramesNoChangeLimit
+	p.NFramesMax, p.NFramesStart, p.NFramesPast = o.FramesMax, o.FramesStart, o.FramesPast
+	p.NConfLimit, p.nLearnedMax, p.NLearnedStart = o.ConflictLimit, o.LearnedMax, o.LearnedStart
+	p.NLearnedDelta, p.NLearnedPerce, p.NTimeOut = o.LearnedDelta, o.LearnedPercent, o.TimeoutSeconds
+	p.NRatioMin, p.NRatioMin2, p.NRatioMax = o.RatioMin, o.RatioMinRefine, o.RatioMax
+	p.FUseTermVars, p.FUseRollback = flag(o.UseTerminalVariables), flag(o.UseRollback)
+	p.FPropFanout, p.FAddLayer, p.FNewRefine = flag(o.PropagateFanout), flag(o.AddLayer), flag(o.NewRefinement)
+	p.FUseSkip, p.FUseSimple, p.FSkipHash = flag(o.SkipIntermediate), flag(o.SimpleCNF), flag(o.SkipHash)
+	p.FUseFullProof, p.FDumpVabs, p.FDumpMabs = flag(o.UseFullProof), flag(o.DumpVariableAbstraction), flag(o.DumpMappedAbstraction)
+	p.FCallProver, p.FSimpProver = flag(o.CallProver), flag(o.SimplifyBeforeProver)
+	p.PFileVabs, p.FVerbose, p.FVeryVerbose = o.VariableAbstractionFile, flag(o.Verbose), flag(o.VeryVerbose)
+	p.NFramesNoChangeLim = o.FramesNoChangeLimit
 }
 
 // Progress returns the most recent frame and stability counters.
 func (p *Abs_Par_t) Progress() Progress {
-	return Progress{Frame: p.iFrame, FrameProved: p.iFrameProved, FramesNoChange: p.nFramesNoChange}
+	return Progress{Frame: p.IFrame, FrameProved: p.iFrameProved, FramesNoChange: p.nFramesNoChange}
 }
 
 // LegacyOptions configures the older abstraction/refinement driver.

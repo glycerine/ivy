@@ -16,8 +16,8 @@ func TestGlaRefineAddsLayerOfPseudoInputs(t *testing.T) {
 	gia.Gia_ManAppendCo(g, root)
 	pars := &Abs_Par_t{}
 	Abs_ParSetDefaults(pars)
-	pars.fUseSimple = 1
-	pars.fAddLayer = 1
+	pars.FUseSimple = 1
+	pars.FAddLayer = 1
 	p := Ga2_ManStart(g, pars)
 	defer Ga2_ManStop(p)
 	Ga2_ManSetupNode(p, gia.Gia_ManObj(g, root>>1), 1)

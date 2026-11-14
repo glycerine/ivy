@@ -58,11 +58,11 @@ func TestOldGlaSequentialTruthOracle(t *testing.T) {
 				}
 				pars := &Abs_Par_t{}
 				Abs_ParSetDefaults(pars)
-				pars.fAddLayer = layer
-				pars.nFramesMax = 3
-				pars.nRatioMin = 0
-				pars.nRatioMin2 = 0
-				pars.nFramesNoChangeLim = 100
+				pars.FAddLayer = layer
+				pars.NFramesMax = 3
+				pars.NRatioMin = 0
+				pars.NRatioMin2 = 0
+				pars.NFramesNoChangeLim = 100
 				result := Gia_ManPerformGlaOld(g, pars, 0)
 				if expected {
 					if result != 0 || g.SequentialCounterexample() == nil || gia.Gia_ManVerifyCex(g, g.SequentialCounterexample(), 0) != 1 {

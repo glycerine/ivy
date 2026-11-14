@@ -13,10 +13,10 @@ func TestGlaDriverFindsAndReplaysCounterexample(t *testing.T) {
 	gia.Gia_ManAppendCo(g, gate)
 	pars := &Abs_Par_t{}
 	Abs_ParSetDefaults(pars)
-	pars.nFramesMax = 2
-	pars.nRatioMin = 0
-	pars.nRatioMin2 = 0
-	pars.nFramesNoChangeLim = 100
+	pars.NFramesMax = 2
+	pars.NRatioMin = 0
+	pars.NRatioMin2 = 0
+	pars.NFramesNoChangeLim = 100
 	got := Gia_ManPerformGla(g, pars)
 	if got != 0 || g.SequentialCounterexample() == nil || gia.Gia_ManVerifyCex(g, g.SequentialCounterexample(), 0) != 1 {
 		t.Fatalf("result %d invalid witness", got)
@@ -54,11 +54,11 @@ func TestGlaDriverRefinesSpuriousCounterexample(t *testing.T) {
 	gia.Gia_ManAppendCo(g, gate)
 	pars := &Abs_Par_t{}
 	Abs_ParSetDefaults(pars)
-	pars.fUseSimple = 1
-	pars.nFramesMax = 1
-	pars.nRatioMin = 0
-	pars.nRatioMin2 = 0
-	pars.nFramesNoChangeLim = 100
+	pars.FUseSimple = 1
+	pars.NFramesMax = 1
+	pars.NRatioMin = 0
+	pars.NRatioMin2 = 0
+	pars.NFramesNoChangeLim = 100
 	if result := Gia_ManPerformGla(g, pars); result != -1 || g.SequentialCounterexample() != nil || pars.iFrameProved != 0 {
 		t.Fatalf("result %d, frame %d, witness %v", result, pars.iFrameProved, g.SequentialCounterexample())
 	}
@@ -76,10 +76,10 @@ func TestGlaDriverSequentialCounterexample(t *testing.T) {
 	gia.Gia_ManSetRegNum(g, 2)
 	pars := &Abs_Par_t{}
 	Abs_ParSetDefaults(pars)
-	pars.nFramesMax = 4
-	pars.nRatioMin = 0
-	pars.nRatioMin2 = 0
-	pars.nFramesNoChangeLim = 100
+	pars.NFramesMax = 4
+	pars.NRatioMin = 0
+	pars.NRatioMin2 = 0
+	pars.NFramesNoChangeLim = 100
 	if result := Gia_ManPerformGla(g, pars); result != 0 || g.SequentialCounterexample() == nil || g.SequentialCounterexample().IFrame != 2 || gia.Gia_ManVerifyCex(g, g.SequentialCounterexample(), 0) != 1 {
 		t.Fatalf("result %d, witness %+v", result, g.SequentialCounterexample())
 	}
@@ -94,10 +94,10 @@ func TestGlaDriverConstantTrueAtLaterFrameSourceAssertion(t *testing.T) {
 	gia.Gia_ManSetRegNum(g, 1)
 	pars := &Abs_Par_t{}
 	Abs_ParSetDefaults(pars)
-	pars.nFramesMax = 3
-	pars.nRatioMin = 0
-	pars.nRatioMin2 = 0
-	pars.nFramesNoChangeLim = 100
+	pars.NFramesMax = 3
+	pars.NRatioMin = 0
+	pars.NRatioMin2 = 0
+	pars.NFramesNoChangeLim = 100
 	defer func() {
 		if got := recover(); got != "abs: GLA target literal must exceed one" {
 			t.Fatalf("panic=%v, want source literal assertion", got)
@@ -114,10 +114,10 @@ func TestGlaDriverLayerModeTerminatesWithRealWitness(t *testing.T) {
 	gia.Gia_ManAppendCo(g, out)
 	pars := &Abs_Par_t{}
 	Abs_ParSetDefaults(pars)
-	pars.fAddLayer = 1
-	pars.nFramesMax = 1
-	pars.nRatioMin = 0
-	pars.nRatioMin2 = 0
+	pars.FAddLayer = 1
+	pars.NFramesMax = 1
+	pars.NRatioMin = 0
+	pars.NRatioMin2 = 0
 	if result := Gia_ManPerformGla(g, pars); result != 0 || g.SequentialCounterexample() == nil || gia.Gia_ManVerifyCex(g, g.SequentialCounterexample(), 0) != 1 {
 		t.Fatalf("result %d witness %+v", result, g.SequentialCounterexample())
 	}
@@ -131,11 +131,11 @@ func TestGlaDriverTimesOutOnConstantFalseFrames(t *testing.T) {
 	gia.Gia_ManSetRegNum(g, 1)
 	pars := &Abs_Par_t{}
 	Abs_ParSetDefaults(pars)
-	pars.nFramesMax = 0
-	pars.nTimeOut = 1
-	pars.nRatioMin = 0
-	pars.nRatioMin2 = 0
-	pars.nFramesNoChangeLim = 100
+	pars.NFramesMax = 0
+	pars.NTimeOut = 1
+	pars.NRatioMin = 0
+	pars.NRatioMin2 = 0
+	pars.NFramesNoChangeLim = 100
 	if result := Gia_ManPerformGla(g, pars); result != -1 || g.SequentialCounterexample() != nil {
 		t.Fatalf("result %d witness %+v", result, g.SequentialCounterexample())
 	}
@@ -182,12 +182,12 @@ func TestGlaSkippedFramesStillUnrollState(t *testing.T) {
 		gia.Gia_ManAppendCo(g, q1)
 		gia.Gia_ManSetRegNum(g, 2)
 		p := NewParameters()
-		p.nFramesMax, p.nFramesNoChangeLim = 4, 100
-		p.nRatioMin, p.nRatioMin2 = 0, 0
+		p.NFramesMax, p.NFramesNoChangeLim = 4, 100
+		p.NRatioMin, p.NRatioMin2 = 0, 0
 		if mode == "start" {
-			p.nFramesStart = 2
+			p.NFramesStart = 2
 		} else {
-			p.fUseSkip, p.iFrameProved = 1, 2
+			p.FUseSkip, p.iFrameProved = 1, 2
 		}
 		got := Gia_ManPerformGla(g, p)
 		cex := g.SequentialCounterexample()

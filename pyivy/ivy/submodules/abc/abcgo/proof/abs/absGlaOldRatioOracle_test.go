@@ -26,14 +26,14 @@ func TestOldGlaRatioLimitSourceOracle(t *testing.T) {
 				right := gia.Gia_ManAppendAnd(g, gia.Gia_ManAppendAnd(g, x[0]^1, x[3]), x[4])
 				gia.Gia_ManAppendCo(g, gia.Gia_ManAppendAnd(g, left, right))
 				p := NewParameters()
-				p.fUseFullProof, p.fAddLayer, p.fPropFanout = full, 1, 0
-				p.nRatioMin, p.nRatioMin2, p.nFramesMax, p.nTimeOut = ratio, 0, 3, 1
+				p.FUseFullProof, p.FAddLayer, p.FPropFanout = full, 1, 0
+				p.NRatioMin, p.NRatioMin2, p.NFramesMax, p.NTimeOut = ratio, 0, 3, 1
 				status := Gia_ManPerformGlaOld(g, p, 0)
 				var classes strings.Builder
 				for _, c := range vec.Vec_IntArray(gia.Gia_ManGateClasses(g)) {
 					fmt.Fprint(&classes, c)
 				}
-				got := fmt.Sprintf("SOURCE status=%d frame=%d stable=%d cex=%d classes=%s", status, p.iFrame, p.nFramesNoChange, boolToInt32(g.SequentialCounterexample() != nil), classes.String())
+				got := fmt.Sprintf("SOURCE status=%d frame=%d stable=%d cex=%d classes=%s", status, p.IFrame, p.nFramesNoChange, boolToInt32(g.SequentialCounterexample() != nil), classes.String())
 				want := "SOURCE status=-1 frame=3 stable=2 cex=0 classes=300000111110"
 				if ratio == 100 {
 					want = "SOURCE status=-1 frame=0 stable=0 cex=0 classes=100000111110"

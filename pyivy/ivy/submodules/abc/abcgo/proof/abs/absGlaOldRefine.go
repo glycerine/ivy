@@ -9,7 +9,7 @@ func Gla_ManRefinement(p *Gla_Man_t) *vec.Vec_Int_t {
 	var cex *util.Abc_Cex_t
 	var mapping *vec.Vec_Int_t
 	Gia_GlaPrepareCexAndMap(p, &cex, &mapping)
-	selected := Rnm_ManRefine(p.pRnm, cex, mapping, p.pPars.fPropFanout, p.pPars.fNewRefine, 1)
+	selected := Rnm_ManRefine(p.pRnm, cex, mapping, p.pPars.FPropFanout, p.pPars.FNewRefine, 1)
 	if vec.Vec_IntSize(selected) == 0 {
 		p.pGia.ClearSequentialCounterexample()
 		witness := Gla_ManDeriveCex(p, mapping)

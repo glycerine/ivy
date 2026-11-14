@@ -13,7 +13,7 @@ func TestOldGlaDriverFindsRealCounterexample(t *testing.T) {
 	gia.Gia_ManAppendCo(g, n)
 	var p Abs_Par_t
 	Abs_ParSetDefaults(&p)
-	p.nFramesMax = 1
+	p.NFramesMax = 1
 	if got := Gia_ManPerformGlaOld(g, &p, 0); got != 0 {
 		t.Fatalf("SAT result %d", got)
 	}
@@ -46,7 +46,7 @@ func TestOldGlaDriverFindsSequentialCounterexample(t *testing.T) {
 	gia.Gia_ManSetRegNum(g, 1)
 	var p Abs_Par_t
 	Abs_ParSetDefaults(&p)
-	p.nFramesMax = 2
+	p.NFramesMax = 2
 	if got := Gia_ManPerformGlaOld(g, &p, 0); got != 0 {
 		t.Fatalf("sequential SAT result %d", got)
 	}
@@ -69,7 +69,7 @@ func TestOldGlaDriverRefinesHiddenLogic(t *testing.T) {
 	gia.Gia_ManAppendCo(g, root)
 	var p Abs_Par_t
 	Abs_ParSetDefaults(&p)
-	p.nFramesMax = 1
+	p.NFramesMax = 1
 	if got := Gia_ManPerformGlaOld(g, &p, 0); got != 0 {
 		t.Fatalf("SAT result %d", got)
 	}
@@ -91,7 +91,7 @@ func TestOldGlaDriverRefinesSpuriousCounterexample(t *testing.T) {
 	gia.Gia_ManAppendCo(g, gia.Gia_ManAppendAnd(g, x, y))
 	var p Abs_Par_t
 	Abs_ParSetDefaults(&p)
-	p.nFramesMax = 1
+	p.NFramesMax = 1
 	if got := Gia_ManPerformGlaOld(g, &p, 0); got != -1 {
 		t.Fatalf("unexpected result %d", got)
 	}
@@ -107,7 +107,7 @@ func TestOldGlaDirectPrimaryInputOutput(t *testing.T) {
 		gia.Gia_ManAppendCo(g, x^complement)
 		var pars Abs_Par_t
 		Abs_ParSetDefaults(&pars)
-		pars.nFramesMax = 1
+		pars.NFramesMax = 1
 		if got := Gia_ManPerformGlaOld(g, &pars, 0); got != 0 || g.SequentialCounterexample() == nil || gia.Gia_ManVerifyCex(g, g.SequentialCounterexample(), 0) != 1 {
 			t.Fatalf("complement=%d result=%d cex=%+v", complement, got, g.SequentialCounterexample())
 		}

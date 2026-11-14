@@ -19,7 +19,7 @@ func TestInterleavedInputsProbe(t *testing.T) {
 	gia.Gia_ManSetGateClasses(g, classes)
 	var p Abs_Par_t
 	Abs_ParSetDefaults(&p)
-	p.nFramesMax = 1
+	p.NFramesMax = 1
 	if Gia_ManPerformGlaOld(g, &p, 0) != 0 {
 		t.Fatal("expected SAT")
 	}

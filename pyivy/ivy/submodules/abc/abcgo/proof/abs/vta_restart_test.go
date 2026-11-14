@@ -20,11 +20,11 @@ func TestVtaRollbackRestartFindsCounterexample(t *testing.T) {
 	gia.Gia_ManAppendCo(p, pi)
 	gia.Gia_ManAppendCo(p, first)
 	gia.Gia_ManSetRegNum(p, 2)
-	pars := &Abs_Par_t{nFramesMax: 4, nFramesStart: 1, nFramesPast: 1, fUseRollback: 1}
+	pars := &Abs_Par_t{NFramesMax: 4, NFramesStart: 1, NFramesPast: 1, FUseRollback: 1}
 	if got := Gia_VtaPerform(p, pars); got != 0 {
 		t.Fatalf("got status %d, want SAT", got)
 	}
-	if pars.nFramesMax != 4 {
+	if pars.NFramesMax != 4 {
 		t.Fatal("frame limit not restored after restart")
 	}
 	cex := p.SequentialCounterexample()

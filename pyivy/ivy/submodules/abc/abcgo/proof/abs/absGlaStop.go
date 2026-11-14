@@ -12,7 +12,7 @@ func Ga2_ManStop(p *Ga2_Man_t) {
 	}
 	gia.Gia_ManSetMapping(p.pGia, nil)
 	gia.Gia_ManSetPhase(p.pGia)
-	if p.pPars.fVerbose != 0 {
+	if p.pPars.FVerbose != 0 {
 		if p.pSat != nil {
 			stats := p.pSat.Statistics()
 			fmt.Printf("SAT solver:  Var = %d  Cla = %d  Conf = %d  Lrn = %d  Reduce = %d  Cex = %d  ObjsAdded = %d\n", stats.Variables, stats.Clauses, stats.Conflicts, stats.Learned, p.pSat.Reductions(), p.nCexes, p.nObjAdded)

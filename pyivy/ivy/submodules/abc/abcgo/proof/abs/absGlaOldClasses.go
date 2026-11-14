@@ -65,7 +65,7 @@ func Gla_ManTranslate(p *Gla_Man_t) *vec.Vec_Int_t {
 		}
 		Gla_ManTranslate_rec(p.pGia, gobj, classes, usage)
 	}
-	vec.Vec_IntWriteEntry(classes, 0, p.pPars.iFrame+1)
+	vec.Vec_IntWriteEntry(classes, 0, p.pPars.IFrame+1)
 	if configs := gia.Gia_ManLutConfigs(p.pGia); configs != nil {
 		original := vec.Vec_IntStart(int(gia.Gia_ManObjNum(p.pGia0)))
 		for i, value := range vec.Vec_IntArray(classes) {

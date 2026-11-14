@@ -3,38 +3,38 @@ package abs
 // Abstraction parameter records, translated from abs.h.
 
 type Abs_Par_t struct {
-	nFramesMax         int32  // maximum frames
-	nFramesStart       int32  // starting frame
-	nFramesPast        int32  // overlap frames
-	nConfLimit         int32  // conflict limit
+	NFramesMax         int32  // maximum frames
+	NFramesStart       int32  // starting frame
+	NFramesPast        int32  // overlap frames
+	NConfLimit         int32  // conflict limit
 	nLearnedMax        int32  // max number of learned clauses
-	nLearnedStart      int32  // max number of learned clauses
-	nLearnedDelta      int32  // delta increase of learned clauses
-	nLearnedPerce      int32  // percentage of clauses to leave
-	nTimeOut           int32  // timeout in seconds
-	nRatioMin          int32  // stop when less than this % of object is unabstracted
-	nRatioMin2         int32  // stop when less than this % of object is unabstracted during refinement
-	nRatioMax          int32  // restart when the number of abstracted object is more than this
-	fUseTermVars       int32  // use terminal variables
-	fUseRollback       int32  // use rollback to the starting number of frames
-	fPropFanout        int32  // propagate fanout implications
-	fAddLayer          int32  // refinement strategy by adding layers
-	fNewRefine         int32  // uses new refinement heuristics
-	fUseSkip           int32  // skip proving intermediate timeframes
-	fUseSimple         int32  // use simple CNF construction
-	fSkipHash          int32  // skip hashing CNF while unrolling
-	fUseFullProof      int32  // use full proof for UNSAT cores
-	fDumpVabs          int32  // dumps the abstracted model
-	fDumpMabs          int32  // dumps the original AIG with abstraction map
-	fCallProver        int32  // calls the prover
-	fSimpProver        int32  // calls simplification before prover
-	pFileVabs          string // dumps the abstracted model into this file
-	fVerbose           int32  // verbose flag
-	fVeryVerbose       int32  // print additional information
-	iFrame             int32  // the number of frames covered
+	NLearnedStart      int32  // max number of learned clauses
+	NLearnedDelta      int32  // delta increase of learned clauses
+	NLearnedPerce      int32  // percentage of clauses to leave
+	NTimeOut           int32  // timeout in seconds
+	NRatioMin          int32  // stop when less than this % of object is unabstracted
+	NRatioMin2         int32  // stop when less than this % of object is unabstracted during refinement
+	NRatioMax          int32  // restart when the number of abstracted object is more than this
+	FUseTermVars       int32  // use terminal variables
+	FUseRollback       int32  // use rollback to the starting number of frames
+	FPropFanout        int32  // propagate fanout implications
+	FAddLayer          int32  // refinement strategy by adding layers
+	FNewRefine         int32  // uses new refinement heuristics
+	FUseSkip           int32  // skip proving intermediate timeframes
+	FUseSimple         int32  // use simple CNF construction
+	FSkipHash          int32  // skip hashing CNF while unrolling
+	FUseFullProof      int32  // use full proof for UNSAT cores
+	FDumpVabs          int32  // dumps the abstracted model
+	FDumpMabs          int32  // dumps the original AIG with abstraction map
+	FCallProver        int32  // calls the prover
+	FSimpProver        int32  // calls simplification before prover
+	PFileVabs          string // dumps the abstracted model into this file
+	FVerbose           int32  // verbose flag
+	FVeryVerbose       int32  // print additional information
+	IFrame             int32  // the number of frames covered
 	iFrameProved       int32  // the number of frames proved
 	nFramesNoChange    int32  // the number of last frames without changes
-	nFramesNoChangeLim int32  // the number of last frames without changes to dump abstraction
+	NFramesNoChangeLim int32  // the number of last frames without changes to dump abstraction
 }
 
 // old abstraction parameters

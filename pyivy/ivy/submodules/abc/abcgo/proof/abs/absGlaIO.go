@@ -12,7 +12,7 @@ import (
 )
 
 func Ga2_ManAbsPrintFrame(p *Ga2_Man_t, frames, conflicts, cexes int32, elapsed int64, final int32) {
-	newline := final != 0 && cexes != 0 || p.pPars.fVeryVerbose != 0
+	newline := final != 0 && cexes != 0 || p.pPars.FVeryVerbose != 0
 	if abcmain.Abc_FrameIsBatchMode() != 0 && !newline {
 		return
 	}
@@ -43,8 +43,8 @@ func Ga2_ManAbsPrintFrame(p *Ga2_Man_t, frames, conflicts, cexes int32, elapsed 
 	}
 }
 func Ga2_GlaGetFileName(p *Ga2_Man_t, abstract int32) string {
-	if p.pPars.pFileVabs != "" {
-		return p.pPars.pFileVabs
+	if p.pPars.PFileVabs != "" {
+		return p.pPars.PFileVabs
 	}
 	if spec := p.pGia.NetworkSpec(); spec != "" {
 		suffix := "_gla.aig"
@@ -56,7 +56,7 @@ func Ga2_GlaGetFileName(p *Ga2_Man_t, abstract int32) string {
 	return "glabs.aig"
 }
 func Ga2_GlaDumpAbsracted(p *Ga2_Man_t, verbose int32) {
-	if p.pPars.fDumpMabs != 0 {
+	if p.pPars.FDumpMabs != 0 {
 		name := Ga2_GlaGetFileName(p, 0)
 		if verbose != 0 {
 			fmt.Printf("Dumping miter with abstraction map into file %q...\n", name)
@@ -67,7 +67,7 @@ func Ga2_GlaDumpAbsracted(p *Ga2_Man_t, verbose int32) {
 		}
 		return
 	}
-	if p.pPars.fDumpVabs != 0 {
+	if p.pPars.FDumpVabs != 0 {
 		name := Ga2_GlaGetFileName(p, 1)
 		if verbose != 0 {
 			fmt.Printf("Dumping abstracted model into file %q...\n", name)
@@ -106,7 +106,7 @@ func Ga2_ManWriteStatus(p *Ga2_Man_t, frames int32) {
 	abcmain.Abc_FrameSetStatus(-1)
 	abcmain.Abc_FrameSetCex(nil)
 	abcmain.Abc_FrameSetNFrames(frames)
-	name := p.pPars.pFileVabs
+	name := p.pPars.PFileVabs
 	if name == "" {
 		name = "glabs.aig"
 	}
@@ -130,7 +130,7 @@ func Ga2_ManDumpInitialMap(p *Ga2_Man_t) {
 		fmt.Printf("Cannot write %s: %v\n", name, err)
 	}
 	gia.Gia_ManSetGateClasses(p.pGia, previous)
-	if p.pPars.fVerbose != 0 {
+	if p.pPars.FVerbose != 0 {
 		fmt.Printf("Dumping miter with abstraction map into file %q...\n", name)
 	}
 }

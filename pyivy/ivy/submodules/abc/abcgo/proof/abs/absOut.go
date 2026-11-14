@@ -136,8 +136,8 @@ func Gia_ManNewRefine(p *gia.Gia_Man_t, cex *util.Abc_Cex_t, frameStart, frameEx
 	gia.Gia_ManSetGateClasses(next, vec.Vec_IntDup(classes))
 	var pars Abs_Par_t
 	Abs_ParSetDefaults(&pars)
-	pars.nFramesMax = cex.IFrame - frameStart + 1 + frameExtra
-	pars.fVerbose = verbose
+	pars.NFramesMax = cex.IFrame - frameStart + 1 + frameExtra
+	pars.FVerbose = verbose
 	if Gia_ManPerformGla(next, &pars) == 0 {
 		gia.Gia_ManSetGateClasses(next, saved)
 	}

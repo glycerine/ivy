@@ -140,7 +140,7 @@ func Ga2_ManAddToAbsOneDynamic(p *Ga2_Man_t, obj *gia.Gia_Obj_t, frame int32) {
 		Ga2_ManCnfAddStatic(p.pSat, Ga2_ObjCnf0(p, obj), Ga2_ObjCnf1(p, obj), vec.Vec_IntArray(p.vLits), lit, -1)
 		return
 	}
-	if p.pPars.fSkipHash == 0 {
+	if p.pPars.FSkipHash == 0 {
 		for vec.Vec_IntSize(p.vLits) < 4 {
 			vec.Vec_IntPush(p.vLits, GA2_BIG_NUM)
 		}

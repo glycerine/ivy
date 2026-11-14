@@ -16,7 +16,7 @@ func Gla_ManStop(p *Gla_Man_t) {
 	if p == nil {
 		return
 	}
-	if p.pPars.fVerbose != 0 && p.pSat != nil {
+	if p.pPars.FVerbose != 0 && p.pSat != nil {
 		s := p.pSat.Statistics()
 		fmt.Printf("SAT solver: Var = %d Cla = %d Conf = %d Lrn = %d Reduce = %d Cex = %d Objs+ = %d\n", s.Variables, s.Clauses, s.Conflicts, s.Learned, p.pSat.Reductions(), p.nCexes, p.nObjAdded)
 	}
@@ -98,7 +98,7 @@ func Gia_GlaSendCancel(p *Gla_Man_t, verbose int32) {
 	util.Gia_ManToBridgeBadAbs(os.Stdout)
 }
 func Gia_GlaDumpAbsracted(p *Gla_Man_t, verbose int32) {
-	name := p.pPars.pFileVabs
+	name := p.pPars.PFileVabs
 	if name == "" {
 		name = "glabs.aig"
 	}

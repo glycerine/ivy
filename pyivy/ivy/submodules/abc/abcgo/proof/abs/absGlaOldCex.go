@@ -22,7 +22,7 @@ func Gia_GlaPrepareCexAndMap(p *Gla_Man_t, cex **util.Abc_Cex_t, mapping **vec.V
 		}
 	}
 	vec.Vec_IntUniqify(boundary)
-	frames := p.pPars.iFrame
+	frames := p.pPars.IFrame
 	result := util.Abc_CexAlloc(0, int32(vec.Vec_IntSize(boundary)), frames+1)
 	result.IFrame = frames
 	for f := int32(0); f <= frames; f++ {
@@ -37,7 +37,7 @@ func Gia_GlaPrepareCexAndMap(p *Gla_Man_t, cex **util.Abc_Cex_t, mapping **vec.V
 
 // Gla_ManDeriveCex copies assignments for real inputs into an ABC witness.
 func Gla_ManDeriveCex(p *Gla_Man_t, inputs *vec.Vec_Int_t) *util.Abc_Cex_t {
-	frame := p.pPars.iFrame
+	frame := p.pPars.IFrame
 	result := util.Abc_CexAlloc(gia.Gia_ManRegNum(p.pGia), gia.Gia_ManPiNum(p.pGia), frame+1)
 	result.IPo = 0
 	result.IFrame = frame

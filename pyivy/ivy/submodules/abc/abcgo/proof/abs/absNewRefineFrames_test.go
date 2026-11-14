@@ -46,7 +46,7 @@ func TestNewRefineMultiFrameRealCounterexample(t *testing.T) {
 	gia.Gia_ManSetGateClasses(shifted, vec.Vec_IntDup(classes))
 	var pars Abs_Par_t
 	Abs_ParSetDefaults(&pars)
-	pars.nFramesMax = 2 // iFrame - frameStart + 1, as in absOut.c.
+	pars.NFramesMax = 2 // iFrame - frameStart + 1, as in absOut.c.
 	if result := Gia_ManPerformGla(shifted, &pars); result != 0 {
 		t.Fatalf("fast-forwarded real counterexample result = %d, want 0", result)
 	}

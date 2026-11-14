@@ -38,7 +38,7 @@ func Gla_ManStart(original *gia.Gia_Man_t, pars *Abs_Par_t) *Gla_Man_t {
 	}
 	mapping := vec.Vec_IntAllocArrayCopy(data.Mapping, len(data.Mapping))
 	work := Gia_ManDupMapped(original, mapping)
-	if pars.fPropFanout != 0 {
+	if pars.FPropFanout != 0 {
 		gia.Gia_ManStaticFanoutStart(work)
 	}
 	p := &Gla_Man_t{pGia0: original, pGia: work, pPars: pars, vAbs: vec.Vec_IntAlloc(100), vTemp: vec.Vec_IntAlloc(100), vAddedNew: vec.Vec_IntAlloc(100), vObjCounts: vec.Vec_IntAlloc(100), vCoreCounts: vec.Vec_IntStart(int(gia.Gia_ManObjNum(work))), vProofIds: vec.Vec_IntAlloc(0)}
@@ -204,8 +204,8 @@ func Gla_ManStart(original *gia.Gia_Man_t, pars *Abs_Par_t) *Gla_Man_t {
 			vec.Vec_IntPush(p.vAbs, i)
 		}
 	}
-	p.pSat = bsat.NewLabeledSolver2ProofMode(pars.fUseFullProof != 0)
-	p.pSat.SetLearnedPolicy(pars.nLearnedStart, pars.nLearnedDelta, pars.nLearnedPerce)
+	p.pSat = bsat.NewLabeledSolver2ProofMode(pars.FUseFullProof != 0)
+	p.pSat.SetLearnedPolicy(pars.NLearnedStart, pars.NLearnedDelta, pars.NLearnedPerce)
 	p.nSatVars = 1
 	p.pRnm = Rnm_ManStart(work)
 	return p

@@ -20,7 +20,7 @@ func TestVtaFindsInputCounterexample(t *testing.T) {
 	gia.Gia_ManAppendCo(p, out)
 	gia.Gia_ManAppendCo(p, pi)
 	gia.Gia_ManSetRegNum(p, 1)
-	if got := Gia_VtaPerform(p, &Abs_Par_t{nFramesMax: 3, nFramesPast: 1, nRatioMin: 0}); got != 0 {
+	if got := Gia_VtaPerform(p, &Abs_Par_t{NFramesMax: 3, NFramesPast: 1, NRatioMin: 0}); got != 0 {
 		t.Fatalf("got status %d, want SAT", got)
 	}
 	if cex := p.SequentialCounterexample(); cex == nil || gia.Gia_ManVerifyCex(p, cex, 0) == 0 {
@@ -60,7 +60,7 @@ func TestVtaPreservesAnUnsatisfiableAbstraction(t *testing.T) {
 	gia.Gia_ManAppendCo(p, impossible)
 	gia.Gia_ManAppendCo(p, reg)
 	gia.Gia_ManSetRegNum(p, 1)
-	if got := Gia_VtaPerform(p, &Abs_Par_t{nFramesMax: 2, nFramesPast: 1}); got != -1 {
+	if got := Gia_VtaPerform(p, &Abs_Par_t{NFramesMax: 2, NFramesPast: 1}); got != -1 {
 		t.Fatalf("status %d, expected bounded unknown", got)
 	}
 	if p.SequentialCounterexample() != nil {

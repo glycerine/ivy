@@ -53,7 +53,7 @@ func TestGlaDynamicNodeUsesCutCnf(t *testing.T) {
 					gia.Gia_ManAppendCo(g, gate)
 					pars := &Abs_Par_t{}
 					Abs_ParSetDefaults(pars)
-					pars.fSkipHash = skip
+					pars.FSkipHash = skip
 					p := Ga2_ManStart(g, pars)
 					p.pSat = bsat.NewLabeledSolver2()
 					p.nSatVars = 1

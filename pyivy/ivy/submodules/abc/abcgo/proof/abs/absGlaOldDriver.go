@@ -17,10 +17,10 @@ func Gia_ManPerformGlaOld(graph *gia.Gia_Man_t, pars *Abs_Par_t, startVta int32)
 		return glaOldPerformLowered(graph, pars, startVta)
 	}
 	start := time.Now()
-	if graph == nil || pars == nil || gia.Gia_ManPoNum(graph) != 1 || pars.nFramesMax != 0 && pars.nFramesStart > pars.nFramesMax {
+	if graph == nil || pars == nil || gia.Gia_ManPoNum(graph) != 1 || pars.NFramesMax != 0 && pars.NFramesStart > pars.NFramesMax {
 		panic("invalid old GLA arguments")
 	}
-	if pars.nTimeOut != 0 {
+	if pars.NTimeOut != 0 {
 		defer absPinClockThread()()
 	}
 	// A previous result must not survive a new verification run.
@@ -54,13 +54,13 @@ func Gia_ManPerformGlaOld(graph *gia.Gia_Man_t, pars *Abs_Par_t, startVta int32)
 	ret := int32(-1)
 	if gia.Gia_ManGateClasses(graph) == nil {
 		if startVta != 0 {
-			oldMax, oldStart, oldTimeout, oldDump := pars.nFramesMax, pars.nFramesStart, pars.nTimeOut, pars.fDumpVabs
-			pars.nFramesMax = pars.nFramesStart
-			pars.nFramesStart = min(pars.nFramesStart/2+1, 3)
-			pars.nTimeOut = 20
-			pars.fDumpVabs = 0
+			oldMax, oldStart, oldTimeout, oldDump := pars.NFramesMax, pars.NFramesStart, pars.NTimeOut, pars.FDumpVabs
+			pars.NFramesMax = pars.NFramesStart
+			pars.NFramesStart = min(pars.NFramesStart/2+1, 3)
+			pars.NTimeOut = 20
+			pars.FDumpVabs = 0
 			ret = Gia_VtaPerformInt(graph, pars)
-			pars.nFramesMax, pars.nFramesStart, pars.nTimeOut, pars.fDumpVabs = oldMax, oldStart, oldTimeout, oldDump
+			pars.NFramesMax, pars.NFramesStart, pars.NTimeOut, pars.FDumpVabs = oldMax, oldStart, oldTimeout, oldDump
 			gia.Gia_ManSetGateClasses(graph, nil)
 			if classes := gia.Gia_ManObjClasses(graph); classes != nil {
 				gia.Gia_ManSetGateClasses(graph, Gia_VtaConvertToGla(graph, classes))
@@ -80,26 +80,26 @@ func Gia_ManPerformGlaOld(graph *gia.Gia_Man_t, pars *Abs_Par_t, startVta int32)
 	defer p.pSat.StopIncrementalProof()
 	p.timeInit = time.Since(start)
 	var deadline int64
-	if pars.nTimeOut != 0 {
-		deadline = absCPUClock() + int64(pars.nTimeOut)*int64(time.Second)
+	if pars.NTimeOut != 0 {
+		deadline = absCPUClock() + int64(pars.NTimeOut)*int64(time.Second)
 		p.pSat.SetRuntimeDeadline(absCPUClock, deadline)
 	}
-	if pars.fVerbose != 0 {
-		fmt.Printf("Running gate-level abstraction: FrameMax = %d ConfMax = %d Timeout = %d RatioMin = %d%%.\n", pars.nFramesMax, pars.nConfLimit, pars.nTimeOut, pars.nRatioMin)
+	if pars.FVerbose != 0 {
+		fmt.Printf("Running gate-level abstraction: FrameMax = %d ConfMax = %d Timeout = %d RatioMin = %d%%.\n", pars.NFramesMax, pars.NConfLimit, pars.NTimeOut, pars.NRatioMin)
 	}
 	var witness *util.Abc_Cex_t
 	var frame, i, previous, status int32
 	var sent bool
 	stopped := false
-	for frame = 0; pars.nFramesMax == 0 || frame < pars.nFramesMax; frame++ {
+	for frame = 0; pars.NFramesMax == 0 || frame < pars.NFramesMax; frame++ {
 		conflictStart := p.pSat.Statistics().Conflicts
-		pars.iFrame = frame
+		pars.IFrame = frame
 		Gia_GlaAddTimeFrame(p, frame)
 		var core *vec.Vec_Int_t
 		var savedVars, conflicts int32
 		for i = 0; ; i++ {
 			clock := time.Now()
-			core = Gla_ManUnsatCore(p, frame, p.pSat, pars.nConfLimit, pars.fVerbose, &status, &conflicts)
+			core = Gla_ManUnsatCore(p, frame, p.pSat, pars.NConfLimit, pars.FVerbose, &status, &conflicts)
 			if status == -1 || deadline != 0 && absCPUClock() > deadline {
 				p.pSat.StopIncrementalProof()
 				stopped = true
@@ -113,12 +113,12 @@ func Gia_ManPerformGlaOld(graph *gia.Gia_Man_t, pars *Abs_Par_t, startVta int32)
 			p.timeSat += time.Since(clock)
 			p.nCexes++
 			if abcmain.Abc_FrameIsBridgeMode() != 0 && sent {
-				Gia_GlaSendCancel(p, pars.fVerbose)
+				Gia_GlaSendCancel(p, pars.FVerbose)
 				sent = false
 			}
 			clock = time.Now()
 			var ppis *vec.Vec_Int_t
-			if pars.fAddLayer != 0 {
+			if pars.FAddLayer != 0 {
 				ppis = Gla_ManCollectPPis(p, nil)
 			} else {
 				ppis = Gla_ManRefinement(p)
@@ -134,7 +134,7 @@ func Gia_ManPerformGlaOld(graph *gia.Gia_Man_t, pars *Abs_Par_t, startVta int32)
 				vec.Vec_IntClear(p.vAddedNew)
 				p.nAbsOld = int32(vec.Vec_IntSize(p.vAbs))
 				savedVars = p.nSatVars
-				if pars.fUseFullProof == 0 {
+				if pars.FUseFullProof == 0 {
 					p.pSat.StartIncrementalProof(p.nObjs, int32(vec.Vec_IntSize(ppis)))
 				}
 			} else if p.pSat.IncrementalProofActive() {
@@ -142,7 +142,7 @@ func Gia_ManPerformGlaOld(graph *gia.Gia_Man_t, pars *Abs_Par_t, startVta int32)
 			}
 			Gia_GlaAddToAbs(p, ppis, 1)
 			Gia_GlaAddOneSlice(p, frame, ppis)
-			if pars.fVerbose != 0 {
+			if pars.FVerbose != 0 {
 				Gla_ManAbsPrintFrame(p, -1, frame+1, int32(p.pSat.Statistics().Conflicts-conflictStart), i, time.Since(start))
 			}
 		}
@@ -167,7 +167,7 @@ func Gia_ManPerformGlaOld(graph *gia.Gia_Man_t, pars *Abs_Par_t, startVta int32)
 			Gia_GlaAddToAbs(p, core, 0)
 			Gia_GlaAddOneSlice(p, frame, core)
 			clock := time.Now()
-			Gla_ManUnsatCore(p, frame, p.pSat, pars.nConfLimit, pars.fVerbose, &status, &conflicts)
+			Gla_ManUnsatCore(p, frame, p.pSat, pars.NConfLimit, pars.FVerbose, &status, &conflicts)
 			p.timeUnsat += time.Since(clock)
 			if status == -1 {
 				stopped = true
@@ -177,31 +177,31 @@ func Gia_ManPerformGlaOld(graph *gia.Gia_Man_t, pars *Abs_Par_t, startVta int32)
 				panic("old GLA proof core did not retain UNSAT")
 			}
 		}
-		if pars.fVerbose != 0 {
+		if pars.FVerbose != 0 {
 			Gla_ManAbsPrintFrame(p, coreSize, frame+1, int32(p.pSat.Statistics().Conflicts-conflictStart), i, time.Since(start))
 		}
 		if frame > 2 && previous > 0 && i == 0 {
 			if abcmain.Abc_FrameIsBridgeMode() != 0 {
 				if sent {
-					Gia_GlaSendCancel(p, pars.fVerbose)
+					Gia_GlaSendCancel(p, pars.FVerbose)
 				}
-				Gia_GlaSendAbsracted(p, pars.fVerbose)
+				Gia_GlaSendAbsracted(p, pars.FVerbose)
 				sent = true
 			}
-			if pars.fDumpVabs != 0 {
+			if pars.FDumpVabs != 0 {
 				abcmain.Abc_FrameSetStatus(-1)
 				abcmain.Abc_FrameSetCex(nil)
 				abcmain.Abc_FrameSetNFrames(frame + 1)
-				name := pars.pFileVabs
+				name := pars.PFileVabs
 				if name == "" {
 					name = "glabs.aig"
 				}
 				abcmain.Cmd_CommandExecute(abcmain.Abc_FrameGetGlobalFrame(), fmt.Sprintf("write_status %s", extra.Extra_FileNameGenericAppend(name, ".status")))
-				Gia_GlaDumpAbsracted(p, pars.fVerbose)
+				Gia_GlaDumpAbsracted(p, pars.FVerbose)
 			}
 		}
 		previous = i
-		if Gia_GlaAbsCount(p, 0, 0) >= (p.nObjs-1)*(100-pars.nRatioMin)/100 {
+		if Gia_GlaAbsCount(p, 0, 0) >= (p.nObjs-1)*(100-pars.NRatioMin)/100 {
 			status = -1
 			stopped = true
 			break
@@ -212,7 +212,7 @@ func Gia_ManPerformGlaOld(graph *gia.Gia_Man_t, pars *Abs_Par_t, startVta int32)
 		if status == -1 || stopped {
 			fmt.Printf("Abstraction stopped in frame %d with a %d-stable abstraction.  ", frame, pars.nFramesNoChange)
 		} else {
-			pars.iFrame++
+			pars.IFrame++
 			fmt.Printf("GLA completed %d frames with a %d-stable abstraction.  ", frame, pars.nFramesNoChange)
 		}
 	} else {
@@ -223,12 +223,12 @@ func Gia_ManPerformGlaOld(graph *gia.Gia_Man_t, pars *Abs_Par_t, startVta int32)
 			fmt.Println("Gia_ManPerformGlaOld(): CEX verification has failed!")
 		}
 		fmt.Printf("Counter-example detected in frame %d.  ", frame)
-		pars.iFrame = witness.IFrame - 1
+		pars.IFrame = witness.IFrame - 1
 		gia.Gia_ManSetGateClasses(graph, nil)
 		ret = 0
 	}
 	fmt.Printf("Time: %v\n", time.Since(start))
-	if pars.fVerbose != 0 {
+	if pars.FVerbose != 0 {
 		p.timeOther = time.Since(start) - p.timeUnsat - p.timeSat - p.timeCex - p.timeInit
 		Gla_ManReportMemory(p)
 	}

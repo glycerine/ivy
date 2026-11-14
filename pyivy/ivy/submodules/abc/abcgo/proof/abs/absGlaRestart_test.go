@@ -18,7 +18,7 @@ func TestGlaRestartRebuildsAbstraction(t *testing.T) {
 	gia.Gia_ManSetGateClasses(g, classes)
 	pars := &Abs_Par_t{}
 	Abs_ParSetDefaults(pars)
-	pars.iFrame = -1
+	pars.IFrame = -1
 	p := Ga2_ManStart(g, pars)
 	defer Ga2_ManStop(p)
 	p.pTable[0] = 99

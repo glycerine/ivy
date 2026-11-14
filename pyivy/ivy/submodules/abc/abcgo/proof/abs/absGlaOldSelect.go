@@ -20,7 +20,7 @@ func Gia_ManRefSetAndPropFanout_rec(p *Gla_Man_t, object *gia.Gia_Obj_t, frame i
 		if ref.Prio == 0 {
 			panic("GLA pseudo-input without priority")
 		}
-		for f := p.pPars.iFrame; f >= 0; f-- {
+		for f := p.pPars.IFrame; f >= 0; f-- {
 			if Gla_ObjRef(p, object, f).fVisit == 0 {
 				Gia_ManRefSetAndPropFanout_rec(p, object, f, selected, sign)
 			}
@@ -28,7 +28,7 @@ func Gia_ManRefSetAndPropFanout_rec(p *Gla_Man_t, object *gia.Gia_Obj_t, frame i
 		vec.Vec_IntPush(selected, gia.Gia_ObjId(p.pGia, object))
 		return
 	}
-	if (gia.Gia_ObjIsCo(object) != 0 && frame == p.pPars.iFrame) || gia.Gia_ObjIsPo(p.pGia, object) != 0 {
+	if (gia.Gia_ObjIsCo(object) != 0 && frame == p.pPars.IFrame) || gia.Gia_ObjIsPo(p.pGia, object) != 0 {
 		return
 	}
 	if gia.Gia_ObjIsRi(p.pGia, object) != 0 {
@@ -66,7 +66,7 @@ func Gla_ManRefSelect_rec(p *Gla_Man_t, object *gia.Gia_Obj_t, frame int32, sele
 	if ref.fVisit != 0 {
 		return
 	}
-	if p.pPars.fPropFanout != 0 {
+	if p.pPars.FPropFanout != 0 {
 		Gia_ManRefSetAndPropFanout_rec(p, object, frame, selected, sign)
 	} else {
 		ref.fVisit = 1
@@ -75,8 +75,8 @@ func Gla_ManRefSelect_rec(p *Gla_Man_t, object *gia.Gia_Obj_t, frame int32, sele
 		if ref.Prio == 0 {
 			panic("GLA pseudo-input without priority")
 		}
-		if p.pPars.fPropFanout != 0 {
-			for f := p.pPars.iFrame; f >= 0; f-- {
+		if p.pPars.FPropFanout != 0 {
+			for f := p.pPars.IFrame; f >= 0; f-- {
 				if Gla_ObjRef(p, object, f).fVisit == 0 {
 					Gia_ManRefSetAndPropFanout_rec(p, object, f, selected, sign)
 				}

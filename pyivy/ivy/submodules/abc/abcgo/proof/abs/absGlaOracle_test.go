@@ -31,12 +31,12 @@ func TestGlaCombinationalTruthOracle(t *testing.T) {
 			gia.Gia_ManAppendCo(g, out)
 			pars := &Abs_Par_t{}
 			Abs_ParSetDefaults(pars)
-			pars.fUseSimple = 1
-			pars.fAddLayer = layer
-			pars.nFramesMax = 1
-			pars.nRatioMin = 0
-			pars.nRatioMin2 = 0
-			pars.nFramesNoChangeLim = 100
+			pars.FUseSimple = 1
+			pars.FAddLayer = layer
+			pars.NFramesMax = 1
+			pars.NRatioMin = 0
+			pars.NRatioMin2 = 0
+			pars.NFramesNoChangeLim = 100
 			got := Gia_ManPerformGla(g, pars)
 			if truth == 0 {
 				if got != 1 {
@@ -95,11 +95,11 @@ func TestGlaSequentialTruthOracle(t *testing.T) {
 			}
 			pars := &Abs_Par_t{}
 			Abs_ParSetDefaults(pars)
-			pars.fUseSimple = 1
-			pars.nFramesMax = 3
-			pars.nRatioMin = 0
-			pars.nRatioMin2 = 0
-			pars.nFramesNoChangeLim = 100
+			pars.FUseSimple = 1
+			pars.NFramesMax = 3
+			pars.NRatioMin = 0
+			pars.NRatioMin2 = 0
+			pars.NFramesNoChangeLim = 100
 			result := Gia_ManPerformGla(g, pars)
 			if expected {
 				if result != 0 || g.SequentialCounterexample() == nil || gia.Gia_ManVerifyCex(g, g.SequentialCounterexample(), 0) != 1 {

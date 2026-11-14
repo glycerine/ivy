@@ -18,7 +18,7 @@ func TestSpuriousActuallyRefines(t *testing.T) {
 	gia.Gia_ManAppendCo(g, gia.Gia_ManAppendAnd(g, l, r))
 	var p Abs_Par_t
 	Abs_ParSetDefaults(&p)
-	p.nFramesMax = 1
+	p.NFramesMax = 1
 	p.nFramesNoChange = 10
 	Gia_ManPerformGlaOld(g, &p, 0)
 	if p.nFramesNoChange != 0 {

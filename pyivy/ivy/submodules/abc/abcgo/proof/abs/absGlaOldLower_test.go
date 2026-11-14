@@ -64,7 +64,7 @@ func TestOldGlaNativeGateCounterexamplesAndClasses(t *testing.T) {
 			}
 			var pars Abs_Par_t
 			Abs_ParSetDefaults(&pars)
-			pars.nFramesMax = 2
+			pars.NFramesMax = 2
 			if got := Gia_ManPerformGlaOld(g, &pars, 0); got != 0 {
 				t.Fatalf("mux=%t seeded=%t result=%d", mux, seeded, got)
 			}
@@ -94,7 +94,7 @@ func TestOldGlaNativeSequentialWitness(t *testing.T) {
 		gia.Gia_ManSetRegNum(g, 1)
 		var pars Abs_Par_t
 		Abs_ParSetDefaults(&pars)
-		pars.nFramesMax = 4
+		pars.NFramesMax = 4
 		if got := Gia_ManPerformGlaOld(g, &pars, 0); got != 0 {
 			t.Fatalf("mux=%t result=%d", mux, got)
 		}
@@ -181,7 +181,7 @@ func TestOldGlaNativeLoweringPreservesExportAssertion(t *testing.T) {
 			gia.Gia_ManAppendCo(g, gia.Gia_ManAppendAnd(g, x, buffer^1))
 			var pars Abs_Par_t
 			Abs_ParSetDefaults(&pars)
-			pars.nFramesMax = 1
+			pars.NFramesMax = 1
 			defer assertSimpleExportPanic(t)
 			Gia_ManPerformGlaOld(g, &pars, 0)
 		})

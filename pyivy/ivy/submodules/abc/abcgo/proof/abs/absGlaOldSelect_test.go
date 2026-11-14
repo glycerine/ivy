@@ -13,7 +13,7 @@ func TestOldGlaSelectChoosesLowerPriorityZero(t *testing.T) {
 		x, y := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
 		and := gia.Gia_ManAppendAnd(g, x, y)
 		gia.Gia_ManAppendCo(g, and)
-		p := &Gla_Man_t{pGia: g, pPars: &Abs_Par_t{fPropFanout: prop}, pvRefis: make([][]Rfn_Obj_t, gia.Gia_ManObjNum(g)), vObjCounts: vec.Vec_IntStart(1)}
+		p := &Gla_Man_t{pGia: g, pPars: &Abs_Par_t{FPropFanout: prop}, pvRefis: make([][]Rfn_Obj_t, gia.Gia_ManObjNum(g)), vObjCounts: vec.Vec_IntStart(1)}
 		xo, yo, root := gia.Gia_ManObj(g, x>>1), gia.Gia_ManObj(g, y>>1), gia.Gia_ManObj(g, and>>1)
 		*Gla_ObjRef(p, xo, 0) = Rfn_Obj_t{fPPi: 1, Prio: 1, Sign: 1}
 		*Gla_ObjRef(p, yo, 0) = Rfn_Obj_t{fPPi: 1, Prio: 2, Sign: 1}
@@ -40,7 +40,7 @@ func TestOldGlaFanoutPropagationMarksControllingPPi(t *testing.T) {
 
 	p := &Gla_Man_t{
 		pGia:       g,
-		pPars:      &Abs_Par_t{fPropFanout: 1},
+		pPars:      &Abs_Par_t{FPropFanout: 1},
 		pvRefis:    make([][]Rfn_Obj_t, gia.Gia_ManObjNum(g)),
 		vObjCounts: vec.Vec_IntStart(1),
 	}

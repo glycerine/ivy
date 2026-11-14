@@ -37,7 +37,7 @@ func TestVtaRejectsNativeGatesWithoutChangingClasses(t *testing.T) {
 			}
 			var pars Abs_Par_t
 			Abs_ParSetDefaults(&pars)
-			pars.nFramesMax = 2
+			pars.NFramesMax = 2
 			var got int32
 			if internal {
 				got = Gia_VtaPerformInt(g, &pars)

@@ -8,9 +8,9 @@ import (
 )
 
 func Abs_ParSetDefaults(p *Abs_Par_t) {
-	*p = Abs_Par_t{nFramesPast: 4, nLearnedMax: 1000, nLearnedStart: 1000,
-		nLearnedDelta: 200, nLearnedPerce: 70, nRatioMax: 30, fPropFanout: 1,
-		iFrame: -1, iFrameProved: -1, nFramesNoChangeLim: 2}
+	*p = Abs_Par_t{NFramesPast: 4, nLearnedMax: 1000, NLearnedStart: 1000,
+		NLearnedDelta: 200, NLearnedPerce: 70, NRatioMax: 30, FPropFanout: 1,
+		IFrame: -1, iFrameProved: -1, NFramesNoChangeLim: 2}
 }
 
 // Gia_VtaConvertToGla counts frame occurrences of each abstracted object.

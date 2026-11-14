@@ -17,9 +17,9 @@ func TestOldGlaHonorsFrameLimit(t *testing.T) {
 	gia.Gia_ManSetRegNum(g, 1)
 	var p Abs_Par_t
 	Abs_ParSetDefaults(&p)
-	p.nFramesMax = 2
+	p.NFramesMax = 2
 	got := Gia_ManPerformGlaOld(g, &p, 0)
-	if got != -1 || p.iFrame != 2 || g.SequentialCounterexample() != nil {
-		t.Fatalf("result=%d frame=%d cex=%v", got, p.iFrame, g.SequentialCounterexample())
+	if got != -1 || p.IFrame != 2 || g.SequentialCounterexample() != nil {
+		t.Fatalf("result=%d frame=%d cex=%v", got, p.IFrame, g.SequentialCounterexample())
 	}
 }

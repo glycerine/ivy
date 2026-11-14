@@ -25,7 +25,7 @@ func TestVtaSourceRejectsPowerOfTwoObjectCount(t *testing.T) {
 	}()
 	var pars Abs_Par_t
 	Abs_ParSetDefaults(&pars)
-	pars.nFramesMax = 1
+	pars.NFramesMax = 1
 	Gia_VtaPerform(g, &pars)
 }
 
@@ -50,8 +50,8 @@ func TestVtaSourceRetainsExistingWitnessWithoutNewCounterexample(t *testing.T) {
 		saved := g.SequentialCounterexample()
 		var pars Abs_Par_t
 		Abs_ParSetDefaults(&pars)
-		pars.nFramesMax = 1
-		pars.nRatioMin = 0
+		pars.NFramesMax = 1
+		pars.NRatioMin = 0
 		got := Gia_VtaPerform(g, &pars)
 		if got == 0 || g.SequentialCounterexample() != saved {
 			t.Fatalf("constant=%v result=%d: source witness ownership changed", constant, got)

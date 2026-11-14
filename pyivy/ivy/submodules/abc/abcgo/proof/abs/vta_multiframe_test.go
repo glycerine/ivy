@@ -20,7 +20,7 @@ func TestVtaThreeFrameCounterexample(t *testing.T) {
 	gia.Gia_ManAppendCo(p, pi)
 	gia.Gia_ManAppendCo(p, first)
 	gia.Gia_ManSetRegNum(p, 2)
-	if got := Gia_VtaPerform(p, &Abs_Par_t{nFramesMax: 4, nFramesPast: 1}); got != 0 {
+	if got := Gia_VtaPerform(p, &Abs_Par_t{NFramesMax: 4, NFramesPast: 1}); got != 0 {
 		t.Fatalf("got status %d, want SAT", got)
 	}
 	cex := p.SequentialCounterexample()

@@ -18,7 +18,7 @@ func TestOldGlaBufferTriggersSourceExportAssertion(t *testing.T) {
 	gia.Gia_ManSetGateClasses(g, classes)
 	var pars Abs_Par_t
 	Abs_ParSetDefaults(&pars)
-	pars.nFramesMax = 1
+	pars.NFramesMax = 1
 	defer assertSimpleExportPanic(t)
 	Gia_ManPerformGlaOld(g, &pars, 0)
 }

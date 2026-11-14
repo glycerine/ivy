@@ -10,7 +10,7 @@ import (
 // pseudo-inputs unknown, and clears the temporary GIA ternary marks afterward.
 func Gla_ManVerifyUsingTerSim(p *Gla_Man_t, pis, ppis, nodes, outputs, selected *vec.Vec_Int_t) {
 	g := p.pGia
-	for frame := int32(0); frame <= p.pPars.iFrame; frame++ {
+	for frame := int32(0); frame <= p.pPars.IFrame; frame++ {
 		gia.Gia_ObjTerSimSet0(gia.Gia_ManConst0(g))
 		setValues := func(v *vec.Vec_Int_t) {
 			for _, id := range vec.Vec_IntArray(v) {

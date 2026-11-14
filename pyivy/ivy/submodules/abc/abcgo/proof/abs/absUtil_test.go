@@ -9,9 +9,9 @@ import (
 )
 
 func TestAbsParametersDefaults(t *testing.T) {
-	p := Abs_Par_t{nTimeOut: 99, fVerbose: 1}
+	p := Abs_Par_t{NTimeOut: 99, FVerbose: 1}
 	Abs_ParSetDefaults(&p)
-	if p.nTimeOut != 0 || p.fVerbose != 0 || p.nFramesPast != 4 || p.nLearnedMax != 1000 || p.nLearnedDelta != 200 || p.nLearnedPerce != 70 || p.nRatioMax != 30 || p.fPropFanout != 1 || p.iFrame != -1 || p.iFrameProved != -1 || p.nFramesNoChangeLim != 2 {
+	if p.NTimeOut != 0 || p.FVerbose != 0 || p.NFramesPast != 4 || p.nLearnedMax != 1000 || p.NLearnedDelta != 200 || p.NLearnedPerce != 70 || p.NRatioMax != 30 || p.FPropFanout != 1 || p.IFrame != -1 || p.iFrameProved != -1 || p.NFramesNoChangeLim != 2 {
 		t.Fatalf("wrong defaults: %+v", p)
 	}
 }

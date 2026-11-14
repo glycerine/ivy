@@ -28,7 +28,7 @@ func Ga2_ManDumpStats(g *gia.Gia_Man_t, pars *Abs_Par_t, solver *bsat.LabeledSol
 	if useN != 0 {
 		name += "n"
 	}
-	if pars.fUseFullProof != 0 {
+	if pars.FUseFullProof != 0 {
 		name += "p"
 	}
 	name += ".txt"

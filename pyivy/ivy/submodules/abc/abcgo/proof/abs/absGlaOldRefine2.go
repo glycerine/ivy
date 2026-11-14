@@ -20,7 +20,7 @@ func Gla_ManRefinement2(p *Gla_Man_t) *vec.Vec_Int_t {
 	cos, pis, ppis, nodes := vec.Vec_IntAlloc(1000), vec.Vec_IntAlloc(1000), vec.Vec_IntAlloc(1000), vec.Vec_IntAlloc(1000)
 	Gla_ManCollect(p, pis, ppis, cos, nodes)
 	g := p.pGia
-	for frame := int32(0); frame <= p.pPars.iFrame; frame++ {
+	for frame := int32(0); frame <= p.pPars.IFrame; frame++ {
 		zero := Gla_ObjRef(p, gia.Gia_ManConst0(g), frame)
 		*zero = Rfn_Obj_t{Sign: sign}
 		for _, id := range vec.Vec_IntArray(pis) {
@@ -73,7 +73,7 @@ func Gla_ManRefinement2(p *Gla_Man_t) *vec.Vec_Int_t {
 		}
 	}
 	output := gia.Gia_ManPo(g, 0)
-	r := Gla_ObjRef(p, output, p.pPars.iFrame)
+	r := Gla_ObjRef(p, output, p.pPars.IFrame)
 	if r.Value != 1 {
 		fmt.Print("\nCounter-example verification has failed!!!\n")
 	}
@@ -85,8 +85,8 @@ func Gla_ManRefinement2(p *Gla_Man_t) *vec.Vec_Int_t {
 		return nil
 	}
 	selected := vec.Vec_IntAlloc(100)
-	vec.Vec_IntFill(p.vObjCounts, int(p.pPars.iFrame)+1, 0)
-	Gla_ManRefSelect_rec(p, gia.Gia_ObjFanin0(output), p.pPars.iFrame, selected, int32(sign))
+	vec.Vec_IntFill(p.vObjCounts, int(p.pPars.IFrame)+1, 0)
+	Gla_ManRefSelect_rec(p, gia.Gia_ObjFanin0(output), p.pPars.IFrame, selected, int32(sign))
 	vec.Vec_IntUniqify(selected)
 	Gla_ManVerifyUsingTerSim(p, pis, ppis, nodes, cos, selected)
 	for i, id := range vec.Vec_IntArray(selected) {

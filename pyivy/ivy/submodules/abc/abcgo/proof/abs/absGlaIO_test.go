@@ -16,12 +16,12 @@ func TestGlaDumpWritesAbstractedAiger(t *testing.T) {
 	for _, lit := range []int32{x, y, gate} {
 		gia.Gia_ObjSetPhaseValue(gia.Gia_ManObj(g, lit>>1), 1)
 	}
-	pars := &Abs_Par_t{fDumpVabs: 1, pFileVabs: filepath.Join(t.TempDir(), "abstract.aig")}
+	pars := &Abs_Par_t{FDumpVabs: 1, PFileVabs: filepath.Join(t.TempDir(), "abstract.aig")}
 	p := &Ga2_Man_t{pGia: g, pPars: pars, vAbs: vec.Vec_IntAlloc(2)}
 	vec.Vec_IntPush(p.vAbs, 0)
 	vec.Vec_IntPush(p.vAbs, gate>>1)
 	Ga2_GlaDumpAbsracted(p, 0)
-	out, err := gia.Gia_AigerRead(pars.pFileVabs, 0, 0, 1)
+	out, err := gia.Gia_AigerRead(pars.PFileVabs, 0, 0, 1)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -42,13 +42,13 @@ func TestGlaInitialDumpRestoresGateClasses(t *testing.T) {
 	classes := vec.Vec_IntStart(int(gia.Gia_ManObjNum(g)))
 	vec.Vec_IntWriteEntry(classes, 0, 1)
 	gia.Gia_ManSetGateClasses(g, classes)
-	pars := &Abs_Par_t{pFileVabs: filepath.Join(t.TempDir(), "initial.aig")}
+	pars := &Abs_Par_t{PFileVabs: filepath.Join(t.TempDir(), "initial.aig")}
 	p := &Ga2_Man_t{pGia: g, pPars: pars}
 	Ga2_ManDumpInitialMap(p)
 	if gia.Gia_ManGateClasses(g) != classes || vec.Vec_IntEntry(classes, int(gate>>1)) != 0 {
 		t.Fatal("original gate classes not restored")
 	}
-	if _, err := gia.Gia_AigerRead(pars.pFileVabs, 0, 0, 1); err != nil {
+	if _, err := gia.Gia_AigerRead(pars.PFileVabs, 0, 0, 1); err != nil {
 		t.Fatal(err)
 	}
 }

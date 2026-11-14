@@ -12,9 +12,9 @@ func TestOldGlaVtaActualStartup(t *testing.T) {
 	gia.Gia_ManAppendCo(g, n)
 	var p Abs_Par_t
 	Abs_ParSetDefaults(&p)
-	p.nFramesStart = 2
-	p.nFramesMax = 3
-	p.nTimeOut = 7
+	p.NFramesStart = 2
+	p.NFramesMax = 3
+	p.NTimeOut = 7
 	got := Gia_ManPerformGlaOld(g, &p, 1)
 	if got != 0 {
 		t.Fatalf("result=%d", got)
@@ -22,7 +22,7 @@ func TestOldGlaVtaActualStartup(t *testing.T) {
 	if cex := g.SequentialCounterexample(); cex == nil || gia.Gia_ManVerifyCex(g, cex, 0) == 0 {
 		t.Fatal("invalid VTA witness")
 	}
-	if p.nFramesStart != 2 || p.nFramesMax != 3 || p.nTimeOut != 7 {
+	if p.NFramesStart != 2 || p.NFramesMax != 3 || p.NTimeOut != 7 {
 		t.Fatal("VTA did not restore parameters")
 	}
 }
@@ -40,16 +40,16 @@ func TestOldGlaVtaTransfersUnresolvedAbstraction(t *testing.T) {
 	gia.Gia_ManAppendCo(g, gia.Gia_ManAppendAnd(g, l, r))
 	var p Abs_Par_t
 	Abs_ParSetDefaults(&p)
-	p.nFramesStart = 1
-	p.nFramesMax = 2
-	p.nTimeOut = 7
+	p.NFramesStart = 1
+	p.NFramesMax = 2
+	p.NTimeOut = 7
 	if got := Gia_ManPerformGlaOld(g, &p, 1); got != -1 {
 		t.Fatalf("result=%d", got)
 	}
 	if gia.Gia_ManObjClasses(g) != nil || gia.Gia_ManGateClasses(g) == nil {
 		t.Fatal("VTA abstraction not transferred")
 	}
-	if p.nFramesStart != 1 || p.nFramesMax != 2 || p.nTimeOut != 7 {
+	if p.NFramesStart != 1 || p.NFramesMax != 2 || p.NTimeOut != 7 {
 		t.Fatal("VTA did not restore parameters")
 	}
 }

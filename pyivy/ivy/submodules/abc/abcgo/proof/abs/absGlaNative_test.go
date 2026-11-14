@@ -23,9 +23,9 @@ func TestGlaNativeGateWitness(t *testing.T) {
 		gia.Gia_ManAppendCo(g, out)
 		var pars Abs_Par_t
 		Abs_ParSetDefaults(&pars)
-		pars.nFramesMax = 1
-		pars.nRatioMin = 0
-		pars.nRatioMin2 = 0
+		pars.NFramesMax = 1
+		pars.NRatioMin = 0
+		pars.NRatioMin2 = 0
 		result := Gia_ManPerformGla(g, &pars)
 		if result != 0 || g.SequentialCounterexample() == nil || gia.Gia_ManVerifyCex(g, g.SequentialCounterexample(), 0) != 1 {
 			t.Fatalf("mux=%v result=%d witness=%+v", mux, result, g.SequentialCounterexample())
@@ -59,9 +59,9 @@ func TestGlaNativeSequentialWitness(t *testing.T) {
 			}
 			var pars Abs_Par_t
 			Abs_ParSetDefaults(&pars)
-			pars.nFramesMax = 4
-			pars.nRatioMin = 0
-			pars.nRatioMin2 = 0
+			pars.NFramesMax = 4
+			pars.NRatioMin = 0
+			pars.NRatioMin2 = 0
 			got := Gia_ManPerformGla(g, &pars)
 			cex := g.SequentialCounterexample()
 			if got != 0 || cex == nil || cex.IFrame != 1 || gia.Gia_ManVerifyCex(g, cex, 0) != 1 {
@@ -89,9 +89,9 @@ func TestGlaNativeGateClassProjection(t *testing.T) {
 		gia.Gia_ManAppendCo(g, out)
 		var pars Abs_Par_t
 		Abs_ParSetDefaults(&pars)
-		pars.nFramesMax = 1
-		pars.nRatioMin = 0
-		pars.nRatioMin2 = 0
+		pars.NFramesMax = 1
+		pars.NRatioMin = 0
+		pars.NRatioMin2 = 0
 		if got := Gia_ManPerformGla(g, &pars); got != -1 {
 			t.Fatalf("mux=%v result=%d", mux, got)
 		}
@@ -185,10 +185,10 @@ func TestOldGlaNativeVtaSeedIntegration(t *testing.T) {
 	gia.Gia_ManSetObjClasses(g, Gia_VtaConvertFromGla(g, gateClasses, 1))
 	var pars Abs_Par_t
 	Abs_ParSetDefaults(&pars)
-	pars.nFramesStart = 2
-	pars.nFramesMax = 4
-	pars.nRatioMin = 0
-	pars.nRatioMin2 = 0
+	pars.NFramesStart = 2
+	pars.NFramesMax = 4
+	pars.NRatioMin = 0
+	pars.NRatioMin2 = 0
 	result := Gia_ManPerformGlaOld(g, &pars, 1)
 	if result != 0 || g.SequentialCounterexample() == nil || gia.Gia_ManVerifyCex(g, g.SequentialCounterexample(), 0) != 1 {
 		t.Fatalf("result=%d witness=%+v", result, g.SequentialCounterexample())
@@ -216,8 +216,8 @@ func TestOldGlaLoweringPreservesVtaSeedWhenVtaSkipped(t *testing.T) {
 		gia.Gia_ManSetObjClasses(g, seed)
 		var pars Abs_Par_t
 		Abs_ParSetDefaults(&pars)
-		pars.nFramesMax = 2
-		pars.nFramesStart = 1
+		pars.NFramesMax = 2
+		pars.NFramesStart = 1
 		result := Gia_ManPerformGlaOld(g, &pars, 1)
 		if constant && result != 1 || !constant && result != 0 {
 			t.Fatalf("constant=%v result=%d", constant, result)
@@ -243,9 +243,9 @@ func TestGlaNativeSeedDoesNotAbstractSimplifiedPrimaryInput(t *testing.T) {
 		gia.Gia_ManSetGateClasses(g, classes)
 		var pars Abs_Par_t
 		Abs_ParSetDefaults(&pars)
-		pars.nFramesMax = 1
-		pars.nRatioMin = 0
-		pars.nRatioMin2 = 0
+		pars.NFramesMax = 1
+		pars.NRatioMin = 0
+		pars.NRatioMin2 = 0
 		var result int32
 		if old {
 			result = Gia_ManPerformGlaOld(g, &pars, 0)
@@ -272,9 +272,9 @@ func TestGlaNativeProjectionRetainsSimplifiedGateSemantics(t *testing.T) {
 		gia.Gia_ManSetGateClasses(g, classes)
 		var pars Abs_Par_t
 		Abs_ParSetDefaults(&pars)
-		pars.nFramesMax = 1
-		pars.nRatioMin = 0
-		pars.nRatioMin2 = 0
+		pars.NFramesMax = 1
+		pars.NRatioMin = 0
+		pars.NRatioMin2 = 0
 		var result int32
 		if old {
 			result = Gia_ManPerformGlaOld(g, &pars, 0)
@@ -323,9 +323,9 @@ func TestGlaNativeProjectionRetainsRegisterAlias(t *testing.T) {
 		gia.Gia_ManSetGateClasses(g, classes)
 		var pars Abs_Par_t
 		Abs_ParSetDefaults(&pars)
-		pars.nFramesMax = 1
-		pars.nRatioMin = 0
-		pars.nRatioMin2 = 0
+		pars.NFramesMax = 1
+		pars.NRatioMin = 0
+		pars.NRatioMin2 = 0
 		var result int32
 		if old {
 			result = Gia_ManPerformGlaOld(g, &pars, 0)
@@ -373,9 +373,9 @@ func TestGlaNativeProjectionRetainsAndAlias(t *testing.T) {
 		gia.Gia_ManSetGateClasses(g, classes)
 		var pars Abs_Par_t
 		Abs_ParSetDefaults(&pars)
-		pars.nFramesMax = 1
-		pars.nRatioMin = 0
-		pars.nRatioMin2 = 0
+		pars.NFramesMax = 1
+		pars.NRatioMin = 0
+		pars.NRatioMin2 = 0
 		var result int32
 		if old {
 			result = Gia_ManPerformGlaOld(g, &pars, 0)

@@ -17,7 +17,7 @@ func Gia_ManPerformGla(g *gia.Gia_Man_t, pars *Abs_Par_t) int32 {
 	if g == nil || pars == nil || gia.Gia_ManPoNum(g) != 1 {
 		panic("abs: GLA requires one output")
 	}
-	if pars.nTimeOut != 0 {
+	if pars.NTimeOut != 0 {
 		defer absPinClockThread()()
 	}
 	if glaOldHasSpecialGates(g) {
@@ -26,7 +26,7 @@ func Gia_ManPerformGla(g *gia.Gia_Man_t, pars *Abs_Par_t) int32 {
 		})
 	}
 	start := time.Now()
-	pars.iFrame = -1
+	pars.IFrame = -1
 	g.ClearSequentialCounterexample()
 	po := gia.Gia_ManPo(g, 0)
 	driver := gia.Gia_ObjFanin0(po)
@@ -71,13 +71,13 @@ func Gia_ManPerformGla(g *gia.Gia_Man_t, pars *Abs_Par_t) int32 {
 	stopped := false
 	defer func() {
 		if proving >= 0 {
-			Gia_GlaProveCancel(pars.fVerbose)
+			Gia_GlaProveCancel(pars.FVerbose)
 		}
 		Ga2_ManStop(p)
 	}()
-	if pars.fVerbose != 0 {
-		fmt.Printf("Running gate-level abstraction: FrameMax = %d ConfMax = %d Timeout = %d\n", pars.nFramesMax, pars.nConfLimit, pars.nTimeOut)
-		if pars.fDumpMabs != 0 {
+	if pars.FVerbose != 0 {
+		fmt.Printf("Running gate-level abstraction: FrameMax = %d ConfMax = %d Timeout = %d\n", pars.NFramesMax, pars.NConfLimit, pars.NTimeOut)
+		if pars.FDumpMabs != 0 {
 			Ga2_ManWriteStatus(p, -1)
 			Ga2_ManDumpInitialMap(p)
 		}
@@ -86,11 +86,11 @@ func Gia_ManPerformGla(g *gia.Gia_Man_t, pars *Abs_Par_t) int32 {
 		if p.cpuDeadline != 0 && absCPUClock() > p.cpuDeadline {
 			break
 		}
-		pars.iFrame = -1
+		pars.IFrame = -1
 		Ga2_ManRestart(p)
 		oldAbs := vec.Vec_IntSize(p.vAbs)
 		restart := false
-		for frame := int32(0); pars.nFramesMax == 0 || frame < pars.nFramesMax; frame++ {
+		for frame := int32(0); pars.NFramesMax == 0 || frame < pars.NFramesMax; frame++ {
 			if p.cpuDeadline != 0 && absCPUClock() > p.cpuDeadline {
 				stopped = true
 				break
@@ -98,13 +98,13 @@ func Gia_ManPerformGla(g *gia.Gia_Man_t, pars *Abs_Par_t) int32 {
 			conflictsBegin := p.pSat.Statistics().Conflicts
 			nAbs := int32(vec.Vec_IntSize(p.vAbs))
 			nValues := int32(vec.Vec_IntSize(p.vValues))
-			pars.iFrame = frame
+			pars.IFrame = frame
 			if int(frame) == len(p.vId2Lit) {
 				p.vId2Lit = append(p.vId2Lit, vec.Vec_IntAlloc(0))
 			}
 			vec.Vec_IntFillExtra(Ga2_MapFrameMap(p, frame), vec.Vec_IntSize(p.vValues), -1)
 			Ga2_ManAddAbsClauses(p, frame)
-			if pars.fUseSkip != 0 && frame <= pars.iFrameProved || pars.nFramesStart != 0 && frame <= pars.nFramesStart {
+			if pars.FUseSkip != 0 && frame <= pars.iFrameProved || pars.NFramesStart != 0 && frame <= pars.NFramesStart {
 				continue
 			}
 			lit := Ga2_ObjFindLit(p, driver, frame)
@@ -130,18 +130,18 @@ func Gia_ManPerformGla(g *gia.Gia_Man_t, pars *Abs_Par_t) int32 {
 				if p.pSat.RootAssigned(lit >> 1) {
 					break
 				}
-				p.pSat.SetLimits(int64(pars.nConfLimit), 0)
+				p.pSat.SetLimits(int64(pars.NConfLimit), 0)
 				began := time.Now()
 				status := p.pSat.Solve(bsat.Literal(lit))
 				if status == bsat.Satisfiable {
 					p.nCexes++
 					p.timeSat += time.Since(began).Nanoseconds()
 					if sent && abcmain.Abc_FrameIsBridgeMode() != 0 {
-						Gia_Ga2SendCancel(p, pars.fVerbose)
+						Gia_Ga2SendCancel(p, pars.FVerbose)
 						sent = false
 					}
 					if proving >= 0 {
-						Gia_GlaProveCancel(pars.fVerbose)
+						Gia_GlaProveCancel(pars.FVerbose)
 						proving = -1
 					}
 					began = time.Now()
@@ -182,7 +182,7 @@ func Gia_ManPerformGla(g *gia.Gia_Man_t, pars *Abs_Par_t) int32 {
 					}
 					Ga2_ManAddToAbs(p, add)
 					refinements++
-					if pars.nRatioMin2 != 0 && int32(vec.Vec_IntSize(p.vAbs)) >= p.nMarked*pars.nRatioMin2/100 {
+					if pars.NRatioMin2 != 0 && int32(vec.Vec_IntSize(p.vAbs)) >= p.nMarked*pars.NRatioMin2/100 {
 						stopped = true
 						break
 					}
@@ -239,43 +239,43 @@ func Gia_ManPerformGla(g *gia.Gia_Man_t, pars *Abs_Par_t) int32 {
 			if pars.iFrameProved < frame {
 				pars.iFrameProved = frame
 			}
-			if pars.fVerbose != 0 {
+			if pars.FVerbose != 0 {
 				Ga2_ManAbsPrintFrame(p, frame, int32(p.pSat.Statistics().Conflicts-conflictsBegin), refinements, time.Since(start).Nanoseconds(), 1)
 			}
-			if Gia_GlaProveCheck(pars.fVerbose) != 0 {
+			if Gia_GlaProveCheck(pars.FVerbose) != 0 {
 				result = 1
 				stopped = true
 				break
 			}
 			if refinements > 0 {
 				gia.Gia_ManSetGateClasses(g, Ga2_ManAbsTranslate(p))
-				if pars.nRatioMin != 0 && int32(vec.Vec_IntSize(p.vAbs)) >= p.nMarked*pars.nRatioMin/100 {
+				if pars.NRatioMin != 0 && int32(vec.Vec_IntSize(p.vAbs)) >= p.nMarked*pars.NRatioMin/100 {
 					stopped = true
 					break
 				}
 			}
-			if pars.nFramesNoChange == pars.nFramesNoChangeLim {
-				if pars.fDumpVabs != 0 || pars.fDumpMabs != 0 {
+			if pars.nFramesNoChange == pars.NFramesNoChangeLim {
+				if pars.FDumpVabs != 0 || pars.FDumpMabs != 0 {
 					Ga2_ManWriteStatus(p, frame)
-					Ga2_GlaDumpAbsracted(p, pars.fVerbose)
+					Ga2_GlaDumpAbsracted(p, pars.FVerbose)
 				}
-				if pars.fCallProver != 0 {
+				if pars.FCallProver != 0 {
 					if proving >= 0 {
-						Gia_GlaProveCancel(pars.fVerbose)
+						Gia_GlaProveCancel(pars.FVerbose)
 					}
-					Gia_GlaProveAbsracted(g, pars.fSimpProver, pars.fVeryVerbose)
+					Gia_GlaProveAbsracted(g, pars.FSimpProver, pars.FVeryVerbose)
 					proving = frame
 					p.nPdrCalls++
 				}
 				if abcmain.Abc_FrameIsBridgeMode() != 0 {
 					if sent {
-						Gia_Ga2SendCancel(p, pars.fVerbose)
+						Gia_Ga2SendCancel(p, pars.FVerbose)
 					}
-					Gia_Ga2SendAbsracted(p, pars.fVerbose)
+					Gia_Ga2SendAbsracted(p, pars.FVerbose)
 					sent = true
 				}
 			}
-			if pars.nRatioMax != 0 && refinements > 0 && (frame > 20 || vec.Vec_IntSize(p.vAbs) > 100) && vec.Vec_IntSize(p.vAbs)-oldAbs >= oldAbs*int(pars.nRatioMax)/100 {
+			if pars.NRatioMax != 0 && refinements > 0 && (frame > 20 || vec.Vec_IntSize(p.vAbs) > 100) && vec.Vec_IntSize(p.vAbs)-oldAbs >= oldAbs*int(pars.NRatioMax)/100 {
 				restart = true
 				break
 			}
@@ -285,11 +285,11 @@ func Gia_ManPerformGla(g *gia.Gia_Man_t, pars *Abs_Par_t) int32 {
 		}
 	}
 	if result == 0 {
-		pars.iFrame--
+		pars.IFrame--
 		gia.Gia_ManSetGateClasses(g, nil)
 	} else if result < 0 {
 		gia.Gia_ManSetGateClasses(g, Ga2_ManAbsTranslate(p))
-		pars.iFrame = pars.iFrameProved
+		pars.IFrame = pars.iFrameProved
 	}
 	return result
 }

@@ -25,9 +25,9 @@ func Ga2_ObjSatValue(p *Ga2_Man_t, obj *gia.Gia_Obj_t, frame int32) int32 {
 	return result
 }
 func Ga2_ManDeriveCex(p *Ga2_Man_t, pis *vec.Vec_Int_t) *util.Abc_Cex_t {
-	c := util.Abc_CexAlloc(gia.Gia_ManRegNum(p.pGia), gia.Gia_ManPiNum(p.pGia), p.pPars.iFrame+1)
+	c := util.Abc_CexAlloc(gia.Gia_ManRegNum(p.pGia), gia.Gia_ManPiNum(p.pGia), p.pPars.IFrame+1)
 	c.IPo = 0
-	c.IFrame = p.pPars.iFrame
+	c.IFrame = p.pPars.IFrame
 	for i := 0; i < vec.Vec_IntSize(pis); i++ {
 		obj := gia.Gia_ManObj(p.pGia, vec.Vec_IntEntry(pis, i))
 		if gia.Gia_ObjIsPi(p.pGia, obj) == 0 {

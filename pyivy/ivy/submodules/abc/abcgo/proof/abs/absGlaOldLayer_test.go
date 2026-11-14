@@ -27,12 +27,12 @@ func TestOldGlaEmptyLayerWaitsForTimeout(t *testing.T) {
 			gia.Gia_ManAppendCo(g, root)
 			var p Abs_Par_t
 			Abs_ParSetDefaults(&p)
-			p.fAddLayer = 1
-			p.fUseFullProof = full
-			p.nFramesMax = 1
-			p.nTimeOut = 1
-			p.nRatioMin = 0
-			p.nRatioMin2 = 0
+			p.FAddLayer = 1
+			p.FUseFullProof = full
+			p.NFramesMax = 1
+			p.NTimeOut = 1
+			p.NRatioMin = 0
+			p.NRatioMin2 = 0
 			got := Gia_ManPerformGlaOld(g, &p, 0)
 			if got != -1 || g.SequentialCounterexample() != nil {
 				t.Fatalf("result=%d cex=%v, want source unknown without witness", got, g.SequentialCounterexample())

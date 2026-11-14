@@ -14,7 +14,7 @@ func TestGlaCexDerivesInputFromSolver(t *testing.T) {
 	gia.Gia_ManAppendCo(g, a)
 	pars := &Abs_Par_t{}
 	Abs_ParSetDefaults(pars)
-	pars.iFrame = 0
+	pars.IFrame = 0
 	p := Ga2_ManStart(g, pars)
 	defer Ga2_ManStop(p)
 	p.pSat = bsat.NewLabeledSolver2()

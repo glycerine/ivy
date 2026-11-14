@@ -20,10 +20,10 @@ func TestOldGlaProofOptionPreservesResults(t *testing.T) {
 			gia.Gia_ManAppendCo(g, out)
 			var pars Abs_Par_t
 			Abs_ParSetDefaults(&pars)
-			pars.fUseFullProof = full
-			pars.nFramesMax = 1
-			pars.nRatioMin = 0
-			pars.nRatioMin2 = 0
+			pars.FUseFullProof = full
+			pars.NFramesMax = 1
+			pars.NRatioMin = 0
+			pars.NRatioMin2 = 0
 			got := Gia_ManPerformGlaOld(g, &pars, 0)
 			if satisfiable {
 				if got != 0 || g.SequentialCounterexample() == nil || gia.Gia_ManVerifyCex(g, g.SequentialCounterexample(), 0) != 1 {
@@ -50,7 +50,7 @@ func TestOldGlaProofModesRefineAndRollback(t *testing.T) {
 		right := gia.Gia_ManAppendAnd(g, gia.Gia_ManAppendAnd(g, x[0]^1, x[3]), x[4])
 		gia.Gia_ManAppendCo(g, gia.Gia_ManAppendAnd(g, left, right))
 		p := NewParameters()
-		p.fUseFullProof, p.nFramesMax, p.nRatioMin = full, 1, 0
+		p.FUseFullProof, p.NFramesMax, p.NRatioMin = full, 1, 0
 		p.nFramesNoChange = 10
 		got := Gia_ManPerformGlaOld(g, p, 0)
 		if got != -1 || g.SequentialCounterexample() != nil || p.nFramesNoChange != 0 {

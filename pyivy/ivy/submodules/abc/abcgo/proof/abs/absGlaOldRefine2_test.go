@@ -15,7 +15,7 @@ func TestOldGlaRefinement2SelectsPseudoInput(t *testing.T) {
 		z := gia.Gia_ManAppendAnd(g, x, y)
 		root := gia.Gia_ManAppendAnd(g, x, z)
 		gia.Gia_ManAppendCo(g, root)
-		p := &Gla_Man_t{pGia: g, pPars: &Abs_Par_t{fPropFanout: prop}, pObjs: make([]Gla_Obj_t, 4), nObjs: 4, pObj2Obj: make([]uint32, gia.Gia_ManObjNum(g)), pvRefis: make([][]Rfn_Obj_t, gia.Gia_ManObjNum(g)), vObjCounts: vec.Vec_IntAlloc(0), vAbs: vec.Vec_IntAllocArrayCopy([]int32{3}, 1), pSat: bsat.NewLabeledSolver2()}
+		p := &Gla_Man_t{pGia: g, pPars: &Abs_Par_t{FPropFanout: prop}, pObjs: make([]Gla_Obj_t, 4), nObjs: 4, pObj2Obj: make([]uint32, gia.Gia_ManObjNum(g)), pvRefis: make([][]Rfn_Obj_t, gia.Gia_ManObjNum(g)), vObjCounts: vec.Vec_IntAlloc(0), vAbs: vec.Vec_IntAllocArrayCopy([]int32{3}, 1), pSat: bsat.NewLabeledSolver2()}
 		for i := range p.pObj2Obj {
 			p.pObj2Obj[i] = ^uint32(0)
 		}

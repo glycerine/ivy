@@ -26,7 +26,7 @@ func Ga2_ManAddToAbs(p *Ga2_Man_t, add *vec.Vec_Int_t) {
 			}
 		}
 	}
-	for frame := int32(0); frame <= p.pPars.iFrame; frame++ {
+	for frame := int32(0); frame <= p.pPars.IFrame; frame++ {
 		vec.Vec_IntFillExtra(Ga2_MapFrameMap(p, frame), vec.Vec_IntSize(p.vValues), -1)
 		for i := 0; i < vec.Vec_IntSize(add); i++ {
 			obj := gia.Gia_ManObj(p.pGia, vec.Vec_IntEntry(add, i))

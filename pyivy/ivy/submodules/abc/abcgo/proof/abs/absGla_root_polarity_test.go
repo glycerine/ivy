@@ -22,12 +22,12 @@ func TestGlaPositiveRootAssignmentMatchesSource(t *testing.T) {
 	gia.Gia_ManSetRegNum(g, 2)
 	var p Abs_Par_t
 	Abs_ParSetDefaults(&p)
-	p.fUseSimple = 1
-	p.fAddLayer = 1
-	p.nFramesMax = 1
-	p.nRatioMin = 0
-	p.nRatioMin2 = 0
-	p.nFramesNoChangeLim = 100
+	p.FUseSimple = 1
+	p.FAddLayer = 1
+	p.NFramesMax = 1
+	p.NRatioMin = 0
+	p.NRatioMin2 = 0
+	p.NFramesNoChangeLim = 100
 	result := Gia_ManPerformGla(g, &p)
 	if result != -1 || g.SequentialCounterexample() != nil {
 		t.Fatalf("source returned unknown without witness; Go result=%d witness=%v", result, g.SequentialCounterexample())
@@ -54,13 +54,13 @@ func TestGlaPositiveRootAssignmentReachableAfterRefinement(t *testing.T) {
 	gia.Gia_ManSetGateClasses(g, classes)
 	var pars Abs_Par_t
 	Abs_ParSetDefaults(&pars)
-	pars.fUseSimple = 1
-	pars.fAddLayer = 1
-	pars.iFrame = -1
+	pars.FUseSimple = 1
+	pars.FAddLayer = 1
+	pars.IFrame = -1
 	p := Ga2_ManStart(g, &pars)
 	defer Ga2_ManStop(p)
 	Ga2_ManRestart(p)
-	pars.iFrame = 0
+	pars.IFrame = 0
 	p.vId2Lit = append(p.vId2Lit, vec.Vec_IntAlloc(0))
 	vec.Vec_IntFillExtra(Ga2_MapFrameMap(p, 0), vec.Vec_IntSize(p.vValues), -1)
 	Ga2_ManAddAbsClauses(p, 0)

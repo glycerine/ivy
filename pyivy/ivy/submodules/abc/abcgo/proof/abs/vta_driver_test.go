@@ -12,7 +12,7 @@ func TestVtaTrivialOutputs(t *testing.T) {
 		gia.Gia_ManAppendCo(p, tc.lit)
 		gia.Gia_ManAppendCo(p, reg)
 		gia.Gia_ManSetRegNum(p, 1)
-		got := Gia_VtaPerform(p, &Abs_Par_t{nFramesMax: 1})
+		got := Gia_VtaPerform(p, &Abs_Par_t{NFramesMax: 1})
 		if got != tc.want {
 			t.Fatalf("output literal %d: got %d, want %d", tc.lit, got, tc.want)
 		}
