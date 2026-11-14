@@ -119,7 +119,6 @@ func Abc_NtkMap(pNtk *Abc_Ntk_t, DelayTarget float64, AreaMulti float64, DelayMu
 	var pMan *Map_Man_t
 	var vSwitching []float32
 	var pSwitching *float32 = nil
-	var clk abctime
 	var clkTotal abctime = Abc_Clock()
 	pLib := mapGenlib()
 
@@ -206,7 +205,6 @@ func Abc_NtkMap(pNtk *Abc_Ntk_t, DelayTarget float64, AreaMulti float64, DelayMu
 	if pMan == nil {
 		return nil
 	}
-	clk = Abc_Clock()
 	mapper.Map_ManSetSwitching(pMan, fSwitching)
 	mapper.Map_ManSetSkipFanout(pMan, fSkipFanout)
 	if fUseProfile != 0 {
@@ -355,7 +353,7 @@ func Abc_NtkToMap(pNtk *Abc_Ntk_t, DelayTarget float64, fRecovery int32, pSwitch
 	mapper.Map_ManSetDelayTarget(pMan, float32(DelayTarget))
 
 	// set arrival and requireds
-	if mapper.Scl_ConIsRunning() && mapper.Scl_ConHasInArrs() {
+	if mapper.Scl_ConIsRunning() && scl.Scl_ConHasInArrs() {
 		mapper.Map_ManSetInputArrivals(pMan, Abc_NtkMapCopyCiArrivalCon(pNtk))
 	} else {
 		mapper.Map_ManSetInputArrivals(pMan, Abc_NtkMapCopyCiArrival(pNtk, Abc_NtkGetCiArrivalTimes(pNtk)))
@@ -562,7 +560,7 @@ func Abc_NtkFromMap(pMan *Map_Man_t, pNtk *Abc_Ntk_t, fUseBuffs int32) *Abc_Ntk_
 	var pNtkNew *Abc_Ntk_t
 	var pNodeMap *Map_Node_t
 	var pNode, pNodeNew *Abc_Obj_t
-	var i, nDupGates int32
+	var i int32
 	assert(mapper.Map_ManReadBufNum(pMan) == baseabc.Abc_NtkBarBufNum(pNtk), "mapper.Map_ManReadBufNum(pMan) == baseabc.Abc_NtkBarBufNum(pNtk)")
 	// create the new network
 	pNtkNew = baseabc.Abc_NtkStartFrom(pNtk, ABC_NTK_LOGIC, ABC_FUNC_MAP)
@@ -612,7 +610,7 @@ func Abc_NtkFromMap(pMan *Map_Man_t, pNtk *Abc_Ntk_t, fUseBuffs int32) *Abc_Ntk_
 		baseabc.Abc_ObjAddFanin(pNode.Copy, pNodeNew)
 	}
 	// decouple the PO driver nodes to reduce the number of levels
-	nDupGates = baseabc.Abc_NtkLogicMakeSimpleCos(pNtkNew, boolToInt32(fUseBuffs == 0))
+	baseabc.Abc_NtkLogicMakeSimpleCos(pNtkNew, boolToInt32(fUseBuffs == 0))
 	//    if ( nDupGates && mapper.Map_ManReadVerbose(pMan) )
 	//        printf( "Duplicated %d gates to decouple the CO drivers.\n", nDupGates );
 	return pNtkNew
