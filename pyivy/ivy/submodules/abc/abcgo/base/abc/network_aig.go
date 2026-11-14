@@ -59,6 +59,8 @@ func (n *Network) CreateAndEdges(a, b Edge) Edge {
 	if err := n.AddFanin(o, b); err != nil {
 		panic(err)
 	}
+	o.Level = 1 + max(a.Object.Level, b.Object.Level)
+	o.Phase = (a.Object.Phase != a.Complement) && (b.Object.Phase != b.Complement)
 	return o.Signal()
 }
 func (n *Network) AndEdges(a, b Edge) Edge {
