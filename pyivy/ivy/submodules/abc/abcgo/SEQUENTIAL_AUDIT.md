@@ -856,3 +856,34 @@ an extra level; Go currently uses one level. Also inspect CO reference access:
 Go stores an output-anchor reference in Node.Refs, whereas C's accessor reports
 actual fanout references. These need their own red tests and caller review.
 Other AIG families and the rest of the original package inventory remain open.
+
+### XOR structural timing versus source choice annotations
+
+Source comparison found two deliberately different conventions: the header's
+Aig_ObjLevelNew charges an explicit XOR two levels, whereas aigDfs.c's choice
+pass increments every logic node by one and resets unvisited nodes to zero.
+Three new regressions failed before the repair, exposing one-level structural
+XORs, incorrect incremental/recomputed levels and acceptance of an invalid
+one-level XOR in ordinary structural validation. The choice regression also
+exposed rejection of C's legitimate zeroed dangling-node annotations.
+
+Centralized structural gate cost and used it in node-level calculation, full
+recomputation and checking. XOR now costs two levels; AND remains one. Kept the
+choice pass's source unit cost. To preserve strong validation under both
+conventions, optional packed metadata records structural, choice or reset
+annotations using two bits per object. Ordinary graphs allocate no annotation
+storage; full structural recomputation releases it. Incremental structural
+updates and explicit level writes clear affected annotations. This metadata
+supports Go's stronger checker and does not change C's level algorithms.
+
+Added regressions for structural creation/recomputation, input arrival levels,
+source unit-cost choice levels, zeroed dangling nodes, corruption detection,
+mode transitions, newly appended nodes and annotation storage release. A
+compiled oracle includes original aigDfs.c, aigUtil.c and timBox.c and confirms
+structural XOR/AND levels 2/3, choice levels 1/2, and arrival-adjusted levels 6/7.
+
+DAR's existing balanced eight-input XOR test assumed three structural levels;
+corrected it to C's six levels for three XOR stages while retaining all 256
+functional assignments. Final AIG, DAR core and DAR facade race suites pass.
+This closes the XOR-cost finding; CO anchor/fanout reference semantics and the
+remaining AIG families are still pending.
