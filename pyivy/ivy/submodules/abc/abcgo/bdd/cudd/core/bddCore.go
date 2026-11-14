@@ -77,6 +77,7 @@ type DdManager struct {
 	siftMaxVar, siftMaxSwap           int
 	symmetryGroups                    [][]int
 	reorderingTime                    time.Duration
+	hooks                             map[Cudd_HookType][]DD_HFP
 }
 
 // Cudd_InitLinearMatrix initializes the manager's linear transform matrix to
@@ -153,6 +154,16 @@ func Cudd_LinearMatrixState(dd *DdManager) ([]uint64, int) {
 		return nil, 0
 	}
 	return append([]uint64(nil), dd.linearMatrix...), dd.linearSize
+}
+
+// Cudd_XorLinearRows replaces row x with row x XOR row y in the packed
+// linear transform matrix.
+func Cudd_XorLinearRows(dd *DdManager, x, y int) {
+	wordsPerRow := (dd.linearSize + 63) / 64
+	xstart, ystart := x*wordsPerRow, y*wordsPerRow
+	for i := 0; i < wordsPerRow; i++ {
+		dd.linearMatrix[xstart+i] ^= dd.linearMatrix[ystart+i]
+	}
 }
 
 // Cudd_ReadLinear reads one bit from the packed linear transform matrix.

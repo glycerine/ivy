@@ -92,3 +92,18 @@ func TestResizeLinearMatrixAddsIdentityRow(t *testing.T) {
 		t.Fatalf("preserved diagonal entry = %d, want 1", got)
 	}
 }
+
+func TestXorLinearRows(t *testing.T) {
+	dd := NewBDDManager(70)
+	if !Cudd_InitLinearMatrix(dd) {
+		t.Fatal("Cudd_InitLinearMatrix failed")
+	}
+	Cudd_XorLinearRows(dd, 2, 67)
+	for _, bit := range []struct{ row, col, want int }{
+		{2, 2, 1}, {2, 67, 1}, {67, 67, 1}, {67, 2, 0},
+	} {
+		if got := Cudd_ReadLinear(dd, bit.row, bit.col); got != bit.want {
+			t.Errorf("Cudd_ReadLinear(%d, %d) = %d, want %d", bit.row, bit.col, got, bit.want)
+		}
+	}
+}
