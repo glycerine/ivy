@@ -10,8 +10,8 @@ func Aig_ManCheck(p *Graph) int32 {
 
 // Aig_ManCheckMarkA detects marks left behind by temporary traversals.
 func Aig_ManCheckMarkA(p *Graph) {
-	for _, n := range p.nodes {
-		if n.MarkA {
+	for id, n := range p.nodes {
+		if !p.deleted[id] && n.MarkA {
 			panic("aig: traversal mark A was not cleared")
 		}
 	}

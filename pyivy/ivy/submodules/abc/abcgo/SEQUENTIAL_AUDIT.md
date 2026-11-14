@@ -262,3 +262,33 @@ caller also passes its full uncached package tests. Remaining families include d
 fanout/timing, memory, partitioning, representatives, retiming, simulation,
 canonicalization and visualization; their earlier reviews still require
 inspection in this sequential audit.
+
+### aig/aig: storage, fanout and timing review checkpoint
+
+Inspected `aigMem.go`, `aigFanout.go`, `fanout_status.go`, `aigTiming.go` and
+`aigCheck.go`, their existing tests, and the corresponding C allocation,
+recycling, circular-link, level-update and mark-check routines. Go pools use
+owned slices instead of C chunks, so allocation-byte accounting is not a
+byte-for-byte reproduction of C arena reservations. Larger stepped entries
+are intentionally retained until Stop in C (the recycle free is commented
+out); retained Go storage is therefore not treated as a leak to fix.
+
+Added six invalid-recycle cases for small and large stepped allocations:
+foreign storage, inconsistent size and double recycling. Tests ensure failed
+operations preserve allocated storage and the small entry remains reusable.
+They pass without a production change. Fanout tests already cover circular
+insert/remove, duplicate pins, growth, deletion holes and unary objects.
+Timing tests check forward/reverse levels, corruption and CI arrival levels.
+
+Found `Aig_ManCheckMarkA` inspected deletion holes, unlike C's live-object
+iteration in `aigCheck.c:136`. Added a red cleanup regression; it panicked on
+an old marked dangling node after removal. The checker now skips deleted
+slots, and the test separately confirms it still rejects live marks. Full
+uncached AIG race tests pass with this fix and the new pool ownership cases.
+
+Compactness review found no further safe consolidation in these files:
+circular per-pin storage remains explicit, allocation ownership has one map
+per pool, and timing shares graph recomputation helpers. Go's whole-graph
+level recomputation costs more than C's incremental scheduling; replacing it
+requires a dedicated performance/correctness change rather than deleting
+checks during this audit. The package audit remains in progress.

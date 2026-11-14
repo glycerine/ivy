@@ -1,6 +1,9 @@
 package aig
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+)
 
 func TestFixedPoolReuseAndOwnership(t *testing.T) {
 	p := Aig_MmFixedStart(16, 2)
@@ -44,5 +47,49 @@ func TestFlexibleAndSteppedPools(t *testing.T) {
 	Aig_MmStepEntryRecycle(p, b, 80)
 	if Aig_MmStepReadMemUsage(p) != 96 {
 		t.Fatal("step accounting")
+	}
+}
+
+func TestSteppedPoolRejectsInvalidRecycleWithoutLosingOwnership(t *testing.T) {
+	for _, size := range []int32{9, 80} {
+		for _, invalid := range []string{"foreign", "wrong size", "double recycle"} {
+			t.Run(fmt.Sprintf("size=%d/%s", size, invalid), func(t *testing.T) {
+				pool := Aig_MmStepStart(3)
+				defer Aig_MmStepStop(pool, 0)
+				entry := Aig_MmStepEntryFetch(pool, size)
+				entry[0] = 37
+				before := Aig_MmStepReadMemUsage(pool)
+				candidate, count := entry, size
+				switch invalid {
+				case "foreign":
+					candidate = make([]byte, size)
+				case "wrong size":
+					count++
+				case "double recycle":
+					Aig_MmStepEntryRecycle(pool, entry, size)
+				}
+				panicked := false
+				func() {
+					defer func() { panicked = recover() != nil }()
+					Aig_MmStepEntryRecycle(pool, candidate, count)
+				}()
+				if !panicked {
+					t.Fatal("invalid recycle accepted")
+				}
+				if Aig_MmStepReadMemUsage(pool) != before || entry[0] != 37 {
+					t.Fatal("failed recycle changed pool storage")
+				}
+				if invalid != "double recycle" {
+					Aig_MmStepEntryRecycle(pool, entry, size)
+				}
+				if size == 9 {
+					reused := Aig_MmStepEntryFetch(pool, size)
+					if &reused[0] != &entry[0] || reused[0] != 37 {
+						t.Fatal("rejected operation lost the reusable entry")
+					}
+					Aig_MmStepEntryRecycle(pool, reused, size)
+				}
+			})
+		}
 	}
 }
