@@ -269,10 +269,3 @@ func Abc_NtkCollectLatchValuesIvy(network *abc.Network, useDCs int32) *vec.Vec_I
 	}
 	return values
 }
-
-func boolInt(value bool) int32 {
-	if value {
-		return 1
-	}
-	return 0
-}

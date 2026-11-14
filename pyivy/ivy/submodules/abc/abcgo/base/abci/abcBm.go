@@ -603,7 +603,7 @@ func Abc_NtkMiterBm(pNtk1, pNtk2 *Abc_Ntk_t, iCurrMatch, oCurrMatch *Vec_Ptr_t) 
 	return baseabc.Abc_NtkCreateFromGias(name, nil, manager)
 }
 
-func Abc_NtkVerifyReportError(pNtk1, pNtk2 *Abc_Ntk_t, model []int32, mismatch *Vec_Int_t) {
+func Abc_NtkVerifyReportErrorWithMismatch(pNtk1, pNtk2 *Abc_Ntk_t, model []int32, mismatch *Vec_Int_t) {
 	graph1, graph2 := baseabc.Abc_NtkStrashToGia(pNtk1), baseabc.Abc_NtkStrashToGia(pNtk2)
 	if len(graph1.Inputs()) != len(model) || len(graph2.Inputs()) != len(model) {
 		return
@@ -666,7 +666,7 @@ func Abc_NtkBmSat(pNtk1, pNtk2 *Abc_Ntk_t, iMatchPairs, oMatchPairs *Vec_Ptr_t, 
 	}
 	status := Abc_NtkMiterSat(miter, 10000, 0, 0, nil, nil)
 	if status == 0 && mismatch != nil && len(miter.Model) > 0 {
-		Abc_NtkVerifyReportError(pNtk1, pNtk2, miter.Model, mismatch)
+		Abc_NtkVerifyReportErrorWithMismatch(pNtk1, pNtk2, miter.Model, mismatch)
 	}
 	return status
 }

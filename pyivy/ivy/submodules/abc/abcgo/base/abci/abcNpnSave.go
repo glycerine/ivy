@@ -348,9 +348,3 @@ func primeAtLeast(n int32) int32 {
 	}
 	return 2
 }
-func max32(a, b int32) int32 {
-	if a > b {
-		return a
-	}
-	return b
-}

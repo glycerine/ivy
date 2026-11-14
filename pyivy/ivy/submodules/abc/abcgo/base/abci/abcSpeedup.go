@@ -603,9 +603,3 @@ func maxFloat(a, b float64) float64 {
 	}
 	return b
 }
-func boolToInt32(v bool) int32 {
-	if v {
-		return 1
-	}
-	return 0
-}

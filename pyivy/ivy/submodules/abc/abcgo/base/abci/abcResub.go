@@ -35,8 +35,6 @@ type Abc_ManRes_t struct {
 	nTotalDivs, nTotalLeaves, nTotalGain, nNodesBeg, nNodesEnd    int32
 }
 
-type Odc_Man_t = Odc_Man_t_
-
 func Abc_ManResubStart(nLeavesMax, nDivsMax int32) *Abc_ManRes_t {
 	p := &Abc_ManRes_t{nLeavesMax: nLeavesMax, nDivsMax: nDivsMax}
 	p.vDivs = vec.Vec_PtrAlloc(int(nDivsMax))

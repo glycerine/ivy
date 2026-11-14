@@ -11,9 +11,6 @@ import (
 	"github.com/glycerine/abcgo/proof/cec"
 )
 
-type Aig_Man_t = aig.Graph
-type Aig_Obj_t = aig.Edge
-
 // Dch_Pars_t retains the C fields used by ABC's DCH callers. The focused
 // Dress2 path consumes only nBTLimit and fVerbose; the remaining fields keep
 // the shared command API source-shaped.

@@ -965,13 +965,6 @@ func printSeqLatchPattern(pNtk *Abc_Ntk_t, values map[*Abc_Obj_t][]bool, frame i
 	}
 }
 
-func boolToInt32(value bool) int32 {
-	if value {
-		return 1
-	}
-	return 0
-}
-
 /*
 *Function*************************************************************
 

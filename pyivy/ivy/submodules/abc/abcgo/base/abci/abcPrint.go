@@ -174,12 +174,6 @@ func Abc_NtkMfsTotalSwitching(pNtk *Abc_Ntk_t) float32 {
 	baseabc.Abc_NtkDelete(strashed)
 	return total
 }
-func boolInt(value bool) int32 {
-	if value {
-		return 1
-	}
-	return 0
-}
 
 /*
 *Function*************************************************************
