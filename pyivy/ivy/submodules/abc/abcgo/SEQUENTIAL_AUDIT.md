@@ -666,3 +666,38 @@ buffer/CO boundaries. The full uncached AIG race suite passes, including the
 compiled oracle. No production repository callers currently use these five
 helpers; wider package audits remain pending. Reverse DFS, support and
 composition helpers still need review before this DFS family can be closed.
+
+### Support collection and support-size source contracts
+
+Reviewed all six support helpers against aigDfs.c and inspected their callers.
+New red regressions exposed retained output-slice contents in SupportNodes,
+missing traversal setup/marks, traversal through seeded internal boundaries,
+and missing regular/non-CO root preconditions. SupportSizeTest was a different
+calculation entirely: it summed output support sizes instead of counting live
+logic gates with support at most sixteen, including dangling gates.
+
+Restored source traversal state and gate-boundary behavior. Recursive helpers
+use caller traversal seeds; collection appends to the supplied slice, whereas
+SupportNodes clears it, starts a traversal and premarks the constant. Scalar
+support counting now directly counts marked CIs without allocating intermediate
+whole-cone and support slices. Restored SupportSizeTest's node scan, threshold
+and source diagnostics. Collection and counting remain separate as in C.
+
+Updated AIG partition/split/register-component callers, SAIG diagnostics and
+FRA output diagnostics to pass regular driver objects, matching their source
+call sites. The earlier general traversal test now supplies a regular root
+where C requires one. These caller adjustments do not close the wider SAIG or
+FRA package audits.
+
+Coverage includes cleared and empty root arrays, CO unwrapping, repeated roots,
+seeded gates, preservation of recursive result prefixes, marks rather than
+slice membership as the visited criterion, buffers, explicit XOR, constant
+collection, repeated wrapper calls and the sixteen/seventeen-input boundary.
+A new positive fixture initially assumed insertion-order XOR fanins; corrected
+its expectation to the graph's canonical fanin order. The final full uncached
+AIG race suite passes. SAIG, FRA, the FRA class manager and SSW race suites also
+pass with unchanged production code after that test-only correction.
+
+Reverse DFS and transfer/composition source contracts remain open, along with
+the remaining AIG algorithm families. The original package audit scope and
+pending package count are unchanged.
