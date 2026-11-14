@@ -49,15 +49,15 @@ var s_MappingTime abctime
 */
 func If_ManSetDefaultPars(pPars *If_Par_t) {
 	*pPars = If_Par_t_{
-		nLutSize:    -1,
-		nCutsMax:    8,
-		nFlowIters:  1,
-		nAreaIters:  2,
+		NLutSize:    -1,
+		NCutsMax:    8,
+		NFlowIters:  1,
+		NAreaIters:  2,
 		DelayTarget: -1,
 		Epsilon:     0.005,
-		fPreprocess: 1,
-		fExpRed:     1,
-		fEdge:       1,
+		FPreprocess: 1,
+		FExpRed:     1,
+		FEdge:       1,
 	}
 }
 
@@ -75,7 +75,7 @@ func If_ManSetDefaultPars(pPars *If_Par_t) {
 **********************************************************************
 */
 func If_ManPerformMapping(p *If_Man_t) int32 {
-	p.pPars.fAreaOnly = p.pPars.fArea // temporary
+	p.pPars.fAreaOnly = p.pPars.FArea // temporary
 	// create the CI cutsets
 	If_ManSetupCiCutSets(p)
 	// allocate memory for other cutsets
@@ -115,46 +115,46 @@ func If_ManPerformMappingComb(p *If_Man_t) int32 {
 	}
 
 	// delay oriented mapping
-	if p.pPars.fPreprocess != 0 && p.pPars.fArea == 0 {
+	if p.pPars.FPreprocess != 0 && p.pPars.FArea == 0 {
 		// map for delay
-		If_ManPerformMappingRound(p, p.pPars.nCutsMax, 0, 1, 1, "Delay")
+		If_ManPerformMappingRound(p, p.pPars.NCutsMax, 0, 1, 1, "Delay")
 		// map for delay second option
-		p.pPars.fFancy = 1
+		p.pPars.FFancy = 1
 		If_ManResetOriginalRefs(p)
-		If_ManPerformMappingRound(p, p.pPars.nCutsMax, 0, 1, 0, "Delay-2")
-		p.pPars.fFancy = 0
+		If_ManPerformMappingRound(p, p.pPars.NCutsMax, 0, 1, 0, "Delay-2")
+		p.pPars.FFancy = 0
 		// map for area
-		p.pPars.fArea = 1
+		p.pPars.FArea = 1
 		If_ManResetOriginalRefs(p)
-		If_ManPerformMappingRound(p, p.pPars.nCutsMax, 0, 1, 0, "Area")
-		p.pPars.fArea = 0
+		If_ManPerformMappingRound(p, p.pPars.NCutsMax, 0, 1, 0, "Area")
+		p.pPars.FArea = 0
 
 	} else {
-		If_ManPerformMappingRound(p, p.pPars.nCutsMax, 0, 0, 1, "Delay")
+		If_ManPerformMappingRound(p, p.pPars.NCutsMax, 0, 0, 1, "Delay")
 	}
 
 	// try to improve area by expanding and reducing the cuts
-	if p.pPars.fExpRed != 0 {
+	if p.pPars.FExpRed != 0 {
 		If_ManImproveMapping(p)
 	}
 
 	// area flow oriented mapping
-	for i := int32(0); i < p.pPars.nFlowIters; i++ {
-		If_ManPerformMappingRound(p, p.pPars.nCutsMax, 1, 0, 0, "Flow")
-		if p.pPars.fExpRed != 0 {
+	for i := int32(0); i < p.pPars.NFlowIters; i++ {
+		If_ManPerformMappingRound(p, p.pPars.NCutsMax, 1, 0, 0, "Flow")
+		if p.pPars.FExpRed != 0 {
 			If_ManImproveMapping(p)
 		}
 	}
 
 	// area oriented mapping
-	for i := int32(0); i < p.pPars.nAreaIters; i++ {
-		If_ManPerformMappingRound(p, p.pPars.nCutsMax, 2, 0, 0, "Area")
-		if p.pPars.fExpRed != 0 {
+	for i := int32(0); i < p.pPars.NAreaIters; i++ {
+		If_ManPerformMappingRound(p, p.pPars.NCutsMax, 2, 0, 0, "Area")
+		if p.pPars.FExpRed != 0 {
 			If_ManImproveMapping(p)
 		}
 	}
 
-	if p.pPars.fVerbose != 0 {
+	if p.pPars.FVerbose != 0 {
 		//        Abc_Print( 1, "Total memory = %7.2f MB. Peak cut memory = %7.2f MB.  ",
 		//            1.0 * (p->nObjBytes + 2*sizeof(void *)) * If_ManObjNum(p) / (1<<20),
 		//            1.0 * p->nSetBytes * Mem_FixedReadMaxEntriesUsed(p->pMemSet) / (1<<20) );

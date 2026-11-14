@@ -4,7 +4,7 @@ package if_
 // Lpk_IfManStart in src/opt/lpk/lpkCore.c. LPK allocates its arrival array
 // after starting the IF manager.
 func If_ManSetLpkPars(p *If_Par_t, lutSize int32) {
-	*p = If_Par_t_{nLutSize: lutSize, nCutsMax: 16, DelayTarget: -1, Epsilon: 0.005, fArea: 1, fTruth: 1}
+	*p = If_Par_t_{NLutSize: lutSize, NCutsMax: 16, DelayTarget: -1, Epsilon: 0.005, FArea: 1, FTruth: 1}
 }
 
 // SetArrivalTime updates one existing arrival slot without changing the rest.

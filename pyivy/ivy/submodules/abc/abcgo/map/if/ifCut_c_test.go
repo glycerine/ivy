@@ -103,7 +103,7 @@ int main(void){char mode;while(scanf(" %c",&mode)==1){if(mode=='M'){int limit,na
 			fmt.Fprintf(&input, " %d", v)
 		}
 		fmt.Fprintln(&input)
-		p = &If_Man_t{pPars: &If_Par_t{fPower: int32(power)}, SortMode: int32(mode), fEpsilon: 0.001}
+		p = &If_Man_t{pPars: &If_Par_t{FPower: int32(power)}, SortMode: int32(mode), fEpsilon: 0.001}
 		ca = &If_Cut_t{Delay: float32(fields[0]), Area: float32(fields[1]), Edge: float32(fields[2]), Power: float32(fields[3]), nLeaves: uint32(fields[4]), fUseless: uint32(fields[5])}
 		cb = &If_Cut_t{Delay: float32(fields[6]), Area: float32(fields[7]), Edge: float32(fields[8]), Power: float32(fields[9]), nLeaves: uint32(fields[10]), fUseless: uint32(fields[11])}
 		expected = append(expected, []int64{int64(If_ManSortCompare(p, ca, cb))})

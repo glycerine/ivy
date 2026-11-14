@@ -10,8 +10,8 @@ import (
 func TestGiaFromIfDsd(t *testing.T) {
 	p, cut := ifDelayTestManager(t)
 	defer If_ManStop(p)
-	p.pPars.pLutStruct = ""
-	p.pPars.fDsdBalance = 1
+	p.pPars.PLutStruct = ""
+	p.pPars.FDsdBalance = 1
 	p.pIfDsdMan = If_DsdManAlloc(3, 4)
 	defer If_DsdManFree(p.pIfDsdMan, 0)
 	truth := dau.Dau_DsdToTruth("<abc>", 3)
@@ -56,7 +56,7 @@ func TestGiaFromIfDsd(t *testing.T) {
 }
 
 func TestGiaFromIfRecordedLibraryCallback(t *testing.T) {
-	pars := &If_Par_t_{nLutSize: 4, nCutsMax: 4, fUserRecLib: 1}
+	pars := &If_Par_t_{NLutSize: 4, NCutsMax: 4, FUserRecLib: 1}
 	calls := 0
 	pars.SetRecordedGiaBuilder(func(dst *Gia_Man_t, _ *If_Man_t, cut *If_Cut_t, leaves *Vec_Int_t, hash int32) int32 {
 		calls++

@@ -338,13 +338,13 @@ func If_CluHashLookup(p *If_Man_t, table []uint64, t int32) *uint32 {
 	if t < 0 || t > 1 {
 		panic("if: invalid decomposition table")
 	}
-	words := If_CluWordNum(p.pPars.nLutSize)
+	words := If_CluWordNum(p.pPars.NLutSize)
 	if p.pHashTable[t] == nil {
 		objects := 0
 		if p.vObjs != nil {
 			objects = Vec_PtrSize(p.vObjs)
 		}
-		entries1 := int64(4) * int64(If_CluPrimeCudd(uint32(objects)*uint32(p.pPars.nCutsMax)))
+		entries1 := int64(4) * int64(If_CluPrimeCudd(uint32(objects)*uint32(p.pPars.NCutsMax)))
 		entries2 := int64(CLU_MEM_MAX) * (1 << 20) / int64(words) / 8
 		p.nTableSize[t] = int32(If_CluPrimeCudd(uint32(min(entries1, entries2) / 2)))
 		p.pHashTable[t] = make(map[uint32]any)
@@ -442,7 +442,7 @@ func If_CluHashTableCheck(p *If_Man_t) {
 				if group.nVars > 6 {
 					panic("if: invalid cached bound set")
 				}
-				if t == 1 && p.pPars.nLutSize == 13 {
+				if t == 1 && p.pPars.NLutSize == 13 {
 					found := If_CluCheck3(nil, entry.pTruth, 13, 5, 5, 5, nil, nil, nil, nil, nil).nVars > 0
 					if found != (group.nVars > 0) {
 						panic("if: cached three-LUT result disagrees with decomposition")
@@ -827,7 +827,7 @@ func If_CluCheck(p *If_Man_t, truth []uint64, n, start, stop, leaf, root int32, 
 		copy(leftover, work[:If_CluWordNum(remaining.nVars)])
 		maximum := n
 		if p != nil {
-			maximum = p.pPars.nLutSize
+			maximum = p.pPars.NLutSize
 		}
 		If_CluAdjustBig(leftover, remaining.nVars, maximum)
 	}
@@ -906,7 +906,7 @@ func If_CluCheck3(p *If_Man_t, truth []uint64, n, leaf, leaf2, root int32, resul
 	}
 	start, stop := int32(0), int32(0)
 	if p != nil {
-		switch p.pPars.nStructType {
+		switch p.pPars.NStructType {
 		case 0:
 		case 1:
 			start = 1
@@ -1123,7 +1123,7 @@ func If_CutPerformCheck45(p *If_Man_t, truth []uint32, n, leaves int32, structur
 		return 0
 	}
 	f1 = If_CluAdjust(f1, g.nVars)
-	return boolInt(g.nVars < 5 || p.pPars.fEnableCheck75 != 0 && If_CluCheckDecOut(f1, 5) != 0 || p.pPars.fEnableCheck75u != 0 && If_CluCheckDecOutU(f1, 5) != 0)
+	return boolInt(g.nVars < 5 || p.pPars.FEnableCheck75 != 0 && If_CluCheckDecOut(f1, 5) != 0 || p.pPars.FEnableCheck75u != 0 && If_CluCheckDecOutU(f1, 5) != 0)
 }
 func If_CutPerformCheck54(p *If_Man_t, truth []uint32, n, leaves int32, structure string) int32 {
 	var r If_Grp_t
@@ -1133,7 +1133,7 @@ func If_CutPerformCheck54(p *If_Man_t, truth []uint32, n, leaves int32, structur
 		return 0
 	}
 	f0 = If_CluAdjust(f0, r.nVars)
-	return boolInt(r.nVars < 5 || p.pPars.fEnableCheck75 != 0 && If_CluCheckDecIn(f0, 5) != 0 || p.pPars.fEnableCheck75u != 0 && If_CluCheckDecInU(f0, 5) != 0)
+	return boolInt(r.nVars < 5 || p.pPars.FEnableCheck75 != 0 && If_CluCheckDecIn(f0, 5) != 0 || p.pPars.FEnableCheck75u != 0 && If_CluCheckDecInU(f0, 5) != 0)
 }
 func cluStructure(s string) ([]int32, bool) {
 	if len(s) != 2 && len(s) != 3 {
@@ -1157,10 +1157,10 @@ func If_CutPerformCheck16(p *If_Man_t, truth []uint32, n, leaves int32, structur
 	copy(work, cluWords32(truth, n))
 	maximum := n
 	if p != nil {
-		maximum = p.pPars.nLutSize
+		maximum = p.pPars.NLutSize
 	}
 	If_CluAdjustBig(work, leaves, maximum)
-	if p == nil || p.pPars.fCutMin == 0 {
+	if p == nil || p.pPars.FCutMin == 0 {
 		If_CluMinimumBase(work, nil, leaves, &leaves)
 	}
 	capacity := sizes[0] + sizes[len(sizes)-1] - 1

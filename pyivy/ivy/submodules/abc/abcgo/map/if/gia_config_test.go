@@ -98,7 +98,7 @@ func TestDsdCellConfigRoundTripToGia(t *testing.T) {
 	pins := make([]byte, 2)
 	lit := If_DsdManCompute(manager, truth, 2, pins, "")
 	Id_DsdManTuneStr1(manager, "{ab}", 0, 0)
-	pars := &If_Par_t_{nLutSize: 4, nCutsMax: 4}
+	pars := &If_Par_t_{NLutSize: 4, NCutsMax: 4}
 	p := If_ManStart(pars)
 	defer If_ManStop(p)
 	p.pIfDsdMan = manager

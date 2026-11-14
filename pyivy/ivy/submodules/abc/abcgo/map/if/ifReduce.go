@@ -59,9 +59,9 @@ func If_ManImproveMapping(p *If_Man_t) {
 	var clk abctime
 
 	clk = Abc_Clock()
-	If_ManImproveExpand(p, p.pPars.nLutSize)
+	If_ManImproveExpand(p, p.pPars.NLutSize)
 	If_ManComputeRequired(p)
-	if p.pPars.fVerbose != 0 {
+	if p.pPars.FVerbose != 0 {
 		Abc_Print(1, "E:  Del = %7.2f.  Ar = %9.1f.  Edge = %8d.  ",
 			p.RequiredGlo, p.AreaGlo, p.nNets)
 		if p.dPower != 0 {

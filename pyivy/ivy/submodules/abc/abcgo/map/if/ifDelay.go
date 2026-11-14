@@ -66,7 +66,7 @@ func If_CutDelaySop(p *If_Man_t, c *If_Cut_t) int32 {
 		return times[0]
 	}
 	cover, _ := ifDelayCover(p, c)
-	if cover == nil || vec.Vec_IntSize(cover) == 0 || p.pPars == nil || int32(vec.Vec_IntSize(cover)) > p.pPars.nGateSize {
+	if cover == nil || vec.Vec_IntSize(cover) == 0 || p.pPars == nil || int32(vec.Vec_IntSize(cover)) > p.pPars.NGateSize {
 		return -1
 	}
 	maxCube := If_CutMaxCubeSize(cover, int32(c.nLeaves))
@@ -294,10 +294,10 @@ func If_CutSopBalanceEval(p *If_Man_t, c *If_Cut_t, aig *Vec_Int_t) int32 {
 	return delay
 }
 func ifDelayLutSize(p *If_Man_t) int32 {
-	if p == nil || p.pPars == nil || len(p.pPars.pLutStruct) == 0 {
+	if p == nil || p.pPars == nil || len(p.pPars.PLutStruct) == 0 {
 		return 0
 	}
-	value := p.pPars.pLutStruct[0]
+	value := p.pPars.PLutStruct[0]
 	if value < '2' || value > '9' {
 		return 0
 	}

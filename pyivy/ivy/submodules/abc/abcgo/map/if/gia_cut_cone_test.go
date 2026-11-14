@@ -7,7 +7,7 @@ import (
 )
 
 func TestGiaCutConeChoiceAndCleanup(t *testing.T) {
-	pars := &If_Par_t_{nLutSize: 4, nCutsMax: 4}
+	pars := &If_Par_t_{NLutSize: 4, NCutsMax: 4}
 	p := If_ManStart(pars)
 	defer If_ManStop(p)
 	a, b, c := If_ManCreateCi(p), If_ManCreateCi(p), If_ManCreateCi(p)

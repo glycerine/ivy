@@ -107,7 +107,7 @@ func TestSopDelayComplementAndFailure(t *testing.T) {
 }
 func ifDelayTestManager(t *testing.T) (*If_Man_t, *If_Cut_t) {
 	t.Helper()
-	pars := &If_Par_t_{nLutSize: 4, nCutsMax: 4, nGateSize: 70, pLutStruct: "44"}
+	pars := &If_Par_t_{NLutSize: 4, NCutsMax: 4, NGateSize: 70, PLutStruct: "44"}
 	p := If_ManStart(pars)
 	leaves := make([]int32, 3)
 	for pin := range leaves {

@@ -84,7 +84,7 @@ func ifTruthRead(p *If_Man_t, c *If_Cut_t, function int32) []uint64 {
 func ifTruthIntern(p *If_Man_t, c *If_Cut_t, table []uint64, phase uint32, makeISOP bool) {
 	n := int(c.nLeaves)
 	if p.vTtMem[n] == nil {
-		p.vTtMem[n] = vec.Vec_MemAllocForTT(n, int(p.pPars.fUseTtPerm))
+		p.vTtMem[n] = vec.Vec_MemAllocForTT(n, int(p.pPars.FUseTtPerm))
 	}
 	p.nTruth6Words[n] = int32(ifTruthWords(n))
 	before := vec.Vec_MemEntryNum(p.vTtMem[n])
@@ -146,7 +146,7 @@ func If_CutTruthPermute(table []uint64, nLeaves, nVars, nWords int32, delays []f
 	}
 }
 func If_CutRotatePins(p *If_Man_t, c *If_Cut_t) {
-	if p.pPars.fUseTtPerm != 0 {
+	if p.pPars.FUseTtPerm != 0 {
 		panic("if: pin rotation conflicts with canonical leaf phases")
 	}
 	delays := make([]float32, c.nLeaves)
@@ -175,7 +175,7 @@ func If_CutComputeTruth(p *If_Man_t, c, a, b *If_Cut_t, complementA, complementB
 		}
 	}
 	reduced := int32(0)
-	if p.pPars.fCutMin != 0 && (a.nLeaves+b.nLeaves > c.nLeaves || a.nLeaves == 0 || b.nLeaves == 0) {
+	if p.pPars.FCutMin != 0 && (a.nLeaves+b.nLeaves > c.nLeaves || a.nLeaves == 0 || b.nLeaves == 0) {
 		x, leaves = ifTruthMinimize(x, leaves)
 		if len(leaves) < int(c.nLeaves) {
 			reduced = 1
@@ -218,7 +218,7 @@ func If_CutComputeTruthPerm_int(p *If_Man_t, c, a, b *If_Cut_t, functionA, funct
 		encoded[i] = id*2 + int32(phases>>uint(i)&1)
 	}
 	reduced := int32(0)
-	if p.pPars.fCutMin != 0 && (a.nLeaves+b.nLeaves > c.nLeaves || a.nLeaves == 0 || b.nLeaves == 0) {
+	if p.pPars.FCutMin != 0 && (a.nLeaves+b.nLeaves > c.nLeaves || a.nLeaves == 0 || b.nLeaves == 0) {
 		x, encoded = ifTruthMinimize(x, encoded)
 		if len(encoded) < int(c.nLeaves) {
 			reduced = 1

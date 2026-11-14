@@ -262,7 +262,7 @@ func If_ManBinarySearchPeriod(p *If_Man_t) int32 {
 
 	// report the results
 	If_ManMarkMapping(p)
-	if p.pPars.fVerbose != 0 {
+	if p.pPars.FVerbose != 0 {
 		//        p->AreaGlo = If_ManScanMapping(p);
 		Abc_Print(1, "Attempt = %2d.  Iters = %3d.  Area = %10.2f.  Fi = %6.2f.  ", p.nAttempts, c, p.AreaGlo, float32(p.Period))
 		if fConverged != 0 {
@@ -394,7 +394,7 @@ func If_ManPerformMappingSeq(p *If_Man_t) int32 {
 	p.vLatchOrder = If_ManCollectLatches(p)
 
 	// set parameters
-	p.nCutsUsed = p.pPars.nCutsMax
+	p.nCutsUsed = p.pPars.NCutsMax
 	p.nAttempts = 0
 	p.nMaxIters = 50
 	p.Period = int32(p.RequiredGlo)

@@ -12,7 +12,7 @@ func TestGiaToIfBridge(t *testing.T) {
 	gia.Gia_ManAppendCo(g, x^1)
 	var pars If_Par_t
 	Gia_ManSetIfParsDefault(&pars)
-	pars.nLutSize = 4
+	pars.NLutSize = 4
 	p := Gia_ManToIf(g, &pars)
 	defer If_ManStop(p)
 	if If_ManCiNum(p) != 2 || If_ManCoNum(p) != 1 {

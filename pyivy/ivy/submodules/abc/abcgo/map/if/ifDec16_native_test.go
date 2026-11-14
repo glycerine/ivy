@@ -136,7 +136,7 @@ func TestClusteringNativeThreeStageReconstruction(t *testing.T) {
 	}
 }
 func TestClusteringNativeCacheAndStructDelay(t *testing.T) {
-	p := &If_Man_t{pPars: &If_Par_t{nLutSize: 6, nCutsMax: 1, fCutMin: 1}}
+	p := &If_Man_t{pPars: &If_Par_t{NLutSize: 6, NCutsMax: 1, FCutMin: 1}}
 	first := []uint64{0x6dd9926d962d6996}
 	slot := If_CluHashLookup(p, first, 0)
 	*slot = 36

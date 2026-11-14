@@ -14,15 +14,15 @@ import (
 // optional packing, and programmable-cell configuration metadata to the GIA.
 func Gia_ManFromIfLogic(p *If_Man_t) *Gia_Man_t {
 	pars := p.pPars
-	assert(pars.fDeriveLuts == 0 || pars.fTruth != 0, "LUT derivation requires truth tables")
+	assert(pars.FDeriveLuts == 0 || pars.FTruth != 0, "LUT derivation requires truth tables")
 	offsets := vec.Vec_IntStart(int(If_ManObjNum(p)))
 	records := vec.Vec_IntStart(1)
 	var packing, configs *Vec_Int_t
 	var configText *Vec_Str_t
-	if pars.fDeriveLuts != 0 && (pars.pLutStruct != "" || pars.fEnableCheck75 != 0 || pars.fEnableCheck75u != 0 || pars.fEnableCheck07 != 0) {
+	if pars.FDeriveLuts != 0 && (pars.PLutStruct != "" || pars.FEnableCheck75 != 0 || pars.FEnableCheck75u != 0 || pars.FEnableCheck07 != 0) {
 		packing = vec.Vec_IntAllocArrayCopy([]int32{0}, 1)
 	}
-	if pars.fUseDsdTune != 0 {
+	if pars.FUseDsdTune != 0 {
 		count := (If_DsdManTtBitNum(p.pIfDsdMan) + If_DsdManPermBitNum(p.pIfDsdMan) + 32) / 32
 		configs = vec.Vec_IntAllocArrayCopy([]int32{0, count}, 2)
 		configText = vec.Vec_StrAlloc(1000)
@@ -43,7 +43,7 @@ func Gia_ManFromIfLogic(p *If_Man_t) *Gia_Man_t {
 		switch obj.Type {
 		case IF_AND:
 			cut := If_ObjCutBest(obj)
-			if pars.fUseTtPerm == 0 && pars.fDelayOpt == 0 && pars.fDelayOptLut == 0 && pars.fDsdBalance == 0 && pars.pLutStruct == "" && pars.fUserRecLib == 0 && pars.fUserSesLib == 0 && pars.nGateSize == 0 && pars.fEnableCheck75 == 0 && pars.fEnableCheck75u == 0 && pars.fEnableCheck07 == 0 && pars.fUseDsdTune == 0 && pars.fUseCofVars == 0 && pars.fUseAndVars == 0 {
+			if pars.FUseTtPerm == 0 && pars.FDelayOpt == 0 && pars.FDelayOptLut == 0 && pars.FDsdBalance == 0 && pars.PLutStruct == "" && pars.FUserRecLib == 0 && pars.FUserSesLib == 0 && pars.NGateSize == 0 && pars.FEnableCheck75 == 0 && pars.FEnableCheck75u == 0 && pars.FEnableCheck07 == 0 && pars.FUseDsdTune == 0 && pars.FUseCofVars == 0 && pars.FUseAndVars == 0 {
 				If_CutRotatePins(p, cut)
 			}
 			vec.Vec_IntClear(leaves)
@@ -51,8 +51,8 @@ func Gia_ManFromIfLogic(p *If_Man_t) *Gia_Man_t {
 				Vec_IntPush(leaves, If_CutLeaf(p, cut, k).iCopy)
 			}
 			switch {
-			case pars.fUseDsd != 0 && pars.pLutStruct != "":
-				if pars.fDeriveLuts != 0 {
+			case pars.FUseDsd != 0 && pars.PLutStruct != "":
+				if pars.FDeriveLuts != 0 {
 					obj.iCopy = Gia_ManFromIfLogicFindLut(p, dst, cut, nil, leaves, lits, cover, offsets, records, packing)
 				} else {
 					if If_CutTruthW(p, cut) == nil {
@@ -61,23 +61,23 @@ func Gia_ManFromIfLogic(p *If_Man_t) *Gia_Man_t {
 					obj.iCopy = Gia_ManFromIfLogicCreateLut(dst, p.puTempW[:p.nTruth6Words[cut.nLeaves]], leaves, cover, offsets, records)
 				}
 				obj.iCopy ^= int32(cut.fCompl)
-			case pars.fUseAndVars != 0 && pars.fDeriveLuts != 0 && int32(cut.nLeaves) > pars.nLutSize/2 && (pars.fUseCofVars == 0 || Vec_IntEntry(p.vTtDecs[cut.nLeaves], int(Abc_Lit2Var(cut.iCutFunc))) != 0):
+			case pars.FUseAndVars != 0 && pars.FDeriveLuts != 0 && int32(cut.nLeaves) > pars.NLutSize/2 && (pars.FUseCofVars == 0 || Vec_IntEntry(p.vTtDecs[cut.nLeaves], int(Abc_Lit2Var(cut.iCutFunc))) != 0):
 				obj.iCopy = Gia_ManFromIfLogicAndVars(dst, p, cut, leaves, temp, cover, offsets, records)
-			case pars.fUseCofVars != 0 && pars.fDeriveLuts != 0 && int32(cut.nLeaves) > pars.nLutSize/2:
+			case pars.FUseCofVars != 0 && pars.FDeriveLuts != 0 && int32(cut.nLeaves) > pars.NLutSize/2:
 				obj.iCopy = Gia_ManFromIfLogicCofVars(dst, p, cut, leaves, temp, cover, offsets, records)
-			case pars.fDeriveLuts != 0 && pars.fTruth != 0 || pars.fUseDsd != 0 || pars.fUseTtPerm != 0 || pars.pFuncCell2 != nil:
+			case pars.FDeriveLuts != 0 && pars.FTruth != 0 || pars.FUseDsd != 0 || pars.FUseTtPerm != 0 || pars.pFuncCell2 != nil:
 				if If_CutTruthW(p, cut) == nil {
 					panic("if: missing cut truth")
 				}
 				truth := p.puTempW[:p.nTruth6Words[cut.nLeaves]]
-				if pars.fUseTtPerm != 0 {
+				if pars.FUseTtPerm != 0 {
 					for k := int32(0); k < int32(cut.nLeaves); k++ {
 						if If_CutLeafBit(cut, k) != 0 {
 							abcutil.Abc_TtFlip(truth, abcutil.Abc_TtWordNum(int32(cut.nLeaves)), k)
 						}
 					}
 				}
-				obj.iCopy = Gia_ManFromIfLogicNode(p, dst, i, leaves, temp, truth, pars.pLutStruct, cover, offsets, records, packing, ifTuneBoolInt(pars.fEnableCheck75 != 0 || pars.fEnableCheck75u != 0), pars.fEnableCheck07)
+				obj.iCopy = Gia_ManFromIfLogicNode(p, dst, i, leaves, temp, truth, pars.PLutStruct, cover, offsets, records, packing, ifTuneBoolInt(pars.FEnableCheck75 != 0 || pars.FEnableCheck75u != 0), pars.FEnableCheck07)
 				if obj.iCopy < 0 {
 					Gia_ManStop(dst)
 					return nil

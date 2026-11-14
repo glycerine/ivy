@@ -140,25 +140,25 @@ type Ifif_Par_t struct {
 }
 
 type If_Par_t_ struct {
-	nLutSize, nCutsMax, nFlowIters, nAreaIters, nGateSize, nNonDecLimit               int32
+	NLutSize, NCutsMax, NFlowIters, NAreaIters, NGateSize, NNonDecLimit               int32
 	DelayTarget, Epsilon                                                              float32
-	nRelaxRatio, nStructType, nAndDelay, nAndArea                                     int32
-	fPreprocess, fArea, fFancy, fExpRed, fLatchPaths, fLut6Filter                     int32
-	fEdge, fPower, fCutMin, fDelayOpt, fDelayOptLut, fDsdBalance                      int32
-	fUserRecLib, fUserSesLib, fBidec, fUse34Spec, fUseBat, fUseBuffs                  int32
-	fEnableCheck07, fEnableCheck08, fEnableCheck10, fEnableCheck75, fEnableCheck75u   int32
-	fUseDsd, fUseDsdTune, fUseCofVars, fUseAndVars, fUseTtPerm, fDeriveLuts           int32
-	fDoAverage, fHashMapping, fVerbose, fVerboseTrace                                 int32
-	pLutStruct                                                                        string
+	NRelaxRatio, NStructType, NAndDelay, NAndArea                                     int32
+	FPreprocess, FArea, FFancy, FExpRed, FLatchPaths, FLut6Filter                     int32
+	FEdge, FPower, FCutMin, FDelayOpt, FDelayOptLut, FDsdBalance                      int32
+	FUserRecLib, FUserSesLib, FBidec, FUse34Spec, FUseBat, FUseBuffs                  int32
+	FEnableCheck07, fEnableCheck08, fEnableCheck10, FEnableCheck75, FEnableCheck75u   int32
+	FUseDsd, FUseDsdTune, FUseCofVars, FUseAndVars, FUseTtPerm, FDeriveLuts           int32
+	FDoAverage, FHashMapping, FVerbose, FVerboseTrace                                 int32
+	PLutStruct                                                                        string
 	WireDelay                                                                         float32
-	fSkipCutFilter, fAreaOnly, fTruth, fUsePerm, fUseBdds, fUseSops, fUseCnfs, fUseMv int32
+	fSkipCutFilter, fAreaOnly, FTruth, FUsePerm, fUseBdds, fUseSops, fUseCnfs, fUseMv int32
 	nLatchesCi, nLatchesCo, nLatchesCiBox, nLatchesCoBox, fLiftLeaves, fUseCoAttrs    int32
 	DelayTargetNew, FinalDelay, FinalArea                                             float32
-	pLutLib                                                                           *If_LibLut_t
+	PLutLib                                                                           *If_LibLut_t
 	pTimesArr, pTimesReq                                                              []float32
 	pFuncCost                                                                         func(*If_Man_t, *If_Cut_t) int32
 	pFuncUser                                                                         func(*If_Man_t, *If_Obj_t, *If_Cut_t) int32
-	pFuncCell                                                                         func(*If_Man_t, []uint32, int32, int32, string) int32
+	PFuncCell                                                                         func(*If_Man_t, []uint32, int32, int32, string) int32
 	pFuncCell2                                                                        func(*If_Man_t, []uint64, int32, *Vec_Str_t, *[]string) int32
 	pFuncWrite                                                                        func(*If_Man_t) int32
 	pFuncRecGia                                                                       func(*Gia_Man_t, *If_Man_t, *If_Cut_t, *Vec_Int_t, int32) int32
@@ -428,7 +428,7 @@ func If_CutCopy(_ *If_Man_t, dst, src *If_Cut_t) {
 	dst.pLeaves, dst.permutation = leaves, permutation
 }
 func If_CutSetup(p *If_Man_t, cut *If_Cut_t) {
-	limit := uint32(p.pPars.nLutSize)
+	limit := uint32(p.pPars.NLutSize)
 	*cut = If_Cut_t_{nLimit: limit}
 }
 
@@ -519,21 +519,21 @@ func If_CutTruthWordSlice(p *If_Man_t, pCut *If_Cut_t) []word {
 	return p.puTempW[:n]
 }
 
-func If_ManCutMin(p *If_Man_t) int32  { return p.pPars.fCutMin }
-func If_ManLutSize(p *If_Man_t) int32 { return p.pPars.nLutSize }
+func If_ManCutMin(p *If_Man_t) int32  { return p.pPars.FCutMin }
+func If_ManLutSize(p *If_Man_t) int32 { return p.pPars.NLutSize }
 
 func If_ParSetRec3Defaults(p *If_Par_t, vars, cuts, useSOPB int32, userFunc func(*If_Man_t, *If_Obj_t, *If_Cut_t) int32) {
 	*p = If_Par_t{}
-	p.nLutSize = vars
-	p.nCutsMax = cuts
+	p.NLutSize = vars
+	p.NCutsMax = cuts
 	p.DelayTarget = -1
 	p.Epsilon = 0.005
-	p.fArea = 1
-	p.fTruth = 1
+	p.FArea = 1
+	p.FTruth = 1
 	if useSOPB != 0 {
-		p.fCutMin, p.fUsePerm, p.fDelayOpt = 0, 1, 1
+		p.FCutMin, p.FUsePerm, p.FDelayOpt = 0, 1, 1
 	} else {
-		p.fCutMin, p.fUsePerm, p.fDelayOpt = 1, 0, 0
+		p.FCutMin, p.FUsePerm, p.FDelayOpt = 1, 0, 0
 	}
 	p.fSkipCutFilter = 0
 	p.pFuncCost = nil
@@ -559,13 +559,13 @@ func If_CutDsdPerm(p *If_Man_t, pCut *If_Cut_t) []byte {
 }
 func If_CutLutArea(p *If_Man_t, pCut *If_Cut_t) float32 {
 	if pCut.fAndCut != 0 {
-		return float32(p.pPars.nAndArea)
+		return float32(p.pPars.NAndArea)
 	}
 	if pCut.fUser != 0 {
 		return float32(pCut.Cost)
 	}
-	if p.pPars.pLutLib != nil {
-		return p.pPars.pLutLib.pLutAreas[pCut.nLeaves]
+	if p.pPars.PLutLib != nil {
+		return p.pPars.PLutLib.pLutAreas[pCut.nLeaves]
 	}
 	return 1
 }

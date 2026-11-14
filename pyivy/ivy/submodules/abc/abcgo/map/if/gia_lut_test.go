@@ -121,9 +121,9 @@ func TestFindLutReconstructsPartition(t *testing.T) {
 		t.Run(mode, func(t *testing.T) {
 			p, cut := ifDelayTestManager(t)
 			defer If_ManStop(p)
-			p.pPars.pLutStruct = "2"
+			p.pPars.PLutStruct = "2"
 			if mode == "selected" {
-				p.pPars.fDelayOptLut = 1
+				p.pPars.FDelayOptLut = 1
 				cut.uMaskFunc = 1 | 1<<2
 			}
 			truth := []uint64{0x8080808080808080}

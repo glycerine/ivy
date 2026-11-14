@@ -11,7 +11,7 @@ import (
 )
 
 func ifTimeTestManager(arrivals []float32) (*If_Man_t, *If_Cut_t, []*If_Obj_t) {
-	pars := &If_Par_t_{nLutSize: 4, nCutsMax: 4, nAndDelay: 2, DelayTarget: -1}
+	pars := &If_Par_t_{NLutSize: 4, NCutsMax: 4, NAndDelay: 2, DelayTarget: -1}
 	p := If_ManStart(pars)
 	var leaves []*If_Obj_t
 	var ids []int32
@@ -44,7 +44,7 @@ func TestCutVariablePinTimingVector(t *testing.T) {
 	library := If_LibLutSetSimple(3)
 	library.fVarPinDelays = 1
 	copy(library.pLutDelays[3][:], fixture.PinDelays)
-	p.pPars.pLutLib = library
+	p.pPars.PLutLib = library
 	if arrival := If_CutDelay(p, nil, c); arrival != fixture.Arrival {
 		t.Fatal("arrival", arrival)
 	}

@@ -49,7 +49,7 @@ import "fmt"
 **********************************************************************
 */
 func If_ManCacheRecord(p *If_Man_t, iDsd0 int32, iDsd1 int32, nShared int32, iDsd int32) {
-	assert(nShared >= 0 && nShared <= p.pPars.nLutSize, "nShared >= 0 && nShared <= p.pPars.nLutSize")
+	assert(nShared >= 0 && nShared <= p.pPars.NLutSize, "nShared >= 0 && nShared <= p.pPars.nLutSize")
 	if p.vCutData == nil {
 		p.vCutData = Vec_IntAlloc(10000)
 	}
@@ -84,7 +84,7 @@ func If_ManCacheAnalize(p *If_Man_t) {
 	var vTest [32]*Vec_Int_t
 	var uUnique int
 	vRes = Hsh_IntManHashArray(p.vCutData, 4)
-	for i := 0; i <= int(p.pPars.nLutSize); i++ {
+	for i := 0; i <= int(p.pPars.NLutSize); i++ {
 		vTest[i] = Vec_IntAlloc(1000)
 	}
 	// inlining of macro Vec_IntForEachEntry
@@ -94,12 +94,12 @@ func If_ManCacheAnalize(p *If_Man_t) {
 		lutSize := cutData[4*i+2]
 		Vec_IntPush(vTest[lutSize], entry)
 	}
-	for i := 0; i <= int(p.pPars.nLutSize); i++ {
+	for i := 0; i <= int(p.pPars.NLutSize); i++ {
 		uUnique = Vec_IntCountUnique(vTest[i])
 		entries := Vec_IntSize(vTest[i])
 		fmt.Printf("%2d-var entries = %8d. (%6.2f %%)  Unique entries = %8d. (%6.2f %%)\n", i, entries, 100.0*float64(entries)/float64(max(1, Vec_IntSize(vRes))), uUnique, 100.0*float64(uUnique)/float64(max(1, entries)))
 	}
-	for i := 0; i <= int(p.pPars.nLutSize); i++ {
+	for i := 0; i <= int(p.pPars.NLutSize); i++ {
 		Vec_IntFree(vTest[i])
 	}
 	uUnique = Vec_IntCountUnique(vRes)

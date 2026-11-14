@@ -59,7 +59,7 @@ func TestTruthNativeComposeAndSupport(t *testing.T) {
 	r := rand.New(rand.NewSource(121))
 	for trial := 0; trial < 100; trial++ {
 		for _, canonical := range []bool{false, true} {
-			p := &If_Man_t{pPars: &If_Par_t{fCutMin: 1}}
+			p := &If_Man_t{pPars: &If_Par_t{FCutMin: 1}}
 			a, b := ifTestCut(6, 0, 1, 2), ifTestCut(6, 1, 3)
 			ifTestStore(p, a, ifTestTable(3, r), canonical)
 			ifTestStore(p, b, ifTestTable(2, r), canonical)
@@ -80,7 +80,7 @@ func TestTruthNativeComposeAndSupport(t *testing.T) {
 	}
 }
 func TestTruthNativeComplementarySupportAndCache(t *testing.T) {
-	p := &If_Man_t{pPars: &If_Par_t{fCutMin: 1}}
+	p := &If_Man_t{pPars: &If_Par_t{FCutMin: 1}}
 	a, b := ifTestCut(6, 0), ifTestCut(6, 0)
 	ifTestStore(p, a, []uint64{0xaaaaaaaaaaaaaaaa}, false)
 	ifTestStore(p, b, []uint64{0xaaaaaaaaaaaaaaaa}, false)
@@ -88,7 +88,7 @@ func TestTruthNativeComplementarySupportAndCache(t *testing.T) {
 	if If_CutComputeTruth(p, c, a, b, 0, 1) != 1 || c.nLeaves != 0 || ifTestValue(p, c, 0) {
 		t.Fatal("x AND !x support not removed")
 	}
-	p = &If_Man_t{pPars: &If_Par_t{fCutMin: 1}}
+	p = &If_Man_t{pPars: &If_Par_t{FCutMin: 1}}
 	for iteration := 0; iteration < 2; iteration++ {
 		offset := int32(iteration * 4)
 		a, b := ifTestCut(6, offset, offset+1), ifTestCut(6, offset+2, offset+3)

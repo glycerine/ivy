@@ -38,21 +38,21 @@ func Gia_ManPerformMappingInt(src *Gia_Man_t, pars *If_Par_t) *Gia_Man_t {
 	}
 	defer func() { pars.pTimesArr, pars.pTimesReq = nil, nil }()
 	src.ClearCellConfiguration()
-	if pars.fDelayOpt == 0 && pars.fDelayOptLut == 0 && pars.fDsdBalance == 0 && pars.fUserRecLib == 0 && pars.fUserSesLib == 0 && pars.fDeriveLuts == 0 && pars.fUseDsd == 0 && pars.fUseTtPerm == 0 && pars.pFuncCell2 == nil {
-		pars.fCutMin = 0
+	if pars.FDelayOpt == 0 && pars.FDelayOptLut == 0 && pars.FDsdBalance == 0 && pars.FUserRecLib == 0 && pars.FUserSesLib == 0 && pars.FDeriveLuts == 0 && pars.FUseDsd == 0 && pars.FUseTtPerm == 0 && pars.pFuncCell2 == nil {
+		pars.FCutMin = 0
 	}
 	manager := Gia_ManToIf(src, pars)
 	defer If_ManStop(manager)
-	if pars.fUseDsd != 0 {
+	if pars.FUseDsd != 0 {
 		dsd := pars.pDsdManager
-		assert(dsd != nil && pars.nLutSize <= If_DsdManVarNum(dsd), "compatible DSD manager is provided")
-		assert(pars.pLutStruct == "" && If_DsdManLutSize(dsd) == 0 || pars.pLutStruct != "" && int32(pars.pLutStruct[0]-'0') == If_DsdManLutSize(dsd), "DSD LUT structure matches")
+		assert(dsd != nil && pars.NLutSize <= If_DsdManVarNum(dsd), "compatible DSD manager is provided")
+		assert(pars.PLutStruct == "" && If_DsdManLutSize(dsd) == 0 || pars.PLutStruct != "" && int32(pars.PLutStruct[0]-'0') == If_DsdManLutSize(dsd), "DSD LUT structure matches")
 		manager.pIfDsdMan = dsd
-		if pars.fDsdBalance != 0 {
-			If_DsdManAllocIsops(dsd, pars.nLutSize)
+		if pars.FDsdBalance != 0 {
+			If_DsdManAllocIsops(dsd, pars.NLutSize)
 		}
 	}
-	if pars.fPower != 0 {
+	if pars.FPower != 0 {
 		if timing != nil {
 			fmt.Println("Switching activity computation for designs with boxes is disabled.")
 		} else {
@@ -65,7 +65,7 @@ func Gia_ManPerformMappingInt(src *Gia_Man_t, pars *If_Par_t) *Gia_Man_t {
 	manager.pUserMan = pars.pReoMan
 	if timing != nil {
 		unit := 0
-		if pars.fDelayOpt != 0 || pars.fDelayOptLut != 0 || pars.fDsdBalance != 0 || pars.fUserRecLib != 0 || pars.fUserSesLib != 0 {
+		if pars.FDelayOpt != 0 || pars.FDelayOptLut != 0 || pars.FDsdBalance != 0 || pars.FUserRecLib != 0 || pars.FUserSesLib != 0 {
 			unit = 1
 		}
 		manager.pManTim = tim.Tim_ManDup(timing, unit)
@@ -83,7 +83,7 @@ func Gia_ManPerformMappingInt(src *Gia_Man_t, pars *If_Par_t) *Gia_Man_t {
 		pars.pFuncWrite(manager)
 	}
 	var result *Gia_Man_t
-	if pars.fDelayOpt != 0 || pars.fDsdBalance != 0 || pars.fUserRecLib != 0 || pars.fUserSesLib != 0 {
+	if pars.FDelayOpt != 0 || pars.FDsdBalance != 0 || pars.FUserRecLib != 0 || pars.FUserSesLib != 0 {
 		result = Gia_ManFromIfAig(manager)
 	} else {
 		result = Gia_ManFromIfLogic(manager)
@@ -101,7 +101,7 @@ func Gia_ManPerformMappingInt(src *Gia_Man_t, pars *If_Par_t) *Gia_Man_t {
 	name, spec := src.Identity()
 	result.SetIdentity(name, spec)
 	Gia_ManSetRegNum(result, Gia_ManRegNum(src))
-	if pars.fVerboseTrace != 0 {
+	if pars.FVerboseTrace != 0 {
 		if pars.pFuncDelayTrace == nil {
 			panic("if: verbose delay trace requires a reporter")
 		}
@@ -129,7 +129,7 @@ func Gia_ManPerformMapping(src *Gia_Man_t, pars *If_Par_t) *Gia_Man_t {
 		}
 		gia.Gia_ManTransferTiming(mapped, work)
 		Gia_ManStop(work)
-		result = gia.Gia_ManDupNormalize(mapped, pars.fHashMapping)
+		result = gia.Gia_ManDupNormalize(mapped, pars.FHashMapping)
 		gia.Gia_ManTransferMapping(result, mapped)
 		gia.Gia_ManTransferPacking(result, mapped)
 		gia.Gia_ManTransferTiming(result, mapped)
@@ -141,7 +141,7 @@ func Gia_ManPerformMapping(src *Gia_Man_t, pars *If_Par_t) *Gia_Man_t {
 			return nil
 		}
 		gia.Gia_ManTransferTiming(result, src)
-		if pars.fHashMapping != 0 {
+		if pars.FHashMapping != 0 {
 			mapped := result
 			result = gia.Gia_ManDupHashMapping(mapped)
 			gia.Gia_ManTransferPacking(result, mapped)
@@ -157,8 +157,8 @@ func Gia_ManPerformMapping(src *Gia_Man_t, pars *If_Par_t) *Gia_Man_t {
 func Gia_ManPerformSopBalance(src *Gia_Man_t, cuts, relax, verbose int32) *Gia_Man_t {
 	var pars If_Par_t
 	If_ManSetDefaultPars(&pars)
-	pars.nCutsMax, pars.nRelaxRatio, pars.fVerbose = cuts, relax, verbose
-	pars.nLutSize, pars.fDelayOpt, pars.fCutMin, pars.fTruth, pars.fExpRed = 6, 1, 1, 1, 0
+	pars.NCutsMax, pars.NRelaxRatio, pars.FVerbose = cuts, relax, verbose
+	pars.NLutSize, pars.FDelayOpt, pars.FCutMin, pars.FTruth, pars.FExpRed = 6, 1, 1, 1, 0
 	result := Gia_ManPerformMappingInt(src, &pars)
 	if result != nil {
 		gia.Gia_ManTransferTiming(result, src)
@@ -170,8 +170,8 @@ func Gia_ManPerformSopBalance(src *Gia_Man_t, cuts, relax, verbose int32) *Gia_M
 func Gia_ManPerformDsdBalance(src *Gia_Man_t, lutSize, cuts, relax, verbose int32) *Gia_Man_t {
 	var pars If_Par_t
 	If_ManSetDefaultPars(&pars)
-	pars.nCutsMax, pars.nRelaxRatio, pars.fVerbose = cuts, relax, verbose
-	pars.nLutSize, pars.fDsdBalance, pars.fUseDsd, pars.fCutMin, pars.fTruth, pars.fExpRed = lutSize, 1, 1, 1, 1, 0
+	pars.NCutsMax, pars.NRelaxRatio, pars.FVerbose = cuts, relax, verbose
+	pars.NLutSize, pars.FDsdBalance, pars.FUseDsd, pars.FCutMin, pars.FTruth, pars.FExpRed = lutSize, 1, 1, 1, 1, 0
 	manager := If_DsdManAlloc(lutSize, 0)
 	defer If_DsdManFree(manager, 0)
 	pars.SetDsdManager(manager)

@@ -6,9 +6,9 @@ import (
 )
 
 func TestLpkParameterInitializationMatchesSource(t *testing.T) {
-	p := If_Par_t_{nLutSize: 9, nCutsMax: 3, fAreaOnly: 1, pTimesArr: []float32{99}, fBidec: 1}
+	p := If_Par_t_{NLutSize: 9, NCutsMax: 3, fAreaOnly: 1, pTimesArr: []float32{99}, FBidec: 1}
 	If_ManSetLpkPars(&p, 4)
-	want := If_Par_t_{nLutSize: 4, nCutsMax: 16, DelayTarget: -1, Epsilon: 0.005, fArea: 1, fTruth: 1}
+	want := If_Par_t_{NLutSize: 4, NCutsMax: 16, DelayTarget: -1, Epsilon: 0.005, FArea: 1, FTruth: 1}
 	if !reflect.DeepEqual(p, want) {
 		t.Fatalf("got %+v, want %+v", p, want)
 	}

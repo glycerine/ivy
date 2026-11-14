@@ -90,10 +90,10 @@ func Gia_ManFromIfLogicCreateLutSpecial(dst *Gia_Man_t, truth []word, leaves, te
 // Gia_ManFromIfLogicFindLut maps a cut to one LUT or to a pair of LUTs using
 // the DSD-selected bound set and the exact two-level decomposition checker.
 func Gia_ManFromIfLogicFindLut(p *If_Man_t, dst *Gia_Man_t, cut *If_Cut_t, sat any, leaves, scratch, cover, mapping, records, packing *Vec_Int_t) int32 {
-	if len(p.pPars.pLutStruct) == 0 || Vec_IntSize(packing) == 0 {
+	if len(p.pPars.PLutStruct) == 0 || Vec_IntSize(packing) == 0 {
 		panic("if: missing LUT structure or packing header")
 	}
-	size := int32(p.pPars.pLutStruct[0] - '0')
+	size := int32(p.pPars.PLutStruct[0] - '0')
 	if size < 2 || size > 6 || Vec_IntSize(leaves) != int(cut.nLeaves) {
 		panic("if: invalid LUT structure or cut leaves")
 	}
@@ -112,7 +112,7 @@ func Gia_ManFromIfLogicFindLut(p *If_Man_t, dst *Gia_Man_t, cut *If_Cut_t, sat a
 	}
 	assert(If_DsdManSuppSize(p.pIfDsdMan, If_CutDsdLit(p, cut)) == int32(cut.nLeaves), "DSD support matches cut")
 	oldSet := uint32(cut.uMaskFunc)
-	if p.pPars.fDelayOptLut == 0 {
+	if p.pPars.FDelayOptLut == 0 {
 		oldSet = If_DsdManCheckXY(p.pIfDsdMan, If_CutDsdLit(p, cut), size, 1, 0, 1, 0)
 	}
 	var set uint32

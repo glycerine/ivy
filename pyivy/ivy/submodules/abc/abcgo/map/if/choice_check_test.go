@@ -5,7 +5,7 @@ import "testing"
 func TestDanglingChoices(t *testing.T) {
 	var pars If_Par_t
 	Gia_ManSetIfParsDefault(&pars)
-	pars.nLutSize = 4
+	pars.NLutSize = 4
 	p := If_ManStart(&pars)
 	defer If_ManStop(p)
 	a, b, c := If_ManCreateCi(p), If_ManCreateCi(p), If_ManCreateCi(p)

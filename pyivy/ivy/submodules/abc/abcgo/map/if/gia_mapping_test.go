@@ -12,9 +12,9 @@ import (
 func TestGiaFromIfLogicMapping(t *testing.T) {
 	for _, useTruth := range []bool{false, true} {
 		t.Run(map[bool]string{false: "structural", true: "truth"}[useTruth], func(t *testing.T) {
-			pars := &If_Par_t_{nLutSize: 4, nCutsMax: 4}
+			pars := &If_Par_t_{NLutSize: 4, NCutsMax: 4}
 			if useTruth {
-				pars.fTruth, pars.fDeriveLuts = 1, 1
+				pars.FTruth, pars.FDeriveLuts = 1, 1
 			}
 			p := If_ManStart(pars)
 			defer If_ManStop(p)
@@ -73,7 +73,7 @@ func TestGiaFromIfLogicCellConfiguration(t *testing.T) {
 	pins := make([]byte, 2)
 	dsd := If_DsdManCompute(manager, truth, 2, pins, "")
 	Id_DsdManTuneStr1(manager, "{ab}", 0, 0)
-	pars := &If_Par_t_{nLutSize: 4, nCutsMax: 4, fTruth: 1, fUseDsd: 1, fUseDsdTune: 1, fDeriveLuts: 1}
+	pars := &If_Par_t_{NLutSize: 4, NCutsMax: 4, FTruth: 1, FUseDsd: 1, FUseDsdTune: 1, FDeriveLuts: 1}
 	p := If_ManStart(pars)
 	defer If_ManStop(p)
 	p.pIfDsdMan = manager
@@ -132,7 +132,7 @@ func TestGiaFromIfLogicCellConfiguration(t *testing.T) {
 
 func TestTruthCacheSizesForSmallLuts(t *testing.T) {
 	for size := int32(1); size <= 6; size++ {
-		p := If_ManStart(&If_Par_t_{nLutSize: size, nCutsMax: 4, fTruth: 1})
+		p := If_ManStart(&If_Par_t_{NLutSize: size, NCutsMax: 4, FTruth: 1})
 		for n := int32(0); n <= size; n++ {
 			if p.nTruth6Words[n] != 1 || len(p.puTempW) != 1 {
 				t.Fatalf("LUT size %d, support %d: words %d temporary %d", size, n, p.nTruth6Words[n], len(p.puTempW))

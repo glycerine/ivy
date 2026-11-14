@@ -33,10 +33,10 @@ func If_ManCutSetFetch(p *If_Man_t) *If_Set_t {
 // If_ManStart initializes the graph manager and its enabled truth caches.
 func If_ManStart(pars *If_Par_t) *If_Man_t {
 	assert(pars != nil, "pars != nil")
-	assert(pars.fUseDsd == 0 || pars.fUseTtPerm == 0, "pars.fUseDsd == 0 || pars.fUseTtPerm == 0")
-	assert(pars.nLutSize > 0 && pars.nLutSize <= IF_MAX_LUTSIZE, "valid LUT size")
-	if pars.fTruth != 0 {
-		assert(pars.nLutSize <= IF_MAX_FUNC_LUTSIZE, "truth LUT size is within the supported truth-cache bound")
+	assert(pars.FUseDsd == 0 || pars.FUseTtPerm == 0, "pars.fUseDsd == 0 || pars.fUseTtPerm == 0")
+	assert(pars.NLutSize > 0 && pars.NLutSize <= IF_MAX_LUTSIZE, "valid LUT size")
+	if pars.FTruth != 0 {
+		assert(pars.NLutSize <= IF_MAX_FUNC_LUTSIZE, "truth LUT size is within the supported truth-cache bound")
 	}
 	p := &If_Man_t_{pPars: pars, fEpsilon: pars.Epsilon}
 	p.vCis = vec.Vec_PtrAlloc(100)
@@ -45,19 +45,19 @@ func If_ManStart(pars *If_Par_t) *If_Man_t {
 	p.vTemp = vec.Vec_PtrAlloc(100)
 	p.vVisited = vec.Vec_PtrAlloc(100)
 
-	if pars.fTruth != 0 {
-		maxVars := int(Abc_MaxInt(6, pars.nLutSize))
+	if pars.FTruth != 0 {
+		maxVars := int(Abc_MaxInt(6, pars.NLutSize))
 		for v := 0; v <= maxVars; v++ {
 			p.nTruth6Words[v] = abcutil.Abc_Truth6WordNum(int32(v))
 		}
 		for v := 6; v <= maxVars; v++ {
-			p.vTtMem[v] = vec.Vec_MemAllocForTT(v, int(pars.fUseTtPerm))
+			p.vTtMem[v] = vec.Vec_MemAllocForTT(v, int(pars.FUseTtPerm))
 		}
 		for v := 0; v < 6; v++ {
 			p.vTtMem[v] = p.vTtMem[6]
 			p.nTruth6Words[v] = p.nTruth6Words[5]
 		}
-		if pars.fDelayOpt != 0 || pars.nGateSize > 0 {
+		if pars.FDelayOpt != 0 || pars.NGateSize > 0 {
 			for v := 6; v <= maxVars; v++ {
 				p.vTtIsops[v] = vec.Vec_WecAlloc(1000)
 				vec.Vec_WecInit(p.vTtIsops[v], 2)
@@ -67,28 +67,28 @@ func If_ManStart(pars *If_Par_t) *If_Man_t {
 				p.vTtIsops[v] = p.vTtIsops[6]
 			}
 		}
-		if pars.fDelayOpt != 0 || pars.nGateSize > 0 || pars.fDsdBalance != 0 {
+		if pars.FDelayOpt != 0 || pars.NGateSize > 0 || pars.FDsdBalance != 0 {
 			p.vCover = vec.Vec_IntAlloc(0)
 			p.vArray = vec.Vec_IntAlloc(1000)
 		}
 	}
-	if pars.fUsePerm != 0 {
-		p.nPermWords = If_CutPermWords(pars.nLutSize)
+	if pars.FUsePerm != 0 {
+		p.nPermWords = If_CutPermWords(pars.NLutSize)
 	}
 	p.nObjBytes = int32(unsafe.Sizeof(If_Obj_t_{}))
-	p.nCutBytes = int32(unsafe.Sizeof(If_Cut_t_{})) + 4*(pars.nLutSize+p.nPermWords)
-	p.nSetBytes = int32(unsafe.Sizeof(If_Set_t_{})) + (int32(unsafe.Sizeof((*If_Cut_t)(nil)))+p.nCutBytes)*(pars.nCutsMax+1)
+	p.nCutBytes = int32(unsafe.Sizeof(If_Cut_t_{})) + 4*(pars.NLutSize+p.nPermWords)
+	p.nSetBytes = int32(unsafe.Sizeof(If_Set_t_{})) + (int32(unsafe.Sizeof((*If_Cut_t)(nil)))+p.nCutBytes)*(pars.NCutsMax+1)
 
-	if pars.fTruth != 0 {
-		wordCount := int(p.nTruth6Words[pars.nLutSize])
+	if pars.FTruth != 0 {
+		wordCount := int(p.nTruth6Words[pars.NLutSize])
 		p.puTemp[0] = make([]uint32, 4*wordCount*2)
 		for i := 1; i < 4; i++ {
 			p.puTemp[i] = p.puTemp[0][i*wordCount*2:]
 		}
 		p.puTempW = make([]uint64, wordCount)
 	}
-	if pars.fUseDsd != 0 {
-		for v := 6; v <= int(Abc_MaxInt(6, pars.nLutSize)); v++ {
+	if pars.FUseDsd != 0 {
+		for v := 6; v <= int(Abc_MaxInt(6, pars.NLutSize)); v++ {
 			p.vTtDsds[v] = vec.Vec_IntAlloc(1000)
 			vec.Vec_IntPush(p.vTtDsds[v], 0)
 			vec.Vec_IntPush(p.vTtDsds[v], 2)
@@ -100,13 +100,13 @@ func If_ManStart(pars *If_Par_t) *If_Man_t {
 			p.vTtDsds[v], p.vTtPerms[v] = p.vTtDsds[6], p.vTtPerms[6]
 		}
 	}
-	if pars.fUseTtPerm != 0 {
+	if pars.FUseTtPerm != 0 {
 		p.vPairHash = vec.Hash_IntManStart(10000)
 		p.vPairPerms = vec.Vec_StrAlloc(10000)
-		vec.Vec_StrFill(p.vPairPerms, int(pars.nLutSize), 0)
+		vec.Vec_StrFill(p.vPairPerms, int(pars.NLutSize), 0)
 		p.vPairRes = vec.Vec_IntAlloc(1000)
 		vec.Vec_IntPush(p.vPairRes, -1)
-		for v := 6; v <= int(Abc_MaxInt(6, pars.nLutSize)); v++ {
+		for v := 6; v <= int(Abc_MaxInt(6, pars.NLutSize)); v++ {
 			p.vTtOccurs[v] = vec.Vec_IntAlloc(1000)
 			vec.Vec_IntPushTwo(p.vTtOccurs[v], 0, 0)
 		}
@@ -114,8 +114,8 @@ func If_ManStart(pars *If_Par_t) *If_Man_t {
 			p.vTtOccurs[v] = p.vTtOccurs[6]
 		}
 	}
-	if pars.fUseCofVars != 0 {
-		for v := 6; v <= int(Abc_MaxInt(6, pars.nLutSize)); v++ {
+	if pars.FUseCofVars != 0 {
+		for v := 6; v <= int(Abc_MaxInt(6, pars.NLutSize)); v++ {
 			p.vTtVars[v] = vec.Vec_StrAlloc(1000)
 			vec.Vec_StrPush(p.vTtVars[v], 0)
 			vec.Vec_StrPush(p.vTtVars[v], 0)
@@ -124,8 +124,8 @@ func If_ManStart(pars *If_Par_t) *If_Man_t {
 			p.vTtVars[v] = p.vTtVars[6]
 		}
 	}
-	if pars.fUseAndVars != 0 {
-		for v := 6; v <= int(Abc_MaxInt(6, pars.nLutSize)); v++ {
+	if pars.FUseAndVars != 0 {
+		for v := 6; v <= int(Abc_MaxInt(6, pars.NLutSize)); v++ {
 			p.vTtDecs[v] = vec.Vec_IntAlloc(1000)
 			vec.Vec_IntPushTwo(p.vTtDecs[v], 0, 0)
 		}
@@ -133,9 +133,9 @@ func If_ManStart(pars *If_Par_t) *If_Man_t {
 			p.vTtDecs[v] = p.vTtDecs[6]
 		}
 	}
-	if pars.fVerbose != 0 {
+	if pars.FVerbose != 0 {
 		fmt.Printf("K = %d. Cut record bytes = %d. Object bytes = %d. Set bytes = %d.\n",
-			pars.nLutSize, p.nCutBytes, p.nObjBytes, p.nSetBytes)
+			pars.NLutSize, p.nCutBytes, p.nObjBytes, p.nSetBytes)
 	}
 
 	p.pConst1 = If_ManSetupObj(p)
@@ -169,10 +169,10 @@ func If_ManStop(p *If_Man_t) {
 		return
 	}
 	p.stopped = true
-	if p.pPars != nil && p.pPars.fVerbose != 0 && p.vCutData != nil {
+	if p.pPars != nil && p.pPars.FVerbose != 0 && p.vCutData != nil {
 		If_ManCacheAnalize(p)
 	}
-	for v := 6; v <= int(Abc_MaxInt(6, p.pPars.nLutSize)); v++ {
+	for v := 6; v <= int(Abc_MaxInt(6, p.pPars.NLutSize)); v++ {
 		vec.Vec_MemFree(p.vTtMem[v])
 		vec.Vec_WecFree(p.vTtIsops[v])
 		vec.Vec_IntFree(p.vTtDsds[v])
@@ -323,7 +323,7 @@ func If_ManCreateChoice(p *If_Man_t, obj *If_Obj_t) {
 
 func If_ManSetupSet(p *If_Man_t, set *If_Set_t) {
 	set.nCuts = 0
-	set.nCutsMax = int16(p.pPars.nCutsMax)
+	set.nCutsMax = int16(p.pPars.NCutsMax)
 	set.ppCuts = make([]*If_Cut_t, int(set.nCutsMax)+1)
 	for i := range set.ppCuts {
 		cut := &If_Cut_t_{}
@@ -334,16 +334,16 @@ func If_ManSetupSet(p *If_Man_t, set *If_Set_t) {
 
 func If_ManSetupCutTriv(p *If_Man_t, cut *If_Cut_t, objID int32) {
 	cut.fCompl = 0
-	cut.nLimit = uint32(p.pPars.nLutSize)
+	cut.nLimit = uint32(p.pPars.NLutSize)
 	cut.nLeaves = 1
 	if p.pPars.fLiftLeaves != 0 {
 		objID <<= 8
 	}
 	cut.pLeaves = []int32{objID}
 	cut.uSign = If_ObjCutSign(uint32(objID))
-	if p.pPars.fUseTtPerm != 0 {
+	if p.pPars.FUseTtPerm != 0 {
 		cut.iCutFunc = 3
-	} else if p.pPars.fTruth != 0 {
+	} else if p.pPars.FTruth != 0 {
 		cut.iCutFunc = 2
 	} else {
 		cut.iCutFunc = -1
@@ -367,7 +367,7 @@ func If_ManSetupCiCutSets(p *If_Man_t) {
 	for i, entry := range vec.Vec_PtrArray(p.vCis) {
 		obj := entry.(*If_Obj_t)
 		If_ManSetupCutTriv(p, &obj.CutBest, obj.Id)
-		set := &If_Set_t{nCuts: 1, nCutsMax: int16(p.pPars.nCutsMax)}
+		set := &If_Set_t{nCuts: 1, nCutsMax: int16(p.pPars.NCutsMax)}
 		set.ppCuts = make([]*If_Cut_t, int(set.nCutsMax)+1)
 		set.ppCuts[0] = &obj.CutBest
 		p.ciCutSets[i] = set
@@ -382,7 +382,7 @@ func If_ManSetupNodeCutSet(p *If_Man_t, obj *If_Obj_t) *If_Set_t {
 	assert(If_ObjIsAnd(obj) != 0 && obj.pCutSet == nil, "AND node has no live cut set")
 	set := If_ManCutSetFetch(p)
 	set.nCuts = 0
-	set.nCutsMax = int16(p.pPars.nCutsMax)
+	set.nCutsMax = int16(p.pPars.NCutsMax)
 	obj.pCutSet = set
 	return set
 }
@@ -437,7 +437,7 @@ func If_ManSetupSetAll(p *If_Man_t, crossCut int32) {
 	}
 	p.pFreeList = p.ownedCutSets[0]
 	p.pMemAnd = p.pFreeList
-	if p.pPars.fVerbose != 0 {
+	if p.pPars.FVerbose != 0 {
 		fmt.Printf("Node = %d. Choice nodes = %d. Cut-set pool = %d.\n",
 			If_ManAndNum(p), p.nChoices, len(p.ownedCutSets))
 	}

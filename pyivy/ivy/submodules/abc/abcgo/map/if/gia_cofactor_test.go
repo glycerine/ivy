@@ -58,7 +58,7 @@ func TestGiaCofactorLutTruthAndMapping(t *testing.T) {
 }
 
 func TestGiaCofactorLutBothInternal(t *testing.T) {
-	pars := &If_Par_t_{nLutSize: 5, nCutsMax: 4}
+	pars := &If_Par_t_{NLutSize: 5, NCutsMax: 4}
 	p := If_ManStart(pars)
 	defer If_ManStop(p)
 	truth := dau.Dau_DsdToTruth("<a(bc)(de)>", 5)
@@ -114,7 +114,7 @@ func TestGiaBiDecompositionTruthAndMapping(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			for _, truthPhase := range []int32{0, 1} {
 				for _, cutPhase := range []uint32{0, 1} {
-					pars := &If_Par_t_{nLutSize: 4, nCutsMax: 4}
+					pars := &If_Par_t_{NLutSize: 4, NCutsMax: 4}
 					p := If_ManStart(pars)
 					truth := dau.Dau_DsdToTruth(tc.expression, 4)
 					p.vTtMem[4] = vec.Vec_MemAllocForTT(6, 0)

@@ -22,7 +22,7 @@ func TestGiaLutStructuresPreserveTruth(t *testing.T) {
 	}
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
-			pars := &If_Par_t_{nLutSize: 8, nCutsMax: 4, fLut6Filter: tc.filter}
+			pars := &If_Par_t_{NLutSize: 8, NCutsMax: 4, FLut6Filter: tc.filter}
 			p := If_ManStart(pars)
 			defer If_ManStop(p)
 			dst := Gia_ManStart(64)

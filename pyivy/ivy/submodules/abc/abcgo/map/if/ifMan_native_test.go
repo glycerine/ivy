@@ -3,7 +3,7 @@ package if_
 import "testing"
 
 func testManagerPars() *If_Par_t {
-	return &If_Par_t_{nLutSize: 4, nCutsMax: 8, nFlowIters: 1, nAreaIters: 2}
+	return &If_Par_t_{NLutSize: 4, NCutsMax: 8, NFlowIters: 1, NAreaIters: 2}
 }
 
 func TestIfManagerBuildsAndFoldsGraph(t *testing.T) {

@@ -90,7 +90,7 @@ func Gia_ManFromIfLogicCofVars(dst *Gia_Man_t, p *If_Man_t, cut *If_Cut_t, leave
 func Gia_ManFromIfLogicAndVars(dst *Gia_Man_t, p *If_Man_t, cut *If_Cut_t, leaves, temp, cover, mapping, records *Vec_Int_t) int32 {
 	n := int32(cut.nLeaves)
 	id := int(Abc_Lit2Var(cut.iCutFunc))
-	if n < 2 || n > 12 || p.pPars.nLutSize > 13 || n > 2*(p.pPars.nLutSize/2) || int(n) != Vec_IntSize(leaves) || p.vTtDecs[n] == nil {
+	if n < 2 || n > 12 || p.pPars.NLutSize > 13 || n > 2*(p.pPars.NLutSize/2) || int(n) != Vec_IntSize(leaves) || p.vTtDecs[n] == nil {
 		panic("if: invalid bi-decomposition cut")
 	}
 	mask := vec.Vec_IntEntry(p.vTtDecs[n], id)
@@ -107,7 +107,7 @@ func Gia_ManFromIfLogicAndVars(dst *Gia_Man_t, p *If_Man_t, cut *If_Cut_t, leave
 	truth := make([]word, p.nTruth6Words[n])
 	abcutil.Abc_TtCopy(truth, stored, p.nTruth6Words[n], orPhase)
 	var parts [2]word
-	abcutil.Abc_TtDeriveBiDec(truth, n, masks[0], masks[1], p.pPars.nLutSize/2, parts[0:1], parts[1:2])
+	abcutil.Abc_TtDeriveBiDec(truth, n, masks[0], masks[1], p.pPars.NLutSize/2, parts[0:1], parts[1:2])
 	var resultParts [2]int32
 	for side := 0; side < 2; side++ {
 		if orPhase != 0 {

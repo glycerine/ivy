@@ -181,7 +181,7 @@ func If_CutCompareDelayOld(p *If_Man_t, a, b **If_Cut_t) int32 { return ifCompar
 func If_CutCompareArea(p *If_Man_t, a, b **If_Cut_t) int32     { return ifCompare(p, *a, *b, "and") }
 func If_ManSortCompare(p *If_Man_t, a, b *If_Cut_t) int32 {
 	fields := ""
-	if p.pPars.fPower != 0 {
+	if p.pPars.FPower != 0 {
 		switch p.SortMode {
 		case 0:
 			fields = "dnape"
@@ -224,7 +224,7 @@ func If_CutSort(p *If_Man_t, set *If_Set_t, c *If_Cut_t) {
 		return
 	}
 	pars := p.pPars
-	special := pars.fUseDsd != 0 || pars.pFuncCell2 != nil || pars.fUseBat != 0 || pars.pLutStruct != "" || pars.fUserRecLib != 0 || pars.fUserSesLib != 0 || pars.fEnableCheck07 != 0 || pars.fUseCofVars != 0 || pars.fUseAndVars != 0 || pars.fUse34Spec != 0 || pars.fUseDsdTune != 0 || pars.fEnableCheck75 != 0 || pars.fEnableCheck75u != 0
+	special := pars.FUseDsd != 0 || pars.pFuncCell2 != nil || pars.FUseBat != 0 || pars.PLutStruct != "" || pars.FUserRecLib != 0 || pars.FUserSesLib != 0 || pars.FEnableCheck07 != 0 || pars.FUseCofVars != 0 || pars.FUseAndVars != 0 || pars.FUse34Spec != 0 || pars.FUseDsdTune != 0 || pars.FEnableCheck75 != 0 || pars.FEnableCheck75u != 0
 	if c.fUseless == 0 && special && (set.ppCuts[0].fUseless != 0 || If_ManSortCompare(p, set.ppCuts[0], c) == 1) {
 		first := set.ppCuts[0]
 		set.ppCuts[0], set.ppCuts[n] = c, first

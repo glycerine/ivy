@@ -67,7 +67,7 @@ func Gia_ManToIf(src *gia.Gia_Man_t, pars *If_Par_t) *If_Man_t {
 				prev = next
 			}
 			If_ManCreateChoice(result, If_Regular(mapped))
-			pars.fExpRed = 0
+			pars.FExpRed = 0
 		}
 	}
 	return result

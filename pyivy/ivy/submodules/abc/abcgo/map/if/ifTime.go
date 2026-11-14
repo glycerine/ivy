@@ -25,11 +25,11 @@ func ifTimingPinDelays(p *If_Man_t, c *If_Cut_t, reconstruct bool) []byte {
 	}
 	var function func(*If_Man_t, *If_Cut_t, []byte) int32
 	switch {
-	case p.pPars.fDelayOpt != 0:
+	case p.pPars.FDelayOpt != 0:
 		function = If_CutSopBalancePinDelays
-	case p.pPars.fDelayOptLut != 0:
+	case p.pPars.FDelayOptLut != 0:
 		function = If_CutLutBalancePinDelays
-	case p.pPars.fDsdBalance != 0:
+	case p.pPars.FDsdBalance != 0:
 		function = If_CutDsdBalancePinDelays
 	default:
 		return If_CutPerm(c)
@@ -59,11 +59,11 @@ func If_CutDelay(p *If_Man_t, _ *If_Obj_t, c *If_Cut_t) float32 {
 	maximum := float32(-IF_FLOAT_LARGE)
 	if c.fAndCut != 0 {
 		for pin := int32(0); pin < int32(c.nLeaves); pin++ {
-			maximum = max(maximum, If_ObjCutBest(If_CutLeaf(p, c, pin)).Delay+float32(p.pPars.nAndDelay))
+			maximum = max(maximum, If_ObjCutBest(If_CutLeaf(p, c, pin)).Delay+float32(p.pPars.NAndDelay))
 		}
 		return maximum
 	}
-	if library := p.pPars.pLutLib; library != nil {
+	if library := p.pPars.PLutLib; library != nil {
 		if p.pPars.fLiftLeaves != 0 {
 			panic("LUT libraries do not support lifted cut leaves")
 		}
@@ -106,11 +106,11 @@ func If_CutPropagateRequired(p *If_Man_t, _ *If_Obj_t, c *If_Cut_t, required flo
 	if c.fAndCut != 0 {
 		for pin := int32(0); pin < int32(c.nLeaves); pin++ {
 			leaf := If_CutLeaf(p, c, pin)
-			leaf.Required = min(leaf.Required, required-float32(p.pPars.nAndDelay))
+			leaf.Required = min(leaf.Required, required-float32(p.pPars.NAndDelay))
 		}
 		return
 	}
-	if library := p.pPars.pLutLib; library != nil {
+	if library := p.pPars.PLutLib; library != nil {
 		if c.nLeaves > uint32(library.LutMax) {
 			panic("cut exceeds LUT library")
 		}
@@ -161,23 +161,23 @@ func ifTimingOutputs(p *If_Man_t, primaryOnly, latchesOnly bool) []*If_Obj_t {
 	return outputs
 }
 func If_ManDelayMax(p *If_Man_t, sequential int32) float32 {
-	if p.pPars.fLatchPaths != 0 && (p.pPars.nLatchesCi == 0 || p.pPars.nLatchesCo == 0) {
+	if p.pPars.FLatchPaths != 0 && (p.pPars.nLatchesCi == 0 || p.pPars.nLatchesCo == 0) {
 		fmt.Println("Delay optimization of latch paths disabled: no latches.")
-		p.pPars.fLatchPaths = 0
+		p.pPars.FLatchPaths = 0
 	}
 	if sequential != 0 && p.pPars.nLatchesCi <= 0 {
 		panic("sequential delay requires latch inputs")
 	}
 	maximum := float32(-IF_FLOAT_LARGE)
-	for _, output := range ifTimingOutputs(p, sequential != 0, sequential == 0 && p.pPars.fLatchPaths != 0) {
+	for _, output := range ifTimingOutputs(p, sequential != 0, sequential == 0 && p.pPars.FLatchPaths != 0) {
 		maximum = max(maximum, If_ObjArrTime(If_ObjFanin0(output)))
 	}
 	return maximum
 }
 func ifTimingApplyTarget(p *If_Man_t) {
 	pars := p.pPars
-	if pars.nRelaxRatio != 0 && pars.DelayTargetNew == 0 {
-		pars.DelayTargetNew = p.RequiredGlo * (100 + float32(pars.nRelaxRatio)) / 100
+	if pars.NRelaxRatio != 0 && pars.DelayTargetNew == 0 {
+		pars.DelayTargetNew = p.RequiredGlo * (100 + float32(pars.NRelaxRatio)) / 100
 	}
 	if pars.DelayTarget != -1 {
 		if p.RequiredGlo > pars.DelayTarget+p.fEpsilon {
@@ -194,8 +194,8 @@ func ifTimingApplyTarget(p *If_Man_t) {
 	}
 }
 func ifTimingOutputRequired(p *If_Man_t, output *If_Obj_t) float32 {
-	if p.pPars.fDoAverage != 0 {
-		return If_ObjArrTime(If_ObjFanin0(output)) * (100 + float32(p.pPars.nRelaxRatio)) / 100
+	if p.pPars.FDoAverage != 0 {
+		return If_ObjArrTime(If_ObjFanin0(output)) * (100 + float32(p.pPars.NRelaxRatio)) / 100
 	}
 	return p.RequiredGlo
 }
@@ -229,7 +229,7 @@ func If_ManComputeRequired(p *If_Man_t) {
 				return
 			}
 			selected := outputs
-			if p.pPars.fDoAverage == 0 && p.pPars.fLatchPaths != 0 {
+			if p.pPars.FDoAverage == 0 && p.pPars.FLatchPaths != 0 {
 				selected = ifTimingOutputs(p, false, true)
 			}
 			for _, output := range selected {
@@ -270,11 +270,11 @@ func If_ManComputeRequired(p *If_Man_t) {
 				panic("invalid output timing attribute")
 			}
 		}
-	case p.pPars.fDoAverage != 0:
+	case p.pPars.FDoAverage != 0:
 		for index, output := range outputs {
 			tim.Tim_ManSetCoRequired(p.pManTim, index, ifTimingOutputRequired(p, output))
 		}
-	case p.pPars.fLatchPaths != 0:
+	case p.pPars.FLatchPaths != 0:
 		start, end := int(p.pPars.nLatchesCoBox), len(outputs)-int(p.pPars.nLatchesCo)
 		for index := start; index < end; index++ {
 			tim.Tim_ManSetCoRequired(p.pManTim, index, IF_FLOAT_LARGE)

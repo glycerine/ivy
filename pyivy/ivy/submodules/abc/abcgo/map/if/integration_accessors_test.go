@@ -22,7 +22,7 @@ func TestSetRenodeConfigPreservesCDefaultsAndCallback(t *testing.T) {
 	reo := new(int)
 	cost := func(_ *If_Man_t, _ *If_Cut_t) int32 { return 9 }
 	pars.SetRenodeConfig(6, 128, 2, 3, 1, 1, 0, 0, 0, 1, reo, cost)
-	if pars.nLutSize != 6 || pars.nCutsMax != 128 || pars.nFlowIters != 2 || pars.nAreaIters != 3 || pars.DelayTarget != -1 || pars.Epsilon != .005 || pars.fPreprocess != 1 || pars.fArea != 1 || pars.fTruth != 1 || pars.fUsePerm != 1 || pars.fUseBdds != 1 || pars.fVerbose != 1 {
+	if pars.NLutSize != 6 || pars.NCutsMax != 128 || pars.NFlowIters != 2 || pars.NAreaIters != 3 || pars.DelayTarget != -1 || pars.Epsilon != .005 || pars.FPreprocess != 1 || pars.FArea != 1 || pars.FTruth != 1 || pars.FUsePerm != 1 || pars.fUseBdds != 1 || pars.FVerbose != 1 {
 		t.Fatal("renode configuration did not preserve source defaults/options")
 	}
 	if pars.pReoMan != reo || pars.pFuncCost == nil || pars.pFuncCost(nil, nil) != 9 {

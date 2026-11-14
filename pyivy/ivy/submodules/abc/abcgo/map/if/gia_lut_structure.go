@@ -36,7 +36,7 @@ func Gia_ManFromIfLogicNode(p *If_Man_t, dst *Gia_Man_t, objectID int32, leaves,
 		}
 		return Gia_ManFromIfLogicCreateLutSpecial(dst, truth, leaves, temp, cover, mapping, records, packing)
 	}
-	if p.pPars.fLut6Filter != 0 && n == 6 {
+	if p.pPars.FLut6Filter != 0 && n == 6 {
 		local := vec.Vec_IntAllocArrayCopy([]int32{0}, 1)
 		defer Vec_IntFree(local)
 		return Gia_ManFromIfLogicCreateLutSpecial(dst, truth, leaves, temp, cover, mapping, records, local)

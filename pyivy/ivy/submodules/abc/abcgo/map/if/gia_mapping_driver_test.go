@@ -16,8 +16,8 @@ func TestGiaMappingDriverSimpleNetwork(t *testing.T) {
 			Gia_ManAppendCo(src, y^1)
 			var pars If_Par_t
 			Gia_ManSetIfParsDefault(&pars)
-			pars.nLutSize = 4
-			pars.fHashMapping = hash
+			pars.NLutSize = 4
+			pars.FHashMapping = hash
 			result := Gia_ManPerformMapping(src, &pars)
 			if result == nil {
 				t.Fatal("mapping failed")

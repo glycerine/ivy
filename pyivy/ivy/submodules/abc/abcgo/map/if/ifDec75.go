@@ -119,7 +119,7 @@ func If_CutPerformCheck75(p *If_Man_t, pTruth0 *uint32, nVars, nLeaves int32, pS
 		panic("if: check75 requires manager parameters")
 	}
 	truth := append([]uint64(nil), truthWordsView(pTruth0, 4)...)
-	if p.pPars.fCutMin == 0 {
+	if p.pPars.FCutMin == 0 {
 		abcutil.Abc_TtMinimumBase(truth, nil, nLeaves, &nLeaves)
 	}
 	if nLeaves < 6 {
@@ -129,7 +129,7 @@ func If_CutPerformCheck75(p *If_Man_t, pTruth0 *uint32, nVars, nLeaves int32, pS
 	if nLeaves < 8 && If_CutPerformCheck16(p, truth32, nVars, nLeaves, "44") != 0 {
 		return 1
 	}
-	if p.pPars.fDeriveLuts == 0 && p.pPars.fEnableCheck75 != 0 && nLeaves == 8 {
+	if p.pPars.FDeriveLuts == 0 && p.pPars.FEnableCheck75 != 0 && nLeaves == 8 {
 		var dsd []byte
 		if dau.Dau_DsdDecompose(truth, nLeaves, 0, 0, &dsd) >= 5 {
 			return 0

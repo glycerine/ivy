@@ -29,8 +29,8 @@ func Gia_ManFromIfAigRec(dst *Gia_Man_t, obj *If_Obj_t) int32 {
 // Gia_ManFromIfAig rebuilds the mapped IF network as a structurally hashed GIA.
 func Gia_ManFromIfAig(p *If_Man_t) *Gia_Man_t {
 	pars := p.pPars
-	assert(pars.pLutStruct == "", "LUT structure is not set")
-	assert(pars.fDelayOpt != 0 || pars.fDsdBalance != 0 || pars.fUserRecLib != 0 || pars.fUserSesLib != 0, "balancing or recorded library is enabled")
+	assert(pars.PLutStruct == "", "LUT structure is not set")
+	assert(pars.FDelayOpt != 0 || pars.FDsdBalance != 0 || pars.FUserRecLib != 0 || pars.FUserSesLib != 0, "balancing or recorded library is enabled")
 	dst := Gia_ManStart(If_ManObjNum(p))
 	Gia_ManHashAlloc(dst)
 	mini, leaves := Vec_IntAlloc(1<<16), Vec_IntAlloc(16)
@@ -49,11 +49,11 @@ func Gia_ManFromIfAig(p *If_Man_t) *Gia_Man_t {
 				Vec_IntPush(leaves, If_CutLeaf(p, cut, k).iCopy)
 			}
 			switch {
-			case pars.fDelayOpt != 0:
+			case pars.FDelayOpt != 0:
 				obj.iCopy = Gia_ManBuildFromMini(dst, p, cut, leaves, mini, 0, 0)
-			case pars.fDsdBalance != 0:
+			case pars.FDsdBalance != 0:
 				obj.iCopy = Gia_ManBuildFromMini(dst, p, cut, leaves, mini, 0, 1)
-			case pars.fUserRecLib != 0:
+			case pars.FUserRecLib != 0:
 				if pars.pFuncRecGia == nil {
 					panic("if: recorded-library GIA builder is not configured")
 				}
