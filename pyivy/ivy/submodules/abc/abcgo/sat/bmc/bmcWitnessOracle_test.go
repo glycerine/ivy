@@ -71,7 +71,7 @@ func TestBMCWitnessTwoInputsTwoRegisters(t *testing.T) {
 				reachable = next
 			}
 			got := [2]int{-1, -1}
-			params := Saig_ParBmc_t{nFramesMax: bound, nStart: int32(start), fSolveAll: 1}
+			params := Saig_ParBmc_t{nFramesMax: bound, nStart: int32(start), fSolveAll: 1, fStoreCex: 1}
 			params.pFuncOnFail = func(out int32, cex *util.Abc_Cex_t) int32 {
 				if out < 0 || out > 1 || cex == nil || cex.IPo != out || got[out] >= 0 || cex.NRegs != 2 || cex.NPis != 2 {
 					t.Fatalf("trial %d: invalid witness output=%d cex=%+v", trial, out, cex)
@@ -102,7 +102,34 @@ func TestBMCWitnessTwoInputsTwoRegisters(t *testing.T) {
 				return 0
 			}
 			status := Saig_ManBmcScalable(g, &params)
-			expected := int32(1)
+			for out := int32(0); out < 2; out++ {
+				if cex := bmcStoredCex(g, out); cex != nil {
+					got[out] = int(cex.IFrame)
+					state := 0
+					for r := 0; r < 2; r++ {
+						if util.Abc_InfoHasBit(cex.PData, int32(r)) {
+							state |= 1 << r
+						}
+					}
+					if state != 0 {
+						t.Fatalf("trial %d secondary witness has nonzero initial state %d", trial, state)
+					}
+					for frame := 0; frame <= int(cex.IFrame); frame++ {
+						input := 0
+						for pi := 0; pi < 2; pi++ {
+							if util.Abc_InfoHasBit(cex.PData, int32(2+2*frame+pi)) {
+								input |= 1 << pi
+							}
+						}
+						index := input | (state << 2)
+						if frame == int(cex.IFrame) && (tables[out]>>index)&1 == 0 {
+							t.Fatalf("trial %d secondary output %d witness does not replay", trial, out)
+						}
+						state = int((tables[2]>>index)&1) | int((tables[3]>>index)&1)<<1
+					}
+				}
+			}
+			expected := int32(-1)
 			count := int32(0)
 			for _, frame := range want {
 				if frame >= 0 {

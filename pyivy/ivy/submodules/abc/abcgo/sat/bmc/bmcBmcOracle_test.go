@@ -3,8 +3,18 @@ package bmc
 import (
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/misc/util"
+	"github.com/glycerine/abcgo/misc/vec"
 	"testing"
 )
+
+func bmcStoredCex(graph *aig.Graph, output int32) *util.Abc_Cex_t {
+	models := graph.SequentialCounterexamples()
+	if models == nil || output < 0 || int(output) >= vec.Vec_PtrSize(models) {
+		return nil
+	}
+	model, _ := vec.Vec_PtrEntry(models, int(output)).(*util.Abc_Cex_t)
+	return model
+}
 
 // oracleTruth uses bit (input + 2*state), independent of the AIG graph.
 func oracleTruth(table, input, state int) int { return (table >> (input + 2*state)) & 1 }
@@ -41,6 +51,9 @@ func TestScalableBMCExhaustiveStateOracle(t *testing.T) {
 					reachable := [2]bool{true, false}
 					earliest := -1
 					for frame := 0; frame < bound; frame++ {
+						if frame == 2 {
+							break
+						} // C completeness cutoff for one register.
 						next := [2]bool{}
 						for state := 0; state < 2; state++ {
 							if !reachable[state] {
@@ -55,11 +68,15 @@ func TestScalableBMCExhaustiveStateOracle(t *testing.T) {
 						}
 						reachable = next
 					}
-					params := Saig_ParBmc_t{nStart: int32(start), nFramesMax: bound, fSolveAll: all}
+					params := Saig_ParBmc_t{nStart: int32(start), nFramesMax: bound, fSolveAll: all, fStoreCex: all}
 					result := Saig_ManBmcScalable(g, &params)
 					if earliest < 0 {
-						if result != 1 {
-							t.Fatalf("trans=%x output=%x start=%d all=%d got=%d, want safe", transition, output, start, all, result)
+						wantSafe := int32(-1)
+						if bound > 2 {
+							wantSafe = 1
+						}
+						if result != wantSafe {
+							t.Fatalf("trans=%x output=%x start=%d all=%d got=%d, want %d", transition, output, start, all, result, wantSafe)
 						}
 						continue
 					}
@@ -102,6 +119,9 @@ func TestScalableBMCMultiOutputOracle(t *testing.T) {
 				want := [2]int{-1, -1}
 				reachable := [2]bool{true, false}
 				for frame := 0; frame < bound; frame++ {
+					if frame == 2 {
+						break
+					} // C completeness cutoff for one register.
 					next := [2]bool{}
 					for state := 0; state < 2; state++ {
 						if !reachable[state] {
@@ -121,7 +141,7 @@ func TestScalableBMCMultiOutputOracle(t *testing.T) {
 					reachable = next
 				}
 				got := [2]int{-1, -1}
-				params := Saig_ParBmc_t{nStart: int32(start), nFramesMax: bound, fSolveAll: 1}
+				params := Saig_ParBmc_t{nStart: int32(start), nFramesMax: bound, fSolveAll: 1, fStoreCex: 1}
 				params.pFuncOnFail = func(output int32, cex *util.Abc_Cex_t) int32 {
 					if output < 0 || output > 1 || cex == nil || got[output] >= 0 || cex.IPo != output {
 						t.Fatalf("invalid witness output=%d cex=%+v", output, cex)
@@ -141,7 +161,15 @@ func TestScalableBMCMultiOutputOracle(t *testing.T) {
 					return 0
 				}
 				result := Saig_ManBmcScalable(g, &params)
-				expected := int32(1)
+				for output := int32(0); output < 2; output++ {
+					if cex := bmcStoredCex(g, output); cex != nil {
+						got[output] = int(cex.IFrame)
+					}
+				}
+				expected := int32(-1)
+				if bound > 2 {
+					expected = 1
+				}
 				count := int32(0)
 				for _, frame := range want {
 					if frame >= 0 {

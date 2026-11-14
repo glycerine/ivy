@@ -38,10 +38,26 @@ func TestCexMinChoosesOneFalseAndInput(t *testing.T) {
 	g := aig.NewGraph()
 	a, b := g.NewInput(), g.NewInput()
 	g.AddOutput(g.AND(a, b).Not())
+	// C's Saig_ManCexMinComputeReason asserts that the manager's terminal
+	// counts have been finalized, even for a zero-register combinational AIG.
+	aig.Aig_ManSetRegNum(g, 0)
 	c := util.Abc_CexAlloc(0, 2, 1)
 	reasons := Saig_ManCexMinComputeReason(g, c, 1)
+	if reasons == nil {
+		t.Fatal("valid combinational counterexample interface was rejected")
+	}
 	got := vec.Vec_IntArray(vec.Vec_VecEntryInt(reasons, 0))
 	if len(got) != 1 || got[0]&1 != 1 {
 		t.Fatalf("reasons %v", got)
+	}
+}
+
+func TestCexMinRejectsUnfinalizedTerminalMetadata(t *testing.T) {
+	g := aig.NewGraph()
+	a, b := g.NewInput(), g.NewInput()
+	g.AddOutput(g.AND(a, b))
+	c := util.Abc_CexAlloc(0, 2, 1)
+	if reasons := Saig_ManCexMinComputeReason(g, c, 1); reasons != nil {
+		t.Fatal("accepted an AIG without finalized CI/CO counts")
 	}
 }
