@@ -59,6 +59,8 @@ func TestNativeChoiceMiterAgainstCompiledABC(t *testing.T) {
 		t.Fatalf("run: %v %s", e, source)
 	}
 	snapshots := make([]*Gia_Man_t, 3)
+	// C receives its own AND expansions; Go receives the equivalent real
+	// XOR/MUX representation. Compare the resulting miter's size and truth.
 	for i := range snapshots {
 		g := Gia_ManStart(24)
 		a, b, c, d := Gia_ManAppendCi(g), Gia_ManAppendCi(g), Gia_ManAppendCi(g), Gia_ManAppendCi(g)

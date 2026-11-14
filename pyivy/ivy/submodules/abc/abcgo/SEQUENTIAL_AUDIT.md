@@ -2636,3 +2636,38 @@ control dependencies remain outside the two-pin dynamic representation;
 static fanouts/reference counting already include those controls. That source
 limitation is not claimed resolved by this repeated-pin repair. GIA remains
 in progress; completion is still 2/131 original packages.
+
+The flagged choice-miter behavior is a confirmed Boolean defect, not a valid
+test expectation. Changing the existing real-gate test to require XOR and MUX
+functions produced a red failure on assignment 0000: all six output polarities
+were wrong. Source giaDup.c's recursive copier only handles ordinary ANDs;
+DAR callers supply those through Gia_ManFromAig. Go accepts explicitly typed
+real gates, but had grouped AND/XOR/MUX/buffer into the same stored-fanin AND
+copy. It now dispatches on gate kind: ordinary AND uses HashAnd, XOR/MUX use
+the already-ported source HashXor/HashMux AND expansions, and buffers forward
+their input. MUX controls are recursively copied as well. The original DFS,
+Value cache, shared inputs and interleaved output order are retained.
+The destination now uses the original structural-hash allocation/stop lifecycle
+instead of the parallel literal-map fallback; no replacement choice algorithm
+was invented. The recursive entry point documents the source's active-hash
+precondition and has no external Go callers.
+
+The native real-gate fixture now supplies C's own ordinary-AND expansions to
+its AND-only copier and compares the resulting miter size and all 16 assignment
+rows with Go's real-gate input. Its optional argument retains the original
+raw-real-gate source reproducer, whose wrong behavior is not required of Go.
+The separate native ordinary-AND conversion oracle still matches exact object
+encoding, Value scratch fields, AIG export and truth. Additional analytical
+tests cover all 32 input/control/data phase combinations, control-only XOR/buf
+cones, constants, output buffers and three-snapshot output interleaving.
+These exercise 512 assignments with nine outputs each. The initial red log is
+`/tmp/abcgo-gia-choice-real-red.log`; native expansion and focused checks pass
+in 1.645s and 1.712s respectively. The full uncached GIA race suite passes
+in 15.760s and vet passes; logs are
+`/tmp/abcgo-gia-choice-final-race.log` and
+`/tmp/abcgo-gia-choice-final-vet.log`.
+
+The sibling HCD copier has the same source-derived stored-fanin assumption;
+its production synthesis path also imports ordinary AIGs. It needs a separate
+regression/repair before this choice-family review can close. HCD's distinct
+dangling-node assertion and register bookkeeping must remain source-faithful.
