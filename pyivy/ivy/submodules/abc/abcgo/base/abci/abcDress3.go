@@ -1,334 +1,281 @@
 package abci
 
-import "fmt"
+import (
+	"fmt"
+	"os"
 
-import "os"
+	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/aig/hop"
+	"github.com/glycerine/abcgo/base/abc"
+	"github.com/glycerine/abcgo/misc/extra"
+	"github.com/glycerine/abcgo/misc/util"
+	"github.com/glycerine/abcgo/misc/vec"
+	"github.com/glycerine/abcgo/proof/cec"
+)
 
-/**CFile****************************************************************
+type Gia_Obj_t = gia.Gia_Obj_t
 
-  FileName    [abcDress3.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Network and node package.]
-
-  Synopsis    [Transfers names from one netlist to the other.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: abcDress3.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "base/abc/abc.h"
-//#include "base/io/ioAbc.h"
-//#include "proof/cec/cec.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Converts AIG from HOP to GIA.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_ConvertHopToGia_rec1(p *Gia_Man_t, pObj *Hop_Obj_t) {
-    assert(!Hop_IsComplement(pObj), "!Hop_IsComplement(pObj)");
-    if !Hop_ObjIsNode(pObj) || Hop_ObjIsMarkA(pObj) {
-        return; }
-    Abc_ConvertHopToGia_rec1( p, Hop_ObjFanin0(pObj) ); 
-    Abc_ConvertHopToGia_rec1( p, Hop_ObjFanin1(pObj) );
-    pObj.iData = Gia_ManHashAnd( p, Hop_ObjChild0CopyI(pObj), Hop_ObjChild1CopyI(pObj) );
-    assert(!Hop_ObjIsMarkA(pObj), "!Hop_ObjIsMarkA(pObj)"); // loop detection
-    Hop_ObjSetMarkA( pObj );
-}
-func Abc_ConvertHopToGia_rec2(pObj *Hop_Obj_t) {
-    assert(!Hop_IsComplement(pObj), "!Hop_IsComplement(pObj)");
-    if !Hop_ObjIsNode(pObj) || !Hop_ObjIsMarkA(pObj) {
-        return; }
-    Abc_ConvertHopToGia_rec2( Hop_ObjFanin0(pObj) ); 
-    Abc_ConvertHopToGia_rec2( Hop_ObjFanin1(pObj) );
-    assert(Hop_ObjIsMarkA(pObj), "Hop_ObjIsMarkA(pObj)"); // loop detection
-    Hop_ObjClearMarkA( pObj );
-}
-func Abc_ConvertHopToGia(p *Gia_Man_t, pRoot *Hop_Obj_t) int32 {
-    assert(!Hop_IsComplement(pRoot), "!Hop_IsComplement(pRoot)");
-    if Hop_ObjIsConst1( pRoot ) {
-        return 1; }
-    Abc_ConvertHopToGia_rec1( p, pRoot );
-    Abc_ConvertHopToGia_rec2( pRoot );
-    return pRoot.iData;
+// Abc_ConvertHopToGia_rec1 converts the marked-once HOP DAG rooted at obj.
+func Abc_ConvertHopToGia_rec1(p *Gia_Man_t, obj *Hop_Obj_t) {
+	if obj == nil || hop.Hop_IsComplement(obj) != 0 {
+		panic("Abc_ConvertHopToGia_rec1 requires a regular HOP object")
+	}
+	if hop.Hop_ObjIsNode(obj) == 0 || hop.Hop_ObjIsMarkA(obj) != 0 {
+		return
+	}
+	Abc_ConvertHopToGia_rec1(p, hop.Hop_ObjFanin0(obj))
+	Abc_ConvertHopToGia_rec1(p, hop.Hop_ObjFanin1(obj))
+	if hop.Hop_ObjIsMarkA(obj) != 0 {
+		panic("Abc_ConvertHopToGia_rec1 detected a HOP cycle")
+	}
+	lit := gia.Gia_ManHashAnd(p, hop.Hop_ObjChild0CopyI(obj), hop.Hop_ObjChild1CopyI(obj))
+	hop.Hop_ObjSetIData(obj, lit)
+	hop.Hop_ObjSetMarkA(obj)
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Add logic from pNtk to the AIG manager p.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkAigToGiaOne(p *Gia_Man_t, pNtk *Abc_Ntk_t, vMap *Vec_Int_t) {
-    var pHopMan *Hop_Man_t;
-    var pHopObj *Hop_Obj_t;
-    var vNodes *Vec_Ptr_t;
-    var pNode, pFanin *Abc_Obj_t;
-    var i, k int32;
-    assert(Abc_NtkIsAigLogic(pNtk), "Abc_NtkIsAigLogic(pNtk)");
-    pHopMan = (Hop_Man_t *)pNtk.pManFunc;
-    Hop_ManConst1(pHopMan).iData = 1;
-    // image primary inputs
-    Abc_NtkCleanCopy( pNtk );
-    // inlining of macro Abc_NtkForEachCi
-    for  i = 0; (i < Abc_NtkCiNum(pNtk)) && (((pNode) = Abc_NtkCi(pNtk, i)), 1); i++  {
-        pNode.iTemp = Gia_ManCiLit(p, Vec_IntEntry(vMap, i));
-    }
-    // iterate through nodes used in the mapping
-    vNodes = Abc_NtkDfs( pNtk, 1 );
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vNodes)) && (((pNode) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {
-        // inlining of macro Abc_ObjForEachFanin
-        for  k = 0; (k < Abc_ObjFaninNum(pNode)) && (((pFanin) = Abc_ObjFanin(pNode, k)), 1); k++  {
-            Hop_ManPi(pHopMan, k).iData = pFanin.iTemp;
-        }
-        pHopObj = Hop_Regular( (Hop_Obj_t *)pNode.pData );
-        assert(Abc_ObjFaninNum(pNode) <= Hop_ManPiNum(pHopMan), "Abc_ObjFaninNum(pNode) <= Hop_ManPiNum(pHopMan)");
-        if Hop_DagSize(pHopObj) > 0 {
-            Abc_ConvertHopToGia( p, pHopObj ); }
-        pNode.iTemp = Abc_LitNotCond( pHopObj.iData, Hop_IsComplement( (Hop_Obj_t *)pNode.pData ) );
-    }
-    Vec_PtrFree( vNodes );
-    // create primary outputs
-    // inlining of macro Abc_NtkForEachCo
-    for  i = 0; (i < Abc_NtkCoNum(pNtk)) && (((pNode) = Abc_NtkCo(pNtk, i)), 1); i++  {
-        Gia_ManAppendCo( p, Abc_ObjFanin0(pNode).iTemp );
-    }
-}
-func Abc_NtkAigToGiaTwo(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, fByName int32) *Gia_Man_t {
-    var p *Gia_Man_t;
-    var pObj *Gia_Obj_t;
-    var pNode *Abc_Obj_t;
-    var vMap1, vMap2 *Vec_Int_t;
-    var i, Index int32;
-    assert(Abc_NtkIsAigLogic(pNtk1), "Abc_NtkIsAigLogic(pNtk1)");
-    assert(Abc_NtkIsAigLogic(pNtk2), "Abc_NtkIsAigLogic(pNtk2)");
-    // find common variables
-    if fByName != 0 {
-        var nCommon int32;
-        vMap1 = Vec_IntStartNatural( Abc_NtkCiNum(pNtk1) );
-        vMap2 = Vec_IntAlloc( Abc_NtkCiNum(pNtk2) );
-        // inlining of macro Abc_NtkForEachCi
-        for  i = 0; (i < Abc_NtkCiNum(pNtk1)) && (((pNode) = Abc_NtkCi(pNtk1, i)), 1); i++  {
-            pNode.iTemp = Index++;
-        }
-        assert(Index == Abc_NtkCiNum(pNtk1), "Index == Abc_NtkCiNum(pNtk1)");
-        // inlining of macro Abc_NtkForEachCi
-        for  i = 0; (i < Abc_NtkCiNum(pNtk2)) && (((pNode) = Abc_NtkCi(pNtk2, i)), 1); i++  {
-            var Num int32  = Nm_ManFindIdByName( pNtk1.pManName, Abc_ObjName(pNode), ABC_OBJ_PI );
-            if Num < 0 {
-                Num = Nm_ManFindIdByName( pNtk1.pManName, Abc_ObjName(pNode), ABC_OBJ_BO ); }
-            assert(Num < 0 || Abc_ObjIsCi(Abc_NtkObj(pNtk1, Num)), "Num < 0 || Abc_ObjIsCi(Abc_NtkObj(pNtk1, Num))");
-            if Num >= 0 {
-                Vec_IntPush( vMap2, Abc_NtkObj(pNtk1, Num).iTemp );
-nCommon++;
-            } else {
-                Vec_IntPush( vMap2, Index++ ); }
-        }
-        // report
-        fmt.Printf("Matched %d vars by name.", nCommon);
-        if nCommon != Abc_NtkCiNum(pNtk1) {
-            fmt.Printf(" Netlist1 has %d unmatched vars.", Abc_NtkCiNum(pNtk1) - nCommon); }
-        if nCommon != Abc_NtkCiNum(pNtk2) {
-            fmt.Printf(" Netlist2 has %d unmatched vars.", Abc_NtkCiNum(pNtk2) - nCommon); }
-        fmt.Printf("\n");
-    
-    } else {
-        vMap1 = Vec_IntStartNatural( Abc_NtkCiNum(pNtk1) );
-        vMap2 = Vec_IntStartNatural( Abc_NtkCiNum(pNtk2) );
-        Index = Abc_MaxInt( Vec_IntSize(vMap1), Vec_IntSize(vMap2) );
-        // report
-        fmt.Printf("Matched %d vars by order.", Abc_MinInt(Abc_NtkCiNum(pNtk1), Abc_NtkCiNum(pNtk2)));
-        if Abc_NtkCiNum(pNtk1) < Abc_NtkCiNum(pNtk2) {
-            fmt.Printf(" The last %d vars of Netlist2 are unmatched vars.", Abc_NtkCiNum(pNtk2) - Abc_NtkCiNum(pNtk1)); }
-        if Abc_NtkCiNum(pNtk1) > Abc_NtkCiNum(pNtk2) {
-            fmt.Printf(" The last %d vars of Netlist1 are unmatched vars.", Abc_NtkCiNum(pNtk1) - Abc_NtkCiNum(pNtk2)); }
-        fmt.Printf("\n");
-    }
-    // create new manager
-    p = Gia_ManStart( 10000 );
-    p.pName = Abc_UtilStrsav( Abc_NtkName(pNtk1) );
-    p.pSpec = Abc_UtilStrsav( Abc_NtkSpec(pNtk1) );
-    for  i = 0; i < Index; i++  {
-        Gia_ManAppendCi(p);
-    }
-    // add logic
-    Gia_ManHashAlloc( p );
-    Abc_NtkAigToGiaOne( p, pNtk1, vMap1 );
-    Abc_NtkAigToGiaOne( p, pNtk2, vMap2 );
-    Gia_ManHashStop( p );
-    Vec_IntFree( vMap1 );
-    Vec_IntFree( vMap2 );
-    // add extra POs to dangling nodes
-    Gia_ManCreateValueRefs( p );
-    // inlining of macro Gia_ManForEachAnd
-    for  i = 0; (i < p.nObjs) && ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else
-        if pObj.Value == 0 {
-            Gia_ManAppendCo( p, Abc_Var2Lit(i, 0) ); }
-    }
-    return p;
+// Abc_ConvertHopToGia_rec2 clears the temporary HOP marks set by conversion.
+func Abc_ConvertHopToGia_rec2(obj *Hop_Obj_t) {
+	if obj == nil || hop.Hop_IsComplement(obj) != 0 {
+		panic("Abc_ConvertHopToGia_rec2 requires a regular HOP object")
+	}
+	if hop.Hop_ObjIsNode(obj) == 0 || hop.Hop_ObjIsMarkA(obj) == 0 {
+		return
+	}
+	Abc_ConvertHopToGia_rec2(hop.Hop_ObjFanin0(obj))
+	Abc_ConvertHopToGia_rec2(hop.Hop_ObjFanin1(obj))
+	if hop.Hop_ObjIsMarkA(obj) == 0 {
+		panic("Abc_ConvertHopToGia_rec2 detected a HOP cycle")
+	}
+	hop.Hop_ObjClearMarkA(obj)
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Collect equivalence class information.]
-
-  Description [Each class is represented as follows: 
-      <num_entries><entry1><entry2>...<entryN> 
-  where <entry> is nodeId with 1-bit for complement and 1-bit for network.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkCollectAddOne(iNtk int32, iObj int32, iGiaLit int32, pGia *Gia_Man_t, vGia2Cla *Vec_Int_t, vNexts []*Vec_Int_t) {
-    var iRepr int32  = Gia_ObjReprSelf( pGia, Abc_Lit2Var(iGiaLit) );
-    var Compl int32  = Abc_LitIsCompl(iGiaLit) ^ Gia_ObjPhase(Gia_ManObj(pGia, iRepr)) ^ Gia_ObjPhase(Gia_ManObj(pGia, Abc_Lit2Var(iGiaLit)));
-    var Added int32  = Abc_Var2Lit( Abc_Var2Lit(iObj, Compl), iNtk );
-    var Entry int32  = Vec_IntEntry( vGia2Cla, iRepr );
-    Vec_IntWriteEntry( vNexts[iNtk], iObj, Entry );
-    Vec_IntWriteEntry( vGia2Cla, iRepr, Added );
-}
-func Abc_NtkCollectEquivClasses(pNtks []*Abc_Ntk_t, pGia *Gia_Man_t) *Vec_Int_t {
-    var vClass *Vec_Int_t  = Vec_IntAlloc( 100 );
-    var vClasses *Vec_Int_t  = Vec_IntAlloc( 1000 );
-    var vGia2Cla *Vec_Int_t  = Vec_IntStartFull( Gia_ManObjNum(pGia) ); // mapping objId into classId
-    var vNexts [2]*Vec_Int_t = [2]*Vec_Int_t{ Vec_IntStartFull(Abc_NtkObjNumMax(pNtks[0])), Vec_IntStartFull(Abc_NtkObjNumMax(pNtks[1])) };
-    var pObj *Abc_Obj_t;
-    var n, i, k, Entry, fCompl int32;
-    // inlining of macro Abc_NtkForEachCi
-    for  i = 0; (i < Abc_NtkCiNum(pNtks[0])) && (((pObj) = Abc_NtkCi(pNtks[0], i)), 1); i++  {
-        Abc_NtkCollectAddOne( 0, Abc_ObjId(pObj), pObj.iTemp, pGia, vGia2Cla, vNexts );
-    }
-    for  n = 0; n < 2; n++  {
-        // inlining of macro Abc_NtkForEachNode
-        for  i = 0; (i < Vec_PtrSize((pNtks[n]).vObjs)) && (((pObj) = Abc_NtkObj(pNtks[n], i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {
-            Abc_NtkCollectAddOne( n, Abc_ObjId(pObj), pObj.iTemp, pGia, vGia2Cla, vNexts ); }
-        }
-    }
-    // inlining of macro Vec_IntForEachEntry
-    for  i = 0; (i < Vec_IntSize(vGia2Cla)) && (((Entry) = Vec_IntEntry(vGia2Cla, i)), 1); i++  {
-        Vec_IntClear( vClass );
-        for  ; Entry >= 0; Entry = Vec_IntEntry(vNexts[Entry&1], Entry>>2)  {
-            Vec_IntPush( vClass, Entry );
-        }
-        if Vec_IntSize(vClass) < 2 {
-            continue; }
-        Vec_IntReverseOrder( vClass );
-        fCompl = 2 & Vec_IntEntry( vClass, 0 );
-        // inlining of macro Vec_IntForEachEntry
-        for  k = 0; (k < Vec_IntSize(vClass)) && (((Entry) = Vec_IntEntry(vClass, k)), 1); k++  {
-            Vec_IntWriteEntry( vClass, k, Entry ^ fCompl );
-        }        
-        Vec_IntPush( vClasses, Vec_IntSize(vClass) );
-        Vec_IntAppend( vClasses, vClass );
-    }
-    Vec_IntFree( vGia2Cla );
-    Vec_IntFree( vNexts[0] );
-    Vec_IntFree( vNexts[1] );
-    Vec_IntFree( vClass );
-    return vClasses;
+func Abc_ConvertHopToGia(p *Gia_Man_t, root *Hop_Obj_t) int32 {
+	if root == nil || hop.Hop_IsComplement(root) != 0 {
+		panic("Abc_ConvertHopToGia requires a regular HOP root")
+	}
+	if hop.Hop_ObjIsConst1(root) != 0 {
+		return 1
+	}
+	Abc_ConvertHopToGia_rec1(p, root)
+	Abc_ConvertHopToGia_rec2(root)
+	return hop.Hop_ObjIData(root)
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Write the output file.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkDumpEquivFile(pFileName string, vClasses *Vec_Int_t, pNtks []*Abc_Ntk_t) {
-    var i, c, k, Entry int32;
-    var pFile *os.File  = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);
-    if pFile == nil { fmt.Printf("Cannot open file %s for writing.\n", pFileName); return; }
-    fmt.Fprintf(pFile, "# Node equivalences computed by ABC for networks \"%s\" and \"%s\" on %s\n\n", Abc_NtkName(pNtks[0]), Abc_NtkName(pNtks[1]), Extra_TimeStamp());
-    for  i = c = 0; i < Vec_IntSize(vClasses); c++, i += 1 + Vec_IntEntry(vClasses, i)  {
-        // inlining of macro Vec_IntForEachEntryStartStop
-        for  k = i + 1; (k < i + 1 + Vec_IntEntry(vClasses, i)) && (((Entry) = Vec_IntEntry(vClasses, k)), 1); k++  {
-            var pNtk *Abc_Ntk_t  = pNtks[Entry & 1];
-            var pObjName string  = Abc_ObjName( Abc_NtkObj(pNtk, Entry>>2) );
-            fmt.Fprintf(pFile, "%d:%s:%s%s\n", c+1, Abc_NtkName(pNtk), (Entry&2) ? "NOT:":"", pObjName);
-        }
-        fmt.Fprintf(pFile, "\n");
-    }
-    _ = (pFile).Close();
+// Abc_NtkAigToGiaOne adds one AIG-logic network to p using vMap for CIs.
+func Abc_NtkAigToGiaOne(p *Gia_Man_t, network *Abc_Ntk_t, vMap *Vec_Int_t) {
+	if abc.Abc_NtkIsAigLogic(network) == 0 {
+		panic("Abc_NtkAigToGiaOne requires AIG logic")
+	}
+	hopMan, ok := network.FunctionManager.(*hop.Hop_Man_t)
+	if !ok || hopMan == nil {
+		panic("AIG logic network has no HOP function manager")
+	}
+	hop.Hop_ObjSetIData(hop.Hop_ManConst1(hopMan), 1)
+	abc.Abc_NtkCleanCopy(network)
+	for i := int32(0); i < abc.Abc_NtkCiNum(network); i++ {
+		abc.Abc_ObjSetTemp(abc.Abc_NtkCi(network, i), gia.Gia_ManCiLit(p, vec.Vec_IntEntry(vMap, int(i))))
+	}
+	for _, node := range abc.Abc_NtkDfs(network, 1) {
+		for k, fanin := range node.Fanins() {
+			if int32(k) >= hop.Hop_ManPiNum(hopMan) {
+				panic("AIG node has more fanins than its HOP function")
+			}
+			pi := hop.Hop_ManPi(hopMan, int32(k))
+			hop.Hop_ObjSetIData(pi, abc.Abc_ObjTemp(fanin.Object)^boolToLit(fanin.Complement))
+		}
+		root, ok := abc.Abc_ObjData(node).(*hop.Hop_Obj_t)
+		if !ok || root == nil {
+			panic("AIG node has no HOP function")
+		}
+		regular := hop.Hop_Regular(root)
+		if hop.Hop_DagSize(regular) > 0 {
+			Abc_ConvertHopToGia(p, regular)
+		}
+		lit := hop.Hop_ObjIData(regular)
+		if hop.Hop_IsComplement(root) != 0 {
+			lit ^= 1
+		}
+		abc.Abc_ObjSetTemp(node, lit)
+	}
+	for i := int32(0); i < abc.Abc_NtkCoNum(network); i++ {
+		co := abc.Abc_NtkCo(network, i)
+		fanins := co.Fanins()
+		if len(fanins) != 1 {
+			panic("AIG CO must have one fanin")
+		}
+		gia.Gia_ManAppendCo(p, abc.Abc_ObjTemp(fanins[0].Object)^boolToLit(fanins[0].Complement))
+	}
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Compute and dump equivalent name classes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkDumpEquiv(pNtks []*Abc_Ntk_t, pFileName string, nConfs int32, fByName int32, fVerbose int32) {
-    //abctime clk = Abc_Clock();
-    var pTemp *Gia_Man_t;
-    var vClasses *Vec_Int_t;
-    // derive shared AIG for the two networks
-    var pGia *Gia_Man_t  = Abc_NtkAigToGiaTwo( pNtks[0], pNtks[1], fByName );
-    if fVerbose != 0 {
-        fmt.Printf("Computing equivalences for networks \"%s\" and \"%s\" with conflict limit %d.\n", Abc_NtkName(pNtks[0]), Abc_NtkName(pNtks[1]), nConfs); }
-    // compute equivalences in this AIG
-    pTemp = Gia_ManComputeGiaEquivs( pGia, nConfs, fVerbose );
-    Gia_ManStop( pTemp );
-    //if ( fVerbose )
-    //    Abc_PrintTime( 1, "Equivalence computation time", Abc_Clock() - clk );
-    if fVerbose != 0 {
-        Gia_ManPrintStats( pGia, nil ); }
-    // collect equivalence class information
-    vClasses = Abc_NtkCollectEquivClasses( pNtks, pGia );
-    Gia_ManStop( pGia );
-    // dump information into the output file
-    Abc_NtkDumpEquivFile( pFileName, vClasses, pNtks );
-    Vec_IntFree( vClasses );
+func boolToLit(complement bool) int32 {
+	if complement {
+		return 1
+	}
+	return 0
 }
 
+// Abc_NtkAigToGiaTwo structurally hashes two AIG networks into shared GIA.
+func Abc_NtkAigToGiaTwo(first, second *Abc_Ntk_t, byName int32) *Gia_Man_t {
+	if abc.Abc_NtkIsAigLogic(first) == 0 || abc.Abc_NtkIsAigLogic(second) == 0 {
+		panic("Abc_NtkAigToGiaTwo requires AIG logic networks")
+	}
+	map1 := vec.Vec_IntStartNatural(int(abc.Abc_NtkCiNum(first)))
+	map2 := vec.Vec_IntAlloc(int(abc.Abc_NtkCiNum(second)))
+	index := int32(0)
+	if byName != 0 {
+		for i := int32(0); i < abc.Abc_NtkCiNum(first); i++ {
+			abc.Abc_ObjSetTemp(abc.Abc_NtkCi(first, i), index)
+			index++
+		}
+		common := int32(0)
+		for i := int32(0); i < abc.Abc_NtkCiNum(second); i++ {
+			ci := abc.Abc_NtkCi(second, i)
+			matched := abc.Abc_NtkFindCi(first, abc.Abc_ObjName(ci))
+			if matched != nil {
+				vec.Vec_IntPush(map2, abc.Abc_ObjTemp(matched))
+				common++
+			} else {
+				vec.Vec_IntPush(map2, index)
+				index++
+			}
+		}
+		fmt.Printf("Matched %d vars by name.", common)
+		if common != abc.Abc_NtkCiNum(first) {
+			fmt.Printf(" Netlist1 has %d unmatched vars.", abc.Abc_NtkCiNum(first)-common)
+		}
+		if common != abc.Abc_NtkCiNum(second) {
+			fmt.Printf(" Netlist2 has %d unmatched vars.", abc.Abc_NtkCiNum(second)-common)
+		}
+		fmt.Println()
+	} else {
+		map2 = vec.Vec_IntStartNatural(int(abc.Abc_NtkCiNum(second)))
+		index = int32(max(abc.Abc_NtkCiNum(first), abc.Abc_NtkCiNum(second)))
+		fmt.Printf("Matched %d vars by order.", min(abc.Abc_NtkCiNum(first), abc.Abc_NtkCiNum(second)))
+		if abc.Abc_NtkCiNum(first) < abc.Abc_NtkCiNum(second) {
+			fmt.Printf(" The last %d vars of Netlist2 are unmatched vars.", abc.Abc_NtkCiNum(second)-abc.Abc_NtkCiNum(first))
+		}
+		if abc.Abc_NtkCiNum(first) > abc.Abc_NtkCiNum(second) {
+			fmt.Printf(" The last %d vars of Netlist1 are unmatched vars.", abc.Abc_NtkCiNum(first)-abc.Abc_NtkCiNum(second))
+		}
+		fmt.Println()
+	}
+	p := gia.Gia_ManStart(10000)
+	gia.Gia_ManSetNameSpec(p, abc.Abc_NtkName(first), abc.Abc_NtkSpec(first))
+	for i := int32(0); i < index; i++ {
+		gia.Gia_ManAppendCi(p)
+	}
+	gia.Gia_ManHashAlloc(p)
+	Abc_NtkAigToGiaOne(p, first, map1)
+	Abc_NtkAigToGiaOne(p, second, map2)
+	gia.Gia_ManHashStop(p)
+	vec.Vec_IntFree(map1)
+	vec.Vec_IntFree(map2)
+	gia.Gia_ManCreateValueRefs(p)
+	for i := int32(0); i < gia.Gia_ManObjNum(p); i++ {
+		obj := gia.Gia_ManObj(p, i)
+		if gia.Gia_ObjIsAnd(obj) != 0 && gia.Gia_ObjValue(obj) == 0 {
+			gia.Gia_ManAppendCo(p, i<<1)
+		}
+	}
+	return p
+}
 
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
+func Abc_NtkCollectAddOne(networkID, objectID, giaLit int32, graph *Gia_Man_t, giaToClass *Vec_Int_t, nexts []*Vec_Int_t) {
+	objID := util.Abc_Lit2Var(giaLit)
+	repr := gia.Gia_ObjReprSelf(graph, objID)
+	compl := util.Abc_LitIsCompl(giaLit) ^ gia.Gia_ObjPhase(gia.Gia_ManObj(graph, repr)) ^ gia.Gia_ObjPhase(gia.Gia_ManObj(graph, objID))
+	added := util.Abc_Var2Lit(util.Abc_Var2Lit(objectID, compl), networkID)
+	entry := vec.Vec_IntEntry(giaToClass, int(repr))
+	vec.Vec_IntWriteEntry(nexts[networkID], int(objectID), entry)
+	vec.Vec_IntWriteEntry(giaToClass, int(repr), added)
+}
 
+// Abc_NtkCollectEquivClasses emits packed count-prefixed equivalence classes.
+func Abc_NtkCollectEquivClasses(networks []*Abc_Ntk_t, graph *Gia_Man_t) *Vec_Int_t {
+	if len(networks) != 2 {
+		panic("equivalence collection requires exactly two networks")
+	}
+	classes := vec.Vec_IntAlloc(1000)
+	class := vec.Vec_IntAlloc(100)
+	giaToClass := vec.Vec_IntStartFull(int(gia.Gia_ManObjNum(graph)))
+	nexts := []*Vec_Int_t{
+		vec.Vec_IntStartFull(int(abc.Abc_NtkObjNumMax(networks[0]))),
+		vec.Vec_IntStartFull(int(abc.Abc_NtkObjNumMax(networks[1]))),
+	}
+	for i := int32(0); i < abc.Abc_NtkCiNum(networks[0]); i++ {
+		o := abc.Abc_NtkCi(networks[0], i)
+		Abc_NtkCollectAddOne(0, abc.Abc_ObjId(o), abc.Abc_ObjTemp(o), graph, giaToClass, nexts)
+	}
+	for n := int32(0); n < 2; n++ {
+		for _, o := range networks[n].ObjectsOfKind(abc.ObjectNode) {
+			Abc_NtkCollectAddOne(n, abc.Abc_ObjId(o), abc.Abc_ObjTemp(o), graph, giaToClass, nexts)
+		}
+	}
+	for i := 0; i < vec.Vec_IntSize(giaToClass); i++ {
+		entry := vec.Vec_IntEntry(giaToClass, i)
+		vec.Vec_IntClear(class)
+		for entry >= 0 {
+			vec.Vec_IntPush(class, entry)
+			entry = vec.Vec_IntEntry(nexts[entry&1], int(entry>>2))
+		}
+		if vec.Vec_IntSize(class) < 2 {
+			continue
+		}
+		vec.Vec_IntReverseOrder(class)
+		compl := 2 & vec.Vec_IntEntry(class, 0)
+		for k := 0; k < vec.Vec_IntSize(class); k++ {
+			vec.Vec_IntWriteEntry(class, k, vec.Vec_IntEntry(class, k)^compl)
+		}
+		vec.Vec_IntPush(classes, int32(vec.Vec_IntSize(class)))
+		vec.Vec_IntAppend(classes, class)
+	}
+	vec.Vec_IntFree(giaToClass)
+	vec.Vec_IntFree(nexts[0])
+	vec.Vec_IntFree(nexts[1])
+	vec.Vec_IntFree(class)
+	return classes
+}
 
-//ABC_NAMESPACE_IMPL_END
+func Abc_NtkDumpEquivFile(fileName string, classes *Vec_Int_t, networks []*Abc_Ntk_t) {
+	file, err := os.OpenFile(fileName, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
+	if err != nil {
+		fmt.Printf("Cannot open file %s for writing.\n", fileName)
+		return
+	}
+	defer file.Close()
+	fmt.Fprintf(file, "# Node equivalences computed by ABC for networks \"%s\" and \"%s\" on %s\n\n", abc.Abc_NtkName(networks[0]), abc.Abc_NtkName(networks[1]), extra.Extra_TimeStamp())
+	for i, classID := 0, int32(0); i < vec.Vec_IntSize(classes); classID++ {
+		count := int(vec.Vec_IntEntry(classes, i))
+		for k := 0; k < count; k++ {
+			entry := vec.Vec_IntEntry(classes, i+1+k)
+			network := networks[entry&1]
+			object := abc.Abc_NtkObj(network, entry>>2)
+			prefix := ""
+			if entry&2 != 0 {
+				prefix = "NOT:"
+			}
+			fmt.Fprintf(file, "%d:%s:%s%s\n", classID+1, abc.Abc_NtkName(network), prefix, abc.Abc_ObjName(object))
+		}
+		fmt.Fprintln(file)
+		i += 1 + count
+	}
+}
 
+func Abc_NtkDumpEquiv(networks []*Abc_Ntk_t, fileName string, conflicts, byName, verbose int32) {
+	if len(networks) != 2 {
+		panic("equivalence dump requires exactly two networks")
+	}
+	graph := Abc_NtkAigToGiaTwo(networks[0], networks[1], byName)
+	if verbose != 0 {
+		fmt.Printf("Computing equivalences for networks \"%s\" and \"%s\" with conflict limit %d.\n", abc.Abc_NtkName(networks[0]), abc.Abc_NtkName(networks[1]), conflicts)
+	}
+	temporary := cec.Gia_ManComputeGiaEquivs(graph, conflicts, verbose)
+	gia.Gia_ManStop(temporary)
+	if verbose != 0 {
+		gia.Gia_ManPrintStats(graph, nil)
+	}
+	classes := Abc_NtkCollectEquivClasses(networks, graph)
+	gia.Gia_ManStop(graph)
+	Abc_NtkDumpEquivFile(fileName, classes, networks)
+	vec.Vec_IntFree(classes)
+}
