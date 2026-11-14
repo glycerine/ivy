@@ -6,6 +6,32 @@ import (
 	"github.com/glycerine/abcgo/aig/aig"
 )
 
+func TestAmapGraphCopyUsesAllocatedSourceChoices(t *testing.T) {
+	source := aig.NewGraph()
+	a, b, c := source.NewInput(), source.NewInput(), source.NewInput()
+	root := source.AND(source.AND(a, b), c)
+	alternative := source.AND(a, source.AND(b, c))
+	source.AddOutput(root.Not())
+	aig.Aig_ObjSetEquiv(source, root, alternative)
+	manager := Amap_ManStart(int32(source.NodeCount()))
+	defer Amap_ManStop(manager)
+	Amap_ManCreate(manager, source)
+	if manager.nChoicesGiven != 1 {
+		t.Fatalf("given choices = %d, want 1", manager.nChoicesGiven)
+	}
+	mappedRoot := manager.sourceCopies[root.NodeID()]
+	mappedAlternative := manager.sourceCopies[alternative.NodeID()]
+	if mappedRoot == nil || mappedAlternative == nil || Amap_ObjChoice(manager, mappedRoot) != mappedAlternative {
+		t.Fatal("source choice was not copied before its representative")
+	}
+	for assignment := 0; assignment < 8; assignment++ {
+		inputs := []bool{assignment&1 != 0, assignment&2 != 0, assignment&4 != 0}
+		if got := evalAmapOutput(manager, inputs); got != (assignment != 7) {
+			t.Fatalf("assignment %03b: output = %v", assignment, got)
+		}
+	}
+}
+
 func TestAmapGraphCopyPreservesCombinationalFunctions(t *testing.T) {
 	source := aig.NewGraph()
 	a, b, c := source.NewInput(), source.NewInput(), source.NewInput()
