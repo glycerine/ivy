@@ -375,3 +375,10 @@ and model tests moved to the higher layer and pass. Correctness repairs for
 isolated/constant outputs, sparse labels and conflict accounting remain explicit;
 source edge-case/limit demonstrations and final inventory remain open. The new
 package's full race suite passes in 8.768s; AIG/ABCI race checks are pending.
+Full AIG/aigpartsat/ABCI race checks completed in 72.463s/8.768s/28.722s.
+Native source edge-case tests prove the original zero-budget premature-SAT
+and sparse-label output-grouping defects; Go keeps the soundness/mapping
+repairs. The final expanded native/clause race checks pass in 16.233s. All
+133 current packages and their tests compile in the repository-wide build
+check; test bodies in unrelated packages were not rerun. AIG remains open
+for final file/function reconciliation.

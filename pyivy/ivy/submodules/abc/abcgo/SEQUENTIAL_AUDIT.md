@@ -2286,3 +2286,36 @@ AIG/ABCI race suites are still running and are not claimed finished here.
 The original 131-package audit remains active; this driver migration adds
 proof/aigpartsat to the package inventory, just as proof/aiginterp was added.
 Only the root package is marked complete.
+
+### Native partition-driver edge-case proofs and integration
+
+The full AIG/aigpartsat/ABCI race suites completed successfully in
+72.463s/8.768s/28.722s (`/tmp/abcgo-partsat-migration-race.log`). After adding
+source driver edge-case observations, the complete new driver suite passed
+race checks in 16.138s (`/tmp/abcgo-partsat-source-final-race.log`). The final
+expanded source/clause checks pass race validation in 16.233s
+(`/tmp/abcgo-partsat-source-edges-final.log`).
+
+The fixture now executes the actual original partitioned driver with total
+budget zero on two incompatible one-gate outputs, (a AND b) and (!a AND b).
+C stops after the first partition, returns SAT and supplies an invalid witness.
+The Go source entry point treats zero as unlimited, completes the formula and
+returns UNSAT. This demonstrates the need for the preserved soundness repair;
+matching the erroneous original return value would be a correctness regression.
+
+A second observation executes original PartSplit with a sole gate labelled 7:
+C returns one graph but eight output groups, leaving the first group's output
+list empty. Go retains one graph and one correctly populated output group.
+The source fixture's unreachable DAR rewrite callback is an abort trap because
+these driver cases select fSynthesize=0; actual cuts, mapped CNF, solver,
+partitioning and model extraction all run from source. The source tests do not
+claim to execute native DAR synthesis in that fixture. Go's DAR entry path is
+covered by the previously red synthesis test.
+
+Repository-wide `go test -p 1 ./... -run '^$' -count=1` passes for all 133
+current packages, including test compilation, after the API migration
+(`/tmp/abcgo-partsat-build-all.log`). This is a build check, not a claim that
+all package test bodies ran. No experiments directories are in this module.
+The original sequential goal remains active with only root marked complete;
+AIG still needs final file/function inventory reconciliation and any remaining
+source control-flow gaps recorded by that check.
