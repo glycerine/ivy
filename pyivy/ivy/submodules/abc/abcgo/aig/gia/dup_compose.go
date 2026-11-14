@@ -157,10 +157,11 @@ func Gia_ManDupOntop(first, second *Gia_Man_t) *Gia_Man_t {
 	}
 	out := giaQuantStart(first)
 	giaComposeNodes(out, first, true)
+	outputs := giaQuantOutputs(out, first)
 	Gia_ManFillValue(second)
 	second.pObjs[0].Value = 0
-	for i := int32(0); i < Gia_ManPiNum(second); i++ {
-		Gia_ManPi(second, i).Value = uint32(giaMappedEdge(first, Gia_ManPo(first, i)))
+	for i, lit := range outputs {
+		Gia_ManPi(second, int32(i)).Value = uint32(lit)
 	}
 	giaComposeNodes(out, second, true)
 	for i := int32(0); i < Gia_ManCoNum(second); i++ {

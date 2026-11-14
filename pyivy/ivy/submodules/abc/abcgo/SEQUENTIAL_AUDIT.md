@@ -3465,3 +3465,26 @@ interface cases pass a separate focused race run in 1.020s. GIA vet passes
 (`/tmp/abcgo-block-review-vet.log`). Production code was unchanged after the
 preceding full GIA/base-acb race run. Remaining GIA families still require
 review; original package completion remains 2/131 and the goal stays active.
+
+Cascade-composition review: a minimal red test passes the same combinational
+graph as both stages and exposes an unmapped-fanin panic
+(`/tmp/abcgo-compose-alias-red.log`). Clearing stage two's scratch values
+also erased stage one's connecting output mappings. Snapshot those literals
+through the existing output-copy helper before resetting stage two. Retain
+the source hashing, interface checks, identity and cleanup algorithm.
+
+Independent truth tables cover four self-cascade polarity variants and 64
+pairs of distinct typed XOR/MUX/buffer graphs, including direct/complemented
+edges, interleaved outputs and dangling logic. The latter compare both with
+evaluation of the stages in sequence and with compiled original C on equivalent
+ordinary-AND graphs: all 1,024 assignment rows match. Tests require first-stage
+identity, unchanged interface counts and no dangling output graph. Independent
+Go coverage runs even when native-oracle prerequisites are absent.
+
+The initial focused tests pass in 1.856s
+(`/tmp/abcgo-cascade-focused.log`). After separating the independent/native
+tests and strengthening cleanup checks, the full uncached GIA race suite
+passes in 49.906s (`/tmp/abcgo-cascade-review-race.log`); GIA vet passes
+(`/tmp/abcgo-cascade-review-vet.log`). Append, shared/sequential composition
+and property/constraint families still need expanded review coverage.
+Original completion remains 2/131; the sequential audit remains active.
