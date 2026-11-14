@@ -3047,3 +3047,22 @@ production transfer logic is unchanged. Focused native coverage passes in
 1.789s (`/tmp/abcgo-mapping-transfer-source.log`). Full uncached GIA race tests
 pass in 21.721s (`/tmp/abcgo-mapping-transfer-race.log`). The package remains
 under audit; original completion is still 2/131.
+
+Representative metadata compactness: Gia_Rpr_t used a uint32 for each of
+four one-bit flags, making every representative record 20 bytes. Store those
+flags as uint8 while retaining the existing named fields and uint32 object
+ID/sentinel. The record now measures 8 bytes on this host, a 60% reduction
+without bit-packing accessors or an algorithm change. AIGER encoding/decoding
+uses explicit conversions at its uint32 boundary; its serialized format is
+unchanged. The existing native C extension decoder and golden/round-trip tests
+pass. New coverage exercises all 16 flag combinations, independent clearing,
+representative sentinel preservation, value copying, and adjacent records;
+the same test measured 20 bytes before and 8 bytes after the change.
+
+Focused tests pass (`/tmp/abcgo-gia-compact-reprs-focused.log`), as do full
+uncached GIA race tests (21.984s,
+`/tmp/abcgo-gia-compact-reprs-race.log`) and GIA vet
+(`/tmp/abcgo-gia-compact-reprs-vet.log`). All 133 module packages and their
+tests compile (`/tmp/abcgo-gia-compact-reprs-module-build.log`); this compile
+gate does not run unrelated test bodies. Further GIA algorithm families and
+representative/name remapping still need audit. Completion remains 2/131.

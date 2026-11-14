@@ -93,7 +93,7 @@ func Gia_AigerReadEquivClasses(pos *[]byte, nSize int32) ([]Gia_Rpr_t, error) {
 			return nil, fmt.Errorf("gia: invalid equivalence member")
 		}
 		result[node].iRepr = uint32(repr)
-		result[node].fProved = (item >> 1) & 1
+		result[node].fProved = uint8((item >> 1) & 1)
 	}
 	*pos = (*pos)[size:]
 	return result, nil
@@ -118,7 +118,7 @@ func Gia_WriteEquivClassesInt(p *Gia_Man_t, size *int32) ([]byte, error) {
 	members := groups[0]
 	prev := 0
 	for _, node := range members {
-		item := uint32(node-prev)<<2 | (p.PReprs[node].fProved&1)<<1
+		item := uint32(node-prev)<<2 | uint32(p.PReprs[node].fProved&1)<<1
 		out = aigerAppendUvar(out, item)
 		prev = node
 	}
@@ -135,7 +135,7 @@ func Gia_WriteEquivClassesInt(p *Gia_Man_t, size *int32) ([]byte, error) {
 		previousRoot = repr
 		prev = repr
 		for _, node := range groups[repr] {
-			out = aigerAppendUvar(out, uint32(node-prev)<<2|(p.PReprs[node].fProved&1)<<1)
+			out = aigerAppendUvar(out, uint32(node-prev)<<2|uint32(p.PReprs[node].fProved&1)<<1)
 			prev = node
 		}
 	}

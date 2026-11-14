@@ -1,11 +1,11 @@
 package gia
 
 type Gia_Rpr_t struct {
-	iRepr   uint32 /* C bitfield: 28 bits; review packing and truncation */ // representative node
-	fProved uint32 /* C bitfield: 1 bits; review packing and truncation */  // marks the proved equivalence
-	fFailed uint32 /* C bitfield: 1 bits; review packing and truncation */  // marks the failed equivalence
-	fColorA uint32 /* C bitfield: 1 bits; review packing and truncation */  // marks cone of A
-	fColorB uint32 /* C bitfield: 1 bits; review packing and truncation */  // marks cone of B
+	iRepr   uint32 // representative node, including the GIA_VOID sentinel
+	fProved uint8  // source one-bit flag: proved equivalence
+	fFailed uint8  // source one-bit flag: failed equivalence
+	fColorA uint8  // source one-bit flag: cone A
+	fColorB uint8  // source one-bit flag: cone B
 }
 type Gia_Plc_t struct {
 	fFixed uint32 /* C bitfield: 1 bits; review packing and truncation */  // the placement of this object is fixed

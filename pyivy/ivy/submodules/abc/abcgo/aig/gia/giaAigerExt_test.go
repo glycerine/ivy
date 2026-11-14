@@ -208,7 +208,7 @@ printf("used=%d",(int)(p-data));return 0;}
 		p.PReprs[i].iRepr = GIA_VOID
 	}
 	for i := 2; i < 20; i++ {
-		p.PReprs[i] = Gia_Rpr_t{iRepr: uint32(i % 2), fProved: uint32(i % 3 & 1)}
+		p.PReprs[i] = Gia_Rpr_t{iRepr: uint32(i % 2), fProved: uint8(i % 3 & 1)}
 	}
 	equivalences, err := Gia_WriteEquivClassesInt(p, nil)
 	if err != nil {

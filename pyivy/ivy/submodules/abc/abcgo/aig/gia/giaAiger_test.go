@@ -260,7 +260,7 @@ func TestAigerPropertyOverflow(t *testing.T) {
 	}
 }
 func TestAigerNormalizationRemapsObjectMetadata(t *testing.T) {
-	for _, headProved := range []uint32{0, 1} {
+	for _, headProved := range []uint8{0, 1} {
 		p := Gia_ManStart(16)
 		p.fGiaSimple = 1
 		a, b := Gia_ManAppendCi(p), Gia_ManAppendCi(p)
