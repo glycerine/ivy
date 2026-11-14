@@ -1416,3 +1416,68 @@ tests have their own focused pass; the final full AIG race suite passes in
 This closes the current edge/frontier retiming family review. The AIG package
 audit is still open, including its property-splitting implementation and the
 remaining unreviewed families; completed package count remains 1/131.
+
+### Property splitting: restore the source BDD pipeline
+
+The existing aigSplit.go explicitly replaced CUDD with recursive Shannon
+cofactoring into an AIG decision graph. Removed that substitute and restored
+the source calls through bdd/cudd/core: Cudd_Init, symmetric automatic-reordering
+configuration, recursive cached BDD construction, explicit symmetric sifting,
+MSB-first cubes, Cudd_Cofactor, conjunction with each cube, and memoized
+BDD-to-MUX reconstruction. Complemented else edges and output roots retain
+their phase. Zero cofactors are omitted in source assignment order; remaining
+COs, including LIs, are copied afterward, followed by cleanup and register-count
+finalization. The existing explicit XOR/buffer support remains a Go extension.
+The unrelated interpolation cone copier now has its own private graph-copy
+helper instead of calling the misnamed former BDD helper.
+
+Two regressions failed before the repair: constructing inputs without a CI
+indexing pass made both selected variables map to the first BDD variable and
+panic, and subset selection used math/rand rather than Aig_ManRandom. Variable
+mapping now follows original CI order, independently of CioID scratch state.
+Subset selection uses the source stream and Vec_PtrRemove semantics (last equal
+entry, survivor order retained), without mutating the caller's slice. Typed
+local BDD scratch keeps BDD handles separate from graph-copy maps and unrelated
+object payloads. The returned BDD root and every cofactor have explicit owned
+references, released before quitting the manager in the high-level driver.
+
+The exhaustive ownership test then exposed a dependency bug, isolated by a
+separate new red test in bdd/cudd/core: after symmetric reordering of truth
+table 5, releasing the sole external root still left one root referenced.
+reorderCommit rewired its canonical graph but retained old DAG reference
+counts, including on reused internal handles. It now rebuilds counts from
+external ownership plus new incoming edges, retaining unchanged ZDD child
+ownership and saturated counts, and resets child-release bookkeeping. The
+255-function ownership regression passes, as do full core/public CUDD race
+suites and a mixed BDD/ZDD release check. This necessary dependency repair is
+not a completed audit of the CUDD package.
+
+The new fixture compiles original aigSplit.c, the actual CUDD implementations
+and their AIG, extra, ST, MTR, timing and memory dependencies. Only standalone
+console/bridge hooks are supplied. All 256 three-input functions and eight
+variable subsets (reverse index order) are tested in combinational and
+sequential form: 4,096 pipeline cases. Independent assignment checks verify
+13,824 cofactor functions across 110,592 evaluations, nonzero output order,
+MUX reconstruction, unchanged latch-input functions and zero leaked BDD roots
+after releasing each function's results. C performs its own zero-reference
+check too. A further 508 complete Aig_ManSplit calls compare random selection
+and ordered property/state outputs with C, and independently check that the
+disjunction of split outputs equals the original property. This validates
+small-function semantics and ownership, not large-instance scaling or every
+automatic-reordering trigger in the dependency.
+
+The focused native comparison passes after both repairs. Full CUDD core/public
+race suites pass (26.201s/1.045s), recorded in
+`/tmp/abcgo-cudd-reorder-ownership.log`. Full AIG, ABCI and proof/aiginterp race
+checks pass (20.108s/28.373s/3.698s) in `/tmp/abcgo-split-bdd-review.log`;
+the final AIG race run with all expanded cases passes in 24.167s, recorded in
+`/tmp/abcgo-split-bdd-final.log`. The fresh uncached module check exits zero:
+129 packages tested, three without tests, no failures, in
+`/tmp/abcgo-split-bdd-integration.log`.
+
+This closes the current aigSplit.go review. Other AIG families remain in
+progress; the audit still has only the root package completed (1/131). Packing,
+justification, visualization and printing remain to reconcile with the source
+inventory. Initial packing inspection found another math/rand-based initializer
+where aigPack.c consumes two Aig_ManRandom words per CI; test that discrepancy
+before changing it in the next family review.
