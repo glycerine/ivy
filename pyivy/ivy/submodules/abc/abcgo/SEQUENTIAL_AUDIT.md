@@ -1481,3 +1481,52 @@ justification, visualization and printing remain to reconcile with the source
 inventory. Initial packing inspection found another math/rand-based initializer
 where aigPack.c consumes two Aig_ManRandom words per CI; test that discrepancy
 before changing it in the next family review.
+
+### Packing source review
+
+Reviewed aigPack.go against every routine in aigPack.c: allocation, word
+helpers, random initialization, simulation, care counting, histogram/candidate
+selection, direct/automatic insertion, diagnostics and lifecycle wrappers.
+The source uses two Aig_ManRandom draws per CI, high word first, then shifts
+left to reserve lane zero. A new regression failed for both uncared and fully
+cared words, including the subsequent random-stream position. Removed
+math/rand and restored exact source initialization. SetRandom overwrites each
+complete input word even when its care mask is populated; the mask itself is
+unchanged. The separately named Go SetInputWord helper still preserves packed
+cares. Updated the old random-reseeding test that asserted the invented
+care-preserving behavior to exercise that explicit manual helper instead.
+
+A compiled fixture includes original aigPack.c and its real AIG random
+implementation. It compares all input/care words, every object's signature,
+care counts, insertion results, total/skipped counters and ordered candidate
+IDs after 1,166 operations (1,167 snapshots including initialization).
+Operations include 128 complete assignments exhausting the 63 automatic lanes,
+36 direct boundary/empty/duplicate-pattern cases, 1,000 seeded partial cubes
+and two random resets after packing. Lanes 0, 1, 31, 32, 62 and 63 are exercised
+explicitly. Seven gates cover every complemented AND-pin combination and
+reconvergence; outputs include both constants and a
+complemented gate. Final histogram and free-tally text match C as well.
+
+The comparison also failed before correcting the source-named PrintCare
+wrapper: its C printing is commented out, while Go emitted one line per CI.
+Restored that disabled diagnostic; explicit WriteCare remains available as a
+Go writer-based extension. Existing empty-graph guards retain finite zero
+statistics rather than C's zero-denominator NaNs. They are outside the native
+comparison, which has nonzero input/gate counts.
+
+Retained the existing atomic rejection of contradictory duplicate literals:
+the source checks its original lane before a separate write loop and can
+accept an unsatisfiable cube. Native comparisons use consistent cubes;
+independent tests check the Go safeguard and preservation of words/care masks
+on rejection. Existing all-64-lane evaluation tests cover explicit XOR,
+buffers and rewritten graph IDs, beyond the source's AND/topological-order
+simulation. Snapshot ownership and invalid interface/literal/lane guards also
+remain covered. Compactness review retained direct slice storage and native
+bit operations; unused C cursor/verbosity/repeat fields are already absent.
+
+The focused packing tests and compiled comparison pass. Full AIG and ABCI
+race suites pass in 24.361s and 29.114s, recorded in
+`/tmp/abcgo-packing-source-review.log`.
+This closes the current packing family review, not the AIG package. The
+justification/experimental driver and visualization/printing families remain
+next; the complete-package count is still 1/131.

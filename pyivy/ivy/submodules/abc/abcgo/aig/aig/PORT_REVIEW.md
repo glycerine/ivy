@@ -76,8 +76,12 @@ output nodes. Separate bug review corrected false witnesses for constant targets
 handled traversal-ID wrap, and validated partial support assignments. Window cut
 expansion uses typed frontier/visited slices and one shared node-arity helper;
 marks are cleared by defer. Tests cover reconvergence, truth of the resulting
-cut, high-fanout limits and frontier size bounds. The Just experimental driver
-still awaits the Pack implementation before its integration gate can pass.
+cut, high-fanout limits and frontier size bounds. Packing has since been
+implemented and source-audited: initialization uses the original two-word AIG
+random stream, and 1,166 compiled-C operations match words, cares, signatures,
+insertion results, candidates, counters and final statistics. The source-named
+care diagnostic is disabled as in C; explicit WriteCare remains available.
+The Just experimental driver still needs its sequential source review.
 
 ## Order, timing and visualization reviews
 
