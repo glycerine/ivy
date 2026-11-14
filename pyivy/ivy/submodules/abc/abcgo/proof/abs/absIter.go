@@ -22,7 +22,7 @@ func Gia_ObjRemFromGla(p *Gia_Man_t, obj *Gia_Obj_t) {
 
 func Gia_IterTryImprove(p *Gia_Man_t, timeout, initialFrame int32) int32 {
 	abstraction := Gia_ManDupAbsGates(p, gia.Gia_ManGateClasses(p))
-	graph := gia.Gia_ManToAigSimple(abstraction)
+	graph := absGiaToAigSimple(abstraction)
 	frames := int32(10000000)
 	if initialFrame != 0 {
 		frames = initialFrame + 1
@@ -31,6 +31,16 @@ func Gia_IterTryImprove(p *Gia_Man_t, timeout, initialFrame int32) int32 {
 	status := bmc.Saig_BmcPerform(graph, 0, frames, 2000, timeout, 0, 0, 0, 0, &frame, 1, 0)
 	if status != 0 && status != -1 {
 		panic("abs: unexpected bounded-check status")
+	}
+	// Bmc2's C entry point reports the requested final depth after exhausting a
+	// bounded run. The Go wrapper uses scalable BMC, which may stop as soon as
+	// its finite-state completeness bound is reached. With no timeout, that is
+	// still a completed bounded proof; translate its depth back to Bmc2's result.
+	if status != 0 && timeout == 0 && initialFrame > 0 {
+		regs := aig.Aig_ManRegNum(graph)
+		if regs >= 0 && regs < 30 && int64(1)<<uint(regs) <= int64(frames) && frame < initialFrame {
+			frame = initialFrame
+		}
 	}
 	aig.Aig_ManStop(graph)
 	gia.Gia_ManStop(abstraction)

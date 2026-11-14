@@ -19,7 +19,7 @@ func glaOldCnfForGia(g *gia.Gia_Man_t) (*cnf.Cnf_Dat_t, error) {
 			return nil, fmt.Errorf("old GLA: lower XOR/MUX object %d to ANDs first", id)
 		}
 	}
-	aigGraph := gia.Gia_ManToAigSimple(g)
+	aigGraph := absGiaToAigSimple(g)
 	data, err := cnf.Cnf_DeriveOtherMapped(aigGraph, 1)
 	if err != nil {
 		return nil, err

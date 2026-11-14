@@ -104,7 +104,7 @@ func Abs_RpmPerformOld(p *gia.Gia_Man_t, verbose int32) *gia.Gia_Man_t {
 		fmt.Println("After PI-2-FF transformation:")
 		gia.Gia_ManPrintStats(converted, nil)
 	}
-	graph := gia.Gia_ManToAigSimple(converted)
+	graph := absGiaToAigSimple(converted)
 	gia.Gia_ManStop(converted)
 	retimed := saig.Saig_ManRetimeMinArea(graph, 10, 0, 0, 1, 0)
 	aig.Aig_ManStop(graph)

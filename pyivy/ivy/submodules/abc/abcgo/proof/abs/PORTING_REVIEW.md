@@ -50,9 +50,13 @@ The lower-level `Gla_ManStart` and `Gla_ManStart2` interfaces still require an
 AND-only graph; replacing only their SAT clauses would leave refinement unsound.
 Old GLA's source `Gia_ManToAigSimple` conversion asserts object-ID identity;
 duplicate or simplified AND nodes can violate that assertion. The Go path
-preserves the assertion rather than substituting local cuts. The optional
-native-gate lowering can itself create a graph that violates this boundary;
-lowering therefore does not guarantee that old GLA accepts every native graph.
+preserves the assertion at ABS call sites rather than substituting local cuts.
+The Linux Makefile defaults to `-g -O` without `-DNDEBUG`, so this assertion is
+active in the tested C build. The optional native-gate lowering can itself
+create a graph that violates this boundary; lowering therefore does not
+guarantee that old GLA accepts every native graph. The shared Go GIA exporter
+also supports release-style mapped-edge behavior for callers whose C builds
+disable assertions.
 Flop-to-gate class conversion visits the control as well as both data inputs
 of native MUX nodes; a regression covers the previously omitted control cone.
 
@@ -112,6 +116,15 @@ the property. The Go result therefore retains this source false-negative.
 Modern GLA also asserts that a nonzero target SAT literal is greater than one.
 A register whose next state is constant one reaches literal 1 at a later frame
 and aborts in C; the Go port retains that assertion as a panic.
+
+`Gia_IterTryImprove` uses C's bounded BMC2 entry point, which reports the
+requested terminal depth after exhausting its interval. Its Go implementation
+uses scalable BMC, which stops once the finite-state completeness bound is
+reached. For a no-timeout run where that bound lies within the requested
+interval, ABS translates the completion back to C's terminal depth; a
+regression covers the irrelevant-latch case. Timed runs retain the scalable
+checker result because early completion and elapsed-time behavior are
+observable there.
 
 The GLA boundary fixtures are `test_vectors/gla_true_root_oracle.c` and
 `test_vectors/gla_const_later_oracle.c`. The optional environment variables

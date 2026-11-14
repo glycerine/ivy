@@ -22,7 +22,7 @@ func Gia_GlaProveAbsracted(graph *Gia_Man_t, simplify, verbose int32) {
 	}
 	abstraction := Gia_ManDupAbsGates(graph, gia.Gia_ManGateClasses(graph))
 	gia.Gia_ManCleanValue(graph)
-	aig := gia.Gia_ManToAigSimple(abstraction)
+	aig := absGiaToAigSimple(abstraction)
 	if simplify != 0 {
 		var pars ssw.Ssw_Pars_t
 		ssw.Ssw_ManSetDefaultParams(&pars)
