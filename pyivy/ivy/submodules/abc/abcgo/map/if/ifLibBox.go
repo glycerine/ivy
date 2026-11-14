@@ -52,6 +52,12 @@ func (p *If_Box_t) Delay(output, input int32) int32 {
 	}
 	return p.pDelays[output*p.nPis+input]
 }
+func (p *If_Box_t) SetDelay(output, input, delay int32) {
+	if output < 0 || output >= p.nPos || input < 0 || input >= p.nPis {
+		panic("box pin outside delay matrix")
+	}
+	p.pDelays[output*p.nPis+input] = delay
+}
 func If_LibBoxStart() *If_LibBox_t { return &If_LibBox_t{vBoxes: vec.Vec_PtrAlloc(100)} }
 func (p *If_LibBox_t_) Boxes() []*If_Box_t {
 	if p == nil || p.vBoxes == nil {

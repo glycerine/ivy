@@ -34,6 +34,22 @@ func (p *If_Par_t_) Bidec() bool { return p.fBidec != 0 }
 func (p *If_Par_t_) SetArrivalTimes(arrivals []float32) {
 	p.pTimesArr = append([]float32(nil), arrivals...)
 }
+
+// SetCutCostFunction installs the source-compatible per-cut cost callback.
+func (p *If_Par_t_) SetCutCostFunction(cost func(*If_Man_t, *If_Cut_t) int32) {
+	p.pFuncCost = cost
+}
+
+// SetRenodeConfig applies the complete option block assembled by ABC's
+// Abc_NtkRenode before invoking the mapper.
+func (p *If_Par_t_) SetRenodeConfig(lutSize, cutsMax, flowIters, areaIters, area, bdds, sops, cnfs, mv, verbose int32, reo any, cost func(*If_Man_t, *If_Cut_t) int32) {
+	*p = If_Par_t_{
+		nLutSize: lutSize, nCutsMax: cutsMax, nFlowIters: flowIters, nAreaIters: areaIters,
+		DelayTarget: -1, Epsilon: 0.005, fPreprocess: 1, fArea: area, fVerbose: verbose,
+		fTruth: 1, fUsePerm: 1, fUseBdds: bdds, fUseSops: sops, fUseCnfs: cnfs, fUseMv: mv,
+		pFuncCost: cost, pReoMan: reo,
+	}
+}
 func (p *If_Par_t_) ArrivalTimes() []float32 { return append([]float32(nil), p.pTimesArr...) }
 func (p *If_Par_t_) SetRequiredTimes(required []float32) {
 	p.pTimesReq = append([]float32(nil), required...)
