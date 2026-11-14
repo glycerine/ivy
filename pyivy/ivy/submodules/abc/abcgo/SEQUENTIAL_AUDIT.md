@@ -2598,3 +2598,41 @@ special gates: the source's two-slot edge encoding cannot represent a MUX
 control edge, and AddFanout chooses the first matching slot for repeated
 fanins. Establish supported caller domains before changing that structure.
 Original package audit completion remains 2/131.
+
+Dynamic fanout review found and repaired a repeated-pin ring corruption.
+The red regression first panicked while FanoutStart was adding an ordinary
+consumer after a simple-mode x & !x: both arcs of that AND had selected pin 0,
+overwriting its links. Incremental AppendAnd had the same issue, and also
+added two copies of the single logical arc for same-phase repeated pins.
+Insertion now selects an unlinked matching pin, removal a linked matching
+pin; both use the existing five-word/two-pin circular-list representation.
+AppendAnd follows FanoutStart's existing single-arc buffer convention.
+No per-node metadata or replacement fanout algorithm was added. The shared
+pin selection also rejects duplicate insertion/absent removal rather than
+overwriting existing links. Insertion now reuses the existing record accessors
+instead of repeating their index formulas in local closures.
+
+The regression covers four pin-phase combinations with fanouts built before
+or after the nodes, partial/complete repeated-edge removal, reinsertion, both
+link directions and removal to empty. A separate test crosses the 4096-object
+initial allocation and removes interior/first/last edges after growth.
+A native fixture calls the original giaFanout.c insertion/removal operations
+and compares all five record words for 42 snapshots across all six removal
+orders of three distinct consumers, followed by reinsertion. It constructs
+the initial edges explicitly: source FanoutStart's old missing-child pointer
+checks do not match modern GIA terminal encoding. Go's kind-aware initializer
+is tested separately, not claimed to be the original C initializer running.
+The native fixture needs no substitute graph/list functions or prebuilt ABC
+objects. Focused repeated-pin/native checks pass in 0.132s; the first full
+uncached GIA race check passes in 15.955s and vet passes. After accessor
+cleanup the full uncached GIA race suite passes in 15.926s and vet passes
+again (`/tmp/abcgo-gia-fanout-final-race.log` and
+`/tmp/abcgo-gia-fanout-final-vet.log`). The original failing regression is
+recorded in `/tmp/abcgo-gia-fanout-repeated-red.log`.
+
+No production Go caller explicitly starts or edits dynamic fanout rings;
+the package's append hooks operate if a caller has enabled them. Real MUX
+control dependencies remain outside the two-pin dynamic representation;
+static fanouts/reference counting already include those controls. That source
+limitation is not claimed resolved by this repeated-pin repair. GIA remains
+in progress; completion is still 2/131 original packages.

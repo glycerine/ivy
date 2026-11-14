@@ -90,7 +90,9 @@ func Gia_ManAppendAnd(p *Gia_Man_t, a, b int32) int32 {
 	obj.fCompl1 = uint32(b & 1)
 	if p.pFanData != nil {
 		Gia_ObjAddFanout(p, Gia_ObjFanin0(obj), obj)
-		Gia_ObjAddFanout(p, Gia_ObjFanin1(obj), obj)
+		if Gia_ObjIsBuf(obj) == 0 {
+			Gia_ObjAddFanout(p, Gia_ObjFanin1(obj), obj)
+		}
 	}
 	if p.fSweeper != 0 || p.fBuiltInSim != 0 {
 		f0, f1 := Gia_ObjFanin0(obj), Gia_ObjFanin1(obj)

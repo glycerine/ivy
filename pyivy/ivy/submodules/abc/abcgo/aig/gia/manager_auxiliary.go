@@ -11,43 +11,25 @@ func Gia_ObjAddFanout(p *Gia_Man_t, obj, fanout *Gia_Obj_t) {
 	if target <= 0 {
 		panic("gia: invalid fanout target")
 	}
-	edge := int32(0)
-	if Gia_ObjFanin0(fanout) == obj {
-		edge = target << 1
-	} else if Gia_ObjIsAnd(fanout) != 0 && Gia_ObjFanin1(fanout) == obj {
-		edge = target<<1 | 1
-	} else {
-		panic("gia: object is not a fanin")
-	}
-	max := source
-	if target > max {
-		max = target
-	}
-	if max >= p.nFansAlloc {
-		count := max * 2
-		if count < 16 {
-			count = 16
-		}
+	if lastID := max(source, target); lastID >= p.nFansAlloc {
+		count := max(16, lastID*2)
 		p.pFanData = append(p.pFanData, make([]int32, 5*int(count)-len(p.pFanData))...)
 		p.nFansAlloc = count
 	}
-	prev := func(e int32) int { return int(5*(e>>1) + 1 + (e & 1)) }
-	next := func(e int32) int { return int(5*(e>>1) + 3 + (e & 1)) }
-	first := p.pFanData[5*source]
-	if first == 0 {
-		p.pFanData[5*source] = edge
-		p.pFanData[prev(edge)] = edge
-		p.pFanData[next(edge)] = edge
+	edge := giaFanoutEdge(p, obj, fanout, false)
+	prev, next := Gia_FanoutPrev(p.pFanData, edge), Gia_FanoutNext(p.pFanData, edge)
+	first := Gia_FanoutObj(p.pFanData, source)
+	if *first == 0 {
+		*first, *prev, *next = edge, edge, edge
 		return
 	}
-	last := p.pFanData[prev(first)]
-	if p.pFanData[next(last)] != first {
+	last := *Gia_FanoutPrev(p.pFanData, *first)
+	if *Gia_FanoutNext(p.pFanData, last) != *first {
 		panic("gia: corrupt fanout ring")
 	}
-	p.pFanData[prev(edge)] = last
-	p.pFanData[next(edge)] = first
-	p.pFanData[prev(first)] = edge
-	p.pFanData[next(last)] = edge
+	*prev, *next = last, *first
+	*Gia_FanoutPrev(p.pFanData, *first) = edge
+	*Gia_FanoutNext(p.pFanData, last) = edge
 }
 
 func Gia_ManBuiltInSimPerform(p *Gia_Man_t, id int32) {

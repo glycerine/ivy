@@ -13,6 +13,36 @@ func Gia_FanoutPrev(data []int32, edge int32) *int32   { return &data[5*(edge>>1
 func Gia_FanoutNext(data []int32, edge int32) *int32   { return &data[5*(edge>>1)+3+(edge&1)] }
 func Gia_ObjFanout0Int(p *Gia_Man_t, id int32) int32   { return *Gia_FanoutObj(p.pFanData, id) }
 func Gia_ObjFanoutNext(p *Gia_Man_t, edge int32) int32 { return *Gia_FanoutNext(p.pFanData, edge) }
+
+// Repeated fanins need distinct pin slots. Source WhatFanin always selects
+// the first match, which overwrites a ring link for simple-mode x & !x.
+// Same-phase repeated pins are buffers and retain their single-arc convention.
+func giaFanoutEdge(p *Gia_Man_t, obj, fanout *Gia_Obj_t, linked bool) int32 {
+	for pin := int32(0); pin < 2; pin++ {
+		var fanin *Gia_Obj_t
+		if pin == 0 {
+			fanin = Gia_ObjFanin0(fanout)
+		} else {
+			if Gia_ObjIsAnd(fanout) == 0 || Gia_ObjIsBuf(fanout) != 0 {
+				continue
+			}
+			fanin = Gia_ObjFanin1(fanout)
+		}
+		if fanin != obj {
+			continue
+		}
+		edge := fanout.id<<1 | pin
+		prev, next := *Gia_FanoutPrev(p.pFanData, edge), *Gia_FanoutNext(p.pFanData, edge)
+		if (prev == 0) != (next == 0) {
+			panic("gia: corrupt fanout ring")
+		}
+		if (next != 0) == linked {
+			return edge
+		}
+	}
+	panic("gia: no matching fanout pin in the requested state")
+}
+
 func Gia_ManFanoutStart(p *Gia_Man_t) {
 	if p.pFanData != nil {
 		panic("gia: fanouts already initialized")
@@ -33,14 +63,9 @@ func Gia_ManFanoutStart(p *Gia_Man_t) {
 }
 func Gia_ManFanoutStop(p *Gia_Man_t) { p.pFanData = nil; p.nFansAlloc = 0 }
 func Gia_ObjRemoveFanout(p *Gia_Man_t, obj, fanout *Gia_Obj_t) {
-	source, target := Gia_ObjId(p, obj), Gia_ObjId(p, fanout)
-	edge := target << 1
-	if Gia_ObjFanin0(fanout) != obj {
-		if Gia_ObjIsAnd(fanout) == 0 || Gia_ObjFanin1(fanout) != obj {
-			panic("gia: object is not a fanin")
-		}
-		edge |= 1
-	}
+	source := Gia_ObjId(p, obj)
+	Gia_ObjId(p, fanout)
+	edge := giaFanoutEdge(p, obj, fanout, true)
 	prev, next := *Gia_FanoutPrev(p.pFanData, edge), *Gia_FanoutNext(p.pFanData, edge)
 	if *Gia_FanoutNext(p.pFanData, prev) != edge || *Gia_FanoutPrev(p.pFanData, next) != edge {
 		panic("gia: corrupt fanout ring")
