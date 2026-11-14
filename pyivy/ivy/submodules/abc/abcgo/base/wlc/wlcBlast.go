@@ -2,6 +2,8 @@ package wlc
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/bool/kit"
+	"github.com/glycerine/abcgo/misc/util"
 	"os"
 	"unsafe"
 )
@@ -77,7 +79,7 @@ func Wlc_NtkPrepareBits(p *Wlc_Ntk_t) int32 {
 	return nBits
 }
 
-func Wlc_NtkMuxTree_rec(pNew *Gia_Man_t, pCtrl *int32, nCtrl int32, vData *Vec_Int_t, Shift int32) int32 {
+func Wlc_NtkMuxTree_rec(pNew *Gia_Man_t, pCtrl []int32, nCtrl int32, vData *Vec_Int_t, Shift int32) int32 {
 	var iLit0, iLit1 int32
 	if nCtrl == 0 {
 		return Vec_IntEntry(vData, Shift)
@@ -86,7 +88,7 @@ func Wlc_NtkMuxTree_rec(pNew *Gia_Man_t, pCtrl *int32, nCtrl int32, vData *Vec_I
 	iLit1 = Wlc_NtkMuxTree_rec(pNew, pCtrl, nCtrl-1, vData, Shift+(1<<(nCtrl-1)))
 	return Gia_ManHashMux(pNew, pCtrl[nCtrl-1], iLit1, iLit0)
 }
-func Wlc_NtkMuxTree2_nb(pNew *Gia_Man_t, pCtrl *int32, nCtrl int32, vData *Vec_Int_t, vAnds *Vec_Int_t) int32 {
+func Wlc_NtkMuxTree2_nb(pNew *Gia_Man_t, pCtrl []int32, nCtrl int32, vData *Vec_Int_t, vAnds *Vec_Int_t) int32 {
 	var iLitOr, iLitAnd, m int32
 	assert(Vec_IntSize(vData) == (1<<nCtrl), "Vec_IntSize(vData) == (1 << nCtrl)")
 	assert(Vec_IntSize(vAnds) == (1<<nCtrl), "Vec_IntSize(vAnds) == (1 << nCtrl)")
@@ -96,13 +98,15 @@ func Wlc_NtkMuxTree2_nb(pNew *Gia_Man_t, pCtrl *int32, nCtrl int32, vData *Vec_I
 	}
 	return iLitOr
 }
-func Wlc_NtkMuxTree2(pNew *Gia_Man_t, pCtrl *int32, nCtrl int32, vData *Vec_Int_t, vAnds *Vec_Int_t, vTemp *Vec_Int_t) int32 {
+func Wlc_NtkMuxTree2(pNew *Gia_Man_t, pCtrl []int32, nCtrl int32, vData *Vec_Int_t, vAnds *Vec_Int_t, vTemp *Vec_Int_t) int32 {
 	var m, iLit int32
 	assert(!(nCtrl != 0) || Vec_IntSize(vData) == (1<<nCtrl), "!nCtrl || Vec_IntSize(vData) == (1 << nCtrl)")
 	assert(!(nCtrl != 0) || Vec_IntSize(vAnds) == (1<<nCtrl), "!nCtrl || Vec_IntSize(vAnds) == (1 << nCtrl)")
 	Vec_IntClear(vTemp)
-	Vec_IntForEachEntry(vAnds, iLit, m)
-	Vec_IntPush(vTemp, Abc_LitNot(Gia_ManHashAnd(pNew, iLit, Vec_IntEntry(vData, m))))
+	for m = 0; m < Vec_IntSize(vAnds); m++ {
+		iLit = Vec_IntEntry(vAnds, m)
+		Vec_IntPush(vTemp, Abc_LitNot(Gia_ManHashAnd(pNew, iLit, Vec_IntEntry(vData, m))))
+	}
 	return Abc_LitNot(Gia_ManHashAndMulti(pNew, vTemp))
 }
 func Wlc_NtkPrintNameArray(vNames *Vec_Ptr_t) {
@@ -127,8 +131,8 @@ func Wlc_NtkPrintNameArray(vNames *Vec_Ptr_t) {
 
 **********************************************************************
 */
-func Wlc_BlastShiftRightInt(pNew *Gia_Man_t, pNum *int32, nNum int32, pShift *int32, nShift int32, fSticky int32, vRes *Vec_Int_t) {
-	var pRes *int32 = Wlc_VecCopy(vRes, pNum, nNum)
+func Wlc_BlastShiftRightInt(pNew *Gia_Man_t, pNum []int32, nNum int32, pShift []int32, nShift int32, fSticky int32, vRes *Vec_Int_t) {
+	var pRes []int32 = Wlc_VecCopy(vRes, pNum, nNum)
 	var Fill int32
 	if fSticky != 0 {
 		Fill = pNum[nNum-1]
@@ -151,10 +155,9 @@ func Wlc_BlastShiftRightInt(pNew *Gia_Man_t, pNum *int32, nNum int32, pShift *in
 		}
 	}
 }
-func Wlc_BlastShiftRight(pNew *Gia_Man_t, pNum *int32, nNum int32, pShift *int32, nShift int32, fSticky int32, vRes *Vec_Int_t) {
+func Wlc_BlastShiftRight(pNew *Gia_Man_t, pNum []int32, nNum int32, pShift []int32, nShift int32, fSticky int32, vRes *Vec_Int_t) {
 	var nShiftMax int32 = Abc_Base2Log(nNum)
-	var pShiftNew *int32 = ABC_ALLOC(int, nShift)
-	memcpy(pShiftNew, pShift, sizeof(int)*nShift)
+	pShiftNew := append([]int32(nil), pShift...)
 	if nShiftMax < nShift && nShift > 30 {
 		var i int32
 		var iRes int32 = pShiftNew[nShiftMax]
@@ -168,10 +171,9 @@ func Wlc_BlastShiftRight(pNew *Gia_Man_t, pNum *int32, nNum int32, pShift *int32
 		nShiftMax = nShift
 	}
 	Wlc_BlastShiftRightInt(pNew, pNum, nNum, pShiftNew, nShiftMax, fSticky, vRes)
-	ABC_FREE(pShiftNew)
 }
-func Wlc_BlastShiftLeftInt(pNew *Gia_Man_t, pNum *int32, nNum int32, pShift *int32, nShift int32, fSticky int32, vRes *Vec_Int_t) {
-	var pRes *int32 = Wlc_VecCopy(vRes, pNum, nNum)
+func Wlc_BlastShiftLeftInt(pNew *Gia_Man_t, pNum []int32, nNum int32, pShift []int32, nShift int32, fSticky int32, vRes *Vec_Int_t) {
+	var pRes []int32 = Wlc_VecCopy(vRes, pNum, nNum)
 	var Fill int32
 	if fSticky != 0 {
 		Fill = pNum[0]
@@ -194,10 +196,9 @@ func Wlc_BlastShiftLeftInt(pNew *Gia_Man_t, pNum *int32, nNum int32, pShift *int
 		}
 	}
 }
-func Wlc_BlastShiftLeft(pNew *Gia_Man_t, pNum *int32, nNum int32, pShift *int32, nShift int32, fSticky int32, vRes *Vec_Int_t) {
+func Wlc_BlastShiftLeft(pNew *Gia_Man_t, pNum []int32, nNum int32, pShift []int32, nShift int32, fSticky int32, vRes *Vec_Int_t) {
 	var nShiftMax int32 = Abc_Base2Log(nNum)
-	var pShiftNew *int32 = ABC_ALLOC(int, nShift)
-	memcpy(pShiftNew, pShift, sizeof(int)*nShift)
+	pShiftNew := append([]int32(nil), pShift...)
 	if nShiftMax < nShift {
 		var i int32
 		var iRes int32 = pShiftNew[nShiftMax]
@@ -211,13 +212,12 @@ func Wlc_BlastShiftLeft(pNew *Gia_Man_t, pNum *int32, nNum int32, pShift *int32,
 		nShiftMax = nShift
 	}
 	Wlc_BlastShiftLeftInt(pNew, pNum, nNum, pShiftNew, nShiftMax, fSticky, vRes)
-	ABC_FREE(pShiftNew)
 }
-func Wlc_BlastRotateRight(pNew *Gia_Man_t, pNum *int32, nNum int32, pShift *int32, nShift int32, vRes *Vec_Int_t) {
-	var pRes *int32 = Wlc_VecCopy(vRes, pNum, nNum)
+func Wlc_BlastRotateRight(pNew *Gia_Man_t, pNum []int32, nNum int32, pShift []int32, nShift int32, vRes *Vec_Int_t) {
+	var pRes []int32 = Wlc_VecCopy(vRes, pNum, nNum)
 	var i int32
 	var j int32
-	var pTemp *int32 = ABC_ALLOC(int, nNum)
+	pTemp := make([]int32, nNum)
 	assert(nShift <= 32, "nShift <= 32")
 	for i = 0; i < nShift; i++ {
 		for j = 0; j < nNum; j++ {
@@ -227,11 +227,11 @@ func Wlc_BlastRotateRight(pNew *Gia_Man_t, pNum *int32, nNum int32, pShift *int3
 	}
 	ABC_FREE(pTemp)
 }
-func Wlc_BlastRotateLeft(pNew *Gia_Man_t, pNum *int32, nNum int32, pShift *int32, nShift int32, vRes *Vec_Int_t) {
-	var pRes *int32 = Wlc_VecCopy(vRes, pNum, nNum)
+func Wlc_BlastRotateLeft(pNew *Gia_Man_t, pNum []int32, nNum int32, pShift []int32, nShift int32, vRes *Vec_Int_t) {
+	var pRes []int32 = Wlc_VecCopy(vRes, pNum, nNum)
 	var i int32
 	var j int32
-	var pTemp *int32 = ABC_ALLOC(int, nNum)
+	pTemp := make([]int32, nNum)
 	assert(nShift <= 32, "nShift <= 32")
 	for i = 0; i < nShift; i++ {
 		for j = 0; j < nNum; j++ {
@@ -248,38 +248,38 @@ func Wlc_BlastRotateLeft(pNew *Gia_Man_t, pNum *int32, nNum int32, pShift *int32
 	}
 	ABC_FREE(pTemp)
 }
-func Wlc_BlastReduction(pNew *Gia_Man_t, pFans *int32, nFans int32, Type int32) int32 {
-	if Type == WLC_OBJ_REDUCT_AND || Type == WLC_OBJ_REDUCT_NAND {
+func Wlc_BlastReduction(pNew *Gia_Man_t, pFans []int32, nFans int32, Type int32) int32 {
+	if Type == int32(WLC_OBJ_REDUCT_AND) || Type == int32(WLC_OBJ_REDUCT_NAND) {
 		var k int32
 		var iLit int32 = 1
 		for k = 0; k < nFans; k++ {
 			iLit = Gia_ManHashAnd(pNew, iLit, pFans[k])
 		}
-		return Abc_LitNotCond(iLit, Type == WLC_OBJ_REDUCT_NAND)
+		return Abc_LitNotCond(iLit, boolToInt32(Type == int32(WLC_OBJ_REDUCT_NAND)))
 	}
-	if Type == WLC_OBJ_REDUCT_OR || Type == WLC_OBJ_REDUCT_NOR {
+	if Type == int32(WLC_OBJ_REDUCT_OR) || Type == int32(WLC_OBJ_REDUCT_NOR) {
 		var k, iLit int32
 		for k = 0; k < nFans; k++ {
 			iLit = Gia_ManHashOr(pNew, iLit, pFans[k])
 		}
-		return Abc_LitNotCond(iLit, Type == WLC_OBJ_REDUCT_NOR)
+		return Abc_LitNotCond(iLit, boolToInt32(Type == int32(WLC_OBJ_REDUCT_NOR)))
 	}
-	if Type == WLC_OBJ_REDUCT_XOR || Type == WLC_OBJ_REDUCT_NXOR {
+	if Type == int32(WLC_OBJ_REDUCT_XOR) || Type == int32(WLC_OBJ_REDUCT_NXOR) {
 		var k, iLit int32
 		for k = 0; k < nFans; k++ {
 			iLit = Gia_ManHashXor(pNew, iLit, pFans[k])
 		}
-		return Abc_LitNotCond(iLit, Type == WLC_OBJ_REDUCT_NXOR)
+		return Abc_LitNotCond(iLit, boolToInt32(Type == int32(WLC_OBJ_REDUCT_NXOR)))
 	}
 	assert(false, "0")
 	return -1
 }
 
-func Wlc_BlastDivider2(pNew *Gia_Man_t, pNum *int32, nNum int32, pDiv *int32, nDiv int32, fQuo int32, vRes *Vec_Int_t) {
+func Wlc_BlastDivider2(pNew *Gia_Man_t, pNum []int32, nNum int32, pDiv []int32, nDiv int32, fQuo int32, vRes *Vec_Int_t) {
 	var i int32
-	var pRes *int32 = Vec_IntArray(vRes)
+	pRes := Vec_IntArray(vRes)
 	var k int32
-	var pQuo *int32 = ABC_ALLOC(int, nNum)
+	pQuo := make([]int32, nNum)
 	assert(nNum > 0 && nDiv > 0, "nNum > 0 && nDiv > 0")
 	assert(Vec_IntSize(vRes) < nNum+nDiv, "Vec_IntSize(vRes) < nNum + nDiv")
 	for i = 0; i < nNum+nDiv; i++ {
@@ -318,11 +318,11 @@ func Wlc_BlastDivider2(pNew *Gia_Man_t, pNum *int32, nNum int32, pDiv *int32, nD
 	}
 	ABC_FREE(pQuo)
 }
-func Wlc_BlastTable(pNew *Gia_Man_t, pTable *word, pFans *int32, nFans int32, nOuts int32, vRes *Vec_Int_t) {
-	// extern int Kit_TruthToGia( Gia_Man_t * pMan, unsigned * pTruth, int nVars, Vec_Int_t * vMemory, Vec_Int_t * vLeaves, int fHash );
-	var vMemory *Vec_Int_t = Vec_IntAlloc(0)
-	var vLeaves Vec_Int_t = Vec_Int_t{nFans, nFans, pFans}
-	var pTruth *word = ABC_ALLOC(word, Abc_TtWordNum(nFans))
+func Wlc_BlastTable(pNew *Gia_Man_t, pTable *word, pFans []int32, nFans int32, nOuts int32, vRes *Vec_Int_t) {
+	var vMemory []uint32
+	var leaves = pFans
+	table := unsafe.Slice(pTable, int(util.Abc_TtWordNum(nFans)))
+	truth := make([]word, util.Abc_TtWordNum(nFans))
 	var o int32
 	var i int32
 	var m int32
@@ -331,46 +331,51 @@ func Wlc_BlastTable(pNew *Gia_Man_t, pTable *word, pFans *int32, nFans int32, nO
 	Vec_IntClear(vRes)
 	for o = 0; o < nOuts; o++ {
 		// derive truth table
-		memset(pTruth, 0, sizeof(word)*Abc_TtWordNum(nFans))
+		clear(truth)
 		for m = 0; m < nMints; m++ {
 			for i = 0; i < nFans; i++ {
-				if Abc_TtGetBit(pTable, m*nFans+i) {
-					Abc_TtSetBit(pTruth, m)
+				if util.Abc_TtGetBit(table, m*nFans+i) != 0 {
+					util.Abc_TtSetBit(truth, m)
 				}
 			}
 		}
 		// implement truth table
 		if nFans < 6 {
-			pTruth[0] = Abc_Tt6Stretch(pTruth[0], nFans)
+			truth[0] = uint64(util.Abc_Tt6Stretch(truth[0], nFans))
 		}
-		iLit = Kit_TruthToGia(pNew, pTruth, nFans, vMemory, &vLeaves, 1)
+		iLit = kit.Kit_TruthToGia(pNew, truth32(truth), nFans, &vMemory, leaves, 1)
 		Vec_IntPush(vRes, iLit)
 	}
-	Vec_IntFree(vMemory)
-	ABC_FREE(pTruth)
 }
-func Wlc_BlastLut(pNew *Gia_Man_t, Truth word, pFans *int32, nFans int32, nOuts int32, vRes *Vec_Int_t) {
-	// extern int Kit_TruthToGia( Gia_Man_t * pMan, unsigned * pTruth, int nVars, Vec_Int_t * vMemory, Vec_Int_t * vLeaves, int fHash );
-	var vMemory *Vec_Int_t = Vec_IntAlloc(0)
-	var vLeaves Vec_Int_t = Vec_Int_t{nFans, nFans, pFans}
+func Wlc_BlastLut(pNew *Gia_Man_t, Truth word, pFans []int32, nFans int32, nOuts int32, vRes *Vec_Int_t) {
+	var vMemory []uint32
+	leaves := pFans
+	truth := []word{Truth}
 	var iLit int32
 	Vec_IntClear(vRes)
 	assert(nOuts == 1, "nOuts == 1")
 	if nFans < 6 {
-		Truth = Abc_Tt6Stretch(Truth, nFans)
+		truth[0] = uint64(util.Abc_Tt6Stretch(Truth, nFans))
 	}
-	iLit = Kit_TruthToGia(pNew, &Truth, nFans, vMemory, &vLeaves, 1)
+	iLit = kit.Kit_TruthToGia(pNew, truth32(truth), nFans, &vMemory, leaves, 1)
 	Vec_IntPush(vRes, iLit)
-	Vec_IntFree(vMemory)
 }
-func Wlc_BlastPower(pNew *Gia_Man_t, pNum *int32, nNum int32, pExp *int32, nExp int32, vTemp *Vec_Int_t, vRes *Vec_Int_t) {
+
+func truth32(words []uint64) []uint32 {
+	out := make([]uint32, 2*len(words))
+	for i, word := range words {
+		out[2*i], out[2*i+1] = uint32(word), uint32(word>>32)
+	}
+	return out
+}
+func Wlc_BlastPower(pNew *Gia_Man_t, pNum []int32, nNum int32, pExp []int32, nExp int32, vTemp *Vec_Int_t, vRes *Vec_Int_t) {
 	var vDegrees *Vec_Int_t = Vec_IntAlloc(2 * nNum)
 	var vResTemp *Vec_Int_t = Vec_IntAlloc(2 * nNum)
 	var i int32
-	var pDegrees *int32 = nil
-	var pRes *int32 = Vec_IntArray(vRes)
+	var pDegrees []int32 = nil
+	pRes := Vec_IntArray(vRes)
 	var k int32
-	var pResTemp *int32 = Vec_IntArray(vResTemp)
+	pResTemp := Vec_IntArray(vResTemp)
 	Vec_IntFill(vRes, nNum, 0)
 	Vec_IntWriteEntry(vRes, 0, 1)
 	for i = 0; i < nExp; i++ {
@@ -388,8 +393,8 @@ func Wlc_BlastPower(pNew *Gia_Man_t, pNum *int32, nNum int32, pExp *int32, nExp 
 	Vec_IntFree(vResTemp)
 	Vec_IntFree(vDegrees)
 }
-func Wlc_BlastSqrt(pNew *Gia_Man_t, pNum *int32, nNum int32, vTmp *Vec_Int_t, vRes *Vec_Int_t) {
-	var pRes, pSum, pSumP *int32
+func Wlc_BlastSqrt(pNew *Gia_Man_t, pNum []int32, nNum int32, vTmp *Vec_Int_t, vRes *Vec_Int_t) {
+	var pRes, pSum, pSumP []int32
 	var i int32
 	var k int32
 	var Carry int32 = -1
@@ -398,10 +403,11 @@ func Wlc_BlastSqrt(pNew *Gia_Man_t, pNum *int32, nNum int32, vTmp *Vec_Int_t, vR
 	Vec_IntFill(vTmp, 2*nNum, 0)
 	pRes = Vec_IntArray(vRes)
 	pSum = Vec_IntArray(vTmp)
-	pSumP = pSum + nNum
+	pSumP = pSum[nNum:]
+	pNumBits := pNum
 	for i = 0; i < nNum/2; i++ {
-		pSumP[0] = pNum[nNum-2*i-2]
-		pSumP[1] = pNum[nNum-2*i-1]
+		pSumP[0] = pNumBits[nNum-2*i-2]
+		pSumP[1] = pNumBits[nNum-2*i-1]
 		for k = 0; k < i+1; k++ {
 			pSumP[k+2] = pSum[k]
 		}
@@ -426,8 +432,8 @@ func Wlc_BlastSqrt(pNew *Gia_Man_t, pNum *int32, nNum int32, vTmp *Vec_Int_t, vR
 	}
 	Vec_IntReverseOrder(vRes)
 }
-func Wlc_BlastSqrtNR(pNew *Gia_Man_t, pNum *int32, nNum int32, vTmp *Vec_Int_t, vRes *Vec_Int_t) {
-	var pSqr, pRem, pIn1 *int32
+func Wlc_BlastSqrtNR(pNew *Gia_Man_t, pNum []int32, nNum int32, vTmp *Vec_Int_t, vRes *Vec_Int_t) {
+	var pSqr, pRem, pIn1 []int32
 	var i int32
 	var k int32
 	var Carry int32 = 1
@@ -436,7 +442,8 @@ func Wlc_BlastSqrtNR(pNew *Gia_Man_t, pNum *int32, nNum int32, vTmp *Vec_Int_t, 
 	Vec_IntFill(vTmp, 2*nNum, 0)
 	pSqr = Vec_IntArray(vRes)
 	pRem = Vec_IntArray(vTmp)
-	pIn1 = pRem + nNum
+	pIn1 = pRem[nNum:]
+	pNumBits := pNum
 	for i = 0; i < nNum/2; i++ {
 		var SqrPrev int32 = Carry
 		assert(pIn1[0] == 0, "pIn1[0] == 0")
@@ -451,8 +458,8 @@ func Wlc_BlastSqrtNR(pNew *Gia_Man_t, pNum *int32, nNum int32, vTmp *Vec_Int_t, 
 		pIn1[k] = 1
 		k++
 		assert(k == 2*i+2, "k == 2*i+2")
-		pRem[2*i+0] = pNum[nNum-2*i-1]
-		pRem[2*i+1] = pNum[nNum-2*i-2]
+		pRem[2*i+0] = pNumBits[nNum-2*i-1]
+		pRem[2*i+1] = pNumBits[nNum-2*i-2]
 		for k = 2*i + 1; k >= 0; k-- {
 			Wlc_BlastFullAdder(pNew, Gia_ManHashXor(pNew, SqrPrev, pIn1[k]), pRem[k], Carry, &Carry, &pRem[k])
 		}
@@ -476,36 +483,42 @@ func Wlc_BlastPrintMatrix(p *Gia_Man_t, vProds *Vec_Wec_t, fVerbose int32) {
 	var vLevel *Vec_Int_t
 	var Truth word
 	var i, k, iLit int32
-	Vec_WecForEachLevel(vProds, vLevel, i)
-	Vec_IntForEachEntry(vLevel, iLit, k)
-	if Gia_ObjIsAnd(Gia_ManObj(p, Abc_Lit2Var(iLit))) {
-		Vec_IntPushUnique(vSupp, Abc_Lit2Var(iLit))
+	for i = 0; i < Vec_WecSize(vProds); i++ {
+		vLevel = Vec_WecEntry(vProds, i)
+		for k = 0; k < Vec_IntSize(vLevel); k++ {
+			iLit = Vec_IntEntry(vLevel, k)
+			if Gia_ObjIsAnd(Gia_ManObj(p, Abc_Lit2Var(iLit))) != 0 {
+				Vec_IntPushUnique(vSupp, Abc_Lit2Var(iLit))
+			}
+		}
 	}
 	fmt.Printf("Booth partial products: %d pps, %d unique, %d nodes.\n", Vec_WecSizeSize(vProds), Vec_IntSize(vSupp), Gia_ManAndNum(p))
 	Vec_IntPrint(vSupp)
 
 	if fVerbose != 0 {
-		Vec_WecForEachLevel(vProds, vLevel, i)
-		for k = 0; k < Vec_IntSize(vLevel); k++ {
-			iLit = Vec_IntEntry(vLevel, k)
-			fmt.Printf("Obj = %4d : ", Abc_Lit2Var(iLit))
-			fmt.Printf("Compl = %d  ", Abc_LitIsCompl(iLit))
-			fmt.Printf("Rank = %2d  ", i)
-			Truth = Gia_ObjComputeTruth6Cis(p, iLit, vSupp, vTemp)
-			Extra_PrintHex(os.Stdout, &Truth, Vec_IntSize(vSupp))
-			if Vec_IntSize(vSupp) == 4 {
-				fmt.Printf("    ")
-			}
-			if Vec_IntSize(vSupp) == 3 {
-				fmt.Printf("      ")
-			}
-			if Vec_IntSize(vSupp) <= 2 {
-				fmt.Printf("       ")
-			}
-			fmt.Printf("  ")
-			Vec_IntPrint(vSupp)
-			if k == Vec_IntSize(vLevel)-1 {
-				fmt.Printf("\n")
+		for i = 0; i < Vec_WecSize(vProds); i++ {
+			vLevel = Vec_WecEntry(vProds, i)
+			for k = 0; k < Vec_IntSize(vLevel); k++ {
+				iLit = Vec_IntEntry(vLevel, k)
+				fmt.Printf("Obj = %4d : ", Abc_Lit2Var(iLit))
+				fmt.Printf("Compl = %d  ", Abc_LitIsCompl(iLit))
+				fmt.Printf("Rank = %2d  ", i)
+				Truth = Gia_ObjComputeTruth6Cis(p, iLit, vSupp, vTemp)
+				Extra_PrintHex(os.Stdout, &Truth, Vec_IntSize(vSupp))
+				if Vec_IntSize(vSupp) == 4 {
+					fmt.Printf("    ")
+				}
+				if Vec_IntSize(vSupp) == 3 {
+					fmt.Printf("      ")
+				}
+				if Vec_IntSize(vSupp) <= 2 {
+					fmt.Printf("       ")
+				}
+				fmt.Printf("  ")
+				Vec_IntPrint(vSupp)
+				if k == Vec_IntSize(vLevel)-1 {
+					fmt.Printf("\n")
+				}
 			}
 		}
 	}
@@ -582,7 +595,7 @@ func Wlc_BlastAddLevel(pNew *Gia_Man_t, Start int32) int32 {
 	}
 	for i = Start; i < Gia_ManObjNum(pNew); i++ {
 		var pObj *Gia_Obj_t = Gia_ManObj(pNew, i)
-		if Gia_ObjIsAnd(pObj) {
+		if Gia_ObjIsAnd(pObj) != 0 {
 			Gia_ObjSetAndLevel(pNew, pObj)
 		}
 	}
@@ -605,7 +618,7 @@ func Wlc_IntInsert2(pNew *Gia_Man_t, vProd *Vec_Int_t, iLit int32) {
 	//
 	// printf( "\n" );
 }
-func Wlc_IntSortCostReverse(pNew *Gia_Man_t, pArray *int32, nSize int32) {
+func Wlc_IntSortCostReverse(pNew *Gia_Man_t, pArray []int32, nSize int32) {
 	var i, j, best_i int32
 	for i = 0; i < nSize-1; i++ {
 		best_i = i
@@ -614,7 +627,7 @@ func Wlc_IntSortCostReverse(pNew *Gia_Man_t, pArray *int32, nSize int32) {
 				best_i = j
 			}
 		}
-		ABC_SWAP(int, pArray[i], pArray[best_i])
+		pArray[i], pArray[best_i] = pArray[best_i], pArray[i]
 	}
 }
 func Wlc_BlastReduceMatrix2(pNew *Gia_Man_t, vProds *Vec_Wec_t, vRes *Vec_Int_t, fSigned int32, fCla int32) {
@@ -622,8 +635,10 @@ func Wlc_BlastReduceMatrix2(pNew *Gia_Man_t, vProds *Vec_Wec_t, vRes *Vec_Int_t,
 	var i, NodeS, NodeC, Node1, Node2, Node3 int32
 	var Start int32 = Wlc_BlastAddLevel(pNew, 0)
 	var nSize int32 = Vec_WecSize(vProds)
-	Vec_WecForEachLevel(vProds, vProd, i)
-	Wlc_IntSortCostReverse(pNew, Vec_IntArray(vProd), Vec_IntSize(vProd))
+	for i = 0; i < nSize; i++ {
+		vProd = Vec_WecEntry(vProds, i)
+		Wlc_IntSortCostReverse(pNew, Vec_IntArray(vProd), Vec_IntSize(vProd))
+	}
 	for i = 0; i < nSize; i++ {
 		for {
 			vProd = Vec_WecEntry(vProds, i)
@@ -676,13 +691,13 @@ func Wlc_BlastReduceMatrix2(pNew *Gia_Man_t, vProds *Vec_Wec_t, vRes *Vec_Int_t,
 	Vec_IntFree(vTemp)
 }
 
-func Wlc_BlastMultiplier3(pNew *Gia_Man_t, pArgA *int32, pArgB *int32, nArgA int32, nArgB int32, vRes *Vec_Int_t, fSigned int32, fCla int32) {
+func Wlc_BlastMultiplier3(pNew *Gia_Man_t, pArgA []int32, pArgB []int32, nArgA int32, nArgB int32, vRes *Vec_Int_t, fSigned int32, fCla int32) {
 	var vProds *Vec_Wec_t = Vec_WecStart(nArgA + nArgB)
 	var vLevels *Vec_Wec_t = Vec_WecStart(nArgA + nArgB)
 	var i, k int32
 	for i = 0; i < nArgA; i++ {
 		for k = 0; k < nArgB; k++ {
-			var fCompl int32 = fSigned && ((i == nArgA-1) ^ (k == nArgB-1))
+			fCompl := boolToInt32(fSigned != 0 && ((i == nArgA-1) != (k == nArgB-1)))
 			Vec_WecPush(vProds, i+k, Abc_LitNotCond(Gia_ManHashAnd(pNew, pArgA[i], pArgB[k]), fCompl))
 			Vec_WecPush(vLevels, i+k, 0)
 		}
@@ -701,7 +716,7 @@ func Wlc_BlastMultiplier3(pNew *Gia_Man_t, pArgA *int32, pArgB *int32, nArgA int
 	Vec_WecFree(vProds)
 	Vec_WecFree(vLevels)
 }
-func Wlc_BlastSquare(pNew *Gia_Man_t, pNum *int32, nNum int32, vTmp *Vec_Int_t, vRes *Vec_Int_t) {
+func Wlc_BlastSquare(pNew *Gia_Man_t, pNum []int32, nNum int32, vTmp *Vec_Int_t, vRes *Vec_Int_t) {
 	var vProds *Vec_Wec_t = Vec_WecStart(2 * nNum)
 	var vLevels *Vec_Wec_t = Vec_WecStart(2 * nNum)
 	var i, k int32
@@ -723,7 +738,7 @@ func Wlc_BlastSquare(pNew *Gia_Man_t, pNum *int32, nNum int32, vTmp *Vec_Int_t, 
 	Vec_WecFree(vProds)
 	Vec_WecFree(vLevels)
 }
-func Wlc_BlastDecoder(pNew *Gia_Man_t, pNum *int32, nNum int32, vTmp *Vec_Int_t, vRes *Vec_Int_t) {
+func Wlc_BlastDecoder(pNew *Gia_Man_t, pNum []int32, nNum int32, vTmp *Vec_Int_t, vRes *Vec_Int_t) {
 	var i int32
 	var k int32
 	var nMints int32 = 1 << nNum
@@ -731,12 +746,12 @@ func Wlc_BlastDecoder(pNew *Gia_Man_t, pNum *int32, nNum int32, vTmp *Vec_Int_t,
 	for i = 0; i < nMints; i++ {
 		var iMint int32 = 1
 		for k = 0; k < nNum; k++ {
-			iMint = Gia_ManHashAnd(pNew, iMint, Abc_LitNotCond(pNum[k], !((i>>k)&1)))
+			iMint = Gia_ManHashAnd(pNew, iMint, Abc_LitNotCond(pNum[k], boolToInt32(((i>>k)&1) == 0)))
 		}
 		Vec_IntPush(vRes, iMint)
 	}
 }
-func Wlc_BlastBooth(pNew *Gia_Man_t, pArgA *int32, pArgB *int32, nArgA int32, nArgB int32, vRes *Vec_Int_t, fSigned int32, fCla int32) {
+func Wlc_BlastBooth(pNew *Gia_Man_t, pArgA []int32, pArgB []int32, nArgA int32, nArgB int32, vRes *Vec_Int_t, fSigned int32, fCla int32) {
 	var vProds *Vec_Wec_t = Vec_WecStart(nArgA + nArgB + 3)
 	var vLevels *Vec_Wec_t = Vec_WecStart(nArgA + nArgB + 3)
 	var FillA int32
@@ -884,10 +899,10 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 	var iFanin int32
 	var iLit int32
 	var nAndPrev int32
-	var pFans0 *int32
-	var pFans1 *int32
-	var pFans2 *int32
-	var pFans3 *int32
+	var pFans0 []int32
+	var pFans1 []int32
+	var pFans2 []int32
+	var pFans3 []int32
 	var nFFins, nFFouts, curPi, curPo, nFf2Regs int32
 	var nBitCis, nBitCos, fAdded int32
 	var Par Wlc_BstPar_t
@@ -905,22 +920,22 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 	vTemp2 = Vec_IntAlloc(1000)
 	vRes = Vec_IntAlloc(1000)
 	// clean AND-gate counters
-	memset(p.nAnds, 0, sizeof(int)*WLC_OBJ_NUMBER)
+	clear(p.nAnds[:])
 	// create AIG manager
 	pNew = Gia_ManStart(5*Wlc_NtkObjNum(p) + 1000)
-	pNew.pName = Abc_UtilStrsav(p.pName)
-	pNew.fGiaSimple = pPar.fGiaSimple
-	if !pPar.fGiaSimple {
+	Gia_ManSetNameSpec(pNew, Abc_UtilStrsav(p.pName), "")
+	Gia_ManSetSimple(pNew, pPar.fGiaSimple)
+	if pPar.fGiaSimple == 0 {
 		Gia_ManHashAlloc(pNew)
 	}
-	if pPar.fAddOutputs {
+	if pPar.fAddOutputs != 0 {
 		vAddOutputs = Vec_IntAlloc(100)
 	}
-	if pPar.fAddOutputs {
+	if pPar.fAddOutputs != 0 {
 		vAddObjs = Vec_IntAlloc(100)
 	}
 	// prepare for AIG with boxes
-	if pPar.vBoxIds {
+	if pPar.vBoxIds != nil {
 		var nNewCis, nNewCos int32
 		assert(Vec_IntSize(&p.vFfs2) == 0, "Vec_IntSize(&p.vFfs2) == 0")
 		// inlining of macro Wlc_NtkForEachObj
@@ -945,7 +960,7 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 		for i = 0; i < Vec_IntSize(pPar.vBoxIds); i++ {
 			pObj = Wlc_NtkObj(p, Vec_IntEntry(pPar.vBoxIds, i))
 			// currently works only for multipliers
-			assert(pObj.Type == WLC_OBJ_ARI_MULTI || pObj.Type == WLC_OBJ_ARI_ADD, "pObj.Type == WLC_OBJ_ARI_MULTI || pObj.Type == WLC_OBJ_ARI_ADD")
+			assert(pObj.Type == uint32(WLC_OBJ_ARI_MULTI) || pObj.Type == uint32(WLC_OBJ_ARI_ADD), "pObj.Type == uint32(WLC_OBJ_ARI_MULTI) || pObj.Type == uint32(WLC_OBJ_ARI_ADD)")
 			nNewCis += Wlc_ObjRange(pObj)
 			nNewCos += Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))
 			nNewCos += Wlc_ObjRange(Wlc_ObjFanin1(p, pObj))
@@ -961,14 +976,14 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 		// create AIG manager for logic of the boxes
 		pExtra = Gia_ManStart(Wlc_NtkObjNum(p))
 		Gia_ManHashAlloc(pExtra)
-		assert(!pPar.fGiaSimple, "!pPar.fGiaSimple")
+		assert(pPar.fGiaSimple == 0, "pPar.fGiaSimple == 0")
 		// create box library
 		pBoxLib = If_LibBoxStart()
 	}
 	if Vec_IntSize(&p.vFfs2) > 0 {
 		var vSignature *Vec_Int_t
 		var nNewCis, nNewCos int32
-		assert(pPar.vBoxIds == 0, "pPar.vBoxIds == 0")
+		assert(pPar.vBoxIds == nil, "pPar.vBoxIds == nil")
 		// count bit-width of regular CIs/COs
 		// inlining of macro Wlc_NtkForEachCi
 		for i = 0; i < Wlc_NtkCiNum(p); i++ {
@@ -985,7 +1000,7 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 		for i = 0; i < Vec_IntSize(&p.vFfs2); i++ {
 			pObj = Wlc_NtkFf2(p, i)
 			// currently works only for multipliers
-			assert(pObj.Type == WLC_OBJ_FF, "pObj.Type == WLC_OBJ_FF")
+			assert(pObj.Type == uint32(WLC_OBJ_FF), "pObj.Type == uint32(WLC_OBJ_FF)")
 			assert(Wlc_ObjRange(pObj) == Wlc_ObjRange(Wlc_ObjFanin0(p, pObj)), "Wlc_ObjRange(pObj) == Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))")
 			nNewCis += Wlc_ObjRange(pObj)
 			nNewCos += 2*Wlc_ObjRange(pObj) + 3
@@ -998,7 +1013,7 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 		// create AIG manager for logic of the boxes
 		pExtra = Gia_ManStart(Wlc_NtkObjNum(p))
 		Gia_ManHashAlloc(pExtra)
-		assert(!pPar.fGiaSimple, "!pPar.fGiaSimple")
+		assert(pPar.fGiaSimple == 0, "pPar.fGiaSimple == 0")
 		// create register classes
 		vRegClasses = Vec_IntAlloc(0)
 		vSignature = Vec_IntAlloc(100)
@@ -1011,20 +1026,23 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 			var iAsyn0 int32
 			var iAsyn int32 = Wlc_ObjFaninId(pObj, 5)
 			nRange = Wlc_ObjRange(pObj)
-			Vec_IntForEachEntryDouble(vSignature, iClk0, iAsyn0, k)
-			if iClk == iClk0 && iAsyn == iAsyn0 {
+			for k = 0; k < Vec_IntSize(vSignature); k += 2 {
+				iClk0 = Vec_IntEntry(vSignature, k)
+				iAsyn0 = Vec_IntEntry(vSignature, k+1)
+				if iClk == iClk0 && iAsyn == iAsyn0 {
+					for b = 0; b < nRange; b++ {
+						Vec_IntPush(vRegClasses, k/2)
+					}
+					break
+				}
+				if k < Vec_IntSize(vSignature) {
+					continue
+				}
 				for b = 0; b < nRange; b++ {
 					Vec_IntPush(vRegClasses, k/2)
 				}
-				break
+				Vec_IntPushTwo(vSignature, iClk, iAsyn)
 			}
-			if k < Vec_IntSize(vSignature) {
-				continue
-			}
-			for b = 0; b < nRange; b++ {
-				Vec_IntPush(vRegClasses, k/2)
-			}
-			Vec_IntPushTwo(vSignature, iClk, iAsyn)
 		}
 		assert(Vec_IntSize(vRegClasses) == nFf2Regs, "Vec_IntSize(vRegClasses) == nFf2Regs")
 		Vec_IntFree(vSignature)
@@ -1062,37 +1080,37 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 		} else {
 			nRange3 = -1
 		}
-		if pObj.Type != WLC_OBJ_FF && Wlc_ObjFaninNum(pObj) > 0 {
-			pFans0 = Vec_IntEntryP(vBits, Wlc_ObjCopy(p, Wlc_ObjFaninId0(pObj)))
+		if pObj.Type != uint32(WLC_OBJ_FF) && Wlc_ObjFaninNum(pObj) > 0 {
+			pFans0 = Vec_IntArray(vBits)[Wlc_ObjCopy(p, Wlc_ObjFaninId0(pObj)):]
 		} else {
 			pFans0 = nil
 		}
-		if pObj.Type != WLC_OBJ_FF && Wlc_ObjFaninNum(pObj) > 1 {
-			pFans1 = Vec_IntEntryP(vBits, Wlc_ObjCopy(p, Wlc_ObjFaninId1(pObj)))
+		if pObj.Type != uint32(WLC_OBJ_FF) && Wlc_ObjFaninNum(pObj) > 1 {
+			pFans1 = Vec_IntArray(vBits)[Wlc_ObjCopy(p, Wlc_ObjFaninId1(pObj)):]
 		} else {
 			pFans1 = nil
 		}
-		if pObj.Type != WLC_OBJ_FF && Wlc_ObjFaninNum(pObj) > 2 {
-			pFans2 = Vec_IntEntryP(vBits, Wlc_ObjCopy(p, Wlc_ObjFaninId2(pObj)))
+		if pObj.Type != uint32(WLC_OBJ_FF) && Wlc_ObjFaninNum(pObj) > 2 {
+			pFans2 = Vec_IntArray(vBits)[Wlc_ObjCopy(p, Wlc_ObjFaninId2(pObj)):]
 		} else {
 			pFans2 = nil
 		}
-		if pObj.Type != WLC_OBJ_FF && Wlc_ObjFaninNum(pObj) > 3 {
-			pFans3 = Vec_IntEntryP(vBits, Wlc_ObjCopy(p, Wlc_ObjFaninId(pObj, 3)))
+		if pObj.Type != uint32(WLC_OBJ_FF) && Wlc_ObjFaninNum(pObj) > 3 {
+			pFans3 = Vec_IntArray(vBits)[Wlc_ObjCopy(p, Wlc_ObjFaninId(pObj, 3)):]
 		} else {
 			pFans3 = nil
 		}
 		Vec_IntClear(vRes)
 		assert(nRange > 0, "nRange > 0")
-		if pPar.vBoxIds && pObj.Mark {
+		if pPar.vBoxIds != nil && pObj.Mark != 0 {
 			var pBox *If_Box_t
 			var Buffer string // was [100]byte in C
 
-			var pTable *float32
+			var pTable []float32
 			var CarryIn int32
 
 			pObj.Mark = 0
-			assert(pObj.Type == WLC_OBJ_ARI_MULTI || pObj.Type == WLC_OBJ_ARI_ADD || pObj.Type == WLC_OBJ_ARI_SUB, "pObj.Type == WLC_OBJ_ARI_MULTI || pObj.Type == WLC_OBJ_ARI_ADD || pObj.Type == WLC_OBJ_ARI_SUB")
+			assert(pObj.Type == uint32(WLC_OBJ_ARI_MULTI) || pObj.Type == uint32(WLC_OBJ_ARI_ADD) || pObj.Type == uint32(WLC_OBJ_ARI_SUB), "pObj.Type == uint32(WLC_OBJ_ARI_MULTI) || pObj.Type == uint32(WLC_OBJ_ARI_ADD) || pObj.Type == uint32(WLC_OBJ_ARI_SUB)")
 
 			// account for carry-in
 			if Wlc_ObjFaninNum(pObj) == 3 {
@@ -1111,10 +1129,10 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 			curPo += nRange0 + nRange1 + nRange2
 
 			// create delay table
-			pTable = ABC_ALLOC(float, 3+nRange*(nRange0+nRange1+nRange2))
-			pTable[0] = Vec_PtrSize(vTables)
-			pTable[1] = nRange0 + nRange1 + nRange2
-			pTable[2] = nRange
+			pTable = make([]float32, 3+int(nRange*(nRange0+nRange1+nRange2)))
+			pTable[0] = float32(Vec_PtrSize(vTables))
+			pTable[1] = float32(nRange0 + nRange1 + nRange2)
+			pTable[2] = float32(nRange)
 			for k = 0; k < nRange*(nRange0+nRange1+nRange2); k++ {
 				pTable[3+k] = 1.0
 			}
@@ -1153,11 +1171,11 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 			pFans1 = Vec_IntArray(vTemp1)
 
 			// bit-blast in the external manager
-			if pObj.Type == WLC_OBJ_ARI_ADD || pObj.Type == WLC_OBJ_ARI_SUB {
+			if pObj.Type == uint32(WLC_OBJ_ARI_ADD) || pObj.Type == uint32(WLC_OBJ_ARI_SUB) {
 				var nRangeMax int32 = Abc_MaxInt(nRange, Abc_MaxInt(nRange0, nRange1))
-				var pArg0 *int32 = Wlc_VecLoadFanins(vRes, pFans0, nRange0, nRangeMax, Wlc_ObjIsSignedFanin01(p, pObj))
-				var pArg1 *int32 = Wlc_VecLoadFanins(vTemp1, pFans1, nRange1, nRangeMax, Wlc_ObjIsSignedFanin01(p, pObj))
-				if pObj.Type == WLC_OBJ_ARI_ADD {
+				var pArg0 []int32 = Wlc_VecLoadFanins(vRes, pFans0, nRange0, nRangeMax, Wlc_ObjIsSignedFanin01(p, pObj))
+				var pArg1 []int32 = Wlc_VecLoadFanins(vTemp1, pFans1, nRange1, nRangeMax, Wlc_ObjIsSignedFanin01(p, pObj))
+				if pObj.Type == uint32(WLC_OBJ_ARI_ADD) {
 					Wlc_BlastAdder(pExtra, pArg0, pArg1, nRange, CarryIn) // result is in pFan0 (vRes)
 				} else {
 					Wlc_BlastSubtract(pExtra, pArg0, pArg1, nRange, 1)
@@ -1166,16 +1184,16 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 
 			} else if fUseOldMultiplierBlasting != 0 {
 				var nRangeMax int32 = Abc_MaxInt(nRange, Abc_MaxInt(nRange0, nRange1))
-				var pArg0 *int32 = Wlc_VecLoadFanins(vTemp0, pFans0, nRange0, nRangeMax, Wlc_ObjIsSignedFanin01(p, pObj))
-				var pArg1 *int32 = Wlc_VecLoadFanins(vTemp1, pFans1, nRange1, nRangeMax, Wlc_ObjIsSignedFanin01(p, pObj))
+				var pArg0 []int32 = Wlc_VecLoadFanins(vTemp0, pFans0, nRange0, nRangeMax, Wlc_ObjIsSignedFanin01(p, pObj))
+				var pArg1 []int32 = Wlc_VecLoadFanins(vTemp1, pFans1, nRange1, nRangeMax, Wlc_ObjIsSignedFanin01(p, pObj))
 				Wlc_BlastMultiplier2(pExtra, pArg0, pArg1, nRange, vTemp2, vRes)
 				Vec_IntShrink(vRes, nRange)
 
 			} else {
 				var fSigned int32 = Wlc_ObjIsSignedFanin01(p, pObj)
 				var nRangeMax int32 = Abc_MaxInt(nRange0, nRange1)
-				var pArg0 *int32 = Wlc_VecLoadFanins(vTemp0, pFans0, nRange0, nRangeMax, fSigned)
-				var pArg1 *int32 = Wlc_VecLoadFanins(vTemp1, pFans1, nRange1, nRangeMax, fSigned)
+				var pArg0 []int32 = Wlc_VecLoadFanins(vTemp0, pFans0, nRange0, nRangeMax, fSigned)
+				var pArg1 []int32 = Wlc_VecLoadFanins(vTemp1, pFans1, nRange1, nRangeMax, fSigned)
 				Wlc_BlastMultiplier(pExtra, pArg0, pArg1, nRangeMax, nRangeMax, vTemp2, vRes, fSigned)
 				if nRange > nRangeMax+nRangeMax {
 					fill := int32(0)
@@ -1201,22 +1219,24 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 
 			// add box to the library
 			opName := "mul"
-			if pObj.Type == WLC_OBJ_ARI_ADD {
+			if pObj.Type == uint32(WLC_OBJ_ARI_ADD) {
 				opName = "add"
 			}
 			Buffer = fmt.Sprintf("%s%03d", opName, 1+If_LibBoxNum(pBoxLib))
 			pBox = If_BoxStart(Abc_UtilStrsav(Buffer), 1+If_LibBoxNum(pBoxLib), nRange0+nRange1+nRange2, nRange, 0, 0, 0)
 			If_LibBoxAdd(pBoxLib, pBox)
-			for k = 0; k < pBox.nPis*pBox.nPos; k++ {
-				pBox.pDelays[k] = 1
+			for output := int32(0); output < pBox.Outputs(); output++ {
+				for input := int32(0); input < pBox.Inputs(); input++ {
+					pBox.SetDelay(output, input, 1)
+				}
 			}
 
-		} else if Wlc_ObjIsCi(pObj) || pObj.Type == WLC_OBJ_FF { // assuming that FFs are ordered immediately after PIs
+		} else if Wlc_ObjIsCi(pObj) != 0 || pObj.Type == uint32(WLC_OBJ_FF) { // assuming that FFs are ordered immediately after PIs
 
-			if pObj.Type == WLC_OBJ_FF {
+			if pObj.Type == uint32(WLC_OBJ_FF) {
 				Vec_IntPush(vFf2Ci, Gia_ManCiNum(pNew))
 			}
-			if Wlc_ObjRangeIsReversed(pObj) {
+			if Wlc_ObjRangeIsReversed(pObj) != 0 {
 				for k = 0; k < nRange; k++ {
 					Vec_IntPush(vRes, -1)
 				}
@@ -1229,27 +1249,27 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 					Vec_IntPush(vRes, Gia_ManAppendCi(pNew))
 				}
 			}
-			if pObj.Type == WLC_OBJ_FO {
+			if pObj.Type == uint32(WLC_OBJ_FO) {
 				nFFouts += Vec_IntSize(vRes)
 			}
-			if pObj.Type == WLC_OBJ_FF {
+			if pObj.Type == uint32(WLC_OBJ_FF) {
 				// complement flop output whose init state is 1
 			}
 
-		} else if pObj.Type == WLC_OBJ_BUF {
+		} else if pObj.Type == uint32(WLC_OBJ_BUF) {
 			var nRangeMax int32 = Abc_MaxInt(nRange0, nRange)
-			var pArg0 *int32 = Wlc_VecLoadFanins(vTemp0, pFans0, nRange0, nRangeMax, Wlc_ObjIsSignedFanin0(p, pObj))
+			var pArg0 []int32 = Wlc_VecLoadFanins(vTemp0, pFans0, nRange0, nRangeMax, Wlc_ObjIsSignedFanin0(p, pObj))
 			for k = 0; k < nRange; k++ {
 				Vec_IntPush(vRes, pArg0[k])
 			}
 
-		} else if pObj.Type == WLC_OBJ_CONST {
+		} else if pObj.Type == uint32(WLC_OBJ_CONST) {
 			var pTruth *word = (*word)(unsafe.Pointer(&Wlc_ObjFanins(pObj)[0]))
 			for k = 0; k < nRange; k++ {
 				Vec_IntPush(vRes, Abc_TtGetBit(pTruth, k))
 			}
 
-		} else if pObj.Type == WLC_OBJ_MUX {
+		} else if pObj.Type == uint32(WLC_OBJ_MUX) {
 			// It is strange and disturbing that Verilog standard treats these statements differently:
 			// Statement 1:
 			//     assign o = i ? b : a;
@@ -1274,15 +1294,15 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 			for k = 0; k < Wlc_ObjFaninNum(pObj); k++ {
 				iFanin = Wlc_ObjFaninId(pObj, k)
 				if k > 0 {
-					fSigned &= Wlc_NtkObj(p, iFanin).Signed
+					fSigned &= int32(Wlc_NtkObj(p, iFanin).Signed)
 				}
 			}
 			Vec_IntClear(vTemp1)
-			if pPar.fDecMuxes {
+			if pPar.fDecMuxes != 0 {
 				for k = 0; k < (1 << nRange0); k++ {
 					var iLitAnd int32 = 1
 					for b = 0; b < nRange0; b++ {
-						iLitAnd = Gia_ManHashAnd(pNew, iLitAnd, Abc_LitNotCond(pFans0[b], ((k>>b)&1) == 0))
+						iLitAnd = Gia_ManHashAnd(pNew, iLitAnd, Abc_LitNotCond(pFans0[b], boolToInt32(((k>>b)&1) == 0)))
 					}
 					Vec_IntPush(vTemp1, iLitAnd)
 				}
@@ -1294,7 +1314,7 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 					iFanin = Wlc_ObjFaninId(pObj, k)
 					if k > 0 {
 						nRange1 = Wlc_ObjRange(Wlc_NtkObj(p, iFanin))
-						pFans1 = Vec_IntEntryP(vBits, Wlc_ObjCopy(p, iFanin))
+						pFans1 = Vec_IntArray(vBits)[Wlc_ObjCopy(p, iFanin):]
 						if Wlc_ObjFaninNum(pObj) == 3 { // Statement 1
 							value := int32(0)
 							if b < nRange1 {
@@ -1314,14 +1334,14 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 						}
 					}
 				}
-				if pPar.fDecMuxes {
+				if pPar.fDecMuxes != 0 {
 					Vec_IntPush(vRes, Wlc_NtkMuxTree2(pNew, pFans0, nRange0, vTemp0, vTemp1, vTemp2))
 				} else {
 					Vec_IntPush(vRes, Wlc_NtkMuxTree_rec(pNew, pFans0, nRange0, vTemp0, 0))
 				}
 			}
 
-		} else if pObj.Type == WLC_OBJ_SEL {
+		} else if pObj.Type == uint32(WLC_OBJ_SEL) {
 			assert(nRange0 == Wlc_ObjFaninNum(pObj)-1, "nRange0 == Wlc_ObjFaninNum(pObj)-1")
 			Vec_IntClear(vTemp1)
 			for k = 0; k < nRange0; k++ {
@@ -1335,64 +1355,64 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 					if k > 0 {
 						var pFanin *Wlc_Obj_t = Wlc_NtkObj(p, iFanin)
 						assert(nRange == Wlc_ObjRange(pFanin), "nRange == Wlc_ObjRange(pFanin)")
-						pFans1 = Vec_IntEntryP(vBits, Wlc_ObjCopy(p, iFanin))
+						pFans1 = Vec_IntArray(vBits)[Wlc_ObjCopy(p, iFanin):]
 						Vec_IntPush(vTemp0, pFans1[b])
 					}
 				}
 				Vec_IntPush(vRes, Wlc_NtkMuxTree2(pNew, nil, 0, vTemp0, vTemp1, vTemp2))
 			}
 
-		} else if pObj.Type == WLC_OBJ_SHIFT_R || pObj.Type == WLC_OBJ_SHIFT_RA ||
-			pObj.Type == WLC_OBJ_SHIFT_L || pObj.Type == WLC_OBJ_SHIFT_LA {
+		} else if pObj.Type == uint32(WLC_OBJ_SHIFT_R) || pObj.Type == uint32(WLC_OBJ_SHIFT_RA) ||
+			pObj.Type == uint32(WLC_OBJ_SHIFT_L) || pObj.Type == uint32(WLC_OBJ_SHIFT_LA) {
 			var nRangeMax int32 = Abc_MaxInt(nRange, nRange0)
-			var pArg0 *int32 = Wlc_VecLoadFanins(vTemp0, pFans0, nRange0, nRangeMax, Wlc_ObjIsSignedFanin0(p, pObj))
-			if pObj.Type == WLC_OBJ_SHIFT_R || pObj.Type == WLC_OBJ_SHIFT_RA {
-				Wlc_BlastShiftRight(pNew, pArg0, nRangeMax, pFans1, nRange1, Wlc_ObjIsSignedFanin0(p, pObj) && pObj.Type == WLC_OBJ_SHIFT_RA, vRes)
+			var pArg0 []int32 = Wlc_VecLoadFanins(vTemp0, pFans0, nRange0, nRangeMax, Wlc_ObjIsSignedFanin0(p, pObj))
+			if pObj.Type == uint32(WLC_OBJ_SHIFT_R) || pObj.Type == uint32(WLC_OBJ_SHIFT_RA) {
+				Wlc_BlastShiftRight(pNew, pArg0, nRangeMax, pFans1, nRange1, boolToInt32(Wlc_ObjIsSignedFanin0(p, pObj) != 0 && pObj.Type == uint32(WLC_OBJ_SHIFT_RA)), vRes)
 			} else {
 				Wlc_BlastShiftLeft(pNew, pArg0, nRangeMax, pFans1, nRange1, 0, vRes)
 			}
 			Vec_IntShrink(vRes, nRange)
 
-		} else if pObj.Type == WLC_OBJ_ROTATE_R {
+		} else if pObj.Type == uint32(WLC_OBJ_ROTATE_R) {
 			assert(nRange0 == nRange, "nRange0 == nRange")
 			Wlc_BlastRotateRight(pNew, pFans0, nRange0, pFans1, nRange1, vRes)
 
-		} else if pObj.Type == WLC_OBJ_ROTATE_L {
+		} else if pObj.Type == uint32(WLC_OBJ_ROTATE_L) {
 			assert(nRange0 == nRange, "nRange0 == nRange")
 			Wlc_BlastRotateLeft(pNew, pFans0, nRange0, pFans1, nRange1, vRes)
 
-		} else if pObj.Type == WLC_OBJ_BIT_NOT {
+		} else if pObj.Type == uint32(WLC_OBJ_BIT_NOT) {
 			var nRangeMax int32 = Abc_MaxInt(nRange, nRange0)
-			var pArg0 *int32 = Wlc_VecLoadFanins(vTemp0, pFans0, nRange0, nRangeMax, Wlc_ObjIsSignedFanin0(p, pObj))
+			var pArg0 []int32 = Wlc_VecLoadFanins(vTemp0, pFans0, nRange0, nRangeMax, Wlc_ObjIsSignedFanin0(p, pObj))
 			for k = 0; k < nRange; k++ {
 				Vec_IntPush(vRes, Abc_LitNot(pArg0[k]))
 			}
 
-		} else if pObj.Type == WLC_OBJ_BIT_AND || pObj.Type == WLC_OBJ_BIT_NAND {
+		} else if pObj.Type == uint32(WLC_OBJ_BIT_AND) || pObj.Type == uint32(WLC_OBJ_BIT_NAND) {
 			var nRangeMax int32 = Abc_MaxInt(nRange, Abc_MaxInt(nRange0, nRange1))
-			var pArg0 *int32 = Wlc_VecLoadFanins(vTemp0, pFans0, nRange0, nRangeMax, Wlc_ObjIsSignedFanin01(p, pObj))
-			var pArg1 *int32 = Wlc_VecLoadFanins(vTemp1, pFans1, nRange1, nRangeMax, Wlc_ObjIsSignedFanin01(p, pObj))
+			var pArg0 []int32 = Wlc_VecLoadFanins(vTemp0, pFans0, nRange0, nRangeMax, Wlc_ObjIsSignedFanin01(p, pObj))
+			var pArg1 []int32 = Wlc_VecLoadFanins(vTemp1, pFans1, nRange1, nRangeMax, Wlc_ObjIsSignedFanin01(p, pObj))
 			for k = 0; k < nRange; k++ {
-				Vec_IntPush(vRes, Abc_LitNotCond(Gia_ManHashAnd(pNew, pArg0[k], pArg1[k]), pObj.Type == WLC_OBJ_BIT_NAND))
+				Vec_IntPush(vRes, Abc_LitNotCond(Gia_ManHashAnd(pNew, pArg0[k], pArg1[k]), boolToInt32(pObj.Type == uint32(WLC_OBJ_BIT_NAND))))
 			}
 
-		} else if pObj.Type == WLC_OBJ_BIT_OR || pObj.Type == WLC_OBJ_BIT_NOR {
+		} else if pObj.Type == uint32(WLC_OBJ_BIT_OR) || pObj.Type == uint32(WLC_OBJ_BIT_NOR) {
 			var nRangeMax int32 = Abc_MaxInt(nRange, Abc_MaxInt(nRange0, nRange1))
-			var pArg0 *int32 = Wlc_VecLoadFanins(vTemp0, pFans0, nRange0, nRangeMax, Wlc_ObjIsSignedFanin01(p, pObj))
-			var pArg1 *int32 = Wlc_VecLoadFanins(vTemp1, pFans1, nRange1, nRangeMax, Wlc_ObjIsSignedFanin01(p, pObj))
+			var pArg0 []int32 = Wlc_VecLoadFanins(vTemp0, pFans0, nRange0, nRangeMax, Wlc_ObjIsSignedFanin01(p, pObj))
+			var pArg1 []int32 = Wlc_VecLoadFanins(vTemp1, pFans1, nRange1, nRangeMax, Wlc_ObjIsSignedFanin01(p, pObj))
 			for k = 0; k < nRange; k++ {
-				Vec_IntPush(vRes, Abc_LitNotCond(Gia_ManHashOr(pNew, pArg0[k], pArg1[k]), pObj.Type == WLC_OBJ_BIT_NOR))
+				Vec_IntPush(vRes, Abc_LitNotCond(Gia_ManHashOr(pNew, pArg0[k], pArg1[k]), boolToInt32(pObj.Type == uint32(WLC_OBJ_BIT_NOR))))
 			}
 
-		} else if pObj.Type == WLC_OBJ_BIT_XOR || pObj.Type == WLC_OBJ_BIT_NXOR {
+		} else if pObj.Type == uint32(WLC_OBJ_BIT_XOR) || pObj.Type == uint32(WLC_OBJ_BIT_NXOR) {
 			var nRangeMax int32 = Abc_MaxInt(nRange, Abc_MaxInt(nRange0, nRange1))
-			var pArg0 *int32 = Wlc_VecLoadFanins(vTemp0, pFans0, nRange0, nRangeMax, Wlc_ObjIsSignedFanin01(p, pObj))
-			var pArg1 *int32 = Wlc_VecLoadFanins(vTemp1, pFans1, nRange1, nRangeMax, Wlc_ObjIsSignedFanin01(p, pObj))
+			var pArg0 []int32 = Wlc_VecLoadFanins(vTemp0, pFans0, nRange0, nRangeMax, Wlc_ObjIsSignedFanin01(p, pObj))
+			var pArg1 []int32 = Wlc_VecLoadFanins(vTemp1, pFans1, nRange1, nRangeMax, Wlc_ObjIsSignedFanin01(p, pObj))
 			for k = 0; k < nRange; k++ {
-				Vec_IntPush(vRes, Abc_LitNotCond(Gia_ManHashXor(pNew, pArg0[k], pArg1[k]), pObj.Type == WLC_OBJ_BIT_NXOR))
+				Vec_IntPush(vRes, Abc_LitNotCond(Gia_ManHashXor(pNew, pArg0[k], pArg1[k]), boolToInt32(pObj.Type == uint32(WLC_OBJ_BIT_NXOR))))
 			}
 
-		} else if pObj.Type == WLC_OBJ_BIT_SELECT {
+		} else if pObj.Type == uint32(WLC_OBJ_BIT_SELECT) {
 			var pFanin *Wlc_Obj_t = Wlc_ObjFanin0(p, pObj)
 			var End int32 = Wlc_ObjRangeEnd(pObj)
 			var Beg int32 = Wlc_ObjRangeBeg(pObj)
@@ -1411,7 +1431,7 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 				}
 			}
 
-		} else if pObj.Type == WLC_OBJ_BIT_CONCAT {
+		} else if pObj.Type == uint32(WLC_OBJ_BIT_CONCAT) {
 			var iFanin, nTotal int32
 			// inlining of macro Wlc_ObjForEachFanin
 			for k = 0; k < Wlc_ObjFaninNum(pObj); k++ {
@@ -1423,15 +1443,15 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 			for k = Wlc_ObjFaninNum(pObj) - 1; k >= 0; k-- {
 				iFanin = Wlc_ObjFaninId(pObj, k)
 				nRange0 = Wlc_ObjRange(Wlc_NtkObj(p, iFanin))
-				pFans0 = Vec_IntEntryP(vBits, Wlc_ObjCopy(p, iFanin))
+				pFans0 = Vec_IntArray(vBits)[Wlc_ObjCopy(p, iFanin):]
 				for b = 0; b < nRange0; b++ {
 					Vec_IntPush(vRes, pFans0[b])
 				}
 			}
 
-		} else if pObj.Type == WLC_OBJ_BIT_ZEROPAD || pObj.Type == WLC_OBJ_BIT_SIGNEXT {
+		} else if pObj.Type == uint32(WLC_OBJ_BIT_ZEROPAD) || pObj.Type == uint32(WLC_OBJ_BIT_SIGNEXT) {
 			var Pad int32
-			if pObj.Type == WLC_OBJ_BIT_ZEROPAD {
+			if pObj.Type == uint32(WLC_OBJ_BIT_ZEROPAD) {
 				Pad = 0
 			} else {
 				Pad = pFans0[nRange0-1]
@@ -1444,46 +1464,46 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 				Vec_IntPush(vRes, Pad)
 			}
 
-		} else if pObj.Type == WLC_OBJ_LOGIC_NOT {
-			iLit = Wlc_BlastReduction(pNew, pFans0, nRange0, WLC_OBJ_REDUCT_OR)
+		} else if pObj.Type == uint32(WLC_OBJ_LOGIC_NOT) {
+			iLit = Wlc_BlastReduction(pNew, pFans0, nRange0, int32(WLC_OBJ_REDUCT_OR))
 			Vec_IntFill(vRes, 1, Abc_LitNot(iLit))
 			for k = 1; k < nRange; k++ {
 				Vec_IntPush(vRes, 0)
 			}
 
-		} else if pObj.Type == WLC_OBJ_LOGIC_IMPL {
-			var iLit0 int32 = Wlc_BlastReduction(pNew, pFans0, nRange0, WLC_OBJ_REDUCT_OR)
-			var iLit1 int32 = Wlc_BlastReduction(pNew, pFans1, nRange1, WLC_OBJ_REDUCT_OR)
+		} else if pObj.Type == uint32(WLC_OBJ_LOGIC_IMPL) {
+			var iLit0 int32 = Wlc_BlastReduction(pNew, pFans0, nRange0, int32(WLC_OBJ_REDUCT_OR))
+			var iLit1 int32 = Wlc_BlastReduction(pNew, pFans1, nRange1, int32(WLC_OBJ_REDUCT_OR))
 			Vec_IntFill(vRes, 1, Gia_ManHashOr(pNew, Abc_LitNot(iLit0), iLit1))
 			for k = 1; k < nRange; k++ {
 				Vec_IntPush(vRes, 0)
 			}
 
-		} else if pObj.Type == WLC_OBJ_LOGIC_AND {
-			var iLit0 int32 = Wlc_BlastReduction(pNew, pFans0, nRange0, WLC_OBJ_REDUCT_OR)
-			var iLit1 int32 = Wlc_BlastReduction(pNew, pFans1, nRange1, WLC_OBJ_REDUCT_OR)
+		} else if pObj.Type == uint32(WLC_OBJ_LOGIC_AND) {
+			var iLit0 int32 = Wlc_BlastReduction(pNew, pFans0, nRange0, int32(WLC_OBJ_REDUCT_OR))
+			var iLit1 int32 = Wlc_BlastReduction(pNew, pFans1, nRange1, int32(WLC_OBJ_REDUCT_OR))
 			Vec_IntFill(vRes, 1, Gia_ManHashAnd(pNew, iLit0, iLit1))
 			for k = 1; k < nRange; k++ {
 				Vec_IntPush(vRes, 0)
 			}
 
-		} else if pObj.Type == WLC_OBJ_LOGIC_OR {
-			var iLit0 int32 = Wlc_BlastReduction(pNew, pFans0, nRange0, WLC_OBJ_REDUCT_OR)
-			var iLit1 int32 = Wlc_BlastReduction(pNew, pFans1, nRange1, WLC_OBJ_REDUCT_OR)
+		} else if pObj.Type == uint32(WLC_OBJ_LOGIC_OR) {
+			var iLit0 int32 = Wlc_BlastReduction(pNew, pFans0, nRange0, int32(WLC_OBJ_REDUCT_OR))
+			var iLit1 int32 = Wlc_BlastReduction(pNew, pFans1, nRange1, int32(WLC_OBJ_REDUCT_OR))
 			Vec_IntFill(vRes, 1, Gia_ManHashOr(pNew, iLit0, iLit1))
 			for k = 1; k < nRange; k++ {
 				Vec_IntPush(vRes, 0)
 			}
 
-		} else if pObj.Type == WLC_OBJ_LOGIC_XOR {
-			var iLit0 int32 = Wlc_BlastReduction(pNew, pFans0, nRange0, WLC_OBJ_REDUCT_OR)
-			var iLit1 int32 = Wlc_BlastReduction(pNew, pFans1, nRange1, WLC_OBJ_REDUCT_OR)
+		} else if pObj.Type == uint32(WLC_OBJ_LOGIC_XOR) {
+			var iLit0 int32 = Wlc_BlastReduction(pNew, pFans0, nRange0, int32(WLC_OBJ_REDUCT_OR))
+			var iLit1 int32 = Wlc_BlastReduction(pNew, pFans1, nRange1, int32(WLC_OBJ_REDUCT_OR))
 			Vec_IntFill(vRes, 1, Gia_ManHashXor(pNew, iLit0, iLit1))
 			for k = 1; k < nRange; k++ {
 				Vec_IntPush(vRes, 0)
 			}
 
-		} else if pObj.Type == WLC_OBJ_COMP_NOTEQU && Wlc_ObjFaninNum(pObj) > 2 {
+		} else if pObj.Type == uint32(WLC_OBJ_COMP_NOTEQU) && Wlc_ObjFaninNum(pObj) > 2 {
 			// find the max range
 			var a int32
 			var b int32
@@ -1497,10 +1517,10 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 				for b = a + 1; b < Wlc_ObjFaninNum(pObj); b++ {
 					var nRange0 int32 = Wlc_ObjRange(Wlc_NtkObj(p, Wlc_ObjFaninId(pObj, a)))
 					var nRange1 int32 = Wlc_ObjRange(Wlc_NtkObj(p, Wlc_ObjFaninId(pObj, b)))
-					var pFans0 *int32 = Vec_IntEntryP(vBits, Wlc_ObjCopy(p, Wlc_ObjFaninId(pObj, a)))
-					var pFans1 *int32 = Vec_IntEntryP(vBits, Wlc_ObjCopy(p, Wlc_ObjFaninId(pObj, b)))
-					var pArg0 *int32 = Wlc_VecLoadFanins(vTemp0, pFans0, nRange0, nRangeMax, 0)
-					var pArg1 *int32 = Wlc_VecLoadFanins(vTemp1, pFans1, nRange1, nRangeMax, 0)
+					var pFans0 []int32 = Vec_IntArray(vBits)[Wlc_ObjCopy(p, Wlc_ObjFaninId(pObj, a)):]
+					var pFans1 []int32 = Vec_IntArray(vBits)[Wlc_ObjCopy(p, Wlc_ObjFaninId(pObj, b)):]
+					var pArg0 []int32 = Wlc_VecLoadFanins(vTemp0, pFans0, nRange0, nRangeMax, 0)
+					var pArg1 []int32 = Wlc_VecLoadFanins(vTemp1, pFans1, nRange1, nRangeMax, 0)
 					var iLit int32
 					for k = 0; k < nRangeMax; k++ {
 						iLit = Gia_ManHashOr(pNew, iLit, Gia_ManHashXor(pNew, pArg0[k], pArg1[k]))
@@ -1513,27 +1533,27 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 				Vec_IntPush(vRes, 0)
 			}
 
-		} else if pObj.Type == WLC_OBJ_COMP_EQU || pObj.Type == WLC_OBJ_COMP_NOTEQU {
+		} else if pObj.Type == uint32(WLC_OBJ_COMP_EQU) || pObj.Type == uint32(WLC_OBJ_COMP_NOTEQU) {
 			var iLit int32
 			var nRangeMax int32 = Abc_MaxInt(nRange0, nRange1)
-			var pArg0 *int32 = Wlc_VecLoadFanins(vTemp0, pFans0, nRange0, nRangeMax, Wlc_ObjIsSignedFanin01(p, pObj))
-			var pArg1 *int32 = Wlc_VecLoadFanins(vTemp1, pFans1, nRange1, nRangeMax, Wlc_ObjIsSignedFanin01(p, pObj))
+			var pArg0 []int32 = Wlc_VecLoadFanins(vTemp0, pFans0, nRange0, nRangeMax, Wlc_ObjIsSignedFanin01(p, pObj))
+			var pArg1 []int32 = Wlc_VecLoadFanins(vTemp1, pFans1, nRange1, nRangeMax, Wlc_ObjIsSignedFanin01(p, pObj))
 			for k = 0; k < nRangeMax; k++ {
 				iLit = Gia_ManHashOr(pNew, iLit, Gia_ManHashXor(pNew, pArg0[k], pArg1[k]))
 			}
-			Vec_IntFill(vRes, 1, Abc_LitNotCond(iLit, pObj.Type == WLC_OBJ_COMP_EQU))
+			Vec_IntFill(vRes, 1, Abc_LitNotCond(iLit, boolToInt32(pObj.Type == uint32(WLC_OBJ_COMP_EQU))))
 			for k = 1; k < nRange; k++ {
 				Vec_IntPush(vRes, 0)
 			}
 
-		} else if pObj.Type == WLC_OBJ_COMP_LESS || pObj.Type == WLC_OBJ_COMP_MOREEQU ||
-			pObj.Type == WLC_OBJ_COMP_MORE || pObj.Type == WLC_OBJ_COMP_LESSEQU {
+		} else if pObj.Type == uint32(WLC_OBJ_COMP_LESS) || pObj.Type == uint32(WLC_OBJ_COMP_MOREEQU) ||
+			pObj.Type == uint32(WLC_OBJ_COMP_MORE) || pObj.Type == uint32(WLC_OBJ_COMP_LESSEQU) {
 			var nRangeMax int32 = Abc_MaxInt(nRange0, nRange1)
 			var fSigned int32 = Wlc_ObjIsSignedFanin01(p, pObj)
-			var pArg0 *int32 = Wlc_VecLoadFanins(vTemp0, pFans0, nRange0, nRangeMax, fSigned)
-			var pArg1 *int32 = Wlc_VecLoadFanins(vTemp1, pFans1, nRange1, nRangeMax, fSigned)
-			var fSwap int32 = (pObj.Type == WLC_OBJ_COMP_MORE || pObj.Type == WLC_OBJ_COMP_LESSEQU)
-			var fCompl int32 = (pObj.Type == WLC_OBJ_COMP_MOREEQU || pObj.Type == WLC_OBJ_COMP_LESSEQU)
+			var pArg0 []int32 = Wlc_VecLoadFanins(vTemp0, pFans0, nRange0, nRangeMax, fSigned)
+			var pArg1 []int32 = Wlc_VecLoadFanins(vTemp1, pFans1, nRange1, nRangeMax, fSigned)
+			var fSwap int32 = boolToInt32(pObj.Type == uint32(WLC_OBJ_COMP_MORE) || pObj.Type == uint32(WLC_OBJ_COMP_LESSEQU))
+			var fCompl int32 = boolToInt32(pObj.Type == uint32(WLC_OBJ_COMP_MOREEQU) || pObj.Type == uint32(WLC_OBJ_COMP_LESSEQU))
 			if fSwap != 0 {
 				pArg0, pArg1 = pArg1, pArg0
 			}
@@ -1548,25 +1568,25 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 				Vec_IntPush(vRes, 0)
 			}
 
-		} else if pObj.Type == WLC_OBJ_REDUCT_AND || pObj.Type == WLC_OBJ_REDUCT_OR || pObj.Type == WLC_OBJ_REDUCT_XOR ||
-			pObj.Type == WLC_OBJ_REDUCT_NAND || pObj.Type == WLC_OBJ_REDUCT_NOR || pObj.Type == WLC_OBJ_REDUCT_NXOR {
-			Vec_IntPush(vRes, Wlc_BlastReduction(pNew, pFans0, nRange0, pObj.Type))
+		} else if pObj.Type == uint32(WLC_OBJ_REDUCT_AND) || pObj.Type == uint32(WLC_OBJ_REDUCT_OR) || pObj.Type == uint32(WLC_OBJ_REDUCT_XOR) ||
+			pObj.Type == uint32(WLC_OBJ_REDUCT_NAND) || pObj.Type == uint32(WLC_OBJ_REDUCT_NOR) || pObj.Type == uint32(WLC_OBJ_REDUCT_NXOR) {
+			Vec_IntPush(vRes, Wlc_BlastReduction(pNew, pFans0, nRange0, int32(pObj.Type)))
 			for k = 1; k < nRange; k++ {
 				Vec_IntPush(vRes, 0)
 			}
 
-		} else if pObj.Type == WLC_OBJ_ARI_ADD || pObj.Type == WLC_OBJ_ARI_SUB {
+		} else if pObj.Type == uint32(WLC_OBJ_ARI_ADD) || pObj.Type == uint32(WLC_OBJ_ARI_SUB) {
 			var nRangeMax int32 = Abc_MaxInt(nRange, Abc_MaxInt(nRange0, nRange1))
-			var pArg0 *int32 = Wlc_VecLoadFanins(vRes, pFans0, nRange0, nRangeMax, Wlc_ObjIsSignedFanin01(p, pObj))
-			var pArg1 *int32 = Wlc_VecLoadFanins(vTemp1, pFans1, nRange1, nRangeMax, Wlc_ObjIsSignedFanin01(p, pObj))
+			var pArg0 []int32 = Wlc_VecLoadFanins(vRes, pFans0, nRange0, nRangeMax, Wlc_ObjIsSignedFanin01(p, pObj))
+			var pArg1 []int32 = Wlc_VecLoadFanins(vTemp1, pFans1, nRange1, nRangeMax, Wlc_ObjIsSignedFanin01(p, pObj))
 			var CarryIn int32
 			if Wlc_ObjFaninNum(pObj) == 3 {
 				CarryIn = pFans2[0]
 			} else {
 				CarryIn = 0
 			}
-			if pObj.Type == WLC_OBJ_ARI_ADD {
-				if pPar.fCla {
+			if pObj.Type == uint32(WLC_OBJ_ARI_ADD) {
+				if pPar.fCla != 0 {
 					Wlc_BlastAdderCLA(pNew, pArg0, pArg1, nRangeMax, Wlc_ObjIsSignedFanin01(p, pObj), CarryIn) // result is in pFan0 (vRes)
 					//Wlc_BlastAdderFast( pNew, pArg0, pArg1, nRangeMax, Wlc_ObjIsSignedFanin01(p, pObj), CarryIn ); // result is in pFan0 (vRes)
 				} else {
@@ -1578,11 +1598,11 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 			} // result is in pFan0 (vRes)
 			Vec_IntShrink(vRes, nRange)
 
-		} else if pObj.Type == WLC_OBJ_ARI_ADDSUB {
+		} else if pObj.Type == uint32(WLC_OBJ_ARI_ADDSUB) {
 			var nRangeMax int32 = Abc_MaxInt(nRange, Abc_MaxInt(nRange2, nRange3))
-			var pArg0 *int32 = Wlc_VecLoadFanins(vTemp0, pFans2, nRange2, nRangeMax, Wlc_ObjIsSignedFanin01(p, pObj))
-			var pArg1 *int32 = Wlc_VecLoadFanins(vTemp1, pFans2, nRange2, nRangeMax, Wlc_ObjIsSignedFanin01(p, pObj))
-			var pArg2 *int32 = Wlc_VecLoadFanins(vTemp2, pFans3, nRange3, nRangeMax, Wlc_ObjIsSignedFanin01(p, pObj))
+			var pArg0 []int32 = Wlc_VecLoadFanins(vTemp0, pFans2, nRange2, nRangeMax, Wlc_ObjIsSignedFanin01(p, pObj))
+			var pArg1 []int32 = Wlc_VecLoadFanins(vTemp1, pFans2, nRange2, nRangeMax, Wlc_ObjIsSignedFanin01(p, pObj))
+			var pArg2 []int32 = Wlc_VecLoadFanins(vTemp2, pFans3, nRange3, nRangeMax, Wlc_ObjIsSignedFanin01(p, pObj))
 			var ModeIn int32 = pFans0[0]
 			var CarryIn int32 = pFans1[0]
 			var j int32
@@ -1593,25 +1613,25 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 				Vec_IntPush(vRes, Gia_ManHashMux(pNew, ModeIn, pArg0[j], pArg1[j]))
 			}
 
-		} else if pObj.Type == WLC_OBJ_ARI_MULTI {
+		} else if pObj.Type == uint32(WLC_OBJ_ARI_MULTI) {
 			if fUseOldMultiplierBlasting != 0 {
 				var nRangeMax int32 = Abc_MaxInt(nRange, Abc_MaxInt(nRange0, nRange1))
-				var pArg0 *int32 = Wlc_VecLoadFanins(vTemp0, pFans0, nRange0, nRangeMax, Wlc_ObjIsSignedFanin01(p, pObj))
-				var pArg1 *int32 = Wlc_VecLoadFanins(vTemp1, pFans1, nRange1, nRangeMax, Wlc_ObjIsSignedFanin01(p, pObj))
+				var pArg0 []int32 = Wlc_VecLoadFanins(vTemp0, pFans0, nRange0, nRangeMax, Wlc_ObjIsSignedFanin01(p, pObj))
+				var pArg1 []int32 = Wlc_VecLoadFanins(vTemp1, pFans1, nRange1, nRangeMax, Wlc_ObjIsSignedFanin01(p, pObj))
 				Wlc_BlastMultiplier2(pNew, pArg0, pArg1, nRange, vTemp2, vRes)
 				Vec_IntShrink(vRes, nRange)
 
 			} else {
 				var fSigned int32 = Wlc_ObjIsSignedFanin01(p, pObj)
 				var nRangeMax int32 = Abc_MaxInt(nRange0, nRange1)
-				var pArg0 *int32 = Wlc_VecLoadFanins(vTemp0, pFans0, nRange0, nRangeMax, fSigned)
-				var pArg1 *int32 = Wlc_VecLoadFanins(vTemp1, pFans1, nRange1, nRangeMax, fSigned)
+				var pArg0 []int32 = Wlc_VecLoadFanins(vTemp0, pFans0, nRange0, nRangeMax, fSigned)
+				var pArg1 []int32 = Wlc_VecLoadFanins(vTemp1, pFans1, nRange1, nRangeMax, fSigned)
 				if Wlc_NtkCountConstBits(pArg0, nRangeMax) < Wlc_NtkCountConstBits(pArg1, nRangeMax) {
 					pArg0, pArg1 = pArg1, pArg0
 				}
-				if pPar.fBooth {
+				if pPar.fBooth != 0 {
 					Wlc_BlastBooth(pNew, pArg0, pArg1, nRange0, nRange1, vRes, fSigned, pPar.fCla)
-				} else if pPar.fCla {
+				} else if pPar.fCla != 0 {
 					Wlc_BlastMultiplier3(pNew, pArg0, pArg1, nRange0, nRange1, vRes, Wlc_ObjIsSignedFanin01(p, pObj), pPar.fCla)
 				} else {
 					Wlc_BlastMultiplier(pNew, pArg0, pArg1, nRangeMax, nRangeMax, vTemp2, vRes, fSigned)
@@ -1628,38 +1648,38 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 				assert(Vec_IntSize(vRes) == nRange, "Vec_IntSize(vRes) == nRange")
 			}
 
-		} else if pObj.Type == WLC_OBJ_ARI_DIVIDE || pObj.Type == WLC_OBJ_ARI_REM || pObj.Type == WLC_OBJ_ARI_MODULUS {
+		} else if pObj.Type == uint32(WLC_OBJ_ARI_DIVIDE) || pObj.Type == uint32(WLC_OBJ_ARI_REM) || pObj.Type == uint32(WLC_OBJ_ARI_MODULUS) {
 			var nRangeMax int32 = Abc_MaxInt(nRange, Abc_MaxInt(nRange0, nRange1))
 			var fSigned int32 = Wlc_ObjIsSignedFanin01(p, pObj)
-			var pArg0 *int32 = Wlc_VecLoadFanins(vTemp0, pFans0, nRange0, nRangeMax, fSigned)
-			var pArg1 *int32 = Wlc_VecLoadFanins(vTemp1, pFans1, nRange1, nRangeMax, fSigned)
+			var pArg0 []int32 = Wlc_VecLoadFanins(vTemp0, pFans0, nRange0, nRangeMax, fSigned)
+			var pArg1 []int32 = Wlc_VecLoadFanins(vTemp1, pFans1, nRange1, nRangeMax, fSigned)
 			if fSigned != 0 {
-				Wlc_BlastDividerSigned(pNew, pArg0, nRangeMax, pArg1, nRangeMax, pObj.Type == WLC_OBJ_ARI_DIVIDE, vRes)
+				Wlc_BlastDividerSigned(pNew, pArg0, nRangeMax, pArg1, nRangeMax, boolToInt32(pObj.Type == uint32(WLC_OBJ_ARI_DIVIDE)), vRes)
 			} else {
-				Wlc_BlastDivider(pNew, pArg0, nRangeMax, pArg1, nRangeMax, pObj.Type == WLC_OBJ_ARI_DIVIDE, vRes)
+				Wlc_BlastDivider(pNew, pArg0, nRangeMax, pArg1, nRangeMax, boolToInt32(pObj.Type == uint32(WLC_OBJ_ARI_DIVIDE)), vRes)
 			}
 			Vec_IntShrink(vRes, nRange)
-			if !pPar.fDivBy0 {
+			if pPar.fDivBy0 == 0 {
 				Wlc_BlastZeroCondition(pNew, pFans1, nRange1, vRes)
 			}
 
-		} else if pObj.Type == WLC_OBJ_ARI_MINUS {
+		} else if pObj.Type == uint32(WLC_OBJ_ARI_MINUS) {
 			var nRangeMax int32 = Abc_MaxInt(nRange0, nRange)
-			var pArg0 *int32 = Wlc_VecLoadFanins(vTemp0, pFans0, nRange0, nRangeMax, Wlc_ObjIsSignedFanin0(p, pObj))
+			var pArg0 []int32 = Wlc_VecLoadFanins(vTemp0, pFans0, nRange0, nRangeMax, Wlc_ObjIsSignedFanin0(p, pObj))
 			Wlc_BlastMinus(pNew, pArg0, nRangeMax, vRes)
 			Vec_IntShrink(vRes, nRange)
 
-		} else if pObj.Type == WLC_OBJ_ARI_POWER {
+		} else if pObj.Type == uint32(WLC_OBJ_ARI_POWER) {
 			var nRangeMax int32 = Abc_MaxInt(nRange0, nRange)
-			var pArg0 *int32 = Wlc_VecLoadFanins(vTemp0, pFans0, nRange0, nRangeMax, Wlc_ObjIsSignedFanin0(p, pObj))
-			var pArg1 *int32 = Wlc_VecLoadFanins(vTemp1, pFans1, nRange1, nRange1, Wlc_ObjIsSignedFanin1(p, pObj))
+			var pArg0 []int32 = Wlc_VecLoadFanins(vTemp0, pFans0, nRange0, nRangeMax, Wlc_ObjIsSignedFanin0(p, pObj))
+			var pArg1 []int32 = Wlc_VecLoadFanins(vTemp1, pFans1, nRange1, nRange1, Wlc_ObjIsSignedFanin1(p, pObj))
 			Wlc_BlastPower(pNew, pArg0, nRangeMax, pArg1, nRange1, vTemp2, vRes)
 			Vec_IntShrink(vRes, nRange)
 
-		} else if pObj.Type == WLC_OBJ_ARI_SQRT {
-			var pArg0 *int32 = Wlc_VecLoadFanins(vTemp0, pFans0, nRange0, nRange0+(nRange0&1), 0)
+		} else if pObj.Type == uint32(WLC_OBJ_ARI_SQRT) {
+			var pArg0 []int32 = Wlc_VecLoadFanins(vTemp0, pFans0, nRange0, nRange0+(nRange0&1), 0)
 			nRange0 += (nRange0 & 1)
-			if pPar.fNonRest {
+			if pPar.fNonRest != 0 {
 				Wlc_BlastSqrtNR(pNew, pArg0, nRange0, vTemp2, vRes)
 			} else {
 				Wlc_BlastSqrt(pNew, pArg0, nRange0, vTemp2, vRes)
@@ -1670,8 +1690,8 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 				Vec_IntShrink(vRes, nRange)
 			}
 
-		} else if pObj.Type == WLC_OBJ_ARI_SQUARE {
-			var pArg0 *int32 = Wlc_VecLoadFanins(vTemp0, pFans0, nRange0, nRange0, 0)
+		} else if pObj.Type == uint32(WLC_OBJ_ARI_SQUARE) {
+			var pArg0 []int32 = Wlc_VecLoadFanins(vTemp0, pFans0, nRange0, nRange0, 0)
 			Wlc_BlastSquare(pNew, pArg0, nRange0, vTemp2, vRes)
 			if nRange > Vec_IntSize(vRes) {
 				Vec_IntFillExtra(vRes, nRange, 0)
@@ -1679,8 +1699,8 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 				Vec_IntShrink(vRes, nRange)
 			}
 
-		} else if pObj.Type == WLC_OBJ_DEC {
-			var pArg0 *int32 = Wlc_VecLoadFanins(vTemp0, pFans0, nRange0, nRange0, 0)
+		} else if pObj.Type == uint32(WLC_OBJ_DEC) {
+			var pArg0 []int32 = Wlc_VecLoadFanins(vTemp0, pFans0, nRange0, nRange0, 0)
 			Wlc_BlastDecoder(pNew, pArg0, nRange0, vTemp2, vRes)
 			if nRange > Vec_IntSize(vRes) {
 				Vec_IntFillExtra(vRes, nRange, 0)
@@ -1688,16 +1708,16 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 				Vec_IntShrink(vRes, nRange)
 			}
 
-		} else if pObj.Type == WLC_OBJ_TABLE {
+		} else if pObj.Type == uint32(WLC_OBJ_TABLE) {
 			Wlc_BlastTable(pNew, Wlc_ObjTable(p, pObj), pFans0, nRange0, nRange, vRes)
-		} else if pObj.Type == WLC_OBJ_LUT && p.vLutTruths {
+		} else if pObj.Type == uint32(WLC_OBJ_LUT) && p.vLutTruths != nil {
 			Wlc_BlastLut(pNew, Vec_WrdEntry(p.vLutTruths, Wlc_ObjId(p, pObj)), pFans0, nRange0, nRange, vRes)
 		} else {
 			assert(false, "0")
 		}
 		assert(Vec_IntSize(vBits) == Wlc_ObjCopy(p, i), "Vec_IntSize(vBits) == Wlc_ObjCopy(p, i)")
 		Vec_IntAppend(vBits, vRes)
-		if vAddOutputs && !Wlc_ObjIsCo(pObj) && ((pObj.Type >= WLC_OBJ_MUX && pObj.Type <= WLC_OBJ_ROTATE_L) || (pObj.Type >= WLC_OBJ_COMP_EQU && pObj.Type <= WLC_OBJ_COMP_MOREEQU) || (pObj.Type >= WLC_OBJ_ARI_ADD && pObj.Type <= WLC_OBJ_ARI_SQUARE)) {
+		if vAddOutputs != nil && Wlc_ObjIsCo(pObj) == 0 && ((pObj.Type >= uint32(WLC_OBJ_MUX) && pObj.Type <= uint32(WLC_OBJ_ROTATE_L)) || (pObj.Type >= uint32(WLC_OBJ_COMP_EQU) && pObj.Type <= uint32(WLC_OBJ_COMP_MOREEQU)) || (pObj.Type >= uint32(WLC_OBJ_ARI_ADD) && pObj.Type <= uint32(WLC_OBJ_ARI_SQUARE))) {
 			Vec_IntAppend(vAddOutputs, vRes)
 			Vec_IntPush(vAddObjs, Wlc_ObjId(p, pObj))
 		}
@@ -1716,17 +1736,17 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 		var pBox *If_Box_t
 		var Buffer string // was [100]byte in C
 
-		var pTable *float32
+		var pTable []float32
 		var vTemp0 *Vec_Int_t = Vec_IntAlloc(100)
 		var vTemp1 *Vec_Int_t = Vec_IntAlloc(100)
 		var iLit int32
 		var nRange int32 = Wlc_ObjRange(pObj)
-		var pFans0, pFans1, pFans2, pFans3 *int32
+		var pFans0, pFans1, pFans2, pFans3 []int32
 		var iReset, iSet, iEnable int32
 		var nRangeIn int32 = 2*nRange + 3 // D, reset, set, enable, Q
 		var iSre int32 = Wlc_ObjFaninId(pObj, 6)
 
-		assert(pObj.Type == WLC_OBJ_FF, "pObj.Type == WLC_OBJ_FF")
+		assert(pObj.Type == uint32(WLC_OBJ_FF), "pObj.Type == uint32(WLC_OBJ_FF)")
 
 		// create new box
 		if vTables == nil {
@@ -1738,10 +1758,10 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 		curPo += nRangeIn
 
 		// create delay table
-		pTable = ABC_ALLOC(float, 3+nRange*nRangeIn)
-		pTable[0] = Vec_PtrSize(vTables)
-		pTable[1] = nRangeIn
-		pTable[2] = nRange
+		pTable = make([]float32, 3+int(nRange*nRangeIn))
+		pTable[0] = float32(Vec_PtrSize(vTables))
+		pTable[1] = float32(nRangeIn)
+		pTable[2] = float32(nRange)
 		for k = 0; k < nRange*nRangeIn; k++ {
 			pTable[3+k] = 1.0
 		}
@@ -1749,22 +1769,22 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 
 		// create combinational outputs in the normal manager
 		if Wlc_ObjFaninNum(pObj) > 0 {
-			pFans0 = Vec_IntEntryP(vBits, Wlc_ObjCopy(p, Wlc_ObjFaninId0(pObj)))
+			pFans0 = Vec_IntArray(vBits)[Wlc_ObjCopy(p, Wlc_ObjFaninId0(pObj)):]
 		} else {
 			pFans0 = nil
 		}
 		if Wlc_ObjFaninNum(pObj) > 1 {
-			pFans1 = Vec_IntEntryP(vBits, Wlc_ObjCopy(p, Wlc_ObjFaninId1(pObj)))
+			pFans1 = Vec_IntArray(vBits)[Wlc_ObjCopy(p, Wlc_ObjFaninId1(pObj)):]
 		} else {
 			pFans1 = nil
 		}
 		if Wlc_ObjFaninNum(pObj) > 2 {
-			pFans2 = Vec_IntEntryP(vBits, Wlc_ObjCopy(p, Wlc_ObjFaninId2(pObj)))
+			pFans2 = Vec_IntArray(vBits)[Wlc_ObjCopy(p, Wlc_ObjFaninId2(pObj)):]
 		} else {
 			pFans2 = nil
 		}
 		if Wlc_ObjFaninNum(pObj) > 3 {
-			pFans3 = Vec_IntEntryP(vBits, Wlc_ObjCopy(p, Wlc_ObjFaninId(pObj, 3)))
+			pFans3 = Vec_IntArray(vBits)[Wlc_ObjCopy(p, Wlc_ObjFaninId(pObj, 3)):]
 		} else {
 			pFans3 = nil
 		}
@@ -1823,25 +1843,27 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 		Buffer = fmt.Sprintf("%s%03d", "ff_comb", 1+If_LibBoxNum(pBoxLib))
 		pBox = If_BoxStart(Abc_UtilStrsav(Buffer), 1+If_LibBoxNum(pBoxLib), nRangeIn, nRange, 0, 0, 0)
 		If_LibBoxAdd(pBoxLib, pBox)
-		for k = 0; k < pBox.nPis*pBox.nPos; k++ {
-			pBox.pDelays[k] = 1
+		for output := int32(0); output < pBox.Outputs(); output++ {
+			for input := int32(0); input < pBox.Inputs(); input++ {
+				pBox.SetDelay(output, input, 1)
+			}
 		}
 		Vec_IntFree(vTemp0)
 		Vec_IntFree(vTemp1)
 	}
 	Vec_IntFree(vFf2Ci)
 	// create COs
-	if pPar.fCreateMiter || pPar.fCreateWordMiter {
+	if pPar.fCreateMiter != 0 || pPar.fCreateWordMiter != 0 {
 		var nPairs, nBits int32
 		var vOuts *Vec_Int_t = Vec_IntAlloc(100)
 		assert(Wlc_NtkPoNum(p)%2 == 0, "Wlc_NtkPoNum(p) % 2 == 0")
 		// inlining of macro Wlc_NtkForEachCo
 		for i = 0; i < Wlc_NtkCoNum(p); i++ {
 			pObj = Wlc_NtkCo(p, i)
-			if pObj.fIsFi {
+			if pObj.fIsFi != 0 {
 				nRange = Wlc_ObjRange(pObj)
-				pFans0 = Vec_IntEntryP(vBits, Wlc_ObjCopy(p, Wlc_ObjId(p, pObj)))
-				if Wlc_ObjRangeIsReversed(pObj) {
+				pFans0 = Vec_IntArray(vBits)[Wlc_ObjCopy(p, Wlc_ObjId(p, pObj)):]
+				if Wlc_ObjRangeIsReversed(pObj) != 0 {
 					for k = 0; k < nRange; k++ {
 						Gia_ManAppendCo(pNew, pFans0[nRange-1-k])
 					}
@@ -1859,11 +1881,11 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 			nRange1 = Wlc_ObjRange(pObj)
 			nRange2 = Wlc_ObjRange(pObj2)
 			assert(nRange1 == nRange2, "nRange1 == nRange2")
-			pFans1 = Vec_IntEntryP(vBits, Wlc_ObjCopy(p, Wlc_ObjId(p, pObj)))
-			pFans2 = Vec_IntEntryP(vBits, Wlc_ObjCopy(p, Wlc_ObjId(p, pObj2)))
-			if pPar.fCreateWordMiter {
+			pFans1 = Vec_IntArray(vBits)[Wlc_ObjCopy(p, Wlc_ObjId(p, pObj)):]
+			pFans2 = Vec_IntArray(vBits)[Wlc_ObjCopy(p, Wlc_ObjId(p, pObj2)):]
+			if pPar.fCreateWordMiter != 0 {
 				Vec_IntClear(vOuts)
-				if Wlc_ObjRangeIsReversed(pObj) {
+				if Wlc_ObjRangeIsReversed(pObj) != 0 {
 					for k = 0; k < nRange1; k++ {
 						Vec_IntPushTwo(vOuts, pFans1[nRange1-1-k], pFans2[nRange2-1-k])
 					}
@@ -1876,7 +1898,7 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 				Gia_ManAppendCo(pNew, Gia_ManHashDualMiter(pNew, vOuts))
 
 			} else {
-				if Wlc_ObjRangeIsReversed(pObj) {
+				if Wlc_ObjRangeIsReversed(pObj) != 0 {
 					for k = 0; k < nRange1; k++ {
 						Gia_ManAppendCo(pNew, pFans1[nRange1-1-k])
 						Gia_ManAppendCo(pNew, pFans2[nRange2-1-k])
@@ -1893,7 +1915,7 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 			nBits += nRange1
 		}
 		Vec_IntFree(vOuts)
-		if pPar.fCreateWordMiter {
+		if pPar.fCreateWordMiter != 0 {
 			fmt.Printf("Derived an ordinary miter with %d bit-level outputs, one for each pair of word-level outputs.\n", nPairs)
 		} else {
 			fmt.Printf("Derived a dual-output miter with %d pairs of bits belonging to %d pairs of word-level outputs.\n", nBits, nPairs)
@@ -1908,18 +1930,20 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 				continue
 			}
 			// create additional PO literals
-			if (vAddOutputs != nil) && pObj.fIsFi {
-				Vec_IntForEachEntry(vAddOutputs, iLit, k)
-				Gia_ManAppendCo(pNew, iLit)
+			if (vAddOutputs != nil) && pObj.fIsFi != 0 {
+				for k = 0; k < Vec_IntSize(vAddOutputs); k++ {
+					iLit = Vec_IntEntry(vAddOutputs, k)
+					Gia_ManAppendCo(pNew, iLit)
+				}
 				fmt.Printf("Created %d additional POs for %d interesting internal word-level variables.\n", Vec_IntSize(vAddOutputs), Vec_IntSize(vAddObjs))
 				Vec_IntFreeP(&vAddOutputs)
 			}
 			nRange = Wlc_ObjRange(pObj)
-			pFans0 = Vec_IntEntryP(vBits, Wlc_ObjCopy(p, Wlc_ObjId(p, pObj)))
+			pFans0 = Vec_IntArray(vBits)[Wlc_ObjCopy(p, Wlc_ObjId(p, pObj)):]
 			if fVerbose != 0 {
 				fmt.Printf("%s(%d) ", Wlc_ObjName(p, Wlc_ObjId(p, pObj)), Gia_ManCoNum(pNew))
 			}
-			if Wlc_ObjRangeIsReversed(pObj) {
+			if Wlc_ObjRangeIsReversed(pObj) != 0 {
 				for k = 0; k < nRange; k++ {
 					Gia_ManAppendCo(pNew, pFans0[nRange-1-k])
 				}
@@ -1929,7 +1953,7 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 					Gia_ManAppendCo(pNew, pFans0[k])
 				}
 			}
-			if pObj.fIsFi {
+			if pObj.fIsFi != 0 {
 				nFFins += nRange
 			}
 		}
@@ -1953,7 +1977,7 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 		Gia_ManSetRegNum(pNew, nFFins)
 	}
 	// finalize AIG
-	if !pPar.fGiaSimple && !pPar.fNoCleanup {
+	if pPar.fGiaSimple == 0 && pPar.fNoCleanup == 0 {
 		pTemp = pNew
 		pNew = Gia_ManCleanup(pTemp)
 		Gia_ManDupRemapLiterals(vBits, pTemp)
@@ -1961,7 +1985,7 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 		Gia_ManStop(pTemp)
 	}
 	// transform AIG with init state
-	if p.pInits {
+	if p.pInits != "" {
 		if int32(len(p.pInits)) != Gia_ManRegNum(pNew) {
 			fmt.Printf("The number of init values (%d) does not match the number of flops (%d).\n", int32(len(p.pInits)), Gia_ManRegNum(pNew))
 			fmt.Printf("It is assumed that the AIG has constant 0 initial state.\n")
@@ -1988,8 +2012,7 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 		Gia_ManStop(pTemp)
 		assert(Gia_ManPoNum(pExtra) == Gia_ManCiNum(pNew)-nBitCis-nFf2Regs, "Gia_ManPoNum(pExtra) == Gia_ManCiNum(pNew) - nBitCis - nFf2Regs")
 		// attach
-		pNew.pAigExtra = pExtra
-		pNew.pManTime = pManTime
+		Gia_ManSetBoxData(pNew, pExtra, pManTime)
 		// normalize AIG
 		pTemp = pNew
 		pNew = Gia_ManDupNormalize(pTemp, 0)
@@ -1997,7 +2020,7 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 		Gia_ManStop(pTemp)
 		//Tim_ManPrint( pManTime );
 	}
-	if pPar.vBoxIds {
+	if pPar.vBoxIds != nil {
 		curPo += nBitCos
 		assert(curPi == Tim_ManCiNum(pManTime), "curPi == Tim_ManCiNum(pManTime)")
 		assert(curPo == Tim_ManCoNum(pManTime), "curPo == Tim_ManCoNum(pManTime)")
@@ -2007,8 +2030,7 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 		Gia_ManStop(pTemp)
 		assert(Gia_ManPoNum(pExtra) == Gia_ManCiNum(pNew)-nBitCis-nFf2Regs, "Gia_ManPoNum(pExtra) == Gia_ManCiNum(pNew) - nBitCis - nFf2Regs")
 		// attach
-		pNew.pAigExtra = pExtra
-		pNew.pManTime = pManTime
+		Gia_ManSetBoxData(pNew, pExtra, pManTime)
 		// normalize AIG
 		pTemp = pNew
 		pNew = Gia_ManDupNormalize(pTemp, 0)
@@ -2017,15 +2039,16 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 		//Tim_ManPrint( pManTime );
 	}
 	// create input names
-	pNew.vNamesIn = Vec_PtrAlloc(Gia_ManCiNum(pNew))
+	vNamesIn := Vec_PtrAlloc(Gia_ManCiNum(pNew))
+	Gia_ManSetInputNames(pNew, vNamesIn)
 	// inlining of macro Wlc_NtkForEachCi
 	for i = 0; i < Wlc_NtkCiNum(p); i++ {
 		pObj = Wlc_NtkCi(p, i)
-		if Wlc_ObjIsPi(pObj) {
+		if Wlc_ObjIsPi(pObj) != 0 {
 			var pName string = Wlc_ObjName(p, Wlc_ObjId(p, pObj))
 			nRange = Wlc_ObjRange(pObj)
 			if (fSkipBitRange != 0) && nRange == 1 {
-				Vec_PtrPush(pNew.vNamesIn, Abc_UtilStrsav(pName))
+				Vec_PtrPush(vNamesIn, Abc_UtilStrsav(pName))
 			} else {
 				for k = 0; k < nRange; k++ {
 					var Buffer string // was [1000]byte in C
@@ -2035,37 +2058,37 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 						bitIndex = pObj.Beg - k
 					}
 					Buffer = fmt.Sprintf("%s[%d]", pName, bitIndex)
-					Vec_PtrPush(pNew.vNamesIn, Abc_UtilStrsav(Buffer))
+					Vec_PtrPush(vNamesIn, Abc_UtilStrsav(Buffer))
 					//printf( "Writing %s\n", Buffer );
 				}
 			}
 		}
 	}
-	if p.pInits {
-		var Length int32 = len(p.pInits)
+	if p.pInits != "" {
+		var Length int32 = int32(len(p.pInits))
 		for i = 0; i < Length; i++ {
 			if p.pInits[i] == 'x' || p.pInits[i] == 'X' {
 				var Buffer string // was [100]byte in C
 
 				Buffer = fmt.Sprintf("_%s_abc_%d_", "init", i)
-				Vec_PtrPush(pNew.vNamesIn, Abc_UtilStrsav(Buffer))
+				Vec_PtrPush(vNamesIn, Abc_UtilStrsav(Buffer))
 				fAdded = 1
 			}
 		}
-		if pPar.fSaveFfNames {
+		if pPar.fSaveFfNames != 0 {
 			for i = 0; i < 1+Length; i++ {
-				Vec_PtrPush(pNew.vNamesIn, nil)
+				Vec_PtrPush(vNamesIn, nil)
 			}
 		}
 	}
 	// inlining of macro Wlc_NtkForEachCi
 	for i = 0; i < Wlc_NtkCiNum(p); i++ {
 		pObj = Wlc_NtkCi(p, i)
-		if !Wlc_ObjIsPi(pObj) {
+		if Wlc_ObjIsPi(pObj) == 0 {
 			var pName string = Wlc_ObjName(p, Wlc_ObjId(p, pObj))
 			nRange = Wlc_ObjRange(pObj)
 			if (fSkipBitRange != 0) && nRange == 1 {
-				Vec_PtrPush(pNew.vNamesIn, Abc_UtilStrsav(pName))
+				Vec_PtrPush(vNamesIn, Abc_UtilStrsav(pName))
 			} else {
 				for k = 0; k < nRange; k++ {
 					var Buffer string // was [1000]byte in C
@@ -2075,7 +2098,7 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 						bitIndex = pObj.Beg - k
 					}
 					Buffer = fmt.Sprintf("%s[%d]", pName, bitIndex)
-					Vec_PtrPush(pNew.vNamesIn, Abc_UtilStrsav(Buffer))
+					Vec_PtrPush(vNamesIn, Abc_UtilStrsav(Buffer))
 				}
 			}
 		}
@@ -2089,7 +2112,7 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 			var Buffer string // was [1000]byte in C
 
 			Buffer = fmt.Sprintf("%s_fo", pName)
-			Vec_PtrPush(pNew.vNamesIn, Abc_UtilStrsav(Buffer))
+			Vec_PtrPush(vNamesIn, Abc_UtilStrsav(Buffer))
 
 		} else {
 			for k = 0; k < nRange; k++ {
@@ -2100,7 +2123,7 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 					bitIndex = pObj.Beg - k
 				}
 				Buffer = fmt.Sprintf("%s_fo[%d]", pName, bitIndex)
-				Vec_PtrPush(pNew.vNamesIn, Abc_UtilStrsav(Buffer))
+				Vec_PtrPush(vNamesIn, Abc_UtilStrsav(Buffer))
 			}
 		}
 	}
@@ -2110,7 +2133,7 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 		var pName string = Wlc_ObjName(p, Wlc_ObjId(p, pObj))
 		nRange = Wlc_ObjRange(pObj)
 		if (fSkipBitRange != 0) && nRange == 1 {
-			Vec_PtrPush(pNew.vNamesIn, Abc_UtilStrsav(pName))
+			Vec_PtrPush(vNamesIn, Abc_UtilStrsav(pName))
 		} else {
 			for k = 0; k < nRange; k++ {
 				var Buffer string // was [1000]byte in C
@@ -2120,34 +2143,34 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 					bitIndex = pObj.Beg - k
 				}
 				Buffer = fmt.Sprintf("%s[%d]", pName, bitIndex)
-				Vec_PtrPush(pNew.vNamesIn, Abc_UtilStrsav(Buffer))
+				Vec_PtrPush(vNamesIn, Abc_UtilStrsav(Buffer))
 			}
 		}
 	}
-	if p.pInits && pPar.fSaveFfNames {
+	if p.pInits != "" && pPar.fSaveFfNames != 0 {
 		var pName string
 		var Length int32 = int32(len(p.pInits))
-		var NameStart int32 = Vec_PtrSize(pNew.vNamesIn) - Length
-		var NullStart int32 = Vec_PtrSize(pNew.vNamesIn) - 2*Length
-		var SepStart int32 = Vec_PtrSize(pNew.vNamesIn) - 2*Length - 1
-		assert(Vec_PtrEntry(pNew.vNamesIn, SepStart) == nil, "Vec_PtrEntry(pNew.vNamesIn, SepStart) == nil")
-		Vec_PtrWriteEntry(pNew.vNamesIn, SepStart, Abc_UtilStrsav("_abc_190121_abc_"))
+		var NameStart int32 = Vec_PtrSize(vNamesIn) - Length
+		var NullStart int32 = Vec_PtrSize(vNamesIn) - 2*Length
+		var SepStart int32 = Vec_PtrSize(vNamesIn) - 2*Length - 1
+		assert(Vec_PtrEntry(vNamesIn, SepStart) == nil, "Vec_PtrEntry(vNamesIn, SepStart) == nil")
+		Vec_PtrWriteEntry(vNamesIn, SepStart, Abc_UtilStrsav("_abc_190121_abc_"))
 		for i = 0; i < Length; i++ {
 			var Buffer string // was [100]byte in C
 
-			Buffer = fmt.Sprintf("%c%s", p.pInits[i], Vec_PtrEntry(pNew.vNamesIn, NameStart+i).(string))
-			assert(Vec_PtrEntry(pNew.vNamesIn, NullStart+i) == nil, "Vec_PtrEntry(pNew.vNamesIn, NullStart+i) == nil")
-			Vec_PtrWriteEntry(pNew.vNamesIn, NullStart+i, Abc_UtilStrsav(Buffer))
+			Buffer = fmt.Sprintf("%c%s", p.pInits[i], Vec_PtrEntry(vNamesIn, NameStart+i).(string))
+			assert(Vec_PtrEntry(vNamesIn, NullStart+i) == nil, "Vec_PtrEntry(vNamesIn, NullStart+i) == nil")
+			Vec_PtrWriteEntry(vNamesIn, NullStart+i, Abc_UtilStrsav(Buffer))
 		}
-		for i = 0; i < Vec_PtrSize(pNew.vNamesIn); i++ {
-			pName = Vec_PtrEntry(pNew.vNamesIn, i).(string)
+		for i = 0; i < Vec_PtrSize(vNamesIn); i++ {
+			pName = Vec_PtrEntry(vNamesIn, i).(string)
 			assert(pName != "", "pName != nil")
 		}
 	}
-	if p.pInits && (fAdded != 0) {
-		Vec_PtrPush(pNew.vNamesIn, Abc_UtilStrsav("abc_reset_flop"))
+	if p.pInits != "" && (fAdded != 0) {
+		Vec_PtrPush(vNamesIn, Abc_UtilStrsav("abc_reset_flop"))
 	}
-	if pPar.vBoxIds {
+	if pPar.vBoxIds != nil {
 		// inlining of macro Wlc_NtkForEachObjVec
 		for i = 0; i < Vec_IntSize(pPar.vBoxIds); i++ {
 			pObj = Wlc_NtkObj(p, Vec_IntEntry(pPar.vBoxIds, i))
@@ -2162,13 +2185,14 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 					bitIndex = pObj.Beg - k
 				}
 				Buffer = fmt.Sprintf("%s[%d]", pName, bitIndex)
-				Vec_PtrPush(pNew.vNamesIn, Abc_UtilStrsav(Buffer))
+				Vec_PtrPush(vNamesIn, Abc_UtilStrsav(Buffer))
 			}
 		}
 	}
-	assert(Vec_PtrSize(pNew.vNamesIn) == Gia_ManCiNum(pNew), "Vec_PtrSize(pNew.vNamesIn) == Gia_ManCiNum(pNew)")
+	assert(Vec_PtrSize(vNamesIn) == Gia_ManCiNum(pNew), "Vec_PtrSize(vNamesIn) == Gia_ManCiNum(pNew)")
 	// create output names
-	pNew.vNamesOut = Vec_PtrAlloc(Gia_ManCoNum(pNew))
+	vNamesOut := Vec_PtrAlloc(Gia_ManCoNum(pNew))
+	Gia_ManSetOutputNames(pNew, vNamesOut)
 	// inlining of macro Wlc_NtkForEachFf2
 	for i = 0; i < Vec_IntSize(&p.vFfs2); i++ {
 		pObj = Wlc_NtkFf2(p, i)
@@ -2179,7 +2203,7 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 			var pName string = Wlc_ObjName(p, iFanin)
 			nRange = Wlc_ObjRange(Wlc_NtkObj(p, iFanin))
 			if (fSkipBitRange != 0) && nRange == 1 {
-				Vec_PtrPush(pNew.vNamesOut, Abc_UtilStrsav(pName))
+				Vec_PtrPush(vNamesOut, Abc_UtilStrsav(pName))
 			} else {
 				for k = 0; k < nRange; k++ {
 					var Buffer string // was [1000]byte in C
@@ -2190,7 +2214,7 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 						bitIndex = pFanin.Beg - k
 					}
 					Buffer = fmt.Sprintf("%s[%d]", pName, bitIndex)
-					Vec_PtrPush(pNew.vNamesOut, Abc_UtilStrsav(Buffer))
+					Vec_PtrPush(vNamesOut, Abc_UtilStrsav(Buffer))
 				}
 			}
 			if b == 3 {
@@ -2204,7 +2228,7 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 				var Buffer string // was [1000]byte in C
 
 				Buffer = fmt.Sprintf("%s_in", pName)
-				Vec_PtrPush(pNew.vNamesOut, Abc_UtilStrsav(Buffer))
+				Vec_PtrPush(vNamesOut, Abc_UtilStrsav(Buffer))
 
 			} else {
 				for k = 0; k < nRange; k++ {
@@ -2215,12 +2239,12 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 						bitIndex = pObj.Beg - k
 					}
 					Buffer = fmt.Sprintf("%s_in[%d]", pName, bitIndex)
-					Vec_PtrPush(pNew.vNamesOut, Abc_UtilStrsav(Buffer))
+					Vec_PtrPush(vNamesOut, Abc_UtilStrsav(Buffer))
 				}
 			}
 		}
 	}
-	if pPar.vBoxIds {
+	if pPar.vBoxIds != nil {
 		// inlining of macro Wlc_NtkForEachObjVec
 		for i = 0; i < Vec_IntSize(pPar.vBoxIds); i++ {
 			pObj = Wlc_NtkObj(p, Vec_IntEntry(pPar.vBoxIds, i))
@@ -2240,7 +2264,7 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 						bitIndex = pFanin.Beg - k
 					}
 					Buffer = fmt.Sprintf("%s[%d]", pName, bitIndex)
-					Vec_PtrPush(pNew.vNamesOut, Abc_UtilStrsav(Buffer))
+					Vec_PtrPush(vNamesOut, Abc_UtilStrsav(Buffer))
 				}
 			}
 		}
@@ -2249,20 +2273,20 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 	// inlining of macro Wlc_NtkForEachCo
 	for i = 0; i < Wlc_NtkCoNum(p); i++ {
 		pObj = Wlc_NtkCo(p, i)
-		if Wlc_ObjIsPo(pObj) {
+		if Wlc_ObjIsPo(pObj) != 0 {
 			var pName string = Wlc_ObjName(p, Wlc_ObjId(p, pObj))
 			nRange = Wlc_ObjRange(pObj)
-			if pPar.fCreateWordMiter {
+			if pPar.fCreateWordMiter != 0 {
 				i++
 				var pObj2 *Wlc_Obj_t = Wlc_NtkCo(p, i)
 				var pName2 string = Wlc_ObjName(p, Wlc_ObjId(p, pObj2))
 				var Buffer string // was [1000]byte in C
 
 				Buffer = fmt.Sprintf("%s_xor_%s", pName, pName2)
-				Vec_PtrPush(pNew.vNamesOut, Abc_UtilStrsav(Buffer))
+				Vec_PtrPush(vNamesOut, Abc_UtilStrsav(Buffer))
 				//printf( "Adding output %s\n", Buffer );
 
-			} else if pPar.fCreateMiter && nRange > 1 {
+			} else if pPar.fCreateMiter != 0 && nRange > 1 {
 				i++
 				var pObj2 *Wlc_Obj_t = Wlc_NtkCo(p, i)
 				var pName2 string = Wlc_ObjName(p, Wlc_ObjId(p, pObj2))
@@ -2276,14 +2300,14 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 						index = pObj.Beg - k
 					}
 					Buffer = fmt.Sprintf("%s[%d]", pName, index)
-					Vec_PtrPush(pNew.vNamesOut, Abc_UtilStrsav(Buffer))
+					Vec_PtrPush(vNamesOut, Abc_UtilStrsav(Buffer))
 					Buffer = fmt.Sprintf("%s[%d]", pName2, index)
-					Vec_PtrPush(pNew.vNamesOut, Abc_UtilStrsav(Buffer))
+					Vec_PtrPush(vNamesOut, Abc_UtilStrsav(Buffer))
 				}
 
 			} else {
 				if (fSkipBitRange != 0) && nRange == 1 {
-					Vec_PtrPush(pNew.vNamesOut, Abc_UtilStrsav(pName))
+					Vec_PtrPush(vNamesOut, Abc_UtilStrsav(pName))
 				} else {
 					for k = 0; k < nRange; k++ {
 						var Buffer string // was [1000]byte in C
@@ -2293,7 +2317,7 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 							index = pObj.Beg - k
 						}
 						Buffer = fmt.Sprintf("%s[%d]", pName, index)
-						Vec_PtrPush(pNew.vNamesOut, Abc_UtilStrsav(Buffer))
+						Vec_PtrPush(vNamesOut, Abc_UtilStrsav(Buffer))
 					}
 				}
 			}
@@ -2307,7 +2331,7 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 			var pName string = Wlc_ObjName(p, Wlc_ObjId(p, pObj))
 			nRange = Wlc_ObjRange(pObj)
 			if (fSkipBitRange != 0) && nRange == 1 {
-				Vec_PtrPush(pNew.vNamesOut, Abc_UtilStrsav(pName))
+				Vec_PtrPush(vNamesOut, Abc_UtilStrsav(pName))
 			} else {
 				for k = 0; k < nRange; k++ {
 					var Buffer string // was [1000]byte in C
@@ -2317,7 +2341,7 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 						index = pObj.Beg - k
 					}
 					Buffer = fmt.Sprintf("%s[%d]", pName, index)
-					Vec_PtrPush(pNew.vNamesOut, Abc_UtilStrsav(Buffer))
+					Vec_PtrPush(vNamesOut, Abc_UtilStrsav(Buffer))
 				}
 			}
 		}
@@ -2325,19 +2349,19 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 	}
 	// add flop outputs
 	if fAdded != 0 {
-		Vec_PtrPush(pNew.vNamesOut, Abc_UtilStrsav("abc_reset_flop_in"))
+		Vec_PtrPush(vNamesOut, Abc_UtilStrsav("abc_reset_flop_in"))
 	}
 	// inlining of macro Wlc_NtkForEachCo
 	for i = 0; i < Wlc_NtkCoNum(p); i++ {
 		pObj = Wlc_NtkCo(p, i)
-		if !Wlc_ObjIsPo(pObj) {
+		if Wlc_ObjIsPo(pObj) == 0 {
 			var pName string = Wlc_ObjName(p, Wlc_ObjId(p, pObj))
 			nRange = Wlc_ObjRange(pObj)
 			if (fSkipBitRange != 0) && nRange == 1 {
 				var Buffer string // was [1000]byte in C
 
 				Buffer = fmt.Sprintf("%s_fi", pName)
-				Vec_PtrPush(pNew.vNamesOut, Abc_UtilStrsav(Buffer))
+				Vec_PtrPush(vNamesOut, Abc_UtilStrsav(Buffer))
 
 			} else {
 				for k = 0; k < nRange; k++ {
@@ -2348,7 +2372,7 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 						index = pObj.Beg - k
 					}
 					Buffer = fmt.Sprintf("%s_fi[%d]", pName, index)
-					Vec_PtrPush(pNew.vNamesOut, Abc_UtilStrsav(Buffer))
+					Vec_PtrPush(vNamesOut, Abc_UtilStrsav(Buffer))
 				}
 			}
 		}
@@ -2362,7 +2386,7 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 			var Buffer string // was [1000]byte in C
 
 			Buffer = fmt.Sprintf("%s_fi", pName)
-			Vec_PtrPush(pNew.vNamesOut, Abc_UtilStrsav(Buffer))
+			Vec_PtrPush(vNamesOut, Abc_UtilStrsav(Buffer))
 
 		} else {
 			for k = 0; k < nRange; k++ {
@@ -2373,11 +2397,11 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 					index = pObj.Beg - k
 				}
 				Buffer = fmt.Sprintf("%s_fi[%d]", pName, index)
-				Vec_PtrPush(pNew.vNamesOut, Abc_UtilStrsav(Buffer))
+				Vec_PtrPush(vNamesOut, Abc_UtilStrsav(Buffer))
 			}
 		}
 	}
-	assert(Vec_PtrSize(pNew.vNamesOut) == Gia_ManCoNum(pNew), "Vec_PtrSize(pNew.vNamesOut) == Gia_ManCoNum(pNew)")
+	assert(Vec_PtrSize(vNamesOut) == Gia_ManCoNum(pNew), "Vec_PtrSize(vNamesOut) == Gia_ManCoNum(pNew)")
 
 	// replace the current library
 	if pBoxLib != nil {
@@ -2387,32 +2411,18 @@ func Wlc_NtkBitBlast(p *Wlc_Ntk_t, pParIn *Wlc_BstPar_t) *Gia_Man_t {
 
 	//pNew->pSpec = Abc_UtilStrsav( p->pSpec ? p->pSpec : p->pName );
 	// dump the miter parts
-	if false {
-		var pFileName0, pFileName1 [1000]byte
-		var pNameGeneric string = Extra_FileNameGeneric(p.pSpec)
-		var vOrder *Vec_Int_t = Vec_IntStartNatural(Gia_ManPoNum(pNew))
-		var pGia0 *Gia_Man_t = Gia_ManDupCones(pNew, Vec_IntArray(vOrder), Vec_IntSize(vOrder)/2, 0)
-		var pGia1 *Gia_Man_t = Gia_ManDupCones(pNew, Vec_IntArray(vOrder)+Vec_IntSize(vOrder)/2, Vec_IntSize(vOrder)/2, 0)
-		assert(Gia_ManPoNum(pNew)%2 == 0, "Gia_ManPoNum(pNew) % 2 == 0")
-		pFileName0 = fmt.Sprintf("%s_lhs_.aig", pNameGeneric)
-		pFileName1 = fmt.Sprintf("%s_rhs_.aig", pNameGeneric)
-		Gia_AigerWrite(pGia0, pFileName0, 0, 0, 0)
-		Gia_AigerWrite(pGia1, pFileName1, 0, 0, 0)
-		Gia_ManStop(pGia0)
-		Gia_ManStop(pGia1)
-		Vec_IntFree(vOrder)
-		ABC_FREE(pNameGeneric)
-		printf("Dumped two parts of the miter into files \"%s\" and \"%s\".\n", pFileName0, pFileName1)
-	}
+	// The optional debug miter dump in the C source is disabled.
+
 	//Wlc_NtkPrintNameArray( pNew->vNamesIn );
 	//Wlc_NtkPrintNameArray( pNew->vNamesOut );
-	if pPar.vBoxIds {
-		Vec_PtrFreeFree(pNew.vNamesIn)
-		pNew.vNamesIn = nil
-		Vec_PtrFreeFree(pNew.vNamesOut)
-		pNew.vNamesOut = nil
+	if pPar.vBoxIds != nil {
+		Vec_PtrFreeFree(vNamesIn)
+		vNamesIn = nil
+		Vec_PtrFreeFree(vNamesOut)
+		vNamesOut = nil
+		Gia_ManSetOutputNames(pNew, nil)
 	}
-	pNew.vRegClasses = vRegClasses
+	Gia_ManSetRegClasses(pNew, vRegClasses)
 	return pNew
 }
 

@@ -85,7 +85,7 @@ func Wlc_NtkReport(p *Wlc_Ntk_t, pCex *Abc_Cex_t, pName string, radix int32) {
 		return
 	}
 	assert(radix == 2 || radix == 10 || radix == 16, "radix is supported")
-	value := Wlc_ConvertToRadix(pCex.pData, start, bits, radix)
+	value := Wlc_ConvertToRadix(pCex.PData, start, bits, radix)
 	prefix := ""
 	if radix == 16 {
 		prefix = "#x"
@@ -102,7 +102,7 @@ func Wlc_StdinCollectStop(vInput *Vec_Str_t, line string, lineSize int32) int32 
 	if len(data) < n {
 		return 0
 	}
-	return int32(strings.HasPrefix(string(data[len(data)-n:]), line))
+	return boolToInt32(strings.HasPrefix(string(data[len(data)-n:]), line))
 }
 
 func readStdinByte() (byte, error) {
@@ -194,7 +194,7 @@ func Wlc_StdinProcessSmt(pAbc *Abc_Frame_t, pCmd string) int32 {
 			return 0
 		}
 		if len(fields) > 1 {
-			Wlc_NtkReport(pAbc.pAbcWlc, cex, fields[1], 16)
+			Wlc_NtkReport(Wlc_AbcGetNtk(pAbc), cex, fields[1], 16)
 		}
 		Vec_StrFree(input)
 		_ = os.Stdout.Sync()

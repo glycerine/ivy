@@ -68,10 +68,10 @@ func Wlc_NtkCollectAddMult(p *Wlc_Ntk_t, pPar *Wlc_BstPar_t, pCountA *int32, pCo
 	// inlining of macro Wlc_NtkForEachObj
 	for i = 1; i < Wlc_NtkObjNumMax(p); i++ {
 		pObj = Wlc_NtkObj(p, i)
-		if pObj.Type == WLC_OBJ_ARI_ADD && pPar.nAdderLimit && Wlc_ObjRange(pObj) >= pPar.nAdderLimit {
+		if pObj.Type == uint32(WLC_OBJ_ARI_ADD) && pPar.nAdderLimit != 0 && Wlc_ObjRange(pObj) >= pPar.nAdderLimit {
 			Vec_IntPush(vBoxIds, i)
 			(*pCountA)++
-		} else if pObj.Type == WLC_OBJ_ARI_MULTI && pPar.nMultLimit && Wlc_ObjRange(pObj) >= pPar.nMultLimit {
+		} else if pObj.Type == uint32(WLC_OBJ_ARI_MULTI) && pPar.nMultLimit != 0 && Wlc_ObjRange(pObj) >= pPar.nMultLimit {
 			Vec_IntPush(vBoxIds, i)
 			(*pCountM)++
 		}
@@ -142,7 +142,7 @@ func Wlc_NtkCollectMultipliers(p *Wlc_Ntk_t) *Vec_Int_t {
 	// inlining of macro Wlc_NtkForEachObj
 	for i = 1; i < Wlc_NtkObjNumMax(p); i++ {
 		pObj = Wlc_NtkObj(p, i)
-		if pObj.Type == WLC_OBJ_ARI_MULTI {
+		if pObj.Type == uint32(WLC_OBJ_ARI_MULTI) {
 			Vec_IntPush(vBoxIds, i)
 		}
 	}
@@ -234,11 +234,11 @@ func Wlc_NtkAbstractNodes(p *Wlc_Ntk_t, vNodesInit *Vec_Int_t) *Wlc_Ntk_t {
 		if i == Vec_IntSize(&p.vCopies) {
 			break
 		}
-		if pObj.Mark {
+		if pObj.Mark != 0 {
 			// clean
 			pObj.Mark = 0
 			// add fresh PI with the same number of bits
-			iObj = Wlc_ObjAlloc(p, WLC_OBJ_PI, Wlc_ObjIsSigned(pObj), Wlc_ObjRange(pObj)-1, 0)
+			iObj = Wlc_ObjAlloc(p, int32(WLC_OBJ_PI), Wlc_ObjIsSigned(pObj), Wlc_ObjRange(pObj)-1, 0)
 
 		} else {
 			// update fanins
@@ -294,8 +294,8 @@ func Wlc_NtkUifNodePairs(p *Wlc_Ntk_t, vPairsInit *Vec_Int_t) *Wlc_Ntk_t {
 	vFanins = Vec_IntAlloc(100)
 	vCompares = Vec_IntAlloc(100)
 	vUifConstrs = Vec_IntAlloc(100)
-	Vec_IntForEachEntryDouble(vPairs, iObj, iObj2, i)
-	{
+	for i = 0; i+1 < Vec_IntSize(vPairs); i += 2 {
+		iObj, iObj2 = Vec_IntEntry(vPairs, i), Vec_IntEntry(vPairs, i+1)
 		// get two nodes
 		pObj = Wlc_NtkObj(p, iObj)
 		pObj2 = Wlc_NtkObj(p, iObj2)
@@ -307,23 +307,23 @@ func Wlc_NtkUifNodePairs(p *Wlc_Ntk_t, vPairsInit *Vec_Int_t) *Wlc_Ntk_t {
 			iFanin = Wlc_ObjFaninId(pObj, k)
 			iFanin2 = Wlc_ObjFaninId(pObj2, k)
 			Vec_IntFillTwo(vFanins, 2, iFanin, iFanin2)
-			iFaninNew = Wlc_ObjCreate(p, WLC_OBJ_COMP_NOTEQU, 0, 0, 0, vFanins)
+			iFaninNew = Wlc_ObjCreate(p, int32(WLC_OBJ_COMP_NOTEQU), 0, 0, 0, vFanins)
 			Vec_IntPush(vCompares, iFaninNew)
 			// note that a pointer to Wlc_Obj_t (for example, pObj) can be invalidated after a call to
 			// Wlc_ObjCreate() due to a possible realloc of the internal array of objects...
 			pObj = Wlc_NtkObj(p, iObj)
 		}
 		// concatenate fanin comparators
-		iObjNew = Wlc_ObjCreate(p, WLC_OBJ_BIT_CONCAT, 0, Vec_IntSize(vCompares)-1, 0, vCompares)
+		iObjNew = Wlc_ObjCreate(p, int32(WLC_OBJ_BIT_CONCAT), 0, Vec_IntSize(vCompares)-1, 0, vCompares)
 		// create reduction-OR node
 		Vec_IntFill(vFanins, 1, iObjNew)
-		iObjNew = Wlc_ObjCreate(p, WLC_OBJ_REDUCT_OR, 0, 0, 0, vFanins)
+		iObjNew = Wlc_ObjCreate(p, int32(WLC_OBJ_REDUCT_OR), 0, 0, 0, vFanins)
 		// craete output comparator node
 		Vec_IntFillTwo(vFanins, 2, iObj, iObj2)
-		iObjNew2 = Wlc_ObjCreate(p, WLC_OBJ_COMP_EQU, 0, 0, 0, vFanins)
+		iObjNew2 = Wlc_ObjCreate(p, int32(WLC_OBJ_COMP_EQU), 0, 0, 0, vFanins)
 		// create implication node (iObjNew is already complemented above)
 		Vec_IntFillTwo(vFanins, 2, iObjNew, iObjNew2)
-		iObjNew = Wlc_ObjCreate(p, WLC_OBJ_LOGIC_OR, 0, 0, 0, vFanins)
+		iObjNew = Wlc_ObjCreate(p, int32(WLC_OBJ_LOGIC_OR), 0, 0, 0, vFanins)
 		// save the constraint
 		Vec_IntPush(vUifConstrs, iObjNew)
 	}
@@ -333,10 +333,10 @@ func Wlc_NtkUifNodePairs(p *Wlc_Ntk_t, vPairsInit *Vec_Int_t) *Wlc_Ntk_t {
 		iObjNew = Vec_IntEntry(vUifConstrs, 0)
 	} else {
 		// concatenate
-		iObjNew = Wlc_ObjCreate(p, WLC_OBJ_BIT_CONCAT, 0, Vec_IntSize(vUifConstrs)-1, 0, vUifConstrs)
+		iObjNew = Wlc_ObjCreate(p, int32(WLC_OBJ_BIT_CONCAT), 0, Vec_IntSize(vUifConstrs)-1, 0, vUifConstrs)
 		// create reduction-AND node
 		Vec_IntFill(vFanins, 1, iObjNew)
-		iObjNew = Wlc_ObjCreate(p, WLC_OBJ_REDUCT_AND, 0, 0, 0, vFanins)
+		iObjNew = Wlc_ObjCreate(p, int32(WLC_OBJ_REDUCT_AND), 0, 0, 0, vFanins)
 	}
 	// update each PO to point to the new node
 	// inlining of macro Wlc_NtkForEachPo
@@ -344,7 +344,7 @@ func Wlc_NtkUifNodePairs(p *Wlc_Ntk_t, vPairsInit *Vec_Int_t) *Wlc_Ntk_t {
 		pObj = Wlc_NtkPo(p, i)
 		iObj = Wlc_ObjId(p, pObj)
 		Vec_IntFillTwo(vFanins, 2, iObj, iObjNew)
-		iObjNew = Wlc_ObjCreate(p, WLC_OBJ_LOGIC_AND, 0, 0, 0, vFanins)
+		iObjNew = Wlc_ObjCreate(p, int32(WLC_OBJ_LOGIC_AND), 0, 0, 0, vFanins)
 		// note that a pointer to Wlc_Obj_t (for example, pObj) can be invalidated after a call to
 		// Wlc_ObjCreate() due to a possible realloc of the internal array of objects...
 		pObj = Wlc_NtkObj(p, iObj)
@@ -355,7 +355,7 @@ func Wlc_NtkUifNodePairs(p *Wlc_Ntk_t, vPairsInit *Vec_Int_t) *Wlc_Ntk_t {
 		Vec_IntWriteEntry(&p.vCos, i, iObjNew)
 		// transfer the PO attribute
 		Wlc_NtkObj(p, iObjNew).fIsPo = 1
-		assert(pObj.fIsPo, "pObj.fIsPo")
+		assert(pObj.fIsPo != 0, "pObj.fIsPo")
 		pObj.fIsPo = 0
 	}
 	// cleanup

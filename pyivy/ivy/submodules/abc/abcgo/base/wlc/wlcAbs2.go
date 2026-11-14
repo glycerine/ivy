@@ -63,28 +63,28 @@ func Wlc_NtkAbs2MarkOpers2(p *Wlc_Ntk_t, pPars *Wlc_Par_t, vUnmark *Vec_Bit_t, f
 		if (vUnmark != nil) && Vec_BitEntry(vUnmark, i) { // not allow this object to be abstracted away
 			continue
 		}
-		if pObj.Type == WLC_OBJ_ARI_ADD || pObj.Type == WLC_OBJ_ARI_SUB || pObj.Type == WLC_OBJ_ARI_MINUS {
+		if pObj.Type == uint32(WLC_OBJ_ARI_ADD) || pObj.Type == uint32(WLC_OBJ_ARI_SUB) || pObj.Type == uint32(WLC_OBJ_ARI_MINUS) {
 			if Wlc_ObjRange(pObj) >= pPars.nBitsAdd {
 				Vec_BitWriteEntry(vLeaves, Wlc_ObjId(p, pObj), 1)
 				Count[0]++
 			}
 			continue
 		}
-		if pObj.Type == WLC_OBJ_ARI_MULTI || pObj.Type == WLC_OBJ_ARI_DIVIDE || pObj.Type == WLC_OBJ_ARI_REM || pObj.Type == WLC_OBJ_ARI_MODULUS {
+		if pObj.Type == uint32(WLC_OBJ_ARI_MULTI) || pObj.Type == uint32(WLC_OBJ_ARI_DIVIDE) || pObj.Type == uint32(WLC_OBJ_ARI_REM) || pObj.Type == uint32(WLC_OBJ_ARI_MODULUS) {
 			if Wlc_ObjRange(pObj) >= pPars.nBitsMul {
 				Vec_BitWriteEntry(vLeaves, Wlc_ObjId(p, pObj), 1)
 				Count[1]++
 			}
 			continue
 		}
-		if pObj.Type == WLC_OBJ_MUX {
+		if pObj.Type == uint32(WLC_OBJ_MUX) {
 			if Wlc_ObjRange(pObj) >= pPars.nBitsMux {
 				Vec_BitWriteEntry(vLeaves, Wlc_ObjId(p, pObj), 1)
 				Count[2]++
 			}
 			continue
 		}
-		if Wlc_ObjIsCi(pObj) && !Wlc_ObjIsPi(pObj) {
+		if Wlc_ObjIsCi(pObj) != 0 && Wlc_ObjIsPi(pObj) == 0 {
 			if Wlc_ObjRange(pObj) >= pPars.nBitsFlop {
 				Vec_BitWriteEntry(vLeaves, Wlc_ObjId(p, pObj), 1)
 				Count[3]++
@@ -116,17 +116,17 @@ func Wlc_NtkAbs2MarkOpers2(p *Wlc_Ntk_t, pPars *Wlc_Par_t, vUnmark *Vec_Bit_t, f
 */
 func Wlc_NtkAbs2MarkNodes2_rec2(p *Wlc_Ntk_t, pObj *Wlc_Obj_t, vLeaves *Vec_Bit_t, vPisOld *Vec_Int_t, vPisNew *Vec_Int_t, vFlops *Vec_Int_t) {
 	var i, iFanin int32
-	if pObj.Mark {
+	if pObj.Mark != 0 {
 		return
 	}
 	pObj.Mark = 1
 	if Vec_BitEntry(vLeaves, Wlc_ObjId(p, pObj)) {
-		assert(!Wlc_ObjIsPi(pObj), "!Wlc_ObjIsPi(pObj)")
+		assert(Wlc_ObjIsPi(pObj) == 0, "Wlc_ObjIsPi(pObj) == 0")
 		Vec_IntPush(vPisNew, Wlc_ObjId(p, pObj))
 		return
 	}
-	if Wlc_ObjIsCi(pObj) {
-		if Wlc_ObjIsPi(pObj) {
+	if Wlc_ObjIsCi(pObj) != 0 {
+		if Wlc_ObjIsPi(pObj) != 0 {
 			Vec_IntPush(vPisOld, Wlc_ObjId(p, pObj))
 		} else {
 			Vec_IntPush(vFlops, Wlc_ObjId(p, pObj))
@@ -156,7 +156,7 @@ func Wlc_NtkAbs2MarkNodes2(p *Wlc_Ntk_t, vLeaves *Vec_Bit_t, vPisOld *Vec_Int_t,
 	// inlining of macro Wlc_NtkForEachObj
 	for i = 1; i < Wlc_NtkObjNumMax(p); i++ {
 		pObj = Wlc_NtkObj(p, i)
-		Count += pObj.Mark
+		Count += int32(pObj.Mark)
 	}
 	//    printf( "Collected %d old PIs, %d new PIs, %d flops, and %d other objects.\n",
 	//        Vec_IntSize(vPisOld), Vec_IntSize(vPisNew), Vec_IntSize(vFlops),
@@ -195,7 +195,7 @@ func Wlc_NtkAbsAbstract2(p *Wlc_Ntk_t, pPars *Wlc_Par_t, vUnmark *Vec_Bit_t, pvP
 	pNtkNew = Wlc_NtkDupDfsAbs(p, vPisOld, vPisNew, vFlops)
 	Vec_IntFree(vPisOld)
 	Vec_IntFree(vFlops)
-	if pvPisNew {
+	if pvPisNew != nil {
 		*pvPisNew = vPisNew
 	} else {
 		Vec_IntFree(vPisNew)
@@ -225,7 +225,7 @@ func Wlc_NtkAbs2Refinement(p *Wlc_Ntk_t, pGia *Gia_Man_t, pCex *Abc_Cex_t, vPisN
 	var pObj *Wlc_Obj_t
 	// count the number of bit-level PPIs and map them into word-level objects they were derived from
 	var f, i, b, nRealPis, nPpiBits int32
-	var vMap *Vec_Int_t = Vec_IntStartFull(pCex.nPis)
+	var vMap *Vec_Int_t = Vec_IntStartFull(pCex.NPis)
 	// inlining of macro Wlc_NtkForEachObjVec
 	for i = 0; i < Vec_IntSize(vPisNew); i++ {
 		pObj = Wlc_NtkObj(p, Vec_IntEntry(vPisNew, i))
@@ -235,14 +235,14 @@ func Wlc_NtkAbs2Refinement(p *Wlc_Ntk_t, pGia *Gia_Man_t, pCex *Abc_Cex_t, vPisN
 		}
 	}
 	// since PPIs are ordered last, the previous bits are real PIs
-	nRealPis = pCex.nPis - nPpiBits
+	nRealPis = pCex.NPis - nPpiBits
 	// find the care-set
 	pCexCare = Bmc_CexCareMinimizeAig(pGia, nRealPis, pCex, 1, 0, 0)
-	assert(pCexCare.nPis == pCex.nPis, "pCexCare.nPis == pCex.nPis")
+	assert(pCexCare.NPis == pCex.NPis, "pCexCare.NPis == pCex.NPis")
 	// detect care PPIs
-	for f = 0; f <= pCexCare.iFrame; f++ {
-		for i = nRealPis; i < pCexCare.nPis; i++ {
-			if Abc_InfoHasBit(pCexCare.pData, pCexCare.nRegs+pCexCare.nPis*f+i) {
+	for f = 0; f <= pCexCare.IFrame; f++ {
+		for i = nRealPis; i < pCexCare.NPis; i++ {
+			if Abc_InfoHasBit(pCexCare.PData, pCexCare.NRegs+pCexCare.NPis*f+i) {
 				Vec_IntPushUniqueOrder(vRefine, Vec_IntEntry(vMap, i-nRealPis))
 			}
 		}
@@ -273,7 +273,7 @@ func Wlc_NtkNodeDeref_rec2(p *Wlc_Ntk_t, pNode *Wlc_Obj_t, vUnmark *Vec_Bit_t) i
 	var i int32
 	var Fanin int32
 	var Counter int32 = 1
-	if Wlc_ObjIsCi(pNode) {
+	if Wlc_ObjIsCi(pNode) != 0 {
 		return 0
 	}
 	Vec_BitWriteEntry(vUnmark, Wlc_ObjId(p, pNode), 1)
@@ -291,7 +291,7 @@ func Wlc_NtkNodeRef_rec2(p *Wlc_Ntk_t, pNode *Wlc_Obj_t) int32 {
 	var i int32
 	var Fanin int32
 	var Counter int32 = 1
-	if Wlc_ObjIsCi(pNode) {
+	if Wlc_ObjIsCi(pNode) != 0 {
 		return 0
 	}
 	// inlining of macro Wlc_ObjForEachFanin
@@ -307,11 +307,11 @@ func Wlc_NtkNodeRef_rec2(p *Wlc_Ntk_t, pNode *Wlc_Obj_t) int32 {
 func Wlc_NtkMarkMffc2(p *Wlc_Ntk_t, pNode *Wlc_Obj_t, vUnmark *Vec_Bit_t) int32 {
 	var Count1, Count2 int32
 	// if this is a flop output, compute MFFC of the corresponding flop input
-	for Wlc_ObjIsCi(pNode) {
+	for Wlc_ObjIsCi(pNode) != 0 {
 		Vec_BitWriteEntry(vUnmark, Wlc_ObjId(p, pNode), 1)
 		pNode = Wlc_ObjFo2Fi(p, pNode)
 	}
-	assert(!Wlc_ObjIsCi(pNode), "!Wlc_ObjIsCi(pNode)")
+	assert(Wlc_ObjIsCi(pNode) == 0, "Wlc_ObjIsCi(pNode) == 0")
 	// dereference the node (and set the bits in vUnmark)
 	Count1 = Wlc_NtkNodeDeref_rec2(p, pNode, vUnmark)
 	// reference it back
@@ -364,11 +364,11 @@ func Wlc_NtkAbs2Core2(p *Wlc_Ntk_t, pPars *Wlc_Par_t) int32 {
 	var PdrPars Pdr_Par_t
 	var pPdrPars *Pdr_Par_t = &PdrPars
 	Pdr_ManSetDefaultParams(pPdrPars)
-	pPdrPars.fUseAbs = 1   // use 'pdr -t'  (on-the-fly abstraction)
-	pPdrPars.fCtgs = 1     // use 'pdr -nc' (improved generalization)
-	pPdrPars.fSkipDown = 0 // use 'pdr -nc' (improved generalization)
+	pPdrPars.SetUseAbs(1)   // use 'pdr -t'  (on-the-fly abstraction)
+	pPdrPars.SetCtgs(1)     // use 'pdr -nc' (improved generalization)
+	pPdrPars.SetSkipDown(0) // use 'pdr -nc' (improved generalization)
 	//pPdrPars->nRestLimit = 500; // reset queue or proof-obligations when it gets larger than this
-	pPdrPars.fVerbose = pPars.fPdrVerbose
+	pPdrPars.SetVerbose(pPars.fPdrVerbose)
 	// perform refinement iterations
 	for nIters = 1; nIters < pPars.nIterMax; nIters++ {
 		var pAig *Aig_Man_t
@@ -377,12 +377,12 @@ func Wlc_NtkAbs2Core2(p *Wlc_Ntk_t, pPars *Wlc_Par_t) int32 {
 		var pGia, pTemp *Gia_Man_t
 		var pAbs *Wlc_Ntk_t
 
-		if pPars.fVerbose {
+		if pPars.fVerbose != 0 {
 			fmt.Printf("\nIteration %d:\n", nIters)
 		}
 
 		// get abstracted GIA and the set of pseudo-PIs (vPisNew)
-		pAbs = Wlc_NtkAbs2(p, pPars, vUnmark, &vPisNew, pPars.fVerbose)
+		pAbs = Wlc_NtkAbsAbstract2(p, pPars, vUnmark, &vPisNew, pPars.fVerbose)
 		pGia = Wlc_NtkBitBlast(pAbs, nil)
 
 		// if the abstraction has flops with DC-init state,
@@ -397,12 +397,12 @@ func Wlc_NtkAbs2Core2(p *Wlc_Ntk_t, pPars *Wlc_Par_t) int32 {
 			Gia_ManStop(pTemp)
 		}
 		// if the word-level outputs have to be XORs, this is a place to do it
-		if pPars.fXorOutput {
+		if pPars.fXorOutput != 0 {
 			pTemp = pGia
 			pGia = Gia_ManTransformMiter2(pTemp)
 			Gia_ManStop(pTemp)
 		}
-		if pPars.fVerbose {
+		if pPars.fVerbose != 0 {
 			fmt.Printf("Derived abstraction with %d objects and %d PPIs. Bit-blasted AIG stats are:\n", Wlc_NtkObjNum(pAbs), Vec_IntSize(vPisNew))
 			Gia_ManPrintStats(pGia, nil)
 		}
@@ -411,8 +411,7 @@ func Wlc_NtkAbs2Core2(p *Wlc_Ntk_t, pPars *Wlc_Par_t) int32 {
 		// try to prove abstracted GIA by converting it to AIG and calling PDR
 		pAig = Gia_ManToAigSimple(pGia)
 		RetValue = Pdr_ManSolve(pAig, pPdrPars)
-		pCex = pAig.pSeqModel
-		pAig.pSeqModel = nil
+		pCex = pAig.TakeSequentialCounterexample()
 		Aig_ManStop(pAig)
 
 		// consider outcomes
@@ -435,15 +434,15 @@ func Wlc_NtkAbs2Core2(p *Wlc_Ntk_t, pPars *Wlc_Par_t) int32 {
 
 		// update the set of objects to be un-abstracted
 		nNodes = Wlc_NtkRemoveFromAbstraction2(p, vRefine, vUnmark)
-		if pPars.fVerbose {
-			fmt.Printf("Refinement of CEX in frame %d came up with %d un-abstacted PPIs, whose MFFCs include %d objects.\n", pCex.iFrame, Vec_IntSize(vRefine), nNodes)
+		if pPars.fVerbose != 0 {
+			fmt.Printf("Refinement of CEX in frame %d came up with %d un-abstacted PPIs, whose MFFCs include %d objects.\n", pCex.IFrame, Vec_IntSize(vRefine), nNodes)
 		}
 		Vec_IntFree(vRefine)
 		Abc_CexFree(pCex)
 	}
 	Vec_BitFree(vUnmark)
 	// report the result
-	if pPars.fVerbose {
+	if pPars.fVerbose != 0 {
 		fmt.Printf("\n")
 	}
 	fmt.Printf("Abstraction ")
@@ -457,6 +456,12 @@ func Wlc_NtkAbs2Core2(p *Wlc_Ntk_t, pPars *Wlc_Par_t) int32 {
 	fmt.Printf(" after %d iterations. ", nIters)
 	Abc_PrintTime(1, "Time", Abc_Clock()-clk)
 	return RetValue
+}
+
+// Wlc_NtkAbsCore2 retains the public C entry-point spelling used by the
+// command layer. The implementation is the second abstraction core.
+func Wlc_NtkAbsCore2(p *Wlc_Ntk_t, pPars *Wlc_Par_t) int32 {
+	return Wlc_NtkAbs2Core2(p, pPars)
 }
 
 ////////////////////////////////////////////////////////////////////////

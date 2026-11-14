@@ -287,15 +287,15 @@ func Wlc_NtkGetPut(pNtk *Abc_Ntk_t, pGia *Gia_Man_t) *Vec_Int_t {
 		var pFanin *Abc_Obj_t
 		var pNode *Abc_Obj_t = Abc_ObjFanin0(Abc_NtkCo(pNtk, 0))
 		var pName string
-		var pCube string
 		var pSop string = pNode.Data.(string)
 		var vFanins *Vec_Int_t = Vec_IntAlloc(Abc_ObjFaninNum(pNode))
 		var i, k, Value, nLits, Counter int32
-		if pGia.vNamesIn != nil {
+		inputNames := Gia_ManInputNames(pGia)
+		if inputNames != nil {
 			// hash the names
 			pNames = Abc_NamStart(100, 16)
-			for i = 0; i < Vec_PtrSize(pGia.vNamesIn); i++ {
-				pName = Vec_PtrEntry(pGia.vNamesIn, i).(string)
+			for i = 0; i < int32(len(inputNames)); i++ {
+				pName = inputNames[i]
 				Value = Abc_NamStrFindOrAdd(pNames, pName, nil)
 				assert(Value == i+1, "Value == i+1")
 				//printf( "%s(%d) ", pName, i );
@@ -330,7 +330,8 @@ func Wlc_NtkGetPut(pNtk *Abc_Ntk_t, pGia *Gia_Man_t) *Vec_Int_t {
 					Value = i
 
 				} else {
-					Value, _ = strconv.Atoi(pName[k+1:])
+					parsed, _ := strconv.Atoi(pName[k+1:])
+					Value = int32(parsed)
 				}
 			}
 			Vec_IntPush(vFanins, Value)
@@ -359,7 +360,7 @@ func Wlc_NtkGetPut(pNtk *Abc_Ntk_t, pGia *Gia_Man_t) *Vec_Int_t {
 			for k = 0; k < int32(Abc_ObjFaninNum(pNode)); k++ {
 				Value = int32(cube[k])
 				if Value != '-' {
-					Vec_IntPush(vRes, Abc_Var2Lit(Vec_IntEntry(vFanins, k), Value == '0'))
+					Vec_IntPush(vRes, Abc_Var2Lit(Vec_IntEntry(vFanins, k), boolToInt32(Value == '0')))
 				}
 			}
 		}

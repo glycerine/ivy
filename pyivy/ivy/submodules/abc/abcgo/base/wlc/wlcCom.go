@@ -2,6 +2,8 @@ package wlc
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/aig/miniaig"
+	wln "github.com/glycerine/abcgo/base/wln"
 	"strconv"
 	"strings"
 )
@@ -97,6 +99,10 @@ func wlcYesNoBool(v bool) string {
 	}
 	return "no"
 }
+func wlcAtoi(s string) int32 {
+	n, _ := strconv.Atoi(s)
+	return int32(n)
+}
 func wlcSelect[T any](ok bool, a, b T) T {
 	if ok {
 		return a
@@ -104,15 +110,40 @@ func wlcSelect[T any](ok bool, a, b T) T {
 	return b
 }
 
-func Wlc_AbcGetNtk(pAbc *Abc_Frame_t) *Wlc_Ntk_t { return pAbc.pAbcWlc }
+func Wlc_AbcGetNtk(pAbc *Abc_Frame_t) *Wlc_Ntk_t {
+	n, _ := pAbc.Resource("pAbcWlc").(*Wlc_Ntk_t)
+	return n
+}
 func Wlc_AbcFreeNtk(pAbc *Abc_Frame_t) {
-	if pAbc.pAbcWlc != nil {
+	if Wlc_AbcGetNtk(pAbc) != nil {
 		Wlc_NtkFree(Wlc_AbcGetNtk(pAbc))
 	}
 }
-func Wlc_AbcUpdateNtk(pAbc *Abc_Frame_t, pNtk *Wlc_Ntk_t) { Wlc_AbcFreeNtk(pAbc); pAbc.pAbcWlc = pNtk }
+func Wlc_AbcUpdateNtk(pAbc *Abc_Frame_t, pNtk *Wlc_Ntk_t) {
+	Wlc_AbcFreeNtk(pAbc)
+	pAbc.SetResource("pAbcWlc", pNtk)
+}
 
-func Wlc_AbcGetInv(pAbc *Abc_Frame_t) *Vec_Int_t { return pAbc.pAbcWlcInv }
+func Wlc_AbcGetInv(pAbc *Abc_Frame_t) *Vec_Int_t {
+	values := pAbc.IntValues("pAbcWlcInv")
+	if len(values) == 0 {
+		return nil
+	}
+	v := Vec_IntAlloc(int32(len(values)))
+	Vec_IntPushArray(v, values, int32(len(values)))
+	return v
+}
+func Wlc_AbcSetInv(pAbc *Abc_Frame_t, inv *Vec_Int_t) {
+	if inv == nil {
+		pAbc.SetIntValues("pAbcWlcInv", nil)
+		return
+	}
+	pAbc.SetIntValues("pAbcWlcInv", Vec_IntArray(inv))
+}
+func Wlc_AbcGetGia(pAbc *Abc_Frame_t) *Gia_Man_t {
+	g, _ := pAbc.Resource("pGia").(*Gia_Man_t)
+	return g
+}
 
 ////////////////////////////////////////////////////////////////////////
 ///                     FUNCTION DEFINITIONS                         ///
@@ -249,7 +280,7 @@ func Abc_CommandReadWlc(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 
 	// perform reading
 	if !(int32(strings.Compare(Extra_FileNameExtension(pFileName), "v")) != 0) {
-		pNtk = Wlc_ReadVer(pFileName, nil)
+		pNtk = Wlc_ReadVer(pFileName, "")
 	} else if !(int32(strings.Compare(Extra_FileNameExtension(pFileName), "smt")) != 0) || !(int32(strings.Compare(Extra_FileNameExtension(pFileName), "smt2")) != 0) {
 		pNtk = Wlc_ReadSmt(pFileName, fOldParser, fPrintTree)
 	} else if !(int32(strings.Compare(Extra_FileNameExtension(pFileName), "ndr")) != 0) {
@@ -411,10 +442,10 @@ func Abc_CommandPs(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Wlc_NtkProfileCones(pNtk)
 	}
 	if fShowMulti != 0 {
-		Wlc_NtkPrintNodes(pNtk, WLC_OBJ_ARI_MULTI)
+		Wlc_NtkPrintNodes(pNtk, int32(WLC_OBJ_ARI_MULTI))
 	}
 	if fShowAdder != 0 {
-		Wlc_NtkPrintNodes(pNtk, WLC_OBJ_ARI_ADD)
+		Wlc_NtkPrintNodes(pNtk, int32(WLC_OBJ_ARI_ADD))
 	}
 	if fShowMem != 0 {
 		Wlc_NtkPrintMemory(pNtk)
@@ -468,7 +499,7 @@ func Abc_CommandCone(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-O\" should be followed by an integer.\n")
 				goto usage
 			}
-			iOutput = strconv.Atoi(argv[globalUtilOptind])
+			iOutput = wlcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
 			if iOutput < 0 {
 				goto usage
@@ -479,7 +510,7 @@ func Abc_CommandCone(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-R\" should be followed by an integer.\n")
 				goto usage
 			}
-			Range = strconv.Atoi(argv[globalUtilOptind])
+			Range = wlcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
 			if Range < 0 {
 				goto usage
@@ -555,7 +586,7 @@ func Abc_CommandPdrAbs(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-A\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nBitsAdd = strconv.Atoi(argv[globalUtilOptind])
+			pPars.nBitsAdd = wlcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
 			if pPars.nBitsAdd < 0 {
 				goto usage
@@ -566,7 +597,7 @@ func Abc_CommandPdrAbs(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-M\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nBitsMul = strconv.Atoi(argv[globalUtilOptind])
+			pPars.nBitsMul = wlcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
 			if pPars.nBitsMul < 0 {
 				goto usage
@@ -577,7 +608,7 @@ func Abc_CommandPdrAbs(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-X\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nBitsMux = strconv.Atoi(argv[globalUtilOptind])
+			pPars.nBitsMux = wlcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
 			if pPars.nBitsMux < 0 {
 				goto usage
@@ -588,7 +619,7 @@ func Abc_CommandPdrAbs(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-F\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nBitsFlop = strconv.Atoi(argv[globalUtilOptind])
+			pPars.nBitsFlop = wlcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
 			if pPars.nBitsFlop < 0 {
 				goto usage
@@ -599,7 +630,7 @@ func Abc_CommandPdrAbs(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-I\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nIterMax = strconv.Atoi(argv[globalUtilOptind])
+			pPars.nIterMax = wlcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
 			if pPars.nIterMax < 0 {
 				goto usage
@@ -610,7 +641,7 @@ func Abc_CommandPdrAbs(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-L\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nLimit = strconv.Atoi(argv[globalUtilOptind])
+			pPars.nLimit = wlcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
 			if pPars.nLimit < 0 {
 				goto usage
@@ -732,7 +763,7 @@ func Abc_CommandAbs(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-A\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nBitsAdd = strconv.Atoi(argv[globalUtilOptind])
+			pPars.nBitsAdd = wlcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
 			if pPars.nBitsAdd < 0 {
 				goto usage
@@ -743,7 +774,7 @@ func Abc_CommandAbs(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-M\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nBitsMul = strconv.Atoi(argv[globalUtilOptind])
+			pPars.nBitsMul = wlcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
 			if pPars.nBitsMul < 0 {
 				goto usage
@@ -754,7 +785,7 @@ func Abc_CommandAbs(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-X\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nBitsMux = strconv.Atoi(argv[globalUtilOptind])
+			pPars.nBitsMux = wlcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
 			if pPars.nBitsMux < 0 {
 				goto usage
@@ -765,7 +796,7 @@ func Abc_CommandAbs(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-F\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nBitsFlop = strconv.Atoi(argv[globalUtilOptind])
+			pPars.nBitsFlop = wlcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
 			if pPars.nBitsFlop < 0 {
 				goto usage
@@ -776,7 +807,7 @@ func Abc_CommandAbs(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-I\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nIterMax = strconv.Atoi(argv[globalUtilOptind])
+			pPars.nIterMax = wlcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
 			if pPars.nIterMax < 0 {
 				goto usage
@@ -787,7 +818,7 @@ func Abc_CommandAbs(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-L\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nLimit = strconv.Atoi(argv[globalUtilOptind])
+			pPars.nLimit = wlcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
 			if pPars.nLimit < 0 {
 				goto usage
@@ -861,7 +892,7 @@ func Abc_CommandAbs2(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-A\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nBitsAdd = strconv.Atoi(argv[globalUtilOptind])
+			pPars.nBitsAdd = wlcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
 			if pPars.nBitsAdd < 0 {
 				goto usage
@@ -872,7 +903,7 @@ func Abc_CommandAbs2(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-M\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nBitsMul = strconv.Atoi(argv[globalUtilOptind])
+			pPars.nBitsMul = wlcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
 			if pPars.nBitsMul < 0 {
 				goto usage
@@ -883,7 +914,7 @@ func Abc_CommandAbs2(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-X\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nBitsMux = strconv.Atoi(argv[globalUtilOptind])
+			pPars.nBitsMux = wlcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
 			if pPars.nBitsMux < 0 {
 				goto usage
@@ -894,7 +925,7 @@ func Abc_CommandAbs2(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-F\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nBitsFlop = strconv.Atoi(argv[globalUtilOptind])
+			pPars.nBitsFlop = wlcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
 			if pPars.nBitsFlop < 0 {
 				goto usage
@@ -905,7 +936,7 @@ func Abc_CommandAbs2(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-I\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.nIterMax = strconv.Atoi(argv[globalUtilOptind])
+			pPars.nIterMax = wlcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
 			if pPars.nIterMax < 0 {
 				goto usage
@@ -975,7 +1006,7 @@ func Abc_CommandMemAbs(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-I\" should be followed by an integer.\n")
 				goto usage
 			}
-			nIterMax = strconv.Atoi(argv[globalUtilOptind])
+			nIterMax = wlcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
 			if nIterMax <= 0 {
 				goto usage
@@ -1037,7 +1068,7 @@ func Abc_CommandMemAbs2(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-I\" should be followed by an integer.\n")
 				goto usage
 			}
-			nFrames = strconv.Atoi(argv[globalUtilOptind])
+			nFrames = wlcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
 			if nFrames <= 0 {
 				goto usage
@@ -1097,7 +1128,7 @@ func Abc_CommandBlast(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-O\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPar.iOutput = strconv.Atoi(argv[globalUtilOptind])
+			pPar.iOutput = wlcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
 			if pPar.iOutput < 0 {
 				goto usage
@@ -1108,7 +1139,7 @@ func Abc_CommandBlast(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-R\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPar.nOutputRange = strconv.Atoi(argv[globalUtilOptind])
+			pPar.nOutputRange = wlcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
 			if pPar.nOutputRange < 0 {
 				goto usage
@@ -1119,7 +1150,7 @@ func Abc_CommandBlast(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-A\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPar.nAdderLimit = strconv.Atoi(argv[globalUtilOptind])
+			pPar.nAdderLimit = wlcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
 			if pPar.nAdderLimit < 0 {
 				goto usage
@@ -1130,7 +1161,7 @@ func Abc_CommandBlast(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-M\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPar.nMultLimit = strconv.Atoi(argv[globalUtilOptind])
+			pPar.nMultLimit = wlcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
 			if pPar.nMultLimit < 0 {
 				goto usage
@@ -1236,15 +1267,15 @@ func Abc_CommandBlast(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			var pName string
 			var pFile *os.File
 			pFile, _ = os.OpenFile("pio_name_map.txt", os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
-			if pNew.vNamesIn != nil {
-				for i = 0; i < Vec_PtrSize(pNew.vNamesIn); i++ {
-					pName = Vec_PtrEntry(pNew.vNamesIn, i)
+			if inputNames := pNew.InputNames(); inputNames != nil {
+				for i = 0; i < int32(len(inputNames)); i++ {
+					pName = inputNames[i]
 					fmt.Fprintf(pFile, "i%d %s\n", i, pName)
 				}
 			}
-			if pNew.vNamesOut != nil {
-				for i = 0; i < Vec_PtrSize(pNew.vNamesOut); i++ {
-					pName = Vec_PtrEntry(pNew.vNamesOut, i)
+			if outputNames := pNew.OutputNames(); outputNames != nil {
+				for i = 0; i < int32(len(outputNames)); i++ {
+					pName = outputNames[i]
 					fmt.Fprintf(pFile, "o%d %s\n", i, pName)
 				}
 			}
@@ -1402,19 +1433,19 @@ func Abc_CommandRetime(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			goto usage
 		}
 	}
-	if pAbc.pNdr != nil {
+	if pAbc.Resource("pNdr") != nil {
 		var vMoves *Vec_Int_t
-		var pNtk *Wln_Ntk_t = Wln_NtkFromNdr(pAbc.pNdr, fDump)
-		Wln_NtkRetimeCreateDelayInfo(pNtk)
+		var pNtk *wln.Wln_Ntk_t = wln.Wln_NtkFromNdr(pAbc.Resource("pNdr").(*miniaig.Ndr_Data_t), fDump)
+		wln.Wln_NtkRetimeCreateDelayInfo(pNtk)
 		if pNtk == nil {
 			fmt.Printf("Transforming NDR into internal represnetation has failed.\n")
 			return 0
 		}
-		vMoves = Wln_NtkRetime(pNtk, fSkipSimple, fVerbose)
-		Wln_NtkFree(pNtk)
-		ABC_FREE(pAbc.pNdrArray)
+		vMoves = wln.Wln_NtkRetime(pNtk, fSkipSimple, fVerbose)
+		wln.Wln_NtkFree(pNtk)
+		pAbc.SetIntValues("pNdrArray", nil)
 		if vMoves != nil {
-			pAbc.pNdrArray = Vec_IntReleaseNewArray(vMoves)
+			pAbc.SetIntValues("pNdrArray", Vec_IntReleaseNewArray(vMoves))
 		}
 		Vec_IntFreeP(&vMoves)
 		return 0
@@ -1435,7 +1466,7 @@ func Abc_CommandRetime(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 0
 	}
 	_ = (pFile).Close()
-	Wln_NtkRetimeTest(pFileName, fSkipSimple, fDump, fVerbose)
+	wln.Wln_NtkRetimeTest(pFileName, fSkipSimple, fDump, fVerbose)
 	return 0
 usage:
 	Abc_Print(-2, "usage: %%retime [-sdvh]\n")
@@ -1705,7 +1736,7 @@ func Abc_CommandInvCheck(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			goto usage
 		}
 	}
-	if pAbc.pGia == nil {
+	if Wlc_AbcGetGia(pAbc) == nil {
 		Abc_Print(1, "Abc_CommandInvMin(): There is no current design.\n")
 		return 0
 	}
@@ -1713,11 +1744,11 @@ func Abc_CommandInvCheck(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(1, "Abc_CommandInvMin(): There is no saved invariant.\n")
 		return 0
 	}
-	if Gia_ManRegNum(pAbc.pGia) != Vec_IntEntryLast(Wlc_AbcGetInv(pAbc)) {
+	if Gia_ManRegNum(Wlc_AbcGetGia(pAbc)) != Vec_IntEntryLast(Wlc_AbcGetInv(pAbc)) {
 		Abc_Print(1, "Abc_CommandInvMin(): The number of flops in the invariant and in GIA should be the same.\n")
 		return 0
 	}
-	nFailed = Pdr_InvCheck(pAbc.pGia, Wlc_AbcGetInv(pAbc), fVerbose)
+	nFailed = Pdr_InvCheck(Wlc_AbcGetGia(pAbc), Wlc_AbcGetInv(pAbc), fVerbose)
 	if nFailed != 0 {
 		fmt.Printf("Invariant verification failed for %d clauses (out of %d). ", nFailed, Vec_IntEntry(Wlc_AbcGetInv(pAbc), 0))
 	} else {
@@ -1816,14 +1847,14 @@ func Abc_CommandInvPut(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(1, "Abc_CommandInvPut(): There is no current design.\n")
 		return 0
 	}
-	if pAbc.pGia == nil {
+	if Wlc_AbcGetGia(pAbc) == nil {
 		Abc_Print(1, "Abc_CommandInvPut(): There is no current AIG.\n")
 		return 0
 	}
 	// derive the network
-	vInv = Wlc_NtkGetPut(pNtk, pAbc.pGia)
+	vInv = Wlc_NtkGetPut(pNtk, Wlc_AbcGetGia(pAbc))
 	if vInv != nil {
-		Abc_FrameSetInv(vInv)
+		Wlc_AbcSetInv(pAbc, vInv)
 	}
 	return 0
 usage:
@@ -1866,7 +1897,7 @@ func Abc_CommandInvMin(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			goto usage
 		}
 	}
-	if pAbc.pGia == nil {
+	if Wlc_AbcGetGia(pAbc) == nil {
 		Abc_Print(1, "Abc_CommandInvMin(): There is no current design.\n")
 		return 0
 	}
@@ -1875,17 +1906,17 @@ func Abc_CommandInvMin(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 0
 	}
 	vInv = Wlc_AbcGetInv(pAbc)
-	if Gia_ManRegNum(pAbc.pGia) != Vec_IntEntryLast(vInv) {
+	if Gia_ManRegNum(Wlc_AbcGetGia(pAbc)) != Vec_IntEntryLast(vInv) {
 		Abc_Print(1, "Abc_CommandInvMin(): The number of flops in the invariant and in GIA should be the same.\n")
 		return 0
 	}
 	if fLits != 0 {
-		vInv2 = Pdr_InvMinimizeLits(pAbc.pGia, vInv, fVerbose)
+		vInv2 = Pdr_InvMinimizeLits(Wlc_AbcGetGia(pAbc), vInv, fVerbose)
 	} else {
-		vInv2 = Pdr_InvMinimize(pAbc.pGia, vInv, fVerbose)
+		vInv2 = Pdr_InvMinimize(Wlc_AbcGetGia(pAbc), vInv, fVerbose)
 	}
 	if vInv2 != nil {
-		Abc_FrameSetInv(vInv2)
+		Wlc_AbcSetInv(pAbc, vInv2)
 	}
 	return 0
 usage:

@@ -214,6 +214,7 @@ type Wlc_Ntk_t struct {
 	nAssert   int32                 // the number of asserts
 	// memory for objects
 	pObjs      *Wlc_Obj_t
+	objStore   []Wlc_Obj_t
 	iObj       int32
 	nObjsAlloc int32
 	pMemFanin  *Mem_Flex_t

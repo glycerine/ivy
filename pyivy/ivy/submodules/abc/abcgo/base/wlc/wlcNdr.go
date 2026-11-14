@@ -21,7 +21,7 @@ import (
   Synopsis    [Constructing WLC network from NDR data structure.]
 
   Author      [Alan Mishchenko]
-  
+
   Affiliation [UC Berkeley]
 
   Date        [Ver. 1.0. Started - August 22, 2014.]
@@ -43,17 +43,19 @@ import (
 ///                     FUNCTION DEFINITIONS                         ///
 ////////////////////////////////////////////////////////////////////////
 
-/**Function*************************************************************
+/*
+*Function*************************************************************
 
-  Synopsis    []
+	Synopsis    []
 
-  Description []
-               
-  SideEffects []
+	Description []
 
-  SeeAlso     []
+	SideEffects []
 
-***********************************************************************/
+	SeeAlso     []
+
+**********************************************************************
+*/
 func Ndr_TypeNdr2Wlc(typ int32) int32 {
 	switch typ {
 	case miniaig.ABC_OPER_CONST:
@@ -291,18 +293,19 @@ func Ndr_TypeWlc2Ndr(typ int32) int32 {
 	}
 }
 
+/*
+*Function*************************************************************
 
-/**Function*************************************************************
+	Synopsis    []
 
-  Synopsis    []
+	Description []
 
-  Description []
-               
-  SideEffects []
+	SideEffects []
 
-  SeeAlso     []
+	SeeAlso     []
 
-***********************************************************************/
+**********************************************************************
+*/
 func Ndr_ObjWriteConstant(bits []uint32, nBits int32) string {
 	assert(nBits+10 < 10000, "nBits + 10 < 10000")
 	var result strings.Builder
@@ -402,17 +405,19 @@ func Wlc_NtkToNdrTest(pNtk *Wlc_Ntk_t) {
 	miniaig.Ndr_Write("test.ndr", design)
 }
 
-/**Function*************************************************************
+/*
+*Function*************************************************************
 
-  Synopsis    []
+	Synopsis    []
 
-  Description []
-               
-  SideEffects []
+	Description []
 
-  SeeAlso     []
+	SideEffects []
 
-***********************************************************************/
+	SeeAlso     []
+
+**********************************************************************
+*/
 func Ndr_ObjReadRange(p *miniaig.Ndr_Data_t, obj int, end, beg *int32) int32 {
 	var values []int
 	n := miniaig.Ndr_ObjReadArray(p, obj, miniaig.NDR_RANGE, &values)
@@ -644,9 +649,9 @@ func Wlc_NtkFromNdr(p *miniaig.Ndr_Data_t) *Wlc_Ntk_t {
 		}
 		assert(vec.Vec_IntSize(&pNtk.vFfs)%2 == 0, "Vec_IntSize(&pNtk.vFfs)%2 == 0")
 		assert(vec.Vec_IntSize(&pNtk.vFfs) == 2*vec.Vec_IntSize(pNtk.vInits), "Vec_IntSize(&pNtk.vFfs) == 2*Vec_IntSize(pNtk.vInits)")
-		for i := int32(0); i < vec.Vec_IntSize(&pNtk.vFfs); i++ {
+		for i := 0; i < vec.Vec_IntSize(&pNtk.vFfs); i++ {
 			if i&1 != 0 {
-				Wlc_ObjSetCo(pNtk, Wlc_NtkFf(pNtk, i), 1)
+				Wlc_ObjSetCo(pNtk, Wlc_NtkFf(pNtk, int32(i)), 1)
 			}
 		}
 		vec.Vec_IntClear(&pNtk.vFfs)
@@ -686,17 +691,19 @@ func Wlc_NtkFromNdr(p *miniaig.Ndr_Data_t) *Wlc_Ntk_t {
 	return pNtk
 }
 
-/**Function*************************************************************
+/*
+*Function*************************************************************
 
-  Synopsis    []
+	Synopsis    []
 
-  Description []
-               
-  SideEffects []
+	Description []
 
-  SeeAlso     []
+	SideEffects []
 
-***********************************************************************/
+	SeeAlso     []
+
+**********************************************************************
+*/
 func ndrFunction(p *miniaig.Ndr_Data_t, obj int) string {
 	var data []byte
 	for _, value := range miniaig.Ndr_ObjReadBodyP(p, obj, miniaig.NDR_FUNCTION) {
@@ -717,15 +724,13 @@ func Wlc_ReadNdr(pFileName string) *Wlc_Ntk_t {
 	return pNtk
 }
 func Wlc_ReadNdrTest() {
-    var pNtk *Wlc_Ntk_t  = Wlc_ReadNdr( "top.ndr" );
-    Wlc_WriteVer( pNtk, "top.v", 0, 0 );
-    Wlc_NtkFree( pNtk );
+	var pNtk *Wlc_Ntk_t = Wlc_ReadNdr("top.ndr")
+	Wlc_WriteVer(pNtk, "top.v", 0, 0)
+	Wlc_NtkFree(pNtk)
 }
 
 ////////////////////////////////////////////////////////////////////////
 ///                       END OF FILE                                ///
 ////////////////////////////////////////////////////////////////////////
 
-
 //ABC_NAMESPACE_IMPL_END
-

@@ -18,12 +18,15 @@ func Wlc_NtkDeleteSim(result *Vec_Ptr_t) {
 
 func Wlc_NtkSimulate(p *Wlc_Ntk_t, nodes *Vec_Int_t, nWords, nFrames int32) *Vec_Ptr_t {
 	gia := Wlc_NtkBitBlast(p, nil)
-	if gia == nil || nodes == nil || nWords <= 0 || nFrames <= 0 {
+	if gia == nil {
 		return nil
 	}
-	Vec_WrdFreeP(&gia.vSims)
-	gia.vSims = Vec_WrdStart(Gia_ManObjNum(gia) * nWords)
-	gia.nSimWords = nWords
+	if nodes == nil || nWords <= 0 || nFrames <= 0 {
+		Gia_ManStop(gia)
+		return nil
+	}
+	Gia_ManClearSimData(gia)
+	Gia_ManSetSimData(gia, Vec_WrdStart(Gia_ManObjNum(gia)*nWords), nWords)
 	result := Vec_PtrAlloc(Vec_IntSize(nodes))
 	for i := int32(0); i < Vec_IntSize(nodes); i++ {
 		obj := Wlc_NtkObj(p, Vec_IntEntry(nodes, i))
@@ -43,7 +46,7 @@ func Wlc_NtkSimulate(p *Wlc_Ntk_t, nodes *Vec_Int_t, nWords, nFrames int32) *Vec
 			} else if Gia_ObjIsCo(obj) != 0 {
 				Wlc_ObjSimCo(gia, id)
 			} else if Gia_ObjIsPi(gia, obj) != 0 {
-				Wlc_ObjSimPi(gia, id)
+				wlcNtkSimPi(gia, id)
 			} else if Gia_ObjIsRo(gia, obj) != 0 {
 				Wlc_ObjSimRo(gia, id)
 			}
@@ -57,12 +60,13 @@ func Wlc_NtkSimulate(p *Wlc_Ntk_t, nodes *Vec_Int_t, nWords, nFrames int32) *Vec
 				data := Vec_PtrEntry(inner, bit).([]word)
 				if lit == -1 {
 					dangling++
+					clear(data[int(frame*nWords):int((frame+1)*nWords)])
 					continue
 				}
 				packed := Wlc_ObjSim(gia, Abc_Lit2Var(lit))
 				for w := int32(0); w < nWords; w++ {
 					value := packed[w]
-					if Abc_LitIsCompl(lit) {
+					if Abc_LitIsCompl(lit) != 0 {
 						value = ^value
 					}
 					data[int(frame*nWords+w)] = value
@@ -73,10 +77,18 @@ func Wlc_NtkSimulate(p *Wlc_Ntk_t, nodes *Vec_Int_t, nWords, nFrames int32) *Vec
 			fmt.Printf("Replaced %d dangling internal bits with constant 0.\n", dangling)
 		}
 	}
-	Vec_WrdFreeP(&gia.vSims)
-	gia.nSimWords = 0
+	Gia_ManClearSimData(gia)
 	Gia_ManStop(gia)
 	return result
+}
+
+// wlcNtkSimPi mirrors wlcSim.c. The Wlc_ObjSimPi helper used by graft code
+// intentionally shifts its first word, while this simulator does not.
+func wlcNtkSimPi(gia *Gia_Man_t, id int32) {
+	words := Gia_ManSimObjectData(gia, id)
+	for i := range words {
+		words[i] = Gia_ManRandomW(0)
+	}
 }
 
 func Wlc_NtkSimulatePrint(p *Wlc_Ntk_t, nodes *Vec_Int_t, result *Vec_Ptr_t, nWords, nFrames int32) {

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math"
 	"os"
+	"unsafe"
 )
 
 /**CFile****************************************************************
@@ -102,8 +103,8 @@ var Wlc_Names = [...]string{
 }
 
 func Wlc_ObjTypeName(p *Wlc_Obj_t) string {
-	if p {
-		if p.Type < WLC_OBJ_NUMBER {
+	if p != nil {
+		if p.Type < uint32(WLC_OBJ_NUMBER) {
 			return Wlc_Names[p.Type]
 		} else {
 			return "out_of_bound"
@@ -131,7 +132,7 @@ func Wlc_ObjTypeName(p *Wlc_Obj_t) string {
 **********************************************************************
 */
 func Wlc_ManSetDefaultParams(pPars *Wlc_Par_t) {
-	memset(pPars, 0, sizeof(Wlc_Par_t))
+	*pPars = Wlc_Par_t{}
 	pPars.nBitsAdd = ABC_INFINITY  // adder bit-width
 	pPars.nBitsMul = ABC_INFINITY  // multiplier bit-widht
 	pPars.nBitsMux = ABC_INFINITY  // MUX bit-width
@@ -172,10 +173,10 @@ func Wlc_ManSetDefaultParams(pPars *Wlc_Par_t) {
 func Wlc_NtkAlloc(pName string, nObjsAlloc int32) *Wlc_Ntk_t {
 	var p *Wlc_Ntk_t
 	p = new(Wlc_Ntk_t)
-	if pName {
+	if pName != "" {
 		p.pName = Extra_FileNameGeneric(pName)
 	} else {
-		p.pName = nil
+		p.pName = ""
 	}
 	Vec_IntGrow(&p.vPis, 111)
 	Vec_IntGrow(&p.vPos, 111)
@@ -184,14 +185,15 @@ func Wlc_NtkAlloc(pName string, nObjsAlloc int32) *Wlc_Ntk_t {
 	Vec_IntGrow(&p.vFfs, 111)
 	p.pMemFanin = Mem_FlexStart()
 	p.nObjsAlloc = nObjsAlloc
-	p.pObjs = ABC_CALLOC(Wlc_Obj_t, p.nObjsAlloc)
+	p.objStore = make([]Wlc_Obj_t, p.nObjsAlloc)
+	p.pObjs = &p.objStore[0]
 	p.iObj = 1
 	return p
 }
 func Wlc_ObjSetCi(p *Wlc_Ntk_t, pObj *Wlc_Obj_t) {
-	assert(Wlc_ObjIsCi(pObj), "Wlc_ObjIsCi(pObj)")
+	assert(Wlc_ObjIsCi(pObj) != 0, "Wlc_ObjIsCi(pObj)")
 	assert(Wlc_ObjFaninNum(pObj) == 0, "Wlc_ObjFaninNum(pObj) == 0")
-	if Wlc_NtkPiNum(p) == Wlc_NtkCiNum(p) || pObj.Type != WLC_OBJ_PI {
+	if Wlc_NtkPiNum(p) == Wlc_NtkCiNum(p) || pObj.Type != uint32(WLC_OBJ_PI) {
 		pObj.Fanins[1] = Vec_IntSize(&p.vCis)
 		Vec_IntPush(&p.vCis, Wlc_ObjId(p, pObj))
 
@@ -207,7 +209,7 @@ func Wlc_ObjSetCi(p *Wlc_Ntk_t, pObj *Wlc_Obj_t) {
 			pTemp.Fanins[1] = i
 		}
 	}
-	if pObj.Type == WLC_OBJ_PI {
+	if pObj.Type == uint32(WLC_OBJ_PI) {
 		Vec_IntPush(&p.vPis, Wlc_ObjId(p, pObj))
 	}
 }
@@ -225,18 +227,18 @@ func Wlc_ObjSetCo(p *Wlc_Ntk_t, pObj *Wlc_Obj_t, fFlopInput int32) {
 }
 func Wlc_ObjAlloc(p *Wlc_Ntk_t, Type int32, Signed int32, End int32, Beg int32) int32 {
 	var pObj *Wlc_Obj_t
-	assert(Type != WLC_OBJ_PO && Type != WLC_OBJ_FI, "Type != WLC_OBJ_PO && Type != WLC_OBJ_FI")
+	assert(Type != int32(WLC_OBJ_PO) && Type != int32(WLC_OBJ_FI), "Type != WLC_OBJ_PO && Type != WLC_OBJ_FI")
 	if p.iObj == p.nObjsAlloc {
-		p.pObjs = ABC_REALLOC(Wlc_Obj_t, p.pObjs, 2*p.nObjsAlloc)
-		memset(p.pObjs+p.nObjsAlloc, 0, sizeof(Wlc_Obj_t)*p.nObjsAlloc)
+		p.objStore = append(p.objStore, make([]Wlc_Obj_t, p.nObjsAlloc)...)
+		p.pObjs = &p.objStore[0]
 		p.nObjsAlloc *= 2
 	}
 	pObj = Wlc_NtkObj(p, p.iObj)
-	pObj.Type = Type
-	pObj.Signed = Signed
+	pObj.Type = uint32(Type)
+	pObj.Signed = uint32(Signed)
 	pObj.End = End
 	pObj.Beg = Beg
-	if Wlc_ObjIsCi(pObj) {
+	if Wlc_ObjIsCi(pObj) != 0 {
 		Wlc_ObjSetCi(p, pObj)
 	}
 	p.nObjs[Type]++
@@ -254,78 +256,77 @@ var spStatic_Wlc_ObjName_Buffer string // was [100]byte in C
 
 func Wlc_ObjName(p *Wlc_Ntk_t, iObj int32) string {
 
-	if Wlc_NtkHasNameId(p) && Wlc_ObjNameId(p, iObj) {
+	if Wlc_NtkHasNameId(p) != 0 && Wlc_ObjNameId(p, iObj) != 0 {
 		return Abc_NamStr(p.pManName, Wlc_ObjNameId(p, iObj))
 	}
 	spStatic_Wlc_ObjName_Buffer = fmt.Sprintf("n%d", iObj)
 	return spStatic_Wlc_ObjName_Buffer
 }
 func Wlc_ObjUpdateType(p *Wlc_Ntk_t, pObj *Wlc_Obj_t, Type int32) {
-	assert(pObj.Type == WLC_OBJ_NONE, "pObj.Type == WLC_OBJ_NONE")
+	assert(pObj.Type == uint32(WLC_OBJ_NONE), "pObj.Type == uint32(WLC_OBJ_NONE)")
 	p.nObjs[pObj.Type]--
-	pObj.Type = Type
+	pObj.Type = uint32(Type)
 	p.nObjs[pObj.Type]++
 }
 func Wlc_ObjAddFanins(p *Wlc_Ntk_t, pObj *Wlc_Obj_t, vFanins *Vec_Int_t) {
 	assert(pObj.nFanins == 0, "pObj.nFanins == 0")
-	pObj.nFanins = Vec_IntSize(vFanins)
+	pObj.nFanins = uint32(Vec_IntSize(vFanins))
 	// special treatment of CONST, SELECT and TABLE
-	if pObj.Type == WLC_OBJ_CONST {
+	if pObj.Type == uint32(WLC_OBJ_CONST) {
 		pObj.nFanins = 0
-	} else if pObj.Type == WLC_OBJ_BIT_SELECT || pObj.Type == WLC_OBJ_TABLE {
+	} else if pObj.Type == uint32(WLC_OBJ_BIT_SELECT) || pObj.Type == uint32(WLC_OBJ_TABLE) {
 		pObj.nFanins = 1
 	}
-	if Wlc_ObjHasArray(pObj) {
-		pObj.pFanins[0] = make([]int32, Vec_IntSize(vFanins))
+	// C stores the full constant bit vector and bit-select operands in the
+	// object's flexible fanin allocation even when nFanins is reset to zero
+	// (CONST) or one (BIT_SELECT). Keep the backing data on the Go object so
+	// Wlc_ObjFanins and Wlc_ObjConstValue see the same words after parsing.
+	if Wlc_ObjHasArray(pObj) != 0 {
+		pObj.pFanins[0] = append(pObj.pFanins[0][:0], Vec_IntArray(vFanins)...)
 	}
-	memcpy(Wlc_ObjFanins(pObj), Vec_IntArray(vFanins), sizeof(int)*Vec_IntSize(vFanins))
+	copy(Wlc_ObjFanins(pObj), Vec_IntArray(vFanins))
 }
 func Wlc_NtkFree(p *Wlc_Ntk_t) {
-	if p.pManName {
+	if p.pManName != nil {
 		Abc_NamStop(p.pManName)
 	}
-	if p.pMemFanin {
+	if p.pMemFanin != nil {
 		Mem_FlexStop(p.pMemFanin, 0)
 	}
-	if p.pMemTable {
+	if p.pMemTable != nil {
 		Mem_FlexStop(p.pMemTable, 0)
 	}
-	ABC_FREE(p.vPoPairs.pArray)
+	Vec_IntClear(&p.vPoPairs)
 	Vec_PtrFreeP(&p.vTables)
 	Vec_WrdFreeP(&p.vLutTruths)
-	ABC_FREE(p.vPis.pArray)
-	ABC_FREE(p.vPos.pArray)
-	ABC_FREE(p.vCis.pArray)
-	ABC_FREE(p.vCos.pArray)
-	ABC_FREE(p.vFfs.pArray)
-	ABC_FREE(p.vFfs2.pArray)
+	Vec_IntClear(&p.vPis)
+	Vec_IntClear(&p.vPos)
+	Vec_IntClear(&p.vCis)
+	Vec_IntClear(&p.vCos)
+	Vec_IntClear(&p.vFfs)
+	Vec_IntClear(&p.vFfs2)
 	Vec_IntFreeP(&p.vInits)
 	Vec_IntFreeP(&p.vArsts)
-	ABC_FREE(p.vTravIds.pArray)
-	ABC_FREE(p.vNameIds.pArray)
-	ABC_FREE(p.vValues.pArray)
-	ABC_FREE(p.vCopies.pArray)
-	ABC_FREE(p.vBits.pArray)
-	ABC_FREE(p.vLevels.pArray)
-	ABC_FREE(p.vRefs.pArray)
-	ABC_FREE(p.pInits)
-	ABC_FREE(p.pObjs)
-	ABC_FREE(p.pName)
-	ABC_FREE(p.pSpec)
-	ABC_FREE(p)
+	Vec_IntClear(&p.vTravIds)
+	Vec_IntClear(&p.vNameIds)
+	Vec_IntClear(&p.vValues)
+	Vec_IntClear(&p.vCopies)
+	Vec_IntClear(&p.vBits)
+	Vec_IntClear(&p.vLevels)
+	Vec_IntClear(&p.vRefs)
+	p.pInits = ""
+	p.pObjs = nil
+	p.objStore = nil
+	p.pName = ""
+	p.pSpec = ""
 }
 func Wlc_NtkMemUsage(p *Wlc_Ntk_t) int32 {
-	var Mem int32 = sizeof(Wlc_Ntk_t)
-	Mem += 4 * p.vPis.nCap
-	Mem += 4 * p.vPos.nCap
-	Mem += 4 * p.vCis.nCap
-	Mem += 4 * p.vCos.nCap
-	Mem += 4 * p.vFfs.nCap
-	Mem += 4 * p.vFfs2.nCap
-	Mem += sizeof(Wlc_Obj_t) * p.nObjsAlloc
-	Mem += Abc_NamMemUsed(p.pManName)
-	Mem += Mem_FlexReadMemUsage(p.pMemFanin)
-	return Mem
+	memBytes := int32(unsafe.Sizeof(Wlc_Ntk_t{}))
+	memBytes += 4 * int32(Vec_IntCap(&p.vPis)+Vec_IntCap(&p.vPos)+Vec_IntCap(&p.vCis)+Vec_IntCap(&p.vCos)+Vec_IntCap(&p.vFfs)+Vec_IntCap(&p.vFfs2))
+	memBytes += int32(unsafe.Sizeof(Wlc_Obj_t{})) * p.nObjsAlloc
+	memBytes += Abc_NamMemUsed(p.pManName)
+	memBytes += Mem_FlexReadMemUsage(p.pMemFanin)
+	return memBytes
 }
 
 /*
@@ -366,7 +367,7 @@ func Wlc_NtkCreateLevelsRev(p *Wlc_Ntk_t) int32 {
 	// inlining of macro Wlc_NtkForEachObjReverse
 	for i = Wlc_NtkObjNumMax(p) - 1; i > 0; i-- {
 		pObj = Wlc_NtkObj(p, i)
-		if Wlc_ObjIsCi(pObj) {
+		if Wlc_ObjIsCi(pObj) != 0 {
 			continue
 		}
 		Level = Wlc_ObjLevel(p, pObj) + 1
@@ -411,7 +412,7 @@ func Wlc_NtkCreateLevels_rec(p *Wlc_Ntk_t, pObj *Wlc_Obj_t) {
 	var iFanin int32
 	var Level int32
 	var iObj int32 = Wlc_ObjId(p, pObj)
-	if Wlc_ObjIsCi(pObj) || Wlc_ObjIsFf(p, iObj) || Wlc_ObjFaninNum(pObj) == 0 || Wlc_ObjLevel(p, pObj) > 0 {
+	if Wlc_ObjIsCi(pObj) != 0 || Wlc_ObjIsFf(p, iObj) != 0 || Wlc_ObjFaninNum(pObj) == 0 || Wlc_ObjLevel(p, pObj) > 0 {
 		return
 	}
 	// inlining of macro Wlc_ObjForEachFanin
@@ -442,7 +443,7 @@ func Wlc_NtkCreateLevels(p *Wlc_Ntk_t) int32 {
 	// inlining of macro Wlc_NtkForEachObj
 	for i = 1; i < Wlc_NtkObjNumMax(p); i++ {
 		pObj = Wlc_NtkObj(p, i)
-		if !Wlc_ObjIsCi(pObj) && Wlc_ObjFaninNum(pObj) {
+		if Wlc_ObjIsCi(pObj) == 0 && Wlc_ObjFaninNum(pObj) != 0 {
 			Vec_IntAddToEntry(&p.vLevels, i, 1)
 		}
 	}
@@ -490,7 +491,7 @@ func Wlc_NtkRemapLevels(p *Wlc_Ntk_t, vObjs *Vec_Int_t, nLevels int32) int32 {
 	// remap levels
 	for i = 0; i < Vec_IntSize(&p.vLevels); i++ {
 		Level = Vec_IntEntry(&p.vLevels, i)
-		if Vec_IntEntry(vUsed, Level) {
+		if Vec_IntEntry(vUsed, Level) != 0 {
 			Vec_IntWriteEntry(&p.vLevels, i, Vec_IntEntry(vMap, Level))
 		} else {
 			Vec_IntWriteEntry(&p.vLevels, i, -1)
@@ -515,7 +516,7 @@ func Wlc_NtkRemapLevels(p *Wlc_Ntk_t, vObjs *Vec_Int_t, nLevels int32) int32 {
 
 **********************************************************************
 */
-func Wlc_NtkCollectStats(p *Wlc_Ntk_t, nObjs [][WLC_OBJ_NUMBER]int32) {
+func Wlc_NtkCollectStats(p *Wlc_Ntk_t, nObjs [2][WLC_OBJ_NUMBER]int32) {
 	var pObj *Wlc_Obj_t
 	var n, i int32
 	if Wlc_NtkPoNum(p) != 2 {
@@ -526,7 +527,7 @@ func Wlc_NtkCollectStats(p *Wlc_Ntk_t, nObjs [][WLC_OBJ_NUMBER]int32) {
 		// inlining of macro Wlc_NtkForEachObj
 		for i = 1; i < Wlc_NtkObjNumMax(p); i++ {
 			pObj = Wlc_NtkObj(p, i)
-			if pObj.Mark {
+			if pObj.Mark != 0 {
 				nObjs[n][pObj.Type]++
 			}
 		}
@@ -540,7 +541,7 @@ func Wlc_NtkCountRealPis(p *Wlc_Ntk_t) int32 {
 	// inlining of macro Wlc_NtkForEachPi
 	for i = 0; i < Wlc_NtkPiNum(p); i++ {
 		pObj = Wlc_NtkPi(p, i)
-		Count += pObj.Mark
+		Count += int32(pObj.Mark)
 	}
 	Wlc_NtkCleanMarks(p)
 	return Count
@@ -581,22 +582,24 @@ func Wlc_NtkPrintDistribFromSign(sss uint64, s *int32, s0 *int32, s1 *int32) {
 	*s = int32(sss) & 0x1FFFFF
 }
 func Wlc_NtkPrintDistribAddOne(vTypes *Vec_Ptr_t, vOccurs *Vec_Ptr_t, Type int32, Sign uint64) {
-	var vType *Vec_Wrd_t = (*Vec_Wrd_t)(Vec_PtrEntry(vTypes, Type))
-	var vOccur *Vec_Wrd_t = (*Vec_Wrd_t)(Vec_PtrEntry(vOccurs, Type))
+	var vType *Vec_Wrd_t = Vec_PtrEntry(vTypes, Type).(*Vec_Wrd_t)
+	var vOccur *Vec_Wrd_t = Vec_PtrEntry(vOccurs, Type).(*Vec_Wrd_t)
 	var Entry uint64
 	var i int32
-	Vec_WrdForEachEntry(vType, Entry, i)
-	if Entry == Sign {
-		Vec_WrdAddToEntry(vOccur, i, 1)
-		return
+	for i = 0; i < int32(Vec_WrdSize(vType)); i++ {
+		Entry = Vec_WrdEntry(vType, i)
+		if Entry == Sign {
+			Vec_WrdAddToEntry(vOccur, i, 1)
+			return
+		}
 	}
 	Vec_WrdPush(vType, Sign)
 	Vec_WrdPush(vOccur, 1)
 }
 func Wlc_NtkPrintDistribSortOne(vTypes *Vec_Ptr_t, vOccurs *Vec_Ptr_t, Type int32) {
-	vType := (*Vec_Wrd_t)(Vec_PtrEntry(vTypes, Type))
-	vOccur := (*Vec_Wrd_t)(Vec_PtrEntry(vOccurs, Type))
-	Vec_WrdSelectSortCost2(Vec_WrdArray(vType), Vec_WrdSize(vType), Vec_WrdArray(vOccur))
+	vType := Vec_PtrEntry(vTypes, Type).(*Vec_Wrd_t)
+	vOccur := Vec_PtrEntry(vOccurs, Type).(*Vec_Wrd_t)
+	Vec_WrdSelectSortCost2(Vec_WrdArray(vType), int(Vec_WrdSize(vType)), Vec_WrdArray(vOccur))
 	Vec_WrdReverseOrder(vType)
 	Vec_WrdReverseOrder(vOccur)
 }
@@ -607,7 +610,7 @@ func Wlc_NtkPrintDistrib(p *Wlc_Ntk_t, fTwoSides int32, fVerbose int32) {
 	var pObjRange *Wlc_Obj_t = nil
 	var nCountRange int32
 	var vTypes, vOccurs *Vec_Ptr_t
-	var vAnds *Vec_Int_t = Vec_IntStart(WLC_OBJ_NUMBER)
+	var vAnds *Vec_Int_t = Vec_IntStart(int32(WLC_OBJ_NUMBER))
 	var Sign uint64
 	var i, k, s, s0, s1 int32
 	if Wlc_NtkPoNum(p) != 2 {
@@ -617,12 +620,12 @@ func Wlc_NtkPrintDistrib(p *Wlc_Ntk_t, fTwoSides int32, fVerbose int32) {
 		Wlc_NtkCollectStats(p, nObjs)
 	}
 	// allocate statistics arrays
-	vTypes = Vec_PtrStart(WLC_OBJ_NUMBER)
-	vOccurs = Vec_PtrStart(WLC_OBJ_NUMBER)
-	for i = 0; i < WLC_OBJ_NUMBER; i++ {
+	vTypes = Vec_PtrStart(int32(WLC_OBJ_NUMBER))
+	vOccurs = Vec_PtrStart(int32(WLC_OBJ_NUMBER))
+	for i = 0; i < int32(WLC_OBJ_NUMBER); i++ {
 		Vec_PtrWriteEntry(vTypes, i, Vec_WrdAlloc(16))
 	}
-	for i = 0; i < WLC_OBJ_NUMBER; i++ {
+	for i = 0; i < int32(WLC_OBJ_NUMBER); i++ {
 		Vec_PtrWriteEntry(vOccurs, i, Vec_WrdAlloc(16))
 	}
 	// add nodes
@@ -633,19 +636,19 @@ func Wlc_NtkPrintDistrib(p *Wlc_Ntk_t, fTwoSides int32, fVerbose int32) {
 		if Wlc_ObjSign(pObj) > 0x1FFFFF {
 			fmt.Printf("Object %6d has range %d, which is reduced to %d in the statistics.\n", i, Wlc_ObjRange(pObj), Wlc_ObjRange(pObj)&0xFFFFF)
 		}
-		if pObj.Beg {
+		if pObj.Beg != 0 {
 			if pObjRange == nil {
 				pObjRange = pObj
 			}
 			nCountRange++
 		}
 		// 0-input types
-		if Wlc_ObjIsCi(pObj) || pObj.Type == WLC_OBJ_CONST || pObj.Type == WLC_OBJ_BIT_CONCAT {
+		if Wlc_ObjIsCi(pObj) != 0 || pObj.Type == uint32(WLC_OBJ_CONST) || pObj.Type == uint32(WLC_OBJ_BIT_CONCAT) {
 			Sign = Wlc_NtkPrintDistribMakeSign(Wlc_ObjSign(pObj), 0, 0)
 			// 1-input types
-		} else if pObj.Type == WLC_OBJ_BUF || pObj.Type == WLC_OBJ_BIT_SELECT || pObj.Type == WLC_OBJ_TABLE ||
-			pObj.Type == WLC_OBJ_BIT_ZEROPAD || pObj.Type == WLC_OBJ_BIT_SIGNEXT ||
-			pObj.Type == WLC_OBJ_BIT_NOT || pObj.Type == WLC_OBJ_LOGIC_NOT || pObj.Type == WLC_OBJ_ARI_MINUS {
+		} else if pObj.Type == uint32(WLC_OBJ_BUF) || pObj.Type == uint32(WLC_OBJ_BIT_SELECT) || pObj.Type == uint32(WLC_OBJ_TABLE) ||
+			pObj.Type == uint32(WLC_OBJ_BIT_ZEROPAD) || pObj.Type == uint32(WLC_OBJ_BIT_SIGNEXT) ||
+			pObj.Type == uint32(WLC_OBJ_BIT_NOT) || pObj.Type == uint32(WLC_OBJ_LOGIC_NOT) || pObj.Type == uint32(WLC_OBJ_ARI_MINUS) {
 			Sign = Wlc_NtkPrintDistribMakeSign(Wlc_ObjSign(pObj), Wlc_ObjSign(Wlc_ObjFanin0(p, pObj)), 0)
 			// 2-input types (including MUX)
 		} else if Wlc_ObjFaninNum(pObj) == 0 {
@@ -664,98 +667,98 @@ func Wlc_NtkPrintDistrib(p *Wlc_Ntk_t, fTwoSides int32, fVerbose int32) {
 			Sign = Wlc_NtkPrintDistribMakeSign(Wlc_ObjSign(pObj), s0, s1)
 		}
 		// add to storage
-		Wlc_NtkPrintDistribAddOne(vTypes, vOccurs, pObj.Type, Sign)
+		Wlc_NtkPrintDistribAddOne(vTypes, vOccurs, int32(pObj.Type), Sign)
 		// count the number of AIG nodes
-		if pObj.Type == WLC_OBJ_MUX {
-			Vec_IntAddToEntry(vAnds, WLC_OBJ_MUX, 3*Wlc_ObjRange(pObj)*(Wlc_ObjFaninNum(pObj)-2))
-		} else if pObj.Type == WLC_OBJ_SHIFT_R {
-			Vec_IntAddToEntry(vAnds, WLC_OBJ_SHIFT_R, Abc_MinInt(Wlc_ObjRange(Wlc_ObjFanin0(p, pObj)), Abc_Base2Log(Wlc_ObjRange(pObj)))*3)
-		} else if pObj.Type == WLC_OBJ_SHIFT_RA {
-			Vec_IntAddToEntry(vAnds, WLC_OBJ_SHIFT_RA, Wlc_ObjRange(pObj)*Abc_MinInt(Wlc_ObjRange(Wlc_ObjFanin0(p, pObj)), Abc_Base2Log(Wlc_ObjRange(pObj)))*3)
-		} else if pObj.Type == WLC_OBJ_SHIFT_L {
-			Vec_IntAddToEntry(vAnds, WLC_OBJ_SHIFT_L, Wlc_ObjRange(pObj)*Abc_MinInt(Wlc_ObjRange(Wlc_ObjFanin0(p, pObj)), Abc_Base2Log(Wlc_ObjRange(pObj)))*3)
-		} else if pObj.Type == WLC_OBJ_SHIFT_LA {
-			Vec_IntAddToEntry(vAnds, WLC_OBJ_SHIFT_LA, Wlc_ObjRange(pObj)*Abc_MinInt(Wlc_ObjRange(Wlc_ObjFanin0(p, pObj)), Abc_Base2Log(Wlc_ObjRange(pObj)))*3)
-		} else if pObj.Type == WLC_OBJ_ROTATE_R {
-			Vec_IntAddToEntry(vAnds, WLC_OBJ_ROTATE_R, Wlc_ObjRange(pObj)*Abc_MinInt(Wlc_ObjRange(Wlc_ObjFanin0(p, pObj)), Abc_Base2Log(Wlc_ObjRange(pObj)))*3)
-		} else if pObj.Type == WLC_OBJ_ROTATE_L {
-			Vec_IntAddToEntry(vAnds, WLC_OBJ_ROTATE_L, Wlc_ObjRange(pObj)*Abc_MinInt(Wlc_ObjRange(Wlc_ObjFanin0(p, pObj)), Abc_Base2Log(Wlc_ObjRange(pObj)))*3)
-		} else if pObj.Type == WLC_OBJ_BIT_NOT {
-			Vec_IntAddToEntry(vAnds, WLC_OBJ_BIT_NOT, 0)
-		} else if pObj.Type == WLC_OBJ_BIT_AND {
-			Vec_IntAddToEntry(vAnds, WLC_OBJ_BIT_AND, Wlc_ObjRange(Wlc_ObjFanin0(p, pObj)))
-		} else if pObj.Type == WLC_OBJ_BIT_OR {
-			Vec_IntAddToEntry(vAnds, WLC_OBJ_BIT_OR, Wlc_ObjRange(Wlc_ObjFanin0(p, pObj)))
-		} else if pObj.Type == WLC_OBJ_BIT_XOR {
-			Vec_IntAddToEntry(vAnds, WLC_OBJ_BIT_XOR, 3*Wlc_ObjRange(Wlc_ObjFanin0(p, pObj)))
-		} else if pObj.Type == WLC_OBJ_BIT_NAND {
-			Vec_IntAddToEntry(vAnds, WLC_OBJ_BIT_NAND, Wlc_ObjRange(Wlc_ObjFanin0(p, pObj)))
-		} else if pObj.Type == WLC_OBJ_BIT_NOR {
-			Vec_IntAddToEntry(vAnds, WLC_OBJ_BIT_NOR, Wlc_ObjRange(Wlc_ObjFanin0(p, pObj)))
-		} else if pObj.Type == WLC_OBJ_BIT_NXOR {
-			Vec_IntAddToEntry(vAnds, WLC_OBJ_BIT_NXOR, 3*Wlc_ObjRange(Wlc_ObjFanin0(p, pObj)))
-		} else if pObj.Type == WLC_OBJ_BIT_SELECT {
-			Vec_IntAddToEntry(vAnds, WLC_OBJ_BIT_SELECT, 0)
-		} else if pObj.Type == WLC_OBJ_BIT_CONCAT {
-			Vec_IntAddToEntry(vAnds, WLC_OBJ_BIT_CONCAT, 0)
-		} else if pObj.Type == WLC_OBJ_BIT_ZEROPAD {
-			Vec_IntAddToEntry(vAnds, WLC_OBJ_BIT_ZEROPAD, 0)
-		} else if pObj.Type == WLC_OBJ_BIT_SIGNEXT {
-			Vec_IntAddToEntry(vAnds, WLC_OBJ_BIT_SIGNEXT, 0)
-		} else if pObj.Type == WLC_OBJ_LOGIC_NOT {
-			Vec_IntAddToEntry(vAnds, WLC_OBJ_LOGIC_NOT, Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))-1)
-		} else if pObj.Type == WLC_OBJ_LOGIC_IMPL {
-			Vec_IntAddToEntry(vAnds, WLC_OBJ_LOGIC_IMPL, Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))+Wlc_ObjRange(Wlc_ObjFanin1(p, pObj))-1)
-		} else if pObj.Type == WLC_OBJ_LOGIC_AND {
-			Vec_IntAddToEntry(vAnds, WLC_OBJ_LOGIC_AND, Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))+Wlc_ObjRange(Wlc_ObjFanin1(p, pObj))-1)
-		} else if pObj.Type == WLC_OBJ_LOGIC_OR {
-			Vec_IntAddToEntry(vAnds, WLC_OBJ_LOGIC_OR, Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))+Wlc_ObjRange(Wlc_ObjFanin1(p, pObj))-1)
-		} else if pObj.Type == WLC_OBJ_LOGIC_XOR {
-			Vec_IntAddToEntry(vAnds, WLC_OBJ_LOGIC_XOR, Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))+Wlc_ObjRange(Wlc_ObjFanin1(p, pObj))+1)
-		} else if pObj.Type == WLC_OBJ_COMP_EQU {
-			Vec_IntAddToEntry(vAnds, WLC_OBJ_COMP_EQU, 4*Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))-1)
-		} else if pObj.Type == WLC_OBJ_COMP_NOTEQU {
-			Vec_IntAddToEntry(vAnds, WLC_OBJ_COMP_NOTEQU, 4*Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))-1)
-		} else if pObj.Type == WLC_OBJ_COMP_LESS {
-			Vec_IntAddToEntry(vAnds, WLC_OBJ_COMP_LESS, 6*Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))-6)
-		} else if pObj.Type == WLC_OBJ_COMP_MORE {
-			Vec_IntAddToEntry(vAnds, WLC_OBJ_COMP_MORE, 6*Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))-6)
-		} else if pObj.Type == WLC_OBJ_COMP_LESSEQU {
-			Vec_IntAddToEntry(vAnds, WLC_OBJ_COMP_LESSEQU, 6*Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))-6)
-		} else if pObj.Type == WLC_OBJ_COMP_MOREEQU {
-			Vec_IntAddToEntry(vAnds, WLC_OBJ_COMP_MOREEQU, 6*Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))-6)
-		} else if pObj.Type == WLC_OBJ_REDUCT_AND {
-			Vec_IntAddToEntry(vAnds, WLC_OBJ_REDUCT_AND, Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))-1)
-		} else if pObj.Type == WLC_OBJ_REDUCT_OR {
-			Vec_IntAddToEntry(vAnds, WLC_OBJ_REDUCT_OR, Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))-1)
-		} else if pObj.Type == WLC_OBJ_REDUCT_XOR {
-			Vec_IntAddToEntry(vAnds, WLC_OBJ_REDUCT_XOR, 3*Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))-3)
-		} else if pObj.Type == WLC_OBJ_REDUCT_NAND {
-			Vec_IntAddToEntry(vAnds, WLC_OBJ_REDUCT_NAND, Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))-1)
-		} else if pObj.Type == WLC_OBJ_REDUCT_NOR {
-			Vec_IntAddToEntry(vAnds, WLC_OBJ_REDUCT_NOR, Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))-1)
-		} else if pObj.Type == WLC_OBJ_REDUCT_NXOR {
-			Vec_IntAddToEntry(vAnds, WLC_OBJ_REDUCT_NXOR, 3*Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))-3)
-		} else if pObj.Type == WLC_OBJ_ARI_ADD {
-			Vec_IntAddToEntry(vAnds, WLC_OBJ_ARI_ADD, 9*Wlc_ObjRange(Wlc_ObjFanin0(p, pObj)))
-		} else if pObj.Type == WLC_OBJ_ARI_SUB {
-			Vec_IntAddToEntry(vAnds, WLC_OBJ_ARI_SUB, 9*Wlc_ObjRange(Wlc_ObjFanin0(p, pObj)))
-		} else if pObj.Type == WLC_OBJ_ARI_MULTI {
-			Vec_IntAddToEntry(vAnds, WLC_OBJ_ARI_MULTI, 9*Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))*Wlc_ObjRange(Wlc_ObjFanin1(p, pObj)))
-		} else if pObj.Type == WLC_OBJ_ARI_DIVIDE {
-			Vec_IntAddToEntry(vAnds, WLC_OBJ_ARI_DIVIDE, 13*Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))*Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))-19*Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))+10)
-		} else if pObj.Type == WLC_OBJ_ARI_REM {
-			Vec_IntAddToEntry(vAnds, WLC_OBJ_ARI_REM, 13*Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))*Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))-7*Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))-2)
-		} else if pObj.Type == WLC_OBJ_ARI_MODULUS {
-			Vec_IntAddToEntry(vAnds, WLC_OBJ_ARI_MODULUS, 13*Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))*Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))-7*Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))-2)
-		} else if pObj.Type == WLC_OBJ_ARI_POWER {
-			Vec_IntAddToEntry(vAnds, WLC_OBJ_ARI_POWER, 10*int32(math.Pow(float64(float64(Wlc_ObjRange(Wlc_ObjFanin0(p, pObj)))), float64(float64(Wlc_ObjRange(Wlc_ObjFanin0(p, pObj)))))))
-		} else if pObj.Type == WLC_OBJ_ARI_MINUS {
-			Vec_IntAddToEntry(vAnds, WLC_OBJ_ARI_MINUS, 4*Wlc_ObjRange(Wlc_ObjFanin0(p, pObj)))
-		} else if pObj.Type == WLC_OBJ_ARI_SQRT {
-			Vec_IntAddToEntry(vAnds, WLC_OBJ_ARI_SQRT, 11*Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))*Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))/8+5*Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))/2-5)
-		} else if pObj.Type == WLC_OBJ_ARI_SQUARE {
-			Vec_IntAddToEntry(vAnds, WLC_OBJ_ARI_SQUARE, 5*Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))*Wlc_ObjRange(Wlc_ObjFanin1(p, pObj)))
+		if pObj.Type == uint32(WLC_OBJ_MUX) {
+			Vec_IntAddToEntry(vAnds, int32(WLC_OBJ_MUX), 3*Wlc_ObjRange(pObj)*(Wlc_ObjFaninNum(pObj)-2))
+		} else if pObj.Type == uint32(WLC_OBJ_SHIFT_R) {
+			Vec_IntAddToEntry(vAnds, int32(WLC_OBJ_SHIFT_R), Abc_MinInt(Wlc_ObjRange(Wlc_ObjFanin0(p, pObj)), Abc_Base2Log(Wlc_ObjRange(pObj)))*3)
+		} else if pObj.Type == uint32(WLC_OBJ_SHIFT_RA) {
+			Vec_IntAddToEntry(vAnds, int32(WLC_OBJ_SHIFT_RA), Wlc_ObjRange(pObj)*Abc_MinInt(Wlc_ObjRange(Wlc_ObjFanin0(p, pObj)), Abc_Base2Log(Wlc_ObjRange(pObj)))*3)
+		} else if pObj.Type == uint32(WLC_OBJ_SHIFT_L) {
+			Vec_IntAddToEntry(vAnds, int32(WLC_OBJ_SHIFT_L), Wlc_ObjRange(pObj)*Abc_MinInt(Wlc_ObjRange(Wlc_ObjFanin0(p, pObj)), Abc_Base2Log(Wlc_ObjRange(pObj)))*3)
+		} else if pObj.Type == uint32(WLC_OBJ_SHIFT_LA) {
+			Vec_IntAddToEntry(vAnds, int32(WLC_OBJ_SHIFT_LA), Wlc_ObjRange(pObj)*Abc_MinInt(Wlc_ObjRange(Wlc_ObjFanin0(p, pObj)), Abc_Base2Log(Wlc_ObjRange(pObj)))*3)
+		} else if pObj.Type == uint32(WLC_OBJ_ROTATE_R) {
+			Vec_IntAddToEntry(vAnds, int32(WLC_OBJ_ROTATE_R), Wlc_ObjRange(pObj)*Abc_MinInt(Wlc_ObjRange(Wlc_ObjFanin0(p, pObj)), Abc_Base2Log(Wlc_ObjRange(pObj)))*3)
+		} else if pObj.Type == uint32(WLC_OBJ_ROTATE_L) {
+			Vec_IntAddToEntry(vAnds, int32(WLC_OBJ_ROTATE_L), Wlc_ObjRange(pObj)*Abc_MinInt(Wlc_ObjRange(Wlc_ObjFanin0(p, pObj)), Abc_Base2Log(Wlc_ObjRange(pObj)))*3)
+		} else if pObj.Type == uint32(WLC_OBJ_BIT_NOT) {
+			Vec_IntAddToEntry(vAnds, int32(WLC_OBJ_BIT_NOT), 0)
+		} else if pObj.Type == uint32(WLC_OBJ_BIT_AND) {
+			Vec_IntAddToEntry(vAnds, int32(WLC_OBJ_BIT_AND), Wlc_ObjRange(Wlc_ObjFanin0(p, pObj)))
+		} else if pObj.Type == uint32(WLC_OBJ_BIT_OR) {
+			Vec_IntAddToEntry(vAnds, int32(WLC_OBJ_BIT_OR), Wlc_ObjRange(Wlc_ObjFanin0(p, pObj)))
+		} else if pObj.Type == uint32(WLC_OBJ_BIT_XOR) {
+			Vec_IntAddToEntry(vAnds, int32(WLC_OBJ_BIT_XOR), 3*Wlc_ObjRange(Wlc_ObjFanin0(p, pObj)))
+		} else if pObj.Type == uint32(WLC_OBJ_BIT_NAND) {
+			Vec_IntAddToEntry(vAnds, int32(WLC_OBJ_BIT_NAND), Wlc_ObjRange(Wlc_ObjFanin0(p, pObj)))
+		} else if pObj.Type == uint32(WLC_OBJ_BIT_NOR) {
+			Vec_IntAddToEntry(vAnds, int32(WLC_OBJ_BIT_NOR), Wlc_ObjRange(Wlc_ObjFanin0(p, pObj)))
+		} else if pObj.Type == uint32(WLC_OBJ_BIT_NXOR) {
+			Vec_IntAddToEntry(vAnds, int32(WLC_OBJ_BIT_NXOR), 3*Wlc_ObjRange(Wlc_ObjFanin0(p, pObj)))
+		} else if pObj.Type == uint32(WLC_OBJ_BIT_SELECT) {
+			Vec_IntAddToEntry(vAnds, int32(WLC_OBJ_BIT_SELECT), 0)
+		} else if pObj.Type == uint32(WLC_OBJ_BIT_CONCAT) {
+			Vec_IntAddToEntry(vAnds, int32(WLC_OBJ_BIT_CONCAT), 0)
+		} else if pObj.Type == uint32(WLC_OBJ_BIT_ZEROPAD) {
+			Vec_IntAddToEntry(vAnds, int32(WLC_OBJ_BIT_ZEROPAD), 0)
+		} else if pObj.Type == uint32(WLC_OBJ_BIT_SIGNEXT) {
+			Vec_IntAddToEntry(vAnds, int32(WLC_OBJ_BIT_SIGNEXT), 0)
+		} else if pObj.Type == uint32(WLC_OBJ_LOGIC_NOT) {
+			Vec_IntAddToEntry(vAnds, int32(WLC_OBJ_LOGIC_NOT), Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))-1)
+		} else if pObj.Type == uint32(WLC_OBJ_LOGIC_IMPL) {
+			Vec_IntAddToEntry(vAnds, int32(WLC_OBJ_LOGIC_IMPL), Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))+Wlc_ObjRange(Wlc_ObjFanin1(p, pObj))-1)
+		} else if pObj.Type == uint32(WLC_OBJ_LOGIC_AND) {
+			Vec_IntAddToEntry(vAnds, int32(WLC_OBJ_LOGIC_AND), Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))+Wlc_ObjRange(Wlc_ObjFanin1(p, pObj))-1)
+		} else if pObj.Type == uint32(WLC_OBJ_LOGIC_OR) {
+			Vec_IntAddToEntry(vAnds, int32(WLC_OBJ_LOGIC_OR), Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))+Wlc_ObjRange(Wlc_ObjFanin1(p, pObj))-1)
+		} else if pObj.Type == uint32(WLC_OBJ_LOGIC_XOR) {
+			Vec_IntAddToEntry(vAnds, int32(WLC_OBJ_LOGIC_XOR), Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))+Wlc_ObjRange(Wlc_ObjFanin1(p, pObj))+1)
+		} else if pObj.Type == uint32(WLC_OBJ_COMP_EQU) {
+			Vec_IntAddToEntry(vAnds, int32(WLC_OBJ_COMP_EQU), 4*Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))-1)
+		} else if pObj.Type == uint32(WLC_OBJ_COMP_NOTEQU) {
+			Vec_IntAddToEntry(vAnds, int32(WLC_OBJ_COMP_NOTEQU), 4*Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))-1)
+		} else if pObj.Type == uint32(WLC_OBJ_COMP_LESS) {
+			Vec_IntAddToEntry(vAnds, int32(WLC_OBJ_COMP_LESS), 6*Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))-6)
+		} else if pObj.Type == uint32(WLC_OBJ_COMP_MORE) {
+			Vec_IntAddToEntry(vAnds, int32(WLC_OBJ_COMP_MORE), 6*Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))-6)
+		} else if pObj.Type == uint32(WLC_OBJ_COMP_LESSEQU) {
+			Vec_IntAddToEntry(vAnds, int32(WLC_OBJ_COMP_LESSEQU), 6*Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))-6)
+		} else if pObj.Type == uint32(WLC_OBJ_COMP_MOREEQU) {
+			Vec_IntAddToEntry(vAnds, int32(WLC_OBJ_COMP_MOREEQU), 6*Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))-6)
+		} else if pObj.Type == uint32(WLC_OBJ_REDUCT_AND) {
+			Vec_IntAddToEntry(vAnds, int32(WLC_OBJ_REDUCT_AND), Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))-1)
+		} else if pObj.Type == uint32(WLC_OBJ_REDUCT_OR) {
+			Vec_IntAddToEntry(vAnds, int32(WLC_OBJ_REDUCT_OR), Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))-1)
+		} else if pObj.Type == uint32(WLC_OBJ_REDUCT_XOR) {
+			Vec_IntAddToEntry(vAnds, int32(WLC_OBJ_REDUCT_XOR), 3*Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))-3)
+		} else if pObj.Type == uint32(WLC_OBJ_REDUCT_NAND) {
+			Vec_IntAddToEntry(vAnds, int32(WLC_OBJ_REDUCT_NAND), Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))-1)
+		} else if pObj.Type == uint32(WLC_OBJ_REDUCT_NOR) {
+			Vec_IntAddToEntry(vAnds, int32(WLC_OBJ_REDUCT_NOR), Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))-1)
+		} else if pObj.Type == uint32(WLC_OBJ_REDUCT_NXOR) {
+			Vec_IntAddToEntry(vAnds, int32(WLC_OBJ_REDUCT_NXOR), 3*Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))-3)
+		} else if pObj.Type == uint32(WLC_OBJ_ARI_ADD) {
+			Vec_IntAddToEntry(vAnds, int32(WLC_OBJ_ARI_ADD), 9*Wlc_ObjRange(Wlc_ObjFanin0(p, pObj)))
+		} else if pObj.Type == uint32(WLC_OBJ_ARI_SUB) {
+			Vec_IntAddToEntry(vAnds, int32(WLC_OBJ_ARI_SUB), 9*Wlc_ObjRange(Wlc_ObjFanin0(p, pObj)))
+		} else if pObj.Type == uint32(WLC_OBJ_ARI_MULTI) {
+			Vec_IntAddToEntry(vAnds, int32(WLC_OBJ_ARI_MULTI), 9*Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))*Wlc_ObjRange(Wlc_ObjFanin1(p, pObj)))
+		} else if pObj.Type == uint32(WLC_OBJ_ARI_DIVIDE) {
+			Vec_IntAddToEntry(vAnds, int32(WLC_OBJ_ARI_DIVIDE), 13*Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))*Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))-19*Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))+10)
+		} else if pObj.Type == uint32(WLC_OBJ_ARI_REM) {
+			Vec_IntAddToEntry(vAnds, int32(WLC_OBJ_ARI_REM), 13*Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))*Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))-7*Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))-2)
+		} else if pObj.Type == uint32(WLC_OBJ_ARI_MODULUS) {
+			Vec_IntAddToEntry(vAnds, int32(WLC_OBJ_ARI_MODULUS), 13*Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))*Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))-7*Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))-2)
+		} else if pObj.Type == uint32(WLC_OBJ_ARI_POWER) {
+			Vec_IntAddToEntry(vAnds, int32(WLC_OBJ_ARI_POWER), 10*int32(math.Pow(float64(float64(Wlc_ObjRange(Wlc_ObjFanin0(p, pObj)))), float64(float64(Wlc_ObjRange(Wlc_ObjFanin0(p, pObj)))))))
+		} else if pObj.Type == uint32(WLC_OBJ_ARI_MINUS) {
+			Vec_IntAddToEntry(vAnds, int32(WLC_OBJ_ARI_MINUS), 4*Wlc_ObjRange(Wlc_ObjFanin0(p, pObj)))
+		} else if pObj.Type == uint32(WLC_OBJ_ARI_SQRT) {
+			Vec_IntAddToEntry(vAnds, int32(WLC_OBJ_ARI_SQRT), 11*Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))*Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))/8+5*Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))/2-5)
+		} else if pObj.Type == uint32(WLC_OBJ_ARI_SQUARE) {
+			Vec_IntAddToEntry(vAnds, int32(WLC_OBJ_ARI_SQUARE), 5*Wlc_ObjRange(Wlc_ObjFanin0(p, pObj))*Wlc_ObjRange(Wlc_ObjFanin1(p, pObj)))
 		}
 	}
 	if (nCountRange != 0) && Vec_IntSize(&p.vNameIds) > 0 {
@@ -768,16 +771,16 @@ func Wlc_NtkPrintDistrib(p *Wlc_Ntk_t, fTwoSides int32, fVerbose int32) {
 		sideLabel = "     Left Share Right"
 	}
 	fmt.Printf("ID  :  name  occurrence%s    and2 (occurrence)<output_range>=<input_range>.<input_range> ...\n", sideLabel)
-	for i = 0; i < WLC_OBJ_NUMBER; i++ {
-		var vType *Vec_Wrd_t = (*Vec_Wrd_t)(Vec_PtrEntry(vTypes, i))
-		var vOccur *Vec_Wrd_t = (*Vec_Wrd_t)(Vec_PtrEntry(vOccurs, i))
+	for i = 0; i < int32(WLC_OBJ_NUMBER); i++ {
+		var vType *Vec_Wrd_t = Vec_PtrEntry(vTypes, i).(*Vec_Wrd_t)
+		var vOccur *Vec_Wrd_t = Vec_PtrEntry(vOccurs, i).(*Vec_Wrd_t)
 		if p.nObjs[i] == 0 {
 			continue
 		}
 		fmt.Printf("%2d  :  %-8s  %6d", i, Wlc_Names[i], p.nObjs[i])
 		if fTwoSides != 0 {
 			var nTotal int32
-			if i == WLC_OBJ_PI {
+			if i == int32(WLC_OBJ_PI) {
 				nTotal = Wlc_NtkCountRealPis(p)
 			} else {
 				nTotal = p.nObjs[i]
@@ -790,10 +793,10 @@ func Wlc_NtkPrintDistrib(p *Wlc_Ntk_t, fTwoSides int32, fVerbose int32) {
 		fmt.Printf("%8d ", Vec_IntEntry(vAnds, i))
 		// sort by occurence
 		Wlc_NtkPrintDistribSortOne(vTypes, vOccurs, i)
-		Vec_WrdForEachEntry(vType, Sign, k)
-		{
+		for k = 0; k < int32(Vec_WrdSize(vType)); k++ {
+			Sign = Vec_WrdEntry(vType, k)
 			Wlc_NtkPrintDistribFromSign(Sign, &s, &s0, &s1)
-			if ((k%6) == 5 && s1) || ((k%8) == 7 && !s1) {
+			if ((k%6) == 5 && s1 != 0) || ((k%8) == 7 && s1 == 0) {
 				fmt.Printf("\n                                ")
 				if fTwoSides != 0 {
 					fmt.Printf("                     ")
@@ -801,20 +804,20 @@ func Wlc_NtkPrintDistrib(p *Wlc_Ntk_t, fTwoSides int32, fVerbose int32) {
 			}
 			fmt.Printf("(%d)", int32(Vec_WrdEntry(vOccur, k)))
 			prefix := ""
-			if Abc_LitIsCompl(s) {
+			if Abc_LitIsCompl(s) != 0 {
 				prefix = "-"
 			}
 			fmt.Printf("%s%d", prefix, Abc_Lit2Var(s))
-			if s0 {
+			if s0 != 0 {
 				prefix = ""
-				if Abc_LitIsCompl(s0) {
+				if Abc_LitIsCompl(s0) != 0 {
 					prefix = "-"
 				}
 				fmt.Printf("=%s%d", prefix, Abc_Lit2Var(s0))
 			}
-			if s1 {
+			if s1 != 0 {
 				prefix = ""
-				if Abc_LitIsCompl(s1) {
+				if Abc_LitIsCompl(s1) != 0 {
 					prefix = "-"
 				}
 				fmt.Printf(".%s%d", prefix, Abc_Lit2Var(s1))
@@ -829,35 +832,35 @@ func Wlc_NtkPrintDistrib(p *Wlc_Ntk_t, fTwoSides int32, fVerbose int32) {
 }
 func Wlc_NtkPrintNode(p *Wlc_Ntk_t, pObj *Wlc_Obj_t) {
 	fmt.Printf("%8d  :  ", Wlc_ObjId(p, pObj))
-	if Vec_IntSize(&p.vLevels) {
+	if Vec_IntSize(&p.vLevels) != 0 {
 		fmt.Printf("Lev = %2d  ", Vec_IntEntry(&p.vLevels, Wlc_ObjId(p, pObj)))
 	}
 	signed := " "
-	if Wlc_ObjIsSigned(pObj) {
+	if Wlc_ObjIsSigned(pObj) != 0 {
 		signed = "s"
 	}
 	fmt.Printf("%6d%s = ", Wlc_ObjRange(pObj), signed)
-	if pObj.Type == WLC_OBJ_PI {
+	if pObj.Type == uint32(WLC_OBJ_PI) {
 		fmt.Printf("            PI                   :    %-12s\n", Wlc_ObjName(p, Wlc_ObjId(p, pObj)))
 		return
 	}
-	if pObj.Type == WLC_OBJ_FO {
+	if pObj.Type == uint32(WLC_OBJ_FO) {
 		fmt.Printf("            FO                   :    %-12s = %-12s\n", Wlc_ObjName(p, Wlc_ObjId(p, pObj)), Wlc_ObjName(p, Wlc_ObjId(p, Wlc_ObjFo2Fi(p, pObj))))
 		return
 	}
-	if pObj.Type != WLC_OBJ_CONST && Wlc_ObjFaninNum(pObj) == 0 {
+	if pObj.Type != uint32(WLC_OBJ_CONST) && Wlc_ObjFaninNum(pObj) == 0 {
 		fmt.Printf("Unknown object without fanins    :    %-12s\n", Wlc_ObjName(p, Wlc_ObjId(p, pObj)))
 		return
 	}
-	if pObj.Type != WLC_OBJ_CONST {
+	if pObj.Type != uint32(WLC_OBJ_CONST) {
 		signed = " "
-		if Wlc_ObjIsSigned(Wlc_ObjFanin0(p, pObj)) {
+		if Wlc_ObjIsSigned(Wlc_ObjFanin0(p, pObj)) != 0 {
 			signed = "s"
 		}
 		fmt.Printf("%6d%s  %5s  ", Wlc_ObjRange(Wlc_ObjFanin0(p, pObj)), signed, Wlc_Names[int32(pObj.Type)])
 		if Wlc_ObjFaninNum(pObj) > 1 {
 			signed = " "
-			if Wlc_ObjIsSigned(Wlc_ObjFanin1(p, pObj)) {
+			if Wlc_ObjIsSigned(Wlc_ObjFanin1(p, pObj)) != 0 {
 				signed = "s"
 			}
 			fmt.Printf("%6d%s ", Wlc_ObjRange(Wlc_ObjFanin1(p, pObj)), signed)
@@ -866,7 +869,7 @@ func Wlc_NtkPrintNode(p *Wlc_Ntk_t, pObj *Wlc_Obj_t) {
 		}
 		if Wlc_ObjFaninNum(pObj) > 2 {
 			signed = " "
-			if Wlc_ObjIsSigned(Wlc_ObjFanin2(p, pObj)) {
+			if Wlc_ObjIsSigned(Wlc_ObjFanin2(p, pObj)) != 0 {
 				signed = "s"
 			}
 			fmt.Printf("%6d%s ", Wlc_ObjRange(Wlc_ObjFanin2(p, pObj)), signed)
@@ -879,13 +882,13 @@ func Wlc_NtkPrintNode(p *Wlc_Ntk_t, pObj *Wlc_Obj_t) {
 	}
 	fmt.Printf(" :    ")
 	fmt.Printf("%-12s", Wlc_ObjName(p, Wlc_ObjId(p, pObj)))
-	if pObj.Type == WLC_OBJ_CONST {
+	if pObj.Type == uint32(WLC_OBJ_CONST) {
 		signChar := ""
-		if Wlc_ObjIsSigned(pObj) {
+		if Wlc_ObjIsSigned(pObj) != 0 {
 			signChar = "s"
 		}
 		fmt.Printf(" = %d'%sh", Wlc_ObjRange(pObj), signChar)
-		if pObj.fXConst {
+		if pObj.fXConst != 0 {
 			var k int32
 			for k = 0; k < (Wlc_ObjRange(pObj)+3)/4; k++ {
 				fmt.Printf("x")
@@ -939,7 +942,7 @@ func Wlc_NtkPrintStats(p *Wlc_Ntk_t, fDistrib int32, fTwoSides int32, fVerbose i
 	fmt.Printf("PO = %4d  ", Wlc_NtkPoNum(p))
 	fmt.Printf("FF = %4d  ", Wlc_NtkFfNum(p))
 	fmt.Printf("Obj = %6d  ", Wlc_NtkObjNum(p)-Wlc_NtkPiNum(p)-Wlc_NtkPoNum(p)-Wlc_NtkFfNum(p))
-	fmt.Printf("Mem = %.3f MB", 1.0*Wlc_NtkMemUsage(p)/(1<<20))
+	fmt.Printf("Mem = %.3f MB", float64(Wlc_NtkMemUsage(p))/(1<<20))
 	fmt.Printf("\n")
 	if fDistrib != 0 {
 		Wlc_NtkPrintDistrib(p, fTwoSides, fVerbose)
@@ -949,12 +952,12 @@ func Wlc_NtkPrintStats(p *Wlc_Ntk_t, fDistrib int32, fTwoSides int32, fVerbose i
 		return
 	}
 	fmt.Printf("Node type statistics:\n")
-	for i = 1; i < WLC_OBJ_NUMBER; i++ {
-		if !p.nObjs[i] {
+	for i = 1; i < int32(WLC_OBJ_NUMBER); i++ {
+		if p.nObjs[i] == 0 {
 			continue
 		}
-		if p.nAnds[0] && p.nAnds[i] {
-			fmt.Printf("%2d  :  %-8s  %6d  %7.2f %%\n", i, Wlc_Names[i], p.nObjs[i], 100.0*p.nAnds[i]/p.nAnds[0])
+		if p.nAnds[0] != 0 && p.nAnds[i] != 0 {
+			fmt.Printf("%2d  :  %-8s  %6d  %7.2f %%\n", i, Wlc_Names[i], p.nObjs[i], 100.0*float64(p.nAnds[i])/float64(p.nAnds[0]))
 		} else {
 			fmt.Printf("%2d  :  %-8s  %6d\n", i, Wlc_Names[i], p.nObjs[i])
 		}
@@ -985,12 +988,12 @@ func Wlc_NtkPrintObjects(p *Wlc_Ntk_t) {
 */
 func Wlc_NtkTransferNames(pNew *Wlc_Ntk_t, p *Wlc_Ntk_t) {
 	var i int32
-	assert(!Wlc_NtkHasCopy(pNew) && Wlc_NtkHasCopy(p), "!Wlc_NtkHasCopy(pNew)   && Wlc_NtkHasCopy(p)")
-	assert(!Wlc_NtkHasNameId(pNew) && Wlc_NtkHasNameId(p), "!Wlc_NtkHasNameId(pNew) && Wlc_NtkHasNameId(p)")
+	assert(Wlc_NtkHasCopy(pNew) == 0 && Wlc_NtkHasCopy(p) != 0, "!Wlc_NtkHasCopy(pNew)   && Wlc_NtkHasCopy(p)")
+	assert(Wlc_NtkHasNameId(pNew) == 0 && Wlc_NtkHasNameId(p) != 0, "!Wlc_NtkHasNameId(pNew) && Wlc_NtkHasNameId(p)")
 	assert(pNew.pManName == nil && p.pManName != nil, "pNew.pManName  == nil && p.pManName != nil")
 	Wlc_NtkCleanNameId(pNew)
 	for i = 0; i < p.nObjsAlloc; i++ {
-		if Wlc_ObjCopy(p, i) > 0 && i < Vec_IntSize(&p.vNameIds) && Wlc_ObjNameId(p, i) {
+		if Wlc_ObjCopy(p, i) > 0 && i < Vec_IntSize(&p.vNameIds) && Wlc_ObjNameId(p, i) != 0 {
 			Wlc_ObjSetNameId(pNew, Wlc_ObjCopy(p, i), Wlc_ObjNameId(p, i))
 		}
 	}
@@ -1037,7 +1040,7 @@ func Wlc_ReduceMarkedInitVec(p *Wlc_Ntk_t, vInit *Vec_Int_t) *Vec_Int_t {
 	// inlining of macro Wlc_NtkForEachCi
 	for i = 0; i < Wlc_NtkCiNum(p); i++ {
 		pObj = Wlc_NtkCi(p, i)
-		if !Wlc_ObjIsPi(pObj) && pObj.Mark {
+		if Wlc_ObjIsPi(pObj) == 0 && pObj.Mark != 0 {
 			Vec_IntWriteEntry(vInitNew, k, Vec_IntEntry(vInit, i-Wlc_NtkPiNum(p)))
 			k++
 		}
@@ -1052,19 +1055,19 @@ func Wlc_ReduceMarkedInitStr(p *Wlc_Ntk_t, pInit string) string {
 	// inlining of macro Wlc_NtkForEachCi
 	for i = 0; i < Wlc_NtkCiNum(p); i++ {
 		pObj = Wlc_NtkCi(p, i)
-		if !Wlc_ObjIsPi(pObj) && pObj.Mark {
+		if Wlc_ObjIsPi(pObj) == 0 && pObj.Mark != 0 {
 			for b = 0; b < Wlc_ObjRange(pObj); b++ {
 				pInitNew[k] = pInitNew[nBits+b]
 				k++
 			}
 		}
-		if !Wlc_ObjIsPi(pObj) {
+		if Wlc_ObjIsPi(pObj) == 0 {
 			nBits += Wlc_ObjRange(pObj)
 		}
 	}
 	pInitNew[k] = 0
 	assert(nBits == int32(len(pInit)), "nBits == int32(strlen(pInit))")
-	return pInitNew
+	return string(pInitNew[:k])
 }
 
 /*
@@ -1090,25 +1093,25 @@ func Wlc_ObjCollectCopyFanins(p *Wlc_Ntk_t, iObj int32, vFanins *Vec_Int_t) {
 		Vec_IntPush(vFanins, Wlc_ObjCopy(p, iFanin))
 	}
 	// special treatment of CONST and SELECT
-	if pObj.Type == WLC_OBJ_CONST {
+	if pObj.Type == uint32(WLC_OBJ_CONST) {
 		var pInts *int32 = Wlc_ObjConstValue(pObj)
-		var nInts int32 = Abc_BitWordNum(Wlc_ObjRange(pObj))
+		var nInts int32 = (Wlc_ObjRange(pObj) + 31) / 32
 		for i = 0; i < nInts; i++ {
-			Vec_IntPush(vFanins, pInts[i])
+			Vec_IntPush(vFanins, unsafe.Slice(pInts, int(nInts))[i])
 		}
 
-	} else if pObj.Type == WLC_OBJ_BIT_SELECT {
+	} else if pObj.Type == uint32(WLC_OBJ_BIT_SELECT) {
 		assert(Vec_IntSize(vFanins) == 1, "Vec_IntSize(vFanins) == 1")
 		Vec_IntPushTwo(vFanins, Wlc_ObjRangeEnd(pObj), Wlc_ObjRangeBeg(pObj))
 
-	} else if pObj.Type == WLC_OBJ_TABLE {
+	} else if pObj.Type == uint32(WLC_OBJ_TABLE) {
 		assert(Vec_IntSize(vFanins) == 1, "Vec_IntSize(vFanins) == 1")
 		Vec_IntPush(vFanins, pObj.Fanins[1])
 	}
 }
 func Wlc_ObjDup(pNew *Wlc_Ntk_t, p *Wlc_Ntk_t, iObj int32, vFanins *Vec_Int_t) int32 {
 	var pObj *Wlc_Obj_t = Wlc_NtkObj(p, iObj)
-	var iFaninNew int32 = Wlc_ObjAlloc(pNew, pObj.Type, Wlc_ObjIsSigned(pObj), pObj.End, pObj.Beg)
+	var iFaninNew int32 = Wlc_ObjAlloc(pNew, int32(pObj.Type), Wlc_ObjIsSigned(pObj), pObj.End, pObj.Beg)
 	var pObjNew *Wlc_Obj_t = Wlc_NtkObj(pNew, iFaninNew)
 	Wlc_ObjCollectCopyFanins(p, iObj, vFanins)
 	Wlc_ObjAddFanins(pNew, pObjNew, vFanins)
@@ -1122,12 +1125,12 @@ func Wlc_NtkDupDfs_rec(pNew *Wlc_Ntk_t, p *Wlc_Ntk_t, iObj int32, vFanins *Vec_I
 	if iObj == 0 {
 		return
 	}
-	if Wlc_ObjCopy(p, iObj) {
+	if Wlc_ObjCopy(p, iObj) != 0 {
 		return
 	}
 	pObj = Wlc_NtkObj(p, iObj)
 	//printf( "Visiting node %16s (ID %6d) of type %5s (type ID %2d)\n", Wlc_ObjName(p, iObj), iObj, Wlc_ObjTypeName(pObj), Wlc_NtkObj(p, iObj)->Type );
-	assert(pObj.Type != WLC_OBJ_FF, "pObj.Type != WLC_OBJ_FF")
+	assert(pObj.Type != uint32(WLC_OBJ_FF), "pObj.Type != uint32(WLC_OBJ_FF)")
 	// inlining of macro Wlc_ObjForEachFanin
 	for i = 0; i < Wlc_ObjFaninNum(pObj); i++ {
 		iFanin = Wlc_ObjFaninId(pObj, i)
@@ -1161,16 +1164,16 @@ func Wlc_NtkDupDfsSimple(p *Wlc_Ntk_t) *Wlc_Ntk_t {
 	// inlining of macro Wlc_NtkForEachCo
 	for i = 0; i < Wlc_NtkCoNum(p); i++ {
 		pObj = Wlc_NtkCo(p, i)
-		Wlc_ObjSetCo(pNew, Wlc_ObjCopyObj(pNew, p, pObj), pObj.fIsFi)
+		Wlc_ObjSetCo(pNew, Wlc_ObjCopyObj(pNew, p, pObj), int32(pObj.fIsFi))
 	}
-	if p.vInits {
+	if p.vInits != nil {
 		pNew.vInits = Vec_IntDup(p.vInits)
 	}
-	if p.pInits {
+	if p.pInits != "" {
 		pNew.pInits = Abc_UtilStrsav(p.pInits)
 	}
 	Vec_IntFree(vFanins)
-	if p.pSpec {
+	if p.pSpec != "" {
 		pNew.pSpec = Abc_UtilStrsav(p.pSpec)
 	}
 	return pNew
@@ -1191,10 +1194,10 @@ func Wlc_NtkDupDfs(p *Wlc_Ntk_t, fMarked int32, fSeq int32) *Wlc_Ntk_t {
 	// inlining of macro Wlc_NtkForEachCi
 	for i = 0; i < Wlc_NtkCiNum(p); i++ {
 		pObj = Wlc_NtkCi(p, i)
-		if !(fMarked != 0) || pObj.Mark {
+		if fMarked == 0 || pObj.Mark != 0 {
 			var Type uint32 = pObj.Type
 			if !(fSeq != 0) {
-				pObj.Type = WLC_OBJ_PI
+				pObj.Type = uint32(WLC_OBJ_PI)
 			}
 			Wlc_ObjDup(pNew, p, Wlc_ObjId(p, pObj), vFanins)
 			pObj.Type = Type
@@ -1203,23 +1206,23 @@ func Wlc_NtkDupDfs(p *Wlc_Ntk_t, fMarked int32, fSeq int32) *Wlc_Ntk_t {
 	// inlining of macro Wlc_NtkForEachFf2
 	for i = 0; i < Vec_IntSize(&p.vFfs2); i++ {
 		pObj = Wlc_NtkFf2(p, i)
-		var iObjNew int32 = Wlc_ObjAlloc(pNew, pObj.Type, Wlc_ObjIsSigned(pObj), pObj.End, pObj.Beg)
+		var iObjNew int32 = Wlc_ObjAlloc(pNew, int32(pObj.Type), Wlc_ObjIsSigned(pObj), pObj.End, pObj.Beg)
 		Wlc_ObjSetCopy(p, Wlc_ObjId(p, pObj), iObjNew)
 		Vec_IntPush(&pNew.vFfs2, iObjNew)
 	}
 	// inlining of macro Wlc_NtkForEachCo
 	for i = 0; i < Wlc_NtkCoNum(p); i++ {
 		pObj = Wlc_NtkCo(p, i)
-		if !(fMarked != 0) || pObj.Mark {
+		if fMarked == 0 || pObj.Mark != 0 {
 			Wlc_NtkDupDfs_rec(pNew, p, Wlc_ObjId(p, pObj), vFanins)
 		}
 	}
 	// inlining of macro Wlc_NtkForEachCo
 	for i = 0; i < Wlc_NtkCoNum(p); i++ {
 		pObj = Wlc_NtkCo(p, i)
-		if !(fMarked != 0) || pObj.Mark {
+		if fMarked == 0 || pObj.Mark != 0 {
 			fi := int32(0)
-			if fSeq != 0 && pObj.fIsFi {
+			if fSeq != 0 && pObj.fIsFi != 0 {
 				fi = 1
 			}
 			Wlc_ObjSetCo(pNew, Wlc_ObjCopyObj(pNew, p, pObj), fi)
@@ -1240,31 +1243,31 @@ func Wlc_NtkDupDfs(p *Wlc_Ntk_t, fMarked int32, fSeq int32) *Wlc_Ntk_t {
 		pObjNew.fXConst = pObj.fXConst
 	}
 	Vec_IntFree(vFanins)
-	if (fSeq != 0) && p.vInits {
+	if fSeq != 0 && p.vInits != nil {
 		if fMarked != 0 {
-			if p.vInits {
+			if p.vInits != nil {
 				pNew.vInits = Wlc_ReduceMarkedInitVec(p, p.vInits)
 			}
-			if p.pInits {
+			if p.pInits != "" {
 				pNew.pInits = Wlc_ReduceMarkedInitStr(p, p.pInits)
 			}
 
 		} else {
-			if p.vInits {
+			if p.vInits != nil {
 				pNew.vInits = Vec_IntDup(p.vInits)
 			}
-			if p.pInits {
+			if p.pInits != "" {
 				pNew.pInits = Abc_UtilStrsav(p.pInits)
 			}
 		}
 	}
-	if p.pSpec {
+	if p.pSpec != "" {
 		pNew.pSpec = Abc_UtilStrsav(p.pSpec)
 	}
-	if Wlc_NtkHasNameId(p) {
+	if Wlc_NtkHasNameId(p) != 0 {
 		Wlc_NtkTransferNames(pNew, p)
 	}
-	if Vec_IntSize(&p.vPoPairs) {
+	if Vec_IntSize(&p.vPoPairs) != 0 {
 		Vec_IntAppend(&pNew.vPoPairs, &p.vPoPairs)
 	}
 	return pNew
@@ -1286,7 +1289,7 @@ func Wlc_NtkDupDfsAbs(p *Wlc_Ntk_t, vPisOld *Vec_Int_t, vPisNew *Vec_Int_t, vFlo
 	// inlining of macro Wlc_NtkForEachObjVec
 	for i = 0; i < Vec_IntSize(vPisOld); i++ {
 		pObj = Wlc_NtkObj(p, Vec_IntEntry(vPisOld, i))
-		assert(Wlc_ObjIsPi(pObj), "Wlc_ObjIsPi(pObj)")
+		assert(Wlc_ObjIsPi(pObj) != 0, "Wlc_ObjIsPi(pObj)")
 		Wlc_ObjDup(pNew, p, Wlc_ObjId(p, pObj), vFanins)
 	}
 	// duplicate additional PIs
@@ -1295,8 +1298,8 @@ func Wlc_NtkDupDfsAbs(p *Wlc_Ntk_t, vPisOld *Vec_Int_t, vPisNew *Vec_Int_t, vFlo
 		pObj = Wlc_NtkObj(p, Vec_IntEntry(vPisNew, i))
 		var Type uint32 = pObj.Type
 		var nFanins int32 = Wlc_ObjFaninNum(pObj)
-		assert(!Wlc_ObjIsPi(pObj), "!Wlc_ObjIsPi(pObj)")
-		pObj.Type = WLC_OBJ_PI
+		assert(Wlc_ObjIsPi(pObj) == 0, "!Wlc_ObjIsPi(pObj)")
+		pObj.Type = uint32(WLC_OBJ_PI)
 		pObj.nFanins = 0
 		Wlc_ObjDup(pNew, p, Wlc_ObjId(p, pObj), vFanins)
 		pObj.Type = Type
@@ -1306,7 +1309,7 @@ func Wlc_NtkDupDfsAbs(p *Wlc_Ntk_t, vPisOld *Vec_Int_t, vPisNew *Vec_Int_t, vFlo
 	// inlining of macro Wlc_NtkForEachObjVec
 	for i = 0; i < Vec_IntSize(vFlops); i++ {
 		pObj = Wlc_NtkObj(p, Vec_IntEntry(vFlops, i))
-		assert(!Wlc_ObjIsPi(pObj) && Wlc_ObjIsCi(pObj), "!Wlc_ObjIsPi(pObj) && Wlc_ObjIsCi(pObj)")
+		assert(Wlc_ObjIsPi(pObj) == 0 && Wlc_ObjIsCi(pObj) != 0, "!Wlc_ObjIsPi(pObj) && Wlc_ObjIsCi(pObj)")
 		Wlc_ObjDup(pNew, p, Wlc_ObjId(p, pObj), vFanins)
 	}
 
@@ -1343,15 +1346,15 @@ func Wlc_NtkDupDfsAbs(p *Wlc_Ntk_t, vPisOld *Vec_Int_t, vPisNew *Vec_Int_t, vFlo
 		pObj = Wlc_NtkObj(p, Vec_IntEntry(vFlops, i))
 		pObj.Mark = 1
 	}
-	if p.vInits {
+	if p.vInits != nil {
 		pNew.vInits = Wlc_ReduceMarkedInitVec(p, p.vInits)
 	}
-	if p.pInits {
+	if p.pInits != "" {
 		pNew.pInits = Wlc_ReduceMarkedInitStr(p, p.pInits)
 	}
 	Wlc_NtkCleanMarks(p)
 
-	if p.pSpec {
+	if p.pSpec != "" {
 		pNew.pSpec = Abc_UtilStrsav(p.pSpec)
 	}
 	//Wlc_NtkTransferNames( pNew, p );
@@ -1387,18 +1390,18 @@ func Wlc_NtkCountMarked(p *Wlc_Ntk_t, pnPis *int32, pnFos *int32, pnAdders *int3
 	// inlining of macro Wlc_NtkForEachObj
 	for i = 1; i < Wlc_NtkObjNumMax(p); i++ {
 		pObj = Wlc_NtkObj(p, i)
-		if !pObj.Mark {
+		if pObj.Mark == 0 {
 			continue
 		}
-		if Wlc_ObjIsPi(pObj) {
+		if Wlc_ObjIsPi(pObj) != 0 {
 			(*pnPis)++
-		} else if Wlc_ObjIsCi(pObj) {
+		} else if Wlc_ObjIsCi(pObj) != 0 {
 			(*pnFos)++
-		} else if pObj.Mark {
+		} else if pObj.Mark != 0 {
 			nNodes++
-			if pObj.Type == WLC_OBJ_ARI_ADD || pObj.Type == WLC_OBJ_ARI_SUB {
+			if pObj.Type == uint32(WLC_OBJ_ARI_ADD) || pObj.Type == uint32(WLC_OBJ_ARI_SUB) {
 				(*pnAdders)++
-			} else if pObj.Type == WLC_OBJ_ARI_MULTI {
+			} else if pObj.Type == uint32(WLC_OBJ_ARI_MULTI) {
 				(*pnMults)++
 			}
 		}
@@ -1407,12 +1410,12 @@ func Wlc_NtkCountMarked(p *Wlc_Ntk_t, pnPis *int32, pnFos *int32, pnAdders *int3
 }
 func Wlc_NtkMarkCone_rec(p *Wlc_Ntk_t, pObj *Wlc_Obj_t, vFlops *Vec_Int_t) {
 	var i, iFanin int32
-	if pObj.Mark {
+	if pObj.Mark != 0 {
 		return
 	}
 	pObj.Mark = 1
-	if Wlc_ObjIsCi(pObj) {
-		if !Wlc_ObjIsPi(pObj) {
+	if Wlc_ObjIsCi(pObj) != 0 {
+		if Wlc_ObjIsPi(pObj) == 0 {
 			Vec_IntPush(vFlops, Wlc_ObjCiId(pObj))
 		}
 		return
@@ -1455,11 +1458,9 @@ func Wlc_NtkMarkCone(p *Wlc_Ntk_t, iCoId int32, Range int32, fSeq int32, fAllPis
 	Vec_IntFree(vFlops)
 }
 func Wlc_NtkProfileCones(p *Wlc_Ntk_t) {
-	var pObj *Wlc_Obj_t
 	var i, nPis, nFos, nNodes, nAdders, nMults int32
 	// inlining of macro Wlc_NtkForEachCo
 	for i = 0; i < Wlc_NtkCoNum(p); i++ {
-		pObj = Wlc_NtkCo(p, i)
 		Wlc_NtkMarkCone(p, i, 1, 0, 0)
 		nNodes = Wlc_NtkCountMarked(p, &nPis, &nFos, &nAdders, &nMults)
 		fmt.Printf("Cone %5d : ", i)
@@ -1490,13 +1491,13 @@ func Wlc_NtkDupSingleNodes(p *Wlc_Ntk_t) *Wlc_Ntk_t {
 	var pNew *Wlc_Ntk_t
 	var vFanins *Vec_Int_t
 	var pObj, pObjNew *Wlc_Obj_t
-	var pFanin, pFaninNew *Wlc_Obj_t
+	var pFanin *Wlc_Obj_t
 	var i, k, iFanin, iFaninNew, iObjNew, Count int32
 	// count objects
 	// inlining of macro Wlc_NtkForEachObj
 	for i = 1; i < Wlc_NtkObjNumMax(p); i++ {
 		pObj = Wlc_NtkObj(p, i)
-		if !Wlc_ObjIsCi(pObj) {
+		if Wlc_ObjIsCi(pObj) == 0 {
 			Count += 1 + Wlc_ObjFaninNum(pObj)
 		}
 	}
@@ -1511,13 +1512,13 @@ func Wlc_NtkDupSingleNodes(p *Wlc_Ntk_t) *Wlc_Ntk_t {
 	// inlining of macro Wlc_NtkForEachObj
 	for i = 1; i < Wlc_NtkObjNumMax(p); i++ {
 		pObj = Wlc_NtkObj(p, i)
-		if Wlc_ObjIsCi(pObj) {
+		if Wlc_ObjIsCi(pObj) != 0 {
 			continue
 		}
-		if pObj.Type == WLC_OBJ_ARI_MULTI {
+		if pObj.Type == uint32(WLC_OBJ_ARI_MULTI) {
 			continue
 		}
-		if pObj.Type == WLC_OBJ_MUX && Wlc_ObjFaninNum(pObj) > 3 {
+		if pObj.Type == uint32(WLC_OBJ_MUX) && Wlc_ObjFaninNum(pObj) > 3 {
 			continue
 		}
 		// create CIs for the fanins
@@ -1525,8 +1526,7 @@ func Wlc_NtkDupSingleNodes(p *Wlc_Ntk_t) *Wlc_Ntk_t {
 		for k = 0; k < Wlc_ObjFaninNum(pObj); k++ {
 			iFanin = Wlc_ObjFaninId(pObj, k)
 			pFanin = Wlc_NtkObj(p, iFanin)
-			iFaninNew = Wlc_ObjAlloc(pNew, WLC_OBJ_PI, pFanin.Signed, pFanin.End, pFanin.Beg)
-			pFaninNew = Wlc_NtkObj(pNew, iFaninNew)
+			iFaninNew = Wlc_ObjAlloc(pNew, int32(WLC_OBJ_PI), int32(pFanin.Signed), pFanin.End, pFanin.Beg)
 			Wlc_ObjSetCopy(p, iFanin, iFaninNew)
 			//Wlc_ObjSetCi( pNew, pFaninNew );
 		}
@@ -1538,7 +1538,7 @@ func Wlc_NtkDupSingleNodes(p *Wlc_Ntk_t) *Wlc_Ntk_t {
 	}
 	Vec_IntFree(vFanins)
 	Wlc_NtkTransferNames(pNew, p)
-	if p.pSpec {
+	if p.pSpec != "" {
 		pNew.pSpec = Abc_UtilStrsav(p.pSpec)
 	}
 	return pNew
@@ -1563,11 +1563,11 @@ func Wlc_NtkShortNames(p *Wlc_Ntk_t) {
 
 	var nDigits, NameId, fFound, i int32
 	var nFlops int32 = Wlc_NtkCoNum(p) - Wlc_NtkPoNum(p)
-	nDigits = Abc_Base10Log(nFlops)
+	nDigits = Abc_Base10Log(uint32(nFlops))
 	// inlining of macro Wlc_NtkForEachCo
 	for i = 0; i < Wlc_NtkCoNum(p); i++ {
 		pObj = Wlc_NtkCo(p, i)
-		if Wlc_ObjIsPo(pObj) {
+		if Wlc_ObjIsPo(pObj) != 0 {
 			continue
 		}
 		pBuffer = fmt.Sprintf("%s%0*d", "fi", nDigits, i-Wlc_NtkPoNum(p))
@@ -1577,14 +1577,14 @@ func Wlc_NtkShortNames(p *Wlc_Ntk_t) {
 	// inlining of macro Wlc_NtkForEachCi
 	for i = 0; i < Wlc_NtkCiNum(p); i++ {
 		pObj = Wlc_NtkCi(p, i)
-		if Wlc_ObjIsPi(pObj) {
+		if Wlc_ObjIsPi(pObj) != 0 {
 			continue
 		}
 		pBuffer = fmt.Sprintf("%s%0*d", "fo", nDigits, i-Wlc_NtkPiNum(p))
 		NameId = Abc_NamStrFindOrAdd(p.pManName, pBuffer, &fFound)
 		Wlc_ObjSetNameId(p, Wlc_ObjId(p, pObj), NameId)
 	}
-	nDigits = Abc_Base10Log(Wlc_NtkPoNum(p))
+	nDigits = Abc_Base10Log(uint32(Wlc_NtkPoNum(p)))
 	// inlining of macro Wlc_NtkForEachPo
 	for i = 0; i < Wlc_NtkPoNum(p); i++ {
 		pObj = Wlc_NtkPo(p, i)
@@ -1592,7 +1592,7 @@ func Wlc_NtkShortNames(p *Wlc_Ntk_t) {
 		NameId = Abc_NamStrFindOrAdd(p.pManName, pBuffer, &fFound)
 		Wlc_ObjSetNameId(p, Wlc_ObjId(p, pObj), NameId)
 	}
-	nDigits = Abc_Base10Log(Wlc_NtkPiNum(p))
+	nDigits = Abc_Base10Log(uint32(Wlc_NtkPiNum(p)))
 	// inlining of macro Wlc_NtkForEachPi
 	for i = 0; i < Wlc_NtkPiNum(p); i++ {
 		pObj = Wlc_NtkPi(p, i)
@@ -1600,11 +1600,11 @@ func Wlc_NtkShortNames(p *Wlc_Ntk_t) {
 		NameId = Abc_NamStrFindOrAdd(p.pManName, pBuffer, &fFound)
 		Wlc_ObjSetNameId(p, Wlc_ObjId(p, pObj), NameId)
 	}
-	nDigits = Abc_Base10Log(Wlc_NtkObjNum(p))
+	nDigits = Abc_Base10Log(uint32(Wlc_NtkObjNum(p)))
 	// inlining of macro Wlc_NtkForEachObj
 	for i = 1; i < Wlc_NtkObjNumMax(p); i++ {
 		pObj = Wlc_NtkObj(p, i)
-		if Wlc_ObjIsCi(pObj) || Wlc_ObjIsCo(pObj) {
+		if Wlc_ObjIsCi(pObj) != 0 || Wlc_ObjIsCo(pObj) != 0 {
 			continue
 		}
 		pBuffer = fmt.Sprintf("%s%0*d", "n", nDigits, i)
@@ -1628,12 +1628,14 @@ func Wlc_NtkShortNames(p *Wlc_Ntk_t) {
 */
 func Wlc_NtkDcFlopNum(p *Wlc_Ntk_t) int32 {
 	var i, nFlops, Count int32
-	if p.pInits == nil {
+	if p.pInits == "" {
 		return 0
 	}
-	nFlops = len(p.pInits)
+	nFlops = int32(len(p.pInits))
 	for i = 0; i < nFlops; i++ {
-		Count += (p.pInits[i] == 'x' || p.pInits[i] == 'X')
+		if p.pInits[i] == 'x' || p.pInits[i] == 'X' {
+			Count++
+		}
 	}
 	return Count
 }

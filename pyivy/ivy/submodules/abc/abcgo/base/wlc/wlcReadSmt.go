@@ -111,25 +111,25 @@ var s_Types [SMT_PRS_END]Smt_Pair_t = [SMT_PRS_END]Smt_Pair_t{
 
 func Smt_GetTypeName(Type Smt_LineType_t) string {
 	var i int32
-	for i = 1; i < SMT_PRS_END; i++ {
+	for i = 1; i < int32(SMT_PRS_END); i++ {
 		if s_Types[i].Type == Type {
 			return s_Types[i].pName
 		}
 	}
-	return nil
+	return ""
 }
 func Smt_AddTypes(p *Abc_Nam_t) {
 	var Type int32
-	for Type = 1; Type < SMT_PRS_END; Type++ {
+	for Type = 1; Type < int32(SMT_PRS_END); Type++ {
 		Abc_NamStrFindOrAdd(p, Smt_GetTypeName(Smt_LineType_t(Type)), nil)
 	}
-	assert(Abc_NamObjNumMax(p) == SMT_PRS_END, "Abc_NamObjNumMax(p) == SMT_PRS_END")
+	assert(Abc_NamObjNumMax(p) == int32(SMT_PRS_END), "Abc_NamObjNumMax(p) == SMT_PRS_END")
 }
 
 func Smt_EntryIsName(Fan int32) int32 { return Abc_LitIsCompl(Fan) }
 func Smt_EntryIsType(Fan int32, Type Smt_LineType_t) int32 {
 	assert((Smt_EntryIsName(Fan) != 0), "Smt_EntryIsName(Fan)")
-	return Abc_Lit2Var(Fan) == Type
+	return boolToInt32(Abc_Lit2Var(Fan) == int32(Type))
 }
 func Smt_EntryName(p *Smt_Prs_t, Fan int32) string {
 	assert((Smt_EntryIsName(Fan) != 0), "Smt_EntryIsName(Fan)")
@@ -141,13 +141,13 @@ func Smt_EntryNode(p *Smt_Prs_t, Fan int32) *Vec_Int_t {
 }
 
 func Smt_VecEntryIsType(vFans *Vec_Int_t, i int32, Type Smt_LineType_t) int32 {
-	return i < Vec_IntSize(vFans) && Smt_EntryIsName(Vec_IntEntry(vFans, i)) && Smt_EntryIsType(Vec_IntEntry(vFans, i), Type)
+	return boolToInt32(i < Vec_IntSize(vFans) && Smt_EntryIsName(Vec_IntEntry(vFans, i)) != 0 && Smt_EntryIsType(Vec_IntEntry(vFans, i), Type) != 0)
 }
 func Smt_VecEntryName(p *Smt_Prs_t, vFans *Vec_Int_t, i int32) string {
 	if Smt_EntryIsName(Vec_IntEntry(vFans, i)) != 0 {
 		return Smt_EntryName(p, Vec_IntEntry(vFans, i))
 	} else {
-		return nil
+		return ""
 	}
 }
 func Smt_VecEntryNode(p *Smt_Prs_t, vFans *Vec_Int_t, i int32) *Vec_Int_t {
@@ -184,112 +184,112 @@ func Smt_StrToType(pName string, pfSigned *int32) int32 {
 	var Type int32
 	*pfSigned = 0
 	if !(int32(strings.Compare(pName, "ite")) != 0) {
-		Type = WLC_OBJ_MUX // 08: multiplexer
+		Type = int32(WLC_OBJ_MUX) // 08: multiplexer
 	} else if !(int32(strings.Compare(pName, "bvlshr")) != 0) {
-		Type = WLC_OBJ_SHIFT_R // 09: shift right
+		Type = int32(WLC_OBJ_SHIFT_R) // 09: shift right
 	} else if !(int32(strings.Compare(pName, "bvashr")) != 0) {
-		Type = WLC_OBJ_SHIFT_RA
+		Type = int32(WLC_OBJ_SHIFT_RA)
 		*pfSigned = 1 // 10: shift right (arithmetic)
 	} else if !(int32(strings.Compare(pName, "bvshl")) != 0) {
-		Type = WLC_OBJ_SHIFT_L // 11: shift left
+		Type = int32(WLC_OBJ_SHIFT_L) // 11: shift left
 		//    else if ( !strcmp(pName, "") )
 		//        Type = WLC_OBJ_SHIFT_LA;    // 12: shift left (arithmetic)
 	} else if !(int32(strings.Compare(pName, "rotate_right")) != 0) {
-		Type = WLC_OBJ_ROTATE_R // 13: rotate right
+		Type = int32(WLC_OBJ_ROTATE_R) // 13: rotate right
 	} else if !(int32(strings.Compare(pName, "rotate_left")) != 0) {
-		Type = WLC_OBJ_ROTATE_L // 14: rotate left
+		Type = int32(WLC_OBJ_ROTATE_L) // 14: rotate left
 	} else if !(int32(strings.Compare(pName, "bvnot")) != 0) {
-		Type = WLC_OBJ_BIT_NOT // 15: bitwise NOT
+		Type = int32(WLC_OBJ_BIT_NOT) // 15: bitwise NOT
 	} else if !(int32(strings.Compare(pName, "bvand")) != 0) {
-		Type = WLC_OBJ_BIT_AND // 16: bitwise AND
+		Type = int32(WLC_OBJ_BIT_AND) // 16: bitwise AND
 	} else if !(int32(strings.Compare(pName, "bvor")) != 0) {
-		Type = WLC_OBJ_BIT_OR // 17: bitwise OR
+		Type = int32(WLC_OBJ_BIT_OR) // 17: bitwise OR
 	} else if !(int32(strings.Compare(pName, "bvxor")) != 0) {
-		Type = WLC_OBJ_BIT_XOR // 18: bitwise XOR
+		Type = int32(WLC_OBJ_BIT_XOR) // 18: bitwise XOR
 	} else if !(int32(strings.Compare(pName, "bvnand")) != 0) {
-		Type = WLC_OBJ_BIT_NAND // 16: bitwise NAND
+		Type = int32(WLC_OBJ_BIT_NAND) // 16: bitwise NAND
 	} else if !(int32(strings.Compare(pName, "bvnor")) != 0) {
-		Type = WLC_OBJ_BIT_NOR // 17: bitwise NOR
+		Type = int32(WLC_OBJ_BIT_NOR) // 17: bitwise NOR
 	} else if !(int32(strings.Compare(pName, "bvxnor")) != 0) {
-		Type = WLC_OBJ_BIT_NXOR // 18: bitwise NXOR
+		Type = int32(WLC_OBJ_BIT_NXOR) // 18: bitwise NXOR
 	} else if !(int32(strings.Compare(pName, "extract")) != 0) {
-		Type = WLC_OBJ_BIT_SELECT // 19: bit selection
+		Type = int32(WLC_OBJ_BIT_SELECT) // 19: bit selection
 	} else if !(int32(strings.Compare(pName, "concat")) != 0) {
-		Type = WLC_OBJ_BIT_CONCAT // 20: bit concatenation
+		Type = int32(WLC_OBJ_BIT_CONCAT) // 20: bit concatenation
 	} else if !(int32(strings.Compare(pName, "zero_extend")) != 0) {
-		Type = WLC_OBJ_BIT_ZEROPAD // 21: zero padding
+		Type = int32(WLC_OBJ_BIT_ZEROPAD) // 21: zero padding
 	} else if !(int32(strings.Compare(pName, "sign_extend")) != 0) {
-		Type = WLC_OBJ_BIT_SIGNEXT // 22: sign extension
+		Type = int32(WLC_OBJ_BIT_SIGNEXT) // 22: sign extension
 	} else if !(int32(strings.Compare(pName, "not")) != 0) {
-		Type = WLC_OBJ_LOGIC_NOT // 23: logic NOT
+		Type = int32(WLC_OBJ_LOGIC_NOT) // 23: logic NOT
 	} else if !(int32(strings.Compare(pName, "=>")) != 0) {
-		Type = WLC_OBJ_LOGIC_IMPL // 24: logic AND
+		Type = int32(WLC_OBJ_LOGIC_IMPL) // 24: logic AND
 	} else if !(int32(strings.Compare(pName, "and")) != 0) {
-		Type = WLC_OBJ_LOGIC_AND // 24: logic AND
+		Type = int32(WLC_OBJ_LOGIC_AND) // 24: logic AND
 	} else if !(int32(strings.Compare(pName, "or")) != 0) {
-		Type = WLC_OBJ_LOGIC_OR // 25: logic OR
+		Type = int32(WLC_OBJ_LOGIC_OR) // 25: logic OR
 	} else if !(int32(strings.Compare(pName, "xor")) != 0) {
-		Type = WLC_OBJ_LOGIC_XOR // 26: logic OR
+		Type = int32(WLC_OBJ_LOGIC_XOR) // 26: logic OR
 	} else if !(int32(strings.Compare(pName, "bvcomp")) != 0) || !(int32(strings.Compare(pName, "=")) != 0) {
-		Type = WLC_OBJ_COMP_EQU // 27: compare equal
+		Type = int32(WLC_OBJ_COMP_EQU) // 27: compare equal
 	} else if !(int32(strings.Compare(pName, "distinct")) != 0) {
-		Type = WLC_OBJ_COMP_NOTEQU // 28: compare not equal
+		Type = int32(WLC_OBJ_COMP_NOTEQU) // 28: compare not equal
 	} else if !(int32(strings.Compare(pName, "bvult")) != 0) {
-		Type = WLC_OBJ_COMP_LESS // 29: compare less
+		Type = int32(WLC_OBJ_COMP_LESS) // 29: compare less
 	} else if !(int32(strings.Compare(pName, "bvugt")) != 0) {
-		Type = WLC_OBJ_COMP_MORE // 30: compare more
+		Type = int32(WLC_OBJ_COMP_MORE) // 30: compare more
 	} else if !(int32(strings.Compare(pName, "bvule")) != 0) {
-		Type = WLC_OBJ_COMP_LESSEQU // 31: compare less or equal
+		Type = int32(WLC_OBJ_COMP_LESSEQU) // 31: compare less or equal
 	} else if !(int32(strings.Compare(pName, "bvuge")) != 0) {
-		Type = WLC_OBJ_COMP_MOREEQU // 32: compare more or equal
+		Type = int32(WLC_OBJ_COMP_MOREEQU) // 32: compare more or equal
 	} else if !(int32(strings.Compare(pName, "bvslt")) != 0) {
-		Type = WLC_OBJ_COMP_LESS
+		Type = int32(WLC_OBJ_COMP_LESS)
 		*pfSigned = 1 // 29: compare less
 	} else if !(int32(strings.Compare(pName, "bvsgt")) != 0) {
-		Type = WLC_OBJ_COMP_MORE
+		Type = int32(WLC_OBJ_COMP_MORE)
 		*pfSigned = 1 // 30: compare more
 	} else if !(int32(strings.Compare(pName, "bvsle")) != 0) {
-		Type = WLC_OBJ_COMP_LESSEQU
+		Type = int32(WLC_OBJ_COMP_LESSEQU)
 		*pfSigned = 1 // 31: compare less or equal
 	} else if !(int32(strings.Compare(pName, "bvsge")) != 0) {
-		Type = WLC_OBJ_COMP_MOREEQU
+		Type = int32(WLC_OBJ_COMP_MOREEQU)
 		*pfSigned = 1 // 32: compare more or equal
 	} else if !(int32(strings.Compare(pName, "bvredand")) != 0) {
-		Type = WLC_OBJ_REDUCT_AND // 33: reduction AND
+		Type = int32(WLC_OBJ_REDUCT_AND) // 33: reduction AND
 	} else if !(int32(strings.Compare(pName, "bvredor")) != 0) {
-		Type = WLC_OBJ_REDUCT_OR // 34: reduction OR
+		Type = int32(WLC_OBJ_REDUCT_OR) // 34: reduction OR
 	} else if !(int32(strings.Compare(pName, "bvredxor")) != 0) {
-		Type = WLC_OBJ_REDUCT_XOR // 35: reduction XOR
+		Type = int32(WLC_OBJ_REDUCT_XOR) // 35: reduction XOR
 	} else if !(int32(strings.Compare(pName, "bvadd")) != 0) {
-		Type = WLC_OBJ_ARI_ADD // 36: arithmetic addition
+		Type = int32(WLC_OBJ_ARI_ADD) // 36: arithmetic addition
 	} else if !(int32(strings.Compare(pName, "bvsub")) != 0) {
-		Type = WLC_OBJ_ARI_SUB // 37: arithmetic subtraction
+		Type = int32(WLC_OBJ_ARI_SUB) // 37: arithmetic subtraction
 	} else if !(int32(strings.Compare(pName, "bvmul")) != 0) {
-		Type = WLC_OBJ_ARI_MULTI // 38: arithmetic multiplier
+		Type = int32(WLC_OBJ_ARI_MULTI) // 38: arithmetic multiplier
 	} else if !(int32(strings.Compare(pName, "bvudiv")) != 0) {
-		Type = WLC_OBJ_ARI_DIVIDE // 39: arithmetic division
+		Type = int32(WLC_OBJ_ARI_DIVIDE) // 39: arithmetic division
 	} else if !(int32(strings.Compare(pName, "bvurem")) != 0) {
-		Type = WLC_OBJ_ARI_REM // 40: arithmetic remainder
+		Type = int32(WLC_OBJ_ARI_REM) // 40: arithmetic remainder
 	} else if !(int32(strings.Compare(pName, "bvsdiv")) != 0) {
-		Type = WLC_OBJ_ARI_DIVIDE
+		Type = int32(WLC_OBJ_ARI_DIVIDE)
 		*pfSigned = 1 // 39: arithmetic division
 	} else if !(int32(strings.Compare(pName, "bvsrem")) != 0) {
-		Type = WLC_OBJ_ARI_REM
+		Type = int32(WLC_OBJ_ARI_REM)
 		*pfSigned = 1 // 40: arithmetic remainder
 	} else if !(int32(strings.Compare(pName, "bvsmod")) != 0) {
-		Type = WLC_OBJ_ARI_MODULUS
+		Type = int32(WLC_OBJ_ARI_MODULUS)
 		*pfSigned = 1 // 40: arithmetic modulus
 	} else if !(int32(strings.Compare(pName, "=")) != 0) {
-		Type = WLC_OBJ_COMP_EQU // 40: arithmetic modulus
+		Type = int32(WLC_OBJ_COMP_EQU) // 40: arithmetic modulus
 		//    else if ( !strcmp(pName, "") )
 		//        Type = WLC_OBJ_ARI_POWER;     // 41: arithmetic power
 	} else if !(int32(strings.Compare(pName, "bvneg")) != 0) {
-		Type = WLC_OBJ_ARI_MINUS // 42: arithmetic minus
+		Type = int32(WLC_OBJ_ARI_MINUS) // 42: arithmetic minus
 		//    else if ( !strcmp(pName, "") )
 		//        Type = WLC_OBJ_TABLE;         // 43: bit table
 	} else {
 		fmt.Printf("The following operations is currently not supported (%s)\n", pName)
-		fflush(os.Stdout)
+		_ = os.Stdout.Sync()
 	}
 	return Type
 }
@@ -352,7 +352,7 @@ func Smt_PrsCreateNodeOld(pNtk *Wlc_Ntk_t, Type int32, fSigned int32, Range int3
 
 	Wlc_ObjAddFanins(pNtk, Wlc_NtkObj(pNtk, iObj), vFanins)
 	if fSigned != 0 {
-		Wlc_NtkObj(pNtk, iObj).Signed = fSigned
+		Wlc_NtkObj(pNtk, iObj).Signed = uint32(fSigned)
 		//        if ( Vec_IntSize(vFanins) > 0 )
 		//            Wlc_NtkObj(pNtk, Vec_IntEntry(vFanins, 0))->Signed = fSigned;
 		//        if ( Vec_IntSize(vFanins) > 1 )
@@ -373,31 +373,31 @@ func Smt_PrsCreateNode(pNtk *Wlc_Ntk_t, Type int32, fSigned int32, Range int32, 
 	assert(Range >= 0, "Range >= 0")
 	assert(fSigned >= 0, "fSigned >= 0")
 
-	//if (Vec_IntSize(vFanins)<=2 || Type == WLC_OBJ_BIT_CONCAT || Type == WLC_OBJ_MUX )
+	//if (Vec_IntSize(vFanins)<=2 || Type == int32(WLC_OBJ_BIT_CONCAT) || Type == int32(WLC_OBJ_MUX) )
 	// explicitely secify allowed multi operators
 	if Vec_IntSize(vFanins) <= 2 ||
-		!(Type == WLC_OBJ_BIT_AND || // 16:`` bitwise AND
-			Type == WLC_OBJ_BIT_OR || // 17: bitwise OR
-			Type == WLC_OBJ_BIT_XOR || // 18: bitwise XOR
-			Type == WLC_OBJ_BIT_NAND || // 19: bitwise AND
-			Type == WLC_OBJ_BIT_NOR || // 20: bitwise OR
-			Type == WLC_OBJ_BIT_NXOR || // 21: bitwise NXOR
+		!(Type == int32(WLC_OBJ_BIT_AND) || // 16:`` bitwise AND
+			Type == int32(WLC_OBJ_BIT_OR) || // 17: bitwise OR
+			Type == int32(WLC_OBJ_BIT_XOR) || // 18: bitwise XOR
+			Type == int32(WLC_OBJ_BIT_NAND) || // 19: bitwise AND
+			Type == int32(WLC_OBJ_BIT_NOR) || // 20: bitwise OR
+			Type == int32(WLC_OBJ_BIT_NXOR) || // 21: bitwise NXOR
 
-			Type == WLC_OBJ_LOGIC_IMPL || // 27: logic implication
-			Type == WLC_OBJ_LOGIC_AND || // 28: logic AND
-			Type == WLC_OBJ_LOGIC_OR || // 29: logic OR
-			Type == WLC_OBJ_LOGIC_XOR || // 30: logic XOR
-			Type == WLC_OBJ_COMP_EQU || // 31: compare equal
-			//          Type == WLC_OBJ_COMP_NOTEQU ||   // 32: compare not equal -- bug fix
-			Type == WLC_OBJ_COMP_LESS || // 33: compare less
-			Type == WLC_OBJ_COMP_MORE || // 34: compare more
-			Type == WLC_OBJ_COMP_LESSEQU || // 35: compare less or equal
-			Type == WLC_OBJ_COMP_MOREEQU || // 36: compare more or equal
+			Type == int32(WLC_OBJ_LOGIC_IMPL) || // 27: logic implication
+			Type == int32(WLC_OBJ_LOGIC_AND) || // 28: logic AND
+			Type == int32(WLC_OBJ_LOGIC_OR) || // 29: logic OR
+			Type == int32(WLC_OBJ_LOGIC_XOR) || // 30: logic XOR
+			Type == int32(WLC_OBJ_COMP_EQU) || // 31: compare equal
+			//          Type == int32(WLC_OBJ_COMP_NOTEQU) ||   // 32: compare not equal -- bug fix
+			Type == int32(WLC_OBJ_COMP_LESS) || // 33: compare less
+			Type == int32(WLC_OBJ_COMP_MORE) || // 34: compare more
+			Type == int32(WLC_OBJ_COMP_LESSEQU) || // 35: compare less or equal
+			Type == int32(WLC_OBJ_COMP_MOREEQU) || // 36: compare more or equal
 
-			Type == WLC_OBJ_ARI_ADD || // 43: arithmetic addition
-			Type == WLC_OBJ_ARI_SUB || // 44: arithmetic subtraction
-			Type == WLC_OBJ_ARI_MULTI || // 45: arithmetic multiplier
-			Type == WLC_OBJ_ARI_DIVIDE) { // 46: arithmetic division
+			Type == int32(WLC_OBJ_ARI_ADD) || // 43: arithmetic addition
+			Type == int32(WLC_OBJ_ARI_SUB) || // 44: arithmetic subtraction
+			Type == int32(WLC_OBJ_ARI_MULTI) || // 45: arithmetic multiplier
+			Type == int32(WLC_OBJ_ARI_DIVIDE)) { // 46: arithmetic division
 		goto FINISHED_WITH_FANINS
 	}
 
@@ -436,7 +436,7 @@ FINISHED_WITH_FANINS:
 	// basically we keep only 32 bits.
 	// bit[31] will be the copy of original MSB (sign bit, just in case) UPDATE: assume it is unsigned first????
 	// bit[31] will be the reduction or of any bits from [31] to Range
-	if Type == WLC_OBJ_SHIFT_R || Type == WLC_OBJ_SHIFT_RA || Type == WLC_OBJ_SHIFT_L {
+	if Type == int32(WLC_OBJ_SHIFT_R) || Type == int32(WLC_OBJ_SHIFT_RA) || Type == int32(WLC_OBJ_SHIFT_L) {
 		var range1, iObj1, iObj2, iObj3 int32
 		assert(Vec_IntSize(vFanins) >= 2, "Vec_IntSize(vFanins)>=2")
 		iFanin1 = Vec_IntEntry(vFanins, 1)
@@ -446,7 +446,7 @@ FINISHED_WITH_FANINS:
 			Vec_IntPush(newFanins, iFanin1)
 			Vec_IntPushTwo(newFanins, 30, 0)
 
-			iObj1 = Wlc_ObjAlloc(pNtk, WLC_OBJ_BIT_SELECT, 0, 30, 0)
+			iObj1 = Wlc_ObjAlloc(pNtk, int32(WLC_OBJ_BIT_SELECT), 0, 30, 0)
 			Buffer = fmt.Sprintf("_n%d_", iObj1)
 			pNameFanin = Buffer
 			NameId = Abc_NamStrFindOrAdd(pNtk.pManName, pNameFanin, &fFound)
@@ -462,7 +462,7 @@ FINISHED_WITH_FANINS:
 			Vec_IntPop(newFanins)
 			Vec_IntPop(newFanins)
 			Vec_IntPushTwo(newFanins, range1-1, 31)
-			iObj2 = Wlc_ObjAlloc(pNtk, WLC_OBJ_BIT_SELECT, 0, range1-1, 31)
+			iObj2 = Wlc_ObjAlloc(pNtk, int32(WLC_OBJ_BIT_SELECT), 0, range1-1, 31)
 			Buffer = fmt.Sprintf("_n%d_", iObj2)
 			pNameFanin = Buffer
 			NameId = Abc_NamStrFindOrAdd(pNtk.pManName, pNameFanin, &fFound)
@@ -477,7 +477,7 @@ FINISHED_WITH_FANINS:
 			Vec_IntPop(newFanins)
 			Vec_IntPop(newFanins)
 			Vec_IntWriteEntry(newFanins, 0, iObj2)
-			iObj3 = Wlc_ObjAlloc(pNtk, WLC_OBJ_REDUCT_OR, 0, 0, 0)
+			iObj3 = Wlc_ObjAlloc(pNtk, int32(WLC_OBJ_REDUCT_OR), 0, 0, 0)
 			Buffer = fmt.Sprintf("_n%d_", iObj3)
 			pNameFanin = Buffer
 			NameId = Abc_NamStrFindOrAdd(pNtk.pManName, pNameFanin, &fFound)
@@ -491,7 +491,7 @@ FINISHED_WITH_FANINS:
 			// concat all together
 			Vec_IntWriteEntry(newFanins, 0, iObj3)
 			Vec_IntPush(newFanins, iObj1)
-			iObj = Wlc_ObjAlloc(pNtk, WLC_OBJ_BIT_CONCAT, 0, 31, 0)
+			iObj = Wlc_ObjAlloc(pNtk, int32(WLC_OBJ_BIT_CONCAT), 0, 31, 0)
 			Buffer = fmt.Sprintf("_n%d_", iObj)
 			pNameFanin = Buffer
 			NameId = Abc_NamStrFindOrAdd(pNtk.pManName, pNameFanin, &fFound)
@@ -521,7 +521,7 @@ FINISHED_WITH_FANINS:
 
 	Wlc_ObjAddFanins(pNtk, Wlc_NtkObj(pNtk, iObj), vFanins)
 	if fSigned != 0 {
-		Wlc_NtkObj(pNtk, iObj).Signed = fSigned
+		Wlc_NtkObj(pNtk, iObj).Signed = uint32(fSigned)
 		//        if ( Vec_IntSize(vFanins) > 0 )
 		//            Wlc_NtkObj(pNtk, Vec_IntEntry(vFanins, 0))->Signed = fSigned;
 		//        if ( Vec_IntSize(vFanins) > 1 )
@@ -537,6 +537,19 @@ func Smt_GetHexFromDecimalString(pStr string) string {
 		return ""
 	}
 	return value.Text(16)
+}
+
+// smtReadHexWords mirrors the parser's least-significant-word-first constant layout.
+func smtReadHexWords(dst []int32, hexText string) int32 {
+	value, ok := new(big.Int).SetString(hexText, 16)
+	if !ok {
+		return 0
+	}
+	for i := range dst {
+		dst[i] = int32(new(big.Int).And(value, big.NewInt(0xffffffff)).Uint64())
+		value.Rsh(value, 32)
+	}
+	return int32(len(hexText))
 }
 
 func Smt_PrsBuildConstant(pNtk *Wlc_Ntk_t, pStr string, nBits int32, pName string) int32 {
@@ -556,13 +569,13 @@ func Smt_PrsBuildConstant(pNtk *Wlc_Ntk_t, pStr string, nBits int32, pName strin
 			var pHex string = Smt_GetHexFromDecimalString(pStr)
 
 			if nBits == -1 {
-				nBits = len(pHex) * 4
+				nBits = int32(len(pHex) * 4)
 			}
 
 			//printf("nbits: %d\n",nBits);
 
-			Vec_IntFill(vFanins, Abc_BitWordNum(nBits), 0)
-			nDigits = Abc_TtReadHexNumber(Vec_IntArray(vFanins), pHex)
+			Vec_IntFill(vFanins, (nBits+31)/32, 0)
+			nDigits = smtReadHexWords(Vec_IntArray(vFanins), pHex)
 			ABC_FREE(pHex)
 
 			/*
@@ -588,12 +601,12 @@ func Smt_PrsBuildConstant(pNtk *Wlc_Ntk_t, pStr string, nBits int32, pName strin
 	} else if pStr[1] == 'b' { // binary
 
 		if nBits == -1 {
-			nBits = len(pStr + 2)
+			nBits = int32(len(pStr[2:]))
 		}
-		Vec_IntFill(vFanins, Abc_BitWordNum(nBits), 0)
+		Vec_IntFill(vFanins, (nBits+31)/32, 0)
 		for i = 0; i < nBits; i++ {
 			if pStr[2+i] == '1' {
-				Abc_InfoSetBit(Vec_IntArray(vFanins), nBits-1-i)
+				*Vec_IntEntryP(vFanins, (nBits-1-i)/32) |= int32(1) << uint((nBits-1-i)%32)
 			} else if pStr[2+i] != '0' {
 				Vec_IntFree(vFanins)
 				return 0
@@ -603,10 +616,10 @@ func Smt_PrsBuildConstant(pNtk *Wlc_Ntk_t, pStr string, nBits int32, pName strin
 	} else if pStr[1] == 'x' { // hexadecimal
 
 		if nBits == -1 {
-			nBits = len(pStr+2) * 4
+			nBits = int32(len(pStr[2:])) * 4
 		}
-		Vec_IntFill(vFanins, Abc_BitWordNum(nBits), 0)
-		nDigits = Abc_TtReadHexNumber(Vec_IntArray(vFanins), pStr+2)
+		Vec_IntFill(vFanins, (nBits+31)/32, 0)
+		nDigits = smtReadHexWords(Vec_IntArray(vFanins), pStr[2:])
 		if nDigits != (nBits+3)/4 {
 			Vec_IntFree(vFanins)
 			return 0
@@ -617,7 +630,7 @@ func Smt_PrsBuildConstant(pNtk *Wlc_Ntk_t, pStr string, nBits int32, pName strin
 		return 0
 	}
 	// create constant node
-	iObj = Smt_PrsCreateNode(pNtk, WLC_OBJ_CONST, 0, nBits, vFanins, pName)
+	iObj = Smt_PrsCreateNode(pNtk, int32(WLC_OBJ_CONST), 0, nBits, vFanins, pName)
 	Vec_IntFree(vFanins)
 	return iObj
 }
@@ -642,13 +655,13 @@ func Smt_PrsBuildNode(pNtk *Wlc_Ntk_t, p *Smt_Prs_t, iNode int32, RangeOut int32
 		var vFans *Vec_Int_t = Smt_EntryNode(p, iNode)
 		var pStr0 string = Smt_VecEntryName(p, vFans, 0)
 		var pStr1 string = Smt_VecEntryName(p, vFans, 1)
-		if pStr0 && pStr1 && pStr0[0] == '_' && pStr1[0] == 'b' && pStr1[1] == 'v' {
+		if pStr0 != "" && pStr1 != "" && pStr0[0] == '_' && pStr1[0] == 'b' && pStr1[1] == 'v' {
 			// (_ bv1 32)
 			var pStr2 string = Smt_VecEntryName(p, vFans, 2)
 			assert(Vec_IntSize(vFans) == 3, "Vec_IntSize(vFans) == 3")
 			return Smt_PrsBuildConstant(pNtk, pStr1[2:], atoi(pStr2), pName)
 
-		} else if pStr0 && pStr0[0] == '=' {
+		} else if pStr0 != "" && pStr0[0] == '=' {
 			assert(Vec_IntSize(vFans) == 3, "Vec_IntSize(vFans) == 3")
 			iNode = Vec_IntEntry(vFans, 2)
 			assert((Smt_EntryIsName(iNode) != 0), "Smt_EntryIsName(iNode)")
@@ -669,7 +682,7 @@ func Smt_PrsBuildNode(pNtk *Wlc_Ntk_t, p *Smt_Prs_t, iNode int32, RangeOut int32
 				iOper = Smt_PrsBuildNode(pNtk, p, iNode, -1, pName)
 				// build comparator
 				Vec_IntPushTwo(vFanins, iOper, iConst)
-				iObj = Smt_PrsCreateNode(pNtk, WLC_OBJ_COMP_EQU, 0, 1, vFanins, pName)
+				iObj = Smt_PrsCreateNode(pNtk, int32(WLC_OBJ_COMP_EQU), 0, 1, vFanins, pName)
 				Vec_IntFree(vFanins)
 				return iObj
 			}
@@ -686,8 +699,8 @@ func Smt_PrsBuildNode(pNtk *Wlc_Ntk_t, p *Smt_Prs_t, iNode int32, RangeOut int32
 			var Type int32 = Smt_PrsReadType(p, Vec_IntEntry(vFans, 0), &fSigned, &Value1, &Value2)
 			// collect fanins
 			var vFanins *Vec_Int_t = Vec_IntAlloc(100)
-			Vec_IntForEachEntryStart(vFans, Fan, i, 1)
-			{
+			for i = 1; i < Vec_IntSize(vFans); i++ {
+				Fan = Vec_IntEntry(vFans, i)
 				iFanin = Smt_PrsBuildNode(pNtk, p, Fan, -1, "")
 				if iFanin == 0 {
 					Vec_IntFree(vFanins)
@@ -696,12 +709,12 @@ func Smt_PrsBuildNode(pNtk *Wlc_Ntk_t, p *Smt_Prs_t, iNode int32, RangeOut int32
 				Vec_IntPush(vFanins, iFanin)
 			}
 			// update specialized nodes
-			assert(Type != WLC_OBJ_BIT_SIGNEXT && Type != WLC_OBJ_BIT_ZEROPAD, "Type != WLC_OBJ_BIT_SIGNEXT && Type != WLC_OBJ_BIT_ZEROPAD")
-			if Type == WLC_OBJ_BIT_SELECT {
+			assert(Type != int32(WLC_OBJ_BIT_SIGNEXT) && Type != int32(WLC_OBJ_BIT_ZEROPAD), "Type != int32(WLC_OBJ_BIT_SIGNEXT) && Type != int32(WLC_OBJ_BIT_ZEROPAD)")
+			if Type == int32(WLC_OBJ_BIT_SELECT) {
 				assert(Value1 >= 0 && Value2 >= 0 && Value1 >= Value2, "Value1 >= 0 && Value2 >= 0 && Value1 >= Value2")
 				Vec_IntPushTwo(vFanins, Value1, Value2)
 
-			} else if Type == WLC_OBJ_ROTATE_R || Type == WLC_OBJ_ROTATE_L {
+			} else if Type == int32(WLC_OBJ_ROTATE_R) || Type == int32(WLC_OBJ_ROTATE_L) {
 				var Buffer string // was [100]byte in C
 
 				assert(Value1 >= 0, "Value1 >= 0")
@@ -711,18 +724,20 @@ func Smt_PrsBuildNode(pNtk *Wlc_Ntk_t, p *Smt_Prs_t, iNode int32, RangeOut int32
 			}
 			// find range
 			Range = 0
-			if Type >= WLC_OBJ_LOGIC_NOT && Type <= WLC_OBJ_REDUCT_XOR {
+			if Type >= int32(WLC_OBJ_LOGIC_NOT) && Type <= int32(WLC_OBJ_REDUCT_XOR) {
 				Range = 1
-			} else if Type == WLC_OBJ_BIT_SELECT {
+			} else if Type == int32(WLC_OBJ_BIT_SELECT) {
 				Range = Value1 - Value2 + 1
-			} else if Type == WLC_OBJ_BIT_CONCAT {
-				Vec_IntForEachEntry(vFanins, NameId, i)
-				Range += Wlc_ObjRange(Wlc_NtkObj(pNtk, NameId))
+			} else if Type == int32(WLC_OBJ_BIT_CONCAT) {
+				for i = 0; i < Vec_IntSize(vFanins); i++ {
+					NameId = Vec_IntEntry(vFanins, i)
+					Range += Wlc_ObjRange(Wlc_NtkObj(pNtk, NameId))
+				}
 
-			} else if Type == WLC_OBJ_MUX {
-				var pArray *int32 = Vec_IntArray(vFanins)
+			} else if Type == int32(WLC_OBJ_MUX) {
+				var pArray []int32 = Vec_IntArray(vFanins)
 				assert(Vec_IntSize(vFanins) == 3, "Vec_IntSize(vFanins) == 3")
-				ABC_SWAP(int, pArray[1], pArray[2])
+				pArray[1], pArray[2] = pArray[2], pArray[1]
 				NameId = Vec_IntEntry(vFanins, 1)
 				Range = Wlc_ObjRange(Wlc_NtkObj(pNtk, NameId))
 
@@ -767,7 +782,7 @@ func Smt_PrsBuild(p *Smt_Prs_t) *Wlc_Ntk_t {
 		vFans2 = Smt_VecEntryNode(p, vFans, i)
 		Fan = Vec_IntEntry(vFans2, 0)
 		assert((Smt_EntryIsName(Fan) != 0), "Smt_EntryIsName(Fan)")
-		if Abc_Lit2Var(Fan) >= SMT_PRS_END {
+		if Abc_Lit2Var(Fan) >= int32(SMT_PRS_END) {
 			fmt.Printf("Ignoring directive \"%s\".\n", Smt_EntryName(p, Fan))
 		}
 	}
@@ -811,7 +826,7 @@ func Smt_PrsBuild(p *Smt_Prs_t) *Wlc_Ntk_t {
 				Range = atoi(pRange)
 			}
 			// create node
-			iObj = Wlc_ObjAlloc(pNtk, WLC_OBJ_PI, 0, Range-1, 0)
+			iObj = Wlc_ObjAlloc(pNtk, int32(WLC_OBJ_PI), 0, Range-1, 0)
 			NameId = Abc_NamStrFindOrAdd(pNtk.pManName, pName, nil)
 			assert(iObj == NameId, "iObj == NameId")
 			// save values
@@ -871,7 +886,7 @@ func Smt_PrsBuild(p *Smt_Prs_t) *Wlc_Ntk_t {
 				Fan = Vec_IntEntry(vFans, 4)
 				Status = Smt_PrsBuildNode(pNtk, p, Fan, Range, pName)
 			}
-			if !Status {
+			if Status == 0 {
 				Wlc_NtkFree(pNtk)
 				pNtk = nil
 				goto finish
@@ -909,7 +924,7 @@ func Smt_PrsBuild(p *Smt_Prs_t) *Wlc_Ntk_t {
 				Fan3 = Vec_IntEntry(vFans3, 1)
 				assert(!(Smt_EntryIsName(Fan3) != 0), "!Smt_EntryIsName(Fan3)")
 				Status = Smt_PrsBuildNode(pNtk, p, Fan3, -1, pName)
-				if !Status {
+				if Status == 0 {
 					Wlc_NtkFree(pNtk)
 					pNtk = nil
 					goto finish
@@ -955,11 +970,11 @@ func Smt_PrsBuild(p *Smt_Prs_t) *Wlc_Ntk_t {
 	}
 	// build AND of asserts
 	if Vec_IntSize(vAsserts) == 1 {
-		iObj = Smt_PrsCreateNode(pNtk, WLC_OBJ_BUF, 0, 1, vAsserts, "miter_output")
+		iObj = Smt_PrsCreateNode(pNtk, int32(WLC_OBJ_BUF), 0, 1, vAsserts, "miter_output")
 	} else {
-		iObj = Smt_PrsCreateNode(pNtk, WLC_OBJ_BIT_CONCAT, 0, Vec_IntSize(vAsserts), vAsserts, "")
+		iObj = Smt_PrsCreateNode(pNtk, int32(WLC_OBJ_BIT_CONCAT), 0, Vec_IntSize(vAsserts), vAsserts, "")
 		Vec_IntFill(vAsserts, 1, iObj)
-		iObj = Smt_PrsCreateNode(pNtk, WLC_OBJ_REDUCT_AND, 0, 1, vAsserts, "miter_output")
+		iObj = Smt_PrsCreateNode(pNtk, int32(WLC_OBJ_REDUCT_AND), 0, 1, vAsserts, "miter_output")
 	}
 	Wlc_ObjSetCo(pNtk, Wlc_NtkObj(pNtk, iObj), 0)
 	// create nameIDs
@@ -1034,7 +1049,7 @@ func Smt_PrsBuild2_rec(pNtk *Wlc_Ntk_t, p *Smt_Prs_t, iNode int32, iObjPrev int3
 			if fFound != 0 {
 				pStr = pStr_glb
 			} else {
-				assert(Abc_NamStrFind(pNtk.pManName, pStr_loc), "Abc_NamStrFind( pNtk.pManName, pStr_loc )")
+				assert(Abc_NamStrFind(pNtk.pManName, pStr_loc) != 0, "Abc_NamStrFind( pNtk.pManName, pStr_loc )")
 				pStr = pStr_loc
 			}
 			// FIXME: delete memory of pStr
@@ -1042,9 +1057,9 @@ func Smt_PrsBuild2_rec(pNtk *Wlc_Ntk_t, p *Smt_Prs_t, iNode int32, iObjPrev int3
 			iObj = Abc_NamStrFindOrAdd(pNtk.pManName, pStr, &fFound)
 			assert((fFound != 0), "fFound")
 			// create buffer if the name of the fanin has different name
-			if pName && (int32(strings.Compare(Wlc_ObjName(pNtk, iObj), pName)) != 0) {
+			if pName != "" && (int32(strings.Compare(Wlc_ObjName(pNtk, iObj), pName)) != 0) {
 				Vec_IntFill(&p.vTempFans, 1, iObj)
-				iObj = Smt_PrsCreateNode(pNtk, WLC_OBJ_BUF, 0, Wlc_ObjRange(Wlc_NtkObj(pNtk, iObj)), &p.vTempFans, pName)
+				iObj = Smt_PrsCreateNode(pNtk, int32(WLC_OBJ_BUF), 0, Wlc_ObjRange(Wlc_NtkObj(pNtk, iObj)), &p.vTempFans, pName)
 			}
 			ABC_FREE(pStr_glb)
 			ABC_FREE(pStr_loc)
@@ -1060,7 +1075,7 @@ func Smt_PrsBuild2_rec(pNtk *Wlc_Ntk_t, p *Smt_Prs_t, iNode int32, iObjPrev int3
 		if Smt_EntryIsName(iRoot0) != 0 {
 			var pName2 string
 			var pStr0 string = Abc_NamStr(p.pStrs, Abc_Lit2Var(iRoot0))
-			if Abc_Lit2Var(iRoot0) == SMT_PRS_LET || Abc_Lit2Var(iRoot0) == SMT_PRS_DEFINE_FUN { //added define-fun is similar to let
+			if Abc_Lit2Var(iRoot0) == int32(SMT_PRS_LET) || Abc_Lit2Var(iRoot0) == int32(SMT_PRS_DEFINE_FUN) { //added define-fun is similar to let
 
 				// let ((s35550 (bvor s48 s35549)))
 				assert(Vec_IntSize(vRoots) == 3, "Vec_IntSize(vRoots) == 3")
@@ -1082,7 +1097,7 @@ func Smt_PrsBuild2_rec(pNtk *Wlc_Ntk_t, p *Smt_Prs_t, iNode int32, iObjPrev int3
 					assert((Smt_EntryIsName(Fan3) != 0), "Smt_EntryIsName(Fan3)")
 					pName2 = Smt_EntryName(p, Fan3)
 					// create a local name with suffix
-					if Abc_Lit2Var(iRoot0) == SMT_PRS_LET {
+					if Abc_Lit2Var(iRoot0) == int32(SMT_PRS_LET) {
 						temp = pName2 + suffix
 
 					} else {
@@ -1101,7 +1116,7 @@ func Smt_PrsBuild2_rec(pNtk *Wlc_Ntk_t, p *Smt_Prs_t, iNode int32, iObjPrev int3
 					}
 					// create buffer
 					//Vec_IntFill( &p->vTempFans, 1, iObj );
-					//Smt_PrsCreateNode( pNtk, WLC_OBJ_BUF, 0, Wlc_ObjRange(Wlc_NtkObj(pNtk, iObj)), &p->vTempFans, pName2 );
+					//Smt_PrsCreateNode( pNtk, int32(WLC_OBJ_BUF), 0, Wlc_ObjRange(Wlc_NtkObj(pNtk, iObj)), &p->vTempFans, pName2 );
 				}
 				// process the final part of let
 				iRoot2 = Vec_IntEntry(vRoots, 2)
@@ -1126,12 +1141,12 @@ func Smt_PrsBuild2_rec(pNtk *Wlc_Ntk_t, p *Smt_Prs_t, iNode int32, iObjPrev int3
 					}
 					// find out this branch
 					Vec_IntFill(&p.vTempFans, 1, iObjPrev)
-					if Type1 == WLC_OBJ_BIT_SIGNEXT || Type1 == WLC_OBJ_BIT_ZEROPAD || Type1 == WLC_OBJ_ROTATE_R || Type1 == WLC_OBJ_ROTATE_L {
+					if Type1 == int32(WLC_OBJ_BIT_SIGNEXT) || Type1 == int32(WLC_OBJ_BIT_ZEROPAD) || Type1 == int32(WLC_OBJ_ROTATE_R) || Type1 == int32(WLC_OBJ_ROTATE_L) {
 						var iRoot2 int32 = Vec_IntEntry(vRoots, 2)
 						var pStr2 string = Abc_NamStr(p.pStrs, Abc_Lit2Var(iRoot2))
 						var Num int32 = atoi(pStr2)
-						//fSigned = (Type1 == WLC_OBJ_BIT_SIGNEXT);
-						if Type1 == WLC_OBJ_ROTATE_R || Type1 == WLC_OBJ_ROTATE_L {
+						//fSigned = (Type1 == int32(WLC_OBJ_BIT_SIGNEXT));
+						if Type1 == int32(WLC_OBJ_ROTATE_R) || Type1 == int32(WLC_OBJ_ROTATE_L) {
 							var iConst int32 = Smt_PrsBuildConstant(pNtk, pStr2, -1, Smt_PrsGenName(p))
 							Vec_IntClear(&p.vTempFans)
 							Vec_IntPushTwo(&p.vTempFans, iObjPrev, iConst)
@@ -1141,7 +1156,7 @@ func Smt_PrsBuild2_rec(pNtk *Wlc_Ntk_t, p *Smt_Prs_t, iNode int32, iObjPrev int3
 							Range = Num + Wlc_ObjRange(Wlc_NtkObj(pNtk, iObjPrev))
 						}
 
-					} else if Type1 == WLC_OBJ_BIT_SELECT {
+					} else if Type1 == int32(WLC_OBJ_BIT_SELECT) {
 						var iRoot2 int32 = Vec_IntEntry(vRoots, 2)
 						var iRoot3 int32 = Vec_IntEntry(vRoots, 3)
 						var pStr2 string = Abc_NamStr(p.pStrs, Abc_Lit2Var(iRoot2))
@@ -1170,12 +1185,12 @@ func Smt_PrsBuild2_rec(pNtk *Wlc_Ntk_t, p *Smt_Prs_t, iNode int32, iObjPrev int3
 				if Type0 == 0 {
 					return 0
 				}
-				assert(Type0 != WLC_OBJ_BIT_SIGNEXT && Type0 != WLC_OBJ_BIT_ZEROPAD && Type0 != WLC_OBJ_BIT_SELECT && Type0 != WLC_OBJ_ROTATE_R && Type0 != WLC_OBJ_ROTATE_L, "Type0 != WLC_OBJ_BIT_SIGNEXT && Type0 != WLC_OBJ_BIT_ZEROPAD && Type0 != WLC_OBJ_BIT_SELECT && Type0 != WLC_OBJ_ROTATE_R && Type0 != WLC_OBJ_ROTATE_L")
+				assert(Type0 != int32(WLC_OBJ_BIT_SIGNEXT) && Type0 != int32(WLC_OBJ_BIT_ZEROPAD) && Type0 != int32(WLC_OBJ_BIT_SELECT) && Type0 != int32(WLC_OBJ_ROTATE_R) && Type0 != int32(WLC_OBJ_ROTATE_L), "Type0 != int32(WLC_OBJ_BIT_SIGNEXT) && Type0 != int32(WLC_OBJ_BIT_ZEROPAD) && Type0 != int32(WLC_OBJ_BIT_SELECT) && Type0 != int32(WLC_OBJ_ROTATE_R) && Type0 != int32(WLC_OBJ_ROTATE_L)")
 
 				// collect fanins
 				vFanins = Vec_IntAlloc(100)
-				Vec_IntForEachEntryStart(vRoots, Fan, i, 1)
-				{
+				for i = 1; i < Vec_IntSize(vRoots); i++ {
+					Fan = Vec_IntEntry(vRoots, i)
 					iObj = Smt_PrsBuild2_rec(pNtk, p, Fan, -1, "")
 					if iObj == 0 {
 						Vec_IntFree(vFanins)
@@ -1185,16 +1200,18 @@ func Smt_PrsBuild2_rec(pNtk *Wlc_Ntk_t, p *Smt_Prs_t, iNode int32, iObjPrev int3
 				}
 				// find range
 				Range = 0
-				if Type0 >= WLC_OBJ_LOGIC_NOT && Type0 <= WLC_OBJ_REDUCT_XOR {
+				if Type0 >= int32(WLC_OBJ_LOGIC_NOT) && Type0 <= int32(WLC_OBJ_REDUCT_XOR) {
 					Range = 1
-				} else if Type0 == WLC_OBJ_BIT_CONCAT {
-					Vec_IntForEachEntry(vFanins, Fan, i)
-					Range += Wlc_ObjRange(Wlc_NtkObj(pNtk, Fan))
+				} else if Type0 == int32(WLC_OBJ_BIT_CONCAT) {
+					for i = 0; i < Vec_IntSize(vFanins); i++ {
+						Fan = Vec_IntEntry(vFanins, i)
+						Range += Wlc_ObjRange(Wlc_NtkObj(pNtk, Fan))
+					}
 
-				} else if Type0 == WLC_OBJ_MUX {
-					var pArray *int32 = Vec_IntArray(vFanins)
+				} else if Type0 == int32(WLC_OBJ_MUX) {
+					var pArray []int32 = Vec_IntArray(vFanins)
 					assert(Vec_IntSize(vFanins) == 3, "Vec_IntSize(vFanins) == 3")
-					ABC_SWAP(int, pArray[1], pArray[2])
+					pArray[1], pArray[2] = pArray[2], pArray[1]
 					iObj = Vec_IntEntry(vFanins, 1)
 					Range = Wlc_ObjRange(Wlc_NtkObj(pNtk, iObj))
 
@@ -1243,7 +1260,7 @@ func Smt_PrsBuild2(p *Smt_Prs_t) *Wlc_Ntk_t {
 		Fan = Vec_IntEntry(vFans, 0)
 		assert((Smt_EntryIsName(Fan) != 0), "Smt_EntryIsName(Fan)")
 		// create variables
-		if Abc_Lit2Var(Fan) == SMT_PRS_DECLARE_FUN {
+		if Abc_Lit2Var(Fan) == int32(SMT_PRS_DECLARE_FUN) {
 			var pName_glb string
 			assert(Vec_IntSize(vFans) == 4, "Vec_IntSize(vFans) == 4")
 			assert((Smt_VecEntryIsType(vFans, 0, SMT_PRS_DECLARE_FUN) != 0), "Smt_VecEntryIsType(vFans, 0, SMT_PRS_DECLARE_FUN)")
@@ -1277,7 +1294,7 @@ func Smt_PrsBuild2(p *Smt_Prs_t) *Wlc_Ntk_t {
 				Range = atoi(pRange)
 			}
 			// create node
-			iObj = Wlc_ObjAlloc(pNtk, WLC_OBJ_PI, 0, Range-1, 0)
+			iObj = Wlc_ObjAlloc(pNtk, int32(WLC_OBJ_PI), 0, Range-1, 0)
 			NameId = Abc_NamStrFindOrAdd(pNtk.pManName, pName, nil)
 			assert(iObj == NameId, "iObj == NameId")
 			// save values
@@ -1289,7 +1306,7 @@ func Smt_PrsBuild2(p *Smt_Prs_t) *Wlc_Ntk_t {
 
 			// create constants
 			/*
-			   else if ( Abc_Lit2Var(Fan) == SMT_PRS_DEFINE_FUN ) // added: we parse DEFINE_FUN in LET
+			   else if ( Abc_Lit2Var(Fan) == int32(SMT_PRS_DEFINE_FUN) ) // added: we parse DEFINE_FUN in LET
 			   {
 			       assert( Vec_IntSize(vFans) == 5 );
 			       assert( Smt_VecEntryIsType(vFans, 0, SMT_PRS_DEFINE_FUN) );
@@ -1367,7 +1384,7 @@ func Smt_PrsBuild2(p *Smt_Prs_t) *Wlc_Ntk_t {
 			*/
 			// added: new way to parse define-fun
 			// create constants
-		} else if Abc_Lit2Var(Fan) == SMT_PRS_DEFINE_FUN {
+		} else if Abc_Lit2Var(Fan) == int32(SMT_PRS_DEFINE_FUN) {
 			var pName_glb string
 			// (define-fun def_16001 () Bool (or def_15999 def_16000))
 			// (define-fun def_15990 () (_ BitVec 24) (concat def_15988 def_15989))
@@ -1410,7 +1427,7 @@ func Smt_PrsBuild2(p *Smt_Prs_t) *Wlc_Ntk_t {
 			ABC_FREE(pName_glb)
 
 			// collect assertion outputs
-		} else if Abc_Lit2Var(Fan) == SMT_PRS_ASSERT {
+		} else if Abc_Lit2Var(Fan) == int32(SMT_PRS_ASSERT) {
 			//(assert ; no quantifiers
 			//   (let ((s2 (bvsge s0 s1)))
 			//   (not s2)))
@@ -1427,20 +1444,20 @@ func Smt_PrsBuild2(p *Smt_Prs_t) *Wlc_Ntk_t {
 			Vec_IntPush(vAsserts, iObj)
 
 			// issue warnings about unknown dirs
-		} else if Abc_Lit2Var(Fan) >= SMT_PRS_END {
+		} else if Abc_Lit2Var(Fan) >= int32(SMT_PRS_END) {
 			fmt.Printf("Ignoring directive \"%s\".\n", Smt_EntryName(p, Fan))
 		}
 	}
 	// build AND of asserts
 	if Vec_IntSize(vAsserts) == 1 {
-		iObj = Smt_PrsCreateNode(pNtk, WLC_OBJ_BUF, 0, 1, vAsserts, "miter")
+		iObj = Smt_PrsCreateNode(pNtk, int32(WLC_OBJ_BUF), 0, 1, vAsserts, "miter")
 		// added: 0 asserts
 	} else if Vec_IntSize(vAsserts) == 0 {
 		iObj = Smt_PrsBuildConstant(pNtk, "#b1", 1, "miter")
 	} else {
-		iObj = Smt_PrsCreateNode(pNtk, WLC_OBJ_BIT_CONCAT, 0, Vec_IntSize(vAsserts), vAsserts, "")
+		iObj = Smt_PrsCreateNode(pNtk, int32(WLC_OBJ_BIT_CONCAT), 0, Vec_IntSize(vAsserts), vAsserts, "")
 		Vec_IntFill(vAsserts, 1, iObj)
-		iObj = Smt_PrsCreateNode(pNtk, WLC_OBJ_REDUCT_AND, 0, 1, vAsserts, "miter")
+		iObj = Smt_PrsCreateNode(pNtk, int32(WLC_OBJ_REDUCT_AND), 0, 1, vAsserts, "miter")
 	}
 	Wlc_ObjSetCo(pNtk, Wlc_NtkObj(pNtk, iObj), 0)
 	// create nameIDs
@@ -1571,14 +1588,16 @@ func Smt_PrsFree(p *Smt_Prs_t) {
 		return
 	}
 	if p.pStrs != nil {
-		Abc_NamDeref(p.pStrs)
+		Abc_NamStop(p.pStrs)
 	}
 	Vec_IntErase(&p.vStack)
 	Vec_IntErase(&p.vTempFans)
 	Vec_WecErase(&p.vObjs)
 }
 
-func Smt_PrsIsSpace(c byte) int32 { return int32(c == ' ' || c == '\t' || c == '\r' || c == '\n') }
+func Smt_PrsIsSpace(c byte) int32 {
+	return boolToInt32(c == ' ' || c == '\t' || c == '\r' || c == '\n')
+}
 
 func Smt_PrsSkipSpaces(p *Smt_Prs_t) {
 	for p.pCur < p.pLimit && Smt_PrsIsSpace(p.pBuffer[p.pCur]) != 0 {
@@ -1587,7 +1606,7 @@ func Smt_PrsSkipSpaces(p *Smt_Prs_t) {
 }
 
 func Smt_PrsSkipNonSpaces(p *Smt_Prs_t) {
-	for p.pCur < p.pLimit && Smt_PrsIsSpace(p.pBuffer[p.pCur]) == 0 && p.pBuffer[p.pCur] != '(' && p.pBuffer[p.pCur] != ')' {
+	for p.pCur < p.pLimit && Smt_PrsIsSpace(p.pBuffer[p.pCur]) == 0 && p.pBuffer[p.pCur] != '(' && p.pBuffer[p.pCur] != ')' && p.pBuffer[p.pCur] != ';' && p.pBuffer[p.pCur] != '"' {
 		p.pCur++
 	}
 }
@@ -1666,7 +1685,7 @@ func Smt_PrsReadLines(p *Smt_Prs_t) {
 	}
 	assert(Vec_IntSize(&p.vStack) == 1, "parser stack has top level")
 	assert(Vec_WecSize(&p.vObjs) == Vec_WecCap(&p.vObjs), "object count matches capacity")
-	p.nDigits = Abc_Base16Log(Vec_WecSize(&p.vObjs))
+	p.nDigits = Abc_Base16Log(uint32(Vec_WecSize(&p.vObjs)))
 }
 
 func Smt_PrsPrintParser_rec(p *Smt_Prs_t, iObj int32, Depth int32) {
@@ -1676,7 +1695,7 @@ func Smt_PrsPrintParser_rec(p *Smt_Prs_t, iObj int32, Depth int32) {
 	vFans = Vec_WecEntry(&p.vObjs, iObj)
 	for i = 0; i < Vec_IntSize(vFans); i++ {
 		Fan = Vec_IntEntry(vFans, i)
-		if Abc_LitIsCompl(Fan) {
+		if Abc_LitIsCompl(Fan) != 0 {
 			fmt.Printf("%*s", Depth+2, "")
 			fmt.Printf("%s\n", Abc_NamStr(p.pStrs, Abc_Lit2Var(Fan)))
 
