@@ -13,7 +13,7 @@ func Csw_Sweep(graph *aig.Graph, nCutsMax, nLeafMax, verbose int32) *aig.Graph {
 		Csw_ObjPrepareCuts(p, ci, 1)
 		Csw_ObjAddRefs(p, ci, aig.Aig_ObjRefs(graph, inputs[i]))
 	}
-	for _, obj := range aig.Aig_ManDfsAll(graph) {
+	for _, obj := range graph.TopologicalObjects() {
 		node := graph.Node(obj)
 		switch node.Kind {
 		case aig.Buffer:
