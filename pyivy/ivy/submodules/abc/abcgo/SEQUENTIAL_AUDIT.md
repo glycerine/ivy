@@ -3713,3 +3713,44 @@ Full uncached race tests pass for GIA (72.616s) and its base/abci caller
 (28.860s), recorded in `/tmp/abcgo-dup-times-class-race.log`. The allocation
 benchmark was repeated on the final source in `/tmp/abcgo-dup-times-after.log`.
 The sequential audit remains active.
+
+PI/register permutation and gap review: read DupPerm, DupPermFlop,
+DupSpreadFlop, DupPermFlopGap, PermuteInputs and DupZero against giaDup.c.
+Their valid-input behavior matches original C. Added independent transition
+tables for all six three-input/register permutations, all ten placements of
+three registers among five slots, all gap/permutation combinations, every
+valid regular/extra/pseudo-PI group split, and zero duplication, across eight
+gate polarity patterns. Spread coverage includes arbitrary positive and
+negative non--1 slot values: those are placeholders, not register indices.
+Gap duplication instead uses an actual permutation. Inserted state bits are
+ignored by the original logic and receive zero next-state values.
+
+All 744 cases and 155,136 input/state rows match compiled original C on
+buffer-transparent ordinary-AND equivalents. The same 744 cases pass with
+DFS-ordered Go graphs, giving another 155,136 rows. Tests retain real XOR/MUX
+and physical buffers, check interface/gate/object counts, stable register
+pairing, and source identity. DupZero deliberately preserves only the source
+name, as C does, and omits all internal logic. Direct-wire PI outputs give
+additional observable interface-order coverage, avoiding graph symmetries.
+Empty permutations, gap-only state with zero original registers, invalid
+permutations/gaps/groups, and negative/out-of-range indices have separate cases.
+
+Bounds inspection found signed overflow in PermuteInputs' ppis+extra check.
+Two MaxInt32 counts wrap past the guard and enter enormous vector-building
+loops. A bounded child-process red test reproduces nontermination
+(`/tmp/abcgo-permutation-overflow-red.log`). Validate ppis against n first,
+then extra against n-ppis, preserving all valid group behavior while avoiding
+addition overflow. This repairs the Go argument guard; invalid arguments have
+no supported C baseline. The child-local memory limit/watchdog keeps the red
+regression bounded and does not affect the main test process.
+
+The initial focused run passes in 2.939s
+(`/tmp/abcgo-permutation-gap-focused.log`). Final expanded focused coverage,
+including the repair and signed Spread slots, passes in 2.961s
+(`/tmp/abcgo-permutation-gap-final-focused.log`). GIA vet passes
+(`/tmp/abcgo-permutation-gap-vet.log`); final full GIA race verification follows.
+No source algorithm substitution or useful additional compaction was needed.
+Input removal, onset/offset, randomized edge mutation and other GIA families
+remain open. Original package completion remains 2/131; the audit stays active.
+Full uncached GIA race tests pass in 85.047s
+(`/tmp/abcgo-permutation-gap-race.log`).

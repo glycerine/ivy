@@ -268,7 +268,7 @@ func Gia_ManDupPiPerm(src *Gia_Man_t) *Gia_Man_t {
 
 func Gia_ManPermuteInputs(src *Gia_Man_t, ppis, extra int32) *Gia_Man_t {
 	n := Gia_ManPiNum(src)
-	if ppis < 0 || extra < 0 || ppis+extra > n {
+	if ppis < 0 || extra < 0 || ppis > n || extra > n-ppis {
 		panic("gia: invalid input groups")
 	}
 	order := vec.Vec_IntAlloc(int(n))
