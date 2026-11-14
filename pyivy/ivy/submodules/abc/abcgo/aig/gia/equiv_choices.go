@@ -60,9 +60,7 @@ func Gia_ManEquivToChoices_rec(q, p *Gia_Man_t, obj *Gia_Obj_t) {
 	if Gia_ObjIsAnd(obj) == 0 {
 		panic("gia: choice object must be an AND")
 	}
-	Gia_ManEquivToChoices_rec(q, p, Gia_ObjFanin0(obj))
-	Gia_ManEquivToChoices_rec(q, p, Gia_ObjFanin1(obj))
-	Gia_ObjSetValue(obj, Gia_ManHashAnd(q, Gia_ObjFanin0Copy(obj), Gia_ObjFanin1Copy(obj)))
+	Gia_ObjSetValue(obj, giaCopyChoiceGate(q, p, obj, Gia_ManEquivToChoices_rec))
 	if repr == nil {
 		return
 	}
@@ -163,6 +161,7 @@ func Gia_ManEquivToChoices(p *Gia_Man_t, snapshots int32) *Gia_Man_t {
 	}
 	Gia_ManHashStop(q)
 	Gia_ManSetRegNum(q, p.nRegs)
+	giaGrowChoiceTables(q)
 	Gia_ManRemoveBadChoices(q)
 	q.PReprs = q.PReprs[:q.nObjs]
 	q.PNexts = q.PNexts[:q.nObjs]

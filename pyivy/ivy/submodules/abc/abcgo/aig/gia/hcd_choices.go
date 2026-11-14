@@ -16,9 +16,7 @@ func Hcd_ManEquivToChoices_rec(dst, src *Gia_Man_t, obj *Gia_Obj_t) {
 		if Gia_ObjIsAnd(obj) == 0 {
 			panic("gia: expected equivalent AND")
 		}
-		Hcd_ManEquivToChoices_rec(dst, src, Gia_ObjFanin0(obj))
-		Hcd_ManEquivToChoices_rec(dst, src, Gia_ObjFanin1(obj))
-		obj.Value = uint32(Gia_ManHashAnd(dst, Gia_ObjFanin0Copy(obj), Gia_ObjFanin1Copy(obj)))
+		obj.Value = uint32(giaCopyChoiceGate(dst, src, obj, Hcd_ManEquivToChoices_rec))
 		if obj.Value>>1 == repr.Value>>1 {
 			if obj.Value != repr.Value^phase {
 				panic("gia: inconsistent choice phase")
@@ -49,9 +47,7 @@ func Hcd_ManEquivToChoices_rec(dst, src *Gia_Man_t, obj *Gia_Obj_t) {
 	if Gia_ObjIsAnd(obj) == 0 {
 		panic("gia: expected AND in choice cone")
 	}
-	Hcd_ManEquivToChoices_rec(dst, src, Gia_ObjFanin0(obj))
-	Hcd_ManEquivToChoices_rec(dst, src, Gia_ObjFanin1(obj))
-	obj.Value = uint32(Gia_ManHashAnd(dst, Gia_ObjFanin0Copy(obj), Gia_ObjFanin1Copy(obj)))
+	obj.Value = uint32(giaCopyChoiceGate(dst, src, obj, Hcd_ManEquivToChoices_rec))
 }
 func Hcd_ManRemoveBadChoices(p *Gia_Man_t) {
 	Gia_ManRemoveBadChoices(p)
@@ -76,6 +72,9 @@ func Hcd_ManEquivToChoices(p *Gia_Man_t, snapshots int32) *Gia_Man_t {
 	for i := int32(0); i < Gia_ManRegNum(p); i++ {
 		obj := Gia_ManRo(p, i)
 		if repr := Gia_ObjReprObj(p, obj.id); repr != nil {
+			if Gia_ObjIsConst0(repr) == 0 && Gia_ObjIsRo(p, repr) == 0 {
+				panic("gia: invalid register representative")
+			}
 			obj.Value = repr.Value
 		}
 	}
@@ -90,6 +89,7 @@ func Hcd_ManEquivToChoices(p *Gia_Man_t, snapshots int32) *Gia_Man_t {
 	}
 	Gia_ManHashStop(dst)
 	Gia_ManSetRegNum(dst, Gia_ManRegNum(p))
+	giaGrowChoiceTables(dst)
 	dst.PReprs = dst.PReprs[:dst.nObjs]
 	dst.PNexts = dst.PNexts[:dst.nObjs]
 	Hcd_ManRemoveBadChoices(dst)

@@ -88,6 +88,7 @@ func TestNativeChoiceMiterAgainstCompiledABC(t *testing.T) {
 		Vec_PtrPush(networks, graph)
 	}
 	compareChoiceMiterOracle(t, hcdSource, Hcd_ManChoiceMiter(networks))
+	compareNativeEquivChoiceOracles(t, exe)
 }
 
 func compareChoiceMiterOracle(t *testing.T, source []byte, out *Gia_Man_t) {

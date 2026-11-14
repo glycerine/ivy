@@ -2736,3 +2736,44 @@ The full uncached GIA race suite passes in 17.088s and vet passes; logs are
 `/tmp/abcgo-gia-choice-checks-verified-vet.log`.
 Choice-class construction/transfer and the remaining HCD synthesis routines
 still need review; original package completion remains 2/131.
+
+Equivalence-to-choice copying had the same typed-gate defect as the miter
+copiers. A new red matrix showed real XOR outputs being computed as ANDs
+(`.../gia_xor_0`: assignment 1 gave false instead of true). Both the GIA and
+HCD converters accepted the real gate encoding but copied only its two data
+pins with HashAnd. They now share a logical-gate copy helper: recurse through
+the correct fanins, use the existing source HashXor/HashMux AND expansions,
+or forward a buffer input. Ordinary AND copying and each converter's distinct
+representative-conflict, dangling-node and snapshot policies remain intact.
+This is a typed-representation correction, not a new equivalence algorithm.
+
+Gate expansion can exceed the original object's count, so destination choice
+tables grow after each copied gate and after CO construction. New auxiliary
+nodes receive GIA_VOID representatives and zero next links; default zero
+representatives would falsely classify them as equivalent to constant zero.
+The small three-input MUX regression grows beyond its six source objects and
+also checks that conversion invents no equivalence classes. The direct matrix
+covers XOR/MUX/buffer input and output phases in 96 cases/768 assignment rows.
+Mixed real-XOR/expanded-XOR classes add eight cases/32 assignment rows and
+check surviving choice members against their representative phase.
+
+The ordinary-AND native oracle now also calls both actual C equivalence-to-
+choice converters on eight phase variants of independent associative AND
+implementations. It compares full node kinds/fanin literals, representatives,
+next links, counts and 128 assignment rows in total. All match. It reuses the
+existing native archive and freshly compiled HCD object; no source routines
+were replaced by test implementations. The native check passes in 1.826s.
+
+HCD also omitted C's assertion that a register representative must be constant
+zero or another RO. A new red test showed it silently accepting a PI instead;
+the precondition is now restored, matching GIA's existing guard. Four valid
+register cases (both converters, constant/RO representatives) check all 16
+four-frame PI traces, 256 frame evaluations including all RI values. Register
+count and the source's zero-initialized representative convention are retained.
+
+Red logs: `/tmp/abcgo-gia-equiv-gates-red.log` and
+`/tmp/abcgo-gia-hcd-register-repr-red.log`. Focused logical checks pass; the
+full uncached GIA race suite passes in 16.675s and vet passes. Final logs:
+`/tmp/abcgo-gia-equiv-copy-final-race.log` and
+`/tmp/abcgo-gia-equiv-copy-final-vet.log`. Remaining HCD synthesis and broader
+equivalence management still need review; GIA is not counted complete.
