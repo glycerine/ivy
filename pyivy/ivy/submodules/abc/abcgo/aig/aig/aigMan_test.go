@@ -1,6 +1,33 @@
 package aig
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+)
+
+func TestManagerStartAcceptsUnknownCapacityHints(t *testing.T) {
+	for _, hint := range []int32{0, -1, -1000, -1 << 31} {
+		t.Run(fmt.Sprint(hint), func(t *testing.T) {
+			defer func() {
+				if failure := recover(); failure != nil {
+					t.Errorf("source accepts nonpositive soft limits: %v", failure)
+				}
+			}()
+			g := Aig_ManStart(hint)
+			a, b := g.NewInput(), g.NewInput()
+			g.AddOutput(g.AND(a, b.Not()))
+			for mask := 0; mask < 4; mask++ {
+				out, err := g.Evaluate([]bool{mask&1 != 0, mask&2 != 0})
+				if err != nil || out[0] != (mask == 1) {
+					t.Fatalf("assignment %d: %v (%v)", mask, out, err)
+				}
+			}
+			if err := g.Check(); err != nil {
+				t.Fatal(err)
+			}
+		})
+	}
+}
 
 func TestManagerCleanupKeepsStableEdges(t *testing.T) {
 	p := Aig_ManStart(32)

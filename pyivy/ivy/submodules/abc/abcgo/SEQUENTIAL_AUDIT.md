@@ -1954,3 +1954,28 @@ aigTest.go matches the original two-output demonstration, using the current CO
 constructor in place of C's obsolete Po spelling. The remaining file/function
 inventory still needs completion before closing aig/aig. The sequential goal
 remains active, with 1/131 original packages completed.
+
+### Manager start and circular-order inventory checkpoint
+
+A red regression confirmed that Aig_ManStart rejected negative soft capacity
+hints, whereas aigMan.c treats every nonpositive hint as unknown. Removed the
+extra panic; Go keeps its growable slice policy. Zero, -1, -1000 and minimum
+int32 hints now create valid graphs and evaluate the same four assignments.
+
+Read every circular-order routine against aigOrder.c, including growth,
+sentinel links, insertion-before-next, current/next cursor removal and Advance's
+separate previous/next responsibilities. No production mismatch was found.
+Added a 1,000-step independent slice-model test checking the complete order,
+reciprocal links, counters and cursor transitions, plus insertion beyond object
+ID 4096 and restoration of the empty sentinel. Go safely resets counters when
+restarting order storage rather than retaining source Stop's stale counters.
+Focused manager/order race checks pass
+(`/tmp/abcgo-manager-order-review.log`). No production Go caller currently
+uses the order API outside this package's tests.
+
+The inventory also found that Aig_ManSupports still performs per-output DFS
+instead of C's reference-counted pooled support propagation, despite the pool
+helpers being present. That substitutes an algorithm and changes traversal
+scratch. Reopen that specific partition-support entry point next, with a red
+scratch regression and the original C propagation as the implementation guide.
+The full AIG package remains in progress; completed count is 1/131.

@@ -3,9 +3,6 @@ package aig
 import "fmt"
 
 func Aig_ManStart(capacity int32) *Graph {
-	if capacity < 0 {
-		panic("aig: negative capacity")
-	}
 	p := NewGraph()
 	if capacity > 1 {
 		nodes := make([]Node, 1, int(capacity))

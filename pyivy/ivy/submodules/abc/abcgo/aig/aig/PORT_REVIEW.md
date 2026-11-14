@@ -283,3 +283,10 @@ ExtractMiter now follows C's fresh-interface/copy/XOR/phase/CO sequence and keep
 copied cones allocated. Native truth/count/level/ownership comparison and 64
 small root-pair checks pass; the full AIG race suite passes in 61.561s. The
 nonpositive Start hint contract and final file/function inventory remain open.
+
+Start/order checkpoint: a red negative-capacity regression justified matching
+C's nonpositive soft-limit contract. Circular order matched source inspection;
+1,000 independent model steps and a high-ID growth test now cover its cursor,
+link and counter invariants. Focused race checks pass. The file inventory has
+reopened Aig_ManSupports: its per-output DFS is an algorithm substitution for
+C's pooled propagation and still needs repair before package completion.
