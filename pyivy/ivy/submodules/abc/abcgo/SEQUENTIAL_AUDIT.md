@@ -583,3 +583,27 @@ Ordinary DFS, preorder DFS, DfsAll and ABCI's recursive callers remain open;
 in particular DfsAll is used by several ports as a topological all-object
 iterator, while source DfsAll assumes no dangling gates. Those callers require
 source-specific review before changing that contract.
+
+### Ordinary and preorder DFS source contracts
+
+Restored ordinary DFS and preorder DFS, including their recursive APIs, from
+aigDfs.c. New red regressions showed incorrect alternative ordering, omitted
+constant, ignored caller seeds, missing traversal generations/marks and missing
+source completeness assertions. Ordinary DFS visits alternatives before fanins;
+preorder appends the current object first but deliberately uses ordinary
+postorder for its alternatives. Both wrappers now share source setup/count
+checks. Recursive calls collect terminals unless the caller premarked them.
+Aig_ManDfsNodes now reuses the restored ordinary helper instead of maintaining
+a duplicate walk. Existing array/choice/register-partition regressions pass.
+
+Reviewed ABCI's two direct recursive callers before updating them. Reachable
+roundtrips now call the source wrapper; all-node choice roundtrips explicitly
+initialize traversal seeds and enumerate live gates, including dangling gates
+as the source object loop does. A new red regression exposed missing traversal
+initialization; it checks repeated calls and deletion holes after the repair.
+This caller adjustment does not constitute a full ABCI audit.
+
+Full uncached AIG, AMAP and ABCI race suites pass. Ordinary/preorder DFS findings
+are closed for this checkpoint. DfsAll still needs a distinct all-live-object
+iterator for ports that use its current behavior; source DfsAll assumes no
+dangling gates. The rest of the AIG algorithm review remains incomplete.
