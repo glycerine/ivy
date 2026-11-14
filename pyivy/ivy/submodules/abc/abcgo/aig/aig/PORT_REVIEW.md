@@ -345,3 +345,15 @@ compatibility is explicit; sibling node IDs need not match C evaluation order.
 Remaining reconciliation includes the separate aigPartSat.go source contracts.
 Full uncached AIG race suite passes in 69.915s, and go vet passes. No new
 whole-repository test claim is made for this experiment-only production change.
+
+SAT partition label review found omitted terminal positions in levelized
+partitioning, wrong choice traversal order/missing traversal marks in DFS, and
+an unbounded manual traversal increment in PartSplitOne. Red regressions
+preceded all three repairs. Exact label maps match 512 native-C result rows;
+source choice-first DFS helpers and the shared bounded traversal helper replace
+the divergent paths. Typed buffers/dangling-graph handling remains explicit.
+The separate incremental SAT pipeline is still open: current per-node
+Tseitin/SATOKO is not the source mapped-CNF/BSAT workflow. Green Boolean tests
+must not be used to claim source algorithm fidelity or identical bounded solves.
+Full AIG/ABCI race suites pass in 70.761s/29.622s; final focused native-label,
+choice-traversal and rollover race checks pass in 2.187s.

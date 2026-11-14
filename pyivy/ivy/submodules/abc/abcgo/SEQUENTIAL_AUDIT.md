@@ -2166,3 +2166,48 @@ complete source-backed review of partition labels, PIO mappings, incremental
 CNF/solver feedback and conflict budgets. Earlier representative/FRA review
 covered aigPart.go, not this separate SAT driver. Do not mark the package
 complete based on those earlier checkpoints. Completed count remains 1/131.
+
+### SAT partition labels and traversal source checkpoint
+
+Read aigPartSat.c in full and began its source-backed reconciliation. Added a
+red minimal levelized-label regression: C's reverse level/ID iteration includes
+COs, CIs and the constant, so a two-input AND with one output has size-one labels
+[4,3,2,1,0]; Go produced all zeros by counting gates alone. The repaired helper
+counts every live object in that same order. Its sorted enumeration retains
+Go's existing ability to handle dangling gates above the output level range;
+C's Levelize asserts outside that domain. Deletion holes remain zero-labelled.
+
+A native fixture executes all four original label generators for 32 cleaned
+random AND graphs at four partition sizes (512 result rows). Exact object-ID
+maps now match, including holes, constant/PI outputs and empty gate sets.
+The fixture cleans dangling gates to meet C DFS completeness assertions.
+
+Two further red cases found generic DFS visited choice alternatives after
+ordinary fanins and left traversal state unchanged. Partition DFS now uses the
+original setup and the already source-reviewed recursive helpers. Preorder's
+choice alternatives still use postorder, as in C. The partition wrapper keeps
+Go's typed unary/buffer/dangling-node domain by omitting whole-manager count
+assertions; the source-valid AND graph order is unchanged. Choice-first order
+and traversal generation are explicitly checked in both modes.
+
+A separate red rollover regression found PartSplitOne incremented its traversal
+counter manually, escaping the bounded generation range used elsewhere. It now
+calls Aig_ManIncrementTravId, removing duplicated rollover code. The boundary
+map, copied-node marks and bounded generation are checked at the wrap threshold.
+Focused label/native/SAT/splitting tests pass. Full AIG/ABCI race checks pass
+in 70.761s/29.622s (`/tmp/abcgo-sat-partition-labels-final.log`). Final focused
+race tests pass in 2.187s (`/tmp/abcgo-sat-partition-focused-final.log`).
+The ABCI partition-SAT command is the production caller.
+
+The complete SAT driver review remains open. Source uses cut-mapped CNF
+(Cnf_Derive, polarity transformation, lifting) and BSAT, whereas the current
+Go file emits per-node Tseitin CNF into SATOKO. Its existing truth-table tests
+are correctness evidence for those formulas, not proof of a faithful port of
+that source pipeline or conflict-limited behavior. Source also has sparse-label,
+constant-output and cumulative-conflict-accounting defects that need explicit
+source observations before deciding which behavior to preserve or repair.
+Next reconcile boundary maps against native SplitOne, then restore the actual
+mapped-CNF/BSAT driver using the higher-layer pattern already applied to
+proof/aiginterp if package cycles require it. Do not call the current SAT path
+fully source-reviewed based on green functional tests. Completed count 1/131;
+aig/aig remains active.

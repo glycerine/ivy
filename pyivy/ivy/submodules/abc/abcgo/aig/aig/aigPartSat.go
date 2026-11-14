@@ -19,9 +19,11 @@ func Aig_ManPartitionLevelized(g *Graph, size int32) []int32 {
 		panic("aig: partition size must be positive")
 	}
 	result := make([]int32, len(g.nodes))
+	// C enumerates every live object in reverse level/ID order. Terminals
+	// consume positions too, even though only gates are split into partitions.
 	var ids []int
-	for id, n := range g.nodes {
-		if !g.deleted[id] && satPartitionNode(n.Kind) {
+	for id := range g.nodes {
+		if !g.deleted[id] {
 			ids = append(ids, id)
 		}
 	}
@@ -41,10 +43,27 @@ func Aig_ManPartitionDfs(g *Graph, size, preorder int32) []int32 {
 	if size <= 0 {
 		panic("aig: partition size must be positive")
 	}
-	var nodes []Edge
-	for _, edge := range g.dfs(g.outputs, false, preorder != 0, true) {
-		if satPartitionNode(g.node(edge).Kind) {
-			nodes = append(nodes, edge)
+	// Use the source traversal setup and recursive helpers: a choice is visited
+	// in postorder before ordinary fanins even during preorder partitioning.
+	// Unlike the strict whole-manager DFS entry points, permit dangling gates
+	// and unary buffers in this typed-graph extension.
+	Aig_ManIncrementTravId(g)
+	g.node(g.Const1()).TravID = g.travID
+	for _, e := range g.inputs {
+		g.node(e).TravID = g.travID
+	}
+	var visited, nodes []Edge
+	for _, e := range g.outputs {
+		root := Aig_Regular(g.outputDriver(e))
+		if preorder != 0 {
+			Aig_ManDfsPreorder_rec(g, root, &visited)
+		} else {
+			Aig_ManDfs_rec(g, root, &visited)
+		}
+	}
+	for _, e := range visited {
+		if satPartitionNode(g.node(e).Kind) {
+			nodes = append(nodes, e)
 		}
 	}
 	if preorder == 0 {
@@ -95,13 +114,7 @@ func Aig_ManPartSplitOne_rec(destination, source *Graph, node Edge, pio *[]int32
 	source.copies[node.NodeID()] = copy
 }
 func Aig_ManPartSplitOne(source *Graph, nodes []Edge) (*Graph, []int32) {
-	source.travID++
-	if source.travID <= 0 {
-		for i := range source.nodes {
-			source.nodes[i].TravID = 0
-		}
-		source.travID = 1
-	}
+	Aig_ManIncrementTravId(source)
 	source.copies = map[int]Edge{}
 	for _, node := range nodes {
 		if node.Complemented() || !satPartitionNode(source.node(node).Kind) {
