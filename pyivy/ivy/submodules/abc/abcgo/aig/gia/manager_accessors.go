@@ -58,6 +58,16 @@ func Gia_ManSimObjectData(p *Gia_Man_t, id int32) []uint64 {
 func Gia_ManSetSimData(p *Gia_Man_t, data *Vec_Wrd_t, words int32) {
 	p.vSims, p.nSimWords = data, words
 }
+
+// Gia_ManSetSimInputs transfers ownership of the input-pattern words used by
+// the pattern simulator.
+func Gia_ManSetSimInputs(p *Gia_Man_t, inputs *Vec_Wrd_t) {
+	if p == nil {
+		return
+	}
+	vec.Vec_WrdFreeP(&p.vSimsPi)
+	p.vSimsPi = inputs
+}
 func Gia_ManClearSimData(p *Gia_Man_t)                   { vec.Vec_WrdFreeP(&p.vSims); p.nSimWords = 0 }
 func Gia_ManSetNameSpec(p *Gia_Man_t, name, spec string) { p.pName, p.pSpec = name, spec }
 
