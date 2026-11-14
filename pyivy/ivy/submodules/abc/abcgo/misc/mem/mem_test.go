@@ -82,6 +82,27 @@ func TestHandleArenas(t *testing.T) {
 		t.Fatal("step recycle")
 	}
 }
+
+func TestStepEntryCountAccessors(t *testing.T) {
+	p := Mmr_StepStart(6, 3)
+	if Mmr_StepEntryNum(p) != 0 || Mmr_StepEntryNumMax(p) != 0 {
+		t.Fatal("new step manager counts are not zero")
+	}
+	a := Mmr_StepFetch(p, 2)
+	b := Mmr_StepFetch(p, 3)
+	if Mmr_StepEntryNum(p) != 2 || Mmr_StepEntryNumMax(p) != 2 {
+		t.Fatal("fetch counts do not match live and high-water entries")
+	}
+	Mmr_StepRecycle(p, a)
+	if Mmr_StepEntryNum(p) != 1 || Mmr_StepEntryNumMax(p) != 2 {
+		t.Fatal("recycle did not decrement only the live-entry count")
+	}
+	Mmr_StepRecycle(p, b)
+	if Mmr_StepEntryNum(p) != 0 || Mmr_StepEntryNumMax(p) != 2 {
+		t.Fatal("recycling all entries changed the high-water count")
+	}
+}
+
 func TestFlexHandlesAcrossPages(t *testing.T) {
 	p := Mmr_FlexStart(4)
 	h := Mmr_FlexFetch(p, 8)

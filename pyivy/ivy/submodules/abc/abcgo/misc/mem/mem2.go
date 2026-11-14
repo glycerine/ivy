@@ -150,6 +150,15 @@ func Mmr_StepRecycle(p *Mmr_Step_t, h int32) {
 	p.nEntries--
 	Mmr_FixedRecycle(&p.mems[n], h>>p.nBits)
 }
+
+// Mmr_StepEntryNum returns the current number of live entries, matching
+// Mmr_Step_t.nEntries.
+func Mmr_StepEntryNum(p *Mmr_Step_t) int32 { return p.nEntries }
+
+// Mmr_StepEntryNumMax returns the high-water live-entry count, matching
+// Mmr_Step_t.nEntriesMax. It is not the number of entries ever fetched.
+func Mmr_StepEntryNumMax(p *Mmr_Step_t) int32 { return p.nEntriesMax }
+
 func Mmr_StepMemory(p *Mmr_Step_t) int32 {
 	var n int32
 	for i := int32(1); i <= p.uMask; i++ {
