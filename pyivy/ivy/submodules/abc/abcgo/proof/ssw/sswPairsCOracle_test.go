@@ -29,13 +29,16 @@ func TestPairClassesCompiledCOracle(t *testing.T) {
 		args []string
 		want string
 	}{
+		// Expected assertion failures must not invoke the host crash reporter.
+		{[]string{"--dumpable"}, "0"},
 		{[]string{"1", "1"}, "1:1,1;"},
 		{[]string{"3", "5", "1", "5"}, "1:1,3,5;"},
 		{[]string{"1", "2", "3", "4", "2", "4"}, "1:1,2,3,4;"},
 		{[]string{"3", "5", "1", "2", "2", "5"}, "1:1,2,3,5;"},
 	}
 	for _, tc := range cases {
-		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+		// Leave scheduling headroom when the entire repository runs in parallel.
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		out, err := exec.CommandContext(ctx, binary, tc.args...).CombinedOutput()
 		cancel()
 		if err != nil || strings.TrimSpace(string(out)) != tc.want {
@@ -43,10 +46,10 @@ func TestPairClassesCompiledCOracle(t *testing.T) {
 		}
 	}
 	args := strings.Fields("6 8 3 8 5 8 2 6 1 5 1 5 3 8 2 7 4 9 1 5 1 8 2 6")
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	out, err := exec.CommandContext(ctx, binary, args...).CombinedOutput()
 	if err == nil || ctx.Err() != nil || !strings.Contains(string(out), "Vec_IntEntry") {
-		t.Fatalf("C invalid offset: %v %q", err, out)
+		t.Fatalf("C invalid offset: %v (context: %v) %q", err, ctx.Err(), out)
 	}
 }

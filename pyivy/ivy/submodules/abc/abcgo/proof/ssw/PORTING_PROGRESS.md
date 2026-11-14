@@ -63,6 +63,20 @@ ordered pair sequence that triggers a C vector bounds assertion after index
 reuse. Go panics on that sequence. If C assertions are disabled, out-of-bounds
 access has undefined behavior, which the Go port does not emulate.
 
+The pair-class C oracle now disables core dumps for its own process with
+`PR_SET_DUMPABLE` before invoking the source. Its intentional assertion could
+otherwise invoke a host crash reporter such as Apport and exceed the old
+one-second subprocess deadline even after printing the expected diagnostic.
+The fixture's dumpability is checked explicitly, and subprocesses have a
+ten-second deadline for scheduling headroom during repository-wide tests.
+Timeouts still fail the test; the invalid-pair case still requires both a
+nonzero exit and the original `Vec_IntEntry` assertion diagnostic. The Go
+pair-class algorithm and its source-compatible panic behavior are unchanged.
+Validation: the dumpability regression failed before the fix; 25 repeated
+oracle runs and the full SSW race suite pass afterward. A fresh repository
+`go test ./... -count=1 -timeout 180s` passes all 128 packages with tests
+(three additional packages have no tests).
+
 The recursive BMC-filter frame helper has direct source-derived tests for
 cached frames, complemented latch-input transitions, node construction across
 frames, and the missing-input assertion. These tests cover the helper itself;
