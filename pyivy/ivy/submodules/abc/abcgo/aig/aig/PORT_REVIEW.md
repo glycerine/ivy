@@ -141,6 +141,16 @@ level review found the source takes the MAXIMUM alternative depth, not the
 minimum: corrected the pass, preserved timing-box dependencies and added maximum
 choice-depth/box-boundary regressions.
 
+The sequential register-partition review restored Aig_ManDfsNodes' C contract:
+include reachable inputs, visit choice alternatives before ordinary fanins,
+skip returned COs/constants and leave current traversal marks on the cone.
+Register-partition creation now uses that helper instead of duplicating DFS,
+and writes reverse mappings in source DFS order followed by selected LOs.
+Aig_ManRegPartitionLinear is an unfinished diagnostic in upstream C; its Go
+entry point now traverses and returns nil instead of inventing partitions.
+Direct regressions failed before each behavioral repair; full AIG and SSW
+race suites pass. Other DFS entry points still need their own source review.
+
 The package-wide live-free gate lexes every Go file, including unfinished drafts.
 It ignores comments/literals and reports source locations of free/ABC_FREE calls.
 It failed at all four remaining cleanup expansions before nil-assignment fixes,

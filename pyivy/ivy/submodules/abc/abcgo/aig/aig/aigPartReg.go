@@ -214,39 +214,22 @@ func Aig_ManRegCreatePart(p *Graph, part []int32, countPis, countRegs *int32, ma
 		}
 		selected[int(index)] = true
 	}
-	seen, active := map[int]bool{}, map[int]bool{}
-	var visit func(Edge)
-	visit = func(edge Edge) {
-		id := edge.NodeID()
-		if !p.valid(edge) {
-			panic("aig: invalid partition edge")
-		}
-		if seen[id] {
-			return
-		}
-		if active[id] {
-			panic("aig: combinational cycle in partition")
-		}
-		active[id] = true
-		for _, fanin := range nodeFanins(*p.node(edge)) {
-			visit(fanin)
-		}
-		delete(active, id)
-		seen[id] = true
+	roots := make([]Edge, len(part))
+	for i, index := range part {
+		roots[i] = p.outputDriver(p.outputs[coOffset+int(index)])
 	}
+	cone := Aig_ManDfsNodes(p, roots, int32(len(roots)))
 	for _, index := range part {
-		visit(p.outputs[coOffset+int(index)])
+		Aig_ObjSetTravIdPrevious(p, p.inputs[ciOffset+int(index)])
 	}
 	result := NewGraph()
 	result.Name, result.Spec = p.Name, p.Spec
 	p.copies = map[int]Edge{0: result.Const1()}
-	Aig_ManIncrementTravId(p)
 	pure, external := int32(0), int32(0)
 	// External support is placed before selected register outputs. Fake outputs
 	// observe every selected LO, preserving it during sequential cleanup.
 	for i, input := range p.inputs {
-		reg := i - ciOffset
-		if !seen[input.NodeID()] || reg >= 0 && selected[reg] {
+		if p.node(input).TravID != p.travID {
 			continue
 		}
 		p.copies[input.NodeID()] = result.NewInput()
@@ -263,6 +246,12 @@ func Aig_ManRegCreatePart(p *Graph, part []int32, countPis, countRegs *int32, ma
 		p.copies[input.NodeID()] = mapped
 		p.node(input).TravID = p.travID
 		result.AddOutput(mapped)
+	}
+	for _, e := range cone {
+		switch p.node(e).Kind {
+		case And, ExclusiveOr, Buffer:
+			dupVisit(result, p, e, false, false, map[int]bool{})
+		}
 	}
 	for _, index := range part {
 		root := p.outputDriver(p.outputs[coOffset+int(index)])
@@ -281,14 +270,13 @@ func Aig_ManRegCreatePart(p *Graph, part []int32, countPis, countRegs *int32, ma
 			mapping[i] = -1
 		}
 		mapping[0] = 0
-		for source, mapped := range p.copies {
-			if mapped != InvalidEdge && mapped.NodeID() < len(mapping) {
-				if int32(source) > mapping[mapped.NodeID()] {
-					mapping[mapped.NodeID()] = int32(source)
-				}
-			}
+		for _, e := range cone {
+			mapping[p.copies[e.NodeID()].NodeID()] = int32(e.NodeID())
 		}
-		mapping[0] = 0
+		for _, index := range part {
+			e := p.inputs[ciOffset+int(index)]
+			mapping[p.copies[e.NodeID()].NodeID()] = int32(e.NodeID())
+		}
 		*mapBack = mapping
 	}
 	return result
@@ -355,23 +343,10 @@ func Aig_ManRegPartitionTraverse(p *Graph) []Edge {
 	}
 	return result
 }
+
+// Aig_ManRegPartitionLinear is unfinished in C: it traverses the registers,
+// ignores the requested size and returns NULL rather than forming partitions.
 func Aig_ManRegPartitionLinear(p *Graph, size int32) [][]int32 {
-	order := Aig_ManRegPartitionTraverse(p)
-	index := map[int]int32{}
-	for i, lo := range p.inputs[len(p.inputs)-int(p.nRegs):] {
-		index[lo.NodeID()] = int32(i)
-	}
-	seen := map[int32]bool{}
-	var domain []int32
-	for _, lo := range order {
-		i := index[lo.NodeID()]
-		domain = append(domain, i)
-		seen[i] = true
-	}
-	for i := int32(0); i < p.nRegs; i++ {
-		if !seen[i] {
-			domain = append(domain, i)
-		}
-	}
-	return partitionDomain(domain, size, 0)
+	Aig_ManRegPartitionTraverse(p)
+	return nil
 }

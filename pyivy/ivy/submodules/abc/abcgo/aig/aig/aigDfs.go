@@ -132,7 +132,31 @@ func Aig_ManDfsNodes(p *Graph, nodes []Edge, n int32) []Edge {
 	if n < 0 || int(n) > len(nodes) {
 		panic("aig: invalid DFS range")
 	}
-	return p.dfs(nodes[:n], true, false, false)
+	Aig_ManIncrementTravId(p)
+	p.node(p.Const1()).TravID = p.travID
+	var result []Edge
+	var visit func(Edge)
+	visit = func(e Edge) {
+		obj := p.node(e)
+		if obj.TravID == p.travID {
+			return
+		}
+		obj.TravID = p.travID
+		if alternative, ok := p.equivs[e.NodeID()]; ok && alternative != InvalidEdge {
+			visit(alternative)
+		}
+		for _, fanin := range nodeFanins(*obj) {
+			visit(fanin)
+		}
+		result = append(result, Aig_Regular(e))
+	}
+	for _, e := range nodes[:n] {
+		if p.node(e).Kind == Output {
+			e = p.outputDriver(e)
+		}
+		visit(e)
+	}
+	return result
 }
 func Aig_ManDfsChoices_rec(p *Graph, e Edge, nodes *[]Edge) {
 	*nodes = append(*nodes, p.dfs([]Edge{e}, true, false, true)...)

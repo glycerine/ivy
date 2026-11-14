@@ -84,22 +84,6 @@ func TestRegisterPartitionCreatePreservesNextStateCone(t *testing.T) {
 		}
 	}
 }
-func TestRegisterPartitionLinearCoverage(t *testing.T) {
-	p := registerPartitionFixture()
-	parts := Aig_ManRegPartitionLinear(p, 2)
-	seen := map[int32]bool{}
-	for _, part := range parts {
-		for _, reg := range part {
-			if seen[reg] {
-				t.Fatal("duplicate linear register")
-			}
-			seen[reg] = true
-		}
-	}
-	if len(seen) != 3 {
-		t.Fatal(parts)
-	}
-}
 func TestRegisterPartitionInvalidSize(t *testing.T) {
 	defer func() {
 		if recover() == nil {
