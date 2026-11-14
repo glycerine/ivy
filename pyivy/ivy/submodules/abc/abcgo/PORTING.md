@@ -24,6 +24,16 @@ covering the verification algorithms, SAT solving, graph representations and I/O
 Current worker reports already confirm that many generated packages do not parse.
 The complete port is therefore still active and incomplete.
 
+Full package sweep on 2026-11-13 (`GOCACHE=/tmp/abcgo-gocache go test -json ./...`):
+119 packages passed, 9 failed, and 3 had no test files (131 packages total).
+The failing packages were `base/abci`, `base/acb`, `base/bac`, `base/cba`,
+`base/wlc`, `base/wln`, `bdd/cudd`, `opt/fret`, and `opt/lpk`. `opt/fret` and
+`opt/lpk` were blocked transitively by raw C syntax in `bdd/cudd`; the other
+failures had local or dependency parse/type errors. `base/ver` passed an uncached
+package test and its box/gate parsing work was committed as `b5c0bf2f8`.
+This is a dated checkpoint, not the current status after ongoing edits; rerun
+the full sweep before reporting a new package count.
+
 ## Verified integration checkpoint
 
 Main-thread package tests pass for misc/mem, misc/avl and misc/hash.
