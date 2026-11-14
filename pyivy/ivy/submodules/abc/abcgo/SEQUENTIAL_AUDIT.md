@@ -3520,3 +3520,45 @@ package completion remains 2/131 and the sequential audit remains active.
 Full uncached GIA race tests pass in 52.317s
 (`/tmp/abcgo-append-review-race.log`), and GIA vet passes
 (`/tmp/abcgo-append-review-vet.log`).
+
+Append/shared-input composition review: compared Gia_ManDup2,
+Gia_ManDupAppend and Gia_ManDupAppendShare with giaDup.c. Added independent
+truth tables and original-C comparisons across eight polarity choices in
+either graph, zero/one/two registers, and three composition modes. All 576
+cases and 25,088 input rows match. Tests preserve the precise source contracts:
+Dup2/shared append concatenate raw COs and retain the first/destination register
+count; ordinary append makes all terminals combinational. They do not silently
+reinterpret these routines as the independent-state merge of AppendNew.
+Coverage checks destination identity, hash lifetime, already-active/new hash
+tables and exact object preservation in unhashed append. An additional 24
+cases (640 rows) interleave CIs, logic and COs to catch ordinal/object-ID mixups.
+
+The first native fixture used physical buffer nodes; source HashStart rejects
+such nodes and also requires structurally unique ANDs. The corrected C baseline
+uses hashed ordinary-AND expansions and transparent buffers, while the Go
+fixtures retain real XOR/MUX/buffer nodes. Initial corrected focused tests
+pass in 1.985s (`/tmp/abcgo-append-shared-focused.log`); expanded focused race
+coverage passes in 4.176s (`/tmp/abcgo-append-shared-race.log`). No production
+change was needed for those distinct-source comparisons.
+
+Inspection then identified a shared-self-append termination defect: the CO
+loop repeatedly reads the growing source count when destination is source.
+A bounded child-process red regression reproduces nontermination without
+hanging the main test runner (`/tmp/abcgo-shared-self-append-red.log`). Snapshot
+the original CO count before appending. This follows the existing composition
+algorithm and adds no source clone. The C routine's source-object iteration
+also assumes distinct arguments; native comparisons intentionally avoid that
+upstream alias defect. Added self-append checks for a direct complemented wire
+and 24 typed combinational/sequential graphs (224 input/state rows), preserving
+raw CO ordering and register counts. A child-local GC memory limit and watchdog
+bound future regressions; the final watchdog allows two seconds of scheduling
+headroom. Full focused tests pass in 1.974s before that headroom adjustment
+(`/tmp/abcgo-append-shared-final-focused.log`). Final race/vet results follow.
+
+Property/constraint composition and other GIA families remain open. Original
+package completion is still 2/131; the sequential audit remains active.
+Final full uncached GIA race tests pass in 70.657s
+(`/tmp/abcgo-append-shared-final-race.log`); GIA vet passes
+(`/tmp/abcgo-append-shared-final-vet.log`). Raw-MUX arm-phase handling during
+unhashed append with an active table remains an inspection follow-up, along
+with property/constraint composition; this checkpoint does not close GIA.

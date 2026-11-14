@@ -109,7 +109,8 @@ func Gia_ManDupAppendShare(dst, src *Gia_Man_t) {
 		Gia_ManCi(src, i).Value = uint32(Gia_ObjToLit(dst, Gia_ManCi(dst, i)))
 	}
 	giaComposeNodes(dst, src, true)
-	for i := int32(0); i < Gia_ManCoNum(src); i++ {
+	nOutputs := Gia_ManCoNum(src) // Appending may also extend src when dst == src.
+	for i := int32(0); i < nOutputs; i++ {
 		giaDupMappedOutput(dst, src, Gia_ManCo(src, i))
 	}
 }
