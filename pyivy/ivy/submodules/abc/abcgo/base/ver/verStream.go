@@ -133,9 +133,12 @@ func (p *Ver_Stream_t_) skip(chars string, skipMembers bool) {
 		fmt.Printf("Ver_StreamSkipToSymbol() failed to parse the file %q.\n", p.pFileName)
 	}
 }
-func Ver_StreamGetWord(p *Ver_Stream_t, stops string) string {
+
+// Ver_StreamGetWord returns nil on a stopped stream or an overlong word.
+// A pointer to an empty string is a valid word at a delimiter or at EOF.
+func Ver_StreamGetWord(p *Ver_Stream_t, stops string) *string {
 	if p.fStop {
-		return ""
+		return nil
 	}
 	if p.cur > p.stop {
 		Ver_StreamReload(p)
@@ -145,13 +148,14 @@ func Ver_StreamGetWord(p *Ver_Stream_t, stops string) string {
 		c := p.buffer[pos]
 		if strings.ContainsRune(stops, rune(c)) {
 			p.cur = pos
-			return string(p.chars[:p.nChars])
+			word := string(p.chars[:p.nChars])
+			return &word
 		}
 		p.chars[p.nChars] = c
 		p.nChars++
 		if p.nChars == VER_WORD_SIZE {
 			fmt.Println("Ver_StreamGetWord(): The buffer size is exceeded.")
-			return ""
+			return nil
 		}
 		if c == '\n' {
 			p.nLineCounter++
@@ -159,10 +163,11 @@ func Ver_StreamGetWord(p *Ver_Stream_t, stops string) string {
 	}
 	if p.stop == p.end {
 		p.fStop = true
-		return string(p.chars[:p.nChars])
+		word := string(p.chars[:p.nChars])
+		return &word
 	}
 	fmt.Printf("Ver_StreamGetWord() failed to parse the file %q.\n", p.pFileName)
-	return ""
+	return nil
 }
 func Ver_StreamMove(p *Ver_Stream_t) {
 	remaining := string(p.buffer[p.cur+1 : p.end])

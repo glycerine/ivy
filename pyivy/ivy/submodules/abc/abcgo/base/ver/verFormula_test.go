@@ -56,3 +56,25 @@ func TestFormulaReductionTruth(t *testing.T) {
 		}
 	}
 }
+
+// ABC records names as length/name pairs and reuses the original index when
+// an escaped identifier is referenced again.
+func TestFormulaEscapedIdentifierReuse(t *testing.T) {
+	man := hop.Hop_ManStart()
+	defer hop.Hop_ManStop(man)
+	names := vec.Vec_PtrAlloc(0)
+	funcs := vec.Vec_PtrAlloc(0)
+	ops := vec.Vec_IntAlloc(0)
+	errbuf := make([]byte, 2000)
+	root := Ver_FormulaParser(`\x.y  ^ \x.y `, man, names, funcs, ops, errbuf)
+	if root == nil {
+		t.Fatalf("parse failed: %s", errbuf)
+	}
+	if vec.Vec_PtrSize(names) != 2 || vec.Vec_PtrEntry(names, 0) != 3 || vec.Vec_PtrEntry(names, 1) != "x.y" {
+		t.Fatalf("names %v", vec.Vec_PtrArray(names))
+	}
+	truth := hop.Hop_ManConvertAigToTruth(man, root, 1, nil, 0)
+	if truth[0] != 0 {
+		t.Fatalf("x xor x truth %#x", truth[0])
+	}
+}

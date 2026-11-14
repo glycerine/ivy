@@ -1,6 +1,13 @@
 package ver
 
-import "os"
+import (
+	"os"
+
+	"github.com/glycerine/abcgo/base/abc"
+	"github.com/glycerine/abcgo/misc/extra"
+	"github.com/glycerine/abcgo/misc/st"
+	"github.com/glycerine/abcgo/misc/vec"
+)
 
 /**CFile****************************************************************
 
@@ -13,7 +20,7 @@ import "os"
   Synopsis    [External declarations.]
 
   Author      [Alan Mishchenko]
-  
+
   Affiliation [UC Berkeley]
 
   Date        [Ver. 1.0. Started - August 19, 2006.]
@@ -21,10 +28,6 @@ import "os"
   Revision    [$Id: ver.h,v 1.00 2006/08/19 00:00:00 alanmi Exp $]
 
 ***********************************************************************/
-
-
-
-
 
 ////////////////////////////////////////////////////////////////////////
 ///                          INCLUDES                                ///
@@ -37,43 +40,42 @@ import "os"
 ///                         PARAMETERS                               ///
 ////////////////////////////////////////////////////////////////////////
 
-
-
 //ABC_NAMESPACE_HEADER_START
- 
 
 ////////////////////////////////////////////////////////////////////////
 ///                         BASIC TYPES                              ///
 ////////////////////////////////////////////////////////////////////////
 
-type Ver_Man_t =       Ver_Man_t_;
-type Ver_Stream_t =    Ver_Stream_t_;
+type Ver_Man_t = Ver_Man_t_
+type Ver_Stream_t = Ver_Stream_t_
 
 type Ver_Man_t_ struct {
-    // internal parameters
-    fMapped             int32;       // mapped verilog
-    fUseMemMan             int32;    // allocate memory manager in the networks
-    fCheck             int32;        // checks network for currectness
-    // input file stream
-    pFileName           string;
-    pReader   *Ver_Stream_t;
-    fNameLast             int32;
-    pProgress    *ProgressBar;
-    // current design
-    pDesign      *Abc_Des_t;
-    tName2Suffix       *st__table;
-    // error handling
-    Output           *os.File;
-    fTopLevel             int32;
-    fError             int32;
-    sError [2000]byte;
-    // intermediate structures
-    vNames      *Vec_Ptr_t;  
-    vStackFn      *Vec_Ptr_t;
-    vStackOp      *Vec_Int_t;
-    vPerm      *Vec_Int_t;
+	// internal parameters
+	fMapped    int32 // mapped verilog
+	fUseMemMan int32 // allocate memory manager in the networks
+	fCheck     int32 // checks network for currectness
+	// input file stream
+	pFileName string
+	pReader   *Ver_Stream_t
+	fNameLast int32
+	pProgress *extra.ProgressBar
+	// current design
+	pDesign      *abc.Design
+	pGateLib     *abc.Design
+	pGenlib      any
+	tName2Suffix *st.Table
+	// error handling
+	Output    *os.File
+	fTopLevel int32
+	fError    int32
+	sError    [2000]byte
+	// intermediate structures
+	vNames   *vec.Vec_Ptr_t
+	vStackFn *vec.Vec_Ptr_t
+	vStackOp *vec.Vec_Int_t
+	vPerm    *vec.Vec_Int_t
+	boxBundles map[*abc.Object]*vec.Vec_Ptr_t
 }
-
 
 ////////////////////////////////////////////////////////////////////////
 ///                      MACRO DEFINITIONS                           ///
@@ -115,7 +117,6 @@ type Ver_Man_t_ struct {
 
 // extern int            Ver_StreamGetLineNumber( Ver_Stream_t * p );
 
-
 // extern int            Ver_StreamIsOkey( Ver_Stream_t * p );
 
 // extern char           Ver_StreamScanChar( Ver_Stream_t * p );
@@ -128,16 +129,8 @@ type Ver_Man_t_ struct {
 
 // extern char *         Ver_StreamGetWord( Ver_Stream_t * p, char * pCharsToStop );
 
-
-
-
 //ABC_NAMESPACE_HEADER_END
-
-
-
-
 
 ////////////////////////////////////////////////////////////////////////
 ///                       END OF FILE                                ///
 ////////////////////////////////////////////////////////////////////////
-

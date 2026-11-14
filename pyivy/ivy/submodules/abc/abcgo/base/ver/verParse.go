@@ -35,13 +35,13 @@ func Ver_ParseSkipComments(pMan *Ver_Man_t) int32 {
 	return 0
 }
 
-func Ver_ParseGetName(pMan *Ver_Man_t) string {
+func Ver_ParseGetName(pMan *Ver_Man_t) *string {
 	p := pMan.pReader
 	pMan.fNameLast = 0
 	if Ver_StreamIsOkey(p) == 0 || Ver_ParseSkipComments(pMan) == 0 {
-		return ""
+		return nil
 	}
-	var word string
+	var word *string
 	if Ver_StreamScanChar(p) == '\\' {
 		pMan.fNameLast = 1
 		Ver_StreamPopChar(p)
@@ -50,7 +50,7 @@ func Ver_ParseGetName(pMan *Ver_Man_t) string {
 		if Ver_StreamScanChar(p) == '[' {
 			for {
 				c := Ver_StreamPopChar(p)
-				word += string(c)
+				*word += string(c)
 				if c == ']' {
 					break
 				}
@@ -60,7 +60,7 @@ func Ver_ParseGetName(pMan *Ver_Man_t) string {
 		word = Ver_StreamGetWord(p, " \t\n\r(),;")
 	}
 	if Ver_StreamIsOkey(p) != 0 && Ver_ParseSkipComments(pMan) == 0 {
-		return ""
+		return nil
 	}
 	return word
 }

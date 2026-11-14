@@ -17,13 +17,13 @@ func TestParseCommentsAndEscapedNames(t *testing.T) {
 	}
 	defer Ver_StreamFree(p)
 	manager := &Ver_Man_t{pReader: p}
-	if got := Ver_ParseGetName(manager); got != "bus[7]" || manager.fNameLast != 1 {
-		t.Fatalf("escaped=%q last=%d", got, manager.fNameLast)
+	if got := Ver_ParseGetName(manager); got == nil || *got != "bus[7]" || manager.fNameLast != 1 {
+		t.Fatalf("escaped=%v last=%d", got, manager.fNameLast)
 	}
 	if Ver_StreamPopChar(p) != ',' {
 		t.Fatal("expected comma")
 	}
-	if got := Ver_ParseGetName(manager); got != "next" || manager.fNameLast != 0 {
-		t.Fatalf("ordinary=%q last=%d", got, manager.fNameLast)
+	if got := Ver_ParseGetName(manager); got == nil || *got != "next" || manager.fNameLast != 0 {
+		t.Fatalf("ordinary=%v last=%d", got, manager.fNameLast)
 	}
 }
