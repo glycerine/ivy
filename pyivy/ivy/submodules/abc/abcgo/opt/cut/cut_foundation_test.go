@@ -104,6 +104,22 @@ func TestCutManagerRejectsInvalidAllocation(t *testing.T) {
 	Cut_ManStart(nil)
 }
 
+func TestNetworkInventoryUsesTemporaryFanoutAdjustment(t *testing.T) {
+	network := cutTestNetwork{
+		{ID: 0, Input: true},
+		{ID: 1, Input: true},
+		{ID: 2, Fanins: [2]int32{0, 1}},
+		{ID: 3, Fanins: [2]int32{0, 1}},
+		{ID: 4, Output: true, Fanins: [2]int32{2, 0}},
+		{ID: 5, Output: true, Fanins: [2]int32{3, 0}},
+	}
+	network[0].FanoutAdjust = -1
+	_, counts := networkInventory(network)
+	if counts[0] != 1 {
+		t.Fatalf("adjusted fanout count = %d, want 1", counts[0])
+	}
+}
+
 func TestNetworkOracleTraversalMatchesRecordedEnumeration(t *testing.T) {
 	network := cutTestNetwork{
 		{ID: 0, Input: true},

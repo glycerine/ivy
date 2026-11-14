@@ -6,6 +6,7 @@ import "fmt"
 // or opaque C object pointers are needed by cut enumeration.
 type NetworkNode struct {
 	ID                                  int32
+	FanoutAdjust                        int32
 	Fanins                              [2]int32
 	Compl                               [2]bool
 	Latches                             [2]int32
@@ -14,6 +15,7 @@ type NetworkNode struct {
 	Choices                             []int32
 }
 type Network interface{ CutNodes() []NetworkNode }
+type NodeAttributeProvider interface{ CutNodeAttributes() []int32 }
 
 func networkInventory(network Network) (map[int32]NetworkNode, []int32) {
 	nodes := network.CutNodes()
@@ -46,9 +48,18 @@ func networkInventory(network Network) (map[int32]NetworkNode, []int32) {
 			counts[fanin]++
 		}
 	}
+	for _, node := range nodes {
+		counts[node.ID] += node.FanoutAdjust
+		if counts[node.ID] < 0 {
+			panic("cut: negative adjusted fanout count")
+		}
+	}
 	return lookup, counts
 }
 func Abc_NtkGetNodeAttributes(network Network) []int32 {
+	if provider, ok := network.(NodeAttributeProvider); ok {
+		return append([]int32(nil), provider.CutNodeAttributes()...)
+	}
 	nodes, counts := networkInventory(network)
 	attrs := make([]int32, len(counts))
 	for id, node := range nodes {
@@ -136,7 +147,10 @@ func Abc_NtkCuts(network Network, params *Cut_Params_t) *Cut_Man_t {
 	return p
 }
 func Abc_NtkCutsOracle(network Network, p *Cut_Oracle_t) {
-	nodes, _ := networkInventory(network)
+	nodes, fanoutCounts := networkInventory(network)
+	if Cut_OracleReadDrop(p) != 0 {
+		Cut_OracleSetFanoutCounts(p, fanoutCounts)
+	}
 	done := map[int32]bool{}
 	active := map[int32]bool{}
 	var visit func(int32)
@@ -167,8 +181,17 @@ func Abc_NtkCutsOracle(network Network, p *Cut_Oracle_t) {
 				visit(node.Fanins[1])
 			}
 			Cut_OracleComputeCuts(p, id, node.Fanins[0], node.Fanins[1], cutBool(node.Compl[0]), cutBool(node.Compl[1]))
+			if Cut_OracleReadDrop(p) != 0 {
+				Cut_OracleTryDroppingCuts(p, node.Fanins[0])
+				if !node.Buffer {
+					Cut_OracleTryDroppingCuts(p, node.Fanins[1])
+				}
+			}
 		} else if node.Output {
 			visit(node.Fanins[0])
+			if Cut_OracleReadDrop(p) != 0 {
+				Cut_OracleTryDroppingCuts(p, node.Fanins[0])
+			}
 		}
 		done[id] = true
 		active[id] = false
