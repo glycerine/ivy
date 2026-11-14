@@ -72,6 +72,37 @@ func TestDominatorOrderedUnion(t *testing.T) {
 		t.Fatal("invalid order accepted")
 	}
 }
+
+// Signatures are only a lower bound on union size. IDs that collide modulo
+// 63, or exceed the width of C's int, must not change exact set membership.
+func TestDominatorSignatureCollisionsPreserveExactMerges(t *testing.T) {
+	ids := []int{0, 31, 32, 62, 63, 126}
+	set := func(mask int) []int {
+		var out []int
+		for i, id := range ids {
+			if mask>>i&1 != 0 {
+				out = append(out, id)
+			}
+		}
+		return out
+	}
+	for a := 1; a < 1<<len(ids); a++ {
+		for b := 1; b < 1<<len(ids); b++ {
+			want := set(a | b)
+			for limit := 1; limit <= len(ids); limit++ {
+				s := &Aig_Sto_t{Limit: limit}
+				got := Aig_ObjDomMerge(s, []*Aig_Dom_t{NewDominator(set(a)...)}, []*Aig_Dom_t{NewDominator(set(b)...)})
+				if len(want) > limit {
+					if len(got) != 0 {
+						t.Fatalf("accepted oversized union: %v", got)
+					}
+				} else if len(got) != 1 || !reflect.DeepEqual(got[0].Nodes, want) {
+					t.Fatalf("a=%d b=%d limit=%d: %v, want %v", a, b, limit, got, want)
+				}
+			}
+		}
+	}
+}
 func TestDominatorFilterAndCopy(t *testing.T) {
 	s := &Aig_Sto_t{Limit: 4}
 	first := newAigDom([]int{10})
@@ -144,14 +175,24 @@ func TestDominatorBruteForcePaths(t *testing.T) {
 		g.AddOutput(edges[len(edges)-2])
 		Aig_ManCleanup(g)
 		s := Aig_ManComputeDomsNodes(domTestFanouts(g), 2)
-		active := make([]bool, len(s.fanins))
+		fanins, fanouts := make([][]int, len(g.nodes)), make([][]int, len(g.nodes))
+		for id, n := range g.nodes {
+			if g.deleted[id] {
+				continue
+			}
+			for _, e := range nodeFanins(n) {
+				fanins[id] = append(fanins[id], e.NodeID())
+				fanouts[e.NodeID()] = append(fanouts[e.NodeID()], id)
+			}
+		}
+		active := make([]bool, len(g.nodes))
 		var activate func(int)
 		activate = func(id int) {
 			if active[id] {
 				return
 			}
 			active[id] = true
-			for _, f := range s.fanins[id] {
+			for _, f := range fanins[id] {
 				activate(f)
 			}
 		}
@@ -177,7 +218,7 @@ func TestDominatorBruteForcePaths(t *testing.T) {
 				}
 				seen[n] = true
 				candidates = append(candidates, n)
-				for _, f := range s.fanouts[n] {
+				for _, f := range fanouts[n] {
 					reach(f)
 				}
 			}
@@ -196,7 +237,7 @@ func TestDominatorBruteForcePaths(t *testing.T) {
 					if value, ok := memo[n]; ok {
 						return value
 					}
-					for _, f := range s.fanouts[n] {
+					for _, f := range fanouts[n] {
 						if active[f] && !walk(f) {
 							memo[n] = false
 							return false

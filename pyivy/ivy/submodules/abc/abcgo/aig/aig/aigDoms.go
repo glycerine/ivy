@@ -35,8 +35,7 @@ type Aig_Dom_t struct {
 
 // Aig_Sto_t owns dominator sets. Diagnostics use graph work marks,
 // traversal IDs and temporary reference updates, as in the source.
-// Direct output edges receive synthetic boundary IDs starting at NodeCount;
-// explicit Output nodes use their existing IDs. OutputIDs exposes this mapping.
+// Outputs must be explicit CO objects, as in C. OutputIDs exposes their IDs.
 // The graph must not be structurally edited while this store is in use.
 type Aig_Sto_t struct {
 	Limit                                                  int
@@ -45,51 +44,24 @@ type Aig_Sto_t struct {
 	OutputIDs                                              []int
 	Times                                                  []int
 	DomNodes, Total, FilteredSupersets, FilteredCandidates int
-	fanins, fanouts                                        [][]int
 }
 
 func Aig_ManDomStart(g *Graph, limit int) *Aig_Sto_t {
 	if g == nil || limit <= 0 {
 		panic("aig: dominator limit must be positive")
 	}
-	count := len(g.nodes) + len(g.outputs)
+	count := len(g.nodes)
 	s := &Aig_Sto_t{
 		Limit: limit, Graph: g,
 		Dominators: make([][]*Aig_Dom_t, count),
 		Times:      make([]int, count),
-		fanins:     make([][]int, count), fanouts: make([][]int, count),
 	}
-	for id, n := range g.nodes {
-		if g.deleted[id] {
-			continue
+	for _, e := range g.outputs {
+		if !g.valid(e) || e.Complemented() || g.node(e).Kind != Output {
+			panic("aig: dominators require explicit CO output objects")
 		}
-		switch n.Kind {
-		case And, ExclusiveOr:
-			s.fanins[id] = []int{n.Fanins[0].NodeID(), n.Fanins[1].NodeID()}
-		case Buffer, Output:
-			s.fanins[id] = []int{n.Fanins[0].NodeID()}
-		}
+		s.OutputIDs = append(s.OutputIDs, e.NodeID())
 	}
-	for i, e := range g.outputs {
-		if !g.valid(e) {
-			panic("aig: invalid dominator output")
-		}
-		id := e.NodeID()
-		if g.nodes[id].Kind != Output {
-			id = len(g.nodes) + i
-			s.fanins[id] = []int{e.NodeID()}
-		}
-		s.OutputIDs = append(s.OutputIDs, id)
-	}
-	for id, inputs := range s.fanins {
-		for _, f := range inputs {
-			if f < 0 || f >= len(g.nodes) || g.deleted[f] {
-				panic("aig: invalid dominator fanin")
-			}
-			s.fanouts[f] = append(s.fanouts[f], id)
-		}
-	}
-
 	return s
 }
 func Aig_ManDomStop(s *Aig_Sto_t) {
@@ -396,12 +368,12 @@ func Aig_ObjDomVolume_rec(s *Aig_Sto_t, id int) int {
 		return 0
 	}
 	g.nodes[id].TravID = g.travID
-	if g.nodes[id].MarkA || len(s.fanins[id]) == 0 {
+	if g.nodes[id].MarkA || len(nodeFanins(g.nodes[id])) == 0 {
 		return 1
 	}
 	n := 0
-	for _, f := range s.fanins[id] {
-		n += Aig_ObjDomVolume_rec(s, f)
+	for _, f := range nodeFanins(g.nodes[id]) {
+		n += Aig_ObjDomVolume_rec(s, f.NodeID())
 	}
 	return n
 }
@@ -429,8 +401,8 @@ func domDeref(s *Aig_Sto_t, id int, barriers map[int]bool) int {
 		return 0
 	}
 	n := 0
-	for _, f := range s.fanins[id] {
-		n += domDeref(s, f, barriers)
+	for _, f := range nodeFanins(s.Graph.nodes[id]) {
+		n += domDeref(s, f.NodeID(), barriers)
 	}
 	return n
 }
@@ -451,8 +423,8 @@ func domRef(s *Aig_Sto_t, id int, barriers map[int]bool) int {
 		return 0
 	}
 	n := 0
-	for _, f := range s.fanins[id] {
-		n += domRef(s, f, barriers)
+	for _, f := range nodeFanins(s.Graph.nodes[id]) {
+		n += domRef(s, f.NodeID(), barriers)
 	}
 	return n
 }
@@ -464,7 +436,7 @@ func Aig_ObjDomDomed(s *Aig_Sto_t, d *Aig_Dom_t) int {
 	}
 	barriers := map[int]bool{}
 	for _, id := range d.Nodes {
-		if id >= len(s.fanins) {
+		if id >= len(s.Graph.nodes) {
 			panic("aig: invalid dominated-cone id")
 		}
 		if id < len(s.Graph.nodes) && s.Graph.nodes[id].Kind == Input {
@@ -474,13 +446,13 @@ func Aig_ObjDomDomed(s *Aig_Sto_t, d *Aig_Dom_t) int {
 	}
 	before, after := 0, 0
 	for _, id := range d.Nodes {
-		for _, f := range s.fanins[id] {
-			before += domDeref(s, f, barriers)
+		for _, f := range nodeFanins(s.Graph.nodes[id]) {
+			before += domDeref(s, f.NodeID(), barriers)
 		}
 	}
 	for _, id := range d.Nodes {
-		for _, f := range s.fanins[id] {
-			after += domRef(s, f, barriers)
+		for _, f := range nodeFanins(s.Graph.nodes[id]) {
+			after += domRef(s, f.NodeID(), barriers)
 		}
 	}
 	if before != after {
@@ -499,7 +471,9 @@ func Aig_ObjDomCollectLos(s *Aig_Sto_t) []int {
 	}
 	return ids
 }
-func domOutputDriver(s *Aig_Sto_t, index int) int { id := s.OutputIDs[index]; return s.fanins[id][0] }
+func domOutputDriver(s *Aig_Sto_t, index int) int {
+	return s.Graph.nodes[s.OutputIDs[index]].Fanins[0].NodeID()
+}
 func Aig_ObjPoLogicDeref(s *Aig_Sto_t) {
 	g := s.Graph
 	for i := 0; i < len(g.outputs)-domRegisterCount(g); i++ {
@@ -547,8 +521,9 @@ func Aig_ManComputeDomsTest(g *Graph) {
 }
 func Aig_ObjDomCount(s *Aig_Sto_t, e Edge) map[int]int {
 	result := map[int]int{}
-	for _, fan := range s.fanouts[e.NodeID()] {
-		doms := s.Dominators[fan]
+	g := s.Graph
+	for i, fan := 0, Aig_ObjFanout0Int(g, int32(e.NodeID())); i < g.node(e).Refs; i, fan = i+1, Aig_ObjFanoutNext(g, fan) {
+		doms := s.Dominators[fan>>1]
 		for i, d := range doms {
 			if i > 0 && len(d.Nodes) > 0 {
 				s.Times[d.Nodes[0]]++

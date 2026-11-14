@@ -195,3 +195,17 @@ func TestDominatorRefRejectsNegativeSourceCounter(t *testing.T) {
 	}()
 	Aig_ObjDomRef_rec(s, a.NodeID())
 }
+
+func TestDominatorRequiresSourceOutputObjects(t *testing.T) {
+	g := NewGraph()
+	a := g.NewInput()
+	// Legacy internal raw-output representation has no CO boundary object.
+	g.outputs = []Edge{a}
+	g.recountReferences()
+	defer func() {
+		if recover() == nil {
+			t.Error("accepted raw edge where source analysis requires a CO object")
+		}
+	}()
+	Aig_ManDomStart(g, 2)
+}
