@@ -79,8 +79,20 @@ func Aig_ManCleanMarkB(p *Graph) {
 }
 func Aig_ManCleanMarkAB(p *Graph) { Aig_ManCleanMarkA(p); Aig_ManCleanMarkB(p) }
 func Aig_ManCleanData(p *Graph)   { clear(p.objectData); clear(p.copies) }
-func Aig_ManCleanNext(p *Graph)   { clear(p.next) }
+func Aig_ManCleanNext(p *Graph) {
+	clear(p.next)
+	// C's pNext storage also holds CioId. Preserve that union's cleanup
+	// effect while keeping Go's independent structural hash tables intact.
+	for id := range p.nodes {
+		if !p.deleted[id] {
+			p.nodes[id].CioID = 0
+		}
+	}
+}
 func Aig_ObjCleanData_rec(p *Graph, root Edge) {
+	if !p.valid(root) || root.Complemented() || p.node(root).Kind == Output {
+		panic("aig: recursive data cleanup requires a regular non-CO object")
+	}
 	for _, e := range p.dfs([]Edge{root}, false, false, false) {
 		delete(p.objectData, e.NodeID())
 		delete(p.copies, e.NodeID())

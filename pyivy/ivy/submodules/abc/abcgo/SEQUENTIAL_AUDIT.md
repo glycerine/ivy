@@ -2421,3 +2421,46 @@ CleanData's root assertions and typed traversal extension against the source;
 source ternary Xsim is nCuts, not pData, so CleanData must not erase Xsim.
 The latter is a confirmed storage distinction, not a bug to invent or fix.
 AIG remains in progress, original completion count 1/131.
+
+### Final utility scratch contracts and module gate
+
+The uncached sequential module suite completed with 130 packages passing and
+three without test files, exit zero (`/tmp/abcgo-final-aig-integration.log`).
+That run covers the constructor/header and demo repairs, not the subsequent
+small scratch-cleanup patch described here.
+
+Two new red regressions closed the identified utility gaps. CleanNext now
+clears live objects' CioID fields as well as typed next bindings, matching C's
+pNext/CioId union. Go's separate structural hash tables remain valid; no
+algorithm needs to emulate C's incidental destruction of hash-chain storage.
+Recursive CleanData now rejects complemented roots and physical CO roots
+before changing payloads, as C asserts. Its existing typed XOR/buffer cone
+extension remains explicit; ordinary AND/CI cleanup order/scope is unchanged.
+Neither entry point has a production Go caller outside its own declaration.
+
+A compiled utility fixture compares every object's CioID, iData-equivalent
+payload and ternary nCuts/Xsim state after next cleanup, global data cleanup
+and regular AND-cone data cleanup, including an unrelated cone. All states
+match; global data cleanup preserves Xsim. Direct tests additionally preserve
+unrelated Go payload/copy bindings and exercise rejection without mutation.
+Focused race checks pass in 2.019s (`/tmp/abcgo-utility-cleanup-final.log`).
+
+Read the remaining utility bodies against aigUtil.c: MUX/XOR recognition,
+buffer phase resolution, all-zero phase simulation, RNG reset/64-bit ordering,
+random-info filling, ordered list union/intersection and witness-session
+allocation/simulation/lookup/stop. Existing exhaustive MUX phase/order tests,
+RNG golden vectors, list cases, sequential witness checks, invalid-session
+checks and writer/state tests cover those contracts. RandomTest2's one-line
+file is the actual source behavior: its disabled LFSR assigns one and exits
+its do/while immediately. RandomTest1 retains the Go formatter's defined
+unsigned decimal output for uint32 draws; C's signed %d with an unsigned
+vararg is not a portable signed-stream specification. No new random algorithm
+or replacement witness algorithm was added. The timestamp/file writer and
+external-viewer portability changes remain those already documented above.
+
+The 52-file inventory is now reconciled. Final full AIG race validation and
+vet of AIG plus the two migrated driver packages are in progress before the
+status row is advanced. Known upstream unfinished/broken experimental
+entry points remain explicit source failures, as recorded in the interpolation
+and register-partition checkpoints; review completion must not imply those
+upstream routines suddenly have invented successful implementations.
