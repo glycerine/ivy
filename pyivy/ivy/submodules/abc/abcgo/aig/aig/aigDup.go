@@ -447,6 +447,8 @@ func Aig_ManDupLevelized(src *Graph) *Graph {
 }
 func Aig_ManDupWithoutPos(src *Graph) *Graph {
 	dst := dupStart(src)
+	// No original POs remain, so their assertion roles cannot be retained.
+	dst.Assertions = 0
 	dst.nRegs = 0
 	dst.nConstrs = 0
 	for id, n := range src.nodes {
@@ -537,6 +539,7 @@ func Aig_ManCreateMiter(a, b *Graph, operation int32) *Graph {
 }
 func dupSequentialOutputs(src *Graph, outputs []Edge, addRegs int32) *Graph {
 	dst := dupStart(src)
+	dst.Assertions = 0 // Source creates ordinary POs for the selected outputs.
 	dst.nTruePis = src.nTruePis
 	dst.nTruePos = int32(len(outputs))
 	if addRegs == 0 {
@@ -558,6 +561,7 @@ func Aig_ManDupOrpos(src *Graph, addRegs int32) *Graph {
 		return nil
 	}
 	dst := dupStart(src)
+	dst.Assertions = 0 // The combined PO is not an original assertion output.
 	dst.nTruePis = src.nTruePis
 	dst.nTruePos = 1
 	if addRegs == 0 {

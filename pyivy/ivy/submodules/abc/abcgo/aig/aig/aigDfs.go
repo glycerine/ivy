@@ -6,9 +6,35 @@ import (
 )
 
 func Aig_ManVerifyTopoOrder(p *Graph) int32 {
-	if p.Check() != nil {
-		return 0
+	Aig_ManSetCioIds(p)
+	Aig_ManIncrementTravId(p)
+	for _, e := range p.LiveEdges() {
+		n := p.node(e)
+		for _, fanin := range nodeFanins(*n) {
+			if p.node(fanin).TravID != p.travID {
+				fmt.Printf("Node %d has fanin %d that is not in a topological order.\n", e.NodeID(), fanin.NodeID())
+				return 0
+			}
+		}
+		if n.Kind == Input {
+			if manager, ok := p.Timing.(*tim.Tim_Man_t); ok && manager != nil {
+				box := tim.Tim_ManBoxForCi(manager, int(n.CioID))
+				if box >= 0 {
+					first, count := tim.Tim_ManBoxInputFirst(manager, box), tim.Tim_ManBoxInputNum(manager, box)
+					for k := 0; k < count; k++ {
+						co := p.outputs[first+k]
+						assert(tim.Tim_ManBoxForCo(manager, int(p.node(co).CioID)) == box, "box input belongs to box")
+						if p.node(co).TravID != p.travID {
+							fmt.Printf("Box %d has input %d that is not in a topological order.\n", box, co.NodeID())
+							return 0
+						}
+					}
+				}
+			}
+		}
+		n.TravID = p.travID
 	}
+	Aig_ManCleanCioIds(p)
 	return 1
 }
 func (p *Graph) dfs(roots []Edge, nodesOnly, preorder, choices bool) []Edge {

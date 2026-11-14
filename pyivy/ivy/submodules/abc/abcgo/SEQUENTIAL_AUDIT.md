@@ -215,3 +215,25 @@ Full AIG race tests pass. The directly affected interpolation caller also passes
 `go test -p 1 ./proof/int -count=1`. The full `aig/aig`
 audit remains in progress; this checkpoint is not a claim that every
 specialized duplication/metadata combination has been exhaustively tested.
+
+### aig/aig: output selection and traversal checks
+
+Source inspection of output-free, flop-only, selected-output, OR-output and
+unsolved-output copies found stale assertion counts copied by `dupStart`.
+These C constructors start fresh managers and do not copy nAsserts. Eight
+new regression cases failed before the fix. The three shared Go construction
+paths now clear Assertions; tests check interface counts, register counts,
+all input assignments, and unchanged source metadata.
+
+Reviewed `aigDfs.go` and the small representative/choice/data/phase accessors.
+Compared ordering, composition and supergate operations against `aigDfs.c`.
+Found `Aig_ManVerifyTopoOrder` delegated to Graph.Check, which accepts DAGs
+whose object IDs are not topological and does not check timing-box ordering.
+Added red tests for a forward buffer reference and an early box-output CI;
+both were incorrectly accepted. Restored C's object-order traversal, terminal
+index setup, timing-box checks, traversal marks and successful index cleanup.
+The implementation retains Graph.Check as the separate graph-validity API.
+
+Full AIG race tests pass with both repairs. Sequential downstream checks for
+SSW, FRA and ABCI also pass for the output-selection changes. The
+remaining algorithm families still require review; aig/aig is not complete.
