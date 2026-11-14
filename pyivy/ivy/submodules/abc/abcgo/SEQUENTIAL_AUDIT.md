@@ -3232,7 +3232,8 @@ constant, an unused CI, and all 16 covariance cells computed independently from
 reachable raw moments. Unreachable dimensions remain sentinel-valued until
 centering converts them to zero. A compiled original giaEmbed.c fixture checks
 single and paired BFS seeds for every vertex in simple/clustered ordinary AND
-graphs with and without register feedback: reached counts, level counts,+farthest-node tie selection and every distance match source. The native
+graphs with and without register feedback: reached counts, level counts,
+farthest-node tie selection and every distance match source. The native
 comparison intentionally does not assert the original faulty covariance.
 
 Focused tests pass in 1.873s (`/tmp/abcgo-embedding-distances-focused.log`).
@@ -3240,3 +3241,33 @@ Full uncached GIA race tests pass in 33.447s
 (`/tmp/abcgo-embedding-distances-race.log`), and GIA vet passes. Repeated-seed
 and zero-norm numerical boundaries are still being examined. Remaining GIA
 families and the full sequential goal remain open; original completion is 2/131.
+
+Embedding boundary follow-up: red tests found that repeated BFS seeds counted
+four unique reachable vertices as six, and normalizing a zero vector produced
+NaNs that propagated through a zero covariance eigensolver and projection
+(`/tmp/abcgo-embedding-boundaries-red.log`). Deduplicate the initial frontier
+using the existing traversal marks. Preserve zero vectors instead of dividing
+by a zero norm. The BFS, power iteration and projection algorithms remain the
+source algorithms; no replacement eigensolver or layout policy was introduced.
+
+Additional red tests exposed float32 square underflow, subnormal precision loss
+and overflow in normalization: very small vectors remained unnormalized or
+changed direction scale, while large finite vectors collapsed to zero. Logs
+are `/tmp/abcgo-embedding-normalization-range-red.log` and
+`/tmp/abcgo-embedding-normalization-accumulation-red.log`. Keep the source's
+float32 products for ordinary vectors; recompute their norm with float64
+products when any nonzero term underflows/is subnormal or the sum overflows.
+This also handles accumulated subnormal squares whose total is normal-sized.
+Only an exactly zero recomputed norm returns without normalization. The
+original C shares these duplicate-seed and numerical defects; Go intentionally
+corrects those boundaries while retaining ordinary-case arithmetic.
+
+Coverage includes repeated multisource seeds, zero-vector suffix preservation,
+zero covariance through finite eigenvectors/projection/placement, six finite
+magnitude scales from the smallest float32 to the largest, 2048 accumulated
+subnormal squares, and a real constant-output graph through the complete
+rank-deficient embedding pipeline. Unique-seed compiled-C BFS comparisons and
+existing nonzero matrix tests still pass. Full uncached GIA race tests pass in
+33.439s (`/tmp/abcgo-embedding-boundaries-race.log`) and GIA vet passes
+(`/tmp/abcgo-embedding-boundaries-vet.log`). Remaining solver/placement
+algorithms and other GIA families still need audit; completion remains 2/131.

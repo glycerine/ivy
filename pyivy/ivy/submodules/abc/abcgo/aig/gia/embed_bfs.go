@@ -54,6 +54,9 @@ func Emb_ManFindDistances(p *Emb_Man_t, starts *Vec_Int_t, distances []Emb_Dat_t
 	current, next := vec.Vec_IntAlloc(vec.Vec_IntSize(starts)), vec.Vec_IntAlloc(16)
 	for _, id := range vec.Vec_IntArray(starts) {
 		o := Emb_ManObj(p, id)
+		if Emb_ObjIsTravIdCurrent(p, o) != 0 {
+			continue
+		}
 		Emb_ObjSetTravIdCurrent(p, o)
 		vec.Vec_IntPush(current, id)
 	}
