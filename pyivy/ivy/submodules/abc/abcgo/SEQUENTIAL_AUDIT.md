@@ -3388,3 +3388,37 @@ in `/tmp/abcgo-embedding-eigen-final-focused.log`. GIA vet passes
 (`/tmp/abcgo-embedding-eigen-vet.log`). Remaining embedding integration/output
 helpers and other GIA algorithm families still need review. Original package
 completion remains 2/131 and the sequential audit remains active.
+
+Embedding integration/output review: the final placement transfer assumed
+GIA object IDs matched embedding vertex order. C explicitly assumes normalized
+ordering there, but the Go graph API supports interleaved terminals and logic.
+An end-to-end red regression shows transferred coordinates disagreeing with
+the plotted source edges for interleaved graphs
+(`/tmp/abcgo-embedding-transfer-red.log`). Transfer now follows each GIA
+object's Value handle to its embedding vertex and placement index. Normalized
+graphs retain the identity mapping; no placement algorithm was changed.
+
+The regression compares two independent outputs of the complete driver:
+plotted geometry versus metadata attached to original GIA object IDs. Eight
+normalized/interleaved, simple/clustered and unrefined/refined cases check all
+logical arcs and register feedback. Tests write plots into temporary working
+directories without invoking gnuplot. Focused coverage passes
+(`/tmp/abcgo-embedding-transfer-focused.log`).
+
+Compactness: plot preparation now uses a single contiguous bitmap with row
+views, matching C's storage arrangement, instead of 500 independently allocated
+rows. The raster/run algorithm and sentinel column are unchanged; existing
+boundary/duplicate-pixel plot-run coverage passes. A 100-call benchmark with
+256 vertices reduces allocations from 503 to 4 per call. Both versions use
+about 364 KB and take about 0.48 ms per call on this host; this is a GC-object
+reduction, not a claimed byte or whole-program runtime reduction. Logs are
+`/tmp/abcgo-embedding-plot-before.log` and
+`/tmp/abcgo-embedding-plot-after.log`.
+
+The remaining embedding output/diagnostic routines were compared with
+giaEmbed.c; their source reporting and file-format conventions are retained.
+Full uncached GIA race tests pass in 43.683s
+(`/tmp/abcgo-embedding-output-race.log`), and GIA vet passes
+(`/tmp/abcgo-embedding-output-vet.log`). Other GIA algorithm families still
+need review. Original package completion remains 2/131; the full sequential
+audit stays active.

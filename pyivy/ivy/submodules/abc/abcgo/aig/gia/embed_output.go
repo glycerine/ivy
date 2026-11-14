@@ -150,17 +150,15 @@ func Emb_ManPrintSolutions(p *Emb_Man_t, nSols int32) {
 }
 func Emb_ManDumpGnuplotPrepare(p *Emb_Man_t) *Vec_Int_t {
 	const rows, cols = 500, 700
-	bitmap := make([][]bool, rows)
-	for i := range bitmap {
-		bitmap[i] = make([]bool, cols+1)
-	}
+	bitmap := make([]bool, rows*(cols+1))
 	for _, o := range p.objects {
 		x := int(p.pPlacement[2*o.Value]) * cols / (1 << 16)
 		y := int(p.pPlacement[2*o.Value+1]) * rows / (1 << 16)
-		bitmap[y][x] = true
+		bitmap[y*(cols+1)+x] = true
 	}
 	lines := vec.Vec_IntAlloc(1000)
-	for y, row := range bitmap {
+	for y := 0; y < rows; y++ {
+		row := bitmap[y*(cols+1) : (y+1)*(cols+1)]
 		in := false
 		for x, on := range row {
 			if on && !in {
@@ -259,9 +257,12 @@ func Gia_ManSolveProblem(g *Gia_Man_t, pars *Emb_Par_t) {
 	}
 	if g.nObjs == p.nObjs && p.pPlacement != nil {
 		g.pPlacement = make([]Gia_Plc_t, p.nObjs)
-		for i := range g.pPlacement {
-			g.pPlacement[i].xCoord = p.pPlacement[2*i]
-			g.pPlacement[i].yCoord = p.pPlacement[2*i+1]
+		// GIA may interleave terminals and logic. Value maps each original
+		// object to its embedding vertex; placement uses that vertex's index.
+		for i, obj := range g.pObjs {
+			position := Emb_ManObj(p, Gia_ObjValue(obj)).Value
+			g.pPlacement[i].xCoord = p.pPlacement[2*position]
+			g.pPlacement[i].yCoord = p.pPlacement[2*position+1]
 		}
 	}
 	Emb_ManStop(p)
