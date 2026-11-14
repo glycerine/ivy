@@ -518,39 +518,19 @@ func Aig_ManRecycleMemory(p *Graph, e Edge) {
 // #define Aig_ManForEachExorReverse( p, pObj, i )                                 \
 //     Vec_PtrForEachEntryReverse( Aig_Obj_t *, p->vObjs, pObj, i ) if ( (pObj) == NULL || !Aig_ObjIsExor(pObj) ) {} else
 
-// these two procedures are only here for the use inside the iterator
+// Circular fanout accessors for the reference-count-bounded iterator. Traverse
+// exactly nRefs entries; a nonempty list returns to its first handle.
 func Aig_ObjFanout0Int(p *Graph, id int32) int32 {
-	for i, n := range p.nodes {
-		if p.deleted[i] {
-			continue
-		}
-		for pin, x := range nodeFanins(n) {
-			if x.NodeID() == int(id) {
-				return int32(i*2 + pin)
-			}
-		}
+	if p.fanouts == nil || id < 0 || int(id) >= len(p.fanouts.data)/5 {
+		panic("aig: fanout object outside allocated index")
 	}
-	return 0
+	return p.fanouts.data[5*id]
 }
 func Aig_ObjFanoutNext(p *Graph, fan int32) int32 {
-	if fan <= 0 {
-		return 0
+	if p.fanouts == nil || fan < 0 || int(fan>>1) >= len(p.fanouts.data)/5 {
+		panic("aig: fanout handle outside allocated index")
 	}
-	node, slot := fan/2, fan&1
-	if int(node) >= len(p.nodes) || int(slot) >= len(nodeFanins(p.nodes[node])) {
-		panic("aig: invalid fanout handle")
-	}
-	source := p.nodes[node].Fanins[slot].NodeID()
-	for i := int(fan) + 1; i < len(p.nodes)*2; i++ {
-		if p.deleted[i/2] {
-			continue
-		}
-		n := p.nodes[i/2]
-		if i&1 < len(nodeFanins(n)) && n.Fanins[i&1].NodeID() == source {
-			return int32(i)
-		}
-	}
-	return 0
+	return *Aig_FanoutNext(p.fanouts.data, fan)
 }
 
 // iterator over the fanouts
