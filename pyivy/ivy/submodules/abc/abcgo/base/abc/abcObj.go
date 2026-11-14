@@ -308,6 +308,19 @@ func Abc_NodeIsInv(o *Object) int32 {
 	return abcBool(fn([]bool{false}) && !fn([]bool{true}))
 }
 func Abc_NodeComplement(o *Object) {
+	switch function := o.Data.(type) {
+	case *hop.Hop_Obj_t:
+		o.Data = hop.Hop_Not(function)
+		clear(o.network.hashed)
+		return
+	case string:
+		if Abc_NtkHasSop(o.network) != 0 {
+			o.Data = Abc_SopComplement(function)
+			clear(o.network.hashed)
+			return
+		}
+	}
+
 	if manager, ok := o.network.FunctionManager.(*core.DdManager); ok {
 		if old, ok := o.Data.(*core.DdNode); ok {
 			next := core.Cudd_Not(old)
@@ -326,6 +339,18 @@ func Abc_NodeComplementInput(o, fanin *Object) {
 	index := Abc_ObjFanoutFaninNum(o, fanin)
 	if index < 0 {
 		panic("missing fanin")
+	}
+	if manager, ok := o.network.FunctionManager.(*hop.Hop_Man_t); ok {
+		if function, ok := o.Data.(*hop.Hop_Obj_t); ok {
+			o.Data = hop.Hop_Complement(manager, function, index)
+			clear(o.network.hashed)
+			return
+		}
+	}
+	if function, ok := o.Data.(string); ok && Abc_NtkHasSop(o.network) != 0 {
+		o.Data = Abc_SopComplementVar(function, index)
+		clear(o.network.hashed)
+		return
 	}
 	if manager, ok := o.network.FunctionManager.(*core.DdManager); ok {
 		if old, ok := o.Data.(*core.DdNode); ok {
