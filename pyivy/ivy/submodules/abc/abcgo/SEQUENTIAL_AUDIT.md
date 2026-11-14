@@ -1028,3 +1028,59 @@ independently legal cofactors in the original C can jointly change the
 function on its care set. Full AIG race tests pass. This compactness change
 does not close the remaining factoring-helper/source-state review or the
 overall AIG/package inventory audit.
+
+### Factoring direct entry and manager traversal initialization
+
+Direct recursive cone derivation on an unvisited, valid cone panicked when its
+copy map had not been allocated by the wrapper. Observed that nil-map panic
+with a red test, then initialized typed copy storage in the recursive entry.
+A separate red test showed NewGraph started at generation zero, aliasing new
+objects' zero traversal marks. The C-named Aig_ManStart already initialized
+generation one; moved that initialization into NewGraph so both constructors
+share it, removing the redundant assignment from Aig_ManStart. The first
+constructor test covered only Aig_ManStart and passed; it was corrected to
+cover both constructors and observed red before the shared repair.
+
+Added a compiled fixture using original aigFact.c, object creation, AND,
+hashing, memory, fanout and utility routines. It compares direct-recursive
+results, copies/traversal marks, wrapper implication substitution and
+reconstruction's support/internal copies. Its standalone manager uses real
+fanout references and hash insertion; console stubs supply only the absent
+frame/bridge environment. No analysis or gate implementation is stubbed.
+
+Ten red entry-contract cases exposed acceptance of complemented roots,
+constant overlap/derivation roots and unmarked/nonlogic support-cone entries
+where C has assertions. Restored those checks; algebraic factoring now passes
+the regular B root into derivation and reapplies the output phase afterward,
+with a dedicated complemented-output regression. Final full AIG race tests
+pass. The full uncached module gate after the shared constructor and copy-map
+repair also passes (129 tested, three without tests, exit zero; log
+`/tmp/abcgo-factoring-entry-integration.log`). The subsequent entry checks have
+no external production callers and are covered by the final AIG race run.
+
+Source inspection has now covered the factoring file's implication,
+overlap/derivation, algebraic driver, packed support simulation,
+reconstruction, support/frontier collection, highlighting and example paths.
+Native XOR and buffer reconstruction preserve their actual operators rather
+than C's AND-only assumptions; empty/inapplicable cones fail safely, and the
+previously demonstrated progressive cofactor correctness repair remains.
+Typed local simulation storage intentionally avoids publishing C's dangling
+truth-table pData pointers after their allocation is freed. These differences
+are explicit correctness/storage decisions, not replacement algorithms.
+
+### Ternary simulation source-stream review
+
+Source comparison found Aig_XsimRand2/3 used math/rand/v2, losing ABC's
+deterministic shared random stream and its draw/rejection protocol. A red test
+checks mixed binary/ternary draws and the following shared word. Restored
+Aig_ManRandom draws and zero-rejection for ternary values; an independent
+compiled original-C fixture confirms the entire mixed sequence and final word.
+
+A second original-C fixture compares the full mapping and final object
+simulation values for eighteen registers across two packed words: holding
+zero, toggling, unknown PI-driven transitions, and transitions to constant
+one. The targeted fixtures and source-stream regressions pass. Existing
+ternary tests cover operators, state packing/ownership, cycles, retirement,
+limits, native XOR/buffers and sequential reduction behavior. Remaining
+review includes zero-register scratch-state behavior and the reduction
+driver's source contracts; no completion claim for ternary simulation or AIG.
