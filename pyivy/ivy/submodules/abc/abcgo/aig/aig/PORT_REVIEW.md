@@ -1,7 +1,14 @@
 # AIG port review
 
-The full package remains under conversion. These reviews apply to the converted
-core, not to the remaining generated algorithm files.
+The sequential source, correctness and readability audit is complete for the
+current 52 production files. Final AIG race tests and vet pass; all 133 module
+packages and their tests compile. See the final closure and explicit validation
+scopes in [the sequential audit](../../SEQUENTIAL_AUDIT.md).
+
+The notes below are chronological; earlier incomplete/conversion statements
+are superseded by that closure. Known upstream experimental failures remain
+explicit and tested, including unfinished linear register partitioning and
+broken reparameterization. Their presence does not justify invented substitutes.
 
 ## Design and readability review
 
@@ -382,3 +389,20 @@ repairs. The final expanded native/clause race checks pass in 16.233s. All
 133 current packages and their tests compile in the repository-wide build
 check; test bodies in unrelated packages were not rerun. AIG remains open
 for final file/function reconciliation.
+
+
+Final header reconciliation repaired ghost kinds, empty-record versus
+constant-one identity, NULL child/complement semantics and recycled type
+queries, with red/green regressions plus compiled original-header states.
+Utility cleanup now honors the pNext/CioId union and source root assertions;
+its native state comparison preserves ternary nCuts/Xsim state. The demo
+reports BLIF creation errors instead of dropping them. A compactness pass
+removed eight bytes of Node padding on amd64 (56 to 48 bytes) by grouping
+boolean fields, without changing algorithms or integer types.
+
+Final full AIG race suite passes in 75.961s, vet passes for AIG and its two
+migrated driver packages, and all 133 module packages/tests compile on that
+layout. The earlier whole-module execution passed 130 tested packages plus
+three without tests; exact ordering of validation and minor final changes is
+recorded in SEQUENTIAL_AUDIT.md. Audit status: reviewed; next original package
+is aig/gia, with original completion count 2/131.

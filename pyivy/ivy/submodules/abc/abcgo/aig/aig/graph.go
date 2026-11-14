@@ -37,10 +37,10 @@ type Node struct {
 	Refs   int
 	MarkA  bool
 	MarkB  bool
+	Phase  bool
 	TravID int32
 	CioID  int32 // C stores this in the terminal pNext/CioId union.
 	Xsim   int32
-	Phase  bool
 }
 type edgePair struct{ a, b Edge }
 

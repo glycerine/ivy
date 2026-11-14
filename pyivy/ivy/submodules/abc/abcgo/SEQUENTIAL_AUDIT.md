@@ -10,10 +10,14 @@ proof that this audit has been completed. No parallel package or agent work.
 Baseline: 131 packages (128 with tests, three command packages without tests).
 The repository-wide uncached tests passed before this audit.
 
+Current status: **2/131 original packages reviewed**. The two driver packages
+extracted during the AIG audit bring the current module total to 133; their
+source workflows and tests are covered by that audit. Next: `aig/gia`.
+
 | # | Package | Status | Evidence |
 | --- | --- | --- | --- |
 | 1 | `.` | reviewed | Root review below; race tests and vet pass. |
-| 2 | `aig/aig` | in progress | Source-backed family reviews; remaining contracts recorded below. |
+| 2 | `aig/aig` | reviewed | All 52 files reconciled; native source matrices, final race suite, vet and module integration gates pass. |
 | 3 | `aig/gia` | pending | |
 | 4 | `aig/gia/mf` | pending | |
 | 5 | `aig/gia/satcost` | pending | |
@@ -165,7 +169,7 @@ and DEMO_REVIEW.md (including strict CLI integer parsing, wall-time reports,
 long lines, single-CPU behavior and cleanup on failures). This review does
 not claim integration coverage for every registered synthesis command.
 
-## 2. aig/aig (in progress)
+## 2. aig/aig (reviewed)
 
 Inventoried 52 production Go files and the earlier review reports. Historical
 reports still mention incomplete conversion and selected-file validation;
@@ -2464,3 +2468,47 @@ status row is advanced. Known upstream unfinished/broken experimental
 entry points remain explicit source failures, as recorded in the interpolation
 and register-partition checkpoints; review completion must not imply those
 upstream routines suddenly have invented successful implementations.
+
+
+### AIG audit closure and compact node layout
+
+Completed the final source/correctness/readability reconciliation for all
+52 production files. The remaining utility gaps above are repaired and
+source-checked. Earlier in-progress statements are chronological checkpoints;
+this closure supersedes them. All bugs uncovered in this audit have red/green
+regressions or an explicit documented upstream-failure contract. No invented
+successful algorithm was retained in place of a source driver.
+
+A final storage review grouped Node.Phase with MarkA/MarkB, removing trailing
+alignment padding without changing field types, arithmetic, graph algorithms
+or adding unsafe production code. On amd64 the measured record shrank from
+56 to 48 bytes (eight bytes per node); a temporary read-only Sizeof/Offsetof
+probe produced `/tmp/abcgo-node-layout-final.log`. No repository consumer uses
+raw Node offsets or serialization. The full module recompiles, including test
+literals, so no positional initializer depends on the previous order.
+
+Final checks on this layout:
+
+- Full uncached AIG race suite passes in 75.961s
+  (`/tmp/abcgo-aig-layout-final-race.log`). The preceding final utility/header
+  state passed the full AIG race suite in 76.344s as well.
+- `go vet ./aig/aig ./proof/aiginterp ./proof/aigpartsat` passes.
+- All 133 packages and their test files compile with the reordered record
+  (`/tmp/abcgo-aig-layout-build-all.log`, exit zero). This is a compile gate,
+  not another run of every unrelated test body.
+- The earlier full uncached module execution passed 130 tested packages and
+  three without tests (`/tmp/abcgo-final-aig-integration.log`). Its scope
+  precedes the two unused cleanup-entry repairs and final field reordering;
+  those are covered by the final AIG native/race checks and module compile gate.
+
+The source's unfinished linear register partitioner and broken experimental
+reparameterization remain explicit, tested upstream limitations rather than
+invented replacement algorithms. Pool accounting reflects Go-owned storage;
+source pointer/union storage is represented by typed state and stable IDs.
+Recorded signed-XOR, forward-DAG/buffer and source-defect repairs remain
+intentional correctness extensions. Review completion is not a claim that
+these upstream experimental failures have been mathematically solved.
+
+Original package progress is now **2/131**, with `aig/gia` next. The full
+sequential goal remains active; none of the other pending packages is counted
+as audited merely because its integration tests passed.
