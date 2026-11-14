@@ -180,7 +180,8 @@ func TestBalanceNativeXor(t *testing.T) {
 		t.Fatal(err)
 	}
 	driver := result.Node(result.Outputs()[0]).Fanins[0]
-	if result.Node(driver).Level != 3 {
+	// Three balanced XOR stages cost two structural AIG levels each in C.
+	if result.Node(driver).Level != 6 {
 		t.Fatal("XOR not balanced", result.Node(driver).Level)
 	}
 	for n := 0; n < 256; n++ {
