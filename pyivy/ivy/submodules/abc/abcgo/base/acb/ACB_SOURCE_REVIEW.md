@@ -33,6 +33,17 @@ window/SAT/decomposition operations against `acbMfs.c` and `acbPush.c`.
   copied write targets. High-bit and multiword tests cover this failure.
 - SAT model values are saved before mutating the formula. The BSAT restart
   bridge clears the formula and facade contradiction state, matching C restart.
+- An UNSAT one-copy observability window means the pivot cannot affect an
+  output. Construction now reports this status and the optimizer explicitly
+  replaces the unobservable pivot with zero. This removes the original C's
+  misleading error/success handling without changing the optimization result.
+  CNF restoration is checked across all clauses for one, two and six copies,
+  including contradictions and empty formulas/clauses. An empty clause no
+  longer panics while reading a nonexistent first literal.
+- A zero budget for additional weighted-support improvement explicitly retains
+  the initial feasible support, rather than reporting an immediate timeout.
+  This preserves the source behavior and is separate from APIs where zero
+  means unlimited search.
 - Prime-cube SOP extraction restores C's negated literal polarity; AND patches
   were previously turned into NOR patches. Six-variable truth extraction tests
   include bit 63 and asymmetric patterns.
@@ -64,7 +75,7 @@ check accepts equivalent functions and rejects inequivalent ones.
 
 ## Test coverage
 
-57 test functions cover:
+60 test functions cover:
 
 - Every Boolean function through three inputs for CNF and SAT extraction;
   all binary functions for SOP patch enumeration and ABC round trips.
@@ -76,6 +87,9 @@ check accepts equivalent functions and rejects inequivalent ones.
 - Weighted/support minimization, cross-word masks, BSAT and SAToko support
   selection, insufficient divisors, interpolation implications, universal
   target quantification, two-target miter substitution, and an unsolvable ECO.
+- Window construction status and complete CNF restoration after immediate or
+  propagated contradictions; unobservable-pivot replacement with exhaustive
+  output-equivalence checks; and zero-budget support feasibility/ownership.
 - Verilog parsing, insertion/extraction and round trips; input ordering;
   counterexample files; patch support remapping; mapped-record serialization,
   internal wires, constants, output aliases and file bytes.
@@ -102,6 +116,12 @@ is blocked by the same dependency. This is separate from the passing ACB package
 ## Final verification
 
 With `GOCACHE=/tmp/abcgo-gocache`, `go test ./base/acb -coverprofile=/tmp/acb.cover`
-passes with **75.5% statement coverage**. The complete suite also passes
+passes with **75.8% statement coverage**. The complete suite also passes
 `go test -race -gcflags=all=-d=checkptr=2 ./base/acb`. Formatting and diff checks
 are clean. No tests were run on `experiments/`.
+
+The complete `go test -v -count=1` audit initially found 90 misleading SAT
+errors (45 unobservable windows reported twice) and one zero-budget timeout.
+After the repairs neither appears. The two no-solution diagnostics and the
+missing-file diagnostic are asserted by deliberate rejection tests and remain
+visible under `Expected rejection` labels in verbose output.

@@ -162,3 +162,34 @@ skipped test was used to conceal this boundary. Package completion and this
 remaining application integration requirement are tracked separately.
 
 See `ACB_SOURCE_REVIEW.md` for the detailed correctness findings and test map.
+
+### Verbose-suite diagnostic audit (2026-11-14)
+
+Ran the complete `go test -v -count=1` from `base/acb`, including every seeded
+optimization subtest. The passing suite initially printed 90 SAT error messages,
+one zero-second timeout, two no-solution messages, and one missing-file message.
+
+- The 90 messages came from 45 one-copy observability windows proved UNSAT
+  during construction, each reported again during simplification. Their pivots
+  cannot influence any window output, so replacing them with a constant is
+  valid. The original C also reports this as an error and returns success.
+  The Go builder now returns its actual construction/propagation status; the
+  optimizer explicitly handles an unobservable pivot. Two-/six-copy windows
+  built after proving both pivot values feasible still enforce consistency.
+- Construction restores the caller's complete CNF even on contradiction.
+  Regression tests cover one, two and six copies; immediate and propagated
+  contradictions; constant pivots; and empty clauses/formulas. The empty-clause
+  test also found a panic in the old first-literal restoration assertion.
+- A zero support-improvement budget retains the already feasible initial
+  support, as before, but now explicitly reports skipped additional search.
+  The general ECO support test uses a positive budget; a separate zero-budget
+  regression verifies the returned support is an independent, feasible copy.
+- The insufficient-divisor, unsolvable-ECO and missing-file tests deliberately
+  exercise rejection paths. They now assert their diagnostics and display
+  them under `Expected rejection` in verbose output.
+
+The final verbose run has **60 test functions**, 476 test/subtest runs, no
+unexpected error or timeout messages, and all tests pass. Full package coverage
+is **75.8%**. `go test -race -gcflags=all=-d=checkptr=2 ./base/acb` also passes;
+formatting and diff checks are clean. The application integration boundary
+recorded above remains unchanged.

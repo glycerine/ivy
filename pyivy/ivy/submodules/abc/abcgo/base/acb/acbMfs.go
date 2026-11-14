@@ -386,11 +386,14 @@ func Acb_NtkWindowUndo(p *Acb_Ntk_t, vWin *Vec_Int_t) {
 
 **********************************************************************
 */
+// Acb_NtkWindow2Solver returns 0 if construction or unit propagation proves
+// UNSAT, and 1 otherwise (not a full SAT decision). For a one-copy window,
+// UNSAT means no input assignment lets a pivot change reach a window output.
+// This is a normal optimization result. The supplied CNF is restored on return.
 func Acb_NtkWindow2Solver(pSat *sat_solver, pCnf *Cnf_Dat_t, vFlip *Vec_Int_t, PivotVar int32, nDivs int32, nTimes int32) int32 {
 	var n int32
 	var i int32
-	var RetValue int32
-	var Test int32 = Cnf_DataClause(pCnf, 0)[0]
+	var RetValue int32 = 1
 	var nGroups int32
 	if nTimes <= 2 {
 		nGroups = nTimes - 1
@@ -410,11 +413,12 @@ func Acb_NtkWindow2Solver(pSat *sat_solver, pCnf *Cnf_Dat_t, vFlip *Vec_Int_t, P
 		if n&1 != 0 {
 			Cnf_DataLiftAndFlipLits(pCnf, -Cnf_DataVarNum(pCnf), vFlip)
 		}
-		for i = 0; i < Cnf_DataClauseNum(pCnf); i++ {
+		for i = 0; RetValue != 0 && i < Cnf_DataClauseNum(pCnf); i++ {
 			if !sat_solver_addclause(pSat, Cnf_DataClause(pCnf, i)) {
-				fmt.Printf("Error: SAT solver became UNSAT at a wrong place.\n")
+				RetValue = 0
 			}
 		}
+		// Restore the caller's CNF even if adding clauses proved UNSAT.
 		if n&1 != 0 {
 			Cnf_DataLiftAndFlipLits(pCnf, Cnf_DataVarNum(pCnf), vFlip)
 		}
@@ -424,22 +428,22 @@ func Acb_NtkWindow2Solver(pSat *sat_solver, pCnf *Cnf_Dat_t, vFlip *Vec_Int_t, P
 			Cnf_DataLift(pCnf, -(nTimes-1)*Cnf_DataVarNum(pCnf))
 		}
 	}
-	assert(Test == Cnf_DataClause(pCnf, 0)[0], "Test == Cnf_DataClause(pCnf, 0)[0]")
+	if RetValue == 0 {
+		return 0
+	}
 	// add conditional buffers
 	for n = 0; n < nRounds; n++ {
 		var BaseA int32 = n * Cnf_DataVarNum(pCnf)
 		var BaseB int32 = ((n + 1) % nTimes) * Cnf_DataVarNum(pCnf)
 		var BaseC int32 = nTimes*Cnf_DataVarNum(pCnf) + (n&1)*nDivs
 		for i = 0; i < nDivs; i++ {
-			sat_solver_add_buffer_enable(pSat, BaseA+i, BaseB+i, BaseC+i, 0)
+			if sat_solver_add_buffer_enable(pSat, BaseA+i, BaseB+i, BaseC+i, 0) == 0 {
+				return 0
+			}
 		}
 	}
 	// finalize
-	RetValue = sat_solver_simplify(pSat)
-	if !(RetValue != 0) {
-		fmt.Printf("Error: SAT solver became UNSAT at a wrong place.\n")
-	}
-	return 1
+	return sat_solver_simplify(pSat)
 }
 
 /*
@@ -1709,8 +1713,19 @@ func Acb_NtkOptNode(p *Acb_Mfs_t, Pivot int32) int32 {
 
 	// derive SAT solver
 	clk = Abc_Clock()
-	Acb_NtkWindow2Solver(p.pSat[0], pCnf, p.vFlip, PivotVar, nDivs, 1)
+	Result = Acb_NtkWindow2Solver(p.pSat[0], pCnf, p.vFlip, PivotVar, nDivs, 1)
 	p.timeSol += Abc_Clock() - clk
+	if Result == 0 {
+		// The CNF requires a window output to change when the pivot flips.
+		// If it is UNSAT, the pivot is unobservable and either constant is safe.
+		if p.pPars.fVerbose != 0 {
+			fmt.Printf("Window is unobservable; replacing node with 0.\n")
+		}
+		p.nChanges[0]++
+		Acb_NtkUpdateNode(p.pNtk, Pivot, 0, nil)
+		RetValue = 1
+		goto cleanup
+	}
 	// check constants
 	for c = 0; c < 2; c++ {
 		var Lit int32 = Abc_Var2Lit(PivotVar, c)
@@ -1729,7 +1744,7 @@ func Acb_NtkOptNode(p *Acb_Mfs_t, Pivot int32) int32 {
 
 	// derive SAT solver
 	clk = Abc_Clock()
-	Acb_NtkWindow2Solver(p.pSat[1], pCnf, p.vFlip, PivotVar, nDivs, 2)
+	assert(Acb_NtkWindow2Solver(p.pSat[1], pCnf, p.vFlip, PivotVar, nDivs, 2) != 0, "both pivot values must admit a two-copy window")
 	p.timeSol += Abc_Clock() - clk
 
 	// try to remove useless fanins
@@ -1817,7 +1832,7 @@ func Acb_NtkOptNode(p *Acb_Mfs_t, Pivot int32) int32 {
 		p.nTwoNodes++
 		// derive SAT solver
 		clk = Abc_Clock()
-		Acb_NtkWindow2Solver(p.pSat[2], pCnf, p.vFlip, PivotVar, nDivs, 6)
+		assert(Acb_NtkWindow2Solver(p.pSat[2], pCnf, p.vFlip, PivotVar, nDivs, 6) != 0, "both pivot values must admit a six-copy window")
 		p.timeSol += Abc_Clock() - clk
 
 		// check for two-node implementation

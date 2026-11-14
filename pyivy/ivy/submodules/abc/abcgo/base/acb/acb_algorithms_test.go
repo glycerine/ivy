@@ -381,7 +381,7 @@ func TestEcoSupportAndPatchFunction(t *testing.T) {
 	defer Gia_ManStop(m)
 	cnf := Acb_NtkDeriveMiterCnf(m, 0, 1, 0)
 	defer Cnf_DataFree(cnf)
-	used := Acb_DerivePatchSupport(cnf, 0, 1, 2, divs, p, nil, 0)
+	used := Acb_DerivePatchSupport(cnf, 0, 1, 2, divs, p, nil, 5)
 	if used == nil || !reflect.DeepEqual(Vec_IntArray(used), []int32{0, 1}) {
 		t.Fatalf("patch support=%v", used)
 	}

@@ -1565,6 +1565,8 @@ func Acb_FindReplace(pSat *sat_solver, iFirstDiv int32, vWeights *Vec_Int_t, vPa
 	}
 }
 
+// Acb_FindSupport improves an already feasible support within TimeOut seconds.
+// A zero budget retains the initial support without additional search.
 func Acb_FindSupport(pSat *sat_solver, iFirstDiv int32, vWeights *Vec_Int_t, vSuppStart *Vec_Int_t, TimeOut int32) *Vec_Int_t {
 	var clkLimit abctime = int64(TimeOut)*int64(time.Second) + Abc_Clock()
 	var vPats *Vec_Wrd_t = nil
@@ -1577,6 +1579,10 @@ func Acb_FindSupport(pSat *sat_solver, iFirstDiv int32, vWeights *Vec_Int_t, vSu
 	CostBest = Acb_ComputeSuppCost(vSuppStart, vWeights, iFirstDiv)
 	vSuppBest = Vec_IntDup(vSuppStart)
 	fmt.Printf("Starting cost = %d.\n", CostBest)
+	if TimeOut == 0 {
+		fmt.Println("Additional support search skipped (zero time budget).")
+		return vSuppBest
+	}
 
 	// iteratively find the one with the most ones in the uncovered rows
 	for Iter = 0; Iter < 500; Iter++ {

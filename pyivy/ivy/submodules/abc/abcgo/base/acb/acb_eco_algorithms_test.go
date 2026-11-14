@@ -229,13 +229,23 @@ func TestSatokoSupportAndInsufficientDivisors(t *testing.T) {
 			nDiv = 2
 		}
 		cnf := Mf_ManGenerateCnf(m, 8, 0, 0, 0, 0)
-		used := Acb_DerivePatchSupportS(cnf, 1, nDiv, divs, p, nil, 0)
+		var used *Vec_Int_t
 		if enough {
+			used = Acb_DerivePatchSupportS(cnf, 1, nDiv, divs, p, nil, 0)
 			if used == nil || !reflect.DeepEqual(Vec_IntArray(used), []int32{0, 1}) {
 				t.Fatalf("Satoko support %v", used)
 			}
-		} else if used != nil {
-			t.Fatalf("accepted insufficient divisors %v", Vec_IntArray(used))
+		} else {
+			output := acbCaptureStdout(t, func() {
+				used = Acb_DerivePatchSupportS(cnf, 1, nDiv, divs, p, nil, 0)
+			})
+			if used != nil {
+				t.Fatalf("accepted insufficient divisors %v", Vec_IntArray(used))
+			}
+			if !strings.Contains(output, "problem has NO solution") {
+				t.Fatalf("missing insufficient-divisor diagnostic: %s", output)
+			}
+			t.Logf("Expected rejection (insufficient divisors):\n%s", strings.TrimSpace(output))
 		}
 		Cnf_DataFree(cnf)
 		Gia_ManStop(m)
@@ -345,9 +355,17 @@ func TestDivisorFilteringAndNoSolution(t *testing.T) {
 	// The reference demands zero, but a=b=1 fixes implementation output at 1.
 	q, good := acbReadFixture(t, "module f(a,b,c,y);\ninput a,b,c;\noutput y;\nbuf(y,1'b0);\nendmodule\n")
 	out := filepath.Join(t.TempDir(), "should_not_exist.v")
-	if result := Acb_NtkEcoPerform(p, q, []string{in, good, "", out}, 0, 0, 1, 1, 0, 0); result != 0 {
+	var result int32
+	output := acbCaptureStdout(t, func() {
+		result = Acb_NtkEcoPerform(p, q, []string{in, good, "", out}, 0, 0, 1, 1, 0, 0)
+	})
+	if result != 0 {
 		t.Fatal("unsolvable ECO accepted")
 	}
+	if !strings.Contains(output, "ECO problem has NO solution") {
+		t.Fatalf("missing unsolvable-ECO diagnostic: %s", output)
+	}
+	t.Logf("Expected rejection (unsolvable ECO):\n%s", strings.TrimSpace(output))
 	if _, err := os.Stat(out); !os.IsNotExist(err) {
 		t.Fatal("failed ECO wrote a patch")
 	}
@@ -486,7 +504,15 @@ func TestGeneratedWireNameCollision(t *testing.T) {
 }
 
 func TestMissingVerilogFile(t *testing.T) {
-	if p := Acb_VerilogSimpleRead(filepath.Join(t.TempDir(), "absent.v"), ""); p != nil {
+	var p *Acb_Ntk_t
+	output := acbCaptureStdout(t, func() {
+		p = Acb_VerilogSimpleRead(filepath.Join(t.TempDir(), "absent.v"), "")
+	})
+	if p != nil {
 		t.Fatal("missing file returned a network")
 	}
+	if !strings.Contains(output, "Cannot read input file") {
+		t.Fatalf("missing file-read diagnostic: %s", output)
+	}
+	t.Logf("Expected rejection (deliberately absent Verilog file):\n%s", strings.TrimSpace(output))
 }
