@@ -49,6 +49,7 @@ func New() *Solver {
 }
 func satoko_create() *Solver                 { return New() }
 func satoko_destroy(s *Solver)               { *s = Solver{} }
+func (s *Solver) Destroy()                   { satoko_destroy(s) }
 func satoko_default_opts(o *Options)         { *o = DefaultOptions() }
 func satoko_configure(s *Solver, o *Options) { s.opts = *o }
 func (s *Solver) Options() *Options          { return &s.opts }

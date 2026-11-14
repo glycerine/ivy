@@ -135,6 +135,67 @@ func (s *Solver) MinimizeAssumptions(lits []int, limit int64) ([]int, int) {
 	}
 	return out, SATOKO_UNSAT
 }
+
+// MinimizeAssumptionsSource ports satoko_minimize_assumptions from
+// solver_api.c. It uses the source's recursive divide-and-conquer reduction,
+// mutates lits in place, and preserves any assumptions already pushed on s.
+func (s *Solver) MinimizeAssumptionsSource(lits []int, limit int64) int {
+	if len(lits) == 0 {
+		return 0
+	}
+	oldLimit := s.opts.ConflictLimit
+	defer func() { s.opts.ConflictLimit = oldLimit }()
+	s.opts.ConflictLimit = limit
+	var minimize func(offset, count int) int
+	minimize = func(offset, count int) int {
+		if count == 1 {
+			if s.Solve() != SATOKO_UNSAT {
+				return 1
+			}
+			return 0
+		}
+		left := count / 2
+		right := count - left
+		for i := 0; i < left; i++ {
+			s.PushAssumption(lits[offset+i])
+		}
+		if s.Solve() == SATOKO_UNSAT {
+			for i := 0; i < left; i++ {
+				s.PopAssumption()
+			}
+			return minimize(offset, left)
+		}
+		keptRight := 1
+		if right != 1 {
+			keptRight = minimize(offset+left, right)
+		}
+		for i := 0; i < left; i++ {
+			s.PopAssumption()
+		}
+
+		leftValues := append([]int(nil), lits[offset:offset+left]...)
+		copy(lits[offset:offset+keptRight], lits[offset+left:offset+left+keptRight])
+		copy(lits[offset+keptRight:offset+keptRight+left], leftValues)
+		for i := 0; i < keptRight; i++ {
+			s.PushAssumption(lits[offset+i])
+		}
+		if s.Solve() == SATOKO_UNSAT {
+			for i := 0; i < keptRight; i++ {
+				s.PopAssumption()
+			}
+			return keptRight
+		}
+		keptLeft := 1
+		if left != 1 {
+			keptLeft = minimize(offset+keptRight, left)
+		}
+		for i := 0; i < keptRight; i++ {
+			s.PopAssumption()
+		}
+		return keptRight + keptLeft
+	}
+	return minimize(0, len(lits))
+}
 func (s *Solver) FinalConflict() []int { return append([]int(nil), s.final...) }
 func (s *Solver) ModelValue(v int) int {
 	if v < 0 || v >= len(s.model) {
