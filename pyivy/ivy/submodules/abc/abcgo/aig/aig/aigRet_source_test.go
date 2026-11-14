@@ -2,8 +2,11 @@ package aig
 
 import (
 	"fmt"
+	"math/rand/v2"
+	"runtime"
 	"strings"
 	"testing"
+	"weak"
 )
 
 func TestRetimingManagerUsesSourceObjectGroups(t *testing.T) {
@@ -191,10 +194,109 @@ func TestRetimingFreeReleasesRetainedOwnership(t *testing.T) {
 		Rtm_ObjAddLast(p, p.latchObjs[0].edges[0], RTM_VAL_ZERO)
 	}
 	Rtm_ManFree(p)
-	if p.source != nil || p.latchObjs != nil || p.nExtraCur != 0 {
+	if p.source != nil || p.latchObjs != nil || p.sourceMap != nil || p.vObjs != nil {
 		t.Error("freed retiming manager retains its graph, latch objects or allocation state")
 	}
 	if err := g.Check(); err != nil {
 		t.Fatalf("freeing retiming state damaged borrowed graph: %v", err)
+	}
+}
+
+func TestRetimingRetiredOverflowStorageIsCollectible(t *testing.T) {
+	for _, grow := range []bool{false, true} {
+		t.Run(fmt.Sprintf("grow=%t", grow), func(t *testing.T) {
+			p := Rtm_ManAlloc(nil)
+			edge := &Rtm_Edg_t{}
+			retired := retireRetimingOverflow(p, edge, grow)
+			runtime.GC()
+			if retired.Value() != nil {
+				t.Error("retiming manager retains overflow storage no longer used by its edge")
+			}
+			// Both owners remain live: only the obsolete backing array may go.
+			runtime.KeepAlive(edge)
+			runtime.KeepAlive(p)
+		})
+	}
+}
+
+func retireRetimingOverflow(p *Rtm_Man_t, edge *Rtm_Edg_t, grow bool) weak.Pointer[uint32] {
+	for i := 0; i < 100; i++ {
+		Rtm_ObjAddLast(p, edge, RTM_VAL_ZERO)
+	}
+	// Seven words exceed the runtime's tiny-allocation batching threshold.
+	retired := weak.Make(&edge.big[0])
+	if grow {
+		for i := 0; i < 100; i++ {
+			Rtm_ObjAddLast(p, edge, RTM_VAL_ONE)
+		}
+	} else {
+		for edge.nLats > 0 {
+			Rtm_ObjRemFirst(p, edge)
+		}
+	}
+	return retired
+}
+
+func TestRetimingPackedStorageAgainstCompiledSource(t *testing.T) {
+	p := Rtm_ManAlloc(nil)
+	var edges [3]Rtm_Edg_t
+	var input, want strings.Builder
+	apply := func(id, action, value int) {
+		fmt.Fprintf(&input, "%d %d %d\n", id, action, value)
+		e := &edges[id]
+		var result Rtm_Init_t
+		switch action {
+		case 0:
+			Rtm_ObjAddFirst(p, e, Rtm_Init_t(value))
+		case 1:
+			Rtm_ObjAddLast(p, e, Rtm_Init_t(value))
+		case 2:
+			result = Rtm_ObjRemFirst(p, e)
+		case 3:
+			result = Rtm_ObjRemLast(p, e)
+		}
+		fmt.Fprintf(&want, "%d", result)
+		for i := range edges {
+			e := &edges[i]
+			fmt.Fprintf(&want, " | %d:", e.nLats)
+			for j := int32(0); j < e.nLats; j++ {
+				fmt.Fprintf(&want, "%d", Rtm_ObjGetOne(p, e, j))
+			}
+		}
+		want.WriteByte('\n')
+	}
+	// Interleaved edges exercise shared C-pool reallocations, compact/overflow
+	// transitions, both ends and every two-bit value across six word boundaries.
+	for cycle := 0; cycle < 2; cycle++ {
+		for n := 0; n < 100; n++ {
+			for id := range edges {
+				apply(id, (n+id+cycle)%2, 1+(n+id)%3)
+			}
+		}
+		for n := 0; n < 100; n++ {
+			for id := range edges {
+				apply(id, 2+(n+id+cycle)%2, 0)
+			}
+		}
+	}
+	rng := rand.New(rand.NewPCG(59, 127))
+	for n := 0; n < 2000; n++ {
+		id, action := rng.IntN(3), rng.IntN(4)
+		if edges[id].nLats == 0 {
+			action %= 2
+		} else if edges[id].nLats >= 100 {
+			action = 2 + action%2
+		}
+		apply(id, action, 1+rng.IntN(3))
+	}
+	got := runAigSourceFixtureInput(t, "retiming_storage_compare.c", input.String())
+	gotLines, wantLines := strings.Split(got, "\n"), strings.Split(want.String(), "\n")
+	if len(gotLines) != len(wantLines) {
+		t.Fatalf("source trace length = %d, want %d", len(gotLines), len(wantLines))
+	}
+	for i := range wantLines {
+		if gotLines[i] != wantLines[i] {
+			t.Fatalf("operation %d: Go %q, C %q", i, wantLines[i], gotLines[i])
+		}
 	}
 }

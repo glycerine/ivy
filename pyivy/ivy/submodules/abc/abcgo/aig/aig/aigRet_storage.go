@@ -14,7 +14,8 @@ const (
 type Rtm_Edg_t struct {
 	nLats int32
 	LData uint32
-	big   []uint32
+	// Each edge owns its overflow buffer; replacing it releases old storage.
+	big []uint32
 }
 type Rtm_Obj_t struct {
 	// Num is the fanin capacity during construction, then retiming depth.
@@ -29,8 +30,6 @@ type Rtm_Obj_t struct {
 }
 type Rtm_Man_t struct {
 	vObjs, vPis, vPos, latchObjs []*Rtm_Obj_t
-	extra                        [][]uint32
-	nExtraCur                    int32
 	source                       *Graph
 	sourceMap                    map[int]*Rtm_Obj_t
 }
@@ -140,14 +139,6 @@ func Rtm_ObjAddLast1(edge *Rtm_Edg_t, value Rtm_Init_t) {
 	edge.LData |= uint32(value) << uint(edge.nLats*2)
 	edge.nLats++
 }
-func rtmAllocateWords(p *Rtm_Man_t, count int32) []uint32 {
-	words := make([]uint32, count)
-	if p != nil {
-		p.extra = append(p.extra, words)
-		p.nExtraCur += count
-	}
-	return words
-}
 func Rtm_ObjTransferToBig(p *Rtm_Man_t, edge *Rtm_Edg_t) {
 	if edge.big != nil || edge.nLats > 10 {
 		panic("aig: invalid compact-to-overflow conversion")
@@ -156,7 +147,7 @@ func Rtm_ObjTransferToBig(p *Rtm_Man_t, edge *Rtm_Edg_t) {
 	if count < 1 {
 		count = 1
 	}
-	edge.big = rtmAllocateWords(p, count)
+	edge.big = make([]uint32, count)
 	edge.big[0] = edge.LData
 	edge.LData = 0
 }
@@ -177,7 +168,7 @@ func Rtm_ObjTransferToBigger(p *Rtm_Man_t, edge *Rtm_Edg_t) {
 		panic("aig: overflow conversion requires overflow storage")
 	}
 	count := int32(len(edge.big)) + 1
-	words := rtmAllocateWords(p, count)
+	words := make([]uint32, count)
 	copy(words, edge.big)
 	edge.big = words
 }
