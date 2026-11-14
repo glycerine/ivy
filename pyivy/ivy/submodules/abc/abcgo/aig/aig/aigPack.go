@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"io"
 	"math/bits"
-	"math/rand/v2"
 	"os"
 )
 
@@ -58,7 +57,9 @@ func (p *Aig_ManPack_t) WriteCare(writer io.Writer) {
 		fmt.Fprintf(writer, "%064b\n", care)
 	}
 }
-func Aig_ManPackPrintCare(p *Aig_ManPack_t) { p.WriteCare(os.Stdout) }
+
+// C leaves this diagnostic disabled; WriteCare is the explicit Go alternative.
+func Aig_ManPackPrintCare(p *Aig_ManPack_t) { p.checkInputs() }
 func Aig_ManPackFree(p *Aig_ManPack_t) {
 	if p == nil {
 		return
@@ -71,10 +72,14 @@ func Aig_ManPackFree(p *Aig_ManPack_t) {
 	fmt.Printf("Patterns: Total = %6d. Skipped = %6d. Cares = %6.2f %%  \n", p.nPatTotal, p.nPatSkip, percent)
 	*p = Aig_ManPack_t{}
 }
+
+// Aig_ManPackSetRandom reinitializes all input words, as in C. Packing care
+// masks remain separate; Start calls this before inserting any patterns.
 func Aig_ManPackSetRandom(p *Aig_ManPack_t) {
 	p.checkInputs()
 	for i := range p.vPiPats {
-		p.vPiPats[i] = (rand.Uint64()<<1)&^p.vPiCare[i] | p.vPiPats[i]&p.vPiCare[i]
+		word := uint64(Aig_ManRandom(0))<<32 | uint64(Aig_ManRandom(0))
+		p.vPiPats[i] = word << 1
 	}
 }
 func Aig_ManPackSimulate(p *Aig_ManPack_t) {

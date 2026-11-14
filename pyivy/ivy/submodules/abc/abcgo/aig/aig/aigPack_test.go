@@ -180,7 +180,7 @@ func TestPackedInvalidInputs(t *testing.T) {
 	}
 }
 
-func TestPackedReseedingPreservesCares(t *testing.T) {
+func TestPackedManualSeedingPreservesCares(t *testing.T) {
 	g := NewGraph()
 	g.NewInput()
 	p := Aig_ManPackAlloc(g)
@@ -188,9 +188,9 @@ func TestPackedReseedingPreservesCares(t *testing.T) {
 	Aig_ManPackAddPatternTry(p, 32, []int32{1})
 	care, before := p.vPiCare[0], p.vPiPats[0]&p.vPiCare[0]
 	for i := 0; i < 10; i++ {
-		Aig_ManPackSetRandom(p)
+		p.SetInputWord(0, ^uint64(0)>>uint(i))
 		if p.vPiPats[0]&care != before || p.vPiCare[0] != care {
-			t.Fatal("randomization changed packed cube")
+			t.Fatal("manual seeding changed packed cube")
 		}
 	}
 	p.SetInputWord(0, ^uint64(0))
