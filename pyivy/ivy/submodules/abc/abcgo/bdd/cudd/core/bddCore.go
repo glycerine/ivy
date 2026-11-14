@@ -53,6 +53,10 @@ type DdManager struct {
 	nextID                            uint64
 	cacheLookups, cacheHits           uint64
 	closed                            bool
+	linearMatrix                      []uint64
+	linearSize                        int
+	linearMemory                      uint64
+	errorCode                         Cudd_ErrorType
 	stdout, stderr                    io.Writer
 	allocationLimited                 bool
 	allocationCeiling                 int
@@ -73,6 +77,61 @@ type DdManager struct {
 	siftMaxVar, siftMaxSwap           int
 	symmetryGroups                    [][]int
 	reorderingTime                    time.Duration
+}
+
+// Cudd_InitLinearMatrix initializes the manager's linear transform matrix to
+// the identity matrix. The packed representation uses one uint64 per 64
+// columns, matching cuddLinear.c on 64-bit platforms.
+func Cudd_InitLinearMatrix(dd *DdManager) bool {
+	if dd == nil || dd.closed {
+		if dd != nil {
+			dd.errorCode = CUDD_MEMORY_OUT
+		}
+		return false
+	}
+	nvars := len(dd.Vars)
+	wordsPerRow := (nvars + 63) / 64
+	maxInt := int(^uint(0) >> 1)
+	if wordsPerRow != 0 && nvars > maxInt/wordsPerRow {
+		dd.errorCode = CUDD_MEMORY_OUT
+		return false
+	}
+	words := wordsPerRow * nvars
+	if uint64(words) > ^uint64(0)/8 {
+		dd.errorCode = CUDD_MEMORY_OUT
+		return false
+	}
+	linear := make([]uint64, words)
+	for i := 0; i < nvars; i++ {
+		linear[i*wordsPerRow+i/64] = uint64(1) << uint(i%64)
+	}
+	dd.linearMatrix = linear
+	dd.linearSize = nvars
+	dd.linearMemory = uint64(words) * 8
+	return true
+}
+
+// Cudd_LinearMatrixState returns a copy of the packed matrix and its dimension.
+func Cudd_LinearMatrixState(dd *DdManager) ([]uint64, int) {
+	if dd == nil {
+		return nil, 0
+	}
+	return append([]uint64(nil), dd.linearMatrix...), dd.linearSize
+}
+
+// Cudd_ReadErrorCode returns the most recently recorded manager error.
+func Cudd_ReadErrorCode(dd *DdManager) Cudd_ErrorType {
+	if dd == nil {
+		return CUDD_INVALID_ARG
+	}
+	return dd.errorCode
+}
+
+// Cudd_ClearErrorCode clears the manager's recorded error.
+func Cudd_ClearErrorCode(dd *DdManager) {
+	if dd != nil {
+		dd.errorCode = CUDD_NO_ERROR
+	}
 }
 
 // Cudd_SetInteraction and Cudd_TestInteraction maintain the symmetric
