@@ -816,3 +816,43 @@ verification matches the affected call scope.
 The transfer/composition findings from the previous checkpoint are closed for
 AND-inverter cones. Incremental timing and the remaining AIG algorithm families
 remain open; this does not complete aig/aig or the original package inventory.
+
+### Incremental timing propagation and CO level metadata
+
+Compared both incremental routines with aigTiming.c. Red regressions exposed
+whole-graph recomputation that changed unrelated levels, ignored seeded work
+marks, updated CO metadata outside the source node-only pass and accepted
+unsupported root kinds. Source setup checks were missing from forward update
+and level verification. Graph.Check and level verification incorrectly treated
+CO cached levels as authoritative, although source propagation leaves them
+unchanged. Tests demonstrated that mismatch before changing the checker.
+
+Restored the two source work queues, ordered by old forward/reverse levels.
+MarkA prevents duplicate pending entries and is cleared when an entry is
+processed. The reverse queue reads each bucket's current length so newly
+allocated fanins with old level zero can be scheduled into the same bucket.
+Unrelated state and traversal generations remain unchanged. Graph.Check now
+ignores CO level metadata while retaining its gate-level checks; explicit
+forward verification follows C's logic-node scope and requires fanouts.
+
+The Go DAR drivers genuinely need a complete reverse-level refresh for their
+buffer-preserving replacements. Moved that existing behavior into the explicit
+Graph.RefreshReverseLevels method and migrated both callers. Source-named
+Aig_ManUpdateReverseLevel now requires a real logic node instead of accepting
+a constant as a refresh sentinel.
+
+An independent compiled-C fixture links the original timing, fanout and utility
+implementations and confirms seeded boundaries, forward increases/decreases,
+unchanged CO fields, reverse propagation through a dynamically extended
+old-level bucket, unrelated reverse state and cleared work marks. The matching
+Go tests pass, as do full uncached AIG, DAR core and DAR facade race suites.
+The existing genuine reverse-level verification check is retained: C's
+diagnostic predicate mistakenly checks forward levels, while Go already
+detects corrupt reverse levels and has a regression for that behavior.
+
+Read-only inspection found two remaining representation issues to address
+before closing timing/graph review. C's Aig_ObjLevelNew charges an explicit XOR
+an extra level; Go currently uses one level. Also inspect CO reference access:
+Go stores an output-anchor reference in Node.Refs, whereas C's accessor reports
+actual fanout references. These need their own red tests and caller review.
+Other AIG families and the rest of the original package inventory remain open.
