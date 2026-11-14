@@ -1,1089 +1,773 @@
 package cudd
 
 import (
+	"errors"
+	"flag"
 	"fmt"
+	"io"
+	"os"
 	"strconv"
-	"strings"
+	"time"
+	"unsafe"
 )
 
-import "os"
-
-/**CFile***********************************************************************
-
-  FileName    [testcudd.c]
-
-  PackageName [cudd]
-
-  Synopsis    [Sanity check tests for some CUDD functions.]
-
-  Description [testcudd reads a matrix with real coefficients and
-  transforms it into an ADD. It then performs various operations on
-  the ADD and on the BDD corresponding to the ADD pattern. Finally,
-  testcudd tests functions relate to Walsh matrices and matrix
-  multiplication.]
-
-  SeeAlso     []
-
-  Author      [Fabio Somenzi]
-
-  Copyright   [Copyright (c) 1995-2004, Regents of the University of Colorado
-
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions
-  are met:
-
-  Redistributions of source code must retain the above copyright
-  notice, this list of conditions and the following disclaimer.
-
-  Redistributions in binary form must reproduce the above copyright
-  notice, this list of conditions and the following disclaimer in the
-  documentation and/or other materials provided with the distribution.
-
-  Neither the name of the University of Colorado nor the names of its
-  contributors may be used to endorse or promote products derived from
-  this software without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
-  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
-  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
-  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
-  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
-  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-  POSSIBILITY OF SUCH DAMAGE.]
-
-******************************************************************************/
-
-//#include "util.h"
-//#include "cuddInt.h"
-
-
-/*---------------------------------------------------------------------------*/
-/* Constant declarations                                                     */
-/*---------------------------------------------------------------------------*/
-
-const TESTCUDD_VERSION =    "TestCudd Version #1.0, Release date 3/17/01"
-
-/*---------------------------------------------------------------------------*/
-/* Variable declarations                                                     */
-/*---------------------------------------------------------------------------*/
-
-#ifndef lint
-static char rcsid[] DD_UNUSED = "$Id: testcudd.c,v 1.20 2009/03/08 02:49:02 fabio Exp $";
-#endif
-
-var onames []string = []string{ "C", "M" }; /* names of functions to be dumped */
-
-/**AutomaticStart*************************************************************/
-
-/*---------------------------------------------------------------------------*/
-/* Static function prototypes                                                */
-/*---------------------------------------------------------------------------*/
-
-// static void usage (char * prog);
-
-// static FILE *open_file (char *filename, const char *mode);
-
-// static int testIterators (DdManager *dd, DdNode *M, DdNode *C, int pr);
-
-// static int testXor (DdManager *dd, DdNode *f, int pr, int nvars);
-
-// static int testHamming (DdManager *dd, DdNode *f, int pr);
-
-// static int testWalsh (DdManager *dd, int N, int cmu, int approach, int pr);
-
-
-/**AutomaticEnd***************************************************************/
-
-
-/**Function********************************************************************
-
-  Synopsis    [Main function for testcudd.]
-
-  Description []
-
-  SideEffects [None]
-
-  SeeAlso     []
-
-******************************************************************************/
-func main() {
-    var fp *os.File;           /* pointer to input file */
-    var file string  = (char *) "";    /* input file name */
-    var dfp *os.File  = nil;    /* pointer to dump file */
-    var dfile string;    /* file for DD dump */
-    var dfunc [2]*DdNode;    /* addresses of the functions to be dumped */
-    var dd *DdManager;    /* pointer to DD manager */
-    var one *DdNode;    /* fast access to constant function */
-    var M *DdNode;
-    var x **DdNode;        /* pointers to variables */
-    var y **DdNode;        /* pointers to variables */
-    var xn **DdNode;    /* complements of row variables */
-    var yn_ **DdNode;    /* complements of column variables */
-    var xvars **DdNode;
-    var yvars **DdNode;
-    var C *DdNode;        /* result of converting from ADD to BDD */
-    var ess *DdNode;    /* cube of essential variables */
-    var shortP *DdNode;    /* BDD cube of shortest path */
-    var largest *DdNode;    /* BDD of largest cube */
-    var shortA *DdNode;    /* ADD cube of shortest path */
-    var constN *DdNode;    /* value returned by evaluation of ADD */
-    var ycube *DdNode;    /* cube of the negated y vars for c-proj */
-    var CP *DdNode;        /* C-Projection of C */
-    var CPr *DdNode;    /* C-Selection of C */
-    var length int32;    /* length of the shortest path */
-    var nx int32;            /* number of variables */
-    var ny int32;
-    var maxnx int32;
-    var maxny int32;
-    var m int32;
-    var n int32;
-    var N int32;
-    var cmu int32;            /* use CMU multiplication */
-    var pr int32;            /* verbose printout level */
-    var harwell int32;
-    var multiple int32;        /* read multiple matrices */
-    var ok int32;
-    var c int32;            /* variable to read in options */
-    var approach int32;        /* reordering approach */
-    var autodyn int32;        /* automatic reordering */
-    var groupcheck int32;        /* option for group sifting */
-    var profile int32;        /* print heap profile if != 0 */
-    var keepperm int32;        /* keep track of permutation */
-    var clearcache int32;        /* clear the cache after each matrix */
-    var blifOrDot int32;        /* dump format: 0 -> dot, 1 -> blif, ... */
-    var retval int32;        /* return value */
-    var i int32;            /* loop index */
-    var startTime long;        /* initial time */
-    var lapTime long;
-    var size int32;
-    unsigned int cacheSize, maxMemory;
-    unsigned int nvars,nslots;
-
-    startTime = util_cpu_time();
-
-    approach = CUDD_REORDER_NONE;
-    autodyn = 0;
-    pr = 0;
-    harwell = 0;
-    multiple = 0;
-    profile = 0;
-    keepperm = 0;
-    cmu = 0;
-    N = 4;
-    nvars = 4;
-    cacheSize = 127;
-    maxMemory = 0;
-    nslots = CUDD_UNIQUE_SLOTS;
-    clearcache = 0;
-    groupcheck = CUDD_GROUP_CHECK7;
-    dfile = "";
-    blifOrDot = 0; /* dot format */
-
-    /* Parse command line. */
-    for (c = util_getopt(len(os.Args), os.Args, (char *) "CDHMPS:a:bcd:g:hkmn:p:v:x:X:"))
-       != -1 {
-    switch c {
-    case 'C':
-        cmu = 1;
-        break;
-    case 'D':
-        autodyn = 1;
-        break;
-    case 'H':
-        harwell = 1;
-        break;
-    case 'M':
-#ifdef MNEMOSYNE
-        (void) mnem_setrecording(0);
-#endif
-        break;
-    case 'P':
-        profile = 1;
-        break;
-    case 'S':
-        nslots = strconv.Atoi(util_optarg);
-        break;
-    case 'X':
-        maxMemory = strconv.Atoi(util_optarg);
-        break;
-    case 'a':
-        approach = strconv.Atoi(util_optarg);
-        break;
-    case 'b':
-        blifOrDot = 1; /* blif format */
-        break;
-    case 'c':
-        clearcache = 1;
-        break;
-    case 'd':
-        dfile = util_optarg;
-        break;
-    case 'g':
-        groupcheck = strconv.Atoi(util_optarg);
-        break;
-    case 'k':
-        keepperm = 1;
-        break;
-    case 'm':
-        multiple = 1;
-        break;
-    case 'n':
-        N = strconv.Atoi(util_optarg);
-        break;
-    case 'p':
-        pr = strconv.Atoi(util_optarg);
-        break;
-    case 'v':
-        nvars = strconv.Atoi(util_optarg);
-        break;
-    case 'x':
-        cacheSize = strconv.Atoi(util_optarg);
-        break;
-    case 'h':
-    fallthrough
-default:
-        usage(os.Args[0]);
-        break;
-    }
-    }
-
-    if len(os.Args) - util_optind == 0 {
-    file = (char *) "-";
-    } else if len(os.Args) - util_optind == 1 {
-    file = os.Args[util_optind];
-    } else {
-    usage(os.Args[0]);
-    }
-    if (approach<0) || (approach>17) {
-    (void) fmt.Fprintf(os.Stderr, "Invalid approach: %d \n", approach);
-    usage(os.Args[0]);
-    }
-
-    if pr >= 0 {
-    (void) fmt.Printf("# %s\n", TESTCUDD_VERSION);
-    /* Echo command line and arguments. */
-    (void) fmt.Printf("#");
-    for i = 0; i < len(os.Args); i++ {
-        (void) fmt.Printf(" %s", os.Args[i]);
-    }
-    (void) fmt.Printf("\n");
-    (void) fflush(os.Stdout);
-    }
-
-    /* Initialize manager and provide easy reference to terminals. */
-    dd = Cudd_Init(nvars,0,nslots,cacheSize,maxMemory);
-    // inlining of macro DD_ONE
-    one = ((dd).one);
-    dd.groupcheck = (Cudd_AggregationType) groupcheck;
-    if autodyn != 0 { Cudd_AutodynEnable(dd,CUDD_REORDER_SAME); }
-
-    /* Open input file. */
-    fp = open_file(file, "r");
-
-    /* Open dump file if requested */
-    if dfile != "" {
-    dfp = open_file(dfile, "w");
-    }
-
-    x = y = xn = yn_ = nil;
-    for {
-    /* We want to start anew for every matrix. */
-    maxnx = maxny = 0;
-    nx = maxnx; ny = maxny;
-    if pr>0 { lapTime = util_cpu_time(); }
-    if harwell != 0 {
-        if pr >= 0 { (void) fmt.Printf(":name: "); }
-        ok = Cudd_addHarwell(fp, dd, &M, &x, &y, &xn, &yn_, &nx, &ny,
-        &m, &n, 0, 2, 1, 2, pr);
-    } else {
-        ok = Cudd_addRead(fp, dd, &M, &x, &y, &xn, &yn_, &nx, &ny,
-        &m, &n, 0, 2, 1, 2);
-        if pr >= 0 {
-        (void) fmt.Printf(":name: %s: %d rows %d columns\n", file, m, n); }
-    }
-    if !(ok != 0) {
-        (void) fmt.Fprintf(os.Stderr, "Error reading matrix\n");
-        os.Exit(int(1));
-    }
-
-    if nx > maxnx { maxnx = nx; }
-    if ny > maxny { maxny = ny; }
-
-    /* Build cube of negated y's. */
-    // inlining of macro DD_ONE
-    ycube = ((dd).one);
-    Cudd_Ref(ycube);
-    for i = maxny - 1; i >= 0; i-- {
-        var tmpp *DdNode;
-        tmpp = Cudd_bddAnd(dd,Cudd_Not(dd.vars[y[i].index]),ycube);
-        if tmpp == nil { os.Exit(int(2)); }
-        Cudd_Ref(tmpp);
-        Cudd_RecursiveDeref(dd,ycube);
-        ycube = tmpp;
-    }
-    /* Initialize vectors of BDD variables used by priority func. */
-    xvars = ALLOC(DdNode *, nx);
-    if xvars == nil { os.Exit(int(2)); }
-    for i = 0; i < nx; i++ {
-        xvars[i] = dd.vars[x[i].index];
-    }
-    yvars = ALLOC(DdNode *, ny);
-    if yvars == nil { os.Exit(int(2)); }
-    for i = 0; i < ny; i++ {
-        yvars[i] = dd.vars[y[i].index];
-    }
-
-    /* Clean up */
-    for i=0; i < maxnx; i++ {
-        Cudd_RecursiveDeref(dd, x[i]);
-        Cudd_RecursiveDeref(dd, xn[i]);
-    }
-    FREE(x);
-    FREE(xn);
-    for i=0; i < maxny; i++ {
-        Cudd_RecursiveDeref(dd, y[i]);
-        Cudd_RecursiveDeref(dd, yn_[i]);
-    }
-    FREE(y);
-    FREE(yn_);
-
-    if pr>0 {(void) fmt.Printf(":1: M"); Cudd_PrintDebug(dd,M,nx+ny,pr);}
-
-    if pr>0 { (void) fmt.Printf(":2: time to read the matrix = %s\n", util_print_time(util_cpu_time() - lapTime)); }
-
-    C = Cudd_addBddPattern(dd, M);
-    if C == 0 { os.Exit(int(2)); }
-    Cudd_Ref(C);
-    if pr>0 {(void) fmt.Printf(":3: C"); Cudd_PrintDebug(dd,C,nx+ny,pr);}
-
-    /* Test iterators. */
-    retval = testIterators(dd,M,C,pr);
-    if retval == 0 { os.Exit(int(2)); }
-
-    cuddCacheProfile(dd,os.Stdout);
-
-    /* Test XOR */
-    retval = testXor(dd,C,pr,nx+ny);
-    if retval == 0 { os.Exit(int(2)); }
-
-    /* Test Hamming distance functions. */
-    retval = testHamming(dd,C,pr);
-    if retval == 0 { os.Exit(int(2)); }
-
-    /* Test selection functions. */
-    CP = Cudd_CProjection(dd,C,ycube);
-    if CP == nil { os.Exit(int(2)); }
-    Cudd_Ref(CP);
-    if pr>0 {(void) fmt.Printf("ycube"); Cudd_PrintDebug(dd,ycube,nx+ny,pr);}
-    if pr>0 {(void) fmt.Printf("CP"); Cudd_PrintDebug(dd,CP,nx+ny,pr);}
-
-    if nx == ny {
-        CPr = Cudd_PrioritySelect(dd,C,xvars,yvars,(DdNode **)nil,
-        (DdNode *)nil,ny,Cudd_Xgty);
-        if CPr == nil { os.Exit(int(2)); }
-        Cudd_Ref(CPr);
-        if pr>0 {(void) fmt.Printf(":4: CPr"); Cudd_PrintDebug(dd,CPr,nx+ny,pr);}
-        if CP != CPr {
-        (void) fmt.Printf("CP != CPr!\n");
-        }
-        Cudd_RecursiveDeref(dd, CPr);
-    }
-
-    /* Test inequality generator. */
-    {
-        var Nmin int32;
-// inlining of macro ddMin
-
-        if (ny) < (nx) {
-            Nmin = (ny);
-        } else {
-            Nmin = (nx);
-        }
-        var q int32;
-        var gen *DdGen;
-        var cube *int32;
-        var f *DdNode  = Cudd_Inequality(dd,Nmin,2,xvars,yvars);
-        if f == nil { os.Exit(int(2)); }
-        Cudd_Ref(f);
-        if pr>0 {
-        (void) fmt.Printf(":4: ineq");
-        Cudd_PrintDebug(dd,f,nx+ny,pr);
-        if pr>1 {
-            Cudd_ForeachPrime(dd,Cudd_Not(f),Cudd_Not(f),gen,cube) {
-            for q = 0; q < dd.size; q++ {
-                switch cube[q] {
-                case 0:
-                (void) fmt.Printf("1");
-                break;
-                case 1:
-                (void) fmt.Printf("0");
-                break;
-                case 2:
-                (void) fmt.Printf("-");
-                break;
-                default:
-                (void) fmt.Printf("?");
-                }
-            }
-            (void) fmt.Printf(" 1\n");
-            }
-            (void) fmt.Printf("\n");
-        }
-        }
-        Cudd_IterDerefBdd(dd, f);
-    }
-    FREE(xvars); FREE(yvars);
-
-    Cudd_RecursiveDeref(dd, CP);
-    Cudd_RecursiveDeref(dd, ycube);
-
-    /* Test functions for essential variables. */
-    ess = Cudd_FindEssential(dd,C);
-    if ess == nil { os.Exit(int(2)); }
-    Cudd_Ref(ess);
-    if pr>0 {(void) fmt.Printf(":4: ess"); Cudd_PrintDebug(dd,ess,nx+ny,pr);}
-    Cudd_RecursiveDeref(dd, ess);
-
-    /* Test functions for shortest paths. */
-    shortP = Cudd_ShortestPath(dd, M, nil, nil, &length);
-    if shortP == nil { os.Exit(int(2)); }
-    Cudd_Ref(shortP);
-    if pr>0 {
-        (void) fmt.Printf(":5: shortP"); Cudd_PrintDebug(dd,shortP,nx+ny,pr);
-    }
-    /* Test functions for largest cubes. */
-    largest = Cudd_LargestCube(dd, Cudd_Not(C), &length);
-    if largest == nil { os.Exit(int(2)); }
-    Cudd_Ref(largest);
-    if pr>0 {
-        (void) fmt.Printf(":5b: largest");
-        Cudd_PrintDebug(dd,largest,nx+ny,pr);
-    }
-    Cudd_RecursiveDeref(dd, largest);
-
-    /* Test Cudd_addEvalConst and Cudd_addIteConstant. */
-    shortA = Cudd_BddToAdd(dd,shortP);
-    if shortA == nil { os.Exit(int(2)); }
-    Cudd_Ref(shortA);
-    Cudd_RecursiveDeref(dd, shortP);
-    constN = Cudd_addEvalConst(dd,shortA,M);
-    if constN == DD_NON_CONSTANT { os.Exit(int(2)); }
-    if Cudd_addIteConstant(dd,shortA,M,constN) != constN { os.Exit(int(2)); }
-    // inlining of macro cuddV
-    if pr>0 {(void) fmt.Printf("The value of M along the chosen shortest path is %g\n", ((constN).type.value));}
-    Cudd_RecursiveDeref(dd, shortA);
-
-    shortP = Cudd_ShortestPath(dd, C, nil, nil, &length);
-    if shortP == nil { os.Exit(int(2)); }
-    Cudd_Ref(shortP);
-    if pr>0 {
-        (void) fmt.Printf(":6: shortP"); Cudd_PrintDebug(dd,shortP,nx+ny,pr);
-    }
-
-    /* Test Cudd_bddIteConstant and Cudd_bddLeq. */
-    if !Cudd_bddLeq(dd,shortP,C) { os.Exit(int(2)); }
-    if Cudd_bddIteConstant(dd,Cudd_Not(shortP),one,C) != one { os.Exit(int(2)); }
-    Cudd_RecursiveDeref(dd, shortP);
-
-    if profile != 0 {
-        retval = cuddHeapProfile(dd);
-    }
-
-    size = dd.size;
-
-    if pr>0 {
-        (void) fmt.Printf("Average distance: %g\n", Cudd_AverageDistance(dd));
-    }
-
-    /* Reorder if so requested. */
-    if approach != CUDD_REORDER_NONE {
-#ifndef DD_STATS
-        retval = Cudd_EnableReorderingReporting(dd);
-        if (retval == 0) {
-        (void) fprintf(stderr,"Error reported by Cudd_EnableReorderingReporting\n");
-        exit(3);
-        }
-#endif
-#ifdef DD_DEBUG
-        retval = Cudd_DebugCheck(dd);
-        if (retval != 0) {
-        (void) fprintf(stderr,"Error reported by Cudd_DebugCheck\n");
-        exit(3);
-        }
-        retval = Cudd_CheckKeys(dd);
-        if (retval != 0) {
-        (void) fprintf(stderr,"Error reported by Cudd_CheckKeys\n");
-        exit(3);
-        }
-#endif
-        retval = Cudd_ReduceHeap(dd,(Cudd_ReorderingType)approach,5);
-        if retval == 0 {
-        (void) fmt.Fprintf(os.Stderr, "Error reported by Cudd_ReduceHeap\n");
-        os.Exit(int(3));
-        }
-#ifndef DD_STATS
-        retval = Cudd_DisableReorderingReporting(dd);
-        if (retval == 0) {
-        (void) fprintf(stderr,"Error reported by Cudd_DisableReorderingReporting\n");
-        exit(3);
-        }
-#endif
-#ifdef DD_DEBUG
-        retval = Cudd_DebugCheck(dd);
-        if (retval != 0) {
-        (void) fprintf(stderr,"Error reported by Cudd_DebugCheck\n");
-        exit(3);
-        }
-        retval = Cudd_CheckKeys(dd);
-        if (retval != 0) {
-        (void) fprintf(stderr,"Error reported by Cudd_CheckKeys\n");
-        exit(3);
-        }
-#endif
-        if approach == CUDD_REORDER_SYMM_SIFT ||
-        approach == CUDD_REORDER_SYMM_SIFT_CONV {
-        Cudd_SymmProfile(dd,0,dd.size-1);
-        }
-
-        if pr>0 {
-        (void) fmt.Printf("Average distance: %g\n", Cudd_AverageDistance(dd));
-        }
-
-        if keepperm != 0 {
-        /* Print variable permutation. */
-        (void) fmt.Printf("Variable Permutation:");
-        for i=0; i<size; i++ {
-            if i%20 == 0 { (void) fmt.Printf("\n"); }
-            (void) fmt.Printf("%d ", dd.invperm[i]);
-        }
-        (void) fmt.Printf("\n");
-        (void) fmt.Printf("Inverse Permutation:");
-        for i=0; i<size; i++ {
-            if i%20 == 0 { (void) fmt.Printf("\n"); }
-            (void) fmt.Printf("%d ", dd.perm[i]);
-        }
-        (void) fmt.Printf("\n");
-        }
-
-        if pr>0 {(void) fmt.Printf("M"); Cudd_PrintDebug(dd,M,nx+ny,pr);}
-
-        if profile != 0 {
-        retval = cuddHeapProfile(dd);
-        }
-
-    }
-
-    /* Dump DDs of C and M if so requested. */
-    if dfile != "" {
-        dfunc[0] = C;
-        dfunc[1] = M;
-        if blifOrDot == 1 {
-        /* Only dump C because blif cannot handle ADDs */
-        retval = Cudd_DumpBlif(dd,1,dfunc,nil,(char **)onames,
-                       nil,dfp,0);
-        } else {
-        retval = Cudd_DumpDot(dd,2,dfunc,nil,(char **)onames,dfp);
-        }
-        if retval != 1 {
-        (void) fmt.Fprintf(os.Stderr, "abnormal termination\n");
-        os.Exit(int(2));
-        }
-    }
-
-    Cudd_RecursiveDeref(dd, C);
-    Cudd_RecursiveDeref(dd, M);
-
-    if clearcache != 0 {
-        if pr>0 {(void) fmt.Printf("Clearing the cache... ");}
-        for i = dd.cacheSlots - 1; i>=0; i-- {
-        dd.cache[i].data = NIL(DdNode);
-        }
-        if pr>0 {(void) fmt.Printf("done\n");}
-    }
-    if pr>0 {
-        (void) fmt.Printf("Number of variables = %6d\t", dd.size);
-        (void) fmt.Printf("Number of slots     = %6d\n", dd.slots);
-        (void) fmt.Printf("Number of keys      = %6d\t", dd.keys);
-        (void) fmt.Printf("Number of min dead  = %6d\n", dd.minDead);
-    }
-
-    
-if !((multiple != 0) && !feof(fp)) { break }
-} 
-
-    _ = (fp).Close();
-    if dfile != "" {
-    _ = (dfp).Close();
-    }
-
-    /* Second phase: experiment with Walsh matrices. */
-    if !testWalsh(dd,N,cmu,approach,pr) {
-    os.Exit(int(2));
-    }
-
-    /* Check variable destruction. */
-    assert(cuddDestroySubtables(dd,3), "cuddDestroySubtables(dd,3)");
-    assert(Cudd_DebugCheck(dd) == 0, "Cudd_DebugCheck(dd) == 0");
-    assert(Cudd_CheckKeys(dd) == 0, "Cudd_CheckKeys(dd) == 0");
-
-    retval = Cudd_CheckZeroRef(dd);
-    ok = retval != 0;  /* ok == 0 means O.K. */
-    if retval != 0 {
-    (void) fmt.Fprintf(os.Stderr, "%d non-zero DD reference counts after dereferencing\n", retval);
-    }
-
-    if pr >= 0 {
-    (void) Cudd_PrintInfo(dd,os.Stdout);
-    }
-
-    Cudd_Quit(dd);
-
-#ifdef MNEMOSYNE
-    mnem_writestats();
-#endif
-
-    if pr>0 { (void) fmt.Printf("total time = %s\n", util_print_time(util_cpu_time() - startTime)); }
-
-    if pr >= 0 { util_print_cpu_stats(os.Stdout); }
-    os.Exit(int(ok));
-    /* NOTREACHED */
-
-} /* end of main */
-
-
-/*---------------------------------------------------------------------------*/
-/* Definition of static functions                                            */
-/*---------------------------------------------------------------------------*/
-
-
-/**Function********************************************************************
-
-  Synopsis    [Prints usage info for testcudd.]
-
-  Description []
-
-  SideEffects [None]
-
-  SeeAlso     []
-
-******************************************************************************/
-func usage(prog string) {
-    (void) fmt.Fprintf(os.Stderr, "usage: %s [options] [file]\n", prog);
-    (void) fmt.Fprintf(os.Stderr, "   -C\t\tuse CMU multiplication algorithm\n");
-    (void) fmt.Fprintf(os.Stderr, "   -D\t\tenable automatic dynamic reordering\n");
-    (void) fmt.Fprintf(os.Stderr, "   -H\t\tread matrix in Harwell format\n");
-    (void) fmt.Fprintf(os.Stderr, "   -M\t\tturns off memory allocation recording\n");
-    (void) fmt.Fprintf(os.Stderr, "   -P\t\tprint BDD heap profile\n");
-    (void) fmt.Fprintf(os.Stderr, "   -S n\t\tnumber of slots for each subtable\n");
-    (void) fmt.Fprintf(os.Stderr, "   -X n\t\ttarget maximum memory in bytes\n");
-    (void) fmt.Fprintf(os.Stderr, "   -a n\t\tchoose reordering approach (0-13)\n");
-    (void) fmt.Fprintf(os.Stderr, "   \t\t\t0: same as autoMethod\n");
-    (void) fmt.Fprintf(os.Stderr, "   \t\t\t1: no reordering (default)\n");
-    (void) fmt.Fprintf(os.Stderr, "   \t\t\t2: random\n");
-    (void) fmt.Fprintf(os.Stderr, "   \t\t\t3: pivot\n");
-    (void) fmt.Fprintf(os.Stderr, "   \t\t\t4: sifting\n");
-    (void) fmt.Fprintf(os.Stderr, "   \t\t\t5: sifting to convergence\n");
-    (void) fmt.Fprintf(os.Stderr, "   \t\t\t6: symmetric sifting\n");
-    (void) fmt.Fprintf(os.Stderr, "   \t\t\t7: symmetric sifting to convergence\n");
-    (void) fmt.Fprintf(os.Stderr, "   \t\t\t8-10: window of size 2-4\n");
-    (void) fmt.Fprintf(os.Stderr, "   \t\t\t11-13: window of size 2-4 to conv.\n");
-    (void) fmt.Fprintf(os.Stderr, "   \t\t\t14: group sifting\n");
-    (void) fmt.Fprintf(os.Stderr, "   \t\t\t15: group sifting to convergence\n");
-    (void) fmt.Fprintf(os.Stderr, "   \t\t\t16: simulated annealing\n");
-    (void) fmt.Fprintf(os.Stderr, "   \t\t\t17: genetic algorithm\n");
-    (void) fmt.Fprintf(os.Stderr, "   -b\t\tuse blif as format for dumps\n");
-    (void) fmt.Fprintf(os.Stderr, "   -c\t\tclear the cache after each matrix\n");
-    (void) fmt.Fprintf(os.Stderr, "   -d file\tdump DDs to file\n");
-    (void) fmt.Fprintf(os.Stderr, "   -g\t\tselect aggregation criterion (0,5,7)\n");
-    (void) fmt.Fprintf(os.Stderr, "   -h\t\tprints this message\n");
-    (void) fmt.Fprintf(os.Stderr, "   -k\t\tprint the variable permutation\n");
-    (void) fmt.Fprintf(os.Stderr, "   -m\t\tread multiple matrices (only with -H)\n");
-    (void) fmt.Fprintf(os.Stderr, "   -n n\t\tnumber of variables\n");
-    (void) fmt.Fprintf(os.Stderr, "   -p n\t\tcontrol verbosity\n");
-    (void) fmt.Fprintf(os.Stderr, "   -v n\t\tinitial variables in the unique table\n");
-    (void) fmt.Fprintf(os.Stderr, "   -x n\t\tinitial size of the cache\n");
-    os.Exit(int(2));
-} /* end of usage */
-
-
-/**Function********************************************************************
-
-  Synopsis    [Opens a file.]
-
-  Description [Opens a file, or fails with an error message and exits.
-  Allows '-' as a synonym for standard input.]
-
-  SideEffects [None]
-
-  SeeAlso     []
-
-******************************************************************************/
-func open_file(filename string, mode string) *os.File {
-    var fp *os.File;
-
-    if int32(strings.Compare(filename, "-")) == 0 {
-    if mode[0] == 'r' {
-        return os.Stdin;
-    } else {
-        return os.Stdout;
-    }
-    } else if (fp = fopen(filename, mode)) == nil {
-    perror(filename);
-    os.Exit(int(1));
-    }
-    return fp;
-
-} /* end of open_file */
-
-
-/**Function********************************************************************
-
-  Synopsis    [Tests Walsh matrix multiplication.]
-
-  Description [Tests Walsh matrix multiplication.  Return 1 if successful;
-  0 otherwise.]
-
-  SideEffects [May create new variables in the manager.]
-
-  SeeAlso     []
-
-******************************************************************************/
-static int
-testWalsh(
-  DdManager *dd /* manager */,
-  int N /* number of variables */,
-  int cmu /* use CMU approach to matrix multiplication */,
-  int approach /* reordering approach */,
-  int pr /* verbosity level */)
-{
-    var walsh1, walsh2, wtw *DdNode;
-    var x, v, z **DdNode;
-    var i, retval int32;
-    // inlining of macro DD_ONE
-    var one *DdNode  = ((dd).one);
-    // inlining of macro DD_ZERO
-    var zero *DdNode  = ((dd).zero);
-
-    if N > 3 {
-    x = ALLOC(DdNode *,N);
-    v = ALLOC(DdNode *,N);
-    z = ALLOC(DdNode *,N);
-
-    for i = N-1; i >= 0; i-- {
-        Cudd_Ref(x[i]=cuddUniqueInter(dd,3*i,one,zero));
-        Cudd_Ref(v[i]=cuddUniqueInter(dd,3*i+1,one,zero));
-        Cudd_Ref(z[i]=cuddUniqueInter(dd,3*i+2,one,zero));
-    }
-    Cudd_Ref(walsh1 = Cudd_addWalsh(dd,v,z,N));
-    if pr>0 {(void) fmt.Printf("walsh1"); Cudd_PrintDebug(dd,walsh1,2*N,pr);}
-    Cudd_Ref(walsh2 = Cudd_addWalsh(dd,x,v,N));
-    if cmu != 0 {
-        Cudd_Ref(wtw = Cudd_addTimesPlus(dd,walsh2,walsh1,v,N));
-    } else {
-        Cudd_Ref(wtw = Cudd_addMatrixMultiply(dd,walsh2,walsh1,v,N));
-    }
-    if pr>0 {(void) fmt.Printf("wtw"); Cudd_PrintDebug(dd,wtw,2*N,pr);}
-
-    if approach != CUDD_REORDER_NONE {
-#ifdef DD_DEBUG
-        retval = Cudd_DebugCheck(dd);
-        if (retval != 0) {
-        (void) fprintf(stderr,"Error reported by Cudd_DebugCheck\n");
-        return(0);
-        }
-#endif
-        retval = Cudd_ReduceHeap(dd,(Cudd_ReorderingType)approach,5);
-        if retval == 0 {
-        (void) fmt.Fprintf(os.Stderr, "Error reported by Cudd_ReduceHeap\n");
-        return(0);
-        }
-#ifdef DD_DEBUG
-        retval = Cudd_DebugCheck(dd);
-        if (retval != 0) {
-        (void) fprintf(stderr,"Error reported by Cudd_DebugCheck\n");
-        return(0);
-        }
-#endif
-        if approach == CUDD_REORDER_SYMM_SIFT ||
-        approach == CUDD_REORDER_SYMM_SIFT_CONV {
-        Cudd_SymmProfile(dd,0,dd.size-1);
-        }
-    }
-    /* Clean up. */
-    Cudd_RecursiveDeref(dd, wtw);
-    Cudd_RecursiveDeref(dd, walsh1);
-    Cudd_RecursiveDeref(dd, walsh2);
-    for i=0; i < N; i++ {
-        Cudd_RecursiveDeref(dd, x[i]);
-        Cudd_RecursiveDeref(dd, v[i]);
-        Cudd_RecursiveDeref(dd, z[i]);
-    }
-    FREE(x);
-    FREE(v);
-    FREE(z);
-    }
-    return(1);
-
-} /* end of testWalsh */
-
-/**Function********************************************************************
-
-  Synopsis    [Tests iterators.]
-
-  Description [Tests iterators on cubes and nodes.]
-
-  SideEffects [None]
-
-  SeeAlso     []
-
-******************************************************************************/
-func testIterators(dd *DdManager, M *DdNode, C *DdNode, pr int32) int32 {
-    var cube *int32;
-    CUDD_VALUE_TYPE value;
-    var gen *DdGen;
-    var q int32;
-
-    /* Test iterator for cubes. */
-    if pr>1 {
-    (void) fmt.Printf("Testing iterator on cubes:\n");
-    Cudd_ForeachCube(dd,M,gen,cube,value) {
-        for q = 0; q < dd.size; q++ {
-        switch cube[q] {
-        case 0:
-            (void) fmt.Printf("0");
-            break;
-        case 1:
-            (void) fmt.Printf("1");
-            break;
-        case 2:
-            (void) fmt.Printf("-");
-            break;
-        default:
-            (void) fmt.Printf("?");
-        }
-        }
-        (void) fmt.Printf(" %g\n", value);
-    }
-    (void) fmt.Printf("\n");
-    }
-
-    if pr>1 {
-    (void) fmt.Printf("Testing prime expansion of cubes:\n");
-    if !Cudd_bddPrintCover(dd,C,C) { return(0); }
-    }
-
-    if pr>1 {
-    (void) fmt.Printf("Testing iterator on primes (CNF):\n");
-    Cudd_ForeachPrime(dd,Cudd_Not(C),Cudd_Not(C),gen,cube) {
-        for q = 0; q < dd.size; q++ {
-        switch cube[q] {
-        case 0:
-            (void) fmt.Printf("1");
-            break;
-        case 1:
-            (void) fmt.Printf("0");
-            break;
-        case 2:
-            (void) fmt.Printf("-");
-            break;
-        default:
-            (void) fmt.Printf("?");
-        }
-        }
-        (void) fmt.Printf(" 1\n");
-    }
-    (void) fmt.Printf("\n");
-    }
-
-    /* Test iterator on nodes. */
-    if pr>2 {
-    var node *DdNode;
-    (void) fmt.Printf("Testing iterator on nodes:\n");
-    Cudd_ForeachNode(dd,M,gen,node) {
-        if Cudd_IsConstant(node) {
-#if SIZEOF_VOID_P == 8
-        (void) printf("ID = 0x%lx\tvalue = %-9g\n",
-                  (ptruint) node /
-                  (ptruint) sizeof(DdNode),
-                  Cudd_V(node));
-#else
-        (void) printf("ID = 0x%x\tvalue = %-9g\n",
-                  (ptruint) node /
-                  (ptruint) sizeof(DdNode),
-                  Cudd_V(node));
-#endif
-        } else {
-#if SIZEOF_VOID_P == 8
-        (void) printf("ID = 0x%lx\tindex = %u\tr = %u\n",
-                  (ptruint) node /
-                  (ptruint) sizeof(DdNode),
-                  node->index, node->ref);
-#else
-        (void) printf("ID = 0x%x\tindex = %u\tr = %u\n",
-                  (ptruint) node /
-                  (ptruint) sizeof(DdNode),
-                  node->index, node->ref);
-#endif
-        }
-    }
-    (void) fmt.Printf("\n");
-    }
-    return(1);
-
-} /* end of testIterators */
-
-
-/**Function********************************************************************
-
-  Synopsis    [Tests the functions related to the exclusive OR.]
-
-  Description [Tests the functions related to the exclusive OR. It
-  builds the boolean difference of the given function in three
-  different ways and checks that the results is the same. Returns 1 if
-  successful; 0 otherwise.]
-
-  SideEffects [None]
-
-  SeeAlso     []
-
-******************************************************************************/
-func testXor(dd *DdManager, f *DdNode, pr int32, nvars int32) int32 {
-    var f1, f0, res1, res2 *DdNode;
-    var x int32;
-
-    /* Extract cofactors w.r.t. mid variable. */
-    x = nvars / 2;
-    f1 = Cudd_Cofactor(dd,f,dd.vars[x]);
-    if f1 == nil { return(0); }
-    Cudd_Ref(f1);
-
-    f0 = Cudd_Cofactor(dd,f,Cudd_Not(dd.vars[x]));
-    if f0 == nil {
-    Cudd_RecursiveDeref(dd,f1);
-    return(0);
-    }
-    Cudd_Ref(f0);
-
-    /* Compute XOR of cofactors with ITE. */
-    res1 = Cudd_bddIte(dd,f1,Cudd_Not(f0),f0);
-    if res1 == nil { return(0); }
-    Cudd_Ref(res1);
-
-    if pr>0 {(void) fmt.Printf("xor1"); Cudd_PrintDebug(dd,res1,nvars,pr);}
-
-    /* Compute XOR of cofactors with XOR. */
-    res2 = Cudd_bddXor(dd,f1,f0);
-    if res2 == nil {
-    Cudd_RecursiveDeref(dd,res1);
-    return(0);
-    }
-    Cudd_Ref(res2);
-
-    if res1 != res2 {
-    if pr>0 {(void) fmt.Printf("xor2"); Cudd_PrintDebug(dd,res2,nvars,pr);}
-    Cudd_RecursiveDeref(dd,res1);
-    Cudd_RecursiveDeref(dd,res2);
-    return(0);
-    }
-    Cudd_RecursiveDeref(dd,res1);
-    Cudd_RecursiveDeref(dd,f1);
-    Cudd_RecursiveDeref(dd,f0);
-
-    /* Compute boolean difference directly. */
-    res1 = Cudd_bddBooleanDiff(dd,f,x);
-    if res1 == nil {
-    Cudd_RecursiveDeref(dd,res2);
-    return(0);
-    }
-    Cudd_Ref(res1);
-
-    if res1 != res2 {
-    if pr>0 {(void) fmt.Printf("xor3"); Cudd_PrintDebug(dd,res1,nvars,pr);}
-    Cudd_RecursiveDeref(dd,res1);
-    Cudd_RecursiveDeref(dd,res2);
-    return(0);
-    }
-    Cudd_RecursiveDeref(dd,res1);
-    Cudd_RecursiveDeref(dd,res2);
-    return(1);
-
-} /* end of testXor */
-
-
-/**Function********************************************************************
-
-  Synopsis    [Tests the Hamming distance functions.]
-
-  Description [Tests the Hammming distance functions. Returns
-  1 if successful; 0 otherwise.]
-
-  SideEffects [None]
-
-  SeeAlso     []
-
-******************************************************************************/
-func testHamming(dd *DdManager, f *DdNode, pr int32) int32 {
-    var vars **DdNode;
-    var minBdd *DdNode;
-    var zero *DdNode;
-    var scan *DdNode;
-    var i int32;
-    var d int32;
-    var minterm *int32;
-    var size int32  = Cudd_ReadSize(dd);
-
-    vars = ALLOC(DdNode *, size);
-    if vars == nil { return(0); }
-    for i = 0; i < size; i++ {
-    vars[i] = Cudd_bddIthVar(dd,i);
-    }
-
-    minBdd = Cudd_bddPickOneMinterm(dd,Cudd_Not(f),vars,size);
-    Cudd_Ref(minBdd);
-    if pr > 0 {
-    (void) fmt.Printf("Chosen minterm for Hamming distance test: ");
-    Cudd_PrintDebug(dd,minBdd,size,pr);
-    }
-
-    minterm = ALLOC(int,size);
-    if minterm == nil {
-    FREE(vars);
-    Cudd_RecursiveDeref(dd,minBdd);
-    return(0);
-    }
-    scan = minBdd;
-    zero = Cudd_Not(DD_ONE(dd));
-    for !Cudd_IsConstant(scan) {
-    var R *DdNode  = Cudd_Regular(scan);
-    var T *DdNode  = Cudd_T(R);
-    var E *DdNode  = Cudd_E(R);
-    if R != scan {
-        T = Cudd_Not(T);
-        E = Cudd_Not(E);
-    }
-    if T == zero {
-        minterm[R.index] = 0;
-        scan = E;
-    } else {
-        minterm[R.index] = 1;
-        scan = T;
-    }
-    }
-    Cudd_RecursiveDeref(dd,minBdd);
-
-    d = Cudd_MinHammingDist(dd,f,minterm,size);
-
-    (void) fmt.Printf("Minimum Hamming distance = %d\n", d);
-
-    FREE(vars);
-    FREE(minterm);
-    return(1);
-
-} /* end of testHamming */
+const TESTCUDD_VERSION = "TestCudd Version #1.0, Release date 3/17/01"
+
+var onames = []string{"C", "M"}
+
+type testCuddOptions struct {
+	cmu, autodyn, harwell, multiple, profile, keepperm, clearcache, blif, memoryRecord int
+	approach, groupcheck, n, pr, nvars, slots, cache                                   int
+	maxMemory                                                                          uint64
+	dump, file                                                                         string
+}
+
+func parseTestCuddArgs(args []string, stderr io.Writer) (testCuddOptions, error) {
+	o := testCuddOptions{approach: int(CUDD_REORDER_NONE), groupcheck: int(CUDD_GROUP_CHECK7), n: 4, nvars: 4, slots: CUDD_UNIQUE_SLOTS, cache: 127, file: "-"}
+	fs := flag.NewFlagSet("testcudd", flag.ContinueOnError)
+	fs.SetOutput(stderr)
+	fs.Usage = func() { testCuddUsage(stderr) }
+	fs.Var((*boolFlag)(&o.cmu), "C", "use CMU multiplication algorithm")
+	fs.Var((*boolFlag)(&o.autodyn), "D", "enable automatic dynamic reordering")
+	fs.Var((*boolFlag)(&o.harwell), "H", "read matrix in Harwell format")
+	fs.Var((*boolFlag)(&o.memoryRecord), "M", "turn off memory allocation recording")
+	fs.Var((*boolFlag)(&o.profile), "P", "print BDD heap profile")
+	fs.Var((*boolFlag)(&o.multiple), "m", "read multiple matrices")
+	fs.Var((*boolFlag)(&o.keepperm), "k", "print the variable permutation")
+	fs.Var((*boolFlag)(&o.clearcache), "c", "clear the cache after each matrix")
+	fs.Var((*boolFlag)(&o.blif), "b", "use blif as format for dumps")
+	fs.IntVar(&o.slots, "S", o.slots, "number of slots for each subtable")
+	fs.Uint64Var(&o.maxMemory, "X", 0, "target maximum memory in bytes")
+	fs.IntVar(&o.approach, "a", o.approach, "reordering approach (0-17)")
+	fs.IntVar(&o.groupcheck, "g", o.groupcheck, "aggregation criterion (0,5,7)")
+	fs.IntVar(&o.n, "n", o.n, "number of variables for Walsh matrices")
+	fs.IntVar(&o.pr, "p", 0, "verbosity")
+	fs.IntVar(&o.nvars, "v", o.nvars, "initial variables in unique table")
+	fs.IntVar(&o.cache, "x", o.cache, "initial cache size")
+	fs.StringVar(&o.dump, "d", "", "dump DDs to file")
+	if err := fs.Parse(args); err != nil {
+		return o, err
+	}
+	if fs.NArg() > 1 {
+		return o, fmt.Errorf("expected at most one input file")
+	}
+	if fs.NArg() == 1 {
+		o.file = fs.Arg(0)
+	}
+	if o.approach < 0 || o.approach > 17 {
+		return o, fmt.Errorf("invalid approach: %d", o.approach)
+	}
+	if o.slots < 0 || o.cache < 0 || o.n < 0 || o.nvars < 0 {
+		return o, fmt.Errorf("sizes must be non-negative")
+	}
+	return o, nil
+}
+
+type boolFlag int
+
+func (b *boolFlag) Set(value string) error {
+	v, err := strconv.ParseBool(value)
+	if err != nil {
+		return err
+	}
+	if v {
+		*b = 1
+	} else {
+		*b = 0
+	}
+	return nil
+}
+func (b *boolFlag) String() string   { return strconv.Itoa(int(*b)) }
+func (b *boolFlag) IsBoolFlag() bool { return true }
+
+func main() { os.Exit(runTestCudd(os.Args[1:], os.Stdout, os.Stderr)) }
+
+func testCuddUsage(out io.Writer) {
+	fmt.Fprintln(out, "usage: testcudd [options] [file]")
+	fmt.Fprintln(out, "   -C\t\tuse CMU multiplication algorithm")
+	fmt.Fprintln(out, "   -D\t\tenable automatic dynamic reordering")
+	fmt.Fprintln(out, "   -H\t\tread matrix in Harwell format")
+	fmt.Fprintln(out, "   -M\t\tturns off memory allocation recording")
+	fmt.Fprintln(out, "   -P\t\tprint BDD heap profile")
+	fmt.Fprintln(out, "   -S n\t\tnumber of slots for each subtable")
+	fmt.Fprintln(out, "   -X n\t\ttarget maximum memory in bytes")
+	fmt.Fprintln(out, "   -a n\t\tchoose reordering approach (0-17)")
+	fmt.Fprintln(out, "   \t\t\t0: same as autoMethod; 1: none; 2: random; 3: pivot")
+	fmt.Fprintln(out, "   \t\t\t4: sifting; 5: sifting to convergence; 6-7: symmetric sifting")
+	fmt.Fprintln(out, "   \t\t\t8-10: window of size 2-4; 11-13: window to convergence")
+	fmt.Fprintln(out, "   \t\t\t14-15: group sifting; 16: simulated annealing; 17: genetic algorithm")
+	fmt.Fprintln(out, "   -b\t\tuse blif as format for dumps")
+	fmt.Fprintln(out, "   -c\t\tclear the cache after each matrix")
+	fmt.Fprintln(out, "   -d file\tdump DDs to file")
+	fmt.Fprintln(out, "   -g n\t\tselect aggregation criterion (0,5,7)")
+	fmt.Fprintln(out, "   -h\t\tprints this message")
+	fmt.Fprintln(out, "   -k\t\tprint the variable permutation")
+	fmt.Fprintln(out, "   -m\t\tread multiple matrices (only with -H)")
+	fmt.Fprintln(out, "   -n n\t\tnumber of variables")
+	fmt.Fprintln(out, "   -p n\t\tcontrol verbosity")
+	fmt.Fprintln(out, "   -v n\t\tinitial variables in the unique table")
+	fmt.Fprintln(out, "   -x n\t\tinitial size of the cache")
+}
+
+func runTestCudd(args []string, stdout, stderr *os.File) int {
+	started := time.Now()
+	o, err := parseTestCuddArgs(args, stderr)
+	if err != nil {
+		if errors.Is(err, flag.ErrHelp) {
+			return 2
+		}
+		fmt.Fprintln(stderr, err)
+		return 2
+	}
+	if o.pr >= 0 {
+		fmt.Fprintf(stdout, "# %s\n# testcudd", TESTCUDD_VERSION)
+		for _, arg := range append([]string{"testcudd"}, args...) {
+			fmt.Fprintf(stdout, " %s", arg)
+		}
+		fmt.Fprintln(stdout)
+	}
+	dd := Cudd_Init(uint32(o.nvars), 0, uint32(o.slots), uint32(o.cache), o.maxMemory)
+	if dd == nil {
+		fmt.Fprintln(stderr, "failed to initialize CUDD manager")
+		return 1
+	}
+	Cudd_SetGroupcheck(dd, Cudd_AggregationType(o.groupcheck))
+	if o.autodyn != 0 {
+		Cudd_AutodynEnable(dd, CUDD_REORDER_SAME)
+	}
+	input, err := openTestFile(o.file, "r", os.Stdin, os.Stdout)
+	if err != nil {
+		fmt.Fprintln(stderr, err)
+		Cudd_Quit(dd)
+		return 1
+	}
+	defer func() {
+		if input != os.Stdin {
+			_ = input.Close()
+		}
+	}()
+	var dump *os.File
+	if o.dump != "" {
+		dump, err = os.Create(o.dump)
+		if err != nil {
+			fmt.Fprintln(stderr, err)
+			Cudd_Quit(dd)
+			return 1
+		}
+		defer dump.Close()
+	}
+	result := runMatrixTests(dd, input, dump, o, stdout, stderr)
+	if result == 0 {
+		Cudd_Quit(dd)
+		return 2
+	}
+	if testWalsh(dd, int32(o.n), int32(o.cmu), Cudd_ReorderingType(o.approach), int32(o.pr), stdout, stderr) == 0 {
+		Cudd_Quit(dd)
+		return 2
+	}
+	if cuddDestroySubtables(dd, 3) == 0 || Cudd_DebugCheck(dd) != 0 || Cudd_CheckKeys(dd) != 0 {
+		Cudd_Quit(dd)
+		return 2
+	}
+	leaks := Cudd_CheckZeroRef(dd)
+	if leaks != 0 {
+		fmt.Fprintf(stderr, "%d non-zero DD reference counts after dereferencing\n", leaks)
+	}
+	if o.pr >= 0 {
+		Cudd_PrintInfo(dd, stdout)
+	}
+	Cudd_Quit(dd)
+	if o.pr > 0 {
+		fmt.Fprintf(stdout, "total time = %s\n", time.Since(started))
+	}
+	if leaks != 0 {
+		return 1
+	}
+	return 0
+}
+
+func openTestFile(name, mode string, stdin, stdout *os.File) (*os.File, error) {
+	if name == "-" {
+		if mode[0] == 'r' {
+			return stdin, nil
+		}
+		return stdout, nil
+	}
+	if mode[0] == 'r' {
+		return os.Open(name)
+	}
+	return os.Create(name)
+}
+
+func runMatrixTests(dd *DdManager, input io.Reader, dump *os.File, o testCuddOptions, stdout, stderr io.Writer) int {
+	var M *DdNode
+	var x, y, xn, yn []*DdNode
+	var nx, ny, rows, cols int32
+	if o.harwell != 0 {
+		err := forEachHarwellMatrix(input, dd, o, stdout, func(hb *HarwellMatrix) bool {
+			M, x, y, xn, yn = hb.Function, hb.X, hb.Y, hb.XNeg, hb.YNeg
+			nx, ny, rows, cols = int32(len(x)), int32(len(y)), int32(hb.Rows), int32(hb.Cols)
+			return M != nil && runMatrix(dd, M, x, y, xn, yn, nx, ny, o, dump, stdout, stderr) != 0
+		})
+		if err != nil {
+			fmt.Fprintf(stderr, "Error reading matrix: %v\n", err)
+			return 0
+		}
+		return 1
+	} else {
+		if Cudd_addRead(input, dd, &M, &x, &y, &xn, &yn, &nx, &ny, &rows, &cols, 0, 2, 1, 2) == 0 {
+			fmt.Fprintln(stderr, "Error reading matrix")
+			return 0
+		}
+		if o.pr >= 0 {
+			fmt.Fprintf(stdout, ":name: %s: %d rows %d columns\n", o.file, rows, cols)
+		}
+	}
+	if M == nil {
+		fmt.Fprintln(stderr, "matrix reader returned a nil ADD")
+		return 0
+	}
+	return runMatrix(dd, M, x, y, xn, yn, nx, ny, o, dump, stdout, stderr)
+}
+
+// forEachHarwellMatrix implements testcudd's do/while read loop. Each read
+// starts with empty variable vectors; the callback owns and releases the
+// matrix function and variable references before the next read begins.
+func forEachHarwellMatrix(input io.Reader, dd *DdManager, o testCuddOptions, stdout io.Writer, visit func(*HarwellMatrix) bool) error {
+	var verbose io.Writer
+	if o.pr > 0 {
+		verbose = stdout
+	}
+	count := 0
+	for {
+		if o.pr >= 0 {
+			fmt.Fprint(stdout, ":name: ")
+		}
+		matrix, more, err := Cudd_addHarwellNext(input, dd, 0, 2, 1, 2, verbose)
+		if err != nil {
+			return err
+		}
+		if !more {
+			if count == 0 {
+				return fmt.Errorf("empty Harwell input")
+			}
+			return nil
+		}
+		if !visit(matrix) {
+			return fmt.Errorf("matrix processing failed")
+		}
+		count++
+		if o.multiple == 0 {
+			return nil
+		}
+	}
+}
+
+func runMatrix(dd *DdManager, M *DdNode, x, y, xn, yn []*DdNode, nx, ny int32, o testCuddOptions, dump *os.File, stdout, stderr io.Writer) int {
+	defer Cudd_RecursiveDeref(dd, M)
+	start := time.Now()
+	maxny := ny
+	ycube := Cudd_ReadOne(dd)
+	Cudd_Ref(ycube)
+	for i := maxny - 1; i >= 0; i-- {
+		tmp := Cudd_bddAnd(dd, Cudd_Not(Cudd_ReadVars(dd, int32(Cudd_NodeReadIndex(y[i])))), ycube)
+		if tmp == nil {
+			return 0
+		}
+		Cudd_Ref(tmp)
+		Cudd_RecursiveDeref(dd, ycube)
+		ycube = tmp
+	}
+	defer Cudd_RecursiveDeref(dd, ycube)
+	xvars, yvars := make([]*DdNode, nx), make([]*DdNode, ny)
+	for i := range xvars {
+		xvars[i] = Cudd_ReadVars(dd, int32(Cudd_NodeReadIndex(x[i])))
+	}
+	for i := range yvars {
+		yvars[i] = Cudd_ReadVars(dd, int32(Cudd_NodeReadIndex(y[i])))
+	}
+	for _, n := range append(append([]*DdNode(nil), x...), xn...) {
+		Cudd_RecursiveDeref(dd, n)
+	}
+	for _, n := range append(append([]*DdNode(nil), y...), yn...) {
+		Cudd_RecursiveDeref(dd, n)
+	}
+	if o.pr > 0 {
+		fmt.Fprint(stdout, ":1: M")
+		Cudd_PrintDebug(dd, M, nx+ny, int32(o.pr))
+	}
+	if o.pr > 0 {
+		fmt.Fprintf(stdout, ":2: time to read the matrix = %s\n", time.Since(start))
+	}
+	C := Cudd_addBddPattern(dd, M)
+	if C == nil {
+		return 0
+	}
+	Cudd_Ref(C)
+	defer Cudd_RecursiveDeref(dd, C)
+	if o.pr > 0 {
+		fmt.Fprint(stdout, ":3: C")
+		Cudd_PrintDebug(dd, C, nx+ny, int32(o.pr))
+	}
+	if testIterators(dd, M, C, int32(o.pr), stdout) == 0 {
+		return 0
+	}
+	cuddCacheProfile(dd, os.Stdout)
+	if testXor(dd, C, int32(o.pr), nx+ny, stdout) == 0 || testHamming(dd, C, int32(o.pr), stdout) == 0 {
+		return 0
+	}
+	CP := Cudd_CProjection(dd, C, ycube)
+	if CP == nil {
+		return 0
+	}
+	Cudd_Ref(CP)
+	defer Cudd_RecursiveDeref(dd, CP)
+	if o.pr > 0 {
+		fmt.Fprint(stdout, "ycube")
+		Cudd_PrintDebug(dd, ycube, nx+ny, int32(o.pr))
+		fmt.Fprint(stdout, "CP")
+		Cudd_PrintDebug(dd, CP, nx+ny, int32(o.pr))
+	}
+	if nx == ny {
+		cpr := Cudd_PrioritySelect(dd, C, xvars, yvars, nil, nil, int(ny), Cudd_Xgty)
+		if cpr == nil {
+			return 0
+		}
+		Cudd_Ref(cpr)
+		if o.pr > 0 {
+			fmt.Fprint(stdout, ":4: CPr")
+			Cudd_PrintDebug(dd, cpr, nx+ny, int32(o.pr))
+		}
+		if CP != cpr {
+			fmt.Fprintln(stdout, "CP != CPr!")
+		}
+		Cudd_RecursiveDeref(dd, cpr)
+	}
+	f := Cudd_Inequality(dd, int(min32(nx, ny)), 2, xvars, yvars)
+	if f == nil {
+		return 0
+	}
+	Cudd_Ref(f)
+	if o.pr > 0 {
+		fmt.Fprint(stdout, ":4: ineq")
+		Cudd_PrintDebug(dd, f, nx+ny, int32(o.pr))
+		if o.pr > 1 {
+			printPrimeCubes(dd, Cudd_Not(f), stdout)
+		}
+	}
+	Cudd_IterDerefBdd(dd, f)
+	ess := Cudd_FindEssential(dd, C)
+	if ess == nil {
+		return 0
+	}
+	Cudd_Ref(ess)
+	if o.pr > 0 {
+		fmt.Fprint(stdout, ":4: ess")
+		Cudd_PrintDebug(dd, ess, nx+ny, int32(o.pr))
+	}
+	Cudd_RecursiveDeref(dd, ess)
+	var length int32
+	short := Cudd_ShortestPath(dd, M, nil, nil, &length)
+	if short == nil {
+		return 0
+	}
+	Cudd_Ref(short)
+	if o.pr > 0 {
+		fmt.Fprint(stdout, ":5: shortP")
+		Cudd_PrintDebug(dd, short, nx+ny, int32(o.pr))
+	}
+	largest := Cudd_LargestCube(dd, Cudd_Not(C), &length)
+	if largest == nil {
+		return 0
+	}
+	Cudd_Ref(largest)
+	if o.pr > 0 {
+		fmt.Fprint(stdout, ":5b: largest")
+		Cudd_PrintDebug(dd, largest, nx+ny, int32(o.pr))
+	}
+	Cudd_RecursiveDeref(dd, largest)
+	shortA := Cudd_BddToAdd(dd, short)
+	if shortA == nil {
+		Cudd_RecursiveDeref(dd, short)
+		return 0
+	}
+	Cudd_Ref(shortA)
+	Cudd_RecursiveDeref(dd, short)
+	constN := Cudd_addEvalConst(dd, shortA, M)
+	if constN == DD_NON_CONSTANT || Cudd_addIteConstant(dd, shortA, M, constN) != constN {
+		Cudd_RecursiveDeref(dd, shortA)
+		return 0
+	}
+	if o.pr > 0 {
+		fmt.Fprintf(stdout, "The value of M along the chosen shortest path is %g\n", Cudd_V(constN))
+	}
+	Cudd_RecursiveDeref(dd, shortA)
+	short = Cudd_ShortestPath(dd, C, nil, nil, &length)
+	if short == nil {
+		return 0
+	}
+	Cudd_Ref(short)
+	if o.pr > 0 {
+		fmt.Fprint(stdout, ":6: shortP")
+		Cudd_PrintDebug(dd, short, nx+ny, int32(o.pr))
+	}
+	if !Cudd_bddLeq(dd, short, C) || Cudd_bddIteConstant(dd, Cudd_Not(short), Cudd_ReadOne(dd), C) != Cudd_ReadOne(dd) {
+		Cudd_RecursiveDeref(dd, short)
+		return 0
+	}
+	Cudd_RecursiveDeref(dd, short)
+	if o.profile != 0 {
+		cuddHeapProfile(dd)
+	}
+	size := Cudd_ReadSize(dd)
+	if o.pr > 0 {
+		fmt.Fprintf(stdout, "Average distance: %g\n", Cudd_AverageDistance(dd))
+	}
+	if Cudd_ReorderingType(o.approach) != CUDD_REORDER_NONE {
+		if Cudd_EnableReorderingReporting(dd) == 0 {
+			fmt.Fprintln(stderr, "Error reported by Cudd_EnableReorderingReporting")
+			return 0
+		}
+		if Cudd_ReduceHeap(dd, Cudd_ReorderingType(o.approach), 5) == 0 {
+			fmt.Fprintln(stderr, "Error reported by Cudd_ReduceHeap")
+			return 0
+		}
+		if Cudd_DisableReorderingReporting(dd) == 0 {
+			fmt.Fprintln(stderr, "Error reported by Cudd_DisableReorderingReporting")
+			return 0
+		}
+		if Cudd_ReorderingType(o.approach) == CUDD_REORDER_SYMM_SIFT || Cudd_ReorderingType(o.approach) == CUDD_REORDER_SYMM_SIFT_CONV {
+			Cudd_SymmProfile(dd, 0, Cudd_ReadSize(dd)-1)
+		}
+		if o.pr > 0 {
+			fmt.Fprintf(stdout, "Average distance: %g\n", Cudd_AverageDistance(dd))
+		}
+		if o.keepperm != 0 {
+			printPermutation(dd, size, stdout)
+		}
+		if o.pr > 0 {
+			fmt.Fprint(stdout, "M")
+			Cudd_PrintDebug(dd, M, nx+ny, int32(o.pr))
+		}
+		if o.profile != 0 {
+			cuddHeapProfile(dd)
+		}
+	}
+	if dump != nil {
+		var status int32
+		if o.blif != 0 {
+			status = Cudd_DumpBlif(dd, []*DdNode{C}, nil, nil, "testcudd", dump, 0)
+		} else {
+			status = Cudd_DumpDot(dd, []*DdNode{C, M}, nil, onames, dump)
+		}
+		if status != 1 {
+			fmt.Fprintln(stderr, "abnormal termination")
+			return 0
+		}
+	}
+	if o.clearcache != 0 {
+		if o.pr > 0 {
+			fmt.Fprint(stdout, "Clearing the cache... ")
+		}
+		cuddCacheFlush(dd)
+		if o.pr > 0 {
+			fmt.Fprintln(stdout, "done")
+		}
+	}
+	if o.pr > 0 {
+		fmt.Fprintf(stdout, "Number of variables = %6d\tNumber of slots = %6d\nNumber of keys = %6d\tNumber of min dead = %6d\n", Cudd_ReadSize(dd), Cudd_ReadSlots(dd), Cudd_ReadKeys(dd), Cudd_ReadMinDead(dd))
+	}
+	return 1
+}
+
+func printPermutation(dd *DdManager, size int32, out io.Writer) {
+	fmt.Fprint(out, "Variable Permutation:")
+	for i := int32(0); i < size; i++ {
+		if i%20 == 0 {
+			fmt.Fprintln(out)
+		}
+		fmt.Fprintf(out, "%d ", Cudd_ReadInvPerm(dd, i))
+	}
+	fmt.Fprint(out, "\nInverse Permutation:")
+	for i := int32(0); i < size; i++ {
+		if i%20 == 0 {
+			fmt.Fprintln(out)
+		}
+		fmt.Fprintf(out, "%d ", Cudd_ReadPerm(dd, i))
+	}
+	fmt.Fprintln(out)
+}
+func min32(a, b int32) int32 {
+	if a < b {
+		return a
+	}
+	return b
+}
+func printPrimeCubes(dd *DdManager, f *DdNode, out io.Writer) {
+	var cube *int32
+	gen := Cudd_FirstPrime(dd, f, f, &cube)
+	if gen == nil {
+		return
+	}
+	defer Cudd_GenFree(gen)
+	for Cudd_IsGenEmpty(gen) == 0 {
+		for i := int32(0); i < Cudd_ReadSize(dd); i++ {
+			switch unsafe.Slice(cube, int(Cudd_ReadSize(dd)))[i] {
+			case 0:
+				fmt.Fprint(out, "1")
+			case 1:
+				fmt.Fprint(out, "0")
+			case 2:
+				fmt.Fprint(out, "-")
+			default:
+				fmt.Fprint(out, "?")
+			}
+		}
+		fmt.Fprintln(out, " 1")
+		if Cudd_NextPrime(gen, &cube) == 0 {
+			break
+		}
+	}
+	fmt.Fprintln(out)
+}
+
+func testWalsh(dd *DdManager, n, cmu int32, approach Cudd_ReorderingType, pr int32, out, errOut io.Writer) int32 {
+	if n <= 3 {
+		return 1
+	}
+	x, v, z := make([]*DdNode, n), make([]*DdNode, n), make([]*DdNode, n)
+	one, zero := Cudd_ReadOne(dd), Cudd_ReadZero(dd)
+	for i := n - 1; i >= 0; i-- {
+		x[i] = cuddUniqueInter(dd, 3*i, one, zero)
+		v[i] = cuddUniqueInter(dd, 3*i+1, one, zero)
+		z[i] = cuddUniqueInter(dd, 3*i+2, one, zero)
+		Cudd_Ref(x[i])
+		Cudd_Ref(v[i])
+		Cudd_Ref(z[i])
+	}
+	walsh1 := Cudd_addWalsh(dd, v, z, n)
+	if walsh1 == nil {
+		return 0
+	}
+	Cudd_Ref(walsh1)
+	if pr > 0 {
+		fmt.Fprint(out, "walsh1")
+		Cudd_PrintDebug(dd, walsh1, 2*n, pr)
+	}
+	walsh2 := Cudd_addWalsh(dd, x, v, n)
+	if walsh2 == nil {
+		Cudd_RecursiveDeref(dd, walsh1)
+		return 0
+	}
+	Cudd_Ref(walsh2)
+	var product *DdNode
+	if cmu != 0 {
+		product = Cudd_addTimesPlus(dd, walsh2, walsh1, v, n)
+	} else {
+		product = Cudd_addMatrixMultiply(dd, walsh2, walsh1, v, n)
+	}
+	if product == nil {
+		Cudd_RecursiveDeref(dd, walsh1)
+		Cudd_RecursiveDeref(dd, walsh2)
+		return 0
+	}
+	Cudd_Ref(product)
+	if pr > 0 {
+		fmt.Fprint(out, "wtw")
+		Cudd_PrintDebug(dd, product, 2*n, pr)
+	}
+	if approach != CUDD_REORDER_NONE && Cudd_ReduceHeap(dd, approach, 5) == 0 {
+		fmt.Fprintln(errOut, "Error reported by Cudd_ReduceHeap")
+		return 0
+	}
+	if approach == CUDD_REORDER_SYMM_SIFT || approach == CUDD_REORDER_SYMM_SIFT_CONV {
+		Cudd_SymmProfile(dd, 0, Cudd_ReadSize(dd)-1)
+	}
+	Cudd_RecursiveDeref(dd, product)
+	Cudd_RecursiveDeref(dd, walsh1)
+	Cudd_RecursiveDeref(dd, walsh2)
+	for i := int32(0); i < n; i++ {
+		Cudd_RecursiveDeref(dd, x[i])
+		Cudd_RecursiveDeref(dd, v[i])
+		Cudd_RecursiveDeref(dd, z[i])
+	}
+	return 1
+}
+
+func testIterators(dd *DdManager, M, C *DdNode, pr int32, out io.Writer) int32 {
+	var cube *int32
+	var value CUDD_VALUE_TYPE
+	gen := Cudd_FirstCube(dd, M, &cube, &value)
+	if gen == nil {
+		return 0
+	}
+	if pr > 1 {
+		fmt.Fprintln(out, "Testing iterator on cubes:")
+		for Cudd_IsGenEmpty(gen) == 0 {
+			printCube(dd, cube, false, out)
+			fmt.Fprintf(out, " %g\n", value)
+			if Cudd_NextCube(gen, &cube, &value) == 0 {
+				break
+			}
+		}
+		fmt.Fprintln(out)
+	}
+	Cudd_GenFree(gen)
+	if pr > 1 {
+		fmt.Fprintln(out, "Testing prime expansion of cubes:")
+		if Cudd_bddPrintCover(dd, C, C) == 0 {
+			return 0
+		}
+	}
+	if pr > 1 {
+		fmt.Fprintln(out, "Testing iterator on primes (CNF):")
+		printPrimeCubes(dd, Cudd_Not(C), out)
+	}
+	if pr > 2 {
+		fmt.Fprintln(out, "Testing iterator on nodes:")
+		var node *DdNode
+		ngen := Cudd_FirstNode(dd, M, &node)
+		if ngen == nil {
+			return 0
+		}
+		for Cudd_IsGenEmpty(ngen) == 0 {
+			r := Cudd_Regular(node)
+			if Cudd_IsConstant(node) {
+				fmt.Fprintf(out, "ID = 0x%x\tvalue = %-9g\n", r.ID, Cudd_V(node))
+			} else {
+				fmt.Fprintf(out, "ID = 0x%x\tindex = %d\tr = %d\n", r.ID, Cudd_NodeReadIndex(node), r.Ref)
+			}
+			if Cudd_NextNode(ngen, &node) == 0 {
+				break
+			}
+		}
+		Cudd_GenFree(ngen)
+		fmt.Fprintln(out)
+	}
+	return 1
+}
+func printCube(dd *DdManager, cube *int32, negate bool, out io.Writer) {
+	values := unsafe.Slice(cube, int(Cudd_ReadSize(dd)))
+	for _, v := range values {
+		switch v {
+		case 0:
+			if negate {
+				fmt.Fprint(out, "1")
+			} else {
+				fmt.Fprint(out, "0")
+			}
+		case 1:
+			if negate {
+				fmt.Fprint(out, "0")
+			} else {
+				fmt.Fprint(out, "1")
+			}
+		case 2:
+			fmt.Fprint(out, "-")
+		default:
+			fmt.Fprint(out, "?")
+		}
+	}
+}
+func testXor(dd *DdManager, f *DdNode, pr, nvars int32, out io.Writer) int32 {
+	x := nvars / 2
+	f1 := Cudd_Cofactor(dd, f, Cudd_ReadVars(dd, x))
+	if f1 == nil {
+		return 0
+	}
+	Cudd_Ref(f1)
+	f0 := Cudd_Cofactor(dd, f, Cudd_Not(Cudd_ReadVars(dd, x)))
+	if f0 == nil {
+		Cudd_RecursiveDeref(dd, f1)
+		return 0
+	}
+	Cudd_Ref(f0)
+	res1 := Cudd_bddIte(dd, f1, Cudd_Not(f0), f0)
+	if res1 == nil {
+		Cudd_RecursiveDeref(dd, f1)
+		Cudd_RecursiveDeref(dd, f0)
+		return 0
+	}
+	Cudd_Ref(res1)
+	if pr > 0 {
+		fmt.Fprint(out, "xor1")
+		Cudd_PrintDebug(dd, res1, nvars, pr)
+	}
+	res2 := Cudd_bddXor(dd, f1, f0)
+	if res2 == nil {
+		Cudd_RecursiveDeref(dd, res1)
+		Cudd_RecursiveDeref(dd, f1)
+		Cudd_RecursiveDeref(dd, f0)
+		return 0
+	}
+	Cudd_Ref(res2)
+	if res1 != res2 {
+		if pr > 0 {
+			fmt.Fprint(out, "xor2")
+			Cudd_PrintDebug(dd, res2, nvars, pr)
+		}
+		Cudd_RecursiveDeref(dd, res1)
+		Cudd_RecursiveDeref(dd, res2)
+		Cudd_RecursiveDeref(dd, f1)
+		Cudd_RecursiveDeref(dd, f0)
+		return 0
+	}
+	Cudd_RecursiveDeref(dd, res1)
+	Cudd_RecursiveDeref(dd, f1)
+	Cudd_RecursiveDeref(dd, f0)
+	res1 = Cudd_bddBooleanDiff(dd, f, int(x))
+	if res1 == nil {
+		Cudd_RecursiveDeref(dd, res2)
+		return 0
+	}
+	Cudd_Ref(res1)
+	if res1 != res2 {
+		if pr > 0 {
+			fmt.Fprint(out, "xor3")
+			Cudd_PrintDebug(dd, res1, nvars, pr)
+		}
+		Cudd_RecursiveDeref(dd, res1)
+		Cudd_RecursiveDeref(dd, res2)
+		return 0
+	}
+	Cudd_RecursiveDeref(dd, res1)
+	Cudd_RecursiveDeref(dd, res2)
+	return 1
+}
+func testHamming(dd *DdManager, f *DdNode, pr int32, out io.Writer) int32 {
+	size := Cudd_ReadSize(dd)
+	vars := make([]*DdNode, size)
+	for i := range vars {
+		vars[i] = Cudd_bddIthVar(dd, int32(i))
+	}
+	minBdd := Cudd_bddPickOneMinterm(dd, Cudd_Not(f), vars, size)
+	if minBdd == nil {
+		return 0
+	}
+	Cudd_Ref(minBdd)
+	if pr > 0 {
+		fmt.Fprint(out, "Chosen minterm for Hamming distance test: ")
+		Cudd_PrintDebug(dd, minBdd, size, pr)
+	}
+	minterm := make([]int32, size)
+	scan := minBdd
+	zero := Cudd_Not(Cudd_ReadOne(dd))
+	for !Cudd_IsConstant(scan) {
+		r := Cudd_Regular(scan)
+		t, e := Cudd_T(r), Cudd_E(r)
+		if r != scan {
+			t, e = Cudd_Not(t), Cudd_Not(e)
+		}
+		if t == zero {
+			minterm[Cudd_NodeReadIndex(r)] = 0
+			scan = e
+		} else {
+			minterm[Cudd_NodeReadIndex(r)] = 1
+			scan = t
+		}
+	}
+	Cudd_RecursiveDeref(dd, minBdd)
+	d := Cudd_MinHammingDist(dd, f, minterm, size)
+	fmt.Fprintf(out, "Minimum Hamming distance = %d\n", d)
+	return 1
+}

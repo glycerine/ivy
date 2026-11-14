@@ -78,6 +78,45 @@ import core "github.com/glycerine/abcgo/bdd/cudd/core"
 
 // Authoritative pure-Go dynamic reordering; root and core share node handles.
 var (
-	Cudd_ReduceHeap  = core.Cudd_ReduceHeap
 	Cudd_ShuffleHeap = core.Cudd_ShuffleHeap
 )
+
+// Cudd_ReduceHeap routes linear methods through cuddLinearAndSifting and
+// leaves every other heuristic on the core dispatcher.
+func Cudd_ReduceHeap(dd *DdManager, method core.Cudd_ReorderingType, minsize int) int {
+	if method != core.CUDD_REORDER_LINEAR && method != core.CUDD_REORDER_LINEAR_CONVERGE {
+		return core.Cudd_ReduceHeap(dd, method, minsize)
+	}
+	if dd == nil || minsize < 0 {
+		return 0
+	}
+	if core.Cudd_bddLinearPreprocessSize(dd) < minsize {
+		return 1
+	}
+	started, proceed := core.Cudd_BeginBDDReordering(dd, method)
+	if !proceed {
+		return 0
+	}
+	converge := method == core.CUDD_REORDER_LINEAR_CONVERGE
+	for {
+		before := linearHeapSize(dd)
+		if len(dd.Vars) == 0 {
+			return boolToInt(core.Cudd_EndBDDReordering(dd, started, true))
+		}
+		if cuddLinearAndSifting(dd, 0, int32(len(dd.Vars)-1)) == 0 {
+			core.Cudd_EndBDDReordering(dd, started, false)
+			return 0
+		}
+		after := linearHeapSize(dd)
+		if !converge || after >= before {
+			return boolToInt(core.Cudd_EndBDDReordering(dd, started, true))
+		}
+	}
+}
+
+func boolToInt(ok bool) int {
+	if ok {
+		return 1
+	}
+	return 0
+}

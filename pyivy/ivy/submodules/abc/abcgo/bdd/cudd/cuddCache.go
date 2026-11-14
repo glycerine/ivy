@@ -9,9 +9,6 @@ import (
 	"github.com/glycerine/abcgo/bdd/cudd/core"
 )
 
-// ptruint is the integer operator tag used by CUDD's generic cache.
-type ptruint = uintptr
-
 func cuddInitCache(dd *DdManager, cacheSize, maxCacheSize uint32) int32 {
 	if dd == nil || cacheSize == 0 || maxCacheSize < cacheSize {
 		return 0

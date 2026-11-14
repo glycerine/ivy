@@ -18,28 +18,39 @@ func Cudd_bddVarConjDecomp(dd *DdManager, f *DdNode, factors *[]*DdNode) int32 {
 		Cudd_Ref(f)
 		return 1
 	}
-	bestA, bestB := (*DdNode)(nil), (*DdNode)(nil)
-	bestSize := int(^uint(0) >> 1)
+	best := -1
+	bestSize := int32(1 << 30)
 	for _, index := range variables {
-		x := core.Cudd_bddIthVar(dd, index)
-		a := core.Cudd_bddOr(dd, f, x)
-		b := core.Cudd_bddOr(dd, f, Cudd_Not(x))
-		if a == nil || b == nil {
-			return 0
+		est1 := Cudd_EstimateCofactor(dd, f, int32(index), 1)
+		est0 := Cudd_EstimateCofactor(dd, f, int32(index), 0)
+		size := est1
+		if est0 > size {
+			size = est0
 		}
-		if a == Cudd_ReadOne(dd) || b == Cudd_ReadOne(dd) {
-			continue
-		}
-		size := Cudd_DagSize(a) + Cudd_DagSize(b)
 		if size < bestSize {
-			bestA, bestB, bestSize = a, b, size
+			best, bestSize = index, size
 		}
 	}
-	if bestA == nil {
-		*factors = []*DdNode{f}
-		Cudd_Ref(f)
+	if best < 0 {
+		return 0
+	}
+	x := core.Cudd_bddIthVar(dd, best)
+	glocal := core.Cudd_bddOr(dd, f, x)
+	hlocal := core.Cudd_bddOr(dd, f, Cudd_Not(x))
+	if glocal == nil || hlocal == nil {
+		return 0
+	}
+	if glocal == Cudd_ReadOne(dd) {
+		*factors = []*DdNode{hlocal}
+		Cudd_Ref(hlocal)
 		return 1
 	}
+	if hlocal == Cudd_ReadOne(dd) {
+		*factors = []*DdNode{glocal}
+		Cudd_Ref(glocal)
+		return 1
+	}
+	bestA, bestB := glocal, hlocal
 	Cudd_Ref(bestA)
 	Cudd_Ref(bestB)
 	*factors = []*DdNode{bestA, bestB}

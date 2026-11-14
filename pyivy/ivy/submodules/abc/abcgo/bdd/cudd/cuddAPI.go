@@ -4,8 +4,6 @@ import core "github.com/glycerine/abcgo/bdd/cudd/core"
 
 import (
 	"fmt"
-	"math"
-	"strings"
 	"time"
 )
 
@@ -737,7 +735,7 @@ func Cudd_bddRealignDisable(dd *DdManager) { core.Cudd_bddRealignDisable(dd) } /
 *****************************************************************************
 */
 func Cudd_ReadOne(dd *DdManager) *DdNode {
-	return (dd.one)
+	return core.Cudd_ReadOne(dd)
 
 } /* end of Cudd_ReadOne */
 
@@ -758,15 +756,7 @@ func Cudd_ReadOne(dd *DdManager) *DdNode {
 *****************************************************************************
 */
 func Cudd_ReadZddOne(dd *DdManager, i int32) *DdNode {
-	if i < 0 {
-		return (nil)
-	}
-	if i < dd.sizeZ {
-		return dd.univ[i]
-	} else {
-		// inlining of macro DD_ONE
-		return ((dd).one)
-	}
+	return core.Cudd_ReadZddOne(dd, int(i))
 
 } /* end of Cudd_ReadZddOne */
 
@@ -1502,7 +1492,7 @@ func Cudd_SetMaxGrowthAlternate(dd *DdManager, growth float64) {
 *****************************************************************************
 */
 func Cudd_ReadReorderingCycle(dd *DdManager) int32 {
-	return (dd.reordCycle)
+	return core.Cudd_ReadReorderingCycle(dd)
 
 } /* end of Cudd_ReadReorderingCycle */
 
@@ -1523,7 +1513,7 @@ func Cudd_ReadReorderingCycle(dd *DdManager) int32 {
 *****************************************************************************
 */
 func Cudd_SetReorderingCycle(dd *DdManager, cycle int32) {
-	dd.reordCycle = cycle
+	core.Cudd_SetReorderingCycle(dd, cycle)
 
 } /* end of Cudd_SetReorderingCycle */
 
@@ -1651,13 +1641,13 @@ func Cudd_NodeReadIndex(node *DdNode) uint32 { return core.Cudd_NodeReadIndex(no
 *****************************************************************************
 */
 func Cudd_ReadPerm(dd *DdManager, i int32) int32 {
-	if i == CUDD_CONST_INDEX {
-		return (CUDD_CONST_INDEX)
+	if uint32(i) == CUDD_CONST_INDEX {
+		return int32(CUDD_CONST_INDEX)
 	}
-	if i < 0 || i >= dd.size {
-		return (-1)
+	if dd == nil {
+		return -1
 	}
-	return (dd.perm[i])
+	return int32(core.Cudd_ReadPerm(dd, int(i)))
 
 } /* end of Cudd_ReadPerm */
 
@@ -1679,13 +1669,13 @@ func Cudd_ReadPerm(dd *DdManager, i int32) int32 {
 *****************************************************************************
 */
 func Cudd_ReadPermZdd(dd *DdManager, i int32) int32 {
-	if i == CUDD_CONST_INDEX {
-		return (CUDD_CONST_INDEX)
+	if uint32(i) == CUDD_CONST_INDEX {
+		return int32(CUDD_CONST_INDEX)
 	}
-	if i < 0 || i >= dd.sizeZ {
-		return (-1)
+	if dd == nil {
+		return -1
 	}
-	return (dd.permZ[i])
+	return int32(core.Cudd_ReadPermZdd(dd, int(i)))
 
 } /* end of Cudd_ReadPermZdd */
 
@@ -1706,13 +1696,13 @@ func Cudd_ReadPermZdd(dd *DdManager, i int32) int32 {
 *****************************************************************************
 */
 func Cudd_ReadInvPerm(dd *DdManager, i int32) int32 {
-	if i == CUDD_CONST_INDEX {
-		return (CUDD_CONST_INDEX)
+	if uint32(i) == CUDD_CONST_INDEX {
+		return int32(CUDD_CONST_INDEX)
 	}
-	if i < 0 || i >= dd.size {
-		return (-1)
+	if dd == nil {
+		return -1
 	}
-	return (dd.invperm[i])
+	return int32(core.Cudd_ReadInvPerm(dd, int(i)))
 
 } /* end of Cudd_ReadInvPerm */
 
@@ -1733,13 +1723,13 @@ func Cudd_ReadInvPerm(dd *DdManager, i int32) int32 {
 *****************************************************************************
 */
 func Cudd_ReadInvPermZdd(dd *DdManager, i int32) int32 {
-	if i == CUDD_CONST_INDEX {
-		return (CUDD_CONST_INDEX)
+	if uint32(i) == CUDD_CONST_INDEX {
+		return int32(CUDD_CONST_INDEX)
 	}
-	if i < 0 || i >= dd.sizeZ {
-		return (-1)
+	if dd == nil {
+		return -1
 	}
-	return (dd.invpermZ[i])
+	return int32(core.Cudd_ReadInvPermZdd(dd, int(i)))
 
 } /* end of Cudd_ReadInvPermZdd */
 
@@ -1761,10 +1751,10 @@ func Cudd_ReadInvPermZdd(dd *DdManager, i int32) int32 {
 *****************************************************************************
 */
 func Cudd_ReadVars(dd *DdManager, i int32) *DdNode {
-	if i < 0 || i > dd.size {
-		return (nil)
+	if dd == nil || i < 0 || int(i) >= len(dd.Vars) {
+		return nil
 	}
-	return (dd.vars[i])
+	return dd.Vars[i]
 
 } /* end of Cudd_ReadVars */
 
@@ -1783,7 +1773,7 @@ func Cudd_ReadVars(dd *DdManager, i int32) *DdNode {
 *****************************************************************************
 */
 func Cudd_ReadEpsilon(dd *DdManager) CUDD_VALUE_TYPE {
-	return (dd.epsilon)
+	return core.Cudd_ReadEpsilon(dd)
 
 } /* end of Cudd_ReadEpsilon */
 
@@ -1802,7 +1792,7 @@ func Cudd_ReadEpsilon(dd *DdManager) CUDD_VALUE_TYPE {
 *****************************************************************************
 */
 func Cudd_SetEpsilon(dd *DdManager, ep CUDD_VALUE_TYPE) {
-	dd.epsilon = ep
+	core.Cudd_SetEpsilon(dd, ep)
 
 } /* end of Cudd_SetEpsilon */
 
@@ -1822,7 +1812,7 @@ func Cudd_SetEpsilon(dd *DdManager, ep CUDD_VALUE_TYPE) {
 *****************************************************************************
 */
 func Cudd_ReadGroupcheck(dd *DdManager) Cudd_AggregationType {
-	return (dd.groupcheck)
+	return core.Cudd_ReadGroupcheck(dd)
 
 } /* end of Cudd_ReadGroupCheck */
 
@@ -1842,7 +1832,7 @@ func Cudd_ReadGroupcheck(dd *DdManager) Cudd_AggregationType {
 *****************************************************************************
 */
 func Cudd_SetGroupcheck(dd *DdManager, gc Cudd_AggregationType) {
-	dd.groupcheck = gc
+	core.Cudd_SetGroupcheck(dd, gc)
 
 } /* end of Cudd_SetGroupcheck */
 
@@ -1860,7 +1850,7 @@ func Cudd_SetGroupcheck(dd *DdManager, gc Cudd_AggregationType) {
 *****************************************************************************
 */
 func Cudd_GarbageCollectionEnabled(dd *DdManager) int32 {
-	return (dd.gcEnabled)
+	return core.Cudd_GarbageCollectionEnabled(dd)
 
 } /* end of Cudd_GarbageCollectionEnabled */
 
@@ -1880,7 +1870,7 @@ func Cudd_GarbageCollectionEnabled(dd *DdManager) int32 {
 *****************************************************************************
 */
 func Cudd_EnableGarbageCollection(dd *DdManager) {
-	dd.gcEnabled = 1
+	core.Cudd_EnableGarbageCollection(dd)
 
 } /* end of Cudd_EnableGarbageCollection */
 
@@ -1902,7 +1892,7 @@ func Cudd_EnableGarbageCollection(dd *DdManager) {
 *****************************************************************************
 */
 func Cudd_DisableGarbageCollection(dd *DdManager) {
-	dd.gcEnabled = 0
+	core.Cudd_DisableGarbageCollection(dd)
 
 } /* end of Cudd_DisableGarbageCollection */
 
@@ -1922,11 +1912,7 @@ func Cudd_DisableGarbageCollection(dd *DdManager) {
 *****************************************************************************
 */
 func Cudd_DeadAreCounted(dd *DdManager) int32 {
-	if dd.countDead == 0 {
-		return 1
-	} else {
-		return 0
-	}
+	return core.Cudd_DeadAreCounted(dd)
 
 } /* end of Cudd_DeadAreCounted */
 
@@ -1947,7 +1933,7 @@ func Cudd_DeadAreCounted(dd *DdManager) int32 {
 *****************************************************************************
 */
 func Cudd_TurnOnCountDead(dd *DdManager) {
-	dd.countDead = 0
+	core.Cudd_TurnOnCountDead(dd)
 
 } /* end of Cudd_TurnOnCountDead */
 
@@ -1970,7 +1956,7 @@ func Cudd_TurnOnCountDead(dd *DdManager) {
 *****************************************************************************
 */
 func Cudd_TurnOffCountDead(dd *DdManager) {
-	dd.countDead = ~0
+	core.Cudd_TurnOffCountDead(dd)
 
 } /* end of Cudd_TurnOffCountDead */
 
@@ -1992,7 +1978,7 @@ func Cudd_TurnOffCountDead(dd *DdManager) {
 *****************************************************************************
 */
 func Cudd_ReadRecomb(dd *DdManager) int32 {
-	return (dd.recomb)
+	return core.Cudd_ReadRecomb(dd)
 
 } /* end of Cudd_ReadRecomb */
 
@@ -2015,7 +2001,7 @@ func Cudd_ReadRecomb(dd *DdManager) int32 {
 *****************************************************************************
 */
 func Cudd_SetRecomb(dd *DdManager, recomb int32) {
-	dd.recomb = recomb
+	core.Cudd_SetRecomb(dd, recomb)
 
 } /* end of Cudd_SetRecomb */
 
@@ -2040,7 +2026,7 @@ func Cudd_SetRecomb(dd *DdManager, recomb int32) {
 *****************************************************************************
 */
 func Cudd_ReadSymmviolation(dd *DdManager) int32 {
-	return (dd.symmviolation)
+	return core.Cudd_ReadSymmviolation(dd)
 
 } /* end of Cudd_ReadSymmviolation */
 
@@ -2065,7 +2051,7 @@ func Cudd_ReadSymmviolation(dd *DdManager) int32 {
 *****************************************************************************
 */
 func Cudd_SetSymmviolation(dd *DdManager, symmviolation int32) {
-	dd.symmviolation = symmviolation
+	core.Cudd_SetSymmviolation(dd, symmviolation)
 
 } /* end of Cudd_SetSymmviolation */
 
@@ -2089,7 +2075,7 @@ func Cudd_SetSymmviolation(dd *DdManager, symmviolation int32) {
 *****************************************************************************
 */
 func Cudd_ReadArcviolation(dd *DdManager) int32 {
-	return (dd.arcviolation)
+	return core.Cudd_ReadArcviolation(dd)
 
 } /* end of Cudd_ReadArcviolation */
 
@@ -2113,7 +2099,7 @@ func Cudd_ReadArcviolation(dd *DdManager) int32 {
 *****************************************************************************
 */
 func Cudd_SetArcviolation(dd *DdManager, arcviolation int32) {
-	dd.arcviolation = arcviolation
+	core.Cudd_SetArcviolation(dd, arcviolation)
 
 } /* end of Cudd_SetArcviolation */
 
@@ -2137,7 +2123,7 @@ func Cudd_SetArcviolation(dd *DdManager, arcviolation int32) {
 *****************************************************************************
 */
 func Cudd_ReadPopulationSize(dd *DdManager) int32 {
-	return (dd.populationSize)
+	return core.Cudd_ReadPopulationSize(dd)
 
 } /* end of Cudd_ReadPopulationSize */
 
@@ -2161,7 +2147,7 @@ func Cudd_ReadPopulationSize(dd *DdManager) int32 {
 *****************************************************************************
 */
 func Cudd_SetPopulationSize(dd *DdManager, populationSize int32) {
-	dd.populationSize = populationSize
+	core.Cudd_SetPopulationSize(dd, populationSize)
 
 } /* end of Cudd_SetPopulationSize */
 
@@ -2185,7 +2171,7 @@ func Cudd_SetPopulationSize(dd *DdManager, populationSize int32) {
 *****************************************************************************
 */
 func Cudd_ReadNumberXovers(dd *DdManager) int32 {
-	return (dd.numberXovers)
+	return core.Cudd_ReadNumberXovers(dd)
 
 } /* end of Cudd_ReadNumberXovers */
 
@@ -2209,7 +2195,7 @@ func Cudd_ReadNumberXovers(dd *DdManager) int32 {
 *****************************************************************************
 */
 func Cudd_SetNumberXovers(dd *DdManager, numberXovers int32) {
-	dd.numberXovers = numberXovers
+	core.Cudd_SetNumberXovers(dd, numberXovers)
 
 } /* end of Cudd_SetNumberXovers */
 
@@ -2351,47 +2337,7 @@ func Cudd_zddReadNodeCount(dd *DdManager) int64 { return int64(core.Cudd_zddRead
 *****************************************************************************
 */
 func Cudd_AddHook(dd *DdManager, f DD_HFP, where Cudd_HookType) int32 {
-	var hook **DdHook
-	var nextHook *DdHook
-	var newHook *DdHook
-
-	switch where {
-	case CUDD_PRE_GC_HOOK:
-		hook = &(dd.preGCHook)
-		break
-	case CUDD_POST_GC_HOOK:
-		hook = &(dd.postGCHook)
-		break
-	case CUDD_PRE_REORDERING_HOOK:
-		hook = &(dd.preReorderingHook)
-		break
-	case CUDD_POST_REORDERING_HOOK:
-		hook = &(dd.postReorderingHook)
-		break
-	default:
-		return (0)
-	}
-	/* Scan the list and find whether the function is already there.
-	 ** If so, just return. */
-	nextHook = *hook
-	for nextHook != nil {
-		if nextHook.f == f {
-			return (2)
-		}
-		hook = &(nextHook.next)
-		nextHook = nextHook.next
-	}
-	/* The function was not in the list. Create a new item and append it
-	 ** to the end of the list. */
-	newHook = new(DdHook)
-	if newHook == nil {
-		dd.errorCode = CUDD_MEMORY_OUT
-		return (0)
-	}
-	newHook.next = nil
-	newHook.f = f
-	*hook = newHook
-	return (1)
+	return core.Cudd_AddHook(dd, f, where)
 
 } /* end of Cudd_AddHook */
 
@@ -2411,37 +2357,7 @@ func Cudd_AddHook(dd *DdManager, f DD_HFP, where Cudd_HookType) int32 {
 *****************************************************************************
 */
 func Cudd_RemoveHook(dd *DdManager, f DD_HFP, where Cudd_HookType) int32 {
-	var hook **DdHook
-	var nextHook *DdHook
-
-	switch where {
-	case CUDD_PRE_GC_HOOK:
-		hook = &(dd.preGCHook)
-		break
-	case CUDD_POST_GC_HOOK:
-		hook = &(dd.postGCHook)
-		break
-	case CUDD_PRE_REORDERING_HOOK:
-		hook = &(dd.preReorderingHook)
-		break
-	case CUDD_POST_REORDERING_HOOK:
-		hook = &(dd.postReorderingHook)
-		break
-	default:
-		return (0)
-	}
-	nextHook = *hook
-	for nextHook != nil {
-		if nextHook.f == f {
-			*hook = nextHook.next
-			ABC_FREE(nextHook)
-			return (1)
-		}
-		hook = &(nextHook.next)
-		nextHook = nextHook.next
-	}
-
-	return (0)
+	return core.Cudd_RemoveHook(dd, f, where)
 
 } /* end of Cudd_RemoveHook */
 
@@ -2461,32 +2377,7 @@ func Cudd_RemoveHook(dd *DdManager, f DD_HFP, where Cudd_HookType) int32 {
 *****************************************************************************
 */
 func Cudd_IsInHook(dd *DdManager, f DD_HFP, where Cudd_HookType) int32 {
-	var hook *DdHook
-
-	switch where {
-	case CUDD_PRE_GC_HOOK:
-		hook = dd.preGCHook
-		break
-	case CUDD_POST_GC_HOOK:
-		hook = dd.postGCHook
-		break
-	case CUDD_PRE_REORDERING_HOOK:
-		hook = dd.preReorderingHook
-		break
-	case CUDD_POST_REORDERING_HOOK:
-		hook = dd.postReorderingHook
-		break
-	default:
-		return (0)
-	}
-	/* Scan the list and find whether the function is already there. */
-	for hook != nil {
-		if hook.f == f {
-			return (1)
-		}
-		hook = hook.next
-	}
-	return (0)
+	return core.Cudd_IsInHook(dd, f, where)
 
 } /* end of Cudd_IsInHook */
 
@@ -2505,7 +2396,7 @@ func Cudd_IsInHook(dd *DdManager, f DD_HFP, where Cudd_HookType) int32 {
 
 *****************************************************************************
 */
-func Cudd_StdPreReordHook(dd *DdManager, graph string, data any) int32 {
+func Cudd_StdPreReordHook(dd *DdManager, graph string, data any) int {
 	method, ok := data.(Cudd_ReorderingType)
 	if !ok {
 		if value, yes := data.(int32); yes {
@@ -2555,7 +2446,7 @@ func Cudd_StdPreReordHook(dd *DdManager, graph string, data any) int32 {
 
 *****************************************************************************
 */
-func Cudd_StdPostReordHook(dd *DdManager, graph string, data any) int32 {
+func Cudd_StdPostReordHook(dd *DdManager, graph string, data any) int {
 	elapsed := time.Duration(0)
 	switch start := data.(type) {
 	case time.Time:
@@ -2661,7 +2552,7 @@ func Cudd_ReorderingReporting(dd *DdManager) int32 {
 *****************************************************************************
 */
 func Cudd_ReadErrorCode(dd *DdManager) Cudd_ErrorType {
-	return (dd.errorCode)
+	return core.Cudd_ReadErrorCode(dd)
 
 } /* end of Cudd_ReadErrorCode */
 
@@ -2679,7 +2570,7 @@ func Cudd_ReadErrorCode(dd *DdManager) Cudd_ErrorType {
 *****************************************************************************
 */
 func Cudd_ClearErrorCode(dd *DdManager) {
-	dd.errorCode = CUDD_NO_ERROR
+	core.Cudd_ClearErrorCode(dd)
 
 } /* end of Cudd_ClearErrorCode */
 
@@ -2699,7 +2590,8 @@ func Cudd_ClearErrorCode(dd *DdManager) {
 *****************************************************************************
 */
 func Cudd_ReadStdout(dd *DdManager) *os.File {
-	return (dd.out)
+	file, _ := core.Cudd_Output(dd).(*os.File)
+	return file
 
 } /* end of Cudd_ReadStdout */
 
@@ -2717,7 +2609,7 @@ func Cudd_ReadStdout(dd *DdManager) *os.File {
 *****************************************************************************
 */
 func Cudd_SetStdout(dd *DdManager, fp *os.File) {
-	dd.out = fp
+	core.Cudd_SetOutput(dd, fp, nil)
 
 } /* end of Cudd_SetStdout */
 
@@ -2737,7 +2629,8 @@ func Cudd_SetStdout(dd *DdManager, fp *os.File) {
 *****************************************************************************
 */
 func Cudd_ReadStderr(dd *DdManager) *os.File {
-	return (dd.err)
+	file, _ := core.Cudd_ErrorOutput(dd).(*os.File)
+	return file
 
 } /* end of Cudd_ReadStderr */
 
@@ -2755,7 +2648,7 @@ func Cudd_ReadStderr(dd *DdManager) *os.File {
 *****************************************************************************
 */
 func Cudd_SetStderr(dd *DdManager, fp *os.File) {
-	dd.err = fp
+	core.Cudd_SetOutput(dd, nil, fp)
 
 } /* end of Cudd_SetStderr */
 

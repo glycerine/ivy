@@ -21,6 +21,9 @@ func Cudd_DebugCheck(dd *DdManager) int32 {
 // failure, matching the diagnostic nature of the CUDD API.
 func Cudd_CheckKeys(dd *DdManager) int32 { return Cudd_DebugCheck(dd) }
 
+// Cudd_CheckZeroRef reports outstanding externally held canonical DD nodes.
+func Cudd_CheckZeroRef(dd *DdManager) int32 { return core.Cudd_CheckZeroRef(dd) }
+
 func cuddHeapProfile(dd *DdManager) int32 {
 	if dd == nil {
 		return 0

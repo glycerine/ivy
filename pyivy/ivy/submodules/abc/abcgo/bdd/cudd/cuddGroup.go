@@ -13,7 +13,7 @@ func Cudd_MakeTreeNode(dd *DdManager, low, size, flags uint32) *mtr.MtrNode {
 	}
 	level := int(low)
 	if level < len(dd.Vars) {
-		level = Cudd_ReadPerm(dd, int32(low))
+		level = int(Cudd_ReadPerm(dd, int32(low)))
 	}
 	if level < 0 || uint64(level)+uint64(size)-1 > uint64(mtr.MTR_MAXHIGH) {
 		return nil

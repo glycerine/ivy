@@ -143,9 +143,10 @@ type DdQueueItem struct {
 	key         any
 }
 type DdLevelQueue struct {
-	first                                              any
-	last                                               *DdQueueItem
+	first                                              *DdQueueItem
+	last                                               []*DdQueueItem
 	freelist                                           *DdQueueItem
 	buckets                                            []*DdQueueItem
 	levels, itemsize, size, maxsize, numBuckets, shift int32
+	byKey                                              map[any]*DdQueueItem
 }

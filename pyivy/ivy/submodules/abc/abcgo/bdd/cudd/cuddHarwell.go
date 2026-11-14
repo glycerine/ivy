@@ -1,7 +1,6 @@
 package cudd
 
 import (
-	"bufio"
 	"fmt"
 	"io"
 	"math/bits"
@@ -31,17 +30,113 @@ func Cudd_addHarwell(r io.Reader, dd *DdManager, bx, sx, by, sy int, verbose io.
 	if r == nil || dd == nil || sx == 0 || sy == 0 {
 		return nil, fmt.Errorf("invalid Harwell reader arguments")
 	}
-	lines := bufio.NewScanner(r)
-	lines.Buffer(make([]byte, 1024), 4*1024*1024)
-	var records []string
-	for lines.Scan() {
-		records = append(records, lines.Text())
-	}
-	if err := lines.Err(); err != nil {
+	result, ok, err := Cudd_addHarwellNext(r, dd, bx, sx, by, sy, verbose)
+	if err != nil {
 		return nil, err
 	}
-	if len(records) < 4 {
-		return nil, fmt.Errorf("Harwell–Boeing input has fewer than four header records")
+	if !ok {
+		return nil, io.EOF
+	}
+	return result, nil
+}
+
+// Cudd_addHarwellNext reads exactly one Harwell–Boeing matrix. It reads the
+// stream one byte at a time at record boundaries so repeated calls preserve
+// the next matrix even when r is not buffered. ok is false only for clean EOF
+// before the next matrix's first header record.
+func Cudd_addHarwellNext(r io.Reader, dd *DdManager, bx, sx, by, sy int, verbose io.Writer) (*HarwellMatrix, bool, error) {
+	if r == nil || dd == nil || sx == 0 || sy == 0 {
+		return nil, false, fmt.Errorf("invalid Harwell reader arguments")
+	}
+	records, err := readHarwellMatrixRecords(r)
+	if err == io.EOF {
+		return nil, false, nil
+	}
+	if err != nil {
+		return nil, false, err
+	}
+	result, err := parseHarwellMatrixRecords(records, dd, bx, sx, by, sy, verbose)
+	return result, true, err
+}
+
+func readHarwellLine(r io.Reader) (string, error) {
+	var line strings.Builder
+	var one [1]byte
+	for {
+		n, err := io.ReadFull(r, one[:])
+		if n == 1 {
+			if one[0] == '\n' {
+				return strings.TrimSuffix(line.String(), "\r"), nil
+			}
+			line.WriteByte(one[0])
+		}
+		if err != nil {
+			if err == io.EOF && line.Len() > 0 {
+				return line.String(), nil
+			}
+			return "", err
+		}
+	}
+}
+
+func readHarwellMatrixRecords(r io.Reader) ([]string, error) {
+	records := make([]string, 0, 8)
+	for i := 0; i < 4; i++ {
+		line, err := readHarwellLine(r)
+		if err != nil {
+			if i == 0 && err == io.EOF {
+				return nil, io.EOF
+			}
+			return nil, fmt.Errorf("Harwell–Boeing input has a truncated header: %w", err)
+		}
+		records = append(records, line)
+	}
+	counts, err := parseHBInts(records[1], 5)
+	if err != nil {
+		return nil, fmt.Errorf("header record 2: %w", err)
+	}
+	meta := strings.Fields(records[2])
+	if len(meta) < 5 {
+		return nil, fmt.Errorf("header record 3 is malformed")
+	}
+	nrow, e1 := strconv.Atoi(meta[1])
+	ncol, e2 := strconv.Atoi(meta[2])
+	nnz, e3 := strconv.Atoi(meta[3])
+	if e1 != nil || e2 != nil || e3 != nil || nrow < 0 || ncol < 0 || nnz < 0 {
+		return nil, fmt.Errorf("header record 3 has invalid dimensions")
+	}
+	rhs := 0
+	if counts[4] > 0 {
+		line, err := readHarwellLine(r)
+		if err != nil {
+			return nil, fmt.Errorf("missing right-hand-side header: %w", err)
+		}
+		records = append(records, line)
+		fields := strings.Fields(line)
+		if len(fields) < 3 {
+			return nil, fmt.Errorf("right-hand-side header is malformed")
+		}
+		rhs, err = strconv.Atoi(fields[1])
+		if err != nil || rhs < 0 {
+			return nil, fmt.Errorf("invalid right-hand-side count")
+		}
+	}
+	need := ncol + 1 + 2*nnz + rhs*nrow
+	fieldCount := 0
+	for fieldCount < need {
+		line, err := readHarwellLine(r)
+		if err != nil {
+			return nil, fmt.Errorf("matrix data is truncated: need %d numeric fields, found %d: %w", need, fieldCount, err)
+		}
+		records = append(records, line)
+		fieldCount += len(strings.Fields(line))
+	}
+	return records, nil
+}
+
+func parseHarwellMatrixRecords(records []string, dd *DdManager, bx, sx, by, sy int, verbose io.Writer) (*HarwellMatrix, error) {
+	if dd == nil || len(records) < 4 {
+		return nil, fmt.Errorf("invalid Harwell matrix records")
 	}
 	title, key := records[0], ""
 	if len(title) > 72 {

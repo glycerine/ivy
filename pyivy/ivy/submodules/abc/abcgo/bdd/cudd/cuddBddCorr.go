@@ -23,7 +23,7 @@ func Cudd_bddCorrelation(dd *DdManager, f, g *DdNode) float64 {
 		}
 		return 0
 	}
-	return 1 - core.Cudd_CountMinterm(dd, difference, nvars)/math.Ldexp(1, nvars)
+	return 1 - core.Cudd_CountMinterm(dd, difference, int(nvars))/math.Ldexp(1, int(nvars))
 }
 
 // Cudd_bddCorrelationWeights computes agreement probability under independent
@@ -47,7 +47,11 @@ func Cudd_bddCorrelationWeights(dd *DdManager, f, g *DdNode, prob []float64) flo
 
 func weightedTrueProbability(f *DdNode, probabilities []float64, memo map[*DdNode]float64) float64 {
 	if Cudd_IsConstant(f) {
-		if Cudd_Regular(f).Value != 0 {
+		truth := Cudd_Regular(f).Value != 0
+		if Cudd_IsComplement(f) {
+			truth = !truth
+		}
+		if truth {
 			return 1
 		}
 		return 0

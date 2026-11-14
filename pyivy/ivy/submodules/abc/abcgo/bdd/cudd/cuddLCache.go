@@ -1,1428 +1,292 @@
 package cudd
 
-/**CFile***********************************************************************
+import (
+	"math/bits"
+	"sync"
+)
+
+const DD_MAX_HASHTABLE_DENSITY = 2
+
+var localCacheRegistry = struct {
+	sync.Mutex
+	caches map[*DdManager]map[*DdLocalCache]struct{}
+}{caches: make(map[*DdManager]map[*DdLocalCache]struct{})}
+
+func cacheHash(key []*DdNode, slots uint32) uint32 {
+	if slots == 0 {
+		return 0
+	}
+	// CUDD hashes node addresses. Go nodes have stable manager-assigned IDs,
+	// which provide the same identity-sensitive behavior without pointer casts.
+	h := uint32(0)
+	if len(key) != 0 {
+		h = uint32(key[0].ID) * DD_P2
+		for _, n := range key[1:] {
+			var id uint32
+			if n != nil {
+				id = uint32(n.ID)
+			}
+			h = h*DD_P1 + id
+		}
+	}
+	return h & (slots - 1)
+}
+
+func sameCacheKey(a, b []*DdNode) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for i := range a {
+		if a[i] != b[i] {
+			return false
+		}
+	}
+	return true
+}
+
+func cuddLocalCacheInit(manager *DdManager, keySize, cacheSize, maxCacheSize uint32) *DdLocalCache {
+	if manager == nil || keySize == 0 {
+		return nil
+	}
+	if cacheSize < 2 {
+		cacheSize = 2
+	}
+	cacheSize = 1 << (bits.Len32(cacheSize) - 1)
+	if maxCacheSize < cacheSize {
+		maxCacheSize = cacheSize
+	}
+	cache := &DdLocalCache{
+		item:     make([]DdLocalCacheItem, cacheSize),
+		itemsize: (keySize + 1) * 8,
+		keysize:  keySize,
+		slots:    cacheSize,
+		shift:    int32(32 - bits.Len32(cacheSize-1)),
+		lookUps:  float64(cacheSize) + 1,
+		minHit:   0.1,
+		maxslots: maxCacheSize,
+		manager:  manager,
+	}
+	localCacheRegistry.Lock()
+	if localCacheRegistry.caches[manager] == nil {
+		localCacheRegistry.caches[manager] = make(map[*DdLocalCache]struct{})
+	}
+	localCacheRegistry.caches[manager][cache] = struct{}{}
+	localCacheRegistry.Unlock()
+	return cache
+}
+
+func cuddLocalCacheQuit(cache *DdLocalCache) {
+	if cache == nil {
+		return
+	}
+	localCacheRegistry.Lock()
+	delete(localCacheRegistry.caches[cache.manager], cache)
+	if len(localCacheRegistry.caches[cache.manager]) == 0 {
+		delete(localCacheRegistry.caches, cache.manager)
+	}
+	localCacheRegistry.Unlock()
+	cache.item = nil
+}
+
+func cuddLocalCacheInsert(cache *DdLocalCache, key []*DdNode, value *DdNode) {
+	if cache == nil || uint32(len(key)) != cache.keysize || cache.slots == 0 {
+		return
+	}
+	idx := cacheHash(key, cache.slots)
+	copyKey := append([]*DdNode(nil), key...)
+	cache.item[idx] = DdLocalCacheItem{key: copyKey, value: value}
+}
+
+func cuddLocalCacheLookup(cache *DdLocalCache, key []*DdNode) *DdNode {
+	if cache == nil || uint32(len(key)) != cache.keysize || cache.slots == 0 {
+		return nil
+	}
+	cache.lookUps++
+	idx := cacheHash(key, cache.slots)
+	entry := &cache.item[idx]
+	if entry.value != nil && sameCacheKey(key, entry.key) {
+		cache.hits++
+		return entry.value
+	}
+	if cache.slots < cache.maxslots && cache.lookUps > 0 && cache.hits/cache.lookUps > cache.minHit {
+		cuddLocalCacheResize(cache)
+	}
+	return nil
+}
 
-  FileName    [cuddLCache.c]
-
-  PackageName [cudd]
-
-  Synopsis    [Functions for local caches.]
-
-  Description [Internal procedures included in this module:
-                <ul>
-                <li> cuddLocalCacheInit()
-                <li> cuddLocalCacheQuit()
-                <li> cuddLocalCacheInsert()
-                <li> cuddLocalCacheLookup()
-                <li> cuddLocalCacheClearDead()
-                <li> cuddLocalCacheClearAll()
-                <li> cuddLocalCacheProfile()
-                <li> cuddHashTableInit()
-                <li> cuddHashTableQuit()
-                <li> cuddHashTableInsert()
-                <li> cuddHashTableLookup()
-                <li> cuddHashTableInsert2()
-                <li> cuddHashTableLookup2()
-                <li> cuddHashTableInsert3()
-                <li> cuddHashTableLookup3()
-                </ul>
-            Static procedures included in this module:
-                <ul>
-                <li> cuddLocalCacheResize()
-                <li> ddLCHash()
-                <li> cuddLocalCacheAddToList()
-                <li> cuddLocalCacheRemoveFromList()
-                <li> cuddHashTableResize()
-                <li> cuddHashTableAlloc()
-                </ul> ]
-
-  SeeAlso     []
-
-  Author      [Fabio Somenzi]
-
-  Copyright   [Copyright (c) 1995-2004, Regents of the University of Colorado
-
-  All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions
-  are met:
-
-  Redistributions of source code must retain the above copyright
-  notice, this list of conditions and the following disclaimer.
-
-  Redistributions in binary form must reproduce the above copyright
-  notice, this list of conditions and the following disclaimer in the
-  documentation and/or other materials provided with the distribution.
-
-  Neither the name of the University of Colorado nor the names of its
-  contributors may be used to endorse or promote products derived from
-  this software without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
-  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
-  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
-  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
-  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
-  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-  POSSIBILITY OF SUCH DAMAGE.]
-
-******************************************************************************/
-
-//#include "misc/util/util_hack.h"
-//#include "cuddInt.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-
-/*---------------------------------------------------------------------------*/
-/* Constant declarations                                                     */
-/*---------------------------------------------------------------------------*/
-
-const DD_MAX_HASHTABLE_DENSITY = 2      /* tells when to resize a table */
-
-/*---------------------------------------------------------------------------*/
-/* Stucture declarations                                                     */
-/*---------------------------------------------------------------------------*/
-
-
-/*---------------------------------------------------------------------------*/
-/* Type declarations                                                         */
-/*---------------------------------------------------------------------------*/
-
-
-/*---------------------------------------------------------------------------*/
-/* Variable declarations                                                     */
-/*---------------------------------------------------------------------------*/
-
-#ifndef lint
-static char rcsid[] DD_UNUSED = "$Id: cuddLCache.c,v 1.24 2009/03/08 02:49:02 fabio Exp $";
-#endif
-
-/*---------------------------------------------------------------------------*/
-/* Macro declarations                                                        */
-/*---------------------------------------------------------------------------*/
-
-/**Macro***********************************************************************
-
-  Synopsis    [Computes hash function for keys of two operands.]
-
-  Description []
-
-  SideEffects [None]
-
-  SeeAlso     [ddLCHash3 ddLCHash]
-
-******************************************************************************/
-#if SIZEOF_VOID_P == 8 && SIZEOF_INT == 4
-#define ddLCHash2(f,g,shift) \
-((((unsigned)(ptruint)(f) * DD_P1 + \
-   (unsigned)(ptruint)(g)) * DD_P2) >> (shift))
-#else
-#define ddLCHash2(f,g,shift) \
-((((unsigned)(f) * DD_P1 + (unsigned)(g)) * DD_P2) >> (shift))
-#endif
-
-
-/**Macro***********************************************************************
-
-  Synopsis    [Computes hash function for keys of three operands.]
-
-  Description []
-
-  SideEffects [None]
-
-  SeeAlso     [ddLCHash2 ddLCHash]
-
-******************************************************************************/
-// Original macro:
-// #define ddLCHash3(f,g,h,shift)  ddCHash2(f,g,h,shift)
-
-
-
-/**AutomaticStart*************************************************************/
-
-/*---------------------------------------------------------------------------*/
-/* Static function prototypes                                                */
-/*---------------------------------------------------------------------------*/
-
-// static void cuddLocalCacheResize (DdLocalCache *cache);
-
-DD_INLINE static unsigned int ddLCHash (DdNodePtr *key, unsigned int keysize, int shift);
-// static void cuddLocalCacheAddToList (DdLocalCache *cache);
-
-// static void cuddLocalCacheRemoveFromList (DdLocalCache *cache);
-
-// static int cuddHashTableResize (DdHashTable *hash);
-
-DD_INLINE static DdHashItem * cuddHashTableAlloc (DdHashTable *hash);
-
-/**AutomaticEnd***************************************************************/
-
-
-/*---------------------------------------------------------------------------*/
-/* Definition of exported functions                                          */
-/*---------------------------------------------------------------------------*/
-
-/*---------------------------------------------------------------------------*/
-/* Definition of internal functions                                          */
-/*---------------------------------------------------------------------------*/
-
-
-/**Function********************************************************************
-
-  Synopsis    [Initializes a local computed table.]
-
-  Description [Initializes a computed table.  Returns a pointer the
-  the new local cache in case of success; NULL otherwise.]
-
-  SideEffects [None]
-
-  SeeAlso     [cuddInitCache]
-
-******************************************************************************/
-DdLocalCache *
-cuddLocalCacheInit(
-  DdManager * manager /* manager */,
-  unsigned int  keySize /* size of the key (number of operands) */,
-  unsigned int  cacheSize /* Initial size of the cache */,
-  unsigned int  maxCacheSize /* Size of the cache beyond which no resizing occurs */)
-{
-    var cache *DdLocalCache;
-    var logSize int32;
-
-    cache = new(DdLocalCache);
-    if cache == nil {
-        manager.errorCode = CUDD_MEMORY_OUT;
-        return(nil);
-    }
-    cache.manager = manager;
-    cache.keysize = keySize;
-    cache.itemsize = (keySize + 1) * sizeof(DdNode *);
-#ifdef DD_CACHE_PROFILE
-    cache->itemsize += sizeof(ptrint);
-#endif
-    // inlining of macro ddMax
-    logSize = cuddComputeFloorLog2((((manager.slots/2) > (cacheSize)) ? (manager.slots/2) : (cacheSize)));
-    cacheSize = 1 << logSize;
-    cache.item = (DdLocalCacheItem *)
-        ABC_ALLOC(char, cacheSize * cache.itemsize);
-    if cache.item == nil {
-        manager.errorCode = CUDD_MEMORY_OUT;
-        ABC_FREE(cache);
-        return(nil);
-    }
-    cache.slots = cacheSize;
-    cache.shift = sizeof(int) * 8 - logSize;
-    // inlining of macro ddMin
-    
-    if (manager.slots) < (maxCacheSize) {
-        cache.maxslots = (manager.slots);
-    } else {
-        cache.maxslots = (maxCacheSize);
-    }
-    cache.minHit = manager.minHit;
-    /* Initialize to avoid division by 0 and immediate resizing. */
-    cache.lookUps = float64( int32( (cacheSize * cache.minHit + 1)));
-    cache.hits = 0;
-    manager.memused += cacheSize * cache.itemsize + sizeof(DdLocalCache);
-
-    /* Initialize the cache. */
-    memset(cache.item, 0, (size_t)(cacheSize * cache.itemsize));
-
-    /* Add to manager's list of local caches for GC. */
-    cuddLocalCacheAddToList(cache);
-
-    return(cache);
-
-} /* end of cuddLocalCacheInit */
-
-
-/**Function********************************************************************
-
-  Synopsis    [Shuts down a local computed table.]
-
-  Description [Initializes the computed table. It is called by
-  Cudd_Init. Returns a pointer the the new local cache in case of
-  success; NULL otherwise.]
-
-  SideEffects [None]
-
-  SeeAlso     [cuddLocalCacheInit]
-
-******************************************************************************/
-void
-cuddLocalCacheQuit(
-  DdLocalCache * cache /* cache to be shut down */)
-{
-    cache.manager.memused -=
-        cache.slots * cache.itemsize + sizeof(DdLocalCache);
-    cuddLocalCacheRemoveFromList(cache);
-    ABC_FREE(cache.item);
-    ABC_FREE(cache);
-
-    return;
-
-} /* end of cuddLocalCacheQuit */
-
-
-/**Function********************************************************************
-
-  Synopsis    [Inserts a result in a local cache.]
-
-  Description []
-
-  SideEffects [None]
-
-  SeeAlso     []
-
-******************************************************************************/
-func cuddLocalCacheInsert(cache *DdLocalCache, key *DdNodePtr, value *DdNode) {
-    unsigned int posn;
-    var entry *DdLocalCacheItem;
-
-    posn = ddLCHash(key,cache.keysize,cache.shift);
-    entry = (DdLocalCacheItem *) ((char *) cache.item +
-                                  posn * cache.itemsize);
-    memcpy(entry.key,key,cache.keysize * sizeof(DdNode *));
-    entry.value = value;
-#ifdef DD_CACHE_PROFILE
-    entry->count++;
-#endif
-
-} /* end of cuddLocalCacheInsert */
-
-
-/**Function********************************************************************
-
-  Synopsis [Looks up in a local cache.]
-
-  Description [Looks up in a local cache. Returns the result if found;
-  it returns NULL if no result is found.]
-
-  SideEffects [None]
-
-  SeeAlso     []
-
-******************************************************************************/
-func cuddLocalCacheLookup(cache *DdLocalCache, key *DdNodePtr) *DdNode {
-    unsigned int posn;
-    var entry *DdLocalCacheItem;
-    var value *DdNode;
-
-    cache.lookUps++;
-    posn = ddLCHash(key,cache.keysize,cache.shift);
-    entry = (DdLocalCacheItem *) ((char *) cache.item +
-                                  posn * cache.itemsize);
-    if entry.value != nil &&
-        memcmp(key,entry.key,cache.keysize*sizeof(DdNode *)) == 0 {
-        cache.hits++;
-        // inlining of macro Cudd_Regular
-        value = ((DdNode *)((ptruint)(entry.value) & ~01));
-        if value.ref == 0 {
-            cuddReclaim(cache.manager,value);
-        }
-        return(entry.value);
-    }
-
-    /* Cache miss: decide whether to resize */
-
-    if cache.slots < cache.maxslots &&
-        cache.hits > cache.lookUps * cache.minHit {
-        cuddLocalCacheResize(cache);
-    }
-
-    return(nil);
-
-} /* end of cuddLocalCacheLookup */
-
-
-/**Function********************************************************************
-
-  Synopsis [Clears the dead entries of the local caches of a manager.]
-
-  Description [Clears the dead entries of the local caches of a manager.
-  Used during garbage collection.]
-
-  SideEffects [None]
-
-  SeeAlso     []
-
-******************************************************************************/
 func cuddLocalCacheClearDead(manager *DdManager) {
-    var cache *DdLocalCache  = manager.localCaches;
-    unsigned int keysize;
-    unsigned int itemsize;
-    unsigned int slots;
-    var item *DdLocalCacheItem;
-    var key *DdNodePtr;
-    unsigned int i, j;
+	localCacheRegistry.Lock()
+	defer localCacheRegistry.Unlock()
+	for cache := range localCacheRegistry.caches[manager] {
+		for i := range cache.item {
+			entry := &cache.item[i]
+			if entry.value == nil {
+				continue
+			}
+			dead := Cudd_Regular(entry.value).Ref == 0
+			for _, key := range entry.key {
+				if key == nil || Cudd_Regular(key).Ref == 0 {
+					dead = true
+					break
+				}
+			}
+			if dead {
+				*entry = DdLocalCacheItem{}
+			}
+		}
+	}
+}
 
-    for cache != nil {
-        keysize = cache.keysize;
-        itemsize = cache.itemsize;
-        slots = cache.slots;
-        item = cache.item;
-        for i = 0; i < slots; i++ {
-            if item.value != nil {
-                // inlining of macro Cudd_Regular
-                if ((DdNode *)((ptruint)(item.value) & ~01)).ref == 0 {
-                    item.value = nil;
-                } else {
-                    key = item.key;
-                    for j = 0; j < keysize; j++ {
-                        // inlining of macro Cudd_Regular
-                        if ((DdNode *)((ptruint)(key[j]) & ~01)).ref == 0 {
-                            item.value = nil;
-                            break;
-                        }
-                    }
-                }
-            }
-            item = (DdLocalCacheItem *) ((char *) item + itemsize);
-        }
-        cache = cache.next;
-    }
-    return;
-
-} /* end of cuddLocalCacheClearDead */
-
-
-/**Function********************************************************************
-
-  Synopsis [Clears the local caches of a manager.]
-
-  Description [Clears the local caches of a manager.
-  Used before reordering.]
-
-  SideEffects [None]
-
-  SeeAlso     []
-
-******************************************************************************/
 func cuddLocalCacheClearAll(manager *DdManager) {
-    var cache *DdLocalCache  = manager.localCaches;
+	localCacheRegistry.Lock()
+	defer localCacheRegistry.Unlock()
+	for cache := range localCacheRegistry.caches[manager] {
+		clear(cache.item)
+	}
+}
 
-    for cache != nil {
-        memset(cache.item, 0, (size_t)(cache.slots * cache.itemsize));
-        cache = cache.next;
-    }
-    return;
-
-} /* end of cuddLocalCacheClearAll */
-
-
-#ifdef DD_CACHE_PROFILE
-
-#define DD_HYSTO_BINS 8
-
-/**Function********************************************************************
-
-  Synopsis    [Computes and prints a profile of a local cache usage.]
-
-  Description [Computes and prints a profile of a local cache usage.
-  Returns 1 if successful; 0 otherwise.]
-
-  SideEffects [None]
-
-  SeeAlso     []
-
-******************************************************************************/
-int
-cuddLocalCacheProfile(
-  DdLocalCache * cache)
-{
-    double count, mean, meansq, stddev, expected;
-    long max, min;
-    int imax, imin;
-    int i, retval, slots;
-    long *hystogram;
-    int nbins = DD_HYSTO_BINS;
-    int bin;
-    long thiscount;
-    double totalcount;
-    int nzeroes;
-    DdLocalCacheItem *entry;
-    FILE *fp = cache->manager->out;
-
-    slots = cache->slots;
-
-    meansq = mean = expected = 0.0;
-    max = min = (long) cache->item[0].count;
-    imax = imin = nzeroes = 0;
-    totalcount = 0.0;
-
-    hystogram = ABC_ALLOC(long, nbins);
-    if (hystogram == NULL) {
-        return(0);
-    }
-    for (i = 0; i < nbins; i++) {
-        hystogram[i] = 0;
-    }
-
-    for (i = 0; i < slots; i++) {
-        entry = (DdLocalCacheItem *) ((char *) cache->item +
-                                      i * cache->itemsize);
-        thiscount = (long) entry->count;
-        if (thiscount > max) {
-            max = thiscount;
-            imax = i;
-        }
-        if (thiscount < min) {
-            min = thiscount;
-            imin = i;
-        }
-        if (thiscount == 0) {
-            nzeroes++;
-        }
-        count = (double) thiscount;
-        mean += count;
-        meansq += count * count;
-        totalcount += count;
-        expected += count * (double) i;
-        bin = (i * nbins) / slots;
-        hystogram[bin] += thiscount;
-    }
-    mean /= (double) slots;
-    meansq /= (double) slots;
-    stddev = sqrt(meansq - mean*mean);
-
-    retval = fprintf(fp,"Cache stats: slots = %d average = %g ", slots, mean);
-    if (retval == EOF) return(0);
-    retval = fprintf(fp,"standard deviation = %g\n", stddev);
-    if (retval == EOF) return(0);
-    retval = fprintf(fp,"Cache max accesses = %ld for slot %d\n", max, imax);
-    if (retval == EOF) return(0);
-    retval = fprintf(fp,"Cache min accesses = %ld for slot %d\n", min, imin);
-    if (retval == EOF) return(0);
-    retval = fprintf(fp,"Cache unused slots = %d\n", nzeroes);
-    if (retval == EOF) return(0);
-
-    if (totalcount) {
-        expected /= totalcount;
-        retval = fprintf(fp,"Cache access hystogram for %d bins", nbins);
-        if (retval == EOF) return(0);
-        retval = fprintf(fp," (expected bin value = %g)\n# ", expected);
-        if (retval == EOF) return(0);
-        for (i = nbins - 1; i>=0; i--) {
-            retval = fprintf(fp,"%ld ", hystogram[i]);
-            if (retval == EOF) return(0);
-        }
-        retval = fprintf(fp,"\n");
-        if (retval == EOF) return(0);
-    }
-
-    ABC_FREE(hystogram);
-    return(1);
-
-} /* end of cuddLocalCacheProfile */
-#endif
-
-
-/**Function********************************************************************
-
-  Synopsis    [Initializes a hash table.]
-
-  Description [Initializes a hash table. Returns a pointer to the new
-  table if successful; NULL otherwise.]
-
-  SideEffects [None]
-
-  SeeAlso     [cuddHashTableQuit]
-
-******************************************************************************/
-DdHashTable *
-cuddHashTableInit(
-  DdManager * manager,
-  unsigned int  keySize,
-  unsigned int  initSize)
-{
-    var hash *DdHashTable;
-    var logSize int32;
-
-#ifdef __osf__
-#pragma pointer_size save
-#pragma pointer_size short
-#endif
-    hash = new(DdHashTable);
-    if hash == nil {
-        manager.errorCode = CUDD_MEMORY_OUT;
-        return(nil);
-    }
-    hash.keysize = keySize;
-    hash.manager = manager;
-    hash.memoryList = nil;
-    hash.nextFree = nil;
-    hash.itemsize = (keySize + 1) * sizeof(DdNode *) +
-        sizeof(ptrint) + sizeof(DdHashItem *);
-    /* We have to guarantee that the shift be < 32. */
-    if initSize < 2 { initSize = 2; }
-    logSize = cuddComputeFloorLog2(initSize);
-    hash.numBuckets = 1 << logSize;
-    hash.shift = sizeof(int) * 8 - logSize;
-    hash.bucket = ABC_ALLOC(DdHashItem *, hash.numBuckets);
-    if hash.bucket == nil {
-        manager.errorCode = CUDD_MEMORY_OUT;
-        ABC_FREE(hash);
-        return(nil);
-    }
-    memset(hash.bucket, 0, (size_t)(hash.numBuckets * sizeof(DdHashItem *)));
-    hash.size = 0;
-    hash.maxsize = hash.numBuckets * DD_MAX_HASHTABLE_DENSITY;
-#ifdef __osf__
-#pragma pointer_size restore
-#endif
-    return(hash);
-
-} /* end of cuddHashTableInit */
-
-
-/**Function********************************************************************
-
-  Synopsis    [Shuts down a hash table.]
-
-  Description [Shuts down a hash table, dereferencing all the values.]
-
-  SideEffects [None]
-
-  SeeAlso     [cuddHashTableInit]
-
-******************************************************************************/
-func cuddHashTableQuit(hash *DdHashTable) {
-#ifdef __osf__
-#pragma pointer_size save
-#pragma pointer_size short
-#endif
-    unsigned int i;
-    var dd *DdManager  = hash.manager;
-    var bucket *DdHashItem;
-    var memlist, nextmem **DdHashItem;
-    unsigned int numBuckets = hash.numBuckets;
-
-    for i = 0; i < numBuckets; i++ {
-        bucket = hash.bucket[i];
-        for bucket != nil {
-            Cudd_RecursiveDeref(dd, bucket.value);
-            bucket = bucket.next;
-        }
-    }
-
-    memlist = hash.memoryList;
-    for memlist != nil {
-        nextmem = (DdHashItem **) memlist[0];
-        ABC_FREE(memlist);
-        memlist = nextmem;
-    }
-
-    ABC_FREE(hash.bucket);
-    ABC_FREE(hash);
-#ifdef __osf__
-#pragma pointer_size restore
-#endif
-
-    return;
-
-} /* end of cuddHashTableQuit */
-
-
-/**Function********************************************************************
-
-  Synopsis    [Inserts an item in a hash table.]
-
-  Description [Inserts an item in a hash table when the key has more than
-  three pointers.  Returns 1 if successful; 0 otherwise.]
-
-  SideEffects [None]
-
-  SeeAlso     [[cuddHashTableInsert1 cuddHashTableInsert2 cuddHashTableInsert3
-  cuddHashTableLookup]
-
-******************************************************************************/
-func cuddHashTableInsert(hash *DdHashTable, key *DdNodePtr, value *DdNode, count ptrint) int32 {
-    var result int32;
-    unsigned int posn;
-    var item *DdHashItem;
-    unsigned int i;
-
-#ifdef DD_DEBUG
-    assert(hash->keysize > 3);
-#endif
-
-    if hash.size > hash.maxsize {
-        result = cuddHashTableResize(hash);
-        if result == 0 { return(0); }
-    }
-    item = cuddHashTableAlloc(hash);
-    if item == nil { return(0); }
-    hash.size++;
-    item.value = value;
-    // inlining of macro cuddRef
-    cuddSatInc(Cudd_Regular(value).ref);
-    item.count = count;
-    for i = 0; i < hash.keysize; i++ {
-        item.key[i] = key[i];
-    }
-    posn = ddLCHash(key,hash.keysize,hash.shift);
-    item.next = hash.bucket[posn];
-    hash.bucket[posn] = item;
-
-    return(1);
-
-} /* end of cuddHashTableInsert */
-
-
-/**Function********************************************************************
-
-  Synopsis    [Looks up a key in a hash table.]
-
-  Description [Looks up a key consisting of more than three pointers
-  in a hash table.  Returns the value associated to the key if there
-  is an entry for the given key in the table; NULL otherwise. If the
-  entry is present, its reference counter is decremented if not
-  saturated. If the counter reaches 0, the value of the entry is
-  dereferenced, and the entry is returned to the free list.]
-
-  SideEffects [None]
-
-  SeeAlso     [cuddHashTableLookup1 cuddHashTableLookup2 cuddHashTableLookup3
-  cuddHashTableInsert]
-
-******************************************************************************/
-func cuddHashTableLookup(hash *DdHashTable, key *DdNodePtr) *DdNode {
-    unsigned int posn;
-    var item, prev *DdHashItem;
-    unsigned int i, keysize;
-
-#ifdef DD_DEBUG
-    assert(hash->keysize > 3);
-#endif
-
-    posn = ddLCHash(key,hash.keysize,hash.shift);
-    item = hash.bucket[posn];
-    prev = nil;
-
-    keysize = hash.keysize;
-    for item != nil {
-        var key2 *DdNodePtr  = item.key;
-        var equal int32  = 1;
-        for i = 0; i < keysize; i++ {
-            if key[i] != key2[i] {
-                equal = 0;
-                break;
-            }
-        }
-        if equal != 0 {
-            var value *DdNode  = item.value;
-            cuddSatDec(item.count);
-            if item.count == 0 {
-                // inlining of macro cuddDeref
-                cuddSatDec(Cudd_Regular(value).ref);
-                if prev == nil {
-                    hash.bucket[posn] = item.next;
-                } else {
-                    prev.next = item.next;
-                }
-                item.next = hash.nextFree;
-                hash.nextFree = item;
-                hash.size--;
-            }
-            return(value);
-        }
-        prev = item;
-        item = item.next;
-    }
-    return(nil);
-
-} /* end of cuddHashTableLookup */
-
-
-/**Function********************************************************************
-
-  Synopsis    [Inserts an item in a hash table.]
-
-  Description [Inserts an item in a hash table when the key is one pointer.
-  Returns 1 if successful; 0 otherwise.]
-
-  SideEffects [None]
-
-  SeeAlso     [cuddHashTableInsert cuddHashTableInsert2 cuddHashTableInsert3
-  cuddHashTableLookup1]
-
-******************************************************************************/
-func cuddHashTableInsert1(hash *DdHashTable, f *DdNode, value *DdNode, count ptrint) int32 {
-    var result int32;
-    unsigned int posn;
-    var item *DdHashItem;
-
-#ifdef DD_DEBUG
-    assert(hash->keysize == 1);
-#endif
-
-    if hash.size > hash.maxsize {
-        result = cuddHashTableResize(hash);
-        if result == 0 { return(0); }
-    }
-    item = cuddHashTableAlloc(hash);
-    if item == nil { return(0); }
-    hash.size++;
-    item.value = value;
-    // inlining of macro cuddRef
-    cuddSatInc(Cudd_Regular(value).ref);
-    item.count = count;
-    item.key[0] = f;
-    posn = ddLCHash2(cuddF2L(f),cuddF2L(f),hash.shift);
-    item.next = hash.bucket[posn];
-    hash.bucket[posn] = item;
-
-    return(1);
-
-} /* end of cuddHashTableInsert1 */
-
-
-/**Function********************************************************************
-
-  Synopsis    [Looks up a key consisting of one pointer in a hash table.]
-
-  Description [Looks up a key consisting of one pointer in a hash table.
-  Returns the value associated to the key if there is an entry for the given
-  key in the table; NULL otherwise. If the entry is present, its reference
-  counter is decremented if not saturated. If the counter reaches 0, the
-  value of the entry is dereferenced, and the entry is returned to the free
-  list.]
-
-  SideEffects [None]
-
-  SeeAlso     [cuddHashTableLookup cuddHashTableLookup2 cuddHashTableLookup3
-  cuddHashTableInsert1]
-
-******************************************************************************/
-func cuddHashTableLookup1(hash *DdHashTable, f *DdNode) *DdNode {
-    unsigned int posn;
-    var item, prev *DdHashItem;
-
-#ifdef DD_DEBUG
-    assert(hash->keysize == 1);
-#endif
-
-    posn = ddLCHash2(cuddF2L(f),cuddF2L(f),hash.shift);
-    item = hash.bucket[posn];
-    prev = nil;
-
-    for item != nil {
-        var key *DdNodePtr  = item.key;
-        if f == key[0] {
-            var value *DdNode  = item.value;
-            cuddSatDec(item.count);
-            if item.count == 0 {
-                // inlining of macro cuddDeref
-                cuddSatDec(Cudd_Regular(value).ref);
-                if prev == nil {
-                    hash.bucket[posn] = item.next;
-                } else {
-                    prev.next = item.next;
-                }
-                item.next = hash.nextFree;
-                hash.nextFree = item;
-                hash.size--;
-            }
-            return(value);
-        }
-        prev = item;
-        item = item.next;
-    }
-    return(nil);
-
-} /* end of cuddHashTableLookup1 */
-
-
-/**Function********************************************************************
-
-  Synopsis    [Inserts an item in a hash table.]
-
-  Description [Inserts an item in a hash table when the key is
-  composed of two pointers. Returns 1 if successful; 0 otherwise.]
-
-  SideEffects [None]
-
-  SeeAlso     [cuddHashTableInsert cuddHashTableInsert1 cuddHashTableInsert3
-  cuddHashTableLookup2]
-
-******************************************************************************/
-func cuddHashTableInsert2(hash *DdHashTable, f *DdNode, g *DdNode, value *DdNode, count ptrint) int32 {
-    var result int32;
-    unsigned int posn;
-    var item *DdHashItem;
-
-#ifdef DD_DEBUG
-    assert(hash->keysize == 2);
-#endif
-
-    if hash.size > hash.maxsize {
-        result = cuddHashTableResize(hash);
-        if result == 0 { return(0); }
-    }
-    item = cuddHashTableAlloc(hash);
-    if item == nil { return(0); }
-    hash.size++;
-    item.value = value;
-    // inlining of macro cuddRef
-    cuddSatInc(Cudd_Regular(value).ref);
-    item.count = count;
-    item.key[0] = f;
-    item.key[1] = g;
-    posn = ddLCHash2(cuddF2L(f),cuddF2L(g),hash.shift);
-    item.next = hash.bucket[posn];
-    hash.bucket[posn] = item;
-
-    return(1);
-
-} /* end of cuddHashTableInsert2 */
-
-
-/**Function********************************************************************
-
-  Synopsis    [Looks up a key consisting of two pointers in a hash table.]
-
-  Description [Looks up a key consisting of two pointer in a hash table.
-  Returns the value associated to the key if there is an entry for the given
-  key in the table; NULL otherwise. If the entry is present, its reference
-  counter is decremented if not saturated. If the counter reaches 0, the
-  value of the entry is dereferenced, and the entry is returned to the free
-  list.]
-
-  SideEffects [None]
-
-  SeeAlso     [cuddHashTableLookup cuddHashTableLookup1 cuddHashTableLookup3
-  cuddHashTableInsert2]
-
-******************************************************************************/
-func cuddHashTableLookup2(hash *DdHashTable, f *DdNode, g *DdNode) *DdNode {
-    unsigned int posn;
-    var item, prev *DdHashItem;
-
-#ifdef DD_DEBUG
-    assert(hash->keysize == 2);
-#endif
-
-    posn = ddLCHash2(cuddF2L(f),cuddF2L(g),hash.shift);
-    item = hash.bucket[posn];
-    prev = nil;
-
-    for item != nil {
-        var key *DdNodePtr  = item.key;
-        if (f == key[0]) && (g == key[1]) {
-            var value *DdNode  = item.value;
-            cuddSatDec(item.count);
-            if item.count == 0 {
-                // inlining of macro cuddDeref
-                cuddSatDec(Cudd_Regular(value).ref);
-                if prev == nil {
-                    hash.bucket[posn] = item.next;
-                } else {
-                    prev.next = item.next;
-                }
-                item.next = hash.nextFree;
-                hash.nextFree = item;
-                hash.size--;
-            }
-            return(value);
-        }
-        prev = item;
-        item = item.next;
-    }
-    return(nil);
-
-} /* end of cuddHashTableLookup2 */
-
-
-/**Function********************************************************************
-
-  Synopsis    [Inserts an item in a hash table.]
-
-  Description [Inserts an item in a hash table when the key is
-  composed of three pointers. Returns 1 if successful; 0 otherwise.]
-
-  SideEffects [None]
-
-  SeeAlso     [cuddHashTableInsert cuddHashTableInsert1 cuddHashTableInsert2
-  cuddHashTableLookup3]
-
-******************************************************************************/
-func cuddHashTableInsert3(hash *DdHashTable, f *DdNode, g *DdNode, h *DdNode, value *DdNode, count ptrint) int32 {
-    var result int32;
-    unsigned int posn;
-    var item *DdHashItem;
-
-#ifdef DD_DEBUG
-    assert(hash->keysize == 3);
-#endif
-
-    if hash.size > hash.maxsize {
-        result = cuddHashTableResize(hash);
-        if result == 0 { return(0); }
-    }
-    item = cuddHashTableAlloc(hash);
-    if item == nil { return(0); }
-    hash.size++;
-    item.value = value;
-    // inlining of macro cuddRef
-    cuddSatInc(Cudd_Regular(value).ref);
-    item.count = count;
-    item.key[0] = f;
-    item.key[1] = g;
-    item.key[2] = h;
-    // inlining of macro ddLCHash3
-    // inlining of macro cuddF2L
-    // inlining of macro Cudd_Regular
-    // inlining of macro Cudd_IsComplement
-    posn = ddCHash2(((((DdNode *)((ptruint)(f) & ~01)).Id << 1) | (int32( ((ptrint) (f) & 01)))),((((DdNode *)((ptruint)(g) & ~01)).Id << 1) | (int32( ((ptrint) (g) & 01)))),((((DdNode *)((ptruint)(h) & ~01)).Id << 1) | (int32( ((ptrint) (h) & 01)))),hash.shift);
-    item.next = hash.bucket[posn];
-    hash.bucket[posn] = item;
-
-    return(1);
-
-} /* end of cuddHashTableInsert3 */
-
-
-/**Function********************************************************************
-
-  Synopsis    [Looks up a key consisting of three pointers in a hash table.]
-
-  Description [Looks up a key consisting of three pointers in a hash table.
-  Returns the value associated to the key if there is an entry for the given
-  key in the table; NULL otherwise. If the entry is present, its reference
-  counter is decremented if not saturated. If the counter reaches 0, the
-  value of the entry is dereferenced, and the entry is returned to the free
-  list.]
-
-  SideEffects [None]
-
-  SeeAlso     [cuddHashTableLookup cuddHashTableLookup1 cuddHashTableLookup2
-  cuddHashTableInsert3]
-
-******************************************************************************/
-func cuddHashTableLookup3(hash *DdHashTable, f *DdNode, g *DdNode, h *DdNode) *DdNode {
-    unsigned int posn;
-    var item, prev *DdHashItem;
-
-#ifdef DD_DEBUG
-    assert(hash->keysize == 3);
-#endif
-
-    // inlining of macro ddLCHash3
-    // inlining of macro cuddF2L
-    // inlining of macro Cudd_Regular
-    // inlining of macro Cudd_IsComplement
-    posn = ddCHash2(((((DdNode *)((ptruint)(f) & ~01)).Id << 1) | (int32( ((ptrint) (f) & 01)))),((((DdNode *)((ptruint)(g) & ~01)).Id << 1) | (int32( ((ptrint) (g) & 01)))),((((DdNode *)((ptruint)(h) & ~01)).Id << 1) | (int32( ((ptrint) (h) & 01)))),hash.shift);
-    item = hash.bucket[posn];
-    prev = nil;
-
-    for item != nil {
-        var key *DdNodePtr  = item.key;
-        if (f == key[0]) && (g == key[1]) && (h == key[2]) {
-            var value *DdNode  = item.value;
-            cuddSatDec(item.count);
-            if item.count == 0 {
-                // inlining of macro cuddDeref
-                cuddSatDec(Cudd_Regular(value).ref);
-                if prev == nil {
-                    hash.bucket[posn] = item.next;
-                } else {
-                    prev.next = item.next;
-                }
-                item.next = hash.nextFree;
-                hash.nextFree = item;
-                hash.size--;
-            }
-            return(value);
-        }
-        prev = item;
-        item = item.next;
-    }
-    return(nil);
-
-} /* end of cuddHashTableLookup3 */
-
-
-/*---------------------------------------------------------------------------*/
-/* Definition of static functions                                            */
-/*---------------------------------------------------------------------------*/
-
-
-/**Function********************************************************************
-
-  Synopsis    [Resizes a local cache.]
-
-  Description []
-
-  SideEffects [None]
-
-  SeeAlso     []
-
-******************************************************************************/
 func cuddLocalCacheResize(cache *DdLocalCache) {
-    var item, olditem, entry, old *DdLocalCacheItem;
-    var i, shift int32;
-    unsigned int posn;
-    unsigned int slots, oldslots;
-    extern DD_OOMFP MMoutOfMemory;
-    DD_OOMFP saveHandler;
+	if cache == nil || cache.slots >= cache.maxslots {
+		return
+	}
+	newSlots := cache.slots * 2
+	if newSlots > cache.maxslots {
+		newSlots = cache.maxslots
+	}
+	if newSlots <= cache.slots {
+		return
+	}
+	old := cache.item
+	cache.item = make([]DdLocalCacheItem, newSlots)
+	cache.slots = newSlots
+	for _, entry := range old {
+		if entry.value != nil {
+			idx := cacheHash(entry.key, newSlots)
+			cache.item[idx] = entry
+		}
+	}
+}
 
-    olditem = cache.item;
-    oldslots = cache.slots;
-    slots = cache.slots = oldslots << 1;
+func cuddLocalCacheAddToList(*DdLocalCache)            {}
+func cuddLocalCacheRemoveFromList(cache *DdLocalCache) { cuddLocalCacheQuit(cache) }
 
-#ifdef DD_VERBOSE
-    (void) fprintf(cache->manager->err,
-                   "Resizing local cache from %d to %d entries\n",
-                   oldslots, slots);
-    (void) fprintf(cache->manager->err,
-                   "\thits = %.0f\tlookups = %.0f\thit ratio = %5.3f\n",
-                   cache->hits, cache->lookUps, cache->hits / cache->lookUps);
-#endif
+func cuddHashTableInit(manager *DdManager, keySize, initSize uint32) *DdHashTable {
+	if manager == nil || keySize == 0 {
+		return nil
+	}
+	if initSize < 2 {
+		initSize = 2
+	}
+	n := uint32(1) << (bits.Len32(initSize) - 1)
+	return &DdHashTable{
+		keysize:    keySize,
+		itemsize:   (keySize+1)*8 + 8,
+		bucket:     make([]*DdHashItem, n),
+		numBuckets: n,
+		shift:      int32(32 - bits.Len32(n-1)),
+		maxsize:    n * DD_MAX_HASHTABLE_DENSITY,
+		manager:    manager,
+	}
+}
 
-    saveHandler = MMoutOfMemory;
-    MMoutOfMemory = Cudd_OutOfMem;
-    cache.item = item =
-        (DdLocalCacheItem *) ABC_ALLOC(char, slots * cache.itemsize);
-    MMoutOfMemory = saveHandler;
-    /* If we fail to allocate the new table we just give up. */
-    if item == nil {
-#ifdef DD_VERBOSE
-        (void) fprintf(cache->manager->err,"Resizing failed. Giving up.\n");
-#endif
-        cache.slots = oldslots;
-        cache.item = olditem;
-        /* Do not try to resize again. */
-        cache.maxslots = oldslots - 1;
-        return;
-    }
-    shift = --(cache.shift);
-    cache.manager.memused += (slots - oldslots) * cache.itemsize;
+func cuddHashTableQuit(hash *DdHashTable) {
+	if hash == nil {
+		return
+	}
+	for i := range hash.bucket {
+		for item := hash.bucket[i]; item != nil; {
+			next := item.next
+			Cudd_Deref(item.value)
+			item = next
+		}
+	}
+	*hash = DdHashTable{}
+}
 
-    /* Clear new cache. */
-    memset(item, 0, (size_t)(slots * cache.itemsize));
+func cuddHashTableInsert(hash *DdHashTable, key []*DdNode, value *DdNode, count ptrint) int32 {
+	if hash == nil || uint32(len(key)) != hash.keysize || value == nil {
+		return 0
+	}
+	if hash.size > hash.maxsize && cuddHashTableResize(hash) == 0 {
+		return 0
+	}
+	idx := cacheHash(key, hash.numBuckets)
+	item := &DdHashItem{key: append([]*DdNode(nil), key...), value: value, count: count, next: hash.bucket[idx]}
+	Cudd_Ref(value)
+	hash.bucket[idx] = item
+	hash.size++
+	return 1
+}
 
-    /* Copy from old cache to new one. */
-    for i = 0; uint32( i) < oldslots; i++ {
-        old = (DdLocalCacheItem *) ((char *) olditem + i * cache.itemsize);
-        if old.value != nil {
-            posn = ddLCHash(old.key,cache.keysize,shift);
-            entry = (DdLocalCacheItem *) ((char *) item +
-                                          posn * cache.itemsize);
-            memcpy(entry.key,old.key,cache.keysize*sizeof(DdNode *));
-            entry.value = old.value;
-        }
-    }
+func cuddHashTableLookup(hash *DdHashTable, key []*DdNode) *DdNode {
+	if hash == nil || uint32(len(key)) != hash.keysize || hash.numBuckets == 0 {
+		return nil
+	}
+	idx := cacheHash(key, hash.numBuckets)
+	var prev *DdHashItem
+	for item := hash.bucket[idx]; item != nil; item = item.next {
+		if !sameCacheKey(item.key, key) {
+			prev = item
+			continue
+		}
+		item.count--
+		if item.count <= 0 {
+			Cudd_Deref(item.value)
+			if prev == nil {
+				hash.bucket[idx] = item.next
+			} else {
+				prev.next = item.next
+			}
+			hash.size--
+		}
+		return item.value
+	}
+	return nil
+}
 
-    ABC_FREE(olditem);
+func cuddHashTableInsert1(h *DdHashTable, f, value *DdNode, count ptrint) int32 {
+	return cuddHashTableInsert(h, []*DdNode{f}, value, count)
+}
+func cuddHashTableLookup1(h *DdHashTable, f *DdNode) *DdNode {
+	return cuddHashTableLookup(h, []*DdNode{f})
+}
+func cuddHashTableInsert2(h *DdHashTable, f, g, value *DdNode, count ptrint) int32 {
+	return cuddHashTableInsert(h, []*DdNode{f, g}, value, count)
+}
+func cuddHashTableLookup2(h *DdHashTable, f, g *DdNode) *DdNode {
+	return cuddHashTableLookup(h, []*DdNode{f, g})
+}
+func cuddHashTableInsert3(h *DdHashTable, f, g, x, value *DdNode, count ptrint) int32 {
+	return cuddHashTableInsert(h, []*DdNode{f, g, x}, value, count)
+}
+func cuddHashTableLookup3(h *DdHashTable, f, g, x *DdNode) *DdNode {
+	return cuddHashTableLookup(h, []*DdNode{f, g, x})
+}
 
-    /* Reinitialize measurements so as to avoid division by 0 and
-    ** immediate resizing.
-    */
-    cache.lookUps = float64( int32( (slots * cache.minHit + 1)));
-    cache.hits = 0;
-
-} /* end of cuddLocalCacheResize */
-
-
-/**Function********************************************************************
-
-  Synopsis    [Computes the hash value for a local cache.]
-
-  Description [Computes the hash value for a local cache. Returns the
-  bucket index.]
-
-  SideEffects [None]
-
-  SeeAlso     []
-
-******************************************************************************/
-//DD_INLINE
-static unsigned int
-ddLCHash(
-  DdNodePtr * key,
-  unsigned int keysize,
-  int shift)
-{
-    unsigned int val = (unsigned int) (ptrint) key[0] * DD_P2;
-    unsigned int i;
-
-    for i = 1; i < keysize; i++ {
-        val = val * DD_P1 + int32( (ptrint)) key[i];
-    }
-
-    return(val >> shift);
-
-} /* end of ddLCHash */
-
-
-/**Function********************************************************************
-
-  Synopsis    [Inserts a local cache in the manager list.]
-
-  Description []
-
-  SideEffects [None]
-
-  SeeAlso     []
-
-******************************************************************************/
-func cuddLocalCacheAddToList(cache *DdLocalCache) {
-    var manager *DdManager  = cache.manager;
-
-    cache.next = manager.localCaches;
-    manager.localCaches = cache;
-    return;
-
-} /* end of cuddLocalCacheAddToList */
-
-
-/**Function********************************************************************
-
-  Synopsis    [Removes a local cache from the manager list.]
-
-  Description []
-
-  SideEffects [None]
-
-  SeeAlso     []
-
-******************************************************************************/
-func cuddLocalCacheRemoveFromList(cache *DdLocalCache) {
-    var manager *DdManager  = cache.manager;
-#ifdef __osf__
-#pragma pointer_size save
-#pragma pointer_size short
-#endif
-    var prevCache **DdLocalCache;
-    var nextCache *DdLocalCache;
-#ifdef __osf__
-#pragma pointer_size restore
-#endif
-
-    prevCache = &(manager.localCaches);
-    nextCache = manager.localCaches;
-
-    for nextCache != nil {
-        if nextCache == cache {
-            *prevCache = nextCache.next;
-            return;
-        }
-        prevCache = &(nextCache.next);
-        nextCache = nextCache.next;
-    }
-    return;                     /* should never get here */
-
-} /* end of cuddLocalCacheRemoveFromList */
-
-
-/**Function********************************************************************
-
-  Synopsis    [Resizes a hash table.]
-
-  Description [Resizes a hash table. Returns 1 if successful; 0
-  otherwise.]
-
-  SideEffects [None]
-
-  SeeAlso     [cuddHashTableInsert]
-
-******************************************************************************/
 func cuddHashTableResize(hash *DdHashTable) int32 {
-    var j int32;
-    unsigned int posn;
-    var item *DdHashItem;
-    var next *DdHashItem;
-#ifdef __osf__
-#pragma pointer_size save
-#pragma pointer_size short
-#endif
-    var key **DdNode;
-    var numBuckets int32;
-    var buckets **DdHashItem;
-    var oldBuckets **DdHashItem  = hash.bucket;
-#ifdef __osf__
-#pragma pointer_size restore
-#endif
-    var shift int32;
-    var oldNumBuckets int32  = hash.numBuckets;
-    extern DD_OOMFP MMoutOfMemory;
-    DD_OOMFP saveHandler;
+	if hash == nil || hash.numBuckets > ^uint32(0)/2 {
+		return 0
+	}
+	n := hash.numBuckets * 2
+	newBuckets := make([]*DdHashItem, n)
+	for _, head := range hash.bucket {
+		for item := head; item != nil; {
+			next := item.next
+			idx := cacheHash(item.key, n)
+			item.next = newBuckets[idx]
+			newBuckets[idx] = item
+			item = next
+		}
+	}
+	hash.bucket = newBuckets
+	hash.numBuckets = n
+	hash.maxsize = n * DD_MAX_HASHTABLE_DENSITY
+	return 1
+}
 
-    /* Compute the new size of the table. */
-    numBuckets = oldNumBuckets << 1;
-    saveHandler = MMoutOfMemory;
-    MMoutOfMemory = Cudd_OutOfMem;
-#ifdef __osf__
-#pragma pointer_size save
-#pragma pointer_size short
-#endif
-    buckets = ABC_ALLOC(DdHashItem *, numBuckets);
-    MMoutOfMemory = saveHandler;
-    if buckets == nil {
-        hash.maxsize <<= 1;
-        return(1);
-    }
-
-    hash.bucket = buckets;
-    hash.numBuckets = numBuckets;
-    shift = --(hash.shift);
-    hash.maxsize <<= 1;
-    memset(buckets, 0, numBuckets * sizeof(DdHashItem *));
-#ifdef __osf__
-#pragma pointer_size restore
-#endif
-    if hash.keysize == 1 {
-        for j = 0; j < oldNumBuckets; j++ {
-            item = oldBuckets[j];
-            for item != nil {
-                next = item.next;
-                key = item.key;
-                posn = ddLCHash2(cuddF2L(key[0]), cuddF2L(key[0]), shift);
-                item.next = buckets[posn];
-                buckets[posn] = item;
-                item = next;
-            }
-        }
-    } else if hash.keysize == 2 {
-        for j = 0; j < oldNumBuckets; j++ {
-            item = oldBuckets[j];
-            for item != nil {
-                next = item.next;
-                key = item.key;
-                posn = ddLCHash2(cuddF2L(key[0]), cuddF2L(key[1]), shift);
-                item.next = buckets[posn];
-                buckets[posn] = item;
-                item = next;
-            }
-        }
-    } else if hash.keysize == 3 {
-        for j = 0; j < oldNumBuckets; j++ {
-            item = oldBuckets[j];
-            for item != nil {
-                next = item.next;
-                key = item.key;
-                // inlining of macro ddLCHash3
-                // inlining of macro cuddF2L
-                // inlining of macro Cudd_Regular
-                // inlining of macro Cudd_IsComplement
-                posn = ddCHash2(((((DdNode *)((ptruint)(key[0]) & ~01)).Id << 1) | (int32( ((ptrint) (key[0]) & 01)))),((((DdNode *)((ptruint)(key[1]) & ~01)).Id << 1) | (int32( ((ptrint) (key[1]) & 01)))),((((DdNode *)((ptruint)(key[2]) & ~01)).Id << 1) | (int32( ((ptrint) (key[2]) & 01)))),shift);
-                item.next = buckets[posn];
-                buckets[posn] = item;
-                item = next;
-            }
-        }
-    } else {
-        for j = 0; j < oldNumBuckets; j++ {
-            item = oldBuckets[j];
-            for item != nil {
-                next = item.next;
-                posn = ddLCHash(item.key, hash.keysize, shift);
-                item.next = buckets[posn];
-                buckets[posn] = item;
-                item = next;
-            }
-        }
-    }
-    ABC_FREE(oldBuckets);
-    return(1);
-
-} /* end of cuddHashTableResize */
-
-
-/**Function********************************************************************
-
-  Synopsis    [Fast storage allocation for items in a hash table.]
-
-  Description [Fast storage allocation for items in a hash table. The
-  first 4 bytes of a chunk contain a pointer to the next block; the
-  rest contains DD_MEM_CHUNK spaces for hash items.  Returns a pointer to
-  a new item if successful; NULL is memory is full.]
-
-  SideEffects [None]
-
-  SeeAlso     [cuddAllocNode cuddDynamicAllocNode]
-
-******************************************************************************/
-//DD_INLINE
 func cuddHashTableAlloc(hash *DdHashTable) *DdHashItem {
-    var i int32;
-    unsigned int itemsize = hash.itemsize;
-    extern DD_OOMFP MMoutOfMemory;
-    DD_OOMFP saveHandler;
-#ifdef __osf__
-#pragma pointer_size save
-#pragma pointer_size short
-#endif
-    var mem **DdHashItem;
-    var thisOne *DdHashItem;
-    var next *DdHashItem;
-    var item *DdHashItem;
-
-    if hash.nextFree == nil {
-        saveHandler = MMoutOfMemory;
-        MMoutOfMemory = Cudd_OutOfMem;
-        mem = (DdHashItem **) ABC_ALLOC(char,(DD_MEM_CHUNK+1) * itemsize);
-        MMoutOfMemory = saveHandler;
-#ifdef __osf__
-#pragma pointer_size restore
-#endif
-        if mem == nil {
-            if hash.manager.stash != nil {
-                ABC_FREE(hash.manager.stash);
-                hash.manager.stash = nil;
-                /* Inhibit resizing of tables. */
-                hash.manager.maxCacheHard = hash.manager.cacheSlots - 1;
-                hash.manager.cacheSlack = - int32( (hash.manager.cacheSlots + 1));
-                for i = 0; i < hash.manager.size; i++ {
-                    hash.manager.subtables[i].maxKeys <<= 2;
-                }
-                hash.manager.gcFrac = 0.2;
-                hash.manager.minDead =
-                    uint32( (0.2 * float64( hash.manager.slots)));
-#ifdef __osf__
-#pragma pointer_size save
-#pragma pointer_size short
-#endif
-                mem = (DdHashItem **) ABC_ALLOC(char,(DD_MEM_CHUNK+1) * itemsize);
-#ifdef __osf__
-#pragma pointer_size restore
-#endif
-            }
-            if mem == nil {
-                (*MMoutOfMemory)(int64(((DD_MEM_CHUNK + 1) * itemsize)));
-                hash.manager.errorCode = CUDD_MEMORY_OUT;
-                return(nil);
-            }
-        }
-
-        mem[0] = (DdHashItem *) hash.memoryList;
-        hash.memoryList = mem;
-
-        thisOne = (DdHashItem *) ((char *) mem + itemsize);
-        hash.nextFree = thisOne;
-        for i = 1; i < DD_MEM_CHUNK; i++ {
-            next = (DdHashItem *) ((char *) thisOne + itemsize);
-            thisOne.next = next;
-            thisOne = next;
-        }
-
-        thisOne.next = nil;
-
-    }
-    item = hash.nextFree;
-    hash.nextFree = item.next;
-    return(item);
-
-} /* end of cuddHashTableAlloc */
-
-
-//ABC_NAMESPACE_IMPL_END
-
+	if hash == nil {
+		return nil
+	}
+	return &DdHashItem{key: make([]*DdNode, hash.keysize)}
+}
