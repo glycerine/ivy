@@ -78,23 +78,18 @@ func retimeFrontierDomains(p *Graph, pis int) map[int]int {
 	return domains
 }
 
-// Aig_ManRetimeFrontier moves at most steps gates forward across zero-initialized
-// registers and returns a structurally rehashed copy. The source graph is used
-// as mutable work storage, as in ABC. Zero steps leaves its state untouched.
+// Aig_ManRetimeFrontier moves gates forward across zero-initialized registers
+// and returns a structurally rehashed copy. The source graph is mutable work
+// storage. C checks its limit after a move, so nonpositive limits permit one.
 func Aig_ManRetimeFrontier(p *Graph, steps int32) *Graph {
 	if p == nil || p.nRegs <= 0 {
 		panic("aig: forward retiming requires registers")
-	}
-	if steps < 0 {
-		panic("aig: negative retiming step limit")
 	}
 	if err := p.Check(); err != nil {
 		panic(err)
 	}
 	registers, pis, pos := sclLayout(p)
-	if steps == 0 {
-		return Aig_ManDupOrdered(p)
-	}
+	steps = max(steps, 1)
 	domains := retimeFrontierDomains(p, pis)
 	Aig_ManRetimeMark(p)
 	liByLo := make(map[int]Edge, registers)

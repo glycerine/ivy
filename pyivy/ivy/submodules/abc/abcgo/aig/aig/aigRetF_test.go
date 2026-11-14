@@ -109,7 +109,7 @@ func TestRetimeFrontierStepLimitAndForwardIDs(t *testing.T) {
 		p := retFExample(2, false, false, false)
 		before := Aig_ManDupOrdered(p)
 		q := Aig_ManRetimeFrontier(p, steps)
-		if q.nRegs != 4-steps {
+		if q.nRegs != 4-max(steps, 1) {
 			t.Fatal("retiming step limit", steps, q.nRegs)
 		}
 		if err := q.Check(); err != nil {
@@ -212,18 +212,30 @@ func TestRetimeFrontierBuffersAndFeedback(t *testing.T) {
 	}
 	checkRetFTraces(t, original, retimed)
 }
-func TestRetimeFrontierZeroStepPreservesMetadata(t *testing.T) {
+func TestRetimeFrontierNoEligibleMovePreservesMetadata(t *testing.T) {
 	p := retFExample(1, false, false, false)
 	p.Name, p.Spec = "no-op", "origin"
 	p.FlopNumbers = []int32{7, 9}
 	p.FlopReprs = []int32{7, 9}
-	p.ClockDomains = [][]int32{{0, 1}}
+	p.ClockDomains = [][]int32{{0}, {1}}
 	q := Aig_ManRetimeFrontier(p, 0)
 	if q.RetimingChanged || p.RetimingChanged || !slices.Equal(q.FlopNumbers, p.FlopNumbers) || !slices.Equal(q.FlopReprs, p.FlopReprs) || q.Name != p.Name || q.Spec != p.Spec || !slices.Equal(q.ClockDomains[0], p.ClockDomains[0]) {
-		t.Fatal("zero-step metadata changed")
+		t.Fatal("no-move metadata changed")
 	}
 	q.FlopNumbers[0] = 42
 	if p.FlopNumbers[0] != 7 {
 		t.Fatal("no-op shares mutable metadata")
+	}
+}
+
+func TestRetimeFrontierNonpositiveLimitMatchesSource(t *testing.T) {
+	for _, steps := range []int32{-1, 0} {
+		p := retFExample(1, true, true, false)
+		before := Aig_ManDupOrdered(p)
+		q := Aig_ManRetimeFrontier(p, steps)
+		if q.nRegs != 1 || !q.RetimingChanged {
+			t.Fatalf("limit %d: source permits one move, got %d registers, changed=%t", steps, q.nRegs, q.RetimingChanged)
+		}
+		checkRetFTraces(t, before, q)
 	}
 }

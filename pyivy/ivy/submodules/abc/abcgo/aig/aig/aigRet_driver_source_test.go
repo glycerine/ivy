@@ -8,6 +8,15 @@ import (
 )
 
 func TestRetimingCompleteDriverAgainstCompiledSource(t *testing.T) {
+	compareRetimingSourceDriver(t, false)
+}
+
+func TestRetimingFrontierAgainstCompiledSource(t *testing.T) {
+	compareRetimingSourceDriver(t, true)
+}
+
+func compareRetimingSourceDriver(t *testing.T, frontier bool) {
+	t.Helper()
 	graphs := []*Graph{
 		retFExample(1, false, false, false),
 		retFExample(1, true, true, false),
@@ -59,9 +68,17 @@ func TestRetimingCompleteDriverAgainstCompiledSource(t *testing.T) {
 	for index, g := range graphs {
 		for _, forward := range []int32{0, 1} {
 			for _, steps := range []int32{-1, 0, 1, 2, 5} {
+				if frontier && forward == 0 {
+					continue
+				}
 				caseNames = append(caseNames, fmt.Sprintf("graph=%d forward=%d steps=%d", index, forward, steps))
 				writeRetimingSourceCase(t, &input, g, forward, steps)
-				out := Rtm_ManRetime(g, forward, steps, 0)
+				var out *Graph
+				if frontier {
+					out = Aig_ManRetimeFrontier(Aig_ManDupOrdered(g), steps)
+				} else {
+					out = Rtm_ManRetime(g, forward, steps, 0)
+				}
 				if err := out.Check(); err != nil {
 					t.Fatalf("%s: %v", caseNames[len(caseNames)-1], err)
 				}
@@ -87,10 +104,16 @@ func TestRetimingCompleteDriverAgainstCompiledSource(t *testing.T) {
 			}
 		}
 	}
-	got := runAigSourceFixtureInput(t, "retiming_driver_compare.c", input.String(),
+	fixture := "retiming_driver_compare.c"
+	sources := []string{
 		"aigMan.c", "aigObj.c", "aigOper.c", "aigTable.c", "aigMem.c",
 		"aigFanout.c", "aigUtil.c", "aigCheck.c", "aigScl.c", "aigDup.c", "aigDfs.c",
-		"../../misc/tim/timMan.c", "../../misc/mem/mem.c")
+		"../../misc/tim/timMan.c", "../../misc/mem/mem.c"}
+	if frontier {
+		fixture = "retiming_frontier_compare.c"
+		sources = append(sources, "../../misc/tim/timBox.c", "../../misc/tim/timTime.c")
+	}
+	got := runAigSourceFixtureInput(t, fixture, input.String(), sources...)
 	gotLines, wantLines := strings.Split(got, "\n"), strings.Split(want.String(), "\n")
 	if len(gotLines) != len(wantLines) {
 		t.Fatalf("source trace length = %d, want %d: %s", len(gotLines), len(wantLines), got)
