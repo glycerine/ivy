@@ -284,7 +284,11 @@ func Aig_SuppMinReconstruct(p *Graph, cofactors, nodes, support []Edge) Edge {
 	if len(nodes) == 0 {
 		return InvalidEdge
 	}
-	copies := map[int]Edge{0: p.Const1()}
+	if p.copies == nil {
+		p.copies = make(map[int]Edge)
+	}
+	copies := p.copies
+	copies[0] = p.Const1()
 	for _, e := range support {
 		if e.Complemented() {
 			panic("aig: complemented support boundary")
@@ -335,18 +339,13 @@ func Aig_SuppMinGateIsInSupport(p *Graph, orGate, support []Edge) bool {
 	return true
 }
 func Aig_SuppMinCollectSupport(p *Graph, nodes []Edge) []Edge {
-	inside := map[int]bool{}
-	for _, e := range nodes {
-		inside[e.NodeID()] = true
-	}
 	support := []Edge{}
 	for _, e := range nodes {
 		for _, f := range nodeFanins(*p.node(e)) {
-			if f.NodeID() == 0 || inside[f.NodeID()] {
+			if f.NodeID() == 0 || p.node(f).TravID == p.travID {
 				continue
 			}
 			f = Aig_Regular(f)
-			inside[f.NodeID()] = true
 			p.node(f).TravID = p.travID
 			support = append(support, f)
 		}

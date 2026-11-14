@@ -8,7 +8,7 @@ nodes before creating gates so slice growth cannot invalidate a node pointer.
 The public traversal helpers preserve ABC's current/previous generation protocol.
 The complete support cut is bounded to sixteen variables, as in the source.
 Local boolean truth tables replace Kit and untyped scratch-pointer storage;
-reconstruction uses local typed copy maps. Cofactor Edge literals represent
+reconstruction uses the graph's typed object-copy map. Cofactor Edge literals represent
 assignments forced true, so a complemented literal forces its node to zero.
 Named status constants retain the original 0/-1/-2/-3 outcomes. The two original
 example helpers return their constructed graph/result/status for inspection
@@ -41,3 +41,15 @@ Review fixes include:
 The converted-file AIG test suite including utility and factoring tests passes
 with the race detector. Full-package compilation remains dependent on other
 workers' outstanding files; no draft sources were hidden or disabled.
+
+## Sequential audit checkpoint
+
+The preceding report is historical, not completion evidence for the current
+package audit. New source comparison found that support collection ignored
+already-current frontier marks and reconstruction failed to publish C's
+object-copy side effects. Both regressions were observed failing before their
+repairs. Support collection now uses traversal marks directly, eliminating its
+extra membership map. Reconstruction uses the graph copy map and preserves
+unrelated entries. A compiled original-C frontier fixture verifies support
+order and resulting marks. See `../../SEQUENTIAL_AUDIT.md` for current scope
+and verification; the remaining factoring helpers still require review.
