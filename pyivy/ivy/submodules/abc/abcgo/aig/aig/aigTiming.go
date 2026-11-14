@@ -27,30 +27,31 @@ func Aig_ObjRequiredLevel(p *Graph, e Edge) int32 {
 }
 func Aig_ObjReverseLevelNew(p *Graph, e Edge) int32 {
 	max := int32(0)
-	for id, n := range p.nodes {
-		if p.deleted[id] {
-			continue
-		}
-		for _, child := range nodeFanins(n) {
-			if child.NodeID() == e.NodeID() {
-				if level := Aig_ObjReverseLevel(p, Edge(id)<<1); level > max {
-					max = level
-				}
-			}
+	for i, fan := int32(0), Aig_ObjFanout0Int(p, int32(e.NodeID())); i < Aig_ObjRefs(p, e); i, fan = i+1, Aig_ObjFanoutNext(p, fan) {
+		if level := Aig_ObjReverseLevel(p, Aig_ManObj(p, fan>>1)); level > max {
+			max = level
 		}
 	}
 	return max + 1
 }
 func Aig_ManStartReverseLevels(p *Graph, increase int32) {
+	if p.fanouts == nil {
+		panic("aig: reverse levels require an active fanout index")
+	}
 	if p.reverseLevels != nil {
 		panic("aig: reverse levels already active")
 	}
 	if increase < 0 {
 		panic("aig: negative level allowance")
 	}
-	p.maxRequiredLevel = Aig_ManLevelNum(p) + increase
+	p.maxRequiredLevel = Aig_ManLevels(p) + increase
 	p.reverseLevels = make([]int32, len(p.nodes))
-	p.recomputeReverseLevels()
+	for _, e := range Aig_ManDfsReverse(p) {
+		if p.node(e).MarkA {
+			panic("aig: reverse level setup requires clear node marks")
+		}
+		Aig_ObjSetReverseLevel(p, e, Aig_ObjReverseLevelNew(p, e))
+	}
 }
 func Aig_ManStopReverseLevels(p *Graph) {
 	if p.reverseLevels == nil {

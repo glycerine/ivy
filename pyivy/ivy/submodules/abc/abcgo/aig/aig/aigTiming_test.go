@@ -8,6 +8,8 @@ func TestRequiredAndReverseLevels(t *testing.T) {
 	first := p.AND(a, b)
 	last := p.AND(first, c)
 	p.AddOutput(last)
+	Aig_ManFanoutStart(p)
+	defer Aig_ManFanoutStop(p)
 	Aig_ManStartReverseLevels(p, 2)
 	if Aig_ObjReverseLevel(p, last) != 1 || Aig_ObjReverseLevel(p, first) != 2 || Aig_ObjRequiredLevel(p, first) != 3 {
 		t.Fatal(p.reverseLevels)

@@ -260,15 +260,22 @@ func Aig_ManDfsChoices(p *Graph) []Edge {
 	return nodes
 }
 func Aig_ManDfsReverse(p *Graph) []Edge {
-	roots := make([]Edge, 0, len(p.nodes))
+	Aig_ManIncrementTravId(p)
+	for _, e := range p.outputs {
+		p.node(e).TravID = p.travID
+	}
+	var nodes []Edge
+	active := make(map[int]bool)
 	for id, n := range p.nodes {
 		if !p.deleted[id] && (n.Kind == And || n.Kind == ExclusiveOr || n.Kind == Buffer) {
-			roots = append(roots, Edge(id)<<1)
+			p.reverseDfsRec(Edge(id)<<1, &nodes, active)
 		}
 	}
-	return p.reverseDfs(roots, nil)
+	return nodes
 }
-func Aig_ManDfsReverse_rec(p *Graph, e Edge, nodes *[]Edge) { *nodes = p.reverseDfs([]Edge{e}, *nodes) }
+func Aig_ManDfsReverse_rec(p *Graph, e Edge, nodes *[]Edge) {
+	p.reverseDfsRec(e, nodes, make(map[int]bool))
+}
 func Aig_ManLevelize(p *Graph) [][]Edge {
 	maxLevel := int(Aig_ManLevelNum(p))
 	levels := make([][]Edge, maxLevel+1)
@@ -283,15 +290,7 @@ func Aig_ManLevelize(p *Graph) [][]Edge {
 	}
 	return levels
 }
-func Aig_ManLevelNum(p *Graph) int32 {
-	max := 0
-	for _, e := range p.outputs {
-		if level := p.node(e).Level; level > max {
-			max = level
-		}
-	}
-	return int32(max)
-}
+func Aig_ManLevelNum(p *Graph) int32          { return Aig_ManLevels(p) }
 func Aig_ManChoiceLevel_rec(p *Graph, e Edge) { p.choiceLevels([]Edge{e}) }
 func Aig_ManChoiceLevel(p *Graph) int32 {
 	Aig_ManSetCioIds(p)
@@ -626,39 +625,25 @@ func Aig_ObjCollectSuper(p *Graph, root Edge, super *[]Edge) int32 {
 	return result
 }
 
-func (p *Graph) reverseDfs(roots, prior []Edge) []Edge {
-	fanouts := make([][]Edge, len(p.nodes))
-	for id, n := range p.nodes {
-		if p.deleted[id] {
-			continue
-		}
-		for _, e := range nodeFanins(n) {
-			fanouts[e.NodeID()] = append(fanouts[e.NodeID()], Edge(id)<<1)
-		}
+func (p *Graph) reverseDfsRec(e Edge, nodes *[]Edge, active map[int]bool) {
+	if e.Complemented() {
+		panic("aig: reverse DFS requires a regular object")
 	}
-	result := append([]Edge(nil), prior...)
-	state := make([]uint8, len(p.nodes))
-	for _, e := range prior {
-		state[e.NodeID()] = 2
+	n := p.node(e)
+	if n.TravID == p.travID {
+		return
 	}
-	var visit func(Edge)
-	visit = func(e Edge) {
-		id := e.NodeID()
-		if state[id] == 2 || p.node(e).Kind == Output {
-			return
-		}
-		if state[id] == 1 {
-			panic("aig: cyclic reverse traversal")
-		}
-		state[id] = 1
-		for _, fan := range fanouts[id] {
-			visit(fan)
-		}
-		state[id] = 2
-		result = append(result, Aig_Regular(e))
+	if n.Kind != And && n.Kind != ExclusiveOr && n.Kind != Buffer {
+		panic("aig: reverse DFS requires a node, buffer or premarked CO")
 	}
-	for _, e := range roots {
-		visit(e)
+	if active[e.NodeID()] {
+		panic("aig: cyclic reverse traversal")
 	}
-	return result
+	active[e.NodeID()] = true
+	for i, fan := 0, Aig_ObjFanout0Int(p, int32(e.NodeID())); i < n.Refs; i, fan = i+1, Aig_ObjFanoutNext(p, fan) {
+		p.reverseDfsRec(Aig_ManObj(p, fan>>1), nodes, active)
+	}
+	delete(active, e.NodeID())
+	n.TravID = p.travID
+	*nodes = append(*nodes, e)
 }

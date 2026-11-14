@@ -66,6 +66,8 @@ func TestReverseDfsIncludesDanglingNodes(t *testing.T) {
 	last := p.AND(first, c)
 	dangling := p.AND(a, c)
 	p.AddOutput(last)
+	Aig_ManFanoutStart(p)
+	defer Aig_ManFanoutStop(p)
 	order := Aig_ManDfsReverse(p)
 	positions := map[Edge]int{}
 	for i, e := range order {
