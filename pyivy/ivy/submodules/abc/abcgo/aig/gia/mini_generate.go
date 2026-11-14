@@ -140,7 +140,6 @@ func Gia_MiniAigGenerate(triples *Vec_Int_t) (*miniaig.Mini_Aig_t, error) {
 			if err := visit(id); err != nil {
 				return nil, err
 			}
-			miniaig.Mini_AigCreatePo(p, mapping[id])
 		}
 	}
 	for id := range defs {
@@ -148,6 +147,12 @@ func Gia_MiniAigGenerate(triples *Vec_Int_t) (*miniaig.Mini_Aig_t, error) {
 			if err := visit(id); err != nil {
 				return nil, err
 			}
+		}
+	}
+	// As in giaMini.c, finish every cone before appending the output suffix.
+	for id := range defs {
+		if defs[id] >= 0 && !used[id] {
+			miniaig.Mini_AigCreatePo(p, mapping[id])
 		}
 	}
 	return p, nil

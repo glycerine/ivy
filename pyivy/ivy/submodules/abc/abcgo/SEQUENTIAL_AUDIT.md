@@ -3126,3 +3126,19 @@ reachable frame. Source giaMini.c reduction/miter flow was compared by
 inspection; no bug was found in these paths. Full uncached GIA race tests
 pass in 26.089s (`/tmp/abcgo-mini-lut-equiv-review-race.log`) and GIA vet passes.
 Other MiniAIG helper paths remain under review; original completion is 2/131.
+
+MiniAIG triples generator: found a source-order mismatch with independent
+output cones. Go emitted a PO immediately after visiting each output cone,
+then appended logic for later outputs; original giaMini.c first computes every
+cone and then emits the PO suffix. A red regression catches the intervening
+logic node (`/tmp/abcgo-mini-generate-order-red.log`). Moved PO creation to a
+final pass, preserving source ID order and existing input/cycle validation.
+No truth function changes or replacement generator were introduced.
+
+A compiled original Gia_MiniAigGenerateFromFile fixture checks complete binary
+MiniAIG files for independent outputs, shared out-of-order definitions and
+repeated fanins. All three now match byte-for-byte. Focused tests pass in
+1.735s (`/tmp/abcgo-mini-generate-order-focused.log`), the full uncached GIA
+race suite passes in 27.870s (`/tmp/abcgo-mini-generate-order-race.log`), and
+GIA vet passes (`/tmp/abcgo-mini-generate-order-vet.log`). GIA's remaining
+algorithm families still need audit; original completion remains 2/131.
