@@ -17,6 +17,11 @@ func runAigSourceFixture(t *testing.T, fixture string, sources ...string) string
 
 func runAigSourceFixtureInput(t *testing.T, fixture, input string, sources ...string) string {
 	t.Helper()
+	return runAigSourceFixtureOptions(t, fixture, input, 10*time.Second, nil, sources...)
+}
+
+func runAigSourceFixtureOptions(t *testing.T, fixture, input string, timeout time.Duration, flags []string, sources ...string) string {
+	t.Helper()
 	if runtime.GOOS != "linux" {
 		t.Skip("fixture uses GNU linker section collection")
 	}
@@ -27,22 +32,23 @@ func runAigSourceFixtureInput(t *testing.T, fixture, input string, sources ...st
 	_, file, _, _ := runtime.Caller(0)
 	dir := filepath.Dir(file)
 	src := filepath.Clean(filepath.Join(dir, "../../../src"))
-	binary := filepath.Join(t.TempDir(), "factor-frontier")
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	binary := filepath.Join(t.TempDir(), "source-oracle")
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 	args := []string{"-DABC_USE_STDINT_H", "-ffunction-sections", "-fdata-sections", "-I", src, filepath.Join(dir, "test_vectors", fixture)}
 	for _, name := range sources {
 		args = append(args, filepath.Join(src, "aig/aig", name))
 	}
+	args = append(args, flags...)
 	args = append(args, "-Wl,--gc-sections", "-o", binary)
 	if out, err := exec.CommandContext(ctx, cc, args...).CombinedOutput(); err != nil {
-		t.Fatalf("compile source frontier: %v: %s", err, out)
+		t.Fatalf("compile source fixture: %v: %s", err, out)
 	}
 	command := exec.CommandContext(ctx, binary)
 	command.Stdin = strings.NewReader(input)
 	out, err := command.CombinedOutput()
 	if err != nil {
-		t.Fatalf("run source frontier: %v: %s", err, out)
+		t.Fatalf("run source fixture: %v: %s", err, out)
 	}
 	return string(out)
 }

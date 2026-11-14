@@ -97,8 +97,14 @@ combinational output and latch next-state values, including constraint polarity.
 
 Design review retains source frame flags and frame-major PI ordering with typed
 mapping slices; graph recursion supports explicit XOR and rewritten node order.
-Property splitting uses an exact Shannon-reduced native decision graph instead
-of CUDD allocation/refcount APIs, with shared cofactor and conversion helpers.
+The sequential audit replaced the earlier Shannon substitute with the source
+CUDD pipeline using bdd/cudd/core: canonical BDD construction, symmetric sifting,
+MSB-first cofactor cubes and BDD-to-MUX conversion. Subset selection uses the
+source AIG random stream and does not depend on terminal scratch IDs. Compiled
+original C matches 4,096 pipeline cases and 508 complete splitter calls, including
+sequential next-state outputs. BDD ownership checks exposed and repaired stale
+reference counts after reordering in the dependency. Detailed evidence and the
+remaining package audit scope are in ../../SEQUENTIAL_AUDIT.md.
 
 Separate bug review uses InvalidEdge to distinguish unmapped objects from the
 constant-one edge, preserves complemented roots and register next-state outputs,
