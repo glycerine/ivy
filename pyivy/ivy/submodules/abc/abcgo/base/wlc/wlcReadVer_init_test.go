@@ -4,7 +4,7 @@ import "testing"
 
 func addInitTestFanin(t *testing.T, ntk *Wlc_Ntk_t, obj *Wlc_Obj_t, fanins ...int32) {
 	t.Helper()
-	v := Vec_IntAlloc(len(fanins))
+	v := Vec_IntAlloc(int32(len(fanins)))
 	for _, fanin := range fanins {
 		Vec_IntPush(v, fanin)
 	}
@@ -33,9 +33,9 @@ func TestWlcPrsConvertInitValuesNegativeWidth(t *testing.T) {
 
 func TestWlcPrsConvertInitValuesBufferedConstantZeroExtend(t *testing.T) {
 	ntk := newInitTestNetwork()
-	constID := Wlc_ObjAlloc(ntk, WLC_OBJ_CONST, 0, 1, 0)
+	constID := Wlc_ObjAlloc(ntk, int32(WLC_OBJ_CONST), 0, 1, 0)
 	addInitTestFanin(t, ntk, Wlc_NtkObj(ntk, constID), 2) // bits 1:0 = 10
-	bufID := Wlc_ObjAlloc(ntk, WLC_OBJ_BUF, 0, 3, 0)
+	bufID := Wlc_ObjAlloc(ntk, int32(WLC_OBJ_BUF), 0, 3, 0)
 	addInitTestFanin(t, ntk, Wlc_NtkObj(ntk, bufID), constID)
 	Vec_IntPush(ntk.vInits, bufID)
 
@@ -50,7 +50,7 @@ func TestWlcPrsConvertInitValuesBufferedConstantZeroExtend(t *testing.T) {
 
 func TestWlcPrsConvertInitValuesNonconstantInput(t *testing.T) {
 	ntk := newInitTestNetwork()
-	piID := Wlc_ObjAlloc(ntk, WLC_OBJ_PI, 0, 2, 0)
+	piID := Wlc_ObjAlloc(ntk, int32(WLC_OBJ_PI), 0, 2, 0)
 	Vec_IntPush(ntk.vInits, piID)
 
 	got := Wlc_PrsConvertInitValues(ntk)

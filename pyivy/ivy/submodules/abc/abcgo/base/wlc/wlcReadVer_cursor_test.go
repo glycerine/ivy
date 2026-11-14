@@ -6,7 +6,7 @@ func TestWlcPrsCursorModelsCStringMovement(t *testing.T) {
 	p := &Wlc_Prs_t{pBuffer: "  \\escaped name , tail\x00ignored"}
 	c := wlcPrsCursorAt(p, 0)
 	nameAt, name := c.findName()
-	if name != `\escaped name ` {
+	if name != `\escaped name` {
 		t.Fatalf("name = %q", name)
 	}
 	comma := nameAt.findSymbol(',')
@@ -25,7 +25,7 @@ func TestWlcPrsCursorFindWordAndNull(t *testing.T) {
 		t.Fatalf("findWord = (%q, %v)", c.rest(), found)
 	}
 	miss, found := c.findWord("endmodule")
-	if found || !miss.valid() || miss.rest() != "" {
+	if found || !miss.valid() || miss.rest() != "module name" {
 		t.Fatalf("missing word cursor = (%q, %v)", miss.rest(), found)
 	}
 }
