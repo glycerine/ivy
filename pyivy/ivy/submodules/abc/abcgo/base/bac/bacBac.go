@@ -1,302 +1,142 @@
 package bac
 
+// Binary BAC serialization, ported from base/bac/bacBac.c.
 import (
+	"encoding/binary"
 	"fmt"
-	"strconv"
+	"os"
+
+	"github.com/glycerine/abcgo/misc/extra"
+	"github.com/glycerine/abcgo/misc/util"
+	"github.com/glycerine/abcgo/misc/vec"
 )
 
-import "os"
-
-/**CFile****************************************************************
-
-  FileName    [bacBac.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Hierarchical word-level netlist.]
-
-  Synopsis    [Verilog parser.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - November 29, 2014.]
-
-  Revision    [$Id: bacBac.c,v 1.00 2014/11/29 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "bac.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-
-/**Function*************************************************************
-
-  Synopsis    [Read CBA.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func BacManReadBacLine(vOut *Vec_Str_t, pPos *int32, pBuffer string, pLimit string) int32 {
-    var c byte;
-    for  (c = Vec_StrEntry(vOut, (*pPos)++)) != '\n' && pBuffer < pLimit  {
-        *pBuffer++ = c;
-    }
-    *pBuffer = 0;
-    return pBuffer < pLimit;
+func BacManReadBacLine(vOut *vec.Vec_Str_t, pos *int32) (string, bool) {
+	line, next, ok := bacReadHeaderLine(vec.Vec_StrArray(vOut), int(*pos))
+	*pos = int32(next)
+	return line, ok
 }
-func BacManReadBacNameAndNums(pBuffer string, Num1 *int32, Num2 *int32, Num3 *int32, Num4 *int32) int32 {
-    *Num1 = *Num2 = *Num3 = *Num4 = -1;
-    // read name
-    for  *pBuffer && *pBuffer != ' '  {
-        pBuffer++;
-    }
-    if !*pBuffer {
-        return 0; }
-    assert(*pBuffer == ' ', "*pBuffer == ' '");
-    *pBuffer = 0;
-    // read Num1
-    *Num1 = strconv.Atoi(++pBuffer);
-    for  *pBuffer && *pBuffer != ' '  {
-        pBuffer++;
-    }
-    if !*pBuffer {
-        return 0; }
-    // read Num2
-    assert(*pBuffer == ' ', "*pBuffer == ' '");
-    *Num2 = strconv.Atoi(++pBuffer);
-    for  *pBuffer && *pBuffer != ' '  {
-        pBuffer++;
-    }
-    if !*pBuffer {
-        return 1; }
-    // read Num3
-    assert(*pBuffer == ' ', "*pBuffer == ' '");
-    *Num3 = strconv.Atoi(++pBuffer);
-    for  *pBuffer && *pBuffer != ' '  {
-        pBuffer++;
-    }
-    if !*pBuffer {
-        return 1; }
-    // read Num4
-    assert(*pBuffer == ' ', "*pBuffer == ' '");
-    *Num4 = strconv.Atoi(++pBuffer);
-    return 1;
+func BacManReadBacNameAndNums(line string) (string, [4]int32, bool) {
+	return bacParseHeaderNumbers(line)
 }
-func Bac_ManReadBacVecStr(vOut *Vec_Str_t, pPos *int32, p *Vec_Str_t, nSize int32) {
-    memcpy( Vec_StrArray(p), Vec_StrArray(vOut) + *pPos, (size_t)nSize );
-    *pPos += nSize;
-    p.nSize = nSize;
-    assert(Vec_StrSize(p) == Vec_StrCap(p), "Vec_StrSize(p) == Vec_StrCap(p)");
+func Bac_ManReadBacVecStr(vOut *vec.Vec_Str_t, pos *int32, p *vec.Vec_Str_t, nSize int32) {
+	data := vec.Vec_StrArray(vOut)
+	assert(nSize >= 0 && *pos >= 0 && int64(*pos)+int64(nSize) <= int64(len(data)), "BAC string vector fits file")
+	vec.Vec_StrFill(p, int(nSize), 0)
+	copy(vec.Vec_StrArray(p), data[int(*pos):int(*pos+nSize)])
+	*pos += nSize
+	assert(vec.Vec_StrSize(p) == vec.Vec_StrCap(p), "BAC string vector fills capacity")
 }
-func Bac_ManReadBacVecInt(vOut *Vec_Str_t, pPos *int32, p *Vec_Int_t, nSize int32) {
-    memcpy( Vec_IntArray(p), Vec_StrArray(vOut) + *pPos, (size_t)nSize );
-    *pPos += nSize;
-    p.nSize = nSize / 4;
-    assert(Vec_IntSize(p) == Vec_IntCap(p), "Vec_IntSize(p) == Vec_IntCap(p)");
+func Bac_ManReadBacVecInt(vOut *vec.Vec_Str_t, pos *int32, p *vec.Vec_Int_t, nSize int32) {
+	data := vec.Vec_StrArray(vOut)
+	assert(nSize >= 0 && nSize%4 == 0 && *pos >= 0 && int64(*pos)+int64(nSize) <= int64(len(data)), "BAC integer vector fits file")
+	vec.Vec_IntFill(p, int(nSize/4), 0)
+	for i := range vec.Vec_IntArray(p) {
+		vec.Vec_IntArray(p)[i] = int32(binary.NativeEndian.Uint32(data[int(*pos)+4*i:]))
+	}
+	*pos += nSize
+	assert(vec.Vec_IntSize(p) == vec.Vec_IntCap(p), "BAC integer vector fills capacity")
 }
-func Bac_ManReadBacNtk(vOut *Vec_Str_t, pPos *int32, pNtk *Bac_Ntk_t) {
-    var i, Type int32;
-    //char * pName; int iObj, NameId;
-    Bac_ManReadBacVecStr( vOut, pPos, &pNtk.vType,      Bac_NtkObjNumAlloc(pNtk) );
-    Bac_ManReadBacVecInt( vOut, pPos, &pNtk.vFanin, 4 * Bac_NtkObjNumAlloc(pNtk) );
-    Bac_ManReadBacVecInt( vOut, pPos, &pNtk.vInfo, 12 * Bac_NtkInfoNumAlloc(pNtk) );
-    // inlining of macro Bac_NtkForEachObjType
-    for  i = 0; (i < Bac_NtkObjNum(pNtk))  && (((Type) = Bac_ObjType(pNtk, i)), 1); i++  { if !(Type != 0) {} else {
-        if Type == BAC_OBJ_PI {
-            Vec_IntPush( &pNtk.vInputs, i ); }
-        if Type == BAC_OBJ_PO {
-            Vec_IntPush( &pNtk.vOutputs, i ); }
-    }
-    }
-    assert(Bac_NtkPiNum(pNtk)  == Bac_NtkPiNumAlloc(pNtk), "Bac_NtkPiNum(pNtk)  == Bac_NtkPiNumAlloc(pNtk)");
-    assert(Bac_NtkPoNum(pNtk)  == Bac_NtkPoNumAlloc(pNtk), "Bac_NtkPoNum(pNtk)  == Bac_NtkPoNumAlloc(pNtk)");
-    assert(Bac_NtkObjNum(pNtk) == Bac_NtkObjNumAlloc(pNtk), "Bac_NtkObjNum(pNtk) == Bac_NtkObjNumAlloc(pNtk)");
-    assert(Bac_NtkInfoNum(pNtk) == Bac_NtkInfoNumAlloc(pNtk), "Bac_NtkInfoNum(pNtk) == Bac_NtkInfoNumAlloc(pNtk)");
-/*
-    // read input/output/box names
-    Bac_NtkForEachPiMain( pNtk, iObj, i )
-    {
-        pName = Vec_StrEntryP( vOut, Pos );     
-        NameId = Abc_NamStrFindOrAdd( p->pStrs, pName, NULL );
-        Pos += strlen(pName) + 1;
-    }
-    Bac_NtkForEachPoMain( pNtk, iObj, i )
-    {
-        pName = Vec_StrEntryP( vOut, Pos );     
-        NameId = Abc_NamStrFindOrAdd( p->pStrs, pName, NULL );
-        Pos += strlen(pName) + 1;
-    }
-    Bac_NtkForEachBox( pNtk, iObj )
-    {
-        pName = Vec_StrEntryP( vOut, Pos );     
-        NameId = Abc_NamStrFindOrAdd( p->pStrs, pName, NULL );
-        Pos += strlen(pName) + 1;
-    }
-*/
+func Bac_ManReadBacNtk(vOut *vec.Vec_Str_t, pos *int32, ntk *Bac_Ntk_t) {
+	Bac_ManReadBacVecStr(vOut, pos, &ntk.vType, int32(vec.Vec_StrCap(&ntk.vType)))
+	Bac_ManReadBacVecInt(vOut, pos, &ntk.vFanin, 4*int32(vec.Vec_StrCap(&ntk.vType)))
+	Bac_ManReadBacVecInt(vOut, pos, &ntk.vInfo, 12*int32(vec.Vec_IntCap(&ntk.vInfo)/3))
+	for i, typ := range vec.Vec_StrArray(&ntk.vType) {
+		if typ>>1 == byte(BAC_OBJ_PI) {
+			vec.Vec_IntPush(&ntk.vInputs, int32(i))
+		}
+		if typ>>1 == byte(BAC_OBJ_PO) {
+			vec.Vec_IntPush(&ntk.vOutputs, int32(i))
+		}
+	}
+	assert(vec.Vec_IntSize(&ntk.vInputs) == vec.Vec_IntCap(&ntk.vInputs), "BAC PI count matches header")
+	assert(vec.Vec_IntSize(&ntk.vOutputs) == vec.Vec_IntCap(&ntk.vOutputs), "BAC PO count matches header")
 }
-func Bac_ManReadBacInt(vOut *Vec_Str_t) *Bac_Man_t {
-    var p *Bac_Man_t;
-    var pNtk *Bac_Ntk_t;
-    var Buffer [1000]byte = "#"; 
-    var i, NameId, Pos, nNtks, Num1, Num2, Num3, Num4 int32;
-    for  Buffer[0] == '#'  {
-        if !(BacManReadBacLine(vOut, &Pos, Buffer, Buffer+1000) != 0) {
-            return nil; }
-    }
-    if !(BacManReadBacNameAndNums(Buffer, &nNtks, &Num2, &Num3, &Num4) != 0) {
-        return nil; }
-    // start manager
-    assert(nNtks > 0, "nNtks > 0");
-    p = Bac_ManAlloc( Buffer, nNtks );
-    // start networks
-    // inlining of macro Bac_ManForEachNtk
-    for  i = 1; (i <= Bac_ManNtkNum(p)) && (((pNtk) = Bac_ManNtk(p, i)), 1); i++  {
-        if !(BacManReadBacLine(vOut, &Pos, Buffer, Buffer+1000) != 0) {
-            Bac_ManFree( p );
-            return nil;
-        }
-        if !(BacManReadBacNameAndNums(Buffer, &Num1, &Num2, &Num3, &Num4) != 0) {
-            Bac_ManFree( p );
-            return nil;
-        }
-        assert(Num1 >= 0 && Num2 >= 0 && Num3 >= 0, "Num1 >= 0 && Num2 >= 0 && Num3 >= 0");
-        NameId = Abc_NamStrFindOrAdd( p.pStrs, Buffer, nil );
-        Bac_NtkAlloc( pNtk, NameId, Num1, Num2, Num3 );
-        Vec_IntFill( &pNtk.vInfo, 3 * Num4, -1 );
-    }
-    // read networks
-    // inlining of macro Bac_ManForEachNtk
-    for  i = 1; (i <= Bac_ManNtkNum(p)) && (((pNtk) = Bac_ManNtk(p, i)), 1); i++  { 
-        Bac_ManReadBacNtk( vOut, &Pos, pNtk );
-    }
-    assert(Bac_ManNtkNum(p) == nNtks, "Bac_ManNtkNum(p) == nNtks");
-    assert(Pos == Vec_StrSize(vOut), "Pos == Vec_StrSize(vOut)");
-    return p;
+func Bac_ManReadBacInt(vOut *vec.Vec_Str_t) *Bac_Man_t {
+	pos := int32(0)
+	var line string
+	for {
+		var ok bool
+		line, ok = BacManReadBacLine(vOut, &pos)
+		if !ok {
+			return nil
+		}
+		if len(line) == 0 || line[0] != '#' {
+			break
+		}
+	}
+	name, nums, ok := BacManReadBacNameAndNums(line)
+	if !ok {
+		return nil
+	}
+	nNtks := nums[0]
+	assert(nNtks > 0, "BAC network count is positive")
+	man := Bac_ManAlloc(name, nNtks)
+	for i := int32(1); i <= nNtks; i++ {
+		line, ok = BacManReadBacLine(vOut, &pos)
+		if !ok {
+			Bac_ManFree(man)
+			return nil
+		}
+		name, nums, ok = BacManReadBacNameAndNums(line)
+		if !ok {
+			Bac_ManFree(man)
+			return nil
+		}
+		assert(nums[0] >= 0 && nums[1] >= 0 && nums[2] >= 0, "BAC network sizes are nonnegative")
+		id := util.Abc_NamStrFindOrAdd(man.pStrs, name, nil)
+		ntk := Bac_ManNtk(man, i)
+		Bac_NtkAlloc(ntk, id, nums[0], nums[1], nums[2])
+		vec.Vec_IntFill(&ntk.vInfo, int(3*nums[3]), -1)
+	}
+	for i := int32(1); i <= nNtks; i++ {
+		Bac_ManReadBacNtk(vOut, &pos, Bac_ManNtk(man, i))
+	}
+	assert(int(pos) == vec.Vec_StrSize(vOut), "BAC file was fully consumed")
+	return man
 }
-func Bac_ManReadBac(pFileName string) *Bac_Man_t {
-    var p *Bac_Man_t;
-    var pFile *os.File;
-    var vOut *Vec_Str_t;
-    var nFileSize int32;
-    pFile = os.Open(pFileName);
-    if pFile == nil {
-        fmt.Printf("Cannot open file \"%s\" for reading.\n", pFileName);
-        return nil;
-    }
-    // get the file size, in bytes
-    fseek( pFile, 0, SEEK_END );  
-    nFileSize = ftell( pFile );  
-    rewind( pFile ); 
-    // load the contents
-    vOut = Vec_StrAlloc( nFileSize );
-    vOut.nSize = vOut.nCap;
-    assert(nFileSize == Vec_StrSize(vOut), "nFileSize == Vec_StrSize(vOut)");
-    nFileSize = fread( Vec_StrArray(vOut), 1, Vec_StrSize(vOut), pFile );
-    assert(nFileSize == Vec_StrSize(vOut), "nFileSize == Vec_StrSize(vOut)");
-    _ = (pFile).Close();
-    // read the networks
-    p = Bac_ManReadBacInt( vOut );
-    if p != nil {
-        p.pSpec = nil;
-        p.pSpec = Abc_UtilStrsav( pFileName );
-    }
-    Vec_StrFree( vOut );
-    return p;
+func Bac_ManReadBac(filename string) *Bac_Man_t {
+	data, err := os.ReadFile(filename)
+	if err != nil {
+		fmt.Printf("Cannot open file %q for reading.\n", filename)
+		return nil
+	}
+	v := vec.Vec_StrAllocArrayCopy(data, len(data))
+	man := Bac_ManReadBacInt(v)
+	if man != nil {
+		man.pSpec = filename
+	}
+	return man
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Write CBA.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Bac_ManWriteBacNtk(vOut *Vec_Str_t, pNtk *Bac_Ntk_t) {
-    //char * pName; int iObj, NameId;
-    Vec_StrPushBuffer( vOut, (char *)Vec_StrArray(&pNtk.vType),       Bac_NtkObjNum(pNtk) );
-    Vec_StrPushBuffer( vOut, (char *)Vec_IntArray(&pNtk.vFanin),  4 * Bac_NtkObjNum(pNtk) );
-    Vec_StrPushBuffer( vOut, (char *)Vec_IntArray(&pNtk.vInfo),  12 * Bac_NtkInfoNum(pNtk) );
-/*
-    // write input/output/box names
-    Bac_NtkForEachPiMain( pNtk, iObj, i )
-    {
-        pName = Bac_ObjNameStr( pNtk, iObj );
-        Vec_StrPrintStr( vOut, pName );
-        Vec_StrPush( vOut, '\0' );
-    }
-    Bac_NtkForEachPoMain( pNtk, iObj, i )
-    {
-        pName = Bac_ObjNameStr( pNtk, iObj );
-        Vec_StrPrintStr( vOut, pName );
-        Vec_StrPush( vOut, '\0' );
-    }
-    Bac_NtkForEachBox( pNtk, iObj )
-    {
-        pName = Bac_ObjNameStr( pNtk, iObj );  
-        Vec_StrPrintStr( vOut, pName );
-        Vec_StrPush( vOut, '\0' );
-    }
-*/
+func Bac_ManWriteBacNtk(out *vec.Vec_Str_t, ntk *Bac_Ntk_t) {
+	data := vec.Vec_StrArray(&ntk.vType)
+	vec.Vec_StrPushBuffer(out, data, len(data))
+	for _, values := range [][]int32{vec.Vec_IntArray(&ntk.vFanin)[:len(data)], vec.Vec_IntArray(&ntk.vInfo)[:3*(vec.Vec_IntSize(&ntk.vInfo)/3)]} {
+		for _, value := range values {
+			var buf [4]byte
+			binary.NativeEndian.PutUint32(buf[:], uint32(value))
+			vec.Vec_StrPushBuffer(out, buf[:], 4)
+		}
+	}
 }
-func Bac_ManWriteBacInt(vOut *Vec_Str_t, p *Bac_Man_t) {
-    var Buffer string // was [1000]byte in C
-
-    var pNtk *Bac_Ntk_t; var i int32;
-    Buffer = fmt.Sprintf("# Design \"%s\" written by ABC on %s\n", Bac_ManName(p), Extra_TimeStamp());
-    Vec_StrPrintStr( vOut, Buffer );
-    // write short info
-    Buffer = fmt.Sprintf("%s %d \n", Bac_ManName(p), Bac_ManNtkNum(p));
-    Vec_StrPrintStr( vOut, Buffer );
-    // inlining of macro Bac_ManForEachNtk
-    for  i = 1; (i <= Bac_ManNtkNum(p)) && (((pNtk) = Bac_ManNtk(p, i)), 1); i++  {
-        Buffer = fmt.Sprintf("%s %d %d %d %d \n", Bac_NtkName(pNtk), Bac_NtkPiNum(pNtk), Bac_NtkPoNum(pNtk), Bac_NtkObjNum(pNtk), Bac_NtkInfoNum(pNtk));
-        Vec_StrPrintStr( vOut, Buffer );
-    }
-    // inlining of macro Bac_ManForEachNtk
-    for  i = 1; (i <= Bac_ManNtkNum(p)) && (((pNtk) = Bac_ManNtk(p, i)), 1); i++  { 
-        Bac_ManWriteBacNtk( vOut, pNtk );
-    }
+func Bac_ManWriteBacInt(out *vec.Vec_Str_t, man *Bac_Man_t) {
+	vec.Vec_StrPrintStr(out, fmt.Sprintf("# Design \"%s\" written by ABC on %s\n", Bac_ManName(man), extra.Extra_TimeStamp()))
+	vec.Vec_StrPrintStr(out, fmt.Sprintf("%s %d \n", Bac_ManName(man), Bac_ManNtkNum(man)))
+	for i := int32(1); i <= Bac_ManNtkNum(man); i++ {
+		ntk := Bac_ManNtk(man, i)
+		vec.Vec_StrPrintStr(out, fmt.Sprintf("%s %d %d %d %d \n", Bac_NtkName(ntk), Bac_NtkPiNum(ntk), Bac_NtkPoNum(ntk), Bac_NtkObjNum(ntk), Bac_NtkInfoNum(ntk)))
+	}
+	for i := int32(1); i <= Bac_ManNtkNum(man); i++ {
+		Bac_ManWriteBacNtk(out, Bac_ManNtk(man, i))
+	}
 }
-func Bac_ManWriteBac(pFileName string, p *Bac_Man_t) {
-    var vOut *Vec_Str_t;
-    assert(p.pMioLib == nil, "p.pMioLib == nil");
-    vOut = Vec_StrAlloc( 10000 );
-    Bac_ManWriteBacInt( vOut, p );
-    if Vec_StrSize(vOut) > 0 {
-        var pFile *os.File  = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);
-        if pFile == nil {
-            fmt.Printf("Cannot open file \"%s\" for writing.\n", pFileName);
-        } else {
-            fwrite( Vec_StrArray(vOut), 1, Vec_StrSize(vOut), pFile );
-            _ = (pFile).Close();
-        }
-    }
-    Vec_StrFree( vOut );    
+func Bac_ManWriteBac(filename string, man *Bac_Man_t) {
+	assert(man.pMioLib == nil, "BAC binary writer requires no library")
+	out := vec.Vec_StrAlloc(10000)
+	Bac_ManWriteBacInt(out, man)
+	if vec.Vec_StrSize(out) > 0 {
+		if err := os.WriteFile(filename, vec.Vec_StrArray(out), 0666); err != nil {
+			fmt.Printf("Cannot open file %q for writing.\n", filename)
+		}
+	}
 }
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-

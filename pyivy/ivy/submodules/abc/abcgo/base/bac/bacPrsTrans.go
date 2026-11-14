@@ -1,6 +1,9 @@
 package bac
 
-import "strconv"
+import (
+	"github.com/glycerine/abcgo/misc/util"
+	"github.com/glycerine/abcgo/misc/vec"
+)
 
 /**CFile****************************************************************
 
@@ -13,7 +16,7 @@ import "strconv"
   Synopsis    [Parse tree to netlist transformation.]
 
   Author      [Alan Mishchenko]
-  
+
   Affiliation [UC Berkeley]
 
   Date        [Ver. 1.0. Started - November 29, 2014.]
@@ -31,16 +34,16 @@ import "strconv"
 ///                        DECLARATIONS                              ///
 ////////////////////////////////////////////////////////////////////////
 
-   
 type Bac_Trip_t struct {
-    Type Bac_ObjType_t;
-    pName         string;
-    pCode         string;
-    pSigs [6]string;
+	Type  Bac_ObjType_t
+	pName string
+	pCode string
+	pSigs [6]string
 }
+
 /*
 static Bac_Trip_t s_Types[100] =
-{ 
+{
     { BAC_BOX_CT       , "VERIFIC_PWR",           "1",      {"o"} },
     { BAC_BOX_CF       , "VERIFIC_GND",           "1",      {"o"} },
     { BAC_BOX_CX       , "VERIFIC_X",             "1",      {"o"} },
@@ -73,7 +76,7 @@ static Bac_Trip_t s_Types[100] =
     { (Bac_ObjType_t)-1, "VERIFIC_HDL_ASSERTION", "1",      {"condition"} },
     { BAC_BOX_ADD      , "add_",                  "1aba1",  {"cin","a","b","o","cout"} },
     { BAC_BOX_MUL      , "mult_",                 "ab?",    {"a","b","o"} },            // ? = a * b
-    { BAC_BOX_DIV      , "div_",                  "ab?",    {"a","b","o"} },            // ? = 
+    { BAC_BOX_DIV      , "div_",                  "ab?",    {"a","b","o"} },            // ? =
     { BAC_BOX_MOD      , "mod_",                  "ab?",    {"a","b","o"} },            // ? =
     { BAC_BOX_REM      , "rem_",                  "ab?",    {"a","b","o"} },            // ? =
     { BAC_BOX_SHIL     , "shift_left_",           "1aba",   {"cin","a","amount","o"} },
@@ -87,7 +90,7 @@ static Bac_Trip_t s_Types[100] =
     { BAC_BOX_RNOR     , "reduce_nor_",           "ab1",    {"a","o"} },
     { BAC_BOX_RXNOR    , "reduce_xnor_",          "ab1",    {"a","o"} },
     { BAC_BOX_LTHAN    , "LessThan_",             "1ab1",   {"cin","a","b","o"} },
-    { BAC_BOX_NMUX     , "Mux_",                  "ab1",    {"sel","data","o"} },       
+    { BAC_BOX_NMUX     , "Mux_",                  "ab1",    {"sel","data","o"} },
     { BAC_BOX_SEL      , "Select_",               "aaa",    {"sel","data","o"} },
     { BAC_BOX_DEC      , "Decoder_",              "a?",     {"a","o"} },                // ? = (1 << a)
     { BAC_BOX_EDEC     , "EnabledDecoder_",       "1a?",    {"en","i","o"} },           // ? = (1 << a)
@@ -114,11 +117,11 @@ static Bac_Trip_t s_Types[100] =
     { BAC_BOX_NMUX     , "wide_mux_",             "ab?",    {"sel","data","o"} },             // ? = b / (1 << a)
     { BAC_BOX_SEL      , "wide_select_",          "ab?",    {"sel","data","o"} },             // ? = b / a
     { BAC_BOX_DFF      , "wide_dff_",             "aaa1a",  {"d","async_val","async_cond","clock","q"} },
-    { BAC_BOX_DFFRS    , "wide_dlatch_",          "aaa1a",  {"d","set","reset","clock","q"} },           
-    { BAC_BOX_LATCHRS  , "wide_dffrs_",           "aaa1a",  {"d","set","reset","clock","q"} },           
+    { BAC_BOX_DFFRS    , "wide_dlatch_",          "aaa1a",  {"d","set","reset","clock","q"} },
+    { BAC_BOX_LATCHRS  , "wide_dffrs_",           "aaa1a",  {"d","set","reset","clock","q"} },
     { BAC_BOX_LATCH    , "wide_dlatchrs_",        "aaa1a",  {"d","async_val","async_cond","clock","q"} },
     { BAC_BOX_PSEL     , "wide_prio_select_",     "ab??",   {"sel","data","carry_in","o"} },  // ? = b / a
-    { BAC_BOX_POW      , "pow_",                  "abc",    {"a","b","o"} },                  // ? = 
+    { BAC_BOX_POW      , "pow_",                  "abc",    {"a","b","o"} },                  // ? =
     { BAC_BOX_PENC     , "PrioEncoder_",          "a?",     {"sel","o"} },
     { BAC_BOX_ABS      , "abs",                   "aa",     {"i","o"} }
 };
@@ -128,83 +131,72 @@ static Bac_Trip_t s_Types[100] =
 ///                     FUNCTION DEFINITIONS                         ///
 ////////////////////////////////////////////////////////////////////////
 
-/**Function*************************************************************
+/*
+*Function*************************************************************
 
-  Synopsis    [Count range size.]
+	Synopsis    [Count range size.]
 
-  Description []
-               
-  SideEffects []
+	Description []
 
-  SeeAlso     []
+	SideEffects []
 
-***********************************************************************/
-func Psr_ManRangeSizeName(p *Psr_Ntk_t, Name int32) int32 {
-    return 1;
-}
-func Psr_ManRangeSizeRange(p *Psr_Ntk_t, Range int32) int32 {
-    var pStr string; 
-    var Left, Right int32;
-    if Range == 0 { 
-        return 1; }
-    pStr = Psr_NtkStr( p, Range );
-    assert(pStr[0] == '[', "pStr[0] == '['");
-    Left = Right = strconv.Atoi(pStr + 1);
-    pStr = strstr( pStr, "=" );
-    if pStr {
-        Right = strconv.Atoi(pStr + 1); }
-    return 1 + (Left > Right ? Left - Right : Right - Left);
-}
-func Psr_ManRangeSizeConst(p *Psr_Ntk_t, Const int32) int32 {
-    return strconv.Atoi(Psr_NtkStr(p, Const));
-}
-func Psr_ManRangeSizeConcat(p *Psr_Ntk_t, Con int32) int32 {
-    extern int Psr_ManRangeSizeArray( Psr_Ntk_t * p, Vec_Int_t * vSlices, int Start, int Stop );
-    var vSigs *Vec_Int_t  = Psr_CatSignals(p, Con);
-    return Psr_ManRangeSizeArray( p, vSigs, 0, Vec_IntSize(vSigs) );
-}
-func Psr_ManRangeSizeSignal(p *Psr_Ntk_t, Sig int32) int32 {
-    var Value int32  = Abc_Lit2Var2( Sig );
-    var Type Psr_ManType_t  = (Psr_ManType_t)Abc_Lit2Att2( Sig );
-    if Type == BAC_PRS_NAME {
-        return Psr_ManRangeSizeName( p, Value ); }
-    if Type == BAC_PRS_SLICE {
-        return Psr_ManRangeSizeRange( p, Psr_SliceRange(p, Value) ); }
-    if Type == BAC_PRS_CONST {
-        return Psr_ManRangeSizeConst( p, Value ); }
-    if Type == BAC_PRS_CONCAT {
-        return Psr_ManRangeSizeConcat( p, Value ); }
-    assert(false, "0");
-    return 0;
-}
-func Psr_ManRangeSizeArray(p *Psr_Ntk_t, vSlices *Vec_Int_t, Start int32, Stop int32) int32 {
-    var i, Sig, Count int32;
-    assert(Vec_IntSize(vSlices) > 0, "Vec_IntSize(vSlices) > 0");
-    // inlining of macro Vec_IntForEachEntryStartStop
-    for  i = Start; (i < Stop) && (((Sig) = Vec_IntEntry(vSlices, i)), 1); i++  {
-        Count += Psr_ManRangeSizeSignal( p, Sig );
-    }
-    return Count;
-}
+	SeeAlso     []
 
+**********************************************************************
+*/
+func Psr_ManRangeSizeName(_ *Psr_Ntk_t, _ int32) int32 { return 1 }
+
+func Psr_ManRangeSizeRange(p *Psr_Ntk_t, rangeID int32) int32 {
+	if rangeID == 0 {
+		return 1
+	}
+	return bacRangeWidth(Psr_NtkStr(p, rangeID))
+}
+func Psr_ManRangeSizeConst(p *Psr_Ntk_t, id int32) int32 {
+	return bacAtoi(Psr_NtkStr(p, id))
+}
+func Psr_ManRangeSizeConcat(p *Psr_Ntk_t, id int32) int32 {
+	signals := Psr_CatSignals(p, id)
+	return Psr_ManRangeSizeArray(p, signals, 0, int32(vec.Vec_IntSize(signals)))
+}
+func Psr_ManRangeSizeSignal(p *Psr_Ntk_t, sig int32) int32 {
+	value := util.Abc_Lit2Var2(sig)
+	switch Psr_ManType_t(util.Abc_Lit2Att2(sig)) {
+	case BAC_PRS_NAME:
+		return Psr_ManRangeSizeName(p, value)
+	case BAC_PRS_SLICE:
+		return Psr_ManRangeSizeRange(p, Psr_SliceRange(p, value))
+	case BAC_PRS_CONST:
+		return Psr_ManRangeSizeConst(p, value)
+	case BAC_PRS_CONCAT:
+		return Psr_ManRangeSizeConcat(p, value)
+	default:
+		panic("bac: unknown parser signal type")
+	}
+}
+func Psr_ManRangeSizeArray(p *Psr_Ntk_t, signals *vec.Vec_Int_t, start, stop int32) int32 {
+	assert(vec.Vec_IntSize(signals) > 0, "signal vector is nonempty")
+	var count int32
+	for i := start; i < stop; i++ {
+		count += Psr_ManRangeSizeSignal(p, vec.Vec_IntEntry(signals, int(i)))
+	}
+	return count
+}
 
 /**Function*************************************************************
 
   Synopsis    []
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
 
-
 ////////////////////////////////////////////////////////////////////////
 ///                       END OF FILE                                ///
 ////////////////////////////////////////////////////////////////////////
 
-
 //ABC_NAMESPACE_IMPL_END
-

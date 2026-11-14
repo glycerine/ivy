@@ -11,7 +11,7 @@ package bac
   Synopsis    [Library procedures.]
 
   Author      [Alan Mishchenko]
-  
+
   Affiliation [UC Berkeley]
 
   Date        [Ver. 1.0. Started - November 29, 2014.]
@@ -37,18 +37,15 @@ package bac
   Synopsis    []
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
 
-
 ////////////////////////////////////////////////////////////////////////
 ///                       END OF FILE                                ///
 ////////////////////////////////////////////////////////////////////////
 
-
 //ABC_NAMESPACE_IMPL_END
-
