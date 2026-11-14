@@ -128,7 +128,6 @@ func If_CommandReadLut(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			break
 		case 'h':
 			goto usage
-			break
 		default:
 			goto usage
 		}
@@ -212,7 +211,6 @@ func If_CommandPrintLut(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			break
 		case 'h':
 			goto usage
-			break
 		default:
 			goto usage
 		}
@@ -272,7 +270,6 @@ func If_CommandReadBox(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			break
 		case 'h':
 			goto usage
-			break
 		default:
 			goto usage
 		}
@@ -349,7 +346,6 @@ func If_CommandPrintBox(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			break
 		case 'h':
 			goto usage
-			break
 		default:
 			goto usage
 		}

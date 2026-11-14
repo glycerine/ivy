@@ -322,12 +322,15 @@ func If_IsComplement(p *If_Obj_t) int32 {
 	return 0
 }
 
-func If_ManCiNum(p *If_Man_t) int32  { return p.nObjs[IF_CI] }
-func If_ManCoNum(p *If_Man_t) int32  { return p.nObjs[IF_CO] }
-func If_ManAndNum(p *If_Man_t) int32 { return p.nObjs[IF_AND] }
-func If_ManObjNum(p *If_Man_t) int32 { return int32(Vec_PtrSize(p.vObjs)) }
+func If_ManCiNum(p *If_Man_t) int32      { return p.nObjs[IF_CI] }
+func If_ManCoNum(p *If_Man_t) int32      { return p.nObjs[IF_CO] }
+func If_ManAndNum(p *If_Man_t) int32     { return p.nObjs[IF_AND] }
+func If_ManObjNum(p *If_Man_t) int32     { return int32(Vec_PtrSize(p.vObjs)) }
+func If_ManObjBytes(p *If_Man_t) int32   { return p.nObjBytes }
+func If_ManArray(p *If_Man_t) *Vec_Int_t { return p.vArray }
 
 func If_ManConst1(p *If_Man_t) *If_Obj_t         { return p.pConst1 }
+func If_ManSetName(p *If_Man_t, name string)     { p.pName = name }
 func ifObjectAt(v *Vec_Ptr_t, i int32) *If_Obj_t { return Vec_PtrEntry(v, int(i)).(*If_Obj_t) }
 func If_ManCi(p *If_Man_t, i int32) *If_Obj_t    { return ifObjectAt(p.vCis, i) }
 func If_ManCo(p *If_Man_t, i int32) *If_Obj_t    { return ifObjectAt(p.vCos, i) }

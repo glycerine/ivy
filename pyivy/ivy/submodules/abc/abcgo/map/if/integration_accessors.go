@@ -6,8 +6,22 @@ import (
 	"math"
 )
 
-func (p *If_Par_t_) LUTSize() int32     { return p.nLutSize }
-func (p *If_Par_t_) SetLUTSize(n int32) { p.nLutSize = n }
+func (p *If_Par_t_) LUTSize() int32          { return p.nLutSize }
+func (p *If_Par_t_) SetLUTSize(n int32)      { p.nLutSize = n }
+func (p *If_Par_t_) GateSize() int32         { return p.nGateSize }
+func (p *If_Par_t_) UsesBdds() bool          { return p.fUseBdds != 0 }
+func (p *If_Par_t_) UsesCnfs() bool          { return p.fUseCnfs != 0 }
+func (p *If_Par_t_) UsesMv() bool            { return p.fUseMv != 0 }
+func (p *If_Par_t_) UsesSops() bool          { return p.fUseSops != 0 }
+func (p *If_Par_t_) UsesUserSesLib() bool    { return p.fUserSesLib != 0 }
+func (p *If_Par_t_) UsesBuffs() bool         { return p.fUseBuffs != 0 }
+func (p *If_Par_t_) UsesTtPerm() bool        { return p.fUseTtPerm != 0 }
+func (p *If_Par_t_) DelayOptimization() bool { return p.fDelayOpt != 0 }
+func (p *If_Par_t_) DsdBalance() bool        { return p.fDsdBalance != 0 }
+func (p *If_Par_t_) UserRecLibrary() bool    { return p.fUserRecLib != 0 }
+func (p *If_Par_t_) LatchPaths() bool        { return p.fLatchPaths != 0 }
+func (p *If_Par_t_) TruthMode() bool         { return p.fTruth != 0 }
+func (p *If_Par_t_) Verbose() bool           { return p.fVerbose != 0 }
 func (p *If_Par_t_) SetCutMin(value bool) {
 	p.fCutMin = 0
 	if value {

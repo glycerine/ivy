@@ -154,8 +154,7 @@ func If_ManRestart(p *If_Man_t) {
 	vec.Vec_PtrClear(p.vTemp)
 	vec.Vec_PtrClear(p.vVisited)
 	p.ciCutSets = nil
-	p.ownedCutSets = nil
-	p.pMemCi, p.pMemAnd, p.pFreeList = nil, nil, nil
+	p.pMemCi = nil
 	p.nObjs = [IF_VOID + 1]int32{}
 	p.nLevelMax, p.nChoices = 0, 0
 	p.pConst1 = If_ManSetupObj(p)

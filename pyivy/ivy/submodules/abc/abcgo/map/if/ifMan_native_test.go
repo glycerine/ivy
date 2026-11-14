@@ -29,6 +29,18 @@ func TestIfManagerBuildsAndFoldsGraph(t *testing.T) {
 	}
 }
 
+func TestIfManagerMetadataAccessors(t *testing.T) {
+	p := If_ManStart(testManagerPars())
+	defer If_ManStop(p)
+	If_ManSetName(p, "mapper-input")
+	if p.pName != "mapper-input" {
+		t.Fatalf("manager name = %q, want mapper-input", p.pName)
+	}
+	if If_ManObjBytes(p) <= 0 {
+		t.Fatalf("manager object size = %d, want positive size", If_ManObjBytes(p))
+	}
+}
+
 func TestIfManagerCutSetPoolReuseAndRestart(t *testing.T) {
 	p := If_ManStart(testManagerPars())
 	defer If_ManStop(p)
