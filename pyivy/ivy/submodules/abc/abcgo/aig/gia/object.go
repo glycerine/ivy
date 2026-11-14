@@ -4,7 +4,12 @@ import "sync/atomic"
 
 // Gia_Obj_t retains the source representation: fanins are backward index
 // differences and complemented-edge flags are separate bits.
-type objectStore struct{ objects *[]*Gia_Obj_t }
+type objectStore struct {
+	objects *[]*Gia_Obj_t
+	// Manager-backed objects retain a view of the live companion table. The
+	// pointer to its slice header survives late initialization and growth.
+	muxes *[]uint32
+}
 
 type Gia_Obj_t struct {
 	pair         atomic.Pointer[Gia_Obj_t]

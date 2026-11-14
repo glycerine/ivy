@@ -12,13 +12,13 @@ The repository-wide uncached tests passed before this audit.
 
 Current status: **2/131 original packages reviewed**. The two driver packages
 extracted during the AIG audit bring the current module total to 133; their
-source workflows and tests are covered by that audit. Next: `aig/gia`.
+source workflows and tests are covered by that audit. Current review: `aig/gia`.
 
 | # | Package | Status | Evidence |
 | --- | --- | --- | --- |
 | 1 | `.` | reviewed | Root review below; race tests and vet pass. |
 | 2 | `aig/aig` | reviewed | All 52 files reconciled; native source matrices, final race suite, vet and module integration gates pass. |
-| 3 | `aig/gia` | pending | |
+| 3 | `aig/gia` | in progress | Inventory and graph/manager representation review begun; first adapter regression below. |
 | 4 | `aig/gia/mf` | pending | |
 | 5 | `aig/gia/satcost` | pending | |
 | 6 | `aig/hop` | pending | |
@@ -2512,3 +2512,51 @@ these upstream experimental failures have been mathematically solved.
 Original package progress is now **2/131**, with `aig/gia` next. The full
 sequential goal remains active; none of the other pending packages is counted
 as audited merely because its integration tests passed.
+
+
+## 3. aig/gia (in progress)
+
+Inventoried 544 production files and 405 test files at the package root;
+subpackages mf/satcost remain separate pending audits. Historical GIA review
+reports and passing tests are context, not evidence that this sequential audit
+has finished. Begin with literal/object encoding, two graph representations,
+manager construction/lifecycle, append operations and object import/export.
+Then continue through hashing, fanouts/references, special gates and the
+remaining source algorithm families. Original completion count remains 2/131.
+
+Read graph.go, literal.go, object.go, graph_objects.go, manager.go,
+manager_accessors.go, append_simplified.go and special_gates.go against
+src/aig/gia/gia.h and Gia_ManStart in giaMan.c. The positive-capacity start
+precondition is real in C (unlike AIG's soft-capacity convention). Pointer
+complements are paired Go views; source Gia_NotCond XORs a tag restricted by
+call sites to 0/1, so do not replace it with a guessed nonzero test.
+
+A new red adapter test found GraphFromObjects accepts real MUX objects as
+ordinary ANDs and silently computes the wrong function. Their two stored data
+fanin offsets have ordinary AND ordering; the control and type discriminator
+live only in the companion manager table. The adapter already promises to
+reject specialized nodes requiring normalization, but checked only real XOR.
+Retain a pointer to that table's slice header in the shared object store and
+reject real MUX imports explicitly, preserving the documented adapter domain.
+This adds one pointer per store/manager, not a flag or pointer per object, and
+handles control-table enabling/growth without stale snapshots. Normal manager
+MUX simulation/conversion remains supported by its existing metadata-aware
+APIs; no fake AND interpretation is retained at this boundary.
+
+The red matrix covers all eight input phase combinations, manager growth and
+late control-table activation; a positive case keeps ordinary AND import valid
+when an allocated table has no MUX entries. A standalone original-header
+fixture confirms classification and encoding plus every three-input assignment
+for all eight MUX polarities: IsAnd is true, IsXor false, IsMux true, and the
+companion control chooses the actual data pin. Focused adapter/source tests
+pass in 0.123s. The complete GIA race suite passes in 15.777s
+(`/tmp/abcgo-gia-core-first-race.log`).
+
+This is the first GIA checkpoint, not completion of its core or whole package.
+Further review must explicitly distinguish fGiaSimple nodes and buffer
+classification, real-gate append preconditions, and source-normalized versus
+typed gate semantics. Also flagged for the later duplication-family review:
+the existing native choice-miter test expects real XOR/MUX nodes to turn into
+stored-fanin ANDs to match C; its green result is not Boolean-correctness
+evidence. Check the intended source preconditions and callers before treating
+such a compatibility test as a correctness contract.

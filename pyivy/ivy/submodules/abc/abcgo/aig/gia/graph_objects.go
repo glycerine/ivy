@@ -73,6 +73,9 @@ func GraphFromObjects(objects []*Gia_Obj_t) (*Graph, error) {
 			copies[id] = a
 			continue
 		}
+		if p.store != nil && p.store.muxes != nil && p.id >= 0 && int(p.id) < len(*p.store.muxes) && (*p.store.muxes)[p.id] != 0 {
+			return nil, fmt.Errorf("gia: specialized MUX object %d requires normalization", id)
+		}
 		if Gia_ObjIsXor(p) != 0 {
 			return nil, fmt.Errorf("gia: specialized XOR object %d requires normalization", id)
 		}

@@ -8,7 +8,7 @@ func Gia_ManStart(nObjsMax int32) *Gia_Man_t {
 	}
 	p := &Gia_Man_t{nObjsAlloc: nObjsMax, pObjs: make([]*Gia_Obj_t, 0, int(nObjsMax)), vCis: vec.Vec_IntAlloc(int(nObjsMax / 20)), vCos: vec.Vec_IntAlloc(int(nObjsMax / 20))}
 	p.pObjs = append(p.pObjs, &Gia_Obj_t{iDiff0: objectNoFanin, iDiff1: objectNoFanin})
-	p.store = &objectStore{objects: &p.pObjs}
+	p.store = &objectStore{objects: &p.pObjs, muxes: &p.PMuxes}
 	p.pObjs[0].store = p.store
 	p.nObjs = 1
 	return p
