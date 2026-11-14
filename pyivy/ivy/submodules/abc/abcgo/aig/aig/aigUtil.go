@@ -211,65 +211,85 @@ func Aig_ObjCompareIdIncrease(a, b Edge) int {
 // Expressions use typed node IDs and local builders; no temporary object data
 // is written into the graph, and repeated XOR operands retain their parity.
 func aigExpression(p *Graph, e Edge, verilog bool) string {
-	n := p.node(e)
-	neg := "!"
-	and, or := " * ", " + "
-	if verilog {
-		neg = "~"
-		and, or = " & ", " | "
-	}
-	switch n.Kind {
-	case Constant:
-		value := "1"
-		if e.Complemented() {
-			value = "0"
-		}
-		if verilog {
-			return "1'b" + value
-		}
-		return value
-	case Input:
-		name, ok := p.objectData[e.NodeID()].(string)
+	names := make(map[int]string, len(p.inputs))
+	for i, input := range p.inputs {
+		name, ok := p.objectData[input.NodeID()].(string)
 		if !ok || name == "" {
-			name = fmt.Sprintf("pi%d", Aig_ObjCioId(p, Aig_Regular(e)))
+			name = fmt.Sprintf("pi%d", i)
 		}
-		if e.Complemented() {
-			return neg + name
-		}
-		return name
-	case Buffer, Output:
-		driver := n.Fanins[0]
-		if e.Complemented() {
-			driver = driver.Not()
-		}
-		return aigExpression(p, driver, verilog)
-	case ExclusiveOr:
-		text := "(" + aigExpression(p, n.Fanins[0], verilog) + " ^ " + aigExpression(p, n.Fanins[1], verilog) + ")"
-		if e.Complemented() {
-			text = neg + text
+		names[input.NodeID()] = name
+	}
+	neg, and, or := "!", " * ", " + "
+	if verilog {
+		neg, and, or = "~", " & ", " | "
+	}
+	wrap := func(text string, level int) string {
+		if level > 0 {
+			return "(" + text + ")"
 		}
 		return text
-	case And:
-		if verilog {
-			if c, t, f, ok := aigMux(p, e); ok {
-
-				return "(" + aigExpression(p, c, true) + " ? " + aigExpression(p, t, true) + " : " + aigExpression(p, f, true) + ")"
-			}
-		}
-		separator := and
-		if e.Complemented() {
-			separator = or
-		}
-		terms := []string{}
-		for _, f := range Aig_ObjCollectMulti(p, Aig_Regular(e)) {
-			if e.Complemented() {
-				f = f.Not()
-			}
-			terms = append(terms, aigExpression(p, f, verilog))
-		}
-		return "(" + strings.Join(terms, separator) + ")"
 	}
-	panic("aig: unknown node kind")
+	var visit func(Edge, int) string
+	visit = func(e Edge, level int) string {
+		n := p.node(e)
+		switch n.Kind {
+		case Constant:
+			value := "1"
+			if e.Complemented() {
+				value = "0"
+			}
+			if verilog {
+				return "1'b" + value
+			}
+			return value
+		case Input:
+			name := names[e.NodeID()]
+			if e.Complemented() {
+				return neg + name
+			}
+			return name
+		case Buffer, Output:
+			driver := n.Fanins[0]
+			if e.Complemented() {
+				driver = driver.Not()
+			}
+			return visit(driver, level)
+		case ExclusiveOr:
+			// Keep binary XOR occurrences: source supergate deduplication
+			// can erase repeated operands and change their parity.
+			first := n.Fanins[0]
+			if e.Complemented() {
+				first = first.Not()
+			}
+			return wrap(visit(first, level+1)+" ^ "+visit(n.Fanins[1], level+1), level)
+		case And:
+			if verilog {
+				if first, second, ok := Aig_ObjRecognizeExor(p, Aig_Regular(e)); ok {
+					if e.Complemented() {
+						first = first.Not()
+					}
+					return wrap(visit(first, level+1)+" ^ "+visit(second, level+1), level)
+				}
+				if control, yes, no, ok := aigMux(p, e); ok {
+					return wrap(visit(control, level+1)+" ? "+visit(yes, level+1)+" : "+visit(no, level+1), level)
+				}
+			}
+			separator := and
+			if e.Complemented() {
+				separator = or
+			}
+			var terms []string
+			for _, fanin := range Aig_ObjCollectMulti(p, Aig_Regular(e)) {
+				if e.Complemented() {
+					fanin = fanin.Not()
+				}
+				terms = append(terms, visit(fanin, level+1))
+			}
+			return wrap(strings.Join(terms, separator), level)
+		}
+		panic("aig: unknown node kind")
+	}
+	return visit(e, 0)
 }
 func Aig_ObjPrintEqn(w io.Writer, p *Graph, e Edge) error {
 	return aigWriteText(w, aigExpression(p, e, false))
@@ -278,37 +298,53 @@ func Aig_ObjPrintVerilog(w io.Writer, p *Graph, e Edge) error {
 	return aigWriteText(w, aigExpression(p, e, true))
 }
 func Aig_ObjPrintVerbose(p *Graph, e Edge, history int32) {
+	if e.Complemented() {
+		panic("aig: verbose printing requires a regular object")
+	}
 	n := p.node(e)
-	fmt.Printf("Node %d : %v", e.NodeID(), n.Kind)
-	if fanins := nodeFanins(*n); len(fanins) > 0 {
-		fmt.Print("(")
-		for i, f := range fanins {
-			if i > 0 {
-				fmt.Print(", ")
-			}
-			fmt.Printf("%d", f.NodeID())
-			if f.Complemented() {
-				fmt.Print("'")
-			}
+	suffix := func(f Edge) string {
+		if f.Complemented() {
+			return "'"
 		}
-		fmt.Print(")")
+		return " "
+	}
+	fmt.Printf("Node %d : ", e.NodeID())
+	switch n.Kind {
+	case Constant:
+		fmt.Print("constant 1")
+	case Input:
+		fmt.Print("CI")
+	case Output, Buffer:
+		kind := "CO"
+		if n.Kind == Buffer {
+			kind = "BUF"
+		}
+		f := n.Fanins[0]
+		fmt.Printf("%s( %d%s )", kind, f.NodeID(), suffix(f))
+	default:
+		kind := "AND"
+		if n.Kind == ExclusiveOr {
+			kind = "XOR"
+		}
+		a, b := n.Fanins[0], n.Fanins[1]
+		fmt.Printf("%s( %d%s, %d%s )", kind, a.NodeID(), suffix(a), b.NodeID(), suffix(b))
 	}
 	fmt.Printf(" (refs = %3d)", n.Refs)
 }
 func Aig_ObjPrintVerboseCone(p *Graph, root Edge, history int32) {
-	for _, e := range p.dfs([]Edge{root}, false, false, false) {
+	for _, e := range Aig_ManDfsArray(p, []Edge{Aig_Regular(root)}, 1) {
 		Aig_ObjPrintVerbose(p, e, history)
 		fmt.Println()
 	}
 	fmt.Println()
 }
 func Aig_ManPrintVerbose(p *Graph, history int32) {
-	fmt.Print("PIs:")
+	fmt.Print("PIs: ")
 	for _, e := range p.inputs {
 		fmt.Printf(" %d", e.NodeID())
 	}
 	fmt.Println()
-	for _, e := range Aig_ManDfs(p, 1) {
+	for _, e := range Aig_ManDfs(p, 0) {
 		Aig_ObjPrintVerbose(p, e, history)
 		fmt.Println()
 	}
