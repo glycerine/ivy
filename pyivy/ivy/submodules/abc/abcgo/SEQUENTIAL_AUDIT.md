@@ -701,3 +701,33 @@ pass with unchanged production code after that test-only correction.
 Reverse DFS and transfer/composition source contracts remain open, along with
 the remaining AIG algorithm families. The original package audit scope and
 pending package count are unchanged.
+
+### Circular fanout accessor prerequisite for reverse DFS
+
+Reverse-DFS inspection exposed an earlier fanout-review gap in aig.go's two
+inline accessor ports. Aig_ObjFanout0Int and Aig_ObjFanoutNext scanned graph
+objects by ID and formed a zero-terminated sequence; C reads the maintained
+circular per-pin list. The scans lost insertion order after link removal and
+reinsertion, and accepted calls without the required fanout allocation.
+New regressions failed on the maintained head, circular successor and missing
+allocation before the repair. The accessors now directly read the source index
+with bounds checks, eliminating whole-graph scans for each link.
+
+Inspected all four production accessor loops against Aig_ObjForEachFanout in
+llb1Pivot.c, sswDyn.c, absOldSim.c and pdrTsim.c. Their Go loops incorrectly
+terminated on zero; restored the source reference-count bound so circular
+lists terminate correctly, including paths containing continue statements.
+Their production managers already allocate the index. Two direct low-level
+SSW/PDR tests omitted that source precondition; added allocation/cleanup to
+those fixtures without weakening their behavioral assertions.
+
+Additional accessor coverage checks unary uses, second-pin encoding, empty
+lists and self-linked single-consumer rings. The final AIG, SSW and PDR race
+suites pass; LLB and abstraction race suites passed with the same production
+changes before those test-only fixture updates. The caller migrations do not
+constitute full audits of the four dependent packages.
+
+This closes the inline fanout accessor gap found while starting reverse DFS.
+Reverse DFS itself still ignores source traversal marks and rebuilds adjacency;
+its timing/DAR callers omit source fanout setup. Those remain the next review
+and integration work, along with transfer/composition and the rest of AIG.
