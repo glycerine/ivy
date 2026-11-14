@@ -3142,3 +3142,22 @@ repeated fanins. All three now match byte-for-byte. Focused tests pass in
 race suite passes in 27.870s (`/tmp/abcgo-mini-generate-order-race.log`), and
 GIA vet passes (`/tmp/abcgo-mini-generate-order-vet.log`). GIA's remaining
 algorithm families still need audit; original completion remains 2/131.
+
+Mini name/equivalence mapping follow-up: added a 64-case matrix combining
+eight AND input-polarity patterns with eight map-literal polarity patterns.
+Equivalent three-input cones associate their ANDs differently and use distinct
+combined object IDs. The matrix covers constant zero/one, omitted entries,
+unmatched classes, objects without a combined copy, duplicate equivalent
+members, and CO correspondence. Independent evaluation checks each returned
+name and equivalence on all eight input assignments (512 assignment rows).
+Explicit expectations enforce the source's last-name preference versus
+first-member equivalence preference, with the appropriate complement phases.
+
+A compiled original giaMini.c fixture runs both Gia_ManMapMiniLut2MiniAig
+and Gia_ManMapEquivAfterScorr for all 64 cases; complete returned vectors
+match. The diagnostic name verifier was also compared with its C source.
+No production defect was found in these paths. Focused native tests pass in
+1.806s (`/tmp/abcgo-mini-name-equiv-focused.log`), full uncached GIA race tests
+pass in 29.634s (`/tmp/abcgo-mini-name-equiv-race.log`), and GIA vet passes.
+Remaining GIA algorithm families still await review; original completion is
+2/131 and the sequential audit remains active.
