@@ -1,5 +1,11 @@
 package core
 
+import (
+	"sort"
+
+	"github.com/glycerine/abcgo/bdd/mtr"
+)
+
 func tableInitialSlots(dd *DdManager) uint32 {
 	if dd.initSlots != 0 {
 		return dd.initSlots
@@ -7,8 +13,40 @@ func tableInitialSlots(dd *DdManager) uint32 {
 	return CUDD_UNIQUE_SLOTS
 }
 
+func initializeTableMetadata(dd *DdManager) bool {
+	if dd.slotCount != 0 {
+		return true
+	}
+	initial := tableInitialSlots(dd)
+	total := (uint64(len(dd.Vars)) + uint64(dd.ZddSize) + 1) * uint64(initial)
+	if total > uint64(^uint32(0)) {
+		dd.errorCode = CUDD_MEMORY_OUT
+		return false
+	}
+	dd.initSlots = initial
+	dd.slotCount = uint32(total)
+	if len(dd.bddTableSlots) == 0 {
+		dd.bddTableSlots = make([]uint32, len(dd.Vars))
+		for i := range dd.bddTableSlots {
+			dd.bddTableSlots[i] = initial
+		}
+	}
+	if len(dd.zddTableSlots) == 0 {
+		dd.zddTableSlots = make([]uint32, dd.ZddSize)
+		for i := range dd.zddTableSlots {
+			dd.zddTableSlots[i] = initial
+		}
+	}
+	dd.tableBDDSize = uint32(len(dd.bddTableSlots))
+	dd.tableZddSize = uint32(len(dd.zddTableSlots))
+	return true
+}
+
 func (dd *DdManager) ensureTableSlots(zdd bool, size int) bool {
 	if size < 0 || uint64(size) > uint64(CUDD_MAXINDEX) {
+		return false
+	}
+	if !initializeTableMetadata(dd) {
 		return false
 	}
 	entries := &dd.bddTableSlots
@@ -88,11 +126,46 @@ func Cudd_ShrinkZddSubtable(dd *DdManager, level int) bool { return dd.rehashTab
 
 // Cudd_InsertBDDSubtables grows the allocated BDD subtable range.
 func Cudd_InsertBDDSubtables(dd *DdManager, count, level int) bool {
-	if dd == nil || dd.closed || count <= 0 || level < 0 || level >= len(dd.bddTableSlots) {
+	if dd == nil || dd.closed || count <= 0 || level < 0 || level > len(dd.Vars) || !initializeTableMetadata(dd) {
 		return false
 	}
-	if !dd.ensureTableSlots(false, len(dd.bddTableSlots)+count) {
+	oldSize := len(dd.Vars)
+	if !dd.ensureTableSlots(false, oldSize) || uint64(oldSize)+uint64(count) >= uint64(CUDD_MAXINDEX) {
 		return false
+	}
+	oldOrder := append([]int(nil), dd.InvPerm...)
+	newIndices := make([]int, count)
+	for i := 0; i < count; i++ {
+		newIndex := len(dd.Vars)
+		if Cudd_bddNewVar(dd) == nil {
+			return false
+		}
+		newIndices[i] = newIndex
+	}
+	order := make([]int, 0, oldSize+count)
+	order = append(order, oldOrder[:level]...)
+	order = append(order, newIndices...)
+	order = append(order, oldOrder[level:]...)
+	dd.InvPerm = order
+	dd.Perm = make([]int, len(order))
+	for newLevel, index := range order {
+		dd.Perm[index] = newLevel
+	}
+	newSlots := make([]uint32, 0, len(dd.bddTableSlots)+count)
+	newSlots = append(newSlots, dd.bddTableSlots[:level]...)
+	for i := 0; i < count; i++ {
+		newSlots = append(newSlots, dd.initSlots)
+	}
+	newSlots = append(newSlots, dd.bddTableSlots[level:]...)
+	dd.bddTableSlots = newSlots
+	dd.tableBDDSize = uint32(len(newSlots))
+	dd.slotCount += uint32(count) * dd.initSlots
+	if dd.Tree != nil {
+		dd.Tree.Size += uint32(count)
+		if len(dd.InvPerm) != 0 {
+			dd.Tree.Index = uint32(dd.InvPerm[0])
+		}
+		patchManagerTree(dd, dd.Tree)
 	}
 	if dd.slotCount > dd.looseUpTo {
 		dd.gcFraction = DD_GC_FRAC_LO
@@ -103,16 +176,87 @@ func Cudd_InsertBDDSubtables(dd *DdManager, count, level int) bool {
 
 // Cudd_DestroyBDDSubtables removes allocated BDD subtables from the end.
 func Cudd_DestroyBDDSubtables(dd *DdManager, count int) bool {
-	if dd == nil || dd.closed || count < 0 || count > len(dd.bddTableSlots)-len(dd.Vars) {
+	if dd == nil || dd.closed || count <= 0 || !initializeTableMetadata(dd) {
 		return false
 	}
-	for _, slots := range dd.bddTableSlots[len(dd.bddTableSlots)-count:] {
-		dd.slotCount -= slots
+	if count > len(dd.Vars) {
+		count = len(dd.Vars)
 	}
-	dd.bddTableSlots = dd.bddTableSlots[:len(dd.bddTableSlots)-count]
+	if count == 0 {
+		return false
+	}
+	first := len(dd.Vars) - count
+	removed := make(map[*DdNode]bool, count)
+	for index := first; index < len(dd.Vars); index++ {
+		removed[Cudd_Regular(dd.Vars[index])] = true
+	}
+	for _, node := range dd.unique {
+		if int(node.Index) >= first {
+			if !removed[node] {
+				return false
+			}
+			continue
+		}
+		if removed[Cudd_Regular(node.T)] || removed[Cudd_Regular(node.E)] {
+			return false
+		}
+	}
+	for node := range removed {
+		if Cudd_ExternalRefCount(dd, node) != 0 {
+			return false
+		}
+	}
+	removedLevels := make([]int, 0, count)
+	for index := first; index < len(dd.Vars); index++ {
+		node := Cudd_Regular(dd.Vars[index])
+		removedLevels = append(removedLevels, dd.Perm[index])
+		if !node.childrenReleased {
+			node.childrenReleased = true
+			Cudd_RecursiveDeref(dd, node.T)
+			Cudd_RecursiveDeref(dd, node.E)
+		}
+		delete(dd.unique, bddUniqueKey{node.Index, node.T, node.E})
+		node.manager = nil
+		if node.inverse != nil {
+			node.inverse.manager = nil
+		}
+	}
+	sort.Sort(sort.Reverse(sort.IntSlice(removedLevels)))
+	for _, level := range removedLevels {
+		if level < 0 || level >= len(dd.bddTableSlots) {
+			continue
+		}
+		dd.slotCount -= dd.bddTableSlots[level]
+		dd.bddTableSlots = append(dd.bddTableSlots[:level], dd.bddTableSlots[level+1:]...)
+	}
+	dd.Vars = dd.Vars[:first]
+	order := make([]int, 0, first)
+	for _, index := range dd.InvPerm {
+		if index < first {
+			order = append(order, index)
+		}
+	}
+	dd.InvPerm = order
+	dd.Perm = make([]int, first)
+	for level, index := range order {
+		dd.Perm[index] = level
+	}
+	dd.cache = make(map[bddITEKey]*DdNode)
+	clear(dd.computed)
+	clear(dd.addCache)
 	dd.tableBDDSize = uint32(len(dd.bddTableSlots))
 	Cudd_FixTableLimits(dd)
+	Cudd_GarbageCollect(dd, true)
 	return true
+}
+
+func patchManagerTree(dd *DdManager, node *mtr.MtrNode) {
+	for current := node; current != nil; current = current.Younger {
+		current.Low = uint32(Cudd_ReadPerm(dd, int(current.Index)))
+		if current.Child != nil {
+			patchManagerTree(dd, current.Child)
+		}
+	}
 }
 
 // Cudd_ResizeZddTable grows capacity up to index while retaining active size.

@@ -164,3 +164,35 @@ func TestCuddTableCapacityGrowthAndLimits(t *testing.T) {
 		t.Fatal("slow-table-growth thresholds do not match cuddSlowTableGrowth")
 	}
 }
+
+func TestCuddTableSubtableInsertAndDestroy(t *testing.T) {
+	dd := NewBDDManager(2)
+	if !Cudd_InsertBDDSubtables(dd, 1, 1) {
+		t.Fatal("failed to insert a BDD subtable")
+	}
+	if Cudd_ReadSize(dd) != 3 || dd.InvPerm[0] != 0 || dd.InvPerm[1] != 2 || dd.InvPerm[2] != 1 || Cudd_ReadSlots(dd) != 1024 {
+		t.Fatalf("insert state: size=%d order=%v slots=%d", Cudd_ReadSize(dd), dd.InvPerm, Cudd_ReadSlots(dd))
+	}
+	Cudd_Ref(dd.Vars[2])
+	if Cudd_DestroyBDDSubtables(dd, 1) {
+		t.Fatal("destroyed a projection variable with an external reference")
+	}
+	Cudd_Deref(dd.Vars[2])
+	if !Cudd_DestroyBDDSubtables(dd, 1) {
+		t.Fatal("failed to destroy the most recently inserted subtable")
+	}
+	if Cudd_ReadSize(dd) != 2 || dd.InvPerm[0] != 0 || dd.InvPerm[1] != 1 || Cudd_ReadSlots(dd) != 768 {
+		t.Fatalf("destroy state: size=%d order=%v slots=%d", Cudd_ReadSize(dd), dd.InvPerm, Cudd_ReadSlots(dd))
+	}
+}
+
+func TestCuddResizeTablesCreatesProjectionAndUniverseState(t *testing.T) {
+	bdd := NewBDDManager(0)
+	if !Cudd_ResizeBDDTable(bdd, 2) || Cudd_ReadSize(bdd) != 3 || Cudd_ReadSlots(bdd) != 1024 {
+		t.Fatalf("BDD resize state: size=%d slots=%d", Cudd_ReadSize(bdd), Cudd_ReadSlots(bdd))
+	}
+	zdd := NewBDDManager(0)
+	if !Cudd_ResizeZddTable(zdd, 3) || zdd.ZddSize != 4 || len(zdd.Univ) != 4 || Cudd_ReadSlots(zdd) != 1280 {
+		t.Fatalf("ZDD resize state: size=%d universe=%d slots=%d", zdd.ZddSize, len(zdd.Univ), Cudd_ReadSlots(zdd))
+	}
+}

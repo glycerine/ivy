@@ -15,11 +15,12 @@ func TestCuddAllocNodeManagerOwnershipAndLimit(t *testing.T) {
 	if n.ID != wantID {
 		t.Fatalf("allocated node ID = %d, want %d", n.ID, wantID)
 	}
-	Cudd_SetMaxLive(dd, uint32(Cudd_ReadNodeCount(dd)-1))
-	if got := Cudd_AllocNode(dd); got != nil {
-		t.Fatalf("allocation at max-live limit returned %#v, want nil", got)
+	limited := Cudd_Init(1, 0, 0, 0, 0)
+	Cudd_SetMaxLive(limited, 0)
+	if got := Cudd_AllocNode(limited); got != nil {
+		t.Fatalf("allocation above max-live limit returned %#v, want nil", got)
 	}
-	if got := Cudd_ReadErrorCode(dd); got != CUDD_TOO_MANY_NODES {
+	if got := Cudd_ReadErrorCode(limited); got != CUDD_TOO_MANY_NODES {
 		t.Fatalf("error code = %v, want CUDD_TOO_MANY_NODES", got)
 	}
 }

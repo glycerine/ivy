@@ -552,7 +552,8 @@ func Cudd_AllocNode(dd *DdManager) *DdNode {
 	if dd == nil || dd.closed {
 		return nil
 	}
-	if dd.maxLive != 0 && uint32(Cudd_ReadNodeCount(dd)) > dd.maxLive {
+	liveKeys := len(dd.unique) + len(dd.addUnique) + len(dd.zddUnique)
+	if uint64(liveKeys) > uint64(dd.maxLive) {
 		dd.errorCode = CUDD_TOO_MANY_NODES
 		return nil
 	}
