@@ -1738,3 +1738,26 @@ cover the typed-node, scratch, supplied sequential-name and filename tests
 then found a distinct first-PO flip representation bug; its new regression is
 red and the repair is the next checkpoint. AIG/package-wide completion remains
 unproven; completed-package count is still 1/131.
+
+### First-PO flip source repair
+
+Inspection of Aig_ManFlipFirstPo found that Go complemented the CO handle in
+the interface slice, whereas C's Aig_ObjChild0Flip complements the CO's child.
+A red structural regression showed terminal identity changed and the child
+stayed unchanged. Independent BLIF and Verilog round trips also failed at
+assignment zero: exported false while Graph.Evaluate correctly observed true.
+The manager routine now flips the explicit CO's first fanin. Legacy implicit
+raw outputs retain their previous edge-flip handling. No references, terminal
+indices or other cached fields are recomputed: C likewise changes only the pin.
+
+Tests check stable handles, unchanged other output/reference ownership, every
+assignment and exact double-flip restoration. A compiled fixture executes the
+original C routine for both constant/CI/AND polarities: all sixteen flips match.
+Focused race checks pass (`/tmp/abcgo-first-po-flip-final.log`). Full AIG, FRA
+and interpolation race checks pass in 56.143s, 12.228s and 11.731s; these latter
+two packages are the direct first-PO flip callers. The ABCI integration check
+is recorded in the same `/tmp/abcgo-first-po-flip-review.log`.
+
+The adjacent statistics/live-object predicate review has newly red source
+regressions and remains the next repair checkpoint. These do not change the
+first-PO fix or establish that the whole AIG package is complete.

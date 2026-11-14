@@ -223,3 +223,10 @@ graph scratch and payloads. Full AIG/ABCI race checks pass (55.776s/28.930s),
 followed by focused race checks for the latest additions. This closes the dump
 writer comparison; the adjacent manager first-PO flip has a newly found source
 representation mismatch that still needs its separate repair checkpoint.
+
+First-PO flip follow-up: repaired Aig_ManFlipFirstPo to complement the explicit
+CO's child, as C does, preserving terminal identity. Before repair both the
+structural regression and independent BLIF/Verilog readbacks failed. Sixteen
+compiled-C flips, all input assignments, reference ownership and double-flip
+restoration now pass; full AIG/FRA/interpolation race checks pass. Adjacent
+statistics/live-object predicate regressions are the next open checkpoint.

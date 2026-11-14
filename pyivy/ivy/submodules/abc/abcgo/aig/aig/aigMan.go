@@ -220,7 +220,14 @@ func Aig_ManFlipFirstPo(p *Graph) {
 	if len(p.outputs) == 0 {
 		panic("aig: no output")
 	}
-	p.outputs[0] = p.outputs[0].Not()
+	if output := p.node(p.outputs[0]); output.Kind == Output {
+		// C flips the CO's child, preserving the terminal's identity. Consumers
+		// such as CNF derivation and dump writers read that child directly.
+		output.Fanins[0] = output.Fanins[0].Not()
+	} else {
+		// Legacy raw output edges have no separate CO object.
+		p.outputs[0] = p.outputs[0].Not()
+	}
 }
 func Aig_ManReleaseData(p *Graph) any { data := p.Data; p.Data = nil; return data }
 
