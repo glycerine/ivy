@@ -64,6 +64,11 @@ search and state hashing over 4,367 histories, including unsigned hash overflow
 and wraparound of the sixteen primes. The existing original-C AND/hash/create
 comparison remains active.
 
+A separate six-register delay-chain fixture reaches aggressive saturation
+before convergence. Go matches the original C's complete printed state trace
+and final mapping. No-PI undefined values in that trace prove retirement was
+exercised rather than ordinary symbolic cutover.
+
 Postprocessing deliberately derives undefined classification from histories:
 C's separate counters are never populated. A focused test checks diagnostic
 group counts, exclusion of undefined histories and lasso markers. This is an

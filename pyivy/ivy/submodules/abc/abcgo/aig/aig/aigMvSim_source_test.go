@@ -187,7 +187,20 @@ func TestMultivaluePostprocessGroupsActualDefinedHistories(t *testing.T) {
 	g.nRegs = 4
 	p := Aig_MvManStart(g, 2)
 	p.states = [][]int32{{1, 1, 1, 1}, {0, 0, 1, SAIG_UNDEF_VALUE}, {1, 1, 1, SAIG_UNDEF_VALUE}}
-	f, err := os.CreateTemp(t.TempDir(), "postprocess")
+	text := captureMvOutput(t, func() { Aig_MvManPostProcess(p, 1) })
+	for _, part := range []string{"never became undef = 3. (Total = 4.)", "FLOP     0 : (  2)", "FLOP     2 : (  1)"} {
+		if !strings.Contains(text, part) {
+			t.Fatalf("diagnostic missing %q: %s", part, text)
+		}
+	}
+	if strings.Contains(text, "FLOP     3") || strings.Count(text, " # ") != 2 {
+		t.Fatalf("undefined history or lasso marker was misclassified: %s", text)
+	}
+}
+
+func captureMvOutput(t *testing.T, action func()) string {
+	t.Helper()
+	f, err := os.CreateTemp(t.TempDir(), "mv-output")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -196,7 +209,7 @@ func TestMultivaluePostprocessGroupsActualDefinedHistories(t *testing.T) {
 	func() {
 		defer func() { os.Stdout = old }()
 		os.Stdout = f
-		Aig_MvManPostProcess(p, 1)
+		action()
 	}()
 	if err := f.Close(); err != nil {
 		t.Fatal(err)
@@ -205,13 +218,36 @@ func TestMultivaluePostprocessGroupsActualDefinedHistories(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	text := string(out)
-	for _, part := range []string{"never became undef = 3. (Total = 4.)", "FLOP     0 : (  2)", "FLOP     2 : (  1)"} {
-		if !strings.Contains(text, part) {
-			t.Fatalf("diagnostic missing %q: %s", part, text)
-		}
+	return string(out)
+}
+
+func TestMultivalueAggressiveSaturationAgainstCompiledSource(t *testing.T) {
+	out := runAigSourceFixture(t, "multivalue_saturation_compare.c", "aigMem.c")
+	g := NewGraph()
+	los := make([]Edge, 6)
+	for i := range los {
+		los[i] = g.NewInput()
 	}
-	if strings.Contains(text, "FLOP     3") || strings.Count(text, " # ") != 2 {
-		t.Fatalf("undefined history or lasso marker was misclassified: %s", text)
+	g.AddOutput(los[5])
+	g.AddOutput(los[0].Not())
+	for _, e := range los[:5] {
+		g.AddOutput(e)
+	}
+	g.nRegs = 6
+	var mapping []Edge
+	trace := captureMvOutput(t, func() { mapping = Aig_MvManSimulate(g, 1, 2, 0, 1) })
+	var got strings.Builder
+	got.WriteString(trace)
+	got.WriteString("driver:")
+	for _, e := range mapping {
+		fmt.Fprintf(&got, " %d", e)
+	}
+	got.WriteByte('\n')
+	if got.String() != out {
+		t.Fatalf("Go aggressive saturation:\n%sC aggressive saturation:\n%s", got.String(), out)
+	}
+	// There are no PIs, so undefined values can arise only from retirement.
+	if !strings.Contains(trace, "*") || strings.Count(trace, "\n") < 6 {
+		t.Fatalf("fixture missed aggressive retirement: %s", trace)
 	}
 }
