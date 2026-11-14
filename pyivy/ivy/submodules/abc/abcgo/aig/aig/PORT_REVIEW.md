@@ -273,3 +273,13 @@ independent buffers. Shared/nested cone tests check graph validity and sequentia
 traces with and without fanout indices. Full AIG/ABCI race and focused source
 checks pass; SAIG status is in /tmp/abcgo-seq-cleanup-final-review.log. These
 checks close the reopened wrapper boundary review, not the entire AIG audit.
+
+Post-cleanup integration: a fresh repository-wide run passes 129 tested packages
+and three packages without tests. This result predates the miter repair below.
+
+Miter source repair: red regressions exposed missing zero-input phase
+normalization, inherited CI levels and cleanup-invalidated copy bindings.
+ExtractMiter now follows C's fresh-interface/copy/XOR/phase/CO sequence and keeps
+copied cones allocated. Native truth/count/level/ownership comparison and 64
+small root-pair checks pass; the full AIG race suite passes in 61.561s. The
+nonpositive Start hint contract and final file/function inventory remain open.

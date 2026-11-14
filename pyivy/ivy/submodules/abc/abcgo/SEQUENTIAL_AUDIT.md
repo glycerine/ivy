@@ -13,7 +13,7 @@ The repository-wide uncached tests passed before this audit.
 | # | Package | Status | Evidence |
 | --- | --- | --- | --- |
 | 1 | `.` | reviewed | Root review below; race tests and vet pass. |
-| 2 | `aig/aig` | in progress | Production-file inventory started. |
+| 2 | `aig/aig` | in progress | Source-backed family reviews; remaining contracts recorded below. |
 | 3 | `aig/gia` | pending | |
 | 4 | `aig/gia/mf` | pending | |
 | 5 | `aig/gia/satcost` | pending | |
@@ -1908,3 +1908,49 @@ fixture passes in 1.052s. Full AIG and ABCI race suites pass in
 cleanup wrapper boundaries. Remaining AIG work includes the manager miter's
 phase-normalization contract and the final file/function inventory. Completed
 package count remains 1/131; the overall sequential audit is active.
+
+### Sequential cleanup repository integration
+
+A fresh `go test -p 1 ./... -count=1 -timeout 180s` after commit ece8b8faa
+passes all 129 packages with tests; three command packages have no tests
+(`/tmp/abcgo-seq-cleanup-integration.log`). The original 131-package checklist
+predates the proof/aiginterp driver migration, which adds one integration
+package. These green checks establish integration of the cleanup repairs, not
+completion of the remaining package audits. The full SAIG race check above
+also passed in 5.901s.
+
+### Miter phase and copied-cone ownership source repair
+
+Independent probes of Aig_ManExtractMiter confirmed three source mismatches.
+For regular roots !a&!b and a&b, C normalizes the XOR's all-zero phase, yielding
+truth nibble 6; Go emitted nibble 9. C creates fresh zero-level CIs, while Go
+reused StartFrom's copied CI levels (3/7 in the regression). Comparing a root
+with itself also ran Go-only cleanup, deleting the copied root even though the
+source's copy map still named it. Source C retains that one unused copied gate.
+All three regression tests, including the compiled-C comparison, failed before
+repair (`/tmp/abcgo-miter-red.log`).
+
+The constructor now follows C's local creation flow: fresh interface, fresh
+copy bindings, both recursive cone copies, XOR, zero-input phase normalization
+and CO creation. It retains copied cones and does not call cleanup. StartFrom
+keeps its separate source contract of copying CI levels. The miter's public
+comment explains phase normalization and copy lifetime so callers do not assume
+it is an unnormalized Boolean mismatch output.
+
+The compiled source comparison checks output truth, retained gate counts,
+fresh CI levels and copy validity for opposite-phase and identical roots.
+Independent exhaustive checks cover 64 pairs of constants, inputs, each signed
+AND phase and a rewriting buffer, evaluating all four assignments (256 checks),
+validating copy bindings and checking the resulting graphs. The complete AIG
+race suite passes in 61.561s (`/tmp/abcgo-miter-final-review.log`). A source search
+finds no production Go caller of ExtractMiter; the original C FRA caller is a
+diagnostic dump helper. The repository-wide run above preceded this isolated
+miter change, and is not reported as a fresh run of its new code.
+
+The remaining manager inventory includes Start's nonpositive soft-capacity
+contract (C accepts negative hints; Go currently panics). Add a red regression
+before changing that behavior. aig_.go is only commented empty C scaffolding;
+aigTest.go matches the original two-output demonstration, using the current CO
+constructor in place of C's obsolete Po spelling. The remaining file/function
+inventory still needs completion before closing aig/aig. The sequential goal
+remains active, with 1/131 original packages completed.

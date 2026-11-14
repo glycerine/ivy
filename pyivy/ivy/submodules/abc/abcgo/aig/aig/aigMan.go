@@ -54,10 +54,20 @@ func Aig_ManDup_rec(destination, source *Graph, root Edge) Edge {
 	}
 	return copy
 }
+// Aig_ManExtractMiter normalizes the copied cones' XOR to false under all-zero
+// inputs, as C does. Copies stay allocated so source copy bindings remain valid.
 func Aig_ManExtractMiter(p *Graph, a, b Edge) *Graph {
-	q := Aig_ManStartFrom(p)
-	q.AddOutput(q.XOR(Aig_ManDup_rec(q, p, a), Aig_ManDup_rec(q, p, b)))
-	Aig_ManCleanup(q)
+	q := Aig_ManStart(int32(len(p.nodes)))
+	q.Name, q.Spec = p.Name, p.Spec
+	p.copies = map[int]Edge{0: q.Const1()}
+	for _, input := range p.inputs {
+		p.copies[input.NodeID()] = q.NewInput()
+	}
+	root := q.XOR(Aig_ManDup_rec(q, p, a), Aig_ManDup_rec(q, p, b))
+	if Aig_ObjPhaseReal(q, root) {
+		root = root.Not()
+	}
+	q.AddOutput(root)
 	return q
 }
 
