@@ -29,7 +29,7 @@ errors also prevent exercising previous tests.
 
 - [x] Inventory source, tests, review notes and all compiler diagnostics.
 - [ ] Resolve API ownership and compatibility bridges against actual Go types.
-- [ ] Complete command, DAR, miter and quantification translations; compile
+- [x] Complete command, DAR, miter and quantification translations; compile
       every production file and all existing tests together.
 - [ ] Run the complete suite; investigate every failure and unexpected
       diagnostic, checking the corresponding C before changing behavior.
@@ -90,3 +90,19 @@ These changes remain unvalidated at runtime while the whole package is red.
 Compiler diagnostics now concentrate in the command and DAR integration
 files. The next gate is still a build of every file together, followed by
 full behavioral tests and inspection of diagnostics.
+
+### Whole-package compilation and first runtime pass
+
+Every production file and existing test now compiles, with vet enabled.
+Completed native DAR/CNF/GIA adapters, SBD mapping and timing translation,
+phase mapping and ESOP bridges, and command argument/result conversions.
+The full verbose suite is now being exercised. Its first run found a local
+DSD worklist that requeued nodes even with recursive decomposition disabled;
+it also omitted minimum-base reduction of recursive MUX cofactors.
+
+Supporting tests exposed missing default names and stale/absent CopyEdge
+metadata during network duplication. A DAR test confused output objects
+with their driver literals; a retiming test expected logic-only timing edges
+but C explicitly retains latch and BI terminals at the same level. These
+expectations were corrected against source, without suppressing diagnostics.
+Runtime verification and comprehensive coverage remain in progress.

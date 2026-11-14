@@ -29,7 +29,7 @@ func TestAbcNtkDarObjectAndCopyEdgeMapping(t *testing.T) {
 		t.Fatal("regular AND node was recorded as complemented")
 	}
 	outputs := g.Outputs()
-	if len(outputs) != 1 || outputs[0] != got.Not() {
+	if len(outputs) != 1 || aig.Aig_ObjChild0(g, outputs[0]) != got.Not() {
 		t.Fatalf("complemented output mapping = %v, want [%v]", outputs, got.Not())
 	}
 

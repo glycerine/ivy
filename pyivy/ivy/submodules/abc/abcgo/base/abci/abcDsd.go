@@ -482,7 +482,11 @@ func Abc_NodeDecompDsdAndMux(node *abc.Object, pending *[]*abc.Object, manager *
 			}
 		}
 		low.Data = core.Cudd_Cofactor(dd, f, core.Cudd_Not(core.Cudd_bddIthVar(dd, i)))
+		core.Cudd_Ref(low.Data.(*core.DdNode))
+		abc.Abc_NodeMinimumBase(low)
 		high.Data = core.Cudd_Cofactor(dd, f, core.Cudd_bddIthVar(dd, i))
+		core.Cudd_Ref(high.Data.(*core.DdNode))
+		abc.Abc_NodeMinimumBase(high)
 		for j := len(fanins) - 1; j >= 0; j-- {
 			_ = node.Network().DeleteFanin(node, j)
 		}
@@ -509,7 +513,7 @@ func Abc_NodeDecompDsdAndMux(node *abc.Object, pending *[]*abc.Object, manager *
 		return
 	}
 	for _, created := range node.Network().ObjectsOfKind(abc.ObjectNode) {
-		if created != node && created.ID >= startID && Abc_NodeIsForDsd(created) != 0 && pending != nil {
+		if created != node && created.ID >= startID && Abc_NodeIsForDsd(created) != 0 && recursive && pending != nil {
 			*pending = append(*pending, created)
 		}
 	}

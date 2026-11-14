@@ -3,7 +3,6 @@ package abci
 import (
 	"fmt"
 	"os"
-	"unsafe"
 
 	baseabc "github.com/glycerine/abcgo/base/abc"
 	"github.com/glycerine/abcgo/bdd/cudd/core"
@@ -134,7 +133,7 @@ func Abc_NtkToFpga(ntk *Abc_Ntk_t, recovery int32, switching []float32, latchPat
 	ciCount := int(baseabc.Abc_NtkCiNum(ntk))
 	var arrivals []float32
 	if ciCount != 0 && arrivalPtr != nil {
-		arrivals = unsafe.Slice(arrivalPtr, ciCount)
+		arrivals = arrivalPtr
 	}
 	if latchPaths != 0 {
 		for i := 0; i < int(baseabc.Abc_NtkPiNum(ntk)) && i < len(arrivals); i++ {

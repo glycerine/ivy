@@ -663,7 +663,7 @@ func Lms_ManPrintFuncStats(p *Lms_Man_t) {
 	}
 	for i = 0; i <= LMS_VAR_MAX; i++ {
 		if Counters[i] != 0 {
-			fmt.Printf("Inputs = %2d.  Funcs = %8d.  Subgrs = %8d.  Ratio = %6.2f.\n", i, Counters[i], CountersS[i], 1.0*CountersS[i]/Counters[i])
+			fmt.Printf("Inputs = %2d.  Funcs = %8d.  Subgrs = %8d.  Ratio = %6.2f.\n", i, Counters[i], CountersS[i], float64(CountersS[i])/float64(Counters[i]))
 		}
 	}
 	Vec_StrFree(vSupps)
@@ -680,7 +680,7 @@ func Lms_ManPrintFreqStats(p *Lms_Man_t) {
 	var i, Freq, Status int32
 	fmt.Printf("Cuts  = %10d. ", p.nTried)
 	//    printf( "Funcs = %10d (%6.2f %%). ", Vec_MemEntryNum(p->vTtMem2), 100.0*Vec_MemEntryNum(p->vTtMem2)/p->nTried );
-	fmt.Printf("Class = %10d (%6.2f %%). ", Vec_MemEntryNum(p.vTtMem), 100.0*Vec_MemEntryNum(p.vTtMem)/p.nTried)
+	fmt.Printf("Class = %10d (%6.2f %%). ", Vec_MemEntryNum(p.vTtMem), 100.0*float64(Vec_MemEntryNum(p.vTtMem))/float64(p.nTried))
 	fmt.Printf("\n")
 	//    return;
 
@@ -729,30 +729,30 @@ func Lms_ManPrintFreqStats(p *Lms_Man_t) {
 
 	// print the results
 	fmt.Printf("NPN: ")
-	fmt.Printf("Full = %6.2f %%  ", 100.0*CountDsdNpn[0]/Vec_MemEntryNum(p.vTtMem))
-	fmt.Printf("Part = %6.2f %%  ", 100.0*CountDsdNpn[1]/Vec_MemEntryNum(p.vTtMem))
-	fmt.Printf("None = %6.2f %%  ", 100.0*CountDsdNpn[2]/Vec_MemEntryNum(p.vTtMem))
+	fmt.Printf("Full = %6.2f %%  ", 100.0*float64(CountDsdNpn[0])/float64(Vec_MemEntryNum(p.vTtMem)))
+	fmt.Printf("Part = %6.2f %%  ", 100.0*float64(CountDsdNpn[1])/float64(Vec_MemEntryNum(p.vTtMem)))
+	fmt.Printf("None = %6.2f %%  ", 100.0*float64(CountDsdNpn[2])/float64(Vec_MemEntryNum(p.vTtMem)))
 	//    printf( "\n" );
 	fmt.Printf("   ")
 	// print the results
 	fmt.Printf("All: ")
-	fmt.Printf("Full = %6.2f %%  ", 100.0*CountDsdAll[0]/p.nTried)
-	fmt.Printf("Part = %6.2f %%  ", 100.0*CountDsdAll[1]/p.nTried)
-	fmt.Printf("None = %6.2f %%  ", 100.0*CountDsdAll[2]/p.nTried)
+	fmt.Printf("Full = %6.2f %%  ", 100.0*float64(CountDsdAll[0])/float64(p.nTried))
+	fmt.Printf("Part = %6.2f %%  ", 100.0*float64(CountDsdAll[1])/float64(p.nTried))
+	fmt.Printf("None = %6.2f %%  ", 100.0*float64(CountDsdAll[2])/float64(p.nTried))
 	fmt.Printf("\n")
 
 	// print the results
 	fmt.Printf("NPN: ")
-	fmt.Printf("Full = %6.2f %%  ", 100.0*CountStepNpn[0]/Vec_MemEntryNum(p.vTtMem))
-	fmt.Printf("1stp = %6.2f %%  ", 100.0*CountStepNpn[1]/Vec_MemEntryNum(p.vTtMem))
-	fmt.Printf("Comp = %6.2f %%  ", 100.0*CountStepNpn[2]/Vec_MemEntryNum(p.vTtMem))
+	fmt.Printf("Full = %6.2f %%  ", 100.0*float64(CountStepNpn[0])/float64(Vec_MemEntryNum(p.vTtMem)))
+	fmt.Printf("1stp = %6.2f %%  ", 100.0*float64(CountStepNpn[1])/float64(Vec_MemEntryNum(p.vTtMem)))
+	fmt.Printf("Comp = %6.2f %%  ", 100.0*float64(CountStepNpn[2])/float64(Vec_MemEntryNum(p.vTtMem)))
 	//    printf( "\n" );
 	fmt.Printf("   ")
 	// print the results
 	fmt.Printf("All: ")
-	fmt.Printf("Full = %6.2f %%  ", 100.0*CountStepAll[0]/p.nTried)
-	fmt.Printf("1stp = %6.2f %%  ", 100.0*CountStepAll[1]/p.nTried)
-	fmt.Printf("Comp = %6.2f %%  ", 100.0*CountStepAll[2]/p.nTried)
+	fmt.Printf("Full = %6.2f %%  ", 100.0*float64(CountStepAll[0])/float64(p.nTried))
+	fmt.Printf("1stp = %6.2f %%  ", 100.0*float64(CountStepAll[1])/float64(p.nTried))
+	fmt.Printf("Comp = %6.2f %%  ", 100.0*float64(CountStepAll[2])/float64(p.nTried))
 	fmt.Printf("\n")
 
 }

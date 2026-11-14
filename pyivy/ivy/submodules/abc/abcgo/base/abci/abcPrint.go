@@ -1372,28 +1372,7 @@ func Abc_NtkPrintStrSupports(pNtk *Abc_Ntk_t, fMatrix int32) {
 
 **********************************************************************
 */
-func Abc_ObjPrint(pFile *os.File, pObj *Abc_Obj_t) {
-	fmt.Fprintf(pFile, "Object %5d : ", baseabc.Abc_ObjId(pObj))
-	kind := map[baseabc.ObjectKind]string{baseabc.ObjectNone: "NONE   ", baseabc.ObjectConst1: "Const1 ", baseabc.ObjectPI: "PI     ", baseabc.ObjectPO: "PO     ", baseabc.ObjectBI: "BI     ", baseabc.ObjectBO: "BO     ", baseabc.ObjectNet: "Net    ", baseabc.ObjectNode: "Node   ", baseabc.ObjectLatch: "Latch  ", baseabc.ObjectWhitebox: "Whitebox", baseabc.ObjectBlackbox: "Blackbox"}
-	label, ok := kind[pObj.Kind]
-	assert(ok, "known object kind")
-	fmt.Fprint(pFile, label, " Fanins ( ")
-	for _, edge := range pObj.Fanins() {
-		fmt.Fprintf(pFile, "%d ", baseabc.Abc_ObjId(edge.Object))
-	}
-	fmt.Fprint(pFile, ") ")
-	if baseabc.Abc_ObjIsNode(pObj) != 0 && baseabc.Abc_NtkHasSop(pObj.Network()) != 0 {
-		fmt.Fprintf(pFile, " %s", pObj.Data)
-	} else if baseabc.Abc_ObjIsNode(pObj) != 0 && baseabc.Abc_NtkHasMapping(pObj.Network()) != 0 {
-		if gate, ok := pObj.Data.(*mio.Mio_Gate_t); ok {
-			fmt.Fprintf(pFile, " %s\n", mio.Mio_GateReadName(gate))
-		} else {
-			fmt.Fprintln(pFile)
-		}
-	} else {
-		fmt.Fprintln(pFile)
-	}
-}
+func Abc_ObjPrint(pFile *os.File, pObj *Abc_Obj_t) { baseabc.Abc_ObjPrint(pFile,pObj) }
 
 /*
 *Function*************************************************************

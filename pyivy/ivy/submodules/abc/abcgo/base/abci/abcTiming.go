@@ -459,25 +459,25 @@ func Abc_NtkGetCoRequiredTimes(n *Abc_Ntk_t) *Abc_Time_t {
 	}
 	return &v[0]
 }
-func Abc_NtkGetCiArrivalFloats(n *Abc_Ntk_t) *float32 {
+func Abc_NtkGetCiArrivalFloats(n *Abc_Ntk_t) []float32 {
 	v := make([]float32, len(timingCIs(n)))
+	if timingManager(n) == nil {
+		return v
+	}
 	for i, o := range timingCIs(n) {
 		v[i] = Abc_NodeReadArrivalWorst(o)
 	}
-	if len(v) == 0 {
+	return v
+}
+func Abc_NtkGetCoRequiredFloats(n *Abc_Ntk_t) []float32 {
+	if timingManager(n) == nil {
 		return nil
 	}
-	return &v[0]
-}
-func Abc_NtkGetCoRequiredFloats(n *Abc_Ntk_t) *float32 {
 	v := make([]float32, len(timingCOs(n)))
 	for i, o := range timingCOs(n) {
 		v[i] = Abc_NodeReadRequiredWorst(o)
 	}
-	if len(v) == 0 {
-		return nil
-	}
-	return &v[0]
+	return v
 }
 
 // Edge slacks are stored as IEEE float bits in Vec_Int_t, as in Abc_Int2Float.
