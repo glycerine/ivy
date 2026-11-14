@@ -533,3 +533,23 @@ Full uncached AIG and SSW race suites pass. SSW's existing second cone walk
 still warrants review when that package's sequential audit is reached; it
 was a workaround for the old helper and has not been counted as audited here.
 The general DFS functions and remaining AIG algorithm families remain open.
+
+### Levelization source contract
+
+The next DFS review found that Aig_ManLevelize omitted the constant, inputs
+and outputs, although C iterates every live object. It also grew levels past
+Aig_ManLevelNum instead of enforcing C's upper-bound assertion. Added and
+observed red tests for an empty manager, a manager with an unused CI and CO,
+and a dangling gate above the output level. The repaired helper preallocates
+the source level range and buckets all live objects in ID order. The test also
+checks that deletion holes remain absent. The full uncached AIG race suite
+passes; no production Go callers currently use this helper.
+
+The general DFS entry points have further source-contract differences still
+to resolve: recursive helpers use local sets instead of traversal marks,
+choice traversal order differs, array traversal omits the source's initial
+constant, and DfsAll includes unreachable gates unlike the source. ABCI's
+roundtrip helpers directly call the recursive API and rely on its current
+node-only behavior, so restoring it requires reviewing and adapting those
+call sites rather than changing the helper in isolation. These are open
+findings, not completed audit work.
