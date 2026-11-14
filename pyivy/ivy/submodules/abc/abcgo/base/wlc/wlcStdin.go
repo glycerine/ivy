@@ -17,7 +17,7 @@ import (
   Synopsis    [stdin processing for STM interface.]
 
   Author      [Alan Mishchenko]
-  
+
   Affiliation [UC Berkeley]
 
   Date        [Ver. 1.0. Started - August 22, 2014.]
@@ -43,158 +43,167 @@ import (
   Synopsis    [Converts a bit-string into a number in a given radix.]
 
   Description []
-               
+
   SideEffects []
 
   SeeAlso     []
 
 ***********************************************************************/
 
-/**Function*************************************************************
+/*
+*Function*************************************************************
 
-  Synopsis    [Report results.]
+	Synopsis    [Report results.]
 
-  Description []
-               
-  SideEffects []
+	Description []
 
-  SeeAlso     []
+	SideEffects []
 
-***********************************************************************/
-func Wlc_NtkReport(p *Wlc_Ntk_t, pCex *Abc_Cex_t, pName string, Radix int32) {
-    var vNum *Vec_Str_t;
-    var i int32;
-    var NameId int32;
-    var Name int32;
-    var Start int32 = -1;
-    var nBits int32 = -1;
-    assert(pCex.nRegs == 0, "pCex.nRegs == 0");
-    // get the name ID
-    NameId = Abc_NamStrFind( p.pManName, pName );
-    if NameId <= 0 {
-        fmt.Printf("Cannot find \"%s\" among nodes of the network.\n", pName);
-        return;
-    }
-    // get the primary input
-    Vec_IntForEachEntryTriple( &p.vValues, Name, Start, nBits, i )
-        if ( Name == NameId )
-            break;
-    // find the PI
-    if i == Vec_IntSize(&p.vValues) {
-        fmt.Printf("Cannot find \"%s\" among primary inputs of the network.\n", pName);
-        return;
-    }
-    // print value
-    assert(Radix == 2 || Radix == 10 || Radix == 16, "Radix == 2 || Radix == 10 || Radix == 16");
-    vNum = Wlc_ConvertToRadix( pCex.pData, Start, nBits, Radix );
-    fmt.Printf("((%s %s%s))\n", pName, Radix == 16 ? "#x" : (Radix == 2 ? "#b" : ""), Vec_StrArray(vNum));
-    Vec_StrFree( vNum );
+	SeeAlso     []
+
+**********************************************************************
+*/
+func Wlc_NtkReport(p *Wlc_Ntk_t, pCex *Abc_Cex_t, pName string, radix int32) {
+	if p == nil || pCex == nil {
+		return
+	}
+	nameID := Abc_NamStrFind(p.pManName, pName)
+	if nameID <= 0 {
+		fmt.Printf("Cannot find %q among nodes of the network.\n", pName)
+		return
+	}
+	var start, bits int32
+	found := false
+	for i := int32(0); i+2 < Vec_IntSize(&p.vValues); i += 3 {
+		if Vec_IntEntry(&p.vValues, i) == nameID {
+			start, bits, found = Vec_IntEntry(&p.vValues, i+1), Vec_IntEntry(&p.vValues, i+2), true
+			break
+		}
+	}
+	if !found {
+		fmt.Printf("Cannot find %q among primary inputs of the network.\n", pName)
+		return
+	}
+	assert(radix == 2 || radix == 10 || radix == 16, "radix is supported")
+	value := Wlc_ConvertToRadix(pCex.pData, start, bits, radix)
+	prefix := ""
+	if radix == 16 {
+		prefix = "#x"
+	} else if radix == 2 {
+		prefix = "#b"
+	}
+	fmt.Printf("((%s %s%s))\n", pName, prefix, Vec_StrArray(value))
+	Vec_StrFree(value)
 }
 
-/**Function********************************************************************
-
-  Synopsis    [Reads stdin and stops when "(check-sat)" is observed.]
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-******************************************************************************/
-func Wlc_StdinCollectStop(vInput *Vec_Str_t, pLine string, LineSize int32) int32 {
-    var pStr string  = Vec_StrArray(vInput) + Vec_StrSize(vInput) - LineSize;
-    if Vec_StrSize(vInput) < LineSize {
-        return 0; }
-    return !strncmp( pStr, pLine, LineSize );
+func Wlc_StdinCollectStop(vInput *Vec_Str_t, line string, lineSize int32) int32 {
+	data := Vec_StrArray(vInput)
+	n := int(lineSize)
+	if len(data) < n {
+		return 0
+	}
+	return int32(strings.HasPrefix(string(data[len(data)-n:]), line))
 }
-func Wlc_StdinCollectProblem(pDir string) *Vec_Str_t {
-    var c int32;
-    var DirSize int32 = len(pDir);
-    var vInput *Vec_Str_t  = Vec_StrAlloc( 1000 );
-    for  (c = fgetc(os.Stdin)) != -1  {
-        Vec_StrPush( vInput, byte(c) );
-        if c == ')' && (Wlc_StdinCollectStop(vInput, pDir, DirSize) != 0) {
-            break; }
-    }
-    Vec_StrPush( vInput, '\0' );
-    return vInput;
+
+func readStdinByte() (byte, error) {
+	var one [1]byte
+	_, err := os.Stdin.Read(one[:])
+	return one[0], err
 }
+
+func Wlc_StdinCollectProblem(directive string) *Vec_Str_t {
+	v := Vec_StrAlloc(1000)
+	for {
+		c, err := readStdinByte()
+		if err != nil {
+			break
+		}
+		Vec_StrPush(v, c)
+		if c == ')' && Wlc_StdinCollectStop(v, directive, int32(len(directive))) != 0 {
+			break
+		}
+	}
+	Vec_StrPush(v, 0)
+	return v
+}
+
 func Wlc_StdinCollectQuery() *Vec_Str_t {
-    var c, Count, fSomeInput int32;
-    var vInput *Vec_Str_t  = Vec_StrAlloc( 1000 );
-    for  (c = fgetc(os.Stdin)) != -1  {
-        Vec_StrPush( vInput, byte(c) );
-        if c == '(' {
-            Count++, fSomeInput = 1;
-        } else if c == ')' {
-            Count--; }
-        if Count == 0 && (fSomeInput != 0) {
-            break; }
-    }
-    if c == -1 {
-        Vec_StrFreeP( &vInput );
-    } else {
-        Vec_StrPush( vInput, '\0' ); }
-    return vInput;
+	v := Vec_StrAlloc(1000)
+	depth, started := 0, false
+	for {
+		c, err := readStdinByte()
+		if err != nil {
+			if !started {
+				Vec_StrFreeP(&v)
+				return nil
+			}
+			break
+		}
+		Vec_StrPush(v, c)
+		if c == '(' {
+			depth++
+			started = true
+		} else if c == ')' && started {
+			depth--
+			if depth == 0 {
+				break
+			}
+		}
+	}
+	Vec_StrPush(v, 0)
+	return v
 }
+
 func Wlc_StdinProcessSmt(pAbc *Abc_Frame_t, pCmd string) int32 {
-    // collect stdin until (check-sat)
-    var vInput *Vec_Str_t  = Wlc_StdinCollectProblem( "(check-sat)" );
-    // parse input
-    var pNtk *Wlc_Ntk_t  = Wlc_ReadSmtBuffer( "top", Vec_StrArray(vInput), Vec_StrArray(vInput) + Vec_StrSize(vInput), 0, 0 );
-    Vec_StrFree( vInput );
-    // install current network
-    Wlc_SetNtk( pAbc, pNtk );
-    // execute command
-    if Cmd_CommandExecute(pAbc, pCmd) {
-        Abc_Print( 1, "Something did not work out with the command \"%s\".\n", pCmd );
-        return 0;
-    }
-    // solver finished
-    if Abc_FrameReadProbStatus(pAbc) == -1 {
-        fmt.Printf("undecided\n");
-    } else if Abc_FrameReadProbStatus(pAbc) == 1 {
-        fmt.Printf("unsat\n");
-    } else if Abc_FrameReadProbStatus(pAbc) == 0 {
-        fmt.Printf("sat\n");
-    } else { assert(false, "0"); }
-    fflush( os.Stdout );
-    // wait for stdin for give directions
-    for  (vInput = Wlc_StdinCollectQuery()) != nil  {
-        var pName string  = strtok( Vec_StrArray(vInput), " \n\t\r()" );
-        // check directive 
-        if int32(strings.Compare(pName, "get-value")) != 0 {
-            Abc_Print( 1, "ABC is expecting \"get-value\" in a follow-up input of the satisfiable problem.\n" );
-            Vec_StrFree( vInput );
-            return 0;
-        }
-        // check status
-        if Abc_FrameReadProbStatus(pAbc) != 0 {
-            Abc_Print( 1, "ABC received a follow-up input for a problem that is not known to be satisfiable.\n" );
-            Vec_StrFree( vInput );
-            return 0;
-        }
-        // get the variable number
-        pName = strtok( nil, "() \n\t\r" );
-        // get the counter-example
-        if Abc_FrameReadCex(pAbc) == nil {
-            Abc_Print( 1, "ABC does not have a counter-example available to process a \"get-value\" request.\n" );
-            Vec_StrFree( vInput );
-            return 0;
-        }
-        // report value of this variable
-        Wlc_NtkReport( (Wlc_Ntk_t *)pAbc.pAbcWlc, (Abc_Cex_t *)Abc_FrameReadCex(pAbc), pName, 16 );
-        Vec_StrFree( vInput );
-        fflush( os.Stdout );
-    }
-    return 1;
+	input := Wlc_StdinCollectProblem("(check-sat)")
+	pNtk := Wlc_ReadSmtBuffer("top", string(Vec_StrArray(input)), Vec_StrSize(input), 0, 0)
+	Vec_StrFree(input)
+	Wlc_SetNtk(pAbc, pNtk)
+	if Cmd_CommandExecute(pAbc, pCmd) != 0 {
+		Abc_Print(1, "Something did not work out with the command %q.\n", pCmd)
+		return 0
+	}
+	status := Abc_FrameReadProbStatus(pAbc)
+	switch status {
+	case -1:
+		fmt.Println("undecided")
+	case 1:
+		fmt.Println("unsat")
+	case 0:
+		fmt.Println("sat")
+	default:
+		assert(false, "known solver status")
+	}
+	_ = os.Stdout.Sync()
+	for input = Wlc_StdinCollectQuery(); input != nil; input = Wlc_StdinCollectQuery() {
+		fields := strings.Fields(strings.Trim(string(Vec_StrArray(input)), "\x00 \t\r\n()"))
+		if len(fields) == 0 || fields[0] != "get-value" {
+			Abc_Print(1, "ABC is expecting \"get-value\" in a follow-up input of the satisfiable problem.\n")
+			Vec_StrFree(input)
+			return 0
+		}
+		if Abc_FrameReadProbStatus(pAbc) != 0 {
+			Abc_Print(1, "ABC received a follow-up input for a problem that is not known to be satisfiable.\n")
+			Vec_StrFree(input)
+			return 0
+		}
+		cex := Abc_FrameReadCex(pAbc)
+		if cex == nil {
+			Abc_Print(1, "ABC does not have a counter-example available to process a \"get-value\" request.\n")
+			Vec_StrFree(input)
+			return 0
+		}
+		if len(fields) > 1 {
+			Wlc_NtkReport(pAbc.pAbcWlc, cex, fields[1], 16)
+		}
+		Vec_StrFree(input)
+		_ = os.Stdout.Sync()
+	}
+	return 1
 }
 
 ////////////////////////////////////////////////////////////////////////
 ///                       END OF FILE                                ///
 ////////////////////////////////////////////////////////////////////////
 
-
 //ABC_NAMESPACE_IMPL_END
-

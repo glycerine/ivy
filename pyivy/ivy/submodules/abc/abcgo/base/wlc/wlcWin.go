@@ -2,6 +2,14 @@ package wlc
 
 import "fmt"
 
+// wlcBoolInt preserves the C helpers' 0/1 return convention.
+func wlcBoolInt(value bool) int32 {
+	if value {
+		return 1
+	}
+	return 0
+}
+
 /**CFile****************************************************************
 
   FileName    [wlcWin.c]
@@ -47,23 +55,24 @@ import "fmt"
 
 ***********************************************************************/
 func Wlc_ObjIsArithm(pObj *Wlc_Obj_t) int32 {
-    return pObj.Type == WLC_OBJ_CONST       || 
+	return wlcBoolInt(pObj.Type == WLC_OBJ_CONST       ||
            pObj.Type == WLC_OBJ_BUF         || pObj.Type == WLC_OBJ_BIT_NOT     ||
            pObj.Type == WLC_OBJ_BIT_ZEROPAD || pObj.Type == WLC_OBJ_BIT_SIGNEXT ||
 //           pObj->Type == WLC_OBJ_BIT_SELECT  || pObj->Type == WLC_OBJ_BIT_CONCAT  ||
            pObj.Type == WLC_OBJ_ARI_ADD     || pObj.Type == WLC_OBJ_ARI_SUB     || 
-           pObj.Type == WLC_OBJ_ARI_MULTI   || pObj.Type == WLC_OBJ_ARI_MINUS;
+           pObj.Type == WLC_OBJ_ARI_MULTI   || pObj.Type == WLC_OBJ_ARI_MINUS)
 }
 func Wlc_ObjIsArithmReal(pObj *Wlc_Obj_t) int32 {
-    return pObj.Type == WLC_OBJ_BIT_NOT     ||
+    return wlcBoolInt(pObj.Type == WLC_OBJ_BIT_NOT     ||
            pObj.Type == WLC_OBJ_ARI_ADD     || pObj.Type == WLC_OBJ_ARI_SUB     || 
-           pObj.Type == WLC_OBJ_ARI_MULTI   || pObj.Type == WLC_OBJ_ARI_MINUS;
+           pObj.Type == WLC_OBJ_ARI_MULTI   || pObj.Type == WLC_OBJ_ARI_MINUS)
 }
 func Wlc_ManCountArithmReal(p *Wlc_Ntk_t, vNodes *Vec_Int_t) int32 {
     var pObj *Wlc_Obj_t; 
     var i, Counter int32;
     // inlining of macro Wlc_NtkForEachObjVec
-    for  i = 0; (i < Vec_IntSize(vNodes)) && (((pObj) = Wlc_NtkObj(p, Vec_IntEntry(vNodes, i))), 1); i++  {
+    for  i = 0; (i < Vec_IntSize(vNodes)); i++   {
+        pObj = Wlc_NtkObj(p, Vec_IntEntry(vNodes, i))
         Counter += Wlc_ObjIsArithmReal( pObj );
     }
     return Counter;
@@ -74,14 +83,15 @@ func Wlc_ObjHasArithm_rec(p *Wlc_Ntk_t, pObj *Wlc_Obj_t) int32 {
     if pObj.Type == WLC_OBJ_BUF         || pObj.Type == WLC_OBJ_BIT_NOT ||
          pObj.Type == WLC_OBJ_BIT_ZEROPAD || pObj.Type == WLC_OBJ_BIT_SIGNEXT {
          return Wlc_ObjHasArithm_rec( p, Wlc_ObjFanin0(p, pObj) ); }
-    return pObj.Type == WLC_OBJ_ARI_ADD   || pObj.Type == WLC_OBJ_ARI_SUB || 
-           pObj.Type == WLC_OBJ_ARI_MULTI || pObj.Type == WLC_OBJ_ARI_MINUS;
+    return wlcBoolInt(pObj.Type == WLC_OBJ_ARI_ADD   || pObj.Type == WLC_OBJ_ARI_SUB ||
+           pObj.Type == WLC_OBJ_ARI_MULTI || pObj.Type == WLC_OBJ_ARI_MINUS)
 }
 func Wlc_ObjHasArithmFanins(p *Wlc_Ntk_t, pObj *Wlc_Obj_t) int32 {
     var pFanin *Wlc_Obj_t;  var i int32;
     assert(!(Wlc_ObjHasArithm_rec(p, pObj) != 0), "!Wlc_ObjHasArithm_rec(p, pObj)");
     // inlining of macro Wlc_ObjForEachFaninObj
-    for  i = 0; (i < Wlc_ObjFaninNum(pObj)) && (((pFanin) = Wlc_NtkObj(p, Wlc_ObjFaninId(pObj, i))), 1); i++  {
+    for  i = 0; (i < Wlc_ObjFaninNum(pObj)); i++   {
+        pFanin = Wlc_NtkObj(p, Wlc_ObjFaninId(pObj, i))
         if Wlc_ObjHasArithm_rec(p, pFanin) != 0 {
             return 1; }
     }
@@ -97,7 +107,8 @@ func Wlc_WinCompute_rec(p *Wlc_Ntk_t, pObj *Wlc_Obj_t, vLeaves *Vec_Int_t, vNode
         return;
     }
     // inlining of macro Wlc_ObjForEachFaninObj
-    for  i = 0; (i < Wlc_ObjFaninNum(pObj)) && (((pFanin) = Wlc_NtkObj(p, Wlc_ObjFaninId(pObj, i))), 1); i++  {
+    for  i = 0; (i < Wlc_ObjFaninNum(pObj)); i++   {
+        pFanin = Wlc_NtkObj(p, Wlc_ObjFaninId(pObj, i))
         Wlc_WinCompute_rec( p, pFanin, vLeaves, vNodes );
     }
     Vec_IntPush( vNodes, Wlc_ObjId(p, pObj) );
@@ -108,7 +119,8 @@ func Wlc_WinCleanMark_rec(p *Wlc_Ntk_t, pObj *Wlc_Obj_t) {
         return; }
     pObj.Mark = 0;
     // inlining of macro Wlc_ObjForEachFaninObj
-    for  i = 0; (i < Wlc_ObjFaninNum(pObj)) && (((pFanin) = Wlc_NtkObj(p, Wlc_ObjFaninId(pObj, i))), 1); i++  {
+    for  i = 0; (i < Wlc_ObjFaninNum(pObj)); i++   {
+        pFanin = Wlc_NtkObj(p, Wlc_ObjFaninId(pObj, i))
         Wlc_WinCleanMark_rec( p, pFanin );
     }
 }
@@ -122,12 +134,14 @@ func Wlc_WinCompute(p *Wlc_Ntk_t, pObj *Wlc_Obj_t, vLeaves *Vec_Int_t, vNodes *V
     } else if Wlc_ObjHasArithmFanins(p, pObj) != 0 {
         var pFanin *Wlc_Obj_t;  var i int32;
         // inlining of macro Wlc_ObjForEachFaninObj
-        for  i = 0; (i < Wlc_ObjFaninNum(pObj)) && (((pFanin) = Wlc_NtkObj(p, Wlc_ObjFaninId(pObj, i))), 1); i++  {
+        for  i = 0; (i < Wlc_ObjFaninNum(pObj)); i++   {
+            pFanin = Wlc_NtkObj(p, Wlc_ObjFaninId(pObj, i))
             if Wlc_ObjHasArithm_rec(p, pFanin) != 0 {
                 Wlc_WinCompute_rec( p, pFanin, vLeaves, vNodes ); }
         }
         // inlining of macro Wlc_ObjForEachFaninObj
-        for  i = 0; (i < Wlc_ObjFaninNum(pObj)) && (((pFanin) = Wlc_NtkObj(p, Wlc_ObjFaninId(pObj, i))), 1); i++  {
+        for  i = 0; (i < Wlc_ObjFaninNum(pObj)); i++   {
+            pFanin = Wlc_NtkObj(p, Wlc_ObjFaninId(pObj, i))
             if Wlc_ObjHasArithm_rec(p, pFanin) != 0 {
                 Wlc_WinCleanMark_rec( p, pFanin ); }
         }
@@ -139,12 +153,15 @@ func Wlc_WinProfileArith(p *Wlc_Ntk_t) {
     var vNodes *Vec_Int_t   = Vec_IntAlloc( 1000 );
     var pObj *Wlc_Obj_t; var i, Count int32;
     // inlining of macro Wlc_NtkForEachObj
-    for  i = 1; (i < Wlc_NtkObjNumMax(p)) && (((pObj) = Wlc_NtkObj(p, i)), 1); i++  {
+    for  i = 1; (i < Wlc_NtkObjNumMax(p)); i++   {
+        pObj = Wlc_NtkObj(p, i)
         pObj.Mark = 0;
     }
     // inlining of macro Wlc_NtkForEachObj
-    for  i = 1; (i < Wlc_NtkObjNumMax(p)) && (((pObj) = Wlc_NtkObj(p, i)), 1); i++  {
-        if Wlc_ObjHasArithm_rec(p, pObj) ? Wlc_ObjIsCo(pObj) : Wlc_ObjHasArithmFanins(p, pObj) {
+    for  i = 1; (i < Wlc_NtkObjNumMax(p)); i++   {
+        pObj = Wlc_NtkObj(p, i)
+        if (Wlc_ObjHasArithm_rec(p, pObj) != 0 && Wlc_ObjIsCo(pObj) != 0) ||
+            (Wlc_ObjHasArithm_rec(p, pObj) == 0 && Wlc_ObjHasArithmFanins(p, pObj) != 0) {
             Wlc_WinCompute( p, pObj, vLeaves, vNodes ); 
             if Wlc_ManCountArithmReal(p, vNodes) < 2 {
                 continue; }
@@ -158,7 +175,8 @@ func Wlc_WinProfileArith(p *Wlc_Ntk_t) {
         }
     }
     // inlining of macro Wlc_NtkForEachObj
-    for  i = 1; (i < Wlc_NtkObjNumMax(p)) && (((pObj) = Wlc_NtkObj(p, i)), 1); i++  {
+    for  i = 1; (i < Wlc_NtkObjNumMax(p)); i++   {
+        pObj = Wlc_NtkObj(p, i)
         assert(pObj.Mark == 0, "pObj.Mark == 0");
     }
     fmt.Printf("Finished printing %d arithmetic cones.\n", Count);

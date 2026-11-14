@@ -3,6 +3,7 @@ package wlc
 import (
 	"fmt"
 	"os"
+	"unsafe"
 )
 
 /**CFile****************************************************************
@@ -125,11 +126,13 @@ func Wlc_NtkCollectObjs_rec(p *Wlc_Ntk_t, pObj *Wlc_Obj_t, vObjs *Vec_Int_t) int
         return 0; }
     pObj.Mark = 1;
     // inlining of macro Wlc_ObjForEachFanin
-    for  i = 0; (i < Wlc_ObjFaninNum(pObj)) && (((iFanin) = Wlc_ObjFaninId(pObj, i)), 1); i++  {
+    for i = 0; i < Wlc_ObjFaninNum(pObj); i++ {
+        iFanin = Wlc_ObjFaninId(pObj, i)
         Count += Wlc_NtkCollectObjs_rec( p, Wlc_NtkObj(p, iFanin), vObjs );
     }
     Vec_IntPush( vObjs, Wlc_ObjId(p, pObj) );
-    return Count + int32((pObj.Type == WLC_OBJ_ARI_MULTI));
+    if pObj.Type == WLC_OBJ_ARI_MULTI { Count++ }
+    return Count;
 }
 func Wlc_NtkCollectObjs(p *Wlc_Ntk_t, fEven int32, pCount *int32) *Vec_Int_t {
     var vObjs *Vec_Int_t  = Vec_IntAlloc( 100 );
@@ -137,7 +140,8 @@ func Wlc_NtkCollectObjs(p *Wlc_Ntk_t, fEven int32, pCount *int32) *Vec_Int_t {
     var i, Count int32;
     Wlc_NtkCleanMarks( p );
     // inlining of macro Wlc_NtkForEachCo
-    for  i = 0; (i < Wlc_NtkCoNum(p)) && (((pObj) = Wlc_NtkCo(p, i)), 1); i++  {
+    for i = 0; i < Wlc_NtkCoNum(p); i++ {
+        pObj = Wlc_NtkCo(p, i)
         if (i & 1) == fEven {
             Count += Wlc_NtkCollectObjs_rec( p, pObj, vObjs ); }
     }
@@ -162,16 +166,16 @@ func Wlc_NtkSaveOneNode(p *Wlc_Ntk_t, pWlcObj *Wlc_Obj_t, pGia *Gia_Man_t, vTtMe
     var k, Entry int32;
     var nWords int32  = Vec_MemEntrySize(vTtMem);
     var nBits int32  = Wlc_ObjRange(pWlcObj);
-    var iFirst int32  = Vec_IntEntry( &p.vCopies, Wlc_ObjId(p, pWlcObj) );
+    var iFirst int32  = Vec_IntEntry(p.vCopies, Wlc_ObjId(p, pWlcObj) );
     for  k = 0; k < nBits; k++  {
-        var iLit int32  = Vec_IntEntry( &p.vBits, iFirst + k );
+        var iLit int32  = Vec_IntEntry(p.vBits, iFirst + k );
         var pInfoObj *word  = Wlc_ObjSim( pGia, Abc_Lit2Var(iLit) );
-        var fCompl int32  = pInfoObj[0] & 1;
+        var fCompl int32  = int32(pInfoObj[0] & 1);
         if fCompl != 0 { Abc_TtNot( pInfoObj, nWords ); }
         Entry = Vec_MemHashInsert( vTtMem, pInfoObj );
         if fCompl != 0 { Abc_TtNot( pInfoObj, nWords ); }
         fmt.Printf("%2d(%d) ", Entry, fCompl ^ Abc_LitIsCompl(iLit));
-        Extra_PrintHex( os.Stdout, (unsigned*)pInfoObj, 8 );
+        Extra_PrintHex( os.Stdout, (*uint32)(unsafe.Pointer(pInfoObj)), 8 );
         fmt.Printf("\n");
     }
     fmt.Printf("\n");
@@ -180,18 +184,18 @@ func Wlc_NtkFindOneNode(p *Wlc_Ntk_t, pWlcObj *Wlc_Obj_t, pGia *Gia_Man_t, vTtMe
     var k, Entry int32;
     var nWords int32  = Vec_MemEntrySize(vTtMem);
     var nBits int32  = Wlc_ObjRange(pWlcObj);
-    var iFirst int32  = Vec_IntEntry( &p.vCopies, Wlc_ObjId(p, pWlcObj) );
+    var iFirst int32  = Vec_IntEntry(p.vCopies, Wlc_ObjId(p, pWlcObj) );
     for  k = 0; k < nBits; k++  {
-        var iLit int32  = Vec_IntEntry( &p.vBits, iFirst + k );
+        var iLit int32  = Vec_IntEntry(p.vBits, iFirst + k );
         var pInfoObj *word  = Wlc_ObjSim( pGia, Abc_Lit2Var(iLit) );
-        var fCompl int32  = pInfoObj[0] & 1;
+        var fCompl int32  = int32(pInfoObj[0] & 1);
         if fCompl != 0 { Abc_TtNot( pInfoObj, nWords ); }
         Entry = *Vec_MemHashLookup( vTtMem, pInfoObj );
         if Entry > 0 {
             fmt.Printf("Obj %4d.  Range = %2d.  Bit %2d.  Entry %d(%d).  %s\n", Wlc_ObjId(p, pWlcObj), Wlc_ObjRange(pWlcObj), k, Entry, fCompl ^ Abc_LitIsCompl(iLit), Wlc_ObjName(p, Wlc_ObjId(p, pWlcObj))); }
         if fCompl != 0 { Abc_TtNot( pInfoObj, nWords ); }
         //printf( "%2d ", Entry );
-        //Extra_PrintHex( stdout, (unsigned*)pInfoObj, 8 );
+        //Extra_PrintHex( stdout, (*uint32)(unsafe.Pointer(pInfoObj)), 8 );
         //printf( "\n" );
     }
     //printf( "\n" );
@@ -233,20 +237,20 @@ func Wlc_NtkGraftMulti(p *Wlc_Ntk_t, fVerbose int32) *Wlc_Ntk_t {
     }
     // swap if wrong side
     if nMultiRHS > 0 {
-        ABC_SWAP( Vec_Int_t *, vObjsLHS, vObjsRHS );
-        ABC_SWAP( int, nMultiLHS, nMultiRHS );
+        vObjsLHS, vObjsRHS = vObjsRHS, vObjsLHS
+        nMultiLHS, nMultiRHS = nMultiRHS, nMultiLHS
     }
     assert(nMultiLHS > 0, "nMultiLHS > 0");
     assert(nMultiRHS == 0, "nMultiRHS == 0");
 
     // allocate simulation info for one timeframe
-    Vec_WrdFreeP( &pGia.vSims );
+    Vec_WrdFreeP(&pGia.vSims);
     pGia.vSims = Vec_WrdStart( Gia_ManObjNum(pGia) * nWords );
     pGia.nSimWords = nWords;
     // perform simulation
     Gia_ManRandomW( 1 );
-    Gia_ManForEachObj1( pGia, pObj, i )
-    {
+    for i = 1; i < Gia_ManObjNum(pGia); i++ {
+        pObj = Gia_ManObj(pGia, i)
         if Gia_ObjIsAnd(pObj) {
             Wlc_ObjSimAnd( pGia, i );
         } else if Gia_ObjIsCo(pObj) {
@@ -262,7 +266,8 @@ func Wlc_NtkGraftMulti(p *Wlc_Ntk_t, fVerbose int32) *Wlc_Ntk_t {
 
     // hash sim info on the multiplier boundary
     // inlining of macro Wlc_NtkForEachObjVec
-    for  i = 0; (i < Vec_IntSize(vObjsLHS)) && (((pWlcObj) = Wlc_NtkObj(p, Vec_IntEntry(vObjsLHS, i))), 1); i++  {
+    for i = 0; i < Vec_IntSize(vObjsLHS); i++ {
+        pWlcObj = Wlc_NtkObj(p, Vec_IntEntry(vObjsLHS, i))
         if Wlc_ObjType(pWlcObj) == WLC_OBJ_ARI_MULTI {
             Wlc_NtkSaveOneNode( p, Wlc_ObjFanin0(p, pWlcObj), pGia, vTtMem );
             Wlc_NtkSaveOneNode( p, Wlc_ObjFanin1(p, pWlcObj), pGia, vTtMem );
@@ -272,7 +277,8 @@ func Wlc_NtkGraftMulti(p *Wlc_Ntk_t, fVerbose int32) *Wlc_Ntk_t {
 
     // check if there are similar signals in LHS
     // inlining of macro Wlc_NtkForEachObjVec
-    for  i = 0; (i < Vec_IntSize(vObjsRHS)) && (((pWlcObj) = Wlc_NtkObj(p, Vec_IntEntry(vObjsRHS, i))), 1); i++  {
+    for i = 0; i < Vec_IntSize(vObjsRHS); i++ {
+        pWlcObj = Wlc_NtkObj(p, Vec_IntEntry(vObjsRHS, i))
         Wlc_NtkFindOneNode( p, pWlcObj, pGia, vTtMem );
     }
 
@@ -280,10 +286,10 @@ func Wlc_NtkGraftMulti(p *Wlc_Ntk_t, fVerbose int32) *Wlc_Ntk_t {
 
 
     Vec_MemHashFree( vTtMem );
-    Vec_MemFreeP( &vTtMem );
+    Vec_MemFreeP(&vTtMem);
 
     // cleanup
-    Vec_WrdFreeP( &pGia.vSims );
+    Vec_WrdFreeP(&pGia.vSims);
     pGia.nSimWords = 0;
 
     Vec_IntFree( vObjsLHS );
@@ -323,7 +329,7 @@ func Sbc_SimMult(A []word, B []word, R []word, nIns int32) {
     var r [2]word;
     var Mask word = Abc_Tt6Mask(nIns); var i, k int32;
     for  i = 0; i < 64; i++  {
-        A[i] = B[i] = R[i] = R[i+64] = 0;
+        A[i], B[i], R[i], R[i+64] = 0, 0, 0, 0;
     }
     Gia_ManRandom(1);
     for  i = 0; i < 64; i++  {
@@ -339,10 +345,10 @@ func Sbc_SimMult(A []word, B []word, R []word, nIns int32) {
         }        
         Sbc_Mult( a, b, r );
         for  k = 0; k < 64; k++  {
-            if (a    >> k) & 1 {  A[k]    |= ((word)1 << i); }
-            if (b    >> k) & 1 {  B[k]    |= ((word)1 << i); }
-            if (r[0] >> k) & 1 {  R[k]    |= ((word)1 << i); }
-            if (r[1] >> k) & 1 {  R[k+64] |= ((word)1 << i); }
+            if ((a >> k) & 1) != 0 {  A[k]    |= (word(1) << i); }
+            if ((b >> k) & 1) != 0 {  B[k]    |= (word(1) << i); }
+            if ((r[0] >> k) & 1) != 0 {  R[k]    |= (word(1) << i); }
+            if ((r[1] >> k) & 1) != 0 {  R[k+64] |= (word(1) << i); }
         }
     }
 //    for ( i = 0; i < 128; i++ )
@@ -375,40 +381,44 @@ var nIns int32 = Vec_IntSize(vIns)/2;
     // create hash table
     var vTtMem *Vec_Mem_t  = Vec_MemAlloc( nWords, 10 );
     Vec_MemHashAlloc( vTtMem, 1000 );
-    Sbc_SimMult( A, B, R, nIns );
+    Sbc_SimMult(A[:], B[:], R[:], nIns);
     for  i = 0; i < 2*nIns; i++  {
-        Vec_MemHashInsert( vTtMem, R+i );
+        Vec_MemHashInsert(vTtMem, &R[i]);
         //printf( "Out %2d : ", i );
         //Extra_PrintHex( stdout, (unsigned *)(R+i), 6 ); printf( "\n" );
     }
     assert(Vec_MemEntryNum(vTtMem) == 2*nIns, "Vec_MemEntryNum(vTtMem) == 2*nIns");
 
     // alloc simulation info
-    Vec_WrdFreeP( &p.vSims );
+    Vec_WrdFreeP(&p.vSims);
     p.vSims = Vec_WrdStart( Gia_ManObjNum(p) * nWords );
     p.nSimWords = nWords;
 
     // mark inputs
     Gia_ManIncrementTravId( p );
     Gia_ObjSetTravIdCurrentId( p, 0 );
-    Gia_ManForEachCi( p, pObj, i )
-    {
+    for i = 0; i < Gia_ManCiNum(p); i++ {
+        pObj = Gia_ManCi(p, i)
         Gia_ObjSetTravIdCurrent( p, pObj );
         //Wlc_ObjSimPi( p, Gia_ObjId(p, pObj) );
     }
 
     // assign inputs
     assert(Vec_IntSize(vIns) % 2 == 0, "Vec_IntSize(vIns) % 2 == 0");
-    Gia_ManForEachObjVec( vIns, p, pObj, i )
-    {
+    for i = 0; i < Vec_IntSize(vIns); i++ {
+        pObj = Gia_ManObj(p, Vec_IntEntry(vIns, i))
         Gia_ObjSetTravIdCurrent( p, pObj );
         pInfoObj = Wlc_ObjSim( p, Gia_ObjId(p, pObj) );
-        *pInfoObj = i < nIns ? A[i] : B[i - nIns];
+        if i < nIns {
+            *pInfoObj = A[i]
+        } else {
+            *pInfoObj = B[i-nIns]
+        }
     }
 
     // perform simulation
-    Gia_ManForEachObj1( p, pObj, i )
-    {
+    for i = 1; i < Gia_ManObjNum(p); i++ {
+        pObj = Gia_ManObj(p, i)
         if Gia_ObjIsTravIdCurrent(p, pObj) {
             continue; }
 
@@ -438,16 +448,16 @@ var nIns int32 = Vec_IntSize(vIns)/2;
         }
     }
 
-    Gia_ManForEachCo( p, pObj, i )
-    {
+    for i = 0; i < Gia_ManCoNum(p); i++ {
+        pObj = Gia_ManCo(p, i)
         pInfoObj = Wlc_ObjSim( p, Gia_ObjId(p, pObj) );
         //printf( "Out %2d : Driver = %5d(%d)", i, Gia_ObjFaninId0p(p, pObj), Gia_ObjFaninC0(pObj) );
-        //Extra_PrintHex( stdout, (unsigned *)pInfoObj, 6 ); printf( "\n" );
+        //Extra_PrintHex( stdout, (*uint32)(unsafe.Pointer(pInfoObj)), 6 ); printf( "\n" );
     }
 
     // cleanup
     Vec_MemHashFree( vTtMem );
-    Vec_MemFreeP( &vTtMem );
+    Vec_MemFreeP(&vTtMem);
     //Vec_WrdFreeP( &p->vSims );
     //p->nSimWords = 0;
     return vGia2Out;
@@ -456,15 +466,19 @@ func Sbc_ManWlcNodes2(pNtk *Wlc_Ntk_t, p *Gia_Man_t, vGiaLits *Vec_Int_t) *Vec_I
     var pObj *Wlc_Obj_t;  var i, k, iGiaLit, iFirst, nBits int32;
     var vRes *Vec_Int_t  = Vec_IntAlloc( 100 );
     var vMap *Vec_Int_t  = Vec_IntStartFull( Gia_ManObjNum(p) );
-    Vec_IntForEachEntry( vGiaLits, iGiaLit, i )
-        if ( iGiaLit != -1 )
-            Vec_IntWriteEntry( vMap, Abc_Lit2Var(iGiaLit), Abc_Var2Lit(i, Abc_LitIsCompl(iGiaLit)) );
+    for i = 0; i < Vec_IntSize(vGiaLits); i++ {
+        iGiaLit = Vec_IntEntry(vGiaLits, i)
+        if iGiaLit != -1 {
+            Vec_IntWriteEntry(vMap, Abc_Lit2Var(iGiaLit), Abc_Var2Lit(i, Abc_LitIsCompl(iGiaLit)))
+        }
+    }
     // inlining of macro Wlc_NtkForEachObj
-    for  i = 1; (i < Wlc_NtkObjNumMax(pNtk)) && (((pObj) = Wlc_NtkObj(pNtk, i)), 1); i++  {
-        iFirst = Vec_IntEntry( &pNtk.vCopies, i );
+    for i = 1; i < Wlc_NtkObjNumMax(pNtk); i++ {
+        pObj = Wlc_NtkObj(pNtk, i)
+        iFirst = Vec_IntEntry(pNtk.vCopies, i );
         nBits  = Wlc_ObjRange(pObj);
         for  k = 0; k < nBits; k++  {
-            var iLitGia int32  = Vec_IntEntry( &pNtk.vBits, iFirst + k );
+            var iLitGia int32  = Vec_IntEntry(pNtk.vBits, iFirst + k );
             var iLitOut int32  = Vec_IntEntry( vMap, Abc_Lit2Var(iLitGia) );
             if iLitOut == -1 {
                 continue; }
@@ -478,18 +492,18 @@ func Sbc_ManWlcNodes2(pNtk *Wlc_Ntk_t, p *Gia_Man_t, vGiaLits *Vec_Int_t) *Vec_I
     Vec_IntSort( vRes, 0 );
     // consider the last one
     pObj   = Wlc_NtkObj( pNtk, Vec_IntEntryLast(vRes) );
-    iFirst = Vec_IntEntry( &pNtk.vCopies, Wlc_ObjId(pNtk, pObj) );
+    iFirst = Vec_IntEntry(pNtk.vCopies, Wlc_ObjId(pNtk, pObj) );
     nBits  = Wlc_ObjRange(pObj);
     fmt.Printf("Considering object %d (%s):\n", Wlc_ObjId(pNtk, pObj), Wlc_ObjName(pNtk, Wlc_ObjId(pNtk, pObj)));
     for  k = 0; k < nBits; k++  {
-        var iLitGia int32   = Vec_IntEntry( &pNtk.vBits, iFirst + k );
+        var iLitGia int32   = Vec_IntEntry(pNtk.vBits, iFirst + k );
         var iLitOutP int32  = Vec_IntFind( vGiaLits, iLitGia );
         var iLitOutN int32  = Vec_IntFind( vGiaLits, Abc_LitNot(iLitGia) );
         fmt.Printf("Matching bit %d with output %d / %d.\n", k, iLitOutP, iLitOutN);
         // print simulation signature
         {
             var pInfoObj *word  = Wlc_ObjSim( p, Abc_Lit2Var(iLitGia) );
-            Extra_PrintHex( os.Stdout, (unsigned *)pInfoObj, 6 ); fmt.Printf("\n");
+            Extra_PrintHex( os.Stdout, (*uint32)(unsafe.Pointer(pInfoObj)), 6 ); fmt.Printf("\n");
         }
     }
     return vRes;
@@ -505,12 +519,13 @@ func Sbc_ManWlcNodes(pNtk *Wlc_Ntk_t, p *Gia_Man_t, vGia2Out *Vec_Int_t, nOuts i
     var iObjFound int32 = -1;
     var vMatched *Vec_Int_t  = Vec_IntAlloc( 100 );
     // inlining of macro Wlc_NtkForEachObj
-    for  i = 1; (i < Wlc_NtkObjNumMax(pNtk)) && (((pObj) = Wlc_NtkObj(pNtk, i)), 1); i++  {
-        iFirst = Vec_IntEntry( &pNtk.vCopies, i );
+    for i = 1; i < Wlc_NtkObjNumMax(pNtk); i++ {
+        pObj = Wlc_NtkObj(pNtk, i)
+        iFirst = Vec_IntEntry(pNtk.vCopies, i );
         nBits  = Wlc_ObjRange(pObj);
         Vec_IntClear( vMatched );
         for  k = 0; k < nBits; k++  {
-            iLitGia = Vec_IntEntry( &pNtk.vBits, iFirst + k );
+            iLitGia = Vec_IntEntry(pNtk.vBits, iFirst + k );
             iLitOut = Vec_IntEntry( vGia2Out, Abc_Lit2Var(iLitGia) );
             if iLitOut == -1 {
                 continue; }
@@ -530,7 +545,7 @@ func Sbc_ManWlcNodes(pNtk *Wlc_Ntk_t, p *Gia_Man_t, vGia2Out *Vec_Int_t, nOuts i
                 iLitGia = Vec_IntEntry( &pNtk->vBits, iFirst + k );
                 {
                     word * pInfoObj = Wlc_ObjSim( p, Abc_Lit2Var(iLitGia) );
-                    Extra_PrintHex( stdout, (unsigned *)pInfoObj, 6 ); printf( "\n" );
+                    Extra_PrintHex( stdout, (*uint32)(unsafe.Pointer(pInfoObj)), 6 ); printf( "\n" );
                 }
             }
             */
@@ -553,7 +568,6 @@ func Sbc_ManWlcNodes(pNtk *Wlc_Ntk_t, p *Gia_Man_t, vGia2Out *Vec_Int_t, nOuts i
 
 ***********************************************************************/
 func Sbc_ManDetectMultTest(pNtk *Wlc_Ntk_t, fVerbose int32) {
-    extern Vec_Int_t * Sdb_StoComputeCutsDetect( Gia_Man_t * pGia );
     var p *Gia_Man_t  = Wlc_NtkBitBlast( pNtk, nil );//, -1, 0, 0, 0, 0, 1, 0, 0 ); // <= no cleanup
     var vIns, vGia2Out *Vec_Int_t;
     var iObjFound int32  = -1;
@@ -570,6 +584,7 @@ func Sbc_ManDetectMultTest(pNtk *Wlc_Ntk_t, fVerbose int32) {
     vGia2Out = Sbc_ManDetectMult( p, vIns );
 
     iObjFound = Sbc_ManWlcNodes( pNtk, p, vGia2Out, Vec_IntSize(vIns) );
+    _ = iObjFound
 
     Vec_IntFree( vGia2Out );
     Vec_IntFree( vIns );
