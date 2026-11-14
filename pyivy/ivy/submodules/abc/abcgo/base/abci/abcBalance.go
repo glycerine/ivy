@@ -3,628 +3,422 @@ package abci
 import (
 	"fmt"
 	"os"
+	"sort"
+
+	"github.com/glycerine/abcgo/base/abc"
+	"github.com/glycerine/abcgo/misc/extra"
+	"github.com/glycerine/abcgo/misc/vec"
 )
 
-/**CFile****************************************************************
-
-  FileName    [abcBalance.c]
-
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Network and node package.]
-
-  Synopsis    [Performs global balancing of the AIG by the number of levels.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: abcBalance.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "base/abc/abc.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
- 
-// static void        Abc_NtkBalancePerform( Abc_Ntk_t * pNtk, Abc_Ntk_t * pNtkAig, int fDuplicate, int fSelective, int fUpdateLevel );
-
-// static Abc_Obj_t * Abc_NodeBalance_rec( Abc_Ntk_t * pNtkNew, Abc_Obj_t * pNode, Vec_Vec_t * vStorage, int Level, int fDuplicate, int fSelective, int fUpdateLevel );
-
-// static Vec_Ptr_t * Abc_NodeBalanceCone( Abc_Obj_t * pNode, Vec_Vec_t * vSuper, int Level, int fDuplicate, int fSelective );
-
-// static int         Abc_NodeBalanceCone_rec( Abc_Obj_t * pNode, Vec_Ptr_t * vSuper, int fFirst, int fDuplicate, int fSelective );
-
-// static void        Abc_NtkMarkCriticalNodes( Abc_Ntk_t * pNtk );
-
-// static Vec_Ptr_t * Abc_NodeBalanceConeExor( Abc_Obj_t * pNode );
-
-
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Balances the AIG network.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkBalance(pNtk *Abc_Ntk_t, fDuplicate int32, fSelective int32, fUpdateLevel int32) *Abc_Ntk_t {
-//    extern void Abc_NtkHaigTranfer( Abc_Ntk_t * pNtkOld, Abc_Ntk_t * pNtkNew );
-    var pNtkAig *Abc_Ntk_t;
-    assert(Abc_NtkIsStrash(pNtk), "Abc_NtkIsStrash(pNtk)");
-    // compute the required times
-    if fSelective != 0 {
-        Abc_NtkStartReverseLevels( pNtk, 0 );
-        Abc_NtkMarkCriticalNodes( pNtk );
-    }
-    // perform balancing
-    pNtkAig = Abc_NtkStartFrom( pNtk, ABC_NTK_STRASH, ABC_FUNC_AIG );
-    // transfer HAIG
-//    Abc_NtkHaigTranfer( pNtk, pNtkAig );
-    // perform balancing
-    Abc_NtkBalancePerform( pNtk, pNtkAig, fDuplicate, fSelective, fUpdateLevel );
-    Abc_NtkFinalize( pNtk, pNtkAig );
-    Abc_AigCleanup( (Abc_Aig_t *)pNtkAig.pManFunc );
-    // undo the required times
-    if fSelective != 0 {
-        Abc_NtkStopReverseLevels( pNtk );
-        Abc_NtkCleanMarkA( pNtk );
-    }
-    if pNtk.pExdc {
-        pNtkAig.pExdc = Abc_NtkDup( pNtk.pExdc ); }
-    // make sure everything is okay
-    if !Abc_NtkCheck( pNtkAig ) {
-        fmt.Printf("Abc_NtkBalance: The network check has failed.\n");
-        Abc_NtkDelete( pNtkAig );
-        return nil;
-    }
-//Abc_NtkPrintCiLevels( pNtkAig );
-    return pNtkAig;
+// Abc_NtkBalance globally balances the AIG by the number of logic levels.
+func Abc_NtkBalance(n *Abc_Ntk_t, duplicate, selective, updateLevel int32) *Abc_Ntk_t {
+	if n == nil || abc.Abc_NtkIsStrash(n) == 0 {
+		panic("Abc_NtkBalance requires a strashed network")
+	}
+	if selective != 0 {
+		abc.Abc_NtkStartReverseLevels(n, 0)
+		Abc_NtkMarkCriticalNodes(n)
+	}
+	balanced := abc.Abc_NtkStartFrom(n, abc.ABC_NTK_STRASH, abc.ABC_FUNC_AIG)
+	Abc_NtkBalancePerform(n, balanced, duplicate, selective, updateLevel)
+	abc.Abc_NtkFinalize(n, balanced)
+	manager := abc.Abc_AigAlloc(balanced)
+	abc.Abc_AigCleanup(manager)
+	abc.Abc_AigFree(manager)
+	if selective != 0 {
+		abc.Abc_NtkStopReverseLevels(n)
+		abc.Abc_NtkCleanMarkA(n)
+	}
+	if n.Exdc != nil {
+		balanced.Exdc = abc.Abc_NtkDup(n.Exdc)
+	}
+	if abc.Abc_NtkCheck(balanced) == 0 {
+		fmt.Fprintln(os.Stdout, "Abc_NtkBalance: The network check has failed.")
+		abc.Abc_NtkDelete(balanced)
+		return nil
+	}
+	return balanced
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Balances the AIG network.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkBalancePerform(pNtk *Abc_Ntk_t, pNtkAig *Abc_Ntk_t, fDuplicate int32, fSelective int32, fUpdateLevel int32) {
-    var pProgress *ProgressBar;
-    var vStorage *Vec_Vec_t;
-    var pNode *Abc_Obj_t;
-    var i int32;
-    // transfer level
-    // inlining of macro Abc_NtkForEachCi
-    for  i = 0; (i < Abc_NtkCiNum(pNtk)) && (((pNode) = Abc_NtkCi(pNtk, i)), 1); i++  {
-        pNode.pCopy.Level = pNode.Level;
-    }
-    // set the level of PIs of AIG according to the arrival times of the old network
-    Abc_NtkSetNodeLevelsArrival( pNtk );
-    // allocate temporary storage for supergates
-    vStorage = Vec_VecStart( 10 );
-    // perform balancing of POs
-    pProgress = Extra_ProgressBarStart( os.Stdout, Abc_NtkCoNum(pNtk) );
-    if pNtk.nBarBufs == 0 {
-        // inlining of macro Abc_NtkForEachCo
-        for  i = 0; (i < Abc_NtkCoNum(pNtk)) && (((pNode) = Abc_NtkCo(pNtk, i)), 1); i++  {
-            Extra_ProgressBarUpdate( pProgress, i, nil );
-            Abc_NodeBalance_rec( pNtkAig, Abc_ObjFanin0(pNode), vStorage, 0, fDuplicate, fSelective, fUpdateLevel );
-        }
-    
-    } else {
-        // inlining of macro Abc_NtkForEachLiPo
-        for  i = 0; (i < Abc_NtkCoNum(pNtk)) && (((pNode) = Abc_NtkCo(pNtk, i < pNtk.nBarBufs ? Abc_NtkCoNum(pNtk) - pNtk.nBarBufs + i : i - pNtk.nBarBufs)), 1); i++  {
-            Extra_ProgressBarUpdate( pProgress, i, nil );
-            Abc_NodeBalance_rec( pNtkAig, Abc_ObjFanin0(pNode), vStorage, 0, fDuplicate, fSelective, fUpdateLevel );
-            if i < pNtk.nBarBufs {
-                Abc_ObjFanout0(Abc_ObjFanout0(pNode)).Level = Abc_ObjFanin0(pNode).Level; }
-        }
-    }
-    Extra_ProgressBarStop( pProgress );
-    Vec_VecFree( vStorage );
+// Abc_NtkBalancePerform balances each CO cone in the destination network.
+func Abc_NtkBalancePerform(old, balanced *Abc_Ntk_t, duplicate, selective, updateLevel int32) {
+	// The C helper initializes all node levels from arrival times before the
+	// balancing pass. Abc_NtkLevel uses the network's CILevel callback.
+	abc.Abc_NtkLevel(old)
+	for i := int32(0); i < abc.Abc_NtkCiNum(old); i++ {
+		oldCI, newCI := abc.Abc_NtkCi(old, i), abc.Abc_NtkCi(balanced, i)
+		if oldCI != nil && newCI != nil {
+			oldCI.CopyEdge = newCI.Signal()
+			oldCI.CopyEdge.Object.Level = oldCI.Level
+		}
+	}
+	storage := vec.Vec_VecStart(10)
+	progress := extra.Extra_ProgressBarStart(os.Stdout, abc.Abc_NtkCoNum(old))
+	cos := old.Outputs()
+	if old.Barriers != 0 {
+		// Abc_NtkForEachLiPo starts with the final barrier COs, then visits
+		// ordinary COs in their original order.
+		ordered := make([]*Abc_Obj_t, 0, len(cos))
+		start := len(cos) - old.Barriers
+		ordered = append(ordered, cos[start:]...)
+		ordered = append(ordered, cos[:start]...)
+		cos = ordered
+	}
+	for i, co := range cos {
+		extra.Extra_ProgressBarUpdate(progress, int32(i), "")
+		Abc_NodeBalance_rec(balanced, abc.Abc_ObjFanin0(co), storage, 0, duplicate, selective, updateLevel)
+		if old.Barriers != 0 && i < old.Barriers {
+			firstFanout := abc.Abc_ObjFanout0(co)
+			if firstFanout != nil && abc.Abc_ObjFanoutNum(firstFanout) > 0 {
+				abc.Abc_ObjFanout0(firstFanout).Level = abc.Abc_ObjFanin0(co).Level
+			}
+		}
+	}
+	extra.Extra_ProgressBarStop(progress)
+	vec.Vec_VecFree(storage)
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Finds the left bound on the next candidate to be paired.]
-
-  Description [The nodes in the array are in the decreasing order of levels. 
-  The last node in the array has the smallest level. By default it would be paired 
-  with the next node on the left. However, it may be possible to pair it with some
-  other node on the left, in such a way that the new node is shared. This procedure
-  finds the index of the left-most node, which can be paired with the last node.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NodeBalanceFindLeft(vSuper *Vec_Ptr_t) int32 {
-    var pNodeRight, pNodeLeft *Abc_Obj_t;
-    var Current int32;
-    // if two or less nodes, pair with the first
-    if Vec_PtrSize(vSuper) < 3 {
-        return 0; }
-    // set the pointer to the one before the last
-    Current = Vec_PtrSize(vSuper) - 2;
-    pNodeRight = (Abc_Obj_t *)Vec_PtrEntry( vSuper, Current );
-    // go through the nodes to the left of this one
-    for  Current--; Current >= 0; Current--  {
-        // get the next node on the left
-        pNodeLeft = (Abc_Obj_t *)Vec_PtrEntry( vSuper, Current );
-        // if the level of this node is different, quit the loop
-        if Abc_ObjRegular(pNodeLeft).Level != Abc_ObjRegular(pNodeRight).Level {
-            break; }
-    }
-    Current++;    
-    // get the node, for which the equality holds
-    pNodeLeft = (Abc_Obj_t *)Vec_PtrEntry( vSuper, Current );
-    assert(Abc_ObjRegular(pNodeLeft).Level == Abc_ObjRegular(pNodeRight).Level, "Abc_ObjRegular(pNodeLeft).Level == Abc_ObjRegular(pNodeRight).Level");
-    return Current;
+// Abc_NodeBalanceFindLeft finds the earliest same-level candidate for pairing.
+func Abc_NodeBalanceFindLeft(super *Vec_Ptr_t) int32 {
+	if vec.Vec_PtrSize(super) < 3 {
+		return 0
+	}
+	current := vec.Vec_PtrSize(super) - 2
+	right := edgeFromAny(vec.Vec_PtrEntry(super, current))
+	for current--; current >= 0; current-- {
+		left := edgeFromAny(vec.Vec_PtrEntry(super, current))
+		if left.Object.Level != right.Object.Level {
+			break
+		}
+	}
+	current++
+	return int32(current)
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Moves closer to the end the node that is best for sharing.]
-
-  Description [If there is no node with sharing, randomly chooses one of 
-  the legal nodes.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NodeBalancePermute(pNtkNew *Abc_Ntk_t, vSuper *Vec_Ptr_t, LeftBound int32) {
-    var pNode1, pNode2, pNode3 *Abc_Obj_t;
-    var RightBound, i int32;
-    // get the right bound
-    RightBound = Vec_PtrSize(vSuper) - 2;
-    assert(LeftBound <= RightBound, "LeftBound <= RightBound");
-    if LeftBound == RightBound {
-        return; }
-    // get the two last nodes
-    pNode1 = (Abc_Obj_t *)Vec_PtrEntry( vSuper, RightBound + 1 );
-    pNode2 = (Abc_Obj_t *)Vec_PtrEntry( vSuper, RightBound     );
-    // find the first node that can be shared
-    for  i = RightBound; i >= LeftBound; i--  {
-        pNode3 = (Abc_Obj_t *)Vec_PtrEntry( vSuper, i );
-        if Abc_AigAndLookup( (Abc_Aig_t *)pNtkNew.pManFunc, pNode1, pNode3 ) {
-            if pNode3 == pNode2 {
-                return; }
-            Vec_PtrWriteEntry( vSuper, i,          pNode2 );
-            Vec_PtrWriteEntry( vSuper, RightBound, pNode3 );
-            return;
-        }
-    }
-/*
-    // we did not find the node to share, randomize choice
-    {
-        int Choice = rand() % (RightBound - LeftBound + 1);
-        pNode3 = Vec_PtrEntry( vSuper, LeftBound + Choice );
-        if ( pNode3 == pNode2 )
-            return;
-        Vec_PtrWriteEntry( vSuper, LeftBound + Choice, pNode2 );
-        Vec_PtrWriteEntry( vSuper, RightBound,         pNode3 );
-    }
-*/
+// Abc_NodeBalancePermute moves a pair that hashes to an existing AND toward
+// the end of the sorted supergate, preserving the original sharing heuristic.
+func Abc_NodeBalancePermute(n *Abc_Ntk_t, super *Vec_Ptr_t, leftBound int32) {
+	right := int32(vec.Vec_PtrSize(super)) - 2
+	if leftBound > right {
+		panic("invalid balance candidate range")
+	}
+	first := edgeFromAny(vec.Vec_PtrEntry(super, int(right+1)))
+	second := edgeFromAny(vec.Vec_PtrEntry(super, int(right)))
+	manager := abc.Abc_AigAlloc(n)
+	for i := right; i >= leftBound; i-- {
+		candidate := edgeFromAny(vec.Vec_PtrEntry(super, int(i)))
+		if abc.Abc_AigAndLookup(manager, first, candidate).Object != nil {
+			if candidate == second {
+				return
+			}
+			vec.Vec_PtrWriteEntry(super, int(i), second)
+			vec.Vec_PtrWriteEntry(super, int(right), candidate)
+			return
+		}
+	}
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Rebalances the multi-input node rooted at pNodeOld.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NodeBalance_rec(pNtkNew *Abc_Ntk_t, pNodeOld *Abc_Obj_t, vStorage *Vec_Vec_t, Level int32, fDuplicate int32, fSelective int32, fUpdateLevel int32) *Abc_Obj_t {
-    var pMan *Abc_Aig_t  = (Abc_Aig_t *)pNtkNew.pManFunc;
-    var pNodeNew, pNode1, pNode2 *Abc_Obj_t;
-    var vSuper *Vec_Ptr_t;
-    var i, LeftBound int32;
-    assert(!Abc_ObjIsComplement(pNodeOld), "!Abc_ObjIsComplement(pNodeOld)");
-    // return if the result if known
-    if pNodeOld.pCopy {
-        return pNodeOld.pCopy; }
-    assert(Abc_ObjIsNode(pNodeOld), "Abc_ObjIsNode(pNodeOld)");
-    // get the implication supergate
-//    Abc_NodeBalanceConeExor( pNodeOld );
-    vSuper = Abc_NodeBalanceCone( pNodeOld, vStorage, Level, fDuplicate, fSelective );
-    if vSuper.nSize == 0 { // it means that the supergate contains two nodes in the opposite polarity
-        pNodeOld.pCopy = Abc_ObjNot(Abc_AigConst1(pNtkNew));
-        return pNodeOld.pCopy;
-    }
-    // for each old node, derive the new well-balanced node
-    for  i = 0; i < vSuper.nSize; i++  {
-        pNodeNew = Abc_NodeBalance_rec( pNtkNew, Abc_ObjRegular((Abc_Obj_t *)vSuper.pArray[i]), vStorage, Level + 1, fDuplicate, fSelective, fUpdateLevel );
-        vSuper.pArray[i] = Abc_ObjNotCond( pNodeNew, Abc_ObjIsComplement((Abc_Obj_t *)vSuper.pArray[i]) );
-    }
-    if vSuper.nSize < 2 {
-        fmt.Printf("BUG!\n"); }
-    // sort the new nodes by level in the decreasing order
-    Vec_PtrSort( vSuper, (int (*)(void))Abc_NodeCompareLevelsDecrease );
-    // balance the nodes
-    assert(vSuper.nSize > 1, "vSuper.nSize > 1");
-    for  vSuper.nSize > 1  {
-        // find the left bound on the node to be paired
-        if !(fUpdateLevel != 0) {
-            LeftBound = 0;
-        } else {
-            LeftBound = Abc_NodeBalanceFindLeft( vSuper );
-        }
-        // find the node that can be shared (if no such node, randomize choice)
-        Abc_NodeBalancePermute( pNtkNew, vSuper, LeftBound );
-        // pull out the last two nodes
-        pNode1 = (Abc_Obj_t *)Vec_PtrPop(vSuper);
-        pNode2 = (Abc_Obj_t *)Vec_PtrPop(vSuper);
-        Abc_VecObjPushUniqueOrderByLevel( vSuper, Abc_AigAnd(pMan, pNode1, pNode2) );
-    }
-    // make sure the balanced node is not assigned
-    assert(pNodeOld.pCopy == nil, "pNodeOld.pCopy == nil");
-    // mark the old node with the new node
-    pNodeOld.pCopy = (Abc_Obj_t *)vSuper.pArray[0];
-    vSuper.nSize = 0;
-//    if ( Abc_ObjRegular(pNodeOld->pCopy) == Abc_AigConst1(pNtkNew) )
-//        printf( "Constant node\n" );
-//    assert( pNodeOld->Level >= Abc_ObjRegular(pNodeOld->pCopy)->Level );
-    return pNodeOld.pCopy;
+// Abc_NodeBalance_rec recursively rebalances the implication supergate rooted
+// at oldEdge and returns its equivalent edge in the destination AIG.
+func Abc_NodeBalance_rec(n *Abc_Ntk_t, old *Abc_Obj_t, storage *Vec_Vec_t, level, duplicate, selective, updateLevel int32) *Abc_Obj_t {
+	return balanceNode(n, old.Signal(), storage, level, duplicate, selective, updateLevel).Object
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Collects the nodes in the cone delimited by fMarkA==1.]
-
-  Description [Returns -1 if the AND-cone has the same node in both polarities.
-  Returns 1 if the AND-cone has the same node in the same polarity. Returns 0
-  if the AND-cone has no repeated nodes.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NodeBalanceCone(pNode *Abc_Obj_t, vStorage *Vec_Vec_t, Level int32, fDuplicate int32, fSelective int32) *Vec_Ptr_t {
-    var vNodes *Vec_Ptr_t;
-    var RetValue, i int32;
-    assert(!Abc_ObjIsComplement(pNode), "!Abc_ObjIsComplement(pNode)");
-    // extend the storage
-    if Vec_VecSize( vStorage ) <= Level {
-        Vec_VecPush( vStorage, Level, 0 ); }
-    // get the temporary array of nodes
-    vNodes = Vec_VecEntry( vStorage, Level );
-    Vec_PtrClear( vNodes );
-    // collect the nodes in the implication supergate
-    RetValue = Abc_NodeBalanceCone_rec( pNode, vNodes, 1, fDuplicate, fSelective );
-    assert(vNodes.nSize > 1, "vNodes.nSize > 1");
-    // unmark the visited nodes
-    for  i = 0; i < vNodes.nSize; i++  {
-        Abc_ObjRegular((Abc_Obj_t *)vNodes.pArray[i]).fMarkB = 0;
-    }
-    // if we found the node and its complement in the same implication supergate, 
-    // return empty set of nodes (meaning that we should use constant-0 node)
-    if RetValue == -1 {
-        vNodes.nSize = 0; }
-    return vNodes;
+func balanceNode(n *Abc_Ntk_t, oldEdge abc.Edge, storage *Vec_Vec_t, level, duplicate, selective, updateLevel int32) abc.Edge {
+	old := oldEdge.Object
+	if old == nil || oldEdge.Complement {
+		panic("Abc_NodeBalance_rec expects a regular node")
+	}
+	if old.CopyEdge.Object != nil {
+		return old.CopyEdge
+	}
+	if abc.Abc_ObjIsNode(old) == 0 {
+		panic("balance root is not an AND node")
+	}
+	super := balanceCone(old.Signal(), storage, level, duplicate, selective)
+	if vec.Vec_PtrSize(super) == 0 {
+		old.CopyEdge = abc.Abc_ObjNot(abc.Abc_AigConst1(n))
+		return old.CopyEdge
+	}
+	for i := 0; i < vec.Vec_PtrSize(super); i++ {
+		edge := edgeFromAny(vec.Vec_PtrEntry(super, i))
+		newEdge := balanceNode(n, edge.Object.Signal(), storage, level+1, duplicate, selective, updateLevel)
+		if edge.Complement {
+			newEdge = newEdge.Not()
+		}
+		vec.Vec_PtrWriteEntry(super, i, newEdge)
+	}
+	if vec.Vec_PtrSize(super) < 2 {
+		fmt.Fprintln(os.Stdout, "BUG!")
+	}
+	sortBalanceEdges(super)
+	manager := abc.Abc_AigAlloc(n)
+	for vec.Vec_PtrSize(super) > 1 {
+		left := int32(0)
+		if updateLevel != 0 {
+			left = Abc_NodeBalanceFindLeft(super)
+		}
+		Abc_NodeBalancePermute(n, super, left)
+		a := edgeFromAny(vec.Vec_PtrPop(super))
+		b := edgeFromAny(vec.Vec_PtrPop(super))
+		combined := abc.Abc_AigAnd(manager, a, b)
+		combined.Object.Level = int(abc.Abc_ObjLevelNew(combined.Object))
+		pushUniqueBalanceEdgeByLevel(super, combined)
+	}
+	old.CopyEdge = edgeFromAny(vec.Vec_PtrEntry(super, 0))
+	vec.Vec_PtrClear(super)
+	return old.CopyEdge
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Collects the nodes in the cone delimited by fMarkA==1.]
-
-  Description [Returns -1 if the AND-cone has the same node in both polarities.
-  Returns 1 if the AND-cone has the same node in the same polarity. Returns 0
-  if the AND-cone has no repeated nodes.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NodeBalanceCone_rec(pNode *Abc_Obj_t, vSuper *Vec_Ptr_t, fFirst int32, fDuplicate int32, fSelective int32) int32 {
-    var RetValue1, RetValue2, i int32;
-    // check if the node is visited
-    if Abc_ObjRegular(pNode).fMarkB {
-        // check if the node occurs in the same polarity
-        for  i = 0; i < vSuper.nSize; i++  {
-            if vSuper.pArray[i] == pNode {
-                return 1; }
-        }
-        // check if the node is present in the opposite polarity
-        for  i = 0; i < vSuper.nSize; i++  {
-            if vSuper.pArray[i] == Abc_ObjNot(pNode) {
-                return -1; }
-        }
-        assert(false, "0");
-        return 0;
-    }
-    // if the new node is complemented or a PI, another gate begins
-    if !(fFirst != 0) && (Abc_ObjIsComplement(pNode) || !Abc_ObjIsNode(pNode) || (!(fDuplicate != 0) && !(fSelective != 0) && (Abc_ObjFanoutNum(pNode) > 1)) || Vec_PtrSize(vSuper) > 10000) {
-        Vec_PtrPush( vSuper, pNode );
-        Abc_ObjRegular(pNode).fMarkB = 1;
-        return 0;
-    }
-    assert(!Abc_ObjIsComplement(pNode), "!Abc_ObjIsComplement(pNode)");
-    assert(Abc_ObjIsNode(pNode), "Abc_ObjIsNode(pNode)");
-    // go through the branches
-    RetValue1 = Abc_NodeBalanceCone_rec( Abc_ObjChild0(pNode), vSuper, 0, fDuplicate, fSelective );
-    RetValue2 = Abc_NodeBalanceCone_rec( Abc_ObjChild1(pNode), vSuper, 0, fDuplicate, fSelective );
-    if RetValue1 == -1 || RetValue2 == -1 {
-        return -1; }
-    // return 1 if at least one branch has a duplicate
-    return RetValue1 || RetValue2;
+// Abc_NodeBalanceCone collects the flattened AND supergate at a given depth.
+func Abc_NodeBalanceCone(root *Abc_Obj_t, storage *Vec_Vec_t, level, duplicate, selective int32) *Vec_Ptr_t {
+	return balanceCone(root.Signal(), storage, level, duplicate, selective)
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NodeBalanceConeExor_rec(pNode *Abc_Obj_t, vSuper *Vec_Ptr_t, fFirst int32) int32 {
-    var RetValue1, RetValue2, i int32;
-    // check if the node occurs in the same polarity
-    for  i = 0; i < vSuper.nSize; i++  {
-        if vSuper.pArray[i] == pNode {
-            return 1; }
-    }
-    // if the new node is complemented or a PI, another gate begins
-    if !(fFirst != 0) && (!pNode.fExor || !Abc_ObjIsNode(pNode)) {
-        Vec_PtrPush( vSuper, pNode );
-        return 0;
-    }
-    assert(!Abc_ObjIsComplement(pNode), "!Abc_ObjIsComplement(pNode)");
-    assert(Abc_ObjIsNode(pNode), "Abc_ObjIsNode(pNode)");
-    assert(pNode.fExor, "pNode.fExor");
-    // go through the branches
-    RetValue1 = Abc_NodeBalanceConeExor_rec( Abc_ObjFanin0(Abc_ObjFanin0(pNode)), vSuper, 0 );
-    RetValue2 = Abc_NodeBalanceConeExor_rec( Abc_ObjFanin1(Abc_ObjFanin0(pNode)), vSuper, 0 );
-    if RetValue1 == -1 || RetValue2 == -1 {
-        return -1; }
-    // return 1 if at least one branch has a duplicate
-    return RetValue1 || RetValue2;
+func balanceCone(root abc.Edge, storage *Vec_Vec_t, level, duplicate, selective int32) *Vec_Ptr_t {
+	if root.Complement {
+		panic("Abc_NodeBalanceCone expects a regular node")
+	}
+	for vec.Vec_VecSize(storage) <= int(level) {
+		vec.Vec_VecPush(storage, int(level), vec.Vec_PtrAlloc(0))
+	}
+	nodes := vec.Vec_VecEntry(storage, int(level))
+	vec.Vec_PtrClear(nodes)
+	ret := balanceConeRec(root, nodes, 1, duplicate, selective)
+	for _, item := range vec.Vec_PtrArray(nodes) {
+		edge := edgeFromAny(item)
+		edge.Object.MarkB = false
+	}
+	if ret == -1 {
+		vec.Vec_PtrClear(nodes)
+	}
+	return nodes
 }
 
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NodeBalanceConeExor(pNode *Abc_Obj_t) *Vec_Ptr_t {
-    var vSuper *Vec_Ptr_t;
-    if !pNode.fExor {
-        return nil; }
-    vSuper = Vec_PtrAlloc( 10 );
-    Abc_NodeBalanceConeExor_rec( pNode, vSuper, 1 );
-    fmt.Printf("%d ", Vec_PtrSize(vSuper));
-    Vec_PtrFree( vSuper );
-    return nil;
+// Abc_NodeBalanceCone_rec flattens AND nodes and detects repeated polarities.
+func Abc_NodeBalanceCone_rec(node *Abc_Obj_t, super *Vec_Ptr_t, first, duplicate, selective int32) int32 {
+	return balanceConeRec(node.Signal(), super, first, duplicate, selective)
 }
 
-
-
-/**Function*************************************************************
-
-  Synopsis    [Collects the nodes in the implication supergate.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NodeFindCone_rec(pNode *Abc_Obj_t) *Vec_Ptr_t {
-    var vNodes *Vec_Ptr_t;
-    var pNodeC, pNodeT, pNodeE *Abc_Obj_t;
-    var RetValue, i int32;
-    assert(!Abc_ObjIsComplement(pNode), "!Abc_ObjIsComplement(pNode)");
-    if Abc_ObjIsCi(pNode) {
-        return nil; }
-    // start the new array
-    vNodes = Vec_PtrAlloc( 4 );
-    // if the node is the MUX collect its fanins
-    if Abc_NodeIsMuxType(pNode) {
-        pNodeC = Abc_NodeRecognizeMux( pNode, &pNodeT, &pNodeE );
-        Vec_PtrPush( vNodes, Abc_ObjRegular(pNodeC) );
-        Vec_PtrPushUnique( vNodes, Abc_ObjRegular(pNodeT) );
-        Vec_PtrPushUnique( vNodes, Abc_ObjRegular(pNodeE) );
-    
-    } else {
-        // collect the nodes in the implication supergate
-        RetValue = Abc_NodeBalanceCone_rec( pNode, vNodes, 1, 1, 0 );
-        assert(vNodes.nSize > 1, "vNodes.nSize > 1");
-        // unmark the visited nodes
-        // inlining of macro Vec_PtrForEachEntry
-        for  i = 0; (i < Vec_PtrSize(vNodes)) && (((pNode) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {
-            Abc_ObjRegular(pNode).fMarkB = 0;
-        }
-        // if we found the node and its complement in the same implication supergate, 
-        // return empty set of nodes (meaning that we should use constant-0 node)
-        if RetValue == -1 {
-            vNodes.nSize = 0; }
-    }
-    // call for the fanin
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vNodes)) && (((pNode) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {
-        pNode = Abc_ObjRegular(pNode);
-        if pNode.pCopy {
-            continue; }
-        pNode.pCopy = (Abc_Obj_t *)Abc_NodeFindCone_rec( pNode );
-    }
-    return vNodes;
+func balanceConeRec(edge abc.Edge, super *Vec_Ptr_t, first, duplicate, selective int32) int32 {
+	node := edge.Object
+	if node.MarkB {
+		for _, item := range vec.Vec_PtrArray(super) {
+			if edgeFromAny(item) == edge {
+				return 1
+			}
+		}
+		for _, item := range vec.Vec_PtrArray(super) {
+			if edgeFromAny(item) == edge.Not() {
+				return -1
+			}
+		}
+		panic("marked balance node missing from supergate")
+	}
+	if first == 0 && (edge.Complement || abc.Abc_ObjIsNode(node) == 0 || (duplicate == 0 && selective == 0 && abc.Abc_ObjFanoutNum(node) > 1) || vec.Vec_PtrSize(super) > 10000) {
+		vec.Vec_PtrPush(super, edge)
+		node.MarkB = true
+		return 0
+	}
+	if edge.Complement || abc.Abc_ObjIsNode(node) == 0 {
+		panic("invalid node in balance cone")
+	}
+	a, b := node.Fanins()[0], node.Fanins()[1]
+	r1 := balanceConeRec(a, super, 0, duplicate, selective)
+	r2 := balanceConeRec(b, super, 0, duplicate, selective)
+	if r1 == -1 || r2 == -1 {
+		return -1
+	}
+	if r1 != 0 || r2 != 0 {
+		return 1
+	}
+	return 0
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Attaches the implication supergates to internal nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkBalanceAttach(pNtk *Abc_Ntk_t) {
-    var pNode *Abc_Obj_t;
-    var i int32;
-    Abc_NtkCleanCopy( pNtk );
-    // inlining of macro Abc_NtkForEachCo
-    for  i = 0; (i < Abc_NtkCoNum(pNtk)) && (((pNode) = Abc_NtkCo(pNtk, i)), 1); i++  {
-        pNode = Abc_ObjFanin0(pNode);
-        if pNode.pCopy {
-            continue; }
-        pNode.pCopy = (Abc_Obj_t *)Abc_NodeFindCone_rec( pNode );
-    }
+// Abc_NodeBalanceConeExor_rec collects leaves of an XOR-marked cone.
+func Abc_NodeBalanceConeExor_rec(node *Abc_Obj_t, super *Vec_Ptr_t, first int32) int32 {
+	return balanceConeExorRec(node.Signal(), super, first)
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Attaches the implication supergates to internal nodes.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkBalanceDetach(pNtk *Abc_Ntk_t) {
-    var pNode *Abc_Obj_t;
-    var i int32;
-    // inlining of macro Abc_NtkForEachNode
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else
-        if pNode.pCopy {
-            Vec_PtrFree( (Vec_Ptr_t *)pNode.pCopy );
-            pNode.pCopy = nil;
-        }
-    }
+func balanceConeExorRec(edge abc.Edge, super *Vec_Ptr_t, first int32) int32 {
+	for _, item := range vec.Vec_PtrArray(super) {
+		if edgeFromAny(item) == edge {
+			return 1
+		}
+	}
+	node := edge.Object
+	if first == 0 && (abc.Abc_NodeIsExorType(node) == 0 || abc.Abc_ObjIsNode(node) == 0) {
+		vec.Vec_PtrPush(super, edge)
+		return 0
+	}
+	if edge.Complement || abc.Abc_ObjIsNode(node) == 0 || abc.Abc_NodeIsExorType(node) == 0 {
+		panic("invalid XOR node in balance cone")
+	}
+	fanins := node.Fanins()
+	operands := fanins[0].Object.Fanins()
+	if len(operands) != 2 {
+		return -1
+	}
+	r1 := balanceConeExorRec(operands[0], super, 0)
+	r2 := balanceConeExorRec(operands[1], super, 0)
+	if r1 == -1 || r2 == -1 {
+		return -1
+	}
+	if r1 != 0 || r2 != 0 {
+		return 1
+	}
+	return 0
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Compute levels of implication supergates.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkBalanceLevel_rec(pNode *Abc_Obj_t) int32 {
-    var vSuper *Vec_Ptr_t;
-    var pFanin *Abc_Obj_t;
-    var i, LevelMax int32;
-    assert(!Abc_ObjIsComplement(pNode), "!Abc_ObjIsComplement(pNode)");
-    if pNode.Level > 0 {
-        return pNode.Level; }
-    if Abc_ObjIsCi(pNode) {
-        return 0; }
-    vSuper = (Vec_Ptr_t *)pNode.pCopy;
-    assert(vSuper != nil, "vSuper != nil");
-    LevelMax = 0;
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(vSuper)) && (((pFanin) = (Abc_Obj_t *)Vec_PtrEntry(vSuper, i)), 1); i++  {
-        pFanin = Abc_ObjRegular(pFanin);
-        Abc_NtkBalanceLevel_rec(pFanin);
-        if LevelMax < int32(pFanin.Level) {
-            LevelMax = pFanin.Level; }
-    }
-    pNode.Level = LevelMax + 1;
-    return pNode.Level;
+// Abc_NodeBalanceConeExor retains the C helper's diagnostic-only behavior.
+func Abc_NodeBalanceConeExor(node *Abc_Obj_t) *Vec_Ptr_t {
+	if abc.Abc_NodeIsExorType(node) == 0 {
+		return nil
+	}
+	super := vec.Vec_PtrAlloc(10)
+	balanceConeExorRec(node.Signal(), super, 1)
+	fmt.Printf("%d ", vec.Vec_PtrSize(super))
+	vec.Vec_PtrFree(super)
+	return nil
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Compute levels of implication supergates.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkBalanceLevel(pNtk *Abc_Ntk_t) {
-    var pNode *Abc_Obj_t;
-    var i int32;
-    // inlining of macro Abc_NtkForEachObj
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pNode) == nil {} else {
-        pNode.Level = 0; }
-    }
-    // inlining of macro Abc_NtkForEachCo
-    for  i = 0; (i < Abc_NtkCoNum(pNtk)) && (((pNode) = Abc_NtkCo(pNtk, i)), 1); i++  {
-        Abc_NtkBalanceLevel_rec( Abc_ObjFanin0(pNode) );
-    }
+// Abc_NodeFindCone_rec recursively attaches implication supergates as CopyData.
+func Abc_NodeFindCone_rec(node *Abc_Obj_t) *Vec_Ptr_t {
+	if node == nil || abc.Abc_ObjIsCi(node) != 0 {
+		return nil
+	}
+	var nodes *Vec_Ptr_t
+	if abc.Abc_NodeIsMuxType(node) != 0 {
+		var thenEdge, elseEdge abc.Edge
+		control := abc.Abc_NodeRecognizeMux(node, &thenEdge, &elseEdge)
+		nodes = vec.Vec_PtrAlloc(3)
+		vec.Vec_PtrPush(nodes, control.Signal())
+		vec.Vec_PtrPushUnique(nodes, thenEdge.Object.Signal())
+		vec.Vec_PtrPushUnique(nodes, elseEdge.Object.Signal())
+	} else {
+		nodes = vec.Vec_PtrAlloc(4)
+		ret := balanceConeRec(node.Signal(), nodes, 1, 1, 0)
+		for _, item := range vec.Vec_PtrArray(nodes) {
+			edgeFromAny(item).Object.MarkB = false
+		}
+		if ret == -1 {
+			vec.Vec_PtrClear(nodes)
+		}
+	}
+	for _, item := range vec.Vec_PtrArray(nodes) {
+		edge := edgeFromAny(item)
+		fanin := edge.Object
+		if fanin.CopyData != nil {
+			continue
+		}
+		fanin.CopyData = Abc_NodeFindCone_rec(fanin)
+	}
+	return nodes
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Marks the nodes on the critical and near critical paths.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkMarkCriticalNodes(pNtk *Abc_Ntk_t) {
-    var pNode *Abc_Obj_t;
-    var i, Counter int32;
-    // inlining of macro Abc_NtkForEachNode
-    for  i = 0; (i < Vec_PtrSize((pNtk).vObjs)) && (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else
-        if Abc_ObjRequiredLevel(pNode) - pNode.Level <= 1 {
-            pNode.fMarkA = 1, Counter++; }
-    }
-    fmt.Printf("The number of nodes on the critical paths = %6d  (%5.2f %%)\n", Counter, 100.0 * Counter / Abc_NtkNodeNum(pNtk));
+// Abc_NtkBalanceAttach attaches implication supergates to all CO drivers.
+func Abc_NtkBalanceAttach(n *Abc_Ntk_t) {
+	abc.Abc_NtkCleanCopy(n)
+	for _, co := range n.Outputs() {
+		driver := abc.Abc_ObjFanin0(co)
+		if driver.CopyData == nil {
+			driver.CopyData = Abc_NodeFindCone_rec(driver)
+		}
+	}
 }
 
+// Abc_NtkBalanceDetach frees the attached cone vectors.
+func Abc_NtkBalanceDetach(n *Abc_Ntk_t) {
+	for _, node := range abc.Abc_NtkNodes(n) {
+		if super, ok := node.CopyData.(*Vec_Ptr_t); ok && super != nil {
+			vec.Vec_PtrFree(super)
+			node.CopyData = nil
+		}
+	}
+}
 
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
+// Abc_NtkBalanceLevel_rec computes the implication-supergate depth.
+func Abc_NtkBalanceLevel_rec(node *Abc_Obj_t) int32 {
+	if node.Level > 0 || abc.Abc_ObjIsCi(node) != 0 {
+		return int32(node.Level)
+	}
+	super, ok := node.CopyData.(*Vec_Ptr_t)
+	if !ok || super == nil {
+		panic("missing attached balance cone")
+	}
+	max := int32(0)
+	for _, item := range vec.Vec_PtrArray(super) {
+		fanin := edgeFromAny(item).Object
+		if level := Abc_NtkBalanceLevel_rec(fanin); level > max {
+			max = level
+		}
+	}
+	node.Level = int(max + 1)
+	return max + 1
+}
 
+// Abc_NtkBalanceLevel computes implication-supergate levels from all COs.
+func Abc_NtkBalanceLevel(n *Abc_Ntk_t) {
+	for _, node := range n.Objects() {
+		node.Level = 0
+	}
+	for _, co := range n.Outputs() {
+		Abc_NtkBalanceLevel_rec(abc.Abc_ObjFanin0(co))
+	}
+}
 
-//ABC_NAMESPACE_IMPL_END
+// Abc_NtkMarkCriticalNodes marks nodes within one level of the required time.
+func Abc_NtkMarkCriticalNodes(n *Abc_Ntk_t) {
+	var count int32
+	for _, node := range abc.Abc_NtkNodes(n) {
+		if abc.Abc_ObjRequiredLevel(node)-int32(node.Level) <= 1 {
+			node.MarkA = true
+			count++
+		}
+	}
+	percent := float64(0)
+	if nodes := abc.Abc_NtkNodeNum(n); nodes != 0 {
+		percent = 100 * float64(count) / float64(nodes)
+	}
+	fmt.Printf("The number of nodes on the critical paths = %6d  (%5.2f %%)\n", count, percent)
+}
 
+func edgeFromAny(value any) abc.Edge {
+	switch edge := value.(type) {
+	case abc.Edge:
+		return edge
+	case *Abc_Obj_t:
+		return edge.Signal()
+	default:
+		panic(fmt.Sprintf("unexpected balance edge %T", value))
+	}
+}
+
+func sortBalanceEdges(super *Vec_Ptr_t) {
+	sort.SliceStable(vec.Vec_PtrArray(super), func(i, j int) bool {
+		a, b := edgeFromAny(vec.Vec_PtrEntry(super, i)), edgeFromAny(vec.Vec_PtrEntry(super, j))
+		if a.Object.Level != b.Object.Level {
+			return a.Object.Level > b.Object.Level
+		}
+		return a.Object.ID > b.Object.ID
+	})
+}
+
+func pushUniqueBalanceEdgeByLevel(super *Vec_Ptr_t, edge abc.Edge) {
+	for _, item := range vec.Vec_PtrArray(super) {
+		if edgeFromAny(item) == edge {
+			return
+		}
+	}
+	index := vec.Vec_PtrSize(super)
+	vec.Vec_PtrPush(super, edge)
+	for index > 0 {
+		previous := edgeFromAny(vec.Vec_PtrEntry(super, index-1))
+		if edge.Object.Level <= previous.Object.Level {
+			break
+		}
+		vec.Vec_PtrWriteEntry(super, index, previous)
+		index--
+	}
+	vec.Vec_PtrWriteEntry(super, index, edge)
+}
