@@ -31,15 +31,15 @@ func Abc_NtkFpgaFast(network *abc.Network, lutSize, recovery, verbose int32) *ab
 
 // Ivy_ManFpgaToAbc reconstructs the mapper's LUT cuts in ABC's Hop functions.
 func Ivy_ManFpgaToAbc(source *abc.Network, manager *ivy.Ivy_Man_t) *abc.Network {
-	manager.pCopy = vec.Vec_PtrStart(int(ivy.Ivy_ManObjIdMax(manager) + 1))
+	ivy.Ivy_ManSetCopy(manager, vec.Vec_PtrStart(int(ivy.Ivy_ManObjIdMax(manager)+1)))
 	mapped := abc.Abc_NtkStartFrom(source, abc.ABC_NTK_LOGIC, abc.ABC_FUNC_AIG)
 	Abc_ObjSetIvy2Abc(manager, ivy.Ivy_ManConst1(manager).Id, abc.Abc_NtkCreateNodeConst1(mapped))
 	for i := int32(0); i < abc.Abc_NtkCiNum(mapped); i++ {
 		Abc_ObjSetIvy2Abc(manager, ivy.Ivy_ManPi(manager, i).Id, abc.Abc_NtkCi(mapped, i))
 	}
 	cutNodes := vec.Vec_IntAlloc(100)
-	for i := int32(0); i < int32(vec.Vec_PtrSize(manager.vPos)); i++ {
-		po := vec.Vec_PtrEntry(manager.vPos, int(i)).(*ivy.Ivy_Obj_t)
+	for i := int32(0); i < ivy.Ivy_ManPoNum(manager); i++ {
+		po := ivy.Ivy_ManPo(manager, i)
 		driver := Ivy_ManToAbcFast_rec(mapped, manager, ivy.Ivy_ObjFanin0(po), cutNodes)
 		if ivy.Ivy_ObjFaninC0(po) != 0 {
 			if abc.Abc_ObjIsCi(driver) != 0 {
@@ -55,8 +55,8 @@ func Ivy_ManFpgaToAbc(source *abc.Network, manager *ivy.Ivy_Man_t) *abc.Network 
 		abc.Abc_ObjAddFanin(abc.Abc_NtkCo(mapped, i), driver)
 	}
 	vec.Vec_IntFree(cutNodes)
-	vec.Vec_PtrFree(manager.pCopy.(*vec.Vec_Ptr_t))
-	manager.pCopy = nil
+	vec.Vec_PtrFree(ivy.Ivy_ManReadCopy(manager).(*vec.Vec_Ptr_t))
+	ivy.Ivy_ManSetCopy(manager, nil)
 	abc.Abc_NtkCleanup(mapped, 0)
 	abc.Abc_NtkLogicMakeSimpleCos(mapped, 0)
 	return mapped
@@ -99,13 +99,13 @@ func Ivy_ManToAbcFast_rec(network *abc.Network, manager *ivy.Ivy_Man_t, root *iv
 }
 
 func Abc_ObjSetIvy2Abc(manager *ivy.Ivy_Man_t, ivyID int32, object *abc.Object) {
-	copy := manager.pCopy.(*vec.Vec_Ptr_t)
+	copy := ivy.Ivy_ManReadCopy(manager).(*vec.Vec_Ptr_t)
 	assert(vec.Vec_PtrEntry(copy, int(ivyID)) == nil, "Ivy object has no prior ABC copy")
 	assert(abc.Abc_ObjIsComplement(object) == 0, "ABC copy is regular")
 	vec.Vec_PtrWriteEntry(copy, int(ivyID), object)
 }
 
 func Abc_ObjGetIvy2Abc(manager *ivy.Ivy_Man_t, ivyID int32) *abc.Object {
-	object, _ := vec.Vec_PtrEntry(manager.pCopy.(*vec.Vec_Ptr_t), int(ivyID)).(*abc.Object)
+	object, _ := vec.Vec_PtrEntry(ivy.Ivy_ManReadCopy(manager).(*vec.Vec_Ptr_t), int(ivyID)).(*abc.Object)
 	return object
 }

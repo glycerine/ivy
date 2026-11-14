@@ -2,6 +2,8 @@ package abci
 
 import (
 	"fmt"
+
+	baseabc "github.com/glycerine/abcgo/base/abc"
 	"os"
 	"time"
 )
@@ -101,30 +103,30 @@ func Abc_NtkQuantify(pNtk *Abc_Ntk_t, fUniv int32, iVar int32, fVerbose int32) i
 	vNodes = Abc_NtkDfsReverseNodes(pNtk, &pObj, 1)
 
 	// assign the cofactors of the CI node to be constants
-	pObj.pCopy = Abc_ObjNot(Abc_AigConst1(pNtk))
+	Abc_ObjSetCopyEdge(pObj, abcCompatCopyEdge(Abc_ObjNot(Abc_AigConst1(pNtk))))
 	pObj.pData = Abc_AigConst1(pNtk)
 
 	// quantify the nodes
 	// inlining of macro Vec_PtrForEachEntry
 	for i = int32(0); i < Vec_PtrSize(vNodes); i++ {
 		pObj = Vec_PtrEntry(vNodes, i).(*Abc_Obj_t)
-		for pNext = pObj.pCopy; pObj != nil; pObj, pNext = pNext, func() *Abc_Obj_t {
+		for pNext = Abc_ObjReadCopyEdge(pObj).Object; pObj != nil; pObj, pNext = pNext, func() *Abc_Obj_t {
 			if pNext == nil {
 				return nil
 			}
-			return pNext.pCopy
+			return Abc_ObjReadCopyEdge(pNext).Object
 		}() {
 			pFanin = Abc_ObjFanin0(pObj)
 			if !Abc_NodeIsTravIdCurrent(pFanin) {
-				pFanin.pCopy = pFanin
+				Abc_ObjSetCopyEdge(pFanin, abcCompatCopyEdge(pFanin))
 				pFanin.pData = pFanin
 			}
 			pFanin = Abc_ObjFanin1(pObj)
 			if !Abc_NodeIsTravIdCurrent(pFanin) {
-				pFanin.pCopy = pFanin
+				Abc_ObjSetCopyEdge(pFanin, abcCompatCopyEdge(pFanin))
 				pFanin.pData = pFanin
 			}
-			pObj.pCopy = Abc_AigAnd(pNtk.pManFunc, Abc_ObjChild0Copy(pObj), Abc_ObjChild1Copy(pObj))
+			Abc_ObjSetCopyEdge(pObj, abcCompatCopyEdge(Abc_AigAnd(pNtk.pManFunc, Abc_ObjChild0Copy(pObj), Abc_ObjChild1Copy(pObj))))
 			pObj.pData = Abc_AigAnd(pNtk.pManFunc, Abc_ObjChild0Data(pObj), Abc_ObjChild1Data(pObj))
 		}
 	}
@@ -188,8 +190,8 @@ func Abc_NtkTransRel(pNtk *Abc_Ntk_t, fInputs int32, fVerbose int32) *Abc_Ntk_t 
 	// start the network
 	pNtkNew = Abc_NtkAlloc(ABC_NTK_STRASH, ABC_FUNC_AIG, 1)
 	// duplicate the name and the spec
-	Buffer = fmt.Sprintf("%s_TR", pNtk.pName)
-	pNtkNew.pName = Extra_UtilStrsav(pNtk.pName)
+	Buffer = fmt.Sprintf("%s_TR", Abc_NtkName(pNtk))
+	Abc_NtkSetName(pNtkNew, Extra_UtilStrsav(Abc_NtkName(pNtk)))
 	//    pNtkNew->pSpec = Extra_UtilStrsav(pNtk->pSpec);
 	Abc_NtkCleanCopy(pNtk)
 	// create current state variables
@@ -198,8 +200,8 @@ func Abc_NtkTransRel(pNtk *Abc_Ntk_t, fInputs int32, fVerbose int32) *Abc_Ntk_t 
 		box := Abc_NtkBox(pNtk, i)
 		if Abc_ObjIsLatch(box) {
 			pObj = Abc_ObjFanout0(box)
-			pObj.pCopy = Abc_NtkCreatePi(pNtkNew)
-			Abc_ObjAssignName(pObj.pCopy, Abc_ObjName(pObj), nil)
+			Abc_ObjSetCopyEdge(pObj, abcCompatCopyEdge(Abc_NtkCreatePi(pNtkNew)))
+			Abc_ObjAssignName(Abc_ObjReadCopyEdge(pObj).Object, Abc_ObjName(pObj), nil)
 		}
 	}
 	// create next state variables
@@ -220,12 +222,12 @@ func Abc_NtkTransRel(pNtk *Abc_Ntk_t, fInputs int32, fVerbose int32) *Abc_Ntk_t 
 	// create the PO
 	Abc_NtkCreatePo(pNtkNew)
 	// restrash the nodes (assuming a topological order of the old network)
-	Abc_AigConst1(pNtk).pCopy = Abc_AigConst1(pNtkNew)
+	Abc_ObjSetCopyEdge(Abc_AigConst1(pNtk), abcCompatCopyEdge(Abc_AigConst1(pNtkNew)))
 	// inlining of macro Abc_NtkForEachNode
 	for i = int32(0); i < Vec_PtrSize(pNtk.vObjs); i++ {
 		pObj = Abc_NtkObj(pNtk, i)
 		if pObj != nil && Abc_ObjIsNode(pObj) {
-			pObj.pCopy = Abc_AigAnd(pNtkNew.pManFunc, Abc_ObjChild0Copy(pObj), Abc_ObjChild1Copy(pObj))
+			Abc_ObjSetCopyEdge(pObj, abcCompatCopyEdge(Abc_AigAnd(pNtkNew.pManFunc, Abc_ObjChild0Copy(pObj), Abc_ObjChild1Copy(pObj))))
 		}
 	}
 	// create the function of the primary output
@@ -327,7 +329,8 @@ func Abc_NtkInitialState(pNtk *Abc_Ntk_t) *Abc_Ntk_t {
 */
 func Abc_NtkSwapVariables(pNtk *Abc_Ntk_t) *Abc_Ntk_t {
 	var pNtkNew *Abc_Ntk_t
-	var pMiter, pObj, pObj0, pObj1 *Abc_Obj_t
+	var pMiter baseabc.Edge
+	var pObj, pObj0, pObj1 *Abc_Obj_t
 	var i int32
 	var nVars int32 = Abc_NtkPiNum(pNtk) / 2
 	assert(Abc_NtkIsStrash(pNtk), "Abc_NtkIsStrash(pNtk)")
@@ -337,16 +340,16 @@ func Abc_NtkSwapVariables(pNtk *Abc_Ntk_t) *Abc_Ntk_t {
 	for i = 0; i < nVars; i++ {
 		pObj0 = Abc_NtkPi(pNtk, i)
 		pObj1 = Abc_NtkPi(pNtk, i+nVars)
-		pMiter = pObj0.pCopy
-		pObj0.pCopy = pObj1.pCopy
-		pObj1.pCopy = pMiter
+		pMiter = Abc_ObjReadCopyEdge(pObj0)
+		Abc_ObjSetCopyEdge(pObj0, abcCompatCopyEdge(Abc_ObjReadCopyEdge(pObj1)))
+		Abc_ObjSetCopyEdge(pObj1, abcCompatCopyEdge(pMiter))
 	}
 	// restrash
 	// inlining of macro Abc_NtkForEachNode
 	for i = int32(0); i < Vec_PtrSize(pNtk.vObjs); i++ {
 		pObj = Abc_NtkObj(pNtk, i)
 		if pObj != nil && Abc_ObjIsNode(pObj) {
-			pObj.pCopy = Abc_AigAnd(pNtkNew.pManFunc, Abc_ObjChild0Copy(pObj), Abc_ObjChild1Copy(pObj))
+			Abc_ObjSetCopyEdge(pObj, abcCompatCopyEdge(Abc_AigAnd(pNtkNew.pManFunc, Abc_ObjChild0Copy(pObj), Abc_ObjChild1Copy(pObj))))
 		}
 	}
 	// add the PO

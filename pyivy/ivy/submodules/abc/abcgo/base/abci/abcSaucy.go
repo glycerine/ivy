@@ -1739,6 +1739,7 @@ func prepare_permutation(s *saucy) {
 }
 func unprepare_permutation_ntk(s *saucy) {
 	numouts := baseabc.Abc_NtkPoNum(s.pNtk)
+	baseabc.Abc_NtkResetNames(s.pNtk_permuted)
 	for i := int32(0); i < s.n; i++ {
 		var src, dst *Abc_Obj_t
 		if i < numouts {
@@ -2066,9 +2067,10 @@ func generateProperInputVector(pNtk *Abc_Ntk_t, c *coloring, randomVector *Vec_I
 	no, ni := baseabc.Abc_NtkPoNum(pNtk), baseabc.Abc_NtkPiNum(pNtk)
 	values := make([]int32, ni)
 	k := int32(0)
-	for i := no; i < no+ni; i += c.clen[i] + 1 {
-		if k >= Vec_IntSize(randomVector) {
-			return nil
+	i := no
+	for ; i < no+ni; i += c.clen[i] + 1 {
+		if k == Vec_IntSize(randomVector) {
+			break
 		}
 		bit := Vec_IntEntry(randomVector, k)
 		for j := i; j <= i+c.clen[i]; j++ {
@@ -2077,7 +2079,7 @@ func generateProperInputVector(pNtk *Abc_Ntk_t, c *coloring, randomVector *Vec_I
 		}
 		k++
 	}
-	if k != Vec_IntSize(randomVector) {
+	if i < no+ni {
 		return nil
 	}
 	return values
@@ -2279,7 +2281,7 @@ func Abc_NtkCecSat_saucy(pNtk1, pNtk2 *Abc_Ntk_t, model []int32) int32 {
 	miter := Abc_NtkMiter(pNtk1, pNtk2, 1, 0, 0, 0)
 	if miter == nil {
 		fmt.Println("Miter computation has failed.")
-		return -1
+		os.Exit(1)
 	}
 	ret := Abc_NtkMiterIsConstant(miter)
 	if ret == 0 {
@@ -2297,12 +2299,17 @@ func Abc_NtkCecSat_saucy(pNtk1, pNtk2 *Abc_Ntk_t, model []int32) int32 {
 	cnf := Abc_NtkMulti(miter, 0, 100, 1, 0, 0, 0)
 	Abc_NtkDelete(miter)
 	if cnf == nil {
-		return -1
+		fmt.Println("Renoding for CNF has failed.")
+		os.Exit(1)
 	}
 	ret = Abc_NtkMiterSat(cnf, 10000, 0, 0, nil, nil)
-	if cnf.pModel != nil {
+	if ret == -1 {
+		fmt.Println("Networks are undecided (SAT solver timed out).")
+		os.Exit(1)
+	}
+	if cnfModel := baseabc.Abc_NtkReadModel(cnf); cnfModel != nil {
 		for i := int32(0); i < baseabc.Abc_NtkPiNum(pNtk1); i++ {
-			model[i] = cnf.pModel[i]
+			model[i] = cnfModel[i]
 		}
 	}
 	Abc_NtkDelete(cnf)
@@ -2323,7 +2330,9 @@ func saucyGateWay(orig *Abc_Ntk_t, po *Abc_Obj_t, gFile *os.File, booleanMatchin
 		return
 	}
 	s := saucy_alloc(ntk)
+	fmt.Print("Build functional dependency graph (dependency stats are below) ... ")
 	saucyGetDependencies(ntk, s.iDep, s.oDep)
+	fmt.Println("\t--------------------")
 	s.topOrder = saucyFindTopologicalOrder(ntk)
 	colors := ints(s.n)
 	no := baseabc.Abc_NtkPoNum(ntk)
@@ -2368,8 +2377,19 @@ func saucyGateWay(orig *Abc_Ntk_t, po *Abc_Obj_t, gFile *os.File, booleanMatchin
 	var stats saucy_stats
 	saucy_search(ntk, s, 0, colors, &stats)
 	print_stats(os.Stdout, stats)
+	if booleanMatching != 0 {
+		if stats.grpsize_base > 1 || stats.grpsize_exp > 0 {
+			fmt.Println("*** Networks are equivalent ***")
+		} else {
+			fmt.Println("*** Networks are NOT equivalent ***")
+		}
+	}
 	saucy_free(s)
 	baseabc.Abc_NtkDelete(ntk)
+	if f, err := os.OpenFile("hadi.txt", os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666); err == nil {
+		fmt.Fprintf(f, "group size = %fe%d\n", stats.grpsize_base, stats.grpsize_exp)
+		_ = f.Close()
+	}
 	fmt.Printf("Runtime = %9.2f sec\n", time.Since(started).Seconds())
 }
 

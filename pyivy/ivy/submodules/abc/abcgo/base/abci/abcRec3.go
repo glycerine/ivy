@@ -8,12 +8,151 @@ import "encoding/binary"
 
 import "github.com/glycerine/abcgo/misc/extra"
 import "github.com/glycerine/abcgo/aig/gia"
+import "github.com/glycerine/abcgo/misc/vec"
+import "github.com/glycerine/abcgo/misc/util"
+import "github.com/glycerine/abcgo/opt/dau"
+import "github.com/glycerine/abcgo/bool/kit"
+import "github.com/glycerine/abcgo/aig/hop"
+import ifpkg "github.com/glycerine/abcgo/map/if"
+import baseabc "github.com/glycerine/abcgo/base/abc"
+
+const ABC_INFINITY = util.ABC_INFINITY
+
+var (
+	Abc_Clock                = util.Abc_Clock
+	Abc_MaxInt               = util.Abc_MaxInt
+	Abc_MinInt               = util.Abc_MinInt
+	Abc_PrintTime            = util.Abc_PrintTime
+	Abc_Truth6WordNum        = util.Abc_Truth6WordNum
+	Abc_TtStretch5           = util.Abc_TtStretch5
+	Abc_TtSuppFindFirst      = util.Abc_TtSuppFindFirst
+	Abc_TtSuppIsMinBase      = util.Abc_TtSuppIsMinBase
+	Abc_TtSuppOnlyOne        = util.Abc_TtSuppOnlyOne
+	Abc_TtSupport            = util.Abc_TtSupport
+	Abc_TtSupportSize        = util.Abc_TtSupportSize
+	Abc_TtCanonicize         = dau.Abc_TtCanonicize
+	Abc_Lit2Var              = util.Abc_Lit2Var
+	Abc_LitNotCond           = util.Abc_LitNotCond
+	Abc_Var2Lit              = util.Abc_Var2Lit
+	Dau_DsdCheck1Step        = dau.Dau_DsdCheck1Step
+	Dau_DsdDecompose         = dau.Dau_DsdDecompose
+	Dau_DsdPrintFromTruth    = dau.Dau_DsdPrintFromTruth
+	Gia_ManAndNum            = gia.Gia_ManAndNum
+	Gia_ManAppendAnd         = gia.Gia_ManAppendAnd
+	Gia_ManAppendCi          = gia.Gia_ManAppendCi
+	Gia_ManAppendCo          = gia.Gia_ManAppendCo
+	Gia_ManCi                = gia.Gia_ManCi
+	Gia_ManCleanupOutputs    = gia.Gia_ManCleanupOutputs
+	Gia_ManCo                = gia.Gia_ManCo
+	Gia_ManHashAnd           = gia.Gia_ManHashAnd
+	Gia_ManHashStart         = gia.Gia_ManHashStart
+	Gia_ManObj               = gia.Gia_ManObj
+	Gia_ManObjNum            = gia.Gia_ManObjNum
+	Gia_ManPatchCoDriver     = gia.Gia_ManPatchCoDriver
+	Gia_ManPi                = gia.Gia_ManPi
+	Gia_ManPiNum             = gia.Gia_ManPiNum
+	Gia_ManPo                = gia.Gia_ManPo
+	Gia_ManStart             = gia.Gia_ManStart
+	Gia_ManStop              = gia.Gia_ManStop
+	Gia_ManStopP             = gia.Gia_ManStopP
+	Gia_ObjCioId             = gia.Gia_ObjCioId
+	Gia_ObjCollectInternal   = gia.Gia_ObjCollectInternal
+	Gia_ObjComputeTruthTable = gia.Gia_ObjComputeTruthTable
+	Gia_ObjFanin0            = gia.Gia_ObjFanin0
+	Gia_ObjFanin1            = gia.Gia_ObjFanin1
+	Gia_ObjFaninC0           = gia.Gia_ObjFaninC0
+	Gia_ObjFaninC1           = gia.Gia_ObjFaninC1
+	Gia_ObjFaninId0          = gia.Gia_ObjFaninId0
+	Gia_ObjFaninId1          = gia.Gia_ObjFaninId1
+	Gia_ObjFaninLit0p        = gia.Gia_ObjFaninLit0p
+	Gia_ObjId                = gia.Gia_ObjId
+	Gia_ObjIsAnd             = gia.Gia_ObjIsAnd
+	Gia_ObjIsCi              = gia.Gia_ObjIsCi
+	Gia_ObjIsCo              = gia.Gia_ObjIsCo
+	Gia_ObjNum               = gia.Gia_ObjNum
+	Gia_ObjPrint             = gia.Gia_ObjPrint
+	Gia_WordCountOnes        = func(word int32) int32 { return gia.Gia_WordCountOnes(uint32(word)) }
+	Hop_And                  = hop.Hop_And
+	Hop_IthVar               = hop.Hop_IthVar
+	Hop_ManConst0            = hop.Hop_ManConst0
+	Hop_NotCond              = hop.Hop_NotCond
+	If_CutLeaf               = ifpkg.If_CutLeaf
+	If_CutLeaveNum           = ifpkg.If_CutLeaveNum
+	If_CutLeaves             = ifpkg.If_CutLeaves
+	If_CutLimit              = ifpkg.If_CutLimit
+	If_CutCost               = ifpkg.If_CutCost
+	If_CutSetCost            = ifpkg.If_CutSetCost
+	If_CutSetUser            = ifpkg.If_CutSetUser
+	If_CutSetUseless         = ifpkg.If_CutSetUseless
+	If_CutComplement         = ifpkg.If_CutComplement
+	If_CutPerm               = ifpkg.If_CutPerm
+	If_CutTraverse           = ifpkg.If_CutTraverse
+	If_CutTruthIsCompl       = ifpkg.If_CutTruthIsCompl
+	If_CutTruthWordSlice     = ifpkg.If_CutTruthWordSlice
+	If_ManCutMin             = ifpkg.If_ManCutMin
+	If_ManLutSize            = ifpkg.If_ManLutSize
+	If_ParSetRec3Defaults    = ifpkg.If_ParSetRec3Defaults
+	If_ManObj                = ifpkg.If_ManObj
+	If_ObjCutBest            = ifpkg.If_ObjCutBest
+	If_ObjFanin0             = ifpkg.If_ObjFanin0
+	If_ObjFanin1             = ifpkg.If_ObjFanin1
+	If_ObjFaninC0            = ifpkg.If_ObjFaninC0
+	If_ObjFaninC1            = ifpkg.If_ObjFaninC1
+	If_ObjCopyLit            = ifpkg.If_ObjCopyLit
+	If_ObjSetCopyLit         = ifpkg.If_ObjSetCopyLit
+	If_ObjIsAnd              = ifpkg.If_ObjIsAnd
+	If_ObjIsCi               = ifpkg.If_ObjIsCi
+	IF_BIG_CHAR              = ifpkg.IF_BIG_CHAR
+	IF_COST_MAX              = ifpkg.IF_COST_MAX
+	Kit_DsdPrintFromTruth    = kit.Kit_DsdPrintFromTruth
+	Abc_NtkGetChoiceNum      = baseabc.Abc_NtkGetChoiceNum
+)
+
+func ABC_PRTP(label string, elapsed, total int64) { util.Abc_PrintTimeP(1, label, elapsed, total) }
+
+func Vec_MemAlloc(words, logPage int32) *Vec_Mem_t { return vec.Vec_MemAlloc(int(words), int(logPage)) }
+func Vec_MemEntryNum(v *Vec_Mem_t) int32           { return int32(vec.Vec_MemEntryNum(v)) }
+func Vec_MemFree(v *Vec_Mem_t)                     { vec.Vec_MemFree(v) }
+func Vec_MemHashAlloc(v *Vec_Mem_t, size int32)    { vec.Vec_MemHashAlloc(v, int(size)) }
+func Vec_MemHashFree(v *Vec_Mem_t)                 { vec.Vec_MemHashFree(v) }
+func Vec_MemHashInsert(v *Vec_Mem_t, words []word) int32 {
+	return int32(vec.Vec_MemHashInsert(v, words))
+}
+func Vec_MemHashLookup(v *Vec_Mem_t, words []word) *int32 { return vec.Vec_MemHashLookup(v, words) }
+func Vec_MemReadEntry(v *Vec_Mem_t, index int32) []word   { return vec.Vec_MemReadEntry(v, int(index)) }
+func Vec_IntAddToEntry(v *Vec_Int_t, index, value int32) int32 {
+	return vec.Vec_IntAddToEntry(v, int(index), value)
+}
+func Vec_IntArray(v *Vec_Int_t) []int32              { return vec.Vec_IntArray(v) }
+func Vec_IntClear(v *Vec_Int_t)                      { vec.Vec_IntClear(v) }
+func Vec_IntEntryP(v *Vec_Int_t, index int32) *int32 { return vec.Vec_IntEntryP(v, int(index)) }
+func Vec_IntFill(v *Vec_Int_t, size, value int32)    { vec.Vec_IntFill(v, int(size), value) }
+func Vec_IntFindMax(v *Vec_Int_t) int32              { return vec.Vec_IntFindMax(v) }
+func Vec_IntFindMin(v *Vec_Int_t) int32              { return vec.Vec_IntFindMin(v) }
+func Vec_IntFreeP(v **Vec_Int_t)                     { vec.Vec_IntFreeP(v) }
+func Vec_PtrFreeP(v **Vec_Ptr_t)                     { vec.Vec_PtrFreeP(v) }
+func Vec_IntStart(size int32) *Vec_Int_t             { return vec.Vec_IntStart(int(size)) }
+func Vec_IntStartFull(size int32) *Vec_Int_t         { return vec.Vec_IntStartFull(int(size)) }
+func Vec_IntStartNatural(size int32) *Vec_Int_t      { return vec.Vec_IntStartNatural(int(size)) }
+func Vec_StrAlloc(size int32) *Vec_Str_t             { return vec.Vec_StrAlloc(int(size)) }
+func Vec_StrEntry(v *Vec_Str_t, index int32) byte    { return vec.Vec_StrEntry(v, int(index)) }
+func Vec_StrFree(v *Vec_Str_t)                       { vec.Vec_StrFree(v) }
+func Vec_StrFreeP(v **Vec_Str_t)                     { vec.Vec_StrFreeP(v) }
+func Vec_StrPush(v *Vec_Str_t, value byte)           { vec.Vec_StrPush(v, value) }
+func Vec_StrSize(v *Vec_Str_t) int32                 { return int32(vec.Vec_StrSize(v)) }
+func Vec_WrdAlloc(size int32) *Vec_Wrd_t             { return vec.Vec_WrdAlloc(int(size)) }
+func Vec_WrdEntry(v *Vec_Wrd_t, index int32) word    { return vec.Vec_WrdEntry(v, int(index)) }
+func Vec_WrdFree(v *Vec_Wrd_t)                       { vec.Vec_WrdFree(v) }
+func Vec_WrdFreeP(v **Vec_Wrd_t)                     { vec.Vec_WrdFreeP(v) }
+func Vec_WrdPush(v *Vec_Wrd_t, value word)           { vec.Vec_WrdPush(v, value) }
 
 func wordsToUint32(words []word) []uint32 {
 	result := make([]uint32, len(words)*2)
 	for i, value := range words {
-		result[2*i] = uint32(value)
-		result[2*i+1] = uint32(value >> 32)
+		var bytes [8]byte
+		binary.NativeEndian.PutUint64(bytes[:], uint64(value))
+		result[2*i] = binary.NativeEndian.Uint32(bytes[:4])
+		result[2*i+1] = binary.NativeEndian.Uint32(bytes[4:])
 	}
 	return result
 }
@@ -22,7 +161,10 @@ func lmsStretch5(words []word, nVars, nVarsOut int32) {
 	parts := wordsToUint32(words)
 	Abc_TtStretch5(parts, nVars, nVarsOut)
 	for i := range words {
-		words[i] = word(parts[2*i]) | word(parts[2*i+1])<<32
+		var bytes [8]byte
+		binary.NativeEndian.PutUint32(bytes[:4], parts[2*i])
+		binary.NativeEndian.PutUint32(bytes[4:], parts[2*i+1])
+		words[i] = word(binary.NativeEndian.Uint64(bytes[:]))
 	}
 }
 
@@ -120,12 +262,12 @@ type Lms_Man_t struct {
 	vFreqs      *Vec_Int_t // subgraph usage frequencies
 	vTruthFreqs *Vec_Int_t // truth table usage frequencies
 	// temporaries
-	vNodes   *Vec_Ptr_t           // the temporary nodes
-	vLabelsP *Vec_Ptr_t           // temporary storage for HOP node labels
-	vLabels  *Vec_Int_t           // temporary storage for AIG node labels
-	vSupps   *Vec_Str_t           // used temporarily by TT dumping
-	word     pTemp1[LMS_MAX_WORD] // copy of the truth table
-	word     pTemp2[LMS_MAX_WORD] // copy of the truth table
+	vNodes   *Vec_Ptr_t         // the temporary nodes
+	vLabelsP *Vec_Ptr_t         // temporary storage for HOP node labels
+	vLabels  *Vec_Int_t         // temporary storage for AIG node labels
+	vSupps   *Vec_Str_t         // used temporarily by TT dumping
+	pTemp1   [LMS_MAX_WORD]word // copy of the truth table
+	pTemp2   [LMS_MAX_WORD]word // copy of the truth table
 	// statistics
 	nTried         int32
 	nFilterSize    int32
@@ -278,8 +420,7 @@ func Lms_ObjAreaUnmark_rec(pObj *Gia_Obj_t) int32 {
 		return 0
 	}
 	gia.Gia_ObjSetMark0(pObj, 0)
-	return 1 + Lms_ObjAreaUnmark_rec(Gia_ObjFanin0(pObj))
-	+Lms_ObjAreaUnmark_rec(Gia_ObjFanin1(pObj))
+	return 1 + Lms_ObjAreaUnmark_rec(Gia_ObjFanin0(pObj)) + Lms_ObjAreaUnmark_rec(Gia_ObjFanin1(pObj))
 }
 func Lms_ObjArea(pObj *Gia_Obj_t) int32 {
 	assert(Gia_ObjIsAnd(pObj) != 0, "Gia_ObjIsAnd(pObj)")
@@ -307,7 +448,7 @@ func Lms_GiaSuppSizes(p *Gia_Man_t) *Vec_Str_t {
 	for i = 1; i < Gia_ManObjNum(p); i++ {
 		pObj = Gia_ManObj(p, i)
 		if Gia_ObjIsAnd(pObj) != 0 {
-			Vec_StrPush(vSupps, byte(Abc_MaxInt(Vec_StrEntry(vSupps, Gia_ObjFaninId0(pObj, i)), Vec_StrEntry(vSupps, Gia_ObjFaninId1(pObj, i)))))
+			Vec_StrPush(vSupps, byte(Abc_MaxInt(int32(Vec_StrEntry(vSupps, Gia_ObjFaninId0(pObj, i))), int32(Vec_StrEntry(vSupps, Gia_ObjFaninId1(pObj, i))))))
 		} else if Gia_ObjIsCo(pObj) != 0 {
 			Vec_StrPush(vSupps, Vec_StrEntry(vSupps, Gia_ObjFaninId0(pObj, i)))
 		} else if Gia_ObjIsCi(pObj) != 0 {
@@ -326,14 +467,12 @@ func Lms_GiaSuppSizes(p *Gia_Man_t) *Vec_Str_t {
 	return vResult
 }
 func Lms_GiaProfilesPrint(p *Gia_Man_t) {
-	var pObj *Gia_Obj_t
 	var i int32
 	var vDelays *Vec_Wrd_t
 	var vAreas *Vec_Str_t
 	vDelays = Lms_GiaDelays(p)
 	vAreas = Lms_GiaAreas(p)
 	for i = 0; i < Gia_ManPoNum(p); i++ {
-		pObj = Gia_ManPo(p, i)
 		fmt.Printf("%6d : ", i)
 		fmt.Printf("A = %2d  ", Vec_StrEntry(vAreas, i))
 		Lms_DelayPrint(Vec_WrdEntry(vDelays, i), Gia_ManPiNum(p))
@@ -474,7 +613,6 @@ func Lms_ManStop(p *Lms_Man_t) {
 	Vec_MemFree(p.vTtMem)
 	//    Vec_MemFree( p->vTtMem2 );
 	Gia_ManStopP(&p.pGia)
-	ABC_FREE(p)
 }
 func Lms_ManPrepare(p *Lms_Man_t) {
 	// compute the first PO for each semi-canonical form
@@ -535,7 +673,7 @@ func Lms_ManPrintFreqStats(p *Lms_Man_t) {
 	var CountDsdAll [3]int32  // full/part/none
 	var CountStepNpn [3]int32 // full/1step/complex
 	var CountStepAll [3]int32 // full/1step/complex
-	var pBuffer [1000]byte
+	pBuffer := make([]byte, 1000)
 	var nSuppSize int32
 	var nNonDecSize int32
 	var pTruth []word
@@ -555,7 +693,7 @@ func Lms_ManPrintFreqStats(p *Lms_Man_t) {
 		   printf( "%s\n", pBuffer );
 		*/
 		nSuppSize = Abc_TtSupportSize(pTruth, p.nVars)
-		nNonDecSize = Dau_DsdDecompose(pTruth, p.nVars, 0, 0, &pBuffer[:])
+		nNonDecSize = Dau_DsdDecompose(pTruth, p.nVars, 0, 0, &pBuffer)
 		if nNonDecSize == 0 {
 			CountDsdNpn[0]++
 			CountDsdAll[0] += Freq
@@ -693,7 +831,7 @@ func Abc_NtkRecLibMerge3(pLib *Gia_Man_t) {
 	for k = 0; k < Gia_ManCoNum(pLib); k++ {
 		pObjPo = Gia_ManCo(pLib, k)
 		// get support size
-		nLeaves = Vec_StrEntry(vSupps, k)
+		nLeaves = int32(Vec_StrEntry(vSupps, k))
 		assert(nLeaves > 1, "nLeaves > 1")
 
 		// compute the truth table
@@ -714,29 +852,29 @@ func Abc_NtkRecLibMerge3(pLib *Gia_Man_t) {
 		clk = Abc_Clock()
 		// map cut leaves into elementary variables of GIA
 		for i = 0; i < nLeaves; i++ {
-			Gia_ManCi(pLib, pCanonPerm[i]).Value = Abc_Var2Lit(Gia_ObjId(pGia, Gia_ManPi(pGia, i)), (uCanonPhase>>i)&1)
+			Gia_ManCi(pLib, int32(pCanonPerm[i])).Value = uint32(Abc_Var2Lit(Gia_ObjId(pGia, Gia_ManPi(pGia, i)), int32(int32((uCanonPhase>>i)&1))))
 		}
 		// build internal nodes
 		vTtNodes := gia.Gia_ManTruthTableNodeIDs(pLib)
 		assert(len(vTtNodes) > 0, "truth-table nodes are available")
 		for i = 0; i < int32(len(vTtNodes)); i++ {
 			pTemp = Gia_ManObj(pLib, vTtNodes[i])
-			iFanin0 = Abc_LitNotCond(Gia_ObjFanin0(pTemp).Value, Gia_ObjFaninC0(pTemp))
-			iFanin1 = Abc_LitNotCond(Gia_ObjFanin1(pTemp).Value, Gia_ObjFaninC1(pTemp))
-			pTemp.Value = Gia_ManHashAnd(pGia, iFanin0, iFanin1)
+			iFanin0 = Abc_LitNotCond(int32(Gia_ObjFanin0(pTemp).Value), Gia_ObjFaninC0(pTemp))
+			iFanin1 = Abc_LitNotCond(int32(Gia_ObjFanin1(pTemp).Value), Gia_ObjFaninC1(pTemp))
+			pTemp.Value = uint32(Gia_ManHashAnd(pGia, iFanin0, iFanin1))
 		}
 		p.timeBuild += Abc_Clock() - clk
 
 		// check if this node is already driving a PO
 		assert(Gia_ObjIsAnd(pTemp) != 0, "Gia_ObjIsAnd(pTemp)")
-		pDriver = Gia_ManObj(pGia, Abc_Lit2Var(pTemp.Value))
+		pDriver = Gia_ManObj(pGia, Abc_Lit2Var(int32(pTemp.Value)))
 		if gia.Gia_ObjMark1(pDriver) != 0 {
 			p.nFilterSame++
 			continue
 		}
 		gia.Gia_ObjSetMark1(pDriver, 1)
 		// create output
-		Gia_ManAppendCo(pGia, Abc_LitNotCond(pTemp.Value, (uCanonPhase>>nLeaves)&1))
+		Gia_ManAppendCo(pGia, Abc_LitNotCond(int32(pTemp.Value), int32((uCanonPhase>>nLeaves)&1)))
 
 		// verify truth table
 		if fCheck != 0 {
@@ -763,7 +901,7 @@ func Abc_NtkRecLibMerge3(pLib *Gia_Man_t) {
 
 		clk = Abc_Clock()
 		// add the resulting truth table to the hash table
-		Index = Vec_MemHashInsert(p.vTtMem, p.pTemp1)
+		Index = Vec_MemHashInsert(p.vTtMem, p.pTemp1[:])
 		// save truth table ID
 		Vec_IntPush(p.vTruthIds, Index)
 		assert(Gia_ManCoNum(pGia) == Vec_IntSize(p.vTruthIds), "Gia_ManCoNum(pGia) == Vec_IntSize(p.vTruthIds)")
@@ -802,18 +940,18 @@ func Abc_NtkRecAddCut3(pIfMan *If_Man_t, pRoot *If_Obj_t, pCut *If_Cut_t) int32 
 	p.nTried++
 
 	// skip small cuts
-	assert(p.nVars == int32(pCut.nLimit), "p.nVars == int32(pCut.nLimit)")
-	if nLeaves < 2 || (nLeaves == 2 && Abc_TtSupportSize(If_CutTruthW(pIfMan, pCut), 2) != 2) {
+	assert(p.nVars == If_CutLimit(pCut), "p.nVars == int32(If_CutLimit(pCut))")
+	if nLeaves < 2 || (nLeaves == 2 && Abc_TtSupportSize(If_CutTruthWordSlice(pIfMan, pCut), 2) != 2) {
 		p.nFilterSize++
 		return 1
 	}
 
 	//    if ( p->vTtMem2 )
-	//        Vec_MemHashInsert( p->vTtMem2, If_CutTruthW(pCut) );
+	//        Vec_MemHashInsert( p->vTtMem2, If_CutTruthWordSlice(pCut) );
 
 	// semi-canonicize truth table
 	clk = Abc_Clock()
-	copy(p.pTemp1[:], If_CutTruthW(pIfMan, pCut))
+	copy(p.pTemp1[:], If_CutTruthWordSlice(pIfMan, pCut))
 	uCanonPhase = Abc_TtCanonicize(p.pTemp1[:], nLeaves, pCanonPerm[:])
 	lmsStretch5(p.pTemp1[:], nLeaves, p.nVars)
 	p.timeCanon += Abc_Clock() - clk
@@ -822,7 +960,7 @@ func Abc_NtkRecAddCut3(pIfMan *If_Man_t, pRoot *If_Obj_t, pCut *If_Cut_t) int32 
 	if p.pGia == nil {
 		clk = Abc_Clock()
 		// add the resulting truth table to the hash table
-		Index = Vec_MemHashInsert(p.vTtMem, p.pTemp1)
+		Index = Vec_MemHashInsert(p.vTtMem, p.pTemp1[:])
 		/*
 		   if ( p->vTruthFreqs == NULL )
 		       p->vTruthFreqs = Vec_IntAlloc( 1000 );
@@ -849,35 +987,35 @@ func Abc_NtkRecAddCut3(pIfMan *If_Man_t, pRoot *If_Obj_t, pCut *If_Cut_t) int32 
 	clk = Abc_Clock()
 	// map cut leaves into elementary variables of GIA
 	for i = 0; i < nLeaves; i++ {
-		If_ManObj(pIfMan, pCut.pLeaves[int32(pCanonPerm[i])]).iCopy = Abc_Var2Lit(Gia_ObjId(pGia, Gia_ManPi(pGia, i)), (uCanonPhase>>i)&1)
+		If_ObjSetCopyLit(If_ManObj(pIfMan, If_CutLeaves(pCut)[int32(pCanonPerm[i])]), Abc_Var2Lit(Gia_ObjId(pGia, Gia_ManPi(pGia, i)), int32(int32((uCanonPhase>>i)&1))))
 	}
 	// build internal nodes
 	fHole = 0
 	assert(Vec_PtrSize(vNodes) > 0, "Vec_PtrSize(vNodes) > 0")
 	for i = nLeaves; i < int32(Vec_PtrSize(vNodes)); i++ {
-		pIfObj = Vec_PtrEntry(vNodes, int(i)).(*If_Obj_t)
+		pIfObj = Vec_PtrEntry(vNodes, i).(*If_Obj_t)
 		if If_ObjIsCi(pIfObj) != 0 {
-			pIfObj.iCopy = 0
+			If_ObjSetCopyLit(pIfObj, 0)
 			fHole = 1
 			continue
 		}
-		iFanin0 = Abc_LitNotCond(If_ObjFanin0(pIfObj).iCopy, If_ObjFaninC0(pIfObj))
-		iFanin1 = Abc_LitNotCond(If_ObjFanin1(pIfObj).iCopy, If_ObjFaninC1(pIfObj))
-		pIfObj.iCopy = Gia_ManHashAnd(pGia, iFanin0, iFanin1)
+		iFanin0 = Abc_LitNotCond(If_ObjCopyLit(If_ObjFanin0(pIfObj)), If_ObjFaninC0(pIfObj))
+		iFanin1 = Abc_LitNotCond(If_ObjCopyLit(If_ObjFanin1(pIfObj)), If_ObjFaninC1(pIfObj))
+		If_ObjSetCopyLit(pIfObj, Gia_ManHashAnd(pGia, iFanin0, iFanin1))
 	}
 	p.nHoleInTheWall += fHole
 	p.timeBuild += Abc_Clock() - clk
 
 	// check if this node is already driving a PO
 	assert(If_ObjIsAnd(pIfObj) != 0, "If_ObjIsAnd(pIfObj)")
-	pDriver = Gia_ManObj(pGia, Abc_Lit2Var(pIfObj.iCopy))
+	pDriver = Gia_ManObj(pGia, Abc_Lit2Var(If_ObjCopyLit(pIfObj)))
 	if gia.Gia_ObjMark1(pDriver) != 0 {
 		p.nFilterSame++
 		return 1
 	}
 	gia.Gia_ObjSetMark1(pDriver, 1)
 	// create output
-	Gia_ManAppendCo(pGia, Abc_LitNotCond(pIfObj.iCopy, (uCanonPhase>>nLeaves)&1))
+	Gia_ManAppendCo(pGia, Abc_LitNotCond(If_ObjCopyLit(pIfObj), int32((uCanonPhase>>nLeaves)&1)))
 
 	// verify truth table
 	clk = Abc_Clock()
@@ -899,7 +1037,7 @@ func Abc_NtkRecAddCut3(pIfMan *If_Man_t, pRoot *If_Obj_t, pCut *If_Cut_t) int32 
 
 	clk = Abc_Clock()
 	// add the resulting truth table to the hash table
-	Index = Vec_MemHashInsert(p.vTtMem, p.pTemp1)
+	Index = Vec_MemHashInsert(p.vTtMem, p.pTemp1[:])
 	// save truth table ID
 	Vec_IntPush(p.vTruthIds, Index)
 	assert(Gia_ManCoNum(pGia) == Vec_IntSize(p.vTruthIds), "Gia_ManCoNum(pGia) == Vec_IntSize(p.vTruthIds)")
@@ -925,7 +1063,7 @@ func Abc_NtkRecAdd3(pNtk *Abc_Ntk_t, fUseSOPB int32) {
 	var Pars If_Par_t
 	var pPars *If_Par_t = &Pars
 	var pNtkNew *Abc_Ntk_t
-	var clk int32 = Abc_Clock()
+	var clk int64 = Abc_Clock()
 	if Abc_NtkGetChoiceNum(pNtk) != 0 {
 		fmt.Printf("Performing recoding structures with choices.\n")
 	}
@@ -937,29 +1075,7 @@ func Abc_NtkRecAdd3(pNtk *Abc_Ntk_t, fUseSOPB int32) {
 	}
 
 	// set defaults
-	// Pars is zero-initialized, matching the C memset defaults.
-	// user-controlable paramters
-	pPars.nLutSize = s_pMan3.nVars
-	pPars.nCutsMax = s_pMan3.nCuts
-	pPars.DelayTarget = -1
-	pPars.Epsilon = float32(0.005)
-	pPars.fArea = 1
-	// internal parameters
-	if fUseSOPB != 0 {
-		pPars.fTruth = 1
-		pPars.fCutMin = 0
-		pPars.fUsePerm = 1
-		pPars.fDelayOpt = 1
-
-	} else {
-		pPars.fTruth = 1
-		pPars.fCutMin = 1
-		pPars.fUsePerm = 0
-		pPars.fDelayOpt = 0
-	}
-	pPars.fSkipCutFilter = 0
-	pPars.pFuncCost = nil
-	pPars.pFuncUser = Abc_NtkRecAddCut3
+	If_ParSetRec3Defaults(pPars, s_pMan3.nVars, s_pMan3.nCuts, fUseSOPB, Abc_NtkRecAddCut3)
 	// perform recording
 	pNtkNew = Abc_NtkIf(pNtk, pPars)
 	Abc_NtkDelete(pNtkNew)
@@ -986,8 +1102,8 @@ func If_CutComputeDelay(p *If_Man_t, pCut *If_Cut_t, pCanonPerm []byte, DelayPro
 	var delayTemp int32
 	var delayMax int32 = -ABC_INFINITY
 	for i = 0; i < nLeaves; i++ {
-		pLeaf = If_ManObj(p, (pCut).pLeaves[int32(pCanonPerm[i])])
-		delayTemp = If_ObjCutBest(pLeaf).Delay + Lms_DelayGet(DelayProfile, i)
+		pLeaf = If_ManObj(p, If_CutLeaves(pCut)[int32(pCanonPerm[i])])
+		delayTemp = int32(If_ObjCutBest(pLeaf).Delay) + Lms_DelayGet(DelayProfile, i)
 		delayMax = Abc_MaxInt(delayMax, delayTemp)
 	}
 	return delayMax
@@ -1008,11 +1124,11 @@ func If_CutFindBestStruct(pIfMan *If_Man_t, pCut *If_Cut_t, pCanonPerm []byte, p
 	var pPerm []byte = If_CutPerm(pCut)
 	var DelayProfile word
 	var clk abctime
-	pCut.fUser = 1
+	If_CutSetUser(pCut, 1)
 	// compute support
-	uSupport = Abc_TtSupport(If_CutTruthW(pIfMan, pCut), nLeaves)
+	uSupport = Abc_TtSupport(If_CutTruthWordSlice(pIfMan, pCut), nLeaves)
 	if uSupport == 0 {
-		pCut.Cost = 1
+		If_CutSetCost(pCut, uint32(1))
 		for i = 0; i < nLeaves; i++ {
 			pPerm[i] = IF_BIG_CHAR
 		}
@@ -1020,27 +1136,27 @@ func If_CutFindBestStruct(pIfMan *If_Man_t, pCut *If_Cut_t, pCanonPerm []byte, p
 	}
 	if Abc_TtSuppIsMinBase(uSupport) == 0 || uSupport == 1 {
 		assert(Abc_TtSuppOnlyOne(uSupport) != 0, "Abc_TtSuppOnlyOne(uSupport)")
-		pCut.Cost = 1
+		If_CutSetCost(pCut, uint32(1))
 		for i = 0; i < nLeaves; i++ {
 			pPerm[i] = IF_BIG_CHAR
 		}
 		pPerm[Abc_TtSuppFindFirst(uSupport)] = 0
-		return If_ObjCutBest(If_ManObj(pIfMan, pCut.pLeaves[Abc_TtSuppFindFirst(uSupport)])).Delay
+		return int32(If_ObjCutBest(If_ManObj(pIfMan, If_CutLeaves(pCut)[Abc_TtSuppFindFirst(uSupport)])).Delay)
 	}
 	assert(Gia_WordCountOnes(uSupport) == nLeaves, "Gia_WordCountOnes(uSupport) == nLeaves")
 
 	// semicanonicize the function
 	clk = Abc_Clock()
-	copy(p.pTemp1[:], If_CutTruthW(pIfMan, pCut))
+	copy(p.pTemp1[:], If_CutTruthWordSlice(pIfMan, pCut))
 	*puCanonPhase = Abc_TtCanonicize(p.pTemp1[:], nLeaves, pCanonPerm[:])
 	lmsStretch5(p.pTemp1[:], nLeaves, p.nVars)
 	p.timeCanon += Abc_Clock() - clk
 
 	// get TT ID for the given class
-	pTruthId = Vec_MemHashLookup(p.vTtMem, p.pTemp1)
+	pTruthId = Vec_MemHashLookup(p.vTtMem, p.pTemp1[:])
 	if *pTruthId == -1 {
-		pCut.Cost = IF_COST_MAX
-		pCut.fUseless = 1
+		If_CutSetCost(pCut, uint32(IF_COST_MAX))
+		If_CutSetUseless(pCut, 1)
 		return ABC_INFINITY
 	}
 
@@ -1056,7 +1172,7 @@ func If_CutFindBestStruct(pIfMan *If_Man_t, pCut *If_Cut_t, pCanonPerm []byte, p
 	iBestPo = -1
 	for i = iFirstPo; i < iFirstPoNext; i++ {
 		Delay = If_CutComputeDelay(pIfMan, pCut, pCanonPerm, Vec_WrdEntry(p.vDelays, i))
-		Area = Vec_StrEntry(p.vAreas, i)
+		Area = int32(Vec_StrEntry(p.vAreas, i))
 		if iBestPo == -1 || BestDelay > Delay || (BestDelay == Delay && BestArea > Area) {
 			iBestPo = i
 			BestDelay = Delay
@@ -1069,16 +1185,16 @@ func If_CutFindBestStruct(pIfMan *If_Man_t, pCut *If_Cut_t, pCanonPerm []byte, p
 
 	// mark as user cut.
 	DelayProfile = Vec_WrdEntry(p.vDelays, iBestPo)
-	pCut.Cost = Vec_StrEntry(p.vAreas, iBestPo)
+	If_CutSetCost(pCut, uint32(Vec_StrEntry(p.vAreas, iBestPo)))
 	for i = 0; i < nLeaves; i++ {
-		pPerm[int32(pCanonPerm[i])] = Lms_DelayGet(DelayProfile, i)
+		pPerm[int32(pCanonPerm[i])] = byte(Lms_DelayGet(DelayProfile, i))
 	}
 	if false {
 		var Max int32
 		var Two int32
 		var pTimes [16]int32
 		for i = 0; i < nLeaves; i++ {
-			pTimes[i] = int32(If_ObjCutBest(If_CutLeaf(pIfMan, pCut, i)).Delay)
+			pTimes[i] = int32(int32(If_ObjCutBest(If_CutLeaf(pIfMan, pCut, i)).Delay))
 		}
 		for i = 0; i < If_CutLeaveNum(pCut); i++ {
 			Max = Abc_MaxInt(Max, pTimes[i])
@@ -1092,11 +1208,11 @@ func If_CutFindBestStruct(pIfMan *If_Man_t, pCut *If_Cut_t, pCanonPerm []byte, p
 			for i = 0; i < If_CutLeaveNum(pCut); i++ {
 				fmt.Printf("%3d ", pTimes[i])
 			}
-			for ; i < pIfMan.pPars.nLutSize; i++ {
+			for ; i < If_ManLutSize(pIfMan); i++ {
 				fmt.Printf("    ")
 			}
 			fmt.Printf("-> %3d   ", BestDelay)
-			Dau_DsdPrintFromTruth(If_CutTruthW(pIfMan, pCut), If_CutLeaveNum(pCut))
+			Dau_DsdPrintFromTruth(If_CutTruthWordSlice(pIfMan, pCut), If_CutLeaveNum(pCut))
 		}
 	}
 	return BestDelay
@@ -1106,7 +1222,7 @@ func If_CutDelayRecCost3(pIfMan *If_Man_t, pCut *If_Cut_t, pObj *If_Obj_t) int32
 	var pCanonPerm [LMS_VAR_MAX]byte
 	var uCanonPhase uint32
 	// make sure the cut functions match the library
-	assert(p.nVars == int32(pCut.nLimit), "p.nVars == int32(pCut.nLimit)")
+	assert(p.nVars == int32(If_CutLimit(pCut)), "p.nVars == int32(If_CutLimit(pCut))")
 	// if this assertion fires, it means that LMS manager was used for library construction
 	// in this case, GIA has to be written out and the manager restarted as described above
 	assert(p.fLibConstr == 0, "!p.fLibConstr")
@@ -1142,10 +1258,10 @@ func Abc_RecToHop3(pMan *Hop_Man_t, pIfMan *If_Man_t, pCut *If_Cut_t, pIfObj *If
 	var uSupport int32
 	var BestPo int32 = -1
 	var nLeaves int32 = If_CutLeaveNum(pCut)
-	assert(pIfMan.pPars.fCutMin == 1, "pIfMan.pPars.fCutMin == 1")
+	assert(If_ManCutMin(pIfMan) == 1, "If_ManCutMin(pIfMan) == 1")
 
 	// compute support
-	uSupport = Abc_TtSupport(If_CutTruthW(pIfMan, pCut), nLeaves)
+	uSupport = Abc_TtSupport(If_CutTruthWordSlice(pIfMan, pCut), nLeaves)
 	if uSupport == 0 {
 		return Hop_NotCond(Hop_ManConst0(pMan), If_CutTruthIsCompl(pCut))
 	}
@@ -1160,6 +1276,7 @@ func Abc_RecToHop3(pMan *Hop_Man_t, pIfMan *If_Man_t, pCut *If_Cut_t, pIfObj *If
 	assert(BestPo >= 0, "BestPo >= 0")
 	pGiaPo = Gia_ManCo(pGia, BestPo)
 	// collect internal nodes into pGia->vTtNodes
+	gia.Gia_ManEnsureTruthWorkspace(pGia, Gia_ManPiNum(pGia))
 	assert(Gia_ObjIsAnd(Gia_ObjFanin0(pGiaPo)) != 0, "Gia_ObjIsAnd( Gia_ObjFanin0(pGiaPo) )")
 	Gia_ObjCollectInternal(pGia, Gia_ObjFanin0(pGiaPo))
 	vTtNodes := gia.Gia_ManTruthTableNodeIDs(pGia)
@@ -1168,7 +1285,7 @@ func Abc_RecToHop3(pMan *Hop_Man_t, pIfMan *If_Man_t, pCut *If_Cut_t, pIfObj *If
 	// collect HOP nodes for leaves
 	Vec_PtrClear(p.vLabelsP)
 	for i = 0; i < nLeaves; i++ {
-		Vec_PtrPush(p.vLabelsP, Hop_NotCond(Hop_IthVar(pMan, pCanonPerm[i]), (uCanonPhase>>i)&1))
+		Vec_PtrPush(p.vLabelsP, Hop_NotCond(Hop_IthVar(pMan, int32(pCanonPerm[i])), int32((uCanonPhase>>i)&1)))
 	}
 
 	// compute HOP nodes for internal nodes
@@ -1176,15 +1293,15 @@ func Abc_RecToHop3(pMan *Hop_Man_t, pIfMan *If_Man_t, pCut *If_Cut_t, pIfObj *If
 		pGiaTemp = Gia_ManObj(pGia, vTtNodes[i])
 		gia.Gia_ObjSetMark0(pGiaTemp, 0) // unmark node marked by Gia_ObjCollectInternal()
 		if Gia_ObjIsAnd(Gia_ObjFanin0(pGiaTemp)) != 0 {
-			pFan0 = Vec_PtrEntry(p.vLabelsP, int(Gia_ObjNum(pGia, Gia_ObjFanin0(pGiaTemp))+nLeaves)).(*Hop_Obj_t)
+			pFan0 = Vec_PtrEntry(p.vLabelsP, Gia_ObjNum(pGia, Gia_ObjFanin0(pGiaTemp))+nLeaves).(*Hop_Obj_t)
 		} else {
-			pFan0 = Vec_PtrEntry(p.vLabelsP, int(Gia_ObjCioId(Gia_ObjFanin0(pGiaTemp)))).(*Hop_Obj_t)
+			pFan0 = Vec_PtrEntry(p.vLabelsP, Gia_ObjCioId(Gia_ObjFanin0(pGiaTemp))).(*Hop_Obj_t)
 		}
 		pFan0 = Hop_NotCond(pFan0, Gia_ObjFaninC0(pGiaTemp))
 		if Gia_ObjIsAnd(Gia_ObjFanin1(pGiaTemp)) != 0 {
-			pFan1 = Vec_PtrEntry(p.vLabelsP, int(Gia_ObjNum(pGia, Gia_ObjFanin1(pGiaTemp))+nLeaves)).(*Hop_Obj_t)
+			pFan1 = Vec_PtrEntry(p.vLabelsP, Gia_ObjNum(pGia, Gia_ObjFanin1(pGiaTemp))+nLeaves).(*Hop_Obj_t)
 		} else {
-			pFan1 = Vec_PtrEntry(p.vLabelsP, int(Gia_ObjCioId(Gia_ObjFanin1(pGiaTemp)))).(*Hop_Obj_t)
+			pFan1 = Vec_PtrEntry(p.vLabelsP, Gia_ObjCioId(Gia_ObjFanin1(pGiaTemp))).(*Hop_Obj_t)
 		}
 		pFan1 = Hop_NotCond(pFan1, Gia_ObjFaninC1(pGiaTemp))
 
@@ -1193,9 +1310,9 @@ func Abc_RecToHop3(pMan *Hop_Man_t, pIfMan *If_Man_t, pCut *If_Cut_t, pIfObj *If
 	}
 	// get the final result
 	assert(Gia_ObjIsAnd(pGiaTemp) != 0, "Gia_ObjIsAnd(pGiaTemp)")
-	pHopObj = Vec_PtrEntry(p.vLabelsP, int(Gia_ObjNum(pGia, pGiaTemp)+nLeaves)).(*Hop_Obj_t)
+	pHopObj = Vec_PtrEntry(p.vLabelsP, Gia_ObjNum(pGia, pGiaTemp)+nLeaves).(*Hop_Obj_t)
 	// complement the result if needed
-	return Hop_NotCond(pHopObj, Gia_ObjFaninC0(pGiaPo)^((uCanonPhase>>nLeaves)&1))
+	return Hop_NotCond(pHopObj, Gia_ObjFaninC0(pGiaPo)^int32((uCanonPhase>>nLeaves)&1))
 }
 
 /*
@@ -1223,11 +1340,11 @@ func Abc_RecToGia3(pMan *Gia_Man_t, pIfMan *If_Man_t, pCut *If_Cut_t, vLeaves *V
 	var uSupport int32
 	var BestPo int32 = -1
 	var nLeaves int32 = If_CutLeaveNum(pCut)
-	assert(pIfMan.pPars.fCutMin == 1, "pIfMan.pPars.fCutMin == 1")
+	assert(If_ManCutMin(pIfMan) == 1, "If_ManCutMin(pIfMan) == 1")
 	assert(nLeaves == Vec_IntSize(vLeaves), "nLeaves == Vec_IntSize(vLeaves)")
 
 	// compute support
-	uSupport = Abc_TtSupport(If_CutTruthW(pIfMan, pCut), nLeaves)
+	uSupport = Abc_TtSupport(If_CutTruthWordSlice(pIfMan, pCut), nLeaves)
 	if uSupport == 0 {
 		return Abc_LitNotCond(0, If_CutTruthIsCompl(pCut))
 	}
@@ -1243,6 +1360,7 @@ func Abc_RecToGia3(pMan *Gia_Man_t, pIfMan *If_Man_t, pCut *If_Cut_t, vLeaves *V
 	pGiaPo = Gia_ManCo(pGia, BestPo)
 
 	// collect internal nodes into pGia->vTtNodes
+	gia.Gia_ManEnsureTruthWorkspace(pGia, Gia_ManPiNum(pGia))
 	assert(Gia_ObjIsAnd(Gia_ObjFanin0(pGiaPo)) != 0, "Gia_ObjIsAnd( Gia_ObjFanin0(pGiaPo) )")
 	Gia_ObjCollectInternal(pGia, Gia_ObjFanin0(pGiaPo))
 	vTtNodes := gia.Gia_ManTruthTableNodeIDs(pGia)
@@ -1251,7 +1369,7 @@ func Abc_RecToGia3(pMan *Gia_Man_t, pIfMan *If_Man_t, pCut *If_Cut_t, vLeaves *V
 	// collect GIA nodes for leaves
 	Vec_IntClear(p.vLabels)
 	for i = 0; i < nLeaves; i++ {
-		Vec_IntPush(p.vLabels, Abc_LitNotCond(Vec_IntEntry(vLeaves, pCanonPerm[i]), (uCanonPhase>>i)&1))
+		Vec_IntPush(p.vLabels, Abc_LitNotCond(Vec_IntEntry(vLeaves, int32(pCanonPerm[i])), int32((uCanonPhase>>i)&1)))
 	}
 
 	// compute HOP nodes for internal nodes
@@ -1281,7 +1399,7 @@ func Abc_RecToGia3(pMan *Gia_Man_t, pIfMan *If_Man_t, pCut *If_Cut_t, vLeaves *V
 	assert(Gia_ObjIsAnd(pGiaTemp) != 0, "Gia_ObjIsAnd(pGiaTemp)")
 	iGiaObj = Vec_IntEntry(p.vLabels, Gia_ObjNum(pGia, pGiaTemp)+nLeaves)
 	// complement the result if needed
-	return Abc_LitNotCond(iGiaObj, Gia_ObjFaninC0(pGiaPo)^((uCanonPhase>>nLeaves)&1)^pCut.fCompl)
+	return Abc_LitNotCond(iGiaObj, Gia_ObjFaninC0(pGiaPo)^int32((uCanonPhase>>nLeaves)&1)^If_CutComplement(pCut))
 }
 
 /**Function*************************************************************
@@ -1462,15 +1580,15 @@ func Lms_GiaNormalize(p *Lms_Man_t) {
 **********************************************************************
 */
 func Abc_NtkRecTruthCompare(p1 *int32, p2 *int32) int32 {
-	var Diff int32 = Vec_StrEntry(s_pMan3.vSupps, *p1) - Vec_StrEntry(s_pMan3.vSupps, *p2)
+	var Diff int32 = int32(Vec_StrEntry(s_pMan3.vSupps, *p1)) - int32(Vec_StrEntry(s_pMan3.vSupps, *p2))
 	if Diff != 0 {
 		return Diff
 	}
-	return lmsCompareTruthWords(Vec_MemReadEntry(s_pMan3.vTtMem, int(*p1)), Vec_MemReadEntry(s_pMan3.vTtMem, int(*p2)))
+	return lmsCompareTruthWords(Vec_MemReadEntry(s_pMan3.vTtMem, *p1), Vec_MemReadEntry(s_pMan3.vTtMem, *p2))
 }
 func Abc_NtkRecDumpTt3(pFileName string, fBinary int32) {
 	var pFile *os.File
-	var pBuffer [1000]byte
+	pBuffer := make([]byte, 1000)
 	var p *Lms_Man_t = s_pMan3
 	var vEntries *Vec_Int_t
 	var pTruth []word
@@ -1490,7 +1608,7 @@ func Abc_NtkRecDumpTt3(pFileName string, fBinary int32) {
 	}
 	p.vSupps = Vec_StrAlloc(nEntries)
 	for i = 0; i < Vec_MemEntryNum(p.vTtMem); i++ {
-		pTruth = Vec_MemReadEntry(p.vTtMem, int(i))
+		pTruth = Vec_MemReadEntry(p.vTtMem, i)
 		Vec_StrPush(p.vSupps, byte(Abc_TtSupportSize(pTruth, nVars)))
 	}
 	vEntries = Vec_IntStartNatural(nEntries)
@@ -1512,8 +1630,8 @@ func Abc_NtkRecDumpTt3(pFileName string, fBinary int32) {
 		extra.Extra_PrintHex(pFile, wordsToUint32(pTruth), nVars)
 		fmt.Fprintf(pFile, "  ")
 		//        Kit_DsdWriteFromTruth( pBuffer, (unsigned *)pTruth, nVars );
-		Dau_DsdDecompose(pTruth, p.nVars, 0, lmsBoolInt32(nVars <= 10), &pBuffer[:])
-		fmt.Fprintf(pFile, "%s\n", pBuffer[:])
+		Dau_DsdDecompose(pTruth, p.nVars, 0, lmsBoolInt32(nVars <= 10), &pBuffer)
+		fmt.Fprintf(pFile, "%s\n", pBuffer)
 	}
 	_ = (pFile).Close()
 	Vec_IntFree(vEntries)

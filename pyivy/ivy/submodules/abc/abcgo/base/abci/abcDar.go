@@ -9,6 +9,7 @@ import (
 	giapkg "github.com/glycerine/abcgo/aig/gia"
 	hoppkg "github.com/glycerine/abcgo/aig/hop"
 	"github.com/glycerine/abcgo/base/abc"
+	"github.com/glycerine/abcgo/map/amap"
 )
 
 /**CFile****************************************************************
@@ -416,7 +417,7 @@ func Abc_NtkFromAigPhase(pMan *Aig_Man_t) *Abc_Ntk_t {
 		copies[id], valid[id] = pNtkNew.CI(i).Signal(), true
 	}
 	abc.Abc_NtkOrderCisCos(pNtkNew)
-	manager := pNtkNew.FunctionManager.(*abc.Abc_Aig_t)
+	manager := abc.Abc_NtkReadFunctionManager(pNtkNew).(*abc.Abc_Aig_t)
 	var build func(aiggraph.Edge) abc.Edge
 	build = func(edge aiggraph.Edge) abc.Edge {
 		id := edge.NodeID()
@@ -1156,7 +1157,7 @@ func Abc_NtkConstructFromCnf(pNtk *Abc_Ntk_t, p *Cnf_Man_t, vMapped *Vec_Ptr_t) 
 	// make the mapper point to the new network
 	Aig_ManConst1(p.pManAig).pData = Abc_NtkCreateNodeConst1(pNtkNew)
 	Abc_NtkForEachCi(pNtk, pNode, i)
-	Aig_ManCi(p.pManAig, i).pData = pNode.pCopy
+	Aig_ManCi(p.pManAig, i).pData = Abc_ObjReadCopyEdge(pNode)
 	// process the nodes in topological order
 	vCover = Vec_IntAlloc(1 << 16)
 	for i, item := range Vec_PtrArray(vMapped) {
@@ -1174,10 +1175,10 @@ func Abc_NtkConstructFromCnf(pNtk *Abc_Ntk_t, p *Cnf_Man_t, vMapped *Vec_Ptr_t) 
 				uTruth = 0xFFFF & truth[0]
 			}
 			Cnf_SopConvertToVector(p.pSops[uTruth], p.pSopSizes[uTruth], vCover)
-			pNodeNew.pData = Abc_SopCreateFromIsop(pNtkNew.pManFunc, pCut.nFanins, vCover)
+			abc.Abc_ObjSetData(pNodeNew, Abc_SopCreateFromIsop(abc.Abc_NtkReadFunctionManager(pNtkNew), pCut.nFanins, vCover))
 
 		} else {
-			pNodeNew.pData = Abc_SopCreateFromIsop(pNtkNew.pManFunc, pCut.nFanins, pCut.vIsop[1])
+			abc.Abc_ObjSetData(pNodeNew, Abc_SopCreateFromIsop(abc.Abc_NtkReadFunctionManager(pNtkNew), pCut.nFanins, pCut.vIsop[1]))
 		}
 		// save the node
 		pObj.pData = pNodeNew
@@ -1188,7 +1189,7 @@ func Abc_NtkConstructFromCnf(pNtk *Abc_Ntk_t, p *Cnf_Man_t, vMapped *Vec_Ptr_t) 
 	{
 		pObj = Aig_ManCo(p.pManAig, i)
 		pNodeNew = Abc_ObjNotCond(Aig_ObjFanin0(pObj).Data.(*Abc_Obj_t), Aig_ObjFaninC0(pObj))
-		Abc_ObjAddFanin(pNode.pCopy, pNodeNew)
+		Abc_ObjAddFanin(Abc_ObjReadCopyEdge(pNode).Object, pNodeNew)
 	}
 
 	// remove the constant node if not used
@@ -1300,7 +1301,7 @@ func Abc_NtkDSat(pNtk *Abc_Ntk_t, nConfLimit ABC_INT64_T, nInsLimit ABC_INT64_T,
 	//    assert( Abc_NtkPoNum(pNtk) == 1 );
 	pMan = Abc_NtkToDar(pNtk, 0, 0)
 	RetValue = Fra_FraigSat(pMan, nConfLimit, nInsLimit, nLearnedStart, nLearnedDelta, nLearnedPerce, fAlignPol, fAndOuts, fNewSolver, fVerbose)
-	pNtk.pModel = pMan.pData
+	Abc_NtkSetModel(pNtk, pMan.pData)
 	pMan.pData = nil
 	Aig_ManStop(pMan)
 	return RetValue
@@ -1326,7 +1327,7 @@ func Abc_NtkPartitionedSat(pNtk *Abc_Ntk_t, nAlgo int32, nPartSize int32, nConfP
 	assert(Abc_NtkLatchNum(pNtk) == 0, "Abc_NtkLatchNum(pNtk) == 0")
 	pMan = Abc_NtkToDar(pNtk, 0, 0)
 	RetValue = Aig_ManPartitionedSat(pMan, nAlgo, nPartSize, nConfPart, nConfTotal, fAlignPol, fSynthesize, fVerbose)
-	pNtk.pModel = pMan.pData
+	Abc_NtkSetModel(pNtk, pMan.pData)
 	pMan.pData = nil
 	Aig_ManStop(pMan)
 	return RetValue
@@ -1393,7 +1394,7 @@ func Abc_NtkDarCec(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, nConfLimit int32, fPartit
 		Abc_Print(1, "Networks are NOT EQUIVALENT after structural hashing.\n")
 		// report the error
 		if pNtk2 == nil {
-			pNtk1.pModel = Abc_NtkVerifyGetCleanModel(pNtk1, 1)
+			Abc_NtkSetModel(pNtk1, Abc_NtkVerifyGetCleanModel(pNtk1, 1))
 		}
 		//        pMiter->pModel = Abc_NtkVerifyGetCleanModel( pMiter, nFrames );
 		//        Abc_NtkVerifyReportErrorSeq( pNtk1, pNtk2, pMiter->pModel, nFrames );
@@ -1418,7 +1419,7 @@ func Abc_NtkDarCec(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, nConfLimit int32, fPartit
 	RetValue = Fra_FraigCec(&pMan, 100000, fVerbose)
 	// transfer model if given
 	if pNtk2 == nil {
-		pNtk1.pModel = pMan.pData
+		Abc_NtkSetModel(pNtk1, pMan.pData)
 		pMan.pData = nil
 	}
 	Aig_ManStop(pMan)
@@ -1750,10 +1751,10 @@ func Abc_NtkDarBmc(pNtk *Abc_Ntk_t, nStart int32, nFrames int32, nSizeMax int32,
 		if piFrames != nil {
 			*piFrames = iFrame
 		}
-		ABC_FREE(pNtk.pModel)
-		ABC_FREE(pNtk.pSeqModel)
-		pNtk.pSeqModel = pMan.pSeqModel
-		pMan.pSeqModel = nil
+		Abc_NtkSetModel(pNtk, nil)
+		Abc_NtkSetSeqModel(pNtk, nil)
+		Abc_NtkSetSeqModel(pNtk, pMan.SequentialCounterexample())
+		pMan.ClearSequentialCounterexample()
 		if RetValue == 1 {
 			Abc_Print(1, "Incorrect return value.  ")
 		} else if RetValue == -1 {
@@ -1766,29 +1767,29 @@ func Abc_NtkDarBmc(pNtk *Abc_Ntk_t, nStart int32, nFrames int32, nSizeMax int32,
 
 		} else { // if ( RetValue == 0 )
 
-			var pCex *Abc_Cex_t = pNtk.pSeqModel
-			Abc_Print(1, "Output %d of miter \"%s\" was asserted in frame %d. ", pCex.iPo, pNtk.pName, pCex.iFrame)
+			var pCex *Abc_Cex_t = Abc_NtkReadSeqModel(pNtk)
+			Abc_Print(1, "Output %d of miter \"%s\" was asserted in frame %d. ", pCex.iPo, Abc_NtkName(pNtk), pCex.iFrame)
 		}
 		ABC_PRT("Time", Abc_Clock()-clk)
 
 	} else {
 		RetValue = Saig_BmcPerform(pMan, nStart, nFrames, nNodeDelta, nTimeOut, nBTLimit, nBTLimitAll, fVerbose, 0, piFrames, 0, fUseSatoko)
-		ABC_FREE(pNtk.pModel)
-		ABC_FREE(pNtk.pSeqModel)
-		pNtk.pSeqModel = pMan.pSeqModel
-		pMan.pSeqModel = nil
+		Abc_NtkSetModel(pNtk, nil)
+		Abc_NtkSetSeqModel(pNtk, nil)
+		Abc_NtkSetSeqModel(pNtk, pMan.SequentialCounterexample())
+		pMan.ClearSequentialCounterexample()
 	}
 	// verify counter-example
-	if pNtk.pSeqModel {
-		status = Saig_ManVerifyCex(pMan, pNtk.pSeqModel)
+	if Abc_NtkReadSeqModel(pNtk) {
+		status = Saig_ManVerifyCex(pMan, Abc_NtkReadSeqModel(pNtk))
 		if status == 0 {
 			Abc_Print(1, "Abc_NtkDarBmc(): Counter-example verification has FAILED.\n")
 		}
 	}
 	Aig_ManStop(pMan)
 	// update the counter-example
-	if pNtk.pSeqModel && (vMap != nil) {
-		pNtk.pSeqModel.iPo = Vec_IntEntry(vMap, pNtk.pSeqModel.iPo)
+	if Abc_NtkReadSeqModel(pNtk) && (vMap != nil) {
+		Abc_NtkReadSeqModel(pNtk).iPo = Vec_IntEntry(vMap, Abc_NtkReadSeqModel(pNtk).iPo)
 	}
 	Vec_IntFreeP(&vMap)
 	return RetValue
@@ -1834,10 +1835,10 @@ func Abc_NtkDarBmc3(pNtk *Abc_Ntk_t, pPars *Saig_ParBmc_t, fOrDecomp int32) int3
 	}
 
 	RetValue = Saig_ManBmcScalable(pMan, pPars)
-	ABC_FREE(pNtk.pModel)
-	ABC_FREE(pNtk.pSeqModel)
-	pNtk.pSeqModel = pMan.pSeqModel
-	pMan.pSeqModel = nil
+	Abc_NtkSetModel(pNtk, nil)
+	Abc_NtkSetSeqModel(pNtk, nil)
+	Abc_NtkSetSeqModel(pNtk, pMan.SequentialCounterexample())
+	pMan.ClearSequentialCounterexample()
 	if !pPars.fSilent {
 		if RetValue == 1 {
 			Abc_Print(1, "Explored all reachable states after completing %d frames.  ", 1<<Aig_ManRegNum(pMan))
@@ -1863,17 +1864,17 @@ func Abc_NtkDarBmc3(pNtk *Abc_Ntk_t, pPars *Saig_ParBmc_t, fOrDecomp int32) int3
 		} else { // if ( RetValue == 0 )
 
 			if !pPars.fSolveAll {
-				var pCex *Abc_Cex_t = pNtk.pSeqModel
-				Abc_Print(1, "Output %d of miter \"%s\" was asserted in frame %d. ", pCex.iPo, pNtk.pName, pCex.iFrame)
+				var pCex *Abc_Cex_t = Abc_NtkReadSeqModel(pNtk)
+				Abc_Print(1, "Output %d of miter \"%s\" was asserted in frame %d. ", pCex.iPo, Abc_NtkName(pNtk), pCex.iFrame)
 
 			} else {
 				var nOutputs int32 = Saig_ManPoNum(pMan) - Saig_ManConstrNum(pMan)
-				if pMan.vSeqModelVec == nil || Vec_PtrCountZero(pMan.vSeqModelVec) == nOutputs {
+				if pMan.SequentialCounterexamples() == nil || Vec_PtrCountZero(pMan.SequentialCounterexamples()) == nOutputs {
 					Abc_Print(1, "None of the %d outputs is found to be SAT", nOutputs)
-				} else if Vec_PtrCountZero(pMan.vSeqModelVec) == 0 {
+				} else if Vec_PtrCountZero(pMan.SequentialCounterexamples()) == 0 {
 					Abc_Print(1, "All %d outputs are found to be SAT", nOutputs)
 				} else {
-					Abc_Print(1, "Some outputs are SAT (%d out of %d)", nOutputs-Vec_PtrCountZero(pMan.vSeqModelVec), nOutputs)
+					Abc_Print(1, "Some outputs are SAT (%d out of %d)", nOutputs-Vec_PtrCountZero(pMan.SequentialCounterexamples()), nOutputs)
 					if pPars.nDropOuts {
 						Abc_Print(1, " while others timed out (%d out of %d)", pPars.nDropOuts, nOutputs)
 					}
@@ -1885,22 +1886,21 @@ func Abc_NtkDarBmc3(pNtk *Abc_Ntk_t, pPars *Saig_ParBmc_t, fOrDecomp int32) int3
 		ABC_PRT("Time", Abc_Clock()-clk)
 	}
 	if RetValue == 0 && pPars.fSolveAll {
-		if pNtk.vSeqModelVec {
-			Vec_PtrFreeFree(pNtk.vSeqModelVec)
+		if abc.Abc_NtkReadSeqModelVec(pNtk) != nil {
+			Vec_PtrFreeFree(abc.Abc_NtkReadSeqModelVec(pNtk))
 		}
-		pNtk.vSeqModelVec = pMan.vSeqModelVec
-		pMan.vSeqModelVec = nil
+		abc.Abc_NtkSetSeqModelVec(pNtk, pMan.TakeSequentialCounterexamples())
 	}
-	if pNtk.pSeqModel {
-		status = Saig_ManVerifyCex(pMan, pNtk.pSeqModel)
+	if Abc_NtkReadSeqModel(pNtk) {
+		status = Saig_ManVerifyCex(pMan, Abc_NtkReadSeqModel(pNtk))
 		if status == 0 {
 			Abc_Print(1, "Abc_NtkDarBmc3(): Counter-example verification has FAILED.\n")
 		}
 	}
 	Aig_ManStop(pMan)
 	// update the counter-example
-	if pNtk.pSeqModel && (vMap != nil) {
-		pNtk.pSeqModel.iPo = Vec_IntEntry(vMap, pNtk.pSeqModel.iPo)
+	if Abc_NtkReadSeqModel(pNtk) && (vMap != nil) {
+		Abc_NtkReadSeqModel(pNtk).iPo = Vec_IntEntry(vMap, Abc_NtkReadSeqModel(pNtk).iPo)
 	}
 	Vec_IntFreeP(&vMap)
 	return RetValue
@@ -1945,19 +1945,19 @@ func Abc_NtkDarBmcInter_int(pMan *Aig_Man_t, pPars *Inter_ManParams_t, ppNtkRes 
 			pTemp = Aig_ManScl(pAux, 1, 1, 0, -1, -1, 0, 0)
 			Aig_ManStop(pAux)
 			if Aig_ManRegNum(pTemp) == 0 {
-				pTemp.pSeqModel = nil
+				pTemp.ClearSequentialCounterexample()
 				RetValue = Fra_FraigSat(pTemp, pPars.nBTLimit, 0, 0, 0, 0, 0, 0, 0, 0)
 				if pTemp.pData != nil {
-					pTemp.pSeqModel = Abc_CexCreate(Aig_ManRegNum(pMan), Saig_ManPiNum(pMan), pTemp.pData, 0, i, 1)
+					pTemp.SetCecCounterexample(Abc_CexCreate(Aig_ManRegNum(pMan), Saig_ManPiNum(pMan), pTemp.pData, 0, i, 1))
 				}
 				//                pNtk->pModel = pTemp->pData, pTemp->pData = NULL;
 
 			} else {
 				RetValue = Inter_ManPerformInterpolation(pTemp, pPars, &iFrame)
 			}
-			if pTemp.pSeqModel != nil {
+			if pTemp.SequentialCounterexample() != nil {
 				if pPars.fDropSatOuts {
-					Abc_Print(1, "Output %d proved SAT in frame %d (replacing by const 0 and continuing...)\n", i, pTemp.pSeqModel.iFrame)
+					Abc_Print(1, "Output %d proved SAT in frame %d (replacing by const 0 and continuing...)\n", i, pTemp.SequentialCounterexample().iFrame)
 					Aig_ObjPatchFanin0(pMan, pObjPo, Aig_ManConst0(pMan))
 					Aig_ManStop(pTemp)
 					nTotalProvedSat++
@@ -1965,9 +1965,9 @@ func Abc_NtkDarBmcInter_int(pMan *Aig_Man_t, pPars *Inter_ManParams_t, ppNtkRes 
 
 				} else {
 					var pCex *Abc_Cex_t
-					pCex = pTemp.pSeqModel
-					pMan.pSeqModel = pCex
-					pTemp.pSeqModel = nil
+					pCex = pTemp.SequentialCounterexample()
+					pMan.SetCecCounterexample(pCex)
+					pTemp.ClearSequentialCounterexample()
 					pCex.iPo = i
 					Aig_ManStop(pTemp)
 					break
@@ -1987,7 +1987,7 @@ func Abc_NtkDarBmcInter_int(pMan *Aig_Man_t, pPars *Inter_ManParams_t, ppNtkRes 
 			Abc_Print(1, "Solving output %3d (out of %3d) using interpolation.\r", i, Saig_ManPoNum(pMan))
 		}
 		Aig_ManCleanup(pMan)
-		if pMan.pSeqModel == nil {
+		if pMan.SequentialCounterexample() == nil {
 			Abc_Print(1, "Interpolation left %d (out of %d) outputs unsolved              \n", Counter, Saig_ManPoNum(pMan))
 			if Counter != 0 {
 				RetValue = -1
@@ -2009,10 +2009,10 @@ func Abc_NtkDarBmcInter_int(pMan *Aig_Man_t, pPars *Inter_ManParams_t, ppNtkRes 
 		Abc_Print(1, "Property proved.  ")
 	} else if RetValue == 0 {
 		out := int32(-1)
-		if pMan.pSeqModel != nil {
-			out = pMan.pSeqModel.iPo
+		if pMan.SequentialCounterexample() != nil {
+			out = pMan.SequentialCounterexample().iPo
 		}
-		Abc_Print(1, "Output %d of miter \"%s\" was asserted in frame %d.  ", out, pMan.pName, iFrame)
+		Abc_Print(1, "Output %d of miter \"%s\" was asserted in frame %d.  ", out, pMan.Name, iFrame)
 	} else if RetValue == -1 {
 		Abc_Print(1, "Property UNDECIDED.  ")
 	} else {
@@ -2055,10 +2055,10 @@ func Abc_NtkDarBmcInter(pNtk *Abc_Ntk_t, pPars *Inter_ManParams_t, ppNtkRes **Ab
 	} else {
 		RetValue = Abc_NtkDarBmcInter_int(pMan, pPars, nil)
 	}
-	ABC_FREE(pNtk.pModel)
-	ABC_FREE(pNtk.pSeqModel)
-	pNtk.pSeqModel = pMan.pSeqModel
-	pMan.pSeqModel = nil
+	Abc_NtkSetModel(pNtk, nil)
+	Abc_NtkSetSeqModel(pNtk, nil)
+	Abc_NtkSetSeqModel(pNtk, pMan.SequentialCounterexample())
+	pMan.ClearSequentialCounterexample()
 	Aig_ManStop(pMan)
 	return RetValue
 }
@@ -2096,16 +2096,16 @@ func Abc_NtkDarDemiter(pNtk *Abc_Ntk_t) int32 {
 		return 0
 	}
 	// create file names
-	name := pNtk.pSpec
+	name := abc.Abc_NtkSpec(pNtk)
 	if name == "" {
-		name = pNtk.pName
+		name = Abc_NtkName(pNtk)
 	}
 	pFileNameGeneric = Extra_FileNameGeneric(name)
 	//    sprintf( pFileName0,  "%s%s",  pFileNameGeneric, "_part0.aig" );
 	//    sprintf( pFileName1,  "%s%s",  pFileNameGeneric, "_part1.aig" );
 	pFileName0 = fmt.Sprintf("%s", "part0.aig")
 	pFileName1 = fmt.Sprintf("%s", "part1.aig")
-	ABC_FREE(pFileNameGeneric)
+	pFileNameGeneric = ""
 	// dump files
 	Ioa_WriteAiger(pPart0, pFileName0, 0, 0)
 	Ioa_WriteAiger(pPart1, pFileName1, 0, 0)
@@ -2158,10 +2158,10 @@ func Abc_NtkDarDemiterNew(pNtk *Abc_Ntk_t) int32 {
 		return 0
 	}
 	// create file names
-	pFileNameGeneric = Extra_FileNameGeneric(pNtk.pSpec)
+	pFileNameGeneric = Extra_FileNameGeneric(abc.Abc_NtkSpec(pNtk))
 	pFileName0 = fmt.Sprintf("%s%s", pFileNameGeneric, "_part0.aig")
 	pFileName1 = fmt.Sprintf("%s%s", pFileNameGeneric, "_part1.aig")
-	ABC_FREE(pFileNameGeneric)
+	pFileNameGeneric = ""
 	// dump files
 	Ioa_WriteAiger(pPart0, pFileName0, 0, 0)
 	Ioa_WriteAiger(pPart1, pFileName1, 0, 0)
@@ -2191,7 +2191,6 @@ func Abc_NtkDarDemiterNew(pNtk *Abc_Ntk_t) int32 {
 **********************************************************************
 */
 func Abc_NtkDarDemiterDual(pNtk *Abc_Ntk_t, fVerbose int32) int32 {
-	var pFileNameGeneric string
 	var pFileName0 string // was [1000]byte in C
 
 	var pFileName1 string // was [1000]byte in C
@@ -2213,18 +2212,14 @@ func Abc_NtkDarDemiterDual(pNtk *Abc_Ntk_t, fVerbose int32) int32 {
 		return 0
 	}
 	// create new AIG
-	ABC_FREE(pPart0.pName)
-	pPart0.pName = Abc_UtilStrsav("part0")
+	pPart0.Name = "part0"
 	// create new AIGs
-	ABC_FREE(pPart1.pName)
-	pPart1.pName = Abc_UtilStrsav("part1")
+	pPart1.Name = "part1"
 	// create file names
-	pFileNameGeneric = Extra_FileNameGeneric(pNtk.pSpec)
 	//    sprintf( pFileName0,  "%s%s",  pFileNameGeneric, "_part0.aig" );
 	//    sprintf( pFileName1,  "%s%s",  pFileNameGeneric, "_part1.aig" );
 	pFileName0 = fmt.Sprintf("%s", "part0.aig")
 	pFileName1 = fmt.Sprintf("%s", "part1.aig")
-	ABC_FREE(pFileNameGeneric)
 	Ioa_WriteAiger(pPart0, pFileName0, 0, 0)
 	Ioa_WriteAiger(pPart1, pFileName1, 0, 0)
 	Abc_Print(1, "Demitering produced two files \"%s\" and \"%s\".\n", pFileName0, pFileName1)
@@ -2284,8 +2279,8 @@ func Abc_NtkDarProve(pNtk *Abc_Ntk_t, pSecPar *Fra_Sec_t, nBmcFramesMax int32, n
 		// transfer model if given
 		//        pNtk->pModel = pNtkComb->pModel; pNtkComb->pModel = NULL;
 		if RetValue == 0 && (Abc_NtkLatchNum(pNtk) == 0) {
-			pNtk.pModel = pNtkComb.pModel
-			pNtkComb.pModel = nil
+			Abc_NtkSetModel(pNtk, Abc_NtkReadModel(pNtkComb))
+			Abc_NtkSetModel(pNtkComb, nil)
 			if pSecPar.fReportSolution {
 				Abc_Print(1, "SOLUTION: FAIL       ")
 			} else {
@@ -2329,10 +2324,10 @@ func Abc_NtkDarProve(pNtk *Abc_Ntk_t, pSecPar *Fra_Sec_t, nBmcFramesMax int32, n
 				ABC_PRT("Time", Abc_Clock()-clkTotal)
 			}
 			// return the counter-example generated
-			ABC_FREE(pNtk.pModel)
-			ABC_FREE(pNtk.pSeqModel)
-			pNtk.pSeqModel = pMan.pSeqModel
-			pMan.pSeqModel = nil
+			Abc_NtkSetModel(pNtk, nil)
+			Abc_NtkSetSeqModel(pNtk, nil)
+			Abc_NtkSetSeqModel(pNtk, pMan.SequentialCounterexample())
+			pMan.ClearSequentialCounterexample()
 			Aig_ManStop(pMan)
 			return RetValue
 		}
@@ -2343,14 +2338,14 @@ func Abc_NtkDarProve(pNtk *Abc_Ntk_t, pSecPar *Fra_Sec_t, nBmcFramesMax int32, n
 
 	} else {
 		RetValue = Fra_FraigSec(pMan, pSecPar, nil)
-		ABC_FREE(pNtk.pModel)
-		ABC_FREE(pNtk.pSeqModel)
-		pNtk.pSeqModel = pMan.pSeqModel
-		pMan.pSeqModel = nil
-		if pNtk.pSeqModel {
-			var pCex *Abc_Cex_t = pNtk.pSeqModel
-			Abc_Print(1, "Output %d of miter \"%s\" was asserted in frame %d.\n", pCex.iPo, pNtk.pName, pCex.iFrame)
-			if !Saig_ManVerifyCex(pMan, pNtk.pSeqModel) {
+		Abc_NtkSetModel(pNtk, nil)
+		Abc_NtkSetSeqModel(pNtk, nil)
+		Abc_NtkSetSeqModel(pNtk, pMan.SequentialCounterexample())
+		pMan.ClearSequentialCounterexample()
+		if Abc_NtkReadSeqModel(pNtk) {
+			var pCex *Abc_Cex_t = Abc_NtkReadSeqModel(pNtk)
+			Abc_Print(1, "Output %d of miter \"%s\" was asserted in frame %d.\n", pCex.iPo, Abc_NtkName(pNtk), pCex.iFrame)
+			if !Saig_ManVerifyCex(pMan, Abc_NtkReadSeqModel(pNtk)) {
 				Abc_Print(1, "Abc_NtkDarProve(): Counter-example verification has FAILED.\n")
 			}
 		}
@@ -2388,9 +2383,9 @@ func Abc_NtkDarSec(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, pSecPar *Fra_Sec_t) int32
 	if RetValue == 0 {
 		Abc_Print(1, "Networks are NOT EQUIVALENT after structural hashing.\n")
 		// report the error
-		pMiter.pModel = Abc_NtkVerifyGetCleanModel(pMiter, pSecPar.nFramesMax)
+		Abc_NtkSetModel(pMiter, Abc_NtkVerifyGetCleanModel(pMiter, pSecPar.nFramesMax))
 		//        Abc_NtkVerifyReportErrorSeq( pNtk1, pNtk2, pMiter->pModel, pSecPar->nFramesMax );
-		ABC_FREE(pMiter.pModel)
+		Abc_NtkSetModel(pMiter, nil)
 		Abc_NtkDelete(pMiter)
 		return 0
 	}
@@ -2474,11 +2469,11 @@ func Abc_NtkDarPdr(pNtk *Abc_Ntk_t, pPars *Pdr_Par_t) int32 {
 			Abc_Print(1, "Property proved.  ")
 		} else {
 			if RetValue == 0 {
-				if pMan.pSeqModel == nil {
+				if pMan.SequentialCounterexample() == nil {
 					Abc_Print(1, "Abc_NtkDarPdr(): Counter-example is not available.\n")
 				} else {
-					Abc_Print(1, "Output %d of miter \"%s\" was asserted in frame %d.  ", pMan.pSeqModel.iPo, pNtk.pName, pMan.pSeqModel.iFrame)
-					if !Saig_ManVerifyCex(pMan, pMan.pSeqModel) {
+					Abc_Print(1, "Output %d of miter \"%s\" was asserted in frame %d.  ", pMan.SequentialCounterexample().iPo, Abc_NtkName(pNtk), pMan.SequentialCounterexample().iFrame)
+					if !Saig_ManVerifyCex(pMan, pMan.SequentialCounterexample()) {
 						Abc_Print(1, "Abc_NtkDarPdr(): Counter-example verification has FAILED.\n")
 					}
 				}
@@ -2507,14 +2502,13 @@ func Abc_NtkDarPdr(pNtk *Abc_Ntk_t, pPars *Pdr_Par_t) int32 {
 		   Abc_Print( 1, "\n" );
 		*/
 	}
-	ABC_FREE(pNtk.pSeqModel)
-	pNtk.pSeqModel = pMan.pSeqModel
-	pMan.pSeqModel = nil
-	if pNtk.vSeqModelVec {
-		Vec_PtrFreeFree(pNtk.vSeqModelVec)
+	Abc_NtkSetSeqModel(pNtk, nil)
+	Abc_NtkSetSeqModel(pNtk, pMan.SequentialCounterexample())
+	pMan.ClearSequentialCounterexample()
+	if abc.Abc_NtkReadSeqModelVec(pNtk) != nil {
+		Vec_PtrFreeFree(abc.Abc_NtkReadSeqModelVec(pNtk))
 	}
-	pNtk.vSeqModelVec = pMan.vSeqModelVec
-	pMan.vSeqModelVec = nil
+	abc.Abc_NtkSetSeqModelVec(pNtk, pMan.TakeSequentialCounterexamples())
 	Aig_ManStop(pMan)
 	return RetValue
 }
@@ -2706,10 +2700,10 @@ func Abc_NtkDarLatchSweep(pNtk *Abc_Ntk_t, fLatchConst int32, fLatchEqual int32,
 		}
 
 	} else {
-		if pMan.vFlopNums {
-			Vec_IntFree(pMan.vFlopNums)
+		if pMan.FlopNumbers != nil {
+			pMan.FlopNumbers = nil
 		}
-		pMan.vFlopNums = nil
+		pMan.FlopNumbers = nil
 		pTemp = pMan
 		pMan = Aig_ManScl(pTemp, fLatchConst, fLatchEqual, fUseMvSweep, nFramesSymb, nFramesSatur, fVerbose, fVeryVerbose)
 		Aig_ManStop(pTemp)
@@ -2742,10 +2736,10 @@ func Abc_NtkDarRetime(pNtk *Abc_Ntk_t, nStepsMax int32, fVerbose int32) *Abc_Ntk
 		return nil
 	}
 	//    Aig_ManReduceLachesCount( pMan );
-	if pMan.vFlopNums {
-		Vec_IntFree(pMan.vFlopNums)
+	if pMan.FlopNumbers != nil {
+		pMan.FlopNumbers = nil
 	}
-	pMan.vFlopNums = nil
+	pMan.FlopNumbers = nil
 
 	pTemp = pMan
 	pMan = Rtm_ManRetime(pTemp, 1, nStepsMax, fVerbose)
@@ -2780,10 +2774,10 @@ func Abc_NtkDarRetimeF(pNtk *Abc_Ntk_t, nStepsMax int32, fVerbose int32) *Abc_Nt
 		return nil
 	}
 	//    Aig_ManReduceLachesCount( pMan );
-	if pMan.vFlopNums {
-		Vec_IntFree(pMan.vFlopNums)
+	if pMan.FlopNumbers != nil {
+		pMan.FlopNumbers = nil
 	}
-	pMan.vFlopNums = nil
+	pMan.FlopNumbers = nil
 
 	pTemp = pMan
 	pMan = Aig_ManRetimeFrontier(pTemp, nStepsMax)
@@ -2819,10 +2813,10 @@ func Abc_NtkDarRetimeMostFwd(pNtk *Abc_Ntk_t, nMaxIters int32, fVerbose int32) *
 		return nil
 	}
 	//    Aig_ManReduceLachesCount( pMan );
-	if pMan.vFlopNums {
-		Vec_IntFree(pMan.vFlopNums)
+	if pMan.FlopNumbers != nil {
+		pMan.FlopNumbers = nil
 	}
-	pMan.vFlopNums = nil
+	pMan.FlopNumbers = nil
 
 	pTemp = pMan
 	pMan = Saig_ManRetimeForward(pTemp, nMaxIters, fVerbose)
@@ -2856,10 +2850,10 @@ func Abc_NtkDarRetimeMinArea(pNtk *Abc_Ntk_t, nMaxIters int32, fForwardOnly int3
 	if pMan == nil {
 		return nil
 	}
-	if pMan.vFlopNums {
-		Vec_IntFree(pMan.vFlopNums)
+	if pMan.FlopNumbers != nil {
+		pMan.FlopNumbers = nil
 	}
-	pMan.vFlopNums = nil
+	pMan.FlopNumbers = nil
 
 	pTemp = pMan
 	pMan = Saig_ManRetimeMinArea(pTemp, nMaxIters, fForwardOnly, fBackwardOnly, fInitial, fVerbose)
@@ -2891,10 +2885,10 @@ func Abc_NtkDarRetimeStep(pNtk *Abc_Ntk_t, fVerbose int32) *Abc_Ntk_t {
 	if pMan == nil {
 		return nil
 	}
-	if pMan.vFlopNums {
-		Vec_IntFree(pMan.vFlopNums)
+	if pMan.FlopNumbers != nil {
+		pMan.FlopNumbers = nil
 	}
-	pMan.vFlopNums = nil
+	pMan.FlopNumbers = nil
 
 	Aig_ManPrintStats(pMan)
 	Saig_ManRetimeSteps(pMan, 1000, 1, 0)
@@ -2959,7 +2953,7 @@ func Abc_NtkDarSeqSim(pNtk *Abc_Ntk_t, nFrames int32, nWords int32, TimeOut int3
 	var clk abctime = Abc_Clock()
 	if Abc_NtkGetChoiceNum(pNtk) != 0 {
 		Abc_Print(1, "Removing %d choices from the AIG.\n", Abc_NtkGetChoiceNum(pNtk))
-		Abc_AigCleanup(pNtk.pManFunc.(*abc.Abc_Aig_t))
+		Abc_AigCleanup(abc.Abc_NtkReadFunctionManager(pNtk).(*abc.Abc_Aig_t))
 	}
 	pMan = Abc_NtkToDar(pNtk, 0, 1)
 	if fNew != 0 {
@@ -2982,9 +2976,9 @@ func Abc_NtkDarSeqSim(pNtk *Abc_Ntk_t, nFrames int32, nWords int32, TimeOut int3
 					Abc_Print(1, "Abc_NtkDarSeqSim(): Counter-example verification has FAILED.\n")
 				}
 			}
-			ABC_FREE(pNtk.pModel)
-			ABC_FREE(pNtk.pSeqModel)
-			pNtk.pSeqModel = pGia.pCexSeq
+			Abc_NtkSetModel(pNtk, nil)
+			Abc_NtkSetSeqModel(pNtk, nil)
+			Abc_NtkSetSeqModel(pNtk, pGia.pCexSeq)
 			pGia.pCexSeq = nil
 			RetValue = 0
 
@@ -3018,9 +3012,9 @@ func Abc_NtkDarSeqSim(pNtk *Abc_Ntk_t, nFrames int32, nWords int32, TimeOut int3
 					Abc_Print(1, "Abc_NtkDarSeqSim(): Counter-example verification has FAILED.\n")
 				}
 			}
-			ABC_FREE(pNtk.pModel)
-			ABC_FREE(pNtk.pSeqModel)
-			pNtk.pSeqModel = pCex
+			Abc_NtkSetModel(pNtk, nil)
+			Abc_NtkSetSeqModel(pNtk, nil)
+			Abc_NtkSetSeqModel(pNtk, pCex)
 			RetValue = 0
 
 		} else {
@@ -3054,33 +3048,32 @@ func Abc_NtkDarSeqSim3(pNtk *Abc_Ntk_t, pPars *Ssw_RarPars_t) int32 {
 	//    abctime clk = Abc_Clock();
 	if Abc_NtkGetChoiceNum(pNtk) != 0 {
 		Abc_Print(1, "Removing %d choices from the AIG.\n", Abc_NtkGetChoiceNum(pNtk))
-		Abc_AigCleanup(pNtk.pManFunc.(*abc.Abc_Aig_t))
+		Abc_AigCleanup(abc.Abc_NtkReadFunctionManager(pNtk).(*abc.Abc_Aig_t))
 	}
 	pMan = Abc_NtkToDar(pNtk, 0, 1)
 	if Ssw_RarSimulate(pMan, pPars) == 0 {
-		if pMan.pSeqModel {
+		if pMan.SequentialCounterexample() {
 			//            Abc_Print( 1, "Simulation of %d frames with %d words asserted output %d in frame %d. ",
 			//                nFrames, nWords, pMan->pSeqModel->iPo, pMan->pSeqModel->iFrame );
-			status = Saig_ManVerifyCex(pMan, pMan.pSeqModel)
+			status = Saig_ManVerifyCex(pMan, pMan.SequentialCounterexample())
 			if status == 0 {
 				Abc_Print(1, "Abc_NtkDarSeqSim(): Counter-example verification has FAILED.\n")
 			}
 		}
-		ABC_FREE(pNtk.pModel)
-		ABC_FREE(pNtk.pSeqModel)
-		pNtk.pSeqModel = pMan.pSeqModel
-		pMan.pSeqModel = nil
+		Abc_NtkSetModel(pNtk, nil)
+		Abc_NtkSetSeqModel(pNtk, nil)
+		Abc_NtkSetSeqModel(pNtk, pMan.SequentialCounterexample())
+		pMan.ClearSequentialCounterexample()
 		RetValue = 0
 
 	} else {
 		//        Abc_Print( 1, "Simulation of %d frames with %d words did not assert the outputs.    ",
 		//            nFrames, nWords );
 	}
-	if pNtk.vSeqModelVec {
-		Vec_PtrFreeFree(pNtk.vSeqModelVec)
+	if abc.Abc_NtkReadSeqModelVec(pNtk) != nil {
+		Vec_PtrFreeFree(abc.Abc_NtkReadSeqModelVec(pNtk))
 	}
-	pNtk.vSeqModelVec = pMan.vSeqModelVec
-	pMan.vSeqModelVec = nil
+	abc.Abc_NtkSetSeqModelVec(pNtk, pMan.TakeSequentialCounterexamples())
 	//    ABC_PRT( "Time", Abc_Clock() - clk );
 	pNtk.pData = pMan.pData
 	pMan.pData = nil
@@ -3112,10 +3105,10 @@ func Abc_NtkDarClau(pNtk *Abc_Ntk_t, nFrames int32, nPref int32, nClauses int32,
 		return 1
 	}
 	//    Aig_ManReduceLachesCount( pMan );
-	if pMan.vFlopNums {
-		Vec_IntFree(pMan.vFlopNums)
+	if pMan.FlopNumbers != nil {
+		pMan.FlopNumbers = nil
 	}
-	pMan.vFlopNums = nil
+	pMan.FlopNumbers = nil
 
 	//    Fra_Clau( pMan, nStepsMax, fVerbose, fVeryVerbose );
 	Fra_Claus(pMan, nFrames, nPref, nClauses, nLutSize, nLevels, nCutsMax, nBatches, fStepUp, fBmc, fRefs, fTarget, fVerbose, fVeryVerbose)
@@ -3365,7 +3358,7 @@ func Abc_NtkInter(pNtkOn *Abc_Ntk_t, pNtkOff *Abc_Ntk_t, fRelation int32, fVerbo
 	}
 	// start the new network
 	pNtkInter = Abc_NtkAlloc(ABC_NTK_STRASH, ABC_FUNC_AIG, 1)
-	pNtkInter.pName = Extra_UtilStrsav(pNtkOn.pName)
+	Abc_NtkSetName(pNtkInter, Extra_UtilStrsav(Abc_NtkName(pNtkOn)))
 	Abc_NtkForEachPi(pNtkOn, pObj, i)
 	Abc_NtkDupObj(pNtkInter, pObj, 1)
 	// process each POs separately
@@ -3724,8 +3717,8 @@ func Abc_NtkDarExtWin(pNtk *Abc_Ntk_t, nObjId int32, nDist int32, fVerbose int32
 		return nil
 	}
 	pNtkAig = Abc_NtkFromAigPhase(pMan)
-	pNtkAig.pName = Extra_UtilStrsav(pNtk.pName)
-	pNtkAig.pSpec = Extra_UtilStrsav(pNtk.pSpec)
+	Abc_NtkSetName(pNtkAig, Extra_UtilStrsav(Abc_NtkName(pNtk)))
+	abc.Abc_NtkSetSpec(pNtkAig, Extra_UtilStrsav(abc.Abc_NtkSpec(pNtk)))
 	Aig_ManStop(pMan)
 	return pNtkAig
 }
@@ -3822,8 +3815,8 @@ func Abc_NtkDarFrames(pNtk *Abc_Ntk_t, nPrefix int32, nFrames int32, fInit int32
 		return nil
 	}
 	pNtkAig = Abc_NtkFromAigPhase(pMan)
-	pNtkAig.pName = Extra_UtilStrsav(pNtk.pName)
-	pNtkAig.pSpec = Extra_UtilStrsav(pNtk.pSpec)
+	Abc_NtkSetName(pNtkAig, Extra_UtilStrsav(Abc_NtkName(pNtk)))
+	abc.Abc_NtkSetSpec(pNtkAig, Extra_UtilStrsav(abc.Abc_NtkSpec(pNtk)))
 	Aig_ManStop(pMan)
 	return pNtkAig
 }
@@ -3861,8 +3854,8 @@ func Abc_NtkDarCleanupAig(pNtk *Abc_Ntk_t, fCleanupPis int32, fCleanupPos int32,
 		}
 	}
 	pNtkAig = Abc_NtkFromAigPhase(pMan)
-	pNtkAig.pName = Extra_UtilStrsav(pNtk.pName)
-	pNtkAig.pSpec = Extra_UtilStrsav(pNtk.pSpec)
+	Abc_NtkSetName(pNtkAig, Extra_UtilStrsav(Abc_NtkName(pNtk)))
+	abc.Abc_NtkSetSpec(pNtkAig, Extra_UtilStrsav(abc.Abc_NtkSpec(pNtk)))
 	Aig_ManStop(pMan)
 	return pNtkAig
 }
@@ -3888,10 +3881,10 @@ func Abc_NtkDarReach(pNtk *Abc_Ntk_t, pPars *Saig_ParBbr_t) int32 {
 		return -1
 	}
 	RetValue = Aig_ManVerifyUsingBdds(pMan, pPars)
-	ABC_FREE(pNtk.pModel)
-	ABC_FREE(pNtk.pSeqModel)
-	pNtk.pSeqModel = pMan.pSeqModel
-	pMan.pSeqModel = nil
+	Abc_NtkSetModel(pNtk, nil)
+	Abc_NtkSetSeqModel(pNtk, nil)
+	Abc_NtkSetSeqModel(pNtk, pMan.SequentialCounterexample())
+	pMan.ClearSequentialCounterexample()
 	Aig_ManStop(pMan)
 	return RetValue
 }
@@ -3934,30 +3927,30 @@ func Amap_ManProduceNetwork(pNtk *Abc_Ntk_t, vMapping *Vec_Ptr_t) *Abc_Ntk_t {
 	// make sure gates exist in the current library
 	for _, item := range Vec_PtrArray(vMapping) {
 		pRes = item.(*Amap_Out_t)
-		if pRes.pName != "" && Mio_LibraryReadGateByName(pLib, pRes.pName, nil) == nil {
-			Abc_Print(1, "Current library does not contain gate \"%s\".\n", pRes.pName)
+		if amap.Amap_OutName(pRes) != "" && Mio_LibraryReadGateByName(pLib, amap.Amap_OutName(pRes), nil) == nil {
+			Abc_Print(1, "Current library does not contain gate \"%s\".\n", amap.Amap_OutName(pRes))
 			return nil
 		}
 	}
 	// create the network
 	pNtkNew = Abc_NtkStartFrom(pNtk, ABC_NTK_LOGIC, ABC_FUNC_MAP)
-	pNtkNew.pManFunc = pLib
+	abc.Abc_NtkSetFunctionManager(pNtkNew, pLib)
 	iPis, iPos = 0, 0
 	vNodesNew = Vec_PtrAlloc(Vec_PtrSize(vMapping))
 	for _, item := range Vec_PtrArray(vMapping) {
 		pRes = item.(*Amap_Out_t)
-		if pRes.Type == -1 {
+		if amap.Amap_OutType(pRes) == -1 {
 			pNodeNew = Abc_NtkCi(pNtkNew, iPis)
 			iPis++
-		} else if pRes.Type == 1 {
+		} else if amap.Amap_OutType(pRes) == 1 {
 			pNodeNew = Abc_NtkCo(pNtkNew, iPos)
 			iPos++
 		} else {
 			pNodeNew = Abc_NtkCreateNode(pNtkNew)
-			pNodeNew.pData = Mio_LibraryReadGateByName(pLib, pRes.pName, nil)
+			abc.Abc_ObjSetData(pNodeNew, Mio_LibraryReadGateByName(pLib, amap.Amap_OutName(pRes), nil))
 		}
-		for k = 0; k < pRes.nFans; k++ {
-			pFaninNew = Vec_PtrEntry(vNodesNew, pRes.pFans[k]).(*Abc_Obj_t)
+		for k = 0; k < int32(amap.Amap_OutFanCount(pRes)); k++ {
+			pFaninNew = Vec_PtrEntry(vNodesNew, amap.Amap_OutFan(pRes, int16(k))).(*Abc_Obj_t)
 			Abc_ObjAddFanin(pNodeNew, pFaninNew)
 		}
 		Vec_PtrPush(vNodesNew, pNodeNew)
@@ -4074,8 +4067,8 @@ func Abc_NtkDarOutdec(pNtk *Abc_Ntk_t, nLits int32, fVerbose int32) *Abc_Ntk_t {
 		return nil
 	}
 	pNtkAig = Abc_NtkFromAigPhase(pMan)
-	pNtkAig.pName = Extra_UtilStrsav(pMan.pName)
-	pNtkAig.pSpec = Extra_UtilStrsav(pMan.pSpec)
+	Abc_NtkSetName(pNtkAig, Extra_UtilStrsav(pMan.Name))
+	abc.Abc_NtkSetSpec(pNtkAig, Extra_UtilStrsav(pMan.Spec))
 	Aig_ManStop(pMan)
 	return pNtkAig
 }
@@ -4113,8 +4106,8 @@ func Abc_NtkDarUnfold(pNtk *Abc_Ntk_t, nFrames int32, nConfs int32, nProps int32
 		return nil
 	}
 	pNtkAig = Abc_NtkFromAigPhase(pMan)
-	pNtkAig.pName = Extra_UtilStrsav(pMan.pName)
-	pNtkAig.pSpec = Extra_UtilStrsav(pMan.pSpec)
+	Abc_NtkSetName(pNtkAig, Extra_UtilStrsav(pMan.Name))
+	abc.Abc_NtkSetSpec(pNtkAig, Extra_UtilStrsav(pMan.Spec))
 	Aig_ManStop(pMan)
 	return pNtkAig
 }
@@ -4144,8 +4137,8 @@ func Abc_NtkDarFold(pNtk *Abc_Ntk_t, fCompl int32, fVerbose int32) *Abc_Ntk_t {
 	pMan = Saig_ManDupFoldConstrsFunc(pTemp, fCompl, fVerbose)
 	Aig_ManStop(pTemp)
 	pNtkAig = Abc_NtkFromAigPhase(pMan)
-	pNtkAig.pName = Extra_UtilStrsav(pMan.pName)
-	pNtkAig.pSpec = Extra_UtilStrsav(pMan.pSpec)
+	Abc_NtkSetName(pNtkAig, Extra_UtilStrsav(pMan.Name))
+	abc.Abc_NtkSetSpec(pNtkAig, Extra_UtilStrsav(pMan.Spec))
 	Aig_ManStop(pMan)
 	return pNtkAig
 }
@@ -4349,4 +4342,4 @@ func Abc_NtkDarTestNtk(pNtk *Abc_Ntk_t) *Abc_Ntk_t {
 ////////////////////////////////////////////////////////////////////////
 
 //#include "abcDarUnfold2.c"
-//ABC_NAMESPACE_IMPL_END
+//ABC_NAMESPACE_IMPL_END))))))))))))))))))))))))))))))

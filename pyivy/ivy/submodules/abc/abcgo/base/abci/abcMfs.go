@@ -14,8 +14,6 @@ import (
 )
 
 type Vec_Wec_t = vec.Vec_Wec_t
-type Vec_Wrd_t = vec.Vec_Wrd_t
-type Vec_Str_t = vec.Vec_Str_t
 type Sfm_Ntk_t = sfm.Sfm_Ntk_t
 type Sfm_Par_t = sfm.Sfm_Par_t
 

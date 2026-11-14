@@ -156,8 +156,8 @@ func Abc_NtkMiterProve(ppNtk **Abc_Ntk_t, pPars any) int32 {
 		ret = Abc_NtkMiterSat(n, int64(p.nMiteringLimitLast), inspectLimit, 0, nil, nil)
 		Abc_NtkMiterPrint(n, "SAT solving", clk, p.fVerbose)
 	}
-	if ret == 0 && n.pModel == nil {
-		n.pModel = make([]int32, Abc_NtkCiNum(n))
+	if ret == 0 && Abc_NtkReadModel(n) == nil {
+		Abc_NtkSetModel(n, make([]int32, Abc_NtkCiNum(n)))
 	}
 	*ppNtk = n
 	return ret
@@ -184,7 +184,7 @@ func Abc_NtkMiterFraig(n *Abc_Ntk_t, btLimit int32, inspectLimit int64, ret, fai
 	newNtk := Abc_NtkFromFraig(man, n)
 	if *ret == 0 {
 		model := fraig.Fraig_ManReadModel(man)
-		newNtk.pModel = append([]int32(nil), model...)
+		Abc_NtkSetModel(newNtk, append([]int32(nil), model...))
 	}
 	*fails = fraig.Fraig_ManReadSatFails(man)
 	*confs = int64(fraig.Fraig_ManReadConflicts(man))

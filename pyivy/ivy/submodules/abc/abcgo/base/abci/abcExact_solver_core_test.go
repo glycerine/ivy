@@ -28,13 +28,19 @@ func TestExactSolverDerivesTruthFromNormalizedGateEncoding(t *testing.T) {
 	// One XOR gate: operation bits 0 and 1 select the two unequal input rows.
 	solution := string([]byte{2, 1, 1, 3, 2, 0, 1, 0, 0, 1, 1})
 	got := Ses_ManDeriveTruth(p, solution, 0)
-	if got[0] != 0x6666666666666666 {
-		t.Fatalf("derived XOR truth = %#016x", got[0])
+	if got == nil || *got != 0x6666666666666666 {
+		if got == nil {
+			t.Fatal("derived XOR truth is nil")
+		}
+		t.Fatalf("derived XOR truth = %#016x", *got)
 	}
 	complemented := []byte(solution)
 	complemented[7] = 1
-	if inv := Ses_ManDeriveTruth(p, string(complemented), 1); inv[0] != ^uint64(0x6666666666666666) {
-		t.Fatalf("complemented output truth = %#016x", inv[0])
+	if inv := Ses_ManDeriveTruth(p, string(complemented), 1); inv == nil || *inv != ^uint64(0x6666666666666666) {
+		if inv == nil {
+			t.Fatal("complemented output truth is nil")
+		}
+		t.Fatalf("complemented output truth = %#016x", *inv)
 	}
 }
 
@@ -88,7 +94,11 @@ func TestExactSolverFindsMinimumXORNetwork(t *testing.T) {
 	if solution == "" || int32(solution[ABC_EXACT_SOL_NGATES]) != 1 {
 		t.Fatalf("minimum XOR solution = %v", []byte(solution))
 	}
-	if got := Ses_ManDeriveTruth(p, solution, 0)[0]; got != truth[0] {
-		t.Fatalf("minimum solution truth = %#016x, want %#016x", got, truth[0])
+	derived := Ses_ManDeriveTruth(p, solution, 0)
+	if derived == nil || *derived != truth[0] {
+		if derived == nil {
+			t.Fatal("minimum solution truth is nil")
+		}
+		t.Fatalf("minimum solution truth = %#016x, want %#016x", *derived, truth[0])
 	}
 }
