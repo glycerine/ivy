@@ -3293,3 +3293,28 @@ microbenchmark changes 32/128/512-element projection times from approximately
 Full uncached GIA race tests pass in 37.243s
 (`/tmp/abcgo-embedding-projection-placement-race.log`) and GIA vet passes.
 The package remains under audit; original completion is 2/131.
+
+Placement scaling review: zero-valued projection coordinates were skipped
+during affine scaling. With both positive and negative coordinates this put
+zero below negative values, changing the intended rank order. A constant
+nonzero axis also computed zero times infinity, replacing finite solutions
+with NaNs. Two red tests demonstrate incorrect placement order and nonfinite
+flat axes (`/tmp/abcgo-embedding-placement-order-red.log`). Scale every
+coordinate, using a zero scale for flat axes. The source's sorting and rank-grid
+placement remain intact. Original C shares both boundary defects; Go corrects
+them rather than preserving erroneous output.
+
+New tests check exact coordinates for shuffled negative/zero/positive axes and
+finite, valid placements for flat nonzero axes. A compiled original giaEmbed.c
+fixture checks ordinary positive axes, repeated coordinate values, both sort
+size regimes, simple/clustered graph construction and register feedback.
+Every coordinate and HPWL value matches before and after three refinement
+steps. Focused tests pass in 1.893s
+(`/tmp/abcgo-embedding-placement-focused.log`). The full uncached GIA race
+suite passes in 37.243s (`/tmp/abcgo-embedding-projection-placement-race.log`)
+and GIA vet passes (`/tmp/abcgo-embedding-projection-placement-vet.log`).
+
+Next inspection target: the embedding constant's reserved fanin slots can
+make an isolated constant qualify as a random pivot. That path still needs
+a regression and repair. Iterative eigenvector accuracy and remaining GIA
+algorithm families also remain under review. Original completion is 2/131.

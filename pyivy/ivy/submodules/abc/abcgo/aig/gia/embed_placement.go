@@ -68,11 +68,12 @@ func Emb_ManDerivePlacement(p *Emb_Man_t, nSols int32) {
 			lo = min(lo, v)
 			hi = max(hi, v)
 		}
-		scale := float32(GIA_PLACE_SIZE) / (hi - lo)
+		var scale float32
+		if hi > lo {
+			scale = float32(GIA_PLACE_SIZE) / (hi - lo)
+		}
 		for i, v := range values {
-			if v != 0 {
-				values[i] = (v - lo) * scale
-			}
+			values[i] = (v - lo) * scale
 		}
 		perms[d] = embSortFloats(values)
 	}
