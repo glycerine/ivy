@@ -8,7 +8,7 @@ import (
 
 func Lf_ManDeriveMapping(p *Lf_Man_t) *Gia_Man_t {
 	g := p.pGia
-	if p.pPars.fCutMin != 0 || g.vMapping != nil {
+	if p.pPars.FCutMin != 0 || g.vMapping != nil {
 		panic("LF invalid structural mapping state")
 	}
 	mapping := vec.Vec_IntStart(int(g.nObjs))
@@ -32,7 +32,7 @@ func Lf_ManDeriveMapping(p *Lf_Man_t) *Gia_Man_t {
 }
 func Lf_ManDeriveMappingCoarse(p *Lf_Man_t) *Gia_Man_t {
 	g := p.pGia
-	if p.pPars.fCutMin != 0 || g.pMuxes == nil {
+	if p.pPars.FCutMin != 0 || g.pMuxes == nil {
 		panic("LF invalid coarse mapping state")
 	}
 	dst := Gia_ManStart(g.nObjs)
@@ -122,8 +122,8 @@ func Lf_ManDerivePart(p *Lf_Man_t, dst *Gia_Man_t, mapping, records, copies *Vec
 	synth := func(t []word, ls []int32) int32 {
 		return kit.Kit_TruthToGia(dst, lfTruthWords(t), int32(len(ls)), &scratch, ls, 0)
 	}
-	if p.pPars.nLutSizeMux != 0 && p.pPars.nLutSizeMux == int32(cut.nLeaves) {
-		lut := p.pPars.nLutSize
+	if p.pPars.NLutSizeMux != 0 && p.pPars.NLutSizeMux == int32(cut.nLeaves) {
+		lut := p.pPars.NLutSize
 		nWords := int32(len(truth))
 		variable := Lf_ManFindCofVar(truth, nWords, int32(cut.nLeaves))
 		if variable < 0 || variable >= int32(cut.nLeaves) {
@@ -174,7 +174,7 @@ func Lf_ManDerivePart(p *Lf_Man_t, dst *Gia_Man_t, mapping, records, copies *Vec
 	return lit
 }
 func Lf_ManDeriveMappingGia(p *Lf_Man_t) *Gia_Man_t {
-	if p.pPars.fCutMin == 0 {
+	if p.pPars.FCutMin == 0 {
 		panic("LF requires minimized cuts")
 	}
 	g := p.pGia

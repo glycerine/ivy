@@ -8,31 +8,31 @@ import (
 )
 
 func Mf_ManPrintStats(p *Mf_Man_t, title string) {
-	if p.pPars.fVerbose == 0 {
+	if p.pPars.FVerbose == 0 {
 		return
 	}
 	q := p.pPars
 	fmt.Printf("%s :  Level =%6d   Area =%9d   Edge =%9d   ", title, q.Delay, q.Area, q.Edge)
-	if q.fGenCnf != 0 {
+	if q.FGenCnf != 0 {
 		fmt.Printf("CNF =%9d   ", q.Clause)
 	}
-	if q.fGenLit != 0 {
+	if q.FGenLit != 0 {
 		fmt.Printf("FFL =%9d   ", q.Clause)
 	}
 	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-p.clkStart)
 }
 func Mf_ManPrintInit(p *Mf_Man_t) {
 	q := p.pPars
-	if q.fVerbose == 0 {
+	if q.FVerbose == 0 {
 		return
 	}
-	fmt.Printf("LutSize = %d  CutNum = %d  Iter = %d  Edge = %d  CutMin = %d  Coarse = %d  CNF = %d  FFL = %d\nComputing cuts...\r", q.nLutSize, q.nCutNum, q.nRounds+q.nRoundsEla, q.fOptEdge, q.fCutMin, q.fCoarsen, q.fGenCnf, q.fGenLit)
+	fmt.Printf("LutSize = %d  CutNum = %d  Iter = %d  Edge = %d  CutMin = %d  Coarse = %d  CNF = %d  FFL = %d\nComputing cuts...\r", q.NLutSize, q.NCutNum, q.NRounds+q.NRoundsEla, q.FOptEdge, q.FCutMin, q.FCoarsen, q.FGenCnf, q.FGenLit)
 }
 func Mf_ManPrintQuit(p *Mf_Man_t, result *Gia_Man_t) {
 	if p.CutCount[0] == 0 {
 		p.CutCount[0] = 1
 	}
-	if p.pPars.fVerbose == 0 {
+	if p.pPars.FVerbose == 0 {
 		return
 	}
 	fmt.Printf("CutPair = %.0f  Merge = %.0f (%.2f %%)  Eval = %.0f (%.2f %%)  Cut = %.0f (%.2f %%)\n", p.CutCount[0], p.CutCount[1], 100*p.CutCount[1]/p.CutCount[0], p.CutCount[2], 100*p.CutCount[2]/p.CutCount[0], p.CutCount[3], 100*p.CutCount[3]/p.CutCount[0])
@@ -45,7 +45,7 @@ func Mf_ManPrintQuit(p *Mf_Man_t, result *Gia_Man_t) {
 	}
 	mapping := vec.Vec_IntMemory(result.vMapping) / (1 << 20)
 	fmt.Printf("Gia = %.2f MB  Man = %.2f MB  Cut = %.2f MB   Map = %.2f MB  TT = %.2f MB  Total = %.2f MB\n", gia, man, cuts, mapping, truth, gia+man+cuts+mapping+truth)
-	for i := int32(0); i <= p.pPars.nLutSize; i++ {
+	for i := int32(0); i <= p.pPars.NLutSize; i++ {
 		fmt.Printf("%d = %d  ", i, p.nCutCounts[i])
 	}
 	if p.vTtMem != nil {
@@ -82,20 +82,20 @@ func Mf_ManComputeMapping(p *Mf_Man_t) {
 }
 
 func Mf_ManPerformMapping(g *Gia_Man_t, pars *Jf_Par_t) *Gia_Man_t {
-	if pars.fGenCnf != 0 || pars.fGenLit != 0 {
-		pars.fCutMin = 1
+	if pars.FGenCnf != 0 || pars.FGenLit != 0 {
+		pars.FCutMin = 1
 	}
 	if Gia_ManHasChoices(g) != 0 {
-		pars.fCutMin = 1
-		pars.fCoarsen = 0
+		pars.FCutMin = 1
+		pars.FCoarsen = 0
 	}
 	coarse := g
-	if pars.fCoarsen != 0 {
-		coarse = Gia_ManDupMuxes(g, pars.nCoarseLimit)
+	if pars.FCoarsen != 0 {
+		coarse = Gia_ManDupMuxes(g, pars.NCoarseLimit)
 	}
 	p := Mf_ManAlloc(coarse, pars)
 	p.pGia0 = g
-	if pars.fVerbose != 0 && pars.fCoarsen != 0 {
+	if pars.FVerbose != 0 && pars.FCoarsen != 0 {
 		fmt.Print("Initial ")
 		Gia_ManPrintMuxStats(g)
 		fmt.Print("\nDerived ")
@@ -104,25 +104,25 @@ func Mf_ManPerformMapping(g *Gia_Man_t, pars *Jf_Par_t) *Gia_Man_t {
 	}
 	Mf_ManPrintInit(p)
 	Mf_ManComputeCuts(p)
-	for p.Iter = 1; p.Iter < pars.nRounds; p.Iter++ {
+	for p.Iter = 1; p.Iter < pars.NRounds; p.Iter++ {
 		Mf_ManComputeMapping(p)
 	}
 	p.fUseEla = 1
-	for ; p.Iter < pars.nRounds+pars.nRoundsEla; p.Iter++ {
+	for ; p.Iter < pars.NRounds+pars.NRoundsEla; p.Iter++ {
 		Mf_ManComputeMapping(p)
 	}
-	if pars.fVeryVerbose != 0 && pars.fCutMin != 0 {
-		vec.Vec_MemDumpTruthTables(p.vTtMem, p.pGia.pName, int(pars.nLutSize))
+	if pars.FVeryVerbose != 0 && pars.FCutMin != 0 {
+		vec.Vec_MemDumpTruthTables(p.vTtMem, p.pGia.pName, int(pars.NLutSize))
 	}
 	var result *Gia_Man_t
-	if pars.fCutMin != 0 {
+	if pars.FCutMin != 0 {
 		result = Mf_ManDeriveMappingGia(p)
-	} else if pars.fCoarsen != 0 {
+	} else if pars.FCoarsen != 0 {
 		result = Mf_ManDeriveMappingCoarse(p)
 	} else {
 		result = Mf_ManDeriveMapping(p)
 	}
-	if pars.fGenCnf != 0 {
+	if pars.FGenCnf != 0 {
 		g.pData = Mf_ManDeriveCnf(p, pars.fCnfObjIds, pars.fAddOrCla)
 	}
 	Gia_ManMappingVerify(result)

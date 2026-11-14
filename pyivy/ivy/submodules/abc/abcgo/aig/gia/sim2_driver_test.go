@@ -17,9 +17,9 @@ func TestEquivSimulationDriverCounterexample(t *testing.T) {
 	}
 	var pars Gia_ParSim_t
 	Gia_ManSimSetDefaultParams(&pars)
-	pars.nWords = 2
-	pars.nIters = 4
-	pars.fCheckMiter = 1
+	pars.NWords = 2
+	pars.NIters = 4
+	pars.FCheckMiter = 1
 	pars.TimeLimit = 0
 	if Gia_ManSimSimulate(g, &pars) != 1 || g.pCexSeq == nil || g.pCexSeq.IFrame != 1 || Gia_ManVerifyCex(g, g.pCexSeq, 0) != 1 {
 		t.Fatalf("invalid counterexample %+v", g.pCexSeq)
@@ -33,8 +33,8 @@ func TestEquivSimulationDriverRefinesConstants(t *testing.T) {
 	g.pNexts = make([]int32, g.nObjs)
 	var pars Gia_ParSim_t
 	Gia_ManSimSetDefaultParams(&pars)
-	pars.nWords = 1
-	pars.nIters = 1
+	pars.NWords = 1
+	pars.NIters = 1
 	pars.TimeLimit = 0
 	if Gia_ManSimSimulate(g, &pars) != 0 || Gia_ObjRepr(g, a>>1) != GIA_VOID {
 		t.Fatal("input remained a constant candidate")

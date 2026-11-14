@@ -6,10 +6,10 @@ import (
 )
 
 func Mf_ManSetDefaultPars(p *Jf_Par_t) {
-	*p = Jf_Par_t{nLutSize: 6, nCutNum: 8, nRounds: 2, nRoundsEla: 1, nCoarseLimit: 3, nAreaTuner: 1, nVerbLimit: 5, DelayTarget: -1, fOptEdge: 1, fCoarsen: 1, nLutSizeMax: MF_LEAF_MAX, nCutNumMax: MF_CUT_MAX}
+	*p = Jf_Par_t{NLutSize: 6, NCutNum: 8, NRounds: 2, NRoundsEla: 1, NCoarseLimit: 3, NAreaTuner: 1, NVerbLimit: 5, DelayTarget: -1, FOptEdge: 1, FCoarsen: 1, NLutSizeMax: MF_LEAF_MAX, NCutNumMax: MF_CUT_MAX}
 }
 func Mf_ManAlloc(g *Gia_Man_t, pars *Jf_Par_t) *Mf_Man_t {
-	if pars.nCutNum <= 1 || pars.nCutNum > MF_CUT_MAX || pars.nLutSize <= 1 || pars.nLutSize > MF_LEAF_MAX {
+	if pars.NCutNum <= 1 || pars.NCutNum > MF_CUT_MAX || pars.NLutSize <= 1 || pars.NLutSize > MF_LEAF_MAX {
 		panic("gia: invalid mapper parameters")
 	}
 	g.Refs = nil
@@ -18,10 +18,10 @@ func Mf_ManAlloc(g *Gia_Man_t, pars *Jf_Par_t) *Mf_Man_t {
 		Gia_ManSetPhase(g)
 	}
 	p := &Mf_Man_t{pGia: g, pPars: pars, pLfObjs: make([]Mf_Obj_t, g.nObjs), iCur: 2, clkStart: util.Abc_Clock()}
-	if pars.fCutMin != 0 {
-		p.vTtMem = vec.Vec_MemAllocForTT(int(pars.nLutSize), 0)
+	if pars.FCutMin != 0 {
+		p.vTtMem = vec.Vec_MemAllocForTT(int(pars.NLutSize), 0)
 	}
-	if pars.fGenCnf != 0 || pars.fGenLit != 0 {
+	if pars.FGenCnf != 0 || pars.FGenLit != 0 {
 		vec.Vec_IntPush(&p.vCnfSizes, 1)
 		vec.Vec_IntPush(&p.vCnfSizes, 2)
 	}
@@ -36,7 +36,7 @@ func Mf_ManFree(p *Mf_Man_t) {
 	if p == nil {
 		return
 	}
-	if p.pPars.fGenCnf != 0 && p.pPars.fGenLit != 0 && vec.Vec_IntSize(&p.vCnfSizes) != vec.Vec_MemEntryNum(p.vTtMem) {
+	if p.pPars.FGenCnf != 0 && p.pPars.FGenLit != 0 && vec.Vec_IntSize(&p.vCnfSizes) != vec.Vec_MemEntryNum(p.vTtMem) {
 		panic("gia: inconsistent truth and CNF counts")
 	}
 	if p.vTtMem != nil {

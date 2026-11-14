@@ -49,7 +49,7 @@ func Lf_ManFindCofVar(truth []word, nWords, nVars int32) int32 {
 	return -1
 }
 func lfComputeTruth(p *Lf_Man_t, inputs []*Lf_Cut_t, phases []int32, out *Lf_Cut_t, xor, mux bool) int32 {
-	lut := p.pPars.nLutSize
+	lut := p.pPars.NLutSize
 	words := 1
 	if lut > 6 {
 		words = 1 << uint(lut-6)

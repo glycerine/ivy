@@ -12,7 +12,7 @@ func Mf_CutPrint(p *Mf_Man_t, c *Mf_Cut_t) {
 	for _, id := range c.pLeaves[:c.nLeaves] {
 		fmt.Printf(" %*d", digits, id)
 	}
-	for i := int32(c.nLeaves); i < p.pPars.nLutSize; i++ {
+	for i := int32(c.nLeaves); i < p.pPars.NLutSize; i++ {
 		fmt.Printf(" %*s", digits, "")
 	}
 	fmt.Printf("  }   D = %4d  A = %9.4f  F = %6d  ", c.Delay, c.Flow, c.iFunc)
@@ -20,10 +20,10 @@ func Mf_CutPrint(p *Mf_Man_t, c *Mf_Cut_t) {
 		fmt.Println()
 		return
 	}
-	if p.pPars.fGenCnf != 0 {
+	if p.pPars.FGenCnf != 0 {
 		fmt.Printf("CNF = %2d  ", vec.Vec_IntEntry(&p.vCnfSizes, int(c.iFunc>>1)))
 	}
-	if p.pPars.fGenLit != 0 {
+	if p.pPars.FGenLit != 0 {
 		fmt.Printf("Lit = %2d  ", vec.Vec_IntEntry(&p.vCnfSizes, int(c.iFunc>>1)))
 	}
 	dau.Dau_DsdPrintFromTruth(vec.Vec_MemReadEntry(p.vTtMem, int(c.iFunc>>1)), int32(c.nLeaves))

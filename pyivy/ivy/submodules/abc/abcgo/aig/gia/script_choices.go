@@ -14,10 +14,10 @@ func giaAigSynch2(input *Gia_Man_t, pars *dch.Params, relax int32, dsdBalance fu
 	}
 	var mapping Jf_Par_t
 	Lf_ManSetDefaultPars(&mapping)
-	mapping.fCutMin, mapping.fCoarsen = 1, 1
-	mapping.nRelaxRatio, mapping.nAreaTuner, mapping.nCutNum = relax, 5, 12
+	mapping.FCutMin, mapping.FCoarsen = 1, 1
+	mapping.NRelaxRatio, mapping.NAreaTuner, mapping.NCutNum = relax, 5, 12
 	if pars.Verbose {
-		mapping.fVerbose = 1
+		mapping.FVerbose = 1
 		Gia_ManPrintStats(input, nil)
 	}
 	first := Gia_ManDup(input)

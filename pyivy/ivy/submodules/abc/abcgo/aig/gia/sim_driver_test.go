@@ -12,9 +12,9 @@ func TestSimulationDriverCounterexample(t *testing.T) {
 	Gia_ManSetRegNum(g, 1)
 	var pars Gia_ParSim_t
 	Gia_ManSimSetDefaultParams(&pars)
-	pars.nWords = 2
-	pars.nIters = 4
-	pars.fCheckMiter = 1
+	pars.NWords = 2
+	pars.NIters = 4
+	pars.FCheckMiter = 1
 	pars.TimeLimit = 0
 	equiv := func(*Gia_Man_t, *Gia_ParSim_t) int32 { t.Fatal("unexpected equivalence simulation"); return 0 }
 	if giaSimSimulate(g, &pars, equiv) != 1 || g.pCexSeq == nil || g.pCexSeq.IFrame != 1 || Gia_ManVerifyCex(g, g.pCexSeq, 0) != 1 {
@@ -28,7 +28,7 @@ func TestSimulationDriverNoFailure(t *testing.T) {
 	Gia_ManAppendCo(g, a)
 	var pars Gia_ParSim_t
 	Gia_ManSimSetDefaultParams(&pars)
-	pars.nIters = 3
+	pars.NIters = 3
 	pars.TimeLimit = 0
 	if giaSimSimulate(g, &pars, nil) != 0 || g.pCexSeq != nil {
 		t.Fatal("unexpected counterexample")

@@ -37,22 +37,22 @@ func Jf_CutCnfSize(p *Jf_Man_t, c []int32) int32 { return Jf_CutCnfSizeF(p, Jf_C
 func Jf_ObjFunc0(p *Gia_Obj_t, c []int32) int32  { return Jf_CutFunc(c) ^ Gia_ObjFaninC0(p) }
 func Jf_ObjFunc1(p *Gia_Obj_t, c []int32) int32  { return Jf_CutFunc(c) ^ Gia_ObjFaninC1(p) }
 func Jf_ManInitRefs(p *Jf_Man_t) []float32 {
-	refs, coarse := jfInitRefs(p.pGia, p.pPars.fCoarsen != 0)
+	refs, coarse := jfInitRefs(p.pGia, p.pPars.FCoarsen != 0)
 	p.nCoarse = coarse
 	return refs
 }
 func Jf_ManAlloc(g *Gia_Man_t, pars *Jf_Par_t) *Jf_Man_t {
-	if pars.nLutSize > JF_LEAF_MAX || pars.nCutNum > JF_CUT_MAX || pars.nLutSize < 0 || pars.nCutNum < 0 {
+	if pars.NLutSize > JF_LEAF_MAX || pars.NCutNum > JF_CUT_MAX || pars.NLutSize < 0 || pars.NCutNum < 0 {
 		panic("JF invalid mapping limits")
 	}
 	g.vMapping = nil
 	p := &Jf_Man_t{pGia: g, pPars: pars, clkStart: time.Now()}
-	if pars.fCutMin != 0 && pars.fFuncDsd == 0 {
-		p.vTtMem = vec.Vec_MemAllocForTT(int(pars.nLutSize), 0)
+	if pars.FCutMin != 0 && pars.FFuncDsd == 0 {
+		p.vTtMem = vec.Vec_MemAllocForTT(int(pars.NLutSize), 0)
 	}
-	if pars.fCutMin != 0 && pars.fFuncDsd != 0 {
+	if pars.FCutMin != 0 && pars.FFuncDsd != 0 {
 		p.pDsd = extra.Sdm_ManRead()
-		if pars.fGenCnf != 0 {
+		if pars.FGenCnf != 0 {
 			p.vCnfs = vec.Vec_IntStart(595)
 			extra.Sdm_ManReadCnfCosts(p.pDsd, vec.Vec_IntArray(p.vCnfs), 595)
 		}
@@ -69,7 +69,7 @@ func Jf_ManAlloc(g *Gia_Man_t, pars *Jf_Par_t) *Jf_Man_t {
 func Jf_ManProfileClasses(p *Jf_Man_t) {
 	var counts, costs [595]int32
 	var total, costTotal int32
-	fmt.Printf("DSD classes that appear in more than %.1f %% of mapped nodes:\n", 0.1*float64(p.pPars.nVerbLimit))
+	fmt.Printf("DSD classes that appear in more than %.1f %% of mapped nodes:\n", 0.1*float64(p.pPars.NVerbLimit))
 	for _, obj := range p.pGia.pObjs {
 		if Gia_ObjIsAnd(obj) == 0 || Gia_ObjIsBuf(obj) != 0 || Gia_ObjRefNumId(p.pGia, obj.id) == 0 {
 			continue
@@ -78,7 +78,7 @@ func Jf_ManProfileClasses(p *Jf_Man_t) {
 		if class < 0 || int(class) >= len(counts) {
 			panic("JF invalid DSD class")
 		}
-		if p.pPars.fGenCnf != 0 {
+		if p.pPars.FGenCnf != 0 {
 			cost := Jf_CutCnfSizeF(p, class)
 			costs[class] += cost
 			costTotal += cost
@@ -90,7 +90,7 @@ func Jf_ManProfileClasses(p *Jf_Man_t) {
 	costTotal = max(costTotal, 1)
 	var other, otherCost int32
 	for i, count := range counts {
-		if count != 0 && 100*float64(count)/float64(total) >= 0.1*float64(p.pPars.nVerbLimit) {
+		if count != 0 && 100*float64(count)/float64(total) >= 0.1*float64(p.pPars.NVerbLimit) {
 			fmt.Printf("%5d  :  %-20s   %8d  %5.1f %%   %8d  %5.1f %%\n", i, extra.Sdm_ManReadDsdStr(p.pDsd, int32(i)), count, 100*float64(count)/float64(total), costs[i], 100*float64(costs[i])/float64(costTotal))
 		} else {
 			other += count
@@ -103,16 +103,16 @@ func Jf_ManFree(p *Jf_Man_t) {
 	if p == nil {
 		return
 	}
-	if p.pPars.fVerbose != 0 && p.pDsd != nil {
+	if p.pPars.FVerbose != 0 && p.pDsd != nil {
 		extra.Sdm_ManPrintDsdStats(p.pDsd, 0)
 	}
-	if p.pPars.fVerbose != 0 && p.vTtMem != nil {
+	if p.pPars.FVerbose != 0 && p.vTtMem != nil {
 		fmt.Printf("Unique truth tables = %d. Memory = %.2f MB   Time = %s\n", vec.Vec_MemEntryNum(p.vTtMem), vec.Vec_MemMemory(p.vTtMem)/(1<<20), time.Since(p.clkStart))
 	}
-	if p.pPars.fVeryVerbose != 0 && p.pPars.fCutMin != 0 && p.pPars.fFuncDsd != 0 {
+	if p.pPars.FVeryVerbose != 0 && p.pPars.FCutMin != 0 && p.pPars.FFuncDsd != 0 {
 		Jf_ManProfileClasses(p)
 	}
-	if p.pPars.fCoarsen != 0 {
+	if p.pPars.FCoarsen != 0 {
 		Gia_ManCleanMark0(p.pGia)
 	}
 	p.pGia.Refs = nil

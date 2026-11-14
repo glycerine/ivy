@@ -17,7 +17,7 @@ func TestEquivalenceSimulationClassRefinement(t *testing.T) {
 	}
 	var pars Gia_ParSim_t
 	Gia_ManSimSetDefaultParams(&pars)
-	pars.nWords = 1
+	pars.NWords = 1
 	p := Gia_Sim2Create(g, &pars)
 	defer Gia_Sim2Delete(p)
 	class := vec.Vec_IntAlloc(4)
@@ -44,7 +44,7 @@ func TestEquivalenceConstantRefinement(t *testing.T) {
 	g.pNexts = make([]int32, g.nObjs)
 	var pars Gia_ParSim_t
 	Gia_ManSimSetDefaultParams(&pars)
-	pars.nWords = 1
+	pars.NWords = 1
 	p := Gia_Sim2Create(g, &pars)
 	defer Gia_Sim2Delete(p)
 	Gia_Sim2Data(p, a>>1)[0] = 0xaaaaaaaa

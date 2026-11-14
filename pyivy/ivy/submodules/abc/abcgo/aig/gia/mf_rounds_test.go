@@ -10,7 +10,7 @@ func TestMfMappingRounds(t *testing.T) {
 	Gia_ManAppendCo(g, y)
 	var pars Jf_Par_t
 	Mf_ManSetDefaultPars(&pars)
-	pars.fCoarsen = 0
+	pars.FCoarsen = 0
 	p := Mf_ManAlloc(g, &pars)
 	Mf_ManComputeCuts(p)
 	p.Iter = 1
@@ -34,7 +34,7 @@ func TestMfPerformMappingModes(t *testing.T) {
 		Gia_ManAppendCo(g, y)
 		var pars Jf_Par_t
 		Mf_ManSetDefaultPars(&pars)
-		pars.fCoarsen, pars.fCutMin, pars.fGenCnf = tc.coarse, tc.truth, tc.cnf
+		pars.FCoarsen, pars.FCutMin, pars.FGenCnf = tc.coarse, tc.truth, tc.cnf
 		mapped := Mf_ManPerformMapping(g, &pars)
 		if Gia_ManLutNum(mapped) == 0 || Gia_ManPoNum(mapped) != 1 {
 			t.Fatalf("mode %+v invalid mapping", tc)

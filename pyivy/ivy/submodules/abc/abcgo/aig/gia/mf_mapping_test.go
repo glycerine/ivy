@@ -8,7 +8,7 @@ func TestMfSelectAndDeriveMapping(t *testing.T) {
 	x := Gia_ManAppendAnd(g, a, b)
 	y := Gia_ManAppendAnd(g, x, c)
 	Gia_ManAppendCo(g, y)
-	p := &Mf_Man_t{pGia: g, pGia0: g, pPars: &Jf_Par_t{nLutSize: 3}, pLfObjs: make([]Mf_Obj_t, g.nObjs), iCur: 2}
+	p := &Mf_Man_t{pGia: g, pGia0: g, pPars: &Jf_Par_t{NLutSize: 3}, pLfObjs: make([]Mf_Obj_t, g.nObjs), iCur: 2}
 	xID, yID := x>>1, y>>1
 	first := &Mf_Cut_t{nLeaves: 2, iFunc: 2}
 	first.pLeaves[0], first.pLeaves[1] = xID, c>>1

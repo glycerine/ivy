@@ -22,7 +22,7 @@ func TestOfSATMappingBound(t *testing.T) {
 	if got := mapper.satProblem(1).Solve(); got != satoko.SATOKO_SAT {
 		t.Fatalf("one LUT: %d", got)
 	}
-	pars.nLutSize = 2
+	pars.NLutSize = 2
 	cuts = newOfCutManager(g, &pars)
 	cuts.computeCuts()
 	mapper = newOfMapper(cuts)

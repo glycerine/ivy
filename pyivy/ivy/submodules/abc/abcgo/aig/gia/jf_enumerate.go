@@ -7,7 +7,7 @@ import (
 )
 
 func Jf_TtComputeForCut(p *Jf_Man_t, f0, f1 int32, c0, c1, out []int32) int32 {
-	lut := p.pPars.nLutSize
+	lut := p.pPars.NLutSize
 	words := 1
 	if lut > 6 {
 		words = 1 << uint(lut-6)
@@ -43,7 +43,7 @@ func jfCutList(list []int32) [][]int32 {
 	return cuts
 }
 func Jf_ObjComputeCuts(p *Jf_Man_t, obj *Gia_Obj_t, edge int32) {
-	lut, limit, id := p.pPars.nLutSize, p.pPars.nCutNum, Gia_ObjId(p.pGia, obj)
+	lut, limit, id := p.pPars.NLutSize, p.pPars.NCutNum, Gia_ObjId(p.pGia, obj)
 	var storage [JF_CUT_MAX + 2]Jf_Cut_t
 	var store [JF_CUT_MAX + 2]*Jf_Cut_t
 	for i := range store {
@@ -64,11 +64,11 @@ func Jf_ObjComputeCuts(p *Jf_Man_t, obj *Gia_Obj_t, edge int32) {
 			p.CutCount[1]++
 			candidate := store[count]
 			cut := candidate.pCut[:]
-			if p.pPars.fCutMin == 0 {
+			if p.pPars.FCutMin == 0 {
 				if Jf_CutMergeOrder(c0, c1, cut, lut) == 0 {
 					continue
 				}
-			} else if p.pPars.fFuncDsd != 0 {
+			} else if p.pPars.FFuncDsd != 0 {
 				config := Jf_CutMerge2(c0, c1, cut, lut)
 				if config == 0 {
 					continue
@@ -78,7 +78,7 @@ func Jf_ObjComputeCuts(p *Jf_Man_t, obj *Gia_Obj_t, edge int32) {
 				if candidate.iFunc < 0 {
 					continue
 				}
-				if p.pPars.fGenCnf != 0 && Jf_CutCnfSizeF(p, candidate.iFunc>>1) >= 12 {
+				if p.pPars.FGenCnf != 0 && Jf_CutCnfSizeF(p, candidate.iFunc>>1) >= 12 {
 					continue
 				}
 				if cut[0] > old {
@@ -106,7 +106,7 @@ func Jf_ObjComputeCuts(p *Jf_Man_t, obj *Gia_Obj_t, edge int32) {
 			candidate.Sign = sign
 			p.CutCount[2]++
 			candidate.Time = 0
-			if p.pPars.fAreaOnly == 0 {
+			if p.pPars.FAreaOnly == 0 {
 				candidate.Time = Jf_CutArr(p, cut)
 			}
 			candidate.Flow = Jf_CutFlow(p, cut)
@@ -118,7 +118,7 @@ func Jf_ObjComputeCuts(p *Jf_Man_t, obj *Gia_Obj_t, edge int32) {
 			panic("JF coarse fanins not unit")
 		}
 		cut := store[count]
-		if p.pPars.fCutMin != 0 {
+		if p.pPars.FCutMin != 0 {
 			cut.iFunc = 4
 		}
 		cut.pCut[0] = 2
@@ -126,9 +126,9 @@ func Jf_ObjComputeCuts(p *Jf_Man_t, obj *Gia_Obj_t, edge int32) {
 		cut.pCut[2] = Jf_ObjLit(Gia_ObjFaninId1(obj, id), Gia_ObjFaninC1(obj))
 		count++
 	}
-	if Jf_ObjIsUnit(obj) && !(p.pPars.fCutMin != 0 && Jf_ObjHasCutWithSize(store[:], count, 1) != 0) {
+	if Jf_ObjIsUnit(obj) && !(p.pPars.FCutMin != 0 && Jf_ObjHasCutWithSize(store[:], count, 1) != 0) {
 		cut := store[count]
-		if p.pPars.fCutMin != 0 {
+		if p.pPars.FCutMin != 0 {
 			cut.iFunc = 2
 		}
 		cut.pCut[0] = 1
@@ -139,7 +139,7 @@ func Jf_ObjComputeCuts(p *Jf_Man_t, obj *Gia_Obj_t, edge int32) {
 		panic("JF no cuts")
 	}
 	cost := func(c *Jf_Cut_t) int32 {
-		if p.pPars.fGenCnf != 0 {
+		if p.pPars.FGenCnf != 0 {
 			return Jf_CutCnfSizeF(p, c.iFunc>>1)
 		}
 		return 1

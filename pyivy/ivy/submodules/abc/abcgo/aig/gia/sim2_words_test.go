@@ -13,7 +13,7 @@ func TestEquivSimulationRound(t *testing.T) {
 	Gia_ManSetRegNum(g, 1)
 	var pars Gia_ParSim_t
 	Gia_ManSimSetDefaultParams(&pars)
-	pars.nWords = 2
+	pars.NWords = 2
 	fast := Gia_ManSimCreate(g, &pars)
 	defer Gia_ManSimDelete(fast)
 	eq := Gia_Sim2Create(g, &pars)
@@ -24,7 +24,7 @@ func TestEquivSimulationRound(t *testing.T) {
 	Gia_Sim2SimulateRound(eq)
 	Gia_ManSimulateRound(fast)
 	for i := int32(0); i < Gia_ManCoNum(g); i++ {
-		if Gia_Sim2CompareEqual(Gia_SimDataCo(fast, i), Gia_Sim2Data(eq, Gia_ManCo(g, i).id), pars.nWords, 0) != 1 {
+		if Gia_Sim2CompareEqual(Gia_SimDataCo(fast, i), Gia_Sim2Data(eq, Gia_ManCo(g, i).id), pars.NWords, 0) != 1 {
 			t.Fatalf("first frame output %d", i)
 		}
 	}
@@ -35,7 +35,7 @@ func TestEquivSimulationRound(t *testing.T) {
 	Gia_Sim2SimulateRound(eq)
 	Gia_ManSimulateRound(fast)
 	for i := int32(0); i < Gia_ManCoNum(g); i++ {
-		if Gia_Sim2CompareEqual(Gia_SimDataCo(fast, i), Gia_Sim2Data(eq, Gia_ManCo(g, i).id), pars.nWords, 0) != 1 {
+		if Gia_Sim2CompareEqual(Gia_SimDataCo(fast, i), Gia_Sim2Data(eq, Gia_ManCo(g, i).id), pars.NWords, 0) != 1 {
 			t.Fatalf("second frame output %d", i)
 		}
 	}

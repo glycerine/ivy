@@ -39,7 +39,7 @@ func (p *ofMapper) cutArea(size int32) int32 {
 	if size < 2 {
 		return 0
 	}
-	return size + p.cuts.pars.nAreaTuner
+	return size + p.cuts.pars.NAreaTuner
 }
 func (p *ofMapper) eachCut(id int32, visit func(handle int32, cut []int32)) {
 	data := p.cuts.storage.at(p.cuts.sets[id])
@@ -64,7 +64,7 @@ func (p *ofMapper) forward() {
 		p.eachCut(id, func(handle int32, cut []int32) {
 			delay := int32(0)
 			for i := range ofStoredLeaves(cut) {
-				delay = max(delay, p.objects[ofStoredVar(cut, i)].delay+p.cuts.pars.nDelayLut1)
+				delay = max(delay, p.objects[ofStoredVar(cut, i)].delay+p.cuts.pars.NDelayLut1)
 			}
 			ofStoredSetDelay1(cut, delay)
 			if delay < bestDelay {
@@ -151,7 +151,7 @@ func (p *ofMapper) backward() {
 		cut := p.cuts.storage.at(best)
 		for i := range ofStoredLeaves(cut) {
 			f := ofStoredVar(cut, i)
-			p.updateRequired(f, o.required-p.cuts.pars.nDelayLut1)
+			p.updateRequired(f, o.required-p.cuts.pars.NDelayLut1)
 			p.objects[f].refs++
 		}
 		p.cuts.pars.Edge += word(ofStoredSize(cut))

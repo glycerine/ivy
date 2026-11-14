@@ -15,20 +15,20 @@ func Lf_ObjMergeOrder(p *Lf_Man_t, id int32) {
 	best := Lf_ObjReadBest(p, id)
 	refs := Lf_ObjFlowRefs(p, id)
 	required := Lf_ObjRequired(p, id)
-	lut := p.pPars.nLutSize
-	if p.pPars.fCutGroup != 0 {
+	lut := p.pPars.NLutSize
+	if p.pPars.FCutGroup != 0 {
 		lut /= 2
 	}
-	limit := p.pPars.nCutNum
+	limit := p.pPars.NCutNum
 	var set0, set1, set2 []Lf_Cut_t
 	n0 := Lf_ManPrepareSet(p, Gia_ObjFaninId0(obj, id), 0, &set0)
 	n1 := Lf_ManPrepareSet(p, Gia_ObjFaninId1(obj, id), 1, &set1)
 	comp0, comp1 := Gia_ObjFaninC0(obj), Gia_ObjFaninC1(obj)
 	var count int32
 	if p.Iter != 0 {
-		Lf_MemLoadCut(&p.vStoreOld, int32(best.Cut[0].Handle), id, result[0], p.pPars.fCutMin, 1)
+		Lf_MemLoadCut(&p.vStoreOld, int32(best.Cut[0].Handle), id, result[0], p.pPars.FCutMin, 1)
 		if Lf_BestDiffCuts(best) != 0 {
-			Lf_MemLoadCut(&p.vStoreOld, int32(best.Cut[1].Handle), id, result[1], p.pPars.fCutMin, 1)
+			Lf_MemLoadCut(&p.vStoreOld, int32(best.Cut[1].Handle), id, result[1], p.pPars.FCutMin, 1)
 		}
 		if p.fUseEla != 0 && Lf_ObjMapRefNum(p, id) > 0 {
 			Lf_CutDeref_rec(p, result[Lf_BestIndex(best)])
@@ -79,10 +79,10 @@ func Lf_ObjMergeOrder(p *Lf_Man_t, id int32) {
 				return
 			}
 			p.CutCount[2]++
-			if p.pPars.fCutMin != 0 && Lf_CutComputeTruthMux(p, a, b, c, comp0, comp1, comp2, candidate) != 0 {
+			if p.pPars.FCutMin != 0 && Lf_CutComputeTruthMux(p, a, b, c, comp0, comp1, comp2, candidate) != 0 {
 				candidate.Sign = Lf_CutGetSign(candidate)
 			}
-			if check && p.pPars.nLutSizeMux != 0 && p.pPars.nLutSizeMux == int32(candidate.nLeaves) && Lf_ManFindCofVar(Lf_CutTruth(p, candidate), words, int32(candidate.nLeaves)) == -1 {
+			if check && p.pPars.NLutSizeMux != 0 && p.pPars.NLutSizeMux == int32(candidate.nLeaves) && Lf_ManFindCofVar(Lf_CutTruth(p, candidate), words, int32(candidate.nLeaves)) == -1 {
 				return
 			}
 			Lf_CutParams(p, candidate, required, refs, obj)
@@ -111,7 +111,7 @@ func Lf_ObjMergeOrder(p *Lf_Man_t, id int32) {
 				}
 			}
 		}
-		if p.pPars.fCutGroup != 0 {
+		if p.pPars.FCutGroup != 0 {
 			if saved == nil || saved.nLeaves != 1 || saved.pLeaves[0] != control {
 				panic("LF missing unit control cut")
 			}
@@ -125,10 +125,10 @@ func Lf_ObjMergeOrder(p *Lf_Man_t, id int32) {
 					if int32(b.nLeaves) > lut {
 						continue
 					}
-					if int32(a.nLeaves+b.nLeaves)+1 > p.pPars.nLutSize {
+					if int32(a.nLeaves+b.nLeaves)+1 > p.pPars.NLutSize {
 						panic("LF grouped cut too large")
 					}
-					combine(a, b, saved, p.pPars.nLutSize, false)
+					combine(a, b, saved, p.pPars.NLutSize, false)
 				}
 			}
 		}
@@ -154,10 +154,10 @@ func Lf_ObjMergeOrder(p *Lf_Man_t, id int32) {
 					continue
 				}
 				p.CutCount[2]++
-				if p.pPars.fCutMin != 0 && Lf_CutComputeTruth(p, a, b, comp0, comp1, candidate, xor) != 0 {
+				if p.pPars.FCutMin != 0 && Lf_CutComputeTruth(p, a, b, comp0, comp1, candidate, xor) != 0 {
 					candidate.Sign = Lf_CutGetSign(candidate)
 				}
-				if p.pPars.nLutSizeMux != 0 && p.pPars.nLutSizeMux == int32(candidate.nLeaves) && Lf_ManFindCofVar(Lf_CutTruth(p, candidate), words, int32(candidate.nLeaves)) == -1 {
+				if p.pPars.NLutSizeMux != 0 && p.pPars.NLutSizeMux == int32(candidate.nLeaves) && Lf_ManFindCofVar(Lf_CutTruth(p, candidate), words, int32(candidate.nLeaves)) == -1 {
 					continue
 				}
 				Lf_CutParams(p, candidate, required, refs, obj)
@@ -189,7 +189,7 @@ func Lf_ObjMergeOrder(p *Lf_Man_t, id int32) {
 			used = 1
 		}
 	}
-	if p.pPars.fUseMux7 != 0 && Gia_ObjIsMuxId(p.pGia, id) != 0 {
+	if p.pPars.FUseMux7 != 0 && Gia_ObjIsMuxId(p.pGia, id) != 0 {
 		c := Lf_ObjCutMux(p, id)
 		Lf_CutParams(p, c, required, refs, obj)
 		best.Delay[2] = c.Delay

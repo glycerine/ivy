@@ -22,7 +22,7 @@ func Ccf_ManStart(src *Gia_Man_t, frames, conflicts, seconds, verbose int32) *Cc
 	if frames <= 0 || conflicts < 0 || seconds < 0 {
 		panic("gia: invalid circuit-cofactoring limits")
 	}
-	parameters := &Gia_ParFra_t{nFrames: frames, fSaveLastLit: 1, fVerbose: verbose}
+	parameters := &Gia_ParFra_t{NFrames: frames, fSaveLastLit: 1, FVerbose: verbose}
 	p := &Ccf_Man_t{pGia: src, nFrameMax: frames, nConfMax: conflicts, nTimeMax: seconds, fVerbose: verbose, pUnr: Gia_ManUnrollStart(src, parameters), vCopies: Vec_IntAlloc(1000), pSat: bsat.NewSolver()}
 	p.pSat.SetLimits(int64(conflicts), 0)
 	if seconds > 0 {

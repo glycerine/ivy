@@ -11,11 +11,11 @@ func TestOfDeriveMapping(t *testing.T) {
 		Gia_ManAppendCo(g, out)
 		var pars Jf_Par_t
 		Mf_ManSetDefaultPars(&pars)
-		pars.nLutSize = 2
-		pars.nDelayLut1 = 10
-		pars.nDelayLut2 = 2
-		pars.nFastEdges = fast
-		pars.fCutMin = 0
+		pars.NLutSize = 2
+		pars.NDelayLut1 = 10
+		pars.NDelayLut2 = 2
+		pars.NFastEdges = fast
+		pars.FCutMin = 0
 		cuts := newOfCutManager(g, &pars)
 		cuts.computeCuts()
 		mapper := newOfMapper(cuts)
@@ -49,8 +49,8 @@ func TestOfDriverMapsNetwork(t *testing.T) {
 		Gia_ManAppendCo(g, out)
 		var pars Jf_Par_t
 		ofDefaultParameters(&pars)
-		pars.nLutSize = 2
-		pars.nFastEdges = fast
+		pars.NLutSize = 2
+		pars.NFastEdges = fast
 		result := ofMap(g, &pars)
 		if result != g || Gia_ObjIsLut(g, out>>1) == 0 || pars.Area != 2 {
 			t.Fatalf("fast=%d: invalid result", fast)

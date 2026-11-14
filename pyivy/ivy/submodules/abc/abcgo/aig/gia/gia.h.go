@@ -50,52 +50,52 @@ package gia
 // new AIG manager
 
 type Gps_Par_t struct {
-	fTents    int32
-	fSwitch   int32
-	fCut      int32
-	fNpn      int32
-	fLutProf  int32
-	fMuxXor   int32
-	fMiter    int32
-	fSkipMap  int32
-	fSlacks   int32
-	fNoColor  int32
-	pDumpFile string
+	FTents    int32
+	FSwitch   int32
+	FCut      int32
+	FNpn      int32
+	FLutProf  int32
+	FMuxXor   int32
+	FMiter    int32
+	FSkipMap  int32
+	FSlacks   int32
+	FNoColor  int32
+	PDumpFile string
 }
 
 type Emb_Par_t struct {
-	nDims      int32 // the number of dimension
-	nSols      int32 // the number of solutions (typically, 2)
-	nIters     int32 // the number of iterations of FORCE
-	fRefine    int32 // use refinement by FORCE
-	fCluster   int32 // use clustered representation
-	fDump      int32 // dump Gnuplot file
-	fDumpLarge int32 // dump Gnuplot file for large benchmarks
-	fShowImage int32 // shows image if Gnuplot is installed
-	fVerbose   int32 // verbose flag
+	NDims      int32 // the number of dimension
+	NSols      int32 // the number of solutions (typically, 2)
+	NIters     int32 // the number of iterations of FORCE
+	FRefine    int32 // use refinement by FORCE
+	FCluster   int32 // use clustered representation
+	FDump      int32 // dump Gnuplot file
+	FDumpLarge int32 // dump Gnuplot file for large benchmarks
+	FShowImage int32 // shows image if Gnuplot is installed
+	FVerbose   int32 // verbose flag
 }
 
 // frames parameters
 
 type Gia_ParFra_t struct {
-	nFrames      int32 // the number of frames to unroll
-	fInit        int32 // initialize the timeframes
+	NFrames      int32 // the number of frames to unroll
+	FInit        int32 // initialize the timeframes
 	fSaveLastLit int32 // adds POs for outputs of each frame
-	fDisableSt   int32 // disables strashing
-	fOrPos       int32 // ORs respective POs in each timeframe
-	fVerbose     int32 // enables verbose output
+	FDisableSt   int32 // disables strashing
+	FOrPos       int32 // ORs respective POs in each timeframe
+	FVerbose     int32 // enables verbose output
 }
 
 // simulation parameters
 
 type Gia_ParSim_t struct {
 	// user-controlled parameters
-	nWords      int32 // the number of machine words
-	nIters      int32 // the number of timeframes
+	NWords      int32 // the number of machine words
+	NIters      int32 // the number of timeframes
 	RandSeed    int32 // seed to generate random numbers
 	TimeLimit   int32 // time limit in seconds
-	fCheckMiter int32 // check if miter outputs are non-zero
-	fVerbose    int32 // enables verbose output
+	FCheckMiter int32 // check if miter outputs are non-zero
+	FVerbose    int32 // enables verbose output
 	iOutFail    int32 // index of the failed output
 }
 
@@ -112,46 +112,46 @@ type Gia_ManSim_t struct {
 }
 
 type Jf_Par_t struct {
-	nLutSize           int32
-	nCutNum            int32
-	nProcNum           int32
-	nRounds            int32
-	nRoundsEla         int32
-	nRelaxRatio        int32
-	nCoarseLimit       int32
-	nAreaTuner         int32
-	nReqTimeFlex       int32
-	nVerbLimit         int32
-	nDelayLut1         int32
-	nDelayLut2         int32
-	nFastEdges         int32
+	NLutSize           int32
+	NCutNum            int32
+	NProcNum           int32
+	NRounds            int32
+	NRoundsEla         int32
+	NRelaxRatio        int32
+	NCoarseLimit       int32
+	NAreaTuner         int32
+	NReqTimeFlex       int32
+	NVerbLimit         int32
+	NDelayLut1         int32
+	NDelayLut2         int32
+	NFastEdges         int32
 	DelayTarget        int32
-	fAreaOnly          int32
-	fPinPerm           int32
-	fPinQuick          int32
-	fPinFilter         int32
-	fOptEdge           int32
-	fUseMux7           int32
-	fPower             int32
-	fCoarsen           int32
-	fCutMin            int32
-	fFuncDsd           int32
-	fGenCnf            int32
-	fGenLit            int32
+	FAreaOnly          int32
+	FPinPerm           int32
+	FPinQuick          int32
+	FPinFilter         int32
+	FOptEdge           int32
+	FUseMux7           int32
+	FPower             int32
+	FCoarsen           int32
+	FCutMin            int32
+	FFuncDsd           int32
+	FGenCnf            int32
+	FGenLit            int32
 	fCnfObjIds         int32
 	fAddOrCla          int32
 	fCnfMapping        int32
-	fPureAig           int32
-	fDoAverage         int32
-	fCutHashing        int32
-	fCutSimple         int32
-	fCutGroup          int32
-	fVerbose           int32
-	fVeryVerbose       int32
-	nLutSizeMax        int32
-	nCutNumMax         int32
-	nProcNumMax        int32
-	nLutSizeMux        int32
+	FPureAig           int32
+	FDoAverage         int32
+	FCutHashing        int32
+	FCutSimple         int32
+	FCutGroup          int32
+	FVerbose           int32
+	FVeryVerbose       int32
+	NLutSizeMax        int32
+	NCutNumMax         int32
+	NProcNumMax        int32
+	NLutSizeMux        int32
 	Delay              word
 	Area               word
 	Edge               word

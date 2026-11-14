@@ -12,8 +12,8 @@ func Jf_ObjPropagateBuf(p *Jf_Man_t, obj *Gia_Obj_t, reverse int32) {
 	panic("JF mapping does not support buffers")
 }
 func Jf_ManComputeCuts(p *Jf_Man_t, edge int32) {
-	if p.pPars.fVerbose != 0 {
-		fmt.Printf("Aig: CI = %d  CO = %d  AND = %d    LutSize = %d  CutMax = %d  Rounds = %d\n", Gia_ManCiNum(p.pGia), Gia_ManCoNum(p.pGia), Gia_ManAndNum(p.pGia), p.pPars.nLutSize, p.pPars.nCutNum, p.pPars.nRounds)
+	if p.pPars.FVerbose != 0 {
+		fmt.Printf("Aig: CI = %d  CO = %d  AND = %d    LutSize = %d  CutMax = %d  Rounds = %d\n", Gia_ManCiNum(p.pGia), Gia_ManCoNum(p.pGia), Gia_ManAndNum(p.pGia), p.pPars.NLutSize, p.pPars.NCutNum, p.pPars.NRounds)
 	}
 	for _, obj := range p.pGia.pObjs {
 		if Gia_ObjIsCi(obj) != 0 || Gia_ObjIsBuf(obj) != 0 {
@@ -25,7 +25,7 @@ func Jf_ManComputeCuts(p *Jf_Man_t, edge int32) {
 			Jf_ObjComputeCuts(p, obj, edge)
 		}
 	}
-	if p.pPars.fVerbose != 0 {
+	if p.pPars.FVerbose != 0 {
 		fmt.Printf("CutPair = %d  Merge = %d  Eval = %d  Cut = %d  Time = %s  Cuts = %.2f MB\n", p.CutCount[0], p.CutCount[1], p.CutCount[2], p.CutCount[3], time.Since(p.clkStart), p.pMem.memory()/(1<<20))
 	}
 }
@@ -67,7 +67,7 @@ func Jf_ManComputeRefs(p *Jf_Man_t) int32 {
 			}
 			cut := Jf_ObjCutBest(p, obj.id)
 			Jf_CutRef(p, cut)
-			if p.pPars.fGenCnf != 0 {
+			if p.pPars.FGenCnf != 0 {
 				p.pPars.Clause += word(Jf_CutCnfSize(p, cut))
 			}
 			p.pPars.Edge += word(Jf_CutSize(cut))
@@ -78,7 +78,7 @@ func Jf_ManComputeRefs(p *Jf_Man_t) int32 {
 	for i := range refs {
 		old := refs[i]
 		var newRef float32
-		if p.pPars.fOptEdge != 0 {
+		if p.pPars.FOptEdge != 0 {
 			newRef = max(1, 0.8*old+0.2*float32(g.Refs[i]))
 		} else {
 			newRef = max(1, 0.2*old+0.8*float32(g.Refs[i]))
@@ -159,7 +159,7 @@ func Jf_ManPropagateEla(p *Jf_Man_t, edge int32) {
 					panic("JF exact area increased")
 				}
 			}
-			if p.pPars.fGenCnf != 0 {
+			if p.pPars.FGenCnf != 0 {
 				p.pPars.Clause += word(Jf_CutCnfSize(p, Jf_ObjCutBest(p, obj.id)))
 			}
 			p.pPars.Edge += word(Jf_CutSize(Jf_ObjCutBest(p, obj.id)))

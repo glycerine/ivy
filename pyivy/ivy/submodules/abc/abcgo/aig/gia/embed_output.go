@@ -233,29 +233,29 @@ func Emb_ManDumpGnuplot(p *Emb_Man_t, name string, large, show int32) {
 }
 func Gia_ManSolveProblem(g *Gia_Man_t, pars *Emb_Par_t) {
 	var p *Emb_Man_t
-	if pars.fCluster != 0 {
+	if pars.FCluster != 0 {
 		p = Emb_ManStart(g)
-		if pars.fVerbose != 0 {
+		if pars.FVerbose != 0 {
 			fmt.Print("Clustered: ")
 			Emb_ManPrintStats(p)
 		}
 	} else {
 		p = Emb_ManStartSimple(g)
 	}
-	p.fVerbose = pars.fVerbose
+	p.fVerbose = pars.FVerbose
 	Gia_ManRandom(1)
 	Emb_ManResetTravId(p)
 	Emb_ManSetValue(p)
-	Emb_ManComputeDimensions(p, pars.nDims)
-	Emb_ManComputeCovariance(p, pars.nDims)
-	Emb_ManComputeEigenvectors(p, pars.nDims, pars.nSols)
-	Emb_ManComputeSolutions(p, pars.nDims, pars.nSols)
-	Emb_ManDerivePlacement(p, pars.nSols)
-	if pars.fRefine != 0 {
-		Emb_ManPlacementRefine(p, pars.nIters, pars.fVerbose)
+	Emb_ManComputeDimensions(p, pars.NDims)
+	Emb_ManComputeCovariance(p, pars.NDims)
+	Emb_ManComputeEigenvectors(p, pars.NDims, pars.NSols)
+	Emb_ManComputeSolutions(p, pars.NDims, pars.NSols)
+	Emb_ManDerivePlacement(p, pars.NSols)
+	if pars.FRefine != 0 {
+		Emb_ManPlacementRefine(p, pars.NIters, pars.FVerbose)
 	}
-	if (pars.fDump != 0 || pars.fDumpLarge != 0) && pars.nSols == 2 {
-		Emb_ManDumpGnuplot(p, g.pName, pars.fDumpLarge, pars.fShowImage)
+	if (pars.FDump != 0 || pars.FDumpLarge != 0) && pars.NSols == 2 {
+		Emb_ManDumpGnuplot(p, g.pName, pars.FDumpLarge, pars.FShowImage)
 	}
 	if g.nObjs == p.nObjs && p.pPlacement != nil {
 		g.pPlacement = make([]Gia_Plc_t, p.nObjs)

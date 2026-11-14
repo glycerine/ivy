@@ -52,13 +52,13 @@ func Jf_ObjCutFilterBoth(p *Jf_Man_t, store []*Jf_Cut_t, count int32) int32 {
 	return jfObjCutFilterBoth(store, count)
 }
 func Jf_ObjCutFilter(p *Jf_Man_t, store []*Jf_Cut_t, count int32) int32 {
-	if jfObjCutFilter(store, count, p.pPars.fCutMin != 0) {
+	if jfObjCutFilter(store, count, p.pPars.FCutMin != 0) {
 		return 1
 	}
 	return 0
 }
 func Jf_ObjAddCutToStore(p *Jf_Man_t, store []*Jf_Cut_t, count, max int32) int32 {
-	return jfObjAddCutToStore(store, count, max, p.pPars.fCutMin != 0, p.pCutCmp)
+	return jfObjAddCutToStore(store, count, max, p.pPars.FCutMin != 0, p.pCutCmp)
 }
 func jfAccounting(p *Jf_Man_t) *jfCutAccounting {
 	return &jfCutAccounting{refs: p.pGia.Refs, best: func(id int32) []int32 { return Jf_ObjCutBest(p, id) }}

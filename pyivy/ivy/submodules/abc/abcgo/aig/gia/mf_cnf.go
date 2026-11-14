@@ -27,7 +27,7 @@ func Mf_ManCountLits(cubes []int32, nCubes, nVars int32) int32 {
 	return count
 }
 func Mf_ManDeriveCnfs(p *Mf_Man_t, nVars, nClauses, nLits *int32) *Vec_Int_t {
-	if p.pPars.nLutSize > 8 {
+	if p.pPars.NLutSize > 8 {
 		panic("gia: CNF requires LUT size at most 8")
 	}
 	count := vec.Vec_IntSize(&p.vCnfSizes)
@@ -37,7 +37,7 @@ func Mf_ManDeriveCnfs(p *Mf_Man_t, nVars, nClauses, nLits *int32) *Vec_Int_t {
 	generate := func(id, n int32, check bool) {
 		truth := vec.Vec_MemReadEntry(p.vTtMem, int(id))
 		var num int32
-		if p.pPars.nLutSize <= 6 {
+		if p.pPars.NLutSize <= 6 {
 			num = util.Abc_Tt6Cnf(truth[0], n, cubes[:])
 		} else {
 			num = util.Abc_Tt8Cnf(truth, n, cubes[:])
@@ -74,7 +74,7 @@ func Mf_ManDeriveCnfs(p *Mf_Man_t, nVars, nClauses, nLits *int32) *Vec_Int_t {
 }
 
 func Mf_ManDeriveCnf(p *Mf_Man_t, objectIDs, addOr int32) *Cnf_Dat_t {
-	m := &mf.Mapping{Network: p.pGia, Options: mf.Options{LUTSize: int(p.pPars.nLutSize)}, Cuts: make([][]mf.Cut, p.pGia.nObjs), Refs: make([]int32, p.pGia.nObjs)}
+	m := &mf.Mapping{Network: p.pGia, Options: mf.Options{LUTSize: int(p.pPars.NLutSize)}, Cuts: make([][]mf.Cut, p.pGia.nObjs), Refs: make([]int32, p.pGia.nObjs)}
 	for i := 0; i < vec.Vec_MemEntryNum(p.vTtMem); i++ {
 		m.Truths = append(m.Truths, append([]uint64(nil), vec.Vec_MemReadEntry(p.vTtMem, i)...))
 	}

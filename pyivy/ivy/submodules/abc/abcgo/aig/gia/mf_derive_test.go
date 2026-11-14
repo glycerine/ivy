@@ -9,7 +9,7 @@ func TestMfDeriveTruthMapping(t *testing.T) {
 	Gia_ManAppendCo(g, x)
 	var pars Jf_Par_t
 	Mf_ManSetDefaultPars(&pars)
-	pars.fCutMin = 1
+	pars.FCutMin = 1
 	p := Mf_ManAlloc(g, &pars)
 	Mf_ObjMergeOrder(p, x>>1)
 	Mf_ManSetMapRefs(p)

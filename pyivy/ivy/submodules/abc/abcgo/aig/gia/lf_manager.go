@@ -23,7 +23,7 @@ func Lf_ManComputeSwitching(g *Gia_Man_t, result *Vec_Flt_t) {
 	*result = *switching
 }
 func Lf_ManAlloc(g *Gia_Man_t, pars *Jf_Par_t) *Lf_Man_t {
-	if pars.nCutNum <= 1 || pars.nCutNum > LF_CUT_MAX || pars.nLutSize <= 1 || pars.nLutSize > LF_LEAF_MAX {
+	if pars.NCutNum <= 1 || pars.NCutNum > LF_CUT_MAX || pars.NLutSize <= 1 || pars.NLutSize > LF_LEAF_MAX {
 		panic("LF invalid mapping limits")
 	}
 	g.Refs = nil
@@ -34,16 +34,16 @@ func Lf_ManAlloc(g *Gia_Man_t, pars *Jf_Par_t) *Lf_Man_t {
 	}
 	p := &Lf_Man_t{pGia: g, pPars: pars, clkStart: time.Now()}
 	Lf_ManAnalyzeCoDrivers(g, &p.nCoDrivers, &p.nInverters)
-	if pars.fPower != 0 {
+	if pars.FPower != 0 {
 		Lf_ManComputeSwitching(g, &p.vSwitches)
 	}
 	// Original packed header occupies six 32-bit words with variable leaves.
-	p.nCutWords = (6 + pars.nLutSize + 1) >> 1
-	p.nSetWords = p.nCutWords * pars.nCutNum
-	if pars.fCutMin != 0 {
-		p.vTtMem = vec.Vec_MemAllocForTT(int(pars.nLutSize), 0)
-		if pars.fUseMux7 != 0 {
-			vec.Vec_MemAddMuxTT(p.vTtMem, int(pars.nLutSize))
+	p.nCutWords = (6 + pars.NLutSize + 1) >> 1
+	p.nSetWords = p.nCutWords * pars.NCutNum
+	if pars.FCutMin != 0 {
+		p.vTtMem = vec.Vec_MemAllocForTT(int(pars.NLutSize), 0)
+		if pars.FUseMux7 != 0 {
+			vec.Vec_MemAddMuxTT(p.vTtMem, int(pars.NLutSize))
 		}
 	}
 	n, nAnd := int(g.nObjs), int(Gia_ManAndNotBufNum(g))
@@ -100,24 +100,24 @@ func Lf_ManFree(p *Lf_Man_t) {
 	p.pObjBests = nil
 }
 func Lf_ManSetDefaultPars(p *Jf_Par_t) {
-	*p = Jf_Par_t{nLutSize: 6, nCutNum: 8, nRounds: 4, nRoundsEla: 1, nCoarseLimit: 3, nAreaTuner: 1, nVerbLimit: 5, DelayTarget: -1, fOptEdge: 1, fCoarsen: 1, nLutSizeMax: LF_LEAF_MAX, nCutNumMax: LF_CUT_MAX}
+	*p = Jf_Par_t{NLutSize: 6, NCutNum: 8, NRounds: 4, NRoundsEla: 1, NCoarseLimit: 3, NAreaTuner: 1, NVerbLimit: 5, DelayTarget: -1, FOptEdge: 1, FCoarsen: 1, NLutSizeMax: LF_LEAF_MAX, NCutNumMax: LF_CUT_MAX}
 }
 func Lf_ManPrintStats(p *Lf_Man_t, title string) {
-	if p.pPars.fVerbose == 0 {
+	if p.pPars.FVerbose == 0 {
 		return
 	}
 	fmt.Printf("%s : Level =%6d   Area =%9d   Edge =%9d   LUT =%9d  ", title, p.pPars.Delay, p.pPars.Area, p.pPars.Edge, p.pPars.Area+word(p.nInverters))
 	if vec.Vec_FltSize(&p.vSwitches) > 0 {
 		fmt.Printf("Swt =%8.1f  ", p.Switches)
 	}
-	if p.pPars.fUseMux7 != 0 {
+	if p.pPars.FUseMux7 != 0 {
 		fmt.Printf("Mux7 =%7d  ", p.pPars.Mux7)
 	}
 	fmt.Printf("Time = %s\n", time.Since(p.clkStart))
 }
 func Lf_ManPrintInit(p *Lf_Man_t) {
-	if p.pPars.fVerbose != 0 {
-		fmt.Printf("LutSize = %d  CutNum = %d  Iter = %d  Edge = %d  CutMin = %d  Coarse = %d  Cut/Set = %d/%d Bytes\n", p.pPars.nLutSize, p.pPars.nCutNum, p.pPars.nRounds+p.pPars.nRoundsEla, p.pPars.fOptEdge, p.pPars.fCutMin, p.pPars.fCoarsen, 8*p.nCutWords, 8*p.nSetWords)
+	if p.pPars.FVerbose != 0 {
+		fmt.Printf("LutSize = %d  CutNum = %d  Iter = %d  Edge = %d  CutMin = %d  Coarse = %d  Cut/Set = %d/%d Bytes\n", p.pPars.NLutSize, p.pPars.NCutNum, p.pPars.NRounds+p.pPars.NRoundsEla, p.pPars.FOptEdge, p.pPars.FCutMin, p.pPars.FCoarsen, 8*p.nCutWords, 8*p.nSetWords)
 	}
 }
 func Lf_ManComputeMapping(p *Lf_Man_t) {

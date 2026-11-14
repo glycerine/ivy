@@ -8,7 +8,7 @@ import (
 
 func (p *ofMapper) directCut(cut []int32) (int32, int32) {
 	n := int(ofStoredSize(cut))
-	fast := int(p.cuts.pars.nFastEdges)
+	fast := int(p.cuts.pars.NFastEdges)
 	if fast < 0 {
 		panic("gia: invalid Of fast edge count")
 	}
@@ -19,7 +19,7 @@ func (p *ofMapper) directCut(cut []int32) (int32, int32) {
 	order := make([]entry, n)
 	for i := range order {
 		id := ofStoredVar(cut, i)
-		order[i] = entry{i, p.objects[id].delay + p.cuts.pars.nDelayLut1}
+		order[i] = entry{i, p.objects[id].delay + p.cuts.pars.NDelayLut1}
 	}
 	sort.SliceStable(order, func(i, j int) bool { return order[i].delay > order[j].delay })
 	slow := int32(0)
@@ -30,7 +30,7 @@ func (p *ofMapper) directCut(cut []int32) (int32, int32) {
 	works := true
 	for k, e := range order {
 		id := ofStoredVar(cut, e.pin)
-		after := p.objects[id].delay2 + p.cuts.pars.nDelayLut2
+		after := p.objects[id].delay2 + p.cuts.pars.NDelayLut2
 		delay := e.delay
 		if k < fast && e.delay > slow && after < e.delay && works && Gia_ObjIsAnd(Gia_ManObj(p.cuts.graph, id)) != 0 && Gia_ObjIsBuf(Gia_ManObj(p.cuts.graph, id)) == 0 {
 			delay = after
@@ -127,9 +127,9 @@ func (p *ofMapper) backwardDirect() {
 		for pin := range ofStoredLeaves(cut) {
 			f, flag := ofStoredVar(cut, pin), ofStoredFlag(cut, pin)
 			direct := flag != 0 && !pointed[id]
-			arc := p.cuts.pars.nDelayLut1
+			arc := p.cuts.pars.NDelayLut1
 			if direct {
-				arc = p.cuts.pars.nDelayLut2
+				arc = p.cuts.pars.NDelayLut2
 				pointed[f] = true
 			}
 			p.updateRequired(f, o.required-arc)

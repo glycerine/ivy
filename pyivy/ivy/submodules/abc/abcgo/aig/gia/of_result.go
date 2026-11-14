@@ -4,13 +4,13 @@ import "github.com/glycerine/abcgo/misc/vec"
 
 func (p *ofMapper) deriveMapping() *Gia_Man_t {
 	g := p.cuts.graph
-	if g.vMapping != nil || p.cuts.pars.fCutMin != 0 {
+	if g.vMapping != nil || p.cuts.pars.FCutMin != 0 {
 		panic("gia: invalid Of mapping derivation")
 	}
 	mapping := vec.Vec_IntAlloc(int(g.nObjs) + int(p.cuts.pars.Edge) + 2*int(p.cuts.pars.Area))
 	vec.Vec_IntFill(mapping, int(g.nObjs), 0)
 	var packing *Vec_Int_t
-	if p.cuts.pars.nFastEdges != 0 {
+	if p.cuts.pars.NFastEdges != 0 {
 		packing = vec.Vec_IntAlloc(16)
 		vec.Vec_IntPush(packing, 0)
 	}

@@ -11,10 +11,10 @@ func TestLfManagerMappingRounds(t *testing.T) {
 		Gia_ManAppendCo(g, y)
 		var pars Jf_Par_t
 		Lf_ManSetDefaultPars(&pars)
-		pars.nLutSize = 3
-		pars.nCutNum = 4
-		pars.fCutMin = min
-		pars.fCoarsen = 0
+		pars.NLutSize = 3
+		pars.NCutNum = 4
+		pars.FCutMin = min
+		pars.FCoarsen = 0
 		p := Lf_ManAlloc(g, &pars)
 		for i := int32(0); i < 2; i++ {
 			p.Iter = i

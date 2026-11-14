@@ -15,7 +15,7 @@ func TestMfMappingRefs(t *testing.T) {
 	if vec.Vec_IntEntry(refs, int(x>>1)) != 1 {
 		t.Fatal("missing output reference")
 	}
-	p := &Mf_Man_t{pGia: g, pPars: &Jf_Par_t{nLutSize: 2, DelayTarget: -1}, pLfObjs: make([]Mf_Obj_t, g.nObjs), iCur: 2}
+	p := &Mf_Man_t{pGia: g, pPars: &Jf_Par_t{NLutSize: 2, DelayTarget: -1}, pLfObjs: make([]Mf_Obj_t, g.nObjs), iCur: 2}
 	cut := &Mf_Cut_t{nLeaves: 2}
 	cut.pLeaves[0], cut.pLeaves[1] = a>>1, b>>1
 	p.pLfObjs[x>>1].iCutSet = Mf_ManSaveCuts(p, []*Mf_Cut_t{cut}, 1)

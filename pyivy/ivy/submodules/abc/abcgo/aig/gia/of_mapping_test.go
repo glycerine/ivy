@@ -10,8 +10,8 @@ func TestOfForwardBackwardMapping(t *testing.T) {
 	Gia_ManAppendCo(g, out)
 	var pars Jf_Par_t
 	Mf_ManSetDefaultPars(&pars)
-	pars.nDelayLut1 = 10
-	pars.nAreaTuner = 1
+	pars.NDelayLut1 = 10
+	pars.NAreaTuner = 1
 	cuts := newOfCutManager(g, &pars)
 	cuts.computeCuts()
 	mapper := newOfMapper(cuts)

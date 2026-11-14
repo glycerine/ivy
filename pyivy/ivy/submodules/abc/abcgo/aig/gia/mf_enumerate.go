@@ -3,7 +3,7 @@ package gia
 func Mf_ObjMergeOrder(p *Mf_Man_t, id int32) {
 	obj := Gia_ManObj(p.pGia, id)
 	best := Mf_ManObj(p, id)
-	limit, num := p.pPars.nLutSize, p.pPars.nCutNum
+	limit, num := p.pPars.NLutSize, p.pPars.NCutNum
 	var left, right, third, storage [MF_CUT_MAX]Mf_Cut_t
 	var cuts [MF_CUT_MAX]*Mf_Cut_t
 	for i := range cuts {
@@ -39,7 +39,7 @@ func Mf_ObjMergeOrder(p *Mf_Man_t, id int32) {
 						continue
 					}
 					p.CutCount[2]++
-					if p.pPars.fCutMin != 0 && Mf_CutComputeTruthMux(p, a, b, c, c0, c1, c2, cuts[n]) != 0 {
+					if p.pPars.FCutMin != 0 && Mf_CutComputeTruthMux(p, a, b, c, c0, c1, c2, cuts[n]) != 0 {
 						cuts[n].Sign = Mf_CutGetSign(cuts[n].pLeaves[:], int32(cuts[n].nLeaves))
 					}
 					Mf_CutParams(p, cuts[n], best.nFlowRefs)
@@ -60,7 +60,7 @@ func Mf_ObjMergeOrder(p *Mf_Man_t, id int32) {
 					continue
 				}
 				p.CutCount[2]++
-				if p.pPars.fCutMin != 0 && Mf_CutComputeTruth(p, a, b, c0, c1, cuts[n], Gia_ObjIsXor(obj)) != 0 {
+				if p.pPars.FCutMin != 0 && Mf_CutComputeTruth(p, a, b, c0, c1, cuts[n], Gia_ObjIsXor(obj)) != 0 {
 					cuts[n].Sign = Mf_CutGetSign(cuts[n].pLeaves[:], int32(cuts[n].nLeaves))
 				}
 				Mf_CutParams(p, cuts[n], best.nFlowRefs)

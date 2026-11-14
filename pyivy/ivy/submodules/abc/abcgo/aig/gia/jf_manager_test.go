@@ -11,7 +11,7 @@ func TestJfManagerLifecycle(t *testing.T) {
 		a, b := Gia_ManAppendCi(p), Gia_ManAppendCi(p)
 		x := Gia_ManAppendAnd(p, a, b)
 		Gia_ManAppendCo(p, x)
-		pars := &Jf_Par_t{nLutSize: 4, nCutNum: 8, fCutMin: mode.min, fFuncDsd: mode.dsd, fGenCnf: mode.cnf}
+		pars := &Jf_Par_t{NLutSize: 4, NCutNum: 8, FCutMin: mode.min, FFuncDsd: mode.dsd, FGenCnf: mode.cnf}
 		man := Jf_ManAlloc(p, pars)
 		if len(p.Refs) != int(p.nObjs) || Jf_ObjRefs(man, a>>1) != 1 || (man.vTtMem != nil) != (mode.min != 0 && mode.dsd == 0) || (man.pDsd != nil) != (mode.dsd != 0) || (man.vCnfs != nil) != (mode.cnf != 0) {
 			t.Fatal("manager setup")

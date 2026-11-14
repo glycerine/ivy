@@ -12,7 +12,7 @@ func TestGiaMfsBridge(t *testing.T) {
 	Gia_ManAppendCo(g, Gia_ManAppendAnd(g, a, b))
 	var mp Jf_Par_t
 	Mf_ManSetDefaultPars(&mp)
-	mp.fCoarsen = 0
+	mp.FCoarsen = 0
 	mapped := Mf_ManPerformMapping(g, &mp)
 	n := Gia_ManExtractMfs(mapped)
 	for input := 0; input < 4; input++ {

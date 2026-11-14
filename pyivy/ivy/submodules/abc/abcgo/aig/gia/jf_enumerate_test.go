@@ -15,7 +15,7 @@ func TestJfEnumerateAndCutModes(t *testing.T) {
 			a, b := Gia_ManAppendCi(g), Gia_ManAppendCi(g)
 			x := Gia_ManAppendAnd(g, a, b)
 			Gia_ManAppendCo(g, x)
-			p := Jf_ManAlloc(g, &Jf_Par_t{nLutSize: 4, nCutNum: 4, fCutMin: mode.min, fFuncDsd: mode.dsd})
+			p := Jf_ManAlloc(g, &Jf_Par_t{NLutSize: 4, NCutNum: 4, FCutMin: mode.min, FFuncDsd: mode.dsd})
 			defer Jf_ManFree(p)
 			p.pCutCmp = Jf_CutCompareDelay
 			Jf_ObjAssignCut(p, Gia_ManObj(g, a>>1))
@@ -39,7 +39,7 @@ func TestJfTruthCutPhasesAndSupport(t *testing.T) {
 	g := Gia_ManStart(8)
 	Gia_ManAppendCi(g)
 	Gia_ManAppendCi(g)
-	p := Jf_ManAlloc(g, &Jf_Par_t{nLutSize: 4, nCutNum: 4, fCutMin: 1})
+	p := Jf_ManAlloc(g, &Jf_Par_t{NLutSize: 4, NCutNum: 4, FCutMin: 1})
 	defer Jf_ManFree(p)
 	a, b := []int32{1, 2}, []int32{1, 4}
 	for phase := int32(0); phase < 4; phase++ {

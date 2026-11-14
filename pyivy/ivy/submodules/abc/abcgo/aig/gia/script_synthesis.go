@@ -8,11 +8,11 @@ func giaAigSyn2(input *Gia_Man_t, old, coarsen, cutMin, relax, delayMin, verbose
 	var pars Jf_Par_t
 	if old != 0 {
 		Jf_ManSetDefaultPars(&pars)
-		pars.fCutMin = cutMin
+		pars.FCutMin = cutMin
 	} else {
 		Lf_ManSetDefaultPars(&pars)
-		pars.fCutMin, pars.fCoarsen, pars.nRelaxRatio = cutMin, coarsen, relax
-		pars.nAreaTuner, pars.nCutNum = 1, 4
+		pars.FCutMin, pars.FCoarsen, pars.NRelaxRatio = cutMin, coarsen, relax
+		pars.NAreaTuner, pars.NCutNum = 1, 4
 	}
 	if verbose != 0 {
 		Gia_ManPrintStats(input, nil)
@@ -32,8 +32,8 @@ func giaAigSyn2(input *Gia_Man_t, old, coarsen, cutMin, relax, delayMin, verbose
 		return Lf_ManPerformMapping(g, &pars)
 	}
 	if delayMin != 0 && p.pManTime == nil {
-		savedCutMin, savedCoarsen, savedRelax := pars.fCutMin, pars.fCoarsen, pars.nRelaxRatio
-		pars.fCutMin, pars.fCoarsen, pars.nRelaxRatio = 0, 0, 0
+		savedCutMin, savedCoarsen, savedRelax := pars.FCutMin, pars.FCoarsen, pars.NRelaxRatio
+		pars.FCutMin, pars.FCoarsen, pars.NRelaxRatio = 0, 0, 0
 		mapGraph(p)
 		area0, delay0 := int32(pars.Area), int32(pars.Delay)
 		balanced := dsdBalance(p, 6, 4, 0, 0)
@@ -46,7 +46,7 @@ func giaAigSyn2(input *Gia_Man_t, old, coarsen, cutMin, relax, delayMin, verbose
 			Gia_ManStop(balanced)
 			p.vMapping = nil
 		}
-		pars.fCutMin, pars.fCoarsen, pars.nRelaxRatio = savedCutMin, savedCoarsen, savedRelax
+		pars.FCutMin, pars.FCoarsen, pars.NRelaxRatio = savedCutMin, savedCoarsen, savedRelax
 	}
 	result := Gia_ManAreaBalance(p, 0, util.ABC_INFINITY, veryVerbose, 0)
 	if verbose != 0 {
@@ -73,7 +73,7 @@ func giaAigSyn2(input *Gia_Man_t, old, coarsen, cutMin, relax, delayMin, verbose
 func Gia_ManAigSyn3(p *Gia_Man_t, verbose, veryVerbose int32) *Gia_Man_t {
 	var pars Jf_Par_t
 	Jf_ManSetDefaultPars(&pars)
-	pars.nRelaxRatio = 40
+	pars.NRelaxRatio = 40
 	if verbose != 0 {
 		Gia_ManPrintStats(p, nil)
 	}
@@ -84,7 +84,7 @@ func Gia_ManAigSyn3(p *Gia_Man_t, verbose, veryVerbose int32) *Gia_Man_t {
 	}
 	q := Gia_ManAreaBalance(p, 0, util.ABC_INFINITY, veryVerbose, 0)
 	for _, size := range []int32{6, 4} {
-		pars.nLutSize = size
+		pars.NLutSize = size
 		q = Jf_ManPerformMapping(q, &pars)
 		if verbose != 0 {
 			Gia_ManPrintStats(q, nil)
@@ -99,7 +99,7 @@ func Gia_ManAigSyn3(p *Gia_Man_t, verbose, veryVerbose int32) *Gia_Man_t {
 func Gia_ManAigSyn4(p *Gia_Man_t, verbose, veryVerbose int32) *Gia_Man_t {
 	var pars Jf_Par_t
 	Jf_ManSetDefaultPars(&pars)
-	pars.nRelaxRatio = 40
+	pars.NRelaxRatio = 40
 	if verbose != 0 {
 		Gia_ManPrintStats(p, nil)
 	}
@@ -110,7 +110,7 @@ func Gia_ManAigSyn4(p *Gia_Man_t, verbose, veryVerbose int32) *Gia_Man_t {
 	}
 	q := Gia_ManAreaBalance(p, 0, util.ABC_INFINITY, veryVerbose, 0)
 	for _, size := range []int32{7, 5} {
-		pars.nLutSize = size
+		pars.NLutSize = size
 		q = Jf_ManPerformMapping(q, &pars)
 		q = Gia_ManPerformFx(q, util.ABC_INFINITY, 0, 0, veryVerbose, 0)
 		q = Gia_ManAreaBalance(q, 0, util.ABC_INFINITY, veryVerbose, 0)

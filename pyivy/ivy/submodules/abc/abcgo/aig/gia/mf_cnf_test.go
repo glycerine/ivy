@@ -12,9 +12,9 @@ func TestMfDeriveCnfs(t *testing.T) {
 	Gia_ManAppendCo(g, x)
 	var pars Jf_Par_t
 	Mf_ManSetDefaultPars(&pars)
-	pars.fCutMin = 1
-	pars.fGenCnf = 1
-	pars.fCoarsen = 0
+	pars.FCutMin = 1
+	pars.FGenCnf = 1
+	pars.FCoarsen = 0
 	p := Mf_ManAlloc(g, &pars)
 	Mf_ManComputeCuts(p)
 	var vars, clauses, lits int32
@@ -33,8 +33,8 @@ func TestMfDeriveCnfSatisfiesAnd(t *testing.T) {
 	Gia_ManAppendCo(g, x)
 	var pars Jf_Par_t
 	Mf_ManSetDefaultPars(&pars)
-	pars.fCutMin = 1
-	pars.fGenCnf = 1
+	pars.FCutMin = 1
+	pars.FGenCnf = 1
 	pars.fCnfMapping = 1
 	p := Mf_ManAlloc(g, &pars)
 	p.pGia0 = g

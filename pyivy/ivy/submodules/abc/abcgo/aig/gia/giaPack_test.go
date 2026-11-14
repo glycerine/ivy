@@ -14,7 +14,7 @@ func TestGiaLutCollectAndPacking(t *testing.T) {
 	Gia_ManAppendCo(g, out)
 	var pars Jf_Par_t
 	ofDefaultParameters(&pars)
-	pars.nLutSize = 2
+	pars.NLutSize = 2
 	ofMap(g, &pars)
 	want := []int32{x >> 1, out >> 1}
 	if got := vec.Vec_IntArray(Gia_ManLutCollect(g)); !reflect.DeepEqual(got, want) {

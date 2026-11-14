@@ -21,12 +21,12 @@ func Gia_Sim2Data(p *Gia_Sim2_t, id int32) []uint32 {
 }
 func Gia_Sim2Delete(p *Gia_Sim2_t) { p.vClassOld = nil; p.vClassNew = nil; p.pDataSim = nil }
 func Gia_Sim2Create(g *Gia_Man_t, pars *Gia_ParSim_t) *Gia_Sim2_t {
-	if g == nil || pars == nil || pars.nWords <= 0 {
+	if g == nil || pars == nil || pars.NWords <= 0 {
 		panic("gia: invalid equivalence simulator")
 	}
-	p := &Gia_Sim2_t{pAig: g, pPars: pars, nWords: pars.nWords, pDataSim: make([]uint32, int(pars.nWords)*int(g.nObjs)), vClassOld: vec.Vec_IntAlloc(100), vClassNew: vec.Vec_IntAlloc(100)}
-	if pars.fVerbose != 0 {
-		fmt.Printf("Memory: AIG = %7.2f MB.  SimInfo = %7.2f MB.\n", 12*float64(g.nObjs)/(1<<20), 4*float64(pars.nWords)*float64(g.nObjs)/(1<<20))
+	p := &Gia_Sim2_t{pAig: g, pPars: pars, nWords: pars.NWords, pDataSim: make([]uint32, int(pars.NWords)*int(g.nObjs)), vClassOld: vec.Vec_IntAlloc(100), vClassNew: vec.Vec_IntAlloc(100)}
+	if pars.FVerbose != 0 {
+		fmt.Printf("Memory: AIG = %7.2f MB.  SimInfo = %7.2f MB.\n", 12*float64(g.nObjs)/(1<<20), 4*float64(pars.NWords)*float64(g.nObjs)/(1<<20))
 	}
 	Gia_ManSetPhase(g)
 	for _, obj := range g.pObjs {

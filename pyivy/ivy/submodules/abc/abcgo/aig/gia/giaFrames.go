@@ -87,10 +87,10 @@ func Gia_ManUnrollAbs(src *Gia_Man_t, frames int32) *Vec_Ptr_t {
 // Gia_ManUnrollStart prepares incremental frame construction. With
 // fSaveLastLit, primary inputs are appended as each frame is requested.
 func Gia_ManUnrollStart(src *Gia_Man_t, params *Gia_ParFra_t) any {
-	if src == nil || params == nil || Gia_ManRegNum(src) < 0 || params.nFrames < 0 {
+	if src == nil || params == nil || Gia_ManRegNum(src) < 0 || params.NFrames < 0 {
 		return nil
 	}
-	capacity := int64(Gia_ManObjNum(src)) * int64(maxInt(1, int(params.nFrames)))
+	capacity := int64(Gia_ManObjNum(src)) * int64(maxInt(1, int(params.NFrames)))
 	if capacity > int64(objectNoFanin) {
 		return nil
 	}
@@ -103,13 +103,13 @@ func Gia_ManUnrollStart(src *Gia_Man_t, params *Gia_ParFra_t) any {
 	Gia_ManHashStart(manager.pNew)
 	nPis, nRegs := Gia_ManPiNum(src), Gia_ManRegNum(src)
 	if params.fSaveLastLit == 0 {
-		for i := int32(0); i < params.nFrames*nPis; i++ {
+		for i := int32(0); i < params.NFrames*nPis; i++ {
 			Gia_ManAppendCi(manager.pNew)
 		}
 	}
 	manager.state = make([]int32, nRegs)
 	for i := int32(0); i < nRegs; i++ {
-		if params.fInit != 0 {
+		if params.FInit != 0 {
 			manager.state[i] = 0
 		} else {
 			manager.state[i] = Gia_ManAppendCi(manager.pNew)
@@ -124,7 +124,7 @@ func Gia_ManUnrollAdd(raw any, fMax int32) any {
 	if !ok || manager == nil || manager.stopped || manager.pAig == nil || manager.pNew == nil || fMax < manager.frame {
 		return nil
 	}
-	if manager.pPars.nFrames > 0 && fMax > manager.pPars.nFrames {
+	if manager.pPars.NFrames > 0 && fMax > manager.pPars.NFrames {
 		return nil
 	}
 	src, dst := manager.pAig, manager.pNew
@@ -158,7 +158,7 @@ func Gia_ManUnrollAdd(raw any, fMax int32) any {
 			if Gia_ObjIsAnd(obj) != 0 {
 				a := remapGiaLiteral(mapping, Gia_ObjFaninLit0(obj, id))
 				b := remapGiaLiteral(mapping, Gia_ObjFaninLit1(obj, id))
-				if manager.pPars.fDisableSt != 0 {
+				if manager.pPars.FDisableSt != 0 {
 					mapping[id] = Gia_ManAppendAnd2(dst, a, b)
 				} else {
 					mapping[id] = Gia_ManHashAnd(dst, a, b)
@@ -215,7 +215,7 @@ func Gia_ManUnroll(src *Gia_Man_t, params *Gia_ParFra_t) *Gia_Man_t {
 		return nil
 	}
 	manager := raw.(*Gia_ManUnr_t)
-	result, ok := Gia_ManUnrollAdd(raw, params.nFrames).(*Gia_Man_t)
+	result, ok := Gia_ManUnrollAdd(raw, params.NFrames).(*Gia_Man_t)
 	if !ok || result == nil {
 		Gia_ManUnrollStop(raw)
 		return nil
@@ -230,7 +230,7 @@ func Gia_ManUnroll(src *Gia_Man_t, params *Gia_ParFra_t) *Gia_Man_t {
 // Gia_ManFrames2 adapts the historical external entry point to the native AIG
 // frame builder, then exports the resulting sequential graph to GIA.
 func Gia_ManFrames2(src *Gia_Man_t, params *Gia_ParFra_t) *Gia_Man_t {
-	if src == nil || params == nil || params.nFrames <= 0 {
+	if src == nil || params == nil || params.NFrames <= 0 {
 		return nil
 	}
 	return buildGiaFrames(src, params)
@@ -240,36 +240,36 @@ func Gia_ManFraSetDefaultParams(params *Gia_ParFra_t) {
 	if params == nil {
 		return
 	}
-	*params = Gia_ParFra_t{nFrames: 32}
+	*params = Gia_ParFra_t{NFrames: 32}
 }
 
 func Gia_ManFrames(src *Gia_Man_t, params *Gia_ParFra_t) *Gia_Man_t {
-	if src == nil || params == nil || params.nFrames <= 0 {
+	if src == nil || params == nil || params.NFrames <= 0 {
 		return nil
 	}
 	return buildGiaFrames(src, params)
 }
 
 func Gia_ManFramesInit(src *Gia_Man_t, params *Gia_ParFra_t) *Gia_Man_t {
-	if src == nil || params == nil || params.nFrames <= 0 {
+	if src == nil || params == nil || params.NFrames <= 0 {
 		return nil
 	}
 	copyParams := *params
-	copyParams.fInit = 1
+	copyParams.FInit = 1
 	return buildGiaFrames(src, &copyParams)
 }
 
 func buildGiaFrames(src *Gia_Man_t, params *Gia_ParFra_t) *Gia_Man_t {
 	graph := Gia_ManToAigSimple(src)
 	withRegisters := int32(0)
-	if params.fInit == 0 {
+	if params.FInit == 0 {
 		withRegisters = 1
 	}
-	unrolled := aig.Aig_ManFrames(graph, params.nFrames, params.fInit, 1, withRegisters, 0, nil)
+	unrolled := aig.Aig_ManFrames(graph, params.NFrames, params.FInit, 1, withRegisters, 0, nil)
 	result := Gia_ManFromAigSimple(unrolled)
 	result.pName, result.pSpec = src.pName, src.pSpec
-	if params.fVerbose != 0 {
-		fmt.Printf("Unrolled %d frames: %d PIs, %d POs, %d registers.\n", params.nFrames, Gia_ManPiNum(result), Gia_ManPoNum(result), Gia_ManRegNum(result))
+	if params.FVerbose != 0 {
+		fmt.Printf("Unrolled %d frames: %d PIs, %d POs, %d registers.\n", params.NFrames, Gia_ManPiNum(result), Gia_ManPoNum(result), Gia_ManRegNum(result))
 	}
 	return result
 }
@@ -278,7 +278,7 @@ func Gia_ManFramesInitSpecial(src *Gia_Man_t, frames, verbose int32) *Gia_Man_t 
 	if src == nil {
 		return nil
 	}
-	params := Gia_ParFra_t{nFrames: frames, fInit: 1, fVerbose: verbose}
+	params := Gia_ParFra_t{NFrames: frames, FInit: 1, FVerbose: verbose}
 	return Gia_ManFramesInit(src, &params)
 }
 

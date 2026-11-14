@@ -9,7 +9,7 @@ func TestGiaMfsRoundTrip(t *testing.T) {
 	Gia_ManAppendCo(g, x)
 	var pars Jf_Par_t
 	Mf_ManSetDefaultPars(&pars)
-	pars.fCoarsen = 0
+	pars.FCoarsen = 0
 	mapped := Mf_ManPerformMapping(g, &pars)
 	data := giaMfsExtract(mapped)
 	result := giaMfsInsert(mapped, data, false)

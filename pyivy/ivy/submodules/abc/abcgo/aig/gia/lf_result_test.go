@@ -21,10 +21,10 @@ func TestLfResultMapping(t *testing.T) {
 			Gia_ManAppendCo(g, y^1)
 			var pars Jf_Par_t
 			Lf_ManSetDefaultPars(&pars)
-			pars.nLutSize = 3
-			pars.nCutNum = 4
-			pars.fCutMin = mode.min
-			pars.fCoarsen = mode.coarse
+			pars.NLutSize = 3
+			pars.NCutNum = 4
+			pars.FCutMin = mode.min
+			pars.FCoarsen = mode.coarse
 			p := Lf_ManAlloc(g, &pars)
 			defer Lf_ManFree(p)
 			for i := int32(0); i < 2; i++ {
@@ -61,9 +61,9 @@ func TestLfResultExplicitMux(t *testing.T) {
 		Gia_ManAppendCo(g, x)
 		var pars Jf_Par_t
 		Lf_ManSetDefaultPars(&pars)
-		pars.nLutSize = 4
-		pars.nCutNum = 4
-		pars.fCutMin = min
+		pars.NLutSize = 4
+		pars.NCutNum = 4
+		pars.FCutMin = min
 		p := Lf_ManAlloc(g, &pars)
 		for i := int32(0); i < 2; i++ {
 			p.Iter = i
@@ -107,7 +107,7 @@ func TestLfCofactorMuxDerivation(t *testing.T) {
 			truth |= 1 << uint(i)
 		}
 	}
-	p := &Lf_Man_t{pGia: g, pPars: &Jf_Par_t{nLutSize: 5, nLutSizeMux: 5}, vTtMem: vec.Vec_MemAllocForTT(5, 0)}
+	p := &Lf_Man_t{pGia: g, pPars: &Jf_Par_t{NLutSize: 5, NLutSizeMux: 5}, vTtMem: vec.Vec_MemAllocForTT(5, 0)}
 	id := vec.Vec_MemHashInsert(p.vTtMem, []uint64{truth})
 	cut := &Lf_Cut_t{nLeaves: 5, iFunc: int32(id) << 1}
 	for i := range leaves {

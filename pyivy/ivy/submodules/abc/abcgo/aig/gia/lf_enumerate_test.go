@@ -13,7 +13,7 @@ func TestLfEnumerateTwoLevel(t *testing.T) {
 		x := Gia_ManAppendAnd(g, a, b)
 		y := Gia_ManAppendAnd(g, x, c)
 		Gia_ManAppendCo(g, y)
-		p := &Lf_Man_t{pGia: g, pPars: &Jf_Par_t{nLutSize: 3, nCutNum: 4, fCutMin: min, DelayTarget: -1}, pObjBests: make([]Lf_Bst_t, 2)}
+		p := &Lf_Man_t{pGia: g, pPars: &Jf_Par_t{NLutSize: 3, NCutNum: 4, FCutMin: min, DelayTarget: -1}, pObjBests: make([]Lf_Bst_t, 2)}
 		vec.Vec_IntFill(&p.vOffsets, int(g.nObjs), -1)
 		vec.Vec_IntWriteEntry(&p.vOffsets, int(x>>1), 0)
 		vec.Vec_IntWriteEntry(&p.vOffsets, int(y>>1), 1)
@@ -56,7 +56,7 @@ func TestLfEnumerateRealMux(t *testing.T) {
 	g.EnableMuxes()
 	x := Gia_ManAppendMuxReal(g, c, a, b)
 	Gia_ManAppendCo(g, x)
-	p := &Lf_Man_t{pGia: g, pPars: &Jf_Par_t{nLutSize: 4, nCutNum: 4, fCutMin: 1}, pObjBests: make([]Lf_Bst_t, 1), vTtMem: vec.Vec_MemAllocForTT(4, 0)}
+	p := &Lf_Man_t{pGia: g, pPars: &Jf_Par_t{NLutSize: 4, NCutNum: 4, FCutMin: 1}, pObjBests: make([]Lf_Bst_t, 1), vTtMem: vec.Vec_MemAllocForTT(4, 0)}
 	vec.Vec_IntFill(&p.vOffsets, int(g.nObjs), -1)
 	vec.Vec_IntWriteEntry(&p.vOffsets, int(x>>1), 0)
 	vec.Vec_IntFill(&p.vCutSets, 1, -1)

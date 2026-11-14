@@ -12,7 +12,7 @@ type ofCutManager struct {
 }
 
 func newOfCutManager(g *Gia_Man_t, pars *Jf_Par_t) *ofCutManager {
-	if pars.nCutNum <= 1 || pars.nCutNum > 32 || pars.nLutSize <= 1 || pars.nLutSize > 6 {
+	if pars.NCutNum <= 1 || pars.NCutNum > 32 || pars.NLutSize <= 1 || pars.NLutSize > 6 {
 		panic("gia: invalid Of mapper parameters")
 	}
 	if Gia_ManHasChoices(g) != 0 {
@@ -23,7 +23,7 @@ func newOfCutManager(g *Gia_Man_t, pars *Jf_Par_t) *ofCutManager {
 	refs := vec.Vec_IntAlloc(0)
 	Mf_ManSetFlowRefs(g, refs)
 	p.refs = append([]int32(nil), vec.Vec_IntArray(refs)...)
-	if pars.fCutMin != 0 {
+	if pars.FCutMin != 0 {
 		p.truth = &nfTruthStore{memory: vec.Vec_MemAllocForTT(6, 0)}
 	}
 	return p
@@ -58,7 +58,7 @@ func (p *ofCutManager) params(c *ofCut, id int32) {
 	}
 	if c.size > 1 {
 		c.delay++
-		c.flow += 100 * (int32(c.size) + p.pars.nAreaTuner)
+		c.flow += 100 * (int32(c.size) + p.pars.NAreaTuner)
 	}
 	c.flow /= max(1, 2*p.refs[id])
 }
@@ -84,7 +84,7 @@ func (p *ofCutManager) merge(id int32) {
 	n0 := p.prepare(left[:], Gia_ObjFaninId0(obj, id), true)
 	n1 := p.prepare(right[:], Gia_ObjFaninId1(obj, id), true)
 	c0, c1 := Gia_ObjFaninC0(obj), Gia_ObjFaninC1(obj)
-	limit, cap := p.pars.nLutSize, p.pars.nCutNum
+	limit, cap := p.pars.NLutSize, p.pars.NCutNum
 	var n int32
 	if sibling := Gia_ObjSibl(p.graph, id); sibling != 0 {
 		count := p.prepare(third[:], sibling, false)

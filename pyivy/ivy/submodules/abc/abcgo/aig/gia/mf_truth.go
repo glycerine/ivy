@@ -7,7 +7,7 @@ import (
 )
 
 func mfCutTruth(p *Mf_Man_t, inputs []*Mf_Cut_t, complements []int32, out *Mf_Cut_t, operation byte) int32 {
-	lut := p.pPars.nLutSize
+	lut := p.pPars.NLutSize
 	words := 1
 	if lut > 6 {
 		words = 1 << uint(lut-6)
@@ -46,9 +46,9 @@ func mfCutTruth(p *Mf_Man_t, inputs []*Mf_Cut_t, complements []int32, out *Mf_Cu
 	}
 	id := vec.Vec_MemHashInsert(p.vTtMem, truth)
 	out.iFunc = uint32(id<<1) | complement
-	if (p.pPars.fGenCnf != 0 || p.pPars.fGenLit != 0) && id == vec.Vec_IntSize(&p.vCnfSizes) && lut <= 8 {
+	if (p.pPars.FGenCnf != 0 || p.pPars.FGenLit != 0) && id == vec.Vec_IntSize(&p.vCnfSizes) && lut <= 8 {
 		var size int32
-		if p.pPars.fGenCnf != 0 {
+		if p.pPars.FGenCnf != 0 {
 			if lut <= 6 {
 				size = util.Abc_Tt6CnfSize(truth[0], int32(out.nLeaves))
 			} else {

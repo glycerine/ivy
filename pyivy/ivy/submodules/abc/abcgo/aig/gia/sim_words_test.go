@@ -13,7 +13,7 @@ func TestSimulatorFrontierWords(t *testing.T) {
 	Gia_ManSetRegNum(g, 1)
 	var pars Gia_ParSim_t
 	Gia_ManSimSetDefaultParams(&pars)
-	pars.nWords = 2
+	pars.NWords = 2
 	sim := Gia_ManSimCreate(g, &pars)
 	defer Gia_ManSimDelete(sim)
 	copy(Gia_SimDataCi(sim, 0), []uint32{0xaaaaaaaa, 0xffffffff})

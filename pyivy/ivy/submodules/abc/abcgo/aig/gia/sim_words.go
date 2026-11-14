@@ -24,11 +24,11 @@ func Gia_SimDataCiExt(p *Gia_ManSim_t, i int32) []uint32 { return Gia_SimDataCi(
 func Gia_SimDataCoExt(p *Gia_ManSim_t, i int32) []uint32 { return Gia_SimDataCo(p, i) }
 
 func Gia_ManSimCreate(g *Gia_Man_t, pars *Gia_ParSim_t) *Gia_ManSim_t {
-	if g == nil || pars == nil || pars.nWords <= 0 {
+	if g == nil || pars == nil || pars.NWords <= 0 {
 		panic("gia: invalid simulator parameters")
 	}
-	p := &Gia_ManSim_t{pPars: pars, nWords: pars.nWords}
-	if pars.fVerbose != 0 {
+	p := &Gia_ManSim_t{pPars: pars, nWords: pars.NWords}
+	if pars.FVerbose != 0 {
 		p.vConsts = Gia_ManSimDeriveResets(g)
 	}
 	p.pAig = Gia_ManFront(g)
@@ -39,7 +39,7 @@ func Gia_ManSimCreate(g *Gia_Man_t, pars *Gia_ParSim_t) *Gia_ManSim_t {
 	for i := int32(0); i < Gia_ManCiNum(g); i++ {
 		vec.Vec_IntPush(p.vCis2Ids, i)
 	}
-	if pars.fVerbose != 0 {
+	if pars.FVerbose != 0 {
 		fmt.Printf("AIG = %7.2f MB.   Front mem = %7.2f MB.  Other mem = %7.2f MB.\n", 12.0*float64(p.pAig.nObjs)/(1<<20), 4.0*float64(p.nWords)*float64(p.pAig.nFront)/(1<<20), 4.0*float64(p.nWords)*float64(Gia_ManCiNum(p.pAig)+Gia_ManCoNum(p.pAig))/(1<<20))
 	}
 	return p

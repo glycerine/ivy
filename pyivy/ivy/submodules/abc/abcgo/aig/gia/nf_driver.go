@@ -2,20 +2,20 @@ package gia
 
 // nfDefaultParameters follows the standard-cell mapper defaults.
 func nfDefaultParameters(p *Jf_Par_t) {
-	*p = Jf_Par_t{nLutSize: 6, nCutNum: 16, nRounds: 4, nRoundsEla: 2, nCoarseLimit: 3, nVerbLimit: 5, DelayTarget: -1, fOptEdge: 1, fCutMin: 1, nLutSizeMax: NF_LEAF_MAX, nCutNumMax: NF_CUT_MAX}
+	*p = Jf_Par_t{NLutSize: 6, NCutNum: 16, NRounds: 4, NRoundsEla: 2, NCoarseLimit: 3, NVerbLimit: 5, DelayTarget: -1, FOptEdge: 1, FCutMin: 1, NLutSizeMax: NF_LEAF_MAX, NCutNumMax: NF_CUT_MAX}
 }
 
 // nfMap runs the native cut, timing and area stages with an already prepared
 // cell library. The caller retains ownership of the library truth store.
 func nfMap(g *Gia_Man_t, pars *Jf_Par_t, library *nfLibrary) *Gia_Man_t {
-	if g == nil || pars == nil || library == nil || pars.nRounds < 1 {
+	if g == nil || pars == nil || library == nil || pars.NRounds < 1 {
 		panic("gia: invalid Nf mapping request")
 	}
 	if Gia_ManHasChoices(g) != 0 {
-		pars.fCoarsen = 0
+		pars.FCoarsen = 0
 	}
-	if pars.fCoarsen != 0 {
-		g = Gia_ManDupMuxes(g, pars.nCoarseLimit)
+	if pars.FCoarsen != 0 {
+		g = Gia_ManDupMuxes(g, pars.NCoarseLimit)
 	}
 	g.Refs = nil
 	g.vCellMapping = nil
@@ -23,11 +23,11 @@ func nfMap(g *Gia_Man_t, pars *Jf_Par_t, library *nfLibrary) *Gia_Man_t {
 	cuts.computeCuts()
 	matcher := newNfMatcher(cuts)
 	var refs *nfMappingRefs
-	for round := int32(0); round < pars.nRounds; round++ {
+	for round := int32(0); round < pars.NRounds; round++ {
 		matcher.computeMapping()
 		refs = matcher.mappingRefs(round)
 	}
-	for round := int32(0); round < pars.nRoundsEla; round++ {
+	for round := int32(0); round < pars.NRoundsEla; round++ {
 		matcher.exactAreaRound(refs)
 	}
 	matcher.fixOutputDrivers(refs)

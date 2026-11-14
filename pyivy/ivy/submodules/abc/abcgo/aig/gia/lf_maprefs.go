@@ -26,7 +26,7 @@ func Lf_ManSetMapRefsOne(p *Lf_Man_t, id int32) {
 	if Lf_ObjMapRefNum(p, id) <= 0 || best.Cut[0].fUsed != 0 || best.Cut[1].fUsed != 0 {
 		panic("LF invalid mapping reference")
 	}
-	if p.pPars.fUseMux7 == 0 || Lf_ManSetMuxCut(p, best, id, required) == 0 {
+	if p.pPars.FUseMux7 == 0 || Lf_ManSetMuxCut(p, best, id, required) == 0 {
 		index := 0
 		if Lf_BestDiffCuts(best) != 0 && best.Delay[1] <= required {
 			index = 1
@@ -63,13 +63,13 @@ func lfRequiredDelay(p *Lf_Man_t, selected bool) int32 {
 		}
 		delay = max(delay, a)
 	}
-	if p.pPars.DelayTarget == -1 && p.pPars.nRelaxRatio != 0 {
-		p.pPars.DelayTarget = int32(float32(delay) * float32(100+p.pPars.nRelaxRatio) / 100)
+	if p.pPars.DelayTarget == -1 && p.pPars.NRelaxRatio != 0 {
+		p.pPars.DelayTarget = int32(float32(delay) * float32(100+p.pPars.NRelaxRatio) / 100)
 	}
 	if p.pPars.DelayTarget != -1 {
 		if delay <= p.pPars.DelayTarget {
 			delay = p.pPars.DelayTarget
-		} else if p.pPars.nRelaxRatio == 0 {
+		} else if p.pPars.NRelaxRatio == 0 {
 			fmt.Printf("Relaxing user-specified delay target from %d to %d.\n", p.pPars.DelayTarget, delay)
 		}
 	}
@@ -85,9 +85,9 @@ func lfTimedRequired(p *Lf_Man_t, delay int32) *tim.Tim_Man_t {
 		panic("LF invalid timing manager")
 	}
 	tim.Tim_ManIncrementTravId(manager)
-	if p.pPars.fDoAverage != 0 {
+	if p.pPars.FDoAverage != 0 {
 		for i := int32(0); i < Gia_ManCoNum(p.pGia); i++ {
-			tim.Tim_ManSetCoRequired(manager, int(i), float32(int32(float32(Lf_ObjCoArrival(p, i))*float32(100+p.pPars.nRelaxRatio)/100)))
+			tim.Tim_ManSetCoRequired(manager, int(i), float32(int32(float32(Lf_ObjCoArrival(p, i))*float32(100+p.pPars.NRelaxRatio)/100)))
 		}
 	} else {
 		tim.Tim_ManInitPoRequiredAll(manager, float32(delay))
@@ -95,8 +95,8 @@ func lfTimedRequired(p *Lf_Man_t, delay int32) *tim.Tim_Man_t {
 	return manager
 }
 func lfOutputRequired(p *Lf_Man_t, i, delay int32) int32 {
-	if p.pPars.fDoAverage != 0 {
-		return int32(float32(Lf_ObjCoArrival(p, i)) * float32(100+p.pPars.nRelaxRatio) / 100)
+	if p.pPars.FDoAverage != 0 {
+		return int32(float32(Lf_ObjCoArrival(p, i)) * float32(100+p.pPars.NRelaxRatio) / 100)
 	}
 	return delay
 }
@@ -108,7 +108,7 @@ func Lf_ManSetMapRefs(p *Lf_Man_t) int32 {
 	p.Switches = 0
 	vec.Vec_IntFill(&p.vMapRefs, int(Gia_ManAndNotBufNum(p.pGia)), 0)
 	vec.Vec_IntFill(&p.vRequired, int(p.pGia.nObjs), util.ABC_INFINITY)
-	if p.pPars.fUseMux7 != 0 {
+	if p.pPars.FUseMux7 != 0 {
 		Gia_ManCleanMark0(p.pGia)
 		for _, id := range vec.Vec_IntArray(p.pGia.vCis) {
 			Gia_ManObj(p.pGia, id).fMark0 = 1
@@ -163,7 +163,7 @@ func Lf_ManSetMapRefs(p *Lf_Man_t) int32 {
 			}
 		}
 	}
-	if p.pPars.fUseMux7 != 0 {
+	if p.pPars.FUseMux7 != 0 {
 		Gia_ManCleanMark0(p.pGia)
 	}
 	refs, flow := vec.Vec_IntArray(&p.vMapRefs), vec.Vec_FltArray(&p.vFlowRefs)
@@ -199,7 +199,7 @@ func Lf_ManCountMapRefs(p *Lf_Man_t) {
 	p.pPars.Edge = 0
 	p.Switches = 0
 	vec.Vec_IntFill(&p.vRequired, int(p.pGia.nObjs), util.ABC_INFINITY)
-	if p.pPars.fUseMux7 != 0 {
+	if p.pPars.FUseMux7 != 0 {
 		Gia_ManCleanMark0(p.pGia)
 	}
 	timing := lfTimedRequired(p, delay)
@@ -236,7 +236,7 @@ func Lf_ManCountMapRefs(p *Lf_Man_t) {
 			}
 		}
 	}
-	if p.pPars.fUseMux7 != 0 {
+	if p.pPars.FUseMux7 != 0 {
 		Gia_ManCleanMark0(p.pGia)
 	}
 }

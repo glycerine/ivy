@@ -10,7 +10,7 @@ func TestKfManagerLifecycleAndRefs(t *testing.T) {
 	a, b := Gia_ManAppendCi(g), Gia_ManAppendCi(g)
 	x := Gia_ManAppendAnd(g, a, b)
 	Gia_ManAppendCo(g, x)
-	pars := &Jf_Par_t{nLutSize: 4, nCutNum: 4}
+	pars := &Jf_Par_t{NLutSize: 4, NCutNum: 4}
 	p := Kf_ManAlloc(g, pars)
 	for _, lit := range []int32{a, b} {
 		Kf_ManStoreStart(p.vTemp, 0)

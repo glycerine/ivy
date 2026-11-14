@@ -10,10 +10,10 @@ func TestOfDirectConnectionTiming(t *testing.T) {
 	Gia_ManAppendCo(g, out)
 	var pars Jf_Par_t
 	Mf_ManSetDefaultPars(&pars)
-	pars.nLutSize = 2
-	pars.nDelayLut1 = 10
-	pars.nDelayLut2 = 2
-	pars.nFastEdges = 1
+	pars.NLutSize = 2
+	pars.NDelayLut1 = 10
+	pars.NDelayLut2 = 2
+	pars.NFastEdges = 1
 	cuts := newOfCutManager(g, &pars)
 	cuts.computeCuts()
 	mapper := newOfMapper(cuts)

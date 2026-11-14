@@ -31,7 +31,7 @@ type Pf_Man_t struct {
 }
 
 func Pf_ManSetDefaultPars(p *Jf_Par_t) {
-	*p = Jf_Par_t{nLutSize: 6, nCutNum: 16, nRounds: 3, nCoarseLimit: 3, nAreaTuner: 1, nVerbLimit: 5, DelayTarget: -1, fOptEdge: 1, fCutMin: 1, nLutSizeMax: 6, nCutNumMax: 32, MapDelayTarget: -1, Epsilon: 0.01}
+	*p = Jf_Par_t{NLutSize: 6, NCutNum: 16, NRounds: 3, NCoarseLimit: 3, NAreaTuner: 1, NVerbLimit: 5, DelayTarget: -1, FOptEdge: 1, FCutMin: 1, NLutSizeMax: 6, NCutNumMax: 32, MapDelayTarget: -1, Epsilon: 0.01}
 }
 func Pf_StoCreate(g *Gia_Man_t, pars *Jf_Par_t) *Pf_Man_t {
 	if g == nil || pars == nil {
@@ -97,11 +97,11 @@ func Pf_ManPerformMapping(g *Gia_Man_t, pars *Jf_Par_t) *Gia_Man_t {
 		return nil
 	}
 	if Gia_ManHasChoices(g) != 0 {
-		pars.fCoarsen = 0
+		pars.FCoarsen = 0
 	}
 	work := g
-	if pars.fCoarsen != 0 {
-		work = Gia_ManDupMuxes(g, pars.nCoarseLimit)
+	if pars.FCoarsen != 0 {
+		work = Gia_ManDupMuxes(g, pars.NCoarseLimit)
 	}
 	p := Pf_StoCreate(work, pars)
 	if p == nil {

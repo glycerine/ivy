@@ -108,6 +108,6 @@ func Mf_ManProfileTruths(p *Mf_Man_t) {
 		}
 		fmt.Printf("%6d : %6d : Occur = %4d  CNF size = %2d  ", counter, i, n, vec.Vec_IntEntry(&p.vCnfSizes, i))
 		counter++
-		dau.Dau_DsdPrintFromTruth(vec.Vec_MemReadEntry(p.vTtMem, i), p.pPars.nLutSize)
+		dau.Dau_DsdPrintFromTruth(vec.Vec_MemReadEntry(p.vTtMem, i), p.pPars.NLutSize)
 	}
 }

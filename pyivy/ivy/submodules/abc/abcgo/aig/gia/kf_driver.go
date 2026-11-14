@@ -35,7 +35,7 @@ type kfDone struct{ id, worker int32 }
 // Kf_ManComputeCuts runs ready nodes on workers; the coordinator alone
 // mutates the manager's storage and releases dependent nodes after completion.
 func Kf_ManComputeCuts(p *Kf_Man_t) {
-	workers := int(p.pPars.nProcNum)
+	workers := int(p.pPars.NProcNum)
 	if workers <= 0 {
 		panic("KF requires workers")
 	}
@@ -66,7 +66,7 @@ func Kf_ManComputeCuts(p *Kf_Man_t) {
 		worker := int32(i)
 		go func() {
 			for job := range jobs[worker] {
-				Kf_SetMergeOrder(&p.pSett[worker], job.a, job.b, p.pPars.fAreaOnly, p.pPars.fCutMin)
+				Kf_SetMergeOrder(&p.pSett[worker], job.a, job.b, p.pPars.FAreaOnly, p.pPars.FCutMin)
 				done <- kfDone{job.id, worker}
 			}
 		}()
@@ -110,7 +110,7 @@ func Kf_ManComputeCuts(p *Kf_Man_t) {
 	}
 }
 func Kf_ManPrintStats(p *Kf_Man_t, title string) {
-	if p.pPars.fVerbose != 0 {
+	if p.pPars.FVerbose != 0 {
 		fmt.Printf("%s : Level =%6d   Area =%9d   Edge =%9d   Time = %s\n", title, p.pPars.Delay, p.pPars.Area, p.pPars.Edge, time.Since(p.clkStart))
 	}
 }
@@ -121,7 +121,7 @@ func Kf_ManComputeMapping(p *Kf_Man_t) {
 		Kf_ManStoreAddUnit(p.vTemp, id, 0, 0)
 		Kf_ObjSetCuts(p, id, p.vTemp)
 	}
-	if p.pPars.nProcNum > 0 {
+	if p.pPars.NProcNum > 0 {
 		Kf_ManComputeCuts(p)
 	} else {
 		for _, obj := range g.pObjs {
@@ -131,12 +131,12 @@ func Kf_ManComputeMapping(p *Kf_Man_t) {
 			id := obj.id
 			set := &p.pSett[0]
 			a, b := Kf_ObjCuts0(p, id), Kf_ObjCuts1(p, id)
-			if p.pPars.fCutHashing != 0 {
-				Kf_SetMerge(set, a, b, p.pPars.fAreaOnly, p.pPars.fCutMin)
-			} else if p.pPars.fCutSimple != 0 {
-				Kf_SetMergeSimple(set, a, b, p.pPars.fAreaOnly, p.pPars.fCutMin)
+			if p.pPars.FCutHashing != 0 {
+				Kf_SetMerge(set, a, b, p.pPars.FAreaOnly, p.pPars.FCutMin)
+			} else if p.pPars.FCutSimple != 0 {
+				Kf_SetMergeSimple(set, a, b, p.pPars.FAreaOnly, p.pPars.FCutMin)
 			} else {
-				Kf_SetMergeOrder(set, a, b, p.pPars.fAreaOnly, p.pPars.fCutMin)
+				Kf_SetMergeOrder(set, a, b, p.pPars.FAreaOnly, p.pPars.FCutMin)
 			}
 			kfSaveNode(p, set, id)
 		}
@@ -145,7 +145,7 @@ func Kf_ManComputeMapping(p *Kf_Man_t) {
 	Kf_ManPrintStats(p, "Start")
 }
 func Kf_ManDerive(p *Kf_Man_t) *Gia_Man_t {
-	if p.pPars.fCutMin != 0 {
+	if p.pPars.FCutMin != 0 {
 		panic("KF minimized mapping not implemented by original")
 	}
 	g := p.pGia
@@ -166,7 +166,7 @@ func Kf_ManDerive(p *Kf_Man_t) *Gia_Man_t {
 	return g
 }
 func Kf_ManSetDefaultPars(p *Jf_Par_t) {
-	*p = Jf_Par_t{nLutSize: 6, nCutNum: 8, nRounds: 1, nVerbLimit: 5, DelayTarget: -1, fOptEdge: 1, nLutSizeMax: KF_LEAF_MAX, nCutNumMax: KF_CUT_MAX, nProcNumMax: KF_PROC_MAX}
+	*p = Jf_Par_t{NLutSize: 6, NCutNum: 8, NRounds: 1, NVerbLimit: 5, DelayTarget: -1, FOptEdge: 1, NLutSizeMax: KF_LEAF_MAX, NCutNumMax: KF_CUT_MAX, NProcNumMax: KF_PROC_MAX}
 }
 func Kf_ManPerformMapping(g *Gia_Man_t, pars *Jf_Par_t) *Gia_Man_t {
 	p := Kf_ManAlloc(g, pars)

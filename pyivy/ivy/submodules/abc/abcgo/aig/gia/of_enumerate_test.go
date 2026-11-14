@@ -11,7 +11,7 @@ func TestOfEnumerateCuts(t *testing.T) {
 		Gia_ManAppendCo(g, out)
 		var pars Jf_Par_t
 		Mf_ManSetDefaultPars(&pars)
-		pars.fCutMin = truth
+		pars.FCutMin = truth
 		p := newOfCutManager(g, &pars)
 		p.computeCuts()
 		data := p.storage.at(p.sets[out>>1])

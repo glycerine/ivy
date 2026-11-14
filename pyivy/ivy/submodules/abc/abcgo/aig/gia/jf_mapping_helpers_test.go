@@ -10,7 +10,7 @@ func TestJfMappingHelpers(t *testing.T) {
 	a, b := Gia_ManAppendCi(g), Gia_ManAppendCi(g)
 	x := Gia_ManAppendAnd(g, a, b)
 	Gia_ManAppendCo(g, x)
-	p := Jf_ManAlloc(g, &Jf_Par_t{nLutSize: 4, nCutNum: 4})
+	p := Jf_ManAlloc(g, &Jf_Par_t{NLutSize: 4, NCutNum: 4})
 	defer Jf_ManFree(p)
 	Jf_ObjAssignCut(p, Gia_ManObj(g, a>>1))
 	Jf_ObjAssignCut(p, Gia_ManObj(g, b>>1))

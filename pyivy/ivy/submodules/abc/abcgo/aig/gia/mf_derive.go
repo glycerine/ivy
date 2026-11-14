@@ -6,7 +6,7 @@ import (
 )
 
 func Mf_ManDeriveMappingGia(p *Mf_Man_t) *Gia_Man_t {
-	if p.pPars.fCutMin == 0 {
+	if p.pPars.FCutMin == 0 {
 		panic("gia: truth-minimized mapping required")
 	}
 	src := p.pGia
@@ -86,7 +86,7 @@ func Mf_ManDeriveMappingGia(p *Mf_Man_t) *Gia_Man_t {
 
 func Mf_ManDeriveMappingCoarse(p *Mf_Man_t) *Gia_Man_t {
 	src := p.pGia
-	if p.pPars.fCutMin != 0 || src.pMuxes == nil {
+	if p.pPars.FCutMin != 0 || src.pMuxes == nil {
 		panic("gia: coarse mapping requires coarse gates without cut minimization")
 	}
 	dst := Gia_ManStart(src.nObjs)

@@ -13,7 +13,7 @@ func TestJfMappingRounds(t *testing.T) {
 			x := Gia_ManAppendAnd(g, a, b)
 			y := Gia_ManAppendAnd(g, x, c)
 			Gia_ManAppendCo(g, y)
-			pars := &Jf_Par_t{nLutSize: 3, nCutNum: 4, fCutMin: mode.min, fFuncDsd: mode.dsd}
+			pars := &Jf_Par_t{NLutSize: 3, NCutNum: 4, FCutMin: mode.min, FFuncDsd: mode.dsd}
 			p := Jf_ManAlloc(g, pars)
 			defer Jf_ManFree(p)
 			p.pCutCmp = Jf_CutCompareDelay

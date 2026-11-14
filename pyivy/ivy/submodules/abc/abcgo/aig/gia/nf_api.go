@@ -19,11 +19,11 @@ func Nf_ManPerformMapping(g *Gia_Man_t, pars *Jf_Par_t) *Gia_Man_t {
 	if g == nil || pars == nil {
 		return nil
 	}
-	cells := mio.Mio_CollectRootsNewDefault2(NF_LEAF_MAX, nil, pars.fVerbose)
+	cells := mio.Mio_CollectRootsNewDefault2(NF_LEAF_MAX, nil, pars.FVerbose)
 	if len(cells) < 4 {
 		return nil
 	}
-	library := nfPrepareLibrary(cells, pars.fPinFilter != 0, pars.fPinPerm != 0, pars.fPinQuick != 0)
+	library := nfPrepareLibrary(cells, pars.FPinFilter != 0, pars.FPinPerm != 0, pars.FPinQuick != 0)
 	defer vec.Vec_MemFree(library.truth.memory)
 	defer vec.Vec_MemHashFree(library.truth.memory)
 	return nfMap(g, pars, library)

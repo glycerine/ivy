@@ -29,7 +29,7 @@ func Lf_ManFetchSet(p *Lf_Man_t, id int32) []Lf_Cut_t {
 	page := vec.Vec_PtrEntry(&p.vMemSets, int(entry>>LF_LOG_PAGE)).([][]Lf_Cut_t)
 	index := entry & ((1 << LF_LOG_PAGE) - 1)
 	if page[index] == nil {
-		page[index] = make([]Lf_Cut_t, p.pPars.nCutNum)
+		page[index] = make([]Lf_Cut_t, p.pPars.NCutNum)
 		for i := range page[index] {
 			page[index][i].nLeaves = LF_NO_LEAF
 		}
@@ -42,10 +42,10 @@ func Lf_ManPrepareSet(p *Lf_Man_t, id, index int32, out *[]Lf_Cut_t) int32 {
 		return Lf_CutCreateUnit(&(*out)[0], id)
 	}
 	*out = Lf_ManFetchSet(p, id)
-	for i := int32(0); i < p.pPars.nCutNum; i++ {
+	for i := int32(0); i < p.pPars.NCutNum; i++ {
 		if (*out)[i].nLeaves == LF_NO_LEAF {
 			return i
 		}
 	}
-	return p.pPars.nCutNum
+	return p.pPars.NCutNum
 }

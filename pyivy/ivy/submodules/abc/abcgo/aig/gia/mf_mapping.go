@@ -20,7 +20,7 @@ func Mf_ObjComputeBestCut(p *Mf_Man_t, id int32) {
 	for i := int32(0); i < set[0]; i++ {
 		cut := set[offset:]
 		size := Mf_CutSize(cut)
-		if Mf_CutIsTriv(cut, id) != 0 || size > p.pPars.nLutSize {
+		if Mf_CutIsTriv(cut, id) != 0 || size > p.pPars.NLutSize {
 			panic("gia: invalid mapping cut")
 		}
 		var flow float32
@@ -75,7 +75,7 @@ func Mf_ManMappingFromMapping(p *Mf_Man_t) int32 {
 	return count
 }
 func Mf_ManDeriveMapping(p *Mf_Man_t) *Gia_Man_t {
-	if p.pPars.fCutMin != 0 || p.pGia.vMapping != nil {
+	if p.pPars.FCutMin != 0 || p.pGia.vMapping != nil {
 		panic("gia: invalid mapping derivation")
 	}
 	mapping := vec.Vec_IntStart(int(p.pGia.nObjs))

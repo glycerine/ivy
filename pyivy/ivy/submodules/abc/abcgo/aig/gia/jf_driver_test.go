@@ -18,11 +18,11 @@ func TestJfDriver(t *testing.T) {
 			Gia_ManAppendCo(g, y^1)
 			var pars Jf_Par_t
 			Jf_ManSetDefaultPars(&pars)
-			pars.nLutSize = 3
-			pars.fCutMin = mode.min
-			pars.fFuncDsd = mode.dsd
-			pars.fPureAig = mode.pure
-			pars.fGenCnf = mode.gen
+			pars.NLutSize = 3
+			pars.FCutMin = mode.min
+			pars.FFuncDsd = mode.dsd
+			pars.FPureAig = mode.pure
+			pars.FGenCnf = mode.gen
 			out := Jf_ManPerformMapping(g, &pars)
 			for mask := 0; mask < 8; mask++ {
 				inputs := []bool{mask&1 != 0, mask&2 != 0, mask&4 != 0}

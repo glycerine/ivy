@@ -14,7 +14,7 @@ func frameTestGraph() *Gia_Man_t {
 
 func TestGiaManUnrollRejectsInvalidFrameCounts(t *testing.T) {
 	for _, frames := range []int32{-1, 1<<30} {
-		if got := Gia_ManUnrollStart(frameTestGraph(), &Gia_ParFra_t{nFrames: frames}); got != nil {
+		if got := Gia_ManUnrollStart(frameTestGraph(), &Gia_ParFra_t{NFrames: frames}); got != nil {
 			t.Fatalf("unroll start with %d frames = %v, want nil", frames, got)
 		}
 	}
@@ -22,7 +22,7 @@ func TestGiaManUnrollRejectsInvalidFrameCounts(t *testing.T) {
 
 func TestGiaManUnrollIncrementalLifecycle(t *testing.T) {
 	src := frameTestGraph()
-	params := &Gia_ParFra_t{nFrames: 2, fSaveLastLit: 1}
+	params := &Gia_ParFra_t{NFrames: 2, fSaveLastLit: 1}
 	raw := Gia_ManUnrollStart(src, params)
 	if raw == nil {
 		t.Fatal("unroll start returned nil")
@@ -64,7 +64,7 @@ func TestGiaManUnrollIncrementalLifecycle(t *testing.T) {
 
 func TestGiaManUnrollFixedFramesAndInitialization(t *testing.T) {
 	src := frameTestGraph()
-	params := &Gia_ParFra_t{nFrames: 2}
+	params := &Gia_ParFra_t{NFrames: 2}
 	raw := Gia_ManUnrollStart(src, params)
 	manager := raw.(*Gia_ManUnr_t)
 	if got := Gia_ManCiNum(manager.pNew); got != 3 {
@@ -77,7 +77,7 @@ func TestGiaManUnrollFixedFramesAndInitialization(t *testing.T) {
 	Gia_ManHashStop(result)
 	Gia_ManUnrollStop(raw)
 
-	initialized := &Gia_ParFra_t{nFrames: 2, fInit: 1}
+	initialized := &Gia_ParFra_t{NFrames: 2, FInit: 1}
 	result = Gia_ManFrames(src, initialized)
 	if result == nil || Gia_ManRegNum(result) != 0 || Gia_ManPoNum(result) != 2 || Gia_ManCiNum(result) != 2 {
 		t.Fatalf("initialized frames have CIs/POs/regs %d/%d/%d, want 2/2/0", Gia_ManCiNum(result), Gia_ManPoNum(result), Gia_ManRegNum(result))
@@ -85,7 +85,7 @@ func TestGiaManUnrollFixedFramesAndInitialization(t *testing.T) {
 }
 
 func TestGiaManFrames2KeepsStateInterface(t *testing.T) {
-	result := Gia_ManFrames2(frameTestGraph(), &Gia_ParFra_t{nFrames: 3})
+	result := Gia_ManFrames2(frameTestGraph(), &Gia_ParFra_t{NFrames: 3})
 	if result == nil {
 		t.Fatal("frame builder returned nil")
 	}

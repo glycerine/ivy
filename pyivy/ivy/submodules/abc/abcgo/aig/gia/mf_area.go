@@ -9,16 +9,16 @@ func Mf_CutArea(p *Mf_Man_t, n, f int32) int32 {
 	if n < 2 {
 		return 0
 	}
-	if p.pPars.fGenCnf != 0 || p.pPars.fGenLit != 0 {
+	if p.pPars.FGenCnf != 0 || p.pPars.FGenLit != 0 {
 		return vec.Vec_IntEntry(&p.vCnfSizes, int(uint32(f)>>1))
 	}
-	if p.pPars.fOptEdge != 0 {
-		return n + p.pPars.nAreaTuner
+	if p.pPars.FOptEdge != 0 {
+		return n + p.pPars.NAreaTuner
 	}
 	return 1
 }
 func Mf_CutParams(p *Mf_Man_t, c *Mf_Cut_t, refs float32) {
-	if c.nLeaves > uint32(p.pPars.nLutSize) {
+	if c.nLeaves > uint32(p.pPars.NLutSize) {
 		panic("gia: cut exceeds LUT size")
 	}
 	c.Delay, c.Flow = 0, 0

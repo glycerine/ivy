@@ -11,7 +11,7 @@ func TestLfArrivalCostAndBest(t *testing.T) {
 	x := Gia_ManAppendAnd(g, a, b)
 	Gia_ManAppendCo(g, x)
 	Gia_ManAppendCo(g, x^1)
-	p := &Lf_Man_t{pGia: g, pPars: &Jf_Par_t{nLutSize: 4, fCutMin: 1, fOptEdge: 1, nAreaTuner: 1}, pObjBests: make([]Lf_Bst_t, 1)}
+	p := &Lf_Man_t{pGia: g, pPars: &Jf_Par_t{NLutSize: 4, FCutMin: 1, FOptEdge: 1, NAreaTuner: 1}, pObjBests: make([]Lf_Bst_t, 1)}
 	vec.Vec_IntFill(&p.vOffsets, int(g.nObjs), -1)
 	vec.Vec_IntWriteEntry(&p.vOffsets, int(x>>1), 0)
 	vec.Vec_IntFill(&p.vCiArrivals, 2, 0)

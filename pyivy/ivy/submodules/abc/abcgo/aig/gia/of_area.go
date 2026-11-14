@@ -80,7 +80,7 @@ func (p *ofMapper) forwardExact() {
 		p.eachCut(id, func(_ int32, cut []int32) {
 			delay := int32(0)
 			for i := range ofStoredLeaves(cut) {
-				delay = max(delay, p.objects[ofStoredVar(cut, i)].delay+p.cuts.pars.nDelayLut1)
+				delay = max(delay, p.objects[ofStoredVar(cut, i)].delay+p.cuts.pars.NDelayLut1)
 			}
 			ofStoredSetDelay1(cut, delay)
 		})
@@ -135,7 +135,7 @@ func (p *ofMapper) backwardExact() {
 		o.best = best
 		cut := p.cuts.storage.at(best)
 		for i := range ofStoredLeaves(cut) {
-			p.updateRequired(ofStoredVar(cut, i), o.required-p.cuts.pars.nDelayLut1)
+			p.updateRequired(ofStoredVar(cut, i), o.required-p.cuts.pars.NDelayLut1)
 		}
 		p.adjustCutRefs(cut, true)
 		p.cuts.pars.Area++
@@ -178,7 +178,7 @@ func (p *ofMapper) backwardRequired() {
 		}
 		cut := p.cuts.storage.at(o.best)
 		for pin := range ofStoredLeaves(cut) {
-			p.updateRequired(ofStoredVar(cut, pin), o.required-p.cuts.pars.nDelayLut1)
+			p.updateRequired(ofStoredVar(cut, pin), o.required-p.cuts.pars.NDelayLut1)
 		}
 		p.cuts.pars.Area++
 		p.cuts.pars.Edge += word(ofStoredSize(cut))

@@ -10,7 +10,7 @@ func TestLfMappingReferencePropagation(t *testing.T) {
 	a, b := Gia_ManAppendCi(g), Gia_ManAppendCi(g)
 	x := Gia_ManAppendAnd(g, a, b)
 	Gia_ManAppendCo(g, x)
-	pars := &Jf_Par_t{nLutSize: 4, DelayTarget: -1, fCutMin: 1}
+	pars := &Jf_Par_t{NLutSize: 4, DelayTarget: -1, FCutMin: 1}
 	p := &Lf_Man_t{pGia: g, pPars: pars, pObjBests: make([]Lf_Bst_t, 1)}
 	vec.Vec_IntFill(&p.vOffsets, int(g.nObjs), -1)
 	vec.Vec_IntWriteEntry(&p.vOffsets, int(x>>1), 0)

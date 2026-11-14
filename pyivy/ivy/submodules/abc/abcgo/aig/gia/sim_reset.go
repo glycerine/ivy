@@ -74,5 +74,5 @@ func Gia_ManSimDeriveResets(p *Gia_Man_t) *Vec_Int_t {
 }
 
 func Gia_ManSimSetDefaultParams(p *Gia_ParSim_t) {
-	*p = Gia_ParSim_t{nWords: 8, nIters: 32, TimeLimit: 60, iOutFail: -1}
+	*p = Gia_ParSim_t{NWords: 8, NIters: 32, TimeLimit: 60, iOutFail: -1}
 }

@@ -70,15 +70,15 @@ func Lf_CutArea(p *Lf_Man_t, c *Lf_Cut_t) float32 {
 	if c.nLeaves < 2 || c.fMux7 != 0 {
 		return 0
 	}
-	if p.pPars.fPower != 0 {
+	if p.pPars.FPower != 0 {
 		return float32(c.nLeaves) + Lf_CutSwitches(p, c)
 	}
 	group := int32(1)
-	if p.pPars.fCutGroup != 0 && int32(c.nLeaves) > p.pPars.nLutSize/2 {
+	if p.pPars.FCutGroup != 0 && int32(c.nLeaves) > p.pPars.NLutSize/2 {
 		group++
 	}
-	if p.pPars.fOptEdge != 0 {
-		return float32((int32(c.nLeaves) + p.pPars.nAreaTuner) * group)
+	if p.pPars.FOptEdge != 0 {
+		return float32((int32(c.nLeaves) + p.pPars.NAreaTuner) * group)
 	}
 	return float32(group)
 }
@@ -119,7 +119,7 @@ func Lf_MemLoadMuxCut(p *Lf_Man_t, id int32, c *Lf_Cut_t) *Lf_Cut_t {
 		panic("LF expected MUX")
 	}
 	c.iFunc = -1
-	if p.pPars.fCutMin != 0 {
+	if p.pPars.FCutMin != 0 {
 		c.iFunc = 4
 	}
 	c.pLeaves[0] = Gia_ObjFaninId0(obj, id)
@@ -139,7 +139,7 @@ func Lf_ObjCutBest(p *Lf_Man_t, id int32) *Lf_Cut_t {
 	if index == 2 {
 		return Lf_MemLoadMuxCut(p, id, c)
 	}
-	return Lf_MemLoadCut(&p.vStoreOld, int32(best.Cut[index].Handle), id, c, p.pPars.fCutMin, 0)
+	return Lf_MemLoadCut(&p.vStoreOld, int32(best.Cut[index].Handle), id, c, p.pPars.FCutMin, 0)
 }
 func Lf_ObjCutBestNew(p *Lf_Man_t, id int32, c *Lf_Cut_t) *Lf_Cut_t {
 	best := Lf_ObjReadBest(p, id)

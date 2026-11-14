@@ -15,10 +15,10 @@ func TestLfDriver(t *testing.T) {
 			Gia_ManAppendCo(g, y^1)
 			var pars Jf_Par_t
 			Lf_ManSetDefaultPars(&pars)
-			pars.nLutSize = 3
-			pars.nCutNum = 4
-			pars.fCutMin = mode.min
-			pars.fCoarsen = mode.coarse
+			pars.NLutSize = 3
+			pars.NCutNum = 4
+			pars.FCutMin = mode.min
+			pars.FCoarsen = mode.coarse
 			out := Lf_ManPerformMapping(g, &pars)
 			Gia_ManMappingVerify(out)
 			for mask := 0; mask < 8; mask++ {

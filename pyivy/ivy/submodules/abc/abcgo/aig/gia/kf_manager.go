@@ -90,7 +90,7 @@ func Kf_ManSetInitRefs(g *Gia_Man_t, refs *Vec_Flt_t) {
 	}
 }
 func Kf_ManAlloc(g *Gia_Man_t, pars *Jf_Par_t) *Kf_Man_t {
-	if pars.nLutSize < 0 || pars.nLutSize > KF_LEAF_MAX || pars.nCutNum < 0 || pars.nCutNum > KF_CUT_MAX || pars.nProcNum < 0 || pars.nProcNum > KF_PROC_MAX {
+	if pars.NLutSize < 0 || pars.NLutSize > KF_LEAF_MAX || pars.NCutNum < 0 || pars.NCutNum > KF_CUT_MAX || pars.NProcNum < 0 || pars.NProcNum > KF_PROC_MAX {
 		panic("KF invalid mapping limits")
 	}
 	g.vMapping = nil
@@ -102,11 +102,11 @@ func Kf_ManAlloc(g *Gia_Man_t, pars *Jf_Par_t) *Kf_Man_t {
 	Kf_ManSetInitRefs(g, &p.vRefs)
 	p.vTemp = vec.Vec_IntAlloc(1000)
 	g.Refs = make([]int32, n)
-	for i := int32(0); i < max(1, pars.nProcNum); i++ {
+	for i := int32(0); i < max(1, pars.NProcNum); i++ {
 		s := &p.pSett[i]
 		s.pMan = p
-		s.nLutSize = uint16(pars.nLutSize)
-		s.nCutNum = uint16(pars.nCutNum)
+		s.nLutSize = uint16(pars.NLutSize)
+		s.nCutNum = uint16(pars.NCutNum)
 		s.TableMask = (1 << KF_LOG_TABLE) - 1
 	}
 	return p
@@ -163,7 +163,7 @@ func Kf_ManComputeRefs(p *Kf_Man_t) int32 {
 	refs, flow := vec.Vec_FltArray(&p.vRefs), vec.Vec_FltArray(&p.vArea)
 	for i, old := range refs {
 		var n float32
-		if p.pPars.fOptEdge != 0 {
+		if p.pPars.FOptEdge != 0 {
 			n = max(1, 0.8*old+0.2*float32(g.Refs[i]))
 		} else {
 			n = max(1, 0.2*old+0.8*float32(g.Refs[i]))

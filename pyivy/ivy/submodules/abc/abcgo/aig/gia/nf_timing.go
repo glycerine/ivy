@@ -7,8 +7,8 @@ import (
 
 func (p *nfMatcher) outputRequired(index int, arrival, delay int32) int32 {
 	required := delay
-	if p.cuts.pars.fDoAverage != 0 {
-		required = arrival * (100 + p.cuts.pars.nRelaxRatio) / 100
+	if p.cuts.pars.FDoAverage != 0 {
+		required = arrival * (100 + p.cuts.pars.NRelaxRatio) / 100
 	}
 	if scl.Scl_ConIsRunning() && scl.Scl_ConHasOutReqs() {
 		external := scl.Scl_ConGetOutReq(index)
@@ -26,8 +26,8 @@ func (p *nfMatcher) outputRequired(index int, arrival, delay int32) int32 {
 
 func (p *nfMatcher) delayTarget(delay int32) int32 {
 	pars := p.cuts.pars
-	if pars.MapDelayTarget == 0 && pars.nRelaxRatio != 0 {
-		pars.MapDelayTarget = float32(delay * (100 + pars.nRelaxRatio) / 100)
+	if pars.MapDelayTarget == 0 && pars.NRelaxRatio != 0 {
+		pars.MapDelayTarget = float32(delay * (100 + pars.NRelaxRatio) / 100)
 	}
 	if pars.MapDelayTarget > 0 && float32(delay) < pars.MapDelayTarget {
 		delay = int32(pars.MapDelayTarget)

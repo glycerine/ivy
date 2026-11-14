@@ -3,7 +3,7 @@ package gia
 import "testing"
 
 func TestMfCutReferenceArea(t *testing.T) {
-	p := &Mf_Man_t{pPars: &Jf_Par_t{nLutSize: 4}, pLfObjs: make([]Mf_Obj_t, 5), iCur: 2}
+	p := &Mf_Man_t{pPars: &Jf_Par_t{NLutSize: 4}, pLfObjs: make([]Mf_Obj_t, 5), iCur: 2}
 	child := &Mf_Cut_t{nLeaves: 2, iFunc: 2}
 	child.pLeaves[0], child.pLeaves[1] = 1, 2
 	p.pLfObjs[3].iCutSet = Mf_ManSaveCuts(p, []*Mf_Cut_t{child}, 1)

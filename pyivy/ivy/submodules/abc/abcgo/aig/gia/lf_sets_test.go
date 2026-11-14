@@ -10,7 +10,7 @@ func TestLfCutSetReuse(t *testing.T) {
 	a, b := Gia_ManAppendCi(g), Gia_ManAppendCi(g)
 	x := Gia_ManAppendAnd(g, a, b)
 	y := Gia_ManAppendAnd(g, x, a)
-	p := &Lf_Man_t{pGia: g, pPars: &Jf_Par_t{nCutNum: 4}}
+	p := &Lf_Man_t{pGia: g, pPars: &Jf_Par_t{NCutNum: 4}}
 	vec.Vec_IntFill(&p.vOffsets, int(g.nObjs), -1)
 	vec.Vec_IntWriteEntry(&p.vOffsets, int(x>>1), 0)
 	vec.Vec_IntWriteEntry(&p.vOffsets, int(y>>1), 1)

@@ -34,7 +34,7 @@ func TestSimulationResetImplications(t *testing.T) {
 	}
 	var pars Gia_ParSim_t
 	Gia_ManSimSetDefaultParams(&pars)
-	if pars.nWords != 8 || pars.nIters != 32 || pars.TimeLimit != 60 || pars.iOutFail != -1 {
+	if pars.NWords != 8 || pars.NIters != 32 || pars.TimeLimit != 60 || pars.iOutFail != -1 {
 		t.Fatalf("wrong defaults: %+v", pars)
 	}
 }

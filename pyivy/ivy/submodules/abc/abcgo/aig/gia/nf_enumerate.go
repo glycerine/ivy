@@ -16,7 +16,7 @@ type nfCutManager struct {
 }
 
 func newNfCutManager(g *Gia_Man_t, pars *Jf_Par_t, library *nfLibrary) *nfCutManager {
-	if pars.nCutNum <= 1 || pars.nCutNum > NF_CUT_MAX || pars.nLutSize <= 1 || pars.nLutSize > NF_LEAF_MAX || library == nil || library.truth == nil {
+	if pars.NCutNum <= 1 || pars.NCutNum > NF_CUT_MAX || pars.NLutSize <= 1 || pars.NLutSize > NF_LEAF_MAX || library == nil || library.truth == nil {
 		panic("gia: invalid Nf mapper parameters")
 	}
 	if Gia_ManHasChoices(g) != 0 {
@@ -61,7 +61,7 @@ func (p *nfCutManager) params(c *Nf_Cut_t, refs float32) {
 	}
 	if c.nLeaves > 1 {
 		c.Delay++
-		c.Flow += float32(int32(c.nLeaves) + p.pars.nAreaTuner)
+		c.Flow += float32(int32(c.nLeaves) + p.pars.NAreaTuner)
 	}
 	c.Flow /= refs
 }
@@ -76,7 +76,7 @@ func (p *nfCutManager) merge(id int32) {
 	n0 := p.prepare(left[:], Gia_ObjFaninId0(obj, id), true)
 	n1 := p.prepare(right[:], Gia_ObjFaninId1(obj, id), true)
 	c0, c1 := Gia_ObjFaninC0(obj), Gia_ObjFaninC1(obj)
-	limit, cap := p.pars.nLutSize, p.pars.nCutNum
+	limit, cap := p.pars.NLutSize, p.pars.NCutNum
 	var n int32
 	if sibling := Gia_ObjSibl(p.graph, id); sibling != 0 {
 		count := p.prepare(third[:], sibling, false)

@@ -16,10 +16,10 @@ func TestKfDriver(t *testing.T) {
 			Gia_ManAppendCo(g, z^1)
 			var pars Jf_Par_t
 			Kf_ManSetDefaultPars(&pars)
-			pars.nLutSize = 4
-			pars.nProcNum = mode.procs
-			pars.fCutHashing = mode.hash
-			pars.fCutSimple = mode.simple
+			pars.NLutSize = 4
+			pars.NProcNum = mode.procs
+			pars.FCutHashing = mode.hash
+			pars.FCutSimple = mode.simple
 			out := Kf_ManPerformMapping(g, &pars)
 			Gia_ManMappingVerify(out)
 			for mask := 0; mask < 16; mask++ {

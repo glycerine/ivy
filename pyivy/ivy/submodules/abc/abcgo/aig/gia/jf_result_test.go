@@ -13,8 +13,8 @@ func TestJfDeriveStructuralMapping(t *testing.T) {
 	Gia_ManAppendCo(g, y)
 	var pars Jf_Par_t
 	Jf_ManSetDefaultPars(&pars)
-	pars.nLutSize = 3
-	pars.fAreaOnly = 0
+	pars.NLutSize = 3
+	pars.FAreaOnly = 0
 	p := Jf_ManAlloc(g, &pars)
 	defer Jf_ManFree(p)
 	p.pCutCmp = Jf_CutCompareDelay
@@ -44,7 +44,7 @@ func TestJfDeriveMinimizedMapping(t *testing.T) {
 			x := Gia_ManAppendAnd(g, a, b^1)
 			y := Gia_ManAppendAnd(g, x, c)
 			Gia_ManAppendCo(g, y^1)
-			pars := &Jf_Par_t{nLutSize: 3, nCutNum: 4, fCutMin: 1, fFuncDsd: mode.dsd, fGenCnf: mode.cnf}
+			pars := &Jf_Par_t{NLutSize: 3, NCutNum: 4, FCutMin: 1, FFuncDsd: mode.dsd, FGenCnf: mode.cnf}
 			p := Jf_ManAlloc(g, pars)
 			defer Jf_ManFree(p)
 			p.pCutCmp = Jf_CutCompareDelay

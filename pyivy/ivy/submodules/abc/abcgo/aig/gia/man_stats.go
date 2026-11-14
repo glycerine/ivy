@@ -43,11 +43,11 @@ var giaPowerHistory struct {
 
 func Gia_ManPrintStats(p *Gia_Man_t, pars *Gps_Par_t) {
 	hadLevels := p.vLevels != nil
-	if pars != nil && pars.fMiter != 0 {
+	if pars != nil && pars.FMiter != 0 {
 		Gia_ManPrintStatsMiter(p, 0)
 		return
 	}
-	noColor := pars != nil && pars.fNoColor != 0
+	noColor := pars != nil && pars.FNoColor != 0
 	if p.pName != "" {
 		if noColor {
 			fmt.Printf("%-8s : ", p.pName)
@@ -78,7 +78,7 @@ func Gia_ManPrintStats(p *Gia_Man_t, pars *Gps_Par_t) {
 	if !hadLevels {
 		p.vLevels = nil
 	}
-	if pars != nil && pars.fCut != 0 {
+	if pars != nil && pars.FCut != 0 {
 		fmt.Printf("  cut = %d(%d)", Gia_ManCrossCut(p, 0), Gia_ManCrossCut(p, 1))
 	}
 	fmt.Printf("  mem =%5.2f MB", Gia_ManMemory(p)/(1<<20))
@@ -94,11 +94,11 @@ func Gia_ManPrintStats(p *Gia_Man_t, pars *Gps_Par_t) {
 	if n := Gia_ManXorNum(p); n != 0 && p.pMuxes == nil {
 		fmt.Printf("  xor = %d", n)
 	}
-	if pars != nil && pars.fMuxXor != 0 {
+	if pars != nil && pars.FMuxXor != 0 {
 		fmt.Print("\nXOR/MUX ")
 		Gia_ManPrintMuxStats(p)
 	}
-	if pars != nil && pars.fSwitch != 0 {
+	if pars != nil && pars.FSwitch != 0 {
 		power := Gia_ManComputeSwitching(p, 48, 16, 0)
 		fmt.Printf("  power =%8.1f", power)
 		giaPowerHistory.Lock()
@@ -116,14 +116,14 @@ func Gia_ManPrintStats(p *Gia_Man_t, pars *Gps_Par_t) {
 	}
 	dump := ""
 	if pars != nil {
-		dump = pars.pDumpFile
+		dump = pars.PDumpFile
 	}
-	if Gia_ManHasMapping(p) != 0 && (pars == nil || pars.fSkipMap == 0) {
+	if Gia_ManHasMapping(p) != 0 && (pars == nil || pars.FSkipMap == 0) {
 		Gia_ManPrintMappingStats(p, dump)
 	} else if dump != "" {
 		Gia_ManLogAigStats(p, dump)
 	}
-	if pars != nil && pars.fNpn != 0 && Gia_ManHasMapping(p) != 0 && Gia_ManLutSizeMax(p) <= 4 {
+	if pars != nil && pars.FNpn != 0 && Gia_ManHasMapping(p) != 0 && Gia_ManLutSizeMax(p) <= 4 {
 		Gia_ManPrintNpnClasses(p)
 	}
 	if p.vPacking != nil {
@@ -132,7 +132,7 @@ func Gia_ManPrintStats(p *Gia_Man_t, pars *Gps_Par_t) {
 	if p.vEdge1 != nil {
 		Gia_ManPrintEdges(p)
 	}
-	if pars != nil && pars.fLutProf != 0 && Gia_ManHasMapping(p) != 0 {
+	if pars != nil && pars.FLutProf != 0 && Gia_ManHasMapping(p) != 0 {
 		Gia_ManPrintLutStats(p)
 	}
 	if p.pPlacement != nil {
@@ -145,10 +145,10 @@ func Gia_ManPrintStats(p *Gia_Man_t, pars *Gps_Par_t) {
 		Gia_ManPrintInitClasses(p.vInitClasses)
 	}
 	Gia_ManCheckIntegrityWithBoxes(p)
-	if pars != nil && pars.fTents != 0 {
+	if pars != nil && pars.FTents != 0 {
 		Gia_ManPrintTents(p)
 	}
-	if pars != nil && pars.fSlacks != 0 {
+	if pars != nil && pars.FSlacks != 0 {
 		Gia_ManDfsSlacksPrint(p)
 	}
 }

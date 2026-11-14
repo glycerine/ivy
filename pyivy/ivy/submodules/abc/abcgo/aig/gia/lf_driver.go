@@ -8,10 +8,10 @@ import (
 )
 
 func Lf_ManPrintQuit(p *Lf_Man_t, result *Gia_Man_t) {
-	if p.pPars.fVerbose == 0 {
-		if p.pPars.fCutGroup != 0 {
+	if p.pPars.FVerbose == 0 {
+		if p.pPars.FCutGroup != 0 {
 			var regular, dual int
-			lut := p.pPars.nLutSize / 2
+			lut := p.pPars.NLutSize / 2
 			for id := int32(0); id < result.nObjs; id++ {
 				if Gia_ObjIsLut(result, id) != 0 {
 					if Gia_ObjLutSize(result, id) > lut {
@@ -29,35 +29,35 @@ func Lf_ManPrintQuit(p *Lf_Man_t, result *Gia_Man_t) {
 	fmt.Printf("CoDrvs = %d  CoInvs = %d  Front = %d  TimeFails = %d   Time = %s\n", p.nCoDrivers, p.nInverters, p.nFrontMax, p.nTimeFails, time.Since(p.clkStart))
 }
 func Lf_ManPerformMappingInt(g *Gia_Man_t, pars *Jf_Par_t) *Gia_Man_t {
-	if pars.fUseMux7 != 0 {
-		pars.fCoarsen = 1
-		pars.nRoundsEla = 0
+	if pars.FUseMux7 != 0 {
+		pars.FCoarsen = 1
+		pars.NRoundsEla = 0
 	}
-	if Gia_ManHasChoices(g) != 0 || pars.nLutSizeMux != 0 {
-		pars.fCutMin = 1
+	if Gia_ManHasChoices(g) != 0 || pars.NLutSizeMux != 0 {
+		pars.FCutMin = 1
 	}
 	coarse := g
-	if pars.fCoarsen != 0 {
-		coarse = Gia_ManDupMuxes(g, pars.nCoarseLimit)
+	if pars.FCoarsen != 0 {
+		coarse = Gia_ManDupMuxes(g, pars.NCoarseLimit)
 		coarse.pManTime = g.pManTime
 		g.pManTime = nil
 	}
 	p := Lf_ManAlloc(coarse, pars)
 	Lf_ManPrintInit(p)
-	for p.Iter = 0; p.Iter < pars.nRounds; p.Iter++ {
+	for p.Iter = 0; p.Iter < pars.NRounds; p.Iter++ {
 		Lf_ManComputeMapping(p)
 	}
 	p.fUseEla = 1
-	for ; p.Iter < pars.nRounds+pars.nRoundsEla; p.Iter++ {
+	for ; p.Iter < pars.NRounds+pars.NRoundsEla; p.Iter++ {
 		Lf_ManComputeMapping(p)
 	}
-	if pars.fVeryVerbose != 0 && pars.fCutMin != 0 {
-		vec.Vec_MemDumpTruthTables(p.vTtMem, coarse.pName, int(pars.nLutSize))
+	if pars.FVeryVerbose != 0 && pars.FCutMin != 0 {
+		vec.Vec_MemDumpTruthTables(p.vTtMem, coarse.pName, int(pars.NLutSize))
 	}
 	var result *Gia_Man_t
-	if pars.fCutMin != 0 {
+	if pars.FCutMin != 0 {
 		result = Lf_ManDeriveMappingGia(p)
-	} else if pars.fCoarsen != 0 {
+	} else if pars.FCoarsen != 0 {
 		result = Lf_ManDeriveMappingCoarse(p)
 	} else {
 		result = Lf_ManDeriveMapping(p)
@@ -109,7 +109,7 @@ func Lf_ManPerformMapping(g *Gia_Man_t, pars *Jf_Par_t) *Gia_Man_t {
 	return result
 }
 func Gia_ManPerformLfMapping(g *Gia_Man_t, pars *Jf_Par_t, normalized int32) *Gia_Man_t {
-	if pars.fCutGroup != 0 && pars.nLutSize != 9 && pars.nLutSize != 11 && pars.nLutSize != 13 {
+	if pars.FCutGroup != 0 && pars.NLutSize != 9 && pars.NLutSize != 11 && pars.NLutSize != 13 {
 		panic("LF invalid grouped LUT size")
 	}
 	if pars.pTimesArr != nil || pars.pTimesReq != nil {

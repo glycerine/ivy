@@ -29,11 +29,11 @@ func TestGiaPrintStatsAndSwitching(t *testing.T) {
 		t.Fatalf("switching: %v", got)
 	}
 	path := filepath.Join(t.TempDir(), "stats.json")
-	Gia_ManPrintStats(p, &Gps_Par_t{fNoColor: 1, fCut: 1, fSwitch: 1, fMuxXor: 1})
+	Gia_ManPrintStats(p, &Gps_Par_t{FNoColor: 1, FCut: 1, FSwitch: 1, FMuxXor: 1})
 	if p.vLevels != nil {
 		t.Fatal("temporary levels retained")
 	}
-	Gia_ManPrintStats(p, &Gps_Par_t{fNoColor: 1, pDumpFile: path})
+	Gia_ManPrintStats(p, &Gps_Par_t{FNoColor: 1, PDumpFile: path})
 	if _, err := os.Stat(path); err != nil {
 		t.Fatal(err)
 	}

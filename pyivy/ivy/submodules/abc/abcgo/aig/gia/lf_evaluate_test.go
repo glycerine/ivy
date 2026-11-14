@@ -11,7 +11,7 @@ func TestLfCutTimingAndArea(t *testing.T) {
 	a, b := Gia_ManAppendCi(g), Gia_ManAppendCi(g)
 	x := Gia_ManAppendAnd(g, a, b)
 	Gia_ManAppendCo(g, x)
-	p := &Lf_Man_t{pGia: g, pPars: &Jf_Par_t{nLutSize: 4}, pObjBests: make([]Lf_Bst_t, 1)}
+	p := &Lf_Man_t{pGia: g, pPars: &Jf_Par_t{NLutSize: 4}, pObjBests: make([]Lf_Bst_t, 1)}
 	vec.Vec_IntFill(&p.vOffsets, int(g.nObjs), -1)
 	vec.Vec_IntWriteEntry(&p.vOffsets, int(x>>1), 0)
 	vec.Vec_IntFill(&p.vCiArrivals, 2, 0)

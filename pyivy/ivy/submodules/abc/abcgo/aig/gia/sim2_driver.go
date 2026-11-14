@@ -39,12 +39,12 @@ func Gia_ManSimSimulateEquiv(g *Gia_Man_t, pars *Gia_ParSim_t) int32 {
 		Gia_Sim2InfoZero(p, Gia_Sim2Data(p, Gia_ManRo(g, i).id))
 	}
 	var frame, output, pattern int32
-	for frame = 0; frame < pars.nIters; frame++ {
+	for frame = 0; frame < pars.NIters; frame++ {
 		Gia_Sim2SimulateRound(p)
-		if pars.fVerbose != 0 {
-			fmt.Printf("Frame %4d out of %4d and timeout %3d sec. Lits = %4d. Time = %7.2f sec\r", frame+1, pars.nIters, pars.TimeLimit, Gia_ManEquivCountLitsAll(g), time.Since(started).Seconds())
+		if pars.FVerbose != 0 {
+			fmt.Printf("Frame %4d out of %4d and timeout %3d sec. Lits = %4d. Time = %7.2f sec\r", frame+1, pars.NIters, pars.TimeLimit, Gia_ManEquivCountLitsAll(g), time.Since(started).Seconds())
 		}
-		if pars.fCheckMiter != 0 && Gia_Sim2CheckPos(p, &output, &pattern) != 0 {
+		if pars.FCheckMiter != 0 && Gia_Sim2CheckPos(p, &output, &pattern) != 0 {
 			Gia_ManResetRandom(pars)
 			pars.iOutFail = output
 			g.pCexSeq = Gia_Sim2GenerateCounter(g, frame, output, p.nWords, pattern)
@@ -60,10 +60,10 @@ func Gia_ManSimSimulateEquiv(g *Gia_Man_t, pars *Gia_ParSim_t) int32 {
 			frame++
 			break
 		}
-		if frame < pars.nIters-1 {
+		if frame < pars.NIters-1 {
 			Gia_Sim2InfoTransfer(p)
 		}
 	}
-	fmt.Printf("No bug detected after simulating %d frames with %d words.  Time: %s\n", frame, pars.nWords, time.Since(started))
+	fmt.Printf("No bug detected after simulating %d frames with %d words.  Time: %s\n", frame, pars.NWords, time.Since(started))
 	return 0
 }

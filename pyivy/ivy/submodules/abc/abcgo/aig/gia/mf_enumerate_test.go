@@ -11,7 +11,7 @@ func TestMfEnumerateAndMap(t *testing.T) {
 		Gia_ManAppendCo(g, y)
 		var pars Jf_Par_t
 		Mf_ManSetDefaultPars(&pars)
-		pars.fCutMin = truth
+		pars.FCutMin = truth
 		p := Mf_ManAlloc(g, &pars)
 		Mf_ObjMergeOrder(p, x>>1)
 		Mf_ObjMergeOrder(p, y>>1)

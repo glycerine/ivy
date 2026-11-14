@@ -29,7 +29,7 @@ func TestFrameMiniAigAndLut(t *testing.T) {
 	}
 	var pars Jf_Par_t
 	Mf_ManSetDefaultPars(&pars)
-	pars.fCoarsen = 0
+	pars.FCoarsen = 0
 	mapped := Mf_ManPerformMapping(original, &pars)
 	f.SetResource("pGia", mapped)
 	v, err := abcmain.Abc_FrameGiaOutputMiniLut(f)
@@ -65,7 +65,7 @@ func TestFrameMiniLutNameMapping(t *testing.T) {
 	}
 	var pars Jf_Par_t
 	Mf_ManSetDefaultPars(&pars)
-	pars.fCoarsen = 0
+	pars.FCoarsen = 0
 	f.SetResource("pGia", Mf_ManPerformMapping(f.Resource("pGia").(*Gia_Man_t), &pars))
 	if _, err := abcmain.Abc_FrameGiaOutputMiniLut(f); err != nil {
 		t.Fatal(err)

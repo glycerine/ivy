@@ -10,7 +10,7 @@ import (
 
 // Jf_ManDeriveMapping attaches the selected structural cuts to the source GIA.
 func Jf_ManDeriveMapping(p *Jf_Man_t) {
-	if p.pPars.fCutMin != 0 {
+	if p.pPars.FCutMin != 0 {
 		panic("JF structural mapping requires unminimized cuts")
 	}
 	mapping := vec.Vec_IntStart(int(p.pGia.nObjs))
@@ -29,14 +29,14 @@ func Jf_ManDeriveMapping(p *Jf_Man_t) {
 	p.pGia.vMapping = mapping
 }
 func Jf_ManSetDefaultPars(p *Jf_Par_t) {
-	*p = Jf_Par_t{nLutSize: 6, nCutNum: 8, nRounds: 1, nVerbLimit: 5, DelayTarget: -1, fAreaOnly: 1, fOptEdge: 1, nLutSizeMax: JF_LEAF_MAX, nCutNumMax: JF_CUT_MAX}
+	*p = Jf_Par_t{NLutSize: 6, NCutNum: 8, NRounds: 1, NVerbLimit: 5, DelayTarget: -1, FAreaOnly: 1, FOptEdge: 1, NLutSizeMax: JF_LEAF_MAX, NCutNumMax: JF_CUT_MAX}
 }
 func Jf_ManPrintStats(p *Jf_Man_t, title string) {
-	if p.pPars.fVerbose == 0 {
+	if p.pPars.FVerbose == 0 {
 		return
 	}
 	fmt.Printf("%s :  Level =%6d   Area =%9d   Edge =%9d   ", title, p.pPars.Delay, p.pPars.Area, p.pPars.Edge)
-	if p.pPars.fGenCnf != 0 {
+	if p.pPars.FGenCnf != 0 {
 		fmt.Printf("Cnf =%9d   ", p.pPars.Clause)
 	}
 	fmt.Printf("Time = %s\n", time.Since(p.clkStart))
@@ -44,7 +44,7 @@ func Jf_ManPrintStats(p *Jf_Man_t, title string) {
 
 // Jf_ManDeriveMappingGia rebuilds the mapped network from minimized cuts.
 func Jf_ManDeriveMappingGia(p *Jf_Man_t) *Gia_Man_t {
-	if p.pPars.fCutMin == 0 {
+	if p.pPars.FCutMin == 0 {
 		panic("JF minimized mapping requires cut minimization")
 	}
 	g := p.pGia
@@ -60,7 +60,7 @@ func Jf_ManDeriveMappingGia(p *Jf_Man_t) *Gia_Man_t {
 		copies[id] = Gia_ManAppendCi(result)
 	}
 	var literals, offsets, cover *Vec_Int_t
-	if p.pPars.fGenCnf != 0 {
+	if p.pPars.FGenCnf != 0 {
 		literals = vec.Vec_IntAlloc(1000)
 		offsets = vec.Vec_IntAlloc(1000)
 		cover = vec.Vec_IntAlloc(100)
@@ -96,7 +96,7 @@ func Jf_ManDeriveMappingGia(p *Jf_Man_t) *Gia_Man_t {
 			continue
 		}
 		var truth []uint64
-		if p.pPars.fFuncDsd != 0 {
+		if p.pPars.FFuncDsd != 0 {
 			if extra.Sdm_ManReadDsdVarNum(p.pDsd, class) != size {
 				panic("JF DSD support mismatch")
 			}
@@ -121,7 +121,7 @@ func Jf_ManDeriveMappingGia(p *Jf_Man_t) *Gia_Man_t {
 			words[2*i+1] = uint32(w >> 32)
 		}
 		lit := kit.Kit_TruthToGia(result, words, int32(len(leaves)), &scratch, leaves, 0)
-		if p.pPars.fGenCnf != 0 {
+		if p.pPars.FGenCnf != 0 {
 			vLeaves := vec.Vec_IntAllocArrayCopy(leaves, len(leaves))
 			Jf_ManGenCnf(truth[0], lit, vLeaves, literals, offsets, cover)
 		}
@@ -142,7 +142,7 @@ func Jf_ManDeriveMappingGia(p *Jf_Man_t) *Gia_Man_t {
 		}
 		lit ^= Gia_ObjFaninC0(obj)
 		out := Gia_ManAppendCo(result, lit)
-		if p.pPars.fGenCnf != 0 {
+		if p.pPars.FGenCnf != 0 {
 			leaves := vec.Vec_IntAllocArrayCopy([]int32{lit}, 1)
 			Jf_ManGenCnf(0xaaaaaaaaaaaaaaaa, out, leaves, literals, offsets, cover)
 		}
@@ -156,7 +156,7 @@ func Jf_ManDeriveMappingGia(p *Jf_Man_t) *Gia_Man_t {
 	}
 	result.vMapping = mapping
 	Gia_ManSetRegNum(result, Gia_ManRegNum(g))
-	if p.pPars.fGenCnf != 0 {
+	if p.pPars.FGenCnf != 0 {
 		if p.pPars.fCnfObjIds != 0 {
 			result.pData = Jf_ManCreateCnf(result, literals, offsets)
 		} else {

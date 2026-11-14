@@ -7,7 +7,7 @@ import (
 
 func TestMfTruthOperations(t *testing.T) {
 	for _, lut := range []int32{6, 8} {
-		p := &Mf_Man_t{pPars: &Jf_Par_t{nLutSize: lut}, vTtMem: vec.Vec_MemAllocForTT(int(lut), 0)}
+		p := &Mf_Man_t{pPars: &Jf_Par_t{NLutSize: lut}, vTtMem: vec.Vec_MemAllocForTT(int(lut), 0)}
 		a, b := &Mf_Cut_t{}, &Mf_Cut_t{}
 		Mf_CutCreateUnit(a, 1)
 		Mf_CutCreateUnit(b, 2)

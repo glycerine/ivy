@@ -7,7 +7,7 @@ import (
 
 func TestLfTruthAndMux(t *testing.T) {
 	for _, lut := range []int32{4, 7} {
-		p := &Lf_Man_t{pPars: &Jf_Par_t{nLutSize: lut}, vTtMem: vec.Vec_MemAllocForTT(int(lut), 0)}
+		p := &Lf_Man_t{pPars: &Jf_Par_t{NLutSize: lut}, vTtMem: vec.Vec_MemAllocForTT(int(lut), 0)}
 		var a, b, c Lf_Cut_t
 		Lf_CutCreateUnit(&a, 1)
 		Lf_CutCreateUnit(&b, 2)

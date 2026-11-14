@@ -32,14 +32,14 @@ func Jf_ManDeriveGia(p *Jf_Man_t) *Gia_Man_t {
 		cut := Jf_ObjCutBest(p, obj.id)
 		size := Jf_CutSize(cut)
 		class := Jf_CutFuncClass(cut)
-		if p.pPars.fCutMin != 0 && size == 0 {
+		if p.pPars.FCutMin != 0 && size == 0 {
 			if class != 0 {
 				panic("JF invalid constant cut")
 			}
 			copies[obj.id] = Jf_CutFunc(cut)
 			continue
 		}
-		if p.pPars.fCutMin != 0 && size == 1 {
+		if p.pPars.FCutMin != 0 && size == 1 {
 			if class != 1 {
 				panic("JF invalid single-leaf cut")
 			}
@@ -60,9 +60,9 @@ func Jf_ManDeriveGia(p *Jf_Man_t) *Gia_Man_t {
 			leaves = append(leaves, copies[lit>>1]^(lit&1))
 		}
 		var truth []uint64
-		if p.pPars.fCutMin == 0 {
-			truth = giaNewTruthEval(g, p.pPars.nLutSize, ids).node(obj.id)
-		} else if p.pPars.fFuncDsd != 0 {
+		if p.pPars.FCutMin == 0 {
+			truth = giaNewTruthEval(g, p.pPars.NLutSize, ids).node(obj.id)
+		} else if p.pPars.FFuncDsd != 0 {
 			if extra.Sdm_ManReadDsdVarNum(p.pDsd, class) != size {
 				panic("JF DSD support mismatch")
 			}
@@ -75,7 +75,7 @@ func Jf_ManDeriveGia(p *Jf_Man_t) *Gia_Man_t {
 			words[2*i], words[2*i+1] = uint32(w), uint32(w>>32)
 		}
 		lit := kit.Kit_TruthToGia(dst, words, int32(len(leaves)), &scratch, leaves, 1)
-		if p.pPars.fCutMin != 0 {
+		if p.pPars.FCutMin != 0 {
 			lit ^= Jf_CutFuncCompl(cut)
 		}
 		copies[obj.id] = lit
@@ -90,7 +90,7 @@ func Jf_ManDeriveGia(p *Jf_Man_t) *Gia_Man_t {
 	}
 	Gia_ManHashStop(dst)
 	Gia_ManSetRegNum(dst, Gia_ManRegNum(g))
-	if p.pPars.fCutMin == 0 {
+	if p.pPars.FCutMin == 0 {
 		dst = Gia_ManCleanup(dst)
 	}
 	return dst
@@ -99,20 +99,20 @@ func Jf_ManPerformMapping(g *Gia_Man_t, pars *Jf_Par_t) *Gia_Man_t {
 	if Gia_ManBufNum(g) != 0 {
 		panic("JF mapping does not support buffers")
 	}
-	if pars.fCutMin != 0 && pars.fFuncDsd != 0 && pars.nLutSize > 6 {
+	if pars.FCutMin != 0 && pars.FFuncDsd != 0 && pars.NLutSize > 6 {
 		panic("JF DSD supports at most six leaves")
 	}
-	if pars.fGenCnf != 0 {
-		pars.fCutMin = 1
-		pars.fFuncDsd = 1
-		pars.fOptEdge = 0
+	if pars.FGenCnf != 0 {
+		pars.FCutMin = 1
+		pars.FFuncDsd = 1
+		pars.FOptEdge = 0
 	}
-	if pars.fCutMin != 0 && pars.fFuncDsd == 0 {
-		pars.fCoarsen = 0
+	if pars.FCutMin != 0 && pars.FFuncDsd == 0 {
+		pars.FCoarsen = 0
 	}
 	p := Jf_ManAlloc(g, pars)
 	defer Jf_ManFree(p)
-	if pars.fAreaOnly != 0 {
+	if pars.FAreaOnly != 0 {
 		p.pCutCmp = Jf_CutCompareArea
 	} else {
 		p.pCutCmp = Jf_CutCompareDelay
@@ -120,9 +120,9 @@ func Jf_ManPerformMapping(g *Gia_Man_t, pars *Jf_Par_t) *Gia_Man_t {
 	Jf_ManComputeCuts(p, 0)
 	Jf_ManComputeRefs(p)
 	Jf_ManPrintStats(p, "Start")
-	for i := int32(0); i < pars.nRounds; i++ {
-		if pars.fGenCnf == 0 {
-			Jf_ManPropagateFlow(p, pars.fOptEdge)
+	for i := int32(0); i < pars.NRounds; i++ {
+		if pars.FGenCnf == 0 {
+			Jf_ManPropagateFlow(p, pars.FOptEdge)
 			Jf_ManPrintStats(p, "Flow ")
 		}
 		Jf_ManPropagateEla(p, 0)
@@ -130,13 +130,13 @@ func Jf_ManPerformMapping(g *Gia_Man_t, pars *Jf_Par_t) *Gia_Man_t {
 		Jf_ManPropagateEla(p, 1)
 		Jf_ManPrintStats(p, "Edge ")
 	}
-	if pars.fVeryVerbose != 0 && pars.fCutMin != 0 && pars.fFuncDsd == 0 {
-		vec.Vec_MemDumpTruthTables(p.vTtMem, g.pName, int(pars.nLutSize))
+	if pars.FVeryVerbose != 0 && pars.FCutMin != 0 && pars.FFuncDsd == 0 {
+		vec.Vec_MemDumpTruthTables(p.vTtMem, g.pName, int(pars.NLutSize))
 	}
-	if pars.fPureAig != 0 {
+	if pars.FPureAig != 0 {
 		return Jf_ManDeriveGia(p)
 	}
-	if pars.fCutMin != 0 {
+	if pars.FCutMin != 0 {
 		return Jf_ManDeriveMappingGia(p)
 	}
 	Jf_ManDeriveMapping(p)
@@ -145,16 +145,16 @@ func Jf_ManPerformMapping(g *Gia_Man_t, pars *Jf_Par_t) *Gia_Man_t {
 func Jf_ManDeriveCnf(p *Gia_Man_t, objIDs int32) *Gia_Man_t {
 	var pars Jf_Par_t
 	Jf_ManSetDefaultPars(&pars)
-	pars.fGenCnf = 1
+	pars.FGenCnf = 1
 	pars.fCnfObjIds = objIDs
 	return Jf_ManPerformMapping(p, &pars)
 }
 func Jf_ManDeriveCnfMiter(p *Gia_Man_t, verbose int32) *Gia_Man_t {
 	var pars Jf_Par_t
 	Jf_ManSetDefaultPars(&pars)
-	pars.fGenCnf = 1
+	pars.FGenCnf = 1
 	pars.fAddOrCla = 1
-	pars.fVerbose = verbose
+	pars.FVerbose = verbose
 	return Jf_ManPerformMapping(p, &pars)
 }
 func Jf_ManDumpCnf(p *Gia_Man_t, filename string, verbose int32) {

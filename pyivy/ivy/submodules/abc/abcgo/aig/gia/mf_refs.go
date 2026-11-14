@@ -51,13 +51,13 @@ func Mf_ManSetMapRefs(p *Mf_Man_t) int32 {
 		delay = max(delay, int32(Mf_ManObj(p, driver.id).Delay))
 	}
 	pars := p.pPars
-	if pars.DelayTarget == -1 && pars.nRelaxRatio != 0 {
-		pars.DelayTarget = int32(float32(delay) * (100 + float32(pars.nRelaxRatio)) / 100)
+	if pars.DelayTarget == -1 && pars.NRelaxRatio != 0 {
+		pars.DelayTarget = int32(float32(delay) * (100 + float32(pars.NRelaxRatio)) / 100)
 	}
 	if pars.DelayTarget != -1 {
 		if delay <= pars.DelayTarget {
 			delay = pars.DelayTarget
-		} else if pars.nRelaxRatio == 0 {
+		} else if pars.NRelaxRatio == 0 {
 			fmt.Printf("Relaxing user-specified delay target from %d to %d.\n", pars.DelayTarget, delay)
 		}
 	}
@@ -81,7 +81,7 @@ func Mf_ManSetMapRefs(p *Mf_Man_t) int32 {
 		}
 		pars.Edge += word(Mf_CutSize(cut))
 		pars.Area++
-		if pars.fGenCnf != 0 || pars.fGenLit != 0 {
+		if pars.FGenCnf != 0 || pars.FGenLit != 0 {
 			pars.Clause += word(Mf_CutArea(p, Mf_CutSize(cut), Mf_CutFunc(cut)))
 		}
 	}
