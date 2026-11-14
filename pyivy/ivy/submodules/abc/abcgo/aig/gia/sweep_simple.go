@@ -24,7 +24,7 @@ func Gia_ManFraigSweepPerform(p *Gia_Man_t, parameters any) {
 }
 
 func Gia_ManFraigSweepSimple(p *Gia_Man_t, parameters any) *Gia_Man_t {
-	if p.pManTime != nil && Gia_ManBoxNum(p) != 0 {
+	if p.PManTime != nil && Gia_ManBoxNum(p) != 0 {
 		panic("gia: simple sweep does not support boxes")
 	}
 	Gia_ManFraigSweepPerform(p, parameters)

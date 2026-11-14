@@ -61,8 +61,8 @@ func giaMfsInsert(p *Gia_Man_t, d *giaMfsNetworkData, allBoxes bool) *Gia_Man_t 
 	realPis, realPos := int(Gia_ManPiNum(p)), int(Gia_ManPoNum(p))
 	var blackIns, blackOuts int
 	var timing *tim.Tim_Man_t
-	if p.pManTime != nil {
-		timing = p.pManTime.(*tim.Tim_Man_t)
+	if p.PManTime != nil {
+		timing = p.PManTime.(*tim.Tim_Man_t)
 		tim.Tim_ManBlackBoxIoNum(timing, &blackIns, &blackOuts)
 		if boxes != 0 {
 			realPis, realPos = tim.Tim_ManPiNum(timing), tim.Tim_ManPoNum(timing)
@@ -164,16 +164,16 @@ func giaMfsInsert(p *Gia_Man_t, d *giaMfsNetworkData, allBoxes bool) *Gia_Man_t 
 	for _, v := range records {
 		vec.Vec_IntPush(mapping, v)
 	}
-	dst.vMapping = mapping
+	dst.VMapping = mapping
 	selected := vec.Vec_IntAlloc(len(remaining))
 	for _, b := range remaining {
 		vec.Vec_IntPush(selected, int32(b))
 	}
 	if timing != nil {
-		dst.pManTime = Gia_ManUpdateTimMan2(p, selected, 0)
+		dst.PManTime = Gia_ManUpdateTimMan2(p, selected, 0)
 	}
-	if p.pAigExtra != nil {
-		dst.pAigExtra = Gia_ManUpdateExtraAig2(p.pManTime, p.pAigExtra, selected)
+	if p.PAigExtra != nil {
+		dst.PAigExtra = Gia_ManUpdateExtraAig2(p.PManTime, p.PAigExtra, selected)
 	}
 	if p.vRegClasses != nil {
 		dst.vRegClasses = vec.Vec_IntDup(p.vRegClasses)

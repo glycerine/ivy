@@ -26,7 +26,7 @@ func Gia_ManUnrollDup(src *Gia_Man_t, limits *Vec_Int_t) *Gia_Man_t {
 		return nil
 	}
 	dst := Gia_ManStart(Gia_ManObjNum(src))
-	dst.pName, dst.pSpec = src.pName, src.pSpec
+	dst.pName, dst.PSpec = src.pName, src.PSpec
 	Vec_IntPush(limits, 1)
 	copyMap := make([]int32, src.nObjs)
 	for i := range copyMap {
@@ -99,7 +99,7 @@ func Gia_ManUnrollStart(src *Gia_Man_t, params *Gia_ParFra_t) any {
 	}
 	manager := &Gia_ManUnr_t{pAig: src, pPars: params, LastLit: 0}
 	manager.pNew = Gia_ManStart(int32(capacity))
-	manager.pNew.pName, manager.pNew.pSpec = src.pName, src.pSpec
+	manager.pNew.pName, manager.pNew.PSpec = src.pName, src.PSpec
 	Gia_ManHashStart(manager.pNew)
 	nPis, nRegs := Gia_ManPiNum(src), Gia_ManRegNum(src)
 	if params.fSaveLastLit == 0 {
@@ -221,7 +221,7 @@ func Gia_ManUnroll(src *Gia_Man_t, params *Gia_ParFra_t) *Gia_Man_t {
 		return nil
 	}
 	Gia_ManHashStop(result)
-	result.pName, result.pSpec = src.pName, src.pSpec
+	result.pName, result.PSpec = src.pName, src.PSpec
 	Gia_ManUnrollStop(raw)
 	_ = manager
 	return result
@@ -267,7 +267,7 @@ func buildGiaFrames(src *Gia_Man_t, params *Gia_ParFra_t) *Gia_Man_t {
 	}
 	unrolled := aig.Aig_ManFrames(graph, params.NFrames, params.FInit, 1, withRegisters, 0, nil)
 	result := Gia_ManFromAigSimple(unrolled)
-	result.pName, result.pSpec = src.pName, src.pSpec
+	result.pName, result.PSpec = src.pName, src.PSpec
 	if params.FVerbose != 0 {
 		fmt.Printf("Unrolled %d frames: %d PIs, %d POs, %d registers.\n", params.NFrames, Gia_ManPiNum(result), Gia_ManPoNum(result), Gia_ManRegNum(result))
 	}

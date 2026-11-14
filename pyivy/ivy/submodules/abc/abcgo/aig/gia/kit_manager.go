@@ -36,7 +36,7 @@ func (p *Gia_Man_t) AndLiteral(a, b int32, hash bool) int32 {
 	if p.literalHash == nil {
 		p.literalHash = make(map[[2]int32]int32)
 		for _, obj := range p.pObjs {
-			if Gia_ObjIsAnd(obj) == 0 || Gia_ObjIsXor(obj) != 0 || (int(obj.id) < len(p.pMuxes) && p.pMuxes[obj.id] != 0) {
+			if Gia_ObjIsAnd(obj) == 0 || Gia_ObjIsXor(obj) != 0 || (int(obj.id) < len(p.PMuxes) && p.PMuxes[obj.id] != 0) {
 				continue
 			}
 			x, y := Gia_ObjFaninLit0(obj, obj.id), Gia_ObjFaninLit1(obj, obj.id)

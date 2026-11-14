@@ -51,7 +51,7 @@ func Gia_ObjCheckMffc(p *Gia_Man_t, root *Gia_Obj_t, limit int32, nodes, leaves,
 	return ok
 }
 func Gia_ManComputeMffcs(p *Gia_Man_t, limitMin, limitMax, suppMax, ratioBest int32) *Vec_Wec_t {
-	if p.pMuxes == nil || limitMin < 0 || limitMax < 0 || suppMax < 0 || ratioBest < 0 || ratioBest > 100 {
+	if p.PMuxes == nil || limitMin < 0 || limitMax < 0 || suppMax < 0 || ratioBest < 0 || ratioBest > 100 {
 		panic("gia: invalid MFFC parameters")
 	}
 	nodes, leaves, inners := vec.Vec_IntAlloc(0), vec.Vec_IntAlloc(0), vec.Vec_IntAlloc(0)

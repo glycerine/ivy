@@ -30,10 +30,10 @@ func Gia_ManLutLevelWithBoxes(p *Gia_Man_t) int32 {
 	if p.nRegs != 0 {
 		panic("gia: boxed LUT timing requires combinational graph")
 	}
-	if p.pManTime == nil {
+	if p.PManTime == nil {
 		return Gia_ManLutLevel(p, nil)
 	}
-	timing, ok := p.pManTime.(*tim.Tim_Man_t)
+	timing, ok := p.PManTime.(*tim.Tim_Man_t)
 	if !ok {
 		panic("gia: invalid timing manager")
 	}
@@ -88,7 +88,7 @@ func Gia_ManLutLevelWithBoxes(p *Gia_Man_t) int32 {
 func Gia_ManLutParams(p *Gia_Man_t, luts, edges, levels *int32) {
 	*luts = Gia_ManLutNum(p)
 	*edges = Gia_ManLutFaninCount(p)
-	if timing, ok := p.pManTime.(*tim.Tim_Man_t); ok && tim.Tim_ManBoxNum(timing) > 0 {
+	if timing, ok := p.PManTime.(*tim.Tim_Man_t); ok && tim.Tim_ManBoxNum(timing) > 0 {
 		*levels = Gia_ManLutLevelWithBoxes(p)
 	} else {
 		*levels = Gia_ManLutLevel(p, nil)

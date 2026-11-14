@@ -23,7 +23,7 @@ func Gia_ManStartMappingFanoutMap(p *Gia_Man_t, counts *Vec_Int_t) *Vec_Int_t {
 	return result
 }
 func Gia_ManStaticMappingFanoutStart(p *Gia_Man_t) {
-	if p.vFanoutNums != nil || p.vFanout != nil || p.vMapping == nil {
+	if p.vFanoutNums != nil || p.vFanout != nil || p.VMapping == nil {
 		panic("gia: invalid mapping fanout initialization")
 	}
 	counts := vec.Vec_IntStart(int(p.nObjs))

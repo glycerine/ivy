@@ -89,7 +89,7 @@ func Sbl_ManTestSat(p *Sbl_Man_t, pivot int32) int32 {
 	if vec.Vec_IntSize(p.vSolBest) > 0 && vec.Vec_IntSize(p.vSolBest) < vec.Vec_IntSize(p.vSolInit) {
 		Sbl_ManUpdateMapping(p)
 		var delay, edges int32
-		if p.pGia.vEdge1 != nil {
+		if p.pGia.VEdge1 != nil {
 			delay = Gia_ManEvalEdgeDelay(p.pGia)
 			edges = Gia_ManEvalEdgeCount(p.pGia)
 		} else {

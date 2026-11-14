@@ -7,10 +7,10 @@ import (
 )
 
 func giaDfsTiming(p *Gia_Man_t) *tim.Tim_Man_t {
-	if p.pManTime == nil {
+	if p.PManTime == nil {
 		return nil
 	}
-	timing, ok := p.pManTime.(*tim.Tim_Man_t)
+	timing, ok := p.PManTime.(*tim.Tim_Man_t)
 	if !ok {
 		panic("gia: invalid timing manager")
 	}

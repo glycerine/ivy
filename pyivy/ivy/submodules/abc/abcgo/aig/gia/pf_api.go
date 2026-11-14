@@ -42,7 +42,7 @@ func Pf_StoCreate(g *Gia_Man_t, pars *Jf_Par_t) *Pf_Man_t {
 		return nil
 	}
 	g.Refs = nil
-	g.vCellMapping = nil
+	g.VCellMapping = nil
 	library := pfPrepareLibrary(cells)
 	return &Pf_Man_t{graph: g, pars: pars, library: library, cuts: library.cutManager(g, pars)}
 }

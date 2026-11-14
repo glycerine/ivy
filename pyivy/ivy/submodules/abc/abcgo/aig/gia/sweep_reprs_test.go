@@ -12,12 +12,12 @@ func TestFraigSelectRepresentatives(t *testing.T) {
 	Gia_ManAppendCo(p, b)
 	tm := tim.Tim_ManStart(3, 2)
 	tim.Tim_ManCreateBox(tm, 0, 1, 2, 1, -1, 0)
-	p.pManTime = tm
+	p.PManTime = tm
 	c := Gia_ManStart(8)
 	ca, cb := Gia_ManAppendCi(c), Gia_ManAppendCi(c)
-	c.pReprs = make([]Gia_Rpr_t, c.nObjs)
-	for i := range c.pReprs {
-		c.pReprs[i].iRepr = GIA_VOID
+	c.PReprs = make([]Gia_Rpr_t, c.nObjs)
+	for i := range c.PReprs {
+		c.PReprs[i].iRepr = GIA_VOID
 	}
 	Gia_ObjSetRepr(c, cb>>1, ca>>1)
 	Gia_ManFillValue(p)

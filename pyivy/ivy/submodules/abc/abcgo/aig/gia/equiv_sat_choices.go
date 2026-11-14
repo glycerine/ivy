@@ -14,7 +14,7 @@ func Cec4_ManSatSolverChoices_rec(dst, src, swept *Gia_Man_t, id int32) int32 {
 	}
 	var lits []int32
 	for member := head; member != 0; member = Gia_ObjNext(src, member) {
-		if src.pReprs[member].fColorA != 0 {
+		if src.PReprs[member].fColorA != 0 {
 			lits = append(lits, Cec4_ManSatSolverAnd_rec(dst, src, swept, member))
 		}
 	}
@@ -34,7 +34,7 @@ func Cec4_ManSatSolverChoices(src, swept *Gia_Man_t) *Gia_Man_t {
 		return Gia_ManDup(swept)
 	}
 	dst := Gia_ManStart(Gia_ManObjNum(swept))
-	dst.pName, dst.pSpec = src.pName, src.pSpec
+	dst.pName, dst.PSpec = src.pName, src.PSpec
 	dst.pSibls = make([]int32, Gia_ManObjNum(swept))
 	Gia_ManFillValue(swept)
 	Gia_ManConst0(swept).Value = 0

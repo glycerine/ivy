@@ -161,7 +161,7 @@ func TestAigerFilesAndPartExport(t *testing.T) {
 		t.Fatal(err)
 	}
 	q, err := Gia_AigerRead(path, 0, 1, 1)
-	if err != nil || q.pSpec != path || q.pName != p.pName {
+	if err != nil || q.PSpec != path || q.pName != p.pName {
 		t.Fatal(err)
 	}
 	part, err := Gia_AigerWriteIntoMemoryStrPart(p, p.vCis, aigerVecInts(aigerAllAnds(p)), p.vCos, 1)
@@ -189,11 +189,11 @@ func TestAigerMetadataExtensions(t *testing.T) {
 	n := int(p.nObjs)
 	p.aigerExtensions = map[byte][]byte{}
 	payloads := map[byte][]byte{'h': {1, 2, 3}, 't': {4, 5}, 'z': {9, 8, 7}, 'd': binary.BigEndian.AppendUint32(nil, 17), 'r': aigerBEArray([]int32{2, 7, 8}), 's': aigerBEArray([]int32{1, 1}), 'b': append([]byte("cell\x00"), aigerBEArray([]int32{5, 6})...)}
-	p.pReprs = make([]Gia_Rpr_t, n)
-	for i := range p.pReprs {
-		p.pReprs[i].iRepr = GIA_VOID
+	p.PReprs = make([]Gia_Rpr_t, n)
+	for i := range p.PReprs {
+		p.PReprs[i].iRepr = GIA_VOID
 	}
-	p.pReprs[3] = Gia_Rpr_t{iRepr: 1, fProved: 1}
+	p.PReprs[3] = Gia_Rpr_t{iRepr: 1, fProved: 1}
 	eq, err := Gia_WriteEquivClassesInt(p, nil)
 	if err != nil {
 		t.Fatal(err)
@@ -215,7 +215,7 @@ func TestAigerMetadataExtensions(t *testing.T) {
 	payloads['i'] = binary.LittleEndian.AppendUint32(nil, math.Float32bits(1.5))
 	payloads['o'] = binary.LittleEndian.AppendUint32(nil, math.Float32bits(2.5))
 	mapping, _ := aigerMakeMapping(p.nObjs, []aigerLUT{{3, []int32{1, 2}}})
-	p.vMapping = aigerVecInts(mapping)
+	p.VMapping = aigerVecInts(mapping)
 	doc, err := Gia_AigerWriteMappingDoc(p)
 	if err != nil {
 		t.Fatal(err)
@@ -243,7 +243,7 @@ func TestAigerMetadataExtensions(t *testing.T) {
 			t.Fatalf("tag %c got %x want %x", tag, got, payload)
 		}
 	}
-	if q.pSwitching[3] != switching[3] || q.pReprs[3].fProved != 1 || q.pPlacement[3].xCoord != 3 || vec.Vec_IntEntry(q.vConfigs, 1) != 6 || q.pObjs[3].Value != before {
+	if q.pSwitching[3] != switching[3] || q.PReprs[3].fProved != 1 || q.pPlacement[3].xCoord != 3 || vec.Vec_IntEntry(q.VConfigs, 1) != 6 || q.pObjs[3].Value != before {
 		t.Fatal("native metadata not populated")
 	}
 	payload := q.AigerExtension('z')
@@ -269,23 +269,23 @@ func TestAigerNormalizationRemapsObjectMetadata(t *testing.T) {
 		c := Gia_ManAppendCi(p)
 		y := Gia_ManAppendAnd(p, a, c)
 		Gia_ManAppendCo(p, y)
-		p.pReprs = make([]Gia_Rpr_t, p.nObjs)
-		for i := range p.pReprs {
-			p.pReprs[i].iRepr = GIA_VOID
+		p.PReprs = make([]Gia_Rpr_t, p.nObjs)
+		for i := range p.PReprs {
+			p.PReprs[i].iRepr = GIA_VOID
 		}
-		p.pReprs[c>>1] = Gia_Rpr_t{iRepr: uint32(x >> 1), fProved: headProved}
-		p.pReprs[y>>1] = Gia_Rpr_t{iRepr: uint32(x >> 1), fProved: 1}
+		p.PReprs[c>>1] = Gia_Rpr_t{iRepr: uint32(x >> 1), fProved: headProved}
+		p.PReprs[y>>1] = Gia_Rpr_t{iRepr: uint32(x >> 1), fProved: 1}
 		p.pSwitching = make([]byte, p.nObjs)
 		class := make([]int32, p.nObjs)
 		for i := range class {
 			p.pSwitching[i] = byte(i + 11)
 			class[i] = int32(i + 20)
 		}
-		p.vGateClasses = aigerVecInts(class)
-		p.vObjClasses = aigerVecInts(class)
+		p.VGateClasses = aigerVecInts(class)
+		p.VObjClasses = aigerVecInts(class)
 		mapping, _ := aigerMakeMapping(p.nObjs, []aigerLUT{{x >> 1, []int32{a >> 1, b >> 1}}, {y >> 1, []int32{a >> 1, c >> 1}}})
-		p.vMapping = aigerVecInts(mapping)
-		p.vPacking = aigerVecInts([]int32{1, 2, x >> 1, y >> 1})
+		p.VMapping = aigerVecInts(mapping)
+		p.VPacking = aigerVecInts([]int32{1, 2, x >> 1, y >> 1})
 		data, err := MarshalAiger(p, AigerWriteOptions{})
 		if err != nil {
 			t.Fatal(err)
@@ -294,14 +294,14 @@ func TestAigerNormalizationRemapsObjectMetadata(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		if q.pSwitching[3] != p.pSwitching[c>>1] || vec.Vec_IntEntry(q.vGateClasses, 4) != class[x>>1] || q.pReprs[4].iRepr != 3 || q.pReprs[4].fProved != headProved || q.pReprs[5].fProved != headProved {
-			t.Fatal("object metadata not remapped/proof weakened", q.pSwitching, q.pReprs)
+		if q.pSwitching[3] != p.pSwitching[c>>1] || vec.Vec_IntEntry(q.VGateClasses, 4) != class[x>>1] || q.PReprs[4].iRepr != 3 || q.PReprs[4].fProved != headProved || q.PReprs[5].fProved != headProved {
+			t.Fatal("object metadata not remapped/proof weakened", q.pSwitching, q.PReprs)
 		}
-		luts, err := aigerLUTs(vec.Vec_IntArray(q.vMapping), q.nObjs)
+		luts, err := aigerLUTs(vec.Vec_IntArray(q.VMapping), q.nObjs)
 		if err != nil || len(luts) != 2 || luts[1].root != 5 || !reflect.DeepEqual(luts[1].fans, []int32{1, 3}) {
 			t.Fatal(err, luts)
 		}
-		if !reflect.DeepEqual(vec.Vec_IntArray(q.vPacking), []int32{1, 2, 4, 5}) {
+		if !reflect.DeepEqual(vec.Vec_IntArray(q.VPacking), []int32{1, 2, 4, 5}) {
 			t.Fatal("packing not remapped")
 		}
 		for assignment := 0; assignment < 8; assignment++ {

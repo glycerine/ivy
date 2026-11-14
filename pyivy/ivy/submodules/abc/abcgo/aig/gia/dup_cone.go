@@ -35,7 +35,7 @@ func Gia_ManDupConeSupp(src *Gia_Man_t, lit int32, ciIDs *Vec_Int_t) *Gia_Man_t 
 	vec.Vec_IntFillExtra(&src.vCopies, int(src.nObjs), -1)
 	out := Gia_ManStart(src.nObjs)
 	out.CopyIdentityFrom(src)
-	if src.pMuxes != nil {
+	if src.PMuxes != nil {
 		out.EnableMuxes()
 	}
 	visited := vec.Vec_IntAlloc(16)

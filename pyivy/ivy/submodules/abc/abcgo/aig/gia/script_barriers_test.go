@@ -105,7 +105,7 @@ func TestScriptChoiceConstruction(t *testing.T) {
 func TestSynch2ChoiceSynthesis(t *testing.T) {
 	for _, light := range []bool{false, true} {
 		p := Gia_ManStart(12)
-		p.pName, p.pSpec = "choice-test", "example"
+		p.pName, p.PSpec = "choice-test", "example"
 		a, b, c := Gia_ManAppendCi(p), Gia_ManAppendCi(p), Gia_ManAppendCi(p)
 		x := Gia_ManAppendAnd(p, a, b^1)
 		Gia_ManAppendCo(p, Gia_ManAppendAnd(p, x, c))
@@ -124,7 +124,7 @@ func TestSynch2ChoiceSynthesis(t *testing.T) {
 		if light {
 			wantCalls = 0
 		}
-		if q == nil || Gia_ManVerifyTwoTruths(p, q) != 1 || calls != wantCalls || q.pName != p.pName || q.pSpec != p.pSpec {
+		if q == nil || Gia_ManVerifyTwoTruths(p, q) != 1 || calls != wantCalls || q.pName != p.pName || q.PSpec != p.PSpec {
 			t.Fatalf("light=%v calls=%d: synthesis changed the graph or metadata", light, calls)
 		}
 	}

@@ -15,8 +15,8 @@ func (p *nfMatcher) outputRequired(index int, arrival, delay int32) int32 {
 		if external > 0 && required <= external {
 			required = external
 		}
-	} else if p.cuts.graph.vOutReqs != nil {
-		external := scl.Scl_Flt2Int(vec.Vec_FltEntry(p.cuts.graph.vOutReqs, index))
+	} else if p.cuts.graph.VOutReqs != nil {
+		external := scl.Scl_Flt2Int(vec.Vec_FltEntry(p.cuts.graph.VOutReqs, index))
 		if external > 0 && required <= external {
 			required = min(2*required, external)
 		}

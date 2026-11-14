@@ -12,7 +12,7 @@ func Gia_ManFramesForCexMin(p *Gia_Man_t, frames int32) *Gia_Man_t {
 		panic("gia: invalid counterexample unrolling")
 	}
 	out := Gia_ManStart(p.nObjs)
-	out.pName, out.pSpec = p.pName, p.pSpec
+	out.pName, out.PSpec = p.pName, p.PSpec
 	Gia_ManHashAlloc(out)
 	mapped := make([]int32, p.nObjs)
 	state := make([]int32, Gia_ManRegNum(p))

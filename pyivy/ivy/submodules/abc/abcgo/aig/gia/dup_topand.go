@@ -6,12 +6,12 @@ import (
 )
 
 func Gia_ManPrintRepr(p *Gia_Man_t) {
-	if len(p.pReprsOld) != int(p.nObjs) || len(p.pReprs) != int(p.nObjs) {
+	if len(p.pReprsOld) != int(p.nObjs) || len(p.PReprs) != int(p.nObjs) {
 		panic("gia: invalid representatives")
 	}
 	for i, repr := range p.pReprsOld {
 		if repr >= 0 {
-			fmt.Printf("%d->%d ", i, p.pReprs[i].iRepr)
+			fmt.Printf("%d->%d ", i, p.PReprs[i].iRepr)
 		}
 	}
 	fmt.Println()

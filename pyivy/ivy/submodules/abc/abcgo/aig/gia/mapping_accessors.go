@@ -5,7 +5,7 @@ func Gia_ObjSimWords(p *Gia_Man_t) int32 {
 	if inputs <= 0 {
 		panic("gia: PI simulation requires primary inputs")
 	}
-	return int32(Vec_WrdSize(p.vSimsPi)) / inputs
+	return int32(Vec_WrdSize(p.VSimsPi)) / inputs
 }
 func giaSimulationSlice(data *Vec_Wrd_t, index, words int32) []word {
 	start, end := int(index*words), int((index+1)*words)
@@ -14,7 +14,7 @@ func giaSimulationSlice(data *Vec_Wrd_t, index, words int32) []word {
 
 // Simulation views borrow exactly one input/object's word block.
 func Gia_ObjSimPi(p *Gia_Man_t, index int32) []word {
-	return giaSimulationSlice(p.vSimsPi, index, Gia_ObjSimWords(p))
+	return giaSimulationSlice(p.VSimsPi, index, Gia_ObjSimWords(p))
 }
 func Gia_ObjSim(p *Gia_Man_t, id int32) []word {
 	return giaSimulationSlice(p.vSims, id, Gia_ObjSimWords(p))
@@ -24,12 +24,12 @@ func Gia_ObjFoffsetId(p *Gia_Man_t, id int32) int32     { return Vec_IntEntry(p.
 func Gia_ObjFoffset(p *Gia_Man_t, obj *Gia_Obj_t) int32 {
 	return Gia_ObjFoffsetId(p, Gia_ObjId(p, obj))
 }
-func Gia_ManHasMapping(p *Gia_Man_t) int32 { return giaBool(p.vMapping != nil) }
+func Gia_ManHasMapping(p *Gia_Man_t) int32 { return giaBool(p.VMapping != nil) }
 func Gia_ObjIsLut(p *Gia_Man_t, id int32) int32 {
-	return giaBool(Vec_IntEntry(p.vMapping, int(id)) != 0)
+	return giaBool(Vec_IntEntry(p.VMapping, int(id)) != 0)
 }
 func Gia_ObjLutSize(p *Gia_Man_t, id int32) int32 {
-	return Vec_IntEntry(p.vMapping, int(Vec_IntEntry(p.vMapping, int(id))))
+	return Vec_IntEntry(p.VMapping, int(Vec_IntEntry(p.VMapping, int(id))))
 }
 
 // giaMappingFanins returns a bounded borrowed record view, excluding its ID.
@@ -40,11 +40,11 @@ func giaMappingFanins(mapping *Vec_Int_t, id int32) []int32 {
 	end := start + count
 	return Vec_IntArray(mapping)[start:end:end]
 }
-func Gia_ObjLutFanins(p *Gia_Man_t, id int32) []int32     { return giaMappingFanins(p.vMapping, id) }
+func Gia_ObjLutFanins(p *Gia_Man_t, id int32) []int32     { return giaMappingFanins(p.VMapping, id) }
 func Gia_ObjLutFanin(p *Gia_Man_t, id, index int32) int32 { return Gia_ObjLutFanins(p, id)[index] }
 func Gia_ObjLutMuxId(p *Gia_Man_t, id int32) int32 {
-	offset := Vec_IntEntry(p.vMapping, int(id))
-	return Vec_IntEntry(p.vMapping, int(offset+1+Gia_ObjLutSize(p, id)))
+	offset := Vec_IntEntry(p.VMapping, int(id))
+	return Vec_IntEntry(p.VMapping, int(offset+1+Gia_ObjLutSize(p, id)))
 }
 func Gia_ObjLutIsMux(p *Gia_Man_t, id int32) int32 { return giaBool(Gia_ObjLutMuxId(p, id) < 0) }
 func Gia_ManHasMapping2(p *Gia_Man_t) int32        { return giaBool(p.vMapping2 != nil) }
@@ -64,30 +64,30 @@ func Gia_ObjLutFanoutNum2(p *Gia_Man_t, id int32) int32 {
 func Gia_ObjLutFanout2(p *Gia_Man_t, id, index int32) int32 {
 	return Vec_IntEntry(Vec_WecEntry(p.vFanouts2, int(id)), int(index))
 }
-func Gia_ManHasCellMapping(p *Gia_Man_t) int32 { return giaBool(p.vCellMapping != nil) }
+func Gia_ManHasCellMapping(p *Gia_Man_t) int32 { return giaBool(p.VCellMapping != nil) }
 func Gia_ObjIsCell(p *Gia_Man_t, lit int32) int32 {
-	return giaBool(Vec_IntEntry(p.vCellMapping, int(lit)) != 0)
+	return giaBool(Vec_IntEntry(p.VCellMapping, int(lit)) != 0)
 }
 func Gia_ObjIsCellInv(p *Gia_Man_t, lit int32) int32 {
-	return giaBool(Vec_IntEntry(p.vCellMapping, int(lit)) == -1)
+	return giaBool(Vec_IntEntry(p.VCellMapping, int(lit)) == -1)
 }
 func Gia_ObjIsCellBuf(p *Gia_Man_t, lit int32) int32 {
-	return giaBool(Vec_IntEntry(p.vCellMapping, int(lit)) == -2)
+	return giaBool(Vec_IntEntry(p.VCellMapping, int(lit)) == -2)
 }
 func Gia_ObjCellSize(p *Gia_Man_t, lit int32) int32 {
-	return Vec_IntEntry(p.vCellMapping, int(Vec_IntEntry(p.vCellMapping, int(lit))))
+	return Vec_IntEntry(p.VCellMapping, int(Vec_IntEntry(p.VCellMapping, int(lit))))
 }
-func Gia_ObjCellFanins(p *Gia_Man_t, lit int32) []int32     { return giaMappingFanins(p.vCellMapping, lit) }
+func Gia_ObjCellFanins(p *Gia_Man_t, lit int32) []int32     { return giaMappingFanins(p.VCellMapping, lit) }
 func Gia_ObjCellFanin(p *Gia_Man_t, lit, index int32) int32 { return Gia_ObjCellFanins(p, lit)[index] }
 func Gia_ObjCellId(p *Gia_Man_t, lit int32) int32 {
-	offset := Vec_IntEntry(p.vCellMapping, int(lit))
-	return Vec_IntEntry(p.vCellMapping, int(offset+1+Gia_ObjCellSize(p, lit)))
+	offset := Vec_IntEntry(p.VCellMapping, int(lit))
+	return Vec_IntEntry(p.VCellMapping, int(offset+1+Gia_ObjCellSize(p, lit)))
 }
 
 // LUT implements the dependency-neutral mapped-network boundary. Returned
 // leaves/truth are independently owned and include the actual output phase.
 func (p *Gia_Man_t) LUT(id int32) (leaves []int32, truth []uint64, ok bool) {
-	if id < 0 || id >= p.nObjs || p.vMapping == nil || Gia_ObjIsLut(p, id) == 0 {
+	if id < 0 || id >= p.nObjs || p.VMapping == nil || Gia_ObjIsLut(p, id) == 0 {
 		return nil, nil, false
 	}
 	leaves = append([]int32(nil), Gia_ObjLutFanins(p, id)...)
@@ -97,7 +97,7 @@ func (p *Gia_Man_t) LUT(id int32) (leaves []int32, truth []uint64, ok bool) {
 
 func Gia_ManLutSizeMax(p *Gia_Man_t) int32 {
 	maximum := int32(-1)
-	if p.vMapping == nil {
+	if p.VMapping == nil {
 		return maximum
 	}
 	for id := int32(1); id < p.nObjs; id++ {

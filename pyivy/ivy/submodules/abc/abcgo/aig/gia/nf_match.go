@@ -158,8 +158,8 @@ func (p *nfMatcher) computeMapping() {
 			var arrival int32
 			if scl.Scl_ConIsRunning() {
 				arrival = scl.Scl_ConGetInArr(ciIndex)
-			} else if p.cuts.graph.vInArrs != nil {
-				arrival = scl.Scl_Flt2Int(vec.Vec_FltEntry(p.cuts.graph.vInArrs, ciIndex))
+			} else if p.cuts.graph.VInArrs != nil {
+				arrival = scl.Scl_Flt2Int(vec.Vec_FltEntry(p.cuts.graph.VInArrs, ciIndex))
 			}
 			ciIndex++
 			p.prepareInput(id, arrival)

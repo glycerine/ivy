@@ -23,7 +23,7 @@ func TestSetMappedDataValidatesBeforeAttaching(t *testing.T) {
 	if err := p.SetMappedData(mapping, packing, configs, ""); err == nil {
 		t.Fatal("accepted missing cell description")
 	}
-	if p.vMapping != nil || p.vPacking != nil || p.vConfigs != nil {
+	if p.VMapping != nil || p.VPacking != nil || p.VConfigs != nil {
 		t.Fatal("failed call changed manager")
 	}
 	if err := p.SetMappedData(mapping, packing, configs, "{ab}"); err != nil {

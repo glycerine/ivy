@@ -7,7 +7,7 @@ import (
 
 func giaEdgeFanins(p *Gia_Man_t, id int32) []int32 {
 	var fanins []int32
-	if p.vMapping != nil && Gia_ObjIsLut(p, id) != 0 {
+	if p.VMapping != nil && Gia_ObjIsLut(p, id) != 0 {
 		fanins = Gia_ObjLutFanins(p, id)
 	} else if p.vMapping2 != nil && Gia_ObjIsLut2(p, id) != 0 {
 		fanins = vec.Vec_IntArray(Gia_ObjLutFanins2(p, id))
@@ -20,7 +20,7 @@ func giaEdgeFanins(p *Gia_Man_t, id int32) []int32 {
 	return fanins
 }
 func giaIsEdgeLut(p *Gia_Man_t, id int32) bool {
-	return p.vMapping != nil && Gia_ObjIsLut(p, id) != 0 || p.vMapping == nil && p.vMapping2 != nil && Gia_ObjIsLut2(p, id) != 0
+	return p.VMapping != nil && Gia_ObjIsLut(p, id) != 0 || p.VMapping == nil && p.vMapping2 != nil && Gia_ObjIsLut2(p, id) != 0
 }
 func Gia_ObjEvalEdgeDelay(p *Gia_Man_t, id int32, delays *Vec_Int_t) int32 {
 	var result int32
@@ -70,13 +70,13 @@ func Gia_ObjComputeEdgeDelay(p *Gia_Man_t, id int32, delays, first, second *Vec_
 	return highest
 }
 func giaWalkEdgeTiming(p *Gia_Man_t, compute bool, useTwo int32) int32 {
-	if p.vMapping == nil && p.vMapping2 == nil {
+	if p.VMapping == nil && p.vMapping2 == nil {
 		panic("gia: missing LUT mapping")
 	}
 	var manager *tim.Tim_Man_t
-	if p.pManTime != nil {
+	if p.PManTime != nil {
 		var ok bool
-		manager, ok = p.pManTime.(*tim.Tim_Man_t)
+		manager, ok = p.PManTime.(*tim.Tim_Man_t)
 		if !ok {
 			panic("gia: invalid timing manager")
 		}
@@ -93,7 +93,7 @@ func giaWalkEdgeTiming(p *Gia_Man_t, compute bool, useTwo int32) int32 {
 			case Gia_ObjIsAnd(obj) != 0:
 				if giaIsEdgeLut(p, id) {
 					if compute {
-						Gia_ObjComputeEdgeDelay(p, id, p.vEdgeDelay, p.vEdge1, p.vEdge2, useTwo)
+						Gia_ObjComputeEdgeDelay(p, id, p.vEdgeDelay, p.VEdge1, p.VEdge2, useTwo)
 					} else {
 						vec.Vec_IntWriteEntry(p.vEdgeDelay, int(id), Gia_ObjEvalEdgeDelay(p, id, p.vEdgeDelay))
 					}
@@ -112,7 +112,7 @@ func giaWalkEdgeTiming(p *Gia_Man_t, compute bool, useTwo int32) int32 {
 				continue
 			}
 			if compute {
-				Gia_ObjComputeEdgeDelay(p, id, p.vEdgeDelay, p.vEdge1, p.vEdge2, useTwo)
+				Gia_ObjComputeEdgeDelay(p, id, p.vEdgeDelay, p.VEdge1, p.VEdge2, useTwo)
 			} else {
 				vec.Vec_IntWriteEntry(p.vEdgeDelay, int(id), Gia_ObjEvalEdgeDelay(p, id, p.vEdgeDelay))
 			}
@@ -126,19 +126,19 @@ func giaWalkEdgeTiming(p *Gia_Man_t, compute bool, useTwo int32) int32 {
 	return result
 }
 func Gia_ManEvalEdgeDelay(p *Gia_Man_t) int32 {
-	if p.vEdge1 == nil || p.vEdge2 == nil {
+	if p.VEdge1 == nil || p.VEdge2 == nil {
 		panic("gia: missing assigned edges")
 	}
 	p.vEdgeDelay = vec.Vec_IntStart(int(p.nObjs))
 	return giaWalkEdgeTiming(p, false, 0)
 }
 func Gia_ManEvalEdgeCount(p *Gia_Man_t) int32 {
-	return int32((vec.Vec_IntCountPositive(p.vEdge1) + vec.Vec_IntCountPositive(p.vEdge2)) / 2)
+	return int32((vec.Vec_IntCountPositive(p.VEdge1) + vec.Vec_IntCountPositive(p.VEdge2)) / 2)
 }
 func Gia_ManComputeEdgeDelay(p *Gia_Man_t, useTwo int32) int32 {
 	p.vEdgeDelay = vec.Vec_IntStart(int(p.nObjs))
-	p.vEdge1 = vec.Vec_IntStart(int(p.nObjs))
-	p.vEdge2 = vec.Vec_IntStart(int(p.nObjs))
+	p.VEdge1 = vec.Vec_IntStart(int(p.nObjs))
+	p.VEdge2 = vec.Vec_IntStart(int(p.nObjs))
 	return giaWalkEdgeTiming(p, true, useTwo)
 }
 
@@ -177,18 +177,18 @@ func Gia_ObjComputeEdgeDelay2(p *Gia_Man_t, id int32, delays, edges1, edges2, fi
 }
 
 func Gia_ManComputeEdgeDelay2(p *Gia_Man_t) int32 {
-	if p.pManTime != nil || p.vMapping == nil && p.vMapping2 == nil {
+	if p.PManTime != nil || p.VMapping == nil && p.vMapping2 == nil {
 		panic("gia: reverse edge assignment requires mapping without timing boxes")
 	}
 	p.vEdgeDelay = vec.Vec_IntStart(int(p.nObjs))
-	p.vEdge1 = vec.Vec_IntStart(int(p.nObjs))
-	p.vEdge2 = vec.Vec_IntStart(int(p.nObjs))
+	p.VEdge1 = vec.Vec_IntStart(int(p.nObjs))
+	p.VEdge2 = vec.Vec_IntStart(int(p.nObjs))
 	first := vec.Vec_IntStart(int(p.nObjs))
 	second := vec.Vec_IntStart(int(p.nObjs))
 	counts := vec.Vec_IntStart(int(p.nObjs))
 	for id := p.nObjs - 1; id >= 0; id-- {
 		if giaIsEdgeLut(p, id) {
-			Gia_ObjComputeEdgeDelay2(p, id, p.vEdgeDelay, p.vEdge1, p.vEdge2, first, second, counts)
+			Gia_ObjComputeEdgeDelay2(p, id, p.vEdgeDelay, p.VEdge1, p.VEdge2, first, second, counts)
 		}
 	}
 	var result int32

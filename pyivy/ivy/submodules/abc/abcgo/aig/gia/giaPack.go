@@ -122,6 +122,6 @@ func Gia_ManLutPacking(p *Gia_Man_t, blockSize, delayRoute, delayDir, verbose in
 		vec.Vec_IntWriteEntry(packing, starts[block], id)
 		starts[block]++
 	}
-	p.vPacking = packing
+	p.VPacking = packing
 	fmt.Printf("Global delay = %d.\n", maxDelay)
 }

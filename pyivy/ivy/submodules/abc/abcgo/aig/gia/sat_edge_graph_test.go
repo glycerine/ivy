@@ -12,17 +12,17 @@ func TestSatEdgeGraph(t *testing.T) {
 	x := Gia_ManAppendAnd(p, a, b)
 	y := Gia_ManAppendAnd(p, x, c)
 	Gia_ManAppendCo(p, y)
-	p.vMapping = vec.Vec_IntStart(int(p.nObjs))
+	p.VMapping = vec.Vec_IntStart(int(p.nObjs))
 	for _, lut := range []struct {
 		id int32
 		in []int32
 	}{{x >> 1, []int32{a >> 1, b >> 1}}, {y >> 1, []int32{x >> 1, c >> 1}}} {
-		vec.Vec_IntWriteEntry(p.vMapping, int(lut.id), int32(vec.Vec_IntSize(p.vMapping)))
-		vec.Vec_IntPush(p.vMapping, int32(len(lut.in)))
+		vec.Vec_IntWriteEntry(p.VMapping, int(lut.id), int32(vec.Vec_IntSize(p.VMapping)))
+		vec.Vec_IntPush(p.VMapping, int32(len(lut.in)))
 		for _, fan := range lut.in {
-			vec.Vec_IntPush(p.vMapping, fan)
+			vec.Vec_IntPush(p.VMapping, fan)
 		}
-		vec.Vec_IntPush(p.vMapping, lut.id)
+		vec.Vec_IntPush(p.VMapping, lut.id)
 	}
 	input := vec.Vec_IntAlloc(2)
 	vec.Vec_IntPushTwo(input, x>>1, y>>1)
@@ -45,17 +45,17 @@ func TestSatEdgeManager(t *testing.T) {
 	x := Gia_ManAppendAnd(p, a, b)
 	y := Gia_ManAppendAnd(p, x, c)
 	Gia_ManAppendCo(p, y)
-	p.vMapping = vec.Vec_IntStart(int(p.nObjs))
+	p.VMapping = vec.Vec_IntStart(int(p.nObjs))
 	for _, lut := range []struct {
 		id int32
 		in []int32
 	}{{x >> 1, []int32{a >> 1, b >> 1}}, {y >> 1, []int32{x >> 1, c >> 1}}} {
-		vec.Vec_IntWriteEntry(p.vMapping, int(lut.id), int32(vec.Vec_IntSize(p.vMapping)))
-		vec.Vec_IntPush(p.vMapping, int32(len(lut.in)))
+		vec.Vec_IntWriteEntry(p.VMapping, int(lut.id), int32(vec.Vec_IntSize(p.VMapping)))
+		vec.Vec_IntPush(p.VMapping, int32(len(lut.in)))
 		for _, fan := range lut.in {
-			vec.Vec_IntPush(p.vMapping, fan)
+			vec.Vec_IntPush(p.VMapping, fan)
 		}
-		vec.Vec_IntPush(p.vMapping, lut.id)
+		vec.Vec_IntPush(p.VMapping, lut.id)
 	}
 	man := Seg_ManAlloc(p, 0)
 	if man.nVars != 1 || man.DelayMax != 2 || vec.Vec_IntEntry(man.vNvars, int(y>>1)) != 2 || man.pSat.NumVars() != 3 {
@@ -84,20 +84,20 @@ func TestSatEdgeComputeDelay(t *testing.T) {
 	x := Gia_ManAppendAnd(p, a, b)
 	y := Gia_ManAppendAnd(p, x, c)
 	Gia_ManAppendCo(p, y)
-	p.vMapping = vec.Vec_IntStart(int(p.nObjs))
+	p.VMapping = vec.Vec_IntStart(int(p.nObjs))
 	for _, lut := range []struct {
 		id int32
 		in []int32
 	}{{x >> 1, []int32{a >> 1, b >> 1}}, {y >> 1, []int32{x >> 1, c >> 1}}} {
-		vec.Vec_IntWriteEntry(p.vMapping, int(lut.id), int32(vec.Vec_IntSize(p.vMapping)))
-		vec.Vec_IntPush(p.vMapping, int32(len(lut.in)))
+		vec.Vec_IntWriteEntry(p.VMapping, int(lut.id), int32(vec.Vec_IntSize(p.VMapping)))
+		vec.Vec_IntPush(p.VMapping, int32(len(lut.in)))
 		for _, fan := range lut.in {
-			vec.Vec_IntPush(p.vMapping, fan)
+			vec.Vec_IntPush(p.VMapping, fan)
 		}
-		vec.Vec_IntPush(p.vMapping, lut.id)
+		vec.Vec_IntPush(p.VMapping, lut.id)
 	}
 	Seg_ManComputeDelay(p, 0, 0, 0, 0)
-	if p.vEdge1 == nil || Gia_ObjCheckEdge(p, x>>1, y>>1) == 0 {
+	if p.VEdge1 == nil || Gia_ObjCheckEdge(p, x>>1, y>>1) == 0 {
 		t.Fatal("expected the edge that minimizes delay")
 	}
 }

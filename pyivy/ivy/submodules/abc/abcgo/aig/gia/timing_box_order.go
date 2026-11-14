@@ -32,7 +32,7 @@ func Gia_ManOrderWithBoxes_rec(p *Gia_Man_t, obj *Gia_Obj_t, nodes *Vec_Int_t) i
 	return 0
 }
 func Gia_ManOrderWithBoxes(p *Gia_Man_t) *Vec_Int_t {
-	manager, ok := p.pManTime.(*tim.Tim_Man_t)
+	manager, ok := p.PManTime.(*tim.Tim_Man_t)
 	if !ok || manager == nil || Gia_ManIsNormalized(p) == 0 {
 		panic("gia: invalid boxed timing manager")
 	}
@@ -97,7 +97,7 @@ func Gia_ManDupUnnormalize(src *Gia_Man_t) *Gia_Man_t {
 	Gia_ManFillValue(src)
 	dst := Gia_ManStart(Gia_ManObjNum(src))
 	dst.CopyIdentityFrom(src)
-	if src.pMuxes != nil {
+	if src.PMuxes != nil {
 		dst.EnableMuxes()
 	}
 	if Gia_ManHasChoices(src) != 0 {
@@ -140,7 +140,7 @@ func Gia_ManDupUnnormalize(src *Gia_Man_t) *Gia_Man_t {
 }
 
 func Gia_ManUpdateTimMan2(p *Gia_Man_t, boxes *Vec_Int_t, diff int32) any {
-	timing := p.pManTime.(*tim.Tim_Man_t)
+	timing := p.PManTime.(*tim.Tim_Man_t)
 	ids := make([]int, 0, vec.Vec_IntSize(boxes))
 	for _, id := range vec.Vec_IntArray(boxes) {
 		ids = append(ids, int(id))

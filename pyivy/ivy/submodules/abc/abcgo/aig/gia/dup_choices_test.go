@@ -9,12 +9,12 @@ func TestDupChoiceLinks(t *testing.T) {
 	alternative := Gia_ManAppendAnd(p, a, c)
 	Gia_ManAppendCo(p, head)
 	p.StartRepresentatives()
-	p.pNexts[head>>1] = alternative >> 1
+	p.PNexts[head>>1] = alternative >> 1
 	out := Gia_ManDupOrderDfsChoices(p)
 	newHead := int32(p.pObjs[head>>1].Value >> 1)
 	newAlt := int32(p.pObjs[alternative>>1].Value >> 1)
-	if newAlt >= newHead || out.pNexts[newHead] != newAlt {
-		t.Fatalf("bad link %d -> %d; expected %d", newHead, out.pNexts[newHead], newAlt)
+	if newAlt >= newHead || out.PNexts[newHead] != newAlt {
+		t.Fatalf("bad link %d -> %d; expected %d", newHead, out.PNexts[newHead], newAlt)
 	}
 	for bits := 0; bits < 8; bits++ {
 		in := []bool{bits&1 != 0, bits&2 != 0, bits&4 != 0}

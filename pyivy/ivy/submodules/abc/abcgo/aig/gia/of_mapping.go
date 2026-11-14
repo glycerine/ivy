@@ -15,8 +15,8 @@ type ofMapper struct {
 func newOfMapper(cuts *ofCutManager) *ofMapper {
 	p := &ofMapper{cuts: cuts, objects: make([]ofMappingObject, len(cuts.sets))}
 	for index, id := range vec.Vec_IntArray(cuts.graph.vCis) {
-		if cuts.graph.vInArrs != nil {
-			p.objects[id].delay = int32(10 * max(0, vec.Vec_FltEntry(cuts.graph.vInArrs, index)))
+		if cuts.graph.VInArrs != nil {
+			p.objects[id].delay = int32(10 * max(0, vec.Vec_FltEntry(cuts.graph.VInArrs, index)))
 			p.objects[id].delay2 = p.objects[id].delay
 		}
 	}

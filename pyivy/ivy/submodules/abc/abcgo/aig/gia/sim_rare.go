@@ -7,9 +7,9 @@ import (
 )
 
 func giaSimWithPatterns(p *Gia_Man_t, patterns *Vec_Wrd_t) *Vec_Wrd_t {
-	old := p.vSimsPi
-	p.vSimsPi = patterns
-	defer func() { p.vSimsPi = old }()
+	old := p.VSimsPi
+	p.VSimsPi = patterns
+	defer func() { p.VSimsPi = old }()
 	return Gia_ManSimPatSim(p)
 }
 func Gia_SimCollectRare(p *Gia_Man_t, patterns *Vec_Wrd_t, limit int32) *Vec_Int_t {

@@ -77,10 +77,10 @@ func lfRequiredDelay(p *Lf_Man_t, selected bool) int32 {
 	return delay
 }
 func lfTimedRequired(p *Lf_Man_t, delay int32) *tim.Tim_Man_t {
-	if p.pGia.pManTime == nil {
+	if p.pGia.PManTime == nil {
 		return nil
 	}
-	manager, ok := p.pGia.pManTime.(*tim.Tim_Man_t)
+	manager, ok := p.pGia.PManTime.(*tim.Tim_Man_t)
 	if !ok {
 		panic("LF invalid timing manager")
 	}

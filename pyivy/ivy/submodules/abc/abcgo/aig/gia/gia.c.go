@@ -85,7 +85,7 @@ func Gia_ManCofPisVars(p *Gia_Man_t, nVars int32) *Gia_Man_t {
 	}
 	out := Gia_ManStart(1000)
 	out.pName = p.pName
-	out.pSpec = p.pSpec
+	out.PSpec = p.PSpec
 	for i := int32(0); i < Gia_ManPiNum(p); i++ {
 		Gia_ManAppendCi(out)
 	}
@@ -134,7 +134,7 @@ func Gia_ManStructExperiment(p *Gia_Man_t) {
 				values[0], values[match] = values[match], values[0]
 				break
 			}
-			candidate.pCexComb = nil
+			candidate.PCexComb = nil
 		}
 		fmt.Printf("\nOut %6d : ", i)
 		if match == Vec_PtrSize(graphs) {

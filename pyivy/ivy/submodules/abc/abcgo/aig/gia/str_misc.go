@@ -3,7 +3,7 @@ package gia
 import "fmt"
 
 func Gia_ManDupMuxesNoHash(p *Gia_Man_t) *Gia_Man_t {
-	if p.pMuxes != nil {
+	if p.PMuxes != nil {
 		panic("gia: expected expanded muxes")
 	}
 	p.Refs = nil
@@ -15,7 +15,7 @@ func Gia_ManDupMuxesNoHash(p *Gia_Man_t) *Gia_Man_t {
 		}
 	}
 	dst := Gia_ManStart(p.nObjs)
-	dst.pName, dst.pSpec = p.pName, p.pSpec
+	dst.pName, dst.PSpec = p.pName, p.PSpec
 	dst.EnableMuxes()
 	Gia_ManFillValue(p)
 	Gia_ManConst0(p).Value = 0

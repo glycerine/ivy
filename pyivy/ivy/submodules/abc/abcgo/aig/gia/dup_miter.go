@@ -184,11 +184,11 @@ func giaTransformPairs(src *Gia_Man_t, mode int) *Gia_Man_t {
 }
 func Gia_ManTransformMiter(src *Gia_Man_t) *Gia_Man_t {
 	out := giaTransformPairs(src, 0)
-	if src.vNamesIn != nil {
-		out.vNamesIn = vec.Vec_PtrDupStr(src.vNamesIn)
+	if src.VNamesIn != nil {
+		out.VNamesIn = vec.Vec_PtrDupStr(src.VNamesIn)
 	}
-	if src.vNamesOut != nil {
-		out.vNamesOut = Gia_ManMiterNames(src.vNamesOut, Gia_ManPoNum(src))
+	if src.VNamesOut != nil {
+		out.VNamesOut = Gia_ManMiterNames(src.VNamesOut, Gia_ManPoNum(src))
 	}
 	return out
 }

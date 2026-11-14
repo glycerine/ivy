@@ -6,7 +6,7 @@ func Gia_ManReprToAigRepr(pAig *aig.Graph, pGia *Gia_Man_t) {
 	if aig.Aig_ManHasReprs(pAig) {
 		panic("gia: AIG representative storage already initialized")
 	}
-	if pGia.pReprs == nil {
+	if pGia.PReprs == nil {
 		panic("gia: missing GIA representative storage")
 	}
 	for id := 0; id < int(aig.Aig_ManObjNumMax(pAig)); id++ {
@@ -34,7 +34,7 @@ func Gia_ManReprToAigRepr2(pAig *aig.Graph, pGia *Gia_Man_t) {
 	if aig.Aig_ManHasReprs(pAig) {
 		panic("gia: AIG representative storage already initialized")
 	}
-	if pGia.pReprs == nil {
+	if pGia.PReprs == nil {
 		panic("gia: missing GIA representative storage")
 	}
 	aig.Aig_ManReprStart(pAig, aig.Aig_ManObjNumMax(pAig))
@@ -48,19 +48,19 @@ func Gia_ManReprToAigRepr2(pAig *aig.Graph, pGia *Gia_Man_t) {
 	}
 }
 func giaPrepareReprImport(p *Gia_Man_t) {
-	if p.pReprs != nil {
+	if p.PReprs != nil {
 		panic("gia: representative storage already initialized")
 	}
-	p.pReprs = make([]Gia_Rpr_t, p.nObjs)
-	for i := range p.pReprs {
-		p.pReprs[i].iRepr = GIA_VOID
+	p.PReprs = make([]Gia_Rpr_t, p.nObjs)
+	for i := range p.PReprs {
+		p.PReprs[i].iRepr = GIA_VOID
 	}
 }
 func Gia_ManReprFromAigRepr(pAig *aig.Graph, pGia *Gia_Man_t) {
 	if !aig.Aig_ManHasReprs(pAig) {
 		panic("gia: missing AIG representative storage")
 	}
-	if pGia.pReprs != nil {
+	if pGia.PReprs != nil {
 		panic("gia: representative storage already initialized")
 	}
 	if Gia_ManObjNum(pGia)-Gia_ManCoNum(pGia) != aig.Aig_ManObjNum(pAig)-aig.Aig_ManCoNum(pAig) {
@@ -93,13 +93,13 @@ func Gia_ManReprFromAigRepr(pAig *aig.Graph, pGia *Gia_Man_t) {
 		}
 		Gia_ObjSetRepr(pGia, int32(mapped), int32(representative))
 	}
-	pGia.pNexts = Gia_ManDeriveNexts(pGia)
+	pGia.PNexts = Gia_ManDeriveNexts(pGia)
 }
 func Gia_ManReprFromAigRepr2(pAig *aig.Graph, pGia *Gia_Man_t) {
 	if !aig.Aig_ManHasReprs(pAig) {
 		panic("gia: missing AIG representative storage")
 	}
-	if pGia.pReprs != nil {
+	if pGia.PReprs != nil {
 		panic("gia: representative storage already initialized")
 	}
 	if Gia_ManObjNum(pGia)-Gia_ManCoNum(pGia) != aig.Aig_ManObjNum(pAig)-aig.Aig_ManCoNum(pAig) {
@@ -121,5 +121,5 @@ func Gia_ManReprFromAigRepr2(pAig *aig.Graph, pGia *Gia_Man_t) {
 		}
 		Gia_ObjSetRepr(pGia, int32(copied>>1), int32(reprCopy>>1))
 	}
-	pGia.pNexts = Gia_ManDeriveNexts(pGia)
+	pGia.PNexts = Gia_ManDeriveNexts(pGia)
 }

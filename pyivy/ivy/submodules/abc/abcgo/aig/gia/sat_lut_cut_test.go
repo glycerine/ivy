@@ -247,7 +247,7 @@ func TestSblSearchWindow(t *testing.T) {
 		roots = append(roots, current)
 	}
 	Gia_ManAppendCo(g, current)
-	g.vMapping = vec.Vec_IntStart(int(g.nObjs))
+	g.VMapping = vec.Vec_IntStart(int(g.nObjs))
 	for i, lit := range roots {
 		id := lit >> 1
 		left := inputs[0] >> 1
@@ -255,11 +255,11 @@ func TestSblSearchWindow(t *testing.T) {
 			left = roots[i-1] >> 1
 		}
 		right := inputs[i+1] >> 1
-		vec.Vec_IntWriteEntry(g.vMapping, int(id), int32(vec.Vec_IntSize(g.vMapping)))
-		vec.Vec_IntPush(g.vMapping, 2)
-		vec.Vec_IntPush(g.vMapping, left)
-		vec.Vec_IntPush(g.vMapping, right)
-		vec.Vec_IntPush(g.vMapping, id)
+		vec.Vec_IntWriteEntry(g.VMapping, int(id), int32(vec.Vec_IntSize(g.VMapping)))
+		vec.Vec_IntPush(g.VMapping, 2)
+		vec.Vec_IntPush(g.VMapping, left)
+		vec.Vec_IntPush(g.VMapping, right)
+		vec.Vec_IntPush(g.VMapping, id)
 	}
 	Gia_ManComputeOneWinStart(g, 16, 0)
 	p := Sbl_ManAlloc(g, 16)
@@ -285,22 +285,22 @@ func TestGiaManLutSat(t *testing.T) {
 		roots = append(roots, current)
 	}
 	Gia_ManAppendCo(g, current)
-	g.vMapping = vec.Vec_IntStart(int(g.nObjs))
+	g.VMapping = vec.Vec_IntStart(int(g.nObjs))
 	for i, lit := range roots {
 		id := lit >> 1
 		left := inputs[0] >> 1
 		if i > 0 {
 			left = roots[i-1] >> 1
 		}
-		vec.Vec_IntWriteEntry(g.vMapping, int(id), int32(vec.Vec_IntSize(g.vMapping)))
-		vec.Vec_IntPush(g.vMapping, 2)
-		vec.Vec_IntPush(g.vMapping, left)
-		vec.Vec_IntPush(g.vMapping, inputs[i+1]>>1)
-		vec.Vec_IntPush(g.vMapping, id)
+		vec.Vec_IntWriteEntry(g.VMapping, int(id), int32(vec.Vec_IntSize(g.VMapping)))
+		vec.Vec_IntPush(g.VMapping, 2)
+		vec.Vec_IntPush(g.VMapping, left)
+		vec.Vec_IntPush(g.VMapping, inputs[i+1]>>1)
+		vec.Vec_IntPush(g.VMapping, id)
 	}
 	before := Gia_ManLutNum(g)
 	Gia_ManLutSat(g, 4, 16, 1, 0, 0, 0, 0, 0, 0, 0)
-	if g.vMapping == nil || g.vMapping2 != nil || Gia_ManLutNum(g) >= before {
+	if g.VMapping == nil || g.vMapping2 != nil || Gia_ManLutNum(g) >= before {
 		t.Fatalf("mapping did not improve: %d -> %d", before, Gia_ManLutNum(g))
 	}
 }

@@ -51,7 +51,7 @@ func TestFrameBridgeGraphAndWitnessOwnership(t *testing.T) {
 		t.Fatal(err)
 	}
 	classes[0] = 7
-	if Vec_IntEntry(q.vFlopClasses, 0) != 4 {
+	if Vec_IntEntry(q.VFlopClasses, 0) != 4 {
 		t.Fatal("classes alias input")
 	}
 	bits := []int32{0, 1, 0}

@@ -10,10 +10,10 @@ func TestHcdEquivToChoices(t *testing.T) {
 	z := Gia_ManAppendAnd(p, y, b)
 	Gia_ManAppendCo(p, z)
 	Gia_ManAppendCo(p, z)
-	p.pReprs = make([]Gia_Rpr_t, p.nObjs)
-	p.pNexts = make([]int32, p.nObjs)
-	for i := range p.pReprs {
-		p.pReprs[i].iRepr = GIA_VOID
+	p.PReprs = make([]Gia_Rpr_t, p.nObjs)
+	p.PNexts = make([]int32, p.nObjs)
+	for i := range p.PReprs {
+		p.PReprs[i].iRepr = GIA_VOID
 	}
 	// No equivalence classes: snapshot reduction must preserve the first output.
 	q := Hcd_ManEquivToChoices(p, 2)
@@ -38,10 +38,10 @@ func TestHcdEquivToChoicesKeepsAlternative(t *testing.T) {
 	second := Gia_ManAppendAnd(p, y, b)
 	Gia_ManAppendCo(p, first)
 	Gia_ManAppendCo(p, second)
-	p.pReprs = make([]Gia_Rpr_t, p.nObjs)
-	p.pNexts = make([]int32, p.nObjs)
-	for i := range p.pReprs {
-		p.pReprs[i].iRepr = GIA_VOID
+	p.PReprs = make([]Gia_Rpr_t, p.nObjs)
+	p.PNexts = make([]int32, p.nObjs)
+	for i := range p.PReprs {
+		p.PReprs[i].iRepr = GIA_VOID
 	}
 	Gia_ObjSetRepr(p, second>>1, first>>1)
 	Gia_ObjSetNext(p, first>>1, second>>1)

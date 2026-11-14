@@ -3,10 +3,10 @@ package gia
 import "fmt"
 
 func Gia_ManPrintPackingStats(p *Gia_Man_t) {
-	if p.vPacking == nil {
+	if p.VPacking == nil {
 		return
 	}
-	data := Vec_IntArray(p.vPacking)
+	data := Vec_IntArray(p.VPacking)
 	if len(data) == 0 {
 		panic("gia: empty packing")
 	}

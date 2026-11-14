@@ -16,7 +16,7 @@ func Gia_ManCheckTopoOrder_rec(p *Gia_Man_t, obj *Gia_Obj_t) int32 {
 	if Gia_ManCheckTopoOrder_rec(p, Gia_ObjFanin0(obj)) == 0 || Gia_ManCheckTopoOrder_rec(p, Gia_ObjFanin1(obj)) == 0 {
 		return 0
 	}
-	if p.pReprs != nil {
+	if p.PReprs != nil {
 		repr := Gia_ObjReprObj(p, obj.id)
 		if repr != nil && repr.Value != 0 {
 			return 0
@@ -46,7 +46,7 @@ func Gia_ManEquivCountLitsAll(p *Gia_Man_t) int32 {
 	return n
 }
 func Gia_ManEquivCountClasses(p *Gia_Man_t) int32 {
-	if p.pReprs == nil {
+	if p.PReprs == nil {
 		return 0
 	}
 	var n int32
@@ -83,7 +83,7 @@ func Gia_ManPrintStatsClasses(p *Gia_Man_t) {
 	fmt.Printf("cst =%3d  cls =%6d  lit =%8d\n", constants, heads, lits)
 }
 func Gia_ManEquivCountLits(p *Gia_Man_t) int32 {
-	if p.pReprs == nil || p.pNexts == nil {
+	if p.PReprs == nil || p.PNexts == nil {
 		return 0
 	}
 	_, _, _, _, lits := giaEquivStats(p)
@@ -91,7 +91,7 @@ func Gia_ManEquivCountLits(p *Gia_Man_t) int32 {
 }
 func Gia_ManEquivCountOne(p *Gia_Man_t, id int32) int32 {
 	n := int32(1)
-	for next := p.pNexts[id]; next != 0; next = p.pNexts[next] {
+	for next := p.PNexts[id]; next != 0; next = p.PNexts[next] {
 		if Gia_ObjRepr(p, next) != id {
 			panic("gia: inconsistent equivalence class")
 		}
@@ -101,9 +101,9 @@ func Gia_ManEquivCountOne(p *Gia_Man_t, id int32) int32 {
 }
 func Gia_ManEquivPrintOne(p *Gia_Man_t, id, counter int32) {
 	fmt.Printf("Class %4d :  Num = %2d  {", counter, Gia_ManEquivCountOne(p, id))
-	for member := id; member != 0; member = p.pNexts[member] {
+	for member := id; member != 0; member = p.PNexts[member] {
 		fmt.Printf(" %d", member)
-		repr := p.pReprs[member]
+		repr := p.PReprs[member]
 		if repr.fColorA != 0 || repr.fColorB != 0 {
 			fmt.Printf(" <%d%d>", repr.fColorA, repr.fColorB)
 		}
@@ -145,7 +145,7 @@ func Gia_ManChoiceMinLevel_rec(p *Gia_Man_t, id, dive int32, mapping *Vec_Int_t)
 			head = id
 		}
 		best, level := int32(-1), int32(embInfinity)
-		for member := head; member != 0; member = p.pNexts[member] {
+		for member := head; member != 0; member = p.PNexts[member] {
 			current := Gia_ManChoiceMinLevel_rec(p, member, 0, mapping)
 			if current < level {
 				best, level = member, current
@@ -155,7 +155,7 @@ func Gia_ManChoiceMinLevel_rec(p *Gia_Man_t, id, dive int32, mapping *Vec_Int_t)
 			panic("gia: invalid choice level")
 		}
 		vec.Vec_IntWriteEntry(mapping, int(head), best)
-		for member := head; member != 0; member = p.pNexts[member] {
+		for member := head; member != 0; member = p.PNexts[member] {
 			Gia_ObjSetLevelId(p, member, level)
 		}
 		return level

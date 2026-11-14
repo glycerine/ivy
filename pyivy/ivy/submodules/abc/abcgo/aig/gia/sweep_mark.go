@@ -17,7 +17,7 @@ func Gia_ManMarkSeqGiaWithBoxes_rec(p *Gia_Man_t, obj *Gia_Obj_t, roots *Vec_Int
 	if Gia_ObjIsCi(obj) == 0 {
 		panic("gia: invalid boxed cone")
 	}
-	timing := p.pManTime.(*tim.Tim_Man_t)
+	timing := p.PManTime.(*tim.Tim_Man_t)
 	realCis := int32(tim.Tim_ManPiNum(timing))
 	if Gia_ObjCioId(obj) < realCis {
 		regs := Gia_ManRegBoxNum(p)
@@ -43,7 +43,7 @@ func Gia_ManMarkSeqGiaWithBoxes_rec(p *Gia_Man_t, obj *Gia_Obj_t, roots *Vec_Int
 	}
 }
 func Gia_ManMarkSeqGiaWithBoxes(p *Gia_Man_t, sequential int32) {
-	timing := p.pManTime.(*tim.Tim_Man_t)
+	timing := p.PManTime.(*tim.Tim_Man_t)
 	realCis, realCos := int32(tim.Tim_ManPiNum(timing)), int32(tim.Tim_ManPoNum(timing))
 	regs := int32(0)
 	if sequential != 0 {

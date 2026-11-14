@@ -26,7 +26,7 @@ func Gia_ObjTempRepr(p *Gia_Man_t, id, level int32) *Gia_Obj_t {
 func Gia_GenerateReducedLevel(p *Gia_Man_t, level int32, roots **Vec_Ptr_t) *Gia_Man_t {
 	*roots = Vec_PtrAlloc(100)
 	result := Gia_ManStart(p.nObjs)
-	result.pName, result.pSpec = p.pName, p.pSpec
+	result.pName, result.PSpec = p.pName, p.PSpec
 	Gia_ManConst0(p).Value = 0
 	for i := int32(0); i < Gia_ManCiNum(p); i++ {
 		Gia_ManCi(p, i).Value = uint32(Gia_ManAppendCi(result))

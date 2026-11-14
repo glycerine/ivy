@@ -26,7 +26,7 @@ func Jf_ManDeriveMapping(p *Jf_Man_t) {
 		}
 		vec.Vec_IntPush(mapping, obj.id)
 	}
-	p.pGia.vMapping = mapping
+	p.pGia.VMapping = mapping
 }
 func Jf_ManSetDefaultPars(p *Jf_Par_t) {
 	*p = Jf_Par_t{NLutSize: 6, NCutNum: 8, NRounds: 1, NVerbLimit: 5, DelayTarget: -1, FAreaOnly: 1, FOptEdge: 1, NLutSizeMax: JF_LEAF_MAX, NCutNumMax: JF_CUT_MAX}
@@ -50,7 +50,7 @@ func Jf_ManDeriveMappingGia(p *Jf_Man_t) *Gia_Man_t {
 	g := p.pGia
 	result := Gia_ManStart(g.nObjs)
 	result.pName = g.pName
-	result.pSpec = g.pSpec
+	result.PSpec = g.PSpec
 	copies := make([]int32, g.nObjs)
 	for i := range copies {
 		copies[i] = -1
@@ -154,7 +154,7 @@ func Jf_ManDeriveMappingGia(p *Jf_Man_t) *Gia_Man_t {
 	for _, v := range records {
 		vec.Vec_IntPush(mapping, v)
 	}
-	result.vMapping = mapping
+	result.VMapping = mapping
 	Gia_ManSetRegNum(result, Gia_ManRegNum(g))
 	if p.pPars.FGenCnf != 0 {
 		if p.pPars.fCnfObjIds != 0 {

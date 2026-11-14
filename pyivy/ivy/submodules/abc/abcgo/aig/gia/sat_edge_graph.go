@@ -23,7 +23,7 @@ func Seg_ManCountIntEdges(p *Gia_Man_t, polars, skip *Vec_Int_t, maxFanouts int3
 				continue
 			}
 			index := int32(vec.Vec_IntSize(edges) / 2)
-			if p.vEdge1 != nil && Gia_ObjCheckEdge(p, fan, id) != 0 {
+			if p.VEdge1 != nil && Gia_ObjCheckEdge(p, fan, id) != 0 {
 				vec.Vec_IntPush(polars, index)
 			}
 			if maxFanouts != 0 && Gia_ObjLutRefNumId(p, fan) >= maxFanouts {

@@ -13,11 +13,11 @@ func TestMappingStatsAppend(t *testing.T) {
 	gate := Gia_ManAppendAnd(p, a, b)
 	Gia_ManAppendCo(p, gate)
 	p.SetIdentity("mapping_stats", "")
-	p.vMapping = Vec_IntStart(int(p.nObjs))
+	p.VMapping = Vec_IntStart(int(p.nObjs))
 	id := gate >> 1
-	Vec_IntWriteEntry(p.vMapping, int(id), int32(Vec_IntSize(p.vMapping)))
+	Vec_IntWriteEntry(p.VMapping, int(id), int32(Vec_IntSize(p.VMapping)))
 	for _, x := range []int32{2, a >> 1, b >> 1, id} {
-		Vec_IntPush(p.vMapping, x)
+		Vec_IntPush(p.VMapping, x)
 	}
 	path := filepath.Join(t.TempDir(), "mapping.txt")
 	Gia_ManPrintMappingStats(p, path)
@@ -37,10 +37,10 @@ func TestMappingMuxDataFaninCount(t *testing.T) {
 	mux := Gia_ManAppendMux(p, control, a, b)
 	Gia_ManAppendCo(p, mux)
 	id := mux >> 1
-	p.vMapping = Vec_IntStart(int(p.nObjs))
-	Vec_IntWriteEntry(p.vMapping, int(id), int32(Vec_IntSize(p.vMapping)))
+	p.VMapping = Vec_IntStart(int(p.nObjs))
+	Vec_IntWriteEntry(p.VMapping, int(id), int32(Vec_IntSize(p.VMapping)))
 	for _, x := range []int32{3, control >> 1, a >> 1, b >> 1, -id} {
-		Vec_IntPush(p.vMapping, x)
+		Vec_IntPush(p.VMapping, x)
 	}
 	var fanins [3]int32
 	Gia_ManPrintGetMuxFanins(p, Gia_ManObj(p, id), fanins[:])

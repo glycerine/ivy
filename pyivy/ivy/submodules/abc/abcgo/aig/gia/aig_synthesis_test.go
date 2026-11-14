@@ -10,15 +10,15 @@ func TestDarCompressionRealBridgeAndMetadataMove(t *testing.T) {
 	root := Gia_ManAppendOr(p, nested, c)
 	Gia_ManAppendCo(p, root)
 	p.SetIdentity("compress-test", "compress.aig")
-	p.vNamesIn = Vec_PtrAlloc(3)
+	p.VNamesIn = Vec_PtrAlloc(3)
 	for _, name := range []string{"a", "b", "c"} {
-		Vec_PtrPush(p.vNamesIn, name)
+		Vec_PtrPush(p.VNamesIn, name)
 	}
 	out, err := Gia_ManCompress2Result(p, true, false)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if out.NetworkName() != "compress-test" || out.NetworkSpec() != "compress.aig" || p.vNamesIn != nil || len(out.InputNames()) != 3 {
+	if out.NetworkName() != "compress-test" || out.NetworkSpec() != "compress.aig" || p.VNamesIn != nil || len(out.InputNames()) != 3 {
 		t.Fatal("compression metadata ownership")
 	}
 	for mask := 0; mask < 8; mask++ {
@@ -76,7 +76,7 @@ func TestSequentialCleanupClassBridge(t *testing.T) {
 	Gia_ManAppendCo(p, input)
 	Gia_ManSetRegNum(p, 2)
 	Gia_ManSeqCleanupClasses(p, 1, 1, 0)
-	if p.pReprs == nil || Gia_ObjReprSelf(p, first>>1) != Gia_ObjReprSelf(p, second>>1) || p.nRegs != 2 {
+	if p.PReprs == nil || Gia_ObjReprSelf(p, first>>1) != Gia_ObjReprSelf(p, second>>1) || p.nRegs != 2 {
 		t.Fatal("sequential representatives not imported")
 	}
 }

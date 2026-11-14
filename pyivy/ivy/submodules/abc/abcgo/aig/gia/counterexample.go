@@ -19,11 +19,11 @@ func (p *Gia_Man_t) SetCombinationalCounterexample(inputs []bool, output int) er
 }
 
 // CombinationalCounterexample returns borrowed model storage.
-func (p *Gia_Man_t) CombinationalCounterexample() *util.Abc_Cex_t { return p.pCexComb }
-func (p *Gia_Man_t) ClearCombinationalCounterexample()            { p.pCexComb = nil }
+func (p *Gia_Man_t) CombinationalCounterexample() *util.Abc_Cex_t { return p.PCexComb }
+func (p *Gia_Man_t) ClearCombinationalCounterexample()            { p.PCexComb = nil }
 func (p *Gia_Man_t) TakeCombinationalCounterexample() *util.Abc_Cex_t {
-	model := p.pCexComb
-	p.pCexComb = nil
+	model := p.PCexComb
+	p.PCexComb = nil
 	return model
 }
 

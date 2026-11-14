@@ -19,16 +19,16 @@ func TestLutPinTimingAndRequired(t *testing.T) {
 	a, b := Gia_ManAppendCi(p), Gia_ManAppendCi(p)
 	x := Gia_ManAppendAnd(p, a, b)
 	Gia_ManAppendCo(p, x)
-	p.vMapping = vec.Vec_IntStart(int(p.nObjs))
-	vec.Vec_IntWriteEntry(p.vMapping, int(x>>1), int32(p.nObjs))
+	p.VMapping = vec.Vec_IntStart(int(p.nObjs))
+	vec.Vec_IntWriteEntry(p.VMapping, int(x>>1), int32(p.nObjs))
 	for _, v := range []int32{2, a >> 1, b >> 1, x >> 1} {
-		vec.Vec_IntPush(p.vMapping, v)
+		vec.Vec_IntPush(p.VMapping, v)
 	}
 	Gia_ManTimeStart(p)
 	defer Gia_ManTimeStop(p)
 	Gia_ObjSetTimeArrival(p, a>>1, 1)
 	Gia_ObjSetTimeArrival(p, b>>1, 3)
-	p.pLutLib = testPinTiming{}
+	p.PLutLib = testPinTiming{}
 	if Gia_ObjComputeArrival(p, x>>1, 1) != 5 || Gia_ObjComputeArrival(p, x>>1, 0) != 7 {
 		t.Fatal("incorrect LUT arrival")
 	}

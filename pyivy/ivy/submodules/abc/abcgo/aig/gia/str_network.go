@@ -114,11 +114,11 @@ func Str_NtkPrintGroups(p *Str_Ntk_t) {
 	fmt.Println()
 }
 func Str_NtkToGia(original *Gia_Man_t, p *Str_Ntk_t) *Gia_Man_t {
-	if original.pMuxes != nil {
+	if original.PMuxes != nil {
 		panic("gia: expected expanded muxes")
 	}
 	dst := Gia_ManStart(3 * original.nObjs / 2)
-	dst.pName, dst.pSpec = original.pName, original.pSpec
+	dst.pName, dst.PSpec = original.pName, original.PSpec
 	Gia_ManHashStart(dst)
 	for id := int32(0); id < p.nObjs; id++ {
 		obj := Str_NtkObj(p, id)

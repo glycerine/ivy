@@ -32,7 +32,7 @@ func Gia_ManUnrollInit(p *Gia_Man_t, nFrames int32) *Gia_Man_t {
 	vec.Vec_IntFill(&p.vCopies, int(nFrames*p.nObjs), -1)
 	q := Gia_ManStart(nFrames * p.nObjs)
 	q.pName = p.pName
-	q.pSpec = p.pSpec
+	q.PSpec = p.PSpec
 	Gia_ManHashAlloc(q)
 	for i := int32(0); i < p.nRegs; i++ {
 		Gia_ObjSetCopyF(p, 0, Gia_ManRo(p, i), 0)
@@ -78,7 +78,7 @@ func Gia_ManUnrollAndCofactor(p *Gia_Man_t, nFrames, limit, verbose int32) *Gia_
 func Gia_ManRemoveEnables2(p *Gia_Man_t) *Gia_Man_t {
 	q := Gia_ManStart(p.nObjs)
 	q.pName = p.pName
-	q.pSpec = p.pSpec
+	q.PSpec = p.PSpec
 	Gia_ManHashAlloc(q)
 	Gia_ManFillValue(p)
 	Gia_ObjSetValue(Gia_ManConst0(p), 0)
@@ -201,7 +201,7 @@ func Gia_ManRemoveEnables(p *Gia_Man_t) *Gia_Man_t {
 	fmt.Printf("Detected %d classes.\n", count)
 	q := Gia_ManStart(p.nObjs)
 	q.pName = p.pName
-	q.pSpec = p.pSpec
+	q.PSpec = p.PSpec
 	Gia_ObjSetValue(Gia_ManConst0(p), 0)
 	for _, obj := range p.pObjs[1:] {
 		switch {
@@ -224,6 +224,6 @@ func Gia_ManRemoveEnables(p *Gia_Man_t) *Gia_Man_t {
 	Gia_ManSetRegNum(q, p.nRegs)
 	result := Gia_ManCleanup(q)
 	Gia_ManStop(q)
-	result.vFlopClasses = classes
+	result.VFlopClasses = classes
 	return result
 }

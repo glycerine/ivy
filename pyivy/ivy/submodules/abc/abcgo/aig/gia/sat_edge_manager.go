@@ -21,7 +21,7 @@ func Seg_ManCountIntLevels(p *Seg_Man_t, first int32) int32 {
 	g := p.pGia
 	vec.Vec_IntFill(p.vFirsts, int(g.nObjs), -1)
 	vec.Vec_IntFill(p.vNvars, int(g.nObjs), 0)
-	if g.pManTime != nil {
+	if g.PManTime != nil {
 		p.DelayMax = Gia_ManLutLevelWithBoxes(g)
 		p.pLevels = append(p.pLevels[:0], vec.Vec_IntArray(g.vLevels)...)
 		g.vLevels = nil

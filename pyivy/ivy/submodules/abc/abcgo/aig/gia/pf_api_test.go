@@ -28,7 +28,7 @@ GATE and2 2 O=a*b; PIN * NONINV 1 999 1 0 1 0
 	var pars Jf_Par_t
 	Pf_ManSetDefaultPars(&pars)
 	duplicate := Pf_ManPerformMapping(g, &pars)
-	if duplicate == nil || duplicate == g || duplicate.nObjs != g.nObjs || duplicate.vCellMapping != nil {
+	if duplicate == nil || duplicate == g || duplicate.nObjs != g.nObjs || duplicate.VCellMapping != nil {
 		t.Fatal("Pf result does not match C fallback")
 	}
 }

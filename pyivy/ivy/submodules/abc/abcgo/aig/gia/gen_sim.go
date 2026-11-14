@@ -2,11 +2,11 @@ package gia
 
 // Gia_ManObjSim returns the packed simulation words owned by an object.
 func Gia_ManObjSim(p *Gia_Man_t, id int32) []word {
-	if id < 0 || id >= p.nObjs || p.nSimWords < 0 || p.vSims == nil {
+	if id < 0 || id >= p.nObjs || p.NSimWords < 0 || p.vSims == nil {
 		panic("gia: invalid simulation object")
 	}
-	start := int(id * p.nSimWords)
-	end := start + int(p.nSimWords)
+	start := int(id * p.NSimWords)
+	end := start + int(p.NSimWords)
 	return Vec_WrdArray(p.vSims)[start:end:end]
 }
 
@@ -49,7 +49,7 @@ func giaSimWords(p *Gia_Man_t, nWords int32, inputs *Vec_Wrd_t) int32 {
 	if nWords < 0 {
 		panic("gia: negative simulation word count")
 	}
-	p.nSimWords = nWords
+	p.NSimWords = nWords
 	p.vSims = Vec_WrdStart(int(p.nObjs) * int(nWords))
 	if inputs != nil {
 		if Vec_WrdSize(inputs) != int(Gia_ManCiNum(p)*nWords) {

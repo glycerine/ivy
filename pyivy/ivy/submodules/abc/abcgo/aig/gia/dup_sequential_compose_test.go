@@ -74,7 +74,7 @@ func TestDupFlopClass(t *testing.T) {
 	Gia_ManAppendCo(p, a)
 	Gia_ManAppendCo(p, r0)
 	Gia_ManSetRegNum(p, 2)
-	p.vFlopClasses = permutation(3, 5)
+	p.VFlopClasses = permutation(3, 5)
 	out := Gia_ManDupFlopClass(p, 5)
 	if Gia_ManPiNum(out) != 2 || Gia_ManRegNum(out) != 1 || Gia_ManPoNum(out) != 2 {
 		t.Fatal("class interface")

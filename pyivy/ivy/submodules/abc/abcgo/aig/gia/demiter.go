@@ -221,7 +221,7 @@ func Gia_ManDupHalfSeq(src *Gia_Man_t, second int32) *Gia_Man_t {
 	Gia_ManFillValue(src)
 	out := Gia_ManStart(src.nObjs)
 	out.CopyIdentityFrom(src)
-	if src.pMuxes != nil {
+	if src.PMuxes != nil {
 		out.EnableMuxes()
 	}
 	src.pObjs[0].Value = 0

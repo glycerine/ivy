@@ -16,7 +16,7 @@ func TestTimingBoxOrder(t *testing.T) {
 	timing := tim.Tim_ManStart(2, 2)
 	tim.Tim_ManSetDelayTables(timing, [][]float32{{0, 1, 1, 3}})
 	tim.Tim_ManCreateBox(timing, 0, 1, 1, 1, 0, 0)
-	p.pManTime = timing
+	p.PManTime = timing
 	got := vec.Vec_IntArray(Gia_ManOrderWithBoxes(p))
 	want := []int32{0, a >> 1, first >> 1, box >> 1, root >> 1, last >> 1}
 	if !reflect.DeepEqual(got, want) {
@@ -33,7 +33,7 @@ func TestDupUnnormalizeBoxOrderAndLogic(t *testing.T) {
 	timing := tim.Tim_ManStart(2, 2)
 	tim.Tim_ManSetDelayTables(timing, [][]float32{{0, 1, 1, 3}})
 	tim.Tim_ManCreateBox(timing, 0, 1, 1, 1, 0, 0)
-	p.pManTime = timing
+	p.PManTime = timing
 	p.SetIdentity("boxed", "source")
 	q := Gia_ManDupUnnormalize(p)
 	if q == nil || Gia_ManIsNormalized(q) != 0 {

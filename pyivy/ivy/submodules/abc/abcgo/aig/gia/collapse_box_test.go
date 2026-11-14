@@ -13,7 +13,7 @@ func TestCollapseWhiteAndBlackBoxes(t *testing.T) {
 		Gia_ManAppendCo(p, box)
 		tm := tim.Tim_ManStart(2, 2)
 		tim.Tim_ManCreateBox(tm, 0, 1, 1, 1, -1, black)
-		p.pManTime = tm
+		p.PManTime = tm
 		extra := Gia_ManStart(5)
 		x := Gia_ManAppendCi(extra)
 		Gia_ManAppendCo(extra, x^1)

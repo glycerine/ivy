@@ -22,7 +22,7 @@ func Gia_ManEvalWindowInc(p *Gia_Man_t, leaves, nodes *Vec_Int_t, window *Vec_We
 	var result int32
 	for _, id := range vec.Vec_IntArray(temp) {
 		if Gia_ObjIsLut(p, id) != 0 {
-			result = max(result, Gia_ObjComputeEdgeDelay(p, id, p.vEdgeDelay, p.vEdge1, p.vEdge2, useTwo))
+			result = max(result, Gia_ObjComputeEdgeDelay(p, id, p.vEdgeDelay, p.VEdge1, p.VEdge2, useTwo))
 		}
 	}
 	return result
@@ -36,7 +36,7 @@ func Gia_ManEvalWindow(p *Gia_Man_t, leaves, nodes *Vec_Int_t, window *Vec_Wec_t
 	return Gia_ManComputeEdgeDelay(p, useTwo)
 }
 func Edg_ManToMapping(p *Gia_Man_t) {
-	if p.vMapping == nil {
+	if p.VMapping == nil {
 		panic("gia: missing LUT mapping")
 	}
 	p.vMapping2 = vec.Vec_WecStart(int(p.nObjs))
@@ -63,7 +63,7 @@ func Edg_ObjEvalEdgeDelay(p *Gia_Man_t, id int32, delays *Vec_Int_t) int32 {
 	return result
 }
 func Edg_ManEvalEdgeDelay(p *Gia_Man_t) int32 {
-	if p.vEdge1 == nil || p.vEdge2 == nil {
+	if p.VEdge1 == nil || p.VEdge2 == nil {
 		panic("gia: missing assigned edges")
 	}
 	p.vEdgeDelay = vec.Vec_IntStart(int(p.nObjs))
@@ -90,7 +90,7 @@ func Edg_ObjEvalEdgeDelayR(p *Gia_Man_t, id int32, delays *Vec_Int_t) int32 {
 	return result
 }
 func Edg_ManEvalEdgeDelayR(p *Gia_Man_t) int32 {
-	if p.vEdge1 == nil || p.vEdge2 == nil {
+	if p.VEdge1 == nil || p.VEdge2 == nil {
 		panic("gia: missing assigned edges")
 	}
 	p.vEdgeDelayR = vec.Vec_IntStart(int(p.nObjs))
@@ -106,7 +106,7 @@ func Edg_ManEvalEdgeDelayR(p *Gia_Man_t) int32 {
 	return result
 }
 func Edg_ManCollectCritEdges(p *Gia_Man_t, edges *Vec_Wec_t, delayMax int32) {
-	if p.vEdge1 == nil || p.vEdge2 == nil {
+	if p.VEdge1 == nil || p.VEdge2 == nil {
 		panic("gia: missing assigned edges")
 	}
 	vec.Vec_WecClear(edges)
@@ -200,12 +200,12 @@ func Edg_ObjImprove(p *Gia_Man_t, id, limit, delayMax, verbose int32) int32 {
 			return false
 		}
 		for _, next := range candidates {
-			if Gia_ObjEdgeCount(next, p.vEdge1, p.vEdge2) >= limit {
+			if Gia_ObjEdgeCount(next, p.VEdge1, p.VEdge2) >= limit {
 				return false
 			}
 		}
 		for _, next := range candidates {
-			if Gia_ObjEdgeAdd(id, next, p.vEdge1, p.vEdge2) != 0 || Gia_ObjEdgeAdd(next, id, p.vEdge1, p.vEdge2) != 0 {
+			if Gia_ObjEdgeAdd(id, next, p.VEdge1, p.VEdge2) != 0 || Gia_ObjEdgeAdd(next, id, p.VEdge1, p.VEdge2) != 0 {
 				panic("gia: edge capacity exceeded")
 			}
 		}
@@ -231,8 +231,8 @@ func Edg_ManAssignEdgeNew(p *Gia_Man_t, limit, verbose int32) int32 {
 		fmt.Printf("Running edge assignment with E = %d.\n", limit)
 	}
 	Edg_ManToMapping(p)
-	p.vEdge1 = vec.Vec_IntStart(int(p.nObjs))
-	p.vEdge2 = vec.Vec_IntStart(int(p.nObjs))
+	p.VEdge1 = vec.Vec_IntStart(int(p.nObjs))
+	p.VEdge2 = vec.Vec_IntStart(int(p.nObjs))
 	levels := vec.Vec_WecStart(0)
 	var best1, best2 *Vec_Int_t
 	best, last := int32(^uint32(0)>>1), -1
@@ -246,8 +246,8 @@ func Edg_ManAssignEdgeNew(p *Gia_Man_t, limit, verbose int32) int32 {
 		if delay < best {
 			best = delay
 			last = i
-			best1 = vec.Vec_IntDup(p.vEdge1)
-			best2 = vec.Vec_IntDup(p.vEdge2)
+			best1 = vec.Vec_IntDup(p.VEdge1)
+			best2 = vec.Vec_IntDup(p.VEdge2)
 		}
 		if verbose != 0 {
 			fmt.Printf("\nIter %4d : Delay = %4d\n", i, delay)
@@ -267,6 +267,6 @@ func Edg_ManAssignEdgeNew(p *Gia_Man_t, limit, verbose int32) int32 {
 			break
 		}
 	}
-	p.vEdge1, p.vEdge2 = best1, best2
+	p.VEdge1, p.VEdge2 = best1, best2
 	return delay
 }

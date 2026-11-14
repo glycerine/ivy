@@ -96,7 +96,7 @@ func Gia_ManRebuildNode(manager *dsd.Dsd_Manager_t, node *dsd.Dsd_Node_t, p *Gia
 
 func Gia_ManRebuild(p *Gia_Man_t, manager *dsd.Dsd_Manager_t, dd *cudd.DdManager) *Gia_Man_t {
 	out := Gia_ManStart(2 * Gia_ManObjNum(p))
-	out.pName, out.pSpec = p.pName, p.pSpec
+	out.pName, out.PSpec = p.pName, p.PSpec
 	Gia_ManHashAlloc(out)
 	dsd.Dsd_NodeSetMark(dsd.Dsd_ManagerReadConst1(manager), 1)
 	for i := int32(0); i < Gia_ManCiNum(p); i++ {

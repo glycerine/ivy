@@ -39,7 +39,7 @@ func Sle_ManDeriveInit(p *Sle_Man_t) {
 		}
 	}
 	vec.Vec_IntSort(p.vPolars, 0)
-	if g.vEdge1 == nil {
+	if g.VEdge1 == nil {
 		return
 	}
 	edges := vec.Vec_IntArray(Gia_ManEdgeToArray(g))

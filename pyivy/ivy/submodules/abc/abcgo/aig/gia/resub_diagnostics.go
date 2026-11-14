@@ -54,7 +54,7 @@ func resubSimulate(p *Gia_Man_t) ([][]word, int) {
 	if n > 6 {
 		words = 1 << (n - 6)
 	}
-	p.vSimsPi = inputs
+	p.VSimsPi = inputs
 	data := make([][]word, p.nObjs)
 	for i := range data {
 		data[i] = make([]word, words)

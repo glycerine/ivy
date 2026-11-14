@@ -39,8 +39,8 @@ func Lf_ManPerformMappingInt(g *Gia_Man_t, pars *Jf_Par_t) *Gia_Man_t {
 	coarse := g
 	if pars.FCoarsen != 0 {
 		coarse = Gia_ManDupMuxes(g, pars.NCoarseLimit)
-		coarse.pManTime = g.pManTime
-		g.pManTime = nil
+		coarse.PManTime = g.PManTime
+		g.PManTime = nil
 	}
 	p := Lf_ManAlloc(coarse, pars)
 	Lf_ManPrintInit(p)
@@ -66,20 +66,20 @@ func Lf_ManPerformMappingInt(g *Gia_Man_t, pars *Jf_Par_t) *Gia_Man_t {
 	Lf_ManPrintQuit(p, result)
 	Lf_ManFree(p)
 	if coarse != g {
-		g.pManTime = coarse.pManTime
-		coarse.pManTime = nil
+		g.PManTime = coarse.PManTime
+		coarse.PManTime = nil
 		Gia_ManStop(coarse)
 	}
 	return result
 }
 func Lf_ManPerformMapping(g *Gia_Man_t, pars *Jf_Par_t) *Gia_Man_t {
-	if g.pManTime != nil {
-		timing, ok := g.pManTime.(*tim.Tim_Man_t)
+	if g.PManTime != nil {
+		timing, ok := g.PManTime.(*tim.Tim_Man_t)
 		if !ok {
 			panic("LF invalid timing manager")
 		}
 		if tim.Tim_ManBoxNum(timing) != 0 && Gia_ManIsNormalized(g) != 0 {
-			g.pManTime = tim.Tim_ManDup(timing, 1)
+			g.PManTime = tim.Tim_ManDup(timing, 1)
 			source := Gia_ManDupUnnormalize(g)
 			if source == nil {
 				return nil
@@ -94,10 +94,10 @@ func Lf_ManPerformMapping(g *Gia_Man_t, pars *Jf_Par_t) *Gia_Man_t {
 			Gia_ManTransferMapping(normalized, result)
 			Gia_ManTransferTiming(normalized, result)
 			Gia_ManStop(result)
-			if normalized.pManTime != nil {
-				tim.Tim_ManStop(normalized.pManTime.(*tim.Tim_Man_t))
+			if normalized.PManTime != nil {
+				tim.Tim_ManStop(normalized.PManTime.(*tim.Tim_Man_t))
 			}
-			normalized.pManTime = timing
+			normalized.PManTime = timing
 			if Gia_ManIsNormalized(normalized) == 0 {
 				panic("LF normalization failed")
 			}
@@ -116,13 +116,13 @@ func Gia_ManPerformLfMapping(g *Gia_Man_t, pars *Jf_Par_t, normalized int32) *Gi
 		panic("LF arrival arrays already set")
 	}
 	source := g
-	if g.pManTime != nil && normalized != 0 {
+	if g.PManTime != nil && normalized != 0 {
 		source = Gia_ManDupUnnormalize(g)
 		if source == nil {
 			return nil
 		}
 		Gia_ManTransferTiming(source, g)
-		tm, ok := source.pManTime.(*tim.Tim_Man_t)
+		tm, ok := source.PManTime.(*tim.Tim_Man_t)
 		if !ok {
 			panic("LF invalid timing manager")
 		}
@@ -134,7 +134,7 @@ func Gia_ManPerformLfMapping(g *Gia_Man_t, pars *Jf_Par_t, normalized int32) *Gi
 	result := Lf_ManPerformMappingInt(source, pars)
 	if result != source {
 		result.pName = source.pName
-		result.pSpec = source.pSpec
+		result.PSpec = source.PSpec
 		Gia_ManSetRegNum(result, Gia_ManRegNum(source))
 		Gia_ManTransferTiming(result, source)
 		Gia_ManStop(source)
@@ -147,7 +147,7 @@ func Gia_ManPerformLfMapping(g *Gia_Man_t, pars *Jf_Par_t, normalized int32) *Gi
 }
 
 func Lf_ManComputeCrossCut(g *Gia_Man_t) int32 {
-	if g.pMuxes != nil {
+	if g.PMuxes != nil {
 		panic("LF crosscut expects ordinary AIG")
 	}
 	Gia_ManCleanValue(g)

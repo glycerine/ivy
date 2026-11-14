@@ -26,14 +26,14 @@ func Gia_ManInsertMfs(p *Gia_Man_t, n *sfm.Sfm_Ntk_t, allBoxes int32) *Gia_Man_t
 
 // Gia_ManPerformMfs optimizes the mapped network and retains timing metadata.
 func Gia_ManPerformMfs(p *Gia_Man_t, pars *sfm.Sfm_Par_t) *Gia_Man_t {
-	if Gia_ManRegNum(p) != 0 || p.vMapping == nil {
+	if Gia_ManRegNum(p) != 0 || p.VMapping == nil {
 		panic("gia: MFS requires a mapped combinational network")
 	}
-	if p.pManTime != nil && p.pAigExtra == nil {
+	if p.PManTime != nil && p.PAigExtra == nil {
 		fmt.Println("Timing manager is given but there is no GIA of boxes.")
 		return nil
 	}
-	if p.pManTime != nil && Gia_ManCiNum(p.pAigExtra) > 15 {
+	if p.PManTime != nil && Gia_ManCiNum(p.PAigExtra) > 15 {
 		fmt.Println("Currently \"&mfs\" cannot process white boxes with more than 15 inputs.")
 		return nil
 	}
@@ -44,11 +44,11 @@ func Gia_ManPerformMfs(p *Gia_Man_t, pars *sfm.Sfm_Par_t) *Gia_Man_t {
 	n := Gia_ManExtractMfs(p)
 	changed := sfm.Sfm_NtkPerform(n, pars)
 	if changed == 0 {
-		if p.pManTime != nil {
+		if p.PManTime != nil {
 			fmt.Println("The network is not changed by \"&mfs\".")
 		}
 		result := Gia_ManDup(p)
-		result.vMapping = vec.Vec_IntDup(p.vMapping)
+		result.VMapping = vec.Vec_IntDup(p.VMapping)
 		Gia_ManTransferTiming(result, p)
 		return result
 	}

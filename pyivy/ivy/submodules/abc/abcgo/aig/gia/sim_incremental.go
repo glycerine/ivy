@@ -3,11 +3,11 @@ package gia
 import "github.com/glycerine/abcgo/misc/vec"
 
 func Gia_ManIncrSimUpdate(p *Gia_Man_t) {
-	if p.fIncrSim == 0 || vec.Vec_IntSize(p.vTimeStamps) > int(p.nObjs) || vec.Vec_WrdSize(p.vSims) > int(p.nObjs*p.nSimWords) || p.iNextPi > Gia_ManCiNum(p) {
+	if p.fIncrSim == 0 || vec.Vec_IntSize(p.vTimeStamps) > int(p.nObjs) || vec.Vec_WrdSize(p.vSims) > int(p.nObjs*p.NSimWords) || p.iNextPi > Gia_ManCiNum(p) {
 		panic("gia: invalid incremental simulation state")
 	}
 	vec.Vec_IntFillExtra(p.vTimeStamps, int(p.nObjs), 0)
-	vec.Vec_WrdFillExtra(p.vSims, int(p.nObjs*p.nSimWords), 0)
+	vec.Vec_WrdFillExtra(p.vSims, int(p.nObjs*p.NSimWords), 0)
 	for i := p.iNextPi; i < Gia_ManCiNum(p); i++ {
 		words := Gia_ManBuiltInData(p, Gia_ManCi(p, i).id)
 		for k := range words {
@@ -22,7 +22,7 @@ func Gia_ManIncrSimStart(p *Gia_Man_t, words, objects int32) {
 	}
 	p.fIncrSim = 1
 	p.iPatsPi = 0
-	p.nSimWords = words
+	p.NSimWords = words
 	p.iTimeStamp = 1
 	p.iNextPi = 0
 	p.vTimeStamps = vec.Vec_IntAlloc(int(words))
@@ -35,7 +35,7 @@ func Gia_ManIncrSimStop(p *Gia_Man_t) {
 	}
 	p.fIncrSim = 0
 	p.iPatsPi = 0
-	p.nSimWords = 0
+	p.NSimWords = 0
 	p.iTimeStamp = 1
 	p.vTimeStamps = nil
 	p.vSims = nil
@@ -58,7 +58,7 @@ func Gia_ManIncrSimSet(p *Gia_Man_t, lits *Vec_Int_t) {
 		}
 	}
 	p.iPatsPi++
-	if p.iPatsPi == 64*p.nSimWords {
+	if p.iPatsPi == 64*p.NSimWords {
 		p.iPatsPi = 0
 	}
 }

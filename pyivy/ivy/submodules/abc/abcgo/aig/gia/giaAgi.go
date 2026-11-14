@@ -157,7 +157,7 @@ func Agi_ManFree(p *Agi_Man_t) {
 func Agi_ManFromGia(p *Gia_Man_t) *Agi_Man_t {
 	out := Agi_ManAlloc(p.nObjs)
 	out.pName = p.pName
-	out.pSpec = p.pSpec
+	out.pSpec = p.PSpec
 	out.nRegs = p.nRegs
 	p.pObjs[0].Value = 0
 	for _, obj := range p.pObjs[1:] {
@@ -175,8 +175,8 @@ func Agi_ManFromGia(p *Gia_Man_t) *Agi_Man_t {
 			}
 		case Gia_ObjIsAnd(obj) != 0:
 			lit = agiAppendNode(out, Gia_ObjFanin0Copy(obj), Gia_ObjFanin1Copy(obj))
-			if int(obj.id) < len(p.pMuxes) && p.pMuxes[obj.id] != 0 {
-				control := p.pMuxes[obj.id]
+			if int(obj.id) < len(p.PMuxes) && p.PMuxes[obj.id] != 0 {
+				control := p.PMuxes[obj.id]
 				copy := p.pObjs[control>>1].Value ^ (control & 1)
 				Agi_ObjSetLit2(out, lit>>1, copy)
 			}

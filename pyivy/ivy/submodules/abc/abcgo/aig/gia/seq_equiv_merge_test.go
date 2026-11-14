@@ -20,11 +20,11 @@ func TestSequentialEquivalenceMergeTransitive(t *testing.T) {
 	}
 	a := makePart([]uint32{0, 1, 2, 4})
 	Gia_ObjSetRepr(a, 2, 1)
-	a.pNexts = Gia_ManDeriveNexts(a)
+	a.PNexts = Gia_ManDeriveNexts(a)
 	b := makePart([]uint32{0, 2, 3, 4})
 	Gia_ObjSetRepr(b, 2, 1)
 	Gia_ObjSetRepr(b, 3, 0)
-	b.pNexts = Gia_ManDeriveNexts(b)
+	b.PNexts = Gia_ManDeriveNexts(b)
 	Gia_ManSeqEquivMerge(p, []*Gia_Man_t{a, b})
 	if Gia_ObjRepr(p, 2) != 1 || Gia_ObjRepr(p, 3) != 1 || Gia_ObjRepr(p, 4) != 0 {
 		t.Fatal("classes did not merge transitively")

@@ -76,7 +76,7 @@ func Gia_ManDup2(first, second *Gia_Man_t) *Gia_Man_t {
 }
 func Gia_ManDupAppend(dst, src *Gia_Man_t) {
 	dst.nRegs = 0
-	if src.pMuxes != nil {
+	if src.PMuxes != nil {
 		dst.EnableMuxes()
 	}
 	if Vec_IntSize(&dst.vHTable) == 0 {

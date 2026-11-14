@@ -34,10 +34,10 @@ func Gia_ManLevelWithBoxes_rec(p *Gia_Man_t, obj *Gia_Obj_t) int32 {
 	return 0
 }
 func Gia_ManLevelWithBoxes(p *Gia_Man_t) int32 {
-	if p.pManTime == nil {
+	if p.PManTime == nil {
 		return Gia_ManLevelNum(p)
 	}
-	timing, ok := p.pManTime.(*tim.Tim_Man_t)
+	timing, ok := p.PManTime.(*tim.Tim_Man_t)
 	if !ok {
 		panic("gia: incompatible timing manager")
 	}
@@ -103,10 +103,10 @@ func Gia_ManLevelWithBoxes(p *Gia_Man_t) int32 {
 // BoxInputObjects returns independent CO object IDs driving the box owning this
 // CI object, or nil for a primary input/a manager without timing boxes.
 func (p *Gia_Man_t) BoxInputObjects(ciID int32) []int32 {
-	if p.pManTime == nil {
+	if p.PManTime == nil {
 		return nil
 	}
-	timing, ok := p.pManTime.(*tim.Tim_Man_t)
+	timing, ok := p.PManTime.(*tim.Tim_Man_t)
 	if !ok {
 		panic("gia: incompatible timing manager")
 	}
@@ -133,7 +133,7 @@ func (p *Gia_Man_t) BoxLevelInputObjects(ciID int32) []int32 {
 	if inputs == nil {
 		return nil
 	}
-	timing := p.pManTime.(*tim.Tim_Man_t)
+	timing := p.PManTime.(*tim.Tim_Man_t)
 	ci := int(Gia_ObjCioId(Gia_ManObj(p, ciID)))
 	box := tim.Tim_ManBoxForCi(timing, ci)
 	output := ci - tim.Tim_ManBoxOutputFirst(timing, box)

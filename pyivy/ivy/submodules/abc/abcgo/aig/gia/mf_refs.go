@@ -18,7 +18,7 @@ func Mf_ManSetFlowRefs(p *Gia_Man_t, refs *Vec_Int_t) {
 		}
 		add(Gia_ObjFanin0(obj), 1)
 		add(Gia_ObjFanin1(obj), 1)
-		if p.pMuxes != nil {
+		if p.PMuxes != nil {
 			if Gia_ObjIsMuxId(p, obj.id) != 0 {
 				add(Gia_ObjFanin2(p, obj), 1)
 			}

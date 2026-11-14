@@ -99,7 +99,7 @@ func TestMFFCMappingRetainsSiblingBoundaryAndReferenceOwner(t *testing.T) {
 	if got := Gia_NodeMffcMapping(p); got != 3 {
 		t.Fatal("both boundary MFFCs must be mapped", got)
 	}
-	if Vec_IntEntry(p.vMapping, int(x>>1)) == 0 || Vec_IntEntry(p.vMapping, int(y>>1)) == 0 || Vec_IntEntry(p.vMapping, int(root>>1)) == 0 {
+	if Vec_IntEntry(p.VMapping, int(x>>1)) == 0 || Vec_IntEntry(p.VMapping, int(y>>1)) == 0 || Vec_IntEntry(p.VMapping, int(root>>1)) == 0 {
 		t.Fatal("recursive scratch vector lost sibling boundary")
 	}
 	if &p.Refs[0] != &old[0] {

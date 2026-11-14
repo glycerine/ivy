@@ -61,7 +61,7 @@ func Sle_ManExplore(g *Gia_Man_t, limit, initial, dynamic, twoEdges, verbose int
 	}
 	if vec.Vec_IntSize(mapping) > 0 {
 		Gia_ManEdgeFromArray(g, edges)
-		g.vMapping = mapping
+		g.VMapping = mapping
 	}
-	g.vPacking = nil
+	g.VPacking = nil
 }

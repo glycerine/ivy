@@ -16,9 +16,9 @@ func (miniTestDispatcher) Execute(f *abcmain.Frame, line string) int32 {
 		return 1
 	}
 	g := Gia_ManDup(f.Resource("pGiaMiniAig").(*Gia_Man_t))
-	g.pReprs = make([]Gia_Rpr_t, g.nObjs)
-	for i := range g.pReprs {
-		g.pReprs[i].iRepr = GIA_VOID
+	g.PReprs = make([]Gia_Rpr_t, g.nObjs)
+	for i := range g.PReprs {
+		g.PReprs[i].iRepr = GIA_VOID
 	}
 	f.SetResource("pGia2", g)
 	return 0

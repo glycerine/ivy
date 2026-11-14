@@ -14,11 +14,11 @@ func TestSweepWithBoxesCombinational(t *testing.T) {
 	Gia_ManAppendCo(p, root)
 	timing := tim.Tim_ManStart(3, 2)
 	tim.Tim_ManCreateBox(timing, 0, 1, 2, 1, -1, 0)
-	p.pManTime = timing
+	p.PManTime = timing
 	extra := Gia_ManStart(5)
 	e := Gia_ManAppendCi(extra)
 	Gia_ManAppendCo(extra, e^1)
-	p.pAigExtra = extra
+	p.PAigExtra = extra
 	params := dch.DefaultParams()
 	q := Gia_ManSweepWithBoxes(p, &params, nil, 0, 0, 0, 0)
 	if q == nil || Gia_ManBoxNum(q) != 0 || Gia_ManCiNum(q) != 2 || Gia_ManCoNum(q) != 1 {
@@ -40,9 +40,9 @@ func (e *noDomainEquivalences) SweepCorrespondence(p *Gia_Man_t) {
 	if Gia_ManRegNum(p) != 2 {
 		panic("wrong domain register count")
 	}
-	p.pReprs = make([]Gia_Rpr_t, p.nObjs)
-	for i := range p.pReprs {
-		p.pReprs[i].iRepr = GIA_VOID
+	p.PReprs = make([]Gia_Rpr_t, p.nObjs)
+	for i := range p.PReprs {
+		p.PReprs[i].iRepr = GIA_VOID
 	}
 }
 
@@ -63,11 +63,11 @@ func TestSweepWithBoxesMultipleDomains(t *testing.T) {
 	Gia_ManAppendCo(p, r3)
 	timing := tim.Tim_ManStart(6, 6)
 	tim.Tim_ManCreateBox(timing, 0, 1, 5, 1, -1, 0)
-	p.pManTime = timing
+	p.PManTime = timing
 	extra := Gia_ManStart(5)
 	e := Gia_ManAppendCi(extra)
 	Gia_ManAppendCo(extra, e)
-	p.pAigExtra = extra
+	p.PAigExtra = extra
 	p.vRegClasses = Vec_IntAlloc(4)
 	for _, class := range []int32{1, 1, 2, 2} {
 		Vec_IntPush(p.vRegClasses, class)

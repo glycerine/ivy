@@ -30,7 +30,7 @@ func Gia_ManSpecReduceInit_rec(q, p *Gia_Man_t, obj *Gia_Obj_t, xors *Vec_Int_t,
 	Gia_ManSpecBuildInit(q, p, obj, xors, frame, dual)
 }
 func Gia_ManSpecReduceInit(p *Gia_Man_t, init *Abc_Cex_t, nFrames, dual int32) *Gia_Man_t {
-	if p.pReprs == nil {
+	if p.PReprs == nil {
 		fmt.Println("Gia_ManSpecReduceInit(): Equivalence classes are not available.")
 		return nil
 	}
@@ -57,7 +57,7 @@ func Gia_ManSpecReduceInit(p *Gia_Man_t, init *Abc_Cex_t, nFrames, dual int32) *
 	}
 	q := Gia_ManStart(nFrames * p.nObjs)
 	q.pName = p.pName
-	q.pSpec = p.pSpec
+	q.PSpec = p.PSpec
 	Gia_ManHashAlloc(q)
 	for i := int32(0); i < p.nRegs; i++ {
 		bit := int32(0)

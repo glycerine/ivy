@@ -24,19 +24,19 @@ func Str_NtkBalanceMux(dst *Gia_Man_t, ntk *Str_Ntk_t, obj *Str_Obj_t, delays *V
 	}
 }
 func Str_NtkBalance(original *Gia_Man_t, ntk *Str_Ntk_t, lutSize, useMuxes, recursive, optArea, verbose int32) *Gia_Man_t {
-	if lutSize <= 0 || lutSize >= 16 || original.pMuxes != nil {
+	if lutSize <= 0 || lutSize >= 16 || original.PMuxes != nil {
 		panic("gia: invalid structured balancing input")
 	}
 	dst := Gia_ManStart(original.nObjs)
-	dst.pName, dst.pSpec = original.pName, original.pSpec
+	dst.pName, dst.PSpec = original.pName, original.PSpec
 	dst.EnableMuxes()
 	vec.Vec_IntFill(&dst.vCopies, int(4*dst.nObjsAlloc), -1)
 	delays := vec.Vec_IntStart(int(4 * dst.nObjsAlloc))
 	Gia_ManHashStart(dst)
 	var timing *tim.Tim_Man_t
-	if original.pManTime != nil {
+	if original.PManTime != nil {
 		var ok bool
-		timing, ok = original.pManTime.(*tim.Tim_Man_t)
+		timing, ok = original.PManTime.(*tim.Tim_Man_t)
 		if !ok {
 			panic("gia: invalid timing manager")
 		}
@@ -100,18 +100,18 @@ func Gia_ManLutBalance(p *Gia_Man_t, lutSize, useMuxes, recursive, optArea, verb
 	work := p
 	var oldTiming *tim.Tim_Man_t
 	boxed := false
-	if p.pManTime != nil {
-		manager, ok := p.pManTime.(*tim.Tim_Man_t)
+	if p.PManTime != nil {
+		manager, ok := p.PManTime.(*tim.Tim_Man_t)
 		if !ok {
 			panic("gia: invalid timing manager")
 		}
 		if tim.Tim_ManBoxNum(manager) != 0 && Gia_ManIsNormalized(p) != 0 {
 			oldTiming = manager
-			p.pManTime = tim.Tim_ManDup(manager, 16)
+			p.PManTime = tim.Tim_ManDup(manager, 16)
 			work = Gia_ManDupUnnormalize(p)
 			if work == nil {
-				tim.Tim_ManStop(p.pManTime.(*tim.Tim_Man_t))
-				p.pManTime = oldTiming
+				tim.Tim_ManStop(p.PManTime.(*tim.Tim_Man_t))
+				p.PManTime = oldTiming
 				return nil
 			}
 			Gia_ManTransferTiming(work, p)
@@ -127,8 +127,8 @@ func Gia_ManLutBalance(p *Gia_Man_t, lutSize, useMuxes, recursive, optArea, verb
 		result = Gia_ManDupNormalize(temp, 0)
 		Gia_ManTransferTiming(result, temp)
 		Gia_ManStop(temp)
-		tim.Tim_ManStop(result.pManTime.(*tim.Tim_Man_t))
-		result.pManTime = oldTiming
+		tim.Tim_ManStop(result.PManTime.(*tim.Tim_Man_t))
+		result.PManTime = oldTiming
 	}
 	if verbose != 0 {
 		Str_NtkPs(ntk, start)

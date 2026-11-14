@@ -24,7 +24,7 @@ func Gia_ManVerifyWithBoxes(impl *Gia_Man_t, conflicts, seconds, sequential, dum
 	if dump != 0 {
 		name := specPath
 		if name == "" {
-			name = impl.pSpec
+			name = impl.PSpec
 		}
 		base := strings.TrimSuffix(name, filepath.Ext(name))
 		left, right := base+"_spec.aig", base+"_impl.aig"

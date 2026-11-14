@@ -8,11 +8,11 @@ import (
 )
 
 func Gia_ManPrintClasses_old(p *Gia_Man_t) {
-	if p.vFlopClasses == nil {
+	if p.VFlopClasses == nil {
 		return
 	}
 	for i := int32(0); i < Gia_ManRegNum(p); i++ {
-		fmt.Printf("%d", vec.Vec_IntEntry(p.vFlopClasses, int(i)))
+		fmt.Printf("%d", vec.Vec_IntEntry(p.VFlopClasses, int(i)))
 	}
 	fmt.Println()
 	for class := int32(1); class <= 2; class++ {
@@ -115,7 +115,7 @@ func Gia_ManPrintChoiceStats(p *Gia_Man_t) {
 	Gia_ManCleanMark0(p)
 }
 func Gia_ManPrintEdges(p *Gia_Man_t) int32 {
-	fmt.Printf("Edges (Q=2)    :                edge =%8d  lev =%5.1f\n", (vec.Vec_IntCountPositive(p.vEdge1)+vec.Vec_IntCountPositive(p.vEdge2))/2, 0.1*float64(Gia_ManEvalEdgeDelay(p)))
+	fmt.Printf("Edges (Q=2)    :                edge =%8d  lev =%5.1f\n", (vec.Vec_IntCountPositive(p.VEdge1)+vec.Vec_IntCountPositive(p.VEdge2))/2, 0.1*float64(Gia_ManEvalEdgeDelay(p)))
 	return 0
 }
 func Gia_ManLogAigStats(p *Gia_Man_t, filename string) {

@@ -15,7 +15,7 @@ func TestGiaNpnClassReport(t *testing.T) {
 	for _, v := range []int32{2, a >> 1, b >> 1, x >> 1} {
 		vec.Vec_IntPush(mapping, v)
 	}
-	g.vMapping = mapping
+	g.VMapping = mapping
 	Gia_ManPrintNpnClasses(g)
 	if g.Refs != nil {
 		t.Fatal("mapped references not released")

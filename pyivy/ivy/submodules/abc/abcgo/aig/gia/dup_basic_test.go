@@ -17,7 +17,7 @@ func TestNativeDuplicateRealGatesAndMetadataOwnership(t *testing.T) {
 	p.aigerSymbols = map[byte][]string{'i': {"a", "b", "c"}}
 	p.aigerComment = []byte("comment")
 	clone := Gia_ManDup(p)
-	if clone.nConstrs != 1 || clone.pName != "clone" || clone.pSpec != "clone.aig" || clone.nXors != 1 || clone.nMuxes != 1 || clone.nBufs != 1 {
+	if clone.nConstrs != 1 || clone.pName != "clone" || clone.PSpec != "clone.aig" || clone.nXors != 1 || clone.nMuxes != 1 || clone.nBufs != 1 {
 		t.Fatal("duplicate tags/metadata")
 	}
 	for mask := 0; mask < 8; mask++ {

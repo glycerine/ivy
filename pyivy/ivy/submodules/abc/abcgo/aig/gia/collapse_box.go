@@ -29,7 +29,7 @@ func Gia_ManDupCollapse_rec(p *Gia_Man_t, obj *Gia_Obj_t, dst *Gia_Man_t) {
 // Gia_ManDupCollapse substitutes white-box implementations and exposes black
 // box ports as inputs and outputs, preserving copy mappings through cleanup.
 func Gia_ManDupCollapse(p, boxes *Gia_Man_t, present *Vec_Int_t, sequential int32) *Gia_Man_t {
-	timing := p.pManTime.(*tim.Tim_Man_t)
+	timing := p.PManTime.(*tim.Tim_Man_t)
 	if sequential != 0 && p.vRegClasses == nil {
 		panic("gia: missing register classes")
 	}
@@ -41,7 +41,7 @@ func Gia_ManDupCollapse(p, boxes *Gia_Man_t, present *Vec_Int_t, sequential int3
 		panic("gia: invalid box presence mask")
 	}
 	dst := Gia_ManStart(Gia_ManObjNum(p))
-	dst.pName, dst.pSpec = p.pName, p.pSpec
+	dst.pName, dst.PSpec = p.pName, p.PSpec
 	if Gia_ManHasChoices(p) != 0 {
 		dst.pSibls = make([]int32, Gia_ManObjNum(p))
 	}

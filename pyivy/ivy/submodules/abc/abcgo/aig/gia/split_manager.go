@@ -36,7 +36,7 @@ func Spl_ManAlloc(g *Gia_Man_t, limit, reverse int32) *Spl_Man_t {
 	Gia_ManCreateRefs(g)
 	Gia_ManSetLutRefs(g)
 	g.vMapping2 = Spl_ManToWecMapping(g)
-	g.vMapping = nil
+	g.VMapping = nil
 	Gia_ManStaticFanoutStart(g)
 	return p
 }
@@ -45,6 +45,6 @@ func Spl_ManStop(p *Spl_Man_t) {
 	if Gia_ManHasMapping(p.pGia) != 0 || Gia_ManHasMapping2(p.pGia) == 0 {
 		panic("gia: invalid window manager mapping")
 	}
-	p.pGia.vMapping = Spl_ManFromWecMapping(p.pGia, p.pGia.vMapping2)
+	p.pGia.VMapping = Spl_ManFromWecMapping(p.pGia, p.pGia.vMapping2)
 	p.pGia.vMapping2 = nil
 }

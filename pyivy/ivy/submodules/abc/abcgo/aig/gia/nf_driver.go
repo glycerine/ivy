@@ -18,7 +18,7 @@ func nfMap(g *Gia_Man_t, pars *Jf_Par_t, library *nfLibrary) *Gia_Man_t {
 		g = Gia_ManDupMuxes(g, pars.NCoarseLimit)
 	}
 	g.Refs = nil
-	g.vCellMapping = nil
+	g.VCellMapping = nil
 	cuts := newNfCutManager(g, pars, library)
 	cuts.computeCuts()
 	matcher := newNfMatcher(cuts)

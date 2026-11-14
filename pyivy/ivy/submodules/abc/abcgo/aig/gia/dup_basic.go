@@ -8,7 +8,7 @@ func Gia_ManDup(src *Gia_Man_t) *Gia_Man_t {
 	dst := Gia_ManStart(src.nObjs)
 	dst.CopyIdentityFrom(src)
 	dst.fGiaSimple = src.fGiaSimple
-	if src.pMuxes != nil {
+	if src.PMuxes != nil {
 		dst.EnableMuxes()
 	}
 	src.pObjs[0].Value = 0

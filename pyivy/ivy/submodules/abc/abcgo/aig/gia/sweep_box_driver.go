@@ -32,7 +32,7 @@ func giaSweepNormalize(graph *Gia_Man_t) *Gia_Man_t {
 }
 
 func Gia_ManSweepWithBoxesAndDomains(p *Gia_Man_t, sequentialParameters any, constant, equivalent, verbose, verboseEquivs int32) *Gia_Man_t {
-	if Gia_ManRegNum(p) != 0 || p.pAigExtra == nil || p.vRegClasses == nil || Vec_IntFindMax(p.vRegClasses) <= 1 {
+	if Gia_ManRegNum(p) != 0 || p.PAigExtra == nil || p.vRegClasses == nil || Vec_IntFindMax(p.vRegClasses) <= 1 {
 		panic("gia: invalid multi-domain box sweep")
 	}
 	domains := Vec_IntFindMax(p.vRegClasses)
@@ -46,7 +46,7 @@ func Gia_ManSweepWithBoxesAndDomains(p *Gia_Man_t, sequentialParameters any, con
 		if before < 2 {
 			continue
 		}
-		collapsed := Gia_ManDupCollapse(graph, graph.pAigExtra, nil, 1)
+		collapsed := Gia_ManDupCollapse(graph, graph.PAigExtra, nil, 1)
 		Gia_ManSweepComputeOneDomainEquivs(collapsed, graph.vRegClasses, domain, sequentialParameters, constant, equivalent, verbose)
 		var kinds [3]int32
 		graph, kinds = giaSweepReduceBoxes(p, graph, collapsed, verbose, 1)
@@ -58,7 +58,7 @@ func Gia_ManSweepWithBoxesAndDomains(p *Gia_Man_t, sequentialParameters any, con
 }
 
 func Gia_ManSweepWithBoxes(p *Gia_Man_t, combinationalParameters, sequentialParameters any, constant, equivalent, verbose, verboseEquivs int32) *Gia_Man_t {
-	if Gia_ManRegNum(p) != 0 || p.pAigExtra == nil {
+	if Gia_ManRegNum(p) != 0 || p.PAigExtra == nil {
 		panic("gia: invalid boxed sweep")
 	}
 	if combinationalParameters == nil && Gia_ManClockDomainNum(p) > 1 {
@@ -74,7 +74,7 @@ func Gia_ManSweepWithBoxes(p *Gia_Man_t, combinationalParameters, sequentialPara
 	if combinationalParameters != nil {
 		sequential = 0
 	}
-	collapsed := Gia_ManDupCollapse(graph, graph.pAigExtra, nil, sequential)
+	collapsed := Gia_ManDupCollapse(graph, graph.PAigExtra, nil, sequential)
 	switch {
 	case combinationalParameters != nil:
 		Gia_ManFraigSweepPerform(collapsed, combinationalParameters)

@@ -93,7 +93,7 @@ func giaTernaryStates(p *Gia_Man_t) [][]byte {
 func Gia_ManReduceConst(p *Gia_Man_t, verbose int32) *Gia_Man_t {
 	// The compact frontier simulator implements ordinary AND/inverter AIGs.
 	// Keep the general evaluator for graphs with explicit XOR, MUX or buffers.
-	plain := p.pMuxes == nil
+	plain := p.PMuxes == nil
 	for _, obj := range p.pObjs {
 		if Gia_ObjIsXor(obj) != 0 || Gia_ObjIsBuf(obj) != 0 {
 			plain = false

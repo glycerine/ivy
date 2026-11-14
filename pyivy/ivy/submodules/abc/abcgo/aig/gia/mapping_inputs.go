@@ -16,9 +16,9 @@ func (p *Gia_Man_t) MappingInputs() (arrivals, required, attrs []int32, timing *
 	if p.vCoAttrs != nil {
 		attrs = vec.Vec_IntArray(p.vCoAttrs)
 	}
-	if p.pManTime != nil {
+	if p.PManTime != nil {
 		var ok bool
-		timing, ok = p.pManTime.(*tim.Tim_Man_t)
+		timing, ok = p.PManTime.(*tim.Tim_Man_t)
 		if !ok {
 			panic("gia: invalid timing manager")
 		}
@@ -35,7 +35,7 @@ func (p *Gia_Man_t) SetMappingOutputArrivals(arrivals []int32) {
 }
 
 // ClearCellConfiguration drops cell-specific configuration on remapping.
-func (p *Gia_Man_t) ClearCellConfiguration() { p.vConfigs = nil; p.pCellStr = "" }
+func (p *Gia_Man_t) ClearCellConfiguration() { p.VConfigs = nil; p.PCellStr = "" }
 
 // ReplacePacking installs a validated owned packing vector.
 func (p *Gia_Man_t) ReplacePacking(packing *Vec_Int_t) error {
@@ -44,6 +44,6 @@ func (p *Gia_Man_t) ReplacePacking(packing *Vec_Int_t) error {
 			return err
 		}
 	}
-	p.vPacking = packing
+	p.VPacking = packing
 	return nil
 }

@@ -88,7 +88,7 @@ func Gia_GenQbfMiter(p *Gia_Man_t, frames, count, size int32, text string, useOu
 		vec.Vec_IntPush(params, lit)
 	}
 	q := Gia_ManStart(p.nObjs)
-	q.pName, q.pSpec = p.pName, p.pSpec
+	q.pName, q.PSpec = p.pName, p.PSpec
 	Gia_ManHashAlloc(q)
 	Gia_ManConst0(p).Value = 0
 	for i := int32(0); i < nPars; i++ {

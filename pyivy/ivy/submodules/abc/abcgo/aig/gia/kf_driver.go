@@ -162,7 +162,7 @@ func Kf_ManDerive(p *Kf_Man_t) *Gia_Man_t {
 		}
 		vec.Vec_IntPush(mapping, obj.id)
 	}
-	g.vMapping = mapping
+	g.VMapping = mapping
 	return g
 }
 func Kf_ManSetDefaultPars(p *Jf_Par_t) {

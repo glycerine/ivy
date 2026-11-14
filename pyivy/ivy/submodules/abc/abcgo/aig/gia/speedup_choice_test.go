@@ -13,10 +13,10 @@ func TestSpeedupChoicePreservesFunction(t *testing.T) {
 	Gia_ManAppendCo(p, y)
 	dst := Gia_ManDup(p)
 	Gia_ManHashStart(dst)
-	dst.pReprs = make([]Gia_Rpr_t, 128)
-	dst.pNexts = make([]int32, 128)
-	for id := range dst.pReprs {
-		dst.pReprs[id].iRepr = GIA_VOID
+	dst.PReprs = make([]Gia_Rpr_t, 128)
+	dst.PNexts = make([]int32, 128)
+	for id := range dst.PReprs {
+		dst.PReprs[id].iRepr = GIA_VOID
 	}
 	leaves := vec.Vec_IntAlloc(3)
 	for _, lit := range []int32{a, b, c} {

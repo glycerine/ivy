@@ -76,13 +76,13 @@ func TestBidecMappedResynthesisTruth(t *testing.T) {
 		if root < 2 {
 			continue
 		}
-		p.vMapping = Vec_IntStart(int(p.nObjs))
-		Vec_IntWriteEntry(p.vMapping, int(root>>1), int32(Vec_IntSize(p.vMapping)))
-		Vec_IntPush(p.vMapping, 5)
+		p.VMapping = Vec_IntStart(int(p.nObjs))
+		Vec_IntWriteEntry(p.VMapping, int(root>>1), int32(Vec_IntSize(p.VMapping)))
+		Vec_IntPush(p.VMapping, 5)
 		for _, id := range inputs {
-			Vec_IntPush(p.vMapping, id)
+			Vec_IntPush(p.VMapping, id)
 		}
-		Vec_IntPush(p.vMapping, root>>1)
+		Vec_IntPush(p.VMapping, root>>1)
 		q := Gia_ManPerformBidec(p, 0)
 		if q == nil {
 			t.Fatal("unexpected missing bidecomposition")

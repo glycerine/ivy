@@ -51,7 +51,7 @@ func Gia_ObjAddFanout(p *Gia_Man_t, obj, fanout *Gia_Obj_t) {
 }
 
 func Gia_ManBuiltInSimPerform(p *Gia_Man_t, id int32) {
-	for w := int32(0); w < p.nSimWords; w++ {
+	for w := int32(0); w < p.NSimWords; w++ {
 		vec.Vec_WrdPush(p.vSims, 0)
 	}
 	Gia_ManBuiltInSimPerformInt(p, id)
@@ -61,20 +61,20 @@ func Gia_ManBuiltInSimPerformInt(p *Gia_Man_t, id int32) {
 		panic("gia: built-in simulation disabled")
 	}
 	data := vec.Vec_WrdArray(p.vSims)
-	if len(data) != int(p.nObjs*p.nSimWords) {
+	if len(data) != int(p.nObjs*p.NSimWords) {
 		panic("gia: invalid simulation storage size")
 	}
 	obj := Gia_ManObj(p, id)
 	a, b := Gia_ObjFaninId0(obj, id), Gia_ObjFaninId1(obj, id)
-	for w := int32(0); w < p.nSimWords; w++ {
-		x, y := data[a*p.nSimWords+w], data[b*p.nSimWords+w]
+	for w := int32(0); w < p.NSimWords; w++ {
+		x, y := data[a*p.NSimWords+w], data[b*p.NSimWords+w]
 		if obj.fCompl0 != 0 {
 			x = ^x
 		}
 		if obj.fCompl1 != 0 {
 			y = ^y
 		}
-		data[id*p.nSimWords+w] = x & y
+		data[id*p.NSimWords+w] = x & y
 	}
 }
 func Gia_ManQuantSetSuppAnd(p *Gia_Man_t, obj *Gia_Obj_t) {

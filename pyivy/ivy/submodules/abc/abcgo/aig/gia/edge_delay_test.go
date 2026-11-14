@@ -45,7 +45,7 @@ func TestEdgeDelayWithTimingBox(t *testing.T) {
 	tim.Tim_ManSetDelayTables(timing, [][]float32{{0, 1, 1, 3}})
 	tim.Tim_ManCreateBox(timing, 0, 1, 1, 1, 0, 0)
 	tim.Tim_ManInitPiArrival(timing, 0, 6)
-	p.pManTime = timing
+	p.PManTime = timing
 	p.vMapping2 = vec.Vec_WecStart(int(p.nObjs))
 	vec.Vec_WecPush(p.vMapping2, int(root>>1), a>>1)
 	vec.Vec_WecPush(p.vMapping2, int(root>>1), box>>1)

@@ -20,10 +20,10 @@ func Gia_ManDupRemapLiterals(lits *Vec_Int_t, p *Gia_Man_t) {
 	}
 }
 func Gia_ManDupRemapEquiv(dst, src *Gia_Man_t) {
-	if src.pReprs == nil {
+	if src.PReprs == nil {
 		return
 	}
-	if dst.pReprs != nil || dst.pNexts != nil {
+	if dst.PReprs != nil || dst.PNexts != nil {
 		panic("gia: destination representatives already allocated")
 	}
 	mapping := make([]int32, src.nObjs)
@@ -103,7 +103,7 @@ func Gia_ManDupOrderDfs(src *Gia_Man_t) *Gia_Man_t {
 	Gia_ManFillValue(src)
 	dst := Gia_ManStart(src.nObjs)
 	dst.CopyIdentityFrom(src)
-	if src.pMuxes != nil {
+	if src.PMuxes != nil {
 		dst.EnableMuxes()
 	}
 	src.pObjs[0].Value = 0
@@ -128,7 +128,7 @@ func Gia_ManDupAbs(src *Gia_Man_t, ppiToFlop, flopToPpi *Vec_Int_t) *Gia_Man_t {
 	Gia_ManFillValue(src)
 	dst := Gia_ManStart(src.nObjs)
 	dst.CopyIdentityFrom(src)
-	if src.pMuxes != nil {
+	if src.PMuxes != nil {
 		dst.EnableMuxes()
 	}
 	src.pObjs[0].Value = 0
@@ -180,7 +180,7 @@ func Gia_ManDupOutputGroup(src *Gia_Man_t, start, stop int32) *Gia_Man_t {
 	Gia_ManFillValue(src)
 	dst := Gia_ManStart(src.nObjs)
 	dst.CopyIdentityFrom(src)
-	if src.pMuxes != nil {
+	if src.PMuxes != nil {
 		dst.EnableMuxes()
 	}
 	src.pObjs[0].Value = 0
@@ -208,7 +208,7 @@ func Gia_ManDupSelectedOutputs(src *Gia_Man_t, selected *Vec_Int_t) *Gia_Man_t {
 	Gia_ManFillValue(src)
 	dst := Gia_ManStart(src.nObjs)
 	dst.CopyIdentityFrom(src)
-	if src.pMuxes != nil {
+	if src.PMuxes != nil {
 		dst.EnableMuxes()
 	}
 	src.pObjs[0].Value = 0
@@ -232,7 +232,7 @@ func Gia_ManDupOrderDfsReverse(src *Gia_Man_t) *Gia_Man_t {
 	Gia_ManFillValue(src)
 	dst := Gia_ManStart(src.nObjs)
 	dst.CopyIdentityFrom(src)
-	if src.pMuxes != nil {
+	if src.PMuxes != nil {
 		dst.EnableMuxes()
 	}
 	src.pObjs[0].Value = 0
@@ -255,7 +255,7 @@ func Gia_ManDupOrderAiger(src *Gia_Man_t) *Gia_Man_t {
 	Gia_ManFillValue(src)
 	dst := Gia_ManStart(src.nObjs)
 	dst.CopyIdentityFrom(src)
-	if src.pMuxes != nil {
+	if src.PMuxes != nil {
 		dst.EnableMuxes()
 	}
 	src.pObjs[0].Value = 0

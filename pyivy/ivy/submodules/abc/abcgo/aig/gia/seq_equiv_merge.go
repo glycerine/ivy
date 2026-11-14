@@ -5,12 +5,12 @@ import "fmt"
 // Gia_ManSeqEquivMerge combines equivalence classes whose part-object Value
 // fields point back to object IDs in the full graph.
 func Gia_ManSeqEquivMerge(p *Gia_Man_t, parts []*Gia_Man_t) {
-	if len(parts) != 2 || p.pReprs != nil || p.pNexts != nil {
+	if len(parts) != 2 || p.PReprs != nil || p.PNexts != nil {
 		panic("gia: invalid sequential equivalence merge")
 	}
 	p.StartRepresentatives()
 	for _, part := range parts {
-		if part == nil || len(part.pReprs) != int(part.nObjs) || len(part.pNexts) != int(part.nObjs) {
+		if part == nil || len(part.PReprs) != int(part.nObjs) || len(part.PNexts) != int(part.nObjs) {
 			panic("gia: invalid equivalence partition")
 		}
 		for id := int32(1); id < part.nObjs; id++ {
@@ -29,10 +29,10 @@ func Gia_ManSeqEquivMerge(p *Gia_Man_t, parts []*Gia_Man_t) {
 		}
 	}
 	giaFlattenReprs(p)
-	p.pNexts = Gia_ManDeriveNexts(p)
+	p.PNexts = Gia_ManDeriveNexts(p)
 }
 func Gia_ManPrintEquivs(p *Gia_Man_t) {
-	if len(p.pReprs) != int(p.nObjs) || len(p.pNexts) != int(p.nObjs) {
+	if len(p.PReprs) != int(p.nObjs) || len(p.PNexts) != int(p.nObjs) {
 		panic("gia: missing equivalence classes")
 	}
 	fmt.Print("Const0:")

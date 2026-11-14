@@ -23,8 +23,8 @@ func TestBuiltInPatternPackingAndGrowth(t *testing.T) {
 		}
 		Gia_ManBuiltInSimAddPat(p, pattern)
 	}
-	if p.nSimWords != 2 || p.iPatsPi != 65 {
-		t.Fatalf("words=%d patterns=%d", p.nSimWords, p.iPatsPi)
+	if p.NSimWords != 2 || p.iPatsPi != 65 {
+		t.Fatalf("words=%d patterns=%d", p.NSimWords, p.iPatsPi)
 	}
 	if Gia_ManBuiltInSimPack(p, pattern) != 64 {
 		t.Fatal("last pattern not retained")

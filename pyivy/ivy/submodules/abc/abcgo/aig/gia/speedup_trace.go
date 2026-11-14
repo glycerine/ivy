@@ -9,7 +9,7 @@ import (
 
 func Gia_ManDelayTraceLutPrint(p *Gia_Man_t, verbose int32) float32 {
 	steps := Gia_ManLutLevel(p, nil)
-	if p.pLutLib != nil {
+	if p.PLutLib != nil {
 		steps = 20
 	}
 	arrival := Gia_ManDelayTraceLut(p)
@@ -30,7 +30,7 @@ func Gia_ManDelayTraceLutPrint(p *Gia_Man_t, verbose int32) float32 {
 	}
 	if verbose != 0 {
 		model, unit := "unit-delay", "lev"
-		if p.pLutLib != nil {
+		if p.PLutLib != nil {
 			model, unit = "LUT library", "%"
 		}
 		fmt.Printf("Max delay = %6.2f. Delay trace using %s model:\n", arrival, model)
@@ -38,7 +38,7 @@ func Gia_ManDelayTraceLutPrint(p *Gia_Man_t, verbose int32) float32 {
 		for i := int32(0); i < steps; i++ {
 			count += counters[i]
 			level := i + 1
-			if p.pLutLib != nil {
+			if p.PLutLib != nil {
 				level *= 5
 			}
 			fmt.Printf("%3d %s : %5d  (%6.2f %%)\n", level, unit, count, 100*float64(count)/float64(Gia_ManLutNum(p)))
@@ -49,9 +49,9 @@ func Gia_ManDelayTraceLutPrint(p *Gia_Man_t, verbose int32) float32 {
 
 func Gia_ManDelayTraceLut(p *Gia_Man_t) float32 {
 	var timing *tim.Tim_Man_t
-	if p.pManTime != nil {
+	if p.PManTime != nil {
 		var ok bool
-		timing, ok = p.pManTime.(*tim.Tim_Man_t)
+		timing, ok = p.PManTime.(*tim.Tim_Man_t)
 		if !ok {
 			panic("gia: invalid timing manager")
 		}

@@ -98,7 +98,7 @@ func TestManagerAppendAuxiliaryState(t *testing.T) {
 	a, b := Gia_ManAppendCi(p), Gia_ManAppendCi(p)
 	p.pFanData = make([]int32, 5*16)
 	p.nFansAlloc = 16
-	p.nSimWords = 1
+	p.NSimWords = 1
 	p.vSims = Vec_WrdStart(int(p.nObjs))
 	Vec_WrdWriteEntry(p.vSims, int(a>>1), 0xaaaaaaaaaaaaaaaa)
 	Vec_WrdWriteEntry(p.vSims, int(b>>1), 0xcccccccccccccccc)
@@ -338,11 +338,11 @@ func TestDependencyNeutralNetworkAndRealGates(t *testing.T) {
 	xor := Gia_ManAppendObj(p)
 	xor.iDiff0 = uint32(xor.id - (b >> 1))
 	xor.iDiff1 = uint32(xor.id - (a >> 1))
-	p.pMuxes = make([]uint32, p.nObjs)
+	p.PMuxes = make([]uint32, p.nObjs)
 	mux := Gia_ManAppendObj(p)
 	mux.iDiff0 = uint32(mux.id - (a >> 1))
 	mux.iDiff1 = uint32(mux.id - (b >> 1))
-	p.pMuxes[mux.id] = uint32(c)
+	p.PMuxes[mux.id] = uint32(c)
 	Gia_ManAppendCo(p, xor.id<<1)
 	Gia_ManAppendCo(p, mux.id<<1)
 	if _, _, _, kind := p.Gate(xor.id); kind != 3 {
@@ -389,15 +389,15 @@ func TestRepresentativeChainsAndCycles(t *testing.T) {
 	p := Gia_ManStart(4)
 	a, b := Gia_ManAppendCi(p), Gia_ManAppendCi(p)
 	n := Gia_ManAppendAnd(p, a, b)
-	p.pNexts = make([]int32, p.nObjs)
-	p.pNexts[a>>1] = b >> 1
-	p.pNexts[b>>1] = n >> 1
+	p.PNexts = make([]int32, p.nObjs)
+	p.PNexts[a>>1] = b >> 1
+	p.PNexts[b>>1] = n >> 1
 	Gia_ManDeriveReprs(p)
 	if Gia_ObjRepr(p, b>>1) != a>>1 || Gia_ObjReprObj(p, n>>1) != Gia_ManObj(p, a>>1) {
 		t.Fatal("class representative")
 	}
-	p.pReprs = nil
-	p.pNexts[n>>1] = b >> 1
+	p.PReprs = nil
+	p.PNexts[n>>1] = b >> 1
 	defer func() {
 		if recover() == nil {
 			t.Fatal("cyclic choices accepted")
@@ -411,9 +411,9 @@ func TestRepresentativeMergesPreserveReorderedClasses(t *testing.T) {
 	Gia_ManAppendCi(p)
 	Gia_ManAppendCi(p)
 	Gia_ManAppendCi(p)
-	p.pReprs = make([]Gia_Rpr_t, p.nObjs)
-	for i := range p.pReprs {
-		p.pReprs[i].iRepr = GIA_VOID
+	p.PReprs = make([]Gia_Rpr_t, p.nObjs)
+	for i := range p.PReprs {
+		p.PReprs[i].iRepr = GIA_VOID
 	}
 	giaMergeRepr(p, 1, 3)
 	giaMergeRepr(p, 2, 3)

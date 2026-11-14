@@ -50,8 +50,8 @@ func (p *Gia_Man_t) Gate(id int32) (a, b, c int32, kind int) {
 		return a, 0, 0, 6
 	}
 	b = Gia_ObjFaninLit1(obj, id)
-	if int(id) < len(p.pMuxes) && p.pMuxes[id] != 0 {
-		return int32(p.pMuxes[id]), b, a, 4
+	if int(id) < len(p.PMuxes) && p.PMuxes[id] != 0 {
+		return int32(p.PMuxes[id]), b, a, 4
 	}
 	if Gia_ObjIsXor(obj) != 0 {
 		return a, b, 0, 3

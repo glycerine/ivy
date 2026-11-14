@@ -44,14 +44,14 @@ func TestEquivChoicesComplementedPhase(t *testing.T) {
 	Gia_ManAppendCo(p, y^1)
 	p.StartRepresentatives()
 	Gia_ObjSetRepr(p, y>>1, x>>1)
-	p.pNexts = Gia_ManDeriveNexts(p)
+	p.PNexts = Gia_ManDeriveNexts(p)
 	q := Gia_ManEquivToChoices(p, 1)
 	checkChoiceOutputs(t, p, q, 3)
 	if Gia_ManCountChoices(q) != 1 {
 		t.Fatalf("expected complemented choice, got %d", Gia_ManCountChoices(q))
 	}
 	Gia_ManSetPhase(q)
-	for head, next := range q.pNexts {
+	for head, next := range q.PNexts {
 		if next == 0 {
 			continue
 		}
@@ -79,7 +79,7 @@ func TestEquivChoicesDependentAndShared(t *testing.T) {
 	Gia_ManAppendCo(p, x)
 	p.StartRepresentatives()
 	Gia_ObjSetRepr(p, y>>1, x>>1)
-	p.pNexts = Gia_ManDeriveNexts(p)
+	p.PNexts = Gia_ManDeriveNexts(p)
 	q := Gia_ManEquivToChoices(p, 1)
 	checkChoiceOutputs(t, p, q, 2)
 	if Gia_ManCountChoices(q) != 0 {
@@ -100,7 +100,7 @@ func TestEquivChoicesConstantsAndRegisters(t *testing.T) {
 	Gia_ManSetRegNum(p, 1)
 	p.StartRepresentatives()
 	Gia_ObjSetRepr(p, zero>>1, 0)
-	p.pNexts = Gia_ManDeriveNexts(p)
+	p.PNexts = Gia_ManDeriveNexts(p)
 	q := Gia_ManEquivToChoices(p, 1)
 	checkChoiceOutputs(t, p, q, 2)
 }

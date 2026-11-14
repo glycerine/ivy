@@ -76,9 +76,9 @@ func TestFrameMiniLutNameMapping(t *testing.T) {
 	called := false
 	InstallFrameEquivalenceComputer(f, func(g *Gia_Man_t, limit, verbose int32) *Gia_Man_t {
 		called = limit == 1000 && verbose == 0
-		g.pReprs = make([]Gia_Rpr_t, g.nObjs)
-		for i := range g.pReprs {
-			g.pReprs[i].iRepr = GIA_VOID
+		g.PReprs = make([]Gia_Rpr_t, g.nObjs)
+		for i := range g.PReprs {
+			g.PReprs[i].iRepr = GIA_VOID
 		}
 		return Gia_ManDup(g)
 	})

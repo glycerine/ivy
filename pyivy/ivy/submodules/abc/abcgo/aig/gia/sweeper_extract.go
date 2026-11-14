@@ -21,7 +21,7 @@ func Gia_SweeperExtractUserLogic(p *Gia_Man_t, probes *Vec_Int_t, inputNames, ou
 		Gia_ManExtract_rec(p, Gia_Regular(Gia_Lit2Obj(p, Gia_SweeperProbeLit(p, id))), ids)
 	}
 	dst := Gia_ManStart(1 + Gia_ManPiNum(p) + int32(Vec_IntSize(ids)+Vec_IntSize(probes)) + 100)
-	dst.pName, dst.pSpec = p.pName, p.pSpec
+	dst.pName, dst.PSpec = p.pName, p.PSpec
 	Gia_ManConst0(p).Value = 0
 	for i := int32(0); i < Gia_ManPiNum(p); i++ {
 		Gia_ManPi(p, i).Value = uint32(Gia_ManAppendCi(dst))
@@ -50,10 +50,10 @@ func Gia_SweeperExtractUserLogic(p *Gia_Man_t, probes *Vec_Int_t, inputNames, ou
 		Gia_ManStop(previous)
 	}
 	if inputNames != nil {
-		dst.vNamesIn = Vec_PtrDupStr(inputNames)
+		dst.VNamesIn = Vec_PtrDupStr(inputNames)
 	}
 	if outputNames != nil {
-		dst.vNamesOut = Vec_PtrDupStr(outputNames)
+		dst.VNamesOut = Vec_PtrDupStr(outputNames)
 	}
 	return dst
 }

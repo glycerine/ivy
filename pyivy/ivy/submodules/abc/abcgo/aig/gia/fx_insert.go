@@ -15,7 +15,7 @@ func Gia_ManFxInsert(p *Gia_Man_t, cubes *Vec_Wec_t, phases *Vec_Str_t) *Gia_Man
 		return Gia_ManDup(p)
 	}
 	result := Gia_ManStart(p.nObjs)
-	result.pName, result.pSpec = p.pName, p.pSpec
+	result.pName, result.PSpec = p.pName, p.PSpec
 	Gia_ManHashStart(result)
 	copies := make([]int32, Vec_IntSize(order))
 	for i := range copies {

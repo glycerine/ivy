@@ -20,10 +20,10 @@ func Gia_ObjRefDec(p *Gia_Man_t, obj *Gia_Obj_t) int32 { return Gia_ObjRefDecId(
 func Gia_ObjRefFanin0Inc(p *Gia_Man_t, obj *Gia_Obj_t) { Gia_ObjRefInc(p, Gia_ObjFanin0(obj)) }
 func Gia_ObjRefFanin1Inc(p *Gia_Man_t, obj *Gia_Obj_t) { Gia_ObjRefInc(p, Gia_ObjFanin1(obj)) }
 func giaMuxFanin(p *Gia_Man_t, obj *Gia_Obj_t) *Gia_Obj_t {
-	if int(obj.id) >= len(p.pMuxes) || p.pMuxes[obj.id] == 0 {
+	if int(obj.id) >= len(p.PMuxes) || p.PMuxes[obj.id] == 0 {
 		panic("gia: expected MUX object")
 	}
-	return Gia_ManObj(p, int32(p.pMuxes[obj.id]>>1))
+	return Gia_ManObj(p, int32(p.PMuxes[obj.id]>>1))
 }
 func Gia_ObjRefFanin2Inc(p *Gia_Man_t, obj *Gia_Obj_t) { Gia_ObjRefInc(p, giaMuxFanin(p, obj)) }
 func Gia_ObjRefFanin0Dec(p *Gia_Man_t, obj *Gia_Obj_t) { Gia_ObjRefDec(p, Gia_ObjFanin0(obj)) }

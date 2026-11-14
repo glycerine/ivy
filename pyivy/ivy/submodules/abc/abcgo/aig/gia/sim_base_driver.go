@@ -26,7 +26,7 @@ func Gia_ManPatSatImprove(p *Gia_Man_t, words0, verbose int32) {
 		fmt.Println("There are no counter-examples.  No need for more simulation.")
 		return
 	}
-	p.vSimsPi = Gia_ManSimBitPacking(p, store, counts[1], counts[0])
+	p.VSimsPi = Gia_ManSimBitPacking(p, store, counts[1], counts[0])
 }
 func Gia_ManSimRelPrint(p *Gia_Man_t, relation *Vec_Wrd_t, outputMints *Vec_Int_t) {
 	words := giaPatternWords(p)

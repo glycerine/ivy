@@ -83,7 +83,7 @@ func Gia_ManOrigIdsReduce(p *Gia_Man_t, pairs *Vec_Int_t) *Gia_Man_t {
 	Gia_ManSetPhase(p)
 	q := Gia_ManStart(p.nObjs)
 	q.pName = p.pName
-	q.pSpec = p.pSpec
+	q.PSpec = p.PSpec
 	Gia_ManFillValue(p)
 	Gia_ObjSetValue(Gia_ManConst0(p), 0)
 	for i := int32(0); i < Gia_ManCiNum(p); i++ {
@@ -123,12 +123,12 @@ func Gia_ManOrigIdsReduce(p *Gia_Man_t, pairs *Vec_Int_t) *Gia_Man_t {
 	}
 	Gia_ManSetRegNum(q, Gia_ManRegNum(p))
 	Gia_ManSetConstrNum(q, Gia_ManConstrNum(p))
-	if p.pReprs != nil || p.pNexts != nil {
+	if p.PReprs != nil || p.PNexts != nil {
 		panic("gia: existing equivalence classes")
 	}
-	p.pReprs = make([]Gia_Rpr_t, p.nObjs)
-	for i := range p.pReprs {
-		p.pReprs[i].iRepr = GIA_VOID
+	p.PReprs = make([]Gia_Rpr_t, p.nObjs)
+	for i := range p.PReprs {
+		p.PReprs[i].iRepr = GIA_VOID
 	}
 	Gia_ManFillValue(q)
 	for _, obj := range p.pObjs {
@@ -147,6 +147,6 @@ func Gia_ManOrigIdsReduce(p *Gia_Man_t, pairs *Vec_Int_t) *Gia_Man_t {
 			Gia_ObjSetRepr(p, obj.id, Gia_ObjValue(other))
 		}
 	}
-	p.pNexts = Gia_ManDeriveNexts(p)
+	p.PNexts = Gia_ManDeriveNexts(p)
 	return q
 }

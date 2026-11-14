@@ -26,9 +26,9 @@ func Sbl_ManCreateTiming(p *Sbl_Man_t, start int32) int32 {
 	g := p.pGia
 	vec.Vec_IntFill(p.vArrs, int(g.nObjs), 0)
 	var timing *tim.Tim_Man_t
-	if g.pManTime != nil {
+	if g.PManTime != nil {
 		var ok bool
-		timing, ok = g.pManTime.(*tim.Tim_Man_t)
+		timing, ok = g.PManTime.(*tim.Tim_Man_t)
 		if !ok {
 			panic("gia: invalid timing manager")
 		}

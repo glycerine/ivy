@@ -128,11 +128,11 @@ func TestGiaTruthLutMapAndCofactors(t *testing.T) {
 	if Gia_LutComputeTruth6Map(p, 0, m) != want {
 		t.Fatal("mapped variable order")
 	}
-	p.vMapping = vec.Vec_IntStart(int(p.nObjs))
-	vec.Vec_IntWriteEntry(p.vMapping, int(lit>>1), int32(p.nObjs))
-	vec.Vec_IntPush(p.vMapping, 3)
+	p.VMapping = vec.Vec_IntStart(int(p.nObjs))
+	vec.Vec_IntWriteEntry(p.VMapping, int(lit>>1), int32(p.nObjs))
+	vec.Vec_IntPush(p.VMapping, 3)
 	for _, id := range vec.Vec_IntArray(s) {
-		vec.Vec_IntPush(p.vMapping, id)
+		vec.Vec_IntPush(p.VMapping, id)
 	}
 	temp := vec.Vec_WrdStart(int(p.nObjs))
 	if Gia_LutComputeTruth6(p, lit>>1, temp) != s_Truth6[0]&^s_Truth6[2] {

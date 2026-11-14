@@ -52,29 +52,29 @@ func Gia_ManSetPhase1(p *Gia_Man_t) {
 		}
 	}
 }
-func (p *Gia_Man_t) HasRepresentatives() bool { return p.pReprs != nil }
+func (p *Gia_Man_t) HasRepresentatives() bool { return p.PReprs != nil }
 func (p *Gia_Man_t) StartRepresentatives() {
-	p.pReprs = make([]Gia_Rpr_t, len(p.pObjs))
-	p.pNexts = make([]int32, len(p.pObjs))
-	for i := range p.pReprs {
-		p.pReprs[i].iRepr = GIA_VOID
+	p.PReprs = make([]Gia_Rpr_t, len(p.pObjs))
+	p.PNexts = make([]int32, len(p.pObjs))
+	for i := range p.PReprs {
+		p.PReprs[i].iRepr = GIA_VOID
 	}
 }
-func (p *Gia_Man_t) Next(id int32) int32 { return p.pNexts[id] }
+func (p *Gia_Man_t) Next(id int32) int32 { return p.PNexts[id] }
 func (p *Gia_Man_t) SetNext(id, next int32) {
 	if next < -1 || int(next) >= len(p.pObjs) {
 		panic("gia: invalid class link")
 	}
-	p.pNexts[id] = next
+	p.PNexts[id] = next
 }
-func (p *Gia_Man_t) SimulationWordCount() int32 { return p.nSimWords }
+func (p *Gia_Man_t) SimulationWordCount() int32 { return p.NSimWords }
 
 // SimulationInputs returns borrowed simulation storage.
 func (p *Gia_Man_t) SimulationInputs() []uint64 {
-	if p.vSimsPi == nil {
+	if p.VSimsPi == nil {
 		return nil
 	}
-	return Vec_WrdArray(p.vSimsPi)
+	return Vec_WrdArray(p.VSimsPi)
 }
 
 func Gia_ManCleanMark01(p *Gia_Man_t) {

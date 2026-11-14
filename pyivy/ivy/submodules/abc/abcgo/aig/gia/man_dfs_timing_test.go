@@ -20,7 +20,7 @@ func TestGiaDfsTimingAndMapping(t *testing.T) {
 			for _, v := range []int32{3, a >> 1, b >> 1, c >> 1, y >> 1} {
 				vec.Vec_IntPush(mapping, v)
 			}
-			g.vMapping = mapping
+			g.VMapping = mapping
 		}
 		order := Gia_ManDfsCollect(g)
 		want := []int32{x >> 1, y >> 1}
@@ -58,7 +58,7 @@ func TestGiaDfsTimingBox(t *testing.T) {
 	tm := tim.Tim_ManStart(2, 2)
 	tim.Tim_ManSetDelayTables(tm, [][]float32{{0, 1, 1, 3}})
 	tim.Tim_ManCreateBox(tm, 0, 1, 1, 1, 0, 0)
-	g.pManTime = tm
+	g.PManTime = tm
 	objects := Gia_ManDfsCollect(g)
 	if !reflect.DeepEqual(vec.Vec_IntArray(objects), []int32{-1, root >> 1}) {
 		t.Fatalf("box order %v", vec.Vec_IntArray(objects))

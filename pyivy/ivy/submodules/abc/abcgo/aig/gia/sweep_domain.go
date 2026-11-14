@@ -5,7 +5,7 @@ package gia
 type SweepCorrespondence interface{ SweepCorrespondence(*Gia_Man_t) }
 
 func Gia_ManSweepComputeOneDomainEquivs(p *Gia_Man_t, classes *Vec_Int_t, domain int32, parameters any, constant, equivalent, verbose int32) {
-	if domain < 1 || domain > Vec_IntFindMax(classes) || p.pManTime != nil || Gia_ManRegNum(p) <= 0 || Vec_IntSize(classes) != int(Gia_ManRegNum(p)) {
+	if domain < 1 || domain > Vec_IntFindMax(classes) || p.PManTime != nil || Gia_ManRegNum(p) <= 0 || Vec_IntSize(classes) != int(Gia_ManRegNum(p)) {
 		panic("gia: invalid sweep domain")
 	}
 	perm := Vec_IntAlloc(int(Gia_ManRegNum(p)))

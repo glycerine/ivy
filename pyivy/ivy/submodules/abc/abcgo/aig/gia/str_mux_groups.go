@@ -69,7 +69,7 @@ func Str_MuxStructDump(p *Gia_Man_t, obj *Gia_Obj_t, out *Vec_Str_t) {
 }
 func Str_ManMuxCountOne(s string) int32 { return int32(strings.Count(s, "[")) }
 func Str_ManDeriveTrees(p *Gia_Man_t) *Vec_Wec_t {
-	if p.pMuxes == nil {
+	if p.PMuxes == nil {
 		panic("gia: mux representation required")
 	}
 	Gia_ManCreateRefs(p)

@@ -72,12 +72,12 @@ func Gia_ManEquivReduce_rec(q, p *Gia_Man_t, obj *Gia_Obj_t, useAll, dual int32)
 	Gia_ObjSetValue(obj, Gia_ManHashAnd(q, Gia_ObjFanin0Copy(obj), Gia_ObjFanin1Copy(obj)))
 }
 func giaEquivEnsureRepresentatives(p *Gia_Man_t) bool {
-	if p.pReprs == nil && p.pSibls != nil {
-		p.pReprs = make([]Gia_Rpr_t, p.nObjs)
+	if p.PReprs == nil && p.pSibls != nil {
+		p.PReprs = make([]Gia_Rpr_t, p.nObjs)
 		mapping := make([]int32, p.nObjs)
 		for i := range mapping {
 			mapping[i] = -1
-			p.pReprs[i].iRepr = GIA_VOID
+			p.PReprs[i].iRepr = GIA_VOID
 		}
 		for i, sibling := range p.pSibls {
 			if sibling > 0 {
@@ -92,14 +92,14 @@ func giaEquivEnsureRepresentatives(p *Gia_Man_t) bool {
 				Gia_ObjSetRepr(p, int32(i), mapping[i])
 			}
 		}
-		p.pNexts = Gia_ManDeriveNexts(p)
+		p.PNexts = Gia_ManDeriveNexts(p)
 	}
-	return p.pReprs != nil
+	return p.PReprs != nil
 }
 func giaEquivReductionStart(p *Gia_Man_t) *Gia_Man_t {
 	q := Gia_ManStart(p.nObjs)
 	q.pName = p.pName
-	q.pSpec = p.pSpec
+	q.PSpec = p.PSpec
 	Gia_ManFillValue(p)
 	Gia_ObjSetValue(Gia_ManConst0(p), 0)
 	for i := int32(0); i < Gia_ManCiNum(p); i++ {
@@ -163,7 +163,7 @@ func Gia_ManEquivReduce2_rec(q, p *Gia_Man_t, obj *Gia_Obj_t, mapping *Vec_Int_t
 		head := repr.id
 		best := Gia_ManObj(p, vec.Vec_IntEntry(mapping, int(head)))
 		Gia_ManEquivReduce2_rec(q, p, best, mapping, 0)
-		for id := head; id != 0; id = p.pNexts[id] {
+		for id := head; id != 0; id = p.PNexts[id] {
 			member := Gia_ManObj(p, id)
 			Gia_ObjSetValue(member, Gia_ObjValue(best)^Gia_ObjPhaseReal(best)^Gia_ObjPhaseReal(member))
 		}

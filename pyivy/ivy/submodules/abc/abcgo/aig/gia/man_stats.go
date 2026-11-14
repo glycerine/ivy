@@ -66,7 +66,7 @@ func Gia_ManPrintStats(p *Gia_Man_t, pars *Gps_Par_t) {
 		fmt.Printf("  boxff =%d(%d)", n, Gia_ManClockDomainNum(p))
 	}
 	kind := "and"
-	if p.pMuxes != nil {
+	if p.PMuxes != nil {
 		kind = "nod"
 	}
 	level, average := Gia_ManLevelNum(p), Gia_ManLevelAve(p)
@@ -85,13 +85,13 @@ func Gia_ManPrintStats(p *Gia_Man_t, pars *Gps_Par_t) {
 	if Gia_ManHasChoices(p) != 0 {
 		fmt.Printf("  ch =%5d", Gia_ManChoiceNum(p))
 	}
-	if p.pManTime != nil {
+	if p.PManTime != nil {
 		fmt.Printf("  box = %d  bb = %d", Gia_ManNonRegBoxNum(p), Gia_ManBlackBoxNum(p))
 	}
 	if n := Gia_ManBufNum(p); n != 0 {
 		fmt.Printf("  buf = %d", n)
 	}
-	if n := Gia_ManXorNum(p); n != 0 && p.pMuxes == nil {
+	if n := Gia_ManXorNum(p); n != 0 && p.PMuxes == nil {
 		fmt.Printf("  xor = %d", n)
 	}
 	if pars != nil && pars.FMuxXor != 0 {
@@ -111,7 +111,7 @@ func Gia_ManPrintStats(p *Gia_Man_t, pars *Gps_Par_t) {
 		giaPowerHistory.Unlock()
 	}
 	fmt.Println()
-	if p.pReprs != nil && p.pNexts != nil {
+	if p.PReprs != nil && p.PNexts != nil {
 		Gia_ManEquivPrintClasses(p, 0, 0)
 	}
 	dump := ""
@@ -126,10 +126,10 @@ func Gia_ManPrintStats(p *Gia_Man_t, pars *Gps_Par_t) {
 	if pars != nil && pars.FNpn != 0 && Gia_ManHasMapping(p) != 0 && Gia_ManLutSizeMax(p) <= 4 {
 		Gia_ManPrintNpnClasses(p)
 	}
-	if p.vPacking != nil {
+	if p.VPacking != nil {
 		Gia_ManPrintPackingStats(p)
 	}
-	if p.vEdge1 != nil {
+	if p.VEdge1 != nil {
 		Gia_ManPrintEdges(p)
 	}
 	if pars != nil && pars.FLutProf != 0 && Gia_ManHasMapping(p) != 0 {
@@ -141,8 +141,8 @@ func Gia_ManPrintStats(p *Gia_Man_t, pars *Gps_Par_t) {
 	Gia_ManPrintFlopClasses(p)
 	Gia_ManPrintGateClasses(p)
 	Gia_ManPrintObjClasses(p)
-	if p.vInitClasses != nil {
-		Gia_ManPrintInitClasses(p.vInitClasses)
+	if p.VInitClasses != nil {
+		Gia_ManPrintInitClasses(p.VInitClasses)
 	}
 	Gia_ManCheckIntegrityWithBoxes(p)
 	if pars != nil && pars.FTents != 0 {

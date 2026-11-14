@@ -22,12 +22,12 @@ func Gia_ManDupNormalize(src *Gia_Man_t, hash int32) *Gia_Man_t {
 	dst := Gia_ManStart(src.nObjs)
 	dst.CopyIdentityFrom(src)
 	src.pObjs[0].Value = 0
-	if src.pMuxes != nil {
+	if src.PMuxes != nil {
 		dst.EnableMuxes()
 	}
 	inputs := append([]int32(nil), Vec_IntArray(src.vCis)...)
 	if Gia_ManIsSeqWithBoxes(src) != 0 {
-		manager, ok := src.pManTime.(*tim.Tim_Man_t)
+		manager, ok := src.PManTime.(*tim.Tim_Man_t)
 		if !ok {
 			panic("gia: normalization needs native box timing")
 		}
@@ -84,7 +84,7 @@ func Gia_ManDupNormalize(src *Gia_Man_t, hash int32) *Gia_Man_t {
 	}
 	Gia_ManSetRegNum(dst, src.nRegs)
 	dst.nConstrs = src.nConstrs
-	if src.pReprs != nil {
+	if src.PReprs != nil {
 		mapping := make([]int32, src.nObjs)
 		for id, obj := range src.pObjs {
 			mapping[id] = int32(obj.Value) >> 1
@@ -97,10 +97,10 @@ func Gia_ManDupNormalize(src *Gia_Man_t, hash int32) *Gia_Man_t {
 }
 
 func Gia_ManBoxNum(p *Gia_Man_t) int32 {
-	if p.pManTime == nil {
+	if p.PManTime == nil {
 		return 0
 	}
-	return int32(tim.Tim_ManBoxNum(p.pManTime.(*tim.Tim_Man_t)))
+	return int32(tim.Tim_ManBoxNum(p.PManTime.(*tim.Tim_Man_t)))
 }
 func Gia_ManRegBoxNum(p *Gia_Man_t) int32 {
 	if p.vRegClasses == nil {
@@ -110,22 +110,22 @@ func Gia_ManRegBoxNum(p *Gia_Man_t) int32 {
 }
 func Gia_ManNonRegBoxNum(p *Gia_Man_t) int32 { return Gia_ManBoxNum(p) - Gia_ManRegBoxNum(p) }
 func Gia_ManBlackBoxNum(p *Gia_Man_t) int32 {
-	if p.pManTime == nil {
+	if p.PManTime == nil {
 		return 0
 	}
-	return int32(tim.Tim_ManBlackBoxNum(p.pManTime.(*tim.Tim_Man_t)))
+	return int32(tim.Tim_ManBlackBoxNum(p.PManTime.(*tim.Tim_Man_t)))
 }
 func Gia_ManBoxCiNum(p *Gia_Man_t) int32 {
-	if p.pManTime == nil {
+	if p.PManTime == nil {
 		return 0
 	}
-	return Gia_ManCiNum(p) - int32(tim.Tim_ManPiNum(p.pManTime.(*tim.Tim_Man_t)))
+	return Gia_ManCiNum(p) - int32(tim.Tim_ManPiNum(p.PManTime.(*tim.Tim_Man_t)))
 }
 func Gia_ManBoxCoNum(p *Gia_Man_t) int32 {
-	if p.pManTime == nil {
+	if p.PManTime == nil {
 		return 0
 	}
-	return Gia_ManCoNum(p) - int32(tim.Tim_ManPoNum(p.pManTime.(*tim.Tim_Man_t)))
+	return Gia_ManCoNum(p) - int32(tim.Tim_ManPoNum(p.PManTime.(*tim.Tim_Man_t)))
 }
 func Gia_ManClockDomainNum(p *Gia_Man_t) int32 {
 	if p.vRegClasses == nil {

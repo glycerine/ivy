@@ -40,14 +40,14 @@ func Cec4_ManMarkIndependentClasses(p, q *Gia_Man_t) int32 {
 			panic("gia: dependent class head")
 		}
 		Gia_ObjSetTravIdPreviousId(q, id)
-		p.pReprs[head].fColorA = 1
-		for member := p.pNexts[head]; member != 0; member = p.pNexts[member] {
+		p.PReprs[head].fColorA = 1
+		for member := p.PNexts[head]; member != 0; member = p.PNexts[member] {
 			if Gia_ObjRepr(p, member) != head {
 				panic("gia: invalid equivalence class")
 			}
 			id = Gia_ObjValue(Gia_ManObj(p, member)) >> 1
 			if Cec4_ManMarkIndependentClasses_rec(q, id) != 0 {
-				p.pReprs[member].fColorA = 1
+				p.PReprs[member].fColorA = 1
 				found = 1
 			}
 			Gia_ObjSetTravIdPreviousId(q, id)
@@ -56,11 +56,11 @@ func Cec4_ManMarkIndependentClasses(p, q *Gia_Man_t) int32 {
 	return found
 }
 func Gia_ManTransferTest(p *Gia_Man_t) {
-	oldReprs, oldNexts := p.pReprs, p.pNexts
+	oldReprs, oldNexts := p.PReprs, p.PNexts
 	q := Gia_ManChangeOrder(p)
 	Gia_ManTransferEquivs(p, q)
-	p.pReprs = nil
-	p.pNexts = nil
+	p.PReprs = nil
+	p.PNexts = nil
 	for _, obj := range p.pObjs {
 		lit := Gia_ObjValue(obj)
 		if lit&1 != 0 {
@@ -69,18 +69,18 @@ func Gia_ManTransferTest(p *Gia_Man_t) {
 		Gia_ObjSetValue(Gia_ManObj(q, lit>>1), obj.id<<1)
 	}
 	Gia_ManTransferEquivs(q, p)
-	reprsMatch, nextsMatch := len(p.pReprs) == len(oldReprs), len(p.pNexts) == len(oldNexts)
+	reprsMatch, nextsMatch := len(p.PReprs) == len(oldReprs), len(p.PNexts) == len(oldNexts)
 	if reprsMatch {
 		for i := range oldReprs {
 			oldReprs[i].fProved = 0
-			if p.pReprs[i] != oldReprs[i] {
+			if p.PReprs[i] != oldReprs[i] {
 				reprsMatch = false
 			}
 		}
 	}
 	if nextsMatch {
 		for i := range oldNexts {
-			if p.pNexts[i] != oldNexts[i] {
+			if p.PNexts[i] != oldNexts[i] {
 				nextsMatch = false
 			}
 		}

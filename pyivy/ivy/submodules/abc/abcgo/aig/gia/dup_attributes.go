@@ -7,21 +7,21 @@ import (
 
 func Gia_ManDupWithAttributes(src *Gia_Man_t) *Gia_Man_t {
 	out := Gia_ManDup(src)
-	if src.vMapping != nil {
-		out.vMapping = vec.Vec_IntDup(src.vMapping)
+	if src.VMapping != nil {
+		out.VMapping = vec.Vec_IntDup(src.VMapping)
 	}
-	if src.vPacking != nil {
-		out.vPacking = vec.Vec_IntDup(src.vPacking)
+	if src.VPacking != nil {
+		out.VPacking = vec.Vec_IntDup(src.VPacking)
 	}
-	if src.pManTime != nil {
-		manager, ok := src.pManTime.(*tim.Tim_Man_t)
+	if src.PManTime != nil {
+		manager, ok := src.PManTime.(*tim.Tim_Man_t)
 		if !ok {
 			panic("gia: invalid timing manager")
 		}
-		out.pManTime = tim.Tim_ManDup(manager, 0)
+		out.PManTime = tim.Tim_ManDup(manager, 0)
 	}
-	if src.pAigExtra != nil {
-		out.pAigExtra = Gia_ManDup(src.pAigExtra)
+	if src.PAigExtra != nil {
+		out.PAigExtra = Gia_ManDup(src.PAigExtra)
 	}
 	out.nAnd2Delay = src.nAnd2Delay
 	if src.vRegClasses != nil {
@@ -30,9 +30,9 @@ func Gia_ManDupWithAttributes(src *Gia_Man_t) *Gia_Man_t {
 	if src.vRegInits != nil {
 		out.vRegInits = vec.Vec_IntDup(src.vRegInits)
 	}
-	if src.vConfigs != nil {
-		out.vConfigs = vec.Vec_IntDup(src.vConfigs)
+	if src.VConfigs != nil {
+		out.VConfigs = vec.Vec_IntDup(src.VConfigs)
 	}
-	out.pCellStr = src.pCellStr
+	out.PCellStr = src.PCellStr
 	return out
 }

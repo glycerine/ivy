@@ -99,16 +99,16 @@ func Gia_AigerReadEquivClasses(pos *[]byte, nSize int32) ([]Gia_Rpr_t, error) {
 	return result, nil
 }
 func Gia_WriteEquivClassesInt(p *Gia_Man_t, size *int32) ([]byte, error) {
-	if len(p.pReprs) != int(p.nObjs) {
+	if len(p.PReprs) != int(p.nObjs) {
 		return nil, fmt.Errorf("gia: equivalence array length mismatch")
 	}
 	groups := map[int][]int{}
 	for node := 1; node < int(p.nObjs); node++ {
-		repr := p.pReprs[node].iRepr
+		repr := p.PReprs[node].iRepr
 		if repr == GIA_VOID {
 			continue
 		}
-		if repr >= uint32(node) || p.pReprs[repr].iRepr != GIA_VOID {
+		if repr >= uint32(node) || p.PReprs[repr].iRepr != GIA_VOID {
 			return nil, fmt.Errorf("gia: invalid equivalence representative")
 		}
 		groups[int(repr)] = append(groups[int(repr)], node)
@@ -118,7 +118,7 @@ func Gia_WriteEquivClassesInt(p *Gia_Man_t, size *int32) ([]byte, error) {
 	members := groups[0]
 	prev := 0
 	for _, node := range members {
-		item := uint32(node-prev)<<2 | (p.pReprs[node].fProved&1)<<1
+		item := uint32(node-prev)<<2 | (p.PReprs[node].fProved&1)<<1
 		out = aigerAppendUvar(out, item)
 		prev = node
 	}
@@ -135,7 +135,7 @@ func Gia_WriteEquivClassesInt(p *Gia_Man_t, size *int32) ([]byte, error) {
 		previousRoot = repr
 		prev = repr
 		for _, node := range groups[repr] {
-			out = aigerAppendUvar(out, uint32(node-prev)<<2|(p.pReprs[node].fProved&1)<<1)
+			out = aigerAppendUvar(out, uint32(node-prev)<<2|(p.PReprs[node].fProved&1)<<1)
 			prev = node
 		}
 	}
@@ -288,10 +288,10 @@ func Gia_AigerReadMapping(pos *[]byte, nObjs int32) ([]int32, error) {
 	return result, nil
 }
 func Gia_AigerWriteMappingInt(p *Gia_Man_t, size *int32) ([]byte, error) {
-	if p.vMapping == nil {
+	if p.VMapping == nil {
 		return nil, fmt.Errorf("gia: mapping unavailable")
 	}
-	luts, err := aigerLUTs(vec.Vec_IntArray(p.vMapping), p.nObjs)
+	luts, err := aigerLUTs(vec.Vec_IntArray(p.VMapping), p.nObjs)
 	if err != nil {
 		return nil, err
 	}
@@ -337,10 +337,10 @@ func Gia_AigerReadMappingSimple(pos *[]byte, nSize int32) ([]int32, error) {
 	return result, nil
 }
 func Gia_AigerWriteMappingSimple(p *Gia_Man_t) (*Vec_Str_t, error) {
-	if p.vMapping == nil {
+	if p.VMapping == nil {
 		return nil, fmt.Errorf("gia: mapping unavailable")
 	}
-	mapping := vec.Vec_IntArray(p.vMapping)
+	mapping := vec.Vec_IntArray(p.VMapping)
 	if _, err := aigerLUTs(mapping, p.nObjs); err != nil {
 		return nil, err
 	}
@@ -385,10 +385,10 @@ func Gia_AigerReadMappingDoc(pos *[]byte, nObjs int32) (*Vec_Int_t, error) {
 	return aigerVecInts(mapping), nil
 }
 func Gia_AigerWriteMappingDoc(p *Gia_Man_t) (*Vec_Str_t, error) {
-	if p.vMapping == nil {
+	if p.VMapping == nil {
 		return nil, fmt.Errorf("gia: mapping unavailable")
 	}
-	luts, err := aigerLUTs(vec.Vec_IntArray(p.vMapping), p.nObjs)
+	luts, err := aigerLUTs(vec.Vec_IntArray(p.VMapping), p.nObjs)
 	if err != nil {
 		return nil, err
 	}
@@ -472,7 +472,7 @@ func aigerDecodeExtension(p *Gia_Man_t, tag byte, payload []byte, opts AigerRead
 		if err != nil {
 			return err
 		}
-		p.pAigExtra = extra
+		p.PAigExtra = extra
 	case 'c', 'd':
 		if len(data) != 4 {
 			return fmt.Errorf("invalid scalar extension size")
@@ -497,8 +497,8 @@ func aigerDecodeExtension(p *Gia_Man_t, tag byte, payload []byte, opts AigerRead
 		if len(data) != 0 {
 			return fmt.Errorf("trailing equivalence bytes")
 		}
-		p.pReprs = reprs
-		p.pNexts = make([]int32, p.nObjs)
+		p.PReprs = reprs
+		p.PNexts = make([]int32, p.nObjs)
 		last := map[uint32]int32{}
 		for node, r := range reprs {
 			if r.iRepr == GIA_VOID {
@@ -508,7 +508,7 @@ func aigerDecodeExtension(p *Gia_Man_t, tag byte, payload []byte, opts AigerRead
 			if !ok {
 				previous = int32(r.iRepr)
 			}
-			p.pNexts[previous] = int32(node)
+			p.PNexts[previous] = int32(node)
 			last[r.iRepr] = int32(node)
 		}
 	case 'm':
@@ -519,7 +519,7 @@ func aigerDecodeExtension(p *Gia_Man_t, tag byte, payload []byte, opts AigerRead
 		if len(data) != 0 {
 			return fmt.Errorf("trailing mapping bytes")
 		}
-		p.vMapping = mapping
+		p.VMapping = mapping
 	case 'k':
 		packing, err := Gia_AigerReadPacking(&data, int32(len(data)))
 		if err != nil {
@@ -528,7 +528,7 @@ func aigerDecodeExtension(p *Gia_Man_t, tag byte, payload []byte, opts AigerRead
 		if err := aigerValidatePacking(vec.Vec_IntArray(packing), p.nObjs); err != nil {
 			return err
 		}
-		p.vPacking = packing
+		p.VPacking = packing
 	case 'n':
 		end := bytes.IndexByte(data, 0)
 		if end < 0 || end != len(data)-1 {
@@ -554,15 +554,15 @@ func aigerDecodeExtension(p *Gia_Man_t, tag byte, payload []byte, opts AigerRead
 			if len(values) != int(p.nRegs) {
 				return fmt.Errorf("flop-class count mismatch")
 			}
-			p.vFlopClasses = aigerVecInts(values)
+			p.VFlopClasses = aigerVecInts(values)
 		} else {
 			if len(values) != int(p.nObjs) {
 				return fmt.Errorf("object-class count mismatch")
 			}
 			if tag == 'g' {
-				p.vGateClasses = aigerVecInts(values)
+				p.VGateClasses = aigerVecInts(values)
 			} else {
-				p.vObjClasses = aigerVecInts(values)
+				p.VObjClasses = aigerVecInts(values)
 			}
 		}
 	case 'i', 'o':
@@ -575,9 +575,9 @@ func aigerDecodeExtension(p *Gia_Man_t, tag byte, payload []byte, opts AigerRead
 			times[i] = math.Float32frombits(uint32(value))
 		}
 		if tag == 'i' {
-			p.vInArrs = vec.Vec_FltAllocArray(times, len(times))
+			p.VInArrs = vec.Vec_FltAllocArray(times, len(times))
 		} else {
-			p.vOutReqs = vec.Vec_FltAllocArray(times, len(times))
+			p.VOutReqs = vec.Vec_FltAllocArray(times, len(times))
 		}
 	case 'u':
 		if len(data) != int(p.nObjs) {
@@ -603,8 +603,8 @@ func aigerDecodeExtension(p *Gia_Man_t, tag byte, payload []byte, opts AigerRead
 		if err != nil {
 			return err
 		}
-		p.pCellStr = string(data[:end])
-		p.vConfigs = aigerVecInts(values)
+		p.PCellStr = string(data[:end])
+		p.VConfigs = aigerVecInts(values)
 	case 'q':
 		values, err := aigerBEInts(data)
 		if err != nil || len(values) == 0 || values[0] < 0 || int64(values[0])*2 != int64(len(values)-1) {
@@ -644,28 +644,28 @@ func aigerDecodeExtension(p *Gia_Man_t, tag byte, payload []byte, opts AigerRead
 				}
 			}
 		}
-		p.vEdge1 = aigerVecInts(first)
-		p.vEdge2 = aigerVecInts(second)
+		p.VEdge1 = aigerVecInts(first)
+		p.VEdge2 = aigerVecInts(second)
 	case 'h', 't':
 		if tag == 'h' {
 			if manager, err := timpkg.UnmarshalAigerTiming(data); err == nil {
-				p.pManTime = manager
+				p.PManTime = manager
 			} else {
-				timing, _ := p.pManTime.(*AigerTimingData)
+				timing, _ := p.PManTime.(*AigerTimingData)
 				if timing == nil {
 					timing = new(AigerTimingData)
 				}
 				timing.Hierarchy = append([]byte(nil), data...)
-				p.pManTime = timing
+				p.PManTime = timing
 			}
 		} else {
-			if _, isTimManager := p.pManTime.(*timpkg.Tim_Man_t); !isTimManager {
-				timing, _ := p.pManTime.(*AigerTimingData)
+			if _, isTimManager := p.PManTime.(*timpkg.Tim_Man_t); !isTimManager {
+				timing, _ := p.PManTime.(*AigerTimingData)
 				if timing == nil {
 					timing = new(AigerTimingData)
 				}
 				timing.Timing = append([]byte(nil), data...)
-				p.pManTime = timing
+				p.PManTime = timing
 			}
 		}
 	}
@@ -754,11 +754,11 @@ func aigerWireMetadata(p *Gia_Man_t, wire *aigerWireModel) (*Gia_Man_t, error) {
 		return aigerVecInts(values), nil
 	}
 	var err error
-	meta.vGateClasses, err = remapVector(p.vGateClasses)
+	meta.VGateClasses, err = remapVector(p.VGateClasses)
 	if err != nil {
 		return nil, err
 	}
-	meta.vObjClasses, err = remapVector(p.vObjClasses)
+	meta.VObjClasses, err = remapVector(p.VObjClasses)
 	if err != nil {
 		return nil, err
 	}
@@ -780,8 +780,8 @@ func aigerWireMetadata(p *Gia_Man_t, wire *aigerWireModel) (*Gia_Man_t, error) {
 			meta.pPlacement[wire.ids[id]] = value
 		}
 	}
-	if p.vMapping != nil {
-		luts, err := aigerLUTs(vec.Vec_IntArray(p.vMapping), p.nObjs)
+	if p.VMapping != nil {
+		luts, err := aigerLUTs(vec.Vec_IntArray(p.VMapping), p.nObjs)
 		if err != nil {
 			return nil, err
 		}
@@ -801,10 +801,10 @@ func aigerWireMetadata(p *Gia_Man_t, wire *aigerWireModel) (*Gia_Man_t, error) {
 		if err != nil {
 			return nil, err
 		}
-		meta.vMapping = aigerVecInts(values)
+		meta.VMapping = aigerVecInts(values)
 	}
-	if p.vPacking != nil {
-		values := append([]int32(nil), vec.Vec_IntArray(p.vPacking)...)
+	if p.VPacking != nil {
+		values := append([]int32(nil), vec.Vec_IntArray(p.VPacking)...)
 		if err := aigerValidatePacking(values, p.nObjs); err != nil {
 			return nil, err
 		}
@@ -819,26 +819,26 @@ func aigerWireMetadata(p *Gia_Man_t, wire *aigerWireModel) (*Gia_Man_t, error) {
 			}
 			i += n
 		}
-		meta.vPacking = aigerVecInts(values)
+		meta.VPacking = aigerVecInts(values)
 	}
-	if p.pReprs != nil {
-		if len(p.pReprs) != int(p.nObjs) {
+	if p.PReprs != nil {
+		if len(p.PReprs) != int(p.nObjs) {
 			return nil, fmt.Errorf("gia: representative array length mismatch")
 		}
 		groups := map[uint32][]int32{}
-		for node, r := range p.pReprs {
+		for node, r := range p.PReprs {
 			if r.iRepr == GIA_VOID {
 				continue
 			}
-			if r.iRepr >= uint32(node) || p.pReprs[r.iRepr].iRepr != GIA_VOID {
+			if r.iRepr >= uint32(node) || p.PReprs[r.iRepr].iRepr != GIA_VOID {
 				return nil, fmt.Errorf("gia: invalid representative class")
 			}
 			groups[r.iRepr] = append(groups[r.iRepr], int32(node))
 		}
-		meta.pReprs = make([]Gia_Rpr_t, wire.objects)
-		meta.pNexts = make([]int32, wire.objects)
-		for i := range meta.pReprs {
-			meta.pReprs[i].iRepr = GIA_VOID
+		meta.PReprs = make([]Gia_Rpr_t, wire.objects)
+		meta.PNexts = make([]int32, wire.objects)
+		for i := range meta.PReprs {
+			meta.PReprs[i].iRepr = GIA_VOID
 		}
 		for head, nodes := range groups {
 			nodes = append(nodes, int32(head))
@@ -850,16 +850,16 @@ func aigerWireMetadata(p *Gia_Man_t, wire *aigerWireModel) (*Gia_Man_t, error) {
 			}
 			sort.Slice(mapped, func(i, j int) bool { return mapped[i] < mapped[j] })
 			for i, node := range mapped[1:] {
-				meta.pReprs[node].iRepr = uint32(mapped[0])
+				meta.PReprs[node].iRepr = uint32(mapped[0])
 				// Reparenting to an unproved member cannot certify relations to
 				// the new head. The old head itself is trivially proved.
 				headOld := oldAt[mapped[0]]
-				headProved := headOld == int32(head) || p.pReprs[headOld].fProved != 0
+				headProved := headOld == int32(head) || p.PReprs[headOld].fProved != 0
 				nodeOld := oldAt[node]
-				if headProved && (nodeOld == int32(head) || p.pReprs[nodeOld].fProved != 0) {
-					meta.pReprs[node].fProved = 1
+				if headProved && (nodeOld == int32(head) || p.PReprs[nodeOld].fProved != 0) {
+					meta.PReprs[node].fProved = 1
 				}
-				meta.pNexts[mapped[i]] = node
+				meta.PNexts[mapped[i]] = node
 			}
 		}
 	}
@@ -905,11 +905,11 @@ func aigerWireMetadata(p *Gia_Man_t, wire *aigerWireModel) (*Gia_Man_t, error) {
 			}
 		}
 	}
-	if p.vEdge1 != nil || p.vEdge2 != nil {
-		if p.vEdge1 == nil || p.vEdge2 == nil {
+	if p.VEdge1 != nil || p.VEdge2 != nil {
+		if p.VEdge1 == nil || p.VEdge2 == nil {
 			return nil, fmt.Errorf("gia: incomplete edge arrays")
 		}
-		a, b := vec.Vec_IntArray(p.vEdge1), vec.Vec_IntArray(p.vEdge2)
+		a, b := vec.Vec_IntArray(p.VEdge1), vec.Vec_IntArray(p.VEdge2)
 		if len(a) != int(p.nObjs) || len(b) != int(p.nObjs) {
 			return nil, fmt.Errorf("gia: edge array length mismatch")
 		}
@@ -928,8 +928,8 @@ func aigerWireMetadata(p *Gia_Man_t, wire *aigerWireModel) (*Gia_Man_t, error) {
 				}
 			}
 		}
-		meta.vEdge1 = aigerVecInts(x)
-		meta.vEdge2 = aigerVecInts(y)
+		meta.VEdge1 = aigerVecInts(x)
+		meta.VEdge2 = aigerVecInts(y)
 	}
 	return &meta, nil
 }
@@ -946,8 +946,8 @@ func aigerEncodeExtensions(p *Gia_Man_t, wire *aigerWireModel, opts AigerWriteOp
 			data[tag] = append([]byte(nil), payload...)
 		}
 	}
-	if p.pAigExtra != nil {
-		encoded, err := aigerMarshalManager(p.pAigExtra, AigerWriteOptions{}, depth+1)
+	if p.PAigExtra != nil {
+		encoded, err := aigerMarshalManager(p.PAigExtra, AigerWriteOptions{}, depth+1)
 		if err != nil {
 			return nil, err
 		}
@@ -965,7 +965,7 @@ func aigerEncodeExtensions(p *Gia_Man_t, wire *aigerWireModel, opts AigerWriteOp
 	for _, part := range []struct {
 		tag byte
 		v   *Vec_Flt_t
-	}{{'i', p.vInArrs}, {'o', p.vOutReqs}} {
+	}{{'i', p.VInArrs}, {'o', p.VOutReqs}} {
 		if part.v == nil {
 			continue
 		}
@@ -975,7 +975,7 @@ func aigerEncodeExtensions(p *Gia_Man_t, wire *aigerWireModel, opts AigerWriteOp
 		}
 		data[part.tag] = encoded
 	}
-	if p.pReprs != nil {
+	if p.PReprs != nil {
 		encoded, err := Gia_WriteEquivClassesInt(p, nil)
 		if err != nil {
 			return nil, err
@@ -986,7 +986,7 @@ func aigerEncodeExtensions(p *Gia_Man_t, wire *aigerWireModel, opts AigerWriteOp
 		tag   byte
 		v     *Vec_Int_t
 		count int
-	}{{'f', p.vFlopClasses, int(p.nRegs)}, {'g', p.vGateClasses, int(p.nObjs)}, {'v', p.vObjClasses, int(p.nObjs)}} {
+	}{{'f', p.VFlopClasses, int(p.nRegs)}, {'g', p.VGateClasses, int(p.nObjs)}, {'v', p.VObjClasses, int(p.nObjs)}} {
 		if part.v == nil {
 			continue
 		}
@@ -996,8 +996,8 @@ func aigerEncodeExtensions(p *Gia_Man_t, wire *aigerWireModel, opts AigerWriteOp
 		}
 		data[part.tag] = aigerLEArray(values)
 	}
-	if p.pManTime != nil {
-		switch timing := p.pManTime.(type) {
+	if p.PManTime != nil {
+		switch timing := p.PManTime.(type) {
 		case *AigerTimingData:
 			if timing.Hierarchy != nil {
 				data['h'] = append([]byte(nil), timing.Hierarchy...)
@@ -1018,13 +1018,13 @@ func aigerEncodeExtensions(p *Gia_Man_t, wire *aigerWireModel, opts AigerWriteOp
 			return nil, fmt.Errorf("gia: timing manager has no AIGER serializer")
 		}
 	}
-	if p.vPacking != nil {
-		if err := aigerValidatePacking(vec.Vec_IntArray(p.vPacking), p.nObjs); err != nil {
+	if p.VPacking != nil {
+		if err := aigerValidatePacking(vec.Vec_IntArray(p.VPacking), p.nObjs); err != nil {
 			return nil, err
 		}
-		data['k'] = append([]byte(nil), vec.Vec_StrArray(Gia_WritePacking(p.vPacking))...)
+		data['k'] = append([]byte(nil), vec.Vec_StrArray(Gia_WritePacking(p.VPacking))...)
 	}
-	if p.vMapping != nil {
+	if p.VMapping != nil {
 		encoded, err := Gia_AigerWriteMappingDoc(p)
 		if err != nil {
 			return nil, err
@@ -1055,12 +1055,12 @@ func aigerEncodeExtensions(p *Gia_Man_t, wire *aigerWireModel, opts AigerWriteOp
 		values := vec.Vec_IntArray(part.v)
 		data[part.tag] = aigerBEArray(append([]int32{int32(len(values))}, values...))
 	}
-	if p.vConfigs != nil {
-		if strings.IndexByte(p.pCellStr, 0) >= 0 {
+	if p.VConfigs != nil {
+		if strings.IndexByte(p.PCellStr, 0) >= 0 {
 			return nil, fmt.Errorf("gia: invalid configuration cell string")
 		}
-		encoded := append([]byte(p.pCellStr), 0)
-		encoded = append(encoded, aigerBEArray(vec.Vec_IntArray(p.vConfigs))...)
+		encoded := append([]byte(p.PCellStr), 0)
+		encoded = append(encoded, aigerBEArray(vec.Vec_IntArray(p.VConfigs))...)
 		data['b'] = encoded
 	}
 	if p.pSibls != nil {
@@ -1086,11 +1086,11 @@ func aigerEncodeExtensions(p *Gia_Man_t, wire *aigerWireModel, opts AigerWriteOp
 		}
 		data['u'] = append([]byte(nil), p.pSwitching...)
 	}
-	if p.vEdge1 != nil || p.vEdge2 != nil {
-		if p.vEdge1 == nil || p.vEdge2 == nil {
+	if p.VEdge1 != nil || p.VEdge2 != nil {
+		if p.VEdge1 == nil || p.VEdge2 == nil {
 			return nil, fmt.Errorf("gia: incomplete edge arrays")
 		}
-		a, b := vec.Vec_IntArray(p.vEdge1), vec.Vec_IntArray(p.vEdge2)
+		a, b := vec.Vec_IntArray(p.VEdge1), vec.Vec_IntArray(p.VEdge2)
 		if len(a) != int(p.nObjs) || len(b) != int(p.nObjs) {
 			return nil, fmt.Errorf("gia: edge array length mismatch")
 		}

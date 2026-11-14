@@ -11,9 +11,9 @@ import (
 
 func Gia_ManSimTest(g *Gia_Man_t) {
 	const words = 4
-	previous := g.vSimsPi
-	g.vSimsPi = vec.Vec_WrdStartRandom(int(Gia_ManCiNum(g)) * words)
-	defer func() { g.vSimsPi = previous }()
+	previous := g.VSimsPi
+	g.VSimsPi = vec.Vec_WrdStartRandom(int(Gia_ManCiNum(g)) * words)
+	defer func() { g.VSimsPi = previous }()
 	start := time.Now()
 	for i := 0; i < 20; i++ {
 		Gia_ManSimPatSim(g)

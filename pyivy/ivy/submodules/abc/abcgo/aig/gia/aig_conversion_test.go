@@ -20,7 +20,7 @@ func TestActualAigGiaRoundTrip(t *testing.T) {
 		} else {
 			converted = Gia_ManFromAig(source)
 		}
-		if converted.pName != source.Name || converted.pSpec != source.Spec {
+		if converted.pName != source.Name || converted.PSpec != source.Spec {
 			t.Fatal("metadata")
 		}
 		restored := Gia_ManToAig(converted, 0)

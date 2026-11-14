@@ -8,7 +8,7 @@ func (p *Gia_Man_t) SetMappedData(mapping, packing, configs *Vec_Int_t, cell str
 	if p == nil || mapping == nil {
 		return fmt.Errorf("gia: mapping is required")
 	}
-	if p.vMapping != nil || p.vPacking != nil || p.vConfigs != nil || p.pCellStr != "" {
+	if p.VMapping != nil || p.VPacking != nil || p.VConfigs != nil || p.PCellStr != "" {
 		return fmt.Errorf("gia: mapping metadata already exists")
 	}
 	data := Vec_IntArray(mapping)
@@ -54,6 +54,6 @@ func (p *Gia_Man_t) SetMappedData(mapping, packing, configs *Vec_Int_t, cell str
 	} else if cell != "" {
 		return fmt.Errorf("gia: cell description without configurations")
 	}
-	p.vMapping, p.vPacking, p.vConfigs, p.pCellStr = mapping, packing, configs, cell
+	p.VMapping, p.VPacking, p.VConfigs, p.PCellStr = mapping, packing, configs, cell
 	return nil
 }

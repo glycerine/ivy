@@ -81,7 +81,7 @@ func Gia_ManFront(p *Gia_Man_t) *Gia_Man_t {
 	maxCut := Gia_ManCrossCutSimple(p)
 	Gia_ManCreateValueRefs(p)
 	result := Gia_ManStart(p.nObjs)
-	result.pName, result.pSpec = p.pName, p.pSpec
+	result.pName, result.PSpec = p.pName, p.PSpec
 	result.nFront = 1 + int32(float32(maxCut)*1.1)
 	front := make([]byte, result.nFront)
 	position := Gia_ManFrontFindNext(front, result.nFront, 0)

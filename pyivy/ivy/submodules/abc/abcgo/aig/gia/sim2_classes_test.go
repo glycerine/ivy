@@ -10,8 +10,8 @@ func TestEquivalenceSimulationClassRefinement(t *testing.T) {
 	for i := 0; i < 4; i++ {
 		Gia_ManAppendCi(g)
 	}
-	g.pReprs = make([]Gia_Rpr_t, g.nObjs)
-	g.pNexts = make([]int32, g.nObjs)
+	g.PReprs = make([]Gia_Rpr_t, g.nObjs)
+	g.PNexts = make([]int32, g.nObjs)
 	for id := int32(1); id < g.nObjs; id++ {
 		Gia_ObjSetRepr(g, id, GIA_VOID)
 	}
@@ -40,8 +40,8 @@ func TestEquivalenceSimulationClassRefinement(t *testing.T) {
 func TestEquivalenceConstantRefinement(t *testing.T) {
 	g := Gia_ManStart(8)
 	a, b := Gia_ManAppendCi(g), Gia_ManAppendCi(g)
-	g.pReprs = make([]Gia_Rpr_t, g.nObjs)
-	g.pNexts = make([]int32, g.nObjs)
+	g.PReprs = make([]Gia_Rpr_t, g.nObjs)
+	g.PNexts = make([]int32, g.nObjs)
 	var pars Gia_ParSim_t
 	Gia_ManSimSetDefaultParams(&pars)
 	pars.NWords = 1

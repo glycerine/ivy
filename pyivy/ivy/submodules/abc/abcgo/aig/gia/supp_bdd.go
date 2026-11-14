@@ -113,7 +113,7 @@ func Gia_ManSupportAnd(p *Gia_ManMin_t, a, b int32) int32 {
 func Gia_ManSupportAndTest(src *Gia_Man_t) *Gia_Man_t {
 	Gia_ManFillValue(src)
 	dst := Gia_ManStart(Gia_ManObjNum(src))
-	dst.pName, dst.pSpec = src.pName, src.pSpec
+	dst.pName, dst.PSpec = src.pName, src.PSpec
 	Gia_ManHashAlloc(dst)
 	Gia_ManConst0(src).Value = 0
 	m := Gia_ManSuppStart(dst)

@@ -22,7 +22,7 @@ func Sbl_ManEvaluateMappingEdge(p *Sbl_Man_t, delay int32) int32 {
 	return 0
 }
 func Sbl_ManEvaluateMapping(p *Sbl_Man_t, delay int32) int32 {
-	if p.pGia.vEdge1 != nil {
+	if p.pGia.VEdge1 != nil {
 		return Sbl_ManEvaluateMappingEdge(p, delay)
 	}
 	started := time.Now()

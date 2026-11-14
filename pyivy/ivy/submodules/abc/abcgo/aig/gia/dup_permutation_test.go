@@ -86,16 +86,16 @@ func TestDupOnsetOffsetAndAttributes(t *testing.T) {
 	p := Gia_ManStart(10)
 	a := Gia_ManAppendCi(p)
 	Gia_ManAppendCo(p, a)
-	p.vConfigs = permutation(10, 20)
-	p.vMapping = permutation(0, 1, 2)
-	p.vPacking = permutation(1, 2)
-	p.pCellStr = "cell"
+	p.VConfigs = permutation(10, 20)
+	p.VMapping = permutation(0, 1, 2)
+	p.VPacking = permutation(1, 2)
+	p.PCellStr = "cell"
 	p.nAnd2Delay = 5
 	copy := Gia_ManDupWithAttributes(p)
-	vec.Vec_IntWriteEntry(copy.vConfigs, 0, 99)
-	vec.Vec_IntWriteEntry(copy.vMapping, 0, 99)
-	vec.Vec_IntWriteEntry(copy.vPacking, 0, 99)
-	if vec.Vec_IntEntry(p.vConfigs, 0) != 10 || vec.Vec_IntEntry(p.vMapping, 0) != 0 || vec.Vec_IntEntry(p.vPacking, 0) != 1 || copy.pCellStr != "cell" || copy.nAnd2Delay != 5 {
+	vec.Vec_IntWriteEntry(copy.VConfigs, 0, 99)
+	vec.Vec_IntWriteEntry(copy.VMapping, 0, 99)
+	vec.Vec_IntWriteEntry(copy.VPacking, 0, 99)
+	if vec.Vec_IntEntry(p.VConfigs, 0) != 10 || vec.Vec_IntEntry(p.VMapping, 0) != 0 || vec.Vec_IntEntry(p.VPacking, 0) != 1 || copy.PCellStr != "cell" || copy.nAnd2Delay != 5 {
 		t.Fatal("attributes not independently copied")
 	}
 	dual := Gia_ManDupOnsetOffset(p)

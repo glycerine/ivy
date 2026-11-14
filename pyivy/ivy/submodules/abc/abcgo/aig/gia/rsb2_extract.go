@@ -39,7 +39,7 @@ func Gia_RsbFindOutputs(p *Gia_Man_t, window, inputs, refs *Vec_Int_t) *Vec_Int_
 }
 func Gia_RsbDeriveGiaFromWindows(p *Gia_Man_t, window, inputs, outputs *Vec_Int_t) *Gia_Man_t {
 	q := Gia_ManStart(p.nObjs)
-	q.pName, q.pSpec = p.pName, p.pSpec
+	q.pName, q.PSpec = p.pName, p.PSpec
 	Gia_ManHashAlloc(q)
 	copies := make([]int32, p.nObjs)
 	for i := range copies {

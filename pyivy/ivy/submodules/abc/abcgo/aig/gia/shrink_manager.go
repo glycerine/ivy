@@ -31,7 +31,7 @@ func Shr_ManAlloc(g *Gia_Man_t) *Shr_Man_t {
 	p.vDivResub = vec.Vec_IntAlloc(6)
 	p.vLeaves = vec.Vec_IntAlloc(6)
 	p.pNew = Gia_ManStart(p.nNewSize)
-	p.pNew.pName, p.pNew.pSpec = g.pName, g.pSpec
+	p.pNew.pName, p.pNew.PSpec = g.pName, g.PSpec
 	Gia_ManHashStart(p.pNew)
 	Gia_ManCleanLevels(p.pNew, p.nNewSize)
 	Gia_ManIncrementTravId(p.pNew)

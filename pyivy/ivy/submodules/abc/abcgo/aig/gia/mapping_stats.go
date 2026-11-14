@@ -109,7 +109,7 @@ func Gia_ManPrintMappingStats(p *Gia_Man_t, dumpFile string) {
 		average = float64(totalLevel) / float64(n)
 	}
 	fmt.Printf("Mapping (K=%d)  :  \033[1;33mlut =%7d\033[0m  \033[1;32medge =%8d\033[0m  \033[1;31mlev =%5d\033[0m \033[1;31m(%.2f)\033[0m  ", maxSize, luts, fanins, maxLevel, average)
-	if timing, ok := p.pManTime.(*tim.Tim_Man_t); ok && tim.Tim_ManBoxNum(timing) > 0 {
+	if timing, ok := p.PManTime.(*tim.Tim_Man_t); ok && tim.Tim_ManBoxNum(timing) > 0 {
 		fmt.Printf("\033[1;31mlevB =%5d\033[0m  ", Gia_ManLutLevelWithBoxes(p))
 	}
 	fmt.Printf("mem =%5.2f MB\n", 4*float64(Gia_ManObjNum(p)+2*luts+fanins)/(1<<20))

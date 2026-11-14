@@ -28,16 +28,16 @@ func TestEquivalenceFilterUsingAigerParts(t *testing.T) {
 		t.Fatal("missing miter")
 	}
 	ra, rb := Gia_ManRo(p, 0).id, Gia_ManRo(p, 1).id
-	p.pReprs = make([]Gia_Rpr_t, p.nObjs)
-	for i := range p.pReprs {
-		p.pReprs[i].iRepr = GIA_VOID
+	p.PReprs = make([]Gia_Rpr_t, p.nObjs)
+	for i := range p.PReprs {
+		p.PReprs[i].iRepr = GIA_VOID
 	}
 	Gia_ObjSetRepr(p, rb, ra)
-	p.pNexts = Gia_ManDeriveNexts(p)
+	p.PNexts = Gia_ManDeriveNexts(p)
 	if Gia_ManFilterEquivsUsingParts(p, fileA, fileB) != 1 {
 		t.Fatal("filter failed")
 	}
-	if Gia_ObjRepr(p, rb) != ra || p.pNexts[ra] != rb {
+	if Gia_ObjRepr(p, rb) != ra || p.PNexts[ra] != rb {
 		t.Fatal("cross-part latch class not preserved")
 	}
 	for _, obj := range p.pObjs {

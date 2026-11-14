@@ -4,8 +4,8 @@ package gia
 // other color or the object's proof and class metadata.
 func Gia_ObjUnsetColor(p *Gia_Man_t, id, color int32) {
 	if color != 0 {
-		p.pReprs[id].fColorB = 0
+		p.PReprs[id].fColorB = 0
 	} else {
-		p.pReprs[id].fColorA = 0
+		p.PReprs[id].fColorA = 0
 	}
 }

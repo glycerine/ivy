@@ -9,12 +9,12 @@ import (
 // aligning retained black boxes by their original IDs when necessary.
 func giaPrepareBoxVerification(impl *Gia_Man_t, path string, sequential int32) (*Gia_Man_t, *Gia_Man_t, error) {
 	if path == "" {
-		path = impl.pSpec
+		path = impl.PSpec
 	}
 	if path == "" {
 		return nil, nil, fmt.Errorf("specification file is not given")
 	}
-	if Gia_ManBoxNum(impl) > 0 && impl.pAigExtra == nil {
+	if Gia_ManBoxNum(impl) > 0 && impl.PAigExtra == nil {
 		return nil, nil, fmt.Errorf("design has no box logic")
 	}
 	spec, err := Gia_AigerRead(path, 0, 0, 0)
@@ -22,16 +22,16 @@ func giaPrepareBoxVerification(impl *Gia_Man_t, path string, sequential int32) (
 		return nil, nil, err
 	}
 	defer Gia_ManStop(spec)
-	if Gia_ManBoxNum(spec) > 0 && spec.pAigExtra == nil {
+	if Gia_ManBoxNum(spec) > 0 && spec.PAigExtra == nil {
 		return nil, nil, fmt.Errorf("specification has no box logic")
 	}
 	var present *Vec_Int_t
-	if spec.pManTime != nil && tim.Tim_ManBlackBoxNum(spec.pManTime.(*tim.Tim_Man_t)) > 0 && Gia_ManBoxNum(impl) > 0 {
+	if spec.PManTime != nil && tim.Tim_ManBlackBoxNum(spec.PManTime.(*tim.Tim_Man_t)) > 0 && Gia_ManBoxNum(impl) > 0 {
 		if Gia_ManBoxNum(spec) < Gia_ManBoxNum(impl) {
 			return nil, nil, fmt.Errorf("specification has fewer boxes than implementation")
 		}
 		if Gia_ManBoxNum(spec) > Gia_ManBoxNum(impl) {
-			mask := tim.Tim_ManAlignTwo(spec.pManTime.(*tim.Tim_Man_t), impl.pManTime.(*tim.Tim_Man_t))
+			mask := tim.Tim_ManAlignTwo(spec.PManTime.(*tim.Tim_Man_t), impl.PManTime.(*tim.Tim_Man_t))
 			if mask == nil {
 				return nil, nil, fmt.Errorf("specification and implementation boxes cannot be aligned")
 			}
@@ -43,12 +43,12 @@ func giaPrepareBoxVerification(impl *Gia_Man_t, path string, sequential int32) (
 	}
 	var left, right *Gia_Man_t
 	if Gia_ManBoxNum(spec) > 0 {
-		left = Gia_ManDupCollapse(spec, spec.pAigExtra, present, sequential)
+		left = Gia_ManDupCollapse(spec, spec.PAigExtra, present, sequential)
 	} else {
 		left = Gia_ManDup(spec)
 	}
 	if Gia_ManBoxNum(impl) > 0 {
-		right = Gia_ManDupCollapse(impl, impl.pAigExtra, nil, sequential)
+		right = Gia_ManDupCollapse(impl, impl.PAigExtra, nil, sequential)
 	} else {
 		right = Gia_ManDup(impl)
 	}

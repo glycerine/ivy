@@ -48,15 +48,15 @@ func Gia_ManSimPatSimNot(p *Gia_Man_t, id int32, obj *Gia_Obj_t, n int32, sims *
 }
 func giaPatternWords(p *Gia_Man_t) int32 {
 	ci := Gia_ManCiNum(p)
-	if ci <= 0 || p.vSimsPi == nil || vec.Vec_WrdSize(p.vSimsPi)%int(ci) != 0 {
+	if ci <= 0 || p.VSimsPi == nil || vec.Vec_WrdSize(p.VSimsPi)%int(ci) != 0 {
 		panic("gia: invalid input simulation dimensions")
 	}
-	return int32(vec.Vec_WrdSize(p.vSimsPi) / int(ci))
+	return int32(vec.Vec_WrdSize(p.VSimsPi) / int(ci))
 }
 func Gia_ManSimPatSim(p *Gia_Man_t) *Vec_Wrd_t {
 	n := giaPatternWords(p)
 	sims := vec.Vec_WrdStart(int(p.nObjs * n))
-	Gia_ManSimPatAssignInputs(p, n, sims, p.vSimsPi)
+	Gia_ManSimPatAssignInputs(p, n, sims, p.VSimsPi)
 	for _, obj := range p.pObjs {
 		if Gia_ObjIsAnd(obj) != 0 {
 			Gia_ManSimPatSimAnd(p, obj.id, obj, n, sims)

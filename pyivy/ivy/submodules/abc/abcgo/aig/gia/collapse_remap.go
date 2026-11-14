@@ -24,7 +24,7 @@ func Gia_ManDupMoveLast(src *Gia_Man_t, insert, count int32) *Gia_Man_t {
 		panic("gia: invalid input move")
 	}
 	dst := Gia_ManStart(Gia_ManObjNum(src))
-	dst.pName, dst.pSpec = src.pName, src.pSpec
+	dst.pName, dst.PSpec = src.pName, src.PSpec
 	Gia_ManConst0(src).Value = 0
 	for _, interval := range [][2]int32{{0, insert}, {n - count, n}, {insert, n - count}} {
 		for i := interval[0]; i < interval[1]; i++ {

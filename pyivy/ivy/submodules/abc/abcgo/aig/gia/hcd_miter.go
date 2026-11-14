@@ -30,7 +30,7 @@ func Hcd_ManChoiceMiter(networks *Vec_Ptr_t) *Gia_Man_t {
 		Gia_ManConst0(src).Value = 0
 	}
 	dst := Gia_ManStart(int32(Vec_PtrSize(networks)) * first.nObjs)
-	dst.pName, dst.pSpec = first.pName, first.pSpec
+	dst.pName, dst.PSpec = first.pName, first.PSpec
 	for k := int32(0); k < Gia_ManCiNum(first); k++ {
 		lit := Gia_ManAppendCi(dst)
 		for i := 0; i < Vec_PtrSize(networks); i++ {
@@ -68,7 +68,7 @@ func Hcd_ObjCheckTfi_rec(p *Gia_Man_t, old, node *Gia_Obj_t, visited *Vec_Ptr_t)
 	if Gia_ObjIsAnd(node) != 0 && Hcd_ObjCheckTfi_rec(p, old, Gia_ObjFanin1(node), visited) != 0 {
 		return 1
 	}
-	if p.pNexts != nil {
+	if p.PNexts != nil {
 		return Hcd_ObjCheckTfi_rec(p, old, Gia_ObjNextObj(p, node.id), visited)
 	}
 	return 0

@@ -24,7 +24,7 @@ func Gia_ManDupReplaceCut(src *Gia_Man_t) *Gia_Man_t {
 	defer Gia_ManCleanMark0(src)
 	out := Gia_ManStart(src.nObjs)
 	out.CopyIdentityFrom(src)
-	if src.pMuxes != nil {
+	if src.PMuxes != nil {
 		out.EnableMuxes()
 	}
 	Gia_ManFillValue(src)

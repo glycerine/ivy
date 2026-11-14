@@ -19,7 +19,7 @@ type Unm_Man_t struct {
 func Unm_ManAlloc(g *Gia_Man_t) *Unm_Man_t {
 	p := &Unm_Man_t{pGia: g, nNewSize: 3 * g.nObjs / 2, clkStart: time.Now(), pHash: vec.Hash_IntManStart(1000), vLeaves: vec.Vec_IntStart(10)}
 	p.pNew = Gia_ManStart(p.nNewSize)
-	p.pNew.pName, p.pNew.pSpec = g.pName, g.pSpec
+	p.pNew.pName, p.pNew.PSpec = g.pName, g.PSpec
 	Gia_ManHashStart(p.pNew)
 	Gia_ManCleanLevels(p.pNew, p.nNewSize)
 	Gia_ManIncrementTravId(p.pNew)

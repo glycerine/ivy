@@ -49,8 +49,8 @@ func Gia_ManAppendObj(p *Gia_Man_t) *Gia_Obj_t {
 	p.pObjs = append(p.pObjs, obj)
 	p.nObjs++
 	p.nObjsAlloc = int32(cap(p.pObjs))
-	if p.pMuxes != nil && len(p.pMuxes) < int(p.nObjs) {
-		p.pMuxes = append(p.pMuxes, make([]uint32, int(p.nObjs)-len(p.pMuxes))...)
+	if p.PMuxes != nil && len(p.PMuxes) < int(p.nObjs) {
+		p.PMuxes = append(p.PMuxes, make([]uint32, int(p.nObjs)-len(p.PMuxes))...)
 	}
 	if vec.Vec_IntSize(&p.vHTable) != 0 {
 		vec.Vec_IntPush(&p.vHash, 0)

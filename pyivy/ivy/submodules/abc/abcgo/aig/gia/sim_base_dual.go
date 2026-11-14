@@ -36,7 +36,7 @@ func Gia_ManSimPatSimPo2(p *Gia_Man_t, id int32, obj *Gia_Obj_t, n int32, sims *
 func Gia_ManSimPatSim2(p *Gia_Man_t) *Vec_Wrd_t {
 	n := giaPatternWords(p)
 	sims := vec.Vec_WrdStart(int(2 * p.nObjs * n))
-	Gia_ManSimPatAssignInputs2(p, n, sims, p.vSimsPi)
+	Gia_ManSimPatAssignInputs2(p, n, sims, p.VSimsPi)
 	for _, obj := range p.pObjs {
 		if Gia_ObjIsAnd(obj) != 0 {
 			Gia_ManSimPatSimAnd2(p, obj.id, obj, n, sims)

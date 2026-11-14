@@ -30,13 +30,13 @@ func TestGiaMfsExtractWhiteBoxInput(t *testing.T) {
 	Gia_ManAppendCo(g, boxOut)
 	tm := tim.Tim_ManStart(3, 3)
 	tim.Tim_ManCreateBox(tm, 0, 2, 2, 1, -1, 0)
-	g.pManTime = tm
+	g.PManTime = tm
 	extra := Gia_ManStart(5)
 	Gia_ManAppendCi(extra)
 	e1 := Gia_ManAppendCi(extra)
 	Gia_ManAppendCo(extra, e1)
-	g.pAigExtra = extra
-	g.vMapping = vec.Vec_IntStart(int(g.nObjs))
+	g.PAigExtra = extra
+	g.VMapping = vec.Vec_IntStart(int(g.nObjs))
 	data := giaMfsExtract(g)
 	node := Gia_ObjCopyArray(g, boxOut>>1)
 	if !data.fixed[node] || len(data.fanins[node]) != 1 || data.truths[node][0] != 0xaaaaaaaaaaaaaaaa {
@@ -56,12 +56,12 @@ func TestGiaMfsExtractBlackBox(t *testing.T) {
 	Gia_ManAppendCo(g, boxOut)
 	tm := tim.Tim_ManStart(2, 2)
 	tim.Tim_ManCreateBox(tm, 0, 1, 1, 1, -1, 1)
-	g.pManTime = tm
+	g.PManTime = tm
 	extra := Gia_ManStart(4)
 	Gia_ManAppendCi(extra)
 	Gia_ManAppendCo(extra, 0)
-	g.pAigExtra = extra
-	g.vMapping = vec.Vec_IntStart(int(g.nObjs))
+	g.PAigExtra = extra
+	g.VMapping = vec.Vec_IntStart(int(g.nObjs))
 	data := giaMfsExtract(g)
 	node := Gia_ObjCopyArray(g, boxOut>>1)
 	if data.pis != 2 || data.pos != 2 || len(data.fanins[node]) != 1 || data.fanins[node][0] != 0 {

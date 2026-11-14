@@ -13,16 +13,16 @@ func TestFraigCreateGiaRetainsUsedBox(t *testing.T) {
 	Gia_ManAppendCo(p, root)
 	timing := tim.Tim_ManStart(2, 2)
 	tim.Tim_ManCreateBox(timing, 0, 1, 1, 1, -1, 0)
-	p.pManTime = timing
+	p.PManTime = timing
 	extra := Gia_ManStart(4)
 	e := Gia_ManAppendCi(extra)
 	Gia_ManAppendCo(extra, e)
-	p.pAigExtra = extra
+	p.PAigExtra = extra
 	u := Gia_ManDupUnnormalize(p)
-	u.pManTime = p.pManTime
-	u.pAigExtra = extra
+	u.PManTime = p.PManTime
+	u.PAigExtra = extra
 	q := Gia_ManFraigCreateGia(u)
-	if Gia_ManBoxNum(q) != 1 || Gia_ManCiNum(q) != 2 || Gia_ManCoNum(q) != 2 || Gia_ManCoNum(q.pAigExtra) != 1 {
+	if Gia_ManBoxNum(q) != 1 || Gia_ManCiNum(q) != 2 || Gia_ManCoNum(q) != 2 || Gia_ManCoNum(q.PAigExtra) != 1 {
 		t.Fatal("incorrect retained box interface")
 	}
 	for mask := 0; mask < 4; mask++ {

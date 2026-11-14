@@ -409,7 +409,7 @@ func aigerNamedProperties(p *Gia_Man_t) *Gia_Man_t {
 		return p
 	}
 	q := Gia_ManStart(p.nObjs)
-	q.pName, q.pSpec, q.fGiaSimple = p.pName, p.pSpec, p.fGiaSimple
+	q.pName, q.PSpec, q.fGiaSimple = p.pName, p.PSpec, p.fGiaSimple
 	mapping := make([]int32, p.nObjs)
 	for _, id := range vec.Vec_IntArray(p.vCis) {
 		mapping[id] = Gia_ManAppendCi(q)
@@ -467,7 +467,7 @@ func aigerZeroInitialize(p *Gia_Man_t) *Gia_Man_t {
 		return p
 	}
 	q := Gia_ManStart(p.nObjs + int32(8*unknown))
-	q.pName, q.pSpec, q.fGiaSimple = p.pName, p.pSpec, p.fGiaSimple
+	q.pName, q.PSpec, q.fGiaSimple = p.pName, p.PSpec, p.fGiaSimple
 	q.nConstrs, q.aigerBadOutputs = p.nConstrs, p.aigerBadOutputs
 	mapping := make([]int32, p.nObjs)
 	cis := vec.Vec_IntArray(p.vCis)
@@ -555,7 +555,7 @@ func Gia_AigerRead(name string, fSimple, fSkip, fCheck int32) (*Gia_Man_t, error
 	if err != nil {
 		return nil, err
 	}
-	p.pSpec = name
+	p.PSpec = name
 	if p.pName == "" {
 		p.pName = Gia_FileNameGeneric(name)
 	}
@@ -659,10 +659,10 @@ func aigerInstallNames(p *Gia_Man_t, ordinary, bad, constraints int) {
 		}
 	}
 	if anyInput {
-		p.vNamesIn = vec.Vec_PtrAllocArray(inputs, len(inputs))
+		p.VNamesIn = vec.Vec_PtrAllocArray(inputs, len(inputs))
 	}
 	if anyOutput {
-		p.vNamesOut = vec.Vec_PtrAllocArray(outputs, len(outputs))
+		p.VNamesOut = vec.Vec_PtrAllocArray(outputs, len(outputs))
 	}
 	for kind, n := range map[byte]int{'i': int(Gia_ManPiNum(p)), 'l': int(p.nRegs)} {
 		ids := make([]int32, n)
@@ -705,7 +705,7 @@ func aigerInstallNames(p *Gia_Man_t, ordinary, bad, constraints int) {
 }
 
 func aigerIndexedMetadata(p *Gia_Man_t) bool {
-	if p.pReprs != nil || p.pSibls != nil || p.vMapping != nil || p.vPacking != nil || p.vGateClasses != nil || p.vObjClasses != nil || p.pSwitching != nil || p.pPlacement != nil || p.vEdge1 != nil {
+	if p.PReprs != nil || p.pSibls != nil || p.VMapping != nil || p.VPacking != nil || p.VGateClasses != nil || p.VObjClasses != nil || p.pSwitching != nil || p.pPlacement != nil || p.VEdge1 != nil {
 		return true
 	}
 	for tag := range p.aigerExtensions {
@@ -717,7 +717,7 @@ func aigerIndexedMetadata(p *Gia_Man_t) bool {
 }
 func aigerCopyCommonMetadata(dst, src *Gia_Man_t) {
 	dst.pName = src.pName
-	dst.pSpec = src.pSpec
+	dst.PSpec = src.PSpec
 	dst.nConstrs = src.nConstrs
 	dst.nAnd2Delay = src.nAnd2Delay
 	dst.aigerBadOutputs = src.aigerBadOutputs
@@ -725,20 +725,20 @@ func aigerCopyCommonMetadata(dst, src *Gia_Man_t) {
 	dst.aigerSymbols = src.aigerSymbols
 	dst.aigerExtensions = src.aigerExtensions
 	dst.aigerComment = src.aigerComment
-	dst.vNamesIn = src.vNamesIn
-	dst.vNamesOut = src.vNamesOut
+	dst.VNamesIn = src.VNamesIn
+	dst.VNamesOut = src.VNamesOut
 	dst.vUserPiIds = src.vUserPiIds
 	dst.vUserPoIds = src.vUserPoIds
 	dst.vUserFfIds = src.vUserFfIds
-	dst.vFlopClasses = src.vFlopClasses
+	dst.VFlopClasses = src.VFlopClasses
 	dst.vRegClasses = src.vRegClasses
 	dst.vRegInits = src.vRegInits
-	dst.pCellStr = src.pCellStr
-	dst.vConfigs = src.vConfigs
-	dst.vInArrs = src.vInArrs
-	dst.vOutReqs = src.vOutReqs
-	dst.pManTime = src.pManTime
-	dst.pAigExtra = src.pAigExtra
+	dst.PCellStr = src.PCellStr
+	dst.VConfigs = src.VConfigs
+	dst.VInArrs = src.VInArrs
+	dst.VOutReqs = src.VOutReqs
+	dst.PManTime = src.PManTime
+	dst.PAigExtra = src.PAigExtra
 }
 func aigerHashRead(p *Gia_Man_t) (*Gia_Man_t, error) {
 	q := Gia_ManStart(p.nObjs)
@@ -844,7 +844,7 @@ func aigerWire(p *Gia_Man_t, cis, ands, cos []int32, regs int32, properties bool
 			return nil, fmt.Errorf("gia: invalid or duplicate selected AND")
 		}
 		o := p.pObjs[id]
-		if Gia_ObjIsXor(o) != 0 || int(id) < len(p.pMuxes) && p.pMuxes[id] != 0 {
+		if Gia_ObjIsXor(o) != 0 || int(id) < len(p.PMuxes) && p.PMuxes[id] != 0 {
 			return nil, fmt.Errorf("gia: normalize specialized XOR/MUX objects before writing AIGER")
 		}
 		a, err := remap(Gia_ObjFaninLit0(o, id))
@@ -996,8 +996,8 @@ func aigerWriteSymbols(out *bytes.Buffer, p *Gia_Man_t, model *aigerWireModel) e
 		names[tag] = make([]string, n)
 		copy(names[tag], p.aigerSymbols[tag])
 	}
-	if p.vNamesIn != nil {
-		raw := vec.Vec_PtrArray(p.vNamesIn)
+	if p.VNamesIn != nil {
+		raw := vec.Vec_PtrArray(p.VNamesIn)
 		if len(raw) != model.inputs+model.latches {
 			return fmt.Errorf("gia: input name count mismatch")
 		}
@@ -1011,8 +1011,8 @@ func aigerWriteSymbols(out *bytes.Buffer, p *Gia_Man_t, model *aigerWireModel) e
 			}
 		}
 	}
-	if p.vNamesOut != nil {
-		raw := vec.Vec_PtrArray(p.vNamesOut)
+	if p.VNamesOut != nil {
+		raw := vec.Vec_PtrArray(p.VNamesOut)
 		if len(raw) < model.ordinary+model.bad+model.constraints {
 			return fmt.Errorf("gia: output name count mismatch")
 		}

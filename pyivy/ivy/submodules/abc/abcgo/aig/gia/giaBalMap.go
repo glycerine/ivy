@@ -100,7 +100,7 @@ func Gia_ManExtractWin(src *Gia_Man_t, outputs *Vec_Int_t, poOnly int32) *Gia_Ma
 	Gia_ManPrepareWin(src, outputs, &inputs, &boundary, &gates, poOnly)
 	dst := Gia_ManStart(int32(Vec_IntSize(inputs) + Vec_IntSize(boundary) + Vec_IntSize(gates) + 1))
 	dst.CopyIdentityFrom(src)
-	if src.pMuxes != nil {
+	if src.PMuxes != nil {
 		dst.EnableMuxes()
 	}
 	src.pObjs[0].Value = 0
@@ -123,7 +123,7 @@ func Gia_ManInsertWin(src *Gia_Man_t, outputs *Vec_Int_t, window *Gia_Man_t) *Gi
 	}
 	dst := Gia_ManStart(src.nObjs)
 	dst.CopyIdentityFrom(src)
-	if src.pMuxes != nil || window.pMuxes != nil {
+	if src.PMuxes != nil || window.PMuxes != nil {
 		dst.EnableMuxes()
 	}
 	src.pObjs[0].Value = 0

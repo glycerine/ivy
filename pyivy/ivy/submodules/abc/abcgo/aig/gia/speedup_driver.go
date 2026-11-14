@@ -11,15 +11,15 @@ func Gia_ManSpeedup(p *Gia_Man_t, percentage, degree, verbose, veryVerbose int32
 	if Gia_ManHasMapping(p) == 0 {
 		panic("gia: speedup requires a mapped graph")
 	}
-	hasLib := p.pLutLib != nil
-	if !hasLib && p.pManTime != nil {
-		old, ok := p.pManTime.(*tim.Tim_Man_t)
+	hasLib := p.PLutLib != nil
+	if !hasLib && p.PManTime != nil {
+		old, ok := p.PManTime.(*tim.Tim_Man_t)
 		if !ok {
 			panic("gia: invalid timing manager")
 		}
 		duplicate := tim.Tim_ManDup(old, 1)
-		p.pManTime = duplicate
-		defer func() { tim.Tim_ManStop(duplicate); p.pManTime = old }()
+		p.PManTime = duplicate
+		defer func() { tim.Tim_ManStop(duplicate); p.PManTime = old }()
 	}
 	arrival := Gia_ManDelayTraceLut(p)
 	defer Gia_ManTimeStop(p)
@@ -62,10 +62,10 @@ func Gia_ManSpeedup(p *Gia_Man_t, percentage, degree, verbose, veryVerbose int32
 	dst := Gia_ManDup(p)
 	Gia_ManHashStart(dst)
 	capacity := 1000 + 3*dst.nObjs
-	dst.pNexts = make([]int32, capacity)
-	dst.pReprs = make([]Gia_Rpr_t, capacity)
-	for i := range dst.pReprs {
-		dst.pReprs[i].iRepr = GIA_VOID
+	dst.PNexts = make([]int32, capacity)
+	dst.PReprs = make([]Gia_Rpr_t, capacity)
+	for i := range dst.PReprs {
+		dst.PReprs[i].iRepr = GIA_VOID
 	}
 	critical, leaves := vec.Vec_IntAlloc(16), vec.Vec_IntAlloc(16)
 	var examined, workable int32

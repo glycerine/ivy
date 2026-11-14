@@ -19,7 +19,7 @@ func Gia_ManMapShrink4(p *Gia_Man_t, keepLevel, verbose int32) *Gia_Man_t {
 	Gia_ManFillValue(p)
 	Gia_ManConst0(p).Value = 0
 	q := Gia_ManStart(p.nObjs)
-	q.pName, q.pSpec = p.pName, p.pSpec
+	q.pName, q.PSpec = p.pName, p.PSpec
 	Gia_ManCleanLevels(q, p.nObjs)
 	Gia_ManHashStart(q)
 	for id := int32(1); id < p.nObjs; id++ {

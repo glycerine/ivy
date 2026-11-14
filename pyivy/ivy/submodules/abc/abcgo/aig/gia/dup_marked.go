@@ -14,7 +14,7 @@ func Gia_ManDupMarked(src *Gia_Man_t) *Gia_Man_t {
 	dst := Gia_ManStart(int32(kept))
 	dst.CopyIdentityFrom(src)
 	dst.fGiaSimple = src.fGiaSimple
-	if src.pMuxes != nil {
+	if src.PMuxes != nil {
 		dst.EnableMuxes()
 	}
 	src.pObjs[0].Value = 0
@@ -79,7 +79,7 @@ func Gia_ManDupMarked(src *Gia_Man_t) *Gia_Man_t {
 		}
 	}
 	Gia_ManSetRegNum(dst, ros)
-	if src.pReprs != nil && src.pNexts != nil {
+	if src.PReprs != nil && src.PNexts != nil {
 		if err := dst.TransferRepresentativesFrom(src, objectMap); err != nil {
 			panic(err)
 		}
@@ -112,7 +112,7 @@ func Gia_ManDupMarked(src *Gia_Man_t) *Gia_Man_t {
 		}
 		return result
 	}
-	dst.vRegClasses, dst.vRegInits, dst.vFlopClasses = subset(src.vRegClasses), subset(src.vRegInits), subset(src.vFlopClasses)
+	dst.vRegClasses, dst.vRegInits, dst.VFlopClasses = subset(src.vRegClasses), subset(src.vRegInits), subset(src.VFlopClasses)
 	if src.aigerLatchInits != nil {
 		for _, index := range registers {
 			dst.aigerLatchInits = append(dst.aigerLatchInits, src.aigerLatchInits[index])

@@ -11,13 +11,13 @@ type Gia_Man_t struct {
 	literalHash     map[[2]int32]int32 // Go bridge structural hash, initialized from existing ANDs
 	store           *objectStore
 	pName           string       // name of the AIG
-	pSpec           string       // name of the input file
+	PSpec           string       // name of the input file
 	nRegs           int32        // number of registers
 	nRegsAlloc      int32        // number of allocated registers
 	nObjs           int32        // number of objects
 	nObjsAlloc      int32        // number of allocated objects
 	pObjs           []*Gia_Obj_t // the array of objects
-	pMuxes          []uint32     // control signals of MUXes
+	PMuxes          []uint32     // control signals of MUXes
 	nXors           int32        // the number of XORs
 	nMuxes          int32        // the number of MUXes
 	nBufs           int32        // the number of buffers
@@ -37,8 +37,8 @@ type Gia_Man_t struct {
 	nTravIds        int32        // the current traversal ID
 	nFront          int32        // frontier size
 	pReprsOld       []int32      // representatives (for CIs and ANDs)
-	pReprs          []Gia_Rpr_t  // representatives (for CIs and ANDs)
-	pNexts          []int32      // next nodes in the equivalence classes
+	PReprs          []Gia_Rpr_t  // representatives (for CIs and ANDs)
+	PNexts          []int32      // next nodes in the equivalence classes
 	pSibls          []int32      // next nodes in the choice nodes
 	pIso            []int32      // pairs of structurally isomorphic nodes
 	nTerLoop        int32        // the state where loop begins
@@ -47,30 +47,30 @@ type Gia_Man_t struct {
 	nFansAlloc      int32        // the size of fanout representation
 	vFanoutNums     *Vec_Int_t   // static fanout
 	vFanout         *Vec_Int_t   // static fanout
-	vMapping        *Vec_Int_t   // mapping for each node
+	VMapping        *Vec_Int_t   // mapping for each node
 	vMapping2       *Vec_Wec_t   // mapping for each node
 	vFanouts2       *Vec_Wec_t   // mapping fanouts
-	vCellMapping    *Vec_Int_t   // mapping for each node
+	VCellMapping    *Vec_Int_t   // mapping for each node
 	pSatlutWinman   any          // windowing for SAT-based mapping
-	vPacking        *Vec_Int_t   // packing information
-	vConfigs        *Vec_Int_t   // cell configurations
-	pCellStr        string       // cell description
+	VPacking        *Vec_Int_t   // packing information
+	VConfigs        *Vec_Int_t   // cell configurations
+	PCellStr        string       // cell description
 	vLutConfigs     *Vec_Int_t   // LUT configurations
 	vEdgeDelay      *Vec_Int_t   // special edge information
 	vEdgeDelayR     *Vec_Int_t   // special edge information
-	vEdge1          *Vec_Int_t   // special edge information
-	vEdge2          *Vec_Int_t   // special edge information
-	pCexComb        *Abc_Cex_t   // combinational counter-example
+	VEdge1          *Vec_Int_t   // special edge information
+	VEdge2          *Vec_Int_t   // special edge information
+	PCexComb        *Abc_Cex_t   // combinational counter-example
 	pCexSeq         *Abc_Cex_t   // sequential counter-example
 	vSeqModelVec    *Vec_Ptr_t   // sequential counter-examples
 	vCopies         Vec_Int_t    // intermediate copies
 	vCopies2        Vec_Int_t    // intermediate copies
 	vVar2Obj        *Vec_Int_t   // mapping of variables into objects
 	vTruths         *Vec_Int_t   // used for truth table computation
-	vFlopClasses    *Vec_Int_t   // classes of flops for retiming/merging/etc
-	vGateClasses    *Vec_Int_t   // classes of gates for abstraction
-	vObjClasses     *Vec_Int_t   // classes of objects for abstraction
-	vInitClasses    *Vec_Int_t   // classes of flops for retiming/merging/etc
+	VFlopClasses    *Vec_Int_t   // classes of flops for retiming/merging/etc
+	VGateClasses    *Vec_Int_t   // classes of gates for abstraction
+	VObjClasses     *Vec_Int_t   // classes of objects for abstraction
+	VInitClasses    *Vec_Int_t   // classes of flops for retiming/merging/etc
 	vRegClasses     *Vec_Int_t   // classes of registers for sequential synthesis
 	vRegInits       *Vec_Int_t   // initial state
 	vDoms           *Vec_Int_t   // dominators
@@ -78,9 +78,9 @@ type Gia_Man_t struct {
 	vXors           *Vec_Int_t   // temporary XORs
 	pSwitching      []byte       // switching activity for each object
 	pPlacement      []Gia_Plc_t  // placement of the objects
-	pAigExtra       *Gia_Man_t   // combinational logic of holes
-	vInArrs         *Vec_Flt_t   // PI arrival times
-	vOutReqs        *Vec_Flt_t   // PO required times
+	PAigExtra       *Gia_Man_t   // combinational logic of holes
+	VInArrs         *Vec_Flt_t   // PI arrival times
+	VOutReqs        *Vec_Flt_t   // PO required times
 	vCiArrs         *Vec_Int_t   // CI arrival times
 	vCoReqs         *Vec_Int_t   // CO required times
 	vCoArrs         *Vec_Int_t   // CO arrival times
@@ -91,8 +91,8 @@ type Gia_Man_t struct {
 	vSwitching      *Vec_Int_t   // switching activity
 	pTravIds        []int32      // separate traversal ID representation
 	nTravIdsAlloc   int32        // the number of trav IDs allocated
-	vNamesIn        *Vec_Ptr_t   // the input names
-	vNamesOut       *Vec_Ptr_t   // the output names
+	VNamesIn        *Vec_Ptr_t   // the input names
+	VNamesOut       *Vec_Ptr_t   // the output names
 	vUserPiIds      *Vec_Int_t   // numbers assigned to PIs by the user
 	vUserPoIds      *Vec_Int_t   // numbers assigned to POs by the user
 	vUserFfIds      *Vec_Int_t   // numbers assigned to FFs by the user
@@ -103,8 +103,8 @@ type Gia_Man_t struct {
 	vCofVars        *Vec_Int_t   // cofactoring variables
 	vClockDoms      *Vec_Vec_t   // clock domains
 	vTiming         *Vec_Flt_t   // arrival/required/slack
-	pManTime        any          // the timing manager
-	pLutLib         any          // LUT library
+	PManTime        any          // the timing manager
+	PLutLib         any          // LUT library
 	nHashHit        word         // hash table hit
 	nHashMiss       word         // hash table miss
 	pData           any          // various user data
@@ -119,14 +119,14 @@ type Gia_Man_t struct {
 	// bit-parallel simulation
 	fBuiltInSim  int32
 	iPatsPi      int32
-	nSimWords    int32
+	NSimWords    int32
 	nSimWordsT   int32
 	iPastPiMax   int32
 	nSimWordsMax int32
 	vSims        *Vec_Wrd_t
 	vSimsT       *Vec_Wrd_t
-	vSimsPi      *Vec_Wrd_t
-	vSimsPo      *Vec_Wrd_t
+	VSimsPi      *Vec_Wrd_t
+	VSimsPo      *Vec_Wrd_t
 	vClassOld    *Vec_Int_t
 	vClassNew    *Vec_Int_t
 	// incremental simulation

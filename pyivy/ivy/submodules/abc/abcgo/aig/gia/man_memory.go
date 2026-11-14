@@ -15,5 +15,5 @@ func Gia_ManMemory(p *Gia_Man_t) float64 {
 	if p.Refs != nil {
 		size += 4 * float64(p.nObjs)
 	}
-	return size + vec.Vec_IntMemory(p.vLevels) + vec.Vec_IntMemory(p.vCellMapping) + vec.Vec_IntMemory(&p.vCopies) + vec.Vec_FltMemory(p.vInArrs) + vec.Vec_FltMemory(p.vOutReqs) + vec.Vec_PtrMemory(p.vNamesIn) + vec.Vec_PtrMemory(p.vNamesOut)
+	return size + vec.Vec_IntMemory(p.vLevels) + vec.Vec_IntMemory(p.VCellMapping) + vec.Vec_IntMemory(&p.vCopies) + vec.Vec_FltMemory(p.VInArrs) + vec.Vec_FltMemory(p.VOutReqs) + vec.Vec_PtrMemory(p.VNamesIn) + vec.Vec_PtrMemory(p.VNamesOut)
 }

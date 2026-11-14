@@ -72,7 +72,7 @@ func giaSpecReduction(p *Gia_Man_t, dual, synthesis, speculate int32, trace, gui
 	return result
 }
 func Gia_ManSpecReduceTrace(p *Gia_Man_t, trace, mapping *Vec_Int_t) *Gia_Man_t {
-	if p.pReprs == nil {
+	if p.PReprs == nil {
 		fmt.Println("Gia_ManSpecReduce(): Equivalence classes are not available.")
 		return nil
 	}
@@ -80,7 +80,7 @@ func Gia_ManSpecReduceTrace(p *Gia_Man_t, trace, mapping *Vec_Int_t) *Gia_Man_t 
 	return giaSpecReduction(p, 0, 0, 1, trace, nil, mapping)
 }
 func Gia_ManSpecReduce(p *Gia_Man_t, dual, synthesis, speculate, skipSome, verbose int32) *Gia_Man_t {
-	if p.pReprs == nil {
+	if p.PReprs == nil {
 		fmt.Println("Gia_ManSpecReduce(): Equivalence classes are not available.")
 		return nil
 	}
@@ -105,7 +105,7 @@ func Gia_ManSpecReduce(p *Gia_Man_t, dual, synthesis, speculate, skipSome, verbo
 }
 
 func Gia_ManCombSpecReduce(p *Gia_Man_t) *Gia_Man_t {
-	if p.pReprs == nil || p.pNexts == nil {
+	if p.PReprs == nil || p.PNexts == nil {
 		panic("gia: missing equivalence classes")
 	}
 	Gia_ManLevelNum(p)

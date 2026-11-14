@@ -13,7 +13,7 @@ func Mf_ManAlloc(g *Gia_Man_t, pars *Jf_Par_t) *Mf_Man_t {
 		panic("gia: invalid mapper parameters")
 	}
 	g.Refs = nil
-	g.vMapping = nil
+	g.VMapping = nil
 	if Gia_ManHasChoices(g) != 0 {
 		Gia_ManSetPhase(g)
 	}

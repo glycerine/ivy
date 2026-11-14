@@ -27,7 +27,7 @@ func Gia_ManBuiltInSimPack(p *Gia_Man_t, pattern *Vec_Int_t) int32 {
 }
 
 func giaSimGrowWords(p *Gia_Man_t) {
-	old := int(p.nSimWords)
+	old := int(p.NSimWords)
 	data := vec.Vec_WrdArray(p.vSims)
 	if len(data) != int(p.nObjs)*old {
 		panic("gia: inconsistent simulation data")
@@ -46,7 +46,7 @@ func giaSimGrowWords(p *Gia_Man_t) {
 		vec.Vec_WrdPush(expanded, next)
 	}
 	p.vSims = expanded
-	care := vec.Vec_WrdArray(p.vSimsPi)
+	care := vec.Vec_WrdArray(p.VSimsPi)
 	expanded = vec.Vec_WrdAlloc(int(Gia_ManCiNum(p)) * (old + 1))
 	for i := 0; i < int(Gia_ManCiNum(p)); i++ {
 		for _, word := range care[i*old : (i+1)*old] {
@@ -54,12 +54,12 @@ func giaSimGrowWords(p *Gia_Man_t) {
 		}
 		vec.Vec_WrdPush(expanded, 0)
 	}
-	p.vSimsPi = expanded
-	p.nSimWords++
+	p.VSimsPi = expanded
+	p.NSimWords++
 }
 
 func Gia_ManBuiltInSimAddPat(p *Gia_Man_t, pattern *Vec_Int_t) int32 {
-	overflow := p.iPatsPi == 64*p.nSimWords && p.nSimWords == p.nSimWordsMax
+	overflow := p.iPatsPi == 64*p.NSimWords && p.NSimWords == p.nSimWordsMax
 	bit := Gia_ManBuiltInSimPack(p, pattern)
 	if bit < 0 {
 		if overflow {
@@ -75,7 +75,7 @@ func Gia_ManBuiltInSimAddPat(p *Gia_Man_t, pattern *Vec_Int_t) int32 {
 			if p.iPatsPi != 0 && p.iPatsPi&15 == 0 {
 				Gia_ManBuiltInSimResimulate(p)
 			}
-			if p.iPatsPi == 64*p.nSimWords {
+			if p.iPatsPi == 64*p.NSimWords {
 				giaSimGrowWords(p)
 			}
 			bit = p.iPatsPi

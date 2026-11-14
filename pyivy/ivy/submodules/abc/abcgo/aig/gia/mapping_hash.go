@@ -42,6 +42,6 @@ func Gia_ManDupHashMapping(src *Gia_Man_t) *Gia_Man_t {
 		}
 		Vec_IntPush(mapping, copied)
 	}
-	dst.vMapping = mapping
+	dst.VMapping = mapping
 	return dst
 }

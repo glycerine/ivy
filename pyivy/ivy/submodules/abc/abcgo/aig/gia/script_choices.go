@@ -25,7 +25,7 @@ func giaAigSynch2(input *Gia_Man_t, pars *dch.Params, relax int32, dsdBalance fu
 		Gia_ManTransferTiming(first, input)
 		return first
 	}
-	if first.pManTime != nil && first.vLevels == nil {
+	if first.PManTime != nil && first.vLevels == nil {
 		Gia_ManLevelWithBoxes(first)
 	}
 	if Gia_ManHasMapping(input) != 0 {
@@ -82,7 +82,7 @@ func giaAigSynch2(input *Gia_Man_t, pars *dch.Params, relax int32, dsdBalance fu
 		result = Gia_ManDupToBarBufs(previous, barriers)
 		Gia_ManStop(previous)
 	}
-	result.pName, result.pSpec = input.pName, input.pSpec
+	result.pName, result.PSpec = input.pName, input.PSpec
 	Gia_ManTransferTiming(result, input)
 	return result
 }

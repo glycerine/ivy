@@ -49,7 +49,7 @@ func Gia_ManFalseRebuildOne(q, p *Gia_Man_t, hook *Vec_Int_t, verbose, veryVerbo
 func Gia_ManFalseRebuild(p *Gia_Man_t, hooks *Vec_Wec_t, verbose, veryVerbose int32) *Gia_Man_t {
 	q := Gia_ManStart(max(1, 4*p.nObjs/3))
 	q.pName = p.pName
-	q.pSpec = p.pSpec
+	q.PSpec = p.PSpec
 	Gia_ObjSetValue(Gia_ManConst0(p), 0)
 	Gia_ManHashAlloc(q)
 	for _, obj := range p.pObjs[1:] {

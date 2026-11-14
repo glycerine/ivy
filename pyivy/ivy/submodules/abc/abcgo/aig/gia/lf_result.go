@@ -8,7 +8,7 @@ import (
 
 func Lf_ManDeriveMapping(p *Lf_Man_t) *Gia_Man_t {
 	g := p.pGia
-	if p.pPars.FCutMin != 0 || g.vMapping != nil {
+	if p.pPars.FCutMin != 0 || g.VMapping != nil {
 		panic("LF invalid structural mapping state")
 	}
 	mapping := vec.Vec_IntStart(int(g.nObjs))
@@ -27,17 +27,17 @@ func Lf_ManDeriveMapping(p *Lf_Man_t) *Gia_Man_t {
 		}
 		vec.Vec_IntPush(mapping, obj.id)
 	}
-	g.vMapping = mapping
+	g.VMapping = mapping
 	return g
 }
 func Lf_ManDeriveMappingCoarse(p *Lf_Man_t) *Gia_Man_t {
 	g := p.pGia
-	if p.pPars.FCutMin != 0 || g.pMuxes == nil {
+	if p.pPars.FCutMin != 0 || g.PMuxes == nil {
 		panic("LF invalid coarse mapping state")
 	}
 	dst := Gia_ManStart(g.nObjs)
 	dst.pName = g.pName
-	dst.pSpec = g.pSpec
+	dst.PSpec = g.PSpec
 	copies := make([]int32, g.nObjs)
 	copies[0] = 0
 	type record struct {
@@ -93,7 +93,7 @@ func Lf_ManDeriveMappingCoarse(p *Lf_Man_t) *Gia_Man_t {
 		}
 		vec.Vec_IntPush(mapping, marker)
 	}
-	dst.vMapping = mapping
+	dst.VMapping = mapping
 	Gia_ManSetRegNum(dst, Gia_ManRegNum(g))
 	return dst
 }
@@ -180,7 +180,7 @@ func Lf_ManDeriveMappingGia(p *Lf_Man_t) *Gia_Man_t {
 	g := p.pGia
 	dst := Gia_ManStart(g.nObjs)
 	dst.pName = g.pName
-	dst.pSpec = g.pSpec
+	dst.PSpec = g.PSpec
 	copies := vec.Vec_IntStartFull(int(g.nObjs))
 	vec.Vec_IntWriteEntry(copies, 0, 0)
 	mapping := vec.Vec_IntStart(2 * int(g.nObjs))
@@ -237,7 +237,7 @@ func Lf_ManDeriveMappingGia(p *Lf_Man_t) *Gia_Man_t {
 		}
 	}
 	vec.Vec_IntAppend(mapping, records)
-	dst.vMapping = mapping
+	dst.VMapping = mapping
 	Gia_ManSetRegNum(dst, Gia_ManRegNum(g))
 	return dst
 }

@@ -25,7 +25,7 @@ func TestPatternPackFullWordBoundary(t *testing.T) {
 	for i := 0; i < 6; i++ {
 		Gia_ManAppendCi(p)
 	}
-	p.vSimsPi = vec.Vec_WrdStart(0)
+	p.VSimsPi = vec.Vec_WrdStart(0)
 	store := vec.Vec_IntAlloc(64 * 8)
 	for value := 0; value < 64; value++ {
 		vec.Vec_IntPush(store, 0)

@@ -12,7 +12,7 @@ func TestGiaSatUsesAllOutputConjunction(t *testing.T) {
 	a := Gia_ManAppendCi(p)
 	Gia_ManAppendCo(p, a)
 	Gia_ManAppendCo(p, a^1)
-	if status := Gia_ManSolveSat(p); status != 1 || p.pCexComb != nil {
+	if status := Gia_ManSolveSat(p); status != 1 || p.PCexComb != nil {
 		t.Fatal("contradictory outputs were not UNSAT", status)
 	}
 	sat := Gia_ManStart(6)
@@ -24,7 +24,7 @@ func TestGiaSatUsesAllOutputConjunction(t *testing.T) {
 	if err != nil || result.Status != ceccore.Different || result.Counterexample == nil {
 		t.Fatal(err, result)
 	}
-	if sat.nObjs != before || sat.pCexComb == nil || sat.pCexComb.PData[0]&3 != 3 {
+	if sat.nObjs != before || sat.PCexComb == nil || sat.PCexComb.PData[0]&3 != 3 {
 		t.Fatal("invalid witness or mutated graph")
 	}
 	if sat.pObjs[x>>1].fMark0 != 1 || sat.pObjs[y>>1].fMark0 != 1 {
@@ -53,20 +53,20 @@ func TestGiaCecRealSolverAndCounterexampleOwnership(t *testing.T) {
 	Gia_ManAppendCo(different, Gia_ManAppendAnd(different, u, v))
 	existing := util.Abc_CexAlloc(0, 2, 1)
 	existing.PData[0] = 2
-	different.pCexComb = existing
-	if status := Cec_ManVerifyTwo(left, different, 0); status != 0 || left.pCexComb == nil || different.pCexComb != existing {
+	different.PCexComb = existing
+	if status := Cec_ManVerifyTwo(left, different, 0); status != 0 || left.PCexComb == nil || different.PCexComb != existing {
 		t.Fatal("missing difference witness", status)
 	}
-	bits := left.pCexComb.PData[0]
+	bits := left.PCexComb.PData[0]
 	inputs := []bool{bits&1 != 0, bits&2 != 0}
 	l, _ := left.Evaluate(inputs)
 	r, _ := different.Evaluate(inputs)
 	if l[0] == r[0] {
 		t.Fatal("witness does not distinguish networks")
 	}
-	other := different.pCexComb.PData[0]
-	left.pCexComb.PData[0] ^= 1
-	if different.pCexComb.PData[0] != other {
+	other := different.PCexComb.PData[0]
+	left.PCexComb.PData[0] ^= 1
+	if different.PCexComb.PData[0] != other {
 		t.Fatal("independent managers share mutable witness storage")
 	}
 }
@@ -86,14 +86,14 @@ func TestGiaSatCancellationAndExplicitFreeState(t *testing.T) {
 	if err != nil || result.Status != ceccore.Different {
 		t.Fatal(err, result)
 	}
-	if p.pCexComb.NRegs != 1 || p.pCexComb.NPis != 1 || p.pCexComb.PData[0]&3 != 3 {
+	if p.PCexComb.NRegs != 1 || p.PCexComb.NPis != 1 || p.PCexComb.PData[0]&3 != 3 {
 		t.Fatal("wrong initial-state/input witness layout")
 	}
 	ctx, cancel := context.WithCancel(context.Background())
 	cancel()
 	options.Context = ctx
 	result, err = Gia_ManSolveSatResult(p, options)
-	if err != nil || result.Status != ceccore.Undecided || p.pCexComb != nil {
+	if err != nil || result.Status != ceccore.Undecided || p.PCexComb != nil {
 		t.Fatal(err, result)
 	}
 }

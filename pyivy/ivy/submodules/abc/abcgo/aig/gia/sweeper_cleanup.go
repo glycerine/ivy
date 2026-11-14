@@ -31,7 +31,7 @@ func Gia_SweeperCleanup(p *Gia_Man_t, command string) *Gia_Man_t {
 		panic("gia: cleanup command changed probe interface")
 	}
 	result := Gia_ManStart(Gia_ManObjNum(tmp) + 100)
-	result.pName, result.pSpec = tmp.pName, tmp.pSpec
+	result.pName, result.PSpec = tmp.pName, tmp.PSpec
 	Gia_ManFillValue(tmp)
 	Gia_ManConst0(tmp).Value = 0
 	for i := int32(0); i < Gia_ManPiNum(tmp); i++ {

@@ -10,9 +10,9 @@ import (
 func Gia_ManPatRareImprove(p *Gia_Man_t, limit, verbose int32) {
 	start := time.Now()
 	words := giaPatternWords(p)
-	patterns := p.vSimsPi
-	p.vSimsPi = nil
-	defer func() { p.vSimsPi = patterns }()
+	patterns := p.VSimsPi
+	p.VSimsPi = nil
+	defer func() { p.VSimsPi = patterns }()
 	initial := Gia_ManPatGetTotalQuo(p, limit, patterns, words)
 	var rares, changes int
 	for n := int32(0); n < 64*words; n++ {

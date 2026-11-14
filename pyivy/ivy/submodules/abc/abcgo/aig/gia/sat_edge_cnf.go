@@ -12,9 +12,9 @@ func Seg_ManCreateCnf(p *Seg_Man_t, two, verbose int32) {
 	started := time.Now()
 	g := p.pGia
 	var timing *tim.Tim_Man_t
-	if g.pManTime != nil {
+	if g.PManTime != nil {
 		var ok bool
-		timing, ok = g.pManTime.(*tim.Tim_Man_t)
+		timing, ok = g.PManTime.(*tim.Tim_Man_t)
 		if !ok {
 			panic("gia: invalid timing manager")
 		}

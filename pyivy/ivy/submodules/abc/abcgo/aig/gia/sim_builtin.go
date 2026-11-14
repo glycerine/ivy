@@ -3,12 +3,12 @@ package gia
 import "github.com/glycerine/abcgo/misc/vec"
 
 func Gia_ManBuiltInDataPi(p *Gia_Man_t, id int32) []uint64 {
-	start := int(p.nSimWords * id)
-	return vec.Vec_WrdArray(p.vSimsPi)[start : start+int(p.nSimWords)]
+	start := int(p.NSimWords * id)
+	return vec.Vec_WrdArray(p.VSimsPi)[start : start+int(p.NSimWords)]
 }
 func Gia_ManBuiltInData(p *Gia_Man_t, id int32) []uint64 {
-	start := int(p.nSimWords * id)
-	return vec.Vec_WrdArray(p.vSims)[start : start+int(p.nSimWords)]
+	start := int(p.NSimWords * id)
+	return vec.Vec_WrdArray(p.vSims)[start : start+int(p.NSimWords)]
 }
 func Gia_ManBuiltInDataPrint(_ *Gia_Man_t, _ int32) {}
 func Gia_ManBuiltInSimStart(p *Gia_Man_t, words, objects int32) {
@@ -18,10 +18,10 @@ func Gia_ManBuiltInSimStart(p *Gia_Man_t, words, objects int32) {
 	p.fBuiltInSim = 1
 	p.iPatsPi = 0
 	p.iPastPiMax = 0
-	p.nSimWords = words
+	p.NSimWords = words
 	p.nSimWordsMax = 8
 	Gia_ManRandomW(1)
-	p.vSimsPi = vec.Vec_WrdStart(int(words * Gia_ManCiNum(p)))
+	p.VSimsPi = vec.Vec_WrdStart(int(words * Gia_ManCiNum(p)))
 	p.vSims = vec.Vec_WrdAlloc(int(words * objects))
 	vec.Vec_WrdFill(p.vSims, int(words), 0)
 	for i := int32(0); i < Gia_ManCiNum(p); i++ {

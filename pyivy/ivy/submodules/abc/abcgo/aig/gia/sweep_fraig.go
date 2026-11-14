@@ -3,7 +3,7 @@ package gia
 import "github.com/glycerine/abcgo/misc/tim"
 
 func Gia_ManUpdateTimMan(p *Gia_Man_t, present *Vec_Int_t) any {
-	timing := p.pManTime.(*tim.Tim_Man_t)
+	timing := p.PManTime.(*tim.Tim_Man_t)
 	mask := make([]int, Vec_IntSize(present))
 	for i, v := range Vec_IntArray(present) {
 		mask[i] = int(v)
@@ -79,7 +79,7 @@ func Gia_ManFraigMarkAnd(p *Gia_Man_t, obj *Gia_Obj_t) *Gia_Obj_t {
 }
 
 func Gia_ManFraigCreateGia(src *Gia_Man_t) *Gia_Man_t {
-	if src.pManTime == nil || src.pAigExtra == nil {
+	if src.PManTime == nil || src.PAigExtra == nil {
 		panic("gia: missing box metadata")
 	}
 	Gia_ManIncrementTravId(src)
@@ -114,7 +114,7 @@ func Gia_ManFraigCreateGia(src *Gia_Man_t) *Gia_Man_t {
 		Gia_ObjSetTravIdCurrent(src, o)
 	}
 	dst := Gia_ManStart(Gia_ManObjNum(src))
-	dst.pName, dst.pSpec = src.pName, src.pSpec
+	dst.pName, dst.PSpec = src.pName, src.PSpec
 	Gia_ManConst0(src).Value = 0
 	for _, o := range src.pObjs[1:] {
 		if Gia_ObjIsTravIdCurrent(src, o) == 0 {
@@ -133,7 +133,7 @@ func Gia_ManFraigCreateGia(src *Gia_Man_t) *Gia_Man_t {
 		}
 		o.Value = uint32(lit)
 	}
-	dst.pManTime = Gia_ManUpdateTimMan(src, present)
-	dst.pAigExtra = Gia_ManUpdateExtraAig(src.pManTime, src.pAigExtra, present)
+	dst.PManTime = Gia_ManUpdateTimMan(src, present)
+	dst.PAigExtra = Gia_ManUpdateExtraAig(src.PManTime, src.PAigExtra, present)
 	return dst
 }

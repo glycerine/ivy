@@ -9,9 +9,9 @@ func (e *testDomainCorrespondence) SweepCorrespondence(p *Gia_Man_t) {
 	if Gia_ManRegNum(p) != 2 {
 		panic("wrong active domain size")
 	}
-	p.pReprs = make([]Gia_Rpr_t, p.nObjs)
-	for i := range p.pReprs {
-		p.pReprs[i].iRepr = GIA_VOID
+	p.PReprs = make([]Gia_Rpr_t, p.nObjs)
+	for i := range p.PReprs {
+		p.PReprs[i].iRepr = GIA_VOID
 	}
 	a, b := Gia_ManRo(p, 0).id, Gia_ManRo(p, 1).id
 	Gia_ObjSetRepr(p, b, a)

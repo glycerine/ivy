@@ -29,9 +29,9 @@ func TestMiniAigFileAndFrameEquivalence(t *testing.T) {
 		t.Fatal(err)
 	}
 	classes := Gia_ManDup(f.Resource("pGiaMiniAig").(*Gia_Man_t))
-	classes.pReprs = make([]Gia_Rpr_t, classes.nObjs)
-	for i := range classes.pReprs {
-		classes.pReprs[i].iRepr = GIA_VOID
+	classes.PReprs = make([]Gia_Rpr_t, classes.nObjs)
+	for i := range classes.PReprs {
+		classes.PReprs[i].iRepr = GIA_VOID
 	}
 	f.SetResource("pGia2", classes)
 	values, err := abcmain.Abc_FrameReadMiniAigEquivClasses(f)

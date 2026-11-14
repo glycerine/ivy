@@ -27,9 +27,9 @@ func Gia_SimQualityOne(p *Gia_Man_t, pattern *Vec_Int_t, outputsOnly int32) *Vec
 		}
 		giaSimFlip(row, int32(i+1))
 	}
-	previous := p.vSimsPi
-	p.vSimsPi = simsIn
-	defer func() { p.vSimsPi = previous }()
+	previous := p.VSimsPi
+	p.VSimsPi = simsIn
+	defer func() { p.VSimsPi = previous }()
 	sims := Gia_ManSimPatSim(p)
 	simData := vec.Vec_WrdArray(sims)
 	count := func(id int32) int32 {

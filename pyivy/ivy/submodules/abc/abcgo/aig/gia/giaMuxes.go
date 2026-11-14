@@ -23,7 +23,7 @@ func Gia_ManDupMuxesTest(p *Gia_Man_t) *Gia_Man_t {
 }
 
 func Gia_ManMuxRestructure(src *Gia_Man_t) *Gia_Man_t {
-	if src.pMuxes == nil || Gia_ManHasChoices(src) != 0 || Gia_ManHasMapping(src) != 0 {
+	if src.PMuxes == nil || Gia_ManHasChoices(src) != 0 || Gia_ManHasMapping(src) != 0 {
 		panic("gia: MUX restructuring requires unmapped real gates without choices")
 	}
 	src.Refs = nil
@@ -466,7 +466,7 @@ func giaProfileCodes(p *Gia_Man_t) (*Vec_Int_t, *Vec_Int_t) {
 	return code, offsets
 }
 func Gia_ManProfileStructuresInt(p *Gia_Man_t, limit, verbose int32) {
-	if p.pMuxes == nil {
+	if p.PMuxes == nil {
 		panic("gia: profiling requires real-gate manager")
 	}
 	Gia_ManStaticFanoutStart(p)
@@ -504,7 +504,7 @@ func Gia_ManProfileStructuresInt(p *Gia_Man_t, limit, verbose int32) {
 	}
 }
 func Gia_ManProfileStructures(p *Gia_Man_t, limit, verbose int32) {
-	if p.pMuxes != nil {
+	if p.PMuxes != nil {
 		Gia_ManProfileStructuresInt(p, limit, verbose)
 		return
 	}

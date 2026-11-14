@@ -23,14 +23,14 @@ func aigerTestManager(n int) *Gia_Man_t {
 }
 func TestAigerEquivalenceGolden(t *testing.T) {
 	p := aigerTestManager(9)
-	p.pReprs = make([]Gia_Rpr_t, 9)
-	for i := range p.pReprs {
-		p.pReprs[i].iRepr = GIA_VOID
+	p.PReprs = make([]Gia_Rpr_t, 9)
+	for i := range p.PReprs {
+		p.PReprs[i].iRepr = GIA_VOID
 	}
-	p.pReprs[1] = Gia_Rpr_t{iRepr: 0, fProved: 1}
-	p.pReprs[3] = Gia_Rpr_t{iRepr: 2}
-	p.pReprs[4] = Gia_Rpr_t{iRepr: 2, fProved: 1}
-	p.pReprs[8] = Gia_Rpr_t{iRepr: 2, fProved: 1}
+	p.PReprs[1] = Gia_Rpr_t{iRepr: 0, fProved: 1}
+	p.PReprs[3] = Gia_Rpr_t{iRepr: 2}
+	p.PReprs[4] = Gia_Rpr_t{iRepr: 2, fProved: 1}
+	p.PReprs[8] = Gia_Rpr_t{iRepr: 2, fProved: 1}
 	data, err := Gia_WriteEquivClassesInt(p, nil)
 	if err != nil {
 		t.Fatal(err)
@@ -41,7 +41,7 @@ func TestAigerEquivalenceGolden(t *testing.T) {
 	}
 	position := append(data, 99)
 	decoded, err := Gia_AigerReadEquivClasses(&position, 9)
-	if err != nil || !reflect.DeepEqual(decoded, p.pReprs) || !bytes.Equal(position, []byte{99}) {
+	if err != nil || !reflect.DeepEqual(decoded, p.PReprs) || !bytes.Equal(position, []byte{99}) {
 		t.Fatal(err, decoded, position)
 	}
 	for _, bad := range [][]byte{{}, {0, 0, 0, 3}, {0, 0, 0, 6, 1}, {0, 0, 0, 5, 0}, {0, 0, 0, 6, 1, 0}, {0, 0, 0, 6, 19, 4}} {
@@ -57,7 +57,7 @@ func TestAigerMappingFormats(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	p.vMapping = aigerVecInts(mapping)
+	p.VMapping = aigerVecInts(mapping)
 	compressed, err := Gia_AigerWriteMappingInt(p, nil)
 	if err != nil {
 		t.Fatal(err)
@@ -203,19 +203,19 @@ printf("used=%d",(int)(p-data));return 0;}
 		t.Fatalf("C oracle: %v: %s", err, out)
 	}
 	p := aigerTestManager(20)
-	p.pReprs = make([]Gia_Rpr_t, p.nObjs)
-	for i := range p.pReprs {
-		p.pReprs[i].iRepr = GIA_VOID
+	p.PReprs = make([]Gia_Rpr_t, p.nObjs)
+	for i := range p.PReprs {
+		p.PReprs[i].iRepr = GIA_VOID
 	}
 	for i := 2; i < 20; i++ {
-		p.pReprs[i] = Gia_Rpr_t{iRepr: uint32(i % 2), fProved: uint32(i % 3 & 1)}
+		p.PReprs[i] = Gia_Rpr_t{iRepr: uint32(i % 2), fProved: uint32(i % 3 & 1)}
 	}
 	equivalences, err := Gia_WriteEquivClassesInt(p, nil)
 	if err != nil {
 		t.Fatal(err)
 	}
 	var expected strings.Builder
-	for _, r := range p.pReprs {
+	for _, r := range p.PReprs {
 		fmt.Fprintf(&expected, "%d:%d ", r.iRepr, r.fProved)
 	}
 	fmt.Fprintf(&expected, "used=%d", len(equivalences))
@@ -226,7 +226,7 @@ printf("used=%d",(int)(p-data));return 0;}
 		t.Fatal(err, string(out), expected.String())
 	}
 	mapping, _ := aigerMakeMapping(20, []aigerLUT{{10, []int32{1, 3, 5}}, {15, []int32{3, 9, 10}}, {19, []int32{10, 15}}})
-	p.vMapping = aigerVecInts(mapping)
+	p.VMapping = aigerVecInts(mapping)
 	encoded, err := Gia_AigerWriteMappingInt(p, nil)
 	if err != nil {
 		t.Fatal(err)

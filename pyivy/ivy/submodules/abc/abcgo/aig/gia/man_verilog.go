@@ -111,13 +111,13 @@ func Gia_ManDumpVerilog(p *Gia_Man_t, filename string, objects *Vec_Int_t) {
 		return '_'
 	}, p.pName)
 	fmt.Fprintf(file, "module %s (\n    ", name)
-	Gia_ManWriteNames(file, 'x', Gia_ManPiNum(p), p.vNamesIn, 4, 4, nil)
+	Gia_ManWriteNames(file, 'x', Gia_ManPiNum(p), p.VNamesIn, 4, 4, nil)
 	fmt.Fprint(file, ",\n    ")
-	Gia_ManWriteNames(file, 'z', Gia_ManPoNum(p), p.vNamesOut, 4, 4, nil)
+	Gia_ManWriteNames(file, 'z', Gia_ManPoNum(p), p.VNamesOut, 4, 4, nil)
 	fmt.Fprint(file, "\n  );\n\n  input ")
-	Gia_ManWriteNames(file, 'x', Gia_ManPiNum(p), p.vNamesIn, 8, 4, nil)
+	Gia_ManWriteNames(file, 'x', Gia_ManPiNum(p), p.VNamesIn, 8, 4, nil)
 	fmt.Fprint(file, ";\n\n  output ")
-	Gia_ManWriteNames(file, 'z', Gia_ManPoNum(p), p.vNamesOut, 9, 4, nil)
+	Gia_ManWriteNames(file, 'z', Gia_ManPoNum(p), p.VNamesOut, 9, 4, nil)
 	fmt.Fprint(file, ";\n\n")
 	if vec.Vec_BitCount(used) != 0 {
 		fmt.Fprint(file, "  wire ")
@@ -147,7 +147,7 @@ func Gia_ManDumpVerilog(p *Gia_Man_t, filename string, objects *Vec_Int_t) {
 	}
 	for i := int32(0); i < Gia_ManPiNum(p); i++ {
 		obj := Gia_ManPi(p, i)
-		input := Gia_ObjGetDumpName(p.vNamesIn, 'x', i, digits2)
+		input := Gia_ObjGetDumpName(p.VNamesIn, 'x', i, digits2)
 		if vec.Vec_BitEntry(used, int(obj.id)) != 0 {
 			fmt.Fprintf(file, "  buf( %s, %s );\n", Gia_ObjGetDumpName(nil, 'n', obj.id, digits), input)
 		}
@@ -189,7 +189,7 @@ func Gia_ManDumpVerilog(p *Gia_Man_t, filename string, objects *Vec_Int_t) {
 			}
 			input = Gia_ObjGetDumpName(nil, prefix, Gia_ObjFanin0(obj).id, digits)
 		}
-		fmt.Fprintf(file, "  buf( %s, %s );\n", Gia_ObjGetDumpName(p.vNamesOut, 'z', i, digits2), input)
+		fmt.Fprintf(file, "  buf( %s, %s );\n", Gia_ObjGetDumpName(p.VNamesOut, 'z', i, digits2), input)
 	}
 	fmt.Fprint(file, "\nendmodule\n\n")
 }

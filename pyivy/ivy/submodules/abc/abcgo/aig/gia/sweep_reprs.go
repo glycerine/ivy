@@ -5,7 +5,7 @@ import "fmt"
 // Gia_ManFraigSelectReprs maps collapsed equivalence classes back to the
 // original graph while keeping flop and carry-chain connections intact.
 func Gia_ManFraigSelectReprs(p, collapsed *Gia_Man_t, verbose int32, flopTypes []int32) []int32 {
-	if p.pManTime == nil || len(flopTypes) < 3 {
+	if p.PManTime == nil || len(flopTypes) < 3 {
 		panic("gia: invalid FRAIG selection arguments")
 	}
 	reprs := make([]int32, Gia_ManObjNum(p))

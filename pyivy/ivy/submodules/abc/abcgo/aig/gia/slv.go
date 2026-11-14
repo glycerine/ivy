@@ -93,7 +93,7 @@ func Slv_ManFromGia(p *Gia_Man_t) *Slv_Man_t {
 		case Gia_ObjIsCo(obj) != 0:
 			copies[id] = slvAppend(out, edge(obj.iDiff0, obj.fCompl0), 0, graphOutput)
 		case Gia_ObjIsAnd(obj) != 0:
-			if Gia_ObjIsXor(obj) != 0 || (int(id) < len(p.pMuxes) && p.pMuxes[id] != 0) {
+			if Gia_ObjIsXor(obj) != 0 || (int(id) < len(p.PMuxes) && p.PMuxes[id] != 0) {
 				panic("gia: normalize solver input XOR/MUX nodes")
 			}
 			copies[id] = slvAppend(out, edge(obj.iDiff0, obj.fCompl0), edge(obj.iDiff1, obj.fCompl1), graphAnd)
@@ -130,7 +130,7 @@ func Slv_ManToAig(p *Gia_Man_t) *Gia_Man_t {
 	solver := Slv_ManFromGia(p)
 	out := Slv_ManToGia(solver)
 	out.pName = p.pName
-	out.pSpec = p.pSpec
+	out.PSpec = p.PSpec
 	Slv_ManPrintFanouts(solver)
 	Slv_ManFree(solver)
 	return out

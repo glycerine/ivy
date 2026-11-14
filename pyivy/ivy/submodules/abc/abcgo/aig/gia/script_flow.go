@@ -26,7 +26,7 @@ func Gia_ManPerformMap(ands, lutSize, cutNum, minAve, useMfs, verbose int32) {
 		command := fmt.Sprintf("&unmap; &if -sz -S %d%d -K %d -C %d %s", lutSize, lutSize, 2*lutSize-1, 2*cutNum, opt)
 		run(command)
 		if g, ok := abcmain.Abc_FrameReadGia(frame).(*Gia_Man_t); ok && g != nil {
-			g.vPacking = nil
+			g.VPacking = nil
 		}
 		run("&save")
 		if verbose != 0 {

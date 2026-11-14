@@ -71,10 +71,10 @@ func giaImportAigNode(out *Gia_Man_t, p *aig.Graph, obj aig.Edge, choicesFirst b
 				}
 				out.pSibls[result>>1] = target
 			} else {
-				if len(out.pNexts) < int(out.nObjs) {
-					out.pNexts = append(out.pNexts, make([]int32, int(out.nObjs)-len(out.pNexts))...)
+				if len(out.PNexts) < int(out.nObjs) {
+					out.PNexts = append(out.PNexts, make([]int32, int(out.nObjs)-len(out.PNexts))...)
 				}
-				out.pNexts[result>>1] = target
+				out.PNexts[result>>1] = target
 			}
 		}
 	default:
@@ -94,7 +94,7 @@ func Gia_ManFromAigChoices_rec(out *Gia_Man_t, p *aig.Graph, obj aig.Edge) {
 func giaImportAig(p *aig.Graph, choicesFirst, allNodes, switchOutputs bool) *Gia_Man_t {
 	out := Gia_ManStart(aig.Aig_ManObjNumMax(p) + 1)
 	out.pName = p.Name
-	out.pSpec = p.Spec
+	out.PSpec = p.Spec
 	out.nConstrs = aig.Aig_ManConstrNum(p)
 	aig.Aig_ManCleanData(p)
 	aig.Aig_ObjSetCopy(p, p.Const1(), 1)
@@ -127,9 +127,9 @@ func giaImportAig(p *aig.Graph, choicesFirst, allNodes, switchOutputs bool) *Gia
 		aig.Aig_ObjSetCopy(p, output, aig.Edge(id))
 	}
 	out.nRegs = aig.Aig_ManRegNum(p)
-	if len(out.pNexts) > 0 {
-		if len(out.pNexts) < int(out.nObjs) {
-			out.pNexts = append(out.pNexts, make([]int32, int(out.nObjs)-len(out.pNexts))...)
+	if len(out.PNexts) > 0 {
+		if len(out.PNexts) < int(out.nObjs) {
+			out.PNexts = append(out.PNexts, make([]int32, int(out.nObjs)-len(out.PNexts))...)
 		}
 		Gia_ManDeriveReprs(out)
 	}
@@ -168,25 +168,25 @@ func giaExportAigNode(out *aig.Graph, copies []aig.Edge, p *Gia_Man_t, obj *Gia_
 	if record {
 		obj.Value = uint32(result)
 	}
-	if choices && int(id) < len(p.pNexts) && p.pNexts[id] != 0 {
-		next := giaExportAigNode(out, copies, p, p.pObjs[p.pNexts[id]], true, record)
+	if choices && int(id) < len(p.PNexts) && p.PNexts[id] != 0 {
+		next := giaExportAigNode(out, copies, p, p.pObjs[p.PNexts[id]], true, record)
 		aig.Aig_ObjSetEquiv(out, aig.Aig_Regular(result), aig.Aig_Regular(next))
 	}
 	return result
 }
 func Gia_ManToAig_rec(out *aig.Graph, copies []aig.Edge, p *Gia_Man_t, obj *Gia_Obj_t) {
-	giaExportAigNode(out, copies, p, obj, p.pNexts != nil, false)
+	giaExportAigNode(out, copies, p, obj, p.PNexts != nil, false)
 }
 func giaExportAig(p *Gia_Man_t, choices, allNodes, levels bool, skip int32) *aig.Graph {
 	if skip <= 0 {
 		panic("gia: invalid output stride")
 	}
-	if choices && (p.pNexts == nil || p.pReprs == nil) {
+	if choices && (p.PNexts == nil || p.PReprs == nil) {
 		panic("gia: choice export requires representatives and next links")
 	}
 	out := aig.Aig_ManStart(p.nObjs)
 	out.Name = p.pName
-	out.Spec = p.pSpec
+	out.Spec = p.PSpec
 	copies := make([]aig.Edge, p.nObjs)
 	for i := range copies {
 		copies[i] = aig.InvalidEdge
@@ -231,7 +231,7 @@ func Gia_ManToAig(p *Gia_Man_t, choices int32) *aig.Graph {
 	return giaExportAig(p, choices != 0, false, true, 1)
 }
 func Gia_ManToAigSkip(p *Gia_Man_t, stride int32) *aig.Graph {
-	if p.pNexts != nil || p.pReprs != nil || stride <= 0 || Gia_ManCoNum(p)%stride != 0 {
+	if p.PNexts != nil || p.PReprs != nil || stride <= 0 || Gia_ManCoNum(p)%stride != 0 {
 		panic("gia: invalid strided AIG export")
 	}
 	return giaExportAig(p, false, false, false, stride)
@@ -244,7 +244,7 @@ func Gia_ManToAigSkip(p *Gia_Man_t, stride int32) *aig.Graph {
 // turning that debug-only assertion into a production panic.
 func Gia_ManToAigSimple(p *Gia_Man_t) *aig.Graph {
 	out := aig.Aig_ManStart(p.nObjs)
-	out.Name, out.Spec = p.pName, p.pSpec
+	out.Name, out.Spec = p.pName, p.PSpec
 	aig.Aig_ManSetConstrNum(out, p.nConstrs)
 	copies := make([]aig.Edge, p.nObjs)
 	for id, obj := range p.pObjs {

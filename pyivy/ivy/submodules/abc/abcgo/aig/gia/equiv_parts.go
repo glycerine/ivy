@@ -5,7 +5,7 @@ import "fmt"
 // giaMarkMiterParts reconstructs the same sequential miter and marks its
 // vertices according to the source graphs' remapped object copies.
 func giaMarkMiterParts(p *Gia_Man_t, nameA, nameB string) bool {
-	if p.pReprs == nil || p.pNexts == nil {
+	if p.PReprs == nil || p.PNexts == nil {
 		fmt.Println("Equivalences are not defined.")
 		return false
 	}
@@ -70,7 +70,7 @@ func Gia_ManFilterEquivsForSpeculation(p *Gia_Man_t, nameA, nameB string, latchA
 		}
 		a, b := int32(-1), int32(-1)
 		for id := head; id != 0; {
-			next := p.pNexts[id]
+			next := p.PNexts[id]
 			obj := p.pObjs[id]
 			if a < 0 && obj.fMark0 != 0 && obj.fMark1 == 0 && (latchA == 0 || Gia_ObjIsRo(p, obj) != 0) {
 				a = id
@@ -79,12 +79,12 @@ func Gia_ManFilterEquivsForSpeculation(p *Gia_Man_t, nameA, nameB string, latchA
 				b = id
 			}
 			Gia_ObjUnsetRepr(p, id)
-			p.pNexts[id] = 0
+			p.PNexts[id] = 0
 			id = next
 		}
 		if a > 0 && b > 0 {
 			a, b = min(a, b), max(a, b)
-			p.pNexts[a] = b
+			p.PNexts[a] = b
 			Gia_ObjSetRepr(p, b, a)
 			count++
 		}
@@ -118,7 +118,7 @@ func Gia_ManFilterEquivsUsingParts(p *Gia_Man_t, nameA, nameB string) int32 {
 		seenA, seenB := false, false
 		count := int32(0)
 		for id := head; id != 0; {
-			next := p.pNexts[id]
+			next := p.PNexts[id]
 			obj := p.pObjs[id]
 			if obj.fMark0 != 0 && obj.fMark1 == 0 {
 				seenA = true
@@ -129,7 +129,7 @@ func Gia_ManFilterEquivsUsingParts(p *Gia_Man_t, nameA, nameB string) int32 {
 				keep = append(keep, id)
 			}
 			Gia_ObjUnsetRepr(p, id)
-			p.pNexts[id] = 0
+			p.PNexts[id] = 0
 			count++
 			id = next
 		}
@@ -137,7 +137,7 @@ func Gia_ManFilterEquivsUsingParts(p *Gia_Man_t, nameA, nameB string) int32 {
 		if seenA && seenB && len(keep) > 1 {
 			for i := 1; i < len(keep); i++ {
 				Gia_ObjSetRepr(p, keep[i], keep[0])
-				p.pNexts[keep[i-1]] = keep[i]
+				p.PNexts[keep[i-1]] = keep[i]
 				after++
 			}
 		}

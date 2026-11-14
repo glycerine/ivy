@@ -17,7 +17,7 @@ func Gia_Man2SupportAndTest(src *Gia_Man_t) *Gia_Man_t {
 	Gia_ManRandomW(1)
 	Gia_ManFillValue(src)
 	dst := Gia_ManStart(Gia_ManObjNum(src))
-	dst.pName, dst.pSpec = src.pName, src.pSpec
+	dst.pName, dst.PSpec = src.pName, src.PSpec
 	Gia_ManHashAlloc(dst)
 	Gia_ManConst0(src).Value = 0
 	manager := Gia_Man2SuppStart(dst)

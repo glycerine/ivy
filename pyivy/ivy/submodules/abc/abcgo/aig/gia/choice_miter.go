@@ -37,7 +37,7 @@ func Gia_ManChoiceMiter(networks []*Gia_Man_t) *Gia_Man_t {
 		}
 	}
 	dst := Gia_ManStart(int32(len(networks)) * Gia_ManObjNum(first))
-	dst.pName, dst.pSpec = first.pName, first.pSpec
+	dst.pName, dst.PSpec = first.pName, first.PSpec
 	for _, src := range networks {
 		for _, obj := range src.pObjs {
 			obj.Value = ^uint32(0)

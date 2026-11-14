@@ -26,9 +26,9 @@ func Gia_ManEquivUpdatePointers(p, q *Gia_Man_t) {
 	}
 }
 func giaEquivInitReprs(p *Gia_Man_t) {
-	p.pReprs = make([]Gia_Rpr_t, p.nObjs)
-	for i := range p.pReprs {
-		p.pReprs[i].iRepr = GIA_VOID
+	p.PReprs = make([]Gia_Rpr_t, p.nObjs)
+	for i := range p.PReprs {
+		p.PReprs[i].iRepr = GIA_VOID
 	}
 }
 func giaEquivRemapClasses(src, dst *Gia_Man_t, translate func(int32) (int32, bool)) {
@@ -47,7 +47,7 @@ func giaEquivRemapClasses(src, dst *Gia_Man_t, translate func(int32) (int32, boo
 			continue
 		}
 		class := vec.Vec_IntAlloc(4)
-		for id := head; id != 0; id = src.pNexts[id] {
+		for id := head; id != 0; id = src.PNexts[id] {
 			if mapped, ok := translate(id); ok {
 				vec.Vec_IntPushUnique(class, mapped)
 			}
@@ -63,7 +63,7 @@ func giaEquivRemapClasses(src, dst *Gia_Man_t, translate func(int32) (int32, boo
 			}
 		}
 	}
-	dst.pNexts = Gia_ManDeriveNexts(dst)
+	dst.PNexts = Gia_ManDeriveNexts(dst)
 }
 func Gia_ManEquivDeriveReprs(p, intermediate, final *Gia_Man_t) {
 	giaEquivRemapClasses(p, final, func(id int32) (int32, bool) {
@@ -130,20 +130,20 @@ func Gia_ManChangeOrder_rec(q, p *Gia_Man_t, obj *Gia_Obj_t) int32 {
 	return lit
 }
 func Gia_ManChangeOrder(p *Gia_Man_t) *Gia_Man_t {
-	if p.pReprs == nil || p.pNexts == nil {
+	if p.PReprs == nil || p.PNexts == nil {
 		panic("gia: missing equivalence classes")
 	}
 	Gia_ManFillValue(p)
 	q := Gia_ManStart(p.nObjs)
 	q.pName = p.pName
-	q.pSpec = p.pSpec
+	q.PSpec = p.PSpec
 	Gia_ObjSetValue(Gia_ManConst0(p), 0)
 	for i := int32(0); i < Gia_ManCiNum(p); i++ {
 		Gia_ObjSetValue(Gia_ManCi(p, i), Gia_ManAppendCi(q))
 	}
 	for head := int32(1); head < p.nObjs; head++ {
 		if Gia_ObjIsHead(p, head) != 0 {
-			for id := head; id != 0; id = p.pNexts[id] {
+			for id := head; id != 0; id = p.PNexts[id] {
 				Gia_ManChangeOrder_rec(q, p, Gia_ManObj(p, id))
 			}
 		}
@@ -167,7 +167,7 @@ func Gia_ManChangeOrder(p *Gia_Man_t) *Gia_Man_t {
 	return q
 }
 func Gia_ManTransferEquivs(p, q *Gia_Man_t) {
-	if p.nObjs != q.nObjs || p.pReprs == nil || p.pNexts == nil || q.pReprs != nil || q.pNexts != nil {
+	if p.nObjs != q.nObjs || p.PReprs == nil || p.PNexts == nil || q.PReprs != nil || q.PNexts != nil {
 		panic("gia: invalid equivalence transfer")
 	}
 	giaEquivRemapClasses(p, q, func(id int32) (int32, bool) { lit := Gia_ObjValue(Gia_ManObj(p, id)); return lit >> 1, lit >= 0 })

@@ -27,7 +27,7 @@ func Gia_ManFraigReduceGia(src *Gia_Man_t, reps []int32) *Gia_Man_t {
 		panic("gia: invalid FRAIG representatives")
 	}
 	dst := Gia_ManStart(Gia_ManObjNum(src))
-	dst.pName, dst.pSpec = src.pName, src.pSpec
+	dst.pName, dst.PSpec = src.pName, src.PSpec
 	Gia_ManFillValue(src)
 	Gia_ManHashAlloc(dst)
 	for _, obj := range src.pObjs {

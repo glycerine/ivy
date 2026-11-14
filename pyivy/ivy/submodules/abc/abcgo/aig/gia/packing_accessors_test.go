@@ -22,7 +22,7 @@ func TestGiaManPackingBorrowAndReplaceLifecycle(t *testing.T) {
 	// The getter is borrowed, matching direct C field access; manager and caller
 	// see the same attached vector and its subsequent mutations.
 	Vec_IntWriteEntry(Gia_ManPacking(p), 2, ci>>1)
-	if Vec_IntEntry(p.vPacking, 2) != ci>>1 {
+	if Vec_IntEntry(p.VPacking, 2) != ci>>1 {
 		t.Fatal("borrowed packing vector did not refer to attached state")
 	}
 

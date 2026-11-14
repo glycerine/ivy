@@ -44,7 +44,7 @@ func Gia_ManGenerateCounter(g *Gia_Man_t, frame, output, words, pattern int32, c
 // simulation is supplied by the separately implemented equivalence engine.
 func giaSimSimulate(g *Gia_Man_t, pars *Gia_ParSim_t, equiv func(*Gia_Man_t, *Gia_ParSim_t) int32) int32 {
 	started := time.Now()
-	if g.pReprs != nil && g.pNexts != nil {
+	if g.PReprs != nil && g.PNexts != nil {
 		return equiv(g, pars)
 	}
 	g.pCexSeq = nil

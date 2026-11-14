@@ -108,7 +108,7 @@ func Gia_SweeperSweep(p *Gia_Man_t, outputs *Vec_Int_t, words, conflicts, verify
 		}
 	}
 	result := Gia_ManStart(count + 100)
-	result.pName, result.pSpec = p.pName, p.pSpec
+	result.pName, result.PSpec = p.pName, p.PSpec
 	mapped := make([]int32, count)
 	Gia_ManHashStart(result)
 	for i := int32(0); i < Gia_ManPiNum(work); i++ {

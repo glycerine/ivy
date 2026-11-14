@@ -8,7 +8,7 @@ func TestCecSimulationReleaseAll(t *testing.T) {
 	Gia_ManCecSimAlloc(g, 1)
 	Gia_ManCecSaveCIWord(g, 1)
 	Gia_ManCecSimFreeAll(g)
-	if g.vSims != nil || g.vSimsPi != nil || g.nSimWords != 0 {
+	if g.vSims != nil || g.VSimsPi != nil || g.NSimWords != 0 {
 		t.Fatal("CEC buffers not released")
 	}
 }

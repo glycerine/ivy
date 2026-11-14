@@ -14,7 +14,7 @@ func Jf_ManDeriveGia(p *Jf_Man_t) *Gia_Man_t {
 	g := p.pGia
 	dst := Gia_ManStart(g.nObjs)
 	dst.pName = g.pName
-	dst.pSpec = g.pSpec
+	dst.PSpec = g.PSpec
 	copies := make([]int32, g.nObjs)
 	for i := range copies {
 		copies[i] = -1

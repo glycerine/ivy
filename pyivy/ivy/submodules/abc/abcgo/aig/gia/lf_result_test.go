@@ -123,7 +123,7 @@ func TestLfCofactorMuxDerivation(t *testing.T) {
 		}
 	}
 	vec.Vec_IntAppend(mapping, records)
-	g.vMapping = mapping
+	g.VMapping = mapping
 	Gia_ManMappingVerify(g)
 	for mask := 0; mask < 32; mask++ {
 		inputs := make([]bool, 5)

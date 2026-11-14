@@ -62,7 +62,7 @@ func Gia_ManCreateGate(p *Gia_Man_t, obj *Gia_Obj_t, super *Vec_Int_t) {
 	var literal int32
 	if Gia_ObjIsXor(obj) == 0 {
 		literal = Gia_ManHashAnd(p, a, b)
-	} else if p.pMuxes != nil {
+	} else if p.PMuxes != nil {
 		literal = Gia_ManHashXorReal(p, a, b)
 	} else {
 		literal = Gia_ManHashXor(p, a, b)
@@ -160,8 +160,8 @@ func giaBalanceInputs(src, dst *Gia_Man_t) {
 		var level int32
 		if src.vCiArrs != nil {
 			level = Vec_IntEntry(src.vCiArrs, i) / delay
-		} else if src.vInArrs != nil {
-			level = int32(Vec_FltEntry(src.vInArrs, i) / float32(delay))
+		} else if src.VInArrs != nil {
+			level = int32(Vec_FltEntry(src.VInArrs, i) / float32(delay))
 		}
 		Gia_ObjSetLevel(dst, dst.pObjs[id], level)
 	}
@@ -588,11 +588,11 @@ func Dam_ManAreaBalanceInt(src *Gia_Man_t, inputs *Vec_Int_t, limit, verbose, ve
 }
 func Gia_ManAreaBalance(src *Gia_Man_t, simple, limit, verbose, veryVerbose int32) *Gia_Man_t {
 	// Set source input arrivals before recording the levels used after coarsening.
-	if src.vCiArrs != nil || src.vInArrs != nil {
+	if src.vCiArrs != nil || src.VInArrs != nil {
 		Gia_ManCleanLevels(src, src.nObjs)
 		giaBalanceInputs(src, src)
 	}
-	if src.pManTime != nil && src.vLevels == nil {
+	if src.PManTime != nil && src.vLevels == nil {
 		Gia_ManLevelWithBoxes(src)
 	}
 	inputs := Gia_ManGetCiLevels(src)

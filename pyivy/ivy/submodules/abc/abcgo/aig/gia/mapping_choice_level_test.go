@@ -27,7 +27,7 @@ func TestChoiceLevelsWithBox(t *testing.T) {
 	tm := tim.Tim_ManStart(2, 2)
 	tim.Tim_ManSetDelayTables(tm, [][]float32{{0, 1, 1, 3}})
 	tim.Tim_ManCreateBox(tm, 0, 1, 1, 1, 0, 0)
-	p.pManTime = tm
+	p.PManTime = tm
 	if got := Gia_ManChoiceLevel(p); got != 2 {
 		t.Fatalf("level=%d", got)
 	}

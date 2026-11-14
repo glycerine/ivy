@@ -15,7 +15,7 @@ func TestGiaCarryOuts(t *testing.T) {
 	Gia_ManAppendCo(g, box)
 	tm := tim.Tim_ManStart(2, 2)
 	tim.Tim_ManCreateBox(tm, 0, 1, 1, 1, 0, 0)
-	g.pManTime = tm
+	g.PManTime = tm
 	if ids := vec.Vec_IntArray(Gia_ManComputeCarryOuts(g)); !reflect.DeepEqual(ids, []int32{box >> 1}) {
 		t.Fatal(ids)
 	}

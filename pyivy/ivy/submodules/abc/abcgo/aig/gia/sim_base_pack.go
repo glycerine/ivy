@@ -72,7 +72,7 @@ func Gia_ManSimBitPacking(p *Gia_Man_t, store *Vec_Int_t, cexes, undecided int32
 		panic("gia: trailing counterexample data")
 	}
 	use := util.Abc_Bit6WordNum(patterns + 1)
-	result := Gia_ManSimCombine(Gia_ManCiNum(p), p.vSimsPi, values, use)
-	fmt.Printf("Compressed %d CEXes into %d patterns and added %d words to available %d words.\n", cexes, patterns, use, vec.Vec_WrdSize(p.vSimsPi)/int(Gia_ManCiNum(p)))
+	result := Gia_ManSimCombine(Gia_ManCiNum(p), p.VSimsPi, values, use)
+	fmt.Printf("Compressed %d CEXes into %d patterns and added %d words to available %d words.\n", cexes, patterns, use, vec.Vec_WrdSize(p.VSimsPi)/int(Gia_ManCiNum(p)))
 	return result
 }

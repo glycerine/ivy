@@ -3,11 +3,11 @@ package gia
 import "github.com/glycerine/abcgo/misc/vec"
 
 func Gia_ManName(p *Gia_Man_t) string                       { return p.pName }
-func Gia_ManSpec(p *Gia_Man_t) string                       { return p.pSpec }
-func Gia_ManInputNames(p *Gia_Man_t) *Vec_Ptr_t             { return p.vNamesIn }
-func Gia_ManSetInputNames(p *Gia_Man_t, names *Vec_Ptr_t)   { p.vNamesIn = names }
-func Gia_ManOutputNames(p *Gia_Man_t) *Vec_Ptr_t            { return p.vNamesOut }
-func Gia_ManSetOutputNames(p *Gia_Man_t, names *Vec_Ptr_t)  { p.vNamesOut = names }
+func Gia_ManSpec(p *Gia_Man_t) string                       { return p.PSpec }
+func Gia_ManInputNames(p *Gia_Man_t) *Vec_Ptr_t             { return p.VNamesIn }
+func Gia_ManSetInputNames(p *Gia_Man_t, names *Vec_Ptr_t)   { p.VNamesIn = names }
+func Gia_ManOutputNames(p *Gia_Man_t) *Vec_Ptr_t            { return p.VNamesOut }
+func Gia_ManSetOutputNames(p *Gia_Man_t, names *Vec_Ptr_t)  { p.VNamesOut = names }
 func Gia_ManSetRegClasses(p *Gia_Man_t, classes *Vec_Int_t) { p.vRegClasses = classes }
 
 // Gia_ManReadSeqModelVec returns the manager's borrowed raw sequential-model
@@ -38,13 +38,13 @@ func Gia_ManTakeSeqModelVec(p *Gia_Man_t) *Vec_Ptr_t {
 	return models
 }
 
-func Gia_ManSimWordNum(p *Gia_Man_t) int32 { return p.nSimWords }
+func Gia_ManSimWordNum(p *Gia_Man_t) int32 { return p.NSimWords }
 func Gia_ManSimData(p *Gia_Man_t) []uint64 { return vec.Vec_WrdArray(p.vSims) }
 
 // Gia_ManSimObjectData returns the mutable simulation words for one object.
 // The caller must have installed simulation storage with Gia_ManSetSimData.
 func Gia_ManSimObjectData(p *Gia_Man_t, id int32) []uint64 {
-	words := p.nSimWords
+	words := p.NSimWords
 	if p.vSims == nil || words <= 0 || id < 0 || id >= p.nObjs {
 		panic("gia: simulation object storage is unavailable")
 	}
@@ -56,7 +56,7 @@ func Gia_ManSimObjectData(p *Gia_Man_t, id int32) []uint64 {
 	return data[start : start+int(words)]
 }
 func Gia_ManSetSimData(p *Gia_Man_t, data *Vec_Wrd_t, words int32) {
-	p.vSims, p.nSimWords = data, words
+	p.vSims, p.NSimWords = data, words
 }
 
 // Gia_ManSetSimInputs transfers ownership of the input-pattern words used by
@@ -65,11 +65,11 @@ func Gia_ManSetSimInputs(p *Gia_Man_t, inputs *Vec_Wrd_t) {
 	if p == nil {
 		return
 	}
-	vec.Vec_WrdFreeP(&p.vSimsPi)
-	p.vSimsPi = inputs
+	vec.Vec_WrdFreeP(&p.VSimsPi)
+	p.VSimsPi = inputs
 }
-func Gia_ManClearSimData(p *Gia_Man_t)                   { vec.Vec_WrdFreeP(&p.vSims); p.nSimWords = 0 }
-func Gia_ManSetNameSpec(p *Gia_Man_t, name, spec string) { p.pName, p.pSpec = name, spec }
+func Gia_ManClearSimData(p *Gia_Man_t)                   { vec.Vec_WrdFreeP(&p.vSims); p.NSimWords = 0 }
+func Gia_ManSetNameSpec(p *Gia_Man_t, name, spec string) { p.pName, p.PSpec = name, spec }
 
 // Gia_ManTruthTableNodeIDs returns a snapshot of the manager's current
 // truth-table node order. The IDs retain the postorder produced by
@@ -167,8 +167,8 @@ func Gia_ManSetRegNum(p *Gia_Man_t, count int32) {
 // Gia_ManSetBoxData attaches the external logic and timing metadata used for
 // black-boxed networks. It mirrors the corresponding C struct assignments.
 func Gia_ManSetBoxData(p, extra *Gia_Man_t, timing any) {
-	p.pAigExtra = extra
-	p.pManTime = timing
+	p.PAigExtra = extra
+	p.PManTime = timing
 }
 
 // Dependency-neutral traversal methods used by higher-level algorithms.

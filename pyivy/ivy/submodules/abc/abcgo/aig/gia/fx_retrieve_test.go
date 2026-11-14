@@ -9,11 +9,11 @@ func TestFxRetrieveCovers(t *testing.T) {
 		x := Gia_ManAppendAnd(p, a^1, b)
 		y := Gia_ManAppendAnd(p, x, c)
 		Gia_ManAppendCo(p, y)
-		p.vMapping = Vec_IntStart(int(p.nObjs))
+		p.VMapping = Vec_IntStart(int(p.nObjs))
 		for _, lut := range []struct{ id, a, b int32 }{{x >> 1, a >> 1, b >> 1}, {y >> 1, x >> 1, c >> 1}} {
-			Vec_IntWriteEntry(p.vMapping, int(lut.id), int32(Vec_IntSize(p.vMapping)))
+			Vec_IntWriteEntry(p.VMapping, int(lut.id), int32(Vec_IntSize(p.VMapping)))
 			for _, value := range []int32{2, lut.a, lut.b, lut.id} {
-				Vec_IntPush(p.vMapping, value)
+				Vec_IntPush(p.VMapping, value)
 			}
 		}
 		var phases *Vec_Str_t

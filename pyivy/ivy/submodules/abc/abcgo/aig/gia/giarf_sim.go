@@ -149,11 +149,11 @@ func Hcd_ManClassesRefine(p *Hcd_Man_t) {
 }
 func Hcd_ManClassesCreate(p *Hcd_Man_t) {
 	g := p.pGia
-	if g.pReprs != nil {
+	if g.PReprs != nil {
 		panic("gia: equivalence classes already exist")
 	}
-	g.pReprs = make([]Gia_Rpr_t, g.nObjs)
-	g.pNexts = make([]int32, g.nObjs)
+	g.PReprs = make([]Gia_Rpr_t, g.nObjs)
+	g.PNexts = make([]int32, g.nObjs)
 	for id, obj := range g.pObjs {
 		repr := int32(GIA_VOID)
 		if Gia_ObjIsAnd(obj) != 0 {

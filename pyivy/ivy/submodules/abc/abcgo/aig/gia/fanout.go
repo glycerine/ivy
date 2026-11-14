@@ -71,8 +71,8 @@ func giaObjectFanins(p *Gia_Man_t, obj *Gia_Obj_t) []int32 {
 	if Gia_ObjIsBuf(obj) == 0 {
 		result = append(result, Gia_ObjFaninId1(obj, obj.id))
 	}
-	if int(obj.id) < len(p.pMuxes) && p.pMuxes[obj.id] != 0 {
-		result = append(result, int32(p.pMuxes[obj.id]>>1))
+	if int(obj.id) < len(p.PMuxes) && p.PMuxes[obj.id] != 0 {
+		result = append(result, int32(p.PMuxes[obj.id]>>1))
 	}
 	return result
 }

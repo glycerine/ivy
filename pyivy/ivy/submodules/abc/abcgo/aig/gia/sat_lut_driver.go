@@ -27,11 +27,11 @@ func Gia_ManLutSat(g *Gia_Man_t, lutSize, number, improves, conflictLimit, delay
 	if p.fVerbose != 0 {
 		fmt.Printf("Parameters: WinSize = %d AIG nodes. Conf = %d. DelayMax = %d.\n", p.nVars, p.nBTLimit, p.DelayMax)
 	}
-	if delay != 0 && g.vEdge1 != nil && p.DelayMax == 0 {
+	if delay != 0 && g.VEdge1 != nil && p.DelayMax == 0 {
 		p.DelayMax = Gia_ManEvalEdgeDelay(g)
 	}
 	Gia_ManComputeOneWinStart(g, number, reverse)
-	defer func() { Gia_ManComputeOneWin(g, -1, nil, nil, nil, nil); g.vPacking = nil }()
+	defer func() { Gia_ManComputeOneWin(g, -1, nil, nil, nil, nil); g.VPacking = nil }()
 	var improved int32
 	for id := int32(1); id < g.nObjs; id++ {
 		if Gia_ObjIsLut2(g, id) == 0 {

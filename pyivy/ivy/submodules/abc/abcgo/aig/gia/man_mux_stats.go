@@ -18,7 +18,7 @@ func Gia_ManCountMuxXor(p *Gia_Man_t, muxes, xors *int32) {
 }
 func Gia_ManPrintMuxStats(p *Gia_Man_t) {
 	var ands, muxes, xors, total int32
-	if p.pMuxes != nil {
+	if p.PMuxes != nil {
 		ands = Gia_ManAndNotBufNum(p) - Gia_ManXorNum(p) - Gia_ManMuxNum(p)
 		xors = Gia_ManXorNum(p)
 		muxes = Gia_ManMuxNum(p)

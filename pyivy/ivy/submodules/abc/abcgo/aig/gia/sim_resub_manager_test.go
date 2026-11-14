@@ -11,9 +11,9 @@ func TestSimulationResubstitutionCareAndFunction(t *testing.T) {
 	x := Gia_ManAppendAnd(g, a, b)
 	y := Gia_ManAppendAnd(g, x, c)
 	Gia_ManAppendCo(g, y)
-	g.vSimsPi = vec.Vec_WrdAlloc(3)
+	g.VSimsPi = vec.Vec_WrdAlloc(3)
 	for _, word := range []uint64{0xaaaaaaaaaaaaaaaa, 0xcccccccccccccccc, 0xffffffffffffffff} {
-		vec.Vec_WrdPush(g.vSimsPi, word)
+		vec.Vec_WrdPush(g.VSimsPi, word)
 	}
 	p := Gia_SimRsbAlloc(g)
 	defer Gia_SimRsbFree(p)

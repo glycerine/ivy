@@ -71,14 +71,14 @@ func Gia_ManGlaCollect(p *Gia_Man_t, classes *Vec_Int_t, pis, ppis, flops, nodes
 	}
 }
 func Gia_ManPrintFlopClasses(p *Gia_Man_t) {
-	if p.vFlopClasses == nil {
+	if p.VFlopClasses == nil {
 		return
 	}
-	if vec.Vec_IntSize(p.vFlopClasses) != int(Gia_ManRegNum(p)) {
+	if vec.Vec_IntSize(p.VFlopClasses) != int(Gia_ManRegNum(p)) {
 		fmt.Println("Gia_ManPrintFlopClasses(): The number of flop map entries differs from the number of flops.")
 		return
 	}
-	zero, one := vec.Vec_IntCountEntry(p.vFlopClasses, 0), vec.Vec_IntCountEntry(p.vFlopClasses, 1)
+	zero, one := vec.Vec_IntCountEntry(p.VFlopClasses, 0), vec.Vec_IntCountEntry(p.VFlopClasses, 1)
 	fmt.Printf("Flop-level abstraction:  Excluded FFs = %d  Included FFs = %d  (%.2f %%) ", zero, one, 100*float64(one)/float64(zero+one+1))
 	if zero+one < int(Gia_ManRegNum(p)) {
 		fmt.Print("and there are other FF classes...")
@@ -86,24 +86,24 @@ func Gia_ManPrintFlopClasses(p *Gia_Man_t) {
 	fmt.Println()
 }
 func Gia_ManPrintGateClasses(p *Gia_Man_t) {
-	if p.vGateClasses == nil {
+	if p.VGateClasses == nil {
 		return
 	}
-	if vec.Vec_IntSize(p.vGateClasses) != int(p.nObjs) {
+	if vec.Vec_IntSize(p.VGateClasses) != int(p.nObjs) {
 		fmt.Println("Gia_ManPrintGateClasses(): The number of flop map entries differs from the number of flops.")
 		return
 	}
 	var pis, ppis, flops, nodes *Vec_Int_t
-	Gia_ManGlaCollect(p, p.vGateClasses, &pis, &ppis, &flops, &nodes)
+	Gia_ManGlaCollect(p, p.VGateClasses, &pis, &ppis, &flops, &nodes)
 	a, b, c, d := vec.Vec_IntSize(pis), vec.Vec_IntSize(ppis), vec.Vec_IntSize(flops), vec.Vec_IntSize(nodes)
 	total := 1 + c + d
 	fmt.Printf("Gate-level abstraction:  PI = %d  PPI = %d  FF = %d (%.2f %%)  AND = %d (%.2f %%)  Obj = %d (%.2f %%)\n", a, b, c, 100*float64(c)/float64(Gia_ManRegNum(p)+1), d, 100*float64(d)/float64(Gia_ManAndNum(p)+1), total, 100*float64(total)/float64(Gia_ManRegNum(p)+Gia_ManAndNum(p)+1))
 }
 func Gia_ManPrintObjClasses(p *Gia_Man_t) {
-	if p.vObjClasses == nil {
+	if p.VObjClasses == nil {
 		return
 	}
-	data := vec.Vec_IntArray(p.vObjClasses)
+	data := vec.Vec_IntArray(p.VObjClasses)
 	frames := int(data[0])
 	if frames < 0 || frames+1 >= len(data) || int(data[frames+1]) != len(data) {
 		panic("gia: invalid object classes")

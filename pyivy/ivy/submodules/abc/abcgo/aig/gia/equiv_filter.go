@@ -6,7 +6,7 @@ import (
 )
 
 func Gia_ManEquivTransform(p *Gia_Man_t, verbose int32) {
-	if p.pReprs == nil || p.pNexts == nil {
+	if p.PReprs == nil || p.PNexts == nil {
 		panic("gia: missing equivalence classes")
 	}
 	for _, obj := range p.pObjs {
@@ -22,7 +22,7 @@ func Gia_ManEquivTransform(p *Gia_Man_t, verbose int32) {
 		totalClasses++
 		var keep []int32
 		for id := head; id != 0; {
-			next := p.pNexts[id]
+			next := p.PNexts[id]
 			totalLits++
 			colors := Gia_ObjColors(p, id)
 			if colors == 0 {
@@ -33,10 +33,10 @@ func Gia_ManEquivTransform(p *Gia_Man_t, verbose int32) {
 			} else {
 				removedLits++
 			}
-			p.pReprs[id].fFailed = 0
-			p.pReprs[id].fProved = 0
+			p.PReprs[id].fFailed = 0
+			p.PReprs[id].fProved = 0
 			Gia_ObjUnsetRepr(p, id)
-			p.pNexts[id] = 0
+			p.PNexts[id] = 0
 			id = next
 		}
 		if len(keep) < 2 {
@@ -45,7 +45,7 @@ func Gia_ManEquivTransform(p *Gia_Man_t, verbose int32) {
 		}
 		for i := 1; i < len(keep); i++ {
 			Gia_ObjSetRepr(p, keep[i], keep[0])
-			p.pNexts[keep[i-1]] = keep[i]
+			p.PNexts[keep[i-1]] = keep[i]
 		}
 	}
 	if verbose != 0 {
@@ -109,7 +109,7 @@ func Gia_ManEquivMark(p *Gia_Man_t, filename string, skipSome, verbose int32) {
 	}
 }
 func Gia_ManEquivFilter(p *Gia_Man_t, outputs *Vec_Int_t, verbose int32) {
-	if p.pReprs == nil || p.pNexts == nil {
+	if p.PReprs == nil || p.PNexts == nil {
 		fmt.Println("Gia_ManEquivFilter(): Equivalence classes are not defined.")
 		return
 	}
@@ -151,7 +151,7 @@ func Gia_ManEquivFilter(p *Gia_Man_t, outputs *Vec_Int_t, verbose int32) {
 			Gia_ObjUnsetRepr(p, vec.Vec_IntEntry(mapping, int(id-Gia_ManPoNum(p))))
 		}
 	}
-	p.pNexts = Gia_ManDeriveNexts(p)
+	p.PNexts = Gia_ManDeriveNexts(p)
 }
 func Gia_ManEquivFilterTest(p *Gia_Man_t) {
 	outputs := vec.Vec_IntAlloc(10)
@@ -194,7 +194,7 @@ func Gia_ManFilterEquivsUsingLatches(p *Gia_Man_t, flopsOnly, flopsWith, useDriv
 		}
 		var members, keep []int32
 		found := false
-		for id := head; id != 0; id = p.pNexts[id] {
+		for id := head; id != 0; id = p.PNexts[id] {
 			members = append(members, id)
 			if selected[id] {
 				found = true
@@ -208,12 +208,12 @@ func Gia_ManFilterEquivsUsingLatches(p *Gia_Man_t, flopsOnly, flopsWith, useDriv
 		}
 		for _, id := range members {
 			Gia_ObjUnsetRepr(p, id)
-			p.pNexts[id] = 0
+			p.PNexts[id] = 0
 		}
 		if flopsOnly != 0 && len(keep) > 1 {
 			for i := 1; i < len(keep); i++ {
 				Gia_ObjSetRepr(p, keep[i], keep[0])
-				p.pNexts[keep[i-1]] = keep[i]
+				p.PNexts[keep[i-1]] = keep[i]
 				after++
 			}
 		}
@@ -221,7 +221,7 @@ func Gia_ManFilterEquivsUsingLatches(p *Gia_Man_t, flopsOnly, flopsWith, useDriv
 	fmt.Printf("The number of literals: Before = %d. After = %d.\n", before, after)
 }
 func Gia_ManEquivImprove(p *Gia_Man_t) {
-	if p.pReprs == nil || p.pNexts == nil {
+	if p.PReprs == nil || p.PNexts == nil {
 		panic("gia: missing equivalence classes")
 	}
 	Gia_ManLevelNum(p)
@@ -232,7 +232,7 @@ func Gia_ManEquivImprove(p *Gia_Man_t) {
 		}
 		best, bestLevel, bestMffc := int32(-1), int32(embInfinity), int32(embInfinity)
 		var members []int32
-		for id := head; id != 0; id = p.pNexts[id] {
+		for id := head; id != 0; id = p.PNexts[id] {
 			obj := Gia_ManObj(p, id)
 			level, mffc := Gia_ObjLevel(p, obj), Gia_NodeMffcSize(p, obj)
 			if level < bestLevel || level == bestLevel && mffc < bestMffc {
@@ -248,9 +248,9 @@ func Gia_ManEquivImprove(p *Gia_Man_t) {
 		Gia_ObjUnsetProved(p, best)
 		for _, id := range members {
 			if id != best {
-				p.pReprs[id].iRepr = uint32(best)
+				p.PReprs[id].iRepr = uint32(best)
 			}
 		}
 	}
-	p.pNexts = nil
+	p.PNexts = nil
 }

@@ -27,7 +27,7 @@ func Lf_ManAlloc(g *Gia_Man_t, pars *Jf_Par_t) *Lf_Man_t {
 		panic("LF invalid mapping limits")
 	}
 	g.Refs = nil
-	g.vMapping = nil
+	g.VMapping = nil
 	Gia_ManCleanValue(g)
 	if Gia_ManHasChoices(g) != 0 {
 		Gia_ManSetPhase(g)
@@ -125,11 +125,11 @@ func Lf_ManComputeMapping(p *Lf_Man_t) {
 		panic("LF new cut store is not empty")
 	}
 	Lf_ManSetCutRefs(p)
-	if p.pGia.pManTime != nil {
+	if p.pGia.PManTime != nil {
 		if Gia_ManBufNum(p.pGia) != 0 {
 			panic("LF timing with buffers")
 		}
-		tm, ok := p.pGia.pManTime.(*tim.Tim_Man_t)
+		tm, ok := p.pGia.PManTime.(*tim.Tim_Man_t)
 		if !ok {
 			panic("LF invalid timing manager")
 		}

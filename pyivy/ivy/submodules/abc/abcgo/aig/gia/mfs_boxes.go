@@ -16,7 +16,7 @@ func giaMfsBoxGroups(p *Gia_Man_t, copies []int32, nodeCount int) ([][]int, []in
 	if len(groups) == 0 {
 		return groups, groupMap
 	}
-	timing := p.pManTime.(*tim.Tim_Man_t)
+	timing := p.PManTime.(*tim.Tim_Man_t)
 	ci := tim.Tim_ManPiNum(timing)
 	co := 0
 	cis, cos := vec.Vec_IntArray(p.vCis), vec.Vec_IntArray(p.vCos)

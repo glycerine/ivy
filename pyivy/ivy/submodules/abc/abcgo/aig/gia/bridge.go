@@ -22,7 +22,7 @@ func Gia_ManToBridgeNetlist(p *Gia_Man_t) (*util.BridgeNetlist, error) {
 		if Gia_ObjIsAnd(obj) == 0 {
 			continue
 		}
-		if Gia_ObjIsXor(obj) != 0 || (int(id) < len(p.pMuxes) && p.pMuxes[id] != 0) {
+		if Gia_ObjIsXor(obj) != 0 || (int(id) < len(p.PMuxes) && p.PMuxes[id] != 0) {
 			return nil, fmt.Errorf("gia: normalize specialized XOR/MUX node %d before bridge export", id)
 		}
 		a, b := Gia_ObjFaninLit0(obj, id), Gia_ObjFaninLit1(obj, id)

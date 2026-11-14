@@ -12,8 +12,8 @@ func Gia_ManChoiceLevel_rec(p *Gia_Man_t, obj *Gia_Obj_t) {
 	var level int32
 	switch {
 	case Gia_ObjIsCi(obj) != 0:
-		if p.pManTime != nil {
-			timing, ok := p.pManTime.(*tim.Tim_Man_t)
+		if p.PManTime != nil {
+			timing, ok := p.PManTime.(*tim.Tim_Man_t)
 			if !ok {
 				panic("gia: invalid timing manager")
 			}

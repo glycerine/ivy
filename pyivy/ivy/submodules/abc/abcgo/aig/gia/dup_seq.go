@@ -10,7 +10,7 @@ func Gia_ManDupFlip(src *Gia_Man_t, initial []int32) *Gia_Man_t {
 	dst := Gia_ManStart(src.nObjs)
 	dst.CopyIdentityFrom(src)
 	dst.fGiaSimple = src.fGiaSimple
-	if src.pMuxes != nil {
+	if src.PMuxes != nil {
 		dst.EnableMuxes()
 	}
 	bit := func(index int32) int32 { return int32(uint32(initial[index>>5]) >> uint(index&31) & 1) }

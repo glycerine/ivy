@@ -11,12 +11,12 @@ func TestSimulationPatternQuality(t *testing.T) {
 	x := Gia_ManAppendAnd(p, a, b)
 	Gia_ManAppendCo(p, x)
 	prior := vec.Vec_WrdStart(2)
-	p.vSimsPi = prior
+	p.VSimsPi = prior
 	pat := vec.Vec_IntAlloc(2)
 	vec.Vec_IntPush(pat, 1)
 	vec.Vec_IntPush(pat, 1)
 	result := Gia_SimQualityOne(p, pat, 1)
-	if vec.Vec_IntEntry(result, 0) != 2 || p.vSimsPi != prior {
+	if vec.Vec_IntEntry(result, 0) != 2 || p.VSimsPi != prior {
 		t.Fatal("incorrect output sensitivity or input restoration")
 	}
 	words := vec.Vec_WrdStart(2)

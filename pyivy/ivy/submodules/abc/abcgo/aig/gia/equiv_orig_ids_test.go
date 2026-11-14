@@ -22,7 +22,7 @@ func TestOriginalIDReduction(t *testing.T) {
 	Gia_ManAppendCo(p, x)
 	Gia_ManAppendCo(p, y)
 	q := Gia_ManOrigIdsReduce(p, permutation(x>>1, y>>1))
-	if Gia_ObjRepr(p, y>>1) != x>>1 || p.pNexts[x>>1] != y>>1 {
+	if Gia_ObjRepr(p, y>>1) != x>>1 || p.PNexts[x>>1] != y>>1 {
 		t.Fatal("equivalence class missing")
 	}
 	out, err := q.Evaluate([]bool{true, true})
@@ -36,12 +36,12 @@ func TestEquivalenceInspectionAndChoiceLevels(t *testing.T) {
 	a, b := Gia_ManAppendCi(p), Gia_ManAppendCi(p)
 	x, y := Gia_ManAppendAnd(p, a, b), Gia_ManAppendAnd(p, a, b)
 	Gia_ManAppendCo(p, y)
-	p.pReprs = make([]Gia_Rpr_t, p.nObjs)
-	for i := range p.pReprs {
-		p.pReprs[i].iRepr = GIA_VOID
+	p.PReprs = make([]Gia_Rpr_t, p.nObjs)
+	for i := range p.PReprs {
+		p.PReprs[i].iRepr = GIA_VOID
 	}
 	Gia_ObjSetRepr(p, y>>1, x>>1)
-	p.pNexts = Gia_ManDeriveNexts(p)
+	p.PNexts = Gia_ManDeriveNexts(p)
 	if Gia_ManEquivCountClasses(p) != 1 || Gia_ManEquivCountLitsAll(p) != 1 || Gia_ManEquivCountOne(p, x>>1) != 2 {
 		t.Fatal("incorrect equivalence counts")
 	}
@@ -60,13 +60,13 @@ func TestEquivalenceReduction(t *testing.T) {
 		a, b := Gia_ManAppendCi(p), Gia_ManAppendCi(p)
 		x, y := Gia_ManAppendAnd(p, a, b), Gia_ManAppendAnd(p, a, b)
 		Gia_ManAppendCo(p, y)
-		p.pReprs = make([]Gia_Rpr_t, p.nObjs)
-		for i := range p.pReprs {
-			p.pReprs[i].iRepr = GIA_VOID
+		p.PReprs = make([]Gia_Rpr_t, p.nObjs)
+		for i := range p.PReprs {
+			p.PReprs[i].iRepr = GIA_VOID
 		}
 		Gia_ObjSetRepr(p, y>>1, x>>1)
 		Gia_ObjSetProved(p, y>>1)
-		p.pNexts = Gia_ManDeriveNexts(p)
+		p.PNexts = Gia_ManDeriveNexts(p)
 		return p
 	}
 	for _, mode := range []int{0, 1} {
@@ -96,12 +96,12 @@ func TestEquivalenceRemapDFS(t *testing.T) {
 	x, y := Gia_ManAppendAnd(p, a, b), Gia_ManAppendAnd(p, a, b)
 	Gia_ManAppendCo(p, x)
 	Gia_ManAppendCo(p, y)
-	p.pReprs = make([]Gia_Rpr_t, p.nObjs)
-	for i := range p.pReprs {
-		p.pReprs[i].iRepr = GIA_VOID
+	p.PReprs = make([]Gia_Rpr_t, p.nObjs)
+	for i := range p.PReprs {
+		p.PReprs[i].iRepr = GIA_VOID
 	}
 	Gia_ObjSetRepr(p, y>>1, x>>1)
-	p.pNexts = Gia_ManDeriveNexts(p)
+	p.PNexts = Gia_ManDeriveNexts(p)
 	q := Gia_ManEquivRemapDfs(p)
 	if Gia_ManEquivCountClasses(q) != 1 || Gia_ManEquivCountLitsAll(q) != 1 {
 		t.Fatal("equivalence class lost during DFS remapping")
@@ -121,12 +121,12 @@ func TestSpeculativeEquivalenceReduction(t *testing.T) {
 	x, y := Gia_ManAppendAnd(p, a, b), Gia_ManAppendAnd(p, a, c)
 	Gia_ManAppendCo(p, x)
 	Gia_ManAppendCo(p, y)
-	p.pReprs = make([]Gia_Rpr_t, p.nObjs)
-	for i := range p.pReprs {
-		p.pReprs[i].iRepr = GIA_VOID
+	p.PReprs = make([]Gia_Rpr_t, p.nObjs)
+	for i := range p.PReprs {
+		p.PReprs[i].iRepr = GIA_VOID
 	}
 	Gia_ObjSetRepr(p, y>>1, x>>1)
-	p.pNexts = Gia_ManDeriveNexts(p)
+	p.PNexts = Gia_ManDeriveNexts(p)
 	trace, mapping := Vec_IntAlloc(1), Vec_IntAlloc(1)
 	q := Gia_ManSpecReduceTrace(p, trace, mapping)
 	if Gia_ManPoNum(q) != 3 || Vec_IntSize(trace) != 1 || Vec_IntEntry(trace, 0) != 1 || Vec_IntEntry(mapping, 0) != y>>1 {
@@ -148,12 +148,12 @@ func TestSpeculativeInitializedFrames(t *testing.T) {
 	Gia_ManAppendCo(p, ro)
 	Gia_ManAppendCo(p, a)
 	Gia_ManSetRegNum(p, 1)
-	p.pReprs = make([]Gia_Rpr_t, p.nObjs)
-	for i := range p.pReprs {
-		p.pReprs[i].iRepr = GIA_VOID
+	p.PReprs = make([]Gia_Rpr_t, p.nObjs)
+	for i := range p.PReprs {
+		p.PReprs[i].iRepr = GIA_VOID
 	}
 	Gia_ObjSetRepr(p, ro>>1, 0)
-	p.pNexts = Gia_ManDeriveNexts(p)
+	p.PNexts = Gia_ManDeriveNexts(p)
 	init := &Abc_Cex_t{NRegs: 1, PData: []uint32{1}}
 	q := Gia_ManSpecReduceInit(p, init, 2, 0)
 	if q == nil || Gia_ManPoNum(q) != 2 || Gia_ManPiNum(q) != 2 {
@@ -176,12 +176,12 @@ func TestEquivalenceTransferAfterReordering(t *testing.T) {
 	x, y := Gia_ManAppendAnd(p, a, b), Gia_ManAppendAnd(p, a, b)
 	Gia_ManAppendCo(p, y)
 	Gia_ManAppendCo(p, x)
-	p.pReprs = make([]Gia_Rpr_t, p.nObjs)
-	for i := range p.pReprs {
-		p.pReprs[i].iRepr = GIA_VOID
+	p.PReprs = make([]Gia_Rpr_t, p.nObjs)
+	for i := range p.PReprs {
+		p.PReprs[i].iRepr = GIA_VOID
 	}
 	Gia_ObjSetRepr(p, y>>1, x>>1)
-	p.pNexts = Gia_ManDeriveNexts(p)
+	p.PNexts = Gia_ManDeriveNexts(p)
 	q := Gia_ManChangeOrder(p)
 	Gia_ManTransferEquivs(p, q)
 	if Gia_ManEquivCountClasses(q) != 1 || Gia_ManEquivCountLitsAll(q) != 1 {
@@ -204,12 +204,12 @@ func TestEquivalenceToChoices(t *testing.T) {
 	bc := Gia_ManAppendAnd(p, b, c)
 	y := Gia_ManAppendAnd(p, a, bc)
 	Gia_ManAppendCo(p, y)
-	p.pReprs = make([]Gia_Rpr_t, p.nObjs)
-	for i := range p.pReprs {
-		p.pReprs[i].iRepr = GIA_VOID
+	p.PReprs = make([]Gia_Rpr_t, p.nObjs)
+	for i := range p.PReprs {
+		p.PReprs[i].iRepr = GIA_VOID
 	}
 	Gia_ObjSetRepr(p, y>>1, x>>1)
-	p.pNexts = Gia_ManDeriveNexts(p)
+	p.PNexts = Gia_ManDeriveNexts(p)
 	q := Gia_ManEquivToChoices(p, 1)
 	if Gia_ManCountChoices(q) != 1 {
 		t.Fatalf("choice count = %d", Gia_ManCountChoices(q))
@@ -229,12 +229,12 @@ func TestEquivalenceFilterDisprovedOutput(t *testing.T) {
 	x, y := Gia_ManAppendAnd(p, a, b), Gia_ManAppendAnd(p, a, c)
 	Gia_ManAppendCo(p, x)
 	Gia_ManAppendCo(p, y)
-	p.pReprs = make([]Gia_Rpr_t, p.nObjs)
-	for i := range p.pReprs {
-		p.pReprs[i].iRepr = GIA_VOID
+	p.PReprs = make([]Gia_Rpr_t, p.nObjs)
+	for i := range p.PReprs {
+		p.PReprs[i].iRepr = GIA_VOID
 	}
 	Gia_ObjSetRepr(p, y>>1, x>>1)
-	p.pNexts = Gia_ManDeriveNexts(p)
+	p.PNexts = Gia_ManDeriveNexts(p)
 	Gia_ManEquivFilter(p, permutation(2), 0)
 	if Gia_ObjHasRepr(p, y>>1) != 0 || Gia_ManEquivCountClasses(p) != 0 {
 		t.Fatal("disproved equivalence retained")
@@ -243,18 +243,18 @@ func TestEquivalenceFilterDisprovedOutput(t *testing.T) {
 func TestEquivalenceTransformRemovesSharedColors(t *testing.T) {
 	p := Gia_ManStart(12)
 	a, b, c := Gia_ManAppendCi(p), Gia_ManAppendCi(p), Gia_ManAppendCi(p)
-	p.pReprs = make([]Gia_Rpr_t, p.nObjs)
-	for i := range p.pReprs {
-		p.pReprs[i].iRepr = GIA_VOID
+	p.PReprs = make([]Gia_Rpr_t, p.nObjs)
+	for i := range p.PReprs {
+		p.PReprs[i].iRepr = GIA_VOID
 	}
 	Gia_ObjSetRepr(p, b>>1, a>>1)
 	Gia_ObjSetRepr(p, c>>1, a>>1)
-	p.pNexts = Gia_ManDeriveNexts(p)
+	p.PNexts = Gia_ManDeriveNexts(p)
 	Gia_ObjSetColor(p, a>>1, 0)
 	Gia_ObjSetColors(p, b>>1)
 	Gia_ObjSetColor(p, c>>1, 1)
 	Gia_ManEquivTransform(p, 0)
-	if Gia_ObjHasRepr(p, b>>1) != 0 || Gia_ObjRepr(p, c>>1) != a>>1 || p.pNexts[a>>1] != c>>1 {
+	if Gia_ObjHasRepr(p, b>>1) != 0 || Gia_ObjRepr(p, c>>1) != a>>1 || p.PNexts[a>>1] != c>>1 {
 		t.Fatal("class was not filtered correctly")
 	}
 }
@@ -265,15 +265,15 @@ func TestEquivalenceFilterByLatches(t *testing.T) {
 	Gia_ManAppendCo(p, a)
 	Gia_ManAppendCo(p, a)
 	Gia_ManSetRegNum(p, 2)
-	p.pReprs = make([]Gia_Rpr_t, p.nObjs)
-	for i := range p.pReprs {
-		p.pReprs[i].iRepr = GIA_VOID
+	p.PReprs = make([]Gia_Rpr_t, p.nObjs)
+	for i := range p.PReprs {
+		p.PReprs[i].iRepr = GIA_VOID
 	}
 	Gia_ObjSetRepr(p, r0>>1, a>>1)
 	Gia_ObjSetRepr(p, r1>>1, a>>1)
-	p.pNexts = Gia_ManDeriveNexts(p)
+	p.PNexts = Gia_ManDeriveNexts(p)
 	Gia_ManFilterEquivsUsingLatches(p, 1, 0, 0)
-	if Gia_ObjHasRepr(p, r0>>1) != 0 || Gia_ObjRepr(p, r1>>1) != r0>>1 || p.pNexts[r0>>1] != r1>>1 {
+	if Gia_ObjHasRepr(p, r0>>1) != 0 || Gia_ObjRepr(p, r1>>1) != r0>>1 || p.PNexts[r0>>1] != r1>>1 {
 		t.Fatal("latch-only class incorrect")
 	}
 }
@@ -283,12 +283,12 @@ func TestCombSpecReduceComparison(t *testing.T) {
 	x, y := Gia_ManAppendAnd(p, a, b), Gia_ManAppendAnd(p, a, c)
 	Gia_ManAppendCo(p, x)
 	Gia_ManAppendCo(p, y)
-	p.pReprs = make([]Gia_Rpr_t, p.nObjs)
-	for i := range p.pReprs {
-		p.pReprs[i].iRepr = GIA_VOID
+	p.PReprs = make([]Gia_Rpr_t, p.nObjs)
+	for i := range p.PReprs {
+		p.PReprs[i].iRepr = GIA_VOID
 	}
 	Gia_ObjSetRepr(p, y>>1, x>>1)
-	p.pNexts = Gia_ManDeriveNexts(p)
+	p.PNexts = Gia_ManDeriveNexts(p)
 	q := Gia_ManCombSpecReduce(p)
 	for bits := 0; bits < 8; bits++ {
 		in := []bool{bits&1 != 0, bits&2 != 0, bits&4 != 0}
@@ -305,18 +305,18 @@ func TestIndependentEquivalenceCandidates(t *testing.T) {
 	x, y := Gia_ManAppendAnd(p, a, b), Gia_ManAppendAnd(p, a, c)
 	z := Gia_ManAppendAnd(p, x, c)
 	Gia_ManAppendCo(p, z)
-	p.pReprs = make([]Gia_Rpr_t, p.nObjs)
-	for i := range p.pReprs {
-		p.pReprs[i].iRepr = GIA_VOID
+	p.PReprs = make([]Gia_Rpr_t, p.nObjs)
+	for i := range p.PReprs {
+		p.PReprs[i].iRepr = GIA_VOID
 	}
 	Gia_ObjSetRepr(p, y>>1, x>>1)
 	Gia_ObjSetRepr(p, z>>1, x>>1)
-	p.pNexts = Gia_ManDeriveNexts(p)
+	p.PNexts = Gia_ManDeriveNexts(p)
 	q := Gia_ManDup(p)
 	if Cec4_ManMarkIndependentClasses(p, q) != 1 {
 		t.Fatal("independent alternative not found")
 	}
-	if p.pReprs[x>>1].fColorA != 1 || p.pReprs[y>>1].fColorA != 1 || p.pReprs[z>>1].fColorA != 0 {
+	if p.PReprs[x>>1].fColorA != 1 || p.PReprs[y>>1].fColorA != 1 || p.PReprs[z>>1].fColorA != 0 {
 		t.Fatal("incorrect independent class marking")
 	}
 }

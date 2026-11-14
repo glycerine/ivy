@@ -123,5 +123,5 @@ func Mf_ManOptimization(p *Mf_Man_t) {
 	}
 	fmt.Println("\nFinished printing individual logic cones.")
 	Gia_ManStaticFanoutStop(g)
-	g.vMapping = nil
+	g.VMapping = nil
 }

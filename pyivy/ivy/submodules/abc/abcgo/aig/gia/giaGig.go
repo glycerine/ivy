@@ -144,7 +144,7 @@ func gigParse(path string) ([]gigNode, error) {
 
 func gigConstruct(nodes []gigNode, name string) (*Gia_Man_t, error) {
 	p := Gia_ManStart(int32(len(nodes) + 2))
-	p.pName, p.pSpec = name, name
+	p.pName, p.PSpec = name, name
 	mapped := map[int32]int32{0: 0, 1: 1}
 	byID := map[int32]gigNode{}
 	outputs := map[int32][]int32{}

@@ -63,7 +63,7 @@ func Gia_ManSimRel(p *Gia_Man_t, objects *Vec_Int_t, values *Vec_Wrd_t) *Vec_Wrd
 	width := words * mints
 	relation := vec.Vec_WrdStart(int(width))
 	sims := vec.Vec_WrdStart(int(p.nObjs * width))
-	Gia_ManSimRelAssignInputs(p, width, sims, words, p.vSimsPi)
+	Gia_ManSimRelAssignInputs(p, width, sims, words, p.VSimsPi)
 	data := vec.Vec_WrdArray(sims)
 	for i, id := range ids {
 		for mint := int32(0); mint < mints; mint++ {

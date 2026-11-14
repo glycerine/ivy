@@ -12,7 +12,7 @@ func Gia_ManCompress2Result(p *Gia_Man_t, updateLevel, verbose bool) (*Gia_Man_t
 	if p == nil {
 		return nil, fmt.Errorf("gia: nil compression graph")
 	}
-	if p.pManTime != nil && p.vLevels == nil {
+	if p.PManTime != nil && p.vLevels == nil {
 		Gia_ManLevelWithBoxes(p)
 	}
 	source := Gia_ManToAig(p, 0)
@@ -53,7 +53,7 @@ func Gia_ManPerformDchResult(p *Gia_Man_t, options *dar.ChoiceOptions) (*Gia_Man
 		config.DchParams = params
 		config.Engine = giaSourceDCHChoiceEngine{params: params}
 	}
-	if p.pManTime != nil && p.vLevels == nil {
+	if p.PManTime != nil && p.vLevels == nil {
 		Gia_ManLevelWithBoxes(p)
 	}
 	source := Gia_ManDup(p)

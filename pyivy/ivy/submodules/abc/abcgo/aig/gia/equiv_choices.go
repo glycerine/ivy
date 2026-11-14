@@ -31,8 +31,8 @@ func Gia_ObjCheckTfi(p *Gia_Man_t, old, node *Gia_Obj_t) int32 {
 	return result
 }
 func Gia_ManAddNextEntry_rec(p *Gia_Man_t, old, node *Gia_Obj_t) {
-	for p.pNexts[old.id] != 0 {
-		old = Gia_ManObj(p, p.pNexts[old.id])
+	for p.PNexts[old.id] != 0 {
+		old = Gia_ManObj(p, p.PNexts[old.id])
 	}
 	Gia_ObjSetNext(p, old.id, node.id)
 }
@@ -98,13 +98,13 @@ func Gia_ManRemoveBadChoices(p *Gia_Man_t) {
 			continue
 		}
 		prev := head
-		for id := p.pNexts[prev]; id != 0; id = p.pNexts[prev] {
+		for id := p.PNexts[prev]; id != 0; id = p.PNexts[prev] {
 			if Gia_ManObj(p, id).fMark0 == 0 {
 				prev = id
 				continue
 			}
 			Gia_ObjUnsetRepr(p, id)
-			Gia_ObjSetNext(p, prev, p.pNexts[id])
+			Gia_ObjSetNext(p, prev, p.PNexts[id])
 			Gia_ObjSetNext(p, id, 0)
 		}
 	}
@@ -117,11 +117,11 @@ func Gia_ManEquivToChoices(p *Gia_Man_t, snapshots int32) *Gia_Man_t {
 	Gia_ManSetPhase(p)
 	q := Gia_ManStart(p.nObjs)
 	q.pName = p.pName
-	q.pSpec = p.pSpec
-	q.pReprs = make([]Gia_Rpr_t, p.nObjs)
-	q.pNexts = make([]int32, p.nObjs)
-	for i := range q.pReprs {
-		q.pReprs[i].iRepr = GIA_VOID
+	q.PSpec = p.PSpec
+	q.PReprs = make([]Gia_Rpr_t, p.nObjs)
+	q.PNexts = make([]int32, p.nObjs)
+	for i := range q.PReprs {
+		q.PReprs[i].iRepr = GIA_VOID
 	}
 	Gia_ManFillValue(p)
 	Gia_ObjSetValue(Gia_ManConst0(p), 0)
@@ -152,14 +152,14 @@ func Gia_ManEquivToChoices(p *Gia_Man_t, snapshots int32) *Gia_Man_t {
 	Gia_ManHashStop(q)
 	Gia_ManSetRegNum(q, p.nRegs)
 	Gia_ManRemoveBadChoices(q)
-	q.pReprs = q.pReprs[:q.nObjs]
-	q.pNexts = q.pNexts[:q.nObjs]
+	q.PReprs = q.PReprs[:q.nObjs]
+	q.PNexts = q.PNexts[:q.nObjs]
 	result := Gia_ManCleanup(q)
 	Gia_ManStop(q)
 	return result
 }
 func Gia_ManCountChoiceNodes(p *Gia_Man_t) int32 {
-	if p.pReprs == nil || p.pNexts == nil {
+	if p.PReprs == nil || p.PNexts == nil {
 		return 0
 	}
 	var n int32
@@ -169,11 +169,11 @@ func Gia_ManCountChoiceNodes(p *Gia_Man_t) int32 {
 	return n
 }
 func Gia_ManCountChoices(p *Gia_Man_t) int32 {
-	if p.pReprs == nil || p.pNexts == nil {
+	if p.PReprs == nil || p.PNexts == nil {
 		return 0
 	}
 	var n int32
-	for _, next := range p.pNexts {
+	for _, next := range p.PNexts {
 		if next > 0 {
 			n++
 		}
@@ -181,7 +181,7 @@ func Gia_ManCountChoices(p *Gia_Man_t) int32 {
 	return n
 }
 func Gia_ManHasNoEquivs(p *Gia_Man_t) int32 {
-	if p.pReprs == nil {
+	if p.PReprs == nil {
 		return 1
 	}
 	for i := int32(0); i < p.nObjs; i++ {

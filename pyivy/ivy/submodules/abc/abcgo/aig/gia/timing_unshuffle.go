@@ -10,7 +10,7 @@ func Gia_ManDupUnshuffleInputs(src *Gia_Man_t) *Gia_Man_t {
 	if Gia_ManIsNormalized(src) == 0 || Gia_ManIsSeqWithBoxes(src) == 0 {
 		panic("gia: expected normalized sequential graph with boxes")
 	}
-	timing := src.pManTime.(*tim.Tim_Man_t)
+	timing := src.PManTime.(*tim.Tim_Man_t)
 	cis, all := int32(tim.Tim_ManPiNum(timing)), int32(tim.Tim_ManCiNum(timing))
 	pis := cis - Gia_ManRegNum(src)
 	if all != Gia_ManCiNum(src) || pis <= 0 {
@@ -18,7 +18,7 @@ func Gia_ManDupUnshuffleInputs(src *Gia_Man_t) *Gia_Man_t {
 	}
 	Gia_ManFillValue(src)
 	dst := Gia_ManStart(Gia_ManObjNum(src))
-	dst.pName, dst.pSpec = src.pName, src.pSpec
+	dst.pName, dst.PSpec = src.pName, src.PSpec
 	Gia_ManConst0(src).Value = 0
 	for _, part := range [][2]int32{{0, pis}, {all - Gia_ManRegNum(src), all}, {pis, all - Gia_ManRegNum(src)}} {
 		for i := part[0]; i < part[1]; i++ {

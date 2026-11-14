@@ -31,9 +31,9 @@ func TestSequentialCleanupRemovesOnlyUnreachableRegisters(t *testing.T) {
 	Gia_ManAppendCo(p, next)
 	Gia_ManAppendCo(p, dead)
 	Gia_ManSetRegNum(p, 2)
-	p.vNamesIn = Vec_PtrAlloc(3)
+	p.VNamesIn = Vec_PtrAlloc(3)
 	for _, name := range []string{"pi", "live", "dead"} {
-		Vec_PtrPush(p.vNamesIn, name)
+		Vec_PtrPush(p.VNamesIn, name)
 	}
 	cleaned := Gia_ManSeqCleanup(p)
 	if cleaned.nRegs != 1 || Gia_ManPiNum(cleaned) != 1 || Gia_ManPoNum(cleaned) != 1 || len(cleaned.InputNames()) != 2 || cleaned.InputNames()[1] != "live" {
@@ -96,7 +96,7 @@ func TestCleanupRetainsEquivalenceClassAndOwnsMetadata(t *testing.T) {
 	Gia_ObjSetRepr(p, second>>1, first>>1)
 	p.SetNext(first>>1, second>>1)
 	cleaned := Gia_ManCleanup(p)
-	if Gia_ManAndNum(cleaned) != 2 || Gia_ObjRepr(cleaned, second>>1) != first>>1 || cleaned.pNexts[first>>1] != second>>1 {
+	if Gia_ManAndNum(cleaned) != 2 || Gia_ObjRepr(cleaned, second>>1) != first>>1 || cleaned.PNexts[first>>1] != second>>1 {
 		t.Fatal("cleanup lost equivalent cone")
 	}
 	p.ClearRepresentatives()

@@ -14,7 +14,7 @@ func TestRarePatternImpact(t *testing.T) {
 	vec.Vec_WrdPush(patterns, 1)
 	vec.Vec_WrdPush(patterns, ^uint64(0))
 	original := vec.Vec_WrdStart(2)
-	p.vSimsPi = original
+	p.VSimsPi = original
 	rare := Gia_SimCollectRare(p, patterns, 2)
 	if vec.Vec_IntSize(rare) != 2 || vec.Vec_IntEntry(rare, 0) != x|1 || vec.Vec_IntEntry(rare, 1) != 1 {
 		t.Fatalf("wrong rare signals %v", vec.Vec_IntArray(rare))
@@ -27,7 +27,7 @@ func TestRarePatternImpact(t *testing.T) {
 	if best == nil || vec.Vec_IntSize(best) != 1 || vec.Vec_IntEntry(best, 0) != 0 || vec.Vec_FltEntry(impact, 0) != 0.5 {
 		t.Fatal("wrong rare-signal impact")
 	}
-	if Gia_ManPatGetOneQuo(p, 2, patterns, 1, 0) != 0.5 || p.vSimsPi != original {
+	if Gia_ManPatGetOneQuo(p, 2, patterns, 1, 0) != 0.5 || p.VSimsPi != original {
 		t.Fatal("wrong quality or input restoration")
 	}
 }

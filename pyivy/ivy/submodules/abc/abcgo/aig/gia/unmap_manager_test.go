@@ -10,12 +10,12 @@ func TestUnmapUsedTruth(t *testing.T) {
 	a, b := Gia_ManAppendCi(g), Gia_ManAppendCi(g)
 	x := Gia_ManAppendAnd(g, a, b^1)
 	Gia_ManAppendCo(g, x)
-	g.vMapping = vec.Vec_IntStart(int(g.nObjs))
-	vec.Vec_IntWriteEntry(g.vMapping, int(x>>1), int32(g.nObjs))
-	vec.Vec_IntPush(g.vMapping, 2)
-	vec.Vec_IntPush(g.vMapping, a>>1)
-	vec.Vec_IntPush(g.vMapping, b>>1)
-	vec.Vec_IntPush(g.vMapping, x>>1)
+	g.VMapping = vec.Vec_IntStart(int(g.nObjs))
+	vec.Vec_IntWriteEntry(g.VMapping, int(x>>1), int32(g.nObjs))
+	vec.Vec_IntPush(g.VMapping, 2)
+	vec.Vec_IntPush(g.VMapping, a>>1)
+	vec.Vec_IntPush(g.VMapping, b>>1)
+	vec.Vec_IntPush(g.VMapping, x>>1)
 	pairs := vec.Vec_IntAlloc(6)
 	vec.Vec_IntPushThree(pairs, x>>1, a>>1, b>>1)
 	vec.Vec_IntPushThree(pairs, x>>1, a>>1, b>>1)
@@ -35,7 +35,7 @@ func TestUnmapRepeatedDecomposablePairs(t *testing.T) {
 	y := Gia_ManAppendAnd(g, x, c)
 	Gia_ManAppendCo(g, x)
 	Gia_ManAppendCo(g, y)
-	g.vMapping = vec.Vec_IntStart(int(g.nObjs))
+	g.VMapping = vec.Vec_IntStart(int(g.nObjs))
 	for _, lut := range []struct {
 		id   int32
 		fans []int32
@@ -43,12 +43,12 @@ func TestUnmapRepeatedDecomposablePairs(t *testing.T) {
 		{x >> 1, []int32{a >> 1, b >> 1}},
 		{y >> 1, []int32{a >> 1, b >> 1, c >> 1}},
 	} {
-		vec.Vec_IntWriteEntry(g.vMapping, int(lut.id), int32(vec.Vec_IntSize(g.vMapping)))
-		vec.Vec_IntPush(g.vMapping, int32(len(lut.fans)))
+		vec.Vec_IntWriteEntry(g.VMapping, int(lut.id), int32(vec.Vec_IntSize(g.VMapping)))
+		vec.Vec_IntPush(g.VMapping, int32(len(lut.fans)))
 		for _, fan := range lut.fans {
-			vec.Vec_IntPush(g.vMapping, fan)
+			vec.Vec_IntPush(g.VMapping, fan)
 		}
-		vec.Vec_IntPush(g.vMapping, lut.id)
+		vec.Vec_IntPush(g.VMapping, lut.id)
 	}
 	p := Unm_ManAlloc(g)
 	defer Unm_ManFree(p)

@@ -109,7 +109,7 @@ func Gia_ManDupSelf(src *Gia_Man_t) *Gia_Man_t {
 	return giaCleanComposed(out)
 }
 func Gia_ManDupFlopClass(src *Gia_Man_t, class int32) *Gia_Man_t {
-	if src.vFlopClasses == nil || vec.Vec_IntSize(src.vFlopClasses) != int(Gia_ManRegNum(src)) {
+	if src.VFlopClasses == nil || vec.Vec_IntSize(src.VFlopClasses) != int(Gia_ManRegNum(src)) {
 		panic("gia: invalid flop classes")
 	}
 	out := giaDupMappedStart(src)
@@ -119,7 +119,7 @@ func Gia_ManDupFlopClass(src *Gia_Man_t, class int32) *Gia_Man_t {
 	var selected int32
 	for pass := 0; pass < 2; pass++ {
 		for i := int32(0); i < Gia_ManRegNum(src); i++ {
-			match := vec.Vec_IntEntry(src.vFlopClasses, int(i)) == class
+			match := vec.Vec_IntEntry(src.VFlopClasses, int(i)) == class
 			if match != (pass == 1) {
 				continue
 			}
@@ -135,7 +135,7 @@ func Gia_ManDupFlopClass(src *Gia_Man_t, class int32) *Gia_Man_t {
 	}
 	for pass := 0; pass < 2; pass++ {
 		for i := int32(0); i < Gia_ManRegNum(src); i++ {
-			match := vec.Vec_IntEntry(src.vFlopClasses, int(i)) == class
+			match := vec.Vec_IntEntry(src.VFlopClasses, int(i)) == class
 			if match == (pass == 1) {
 				giaDupMappedOutput(out, src, Gia_ManRi(src, i))
 			}
@@ -150,7 +150,7 @@ func Gia_ManDupTimes(src *Gia_Man_t, times int32) *Gia_Man_t {
 	}
 	out := Gia_ManStart(src.nObjs)
 	out.CopyIdentityFrom(src)
-	if src.pMuxes != nil {
+	if src.PMuxes != nil {
 		out.EnableMuxes()
 	}
 	pis, ros, pos, ris := make([]int32, 0), make([]int32, 0), make([]int32, 0), make([]int32, 0)

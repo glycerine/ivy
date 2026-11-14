@@ -24,7 +24,7 @@ func TestGiaLutCollectAndPacking(t *testing.T) {
 		t.Fatalf("breadth order %v", got)
 	}
 	Gia_ManLutPacking(g, 2, 10, 2, 0)
-	if got := vec.Vec_IntArray(g.vPacking); !reflect.DeepEqual(got, []int32{1, 2, out >> 1, x >> 1}) {
+	if got := vec.Vec_IntArray(g.VPacking); !reflect.DeepEqual(got, []int32{1, 2, out >> 1, x >> 1}) {
 		t.Fatalf("packing %v", got)
 	}
 }
@@ -34,12 +34,12 @@ func TestGiaLutPackingZeroInput(t *testing.T) {
 	a, b := Gia_ManAppendCi(g), Gia_ManAppendCi(g)
 	out := Gia_ManAppendAnd(g, a, b)
 	Gia_ManAppendCo(g, out)
-	g.vMapping = vec.Vec_IntStart(int(g.nObjs))
-	vec.Vec_IntWriteEntry(g.vMapping, int(out>>1), int32(vec.Vec_IntSize(g.vMapping)))
-	vec.Vec_IntPush(g.vMapping, 0)
-	vec.Vec_IntPush(g.vMapping, out>>1)
+	g.VMapping = vec.Vec_IntStart(int(g.nObjs))
+	vec.Vec_IntWriteEntry(g.VMapping, int(out>>1), int32(vec.Vec_IntSize(g.VMapping)))
+	vec.Vec_IntPush(g.VMapping, 0)
+	vec.Vec_IntPush(g.VMapping, out>>1)
 	Gia_ManLutPacking(g, 2, 10, 2, 0)
-	if got := vec.Vec_IntArray(g.vPacking); !reflect.DeepEqual(got, []int32{1, 1, out >> 1}) {
+	if got := vec.Vec_IntArray(g.VPacking); !reflect.DeepEqual(got, []int32{1, 1, out >> 1}) {
 		t.Fatalf("packing %v", got)
 	}
 }

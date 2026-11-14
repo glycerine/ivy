@@ -21,7 +21,7 @@ func Gia_ManAppendMuxReal(p *Gia_Man_t, control, then, otherwise int32) int32 {
 	giaCheckFanin(p, control)
 	giaCheckFanin(p, then)
 	giaCheckFanin(p, otherwise)
-	if p.pMuxes == nil {
+	if p.PMuxes == nil {
 		panic("gia: real MUX storage is not enabled")
 	}
 	if then>>1 == otherwise>>1 || control>>1 == then>>1 || control>>1 == otherwise>>1 {
@@ -39,7 +39,7 @@ func Gia_ManAppendMuxReal(p *Gia_Man_t, control, then, otherwise int32) int32 {
 	obj.fCompl0 = uint32(otherwise & 1)
 	obj.iDiff1 = uint32(obj.id - (then >> 1))
 	obj.fCompl1 = uint32(then & 1)
-	p.pMuxes[obj.id] = uint32(control)
+	p.PMuxes[obj.id] = uint32(control)
 	p.nMuxes++
 	return obj.id << 1
 }
@@ -57,7 +57,7 @@ func Gia_ManAppendBuf(p *Gia_Man_t, lit int32) int32 {
 // EnableMuxes enables storage for real MUX control literals. Existing metadata
 // remains intact; subsequent object appends grow the storage with the manager.
 func (p *Gia_Man_t) EnableMuxes() {
-	if p.pMuxes == nil {
-		p.pMuxes = make([]uint32, len(p.pObjs))
+	if p.PMuxes == nil {
+		p.PMuxes = make([]uint32, len(p.pObjs))
 	}
 }

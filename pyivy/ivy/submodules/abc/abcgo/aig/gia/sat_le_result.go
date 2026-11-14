@@ -75,9 +75,9 @@ func Sle_ManDeriveResult(p *Sle_Man_t, edges, mapping *Vec_Int_t) {
 		}
 		vec.Vec_IntPush(mapping, id)
 	}
-	previous := g.vMapping
-	g.vMapping = mapping
-	defer func() { g.vMapping = previous }()
+	previous := g.VMapping
+	g.VMapping = mapping
+	defer func() { g.VMapping = previous }()
 	vec.Vec_IntClear(edges)
 	for id := int32(1); id < g.nObjs; id++ {
 		if Gia_ObjIsAnd(Gia_ManObj(g, id)) == 0 || !sleValue(p, id) {

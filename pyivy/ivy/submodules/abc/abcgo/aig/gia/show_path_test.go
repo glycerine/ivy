@@ -15,17 +15,17 @@ func TestShowCriticalLutPath(t *testing.T) {
 	y := Gia_ManAppendAnd(p, x, c)
 	Gia_ManAppendCo(p, y)
 	Gia_ManAppendCo(p, x)
-	p.vMapping = vec.Vec_IntStart(int(p.nObjs))
+	p.VMapping = vec.Vec_IntStart(int(p.nObjs))
 	for _, lut := range []struct {
 		id   int32
 		fans []int32
 	}{{x >> 1, []int32{a >> 1, b >> 1}}, {y >> 1, []int32{x >> 1, c >> 1}}} {
-		vec.Vec_IntWriteEntry(p.vMapping, int(lut.id), int32(vec.Vec_IntSize(p.vMapping)))
-		vec.Vec_IntPush(p.vMapping, int32(len(lut.fans)))
+		vec.Vec_IntWriteEntry(p.VMapping, int(lut.id), int32(vec.Vec_IntSize(p.VMapping)))
+		vec.Vec_IntPush(p.VMapping, int32(len(lut.fans)))
 		for _, fan := range lut.fans {
-			vec.Vec_IntPush(p.vMapping, fan)
+			vec.Vec_IntPush(p.VMapping, fan)
 		}
-		vec.Vec_IntPush(p.vMapping, lut.id)
+		vec.Vec_IntPush(p.VMapping, lut.id)
 	}
 	path := giaCriticalLuts(p)
 	if path.depth != 2 || path.nodes != 2 || path.edges != 3 || path.marked[c>>1] {

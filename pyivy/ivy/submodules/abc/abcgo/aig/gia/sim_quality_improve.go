@@ -37,9 +37,9 @@ func Gia_SimQualityPatternsMax(p *Gia_Man_t, pattern *Vec_Int_t, iteration, verb
 func Gia_ManPatDistImprove(p *Gia_Man_t, verbose int32) {
 	words := giaPatternWords(p)
 	stats := Gia_SimGenerateStats(p)
-	patterns := p.vSimsPi
-	p.vSimsPi = nil
-	defer func() { p.vSimsPi = patterns }()
+	patterns := p.VSimsPi
+	p.VSimsPi = nil
+	defer func() { p.VSimsPi = patterns }()
 	util.Abc_Random(1)
 	var initialTotal, finalTotal float64
 	for n := int32(0); n < 64*words; n++ {

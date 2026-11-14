@@ -5,10 +5,10 @@ import "github.com/glycerine/abcgo/misc/tim"
 // Gia_ManDupWithBoxes removes unmarked boxes and their unused logic while
 // keeping the timing manager and box implementation outputs in sync.
 func Gia_ManDupWithBoxes(src *Gia_Man_t, sequential int32) *Gia_Man_t {
-	timing := src.pManTime.(*tim.Tim_Man_t)
+	timing := src.PManTime.(*tim.Tim_Man_t)
 	Gia_ManMarkSeqGiaWithBoxes(src, sequential)
 	dst := Gia_ManStart(Gia_ManObjNum(src))
-	dst.pName, dst.pSpec = src.pName, src.pSpec
+	dst.pName, dst.PSpec = src.pName, src.PSpec
 	Gia_ManConst0(src).Value = 0
 	for _, obj := range src.pObjs[1:] {
 		if Gia_ObjIsTravIdCurrent(src, obj) == 0 {
@@ -76,12 +76,12 @@ func Gia_ManDupWithBoxes(src *Gia_Man_t, sequential int32) *Gia_Man_t {
 	if ci != int(Gia_ManCiNum(src)) || co != int(Gia_ManCoNum(src)) {
 		panic("gia: inconsistent box interface")
 	}
-	dst.pManTime = Gia_ManUpdateTimMan2(src, boxes, Gia_ManRegBoxNum(src)-Gia_ManRegBoxNum(dst))
-	if src.pAigExtra == nil {
+	dst.PManTime = Gia_ManUpdateTimMan2(src, boxes, Gia_ManRegBoxNum(src)-Gia_ManRegBoxNum(dst))
+	if src.PAigExtra == nil {
 		panic("gia: missing box implementation graph")
 	}
-	dst.pAigExtra = Gia_ManUpdateExtraAig2(src.pManTime, src.pAigExtra, boxes)
-	if Gia_ManCiNum(dst) != int32(tim.Tim_ManPiNum(dst.pManTime.(*tim.Tim_Man_t)))+Gia_ManCoNum(dst.pAigExtra) {
+	dst.PAigExtra = Gia_ManUpdateExtraAig2(src.PManTime, src.PAigExtra, boxes)
+	if Gia_ManCiNum(dst) != int32(tim.Tim_ManPiNum(dst.PManTime.(*tim.Tim_Man_t)))+Gia_ManCoNum(dst.PAigExtra) {
 		panic("gia: inconsistent reduced box graph")
 	}
 	dst.nAnd2Delay = src.nAnd2Delay

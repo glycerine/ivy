@@ -50,7 +50,7 @@ func giaConjunction(p *Gia_Man_t) *allOutputConjunction {
 	return n
 }
 func giaSaveCounterexample(p *Gia_Man_t, witness *ceccore.Counterexample) {
-	p.pCexComb = nil
+	p.PCexComb = nil
 	if witness == nil {
 		return
 	}
@@ -67,14 +67,14 @@ func giaSaveCounterexample(p *Gia_Man_t, witness *ceccore.Counterexample) {
 	for i := 0; i < int(Gia_ManPiNum(p)); i++ {
 		set(int(p.nRegs)+i, witness.Inputs[i])
 	}
-	p.pCexComb = cex
+	p.PCexComb = cex
 }
 
 // Gia_ManSolveSatResult solves the conjunction of all outputs, as the original
 // Fra_FraigSat fAndOuts call did. Sequential state is free only when explicitly
 // requested through TreatRegistersAsInputs; the legacy entry point rejects it.
 func Gia_ManSolveSatResult(p *Gia_Man_t, provided ...ceccore.Options) (ceccore.Result, error) {
-	p.pCexComb = nil
+	p.PCexComb = nil
 	options := ceccore.DefaultSATOptions()
 	options.ConflictLimit = 10000000
 	if len(provided) > 1 {
@@ -129,7 +129,7 @@ func Gia_ManSolveSat(p *Gia_Man_t) int32 {
 }
 
 func Cec_ManVerifyTwo(left, right *Gia_Man_t, verbose int32) int32 {
-	left.pCexComb = nil
+	left.PCexComb = nil
 	result, err := ceccore.VerifyTwo(left, right)
 	if err != nil {
 		if verbose != 0 {

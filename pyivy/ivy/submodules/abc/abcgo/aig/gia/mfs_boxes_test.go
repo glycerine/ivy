@@ -12,7 +12,7 @@ func TestGiaMfsBoxGroups(t *testing.T) {
 	y := Gia_ManAppendCo(g, b)
 	tm := tim.Tim_ManStart(2, 2)
 	tim.Tim_ManCreateBox(tm, 0, 1, 1, 1, -1, 0)
-	g.pManTime = tm
+	g.PManTime = tm
 	copies := make([]int32, g.nObjs)
 	copies[a>>1] = 1
 	copies[b>>1] = 2

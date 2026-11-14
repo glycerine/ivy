@@ -17,7 +17,7 @@ func ofMap(g *Gia_Man_t, pars *Jf_Par_t) *Gia_Man_t {
 		g = Gia_ManDupMuxes(g, pars.NCoarseLimit)
 	}
 	g.Refs = nil
-	g.vCellMapping = nil
+	g.VCellMapping = nil
 	cuts := newOfCutManager(g, pars)
 	if cuts.truth != nil {
 		defer vec.Vec_MemFree(cuts.truth.memory)
@@ -45,7 +45,7 @@ func ofMap(g *Gia_Man_t, pars *Jf_Par_t) *Gia_Man_t {
 	}
 	result := mapper.deriveMapping()
 	Gia_ManMappingVerify(result)
-	if result.vPacking != nil {
+	if result.VPacking != nil {
 		Gia_ManConvertPackingToEdges(result)
 	}
 	return result

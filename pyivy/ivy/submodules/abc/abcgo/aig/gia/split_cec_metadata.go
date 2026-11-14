@@ -28,6 +28,6 @@ func (p *Gia_Man_t) SetSplitCounterexample(c *util.Abc_Cex_t) error {
 	if p == nil || c == nil || c.NRegs != 0 || c.NPis < 0 || c.NBits != c.NPis || c.IFrame != 0 || c.IPo < 0 || c.IPo >= Gia_ManPoNum(p) || int64(len(c.PData))*32 < int64(c.NBits) {
 		return fmt.Errorf("gia: invalid split counterexample")
 	}
-	p.pCexComb = c
+	p.PCexComb = c
 	return nil
 }

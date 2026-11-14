@@ -20,8 +20,8 @@ func Gia_ManCombMarkUsed_rec(p *Gia_Man_t, obj *Gia_Obj_t) int32 {
 		count++
 		fanins := giaObjectFanins(p, node)
 		// Follow source equivalence links as reachability edges as well.
-		if p.pNexts != nil && p.pNexts[id] > 0 {
-			fanins = append(fanins, p.pNexts[id])
+		if p.PNexts != nil && p.PNexts[id] > 0 {
+			fanins = append(fanins, p.PNexts[id])
 		}
 		if sibling := Gia_ObjSibl(p, id); sibling != 0 {
 			fanins = append(fanins, sibling)

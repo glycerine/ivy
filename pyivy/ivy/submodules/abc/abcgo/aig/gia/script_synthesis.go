@@ -31,7 +31,7 @@ func giaAigSyn2(input *Gia_Man_t, old, coarsen, cutMin, relax, delayMin, verbose
 		}
 		return Lf_ManPerformMapping(g, &pars)
 	}
-	if delayMin != 0 && p.pManTime == nil {
+	if delayMin != 0 && p.PManTime == nil {
 		savedCutMin, savedCoarsen, savedRelax := pars.FCutMin, pars.FCoarsen, pars.NRelaxRatio
 		pars.FCutMin, pars.FCoarsen, pars.NRelaxRatio = 0, 0, 0
 		mapGraph(p)
@@ -44,7 +44,7 @@ func giaAigSyn2(input *Gia_Man_t, old, coarsen, cutMin, relax, delayMin, verbose
 			p = balanced
 		} else {
 			Gia_ManStop(balanced)
-			p.vMapping = nil
+			p.VMapping = nil
 		}
 		pars.FCutMin, pars.FCoarsen, pars.NRelaxRatio = savedCutMin, savedCoarsen, savedRelax
 	}

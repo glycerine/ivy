@@ -5,5 +5,5 @@ func Gia_ManCopyNameSpec(dst, src *Gia_Man_t) {
 	if dst == nil || src == nil {
 		panic("gia: nil manager when copying name and spec")
 	}
-	dst.pName, dst.pSpec = src.pName, src.pSpec
+	dst.pName, dst.PSpec = src.pName, src.PSpec
 }

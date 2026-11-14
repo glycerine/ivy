@@ -7,7 +7,7 @@ import (
 )
 
 func Gia_ManHasChoices_very_old(p *Gia_Man_t) int32 {
-	if p.pReprs == nil || p.pNexts == nil {
+	if p.PReprs == nil || p.PNexts == nil {
 		return 0
 	}
 	var reprs, nexts int

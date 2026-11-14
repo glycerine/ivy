@@ -79,14 +79,14 @@ func Mf_ManDeriveMappingGia(p *Mf_Man_t) *Gia_Man_t {
 	for _, v := range records {
 		vec.Vec_IntPush(mapping, v)
 	}
-	dst.vMapping = mapping
+	dst.VMapping = mapping
 	Gia_ManSetRegNum(dst, Gia_ManRegNum(src))
 	return dst
 }
 
 func Mf_ManDeriveMappingCoarse(p *Mf_Man_t) *Gia_Man_t {
 	src := p.pGia
-	if p.pPars.FCutMin != 0 || src.pMuxes == nil {
+	if p.pPars.FCutMin != 0 || src.PMuxes == nil {
 		panic("gia: coarse mapping requires coarse gates without cut minimization")
 	}
 	dst := Gia_ManStart(src.nObjs)
@@ -133,7 +133,7 @@ func Mf_ManDeriveMappingCoarse(p *Mf_Man_t) *Gia_Man_t {
 	for _, v := range records {
 		vec.Vec_IntPush(mapping, v)
 	}
-	dst.vMapping = mapping
+	dst.VMapping = mapping
 	Gia_ManSetRegNum(dst, Gia_ManRegNum(src))
 	return dst
 }

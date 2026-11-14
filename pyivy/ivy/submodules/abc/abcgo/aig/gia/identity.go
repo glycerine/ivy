@@ -2,8 +2,8 @@ package gia
 
 import "fmt"
 
-func (p *Gia_Man_t) ClearRepresentatives()           { p.pReprs = nil; p.pNexts = nil }
-func (p *Gia_Man_t) CopyIdentityFrom(src *Gia_Man_t) { p.pName, p.pSpec = src.pName, src.pSpec }
+func (p *Gia_Man_t) ClearRepresentatives()           { p.PReprs = nil; p.PNexts = nil }
+func (p *Gia_Man_t) CopyIdentityFrom(src *Gia_Man_t) { p.pName, p.PSpec = src.pName, src.PSpec }
 
 // CopyIONamesFrom maps destination interface indices to source indices. A nil
 // map means identity; -1 omits that name. All maps are validated before mutation.
@@ -37,15 +37,15 @@ func (p *Gia_Man_t) CopyIONamesFrom(src *Gia_Man_t, inputMap, outputMap []int32)
 		}
 		return result, nil
 	}
-	inputs, err := copyNames(src.vNamesIn, int(Gia_ManCiNum(p)), int(Gia_ManCiNum(src)), inputMap)
+	inputs, err := copyNames(src.VNamesIn, int(Gia_ManCiNum(p)), int(Gia_ManCiNum(src)), inputMap)
 	if err != nil {
 		return err
 	}
-	outputs, err := copyNames(src.vNamesOut, int(Gia_ManCoNum(p)), int(Gia_ManCoNum(src)), outputMap)
+	outputs, err := copyNames(src.VNamesOut, int(Gia_ManCoNum(p)), int(Gia_ManCoNum(src)), outputMap)
 	if err != nil {
 		return err
 	}
-	p.vNamesIn, p.vNamesOut = inputs, outputs
+	p.VNamesIn, p.VNamesOut = inputs, outputs
 	return nil
 }
 
@@ -60,11 +60,11 @@ func (p *Gia_Man_t) TransferRepresentativesFrom(src *Gia_Man_t, objectMap []int3
 			return fmt.Errorf("gia: invalid mapped representative object %d", id)
 		}
 	}
-	if src.pReprs == nil {
+	if src.PReprs == nil {
 		p.ClearRepresentatives()
 		return nil
 	}
-	if len(src.pReprs) != len(src.pObjs) {
+	if len(src.PReprs) != len(src.pObjs) {
 		return fmt.Errorf("gia: invalid source representatives")
 	}
 	// Build in a temporary manager so failed validation leaves destination intact.
@@ -89,8 +89,8 @@ func (p *Gia_Man_t) TransferRepresentativesFrom(src *Gia_Man_t, objectMap []int3
 		}
 	}
 	giaFlattenReprs(temp)
-	temp.pNexts = Gia_ManDeriveNexts(temp)
-	p.pReprs, p.pNexts = temp.pReprs, temp.pNexts
+	temp.PNexts = Gia_ManDeriveNexts(temp)
+	p.PReprs, p.PNexts = temp.PReprs, temp.PNexts
 	return nil
 }
 
@@ -108,19 +108,19 @@ func giaCopyNames(names *Vec_Ptr_t) []string {
 }
 
 // InputNames returns an independent name slice, or nil when names are absent.
-func (p *Gia_Man_t) InputNames() []string  { return giaCopyNames(p.vNamesIn) }
-func (p *Gia_Man_t) OutputNames() []string { return giaCopyNames(p.vNamesOut) }
+func (p *Gia_Man_t) InputNames() []string  { return giaCopyNames(p.VNamesIn) }
+func (p *Gia_Man_t) OutputNames() []string { return giaCopyNames(p.VNamesOut) }
 
-func (p *Gia_Man_t) Identity() (name, spec string) { return p.pName, p.pSpec }
-func (p *Gia_Man_t) SetIdentity(name, spec string) { p.pName, p.pSpec = name, spec }
+func (p *Gia_Man_t) Identity() (name, spec string) { return p.pName, p.PSpec }
+func (p *Gia_Man_t) SetIdentity(name, spec string) { p.pName, p.PSpec = name, spec }
 func (p *Gia_Man_t) Data() any                     { return p.pData }
 func (p *Gia_Man_t) SetData(data any)              { p.pData = data }
 func (p *Gia_Man_t) TakeData() any                 { data := p.pData; p.pData = nil; return data }
 
 func (p *Gia_Man_t) NetworkName() string { return p.pName }
-func (p *Gia_Man_t) NetworkSpec() string { return p.pSpec }
+func (p *Gia_Man_t) NetworkSpec() string { return p.PSpec }
 
 // CellConfiguration returns the mapped-cell description and configuration words.
 func (p *Gia_Man_t) CellConfiguration() (string, *Vec_Int_t) {
-	return p.pCellStr, p.vConfigs
+	return p.PCellStr, p.VConfigs
 }

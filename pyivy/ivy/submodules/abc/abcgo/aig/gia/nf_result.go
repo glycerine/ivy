@@ -6,7 +6,7 @@ import "github.com/glycerine/abcgo/misc/vec"
 // mapping. Negative entries denote an inverter or a buffer, respectively.
 func (p *nfMatcher) deriveMapping(refs *nfMappingRefs) *Gia_Man_t {
 	g := p.cuts.graph
-	if g.vCellMapping != nil {
+	if g.VCellMapping != nil {
 		panic("gia: cell mapping already exists")
 	}
 	mapping := vec.Vec_IntAlloc(int(2*g.nObjs + refs.edges + 2*refs.gates))
@@ -54,6 +54,6 @@ func (p *nfMatcher) deriveMapping(refs *nfMappingRefs) *Gia_Man_t {
 			vec.Vec_IntPush(mapping, match.gate)
 		}
 	}
-	g.vCellMapping = mapping
+	g.VCellMapping = mapping
 	return g
 }

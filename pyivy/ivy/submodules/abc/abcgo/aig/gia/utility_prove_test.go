@@ -53,13 +53,13 @@ func TestLegacyChoiceDetection(t *testing.T) {
 	if Gia_ManHasChoices_very_old(p) != 0 {
 		t.Fatal("choices without representatives")
 	}
-	p.pReprs = make([]Gia_Rpr_t, p.nObjs)
-	for i := range p.pReprs {
-		p.pReprs[i].iRepr = GIA_VOID
+	p.PReprs = make([]Gia_Rpr_t, p.nObjs)
+	for i := range p.PReprs {
+		p.PReprs[i].iRepr = GIA_VOID
 	}
-	p.pNexts = make([]int32, p.nObjs)
+	p.PNexts = make([]int32, p.nObjs)
 	Gia_ObjSetRepr(p, y>>1, x>>1)
-	p.pNexts[x>>1] = y >> 1
+	p.PNexts[x>>1] = y >> 1
 	if Gia_ManHasChoices_very_old(p) != 1 {
 		t.Fatal("choice not detected")
 	}

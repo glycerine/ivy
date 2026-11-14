@@ -27,7 +27,7 @@ func Gia_Sim2GenerateCounter(g *Gia_Man_t, frame, output, words, pattern int32) 
 	return cex
 }
 func Gia_ManSimSimulateEquiv(g *Gia_Man_t, pars *Gia_ParSim_t) int32 {
-	if g.pReprs == nil || g.pNexts == nil {
+	if g.PReprs == nil || g.PNexts == nil {
 		panic("gia: equivalence classes required")
 	}
 	started := time.Now()

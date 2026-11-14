@@ -4,13 +4,13 @@ import "fmt"
 
 // Gia_ManTisDupMuxes replaces eligible AND decompositions with real MUXes.
 func Gia_ManTisDupMuxes(src *Gia_Man_t) *Gia_Man_t {
-	if src.pMuxes != nil {
+	if src.PMuxes != nil {
 		panic("gia: TIS expects an ordinary AIG")
 	}
 	src.Refs = nil
 	Gia_ManCreateRefs(src)
 	dst := Gia_ManStart(5000)
-	dst.pName, dst.pSpec = src.pName, src.pSpec
+	dst.pName, dst.PSpec = src.pName, src.PSpec
 	dst.EnableMuxes()
 	Gia_ManConst0(src).Value = 0
 	for i := int32(0); i < Gia_ManCiNum(src); i++ {

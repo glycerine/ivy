@@ -52,7 +52,7 @@ func TestTasMiterPacksPatternsAndMarksProved(t *testing.T) {
 	unsat := Gia_ManHashAnd(g, Gia_ManHashAnd(g, left, right), b^1)
 	Gia_ManAppendCo(g, sat)
 	Gia_ManAppendCo(g, unsat)
-	g.pReprs = make([]Gia_Rpr_t, g.nObjs)
+	g.PReprs = make([]Gia_Rpr_t, g.nObjs)
 	roots := []*Gia_Obj_t{Gia_ManObj(g, a>>1), Gia_ManObj(g, b>>1)}
 	simulation := [][]uint32{{0}, {0}}
 	Tas_ManSolveMiterNc2(g, 10000, g, roots, simulation)

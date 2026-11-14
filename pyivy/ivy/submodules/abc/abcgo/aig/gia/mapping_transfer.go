@@ -44,7 +44,7 @@ func Gia_ManMappingVerify(p *Gia_Man_t) {
 
 // Gia_ManTransferMapping copies LUT records through source Value literals.
 func Gia_ManTransferMapping(dst, src *Gia_Man_t) {
-	if src.vMapping == nil {
+	if src.VMapping == nil {
 		return
 	}
 	Gia_ManMappingVerify(src)
@@ -87,17 +87,17 @@ func Gia_ManTransferMapping(dst, src *Gia_Man_t) {
 		}
 		Vec_IntPush(mapping, mappedMux)
 	}
-	dst.vMapping = mapping
+	dst.VMapping = mapping
 	Gia_ManMappingVerify(dst)
 }
 func Gia_ManTransferPacking(dst, src *Gia_Man_t) {
-	if src.vPacking == nil {
+	if src.VPacking == nil {
 		return
 	}
-	if dst.vPacking != nil {
+	if dst.VPacking != nil {
 		panic("gia: destination already has packing")
 	}
-	data := Vec_IntArray(src.vPacking)
+	data := Vec_IntArray(src.VPacking)
 	if len(data) == 0 {
 		panic("gia: empty packing")
 	}
@@ -132,5 +132,5 @@ func Gia_ManTransferPacking(dst, src *Gia_Man_t) {
 	if entries != data[0] {
 		panic("gia: packing count mismatch")
 	}
-	dst.vPacking = result
+	dst.VPacking = result
 }

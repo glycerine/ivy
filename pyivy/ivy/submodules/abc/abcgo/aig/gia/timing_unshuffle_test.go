@@ -14,7 +14,7 @@ func TestUnshuffleBoxedRegisterInputs(t *testing.T) {
 	Gia_ManSetRegNum(p, 1)
 	timing := tim.Tim_ManStart(3, 3)
 	tim.Tim_ManCreateBox(timing, 0, 1, 2, 1, -1, 0)
-	p.pManTime = timing
+	p.PManTime = timing
 	q := Gia_ManDupUnshuffleInputs(p)
 	if Gia_ManCiNum(q) != 3 || Gia_ManRegNum(q) != 1 {
 		t.Fatal("incorrect interface")

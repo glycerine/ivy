@@ -26,7 +26,7 @@ func Lf_ManSetFlowRefs(g *Gia_Man_t, refs *Vec_Flt_t, offsets *Vec_Int_t) {
 			continue
 		}
 		change(Gia_ObjFanin1(obj), 1)
-		if g.pMuxes != nil {
+		if g.PMuxes != nil {
 			if Gia_ObjIsMuxId(g, obj.id) != 0 {
 				change(Gia_ObjFanin2(g, obj), 1)
 			}

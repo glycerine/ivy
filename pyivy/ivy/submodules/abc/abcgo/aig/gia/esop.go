@@ -90,7 +90,7 @@ func Eso_ManCoverConvert(p *Eso_Man_t, cover *Vec_Ptr_t) *Gia_Man_t {
 	g := p.pGia
 	q := Gia_ManStart(g.nObjs)
 	q.pName = g.pName
-	q.pSpec = g.pSpec
+	q.PSpec = g.PSpec
 	Gia_ManHashAlloc(q)
 	Gia_ObjSetValue(Gia_ManConst0(g), 0)
 	for i := int32(0); i < Gia_ManCiNum(g); i++ {

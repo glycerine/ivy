@@ -20,8 +20,8 @@ func giaMfsExtract(p *Gia_Man_t) *giaMfsNetworkData {
 	realPis, realPos := int(Gia_ManPiNum(p)), int(Gia_ManPoNum(p))
 	var timing *tim.Tim_Man_t
 	var blackIns, blackOuts int
-	if p.pManTime != nil {
-		timing = p.pManTime.(*tim.Tim_Man_t)
+	if p.PManTime != nil {
+		timing = p.PManTime.(*tim.Tim_Man_t)
 		tim.Tim_ManBlackBoxIoNum(timing, &blackIns, &blackOuts)
 		if boxes > 0 {
 			realPis, realPos = tim.Tim_ManPiNum(timing), tim.Tim_ManPoNum(timing)
@@ -101,8 +101,8 @@ func giaMfsExtract(p *Gia_Man_t) *giaMfsNetworkData {
 	if count != size {
 		panic("gia: inconsistent MFS node count")
 	}
-	if p.pAigExtra != nil {
-		extra := p.pAigExtra
+	if p.PAigExtra != nil {
+		extra := p.PAigExtra
 		if Gia_ManCiNum(extra) >= 16 {
 			panic("gia: box truth exceeds 15 inputs")
 		}

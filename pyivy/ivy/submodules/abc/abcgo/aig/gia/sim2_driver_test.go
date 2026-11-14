@@ -10,8 +10,8 @@ func TestEquivSimulationDriverCounterexample(t *testing.T) {
 	Gia_ManAppendCo(g, out)
 	Gia_ManAppendCo(g, a)
 	Gia_ManSetRegNum(g, 1)
-	g.pReprs = make([]Gia_Rpr_t, g.nObjs)
-	g.pNexts = make([]int32, g.nObjs)
+	g.PReprs = make([]Gia_Rpr_t, g.nObjs)
+	g.PNexts = make([]int32, g.nObjs)
 	for id := int32(1); id < g.nObjs; id++ {
 		Gia_ObjSetRepr(g, id, GIA_VOID)
 	}
@@ -29,8 +29,8 @@ func TestEquivSimulationDriverRefinesConstants(t *testing.T) {
 	g := Gia_ManStart(6)
 	a := Gia_ManAppendCi(g)
 	Gia_ManAppendCo(g, a)
-	g.pReprs = make([]Gia_Rpr_t, g.nObjs)
-	g.pNexts = make([]int32, g.nObjs)
+	g.PReprs = make([]Gia_Rpr_t, g.nObjs)
+	g.PNexts = make([]int32, g.nObjs)
 	var pars Gia_ParSim_t
 	Gia_ManSimSetDefaultParams(&pars)
 	pars.NWords = 1

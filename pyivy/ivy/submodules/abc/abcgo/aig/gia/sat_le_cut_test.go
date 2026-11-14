@@ -102,17 +102,17 @@ func TestSleInitialMapping(t *testing.T) {
 	x := Gia_ManAppendAnd(p, a, b)
 	y := Gia_ManAppendAnd(p, x, c)
 	Gia_ManAppendCo(p, y)
-	p.vMapping = vec.Vec_IntStart(int(p.nObjs))
+	p.VMapping = vec.Vec_IntStart(int(p.nObjs))
 	for _, lut := range []struct {
 		id int32
 		in []int32
 	}{{x >> 1, []int32{a >> 1, b >> 1}}, {y >> 1, []int32{x >> 1, c >> 1}}} {
-		vec.Vec_IntWriteEntry(p.vMapping, int(lut.id), int32(vec.Vec_IntSize(p.vMapping)))
-		vec.Vec_IntPush(p.vMapping, int32(len(lut.in)))
+		vec.Vec_IntWriteEntry(p.VMapping, int(lut.id), int32(vec.Vec_IntSize(p.VMapping)))
+		vec.Vec_IntPush(p.VMapping, int32(len(lut.in)))
 		for _, fan := range lut.in {
-			vec.Vec_IntPush(p.vMapping, fan)
+			vec.Vec_IntPush(p.VMapping, fan)
 		}
-		vec.Vec_IntPush(p.vMapping, lut.id)
+		vec.Vec_IntPush(p.VMapping, lut.id)
 	}
 	edges := vec.Vec_IntAlloc(2)
 	vec.Vec_IntPushTwo(edges, x>>1, y>>1)
@@ -163,7 +163,7 @@ func TestSleDeriveResult(t *testing.T) {
 	}
 	edges, mapping := vec.Vec_IntAlloc(4), vec.Vec_IntAlloc(16)
 	Sle_ManDeriveResult(m, edges, mapping)
-	p.vMapping = mapping
+	p.VMapping = mapping
 	if Gia_ObjIsLut(p, y>>1) == 0 || Gia_ObjLutSize(p, y>>1) < 2 {
 		t.Fatal("output LUT not mapped")
 	}
@@ -179,7 +179,7 @@ func TestSleExplore(t *testing.T) {
 	y := Gia_ManAppendAnd(p, x, c)
 	Gia_ManAppendCo(p, y)
 	Sle_ManExplore(p, 0, 0, 1, 0, 0)
-	if p.vMapping == nil || Gia_ObjIsLut(p, y>>1) == 0 {
+	if p.VMapping == nil || Gia_ObjIsLut(p, y>>1) == 0 {
 		t.Fatal("SAT mapping not produced")
 	}
 	leaves := Gia_ObjLutFanins(p, y>>1)

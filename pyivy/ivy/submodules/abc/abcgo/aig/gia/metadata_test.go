@@ -97,11 +97,11 @@ func TestPhasePatternRealMuxAndXor(t *testing.T) {
 	xor := Gia_ManAppendObj(p)
 	xor.iDiff0 = uint32(xor.id - (b >> 1))
 	xor.iDiff1 = uint32(xor.id - (a >> 1))
-	p.pMuxes = make([]uint32, p.nObjs)
+	p.PMuxes = make([]uint32, p.nObjs)
 	mux := Gia_ManAppendObj(p)
 	mux.iDiff0 = uint32(mux.id - (a >> 1))
 	mux.iDiff1 = uint32(mux.id - (b >> 1))
-	p.pMuxes[mux.id] = uint32(c ^ 1)
+	p.PMuxes[mux.id] = uint32(c ^ 1)
 	Gia_ManAppendCo(p, xor.id<<1)
 	Gia_ManAppendCo(p, mux.id<<1|1)
 	values := Vec_IntAlloc(3)
@@ -141,7 +141,7 @@ func TestPhasePatternRealMuxAndXor(t *testing.T) {
 func TestSpecialGateConstructionOrdering(t *testing.T) {
 	p := Gia_ManStart(8)
 	a, b, c := Gia_ManAppendCi(p), Gia_ManAppendCi(p), Gia_ManAppendCi(p)
-	p.pMuxes = make([]uint32, p.nObjs)
+	p.PMuxes = make([]uint32, p.nObjs)
 	x := Gia_ManAppendXorReal(p, a^1, b)
 	m := Gia_ManAppendMuxReal(p, c, a, b^1)
 	buf := Gia_ManAppendBuf(p, m^1)
@@ -169,7 +169,7 @@ func TestSpecialGateConstructionOrdering(t *testing.T) {
 func TestSourceGateLevels(t *testing.T) {
 	p := Gia_ManStart(8)
 	a, b, c := Gia_ManAppendCi(p), Gia_ManAppendCi(p), Gia_ManAppendCi(p)
-	p.pMuxes = make([]uint32, p.nObjs)
+	p.PMuxes = make([]uint32, p.nObjs)
 	x := Gia_ManAppendXorReal(p, a, b)
 	m := Gia_ManAppendMuxReal(p, c, x, a)
 	buf := Gia_ManAppendBuf(p, m)
@@ -396,30 +396,30 @@ func TestIdentityNamesAndRepresentativeRemap(t *testing.T) {
 		Gia_ManAppendCi(p)
 		Gia_ManAppendCo(p, 2)
 	}
-	src.pName, src.pSpec = "source", "source.aig"
-	src.vNamesIn = Vec_PtrAlloc(2)
-	Vec_PtrPush(src.vNamesIn, "a")
-	Vec_PtrPush(src.vNamesIn, "b")
-	src.vNamesOut = Vec_PtrAlloc(1)
-	Vec_PtrPush(src.vNamesOut, "out")
+	src.pName, src.PSpec = "source", "source.aig"
+	src.VNamesIn = Vec_PtrAlloc(2)
+	Vec_PtrPush(src.VNamesIn, "a")
+	Vec_PtrPush(src.VNamesIn, "b")
+	src.VNamesOut = Vec_PtrAlloc(1)
+	Vec_PtrPush(src.VNamesOut, "out")
 	dst.CopyIdentityFrom(src)
 	if err := dst.CopyIONamesFrom(src, []int32{1, -1}, nil); err != nil {
 		t.Fatal(err)
 	}
-	if dst.pName != "source" || Vec_PtrEntry(dst.vNamesIn, 0) != "b" || Vec_PtrEntry(dst.vNamesIn, 1) != nil {
+	if dst.pName != "source" || Vec_PtrEntry(dst.VNamesIn, 0) != "b" || Vec_PtrEntry(dst.VNamesIn, 1) != nil {
 		t.Fatal("identity/name remap")
 	}
-	old := dst.vNamesIn
-	if err := dst.CopyIONamesFrom(src, []int32{20, 1}, nil); err == nil || dst.vNamesIn != old {
+	old := dst.VNamesIn
+	if err := dst.CopyIONamesFrom(src, []int32{20, 1}, nil); err == nil || dst.VNamesIn != old {
 		t.Fatal("invalid remap mutated names")
 	}
 	src.StartRepresentatives()
 	Gia_ObjSetRepr(src, 2, 1)
-	src.pNexts[1] = 2
+	src.PNexts[1] = 2
 	if err := dst.TransferRepresentativesFrom(src, []int32{0, 2, 1, 3}); err != nil {
 		t.Fatal(err)
 	}
-	if Gia_ObjRepr(dst, 2) != 1 || dst.pNexts[1] != 2 {
+	if Gia_ObjRepr(dst, 2) != 1 || dst.PNexts[1] != 2 {
 		t.Fatal("reordered class")
 	}
 	src.ClearRepresentatives()
@@ -432,9 +432,9 @@ func TestMappingRecordViewsAndSimulationBlocks(t *testing.T) {
 	p := Gia_ManStart(4)
 	Gia_ManAppendCi(p)
 	Gia_ManAppendCi(p)
-	p.vMapping = Vec_IntAlloc(10)
+	p.VMapping = Vec_IntAlloc(10)
 	for _, v := range []int32{0, 3, 0, 2, 1, 2, -7} {
-		Vec_IntPush(p.vMapping, v)
+		Vec_IntPush(p.VMapping, v)
 	}
 	fanins := Gia_ObjLutFanins(p, 1)
 	if len(fanins) != 2 || cap(fanins) != 2 || fanins[0] != 1 || fanins[1] != 2 || Gia_ObjLutMuxId(p, 1) != -7 || Gia_ObjLutIsMux(p, 1) != 1 {
@@ -444,16 +444,16 @@ func TestMappingRecordViewsAndSimulationBlocks(t *testing.T) {
 	if Gia_ObjLutFanin(p, 1, 0) != 2 {
 		t.Fatal("mapping view must be borrowed")
 	}
-	p.vSimsPi = Vec_WrdAlloc(4)
+	p.VSimsPi = Vec_WrdAlloc(4)
 	for _, v := range []uint64{1, 2, 3, 4} {
-		Vec_WrdPush(p.vSimsPi, v)
+		Vec_WrdPush(p.VSimsPi, v)
 	}
 	first, second := Gia_ObjSimPi(p, 0), Gia_ObjSimPi(p, 1)
 	if len(first) != 2 || cap(first) != 2 || len(second) != 2 || second[0] != 3 {
 		t.Fatal("simulation strides")
 	}
 	first[1] = 9
-	if Vec_WrdEntry(p.vSimsPi, 1) != 9 || second[0] != 3 {
+	if Vec_WrdEntry(p.VSimsPi, 1) != 9 || second[0] != 3 {
 		t.Fatal("simulation blocks overlap")
 	}
 }
@@ -467,12 +467,12 @@ func TestOppositePhaseSameFaninIsNotBuffer(t *testing.T) {
 	if Gia_ObjIsBuf(obj) != 0 || Gia_ObjIsAndNotBuf(obj) != 1 {
 		t.Fatal("x AND !x is not a buffer")
 	}
-	p.vMapping = Vec_IntAlloc(8)
-	Vec_IntFill(p.vMapping, int(p.nObjs), 0)
-	Vec_IntWriteEntry(p.vMapping, int(obj.id), int32(Vec_IntSize(p.vMapping)))
-	Vec_IntPush(p.vMapping, 1)
-	Vec_IntPush(p.vMapping, a>>1)
-	Vec_IntPush(p.vMapping, obj.id)
+	p.VMapping = Vec_IntAlloc(8)
+	Vec_IntFill(p.VMapping, int(p.nObjs), 0)
+	Vec_IntWriteEntry(p.VMapping, int(obj.id), int32(Vec_IntSize(p.VMapping)))
+	Vec_IntPush(p.VMapping, 1)
+	Vec_IntPush(p.VMapping, a>>1)
+	Vec_IntPush(p.VMapping, obj.id)
 	leaves, truth, ok := p.LUT(obj.id)
 	if !ok || len(leaves) != 1 || len(truth) != 1 || truth[0] != 0 {
 		t.Fatal("mapped contradiction truth", leaves, truth, ok)

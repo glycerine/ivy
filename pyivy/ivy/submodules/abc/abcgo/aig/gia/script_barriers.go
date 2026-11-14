@@ -13,7 +13,7 @@ func Gia_ManDupFromBarBufs(p *Gia_Man_t) *Gia_Man_t {
 		panic("gia: invalid barrier conversion source")
 	}
 	q := Gia_ManStart(p.nObjs)
-	q.pName, q.pSpec = p.pName, p.pSpec
+	q.pName, q.PSpec = p.pName, p.PSpec
 	Gia_ManFillValue(p)
 	Gia_ManConst0(p).Value = 0
 	for i := int32(0); i < Gia_ManCiNum(p); i++ {
@@ -55,7 +55,7 @@ func Gia_ManDupToBarBufs(p *Gia_Man_t, count int32) *Gia_Man_t {
 	}
 	realIn, realOut := Gia_ManCiNum(p)-count, Gia_ManCoNum(p)-count
 	q := Gia_ManStart(p.nObjs)
-	q.pName, q.pSpec = p.pName, p.pSpec
+	q.pName, q.PSpec = p.pName, p.PSpec
 	q.pSibls = make([]int32, p.nObjs+count+1)
 	Gia_ManFillValue(p)
 	Gia_ManConst0(p).Value = 0

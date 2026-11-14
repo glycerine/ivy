@@ -158,6 +158,6 @@ func Gia_NodeMffcMapping(p *Gia_Man_t) int32 {
 	for i := int32(0); i < Gia_ManCoNum(p); i++ {
 		count += Gia_NodeMffcMapping_rec(p, Gia_ObjFaninId0p(p, Gia_ManCo(p, i)), mapping, support)
 	}
-	p.vMapping = mapping
+	p.VMapping = mapping
 	return count
 }

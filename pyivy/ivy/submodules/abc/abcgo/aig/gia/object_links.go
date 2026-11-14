@@ -7,7 +7,7 @@ func Gia_ObjPhaseDiff(p *Gia_Man_t, i, k int32) int32 {
 	return Gia_ObjPhase(Gia_ManObj(p, i)) ^ Gia_ObjPhase(Gia_ManObj(p, k))
 }
 func Gia_ObjIsMuxId(p *Gia_Man_t, id int32) int32 {
-	return giaBool(id >= 0 && int(id) < len(p.pMuxes) && p.pMuxes[id] != 0)
+	return giaBool(id >= 0 && int(id) < len(p.PMuxes) && p.PMuxes[id] != 0)
 }
 func Gia_ObjIsMux(p *Gia_Man_t, obj *Gia_Obj_t) int32 { return Gia_ObjIsMuxId(p, Gia_ObjId(p, obj)) }
 func Gia_ObjIsAndReal(p *Gia_Man_t, obj *Gia_Obj_t) int32 {
@@ -56,16 +56,16 @@ func Gia_ObjRiToRoId(p *Gia_Man_t, id int32) int32 {
 func Gia_ObjDiff0(obj *Gia_Obj_t) int32 { return int32(obj.iDiff0) }
 func Gia_ObjDiff1(obj *Gia_Obj_t) int32 { return int32(obj.iDiff1) }
 func Gia_ObjFaninC2(p *Gia_Man_t, obj *Gia_Obj_t) int32 {
-	if len(p.pMuxes) == 0 {
+	if len(p.PMuxes) == 0 {
 		return 0
 	}
-	return int32(p.pMuxes[Gia_ObjId(p, obj)] & 1)
+	return int32(p.PMuxes[Gia_ObjId(p, obj)] & 1)
 }
 func Gia_ObjFanin2(p *Gia_Man_t, obj *Gia_Obj_t) *Gia_Obj_t {
-	if len(p.pMuxes) == 0 {
+	if len(p.PMuxes) == 0 {
 		return nil
 	}
-	return Gia_ManObj(p, int32(p.pMuxes[Gia_ObjId(p, obj)]>>1))
+	return Gia_ManObj(p, int32(p.PMuxes[Gia_ObjId(p, obj)]>>1))
 }
 func Gia_ObjChild0(obj *Gia_Obj_t) *Gia_Obj_t {
 	return Gia_NotCond(Gia_ObjFanin0(obj), Gia_ObjFaninC0(obj))
@@ -80,7 +80,7 @@ func Gia_ObjFaninId2(p *Gia_Man_t, id int32) int32 {
 	if Gia_ObjIsMuxId(p, id) == 0 {
 		return -1
 	}
-	return int32(p.pMuxes[id] >> 1)
+	return int32(p.PMuxes[id] >> 1)
 }
 func Gia_ObjFaninId0p(p *Gia_Man_t, obj *Gia_Obj_t) int32 {
 	return Gia_ObjFaninId0(obj, Gia_ObjId(p, obj))
@@ -101,7 +101,7 @@ func Gia_ObjFaninLit2(p *Gia_Man_t, id int32) int32 {
 	if Gia_ObjIsMuxId(p, id) == 0 {
 		return -1
 	}
-	return int32(p.pMuxes[id])
+	return int32(p.PMuxes[id])
 }
 func Gia_ObjFaninLit2p(p *Gia_Man_t, obj *Gia_Obj_t) int32 {
 	return Gia_ObjFaninLit2(p, Gia_ObjId(p, obj))

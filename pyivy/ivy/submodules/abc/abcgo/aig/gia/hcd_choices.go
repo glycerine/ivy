@@ -82,16 +82,16 @@ func Hcd_ManRemoveBadChoices(p *Gia_Man_t) {
 	Gia_ManCleanMark0(p)
 }
 func Hcd_ManEquivToChoices(p *Gia_Man_t, snapshots int32) *Gia_Man_t {
-	if snapshots <= 0 || Gia_ManCoNum(p)%snapshots != 0 || p.pReprs == nil {
+	if snapshots <= 0 || Gia_ManCoNum(p)%snapshots != 0 || p.PReprs == nil {
 		panic("gia: invalid choice snapshots or classes")
 	}
 	Gia_ManSetPhase(p)
 	dst := Gia_ManStart(p.nObjs)
-	dst.pName, dst.pSpec = p.pName, p.pSpec
-	dst.pReprs = make([]Gia_Rpr_t, p.nObjs)
-	dst.pNexts = make([]int32, p.nObjs)
-	for i := range dst.pReprs {
-		dst.pReprs[i].iRepr = GIA_VOID
+	dst.pName, dst.PSpec = p.pName, p.PSpec
+	dst.PReprs = make([]Gia_Rpr_t, p.nObjs)
+	dst.PNexts = make([]int32, p.nObjs)
+	for i := range dst.PReprs {
+		dst.PReprs[i].iRepr = GIA_VOID
 	}
 	Gia_ManFillValue(p)
 	Gia_ManConst0(p).Value = 0
@@ -115,8 +115,8 @@ func Hcd_ManEquivToChoices(p *Gia_Man_t, snapshots int32) *Gia_Man_t {
 	}
 	Gia_ManHashStop(dst)
 	Gia_ManSetRegNum(dst, Gia_ManRegNum(p))
-	dst.pReprs = dst.pReprs[:dst.nObjs]
-	dst.pNexts = dst.pNexts[:dst.nObjs]
+	dst.PReprs = dst.PReprs[:dst.nObjs]
+	dst.PNexts = dst.PNexts[:dst.nObjs]
 	Hcd_ManRemoveBadChoices(dst)
 	return Gia_ManCleanup(dst)
 }

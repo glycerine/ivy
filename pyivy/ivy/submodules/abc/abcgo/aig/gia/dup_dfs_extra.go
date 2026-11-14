@@ -64,7 +64,7 @@ func Gia_ManDupDfs2(src *Gia_Man_t) *Gia_Man_t {
 	Gia_ManFillValue(src)
 	out := Gia_ManStart(src.nObjs)
 	out.CopyIdentityFrom(src)
-	if src.pMuxes != nil {
+	if src.PMuxes != nil {
 		out.EnableMuxes()
 	}
 	src.pObjs[0].Value = 0
@@ -85,7 +85,7 @@ func Gia_ManDupDfs(src *Gia_Man_t) *Gia_Man_t {
 	Gia_ManFillValue(src)
 	out := Gia_ManStart(src.nObjs)
 	out.CopyIdentityFrom(src)
-	if src.pMuxes != nil {
+	if src.PMuxes != nil {
 		out.EnableMuxes()
 	}
 	src.pObjs[0].Value = 0
@@ -112,7 +112,7 @@ func Gia_ManDupDfsOnePo(src *Gia_Man_t, po int32) *Gia_Man_t {
 	Gia_ManFillValue(src)
 	out := Gia_ManStart(src.nObjs)
 	out.CopyIdentityFrom(src)
-	if src.pMuxes != nil {
+	if src.PMuxes != nil {
 		out.EnableMuxes()
 	}
 	src.pObjs[0].Value = 0
@@ -136,7 +136,7 @@ func Gia_ManDupDfsSkip(src *Gia_Man_t) *Gia_Man_t {
 	Gia_ManFillValue(src)
 	out := Gia_ManStart(src.nObjs)
 	out.CopyIdentityFrom(src)
-	if src.pMuxes != nil {
+	if src.PMuxes != nil {
 		out.EnableMuxes()
 	}
 	src.pObjs[0].Value = 0
@@ -160,7 +160,7 @@ func Gia_ManDupDfsNode(src *Gia_Man_t, root *Gia_Obj_t) *Gia_Man_t {
 	Gia_ManFillValue(src)
 	out := Gia_ManStart(src.nObjs)
 	out.CopyIdentityFrom(src)
-	if src.pMuxes != nil {
+	if src.PMuxes != nil {
 		out.EnableMuxes()
 	}
 	src.pObjs[0].Value = 0
@@ -172,7 +172,7 @@ func Gia_ManDupDfsLitArray(src *Gia_Man_t, lits *Vec_Int_t) *Gia_Man_t {
 	Gia_ManFillValue(src)
 	out := Gia_ManStart(src.nObjs)
 	out.CopyIdentityFrom(src)
-	if src.pMuxes != nil {
+	if src.PMuxes != nil {
 		out.EnableMuxes()
 	}
 	src.pObjs[0].Value = 0

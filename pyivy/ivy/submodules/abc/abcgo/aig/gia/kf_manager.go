@@ -93,7 +93,7 @@ func Kf_ManAlloc(g *Gia_Man_t, pars *Jf_Par_t) *Kf_Man_t {
 	if pars.NLutSize < 0 || pars.NLutSize > KF_LEAF_MAX || pars.NCutNum < 0 || pars.NCutNum > KF_CUT_MAX || pars.NProcNum < 0 || pars.NProcNum > KF_PROC_MAX {
 		panic("KF invalid mapping limits")
 	}
-	g.vMapping = nil
+	g.VMapping = nil
 	p := &Kf_Man_t{pGia: g, pPars: pars, clkStart: time.Now()}
 	n := int(g.nObjs)
 	vec.Vec_IntFill(&p.vCuts, n, 0)

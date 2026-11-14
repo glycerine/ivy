@@ -64,7 +64,7 @@ func (bridge *FrameDataBridge) Export(frame *abcmain.Frame, format string) (any,
 		combined := Gia_ManDup2(aig, lut)
 		defer Gia_ManStop(combined)
 		reduced := bridge.ComputeEquivs(combined, 1000, 0)
-		if reduced == nil || combined.pReprs == nil {
+		if reduced == nil || combined.PReprs == nil {
 			return nil, fmt.Errorf("gia: equivalence computation failed")
 		}
 		Gia_ManStop(reduced)
@@ -74,7 +74,7 @@ func (bridge *FrameDataBridge) Export(frame *abcmain.Frame, format string) (any,
 		original, ok1 := frame.Resource("pGiaMiniAig").(*Gia_Man_t)
 		mapped, ok2 := frame.Resource("vCopyMiniAig").(*Vec_Int_t)
 		classes, ok3 := frame.Resource("pGia2").(*Gia_Man_t)
-		if !ok1 || !ok2 || !ok3 || original == nil || mapped == nil || classes == nil || classes.pReprs == nil || classes.nObjs != original.nObjs {
+		if !ok1 || !ok2 || !ok3 || original == nil || mapped == nil || classes == nil || classes.PReprs == nil || classes.nObjs != original.nObjs {
 			return nil, fmt.Errorf("gia: MiniAIG equivalence data is incomplete")
 		}
 		result := Gia_ManMapEquivAfterScorr(classes, mapped)
@@ -186,9 +186,9 @@ func (bridge *FrameDataBridge) Import(frame *abcmain.Frame, format string, value
 		if !ok || len(classes) != int(p.nRegs) {
 			return fmt.Errorf("gia: invalid flop class dimensions")
 		}
-		p.vFlopClasses = vec.Vec_IntAlloc(len(classes))
+		p.VFlopClasses = vec.Vec_IntAlloc(len(classes))
 		for _, class := range classes {
-			vec.Vec_IntPush(p.vFlopClasses, class)
+			vec.Vec_IntPush(p.VFlopClasses, class)
 		}
 		return nil
 	}

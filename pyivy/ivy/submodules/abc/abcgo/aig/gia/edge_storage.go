@@ -45,28 +45,28 @@ func Gia_ManEdgeFromArray(p *Gia_Man_t, edges *Vec_Int_t) {
 	if len(data)%2 != 0 {
 		panic("gia: incomplete edge pair")
 	}
-	p.vEdge1 = vec.Vec_IntStart(int(p.nObjs))
-	p.vEdge2 = vec.Vec_IntStart(int(p.nObjs))
+	p.VEdge1 = vec.Vec_IntStart(int(p.nObjs))
+	p.VEdge2 = vec.Vec_IntStart(int(p.nObjs))
 	var violations int32
 	for i := 0; i < len(data); i += 2 {
 		a, b := data[i], data[i+1]
 		if a < 0 || a >= b || b >= p.nObjs {
 			panic("gia: invalid edge endpoints")
 		}
-		violations += Gia_ObjEdgeAdd(a, b, p.vEdge1, p.vEdge2)
-		violations += Gia_ObjEdgeAdd(b, a, p.vEdge1, p.vEdge2)
+		violations += Gia_ObjEdgeAdd(a, b, p.VEdge1, p.VEdge2)
+		violations += Gia_ObjEdgeAdd(b, a, p.VEdge1, p.VEdge2)
 	}
 	if violations != 0 {
 		fmt.Printf("Found %d violations during edge conversion.\n", violations)
 	}
 }
 func Gia_ManEdgeToArray(p *Gia_Man_t) *Vec_Int_t {
-	if p.vEdge1 == nil || p.vEdge2 == nil || vec.Vec_IntSize(p.vEdge1) != int(p.nObjs) || vec.Vec_IntSize(p.vEdge2) != int(p.nObjs) {
+	if p.VEdge1 == nil || p.VEdge2 == nil || vec.Vec_IntSize(p.VEdge1) != int(p.nObjs) || vec.Vec_IntSize(p.VEdge2) != int(p.nObjs) {
 		panic("gia: invalid assigned edge storage")
 	}
 	result := vec.Vec_IntAlloc(16)
 	for id := int32(0); id < p.nObjs; id++ {
-		for _, edges := range []*Vec_Int_t{p.vEdge1, p.vEdge2} {
+		for _, edges := range []*Vec_Int_t{p.VEdge1, p.VEdge2} {
 			fanin := vec.Vec_IntEntry(edges, int(id))
 			if fanin != 0 && fanin < id {
 				vec.Vec_IntPush(result, fanin)
@@ -77,22 +77,22 @@ func Gia_ManEdgeToArray(p *Gia_Man_t) *Vec_Int_t {
 	return result
 }
 func Gia_ManConvertPackingToEdges(p *Gia_Man_t) {
-	if p.vPacking == nil {
+	if p.VPacking == nil {
 		return
 	}
-	data := vec.Vec_IntArray(p.vPacking)
+	data := vec.Vec_IntArray(p.VPacking)
 	if len(data) == 0 {
 		panic("gia: empty packing")
 	}
-	p.vEdge1 = vec.Vec_IntStart(int(p.nObjs))
-	p.vEdge2 = vec.Vec_IntStart(int(p.nObjs))
+	p.VEdge1 = vec.Vec_IntStart(int(p.nObjs))
+	p.VEdge2 = vec.Vec_IntStart(int(p.nObjs))
 	count, violations := 0, int32(0)
 	add := func(a, b int32) {
 		if a < 0 || b < 0 || a >= p.nObjs || b >= p.nObjs {
 			panic("gia: invalid packed node")
 		}
-		violations += Gia_ObjEdgeAdd(a, b, p.vEdge1, p.vEdge2)
-		violations += Gia_ObjEdgeAdd(b, a, p.vEdge1, p.vEdge2)
+		violations += Gia_ObjEdgeAdd(a, b, p.VEdge1, p.VEdge2)
+		violations += Gia_ObjEdgeAdd(b, a, p.VEdge1, p.VEdge2)
 	}
 	for pos := 1; pos < len(data); {
 		n := int(data[pos])
@@ -118,6 +118,6 @@ func Gia_ManConvertPackingToEdges(p *Gia_Man_t) {
 	}
 }
 func Gia_ObjHaveEdge(p *Gia_Man_t, id, next int32) int32 {
-	return giaBool(vec.Vec_IntEntry(p.vEdge1, int(id)) == next || vec.Vec_IntEntry(p.vEdge2, int(id)) == next)
+	return giaBool(vec.Vec_IntEntry(p.VEdge1, int(id)) == next || vec.Vec_IntEntry(p.VEdge2, int(id)) == next)
 }
 func Gia_ObjCheckEdge(p *Gia_Man_t, id, next int32) int32 { return Gia_ObjHaveEdge(p, id, next) }

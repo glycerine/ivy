@@ -8,17 +8,17 @@ func TestMappingMetrics(t *testing.T) {
 	x := Gia_ManAppendAnd(p, a, b)
 	y := Gia_ManAppendAnd(p, x, c)
 	co := Gia_ManAppendCo(p, y)
-	p.vMapping = Vec_IntStart(int(p.nObjs))
+	p.VMapping = Vec_IntStart(int(p.nObjs))
 	for _, lut := range []struct {
 		id int32
 		in []int32
 	}{{x >> 1, []int32{a >> 1, b >> 1}}, {y >> 1, []int32{x >> 1, c >> 1}}} {
-		Vec_IntWriteEntry(p.vMapping, int(lut.id), int32(Vec_IntSize(p.vMapping)))
-		Vec_IntPush(p.vMapping, int32(len(lut.in)))
+		Vec_IntWriteEntry(p.VMapping, int(lut.id), int32(Vec_IntSize(p.VMapping)))
+		Vec_IntPush(p.VMapping, int32(len(lut.in)))
 		for _, id := range lut.in {
-			Vec_IntPush(p.vMapping, id)
+			Vec_IntPush(p.VMapping, id)
 		}
-		Vec_IntPush(p.vMapping, lut.id)
+		Vec_IntPush(p.VMapping, lut.id)
 	}
 	var levels []int32
 	if Gia_ManLutNum(p) != 2 || Gia_ManLutFaninCount(p) != 4 || Gia_ManLutLevel(p, &levels) != 2 || levels[co>>1] != 2 {

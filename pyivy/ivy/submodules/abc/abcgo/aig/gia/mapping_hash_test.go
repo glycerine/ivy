@@ -9,11 +9,11 @@ func TestDupHashMappingMergesIdenticalLuts(t *testing.T) {
 	Gia_ManAppendCo(p, x)
 	Gia_ManAppendCo(p, y^1)
 	p.SetIdentity("hash mapping", "spec")
-	p.vMapping = Vec_IntStart(int(p.nObjs))
+	p.VMapping = Vec_IntStart(int(p.nObjs))
 	for _, id := range []int32{x >> 1, y >> 1} {
-		Vec_IntWriteEntry(p.vMapping, int(id), int32(Vec_IntSize(p.vMapping)))
+		Vec_IntWriteEntry(p.VMapping, int(id), int32(Vec_IntSize(p.VMapping)))
 		for _, value := range []int32{2, a >> 1, b >> 1, id} {
-			Vec_IntPush(p.vMapping, value)
+			Vec_IntPush(p.VMapping, value)
 		}
 	}
 	q := Gia_ManDupHashMapping(p)

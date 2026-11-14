@@ -37,7 +37,7 @@ func giaDupMappedStart(src *Gia_Man_t) *Gia_Man_t {
 	src.pObjs[0].Value = 0
 	dst := Gia_ManStart(src.nObjs)
 	dst.CopyIdentityFrom(src)
-	if src.pMuxes != nil {
+	if src.PMuxes != nil {
 		dst.EnableMuxes()
 	}
 	return dst

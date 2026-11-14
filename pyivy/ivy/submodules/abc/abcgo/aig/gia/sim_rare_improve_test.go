@@ -13,9 +13,9 @@ func TestRarePatternImprovement(t *testing.T) {
 	patterns := vec.Vec_WrdAlloc(2)
 	vec.Vec_WrdPush(patterns, 0)
 	vec.Vec_WrdPush(patterns, ^uint64(0))
-	p.vSimsPi = patterns
+	p.VSimsPi = patterns
 	Gia_ManPatRareImprove(p, 2, 0)
-	if p.vSimsPi != patterns || vec.Vec_WrdEntry(patterns, 0) == 0 {
+	if p.VSimsPi != patterns || vec.Vec_WrdEntry(patterns, 0) == 0 {
 		t.Fatal("failed to improve or restore patterns")
 	}
 }

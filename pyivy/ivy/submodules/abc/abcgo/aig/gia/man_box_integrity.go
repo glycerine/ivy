@@ -26,7 +26,7 @@ func Gia_ManComputeCarryOuts(p *Gia_Man_t) *Vec_Int_t {
 	return result
 }
 func Gia_ManCheckIntegrityWithBoxes(p *Gia_Man_t) {
-	if p.pManTime == nil {
+	if p.PManTime == nil {
 		return
 	}
 	p.Refs = nil

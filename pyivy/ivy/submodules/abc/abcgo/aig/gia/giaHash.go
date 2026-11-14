@@ -20,7 +20,7 @@ func Gia_ManHashFind(p *Gia_Man_t, a, b, c int32) *int32 {
 	for *slot != 0 {
 		id := *slot
 		obj := p.pObjs[id]
-		if Gia_ObjFaninLit0(obj, id) == a && Gia_ObjFaninLit1(obj, id) == b && (p.pMuxes == nil || Gia_ObjFaninLit2(p, id) == c) {
+		if Gia_ObjFaninLit0(obj, id) == a && Gia_ObjFaninLit1(obj, id) == b && (p.PMuxes == nil || Gia_ObjFaninLit2(p, id) == c) {
 			break
 		}
 		slot = Vec_IntEntryP(&p.vHash, int(id))

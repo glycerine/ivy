@@ -37,10 +37,10 @@ func Gia_LutWhereIsPin(p *Gia_Man_t, fanout, fanin int32, permutation []int32) i
 	return -1
 }
 func giaLutTiming(p *Gia_Man_t) LUTPinTiming {
-	if p.pLutLib == nil {
+	if p.PLutLib == nil {
 		return nil
 	}
-	lib, ok := p.pLutLib.(LUTPinTiming)
+	lib, ok := p.PLutLib.(LUTPinTiming)
 	if !ok {
 		panic("gia: incompatible LUT timing library")
 	}

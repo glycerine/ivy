@@ -7,10 +7,10 @@ func TestCec4ChoicesWithoutClasses(t *testing.T) {
 	a, b := Gia_ManAppendCi(p), Gia_ManAppendCi(p)
 	x := Gia_ManAppendAnd(p, a, b)
 	Gia_ManAppendCo(p, x)
-	p.pReprs = make([]Gia_Rpr_t, p.nObjs)
-	p.pNexts = make([]int32, p.nObjs)
-	for i := range p.pReprs {
-		p.pReprs[i].iRepr = GIA_VOID
+	p.PReprs = make([]Gia_Rpr_t, p.nObjs)
+	p.PNexts = make([]int32, p.nObjs)
+	for i := range p.PReprs {
+		p.PReprs[i].iRepr = GIA_VOID
 	}
 	q := Gia_ManDup(p)
 	result := Cec4_ManSatSolverChoices(p, q)
@@ -29,12 +29,12 @@ func TestCec4ChoicesIndependentClassFailsExplicitly(t *testing.T) {
 	y := Gia_ManAppendAnd(p, a, Gia_ManAppendAnd(p, b, c))
 	Gia_ManAppendCo(p, x)
 	Gia_ManAppendCo(p, y)
-	p.pReprs = make([]Gia_Rpr_t, p.nObjs)
-	for i := range p.pReprs {
-		p.pReprs[i].iRepr = GIA_VOID
+	p.PReprs = make([]Gia_Rpr_t, p.nObjs)
+	for i := range p.PReprs {
+		p.PReprs[i].iRepr = GIA_VOID
 	}
 	Gia_ObjSetRepr(p, y>>1, x>>1)
-	p.pNexts = Gia_ManDeriveNexts(p)
+	p.PNexts = Gia_ManDeriveNexts(p)
 	q := Gia_ManDup(p)
 	for bits := 0; bits < 8; bits++ {
 		in := []bool{bits&1 != 0, bits&2 != 0, bits&4 != 0}
@@ -61,12 +61,12 @@ func TestCec4ChoicesDependentClassPreservesFunction(t *testing.T) {
 	or := Gia_ManAppendAnd(p, a^1, b^1) ^ 1
 	y := Gia_ManAppendAnd(p, x, or)
 	Gia_ManAppendCo(p, y)
-	p.pReprs = make([]Gia_Rpr_t, p.nObjs)
-	for i := range p.pReprs {
-		p.pReprs[i].iRepr = GIA_VOID
+	p.PReprs = make([]Gia_Rpr_t, p.nObjs)
+	for i := range p.PReprs {
+		p.PReprs[i].iRepr = GIA_VOID
 	}
 	Gia_ObjSetRepr(p, y>>1, x>>1)
-	p.pNexts = Gia_ManDeriveNexts(p)
+	p.PNexts = Gia_ManDeriveNexts(p)
 	q := Gia_ManDup(p)
 	if Cec4_ManMarkIndependentClasses(p, q) != 0 {
 		t.Fatal("dependent alternative was marked independent")
@@ -95,8 +95,8 @@ func TestCec4ChoiceRecursionUsesSourceZeroStub(t *testing.T) {
 	src.StartRepresentatives()
 	Gia_ObjSetRepr(src, 2, 1)
 	Gia_ObjSetNext(src, 1, 2)
-	src.pReprs[1].fColorA = 1
-	src.pReprs[2].fColorA = 1
+	src.PReprs[1].fColorA = 1
+	src.PReprs[2].fColorA = 1
 	dst := Gia_ManStart(8)
 	dst.pSibls = make([]int32, 3)
 	if got := Cec4_ManSatSolverChoices_rec(dst, src, nil, 1); got != 0 {

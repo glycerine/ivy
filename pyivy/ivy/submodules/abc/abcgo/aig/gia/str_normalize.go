@@ -107,7 +107,7 @@ func Str_ManNormalize_rec(ntk *Str_Ntk_t, p *Gia_Man_t, obj *Gia_Obj_t, groups *
 	obj.Value = uint32(Str_ObjCreate(ntk, kind, lits))
 }
 func Str_ManNormalizeInt(p *Gia_Man_t, groups *Vec_Wec_t, roots *Vec_Int_t) *Str_Ntk_t {
-	if p.pMuxes == nil {
+	if p.PMuxes == nil {
 		panic("gia: normalization needs real mux metadata")
 	}
 	if p.vSuper == nil {

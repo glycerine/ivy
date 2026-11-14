@@ -4,24 +4,24 @@ import "github.com/glycerine/abcgo/misc/tim"
 
 // BoxTiming returns borrowed timing and functional-model metadata.
 func (p *Gia_Man_t) BoxTiming() (*tim.Tim_Man_t, *Gia_Man_t) {
-	if p.pManTime == nil {
-		return nil, p.pAigExtra
+	if p.PManTime == nil {
+		return nil, p.PAigExtra
 	}
-	timing, ok := p.pManTime.(*tim.Tim_Man_t)
+	timing, ok := p.PManTime.(*tim.Tim_Man_t)
 	if !ok {
 		panic("gia: invalid timing manager")
 	}
-	return timing, p.pAigExtra
+	return timing, p.PAigExtra
 }
 
 // SetBoxTiming installs timing and functional-model metadata on the manager.
 func (p *Gia_Man_t) SetBoxTiming(timing *tim.Tim_Man_t, extra *Gia_Man_t) {
 	if timing == nil {
-		p.pManTime = nil
+		p.PManTime = nil
 	} else {
-		p.pManTime = timing
+		p.PManTime = timing
 	}
-	p.pAigExtra = extra
+	p.PAigExtra = extra
 }
 
 // Gia_ManClearLevels releases the cached level vector.

@@ -65,7 +65,7 @@ func Gia_ManCompare(a, b *Gia_Man_t) int32 {
 			fmt.Printf("Objects %d are different.\n", i)
 			return 0
 		}
-		if a.pReprs != nil && b.pReprs != nil && a.pReprs[i] != b.pReprs[i] {
+		if a.PReprs != nil && b.PReprs != nil && a.PReprs[i] != b.PReprs[i] {
 			fmt.Printf("Representatives of objects %d are different.\n", i)
 			return 0
 		}

@@ -45,7 +45,7 @@ func Jf_ManAlloc(g *Gia_Man_t, pars *Jf_Par_t) *Jf_Man_t {
 	if pars.NLutSize > JF_LEAF_MAX || pars.NCutNum > JF_CUT_MAX || pars.NLutSize < 0 || pars.NCutNum < 0 {
 		panic("JF invalid mapping limits")
 	}
-	g.vMapping = nil
+	g.VMapping = nil
 	p := &Jf_Man_t{pGia: g, pPars: pars, clkStart: time.Now()}
 	if pars.FCutMin != 0 && pars.FFuncDsd == 0 {
 		p.vTtMem = vec.Vec_MemAllocForTT(int(pars.NLutSize), 0)

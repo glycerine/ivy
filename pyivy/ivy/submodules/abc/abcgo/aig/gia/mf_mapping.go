@@ -52,7 +52,7 @@ func Mf_ObjComputeBestCut(p *Mf_Man_t, id int32) {
 
 func Mf_ManMappingFromMapping(p *Mf_Man_t) int32 {
 	g := p.pGia0
-	if g.vMapping != nil {
+	if g.VMapping != nil {
 		panic("gia: mapping already exists")
 	}
 	mapping := vec.Vec_IntStart(int(g.nObjs))
@@ -70,12 +70,12 @@ func Mf_ManMappingFromMapping(p *Mf_Man_t) int32 {
 		vec.Vec_IntPush(mapping, obj.id)
 		count++
 	}
-	g.vMapping = mapping
+	g.VMapping = mapping
 	fmt.Printf("Mapping is %.2fx larger than AIG manager.\n", float64(vec.Vec_IntSize(mapping))/float64(g.nObjs))
 	return count
 }
 func Mf_ManDeriveMapping(p *Mf_Man_t) *Gia_Man_t {
-	if p.pPars.FCutMin != 0 || p.pGia.vMapping != nil {
+	if p.pPars.FCutMin != 0 || p.pGia.VMapping != nil {
 		panic("gia: invalid mapping derivation")
 	}
 	mapping := vec.Vec_IntStart(int(p.pGia.nObjs))
@@ -91,6 +91,6 @@ func Mf_ManDeriveMapping(p *Mf_Man_t) *Gia_Man_t {
 		}
 		vec.Vec_IntPush(mapping, obj.id)
 	}
-	p.pGia.vMapping = mapping
+	p.pGia.VMapping = mapping
 	return p.pGia
 }

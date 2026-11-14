@@ -43,7 +43,7 @@ func Mf_ManPrintQuit(p *Mf_Man_t, result *Gia_Man_t) {
 	if p.vTtMem != nil {
 		truth = vec.Vec_MemMemory(p.vTtMem) / (1 << 20)
 	}
-	mapping := vec.Vec_IntMemory(result.vMapping) / (1 << 20)
+	mapping := vec.Vec_IntMemory(result.VMapping) / (1 << 20)
 	fmt.Printf("Gia = %.2f MB  Man = %.2f MB  Cut = %.2f MB   Map = %.2f MB  TT = %.2f MB  Total = %.2f MB\n", gia, man, cuts, mapping, truth, gia+man+cuts+mapping+truth)
 	for i := int32(0); i <= p.pPars.NLutSize; i++ {
 		fmt.Printf("%d = %d  ", i, p.nCutCounts[i])

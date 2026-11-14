@@ -77,7 +77,7 @@ func qbfWriteDIMACS(w io.Writer, g *Gia_Man_t, nPars int32) error {
 	return bw.Flush()
 }
 func Gia_QbfDumpFile(g *Gia_Man_t, nPars int32) {
-	name := extra.Extra_FileNameGenericAppend(g.pSpec, ".qdimacs")
+	name := extra.Extra_FileNameGenericAppend(g.PSpec, ".qdimacs")
 	file, err := os.Create(name)
 	if err != nil {
 		fmt.Printf("Cannot write QBF file %q: %v\n", name, err)

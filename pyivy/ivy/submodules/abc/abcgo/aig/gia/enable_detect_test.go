@@ -53,8 +53,8 @@ func TestRemoveEnableRetainsDataAndClass(t *testing.T) {
 	Gia_ManAppendCo(p, next)
 	Gia_ManSetRegNum(p, 1)
 	q := Gia_ManRemoveEnables(p)
-	if q.vFlopClasses == nil || Vec_IntSize(q.vFlopClasses) != 1 || Vec_IntEntry(q.vFlopClasses, 0) != 1 {
-		t.Fatalf("flop classes: %v", q.vFlopClasses)
+	if q.VFlopClasses == nil || Vec_IntSize(q.VFlopClasses) != 1 || Vec_IntEntry(q.VFlopClasses, 0) != 1 {
+		t.Fatalf("flop classes: %v", q.VFlopClasses)
 	}
 	for bits := 0; bits < 8; bits++ {
 		inputs := []bool{bits&1 != 0, bits&2 != 0, bits&4 != 0}

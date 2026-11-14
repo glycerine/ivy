@@ -109,8 +109,8 @@ func (e *giaTruthEval) node(id int32) []word {
 	} else {
 		b := e.lit(Gia_ObjFaninLit1(o, id))
 		var c []word
-		if int(id) < len(e.p.pMuxes) && e.p.pMuxes[id] != 0 {
-			c = e.lit(int32(e.p.pMuxes[id]))
+		if int(id) < len(e.p.PMuxes) && e.p.PMuxes[id] != 0 {
+			c = e.lit(int32(e.p.PMuxes[id]))
 		}
 		for i := range r {
 			if c != nil {
@@ -223,7 +223,7 @@ func Gia_Truth5ToGia(p *Gia_Man_t, lits []int32, n int32, t uint32, hash int32) 
 	return Gia_Truth6ToGia(p, lits, n, word(t)|word(t)<<32, hash)
 }
 func giaTruthLutLeaves(p *Gia_Man_t, id int32) []int32 {
-	a := vec.Vec_IntArray(p.vMapping)
+	a := vec.Vec_IntArray(p.VMapping)
 	if id < 0 || int(id) >= len(a) || a[id] <= 0 {
 		panic("GIA object has no LUT mapping")
 	}
@@ -267,8 +267,8 @@ func giaTruthWordNode(p *Gia_Man_t, o *Gia_Obj_t, read func(int32) word) word {
 	if o.fCompl1 != 0 {
 		b = ^b
 	}
-	if int(o.id) < len(p.pMuxes) && p.pMuxes[o.id] != 0 {
-		l := int32(p.pMuxes[o.id])
+	if int(o.id) < len(p.PMuxes) && p.PMuxes[o.id] != 0 {
+		l := int32(p.PMuxes[o.id])
 		c := read(l >> 1)
 		if l&1 != 0 {
 			c = ^c
@@ -593,7 +593,7 @@ func Gia_ManIsoNpnReduce(p *Gia_Man_t, equivs **Vec_Ptr_t, verbose int32) *Gia_M
 	}
 	out := Gia_ManStart(p.nObjs)
 	ci := map[int32]int32{0: 0}
-	out.pName, out.pSpec = p.pName, p.pSpec
+	out.pName, out.PSpec = p.pName, p.PSpec
 	for i := int32(0); i < Gia_ManPiNum(p); i++ {
 		ci[Gia_ManPi(p, i).id] = Gia_ManAppendCi(out)
 	}
@@ -637,8 +637,8 @@ func Gia_ManIsoNpnReduce(p *Gia_Man_t, equivs **Vec_Ptr_t, verbose int32) *Gia_M
 			l = a
 		} else {
 			b := clone(Gia_ObjFaninId1(o, id)) ^ int32(o.fCompl1)
-			if int(id) < len(p.pMuxes) && p.pMuxes[id] != 0 {
-				c := int32(p.pMuxes[id])
+			if int(id) < len(p.PMuxes) && p.PMuxes[id] != 0 {
+				c := int32(p.PMuxes[id])
 				control := clone(c>>1) ^ (c & 1)
 				l = giaTruthAnd(out, giaTruthAnd(out, control, b, true)^1, giaTruthAnd(out, control^1, a, true)^1, true) ^ 1
 			} else if Gia_ObjIsXor(o) != 0 {

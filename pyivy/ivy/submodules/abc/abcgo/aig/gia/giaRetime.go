@@ -105,13 +105,13 @@ func Gia_ManRetimeDupForward(p *Gia_Man_t, cut []*Gia_Obj_t) *Gia_Man_t {
 func Gia_ManRetimeForwardOne(p *Gia_Man_t, fixed, moves *int32) *Gia_Man_t {
 	var classes []int32
 	var newClasses *Vec_Int_t
-	if p.vFlopClasses != nil {
+	if p.VFlopClasses != nil {
 		classes = make([]int32, p.nObjs)
 		for i := range classes {
 			classes[i] = -1
 		}
 		for i := int32(0); i < Gia_ManRegNum(p); i++ {
-			classes[Gia_ManRo(p, i).id] = vec.Vec_IntEntry(p.vFlopClasses, int(i))
+			classes[Gia_ManRo(p, i).id] = vec.Vec_IntEntry(p.VFlopClasses, int(i))
 		}
 		newClasses = vec.Vec_IntAlloc(int(Gia_ManRegNum(p)))
 	}
@@ -169,7 +169,7 @@ func Gia_ManRetimeForwardOne(p *Gia_Man_t, fixed, moves *int32) *Gia_Man_t {
 		}
 	}
 	result := Gia_ManRetimeDupForward(p, cut)
-	result.vFlopClasses = newClasses
+	result.VFlopClasses = newClasses
 	return result
 }
 func Gia_ManRetimeForward(p *Gia_Man_t, maxIters, verbose int32) *Gia_Man_t {

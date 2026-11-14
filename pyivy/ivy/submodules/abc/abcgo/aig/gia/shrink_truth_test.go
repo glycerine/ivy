@@ -71,13 +71,13 @@ func TestShrink6MappedTruth(t *testing.T) {
 	x := Gia_ManAppendAnd(p, a, b)
 	y := Gia_ManAppendAnd(p, x, c^1)
 	Gia_ManAppendCo(p, y)
-	p.vMapping = vec.Vec_IntStart(int(p.nObjs))
-	vec.Vec_IntWriteEntry(p.vMapping, int(y>>1), int32(p.nObjs))
-	vec.Vec_IntPush(p.vMapping, 3)
+	p.VMapping = vec.Vec_IntStart(int(p.nObjs))
+	vec.Vec_IntWriteEntry(p.VMapping, int(y>>1), int32(p.nObjs))
+	vec.Vec_IntPush(p.VMapping, 3)
 	for _, id := range []int32{a >> 1, b >> 1, c >> 1} {
-		vec.Vec_IntPush(p.vMapping, id)
+		vec.Vec_IntPush(p.VMapping, id)
 	}
-	vec.Vec_IntPush(p.vMapping, y>>1)
+	vec.Vec_IntPush(p.VMapping, y>>1)
 	q := Gia_ManMapShrink6(p, 10, 0, 0)
 	if q == nil || Gia_ManVerifyTwoTruths(p, q) != 1 {
 		t.Fatal("six-input shrink changed function")

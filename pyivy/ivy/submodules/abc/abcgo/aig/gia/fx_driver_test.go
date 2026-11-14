@@ -11,17 +11,17 @@ func TestPerformFxEndToEnd(t *testing.T) {
 		z := Gia_ManAppendAnd(p, x, c^1)
 		Gia_ManAppendCo(p, y)
 		Gia_ManAppendCo(p, z^1)
-		p.vMapping = Vec_IntStart(int(p.nObjs))
+		p.VMapping = Vec_IntStart(int(p.nObjs))
 		for _, lut := range []struct {
 			id  int32
 			ins []int32
 		}{{x >> 1, []int32{a >> 1, b >> 1}}, {y >> 1, []int32{x >> 1, c >> 1}}, {z >> 1, []int32{x >> 1, c >> 1}}} {
-			Vec_IntWriteEntry(p.vMapping, int(lut.id), int32(Vec_IntSize(p.vMapping)))
-			Vec_IntPush(p.vMapping, int32(len(lut.ins)))
+			Vec_IntWriteEntry(p.VMapping, int(lut.id), int32(Vec_IntSize(p.VMapping)))
+			Vec_IntPush(p.VMapping, int32(len(lut.ins)))
 			for _, id := range lut.ins {
-				Vec_IntPush(p.vMapping, id)
+				Vec_IntPush(p.VMapping, id)
 			}
-			Vec_IntPush(p.vMapping, lut.id)
+			Vec_IntPush(p.VMapping, lut.id)
 		}
 		q := Gia_ManPerformFx(p, 5, 0, reverse, 0, 0)
 		for input := 0; input < 8; input++ {
