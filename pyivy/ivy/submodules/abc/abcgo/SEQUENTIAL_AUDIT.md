@@ -3034,3 +3034,16 @@ Expanded vet also reports existing base/abci self-assignment, unkeyed literals
 and unreachable-code diagnostics (`/tmp/abcgo-mapping-hash-review-vet.log`);
 no base/abci files changed in this repair. These diagnostics remain for that
 package's sequential audit. Original completion remains 2/131.
+
+Mapping/packing transfer follow-up: added a compiled-original giaIf.c oracle
+comparison with reordered CIs, reversed LUT construction order, six retained
+LUTs, one dangling LUT, redundant dangling cut leaves, both signs of MUX record
+trailers, replacement of existing destination mapping, and packing groups of
+sizes one, two and three. Complete destination mapping and packing vectors
+match the native source. Independent expectations also check fanin order,
+pruned counts, signed trailer remapping, group order, unchanged source records
+and independently owned destination storage. This found no additional defect;
+production transfer logic is unchanged. Focused native coverage passes in
+1.789s (`/tmp/abcgo-mapping-transfer-source.log`). Full uncached GIA race tests
+pass in 21.721s (`/tmp/abcgo-mapping-transfer-race.log`). The package remains
+under audit; original completion is still 2/131.
