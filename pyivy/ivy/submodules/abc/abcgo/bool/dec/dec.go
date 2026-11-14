@@ -38,8 +38,10 @@ func Dec_EdgeCreate(node, compl int32) Dec_Edge_t {
 	}
 	return Dec_Edge_t{uint32(compl) & 1, uint32(node)}
 }
-func Dec_EdgeToInt(e Dec_Edge_t) uint32 { return e.Node<<1 | e.fCompl }
-func Dec_IntToEdge(e uint32) Dec_Edge_t { return Dec_EdgeCreate(int32(e>>1), int32(e&1)) }
+func Dec_EdgeToInt(e Dec_Edge_t) uint32      { return e.Node<<1 | e.fCompl }
+func Dec_IntToEdge(e uint32) Dec_Edge_t      { return Dec_EdgeCreate(int32(e>>1), int32(e&1)) }
+func Dec_EdgeIsComplement(e Dec_Edge_t) bool { return e.fCompl != 0 }
+func Dec_EdgeNot(e Dec_Edge_t) Dec_Edge_t    { e.fCompl ^= 1; return e }
 
 // The historical union variant uses native bitfield layout: complement first.
 func Dec_EdgeToInt_(e Dec_Edge_t) uint32 { return Dec_EdgeToInt(e) }
