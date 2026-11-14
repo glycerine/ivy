@@ -32,7 +32,9 @@ func Aig_ProcedureTest() {
 		fmt.Printf("Check has failed\n")
 	}
 
-	Aig_ManDumpBlif(p, "aig_test_file.blif", nil, nil)
+	if err := Aig_ManDumpBlif(p, "aig_test_file.blif", nil, nil); err != nil {
+		fmt.Println(err)
+	}
 	Aig_ManStop(p)
 }
 
