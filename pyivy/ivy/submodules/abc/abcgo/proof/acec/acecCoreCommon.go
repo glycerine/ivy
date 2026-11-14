@@ -6,7 +6,7 @@ import (
 	"github.com/glycerine/abcgo/misc/vec"
 )
 
-func Acec_ManCecSetDefaultParams(p *Acec_ParCec_t) { *p = Acec_ParCec_t{nBTLimit: 1000, iOutFail: -1} }
+func Acec_ManCecSetDefaultParams(p *Acec_ParCec_t) { *p = Acec_ParCec_t{NBTLimit: 1000, iOutFail: -1} }
 func Acec_CommonStart(base, add *Gia_Man_t) *Gia_Man_t {
 	gia.Gia_ManFillValue(add)
 	gia.Gia_ManConst0(add).Value = 0

@@ -4,9 +4,9 @@ import "testing"
 
 // The source initializer overwrites every field, not just the conflict limit.
 func TestSourceParameterDefaultsReplacePriorValues(t *testing.T) {
-	p := Acec_ParCec_t{nBTLimit: 7, TimeLimit: 7, fMiter: 7, fDualOutput: 7, fTwoOutput: 7, fBooth: 7, fSilent: 7, fVeryVerbose: 7, fVerbose: 7, iOutFail: 7}
+	p := Acec_ParCec_t{NBTLimit: 7, TimeLimit: 7, FMiter: 7, FDualOutput: 7, FTwoOutput: 7, FBooth: 7, FSilent: 7, fVeryVerbose: 7, FVerbose: 7, iOutFail: 7}
 	Acec_ManCecSetDefaultParams(&p)
-	want := Acec_ParCec_t{nBTLimit: 1000, iOutFail: -1}
+	want := Acec_ParCec_t{NBTLimit: 1000, iOutFail: -1}
 	if p != want {
 		t.Fatalf("parameters %#v, source defaults %#v", p, want)
 	}
@@ -19,11 +19,11 @@ func TestSourceSolveIgnoresInactiveOptions(t *testing.T) {
 		set  func(*Acec_ParCec_t)
 	}{
 		{"timeout", func(p *Acec_ParCec_t) { p.TimeLimit = 1 }},
-		{"miter", func(p *Acec_ParCec_t) { p.fMiter = 1 }},
-		{"dual", func(p *Acec_ParCec_t) { p.fDualOutput = 1 }},
-		{"two_output", func(p *Acec_ParCec_t) { p.fTwoOutput = 1 }},
-		{"booth", func(p *Acec_ParCec_t) { p.fBooth = 1 }},
-		{"silent", func(p *Acec_ParCec_t) { p.fSilent = 1 }},
+		{"miter", func(p *Acec_ParCec_t) { p.FMiter = 1 }},
+		{"dual", func(p *Acec_ParCec_t) { p.FDualOutput = 1 }},
+		{"two_output", func(p *Acec_ParCec_t) { p.FTwoOutput = 1 }},
+		{"booth", func(p *Acec_ParCec_t) { p.FBooth = 1 }},
+		{"silent", func(p *Acec_ParCec_t) { p.FSilent = 1 }},
 		{"very_verbose", func(p *Acec_ParCec_t) { p.fVeryVerbose = 1 }},
 	} {
 		t.Run(mutate.name, func(t *testing.T) {

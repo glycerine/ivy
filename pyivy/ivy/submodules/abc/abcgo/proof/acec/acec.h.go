@@ -11,7 +11,7 @@ package acec
   Synopsis    [External declarations.]
 
   Author      [Alan Mishchenko]
-  
+
   Affiliation [UC Berkeley]
 
   Date        [Ver. 1.0. Started - June 20, 2005.]
@@ -19,10 +19,6 @@ package acec
   Revision    [$Id: acec.h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
 
 ***********************************************************************/
-
-
-
-
 
 ////////////////////////////////////////////////////////////////////////
 ///                          INCLUDES                                ///
@@ -32,27 +28,25 @@ package acec
 ///                         PARAMETERS                               ///
 ////////////////////////////////////////////////////////////////////////
 
-
 //ABC_NAMESPACE_HEADER_START
- 
 
 ////////////////////////////////////////////////////////////////////////
 ///                         BASIC TYPES                              ///
 ////////////////////////////////////////////////////////////////////////
 
 // combinational equivalence checking parameters
-   
+
 type Acec_ParCec_t struct {
-    nBTLimit              int32;      // conflict limit at a node
-    TimeLimit              int32;     // the runtime limit in seconds
-    fMiter              int32;        // input circuit is a miter
-    fDualOutput              int32;   // dual-output miter
-    fTwoOutput              int32;    // two-output miter
-    fBooth              int32;        // expecting Booth multiplier
-    fSilent              int32;       // print no messages
-    fVeryVerbose              int32;  // verbose stats
-    fVerbose              int32;      // verbose stats
-    iOutFail              int32;      // the number of failed output
+	NBTLimit     int32 // conflict limit at a node
+	TimeLimit    int32 // the runtime limit in seconds
+	FMiter       int32 // input circuit is a miter
+	FDualOutput  int32 // dual-output miter
+	FTwoOutput   int32 // two-output miter
+	FBooth       int32 // expecting Booth multiplier
+	FSilent      int32 // print no messages
+	fVeryVerbose int32 // verbose stats
+	FVerbose     int32 // verbose stats
+	iOutFail     int32 // the number of failed output
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -98,14 +92,8 @@ type Acec_ParCec_t struct {
 /*=== acecTree.c ========================================================*/
 // extern Gia_Man_t *   Acec_Normalize( Gia_Man_t * pGia, int fBooth, int fVerbose );
 
-
-
 //ABC_NAMESPACE_HEADER_END
-
-
-
 
 ////////////////////////////////////////////////////////////////////////
 ///                       END OF FILE                                ///
 ////////////////////////////////////////////////////////////////////////
-

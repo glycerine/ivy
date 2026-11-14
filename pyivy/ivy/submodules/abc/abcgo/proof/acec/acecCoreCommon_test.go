@@ -34,9 +34,9 @@ func TestCommonGraphHashesEquivalentCircuits(t *testing.T) {
 	}
 }
 func TestDefaultCecParameters(t *testing.T) {
-	p := Acec_ParCec_t{fVerbose: 1}
+	p := Acec_ParCec_t{FVerbose: 1}
 	Acec_ManCecSetDefaultParams(&p)
-	if p.nBTLimit != 1000 || p.iOutFail != -1 || p.fVerbose != 0 {
+	if p.NBTLimit != 1000 || p.iOutFail != -1 || p.FVerbose != 0 {
 		t.Fatalf("parameters %+v", p)
 	}
 }

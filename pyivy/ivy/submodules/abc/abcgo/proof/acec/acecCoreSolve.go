@@ -31,7 +31,7 @@ func acecComputeEquivClasses(a, b *Gia_Man_t, mapA, mapB **Vec_Int_t, compute fu
 func Acec_Solve(a, b *Gia_Man_t, pars *Acec_ParCec_t) int32 {
 	start := time.Now()
 	left, right := a, b
-	boxA, boxB := Acec_ProduceBox(a, pars.fVerbose), Acec_ProduceBox(b, pars.fVerbose)
+	boxA, boxB := Acec_ProduceBox(a, pars.FVerbose), Acec_ProduceBox(b, pars.FVerbose)
 	if boxA == nil || boxB == nil {
 		fmt.Println("Cannot find arithmetic boxes in both LHS and RHS. Trying regular CEC.")
 	} else if Acec_MatchBoxes(boxA, boxB) == 0 {
@@ -46,8 +46,8 @@ func Acec_Solve(a, b *Gia_Man_t, pars *Acec_ParCec_t) int32 {
 	}
 	var cecParams cec.Cec_ParCec_t
 	cec.Cec_ManCecSetDefaultParams(&cecParams)
-	cecParams.SetConflictLimit(pars.nBTLimit)
-	miter := gia.Gia_ManMiter(left, right, 0, 1, 0, 0, pars.fVerbose)
+	cecParams.SetConflictLimit(pars.NBTLimit)
+	miter := gia.Gia_ManMiter(left, right, 0, 1, 0, 0, pars.FVerbose)
 	status := int32(-1)
 	if miter == nil {
 		fmt.Println("Miter computation has failed.")
