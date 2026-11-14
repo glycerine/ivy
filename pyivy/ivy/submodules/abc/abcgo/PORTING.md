@@ -1860,6 +1860,21 @@ raw and LUT-mapped networks plus a timing box; the focused GIA core passes.
 Other `giaMan.go` reporting functions and later draft files still prevent the
 actual GIA/IF package build.
 
+## Full-module build checkpoint (2026-11-13)
+
+An uncached `GOCACHE=/tmp/abcgo-gocache go test -json ./...` snapshot found
+131 packages: 123 passed, 5 failed, and 3 have no test files. The remaining
+failures are `base/abci`, `base/acb`, `opt/fret`, `opt/lpk`, and `base/wlc`.
+`bdd/cudd` and its `core` subpackage now pass their full tests; `base/bac` and
+`base/cba` also pass their package tests.
+
+The package count does not imply that every ABC routine is ported. The
+`base/abci` source audit still finds untranslated or incomplete `.go` drafts;
+the current parser frontier includes `abcBidec.go` and `abcDar.go`, with many
+other source-file ports in progress. `base/wlc` also needs its WLC/WLN package
+dependency cycle removed while preserving the retiming calls. Re-run the full
+module sweep after those changes before treating the count as current.
+
 Ported the manager's NPN class report using the Go DAR canonicalization library
 and its per-output miter report using the switching-simulation provider. Focused
 tests exercise both reports; the focused GIA core passes. The miter probability
