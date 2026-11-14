@@ -5,7 +5,6 @@ import (
 	"encoding/binary"
 	"fmt"
 	"io"
-	"math/rand/v2"
 	"os"
 )
 
@@ -42,8 +41,14 @@ func Aig_XsimAnd(a, b int32) int32 {
 	}
 	return AIG_XVS1
 }
-func Aig_XsimRand2() int32                        { return 1 + int32(rand.Uint32()&1) }
-func Aig_XsimRand3() int32                        { return 1 + rand.Int32N(3) }
+func Aig_XsimRand2() int32 { return 1 + int32(Aig_ManRandom(0)&1) }
+func Aig_XsimRand3() int32 {
+	for {
+		if value := int32(Aig_ManRandom(0) & 3); value != 0 {
+			return value
+		}
+	}
+}
 func Aig_ObjGetXsimFanin0(p *Graph, e Edge) int32 { return ternaryEdgeValue(p, p.node(e).Fanins[0]) }
 func Aig_ObjGetXsimFanin1(p *Graph, e Edge) int32 { return ternaryEdgeValue(p, p.node(e).Fanins[1]) }
 func ternaryEdgeValue(p *Graph, e Edge) int32 {

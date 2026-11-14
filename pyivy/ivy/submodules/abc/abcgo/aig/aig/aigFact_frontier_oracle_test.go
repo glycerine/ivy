@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-func runFactSourceFixture(t *testing.T, fixture string, sources ...string) string {
+func runAigSourceFixture(t *testing.T, fixture string, sources ...string) string {
 	t.Helper()
 	if runtime.GOOS != "linux" {
 		t.Skip("fixture uses GNU linker section collection")
@@ -42,14 +42,14 @@ func runFactSourceFixture(t *testing.T, fixture string, sources ...string) strin
 }
 
 func TestSupportFrontierAgainstCompiledSource(t *testing.T) {
-	out := runFactSourceFixture(t, "factor_frontier_compare.c")
+	out := runAigSourceFixture(t, "factor_frontier_compare.c")
 	if want := "support: 2 3\nmarks: 0 7 7 7 7 7\n"; out != want {
 		t.Fatalf("source frontier = %q, want %q", out, want)
 	}
 }
 
 func TestFactoringCopiesAgainstCompiledSource(t *testing.T) {
-	out := runFactSourceFixture(t, "factor_copies_compare.c", "aigObj.c", "aigOper.c", "aigTable.c", "aigMem.c", "aigFanout.c", "aigUtil.c")
+	out := runAigSourceFixture(t, "factor_copies_compare.c", "aigObj.c", "aigOper.c", "aigTable.c", "aigMem.c", "aigFanout.c", "aigUtil.c")
 	p := NewGraph()
 	a, b, c := p.NewInput(), p.NewInput(), p.NewInput()
 	x := p.AND(a, b)
