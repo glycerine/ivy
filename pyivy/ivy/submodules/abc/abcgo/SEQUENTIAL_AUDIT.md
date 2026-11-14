@@ -1084,3 +1084,37 @@ ternary tests cover operators, state packing/ownership, cycles, retirement,
 limits, native XOR/buffers and sequential reduction behavior. Remaining
 review includes zero-register scratch-state behavior and the reduction
 driver's source contracts; no completion claim for ternary simulation or AIG.
+
+### Ternary scratch scope and reduction-driver review
+
+Red regressions exposed two additional source-state mismatches: the
+zero-register early return skipped constant/PI initialization and logic
+simulation, while sequential simulation overwrote ordinary PO scratch data
+that C leaves untouched. Removed the early return and separated logic plus
+selected-CO simulation from the existing complete-frame helper. The driver
+selects only LIs, following C's transfer scope; the complete-frame helper
+still supports the existing explicit-output/XOR/buffer tests. One next-state
+snapshot is now reused across rounds rather than allocated each round.
+
+A compiled original-C fixture compares every object value and returned
+mapping on zero-register and one-register graphs with seeded PO scratch.
+It passes after the repairs. Reviewed the remaining aigTsim.c paths:
+ternary operators, state allocation/hash/lookup/insertion, packing, printing,
+counting and OR aggregation; bounded simulation/repetition/retirement;
+constant mapping and the remap/cleanup/repeat driver. Go maps and immutable
+keys replace allocator/hash links; native XOR, buffers and nonnumeric DAG
+ordering are explicit operator-preserving extensions. The existing
+no-progress check prevents an injected invalid engine looping forever.
+
+Additional tests exercise two successive reductions followed by a nil
+mapping, manager disposal/ownership, option forwarding and both assignments
+of the remaining register. A separate nil-mapping test proves the unchanged
+source manager remains intact. These passed without requiring a production
+change. Full AIG, FRA and ABCI race suites pass; the final AIG race run also
+includes those newly added driver tests. The log for the caller checks is
+`/tmp/abcgo-ternary-scope-review.log`.
+
+This completes the current source comparison of aigTsim.go itself, not the
+shared multivalued engine or the complete AIG package. Review of
+aigMvSim.go against saigSimMv.c is next, followed by the remaining AIG
+families. Original package-audit completion remains 1/131.
