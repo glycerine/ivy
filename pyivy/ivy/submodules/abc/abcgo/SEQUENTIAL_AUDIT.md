@@ -933,3 +933,46 @@ Go tests explicitly expect graph immutability, so their green result does not
 prove source fidelity. Compare complete driver state and ordering against C
 before blessing that design or replacing its tests. No dominator source
 changes have been made in this checkpoint.
+
+### Dominator driver ordering and graph work state
+
+Subsequent source comparison and red tests exposed missing traversal-ID
+updates in all three dominator drivers and reordered cuts when a fanout-list
+head had been rotated. Restored the source reverse-DFS driver, LI-cone marking
+for flop/PI modes, and reference-bounded fanout-list iteration. Removed the
+separate stored traversal order and cone-activation pass. Direct drivers now
+require fanout allocation, while the three source convenience wrappers own
+and release their temporary indexes. Flop TFI rejects complemented roots,
+regularizes recursive fanins and uses the shared bounded traversal helper.
+Separate red tests cover the setup checks and traversal-generation boundary.
+
+A compiled fixture includes original aigDoms.c and links original DFS,
+fanout, memory and utility implementations. Its three-mode comparison checks
+the complete ordered dominator vectors, statistics, manager traversal ID and
+per-object traversal IDs after rotating a fanout head. Console-only stubs
+provide the absent ABC frame/bridge environment, not analysis algorithms.
+
+The source driver dereferences a null dominator vector on a dangling-fanout
+fixture. Go previously treated that missing vector as empty and silently
+returned incomplete cuts. Added a red regression and an explicit diagnostic
+panic; valid-input exhaustive path tests now clean dangling logic first.
+Tests that formerly asserted total graph immutability now check structural
+and value preservation while allowing the source traversal mutations.
+
+Further red regressions exposed diagnostic routines using private reference
+and mark copies, ignoring preexisting graph marks, and failing to leave source
+volume traversal state or clear source work marks. Removed those two private
+arrays. Volume, LO collection and temporary cone references now use graph
+state; FindGood clears graph MarkA flags. Restored the source negative-counter
+check in reference recursion after observing its own failing test. The
+compiled fixture additionally compares marked-boundary volume, LO marking,
+temporary and restored reference counts, final traversal IDs and mark cleanup.
+The existing related-node-cut barrier remains a tested Go safety extension;
+it prevents double removal of cut inputs and is not attributed to C.
+
+Focused regressions and the full AIG race suite pass. Repository search finds
+no production callers of these dominator APIs outside aigDoms.go; no caller
+packages needed changes. This checkpoint does not complete AIG review. The
+remaining dominator representation/edge-case questions include legacy raw
+output boundaries and the widened signature cache. Other AIG families and
+the rest of the package inventory remain open.
