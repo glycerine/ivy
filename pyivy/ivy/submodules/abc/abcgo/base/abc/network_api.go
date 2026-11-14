@@ -45,7 +45,6 @@ func Abc_NtkHasOnlyLatchBoxes(n *Network) int32 {
 func Abc_NtkCi(n *Network, index int32) *Object  { return n.cis[index] }
 func Abc_NtkCo(n *Network, index int32) *Object  { return n.cos[index] }
 func Abc_NtkBox(n *Network, index int32) *Object { return n.boxes[index] }
-func Abc_NtkSpec(n *Network) string              { return n.Spec }
 func Abc_NtkSetName(n *Network, name string)     { n.Name = name }
 func Abc_NtkSetSpec(n *Network, spec string)     { n.Spec = spec }
 func setLatchInit(o *Object, value Abc_InitType_t) {

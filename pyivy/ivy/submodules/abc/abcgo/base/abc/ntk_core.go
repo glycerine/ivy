@@ -79,6 +79,9 @@ func ntkCopiedEdge(e Edge) Edge {
 	return copy
 }
 func ntkCopyTiming(dst, src *Network) {
+	if src.MappingTiming != nil {
+		Abc_NtkSetMappingTiming(dst, src.MappingTiming)
+	}
 	if src.CILevel != nil {
 		levels := make(map[*Object]int)
 		for _, o := range src.cis {

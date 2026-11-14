@@ -89,6 +89,7 @@ type Network struct {
 	NameIDs                   []int32
 	Topo                      []int32
 	AndGateDelay              float64
+	MappingTiming             *MappingTiming
 	WireLoad                  string
 	LTLProperties             []string
 	Model                     []int32

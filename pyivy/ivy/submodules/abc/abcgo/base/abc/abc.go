@@ -127,6 +127,7 @@ func Abc_NtkPiNum(n *Network) int32           { return int32(len(n.ObjectsOfKind
 func Abc_NtkPoNum(n *Network) int32           { return int32(len(n.ObjectsOfKind(ObjectPO))) }
 func Abc_NtkNodeNum(n *Network) int32         { return int32(len(n.ObjectsOfKind(ObjectNode))) }
 func Abc_NtkName(n *Network) string           { return n.Name }
+func Abc_NtkSpec(n *Network) string           { return n.Spec }
 
 func Abc_NtkCreatePi(n *Network) *Object       { return n.NewObject(ObjectPI) }
 func Abc_NtkCreatePo(n *Network) *Object       { return n.NewObject(ObjectPO) }
