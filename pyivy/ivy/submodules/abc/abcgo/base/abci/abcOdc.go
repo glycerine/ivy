@@ -3,1143 +3,582 @@ package abci
 import (
 	"fmt"
 	"time"
+
+	baseabc "github.com/glycerine/abcgo/base/abc"
+	"github.com/glycerine/abcgo/misc/extra"
+	"github.com/glycerine/abcgo/misc/util"
+	"github.com/glycerine/abcgo/misc/vec"
+	"github.com/glycerine/abcgo/opt/res"
 )
 
-/**CFile****************************************************************
+const ABC_DC_MAX_NODES = 1 << 15
 
-  FileName    [abcOdc.c]
+type Odc_Lit_t = uint16
 
-  SystemName  [ABC: Logic synthesis and verification system.]
-
-  PackageName [Network and node package.]
-
-  Synopsis    [Scalable computation of observability don't-cares.]
-
-  Author      [Alan Mishchenko]
-  
-  Affiliation [UC Berkeley]
-
-  Date        [Ver. 1.0. Started - June 20, 2005.]
-
-  Revision    [$Id: abcOdc.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
-
-***********************************************************************/
-
-//#include "base/abc/abc.h"
-
-//ABC_NAMESPACE_IMPL_START
-
-
-////////////////////////////////////////////////////////////////////////
-///                        DECLARATIONS                              ///
-////////////////////////////////////////////////////////////////////////
-
-#define ABC_DC_MAX_NODES   (1<<15)
-
-typedef unsigned short Odc_Lit_t;
-
-        // 16 bytes
 type Odc_Obj_t struct {
-    iFan0               Odc_Lit_t;       // first fanin
-    iFan1               Odc_Lit_t;       // second fanin
-    iNext               Odc_Lit_t;       // next node in the hash table
-    unsigned short          TravId;      // the traversal ID
-    uData                uint32;       // the computed data
-    uMask                uint32;       // the variable mask 
+	iFan0, iFan1, iNext Odc_Lit_t
+	TravId              uint16
+	uData, uMask        uint32
 }
 
 type Odc_Man_t_ struct {
-    // dont'-care parameters
-    nVarsMax                     int32;    // the max number of cut variables
-    nLevels                     int32;     // the number of ODC levels
-    fVerbose                     int32;    // the verbosiness flag
-    fVeryVerbose                     int32;// the verbosiness flag to print per-node stats
-    nPercCutoff                     int32; // cutoff percentage
-
-    // windowing
-    pNode              *Abc_Obj_t;       // the node for windowing
-    vLeaves              *Vec_Ptr_t;     // the number of the cut
-    vRoots              *Vec_Ptr_t;      // the roots of the cut
-    vBranches              *Vec_Ptr_t;   // additional inputs 
-
-    // internal AIG package
-    // objects
-    nPis                     int32;        // number of PIs (nVarsMax + 32)
-    nObjs                     int32;       // number of objects (Const1, PIs, ANDs)
-    nObjsAlloc                     int32;  // number of objects allocated
-    pObjs              *Odc_Obj_t;       // objects 
-    iRoot               Odc_Lit_t;       // the root object
-    unsigned short          nTravIds;    // the number of travIDs
-    // structural hashing
-    pTable              *Odc_Lit_t;      // hash table
-    nTableSize                     int32;  // hash table size
-    vUsedSpots              *Vec_Int_t;  // the used spots
-
-    // truth tables
-    nBits                     int32;       // the number of bits
-    nWords                     int32;      // the number of words 
-    vTruths              *Vec_Ptr_t;     // truth tables for each node
-    vTruthsElem              *Vec_Ptr_t; // elementary truth tables for the PIs
-    puTruth               *uint32;     // the place where the resulting truth table does
-
-    // statistics
-    nWins                     int32;       // the number of windows processed
-    nWinsEmpty                     int32;  // the number of empty windows
-    nSimsEmpty                     int32;  // the number of empty simulation infos
-    nQuantsOver                     int32; // the number of quantification overflows
-    nWinsFinish                     int32; // the number of windows that finished
-    nTotalDcs                     int32;   // total percentage of DCs
-
-    // runtime
-    timeClean                 abctime;   // windowing
-    timeWin                 abctime;     // windowing
-    timeMiter                 abctime;   // computing the miter
-    timeSim                 abctime;     // simulation
-    timeQuant                 abctime;   // quantification
-    timeTruth                 abctime;   // truth table
-    timeTotal                 abctime;   // useful runtime
-    timeAbort                 abctime;   // aborted runtime
+	nVarsMax, nLevels, fVerbose, fVeryVerbose, nPercCutoff int32
+	pNode                                                  *Abc_Obj_t
+	vLeaves, vRoots, vBranches                             *Vec_Ptr_t
+	nPis, nObjs, nObjsAlloc                                int32
+	pObjs                                                  []*Odc_Obj_t
+	iRoot                                                  Odc_Lit_t
+	nTravIds                                               uint16
+	pTable                                                 []Odc_Lit_t
+	nTableSize                                             int32
+	vUsedSpots                                             *Vec_Int_t
+	nBits, nWords                                          int32
+	vTruths, vTruthsElem                                   *Vec_Ptr_t
+	puTruth                                                []uint32
+	nWins, nWinsEmpty, nSimsEmpty, nQuantsOver             int32
+	nWinsFinish, nTotalDcs                                 int32
+	timeClean, timeWin, timeMiter, timeSim                 int64
+	timeQuant, timeTruth, timeTotal, timeAbort             int64
+	rng                                                    *odcRand
 }
 
+type Odc_Man_t = Odc_Man_t_
 
-// quantity of different objects
-func Odc_PiNum(p *Odc_Man_t) int32 { return p.nPis;                       }
-func Odc_NodeNum(p *Odc_Man_t) int32 { return p.nObjs - p.nPis - 1;        }
-func Odc_ObjNum(p *Odc_Man_t) int32 { return p.nObjs;                      }
-
-// complemented attributes of objects
-func Odc_IsComplement(Lit Odc_Lit_t) int32 { return Lit &  (Odc_Lit_t)1;           }
-func Odc_Regular(Lit Odc_Lit_t) Odc_Lit_t { return Lit & ~(Odc_Lit_t)1;           }
-func Odc_Not(Lit Odc_Lit_t) Odc_Lit_t { return Lit ^  (Odc_Lit_t)1;           }
-func Odc_NotCond(Lit Odc_Lit_t, c int32) Odc_Lit_t { return Lit ^  (Odc_Lit_t)(c!=0);      }
-
-// specialized Literals
-func Odc_Const0() Odc_Lit_t { return 1;                             }
-func Odc_Const1() Odc_Lit_t { return 0;                             }
-func Odc_Var(p *Odc_Man_t, i int32) Odc_Lit_t { assert(i >= 0 && i < p.nPis, "i >= 0 && i < p.nPis"); return (i+1) << 1;  }
-func Odc_IsConst(Lit Odc_Lit_t) int32 { return Lit <  (Odc_Lit_t)2;           }
-func Odc_IsTerm(p *Odc_Man_t, Lit Odc_Lit_t) int32 { return int32((Lit>>1)) <= p.nPis;      }
-
-// accessing internal storage
-func Odc_ObjNew(p *Odc_Man_t) *Odc_Obj_t { assert(p.nObjs < p.nObjsAlloc, "p.nObjs < p.nObjsAlloc"); return p.pObjs + p.nObjs++;        }
-func Odc_Obj2Lit(p *Odc_Man_t, pObj *Odc_Obj_t) Odc_Lit_t { assert(pObj, "pObj"); return (pObj - p.pObjs) << 1;                           }
-func Odc_Lit2Obj(p *Odc_Man_t, Lit Odc_Lit_t) *Odc_Obj_t { assert(!(Lit & 1) && int32((Lit>>1)) < p.nObjs, "!(Lit & 1) && int32((Lit>>1)) < p.nObjs"); return p.pObjs + (Lit>>1); }
-
-// fanins and their complements
-func Odc_ObjChild0(pObj *Odc_Obj_t) Odc_Lit_t { return pObj.iFan0;                   }
-func Odc_ObjChild1(pObj *Odc_Obj_t) Odc_Lit_t { return pObj.iFan1;                   }
-func Odc_ObjFanin0(pObj *Odc_Obj_t) Odc_Lit_t { return Odc_Regular(pObj.iFan0);      }
-func Odc_ObjFanin1(pObj *Odc_Obj_t) Odc_Lit_t { return Odc_Regular(pObj.iFan1);      }
-func Odc_ObjFaninC0(pObj *Odc_Obj_t) int32 { return Odc_IsComplement(pObj.iFan0); }
-func Odc_ObjFaninC1(pObj *Odc_Obj_t) int32 { return Odc_IsComplement(pObj.iFan1); }
-
-// traversal IDs
-func Odc_ManIncrementTravId(p *Odc_Man_t) { p.nTravIds++;                                    }
-func Odc_ObjSetTravIdCurrent(p *Odc_Man_t, pObj *Odc_Obj_t) { pObj.TravId = p.nTravIds;                       }
-func Odc_ObjIsTravIdCurrent(p *Odc_Man_t, pObj *Odc_Obj_t) int32 { return int32( (int32(pObj.TravId) == p.nTravIds));  }
-
-// truth tables
-func Odc_ObjTruth(p *Odc_Man_t, Lit Odc_Lit_t) *uint32 { assert(!(Lit & 1), "!(Lit & 1)"); return (unsigned *) Vec_PtrEntry(p.vTruths, Lit >> 1);  }
-
-// iterators 
-// Original macro:
-// #define Odc_ForEachPi( p, Lit, i )                                                 \
-//     for ( i = 0; (i < Odc_PiNum(p)) && (((Lit) = Odc_Var(p, i)), 1); i++ )
-
-// Original macro:
-// #define Odc_ForEachAnd( p, pObj, i )                                               \
-//     for ( i = 1 + Odc_CiNum(p); (i < Odc_ObjNum(p)) && ((pObj) = (p)->pObjs + i); i++ )
-
-
-
-////////////////////////////////////////////////////////////////////////
-///                     FUNCTION DEFINITIONS                         ///
-////////////////////////////////////////////////////////////////////////
-
-/**Function*************************************************************
-
-  Synopsis    [Allocates the don't-care manager.]
-
-  Description [The parameters are the max number of cut variables, 
-  the number of fanout levels used for the ODC computation, and verbosiness.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkDontCareAlloc(nVarsMax int32, nLevels int32, fVerbose int32, fVeryVerbose int32) *Odc_Man_t {
-    var p *Odc_Man_t;
-    var pData *uint32;
-    var i, k int32;
-    // inlining of macro ABC_ALLOC
-    p = ((Odc_Man_t *) malloc(sizeof(Odc_Man_t) * (size_t)(1)));
-    memset( p, 0, sizeof(Odc_Man_t) );
-    assert(nVarsMax > 4 && nVarsMax < 16, "nVarsMax > 4 && nVarsMax < 16");
-    assert(nLevels > 0 && nLevels < 10, "nLevels > 0 && nLevels < 10");
-
-    srand( 0xABC );
-
-    // dont'-care parameters
-    p.nVarsMax     = nVarsMax;
-    p.nLevels      = nLevels;
-    p.fVerbose     = fVerbose;
-    p.fVeryVerbose = fVeryVerbose;
-    p.nPercCutoff  = 10;
-
-    // windowing
-    p.vRoots    = Vec_PtrAlloc( 128 );
-    p.vBranches = Vec_PtrAlloc( 128 );
-
-    // internal AIG package
-    // allocate room for objects
-    p.nObjsAlloc = ABC_DC_MAX_NODES; 
-    // inlining of macro ABC_ALLOC
-    p.pObjs = ((Odc_Obj_t *) malloc(sizeof(Odc_Obj_t) * (size_t)(p.nObjsAlloc * sizeof(Odc_Obj_t))));
-    p.nPis  = nVarsMax + 32;
-    p.nObjs = 1 + p.nPis;
-    memset( p.pObjs, 0, p.nObjs * sizeof(Odc_Obj_t) );
-    // set the PI masks
-    for  i = 0; i < 32; i++  {
-        p.pObjs[1 + p.nVarsMax + i].uMask = (1 << i);
-    }
-    // allocate hash table
-    p.nTableSize = p.nObjsAlloc/3 + 1;
-    // inlining of macro ABC_ALLOC
-    p.pTable = ((Odc_Lit_t *) malloc(sizeof(Odc_Lit_t) * (size_t)(p.nTableSize * sizeof(Odc_Lit_t))));
-    memset( p.pTable, 0, p.nTableSize * sizeof(Odc_Lit_t) );
-    p.vUsedSpots = Vec_IntAlloc( 1000 );
-
-    // truth tables
-    p.nWords = Abc_TruthWordNum( p.nVarsMax );
-    p.nBits = p.nWords * 8 * sizeof(unsigned);
-    p.vTruths = Vec_PtrAllocSimInfo( p.nObjsAlloc, p.nWords );
-    p.vTruthsElem = Vec_PtrAllocSimInfo( p.nVarsMax, p.nWords );
-
-    // set elementary truth tables
-    Abc_InfoFill( (unsigned *)Vec_PtrEntry(p.vTruths, 0), p.nWords );
-    for  k = 0; k < p.nVarsMax; k++  {
-//        pData = Odc_ObjTruth( p, Odc_Var(p, k) );
-        pData = (unsigned *)Vec_PtrEntry( p.vTruthsElem, k );
-        Abc_InfoClear( pData, p.nWords );
-        for  i = 0; i < p.nBits; i++  {
-            if i & (1 << k) {
-                pData[i>>5] |= (1 << (i&31)); }
-        }
-    }
-
-    // set random truth table for the additional inputs
-    for  k = p.nVarsMax; k < p.nPis; k++  {
-        pData = Odc_ObjTruth( p, Odc_Var(p, k) );
-        Abc_InfoRandom( pData, p.nWords );
-    }
-
-    // set the miter to the unused value
-    p.iRoot = 0xffff;
-    return p;
+type odcRand struct {
+	state [31]uint32
+	index uint64
 }
 
-/**Function*************************************************************
+func newOdcRand(seed uint32) *odcRand {
+	if seed == 0 {
+		seed = 1
+	}
+	seq := make([]uint32, 344)
+	seq[0] = seed
+	for i := 1; i < 31; i++ {
+		seq[i] = uint32((uint64(16807) * uint64(seq[i-1])) % 2147483647)
+	}
+	seq[31], seq[32], seq[33] = seq[0], seq[1], seq[2]
+	for i := 34; i < len(seq); i++ {
+		seq[i] = seq[i-31] + seq[i-3]
+	}
+	r := &odcRand{index: 344}
+	for i := 313; i < 344; i++ {
+		r.state[i%31] = seq[i]
+	}
+	return r
+}
+func (r *odcRand) next() uint32 {
+	i := r.index
+	v := r.state[(i-31)%31] + r.state[(i-3)%31]
+	r.state[i%31] = v
+	r.index++
+	return v >> 1
+}
 
-  Synopsis    [Clears the manager.]
+func Odc_PiNum(p *Odc_Man_t) int32       { return p.nPis }
+func Odc_NodeNum(p *Odc_Man_t) int32     { return p.nObjs - p.nPis - 1 }
+func Odc_ObjNum(p *Odc_Man_t) int32      { return p.nObjs }
+func Odc_IsComplement(l Odc_Lit_t) int32 { return int32(l & 1) }
+func Odc_Regular(l Odc_Lit_t) Odc_Lit_t  { return l &^ 1 }
+func Odc_Not(l Odc_Lit_t) Odc_Lit_t      { return l ^ 1 }
+func Odc_NotCond(l Odc_Lit_t, c int32) Odc_Lit_t {
+	if c != 0 {
+		return l ^ 1
+	}
+	return l
+}
+func Odc_Const0() Odc_Lit_t { return 1 }
+func Odc_Const1() Odc_Lit_t { return 0 }
+func Odc_Var(p *Odc_Man_t, i int32) Odc_Lit_t {
+	assert(i >= 0 && i < p.nPis, "i >= 0 && i < p.nPis")
+	return Odc_Lit_t((i + 1) << 1)
+}
+func Odc_IsConst(l Odc_Lit_t) int32 {
+	if l < 2 {
+		return 1
+	}
+	return 0
+}
+func Odc_IsTerm(p *Odc_Man_t, l Odc_Lit_t) int32 {
+	if int32(l>>1) <= p.nPis {
+		return 1
+	}
+	return 0
+}
+func Odc_ObjNew(p *Odc_Man_t) *Odc_Obj_t {
+	assert(p.nObjs < p.nObjsAlloc, "ODC object capacity")
+	o := &Odc_Obj_t{}
+	p.pObjs = append(p.pObjs, o)
+	p.nObjs++
+	return o
+}
+func Odc_Obj2Lit(p *Odc_Man_t, o *Odc_Obj_t) Odc_Lit_t {
+	for i, x := range p.pObjs {
+		if x == o {
+			return Odc_Lit_t(i << 1)
+		}
+	}
+	panic("ODC object not in manager")
+}
+func Odc_Lit2Obj(p *Odc_Man_t, l Odc_Lit_t) *Odc_Obj_t {
+	assert(l&1 == 0 && int32(l>>1) < p.nObjs, "invalid ODC literal")
+	return p.pObjs[int(l>>1)]
+}
+func Odc_ObjChild0(o *Odc_Obj_t) Odc_Lit_t               { return o.iFan0 }
+func Odc_ObjChild1(o *Odc_Obj_t) Odc_Lit_t               { return o.iFan1 }
+func Odc_ObjFanin0(o *Odc_Obj_t) Odc_Lit_t               { return Odc_Regular(o.iFan0) }
+func Odc_ObjFanin1(o *Odc_Obj_t) Odc_Lit_t               { return Odc_Regular(o.iFan1) }
+func Odc_ObjFaninC0(o *Odc_Obj_t) int32                  { return Odc_IsComplement(o.iFan0) }
+func Odc_ObjFaninC1(o *Odc_Obj_t) int32                  { return Odc_IsComplement(o.iFan1) }
+func Odc_ManIncrementTravId(p *Odc_Man_t)                { p.nTravIds++ }
+func Odc_ObjSetTravIdCurrent(p *Odc_Man_t, o *Odc_Obj_t) { o.TravId = p.nTravIds }
+func Odc_ObjIsTravIdCurrent(p *Odc_Man_t, o *Odc_Obj_t) int32 {
+	if o.TravId == p.nTravIds {
+		return 1
+	}
+	return 0
+}
+func Odc_ObjTruth(p *Odc_Man_t, l Odc_Lit_t) []uint32 {
+	assert(l&1 == 0, "truth literal must be regular")
+	return vec.Vec_PtrEntry(p.vTruths, int(l>>1)).([]uint32)
+}
 
-  Description []
-               
-  SideEffects []
+func Abc_NtkDontCareAlloc(nVarsMax, nLevels, fVerbose, fVeryVerbose int32) *Odc_Man_t {
+	assert(nVarsMax > 4 && nVarsMax < 16 && nLevels > 0 && nLevels < 10, "invalid ODC parameters")
+	p := &Odc_Man_t_{nVarsMax: nVarsMax, nLevels: nLevels, fVerbose: fVerbose, fVeryVerbose: fVeryVerbose, nPercCutoff: 10, nObjsAlloc: ABC_DC_MAX_NODES, nPis: nVarsMax + 32, rng: newOdcRand(0xABC)}
+	p.vRoots, p.vBranches = vec.Vec_PtrAlloc(128), vec.Vec_PtrAlloc(128)
+	p.nObjs = 1 + p.nPis
+	p.pObjs = make([]*Odc_Obj_t, p.nObjs)
+	for i := range p.pObjs {
+		p.pObjs[i] = &Odc_Obj_t{}
+	}
+	for i := int32(0); i < 32; i++ {
+		p.pObjs[1+int(nVarsMax+i)].uMask = uint32(1) << uint(i)
+	}
+	p.nTableSize = p.nObjsAlloc/3 + 1
+	p.pTable = make([]Odc_Lit_t, p.nTableSize)
+	p.vUsedSpots = vec.Vec_IntAlloc(1000)
+	p.nWords = util.Abc_TruthWordNum(nVarsMax)
+	p.nBits = p.nWords * 32
+	p.vTruths = vec.Vec_PtrAllocSimInfo(int(p.nObjsAlloc), int(p.nWords))
+	p.vTruthsElem = vec.Vec_PtrAllocSimInfo(int(nVarsMax), int(p.nWords))
+	res.Abc_InfoFill(vec.Vec_PtrEntry(p.vTruths, 0).([]uint32), p.nWords)
+	for k := int32(0); k < nVarsMax; k++ {
+		d := vec.Vec_PtrEntry(p.vTruthsElem, int(k)).([]uint32)
+		for bit := int32(0); bit < p.nBits; bit++ {
+			if bit&(1<<uint(k)) != 0 {
+				d[bit>>5] |= uint32(1) << uint(bit&31)
+			}
+		}
+	}
+	for k := nVarsMax; k < p.nPis; k++ {
+		d := Odc_ObjTruth(p, Odc_Var(p, k))
+		for i := len(d) - 1; i >= 0; i-- {
+			d[i] = (p.rng.next() << 24) ^ (p.rng.next() << 12) ^ p.rng.next()
+		}
+	}
+	p.iRoot = 0xffff
+	return p
+}
 
-  SeeAlso     []
-
-***********************************************************************/
 func Abc_NtkDontCareClear(p *Odc_Man_t) {
-    var clk abctime  = Abc_Clock();
-    // clean the structural hashing table
-    if Vec_IntSize(p.vUsedSpots) > p.nTableSize/3 { // more than one third
-        memset( p.pTable, 0, sizeof(Odc_Lit_t) * p.nTableSize );
-    } else {
-        var iSpot, i int32;
-        // inlining of macro Vec_IntForEachEntry
-        for  i = 0; (i < Vec_IntSize(p.vUsedSpots)) && (((iSpot) = Vec_IntEntry(p.vUsedSpots, i)), 1); i++  {
-            p.pTable[iSpot] = 0;
-        }
-    }
-    Vec_IntClear( p.vUsedSpots ); 
-    // reset the number of nodes
-    p.nObjs = 1 + p.nPis;
-    // reset the root node
-    p.iRoot = 0xffff;
-
-p.timeClean += Abc_Clock() - clk;
+	clk := util.Abc_Clock()
+	if vec.Vec_IntSize(p.vUsedSpots) > int(p.nTableSize/3) {
+		clear(p.pTable)
+	} else {
+		for i := 0; i < vec.Vec_IntSize(p.vUsedSpots); i++ {
+			p.pTable[vec.Vec_IntEntry(p.vUsedSpots, i)] = 0
+		}
+	}
+	vec.Vec_IntClear(p.vUsedSpots)
+	p.nObjs = 1 + p.nPis
+	p.pObjs = p.pObjs[:p.nObjs]
+	p.iRoot = 0xffff
+	p.timeClean += util.Abc_Clock() - clk
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Frees the don't-care manager.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Abc_NtkDontCareFree(p *Odc_Man_t) {
-    if p.fVerbose {
-        fmt.Printf("Wins = %5d. Empty = %5d. SimsEmpty = %5d. QuantOver = %5d. WinsFinish = %5d.\n", p.nWins, p.nWinsEmpty, p.nSimsEmpty, p.nQuantsOver, p.nWinsFinish);
-        fmt.Printf("Ave DCs per window = %6.2f %%. Ave DCs per finished window = %6.2f %%.\n", 1.0*p.nTotalDcs/p.nWins, 1.0*p.nTotalDcs/p.nWinsFinish);
-        fmt.Printf("Runtime stats of the ODC manager:\n");
-        // inlining of macro ABC_PRT
-        Abc_Print(1, "%s =", ("Cleaning    "));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((p.timeClean)))/(float64(int64(time.Second))));;
-        // inlining of macro ABC_PRT
-        Abc_Print(1, "%s =", ("Windowing   "));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((p.timeWin)))/(float64(int64(time.Second))));;
-        // inlining of macro ABC_PRT
-        Abc_Print(1, "%s =", ("Miter       "));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((p.timeMiter)))/(float64(int64(time.Second))));;
-        // inlining of macro ABC_PRT
-        Abc_Print(1, "%s =", ("Simulation  "));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((p.timeSim)))/(float64(int64(time.Second))));;
-        // inlining of macro ABC_PRT
-        Abc_Print(1, "%s =", ("Quantifying "));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((p.timeQuant)))/(float64(int64(time.Second))));;
-        // inlining of macro ABC_PRT
-        Abc_Print(1, "%s =", ("Truth table "));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((p.timeTruth)))/(float64(int64(time.Second))));;
-        // inlining of macro ABC_PRT
-        Abc_Print(1, "%s =", ("TOTAL       "));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((p.timeTotal)))/(float64(int64(time.Second))));;
-        // inlining of macro ABC_PRT
-        Abc_Print(1, "%s =", ("Aborted     "));
-Abc_Print(1, "%9.2f sec\n", 1.0*(float64((p.timeAbort)))/(float64(int64(time.Second))));;
-    }
-    Vec_PtrFree( p.vRoots );
-    Vec_PtrFree( p.vBranches );
-    Vec_PtrFree( p.vTruths );
-    Vec_PtrFree( p.vTruthsElem );
-    Vec_IntFree( p.vUsedSpots );
-    p.pObjs = nil;
-    p.pTable = nil;
-    p = nil;
+	if p == nil {
+		return
+	}
+	if p.fVerbose != 0 {
+		fmt.Printf("Wins = %5d. Empty = %5d. SimsEmpty = %5d. QuantOver = %5d. WinsFinish = %5d.\n", p.nWins, p.nWinsEmpty, p.nSimsEmpty, p.nQuantsOver, p.nWinsFinish)
+		fmt.Printf("Ave DCs per window = %6.2f %%. Ave DCs per finished window = %6.2f %%.\n", float64(p.nTotalDcs)/float64(p.nWins), float64(p.nTotalDcs)/float64(p.nWinsFinish))
+		for _, x := range []struct {
+			name string
+			t    int64
+		}{{"Cleaning", p.timeClean}, {"Windowing", p.timeWin}, {"Miter", p.timeMiter}, {"Simulation", p.timeSim}, {"Quantifying", p.timeQuant}, {"Truth table", p.timeTruth}, {"TOTAL", p.timeTotal}, {"Aborted", p.timeAbort}} {
+			fmt.Printf("%-12s %9.2f sec\n", x.name, float64(x.t)/float64(time.Second))
+		}
+	}
+	vec.Vec_PtrFree(p.vRoots)
+	vec.Vec_PtrFree(p.vBranches)
+	vec.Vec_PtrFree(p.vTruths)
+	vec.Vec_PtrFree(p.vTruthsElem)
+	vec.Vec_IntFree(p.vUsedSpots)
 }
 
-
-
-/**Function*************************************************************
-
-  Synopsis    [Marks the TFO of the collected nodes up to the given level.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkDontCareWinSweepLeafTfo_rec(pObj *Abc_Obj_t, nLevelLimit int32, pNode *Abc_Obj_t) {
-    var pFanout *Abc_Obj_t;
-    var i int32;
-    if Abc_ObjIsCo(pObj) || int32(pObj.Level) > nLevelLimit || pObj == pNode {
-        return; }
-    if Abc_NodeIsTravIdCurrent(pObj) {
-        return; }
-    Abc_NodeSetTravIdCurrent( pObj );
-    ////////////////////////////////////////
-    // try to reduce the runtime
-    if Abc_ObjFanoutNum(pObj) > 100 {
-        return; }
-    ////////////////////////////////////////
-    // inlining of macro Abc_ObjForEachFanout
-    for  i = 0; (i < Abc_ObjFanoutNum(pObj)) && (((pFanout) = Abc_ObjFanout(pObj, i)), 1); i++  {
-        Abc_NtkDontCareWinSweepLeafTfo_rec( pFanout, nLevelLimit, pNode );
-    }
+func odcEntry(p *Odc_Man_t, v *Vec_Ptr_t, i int32) *Abc_Obj_t {
+	x := vec.Vec_PtrEntry(v, int(i))
+	o, _ := x.(*Abc_Obj_t)
+	if o == nil {
+		o, _ = x.(*baseabc.Abc_Obj_t)
+	}
+	return o
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Marks the TFO of the collected nodes up to the given level.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
+func Abc_NtkDontCareWinSweepLeafTfo_rec(o *Abc_Obj_t, limit int32, pivot *Abc_Obj_t) {
+	if baseabc.Abc_ObjIsCo(o) != 0 || int32(o.Level) > limit || o == pivot || baseabc.Abc_NodeIsTravIdCurrent(o) != 0 {
+		return
+	}
+	baseabc.Abc_NodeSetTravIdCurrent(o)
+	if baseabc.Abc_ObjFanoutNum(o) > 100 {
+		return
+	}
+	for i := int32(0); i < baseabc.Abc_ObjFanoutNum(o); i++ {
+		Abc_NtkDontCareWinSweepLeafTfo_rec(baseabc.Abc_ObjFanout(o, i), limit, pivot)
+	}
+}
 func Abc_NtkDontCareWinSweepLeafTfo(p *Odc_Man_t) {
-    var pObj *Abc_Obj_t;
-    var i int32;
-    Abc_NtkIncrementTravId( p.pNode.pNtk );
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vLeaves)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vLeaves, i)), 1); i++  {
-        Abc_NtkDontCareWinSweepLeafTfo_rec( pObj, p.pNode.Level + p.nLevels, p.pNode );
-    }
+	baseabc.Abc_NtkIncrementTravId(p.pNode.Network())
+	for i := int32(0); i < int32(vec.Vec_PtrSize(p.vLeaves)); i++ {
+		Abc_NtkDontCareWinSweepLeafTfo_rec(odcEntry(p, p.vLeaves, i), int32(p.pNode.Level)+p.nLevels, p.pNode)
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Recursively collects the roots.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkDontCareWinCollectRoots_rec(pObj *Abc_Obj_t, vRoots *Vec_Ptr_t) {
-    var pFanout *Abc_Obj_t;
-    var i int32;
-    assert(Abc_ObjIsNode(pObj), "Abc_ObjIsNode(pObj)");
-    assert(Abc_NodeIsTravIdCurrent(pObj), "Abc_NodeIsTravIdCurrent(pObj)");
-    // check if the node has all fanouts marked
-    // inlining of macro Abc_ObjForEachFanout
-    for  i = 0; (i < Abc_ObjFanoutNum(pObj)) && (((pFanout) = Abc_ObjFanout(pObj, i)), 1); i++  {
-        if !Abc_NodeIsTravIdCurrent(pFanout) {
-            break; }
-    }
-    // if some of the fanouts are unmarked, add the node to the root
-    if i < Abc_ObjFanoutNum(pObj) {
-        Vec_PtrPushUnique( vRoots, pObj );
-        return;
-    }
-    // otherwise, call recursively
-    // inlining of macro Abc_ObjForEachFanout
-    for  i = 0; (i < Abc_ObjFanoutNum(pObj)) && (((pFanout) = Abc_ObjFanout(pObj, i)), 1); i++  {
-        Abc_NtkDontCareWinCollectRoots_rec( pFanout, vRoots );
-    }
+func Abc_NtkDontCareWinCollectRoots_rec(o *Abc_Obj_t, roots *Vec_Ptr_t) {
+	assert(baseabc.Abc_ObjIsNode(o) != 0 && baseabc.Abc_NodeIsTravIdCurrent(o) != 0, "ODC root traversal")
+	for i := int32(0); i < baseabc.Abc_ObjFanoutNum(o); i++ {
+		if baseabc.Abc_NodeIsTravIdCurrent(baseabc.Abc_ObjFanout(o, i)) == 0 {
+			vec.Vec_PtrPushUnique(roots, o)
+			return
+		}
+	}
+	for i := int32(0); i < baseabc.Abc_ObjFanoutNum(o); i++ {
+		Abc_NtkDontCareWinCollectRoots_rec(baseabc.Abc_ObjFanout(o, i), roots)
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Collects the roots of the window.]
-
-  Description [Roots of the window are the nodes that have at least
-  one fanout that it not in the TFO of the leaves.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Abc_NtkDontCareWinCollectRoots(p *Odc_Man_t) {
-    assert(!Abc_NodeIsTravIdCurrent(p.pNode), "!Abc_NodeIsTravIdCurrent(p.pNode)");
-    // mark the node with the old traversal ID
-    Abc_NodeSetTravIdCurrent( p.pNode ); 
-    // collect the roots
-    Vec_PtrClear( p.vRoots );
-    Abc_NtkDontCareWinCollectRoots_rec( p.pNode, p.vRoots );
+	assert(baseabc.Abc_NodeIsTravIdCurrent(p.pNode) == 0, "pivot traversal state")
+	baseabc.Abc_NodeSetTravIdCurrent(p.pNode)
+	vec.Vec_PtrClear(p.vRoots)
+	Abc_NtkDontCareWinCollectRoots_rec(p.pNode, p.vRoots)
 }
- 
-/**Function*************************************************************
-
-  Synopsis    [Recursively adds missing nodes and leaves.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     [] 
-
-***********************************************************************/
-func Abc_NtkDontCareWinAddMissing_rec(p *Odc_Man_t, pObj *Abc_Obj_t) int32 {
-    var pFanin *Abc_Obj_t;
-    var i int32;
-    // skip the already collected leaves and branches
-    if Abc_NodeIsTravIdCurrent(pObj) {
-        return 1; }
-    // if this is not an internal node - make it a new branch
-    if !Abc_NodeIsTravIdPrevious(pObj) || Abc_ObjIsCi(pObj) { //|| (int)pObj->Level <= p->nLevLeaves )
-    
-        Abc_NodeSetTravIdCurrent( pObj );
-        Vec_PtrPush( p.vBranches, pObj );
-        return Vec_PtrSize(p.vBranches) <= 32;
-    }
-    // visit the fanins of the node
-    // inlining of macro Abc_ObjForEachFanin
-    for  i = 0; (i < Abc_ObjFaninNum(pObj)) && (((pFanin) = Abc_ObjFanin(pObj, i)), 1); i++  {
-        if !(Abc_NtkDontCareWinAddMissing_rec( p, pFanin ) != 0) {
-            return 0; }
-    }
-    return 1;
+func Abc_NtkDontCareWinAddMissing_rec(p *Odc_Man_t, o *Abc_Obj_t) int32 {
+	if baseabc.Abc_NodeIsTravIdCurrent(o) != 0 {
+		return 1
+	}
+	if baseabc.Abc_NodeIsTravIdPrevious(o) == 0 || baseabc.Abc_ObjIsCi(o) != 0 {
+		baseabc.Abc_NodeSetTravIdCurrent(o)
+		vec.Vec_PtrPush(p.vBranches, o)
+		if vec.Vec_PtrSize(p.vBranches) <= 32 {
+			return 1
+		}
+		return 0
+	}
+	for i := int32(0); i < baseabc.Abc_ObjFaninNum(o); i++ {
+		if Abc_NtkDontCareWinAddMissing_rec(p, baseabc.Abc_ObjFanin(o, i)) == 0 {
+			return 0
+		}
+	}
+	return 1
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Adds to the window nodes and leaves in the TFI of the roots.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Abc_NtkDontCareWinAddMissing(p *Odc_Man_t) int32 {
-    var pObj *Abc_Obj_t;
-    var i int32;
-    // set the leaves
-    Abc_NtkIncrementTravId( p.pNode.pNtk );
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vLeaves)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vLeaves, i)), 1); i++  {
-        Abc_NodeSetTravIdCurrent( pObj );
-    }        
-    // explore from the roots
-    Vec_PtrClear( p.vBranches );
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vRoots)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vRoots, i)), 1); i++  {
-        if !(Abc_NtkDontCareWinAddMissing_rec( p, pObj ) != 0) {
-            return 0; }
-    }
-    return 1;
+	baseabc.Abc_NtkIncrementTravId(p.pNode.Network())
+	for i := int32(0); i < int32(vec.Vec_PtrSize(p.vLeaves)); i++ {
+		baseabc.Abc_NodeSetTravIdCurrent(odcEntry(p, p.vLeaves, i))
+	}
+	vec.Vec_PtrClear(p.vBranches)
+	for i := int32(0); i < int32(vec.Vec_PtrSize(p.vRoots)); i++ {
+		if Abc_NtkDontCareWinAddMissing_rec(p, odcEntry(p, p.vRoots, i)) == 0 {
+			return 0
+		}
+	}
+	return 1
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Computes window for the node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Abc_NtkDontCareWindow(p *Odc_Man_t) int32 {
-    // mark the TFO of the collected nodes up to the given level (p->pNode->Level + p->nWinTfoMax)
-    Abc_NtkDontCareWinSweepLeafTfo( p );
-    // find the roots of the window
-    Abc_NtkDontCareWinCollectRoots( p );
-    if Vec_PtrSize(p.vRoots) == 1 && Vec_PtrEntry(p.vRoots, 0) == p.pNode {
-//        printf( "Empty window\n" );
-        return 0;
-    }
-    // add the nodes in the TFI of the roots that are not yet in the window
-    if !(Abc_NtkDontCareWinAddMissing( p ) != 0) {
-//        printf( "Too many branches (%d)\n", Vec_PtrSize(p->vBranches) );
-        return 0;
-    }
-    return 1;
+	Abc_NtkDontCareWinSweepLeafTfo(p)
+	Abc_NtkDontCareWinCollectRoots(p)
+	if vec.Vec_PtrSize(p.vRoots) == 1 && odcEntry(p, p.vRoots, 0) == p.pNode {
+		return 0
+	}
+	return Abc_NtkDontCareWinAddMissing(p)
 }
 
-
-
-
-
-/**Function*************************************************************
-
-  Synopsis    [Performing hashing of two AIG Literals.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Odc_HashKey(iFan0 Odc_Lit_t, iFan1 Odc_Lit_t, TableSize int32) uint32 {
-    var Key uint32;
-    Key ^= Odc_Regular(iFan0) * 7937;
-    Key ^= Odc_Regular(iFan1) * 2971;
-    Key ^= Odc_IsComplement(iFan0) * 911;
-    Key ^= Odc_IsComplement(iFan1) * 353;
-    return Key % TableSize;
+func Odc_HashKey(a, b Odc_Lit_t, size int32) uint32 {
+	return uint32((uint32(Odc_Regular(a))*7937 ^ uint32(Odc_Regular(b))*2971 ^ uint32(Odc_IsComplement(a))*911 ^ uint32(Odc_IsComplement(b))*353) % uint32(size))
+}
+func Odc_HashLookup(p *Odc_Man_t, a, b Odc_Lit_t) *Odc_Lit_t {
+	assert(a < b, "canonical ODC fanins")
+	h := int(Odc_HashKey(a, b, p.nTableSize))
+	if p.pTable[h] == 0 {
+		vec.Vec_IntPush(p.vUsedSpots, int32(h))
+	}
+	link := &p.pTable[h]
+	for *link != 0 {
+		o := Odc_Lit2Obj(p, *link)
+		if o.iFan0 == a && o.iFan1 == b {
+			return link
+		}
+		link = &o.iNext
+	}
+	return link
+}
+func Odc_And(p *Odc_Man_t, a, b Odc_Lit_t) Odc_Lit_t {
+	if a == b {
+		return a
+	}
+	if a == Odc_Not(b) {
+		return Odc_Const0()
+	}
+	if Odc_Regular(a) == 0 {
+		if a == 0 {
+			return b
+		}
+		return 1
+	}
+	if Odc_Regular(b) == 0 {
+		if b == 0 {
+			return a
+		}
+		return 1
+	}
+	if a > b {
+		a, b = b, a
+	}
+	entry := Odc_HashLookup(p, a, b)
+	if *entry != 0 {
+		return *entry
+	}
+	o := Odc_ObjNew(p)
+	o.iFan0 = a
+	o.iFan1 = b
+	o.uMask = Odc_Lit2Obj(p, Odc_Regular(a)).uMask | Odc_Lit2Obj(p, Odc_Regular(b)).uMask
+	*entry = Odc_Obj2Lit(p, o)
+	return *entry
+}
+func Odc_Or(p *Odc_Man_t, a, b Odc_Lit_t) Odc_Lit_t {
+	return Odc_Not(Odc_And(p, Odc_Not(a), Odc_Not(b)))
+}
+func Odc_Xor(p *Odc_Man_t, a, b Odc_Lit_t) Odc_Lit_t {
+	return Odc_Or(p, Odc_And(p, a, Odc_Not(b)), Odc_And(p, Odc_Not(a), b))
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Checks if the given name node already exists in the table.]
-
-  Description []
-  
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Odc_HashLookup(p *Odc_Man_t, iFan0 Odc_Lit_t, iFan1 Odc_Lit_t) *Odc_Lit_t {
-    var pObj *Odc_Obj_t;
-    var pEntry *Odc_Lit_t;
-    var uHashKey uint32;
-    assert(iFan0 < iFan1, "iFan0 < iFan1");
-    // get the hash key for this node
-    uHashKey = Odc_HashKey( iFan0, iFan1, p.nTableSize );
-    // remember the spot in the hash table that will be used
-    if p.pTable[uHashKey] == 0 {
-        Vec_IntPush( p.vUsedSpots, uHashKey ); }
-    // find the entry
-    for  pEntry = p.pTable + uHashKey; *pEntry; pEntry = &pObj.iNext  {
-        pObj = Odc_Lit2Obj( p, *pEntry );
-        if pObj.iFan0 == iFan0 && pObj.iFan1 == iFan1 {
-            return pEntry; }
-    }
-    return pEntry;
+func odcTransferRec(p *Odc_Man_t, node, pivot *Abc_Obj_t, memo map[*Abc_Obj_t]uint32) uint32 {
+	if v, ok := memo[node]; ok {
+		return v
+	}
+	if node == pivot {
+		return uint32(Odc_Const1())<<16 | uint32(Odc_Const0())
+	}
+	a := odcTransferRec(p, baseabc.Abc_ObjFanin0(node), pivot, memo)
+	b := odcTransferRec(p, baseabc.Abc_ObjFanin1(node), pivot, memo)
+	lo := Odc_And(p, Odc_NotCond(Odc_Lit_t(a), baseabc.Abc_ObjFaninC0(node)), Odc_NotCond(Odc_Lit_t(b), baseabc.Abc_ObjFaninC1(node)))
+	hi := Odc_And(p, Odc_NotCond(Odc_Lit_t(a>>16), baseabc.Abc_ObjFaninC0(node)), Odc_NotCond(Odc_Lit_t(b>>16), baseabc.Abc_ObjFaninC1(node)))
+	v := uint32(hi)<<16 | uint32(lo)
+	memo[node] = v
+	return v
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Finds node by structural hashing or creates a new node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Odc_And(p *Odc_Man_t, iFan0 Odc_Lit_t, iFan1 Odc_Lit_t) Odc_Lit_t {
-    var pObj *Odc_Obj_t;
-    var pEntry *Odc_Lit_t;
-    var uMask0, uMask1 uint32;
-    var Temp int32;
-    // consider trivial cases
-    if iFan0 == iFan1 {
-        return iFan0; }
-    if iFan0 == Odc_Not(iFan1) {
-        return Odc_Const0(); }
-    if Odc_Regular(iFan0) == Odc_Const1() {
-        if iFan0 == Odc_Const1() {
-            return iFan1;
-        } else {
-            return Odc_Const0();
-        } }
-    if Odc_Regular(iFan1) == Odc_Const1() {
-        if iFan1 == Odc_Const1() {
-            return iFan0;
-        } else {
-            return Odc_Const0();
-        } }
-    // canonicize the fanin order
-    if iFan0 > iFan1 {
-        Temp = iFan0;
-iFan0 = iFan1;
-iFan1 = Temp; }
-    // check if a node with these fanins exists
-    pEntry = Odc_HashLookup( p, iFan0, iFan1 );
-    if *pEntry {
-        return *pEntry; }
-    // create a new node
-    pObj = Odc_ObjNew( p );
-    pObj.iFan0 = iFan0;
-    pObj.iFan1 = iFan1;
-    pObj.iNext = 0;
-    pObj.TravId = 0;
-    // set the mask
-    uMask0 = Odc_Lit2Obj(p, Odc_Regular(iFan0)).uMask;
-    uMask1 = Odc_Lit2Obj(p, Odc_Regular(iFan1)).uMask;
-    pObj.uMask = uMask0 | uMask1;
-    // add to the table
-    *pEntry = Odc_Obj2Lit( p, pObj );
-    return *pEntry;
+func Abc_NtkDontCareTransfer_rec(p *Odc_Man_t, node, pivot *Abc_Obj_t) uint32 {
+	return odcTransferRec(p, node, pivot, map[*Abc_Obj_t]uint32{})
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Boolean OR.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Odc_Or(p *Odc_Man_t, iFan0 Odc_Lit_t, iFan1 Odc_Lit_t) Odc_Lit_t {
-    return Odc_Not( Odc_And(p, Odc_Not(iFan0), Odc_Not(iFan1)) );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Boolean XOR.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Odc_Xor(p *Odc_Man_t, iFan0 Odc_Lit_t, iFan1 Odc_Lit_t) Odc_Lit_t {
-    return Odc_Or( p, Odc_And(p, iFan0, Odc_Not(iFan1)), Odc_And(p, Odc_Not(iFan0), iFan1) );
-}
-
-
-
-
-
-/**Function*************************************************************
-
-  Synopsis    [Transfers the window into the AIG package.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkDontCareTransfer_rec(p *Odc_Man_t, pNode *Abc_Obj_t, pPivot *Abc_Obj_t) any {
-    var uData0, uData1 uint32;
-    var uLit0, uLit1, uRes0, uRes1 Odc_Lit_t;
-    assert(!Abc_ObjIsComplement(pNode), "!Abc_ObjIsComplement(pNode)");
-    // skip visited objects
-    if Abc_NodeIsTravIdCurrent(pNode) {
-        return pNode.pCopy; }
-    Abc_NodeSetTravIdCurrent(pNode);
-    assert(Abc_ObjIsNode(pNode), "Abc_ObjIsNode(pNode)");
-    // consider the case when the node is the pivot
-    if pNode == pPivot {
-        return pNode.pCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)((Odc_Const1() << 16) | Odc_Const0()); }
-    // compute the cofactors
-    uData0 = uint32((ABC_PTRUINT_T))Abc_NtkDontCareTransfer_rec( p, Abc_ObjFanin0(pNode), pPivot );
-    uData1 = uint32((ABC_PTRUINT_T))Abc_NtkDontCareTransfer_rec( p, Abc_ObjFanin1(pNode), pPivot );
-    // find the 0-cofactor
-    uLit0 = Odc_NotCond( (Odc_Lit_t)(uData0 & 0xffff), Abc_ObjFaninC0(pNode) );
-    uLit1 = Odc_NotCond( (Odc_Lit_t)(uData1 & 0xffff), Abc_ObjFaninC1(pNode) );
-    uRes0 = Odc_And( p, uLit0, uLit1 );
-    // find the 1-cofactor
-    uLit0 = Odc_NotCond( (Odc_Lit_t)(uData0 >> 16), Abc_ObjFaninC0(pNode) );
-    uLit1 = Odc_NotCond( (Odc_Lit_t)(uData1 >> 16), Abc_ObjFaninC1(pNode) );
-    uRes1 = Odc_And( p, uLit0, uLit1 );
-    // find the result
-    return pNode.pCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)((uRes1 << 16) | uRes0);
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Transfers the window into the AIG package.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Abc_NtkDontCareTransfer(p *Odc_Man_t) int32 {
-    var pObj *Abc_Obj_t;
-    var uRes0, uRes1 Odc_Lit_t;
-    var uLit Odc_Lit_t;
-    var uData uint32;
-    var i int32;
-    Abc_NtkIncrementTravId( p.pNode.pNtk );
-    // set elementary variables at the leaves 
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vLeaves)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vLeaves, i)), 1); i++  {
-        uLit = Odc_Var( p, i );
-        pObj.pCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)((uLit << 16) | uLit);
-        Abc_NodeSetTravIdCurrent(pObj);
-    }
-    // set elementary variables at the branched 
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vBranches)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vBranches, i)), 1); i++  {
-        uLit = Odc_Var( p, i+p.nVarsMax );
-        pObj.pCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)((uLit << 16) | uLit);
-        Abc_NodeSetTravIdCurrent(pObj);
-    }
-    // compute the AIG for the window
-    p.iRoot = Odc_Const0();
-    // inlining of macro Vec_PtrForEachEntry
-    for  i = 0; (i < Vec_PtrSize(p.vRoots)) && (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vRoots, i)), 1); i++  {
-        uData = uint32((ABC_PTRUINT_T))Abc_NtkDontCareTransfer_rec( p, pObj, p.pNode );
-        // get the cofactors
-        uRes0 = uData & 0xffff;
-        uRes1 = uData >> 16;
-        // compute the miter
-//        assert( uRes0 != uRes1 ); // may be false if the node is redundant w.r.t. this root
-        uLit = Odc_Xor( p, uRes0, uRes1 );
-        p.iRoot = Odc_Or( p, p.iRoot, uLit );
-    }
-    return 1;
+	memo := map[*Abc_Obj_t]uint32{}
+	for i := int32(0); i < int32(vec.Vec_PtrSize(p.vLeaves)); i++ {
+		memo[odcEntry(p, p.vLeaves, i)] = uint32(Odc_Var(p, i))<<16 | uint32(Odc_Var(p, i))
+	}
+	for i := int32(0); i < int32(vec.Vec_PtrSize(p.vBranches)); i++ {
+		l := Odc_Var(p, i+p.nVarsMax)
+		memo[odcEntry(p, p.vBranches, i)] = uint32(l)<<16 | uint32(l)
+	}
+	p.iRoot = Odc_Const0()
+	for i := int32(0); i < int32(vec.Vec_PtrSize(p.vRoots)); i++ {
+		d := odcTransferRec(p, odcEntry(p, p.vRoots, i), p.pNode, memo)
+		p.iRoot = Odc_Or(p, p.iRoot, Odc_Xor(p, Odc_Lit_t(d), Odc_Lit_t(d>>16)))
+	}
+	return 1
 }
 
-
-/**Function*************************************************************
-
-  Synopsis    [Recursively computes the pair of cofactors.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkDontCareCofactors_rec(p *Odc_Man_t, Lit Odc_Lit_t, uMask uint32) uint32 {
-    var pObj *Odc_Obj_t;
-    var uData0, uData1 uint32;
-    var uLit0, uLit1, uRes0, uRes1 Odc_Lit_t;
-    assert(!(Odc_IsComplement(Lit) != 0), "!Odc_IsComplement(Lit)");
-    // skip visited objects
-    pObj = Odc_Lit2Obj( p, Lit );
-    if Odc_ObjIsTravIdCurrent(p, pObj) != 0 {
-        return pObj.uData; }
-    Odc_ObjSetTravIdCurrent(p, pObj);
-    // skip objects out of the cone
-    if (pObj.uMask & uMask) == 0 {
-        return pObj.uData = ((Lit << 16) | Lit); }
-    // consider the case when the node is the var
-    if pObj.uMask == uMask && (Odc_IsTerm(p, Lit) != 0) {
-        return pObj.uData = ((Odc_Const1() << 16) | Odc_Const0()); }
-    // compute the cofactors
-    uData0 = Abc_NtkDontCareCofactors_rec( p, Odc_ObjFanin0(pObj), uMask );
-    uData1 = Abc_NtkDontCareCofactors_rec( p, Odc_ObjFanin1(pObj), uMask );
-    // find the 0-cofactor
-    uLit0 = Odc_NotCond( (Odc_Lit_t)(uData0 & 0xffff), Odc_ObjFaninC0(pObj) );
-    uLit1 = Odc_NotCond( (Odc_Lit_t)(uData1 & 0xffff), Odc_ObjFaninC1(pObj) );
-    uRes0 = Odc_And( p, uLit0, uLit1 );
-    // find the 1-cofactor
-    uLit0 = Odc_NotCond( (Odc_Lit_t)(uData0 >> 16), Odc_ObjFaninC0(pObj) );
-    uLit1 = Odc_NotCond( (Odc_Lit_t)(uData1 >> 16), Odc_ObjFaninC1(pObj) );
-    uRes1 = Odc_And( p, uLit0, uLit1 );
-    // find the result
-    return pObj.uData = ((uRes1 << 16) | uRes0);
+func Abc_NtkDontCareCofactors_rec(p *Odc_Man_t, l Odc_Lit_t, mask uint32) uint32 {
+	assert(l&1 == 0, "regular cofactors literal")
+	o := Odc_Lit2Obj(p, l)
+	if Odc_ObjIsTravIdCurrent(p, o) != 0 {
+		return o.uData
+	}
+	Odc_ObjSetTravIdCurrent(p, o)
+	if o.uMask&mask == 0 {
+		o.uData = uint32(l)<<16 | uint32(l)
+		return o.uData
+	}
+	if o.uMask == mask && Odc_IsTerm(p, l) != 0 {
+		o.uData = uint32(Odc_Const1())<<16 | uint32(Odc_Const0())
+		return o.uData
+	}
+	a := Abc_NtkDontCareCofactors_rec(p, Odc_ObjFanin0(o), mask)
+	b := Abc_NtkDontCareCofactors_rec(p, Odc_ObjFanin1(o), mask)
+	lo := Odc_And(p, Odc_NotCond(Odc_Lit_t(a), Odc_ObjFaninC0(o)), Odc_NotCond(Odc_Lit_t(b), Odc_ObjFaninC1(o)))
+	hi := Odc_And(p, Odc_NotCond(Odc_Lit_t(a>>16), Odc_ObjFaninC0(o)), Odc_NotCond(Odc_Lit_t(b>>16), Odc_ObjFaninC1(o)))
+	o.uData = uint32(hi)<<16 | uint32(lo)
+	return o.uData
+}
+func Abc_NtkDontCareQuantify(p *Odc_Man_t) int32 {
+	assert(p.iRoot < 0xffff && vec.Vec_PtrSize(p.vBranches) <= 32, "ODC quantification bounds")
+	for i := int32(0); i < int32(vec.Vec_PtrSize(p.vBranches)); i++ {
+		Odc_ManIncrementTravId(p)
+		d := Abc_NtkDontCareCofactors_rec(p, Odc_Regular(p.iRoot), uint32(1)<<uint(i))
+		a := Odc_NotCond(Odc_Lit_t(d), Odc_IsComplement(p.iRoot))
+		b := Odc_NotCond(Odc_Lit_t(d>>16), Odc_IsComplement(p.iRoot))
+		p.iRoot = Odc_Or(p, a, b)
+		if Odc_ObjNum(p) > ABC_DC_MAX_NODES/2 {
+			return 0
+		}
+	}
+	return 1
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Quantifies the branch variables.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkDontCareQuantify(p *Odc_Man_t) int32 {   
-    var uRes0, uRes1 Odc_Lit_t;
-    var uData uint32;
-    var i int32;
-    assert(p.iRoot < 0xffff, "p.iRoot < 0xffff");
-    assert(Vec_PtrSize(p.vBranches) <= 32, "Vec_PtrSize(p.vBranches) <= 32"); // the mask size
-    for  i = 0; i < Vec_PtrSize(p.vBranches); i++  {
-        // compute the cofactors w.r.t. this variable
-        Odc_ManIncrementTravId( p );
-        uData = Abc_NtkDontCareCofactors_rec( p, Odc_Regular(p.iRoot), (1 << i) );
-        uRes0 = Odc_NotCond( (Odc_Lit_t)(uData & 0xffff), Odc_IsComplement(p.iRoot) );
-        uRes1 = Odc_NotCond( (Odc_Lit_t)(uData >> 16),    Odc_IsComplement(p.iRoot) );
-        // quantify this variable existentially
-        p.iRoot = Odc_Or( p, uRes0, uRes1 );
-        // check the limit
-        if Odc_ObjNum(p) > ABC_DC_MAX_NODES/2 {
-            return 0; }
-    }
-    assert(p.nObjs <= p.nObjsAlloc, "p.nObjs <= p.nObjsAlloc");
-    return 1;
-}
-
-
-
-/**Function*************************************************************
-
-  Synopsis    [Set elementary truth tables for PIs.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Abc_NtkDontCareSimulateSetElem2(p *Odc_Man_t) {
-    var pData *uint32;
-    var i, k int32;
-    for  k = 0; k < p.nVarsMax; k++  {
-        pData = Odc_ObjTruth( p, Odc_Var(p, k) );
-        Abc_InfoClear( pData, p.nWords );
-        for  i = 0; i < p.nBits; i++  {
-            if i & (1 << k) {
-                pData[i>>5] |= (1 << (i&31)); }
-        }
-    }
+	for k := int32(0); k < p.nVarsMax; k++ {
+		d := Odc_ObjTruth(p, Odc_Var(p, k))
+		clear(d)
+		for bit := int32(0); bit < p.nBits; bit++ {
+			if bit&(1<<uint(k)) != 0 {
+				d[bit>>5] |= uint32(1) << uint(bit&31)
+			}
+		}
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Set elementary truth tables for PIs.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Abc_NtkDontCareSimulateSetElem(p *Odc_Man_t) {
-    var pData, pData2 *uint32;
-    var k int32;
-    for  k = 0; k < p.nVarsMax; k++  {
-        pData = Odc_ObjTruth( p, Odc_Var(p, k) );
-        pData2 = (unsigned *)Vec_PtrEntry( p.vTruthsElem, k );
-        Abc_InfoCopy( pData, pData2, p.nWords );
-    }
+	for k := int32(0); k < p.nVarsMax; k++ {
+		copy(Odc_ObjTruth(p, Odc_Var(p, k)), vec.Vec_PtrEntry(p.vTruthsElem, int(k)).([]uint32))
+	}
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Set random simulation words for PIs.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
 func Abc_NtkDontCareSimulateSetRand(p *Odc_Man_t) {
-    var pData *uint32;
-    var w, k, Number int32;
-    for  w = 0; w < p.nWords; w++  {
-        Number = rand();
-        for  k = 0; k < p.nVarsMax; k++  {
-            pData = Odc_ObjTruth( p, Odc_Var(p, k) );
-            pData[w] = (Number & (1<<k)) ? ~0 : 0;
-        }
-    }
+	for w := int32(0); w < p.nWords; w++ {
+		n := p.rng.next()
+		for k := int32(0); k < p.nVarsMax; k++ {
+			d := Odc_ObjTruth(p, Odc_Var(p, k))
+			if n&(uint32(1)<<uint(k)) != 0 {
+				d[w] = ^uint32(0)
+			} else {
+				d[w] = 0
+			}
+		}
+	}
+}
+func Abc_NtkDontCareCountMintsWord(p *Odc_Man_t, d []uint32) int32 {
+	var n int32
+	for w := int32(0); w < p.nWords; w++ {
+		if d[w] != 0 {
+			n++
+		}
+	}
+	return n
+}
+func Abc_NtkDontCareTruthOne(p *Odc_Man_t, l Odc_Lit_t) {
+	o := Odc_Lit2Obj(p, l)
+	dst, a, b := Odc_ObjTruth(p, l), Odc_ObjTruth(p, Odc_ObjFanin0(o)), Odc_ObjTruth(p, Odc_ObjFanin1(o))
+	for i := int32(0); i < p.nWords; i++ {
+		x, y := a[i], b[i]
+		if Odc_ObjFaninC0(o) != 0 {
+			x = ^x
+		}
+		if Odc_ObjFaninC1(o) != 0 {
+			y = ^y
+		}
+		dst[i] = x & y
+	}
+}
+func Abc_NtkDontCareSimulate_rec(p *Odc_Man_t, l Odc_Lit_t) {
+	if Odc_IsTerm(p, l) != 0 {
+		return
+	}
+	o := Odc_Lit2Obj(p, l)
+	if Odc_ObjIsTravIdCurrent(p, o) != 0 {
+		return
+	}
+	Odc_ObjSetTravIdCurrent(p, o)
+	Abc_NtkDontCareSimulate_rec(p, Odc_ObjFanin0(o))
+	Abc_NtkDontCareSimulate_rec(p, Odc_ObjFanin1(o))
+	Abc_NtkDontCareTruthOne(p, l)
+}
+func Abc_NtkDontCareSimulate(p *Odc_Man_t, d []uint32) int32 {
+	Odc_ManIncrementTravId(p)
+	l := Odc_Regular(p.iRoot)
+	Abc_NtkDontCareSimulate_rec(p, l)
+	copy(d, Odc_ObjTruth(p, l))
+	if Odc_IsComplement(p.iRoot) != 0 {
+		for i := range d[:p.nWords] {
+			d[i] = ^d[i]
+		}
+	}
+	return extra.Extra_TruthCountOnes(d, p.nVarsMax)
+}
+func Abc_NtkDontCareSimulateBefore(p *Odc_Man_t, d []uint32) int32 {
+	const iters = 2
+	rounds := p.nBits / p.nWords
+	var c int32
+	for i := 0; i < iters; i++ {
+		Abc_NtkDontCareSimulateSetRand(p)
+		Abc_NtkDontCareSimulate(p, d)
+		c += Abc_NtkDontCareCountMintsWord(p, d)
+	}
+	return c * rounds / iters
 }
 
-/**Function*************************************************************
-
-  Synopsis    [Set random simulation words for PIs.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkDontCareCountMintsWord(p *Odc_Man_t, puTruth *uint32) int32 {
-    var w, Counter int32;
-    for  w = 0; w < p.nWords; w++  {
-        if puTruth[w] {
-            Counter++; }
-    }
-    return Counter;
+func Abc_NtkDontCareCompute(p *Odc_Man_t, node *Abc_Obj_t, leaves *Vec_Ptr_t, d []uint32) int32 {
+	start := util.Abc_Clock()
+	p.nWins++
+	assert(baseabc.Abc_ObjIsComplement(node) == 0 && baseabc.Abc_ObjIsNode(node) != 0 && int32(vec.Vec_PtrSize(leaves)) <= p.nVarsMax, "ODC compute arguments")
+	p.vLeaves, p.pNode = leaves, node
+	clk := util.Abc_Clock()
+	ret := Abc_NtkDontCareWindow(p)
+	p.timeWin += util.Abc_Clock() - clk
+	if ret == 0 {
+		p.timeAbort += util.Abc_Clock() - start
+		res.Abc_InfoFill(d, p.nWords)
+		p.nWinsEmpty++
+		return 0
+	}
+	if p.fVeryVerbose != 0 {
+		fmt.Printf(" %5d : Leaf = %2d Root = %2d Bran = %2d | ", node.ID, vec.Vec_PtrSize(leaves), vec.Vec_PtrSize(p.vRoots), vec.Vec_PtrSize(p.vBranches))
+	}
+	clk = util.Abc_Clock()
+	Abc_NtkDontCareTransfer(p)
+	p.timeMiter += util.Abc_Clock() - clk
+	clk = util.Abc_Clock()
+	nm := Abc_NtkDontCareSimulateBefore(p, d)
+	p.timeSim += util.Abc_Clock() - clk
+	if p.fVeryVerbose != 0 {
+		fmt.Printf("AIG = %5d %6.2f %% ", Odc_NodeNum(p), 100*float64(p.nBits-nm)/float64(p.nBits))
+	}
+	if 100*float64(p.nBits-nm)/float64(p.nBits) < float64(p.nPercCutoff) {
+		p.timeAbort += util.Abc_Clock() - start
+		if p.fVeryVerbose != 0 {
+			fmt.Println("Simulation cutoff.")
+		}
+		res.Abc_InfoFill(d, p.nWords)
+		p.nSimsEmpty++
+		return 0
+	}
+	clk = util.Abc_Clock()
+	ret = Abc_NtkDontCareQuantify(p)
+	p.timeQuant += util.Abc_Clock() - clk
+	if ret == 0 {
+		p.timeAbort += util.Abc_Clock() - start
+		if p.fVeryVerbose != 0 {
+			fmt.Println("=== Overflow! ===")
+		}
+		res.Abc_InfoFill(d, p.nWords)
+		p.nQuantsOver++
+		return 0
+	}
+	clk = util.Abc_Clock()
+	Abc_NtkDontCareSimulateSetElem(p)
+	nm = Abc_NtkDontCareSimulate(p, d)
+	p.timeTruth += util.Abc_Clock() - clk
+	if p.fVeryVerbose != 0 {
+		fmt.Printf("AIG = %5d %6.2f %%\n", Odc_NodeNum(p), 100*float64(p.nBits-nm)/float64(p.nBits))
+	}
+	p.timeTotal += util.Abc_Clock() - start
+	p.nWinsFinish++
+	p.nTotalDcs += int32(100 * float64(p.nBits-nm) / float64(p.nBits))
+	return nm
 }
-
-/**Function*************************************************************
-
-  Synopsis    [Simulates one node.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkDontCareTruthOne(p *Odc_Man_t, Lit Odc_Lit_t) {
-    var pObj *Odc_Obj_t;
-    var pInfo, pInfo1, pInfo2 *uint32;
-    var k, fComp1, fComp2 int32;
-    assert(!(Odc_IsComplement( Lit ) != 0), "!Odc_IsComplement( Lit )");
-    assert(!(Odc_IsTerm( p, Lit ) != 0), "!Odc_IsTerm( p, Lit )");
-    // get the truth tables
-    pObj   = Odc_Lit2Obj( p, Lit );
-    pInfo  = Odc_ObjTruth( p, Lit );
-    pInfo1 = Odc_ObjTruth( p, Odc_ObjFanin0(pObj) );
-    pInfo2 = Odc_ObjTruth( p, Odc_ObjFanin1(pObj) );
-    fComp1 = Odc_ObjFaninC0( pObj );
-    fComp2 = Odc_ObjFaninC1( pObj );
-    // simulate
-    if fComp1 && (fComp2 != 0) {
-        for  k = 0; k < p.nWords; k++  {
-            pInfo[k] = ~pInfo1[k] & ~pInfo2[k];
-        }
-    } else if fComp1 && !(fComp2 != 0) {
-        for  k = 0; k < p.nWords; k++  {
-            pInfo[k] = ~pInfo1[k] &  pInfo2[k];
-        }
-    } else if !fComp1 && (fComp2 != 0) {
-        for  k = 0; k < p.nWords; k++  {
-            pInfo[k] =  pInfo1[k] & ~pInfo2[k];
-        }
-    } else { // if ( fComp1 && fComp2 )
-        for  k = 0; k < p.nWords; k++  {
-            pInfo[k] =  pInfo1[k] &  pInfo2[k];
-        } }
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Computes the truth table.]
-
-  Description []
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkDontCareSimulate_rec(p *Odc_Man_t, Lit Odc_Lit_t) {
-    var pObj *Odc_Obj_t;
-    assert(!(Odc_IsComplement(Lit) != 0), "!Odc_IsComplement(Lit)");
-    // skip terminals
-    if Odc_IsTerm(p, Lit) != 0 {
-        return; }
-    // skip visited objects
-    pObj = Odc_Lit2Obj( p, Lit );
-    if Odc_ObjIsTravIdCurrent(p, pObj) != 0 {
-        return; }
-    Odc_ObjSetTravIdCurrent(p, pObj);
-    // call recursively
-    Abc_NtkDontCareSimulate_rec( p, Odc_ObjFanin0(pObj) );
-    Abc_NtkDontCareSimulate_rec( p, Odc_ObjFanin1(pObj) );
-    // construct the truth table
-    Abc_NtkDontCareTruthOne( p, Lit );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Computes the truth table of the care set.]
-
-  Description [Returns the number of ones in the simulation info.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkDontCareSimulate(p *Odc_Man_t, puTruth *uint32) int32 {
-    Odc_ManIncrementTravId( p );
-    Abc_NtkDontCareSimulate_rec( p, Odc_Regular(p.iRoot) );
-    Abc_InfoCopy( puTruth, Odc_ObjTruth(p, Odc_Regular(p.iRoot)), p.nWords );
-    if Odc_IsComplement(p.iRoot) != 0 {
-        Abc_InfoNot( puTruth, p.nWords ); }
-    return Extra_TruthCountOnes( puTruth, p.nVarsMax );
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Computes the truth table of the care set.]
-
-  Description [Returns the number of ones in the simulation info.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkDontCareSimulateBefore(p *Odc_Man_t, puTruth *uint32) int32 {
-    var nIters int32  = 2;
-    var nRounds, Counter, r int32;
-    // decide how many rounds to simulate
-    nRounds = p.nBits / p.nWords;
-    Counter = 0;
-    for  r = 0; r < nIters; r++  {
-        Abc_NtkDontCareSimulateSetRand( p );
-        Abc_NtkDontCareSimulate( p, puTruth );
-        Counter += Abc_NtkDontCareCountMintsWord( p, puTruth );
-    }
-    // normalize
-    Counter = Counter * nRounds / nIters;
-    return Counter;
-}
-
-/**Function*************************************************************
-
-  Synopsis    [Computes ODCs for the node in terms of the cut variables.]
-
-  Description [Returns the number of don't care minterms in the truth table.
-  In particular, this procedure returns 0 if there is no don't-cares.]
-               
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-func Abc_NtkDontCareCompute(p *Odc_Man_t, pNode *Abc_Obj_t, vLeaves *Vec_Ptr_t, puTruth *uint32) int32 {
-    var nMints, RetValue int32;
-    var clk abctime;
-    var clkTotal abctime = Abc_Clock();
-
-    p.nWins++;
-    
-    // set the parameters
-    assert(!Abc_ObjIsComplement(pNode), "!Abc_ObjIsComplement(pNode)");
-    assert(Abc_ObjIsNode(pNode), "Abc_ObjIsNode(pNode)");
-    assert(Vec_PtrSize(vLeaves) <= p.nVarsMax, "Vec_PtrSize(vLeaves) <= p.nVarsMax");
-    p.vLeaves = vLeaves;
-    p.pNode = pNode;
-
-    // compute the window
-clk = Abc_Clock();
-    RetValue = Abc_NtkDontCareWindow( p );
-p.timeWin += Abc_Clock() - clk;
-    if !(RetValue != 0) {
-p.timeAbort += Abc_Clock() - clkTotal;
-        Abc_InfoFill( puTruth, p.nWords );
-        p.nWinsEmpty++;        
-        return 0;
-    }
-
-    if p.fVeryVerbose {
-        fmt.Printf(" %5d : ", pNode.Id);
-        fmt.Printf("Leaf = %2d ", Vec_PtrSize(p.vLeaves));
-        fmt.Printf("Root = %2d ", Vec_PtrSize(p.vRoots));
-        fmt.Printf("Bran = %2d ", Vec_PtrSize(p.vBranches));
-        fmt.Printf(" |  ");
-    }
-
-    // transfer the window into the AIG package
-clk = Abc_Clock();
-    Abc_NtkDontCareTransfer( p );
-p.timeMiter += Abc_Clock() - clk;
-
-    // simulate to estimate the amount of don't-cares
-clk = Abc_Clock();
-    nMints = Abc_NtkDontCareSimulateBefore( p, puTruth );
-p.timeSim += Abc_Clock() - clk;
-    if p.fVeryVerbose {
-        fmt.Printf("AIG = %5d ", Odc_NodeNum(p));
-        fmt.Printf("%6.2f %%  ", 100.0 * (p.nBits - nMints) / p.nBits);
-    }
-
-    // if there is less then the given percentage of don't-cares, skip
-    if 100.0 * (p.nBits - nMints) / p.nBits < 1.0 * p.nPercCutoff {
-p.timeAbort += Abc_Clock() - clkTotal;
-        if p.fVeryVerbose {
-            fmt.Printf("Simulation cutoff.\n"); }
-        Abc_InfoFill( puTruth, p.nWords );
-        p.nSimsEmpty++;
-        return 0;
-    }
-
-    // quantify external variables
-clk = Abc_Clock();
-    RetValue = Abc_NtkDontCareQuantify( p );
-p.timeQuant += Abc_Clock() - clk;
-    if !(RetValue != 0) {
-p.timeAbort += Abc_Clock() - clkTotal;
-        if p.fVeryVerbose {
-            fmt.Printf("=== Overflow! ===\n"); }
-        Abc_InfoFill( puTruth, p.nWords );
-        p.nQuantsOver++;
-        return 0;
-    }
-
-    // get the truth table
-clk = Abc_Clock();
-    Abc_NtkDontCareSimulateSetElem( p );
-    nMints = Abc_NtkDontCareSimulate( p, puTruth );
-p.timeTruth += Abc_Clock() - clk;
-    if p.fVeryVerbose {
-        fmt.Printf("AIG = %5d ", Odc_NodeNum(p));
-        fmt.Printf("%6.2f %%  ", 100.0 * (p.nBits - nMints) / p.nBits);
-        fmt.Printf("\n");
-    }
-p.timeTotal += Abc_Clock() - clkTotal;
-    p.nWinsFinish++;
-    p.nTotalDcs += int32((100.0 * (p.nBits - nMints) / p.nBits));
-    return nMints;
-}
-
-
-////////////////////////////////////////////////////////////////////////
-///                       END OF FILE                                ///
-////////////////////////////////////////////////////////////////////////
-
-
-//ABC_NAMESPACE_IMPL_END
-
