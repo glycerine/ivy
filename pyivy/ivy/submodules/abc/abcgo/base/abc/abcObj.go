@@ -107,11 +107,9 @@ func Abc_NtkDupObj(n *Network, old *Object, copyName int32) *Object {
 				nameObject = old.fanins[0].Object
 			}
 		}
-		if name, ok := old.network.names.Lookup(int32(nameObject.ID)); ok {
-			o.SetName(name)
-		}
+		o.SetName(Abc_ObjName(nameObject))
 	}
-	old.Copy = o
+	setCopy(old, o.Signal())
 	return o
 }
 func Abc_NtkDupBox(n *Network, box *Object, copyName int32) *Object {
