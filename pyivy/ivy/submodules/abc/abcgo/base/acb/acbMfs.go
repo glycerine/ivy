@@ -1451,7 +1451,7 @@ func Acb_MfsStop(p *Acb_Mfs_t) {
 	sat_solver_delete(p.pSat[0])
 	sat_solver_delete(p.pSat[1])
 	sat_solver_delete(p.pSat[2])
-	ABC_FREE(p)
+	p = nil
 }
 func Acb_NtkObjMffcEstimate(pNtk *Acb_Ntk_t, iObj int32) int32 {
 	var k int32
