@@ -29,3 +29,12 @@ func TestSetRenodeConfigPreservesCDefaultsAndCallback(t *testing.T) {
 		t.Fatal("renode manager or cost callback was not installed")
 	}
 }
+
+func TestTimingReadsSignedSourcePermutationByte(t *testing.T) {
+	if got := ifTimingPinDelay([]byte{0x9c}, 0); got != -100 {
+		t.Fatalf("signed permutation byte = %v, want -100", got)
+	}
+	if got := ifTimingPinDelay([]byte{7}, 0); got != 7 {
+		t.Fatalf("positive permutation byte = %v, want 7", got)
+	}
+}

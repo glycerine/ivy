@@ -51,7 +51,9 @@ func ifTimingPinDelay(permutation []byte, pin int) float32 {
 	if permutation[pin] == IF_BIG_CHAR {
 		return -float32(IF_BIG_CHAR)
 	}
-	return float32(permutation[pin])
+	// C's pPerm field is `char *`; values such as Renode's -100 sentinel
+	// are stored in the same byte array but read back as signed chars.
+	return float32(int8(permutation[pin]))
 }
 func If_CutDelay(p *If_Man_t, _ *If_Obj_t, c *If_Cut_t) float32 {
 	maximum := float32(-IF_FLOAT_LARGE)
