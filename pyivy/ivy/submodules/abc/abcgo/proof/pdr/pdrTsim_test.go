@@ -32,6 +32,8 @@ func TestPdrTsimPropagationAndUndo(t *testing.T) {
 	po := g.AddOutput(gate)
 	g.AddOutput(lo)
 	aig.Aig_ManSetRegNum(g, 1)
+	aig.Aig_ManFanoutStart(g)
+	defer aig.Aig_ManFanoutStop(g)
 	cos := tsimVec(int32(po.NodeID()))
 	cis, nodes := tsimVec(), tsimVec()
 	Pdr_ManCollectCone(g, cos, cis, nodes)

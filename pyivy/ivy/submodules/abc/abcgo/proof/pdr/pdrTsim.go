@@ -142,7 +142,7 @@ func Pdr_ManExtendOne(g *aig.Graph, e aig.Edge, undo, vis *vec.Vec_Int_t) int32 
 	vec.Vec_IntPush(vis, int32(e.NodeID()))
 	for i := 0; i < vec.Vec_IntSize(vis); i++ {
 		id := vec.Vec_IntEntry(vis, i)
-		for handle := aig.Aig_ObjFanout0Int(g, id); handle != 0; handle = aig.Aig_ObjFanoutNext(g, handle) {
+		for k, handle := int32(0), aig.Aig_ObjFanout0Int(g, id); k < aig.Aig_ObjRefs(g, aig.Aig_ManObj(g, id)); k, handle = k+1, aig.Aig_ObjFanoutNext(g, handle) {
 			f := aig.Aig_ManObj(g, handle/2)
 			if !aig.Aig_ObjIsTravIdCurrent(g, f) {
 				continue
