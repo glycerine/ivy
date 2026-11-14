@@ -222,6 +222,22 @@ func reorderCommit(dd *DdManager, roots reorderRoots, h *reorderHeap, order []in
 			nextBDD[key] = node
 		}
 	}
+	// Scratch rebuilding changes child edges and may reuse an old handle for a
+	// different internal node. Rebuild its reference count from retained owners
+	// and the new incoming edges instead of keeping counts from the old DAG.
+	// ZDD edges are outside this reorder and still own their constant children.
+	zddIncoming := map[*DdNode]uint64{}
+	for _, parent := range dd.zddUnique {
+		if !parent.childrenReleased {
+			zddIncoming[Cudd_Regular(parent.T)]++
+			zddIncoming[Cudd_Regular(parent.E)]++
+		}
+	}
+	for fresh, node := range mapped {
+		refs := uint64(h.external[fresh]) + uint64(h.incoming[fresh]) + zddIncoming[node]
+		node.Ref = uint32(min(refs, uint64(math.MaxUint32)))
+		node.childrenReleased = false
+	}
 	for _, table := range []map[bddUniqueKey]*DdNode{oldBDD, oldADD} {
 		for _, old := range table {
 			if !usedOld[old] {

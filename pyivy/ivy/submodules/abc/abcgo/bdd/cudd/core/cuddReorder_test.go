@@ -289,6 +289,11 @@ func TestBDDHeapReorderLeavesZDDStateUntouched(t *testing.T) {
 	if Cudd_ShuffleHeap(dd, []int{2, 0, 1}) != 1 || Cudd_zddCount(dd, z) != count || z.Ref != 1 {
 		t.Fatal("shuffle changed referenced ZDD")
 	}
+	Cudd_RecursiveDeref(dd, root)
+	Cudd_RecursiveDeref(dd, z)
+	if remaining := Cudd_CheckZeroRef(dd); remaining != 0 {
+		t.Fatalf("BDD/ZDD owners released but %d external roots remain", remaining)
+	}
 }
 func TestSiftLimitsSymmetryMetadataAndMinSize(t *testing.T) {
 	dd := NewBDDManager(3)
