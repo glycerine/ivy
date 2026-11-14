@@ -289,13 +289,30 @@ func Rtm_ManToAig(p *Rtm_Man_t) *Graph {
 	return g
 }
 
-// Backward mode retains ABC's unconstrained-initial-state contract (VOID latches).
+// Rtm_ManRetime follows ABC's edge-retiming driver. Forward mode preserves
+// zero-reset behavior. Backward mode discards initial values, inserts VOID
+// latches, then reconstructs them as zero without solving reset constraints.
+// Consequently backward mode need not preserve the original zero-reset trace.
 func Rtm_ManRetime(g *Graph, forward, steps, verbose int32) *Graph {
 	if g.nRegs == 0 {
 		return Aig_ManDupOrdered(g)
 	}
 	if len(g.ClockDomains) > 1 {
 		panic("aig: edge retiming requires a single clock domain")
+	}
+	if len(g.ClockDomains) == 1 {
+		// The edge algorithm cannot track different domains through a move.
+		// A partial list must not silently absorb previously unassigned latches.
+		seen := make([]bool, g.nRegs)
+		for _, reg := range g.ClockDomains[0] {
+			if reg < 0 || reg >= g.nRegs || seen[reg] {
+				panic("aig: invalid edge-retiming clock-domain membership")
+			}
+			seen[reg] = true
+		}
+		if len(g.ClockDomains[0]) != len(seen) {
+			panic("aig: edge retiming requires every register in its clock domain")
+		}
 	}
 	p := Rtm_ManFromAig(g)
 	defer Rtm_ManFree(p)

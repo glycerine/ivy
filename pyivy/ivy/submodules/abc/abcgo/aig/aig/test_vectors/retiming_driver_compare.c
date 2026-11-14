@@ -1,0 +1,57 @@
+#include "aig/aig/aigRet.c"
+
+/* Standalone console environment; all graph/retiming algorithms are source. */
+unsigned enable_dbg_outs = 1;
+int Abc_FrameIsBridgeMode(void) { return 0; }
+int Gia_ManToBridgeText(FILE *f, int n, unsigned char *s) { abort(); }
+char *vnsprintf(const char *f, va_list a) { abort(); }
+
+static Aig_Obj_t *read_lit(Aig_Obj_t **objects)
+{
+    int lit;
+    assert(scanf("%d", &lit) == 1);
+    return Aig_NotCond(objects[lit/2], lit&1);
+}
+
+int main(void)
+{
+    Aig_Man_t *g, *out;
+    Aig_Obj_t *objects[1024], *a, *b, *obj;
+    unsigned char values[4096], state[1024], next[1024];
+    int npis, nregs, nnodes, npos, forward, steps, i, frame;
+    while (scanf("%d%d%d%d%d%d", &npis, &nregs, &nnodes, &npos, &forward, &steps) == 6)
+    {
+        g = Aig_ManStart(100);
+        objects[0] = Aig_ManConst1(g);
+        for (i = 1; i <= npis+nregs; i++) objects[i] = Aig_ObjCreateCi(g);
+        for (i = 1+npis+nregs; i <= npis+nregs+nnodes; i++)
+        {
+            a = read_lit(objects); b = read_lit(objects);
+            objects[i] = Aig_And(g, a, b);
+        }
+        for (i = 0; i < npos+nregs; i++) Aig_ObjCreateCo(g, read_lit(objects));
+        Aig_ManSetRegNum(g, nregs);
+        out = Rtm_ManRetime(g, forward, steps, 0);
+        printf("registers %d\n", Aig_ManRegNum(out));
+        memset(state, 0, sizeof(state));
+        for (frame = 0; frame < 64; frame++)
+        {
+            memset(values, 0, sizeof(values));
+            values[0] = 1;
+            Aig_ManForEachCi(out, obj, i)
+                values[obj->Id] = i < npis ? ((frame*13+(frame>>2)*7) >> i)&1 : state[i-npis];
+            Aig_ManForEachNode(out, obj, i)
+                values[obj->Id] = (values[Aig_ObjFaninId0(obj)] ^ Aig_ObjFaninC0(obj)) &
+                                 (values[Aig_ObjFaninId1(obj)] ^ Aig_ObjFaninC1(obj));
+            Aig_ManForEachCo(out, obj, i)
+            {
+                int value = values[Aig_ObjFaninId0(obj)] ^ Aig_ObjFaninC0(obj);
+                if (i < npos) printf("%d", value); else next[i-npos] = value;
+            }
+            puts("");
+            memcpy(state, next, Aig_ManRegNum(out));
+        }
+        Aig_ManStop(out); Aig_ManStop(g);
+    }
+    return 0;
+}
