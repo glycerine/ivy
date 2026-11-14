@@ -304,7 +304,9 @@ func (g *Graph) Check() error {
 		if count == 2 {
 			level++
 		}
-		if n.Level != level {
+		// CO level fields are auxiliary metadata in C. Incremental timing
+		// updates logic nodes and may leave a CO's cached level unchanged.
+		if n.Kind != Output && n.Level != level {
 			// Choice classes can use ordinary structural levels until the
 			// explicit choice-level pass annotates their maximum depth.
 			choiceLevel := level

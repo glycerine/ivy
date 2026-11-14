@@ -33,6 +33,8 @@ func TestArrivalLevelsSurviveRecomputation(t *testing.T) {
 	p.node(a).Level = 4
 	n := p.AND(a, b)
 	p.AddOutput(n)
+	Aig_ManFanoutStart(p)
+	defer Aig_ManFanoutStop(p)
 	Aig_ManUpdateLevel(p, n)
 	if p.node(a).Level != 4 || p.node(n).Level != 5 {
 		t.Fatal("input arrival level lost")
