@@ -108,12 +108,9 @@ func Aig_ObjDelete(p *Graph, e Edge) {
 }
 func Aig_ObjDelete_rec(p *Graph, e Edge, freeTop int32) {
 	p.editDepth++
-	defer func() {
-		p.editDepth--
-		if freeTop != 0 {
-			p.refreshFanouts()
-		}
-	}()
+	// Disconnect updates each circular fanout link. Rebuilding afterward would
+	// change the surviving iteration order after a CO pin was patched.
+	defer func() { p.editDepth-- }()
 	n := *p.node(e)
 	if n.Kind == Constant || n.Kind == Input {
 		return

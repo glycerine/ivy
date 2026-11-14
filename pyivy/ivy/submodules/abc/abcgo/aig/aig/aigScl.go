@@ -152,12 +152,16 @@ func sclLiveRegisters(p *Graph) []bool {
 	live := make([]bool, registers)
 	for i, input := range p.inputs[pis:] {
 		live[i] = p.node(input).TravID == p.travID
+		// C clears the LO's pNext/CioId union after using it for the LI link.
+		p.node(input).CioID = 0
+		delete(p.next, input.NodeID())
 	}
 	return live
 }
 func Aig_ManSeqCleanup(p *Graph) int32 {
 	_, pis, pos := sclLayout(p)
 	live := sclLiveRegisters(p)
+	var removedInputs []Edge
 	inputs := append([]Edge(nil), p.inputs[:pis]...)
 	outputs := append([]Edge(nil), p.outputs[:pos]...)
 	oldToNew := make([]int32, len(live))
@@ -179,9 +183,14 @@ func Aig_ManSeqCleanup(p *Graph) int32 {
 			}
 			continue
 		}
-		p.deleted[input.NodeID()] = true
+		// Keep the LO addressable until recursive cleanup releases its pins.
+		// C can dereference its arena object even after clearing its vObjs slot.
+		removedInputs = append(removedInputs, input)
 		if p.node(output).Kind == Output {
+			Aig_ObjDisconnect(p, Aig_Regular(output))
 			p.deleted[output.NodeID()] = true
+		} else {
+			p.node(output).Refs-- // Legacy implicit CO consumer.
 		}
 	}
 	if p.ClockDomains != nil {
@@ -240,53 +249,53 @@ func Aig_ManSeqCleanup(p *Graph) int32 {
 	p.nTruePis = int32(pis)
 	p.nTruePos = int32(len(outputs)) - p.nRegs
 	p.FlopNumbers = numbers
-	return sclCleanupLogic(p)
+	Aig_ManSetCioIds(p)
+	before := Aig_ManNodeNum(p)
+	Aig_ManCleanup(p)
+	sclReleaseRemovedInputBuffers(p, removedInputs)
+	for _, input := range removedInputs {
+		p.deleted[input.NodeID()] = true
+	}
+	return before - Aig_ManNodeNum(p)
 }
 
-// Register removal currently reclaims storage by reachability after dropping
-// interface entries. Its buffer boundary needs a separate source review; keep
-// this broader sweep separate from reference-driven Aig_ManCleanup.
-func sclCleanupLogic(p *Graph) int32 {
-	before := Aig_ManNodeNum(p)
-	live := make([]bool, len(p.nodes))
-	live[0] = true
-	for _, e := range p.inputs {
-		live[e.NodeID()] = true
+// C can retain a standalone buffer whose fanin is a removed LO. Reclaim only
+// those dead buffer cones so the Go graph has no edges into deleted terminals;
+// independent standalone buffers retain the source cleanup behavior.
+func sclReleaseRemovedInputBuffers(p *Graph, inputs []Edge) {
+	removed := make(map[int]bool, len(inputs))
+	for _, input := range inputs {
+		if p.node(input).Refs != 0 {
+			removed[input.NodeID()] = true
+		}
 	}
-	var visit func(Edge)
-	visit = func(e Edge) {
+	if len(removed) == 0 {
+		return
+	}
+	depends := map[int]bool{}
+	var visit func(Edge) bool
+	visit = func(e Edge) bool {
 		id := e.NodeID()
-		if live[id] {
-			return
+		if removed[id] {
+			return true
 		}
-		live[id] = true
-		n := p.nodes[id]
-		if n.Kind == And || n.Kind == ExclusiveOr || (n.Kind == Buffer || n.Kind == Output) {
-			visit(n.Fanins[0])
-			if n.Kind != Buffer && n.Kind != Output {
-				visit(n.Fanins[1])
+		if value, known := depends[id]; known {
+			return value
+		}
+		for _, fanin := range nodeFanins(*p.node(e)) {
+			if visit(fanin) {
+				depends[id] = true
+				return true
 			}
 		}
+		depends[id] = false
+		return false
 	}
-	for _, e := range p.outputs {
-		visit(e)
-	}
-	for id, n := range p.nodes {
-		if p.deleted[id] || live[id] {
-			continue
-		}
-		p.deleted[id] = true
-		if n.Kind == And || n.Kind == ExclusiveOr {
-			a, b := n.Fanins[0], n.Fanins[1]
-			if a > b {
-				a, b = b, a
-			}
-			delete(p.nodeTable(n.Kind), edgePair{a, b})
+	for id, node := range p.nodes {
+		if !p.deleted[id] && node.Kind == Buffer && node.Refs == 0 && visit(Edge(id)<<1) {
+			Aig_ObjDelete_rec(p, Edge(id)<<1, 1)
 		}
 	}
-	p.recountReferences()
-	p.refreshFanouts()
-	return before - Aig_ManNodeNum(p)
 }
 func Aig_ManSeqCleanupBasic(p *Graph) int32 {
 	_, _, pos := sclLayout(p)
@@ -297,15 +306,17 @@ func Aig_ManSeqCleanupBasic(p *Graph) int32 {
 		}
 		output := p.outputs[pos+reg]
 		if p.node(output).Kind == Output {
-			p.node(output).Fanins[0] = dupPhase(p.Const0(), output.Complemented())
+			Aig_ObjPatchFanin0(p, Aig_Regular(output), dupPhase(p.Const0(), output.Complemented()))
 		} else {
+			p.node(output).Refs--
 			p.outputs[pos+reg] = p.Const0()
+			p.node(p.Const0()).Refs++
+			if p.node(output).Refs == 0 && p.node(output).Kind != Input && p.node(output).Kind != Constant {
+				Aig_ObjDelete_rec(p, Aig_Regular(output), 1)
+			}
 		}
 	}
-	p.recountReferences()
-	p.recomputeLevels()
-	p.refreshFanouts()
-	return sclCleanupLogic(p)
+	return Aig_ManCleanup(p)
 }
 func Aig_ManCountMergeRegs(p *Graph) int32 {
 	writeMergeRegisterStats(os.Stdout, p)

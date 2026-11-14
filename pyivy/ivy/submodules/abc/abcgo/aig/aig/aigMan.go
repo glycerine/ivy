@@ -81,10 +81,8 @@ func Aig_ManCleanup(p *Graph) int32 {
 			roots = append(roots, Edge(id)<<1)
 		}
 	}
-	// Batch fanout rebuilding while the source recursive deletion updates each
-	// physical pin and reference count. Buffers are deleted only recursively.
-	p.editDepth++
-	defer func() { p.editDepth--; p.refreshFanouts() }()
+	// Recursive deletion updates physical pins and their reference counts.
+	// Buffers are deleted only recursively.
 	for _, root := range roots {
 		Aig_ObjDelete_rec(p, root, 1)
 	}

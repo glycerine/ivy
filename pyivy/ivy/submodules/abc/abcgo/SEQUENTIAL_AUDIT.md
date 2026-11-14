@@ -1852,3 +1852,59 @@ SAIG race checks pass in 59.416s/29.039s/5.858s
 (`/tmp/abcgo-seq-cleanup-review.log`). The sequential wrapper repairs and their
 expanded state oracle remain a separate open checkpoint; this commit records
 only the independently justified local patch repair.
+
+### Sequential cleanup wrapper source repair
+
+The expanded review confirmed that the earlier sequential sweep had not
+preserved C's primitive boundaries. Four new regressions failed before repair:
+standalone buffers were reclaimed, Basic counted gates that C's patch already
+deleted, full cleanup retained old terminal IDs after removing an earlier
+register, and Basic left LO pNext/CioId scratch intact. The original C boundary
+fixture confirms each expected result. Corrected the earlier standalone-buffer
+test, which had encoded the broader Go behavior rather than checking C.
+
+Both wrappers now finish through reference-driven Aig_ManCleanup. Full cleanup
+disconnects removed LIs, keeps removed LOs addressable until pin release is
+finished, restores current terminal IDs and then retires those LO slots. This
+models C's still-addressable arena objects without retaining invalid Go edges.
+Basic patches unused LIs through Aig_ObjPatchFanin0, preserving its immediate
+old-cone deletion and returning only the final cleanup's count. LO union scratch
+is cleared after register reachability, as in C. Removed the duplicate general
+reachability sweep. Existing clock/one-hot/flop metadata remapping stays intact.
+
+A native fixture also exposes an upstream corner case: C retains a standalone
+buffer even when that buffer references an LO whose vObjs slot was removed.
+Go deliberately repairs only these invalid-input buffer cones. Independent
+standalone buffers survive, matching the ordinary C boundary. New red/green
+coverage checks selective reclamation; shared/nested AND/XOR/buffer cones with
+and without fanouts pass Graph.Check and independent sequential trace
+comparison. The small dependency memo uses one map and only runs when removed
+inputs still have physical consumers. This is a narrow upstream safety repair,
+not a substitute cleanup algorithm.
+
+The complete state oracle then failed on a circular fanout ordering difference:
+post-deletion rebuilds sorted surviving pins instead of preserving C's removal/
+append order after patching a CO. Per-pin disconnection already maintains the
+index, so recursive deletion, manager cleanup and Basic no longer perform those
+redundant rebuilds. A minimal regression and C fixture confirm the constant
+fanout order 12,16,14 (not sorted 12,14,16).
+
+Across 512 generated sequential graphs and 1,024 calls, actual C and Go match
+removed-gate counts, register/interface lists, flop-number remapping, explicit
+true PI/PO metadata, manager generation, hash counts, live-object references,
+fanins, cached levels, traversal IDs, CI/CO IDs and physical fanout cycles.
+Cases cover zero through three registers, full/Basic modes, active/inactive
+fanout indices, safe standalone buffers and physical XORs. Deliberately stale
+terminal IDs, CO levels of 99 and stale true-count metadata check exact scratch
+scope. Repeated cleanup checks idempotence without hiding source side effects.
+The invalid-input C corner is tested separately rather than requiring Go to
+reproduce an inconsistent graph.
+
+Focused race checks pass in 4.937s
+(`/tmp/abcgo-seq-cleanup-focused-final.log`); the final small boundary/order
+fixture passes in 1.052s. Full AIG and ABCI race suites pass in
+60.275s/28.775s; SAIG verification is recorded in
+`/tmp/abcgo-seq-cleanup-final-review.log`. This closes the reopened sequential
+cleanup wrapper boundaries. Remaining AIG work includes the manager miter's
+phase-normalization contract and the final file/function inventory. Completed
+package count remains 1/131; the overall sequential audit is active.

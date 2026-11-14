@@ -351,12 +351,12 @@ func TestSequentialCleanupRejectsBadClockMetadataWithoutMutation(t *testing.T) {
 	Aig_ManSeqCleanup(p)
 }
 
-func TestSequentialCleanupReportsGatesNotBufferStorage(t *testing.T) {
+func TestSequentialCleanupRetainsStandaloneBufferStorage(t *testing.T) {
 	p := NewGraph()
 	a, b := p.NewInput(), p.NewInput()
 	gate := p.AND(a, b)
 	buffer := Aig_ObjCreate(p, &Node{Kind: Buffer, Fanins: [2]Edge{gate, InvalidEdge}, Level: p.node(gate).Level})
-	if count := Aig_ManSeqCleanup(p); count != 1 || !p.deleted[gate.NodeID()] || !p.deleted[buffer.NodeID()] {
+	if count := Aig_ManSeqCleanup(p); count != 0 || p.deleted[gate.NodeID()] || p.deleted[buffer.NodeID()] {
 		t.Fatal(count, p.deleted)
 	}
 }

@@ -258,3 +258,18 @@ CO's auxiliary level. It now updates only the target CO and its physical fanout
 pin, matching aigObj.c, while retaining recursive old-cone deletion. Full AIG,
 ABCI and SAIG race checks pass. Sequential wrapper/state comparisons are still
 in progress as a separate checkpoint.
+
+Sequential cleanup boundary repair: four red regressions exposed buffer
+liveness, Basic's patch/delete return count, terminal-ID refresh and LO union
+scratch mismatches. Both wrappers now use source reference-driven cleanup;
+the general reachability sweep is removed. Native state comparison matches
+1,024 calls across 512 graphs, including metadata, live levels/traversal IDs,
+references, hash state and circular fanout order. Red native ordering evidence
+also justified removing redundant post-deletion rebuilds.
+
+An original C boundary fixture confirms its retained-buffer reference to a
+removed LO. Go reclaims only those invalid-input buffer cones, preserving
+independent buffers. Shared/nested cone tests check graph validity and sequential
+traces with and without fanout indices. Full AIG/ABCI race and focused source
+checks pass; SAIG status is in /tmp/abcgo-seq-cleanup-final-review.log. These
+checks close the reopened wrapper boundary review, not the entire AIG audit.
