@@ -34,3 +34,30 @@ func TestGiarfReducedLevel(t *testing.T) {
 		t.Fatal("reduced graph or roots are incorrect")
 	}
 }
+
+func TestGiarfTemporaryRepresentativeRequiresProof(t *testing.T) {
+	g := Gia_ManStart(1)
+	a, b, c := Gia_ManAppendCi(g), Gia_ManAppendCi(g), Gia_ManAppendCi(g)
+	ab := Gia_ManAppendAnd(g, a, b)
+	head := Gia_ManAppendAnd(g, ab, c)
+	lower, current := Gia_ManAppendAnd(g, a, b), Gia_ManAppendAnd(g, a, b)
+	Gia_ManLevelNum(g)
+	g.StartRepresentatives()
+	Gia_ObjSetRepr(g, lower>>1, head>>1)
+	Gia_ObjSetRepr(g, current>>1, head>>1)
+	Gia_ObjSetNext(g, head>>1, lower>>1)
+	Gia_ObjSetNext(g, lower>>1, current>>1)
+	Gia_ObjSetProved(g, current>>1)
+	Gia_ObjSetFailed(g, head>>1)
+	if got := Gia_ObjTempRepr(g, current>>1, 3); got != nil {
+		t.Fatal("selected a temporary representative without a proof")
+	}
+	Gia_ObjSetProved(g, lower>>1)
+	if got := Gia_ObjTempRepr(g, current>>1, 3); got != Gia_ManObj(g, lower>>1) {
+		t.Fatal("lost a proved lower-level representative")
+	}
+	Gia_ObjSetFailed(g, lower>>1)
+	if got := Gia_ObjTempRepr(g, current>>1, 3); got != nil {
+		t.Fatal("selected a representative whose SAT check failed")
+	}
+}

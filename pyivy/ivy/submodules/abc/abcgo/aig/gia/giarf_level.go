@@ -11,7 +11,7 @@ func Gia_ObjTempRepr(p *Gia_Man_t, id, level int32) *Gia_Obj_t {
 		return Gia_ManConst0(p)
 	}
 	for member := repr; member != 0; member = Gia_ObjNext(p, member) {
-		if Gia_ObjFailed(p, member) != 0 {
+		if Gia_ObjFailed(p, member) != 0 || Gia_ObjProved(p, member) == 0 {
 			continue
 		}
 		if member >= id {

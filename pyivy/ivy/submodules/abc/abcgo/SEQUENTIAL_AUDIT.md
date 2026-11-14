@@ -2777,3 +2777,59 @@ full uncached GIA race suite passes in 16.675s and vet passes. Final logs:
 `/tmp/abcgo-gia-equiv-copy-final-race.log` and
 `/tmp/abcgo-gia-equiv-copy-final-vet.log`. Remaining HCD synthesis and broader
 equivalence management still need review; GIA is not counted complete.
+
+Reviewed hcd_synthesis.go against giaHcd.c's parameter defaults, rewrite/
+refactor/balance sequences, three-snapshot construction and choice driver.
+The algorithm passes and option assignments match the source; verbose output
+has fewer intermediate statistics, and Go omits the old debug m3.aig write.
+The existing no-synthesis path correctly uses one snapshot rather than C's
+three-entry placeholder vector, which would discard outputs or assert on
+their count. This review does not claim those C wrapper bugs were reproduced.
+
+Following HCD into giarf_driver.go exposed an actual Boolean failure in
+ordinary AND graphs: the source's `level < levels` bound skips the highest
+level. A balanced 32-input conjunction was retained as a simulated constant
+candidate and rewritten to false with the MiniSat backend. Its complemented
+output was wrong as well, despite a structurally valid returned graph. The
+red end-to-end case is `/tmp/abcgo-gia-hcd-rare-red.log`; a minimal duplicated-
+AND case at level one also showed that no SAT proof ran at all
+(`/tmp/abcgo-gia-highest-level-red.log`). The driver now checks the final level.
+
+Resource-limit review found a separate error: a class with unknown SAT results
+was marked proved if no query returned a counterexample. The direct red case
+reported two unknowns and two proofs; an exhausted-budget end-to-end run still
+rewrote the rare conjunction to false even after fixing the level bound.
+Unknown class queries now prevent that proof marking. At the final boundary,
+only proved, nonfailed equivalences remain eligible for substitution. Filtering
+clears rejected representatives in one scan and rebuilds next links once if
+needed, rather than repeatedly removing members with quadratic class scans.
+This preserves the existing SAT/refinement algorithm and original logic for
+unresolved candidates; no alternative solver or heuristic proof was invented.
+The strict level bound and unknown/proved branch also appear in the original
+giaGiarf.c, so these are documented correctness repairs beyond source behavior,
+not claims of native equivalence for those faulty paths.
+
+Proof provenance needs care across levels: a member can be proved only against
+a temporary lower-level member while its actual head remains unchecked or
+fails a later query. Red tests caught both accepting that unproved head and
+selecting an unproved temporary representative. Final filtering requires the
+member and its real head to be proved/nonfailed (constant zero is intrinsic);
+Gia_ObjTempRepr also requires proof for the selected lower-level candidate.
+Known valid equivalences are still retained by the highest-level driver test.
+Red logs: `/tmp/abcgo-gia-unknown-proof-red.log`,
+`/tmp/abcgo-gia-unproved-head-red.log`, and
+`/tmp/abcgo-gia-unproved-temp-red.log`.
+
+The rare-output test now covers both SAT backends, synthesis on/off and an
+already-exhausted TAS budget, with 198 assignments and both output polarities.
+A four-pigeon/three-hole UNSAT fixture independently exhausts a positive
+one-conflict budget on both backends and checks that an unproved constant is
+not exposed as a proved equivalence. The previously existing equivalence and
+HCD tests remain part of the full package gate. The full uncached GIA race
+suite passes in 17.369s and vet passes; final logs are
+`/tmp/abcgo-gia-giarf-proof-complete-race.log` and
+`/tmp/abcgo-gia-giarf-proof-complete-vet.log`.
+
+Next review includes Giarf simulation/refinement, reduced-level copying and
+their typed-gate assumptions, followed by remaining equivalence metadata and
+transfer families. Original package audit completion remains 2/131.

@@ -73,7 +73,7 @@ func Gia_ComputeEquivalencesLevel(p *Hcd_Man_t, reduced *Gia_Man_t, roots *Vec_P
 			if Vec_PtrSize(members) < 2 {
 				continue
 			}
-			failed := false
+			failed, pending := false, false
 			prev := Vec_PtrEntry(members, Vec_PtrSize(members)-1).(*Gia_Obj_t)
 			for k := 0; k < Vec_PtrSize(members); k++ {
 				member := Vec_PtrEntry(members, k).(*Gia_Obj_t)
@@ -82,6 +82,7 @@ func Gia_ComputeEquivalencesLevel(p *Hcd_Man_t, reduced *Gia_Man_t, roots *Vec_P
 				status, cex := check(a, &b)
 				switch status {
 				case -1:
+					pending = true
 					undecided++
 					Gia_ObjSetFailed(g, prev.id)
 					Gia_ObjSetFailed(g, member.id)
@@ -102,7 +103,7 @@ func Gia_ComputeEquivalencesLevel(p *Hcd_Man_t, reduced *Gia_Man_t, roots *Vec_P
 					}
 				}
 				Gia_ResimulateAndRefine(p, reprID)
-			} else {
+			} else if !pending {
 				for k := 0; k < Vec_PtrSize(members); k++ {
 					Gia_ObjSetProved(g, Vec_PtrEntry(members, k).(*Gia_Obj_t).id)
 				}
@@ -133,7 +134,9 @@ func Gia_ComputeEquivalences(g *Gia_Man_t, limit, useMiniSat, verbose int32) {
 		Hcd_ManSimulateSimple(p)
 		Hcd_ManClassesRefine(p)
 	}
-	for level := int32(1); level < levels; level++ {
+	// The source's strict bound skips the deepest gates, leaving simulation
+	// candidates there unverified before they are used to rewrite the graph.
+	for level := int32(1); level <= levels; level++ {
 		start := time.Now()
 		var roots *Vec_Ptr_t
 		reduced := Gia_GenerateReducedLevel(g, level, &roots)
@@ -141,5 +144,28 @@ func Gia_ComputeEquivalences(g *Gia_Man_t, limit, useMiniSat, verbose int32) {
 		Gia_ManStop(reduced)
 		fmt.Printf("LEVEL %3d (out of %3d) Iters = %3d Time = %s\n", level, levels, iterations, time.Since(start))
 	}
+	giaDropUnprovedEquivalences(g)
 	Gia_GiarfPrintClasses(g)
+}
+
+// Simulation proposes candidates; only successful SAT checks justify
+// substituting them. Preserve original logic after an unknown result or
+// a final simulation refinement that creates an unchecked candidate.
+func giaDropUnprovedEquivalences(g *Gia_Man_t) {
+	proved := func(id int32) bool {
+		return id == 0 || Gia_ObjProved(g, id) != 0 && Gia_ObjFailed(g, id) == 0
+	}
+	changed := false
+	for id := int32(1); id < g.nObjs; id++ {
+		repr := Gia_ObjRepr(g, id)
+		// A member may have been proved only against a temporary lower-level
+		// member. Its actual class head must have passed checking as well.
+		if repr != GIA_VOID && (!proved(id) || !proved(repr)) {
+			Gia_ObjUnsetRepr(g, id)
+			changed = true
+		}
+	}
+	if changed {
+		g.PNexts = Gia_ManDeriveNexts(g)
+	}
 }
