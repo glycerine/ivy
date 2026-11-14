@@ -1290,3 +1290,46 @@ and three packages without tests; its log is
 This completes the current packed-storage review, not the retiming family.
 Queue/autonomous corner cases, backward VOID initialization and the separate
 frontier implementation still need the source review described above.
+
+### Edge-retiming complete driver and reset checkpoint
+
+Added a compiled comparison that executes the original Rtm_ManRetime,
+Rtm_ManToAig, register sharing, graph construction, cleanup and their real C
+dependencies. Only standalone console/bridge hooks are supplied. Compared
+register counts and 64-frame output traces for 26 graphs, both directions,
+and depth limits -1, 0, 1, 2 and 5: all 260 cases match. Directed graphs cover
+register chains, complemented inputs, observable autonomous feedback and
+unobservable PI-driven state; 20 seeded random graphs add reconvergence,
+constants, multiple outputs and feedback. This is 16,640 matched output
+frames, not an exhaustive equivalence proof or an internal queue trace.
+
+Inspection of source scheduling confirms its ordered queue and depth handling
+in Go. Go filters initially queued autonomous objects when popping instead
+of when enqueuing. This does not affect movement order among eligible objects:
+forward reachability propagates through all fanouts and backward reachability
+through all fanins, so an excluded autonomous object cannot become an eligible
+neighbor of a moved object. Existing Go XOR/buffer extensions are outside this
+AND-only compiled comparison.
+
+The directed reset example confirms a source limitation rather than a port
+bug: backward retiming discards initialization, inserts VOID edge values and
+reconstructs them as zero without solving reset constraints. A zero-initialized
+register driven by AND(!a,!b) can therefore produce initial output one after a
+backward move, where the original output was zero. Added an explicit test and
+expanded the public function comment so this is not presented as preservation
+of zero-reset traces. No replacement reset algorithm was invented.
+
+Five red regressions exposed incomplete Go clock-domain validation: an empty,
+partial, duplicate, negative or out-of-range single-domain list was silently
+replaced with membership covering all new registers. The existing single-domain
+restriction now requires every old register exactly once when metadata is
+present. A positive test accepts reversed full membership, checks rebuilt
+membership, verifies source metadata remains unchanged and compares forward
+traces. This is a repair to the Go metadata extension; C's retiming algorithm
+has not changed. Low-level reconstruction metadata after manual manager edits
+and the separate frontier implementation still need review before closing
+the retiming family.
+
+Validation after the clock-domain fix: full AIG and ABCI race suites pass
+(9.838s and 29.439s), recorded in
+`/tmp/abcgo-retiming-driver-review.log`.
