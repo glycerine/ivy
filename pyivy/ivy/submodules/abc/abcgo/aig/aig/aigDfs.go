@@ -295,8 +295,13 @@ func Aig_ManChoiceLevel_rec(p *Graph, e Edge) { p.choiceLevels([]Edge{e}) }
 func Aig_ManChoiceLevel(p *Graph) int32 {
 	Aig_ManSetCioIds(p)
 	defer Aig_ManCleanCioIds(p)
+	p.levelModes = make([]byte, (len(p.nodes)+3)/4)
 	for i := range p.nodes {
+		if p.deleted[i] {
+			continue
+		}
 		p.nodes[i].Level = 0
+		p.setLevelMode(i, levelReset)
 	}
 	roots := append(append([]Edge(nil), p.outputs...), p.inputs...)
 	p.choiceLevels(roots)
@@ -359,6 +364,7 @@ func (p *Graph) choiceLevels(roots []Edge) {
 			}
 		}
 		p.nodes[id].Level = level
+		p.setLevelMode(id, levelChoice)
 		state[id] = 2
 	}
 	for _, e := range roots {

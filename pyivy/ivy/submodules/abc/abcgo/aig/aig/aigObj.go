@@ -282,6 +282,7 @@ func nodeFanins(n Node) []Edge {
 	return nil
 }
 func (p *Graph) recomputeLevels() {
+	p.levelModes = nil
 	state := make([]uint8, len(p.nodes))
 	var visit func(int)
 	visit = func(id int) {
@@ -311,7 +312,7 @@ func (p *Graph) recomputeLevels() {
 		if len(fanins) > 0 {
 			phase = Aig_ObjPhaseReal(p, fanins[0])
 			if len(fanins) == 2 {
-				level++
+				level += nodeLevelCost(n.Kind)
 				if n.Kind == And {
 					phase = phase && Aig_ObjPhaseReal(p, fanins[1])
 				} else {

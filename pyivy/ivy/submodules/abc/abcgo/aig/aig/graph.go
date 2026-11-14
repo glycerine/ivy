@@ -62,6 +62,7 @@ type Graph struct {
 	FlopReprs                                   []int32
 	cutManager                                  *Aig_ManCut_t
 	reverseLevels                               []int32
+	levelModes                                  []byte
 	maxRequiredLevel                            int32
 	order                                       []orderLinks
 	iPrev, iNext, nAndTotal, nAndPrev           int32
@@ -301,8 +302,20 @@ func (g *Graph) Check() error {
 				level = l
 			}
 		}
+		mode := g.levelMode(id)
 		if count == 2 {
-			level++
+			delay := nodeLevelCost(n.Kind)
+			if mode == levelChoice {
+				delay = 1
+			}
+			level += delay
+		}
+		if mode == levelReset {
+			level = 0
+		} else if mode == levelChoice {
+			if other, ok := g.equivs[id]; ok && g.valid(other) {
+				level = max(level, g.node(other).Level)
+			}
 		}
 		// CO level fields are auxiliary metadata in C. Incremental timing
 		// updates logic nodes and may leave a CO's cached level unchanged.
@@ -310,7 +323,7 @@ func (g *Graph) Check() error {
 			// Choice classes can use ordinary structural levels until the
 			// explicit choice-level pass annotates their maximum depth.
 			choiceLevel := level
-			if other, ok := g.equivs[id]; ok && g.valid(other) && g.node(other).Level > choiceLevel {
+			if other, ok := g.equivs[id]; mode == levelStructural && ok && g.valid(other) && g.node(other).Level > choiceLevel {
 				choiceLevel = g.node(other).Level
 			}
 			if n.Level != choiceLevel {

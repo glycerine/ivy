@@ -374,13 +374,14 @@ func Aig_ObjLevelNew(p *Graph, e Edge) int32 {
 		return 0
 	}
 	a, b := p.node(n.Fanins[0]).Level, p.node(n.Fanins[1]).Level
-	if a > b {
-		return int32(a + 1)
-	}
-	return int32(b + 1)
+	return int32(max(a, b) + nodeLevelCost(n.Kind))
 }
-func Aig_ObjSetLevel(p *Graph, e Edge, l int32) int32 { p.node(e).Level = int(l); return l }
-func Aig_ObjClean(p *Graph, e Edge)                   { *p.node(e) = Node{} }
+func Aig_ObjSetLevel(p *Graph, e Edge, l int32) int32 {
+	p.node(e).Level = int(l)
+	p.setLevelMode(e.NodeID(), levelStructural)
+	return l
+}
+func Aig_ObjClean(p *Graph, e Edge) { *p.node(e) = Node{} }
 func Aig_ObjFanout0(p *Graph, e Edge) Edge {
 	for id, n := range p.nodes {
 		if p.deleted[id] {

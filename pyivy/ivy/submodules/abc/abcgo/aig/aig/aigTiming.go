@@ -79,6 +79,7 @@ func Aig_ManUpdateLevel(p *Graph, e Edge) {
 				panic("aig: forward timing queue has inconsistent old level")
 			}
 			n.Level = int(Aig_ObjLevelNew(p, current))
+			p.setLevelMode(current.NodeID(), levelStructural)
 			if n.Level == level {
 				continue
 			}
