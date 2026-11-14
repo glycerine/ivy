@@ -3448,3 +3448,20 @@ Full uncached race tests pass for GIA (45.637s) and its base/acb caller (5.197s)
 (`/tmp/abcgo-quantification-review-vet.log`). Other duplication algorithms,
 including block reduction, still need review. Original completion remains
 2/131; the sequential audit remains active.
+
+Block-reduction review: compared Gia_ManDupBlock with giaDup.c. Its input
+zeroing, output selection, hashing/cleanup and integer register-count reduction
+match the source. No production defect or useful simplification was found.
+Added exhaustive independent truth-table coverage for blocks 1/2/3/6, eight
+polarity choices, real XOR/MUX gates, buffers, constants, interleaved logic/COs,
+and aligned combinational/sequential interfaces. Tests also check identity,
+PI/PO/register counts, empty graphs, nonpositive block sizes, and indivisible
+CI/CO counts. They do not invent behavior for unaligned register blocks.
+
+A separate compiled-original-C fixture uses equivalent ordinary-AND gates;
+all 96 cases and 1,872 assignment rows match. Focused race tests pass in 2.984s
+(`/tmp/abcgo-block-review-race.log`); the subsequently added empty/invalid
+interface cases pass a separate focused race run in 1.020s. GIA vet passes
+(`/tmp/abcgo-block-review-vet.log`). Production code was unchanged after the
+preceding full GIA/base-acb race run. Remaining GIA families still require
+review; original package completion remains 2/131 and the goal stays active.
