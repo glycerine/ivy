@@ -3589,3 +3589,34 @@ other GIA families remain open. Original completion remains 2/131.
 Full uncached race tests pass for GIA (59.249s) and its base/abci caller
 (28.582s), recorded in `/tmp/abcgo-append-mux-phase-race.log`. GIA vet passes
 (`/tmp/abcgo-append-mux-phase-vet.log`). The sequential audit stays active.
+
+Property/constraint composition review: compared Gia_ManDupWithNewPo and
+Gia_ManDupWithConstraints directly with giaDup.c. No production defect or
+useful simplification was found. New independent transition-table coverage
+checks that property inputs are current register outputs, not next-state
+functions; replacing properties preserves all RIs and drops old constraint
+metadata, following C. Constraint conversion checks every PO classification
+mask: ordinary outputs first, complemented constraints next, original RIs
+last, with the replacement constraint count. Constraint conversion retains
+source object counts and both drivers retain identity and normalized layout.
+
+Typed XOR/MUX/buffer graphs include interleaved outputs, three-register
+transition relations, two-output properties, constants, and combinational/
+all-register interfaces. Across 648 cases and 41,472 input/state rows, both
+independent evaluation and the compiled original-C ordinary-AND expansion
+agree. Physical buffers are transparent in the C fixture because its
+AppendAnd-based constraint driver requires distinct fanin objects; they remain
+physical buffers in the Go tests. Additional cases cover empty managers,
+constant properties, a property with zero outputs but live transition logic,
+and six invalid property/type interfaces. Tests check both insufficient and
+excess type counts and reject negative/nonbinary classifications.
+
+The initial focused run passes in 2.056s
+(`/tmp/abcgo-property-constraint-focused.log`). Final focused uncached race
+coverage, including the added boundary and interface checks, passes in 4.955s
+(`/tmp/abcgo-property-constraint-race.log`); GIA vet passes
+(`/tmp/abcgo-property-constraint-vet.log`). No production code changed after
+the previous full GIA/base-abci race run. This closes expanded review coverage
+for the property/constraint functions in dup_compose.go, not the remaining
+GIA duplication or other algorithm families. Original completion stays 2/131;
+the sequential audit remains active.
