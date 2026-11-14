@@ -3488,3 +3488,35 @@ passes in 49.906s (`/tmp/abcgo-cascade-review-race.log`); GIA vet passes
 (`/tmp/abcgo-cascade-review-vet.log`). Append, shared/sequential composition
 and property/constraint families still need expanded review coverage.
 Original completion remains 2/131; the sequential audit remains active.
+
+Sequential append review: a new minimal red regression exposed shared scratch
+state when Gia_ManDupAppendNew receives the same sequential graph twice.
+For PI=0 and first/second register values 1/0, the first copy incorrectly uses
+the second register bank (`/tmp/abcgo-append-independent-red.log`). Duplicate
+the second source through the existing Gia_ManDup only for this aliased,
+sequential case. This gives each bank its own Value mapping without changing
+the common distinct-source path or the source composition algorithm. Source C
+also reuses one scratch mapping for aliased arguments; the native comparison
+below deliberately checks distinct graphs, not agreement with that defect.
+
+Expanded independent transition-table tests cover all eight input/gate
+polarity combinations in either graph and zero/one/two registers per graph,
+including unequal register counts. They check shared PIs, independent state
+banks, PO-before-RI output ordering, and first-source identity. All 576 cases
+and 12,544 input/state rows also match compiled original C on equivalent
+ordinary-AND graphs. Separate alias coverage checks 24 typed cases and 672
+input/state rows, plus the minimal regression. XOR/MUX gates, buffers, direct
+complemented outputs and interleaved CO/logic layouts are included. Native
+prerequisites do not gate the independent Go tests. Test helper duplication
+was removed, and alias cases run once rather than once per unrelated pair.
+The initial expanded fixture used the same object as MUX control and an arm
+for one-register graphs; it was corrected to respect the real-MUX constructor's
+distinct-fanin precondition before comparing results.
+
+Focused tests pass in 1.950s (`/tmp/abcgo-append-review-focused.log`). Full
+uncached GIA race and vet verification is recorded below. Other append,
+property and constraint routines still need expanded review coverage; original
+package completion remains 2/131 and the sequential audit remains active.
+Full uncached GIA race tests pass in 52.317s
+(`/tmp/abcgo-append-review-race.log`), and GIA vet passes
+(`/tmp/abcgo-append-review-vet.log`).

@@ -117,6 +117,10 @@ func Gia_ManDupAppendNew(first, second *Gia_Man_t) *Gia_Man_t {
 	if Gia_ManPiNum(first) != Gia_ManPiNum(second) {
 		panic("gia: primary input count mismatch")
 	}
+	if first == second && Gia_ManRegNum(first) != 0 {
+		// Each register bank needs an independent source-to-copy mapping.
+		second = Gia_ManDup(second)
+	}
 	out := Gia_ManStart(first.nObjs + second.nObjs)
 	out.CopyIdentityFrom(first)
 	Gia_ManHashAlloc(out)
