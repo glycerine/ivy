@@ -3183,3 +3183,36 @@ All 133 module packages/tests compile
 (`/tmp/abcgo-placement-metadata-module-build.log`); unrelated test bodies were
 not run by that gate. Full placement algorithms and other remaining GIA
 families still need review. Original completion remains 2/131.
+
+Embedding/FORCE graph review: both simple builders and the shared supernode
+collector followed only the two stored data pins of real MUXes. Their separate
+control edge was lost, disconnecting control-only logic from placement. Added
+failing embedding and FORCE regressions before fixing
+(`/tmp/abcgo-placement-mux-red.log`). A shared placement-fanin helper retains
+the original two-pin ordering/multiplicity and adds a real MUX's control pin.
+Both simple constructors and clustered cone collection use it. The original
+C builders assume ordinary AND graphs; the ordinary path remains intact.
+
+Regressions check simple and clustered embedding/FORCE graphs with a MUX
+controlled by an otherwise-unused AND cone. Expected root fanins, reachability
+of all four data/control inputs, and valid FORCE refinement permutations now
+pass. A compiled original giaForce.c fixture checks an ordinary AND network
+with a collapsible supernode over all six orders of three outputs, with and
+without clustering. Forward/reverse fanin cross cuts, complete DFS positions,
+the selected forward/reverse cut, and all positions after three refinement
+iterations match source C in every case. This does not claim native agreement
+for the real-MUX omission, which is repaired in Go.
+
+Inspection also found that C's simple FORCE builder sets fCi=0 on CI objects;
+Go already correctly labels them as CIs. That existing correction is retained.
+Native comparisons cover cross-cut/placement behavior, which is unaffected
+because those input objects have no fanins; they do not claim raw flag equality.
+FORCE register feedback remains disabled as in the original source, while
+embedding retains its source register connections.
+
+Focused source/regression tests pass in 1.899s
+(`/tmp/abcgo-placement-control-focused.log`). Full uncached GIA race tests
+pass in 31.475s (`/tmp/abcgo-placement-control-race.log`) and GIA vet passes
+(`/tmp/abcgo-placement-control-vet.log`). Distance/eigensolver/placement
+boundaries and remaining GIA families still need review. Original completion
+remains 2/131 and the sequential goal stays active.

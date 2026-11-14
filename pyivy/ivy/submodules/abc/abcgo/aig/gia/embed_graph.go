@@ -51,6 +51,16 @@ func Emb_ObjAddFanin(o, fanin *Emb_Obj_t) {
 	o.fanins = append(o.fanins, fanin)
 	fanin.fanouts = append(fanin.fanouts, o)
 }
+
+// Placement keeps the source's two stored pins (including repeated buffer
+// pins). Real MUXes add a control pin stored outside the object itself.
+func giaPlacementFanins(g *Gia_Man_t, obj *Gia_Obj_t) []int32 {
+	fanins := []int32{Gia_ObjFaninId0(obj, obj.id), Gia_ObjFaninId1(obj, obj.id)}
+	if Gia_ObjIsMux(g, obj) != 0 {
+		fanins = append(fanins, Gia_ObjFaninId2(g, obj.id))
+	}
+	return fanins
+}
 func Emb_ManCleanTravId(p *Emb_Man_t) {
 	for _, o := range p.objects {
 		o.TravId = 0
@@ -106,8 +116,9 @@ func Emb_ManStartSimple(g *Gia_Man_t) *Emb_Man_t {
 			continue
 		}
 		o := add(obj)
-		Emb_ObjAddFanin(o, byID[Gia_ObjFaninId0(obj, obj.id)])
-		Emb_ObjAddFanin(o, byID[Gia_ObjFaninId1(obj, obj.id)])
+		for _, id := range giaPlacementFanins(g, obj) {
+			Emb_ObjAddFanin(o, byID[id])
+		}
 	}
 	for i := int32(0); i < Gia_ManCoNum(g); i++ {
 		obj := Gia_ManCo(g, i)
@@ -140,8 +151,9 @@ func Emb_ManCollectSuper_rec(p *Gia_Man_t, obj *Gia_Obj_t, super, visit *Vec_Int
 	if Gia_ObjIsAnd(obj) == 0 {
 		panic("gia: unmarked supernode leaf")
 	}
-	Emb_ManCollectSuper_rec(p, Gia_ObjFanin0(obj), super, visit)
-	Emb_ManCollectSuper_rec(p, Gia_ObjFanin1(obj), super, visit)
+	for _, id := range giaPlacementFanins(p, obj) {
+		Emb_ManCollectSuper_rec(p, Gia_ManObj(p, id), super, visit)
+	}
 }
 func Emb_ManCollectSuper(p *Gia_Man_t, obj *Gia_Obj_t, super, visit *Vec_Int_t) {
 	vec.Vec_IntClear(super)

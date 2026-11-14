@@ -91,7 +91,7 @@ func frcManStart(g *Gia_Man_t, cluster bool) *Frc_Man_t {
 			Frc_ManCollectSuper(g, obj, super, visit)
 			fanins = vec.Vec_IntArray(super)
 		} else {
-			fanins = []int32{Gia_ObjFaninId0(obj, obj.id), Gia_ObjFaninId1(obj, obj.id)}
+			fanins = giaPlacementFanins(g, obj)
 		}
 		o := add(obj)
 		for _, id := range fanins {
