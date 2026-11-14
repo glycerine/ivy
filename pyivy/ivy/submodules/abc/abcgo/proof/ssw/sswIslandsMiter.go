@@ -37,7 +37,7 @@ func sswIslandMiter(p0, p1 *aig.Graph) *aig.Graph {
 			}
 			return v ^ (e & 1)
 		}
-		for _, e := range aig.Aig_ManDfsAll(src) {
+		for _, e := range src.TopologicalObjects() {
 			n := src.Node(e)
 			var v aig.Edge
 			switch n.Kind {

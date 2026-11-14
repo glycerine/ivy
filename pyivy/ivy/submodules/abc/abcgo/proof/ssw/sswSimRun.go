@@ -8,7 +8,7 @@ import (
 // Ssw_SmlSimulateOne evaluates all time frames using the current input words.
 func Ssw_SmlSimulateOne(p *Ssw_Sml_t) {
 	start := time.Now()
-	nodes := aig.Aig_ManDfsAll(p.pAig)
+	nodes := p.pAig.TopologicalObjects()
 	outputs := p.pAig.Outputs()
 	inputs := p.pAig.Inputs()
 	nRegs := int(p.pAig.RegisterCount())

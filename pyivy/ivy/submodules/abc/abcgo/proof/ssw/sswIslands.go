@@ -211,7 +211,7 @@ func Ssw_MatchingComplete(p0, p1 *aig.Graph) {
 		}
 		return v ^ (e & 1)
 	}
-	for _, e := range aig.Aig_ManDfsAll(p0) {
+	for _, e := range p0.TopologicalObjects() {
 		n := p0.Node(e)
 		if n.Kind != aig.And && n.Kind != aig.ExclusiveOr && n.Kind != aig.Buffer {
 			continue

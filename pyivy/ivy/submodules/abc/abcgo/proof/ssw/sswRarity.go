@@ -463,7 +463,7 @@ func Ssw_RarManSimulate(p *Ssw_RarMan_t, init *vec.Vec_Int_t, update, first int3
 	for _, obj := range g.Inputs() {
 		check(obj)
 	}
-	for _, obj := range aig.Aig_ManDfsAll(g) {
+	for _, obj := range g.TopologicalObjects() {
 		n := g.Node(obj)
 		if n.Kind != aig.And && n.Kind != aig.ExclusiveOr && n.Kind != aig.Buffer {
 			continue

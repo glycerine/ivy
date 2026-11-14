@@ -10,7 +10,7 @@ func Ssw_FramesWithConstraints(g *aig.Graph, nFrames int32) *aig.Graph {
 		panic("ssw: invalid constrained unrolling")
 	}
 	target := aig.NewGraph()
-	nodes := aig.Aig_ManDfsAll(g)
+	nodes := g.TopologicalObjects()
 	mapped := make([]aig.Edge, len(g.Nodes()))
 	for i := range mapped {
 		mapped[i] = aig.InvalidEdge

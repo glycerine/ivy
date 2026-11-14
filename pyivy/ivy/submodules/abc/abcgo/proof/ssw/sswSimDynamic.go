@@ -43,7 +43,7 @@ func Ssw_SmlSimulateOneFrame(p *Ssw_Sml_t) {
 	start := time.Now()
 	inputs, outputs := p.pAig.Inputs(), p.pAig.Outputs()
 	regs := int(p.pAig.RegisterCount())
-	for _, obj := range aig.Aig_ManDfsAll(p.pAig) {
+	for _, obj := range p.pAig.TopologicalObjects() {
 		kind := p.pAig.Node(obj).Kind
 		if kind == aig.And || kind == aig.ExclusiveOr || kind == aig.Buffer {
 			Ssw_SmlNodeSimulate(p, obj, 0)

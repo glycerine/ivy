@@ -72,7 +72,7 @@ func Ssw_FramesConstrainNode(p *Ssw_Man_t, frames, graph *aig.Graph, obj aig.Edg
 // sswFrameNodes visits all live internal objects in fanin-first order.
 func sswFrameNodes(graph *aig.Graph) []aig.Edge {
 	var nodes []aig.Edge
-	for _, e := range aig.Aig_ManDfsAll(graph) {
+	for _, e := range graph.TopologicalObjects() {
 		if aig.Aig_ObjIsNode(graph, e) || graph.Node(e).Kind == aig.Buffer {
 			nodes = append(nodes, e)
 		}

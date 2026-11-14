@@ -21,7 +21,7 @@ func sswFilterSimulateFrame(p *Ssw_Man_t, piValue func(int) bool) {
 	for i, lo := range inputs[pis:] {
 		sswSetMark(g, lo, g.Node(outputs[pos+i]).MarkB)
 	}
-	for _, obj := range aig.Aig_ManDfsAll(g) {
+	for _, obj := range g.TopologicalObjects() {
 		n := g.Node(obj)
 		switch n.Kind {
 		case aig.And:

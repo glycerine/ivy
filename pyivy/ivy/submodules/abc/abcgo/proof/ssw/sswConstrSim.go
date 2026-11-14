@@ -38,7 +38,7 @@ func Ssw_ManRefineByConstrSim(p *Ssw_Man_t) {
 		sswSetMark(g, li, false)
 	}
 	frames := vec.Vec_IntSize(p.vInits) / pis
-	nodes := aig.Aig_ManDfsAll(g)
+	nodes := g.TopologicalObjects()
 	offset := 0
 	for f := 0; f < frames; f++ {
 		sswSetMark(g, g.Const1(), true)

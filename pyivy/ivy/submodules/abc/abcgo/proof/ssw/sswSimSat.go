@@ -13,7 +13,7 @@ func Ssw_ManResimulateBit(p *Ssw_Man_t, _ aig.Edge, repr aig.Edge) {
 	for i, obj := range g.Inputs() {
 		sswSetMark(g, obj, sswPatternBit(p.pPatWords, i) != 0)
 	}
-	for _, obj := range aig.Aig_ManDfsAll(g) {
+	for _, obj := range g.TopologicalObjects() {
 		n := g.Node(obj)
 		switch n.Kind {
 		case aig.And:
