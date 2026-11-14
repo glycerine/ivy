@@ -745,7 +745,7 @@ func Saig_ManDemiterNew(src *aig.Graph) int32 {
 			if ok {
 				fmt.Println()
 				for _, e := range []aig.Edge{a, b} {
-					for _, s := range aig.Aig_Support(src, e) {
+					for _, s := range aig.Aig_Support(src, aig.Aig_Regular(e)) {
 						if Saig_ObjIsLo(src, s) {
 							fmt.Printf(" %d", aig.Aig_ObjCioId(src, s))
 						}
