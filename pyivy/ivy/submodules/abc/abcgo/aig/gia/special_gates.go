@@ -34,6 +34,10 @@ func Gia_ManAppendMuxReal(p *Gia_Man_t, control, then, otherwise int32) int32 {
 		then, otherwise = otherwise, then
 		control ^= 1
 	}
+	if control == 0 {
+		// Zero marks absent MUX metadata. Keep one node and the selected edge.
+		return Gia_ManAppendBuf(p, otherwise)
+	}
 	obj := Gia_ManAppendObj(p)
 	obj.iDiff0 = uint32(obj.id - (otherwise >> 1))
 	obj.fCompl0 = uint32(otherwise & 1)

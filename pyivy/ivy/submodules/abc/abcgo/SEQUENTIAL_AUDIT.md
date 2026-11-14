@@ -3837,3 +3837,47 @@ controls whose canonical control tag becomes zero, the same value used for
 no-MUX metadata. Add a red truth-table regression before any constructor
 repair. Other duplication/core families remain open; original completion is
 still 2/131 and the sequential audit stays active.
+
+Raw-MUX constant-control follow-up: a minimal red truth-table test confirms
+that AppendMuxReal(0, highData, lowData) returns false for lowData=true,
+highData=false (`/tmp/abcgo-mux-constant-control-red.log`). Sorting the data
+pins may also turn an original constant-true control into the same zero tag.
+Zero is the companion table's no-MUX marker, so these nodes silently become
+ordinary ANDs instead of selecting the lower data input.
+
+After the existing validation and pin ordering, represent canonical control
+zero by the existing AppendBuf primitive on the selected edge. This still
+allocates exactly one node and preserves every subsequent object ID, without
+new type flags or a change in table/wire encoding. All other representable
+MUX cases retain their prior representation. Buffer/MUX counts now agree
+with the actual stored kind, and complemented selected edges are retained.
+The fix is an exact Boolean identity, not a replacement graph algorithm.
+
+The source-header witness reproduces eight legacy failures among 32 raw
+control/data-phase cases; the other 24 cases agree unchanged. Go constructor
+coverage checks 48 constant/variable, data-order, phase and hash-state cases
+(288 assignments) through the original graph, raw clone, both normalization
+modes and cleanup. Five invalid-constructor tests confirm that the buffer
+case does not bypass storage, fanin-distinctness, fanin-validity or active-hash
+phase preconditions and does not allocate on rejection. Focused tests pass
+in 1.809s, then 1.825s with those additional rejection checks, in
+`/tmp/abcgo-mux-constant-control-focused.log` and
+`/tmp/abcgo-mux-constant-control-final-focused.log`.
+
+Full uncached GIA race tests pass in 92.400s
+(`/tmp/abcgo-mux-constant-control-race.log`). The complete module test command
+`go test -count=1 ./...` passes across all 133 current packages (130 tested,
+three without tests), recorded in
+`/tmp/abcgo-mux-constant-control-integration.log`. This integration result is
+not a code-review completion claim for those other packages. GIA vet passes
+(`/tmp/abcgo-mux-constant-control-vet.log`).
+
+A final 64-case DFS integration check maps a source control CI to each
+constant, reverses leaf mappings and covers all data phases with and without
+hashing. It verifies exact one-node allocation and 256 assignment rows against
+the original graph with the control fixed. All new raw-MUX cases, including
+that subsequently added check, pass the focused race run in 2.869s
+(`/tmp/abcgo-mux-constant-control-final-focused-race.log`); production code was
+unchanged after the full-module run. This closes the core follow-up flagged
+in the previous checkpoint. Other GIA families remain open; original package
+completion stays 2/131 and the sequential audit remains active.
