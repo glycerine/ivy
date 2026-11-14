@@ -252,3 +252,9 @@ Sequential cleanup's former general sweep is now local to sclCleanupLogic.
 Its typed-buffer, terminal-removal and Basic patch/delete boundaries remain an
 open source-fidelity review. The earlier sequential tests are not proof of
 matching those C boundaries; no claim of package completion is made here.
+
+CO patch review: a red regression showed Aig_ObjPatchFanin0 changed an unrelated
+CO's auxiliary level. It now updates only the target CO and its physical fanout
+pin, matching aigObj.c, while retaining recursive old-cone deletion. Full AIG,
+ABCI and SAIG race checks pass. Sequential wrapper/state comparisons are still
+in progress as a separate checkpoint.

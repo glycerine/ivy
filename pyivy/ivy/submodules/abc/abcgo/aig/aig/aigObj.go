@@ -157,11 +157,17 @@ func Aig_ObjPatchFanin0(p *Graph, e, driver Edge) {
 		panic("aig: output patch requires valid output/driver")
 	}
 	old := p.node(e).Fanins[0]
+	if p.fanouts != nil {
+		Aig_ObjRemoveFanoutPin(p, Aig_Regular(old), Aig_Regular(e), 0)
+	}
 	p.node(old).Refs--
 	p.node(e).Fanins[0] = driver
+	p.node(e).Level = p.node(driver).Level
+	p.node(e).Phase = Aig_ObjPhaseReal(p, driver)
 	p.node(driver).Refs++
-	p.recomputeLevels()
-	p.refreshFanouts()
+	if p.fanouts != nil {
+		Aig_ObjAddFanoutPin(p, Aig_Regular(driver), Aig_Regular(e), 0)
+	}
 	if p.node(old).Refs == 0 && p.node(old).Kind != Input && p.node(old).Kind != Constant {
 		Aig_ObjDelete_rec(p, Aig_Regular(old), 1)
 	}

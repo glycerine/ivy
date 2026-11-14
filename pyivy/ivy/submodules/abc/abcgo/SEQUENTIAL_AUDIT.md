@@ -1835,3 +1835,20 @@ boundary against C. Next extend the native oracle to SeqCleanup/Basic, checking
 terminal disconnection, retained buffers, CioID refresh and the Basic patch's
 immediate deletion/return-count boundary. Recheck Aig_ManExtractMiter's source
 phase normalization afterward. The package-wide audit remains open at 1/131.
+
+### Local CO patch source repair
+
+While restoring Basic sequential cleanup's call to Aig_ObjPatchFanin0,
+inspection found that the patch helper recomputed every graph level/phase and
+rebuilt all fanouts. C updates only the target CO's cache and pin. A new red
+regression patched one output while another had a valid auxiliary level of 99;
+Go incorrectly changed the unrelated output's level to 1.
+
+The helper now removes/adds its exact physical fanout pin, updates only the
+patched CO's driver, level and phase, and keeps the existing recursive deletion
+of an unreferenced old cone. The regression checks the untouched CO snapshot,
+patched cache, active fanout consistency and graph validity. Full AIG, ABCI and
+SAIG race checks pass in 59.416s/29.039s/5.858s
+(`/tmp/abcgo-seq-cleanup-review.log`). The sequential wrapper repairs and their
+expanded state oracle remain a separate open checkpoint; this commit records
+only the independently justified local patch repair.
