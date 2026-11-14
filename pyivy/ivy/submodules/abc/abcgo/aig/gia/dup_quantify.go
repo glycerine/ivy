@@ -65,11 +65,12 @@ func Gia_ManDupMux(variable int32, positive, negative *Gia_Man_t) *Gia_Man_t {
 		panic("gia: invalid cofactor mux interface")
 	}
 	out := giaQuantStart(negative)
+	out.CopyIdentityFrom(positive)
 	neg := giaQuantOutputs(out, negative)[0]
 	Gia_ManFillValue(positive)
 	positive.pObjs[0].Value = 0
 	for i := int32(0); i < Gia_ManCiNum(positive); i++ {
-		Gia_ManCi(positive, i).Value = Gia_ManCi(negative, i).Value
+		Gia_ManCi(positive, i).Value = uint32(Gia_ObjToLit(out, Gia_ManCi(out, i)))
 	}
 	pos := giaQuantOutputs(out, positive)[0]
 	ctrl := int32(Gia_ManCi(negative, variable).Value)

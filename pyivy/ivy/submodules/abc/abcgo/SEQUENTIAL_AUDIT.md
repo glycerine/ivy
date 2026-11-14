@@ -3422,3 +3422,29 @@ Full uncached GIA race tests pass in 43.683s
 (`/tmp/abcgo-embedding-output-vet.log`). Other GIA algorithm families still
 need review. Original package completion remains 2/131; the full sequential
 audit stays active.
+
+Cofactor and quantification review: two red regressions exposed MUX composition
+failures. Passing the same graph for both branches cleared the CI scratch
+mapping before reuse and panicked (`/tmp/abcgo-cofactor-mux-alias-red.log`).
+Initialize positive-branch CI mappings from the destination CIs instead.
+Distinct branch graphs also inherited negative-branch name/spec metadata,
+contrary to C's explicit positive-branch identity choice
+(`/tmp/abcgo-quantification-expanded-red.log`). Copy positive identity.
+The source C scratch algorithm also assumes distinct branch graphs; the Go
+repair handles aliasing without introducing a separate composition algorithm.
+
+Coverage exercises real XOR/MUX gates, buffers, eight polarity combinations,
+all input assignments, variable and guarded internal-node cofactors, both
+existential entry points, and combinational/sequential interface metadata.
+Universal abstraction retains the source convention: combine only output zero,
+and use the positive cofactor for auxiliary outputs. The compiled original-C
+fixture compares 328 cases and 5,248 input rows against equivalent ordinary-AND
+expansions, including register/constraint counts and positive branch identity
+(`/tmp/abcgo-quantification-native.log`). Its explicit Exist2 declaration is
+needed because that C function is defined but absent from gia.h.
+
+Full uncached race tests pass for GIA (45.637s) and its base/acb caller (5.197s)
+(`/tmp/abcgo-quantification-review-race.log`). GIA vet passes
+(`/tmp/abcgo-quantification-review-vet.log`). Other duplication algorithms,
+including block reduction, still need review. Original completion remains
+2/131; the sequential audit remains active.
