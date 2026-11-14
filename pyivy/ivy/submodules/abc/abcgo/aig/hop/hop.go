@@ -24,6 +24,7 @@ type Hop_Obj_t_ struct {
 	pData                             any
 	iData                             int32
 	pNext                             *Hop_Obj_t
+	pNextData                         any
 	PioNum                            int32
 	pFanin0, pFanin1                  *Hop_Obj_t
 	Type                              Hop_Type_t
@@ -130,15 +131,37 @@ func Hop_ManAndNum(p *Hop_Man_t) int32                 { return p.nObjs[AIG_AND]
 func Hop_ManExorNum(p *Hop_Man_t) int32                { return p.nObjs[AIG_EXOR] }
 func Hop_ManNodeNum(p *Hop_Man_t) int32                { return p.nObjs[AIG_AND] + p.nObjs[AIG_EXOR] }
 func Hop_ManObjNum(p *Hop_Man_t) int32                 { return p.nCreated - p.nDeleted }
-func Hop_ManGetCost(p *Hop_Man_t) int32                { return Hop_ManAndNum(p) + 3*Hop_ManExorNum(p) }
-func Hop_ObjType(p *Hop_Obj_t) Hop_Type_t              { return p.Type }
-func Hop_ObjIsNone(p *Hop_Obj_t) int32                 { return hopBool(p.Type == AIG_NONE) }
-func Hop_ObjIsConst1(p *Hop_Obj_t) int32               { return hopBool(p.Type == AIG_CONST1) }
-func Hop_ObjIsPi(p *Hop_Obj_t) int32                   { return hopBool(p.Type == AIG_PI) }
-func Hop_ObjIsPo(p *Hop_Obj_t) int32                   { return hopBool(p.Type == AIG_PO) }
-func Hop_ObjIsAnd(p *Hop_Obj_t) int32                  { return hopBool(p.Type == AIG_AND) }
-func Hop_ObjIsExor(p *Hop_Obj_t) int32                 { return hopBool(p.Type == AIG_EXOR) }
-func Hop_ObjIsNode(p *Hop_Obj_t) int32                 { return hopBool(p.Type == AIG_AND || p.Type == AIG_EXOR) }
+func Hop_ManObjects(p *Hop_Man_t) []*Hop_Obj_t {
+	if p == nil || p.vObjs == nil {
+		return nil
+	}
+	objects := make([]*Hop_Obj_t, 0, Vec_PtrSize(p.vObjs))
+	for _, item := range Vec_PtrArray(p.vObjs) {
+		if o, ok := item.(*Hop_Obj_t); ok && o.Type != AIG_NONE {
+			objects = append(objects, o)
+		}
+	}
+	return objects
+}
+func Hop_ManStartWithObjects(capacity int) *Hop_Man_t {
+	p := Hop_ManStart()
+	p.vObjs = Vec_PtrAlloc(int32(capacity))
+	Vec_PtrPush(p.vObjs, p.pConst1)
+	return p
+}
+func Hop_ObjReadNext(o *Hop_Obj_t) *Hop_Obj_t   { return Hop_Regular(o).pNext }
+func Hop_ObjSetNext(o, next *Hop_Obj_t)         { Hop_Regular(o).pNext = next }
+func Hop_ObjReadNextData(o *Hop_Obj_t) any      { return Hop_Regular(o).pNextData }
+func Hop_ObjSetNextData(o *Hop_Obj_t, next any) { Hop_Regular(o).pNextData = next }
+func Hop_ManGetCost(p *Hop_Man_t) int32         { return Hop_ManAndNum(p) + 3*Hop_ManExorNum(p) }
+func Hop_ObjType(p *Hop_Obj_t) Hop_Type_t       { return p.Type }
+func Hop_ObjIsNone(p *Hop_Obj_t) int32          { return hopBool(p.Type == AIG_NONE) }
+func Hop_ObjIsConst1(p *Hop_Obj_t) int32        { return hopBool(p.Type == AIG_CONST1) }
+func Hop_ObjIsPi(p *Hop_Obj_t) int32            { return hopBool(p.Type == AIG_PI) }
+func Hop_ObjIsPo(p *Hop_Obj_t) int32            { return hopBool(p.Type == AIG_PO) }
+func Hop_ObjIsAnd(p *Hop_Obj_t) int32           { return hopBool(p.Type == AIG_AND) }
+func Hop_ObjIsExor(p *Hop_Obj_t) int32          { return hopBool(p.Type == AIG_EXOR) }
+func Hop_ObjIsNode(p *Hop_Obj_t) int32          { return hopBool(p.Type == AIG_AND || p.Type == AIG_EXOR) }
 func Hop_ObjIsTerm(p *Hop_Obj_t) int32 {
 	return hopBool(p.Type == AIG_PI || p.Type == AIG_PO || p.Type == AIG_CONST1)
 }
