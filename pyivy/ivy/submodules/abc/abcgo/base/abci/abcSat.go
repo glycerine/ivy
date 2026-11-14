@@ -4,6 +4,8 @@ import "fmt"
 
 import "os"
 
+import "github.com/glycerine/abcgo/misc/vec"
+
 /**CFile****************************************************************
 
   FileName    [abcSat.c]
@@ -126,7 +128,7 @@ func Abc_NtkMiterSat(pNtk *Abc_Ntk_t, nConfLimit ABC_INT64_T, nInsLimit ABC_INT6
     if status == l_True {
 //        Vec_Int_t * vCiIds = Abc_NtkGetCiIds( pNtk );
         var vCiIds *Vec_Int_t  = Abc_NtkGetCiSatVarNums( pNtk );
-        pNtk.pModel = Sat_SolverGetModel( pSat, vCiIds.pArray, vCiIds.nSize );
+        pNtk.Model = Sat_SolverGetModel( pSat, vec.Vec_IntArray(vCiIds), int32(vec.Vec_IntSize(vCiIds)) );
         Vec_IntFree( vCiIds );
     }
     // free the sat_solver

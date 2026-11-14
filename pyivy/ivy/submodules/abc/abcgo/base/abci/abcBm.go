@@ -2,10 +2,47 @@ package abci
 
 import (
 	"fmt"
+	"math/rand"
+	"os"
 	"time"
+
+	aiggraph "github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/aig/gia"
+	baseabc "github.com/glycerine/abcgo/base/abc"
+	"github.com/glycerine/abcgo/misc/vec"
+	"github.com/glycerine/abcgo/opt/sim"
 )
 
-import "os"
+type ABC_INT64_T = int64
+
+func Vec_IntAlloc(n int32) *Vec_Int_t                  { return vec.Vec_IntAlloc(int(n)) }
+func Vec_IntFree(v *Vec_Int_t)                         { vec.Vec_IntFree(v) }
+func Vec_IntSize(v *Vec_Int_t) int32                   { return int32(vec.Vec_IntSize(v)) }
+func Vec_IntEntry(v *Vec_Int_t, i int32) int32         { return vec.Vec_IntEntry(v, int(i)) }
+func Vec_IntEntryLast(v *Vec_Int_t) int32              { return vec.Vec_IntEntryLast(v) }
+func Vec_IntFind(v *Vec_Int_t, x int32) int            { return vec.Vec_IntFind(v, x) }
+func Vec_IntPush(v *Vec_Int_t, x int32)                { vec.Vec_IntPush(v, x) }
+func Vec_IntPushOrder(v *Vec_Int_t, x int32)           { vec.Vec_IntPushOrder(v, x) }
+func Vec_IntPushUnique(v *Vec_Int_t, x int32) int      { return vec.Vec_IntPushUnique(v, x) }
+func Vec_IntPushUniqueOrder(v *Vec_Int_t, x int32) int { return vec.Vec_IntPushUniqueOrder(v, x) }
+func Vec_IntWriteEntry(v *Vec_Int_t, i, x int32)       { vec.Vec_IntWriteEntry(v, int(i), x) }
+func Vec_IntPop(v *Vec_Int_t) int32                    { return vec.Vec_IntPop(v) }
+func Vec_PtrAlloc(n int32) *Vec_Ptr_t                  { return vec.Vec_PtrAlloc(int(n)) }
+func Vec_PtrFree(v *Vec_Ptr_t)                         { vec.Vec_PtrFree(v) }
+func Vec_PtrSize(v *Vec_Ptr_t) int32                   { return int32(vec.Vec_PtrSize(v)) }
+func Vec_PtrEntry(v *Vec_Ptr_t, i int32) any           { return vec.Vec_PtrEntry(v, int(i)) }
+func Vec_PtrPush(v *Vec_Ptr_t, x any)                  { vec.Vec_PtrPush(v, x) }
+func Vec_PtrPop(v *Vec_Ptr_t) any                      { return vec.Vec_PtrPop(v) }
+func Vec_PtrClear(v *Vec_Ptr_t)                        { vec.Vec_PtrClear(v) }
+func Abc_NtkPiNum(n *Abc_Ntk_t) int32                  { return baseabc.Abc_NtkPiNum(n) }
+func Abc_NtkPoNum(n *Abc_Ntk_t) int32                  { return baseabc.Abc_NtkPoNum(n) }
+func Abc_NtkPi(n *Abc_Ntk_t, i int32) *Abc_Obj_t       { return baseabc.Abc_NtkPi(n, i) }
+func Abc_NtkPo(n *Abc_Ntk_t, i int32) *Abc_Obj_t       { return baseabc.Abc_NtkPo(n, i) }
+func Abc_NtkCiNum(n *Abc_Ntk_t) int32                  { return baseabc.Abc_NtkCiNum(n) }
+func Abc_NtkCoNum(n *Abc_Ntk_t) int32                  { return baseabc.Abc_NtkCoNum(n) }
+func Abc_NtkLatchNum(n *Abc_Ntk_t) int32               { return baseabc.Abc_NtkLatchNum(n) }
+func Abc_NtkDelete(n *Abc_Ntk_t)                       { baseabc.Abc_NtkDelete(n) }
+func Abc_AigLevel(n *Abc_Ntk_t) int32                  { return baseabc.Abc_AigLevel(n) }
 
 /**CFile****************************************************************
 
@@ -18,20 +55,20 @@ import "os"
   Synopsis    [Check P-equivalence and PP-equivalence of two circuits.]
 
   Author      [Hadi Katebi]
-  
+
   Affiliation [University of Michigan]
 
   Date        [Ver. 1.0. Started - January, 2009.]
 
   Revision    [No revisions so far]
 
-  Comments    [This is the cleaned up version of the code I used for DATE 2010 publication.]              
+  Comments    [This is the cleaned up version of the code I used for DATE 2010 publication.]
               [If you have any question or if you find a bug, contact me at hadik@umich.edu.]
-              [I don't guarantee that I can fix all the bugs, but I can definitely point you to 
+              [I don't guarantee that I can fix all the bugs, but I can definitely point you to
                the right direction so you can fix the bugs yourself].
 
   Debugging   [There are some part of the code that are commented out. Those parts mostly print
-               the contents of the data structures to the standard output. Un-comment them if you 
+               the contents of the data structures to the standard output. Un-comment them if you
                find them useful for debugging.]
 
 ***********************************************************************/
@@ -44,1986 +81,1126 @@ import "os"
 //ABC_NAMESPACE_IMPL_START
 
 const FALSE = 0
-const TRUE =  1
+const TRUE = 1
 
 // int match1by1(Abc_Ntk_t * pNtk1, Vec_Ptr_t ** nodesInLevel1, Vec_Int_t ** iMatch1, Vec_Int_t ** iDep1, Vec_Int_t * matchedInputs1, int * iGroup1, Vec_Int_t ** oMatch1, int * oGroup1,
 //                Abc_Ntk_t * pNtk2, Vec_Ptr_t ** nodesInLevel2, Vec_Int_t ** iMatch2, Vec_Int_t ** iDep2, Vec_Int_t * matchedInputs2, int * iGroup2, Vec_Int_t ** oMatch2, int * oGroup2,
 //                Vec_Int_t * matchedOutputs1, Vec_Int_t * matchedOutputs2, Vec_Int_t * oMatchedGroups, Vec_Int_t * iNonSingleton, int ii, int idx);
 
-
 // int Abc_NtkBmSat( Abc_Ntk_t * pNtk1, Abc_Ntk_t * pNtk2, Vec_Ptr_t * iMatchPairs, Vec_Ptr_t * oMatchPairs, Vec_Int_t * mismatch, int mode);
 
-
-func getDependencies(pNtk *Abc_Ntk_t, iDep **Vec_Int_t, oDep **Vec_Int_t) {    
-    var vSuppFun *Vec_Ptr_t;
-    var i, j int32;    
-    
-    vSuppFun = Sim_ComputeFunSupp(pNtk, 0);
-    for i = 0; i < Abc_NtkPoNum(pNtk); i++ {
-        var seg string  = (char *)vSuppFun.pArray[i];
-        
-        for j = 0; j < Abc_NtkPiNum(pNtk); j+=8 {
-            if ((*seg) & 0x01) == 0x01 {
-                Vec_IntPushOrder(oDep[i], j); }
-            if ((*seg) & 0x02) == 0x02 {
-                Vec_IntPushOrder(oDep[i], j+1); }
-            if ((*seg) & 0x04) == 0x04 {
-                Vec_IntPushOrder(oDep[i], j+2); }
-            if ((*seg) & 0x08) == 0x08 {
-                Vec_IntPushOrder(oDep[i], j+3); }
-            if ((*seg) & 0x10) == 0x10 {
-                Vec_IntPushOrder(oDep[i], j+4); }
-            if ((*seg) & 0x20) == 0x20 {
-                Vec_IntPushOrder(oDep[i], j+5); }
-            if ((*seg) & 0x40) == 0x40 {
-                Vec_IntPushOrder(oDep[i], j+6); }
-            if ((*seg) & 0x80) == 0x80 {
-                Vec_IntPushOrder(oDep[i], j+7); }
-
-            seg++;
-        }
-    }
-
-    for i = 0; i < Abc_NtkPoNum(pNtk); i++ {
-        for j = 0; j < Vec_IntSize(oDep[i]); j++ {
-            Vec_IntPush(iDep[Vec_IntEntry(oDep[i], j)], i);
-        }
-    }    
-    
-
-    /*for(i = 0; i < Abc_NtkPoNum(pNtk); i++)
-    {
-        printf("Output %d: ", i);
-        for(j = 0; j < Vec_IntSize(oDep[i]); j++)
-            printf("%d ", Vec_IntEntry(oDep[i], j));
-        printf("\n");
-    }
-
-    printf("\n");
-
-    for(i = 0; i < Abc_NtkPiNum(pNtk); i++)
-    {
-        printf("Input %d: ", i);
-        for(j = 0; j < Vec_IntSize(iDep[i]); j++)
-            printf("%d ", Vec_IntEntry(iDep[i], j));
-        printf("\n");
-    }
-
-    printf("\n");    */    
+func getDependencies(pNtk *Abc_Ntk_t, iDep, oDep []*Vec_Int_t) {
+	graph := baseabc.Abc_NtkStrashToGia(pNtk)
+	supports := sim.Sim_ComputeFunSupp(graph, false)
+	inputs, outputs := int(Abc_NtkPiNum(pNtk)), graph.Outputs()
+	if len(iDep) < inputs || len(oDep) < len(outputs) {
+		panic("abcBm: dependency vectors do not match network dimensions")
+	}
+	for output := range outputs {
+		for input := 0; input < inputs; input++ {
+			if sim.Sim_HasBit(supports[output], input) {
+				Vec_IntPushOrder(oDep[output], int32(input))
+			}
+		}
+	}
+	for output := range outputs {
+		for j := int32(0); j < Vec_IntSize(oDep[output]); j++ {
+			Vec_IntPush(iDep[Vec_IntEntry(oDep[output], j)], int32(output))
+		}
+	}
 }
 
-func initMatchList(pNtk *Abc_Ntk_t, iDep **Vec_Int_t, oDep **Vec_Int_t, iMatch **Vec_Int_t, iLastItem *int32, oMatch **Vec_Int_t, oLastItem *int32, iGroup *int32, oGroup *int32, p_equivalence int32) {
-    var i, j, curr int32;
-    var temp **Vec_Int_t;
-
-    if !(p_equivalence != 0) {
-        // inlining of macro ABC_ALLOC
-        temp = ((Vec_Int_t* *) malloc(sizeof(Vec_Int_t*) * (size_t)(Abc_NtkPiNum(pNtk)+1)));
-
-        for i = 0; i < Abc_NtkPiNum(pNtk)+1; i++ {    
-            temp[i] = Vec_IntAlloc( 0 );
-        }    
-
-        for i = 0; i < Abc_NtkPoNum(pNtk); i++ {        
-            Vec_IntPush(temp[Vec_IntSize(oDep[i])], i);
-        }
-
-        curr = 0;
-        for i = 0; i < Abc_NtkPiNum(pNtk)+1; i++ {
-            if Vec_IntSize(temp[i]) == 0 {
-                Vec_IntFree( temp[i] );
-
-            } else {
-                oMatch[curr] = temp[i];
-                
-                for j = 0; j < Vec_IntSize(temp[i]); j++ {
-                    oGroup[Vec_IntEntry(oMatch[curr], j)] = curr;
-                }
-            
-                curr++;
-            }
-        }
-
-        *oLastItem = curr;
-
-        temp = nil;
-    
-    } else {
-        // the else part fixes the outputs for P-equivalence checking
-        for i = 0; i < Abc_NtkPoNum(pNtk); i++ {
-            Vec_IntPush(oMatch[i], i);
-            oGroup[i] = i;
-            (*oLastItem) = Abc_NtkPoNum(pNtk);
-        }
-    }
-        
-    /*for(j = 0; j < *oLastItem; j++)
-    {
-        printf("oMatch %d: ", j);
-        for(i = 0; i < Vec_IntSize(oMatch[j]); i++)
-            printf("%d ", Vec_IntEntry(oMatch[j], i));
-        printf("\n");
-    }
-
-    for(i = 0; i < Abc_NtkPoNum(pNtk); i++)
-        printf("%d: %d ", i, oGroup[i]);*/
-
-    //////////////////////////////////////////////////////////////////////////////
-
-    // inlining of macro ABC_ALLOC
-    temp = ((Vec_Int_t* *) malloc(sizeof(Vec_Int_t*) * (size_t)(Abc_NtkPoNum(pNtk)+1)));
-
-    for i = 0; i < Abc_NtkPoNum(pNtk)+1; i++ {    
-        temp[i] = Vec_IntAlloc( 0 );
-    }
-
-    for i = 0; i < Abc_NtkPiNum(pNtk); i++ {        
-        Vec_IntPush(temp[Vec_IntSize(iDep[i])], i);
-    }
-
-    curr = 0;
-    for i = 0; i < Abc_NtkPoNum(pNtk)+1; i++ {
-        if Vec_IntSize(temp[i]) == 0 {
-            Vec_IntFree( temp[i] );
-        } else {
-            iMatch[curr] = temp[i];
-            for j = 0; j < Vec_IntSize(iMatch[curr]); j++ {
-                iGroup[Vec_IntEntry(iMatch[curr], j)] = curr;
-            }
-            curr++;
-        }        
-    }
-
-    *iLastItem = curr;
-
-    temp = nil;        
-
-    /*printf("\n");
-    for(j = 0; j < *iLastItem; j++)
-    {
-        printf("iMatch %d: ", j);
-        for(i = 0; i < Vec_IntSize(iMatch[j]); i++)
-            printf("%d ", Vec_IntEntry(iMatch[j], i));
-        printf("\n");
-    }
-
-    for(i = 0; i < Abc_NtkPiNum(pNtk); i++)
-        printf("%d: %d ", i, iGroup[i]);
-    printf("\n");*/
+func initMatchList(pNtk *Abc_Ntk_t, iDep, oDep, iMatch, oMatch []*Vec_Int_t, iLastItem, oLastItem *int32, iGroup, oGroup []int32, pEquivalence int32) {
+	nInputs, nOutputs := int(Abc_NtkPiNum(pNtk)), int(Abc_NtkPoNum(pNtk))
+	if pEquivalence == 0 {
+		for i := range oMatch {
+			Vec_IntFree(oMatch[i])
+			oMatch[i] = nil
+		}
+		buckets := make([]*Vec_Int_t, nInputs+1)
+		for i := range buckets {
+			buckets[i] = Vec_IntAlloc(0)
+		}
+		for i := 0; i < nOutputs; i++ {
+			Vec_IntPush(buckets[Vec_IntSize(oDep[i])], int32(i))
+		}
+		curr := 0
+		for _, bucket := range buckets {
+			if Vec_IntSize(bucket) == 0 {
+				Vec_IntFree(bucket)
+				continue
+			}
+			oMatch[curr] = bucket
+			for j := int32(0); j < Vec_IntSize(bucket); j++ {
+				oGroup[Vec_IntEntry(bucket, j)] = int32(curr)
+			}
+			curr++
+		}
+		*oLastItem = int32(curr)
+	} else {
+		for i := 0; i < nOutputs; i++ {
+			if oMatch[i] == nil {
+				oMatch[i] = Vec_IntAlloc(1)
+			}
+			Vec_IntPush(oMatch[i], int32(i))
+			oGroup[i] = int32(i)
+		}
+		*oLastItem = int32(nOutputs)
+	}
+	for i := range iMatch {
+		Vec_IntFree(iMatch[i])
+		iMatch[i] = nil
+	}
+	buckets := make([]*Vec_Int_t, nOutputs+1)
+	for i := range buckets {
+		buckets[i] = Vec_IntAlloc(0)
+	}
+	for i := 0; i < nInputs; i++ {
+		Vec_IntPush(buckets[Vec_IntSize(iDep[i])], int32(i))
+	}
+	curr := 0
+	for _, bucket := range buckets {
+		if Vec_IntSize(bucket) == 0 {
+			Vec_IntFree(bucket)
+			continue
+		}
+		iMatch[curr] = bucket
+		for j := int32(0); j < Vec_IntSize(bucket); j++ {
+			iGroup[Vec_IntEntry(bucket, j)] = int32(curr)
+		}
+		curr++
+	}
+	*iLastItem = int32(curr)
 }
 
-func iSortDependencies(pNtk *Abc_Ntk_t, iDep **Vec_Int_t, oGroup *int32) {
-    var i, j, k int32;    
-    var temp *Vec_Int_t;    
-    var oGroupList *Vec_Int_t;    
-
-    oGroupList = Vec_IntAlloc( 10 );
-
-    for i = 0; i < Abc_NtkPiNum(pNtk); i++ {
-        if Vec_IntSize(iDep[i]) == 1 {
-            continue; }
-        
-        temp = Vec_IntAlloc( Vec_IntSize(iDep[i]) );        
-
-        for j = 0; j < Vec_IntSize(iDep[i]); j++ {
-            Vec_IntPushUniqueOrder(oGroupList, oGroup[Vec_IntEntry(iDep[i], j)]);
-        }
-
-        for j = 0; j < Vec_IntSize(oGroupList); j++ {
-            for k = 0; k < Vec_IntSize(iDep[i]); k++ {
-                if oGroup[Vec_IntEntry(iDep[i], k)] == Vec_IntEntry(oGroupList, j) {
-                    Vec_IntPush( temp, Vec_IntEntry(iDep[i], k) );        
-                    Vec_IntRemove( iDep[i], Vec_IntEntry(iDep[i], k) );
-                    k--;
-                }
-            }
-        }        
-
-        Vec_IntFree( iDep[i] );        
-        iDep[i] = temp;
-        Vec_IntClear( oGroupList );
-
-        /*printf("Input %d: ", i);
-        for(j = 0; j < Vec_IntSize(iDep[i]); j++)
-            printf("%d ", Vec_IntEntry(iDep[i], j));
-        printf("\n");*/
-    }
-    
-    Vec_IntFree( oGroupList );
+func iSortDependencies(pNtk *Abc_Ntk_t, iDep []*Vec_Int_t, oGroup []int32) {
+	for i := 0; i < int(Abc_NtkPiNum(pNtk)); i++ {
+		if Vec_IntSize(iDep[i]) <= 1 {
+			continue
+		}
+		order := Vec_IntAlloc(Vec_IntSize(iDep[i]))
+		for j := int32(0); j < Vec_IntSize(iDep[i]); j++ {
+			Vec_IntPushUniqueOrder(order, oGroup[Vec_IntEntry(iDep[i], j)])
+		}
+		tmp := Vec_IntAlloc(Vec_IntSize(iDep[i]))
+		for g := int32(0); g < Vec_IntSize(order); g++ {
+			group := Vec_IntEntry(order, g)
+			for j := int32(0); j < Vec_IntSize(iDep[i]); j++ {
+				item := Vec_IntEntry(iDep[i], j)
+				if oGroup[item] == group {
+					Vec_IntPush(tmp, item)
+				}
+			}
+		}
+		Vec_IntFree(order)
+		Vec_IntFree(iDep[i])
+		iDep[i] = tmp
+	}
 }
 
-func oSortDependencies(pNtk *Abc_Ntk_t, oDep **Vec_Int_t, iGroup *int32) {
-    var i, j, k int32;    
-    var temp *Vec_Int_t;
-    var iGroupList *Vec_Int_t;    
-    
-    iGroupList = Vec_IntAlloc( 10 );
-
-    for i = 0; i < Abc_NtkPoNum(pNtk); i++ {
-        if Vec_IntSize(oDep[i]) == 1 {
-            continue; }    
-        
-        temp = Vec_IntAlloc( Vec_IntSize(oDep[i]) );
-
-        for j = 0; j < Vec_IntSize(oDep[i]); j++ {
-            Vec_IntPushUniqueOrder(iGroupList, iGroup[Vec_IntEntry(oDep[i], j)]);
-        }        
-
-        for j = 0; j < Vec_IntSize(iGroupList); j++ {
-            for k = 0; k < Vec_IntSize(oDep[i]); k++ {
-                if iGroup[Vec_IntEntry(oDep[i], k)] == Vec_IntEntry(iGroupList, j) {
-                    Vec_IntPush( temp, Vec_IntEntry(oDep[i], k) );
-                    Vec_IntRemove( oDep[i], Vec_IntEntry(oDep[i], k) );
-                    k--;
-                }
-            }
-        }
-
-        Vec_IntFree( oDep[i] );
-        oDep[i] = temp;
-        Vec_IntClear( iGroupList );
-
-        /*printf("Output %d: ", i);
-        for(j = 0; j < Vec_IntSize(oDep[i]); j++)
-            printf("%d ", Vec_IntEntry(oDep[i], j));
-        printf("\n");*/
-    }
-    
-    Vec_IntFree( iGroupList );
+func oSortDependencies(pNtk *Abc_Ntk_t, oDep []*Vec_Int_t, iGroup []int32) {
+	for i := 0; i < int(Abc_NtkPoNum(pNtk)); i++ {
+		if Vec_IntSize(oDep[i]) <= 1 {
+			continue
+		}
+		order := Vec_IntAlloc(Vec_IntSize(oDep[i]))
+		for j := int32(0); j < Vec_IntSize(oDep[i]); j++ {
+			Vec_IntPushUniqueOrder(order, iGroup[Vec_IntEntry(oDep[i], j)])
+		}
+		tmp := Vec_IntAlloc(Vec_IntSize(oDep[i]))
+		for g := int32(0); g < Vec_IntSize(order); g++ {
+			group := Vec_IntEntry(order, g)
+			for j := int32(0); j < Vec_IntSize(oDep[i]); j++ {
+				item := Vec_IntEntry(oDep[i], j)
+				if iGroup[item] == group {
+					Vec_IntPush(tmp, item)
+				}
+			}
+		}
+		Vec_IntFree(order)
+		Vec_IntFree(oDep[i])
+		oDep[i] = tmp
+	}
 }
 
-func oSplitByDep(pNtk *Abc_Ntk_t, oDep **Vec_Int_t, oMatch **Vec_Int_t, oGroup *int32, oLastItem *int32, iGroup *int32) int32 {
-    var i, j, k int32;
-    var numOfItemsAdded int32;
-    var array, sortedArray *Vec_Int_t;    
-
-    numOfItemsAdded = 0;
-
-    for i = 0; i < *oLastItem; i++ {
-        if Vec_IntSize(oMatch[i]) == 1 {
-            continue; }
-
-        array = Vec_IntAlloc( Vec_IntSize(oMatch[i]) );
-        sortedArray = Vec_IntAlloc( Vec_IntSize(oMatch[i]) );
-
-        for j = 0; j < Vec_IntSize(oMatch[i]); j++ {
-            var factor, encode int32;
-
-            encode = 0;
-            factor = 1;    
-            
-            for k = 0; k < Vec_IntSize(oDep[Vec_IntEntry(oMatch[i], j)]); k++ {                                        
-                encode += iGroup[Vec_IntEntry(oDep[Vec_IntEntry(oMatch[i], j)], k)] * factor;
-            }                        
-            
-            Vec_IntPush(array, encode);
-            Vec_IntPushUniqueOrder(sortedArray, encode);
-
-            if encode < 0 {
-                fmt.Printf("WARNING! Integer overflow!"); }
-
-            //printf("%d ", Vec_IntEntry(array, j));
-        }                
-        
-        for  Vec_IntSize(sortedArray) > 1  {            
-            for k = 0; k < Vec_IntSize(oMatch[i]); k++ {
-                if Vec_IntEntry(array, k) == Vec_IntEntryLast(sortedArray) {
-                    Vec_IntPush(oMatch[*oLastItem+numOfItemsAdded], Vec_IntEntry(oMatch[i], k));
-                    oGroup[Vec_IntEntry(oMatch[i], k)] = *oLastItem+numOfItemsAdded;
-                    Vec_IntRemove( oMatch[i], Vec_IntEntry(oMatch[i], k) );        
-                    Vec_IntRemove( array, Vec_IntEntry(array, k) );            
-                    k--;
-                }    
-            }            
-            numOfItemsAdded++;
-            Vec_IntPop(sortedArray);                        
-        }
-
-        Vec_IntFree( array );        
-        Vec_IntFree( sortedArray );        
-        //printf("\n");
-    }    
-
-    *oLastItem += numOfItemsAdded;
-
-    /*printf("\n");
-    for(j = 0; j < *oLastItem ; j++)
-    {
-        printf("oMatch %d: ", j);
-        for(i = 0; i < Vec_IntSize(oMatch[j]); i++)
-            printf("%d ", Vec_IntEntry(oMatch[j], i));
-        printf("\n");
-    }*/
-
-    return numOfItemsAdded;
+func oSplitByDep(pNtk *Abc_Ntk_t, oDep, oMatch []*Vec_Int_t, oGroup []int32, oLastItem *int32, iGroup []int32) int32 {
+	added := int32(0)
+	for i := int32(0); i < *oLastItem; i++ {
+		if Vec_IntSize(oMatch[i]) == 1 {
+			continue
+		}
+		encodings := make([]int32, Vec_IntSize(oMatch[i]))
+		unique := Vec_IntAlloc(Vec_IntSize(oMatch[i]))
+		for j := int32(0); j < Vec_IntSize(oMatch[i]); j++ {
+			var encode int32
+			for k := int32(0); k < Vec_IntSize(oDep[Vec_IntEntry(oMatch[i], j)]); k++ {
+				encode += iGroup[Vec_IntEntry(oDep[Vec_IntEntry(oMatch[i], j)], k)]
+			}
+			encodings[j] = encode
+			Vec_IntPushUniqueOrder(unique, encode)
+		}
+		for groupIndex := Vec_IntSize(unique) - 1; groupIndex > 0; groupIndex-- {
+			value := Vec_IntEntry(unique, groupIndex)
+			newGroup := *oLastItem + added
+			if oMatch[newGroup] == nil {
+				oMatch[newGroup] = Vec_IntAlloc(1)
+			}
+			remaining := Vec_IntAlloc(Vec_IntSize(oMatch[i]))
+			for j := int32(0); j < Vec_IntSize(oMatch[i]); j++ {
+				item := Vec_IntEntry(oMatch[i], j)
+				if encodings[j] == value {
+					Vec_IntPush(oMatch[newGroup], item)
+					oGroup[item] = newGroup
+				} else {
+					Vec_IntPush(remaining, item)
+				}
+			}
+			Vec_IntFree(oMatch[i])
+			oMatch[i] = remaining
+			added++
+		}
+		Vec_IntFree(unique)
+	}
+	*oLastItem += added
+	return added
 }
 
-func iSplitByDep(pNtk *Abc_Ntk_t, iDep **Vec_Int_t, iMatch **Vec_Int_t, iGroup *int32, iLastItem *int32, oGroup *int32) int32 {
-    var i, j, k int32;    
-    var numOfItemsAdded int32;
-    var array, sortedArray *Vec_Int_t;    
-
-    for i = 0; i < *iLastItem; i++ {
-        if Vec_IntSize(iMatch[i]) == 1 {
-            continue; }
-        
-        array = Vec_IntAlloc( Vec_IntSize(iMatch[i]) );
-        sortedArray = Vec_IntAlloc( Vec_IntSize(iMatch[i]) );
-
-        for j = 0; j < Vec_IntSize(iMatch[i]); j++ {        
-            var factor, encode int32;
-
-            encode = 0;
-            factor = 1;    
-            
-            for k = 0; k < Vec_IntSize(iDep[Vec_IntEntry(iMatch[i], j)]); k++ {                            
-                encode += oGroup[Vec_IntEntry(iDep[Vec_IntEntry(iMatch[i], j)], k)] * factor;
-            }                        
-
-            Vec_IntPush(array, encode);
-            Vec_IntPushUniqueOrder(sortedArray, encode);
-            
-            //printf("%d ", Vec_IntEntry(array, j));
-        }            
-                
-        for  Vec_IntSize(sortedArray) > 1  {            
-            for k = 0; k < Vec_IntSize(iMatch[i]); k++ {
-                if Vec_IntEntry(array, k) == Vec_IntEntryLast(sortedArray) {
-                    Vec_IntPush(iMatch[*iLastItem+numOfItemsAdded], Vec_IntEntry(iMatch[i], k));
-                    iGroup[Vec_IntEntry(iMatch[i], k)] = *iLastItem+numOfItemsAdded;
-                    Vec_IntRemove( iMatch[i], Vec_IntEntry(iMatch[i], k) );                            
-                    Vec_IntRemove( array, Vec_IntEntry(array, k) );    
-                    k--;
-                }
-            }
-            numOfItemsAdded++;
-            Vec_IntPop(sortedArray);    
-        }
-
-        Vec_IntFree( array );        
-        Vec_IntFree( sortedArray );    
-        //printf("\n");
-    }    
-
-    *iLastItem += numOfItemsAdded;
-
-    /*printf("\n");
-    for(j = 0; j < *iLastItem ; j++)
-    {
-        printf("iMatch %d: ", j);
-        for(i = 0; i < Vec_IntSize(iMatch[j]); i++)
-            printf("%d ", Vec_IntEntry(iMatch[j], i));
-        printf("\n");
-    }*/
-
-    return numOfItemsAdded;    
+func iSplitByDep(pNtk *Abc_Ntk_t, iDep, iMatch []*Vec_Int_t, iGroup []int32, iLastItem *int32, oGroup []int32) int32 {
+	added := int32(0)
+	for i := int32(0); i < *iLastItem; i++ {
+		if Vec_IntSize(iMatch[i]) == 1 {
+			continue
+		}
+		encodings := make([]int32, Vec_IntSize(iMatch[i]))
+		unique := Vec_IntAlloc(Vec_IntSize(iMatch[i]))
+		for j := int32(0); j < Vec_IntSize(iMatch[i]); j++ {
+			var encode int32
+			for k := int32(0); k < Vec_IntSize(iDep[Vec_IntEntry(iMatch[i], j)]); k++ {
+				encode += oGroup[Vec_IntEntry(iDep[Vec_IntEntry(iMatch[i], j)], k)]
+			}
+			encodings[j] = encode
+			Vec_IntPushUniqueOrder(unique, encode)
+		}
+		for groupIndex := Vec_IntSize(unique) - 1; groupIndex > 0; groupIndex-- {
+			value := Vec_IntEntry(unique, groupIndex)
+			newGroup := *iLastItem + added
+			if iMatch[newGroup] == nil {
+				iMatch[newGroup] = Vec_IntAlloc(1)
+			}
+			remaining := Vec_IntAlloc(Vec_IntSize(iMatch[i]))
+			for j := int32(0); j < Vec_IntSize(iMatch[i]); j++ {
+				item := Vec_IntEntry(iMatch[i], j)
+				if encodings[j] == value {
+					Vec_IntPush(iMatch[newGroup], item)
+					iGroup[item] = newGroup
+				} else {
+					Vec_IntPush(remaining, item)
+				}
+			}
+			Vec_IntFree(iMatch[i])
+			iMatch[i] = remaining
+			added++
+		}
+		Vec_IntFree(unique)
+	}
+	*iLastItem += added
+	return added
 }
 
-func findTopologicalOrder(pNtk *Abc_Ntk_t) **Vec_Ptr_t {
-    var vNodes **Vec_Ptr_t;
-    var pObj, pFanout *Abc_Obj_t;
-    var i, k int32;    
-    
-    extern void Abc_NtkDfsReverse_rec( Abc_Obj_t * pNode, Vec_Ptr_t * vNodes );
-    
-    // start the array of nodes
-    // inlining of macro ABC_ALLOC
-    vNodes = ((Vec_Ptr_t * *) malloc(sizeof(Vec_Ptr_t *) * (size_t)(Abc_NtkPiNum(pNtk))));
-    for i = 0; i < Abc_NtkPiNum(pNtk); i++ {
-        vNodes[i] = Vec_PtrAlloc(50);
-    }    
-    
-    // inlining of macro Abc_NtkForEachCi
-    for  i = 0; (i < Abc_NtkCiNum(pNtk)) && (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {
-        // set the traversal ID
-        Abc_NtkIncrementTravId( pNtk );
-        Abc_NodeSetTravIdCurrent( pObj );
-        pObj = Abc_ObjFanout0Ntk(pObj);
-        // inlining of macro Abc_ObjForEachFanout
-        for  k = 0; (k < Abc_ObjFanoutNum(pObj)) && (((pFanout) = Abc_ObjFanout(pObj, k)), 1); k++  {
-            Abc_NtkDfsReverse_rec( pFanout, vNodes[i] );
-        }
-    }
-   
-    return vNodes;
+func findTopologicalOrder(pNtk *Abc_Ntk_t) []*Vec_Ptr_t {
+	// The native routine builds reverse-fanout lists for one-input simulation.
+	// The Go simulator evaluates the same strashed cone directly, so these
+	// vectors remain empty compatibility slots.
+	result := make([]*Vec_Ptr_t, Abc_NtkPiNum(pNtk))
+	for i := range result {
+		result[i] = Vec_PtrAlloc(0)
+	}
+	return result
 }
 
-
-func Abc_NtkSimulateOneNode(pNtk *Abc_Ntk_t, pModel *int32, input int32, topOrder **Vec_Ptr_t) *int32 {
-    var pNode *Abc_Obj_t;
-    var vNodes *Vec_Ptr_t;
-    var pValues *int32;
-    var Value0 int32;
-    var Value1 int32;
-    var i int32;
-   
-    vNodes = Vec_PtrAlloc( 50 );
-/*
-    printf( "Counter example: " );
-    Abc_NtkForEachCi( pNtk, pNode, i )
-        printf( " %d", pModel[i] );
-    printf( "\n" );
-*/
-    // increment the trav ID
-    Abc_NtkIncrementTravId( pNtk );
-    // set the CI values     
-    Abc_AigConst1(pNtk).pCopy = (Abc_Obj_t *)1;
-    pNode = Abc_NtkCi(pNtk, input);
-    pNode.iTemp = pModel[input];
-    
-    // simulate in the topological order    
-    for i = Vec_PtrSize(topOrder[input])-1; i >= 0; i-- {
-        pNode = (Abc_Obj_t *)Vec_PtrEntry(topOrder[input], i);        
-        
-        Value0 = (int32((ABC_PTRUINT_T))Abc_ObjFanin0(pNode).pCopy) ^ Abc_ObjFaninC0(pNode);
-        Value1 = (int32((ABC_PTRUINT_T))Abc_ObjFanin1(pNode).pCopy) ^ Abc_ObjFaninC1(pNode);
-        
-        if pNode.iTemp != (Value0 & Value1) {
-            pNode.iTemp = (Value0 & Value1);
-            Vec_PtrPush(vNodes, pNode);
-        }
-    
-    }    
-    // fill the output values
-    // inlining of macro ABC_ALLOC
-    pValues = ((int *) malloc(sizeof(int) * (size_t)(Abc_NtkCoNum(pNtk))));
-    // inlining of macro Abc_NtkForEachCo
-    for  i = 0; (i < Abc_NtkCoNum(pNtk)) && (((pNode) = Abc_NtkCo(pNtk, i)), 1); i++  {
-        pValues[i] = (int32((ABC_PTRUINT_T))Abc_ObjFanin0(pNode).pCopy) ^ Abc_ObjFaninC0(pNode);
-    }
-    
-    pNode = Abc_NtkCi(pNtk, input);
-    if pNode.pCopy == (Abc_Obj_t *)1 {
-        pNode.pCopy = (Abc_Obj_t *)0;
-    } else {
-        pNode.pCopy = (Abc_Obj_t *)1; }
-
-    for i = 0; i < Vec_PtrSize(vNodes); i++ {
-        pNode = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i);
-
-        if pNode.pCopy == (Abc_Obj_t *)1 {
-            pNode.pCopy = (Abc_Obj_t *)0;
-        } else {
-            pNode.pCopy = (Abc_Obj_t *)1; }
-    }
-
-    Vec_PtrFree( vNodes );
-
-    return pValues;
+func Abc_NtkSimulateOneNode(pNtk *Abc_Ntk_t, model []int32, input int32, topOrder []*Vec_Ptr_t) []int32 {
+	_ = input
+	_ = topOrder
+	graph := baseabc.Abc_NtkStrashToGia(pNtk)
+	inputs := make([]bool, len(graph.Inputs()))
+	for i := range inputs {
+		if i < len(model) {
+			inputs[i] = model[i] != 0
+		}
+	}
+	values, err := graph.Evaluate(inputs)
+	if err != nil {
+		panic(err)
+	}
+	outputs := make([]int32, len(graph.Outputs()))
+	for i := range graph.Outputs() {
+		if values[i] {
+			outputs[i] = 1
+		}
+	}
+	return outputs
 }
 
-func refineIOBySimulation(pNtk *Abc_Ntk_t, iMatch **Vec_Int_t, iLastItem *int32, iGroup *int32, iDep **Vec_Int_t, oMatch **Vec_Int_t, oLastItem *int32, oGroup *int32, oDep **Vec_Int_t, vPiValues string, observability *int32, topOrder **Vec_Ptr_t) int32 {
-    var pObj *Abc_Obj_t;
-    var pModel *int32;//, ** pModel2;
-    var output, output2 *int32;
-    var lastItem int32;
-    var i, j, k int32;
-    var iComputedNum, iComputedNumSorted *Vec_Int_t;    
-    var oComputedNum *Vec_Int_t;                // encoding the number of flips        
-    var factor int32;    
-    var isRefined int32  = FALSE;    
-
-    // inlining of macro ABC_ALLOC
-    pModel = ((int *) malloc(sizeof(int) * (size_t)(Abc_NtkCiNum(pNtk))));    
-
-    // inlining of macro Abc_NtkForEachPi
-    for  i = 0; (i < Abc_NtkPiNum(pNtk)) && (((pObj) = Abc_NtkPi(pNtk, i)), 1); i++  {
-        pModel[i] = vPiValues[i] - '0';
-    }
-    // inlining of macro Abc_NtkForEachLatch
-    for  i = 0; (i < Vec_PtrSize((pNtk).vBoxes)) && (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pObj) {} else {
-        pModel[Abc_NtkPiNum(pNtk)+i] = pObj.iData - 1; }
-    }
-
-    output = Abc_NtkVerifySimulatePattern( pNtk, pModel );    
-
-    oComputedNum = Vec_IntAlloc( Abc_NtkPoNum(pNtk) );
-    for i = 0; i < Abc_NtkPoNum(pNtk); i++ {
-        Vec_IntPush(oComputedNum, 0);
-    }
-    
-    /****************************************************************************************/
-    /********** group outputs that produce 1 and outputs that produce 0 together ************/    
-    
-    lastItem = *oLastItem;
-    for i = 0; i < lastItem && (*oLastItem) != Abc_NtkPoNum(pNtk); i++ {
-        var flag int32  = FALSE;
-
-        if Vec_IntSize(oMatch[i]) == 1 {
-            continue; }
-
-        for j = 1; j < Vec_IntSize(oMatch[i]); j++ {
-            if output[Vec_IntEntry(oMatch[i], 0)] != output[Vec_IntEntry(oMatch[i], j)] {
-                flag = TRUE;
-                break;
-            }
-        }
-
-        if flag != 0 {
-            for j = 0; j < Vec_IntSize(oMatch[i]); j++ {
-                if output[Vec_IntEntry(oMatch[i], j)] {
-                    Vec_IntPush(oMatch[*oLastItem], Vec_IntEntry(oMatch[i], j));
-                    oGroup[Vec_IntEntry(oMatch[i], j)] = *oLastItem;    
-                    Vec_IntRemove(oMatch[i], Vec_IntEntry(oMatch[i], j));    
-                    j--;
-                }
-            }
-
-            (*oLastItem)++;
-        }
-    }
-
-    if (*oLastItem) > lastItem {
-        isRefined = TRUE;
-        iSortDependencies(pNtk, iDep, oGroup);    
-    }
-
-    /****************************************************************************************/
-    /************* group inputs that make the same number of flips in outpus ****************/        
-
-    lastItem = *iLastItem;
-    for i = 0; i < lastItem && (*iLastItem) != Abc_NtkPiNum(pNtk); i++ {
-        var num int32;
-
-        if Vec_IntSize(iMatch[i]) == 1 {
-            continue; }
-
-        iComputedNum = Vec_IntAlloc( Vec_IntSize(iMatch[i]) );
-        iComputedNumSorted = Vec_IntAlloc( Vec_IntSize(iMatch[i]) );    
-        
-        for j = 0; j < Vec_IntSize(iMatch[i]); j++ {
-            if vPiValues[Vec_IntEntry(iMatch[i], j)] == '0' {                
-                pModel[Vec_IntEntry(iMatch[i], j)] = 1;
-            } else {                 
-                pModel[Vec_IntEntry(iMatch[i], j)] = 0; }        
-            
-            //output2 = Abc_NtkVerifySimulatePattern( pNtk, pModel );    
-            output2 = Abc_NtkSimulateOneNode( pNtk, pModel, Vec_IntEntry(iMatch[i], j), topOrder );
-            
-            num = 0;
-            factor = 1;    
-            for k = 0; k < Vec_IntSize(iDep[Vec_IntEntry(iMatch[i], j)]); k++ {
-                var outputIndex int32  = Vec_IntEntry(iDep[Vec_IntEntry(iMatch[i], j)], k);        
-
-                if output2[outputIndex] {
-                    num += (oGroup[outputIndex] + 1) * factor; }                
-            
-                if output[outputIndex] != output2[outputIndex] {
-                    var temp int32  = Vec_IntEntry(oComputedNum, outputIndex) + i + 1;
-                    Vec_IntWriteEntry(oComputedNum, outputIndex, temp);    
-                    observability[Vec_IntEntry(iMatch[i], j)]++;
-                }
-            }
-
-            Vec_IntPush(iComputedNum, num);
-            Vec_IntPushUniqueOrder(iComputedNumSorted, num);            
-
-            pModel[Vec_IntEntry(iMatch[i], j)] = vPiValues[Vec_IntEntry(iMatch[i], j)] - '0';
-            output2 = nil;
-        }    
-
-        for  Vec_IntSize( iComputedNumSorted ) > 1  {
-            for k = 0; k < Vec_IntSize(iMatch[i]); k++ {                            
-                if Vec_IntEntry(iComputedNum, k) == Vec_IntEntryLast(iComputedNumSorted) {
-                    Vec_IntPush(iMatch[*iLastItem], Vec_IntEntry(iMatch[i], k));
-                    iGroup[Vec_IntEntry(iMatch[i], k)] = *iLastItem;
-                    Vec_IntRemove( iMatch[i], Vec_IntEntry(iMatch[i], k) );
-                    Vec_IntRemove( iComputedNum, Vec_IntEntry(iComputedNum, k) );        
-                    k--;
-                }                
-            }
-            (*iLastItem)++;    
-            Vec_IntPop( iComputedNumSorted );
-        }    
-
-        Vec_IntFree( iComputedNum );
-        Vec_IntFree( iComputedNumSorted );
-    }
-
-    if (*iLastItem) > lastItem {
-        isRefined = TRUE;
-        oSortDependencies(pNtk, oDep, iGroup);
-    }
-
-    /****************************************************************************************/
-    /********** encode the number of flips in each output by flipping the outputs ***********/
-    /********** and group all the outputs that have the same encoding         ***********/    
-
-    lastItem = *oLastItem;
-    for i = 0; i < lastItem && (*oLastItem) != Abc_NtkPoNum(pNtk); i++ {
-        var encode, sortedEncode *Vec_Int_t;                // encoding the number of flips                    
-
-        if Vec_IntSize(oMatch[i]) == 1 {
-            continue; }
-            
-        encode = Vec_IntAlloc( Vec_IntSize(oMatch[i]) );
-        sortedEncode = Vec_IntAlloc( Vec_IntSize(oMatch[i]) );                    
-    
-        for j = 0; j < Vec_IntSize(oMatch[i]); j++ {
-            Vec_IntPush(encode, Vec_IntEntry(oComputedNum, Vec_IntEntry(oMatch[i], j)) );
-            Vec_IntPushUniqueOrder( sortedEncode, Vec_IntEntry(encode, j) );
-        }
-
-        for  Vec_IntSize(sortedEncode) > 1  {
-            for j = 0; j < Vec_IntSize(oMatch[i]); j++ {
-                if Vec_IntEntry(encode, j) == Vec_IntEntryLast(sortedEncode) {
-                    Vec_IntPush(oMatch[*oLastItem], Vec_IntEntry(oMatch[i], j));
-                    oGroup[Vec_IntEntry(oMatch[i], j)] = *oLastItem;
-                    Vec_IntRemove( oMatch[i], Vec_IntEntry(oMatch[i], j) );
-                    Vec_IntRemove( encode, Vec_IntEntry(encode, j) );
-                    j --;
-                }
-            }                
-            
-            (*oLastItem)++;
-            Vec_IntPop( sortedEncode );
-        }
-
-        Vec_IntFree( encode );
-        Vec_IntFree( sortedEncode );
-    }
-
-    if (*oLastItem) > lastItem {
-        isRefined = TRUE; }    
-
-    pModel = nil;
-    output = nil;
-    Vec_IntFree( oComputedNum );
-
-    return isRefined;    
+func bmSplitByKey(match []*Vec_Int_t, group []int32, groupIndex int32, lastItem *int32, keys []int32) int32 {
+	if Vec_IntSize(match[groupIndex]) < 2 {
+		return 0
+	}
+	unique := Vec_IntAlloc(int32(len(keys)))
+	for _, key := range keys {
+		Vec_IntPushUniqueOrder(unique, key)
+	}
+	added := int32(0)
+	for k := Vec_IntSize(unique) - 1; k > 0; k-- {
+		key, newIndex := Vec_IntEntry(unique, k), *lastItem+added
+		if match[newIndex] == nil {
+			match[newIndex] = Vec_IntAlloc(1)
+		}
+		remaining := Vec_IntAlloc(Vec_IntSize(match[groupIndex]))
+		for j := int32(0); j < Vec_IntSize(match[groupIndex]); j++ {
+			item := Vec_IntEntry(match[groupIndex], j)
+			if keys[j] == key {
+				Vec_IntPush(match[newIndex], item)
+				group[item] = newIndex
+			} else {
+				Vec_IntPush(remaining, item)
+			}
+		}
+		Vec_IntFree(match[groupIndex])
+		match[groupIndex] = remaining
+		added++
+	}
+	Vec_IntFree(unique)
+	*lastItem += added
+	return added
 }
 
-func Abc_NtkMiterBm(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, iCurrMatch *Vec_Ptr_t, oCurrMatch *Vec_Ptr_t) *Abc_Ntk_t {
-    var Buffer string // was [1000]byte in C
-
-    var pNtkMiter *Abc_Ntk_t;
-
-    pNtkMiter = Abc_NtkAlloc( ABC_NTK_STRASH, ABC_FUNC_AIG, 1 );
-    Buffer = fmt.Sprintf("%s_%s_miter", pNtk1.pName, pNtk2.pName);
-    pNtkMiter.pName = Extra_UtilStrsav(Buffer);
-
-    //Abc_NtkMiterPrepare( pNtk1, pNtk2, pNtkMiter, fComb, nPartSize );
-    {
-        var pObj, pObjNew *Abc_Obj_t;
-        var i int32;
-
-        Abc_AigConst1(pNtk1).pCopy = Abc_AigConst1(pNtkMiter);
-        Abc_AigConst1(pNtk2).pCopy = Abc_AigConst1(pNtkMiter);
-
-        // create new PIs and remember them in the old PIs
-        if iCurrMatch == nil {
-            // inlining of macro Abc_NtkForEachCi
-            for  i = 0; (i < Abc_NtkCiNum(pNtk1)) && (((pObj) = Abc_NtkCi(pNtk1, i)), 1); i++  {
-                pObjNew = Abc_NtkCreatePi( pNtkMiter );
-                // remember this PI in the old PIs
-                pObj.pCopy = pObjNew;
-                pObj = Abc_NtkCi(pNtk2, i);  
-                pObj.pCopy = pObjNew;
-                // add name
-                Abc_ObjAssignName( pObjNew, Abc_ObjName(pObj), nil );
-            }
-        
-        } else {
-            for i = 0; i < Vec_PtrSize( iCurrMatch ); i += 2 {
-                pObjNew = Abc_NtkCreatePi( pNtkMiter );
-                pObj = (Abc_Obj_t *)Vec_PtrEntry(iCurrMatch, i);
-                pObj.pCopy = pObjNew;
-                pObj = (Abc_Obj_t *)Vec_PtrEntry(iCurrMatch, i+1);
-                pObj.pCopy = pObjNew;
-                // add name
-                Abc_ObjAssignName( pObjNew, Abc_ObjName(pObj), nil );
-            }
-        }
-
-        // create the only PO
-        pObjNew = Abc_NtkCreatePo( pNtkMiter );
-        // add the PO name
-        Abc_ObjAssignName( pObjNew, "miter", nil );
-    }
-
-    // Abc_NtkMiterAddOne( pNtk1, pNtkMiter );
-    {
-        var pNode *Abc_Obj_t;
-        var i int32;
-        assert(Abc_NtkIsDfsOrdered(pNtk1), "Abc_NtkIsDfsOrdered(pNtk1)");
-        // inlining of macro Abc_AigForEachAnd
-        for  i = 0; (i < Vec_PtrSize((pNtk1).vObjs)) && (((pNode) = Abc_NtkObj(pNtk1, i)), 1); i++  {           if (pNode) == nil || !Abc_AigNodeIsAnd(pNode) {} else {
-            pNode.pCopy = Abc_AigAnd( (Abc_Aig_t *)pNtkMiter.pManFunc, Abc_ObjChild0Copy(pNode), Abc_ObjChild1Copy(pNode) ); }
-        }
-    }
-
-    // Abc_NtkMiterAddOne( pNtk2, pNtkMiter );
-    {
-        var pNode *Abc_Obj_t;
-        var i int32;
-        assert(Abc_NtkIsDfsOrdered(pNtk2), "Abc_NtkIsDfsOrdered(pNtk2)");
-        // inlining of macro Abc_AigForEachAnd
-        for  i = 0; (i < Vec_PtrSize((pNtk2).vObjs)) && (((pNode) = Abc_NtkObj(pNtk2, i)), 1); i++  {           if (pNode) == nil || !Abc_AigNodeIsAnd(pNode) {} else {
-            pNode.pCopy = Abc_AigAnd( (Abc_Aig_t *)pNtkMiter.pManFunc, Abc_ObjChild0Copy(pNode), Abc_ObjChild1Copy(pNode) ); }
-        }
-    }
-    
-    // Abc_NtkMiterFinalize( pNtk1, pNtk2, pNtkMiter, fComb, nPartSize );    
-    {
-        var vPairs *Vec_Ptr_t;
-        var pMiter *Abc_Obj_t;
-        var i int32;
-
-        vPairs = Vec_PtrAlloc( 100 );
-        
-        // collect the CO nodes for the miter
-        if oCurrMatch != nil {
-            for i = 0; i < Vec_PtrSize( oCurrMatch ); i += 2 {
-                Vec_PtrPush( vPairs, Abc_ObjChild0Copy((Abc_Obj_t *)Vec_PtrEntry(oCurrMatch, i)) );
-                Vec_PtrPush( vPairs, Abc_ObjChild0Copy((Abc_Obj_t *)Vec_PtrEntry(oCurrMatch, i+1)) );
-            }
-        
-        } else {
-            var pNode *Abc_Obj_t;
-
-            // inlining of macro Abc_NtkForEachCo
-            for  i = 0; (i < Abc_NtkCoNum(pNtk1)) && (((pNode) = Abc_NtkCo(pNtk1, i)), 1); i++  {
-                Vec_PtrPush( vPairs, Abc_ObjChild0Copy(pNode) );
-                pNode = Abc_NtkCo( pNtk2, i );
-                Vec_PtrPush( vPairs, Abc_ObjChild0Copy(pNode) );
-            }
-        }
-        
-     pMiter = Abc_AigMiter( (Abc_Aig_t *)pNtkMiter.pManFunc, vPairs, 0 );
-     Abc_ObjAddFanin( Abc_NtkPo(pNtkMiter,0), pMiter );
-     Vec_PtrFree(vPairs);
-    }
-
-    //Abc_AigCleanup(pNtkMiter->pManFunc);
-    
-    return pNtkMiter;
+func refineIOBySimulation(pNtk *Abc_Ntk_t, iMatch []*Vec_Int_t, iLastItem *int32, iGroup []int32, iDep []*Vec_Int_t, oMatch []*Vec_Int_t, oLastItem *int32, oGroup []int32, oDep []*Vec_Int_t, piValues string, observability []int32, topOrder []*Vec_Ptr_t) int32 {
+	_ = oDep
+	graph := baseabc.Abc_NtkStrashToGia(pNtk)
+	inputCount, outputEdges := len(graph.Inputs()), graph.Outputs()
+	model := make([]int32, inputCount)
+	for i := 0; i < inputCount && i < len(piValues); i++ {
+		model[i] = int32(piValues[i] - '0')
+	}
+	baseOutput := Abc_NtkSimulateOneNode(pNtk, model, 0, topOrder)
+	refined := int32(0)
+	lastOutput := *oLastItem
+	for i := int32(0); i < lastOutput && *oLastItem != int32(len(outputEdges)); i++ {
+		if Vec_IntSize(oMatch[i]) < 2 {
+			continue
+		}
+		first := Vec_IntEntry(oMatch[i], 0)
+		separates := false
+		for j := int32(1); j < Vec_IntSize(oMatch[i]); j++ {
+			if baseOutput[Vec_IntEntry(oMatch[i], j)] != baseOutput[first] {
+				separates = true
+				break
+			}
+		}
+		if !separates {
+			continue
+		}
+		newIndex := *oLastItem
+		if oMatch[newIndex] == nil {
+			oMatch[newIndex] = Vec_IntAlloc(1)
+		}
+		remaining := Vec_IntAlloc(Vec_IntSize(oMatch[i]))
+		for j := int32(0); j < Vec_IntSize(oMatch[i]); j++ {
+			item := Vec_IntEntry(oMatch[i], j)
+			if baseOutput[item] != 0 {
+				Vec_IntPush(oMatch[newIndex], item)
+				oGroup[item] = newIndex
+			} else {
+				Vec_IntPush(remaining, item)
+			}
+		}
+		Vec_IntFree(oMatch[i])
+		oMatch[i] = remaining
+		(*oLastItem)++
+		refined = 1
+	}
+	if *oLastItem > lastOutput {
+		iSortDependencies(pNtk, iDep, oGroup)
+	}
+	oComputed := make([]int32, len(outputEdges))
+	lastInput := *iLastItem
+	for groupIndex := int32(0); groupIndex < lastInput && *iLastItem != int32(inputCount); groupIndex++ {
+		if Vec_IntSize(iMatch[groupIndex]) < 2 {
+			continue
+		}
+		keys := make([]int32, Vec_IntSize(iMatch[groupIndex]))
+		for j := int32(0); j < Vec_IntSize(iMatch[groupIndex]); j++ {
+			input := Vec_IntEntry(iMatch[groupIndex], j)
+			flipped := append([]int32(nil), model...)
+			flipped[input] ^= 1
+			output := Abc_NtkSimulateOneNode(pNtk, flipped, input, topOrder)
+			var key int32
+			for k := int32(0); k < Vec_IntSize(iDep[input]); k++ {
+				o := Vec_IntEntry(iDep[input], k)
+				if output[o] != 0 {
+					key += oGroup[o] + 1
+				}
+				if baseOutput[o] != output[o] {
+					oComputed[o] += groupIndex + 1
+					observability[input]++
+				}
+			}
+			keys[j] = key
+		}
+		if bmSplitByKey(iMatch, iGroup, groupIndex, iLastItem, keys) != 0 {
+			refined = 1
+		}
+	}
+	if *iLastItem > lastInput {
+		oSortDependencies(pNtk, oDep, iGroup)
+	}
+	lastOutput = *oLastItem
+	for groupIndex := int32(0); groupIndex < lastOutput && *oLastItem != int32(len(outputEdges)); groupIndex++ {
+		if Vec_IntSize(oMatch[groupIndex]) < 2 {
+			continue
+		}
+		keys := make([]int32, Vec_IntSize(oMatch[groupIndex]))
+		for j := int32(0); j < Vec_IntSize(oMatch[groupIndex]); j++ {
+			keys[j] = oComputed[Vec_IntEntry(oMatch[groupIndex], j)]
+		}
+		if bmSplitByKey(oMatch, oGroup, groupIndex, oLastItem, keys) != 0 {
+			refined = 1
+		}
+	}
+	return refined
 }
 
-var pValues1__, pValues2__ *int32;
-
-func Abc_NtkVerifyReportError(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, pModel *int32, mismatch *Vec_Int_t) {
-    var vNodes *Vec_Ptr_t;
-    var pNode *Abc_Obj_t;    
-    var nErrors int32;
-    var nPrinted int32;
-    var i int32;
-    var iNode int32 = -1;
-
-    assert(Abc_NtkCiNum(pNtk1) == Abc_NtkCiNum(pNtk2), "Abc_NtkCiNum(pNtk1) == Abc_NtkCiNum(pNtk2)");
-    assert(Abc_NtkCoNum(pNtk1) == Abc_NtkCoNum(pNtk2), "Abc_NtkCoNum(pNtk1) == Abc_NtkCoNum(pNtk2)");
-    // get the CO values under this model
-    pValues1__ = Abc_NtkVerifySimulatePattern( pNtk1, pModel );
-    pValues2__ = Abc_NtkVerifySimulatePattern( pNtk2, pModel );
-    // count the mismatches
-    nErrors = 0;
-    for  i = 0; i < Abc_NtkCoNum(pNtk1); i++  {
-        nErrors += int32(( pValues1__[i] != pValues2__[i] ));
-    }
-    //printf( "Verification failed for at least %d outputs: ", nErrors );
-    // print the first 3 outputs
-    nPrinted = 0;
-    for  i = 0; i < Abc_NtkCoNum(pNtk1); i++  {
-        if pValues1__[i] != pValues2__[i] {
-            if iNode == -1 {
-                iNode = i; }
-            //printf( " %s", Abc_ObjName(Abc_NtkCo(pNtk1,i)) );
-            if nPrinted++; nPrinted == 3 {
-                break; }
-        }
-    }
-    /*if ( nPrinted != nErrors )
-        printf( " ..." );
-    printf( "\n" );*/
-    // report mismatch for the first output
-    if iNode >= 0 {
-        /*printf( "Output %s: Value in Network1 = %d. Value in Network2 = %d.\n", 
-            Abc_ObjName(Abc_NtkCo(pNtk1,iNode)), pValues1[iNode], pValues2[iNode] );
-        printf( "Input pattern: " );*/
-        // collect PIs in the cone
-        pNode = Abc_NtkCo(pNtk1,iNode);
-        vNodes = Abc_NtkNodeSupport( pNtk1, &pNode, 1 );
-        // set the PI numbers
-        // inlining of macro Abc_NtkForEachCi
-        for  i = 0; (i < Abc_NtkCiNum(pNtk1)) && (((pNode) = Abc_NtkCi(pNtk1, i)), 1); i++  {
-            pNode.iTemp = i;
-        }
-        // print the model
-        pNode = (Abc_Obj_t *)Vec_PtrEntry( vNodes, 0 );
-        if Abc_ObjIsCi(pNode) {
-            // inlining of macro Vec_PtrForEachEntry
-            for  i = 0; (i < Vec_PtrSize(vNodes)) && (((pNode) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {
-                assert(Abc_ObjIsCi(pNode), "Abc_ObjIsCi(pNode)");
-                //printf( " %s=%d", Abc_ObjName(pNode), pModel[(int)pNode->pCopy] );
-                Vec_IntPush(mismatch, Abc_ObjId(pNode)-1);
-                Vec_IntPush(mismatch, pModel[int32((size_t))pNode.pCopy]);
-            }
-        }
-        //printf( "\n" );
-        Vec_PtrFree( vNodes );
-    }
-    free( pValues1__ );
-    free( pValues2__ );
+func Abc_NtkMiterBm(pNtk1, pNtk2 *Abc_Ntk_t, iCurrMatch, oCurrMatch *Vec_Ptr_t) *Abc_Ntk_t {
+	if pNtk1 == nil || pNtk2 == nil {
+		return nil
+	}
+	graph1, graph2 := baseabc.Abc_NtkStrashToGia(pNtk1), baseabc.Abc_NtkStrashToGia(pNtk2)
+	cis := func(n *Abc_Ntk_t) []*baseabc.Object {
+		var result []*baseabc.Object
+		for _, obj := range n.Objects() {
+			if obj.IsCI() {
+				result = append(result, obj)
+			}
+		}
+		return result
+	}
+	cos := func(n *Abc_Ntk_t) []*baseabc.Object {
+		var result []*baseabc.Object
+		for _, obj := range n.Objects() {
+			if obj.IsCO() {
+				result = append(result, obj)
+			}
+		}
+		return result
+	}
+	ci1, ci2, co1, co2 := cis(pNtk1), cis(pNtk2), cos(pNtk1), cos(pNtk2)
+	inputs1, inputs2 := graph1.Inputs(), graph2.Inputs()
+	outputs1, outputs2 := graph1.Outputs(), graph2.Outputs()
+	if len(ci1) != len(inputs1) || len(ci2) != len(inputs2) || len(co1) != len(outputs1) || len(co2) != len(outputs2) {
+		return nil
+	}
+	ciIndex1, ciIndex2 := make(map[*baseabc.Object]int, len(ci1)), make(map[*baseabc.Object]int, len(ci2))
+	coIndex1, coIndex2 := make(map[*baseabc.Object]int, len(co1)), make(map[*baseabc.Object]int, len(co2))
+	for i, o := range ci1 {
+		ciIndex1[o] = i
+	}
+	for i, o := range ci2 {
+		ciIndex2[o] = i
+	}
+	for i, o := range co1 {
+		coIndex1[o] = i
+	}
+	for i, o := range co2 {
+		coIndex2[o] = i
+	}
+	shared := aiggraph.NewGraph()
+	aiggraph.Aig_ObjSetCopy(graph1, aiggraph.Edge(0), aiggraph.Edge(0))
+	aiggraph.Aig_ObjSetCopy(graph2, aiggraph.Edge(0), aiggraph.Edge(0))
+	mapInput := func(a, b *baseabc.Object) bool {
+		i1, aIs1 := ciIndex1[a]
+		i2, aIs2 := ciIndex2[a]
+		j1, bIs1 := ciIndex1[b]
+		j2, bIs2 := ciIndex2[b]
+		var index1, index2 int
+		switch {
+		case aIs1 && bIs2:
+			index1, index2 = i1, j2
+		case bIs1 && aIs2:
+			index1, index2 = j1, i2
+		default:
+			return false
+		}
+		input := shared.NewInput()
+		aiggraph.Aig_ObjSetCopy(graph1, inputs1[index1], input)
+		aiggraph.Aig_ObjSetCopy(graph2, inputs2[index2], input)
+		return true
+	}
+	if iCurrMatch == nil {
+		if len(ci1) != len(ci2) {
+			return nil
+		}
+		for i := range ci1 {
+			if !mapInput(ci1[i], ci2[i]) {
+				return nil
+			}
+		}
+	} else {
+		if Vec_PtrSize(iCurrMatch)%2 != 0 {
+			return nil
+		}
+		for i := int32(0); i < Vec_PtrSize(iCurrMatch); i += 2 {
+			o1, ok1 := Vec_PtrEntry(iCurrMatch, i).(*baseabc.Object)
+			o2, ok2 := Vec_PtrEntry(iCurrMatch, i+1).(*baseabc.Object)
+			if !ok1 || !ok2 || !mapInput(o1, o2) {
+				return nil
+			}
+		}
+	}
+	var pairs [][2]*baseabc.Object
+	if oCurrMatch == nil {
+		if len(co1) != len(co2) {
+			return nil
+		}
+		for i := range co1 {
+			pairs = append(pairs, [2]*baseabc.Object{co1[i], co2[i]})
+		}
+	} else {
+		if Vec_PtrSize(oCurrMatch)%2 != 0 {
+			return nil
+		}
+		for i := int32(0); i < Vec_PtrSize(oCurrMatch); i += 2 {
+			o1, ok1 := Vec_PtrEntry(oCurrMatch, i).(*baseabc.Object)
+			o2, ok2 := Vec_PtrEntry(oCurrMatch, i+1).(*baseabc.Object)
+			if !ok1 || !ok2 {
+				return nil
+			}
+			pairs = append(pairs, [2]*baseabc.Object{o1, o2})
+		}
+	}
+	miter := aiggraph.Edge(1) // ABC_AigMiter returns constant zero for no pairs.
+	for _, pair := range pairs {
+		i1, aIs1 := coIndex1[pair[0]]
+		i2, aIs2 := coIndex2[pair[0]]
+		j1, bIs1 := coIndex1[pair[1]]
+		j2, bIs2 := coIndex2[pair[1]]
+		var index1, index2 int
+		switch {
+		case aIs1 && bIs2:
+			index1, index2 = i1, j2
+		case bIs1 && aIs2:
+			index1, index2 = j1, i2
+		default:
+			return nil
+		}
+		a := aiggraph.Aig_ManDup_rec(shared, graph1, outputs1[index1])
+		b := aiggraph.Aig_ManDup_rec(shared, graph2, outputs2[index2])
+		miter = shared.OR(miter, shared.XOR(a, b))
+	}
+	shared.AddOutput(miter)
+	manager := gia.Gia_ManFromAig(shared)
+	defer gia.Gia_ManStop(manager)
+	name := baseabc.Abc_NtkName(pNtk1) + "_" + baseabc.Abc_NtkName(pNtk2) + "_miter"
+	return baseabc.Abc_NtkCreateFromGias(name, nil, manager)
 }
 
-var spStatic_Abc_NtkMiterSatBm_pSat *sat_solver = nil;
-func Abc_NtkMiterSatBm(pNtk *Abc_Ntk_t, nConfLimit ABC_INT64_T, nInsLimit ABC_INT64_T, fVerbose int32, pNumConfs *ABC_INT64_T, pNumInspects *ABC_INT64_T) int32 {
-    
-    var status lbool;
-    var RetValue int32;
-    var clk abctime;    
-
-    extern int Abc_NodeAddClausesTop( sat_solver * spStatic_Abc_NtkMiterSatBm_pSat, Abc_Obj_t * pNode, Vec_Int_t * vVars );
-    extern Vec_Int_t * Abc_NtkGetCiSatVarNums( Abc_Ntk_t * pNtk );    
- 
-    if pNumConfs != nil {
-        *pNumConfs = 0; }
-    if pNumInspects != nil {
-        *pNumInspects = 0; }
-
-    assert(Abc_NtkLatchNum(pNtk) == 0, "Abc_NtkLatchNum(pNtk) == 0");
-
-//    if ( Abc_NtkPoNum(pNtk) > 1 )
-//        fprintf( stdout, "Warning: The miter has %d outputs. SAT will try to prove all of them.\n", Abc_NtkPoNum(pNtk) );
-
-    // load clauses into the sat_solver
-    clk = Abc_Clock();
-
-            
-        
-    spStatic_Abc_NtkMiterSatBm_pSat = (sat_solver *)Abc_NtkMiterSatCreate( pNtk, 0 );
-            
-    if spStatic_Abc_NtkMiterSatBm_pSat == nil {
-        return 1; }
-//printf( "%d \n", pSat->clauses.size );
-//sat_solver_delete( pSat );
-//return 1;
-
-//    printf( "Created SAT problem with %d variable and %d clauses. ", sat_solver_nvars(pSat), sat_solver_nclauses(pSat) );
-//    PRT( "Time", Abc_Clock() - clk );
-
-    // simplify the problem
-    clk = Abc_Clock();
-    status = sat_solver_simplify(spStatic_Abc_NtkMiterSatBm_pSat);
-//    printf( "Simplified the problem to %d variables and %d clauses. ", sat_solver_nvars(pSat), sat_solver_nclauses(pSat) );
-//    PRT( "Time", Abc_Clock() - clk );
-    if status == 0 {
-        sat_solver_delete( spStatic_Abc_NtkMiterSatBm_pSat );
-//        printf( "The problem is UNSATISFIABLE after simplification.\n" );
-        return 1;
-    }
-
-    // solve the miter
-    clk = Abc_Clock();
-    if fVerbose != 0 {
-        spStatic_Abc_NtkMiterSatBm_pSat.verbosity = 1; }
-    status = sat_solver_solve( spStatic_Abc_NtkMiterSatBm_pSat, nil, nil, (ABC_INT64_T)nConfLimit, (ABC_INT64_T)nInsLimit, (ABC_INT64_T)0, (ABC_INT64_T)0 );
-    if status == l_Undef {
-//        printf( "The problem timed out.\n" );
-        RetValue = -1;
-    
-    } else if status == l_True {
-//        printf( "The problem is SATISFIABLE.\n" );
-        RetValue = 0;
-    
-    } else if status == l_False {
-//        printf( "The problem is UNSATISFIABLE.\n" );
-        RetValue = 1;
-    
-    } else {
-        assert(false, "0"); }
-//    PRT( "SAT sat_solver time", Abc_Clock() - clk );
-//    printf( "The number of conflicts = %d.\n", (int)pSat->sat_solver_stats.conflicts );
-
-    // if the problem is SAT, get the counterexample
-    if status == l_True {
-//        Vec_Int_t * vCiIds = Abc_NtkGetCiIds( pNtk );
-        var vCiIds *Vec_Int_t  = Abc_NtkGetCiSatVarNums( pNtk );
-        pNtk.pModel = Sat_SolverGetModel( spStatic_Abc_NtkMiterSatBm_pSat, vCiIds.pArray, vCiIds.nSize );
-        Vec_IntFree( vCiIds );
-    }
-    // free the sat_solver
-    if fVerbose != 0 {
-        Sat_SolverPrintStats( os.Stdout, spStatic_Abc_NtkMiterSatBm_pSat ); }
-
-    if pNumConfs != nil {
-        *pNumConfs = int32(spStatic_Abc_NtkMiterSatBm_pSat.stats.conflicts); }
-    if pNumInspects != nil {
-        *pNumInspects = int32(spStatic_Abc_NtkMiterSatBm_pSat.stats.inspects); }
-
-//sat_solver_store_write( pSat, "trace.cnf" );    
-    sat_solver_store_free( spStatic_Abc_NtkMiterSatBm_pSat );
-    sat_solver_delete( spStatic_Abc_NtkMiterSatBm_pSat );
-    return RetValue;
+func Abc_NtkVerifyReportError(pNtk1, pNtk2 *Abc_Ntk_t, model []int32, mismatch *Vec_Int_t) {
+	graph1, graph2 := baseabc.Abc_NtkStrashToGia(pNtk1), baseabc.Abc_NtkStrashToGia(pNtk2)
+	if len(graph1.Inputs()) != len(model) || len(graph2.Inputs()) != len(model) {
+		return
+	}
+	inputs := make([]bool, len(model))
+	for i, value := range model {
+		inputs[i] = value != 0
+	}
+	values1, err1 := graph1.Evaluate(inputs)
+	values2, err2 := graph2.Evaluate(inputs)
+	if err1 != nil || err2 != nil {
+		return
+	}
+	outputs1, outputs2 := graph1.Outputs(), graph2.Outputs()
+	count := len(outputs1)
+	if len(outputs2) < count {
+		count = len(outputs2)
+	}
+	firstMismatch := -1
+	for i := 0; i < count; i++ {
+		if values1[i] != values2[i] {
+			firstMismatch = i
+			break
+		}
+	}
+	if firstMismatch < 0 || mismatch == nil {
+		return
+	}
+	supports := sim.Sim_ComputeFunSupp(graph1, false)
+	support := supports[firstMismatch]
+	for i, value := range model {
+		if sim.Sim_HasBit(support, i) {
+			Vec_IntPush(mismatch, int32(i))
+			Vec_IntPush(mismatch, value)
+		}
+	}
 }
 
-func Abc_NtkBmSat(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, iMatchPairs *Vec_Ptr_t, oMatchPairs *Vec_Ptr_t, mismatch *Vec_Int_t, mode int32) int32 {    
-    extern Abc_Ntk_t * Abc_NtkMulti( Abc_Ntk_t * pNtk, int nThresh, int nFaninMax, int fCnf, int fMulti, int fSimple, int fFactor );    
-
-    var pMiter *Abc_Ntk_t  = nil;
-    var pCnf *Abc_Ntk_t;
-    var RetValue int32;
-
-    // get the miter of the two networks
-    if mode == 0 {
-        //Abc_NtkDelete( pMiter );
-        pMiter = Abc_NtkMiterBm( pNtk1, pNtk2, iMatchPairs, oMatchPairs );
-    
-    } else if mode == 1 {        // add new outputs
-            
-        var i int32;
-        var pObj *Abc_Obj_t;
-        var vPairs *Vec_Ptr_t;
-        var pNtkMiter *Abc_Obj_t;        
-
-        vPairs = Vec_PtrAlloc( 100 );
-
-        // inlining of macro Abc_NtkForEachCo
-        for  i = 0; (i < Abc_NtkCoNum(pMiter)) && (((pObj) = Abc_NtkCo(pMiter, i)), 1); i++  {            
-            Abc_ObjRemoveFanins( pObj );
-        }
-
-        for i = 0; i < Vec_PtrSize( oMatchPairs ); i += 2 {
-            Vec_PtrPush( vPairs, Abc_ObjChild0Copy((Abc_Obj_t *)Vec_PtrEntry(oMatchPairs, i)) );
-            Vec_PtrPush( vPairs, Abc_ObjChild0Copy((Abc_Obj_t *)Vec_PtrEntry(oMatchPairs, i+1)) );
-        }
-        pNtkMiter = Abc_AigMiter( (Abc_Aig_t *)pMiter.pManFunc, vPairs, 0 );
-        Abc_ObjAddFanin( Abc_NtkPo(pMiter,0), pNtkMiter );     
-        Vec_PtrFree( vPairs);
-    
-    } else if mode == 2 {        // add some outputs
-    
-
-    
-    } else if mode == 3 {            // remove all outputs
-    
-    }
-
-    if pMiter == nil {
-        fmt.Printf("Miter computation has failed.");        
-        return -1;
-    }
-    RetValue = Abc_NtkMiterIsConstant( pMiter );
-    if RetValue == 0 {        
-        /*printf("Networks are NOT EQUIVALENT after structural hashing.");    */
-        // report the error        
-        if mismatch != nil {
-            pMiter.pModel = Abc_NtkVerifyGetCleanModel( pMiter, 1 );
-            Abc_NtkVerifyReportError( pNtk1, pNtk2, pMiter.pModel, mismatch );
-            pMiter.pModel = nil;
-        }        
-        Abc_NtkDelete( pMiter );
-        return RetValue;
-    }
-    if RetValue == 1 {        
-        /*printf("Networks are equivalent after structural hashing.");    */
-        Abc_NtkDelete( pMiter );
-        return RetValue;
-    }
-
-    // convert the miter into a CNF
-    //if(mode == 0)
-    pCnf = Abc_NtkMulti( pMiter, 0, 100, 1, 0, 0, 0 );
-    Abc_NtkDelete( pMiter );
-    if pCnf == nil {        
-        fmt.Printf("Renoding for CNF has failed.");    
-        return -1;
-    }
-
-    // solve the CNF using the SAT solver
-    RetValue = Abc_NtkMiterSat( pCnf, (ABC_INT64_T)10000, (ABC_INT64_T)0, 0, nil, nil);
-    /*if ( RetValue == -1 )
-        printf("Networks are undecided (SAT solver timed out).");    
-    else if ( RetValue == 0 )        
-        printf("Networks are NOT EQUIVALENT after SAT.");    
-    else
-        printf("Networks are equivalent after SAT.");    */
-    if mismatch != nil && pCnf.pModel {
-        Abc_NtkVerifyReportError( pNtk1, pNtk2, pCnf.pModel, mismatch ); }
-
-    pCnf.pModel = nil;
-    Abc_NtkDelete( pCnf );
-
-    return RetValue;
+func Abc_NtkMiterSatBm(pNtk *Abc_Ntk_t, nConfLimit, nInsLimit ABC_INT64_T, fVerbose int32, pNumConfs, pNumInspects *ABC_INT64_T) int32 {
+	return Abc_NtkMiterSat(pNtk, nConfLimit, nInsLimit, fVerbose, pNumConfs, pNumInspects)
 }
 
-func checkEquivalence(pNtk1 *Abc_Ntk_t, matchedInputs1 *Vec_Int_t, matchedOutputs1 *Vec_Int_t, pNtk2 *Abc_Ntk_t, matchedInputs2 *Vec_Int_t, matchedOutputs2 *Vec_Int_t) int32 {    
-    var iMatchPairs, oMatchPairs *Vec_Ptr_t;
-    var i int32;
-    var result int32;
-
-    iMatchPairs = Vec_PtrAlloc( Abc_NtkPiNum( pNtk1 ) * 2);
-    oMatchPairs = Vec_PtrAlloc( Abc_NtkPoNum( pNtk1 ) * 2);
-
-    for i = 0; i < Abc_NtkPiNum(pNtk1); i++ {    
-        Vec_PtrPush(iMatchPairs, Abc_NtkPi(pNtk2, Vec_IntEntry(matchedInputs2, i)));
-        Vec_PtrPush(iMatchPairs, Abc_NtkPi(pNtk1, Vec_IntEntry(matchedInputs1, i)));
-    }
-                
-
-    for i = 0; i < Abc_NtkPoNum(pNtk1); i++ {
-        Vec_PtrPush(oMatchPairs, Abc_NtkPo(pNtk2, Vec_IntEntry(matchedOutputs2, i)));
-        Vec_PtrPush(oMatchPairs, Abc_NtkPo(pNtk1, Vec_IntEntry(matchedOutputs1, i)));
-    }        
-
-    result = Abc_NtkBmSat(pNtk1, pNtk2, iMatchPairs, oMatchPairs, nil, 0);
-
-    if result {
-        fmt.Printf("*** Circuits are equivalent ***\n");
-    } else {
-        fmt.Printf("*** Circuits are NOT equivalent ***\n"); }
-
-    Vec_PtrFree( iMatchPairs );
-    Vec_PtrFree( oMatchPairs );    
-
-    return result;
+func Abc_NtkBmSat(pNtk1, pNtk2 *Abc_Ntk_t, iMatchPairs, oMatchPairs *Vec_Ptr_t, mismatch *Vec_Int_t, mode int32) int32 {
+	if mode != 0 {
+		fmt.Printf("Miter computation has failed.")
+		return -1
+	}
+	miter := Abc_NtkMiterBm(pNtk1, pNtk2, iMatchPairs, oMatchPairs)
+	if miter == nil {
+		fmt.Printf("Miter computation has failed.")
+		return -1
+	}
+	defer baseabc.Abc_NtkDelete(miter)
+	constant := Abc_NtkMiterIsConstant(miter)
+	if constant == 0 {
+		return 0
+	}
+	if constant == 1 {
+		return 1
+	}
+	status := Abc_NtkMiterSat(miter, 10000, 0, 0, nil, nil)
+	if status == 0 && mismatch != nil && len(miter.Model) > 0 {
+		Abc_NtkVerifyReportError(pNtk1, pNtk2, miter.Model, mismatch)
+	}
+	return status
 }
 
-func computeCofactor(pNtk *Abc_Ntk_t, nodesInLevel **Vec_Ptr_t, bitVector *int32, currInputs *Vec_Int_t) *Abc_Ntk_t {    
-    var subNtk *Abc_Ntk_t;    
-    var pObj, pObjNew *Abc_Obj_t;
-    var i, j, numOfLevels int32;        
-
-    numOfLevels = Abc_AigLevel( pNtk );        // number of levels excludes PI/POs    
-
-    // start a new network
-    subNtk = Abc_NtkAlloc( ABC_NTK_STRASH, ABC_FUNC_AIG, 1 );    
-    subNtk.pName = Extra_UtilStrsav("subNtk");
-
-    Abc_AigConst1(pNtk).pCopy = Abc_AigConst1(subNtk);    
-
-    // clean the node copy fields and mark the nodes that need to be copied to the new network
-    Abc_NtkCleanCopy( pNtk );
-
-    if bitVector != nil {
-        for i = 0; i < Abc_NtkPiNum(pNtk); i++ {
-            if bitVector[i] {
-                pObj = Abc_NtkPi(pNtk, i);
-                pObj.pCopy = (Abc_Obj_t *)(1);
-            }
-        }
-    }
-
-    for i = 0; i < Vec_IntSize(currInputs); i++ {
-        pObj = Abc_NtkPi(pNtk, Vec_IntEntry(currInputs, i));
-        pObjNew = Abc_NtkDupObj( subNtk, pObj, 1 );
-        pObj.pCopy = pObjNew;
-    }
-        
-
-    // i = 0 are the inputs and the inputs are not added to the 2d array ( nodesInLevel )
-    for  i = 0; i <= numOfLevels; i++  {    
-        for  j = 0; j < Vec_PtrSize( nodesInLevel[i] ); j++ {
-            pObj = (Abc_Obj_t *)Vec_PtrEntry( nodesInLevel[i], j );
-
-            if Abc_ObjChild0Copy(pObj) == nil && Abc_ObjChild1Copy(pObj) == nil {
-                pObj.pCopy = nil;
-            } else if Abc_ObjChild0Copy(pObj) == nil && Abc_ObjChild1Copy(pObj) == (void*)(1) {
-                pObj.pCopy = nil;
-            } else if Abc_ObjChild0Copy(pObj) == nil && (Abc_ObjChild1Copy(pObj) != (nil) && Abc_ObjChild1Copy(pObj) != (void*)(1)) {
-                pObj.pCopy = nil;
-            } else if Abc_ObjChild0Copy(pObj) == (void*)(1) && Abc_ObjChild1Copy(pObj) == nil {
-                pObj.pCopy = nil;
-            } else if Abc_ObjChild0Copy(pObj) == (void*)(1) && Abc_ObjChild1Copy(pObj) == (void*)(1) {
-                pObj.pCopy = (Abc_Obj_t *)(1);
-            } else if Abc_ObjChild0Copy(pObj) == (void*)(1) && (Abc_ObjChild1Copy(pObj) != (nil) && Abc_ObjChild1Copy(pObj) != (void*)(1)) {
-                pObj.pCopy = Abc_ObjChild1Copy(pObj);
-            } else if (Abc_ObjChild0Copy(pObj) != (nil) && Abc_ObjChild0Copy(pObj) != (void*)(1)) && Abc_ObjChild1Copy(pObj) == nil {
-                pObj.pCopy = nil;
-            } else if (Abc_ObjChild0Copy(pObj) != (nil) && Abc_ObjChild0Copy(pObj) != (void*)(1)) && Abc_ObjChild1Copy(pObj) == (void*)(1) {
-                pObj.pCopy = Abc_ObjChild0Copy(pObj);
-            } else if (Abc_ObjChild0Copy(pObj) != (nil) && Abc_ObjChild0Copy(pObj) != (void*)(1)) &&
-                     (Abc_ObjChild1Copy(pObj) != (nil) && Abc_ObjChild1Copy(pObj) != (void*)(1)) {
-                pObj.pCopy = Abc_AigAnd( (Abc_Aig_t *)subNtk.pManFunc, Abc_ObjChild0Copy(pObj), Abc_ObjChild1Copy(pObj) ); }                    
-        }
-    }    
-
-    for i = 0; i < Abc_NtkPoNum(pNtk); i++ {
-        pObj = Abc_NtkPo(pNtk, i);
-        pObjNew = Abc_NtkDupObj( subNtk, pObj, 1 );
-        
-        if Abc_ObjChild0Copy(pObj) == nil {
-            Abc_ObjAddFanin( pObjNew, Abc_AigConst1(subNtk));
-            pObjNew.fCompl0 = 1;
-        
-        } else if Abc_ObjChild0Copy(pObj) == (void*)(1) {
-            Abc_ObjAddFanin( pObjNew, Abc_AigConst1(subNtk));
-            pObjNew.fCompl0 = 0;
-        
-        } else {
-            Abc_ObjAddFanin( pObjNew, Abc_ObjChild0Copy(pObj) ); }
-    }
-
-    return subNtk;
+func checkEquivalence(pNtk1 *Abc_Ntk_t, matchedInputs1, matchedOutputs1 *Vec_Int_t, pNtk2 *Abc_Ntk_t, matchedInputs2, matchedOutputs2 *Vec_Int_t) int32 {
+	iMatchPairs := Vec_PtrAlloc(2 * Abc_NtkPiNum(pNtk1))
+	oMatchPairs := Vec_PtrAlloc(2 * Abc_NtkPoNum(pNtk1))
+	defer Vec_PtrFree(iMatchPairs)
+	defer Vec_PtrFree(oMatchPairs)
+	for i := int32(0); i < Abc_NtkPiNum(pNtk1); i++ {
+		Vec_PtrPush(iMatchPairs, Abc_NtkPi(pNtk2, Vec_IntEntry(matchedInputs2, i)))
+		Vec_PtrPush(iMatchPairs, Abc_NtkPi(pNtk1, Vec_IntEntry(matchedInputs1, i)))
+	}
+	for i := int32(0); i < Abc_NtkPoNum(pNtk1); i++ {
+		Vec_PtrPush(oMatchPairs, Abc_NtkPo(pNtk2, Vec_IntEntry(matchedOutputs2, i)))
+		Vec_PtrPush(oMatchPairs, Abc_NtkPo(pNtk1, Vec_IntEntry(matchedOutputs1, i)))
+	}
+	result := Abc_NtkBmSat(pNtk1, pNtk2, iMatchPairs, oMatchPairs, nil, 0)
+	if result != 0 {
+		fmt.Printf("*** Circuits are equivalent ***\n")
+	} else {
+		fmt.Printf("*** Circuits are NOT equivalent ***\n")
+	}
+	return result
 }
 
-var matchFile *os.File;
-
-var spStatic_matchNonSingletonOutputs_MATCH_FOUND int32;
-var spStatic_matchNonSingletonOutputs_counter int32;
-func matchNonSingletonOutputs(pNtk1 *Abc_Ntk_t, nodesInLevel1 **Vec_Ptr_t, iMatch1 **Vec_Int_t, iDep1 **Vec_Int_t, matchedInputs1 *Vec_Int_t, iGroup1 *int32, oMatch1 **Vec_Int_t, oGroup1 *int32, pNtk2 *Abc_Ntk_t, nodesInLevel2 **Vec_Ptr_t, iMatch2 **Vec_Int_t, iDep2 **Vec_Int_t, matchedInputs2 *Vec_Int_t, iGroup2 *int32, oMatch2 **Vec_Int_t, oGroup2 *int32, matchedOutputs1 *Vec_Int_t, matchedOutputs2 *Vec_Int_t, oMatchedGroups *Vec_Int_t, iNonSingleton *Vec_Int_t, subNtk1 *Abc_Ntk_t, subNtk2 *Abc_Ntk_t, oMatchPairs *Vec_Ptr_t, oNonSingleton *Vec_Int_t, oI int32, idx int32, ii int32, iidx int32) int32 {        
-    
-    var i int32;
-    var j, temp int32;
-    var mismatch *Vec_Int_t;        
-    var skipList *int32;    
-    
-
-    spStatic_matchNonSingletonOutputs_MATCH_FOUND = FALSE;
-    
-    if oI == Vec_IntSize( oNonSingleton ) {
-        if iNonSingleton != nil {            
-            if match1by1(pNtk1, nodesInLevel1, iMatch1, iDep1, matchedInputs1, iGroup1, oMatch1, oGroup1,
-                          pNtk2, nodesInLevel2, iMatch2, iDep2, matchedInputs2, iGroup2, oMatch2, oGroup2,
-                           matchedOutputs1, matchedOutputs2, oMatchedGroups, iNonSingleton, ii, iidx) != 0 {
-                spStatic_matchNonSingletonOutputs_MATCH_FOUND = TRUE; } }    
-
-        if iNonSingleton == nil {
-            spStatic_matchNonSingletonOutputs_MATCH_FOUND = TRUE; }
-
-        return spStatic_matchNonSingletonOutputs_MATCH_FOUND;
-    }
-
-    i = Vec_IntEntry(oNonSingleton, oI);
-
-    mismatch = Vec_IntAlloc(10);
-    
-    // inlining of macro ABC_ALLOC
-    skipList = ((int *) malloc(sizeof(int) * (size_t)(Vec_IntSize(oMatch1[i]))));
-
-    for j = 0; j < Vec_IntSize(oMatch1[i]); j++ {
-        skipList[j] = FALSE;
-    }
-
-    Vec_PtrPush(oMatchPairs, Abc_NtkPo(subNtk1, Vec_IntEntry(oMatch1[i], idx)) );
-    Vec_IntPush(matchedOutputs1, Vec_IntEntry(oMatch1[i], idx));
-
-    for j = 0; j < Vec_IntSize( oMatch2[i] ) && spStatic_matchNonSingletonOutputs_MATCH_FOUND == FALSE; j++ {
-        if Vec_IntEntry(oMatch2[i], j) == -1 || skipList[j] == TRUE {
-            continue; }
-
-        Vec_PtrPush(oMatchPairs, Abc_NtkPo(subNtk2, Vec_IntEntry(oMatch2[i], j)));
-        Vec_IntPush(matchedOutputs2, Vec_IntEntry(oMatch2[i], j));
-
-        spStatic_matchNonSingletonOutputs_counter++;        
-        if Abc_NtkBmSat( subNtk1, subNtk2, nil, oMatchPairs, mismatch, 0) != 0 {
-            /*fprintf(matchFile, "%s matched to %s\n", Abc_ObjName(Abc_NtkPo(pNtk1, Vec_IntEntry(oMatch1[i], idx))), 
-                                         Abc_ObjName(Abc_NtkPo(pNtk2, Vec_IntEntry(oMatch2[i], j))));            */
-
-            temp =  Vec_IntEntry(oMatch2[i], j);
-            Vec_IntWriteEntry(oMatch2[i], j, -1);
-            
-            if idx != Vec_IntSize( oMatch1[i] ) - 1 {
-                // call the same function with idx+1
-                matchNonSingletonOutputs(pNtk1, nodesInLevel1, iMatch1, iDep1, matchedInputs1, iGroup1, oMatch1, oGroup1,
-                                         pNtk2, nodesInLevel2, iMatch2, iDep2, matchedInputs2, iGroup2, oMatch2, oGroup2,
-                                         matchedOutputs1, matchedOutputs2, oMatchedGroups, iNonSingleton,                         
-                                         subNtk1, subNtk2, oMatchPairs,
-                                         oNonSingleton, oI, idx+1, ii, iidx);
-            } else {    
-                // call the same function with idx = 0 and oI++
-                matchNonSingletonOutputs(pNtk1, nodesInLevel1, iMatch1, iDep1, matchedInputs1, iGroup1, oMatch1, oGroup1,
-                                         pNtk2, nodesInLevel2, iMatch2, iDep2, matchedInputs2, iGroup2, oMatch2, oGroup2,
-                                         matchedOutputs1, matchedOutputs2, oMatchedGroups, iNonSingleton,                         
-                                         subNtk1, subNtk2, oMatchPairs,
-                                         oNonSingleton, oI+1, 0, ii, iidx); }
-
-            Vec_IntWriteEntry(oMatch2[i], j, temp);
-                
-        } else {
-            var output1, output2 *int32;
-            var k int32;
-            var pObj *Abc_Obj_t;
-            var pModel *int32;
-            var vPiValues string;            
-            
-
-            // inlining of macro ABC_ALLOC
-            vPiValues = ((char *) malloc(sizeof(char) * (size_t)(Abc_NtkPiNum(subNtk1) + 1)));
-            vPiValues[Abc_NtkPiNum(subNtk1)] = '\0';    
-            
-            for k = 0; k < Abc_NtkPiNum(subNtk1); k++ {
-                vPiValues[k] = '0';
-            }
-
-            for k = 0; k < Vec_IntSize(mismatch); k += 2 {            
-                vPiValues[Vec_IntEntry(mismatch, k)] = Vec_IntEntry(mismatch, k+1);
-            }                        
-
-            // inlining of macro ABC_ALLOC
-            pModel = ((int *) malloc(sizeof(int) * (size_t)(Abc_NtkCiNum(subNtk1))));    
-
-            // inlining of macro Abc_NtkForEachPi
-            for  k = 0; (k < Abc_NtkPiNum(subNtk1)) && (((pObj) = Abc_NtkPi(subNtk1, k)), 1); k++  {
-                pModel[k] = vPiValues[k] - '0';
-            }
-            // inlining of macro Abc_NtkForEachLatch
-            for  k = 0; (k < Vec_PtrSize((subNtk1).vBoxes)) && (((pObj) = Abc_NtkBox(subNtk1, k)), 1); k++  {           if !Abc_ObjIsLatch(pObj) {} else {
-                pModel[Abc_NtkPiNum(subNtk1)+k] = pObj.iData - 1; }
-            }            
-    
-            output1 = Abc_NtkVerifySimulatePattern( subNtk1, pModel );
-
-            // inlining of macro Abc_NtkForEachLatch
-            for  k = 0; (k < Vec_PtrSize((subNtk2).vBoxes)) && (((pObj) = Abc_NtkBox(subNtk2, k)), 1); k++  {           if !Abc_ObjIsLatch(pObj) {} else {
-                pModel[Abc_NtkPiNum(subNtk2)+k] = pObj.iData - 1; }
-            }
-
-            output2 = Abc_NtkVerifySimulatePattern( subNtk2, pModel );
-            
-
-            for k = 0; k < Vec_IntSize( oMatch1[i] ); k++ {
-                if output1[Vec_IntEntry(oMatch1[i], idx)] != output2[Vec_IntEntry(oMatch2[i], k)] {
-                    skipList[k] = TRUE;    
-                    /*printf("Output is SKIPPED");*/
-                }
-            }
-                
-            vPiValues = nil;
-            pModel = nil;
-            output1 = nil;
-            output2 = nil;
-        }
-        
-        if spStatic_matchNonSingletonOutputs_MATCH_FOUND == FALSE {
-            Vec_PtrPop(oMatchPairs);
-            Vec_IntPop(matchedOutputs2);
-        }
-    }
-
-    if spStatic_matchNonSingletonOutputs_MATCH_FOUND == FALSE {
-        Vec_PtrPop(oMatchPairs);
-        Vec_IntPop(matchedOutputs1);
-    }
-
-    if (spStatic_matchNonSingletonOutputs_MATCH_FOUND != 0) && spStatic_matchNonSingletonOutputs_counter != 0 {        
-        /*printf("Number of OUTPUT SAT instances = %d", counter);*/
-        spStatic_matchNonSingletonOutputs_counter = 0;
-    }
-
-    mismatch = nil;
-    skipList = nil;
-
-    return spStatic_matchNonSingletonOutputs_MATCH_FOUND;
+func computeCofactor(pNtk *Abc_Ntk_t, nodesInLevel []*Vec_Ptr_t, bitVector []int32, currInputs *Vec_Int_t) *Abc_Ntk_t {
+	_ = nodesInLevel
+	source := baseabc.Abc_NtkStrashToGia(pNtk)
+	destination := aiggraph.NewGraph()
+	nodes := source.Nodes()
+	mapped := make([]aiggraph.Edge, len(nodes))
+	known := make([]bool, len(nodes))
+	known[0], mapped[0] = true, aiggraph.Edge(0)
+	for i, input := range source.Inputs() {
+		if i < len(bitVector) && bitVector[i] != 0 {
+			known[input.NodeID()], mapped[input.NodeID()] = true, aiggraph.Edge(0)
+		}
+	}
+	for i := int32(0); i < Vec_IntSize(currInputs); i++ {
+		index := int(Vec_IntEntry(currInputs, i))
+		if index < 0 || index >= len(source.Inputs()) {
+			continue
+		}
+		input := source.Inputs()[index]
+		known[input.NodeID()], mapped[input.NodeID()] = true, destination.NewInput()
+	}
+	for id := 1; id < len(nodes); id++ {
+		node := nodes[id]
+		switch node.Kind {
+		case aiggraph.And, aiggraph.ExclusiveOr:
+			a, b := node.Fanins[0], node.Fanins[1]
+			if !known[a.NodeID()] || !known[b.NodeID()] {
+				continue
+			}
+			aMapped, bMapped := mapped[a.NodeID()], mapped[b.NodeID()]
+			if a.Complemented() {
+				aMapped = aMapped.Not()
+			}
+			if b.Complemented() {
+				bMapped = bMapped.Not()
+			}
+			if node.Kind == aiggraph.ExclusiveOr {
+				mapped[id] = destination.XOR(aMapped, bMapped)
+			} else {
+				mapped[id] = destination.AND(aMapped, bMapped)
+			}
+			known[id] = true
+		case aiggraph.Buffer, aiggraph.Output:
+			a := node.Fanins[0]
+			if known[a.NodeID()] {
+				mapped[id], known[id] = mapped[a.NodeID()], true
+				if a.Complemented() {
+					mapped[id] = mapped[id].Not()
+				}
+			}
+		}
+	}
+	for _, output := range source.Outputs() {
+		driver := nodes[output.NodeID()].Fanins[0]
+		value := aiggraph.Edge(1) // An omitted/unmapped cofactor input is false.
+		if known[driver.NodeID()] {
+			value = mapped[driver.NodeID()]
+			if driver.Complemented() {
+				value = value.Not()
+			}
+		}
+		destination.AddOutput(value)
+	}
+	manager := gia.Gia_ManFromAig(destination)
+	defer gia.Gia_ManStop(manager)
+	return baseabc.Abc_NtkCreateFromGias("subNtk", nil, manager)
 }
 
-func match1by1(pNtk1 *Abc_Ntk_t, nodesInLevel1 **Vec_Ptr_t, iMatch1 **Vec_Int_t, iDep1 **Vec_Int_t, matchedInputs1 *Vec_Int_t, iGroup1 *int32, oMatch1 **Vec_Int_t, oGroup1 *int32, pNtk2 *Abc_Ntk_t, nodesInLevel2 **Vec_Ptr_t, iMatch2 **Vec_Int_t, iDep2 **Vec_Int_t, matchedInputs2 *Vec_Int_t, iGroup2 *int32, oMatch2 **Vec_Int_t, oGroup2 *int32, matchedOutputs1 *Vec_Int_t, matchedOutputs2 *Vec_Int_t, oMatchedGroups *Vec_Int_t, iNonSingleton *Vec_Int_t, ii int32, idx int32) int32 {
-    static int MATCH_FOUND = FALSE;
-    var subNtk1, subNtk2 *Abc_Ntk_t;
-    var oNonSingleton *Vec_Int_t;    
-    var oMatchPairs *Vec_Ptr_t;
-    var skipList *int32;
-    var j, m int32;    
-    var i int32;        
-    static int counter = 0;
-
-    MATCH_FOUND = FALSE;
-
-    if ii == Vec_IntSize(iNonSingleton) {
-        MATCH_FOUND = TRUE;
-        return TRUE;
-    }
-    
-    i = Vec_IntEntry(iNonSingleton, ii);
-
-    if idx == Vec_IntSize(iMatch1[i]) {        
-        // call again with the next element in iNonSingleton
-        return match1by1(pNtk1, nodesInLevel1, iMatch1, iDep1, matchedInputs1, iGroup1, oMatch1, oGroup1,
-                         pNtk2, nodesInLevel2, iMatch2, iDep2, matchedInputs2, iGroup2, oMatch2, oGroup2,
-                         matchedOutputs1, matchedOutputs2, oMatchedGroups, iNonSingleton, ii+1, 0);            
-        
-    }    
-    
-    oNonSingleton = Vec_IntAlloc(10);
-    oMatchPairs = Vec_PtrAlloc(100);    
-    // inlining of macro ABC_ALLOC
-    skipList = ((int *) malloc(sizeof(int) * (size_t)(Vec_IntSize(iMatch1[i]))));
-
-    for j = 0; j < Vec_IntSize(iMatch1[i]); j++ {
-        skipList[j] = FALSE;
-    }
-    
-    Vec_IntPush(matchedInputs1, Vec_IntEntry(iMatch1[i], idx));
-    idx++;
-    
-    if idx == 1 {
-        for j = 0; j < Vec_IntSize(iDep1[Vec_IntEntryLast(iMatch1[i])]); j++ {
-            if Vec_IntSize(oMatch1[oGroup1[Vec_IntEntry(iDep1[Vec_IntEntryLast(iMatch1[i])], j)]]) == 1 { 
-                continue; }
-            if Vec_IntFind( oMatchedGroups, oGroup1[Vec_IntEntry(iDep1[Vec_IntEntryLast(iMatch1[i])], j)]) != -1 {
-                continue; }
-            
-            Vec_IntPushUnique(oNonSingleton,  oGroup1[Vec_IntEntry(iDep1[Vec_IntEntryLast(iMatch1[i])], j)]);
-            Vec_IntPushUnique(oMatchedGroups, oGroup1[Vec_IntEntry(iDep1[Vec_IntEntryLast(iMatch1[i])], j)]);        
-        }
-    }
-
-    subNtk1 = computeCofactor(pNtk1, nodesInLevel1, nil, matchedInputs1);
-
-    for j = idx-1; j < Vec_IntSize(iMatch2[i]) && MATCH_FOUND == FALSE; j++ {
-        var tempJ int32;
-        var mismatch *Vec_Int_t;
-
-        if skipList[j] {
-            continue; }
-
-        mismatch = Vec_IntAlloc(10);
-
-        Vec_IntPush(matchedInputs2, Vec_IntEntry(iMatch2[i], j));        
-        
-        subNtk2 = computeCofactor(pNtk2, nodesInLevel2, nil, matchedInputs2);            
-
-        for m = 0; m < Vec_IntSize(matchedOutputs1); m++ {
-            Vec_PtrPush(oMatchPairs, Abc_NtkPo(subNtk1, Vec_IntEntry(matchedOutputs1, m)));
-            Vec_PtrPush(oMatchPairs, Abc_NtkPo(subNtk2, Vec_IntEntry(matchedOutputs2, m)));
-        }
-
-        counter++;
-
-        if Abc_NtkBmSat( subNtk2, subNtk1, nil, oMatchPairs, mismatch, 0) != 0 {
-            if idx-1 != j {
-                tempJ = Vec_IntEntry(iMatch2[i], idx-1);
-                Vec_IntWriteEntry(iMatch2[i], idx-1, Vec_IntEntry(iMatch2[i], j));
-                Vec_IntWriteEntry(iMatch2[i], j, tempJ);
-            }
-
-            /*fprintf(matchFile, "%s matched to %s\n", Abc_ObjName(Abc_NtkPi(pNtk1, Vec_IntEntry(iMatch1[i], idx-1))), 
-                                                      Abc_ObjName(Abc_NtkPi(pNtk2, Vec_IntEntry(iMatch2[i], j))));*/
-
-            // we look for a match for outputs in oNonSingleton                                
-            matchNonSingletonOutputs(pNtk1, nodesInLevel1, iMatch1, iDep1, matchedInputs1, iGroup1, oMatch1, oGroup1,
-                                     pNtk2, nodesInLevel2, iMatch2, iDep2, matchedInputs2, iGroup2, oMatch2, oGroup2,
-                                     matchedOutputs1, matchedOutputs2, oMatchedGroups, iNonSingleton,                         
-                                     subNtk1, subNtk2, oMatchPairs, oNonSingleton, 0, 0, ii, idx);
-            
-            
-            if idx-1 != j {
-                tempJ = Vec_IntEntry(iMatch2[i], idx-1);
-                Vec_IntWriteEntry(iMatch2[i], idx-1, Vec_IntEntry(iMatch2[i], j));
-                Vec_IntWriteEntry(iMatch2[i], j, tempJ);
-            }
-        
-        } else {
-            var FpNtk1, FpNtk2 *Abc_Ntk_t;
-            var bitVector1, bitVector2 *int32;
-            var currInputs1, currInputs2 *Vec_Int_t;            
-            var vSupp *Vec_Ptr_t;    
-            var pObj *Abc_Obj_t;
-            var suppNum1 int32;
-            var suppNum2 *int32;            
-            
-            // inlining of macro ABC_ALLOC
-            bitVector1 = ((int *) malloc(sizeof(int) * (size_t)(Abc_NtkPiNum(pNtk1))));
-            // inlining of macro ABC_ALLOC
-            bitVector2 = ((int *) malloc(sizeof(int) * (size_t)(Abc_NtkPiNum(pNtk2))));
-
-            currInputs1 = Vec_IntAlloc(10);
-            currInputs2 = Vec_IntAlloc(10);        
-            
-            // inlining of macro ABC_ALLOC
-            suppNum2 = ((int *) malloc(sizeof(int) * (size_t)(Vec_IntSize(iMatch2[i])-idx+1)));
-
-            for m = 0; m < Abc_NtkPiNum(pNtk1); m++ {
-                bitVector1[m] = 0;
-                bitVector2[m] = 0;
-            }
-
-            for m = 0; m < Vec_IntSize(iMatch2[i])-idx+1; m++ {                        
-                suppNum2[m]= 0;
-            }            
-
-            // First of all set the value of the inputs that are already matched and are in mismatch
-            for m = 0; m < Vec_IntSize(mismatch); m += 2 {
-                var n int32  = Vec_IntEntry(mismatch, m);
-                    
-                bitVector1[Vec_IntEntry(matchedInputs1, n)] = Vec_IntEntry(mismatch, m+1);
-                bitVector2[Vec_IntEntry(matchedInputs2, n)] = Vec_IntEntry(mismatch, m+1);
-                
-            }
-            
-            for m = idx-1; m < Vec_IntSize(iMatch1[i]); m++ {
-                Vec_IntPush(currInputs1, Vec_IntEntry(iMatch1[i], m));
-                Vec_IntPush(currInputs2, Vec_IntEntry(iMatch2[i], m));
-            }
-
-            // Then add all the inputs that are not yet matched to the currInputs
-            for m = 0; m < Abc_NtkPiNum(pNtk1); m++ {
-                if Vec_IntFind( matchedInputs1, m ) == -1 {
-                    Vec_IntPushUnique(currInputs1, m); }
-
-                if Vec_IntFind( matchedInputs2, m ) == -1 {
-                    Vec_IntPushUnique(currInputs2, m); }
-            }
-
-            FpNtk1 = computeCofactor(pNtk1, nodesInLevel1, bitVector1, currInputs1);            
-            FpNtk2 = computeCofactor(pNtk2, nodesInLevel2, bitVector2, currInputs2);    
-
-            // inlining of macro Abc_NtkForEachPo
-            for  m = 0; (m < Abc_NtkPoNum(FpNtk1)) && (((pObj) = Abc_NtkPo(FpNtk1, m)), 1); m++  {        
-                var n int32;
-                vSupp  = Abc_NtkNodeSupport( FpNtk1, &pObj, 1 );                        
-                
-                for n = 0; n < vSupp.nSize; n++ {
-                    if Abc_ObjId((Abc_Obj_t *)vSupp.pArray[n]) == 1 {
-                        suppNum1 += Vec_IntFind( matchedOutputs1, m) + 1; }
-                }                
-                        
-                Vec_PtrFree( vSupp );
-            }
-            
-            // inlining of macro Abc_NtkForEachPo
-            for  m = 0; (m < Abc_NtkPoNum(FpNtk2)) && (((pObj) = Abc_NtkPo(FpNtk2, m)), 1); m++  {        
-                var n int32;
-                vSupp  = Abc_NtkNodeSupport( FpNtk2, &pObj, 1 );                        
-                
-                for n = 0; n < vSupp.nSize; n++ {
-                    if int32(Abc_ObjId((Abc_Obj_t *)vSupp.pArray[n]))-1 < (Vec_IntSize(iMatch2[i]))-idx+1 &&
-                        int32(Abc_ObjId((Abc_Obj_t *)vSupp.pArray[n]))-1 >= 0 {
-                        suppNum2[Abc_ObjId((Abc_Obj_t *)vSupp.pArray[n])-1] += Vec_IntFind( matchedOutputs2, m) + 1; }
-                }                
-                        
-                Vec_PtrFree( vSupp );
-            }
-
-            /*if(suppNum1 != 0)            
-                printf("Ntk1 is trigged");            
-
-            if(suppNum2[0] != 0)
-                printf("Ntk2 is trigged");*/
-
-            for m = 0; m < Vec_IntSize(iMatch2[i])-idx+1; m++ {
-                if suppNum2[m] != suppNum1 {
-                    skipList[m+idx-1] = TRUE;                    
-                    /*printf("input is skipped");*/
-                }
-            }
-                
-            Abc_NtkDelete( FpNtk1 );
-            Abc_NtkDelete( FpNtk2 );
-            bitVector1 = nil;    
-             bitVector2 = nil;    
-            Vec_IntFree( currInputs1 );
-            Vec_IntFree( currInputs2 );            
-            suppNum2 = nil;
-        }
-        
-        Vec_PtrClear(oMatchPairs);
-        Abc_NtkDelete( subNtk2 );
-        Vec_IntFree(mismatch);
-
-        //Vec_IntWriteEntry(iMatch2[i], j, tempJ);        
-        
-        if MATCH_FOUND == FALSE {
-            Vec_IntPop(matchedInputs2); }
-    }
-
-    if MATCH_FOUND == FALSE {
-        Vec_IntPop(matchedInputs1);    
-        
-        if idx == 1 {
-            for m = 0; m < Vec_IntSize(oNonSingleton); m++ {
-                Vec_IntPop( oMatchedGroups );
-            }
-        }
-    }
-    
-    Vec_IntFree( oNonSingleton );    
-    Vec_PtrFree( oMatchPairs );    
-    skipList = nil;
-    Abc_NtkDelete( subNtk1 );    
-
-    if MATCH_FOUND && counter != 0 {        
-        /*printf("Number of INPUT SAT instances = %d\n", counter);*/
-
-        counter = 0;
-    }
-
-    return MATCH_FOUND;
+func matchNonSingletonOutputs(pNtk1 *Abc_Ntk_t, nodesInLevel1 []*Vec_Ptr_t, iMatch1, iDep1 []*Vec_Int_t, matchedInputs1 *Vec_Int_t, iGroup1 []int32, oMatch1 []*Vec_Int_t, oGroup1 []int32, pNtk2 *Abc_Ntk_t, nodesInLevel2 []*Vec_Ptr_t, iMatch2, iDep2 []*Vec_Int_t, matchedInputs2 *Vec_Int_t, iGroup2 []int32, oMatch2 []*Vec_Int_t, oGroup2 []int32, matchedOutputs1, matchedOutputs2, oMatchedGroups, iNonSingleton *Vec_Int_t, subNtk1, subNtk2 *Abc_Ntk_t, oMatchPairs *Vec_Ptr_t, oNonSingleton *Vec_Int_t, oI, idx, ii, iidx int32) int32 {
+	if oI == Vec_IntSize(oNonSingleton) {
+		if iNonSingleton == nil {
+			return 1
+		}
+		return match1by1(pNtk1, nodesInLevel1, iMatch1, iDep1, matchedInputs1, iGroup1, oMatch1, oGroup1, pNtk2, nodesInLevel2, iMatch2, iDep2, matchedInputs2, iGroup2, oMatch2, oGroup2, matchedOutputs1, matchedOutputs2, oMatchedGroups, iNonSingleton, ii, iidx)
+	}
+	group := Vec_IntEntry(oNonSingleton, oI)
+	if idx < 0 || idx >= Vec_IntSize(oMatch1[group]) {
+		return 0
+	}
+	output1 := Vec_IntEntry(oMatch1[group], idx)
+	Vec_PtrPush(oMatchPairs, Abc_NtkPo(subNtk1, output1))
+	Vec_IntPush(matchedOutputs1, output1)
+	skip := make([]bool, Vec_IntSize(oMatch2[group]))
+	found := int32(0)
+	for j := int32(0); j < Vec_IntSize(oMatch2[group]) && found == 0; j++ {
+		output2 := Vec_IntEntry(oMatch2[group], j)
+		if output2 < 0 || skip[j] {
+			continue
+		}
+		Vec_PtrPush(oMatchPairs, Abc_NtkPo(subNtk2, output2))
+		Vec_IntPush(matchedOutputs2, output2)
+		mismatch := Vec_IntAlloc(10)
+		if Abc_NtkBmSat(subNtk1, subNtk2, nil, oMatchPairs, mismatch, 0) != 0 {
+			Vec_IntWriteEntry(oMatch2[group], j, -1)
+			nextO, nextIdx := oI, idx+1
+			if nextIdx == Vec_IntSize(oMatch1[group]) {
+				nextO++
+				nextIdx = 0
+			}
+			found = matchNonSingletonOutputs(pNtk1, nodesInLevel1, iMatch1, iDep1, matchedInputs1, iGroup1, oMatch1, oGroup1, pNtk2, nodesInLevel2, iMatch2, iDep2, matchedInputs2, iGroup2, oMatch2, oGroup2, matchedOutputs1, matchedOutputs2, oMatchedGroups, iNonSingleton, subNtk1, subNtk2, oMatchPairs, oNonSingleton, nextO, nextIdx, ii, iidx)
+			Vec_IntWriteEntry(oMatch2[group], j, output2)
+		} else {
+			model := make([]int32, Abc_NtkPiNum(subNtk1))
+			for k := int32(0); k+1 < Vec_IntSize(mismatch); k += 2 {
+				input := Vec_IntEntry(mismatch, k)
+				if input >= 0 && int(input) < len(model) {
+					model[input] = Vec_IntEntry(mismatch, k+1)
+				}
+			}
+			values1 := Abc_NtkSimulateOneNode(subNtk1, model, 0, nil)
+			values2 := Abc_NtkSimulateOneNode(subNtk2, model, 0, nil)
+			for k := int32(0); k < Vec_IntSize(oMatch2[group]); k++ {
+				candidate := Vec_IntEntry(oMatch2[group], k)
+				if candidate >= 0 && output1 < int32(len(values1)) && candidate < int32(len(values2)) && values1[output1] != values2[candidate] {
+					skip[k] = true
+				}
+			}
+		}
+		Vec_IntFree(mismatch)
+		if found == 0 {
+			Vec_PtrPop(oMatchPairs)
+			Vec_IntPop(matchedOutputs2)
+		}
+	}
+	if found == 0 {
+		Vec_PtrPop(oMatchPairs)
+		Vec_IntPop(matchedOutputs1)
+	}
+	return found
 }
 
-func refineBySAT(pNtk1 *Abc_Ntk_t, iMatch1 **Vec_Int_t, iGroup1 *int32, iDep1 **Vec_Int_t, iLastItem1 *int32, oMatch1 **Vec_Int_t, oGroup1 *int32, oDep1 **Vec_Int_t, oLastItem1 *int32, observability1 *int32, pNtk2 *Abc_Ntk_t, iMatch2 **Vec_Int_t, iGroup2 *int32, iDep2 **Vec_Int_t, iLastItem2 *int32, oMatch2 **Vec_Int_t, oGroup2 *int32, oDep2 **Vec_Int_t, oLastItem2 *int32, observability2 *int32) float32 {
-    var i, j int32;    
-    var pObj *Abc_Obj_t;
-    var iNonSingleton *Vec_Int_t;
-    var matchedInputs1, matchedInputs2 *Vec_Int_t;
-    var matchedOutputs1, matchedOutputs2 *Vec_Int_t;
-    var nodesInLevel1, nodesInLevel2 **Vec_Ptr_t;
-    var oMatchedGroups *Vec_Int_t;
-    var result *os.File;    
-    var matchFound int32;
-    var clk abctime  = Abc_Clock();
-    var satTime float32  = 0.0;
-
-    /*matchFile = fopen("satmatch.txt", "w");*/
-    
-    iNonSingleton = Vec_IntAlloc(10);    
-    
-    matchedInputs1 = Vec_IntAlloc( Abc_NtkPiNum(pNtk1) );
-    matchedInputs2 = Vec_IntAlloc( Abc_NtkPiNum(pNtk2) );
-
-    matchedOutputs1 = Vec_IntAlloc( Abc_NtkPoNum(pNtk1) );
-    matchedOutputs2 = Vec_IntAlloc( Abc_NtkPoNum(pNtk2) );
-
-    // inlining of macro ABC_ALLOC
-    nodesInLevel1 = ((Vec_Ptr_t * *) malloc(sizeof(Vec_Ptr_t *) * (size_t)(Abc_AigLevel( pNtk1 ) + 1)));    // why numOfLevels+1? because the inputs are in level 0
-    for i = 0; i <= Abc_AigLevel( pNtk1 ); i++ {
-        nodesInLevel1[i] = Vec_PtrAlloc( 20 );
-    }
-
-    // bucket sort the objects based on their levels
-    // inlining of macro Abc_AigForEachAnd
-    for  i = 0; (i < Vec_PtrSize((pNtk1).vObjs)) && (((pObj) = Abc_NtkObj(pNtk1, i)), 1); i++  {           if (pObj) == nil || !Abc_AigNodeIsAnd(pObj) {} else {    
-        Vec_PtrPush(nodesInLevel1[Abc_ObjLevel(pObj)], pObj); }
-    }
-    
-    // inlining of macro ABC_ALLOC
-    nodesInLevel2 = ((Vec_Ptr_t * *) malloc(sizeof(Vec_Ptr_t *) * (size_t)(Abc_AigLevel( pNtk2 ) + 1)));    // why numOfLevels+1? because the inputs are in level 0
-    for i = 0; i <= Abc_AigLevel( pNtk2 ); i++ {
-        nodesInLevel2[i] = Vec_PtrAlloc( 20 );
-    }
-
-    // bucket sort the objects based on their levels
-    // inlining of macro Abc_AigForEachAnd
-    for  i = 0; (i < Vec_PtrSize((pNtk2).vObjs)) && (((pObj) = Abc_NtkObj(pNtk2, i)), 1); i++  {           if (pObj) == nil || !Abc_AigNodeIsAnd(pObj) {} else {    
-        Vec_PtrPush(nodesInLevel2[Abc_ObjLevel(pObj)], pObj); }
-    }    
-
-    oMatchedGroups = Vec_IntAlloc( 10 );
-
-    for i = 0; i < *iLastItem1; i++ {
-        if Vec_IntSize(iMatch1[i]) == 1 {
-            Vec_IntPush(matchedInputs1, Vec_IntEntryLast(iMatch1[i]));
-            Vec_IntPush(matchedInputs2, Vec_IntEntryLast(iMatch2[i]));        
-        
-        } else {
-            Vec_IntPush(iNonSingleton, i); }
-    }
-
-    for i = 0; i < *oLastItem1; i++ {
-        if Vec_IntSize(oMatch1[i]) == 1 {
-            Vec_IntPush(matchedOutputs1, Vec_IntEntryLast(oMatch1[i]));
-            Vec_IntPush(matchedOutputs2, Vec_IntEntryLast(oMatch2[i]));
-        }
-    }
-    
-    for i = 0; i < Vec_IntSize(iNonSingleton) - 1; i++ {
-        for j = i + 1; j < Vec_IntSize(iNonSingleton); j++ {        
-            if observability2[Vec_IntEntry(iMatch2[Vec_IntEntry(iNonSingleton, j)], 0)] > 
-                observability2[Vec_IntEntry(iMatch2[Vec_IntEntry(iNonSingleton, i)], 0)] {                
-                var temp int32  = Vec_IntEntry(iNonSingleton, i);
-                Vec_IntWriteEntry( iNonSingleton, i, Vec_IntEntry(iNonSingleton, j) );
-                Vec_IntWriteEntry( iNonSingleton, j, temp );                
-            
-            } else if observability2[Vec_IntEntry(iMatch2[Vec_IntEntry(iNonSingleton, j)], 0)] == 
-                     observability2[Vec_IntEntry(iMatch2[Vec_IntEntry(iNonSingleton, i)], 0)] {
-                if Vec_IntSize(iMatch2[Vec_IntEntry(iNonSingleton, j)]) < Vec_IntSize(iMatch2[Vec_IntEntry(iNonSingleton, i)]) {
-                    var temp int32  = Vec_IntEntry(iNonSingleton, i);
-                    Vec_IntWriteEntry( iNonSingleton, i, Vec_IntEntry(iNonSingleton, j) );
-                    Vec_IntWriteEntry( iNonSingleton, j, temp );                
-                }
-            }
-        }
-    }    
-
-    /*for(i = 0; i < Vec_IntSize(iNonSingleton) - 1; i++)
-    {
-        for(j = i + 1; j < Vec_IntSize(iNonSingleton); j++)        
-            if( Vec_IntSize(oDep2[oGroup2[Vec_IntEntryLast(iMatch2[Vec_IntEntry(iNonSingleton, j)])]]) > 
-                Vec_IntSize(oDep2[oGroup2[Vec_IntEntryLast(iMatch2[Vec_IntEntry(iNonSingleton, i)])]]) )
-            {                
-                int temp = Vec_IntEntry(iNonSingleton, i);
-                Vec_IntWriteEntry( iNonSingleton, i, Vec_IntEntry(iNonSingleton, j) );
-                Vec_IntWriteEntry( iNonSingleton, j, temp );                
-            }
-            else if( Vec_IntSize(oDep2[oGroup2[Vec_IntEntryLast(iMatch2[Vec_IntEntry(iNonSingleton, j)])]]) == 
-                Vec_IntSize(oDep2[oGroup2[Vec_IntEntryLast(iMatch2[Vec_IntEntry(iNonSingleton, i)])]]) )
-            {
-                if( observability2[Vec_IntEntry(iMatch2[Vec_IntEntry(iNonSingleton, j)], 0)] > 
-                        observability2[Vec_IntEntry(iMatch2[Vec_IntEntry(iNonSingleton, i)], 0)] )
-                {
-                    int temp = Vec_IntEntry(iNonSingleton, i);
-                    Vec_IntWriteEntry( iNonSingleton, i, Vec_IntEntry(iNonSingleton, j) );
-                    Vec_IntWriteEntry( iNonSingleton, j, temp );                
-                }
-            }
-    }*/
-
-    matchFound = match1by1(pNtk1, nodesInLevel1, iMatch1, iDep1, matchedInputs1, iGroup1, oMatch1, oGroup1,
-                           pNtk2, nodesInLevel2, iMatch2, iDep2, matchedInputs2, iGroup2, oMatch2, oGroup2,
-                           matchedOutputs1, matchedOutputs2, oMatchedGroups, iNonSingleton, 0, 0);
-
-    if (matchFound != 0) && Vec_IntSize(matchedOutputs1) != Abc_NtkPoNum(pNtk1) {
-        var oNonSingleton *Vec_Int_t;
-        var oMatchPairs *Vec_Ptr_t;
-        var subNtk1, subNtk2 *Abc_Ntk_t;
-
-        oNonSingleton = Vec_IntAlloc( 10 );
-        
-        oMatchPairs = Vec_PtrAlloc(Abc_NtkPoNum(pNtk1) * 2);    
-
-        for i = 0; i < *oLastItem1; i++ {
-            if Vec_IntSize(oMatch1[i]) > 1 && Vec_IntFind( oMatchedGroups, i) == -1 {
-                Vec_IntPush(oNonSingleton, i); }
-        }
-            
-        subNtk1 = computeCofactor(pNtk1, nodesInLevel1, nil, matchedInputs1);
-        subNtk2 = computeCofactor(pNtk2, nodesInLevel2, nil, matchedInputs2);
-        
-        matchFound = matchNonSingletonOutputs(pNtk1, nodesInLevel1, iMatch1, iDep1, matchedInputs1, iGroup1, oMatch1, oGroup1,
-                                 pNtk2, nodesInLevel2, iMatch2, iDep2, matchedInputs2, iGroup1, oMatch2, oGroup2,
-                                 matchedOutputs1, matchedOutputs2, oMatchedGroups, nil,                         
-                                 subNtk1, subNtk2, oMatchPairs, oNonSingleton, 0, 0, 0, 0);
-
-        Vec_IntFree( oNonSingleton );        
-        Vec_PtrFree( oMatchPairs );
-
-        Abc_NtkDelete(subNtk1);
-        Abc_NtkDelete(subNtk2);
-    }
-
-    satTime = float32((Abc_Clock() - clk))/float32((int64(time.Second)));    
-
-    if matchFound != 0 {
-          checkEquivalence( pNtk1, matchedInputs1, matchedOutputs1, pNtk2, matchedInputs2, matchedOutputs2);
-
-        result = os.OpenFile("IOmatch.txt", os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);
-
-        fmt.Fprintf(result, "I/O = %d / %d \n\n", Abc_NtkPiNum(pNtk1), Abc_NtkPoNum(pNtk1));
-        
-        for i = 0; i < Vec_IntSize(matchedInputs1) ; i++ {
-              fmt.Fprintf(result, "{%s}\t{%s}\n", Abc_ObjName(Abc_NtkPi(pNtk1, Vec_IntEntry(matchedInputs1, i))), Abc_ObjName(Abc_NtkPi(pNtk2, Vec_IntEntry(matchedInputs2, i))));
-        }                                    
-
-        fmt.Fprintf(result, "\n-----------------------------------------\n");
-
-        for i = 0; i < Vec_IntSize(matchedOutputs1) ; i++ {
-            fmt.Fprintf(result, "{%s}\t{%s}\n", Abc_ObjName(Abc_NtkPo(pNtk1, Vec_IntEntry(matchedOutputs1, i))), Abc_ObjName(Abc_NtkPo(pNtk2, Vec_IntEntry(matchedOutputs2, i))));
-        }                                    
-
-        _ = (result).Close();    
-    }
-
-    Vec_IntFree( matchedInputs1 );
-    Vec_IntFree( matchedInputs2 );
-    Vec_IntFree( matchedOutputs1 );
-    Vec_IntFree( matchedOutputs2 );
-    Vec_IntFree( iNonSingleton );
-    Vec_IntFree( oMatchedGroups );
-    
-    for i = 0; i <= Abc_AigLevel( pNtk1 ); i++ {    
-        Vec_PtrFree( nodesInLevel1[i] );
-    }
-    for i = 0; i <= Abc_AigLevel( pNtk2 ); i++ {    
-        Vec_PtrFree( nodesInLevel2[i] );
-    }
-    
-
-    nodesInLevel1 = nil;
-    nodesInLevel2 = nil;
-    /*fclose(matchFile);*/
-    
-    return satTime;
+func match1by1(pNtk1 *Abc_Ntk_t, nodesInLevel1 []*Vec_Ptr_t, iMatch1, iDep1 []*Vec_Int_t, matchedInputs1 *Vec_Int_t, iGroup1 []int32, oMatch1 []*Vec_Int_t, oGroup1 []int32, pNtk2 *Abc_Ntk_t, nodesInLevel2 []*Vec_Ptr_t, iMatch2, iDep2 []*Vec_Int_t, matchedInputs2 *Vec_Int_t, iGroup2 []int32, oMatch2 []*Vec_Int_t, oGroup2 []int32, matchedOutputs1, matchedOutputs2, oMatchedGroups, iNonSingleton *Vec_Int_t, ii, idx int32) int32 {
+	if ii == Vec_IntSize(iNonSingleton) {
+		return 1
+	}
+	group := Vec_IntEntry(iNonSingleton, ii)
+	if idx == Vec_IntSize(iMatch1[group]) {
+		return match1by1(pNtk1, nodesInLevel1, iMatch1, iDep1, matchedInputs1, iGroup1, oMatch1, oGroup1, pNtk2, nodesInLevel2, iMatch2, iDep2, matchedInputs2, iGroup2, oMatch2, oGroup2, matchedOutputs1, matchedOutputs2, oMatchedGroups, iNonSingleton, ii+1, 0)
+	}
+	oNonSingleton := Vec_IntAlloc(10)
+	oMatchPairs := Vec_PtrAlloc(100)
+	defer Vec_IntFree(oNonSingleton)
+	defer Vec_PtrFree(oMatchPairs)
+	input1 := Vec_IntEntry(iMatch1[group], idx)
+	Vec_IntPush(matchedInputs1, input1)
+	nextIdx := idx + 1
+	if nextIdx == 1 {
+		for j := int32(0); j < Vec_IntSize(iDep1[input1]); j++ {
+			outputGroup := oGroup1[Vec_IntEntry(iDep1[input1], j)]
+			if Vec_IntSize(oMatch1[outputGroup]) == 1 || Vec_IntFind(oMatchedGroups, outputGroup) >= 0 {
+				continue
+			}
+			Vec_IntPushUnique(oNonSingleton, outputGroup)
+			Vec_IntPushUnique(oMatchedGroups, outputGroup)
+		}
+	}
+	subNtk1 := computeCofactor(pNtk1, nodesInLevel1, nil, matchedInputs1)
+	defer Abc_NtkDelete(subNtk1)
+	found := int32(0)
+	skip := make([]bool, Vec_IntSize(iMatch1[group]))
+	for j := idx; j < Vec_IntSize(iMatch2[group]) && found == 0; j++ {
+		if j < int32(len(skip)) && skip[j] {
+			continue
+		}
+		input2 := Vec_IntEntry(iMatch2[group], j)
+		Vec_IntPush(matchedInputs2, input2)
+		subNtk2 := computeCofactor(pNtk2, nodesInLevel2, nil, matchedInputs2)
+		for m := int32(0); m < Vec_IntSize(matchedOutputs1); m++ {
+			Vec_PtrPush(oMatchPairs, Abc_NtkPo(subNtk1, Vec_IntEntry(matchedOutputs1, m)))
+			Vec_PtrPush(oMatchPairs, Abc_NtkPo(subNtk2, Vec_IntEntry(matchedOutputs2, m)))
+		}
+		mismatch := Vec_IntAlloc(10)
+		if Abc_NtkBmSat(subNtk2, subNtk1, nil, oMatchPairs, mismatch, 0) != 0 {
+			if idx != j {
+				temp := Vec_IntEntry(iMatch2[group], idx)
+				Vec_IntWriteEntry(iMatch2[group], idx, input2)
+				Vec_IntWriteEntry(iMatch2[group], j, temp)
+			}
+			found = matchNonSingletonOutputs(pNtk1, nodesInLevel1, iMatch1, iDep1, matchedInputs1, iGroup1, oMatch1, oGroup1, pNtk2, nodesInLevel2, iMatch2, iDep2, matchedInputs2, iGroup2, oMatch2, oGroup2, matchedOutputs1, matchedOutputs2, oMatchedGroups, iNonSingleton, subNtk1, subNtk2, oMatchPairs, oNonSingleton, 0, 0, ii, nextIdx)
+			if idx != j {
+				Vec_IntWriteEntry(iMatch2[group], j, Vec_IntEntry(iMatch2[group], idx))
+				Vec_IntWriteEntry(iMatch2[group], idx, input2)
+			}
+		} else {
+			// A failed SAT match supplies a counterexample.  Cofactor both
+			// networks on the already matched inputs and compare the remaining
+			// support counts, as the C implementation does to prune candidates.
+			bitVector1 := make([]int32, Abc_NtkPiNum(pNtk1))
+			bitVector2 := make([]int32, Abc_NtkPiNum(pNtk2))
+			for k := int32(0); k+1 < Vec_IntSize(mismatch); k += 2 {
+				matchedIndex := Vec_IntEntry(mismatch, k)
+				if matchedIndex < 0 || matchedIndex >= Vec_IntSize(matchedInputs1) || matchedIndex >= Vec_IntSize(matchedInputs2) {
+					continue
+				}
+				value := Vec_IntEntry(mismatch, k+1)
+				input1, input2 := Vec_IntEntry(matchedInputs1, matchedIndex), Vec_IntEntry(matchedInputs2, matchedIndex)
+				if input1 >= 0 && input1 < int32(len(bitVector1)) {
+					bitVector1[input1] = value
+				}
+				if input2 >= 0 && input2 < int32(len(bitVector2)) {
+					bitVector2[input2] = value
+				}
+			}
+			currInputs1, currInputs2 := Vec_IntAlloc(10), Vec_IntAlloc(10)
+			for k := idx; k < Vec_IntSize(iMatch1[group]); k++ {
+				Vec_IntPush(currInputs1, Vec_IntEntry(iMatch1[group], k))
+				Vec_IntPush(currInputs2, Vec_IntEntry(iMatch2[group], k))
+			}
+			for k := int32(0); k < Abc_NtkPiNum(pNtk1); k++ {
+				if Vec_IntFind(matchedInputs1, k) < 0 {
+					Vec_IntPushUnique(currInputs1, k)
+				}
+				if k < Abc_NtkPiNum(pNtk2) && Vec_IntFind(matchedInputs2, k) < 0 {
+					Vec_IntPushUnique(currInputs2, k)
+				}
+			}
+			fpNtk1 := computeCofactor(pNtk1, nodesInLevel1, bitVector1, currInputs1)
+			fpNtk2 := computeCofactor(pNtk2, nodesInLevel2, bitVector2, currInputs2)
+			graph1, graph2 := baseabc.Abc_NtkStrashToGia(fpNtk1), baseabc.Abc_NtkStrashToGia(fpNtk2)
+			support1 := sim.Sim_ComputeFunSupp(graph1, false)
+			support2 := sim.Sim_ComputeFunSupp(graph2, false)
+			var count1 int32
+			for output, bits := range support1 {
+				if sim.Sim_HasBit(bits, 0) {
+					count1 += int32(Vec_IntFind(matchedOutputs1, int32(output)) + 1)
+				}
+			}
+			count2 := make([]int32, Vec_IntSize(iMatch2[group])-idx)
+			for output, bits := range support2 {
+				weight := int32(Vec_IntFind(matchedOutputs2, int32(output)) + 1)
+				for input := range count2 {
+					if sim.Sim_HasBit(bits, input) {
+						count2[input] += weight
+					}
+				}
+			}
+			for offset := int32(0); offset < int32(len(count2)); offset++ {
+				candidate := idx + offset
+				if candidate >= 0 && candidate < int32(len(skip)) && count2[offset] != count1 {
+					skip[candidate] = true
+				}
+			}
+			Abc_NtkDelete(fpNtk1)
+			Abc_NtkDelete(fpNtk2)
+			Vec_IntFree(currInputs1)
+			Vec_IntFree(currInputs2)
+		}
+		Vec_IntFree(mismatch)
+		Vec_PtrClear(oMatchPairs)
+		Abc_NtkDelete(subNtk2)
+		if found == 0 {
+			Vec_IntPop(matchedInputs2)
+		}
+	}
+	if found == 0 {
+		Vec_IntPop(matchedInputs1)
+		if nextIdx == 1 {
+			for i := int32(0); i < Vec_IntSize(oNonSingleton); i++ {
+				Vec_IntPop(oMatchedGroups)
+			}
+		}
+	}
+	return found
 }
 
-func checkListConsistency(iMatch1 **Vec_Int_t, oMatch1 **Vec_Int_t, iMatch2 **Vec_Int_t, oMatch2 **Vec_Int_t, iLastItem1 int32, oLastItem1 int32, iLastItem2 int32, oLastItem2 int32) int32 {
-    //int i;
-
-    if iLastItem1 != iLastItem2 || oLastItem1 != oLastItem2 {
-        return FALSE; }
-
-    /*for(i = 0; i < iLastItem1; i++) {
-        if(Vec_IntSize(iMatch1[i]) != Vec_IntSize(iMatch2[i]))
-            return FALSE;
-    }
-
-    for(i = 0; i < oLastItem1; i++) {
-        if(Vec_IntSize(oMatch1[i]) != Vec_IntSize(oMatch2[i]))
-            return FALSE;
-    }*/
-        
-    return TRUE;
+func refineBySAT(pNtk1 *Abc_Ntk_t, iMatch1 []*Vec_Int_t, iGroup1 []int32, iDep1 []*Vec_Int_t, iLastItem1 *int32, oMatch1 []*Vec_Int_t, oGroup1 []int32, oDep1 []*Vec_Int_t, oLastItem1 *int32, observability1 []int32, pNtk2 *Abc_Ntk_t, iMatch2 []*Vec_Int_t, iGroup2 []int32, iDep2 []*Vec_Int_t, iLastItem2 *int32, oMatch2 []*Vec_Int_t, oGroup2 []int32, oDep2 []*Vec_Int_t, oLastItem2 *int32, observability2 []int32) float32 {
+	start := time.Now()
+	iNonSingleton := Vec_IntAlloc(10)
+	matchedInputs1, matchedInputs2 := Vec_IntAlloc(Abc_NtkPiNum(pNtk1)), Vec_IntAlloc(Abc_NtkPiNum(pNtk2))
+	matchedOutputs1, matchedOutputs2 := Vec_IntAlloc(Abc_NtkPoNum(pNtk1)), Vec_IntAlloc(Abc_NtkPoNum(pNtk2))
+	oMatchedGroups := Vec_IntAlloc(10)
+	defer Vec_IntFree(iNonSingleton)
+	defer Vec_IntFree(matchedInputs1)
+	defer Vec_IntFree(matchedInputs2)
+	defer Vec_IntFree(matchedOutputs1)
+	defer Vec_IntFree(matchedOutputs2)
+	defer Vec_IntFree(oMatchedGroups)
+	nodesInLevel1 := make([]*Vec_Ptr_t, int(baseabc.Abc_AigLevel(pNtk1))+1)
+	nodesInLevel2 := make([]*Vec_Ptr_t, int(baseabc.Abc_AigLevel(pNtk2))+1)
+	for i := range nodesInLevel1 {
+		nodesInLevel1[i] = Vec_PtrAlloc(0)
+	}
+	for i := range nodesInLevel2 {
+		nodesInLevel2[i] = Vec_PtrAlloc(0)
+	}
+	defer func() {
+		for _, v := range nodesInLevel1 {
+			Vec_PtrFree(v)
+		}
+		for _, v := range nodesInLevel2 {
+			Vec_PtrFree(v)
+		}
+	}()
+	for i := int32(0); i < *iLastItem1; i++ {
+		if Vec_IntSize(iMatch1[i]) == 1 {
+			Vec_IntPush(matchedInputs1, Vec_IntEntryLast(iMatch1[i]))
+			Vec_IntPush(matchedInputs2, Vec_IntEntryLast(iMatch2[i]))
+		} else {
+			Vec_IntPush(iNonSingleton, i)
+		}
+	}
+	for i := int32(0); i < *oLastItem1; i++ {
+		if Vec_IntSize(oMatch1[i]) == 1 {
+			Vec_IntPush(matchedOutputs1, Vec_IntEntryLast(oMatch1[i]))
+			Vec_IntPush(matchedOutputs2, Vec_IntEntryLast(oMatch2[i]))
+		}
+	}
+	for i := int32(0); i < Vec_IntSize(iNonSingleton)-1; i++ {
+		for j := i + 1; j < Vec_IntSize(iNonSingleton); j++ {
+			a, b := Vec_IntEntry(iNonSingleton, i), Vec_IntEntry(iNonSingleton, j)
+			inputA, inputB := Vec_IntEntry(iMatch2[a], 0), Vec_IntEntry(iMatch2[b], 0)
+			swap := observability2[inputB] > observability2[inputA]
+			if observability2[inputB] == observability2[inputA] {
+				swap = Vec_IntSize(iMatch2[b]) < Vec_IntSize(iMatch2[a])
+			}
+			if swap {
+				Vec_IntWriteEntry(iNonSingleton, i, b)
+				Vec_IntWriteEntry(iNonSingleton, j, a)
+			}
+		}
+	}
+	matched := match1by1(pNtk1, nodesInLevel1, iMatch1, iDep1, matchedInputs1, iGroup1, oMatch1, oGroup1, pNtk2, nodesInLevel2, iMatch2, iDep2, matchedInputs2, iGroup2, oMatch2, oGroup2, matchedOutputs1, matchedOutputs2, oMatchedGroups, iNonSingleton, 0, 0) != 0
+	if matched && Vec_IntSize(matchedOutputs1) != Abc_NtkPoNum(pNtk1) {
+		oNonSingleton := Vec_IntAlloc(10)
+		oMatchPairs := Vec_PtrAlloc(Abc_NtkPoNum(pNtk1) * 2)
+		for i := int32(0); i < *oLastItem1; i++ {
+			if Vec_IntSize(oMatch1[i]) > 1 && Vec_IntFind(oMatchedGroups, i) < 0 {
+				Vec_IntPush(oNonSingleton, i)
+			}
+		}
+		subNtk1 := computeCofactor(pNtk1, nodesInLevel1, nil, matchedInputs1)
+		subNtk2 := computeCofactor(pNtk2, nodesInLevel2, nil, matchedInputs2)
+		matched = matchNonSingletonOutputs(pNtk1, nodesInLevel1, iMatch1, iDep1, matchedInputs1, iGroup1, oMatch1, oGroup1, pNtk2, nodesInLevel2, iMatch2, iDep2, matchedInputs2, iGroup2, oMatch2, oGroup2, matchedOutputs1, matchedOutputs2, oMatchedGroups, nil, subNtk1, subNtk2, oMatchPairs, oNonSingleton, 0, 0, 0, 0) != 0
+		Vec_IntFree(oNonSingleton)
+		Vec_PtrFree(oMatchPairs)
+		Abc_NtkDelete(subNtk1)
+		Abc_NtkDelete(subNtk2)
+	}
+	if matched {
+		checkEquivalence(pNtk1, matchedInputs1, matchedOutputs1, pNtk2, matchedInputs2, matchedOutputs2)
+		result, err := os.Create("IOmatch.txt")
+		if err == nil {
+			fmt.Fprintf(result, "I/O = %d / %d \n\n", Abc_NtkPiNum(pNtk1), Abc_NtkPoNum(pNtk1))
+			for i := int32(0); i < Vec_IntSize(matchedInputs1); i++ {
+				fmt.Fprintf(result, "{%s}\t{%s}\n", baseabc.Abc_ObjName(Abc_NtkPi(pNtk1, Vec_IntEntry(matchedInputs1, i))), baseabc.Abc_ObjName(Abc_NtkPi(pNtk2, Vec_IntEntry(matchedInputs2, i))))
+			}
+			fmt.Fprintln(result, "\n-----------------------------------------")
+			for i := int32(0); i < Vec_IntSize(matchedOutputs1); i++ {
+				fmt.Fprintf(result, "{%s}\t{%s}\n", baseabc.Abc_ObjName(Abc_NtkPo(pNtk1, Vec_IntEntry(matchedOutputs1, i))), baseabc.Abc_ObjName(Abc_NtkPo(pNtk2, Vec_IntEntry(matchedOutputs2, i))))
+			}
+			_ = result.Close()
+		}
+	}
+	return float32(time.Since(start).Seconds())
 }
 
-
-func bmGateWay(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, p_equivalence int32) {    
-    var iDep1, oDep1 **Vec_Int_t;
-    var iDep2, oDep2 **Vec_Int_t;
-    var iMatch1, oMatch1 **Vec_Int_t;
-    var iMatch2, oMatch2 **Vec_Int_t;        
-    var iGroup1, oGroup1 *int32;
-    var iGroup2, oGroup2 *int32;
-    var iLastItem1, oLastItem1 int32;
-    var iLastItem2, oLastItem2 int32;    
-    var i, j int32;    
-    
-    var vPiValues1, vPiValues2 string;
-    var observability1, observability2 *int32;
-    var clk abctime  = Abc_Clock();
-    var initTime float32;
-    var simulTime float32;
-    var satTime float32;
-    var topOrder1 **Vec_Ptr_t = nil;
-    var topOrder2 **Vec_Ptr_t = nil;
-
-    extern void getDependencies(Abc_Ntk_t *pNtk, Vec_Int_t** iDep, Vec_Int_t** oDep);
-    extern void initMatchList(Abc_Ntk_t *pNtk, Vec_Int_t** iDep, Vec_Int_t** oDep, Vec_Int_t** iMatch, int* iLastItem, Vec_Int_t** oMatch, int* oLastItem, int* iGroup, int* oGroup, int p_equivalence);        
-    extern void iSortDependencies(Abc_Ntk_t *pNtk, Vec_Int_t** iDep, int* oGroup);
-    extern void oSortDependencies(Abc_Ntk_t *pNtk, Vec_Int_t** oDep, int* iGroup);
-    extern int iSplitByDep(Abc_Ntk_t *pNtk, Vec_Int_t** iDep, Vec_Int_t** iMatch, int* iGroup, int* iLastItem, int* oGroup);
-    extern int oSplitByDep(Abc_Ntk_t *pNtk, Vec_Int_t** oDep, Vec_Int_t** oMatch, int* oGroup, int* oLastItem, int* iGroup);    
-    extern Vec_Ptr_t ** findTopologicalOrder(Abc_Ntk_t * pNtk);
-    extern int refineIOBySimulation(Abc_Ntk_t *pNtk, Vec_Int_t** iMatch, int* iLastItem, int * iGroup, Vec_Int_t** iDep, Vec_Int_t** oMatch, int* oLastItem, int * oGroup, Vec_Int_t** oDep, char * vPiValues, int * observability, Vec_Ptr_t ** topOrder);    
-    extern float refineBySAT(Abc_Ntk_t * pNtk1, Vec_Int_t ** iMatch1, int * iGroup1, Vec_Int_t ** iDep1, int* iLastItem1, Vec_Int_t ** oMatch1, int * oGroup1, Vec_Int_t ** oDep1, int* oLastItem1, int * observability1,
-                            Abc_Ntk_t * pNtk2, Vec_Int_t ** iMatch2, int * iGroup2, Vec_Int_t ** iDep2, int* iLastItem2, Vec_Int_t ** oMatch2, int * oGroup2, Vec_Int_t ** oDep2, int* oLastItem2, int * observability2);                
-    int checkListConsistency(Vec_Int_t ** iMatch1, Vec_Int_t ** oMatch1, Vec_Int_t ** iMatch2, Vec_Int_t ** oMatch2, int iLastItem1, int oLastItem1, int iLastItem2, int oLastItem2);    
-
-    // inlining of macro ABC_ALLOC
-    iDep1 = ((Vec_Int_t* *) malloc(sizeof(Vec_Int_t*) * (size_t)(uint32(Abc_NtkPiNum(pNtk1)))));
-    // inlining of macro ABC_ALLOC
-    oDep1 = ((Vec_Int_t* *) malloc(sizeof(Vec_Int_t*) * (size_t)(uint32(Abc_NtkPoNum(pNtk1)))));
-
-    // inlining of macro ABC_ALLOC
-    iDep2 = ((Vec_Int_t* *) malloc(sizeof(Vec_Int_t*) * (size_t)(uint32(Abc_NtkPiNum(pNtk2)))));
-    // inlining of macro ABC_ALLOC
-    oDep2 = ((Vec_Int_t* *) malloc(sizeof(Vec_Int_t*) * (size_t)(uint32(Abc_NtkPoNum(pNtk2)))));
-
-    // inlining of macro ABC_ALLOC
-    iMatch1 = ((Vec_Int_t* *) malloc(sizeof(Vec_Int_t*) * (size_t)(uint32(Abc_NtkPiNum(pNtk1)))));
-    // inlining of macro ABC_ALLOC
-    oMatch1 = ((Vec_Int_t* *) malloc(sizeof(Vec_Int_t*) * (size_t)(uint32(Abc_NtkPoNum(pNtk1)))));
-
-    // inlining of macro ABC_ALLOC
-    iMatch2 = ((Vec_Int_t* *) malloc(sizeof(Vec_Int_t*) * (size_t)(uint32(Abc_NtkPiNum(pNtk2)))));
-    // inlining of macro ABC_ALLOC
-    oMatch2 = ((Vec_Int_t* *) malloc(sizeof(Vec_Int_t*) * (size_t)(uint32(Abc_NtkPoNum(pNtk2)))));        
-
-    // inlining of macro ABC_ALLOC
-    iGroup1 = ((int *) malloc(sizeof(int) * (size_t)(Abc_NtkPiNum(pNtk1))));
-    // inlining of macro ABC_ALLOC
-    oGroup1 = ((int *) malloc(sizeof(int) * (size_t)(Abc_NtkPoNum(pNtk1))));
-
-    // inlining of macro ABC_ALLOC
-    iGroup2 = ((int *) malloc(sizeof(int) * (size_t)(Abc_NtkPiNum(pNtk2))));
-    // inlining of macro ABC_ALLOC
-    oGroup2 = ((int *) malloc(sizeof(int) * (size_t)(Abc_NtkPoNum(pNtk2))));
-
-    // inlining of macro ABC_ALLOC
-    vPiValues1 = ((char *) malloc(sizeof(char) * (size_t)(Abc_NtkPiNum(pNtk1) + 1)));
-    vPiValues1[Abc_NtkPiNum(pNtk1)] = '\0';    
-
-    // inlining of macro ABC_ALLOC
-    vPiValues2 = ((char *) malloc(sizeof(char) * (size_t)(Abc_NtkPiNum(pNtk2) + 1)));
-    vPiValues2[Abc_NtkPiNum(pNtk2)] = '\0';    
-
-    // inlining of macro ABC_ALLOC
-    observability1 = ((int *) malloc(sizeof(int) * (size_t)(uint32(Abc_NtkPiNum(pNtk1)))));
-    // inlining of macro ABC_ALLOC
-    observability2 = ((int *) malloc(sizeof(int) * (size_t)(uint32(Abc_NtkPiNum(pNtk2)))));
-
-    for i = 0; i < Abc_NtkPiNum(pNtk1); i++ {        
-        iDep1[i] = Vec_IntAlloc( 1 );
-        iMatch1[i] = Vec_IntAlloc( 1 );
-
-        iDep2[i] = Vec_IntAlloc( 1 );
-        iMatch2[i] = Vec_IntAlloc( 1 );
-
-        vPiValues1[i] = '0';
-        vPiValues2[i] = '0';
-
-        observability1[i] = 0;
-        observability2[i] = 0;
-    }
-
-    for i = 0; i < Abc_NtkPoNum(pNtk1); i++ {
-        oDep1[i] = Vec_IntAlloc( 1 );
-        oMatch1[i] = Vec_IntAlloc( 1 );
-
-        oDep2[i] = Vec_IntAlloc( 1 );
-        oMatch2[i] = Vec_IntAlloc( 1 );
-    }    
-    
-    /************* Strashing ************/    
-    pNtk1 = Abc_NtkStrash( pNtk1, 0, 0, 0 );    
-    pNtk2 = Abc_NtkStrash( pNtk2, 0, 0, 0 );            
-    fmt.Printf("Network  strashing is done!\n");    
-    /************************************/    
-    
-    /******* Getting Dependencies *******/    
-    getDependencies(pNtk1, iDep1, oDep1);
-    getDependencies(pNtk2, iDep2, oDep2);            
-    fmt.Printf("Getting dependencies is done!\n");    
-    /************************************/
-
-    /***** Intializing match lists ******/    
-    initMatchList(pNtk1, iDep1, oDep1, iMatch1, &iLastItem1, oMatch1, &oLastItem1, iGroup1, oGroup1, p_equivalence);            
-    initMatchList(pNtk2, iDep2, oDep2, iMatch2, &iLastItem2, oMatch2, &oLastItem2, iGroup2, oGroup2, p_equivalence);    
-    fmt.Printf("Initializing match lists is done!\n");        
-    /************************************/
-
-    if !(checkListConsistency(iMatch1, oMatch1, iMatch2, oMatch2, iLastItem1, oLastItem1, iLastItem2, oLastItem2) != 0) {
-        fmt.Fprintf(os.Stdout, "I/O dependencies of two circuits are different.\n");
-        goto freeAndExit;
-    }        
-
-    fmt.Printf("Refining IOs by dependencies ...");                
-    // split match lists further by checking dependencies
-    for
-    {
-        var iNumOfItemsAdded int32 = 1;
-        var oNumOfItemsAdded int32 = 1;        
-
-        for
-        {    
-            if oNumOfItemsAdded != 0 {
-                iSortDependencies(pNtk1, iDep1, oGroup1);
-                iSortDependencies(pNtk2, iDep2, oGroup2);
-            }
-            
-            if iNumOfItemsAdded != 0 {
-                oSortDependencies(pNtk1, oDep1, iGroup1);
-                oSortDependencies(pNtk2, oDep2, iGroup2);
-            }
-
-            if iLastItem1 < Abc_NtkPiNum(pNtk1) {                
-                iSplitByDep(pNtk1, iDep1, iMatch1, iGroup1, &iLastItem1, oGroup1);
-                if oLastItem1 < Abc_NtkPoNum(pNtk1) {
-                    oSplitByDep(pNtk1, oDep1, oMatch1, oGroup1, &oLastItem1, iGroup1); }
-            }                
-
-            if iLastItem2 < Abc_NtkPiNum(pNtk2) {
-                iNumOfItemsAdded = iSplitByDep(pNtk2, iDep2, iMatch2, iGroup2, &iLastItem2, oGroup2);
-            } else {
-                iNumOfItemsAdded = 0; }    
-                
-            if oLastItem2 < Abc_NtkPoNum(pNtk2) {        
-                oNumOfItemsAdded = oSplitByDep(pNtk2, oDep2, oMatch2, oGroup2, &oLastItem2, iGroup2);
-            } else {
-                oNumOfItemsAdded = 0; }
-            
-            if !(checkListConsistency(iMatch1, oMatch1, iMatch2, oMatch2, iLastItem1, oLastItem1, iLastItem2, oLastItem2) != 0) {
-                fmt.Fprintf(os.Stdout, "I/O dependencies of two circuits are different.\n");
-                goto freeAndExit;
-            }        
-        
-if !(iNumOfItemsAdded != 0 || oNumOfItemsAdded != 0) { break }
+func checkListConsistency(iMatch1, oMatch1, iMatch2, oMatch2 []*Vec_Int_t, iLastItem1, oLastItem1, iLastItem2, oLastItem2 int32) int32 {
+	if iLastItem1 != iLastItem2 || oLastItem1 != oLastItem2 {
+		return FALSE
+	}
+	return TRUE
 }
 
-    
-if !(false) { break }
+func bmGateWay(pNtk1, pNtk2 *Abc_Ntk_t, pEquivalence int32) {
+	totalStart := time.Now()
+	if pNtk1 == nil || pNtk2 == nil {
+		return
+	}
+	if Abc_NtkPiNum(pNtk1) != Abc_NtkPiNum(pNtk2) || Abc_NtkPoNum(pNtk1) != Abc_NtkPoNum(pNtk2) {
+		fmt.Printf("I/O dependencies of two circuits are different.\n")
+		return
+	}
+	pNtk1, pNtk2 = Abc_NtkStrash(pNtk1, 0, 0, 0), Abc_NtkStrash(pNtk2, 0, 0, 0)
+	if pNtk1 == nil || pNtk2 == nil {
+		return
+	}
+	nInputs, nOutputs := int(Abc_NtkPiNum(pNtk1)), int(Abc_NtkPoNum(pNtk1))
+	iDep1, iDep2 := make([]*Vec_Int_t, nInputs), make([]*Vec_Int_t, nInputs)
+	oDep1, oDep2 := make([]*Vec_Int_t, nOutputs), make([]*Vec_Int_t, nOutputs)
+	iMatch1, iMatch2 := make([]*Vec_Int_t, nInputs), make([]*Vec_Int_t, nInputs)
+	oMatch1, oMatch2 := make([]*Vec_Int_t, nOutputs), make([]*Vec_Int_t, nOutputs)
+	iGroup1, iGroup2 := make([]int32, nInputs), make([]int32, nInputs)
+	oGroup1, oGroup2 := make([]int32, nOutputs), make([]int32, nOutputs)
+	observability1, observability2 := make([]int32, nInputs), make([]int32, nInputs)
+	for i := range iDep1 {
+		iDep1[i] = Vec_IntAlloc(1)
+		iDep2[i] = Vec_IntAlloc(1)
+		iMatch1[i] = Vec_IntAlloc(1)
+		iMatch2[i] = Vec_IntAlloc(1)
+	}
+	for i := range oDep1 {
+		oDep1[i] = Vec_IntAlloc(1)
+		oDep2[i] = Vec_IntAlloc(1)
+		oMatch1[i] = Vec_IntAlloc(1)
+		oMatch2[i] = Vec_IntAlloc(1)
+	}
+	var iLastItem1, oLastItem1, iLastItem2, oLastItem2 int32
+	defer func() {
+		for i := range iMatch1 {
+			Vec_IntFree(iMatch1[i])
+			Vec_IntFree(iMatch2[i])
+		}
+		for i := range oMatch1 {
+			Vec_IntFree(oMatch1[i])
+			Vec_IntFree(oMatch2[i])
+		}
+		for i := range iDep1 {
+			Vec_IntFree(iDep1[i])
+			Vec_IntFree(iDep2[i])
+		}
+		for i := range oDep1 {
+			Vec_IntFree(oDep1[i])
+			Vec_IntFree(oDep2[i])
+		}
+	}()
+	fmt.Printf("Network  strashing is done!\n")
+	getDependencies(pNtk1, iDep1, oDep1)
+	getDependencies(pNtk2, iDep2, oDep2)
+	fmt.Printf("Getting dependencies is done!\n")
+	initMatchList(pNtk1, iDep1, oDep1, iMatch1, &iLastItem1, oMatch1, &oLastItem1, iGroup1, oGroup1, pEquivalence)
+	initMatchList(pNtk2, iDep2, oDep2, iMatch2, &iLastItem2, oMatch2, &oLastItem2, iGroup2, oGroup2, pEquivalence)
+	fmt.Printf("Initializing match lists is done!\n")
+	if checkListConsistency(iMatch1, oMatch1, iMatch2, oMatch2, iLastItem1, oLastItem1, iLastItem2, oLastItem2) == 0 {
+		fmt.Printf("I/O dependencies of two circuits are different.\n")
+		return
+	}
+	fmt.Printf("Refining IOs by dependencies ...")
+	for {
+		iAdded, oAdded := int32(1), int32(1)
+		for iAdded != 0 || oAdded != 0 {
+			if oAdded != 0 {
+				iSortDependencies(pNtk1, iDep1, oGroup1)
+				iSortDependencies(pNtk2, iDep2, oGroup2)
+			}
+			if iAdded != 0 {
+				oSortDependencies(pNtk1, oDep1, iGroup1)
+				oSortDependencies(pNtk2, oDep2, iGroup2)
+			}
+			if iLastItem1 < int32(nInputs) {
+				_ = iSplitByDep(pNtk1, iDep1, iMatch1, iGroup1, &iLastItem1, oGroup1)
+				if oLastItem1 < int32(nOutputs) {
+					_ = oSplitByDep(pNtk1, oDep1, oMatch1, oGroup1, &oLastItem1, iGroup1)
+				}
+			}
+			if iLastItem2 < int32(nInputs) {
+				iAdded = iSplitByDep(pNtk2, iDep2, iMatch2, iGroup2, &iLastItem2, oGroup2)
+			} else {
+				iAdded = 0
+			}
+			if oLastItem2 < int32(nOutputs) {
+				oAdded = oSplitByDep(pNtk2, oDep2, oMatch2, oGroup2, &oLastItem2, iGroup2)
+			} else {
+				oAdded = 0
+			}
+			if checkListConsistency(iMatch1, oMatch1, iMatch2, oMatch2, iLastItem1, oLastItem1, iLastItem2, oLastItem2) == 0 {
+				fmt.Printf("I/O dependencies of two circuits are different.\n")
+				return
+			}
+		}
+		break
+	}
+	fmt.Printf(" done!\n")
+	topOrder1, topOrder2 := findTopologicalOrder(pNtk1), findTopologicalOrder(pNtk2)
+	defer func() {
+		for _, v := range topOrder1 {
+			Vec_PtrFree(v)
+		}
+		for _, v := range topOrder2 {
+			Vec_PtrFree(v)
+		}
+	}()
+	piValues1, piValues2 := make([]byte, nInputs), make([]byte, nInputs)
+	for i := range piValues1 {
+		piValues1[i] = '0'
+		piValues2[i] = '0'
+	}
+	fmt.Printf("Refining IOs by simulation ...")
+	initTime := float32(time.Since(totalStart).Seconds())
+	simulationStart := time.Now()
+	for tries := 0; tries <= 200; {
+		for i := int32(0); i < iLastItem1; i++ {
+			value := byte('0' + rand.Uint32()%2)
+			if Vec_IntSize(iMatch1[i]) != Vec_IntSize(iMatch2[i]) {
+				fmt.Printf("Input refinement by simulation finds two circuits different.\n")
+				return
+			}
+			for j := int32(0); j < Vec_IntSize(iMatch1[i]); j++ {
+				piValues1[Vec_IntEntry(iMatch1[i], j)] = value
+				piValues2[Vec_IntEntry(iMatch2[i], j)] = value
+			}
+		}
+		refined1 := refineIOBySimulation(pNtk1, iMatch1, &iLastItem1, iGroup1, iDep1, oMatch1, &oLastItem1, oGroup1, oDep1, string(piValues1), observability1, topOrder1)
+		refined2 := refineIOBySimulation(pNtk2, iMatch2, &iLastItem2, iGroup2, iDep2, oMatch2, &oLastItem2, oGroup2, oDep2, string(piValues2), observability2, topOrder2)
+		if (refined1 != 0) != (refined2 != 0) || checkListConsistency(iMatch1, oMatch1, iMatch2, oMatch2, iLastItem1, oLastItem1, iLastItem2, oLastItem2) == 0 {
+			fmt.Printf("Input refinement by simulation finds two circuits different.\n")
+			return
+		}
+		if refined1 != 0 && refined2 != 0 {
+			tries = 0
+		} else {
+			tries++
+		}
+	}
+	fmt.Printf(" done!\nSAT-based search started ...\n")
+	simulTime := float32(time.Since(simulationStart).Seconds())
+	satTime := refineBySAT(pNtk1, iMatch1, iGroup1, iDep1, &iLastItem1, oMatch1, oGroup1, oDep1, &oLastItem1, observability1, pNtk2, iMatch2, iGroup2, iDep2, &iLastItem2, oMatch2, oGroup2, oDep2, &oLastItem2, observability2)
+	fmt.Printf("Init Time = %4.2f\n", initTime)
+	fmt.Printf("Simulation Time = %4.2f\n", simulTime)
+	fmt.Printf("SAT Time = %4.2f\n", satTime)
+	fmt.Printf("Overall Time = %4.2f\n", initTime+simulTime+satTime)
 }
-
-    fmt.Printf(" done!\n");
-
-    initTime = (float32((Abc_Clock() - clk))/float32((int64(time.Second))));    
-    clk = Abc_Clock();
-
-    topOrder1 = findTopologicalOrder(pNtk1);
-    topOrder2 = findTopologicalOrder(pNtk2);
-
-    fmt.Printf("Refining IOs by simulation ...");                
-
-    for
-    {
-        var counter int32;
-        var ioSuccess1, ioSuccess2 int32;    
-        
-        for
-        {
-            for i = 0; i < iLastItem1; i++ {
-                var temp int32  = int32((SIM_RANDOM_UNSIGNED % 2));        
-                
-                if Vec_IntSize(iMatch1[i]) != Vec_IntSize(iMatch2[i]) {
-                    fmt.Fprintf(os.Stdout, "Input refinement by simulation finds two circuits different.\n");                
-                    goto freeAndExit;
-                }
-                
-                for j = 0; j < Vec_IntSize(iMatch1[i]); j++ {
-                    vPiValues1[Vec_IntEntry(iMatch1[i], j)] = temp + '0';
-                    vPiValues2[Vec_IntEntry(iMatch2[i], j)] = temp + '0';    
-                }            
-            }                    
-            
-            ioSuccess1 = refineIOBySimulation(pNtk1, iMatch1, &iLastItem1, iGroup1, iDep1, oMatch1, &oLastItem1, oGroup1, oDep1, vPiValues1, observability1, topOrder1);                
-            ioSuccess2 = refineIOBySimulation(pNtk2, iMatch2, &iLastItem2, iGroup2, iDep2, oMatch2, &oLastItem2, oGroup2, oDep2, vPiValues2, observability2, topOrder2);
-            
-            if ioSuccess1 && (ioSuccess2 != 0) {
-                counter = 0;
-            } else {
-                counter++; }                        
-            
-            if ioSuccess1 != ioSuccess2 ||
-               !(checkListConsistency(iMatch1, oMatch1, iMatch2, oMatch2, iLastItem1, oLastItem1, iLastItem2, oLastItem2) != 0) {
-                fmt.Fprintf(os.Stdout, "Input refinement by simulation finds two circuits different.\n");                
-                goto freeAndExit;
-            }
-        
-if !(counter <= 200) { break }
-}                
-        
-    
-if !(false) { break }
-}    
-
-    fmt.Printf(" done!\n");
-    
-    simulTime = float32((Abc_Clock() - clk))/float32((int64(time.Second)));
-    fmt.Printf("SAT-based search started ...\n");
-
-    satTime = refineBySAT(pNtk1, iMatch1, iGroup1, iDep1, &iLastItem1, oMatch1, oGroup1, oDep1, &oLastItem1, observability1,
-                                  pNtk2, iMatch2, iGroup2, iDep2, &iLastItem2, oMatch2, oGroup2, oDep2, &oLastItem2, observability2);
-
-    fmt.Printf("Init Time = %4.2f\n", initTime);    
-    fmt.Printf("Simulation Time = %4.2f\n", simulTime);
-    fmt.Printf("SAT Time = %4.2f\n", satTime);
-    fmt.Printf("Overall Time = %4.2f\n", initTime + simulTime + satTime);
-    
-freeAndExit:
-
-    for i = 0; i < iLastItem1 ; i++ {            
-        
-        Vec_IntFree( iMatch1[i] );
-        Vec_IntFree( iMatch2[i] );
-    }
-    
-    for i = 0; i < oLastItem1 ; i++ {            
-        
-        Vec_IntFree( oMatch1[i] );
-        Vec_IntFree( oMatch2[i] );
-    }
-
-    for i = 0; i < Abc_NtkPiNum(pNtk1); i++ {
-        Vec_IntFree( iDep1[i] );
-        Vec_IntFree( iDep2[i] );
-        if topOrder1 != nil {
-            Vec_PtrFree( topOrder1[i] );
-            Vec_PtrFree( topOrder2[i] );
-        }
-    }
-
-    for i = 0; i < Abc_NtkPoNum(pNtk1); i++ {
-        Vec_IntFree( oDep1[i] );
-        Vec_IntFree( oDep2[i] );
-    }
-
-    iMatch1 = nil;
-    iMatch2 = nil;
-    oMatch1 = nil;
-    oMatch2 = nil;
-    iDep1 = nil;
-    iDep2 = nil;
-    oDep1 = nil;
-    oDep2 = nil;
-    iGroup1 = nil;
-    iGroup2 = nil;
-    oGroup1 = nil;
-    oGroup2 = nil;    
-    vPiValues1 = nil;
-    vPiValues2 = nil;
-    observability1 = nil;
-    observability2 = nil;
-    if topOrder1 != nil {
-        topOrder1 = nil;
-        topOrder2 = nil;
-    }
-}
-//ABC_NAMESPACE_IMPL_END
-
