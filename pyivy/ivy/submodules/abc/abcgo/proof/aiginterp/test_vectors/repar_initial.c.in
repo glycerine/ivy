@@ -1,0 +1,41 @@
+#include <sys/prctl.h>
+#include "aig/aig/aig.h"
+#include "sat/cnf/cnf.h"
+#include "sat/bsat/satSolver2.h"
+unsigned enable_dbg_outs = 0;
+int Abc_FrameIsBridgeMode(void) { return 0; }
+int Gia_ManToBridgeText(FILE *f,int n,unsigned char *s) { return 0; }
+char *vnsprintf(const char *format,va_list args) { return NULL; }
+int Int2_ManChainStart(Int2_Man_t *p,clause *c) { return 0; }
+int Int2_ManChainResolve(Int2_Man_t *p,clause *c,int lit,int var) { return 0; }
+void Int2_ManStop(Int2_Man_t *p) {}
+void Cnf_DataLift(Cnf_Dat_t *p,int shift) {
+ int i; for(i=0;i<5;i++) p->pClauses[0][i]+=2*shift;
+ p->pVarNums[0]+=shift;
+}
+/* Diagnostic second build repairs only the obsolete zero clause IDs. */
+#ifdef REPAIR_CLAUSE_IDS
+static int nextClauseId = 0;
+#define sat_solver2_addclause(s,a,b,id) sat_solver2_addclause(s,a,b,++nextClauseId)
+#endif
+/*HELPERS*/
+int main(void) {
+ sat_solver2 *pSat;
+ Vec_Int_t *vVars;
+ Aig_Obj_t output = {0},*objects[1] = {&output},*pObj;
+ Vec_Ptr_t cos = {1,1,(void **)objects};
+ Aig_Man_t graph = {0},*pMan = &graph;
+ /* Free output v0 equals input v1; v2 is ABC constant one. */
+ int literals[5]={0,3,1,2,4},*clauses[4]={literals,literals+2,literals+4,literals+5},variables[1]={0};
+ Cnf_Dat_t cnf = {0},*pCnf=&cnf;
+ int nOuts=1,ShiftP[2],ShiftCnf[2],ShiftOr[2],ShiftAssume,Cid,Lit,status,i,k;
+ if (prctl(PR_SET_DUMPABLE,0,0,0,0)!=0) return 2;
+ graph.vCos=&cos;
+ cnf.nVars=3;cnf.nClauses=3;cnf.pClauses=clauses;cnf.pVarNums=variables;
+ /*PREFIX*/
+ Lit=toLitCond(ShiftAssume,1);
+ status=sat_solver2_solve(pSat,&Lit,&Lit+1,0,0,0,0);
+ printf("status=%d\n",status);
+ Vec_IntFree(vVars);sat_solver2_delete(pSat);
+ return status==l_True ? 0 : 1;
+}
