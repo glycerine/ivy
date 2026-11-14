@@ -3105,3 +3105,24 @@ uncached race suites pass for GIA (23.667s) and the base/abci exporter caller
 (28.848s), in `/tmp/abcgo-identity-mini-review-race.log`; GIA vet also passes.
 GIA export/import and other remaining algorithm families still need review.
 Original package completion remains 2/131; the sequential goal stays active.
+
+MiniLUT export/equivalence follow-up: added independent interpretation of
+exported MiniLUT records over all assignments at widths 2, 5, 6, 7, 8, 10 and
+16, each with uniform versus mixed root-output polarity (268,176 assignment
+rows). Tests cover cut-pin reordering beyond six variables, uint32/uint64 truth
+boundaries, complemented internal cut leaves, constants, register/interface
+counts, and shared root/PI inverters. A compiled giaMini.c fixture receives the
+equivalent ordinary AND expansion of the Go real-XOR graph. Digests include
+every exported pin and truth word; all 14 cases match original C, including
+16-input tables. Focused native coverage passes in 1.859s
+(`/tmp/abcgo-mini-lut-wide-native.log`).
+
+MiniAIG reduction/miter coverage checks four signed duplicate-AND networks
+with two registers that have identical reset and transition functions. Across
+all 16 four-cycle PI traces (256 frames), reduction removes the redundant
+register while preserving four POs and the next-state function. The miter
+retains two registers and two equivalence assertions, both false on every
+reachable frame. Source giaMini.c reduction/miter flow was compared by
+inspection; no bug was found in these paths. Full uncached GIA race tests
+pass in 26.089s (`/tmp/abcgo-mini-lut-equiv-review-race.log`) and GIA vet passes.
+Other MiniAIG helper paths remain under review; original completion is 2/131.
