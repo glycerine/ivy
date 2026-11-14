@@ -81,6 +81,18 @@ func Ivy_FraigParamsDefault(params *Ivy_FraigParams_t) {
 	*params = Ivy_FraigParams_t{nSimWords: 32, dSimSatur: 0.005, MaxScore: 25, fDoSparse: 1, dActConeRatio: 0.3, dActConeBumpMax: 10, nBTLimitNode: 100, nBTLimitMiter: 500000}
 }
 
+// Ivy_FraigParamsSetBmc configures the FRAIG options used by ABC's bounded
+// model checker. The source sets an unlimited node backtrack limit and turns
+// proving and verbose reporting off.
+func Ivy_FraigParamsSetBmc(params *Ivy_FraigParams_t, nodeLimit int32, verbose, prove int32) {
+	if params == nil {
+		panic("ivy: nil FRAIG parameters")
+	}
+	params.nBTLimitNode = nodeLimit
+	params.fVerbose = verbose
+	params.fProve = prove
+}
+
 // This allocator preserves the real graph fanout lists: FRAIG owns typed state
 // instead of reinterpreting fanout pointers as simulation blocks and integers.
 func ivyFraigStartSimulation(source *Ivy_Man_t, params *Ivy_FraigParams_t) *Ivy_FraigMan_t {
