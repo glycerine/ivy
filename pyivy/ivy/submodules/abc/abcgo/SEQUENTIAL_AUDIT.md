@@ -1168,3 +1168,46 @@ retirement, so the original-C comparison checks the complete state trace
 through both thresholds and the final nil mapping. Undefined values in this
 no-PI fixture can arise only from retirement. This test passed without a
 production fix. The final full AIG race run includes it.
+
+### Canonicalization and library recording source review
+
+Compared aigCanon.go with the complete aigCanon.c: signature construction,
+bytewise comparison, uniqueness, phase/permutation transformations and
+diagnostics; truth hashing, ownership, insertion and resizing; manager
+construction/disposal; BDC-to-AIG copying, DSD prime selection, statistics,
+recording verification and library writing. The signature comparator
+deliberately preserves little-endian memcmp of nOnes alone, rather than
+numeric ordering or comparing the unused cofactor fields.
+
+An original-C fixture compiles aigCanon.c and Kit truth operations unchanged.
+It compares phases, uniqueness flags, permutations, full signatures and
+canonical truth for 700 cases: zero-variable constants, every function of
+one through three variables, and random normalized tables through twelve
+variables, in both return-buffer modes. This baseline passed before and
+after replacing duplicate cofactor/phase/swap code with Kit calls. Removed
+the unused truth and reverse-permutation buffers (524 bytes per manager).
+Verification still checks phase/permutation directly without mutating the
+canonical truth back into the original, so no reverse buffer is needed.
+
+Two focused tests were observed red: resizing a one-bin table chose five
+rather than C's inclusive next prime three, and the empty-variable signature
+diagnostic omitted C's leading zero. Reused util.Abc_PrimeCudd for manager
+creation/resizing and restored that diagnostic. The duplicate prime-search
+routine is gone. Existing Go safeguards remain intentional: lookup checks
+stored variable width, resize reacquires the bucket pointer, and a failed
+library write retains recording state for retry. C can read beyond a
+different-width truth allocation and use its stale bucket pointer after
+resizing. Existing ownership/resize/write-failure tests cover those Go
+safeguards; this review does not reintroduce C's unsafe behavior.
+
+Added an independent library semantic round trip: BDC decomposition and
+AIGER serialization of constants, identity/inversion, four/six-variable
+functions and twelve-variable parity. Evaluation of parsed AIGER literals
+checks every one of the 4096 input assignments, including constant-polarity
+convention and complemented outputs. Existing tests check fully/partially
+DSD counters, prime recording, deduplication, graph consistency and failed
+write retry. Full AIG race tests pass after the changes.
+
+This closes the current aigCanon.go review, not its dependency packages or
+the complete AIG package. Retiming and the other outstanding AIG families
+remain next in the sequential audit; completed package count remains 1/131.
