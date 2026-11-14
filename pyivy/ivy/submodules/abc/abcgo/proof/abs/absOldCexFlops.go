@@ -31,7 +31,7 @@ func Saig_ManCbaFilterFlops(g *aig.Graph, cex *util.Abc_Cex_t, classes, candidat
 	costs := make([]int, len(mapping))
 	value := func(e aig.Edge) bool { return values[e.NodeID()] != e.Complemented() }
 	// Rewrites can make object IDs non-topological.
-	order := aig.Aig_ManDfsAll(g)
+	order := g.TopologicalObjects()
 	for frame := int32(0); frame < cex.IFrame; frame++ {
 		base := cex.NRegs + frame*cex.NPis
 		// The C implementation omitted these real PIs, incorrectly treating them as zero.
