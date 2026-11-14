@@ -240,7 +240,7 @@ func abcDsdBuildNetwork(src *abc.Network, dd *core.DdManager, functions []*core.
 	if printTree {
 		namesIn, namesOut := abcNetworkIONames(src)
 		if verbose {
-			dsd.Dsd_TreePrint(os.Stdout, manager, namesIn, namesOut, short, -1)
+			dsd.Dsd_TreePrint(os.Stdout, manager, namesIn, namesOut, int(boolInt(short)), -1)
 		} else {
 			dsd.Dsd_TreePrint2(os.Stdout, manager, namesIn, namesOut, -1)
 		}
@@ -326,7 +326,7 @@ func Abc_NtkDsdConstruct(manager *dsd.Dsd_Manager_t, src, dst *abc.Network) erro
 	if len(src.Inputs()) != len(dst.Inputs()) {
 		return fmt.Errorf("source and destination CI counts differ")
 	}
-	for i, input := range src.Inputs() {
+	for i := range src.Inputs() {
 		dsd.Dsd_NodeSetMark(dsd.Dsd_ManagerReadInput(manager, i), dst.Inputs()[i].ID)
 	}
 	count := 0

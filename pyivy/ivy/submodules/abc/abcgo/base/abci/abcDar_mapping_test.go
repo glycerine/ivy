@@ -77,7 +77,7 @@ func TestVerifyPatternSliceReturnsOrderedOutputs(t *testing.T) {
 	x := abc.Abc_NtkCreatePi(n)
 	po0, po1 := abc.Abc_NtkCreatePo(n), abc.Abc_NtkCreatePo(n)
 	abc.Abc_ObjAddFanin(po0, x)
-	abc.Abc_ObjAddFanin(po1, x.Not())
+	abc.Abc_ObjAddFanin(po1, x.Signal().Not())
 	if got := Abc_NtkVerifySimulatePatternSlice(n, []int32{1}); len(got) != 2 || got[0] != 1 || got[1] != 0 {
 		t.Fatalf("simulated outputs = %v", got)
 	}

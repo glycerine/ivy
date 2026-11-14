@@ -298,7 +298,7 @@ func Abc_NtkStartCutManForScl(pNtk *Abc_Ntk_t, nLutSize int32) *Cut_Man_t {
 	spStatic_Abc_NtkStartCutManForScl_pParams.NIdsMax = abc.Abc_NtkObjNumMax(pNtk)
 	pManCut = cut.Cut_ManStart(spStatic_Abc_NtkStartCutManForScl_pParams)
 	if spStatic_Abc_NtkStartCutManForScl_pParams.FDrop != 0 {
-		cut.Cut_ManSetFanoutCounts(pManCut, abc.Abc_NtkFanoutCounts(pNtk).Array())
+		cut.Cut_ManSetFanoutCounts(pManCut, Vec_IntArray(abc.Abc_NtkFanoutCounts(pNtk)))
 	}
 	// set cuts for PIs
 	// inlining of macro Abc_NtkForEachCi
@@ -419,15 +419,15 @@ func Abc_NodeSuperChoiceTruth(pManScl *Abc_ManScl_t) []uint32 {
 		pSop, _ = pObj.Data.(string)
 		if pSop[0] == '0' && pSop[1] == '0' {
 			for k = 0; k < pManScl.nWords; k++ {
-				puData[k] = ~puData0[k] & ~puData1[k]
+				puData[k] = ^puData0[k] & ^puData1[k]
 			}
 		} else if pSop[0] == '0' {
 			for k = 0; k < pManScl.nWords; k++ {
-				puData[k] = ~puData0[k] & puData1[k]
+				puData[k] = ^puData0[k] & puData1[k]
 			}
 		} else if pSop[1] == '0' {
 			for k = 0; k < pManScl.nWords; k++ {
-				puData[k] = puData0[k] & ~puData1[k]
+				puData[k] = puData0[k] & ^puData1[k]
 			}
 		} else {
 			for k = 0; k < pManScl.nWords; k++ {
@@ -577,7 +577,6 @@ func Abc_NodeSuperChoiceCollect(pRoot *Abc_Obj_t, vLeaves *Vec_Ptr_t, vVolume *V
 **********************************************************************
 */
 func Abc_NodeLeavesRemove(vLeaves *Vec_Ptr_t, uPhase uint32, nVars int32) {
-	var i int32
 	for i := nVars - 1; i >= 0; i-- {
 		if uPhase&(1<<uint(i)) != 0 {
 			vec.Vec_PtrRemove(vLeaves, Vec_PtrEntry(vLeaves, i))
@@ -656,7 +655,7 @@ func Abc_NodeSuperChoiceLut(p *Abc_ManScl_t, pObj *Abc_Obj_t) *Abc_Obj_t {
 	if nSuppVars != nVars {
 		extra.Extra_TruthShrink(p.uCofs[0], p.uTruth, nSuppVars, nVars, uint32(uSupport))
 		extra.Extra_TruthCopy(p.uTruth, p.uCofs[0], nVars)
-		Abc_NodeLeavesRemove(p.vLeaves, ((1<<nVars)-1)&~uSupport, nVars)
+		Abc_NodeLeavesRemove(p.vLeaves, uint32(((1<<nVars)-1)&^uSupport), nVars)
 	}
 	//    return NULL;
 	// decompose the truth table recursively
@@ -849,7 +848,7 @@ func Abc_NodeDecomposeStep(p *Abc_ManScl_t) int32 {
 		extra.Extra_TruthClear(pTruth, p.nLutSize)
 		for k = 0; k < nClasses; k++ {
 			if k&(1<<uint(v)) != 0 {
-				for i = 0; i < spStatic_Abc_NodeDecomposeStep_nCofClasses[k]; i++ {
+				for i = 0; i < int32(spStatic_Abc_NodeDecomposeStep_nCofClasses[k]); i++ {
 					pTruthCof = p.uCofs[1]
 					extra.Extra_TruthFill(pTruthCof, p.nLutSize)
 					for w = 0; w < p.nLutSize; w++ {
@@ -876,7 +875,7 @@ func Abc_NodeDecomposeStep(p *Abc_ManScl_t) int32 {
 	}
 	// put the new nodes back into the list
 	for v = 0; v < nVarsNew; v++ {
-		Vec_PtrWriteEntry(p.vLeaves, p.pBSet[v], pNodesNew[v])
+		Vec_PtrWriteEntry(p.vLeaves, int(p.pBSet[v]), pNodesNew[v])
 	}
 	// compute the variables that should be removed
 	uPhase = 0

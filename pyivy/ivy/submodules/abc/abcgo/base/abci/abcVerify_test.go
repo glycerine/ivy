@@ -2,7 +2,6 @@ package abci
 
 import (
 	"testing"
-	"unsafe"
 
 	"github.com/glycerine/abcgo/base/abc"
 	"github.com/glycerine/abcgo/misc/util"
@@ -18,7 +17,10 @@ func TestVerifyCleanModelReturnsZeroedCIsAcrossFrames(t *testing.T) {
 	if model == nil {
 		t.Fatal("clean model is nil")
 	}
-	got := unsafe.Slice(model, 6)
+	got := model
+	if len(got) != 6 {
+		t.Fatalf("model length = %d, want 6", len(got))
+	}
 	for i, value := range got {
 		if value != 0 {
 			t.Errorf("model[%d]=%d, want 0", i, value)

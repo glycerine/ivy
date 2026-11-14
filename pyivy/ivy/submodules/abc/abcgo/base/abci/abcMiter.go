@@ -10,8 +10,6 @@ import misc_util "github.com/glycerine/abcgo/misc/util"
 
 import sat_bsat "github.com/glycerine/abcgo/sat/bsat"
 
-import sat_cnf "github.com/glycerine/abcgo/sat/cnf"
-
 import (
 	"bufio"
 	"fmt"
@@ -145,7 +143,7 @@ func Abc_NtkMiterInt(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, fComb int32, nPartSize 
 	Abc_NtkMiterAddOne(pNtk1, pNtkMiter)
 	Abc_NtkMiterAddOne(pNtk2, pNtkMiter)
 	Abc_NtkMiterFinalize(pNtk1, pNtk2, pNtkMiter, fComb, nPartSize, fImplic, fMulti)
-	base_abc.Abc_AigCleanup(pNtkMiter.pManFunc.(*Abc_Aig_t))
+	base_abc.Abc_AigCleanup(pNtkMiter.FunctionManager.(*base_abc.Abc_Aig_t))
 
 	// make sure that everything is okay
 	if base_abc.Abc_NtkCheck(pNtkMiter) == 0 {
@@ -175,8 +173,8 @@ func Abc_NtkMiterPrepare(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, pNtkMiter *Abc_Ntk_
 	// clean the copy field in all objects
 	//    Abc_NtkCleanCopy( pNtk1 );
 	//    Abc_NtkCleanCopy( pNtk2 );
-	Abc_ObjSetCopyEdge(base_abc.Abc_AigConst1(pNtk1), abcCompatCopyEdge(base_abc.Abc_AigConst1(pNtkMiter)))
-	Abc_ObjSetCopyEdge(base_abc.Abc_AigConst1(pNtk2), abcCompatCopyEdge(base_abc.Abc_AigConst1(pNtkMiter)))
+	Abc_ObjSetCopyEdge(base_abc.Abc_AigConst1(pNtk1).Object, abcCompatCopyEdge(base_abc.Abc_AigConst1(pNtkMiter)))
+	Abc_ObjSetCopyEdge(base_abc.Abc_AigConst1(pNtk2).Object, abcCompatCopyEdge(base_abc.Abc_AigConst1(pNtkMiter)))
 
 	if fComb != 0 {
 		// create new PIs and remember them in the old PIs
@@ -189,7 +187,7 @@ func Abc_NtkMiterPrepare(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, pNtkMiter *Abc_Ntk_
 			pObj = base_abc.Abc_NtkCi(pNtk2, i)
 			Abc_ObjSetCopyEdge(pObj, abcCompatCopyEdge(pObjNew))
 			// add name
-			base_abc.Abc_ObjAssignName(pObjNew, Abc_ObjName(pObj), nil)
+			base_abc.Abc_ObjAssignName(pObjNew, Abc_ObjName(pObj), "")
 		}
 		if nPartSize <= 0 {
 			// create POs
@@ -203,7 +201,7 @@ func Abc_NtkMiterPrepare(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, pNtkMiter *Abc_Ntk_
 
 			} else {
 				pObjNew = base_abc.Abc_NtkCreatePo(pNtkMiter)
-				base_abc.Abc_ObjAssignName(pObjNew, "miter", nil)
+				base_abc.Abc_ObjAssignName(pObjNew, "miter", "")
 			}
 		}
 
@@ -218,7 +216,7 @@ func Abc_NtkMiterPrepare(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, pNtkMiter *Abc_Ntk_
 			pObj = Abc_NtkPi(pNtk2, i)
 			Abc_ObjSetCopyEdge(pObj, abcCompatCopyEdge(pObjNew))
 			// add name
-			base_abc.Abc_ObjAssignName(pObjNew, Abc_ObjName(pObj), nil)
+			base_abc.Abc_ObjAssignName(pObjNew, Abc_ObjName(pObj), "")
 		}
 		if nPartSize <= 0 {
 			// create POs
@@ -232,12 +230,12 @@ func Abc_NtkMiterPrepare(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, pNtkMiter *Abc_Ntk_
 
 			} else {
 				pObjNew = base_abc.Abc_NtkCreatePo(pNtkMiter)
-				base_abc.Abc_ObjAssignName(pObjNew, "miter", nil)
+				base_abc.Abc_ObjAssignName(pObjNew, "miter", "")
 			}
 		}
 		// create the latches
 		// inlining of macro Abc_NtkForEachLatch
-		for i = 0; i < Vec_PtrSize(pNtk1.vBoxes); i++ {
+		for i = 0; i < int32(len(pNtk1.Boxes())); i++ {
 			pObj = base_abc.Abc_NtkBox(pNtk1, i)
 			if base_abc.Abc_ObjIsLatch(pObj) == 0 {
 				continue
@@ -249,7 +247,7 @@ func Abc_NtkMiterPrepare(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, pNtkMiter *Abc_Ntk_
 			base_abc.Abc_ObjAssignName(Abc_ObjFanout0(pObjNew), Abc_ObjName(Abc_ObjFanout0(pObj)), "_1")
 		}
 		// inlining of macro Abc_NtkForEachLatch
-		for i = 0; i < Vec_PtrSize(pNtk2.vBoxes); i++ {
+		for i = 0; i < int32(len(pNtk2.Boxes())); i++ {
 			pObj = base_abc.Abc_NtkBox(pNtk2, i)
 			if base_abc.Abc_ObjIsLatch(pObj) == 0 {
 				continue
@@ -281,12 +279,12 @@ func Abc_NtkMiterAddOne(pNtk *Abc_Ntk_t, pNtkMiter *Abc_Ntk_t) {
 	var i int32
 	assert((base_abc.Abc_NtkIsDfsOrdered(pNtk) != 0), "Abc_NtkIsDfsOrdered(pNtk)")
 	// inlining of macro Abc_AigForEachAnd
-	for i = 0; i < Vec_PtrSize(pNtk.vObjs); i++ {
+	for i = 0; i < Abc_NtkObjNumMax(pNtk); i++ {
 		pNode = Abc_NtkObj(pNtk, i)
 		if pNode == nil || (base_abc.Abc_AigNodeIsAnd(pNode) == 0) {
 			continue
 		}
-		Abc_ObjSetCopyEdge(pNode, abcCompatCopyEdge(base_abc.Abc_AigAnd(pNtkMiter.pManFunc.(*Abc_Aig_t), Abc_ObjChild0Copy(pNode), Abc_ObjChild1Copy(pNode))))
+		Abc_ObjSetCopyEdge(pNode, abcCompatCopyEdge(base_abc.Abc_AigAnd(pNtkMiter.FunctionManager.(*base_abc.Abc_Aig_t), Abc_ObjChild0Copy(pNode), Abc_ObjChild1Copy(pNode))))
 	}
 }
 
@@ -304,21 +302,20 @@ func Abc_NtkMiterAddOne(pNtk *Abc_Ntk_t, pNtkMiter *Abc_Ntk_t) {
 **********************************************************************
 */
 func Abc_NtkMiterAddCone(pNtk *Abc_Ntk_t, pNtkMiter *Abc_Ntk_t, pRoot *Abc_Obj_t) {
-	var vNodes *Vec_Ptr_t
+	var vNodes []*Abc_Obj_t
 	var pNode *Abc_Obj_t
 	var i int32
 	// map the constant nodes
-	Abc_ObjSetCopyEdge(base_abc.Abc_AigConst1(pNtk), abcCompatCopyEdge(base_abc.Abc_AigConst1(pNtkMiter)))
+	Abc_ObjSetCopyEdge(base_abc.Abc_AigConst1(pNtk).Object, abcCompatCopyEdge(base_abc.Abc_AigConst1(pNtkMiter)))
 	// perform strashing
-	vNodes = base_abc.Abc_NtkDfsNodes(pNtk, &pRoot, 1)
+	vNodes = base_abc.Abc_NtkDfsNodes(pNtk, []*Abc_Obj_t{pRoot}, 1)
 	// inlining of macro Vec_PtrForEachEntry
-	for i = 0; i < Vec_PtrSize(vNodes); i++ {
-		pNode = Vec_PtrEntry(vNodes, i).(*Abc_Obj_t)
+	for i = 0; i < int32(len(vNodes)); i++ {
+		pNode = vNodes[i]
 		if base_abc.Abc_AigNodeIsAnd(pNode) != 0 {
-			Abc_ObjSetCopyEdge(pNode, abcCompatCopyEdge(base_abc.Abc_AigAnd(pNtkMiter.pManFunc.(*Abc_Aig_t), Abc_ObjChild0Copy(pNode), Abc_ObjChild1Copy(pNode))))
+			Abc_ObjSetCopyEdge(pNode, abcCompatCopyEdge(base_abc.Abc_AigAnd(pNtkMiter.FunctionManager.(*base_abc.Abc_Aig_t), Abc_ObjChild0Copy(pNode), Abc_ObjChild1Copy(pNode))))
 		}
 	}
-	Vec_PtrFree(vNodes)
 }
 
 /*
@@ -335,25 +332,26 @@ func Abc_NtkMiterAddCone(pNtk *Abc_Ntk_t, pNtkMiter *Abc_Ntk_t, pRoot *Abc_Obj_t
 **********************************************************************
 */
 func Abc_NtkMiterFinalize(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, pNtkMiter *Abc_Ntk_t, fComb int32, nPartSize int32, fImplic int32, fMulti int32) {
-	var vPairs *Vec_Ptr_t
-	var pMiter, pNode *Abc_Obj_t
+	var vPairs []base_abc.Edge
+	var pNode *Abc_Obj_t
+	var pMiter base_abc.Edge
 	var i int32
 	assert(nPartSize == 0 || fMulti == 0, "nPartSize == 0 || fMulti == 0")
 	// collect the PO pairs from both networks
-	vPairs = Vec_PtrAlloc(100)
+	vPairs = make([]base_abc.Edge, 0, 100)
 	if fComb != 0 {
 		// collect the CO nodes for the miter
 		// inlining of macro Abc_NtkForEachCo
 		for i = 0; i < Abc_NtkCoNum(pNtk1); i++ {
 			pNode = base_abc.Abc_NtkCo(pNtk1, i)
 			if fMulti != 0 {
-				pMiter = base_abc.Abc_AigXor(pNtkMiter.pManFunc.(*Abc_Aig_t), Abc_ObjChild0Copy(pNode), Abc_ObjChild0Copy(base_abc.Abc_NtkCo(pNtk2, i)))
+				pMiter = base_abc.Abc_AigXor(pNtkMiter.FunctionManager.(*base_abc.Abc_Aig_t), Abc_ObjChild0Copy(pNode), Abc_ObjChild0Copy(base_abc.Abc_NtkCo(pNtk2, i)))
 				Abc_ObjAddFanin(Abc_NtkPo(pNtkMiter, i), pMiter)
 
 			} else {
-				Vec_PtrPush(vPairs, Abc_ObjChild0Copy(pNode))
+				vPairs = append(vPairs, Abc_ObjChild0Copy(pNode))
 				pNode = base_abc.Abc_NtkCo(pNtk2, i)
-				Vec_PtrPush(vPairs, Abc_ObjChild0Copy(pNode))
+				vPairs = append(vPairs, Abc_ObjChild0Copy(pNode))
 			}
 		}
 
@@ -363,29 +361,27 @@ func Abc_NtkMiterFinalize(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, pNtkMiter *Abc_Ntk
 		for i = 0; i < Abc_NtkPoNum(pNtk1); i++ {
 			pNode = Abc_NtkPo(pNtk1, i)
 			if fMulti != 0 {
-				pMiter = base_abc.Abc_AigXor(pNtkMiter.pManFunc.(*Abc_Aig_t), Abc_ObjChild0Copy(pNode), Abc_ObjChild0Copy(base_abc.Abc_NtkCo(pNtk2, i)))
+				pMiter = base_abc.Abc_AigXor(pNtkMiter.FunctionManager.(*base_abc.Abc_Aig_t), Abc_ObjChild0Copy(pNode), Abc_ObjChild0Copy(base_abc.Abc_NtkCo(pNtk2, i)))
 				Abc_ObjAddFanin(Abc_NtkPo(pNtkMiter, i), pMiter)
 
 			} else {
-				Vec_PtrPush(vPairs, Abc_ObjChild0Copy(pNode))
+				vPairs = append(vPairs, Abc_ObjChild0Copy(pNode))
 				pNode = Abc_NtkPo(pNtk2, i)
-				Vec_PtrPush(vPairs, Abc_ObjChild0Copy(pNode))
+				vPairs = append(vPairs, Abc_ObjChild0Copy(pNode))
 			}
 		}
 		// connect new latches
 		// inlining of macro Abc_NtkForEachLatch
-		for i = 0; i < Vec_PtrSize((pNtk1).vBoxes); i++ {
-			if base_abc.Abc_ObjIsLatch(pNode) == 0 {
-			} else {
-				pNode = base_abc.Abc_NtkBox(pNtk1, i)
+		for i = 0; i < int32(len(pNtk1.Boxes())); i++ {
+			pNode = base_abc.Abc_NtkBox(pNtk1, i)
+			if base_abc.Abc_ObjIsLatch(pNode) != 0 {
 				Abc_ObjAddFanin(Abc_ObjReadCopyEdge(Abc_ObjFanin0(pNode)).Object, Abc_ObjChild0Copy(Abc_ObjFanin0(pNode)))
 			}
 		}
 		// inlining of macro Abc_NtkForEachLatch
-		for i = 0; i < Vec_PtrSize((pNtk2).vBoxes); i++ {
-			if base_abc.Abc_ObjIsLatch(pNode) == 0 {
-			} else {
-				pNode = base_abc.Abc_NtkBox(pNtk2, i)
+		for i = 0; i < int32(len(pNtk2.Boxes())); i++ {
+			pNode = base_abc.Abc_NtkBox(pNtk2, i)
+			if base_abc.Abc_ObjIsLatch(pNode) != 0 {
 				Abc_ObjAddFanin(Abc_ObjReadCopyEdge(Abc_ObjFanin0(pNode)).Object, Abc_ObjChild0Copy(Abc_ObjFanin0(pNode)))
 			}
 		}
@@ -393,33 +389,33 @@ func Abc_NtkMiterFinalize(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, pNtkMiter *Abc_Ntk
 	// add the miter
 	if nPartSize <= 0 {
 		if !(fMulti != 0) {
-			pMiter = base_abc.Abc_AigMiter(pNtkMiter.pManFunc.(*Abc_Aig_t), vPairs, fImplic)
+			pMiter = base_abc.Abc_AigMiter(pNtkMiter.FunctionManager.(*base_abc.Abc_Aig_t), &vPairs, fImplic)
 			Abc_ObjAddFanin(Abc_NtkPo(pNtkMiter, 0), pMiter)
 		}
 
 	} else {
 		var Buffer string // was [1024]byte in C
 
-		var vPairsPart *Vec_Ptr_t
+		var vPairsPart []base_abc.Edge
 		var nParts, i, k, iCur int32
-		assert(Vec_PtrSize(vPairs) == 2*Abc_NtkCoNum(pNtk1), "Vec_PtrSize(vPairs) == 2 * Abc_NtkCoNum(pNtk1)")
+		assert(int32(len(vPairs)) == 2*Abc_NtkCoNum(pNtk1), "int32(len(vPairs)) == 2 * Abc_NtkCoNum(pNtk1)")
 		// create partitions
 		nParts = Abc_NtkCoNum(pNtk1) / nPartSize
 		if Abc_NtkCoNum(pNtk1)%nPartSize > 0 {
 			nParts++
 		}
-		vPairsPart = Vec_PtrAlloc(nPartSize)
+		vPairsPart = make([]base_abc.Edge, 0, 2*nPartSize)
 		for i = 0; i < nParts; i++ {
-			Vec_PtrClear(vPairsPart)
+			vPairsPart = vPairsPart[:0]
 			for k = 0; k < nPartSize; k++ {
 				iCur = i*nPartSize + k
 				if iCur >= Abc_NtkCoNum(pNtk1) {
 					break
 				}
-				Vec_PtrPush(vPairsPart, Vec_PtrEntry(vPairs, 2*iCur))
-				Vec_PtrPush(vPairsPart, Vec_PtrEntry(vPairs, 2*iCur+1))
+				vPairsPart = append(vPairsPart, vPairs[2*iCur])
+				vPairsPart = append(vPairsPart, vPairs[2*iCur+1])
 			}
-			pMiter = base_abc.Abc_AigMiter(pNtkMiter.pManFunc.(*Abc_Aig_t), vPairsPart, fImplic)
+			pMiter = base_abc.Abc_AigMiter(pNtkMiter.FunctionManager.(*base_abc.Abc_Aig_t), &vPairsPart, fImplic)
 			pNode = base_abc.Abc_NtkCreatePo(pNtkMiter)
 			Abc_ObjAddFanin(pNode, pMiter)
 			// assign the name to the node
@@ -430,9 +426,7 @@ func Abc_NtkMiterFinalize(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, pNtkMiter *Abc_Ntk
 			}
 			base_abc.Abc_ObjAssignName(pNode, "miter_", Buffer)
 		}
-		Vec_PtrFree(vPairsPart)
 	}
-	Vec_PtrFree(vPairs)
 }
 
 /*
@@ -452,8 +446,9 @@ func Abc_NtkMiterAnd(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, fOr int32, fCompl2 int3
 	var Buffer string // was [1000]byte in C
 
 	var pNtkMiter *Abc_Ntk_t
-	var pOutput1, pOutput2 *Abc_Obj_t
-	var pRoot1, pRoot2, pMiter *Abc_Obj_t
+	var pOutput1, pOutput2 base_abc.Edge
+	var pRoot1, pRoot2 *Abc_Obj_t
+	var pMiter base_abc.Edge
 
 	assert((Abc_NtkIsStrash(pNtk1) != 0), "Abc_NtkIsStrash(pNtk1)")
 	assert((Abc_NtkIsStrash(pNtk2) != 0), "Abc_NtkIsStrash(pNtk2)")
@@ -483,9 +478,9 @@ func Abc_NtkMiterAnd(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, fOr int32, fCompl2 int3
 
 	// create the miter of the two outputs
 	if fOr != 0 {
-		pMiter = base_abc.Abc_AigOr(pNtkMiter.pManFunc.(*Abc_Aig_t), pOutput1, pOutput2)
+		pMiter = base_abc.Abc_AigOr(pNtkMiter.FunctionManager.(*base_abc.Abc_Aig_t), pOutput1, pOutput2)
 	} else {
-		pMiter = base_abc.Abc_AigAnd(pNtkMiter.pManFunc.(*Abc_Aig_t), pOutput1, pOutput2)
+		pMiter = base_abc.Abc_AigAnd(pNtkMiter.FunctionManager.(*base_abc.Abc_Aig_t), pOutput1, pOutput2)
 	}
 	Abc_ObjAddFanin(Abc_NtkPo(pNtkMiter, 0), pMiter)
 
@@ -516,7 +511,8 @@ func Abc_NtkMiterCofactor(pNtk *Abc_Ntk_t, vPiValues *Vec_Int_t) *Abc_Ntk_t {
 	var Buffer string // was [1000]byte in C
 
 	var pNtkMiter *Abc_Ntk_t
-	var pRoot, pOutput1 *Abc_Obj_t
+	var pRoot *Abc_Obj_t
+	var pOutput1 base_abc.Edge
 	var Value, i int32
 
 	assert((Abc_NtkIsStrash(pNtk) != 0), "Abc_NtkIsStrash(pNtk)")
@@ -585,7 +581,8 @@ func Abc_NtkMiterForCofactors(pNtk *Abc_Ntk_t, Out int32, In1 int32, In2 int32) 
 	var Buffer string // was [1000]byte in C
 
 	var pNtkMiter *Abc_Ntk_t
-	var pRoot, pOutput1, pOutput2, pMiter *Abc_Obj_t
+	var pRoot *Abc_Obj_t
+	var pOutput1, pOutput2, pMiter base_abc.Edge
 
 	assert((Abc_NtkIsStrash(pNtk) != 0), "Abc_NtkIsStrash(pNtk)")
 	assert(Out < Abc_NtkCoNum(pNtk), "Out < Abc_NtkCoNum(pNtk)")
@@ -626,7 +623,7 @@ func Abc_NtkMiterForCofactors(pNtk *Abc_Ntk_t, Out int32, In1 int32, In2 int32) 
 	pOutput2 = Abc_ObjReadCopyEdge(Abc_ObjFanin0(pRoot))
 
 	// create the miter of the two outputs
-	pMiter = base_abc.Abc_AigXor(pNtkMiter.pManFunc.(*Abc_Aig_t), pOutput1, pOutput2)
+	pMiter = base_abc.Abc_AigXor(pNtkMiter.FunctionManager.(*base_abc.Abc_Aig_t), pOutput1, pOutput2)
 	Abc_ObjAddFanin(Abc_NtkPo(pNtkMiter, 0), pMiter)
 
 	// make sure that everything is okay
@@ -653,7 +650,8 @@ func Abc_NtkMiterForCofactors(pNtk *Abc_Ntk_t, Out int32, In1 int32, In2 int32) 
 */
 func Abc_NtkMiterQuantify(pNtk *Abc_Ntk_t, In int32, fExist int32) *Abc_Ntk_t {
 	var pNtkMiter *Abc_Ntk_t
-	var pRoot, pOutput1, pOutput2, pMiter *Abc_Obj_t
+	var pRoot *Abc_Obj_t
+	var pOutput1, pOutput2, pMiter base_abc.Edge
 
 	assert((Abc_NtkIsStrash(pNtk) != 0), "Abc_NtkIsStrash(pNtk)")
 	assert(1 == Abc_NtkCoNum(pNtk), "1 == Abc_NtkCoNum(pNtk)")
@@ -687,9 +685,9 @@ func Abc_NtkMiterQuantify(pNtk *Abc_Ntk_t, In int32, fExist int32) *Abc_Ntk_t {
 
 	// create the miter of the two outputs
 	if fExist != 0 {
-		pMiter = base_abc.Abc_AigOr(pNtkMiter.pManFunc.(*Abc_Aig_t), pOutput1, pOutput2)
+		pMiter = base_abc.Abc_AigOr(pNtkMiter.FunctionManager.(*base_abc.Abc_Aig_t), pOutput1, pOutput2)
 	} else {
-		pMiter = base_abc.Abc_AigAnd(pNtkMiter.pManFunc.(*Abc_Aig_t), pOutput1, pOutput2)
+		pMiter = base_abc.Abc_AigAnd(pNtkMiter.FunctionManager.(*base_abc.Abc_Aig_t), pOutput1, pOutput2)
 	}
 	Abc_ObjAddFanin(Abc_NtkPo(pNtkMiter, 0), pMiter)
 
@@ -751,7 +749,8 @@ func Abc_NtkMiterQuantifyPis(pNtk *Abc_Ntk_t) *Abc_Ntk_t {
 **********************************************************************
 */
 func Abc_NtkMiterIsConstant(pMiter *Abc_Ntk_t) int32 {
-	var pNodePo, pChild *Abc_Obj_t
+	var pNodePo *Abc_Obj_t
+	var pChild base_abc.Edge
 	var i int32
 	assert((Abc_NtkIsStrash(pMiter) != 0), "Abc_NtkIsStrash(pMiter)")
 	// inlining of macro Abc_NtkForEachPo
@@ -759,8 +758,8 @@ func Abc_NtkMiterIsConstant(pMiter *Abc_Ntk_t) int32 {
 		pNodePo = Abc_NtkPo(pMiter, i)
 		pChild = Abc_ObjChild0(pNodePo)
 		// check if the output is constant 1
-		if base_abc.Abc_AigNodeIsConst(pChild) != 0 {
-			assert(base_abc.Abc_ObjRegular(pChild) == base_abc.Abc_AigConst1(pMiter), "Abc_ObjRegular(pChild) == Abc_AigConst1(pMiter)")
+		if base_abc.Abc_AigNodeIsConst(pChild.Object) != 0 {
+			assert(base_abc.Abc_ObjRegular(pChild) == base_abc.Abc_AigConst1(pMiter).Object, "Abc_ObjRegular(pChild) == Abc_AigConst1(pMiter)")
 			if base_abc.Abc_ObjIsComplement(pChild) == 0 {
 				// if the miter is constant 1, return immediately
 				//                printf( "MITER IS CONSTANT 1!\n" );
@@ -797,11 +796,11 @@ func Abc_NtkMiterIsConstant(pMiter *Abc_Ntk_t) int32 {
 **********************************************************************
 */
 func Abc_NtkMiterReport(pMiter *Abc_Ntk_t) {
-	var pChild, pNode *Abc_Obj_t
+	var pChild base_abc.Edge
 	var i int32
 	if Abc_NtkPoNum(pMiter) == 1 {
 		pChild = Abc_ObjChild0(Abc_NtkPo(pMiter, 0))
-		if base_abc.Abc_AigNodeIsConst(pChild) != 0 {
+		if base_abc.Abc_AigNodeIsConst(pChild.Object) != 0 {
 			if base_abc.Abc_ObjIsComplement(pChild) != 0 {
 				fmt.Printf("Unsatisfiable.\n")
 			} else {
@@ -815,10 +814,9 @@ func Abc_NtkMiterReport(pMiter *Abc_Ntk_t) {
 	} else {
 		// inlining of macro Abc_NtkForEachPo
 		for i = 0; i < Abc_NtkPoNum(pMiter); i++ {
-			pNode = Abc_NtkPo(pMiter, i)
 			pChild = Abc_ObjChild0(Abc_NtkPo(pMiter, i))
 			fmt.Printf("Output #%2d : ", i)
-			if base_abc.Abc_AigNodeIsConst(pChild) != 0 {
+			if base_abc.Abc_AigNodeIsConst(pChild.Object) != 0 {
 				if base_abc.Abc_ObjIsComplement(pChild) != 0 {
 					fmt.Printf("Unsatisfiable.\n")
 				} else {
@@ -861,14 +859,13 @@ func Abc_NtkFrames(pNtk *Abc_Ntk_t, nFrames int32, fInitial int32, fVerbose int3
 	Buffer = fmt.Sprintf("%s_%d_frames", Abc_NtkName(pNtk), nFrames)
 	Abc_NtkSetName(pNtkFrames, Extra_UtilStrsav(Buffer))
 	// map the constant nodes
-	Abc_ObjSetCopyEdge(base_abc.Abc_AigConst1(pNtk), abcCompatCopyEdge(base_abc.Abc_AigConst1(pNtkFrames)))
+	Abc_ObjSetCopyEdge(base_abc.Abc_AigConst1(pNtk).Object, abcCompatCopyEdge(base_abc.Abc_AigConst1(pNtkFrames)))
 	// create new latches (or their initial values) and remember them in the new latches
 	if !(fInitial != 0) {
 		// inlining of macro Abc_NtkForEachLatch
-		for i = 0; i < Vec_PtrSize((pNtk).vBoxes); i++ {
-			if base_abc.Abc_ObjIsLatch(pLatch) == 0 {
-			} else {
-				pLatch = base_abc.Abc_NtkBox(pNtk, i)
+		for i = 0; i < int32(len(pNtk.Boxes())); i++ {
+			pLatch = base_abc.Abc_NtkBox(pNtk, i)
+			if base_abc.Abc_ObjIsLatch(pLatch) != 0 {
 				base_abc.Abc_NtkDupBox(pNtkFrames, pLatch, 1)
 			}
 		}
@@ -876,15 +873,14 @@ func Abc_NtkFrames(pNtk *Abc_Ntk_t, nFrames int32, fInitial int32, fVerbose int3
 	} else {
 		Counter = 0
 		// inlining of macro Abc_NtkForEachLatch
-		for i = 0; i < Vec_PtrSize((pNtk).vBoxes); i++ {
-			if base_abc.Abc_ObjIsLatch(pLatch) == 0 {
-			} else {
-				pLatch = base_abc.Abc_NtkBox(pNtk, i)
+		for i = 0; i < int32(len(pNtk.Boxes())); i++ {
+			pLatch = base_abc.Abc_NtkBox(pNtk, i)
+			if base_abc.Abc_ObjIsLatch(pLatch) != 0 {
 				pLatchOut = Abc_ObjFanout0(pLatch)
 				if (base_abc.Abc_LatchIsInitNone(pLatch) != 0) || (base_abc.Abc_LatchIsInitDc(pLatch) != 0) { // don't-care initial value - create a new PI
 
 					Abc_ObjSetCopyEdge(pLatchOut, abcCompatCopyEdge(base_abc.Abc_NtkCreatePi(pNtkFrames)))
-					base_abc.Abc_ObjAssignName(Abc_ObjReadCopyEdge(pLatchOut).Object, Abc_ObjName(pLatchOut), nil)
+					base_abc.Abc_ObjAssignName(Abc_ObjReadCopyEdge(pLatchOut).Object, Abc_ObjName(pLatchOut), "")
 					Counter++
 
 				} else {
@@ -900,7 +896,7 @@ func Abc_NtkFrames(pNtk *Abc_Ntk_t, nFrames int32, fInitial int32, fVerbose int3
 	// create the timeframes
 	pProgress = misc_extra.Extra_ProgressBarStart(os.Stdout, nFrames)
 	for i = 0; i < nFrames; i++ {
-		misc_extra.Extra_ProgressBarUpdate(pProgress, i, nil)
+		misc_extra.Extra_ProgressBarUpdate(pProgress, i, "")
 		Abc_NtkAddFrame(pNtkFrames, pNtk, i)
 	}
 	misc_extra.Extra_ProgressBarStop(pProgress)
@@ -909,17 +905,16 @@ func Abc_NtkFrames(pNtk *Abc_Ntk_t, nFrames int32, fInitial int32, fVerbose int3
 	if !(fInitial != 0) {
 		// we cannot use pLatch->pCopy here because pLatch->pCopy is used for temporary storage of strashed values
 		// inlining of macro Abc_NtkForEachLatch
-		for i = 0; i < Vec_PtrSize((pNtk).vBoxes); i++ {
-			if base_abc.Abc_ObjIsLatch(pLatch) == 0 {
-			} else {
-				pLatch = base_abc.Abc_NtkBox(pNtk, i)
+		for i = 0; i < int32(len(pNtk.Boxes())); i++ {
+			pLatch = base_abc.Abc_NtkBox(pNtk, i)
+			if base_abc.Abc_ObjIsLatch(pLatch) != 0 {
 				Abc_ObjAddFanin(Abc_ObjReadCopyEdge(Abc_ObjFanin0(pLatch)).Object, Abc_ObjReadCopyEdge(Abc_ObjFanout0(pLatch)))
 			}
 		}
 	}
 
 	// remove dangling nodes
-	base_abc.Abc_AigCleanup(pNtkFrames.pManFunc.(*Abc_Aig_t))
+	base_abc.Abc_AigCleanup(pNtkFrames.FunctionManager.(*base_abc.Abc_Aig_t))
 	// reorder the latches
 	base_abc.Abc_NtkOrderCisCos(pNtkFrames)
 	// make sure that everything is okay
@@ -964,12 +959,12 @@ func Abc_NtkAddFrame(pNtkFrames *Abc_Ntk_t, pNtk *Abc_Ntk_t, iFrame int32) {
 	}
 	// add the internal nodes
 	// inlining of macro Abc_AigForEachAnd
-	for i = 0; i < Vec_PtrSize(pNtk.vObjs); i++ {
+	for i = 0; i < Abc_NtkObjNumMax(pNtk); i++ {
 		pNode = Abc_NtkObj(pNtk, i)
 		if pNode == nil || (base_abc.Abc_AigNodeIsAnd(pNode) == 0) {
 			continue
 		}
-		Abc_ObjSetCopyEdge(pNode, abcCompatCopyEdge(base_abc.Abc_AigAnd(pNtkFrames.pManFunc.(*Abc_Aig_t), Abc_ObjChild0Copy(pNode), Abc_ObjChild1Copy(pNode))))
+		Abc_ObjSetCopyEdge(pNode, abcCompatCopyEdge(base_abc.Abc_AigAnd(pNtkFrames.FunctionManager.(*base_abc.Abc_Aig_t), Abc_ObjChild0Copy(pNode), Abc_ObjChild1Copy(pNode))))
 	}
 	// add the new POs
 	// inlining of macro Abc_NtkForEachPo
@@ -980,18 +975,16 @@ func Abc_NtkAddFrame(pNtkFrames *Abc_Ntk_t, pNtk *Abc_Ntk_t, iFrame int32) {
 	}
 	// transfer the implementation of the latch inputs to the latch outputs
 	// inlining of macro Abc_NtkForEachLatch
-	for i = 0; i < Vec_PtrSize((pNtk).vBoxes); i++ {
-		if base_abc.Abc_ObjIsLatch(pLatch) == 0 {
-		} else {
-			pLatch = base_abc.Abc_NtkBox(pNtk, i)
+	for i = 0; i < int32(len(pNtk.Boxes())); i++ {
+		pLatch = base_abc.Abc_NtkBox(pNtk, i)
+		if base_abc.Abc_ObjIsLatch(pLatch) != 0 {
 			Abc_ObjSetCopyEdge(pLatch, abcCompatCopyEdge(Abc_ObjChild0Copy(Abc_ObjFanin0(pLatch))))
 		}
 	}
 	// inlining of macro Abc_NtkForEachLatch
-	for i = 0; i < Vec_PtrSize((pNtk).vBoxes); i++ {
-		if base_abc.Abc_ObjIsLatch(pLatch) == 0 {
-		} else {
-			pLatch = base_abc.Abc_NtkBox(pNtk, i)
+	for i = 0; i < int32(len(pNtk.Boxes())); i++ {
+		pLatch = base_abc.Abc_NtkBox(pNtk, i)
+		if base_abc.Abc_ObjIsLatch(pLatch) != 0 {
 			Abc_ObjSetCopyEdge(Abc_ObjFanout0(pLatch), Abc_ObjReadCopyEdge(pLatch))
 		}
 	}
@@ -1207,9 +1200,10 @@ func Abc_NtkAddFrame2(pNtkFrames *Abc_Ntk_t, pNtk *Abc_Ntk_t, iFrame int32, vNod
 **********************************************************************
 */
 func Abc_NtkDemiter(pNtk *Abc_Ntk_t) int32 {
-	var pNodeC, pNodeA, pNodeB, pNode *Abc_Obj_t
+	var pNodeC, pNode *Abc_Obj_t
+	var pNodeA, pNodeB base_abc.Edge
 	var pPoNew *Abc_Obj_t
-	var vNodes1, vNodes2 *Vec_Ptr_t
+	var vNodes1, vNodes2 []*Abc_Obj_t
 	var nCommon, i int32
 
 	assert((Abc_NtkIsStrash(pNtk) != 0), "Abc_NtkIsStrash(pNtk)")
@@ -1228,38 +1222,36 @@ func Abc_NtkDemiter(pNtk *Abc_Ntk_t) int32 {
 	// add the PO corresponding to control input
 	pPoNew = base_abc.Abc_NtkCreatePo(pNtk)
 	Abc_ObjAddFanin(pPoNew, pNodeC)
-	base_abc.Abc_ObjAssignName(pPoNew, "addOut1", nil)
+	base_abc.Abc_ObjAssignName(pPoNew, "addOut1", "")
 
 	// add the PO corresponding to other input
 	pPoNew = base_abc.Abc_NtkCreatePo(pNtk)
 	Abc_ObjAddFanin(pPoNew, pNodeB)
-	base_abc.Abc_ObjAssignName(pPoNew, "addOut2", nil)
+	base_abc.Abc_ObjAssignName(pPoNew, "addOut2", "")
 
 	// mark the nodes in the first cone
-	pNodeB = base_abc.Abc_ObjRegular(pNodeB)
-	vNodes1 = base_abc.Abc_NtkDfsNodes(pNtk, &pNodeC, 1)
-	vNodes2 = base_abc.Abc_NtkDfsNodes(pNtk, &pNodeB, 1)
+	pNodeB = pNodeB.Object.Signal()
+	vNodes1 = base_abc.Abc_NtkDfsNodes(pNtk, []*Abc_Obj_t{pNodeC}, 1)
+	vNodes2 = base_abc.Abc_NtkDfsNodes(pNtk, []*Abc_Obj_t{pNodeB.Object}, 1)
 
 	// inlining of macro Vec_PtrForEachEntry
-	for i = 0; i < Vec_PtrSize(vNodes1); i++ {
-		pNode = Vec_PtrEntry(vNodes1, i).(*Abc_Obj_t)
-		pNode.fMarkA = 1
+	for i = 0; i < int32(len(vNodes1)); i++ {
+		pNode = vNodes1[i]
+		pNode.MarkA = true
 	}
 	nCommon = 0
 	// inlining of macro Vec_PtrForEachEntry
-	for i = 0; i < Vec_PtrSize(vNodes2); i++ {
-		pNode = Vec_PtrEntry(vNodes2, i).(*Abc_Obj_t)
-		nCommon += pNode.fMarkA
+	for i = 0; i < int32(len(vNodes2)); i++ {
+		pNode = vNodes2[i]
+		nCommon += boolInt(pNode.MarkA)
 	}
 	// inlining of macro Vec_PtrForEachEntry
-	for i = 0; i < Vec_PtrSize(vNodes1); i++ {
-		pNode = Vec_PtrEntry(vNodes1, i).(*Abc_Obj_t)
-		pNode.fMarkA = 0
+	for i = 0; i < int32(len(vNodes1)); i++ {
+		pNode = vNodes1[i]
+		pNode.MarkA = false
 	}
 
-	fmt.Printf("First cone = %6d.  Second cone = %6d.  Common = %6d.\n", vNodes1.nSize, vNodes2.nSize, nCommon)
-	Vec_PtrFree(vNodes1)
-	Vec_PtrFree(vNodes2)
+	fmt.Printf("First cone = %6d.  Second cone = %6d.  Common = %6d.\n", len(vNodes1), len(vNodes2), nCommon)
 
 	// reorder the latches
 	base_abc.Abc_NtkOrderCisCos(pNtk)
@@ -1284,7 +1276,8 @@ func Abc_NtkDemiter(pNtk *Abc_Ntk_t) int32 {
 **********************************************************************
 */
 func Abc_NtkCombinePos(pNtk *Abc_Ntk_t, fAnd int32, fXor int32) int32 {
-	var pNode, pMiter *Abc_Obj_t
+	var pNode *Abc_Obj_t
+	var pMiter base_abc.Edge
 	var i int32
 	assert((Abc_NtkIsStrash(pNtk) != 0), "Abc_NtkIsStrash(pNtk)")
 	//    assert( Abc_NtkLatchNum(pNtk) == 0 );
@@ -1302,11 +1295,11 @@ func Abc_NtkCombinePos(pNtk *Abc_Ntk_t, fAnd int32, fXor int32) int32 {
 	for i = 0; i < Abc_NtkPoNum(pNtk); i++ {
 		pNode = Abc_NtkPo(pNtk, i)
 		if fAnd != 0 {
-			pMiter = base_abc.Abc_AigAnd(pNtk.pManFunc.(*Abc_Aig_t), pMiter, Abc_ObjChild0(pNode))
+			pMiter = base_abc.Abc_AigAnd(pNtk.FunctionManager.(*base_abc.Abc_Aig_t), pMiter, Abc_ObjChild0(pNode))
 		} else if fXor != 0 {
-			pMiter = base_abc.Abc_AigXor(pNtk.pManFunc.(*Abc_Aig_t), pMiter, Abc_ObjChild0(pNode))
+			pMiter = base_abc.Abc_AigXor(pNtk.FunctionManager.(*base_abc.Abc_Aig_t), pMiter, Abc_ObjChild0(pNode))
 		} else {
-			pMiter = base_abc.Abc_AigOr(pNtk.pManFunc.(*Abc_Aig_t), pMiter, Abc_ObjChild0(pNode))
+			pMiter = base_abc.Abc_AigOr(pNtk.FunctionManager.(*base_abc.Abc_Aig_t), pMiter, Abc_ObjChild0(pNode))
 		}
 	}
 	// remove the POs and their names
@@ -1317,7 +1310,7 @@ func Abc_NtkCombinePos(pNtk *Abc_Ntk_t, fAnd int32, fXor int32) int32 {
 	// create the new PO
 	pNode = base_abc.Abc_NtkCreatePo(pNtk)
 	Abc_ObjAddFanin(pNode, pMiter)
-	base_abc.Abc_ObjAssignName(pNode, "miter", nil)
+	base_abc.Abc_ObjAssignName(pNode, "miter", "")
 	base_abc.Abc_NtkOrderCisCos(pNtk)
 	// make sure that everything is okay
 	if base_abc.Abc_NtkCheck(pNtk) == 0 {
@@ -1348,7 +1341,7 @@ func Abc_NtkTryNewMiter(pFileName0 string, pFileName1 string) *Vec_Ptr_t {
 	var iCiVarBeg int32
 	var iCoVarBeg int32 = 1
 	var nBTLimit int32 = 100000
-	var pSat *sat_solver = nil
+	var pSat *sat_bsat.Solver
 	var pCnf *aig_gia.Cnf_Dat_t = nil
 	var vCexes *Vec_Ptr_t = nil
 	var pNtk1 *Abc_Ntk_t = Io_Read(pFileName0, IO_FILE_VERILOG, 1, 0)
@@ -1364,29 +1357,34 @@ func Abc_NtkTryNewMiter(pFileName0 string, pFileName1 string) *Vec_Ptr_t {
 	Abc_NtkDelete(pNtk1_)
 	Abc_NtkDelete(pNtk2_)
 	Abc_NtkDelete(pMiter)
-	vCexes = aig_gia.Vec_PtrStart(Gia_ManPoNum(pGia))
-	pCnf = aig_gia.Mf_ManGenerateCnf(pGia, 8, 0, 0, 0, 0).(*Cnf_Dat_t)
+	vCexes = aig_gia.Vec_PtrStart(int(Gia_ManPoNum(pGia)))
+	pCnf = aig_gia.Mf_ManGenerateCnf(pGia, 8, 0, 0, 0, 0)
 	nVars = Gia_ManPiNum(pGia)
-	iCiVarBeg = pCnf.nVars - nVars
+	iCiVarBeg = int32(pCnf.Variables) - nVars
 	// inlining of macro ABC_ALLOC
 	pVars = make([]int32, int(nVars))
 	for i = 0; i < nVars; i++ {
 		pVars[i] = iCiVarBeg + i
 	}
-	pSat = sat_cnf.Cnf_DataWriteIntoSolver(pCnf, 1, 0).(*sat_solver)
-	sat_cnf.Cnf_DataFree(pCnf)
+	pSat = sat_bsat.NewSolver()
+	pSat.SetNumVars(int32(pCnf.Variables))
+	for _, clause := range pCnf.Clauses {
+		if !pSat.AddClause(clause...) {
+			break
+		}
+	}
 	for i = 0; i < Gia_ManPoNum(pGia); i++ {
 		var Lit int32 = Abc_Var2Lit(iCoVarBeg+i, 0)
-		var status int32 = sat_solver_solve(pSat, &Lit, &Lit+1, nBTLimit, 0, 0, 0)
-		assert(status != l_Undef, "status != l_Undef")
-		if status == l_False {
+		status := pSat.SolveWithResourceLimits([]int32{Lit}, int64(nBTLimit), 0, 0, 0)
+		assert(status != sat_bsat.Unknown, "status != sat_bsat.Unknown")
+		if status == sat_bsat.Unsat {
 			continue
 		}
-		Vec_PtrWriteEntry(vCexes, i, sat_bsat.Sat_SolverGetModel(pSat, pVars, nVars))
+		Vec_PtrWriteEntry(vCexes, int(i), sat_bsat.Sat_SolverGetModel(pSat, pVars, nVars))
 		fmt.Printf("Output %3d (out of %3d) is SAT.\n", i, Gia_ManPoNum(pGia))
 	}
 	Gia_ManStop(pGia)
-	sat_solver_delete(pSat)
+	pSat.Delete()
 	pVars = nil
 	return vCexes
 }
@@ -1463,8 +1461,8 @@ func Abc_NtkSpecialMiter(pNtk *Abc_Ntk_t, vNodes *Vec_Ptr_t) *Abc_Ntk_t {
 	var vNames *Vec_Ptr_t = Vec_PtrAlloc(100)
 	var vFanins *Vec_Ptr_t = Vec_PtrAlloc(100)
 	var vDatas *Vec_Ptr_t = Vec_PtrAlloc(100)
-	var vDfs *Vec_Ptr_t = base_abc.Abc_NtkDfs(pNtk, 1)
-	var vCopies *Vec_Ptr_t = aig_gia.Vec_PtrStart(Abc_NtkObjNumMax(pNtk))
+	var vDfs = base_abc.Abc_NtkDfs(pNtk, 1)
+	var vCopies *Vec_Ptr_t = aig_gia.Vec_PtrStart(int(Abc_NtkObjNumMax(pNtk)))
 	var i, k, Index, First, nNewPis int32
 	// count the number of additional inputs
 	base_abc.Abc_NtkCleanCopy(pNtk)
@@ -1475,7 +1473,7 @@ func Abc_NtkSpecialMiter(pNtk *Abc_Ntk_t, vNodes *Vec_Ptr_t) *Abc_Ntk_t {
 		var Buffer string // was [1000]byte in C
 
 		assert((Abc_ObjIsNode(pObj) != 0), "Abc_ObjIsNode(pObj)")
-		pObj.fMarkA = 1
+		pObj.MarkA = true
 		Vec_IntPush(vFirsts, nNewPis)
 		nNewPis += 1 << Abc_ObjFaninNum(pObj)
 		for k = 0; k < (1 << Abc_ObjFaninNum(pObj)); k++ {
@@ -1484,12 +1482,12 @@ func Abc_NtkSpecialMiter(pNtk *Abc_Ntk_t, vNodes *Vec_Ptr_t) *Abc_Ntk_t {
 		}
 	}
 	// create new network with the additional PIs
-	pNtkNew = base_abc.Abc_NtkAlloc(pNtk.ntkType, pNtk.ntkFunc, 1)
+	pNtkNew = base_abc.Abc_NtkAlloc(base_abc.Abc_NtkType_t(pNtk.Type), base_abc.Abc_NtkFunc_t(pNtk.Function), 1)
 	Abc_NtkSetName(pNtkNew, Extra_UtilStrsav("miter"))
 	// inlining of macro Vec_PtrForEachEntry
 	for i = 0; i < Vec_PtrSize(vNames); i++ {
 		pName = Vec_PtrEntry(vNames, i).(string)
-		base_abc.Abc_ObjAssignName(base_abc.Abc_NtkCreatePi(pNtkNew), pName, nil)
+		base_abc.Abc_ObjAssignName(base_abc.Abc_NtkCreatePi(pNtkNew), pName, "")
 	}
 	// duplicate PIs
 	// inlining of macro Abc_NtkForEachCi
@@ -1499,16 +1497,16 @@ func Abc_NtkSpecialMiter(pNtk *Abc_Ntk_t, vNodes *Vec_Ptr_t) *Abc_Ntk_t {
 	}
 	// copy nodes
 	// inlining of macro Vec_PtrForEachEntry
-	for i = 0; i < Vec_PtrSize(vDfs); i++ {
-		pObj = Vec_PtrEntry(vDfs, i).(*Abc_Obj_t)
-		if !pObj.fMarkA {
+	for i = 0; i < int32(len(vDfs)); i++ {
+		pObj = vDfs[i]
+		if !pObj.MarkA {
 			base_abc.Abc_NtkDupObj(pNtkNew, pObj, 1)
 			// inlining of macro Abc_ObjForEachFanin
 			for k = 0; k < Abc_ObjFaninNum(pObj); k++ {
 				pFanin = base_abc.Abc_ObjFanin(pObj, k)
 				Abc_ObjAddFanin(Abc_ObjReadCopyEdge(pObj).Object, Abc_ObjReadCopyEdge(pFanin))
 			}
-			Vec_PtrWriteEntry(vCopies, pObj.Id, Abc_ObjReadCopyEdge(pObj).Object)
+			Vec_PtrWriteEntry(vCopies, pObj.ID, Abc_ObjReadCopyEdge(pObj).Object)
 			continue
 		}
 		Vec_PtrClear(vFanins)
@@ -1517,7 +1515,7 @@ func Abc_NtkSpecialMiter(pNtk *Abc_Ntk_t, vNodes *Vec_Ptr_t) *Abc_Ntk_t {
 			pFanin = base_abc.Abc_ObjFanin(pObj, k)
 			Vec_PtrPush(vFanins, Abc_ObjReadCopyEdge(pFanin).Object)
 		}
-		Index = aig_gia.Vec_PtrFind(vNodes, pObj)
+		Index = int32(aig_gia.Vec_PtrFind(vNodes, pObj))
 		assert(Index >= 0, "Index >= 0")
 		First = Vec_IntEntry(vFirsts, Index)
 		Vec_PtrClear(vDatas)
@@ -1527,12 +1525,12 @@ func Abc_NtkSpecialMiter(pNtk *Abc_Ntk_t, vNodes *Vec_Ptr_t) *Abc_Ntk_t {
 		Abc_ObjSetCopyEdge(pObj, abcCompatCopyEdge(Abc_NtkSpecialMuxTree_rec(pNtkNew,
 			vecObjPtrArray(vFanins), Vec_PtrSize(vFanins),
 			vecObjPtrArray(vDatas), 0)))
-		Vec_PtrWriteEntry(vCopies, pObj.Id, Abc_ObjReadCopyEdge(pObj).Object)
+		Vec_PtrWriteEntry(vCopies, pObj.ID, Abc_ObjReadCopyEdge(pObj).Object)
 	}
 	// inlining of macro Vec_PtrForEachEntry
-	for i = 0; i < Vec_PtrSize(vDfs); i++ {
-		pObj = Vec_PtrEntry(vDfs, i).(*Abc_Obj_t)
-		pObj.fMarkA = 0
+	for i = 0; i < int32(len(vDfs)); i++ {
+		pObj = vDfs[i]
+		pObj.MarkA = false
 		base_abc.Abc_NtkDupObj(pNtkNew, pObj, 0)
 		base_abc.Abc_ObjAssignName(Abc_ObjReadCopyEdge(pObj).Object, Abc_ObjName(pObj), "_copy")
 		// inlining of macro Abc_ObjForEachFanin
@@ -1549,22 +1547,21 @@ func Abc_NtkSpecialMiter(pNtk *Abc_Ntk_t, vNodes *Vec_Ptr_t) *Abc_Ntk_t {
 		Vec_PtrClear(vFanins)
 		Vec_PtrPush(vFanins, Abc_ObjReadCopyEdge(Abc_ObjFanin0(pObj)).Object)
 		Vec_PtrPush(vFanins, Vec_PtrEntry(vCopies, base_abc.Abc_ObjId(Abc_ObjFanin0(pObj))).(*Abc_Obj_t))
-		Vec_PtrPush(vDatas, base_abc.Abc_NtkCreateNodeExor(pNtkNew, vFanins))
+		Vec_PtrPush(vDatas, base_abc.Abc_NtkCreateNodeExor(pNtkNew, vecObjPtrArray(vFanins)))
 	}
 	if Vec_PtrSize(vDatas) > 1 {
-		pObjNew = base_abc.Abc_NtkCreateNodeOr(pNtkNew, vDatas)
+		pObjNew = base_abc.Abc_NtkCreateNodeOr(pNtkNew, vecObjPtrArray(vDatas))
 	} else {
 		pObjNew = Vec_PtrEntry(vDatas, 0).(*Abc_Obj_t)
 	}
 	pPoNew = base_abc.Abc_NtkCreatePo(pNtkNew)
 	Abc_ObjAddFanin(pPoNew, pObjNew)
-	base_abc.Abc_ObjAssignName(pPoNew, "miter_output", nil)
+	base_abc.Abc_ObjAssignName(pPoNew, "miter_output", "")
 	// cleanup
 	Vec_IntFree(vFirsts)
 	Vec_PtrFreeFree(vNames)
 	Vec_PtrFree(vFanins)
 	Vec_PtrFree(vDatas)
-	Vec_PtrFree(vDfs)
 	Vec_PtrFree(vCopies)
 	return pNtkNew
 }

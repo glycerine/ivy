@@ -80,7 +80,7 @@ func Abc_NtkCecSat(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, nConfLimit int32, nInsLim
 	retValue := Abc_NtkMiterIsConstant(pMiter)
 	if retValue == 0 {
 		fmt.Printf("Networks are NOT EQUIVALENT after structural hashing.\n")
-		abcVerifySetModel(pMiter, Abc_NtkVerifyGetCleanModel(pMiter, 1), 1)
+		Abc_NtkVerifyGetCleanModel(pMiter, 1)
 		Abc_NtkVerifyReportError(pNtk1, pNtk2, abcVerifyModelPtr(pMiter))
 		pMiter.Model = nil
 		abc.Abc_NtkDelete(pMiter)
@@ -159,7 +159,7 @@ func Abc_NtkCecFraig(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, nSeconds int32, fVerbos
 	retValue := Abc_NtkMiterIsConstant(pMiter)
 	if retValue == 0 {
 		fmt.Printf("Networks are NOT EQUIVALENT after structural hashing.  ")
-		abcVerifySetModel(pMiter, Abc_NtkVerifyGetCleanModel(pMiter, 1), 1)
+		Abc_NtkVerifyGetCleanModel(pMiter, 1)
 		Abc_NtkVerifyReportError(pNtk1, pNtk2, abcVerifyModelPtr(pMiter))
 		pMiter.Model = nil
 		abc.Abc_NtkDelete(pMiter)
@@ -220,7 +220,7 @@ func Abc_NtkCecFraigPart(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, nSeconds int32, nPa
 	retValue := Abc_NtkMiterIsConstant(pMiter)
 	if retValue == 0 {
 		fmt.Printf("Networks are NOT EQUIVALENT after structural hashing.\n")
-		abcVerifySetModel(pMiter, Abc_NtkVerifyGetCleanModel(pMiter, 1), 1)
+		Abc_NtkVerifyGetCleanModel(pMiter, 1)
 		Abc_NtkVerifyReportError(pNtk1, pNtk2, abcVerifyModelPtr(pMiter))
 		pMiter.Model = nil
 		abc.Abc_NtkDelete(pMiter)
@@ -309,7 +309,7 @@ func Abc_NtkCecFraigPartAuto(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, nSeconds int32,
 	if retValue == 0 || retValue == 1 {
 		if retValue == 0 {
 			fmt.Printf("Networks are NOT EQUIVALENT after structural hashing.\n")
-			abcVerifySetModel(pMiter, Abc_NtkVerifyGetCleanModel(pMiter, 1), 1)
+			Abc_NtkVerifyGetCleanModel(pMiter, 1)
 			Abc_NtkVerifyReportError(pNtk1, pNtk2, abcVerifyModelPtr(pMiter))
 			pMiter.Model = nil
 		} else {
@@ -516,7 +516,7 @@ func Abc_NtkSecFraig(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, nSeconds int32, nFrames
 	retValue := Abc_NtkMiterIsConstant(pMiter)
 	if retValue == 0 {
 		fmt.Printf("Networks are NOT EQUIVALENT after structural hashing.\n")
-		abcVerifySetModel(pMiter, Abc_NtkVerifyGetCleanModel(pMiter, nFrames), nFrames)
+		Abc_NtkVerifyGetCleanModel(pMiter, nFrames)
 		Abc_NtkVerifyReportErrorSeq(pNtk1, pNtk2, abcVerifyModelPtr(pMiter), nFrames)
 		pMiter.Model = nil
 		abc.Abc_NtkDelete(pMiter)
@@ -582,19 +582,6 @@ func Abc_NtkSecFraig(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, nSeconds int32, nFrames
 
 **********************************************************************
 */
-func abcVerifySetModel(pNtk *Abc_Ntk_t, model *int32, nFrames int32) {
-	if model == nil {
-		pNtk.Model = nil
-		return
-	}
-	count := int(abc.Abc_NtkCiNum(pNtk) * nFrames)
-	if count <= 0 {
-		pNtk.Model = nil
-		return
-	}
-	pNtk.Model = unsafe.Slice(model, count)
-}
-
 func abcVerifyModelPtr(pNtk *Abc_Ntk_t) *int32 {
 	if len(pNtk.Model) == 0 {
 		return nil
@@ -602,14 +589,14 @@ func abcVerifyModelPtr(pNtk *Abc_Ntk_t) *int32 {
 	return &pNtk.Model[0]
 }
 
-func Abc_NtkVerifyGetCleanModel(pNtk *Abc_Ntk_t, nFrames int32) *int32 {
+func Abc_NtkVerifyGetCleanModel(pNtk *Abc_Ntk_t, nFrames int32) []int32 {
 	n := int(abc.Abc_NtkCiNum(pNtk) * nFrames)
 	if n <= 0 {
 		return nil
 	}
 	model := make([]int32, n)
 	pNtk.Model = model
-	return &model[0]
+	return model
 }
 
 /*

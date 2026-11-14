@@ -1112,8 +1112,8 @@ func bmGateWay(pNtk1, pNtk2 *Abc_Ntk_t, pEquivalence int32) {
 	getDependencies(pNtk1, iDep1, oDep1)
 	getDependencies(pNtk2, iDep2, oDep2)
 	fmt.Printf("Getting dependencies is done!\n")
-	initMatchList(pNtk1, iDep1, oDep1, iMatch1, &iLastItem1, oMatch1, &oLastItem1, iGroup1, oGroup1, pEquivalence)
-	initMatchList(pNtk2, iDep2, oDep2, iMatch2, &iLastItem2, oMatch2, &oLastItem2, iGroup2, oGroup2, pEquivalence)
+	initMatchList(pNtk1, iDep1, oDep1, iMatch1, oMatch1, &iLastItem1, &oLastItem1, iGroup1, oGroup1, pEquivalence)
+	initMatchList(pNtk2, iDep2, oDep2, iMatch2, oMatch2, &iLastItem2, &oLastItem2, iGroup2, oGroup2, pEquivalence)
 	fmt.Printf("Initializing match lists is done!\n")
 	if checkListConsistency(iMatch1, oMatch1, iMatch2, oMatch2, iLastItem1, oLastItem1, iLastItem2, oLastItem2) == 0 {
 		fmt.Printf("I/O dependencies of two circuits are different.\n")

@@ -770,7 +770,7 @@ func Abc_NtkPrintFanioNew(pFile *os.File, pNtk *Abc_Ntk_t, fMffc int32) {
 	}
 	fmt.Fprintln(pFile, "The distribution of fanins and fanouts in the network:")
 	fmt.Fprintln(pFile, "         Number   Nodes with fanin  Nodes with fanout")
-	for k := 0; k < size; k++ {
+	for k := int32(0); k < size; k++ {
 		if inBins[k] == 0 && outBins[k] == 0 {
 			continue
 		}
@@ -1422,9 +1422,9 @@ func Abc_NtkPrintMiter(pNtk *Abc_Ntk_t) {
 	for i := int32(0); i < baseabc.Abc_NtkPoNum(pNtk); i++ {
 		po := baseabc.Abc_NtkPo(pNtk, i)
 		edge := po.Fanins()[0]
-		if edge.Object == one && edge.Complement {
+		if edge.Object == one.Object && edge.Complement {
 			unsat++
-		} else if edge.Object == one && !edge.Complement {
+		} else if edge.Object == one.Object && !edge.Complement {
 			sat++
 			if first < 0 {
 				first = int(i)
@@ -1477,7 +1477,7 @@ func Abc_NtkPrintPoEquivs(pNtk *Abc_Ntk_t) {
 		po := baseabc.Abc_NtkPo(pNtk, i)
 		edge := po.Fanins()[0]
 		driver := edge.Object
-		if baseabc.Abc_NtkIsStrash(pNtk) != 0 && driver == pNtk.One() {
+		if baseabc.Abc_NtkIsStrash(pNtk) != 0 && driver == pNtk.One().Object {
 			fmt.Printf("%s = Const%d\n", po.Name(), boolInt(!edge.Complement))
 			continue
 		}
@@ -1540,7 +1540,7 @@ func Abc_NtkMfsTotalGlitchingLut(pNtk *Abc_Ntk_t, nPats int32, Prob int32, fVerb
 	}
 	for i := int32(0); i < baseabc.Abc_NtkCiNum(pNtk); i++ {
 		obj := baseabc.Abc_NtkCi(pNtk, i)
-		obj.Temp = gia.Gli_ManCreateCi(p, baseabc.Abc_ObjFanoutNum(obj))
+		obj.Temp = int(gia.Gli_ManCreateCi(p, baseabc.Abc_ObjFanoutNum(obj)))
 	}
 	truths := make([][]uint64, baseabc.Abc_NtkObjNumMax(pNtk))
 	for _, obj := range nodes {
@@ -1561,7 +1561,7 @@ func Abc_NtkMfsTotalGlitchingLut(pNtk *Abc_Ntk_t, nPats int32, Prob int32, fVerb
 			hi = words[1]
 		}
 		truths[baseabc.Abc_ObjId(obj)] = []uint64{uint64(hi)<<32 | uint64(lo)}
-		obj.Temp = gia.Gli_ManCreateNode(p, fanins, baseabc.Abc_ObjFanoutNum(obj), truths[baseabc.Abc_ObjId(obj)])
+		obj.Temp = int(gia.Gli_ManCreateNode(p, fanins, baseabc.Abc_ObjFanoutNum(obj), truths[baseabc.Abc_ObjId(obj)]))
 	}
 	for i := int32(0); i < baseabc.Abc_NtkCoNum(pNtk); i++ {
 		co := baseabc.Abc_NtkCo(pNtk, i)
@@ -1602,7 +1602,7 @@ func Abc_NtkMfsTotalGlitching(pNtk *Abc_Ntk_t, nPats int32, Prob int32, fVerbose
 	}
 	for i := int32(0); i < baseabc.Abc_NtkCiNum(pNtk); i++ {
 		obj := baseabc.Abc_NtkCi(pNtk, i)
-		obj.Temp = gia.Gli_ManCreateCi(p, baseabc.Abc_ObjFanoutNum(obj))
+		obj.Temp = int(gia.Gli_ManCreateCi(p, baseabc.Abc_ObjFanoutNum(obj)))
 	}
 	for _, obj := range nodes {
 		vec.Vec_IntClear(fanins)
@@ -1613,7 +1613,7 @@ func Abc_NtkMfsTotalGlitching(pNtk *Abc_Ntk_t, nPats int32, Prob int32, fVerbose
 		if !ok {
 			return -1
 		}
-		obj.Temp = gia.Gli_ManCreateNode(p, fanins, baseabc.Abc_ObjFanoutNum(obj), mio.Mio_GateReadTruthP(gate))
+		obj.Temp = int(gia.Gli_ManCreateNode(p, fanins, baseabc.Abc_ObjFanoutNum(obj), mio.Mio_GateReadTruthP(gate)))
 	}
 	for i := int32(0); i < baseabc.Abc_NtkCoNum(pNtk); i++ {
 		co := baseabc.Abc_NtkCo(pNtk, i)

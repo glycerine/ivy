@@ -56,6 +56,24 @@ func Abc_ObjSetCopy(o, copy *Abc_Obj_t)                  { baseabc.Abc_ObjSetCop
 func Abc_ObjReadCopyEdge(o *Abc_Obj_t) baseabc.Edge      { return o.ReadCopyEdge() }
 func Abc_ObjSetCopyEdge(o *Abc_Obj_t, edge baseabc.Edge) { o.SetCopyEdge(edge) }
 
+func Abc_NtkConstrNum(n *Abc_Ntk_t) int32 { return n.Constraints }
+
+func Abc_ObjChild0Copy(o *Abc_Obj_t) baseabc.Edge {
+	return baseabc.Abc_ObjNotCond(Abc_ObjFanin0(o).ReadCopyEdge(), baseabc.Abc_ObjFaninC0(o))
+}
+
+func Abc_ObjChild1Copy(o *Abc_Obj_t) baseabc.Edge {
+	return baseabc.Abc_ObjNotCond(Abc_ObjFanin1(o).ReadCopyEdge(), baseabc.Abc_ObjFaninC1(o))
+}
+
+func Abc_ObjChild0Data(o *Abc_Obj_t) baseabc.Edge {
+	return baseabc.Abc_ObjNotCond(abcCompatCopyEdge(Abc_ObjFanin0(o).Data), baseabc.Abc_ObjFaninC0(o))
+}
+
+func Abc_ObjChild1Data(o *Abc_Obj_t) baseabc.Edge {
+	return baseabc.Abc_ObjNotCond(abcCompatCopyEdge(Abc_ObjFanin1(o).Data), baseabc.Abc_ObjFaninC1(o))
+}
+
 func abcCompatCopyEdge(value any) baseabc.Edge {
 	switch v := value.(type) {
 	case baseabc.Edge:

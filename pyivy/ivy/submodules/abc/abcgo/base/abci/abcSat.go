@@ -185,7 +185,7 @@ func Abc_NtkMiterSatCreateLogic(n *Abc_Ntk_t, allPrimes int32) any {
 		s.NewVariable()
 	}
 	var cube []byte
-	for _, node := range n.Nodes() {
+	for _, node := range n.ObjectsOfKind(abc.ObjectNode) {
 		root, ok := node.Data.(*core.DdNode)
 		manager, managerOK := n.FunctionManager.(*core.DdManager)
 		if !ok || !managerOK {

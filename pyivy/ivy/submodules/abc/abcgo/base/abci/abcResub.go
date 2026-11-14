@@ -385,7 +385,7 @@ func Abc_NtkResubstitute(n *Abc_Ntk_t, cutMax, stepsMax, levelsOdc, updateLevel,
 			clk = time.Now()
 			Abc_NtkDontCareClear(odc)
 			if len(res.pCareSet) != 0 {
-				Abc_NtkDontCareCompute(odc, node, leaves, &res.pCareSet[0])
+				Abc_NtkDontCareCompute(odc, node, leaves, res.pCareSet)
 			}
 			res.timeTruth += int64(time.Since(clk))
 		}

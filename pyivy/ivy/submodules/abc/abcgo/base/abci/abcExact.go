@@ -8,6 +8,7 @@ import (
 	"time"
 	"unsafe"
 
+	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/aig/gia"
 	baseabc "github.com/glycerine/abcgo/base/abc"
 	"github.com/glycerine/abcgo/misc/mem"
@@ -1043,18 +1044,18 @@ func Ses_ManDeriveTruth(pSes *Ses_Man_t, pSol string, fInvert int32) *word {
 		f, j, k := int32(pSol[pos]), int32(pSol[pos+2]), int32(pSol[pos+3])
 		assert(pSol[pos+1] == 2, "binary gate encoding")
 		assert(j >= 0 && j < pSes.nSpecVars+i && k > j && k < pSes.nSpecVars+i, "fanin indices ordered")
-		var t0, t1 *word
+		var t0, t1 []word
 		if j < pSes.nSpecVars {
-			t0 = &s_Truths8[j<<2]
+			t0 = s_Truths8[j<<2:]
 		} else {
-			t0 = &pSes.pTtObjs[(j-pSes.nSpecVars)<<2]
+			t0 = pSes.pTtObjs[(j-pSes.nSpecVars)<<2:]
 		}
 		if k < pSes.nSpecVars {
-			t1 = &s_Truths8[k<<2]
+			t1 = s_Truths8[k<<2:]
 		} else {
-			t1 = &pSes.pTtObjs[(k-pSes.nSpecVars)<<2]
+			t1 = pSes.pTtObjs[(k-pSes.nSpecVars)<<2:]
 		}
-		out := &pSes.pTtObjs[i<<2]
+		out := pSes.pTtObjs[i<<2:]
 		for w := int32(0); w < pSes.nSpecWords; w++ {
 			if f&1 != 0 {
 				out[w] |= ^t0[w] & t1[w]
@@ -1069,13 +1070,13 @@ func Ses_ManDeriveTruth(pSes *Ses_Man_t, pSol string, fInvert int32) *word {
 	}
 	lit := int32(pSol[3+int(nGates)*4])
 	assert(lit>>1 == nGates-1, "solution output refers to last gate")
-	out := &pSes.pTtObjs[(nGates-1)<<2]
+	out := pSes.pTtObjs[(nGates-1)<<2:]
 	if fInvert != 0 && lit&1 != 0 {
 		for w := int32(0); w < pSes.nSpecWords; w++ {
 			out[w] = ^out[w]
 		}
 	}
-	return out
+	return &out[0]
 }
 
 /*
@@ -1450,7 +1451,7 @@ func Ses_ManCreateDepthClauses(pSes *Ses_Man_t) int32 {
 **********************************************************************
 */
 func Sat_Wrd2Dbl(w word) float64 {
-	return float64(uint32((w & 0x3FFFFFFF))) + float64((1<<30))*uint32((w>>30))
+	return float64(uint32(w&0x3FFFFFFF)) + float64(1<<30)*float64(w>>30)
 }
 
 func Ses_ManSolve(pSes *Ses_Man_t) int32 {
@@ -1628,7 +1629,7 @@ func Ses_ManExtractSolution(pSes *Ses_Man_t) string {
 func Ses_ManExtractNtk(pSol string) *baseabc.Network {
 	nVars, nFuncs, nGates := int32(pSol[ABC_EXACT_SOL_NVARS]), int32(pSol[ABC_EXACT_SOL_NFUNC]), int32(pSol[ABC_EXACT_SOL_NGATES])
 	ntk := baseabc.Abc_NtkAlloc(baseabc.ABC_NTK_LOGIC, baseabc.ABC_FUNC_SOP, 1)
-	ntk.SetName("exact")
+	baseabc.Abc_NtkSetName(ntk, "exact")
 	gates := vec.Vec_PtrAlloc(int(nVars + nGates))
 	names := baseabc.Abc_NodeGetFakeNames(nVars + nFuncs)
 	for i := int32(0); i < nVars; i++ {
@@ -1742,7 +1743,7 @@ func Ses_ManPrintFuncs(pSes *Ses_Man_t) {
 	spFmt.Printf("find optimum circuit for %d %d-variable functions:\n", pSes.nSpecFunc, pSes.nSpecVars)
 	for h = 0; h < pSes.nSpecFunc; h++ {
 		spFmt.Printf("  func %d: ", h+1)
-		Abc_TtPrintHexRev(os.Stdout, &truths[h<<2], pSes.nSpecVars)
+		Abc_TtPrintHexRev(os.Stdout, truths[h<<2:], pSes.nSpecVars)
 		spFmt.Printf("\n")
 	}
 
@@ -1975,7 +1976,7 @@ func Ses_ManRestoreDepthAndArrivalTimes(pSes *Ses_Man_t) {
 	if pSes.nMaxDepth == -1 {
 		return
 	}
-	Abc_ExactCopyDepthAndArrivalTimes(pSes.nSpecVars, pSes.nMaxDepthTmp, &pSes.nMaxDepth, pSes.pArrTimeProfileTmp[:], pSes.pArrTimeProfile)
+	Abc_ExactCopyDepthAndArrivalTimes(pSes.nSpecVars, pSes.nMaxDepthTmp, &pSes.nMaxDepth, &pSes.pArrTimeProfileTmp[0], pSes.pArrTimeProfile)
 }
 
 func Abc_ExactAdjustDepthAndArrivalTimes(nVars int32, nGates int32, nDepthFrom int32, nDepthTo *int32, pTimesFrom *int32, pTimesTo *int32, nTimesMax int32) {
@@ -2002,7 +2003,7 @@ func Abc_ExactAdjustDepthAndArrivalTimes(nVars int32, nGates int32, nDepthFrom i
 }
 
 func Ses_AdjustDepthAndArrivalTimes(pSes *Ses_Man_t, nGates int32) {
-	Abc_ExactAdjustDepthAndArrivalTimes(pSes.nSpecVars, nGates, pSes.nMaxDepthTmp, &pSes.nMaxDepth, pSes.pArrTimeProfileTmp, pSes.pArrTimeProfile, pSes.nArrTimeMax-1)
+	Abc_ExactAdjustDepthAndArrivalTimes(pSes.nSpecVars, nGates, pSes.nMaxDepthTmp, &pSes.nMaxDepth, &pSes.pArrTimeProfileTmp[0], pSes.pArrTimeProfile, pSes.nArrTimeMax-1)
 }
 
 /* return: (2: continue, 1: found, 0: gave up) */
@@ -2311,7 +2312,9 @@ func Abc_ExactTestSingleOutputAIG(fVerbose int32) {
 	cec.Cec_ManCecSetDefaultParams(&params)
 	ntk := Abc_NtkFromTruthTable(&truth[0], 4)
 	baseabc.Abc_NtkToAig(ntk)
-	ref := baseabc.Abc_NtkAigToGia(ntk, 1)
+	refAig := baseabc.Abc_NtkAigToGia(ntk, 1)
+	ref := gia.Gia_ManFromAig(refAig)
+	aig.Aig_ManStop(refAig)
 	for _, tc := range []struct {
 		depth    int32
 		arrivals *int32
@@ -2536,7 +2539,7 @@ func Abc_ExactDelayCost(pTruth *word, nVars int32, pArrTimeProfile *int32, pPerm
 	}
 	if sol != "" {
 		gateCount := int(sol[ABC_EXACT_SOL_NGATES])
-		*cost = gateCount
+		*cost = int32(gateCount)
 		pos := 3 + 4*gateCount + 1
 		delay := int32(sol[pos])
 		_ = delay

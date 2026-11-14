@@ -92,73 +92,45 @@ func Abc_NtkSynthesize(ppNtk **Abc_Ntk_t, fMoreEffort int32) {
 **********************************************************************
 */
 func Abc_NtkQuantify(pNtk *Abc_Ntk_t, fUniv int32, iVar int32, fVerbose int32) int32 {
-	var vNodes *Vec_Ptr_t
-	var pObj, pNext, pFanin *Abc_Obj_t
-	var i int32
-	assert((Abc_NtkIsStrash(pNtk) != 0), "Abc_NtkIsStrash(pNtk)")
-	assert(iVar < Abc_NtkCiNum(pNtk), "iVar < Abc_NtkCiNum(pNtk)")
-
-	// collect the internal nodes
-	pObj = baseabc.Abc_NtkCi(pNtk, iVar)
-	vNodes = baseabc.Abc_NtkDfsReverseNodes(pNtk, &pObj, 1)
-
-	// assign the cofactors of the CI node to be constants
-	Abc_ObjSetCopyEdge(pObj, abcCompatCopyEdge(baseabc.Abc_ObjNot(baseabc.Abc_AigConst1(pNtk))))
-	pObj.pData = baseabc.Abc_AigConst1(pNtk)
-
-	// quantify the nodes
-	// inlining of macro Vec_PtrForEachEntry
-	for i = int32(0); i < Vec_PtrSize(vNodes); i++ {
-		pObj = Vec_PtrEntry(vNodes, i).(*Abc_Obj_t)
-		for pNext = Abc_ObjReadCopyEdge(pObj).Object; pObj != nil; pObj, pNext = pNext, func() *Abc_Obj_t {
-			if pNext == nil {
-				return nil
+	assert(Abc_NtkIsStrash(pNtk) != 0, "quantification requires a strashed network")
+	assert(iVar >= 0 && iVar < Abc_NtkCiNum(pNtk), "quantified CI is in range")
+	pivot := baseabc.Abc_NtkCi(pNtk, iVar)
+	levels := baseabc.Abc_NtkDfsReverseNodes(pNtk, []*Abc_Obj_t{pivot}, 1)
+	manager := pNtk.FunctionManager.(*baseabc.Abc_Aig_t)
+	pivot.SetCopyEdge(pNtk.One().Not())
+	pivot.Data = pNtk.One()
+	// The reverse DFS links nodes at each level through Copy. Save the next
+	// link before replacing it with the node's zero cofactor.
+	for _, head := range levels {
+		for node := head; node != nil; {
+			next := node.Copy
+			for _, fanin := range []*Abc_Obj_t{Abc_ObjFanin0(node), Abc_ObjFanin1(node)} {
+				if baseabc.Abc_NodeIsTravIdCurrent(fanin) == 0 {
+					fanin.SetCopyEdge(fanin.Signal())
+					fanin.Data = fanin.Signal()
+				}
 			}
-			return Abc_ObjReadCopyEdge(pNext).Object
-		}() {
-			pFanin = Abc_ObjFanin0(pObj)
-			if baseabc.Abc_NodeIsTravIdCurrent(pFanin) == 0 {
-				Abc_ObjSetCopyEdge(pFanin, abcCompatCopyEdge(pFanin))
-				pFanin.pData = pFanin
-			}
-			pFanin = Abc_ObjFanin1(pObj)
-			if baseabc.Abc_NodeIsTravIdCurrent(pFanin) == 0 {
-				Abc_ObjSetCopyEdge(pFanin, abcCompatCopyEdge(pFanin))
-				pFanin.pData = pFanin
-			}
-			Abc_ObjSetCopyEdge(pObj, abcCompatCopyEdge(baseabc.Abc_AigAnd(pNtk.pManFunc, Abc_ObjChild0Copy(pObj), Abc_ObjChild1Copy(pObj))))
-			pObj.pData = baseabc.Abc_AigAnd(pNtk.pManFunc, Abc_ObjChild0Data(pObj), Abc_ObjChild1Data(pObj))
+			node.SetCopyEdge(baseabc.Abc_AigAnd(manager, Abc_ObjChild0Copy(node), Abc_ObjChild1Copy(node)))
+			node.Data = baseabc.Abc_AigAnd(manager, Abc_ObjChild0Data(node), Abc_ObjChild1Data(node))
+			node = next
 		}
 	}
-	Vec_PtrFree(vNodes)
-
-	// update the affected COs
-	// inlining of macro Abc_NtkForEachCo
-	for i = int32(0); i < Abc_NtkCoNum(pNtk); i++ {
-		pObj = baseabc.Abc_NtkCo(pNtk, i)
-		if baseabc.Abc_NodeIsTravIdCurrent(pObj) == 0 {
+	for _, output := range pNtk.Outputs() {
+		if baseabc.Abc_NodeIsTravIdCurrent(output) == 0 {
 			continue
 		}
-		pFanin = Abc_ObjFanin0(pObj)
-		// get the result of quantification
+		fanin := Abc_ObjFanin0(output)
+		var result baseabc.Edge
 		if fUniv != 0 {
-			pNext = baseabc.Abc_AigAnd(pNtk.pManFunc, Abc_ObjChild0Copy(pObj), Abc_ObjChild0Data(pObj))
+			result = baseabc.Abc_AigAnd(manager, Abc_ObjChild0Copy(output), Abc_ObjChild0Data(output))
 		} else {
-			pNext = baseabc.Abc_AigOr(pNtk.pManFunc, Abc_ObjChild0Copy(pObj), Abc_ObjChild0Data(pObj))
+			result = baseabc.Abc_AigOr(manager, Abc_ObjChild0Copy(output), Abc_ObjChild0Data(output))
 		}
-		pNext = baseabc.Abc_ObjNotCond(pNext, baseabc.Abc_ObjFaninC0(pObj))
-		if baseabc.Abc_ObjRegular(pNext) == pFanin {
-			continue
+		result = baseabc.Abc_ObjNotCond(result, baseabc.Abc_ObjFaninC0(output))
+		if result.Object != fanin {
+			baseabc.Abc_ObjPatchFanin(output, fanin, result)
 		}
-		// update the fanins of the CO
-		baseabc.Abc_ObjPatchFanin(pObj, pFanin, pNext)
-		//        if ( Abc_ObjFanoutNum(pFanin) == 0 )
-		//            Abc_AigDeleteNode( pNtk->pManFunc, pFanin );
 	}
-
-	// make sure the node has no fanouts
-	//    pObj = Abc_NtkCi( pNtk, iVar );
-	//    assert( Abc_ObjFanoutNum(pObj) == 0 );
 	return 1
 }
 
@@ -176,11 +148,11 @@ func Abc_NtkQuantify(pNtk *Abc_Ntk_t, fUniv int32, iVar int32, fVerbose int32) i
 **********************************************************************
 */
 func Abc_NtkTransRel(pNtk *Abc_Ntk_t, fInputs int32, fVerbose int32) *Abc_Ntk_t {
-	var Buffer string // was [1000]byte in C
 
-	var vPairs *Vec_Ptr_t
+	var vPairs []baseabc.Edge
 	var pNtkNew *Abc_Ntk_t
-	var pObj, pMiter *Abc_Obj_t
+	var pObj *Abc_Obj_t
+	var pMiter baseabc.Edge
 	var i, nLatches int32
 	var fSynthesis int32 = 1
 
@@ -190,27 +162,26 @@ func Abc_NtkTransRel(pNtk *Abc_Ntk_t, fInputs int32, fVerbose int32) *Abc_Ntk_t 
 	// start the network
 	pNtkNew = baseabc.Abc_NtkAlloc(baseabc.ABC_NTK_STRASH, baseabc.ABC_FUNC_AIG, 1)
 	// duplicate the name and the spec
-	Buffer = fmt.Sprintf("%s_TR", Abc_NtkName(pNtk))
 	Abc_NtkSetName(pNtkNew, Extra_UtilStrsav(Abc_NtkName(pNtk)))
 	//    pNtkNew->pSpec = Extra_UtilStrsav(pNtk->pSpec);
 	baseabc.Abc_NtkCleanCopy(pNtk)
 	// create current state variables
 	// inlining of macro Abc_NtkForEachLatchOutput
-	for i = int32(0); i < Vec_PtrSize(pNtk.vBoxes); i++ {
+	for i = int32(0); i < int32(len(pNtk.Boxes())); i++ {
 		box := baseabc.Abc_NtkBox(pNtk, i)
 		if baseabc.Abc_ObjIsLatch(box) != 0 {
 			pObj = Abc_ObjFanout0(box)
 			Abc_ObjSetCopyEdge(pObj, abcCompatCopyEdge(baseabc.Abc_NtkCreatePi(pNtkNew)))
-			baseabc.Abc_ObjAssignName(Abc_ObjReadCopyEdge(pObj).Object, Abc_ObjName(pObj), nil)
+			baseabc.Abc_ObjAssignName(Abc_ObjReadCopyEdge(pObj).Object, Abc_ObjName(pObj), "")
 		}
 	}
 	// create next state variables
 	// inlining of macro Abc_NtkForEachLatchInput
-	for i = int32(0); i < Vec_PtrSize(pNtk.vBoxes); i++ {
+	for i = int32(0); i < int32(len(pNtk.Boxes())); i++ {
 		box := baseabc.Abc_NtkBox(pNtk, i)
 		if baseabc.Abc_ObjIsLatch(box) != 0 {
 			pObj = Abc_ObjFanin0(box)
-			baseabc.Abc_ObjAssignName(baseabc.Abc_NtkCreatePi(pNtkNew), Abc_ObjName(pObj), nil)
+			baseabc.Abc_ObjAssignName(baseabc.Abc_NtkCreatePi(pNtkNew), Abc_ObjName(pObj), "")
 		}
 	}
 	// create PI variables
@@ -222,31 +193,30 @@ func Abc_NtkTransRel(pNtk *Abc_Ntk_t, fInputs int32, fVerbose int32) *Abc_Ntk_t 
 	// create the PO
 	baseabc.Abc_NtkCreatePo(pNtkNew)
 	// restrash the nodes (assuming a topological order of the old network)
-	Abc_ObjSetCopyEdge(baseabc.Abc_AigConst1(pNtk), abcCompatCopyEdge(baseabc.Abc_AigConst1(pNtkNew)))
+	Abc_ObjSetCopyEdge(baseabc.Abc_AigConst1(pNtk).Object, abcCompatCopyEdge(baseabc.Abc_AigConst1(pNtkNew)))
 	// inlining of macro Abc_NtkForEachNode
-	for i = int32(0); i < Vec_PtrSize(pNtk.vObjs); i++ {
+	for i = int32(0); i < Abc_NtkObjNumMax(pNtk); i++ {
 		pObj = Abc_NtkObj(pNtk, i)
 		if pObj != nil && (Abc_ObjIsNode(pObj) != 0) {
-			Abc_ObjSetCopyEdge(pObj, abcCompatCopyEdge(baseabc.Abc_AigAnd(pNtkNew.pManFunc, Abc_ObjChild0Copy(pObj), Abc_ObjChild1Copy(pObj))))
+			Abc_ObjSetCopyEdge(pObj, abcCompatCopyEdge(baseabc.Abc_AigAnd(pNtkNew.FunctionManager.(*baseabc.Abc_Aig_t), Abc_ObjChild0Copy(pObj), Abc_ObjChild1Copy(pObj))))
 		}
 	}
 	// create the function of the primary output
 	assert(baseabc.Abc_NtkBoxNum(pNtk) == Abc_NtkLatchNum(pNtk), "Abc_NtkBoxNum(pNtk) == Abc_NtkLatchNum(pNtk)")
-	vPairs = Vec_PtrAlloc(2 * nLatches)
+	vPairs = make([]baseabc.Edge, 0, 2*nLatches)
 	// inlining of macro Abc_NtkForEachLatchInput
-	for i = int32(0); i < Vec_PtrSize(pNtk.vBoxes); i++ {
+	for i = int32(0); i < int32(len(pNtk.Boxes())); i++ {
 		box := baseabc.Abc_NtkBox(pNtk, i)
 		if baseabc.Abc_ObjIsLatch(box) != 0 {
 			pObj = Abc_ObjFanin0(box)
-			Vec_PtrPush(vPairs, Abc_ObjChild0Copy(pObj))
-			Vec_PtrPush(vPairs, Abc_NtkPi(pNtkNew, i+nLatches))
+			vPairs = append(vPairs, Abc_ObjChild0Copy(pObj))
+			vPairs = append(vPairs, Abc_NtkPi(pNtkNew, i+nLatches).Signal())
 		}
 	}
-	pMiter = baseabc.Abc_AigMiter(pNtkNew.pManFunc, vPairs, 0)
-	Vec_PtrFree(vPairs)
+	pMiter = baseabc.Abc_AigMiter(pNtkNew.FunctionManager.(*baseabc.Abc_Aig_t), &vPairs, 0)
 	// add the primary output
 	Abc_ObjAddFanin(Abc_NtkPo(pNtkNew, 0), baseabc.Abc_ObjNot(pMiter))
-	baseabc.Abc_ObjAssignName(Abc_NtkPo(pNtkNew, 0), "rel", nil)
+	baseabc.Abc_ObjAssignName(Abc_NtkPo(pNtkNew, 0), "rel", "")
 
 	// quantify inputs
 	if fInputs != 0 {
@@ -258,7 +228,7 @@ func Abc_NtkTransRel(pNtk *Abc_Ntk_t, fInputs int32, fVerbose int32) *Abc_Ntk_t 
 			//            if ( fSynthesis && (i % 3 == 2) )
 			if fSynthesis != 0 {
 				baseabc.Abc_NtkCleanData(pNtkNew)
-				baseabc.Abc_AigCleanup(pNtkNew.pManFunc)
+				baseabc.Abc_AigCleanup(pNtkNew.FunctionManager.(*baseabc.Abc_Aig_t))
 				Abc_NtkSynthesize(&pNtkNew, 1)
 			}
 			//            printf( "Var = %3d. Nodes = %6d. ", Abc_NtkPiNum(pNtkNew) - 1 - i, Abc_NtkNodeNum(pNtkNew) );
@@ -266,7 +236,7 @@ func Abc_NtkTransRel(pNtk *Abc_Ntk_t, fInputs int32, fVerbose int32) *Abc_Ntk_t 
 		}
 		//        printf( "\n" );
 		baseabc.Abc_NtkCleanData(pNtkNew)
-		baseabc.Abc_AigCleanup(pNtkNew.pManFunc)
+		baseabc.Abc_AigCleanup(pNtkNew.FunctionManager.(*baseabc.Abc_Aig_t))
 		for i = Abc_NtkPiNum(pNtkNew) - 1; i >= 2*nLatches; i-- {
 			pObj = Abc_NtkPi(pNtkNew, i)
 			assert(baseabc.Abc_ObjFanoutNum(pObj) == 0, "Abc_ObjFanoutNum(pObj) == 0")
@@ -298,7 +268,7 @@ func Abc_NtkTransRel(pNtk *Abc_Ntk_t, fInputs int32, fVerbose int32) *Abc_Ntk_t 
 */
 func Abc_NtkInitialState(pNtk *Abc_Ntk_t) *Abc_Ntk_t {
 	var pNtkNew *Abc_Ntk_t
-	var pMiter *Abc_Obj_t
+	var pMiter baseabc.Edge
 	var i int32
 	var nVars int32 = Abc_NtkPiNum(pNtk) / 2
 	assert((Abc_NtkIsStrash(pNtk) != 0), "Abc_NtkIsStrash(pNtk)")
@@ -307,7 +277,7 @@ func Abc_NtkInitialState(pNtk *Abc_Ntk_t) *Abc_Ntk_t {
 	// compute the all-zero state in terms of the CS variables
 	pMiter = baseabc.Abc_AigConst1(pNtkNew)
 	for i = 0; i < nVars; i++ {
-		pMiter = baseabc.Abc_AigAnd(pNtkNew.pManFunc, pMiter, baseabc.Abc_ObjNot(Abc_NtkPi(pNtkNew, i)))
+		pMiter = baseabc.Abc_AigAnd(pNtkNew.FunctionManager.(*baseabc.Abc_Aig_t), pMiter, baseabc.Abc_ObjNot(Abc_NtkPi(pNtkNew, i)))
 	}
 	// add the PO
 	Abc_ObjAddFanin(Abc_NtkPo(pNtkNew, 0), pMiter)
@@ -346,10 +316,10 @@ func Abc_NtkSwapVariables(pNtk *Abc_Ntk_t) *Abc_Ntk_t {
 	}
 	// restrash
 	// inlining of macro Abc_NtkForEachNode
-	for i = int32(0); i < Vec_PtrSize(pNtk.vObjs); i++ {
+	for i = int32(0); i < Abc_NtkObjNumMax(pNtk); i++ {
 		pObj = Abc_NtkObj(pNtk, i)
 		if pObj != nil && (Abc_ObjIsNode(pObj) != 0) {
-			Abc_ObjSetCopyEdge(pObj, abcCompatCopyEdge(baseabc.Abc_AigAnd(pNtkNew.pManFunc, Abc_ObjChild0Copy(pObj), Abc_ObjChild1Copy(pObj))))
+			Abc_ObjSetCopyEdge(pObj, abcCompatCopyEdge(baseabc.Abc_AigAnd(pNtkNew.FunctionManager.(*baseabc.Abc_Aig_t), Abc_ObjChild0Copy(pObj), Abc_ObjChild1Copy(pObj))))
 		}
 	}
 	// add the PO
@@ -405,12 +375,12 @@ func Abc_NtkReachability(pNtkRel *Abc_Ntk_t, nIters int32, fVerbose int32) *Abc_
 			Abc_NtkQuantify(pNtkNext, 0, v, fVerbose)
 			if fSynthesis != 0 && v%3 == 2 {
 				baseabc.Abc_NtkCleanData(pNtkNext)
-				baseabc.Abc_AigCleanup(pNtkNext.pManFunc)
+				baseabc.Abc_AigCleanup(pNtkNext.FunctionManager.(*baseabc.Abc_Aig_t))
 				Abc_NtkSynthesize(&pNtkNext, fMoreEffort)
 			}
 		}
 		baseabc.Abc_NtkCleanData(pNtkNext)
-		baseabc.Abc_AigCleanup(pNtkNext.pManFunc)
+		baseabc.Abc_AigCleanup(pNtkNext.FunctionManager.(*baseabc.Abc_Aig_t))
 		if fSynthesis != 0 {
 			Abc_NtkSynthesize(&pNtkNext, 1)
 		}
@@ -419,7 +389,7 @@ func Abc_NtkReachability(pNtkRel *Abc_Ntk_t, nIters int32, fVerbose int32) *Abc_
 		pNtkNext = Abc_NtkSwapVariables(pNtkTemp)
 		Abc_NtkDelete(pNtkTemp)
 		// check the termination condition
-		if Abc_ObjFanin0(Abc_NtkPo(pNtkNext, 0)) == baseabc.Abc_AigConst1(pNtkNext) {
+		if Abc_ObjFanin0(Abc_NtkPo(pNtkNext, 0)) == baseabc.Abc_AigConst1(pNtkNext).Object {
 			fFixedPoint = 1
 			fmt.Printf("Fixed point is reached!\n")
 			Abc_NtkDelete(pNtkNext)
@@ -441,7 +411,7 @@ func Abc_NtkReachability(pNtkRel *Abc_Ntk_t, nIters int32, fVerbose int32) *Abc_
 		nNodesNew = Abc_NtkNodeNum(pNtkFront)
 		// print statistics
 		if fVerbose != 0 {
-			fmt.Printf("I = %3d : Reach = %6d  Fr = %6d  FrM = %6d  %7.2f %%   ", i+1, Abc_NtkNodeNum(pNtkReached), nNodesOld, nNodesNew, 100.0*(nNodesNew-nNodesPrev)/nNodesPrev)
+			fmt.Printf("I = %3d : Reach = %6d  Fr = %6d  FrM = %6d  %7.2f %%   ", i+1, Abc_NtkNodeNum(pNtkReached), nNodesOld, nNodesNew, 100.0*float64(nNodesNew-nNodesPrev)/float64(nNodesPrev))
 			// inlining of macro ABC_PRT
 			Abc_Print(1, "%s =", ("T"))
 			Abc_Print(1, "%9.2f sec\n", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))))

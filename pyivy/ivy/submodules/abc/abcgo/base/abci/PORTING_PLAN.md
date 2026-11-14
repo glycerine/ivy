@@ -79,3 +79,14 @@ Restored 368 parameter-qualified flag references dropped by prior ternary
 translation, checking the original command bodies. Converted 411 C truth
 tests according to their Go operand types. ABCI remains red while command
 arguments, representation conversions and graph algorithms are completed.
+
+### Graph and buffer representation repairs
+
+Completed the miter and quantification compile repairs using native slices
+and explicit complemented edges. Restored latch iteration and preserved the
+linked-list traversal used by reverse DFS. Removed pointer indexing from
+truth, switching, and counterexample buffers; fixed affected existing tests.
+These changes remain unvalidated at runtime while the whole package is red.
+Compiler diagnostics now concentrate in the command and DAR integration
+files. The next gate is still a build of every file together, followed by
+full behavioral tests and inspection of diagnostics.

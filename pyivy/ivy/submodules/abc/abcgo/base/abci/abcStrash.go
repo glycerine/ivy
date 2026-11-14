@@ -216,7 +216,7 @@ func Abc_NtkAppend(pNtk1, pNtk2 *Abc_Ntk_t, fAddPos int32) int32 {
 	}
 	abc.Abc_NtkCleanCopy(pNtk2)
 	if abc.Abc_NtkIsStrash(pNtk2) != 0 {
-		abc.Abc_ObjSetCopyData(abc.Abc_AigConst1(pNtk2), abc.Abc_AigConst1(pNtk1))
+		abc.Abc_ObjSetCopyData(abc.Abc_AigConst1(pNtk2).Object, abc.Abc_AigConst1(pNtk1))
 	}
 	newCIs := 0
 	for _, ci := range pNtk2.Inputs() {
@@ -314,7 +314,7 @@ func Abc_NodeStrash(pNtkNew *Abc_Ntk_t, pNodeOld *Abc_Obj_t, fRecord int32) abc.
 	for i, fanin := range pNodeOld.Fanins() {
 		hop.Hop_ObjSetData(hop.Hop_IthVar(pMan, int32(i)), abc.Abc_ObjCopyEdge(fanin.Object))
 	}
-	hop.Hop_ObjSetData(hop.Hop_ManConst1(pMan), abc.Abc_AigConst1(pNtkNew).Signal())
+	hop.Hop_ObjSetData(hop.Hop_ManConst1(pMan), abc.Abc_AigConst1(pNtkNew))
 	root := hop.Hop_Regular(pRoot)
 	Abc_NodeStrash_rec(strashAig(pNtkNew), root)
 	hop.Hop_ConeUnmark_rec(root)
@@ -348,7 +348,7 @@ func Abc_NtkTopmost(pNtk *Abc_Ntk_t, nLevels int32) *Abc_Ntk_t {
 	out := abc.Abc_NtkAlloc(abc.ABC_NTK_STRASH, abc.ABC_FUNC_AIG, 1)
 	out.Name = pNtk.Name
 	abc.Abc_NtkCleanCopy(pNtk)
-	abc.Abc_ObjSetCopyData(abc.Abc_AigConst1(pNtk), abc.Abc_AigConst1(out))
+	abc.Abc_ObjSetCopyData(abc.Abc_AigConst1(pNtk).Object, abc.Abc_AigConst1(out))
 	for _, co := range pNtk.Outputs() {
 		if len(co.Fanins()) == 0 {
 			continue
@@ -393,7 +393,7 @@ func Abc_NtkBottommost(pNtk *Abc_Ntk_t, nLevels int32) *Abc_Ntk_t {
 	out := abc.Abc_NtkAlloc(abc.ABC_NTK_STRASH, abc.ABC_FUNC_AIG, 1)
 	out.Name = pNtk.Name
 	abc.Abc_NtkCleanCopy(pNtk)
-	abc.Abc_ObjSetCopyData(abc.Abc_AigConst1(pNtk), abc.Abc_AigConst1(out))
+	abc.Abc_ObjSetCopyData(abc.Abc_AigConst1(pNtk).Object, abc.Abc_AigConst1(out))
 	for _, ci := range pNtk.Inputs() {
 		abc.Abc_ObjSetCopyData(ci, abc.Abc_NtkCreatePi(out))
 	}
@@ -470,7 +470,7 @@ func Abc_NtkTopAnd(pNtk *Abc_Ntk_t) *Abc_Ntk_t {
 	abc.Abc_NtkCleanCopy(pNtk)
 	out := abc.Abc_NtkAlloc(abc.ABC_NTK_STRASH, abc.ABC_FUNC_AIG, 1)
 	out.Name, out.Spec = pNtk.Name, pNtk.Spec
-	abc.Abc_ObjSetCopyData(abc.Abc_AigConst1(pNtk), abc.Abc_AigConst1(out))
+	abc.Abc_ObjSetCopyData(abc.Abc_AigConst1(pNtk).Object, abc.Abc_AigConst1(out))
 	for _, pi := range pNtk.ObjectsOfKind(abc.ObjectPI) {
 		abc.Abc_NtkDupObj(out, pi, 1)
 	}
@@ -538,9 +538,9 @@ func Abc_NtkWriteAig(pNtk *Abc_Ntk_t, pFileName string) {
 	}
 	lit := int32(0)
 	one := abc.Abc_AigConst1(pNtk)
-	idToLit[2*one.ID+1] = lit
+	idToLit[2*one.Object.ID+1] = lit
 	lit++
-	idToLit[2*one.ID] = lit
+	idToLit[2*one.Object.ID] = lit
 	lit++
 	for _, pi := range pNtk.ObjectsOfKind(abc.ObjectPI) {
 		idToLit[2*pi.ID] = lit

@@ -113,7 +113,7 @@ func If_ManComputeSwitching(pIfMan *If_Man_t) {
 	probabilities := aig_gia.Gia_ManComputeSwitchProbs(pNew, 48, 16, 0)
 	values := make([]float32, Vec_IntSize(probabilities))
 	for i := range values {
-		values[i] = math.Float32frombits(uint32(Vec_IntEntry(probabilities, i)))
+		values[i] = math.Float32frombits(uint32(Vec_IntEntry(probabilities, int32(i))))
 	}
 	Vec_IntFree(probabilities)
 	pIfMan.SetSwitchingProbabilities(values)
@@ -403,11 +403,11 @@ func Abc_NodeBuildFromMiniInt(pMan *Hop_Man_t, vAig *Vec_Int_t, nLeaves int32) *
 		return hoppkg.Hop_NotCond(hoppkg.Hop_IthVar(pMan, 0), last)
 	}
 	assert(size&1 == 1, "AND mini AIG has an odd number of entries")
-	objects := make([]*Hop_Obj_t, nLeaves+(size-1)/2)
+	objects := make([]*Hop_Obj_t, int(nLeaves)+(size-1)/2)
 	for i := int32(0); i < nLeaves; i++ {
 		objects[i] = hoppkg.Hop_IthVar(pMan, i)
 	}
-	for i := int32(0); i < size-1; i += 2 {
+	for i := int32(0); i < int32(size)-1; i += 2 {
 		lit0, lit1 := vec.Vec_IntEntry(vAig, int(i)), vec.Vec_IntEntry(vAig, int(i+1))
 		var0, var1 := lit0>>1, lit1>>1
 		assert(var0 >= 0 && var0 < int32(len(objects)) && var1 >= 0 && var1 < int32(len(objects)), "mini AIG fanin is already defined")
@@ -421,7 +421,7 @@ func Abc_NodeBuildFromMiniInt(pMan *Hop_Man_t, vAig *Vec_Int_t, nLeaves int32) *
 func Abc_NodeBuildFromMini(pMan *Hop_Man_t, p *If_Man_t, pCut *If_Cut_t, fUseDsd int32) *Hop_Obj_t {
 	var delay int32
 	if fUseDsd != 0 {
-		delay = ifpkg.If_CutDsdBalanceEval(p, pCut, ifpkg.If_ManArray(p))
+		delay = int32(ifpkg.If_CutDsdBalanceEval(p, pCut, ifpkg.If_ManArray(p)))
 	} else {
 		delay = ifpkg.If_CutSopBalanceEval(p, pCut, ifpkg.If_ManArray(p))
 	}
@@ -460,7 +460,7 @@ func Abc_NodeFromIf_rec(pNtkNew *Abc_Ntk_t, pIfMan *If_Man_t, pIfObj *If_Obj_t, 
 			fanins[i] = Abc_NodeFromIf_rec(pNtkNew, pIfMan, ifpkg.If_ManObj(pIfMan, leaves[i]), vCover)
 		}
 		assert(n > 0, "exact mapper has at least one leaf")
-		built := Abc_ExactBuildNode((*word)(unsafe.Pointer(ifpkg.If_CutTruth(pIfMan, cut))), n, ifpkg.If_CutArrTimeProfile(pIfMan, cut), (**Abc_Obj_t)(unsafe.Pointer(&fanins[0])), pNtkNew)
+		built := Abc_ExactBuildNode((*word)(unsafe.Pointer(ifpkg.If_CutTruth(pIfMan, cut))), n, ifpkg.If_CutArrTimeProfile(pIfMan, cut), fanins, pNtkNew)
 		if built != nil {
 			ifpkg.If_ObjSetCopy(pIfObj, built)
 		}
@@ -471,7 +471,7 @@ func Abc_NodeFromIf_rec(pNtkNew *Abc_Ntk_t, pIfMan *If_Man_t, pIfObj *If_Obj_t, 
 			panic("abcIf: recursive library requires AIG network")
 		}
 	}
-	if n > 0 && !pars.DelayOptimization() && !pars.DsdBalance() && !pars.UsesTtPerm() && !pars.UsesUserRecLib() && !pars.UsesUserSesLib() && pars.LUTStructure() == "" && pars.GateSize() == 0 {
+	if n > 0 && !pars.DelayOptimization() && !pars.DsdBalance() && !pars.UsesTtPerm() && !pars.UserRecLibrary() && !pars.UsesUserSesLib() && pars.LUTStructure() == "" && pars.GateSize() == 0 {
 		ifpkg.If_CutRotatePins(pIfMan, cut)
 		leaves = ifpkg.If_CutLeaves(cut)
 	}
@@ -506,7 +506,7 @@ func Abc_NodeFromIf_rec(pNtkNew *Abc_Ntk_t, pIfMan *If_Man_t, pIfObj *If_Obj_t, 
 			var cubes []uint32
 			compl := kit.Kit_TruthIsop(truth, n, &cubes, 1)
 			assert(compl == 0 || compl == 1, "ISOP complement is binary")
-			cover := vec.Vec_IntAlloc(int32(len(cubes)))
+			cover := vec.Vec_IntAlloc(int(int32(len(cubes))))
 			for _, cube := range cubes {
 				vec.Vec_IntPush(cover, int32(cube))
 			}

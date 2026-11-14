@@ -75,24 +75,24 @@ import (
 
 type Abc_Edge_t int32
 
-func Abc_EdgeCreate(Id int32, fCompl int32) Abc_Edge_t        { return (Id << 1) | fCompl }
-func Abc_EdgeId(Edge Abc_Edge_t) int32                        { return Edge >> 1 }
-func Abc_EdgeIsComplement(Edge Abc_Edge_t) int32              { return Edge & 1 }
+func Abc_EdgeCreate(Id int32, fCompl int32) Abc_Edge_t        { return Abc_Edge_t((Id << 1) | fCompl) }
+func Abc_EdgeId(Edge Abc_Edge_t) int32                        { return int32(Edge >> 1) }
+func Abc_EdgeIsComplement(Edge Abc_Edge_t) int32              { return int32(Edge & 1) }
 func Abc_EdgeRegular(Edge Abc_Edge_t) Abc_Edge_t              { return (Edge >> 1) << 1 }
 func Abc_EdgeNot(Edge Abc_Edge_t) Abc_Edge_t                  { return Edge ^ 1 }
-func Abc_EdgeNotCond(Edge Abc_Edge_t, fCond int32) Abc_Edge_t { return Edge ^ fCond }
+func Abc_EdgeNotCond(Edge Abc_Edge_t, fCond int32) Abc_Edge_t { return Edge ^ Abc_Edge_t(fCond) }
 func Abc_EdgeFromNode(pNode *Abc_Obj_t) Abc_Edge_t {
-	return Abc_EdgeCreate(baseabc.Abc_ObjRegular(pNode).Id, baseabc.Abc_ObjIsComplement(pNode))
+	return Abc_EdgeCreate(int32(baseabc.Abc_ObjRegular(pNode).ID), baseabc.Abc_ObjIsComplement(pNode))
 }
 func Abc_EdgeToNode(p *Abc_Ntk_t, Edge Abc_Edge_t) baseabc.Edge {
 	return baseabc.Abc_ObjNotCond(baseabc.Abc_NtkObj(p, Abc_EdgeId(Edge)), Abc_EdgeIsComplement(Edge))
 }
 
 func Abc_ObjFanin0Ivy(p *Abc_Ntk_t, pObj *ivypkg.Ivy_Obj_t) baseabc.Edge {
-	return baseabc.Abc_ObjNotCond(Abc_EdgeToNode(p, ivypkg.Ivy_ObjFanin0(pObj).TravId), ivypkg.Ivy_ObjFaninC0(pObj))
+	return baseabc.Abc_ObjNotCond(Abc_EdgeToNode(p, Abc_Edge_t(ivypkg.Ivy_ObjFanin0(pObj).TravId)), ivypkg.Ivy_ObjFaninC0(pObj))
 }
 func Abc_ObjFanin1Ivy(p *Abc_Ntk_t, pObj *ivypkg.Ivy_Obj_t) baseabc.Edge {
-	return baseabc.Abc_ObjNotCond(Abc_EdgeToNode(p, ivypkg.Ivy_ObjFanin1(pObj).TravId), ivypkg.Ivy_ObjFaninC1(pObj))
+	return baseabc.Abc_ObjNotCond(Abc_EdgeToNode(p, Abc_Edge_t(ivypkg.Ivy_ObjFanin1(pObj).TravId)), ivypkg.Ivy_ObjFaninC1(pObj))
 }
 
 // static Vec_Int_t * Abc_NtkCollectLatchValuesIvy( Abc_Ntk_t * pNtk, int fUseDcs );
@@ -145,7 +145,7 @@ func Abc_NtkIvyBefore(pNtk *Abc_Ntk_t, fSeq int32, fUseDc int32) *ivypkg.Ivy_Man
 	if fSeq != 0 {
 		var nLatches int32 = baseabc.Abc_NtkLatchNum(pNtk)
 		var vInit *Vec_Int_t = Abc_NtkCollectLatchValuesIvy(pNtk, fUseDc)
-		ivypkg.Ivy_ManMakeSeq(pMan, nLatches, vInit.pArray)
+		ivypkg.Ivy_ManMakeSeq(pMan, nLatches, Vec_IntArray(vInit))
 		Vec_IntFree(vInit)
 		//        ivypkg.Ivy_ManPrintStats( pMan );
 	}
@@ -237,7 +237,6 @@ func Abc_NtkIvyStrash(pNtk *Abc_Ntk_t) *Abc_Ntk_t {
 func Abc_NtkIvyHaig(pNtk *Abc_Ntk_t, nIters int32, fUseZeroCost int32, fVerbose int32) *Abc_Ntk_t {
 	var pNtkAig *Abc_Ntk_t
 	var pMan *ivypkg.Ivy_Man_t
-	var clk abctime
 	//    int i;
 	/*
 	   extern int nMoves;
@@ -475,7 +474,7 @@ func Abc_NtkIvySat(pNtk *Abc_Ntk_t, nConfLimit int32, fVerbose int32) *Abc_Ntk_t
 **********************************************************************
 */
 func Abc_NtkTransferPointers(pNtk *Abc_Ntk_t, pNtkAig *Abc_Ntk_t) {
-	baseabc.Abc_AigConst1(pNtk).Copy = baseabc.Abc_AigConst1(pNtkAig)
+	baseabc.Abc_AigConst1(pNtk).Object.SetCopyEdge(baseabc.Abc_AigConst1(pNtkAig))
 	for i, obj := range pNtk.Inputs() {
 		obj.Copy = pNtkAig.Inputs()[i]
 	}
@@ -486,7 +485,7 @@ func Abc_NtkTransferPointers(pNtk *Abc_Ntk_t, pNtkAig *Abc_Ntk_t) {
 		obj.Copy = pNtkAig.Boxes()[i]
 	}
 	for _, obj := range pNtk.ObjectsOfKind(baseabc.ObjectNode) {
-		ivyNode, _ := obj.Copy.(*ivypkg.Ivy_Obj_t)
+		ivyNode, _ := obj.CopyData.(*ivypkg.Ivy_Obj_t)
 		if ivyNode == nil {
 			continue
 		}
@@ -494,7 +493,7 @@ func Abc_NtkTransferPointers(pNtk *Abc_Ntk_t, pNtkAig *Abc_Ntk_t) {
 		if equiv == nil {
 			continue
 		}
-		mapped := Abc_EdgeToNode(pNtkAig, ivypkg.Ivy_Regular(equiv).TravId)
+		mapped := Abc_EdgeToNode(pNtkAig, Abc_Edge_t(ivypkg.Ivy_Regular(equiv).TravId))
 		obj.Copy = mapped.Object
 		obj.CopyEdge = baseabc.Edge{Object: mapped.Object, Complement: mapped.Complement != (ivypkg.Ivy_IsComplement(equiv) != 0)}
 	}
@@ -650,7 +649,7 @@ func Abc_NtkIvyProve(ppNtk **Abc_Ntk_t, pPars any) int32 {
 	pNtk = Abc_NtkIvyAfter(pNtkTemp, pMan, 0, 0)
 	Abc_NtkDelete(pNtkTemp)
 	// transfer model if given
-	model, _ := ivypkg.Ivy_ManTakeData(pMan).([]int32)
+	model, _ = ivypkg.Ivy_ManTakeData(pMan).([]int32)
 	baseabc.Abc_NtkSetModel(pNtk, model)
 	ivypkg.Ivy_ManStop(pMan)
 

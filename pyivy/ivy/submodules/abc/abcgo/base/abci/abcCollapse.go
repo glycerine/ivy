@@ -366,7 +366,7 @@ func Abc_GiaDeriveSops(dst *Abc_Ntk_t, g *gia.Gia_Man_t, supports *vec.Vec_Wec_t
 		if cnf != nil {
 			sop = Abc_NtkClpGiaOne2(cnf, g, int(coIndex), supp, vec.Vec_WecEntry(classes, entry), supports, cubeLimit, conflictLimit, canonical, reverse, currentVerbose)
 		} else {
-			sop = Abc_NtkClpGiaOne(g, int(coIndex), cubeLimit, conflictLimit, canonical, reverse, supp, currentVerbose, vec.Vec_WecEntry(classes, entry), supports)
+			sop = Abc_NtkClpGiaOne(g, int(coIndex), cubeLimit, conflictLimit, canonical, reverse, supp, vec.Vec_WecEntry(classes, entry), currentVerbose, supports)
 		}
 		if sop == nil {
 			return nil

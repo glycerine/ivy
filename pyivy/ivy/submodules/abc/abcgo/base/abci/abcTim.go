@@ -188,7 +188,7 @@ func Abc_NtkTestTimDeriveGia(n *Abc_Ntk_t, verbose int32) *Gia_Man_t {
 	for i := int32(0); i < curPi; i++ {
 		gia.Gia_ManAppendCi(g)
 	}
-	for i := 0; i < int32(maxInputs); i++ {
+	for i := 0; i < maxInputs; i++ {
 		gia.Gia_ManAppendCi(holes)
 	}
 	gia.Gia_ManHashAlloc(g)
@@ -198,13 +198,13 @@ func Abc_NtkTestTimDeriveGia(n *Abc_Ntk_t, verbose int32) *Gia_Man_t {
 		c.Temp = 1
 	}
 	for i := int32(0); i < ciNum; i++ {
-		baseabc.Abc_NtkCi(n, i).Temp = gia.Gia_ObjToLit(g, gia.Gia_ManCi(g, i))
+		baseabc.Abc_NtkCi(n, i).Temp = int(gia.Gia_ObjToLit(g, gia.Gia_ManCi(g, i)))
 	}
 	var coLits, holeLits []int32
 	curPi, curPo = ciNum, 0
 	for _, o := range nodes {
 		if !white[o] {
-			o.Temp = Abc_NtkTestTimNodeStrash(g, o)
+			o.Temp = int(Abc_NtkTestTimNodeStrash(g, o))
 			continue
 		}
 		ins := int32(len(o.Fanins()))
@@ -212,14 +212,14 @@ func Abc_NtkTestTimDeriveGia(n *Abc_Ntk_t, verbose int32) *Gia_Man_t {
 		tim.Tim_ManCreateBox(manager, int(curPo), int(ins), int(curPi), 1, int(boxID), 0)
 		curPo += ins
 		for k, e := range o.Fanins() {
-			coLits = append(coLits, e.Object.Temp)
-			e.Object.Temp = gia.Gia_ObjToLit(holes, gia.Gia_ManCi(holes, int32(k)))
+			coLits = append(coLits, int32(e.Object.Temp))
+			e.Object.Temp = int(gia.Gia_ObjToLit(holes, gia.Gia_ManCi(holes, int32(k))))
 			if k >= maxInputs {
 				panic("whitebox exceeds hole input capacity")
 			}
 		}
 		holeLits = append(holeLits, Abc_NtkTestTimNodeStrash(holes, o))
-		o.Temp = gia.Gia_ObjToLit(g, gia.Gia_ManCi(g, curPi))
+		o.Temp = int(gia.Gia_ObjToLit(g, gia.Gia_ManCi(g, curPi)))
 		curPi++
 	}
 	for i := int32(0); i < coNum; i++ {
@@ -227,7 +227,7 @@ func Abc_NtkTestTimDeriveGia(n *Abc_Ntk_t, verbose int32) *Gia_Man_t {
 		if len(co.Fanins()) == 0 {
 			panic("TIM CO has no driver")
 		}
-		gia.Gia_ManAppendCo(g, co.Fanins()[0].Object.Temp)
+		gia.Gia_ManAppendCo(g, int32(co.Fanins()[0].Object.Temp))
 	}
 	for _, lit := range coLits {
 		gia.Gia_ManAppendCo(g, lit)

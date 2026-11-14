@@ -54,13 +54,13 @@ func abcRunLiveCommand(frame *Abc_Frame_t, argc int32, argv []string, run func(*
 				if int32(i) >= baseabc.Abc_NtkCiNum(newNtk) {
 					break
 				}
-				baseabc.Abc_ObjAssignName(baseabc.Abc_NtkCi(newNtk, int32(i)), name, nil)
+				baseabc.Abc_ObjAssignName(baseabc.Abc_NtkCi(newNtk, int32(i)), name, "")
 			}
 			for i, name := range liveFrame.Network.OutputNames {
 				if int32(i) >= baseabc.Abc_NtkCoNum(newNtk) {
 					break
 				}
-				baseabc.Abc_ObjAssignName(baseabc.Abc_NtkCo(newNtk, int32(i)), name, nil)
+				baseabc.Abc_ObjAssignName(baseabc.Abc_NtkCo(newNtk, int32(i)), name, "")
 			}
 			Abc_FrameReplaceCurrentNetwork(frame, newNtk)
 		}

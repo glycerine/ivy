@@ -37,7 +37,8 @@ func TestFrameGiaUpdateTransfersNamesAndBackup(t *testing.T) {
 	if giapkg.Gia_ManInputNames(old) != nil || giapkg.Gia_ManOutputNames(old) != nil {
 		t.Fatal("name ownership was not cleared from the previous manager")
 	}
-	if got := Abc_FrameGetGia(frame); got != next {
+	got := Abc_FrameGetGia(frame)
+	if got != next {
 		t.Fatal("frame GIA take returned the wrong manager")
 	}
 	giapkg.Gia_ManStop(got)

@@ -11,7 +11,7 @@ package abci
   Synopsis    [Flop dependency visualization.]
 
   Author      [Alan Mishchenko]
-  
+
   Affiliation [UC Berkeley]
 
   Date        [Ver. 1.0. Started - June 20, 2005.]
@@ -23,7 +23,6 @@ package abci
 //#include "base/abc/abc.h"
 
 //ABC_NAMESPACE_IMPL_START
-
 
 ////////////////////////////////////////////////////////////////////////
 ///                        DECLARATIONS                              ///
@@ -37,6 +36,4 @@ package abci
 ///                       END OF FILE                                ///
 ////////////////////////////////////////////////////////////////////////
 
-
 //ABC_NAMESPACE_IMPL_END
-

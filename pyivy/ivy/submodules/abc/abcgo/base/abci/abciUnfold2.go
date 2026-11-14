@@ -64,11 +64,11 @@ func Abc_CommandUnfold2(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Empty network.\n")
 		return 1
 	}
-	if (Abc_NtkIsComb(pNtk) != 0) {
+	if Abc_NtkIsComb(pNtk) != 0 {
 		Abc_Print(-1, "The network is combinational.\n")
 		return 0
 	}
-	if (Abc_NtkIsStrash(pNtk) == 0) {
+	if Abc_NtkIsStrash(pNtk) == 0 {
 		Abc_Print(-1, "Currently only works for structurally hashed circuits.\n")
 		return 0
 	}
@@ -118,7 +118,7 @@ func Abc_CommandFold2(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Empty network.\n")
 		return 1
 	}
-	if (Abc_NtkIsStrash(pNtk) == 0) {
+	if Abc_NtkIsStrash(pNtk) == 0 {
 		Abc_Print(-1, "Currently only works for structurally hashed circuits.\n")
 		return 0
 	}
@@ -126,7 +126,7 @@ func Abc_CommandFold2(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(0, "The network has no constraints.\n")
 		return 0
 	}
-	if (Abc_NtkIsComb(pNtk) != 0) {
+	if Abc_NtkIsComb(pNtk) != 0 {
 		Abc_Print(0, "The network is combinational.\n")
 	}
 	pNtkRes := Abc_NtkDarFold2(pNtk, 0, verbose, 0)

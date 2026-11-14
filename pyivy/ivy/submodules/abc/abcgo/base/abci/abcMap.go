@@ -125,7 +125,7 @@ func Abc_NtkMap(pNtk *Abc_Ntk_t, DelayTarget float64, AreaMulti float64, DelayMu
 	var pNtkNew *Abc_Ntk_t
 	var pMan *Map_Man_t
 	var vSwitching []float32
-	var pSwitching *float32 = nil
+	var pSwitching []float32
 	var clkTotal abctime = Abc_Clock()
 	pLib := mapGenlib()
 
@@ -203,7 +203,7 @@ func Abc_NtkMap(pNtk *Abc_Ntk_t, DelayTarget float64, AreaMulti float64, DelayMu
 		// Sim_NtkComputeSwitching is provided by the simulation package.
 		vSwitching = sim.Sim_NtkComputeSwitching(baseabc.Abc_NtkToDar(pNtk, 0, 0), 4096)
 		if len(vSwitching) > 0 {
-			pSwitching = &vSwitching[0]
+			pSwitching = vSwitching
 		}
 	}
 
@@ -220,14 +220,14 @@ func Abc_NtkMap(pNtk *Abc_Ntk_t, DelayTarget float64, AreaMulti float64, DelayMu
 	if LogFan != 0 {
 		mapper.Map_ManCreateNodeDelays(pMan, int32(LogFan))
 	}
-	if (mapper.Map_Mapping(pMan) == 0) {
+	if mapper.Map_Mapping(pMan) == 0 {
 		mapper.Map_ManFree(pMan)
 		return nil
 	}
 	//    mapper.Map_ManPrintStatsToFile( pNtk->pSpec, mapper.Map_ManReadAreaFinal(pMan), mapper.Map_ManReadRequiredGlo(pMan), Abc_Clock()-clk );
 
 	// reconstruct the network after mapping (use buffers when user requested or in the area mode)
-	pNtkNew = Abc_NtkFromMap(pMan, pNtk, fUseBuffs != 0 || (DelayTarget == float64(ABC_INFINITY)))
+	pNtkNew = Abc_NtkFromMap(pMan, pNtk, boolInt(fUseBuffs != 0 || (DelayTarget == float64(ABC_INFINITY))))
 	if mio.Mio_LibraryHasProfile(pLib) != 0 {
 		mio.Mio_LibraryTransferProfile2(mapGenlib(), pLib)
 	}
@@ -341,11 +341,11 @@ func Abc_NtkMapCopyCoRequiredCon(pNtk *Abc_Ntk_t) []Map_Time_t {
 
 **********************************************************************
 */
-func Abc_NtkToMap(pNtk *Abc_Ntk_t, DelayTarget float64, fRecovery int32, pSwitching *float32, fVerbose int32) *Map_Man_t {
+func Abc_NtkToMap(pNtk *Abc_Ntk_t, DelayTarget float64, fRecovery int32, pSwitching []float32, fVerbose int32) *Map_Man_t {
 	var pMan *Map_Man_t
 	var pNodeMap *Map_Node_t
 	var vNodes []*Abc_Obj_t
-	var pNode, pFanin, pPrev *Abc_Obj_t
+	var pFanin, pPrev *Abc_Obj_t
 	var i int32
 
 	assert(baseabc.Abc_NtkIsStrash(pNtk) != 0, "baseabc.Abc_NtkIsStrash(pNtk)")
@@ -373,7 +373,7 @@ func Abc_NtkToMap(pNtk *Abc_Ntk_t, DelayTarget float64, fRecovery int32, pSwitch
 
 	// create PIs and remember them in the old nodes
 	baseabc.Abc_NtkCleanCopy(pNtk)
-	baseabc.Abc_AigConst1(pNtk).CopyData = mapper.Map_ManReadConst1(pMan)
+	baseabc.Abc_AigConst1(pNtk).Object.CopyData = mapper.Map_ManReadConst1(pMan)
 	// inlining of macro Abc_NtkForEachCi
 	for i = int32(0); i < Abc_NtkCiNum(pNtk); i++ {
 		pNode := baseabc.Abc_NtkCi(pNtk, i)
@@ -473,7 +473,7 @@ func Abc_NodeFromMapSuper_rec(pNtkNew *Abc_Ntk_t, pNodeMap *Map_Node_t, pSuper *
 			return baseabc.Abc_NtkCreateNodeConst0(pNtkNew)
 		}
 	}
-	pRoot = mio.Mio_LibraryReadGateByName(pLib, mio.Mio_GateReadName(pRoot), nil)
+	pRoot = mio.Mio_LibraryReadGateByName(pLib, mio.Mio_GateReadName(pRoot), "")
 
 	// get information about the fanins of the supergate
 	nFanins = mapper.Map_SuperReadFaninNum(pSuper)
@@ -566,7 +566,7 @@ func Abc_NodeFromMap_rec(pNtkNew *Abc_Ntk_t, pNodeMap *Map_Node_t, fPhase int32)
 func Abc_NtkFromMap(pMan *Map_Man_t, pNtk *Abc_Ntk_t, fUseBuffs int32) *Abc_Ntk_t {
 	var pNtkNew *Abc_Ntk_t
 	var pNodeMap *Map_Node_t
-	var pNode, pNodeNew *Abc_Obj_t
+	var pNodeNew *Abc_Obj_t
 	var i int32
 	assert(mapper.Map_ManReadBufNum(pMan) == baseabc.Abc_NtkBarBufNum(pNtk), "mapper.Map_ManReadBufNum(pMan) == baseabc.Abc_NtkBarBufNum(pNtk)")
 	// create the new network
@@ -646,7 +646,7 @@ func Abc_NtkSuperChoice(pNtk *Abc_Ntk_t) *Abc_Ntk_t {
 	// check that the library is available
 	if base_main.Abc_FrameReadLibGen() == nil {
 		fmt.Printf("The current library is not available.\n")
-		return 0
+		return nil
 	}
 
 	// derive the supergate library
@@ -666,7 +666,7 @@ func Abc_NtkSuperChoice(pNtk *Abc_Ntk_t) *Abc_Ntk_t {
 	if pMan == nil {
 		return nil
 	}
-	if (mapper.Map_Mapping(pMan) == 0) {
+	if mapper.Map_Mapping(pMan) == 0 {
 		mapper.Map_ManFree(pMan)
 		return nil
 	}
@@ -709,7 +709,6 @@ func Abc_NtkFromMapSuperChoice(pMan *Map_Man_t, pNtk *Abc_Ntk_t) *Abc_Ntk_t {
 	// save the pointer to the mapped nodes
 	// inlining of macro Abc_NtkForEachCi
 	for i = int32(0); i < Abc_NtkCiNum(pNtk); i++ {
-		pNode := baseabc.Abc_NtkCi(pNtk, i)
 		// Mapper node remains in CopyData; Next carries only network object links.
 	}
 	// inlining of macro Abc_NtkForEachPo
@@ -779,7 +778,7 @@ func Abc_NtkFromMapSuperChoice(pMan *Map_Man_t, pNtk *Abc_Ntk_t) *Abc_Ntk_t {
 		if pNode == nil || baseabc.Abc_ObjIsNode(pNode) == 0 {
 			continue
 		}
-		extra.Extra_ProgressBarUpdate(pProgress, i, nil)
+		extra.Extra_ProgressBarUpdate(pProgress, i, "")
 		//        if ( baseabc.Abc_NodeIsConst(pNode) )
 		//            continue;
 		Abc_NodeSuperChoice(pNtkNew, pNode)
@@ -891,7 +890,7 @@ func Abc_NodeFromMapSuperChoice_rec(pNtkNew *Abc_Ntk_t, pSuper *Map_Super_t, pNo
 			return baseabc.Abc_NtkCreateNodeConst0(pNtkNew)
 		}
 	}
-	pRoot = mio.Mio_LibraryReadGateByName(pLib, mio.Mio_GateReadName(pRoot), nil)
+	pRoot = mio.Mio_LibraryReadGateByName(pLib, mio.Mio_GateReadName(pRoot), "")
 
 	// get information about the fanins of the supergate
 	nFanins = mapper.Map_SuperReadFaninNum(pSuper)
@@ -964,7 +963,6 @@ func Abc_NtkWriteMiniMapping(pNtk *Abc_Ntk_t) *Vec_Int_t {
 	var nNodes int32
 	var nFanins int32
 	var nExtra int32
-	var pArray []int32
 	assert(baseabc.Abc_NtkHasMapping(pNtk) != 0, "baseabc.Abc_NtkHasMapping(pNtk)")
 	// collect nodes in the DFS order
 	vNodes = baseabc.Abc_NtkDfs(pNtk, 0)
@@ -973,18 +971,18 @@ func Abc_NtkWriteMiniMapping(pNtk *Abc_Ntk_t) *Vec_Int_t {
 	// inlining of macro Abc_NtkForEachCi
 	for i = int32(0); i < Abc_NtkCiNum(pNtk); i++ {
 		pObj = baseabc.Abc_NtkCi(pNtk, i)
-		pObj.Temp = nNodes
+		pObj.Temp = int(nNodes)
 		nNodes++
 	}
 	// inlining of macro Vec_PtrForEachEntry
-	for i = 0; i < len(vNodes); i++ {
+	for i = 0; i < int32(len(vNodes)); i++ {
 		pObj = vNodes[i]
-		pObj.Temp = nNodes
+		pObj.Temp = int(nNodes)
 		nNodes++
 		nFanins += baseabc.Abc_ObjFaninNum(pObj)
 	}
 	// allocate attay to store mapping (4 counters + fanins for each node + PO drivers + gate names)
-	vMapping = Vec_IntAlloc(4 + int(baseabc.Abc_NtkNodeNum(pNtk)+nFanins+Abc_NtkCoNum(pNtk)) + 10000)
+	vMapping = Vec_IntAlloc(int32(4 + int(baseabc.Abc_NtkNodeNum(pNtk)+nFanins+Abc_NtkCoNum(pNtk)) + 10000))
 	// write the numbers of CI/CO/Node/FF
 	Vec_IntPush(vMapping, Abc_NtkCiNum(pNtk))
 	Vec_IntPush(vMapping, Abc_NtkCoNum(pNtk))
@@ -993,13 +991,13 @@ func Abc_NtkWriteMiniMapping(pNtk *Abc_Ntk_t) *Vec_Int_t {
 	// write the nodes
 	vGates = Vec_StrAlloc(10000)
 	// inlining of macro Vec_PtrForEachEntry
-	for i = 0; i < len(vNodes); i++ {
+	for i = 0; i < int32(len(vNodes)); i++ {
 		pObj = vNodes[i]
 		Vec_IntPush(vMapping, baseabc.Abc_ObjFaninNum(pObj))
 		// inlining of macro Abc_ObjForEachFanin
 		for k = int32(0); k < baseabc.Abc_ObjFaninNum(pObj); k++ {
 			pFanin = baseabc.Abc_ObjFanin(pObj, k)
-			Vec_IntPush(vMapping, pFanin.Temp)
+			Vec_IntPush(vMapping, int32(pFanin.Temp))
 		}
 		// remember this gate (to be added to the mapping later)
 		gate, _ := pObj.Data.(*Mio_Gate_t)
@@ -1010,7 +1008,7 @@ func Abc_NtkWriteMiniMapping(pNtk *Abc_Ntk_t) *Vec_Int_t {
 	// inlining of macro Abc_NtkForEachCo
 	for i = int32(0); i < Abc_NtkCoNum(pNtk); i++ {
 		pObj = baseabc.Abc_NtkCo(pNtk, i)
-		Vec_IntPush(vMapping, baseabc.Abc_ObjFanin0(pObj).Temp)
+		Vec_IntPush(vMapping, int32(baseabc.Abc_ObjFanin0(pObj).Temp))
 	}
 	// finish off the array
 	nExtra = int32(4 - Vec_StrSize(vGates)%4)

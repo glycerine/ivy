@@ -575,11 +575,11 @@ func Abc_WriteKLut(pFile *os.File, nLutSize int32) {
 func Abc_GenFpga(pFileName string, nLutSize int32, nLuts int32, nVars int32) {
 	var fGenerateFunc int32 = 1
 	var pFile *os.File
-	var nVarsLut int32 = (1 << nLutSize)                      // the number of LUT variables
-	var nVarsLog int32 = util.Abc_Base2Log(nVars + nLuts - 1) // the number of encoding vars
-	var nVarsDeg int32 = (1 << nVarsLog)                      // the number of LUT variables (total)
-	var nParsLut int32 = nLuts * (1 << nLutSize)              // the number of LUT params
-	var nParsVar int32 = nLuts * nLutSize * nVarsLog          // the number of var params
+	var nVarsLut int32 = (1 << nLutSize)                              // the number of LUT variables
+	var nVarsLog int32 = util.Abc_Base2Log(uint32(nVars + nLuts - 1)) // the number of encoding vars
+	var nVarsDeg int32 = (1 << nVarsLog)                              // the number of LUT variables (total)
+	var nParsLut int32 = nLuts * (1 << nLutSize)                      // the number of LUT params
+	var nParsVar int32 = nLuts * nLutSize * nVarsLog                  // the number of var params
 	var i, j, k int32
 
 	assert(nVars > 0, "nVars > 0")
@@ -951,7 +951,7 @@ func Abc_AdderTree(pFile *os.File, nArgs int32, nBits int32) {
 	var i int32
 	var k int32
 	var nDigits int32 = Abc_Base10Log(nBits)
-	var Log2 int32 = util.Abc_Base2Log(nArgs)
+	var Log2 int32 = util.Abc_Base2Log(uint32(nArgs))
 	assert(nArgs > 1 && nBits > 1, "nArgs > 1 && nBits > 1")
 	fmt.Fprintf(pFile, "module adder_tree_%d_%d (\n   ", nArgs, nBits)
 	for i = 0; i < nBits; i++ {

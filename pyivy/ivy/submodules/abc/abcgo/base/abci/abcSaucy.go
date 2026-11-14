@@ -1944,7 +1944,7 @@ func saucy_free(s *saucy) {
 func saucy_alloc(pNtk *Abc_Ntk_t) *saucy {
 	n := baseabc.Abc_NtkPiNum(pNtk) + baseabc.Abc_NtkPoNum(pNtk)
 	ni, no := baseabc.Abc_NtkPiNum(pNtk), baseabc.Abc_NtkPoNum(pNtk)
-	s := &saucy{ninduce: ints(n), sinduce: ints(n), indmark: bits(n), left: coloring{cfront: zeros(n), clen: ints(n), lab: ints(n), unlab: ints(n)}, right: coloring{cfront: zeros(n), clen: ints(n), lab: ints(n), unlab: ints(n)}, stuff: bits(n + 1), bucket: ints(n + 2), count: ints(n + 1), ccount: zeros(n), clist: ints(n), nextnon: ints(n + 2), prevnon: ints(n + 1), anctar: ints(n), start: ints(n), gamma: ints(n), junk: ints(n), theta: ints(n), thsize: ints(n), splitvar: ints(n), splitwho: ints(n), splitfrom: ints(n), splitlev: ints(n + 1), unsupp: ints(n), conncnts: zeros(n), diffmark: bits(n), diffs: ints(n), difflev: ints(n), undifflev: ints(n), specmin: ints(n), thnext: ints(n), thprev: ints(n), threp: ints(n), thfront: ints(n), pairs: ints(n), unpairs: ints(n), diffnons: ints(n), undiffnons: ints(n), marks: bits(n), iDep: make([]*Vec_Int_t, ni), oDep: make([]*Vec_Int_t, no), obs: make([]*Vec_Int_t, ni), ctrl: make([]*Vec_Int_t, no), randomVectorArray_sim1: Vec_PtrAlloc(n), randomVectorSplit_sim1: zeros(n), randomVectorArray_sim2: Vec_PtrAlloc(n), randomVectorSplit_sim2: zeros(n), satCounterExamples: Vec_PtrAlloc(1), pModel: ints(ni)}
+	s := &saucy{ninduce: ints(n), sinduce: ints(n), indmark: make([]byte, n), left: coloring{cfront: ints(n), clen: ints(n), lab: ints(n), unlab: ints(n)}, right: coloring{cfront: ints(n), clen: ints(n), lab: ints(n), unlab: ints(n)}, stuff: make([]byte, n+1), bucket: ints(n + 2), count: ints(n + 1), ccount: ints(n), clist: ints(n), nextnon: ints(n + 2), prevnon: ints(n + 1), anctar: ints(n), start: ints(n), gamma: ints(n), junk: ints(n), theta: ints(n), thsize: ints(n), splitvar: ints(n), splitwho: ints(n), splitfrom: ints(n), splitlev: ints(n + 1), unsupp: ints(n), conncnts: ints(n), diffmark: make([]byte, n), diffs: ints(n), difflev: ints(n), undifflev: ints(n), specmin: ints(n), thnext: ints(n), thprev: ints(n), threp: ints(n), thfront: ints(n), pairs: ints(n), unpairs: ints(n), diffnons: ints(n), undiffnons: ints(n), marks: make([]byte, n), iDep: make([]*Vec_Int_t, ni), oDep: make([]*Vec_Int_t, no), obs: make([]*Vec_Int_t, ni), ctrl: make([]*Vec_Int_t, no), randomVectorArray_sim1: Vec_PtrAlloc(n), randomVectorSplit_sim1: ints(n), randomVectorArray_sim2: Vec_PtrAlloc(n), randomVectorSplit_sim2: ints(n), satCounterExamples: Vec_PtrAlloc(1), pModel: ints(ni)}
 	for i := range s.iDep {
 		s.iDep[i] = Vec_IntAlloc(1)
 		s.obs[i] = Vec_IntAlloc(1)
@@ -1989,7 +1989,10 @@ func saucyFindTopologicalOrder(pNtk *Abc_Ntk_t) []*Vec_Ptr_t {
 		pi := baseabc.Abc_NtkCi(pNtk, i)
 		baseabc.Abc_NtkIncrementTravId(pNtk)
 		baseabc.Abc_NodeSetTravIdCurrent(pi)
-		root := baseabc.Abc_ObjFanout0Ntk(pi)
+		root := pi
+		if baseabc.Abc_NtkIsNetlist(pNtk) != 0 {
+			root = baseabc.Abc_ObjFanout0(pi)
+		}
 		var ordered []*baseabc.Object
 		for k := int32(0); k < baseabc.Abc_ObjFanoutNum(root); k++ {
 			baseabc.Abc_NtkDfsReverse_rec(baseabc.Abc_ObjFanout(root, k), &ordered)
@@ -2037,7 +2040,7 @@ func buildDepGraph(pNtk *Abc_Ntk_t, iDep, oDep []*Vec_Int_t) *saucy_graph {
 	for i := int32(0); i < no; i++ {
 		e += Vec_IntSize(oDep[i])
 	}
-	g := &saucy_graph{n: n, e: e, adj: zeros(n + 1), edg: ints(2 * e)}
+	g := &saucy_graph{n: n, e: e, adj: ints(n + 1), edg: ints(2 * e)}
 	for i := int32(0); i < n; i++ {
 		if i < no {
 			g.adj[i+1] = g.adj[i] + Vec_IntSize(oDep[i])

@@ -45,8 +45,7 @@ func Abc_NtkDelayTraceSortPins(node *Abc_Obj_t, perm []int32, delays []float32) 
 }
 
 func speedupLut() *ifpkg.If_LibLut_t {
-	p, _ := ifpkg.Abc_FrameReadLibLut().(*ifpkg.If_LibLut_t)
-	return p
+	return ifpkg.Abc_FrameReadLibLut()
 }
 func speedupDelay(lib *ifpkg.If_LibLut_t, n, pin int32) float32 {
 	return ifpkg.If_CutLutDelay(lib, n, pin)

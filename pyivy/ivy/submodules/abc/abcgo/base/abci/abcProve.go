@@ -180,7 +180,7 @@ func Abc_NtkMiterFraig(n *Abc_Ntk_t, btLimit int32, inspectLimit int64, ret, fai
 	params.NPatsRand, params.NPatsDyna = words*32, words*32
 	params.NBTLimit, params.NSeconds, params.FTryProve, params.FDoSparse = btLimit, -1, 0, 1
 	params.FVerbose, params.NInspLimit = 0, inspectLimit
-	man := fraig.Abc_NtkToFraig(n, &params, 0, 0).(*fraig.Fraig_Man_t)
+	man := Abc_NtkToFraig(n, &params, 0, 0).(*fraig.Fraig_Man_t)
 	fraig.Fraig_ManProveMiter(man)
 	*ret = fraig.Fraig_ManCheckMiter(man)
 	newNtk := Abc_NtkFromFraig(man, n)
