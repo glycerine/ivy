@@ -124,11 +124,14 @@ for the source evidence, migration and remaining package review scope.
 
 Partition design uses typed pooled blocks/support records, sorted support sets,
 bitmap scoring and explicit forward/inverse CI maps. Smart register/output
-partitioning shares one implementation; exact functional classes use separate
-Shannon scratch graphs, avoiding auxiliary nodes in the source. SAT-conflict
-parameters remain source API controls but this backend generates no SAT conflicts;
-level filtering is retained. Source-named choice/FRAIG drivers perform actual
-partition duplication, equivalence proofs and representative/choice transfer.
+partitioning shares one implementation. The partitioned choice/FRAIG drivers
+call an explicit FRA backend, forwarding conflict and level limits; proof/fra
+owns the source-signature entry points to avoid an import cycle. Their saved
+partition-to-parent copy maps survive FRA's scratch-map use. The old description
+of Shannon functional classification and ignored conflict limits is obsolete.
+Constructive choicing follows C's caller-supplied equivalence contract, checks
+the previous version's destination copy map and transfers output-driver
+representatives without adding a separate equivalence search.
 
 Separate bug review checks sorted support/output coverage, inverse maps, phase
 handling, pool ownership, compaction with a pending small partition before a

@@ -680,6 +680,17 @@ func Aig_ManChoiceConstructiveOne(destination, previous, current *Graph) {
 	if len(destination.inputs) != len(previous.inputs) || len(destination.inputs) != len(current.inputs) || len(destination.outputs) != len(current.outputs) || len(destination.outputs) != len(previous.outputs) {
 		panic("aig: constructive choice terminal counts differ")
 	}
+	// C checks these pData links using destination object marks. The caller
+	// supplies equivalent versions; constructive choicing does not prove them.
+	for id := range previous.nodes {
+		if previous.deleted[id] {
+			continue
+		}
+		copy, ok := previous.copies[id]
+		if !ok || !destination.valid(copy) {
+			panic("aig: previous choice object has no valid destination copy")
+		}
+	}
 	current.copies = map[int]Edge{0: 0}
 	for i, e := range current.inputs {
 		current.copies[e.NodeID()] = destination.inputs[i]
@@ -689,22 +700,12 @@ func Aig_ManChoiceConstructiveOne(destination, previous, current *Graph) {
 			partClone(destination, current, Edge(id)<<1, current.copies, nil)
 		}
 	}
-	proof := NewGraph()
-	for range destination.inputs {
-		proof.NewInput()
-	}
-	memo := make(map[Edge]Edge)
 	if destination.reprs == nil {
 		Aig_ManReprStart(destination, int32(len(destination.nodes)))
 	}
 	for i, output := range current.outputs {
 		copied := partClone(destination, current, current.outputDriver(output), current.copies, nil)
 		original := destination.outputDriver(destination.outputs[i])
-		a := interCopy(destination, proof, original, proof.inputs)
-		b := interCopy(destination, proof, copied, proof.inputs)
-		if splitReduce(proof, proof.XOR(a, b), memo) != proof.Const0() {
-			panic("aig: constructive choices are not equivalent")
-		}
 		Aig_ObjSetRepr_(destination, Aig_Regular(original), Aig_Regular(copied))
 		current.copies[output.NodeID()] = destination.outputs[i]
 	}
