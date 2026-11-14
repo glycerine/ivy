@@ -2985,3 +2985,27 @@ CEC packages still await their own sequential audits; these adjacent changes
 do not count them complete. GIA class rehashing/pattern boundaries, metadata
 and transfer algorithms and the remaining algorithm families are still
 pending. Original completion remains 2/131 and the full goal stays active.
+
+Giarf pattern/class boundary review: compared packing and refinement with
+giaGiarf.c. Added tests for all 32 single-word bit positions, partial literal
+counts, repeated and empty cubes, and conflict rejection before any simulation
+or presence write. Thirty-two distinct complete five-input assignments verify
+that exactly 31 non-phase slots are available, exhaustion leaves data unchanged,
+and bit zero remains reserved. Direct pattern insertion checks bit positions
+0, 1 and 31 with interleaved CI/internal object IDs and untouched unspecified
+inputs/internal nodes.
+
+Class refinement coverage deliberately constructs distinct nonconstant words
+with the same initial hash bucket. An independent partition oracle groups
+objects by their accumulated normalized simulation history over four rounds;
+it checks every representative and next link, complement equivalence,
+constant candidates leaving the constant class, recursive splitting, and no
+merging when later signatures coincide. All tests pass without production
+changes; these checks found no additional bug. The unused related-class
+collector's treatment of head roots matches the original source and was not
+changed speculatively.
+
+The full uncached GIA race suite passes in 19.853s
+(`/tmp/abcgo-giarf-packing-classes-race.log`), and GIA vet passes. GIA remains
+under audit; metadata/transfer algorithms and remaining families still need
+review. Original package completion remains 2/131.
