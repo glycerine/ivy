@@ -363,6 +363,9 @@ func Abc_NtkCreateNodeConst0(n *Network) *Object {
 		core.Cudd_Ref(value)
 		node.Data = value
 	}
+	if manager, ok := n.FunctionManager.(*hop.Hop_Man_t); ok {
+		node.Data = hop.Hop_Not(hop.Hop_ManConst1(manager))
+	}
 	return sopConstructor(n, node, Abc_SopCreateConst0(nil))
 }
 func Abc_NtkCreateNodeConst1(n *Network) *Object {
@@ -371,6 +374,9 @@ func Abc_NtkCreateNodeConst1(n *Network) *Object {
 		value := core.Cudd_ReadOne(manager)
 		core.Cudd_Ref(value)
 		node.Data = value
+	}
+	if manager, ok := n.FunctionManager.(*hop.Hop_Man_t); ok {
+		node.Data = hop.Hop_ManConst1(manager)
 	}
 	return sopConstructor(n, node, Abc_SopCreateConst1(nil))
 }
@@ -399,6 +405,9 @@ func Abc_NtkCreateNodeBuf(n *Network, fanin *Object) *Object {
 		value := core.Cudd_bddIthVar(manager, 0)
 		core.Cudd_Ref(value)
 		node.Data = value
+	}
+	if manager, ok := n.FunctionManager.(*hop.Hop_Man_t); ok {
+		node.Data = hop.Hop_IthVar(manager, 0)
 	}
 	return sopConstructor(n, node, Abc_SopCreateBuf(nil))
 }
