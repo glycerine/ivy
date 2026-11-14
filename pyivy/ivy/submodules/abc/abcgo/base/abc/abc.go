@@ -74,22 +74,25 @@ func Abc_ObjNotCond(value any, condition int32) Edge {
 	}
 	return e
 }
-func Abc_ObjIsComplement(value any) int32 { return abcBool(objectEdge(value).Complement) }
-func Abc_ObjId(o *Object) int32           { return int32(o.ID) }
-func Abc_ObjNtk(o *Object) *Network       { return o.network }
-func Abc_ObjType(o *Object) ObjectKind    { return o.Kind }
-func Abc_ObjIsPi(o *Object) int32         { return abcBool(o.Kind == ObjectPI) }
-func Abc_ObjIsPo(o *Object) int32         { return abcBool(o.Kind == ObjectPO) }
-func Abc_ObjIsBi(o *Object) int32         { return abcBool(o.Kind == ObjectBI) }
-func Abc_ObjIsBo(o *Object) int32         { return abcBool(o.Kind == ObjectBO) }
-func Abc_ObjIsCi(o *Object) int32         { return abcBool(o.IsCI()) }
-func Abc_ObjIsCo(o *Object) int32         { return abcBool(o.IsCO()) }
-func Abc_ObjIsNet(o *Object) int32        { return abcBool(o.Kind == ObjectNet) }
-func Abc_ObjIsNode(o *Object) int32       { return abcBool(o.Kind == ObjectNode) }
-func Abc_ObjIsLatch(o *Object) int32      { return abcBool(o.Kind == ObjectLatch) }
-func Abc_ObjIsBox(o *Object) int32        { return abcBool(o.Kind >= ObjectLatch && o.Kind <= ObjectBlackbox) }
-func Abc_ObjIsConst1(o *Object) int32     { return abcBool(o.Kind == ObjectConst1) }
-func Abc_ObjFaninNum(o *Object) int32     { return int32(len(o.fanins)) }
+func Abc_ObjIsComplement(value any) int32   { return abcBool(objectEdge(value).Complement) }
+func Abc_ObjId(o *Object) int32             { return int32(o.ID) }
+func Abc_ObjNtk(o *Object) *Network         { return o.network }
+func Abc_ObjType(o *Object) ObjectKind      { return o.Kind }
+func Abc_ObjIsPi(o *Object) int32           { return abcBool(o.Kind == ObjectPI) }
+func Abc_ObjIsPo(o *Object) int32           { return abcBool(o.Kind == ObjectPO) }
+func Abc_ObjIsBi(o *Object) int32           { return abcBool(o.Kind == ObjectBI) }
+func Abc_ObjIsBo(o *Object) int32           { return abcBool(o.Kind == ObjectBO) }
+func Abc_ObjIsCi(o *Object) int32           { return abcBool(o.IsCI()) }
+func Abc_ObjIsCo(o *Object) int32           { return abcBool(o.IsCO()) }
+func Abc_ObjIsNet(o *Object) int32          { return abcBool(o.Kind == ObjectNet) }
+func Abc_ObjIsNode(o *Object) int32         { return abcBool(o.Kind == ObjectNode) }
+func Abc_ObjIsBarBuf(o *Object) int32       { return abcBool(o.Barrier) }
+func Abc_ObjIsLatch(o *Object) int32        { return abcBool(o.Kind == ObjectLatch) }
+func Abc_ObjIsBox(o *Object) int32          { return abcBool(o.Kind >= ObjectLatch && o.Kind <= ObjectBlackbox) }
+func Abc_ObjIsConst1(o *Object) int32       { return abcBool(o.Kind == ObjectConst1) }
+func Abc_ObjFaninNum(o *Object) int32       { return int32(len(o.fanins)) }
+func Abc_ObjTemp(o *Object) int32           { return int32(o.Temp) }
+func Abc_ObjSetTemp(o *Object, value int32) { o.Temp = int(value) }
 func Abc_ObjFanoutNum(o *Object) int32 {
 	if o.network.refs != nil {
 		return int32(o.network.refs[o])
@@ -116,6 +119,7 @@ func Abc_ObjData(o *Object) any               { return o.Data }
 func Abc_ObjSetData(o *Object, data any)      { o.Data = data; clear(o.network.hashed) }
 func Abc_ObjCopyData(o *Object) any           { return o.CopyData }
 func Abc_ObjSetCopyData(o *Object, data any)  { o.CopyData = data }
+func Abc_ObjCopyEdge(o *Object) Edge          { return getCopy(o) }
 func Abc_NtkObj(n *Network, id int32) *Object { return n.Object(int(id)) }
 func Abc_NtkObjNum(n *Network) int32          { return int32(len(n.Objects())) }
 func Abc_NtkObjNumMax(n *Network) int32       { return int32(len(n.objects)) }
@@ -162,6 +166,8 @@ func Abc_NtkBoxNum(n *Network) int32 {
 }
 func Abc_NtkPi(n *Network, i int32) *Object { return n.ObjectsOfKind(ObjectPI)[i] }
 func Abc_NtkPo(n *Network, i int32) *Object { return n.ObjectsOfKind(ObjectPO)[i] }
+func Abc_NtkBarBufNum(n *Network) int32     { return int32(n.Barriers) }
+func Abc_NtkNodes(n *Network) []*Object     { return n.ObjectsOfKind(ObjectNode) }
 
 func Abc_AigNodeIsAnd(o *Object) int32 {
 	return abcBool(o != nil && o.Kind == ObjectNode && o.Data == aigANDMarker && len(o.fanins) == 2)
@@ -170,5 +176,6 @@ func Abc_AigNodeIsConst(o *Object) int32 { return abcBool(o.Kind == ObjectConst1
 func Abc_AigNodeIsChoice(o *Object) int32 {
 	return abcBool(o.Kind == ObjectNode && o.Choice != nil && len(o.fanouts) > 0)
 }
-func Abc_ObjFaninC0(o *Object) int32 { return Abc_ObjFaninC(o, 0) }
-func Abc_ObjFaninC1(o *Object) int32 { return Abc_ObjFaninC(o, 1) }
+func Abc_ObjChoice(o *Object) *Object { return o.Choice }
+func Abc_ObjFaninC0(o *Object) int32  { return Abc_ObjFaninC(o, 0) }
+func Abc_ObjFaninC1(o *Object) int32  { return Abc_ObjFaninC(o, 1) }

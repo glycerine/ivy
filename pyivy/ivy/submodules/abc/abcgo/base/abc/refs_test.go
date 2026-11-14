@@ -1,6 +1,34 @@
 package abc
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/glycerine/abcgo/misc/vec"
+)
+
+func TestTemporaryFanoutAdjustmentPreservesGraph(t *testing.T) {
+	n := NewNetwork("fanout-adjustment")
+	a, b := n.NewObject(ObjectPI), n.NewObject(ObjectPI)
+	root := n.CreateAndEdges(a.Signal(), b.Signal())
+	if got := Abc_ObjFanoutNum(a); got != 1 {
+		t.Fatal(got)
+	}
+	Abc_ObjAdjustFanoutCount(a, -1)
+	if got := Abc_ObjFanoutNum(a); got != 0 {
+		t.Fatalf("adjusted fanout count = %d", got)
+	}
+	if got := vec.Vec_IntEntry(Abc_NtkFanoutCounts(n), int(a.ID)); got != 0 {
+		t.Fatalf("fanout vector count = %d", got)
+	}
+	if len(a.fanouts) != 1 || a.fanouts[0] != root.Object {
+		t.Fatal("temporary adjustment changed graph adjacency")
+	}
+	Abc_ObjAdjustFanoutCount(a, 1)
+	Abc_NtkFinishFanoutCountAdjustments(n)
+	if n.refs != nil || Abc_ObjFanoutNum(a) != 1 {
+		t.Fatal("temporary counts were not restored")
+	}
+}
 
 func TestMffcReferenceAccounting(t *testing.T) {
 	n := NewNetwork("mffc")

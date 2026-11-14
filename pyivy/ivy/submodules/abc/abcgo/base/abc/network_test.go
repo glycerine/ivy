@@ -37,6 +37,26 @@ func TestNetworkAIG(t *testing.T) {
 		t.Fatal("accepted second PO input")
 	}
 }
+
+func TestMappingLoaderAccessorsPreserveChoiceAndCopyEdge(t *testing.T) {
+	n := NewNetwork("mapping loader")
+	a, b := n.NewObject(ObjectPI), n.NewObject(ObjectPI)
+	root := n.CreateAndEdges(a.Signal(), b.Signal()).Object
+	choice := n.CreateAndEdges(a.Signal().Not(), b.Signal().Not()).Object
+	root.Choice = choice
+	po := n.NewObject(ObjectPO)
+	if err := n.AddFanin(po, root.Signal()); err != nil {
+		t.Fatal(err)
+	}
+	if Abc_ObjChoice(root) != choice || Abc_AigNodeIsChoice(root) == 0 {
+		t.Fatal("choice accessor did not preserve the alternate node")
+	}
+	root.SetCopyEdge(choice.Signal().Not())
+	got := Abc_ObjCopyEdge(root)
+	if got.Object != choice || !got.Complement {
+		t.Fatalf("copy edge = %+v, want complemented choice mapping", got)
+	}
+}
 func TestNetworkMutation(t *testing.T) {
 	n := NewNetwork("mutate")
 	a := n.NewObject(ObjectPI)

@@ -21,6 +21,21 @@ func (n *Network) finishReferences() {
 	}
 	n.refs = nil
 }
+
+// Abc_ObjAdjustFanoutCount applies ABC's temporary fanout adjustment without
+// changing graph adjacency. The counts are discarded once they match the graph.
+func Abc_ObjAdjustFanoutCount(o *Object, delta int32) {
+	if o == nil {
+		panic("cannot adjust fanouts of a nil object")
+	}
+	refs := o.network.referenceCounts()
+	refs[o] += int(delta)
+	if refs[o] < 0 {
+		panic("fanout adjustment made a count negative")
+	}
+}
+
+func Abc_NtkFinishFanoutCountAdjustments(n *Network) { n.finishReferences() }
 func Abc_NtkIncrementTravId(n *Network) {
 	n.travID++
 	if n.travID == 0 {

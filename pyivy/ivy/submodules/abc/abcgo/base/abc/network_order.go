@@ -45,9 +45,14 @@ func Abc_NodeCompareLevelsDecrease(a, b **Object) int32 {
 func Abc_NtkFanoutCounts(n *Network) *vec.Vec_Int_t {
 	counts := vec.Vec_IntAlloc(len(n.objects))
 	vec.Vec_IntFill(counts, len(n.objects), -1)
+	refs := n.refs
 	for _, o := range n.Objects() {
 		if o.IsCI() || o.Kind == ObjectNode {
-			vec.Vec_IntWriteEntry(counts, o.ID, int32(len(o.fanouts)))
+			count := len(o.fanouts)
+			if refs != nil {
+				count = refs[o]
+			}
+			vec.Vec_IntWriteEntry(counts, o.ID, int32(count))
 		}
 	}
 	return counts
