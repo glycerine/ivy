@@ -331,3 +331,27 @@ Repair dependencies identified from current code:
 This is active required work, not an accepted approximation or a reason to
 mark the package complete. Further inspection of the dependency boundary and
 red behavioral/source regressions is the next step for this family.
+
+### Native interpolation driver repair: first working integration
+
+Implemented `proof/aiginterp.Aig_ManInter` above AIG/CNF/BSAT to resolve the
+import cycle without an optional provider or solver substitution. It follows
+`src/aig/aig/aigInter.c` using Cnf_DeriveSimple, lifted B variables, the source
+A/B clause-store boundary, optional relation-clause movement, CI equalities,
+root marking, BSAT solving and Inta resolution interpolation. Existing owner
+APIs were sufficient; no solver implementation was copied.
+
+Added an ACB source-failure regression before switching its caller: an
+inconsistent A partition must return nil during clause insertion. The old
+Shannon path returned a graph and the test failed. ACB's Gia_ManInterOne now
+uses the native driver. The driver tests check all 256 two-input predicate
+pairs, source early-failure behavior, graph validity, Craig conditions and
+relation-variable ordering. Full new-driver and ACB race tests pass.
+
+This is partial repair: ABCI still calls the legacy AIG implementation, and
+InterFast, InterTest and InterRepar still need their original workflows.
+The new driver package is supporting implementation work and must also receive
+final review/validation; it does not reduce the original 131-package scope.
+Required next steps are to move the remaining callers, remove the replacement
+algorithms, port the solver2/proof reparameterization driver, and add C-oracle
+and broader integration evidence. No optional callback fallback is introduced.
