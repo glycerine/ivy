@@ -1598,3 +1598,45 @@ the 4,310-query comparison and the complete experiment after this addition.
 This closes the current justification core/experiment family review. The AIG
 package audit remains open, including visualization/printing and the remaining
 source inventory; the completed-package count is still 1/131.
+
+### Visualization source review
+
+Read all of aigShow.c and aigShow.go, including the filename helper used by
+the C show wrapper. Three new regressions failed before repair: terminal labels
+used CI/CO scratch indices (new inputs all appeared as PI 0) instead of stable
+object IDs, unused constant one appeared as an extra node, and Show discarded
+the source directory and appended .dot after an existing extension. Labels now
+use object IDs, constant one is declared only when referenced, and Show retains
+the directory while replacing the final filename extension. filepath.Ext also
+avoids mistaking a dotted parent directory for the filename's extension.
+
+Restored the source DOT layout: title and statistics boxes, level scaffolding,
+CO ordering/invisible edges, terminal colors and shapes, numeric labels,
+internal-node fill highlighting, and bold/dotted signal edges. Shared node/rank
+emitters keep the formatting code smaller than the C fprintf sequence. History
+choice-edge rendering remains disabled, as in the active C code. A compiled
+fixture executes the actual C writer, and eight standard diagrams match byte
+for byte across referenced/unreferenced constants, highlights and both history
+flag values. The fixture also checks C's post-write marks and output levels.
+
+The Go API retains local highlight state and display ranks rather than mutating
+the source graph. A full-node snapshot test covers MarkA/MarkB, traversal IDs,
+and a deliberately nonstandard cached CO level. Source C temporarily rewrites
+CO levels and clears highlighted marks, which can destroy preexisting scratch
+state; Go leaves all of it intact. Named graph labels retain escaped text as a
+Go extension. XOR/buffer shapes, explicit zero-level logic, and ranked high
+dangling gates remain supported instead of leaving those objects implicit.
+
+Graphviz successfully parses a diagram containing quoted/newline/Unicode graph
+names, a buffer, XOR, complemented edges, highlights and a higher dangling
+cone. Boundary tests allow 200 logic nodes, reject 201 (including a dangling
+gate), preserve existing files on invalid-highlight/size errors and report
+directory-write failures. The show wrapper returns the DOT artifact path;
+external GUI rendering remains the caller's responsibility. No GUI command is
+launched by the library.
+
+Full AIG and ABCI race suites pass in 25.821s and 28.557s, recorded in
+`/tmp/abcgo-visualization-source-review.log`. This closes the current
+visualization review, not the entire AIG package. Printing and the remaining
+source inventory still need verification before marking package 2 complete;
+completed-package count remains 1/131.

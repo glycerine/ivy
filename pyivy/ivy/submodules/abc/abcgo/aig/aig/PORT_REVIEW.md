@@ -95,6 +95,13 @@ and a snapshot iterator, and centralized forward/reverse timing recomputation.
 DOT generation uses a byte buffer, lexical node IDs and local highlight state;
 show returns the artifact path so rendering is controlled by the caller.
 
+The sequential visualization audit restored source titles/ranks, terminal
+labels/colors, highlight styling and file naming. Eight standard DOT artifacts
+match compiled C byte for byte. Go preserves the complete node scratch/cache
+snapshot and supports named labels, XOR/buffer shapes and high dangling logic.
+Graphviz parsing, the 200/201-node boundary and failure-without-overwrite checks
+pass, along with full AIG/ABCI race suites.
+
 Separate bug review and tests verify order cursor repair when removing the
 previous/next item, reverse-level corruption detection, nonzero PI arrival-level
 preservation, and DOT escaping/complemented edges without changing stored levels
