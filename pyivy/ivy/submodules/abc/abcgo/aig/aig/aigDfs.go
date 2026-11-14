@@ -79,19 +79,61 @@ func (p *Graph) dfs(roots []Edge, nodesOnly, preorder, choices bool) []Edge {
 	return result
 }
 func Aig_ManDfs(p *Graph, nodesOnly int32) []Edge {
-	return p.dfs(p.outputs, nodesOnly != 0, false, true)
+	return p.dfsOutputOrder(nodesOnly != 0, false)
 }
 func Aig_ManDfs_rec(p *Graph, e Edge, nodes *[]Edge) {
-	seen := make(map[int]bool)
-	for _, x := range *nodes {
-		seen[x.NodeID()] = true
+	if e == InvalidEdge {
+		return
 	}
-	for _, x := range p.dfs([]Edge{e}, true, false, false) {
-		if !seen[x.NodeID()] {
-			*nodes = append(*nodes, x)
-			seen[x.NodeID()] = true
+	if e.Complemented() {
+		panic("aig: recursive DFS requires a regular object")
+	}
+	n := p.node(e)
+	if n.TravID == p.travID {
+		return
+	}
+	n.TravID = p.travID
+	if alternative, ok := p.equivs[e.NodeID()]; ok {
+		Aig_ManDfs_rec(p, alternative, nodes)
+	}
+	for _, fanin := range nodeFanins(*n) {
+		Aig_ManDfs_rec(p, Aig_Regular(fanin), nodes)
+	}
+	*nodes = append(*nodes, e)
+}
+
+// Ordinary and preorder DFS share C's setup and completeness assertions. Their
+// recursive helpers differ in when they append the object; both traverse a
+// choice alternative in ordinary postorder before visiting ordinary fanins.
+func (p *Graph) dfsOutputOrder(nodesOnly, preorder bool) []Edge {
+	Aig_ManIncrementTravId(p)
+	p.node(p.Const1()).TravID = p.travID
+	var nodes []Edge
+	if nodesOnly {
+		for _, e := range p.inputs {
+			p.node(e).TravID = p.travID
+		}
+	} else {
+		nodes = append(nodes, p.Const1())
+	}
+	for _, e := range p.outputs {
+		if nodesOnly {
+			e = p.outputDriver(e)
+		}
+		if preorder {
+			Aig_ManDfsPreorder_rec(p, Aig_Regular(e), &nodes)
+		} else {
+			Aig_ManDfs_rec(p, Aig_Regular(e), &nodes)
 		}
 	}
+	expected := Aig_ManObjNum(p)
+	if nodesOnly {
+		expected = Aig_ManNodeNum(p)
+	}
+	if int32(len(nodes)) != expected {
+		panic("aig: DFS object count differs from manager count")
+	}
+	return nodes
 }
 func Aig_ManDfsAll_rec(p *Graph, e Edge, nodes *[]Edge) {
 	n := p.node(e)
@@ -133,10 +175,27 @@ func Aig_ManDfsAll(p *Graph) []Edge {
 	return p.dfs(roots, false, false, false)
 }
 func Aig_ManDfsPreorder_rec(p *Graph, e Edge, nodes *[]Edge) {
-	*nodes = append(*nodes, p.dfs([]Edge{e}, true, true, false)...)
+	if e == InvalidEdge {
+		return
+	}
+	if e.Complemented() {
+		panic("aig: recursive preorder DFS requires a regular object")
+	}
+	n := p.node(e)
+	if n.TravID == p.travID {
+		return
+	}
+	n.TravID = p.travID
+	*nodes = append(*nodes, e)
+	if alternative, ok := p.equivs[e.NodeID()]; ok {
+		Aig_ManDfs_rec(p, alternative, nodes)
+	}
+	for _, fanin := range nodeFanins(*n) {
+		Aig_ManDfsPreorder_rec(p, Aig_Regular(fanin), nodes)
+	}
 }
 func Aig_ManDfsPreorder(p *Graph, nodesOnly int32) []Edge {
-	return p.dfs(p.outputs, nodesOnly != 0, true, true)
+	return p.dfsOutputOrder(nodesOnly != 0, true)
 }
 func Aig_ManDfsNodes(p *Graph, nodes []Edge, n int32) []Edge {
 	if n < 0 || int(n) > len(nodes) {
@@ -145,26 +204,11 @@ func Aig_ManDfsNodes(p *Graph, nodes []Edge, n int32) []Edge {
 	Aig_ManIncrementTravId(p)
 	p.node(p.Const1()).TravID = p.travID
 	var result []Edge
-	var visit func(Edge)
-	visit = func(e Edge) {
-		obj := p.node(e)
-		if obj.TravID == p.travID {
-			return
-		}
-		obj.TravID = p.travID
-		if alternative, ok := p.equivs[e.NodeID()]; ok && alternative != InvalidEdge {
-			visit(alternative)
-		}
-		for _, fanin := range nodeFanins(*obj) {
-			visit(fanin)
-		}
-		result = append(result, Aig_Regular(e))
-	}
 	for _, e := range nodes[:n] {
 		if p.node(e).Kind == Output {
 			e = p.outputDriver(e)
 		}
-		visit(e)
+		Aig_ManDfs_rec(p, Aig_Regular(e), &result)
 	}
 	return result
 }
