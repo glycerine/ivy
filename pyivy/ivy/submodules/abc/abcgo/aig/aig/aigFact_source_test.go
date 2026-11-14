@@ -5,6 +5,15 @@ import (
 	"testing"
 )
 
+func TestNewManagerStartsWithDistinctSourceTraversalGeneration(t *testing.T) {
+	for _, p := range []*Graph{NewGraph(), Aig_ManStart(16)} {
+		a := p.NewInput()
+		if p.travID != 1 || Aig_ObjIsTravIdCurrent(p, a) || Aig_ObjIsTravIdCurrent(p, p.Const1()) {
+			t.Errorf("new manager generation %d aliases zero-initialized objects; C starts at 1", p.travID)
+		}
+	}
+}
+
 func TestSupportCollectorRespectsCurrentFrontier(t *testing.T) {
 	p := NewGraph()
 	a, b, c := p.NewInput(), p.NewInput(), p.NewInput()
@@ -43,6 +52,72 @@ func TestSupportReconstructionLeavesSourceCopies(t *testing.T) {
 	}
 	if err := p.Check(); err != nil {
 		t.Fatal(err)
+	}
+}
+
+func TestDeriveConeRecursiveEntryWithoutPriorCopyStorage(t *testing.T) {
+	p := NewGraph()
+	a, b := p.NewInput(), p.NewInput()
+	root := p.AND(a.Not(), b)
+	Aig_ManIncrementTravId(p)
+	if p.copies != nil {
+		t.Fatal("fixture already has copy storage")
+	}
+	if got := Aig_ManDeriveNewCone_rec(p, root); got != root {
+		t.Fatalf("derived %d, want unchanged cone %d", got, root)
+	}
+	for _, e := range []Edge{a, b, root} {
+		if !Aig_ObjIsTravIdCurrent(p, e) || Aig_ObjCopy(p, e) != e {
+			t.Errorf("object %d missing source copy/traversal state", e)
+		}
+	}
+}
+
+func TestFactoringSourceEntryPreconditions(t *testing.T) {
+	for _, name := range []string{"overlap-complement", "overlap-constant", "derive-complement", "derive-constant", "highlight-complement", "collect-complement", "super-complement", "super-input", "support-unmarked", "support-input"} {
+		t.Run(name, func(t *testing.T) {
+			p := NewGraph()
+			a, b := p.NewInput(), p.NewInput()
+			root := p.AND(a, b)
+			defer func() {
+				if recover() == nil {
+					t.Error("accepted entry forbidden by source assertion")
+				}
+			}()
+			switch name {
+			case "overlap-complement":
+				Aig_ManFindConeOverlap(p, []Edge{a}, root.Not())
+			case "overlap-constant":
+				Aig_ManFindConeOverlap(p, []Edge{a}, p.Const1())
+			case "derive-complement":
+				Aig_ManDeriveNewCone(p, []Edge{a}, root.Not())
+			case "derive-constant":
+				Aig_ManDeriveNewCone(p, []Edge{a}, p.Const1())
+			case "highlight-complement":
+				Aig_SuppMinHighlightCone(p, root.Not(), []Edge{a})
+			case "collect-complement":
+				Aig_SuppMinCollectCone(p, root.Not())
+			case "super-complement":
+				Aig_SuppMinCollectSuper(p, root.Not())
+			case "super-input":
+				Aig_SuppMinCollectSuper(p, a)
+			case "support-unmarked":
+				Aig_SuppMinCollectSupport(p, []Edge{root})
+			case "support-input":
+				Aig_ObjSetTravIdCurrent(p, a)
+				Aig_SuppMinCollectSupport(p, []Edge{a})
+			}
+		})
+	}
+}
+
+func TestAlgebraicFactoringPreservesComplementedOutput(t *testing.T) {
+	p := NewGraph()
+	a, b, c := p.NewInput(), p.NewInput(), p.NewInput()
+	p.AddOutput(p.AND(a, b))
+	p.AddOutput(p.AND(a, c).Not())
+	if got := Aig_ManFactorAlgebraic(p, 0, 1, 1); got != c.Not() {
+		t.Fatalf("factored complemented output = %d, want %d", got, c.Not())
 	}
 }
 

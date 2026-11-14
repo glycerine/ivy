@@ -67,6 +67,9 @@ func Aig_ManFindConeOverlap_rec(p *Graph, root Edge) bool {
 	return false
 }
 func Aig_ManFindConeOverlap(p *Graph, implications []Edge, root Edge) bool {
+	if root.Complemented() || p.node(root).Kind == Constant {
+		panic("aig: cone overlap requires a regular nonconstant root")
+	}
 	Aig_ManIncrementTravId(p)
 	for _, e := range implications {
 		p.node(e).TravID = p.travID
@@ -86,6 +89,9 @@ func aigFactRebuild(p *Graph, n Node, a, b Edge) Edge {
 	panic("aig: cannot rebuild a terminal as a gate")
 }
 func Aig_ManDeriveNewCone_rec(p *Graph, root Edge) Edge {
+	if p.copies == nil {
+		p.copies = make(map[int]Edge)
+	}
 	e := Aig_Regular(root)
 	n := *p.node(e)
 	var result Edge
@@ -116,6 +122,9 @@ func Aig_ManDeriveNewCone_rec(p *Graph, root Edge) Edge {
 	return result
 }
 func Aig_ManDeriveNewCone(p *Graph, implications []Edge, root Edge) Edge {
+	if root.Complemented() || p.node(root).Kind == Constant {
+		panic("aig: cone derivation requires a regular nonconstant root")
+	}
 	Aig_ManIncrementTravId(p)
 	if p.copies == nil {
 		p.copies = map[int]Edge{}
@@ -145,7 +154,7 @@ func Aig_ManFactorAlgebraic_int(p *Graph, outputA, outputB Edge, value int32) Ed
 	if !Aig_ManFindConeOverlap(p, implications, Aig_Regular(b)) {
 		return InvalidEdge
 	}
-	return Aig_ManDeriveNewCone(p, implications, b)
+	return Aig_NotCond(Aig_ManDeriveNewCone(p, implications, Aig_Regular(b)), Aig_IsComplement(b))
 }
 func Aig_ManFactorAlgebraic(p *Graph, outputA, outputB, value int32) Edge {
 	if outputA < 0 || int(outputA) >= len(p.outputs) || outputB < 0 || int(outputB) >= len(p.outputs) {
@@ -327,7 +336,11 @@ func Aig_SuppMinGateIsInSupport(p *Graph, orGate, support []Edge) bool {
 func Aig_SuppMinCollectSupport(p *Graph, nodes []Edge) []Edge {
 	support := []Edge{}
 	for _, e := range nodes {
-		for _, f := range nodeFanins(*p.node(e)) {
+		n := p.node(e)
+		if e.Complemented() || n.TravID != p.travID || n.Kind != And && n.Kind != ExclusiveOr {
+			panic("aig: support collection requires current regular logic nodes")
+		}
+		for _, f := range nodeFanins(*n) {
 			if f.NodeID() == 0 || p.node(f).TravID == p.travID {
 				continue
 			}
@@ -354,6 +367,9 @@ func Aig_SuppMinCollectCone_rec(p *Graph, root Edge, nodes *[]Edge) {
 	*nodes = append(*nodes, e)
 }
 func Aig_SuppMinCollectCone(p *Graph, root Edge) []Edge {
+	if root.Complemented() {
+		panic("aig: cone collection requires a regular root")
+	}
 	Aig_ManIncrementTravId(p)
 	nodes := []Edge{}
 	Aig_SuppMinCollectCone_rec(p, root, &nodes)
@@ -378,6 +394,9 @@ func Aig_SuppMinHighlightCone_rec(p *Graph, root Edge) bool {
 	return overlaps
 }
 func Aig_SuppMinHighlightCone(p *Graph, root Edge, orGate []Edge) bool {
+	if root.Complemented() {
+		panic("aig: cone highlighting requires a regular root")
+	}
 	Aig_ManIncrementTravId(p)
 	Aig_ManIncrementTravId(p)
 	for _, e := range orGate {
@@ -404,6 +423,9 @@ func Aig_SuppMinCollectSuper_rec(p *Graph, root Edge, super *[]Edge) {
 	}
 }
 func Aig_SuppMinCollectSuper(p *Graph, root Edge) []Edge {
+	if root.Complemented() || p.node(root).Kind != And && p.node(root).Kind != ExclusiveOr {
+		panic("aig: supergate collection requires a regular logic root")
+	}
 	super := []Edge{}
 	for _, e := range nodeFanins(*p.node(root)) {
 		Aig_SuppMinCollectSuper_rec(p, e, &super)

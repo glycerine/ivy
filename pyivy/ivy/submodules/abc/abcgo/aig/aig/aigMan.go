@@ -7,7 +7,6 @@ func Aig_ManStart(capacity int32) *Graph {
 		panic("aig: negative capacity")
 	}
 	p := NewGraph()
-	p.travID = 1
 	if capacity > 1 {
 		nodes := make([]Node, 1, int(capacity))
 		nodes[0] = p.nodes[0]

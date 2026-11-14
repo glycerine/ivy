@@ -89,7 +89,7 @@ type Graph struct {
 }
 
 func NewGraph() *Graph {
-	return &Graph{nodes: []Node{{Kind: Constant, Phase: true}}, hash: make(map[edgePair]Edge), deleted: make(map[int]bool)}
+	return &Graph{nodes: []Node{{Kind: Constant, Phase: true}}, hash: make(map[edgePair]Edge), deleted: make(map[int]bool), travID: 1}
 }
 func (g *Graph) Const1() Edge         { return 0 }
 func (g *Graph) Const0() Edge         { return 1 }
