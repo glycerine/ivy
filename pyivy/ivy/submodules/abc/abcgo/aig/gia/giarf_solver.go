@@ -13,6 +13,7 @@ type giarfSolver struct {
 	limit int32
 	mini  bool
 	tas   *Tas_Man_t
+	cec   *ceccore.Manager
 }
 
 func newGiarfSolver(graph *Gia_Man_t, limit int32, mini bool) *giarfSolver {
@@ -26,6 +27,7 @@ func (s *giarfSolver) close() {
 	if s.tas != nil {
 		Tas_ManStop(s.tas)
 	}
+	s.cec = nil
 }
 func (s *giarfSolver) check(a int32, b *int32) (int32, *Vec_Int_t, error) {
 	if a < 0 || a>>1 >= s.graph.nObjs || b != nil && (*b < 0 || *b>>1 >= s.graph.nObjs) {
@@ -42,22 +44,24 @@ func (s *giarfSolver) check(a int32, b *int32) (int32, *Vec_Int_t, error) {
 		}
 		return status, nil, nil
 	}
-	var network ceccore.Network = s.graph
-	root := a
-	if b != nil {
-		virtual := &allOutputConjunction{base: s.graph, ands: [][2]int32{{a, *b}}, root: s.graph.nObjs << 1}
-		network = virtual
-		root = virtual.root
+	if s.cec == nil {
+		options := ceccore.DefaultSATOptions()
+		options.ConflictLimit = int64(s.limit)
+		options.PolarFlip = false
+		options.TreatRegistersAsInputs = true
+		var err error
+		s.cec, err = ceccore.NewManager(s.graph, options)
+		if err != nil {
+			return -1, nil, err
+		}
 	}
-	options := ceccore.DefaultSATOptions()
-	options.ConflictLimit = int64(s.limit)
-	options.PolarFlip = false
-	options.TreatRegistersAsInputs = true
-	manager, err := ceccore.NewManager(network, options)
-	if err != nil {
-		return -1, nil, err
+	var result ceccore.Result
+	var err error
+	if b == nil {
+		result, err = s.cec.CheckLiteral(a)
+	} else {
+		result, err = s.cec.CheckConjunction(a, *b)
 	}
-	result, err := manager.CheckLiteral(root)
 	if err != nil {
 		return -1, nil, err
 	}

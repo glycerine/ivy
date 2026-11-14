@@ -2882,3 +2882,43 @@ In particular, giarfSolver currently reconstructs the CEC manager per query
 and adds a synthetic AND for two assumptions, although the current CEC core
 already exposes CheckConjunction. Check its incremental-query contract before
 reusing one manager per reduced level, as C does.
+
+Giarf SAT-lifetime review confirmed that core.Manager supports incremental
+CheckLiteral/CheckConjunction queries, per-query conflict limits, validated
+witnesses and automatic recycling. giarfSolver now initializes that manager
+once per reduced level, reuses it across queries and releases it at close.
+Two-literal queries use CheckConjunction directly instead of adding a virtual
+AND and snapshotting the whole graph again. TAS ownership is unchanged. This
+is a lifetime/compactness improvement to the existing adapter, not a solver
+replacement or a claim that its backend matches the original CEC solver.
+
+An exhaustive three-input query sequence checks 840 unary/conjunction queries
+across both backends, with constants, complements, repeated assumptions and
+alternating SAT/UNSAT results. Every status is compared against all eight
+assignments; every returned witness is independently checked for valid CI
+ordinals and satisfaction, and UNSAT results must not retain the prior model.
+These tests pass before and after the optimization; no artificial failing
+layout test was added for a performance-only change. Existing rare-output,
+highest-level and exhausted/positive-budget regressions also pass.
+
+The warmed 64-input benchmark, 500 queries in each run, measured 187,731 to
+19,063 ns/query, 118,054 to 22,397 bytes/query and 1,159 to 10 allocations/query.
+These are local microbenchmark results, not a whole-application speed claim.
+Logs are `/tmp/abcgo-gia-giarf-manager-before.log` and
+`/tmp/abcgo-gia-giarf-manager-after.log`. The full uncached GIA race suite
+passes in 17.715s and vet passes (`/tmp/abcgo-gia-giarf-manager-final-race.log`
+and `/tmp/abcgo-gia-giarf-manager-final-vet.log`).
+
+Important remaining source-fidelity work: the current giarfSolver `mini` path
+uses proof/cec/core.Manager, whose implementation is Satoko-backed. The
+source-shaped Cec_ManSatCheckNode/Two implementation in proof/cec instead
+uses cecSourceSAT and the ported BSAT solver, including source frontier,
+supergate and MUX CNF construction. Giarf cannot import that parent directly
+because proof/cec imports GIA. Reusing the current manager does not resolve
+that backend/encoding mismatch. Before closing this family, share the existing
+source CNF/BSAT implementation through a dependency-neutral component, keep
+the source-shaped parent wrapper thin, and wire Giarf to the shared source
+engine without an import cycle or another duplicated/invented solver. Preserve
+the existing exact-clause/variable-layout CEC tests and add Giarf source query
+comparisons, recycling, budget and witness coverage. This remains pending;
+GIA and the full sequential audit are still active at 2/131 completed originals.
