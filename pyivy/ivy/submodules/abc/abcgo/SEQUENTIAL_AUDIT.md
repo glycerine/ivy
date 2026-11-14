@@ -776,3 +776,43 @@ point delegates to the full wrapper instead of honoring C's seeded marks/copy
 state, and the wrapper panics where C returns NULL for an undefined PI index.
 These require failing regressions before repair, plus truth-table checks and
 care when composition appends to the graph's backing node slice.
+
+### Transfer and composition source contracts
+
+Reviewed the two wrappers and recursive helpers against aigDfs.c. Seven new
+regressions failed before repair: constant transfer wiped source copy state;
+transfer rejected a variable bound larger than the available CI count; direct
+transfer trusted stale unmarked copies and ignored marked boundaries; the
+wrapper discarded seeded/unrelated copies; undefined composition variables
+panicked instead of returning the NULL equivalent; recursive composition
+ignored seed mappings and omitted marks/leaf mappings; composition omitted
+its source marks when allocating new graph nodes.
+
+Transfer now preserves the source constant/identity fast paths, maps CIs with
+C's bounded loop and retains unrelated copy entries. Its recursive helper
+uses MarkA as the visited/cache-validity criterion, updating copies and marks
+in postorder; the wrapper unmarks afterward. Composition likewise honors
+seeded marks, records visited terminal copies and updates internal copies and
+marks before the wrapper clears them. Undefined nonnegative PI indices print
+the source diagnostic and return InvalidEdge. Node values are copied before
+recursion, and mark writes reacquire nodes by ID after allocation so slice
+growth cannot leave updates on an obsolete backing array. Go cycle guards
+protect both recursive walks.
+
+Retained the existing Go explicit-XOR transfer extension with a dedicated
+truth-table test. The source AND-inverter transfer cases follow C; composition
+continues to require an AND-inverter root cone, as the previous Go port did.
+This checkpoint does not claim C equivalence for unsupported primitive kinds.
+
+Independent truth-table tests cover all 512 two-input composition combinations
+(16 original functions, 16 replacements, two variables), every assignment,
+all 16 transferred functions, extra destination CIs, complemented and constant
+roots, and post-operation graph/mark consistency. Direct tests also force node
+slice growth and verify seeded/unrelated copy preservation. The full uncached
+AIG race suite passes, including the existing compiled-C cone oracle. These
+four helpers have no production repository callers, so the focused package
+verification matches the affected call scope.
+
+The transfer/composition findings from the previous checkpoint are closed for
+AND-inverter cones. Incremental timing and the remaining AIG algorithm families
+remain open; this does not complete aig/aig or the original package inventory.
