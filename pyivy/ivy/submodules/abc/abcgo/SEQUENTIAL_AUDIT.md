@@ -3350,3 +3350,41 @@ uncached GIA race tests pass in 41.107s
 (`/tmp/abcgo-embedding-pivot-race.log`), and GIA vet passes
 (`/tmp/abcgo-embedding-pivot-vet.log`). Iterative eigenvector accuracy and
 remaining GIA algorithm families still need review. Completion remains 2/131.
+
+Embedding eigenvector review: found dominant-direction leakage after covariance
+multiplication. The source projected the input iterate away from prior axes,
+but multiplication could reintroduce them because those prior eigenvectors
+are approximate. A red diagonal-covariance regression gives secondary variance
+394658 instead of 1 for diag(1e9, 1, 0.1)
+(`/tmp/abcgo-embedding-eigen-red.log`). A compiled original giaEmbed.c witness
+independently reproduces secondary variance 394658.026; corrected Go gives
+0.999997861 while retaining the original principal eigenvector.
+
+Project the multiplied iterate through the existing orthogonalization helper
+before normalization. Also avoid normalizing deflation remnants at the scale
+of float32 roundoff: their norm is compared relative to the pre-projection
+norm, using dimension times float32 epsilon. A rotated rank-deficient red test
+showed a null axis becoming an almost exact duplicate of the principal axis
+(`/tmp/abcgo-embedding-eigen-spectra-red.log`); such numerical remnants now
+remain zero. Share the robust float64 squared-norm calculation with vector
+normalization. This retains source power iteration, random initialization,
+100-iteration limit and 0.999 convergence criterion; it does not introduce a
+replacement eigensolver. Original C shares the demonstrated deflation defect.
+
+Coverage includes 12 large-gap cases retaining genuine secondary variance
+down to 1e-20, twenty rotated known-spectrum cases with repeated/zero eigenvalues
+and deficient rank, and a dense 100-dimensional rank-two covariance. Tests
+require finite/unit nonzero directions, orthogonality, and the expected
+variance spectrum at tolerances consistent with the retained approximate
+iteration. Existing zero-covariance and complete rank-deficient graph pipelines
+remain green. The original-C principal-vector witness and ordinary connected
+dimension/covariance/projection baseline also pass.
+
+Full uncached GIA race tests pass in 42.952s
+(`/tmp/abcgo-embedding-eigen-race.log`). Final strengthened spectral assertions
+and the additional 100-dimensional case pass the focused race check in 2.983s
+(`/tmp/abcgo-embedding-eigen-final-race.log`); final focused native output is
+in `/tmp/abcgo-embedding-eigen-final-focused.log`. GIA vet passes
+(`/tmp/abcgo-embedding-eigen-vet.log`). Remaining embedding integration/output
+helpers and other GIA algorithm families still need review. Original package
+completion remains 2/131 and the sequential audit remains active.

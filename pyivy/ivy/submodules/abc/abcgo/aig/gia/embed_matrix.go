@@ -19,6 +19,14 @@ func Emb_ManVecRandom(v []float32, nDims int32) {
 		v[i] = float32(Gia_ManRandom(0))
 	}
 }
+func embSquaredNorm(v []float32) float64 {
+	var norm float64
+	for _, x := range v {
+		y := float64(x)
+		norm += y * y
+	}
+	return norm
+}
 func Emb_ManVecNormal(v []float32, nDims int32) {
 	var norm float64
 	wide := false
@@ -30,11 +38,7 @@ func Emb_ManVecNormal(v []float32, nDims int32) {
 	// Keep the source's float32 products for ordinary vectors. Recompute in
 	// float64 if squaring overflowed or lost precision in the subnormal range.
 	if wide || norm == 0 || math.IsInf(norm, 0) {
-		norm = 0
-		for _, x := range v[:nDims] {
-			y := float64(x)
-			norm += y * y
-		}
+		norm = embSquaredNorm(v[:nDims])
 		// Zero covariance can yield an iterate with no direction to normalize.
 		if norm == 0 {
 			return

@@ -86,6 +86,24 @@ func Emb_ManComputeEigenvectors(p *Emb_Man_t, nDims, nSols int32) {
 				Emb_ManVecCopyOne(v, hat, nDims)
 			}
 			Emb_ManVecMultiply(p.pMatr, v, nDims, hat)
+			var beforeProjection float64
+			if i > 0 {
+				beforeProjection = embSquaredNorm(hat)
+			}
+			// Approximate earlier eigenvectors need not span an exactly
+			// invariant subspace. Remove leakage introduced by multiplication.
+			for j := int32(0); j < i; j++ {
+				Emb_ManVecOrthogonolizeOne(p.pEigen[j], hat, nDims, hat)
+			}
+			if i > 0 {
+				// Do not amplify float32 deflation noise into a spurious axis
+				// when the covariance has no remaining direction.
+				roundoff := float64(nDims) * 0x1p-23
+				if embSquaredNorm(hat) <= beforeProjection*roundoff*roundoff {
+					clear(hat)
+					break
+				}
+			}
 			Emb_ManVecNormal(hat, nDims)
 			if Emb_ManVecMultiplyOne(hat, v, nDims) >= 0.999 {
 				break
