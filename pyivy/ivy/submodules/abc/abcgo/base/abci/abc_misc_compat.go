@@ -20,6 +20,12 @@ func Extra_FileNameGeneric(name string) string { return extra.Extra_FileNameGene
 
 func Abc_Base10Log(n int32) int32 { return util.Abc_Base10Log(uint32(n)) }
 
+func Abc_CexPrintStats(p *Abc_Cex_t) { util.Abc_CexPrintStats(p) }
+
+func Abc_CexPrintStatsInputs(p *Abc_Cex_t, realPis int32) {
+	util.Abc_CexPrintStatsInputs(p, realPis)
+}
+
 func Vec_WrdSize(v *Vec_Wrd_t) int32 { return int32(vec.Vec_WrdSize(v)) }
 
 func Vec_PtrWriteEntry(v *Vec_Ptr_t, i int, value any) {
