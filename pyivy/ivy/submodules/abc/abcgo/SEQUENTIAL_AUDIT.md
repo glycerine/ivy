@@ -731,3 +731,35 @@ This closes the inline fanout accessor gap found while starting reverse DFS.
 Reverse DFS itself still ignores source traversal marks and rebuilds adjacency;
 its timing/DAR callers omit source fanout setup. Those remain the next review
 and integration work, along with transfer/composition and the rest of AIG.
+
+### Reverse DFS, reverse timing and DAR fanout setup
+
+Restored reverse DFS from aigDfs.c after repairing its accessor prerequisite.
+New red tests exposed incorrect maintained-list order, missing traversal setup
+and marks, ignored recursive seeds and acceptance of missing fanout allocation.
+The wrapper now premarks COs, visits live gates/buffers in object order and
+follows the indexed circular fanouts. Recursive calls honor caller seeds and
+mark objects after visiting users; the existing Go cycle guard remains.
+Removed the duplicate full-graph adjacency construction and result-list-based
+visited state.
+
+Reverse timing now enforces C's fanout allocation and clean-MarkA preconditions,
+both exposed by red tests. It takes the global bound from output DRIVER levels,
+as C does, rather than CO metadata. A separate red test exposed the same field
+error in Aig_ManLevelNum; it now reuses the existing source-correct Aig_ManLevels.
+Per-object reverse-level calculation follows indexed fanouts, replacing an
+entire-graph scan for every gate. Existing timing tests now provide the source
+fanout setup; the behavioral checks remain unchanged.
+
+Inspected darCore.c and darRefact.c before updating their Go callers. Rewrite
+now performs source cleanup before fanout/timing setup and honors its Fanout
+flag. Refactor establishes fanouts unconditionally, as C does. Both release
+owned state on Go cancellation/error paths via defer. New lifecycle tests failed
+before these repairs, checking index presence during processing and cleanup on
+cancellation. The existing reverse-level cancellation test now also checks for
+a leaked fanout index and allocates its own index before restarting timing.
+
+Final uncached AIG, DAR core and DAR facade race suites pass. This is integration
+work required by the AIG review, not a completed DAR package audit. Transfer,
+composition, incremental timing details and the remaining AIG families still
+require review; aig/aig remains in progress.
