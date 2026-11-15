@@ -63,6 +63,13 @@ func Gia_ManQuantExist_rec(p *Gia_Man_t, id int32, result []int32) {
 		return
 	}
 	Gia_ObjSetTravIdCurrentId(p, id)
+	// An earlier elimination can make the output constant while variables
+	// remain. Constant zero has no fanins and both of its cofactors are zero.
+	if id == 0 {
+		result[0], result[1] = 0, 0
+		Gia_ObjCopySetTwoArray(p, id, result)
+		return
+	}
 	obj := Gia_ManObj(p, id)
 	if Gia_ObjIsCi(obj) != 0 {
 		result[0], result[1] = 0, 1

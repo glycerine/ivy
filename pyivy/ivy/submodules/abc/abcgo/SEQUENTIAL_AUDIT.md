@@ -7841,3 +7841,22 @@ A separate public-row probe confirms append to a one-word support slice (cap999)
 overwrites the next CI's support word (2 ->12345). Add permanent red regressions
 before either repair. Detailed next plan/evidence:
 /tmp/abcgo-exist-next-review-plan.md and /tmp/abcgo-exist-review-probe.
+
+### Incremental quantification constant and row-boundary checkpoint
+
+Add permanent red regressions before repairing quant_support.go/quant_cone.go.
+Appending to a one-word support row overwrites the next CI word (2 ->12345),
+and eliminating all MUX inputs panics in both output phases in the original
+incremental variant (/tmp/abcgo-exist-constant-row-red.log). The alternative
+Exist2 variant already returns true in these directed cases.
+
+Bound support-row capacity with a full slice expression, keeping the row a
+writable view. Add the missing constant-zero base case to the recursive
+cofactor routine: both cofactors of constant zero are zero, including after an
+intermediate result collapses before the final variable. This corrects a C bug
+also reproduced in the native preparation, rather than imitating its invalid
+fanin access. Preserve the existing source algorithm and traversal/cache flow.
+Existing/new quantification checks pass in 2.032s
+(/tmp/abcgo-exist-constant-row-repaired.log). This is an initial family repair;
+expanded truth, native/support, compactness and full integration gates remain.
+Original completion stays 2/131.

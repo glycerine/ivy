@@ -7,7 +7,7 @@ import (
 
 func Gia_ManQuantInfoId(p *Gia_Man_t, id int32) []word {
 	start := id * p.nSuppWords
-	return vec.Vec_WrdArray(p.vSuppWords)[start : start+p.nSuppWords]
+	return vec.Vec_WrdArray(p.vSuppWords)[start : start+p.nSuppWords : start+p.nSuppWords]
 }
 func Gia_ManQuantInfo(p *Gia_Man_t, obj *Gia_Obj_t) []word { return Gia_ManQuantInfoId(p, obj.id) }
 func Gia_ObjCopyGetTwoArray(p *Gia_Man_t, id int32, out []int32) {
