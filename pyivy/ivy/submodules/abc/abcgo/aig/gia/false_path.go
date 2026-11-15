@@ -2,7 +2,6 @@ package gia
 
 import (
 	"fmt"
-	"sort"
 	"time"
 
 	"github.com/glycerine/abcgo/misc/vec"
@@ -224,19 +223,17 @@ func Gia_ManCheckFalseOne(p *Gia_Man_t, out, timeout int32, hooks *Vec_Wec_t, ve
 }
 func Gia_ManCheckFalse2(p *Gia_Man_t, slack, timeout, verbose, veryVerbose int32) *Gia_Man_t {
 	Gia_ManLevelNum(p)
-	order := make([]int32, Gia_ManCoNum(p))
-	for i := range order {
-		order[i] = int32(i)
+	weights := make([]float32, Gia_ManCoNum(p))
+	priority := vec.Vec_QueAlloc(len(weights))
+	defer vec.Vec_QueFree(priority)
+	vec.Vec_QueSetPriority(priority, &weights)
+	for i := range weights {
+		weights[i] = float32(Gia_ObjLevel(p, Gia_ManCo(p, int32(i))))
+		vec.Vec_QuePush(priority, i)
 	}
-	sort.SliceStable(order, func(i, j int) bool {
-		return Gia_ObjLevel(p, Gia_ManCo(p, order[i])) > Gia_ObjLevel(p, Gia_ManCo(p, order[j]))
-	})
 	hooks := vec.Vec_WecStart(int(p.nObjs))
-	for _, i := range order {
-		if Gia_ObjLevel(p, Gia_ManCo(p, i)) < p.nLevels-slack {
-			break
-		}
-		Gia_ManCheckFalseOne(p, i, timeout, hooks, verbose, veryVerbose)
+	for vec.Vec_QueSize(priority) > 0 && vec.Vec_QueTopPriority(priority) >= float32(p.nLevels-slack) {
+		Gia_ManCheckFalseOne(p, int32(vec.Vec_QuePop(priority)), timeout, hooks, verbose, veryVerbose)
 	}
 	if verbose != 0 {
 		fmt.Printf("Collected %d non-overlapping false paths.\n", vec.Vec_WecSizeUsed(hooks))

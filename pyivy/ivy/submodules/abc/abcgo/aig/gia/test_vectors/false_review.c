@@ -29,4 +29,22 @@ static void inspect_batch(void) {
   Vec_WecFree(hooks);Gia_ManStop(g);
  }
 }
-int main(int argc,char **argv){if(argc>1 && !strcmp(argv[1],"--batch"))inspect_batch();else inspect_single();return 0;}
+static void inspect_priority(void){
+ Gia_Man_t *g=Gia_ManStart(32),*out;int a=Gia_ManAppendCi(g),b=Gia_ManAppendCi(g),x=Gia_ManAppendAnd(g,a,b),root=Gia_ManAppendAnd(g,x,a^1),i;
+ for(i=0;i<5;++i)Gia_ManAppendCo(g,root^(i&1));out=Gia_ManCheckFalse2(g,0,0,1,0);Gia_ManStop(out);Gia_ManStop(g);
+}
+static void inspect_verbose(void){
+ Gia_Man_t *g,*out;int mode,a,b,x,root,i;
+ for(mode=0;mode<3;++mode){
+  g=Gia_ManStart(32);a=Gia_ManAppendCi(g);b=Gia_ManAppendCi(g);x=Gia_ManAppendAnd(g,a,b);root=mode==2?x:Gia_ManAppendAnd(g,x,a^1);
+  for(i=0;i<(mode==1?5:1);++i)Gia_ManAppendCo(g,root^(i&1));Gia_ManLevelNum(g);printf("mode %d\n",mode);
+  out=mode==1?Gia_ManCheckFalse2(g,0,0,1,1):Gia_ManCheckOne(g,0,root>>1,0,1,1);
+  if(out)Gia_ManStop(out);Gia_ManStop(g);
+ }
+}
+int main(int argc,char **argv){
+ if(argc>1 && !strcmp(argv[1],"--batch"))inspect_batch();
+ else if(argc>1 && !strcmp(argv[1],"--priority"))inspect_priority();
+ else if(argc>1 && !strcmp(argv[1],"--verbose"))inspect_verbose();
+ else inspect_single();return 0;
+}

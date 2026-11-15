@@ -3,6 +3,7 @@ package gia
 import (
 	"fmt"
 	"os/exec"
+	"regexp"
 	"strings"
 	"testing"
 )
@@ -109,4 +110,80 @@ func TestFalsePathNativeBatchHooksAndScratch(t *testing.T) {
 		Gia_ManStop(g)
 	}
 	esopReviewCompare(t, native, records.String())
+}
+
+func falseReviewTiedOutputs() *Gia_Man_t {
+	g := Gia_ManStart(32)
+	a, b := Gia_ManAppendCi(g), Gia_ManAppendCi(g)
+	x := Gia_ManAppendAnd(g, a, b)
+	root := Gia_ManAppendAnd(g, x, a^1)
+	for i := int32(0); i < 5; i++ {
+		Gia_ManAppendCo(g, root^(i&1))
+	}
+	return g
+}
+func TestFalsePathNativePriorityTies(t *testing.T) {
+	exe := compileGiaSourceOracle(t, "false_review.c")
+	native, err := exec.Command(exe, "--priority").CombinedOutput()
+	if err != nil {
+		t.Fatalf("C priority: %v\n%s", err, native)
+	}
+	g := falseReviewTiedOutputs()
+	defer Gia_ManStop(g)
+	got := hashReviewStdout(t, func() { out := Gia_ManCheckFalse2(g, 0, 0, 1, 0); cofReviewCheckRebuild(t, g, out); Gia_ManStop(out) })
+	headers := regexp.MustCompile(`(?m)^PO +(-?[0-9]+) :`)
+	wantPOs, gotPOs := headers.FindAllStringSubmatch(string(native), -1), headers.FindAllStringSubmatch(got, -1)
+	if len(wantPOs) != 5 || len(gotPOs) != 5 {
+		t.Fatalf("missing five queries C%v Go%v", wantPOs, gotPOs)
+	}
+	for i := range wantPOs {
+		if gotPOs[i][1] != wantPOs[i][1] {
+			t.Fatalf("query%d Go PO%s C PO%s\nGo:\n%s\nC:\n%s", i, gotPOs[i][1], wantPOs[i][1], got, native)
+		}
+	}
+}
+
+func TestFalsePathNativeVerboseReports(t *testing.T) {
+	exe := compileGiaSourceOracle(t, "false_review.c")
+	native, err := exec.Command(exe, "--verbose").CombinedOutput()
+	if err != nil {
+		t.Fatalf("C reports: %v\n%s", err, native)
+	}
+	got := hashReviewStdout(t, func() {
+		for mode := 0; mode < 3; mode++ {
+			g := Gia_ManStart(32)
+			a, b := Gia_ManAppendCi(g), Gia_ManAppendCi(g)
+			x := Gia_ManAppendAnd(g, a, b)
+			root := x
+			if mode != 2 {
+				root = Gia_ManAppendAnd(g, x, a^1)
+			}
+			count := 1
+			if mode == 1 {
+				count = 5
+			}
+			for i := 0; i < count; i++ {
+				Gia_ManAppendCo(g, root^int32(i&1))
+			}
+			Gia_ManLevelNum(g)
+			fmt.Printf("mode %d\n", mode)
+			var out *Gia_Man_t
+			if mode == 1 {
+				out = Gia_ManCheckFalse2(g, 0, 0, 1, 1)
+			} else {
+				out = Gia_ManCheckOne(g, 0, root>>1, 0, 1, 1)
+			}
+			if out != nil {
+				cofReviewCheckRebuild(t, g, out)
+				Gia_ManStop(out)
+			}
+			Gia_ManStop(g)
+		}
+	})
+	clock := regexp.MustCompile(`Time =[ ]*[0-9]+\.[0-9]{2} sec`)
+	want := clock.ReplaceAllString(string(native), "<time>")
+	got = clock.ReplaceAllString(got, "<time>")
+	if got != want {
+		t.Fatalf("reports differ\nGo:\n%s\nC:\n%s", got, want)
+	}
 }

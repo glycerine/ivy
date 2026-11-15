@@ -8054,3 +8054,20 @@ and independent typed truth/ownership. This does not yet validate typed CNF/path
 selection: source ordinary-AIG boundary handling remains part of the next work,
 along with core interval limits, source reports, queue ties and full drivers.
 Original completion remains 2/131; no full gate or family closure claimed.
+
+### False-path priority and diagnostic regression checkpoint
+
+Add a five-equal-output native regression. Stable sorting queries POs0,1,2,3,4;
+source Vec_Que queries0,4,3,2,1 (/tmp/abcgo-false-priority-red.log). Reuse the
+existing source Vec_Que heap with float weights; retain an explicit nonempty
+queue guard. All previously green false-path checks pass in 6.148s
+(/tmp/abcgo-false-priority-repaired.log).
+
+Add actual-source verbose single/batch/real-path comparison. Correct a fixture
+literal-versus-object-ID mistake before interpreting its results. The genuine
+regression now fails on source report content (/tmp/abcgo-false-reports-red.log):
+batch core count is confused with rewrite length; original path length, top node,
+core indices/node IDs, path counters and detailed level/object diagnostics are
+missing. Retain source distinctions while exposing query metadata for reports
+and the separate batch interval-limit check. This report test is intentionally
+red at this checkpoint; full family/gates remain open, completion stays2/131.
