@@ -150,37 +150,48 @@ func TestFalsePathNativeVerboseReports(t *testing.T) {
 		t.Fatalf("C reports: %v\n%s", err, native)
 	}
 	got := hashReviewStdout(t, func() {
-		for mode := 0; mode < 3; mode++ {
-			g := Gia_ManStart(32)
-			a, b := Gia_ManAppendCi(g), Gia_ManAppendCi(g)
-			x := Gia_ManAppendAnd(g, a, b)
-			root := x
-			if mode != 2 {
-				root = Gia_ManAppendAnd(g, x, a^1)
+		for verbose := int32(0); verbose < 2; verbose++ {
+			for very := int32(0); very < 2; very++ {
+				for mode := 0; mode < 3; mode++ {
+					g := Gia_ManStart(32)
+					a, b := Gia_ManAppendCi(g), Gia_ManAppendCi(g)
+					x := Gia_ManAppendAnd(g, a, b)
+					root := x
+					if mode != 2 {
+						root = Gia_ManAppendAnd(g, x, a^1)
+					}
+					count := 1
+					if mode == 1 {
+						count = 5
+					}
+					for i := 0; i < count; i++ {
+						Gia_ManAppendCo(g, root^int32(i&1))
+					}
+					Gia_ManLevelNum(g)
+					fmt.Printf("mode %d %d %d\n", mode, verbose, very)
+					var out *Gia_Man_t
+					if mode == 1 {
+						out = Gia_ManCheckFalse2(g, 0, 0, verbose, very)
+					} else {
+						out = Gia_ManCheckOne(g, 0, root>>1, 0, verbose, very)
+					}
+					if out != nil {
+						cofReviewCheckRebuild(t, g, out)
+						Gia_ManStop(out)
+					}
+					Gia_ManStop(g)
+				}
 			}
-			count := 1
-			if mode == 1 {
-				count = 5
-			}
-			for i := 0; i < count; i++ {
-				Gia_ManAppendCo(g, root^int32(i&1))
-			}
-			Gia_ManLevelNum(g)
-			fmt.Printf("mode %d\n", mode)
-			var out *Gia_Man_t
-			if mode == 1 {
-				out = Gia_ManCheckFalse2(g, 0, 0, 1, 1)
-			} else {
-				out = Gia_ManCheckOne(g, 0, root>>1, 0, 1, 1)
-			}
-			if out != nil {
-				cofReviewCheckRebuild(t, g, out)
-				Gia_ManStop(out)
-			}
-			Gia_ManStop(g)
 		}
 	})
-	clock := regexp.MustCompile(`Time =[ ]*[0-9]+\.[0-9]{2} sec`)
+	clock := regexp.MustCompile(`Time =([ ]*[0-9]+\.[0-9]{2}) sec`)
+	for _, text := range []string{string(native), got} {
+		for _, field := range clock.FindAllStringSubmatch(text, -1) {
+			if len(field[1]) != 9 {
+				t.Fatalf("changed source time-column width: %q", field[0])
+			}
+		}
+	}
 	want := clock.ReplaceAllString(string(native), "<time>")
 	got = clock.ReplaceAllString(got, "<time>")
 	if got != want {

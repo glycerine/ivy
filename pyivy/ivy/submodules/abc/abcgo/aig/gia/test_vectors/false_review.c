@@ -34,11 +34,11 @@ static void inspect_priority(void){
  for(i=0;i<5;++i)Gia_ManAppendCo(g,root^(i&1));out=Gia_ManCheckFalse2(g,0,0,1,0);Gia_ManStop(out);Gia_ManStop(g);
 }
 static void inspect_verbose(void){
- Gia_Man_t *g,*out;int mode,a,b,x,root,i;
- for(mode=0;mode<3;++mode){
+ Gia_Man_t *g,*out;int mode,a,b,x,root,i,verbose,very;
+ for(verbose=0;verbose<2;++verbose)for(very=0;very<2;++very)for(mode=0;mode<3;++mode){
   g=Gia_ManStart(32);a=Gia_ManAppendCi(g);b=Gia_ManAppendCi(g);x=Gia_ManAppendAnd(g,a,b);root=mode==2?x:Gia_ManAppendAnd(g,x,a^1);
-  for(i=0;i<(mode==1?5:1);++i)Gia_ManAppendCo(g,root^(i&1));Gia_ManLevelNum(g);printf("mode %d\n",mode);
-  out=mode==1?Gia_ManCheckFalse2(g,0,0,1,1):Gia_ManCheckOne(g,0,root>>1,0,1,1);
+  for(i=0;i<(mode==1?5:1);++i)Gia_ManAppendCo(g,root^(i&1));Gia_ManLevelNum(g);printf("mode %d %d %d\n",mode,verbose,very);
+  out=mode==1?Gia_ManCheckFalse2(g,0,0,verbose,very):Gia_ManCheckOne(g,0,root>>1,0,verbose,very);
   if(out)Gia_ManStop(out);Gia_ManStop(g);
  }
 }

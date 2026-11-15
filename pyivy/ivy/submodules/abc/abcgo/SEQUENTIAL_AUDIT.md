@@ -8071,3 +8071,26 @@ core indices/node IDs, path counters and detailed level/object diagnostics are
 missing. Retain source distinctions while exposing query metadata for reports
 and the separate batch interval-limit check. This report test is intentionally
 red at this checkpoint; full family/gates remain open, completion stays2/131.
+
+### False-path query metadata, interval limit and reports
+
+Group original path, owned final core and solve status into a short-lived query
+result; retain a compatibility adapter for existing private tests. Distinguish
+single/batch core and interval metrics, restore original path length/top node,
+source core-index versus node-ID ordering, timing width, vector/level/object
+reports and batch-only path numbering. Sharing the copy loop retains a flag for
+the two source rebuild routines' different numbering policy.
+
+The original report regression fails before this repair. Extend exact native
+report coverage to all quiet/verbose/very-verbose combinations for false single,
+false batch and real-path cases, normalizing only clock values and asserting
+source timing-column width. Add a red protocol-level boundary test: core1..20
+has span19 and source accepts its 21-node hook, but the old hook-length test
+rejects it (/tmp/abcgo-false-interval-red.log). Test source span<20 directly,
+keeping index-zero behavior and overlap/status checks. Batch insertion now uses
+the original path slice directly without allocating a rejected/temporary hook.
+
+All false-path/native/rebuild/interval/report tests pass in 8.059s
+(/tmp/abcgo-false-interval-reports-repaired.log). Typed solver boundaries, expanded
+full-driver/resource/compactness checks and final frozen integration remain
+pending; original completion stays 2/131, no family closure claimed.

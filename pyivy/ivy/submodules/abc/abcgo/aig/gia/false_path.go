@@ -43,21 +43,35 @@ func Gia_ManFalseRebuildOne(q, p *Gia_Man_t, hook *Vec_Int_t, verbose, veryVerbo
 		prev, previous = obj, old
 	}
 	if veryVerbose != 0 {
-		fmt.Printf("Eliminated path: %v\n", ids)
+		fmt.Print("Eliminated path: ")
+		vec.Vec_IntPrint(hook)
+		for _, id := range ids {
+			obj := p.pObjs[id]
+			fmt.Printf("Level %3d : ", Gia_ObjLevel(p, obj))
+			Gia_ObjPrint(p, obj)
+		}
 	}
 }
 func Gia_ManFalseRebuild(p *Gia_Man_t, hooks *Vec_Wec_t, verbose, veryVerbose int32) *Gia_Man_t {
+	return giaFalseRebuild(p, hooks, verbose, veryVerbose, true)
+}
+func giaFalseRebuild(p *Gia_Man_t, hooks *Vec_Wec_t, verbose, veryVerbose int32, numberPaths bool) *Gia_Man_t {
 	q := Gia_ManStart(max(1, 4*p.nObjs/3))
 	q.pName = p.pName
 	q.PSpec = p.PSpec
 	Gia_ObjSetValue(Gia_ManConst0(p), 0)
 	Gia_ManHashAlloc(q)
 	read := func(lit int32) int32 { return int32(p.pObjs[lit>>1].Value) ^ (lit & 1) }
+	counter := 0
 	for _, obj := range p.pObjs[1:] {
 		switch {
 		case Gia_ObjIsAnd(obj) != 0:
 			hook := vec.Vec_WecEntry(hooks, int(obj.id))
 			if vec.Vec_IntSize(hook) > 0 {
+				if veryVerbose != 0 && numberPaths {
+					fmt.Printf("Path %d : ", counter)
+					counter++
+				}
 				Gia_ManFalseRebuildOne(q, p, hook, verbose, veryVerbose)
 			} else {
 				Gia_ObjSetValue(obj, giaHashMappedGate(q, p, obj, read))
@@ -87,7 +101,7 @@ func Gia_ManFalseRebuildPath(p *Gia_Man_t, path *Vec_Int_t, verbose, veryVerbose
 		vec.Vec_WecPush(hooks, int(ids[len(ids)-1]), id)
 	}
 	Gia_ManFillValue(p)
-	return Gia_ManFalseRebuild(p, hooks, verbose, veryVerbose)
+	return giaFalseRebuild(p, hooks, verbose, veryVerbose, false)
 }
 func Gia_ManCollectPath_rec(p *Gia_Man_t, obj *Gia_Obj_t, path *Vec_Int_t) {
 	if Gia_ObjIsAnd(obj) != 0 {
@@ -108,7 +122,57 @@ func Gia_ManCollectPath(p *Gia_Man_t, obj *Gia_Obj_t) *Vec_Int_t {
 	Gia_ManCollectPath_rec(p, obj, path)
 	return path
 }
-func giaFalsePathSolve(p *Gia_Man_t, root int32, timeout int32, includeInput bool) (*Vec_Int_t, bsat.Status) {
+
+// giaFalseQuery owns the original path and the final assumption conflict.
+// Keep core size and rewritten interval separate, as the two C drivers do.
+type giaFalseQuery struct {
+	ids    []int32
+	core   []bsat.Literal
+	status bsat.Status
+}
+
+func (q giaFalseQuery) span() (int, int) {
+	begin, end := int(q.core[len(q.core)-1]>>1), int(q.core[0]>>1)
+	if begin > end {
+		panic("gia: unordered false-path core")
+	}
+	return begin, end
+}
+func (q giaFalseQuery) hook() *Vec_Int_t {
+	if q.status != bsat.Unsatisfiable || len(q.core) == 0 {
+		return nil
+	}
+	begin, end := q.span()
+	path := vec.Vec_IntAlloc(end - begin + 2)
+	for i := max(begin-1, 0); i <= end; i++ {
+		vec.Vec_IntPush(path, q.ids[i])
+	}
+	return path
+}
+func (q giaFalseQuery) addBatchHook(hooks *Vec_Wec_t) bool {
+	if q.status != bsat.Unsatisfiable || len(q.core) == 0 {
+		return false
+	}
+	begin, end := q.span()
+	if end-begin >= 20 {
+		return false
+	}
+	ids := q.ids[max(begin-1, 0) : end+1]
+	for _, id := range ids {
+		if vec.Vec_IntSize(vec.Vec_WecEntry(hooks, int(id))) > 0 {
+			return false
+		}
+	}
+	for _, id := range ids {
+		vec.Vec_WecPush(hooks, int(ids[len(ids)-1]), id)
+	}
+	return true
+}
+func giaFalsePathSolve(p *Gia_Man_t, root, timeout int32, includeInput bool) (*Vec_Int_t, bsat.Status) {
+	q := giaFalseSolveQuery(p, root, timeout, includeInput)
+	return q.hook(), q.status
+}
+func giaFalseSolveQuery(p *Gia_Man_t, root int32, timeout int32, includeInput bool) giaFalseQuery {
 	path := Gia_ManCollectPath(p, Gia_ManObj(p, root))
 	ids := vec.Vec_IntArray(path)
 	objects := vec.Vec_IntArray(Gia_ManCollectNodesCis(p, []int32{root}, 1))
@@ -173,52 +237,33 @@ func giaFalsePathSolve(p *Gia_Man_t, root int32, timeout int32, includeInput boo
 	// separate minimization pass. Core choice determines the rewritten interval.
 	status := solver.Solve(assumptions...)
 	core := solver.UnsatCore()
-	if status != bsat.Unsatisfiable || len(core) == 0 {
-		return nil, status
-	}
-	begin, end := int(core[len(core)-1]>>1), int(core[0]>>1)
-	out := vec.Vec_IntAlloc(end - begin + 2)
-	for i := max(begin-1, 0); i <= end; i++ {
-		vec.Vec_IntPush(out, ids[i])
-	}
-	return out, status
+	return giaFalseQuery{ids: ids, core: core, status: status}
 }
 
 func Gia_ManCheckFalseOne(p *Gia_Man_t, out, timeout int32, hooks *Vec_Wec_t, verbose, veryVerbose int32) {
-	start := time.Now()
+	started := time.Now()
 	pivot := Gia_ManCo(p, out)
-	path, status := giaFalsePathSolve(p, Gia_ObjFaninId0(pivot, pivot.id), timeout, true)
-	if path != nil && vec.Vec_IntSize(path) <= 20 {
-		ids := vec.Vec_IntArray(path)
-		available := true
-		for _, id := range ids {
-			if vec.Vec_IntSize(vec.Vec_WecEntry(hooks, int(id))) > 0 {
-				available = false
-				break
-			}
-		}
-		if available {
-			for _, id := range ids {
-				vec.Vec_WecPush(hooks, int(ids[len(ids)-1]), id)
-			}
-		}
-	}
+	query := giaFalseSolveQuery(p, Gia_ObjFaninId0(pivot, pivot.id), timeout, true)
+	query.addBatchHook(hooks)
 	if verbose != 0 {
 		fmt.Printf("PO %6d : Level = %3d  ", out, Gia_ObjLevel(p, pivot))
-		switch status {
+		switch query.status {
 		case bsat.Unknown:
 			fmt.Printf("Timeout reached after %d seconds. ", timeout)
 		case bsat.Satisfiable:
 			fmt.Print("There is no false path. ")
-		default:
-			if path != nil {
-				fmt.Printf("False path contains %d nodes. ", vec.Vec_IntSize(path))
+		case bsat.Unsatisfiable:
+			if len(query.core) > 0 {
+				fmt.Printf("False path contains %d nodes (out of %d):  top = %d  ", len(query.core), len(query.ids), query.ids[query.core[0]>>1])
 				if veryVerbose != 0 {
-					fmt.Printf("%v ", vec.Vec_IntArray(path))
+					for _, lit := range query.core {
+						fmt.Printf("%d ", lit>>1)
+					}
 				}
+				fmt.Print("  ")
 			}
 		}
-		fmt.Printf("Time = %.2f sec\n", time.Since(start).Seconds())
+		fmt.Printf("Time =%9.2f sec\n", time.Since(started).Seconds())
 	}
 }
 func Gia_ManCheckFalse2(p *Gia_Man_t, slack, timeout, verbose, veryVerbose int32) *Gia_Man_t {
@@ -241,24 +286,28 @@ func Gia_ManCheckFalse2(p *Gia_Man_t, slack, timeout, verbose, veryVerbose int32
 	return Gia_ManFalseRebuild(p, hooks, verbose, veryVerbose)
 }
 func Gia_ManCheckOne(p *Gia_Man_t, out, id, timeout, verbose, veryVerbose int32) *Gia_Man_t {
-	start := time.Now()
-	path, status := giaFalsePathSolve(p, id, timeout, false)
+	started := time.Now()
+	query := giaFalseSolveQuery(p, id, timeout, false)
+	path := query.hook()
 	if verbose != 0 {
 		fmt.Printf("PO %6d : Level = %3d  ", out, Gia_ObjLevelId(p, id))
-		switch status {
+		switch query.status {
 		case bsat.Unknown:
 			fmt.Printf("Timeout reached after %d seconds. ", timeout)
 		case bsat.Satisfiable:
 			fmt.Print("There is no false path. ")
-		default:
+		case bsat.Unsatisfiable:
 			if path != nil {
-				fmt.Printf("False path contains %d nodes. ", vec.Vec_IntSize(path))
+				fmt.Printf("False path contains %d nodes (out of %d):  ", vec.Vec_IntSize(path), len(query.ids))
 				if veryVerbose != 0 {
-					fmt.Printf("%v ", vec.Vec_IntArray(path))
+					for i := len(query.core) - 1; i >= 0; i-- {
+						fmt.Printf("%d ", query.ids[query.core[i]>>1])
+					}
 				}
+				fmt.Print("  ")
 			}
 		}
-		fmt.Printf("Time = %.2f sec\n", time.Since(start).Seconds())
+		fmt.Printf("Time =%9.2f sec\n", time.Since(started).Seconds())
 	}
 	if path == nil {
 		return nil
