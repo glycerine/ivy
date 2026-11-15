@@ -15,7 +15,14 @@ func Gia_ManHighlight_rec(p *Gia_Man_t, id int32) {
 		Gia_ObjSetTravIdCurrentId(p, id)
 		obj := p.pObjs[id]
 		if Gia_ObjIsAnd(obj) != 0 {
-			stack = append(stack, giaObjectFanins(p, obj)...)
+			a, b, c, kind := p.Gate(id)
+			stack = append(stack, a>>1)
+			if kind != 5 {
+				stack = append(stack, b>>1)
+			}
+			if kind == 4 {
+				stack = append(stack, c>>1)
+			}
 		}
 	}
 }
@@ -40,8 +47,13 @@ func Gia_ManPrepareWin(p *Gia_Man_t, outputs *Vec_Int_t, inputsOut, outputsOut, 
 			if Gia_ObjIsAnd(obj) != 0 && Gia_ObjIsTravIdCurrentId(p, obj.id) == 0 {
 				continue
 			}
-			for _, id := range giaObjectFanins(p, obj) {
-				p.pObjs[id].fMark0 = 1
+			a, b, c, kind := p.Gate(obj.id)
+			p.pObjs[a>>1].fMark0 = 1
+			if kind == 2 || kind == 3 || kind == 4 {
+				p.pObjs[b>>1].fMark0 = 1
+			}
+			if kind == 4 {
+				p.pObjs[c>>1].fMark0 = 1
 			}
 		}
 	}
@@ -100,6 +112,7 @@ func Gia_ManExtractWin(src *Gia_Man_t, outputs *Vec_Int_t, poOnly int32) *Gia_Ma
 	Gia_ManPrepareWin(src, outputs, &inputs, &boundary, &gates, poOnly)
 	dst := Gia_ManStart(int32(Vec_IntSize(inputs) + Vec_IntSize(boundary) + Vec_IntSize(gates) + 1))
 	dst.CopyIdentityFrom(src)
+	dst.fGiaSimple = src.fGiaSimple
 	if src.PMuxes != nil {
 		dst.EnableMuxes()
 	}

@@ -5541,3 +5541,34 @@ Next review giaBalMap.go window selection/extraction/insertion, comparing
 ordinary-AIG native boundary lists and graph copies, then typed/zero-depth
 extensions, logical port permutations, property metadata and mapped-level
 selection. Original completion remains 2/131; the sequential audit is active.
+
+Window review finds that ExtractWin omits fGiaSimple, so valid repeated-object
+ANDs such as x & !x panic while appending the extracted graph. The new minimal
+red test reproduces this (/tmp/abcgo-window-simple-red.log); preserve the source
+flag on the combinational window and both boundary modes pass afterwards.
+
+New balance_windows.c invokes the original window routines from ABC, not a
+replacement algorithm. All 1,024 ordinary-AIG boundary/extraction cases, 512
+insertions and 168 mapped/unmapped level/percentage selections agree exactly on
+boundary/gate/input IDs, graph structure, source Value/marks/traversal membership,
+logical port lists and exhaustive small truth tables. Layouts include interleaved
+CI/CO objects and reversed logical port order. Additional Go checks cover 1,920
+typed/layout/subset cases with MUX control dependencies, XORs, buffers, constants,
+selected CIs, sequential roles and reset metadata; 960 reconstructions retain
+truth directly and after AIGER serialization over 30,720 source assignments.
+The zero-depth extraction extension intentionally returns regular boundary
+objects, not signed selected COs, consistent with the original window contract.
+
+Eliminate temporary per-node fanin slices from highlight/mark loops by reading
+the existing Gate representation. The 1,024-node AND benchmark improves from
+74,504B / 4,116 allocations / 126,530ns to 41,736B / 19 / 57,916ns; the MUX
+benchmark from 74,504B / 4,115 / 166,962ns to 41,736B / 19 / 57,755ns. Native
+and typed checks still pass (/tmp/abcgo-window-optimized.log).
+
+Real registered-engine integration adds 48 SOP/DSD window runs. SOP passes;
+DSD changes XOR-related outputs to constants, failing the new truth regression
+in /tmp/abcgo-window-comprehensive.log. Extraction/insertion and independent
+native tests pass, so investigate the registered IF-owned DSD path rather than
+substitute another synthesis algorithm. Save a red checkpoint while tracing
+this dependency bug; comprehensive integration is pending. Original completion
+remains 2/131, with GIA and the sequential audit active.
