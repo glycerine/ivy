@@ -1880,3 +1880,11 @@ and its per-output miter report using the switching-simulation provider. Focused
 tests exercise both reports; the focused GIA core passes. The miter probability
 report shares LF's still-unconnected switching provider. The main manager
 statistics routine and later C drafts still block actual GIA/IF builds.
+
+Sequential GIA fast-extraction review closes all11 giaFx.c routines and restores
+the original abcFx.c incremental backend. Frozen uncached full-module race tests
+pass130 tested packages plus three commands without tests; GIA567.287s,
+ABCI29.728s,BMC24.133s,opt/fx1.475s. GIA/opt-fx vet is clean. Detailed source,
+regression, native/scalar and ownership evidence is in
+`aig/gia/REVIEW_fast_extraction.md` and `SEQUENTIAL_AUDIT.md`.
+The wider GIA review remains open; original audit completion stays2/131.

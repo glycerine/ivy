@@ -1,4 +1,4 @@
-# Fast-extraction source review (in progress)
+# Fast-extraction source review
 
 Scope: all 11 active routines in `src/aig/gia/giaFx.c`, plus the
 `Fx_FastExtract` dependency in `src/base/abci/abcFx.c`. This is a source-family
@@ -34,9 +34,9 @@ Work is sequential, without agents or branches.
 9. [x] Review compactness: reusable fanin index vector and source maintained
    levels instead of per-owner map allocation and repeated whole-graph scans.
    Measure before claiming performance improvement.
-10. [ ] Full source inventory reconciled; freeze code/tests/fixtures, run the
-    uncached full-module race suite and vet, inspect terminal results, and
-    update this record and `SEQUENTIAL_AUDIT.md` before closing this family.
+10. [x] Full source inventory reconciled; production/tests/fixtures frozen
+    throughout uncached full-module race testing and GIA/opt-fx vet. Terminal
+    results inspected and progress records updated; this family is closed.
 
 ## Evidence so far
 
@@ -91,6 +91,8 @@ Work is sequential, without agents or branches.
 - `30228642e`: source graph/SOP leaf contract repairs and regressions.
 - `d1f8c78ec`: incremental extraction engine and containment regressions.
 - `572937416`: source divisor/queue diagnostics and verbosity flags.
+- `bb758fdb5`: native backend/caller matrices and interface ownership.
+- `8e903bc6c`: final focused source reconciliation and compact storage.
 
 These checkpoints use `red:` because full family review and integration are pending.
 
@@ -159,8 +161,16 @@ uses the reviewed source timing-transfer operation, including moving names out
 of the source. Unchanged duplication preserves actual typed gates; rebuilt
 logic uses the original factoring/DSD algorithms.
 
-## Final integration pending
+## Final frozen integration
 
-Production code, tests and fixtures are frozen for the uncached full-module
-race gate and GIA/opt-fx vet. Do not close the family before terminal results.
-The wider GIA source inventory remains open and package completion stays2/131.
+Exact full-module race handle40924 terminates exit0: 130 tested packages pass,
+three command packages have no tests, and there are zero FAIL/DATA RACE records.
+GIA 567.287s, ABCI 29.728s, BMC 24.133s, opt/fx 1.475s
+(`/tmp/abcgo-fx-final-module-race.log`). Exact GIA/opt-fx vet handle49486
+terminates exit0 with an empty log (`/tmp/abcgo-fx-final-vet.log`). Production,
+tests and fixtures remained frozen at checkpoint8e903bc6c throughout both gates.
+
+Close all 11 active giaFx.c routines and the required incremental extraction
+backend reconciliation. The wider GIA source inventory remains open and
+original package audit completion stays2/131. Next source family is giaGen.c
+(13 routines).

@@ -8642,3 +8642,28 @@ general guarantee. Exact native/scalar checks remain green after simplification.
 Save a coherent red GIA checkpoint, then freeze production/tests/fixtures for
 uncached full module race tests and vet. Original completion2/131; do not close
 GIA or the overall goal when this family closes.
+
+### Fast-extraction family frozen integration closure
+
+Exact full-module race handle40924 terminates exit0:130 tested packages pass,
+three command packages have no tests, zero FAIL/DATA RACE records. GIA567.287s,
+ABCI29.728s,BMC24.133s,opt/fx1.475s
+(/tmp/abcgo-fx-final-module-race.log). Exact vet handle49486 terminates exit0
+with an empty GIA/opt-fx log (/tmp/abcgo-fx-final-vet.log). Code/tests/fixtures
+remained frozen at8e903bc6c through both gates. All37 final focused tests
+passed without skips (GIA16.837s,opt/fx0.157s).
+
+REVIEW_fast_extraction.md reconciles all11 active giaFx.c routines, the restored
+abcFx.c incremental engine, regressions-before-repairs, original-C defects,
+explicit Go compatibility steps, native/scalar matrices, interface/timing
+ownership and measured compactness. Close this source family. GIA remains open
+and original package completion stays2/131.
+
+Next family giaGen.c has13 active routines in gen_sim.go/gen_dump.go/gen_read.go.
+Read-only preparation during the frozen gate finds that real XOR words are
+silently ANDed: Go returns8888888888888888 instead of6666666666666666
+(/tmp/abcgo-gen-typed-probe.log). Actual C ordinary AND-expanded XOR returns
+the correct6666... (/tmp/abcgo-gen-typed-native.log). The probes are .go/.c in
+/tmp, not changes to tested files. Add a new red regression before repair;
+review all13 routines and retain explicit random/file-format contracts.
+Detailed preparation is /tmp/abcgo-gen-next-review-plan.md. No agents/branches.

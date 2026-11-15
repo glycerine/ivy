@@ -395,3 +395,17 @@ packages plus three command packages without tests, GIA545.769s
 (/tmp/abcgo-frames-final-module-race.log). GIA vet is clean
 (/tmp/abcgo-frames-final-vet.log). This closes the source family only; the wider
 GIA audit remains open, with fast extraction next.
+
+Fast-extraction sequential review is complete for all11 active giaFx.c routines
+and its required abcFx.c backend. Replace the recomputed-catalog substitute
+with the original incremental matrix/queue engine; repair leaf conversion,
+SOP leaf contracts and owned interface metadata; restore source diagnostics
+and simplify insertion storage. REVIEW_fast_extraction.md records explicit
+original-C defects/Go compatibility steps, native/scalar coverage and measured
+compactness. All37 focused tests pass without skips (GIA16.837s,opt/fx0.157s).
+Frozen full-module race testing passes130 tested packages plus three command
+packages without tests, GIA567.287s; GIA/opt-fx vet is clean
+(/tmp/abcgo-fx-final-module-race.log, /tmp/abcgo-fx-final-vet.log).
+The family is closed; GIA's broader audit remains open. Next is giaGen.c's
+simulation/dataset utilities, with a read-only real-XOR word defect already
+characterized for a regression-before-repair.
