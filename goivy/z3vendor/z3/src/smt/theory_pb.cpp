@@ -472,6 +472,14 @@ namespace smt {
         //fml1 = c->to_expr(ctx, m);
         c->unique();
         lbool is_true = c->normalize();
+        // FORK FIX #61 (g3 audit, see FORK_BUGFIXES.md): an equality whose
+        // arguments were all assigned keeps none and a negative bound;
+        // normalize leaves it l_undef, but a constraint with no arguments
+        // is never watched, so nothing would falsify it. Like
+        // pb_rewriter::mk_app_core, fold it to false.
+        if (is_true == l_undef && c->is_eq() && c->size() == 0) {
+            is_true = l_false;
+        }
         c->prune();
         c->post_prune();
         //fml2 = c->to_expr(ctx, m);
@@ -540,7 +548,16 @@ namespace smt {
         m_var_infos[abv].m_ineq = c;
         m_ineqs_trail.push_back(abv);
 
-        if (m_enable_simplex) {
+        // FORK FIX #58 (g3 audit, see FORK_BUGFIXES.md): abv is both the
+        // 0-1 column of the atom and the slack column of its row, so a
+        // constraint over another pb atom bounds that atom's weighted sum
+        // by [0,1] (unsat on sat nested constraints, or a crash). Such a
+        // constraint gets no simplex row.
+        bool use_simplex = m_enable_simplex;
+        for (unsigned i = 0; use_simplex && i < c->size(); ++i) {
+            use_simplex = !m_ineq_row_info.contains(c->lit(i).var());
+        }
+        if (use_simplex) {
             //
             // TBD: using abv as slack identity doesn't quite 
             // work if psuedo-Booleans are used 
@@ -785,7 +802,11 @@ namespace smt {
         TRACE("pb", tout << "assign: " << ~nlit << "\n";);
         ineqs = m_var_infos[v].m_lit_watch[nlit.sign()];
         if (ineqs != nullptr) {
-            if (m_enable_simplex) {
+            // FORK FIX #59 (g3 audit, see FORK_BUGFIXES.md): pop leaves a
+            // freed var's emptied watch list behind; when the var is reused
+            // as a pb atom, its column is the atom's slack, so bound only
+            // 0-1 columns (m_vars).
+            if (m_enable_simplex && m_vars.contains(v)) {
                 mpq_inf num(mpq(is_true?1:0),mpq(0));
                 if (!update_bound(v, ~nlit, is_true, num)) {
                     return;
@@ -813,7 +834,7 @@ namespace smt {
         }
         ineq* c = m_var_infos[v].m_ineq;
         if (c != nullptr) {
-            if (m_enable_simplex) {
+            if (m_enable_simplex && m_ineq_row_info.contains(v)) { // FORK FIX #58: no row over pb atoms
                 row_info const& info = m_ineq_row_info.find(v);
                 unsynch_mpq_manager mgr;
                 scoped_eps_numeral coeff(m_mpq_inf_mgr);
@@ -1220,6 +1241,10 @@ namespace smt {
     literal theory_pb::assert_ge(context& ctx, unsigned k, unsigned n, literal const* xs) {
         theory_pb_params p;
         theory_pb th(ctx.get_manager(), p);
+        // FORK FIX #62 (g3 audit, see FORK_BUGFIXES.md): th is not
+        // registered with ctx, so without init its manager is null and
+        // psort_expr::mk_clause (th.justify, proofs_enabled) segfaults.
+        th.init(&ctx);
         psort_expr ps(ctx, th);
         psort_nw<psort_expr> sort(ps);
         return sort.ge(false, k, n, xs);
@@ -1330,9 +1355,8 @@ namespace smt {
             clear_watch(*c);
             m_var_infos[v].m_ineq = nullptr;
             m_ineqs_trail.pop_back();
-            if (m_enable_simplex) {
-                row_info r_info;
-                VERIFY(m_ineq_row_info.find(v, r_info));
+            row_info r_info;
+            if (m_enable_simplex && m_ineq_row_info.find(v, r_info)) { // FORK FIX #58: no row over pb atoms
                 m_ineq_row_info.erase(v);
                 bool_var v2 = m_ineq_rep.find(r_info.m_rep);
                 if (v == v2) {

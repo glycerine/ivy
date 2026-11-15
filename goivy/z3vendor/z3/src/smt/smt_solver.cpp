@@ -76,10 +76,14 @@ namespace smt {
         }
 
         void updt_params(params_ref const & p) override {
+            // FORK FIX #60 (g3 audit, see FORK_BUGFIXES.md): updt_params reads the merged solver params so solver-level settings survive (as upstream; AUDIT smtcore_03-F10)
+            // Re-read the smt settings from the solver's merged parameters,
+            // as upstream z3 does: p alone would reset every setting it does
+            // not mention (for example smt.mbqi) to the global default.
             solver::updt_params(p);
-            m_smt_params.updt_params(p);
-            m_context.updt_params(p);
-            smt_params_helper smth(p);
+            m_smt_params.updt_params(solver::get_params());
+            m_context.updt_params(solver::get_params());
+            smt_params_helper smth(solver::get_params());
             m_core_extend_patterns = smth.core_extend_patterns();
             m_core_extend_patterns_max_distance = smth.core_extend_patterns_max_distance();
             m_core_extend_nonlocal_patterns = smth.core_extend_nonlocal_patterns();

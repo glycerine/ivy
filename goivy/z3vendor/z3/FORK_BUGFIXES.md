@@ -30,6 +30,48 @@ the g3 fork's `src/` tree:
 * g3 commits 018d8d387 and 1b4ae811e: fixes 43-44 below (red tests in g3
   commits 3f6706dec and c2b07b691); d3d15a7b4 repairs the `FORK FIX #40`
   comment, which had been placed inside a macro
+* g3 commit eff65eb03: fix 45 below (red test in g3 commit 85f87a878, `FORK FIX
+  #45` comment in 503d4fa8a)
+* g3 commits 64f41b16d and c9d71d841: fixes 46-47 below (red tests in g3
+  commits d21dc52c5 and 7f1d18f5d, `FORK FIX` comments in 70817364f)
+* g3 commits 6d5697bfe, 088bffab7, aeeab9dba and 66c0fa4e4: fixes 48-51 below
+  (red tests in g3 commits 800698807, 59e18dbb9, f337ddd39 and 0b5de3027,
+  `FORK FIX` comments in 6bf3dd797)
+* g3 commits 0e5916f46 and 060eea5c7: fixes 52-53 below (red tests in g3
+  commits dd9706fb4 and 437084826, `FORK FIX` comments in 0edfff976)
+* g3 commits 748e0e081 and 62affb150: fixes 54-55 below (red tests in g3
+  commits 390424642 and 170a2fd3e, `FORK FIX` comments in 9778bc6d0)
+* g3 commits ca3497492 and 93a286ac9: fixes 56-57 below (red tests in g3
+  commits 574cf4f54 and e75aff46d, `FORK FIX` comments in ca7dae915)
+* g3 commits 5ff7e54dd and e807b6c55: fixes 58-59 below (red tests in g3
+  commits e23727c84 and fd1cf03ba, `FORK FIX` comments in the fix commits)
+* g3 commits da4297199 and baec5580d: fixes 60-61 below (red tests in g3
+  commits 7aca00862 and 42a8fc491, `FORK FIX` comments in 8aed59184 and
+  baec5580d)
+* g3 commit 8a785a252: fix 62 below (red test in g3 commit f5825ce1d,
+  `FORK FIX` comment in the fix commit)
+* g3 commit a771cbed6: fix 63 below (red test in g3 commit 542594f7e,
+  `FORK FIX` comments in the fix commit)
+* g3 commits 843a255af, 78f442aa6, 4372996c3, 7a5001629, 61cfc469a,
+  a6e72d800, 392fc24a8, e0b4784b5, e0b592b0d, 3ab8fbf8b, c048c9a39,
+  86591a87d, a16326820 and e743ee36f: fixes 64-77 below (red tests in g3
+  commits f93d4ebeb, bef8e3063, 8e955ab03, 4deebbea4, 45a6078e6, 3e3334ab0,
+  fb447d6a1, 61d3347be, 95c2a728e, 627df6fc1, 61cd5da3c, dcd04f514 and
+  a138c4b5c; `FORK FIX` comments in the fix commits)
+* g3 commits 2b6e876f6, fa6d9a3f6, e661b489c, 97ec8930e, 1c15f296d,
+  8ed299553, 07e5e0e66, 9568f2110, c787bcd7c, 2636ac7d3, b1800ceec and
+  69c959c58: fixes 79-90 below (red tests in g3 commits e7249ff89,
+  59b15ad99, c59d036bc, bc8c8f2dd, 2990cc1df, be34a9c03, a103c88fb,
+  d158e06c6, 5176da850, d9872fb66, b9203b17e and 6ffb6ec78; `FORK FIX`
+  comments in the fix commits).
+* g3 commits bb9a1f251, ddf0de888, aba28b511, f22e24f67 and 8035a892b:
+  fixes 78 and 91-94 below (red tests in g3 commits 7348fa79a, c1f490483,
+  ec4e0af1a, 601c9a3ca and 799016783; `FORK FIX` comments in the fix
+  commits)
+* g3 commit af3832cd0: fix 95 below (red test in g3 commit f1c5fe437,
+  `FORK FIX` comment in 469bcbdd6)
+* g3 commit 047e3d468: fix 96 below (red test in g3 commit df6c3cf06,
+  `FORK FIX` comments in the fix commit)
 
 They are copied here unchanged.
 
@@ -79,6 +121,58 @@ They are copied here unchanged.
 | 42 | `(get-user-tactics)` segfaults | backport of upstream 202ed79a2 (#5445) | `util/sexpr.cpp` |
 | 43 | Duality with `xform.quantify_arrays`: later queries answer wrongly (lost or stale rules) | local fix (Duality was removed upstream) | `muz/duality/duality_dl_interface.cpp` |
 | 44 | Duality segfaults on the query after a failed one | local fix (Duality was removed upstream) | `muz/duality/duality_dl_interface.cpp` |
+| 45 | `model_implicant` evaluates a nested array disequality to false (UNREACHABLE, segfault) | local fix (still present upstream) | `model/model_implicant.cpp` |
+| 46 | Duality with `use_underapprox` aborts with "error in ExpansionChoices" on a sat problem | local fix (Duality was removed upstream) | `duality/duality_rpfp.cpp` |
+| 47 | Duality with `use_underapprox` fails in iZ3 ("unknown assertion") on a sat problem | local fix (Duality was removed upstream) | `duality/duality_solver.cpp` |
+| 48 | PDR proof trace proves the wrong fact when nullary predicates share the state `true` | local fix (PDR was removed upstream) | `muz/pdr/pdr_context.cpp` |
+| 49 | PDR proof trace concludes from an unresolved duplicate leaf | local fix (PDR was removed upstream) | `muz/pdr/pdr_context.cpp` |
+| 50 | PDR Boogie certificate without `generate_proof_trace` segfaults | local fix (PDR was removed upstream) | `muz/pdr/pdr_context.cpp` |
+| 51 | PDR proof trace segfaults after `remove_duplicate_tails` merged a tail | local fix (PDR was removed upstream) | `muz/pdr/pdr_context.cpp` |
+| 52 | Model evaluation after a `max_steps` exception returns a stale result (sort mismatch, segfault) | backport of upstream 18bb90f93 (#4426), b013df9a9 (#4431) | `ast/rewriter/rewriter_def.h` |
+| 53 | `qe` on finite-domain sorts: `exists x. x != c` eliminates to `false` (unsound) | local fix (still present upstream) | `qe/qe_dl_plugin.cpp` |
+| 54 | Sieve-relation negation drops inner/inner equalities and empties the target | local fix (still present upstream) | `muz/rel/dl_sieve_relation.cpp` |
+| 55 | `datalog.default_table_checked` with a sparse table segfaults on a nullary empty table | local fix (still present upstream) | `muz/rel/dl_check_table.cpp` |
+| 56 | `datalog.default_table=bitvector` segfaults on a nullary table | backport of upstream 8dac9b7b94 | `muz/rel/dl_table.cpp` |
+| 57 | `smt.case_split=6` reads an uninitialized decision phase (always negative in the reference build) | as upstream (`lbool phase = l_undef`) | `smt/smt_context.cpp` |
+| 58 | `pb.enable_simplex`: a pb constraint over a nested pb atom answers `unsat` on satisfiable input, or segfaults | local fix (`pb.enable_simplex` was removed upstream) | `smt/theory_pb.cpp` |
+| 59 | `pb.enable_simplex` under push/pop: a reused bool var's slack column gets a 0-1 bound, giving `unsat` on satisfiable input | local fix (`pb.enable_simplex` was removed upstream) | `smt/theory_pb.cpp` |
+| 60 | `smt_solver::updt_params` resets solver-level smt settings (e.g. `mbqi=false` turns back on after `Z3_get_implied_equalities`; segfault in the model checker) | as upstream (merged `solver::get_params()`) | `smt/smt_solver.cpp` |
+| 61 | A pb equality whose arguments are all assigned at internalization is dropped: `sat` on unsat input (default options) | local fix (upstream redesigned pb equalities in bd96eaff47) | `smt/theory_pb.cpp` |
+| 62 | `theory_pb::assert_ge` (test helper) segfaults: its local theory is never initialized (`./test-z3 theory_pb`) | as upstream becf423c77 | `smt/theory_pb.cpp` |
+| 63 | Duality certificates give eliminated rule variables the model default (invalid certificate) | local fix (Duality was removed upstream); port of g3's witness search | `muz/duality/duality_dl_interface.cpp` |
+| 64 | `qe` finite-domain plugin: wrong result when the domain size equals the number of equality atoms | local fix (still present upstream) | `qe/qe_dl_plugin.cpp` |
+| 65 | `((_ to_fp eb sb) <Real>)`: out-of-bounds read of `domain[1]` | as upstream (one-Real branch removed) | `ast/fpa_decl_plugin.cpp` |
+| 66 | `z3 -dl <directory>` prints NOT IMPLEMENTED YET! and hangs on POSIX | local fix (still present upstream) | `muz/base/dl_util.cpp` |
+| 67 | WPA not-in-sort warning prints with MSVC's `%I64u` (undefined behavior with glibc) | local fix (still present upstream) | `muz/fp/datalog_parser.cpp` |
+| 68 | `read_uint64` rejects values near `ULLONG_MAX` | local fix (still present upstream) | `muz/base/dl_util.cpp` |
+| 69 | WPA map line with an empty name reads the name's last character | local fix (still present upstream) | `muz/fp/datalog_parser.cpp` |
+| 70 | `goal::update` pushes the unflattened formula, so a goal can fail to become inconsistent | local fix (still present upstream) | `tactic/goal.cpp` |
+| 71 | Model evaluation of mutually recursive `define-fun-rec` predicates never terminates | local fix (upstream replaced it with recfun) | `model/model_evaluator.cpp`, `ast/rewriter/rewriter_def.h`, `ast/ast.h`, `cmd_context/cmd_context.cpp` |
+| 72 | Nested parametric datatypes: use-after-free in `get_sort_size` (segfault) | backport of upstream f1c3e1aa7, e08abb321 | `ast/datatype_decl_plugin.{h,cpp}` |
+| 73 | `and_then`: a decided-sat subgoal does not decide the goal (`unknown`) | as upstream (`result.reset()`) | `tactic/tactical.cpp` |
+| 74 | `repeat`: same as 73, and a null-model segfault with models on | local fix (still present upstream) | `tactic/tactical.cpp` |
+| 75 | opt `from_fmls`: an assert-soft group after maximize/minimize is checked against the wrong term | backport of upstream b33f5f879 | `opt/opt_context.cpp` |
+| 76 | qe array `solve_store`: wrong result when nested store indices coincide | local fix (still present upstream) | `qe/qe_array_plugin.cpp` |
+| 77 | Symbolic automaton product ignores the epsilon closure of the initial states | backport of upstream 606754c09, a921b4ff4 | `math/automata/symbolic_automata_def.h` |
+| 78 | datalog `string_to_uint64` accepts a blank string and reads an uninitialized value | local fix (still present upstream) | `muz/base/dl_util.cpp` |
+| 79 | `elim-small-bv` enumerates only `bv_sz` values (unsound `sat`), crashes on non-BV quantifiers | backport of upstream b6ee0b151, 8e033c1e7, aa901c4e8 | `tactic/bv/elim_small_bv_tactic.cpp` |
+| 80 | `sine-filter` segfaults on a symbol-free last formula or an empty goal | backport of upstream fcd1f2b3c, plus a local empty-goal guard | `tactic/sine_filter.cpp` |
+| 81 | `symmetry-reduce` fails `VERIFY` / segfaults on quantified goals | backport of upstream 330b3cc8d | `tactic/tactic.{h,cpp}`, `tactic/core/symmetry_reduce_tactic.cpp` |
+| 82 | `bvarray2uf` hits `NOT_IMPLEMENTED_YET` on quantifiers | backport of upstream 4bad2dd92 | `tactic/bv/bvarray2uf_rewriter.cpp` |
+| 83 | `get-value` under `model_evaluator.max_steps` segfaults | backport of upstream 335d672bf | `parsers/smt2/smt2parser.cpp` |
+| 84 | A pop forgets parametric datatype instances created outside the popped scope | backport of upstream 19f655c69, 120467159, 2d358a9a5, 984767509 | `cmd_context/pdecl.{h,cpp}`, `cmd_context/cmd_context.cpp` |
+| 85 | Datatype constructors unknown after pop when reached through a `define-sort` alias | local fix (still present upstream) | `cmd_context/pdecl.{h,cpp}` |
+| 86 | WPA loader `fread`s a null `FILE` for an unreadable `.map`/`.rel` file | local fix (still present upstream) | `muz/fp/datalog_parser.cpp` |
+| 87 | QBMC hyper-resolution positions recorded as (0,1) | backport of upstream 784b613b5 | `muz/bmc/dl_bmc_engine.cpp` |
+| 88 | Nonlinear BMC proof reconstruction Skolemizes head variables (segfault) | local fix (still present upstream as an error) | `muz/bmc/dl_bmc_engine.cpp` |
+| 89 | Boogie certificate prints leftover debug lines on stdout | as upstream 73a24ca0a | `muz/base/dl_boogie_proof.cpp` |
+| 90 | `psort_nw::m_t` uninitialized: sortmax's network depends on garbage (wrong optima) | as upstream (`m_t(GE)`) | `util/sorting_network.h` |
+| 91 | Duality certificates print and prove each edge with the previous rule's clause after dead-edge removal | local fix (Duality removed upstream) | `muz/duality/duality_dl_interface.cpp` |
+| 92 | Duality `fixedpoint.print_answer` segfaults (`get_answer` returns null) | local fix (Duality removed upstream) | `muz/duality/duality_dl_interface.cpp` |
+| 93 | Duality `get_proof` builds hyper-resolve steps the proof checker rejects | local fix (Duality removed upstream); port of g3's proof shape | `muz/duality/duality_dl_interface.cpp` |
+| 94 | Linear BMC hyper-resolution positions recorded as (0,1) | local fix (still present upstream) | `muz/bmc/dl_bmc_engine.cpp` |
+| 95 | qe-sat: a resource-limited projection check fails a `VERIFY` and segfaults | local fix (qe-sat was removed upstream) | `qe/qe_sat_tactic.cpp` |
+| 96 | Duality livelocks re-proposing a candidate the feasibility check already rejected | local fix (Duality removed upstream) | `duality/duality_solver.cpp` |
 
 Every changed site has a comment that starts with "backport of upstream",
 "BACKPORT upstream", or "FORK FIX".
@@ -331,7 +425,7 @@ root is simplified again under the assumption made from its own value.
 **Fix.** `src/tactic/core/dom_simplify_tactic.cpp:290`: recurse only
 `if (child != e)` (in `simplify_rec`, `src/tactic/core/dom_simplify_tactic.cpp:263`).
 
-**Test.** `TST(z3_4_7_1_dom_simplify_root)`, `src/test/z3_4_7_1_bugs.cpp:208`
+**Test.** `TST(z3_4_7_1_dom_simplify_root)`, `src/test/z3_4_7_1_bugs.cpp:251`
 (registered at `src/test/main.cpp:212`).
 
 ---
@@ -355,7 +449,7 @@ definition had been popped.
 (a comment marks the place), so `rewriter_tpl::reset()` clears both the new
 definitions and the cache after each pass.
 
-**Test.** `TST(z3_4_7_1_elim_term_ite_pop)`, `src/test/z3_4_7_1_bugs.cpp:222`
+**Test.** `TST(z3_4_7_1_elim_term_ite_pop)`, `src/test/z3_4_7_1_bugs.cpp:265`
 (registered at `src/test/main.cpp:213`).
 
 ---
@@ -392,7 +486,7 @@ definition of `asserted_formulas::expand_macros()` is at
 `src/smt/asserted_formulas.cpp:344`. With the finder on, the path is
 unchanged.
 
-**Test.** `TST(z3_4_7_1_macro_finder_off)`, `src/test/z3_4_7_1_bugs.cpp:255`
+**Test.** `TST(z3_4_7_1_macro_finder_off)`, `src/test/z3_4_7_1_bugs.cpp:298`
 (registered at `src/test/main.cpp:214`).
 
 ---
@@ -424,8 +518,8 @@ for example `p1`, `(> x 0)`, `p0`, `(not p1)`, or `(or (not p0) (not p1))`,
 * `:643` stop the `replace` loop once `g->inconsistent()`.
 
 **Tests.** `TST(z3_4_7_1_pb_preprocess_index)`,
-`src/test/z3_4_7_1_bugs.cpp:290`, and `TST(z3_4_7_1_pb_preprocess_resolve)`,
-`src/test/z3_4_7_1_bugs.cpp:306` (registered at `src/test/main.cpp:215-216`).
+`src/test/z3_4_7_1_bugs.cpp:333`, and `TST(z3_4_7_1_pb_preprocess_resolve)`,
+`src/test/z3_4_7_1_bugs.cpp:349` (registered at `src/test/main.cpp:215-216`).
 
 ---
 
@@ -445,7 +539,7 @@ missing entry as a conflict.
 `src/smt/theory_datatype.cpp:740`): if the class has no recognizers yet,
 register the triggering one with `add_recognizer(w, recognizer)` first.
 
-**Test.** `TST(z3_4_7_1_dt_recognizer)`, `src/test/z3_4_7_1_bugs.cpp:345`
+**Test.** `TST(z3_4_7_1_dt_recognizer)`, `src/test/z3_4_7_1_bugs.cpp:388`
 (registered at `src/test/main.cpp:217`).
 
 **Note on fixes 6-12.** Their tests live in `src/test/z3_4_7_1_bugs.cpp`
@@ -476,7 +570,7 @@ no bound.
 incremented at `:378` (in `simplify_goal`, `src/tactic/core/dom_simplify_tactic.cpp:368`).
 
 **Test.** `TST(z3_4_7_1_dom_simplify_oscillation)`,
-`src/test/z3_4_7_1_bugs.cpp:395` (registered at `src/test/main.cpp:218`). A
+`src/test/z3_4_7_1_bugs.cpp:438` (registered at `src/test/main.cpp:218`). A
 20-second SIGALRM watchdog turns the hang into a test failure (POSIX only).
 
 ---
@@ -507,7 +601,7 @@ the term was returned unchanged.
   `:84`).
 
 **Test.** `TST(z3_4_7_1_update_field_constructor)`,
-`src/test/z3_4_7_1_bugs.cpp:422` (registered at `src/test/main.cpp:219`).
+`src/test/z3_4_7_1_bugs.cpp:465` (registered at `src/test/main.cpp:219`).
 
 ---
 
@@ -529,7 +623,7 @@ crashes in the destructor). `FORK FIX #13` comments at
 `src/muz/pdr/pdr_context.h:264` and `src/muz/pdr/pdr_context.cpp:52`,
 `:1004`, `:1155`, `:1175` and `:1487`.
 
-**Test.** `TST(z3_4_7_1_pdr_nullary_cache)`, `src/test/z3_4_7_1_bugs.cpp:468`
+**Test.** `TST(z3_4_7_1_pdr_nullary_cache)`, `src/test/z3_4_7_1_bugs.cpp:511`
 (registered at `src/test/main.cpp:228`).
 
 ---
@@ -549,7 +643,7 @@ so an edge with two positions is rewritten twice.
 that has already been rewritten.
 
 **Test.** `TST(z3_4_7_1_duality_unhoist_repeated_child)`,
-`src/test/z3_4_7_1_bugs.cpp:498` (registered at `src/test/main.cpp:229`).
+`src/test/z3_4_7_1_bugs.cpp:541` (registered at `src/test/main.cpp:229`).
 
 ---
 
@@ -569,7 +663,7 @@ wrapped plugin cannot handle the signature, fall back to
 `get_manager().mk_empty_table(s)`.
 
 **Test.** `TST(z3_4_7_1_lazy_sparse_nullary_union)`,
-`src/test/z3_4_7_1_bugs.cpp:521` (registered at `src/test/main.cpp:230`).
+`src/test/z3_4_7_1_bugs.cpp:564` (registered at `src/test/main.cpp:230`).
 
 ---
 
@@ -588,7 +682,7 @@ rule set instead of at the trace level, and does not stop at a fact.
 **Fix.** `src/muz/bmc/dl_bmc_engine.cpp:290` and `:348` (`FORK FIX #16`):
 evaluate at `level`, stop at any fact, `VERIFY(level > 0)`.
 
-**Test.** `TST(z3_4_7_1_qbmc_eval_level)`, `src/test/z3_4_7_1_bugs.cpp:550`
+**Test.** `TST(z3_4_7_1_qbmc_eval_level)`, `src/test/z3_4_7_1_bugs.cpp:593`
 (registered at `src/test/main.cpp:231`). It checks that the output starts
 with `sat` and that the proof contains `(asserted (p 0))`; the exact proof
 depends on the model.
@@ -608,7 +702,7 @@ instead of the width of the variable.
 **Fix.** `src/muz/ddnf/ddnf.cpp:855` (`FORK FIX #17`): use
 `bv.get_bv_size(v)`.
 
-**Test.** `TST(z3_4_7_1_ddnf_extract_width)`, `src/test/z3_4_7_1_bugs.cpp:586`
+**Test.** `TST(z3_4_7_1_ddnf_extract_width)`, `src/test/z3_4_7_1_bugs.cpp:629`
 (registered at `src/test/main.cpp:232`).
 
 ---
@@ -626,7 +720,7 @@ predecessor.
 **Fix.** `src/util/min_cut.cpp:166` (`FORK FIX #18`): add the reverse arc
 to `edge(l, max)`.
 
-**Test.** `TST(z3_4_7_1_min_cut_shared_node)`, `src/test/z3_4_7_1_bugs.cpp:639`
+**Test.** `TST(z3_4_7_1_min_cut_shared_node)`, `src/test/z3_4_7_1_bugs.cpp:682`
 (registered at `src/test/main.cpp:233`), with a 20-second watchdog.
 
 ---
@@ -647,7 +741,7 @@ modus-ponens premises in the wrong order, which is undefined behaviour.
 and `:242` (`FORK FIX #19`): build the proof under `scoped_proof` and call
 `mk_modus_ponens(p1, mk_def_axiom(...))`.
 
-**Test.** `TST(z3_4_7_1_qi_weakening_proof)`, `src/test/z3_4_7_1_bugs.cpp:672`
+**Test.** `TST(z3_4_7_1_qi_weakening_proof)`, `src/test/z3_4_7_1_bugs.cpp:715`
 (registered at `src/test/main.cpp:234`), with proof mode both off and on.
 
 ---
@@ -666,7 +760,7 @@ branch without the checks of the numeral-on-the-right branch.
 **Fix.** `src/tactic/arith/pb2bv_tactic.cpp:636` (`FORK FIX #20`): swap the
 operands, flip `<=`/`>=`, and use the checked branch.
 
-**Test.** `TST(z3_4_7_1_pb2bv_numeral_lhs)`, `src/test/z3_4_7_1_bugs.cpp:743`
+**Test.** `TST(z3_4_7_1_pb2bv_numeral_lhs)`, `src/test/z3_4_7_1_bugs.cpp:786`
 (registered at `src/test/main.cpp:220`).
 
 ---
@@ -684,7 +778,7 @@ unsat problem.
 **Fix.** `src/tactic/arith/eq2bv_tactic.cpp:158` (`FORK FIX #21`):
 `m_rw.reset()` per goal.
 
-**Test.** `TST(z3_4_7_1_eq2bv_stale_cache)`, `src/test/z3_4_7_1_bugs.cpp:765`
+**Test.** `TST(z3_4_7_1_eq2bv_stale_cache)`, `src/test/z3_4_7_1_bugs.cpp:808`
 (registered at `src/test/main.cpp:221`).
 
 ---
@@ -702,7 +796,7 @@ formulas that mention them have already been replaced by purified ones.
 **Fix.** `src/tactic/arith/purify_arith_tactic.cpp:746` (`FORK FIX #22`):
 call `find_unsafe()` at the start of `operator()`.
 
-**Test.** `TST(z3_4_7_1_purify_trig_unsafe)`, `src/test/z3_4_7_1_bugs.cpp:786`
+**Test.** `TST(z3_4_7_1_purify_trig_unsafe)`, `src/test/z3_4_7_1_bugs.cpp:829`
 (registered at `src/test/main.cpp:222`).
 
 ---
@@ -721,7 +815,7 @@ they contain.
 unbound variables of identical subterms.
 
 **Test.** `TST(z3_4_7_1_ufbv_demod_unbound_var)`,
-`src/test/z3_4_7_1_bugs.cpp:812` (registered at `src/test/main.cpp:223`).
+`src/test/z3_4_7_1_bugs.cpp:855` (registered at `src/test/main.cpp:223`).
 The bug depends on AST ids, so the test runs the script through a shell-like
 `cmd_context` rather than `Z3_eval_smtlib2_string`.
 
@@ -740,7 +834,7 @@ last formula.
 re-read the size each round.
 
 **Test.** `TST(z3_4_7_1_recover01_inconsistent)`,
-`src/test/z3_4_7_1_bugs.cpp:845` (registered at `src/test/main.cpp:224`).
+`src/test/z3_4_7_1_bugs.cpp:888` (registered at `src/test/main.cpp:224`).
 
 ---
 
@@ -756,7 +850,7 @@ re-read the size each round.
 (`FORK FIX #25`): prove the split with `mk_push_quant`.
 
 **Test.** `TST(z3_4_7_1_distribute_forall_proof)`,
-`src/test/z3_4_7_1_bugs.cpp:884` (registered at `src/test/main.cpp:225`).
+`src/test/z3_4_7_1_bugs.cpp:927` (registered at `src/test/main.cpp:225`).
 
 ---
 
@@ -774,7 +868,7 @@ integral.
 (`FORK FIX #26`): leave the sum unchanged unless the bound and every
 coefficient are integral.
 
-**Test.** `TST(z3_4_7_1_pb2bv_fractional)`, `src/test/z3_4_7_1_bugs.cpp:903`
+**Test.** `TST(z3_4_7_1_pb2bv_fractional)`, `src/test/z3_4_7_1_bugs.cpp:946`
 (registered at `src/test/main.cpp:226`).
 
 ---
@@ -795,7 +889,7 @@ becomes inconsistent and the rewrite loop keeps appending.
 sum with no terms in `mk_eq` when `compile_equality` is off. The underlying
 `goal::update` defect is listed below.
 
-**Test.** `TST(z3_4_7_1_lia2card_empty_eq)`, `src/test/z3_4_7_1_bugs.cpp:931`
+**Test.** `TST(z3_4_7_1_lia2card_empty_eq)`, `src/test/z3_4_7_1_bugs.cpp:974`
 (registered at `src/test/main.cpp:227`), with a 20-second watchdog.
 
 ---
@@ -810,7 +904,7 @@ sum with no terms in `mk_eq` when `compile_equality` is off. The underlying
 
 **Fix.** `src/nlsat/nlsat_explain.cpp:1673` and `:1689` (`FORK FIX #28`): the sign is an `int`.
 
-**Test.** `TST(z3_4_7_1_nlsat_signed_infinity)`, `src/test/z3_4_7_1_bugs.cpp:997`
+**Test.** `TST(z3_4_7_1_nlsat_signed_infinity)`, `src/test/z3_4_7_1_bugs.cpp:1040`
 (registered at `src/test/main.cpp:235`).
 
 ---
@@ -825,7 +919,7 @@ sum with no terms in `mk_eq` when `compile_equality` is off. The underlying
 
 **Fix.** `src/nlsat/nlsat_evaluator.cpp:387` (`FORK FIX #29`): normalize each sign to -1, 0 or 1 before multiplying.
 
-**Test.** `TST(z3_4_7_1_nlsat_eval_sign_overflow)`, `src/test/z3_4_7_1_bugs.cpp:1038`
+**Test.** `TST(z3_4_7_1_nlsat_eval_sign_overflow)`, `src/test/z3_4_7_1_bugs.cpp:1081`
 (registered at `src/test/main.cpp:236`).
 
 ---
@@ -840,7 +934,7 @@ sum with no terms in `mk_eq` when `compile_equality` is off. The underlying
 
 **Fix.** `src/nlsat/nlsat_explain.cpp:1729` and `:1747` (`FORK FIX #30`): each polynomial indexes its own power tables (upstream's As/Bs).
 
-**Test.** `TST(z3_4_7_1_nlsat_solve_eq_powers)`, `src/test/z3_4_7_1_bugs.cpp:1075`
+**Test.** `TST(z3_4_7_1_nlsat_solve_eq_powers)`, `src/test/z3_4_7_1_bugs.cpp:1118`
 (registered at `src/test/main.cpp:237`).
 
 ---
@@ -855,7 +949,7 @@ sum with no terms in `mk_eq` when `compile_equality` is off. The underlying
 
 **Fix.** `src/nlsat/nlsat_explain.cpp:432` and `:1138` (`FORK FIX #31`): test `s < 0`.
 
-**Test.** `TST(z3_4_7_1_nlsat_simplify_core_sign)`, `src/test/z3_4_7_1_bugs.cpp:1115`
+**Test.** `TST(z3_4_7_1_nlsat_simplify_core_sign)`, `src/test/z3_4_7_1_bugs.cpp:1158`
 (registered at `src/test/main.cpp:238`).
 
 ---
@@ -870,7 +964,7 @@ sum with no terms in `mk_eq` when `compile_equality` is off. The underlying
 
 **Fix.** `src/nlsat/nlsat_solver.cpp:2373`, `:2385`, `:2409` and `:2451` (`FORK FIX #32`).
 
-**Test.** `TST(z3_4_7_1_nlsat_inline_vars)`, `src/test/z3_4_7_1_bugs.cpp:1177`
+**Test.** `TST(z3_4_7_1_nlsat_inline_vars)`, `src/test/z3_4_7_1_bugs.cpp:1220`
 (registered at `src/test/main.cpp:239`).
 
 ---
@@ -885,7 +979,7 @@ sum with no terms in `mk_eq` when `compile_equality` is off. The underlying
 
 **Fix.** `src/nlsat/nlsat_solver.cpp:2019` (`FORK FIX #33`): `can_reorder()` returns false while patches exist.
 
-**Test.** `TST(z3_4_7_1_nlsat_inline_reorder)`, `src/test/z3_4_7_1_bugs.cpp:1200`
+**Test.** `TST(z3_4_7_1_nlsat_inline_reorder)`, `src/test/z3_4_7_1_bugs.cpp:1243`
 (registered at `src/test/main.cpp:240`).
 
 ---
@@ -900,7 +994,7 @@ sum with no terms in `mk_eq` when `compile_equality` is off. The underlying
 
 **Fix.** `src/qe/qe_arith_plugin.cpp:1931` (`FORK FIX #34`): choose the bound family with `get_bound_sizes`.
 
-**Test.** `TST(z3_4_7_1_qe_project_real_direction)`, `src/test/z3_4_7_1_bugs.cpp:1232`
+**Test.** `TST(z3_4_7_1_qe_project_real_direction)`, `src/test/z3_4_7_1_bugs.cpp:1275`
 (registered at `src/test/main.cpp:241`).
 
 ---
@@ -915,7 +1009,7 @@ sum with no terms in `mk_eq` when `compile_equality` is off. The underlying
 
 **Fix.** `src/qe/qe_arith_plugin.cpp:45` and `:1329` (`FORK FIX #35`): a divisibility atom needs a positive modulus; others are left alone, so the quantifier is kept.
 
-**Test.** `TST(z3_4_7_1_qe_mod_divisor)`, `src/test/z3_4_7_1_bugs.cpp:1255`
+**Test.** `TST(z3_4_7_1_qe_mod_divisor)`, `src/test/z3_4_7_1_bugs.cpp:1298`
 (registered at `src/test/main.cpp:242`).
 
 ---
@@ -930,7 +1024,7 @@ sum with no terms in `mk_eq` when `compile_equality` is off. The underlying
 
 **Fix.** `src/qe/qe_datatype_plugin.cpp:725` (`FORK FIX #36`): conjoin `r(t)`.
 
-**Test.** `TST(z3_4_7_1_qe_dt_eq_recognizer)`, `src/test/z3_4_7_1_bugs.cpp:1275`
+**Test.** `TST(z3_4_7_1_qe_dt_eq_recognizer)`, `src/test/z3_4_7_1_bugs.cpp:1318`
 (registered at `src/test/main.cpp:243`).
 
 ---
@@ -945,7 +1039,7 @@ sum with no terms in `mk_eq` when `compile_equality` is off. The underlying
 
 **Fix.** `src/qe/qe_lite.cpp:1544` (`FORK FIX #37`): reset `m_expr2bvar`.
 
-**Test.** `TST(z3_4_7_1_qe_lite_fm_bvar)`, `src/test/z3_4_7_1_bugs.cpp:1294`
+**Test.** `TST(z3_4_7_1_qe_lite_fm_bvar)`, `src/test/z3_4_7_1_bugs.cpp:1337`
 (registered at `src/test/main.cpp:244`).
 
 ---
@@ -960,7 +1054,7 @@ sum with no terms in `mk_eq` when `compile_equality` is off. The underlying
 
 **Fix.** `src/ast/pb_decl_plugin.cpp:177` (`FORK FIX #38`): pass copies of the coefficients.
 
-**Test.** `TST(z3_4_7_1_pb_mk_lt_coeffs)`, `src/test/z3_4_7_1_bugs.cpp:1316`
+**Test.** `TST(z3_4_7_1_pb_mk_lt_coeffs)`, `src/test/z3_4_7_1_bugs.cpp:1359`
 (registered at `src/test/main.cpp:245`).
 
 ---
@@ -975,7 +1069,7 @@ sum with no terms in `mk_eq` when `compile_equality` is off. The underlying
 
 **Fix.** `src/opt/opt_parse.cpp:292` (`FORK FIX #39`): consume the shared `m` once, then test `in:` / `ax:`. The meaning kept for `max:` (minimize the negated sum) is unchanged and itself questionable.
 
-**Test.** `TST(z3_4_7_1_opb_max_objective)`, `src/test/z3_4_7_1_bugs.cpp:1336`
+**Test.** `TST(z3_4_7_1_opb_max_objective)`, `src/test/z3_4_7_1_bugs.cpp:1379`
 (registered at `src/test/main.cpp:246`).
 
 ---
@@ -990,7 +1084,7 @@ sum with no terms in `mk_eq` when `compile_equality` is off. The underlying
 
 **Fix.** `src/cmd_context/tactic_cmds.cpp:763` (`FORK FIX #40`): fold from child 2.
 
-**Test.** `TST(z3_4_7_1_probe_nary_fold)`, `src/test/z3_4_7_1_bugs.cpp:1354`
+**Test.** `TST(z3_4_7_1_probe_nary_fold)`, `src/test/z3_4_7_1_bugs.cpp:1397`
 (registered at `src/test/main.cpp:247`).
 
 ---
@@ -1005,7 +1099,7 @@ sum with no terms in `mk_eq` when `compile_equality` is off. The underlying
 
 **Fix.** `scripts/update_api.py:958` (`FORK FIX #41`, generates `api_log_macros.cpp`), `src/api/z3_logger.h:45` and `src/api/z3_replayer.cpp:500` and `:509`: log and replay `int` arrays as `int` arrays.
 
-**Test.** `TST(z3_4_7_1_pb_log_replay)`, `src/test/z3_4_7_1_bugs.cpp:1370`
+**Test.** `TST(z3_4_7_1_pb_log_replay)`, `src/test/z3_4_7_1_bugs.cpp:1413`
 (registered at `src/test/main.cpp:248`).
 
 ---
@@ -1020,7 +1114,7 @@ sum with no terms in `mk_eq` when `compile_equality` is off. The underlying
 
 **Fix.** `src/util/sexpr.cpp:188` (`FORK FIX #42`): return after `display_atom`.
 
-**Test.** `TST(z3_4_7_1_sexpr_display_atom)`, `src/test/z3_4_7_1_bugs.cpp:1411`
+**Test.** `TST(z3_4_7_1_sexpr_display_atom)`, `src/test/z3_4_7_1_bugs.cpp:1454`
 (registered at `src/test/main.cpp:249`).
 
 ---
@@ -1045,7 +1139,7 @@ queries' rules, and its `query!0` output predicate stays in the context.
 `old_rules` before `mk_query`, and call `m_ctx.reopen();
 m_ctx.replace_rules(old_rules);` after the transformed formulas are read.
 
-**Test.** `TST(z3_4_7_1_duality_quantify_arrays_requery)`, `src/test/z3_4_7_1_bugs.cpp:1427`
+**Test.** `TST(z3_4_7_1_duality_quantify_arrays_requery)`, `src/test/z3_4_7_1_bugs.cpp:1470`
 (registered at `src/test/main.cpp:250`).
 
 ---
@@ -1065,8 +1159,885 @@ next query calls `old_rs->GetCounterexample()`.
 the counterexample swap when `old_rs` is null, as the existing guard on
 `LearnFrom` already does.
 
-**Test.** `TST(z3_4_7_1_duality_failed_query_requery)`, `src/test/z3_4_7_1_bugs.cpp:1454`
+**Test.** `TST(z3_4_7_1_duality_failed_query_requery)`, `src/test/z3_4_7_1_bugs.cpp:1497`
 (registered at `src/test/main.cpp:251`).
+
+---
+
+## 45. `model_implicant`: a nested array equality stays marked true
+
+**Upstream:** still present in z3 5.4.2 (`src/model/model_implicant.cpp:600-604`).
+
+**Symptom.** For two arrays of arrays that agree at one index and differ at
+another, `(not (= a b))` evaluates to false; `minimize_literals` then hits
+`UNREACHABLE` ("formula false in model") and the process crashes. Reached
+from PDR/Spacer model implicants.
+
+**Cause.** In `eval_array_eq`, the nested-array branch marks the inner
+equality true at one index and `continue`s without clearing the mark, so the
+later differing index never makes the outer equality false.
+
+**Fix.** `src/model/model_implicant.cpp:605` (`FORK FIX #45`): `set_unknown(e);`
+before the `continue`.
+
+**Test.** `TST(z3_4_7_1_implicant_nested_array_eq)`, `src/test/z3_4_7_1_bugs.cpp:1522`
+(registered at `src/test/main.cpp:252`).
+
+---
+
+## 46. Duality: underapproximation flags fixed in `FixCurrentState`
+
+**Upstream:** none. Duality was removed upstream.
+
+**Symptom.** With `fixedpoint.duality.use_underapprox=true`, a satisfiable
+problem aborts with an uncaught "error in ExpansionChoices".
+
+**Cause.** `FixCurrentState` passes an empty don't-care set, so the
+`@under` flag literals are frozen to their current values, and the expansion
+choices later contradict them.
+
+**Fix.** `src/duality/duality_rpfp.cpp:2521` (`FORK FIX #46`): add the
+`underapprox_flag_rev` keys to `dont_cares`. Its red test passes only together
+with fix 47.
+
+**Test.** `TST(z3_4_7_1_duality_underapprox_flag_literals)`, `src/test/z3_4_7_1_bugs.cpp:1566`
+(registered at `src/test/main.cpp:253`).
+
+---
+
+## 47. Duality: `Build` interpolates a stale assumption-based proof
+
+**Upstream:** none. Duality was removed upstream.
+
+**Symptom.** With `use_underapprox`, iZ3 fails with "unknown assertion" on a
+satisfiable problem.
+
+**Cause.** `Build` interpolates the proof of the assumption-based
+`CheckWithUnderapprox`; the plain `tree->Check(top)` that would produce an
+interpolatable proof is commented out.
+
+**Fix.** `src/duality/duality_solver.cpp:1958` (`FORK FIX #47`): re-enable
+`tree->Check(top);` before interpolating.
+
+**Test.** `TST(z3_4_7_1_duality_underapprox_stale_proof)`, `src/test/z3_4_7_1_bugs.cpp:1587`
+(registered at `src/test/main.cpp:254`).
+
+---
+
+## 48. PDR proof trace: cache keyed by state only
+
+**Upstream:** none. PDR was removed upstream (6adaed718).
+
+**Symptom.** With `fixedpoint.generate_proof_trace=true`, when the `query!0` root and a body predicate are nullary (state `true`), the certificate proves the wrong fact (for example `(forall x (P x))` instead of `query!0`).
+
+**Cause.** `model_search::get_proof_trace` caches proofs and rules by state only, as fix 13 did for the search cache.
+
+**Fix.** `src/muz/pdr/pdr_context.cpp:1308` and the other `FORK FIX #48` sites: key both caches by `(pt().head(), state())` with `obj_pair_map`.
+
+**Test.** `TST(z3_4_7_1_pdr_proof_nullary_root)`, `src/test/z3_4_7_1_bugs.cpp:1606`
+(registered at `src/test/main.cpp:255`).
+
+---
+
+## 49. PDR proof trace: unresolved duplicate leaf
+
+**Upstream:** none. PDR was removed upstream (6adaed718).
+
+**Symptom.** A repeated obligation that the search closed as a duplicate without children is reached first, so its unresolved rule is cached and the certificate concludes `(=> (a true) query!0)`.
+
+**Cause.** `get_proof_trace` resolves nodes in visit order and caches the first one seen.
+
+**Fix.** `src/muz/pdr/pdr_context.cpp:1320` and `:1345` (`FORK FIX #49`): collect the first expanded node per (predicate, state) and resolve it in place of a childless duplicate.
+
+**Test.** `TST(z3_4_7_1_pdr_proof_duplicate_leaf)`, `src/test/z3_4_7_1_bugs.cpp:1639`
+(registered at `src/test/main.cpp:256`).
+
+---
+
+## 50. PDR Boogie certificate without a proof trace
+
+**Upstream:** none. PDR was removed upstream (6adaed718).
+
+**Symptom.** `fixedpoint.print_boogie_certificate=true` without `generate_proof_trace` segfaults.
+
+**Cause.** The rules then have no proof; only `SASSERT(p1)` guarded the dereference.
+
+**Fix.** `src/muz/pdr/pdr_context.cpp:1374` (`FORK FIX #50`): use `m.mk_asserted(rule formula)` when a rule has no proof.
+
+**Test.** `TST(z3_4_7_1_pdr_boogie_without_proof_trace)`, `src/test/z3_4_7_1_bugs.cpp:1690`
+(registered at `src/test/main.cpp:257`).
+
+---
+
+## 51. PDR proof trace after merged tails
+
+**Upstream:** none. PDR was removed upstream (6adaed718).
+
+**Symptom.** When `remove_duplicate_tails` merged a child's tail away, `get_proof_trace` segfaults in `rule_unifier::unify_rules` (reads `get_tail(0)` of a rule with no tails left).
+
+**Cause.** It always unifies tail 0 of the partly resolved rule with the next child.
+
+**Fix.** `src/muz/pdr/pdr_context.cpp:1406`, `:1441` and `:1451` (`FORK FIX #51`): unify only while an uninterpreted tail is left; if unification fails, print the IF_VERBOSE message and skip that child; keep the resolved children in a separate premises vector.
+
+**Test.** `TST(z3_4_7_1_pdr_proof_merged_tails)`, `src/test/z3_4_7_1_bugs.cpp:1718`
+(registered at `src/test/main.cpp:258`).
+
+---
+
+## 52. Rewriter keeps stale stacks after a `max_steps` exception
+
+**Upstream:** 18bb90f93 (2020-05-21, "fix #4426") and b013df9a9 (2020-06-04,
+"fix #4431").
+
+**Symptom.** After a rewrite stops with "max. steps exceeded", the next
+rewrite on the same rewriter (for example the next model evaluation) returns a
+stale result: "Sort mismatch at argument #2 ... supplied sort is Bool", or a
+segfault for small `model_evaluator.max_steps`. Seen in model finding with
+`model.partial`/MBQI and `max_steps` (g3 vector
+`z3_bug_proto_eval_max_steps.smt2`).
+
+**Cause.** `rewriter_tpl::operator()` starts with the frame, result, scope
+and cache stacks left over from the interrupted rewrite.
+
+**Fix.** `src/ast/rewriter/rewriter_def.h:743` (`FORK FIX #52`): reset the
+frames, results, result proofs, scopes and cache when they are not empty, as
+upstream does.
+
+**Test.** `TST(z3_4_7_1_rewriter_stale_stacks)`, `src/test/z3_4_7_1_bugs.cpp:1758`
+(registered at `src/test/main.cpp:259`).
+
+---
+
+## 53. `qe` finite-domain plugin: negative atoms in the "other value" branch
+
+**Upstream:** still present (`src/qe/qe_dl_plugin.cpp:167`).
+
+**Symptom.** Over a finite-domain sort of size 4, `(exists ((x S)) (not (= x
+c)))` eliminates to `false`; the correct result is `true`.
+
+**Cause.** `dl_plugin::subst_large_domain` substitutes `true` for the
+negatively occurring atom `(= x c)` in the "other value" branch, contradicting
+`assign_large_domain` (which asserts `not(neq_atom)`) and the datatype
+plugin's `subst_large_domain`.
+
+**Fix.** `src/qe/qe_dl_plugin.cpp:165` (`FORK FIX #53`): substitute `false`.
+
+**Test.** `TST(z3_4_7_1_qe_dl_other_value_neq)`, `src/test/z3_4_7_1_bugs.cpp:1799`
+(registered at `src/test/main.cpp:260`).
+
+---
+
+## 54. Sieve-relation negation: inverted inner-column test
+
+**Upstream:** still present (`src/muz/rel/dl_sieve_relation.cpp:636` in 5.4.2).
+
+**Symptom.** `sieve_relation_plugin::mk_filter_by_negation_fn` mishandles
+the equality columns. An equality between two inner columns is dropped, so the
+inner negation runs on zero columns and removes every target row whenever the
+negated relation is nonempty. An equality on a full (sieved) column of the
+negated relation, which always holds, yields the identity filter instead of
+subtracting. Sieve relations come from `mk_explanations` with
+`datalog.explanations_on_relation_level=true` (API `query(expr)` path).
+
+**Cause.** `r_col_inner = r_sieved && !sr->is_inner_col(r_cols[i])` (and the
+same for `neg_col_inner`) is true exactly when the column is *not* inner, and
+`get_inner_col(i)` uses the loop index instead of `r_cols[i]` / `neg_cols[i]`.
+
+**Fix.** `src/muz/rel/dl_sieve_relation.cpp:637` (`FORK FIX #54`):
+`r_col_inner = !r_sieved || sr->is_inner_col(r_cols[i])`, the same for the
+negated side, and `get_inner_col(r_cols[i])` / `get_inner_col(neg_cols[i])`
+(a non-sieve side uses the column itself).
+
+**Test.** `TST(z3_4_7_1_sieve_negation_inner_cols)`, `src/test/z3_4_7_1_bugs.cpp:1835`
+(registered at `src/test/main.cpp:262`).
+
+---
+
+## 55. `check_table` with a sparse member: nullary `mk_empty` segfaults
+
+**Upstream:** still present (`src/muz/rel/dl_check_table.cpp:52` in 5.4.2).
+
+**Symptom.** With `fixedpoint.datalog.default_table_checked=true` and sparse as
+either the default table or the checker, a rule that projects to a nullary
+table before a negation segfaults in
+`sparse_table::column_layout::make_byte_aligned_end`; the correct answer is
+`sat`.
+
+**Cause.** `instr_union` creates its empty target with
+`r_src.get_plugin().mk_empty(r_src)`. `check_table_plugin::mk_empty` passes the
+0-column signature to both wrapped plugins without checking
+`can_handle_signature`, and `sparse_table_plugin` needs at least one column
+(the same pattern as fix 15).
+
+**Fix.** `src/muz/rel/dl_check_table.cpp:52` (`FORK FIX #55`): a wrapped
+plugin that cannot handle the signature is replaced by
+`get_manager().mk_empty_table(s)`, as `lazy_table_plugin::mk_empty` does.
+
+**Test.** `TST(z3_4_7_1_check_table_nullary_empty)`, `src/test/z3_4_7_1_bugs.cpp:1908`
+(registered at `src/test/main.cpp:263`).
+
+---
+
+## 56. `bitvector_table`: nullary tables reserve no bits
+
+**Upstream:** fixed in 8dac9b7b94 ("fix #3814").
+
+**Symptom.** With `fixedpoint.datalog.default_table=bitvector`, any nullary
+predicate (for example `(declare-rel g ()) (rule g) (query g)`) segfaults in
+`bitvector_table::add_fact`; the correct answer is `sat`.
+
+**Cause.** The `bitvector_table` constructor calls `m_bv.reserve(1 << shift)`
+inside the loop over the columns, so a table with no columns reserves nothing.
+
+**Fix.** `src/muz/rel/dl_table.cpp:257` (`FORK FIX #56`): reserve after the
+loop, as upstream does; a nullary table holds one bit.
+
+**Test.** `TST(z3_4_7_1_bitvector_table_nullary)`, `src/test/z3_4_7_1_bugs.cpp:1950`
+(registered at `src/test/main.cpp:264`).
+
+---
+
+## 57. `smt.case_split=6`: uninitialized decision phase
+
+**Upstream:** fixed (`src/smt/smt_context.cpp:2006` declares
+`lbool phase = l_undef;`).
+
+**Symptom.** With `smt.case_split=6` (theory-aware branching) the decision
+phase is undefined; the reference build decides negative every time, whatever
+`smt.phase_selection` says, so models and statistics differ from g3 and are
+not guaranteed across compilers.
+
+**Cause.** `context::decide` declares `lbool phase;` without a value and
+`theory_aware_branching_queue::next_case_split` returns without writing it.
+
+**Fix.** `src/smt/smt_context.cpp:1809` (`FORK FIX #57`): initialize the
+phase to `l_undef`, so the configured phase selection decides, as in upstream
+and in g3 (AUDIT.md smtcore_02-F9).
+
+**Test.** `TST(z3_4_7_1_case_split6_phase)`, `src/test/z3_4_7_1_bugs.cpp:1985`
+(registered at `src/test/main.cpp:265`). The unfixed code reads undefined
+behavior, so the test is red in this build but not guaranteed red everywhere.
+
+---
+
+## 58. PB simplex: rows over nested pb atoms
+
+**Upstream:** `pb.enable_simplex` no longer exists (1a1d88dde7 rejects it).
+
+**Symptom.** With `pb.enable_simplex=true`, a pb constraint that has another
+pb atom as an argument, for example
+`((_ pbge 3 2 1 1) ((_ pbge 2 1 1 1) (not b) (not d) a) b d)`, answers `unsat`
+although a=b=true, d=false satisfies it; other inputs segfault. On 400 random
+nested scripts the release build was wrong in 131.
+
+**Cause.** In `theory_pb::internalize_atom` the simplex column of a pb atom
+`abv` is both the atom's slack column and a 0-1 column of any outer
+constraint that mentions it, so the outer row puts [0,1] bounds on the inner
+slack (the code carries a "TBD" comment about this case).
+
+**Fix.** `src/smt/theory_pb.cpp:543` (`FORK FIX #58`): a constraint with an
+argument that is itself a pb atom with a row gets no simplex row;
+`assign_eh` (`:829`) and `pop_scope_eh` (`:1347`) skip atoms without a row
+(replacing a `VERIFY`).
+
+**Test.** `TST(z3_4_7_1_pb_simplex_nested)`, `src/test/z3_4_7_1_bugs.cpp:2032`
+(registered at `src/test/main.cpp:266`).
+
+---
+
+## 59. PB simplex: 0-1 bound on a reused slack column after pop
+
+**Upstream:** `pb.enable_simplex` no longer exists (1a1d88dde7 rejects it).
+
+**Symptom.** With `pb.enable_simplex=true` and push/pop, satisfiable problems
+answer `unsat` after a pop (minimal repro: sat, then unsat; correct: sat,
+sat).
+
+**Cause.** `theory_pb::assign_eh` bounds a bool var's 0-1 column whenever
+`m_lit_watch[sign] != nullptr`. `pop_scope_eh`/`clear_watch` empty but keep
+the watch lists of popped constraints, so when a freed bool var is reused as
+a pb atom, whose column is that atom's slack, assigning it puts a 0-1 bound
+on the weighted sum.
+
+**Fix.** `src/smt/theory_pb.cpp:797` (`FORK FIX #59`): apply the literal bound
+only to 0-1 columns (`m_enable_simplex && m_vars.contains(v)`).
+
+**Test.** `TST(z3_4_7_1_pb_simplex_pop)`, `src/test/z3_4_7_1_bugs.cpp:2060`
+(registered at `src/test/main.cpp:267`).
+
+---
+
+## 60. `smt_solver::updt_params` resets solver-level settings
+
+**Upstream:** fixed (`smt_solver::updt_params` uses `solver::get_params()`;
+z3 4.15.2 keeps `mbqi=false` in the scenarios below).
+
+**Symptom.** `Z3_get_implied_equalities` calls `updt_params` with just
+`produce_models=true`. On a solver created with `smt.mbqi=false` that
+re-enables mbqi: a later quantified problem answers `sat` instead of
+`unknown`, and if a quantifier was already internalized under `mbqi=false`
+the next check segfaults in `model_finder::get_flat_quantifier` (from
+`model_checker::check`).
+
+**Cause.** `smt_solver::updt_params(p)` passes `p` alone to
+`smt_params::updt_params`, `context::updt_params` and `smt_params_helper`, so
+every smt setting not in `p` is re-read from the global defaults.
+
+**Fix.** `src/smt/smt_solver.cpp:79` (`FORK FIX #60`): pass the merged
+`solver::get_params()`, as upstream does (AUDIT.md smtcore_03-F10 follow-up).
+
+**Test.** `TST(z3_4_7_1_solver_updt_params)`, `src/test/z3_4_7_1_bugs.cpp:2099`
+(registered at `src/test/main.cpp:268`).
+
+---
+
+## 61. `theory_pb`: a pb equality left with no arguments is dropped
+
+**Upstream:** fixed by redesign in bd96eaff47 ("axiomatize pb-eq"); upstream
+answers `unsat`. The fork fix is minimal and does not backport the redesign.
+
+**Symptom.** With default options,
+`(assert (or a b)) (assert (not b)) (assert ((_ pbeq 1 1 1) a c)) (assert (or c b))`
+answers `sat`; `model_validate=true` reports the model invalid. The problem
+is unsat.
+
+**Cause.** `theory_pb::internalize_atom` drops the arguments that are already
+assigned and subtracts the true ones' coefficients from the bound. When every
+argument of an equality is assigned, the constraint keeps no arguments and a
+negative bound; `pb_rewriter_util::normalize` only rejects a bound above the
+coefficient sum, so it returns `l_undef`, and a constraint with no arguments
+is never watched or propagated.
+
+**Fix.** `src/smt/theory_pb.cpp:475` (`FORK FIX #61`): after `normalize`, an
+undecided equality with no arguments is false, matching
+`pb_rewriter::mk_app_core` (`sz == 0 && k != 0`).
+
+**Test.** `TST(z3_4_7_1_pb_eq_no_args)`, `src/test/z3_4_7_1_bugs.cpp:2135`
+(registered at `src/test/main.cpp:269`).
+
+---
+
+## 62. `theory_pb::assert_ge`: uninitialized local theory
+
+**Upstream:** fixed in becf423c77 (theories are built from the context;
+`assert_ge` became `theory_pb th(ctx);`).
+
+**Symptom.** `./test-z3 theory_pb` segfaults right after its fuzz phase, on
+the first `assert_ge` case ("k:0 4"). Only the unit test reaches this helper;
+solver results are unaffected.
+
+**Cause.** `theory_pb::assert_ge` builds a local
+`theory_pb th(ctx.get_manager(), p)` and never calls `th.init(&ctx)`, so
+`theory::m_manager` stays null; the sorting network's first clause reaches
+`theory_pb::justify`, whose `proofs_enabled()` dereferences it.
+
+**Fix.** `src/smt/theory_pb.cpp:1244` (`FORK FIX #62`): call `th.init(&ctx)`
+after constructing `th`.
+
+**Test.** `TST(z3_4_7_1_pb_assert_ge_uninit)`, `src/test/z3_4_7_1_bugs.cpp:2163`
+(registered at `src/test/main.cpp:270`).
+
+---
+
+## 63. Duality certificates: witnesses for eliminated rule variables
+
+**Upstream:** Duality was removed upstream; no fix to backport.
+
+**Symptom.** With `fixedpoint.engine=duality` and `:print-certificate true`,
+a counterexample step prints each rule variable as `tree->Eval(&edge, skolem)`.
+A variable that qe-lite eliminated from the edge formula is unconstrained in
+the counterexample model and prints the model default, so the certificate is
+invalid (for example it certifies `q0(5)` by `x1 = x + 3` with `(= x 0)`).
+
+**Cause.** `print_proof` and `extract_proof` evaluate the original rule's
+variables in the edge model, which no longer mentions eliminated variables.
+
+**Fix.** `src/muz/duality/duality_dl_interface.cpp` (`FORK FIX #63`): keep
+the raw background axioms (:255) and, per step, search a witness for the
+original rule's variables that is consistent with the step's head and body
+facts (`witness_clause_shape`, `witness_node_fact`, `find_step_witness`,
+:405-603), as g3 does (pkg/duality/counterexample_proof.go). `print_proof`
+(:617) and `extract_proof` (:769) use it, falling back to the old value when
+no witness is found (g3 AUDIT.md duality_01-F4).
+
+**Test.** `TST(z3_4_7_1_duality_certificate_eliminated_var)`,
+`src/test/z3_4_7_1_bugs.cpp:1658` (registered at `src/test/main.cpp:256`).
+
+---
+
+## 64. qe finite-domain plugin: domain size equal to the number of atoms
+
+**Upstream:** still present (`src/qe/qe_dl_plugin.cpp:122` in 5.4.2).
+
+**Symptom.** Over a finite-domain sort of size 2, qe eliminates `(exists ((x S)) (and (not (= x y)) (not (= x z))))` to `true` (with fix 53) where the correct result is `(= y z)`, and `(exists ((x S)) (and (not (= x 0)) (not (= x 1))))` to `true` instead of `false`.
+
+**Cause.** `is_small_domain` uses `domain_size < num_eqs + num_neqs`; at equality the large-domain "other value" branch assumes a value outside the atoms exists, and none does.
+
+**Fix.** `src/qe/qe_dl_plugin.cpp:120` (`FORK FIX #64`): enumerate when `domain_size <= num_eqs + num_neqs` (g3 AUDIT.md qe_01-F4).
+
+**Test.** `TST(z3_4_7_1_qe_dl_domain_boundary)`, `src/test/z3_4_7_1_bugs.cpp:1995`
+(registered at `src/test/main.cpp:263`).
+
+---
+
+## 65. `to_fp` of one Real: out-of-bounds read
+
+**Upstream:** the one-Real branch was removed; upstream rejects the input with "Unexpected argument combination".
+
+**Symptom.** `((_ to_fp 3 3) r)` with `r` a Real reads `domain[1]` of a one-element domain (undefined behavior); the reference build reports "sort mismatch, expected one argument of Real sort", and accepting the input would crash `fpa2bv` (no rounding mode).
+
+**Cause.** `fpa_decl_plugin::mk_to_fp` has a "1 Real -> 1 FP" branch that checks `domain[1]`.
+
+**Fix.** `src/ast/fpa_decl_plugin.cpp:514` (`FORK FIX #65`): drop the branch and "(Real)" from the supported-combinations message, as upstream (g3 AUDIT.md ast_05-F2).
+
+**Test.** `TST(z3_4_7_1_to_fp_one_real)`, `src/test/z3_4_7_1_bugs.cpp:2379`
+(registered at `src/test/main.cpp:281`).
+
+---
+
+## 66. `z3 -dl <directory>` on POSIX
+
+**Upstream:** still present (`NOT_IMPLEMENTED_YET()` in 5.4.2).
+
+**Symptom.** `z3 -dl wpa/` prints `NOT IMPLEMENTED YET!` and hangs (`UNREACHABLE` in release).
+
+**Cause.** `get_file_names` is implemented only for `_WINDOWS`.
+
+**Fix.** `src/muz/base/dl_util.cpp:601` (`FORK FIX #66`): opendir/readdir with sorted names, the same extension filter and recursion as the Windows code (g3 AUDIT.md cmd_context_02-F11).
+
+**Test.** `TST(z3_4_7_1_get_file_names_posix)`, `src/test/z3_4_7_1_bugs.cpp:2427`
+(registered at `src/test/main.cpp:282`).
+
+---
+
+## 67. WPA not-in-sort warning format
+
+**Upstream:** still present.
+
+**Symptom.** The warning prints `4294967301` as `5` padded to 64 columns.
+
+**Cause.** `%I64u` is MSVC-only; glibc reads it as a 64-wide `%u` of a 32-bit argument (undefined behavior).
+
+**Fix.** `src/muz/fp/datalog_parser.cpp:1291` (`FORK FIX #67`): `PRIu64` (also the unreachable "unknown symbol number" message).
+
+**Test.** `TST(z3_4_7_1_wpa_warning_number)`, `src/test/z3_4_7_1_bugs.cpp:2519`
+(registered at `src/test/main.cpp:283`).
+
+---
+
+## 68. `read_uint64` near `ULLONG_MAX`
+
+**Upstream:** still present.
+
+**Symptom.** `read_uint64` rejects `ULLONG_MAX` and every value from 18446744073709551610 up.
+
+**Cause.** The overflow-guarded branch never advances past the digit.
+
+**Fix.** `src/muz/base/dl_util.cpp:697` (`FORK FIX #68`): consume the digit (`s++`).
+
+**Test.** `TST(z3_4_7_1_read_uint64_max)`, `src/test/z3_4_7_1_bugs.cpp:2542`
+(registered at `src/test/main.cpp:284`).
+
+---
+
+## 69. WPA map line with an empty name
+
+**Upstream:** still present.
+
+**Symptom.** A map line such as `"1 "` gives an empty name, and the parser reads `rest_of_line[size()-1]` (undefined behavior; a release build happens to read a harmless byte, so the test is not red).
+
+**Cause.** `parse_map_line` tests the name's last character without checking for an empty name.
+
+**Fix.** `src/muz/fp/datalog_parser.cpp:1497` (`FORK FIX #69`): test emptiness first; the name is the empty symbol.
+
+**Test.** `TST(z3_4_7_1_wpa_empty_map_name)`, `src/test/z3_4_7_1_bugs.cpp:2569`
+(registered at `src/test/main.cpp:285`).
+
+---
+
+## 70. `goal::update` pushes the unflattened formula
+
+**Upstream:** still present (5.4.2).
+
+**Symptom.** `(declare-const a Bool)(assert (not (=> false a)))(apply nnf)` keeps `(not (=> false a))`, `(not a)` and `(and false (not a))`; the goal should be `false`. The same path made lia2card loop with `:compile_equality false` (fix 27 avoided that trigger).
+
+**Cause.** Without proofs, `goal::update` flattens the new formula but calls `push_back(f, nullptr, d)` instead of `push_back(fr, ...)`.
+
+**Fix.** `src/tactic/goal.cpp:292` (`FORK FIX #70`): push `fr`.
+
+**Test.** `TST(z3_4_7_1_goal_update_false)`, `src/test/z3_4_7_1_bugs.cpp:2591`
+(registered at `src/test/main.cpp:278`).
+
+---
+
+## 71. Model evaluation of mutually recursive `define-fun-rec`
+
+**Upstream:** replaced by the recfun theory; no direct fix.
+
+**Symptom.** `get-value` of `(even 0)` for mutually recursive Boolean `define-fun-rec`s never terminates.
+
+**Cause.** The model evaluator expands both branches of the recursive `ite`/`and`/`or` unboundedly.
+
+**Fix.** `FORK FIX #71`: `ast_manager` notes that `define-fun-rec` was used (`src/ast/ast.h:1488`, set in `cmd_context::insert_rec_fun`), and the model evaluator (`src/model/model_evaluator.cpp:515`) then lets `rewriter_tpl::constant_fold` stop an `and` at a false argument and an `or` at a true one (`src/ast/rewriter/rewriter_def.h`), as g3 does.
+
+**Test.** `TST(z3_4_7_1_rec_fun_model_eval)`, `src/test/z3_4_7_1_bugs.cpp:2629`
+(registered at `src/test/main.cpp:279`).
+
+---
+
+## 72. Nested parametric datatypes: `get_sort_size` use-after-free
+
+**Upstream:** fixed in f1c3e1aa7 ("fix #2077") and e08abb321 ("fix #2504").
+
+**Symptom.** Declaring `(Box T)` and `(Wrap U)` with a `(Box U)` field and asserting three distinct `(Wrap Bool)` values segfaults; the answer is `unsat`.
+
+**Cause.** `sparam::subst` returns a size held in `S`, which `get_sort_size` then `dec_ref`s and frees before `mk_sort` uses it; the substitution was also keyed by the wrong parameters.
+
+**Fix.** `src/ast/datatype_decl_plugin.cpp:587` and `:678` (`FORK FIX #72`) with the `m_refs` member in `datatype_decl_plugin.h`: key by `d.params()` and keep the sizes alive until `set_sort_size`, as upstream.
+
+**Test.** `TST(z3_4_7_1_datatype_param_size)`, `src/test/z3_4_7_1_bugs.cpp:2657`
+(registered at `src/test/main.cpp:280`).
+
+---
+
+## 73. `and_then`: a decided-sat subgoal does not decide the goal
+
+**Upstream:** fixed (`result.reset()` in `and_then_tactical::operator()`).
+
+**Symptom.** `(check-sat-using (then split-clause simplify))` answers `unknown` although a later subgoal is decided sat with a valid model; `apply` prints the stale undecided subgoals too.
+
+**Cause.** The sat branch is appended to `result`, which still holds the undecided subgoals of earlier iterations.
+
+**Fix.** `src/tactic/tactical.cpp:161` (`FORK FIX #73`): reset `result` before pushing the sat goal (g3 AUDIT.md tactic_top_01-F1).
+
+**Test.** `TST(z3_4_7_1_and_then_sat_branch)`, `src/test/z3_4_7_1_bugs.cpp:2679`
+(registered at `src/test/main.cpp:276`).
+
+---
+
+## 74. `repeat`: a decided-sat subgoal does not decide the goal
+
+**Upstream:** still present in 5.4.2 (the null-model crash is gone with redesigned model converters).
+
+**Symptom.** As fix 73 for `repeat`; with models on (the shell default), `(check-sat-using (repeat (or-else split-clause solve-eqs)))` over `(or (> x 0) (= y 3))` also segfaults in `extension_model_converter` because the branch's converter runs on a null model.
+
+**Cause.** `repeat_tactical::operator()` keeps earlier undecided goals and applies the model converters to a null model.
+
+**Fix.** `src/tactic/tactical.cpp:1004` (`FORK FIX #74`): reset `result`, and build the model as `and_then` does (`md = alloc(model, m); apply(mc2, md, 0); apply(mc1, md, i);`).
+
+**Test.** `TST(z3_4_7_1_repeat_sat_branch)`, `src/test/z3_4_7_1_bugs.cpp:2703`
+(registered at `src/test/main.cpp:277`).
+
+---
+
+## 75. opt `from_fmls`: stale objective term
+
+**Upstream:** fixed in b33f5f879.
+
+**Symptom.** A plain `assert-soft` group after a `maximize`/`minimize` is verified against the objective's term, maxres rejects every improving model, and the stale initial cost is reported (`(q (- 1))` instead of `(q (- 3))`).
+
+**Cause.** `orig_term` is kept across loop iterations and `is_maxsat` does not reset it.
+
+**Fix.** `src/opt/opt_context.cpp:816` and `:965` (`FORK FIX #75`): declare `orig_term` inside the loop and reset it in `is_maxsat`, as upstream.
+
+**Test.** `TST(z3_4_7_1_opt_stale_orig_term)`, `src/test/z3_4_7_1_bugs.cpp:2730`
+(registered at `src/test/main.cpp:273`).
+
+---
+
+## 76. qe array `solve_store` with coinciding indices
+
+**Upstream:** still present (5.4.2).
+
+**Symptom.** `(exists ((a (Array Int Int))) (= b (store (store a i v1) j v2)))` with `i = j`, `v1 = 0`, `v2 = 1` is unsat under `(then qe smt)` although plain check-sat says sat.
+
+**Cause.** `array_plugin::solve_store` adds `select(store_T, i_k) = v_k` with the outer writes stored into `t`, which forces `v_k` to equal an outer value when the indices coincide.
+
+**Fix.** `src/qe/qe_array_plugin.cpp:239` (`FORK FIX #76`): each write gives `(or (= i_k i_o) ... (= (select t i_k) v_k))` over the outer writes, as g3 does.
+
+**Test.** `TST(z3_4_7_1_qe_nested_store)`, `src/test/z3_4_7_1_bugs.cpp:2768`
+(registered at `src/test/main.cpp:274`).
+
+---
+
+## 77. Symbolic automaton product: epsilon closure of the initial states
+
+**Upstream:** fixed in 606754c09 ("fix #2262") and a921b4ff4; the code was later removed (z3-4.15.3).
+
+**Symptom.** `(str.in.re x (re.inter (re.union (str.to.re "") (str.to.re "a")) (re.union (str.to.re "") (str.to.re "b"))))` is unsat although `x = ""` satisfies it.
+
+**Cause.** `mk_product` tests the initial states' finality without their epsilon closure.
+
+**Fix.** `src/math/automata/symbolic_automata_def.h:382` and `:474` (`FORK FIX #77`): use the epsilon closure of the initial states, as upstream.
+
+**Test.** `TST(z3_4_7_1_automaton_product_epsilon)`, `src/test/z3_4_7_1_bugs.cpp:2807`
+(registered at `src/test/main.cpp:275`).
+
+---
+
+## 78. datalog `string_to_uint64` and blank strings
+
+**Upstream:** still present (1a1d88dde7).
+
+**Symptom.** An `int` domain fact such as `P("")` parses with an indeterminate numeral (a different value each run).
+
+**Cause.** `string_to_uint64` treats `sscanf`'s EOF result for a blank string as success.
+
+**Fix.** `src/muz/base/dl_util.cpp:670` (`FORK FIX #78`): require `converted == 1`; the parser then reports `Invalid integer: ""` (g3 AUDIT.md cmd_context_01-F9).
+
+**Test.** `TST(z3_4_7_1_dl_string_to_uint64_blank)`, `src/test/z3_4_7_1_bugs.cpp:3290` (registered at `src/test/main.cpp:300`).
+
+---
+
+## 79. `elim-small-bv`: incomplete enumeration
+
+**Upstream:** fixed in b6ee0b151, 8e033c1e7 and aa901c4e8.
+
+**Symptom.** `(forall ((y (_ BitVec 2))) (not (= y #b11)))` becomes `true`, so an unsat goal answers sat; a goal quantified over Int segfaults; under `max_steps` a partial expansion is kept.
+
+**Cause.** `rw_cfg::reduce_quantifier` calls `get_bv_size` before checking the sort, enumerates `j < bv_sz` values instead of `2^bv_sz`, and keeps a partial expansion.
+
+**Fix.** `src/tactic/bv/elim_small_bv_tactic.cpp:143` (`FORK FIX #79`): as upstream (g3 had copied the unsoundness and is fixed too).
+
+**Test.** `TST(z3_4_7_1_elim_small_bv)`, `src/test/z3_4_7_1_bugs.cpp:2794` (registered at `src/test/main.cpp:290`).
+
+---
+
+## 80. `sine-filter` crashes
+
+**Upstream:** fcd1f2b3c fixes the missing entry; sine-filter was removed upstream (490dc66ec).
+
+**Symptom.** A last formula with no uninterpreted root such as `(> x 0)` segfaults; an empty goal reads `g->form(UINT_MAX)`.
+
+**Cause.** `filter_expressions` dereferences a missing `obj_map` entry and indexes the last formula of an empty goal.
+
+**Fix.** `src/tactic/sine_filter.cpp:224` (`FORK FIX #80`).
+
+**Test.** `TST(z3_4_7_1_sine_filter_component)`, `src/test/z3_4_7_1_bugs.cpp:2822` (registered at `src/test/main.cpp:291`).
+
+---
+
+## 81. `symmetry-reduce` on quantified goals
+
+**Upstream:** fixed in 330b3cc8d.
+
+**Symptom.** A quantified goal fails `VERIFY(colors1.find(a, v2))` in `merge_colors` (release: segfault).
+
+**Cause.** The tactic does not reject quantified goals.
+
+**Fix.** `src/tactic/tactic.h:162`, `src/tactic/tactic.cpp:255`, `src/tactic/core/symmetry_reduce_tactic.cpp:644` (`FORK FIX #81`): `fail_if_has_quantifiers`, as upstream.
+
+**Test.** `TST(z3_4_7_1_symmetry_reduce_quantified)`, `src/test/z3_4_7_1_bugs.cpp:2845` (registered at `src/test/main.cpp:292`).
+
+---
+
+## 82. `bvarray2uf` on quantifiers
+
+**Upstream:** fixed in 4bad2dd92.
+
+**Symptom.** Any quantifier, even `(forall ((x Int)) (p x))`, reaches `NOT_IMPLEMENTED_YET()`.
+
+**Cause.** `reduce_var`, `reduce_quantifier` and two `reduce_app` cases are unimplemented.
+
+**Fix.** `src/tactic/bv/bvarray2uf_rewriter.cpp:217`, `:368`, `:401`, `:408` (`FORK FIX #82`): raise `default_exception("not handled by bvarray2uf")`, as upstream.
+
+**Test.** `TST(z3_4_7_1_bvarray2uf_quantifier)`, `src/test/z3_4_7_1_bugs.cpp:2866` (registered at `src/test/main.cpp:293`).
+
+---
+
+## 83. `get-value` under `model_evaluator.max_steps`
+
+**Upstream:** fixed in 335d672bf.
+
+**Symptom.** `get-value` segfaults in `shared_occs` when evaluation exceeds `max_steps` (fix 52 does not cover this path).
+
+**Cause.** `parse_get_value` calls `model::eval`, which swallows the exception and leaves a null value that `display` dereferences.
+
+**Fix.** `src/parsers/smt2/smt2parser.cpp:34`, `:2597` (`FORK FIX #83`): evaluate with a `model_evaluator` so the exception becomes a command error.
+
+**Test.** `TST(z3_4_7_1_get_value_max_steps)`, `src/test/z3_4_7_1_bugs.cpp:2885` (registered at `src/test/main.cpp:294`).
+
+---
+
+## 84. Parametric datatype instances after pop
+
+**Upstream:** fixed in 19f655c69, 120467159, 2d358a9a5 and 984767509.
+
+**Symptom.** After a pop, the next `(List Real)` created outside the popped scope fails with "invalid declaration, constant 'nil' ... already declared" and the declaration that used it is lost.
+
+**Cause.** A pop resets the whole instance cache of the parametric datatype.
+
+**Fix.** `src/cmd_context/pdecl.h`, `pdecl.cpp` and `cmd_context.cpp:1333`, `:1452`, `:2040` (`FORK FIX #84`): the notified-sort set with a push/pop trail, as upstream.
+
+**Test.** `TST(z3_4_7_1_datatype_inst_after_pop)`, `src/test/z3_4_7_1_bugs.cpp:2917` (registered at `src/test/main.cpp:295`).
+
+---
+
+## 85. `define-sort` alias after pop
+
+**Upstream:** still present (5.4.2).
+
+**Symptom.** `(define-sort L () (List Int)) (push 1) (declare-const k L) (pop 1) (declare-const k L) (assert (= k (insert 1 nil)))` reports `unknown constant nil`.
+
+**Cause.** The alias's psort instance cache survives the pop, which removed the constructors, and a cache hit never declares them again.
+
+**Fix.** `src/cmd_context/pdecl.cpp:217`, `:320`, `:734` and `pdecl.h` (`FORK FIX #85`): `needs_renotify` re-instantiates the definition on such cache hits.
+
+**Test.** `TST(z3_4_7_1_define_sort_alias_after_pop)`, `src/test/z3_4_7_1_bugs.cpp:2953` (registered at `src/test/main.cpp:296`).
+
+---
+
+## 86. WPA loader: unreadable map or relation file
+
+**Upstream:** still present (5.4.2).
+
+**Symptom.** `chmod 0 dir/V.map; z3 -dl dir` segfaults.
+
+**Cause.** `parse_rel_file` and `parse_map_file` `fread` from a null `FILE`.
+
+**Fix.** `src/muz/fp/datalog_parser.cpp:1383`, `:1526` (`FORK FIX #86`): report "ERROR: could not open file '%s'." as `parse_file` does.
+
+**Test.** `TST(z3_4_7_1_wpa_unreadable_file)`, `src/test/z3_4_7_1_bugs.cpp:2979` (registered at `src/test/main.cpp:289`).
+
+---
+
+## 87. QBMC hyper-resolution positions
+
+**Upstream:** fixed in 784b613b5.
+
+**Symptom.** QBMC proofs record `(_ hyper-res 0 1)`; the proof checker rejects them.
+
+**Cause.** `qlinear::get_model` resolves tail 0 of the derivation (premise 0) against the selected rule's head (premise 1), so the positions are (1,0).
+
+**Fix.** `src/muz/bmc/dl_bmc_engine.cpp:323` (`FORK FIX #87`): (1,0), as upstream.
+
+**Test.** `TST(z3_4_7_1_qbmc_hyper_res_positions)`, `src/test/z3_4_7_1_bugs.cpp:3010` (registered at `src/test/main.cpp:286`).
+
+---
+
+## 88. Nonlinear BMC proof reconstruction
+
+**Upstream:** still present (5.4.2 reports "could not expand BMC rule").
+
+**Symptom.** Nonlinear BMC queries such as `r(x) :- p(x), p(x+1)` segfault in proof reconstruction; without a proof trace `mk_hyper_resolve` crashes; the root proof concludes an internal level predicate.
+
+**Cause.** `nonlinear::get_proof` Skolemizes every rule variable while `compile` binds head variables to the head arguments, so no tail rule is selected and a null rule is dereferenced.
+
+**Fix.** `src/muz/bmc/dl_bmc_engine.cpp:521`, `:532`, `:570` (`FORK FIX #88`): bind head variables to the goal atom's arguments, assert a rule without a proof, and conclude the predicate at the model values.
+
+**Test.** `TST(z3_4_7_1_bmc_nonlinear_head_vars)`, `src/test/z3_4_7_1_bugs.cpp:3040` (registered at `src/test/main.cpp:287`).
+
+---
+
+## 89. Boogie certificate debug output
+
+**Upstream:** removed upstream in 73a24ca0a.
+
+**Symptom.** `fixedpoint.print_boogie_certificate` prints `set proof`, `proof set`, and per step `get_subst` with the whole proof, on stdout.
+
+**Cause.** Leftover debug output in `boogie_proof::set_proof` and `get_subst`.
+
+**Fix.** `src/muz/base/dl_boogie_proof.cpp:124`, `:205` (`FORK FIX #89`): drop the debug lines, as upstream.
+
+**Test.** `TST(z3_4_7_1_boogie_proof_debug_output)`, `src/test/z3_4_7_1_bugs.cpp:3068` (registered at `src/test/main.cpp:288`).
+
+---
+
+## 90. Sorting network comparison mode uninitialized
+
+**Upstream:** fixed (`psort_nw(psort_expr& c): ctx(c), m_t(GE) {}`).
+
+**Symptom.** sortmax reports optima below the true cost (for example 4 where the optimum is 5, or cost 0 with every soft false), and its clauses change between builds.
+
+**Cause.** `psort_nw`'s constructor leaves `m_t` uninitialized, and sortmax calls `sorting()` without `ge`/`le`/`eq`.
+
+**Fix.** `src/util/sorting_network.h:188` (`FORK FIX #90`): initialize `m_t` to `GE`, as upstream (g3 builds the GE network too).
+
+**Test.** `TST(z3_4_7_1_sorting_uninit_cmp)`, `src/test/z3_4_7_1_bugs.cpp:3128` (registered at `src/test/main.cpp:285`).
+
+---
+
+## 91. Duality edge-to-clause map after dead-edge removal
+
+**Upstream:** Duality was removed upstream.
+
+**Symptom.** Every edge after a removed dead edge prints, and proves with, the previous rule's clause (extra substitutions such as `(= x1 0)` in certificates).
+
+**Cause.** `dl_interface::query` maps `edges[i]` to `i`, but `FromClauses` -> `RemoveDeadNodes` has already deleted edges.
+
+**Fix.** `src/muz/duality/duality_dl_interface.cpp:312` (`FORK FIX #91`): map each edge by its `number - 1`.
+
+**Test.** `TST(z3_4_7_1_duality_certificate_dead_edge)`, `src/test/z3_4_7_1_bugs.cpp:1771` (registered at `src/test/main.cpp:256`).
+
+---
+
+## 92. Duality `get_answer`
+
+**Upstream:** Duality was removed upstream.
+
+**Symptom.** `fixedpoint.print_answer` with the Duality engine segfaults.
+
+**Cause.** `dl_interface::get_answer` is `SASSERT(false)` and returns null, which the caller dereferences.
+
+**Fix.** `src/muz/duality/duality_dl_interface.cpp:713` (`FORK FIX #92`): throw "duality does not support get_answer", as g3 reports.
+
+**Test.** `TST(z3_4_7_1_duality_print_answer)`, `src/test/z3_4_7_1_bugs.cpp:1820` (registered at `src/test/main.cpp:257`).
+
+---
+
+## 93. Duality `get_proof` hyper-resolve steps
+
+**Upstream:** Duality was removed upstream.
+
+**Symptom.** `(get-proof)` after a Duality query prints steps the proof checker rejects: substitutions in declaration order instead of variable-index order, positions of the child instead of the resolved body literal, and `@Fail!0` instead of the clause head as the query step's conclusion.
+
+**Cause.** `extract_proof` builds the steps from the edge order rather than from the original clause.
+
+**Fix.** `src/muz/duality/duality_dl_interface.cpp:764`, `:793` and following (`FORK FIX #93`): port g3's proof shape (variable order, one premise per resolved literal, the original head, background axioms resolving matching body literals).
+
+**Test.** `TST(z3_4_7_1_duality_proof_hyper_resolve)`, `src/test/z3_4_7_1_bugs.cpp:1841` (registered at `src/test/main.cpp:258`).
+
+---
+
+## 94. Linear BMC hyper-resolution positions
+
+**Upstream:** still present (5.4.2); 784b613b5 fixed only qlinear (fix 87).
+
+**Symptom.** Linear BMC proofs record `(_ hyper-res 0 1)`; the proof checker cannot establish complementarity.
+
+**Cause.** `linear::get_model` resolves tail 0 of the derivation (premise 0) against the selected rule's head (premise 1) but pushes `(0, 1)`.
+
+**Fix.** `src/muz/bmc/dl_bmc_engine.cpp:1287` (`FORK FIX #94`): `(1, 0)`, as fix 87 does for qlinear.
+
+**Test.** `TST(z3_4_7_1_bmc_linear_hyper_res_positions)`, `src/test/z3_4_7_1_bugs.cpp:3314` (registered at `src/test/main.cpp:301`).
+
+---
+
+## 95. qe-sat projection under a resource limit
+
+**Upstream:** qe-sat was removed upstream.
+
+**Symptom.** Under `rlimit`, `(check-sat-using qe-sat)` prints "Failed to verify" and then segfaults (projection with no model). g3 answers `unknown` with reason "max. resource limit exceeded".
+
+**Cause.** `qsat::project` does `VERIFY(l_true == m_solvers[idx+1]->check())`; under a resource limit the check is `l_undef`.
+
+**Fix.** `src/qe/qe_sat_tactic.cpp:640` (`FORK FIX #95`): throw `tactic_exception(get_cancel_msg())` when the check is undecided, as g3 does (pkg/qe/sat_project_level.go).
+
+**Test.** `TST(z3_4_7_1_qe_sat_projection_canceled)`, `src/test/z3_4_7_1_bugs.cpp:3345` (registered at `src/test/main.cpp:302`).
+
+---
+
+## 96. Duality: a rejected candidate proposed forever
+
+**Upstream:** Duality was removed upstream.
+
+**Symptom.** For a rule `err <- forall z. p(z)` with `p = {1}` (unsat), z3 loops forever on "reject 2 err" (48k report lines in 10 s).
+
+**Cause.** The induction check's edge solver uses `mbqi.id=itp`, so it ignores the non-interpolant quantifier and says sat; `CandidateFeasible` refutes the candidate, but no state changes, so the same candidate comes back.
+
+**Fix.** `src/duality/duality_solver.cpp` (`FORK FIX #96`): count state changes (`ExpandNode` :702, `Update` :1593, `Extend` :1745; member at :296) and, in `SolveMainInt` (:1106), throw the existing `Solver::Incompleteness` when an already rejected candidate returns with no state change since. `dl_interface::query` reports it as "query failed: incompleteness" and `unknown`, as g3 does.
+
+**Test.** `TST(z3_4_7_1_duality_rejected_candidate_loop)`, `src/test/z3_4_7_1_bugs.cpp:1880` (registered at `src/test/main.cpp:259`).
 
 ---
 
@@ -1075,32 +2046,4 @@ the counterexample swap when `old_rs` is null, as the existing guard on
 The g3 fork documents these only in comments; no code changed for them.
 They are listed so their behaviour isn't mistaken for a regression.
 
-* **`opt/opt_context.cpp` `from_fmls`.** `orig_term` is kept across loop
-  iterations, so a plain `assert-soft` group that follows a
-  `maximize`/`minimize` is verified against the wrong term, and maxres
-  reports the stale initial cost. Upstream fixed this; z3 4.17.0 prints the
-  optimum.
-* **`ast/rewriter/rewriter_def.h`.** Model evaluation of mutually recursive
-  `define-fun-rec` predicates does not terminate (for example, `get-value`
-  of `(even 0)`). Upstream replaced this with its recfun theory.
-* **`qe/qe_array_plugin.cpp` `solve_store`.** It rewrites
-  `store(store(A,j,u),i,v) = t` to `store(t,i,v)[j] = u`, which is wrong
-  when `i = j`. This is still present in upstream 4.17.0.
-* **`math/automata/symbolic_automata_def.h` `mk_product`.** It ignores the
-  epsilon closure of final states.
-* **`tactic/goal.cpp` `goal::update`.** It flattens the new formula but
-  appends the unflattened one (`f` instead of `fr`), so a goal can fail to
-  become inconsistent. Fix 27 avoids the one known trigger; changing
-  `goal::update` itself would affect every tactic. Still present upstream.
-* **`muz/bmc/dl_bmc_engine.cpp` QBMC hyper-resolution positions.** Upstream
-  784b613b5 also changes them from (0,1) to (1,0). Fix 16 does not port that
-  part, because it would change every printed QBMC proof.
-* **Nonlinear BMC with a quantified tail** segfaults (seen in g3 work input
-  `bmc4.smt2`, second query); not analysed.
-* **Other crashes and assertion failures that were not analysed:**
-  * the `sine-filter` and `elim-small-bv` tactics;
-  * a `symmetry-reduce` assertion;
-  * `bvarray2uf` NOT IMPLEMENTED;
-  * `get-value` under `model_evaluator.max_steps`;
-  * `define-sort` after `pop`;
-  * qlinear `unify_rules`.
+None at present: every bug that was listed here is now fixed above.

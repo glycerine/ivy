@@ -813,6 +813,10 @@ namespace opt {
                             bool& neg, symbol& id, expr_ref& orig_term, unsigned& index) {
         if (!is_app(fml)) return false;
         neg = false;
+        // FORK FIX #75 (upstream b33f5f879): clear orig_term so a soft group
+        // does not keep the term of an earlier maximize/minimize.
+        orig_term = nullptr;
+        index = 0;
         app* a = to_app(fml);
         if (m_objective_fns.find(a->get_decl(), index) && m_objectives[index].m_type == O_MAXSMT) {
             for (unsigned i = 0; i < a->get_num_args(); ++i) {
@@ -955,14 +959,19 @@ namespace opt {
     void context::from_fmls(expr_ref_vector const& fmls) {
         TRACE("opt", tout << fmls << "\n";);
         m_hard_constraints.reset();
-        expr_ref orig_term(m);
         for (unsigned i = 0; i < fmls.size(); ++i) {
             expr* fml = fmls[i];
             app_ref tr(m);
+            // FORK FIX #75 (upstream b33f5f879): orig_term was declared
+            // outside the loop, so a plain assert-soft group that follows a
+            // maximize/minimize got that objective's term as obj.m_term;
+            // verify_model then rejected every improving maxres model and
+            // the stale initial cost was reported.
+            expr_ref orig_term(m);
             expr_ref_vector terms(m);
             vector<rational> weights;
             rational offset(0);
-            unsigned index;
+            unsigned index = 0;
             symbol id;
             bool neg;
             if (is_maxsat(fml, terms, weights, offset, neg, id, orig_term, index)) {

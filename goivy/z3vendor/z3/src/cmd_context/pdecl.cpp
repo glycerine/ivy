@@ -214,13 +214,19 @@ class psort_app : public psort {
 
     sort * instantiate(pdecl_manager & m, sort * const * s) override {
         sort * r = find(s);
-        if (r)
+        // FORK FIX #85 (g3 audit, see FORK_BUGFIXES.md): on a cache hit, declare the
+        // datatype's functions again when a pop removed them.
+        if (r && !m.needs_renotify(r))
             return r;
         sort_ref_buffer args_i(m.m());
         unsigned sz = m_args.size();
         for (unsigned i = 0; i < sz; i++) {
             sort * a = m_args[i]->instantiate(m, s);
             args_i.push_back(a);
+        }
+        if (r) {
+            m_decl->instantiate(m, args_i.size(), args_i.c_ptr());
+            return r;
         }
         r = m_decl->instantiate(m, args_i.size(), args_i.c_ptr());
         cache(m, s, r);
@@ -310,8 +316,13 @@ void psort_user_decl::finalize(pdecl_manager & m) {
 sort * psort_user_decl::instantiate(pdecl_manager & m, unsigned n, sort * const * s) {
     SASSERT(n == m_num_params);
     sort * r = find(s);
-    if (r)
+    if (r) {
+        // FORK FIX #85 (g3 audit, see FORK_BUGFIXES.md): on a cache hit, declare the
+        // datatype's functions again when a pop removed them.
+        if (m_def != nullptr && m.needs_renotify(r))
+            m_def->instantiate(m, s);
         return r;
+    }
     if (m_def == nullptr) {
         buffer<parameter> ps;
         for (unsigned i = 0; i < n; i++)
@@ -679,8 +690,11 @@ sort* pdecl_manager::instantiate_datatype(psort_decl* p, symbol const& name, uns
     TRACE("datatype", tout << name << " "; for (unsigned i = 0; i < n; ++i) tout << s[i]->get_name() << " "; tout << "\n";);
     pdecl_manager& m = *this;
     sort * r = p->find(s);
-    if (r)
+    if (r) {
+        // FORK FIX #84 (g3 audit, see FORK_BUGFIXES.md): backport of upstream 19f655c69
+        notify_datatype(r, p, n, s);
         return r;
+    }
     buffer<parameter> ps;
     ps.push_back(parameter(name));
     for (unsigned i = 0; i < n; i++)
@@ -689,7 +703,21 @@ sort* pdecl_manager::instantiate_datatype(psort_decl* p, symbol const& name, uns
     r = m.m().mk_sort(util.get_family_id(), DATATYPE_SORT, ps.size(), ps.c_ptr());
     p->cache(m, s, r);
     m.save_info(r, p, n, s);
-    if (n > 0 && util.is_declared(r)) {
+    notify_datatype(r, p, n, s);
+    return r;
+}
+
+// FORK FIX #84 (g3 audit, see FORK_BUGFIXES.md): backport of upstream 19f655c69 ("fix #3930"),
+// 120467159 ("fix #4534"). A pop resets the whole instance cache of a
+// datatype declaration, also instances created outside the popped scope,
+// whose constructors are still declared; declaring them again failed with
+// "already declared". Notify each instance once per scope instead.
+void pdecl_manager::notify_datatype(sort *r, psort_decl* p, unsigned n, sort* const* s) {
+    if (m_notified.contains(r) || n == 0)
+        return;
+    pdecl_manager& m = *this;
+    datatype_util util(m.m());
+    if (util.is_declared(r)) {
         bool has_typevar = false;
         // crude check ..
         for (unsigned i = 0; !has_typevar && i < n; ++i) {
@@ -698,8 +726,32 @@ sort* pdecl_manager::instantiate_datatype(psort_decl* p, symbol const& name, uns
         if (!has_typevar) {
             m.notify_new_dt(r, p);
         }
+        m_notified.insert(r);
+        m_notified_trail.push_back(r);
     }
-    return r;
+}
+
+// FORK FIX #85 (g3 audit, see FORK_BUGFIXES.md): true for an instance of a declared
+// parametric datatype that is not notified in the current scopes (a pop
+// removed its constructors, accessors and recognizers).
+bool pdecl_manager::needs_renotify(sort * r) const {
+    datatype_util util(m());
+    return util.is_datatype(r) && util.get_datatype_num_parameter_sorts(r) > 0 &&
+        util.is_declared(r) && !m_notified.contains(r);
+}
+
+void pdecl_manager::push() {
+    m_notified_lim.push_back(m_notified_trail.size());
+}
+
+void pdecl_manager::pop(unsigned n) {
+    SASSERT(n > 0);
+    unsigned new_sz = m_notified_lim[m_notified_lim.size() - n];
+    for (unsigned i = m_notified_trail.size(); i-- > new_sz; ) {
+        m_notified.erase(m_notified_trail[i]);
+    }
+    m_notified_trail.shrink(new_sz);
+    m_notified_lim.shrink(m_notified_lim.size() - n);
 }
 
 bool pdatatypes_decl::instantiate(pdecl_manager & m, sort * const * s) {

@@ -15,6 +15,10 @@ Copyright (c) 2015 Microsoft Corporation
 #include<iostream>
 #include<sstream>
 #include<cstdio>
+#ifndef __STDC_FORMAT_MACROS
+#define __STDC_FORMAT_MACROS
+#endif
+#include <inttypes.h>
 
 using namespace datalog;
 
@@ -1284,7 +1288,8 @@ private:
         SASSERT(e->get_data().m_value);
         uint64_set & sort_content = *e->get_data().m_value;
         if(!sort_content.contains(num)) {
-            warning_msg("symbol number %I64u on line %d in file %s does not belong to sort %s", 
+            // FORK FIX #67 (g3 audit, see FORK_BUGFIXES.md): print the uint64_t with PRIu64, not MSVC's %I64u (AUDIT cmd_context_02-F11)
+            warning_msg("symbol number %" PRIu64 " on line %d in file %s does not belong to sort %s", 
                 num, m_current_line, m_current_file.c_str(), s->get_name().bare_str());
             return false;
         }
@@ -1297,7 +1302,7 @@ private:
             if(num==0) {
                 const_name = symbol("<zero element>");
             } else if(!m_number_names.find(num, const_name)) {
-                throw default_exception(default_exception::fmt(), "unknown symbol number %I64u on line %d in file %s", 
+                throw default_exception(default_exception::fmt(), "unknown symbol number %" PRIu64 " on line %d in file %s", 
                     num, m_current_line, m_current_file.c_str());
             }
             res =  mk_table_const(const_name, s);
@@ -1375,6 +1380,10 @@ private:
         //SASSERT(!stm.fail());
         //line_reader rdr(stm);
         line_reader rdr(fname.c_str());
+        // FORK FIX #86 (g3 audit, see FORK_BUGFIXES.md): report an unreadable relation file instead of reading a null FILE (AUDIT cmd_context_02-F11)
+        if (!rdr()) {
+            throw default_exception(default_exception::fmt(), "ERROR: could not open file '%s'.", fname.c_str());
+        }
         while(!rdr.eof()) {
             m_current_line++;
             char * full_line = rdr.get_line();
@@ -1489,7 +1498,8 @@ private:
                 rest_of_line = rest_of_line.substr(0, rest_of_line.size()-ignored_suffix_len);
             }
 
-            if(rest_of_line[rest_of_line.size()-1]==' ') {
+            // FORK FIX #69 (g3 audit, see FORK_BUGFIXES.md): an empty name has no last character to test (AUDIT cmd_context_02-F11)
+            if(!rest_of_line.empty() && rest_of_line[rest_of_line.size()-1]==' ') {
                 rest_of_line = rest_of_line.substr(0, rest_of_line.size()-1);
             }
 
@@ -1513,6 +1523,10 @@ private:
         //SASSERT(!stm.fail());
         //line_reader rdr(stm);
         line_reader rdr(fname.c_str());
+        // FORK FIX #86 (g3 audit, see FORK_BUGFIXES.md): report an unreadable map file instead of reading a null FILE (AUDIT cmd_context_02-F11)
+        if (!rdr()) {
+            throw default_exception(default_exception::fmt(), "ERROR: could not open file '%s'.", fname.c_str());
+        }
         while(!rdr.eof()) {
             m_current_line++;
             char * full_line = rdr.get_line();

@@ -634,11 +634,12 @@ namespace datalog {
         for(unsigned i=0; i<col_cnt; i++) {
             //if at least one end of an equality is not an inner column, we ignore that equality
             //(which introduces imprecision)
-            bool r_col_inner = r_sieved && !sr->is_inner_col(r_cols[i]);
-            bool neg_col_inner = neg_sieved && !sneg->is_inner_col(neg_cols[i]);
+            // FORK FIX #54 (g3 audit, see FORK_BUGFIXES.md): sieve negation inner-column test was inverted and indexed by loop position (AUDIT muz_rel_06-F5)
+            bool r_col_inner = !r_sieved || sr->is_inner_col(r_cols[i]);
+            bool neg_col_inner = !neg_sieved || sneg->is_inner_col(neg_cols[i]);
             if(r_col_inner && neg_col_inner) {
-                ir_cols.push_back( r_sieved ? sr->get_inner_col(i) : i );
-                ineg_cols.push_back( neg_sieved ? sneg->get_inner_col(i) : i );
+                ir_cols.push_back( r_sieved ? sr->get_inner_col(r_cols[i]) : r_cols[i] );
+                ineg_cols.push_back( neg_sieved ? sneg->get_inner_col(neg_cols[i]) : neg_cols[i] );
             }
             else if(!r_col_inner && neg_col_inner) {
                 //Sieved (i.e. full) column in r is matched on an inner column in neg.

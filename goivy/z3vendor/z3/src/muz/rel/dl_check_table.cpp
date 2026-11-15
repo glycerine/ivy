@@ -49,8 +49,11 @@ namespace datalog {
 
     table_base * check_table_plugin::mk_empty(const table_signature & s) {
         IF_VERBOSE(1, verbose_stream() << __FUNCTION__ << "\n";);
-        table_base* checker = m_checker.mk_empty(s);
-        table_base* tocheck = m_tocheck.mk_empty(s);
+        // FORK FIX #55 (g3 audit, see FORK_BUGFIXES.md): check_table mk_empty falls back to mk_empty_table for signatures a wrapped plugin cannot handle
+        // The wrapped plugins may not handle s (sparse tables need at least
+        // one column); fall back to the table plugin the manager selects.
+        table_base* checker = m_checker.can_handle_signature(s) ? m_checker.mk_empty(s) : get_manager().mk_empty_table(s);
+        table_base* tocheck = m_tocheck.can_handle_signature(s) ? m_tocheck.mk_empty(s) : get_manager().mk_empty_table(s);
         return alloc(check_table, *this, s, tocheck, checker);
     }
     

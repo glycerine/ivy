@@ -379,8 +379,27 @@ typename symbolic_automata<T, M>::automaton_t* symbolic_automata<T, M>::mk_produ
     pair2id.insert(init_pair, 0);
     moves_t mvs;
     unsigned_vector final;
-    if (a.is_final_state(a.init()) && b.is_final_state(b.init())) {
-        final.push_back(0);
+    // FORK FIX #77 (upstream 606754c09, a921b4ff4): the initial pair is
+    // final when the epsilon closures of both initial states contain a
+    // final state. Testing is_final_state(init()) made ("" | a) & ("" | b)
+    // empty. (Target pairs need no closure: get_moves_from below already
+    // returns every state of the destination's epsilon closure.)
+    unsigned_vector a_init, b_init;
+    a.get_epsilon_closure(a.init(), a_init);
+    bool a_init_is_final = false, b_init_is_final = false;
+    for (unsigned ia : a_init) {
+        if (a.is_final_state(ia)) {
+            a_init_is_final = true;
+            b.get_epsilon_closure(b.init(), b_init);
+            for (unsigned ib : b_init) {
+                if (b.is_final_state(ib)) {
+                    b_init_is_final = true;
+                    final.push_back(0);
+                    break;
+                }
+            }
+            break;
+        }
     }
     unsigned n = 1;
     moves_t mvsA, mvsB;
@@ -452,7 +471,7 @@ typename symbolic_automata<T, M>::automaton_t* symbolic_automata<T, M>::mk_produ
         }
     }
     if (mvs1.empty()) {
-        if (a.is_final_state(a.init()) && b.is_final_state(b.init())) {
+        if (a_init_is_final && b_init_is_final) { // FORK FIX #77
             // special case: automaton has no moves, but the initial state is final on both sides
             // this results in the automaton which accepts the empty sequence and nothing else
             final.clear();

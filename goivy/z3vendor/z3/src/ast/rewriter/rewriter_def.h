@@ -179,8 +179,33 @@ bool rewriter_tpl<Config>::visit(expr * t, unsigned max_depth) {
     }
 }
 
+// g3 note (z3 4.7.1 bug, see g3 TODO.md "z3 4.7.1 bugs fixed in g3"): only
+// ite is folded early, so model evaluation rewrites every and/or argument
+// before reducing them. For define-fun-rec bodies such as
+// (or (<= n 0) (odd (+ -1 n))), get-value of (even 0) unfolds the dead branch
+// forever (g3 test_vectors/recursive_mutual_boolean_model.smt2 never
+// finishes). g3 and the fork (FORK FIX #71) short-circuit and/or during model
+// evaluation once a recursive function is defined
+// (pkg/ast/rewriter/traversal.go EnableModelBooleanShortCircuit). Upstream z3
+// replaced this path with its recfun theory and answers at once.
 template<typename Config>
 bool rewriter_tpl<Config>::constant_fold(app * t, frame & fr) {
+    // FORK FIX #71 (g3 audit, see FORK_BUGFIXES.md): a false and-argument or a
+    // true or-argument decides the application; do not rewrite the rest
+    // (they may unfold recursive definitions forever).
+    if (m_bool_short_circuit && fr.m_i > 0 && (m().is_and(t) || m().is_or(t))) {
+        expr * arg = result_stack()[fr.m_spos + fr.m_i - 1].get();
+        if (m().is_and(t) ? m().is_false(arg) : m().is_true(arg)) {
+            m_r = arg;
+            result_stack().shrink(fr.m_spos);
+            result_stack().push_back(m_r);
+            cache_result<false>(t, m_r, nullptr, fr.m_cache_result);
+            frame_stack().pop_back();
+            set_new_child_flag(t, m_r);
+            m_r = nullptr;
+            return true;
+        }
+    }
     if (fr.m_i == 1 && m().is_ite(t)) {
         expr * cond = result_stack()[fr.m_spos].get();
         expr* arg = nullptr;
@@ -575,7 +600,8 @@ rewriter_tpl<Config>::rewriter_tpl(ast_manager & m, bool proof_gen, Config & cfg
     m_inv_shifter(m),
     m_r(m),
     m_pr(m),
-    m_pr2(m) {
+    m_pr2(m),
+    m_bool_short_circuit(false) {
 }
 
 template<typename Config>
@@ -731,6 +757,15 @@ void rewriter_tpl<Config>::resume_core(expr_ref & result, proof_ref & result_pr)
 
 template<typename Config>
 void rewriter_tpl<Config>::operator()(expr * t, expr_ref & result, proof_ref & result_pr) {
+    // FORK FIX #52 (g3 audit, see FORK_BUGFIXES.md): backport of upstream 18bb90f93/b013df9a9: reset stale rewriter stacks (AUDIT smtcore_14-F3)
+    if (!frame_stack().empty() || m_cache != m_cache_stack[0]) {
+        frame_stack().reset();
+        result_stack().reset();
+        result_pr_stack().reset();
+        m_scopes.reset();
+        reset_cache();
+    }
+
     if (m_proof_gen)
         main_loop<true>(t, result, result_pr);
     else

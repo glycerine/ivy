@@ -117,7 +117,8 @@ namespace qe {
 
         bool is_small_domain(contains_app& x, eq_atoms& eqs, uint64_t& domain_size) {
             VERIFY(m_util.try_get_size(m.get_sort(x.x()), domain_size));
-            return domain_size < eqs.num_eqs() + eqs.num_neqs();
+            // FORK FIX #64 (g3 audit, see FORK_BUGFIXES.md): enumerate the domain when the atoms can cover it; the large-domain "other value" branch needs a value outside them (AUDIT qe_01-F4)
+            return domain_size <= eqs.num_eqs() + eqs.num_neqs();
         }
 
         void assign_small_domain(contains_app & x,eq_atoms& eqs, unsigned value) {
@@ -162,7 +163,8 @@ namespace qe {
                 }
 
                 for (unsigned i = 0; i < eqs.num_neqs(); ++i) {
-                    m_replace.apply_substitution(eqs.neq_atom(i), m.mk_true(), fml);
+                    // FORK FIX #53 (g3 audit, see FORK_BUGFIXES.md): other-value branch substitutes false for negative atoms (AUDIT qe_01-F4)
+                    m_replace.apply_substitution(eqs.neq_atom(i), m.mk_false(), fml);
                 }
             }
         }
