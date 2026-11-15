@@ -5740,3 +5740,37 @@ native checks. Inspection identifies a further risk: the verdict uses zero
 phases even when Go AIGER metadata supplies one or unknown reset states; add a
 red regression before any repair. Original completion remains 2/131, GIA and
 the sequential audit active; full integration is pending.
+
+A second circuit-cofactoring false-proof regression confirms that latch reset
+metadata is ignored by the verdict: the held-register property RO is reported
+safe for reset1 and reset-1 (unknown), even though both admit a bad initial
+state. Red evidence: /tmp/abcgo-ccof-resets-red.log. Keep C's zero-state phase
+behavior for known resets, seed explicit one resets, and for unknown resets
+intersect the accumulated bad-state images with the admissible initial-state
+cube using the existing BSAT gate encoding in a fresh solver. The enumeration
+solver's blocking clauses must not enter this intersection query. Copy its
+absolute deadline and per-call conflict budget; Unknown remains undecided.
+This is an exact Go metadata extension beyond C's zero-initial-state contract,
+not a substitute image or synthesis algorithm.
+
+All 768 complete one-bit property/transition/reset cases agree with independent
+exhaustive three-frame simulation, and 144 two-register reset/image intersections
+agree for all two-input functions and zero/one/unknown reset cubes even after
+contradictory blocking clauses are inserted into the enumeration solver.
+Another 32,768 direct model-cofactor checks cover symbolic register inputs,
+fixed/flipped frame PIs, raw XOR/MUX/buffer phases, logical layouts, constants,
+CI roots and complemented blocking literals. Evidence:
+/tmp/abcgo-ccof-models-resets.log and /tmp/abcgo-ccof-reset-intersections.log.
+
+The actual source giaCCof.c is included in circuit_cofactor.c to expose its
+private manager. All 192 proper-image enumeration/repeated-convergence cases
+agree with C and independent existential state evaluation
+(/tmp/abcgo-ccof-native.log,2.157s). Native cases respect C's nonconstant-image
+blocking assertion; full/empty images are checked independently in Go rather
+than claiming the source supports them without that assertion issue.
+Deterministic expired-clock and pigeonhole conflict-budget checks return
+Unknown, then resume correctly. Separate reset queries preserve both limits;
+stop releases owned frame/unroller state and leaves the source alive
+(/tmp/abcgo-ccof-resources.log). Save a red checkpoint before final cross-frame,
+diagnostic and integration checks. Original completion remains 2/131; GIA and
+the sequential audit remain active.

@@ -2,8 +2,9 @@ package gia
 
 import (
 	"fmt"
-	"github.com/glycerine/abcgo/sat/bsat"
 	"time"
+
+	"github.com/glycerine/abcgo/sat/bsat"
 )
 
 // Ccf_Man_t incrementally enumerates backward images by fixing frame PIs to
@@ -156,6 +157,56 @@ func Gia_ManCofGetReachable(p *Ccf_Man_t, property int32) int32 {
 	}
 	return 0
 }
+
+// C assumes zero-initialized registers. Go also retains AIGER one/unknown
+// resets, which must be intersected with the accumulated bad-state images.
+func giaCofInitialFailure(p *Ccf_Man_t) bsat.Status {
+	inits := p.pGia.aigerLatchInits
+	unknown := false
+	for _, reset := range inits {
+		unknown = unknown || reset == -1
+	}
+	if !unknown {
+		for _, obj := range p.pFrames.pObjs {
+			if Gia_ObjIsCi(obj) != 0 {
+				obj.fPhase = 0
+				if i := Gia_ObjCioId(obj); int(i) < len(inits) {
+					obj.fPhase = uint32(inits[i])
+				}
+			} else {
+				Gia_ObjSetPhase(p.pFrames, obj)
+			}
+		}
+		for _, id := range Vec_IntArray(p.pFrames.vCos) {
+			if p.pFrames.pObjs[id].fPhase != 0 {
+				return bsat.Satisfiable
+			}
+		}
+		return bsat.Unsatisfiable
+	}
+	// The image-enumeration solver contains blocking clauses. Use the same
+	// gate encoding without those clauses to test intersection with reset states.
+	check := &Ccf_Man_t{pFrames: p.pFrames, pSat: bsat.NewSolver()}
+	defer check.pSat.Close()
+	check.pSat.SetLimits(int64(p.nConfMax), 0)
+	clock, deadline := p.pSat.RuntimeDeadline()
+	check.pSat.SetRuntimeDeadline(clock, deadline)
+	Gia_ManCofExtendSolver(check)
+	assumptions := make([]int32, 0, len(inits)+1)
+	for i, reset := range inits {
+		if reset != -1 {
+			assumptions = append(assumptions, Gia_ObjToLit(p.pFrames, Gia_ManCi(p.pFrames, int32(i)))^(reset^1))
+		}
+	}
+	for _, id := range Vec_IntArray(p.pFrames.vCos) {
+		property := Gia_ObjFaninLit0p(p.pFrames, p.pFrames.pObjs[id])
+		if status := check.pSat.Solve(append(assumptions, property)...); status != bsat.Unsatisfiable {
+			return status
+		}
+	}
+	return bsat.Unsatisfiable
+}
+
 func Gia_ManCofTest(src *Gia_Man_t, frames, conflicts, seconds, verbose int32) *Gia_Man_t {
 	if Gia_ManPoNum(src) != 1 {
 		panic("gia: circuit cofactoring requires one property")
@@ -175,15 +226,14 @@ func Gia_ManCofTest(src *Gia_Man_t, frames, conflicts, seconds, verbose int32) *
 		if status != 0 {
 			break
 		}
-		Gia_ManSetPhase(p.pFrames)
-		for i := int32(0); i < Gia_ManPoNum(p.pFrames); i++ {
-			if Gia_ObjPhase(Gia_ManPo(p.pFrames, i)) != 0 {
-				fmt.Printf("Property failed in frame %d.\n", frame)
-				failed = true
-				break
-			}
+		initial := giaCofInitialFailure(p)
+		if initial == bsat.Unknown {
+			status = -1
+			break
 		}
-		if failed {
+		if initial == bsat.Satisfiable {
+			fmt.Printf("Property failed in frame %d.\n", frame)
+			failed = true
 			break
 		}
 	}
