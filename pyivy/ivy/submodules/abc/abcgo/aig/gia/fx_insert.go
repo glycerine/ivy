@@ -27,16 +27,23 @@ func Gia_ManFxInsert(p *Gia_Man_t, cubes *Vec_Wec_t, phases *Vec_Str_t) *Gia_Man
 	for i := int32(0); i < Gia_ManCiNum(p); i++ {
 		copies[i] = Gia_ManAppendCi(result)
 	}
+	index := make([]int, len(copies))
+	for i := range index {
+		index[i] = -1
+	}
+	var fanins []int32
+	leaves := Vec_IntAlloc(16)
+	var levels []int32
+	patterns := [6]uint64{0xaaaaaaaaaaaaaaaa, 0xcccccccccccccccc, 0xf0f0f0f0f0f0f0f0, 0xff00ff00ff00ff00, 0xffff0000ffff0000, 0xffffffff00000000}
 	for k := int(Gia_ManCiNum(p)); k < Vec_IntSize(order); k++ {
 		owner := Vec_IntEntry(order, k)
 		start, n := Vec_IntEntry(first, int(owner)), Vec_IntEntry(count, int(owner))
-		index := make(map[int32]int)
-		var fanins []int32
+		fanins = fanins[:0]
 		for c := int32(0); c < n; c++ {
 			cube := Vec_WecEntry(cubes, int(start+c))
 			for j := 1; j < Vec_IntSize(cube); j++ {
 				input := Vec_IntEntry(cube, j) >> 1
-				if _, ok := index[input]; !ok {
+				if index[input] < 0 {
 					index[input] = len(fanins)
 					fanins = append(fanins, input)
 				}
@@ -46,27 +53,12 @@ func Gia_ManFxInsert(p *Gia_Man_t, cubes *Vec_Wec_t, phases *Vec_Str_t) *Gia_Man
 		// as an empty cube; the phase flag distinguishes zero from one.
 		lit := int32(1)
 		if len(fanins) != 0 {
-			leaves := Vec_IntAlloc(len(fanins))
+			Vec_IntClear(leaves)
 			for _, input := range fanins {
 				if copies[input] < 0 {
 					panic("gia: extraction cube has unresolved input")
 				}
 				Vec_IntPush(leaves, copies[input])
-			}
-			var sop strings.Builder
-			for c := int32(0); c < n; c++ {
-				row := []byte(strings.Repeat("-", len(fanins)))
-				cube := Vec_WecEntry(cubes, int(start+c))
-				for j := 1; j < Vec_IntSize(cube); j++ {
-					input := Vec_IntEntry(cube, j)
-					char := byte('1')
-					if input&1 != 0 {
-						char = '0'
-					}
-					row[index[input>>1]] = char
-				}
-				sop.Write(row)
-				sop.WriteString(" 1\n")
 			}
 			if len(fanins) <= 6 {
 				var truth uint64
@@ -75,13 +67,7 @@ func Gia_ManFxInsert(p *Gia_Man_t, cubes *Vec_Wec_t, phases *Vec_Str_t) *Gia_Man
 					cube := Vec_WecEntry(cubes, int(start+c))
 					for j := 1; j < Vec_IntSize(cube); j++ {
 						input := Vec_IntEntry(cube, j)
-						v := index[input>>1]
-						var pattern uint64
-						for bit := 0; bit < 64; bit++ {
-							if bit&(1<<v) != 0 {
-								pattern |= uint64(1) << bit
-							}
-						}
+						pattern := patterns[index[input>>1]]
 						if input&1 != 0 {
 							pattern = ^pattern
 						}
@@ -92,13 +78,32 @@ func Gia_ManFxInsert(p *Gia_Man_t, cubes *Vec_Wec_t, phases *Vec_Str_t) *Gia_Man
 				if truth == 0 {
 					truth = ^truth
 				}
-				lit = giaFxDsdToGia(result, truth, Vec_IntArray(leaves))
+				levels = giaFxExtendLevels(result, levels)
+				lit = giaFxDsdToGiaLevels(result, truth, Vec_IntArray(leaves), levels)
 			} else {
+				var sop strings.Builder
+				for c := int32(0); c < n; c++ {
+					row := []byte(strings.Repeat("-", len(fanins)))
+					cube := Vec_WecEntry(cubes, int(start+c))
+					for j := 1; j < Vec_IntSize(cube); j++ {
+						input := Vec_IntEntry(cube, j)
+						char := byte('1')
+						if input&1 != 0 {
+							char = '0'
+						}
+						row[index[input>>1]] = char
+					}
+					sop.Write(row)
+					sop.WriteString(" 1\n")
+				}
 				lit = Gia_ManFactorNode(result, sop.String(), leaves)
 			}
 		}
 		if int(owner) < Vec_StrSize(phases) && Vec_StrEntry(phases, int(owner)) != 0 {
 			lit ^= 1
+		}
+		for _, input := range fanins {
+			index[input] = -1
 		}
 		copies[owner] = lit
 	}
@@ -124,15 +129,26 @@ func Gia_ManFxInsert(p *Gia_Man_t, cubes *Vec_Wec_t, phases *Vec_Str_t) *Gia_Man
 // giaFxDsdToGia imports the decomposer's AND graph into the destination's
 // structural hash. The temporary graph uses the opposite constant polarity.
 func giaFxDsdToGia(p *Gia_Man_t, truth uint64, leaves []int32) int32 {
+	return giaFxDsdToGiaLevels(p, truth, leaves, giaFxExtendLevels(p, nil))
+}
+
+// Extend each newly appended destination node's level once. Source fast
+// extraction maintains the same levels incrementally in its destination.
+func giaFxExtendLevels(p *Gia_Man_t, levels []int32) []int32 {
+	for id := int32(len(levels)); id < p.nObjs; id++ {
+		obj := p.pObjs[id]
+		level := int32(0)
+		if Gia_ObjIsAnd(obj) != 0 {
+			level = 1 + max(levels[Gia_ObjFaninId0(obj, id)], levels[Gia_ObjFaninId1(obj, id)])
+		}
+		levels = append(levels, level)
+	}
+	return levels
+}
+
+func giaFxDsdToGiaLevels(p *Gia_Man_t, truth uint64, leaves, levels []int32) int32 {
 	graph := aig.NewGraph()
 	inputs := make([]aig.Edge, len(leaves))
-	levels := make([]int32, p.nObjs)
-	for id := int32(1); id < p.nObjs; id++ {
-		obj := p.pObjs[id]
-		if Gia_ObjIsAnd(obj) != 0 {
-			levels[id] = 1 + max(levels[Gia_ObjFaninId0(obj, id)], levels[Gia_ObjFaninId1(obj, id)])
-		}
-	}
 	for i, lit := range leaves {
 		inputs[i] = graph.NewInput()
 		aig.Aig_ObjSetLevel(graph, inputs[i], levels[lit>>1])

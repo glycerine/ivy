@@ -8614,3 +8614,31 @@ calls the existing original remap helpers only on the duplicate return path,
 identified by CO Value scratch; rebuilt results are untouched. Compare this
 mode to Go while independently checking Go's source/result truth for every
 assignment. Full mapped matrix rerun remains pending. No source files changed.
+
+### Fast-extraction complete focused source reconciliation
+
+All37 focused tests pass without skips (GIA16.837s,opt/fx0.157s,
+/tmp/abcgo-fx-final-complete-focused.log, exact handle18517 terminal0).
+REVIEW_fast_extraction.md now reconciles every one of11 active giaFx.c routines,
+the mechanically restored abcFx.c engine, native/independent evidence and
+original-C/Go compatibility distinctions.
+
+Additional matrices:192 mapped retrieval configurations compare all Value
+scratch and384 drivers compare counts/truth plus6,144 independent assignments;
+192 factored covers and192 insertion runs compare literal/count/truth over
+3–8 variables,16,128 assignments per stage; five exact native topology cases;
+128 multiword retrieval cases over2–9-input cuts with16,320 assignments plus
+zero/one constant covers;512 typed/interleaved/reordered/sequential driver
+cases with8,192 assignments, timing/name ownership and post-source-stop result
+validity; no-AND/no-mapping and zero-input shortcuts. Fixture initialization
+and complete-cut preconditions are explicit; no production bugs were inferred
+from the initial invalid fixture setup.
+
+Insertion now reuses source-style index/fanin/leaf storage, six elementary
+truth masks and incrementally extended levels; it builds SOP only when needed.
+The 256-owner local benchmark drops from1.790ms/780,643B/11,880allocs to
+1.278ms/609,362B/10,604allocs. Report these as one short-run measurement, not a
+general guarantee. Exact native/scalar checks remain green after simplification.
+Save a coherent red GIA checkpoint, then freeze production/tests/fixtures for
+uncached full module race tests and vet. Original completion2/131; do not close
+GIA or the overall goal when this family closes.

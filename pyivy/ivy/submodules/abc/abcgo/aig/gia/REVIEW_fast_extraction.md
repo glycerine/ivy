@@ -28,13 +28,13 @@ Work is sequential, without agents or branches.
    states, AIGER properties/comments in both insertion return paths.
 7. [x] Reconcile source verbose reports and driver behavior. All four verbosity
    modes match C after clock-only normalization; timing field width is checked.
-8. [ ] Complete native/independent retrieve, topology, insertion and driver
+8. [x] Complete native/independent retrieve, topology, insertion and driver
    matrices, including large (>6-fanin) factoring, typed/reordered interfaces,
    constants, scratch values, timing ownership and unchanged cases.
-9. [ ] Review compactness: reusable fanin index vector and source maintained
+9. [x] Review compactness: reusable fanin index vector and source maintained
    levels instead of per-owner map allocation and repeated whole-graph scans.
    Measure before claiming performance improvement.
-10. [ ] Reconcile full source inventory, freeze code/tests/fixtures, run the
+10. [ ] Full source inventory reconciled; freeze code/tests/fixtures, run the
     uncached full-module race suite and vet, inspect terminal results, and
     update this record and `SEQUENTIAL_AUDIT.md` before closing this family.
 
@@ -76,15 +76,15 @@ Work is sequential, without agents or branches.
 | --- | --- | --- |
 | Gia_ManGraphToAig | fx_sop.go | Native/scalar conversion matrix |
 | Gia_ManSopToAig | fx_sop.go | Native/scalar conversion matrix |
-| Gia_ManFactorGraph | fx_sop.go | Further factor-path matrix pending |
-| Gia_ManFactorNode | fx_sop.go | Existing tests; native factor matrix pending |
-| Gia_ManComputeTruths | fx_retrieve.go | Further mapped matrix pending |
-| Gia_ManAssignNumbers | fx_retrieve.go | Scratch checks pending |
-| Gia_ManFxRetrieve | fx_retrieve.go | Existing tests; native matrix pending |
-| Gia_ManFxTopoOrder_rec | fx_order.go | Further topology matrix pending |
-| Gia_ManFxTopoOrder | fx_order.go | Existing tests; native matrix pending |
-| Gia_ManFxInsert | fx_insert.go | Interface repaired; synthesis matrix pending |
-| Gia_ManPerformFx | fx_driver.go | Incremental backend restored; reports pending |
+| Gia_ManFactorGraph | fx_sop.go | 192 native/scalar factored covers |
+| Gia_ManFactorNode | fx_sop.go | Native/scalar 3–8-variable factoring and insertion |
+| Gia_ManComputeTruths | fx_retrieve.go | Native mapped/multiword matrices, fanin order checks |
+| Gia_ManAssignNumbers | fx_retrieve.go | All object Value scratch compared in 192 native cases |
+| Gia_ManFxRetrieve | fx_retrieve.go | Native/scalar covers, phases, constants, 2–9-variable cuts |
+| Gia_ManFxTopoOrder_rec | fx_order.go | Native exact order/first/count, dependency holes |
+| Gia_ManFxTopoOrder | fx_order.go | Native unchanged, new-owner, missing-owner, zero-CI cases |
+| Gia_ManFxInsert | fx_insert.go | Native DSD/SOP insertion, owned interface, compact storage |
+| Gia_ManPerformFx | fx_driver.go | Native drivers/reports, typed/sequential/no-AND ownership |
 
 ## Checkpoints
 
@@ -92,4 +92,75 @@ Work is sequential, without agents or branches.
 - `d1f8c78ec`: incremental extraction engine and containment regressions.
 - `572937416`: source divisor/queue diagnostics and verbosity flags.
 
-Both commits use `red:` because full family review and integration are pending.
+These checkpoints use `red:` because full family review and integration are pending.
+
+## Completed focused reconciliation
+
+All 37 focused tests pass without skips: GIA 16.837s, opt/fx 0.157s
+(`/tmp/abcgo-fx-final-complete-focused.log`, exact handle18517 terminal0).
+The source inventory above covers all 11 active giaFx.c routines.
+
+- 192 mapped configurations compare retrieved cubes, phases and every object
+  Value scratch; their 384 complete driver runs compare C structure counts
+  and truth, plus 6,144 independent logical input assignments. Both fanin
+  sorting directions, several mapping granularities and reordered CIs occur.
+- Original C's unchanged branch calls Gia_ManDup, which loses reordered
+  logical ports. The unmodified fixture execution characterizes its wrong
+  8080 output mask. A separately requested `--correct-ports` execution uses
+  existing C remap helpers only on this duplicate branch. Go retains correct
+  logical order; its independent truth check never uses the faulty mask.
+- 192 factored covers compare exact returned literal, object count and truth
+  with C, followed by 192 insertion runs covering both DSD and >6-fanin SOP
+  synthesis. Each stage checks 16,128 independent assignments. The native
+  factoring fixture calls Abc_Start/Abc_Stop as required by C's global DEC
+  manager; the initial missing initialization was a fixture error.
+- Five exact native topology cases cover unchanged results/output pointers,
+  grouped multiple cubes, new divisors, holes/missing owners, no CIs and empty
+  input. Preserve the source's zero-valued input prefix, rather than treating
+  it as an array of input IDs.
+- 128 native multiword retrieval cases cover 2–9-input cuts and 16,320
+  independent assignments. Two additional constant-function cases verify
+  zero/one covers and phases. Constant examples use complete CI cuts rather
+  than a constant fanin which C's internal cut collector rejects.
+- 512 typed/interleaved/reordered/sequential driver cases check 8,192 input
+  assignments, interface names/properties/comments/reset states and ownership
+  transfers of timing/name vectors. Stopping the source leaves result-owned
+  metadata valid. No-AND cases verify that mapping is unnecessary, including
+  zero-input constant outputs and retained registers.
+- All four verbosity modes match actual C after clock-only normalization;
+  counters, float32 weights, divisor order and field widths remain exact.
+
+## Compactness and ownership
+
+Graph conversion reads existing DEC node payloads directly instead of copying
+all leaf signals into a redundant array. FxInsert reuses the source-style
+fanin index vector, fanin list and leaf vector, resets only touched indices,
+uses six fixed elementary truth patterns, and builds SOP strings only above
+six fanins. Destination levels are computed once for each appended node instead
+of scanning every prior node for every DSD call. The DSD adapter still uses a
+temporary AIG because the existing Go DSD implementation accepts that API;
+this is an adapter to the original algorithm, not a new synthesis heuristic.
+
+A single 150ms benchmark run before/after these insertion changes:
+
+| Chain owners | Before time | After time | Before B/op | After B/op | Before allocs | After allocs |
+| --- | --- | --- | --- | --- | --- | --- |
+| 8 | 59.740us | 49.977us | 27,920 | 26,817 | 464 | 424 |
+| 64 | 414.481us | 320.050us | 174,752 | 158,032 | 3,044 | 2,726 |
+| 256 | 1,790.226us | 1,278.390us | 780,643 | 609,362 | 11,880 | 10,604 |
+
+Logs: `/tmp/abcgo-fx-insertion-before-bench.log` and `...-after-bench.log`.
+These are local short-run observations, not a general speedup guarantee.
+
+Retained logical CI/CO/register order makes interface names, properties and
+reset metadata valid; copy these into owned storage. Rebuilding does not copy
+stale node-indexed mapping or serialized node payloads. The driver separately
+uses the reviewed source timing-transfer operation, including moving names out
+of the source. Unchanged duplication preserves actual typed gates; rebuilt
+logic uses the original factoring/DSD algorithms.
+
+## Final integration pending
+
+Production code, tests and fixtures are frozen for the uncached full-module
+race gate and GIA/opt-fx vet. Do not close the family before terminal results.
+The wider GIA source inventory remains open and package completion stays2/131.
