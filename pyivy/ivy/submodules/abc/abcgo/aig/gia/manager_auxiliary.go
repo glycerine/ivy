@@ -77,8 +77,15 @@ func Gia_ManQuantSetSuppAnd(p *Gia_Man_t, obj *Gia_Obj_t) {
 		control = int32(p.PMuxes[id] >> 1)
 	}
 	for w := int32(0); w < p.nSuppWords; w++ {
-		value := data[a*p.nSuppWords+w] | data[b*p.nSuppWords+w]
-		if control >= 0 {
+		// Row zero is query-selection scratch, not constant support.
+		var value word
+		if a != 0 {
+			value |= data[a*p.nSuppWords+w]
+		}
+		if b != 0 {
+			value |= data[b*p.nSuppWords+w]
+		}
+		if control > 0 {
 			value |= data[control*p.nSuppWords+w]
 		}
 		data[id*p.nSuppWords+w] = value

@@ -7929,3 +7929,29 @@ support/typed/generated/native checks pass in 3.864s
 (/tmp/abcgo-exist-support-expanded.log). Raw constant fanins, direct cone-copy
 ownership/compactness and final frozen integration remain under review. No
 family closure claimed; original completion remains 2/131.
+
+### Quantifier constant-boundary and ownership repair
+
+Add raw zero/one/repeated/opposite-fanin tests across both algorithms, both
+phases and every keep mask before another repair. Zero/one raw fanins panic in
+the incremental collector (/tmp/abcgo-exist-raw-constants-red.log). Constant
+row zero is query-selection scratch, so overlap cannot classify it as an AND.
+Treat it as a fixed side boundary for source cone reconstruction. Direct typed
+cone-copy tests now verify logical CI remapping, selected-variable counts,
+source Value preservation, cleared copy slots, complete truth and ownership
+beyond source disposal. All quantifier checks pass in 5.973s
+(/tmp/abcgo-exist-constants-ownership-repaired.log).
+
+Two additional red boundaries expose marker leakage when appending an AND with
+a constant fanin and an extra constant counted as an internal node
+(/tmp/abcgo-exist-constant-marker-red.log). Exclude constant row zero from support
+unions and stop affected-node counting at it. Preserve its independent use as
+the selected-variable mask. The full quantifier-focused set passes in 5.948s
+(/tmp/abcgo-exist-constant-marker-repaired.log). These are safe raw-representation
+boundaries beyond the source algorithms' usual canonically hashed cones.
+
+Before compactness changes, a 5,001-node collection benchmark reveals 10,002
+allocations/80,327 bytes and 281,377 ns per call from the new general logical
+fanin slices (/tmp/abcgo-exist-collect-before.log). Remove those temporary
+allocations without changing source traversal order before the final gates.
+Family/final integration remains open; original completion stays 2/131.

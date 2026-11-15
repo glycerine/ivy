@@ -227,3 +227,123 @@ func TestQuantExist2TypedConeTruth(t *testing.T) {
 		}
 	}
 }
+
+func TestQuantRawConstantFanins(t *testing.T) {
+	for _, shape := range []string{"zero", "one", "repeated", "opposite"} {
+		for mode := 0; mode < 2; mode++ {
+			for phase := int32(0); phase < 2; phase++ {
+				t.Run(fmt.Sprintf("%s/mode%d/phase%d", shape, mode, phase), func(t *testing.T) {
+					defer func() {
+						if err := recover(); err != nil {
+							t.Fatalf("raw-constant quantification panicked: %v", err)
+						}
+					}()
+					for mask := 0; mask < 4; mask++ {
+						g := Gia_ManStart(32)
+						g.fGiaSimple = 1
+						Gia_ManQuantSetSuppStart(g)
+						a := Gia_ManAppendCi(g)
+						Gia_ManQuantSetSuppZero(g)
+						Gia_ManQuantSetSuppCi(g, Gia_ManObj(g, a>>1))
+						b := Gia_ManAppendCi(g)
+						Gia_ManQuantSetSuppZero(g)
+						Gia_ManQuantSetSuppCi(g, Gia_ManObj(g, b>>1))
+						var root int32
+						switch shape {
+						case "zero":
+							root = Gia_ManAppendAnd(g, 0, a)
+						case "one":
+							root = Gia_ManAppendAnd(g, 1, a)
+						case "repeated":
+							root = Gia_ManAppendAnd(g, a, a)
+						case "opposite":
+							root = Gia_ManAppendAnd(g, a, a^1)
+						}
+						root ^= phase
+						truth := make([]bool, 4)
+						for bits := range truth {
+							values := cofReviewValues(g, bits)
+							truth[bits] = values[root>>1] != (root&1 != 0)
+						}
+						Gia_ManHashAlloc(g)
+						keep := func(_ any, ci int32) int32 { return int32(mask>>ci) & 1 }
+						var result int32
+						if mode == 0 {
+							result = Gia_ManQuantExist(g, root, keep, nil)
+						} else {
+							result = Gia_ManQuantExist2(g, root, keep, nil)
+						}
+						for bits := range truth {
+							values := cofReviewValues(g, bits)
+							got := values[result>>1] != (result&1 != 0)
+							want := quantReviewExpected(truth, mask, bits)
+							if got != want {
+								t.Fatalf("keep%x input%d literal%d got%t want%t", mask, bits, result, got, want)
+							}
+						}
+						Gia_ManStop(g)
+					}
+				})
+			}
+		}
+	}
+}
+
+func TestQuantConeCopyMappingAndOwnership(t *testing.T) {
+	for _, kind := range []string{"xor", "mux", "buffer"} {
+		for phase := int32(0); phase < 2; phase++ {
+			src := esopReviewTypedGraph(kind, 5)
+			saved := make([]uint32, src.nObjs)
+			for i, obj := range src.pObjs {
+				obj.Value = uint32(123 + i*17)
+				saved[i] = obj.Value
+			}
+			root := Gia_ObjFaninLit0(Gia_ManCo(src, 0), Gia_ManCo(src, 0).id) ^ phase
+			keep := func(_ any, ci int32) int32 { return giaBool(ci == 1) }
+			var cis *Vec_Int_t
+			var lit int32
+			out := Gia_ManQuantDupConeSupp(src, root, keep, nil, &cis, &lit)
+			if Vec_IntSize(cis) != int(Gia_ManCiNum(out)) {
+				t.Fatal("mapping does not cover copied CIs")
+			}
+			for i, obj := range src.pObjs {
+				if obj.Value != saved[i] {
+					t.Fatal("cone copy modified unrelated Value scratch")
+				}
+			}
+			for _, copy := range Vec_IntArray(&src.vCopies) {
+				if copy != -1 {
+					t.Fatal("cone copy left occupied slots")
+				}
+			}
+			quantVars := int32(0)
+			for _, ci := range Vec_IntArray(cis) {
+				if ci != 1 {
+					quantVars++
+				}
+			}
+			if out.iSuppPi != quantVars {
+				t.Fatalf("tracked%d variables, want%d", out.iSuppPi, quantVars)
+			}
+			Gia_ManAppendCo(out, lit)
+			for bits := 0; bits < 8; bits++ {
+				oldInputs := []bool{bits&1 != 0, bits&2 != 0, bits&4 != 0}
+				newInputs := make([]bool, Vec_IntSize(cis))
+				for i, ci := range Vec_IntArray(cis) {
+					newInputs[i] = oldInputs[ci]
+				}
+				before, e1 := src.Evaluate(oldInputs)
+				after, e2 := out.Evaluate(newInputs)
+				if e1 != nil || e2 != nil || after[0] != (before[0] != (phase != 0)) {
+					t.Fatalf("kind%s phase%d input%d old%v new%v errors%v/%v", kind, phase, bits, before, after, e1, e2)
+				}
+			}
+			// Source disposal cannot invalidate the copied manager or its CI map.
+			Gia_ManStop(src)
+			if _, err := out.Evaluate(make([]bool, Vec_IntSize(cis))); err != nil {
+				t.Fatal(err)
+			}
+			Gia_ManStop(out)
+		}
+	}
+}

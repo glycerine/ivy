@@ -175,3 +175,71 @@ func TestQuantificationDeepSharedCone(t *testing.T) {
 		Gia_ManStop(g)
 	}
 }
+
+func TestQuantConstantSupportIgnoresSelectionMarker(t *testing.T) {
+	g := Gia_ManStart(16)
+	defer Gia_ManStop(g)
+	Gia_ManQuantSetSuppStart(g)
+	a := Gia_ManAppendCi(g)
+	Gia_ManQuantSetSuppZero(g)
+	Gia_ManQuantSetSuppCi(g, Gia_ManObj(g, a>>1))
+	b := Gia_ManAppendCi(g)
+	Gia_ManQuantSetSuppZero(g)
+	Gia_ManQuantSetSuppCi(g, Gia_ManObj(g, b>>1))
+	Gia_ManQuantMarkUsedCis(g, func(any, int32) int32 { return 0 }, nil)
+	root := Gia_ManAppendAnd(g, 0, b)
+	// Constant fanins contribute no structural support. Row zero currently holds
+	// a query-selection mask, which must not leak into a newly appended gate.
+	if Gia_ManQuantCheckSupp(g, root>>1, 0) != 0 || Gia_ManQuantCheckSupp(g, root>>1, 1) != 1 {
+		t.Fatalf("selection marker leaked into support row: %x", Gia_ManQuantInfoId(g, root>>1))
+	}
+	if report := hashReviewStdout(t, func() { Gia_ManQuantVerify(g, root>>1) }); report != "" {
+		t.Fatalf("constant support verification: %s", report)
+	}
+}
+
+func TestQuantCountUsedStopsAtConstant(t *testing.T) {
+	defer func() {
+		if err := recover(); err != nil {
+			t.Fatalf("affected-cone count followed constant fanins: %v", err)
+		}
+	}()
+	g := Gia_ManStart(16)
+	defer Gia_ManStop(g)
+	Gia_ManQuantSetSuppStart(g)
+	a := Gia_ManAppendCi(g)
+	Gia_ManQuantSetSuppZero(g)
+	Gia_ManQuantSetSuppCi(g, Gia_ManObj(g, a>>1))
+	root := Gia_ManAppendAnd(g, 0, a)
+	Gia_ManQuantMarkUsedCis(g, func(any, int32) int32 { return 0 }, nil)
+	g.iSuppPi = 0
+	if got := Gia_ManQuantCountUsed(g, root>>1); got != 1 {
+		t.Fatalf("affected count%d, want one AND", got)
+	}
+}
+
+func BenchmarkQuantCollectSharedCone(b *testing.B) {
+	g := Gia_ManStart(16000)
+	defer Gia_ManStop(g)
+	Gia_ManQuantSetSuppStart(g)
+	a := Gia_ManAppendCi(g)
+	Gia_ManQuantSetSuppZero(g)
+	Gia_ManQuantSetSuppCi(g, Gia_ManObj(g, a>>1))
+	c := Gia_ManAppendCi(g)
+	Gia_ManQuantSetSuppZero(g)
+	Gia_ManQuantSetSuppCi(g, Gia_ManObj(g, c>>1))
+	root := Gia_ManAppendAnd(g, a, c)
+	for i := 0; i < 5000; i++ {
+		root = Gia_ManAppendAnd(g, root, a)
+	}
+	cis, side, ands := Vec_IntAlloc(2), Vec_IntAlloc(2), Vec_IntAlloc(6000)
+	keepC := func(_ any, ci int32) int32 { return giaBool(ci == 1) }
+	b.ReportAllocs()
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		Vec_IntClear(cis)
+		Vec_IntClear(side)
+		Vec_IntClear(ands)
+		Gia_ManQuantCollect(g, root>>1, keepC, nil, cis, side, ands)
+	}
+}

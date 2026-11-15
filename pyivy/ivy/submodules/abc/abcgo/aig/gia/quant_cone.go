@@ -102,7 +102,9 @@ func Gia_ManQuantCollect_rec(p *Gia_Man_t, id int32, cis, side, ands *Vec_Int_t)
 		return
 	}
 	Gia_ObjSetTravIdCurrentId(p, id)
-	if Gia_ManQuantCheckOverlap(p, id) == 0 {
+	// Row zero also stores the selected-variable mask, but the constant is
+	// still a fixed boundary rather than an internal gate to rebuild.
+	if id == 0 || Gia_ManQuantCheckOverlap(p, id) == 0 {
 		vec.Vec_IntPush(side, id)
 		return
 	}

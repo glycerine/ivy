@@ -124,7 +124,7 @@ func Gia_ManQuantCountUsed_rec(p *Gia_Man_t, id int32) int32 {
 	}
 	Gia_ObjSetTravIdCurrentId(p, id)
 	obj := Gia_ManObj(p, id)
-	if Gia_ObjIsCi(obj) != 0 {
+	if id == 0 || Gia_ObjIsCi(obj) != 0 {
 		return 0
 	}
 	count := int32(1)
