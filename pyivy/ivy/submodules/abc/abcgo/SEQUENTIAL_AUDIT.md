@@ -4498,3 +4498,13 @@ the structural improvement is processing positive objects once rather than
 unfolding every path. No extra per-object visited array is allocated. Distinct
 CI leaves are counted once in verbose diagnostics; the logical leaf set is
 unchanged. The full race gate is pending at this write.
+
+The final full gate is green: uncached race tests pass for GIA (161.638s)
+and ABCI (28.133s), recorded in `/tmp/abcgo-topand-review-race.log`; GIA vet
+passes (`/tmp/abcgo-topand-review-vet.log`). No code changed after checkpoint
+f8f532e98. The confirmed repairs are false-conjunct preservation, bounded
+shared-frontier expansion and class-copy constraint roles. The printer keeps
+C's original filtered-new-table behavior. Top-AND review covers the
+combinational domain enforced by its ABC command caller. This completes the
+reviewed functions in dup_topand.go; other duplication and GIA families remain
+open. Original completion stays 2/131 and the sequential audit remains active.
