@@ -2,8 +2,27 @@ package gia
 
 import (
 	"fmt"
+
 	"github.com/glycerine/abcgo/misc/vec"
 )
+
+// The source transforms operate on ordinary AIGs. Lower real gates through the
+// existing Boolean hash operations when copying into an ordinary hashed AIG.
+func giaEnableHashGate(dst, src *Gia_Man_t, obj *Gia_Obj_t, read func(int32) int32) int32 {
+	a, b, c, kind := src.Gate(obj.id)
+	switch kind {
+	case 2:
+		return Gia_ManHashAnd(dst, read(a), read(b))
+	case 3:
+		return Gia_ManHashXor(dst, read(a), read(b))
+	case 4:
+		return Gia_ManHashMux(dst, read(a), read(b), read(c))
+	case 5:
+		return read(a)
+	default:
+		panic("gia: expected an internal enable-transform gate")
+	}
+}
 
 func Gia_ManTransferFrames(aig, frames *Gia_Man_t, nFrames int32, newGraph *Gia_Man_t, signals *Vec_Int_t) *Vec_Int_t {
 	result := vec.Vec_IntAlloc(100)
@@ -42,9 +61,12 @@ func Gia_ManUnrollInit(p *Gia_Man_t, nFrames int32) *Gia_Man_t {
 		for i := int32(0); i < Gia_ManPiNum(p); i++ {
 			Gia_ObjSetCopyF(p, frame, Gia_ManPi(p, i), Gia_ManAppendCi(q))
 		}
+		read := func(lit int32) int32 {
+			return Gia_ObjCopyF(p, frame, Gia_ManObj(p, lit>>1)) ^ (lit & 1)
+		}
 		for _, obj := range p.pObjs {
 			if Gia_ObjIsAnd(obj) != 0 {
-				Gia_ObjSetCopyF(p, frame, obj, Gia_ManHashAnd(q, Gia_ObjFanin0CopyF(p, frame, obj), Gia_ObjFanin1CopyF(p, frame, obj)))
+				Gia_ObjSetCopyF(p, frame, obj, giaEnableHashGate(q, p, obj, read))
 			}
 		}
 		for i := int32(0); i < Gia_ManCoNum(p); i++ {
@@ -85,9 +107,10 @@ func Gia_ManRemoveEnables2(p *Gia_Man_t) *Gia_Man_t {
 	for i := int32(0); i < Gia_ManCiNum(p); i++ {
 		Gia_ObjSetValue(Gia_ManCi(p, i), Gia_ManAppendCi(q))
 	}
+	read := func(lit int32) int32 { return Gia_ObjLitCopy(p, lit) }
 	for _, obj := range p.pObjs {
 		if Gia_ObjIsAnd(obj) != 0 {
-			Gia_ObjSetValue(obj, Gia_ManHashAnd(q, Gia_ObjFanin0Copy(obj), Gia_ObjFanin1Copy(obj)))
+			Gia_ObjSetValue(obj, giaEnableHashGate(q, p, obj, read))
 		}
 	}
 	for i := int32(0); i < Gia_ManPoNum(p); i++ {
@@ -202,11 +225,15 @@ func Gia_ManRemoveEnables(p *Gia_Man_t) *Gia_Man_t {
 	q := Gia_ManStart(p.nObjs)
 	q.pName = p.pName
 	q.PSpec = p.PSpec
+	q.fGiaSimple = p.fGiaSimple
+	if p.PMuxes != nil {
+		q.EnableMuxes()
+	}
 	Gia_ObjSetValue(Gia_ManConst0(p), 0)
 	for _, obj := range p.pObjs[1:] {
 		switch {
 		case Gia_ObjIsAnd(obj) != 0:
-			Gia_ObjSetValue(obj, Gia_ManAppendAnd(q, Gia_ObjFanin0Copy(obj), Gia_ObjFanin1Copy(obj)))
+			giaAppendMappedNode(q, p, obj)
 		case Gia_ObjIsCi(obj) != 0:
 			Gia_ObjSetValue(obj, Gia_ManAppendCi(q))
 		case Gia_ObjIsPo(p, obj) != 0:

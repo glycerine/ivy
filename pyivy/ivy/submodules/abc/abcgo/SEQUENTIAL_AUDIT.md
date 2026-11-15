@@ -7012,3 +7012,30 @@ ordinary-AIG assumption, use established typed-copy helpers or explicit supporte
 handling, track the ordinary native baseline and independently test typed/state/
 phase/ownership boundaries. Also cover transfer/cofactoring driver composition
 and preserve/document existing repairs of C's unrecognized-enable failure paths.
+
+### Sequential enable transforms: typed-copy checkpoint
+
+Track the ordinary actual-giaEnable.c fixture and all 2,040 baseline trace lines:
+detection reports and signal order, eight phase variants, one-to-three-frame
+object/interface counts, all copy-table entries and exhaustive output truth,
+plus recognized-enable removal by both variants. Add a red truth-table regression
+covering all three transforms on real XOR/MUX, buffers and simple opposite-fanin
+nodes (/tmp/abcgo-enable-typed-red.log). It exposes XOR/MUX-to-AND corruption in
+all three copy paths and buffer/simple-mode panics in raw removal.
+
+Use existing Boolean hash operations to lower real gates in the hashed copies,
+with one local helper accepting the appropriate frame/Value literal reader.
+Raw removal uses the established typed append helper and preserves simple/MUX
+representation setup. These are mechanical copy repairs, not new enable
+heuristics. Typed and existing basic tests pass in 0.071s
+(/tmp/abcgo-enable-typed-repaired.log); tracked native agreement and all these
+tests pass in 1.881s (/tmp/abcgo-enable-native-first.log).
+
+Further inspection identifies two risks for red boundary tests now running:
+typed gate roots/branches whose bit fields resemble a structural MUX, and
+nonphysical logical port order in raw removal. Save this integration-pending
+checkpoint before further repairs. Detection remains the original structural
+heuristic; distinguish unsupported typed pattern recognition from faithfully
+copying typed logic. Transfer/cofactoring, broader phase/state/ownership checks,
+compactness and module race/vet gates are still pending. Original completion
+remains 2/131; GIA is in progress.
