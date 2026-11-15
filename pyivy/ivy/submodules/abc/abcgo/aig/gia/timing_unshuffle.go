@@ -2,6 +2,7 @@ package gia
 
 import (
 	"fmt"
+
 	"github.com/glycerine/abcgo/misc/tim"
 )
 
@@ -16,27 +17,19 @@ func Gia_ManDupUnshuffleInputs(src *Gia_Man_t) *Gia_Man_t {
 	if all != Gia_ManCiNum(src) || pis <= 0 {
 		panic("gia: invalid boxed input partition")
 	}
-	Gia_ManFillValue(src)
-	dst := Gia_ManStart(Gia_ManObjNum(src))
-	dst.pName, dst.PSpec = src.pName, src.PSpec
-	Gia_ManConst0(src).Value = 0
+	dst := giaDupMappedStart(src)
 	for _, part := range [][2]int32{{0, pis}, {all - Gia_ManRegNum(src), all}, {pis, all - Gia_ManRegNum(src)}} {
 		for i := part[0]; i < part[1]; i++ {
 			Gia_ManCi(src, i).Value = uint32(Gia_ManAppendCi(dst))
 		}
 	}
 	fmt.Println("Warning: Unshuffled CI order to be correct AIG with boxes.")
-	for _, obj := range src.pObjs {
-		if Gia_ObjIsAnd(obj) != 0 {
-			obj.Value = uint32(Gia_ManAppendAnd(dst, Gia_ObjFanin0Copy(obj), Gia_ObjFanin1Copy(obj)))
-		}
-	}
+	giaDupMappedNodes(dst, src)
 	for i := int32(0); i < Gia_ManCoNum(src); i++ {
-		obj := Gia_ManCo(src, i)
-		obj.Value = uint32(Gia_ManAppendCo(dst, Gia_ObjFanin0Copy(obj)))
+		giaDupMappedOutput(dst, src, Gia_ManCo(src, i))
 	}
 	Gia_ManSetRegNum(dst, Gia_ManRegNum(src))
-	dst.nConstrs = src.nConstrs
+	giaCopyOutputRoles(dst, src)
 	if Gia_ManIsNormalized(dst) == 0 {
 		panic("gia: unshuffle produced unnormalized graph")
 	}

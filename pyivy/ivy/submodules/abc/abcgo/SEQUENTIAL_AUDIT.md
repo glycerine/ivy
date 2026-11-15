@@ -5168,3 +5168,31 @@ and 128 truth rows, covering both input polarities and a sibling with/without
 the future-box dependency. Both new regressions pass after the change
 (`/tmp/abcgo-box-buffer-green.log`, 1.813s). Save a red checkpoint pending
 shared timing-family integration. Original completion remains 2/131.
+
+Boxed input unshuffling review finds two more defects, both covered by new
+red regressions before repair (`/tmp/abcgo-unshuffle-red.log`). The complete
+output list loses its bad-output count. The old internal-node loop treats
+all gates as ordinary ANDs, changing XOR/MUX truth and panicking for buffers
+and repeated/opposite-fanin simple-mode ANDs.
+
+Reuse giaDupMappedStart, giaDupMappedNodes and giaDupMappedOutput instead of
+the incomplete local copying loops; these retain raw gate kinds and simple
+mode while preserving the existing C CI permutation. Copy complete output
+roles via giaCopyOutputRoles. This reduces local production code and keeps
+the already-reviewed raw-copy rules in one implementation. The source C
+routine itself assumes ordinary ANDs; typed/simple cases are checked against
+the Go graph's Boolean semantics, not presented as supported native inputs.
+
+`timing_unshuffle_review_test.go` and `test_vectors/timing_unshuffle.c`
+compare 432 ordinary native cases/43,904 input-state rows, exact destination
+structure, all source copy literals and equivalence representatives/nexts.
+PI, register and box-output widths each range independently over 1..3, with
+all 16 phase patterns. A separate 5,400-copy matrix covers all five gate
+families, valid three-PO bad/constraint partitions and four phase patterns:
+548,800 truth rows match before and after serialization under the explicit
+C input permutation. This is an assignment-permutation check, not a claim
+of sequential equivalence under unchanged register-coordinate labels.
+Source informational unshuffle warnings are expected. All focused timing
+checks pass in 5.054s (`/tmp/abcgo-unshuffle-expanded.log`). Full module race
+and GIA vet integration follow; save a red checkpoint until verified.
+Original completion remains 2/131; GIA and the sequential audit stay active.
