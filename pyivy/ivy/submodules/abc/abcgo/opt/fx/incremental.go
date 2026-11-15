@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"slices"
 
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 )
 
@@ -12,17 +13,19 @@ import (
 // indices stay stable until extraction finishes; empty rows are tombstones.
 // The map only assigns insertion-order divisor IDs and is never iterated.
 type extraction struct {
-	cubes     [][]int32
-	lits      [][]int
-	first     []int
-	levels    []int32
-	divisors  [][]int32
-	ids       map[string]int
-	weights   []float32
-	queue     *vec.Vec_Que_t
-	marked    []bool
-	contained []int
-	options   Options
+	cubes                                     [][]int32
+	lits                                      [][]int
+	first                                     []int
+	levels                                    []int32
+	divisors                                  [][]int32
+	ids                                       map[string]int
+	weights                                   []float32
+	queue                                     *vec.Vec_Que_t
+	marked                                    []bool
+	contained                                 []int
+	options                                   Options
+	literalCount, selected, complementedMuxes int
+	started                                   int64
 }
 
 func (p *extraction) level(cube []int32) (level int32) {
@@ -107,8 +110,14 @@ func (p *extraction) doubles(first, pivot int, remove, update bool) error {
 			}
 			continue
 		}
-		if len(div) == 4 && NormalizeDivisor(div) < 0 && p.options.CanonicalOnly {
-			continue
+		if len(div) == 4 {
+			phase := NormalizeDivisor(div)
+			if phase == 1 {
+				p.complementedMuxes++
+			}
+			if phase < 0 && p.options.CanonicalOnly {
+				continue
+			}
 		}
 		if p.options.LiteralLimit != 0 && p.options.LiteralLimit < int32(len(div)) {
 			continue
@@ -172,6 +181,7 @@ func removeIndices(a, b []int) []int {
 	return a[:n]
 }
 func (p *extraction) update(id int) error {
+	p.selected++
 	div := slices.Clone(p.divisors[id])
 	a, b := DivisorPivots(div)
 	var singles []int
@@ -232,12 +242,14 @@ func (p *extraction) update(id int) error {
 		for len(p.marked) < len(p.cubes) {
 			p.marked = append(p.marked, false)
 		}
+		p.literalCount += len(div)
 		p.lits = append(p.lits, nil, nil)
 		for _, i := range singles {
 			cube, n := RemoveDivisorLiterals(p.cubes[i], div, false)
 			if n != 2 {
 				return fmt.Errorf("fx: invalid single-cube occurrence")
 			}
+			p.literalCount--
 			p.cubes[i] = append(cube, newVar<<1)
 			p.lits[newVar<<1] = append(p.lits[newVar<<1], i)
 		}
@@ -262,6 +274,7 @@ func (p *extraction) update(id int) error {
 			p.cubes[pair.First] = append(p.cubes[pair.First], lit)
 			p.lits[lit] = append(p.lits[lit], pair.First)
 		}
+		p.literalCount -= len(div) + len(p.cubes[pair.Second]) - 2
 		doubles = append(doubles, pair.First)
 		p.cubes[pair.Second] = nil
 	}
@@ -319,4 +332,40 @@ func (p *extraction) update(id int) error {
 		}
 	}
 	return nil
+}
+
+func (p *extraction) printDivisor(id int) {
+	div := p.divisors[id]
+	fmt.Printf("%4d : Div %7d : Weight %12.5f  ", p.selected, id, p.weights[id])
+	for _, lit := range div {
+		if lit&1 == 0 {
+			fmt.Printf("%d(1)", lit>>1)
+		}
+	}
+	fmt.Print(" + ")
+	for _, lit := range div {
+		if lit&1 != 0 {
+			fmt.Printf("%d(2)", lit>>1)
+		}
+	}
+	for i := len(div) + 3; i < 16; i++ {
+		fmt.Print(" ")
+	}
+	fmt.Printf("Lits =%7d  Divs =%8d  ", p.literalCount, len(p.divisors))
+	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-p.started)
+}
+func (p *extraction) printStats(elapsed int64) {
+	cubes, lits := 0, 0
+	for _, row := range p.cubes {
+		if len(row) > 0 {
+			cubes++
+		}
+	}
+	for _, row := range p.lits {
+		if len(row) > 0 {
+			lits++
+		}
+	}
+	fmt.Printf("Cubes =%8d  Lits  =%8d  Divs  =%8d  Divs+ =%8d  Compl =%8d  Extr  =%7d  ", cubes, lits, len(p.divisors), vec.Vec_QueSize(p.queue), p.complementedMuxes, p.selected)
+	util.Abc_PrintTime(1, "Time", elapsed)
 }

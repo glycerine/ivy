@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"slices"
 
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 )
 
@@ -12,6 +13,8 @@ type Options struct {
 	MaxNewNodes   int32
 	LiteralLimit  int32
 	CanonicalOnly bool
+	Verbose       bool
+	VeryVerbose   bool
 }
 
 // Extract runs abcFx.c's incremental fast-extract matrix and priority queue.
@@ -22,6 +25,7 @@ type Options struct {
 // Fx_FastExtract can assert on such redundant covers. Irredundant inputs pass
 // through unchanged.
 func Extract(cubes [][]int32, nVars int32, options Options) ([][]int32, int32, error) {
+	started := util.Abc_Clock()
 	if options.MaxNewNodes < 0 || options.LiteralLimit < 0 || nVars < 0 {
 		return nil, 0, fmt.Errorf("fx: negative extraction limit or variable count")
 	}
@@ -47,6 +51,7 @@ func Extract(cubes [][]int32, nVars int32, options Options) ([][]int32, int32, e
 	}
 	p.cubes = removeContained(p.cubes)
 	for i, cube := range p.cubes {
+		p.literalCount += len(cube) - 1
 		if p.first[cube[0]] < 0 {
 			p.first[cube[0]] = i
 		}
@@ -78,10 +83,26 @@ func Extract(cubes [][]int32, nVars int32, options Options) ([][]int32, int32, e
 			vec.Vec_QuePush(p.queue, id)
 		}
 	}
+	if options.VeryVerbose {
+		for id := range p.weights {
+			p.printDivisor(id)
+		}
+	}
+	if options.Verbose {
+		p.printStats(util.Abc_Clock() - started)
+	}
+	p.started = util.Abc_Clock()
 	for i := int32(0); i < options.MaxNewNodes && vec.Vec_QueTopPriority(p.queue) > 0; i++ {
-		if err := p.update(vec.Vec_QuePop(p.queue)); err != nil {
+		id := vec.Vec_QuePop(p.queue)
+		if options.VeryVerbose {
+			p.printDivisor(id)
+		}
+		if err := p.update(id); err != nil {
 			return nil, 0, err
 		}
+	}
+	if options.Verbose {
+		p.printStats(util.Abc_Clock() - started)
 	}
 	p.cubes = slices.DeleteFunc(p.cubes, func(cube []int32) bool { return len(cube) == 0 })
 	return p.cubes, int32(len(p.first)) - nVars, nil
