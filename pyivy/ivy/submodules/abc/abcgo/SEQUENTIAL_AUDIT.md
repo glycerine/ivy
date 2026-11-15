@@ -5956,3 +5956,39 @@ next step, not a completed fix or a substitute for reference-lifecycle coverage.
 Also inspect trivial-DSD fallback semantics and extend metadata checks across
 logical-interface permutations, names and AIGER round trips. Original completion
 remains 2/131; GIA and the sequential audit remain active.
+
+The typed-gate budget regression fails for both native XOR and MUX with a fresh
+zero-node budget (/tmp/abcgo-collapse-limits-red.log). Lower typed graphs using
+the existing source-faithful XOR/MUX-to-AND routine before collapse; each AND
+then uses the same source allocation check. This removes the unlimited typed
+BDD paths without introducing a substitute BDD API. Failure/retry/truth and
+external-reference checks pass (/tmp/abcgo-collapse-limits-green.log).
+
+A trivial-decomposition regression demonstrates Go skipping source's duplicate
+fallback when DSD has no internal nodes (/tmp/abcgo-collapse-trivial-red.log).
+Return the duplicate before allocating a replacement manager in that case.
+Unused gates in the Go test distinguish the results; the public Go extension
+accepts such graphs, whereas native collapse expects a cleaned graph. The
+source Rebuild fallback itself unambiguously returns a full duplicate.
+
+The BDD reference review then finds a concrete retention bug: a temporary AND
+that simplifies out of a later result retains projection child references after
+collapse and output release (/tmp/abcgo-collapse-refs-red.log). The first fixture
+used same-object complementary inputs, which the raw GIA append API rejects;
+replace it with distinct fanins (a AND b) AND NOT a before recording the actual
+retention failure. Restore source live-root ownership and final-fanout releases,
+using local fanout counts instead of mutating caller scratch p.Refs. Deferred
+cleanup releases live roots on all failures; returned CO references transfer to
+the output vector. Go's dangling-gate extension releases unused results too.
+Success and failure checks now return projection references to their baseline.
+
+Focused collapse tests pass (/tmp/abcgo-collapse-lifecycle-focused.log), including
+192 signed/typed/interface-layout/reset cases, 6,144 graph/AIGER truth rows,
+metadata/name independence and reset preservation. The first matrix encoded
+unknown reset as 2; correct the test to this package's -1 representation without
+changing production reset handling. A new complete native collapse/DSD/rebuild
+oracle matches exact graphs and output literals for all 256 three-input functions
+with independent exhaustive truth checks
+(/tmp/abcgo-collapse-rebuild-native.log). The earlier 6,264 ISOP-specific native
+cases also still pass. Save a red checkpoint pending prime-transfer lifecycle,
+source reporting review and full integration. Original completion remains 2/131.

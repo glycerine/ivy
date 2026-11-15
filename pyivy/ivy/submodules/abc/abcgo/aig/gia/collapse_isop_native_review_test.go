@@ -114,3 +114,59 @@ func TestCollapseIsopCoversAndAigsMatchOriginalABC(t *testing.T) {
 	}
 	t.Logf("%d exact native SOP, phase, root literal and AIG structure cases, with independent truth under all small inputs", cases)
 }
+
+func TestCollapseRebuildMatchesOriginalABC(t *testing.T) {
+	exe := compileGiaSourceOracle(t, "collapse_rebuild.c")
+	native, err := exec.Command(exe).CombinedOutput()
+	if err != nil {
+		t.Fatalf("native collapse/rebuild: %v\n%s", err, native)
+	}
+	var got strings.Builder
+	for table := 0; table < 256; table++ {
+		p := Gia_ManStart(128)
+		Gia_ManHashStart(p)
+		inputs := []int32{Gia_ManAppendCi(p), Gia_ManAppendCi(p), Gia_ManAppendCi(p)}
+		root := int32(0)
+		for mask := 0; mask < 8; mask++ {
+			if table>>mask&1 != 0 {
+				cube := int32(1)
+				for i, lit := range inputs {
+					cube = Gia_ManHashAnd(p, cube, lit^int32(1^(mask>>i&1)))
+				}
+				root = Gia_ManHashOr(p, root, cube)
+			}
+		}
+		for _, lit := range []int32{root, root ^ 1, inputs[0], 1} {
+			Gia_ManAppendCo(p, lit)
+		}
+		Gia_ManHashStop(p)
+		clean := Gia_ManCleanup(p)
+		out := Gia_ManCollapseTest(clean, 0)
+		fmt.Fprintf(&got, "table %x objects %d ands", table, Gia_ManObjNum(out))
+		for _, obj := range out.pObjs {
+			if Gia_ObjIsAnd(obj) != 0 {
+				a, b, _, _ := out.Gate(obj.id)
+				fmt.Fprintf(&got, " %d:%d", a, b)
+			}
+		}
+		got.WriteString(" outputs")
+		for i := int32(0); i < Gia_ManCoNum(out); i++ {
+			a, _, _, _ := out.Gate(Gia_ObjId(out, Gia_ManCo(out, i)))
+			fmt.Fprintf(&got, " %d", a)
+		}
+		got.WriteByte('\n')
+		for mask := 0; mask < 8; mask++ {
+			checkQuantificationOutputs(t, out, []bool{mask&1 != 0, mask&2 != 0, mask&4 != 0}, []bool{table>>mask&1 != 0, table>>mask&1 == 0, mask&1 != 0, true})
+		}
+	}
+	if got.String() != string(native) {
+		a, b := strings.Split(got.String(), "\n"), strings.Split(string(native), "\n")
+		for i := 0; i < min(len(a), len(b)); i++ {
+			if a[i] != b[i] {
+				t.Fatalf("collapse/rebuild source line%d differs\nGo:%s\nC: %s", i+1, a[i], b[i])
+			}
+		}
+		t.Fatalf("native output length Go%d C%d", got.Len(), len(native))
+	}
+	t.Log("all 256 three-input functions match exact native rebuilt graph and output literals")
+}

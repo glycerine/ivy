@@ -149,6 +149,11 @@ func Gia_ManRebuildNode(manager *dsd.Dsd_Manager_t, node *dsd.Dsd_Node_t, p *Gia
 }
 
 func Gia_ManRebuild(p *Gia_Man_t, manager *dsd.Dsd_Manager_t, dd *cudd.DdManager) *Gia_Man_t {
+	var count int
+	nodes := dsd.Dsd_TreeCollectNodesDfs(manager, &count)
+	if count == 0 {
+		return Gia_ManDup(p)
+	}
 	out := Gia_ManStart(2 * Gia_ManObjNum(p))
 	out.pName, out.PSpec = p.pName, p.PSpec
 	Gia_ManHashAlloc(out)
@@ -158,8 +163,7 @@ func Gia_ManRebuild(p *Gia_Man_t, manager *dsd.Dsd_Manager_t, dd *cudd.DdManager
 	}
 	fanins := vec.Vec_IntAlloc(16)
 	sop, cube := vec.Vec_StrAlloc(0), vec.Vec_StrAlloc(0)
-	var count int
-	for _, node := range dsd.Dsd_TreeCollectNodesDfs(manager, &count) {
+	for _, node := range nodes {
 		if Gia_ManRebuildNode(manager, node, out, dd, fanins, sop, cube) < 0 {
 			Gia_ManStop(out)
 			return Gia_ManDup(p)
@@ -205,23 +209,61 @@ func Gia_ManCollapse(p *Gia_Man_t, dd *cudd.DdManager, limit, verbose int32) *Ve
 	if p == nil || dd == nil || limit < 0 {
 		return nil
 	}
+	// The source algorithm accepts ordinary ANDs. Lower typed gates first so
+	// every constituent AND obeys the same allocation limit as the source.
+	if p.nXors != 0 || p.nMuxes != 0 {
+		plain := Gia_ManDupNoMuxes(p, 0)
+		defer Gia_ManStop(plain)
+		return Gia_ManCollapse(plain, dd, limit, verbose)
+	}
 	values := make([]*cudd.DdNode, p.nObjs)
-	values[0] = dd.LogicZero
+	remaining := make([]int32, p.nObjs)
+	for id := int32(1); id < p.nObjs; id++ {
+		a, b, _, kind := p.Gate(id)
+		switch kind {
+		case 2:
+			remaining[b>>1]++
+			fallthrough
+		case 5, 6:
+			remaining[a>>1]++
+		}
+	}
+	// Own live roots until their final fanout is processed, as in the source.
+	// The local counts also support repeated calls without changing p.Refs.
+	defer func() {
+		for _, node := range values {
+			cudd.Cudd_RecursiveDeref(dd, node)
+		}
+	}()
+	retain := func(id int32, node *cudd.DdNode) {
+		values[id] = node
+		cudd.Cudd_Ref(node)
+	}
+	release := func(lit int32) {
+		id := lit >> 1
+		remaining[id]--
+		if remaining[id] == 0 {
+			cudd.Cudd_RecursiveDeref(dd, values[id])
+			values[id] = nil
+		}
+	}
+	if remaining[0] != 0 {
+		retain(0, dd.LogicZero)
+	}
 	for i := int32(0); i < Gia_ManCiNum(p); i++ {
-		values[Gia_ObjId(p, Gia_ManCi(p, i))] = cudd.Cudd_bddIthVar(dd, int(i))
+		id := Gia_ObjId(p, Gia_ManCi(p, i))
+		if remaining[id] != 0 {
+			retain(id, cudd.Cudd_bddIthVar(dd, int(i)))
+		}
 	}
 	read := func(lit int32) *cudd.DdNode { return cudd.Cudd_NotCond(values[lit>>1], lit&1 != 0) }
 	for id := int32(1); id < p.nObjs; id++ {
-		a, b, c, kind := p.Gate(id)
+		a, b, _, kind := p.Gate(id)
 		switch kind {
 		case 1:
 			continue
 		case 2:
 			values[id] = cudd.Cudd_bddAndLimit(dd, read(a), read(b), uint32(limit))
-		case 3:
-			values[id] = cudd.Cudd_bddXor(dd, read(a), read(b))
-		case 4:
-			values[id] = cudd.Cudd_bddIte(dd, read(a), read(b), read(c))
 		case 5, 6:
 			values[id] = read(a)
 		default:
@@ -230,12 +272,22 @@ func Gia_ManCollapse(p *Gia_Man_t, dd *cudd.DdManager, limit, verbose int32) *Ve
 		if values[id] == nil {
 			return nil
 		}
+		cudd.Cudd_Ref(values[id])
+		release(a)
+		if kind == 2 {
+			release(b)
+		}
+		// Dangling gates are accepted by Go; release their unused results too.
+		if kind != 6 && remaining[id] == 0 {
+			cudd.Cudd_RecursiveDeref(dd, values[id])
+			values[id] = nil
+		}
 	}
 	result := vec.Vec_PtrAlloc(int(Gia_ManCoNum(p)))
 	for i := int32(0); i < Gia_ManCoNum(p); i++ {
-		node := values[Gia_ObjId(p, Gia_ManCo(p, i))]
-		cudd.Cudd_Ref(node)
-		vec.Vec_PtrPush(result, node)
+		id := Gia_ObjId(p, Gia_ManCo(p, i))
+		vec.Vec_PtrPush(result, values[id])
+		values[id] = nil // Transfer the output reference to the returned vector.
 	}
 	return result
 }

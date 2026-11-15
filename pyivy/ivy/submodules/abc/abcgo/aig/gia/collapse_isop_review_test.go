@@ -1,6 +1,8 @@
 package gia
 
 import (
+	"fmt"
+	"slices"
 	"strings"
 	"testing"
 
@@ -108,4 +110,73 @@ func TestCollapseIsopCubeLimit(t *testing.T) {
 		cudd.Cudd_RecursiveDeref(dd, f)
 		cudd.Cudd_Quit(dd)
 	}
+}
+
+func TestCollapseTrivialDecompositionDuplicatesSource(t *testing.T) {
+	p := Gia_ManStart(16)
+	a, b := Gia_ManAppendCi(p), Gia_ManAppendCi(p)
+	Gia_ManAppendAnd(p, a, b) // Source retains this unused gate on trivial fallback.
+	Gia_ManAppendCo(p, a)
+	Gia_ManAppendCo(p, 1)
+	out := Gia_ManCollapseTest(p, 0)
+	if out.nObjs != p.nObjs || Gia_ManAndNum(out) != 1 {
+		t.Fatalf("source's trivial-DSD fallback was skipped: %d objects, want %d", out.nObjs, p.nObjs)
+	}
+	for mask := 0; mask < 4; mask++ {
+		checkQuantificationOutputs(t, out, []bool{mask&1 != 0, mask&2 != 0}, []bool{mask&1 != 0, true})
+	}
+}
+
+func TestCollapseInterfaceLayoutsAndAiger(t *testing.T) {
+	cases := 0
+	for signs := 0; signs < 8; signs++ {
+		for typed := 0; typed < 2; typed++ {
+			for layout := 0; layout < 4; layout++ {
+				for _, reset := range []int32{0, 1, -1} {
+					p := windowReviewGraph(signs, typed, layout)
+					Gia_ManSetRegNum(p, 1)
+					if err := p.SetAigerProperties(1, 1); err != nil {
+						t.Fatal(err)
+					}
+					p.SetIdentity("collapse-layout", "collapse-layout.aig")
+					p.aigerLatchInits = []int32{reset}
+					p.aigerComment = []byte("collapse-layout-state")
+					p.VNamesIn, p.VNamesOut = Vec_PtrAlloc(4), Vec_PtrAlloc(4)
+					for i := 0; i < 4; i++ {
+						Vec_PtrPush(p.VNamesIn, fmt.Sprintf("in%d", i))
+						Vec_PtrPush(p.VNamesOut, fmt.Sprintf("out%d", i))
+					}
+					out := Gia_ManCollapseTest(p, 0)
+					if out.nRegs != 1 || out.nConstrs != 1 || out.aigerBadOutputs != 1 || !slices.Equal(out.aigerLatchInits, p.aigerLatchInits) || !slices.Equal(out.aigerComment, p.aigerComment) || !slices.Equal(out.InputNames(), p.InputNames()) || !slices.Equal(out.OutputNames(), p.OutputNames()) {
+						t.Fatalf("signs%d typed%d layout%d reset%d lost metadata", signs, typed, layout, reset)
+					}
+					if name, spec := out.Identity(); name != "collapse-layout" || spec != "collapse-layout.aig" {
+						t.Fatal("lost identity")
+					}
+					wire := partitionReviewRoundTrip(t, out, 1, 1)
+					if !slices.Equal(wire.aigerLatchInits, p.aigerLatchInits) {
+						t.Fatal("AIGER reset changed")
+					}
+					for mask := 0; mask < 16; mask++ {
+						inputs := []bool{mask&1 != 0, mask&2 != 0, mask&4 != 0, mask&8 != 0}
+						want, err := p.Evaluate(inputs)
+						if err != nil {
+							t.Fatal(err)
+						}
+						checkQuantificationOutputs(t, out, inputs, want)
+						checkQuantificationOutputs(t, wire, inputs, want)
+					}
+					Vec_PtrWriteEntry(out.VNamesIn, 0, "changed")
+					Vec_PtrWriteEntry(out.VNamesOut, 0, "changed")
+					out.aigerLatchInits[0] = reset ^ 1
+					out.aigerComment[0] = 'X'
+					if p.InputNames()[0] != "in0" || p.OutputNames()[0] != "out0" || p.aigerLatchInits[0] != reset || string(p.aigerComment) != "collapse-layout-state" {
+						t.Fatal("metadata aliases input")
+					}
+					cases++
+				}
+			}
+		}
+	}
+	t.Logf("%d typed/layout/reset cases and %d independently checked output rows", cases, cases*16*2)
 }
