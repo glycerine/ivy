@@ -5135,3 +5135,19 @@ The expected topological-order diagnostics in rejection tests are intentional.
 All focused tests pass in 1.950s (`/tmp/abcgo-box-order-final-focused.log`).
 Save a red checkpoint pending full integration. Original completion remains
 2/131; GIA and the sequential audit remain active.
+
+Boxed-copy integration is green: full uncached module race tests pass all
+130 tested packages; three command packages have no tests and no failure/
+race diagnostic lines appear (`/tmp/abcgo-box-order-module-race.log`).
+GIA passes in 221.907s, ABCI in 29.173s and BMC in 23.961s. GIA vet passes
+(`/tmp/abcgo-box-order-vet.log`). Production fixes and expanded tests are
+saved in a44d46122; source/tests/fixture stayed unchanged during integration.
+This closes the identified output-role and sibling-sizing bugs, with the
+allocation reduction retaining tested ordinary/typed traversal decisions.
+
+Further timing-family review remains: verify the C buffer-specific sibling
+traversal rule (C handles a buffer before following choice siblings), then
+review timing_unshuffle.go against giaTim.c, especially output-role and real
+gate retention. State-coordinate duplication in dup_seq.go also needs its
+remaining review; do not infer that prior copying-family repairs cover it.
+Original completion remains 2/131; GIA and the sequential audit remain active.
