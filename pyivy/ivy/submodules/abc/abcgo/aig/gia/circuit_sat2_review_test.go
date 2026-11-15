@@ -1,6 +1,7 @@
 package gia
 
 import (
+	"fmt"
 	"slices"
 	"testing"
 )
@@ -125,5 +126,270 @@ func BenchmarkCircuitSAT2ConflictScratch(b *testing.B) {
 				}
 			}
 		})
+	}
+}
+
+func TestCircuitSAT2RawGateValues(t *testing.T) {
+	for _, kind := range []string{"buffer", "repeated", "opposite", "zero", "one", "constant-zero", "constant-one"} {
+		for mode := int32(0); mode < 2; mode++ {
+			for phase := int32(0); phase < 2; phase++ {
+				t.Run(fmt.Sprintf("%s/mode%d/phase%d", kind, mode, phase), func(t *testing.T) {
+					g := Gia_ManStart(16)
+					g.fGiaSimple = 1
+					a := Gia_ManAppendCi(g)
+					var root int32
+					switch kind {
+					case "buffer":
+						root = Gia_ManAppendBuf(g, a)
+					case "repeated":
+						root = Gia_ManAppendAnd(g, a, a)
+					case "opposite":
+						root = Gia_ManAppendAnd(g, a, a^1)
+					case "zero":
+						root = Gia_ManAppendAnd(g, 0, a)
+					case "one":
+						root = Gia_ManAppendAnd(g, 1, a)
+					case "constant-zero":
+						root = Gia_ManAppendAnd(g, 0, 1)
+					case "constant-one":
+						root = Gia_ManAppendAnd(g, 1, 1)
+					}
+					p := Cbs2_ManAlloc(g)
+					defer Cbs2_ManStop(p)
+					p.Pars.fUseFanout = mode
+					var truth uint8
+					for input := 0; input < 2; input++ {
+						values, _, err := g.evaluateObjects([]bool{input != 0})
+						if err != nil {
+							t.Fatal(err)
+						}
+						if values[root>>1] != (phase != 0) {
+							truth |= 1 << input
+						}
+					}
+					defer func() {
+						if recovered := recover(); recovered != nil {
+							t.Fatalf("raw gate query panicked: %v", recovered)
+						}
+					}()
+					if status := Cbs2_ManSolve(p, root^phase); status != giaBool(truth == 0) {
+						t.Fatalf("raw gate verdict%d truth%x", status, truth)
+					}
+					if truth != 0 {
+						completions := uint8(3)
+						for _, lit := range Vec_IntArray(p.vModel) {
+							if lit>>1 != 0 {
+								t.Fatal("invalid CI witness")
+							}
+							if lit&1 == 0 {
+								completions &= 2
+							} else {
+								completions &= 1
+							}
+						}
+						if completions == 0 || completions & ^truth != 0 {
+							t.Fatal("invalid raw-gate witness")
+						}
+					}
+					Cbs2_ManCheckFanouts(p)
+				})
+			}
+		}
+	}
+}
+
+func TestCircuitSAT2RawAndExtensions(t *testing.T) {
+	queries := 0
+	for seed := 0; seed < 128; seed++ {
+		g := Gia_ManStart(64)
+		g.fGiaSimple = 1
+		lits := []int32{0, 1, Gia_ManAppendCi(g), Gia_ManAppendCi(g), Gia_ManAppendCi(g)}
+		random := uint32(seed + 29)
+		for i := 0; i < 18; i++ {
+			random = random*1664525 + 1013904223
+			a := lits[int(random)%len(lits)] ^ int32(random>>31)
+			random = random*1664525 + 1013904223
+			b := lits[int(random)%len(lits)] ^ int32(random>>31)
+			if i%4 == 0 {
+				b = a ^ int32((i/4)&1)
+			}
+			var lit int32
+			if i%5 == 0 {
+				lit = Gia_ManAppendBuf(g, a)
+			} else {
+				lit = Gia_ManAppendAnd(g, a, b)
+			}
+			lits = append(lits, lit)
+		}
+		truth := make([]uint8, g.nObjs)
+		ciTruth := []uint8{0xaa, 0xcc, 0xf0}
+		for mask := 0; mask < 8; mask++ {
+			values, _, err := g.evaluateObjects([]bool{mask&1 != 0, mask&2 != 0, mask&4 != 0})
+			if err != nil {
+				t.Fatal(err)
+			}
+			for id, v := range values {
+				if v {
+					truth[id] |= 1 << uint(mask)
+				}
+			}
+		}
+		bits := func(lit int32) uint8 {
+			v := truth[lit>>1]
+			if lit&1 != 0 {
+				v = ^v
+			}
+			return v
+		}
+		p := Cbs2_ManAlloc(g)
+		for modeFanout := int32(0); modeFanout < 2; modeFanout++ {
+			p.Pars.fUseFanout = modeFanout
+			for query, first := range lits {
+				for phase := int32(0); phase < 2; phase++ {
+					for mode := 0; mode < 3; mode++ {
+						root := first ^ phase
+						second := lits[(query+5)%len(lits)] ^ phase
+						expected := bits(root)
+						var status int32
+						if mode == 0 {
+							status = Cbs2_ManSolve(p, root)
+						} else {
+							if mode == 2 {
+								second = root ^ 1
+							}
+							if second != 0 {
+								expected &= bits(second)
+							}
+							status = Cbs2_ManSolve2(p, root, second)
+						}
+						if status != giaBool(expected == 0) {
+							t.Fatalf("raw graph%d first%d second%d mode%d: verdict%d expected bits%x", seed, root, second, mode, status, expected)
+						}
+						if status == 0 {
+							completions := uint8(0xff)
+							seen := map[int32]bool{}
+							for _, entry := range Vec_IntArray(p.vModel) {
+								id := entry >> 1
+								if id < 0 || seen[id] {
+									t.Fatal("invalid raw model")
+								}
+								seen[id] = true
+								var v uint8
+								if mode == 0 {
+									if id >= 3 {
+										t.Fatal("raw CI model index")
+									}
+									v = ciTruth[id]
+								} else {
+									if id >= g.nObjs {
+										t.Fatal("raw all-object model index")
+									}
+									v = truth[id]
+								}
+								if entry&1 != 0 {
+									v = ^v
+								}
+								completions &= v
+							}
+							if completions == 0 || completions&^expected != 0 {
+								t.Fatalf("raw graph%d query%d phase%d mode%d model does not imply roots", seed, query, phase, mode)
+							}
+						}
+						for id, value := range p.vAssign {
+							if value < 2 || p.vMark[id] != 0 || p.vLevReason[3*id] != -1 {
+								t.Fatal("raw graph retained assignments")
+							}
+						}
+						if p.pProp.iHead != 0 || p.pProp.iTail != 0 || p.pJust.iHead != 0 || p.pJust.iTail != 0 || p.pClauses.iHead != 1 || p.pClauses.iTail != 1 || len(p.vWatchUpds) != 0 {
+							t.Fatal("raw graph retained queues/watches")
+						}
+						Cbs2_ManCheckFanouts(p)
+						queries++
+					}
+				}
+			}
+		}
+		Cbs2_ManStop(p)
+	}
+	t.Logf("%d exhaustive raw-AND/constant/buffer/shared-fanin queries with validated witnesses", queries)
+}
+
+func TestCircuitSAT2NestedQueuesAndLifecycle(t *testing.T) {
+	q := Cbs2_Que_t{}
+	Cbs2_QuePush(&q, 11)
+	Cbs2_QuePush(&q, 23)
+	var h0, t0, h1, t1 int32
+	Cbs2_QueStore(&q, &h0, &t0)
+	for i := 0; i < 3000; i++ {
+		Cbs2_QuePush(&q, int32(i))
+	}
+	Cbs2_QueStore(&q, &h1, &t1)
+	q.pData[q.iHead] = -1
+	Cbs2_QueGrow(&q, 2*int32(cap(q.pData)))
+	Cbs2_QueRestore(&q, h1, t1)
+	if Cbs2_QueHasNode(&q, 23) != 1 {
+		t.Fatal("inner saved frontier lost")
+	}
+	Cbs2_QueRestore(&q, h0, t0)
+	if q.iHead != 0 || q.iTail != 2 || !slices.Equal(q.pData[:2], []int32{11, 23}) {
+		t.Fatal("outer saved frontier lost")
+	}
+	g := Gia_ManStart(16)
+	a, b := Gia_ManAppendCi(g), Gia_ManAppendCi(g)
+	for _, obj := range g.pObjs {
+		obj.Value = 1234
+		obj.fMark0 = 1
+		obj.fMark1 = 1
+	}
+	p := Cbs2_ManAlloc(g)
+	Cbs2_ManAssign(p, a, 0, 0, 0)
+	Cbs2_ManAssign(p, b^1, 1, 0, 0)
+	model := Vec_IntAlloc(0)
+	Cbs2_ManSaveModel(p, model)
+	if !slices.Equal(Vec_IntArray(model), []int32{0, 3}) {
+		t.Fatal("CI witness convention")
+	}
+	Cbs2_ManSaveModelAll(p, model)
+	if !slices.Equal(Vec_IntArray(model), []int32{2, 5}) {
+		t.Fatal("all-object witness convention")
+	}
+	Cbs2_ManCancelUntil(p, 1)
+	if p.pProp.iHead != 1 || p.pProp.iTail != 1 || Cbs2_VarIsAssigned(p, a>>1) != 1 || Cbs2_VarUnused(p, b>>1) != 1 {
+		t.Fatal("partial cancellation")
+	}
+	cexReviewMustPanic(t, func() { Cbs2_ManCancelUntil(p, 2) })
+	Cbs2_ManSetConflictNum(p, 7)
+	p.Pars.nJustLimit = 1
+	p.Pars.nBTThis = 7
+	p.Pars.nJustThis = 1
+	if Cbs2_ManCheckLimits(p) != 0 {
+		t.Fatal("limits must be strict")
+	}
+	p.Pars.nBTThis++
+	if Cbs2_ManCheckLimits(p) != 1 || p.nFails[0] != 0 || p.nFails[1] != 1 {
+		t.Fatal("conflict budget/counter")
+	}
+	p.Pars.nBTThis = 0
+	p.Pars.nJustThis++
+	if Cbs2_ManCheckLimits(p) != 1 || p.nFails[0] != 1 || p.nFails[1] != 1 {
+		t.Fatal("frontier budget/counter")
+	}
+	p.vActivity[a>>1] = 5
+	p.vActStore = append(p.vActStore, a>>1)
+	Cbs2_ManBumpClean(p)
+	if p.vActivity[a>>1] != 0 {
+		t.Fatal("activity cleanup")
+	}
+	Cbs2_ManStop(p)
+	Cbs2_ManStop(p)
+	Cbs2_ManStop(nil)
+	cexReviewMustPanic(t, func() { Cbs2_ManSolve(p, a) })
+	if p.pAig != nil || p.vAssign != nil || p.vLevReason != nil || p.vWatches != nil || p.vTemp != nil || p.vModel != nil || p.pProp.pData != nil {
+		t.Fatal("stopped manager retains storage")
+	}
+	for _, obj := range g.pObjs {
+		if obj.Value != 1234 || obj.fMark0 != 1 || obj.fMark1 != 1 {
+			t.Fatal("CBS2 changed borrowed graph marks/values")
+		}
 	}
 }

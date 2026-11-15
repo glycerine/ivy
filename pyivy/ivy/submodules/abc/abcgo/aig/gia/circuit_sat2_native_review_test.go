@@ -3,6 +3,7 @@ package gia
 import (
 	"fmt"
 	"os/exec"
+	"regexp"
 	"slices"
 	"strings"
 	"testing"
@@ -254,4 +255,173 @@ func TestCircuitSAT2MitersAndPhasesMatchOriginalABC(t *testing.T) {
 		t.Fatalf("miter source lengths Go%d C%d", len(got), len(native))
 	}
 	t.Log("3600 exact source miter properties, witnesses and unchanged phases")
+}
+
+func TestCircuitSAT2WatchedClausesMatchOriginalABC(t *testing.T) {
+	exe := compileGiaSourceOracle(t, "circuit_sat2_review.c")
+	native, err := exec.Command(exe, "watch").CombinedOutput()
+	if err != nil {
+		t.Fatalf("native CBS2 watches: %v\n%s", err, native)
+	}
+	g := Gia_ManStart(16)
+	a, b, c, d, e := Gia_ManAppendCi(g), Gia_ManAppendCi(g), Gia_ManAppendCi(g), Gia_ManAppendCi(g), Gia_ManAppendCi(g)
+	p := Cbs2_ManAlloc(g)
+	defer Cbs2_ManStop(p)
+	p.pClauses.pData = make([]int32, 1, 2)
+	learned := func(lits []int32) {
+		h := p.pClauses.iHead
+		Cbs2_QuePush(&p.pClauses, int32(len(lits)))
+		for _, lit := range lits {
+			Cbs2_QuePush(&p.pClauses, lit)
+		}
+		Cbs2_QuePush(&p.pClauses, 0)
+		Cbs2_QuePush(&p.pClauses, 0)
+		p.pClauses.iHead = p.pClauses.iTail
+		Cbs2_ManWatchClause(p, h, lits[0])
+		Cbs2_ManWatchClause(p, h, lits[1])
+	}
+	snapshot := func(label string, h int32) {
+		fmt.Printf("watch %s h%d head%d tail%d clauses", label, h, p.pClauses.iHead, p.pClauses.iTail)
+		for _, v := range p.pClauses.pData[1:p.pClauses.iTail] {
+			fmt.Printf(" %d", v)
+		}
+		for _, item := range []struct {
+			name   string
+			values []int32
+		}{
+			{"trail", p.pProp.pData[:p.pProp.iTail]}, {"watches", p.vWatches},
+		} {
+			fmt.Print(" " + item.name)
+			for _, v := range item.values {
+				fmt.Printf(" %d", v)
+			}
+		}
+		fmt.Print(" assigns")
+		for _, v := range p.vAssign {
+			fmt.Printf(" %d", v)
+		}
+		fmt.Print(" levels")
+		for _, v := range p.vLevReason {
+			fmt.Printf(" %d", v)
+		}
+		fmt.Print(" marks")
+		for _, v := range p.vMark {
+			fmt.Printf(" %d", v)
+		}
+		fmt.Printf(" calls%d conflicts%d\n", p.nPropCalls[1], p.nClauseConf)
+	}
+	got := hashReviewStdout(t, func() {
+		learned([]int32{a, b, c, d})
+		learned([]int32{a, e})
+		Cbs2_ManAssign(p, a^1, 0, 0, 0)
+		h := Cbs2_ManPropagateClauses(p, 0, a^1)
+		snapshot("a", h)
+		Cbs2_ManAssign(p, b^1, 1, 0, 0)
+		h = Cbs2_ManPropagateClauses(p, 1, b^1)
+		snapshot("b", h)
+		Cbs2_ManAssign(p, c^1, 2, 0, 0)
+		h = Cbs2_ManPropagateClauses(p, 2, c^1)
+		snapshot("unit", h)
+		Cbs2_ManCancelUntil(p, 4)
+		Cbs2_ManAssign(p, d^1, 3, 0, 0)
+		h = Cbs2_ManPropagateClauses(p, 3, c^1)
+		snapshot("conflict", h)
+		if h == 0 || Cbs2_ClauseSize(p, h) != 4 {
+			t.Fatal("missing learned conflict")
+		}
+		Cbs2_ManPrintCube(p, 3, h)
+		Cbs2_ManPrintClause(p, 3, h+Cbs2_ClauseSize(p, h)+1)
+	})
+	if got != string(native) {
+		t.Fatalf("CBS2 watches differ\nGo:%s\nC:%s", got, native)
+	}
+	Cbs2_ManCancelUntil(p, 0)
+	Cbs2_ManCleanWatch(p)
+	for _, v := range p.vWatches {
+		if v != 0 {
+			t.Fatal("watch cleanup failed")
+		}
+	}
+}
+
+func TestCircuitSAT2PreparedFanoutsMatchOriginalABC(t *testing.T) {
+	exe := compileGiaSourceOracle(t, "circuit_sat2_review.c")
+	native, err := exec.Command(exe, "fanouts").CombinedOutput()
+	if err != nil {
+		t.Fatalf("native CBS2 fanouts: %v\n%s", err, native)
+	}
+	g := Gia_ManStart(16)
+	a, b, c, d := Gia_ManAppendCi(g), Gia_ManAppendCi(g), Gia_ManAppendCi(g), Gia_ManAppendCi(g)
+	ab := Gia_ManAppendAnd(g, a, b)
+	r0, r1 := Gia_ManAppendAnd(g, ab, c), Gia_ManAppendAnd(g, ab, d)
+	p := Cbs2_ManAlloc(g)
+	defer Cbs2_ManStop(p)
+	Gia_ManIncrementTravId(g)
+	Cbs2_ManCreateFanout_rec(p, r0>>1)
+	Cbs2_ManCreateFanout_rec(p, r1>>1)
+	heads, links := slices.Clone(p.vFanout0), slices.Clone(p.vFanoutN)
+	got := hashReviewStdout(t, func() {
+		Cbs2_ManPrintFanouts(p)
+		fmt.Print("heads")
+		for _, v := range p.vFanout0 {
+			fmt.Printf(" %d", v)
+		}
+		fmt.Print(" links")
+		for _, v := range p.vFanoutN {
+			fmt.Printf(" %d", v)
+		}
+		fmt.Println()
+		status := Cbs2_ManSolve2(p, r0, r1)
+		fmt.Printf("prepared status%d model", status)
+		for _, v := range Vec_IntArray(p.vModel) {
+			fmt.Printf(" %d", v)
+		}
+		fmt.Println()
+		Cbs2_ManPrintFanouts(p)
+	})
+	if got != string(native) {
+		t.Fatalf("CBS2 fanouts differ\nGo:%s\nC:%s", got, native)
+	}
+	if !slices.Equal(heads, p.vFanout0) || !slices.Equal(links, p.vFanoutN) || !p.fanoutsReady {
+		t.Fatal("solver changed caller-prepared fanouts")
+	}
+	Cbs2_ManDeleteFanout_rec(p, r0>>1)
+	Cbs2_ManDeleteFanout_rec(p, r1>>1)
+	Cbs2_ManCheckFanouts(p)
+	if p.fanoutsReady {
+		t.Fatal("fanout ownership was not released")
+	}
+	if Cbs2_ManSolve(p, r0) != 0 {
+		t.Fatal("automatic fanout rebuild failed")
+	}
+	Cbs2_ManCheckFanouts(p)
+}
+
+func TestCircuitSAT2VerbosePropagationStatistics(t *testing.T) {
+	exe := compileGiaSourceOracle(t, "circuit_sat2_review.c")
+	native, err := exec.Command(exe, "verbose").CombinedOutput()
+	if err != nil {
+		t.Fatalf("native CBS2 verbose report: %v\n%s", err, native)
+	}
+	g := Gia_ManStart(16)
+	a, b := Gia_ManAppendCi(g), Gia_ManAppendCi(g)
+	Gia_ManAppendCo(g, 0)
+	Gia_ManAppendCo(g, 1)
+	Gia_ManAppendCo(g, Gia_ManAppendAnd(g, a, b))
+	got := hashReviewStdout(t, func() { Cbs2_ManSolveMiterNc(g, 0, nil, 1) })
+	tail := func(report string) string {
+		index := strings.Index(report, "Prop1 =")
+		if index < 0 {
+			t.Fatalf("missing propagation statistics:\n%s", report)
+		}
+		tail := report[index:]
+		timing := regexp.MustCompile(`JFront = +[0-9]+\.[0-9]{2} sec\n$`)
+		if !timing.MatchString(tail) {
+			t.Fatalf("missing/malformed frontier timing: %q", tail)
+		}
+		return timing.ReplaceAllString(tail, "JFront = <elapsed>\n")
+	}
+	if want := tail(string(native)); tail(got) != want {
+		t.Fatalf("propagation report differs\nGo:%s\nC:%s", tail(got), want)
+	}
 }

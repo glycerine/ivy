@@ -49,13 +49,21 @@ func Cbs2_VarSetValue(p *Cbs2_Man_t, id, value int32) {
 	p.vAssign[id] = byte(value)
 }
 func Cbs2_VarIsJust(p *Cbs2_Man_t, obj *Gia_Obj_t, id int32) int32 {
-	return giaBool(Gia_ObjIsAnd(obj) != 0 && p.vAssign[Gia_ObjFaninId0(obj, id)] >= 2 && p.vAssign[Gia_ObjFaninId1(obj, id)] >= 2)
+	return giaBool(Gia_ObjIsAnd(obj) != 0 && Cbs2_VarFanin0Value(p, obj, id) >= 2 && Cbs2_VarFanin1Value(p, obj, id) >= 2)
 }
 func Cbs2_VarFanin0Value(p *Cbs2_Man_t, obj *Gia_Obj_t, id int32) int32 {
-	return Cbs2_VarValue(p, Gia_ObjFaninId0(obj, id)) ^ Gia_ObjFaninC0(obj)
+	fanin := Gia_ObjFaninId0(obj, id)
+	if fanin == 0 {
+		return Gia_ObjFaninC0(obj)
+	}
+	return Cbs2_VarValue(p, fanin) ^ Gia_ObjFaninC0(obj)
 }
 func Cbs2_VarFanin1Value(p *Cbs2_Man_t, obj *Gia_Obj_t, id int32) int32 {
-	return Cbs2_VarValue(p, Gia_ObjFaninId1(obj, id)) ^ Gia_ObjFaninC1(obj)
+	fanin := Gia_ObjFaninId1(obj, id)
+	if fanin == 0 {
+		return Gia_ObjFaninC1(obj)
+	}
+	return Cbs2_VarValue(p, fanin) ^ Gia_ObjFaninC1(obj)
 }
 func Cbs2_VarDecLevel(p *Cbs2_Man_t, id int32) int32      { return p.vLevReason[3*id] }
 func Cbs2_VarReason0(p *Cbs2_Man_t, id int32) int32       { return p.vLevReason[3*id+1] }
@@ -278,6 +286,9 @@ func Cbs2_ManDeriveReason(p *Cbs2_Man_t, level int32) int32 {
 	p.vTemp = p.vTemp[:0]
 	for read := write; read < q.iTail; read++ {
 		id := q.pData[read]
+		if id == 0 { // fixed constant fanins contribute no decision antecedent
+			continue
+		}
 		if p.vMark[id] != 0 {
 			continue
 		}
@@ -301,18 +312,29 @@ func Cbs2_ManDeriveReason(p *Cbs2_Man_t, level int32) int32 {
 			if b != 0 {
 				Cbs2_QuePush(q, b)
 			}
+		case b == cbs2ConstantReason:
+			// An upward implication justified solely by fixed constant fanins.
 		default:
 			for i, size := int32(1), Cbs2_ClauseSize(p, b); i < size; i++ {
 				Cbs2_QuePush(q, Cbs2_ClauseLit(p, b, i)>>1)
 			}
 		}
 	}
-	if q.pData[q.iHead+1] == 0 {
-		panic("gia: CBS2 reason has no decision")
-	}
 	q.iTail = write
 	for _, id := range p.vTemp {
 		p.vMark[id] = 0
+	}
+	if q.pData[q.iHead+1] == 0 {
+		// Raw constant gates may expose a conflict independent of this branch.
+		// Continue at the highest remaining antecedent level, as resolution does.
+		maximum := int32(-1)
+		for _, id := range q.pData[q.iHead+2 : q.iTail] {
+			maximum = max(maximum, Cbs2_VarDecLevel(p, id))
+		}
+		if maximum < 0 || maximum >= level {
+			panic("gia: CBS2 reason has no decision")
+		}
+		return Cbs2_ManDeriveReason(p, maximum)
 	}
 	return Cbs2_QueFinish(p, level)
 }
@@ -320,9 +342,11 @@ func Cbs2_ManAnalyze(p *Cbs2_Man_t, level, id, a, b int32) int32 {
 	q := &p.pClauses
 	Cbs2_QuePush(q, 0)
 	Cbs2_QuePush(q, 0)
-	if a != 0 {
+	if a != 0 || b == 0 {
 		Cbs2_QuePush(q, id)
-		Cbs2_QuePush(q, a)
+		if a != 0 {
+			Cbs2_QuePush(q, a)
+		}
 		if b != 0 {
 			Cbs2_QuePush(q, b)
 		}
@@ -332,6 +356,17 @@ func Cbs2_ManAnalyze(p *Cbs2_Man_t, level, id, a, b int32) int32 {
 		}
 	}
 	return Cbs2_ManDeriveReason(p, level)
+}
+
+// Hashed C inputs simplify constant fanins away. Raw Go gates retain them;
+// distinguish an empty circuit reason from a decision or a learned-clause ID.
+const cbs2ConstantReason int32 = -1
+
+func cbs2AnalyzeGate(p *Cbs2_Man_t, level, id, a, b int32) int32 {
+	if a == 0 {
+		a, b = b, 0
+	}
+	return Cbs2_ManAnalyze(p, level, id, a, b)
 }
 func Cbs2_ManPropagateClauses(p *Cbs2_Man_t, level, lit int32) int32 {
 	falseLit := lit ^ 1
@@ -425,19 +460,26 @@ func Cbs2_ManPropagateOne(p *Cbs2_Man_t, id, level int32) int32 {
 	fa, fb := Gia_ObjFaninId0(obj, id), Gia_ObjFaninId1(obj, id)
 	if Cbs2_VarValue(p, id) == 1 {
 		if a == 0 || b == 0 {
+			if (a == 0 && fa == 0) || (b == 0 && fb == 0) {
+				return cbs2AnalyzeGate(p, level, id, 0, 0)
+			}
 			if a == 0 && b != 0 {
-				return Cbs2_ManAnalyze(p, level, id, fa, 0)
+				return cbs2AnalyzeGate(p, level, id, fa, 0)
 			}
 			if a != 0 && b == 0 {
-				return Cbs2_ManAnalyze(p, level, id, fb, 0)
+				return cbs2AnalyzeGate(p, level, id, fb, 0)
 			}
-			return Cbs2_ManAnalyze(p, level, id, fa, fb)
+			return cbs2AnalyzeGate(p, level, id, fa, fb)
 		}
 		if a >= 2 {
 			Cbs2_ManAssign(p, Gia_ObjFaninLit0(obj, id), level, id, 0)
 		}
 		if b >= 2 {
-			Cbs2_ManAssign(p, Gia_ObjFaninLit1(obj, id), level, id, 0)
+			if Cbs2_VarIsAssigned(p, fb) == 0 {
+				Cbs2_ManAssign(p, Gia_ObjFaninLit1(obj, id), level, id, 0)
+			} else if Cbs2_VarFanin1Value(p, obj, id) == 0 {
+				return cbs2AnalyzeGate(p, level, id, fb, 0)
+			}
 		}
 		return 0
 	}
@@ -445,7 +487,7 @@ func Cbs2_ManPropagateOne(p *Cbs2_Man_t, id, level int32) int32 {
 		return 0
 	}
 	if a == 1 && b == 1 {
-		return Cbs2_ManAnalyze(p, level, id, fa, fb)
+		return cbs2AnalyzeGate(p, level, id, fa, fb)
 	}
 	if a == 1 || b == 1 {
 		if a >= 2 {
@@ -469,7 +511,7 @@ func Cbs2_ManPropagateTwo(p *Cbs2_Man_t, id, level int32) int32 {
 		return 0
 	}
 	if a == 1 && b == 1 {
-		return Cbs2_ManAnalyze(p, level, id, Gia_ObjFaninId0(obj, id), Gia_ObjFaninId1(obj, id))
+		return cbs2AnalyzeGate(p, level, id, Gia_ObjFaninId0(obj, id), Gia_ObjFaninId1(obj, id))
 	}
 	if a >= 2 {
 		Cbs2_ManAssign(p, Gia_ObjFaninLit0(obj, id)^1, level, id, Gia_ObjFaninId1(obj, id))
@@ -484,16 +526,26 @@ func Cbs2_ManPropagateUnassigned(p *Cbs2_Man_t, id, level int32) {
 	a, b := Cbs2_VarFanin0Value(p, obj, id), Cbs2_VarFanin1Value(p, obj, id)
 	fa, fb := Gia_ObjFaninId0(obj, id), Gia_ObjFaninId1(obj, id)
 	p.nPropCalls[2]++
+	var lit, reason0, reason1 int32
 	switch {
 	case a == 0 && b == 0:
-		Cbs2_ManAssign(p, id<<1|1, level, fa, fb)
+		lit, reason0, reason1 = id<<1|1, fa, fb
 	case a == 0:
-		Cbs2_ManAssign(p, id<<1|1, level, fa, 0)
+		lit, reason0 = id<<1|1, fa
 	case b == 0:
-		Cbs2_ManAssign(p, id<<1|1, level, fb, 0)
+		lit, reason0 = id<<1|1, fb
 	case a == 1 && b == 1:
-		Cbs2_ManAssign(p, id<<1, level, fa, fb)
+		lit, reason0, reason1 = id<<1, fa, fb
+	default:
+		return
 	}
+	if reason0 == 0 {
+		reason0, reason1 = reason1, 0
+		if reason0 == 0 {
+			reason1 = cbs2ConstantReason
+		}
+	}
+	Cbs2_ManAssign(p, lit, level, reason0, reason1)
 }
 func Cbs2_ManPropagate(p *Cbs2_Man_t, level int32) int32 {
 	for {
@@ -735,9 +787,9 @@ func Cbs2_ManSatPrintStats(p *Cbs2_Man_t) {
 	})
 }
 func Cbs2_ObjPrintFanouts(p *Cbs2_Man_t, id int32) {
-	fmt.Printf("Fanouts of node %d:", id)
+	fmt.Printf("Fanouts of node %d: ", id)
 	for fan := p.vFanout0[id]; fan != 0; fan = p.vFanoutN[fan] {
-		fmt.Printf(" %d", fan>>1)
+		fmt.Printf("%d ", fan>>1)
 	}
 	fmt.Println()
 }
@@ -772,6 +824,7 @@ func Cbs2_ManCreateFanout_rec(p *Cbs2_Man_t, id int32) {
 }
 func Cbs2_ManDeleteFanout_rec(p *Cbs2_Man_t, id int32) {
 	if id == 0 {
+		p.vFanout0[0] = 0
 		return
 	}
 	obj := p.pAig.pObjs[id]
@@ -845,6 +898,7 @@ func Cbs2_ManSolveMiterNc(graph *Gia_Man_t, conflicts int32, statusOut **Vec_Str
 	p.timeTotal = time.Since(started)
 	if verbose != 0 {
 		Cbs2_ManSatPrintStats(p)
+		fmt.Printf("Prop1 = %d.  Prop2 = %d.  Prop3 = %d.  ClaConf = %d.   FailJ = %d.  FailC = %d.   JFront =%9.2f sec\n", p.nPropCalls[0], p.nPropCalls[1], p.nPropCalls[2], p.nClauseConf, p.nFails[0], p.nFails[1], p.timeJFront.Seconds())
 	}
 	if statusOut != nil {
 		*statusOut = statuses

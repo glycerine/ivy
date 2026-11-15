@@ -56,8 +56,57 @@ static void stats(void) {
  Cbs2_ManSatPrintStats(p);Cbs2_ManStop(p);p=Cbs2_ManAlloc(g);Cbs2_ManSatPrintStats(p);Cbs2_ManStop(p);Gia_ManStop(g);
 }
 
+static int learned(Cbs2_Man_t *p,int *lits,int n) {
+ int h=p->pClauses.iHead,i;Cbs2_QuePush(&p->pClauses,n);
+ for(i=0;i<n;++i)Cbs2_QuePush(&p->pClauses,lits[i]);
+ Cbs2_QuePush(&p->pClauses,0);Cbs2_QuePush(&p->pClauses,0);p->pClauses.iHead=p->pClauses.iTail;
+ Cbs2_ManWatchClause(p,h,lits[0]);Cbs2_ManWatchClause(p,h,lits[1]);return h;
+}
+static void snapshot(Cbs2_Man_t *p,const char *label,int h) {
+ int i;printf("watch %s h%d head%d tail%d clauses",label,h,p->pClauses.iHead,p->pClauses.iTail);
+ for(i=1;i<p->pClauses.iTail;++i)printf(" %d",p->pClauses.pData[i]);
+ printf(" trail");for(i=0;i<p->pProp.iTail;++i)printf(" %d",p->pProp.pData[i]);
+ printf(" watches");for(i=0;i<Vec_IntSize(&p->vWatches);++i)printf(" %d",Vec_IntEntry(&p->vWatches,i));
+ printf(" assigns");for(i=0;i<Vec_StrSize(&p->vAssign);++i)printf(" %d",Vec_StrEntry(&p->vAssign,i));
+ printf(" levels");for(i=0;i<Vec_IntSize(&p->vLevReason);++i)printf(" %d",Vec_IntEntry(&p->vLevReason,i));
+ printf(" marks");for(i=0;i<Vec_StrSize(&p->vMark);++i)printf(" %d",Vec_StrEntry(&p->vMark,i));
+ printf(" calls%d conflicts%d\n",p->nPropCalls[1],p->nClauseConf);
+}
+static void watch(void) {
+ Gia_Man_t *g=Gia_ManStart(16);Cbs2_Man_t *p;int a,b,c,d,e,lits[4],h;
+ a=Gia_ManAppendCi(g);b=Gia_ManAppendCi(g);c=Gia_ManAppendCi(g);d=Gia_ManAppendCi(g);e=Gia_ManAppendCi(g);
+ p=Cbs2_ManAlloc(g);p->pClauses.nSize=2;p->pClauses.pData=ABC_REALLOC(int,p->pClauses.pData,2);
+ lits[0]=a;lits[1]=b;lits[2]=c;lits[3]=d;learned(p,lits,4);lits[1]=e;learned(p,lits,2);
+ Cbs2_ManAssign(p,a^1,0,0,0);h=Cbs2_ManPropagateClauses(p,0,a^1);snapshot(p,"a",h);
+ Cbs2_ManAssign(p,b^1,1,0,0);h=Cbs2_ManPropagateClauses(p,1,b^1);snapshot(p,"b",h);
+ Cbs2_ManAssign(p,c^1,2,0,0);h=Cbs2_ManPropagateClauses(p,2,c^1);snapshot(p,"unit",h);
+ Cbs2_ManCancelUntil(p,4);Cbs2_ManAssign(p,d^1,3,0,0);h=Cbs2_ManPropagateClauses(p,3,c^1);snapshot(p,"conflict",h);
+ Cbs2_ManPrintCube(p,3,h);Cbs2_ManPrintClause(p,3,h+Cbs2_ClauseSize(p,h)+1);
+ Cbs2_ManCancelUntil(p,0);Cbs2_ManCleanWatch(p);Cbs2_ManStop(p);Gia_ManStop(g);
+}
+
+static void fanouts(void) {
+ Gia_Man_t *g=Gia_ManStart(16);Cbs2_Man_t *p;int a,b,c,d,ab,r0,r1,status,i,v;
+ a=Gia_ManAppendCi(g);b=Gia_ManAppendCi(g);c=Gia_ManAppendCi(g);d=Gia_ManAppendCi(g);
+ ab=Gia_ManAppendAnd(g,a,b);r0=Gia_ManAppendAnd(g,ab,c);r1=Gia_ManAppendAnd(g,ab,d);
+ Gia_ManCreateRefs(g);p=Cbs2_ManAlloc(g);Gia_ManIncrementTravId(g);
+ Cbs2_ManCreateFanout_rec(p,r0>>1);Cbs2_ManCreateFanout_rec(p,r1>>1);
+ Cbs2_ManPrintFanouts(p);printf("heads");Vec_IntForEachEntry(&p->vFanout0,v,i)printf(" %d",v);
+ printf(" links");Vec_IntForEachEntry(&p->vFanoutN,v,i)printf(" %d",v);printf("\n");
+ status=Cbs2_ManSolve2(p,r0,r1);printf("prepared status%d model",status);Vec_IntForEachEntry(p->vModel,v,i)printf(" %d",v);printf("\n");
+ Cbs2_ManPrintFanouts(p);
+ Cbs2_ManDeleteFanout_rec(p,r0>>1);Cbs2_ManDeleteFanout_rec(p,r1>>1);Cbs2_ManCheckFanouts(p);
+ Cbs2_ManStop(p);Gia_ManStop(g);
+}
+
+static void verbose(void) {
+ Gia_Man_t *g=Gia_ManStart(16);Vec_Str_t *status;Vec_Int_t *store;int a=Gia_ManAppendCi(g),b=Gia_ManAppendCi(g);
+ Gia_ManAppendCo(g,0);Gia_ManAppendCo(g,1);Gia_ManAppendCo(g,Gia_ManAppendAnd(g,a,b));
+ store=Cbs2_ManSolveMiterNc(g,0,&status,1);Vec_IntFree(store);Vec_StrFree(status);Gia_ManStop(g);
+}
+
 int main(int argc,char **argv) {
- if(argc>1){if(argv[1][0]=='m')miters();else stats();return 0;}
+ if(argc>1){if(argv[1][0]=='m')miters();else if(argv[1][0]=='w')watch();else if(argv[1][0]=='f')fanouts();else if(argv[1][0]=='v')verbose();else stats();return 0;}
  setvbuf(stdout,NULL,_IONBF,0);
  int seed,fanout,bi,ji,q,phase,mode,status,k,value,lits[29];
  int budgets[]={0,1,3,1000},frontiers[]={0,1,3,100};Gia_Man_t *g;Cbs2_Man_t *p;

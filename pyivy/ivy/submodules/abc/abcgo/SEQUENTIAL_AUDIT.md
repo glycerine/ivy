@@ -6450,3 +6450,46 @@ Next checks: watched clause growth/ownership and reports, lifecycle/nested
 queues, raw constant/repeated-fanin inputs and exhaustive paired witnesses;
 then focused and full module race/vet integration. CBS2 and GIA remain open;
 original completion remains 2/131.
+
+CBS2 raw-gate regressions expose incorrect SAT verdicts for constant fanins,
+double-assignment panics for buffers/repeated/opposite fanins, and stale fanout
+links at constant node zero (/tmp/abcgo-cbs2-raw-red.log). Treat constant fanins
+as fixed values, recheck a shared second fanin after assigning the first, and
+clear the constant's fanout head during deletion. Constant-only upward
+implications need a distinct empty reason: use a negative reason sentinel,
+separate from decisions and positive learned-clause handles. Omit fixed axioms
+from conflict antecedents; preserve the ordinary circuit/clause reason encoding.
+
+A broader raw-gate sweep first fails when such an unconditional implication
+exposes a conflict independent of the current branch
+(/tmp/abcgo-cbs2-raw-extensions.log). If current-level reason expansion leaves
+only lower-level antecedents, continue at their highest level, as source
+resolution already does. The 35,328-query sweep then passes both propagation
+modes, constants, buffers, shared/opposite fanins and paired/contradictory roots;
+all verdicts and nonempty cube completions are checked over every three-input
+assignment (/tmp/abcgo-cbs2-raw-extensions-2.log). These are representation
+extensions to source's usual hashed inputs, not a replacement solver.
+
+Actual C watched-clause snapshots match through two watch moves, unit
+implication, cancellation, a learned conflict and forced backing growth from
+capacity two. Compare complete clause storage, watch links, assignment/reason
+arrays, marks and counters (/tmp/abcgo-cbs2-watch-native.log). A native prepared-
+fanout test agrees on linked structure and ordered all-object model; only report
+spacing fails before repair (/tmp/abcgo-cbs2-fanouts-red.log). Restore source
+spacing and verify solves preserve caller-prepared links, release ownership on
+explicit deletion, and correctly rebuild/release automatically owned fanouts.
+
+Source's verbose propagation/failure/frontier report was also omitted. The
+native public-wrapper regression fails before restoration
+(/tmp/abcgo-cbs2-verbose-red.log); compare exact counters and validate timing
+format while excluding nondeterministic elapsed values. Add nested queue save/
+restore across growth, partial cancellation, model encoding, strict budgets and
+failure counters, activity cleanup, repeated/active stop, and preservation of
+borrowed graph marks/values.
+
+The combined CBS2 focused suite passes in 11.568s
+(/tmp/abcgo-cbs2-final-focused.log). Final benchmark after the raw-gate fixes:
+top-down 5,653ns and fanout 4,260ns, both 0B/0 allocations
+(/tmp/abcgo-cbs2-scratch-final.log). Save an integration-pending checkpoint before
+all-root-pair checks on the harder five-input graphs and full race/vet gates.
+Original completion remains 2/131; CBS2 and the GIA audit remain in progress.
