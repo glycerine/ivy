@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math"
 	"os/exec"
+	"regexp"
 	"strings"
 	"testing"
 
@@ -198,4 +199,40 @@ func TestAreaBalanceIntermediateNativeOracle(t *testing.T) {
 		t.Fatalf("line counts C%d Go%d", len(a), len(b))
 	}
 	t.Logf("%d cases, %d extracted-divisor updates, %d truth rows and exact intermediate DAM states match C", cases, updates, cases*64)
+}
+
+func TestAreaDiagnosticsMatchOriginalABC(t *testing.T) {
+	exe := compileGiaSourceOracle(t, "balance_area_states.c")
+	native, err := exec.Command(exe, "diagnostics").CombinedOutput()
+	if err != nil {
+		t.Fatalf("native diagnostics: %v\n%s", err, native)
+	}
+	got := hashReviewStdout(t, func() {
+		for family := 0; family < 6; family++ {
+			for signs := 0; signs < 2; signs++ {
+				fmt.Printf("queue %d %d\n", family, signs)
+				g := areaReviewGraph(family, signs)
+				p := Dam_ManAlloc(g)
+				p.nLevelMax = Gia_ManSetLevels(g, nil)
+				p.vNodLevR = append([]int32(nil), Vec_IntArray(Gia_ManReverseLevel(g))...)
+				Dam_ManCreatePairs(p, 1)
+				Dam_PrintQue(p)
+				if vec.Vec_QueSize(p.vQue) > 0 {
+					Dam_PrintDiv(p, int32(vec.Vec_QueTop(p.vQue)))
+				}
+				Dam_PrintDiv(p, 0)
+				Dam_ManFree(p)
+				for mode := int32(0); mode < 4; mode++ {
+					fmt.Printf("verbose %d %d %d\n", family, signs, mode)
+					Dam_ManAreaBalanceInt(areaReviewGraph(family, signs), nil, 3, mode&1, mode>>1&1)
+				}
+			}
+		}
+	})
+	// CPU time in C and elapsed time in Go are inherently nondeterministic.
+	clock := regexp.MustCompile(`Time\s*=\s*[0-9.]+ sec`)
+	wantText, gotText := clock.ReplaceAllString(string(native), "Time=<elapsed>"), clock.ReplaceAllString(got, "Time=<elapsed>")
+	if gotText != wantText {
+		t.Fatalf("area diagnostics differ from original ABC\nGo:\n%s\nC:\n%s", gotText, wantText)
+	}
 }

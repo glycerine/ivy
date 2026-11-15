@@ -5492,3 +5492,33 @@ Restore interface metadata at that area-wrapper boundary too; global normalizati
 is not changed because other callers may reorder state/interface coordinates.
 Save a red checkpoint pending focused rerun and full integration. Original
 completion remains 2/131, with GIA and the sequential audit active.
+
+Area diagnostics have two red regressions: public flags omit all four source
+stage reports, pair and gain summaries, and incorrectly print the extraction
+summary for verbose without very-verbose (/tmp/abcgo-area-diagnostics-red.log).
+A native diagnostic mode in balance_area_states.c additionally fails on the
+invented DAM/queue/divisor text (/tmp/abcgo-area-diagnostics-native-red.log).
+Restore the source pair/divisor totals, tried/used/XOR percentages, selection
+labels/operators/polarities/weights, final gain/gainX summary and flag wiring.
+Keep time.Now/time.Since elapsed timing in Go; native comparison normalizes only
+the inherently nondeterministic Time field. Integer diagnostics use Go int
+counters rather than intentionally reproducing C signed-overflow behavior.
+
+All 12 AND/XOR/mixed/MUX/buffer/wide phase families' queue/divisor diagnostics
+and 48 internal verbose-mode runs match original C exactly after normalizing
+time. Public tests verify four stage reports only for verbose, extraction reports
+only for very-verbose, quiet silence, and identical truth under all flag pairs.
+The 1,152-case mapped/unmapped/simple/coarsened/arrival/limit matrix now retains
+roles, reset values, comments and identity, with 73,728 truth rows checked both
+directly and after AIGER serialization. Correct the test's initially invalid
+reset encoding 2 to a valid 0; this was a fixture error, not a production fix.
+
+Empty/no-output/constant/CI/buffer/one-AND/contradiction cases with no shared
+divisors also terminate correctly and print finite DAM percentages. The general
+source graph report averages levels over zero COs and prints NaN on zero-output
+graphs in both languages; that separate source behavior is not changed here.
+The focused run, including the previous depth verbose guard and 480-case native
+intermediate states, passes in 4.265s (/tmp/abcgo-area-final-focused.log).
+Save a red integration checkpoint and freeze source/tests/fixtures for full
+uncached module race tests plus GIA vet. Original completion remains 2/131,
+with GIA and the sequential audit active; mapped-window review remains ahead.

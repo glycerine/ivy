@@ -71,8 +71,27 @@ static void result(Gia_Man_t *g,Gia_Man_t *out)
     }
     puts("");ABC_FREE(values);
 }
-int main(void)
+static int diagnostics(void)
 {
+    int family,signs,mode;Gia_Man_t *g,*out;Dam_Man_t *p;
+    for(family=0;family<6;family++)for(signs=0;signs<2;signs++){
+        printf("queue %d %d\n",family,signs);
+        g=area_graph(family,signs);p=Dam_ManAlloc(g);
+        p->nLevelMax=Gia_ManSetLevels(g,NULL);p->vNodLevR=Gia_ManReverseLevel(g);
+        Dam_ManCreatePairs(p,1);Dam_PrintQue(p);
+        if(Vec_QueSize(p->vQue))Dam_PrintDiv(p,Vec_QueTop(p->vQue));
+        Dam_PrintDiv(p,0);Dam_ManFree(p);Gia_ManStop(g);
+        for(mode=0;mode<4;mode++){
+            printf("verbose %d %d %d\n",family,signs,mode);
+            g=area_graph(family,signs);out=Dam_ManAreaBalanceInt(g,NULL,3,mode&1,(mode>>1)&1);
+            Gia_ManStop(out);Gia_ManStop(g);
+        }
+    }
+    return 0;
+}
+int main(int argc,char **argv)
+{
+    if(argc>1 && !strcmp(argv[1],"diagnostics"))return diagnostics();
     int family,signs,arrival,li,limits[5]={0,1,2,4,8},levels[6]={0,2,1,3,0,1},i,step,div;Gia_Obj_t *obj;
     for(family=0;family<6;family++)for(signs=0;signs<8;signs++)for(arrival=0;arrival<2;arrival++)for(li=0;li<5;li++){
         Gia_Man_t *g=area_graph(family,signs),*out;Dam_Man_t *p=Dam_ManAlloc(g);Vec_Int_t *inputs=arrival?Vec_IntAllocArrayCopy(levels,6):NULL;

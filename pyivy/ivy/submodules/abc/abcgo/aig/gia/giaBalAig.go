@@ -357,11 +357,13 @@ func Dam_ManCreatePairs(p *Dam_Man_t, verbose int32) {
 	type occurrence struct{ divisor, node int32 }
 	var occurrences []occurrence
 	var candidates []int32
+	var pairsAll, pairsTried, pairsUsed, pairsXor, divsXor int
 	for _, obj := range p.pGia.pObjs {
 		set := Dam_ObjSet(p, obj.id)
 		if set == nil {
 			continue
 		}
+		pairsAll += int(set[0]) * (int(set[0]) - 1) / 2
 		xor := Gia_ObjIsXor(obj) != 0
 		candidates = candidates[:0]
 		for _, lit := range set[1 : 1+set[0]] {
@@ -369,6 +371,7 @@ func Dam_ManCreatePairs(p *Dam_Man_t, verbose int32) {
 				candidates = append(candidates, lit)
 			}
 		}
+		pairsTried += len(candidates) * (len(candidates) - 1) / 2
 		for i, a := range candidates {
 			for _, b := range candidates[i+1:] {
 				a, b := damPair(a, b, xor)
@@ -393,6 +396,11 @@ func Dam_ManCreatePairs(p *Dam_Man_t, verbose int32) {
 			continue
 		}
 		a, b := vec.Hash_IntObjData0(hash, int32(id)), vec.Hash_IntObjData1(hash, int32(id))
+		pairsUsed += int(refs)
+		if a > b {
+			pairsXor += int(refs)
+			divsXor++
+		}
 		div := vec.Hash_Int2ManInsert(p.vHash, a, b, 0)
 		remap[id] = div
 		p.vCounts = append(p.vCounts, float32(float64(refs)+0.005*float64(Dam_ManDivSlack(p, a, b, reverse[id]))))
@@ -409,7 +417,18 @@ func Dam_ManCreatePairs(p *Dam_Man_t, verbose int32) {
 	}
 	p.vDivLevR = make([]int32, len(p.vCounts)*2)
 	if verbose != 0 {
-		fmt.Printf("DAM: %d candidate pairs, %d shared divisors\n", vec.Hash_IntManEntryNum(hash), len(p.vCounts)-1)
+		for _, row := range []struct {
+			label                   string
+			total, tried, used, xor int
+		}{
+			{"Pairs:", pairsAll, pairsTried, pairsUsed, pairsXor},
+			{"Div:  ", vec.Hash_IntManEntryNum(hash), vec.Hash_IntManEntryNum(hash), len(p.vCounts) - 1, divsXor},
+		} {
+			denom := float64(max(row.total, 1))
+			fmt.Printf("%s  Total =%9d (%6.2f %%)  Tried =%9d (%6.2f %%)  Used =%9d (%6.2f %%)  Xor =%9d (%6.2f %%)\n",
+				row.label, row.total, 100*float64(row.total)/denom, row.tried, 100*float64(row.tried)/denom,
+				row.used, 100*float64(row.used)/denom, row.xor, 100*float64(row.xor)/denom)
+		}
 	}
 }
 
@@ -467,16 +486,27 @@ func Dam_ManMultiAig(p *Dam_Man_t) *Gia_Man_t {
 }
 func Dam_PrintDiv(p *Dam_Man_t, id int32) {
 	if id == 0 {
-		fmt.Printf("Final statistics after extracting %d divisors: ", p.nDivs)
+		fmt.Printf("Final statistics after extracting %6d divisors:          ", p.nDivs)
 	} else {
 		a, b := vec.Hash_IntObjData0(p.vHash, id), vec.Hash_IntObjData1(p.vHash, id)
-		fmt.Printf("Div %d: (%d,%d), weight %.2f; ", id, a, b, p.vCounts[id])
+		op := byte('*')
+		if a > b {
+			op = '+'
+		}
+		fmt.Printf("Div%5d : D%-8d = %8s %c  %8s   Weight %9.2f  ",
+			p.nDivs+1, id, fmt.Sprintf("%c%d", " !"[a&1], a>>1), op, fmt.Sprintf("%c%d", " !"[b&1], b>>1), p.vCounts[id])
 	}
-	fmt.Printf("Divs=%d Ands=%d Time=%s\n", vec.Hash_IntManEntryNum(p.vHash), p.nAnds-p.nGain, time.Since(p.clkStart))
+	fmt.Printf("Divs =%8d  Ands =%8d  Time = %8.2f sec\n", vec.Hash_IntManEntryNum(p.vHash), p.nAnds-p.nGain, time.Since(p.clkStart).Seconds())
 }
 func Dam_PrintQue(p *Dam_Man_t) {
+	fmt.Print("Divisor queue: \n")
 	for id := 1; id <= vec.Hash_IntManEntryNum(p.vHash); id++ {
-		fmt.Printf("Div %d: (%d,%d), weight %.2f\n", id, vec.Hash_IntObjData0(p.vHash, int32(id)), vec.Hash_IntObjData1(p.vHash, int32(id)), p.vCounts[id])
+		a, b := vec.Hash_IntObjData0(p.vHash, int32(id)), vec.Hash_IntObjData1(p.vHash, int32(id))
+		op := byte('*')
+		if a > b {
+			op = '+'
+		}
+		fmt.Printf("Div %7d : Weight %9.2f  F = %c%c %c %c%c   \n", id, p.vCounts[id], " !"[a&1], 'a'+(a>>1)-1, op, " !"[b&1], 'a'+(b>>1)-1)
 	}
 }
 func Dam_ManUpdateNode(p *Dam_Man_t, id, a, b, replacement int32, divisors *Vec_Int_t) int32 {
@@ -598,10 +628,17 @@ func Dam_ManAreaBalanceInt(src *Gia_Man_t, inputs *Vec_Int_t, limit, verbose, ve
 		}
 		Dam_ManUpdate(p, divisor)
 	}
-	if verbose != 0 || veryVerbose != 0 {
+	if veryVerbose != 0 {
 		Dam_PrintDiv(p, 0)
 	}
 	result := Dam_ManMultiAig(p)
+	if verbose != 0 {
+		all := vec.Hash_IntManEntryNum(p.vHash)
+		denom := float64(max(all, 1))
+		fmt.Printf("Div:    Total =%9d (%6.2f %%)   Used =%9d (%6.2f %%)  Gain =%6d (%6.2f %%)  GainX = %d  Time = %8.2f sec\n",
+			all, 100*float64(all)/denom, p.nDivs, 100*float64(p.nDivs)/denom,
+			p.nGain, 100*float64(p.nGain)/float64(max(p.nAnds, 1)), p.nGainX, time.Since(p.clkStart).Seconds())
+	}
 	Dam_ManFree(p)
 	return result
 }
@@ -624,6 +661,9 @@ func Gia_ManAreaBalance(src *Gia_Man_t, simple, limit, verbose, veryVerbose int3
 		initial = Gia_ManDup(src)
 	}
 	Gia_ManTransferTiming(initial, src)
+	if verbose != 0 {
+		Gia_ManPrintStats(initial, nil)
+	}
 	var coarse *Gia_Man_t
 	if simple != 0 {
 		coarse = Gia_ManDup(initial)
@@ -631,12 +671,21 @@ func Gia_ManAreaBalance(src *Gia_Man_t, simple, limit, verbose, veryVerbose int3
 		coarse = Gia_ManDupMuxes(initial, 2)
 	}
 	Gia_ManTransferTiming(coarse, initial)
+	if verbose != 0 {
+		Gia_ManPrintStats(coarse, nil)
+	}
 	Gia_ManStop(initial)
 	middle := Dam_ManAreaBalanceInt(coarse, inputs, limit, verbose, veryVerbose)
 	Gia_ManTransferTiming(middle, coarse)
+	if verbose != 0 {
+		Gia_ManPrintStats(middle, nil)
+	}
 	Gia_ManStop(coarse)
 	result := Gia_ManDupNoMuxes(middle, 0)
 	Gia_ManTransferTiming(result, middle)
+	if verbose != 0 {
+		Gia_ManPrintStats(result, nil)
+	}
 	Gia_ManStop(middle)
 	if Gia_ManIsNormalized(result) == 0 {
 		old := result

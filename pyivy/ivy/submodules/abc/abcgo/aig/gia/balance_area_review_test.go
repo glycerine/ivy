@@ -1,9 +1,11 @@
 package gia
 
 import (
-	"github.com/glycerine/abcgo/misc/vec"
 	"slices"
+	"strings"
 	"testing"
+
+	"github.com/glycerine/abcgo/misc/vec"
 )
 
 func TestAreaCollectorPreservesUnrelatedMark0(t *testing.T) {
@@ -142,7 +144,7 @@ func TestAreaBalancePublicInterfaceMatrix(t *testing.T) {
 							if err := src.SetAigerProperties(1, 1); err != nil {
 								t.Fatal(err)
 							}
-							src.aigerLatchInits = []int32{1, 2}
+							src.aigerLatchInits = []int32{1, 0}
 							src.aigerComment = []byte("area-interface")
 							balanceDepthReviewArrivals(src, arrival, 2)
 							out := Gia_ManAreaBalance(src, simple, limit, 0, 0)
@@ -170,4 +172,80 @@ func TestAreaBalancePublicInterfaceMatrix(t *testing.T) {
 		}
 	}
 	t.Logf("%d mapped/unmapped public area rewrites and %d truth rows with serialization", cases, cases*64)
+}
+
+func TestAreaBalanceDiagnosticControls(t *testing.T) {
+	for _, flags := range [][2]int32{{0, 0}, {1, 0}, {0, 1}, {1, 1}} {
+		src := Gia_ManDupNoMuxes(areaReviewGraph(1, 0), 0)
+		var out *Gia_Man_t
+		text := hashReviewStdout(t, func() { out = Gia_ManAreaBalance(src, 1, 3, flags[0], flags[1]) })
+		if flags == [2]int32{} && text != "" {
+			t.Fatalf("quiet area balance printed %q", text)
+		}
+		if got, want := strings.Count(text, "i/o ="), int(flags[0])*4; got != want {
+			t.Errorf("flags%v: %d stage reports, want%d", flags, got, want)
+		}
+		if got, want := strings.Count(text, "Pairs:"), int(flags[0]); got != want {
+			t.Errorf("flags%v: %d pair reports, want%d", flags, got, want)
+		}
+		if got, want := strings.Count(text, "Div:  "), int(flags[0])*2; got != want {
+			t.Errorf("flags%v: %d divisor summaries, want%d", flags, got, want)
+		}
+		if got, want := strings.Count(text, "Final statistics after extracting"), int(flags[1]); got != want {
+			t.Errorf("flags%v: %d extraction reports, want%d", flags, got, want)
+		}
+		for mask := 0; mask < 64; mask++ {
+			inputs := []bool{mask&1 != 0, mask&2 != 0, mask&4 != 0, mask&8 != 0, mask&16 != 0, mask&32 != 0}
+			want, err := src.Evaluate(inputs)
+			if err != nil {
+				t.Fatal(err)
+			}
+			checkQuantificationOutputs(t, out, inputs, want)
+		}
+	}
+}
+
+func TestAreaBalanceWithNoSharedDivisors(t *testing.T) {
+	for kind := 0; kind < 6; kind++ {
+		for simple := int32(0); simple < 2; simple++ {
+			src := Gia_ManStart(16)
+			a, b := Gia_ManAppendCi(src), Gia_ManAppendCi(src)
+			switch kind {
+			case 0: // No outputs.
+			case 1:
+				Gia_ManAppendCo(src, 0)
+				Gia_ManAppendCo(src, 1)
+			case 2:
+				Gia_ManAppendCo(src, a)
+				Gia_ManAppendCo(src, b^1)
+			case 3:
+				Gia_ManAppendCo(src, Gia_ManAppendBuf(src, a^1))
+			case 4:
+				Gia_ManAppendCo(src, Gia_ManAppendAnd(src, a, b))
+			case 5:
+				src.fGiaSimple = 1
+				Gia_ManAppendCo(src, Gia_ManAppendAnd(src, a, a^1))
+			}
+			var out *Gia_Man_t
+			text := hashReviewStdout(t, func() { out = Gia_ManAreaBalance(src, simple, 8, 1, 1) })
+			// The source's general graph report prints an undefined average for
+			// zero COs. Check the DAM ratios here; general stats are separate.
+			for _, line := range strings.Split(text, "\n") {
+				if strings.Contains(line, "i/o =") {
+					continue
+				}
+				if strings.Contains(line, "NaN") || strings.Contains(line, "Inf") {
+					t.Fatalf("kind%d simple%d: invalid empty area statistics %s", kind, simple, line)
+				}
+			}
+			for mask := 0; mask < 4; mask++ {
+				inputs := []bool{mask&1 != 0, mask&2 != 0}
+				want, err := src.Evaluate(inputs)
+				if err != nil {
+					t.Fatal(err)
+				}
+				checkQuantificationOutputs(t, out, inputs, want)
+			}
+		}
+	}
 }
