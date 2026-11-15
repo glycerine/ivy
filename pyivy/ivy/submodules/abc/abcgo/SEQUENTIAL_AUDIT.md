@@ -8296,3 +8296,24 @@ Plan /tmp/abcgo-frames-next-review-plan.md records source routines, lifecycle,
 typed/initialization boundaries and the known source edge contracts to test.
 Minimal red tests are drafted in /tmp/abcgo-frames-red-tests.go, not run yet;
 install/compile them and establish red evidence before production changes.
+
+### Timeframe source fidelity: red evidence and first repairs
+
+Install the prepared minimal tests and permanent actual-source fixture. All
+three minimal tests and all four native modes fail for the documented
+scheduling/abstraction/interface/LastLit differences
+(/tmp/abcgo-frames-scheduling-red.log,1.820s). Restore the source PO-cone DFS,
+dynamic reached-register dependency tents, two-way Value mapping and sparse
+reverse-time abstraction. Extend the DFS to real gate fanins while preserving
+ordinary source order. An initial implementation mistakenly compared Value to
+the29-bit no-fanin sentinel; the existing minimal/native tests remain red and
+catch the empty clone. Use FillValue's all32-bits-set sentinel instead.
+
+Exact ordered object fields/limits and sparse abstraction rows now match C;
+both minimal tests and corresponding native submodes pass. Frames2 and
+incremental scheduler/LastLit submodes remain red
+(/tmp/abcgo-frames-order-abs-progress.log,1.834s). Do not present this as a green
+package or rerun full integration while these required repairs remain.
+REVIEW_timeframes.md records the remaining active source reconciliation,
+existing CCof lifecycle/typed/resource behavior to retain, source edge bugs and
+comprehensive coverage plan. This is a red checkpoint; original completion2/131.

@@ -2,6 +2,7 @@ package gia
 
 import (
 	"fmt"
+	"math/bits"
 
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/misc/vec"
@@ -19,67 +20,112 @@ type Gia_ManUnr_t struct {
 	stopped bool
 }
 
-// Gia_ManUnrollDup makes an ordered, object-preserving clone. vLimit receives
-// the one conservative level boundary used by clients that inspect the order.
+// giaUnrollDupRec retains the source DFS order and publishes both directions:
+// original Value is a copy literal; destination Value is the original ID.
+func giaUnrollDupRec(dst, src *Gia_Man_t, obj *Gia_Obj_t) {
+	if obj.Value != ^uint32(0) {
+		return
+	}
+	copyLit := func(lit int32) int32 {
+		fanin := src.pObjs[lit>>1]
+		giaUnrollDupRec(dst, src, fanin)
+		return int32(fanin.Value) ^ (lit & 1)
+	}
+	a, b, c, kind := src.Gate(obj.id)
+	var lit int32
+	switch kind {
+	case 1:
+		lit = Gia_ManAppendCi(dst)
+	case 2:
+		lit = Gia_ManAppendAnd(dst, copyLit(a), copyLit(b))
+	case 3:
+		lit = Gia_ManAppendXorReal(dst, copyLit(a), copyLit(b))
+	case 4:
+		// Visit stored data pins before control, extending the two-pin C walk.
+		otherwise, then := copyLit(c), copyLit(b)
+		lit = Gia_ManAppendMuxReal(dst, copyLit(a), then, otherwise)
+	case 5:
+		lit = Gia_ManAppendBuf(dst, copyLit(a))
+	case 6:
+		lit = Gia_ManAppendCo(dst, copyLit(a))
+	default:
+		panic("gia: invalid object in unrolling order")
+	}
+	obj.Value = uint32(lit)
+	dst.pObjs[lit>>1].Value = uint32(obj.id)
+}
+
+// Gia_ManUnrollDup orders PO cones, then the reached registers' RI cones in
+// successive dependency tents. Unreachable objects are not copied.
 func Gia_ManUnrollDup(src *Gia_Man_t, limits *Vec_Int_t) *Gia_Man_t {
 	if src == nil || limits == nil || Vec_IntSize(limits) != 0 {
 		return nil
 	}
-	dst := Gia_ManStart(Gia_ManObjNum(src))
-	dst.pName, dst.PSpec = src.pName, src.PSpec
-	Vec_IntPush(limits, 1)
-	copyMap := make([]int32, src.nObjs)
-	for i := range copyMap {
-		copyMap[i] = -1
+	dst := Gia_ManStart(src.nObjs)
+	dst.CopyIdentityFrom(src)
+	dst.fGiaSimple = src.fGiaSimple
+	if src.PMuxes != nil {
+		dst.EnableMuxes()
 	}
-	copyMap[0] = 0
-	for i := int32(0); i < Gia_ManCiNum(src); i++ {
-		lit := Gia_ManAppendCi(dst)
-		copyMap[Gia_ObjId(src, Gia_ManCi(src, i))] = lit
-		Gia_ObjSetValue(Gia_ManObj(dst, lit>>1), Gia_ObjCioId(Gia_ManCi(src, i)))
+	Gia_ManFillValue(src)
+	src.pObjs[0].Value = 0
+	Vec_IntPush(limits, dst.nObjs)
+	for i := int32(0); i < Gia_ManPoNum(src); i++ {
+		giaUnrollDupRec(dst, src, Gia_ManPo(src, i))
 	}
-	for id := int32(1); id < src.nObjs; id++ {
-		obj := Gia_ManObj(src, id)
-		switch {
-		case Gia_ObjIsAnd(obj) != 0:
-			a := remapGiaLiteral(copyMap, Gia_ObjFaninLit0(obj, id))
-			b := remapGiaLiteral(copyMap, Gia_ObjFaninLit1(obj, id))
-			copyMap[id] = Gia_ManAppendAnd(dst, a, b)
-		case Gia_ObjIsCo(obj) != 0:
-			copyMap[id] = Gia_ManAppendCo(dst, remapGiaLiteral(copyMap, Gia_ObjFaninLit0(obj, id)))
+	Vec_IntPush(limits, dst.nObjs)
+	for i := int32(1); i < dst.nObjs; i++ {
+		if i == Vec_IntEntryLast(limits) {
+			Vec_IntPush(limits, dst.nObjs)
 		}
-		if copyMap[id] >= 0 {
-			Gia_ObjSetValue(Gia_ManObj(dst, copyMap[id]>>1), id)
+		original := src.pObjs[dst.pObjs[i].Value]
+		if Gia_ObjIsRo(src, original) != 0 {
+			ri := Gia_ObjRoToRi(src, original)
+			if ri.Value != ^uint32(0) {
+				panic("gia: register input already ordered")
+			}
+			giaUnrollDupRec(dst, src, ri)
 		}
 	}
-	Vec_IntPush(limits, Gia_ManObjNum(dst))
 	Gia_ManSetRegNum(dst, 0)
 	return dst
 }
 
-// Gia_ManUnrollAbs returns conservative reverse-time object sets. Each entry
-// packs the distance from the requested frame in the high bits and the source
-// object ID in the low bits; including the full cone is safe for abstraction.
+// Gia_ManUnrollAbs packs the newly reached dependency tent of each earlier
+// timeframe, retaining the source sparse reverse-time abstraction schedule.
 func Gia_ManUnrollAbs(src *Gia_Man_t, frames int32) *Vec_Ptr_t {
 	result := vec.Vec_PtrAlloc(maxInt(0, int(frames)))
 	if src == nil || frames <= 0 {
 		return result
 	}
-	bits := int32(0)
-	for n := Gia_ManObjNum(src); n > 1<<bits; bits++ {
-	}
+	shift := uint(bits.Len(uint(src.nObjs - 1)))
+	limits := Vec_IntAlloc(0)
+	ordered := Gia_ManUnrollDup(src, limits)
+	defer Gia_ManStop(ordered)
 	for end := int32(0); end < frames; end++ {
-		entries := vec.Vec_IntAlloc(0)
+		size := ordered.nObjs
+		if end+1 < int32(Vec_IntSize(limits)) {
+			size = Vec_IntEntry(limits, int(end+1))
+		}
+		row := Vec_IntAlloc(int(size))
 		for frame := int32(0); frame <= end; frame++ {
-			for id := int32(1); id < src.nObjs; id++ {
-				obj := Gia_ManObj(src, id)
-				if Gia_ObjIsAnd(obj) != 0 || Gia_ObjIsRo(src, obj) != 0 {
-					vec.Vec_IntPush(entries, ((end-frame)<<bits)|id)
+			start, stop := int32(0), int32(0)
+			if frame < int32(Vec_IntSize(limits)) {
+				start = Vec_IntEntry(limits, int(frame))
+			}
+			if frame+1 < int32(Vec_IntSize(limits)) {
+				stop = Vec_IntEntry(limits, int(frame+1))
+			}
+			for i := stop - 1; i >= start; i-- {
+				original := src.pObjs[ordered.pObjs[i].Value]
+				if Gia_ObjIsCo(original) != 0 || Gia_ObjIsPi(src, original) != 0 {
+					continue
 				}
+				Vec_IntPush(row, ((end-frame)<<shift)|original.id)
 			}
 		}
-		vec.Vec_IntSort(entries, 1)
-		vec.Vec_PtrPush(result, entries)
+		Vec_IntSort(row, 1)
+		Vec_PtrPush(result, row)
 	}
 	return result
 }
