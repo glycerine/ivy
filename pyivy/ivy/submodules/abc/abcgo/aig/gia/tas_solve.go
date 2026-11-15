@@ -73,22 +73,37 @@ func Tas_ManSolve_rec(p *Tas_Man_t, level int32) int32 {
 // Tas_ManSolveArray solves the conjunction of requested object edges.
 // It returns 0 for SAT, 1 for UNSAT and -1 if resource limits were reached.
 func Tas_ManSolveArray(p *Tas_Man_t, objects []*Gia_Obj_t) int32 {
-	vec.Vec_IntClear(p.vModel)
+	if p == nil {
+		panic("gia: nil SAT manager")
+	}
+	tasCheckGraph(p.pAig)
+	if len(p.pActivity) != int(p.pAig.nObjs) {
+		panic("gia: SAT graph changed after allocation")
+	}
 	if Tas_QueIsEmpty(&p.pProp) == 0 || p.pProp.iHead != 0 || Tas_QueIsEmpty(&p.pJust) == 0 || p.pJust.iHead != 0 || p.pClauses.iHead != 1 || p.pClauses.iTail != 1 {
 		panic("gia: SAT manager is not reset")
 	}
 	zero := Gia_ManConst0(p.pAig)
 	one := Gia_Not(zero)
 	seen := make(map[*Gia_Obj_t]bool)
+	contradiction := false
 	for _, edge := range objects {
 		if edge == nil {
 			panic("gia: nil SAT assumption")
 		}
-		if edge == zero || seen[Gia_Not(edge)] {
-			return 1
+		node := Gia_Regular(edge)
+		Gia_ObjId(p.pAig, node)
+		if node != zero && Gia_ObjIsCand(node) == 0 {
+			panic("gia: invalid SAT assumption")
 		}
-		Gia_ObjId(p.pAig, Gia_Regular(edge))
+		if edge == zero || seen[Gia_Not(edge)] {
+			contradiction = true
+		}
 		seen[edge] = true
+	}
+	vec.Vec_IntClear(p.vModel)
+	if contradiction {
+		return 1
 	}
 	if p.pAig.Refs == nil {
 		Gia_ManCreateRefs(p.pAig)
@@ -134,9 +149,10 @@ func Tas_ManSolve(p *Tas_Man_t, first, second *Gia_Obj_t) int32 {
 	if first == nil {
 		panic("gia: nil SAT root")
 	}
-	objects := []*Gia_Obj_t{first}
+	objects := [2]*Gia_Obj_t{first, second}
+	count := 1
 	if second != nil {
-		objects = append(objects, second)
+		count = 2
 	}
-	return Tas_ManSolveArray(p, objects)
+	return Tas_ManSolveArray(p, objects[:count])
 }

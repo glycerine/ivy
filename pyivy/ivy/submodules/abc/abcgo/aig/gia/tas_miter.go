@@ -8,24 +8,11 @@ import (
 )
 
 func Tas_ManSatPrintStats(p *Tas_Man_t) {
-	fmt.Printf("CO = %8d  AND = %8d  Conf = %6d  JustMax = %5d\n", Gia_ManCoNum(p.pAig), Gia_ManAndNum(p.pAig), p.Pars.nBTLimit, p.Pars.nJustLimit)
-	for _, row := range []struct {
-		name             string
-		calls, conflicts int32
-		elapsed          time.Duration
-	}{
-		{"Unsat", p.nSatUnsat, p.nConfUnsat, p.timeSatUnsat}, {"Sat", p.nSatSat, p.nConfSat, p.timeSatSat}, {"Undef", p.nSatUndec, p.nConfUndec, p.timeSatUndec},
-	} {
-		var percent, average float64
-		if p.nSatTotal != 0 {
-			percent = 100 * float64(row.calls) / float64(p.nSatTotal)
-		}
-		if row.calls != 0 {
-			average = float64(row.conflicts) / float64(row.calls)
-		}
-		fmt.Printf("%-5s calls %6d  (%6.2f %%)   Ave conf = %8.1f   Time = %s\n", row.name, row.calls, percent, average, row.elapsed)
-	}
-	fmt.Printf("Total time = %s\n", p.timeTotal)
+	cbsPrintStatistics(p.pAig, p.Pars.nBTLimit, p.Pars.nJustLimit, p.nSatTotal, p.timeTotal, [3]cbsStatisticsRow{
+		{"Unsat", p.nSatUnsat, p.nConfUnsat, p.timeSatUnsat},
+		{"Sat  ", p.nSatSat, p.nConfSat, p.timeSatSat},
+		{"Undef", p.nSatUndec, p.nConfUndec, p.timeSatUndec},
+	})
 }
 
 func tasAppendCounterexample(store *vec.Vec_Int_t, model *vec.Vec_Int_t, output int32) {

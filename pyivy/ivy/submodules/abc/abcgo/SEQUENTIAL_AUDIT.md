@@ -6528,3 +6528,42 @@ Read-only inspection also identifies reusable source mark scratch as a possible
 compactness improvement; currently Go allocates a local marked slice and a
 resolution map. The small giaCTas2.c experiment is separate and contains only an
 attempted variable allocator; its Go Tas2_* representation still needs review.
+
+### CTAS core comparison, guards and compactness checkpoint
+
+Track the actual-C CTAS fixture and compare Go on all 84,864 single/paired/array
+queries across highest, lowest, max-fanin-fanout and activity heuristics, resource
+limits and random/hard five-input graphs. Exact verdicts, search counters and
+ordered CI witnesses agree; independently enumerate all completing assignments
+and check trail/reason/mark/phase/watch/clause/activity cleanup after every query
+(/tmp/abcgo-tas-native.log). Outcomes are 29,142 undecided, 51,641 SAT and 4,081
+UNSAT; maximum 21 backtracks and frontier ten.
+
+Red regressions expose unsupported typed/mutated graph acceptance, modification
+of the saved model before rejecting invalid roots, a partially assigned graph
+when rejecting a CO in a later assumption, active Stop leaving graph marks, and
+source statistics replaced with duration strings and missing percentages
+(/tmp/abcgo-tas-guards-red.log). Validate the static ordinary-AND graph and all
+assumptions before changing model/trail state; retain source early contradictory-
+assumption verdict semantics after validation. Stop clears remaining assigned
+trail entries before releasing the manager. The first implementation used normal
+trail cancellation; an existing low-level test had already manually unassigned
+entries while retaining its artificial queue. Make destruction tolerate these
+already-cleaned entries instead of altering that fixture.
+
+Restore the source statistics formatter shared with the CBS engines. Restore
+source reusable mark scratch and fPhase-based resolution deduplication, removing
+per-conflict marked slices/maps. Use a fixed two-root array. The hard UNSAT
+benchmark drops from 3,720B/127 allocations/27,341ns to 448B/28 allocations/11,171ns
+for a single root, and 2,056B/76 allocations/16,454ns to 256B/16 allocations/8,165ns
+for paired roots (/tmp/abcgo-tas-scratch-before.log and
+/tmp/abcgo-tas-scratch-after.log). Remaining small clause-handle wrappers are not
+replaced with a memory-hungry cache. Remove the 570-line empty generated comment
+skeleton in giaCTas.go, preserving source attribution and an index to tas_*.go.
+
+All existing/new Tas tests pass in 4.153s after the low-level shutdown adjustment
+(/tmp/abcgo-tas-first-repaired-2.log). Save an integration-pending checkpoint.
+Next: native public miters, watched-clause growth/reasons, packed simulation
+patterns and word boundaries; raw gates, full paired/array cubes and lifecycle;
+then focused and full race/vet integration. CTAS and GIA remain in progress;
+original completion stays 2/131.

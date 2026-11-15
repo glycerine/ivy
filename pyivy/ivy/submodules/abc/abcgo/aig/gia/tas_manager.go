@@ -19,7 +19,7 @@ type Tas_Man_t struct {
 	pProp, pJust, pClauses                            Tas_Que_t
 	pIter                                             int32
 	vLevReas, vModel, vWatchLits, vActiveVars         *vec.Vec_Int_t
-	vTemp                                             *vec.Vec_Ptr_t
+	vTemp                                             []*Gia_Obj_t
 	pStore                                            Tas_Sto_t
 	pWatches                                          []int32
 	nClauses                                          int32
@@ -32,11 +32,15 @@ type Tas_Man_t struct {
 func Tas_SetDefaultParams(p *Tas_Par_t) {
 	*p = Tas_Par_t{nBTLimit: 2000, nJustLimit: 2000, fUseHighest: 1, fVerbose: 1, VarDecay: 0.95, VarInc: 1}
 }
-func Tas_ManAlloc(aig *Gia_Man_t, limit int32) *Tas_Man_t {
-	if aig == nil {
-		panic("gia: SAT manager requires an AIG")
+func tasCheckGraph(aig *Gia_Man_t) {
+	if aig == nil || Gia_ManXorNum(aig) != 0 || Gia_ManMuxNum(aig) != 0 {
+		panic("gia: SAT manager requires an ordinary AND graph")
 	}
-	p := &Tas_Man_t{pAig: aig, vLevReas: vec.Vec_IntAlloc(1000), vModel: vec.Vec_IntAlloc(1000), vTemp: vec.Vec_PtrAlloc(1000), vWatchLits: vec.Vec_IntAlloc(100), vActiveVars: vec.Vec_IntAlloc(100), pWatches: make([]int32, 2*int(aig.nObjs)), pActivity: make([]float32, aig.nObjs)}
+}
+
+func Tas_ManAlloc(aig *Gia_Man_t, limit int32) *Tas_Man_t {
+	tasCheckGraph(aig)
+	p := &Tas_Man_t{pAig: aig, vLevReas: vec.Vec_IntAlloc(1000), vModel: vec.Vec_IntAlloc(1000), vWatchLits: vec.Vec_IntAlloc(100), vActiveVars: vec.Vec_IntAlloc(100), pWatches: make([]int32, 2*int(aig.nObjs)), pActivity: make([]float32, aig.nObjs)}
 	Tas_SetDefaultParams(&p.Pars)
 	p.Pars.nBTLimit = limit
 	p.pClauses.pData = []*Gia_Obj_t{nil}
@@ -46,6 +50,11 @@ func Tas_ManAlloc(aig *Gia_Man_t, limit int32) *Tas_Man_t {
 }
 func Tas_ManStop(p *Tas_Man_t) {
 	if p != nil {
+		for _, node := range p.pProp.pData[:p.pProp.iTail] {
+			if node != nil && Tas_VarIsAssigned(node) != 0 {
+				Tas_VarUnassign(node)
+			}
+		}
 		*p = Tas_Man_t{}
 	}
 }

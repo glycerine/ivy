@@ -7,9 +7,9 @@ func Tas_ManDeriveReason(p *Tas_Man_t, level int32) {
 	if q.iHead+1 >= q.iTail || q.pData[q.iHead] != nil {
 		panic("gia: invalid conflict reason queue")
 	}
-	var marked []*Gia_Obj_t
+	p.vTemp = p.vTemp[:0]
 	defer func() {
-		for _, node := range marked {
+		for _, node := range p.vTemp {
 			node.fPhase = 0
 		}
 	}()
@@ -20,7 +20,7 @@ func Tas_ManDeriveReason(p *Tas_Man_t, level int32) {
 			continue
 		}
 		node.fPhase = 1
-		marked = append(marked, node)
+		p.vTemp = append(p.vTemp, node)
 		litLevel := Tas_VarDecLevel(p, node)
 		if litLevel < level {
 			q.pData[k] = node
@@ -87,18 +87,20 @@ func Tas_ManResolve(p *Tas_Man_t, _ int32, first, second int32) int32 {
 		panic("gia: invalid conflict resolution")
 	}
 	Tas_QuePush(q, nil)
-	seen := make(map[*Gia_Obj_t]bool)
 	maxLevel := int32(-1)
-	for _, handle := range []int32{first, second} {
+	for _, handle := range [2]int32{first, second} {
 		for i := handle + 1; q.pData[i] != nil; i++ {
 			node := q.pData[i]
-			if seen[node] {
+			if node.fPhase != 0 {
 				continue
 			}
-			seen[node] = true
+			node.fPhase = 1
 			Tas_QuePush(q, node)
 			maxLevel = max(maxLevel, Tas_VarDecLevel(p, node))
 		}
+	}
+	for _, node := range q.pData[q.iHead+1 : q.iTail] {
+		node.fPhase = 0
 	}
 	Tas_ManDeriveReason(p, maxLevel)
 	return Tas_QueFinish(q)
