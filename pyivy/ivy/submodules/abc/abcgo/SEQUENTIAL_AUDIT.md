@@ -6680,3 +6680,31 @@ Save an integration-pending checkpoint before primitive merge/dominance/tie
 matrices, larger-ID signature collisions, typed XOR and rejected representation
 boundaries, truth-input ownership, empty statistics, and final race/vet checks.
 Original completion remains 2/131; GIA is still in progress.
+
+The native primitive matrix passes 73,728 successful/rejected merges across both
+merge entry points, 4,096 subset checks and 192 priority-set updates. Cases cover
+zero/full bounds, colliding ID signatures (0/64, 1/65, 63/127), equal costs,
+dominance removal, overflow limits, retained pointer-slot identity and 28-bit cost
+metadata (/tmp/abcgo-cut-primitives-native.log). Independent bit-set unions and
+subset relations verify the expected results, not only C agreement.
+
+Add ownership/boundary checks for finite empty-interface statistics, private
+references and borrowed graph marks/Values, input-cut/truth preservation under
+composition, every input phase and AND/XOR combination, minimization on/off and
+full eight-leaf formal assignments. Buffer/MUX rejection and invalid constructor
+bounds pass (/tmp/abcgo-cut-ownership.log). Finite zero statistics deliberately
+avoid C's undefined zero-denominator ratios.
+
+Expand the native enumeration matrix to ordinary AND, real typed-XOR and larger
+ID/capacity-growth graphs: all 1,512 configurations agree exactly. Independently
+check 383,656 stored truth functions (74,951 ordinary, 47,355 typed-XOR, 261,350
+larger-ID), including every formal assignment before minimization and all actual
+eight-input completions afterward
+(/tmp/abcgo-cut-enumeration-expanded-native-2.log). The first typed comparison
+failed because the C fixture's graph dump printed zero fanins for its new XOR
+kind; fix the fixture's discriminator rather than altering correct production
+code. Its corrected graph/cut/truth snapshots all agree.
+
+Save the expanded tests as an integration-pending checkpoint before the final
+focused suite and full module race/vet gates. Original completion stays 2/131;
+GIA remains in progress.

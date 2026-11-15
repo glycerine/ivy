@@ -13,7 +13,11 @@ import (
 func cutEnumReviewGraph(seed int) *Gia_Man_t {
 	g := Gia_ManStart(128)
 	Gia_ManHashStart(g)
-	var lits [40]int32
+	var lits [80]int32
+	count := 40
+	if seed >= 16 {
+		count = 80
+	}
 	for i := 0; i < 8; i++ {
 		lits[i] = Gia_ManAppendCi(g)
 	}
@@ -24,7 +28,7 @@ func cutEnumReviewGraph(seed int) *Gia_Man_t {
 	lits[13] = Gia_ManHashAnd(g, lits[10], lits[11])
 	lits[14] = Gia_ManHashAnd(g, lits[12], lits[13])
 	random := uint32(seed + 307)
-	for i := 15; i < 40; i++ {
+	for i := 15; i < count; i++ {
 		random = random*1664525 + 1013904223
 		a := lits[int(random)%i]
 		random = random*1664525 + 1013904223
@@ -34,14 +38,18 @@ func cutEnumReviewGraph(seed int) *Gia_Man_t {
 		random = random*1664525 + 1013904223
 		b ^= int32(random >> 31)
 		if i%3 == 0 {
-			lits[i] = Gia_ManHashXor(g, a, b)
+			if seed >= 8 && seed < 16 && a>>1 != b>>1 {
+				lits[i] = Gia_ManAppendXorReal(g, a, b)
+			} else {
+				lits[i] = Gia_ManHashXor(g, a, b)
+			}
 		} else {
 			lits[i] = Gia_ManHashAnd(g, a, b)
 		}
 	}
 	Gia_ManAppendCo(g, lits[14])
-	Gia_ManAppendCo(g, lits[39])
-	Gia_ManAppendCo(g, lits[37]^1)
+	Gia_ManAppendCo(g, lits[count-1])
+	Gia_ManAppendCo(g, lits[count-3]^1)
 	Gia_ManHashStop(g)
 	return g
 }
@@ -141,10 +149,14 @@ func cutEnumReviewValidate(t *testing.T, p *Gia_Sto_t) int {
 							return cache[node]
 						}
 						a, b, _, kind := g.Gate(node)
-						if kind != 2 {
+						if kind != 2 && kind != 3 {
 							t.Fatalf("node%d cut%v misses boundary node%d kind%d", id, leaves, node, kind)
 						}
-						value := (evaluate(a>>1) != (a&1 != 0)) && (evaluate(b>>1) != (b&1 != 0))
+						va, vb := evaluate(a>>1) != (a&1 != 0), evaluate(b>>1) != (b&1 != 0)
+						value := va && vb
+						if kind == 3 {
+							value = va != vb
+						}
 						seen[node], cache[node] = true, value
 						return value
 					}
@@ -181,13 +193,26 @@ func cutEnumReviewValidate(t *testing.T, p *Gia_Sto_t) int {
 
 func TestCutEnumerationMatchesOriginalABC(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "cut_enumeration_review.c")
-	native, err := exec.Command(exe).CombinedOutput()
+	for _, variant := range []struct {
+		name        string
+		first, last int
+		args        []string
+	}{
+		{"ordinary", 0, 8, nil}, {"typed-XOR", 8, 16, []string{"xor"}}, {"large-IDs", 16, 24, []string{"large"}},
+	} {
+		t.Run(variant.name, func(t *testing.T) { cutEnumReviewCompare(t, exe, variant.first, variant.last, variant.args...) })
+	}
+}
+
+func cutEnumReviewCompare(t *testing.T, exe string, first, last int, args ...string) {
+	t.Helper()
+	native, err := exec.Command(exe, args...).CombinedOutput()
 	if err != nil {
 		t.Fatalf("native cuts: %v\n%s", err, native)
 	}
 	var got strings.Builder
 	cases, truths := 0, 0
-	for seed := 0; seed < 8; seed++ {
+	for seed := first; seed < last; seed++ {
 		for size := int32(2); size <= 8; size++ {
 			for _, num := range []int32{2, 10, 50} {
 				for mode := 0; mode < 3; mode++ {
