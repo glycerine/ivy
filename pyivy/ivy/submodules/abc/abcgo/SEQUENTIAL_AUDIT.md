@@ -5053,3 +5053,33 @@ three command packages have no tests, and no failure/race diagnostics appear
 saved in 6d185e2f1. This completes the identified role/port/precondition
 repairs, not the entire low-level LUT balancing review. Original completion
 remains 2/131; GIA and the sequential audit remain active.
+
+The remaining LUT-balancing helpers were compared with giaBalLut.c:
+cut signatures/subset checks, ordered two-/three-input unions, antichain
+insertion and tie order, candidate cut enumeration, gate costs, pair choice,
+AND/XOR simplification, bounded supergate collection and recursive balancing.
+Ignored complement/function flags correspond to disabled truth-minimization
+code in C. The Go unit-cut allocation replaces C's three static scratch
+slots, keeping calls isolated without changing the retained cuts.
+
+New native fixture `aig/gia/test_vectors/lut_balance_internal.c` includes the
+actual C implementation to expose static helpers; no algorithm is duplicated
+in the fixture. `lut_balance_internal_review_test.go` compares exact cut
+leaves/signatures/functions/delays, returned costs, sorted candidate literals,
+selected pair indices, and all collected supergates for 560 configurations
+(16 seeds, K2..6, C2..8), 26,880 gate decisions and 26,880 pair decisions.
+Three-input MUX gates use K>=3; K2 exercises AND/XOR as required by the
+native gate-fitting contract.
+
+Additional exact native checks cover all 12,870 multisets of up to eight
+literals over three variables, both AND/XOR simplification modes (25,740
+cases), 13,071 two-cut and 13,869 three-cut merges with deliberately colliding
+64-bit signatures, and 16 supergate collection cases crossing the size-50
+and fanout-three boundaries. Independent Boolean checks verify every
+simplification on all eight assignments (205,920 rows) and each boundary
+collection on 128 assignments (2,048 rows). Original-C intermediate decisions
+agree; no new production defect or worthwhile simplification was found.
+Expanded native coverage passes with the race detector in 4.962s
+(`/tmp/abcgo-lut-internal-expanded-race.log`). Full GIA race integration is
+still running; vet passes. Save a red checkpoint pending integration.
+GIA review remains active; original completion stays 2/131.
