@@ -8038,3 +8038,19 @@ existing false-path tests also pass (5.488s,
 /tmp/abcgo-false-scratch-repaired.log). Separate typed/metadata rebuild regressions
 are being established before further changes. Full gates and the rest of the
 family source reconciliation remain pending; package completion stays 2/131.
+
+### False-path rebuild typed logic and metadata
+
+Add red empty-hook typed/polarity/reversed-construction cases and owned metadata
+checks before repairing the copy pass (/tmp/abcgo-false-rebuild-red.log). The old
+pass changed XOR/MUX functions even when no path was selected, and discarded
+roles/resets/comments/names. Copy nonhooked real gates through giaHashMappedGate,
+using the source Value mapping, restore logical CI/CO order with existing remap
+helpers, and copy unchanged interface metadata before cleanup.
+
+All focused false-path/native/rebuild tests pass in 4.445s
+(/tmp/abcgo-false-rebuild-repaired.log), including exact native ordinary results
+and independent typed truth/ownership. This does not yet validate typed CNF/path
+selection: source ordinary-AIG boundary handling remains part of the next work,
+along with core interval limits, source reports, queue ties and full drivers.
+Original completion remains 2/131; no full gate or family closure claimed.

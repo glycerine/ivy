@@ -53,6 +53,7 @@ func Gia_ManFalseRebuild(p *Gia_Man_t, hooks *Vec_Wec_t, verbose, veryVerbose in
 	q.PSpec = p.PSpec
 	Gia_ObjSetValue(Gia_ManConst0(p), 0)
 	Gia_ManHashAlloc(q)
+	read := func(lit int32) int32 { return int32(p.pObjs[lit>>1].Value) ^ (lit & 1) }
 	for _, obj := range p.pObjs[1:] {
 		switch {
 		case Gia_ObjIsAnd(obj) != 0:
@@ -60,16 +61,19 @@ func Gia_ManFalseRebuild(p *Gia_Man_t, hooks *Vec_Wec_t, verbose, veryVerbose in
 			if vec.Vec_IntSize(hook) > 0 {
 				Gia_ManFalseRebuildOne(q, p, hook, verbose, veryVerbose)
 			} else {
-				Gia_ObjSetValue(obj, Gia_ManHashAnd(q, Gia_ObjFanin0Copy(obj), Gia_ObjFanin1Copy(obj)))
+				Gia_ObjSetValue(obj, giaHashMappedGate(q, p, obj, read))
 			}
 		case Gia_ObjIsCi(obj) != 0:
 			Gia_ObjSetValue(obj, Gia_ManAppendCi(q))
 		case Gia_ObjIsCo(obj) != 0:
-			Gia_ObjSetValue(obj, Gia_ManAppendCo(q, Gia_ObjFanin0Copy(obj)))
+			Gia_ObjSetValue(obj, Gia_ManAppendCo(q, read(Gia_ObjFaninLit0(obj, obj.id))))
 		}
 	}
 	Gia_ManHashStop(q)
+	Gia_ManDupRemapCis(q, p)
+	Gia_ManDupRemapCos(q, p)
 	Gia_ManSetRegNum(q, p.nRegs)
+	giaCopyInterfaceMetadata(q, p)
 	result := Gia_ManCleanup(q)
 	Gia_ManStop(q)
 	return result
