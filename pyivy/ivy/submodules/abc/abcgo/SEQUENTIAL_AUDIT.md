@@ -4310,3 +4310,54 @@ in `/tmp/abcgo-dfs-output-review-race.log`; GIA vet passes
 (`/tmp/abcgo-dfs-output-review-vet.log`). No production changes followed the
 checks. OnePo and Skip output/state behavior are now reviewed; node and
 literal-array cone extraction are the next sequential targets.
+
+Node/literal-array cone review: a new red ownership regression shows DfsNode
+accepts an AND object from another manager and silently returns constant zero
+from that object's preexisting Value cache (`/tmp/abcgo-dfs-node-owner-red.log`).
+Call Gia_ObjId(src,root) before type checking/clearing source mappings. This
+constant-time check enforces the same regular, manager-owned object precondition
+used elsewhere in the Go manager API. Foreign/complemented handles are invalid
+inputs, not requests for a different graph or output polarity. C's foreign
+pointer arithmetic is not invoked as an oracle.
+
+Compiled C matches 3,264 ordinary-AND node/literal cases and 91,008 complete
+assignment rows: 32 polarities, zero/two/four source registers, each internal
+node as a root, both phases of every constant/input/internal candidate, empty
+literal lists, repeated/opposite-phase roots and mixed shared cones. Compare
+all source Value mappings, first-discovery inputs for node extraction,
+original input order for arrays, exact copied gate counts and output truth.
+Node extraction retains only reachable inputs; arrays retain all five original
+CIs, including an unused one after the COs. Both return combinational graphs,
+retain name/spec and reset derived constraint metadata. Array arguments remain
+unchanged, and source CO objects are never copied by these candidate-only APIs.
+
+Independent Boolean formulas and fixed logical dependency/support masks extend
+coverage to real XOR/MUX/buffer gates and reverse-DFS layouts, including
+explicit extraction of previously dangling logic. The main four-variant matrix
+covers 14,496 cases and 395,904 rows. Another 96 cases/1,536 rows compare old
+representative substitution with C through the literal-array entry point:
+chained inverse equivalents, constants, repeated roots and complemented
+requests reduce to one AND while preserving all four original CIs. Source ROs
+become ordinary combinational inputs, as in C. Combined native comparison is
+3,360 cases/92,544 rows; combined independent matrix coverage is 14,592 cases
+and 397,440 rows.
+
+Boundary checks include empty lists/graphs, unused input literals, constant
+buffers with zero-input support and both output phases. Root validation rejects
+nil/constant/CI/CO/inverse objects without changing source Values. Invalid
+literal indices and CO-as-logic literals reject; native invalid-input behavior
+is not launched. The fixture is `aig/gia/test_vectors/dfs_literal_cones.c`, with
+implicit declarations treated as C compilation errors. Initial matrix checks
+pass in 0.488s (`/tmp/abcgo-literal-cone-expanded-go.log`), initial native checks
+in 1.935s (`/tmp/abcgo-literal-cone-native.log`), and final old-representative/
+boundary coverage in 2.374s (`/tmp/abcgo-literal-cone-final-focused.log`).
+No further compactness rewrite is needed in these short routines; they already
+share typed recursive copying without an extra traversal or support array.
+CiMap behavior and other GIA families remain open. Original package completion
+stays 2/131 and the sequential audit remains active.
+
+Full uncached GIA race tests pass in 138.368s
+(`/tmp/abcgo-literal-cone-review-race.log`); GIA vet passes
+(`/tmp/abcgo-literal-cone-review-vet.log`). No production changes followed
+these checks. Node and literal-array extraction review is complete; CI-map
+substitution is the next sequential target.

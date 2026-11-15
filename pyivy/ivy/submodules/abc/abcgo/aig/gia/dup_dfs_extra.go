@@ -137,6 +137,7 @@ func Gia_ManDupDfsSkip(src *Gia_Man_t) *Gia_Man_t {
 }
 func Gia_ManDupDfs3_rec(dst, src *Gia_Man_t, obj *Gia_Obj_t) { Gia_ManDupOrderDfs_rec(dst, src, obj) }
 func Gia_ManDupDfsNode(src *Gia_Man_t, root *Gia_Obj_t) *Gia_Man_t {
+	Gia_ObjId(src, root)
 	if Gia_ObjIsAnd(root) == 0 {
 		panic("gia: expected internal cone root")
 	}
