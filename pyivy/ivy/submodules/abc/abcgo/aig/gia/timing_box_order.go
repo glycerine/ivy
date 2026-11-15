@@ -2,6 +2,7 @@ package gia
 
 import (
 	"fmt"
+
 	"github.com/glycerine/abcgo/misc/tim"
 	"github.com/glycerine/abcgo/misc/vec"
 )
@@ -23,8 +24,15 @@ func Gia_ManOrderWithBoxes_rec(p *Gia_Man_t, obj *Gia_Obj_t, nodes *Vec_Int_t) i
 			return 1
 		}
 	}
-	for _, id := range giaObjectFanins(p, obj) {
-		if Gia_ManOrderWithBoxes_rec(p, Gia_ManObj(p, id), nodes) != 0 {
+	if Gia_ManOrderWithBoxes_rec(p, Gia_ObjFanin0(obj), nodes) != 0 {
+		return 1
+	}
+	if Gia_ObjIsBuf(obj) == 0 {
+		if Gia_ManOrderWithBoxes_rec(p, Gia_ObjFanin1(obj), nodes) != 0 {
+			return 1
+		}
+		// Real MUX control follows both stored data fanins.
+		if Gia_ObjIsMux(p, obj) != 0 && Gia_ManOrderWithBoxes_rec(p, Gia_ObjFanin2(p, obj), nodes) != 0 {
 			return 1
 		}
 	}
@@ -101,7 +109,7 @@ func Gia_ManDupUnnormalize(src *Gia_Man_t) *Gia_Man_t {
 		dst.EnableMuxes()
 	}
 	if Gia_ManHasChoices(src) != 0 {
-		dst.pSibls = make([]int32, Gia_ManObjNum(src))
+		dst.pSibls = make([]int32, vec.Vec_IntSize(order))
 	}
 	for _, id := range vec.Vec_IntArray(order) {
 		obj := Gia_ManObj(src, id)
@@ -135,7 +143,7 @@ func Gia_ManDupUnnormalize(src *Gia_Man_t) *Gia_Man_t {
 		}
 	}
 	Gia_ManSetRegNum(dst, Gia_ManRegNum(src))
-	dst.nConstrs = src.nConstrs
+	giaCopyOutputRoles(dst, src)
 	return dst
 }
 

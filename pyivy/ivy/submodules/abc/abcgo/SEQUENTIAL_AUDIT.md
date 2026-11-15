@@ -5100,3 +5100,38 @@ implementation reviewed here. It does not finish GIA or other balancing
 families. Continue with `timing_box_order.go`, comparing boxed traversal and
 unnormalization with giaTim.c, including output-role retention. Original
 completion remains 2/131 and the sequential audit remains active.
+
+Boxed timing/order review: two new regressions fail before their respective
+fixes. Gia_ManDupUnnormalize drops the bad-output count despite preserving
+all outputs (`/tmp/abcgo-box-order-red.log`). With unreachable source logic,
+it also allocates the sibling table at the larger source-object count,
+violating the destination's exact-size metadata contract and preventing
+AIGER serialization (`/tmp/abcgo-box-order-sibling-red.log`: 19 sibling slots
+for 18 retained objects). Copy output roles through giaCopyOutputRoles and
+size the sibling table from the retained order, whose entries each produce
+one destination object including the existing constant.
+
+Box traversal previously allocated two fanin slices for each ordinary AND.
+Direct fanin calls retain the physical data-fanin order, buffer handling and
+real-MUX control dependency without allocating slices. A 256-AND chain over
+100 benchmark calls improves from 5,280B/514 allocations/19,876ns per call
+to 1,184B/2 allocations/5,506ns (`/tmp/abcgo-box-order-bench-before.log`,
+`/tmp/abcgo-box-order-optimized.log`). The traversal algorithm is unchanged.
+
+Native fixture `test_vectors/timing_box_order.c` compares the actual giaTim.c
+order and unnormalization routines on 1,536 ordinary-AND cases: all 256 phase
+patterns, choice siblings on/off, and zero/one/two register pairs. Exact
+object order, all source Value copies (including omitted dangling nodes),
+destination structure/sibling indices and 49,152 input/state truth rows
+agree. Go's bad-output field is independently checked, not represented as
+native-C proof. A 304-case typed/plain/choice/property-partition matrix
+checks 9,728 rows directly and after AIGER serialization.
+
+Additional checks cover asymmetric box input/output widths; buffer/constant
+cones; rejection of future-box data and real-MUX-control dependencies across
+repeated calls; all two-box selections/permutations and terminal reductions;
+selected extra-AIG output identities; and reduced timing-table ownership.
+The expected topological-order diagnostics in rejection tests are intentional.
+All focused tests pass in 1.950s (`/tmp/abcgo-box-order-final-focused.log`).
+Save a red checkpoint pending full integration. Original completion remains
+2/131; GIA and the sequential audit remain active.
