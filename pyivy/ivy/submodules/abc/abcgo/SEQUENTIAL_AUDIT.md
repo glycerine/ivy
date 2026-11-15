@@ -6708,3 +6708,12 @@ code. Its corrected graph/cut/truth snapshots all agree.
 Save the expanded tests as an integration-pending checkpoint before the final
 focused suite and full module race/vet gates. Original completion stays 2/131;
 GIA remains in progress.
+
+Stand-alone cut final focused tests pass in 10.806s, including expanded native
+matrices, reports, ownership/representation boundaries and old cut-replacement
+regressions (/tmp/abcgo-cut-enumeration-final-focused.log). Production source is
+unchanged since the first repair checkpoint; the subsequent changes expand
+coverage. REVIEW_cut_enumeration.md records the reviewed algorithms, source
+exceptions and remaining shared-utility allocation. Save a checkpoint and freeze
+source/tests/fixtures for full module race and GIA vet. Original completion
+remains 2/131; GIA is still in progress.
