@@ -4525,3 +4525,27 @@ sample). Logs are `/tmp/abcgo-cut-highlight-before.log` and
 `/tmp/abcgo-cut-highlight-after.log`. Expanded typed-marker/native/lifted-
 behavior checks are still pending; save this checkpoint with a red prefix at
 the requested interval. Original completion stays 2/131; GIA remains active.
+
+Expanded cut checks now pass (`/tmp/abcgo-cut-final-focused.log`, 2.011s).
+The independent marker/behavior matrix covers 1,536 cases across 128 phase
+patterns, three output-cone modes, ordinary AND and real XOR/MUX/buffer
+graphs, and original/reverse-DFS layouts. It checks 86,016 abstract input
+rows and 49,152 concrete PI/state assignments lifted to cut inputs. Every
+lift retains all outputs and next-state bits; this is deliberately a one-way
+abstraction contract, not preservation of the joint range of correlated cut
+signals. Source mark0 is cleared, independent mark1 survives, register order
+and constraints survive, and counterexamples are not copied. Separate tests
+cover empty/constant graphs, unused state, no properties, combinational
+outputs, and a PI-only MUX control boundary (eight phases, 64 abstract and
+64 lifted rows).
+
+The original-C fixture `aig/gia/test_vectors/replace_cut.c` agrees on 128
+ordinary-AND cases and 4,096 abstract input rows, including source Value maps
+and structural register-dependence marks. This comparison uses output taps
+already present at the boundary, where C discovers no late PIs. A separate C
+witness returns `1 0 2 1`: late PI discovery puts the original RO outside the
+RO tail and an original PI inside it. The Go prepass repairs that inherited
+ordering defect while copying the actual uncut logic. Real typed gates are
+checked independently; the C routine does not support their representation.
+GIA vet passes (`/tmp/abcgo-cut-review-vet.log`); the full GIA/ABCI uncached
+race gate is running.
