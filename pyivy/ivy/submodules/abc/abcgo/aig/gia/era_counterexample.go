@@ -21,7 +21,15 @@ func Gia_ManAreDeriveCexSatStart(p *Gia_ManAre_t) {
 		if Gia_ObjIsXor(obj) != 0 || Gia_ObjIsMux(source, obj) != 0 {
 			// The source export API reads raw AND fanins. Supply the
 			// equivalent ordinary AIG before exporting real gates to CNF.
+			saved := make([]uint32, len(source.pObjs))
+			for i, obj := range source.pObjs {
+				saved[i] = obj.Value
+			}
+			original := source
 			source = Gia_ManDupNoMuxes(source, 1)
+			for i, obj := range original.pObjs {
+				obj.Value = saved[i]
+			}
 			defer Gia_ManStop(source)
 			break
 		}
@@ -107,7 +115,9 @@ func Gia_ManAreDeriveCex(p *Gia_ManAre_t, last *Gia_StaAre_t) *Abc_Cex_t {
 	if p.iOutFail < 0 || last == nil {
 		panic("gia: missing failing reachability target")
 	}
-	Gia_ManAreDeriveCexSatStart(p)
+	if p.pSat == nil {
+		Gia_ManAreDeriveCexSatStart(p)
+	}
 	var states []*Gia_StaAre_t
 	for s := last; Gia_StaIsGood(p, s) != 0; s = Gia_StaPrev(p, s) {
 		if s != last {

@@ -7487,3 +7487,32 @@ nonconstant cone may reach unsatisfiable trace reconstruction. A temporary
 independent Boolean-zero reproduction is being evaluated; no conclusion or
 repair is claimed yet. Full family integration remains pending, as do final
 review notes. Original package completion stays 2/131.
+
+### Cube semantic-feasibility repair checkpoint
+
+The temporary reproduction is a real correctness defect, inherited from the
+source's structural may-fail/may-vary heuristic. A distributivity identity gives
+a logically zero but structurally nonconstant cone. As a PO it causes impossible
+trace reconstruction; as an RI it fabricates a don't-care successor and later
+an impossible witness. Eight ordinary/real-XOR regressions fail before repair,
+including semantic-one successor precision (/tmp/abcgo-era2-semantic-red.log).
+
+Keep the cube/cofactor algorithm and use the already restored static BSAT CNF
+to prove cofactored PO feasibility and RI polarities. Bind source CIs fixed by
+the current cube/recursive choices. A PO requires an actual satisfying model;
+an RI is a don't-care only if both values are feasible. Constants and unresolved
+CI literals need no SAT call. Cache only checked polarity facts in pNew's literal
+namespace, reset on pNew replacement, reuse the existing solver for later CEX
+reconstruction and close it on safe/resource cleanup. Preserve source Value
+scratch when typed normalization initializes online SAT. Unknown proof results
+stop without a fabricated target; propagate that stop up recursive callers.
+
+The first repair passes semantic regressions, typed sequential/SAT tests and all
+160 exact ordinary native driver/trace cases in 2.441s
+(/tmp/abcgo-era2-semantic-first-repair.log). This is a focused checkpoint, not final
+semantic review: add broader independent sequential exploration, polarity-cache
+and graph-lifetime tests, and deterministic proof-stop checks before closing the
+family or running final integration. Source-only structural helpers retain their
+may-fail API; the actual driver now validates those candidates. No alternative
+solver or replacement reachability algorithm is introduced. Completion stays
+2/131; both cube family and GIA remain open.

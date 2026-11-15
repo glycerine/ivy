@@ -25,15 +25,19 @@ func Gia_ManAreDeriveNexts_rec(p *Gia_ManAre_t, state Gia_PtrAre_t) int32 {
 		next := Gia_ManAreCreateStaNew(p)
 		if next == nil {
 			p.fStopped = 1
-			return 0
+			return 1
 		}
 		next.iPrev = state
-		if p.fMiter != 0 && Gia_ManCheckPOstatus(p)&1 != 0 {
+		if p.fMiter != 0 && giaAreOutputAsserted(p) {
 			p.fStopped = 1
 			if p.pTarget != nil {
 				panic("gia: duplicate reachability target")
 			}
 			p.pTarget = next
+			return 1
+		}
+		if p.fStopped != 0 || !giaAreRefineSuccessor(p, next) {
+			Gia_ManAreRycycleSta(p, next)
 			return 1
 		}
 		Gia_ManAreCubeProcess(p, next)
@@ -95,6 +99,7 @@ func Gia_ManAreDeriveNexts(p *Gia_ManAre_t, state Gia_PtrAre_t) int32 {
 		p.pNew = nil
 	}
 	if p.pNew == nil {
+		p.cofTruth = nil
 		p.pNew = Gia_ManStart(10 * p.pAig.nObjs)
 		Gia_ManIncrementTravId(p.pNew)
 		Gia_ManHashAlloc(p.pNew)

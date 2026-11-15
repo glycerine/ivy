@@ -21,6 +21,7 @@ type Gia_ObjAre_t struct {
 	F                      [3]Gia_PtrAre_t
 }
 type Gia_ManAre_t struct {
+	cofTruth                                                         map[int32]giaAreCofTruth
 	pAig, pNew                                                       *Gia_Man_t
 	objects                                                          []*Gia_ObjAre_t
 	states                                                           []*Gia_StaAre_t
@@ -65,6 +66,9 @@ func Gia_ManAreCreate(g *Gia_Man_t) *Gia_ManAre_t {
 }
 func Gia_ManAreFree(p *Gia_ManAre_t) {
 	if p != nil {
+		if p.pSat != nil {
+			p.pSat.Close()
+		}
 		Gia_ManStop(p.pAig)
 		if p.pNew != nil {
 			Gia_ManStop(p.pNew)
