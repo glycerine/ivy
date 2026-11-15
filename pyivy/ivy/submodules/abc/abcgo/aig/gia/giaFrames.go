@@ -153,15 +153,26 @@ func Gia_ManUnrollAdd(raw any, fMax int32) any {
 				mapping[id] = manager.state[i-nPis]
 			}
 		}
+		and, xor, mux := Gia_ManHashAnd, Gia_ManHashXor, Gia_ManHashMux
+		if manager.pPars.FDisableSt != 0 {
+			and, xor, mux = Gia_ManAppendAnd2, Gia_ManAppendXor2, Gia_ManAppendMux2
+		}
 		for id := int32(1); id < src.nObjs; id++ {
 			obj := Gia_ManObj(src, id)
 			if Gia_ObjIsAnd(obj) != 0 {
-				a := remapGiaLiteral(mapping, Gia_ObjFaninLit0(obj, id))
-				b := remapGiaLiteral(mapping, Gia_ObjFaninLit1(obj, id))
-				if manager.pPars.FDisableSt != 0 {
-					mapping[id] = Gia_ManAppendAnd2(dst, a, b)
-				} else {
-					mapping[id] = Gia_ManHashAnd(dst, a, b)
+				a, b, c, kind := src.Gate(id)
+				a = remapGiaLiteral(mapping, a)
+				switch kind {
+				case 2:
+					mapping[id] = and(dst, a, remapGiaLiteral(mapping, b))
+				case 3:
+					mapping[id] = xor(dst, a, remapGiaLiteral(mapping, b))
+				case 4:
+					mapping[id] = mux(dst, a, remapGiaLiteral(mapping, b), remapGiaLiteral(mapping, c))
+				case 5:
+					mapping[id] = a
+				default:
+					panic("gia: unsupported unrolling gate")
 				}
 			}
 		}

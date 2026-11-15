@@ -5714,3 +5714,29 @@ independent exhaustive transition systems and native checks where source
 preconditions permit. No circuit-cofactoring production change has been made
 during integration. Original completion remains 2/131; GIA and the full
 sequential audit remain active.
+
+Circuit-cofactoring review starts with a false-proof regression. A real XOR
+property PI xor RO can fail from the zero initial state in frame0, but the
+wrapper reports that it holds. The MUX property PI ? 1 : RO has the same
+failure. Red evidence: /tmp/abcgo-ccof-xor-red.log and
+/tmp/abcgo-ccof-typed-red.log. The cause is shared frame unrolling: it reads
+only two raw fanins and reconstructs every internal gate as AND. Preserve
+ordinary-AND source behavior, but dispatch the Go typed extensions through
+existing AND/XOR/MUX constructors (hashed or non-hashed as selected), and
+forward buffers. Both false-proof cases now fail in frame0 as expected;
+existing ordinary-unrolling/initialization/lifecycle tests remain green.
+
+Direct incremental CNF checks pass 9,216 fixed-input wrong-gate contradictions
+and 1,024 appended XOR checks across phases, typed gates and logical/physical
+layouts. Repeated extension retains clause/variable counts. All 256 one-bit
+property/transition functions match exhaustive simulation over three frames:
+768 incremental image/status checks and 7,168 assignments, including full/empty
+images and repeated convergence. Focused evidence is in
+/tmp/abcgo-ccof-baseline.log (0.492s). This reviews the dependent unroller's gate
+handling, not its separate scheduling/abstraction algorithms.
+
+Save a red checkpoint while extending raw model-cofactor, reset, resource and
+native checks. Inspection identifies a further risk: the verdict uses zero
+phases even when Go AIGER metadata supplies one or unknown reset states; add a
+red regression before any repair. Original completion remains 2/131, GIA and
+the sequential audit active; full integration is pending.
