@@ -6741,3 +6741,36 @@ source defects explicitly rather than blindly requiring identical failure/goal
 traces. Next: tracked normal-control native tests, deterministic stopping and
 error/ownership/outer-loop coverage, then fixes backed by red regressions if
 inspection or tests expose additional Go bugs.
+
+### Deep synthesis driver control and boundary checkpoint
+
+Track the actual giaDeep.c fixture with scripted frame/command boundaries and
+real graph allocation/duplication. All 96 normal configurations agree exactly:
+1,968 complete commands, next random words, batch mode, LUT cycles, no-improvement
+stopping, independent best/frame selection and three-trial restart behavior
+(/tmp/abcgo-deep-native.log). Independently check command counts, returned graph
+truth and ownership. Keep existing Go repairs of C's ignored advertised quality
+goal, missing batch restoration on failure and missing outer-failure handling;
+these are tested explicitly rather than claimed identical to broken C paths.
+
+New red regressions expose two additional Go bugs: a command panic leaks temporary
+batch mode, and timeout accounting excludes the initial best-graph copy
+(/tmp/abcgo-deep-control-red.log). A private clock parameter permits deterministic
+budget tests without global clock mutation; first extract it while preserving
+the old ordering, then observe the failing copy-cost regression. Start timing
+before duplication, as source does, and use a named command helper with deferred
+batch restoration. Native normal traces still match after repair.
+
+Expanded tests cover first/later/outer command failures, removed/absent/wrong-type/
+typed-nil graphs, quality-goal stopping, owned results, zero outer trials, precise
+portable wall-clock deadlines, verbose improvements and the full 100,000-iteration
+bound. Equal-cost candidates preserve the first best graph and its metadata.
+These pass in 1.855s before the final zero-frame regression
+(/tmp/abcgo-deep-final-focused.log).
+
+That final regression fails: zero outer trials create a global frame even though
+source's loop performs no frame access (/tmp/abcgo-deep-zero-frame-red.log).
+Return one owned duplicate directly for nonpositive trial counts, avoiding frame
+creation and the unused initial duplicate. Save an integration-pending checkpoint
+before final focused/source reruns, documentation and module race/vet gates.
+Original completion remains 2/131; GIA is still in progress.
