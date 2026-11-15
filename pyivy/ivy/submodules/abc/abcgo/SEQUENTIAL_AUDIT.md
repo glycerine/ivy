@@ -8788,3 +8788,24 @@ silently accepts a dangling Sel whose parent isPI, which C rejects atline273,
 and suppresses the source success counts/time report. These have native/Go
 probes in/tmp and need new red tests before fixes. Full next plan is
 /tmp/abcgo-gig-next-review-plan.md. No agents/branches, no next-family code edits.
+
+### GIG reader: new Boolean, selection and report regressions
+
+Begin all seven active giaGig.c routines after simulation/dataset green closure
+555ed782b. Five new abbreviated-truth cases and four invalid unused-selection
+cases fail before repair (/tmp/abcgo-gig-short-select-red.log, handle11713
+terminal1). Plain ParseUint incorrectly makes F a function of higher inputs
+instead of constant1, and similarly breaks8/AB/A/5 expansion. Reuse existing
+util.Abc_TtReadHex after bounded validation. Enforce source Bar/Del selection
+parent types even for unused records. A separate native success-report test
+fails because Go omits source counts/time (/tmp/abcgo-gig-report-red.log,
+handle52436 terminal1); restore fixed enum count order and time field.
+
+The repaired minimal suite passes1.850s
+(/tmp/abcgo-gig-minimal-repaired.log); full native coverage remains pending.
+REVIEW_gig_reader.md records the complete seven-routine plan, explicit narrow
+native LUT6 assertion correction, and measured descriptor/index baseline.
+Source correct six-input construction is not regressed to the C parser's
+erroneous four-input assertion. All other native assertions remain active.
+Save coherent red checkpoints while broader review/integration is pending;
+original completion2/131 and GIA remain open. No agents/branches.

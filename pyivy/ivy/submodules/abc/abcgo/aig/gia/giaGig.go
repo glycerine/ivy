@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/glycerine/abcgo/bool/kit"
+	"github.com/glycerine/abcgo/misc/util"
 )
 
 // gigNode represents one record in the Gate-Inverter Graph text format.
@@ -110,11 +111,15 @@ func gigParse(path string) ([]gigNode, error) {
 			}
 			hex := strings.TrimSpace(strings.SplitN(suffix[1:], "]", 2)[0])
 			hex = strings.TrimPrefix(hex, "0x")
-			value, e := strconv.ParseUint(hex, 16, 64)
+			_, e := strconv.ParseUint(hex, 16, 64)
 			if e != nil {
 				return nil, fmt.Errorf("line %d: bad truth table: %w", line, e)
 			}
-			node.truth = value
+			// Abc_TtReadHex repeats abbreviated tables across unused variables;
+			// reading only the numeric value changes their Boolean function.
+			var truth [1]uint64
+			util.Abc_TtReadHex(truth[:], hex)
+			node.truth = truth[0]
 		case "Box":
 			if len(node.args) < 4 || len(node.args) > 5 {
 				return nil, fmt.Errorf("line %d: invalid box", line)
@@ -167,6 +172,8 @@ func gigConstruct(nodes []gigNode, name string) (*Gia_Man_t, error) {
 			}
 			if parent.kind == "Del" {
 				outputs[parent.id] = append(outputs[parent.id], n.id)
+			} else if parent.kind != "Bar" {
+				return nil, fmt.Errorf("select %d has invalid parent %d of type %s", n.id, parent.id, parent.kind)
 			}
 		}
 	}
@@ -248,8 +255,19 @@ func gigConstruct(nodes []gigNode, name string) (*Gia_Man_t, error) {
 
 // Gia_ManReadGig reads a Gate-Inverter Graph and constructs its AIG.
 func Gia_ManReadGig(path string) *Gia_Man_t {
+	started := util.Abc_Clock()
 	nodes, err := gigParse(path)
 	if err == nil {
+		counts := make(map[string]int)
+		for _, node := range nodes {
+			counts[node.kind]++
+		}
+		for _, kind := range []string{"PI", "PO", "Bar", "Seq", "Sel", "Lut4", "Lut6", "Box", "Del"} {
+			if count := counts[kind]; count != 0 {
+				fmt.Printf("%s=%d  ", kind, count)
+			}
+		}
+		util.Abc_PrintTime(1, "Time", util.Abc_Clock()-started)
 		var result *Gia_Man_t
 		result, err = gigConstruct(nodes, path)
 		if err == nil {
