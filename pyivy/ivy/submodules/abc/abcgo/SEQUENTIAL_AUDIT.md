@@ -4549,3 +4549,10 @@ ordering defect while copying the actual uncut logic. Real typed gates are
 checked independently; the C routine does not support their representation.
 GIA vet passes (`/tmp/abcgo-cut-review-vet.log`); the full GIA/ABCI uncached
 race gate is running.
+
+The final uncached race gate passes: GIA 164.221s and ABCI 28.219s
+(`/tmp/abcgo-cut-review-race.log`). No production changes followed checkpoint
+426813c65; expanded coverage is saved in 6b244efdb. This completes review of
+dup_replace_cut.go, including logical register dependence and the cut/state
+interface. Other GIA families and the final inventory reconciliation remain
+open. Original package completion stays 2/131; the sequential audit is active.
