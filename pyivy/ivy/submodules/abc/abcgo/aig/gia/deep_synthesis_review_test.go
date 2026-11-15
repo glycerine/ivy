@@ -272,3 +272,30 @@ func TestDeepSynthesisZeroTrialsDoesNotCreateFrame(t *testing.T) {
 		t.Fatal("zero trials created a global frame")
 	}
 }
+
+func TestDeepSynthesisNoImprovementBoundaries(t *testing.T) {
+	for _, limit := range []int32{0, 1, 3} {
+		for scenario := 0; scenario < 2; scenario++ {
+			t.Run(fmt.Sprintf("limit%d/scenario%d", limit, scenario), func(t *testing.T) {
+				f := deepReviewFrame(t)
+				g := deepReviewGraph(6)
+				f.SetResource("pGia", g)
+				d := &deepReviewDispatcher{scenario: scenario, last: g}
+				f.Dispatcher = d
+				var result *Gia_Man_t
+				hashReviewStdout(t, func() { result = Gia_ManDeepSynOne(limit, 0, 0, 0, 0, 0) })
+				if result == nil {
+					t.Fatal("stagnation discarded best graph")
+				}
+				defer Gia_ManStop(result)
+				expected := int(limit) + 1
+				if scenario == 1 {
+					expected++
+				}
+				if d.calls != expected {
+					t.Fatalf("stagnation calls%d expected%d", d.calls, expected)
+				}
+			})
+		}
+	}
+}

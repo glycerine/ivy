@@ -22,13 +22,13 @@ func Gia_ManDeepSynOne(noImprovement, timeout, goal, seed, useTwo, verbose int32
 }
 
 func giaManDeepSynOne(noImprovement, timeout, goal, seed, useTwo, verbose int32, now func() time.Time) *Gia_Man_t {
+	start := now()
 	frame := abcmain.Abc_FrameGetGlobalFrame()
 	initial, ok := abcmain.Abc_FrameReadGia(frame).(*Gia_Man_t)
 	if !ok || initial == nil {
 		fmt.Fprintln(frame.Err, "gia: no current graph for synthesis")
 		return nil
 	}
-	start := now()
 	best := Gia_ManDup(initial)
 	last := int32(-1)
 	util.Abc_Random(1)
@@ -75,6 +75,7 @@ func giaManDeepSynOne(noImprovement, timeout, goal, seed, useTwo, verbose int32,
 				fmt.Printf("Iter %6d : Time %8.2f sec : And = %6d  Lev = %3d  <== best : %s\n", i, now().Sub(start).Seconds(), Gia_ManAndNum(best), Gia_ManLevelNum(best), command)
 			}
 		}
+		// C never updates nAndsMin; honor the CLI's advertised quality goal.
 		if goal > 0 && Gia_ManAndNum(best) <= goal {
 			fmt.Printf("Quality goal (%d nodes <= %d nodes) is achieved after %d iterations and %.2f seconds.\n", Gia_ManAndNum(best), goal, i, now().Sub(start).Seconds())
 			break

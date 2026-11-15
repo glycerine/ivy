@@ -6774,3 +6774,18 @@ Return one owned duplicate directly for nonpositive trial counts, avoiding frame
 creation and the unused initial duplicate. Save an integration-pending checkpoint
 before final focused/source reruns, documentation and module race/vet gates.
 Original completion remains 2/131; GIA is still in progress.
+
+### Deep synthesis final focused checks
+
+Complete the no-improvement boundary matrix and verify the real synthesis
+pipeline, including registered &deepsyn, with normal frame initialization and
+standard abc.rc aliases. A bare frame lacks these startup facilities; that was
+a probe setup problem, not a driver defect. The direct and command results both
+reduce six redundant ANDs to one and preserve all four input assignments. The
+direct result remains valid after subsequent frame replacement. Track this as
+an external-package integration test to avoid an ABCI import cycle.
+
+REVIEW_deep_synthesis.md distinguishes native scripted driver comparisons from
+real-engine integration and documents intentional source repairs, portable
+wall-clock deadlines and remaining coverage limits. Final focused tests and
+module race/vet gates follow; do not count the family complete until they pass.
