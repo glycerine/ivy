@@ -8483,3 +8483,24 @@ metadata extension does not alter C's default-zero cases or frame node order;
 explicit FInit still selects zero initialization, and combinational outputs have
 no latch state metadata. Final focused rerun and frozen full integration remain
 pending. Package completion2/131, GIA and timeframe review remain open.
+
+### Complete timeframe source reconciliation and focused gate
+
+Close the remaining coverage gaps before integration:160 generated sparse
+abstraction configurations match all480 native rows;128 complete buffered/mixed
+configurations pass49,920 independent histories and96 incremental buffered
+configurations pass50,880 histories
+(/tmp/abcgo-frames-buffer-and-abstraction.log,2.030s). Buffers exercise aliased
+logical inputs that the earlier window-based real-gate matrix did not contain.
+
+The final combined timeframe/unroller/native/CCof/lifecycle/reset focused suite
+passes34.608s (/tmp/abcgo-frames-final-complete-focused.log). Its exact handle
+96750 terminates exit0. REVIEW_timeframes.md now maps every one of22 active
+source routines to its Go implementation and evidence, distinguishes explicit
+original-C defects/corrected modes, and records interface/state metadata policy,
+resource ownership and measured compactness costs. The inactive old Unroll
+function is excluded. No whole-package or goal closure is claimed.
+
+Save this red checkpoint and freeze production/tests/fixtures for uncached full
+module race tests and GIA vet. Inspect terminal results before closing the
+family. Original completion2/131; remaining GIA source inventory stays open.

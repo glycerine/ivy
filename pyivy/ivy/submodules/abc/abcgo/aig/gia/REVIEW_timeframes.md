@@ -1,129 +1,198 @@
-# Timeframe unrolling review — in progress
+# Timeframe unrolling review
 
-Review `src/aig/gia/giaFrames.c` against `giaFrames.go`. Reconcile each active
-source routine, excluding the commented old Unroll implementation at lines
-540–595. The current full-frame map and common AIG-frame wrapper are not
-accepted substitutes for the source tent/history scheduler and distinct entry
-points. Prior CCof coverage proves many Boolean cases, not scheduling fidelity.
+Reconcile all22 active routines in `src/aig/gia/giaFrames.c` with
+`giaFrames.go`, `frames_unroll.go` and `frames_driver.go`. Exclude the commented
+old Unroll implementation at source lines540–595. Preserve source dependency
+tents, rank-delayed rolling history, sparse abstraction, frame construction,
+OR aggregation and specialized prefix termination. The former full-map/common
+AIG-frame substitutes did not implement these distinct source contracts.
 
-## Established red evidence and current repair
+## Repairs and red evidence
 
-A17-object graph with two PIs, three registers, six ordinary ANDs and two POs
-has native dependency limits `[1,8,15,17]`. The previous Go clone returned
-`[1,17]`. Its abstraction rows contained9/18/27 nodes instead of4/8/9. Native
-Frames2 returns ci9/co6/regs0/objs29; Go's common wrapper returns
-ci9/co9/regs3/objs37. Incremental first-step source ci5/co0/objs8/lit14 differs
-from Go ci5/co0/objs12/lit12. All four native modes and three minimal regressions
-fail before production changes (`/tmp/abcgo-frames-scheduling-red.log`).
+The initial17-object two-PI/three-register graph has native dependency limits
+`[1,8,15,17]`; old Go returned `[1,17]`. Its abstraction rows contained9/18/27
+objects instead of4/8/9. Source Frames2 returned ci9/co6/regs0/objs29, while
+Go's shared wrapper returned ci9/co9/regs3/objs37. The first incremental step
+also had different node counts and the wrong property literal. All minimal
+and four native-mode comparisons fail before repair
+(`/tmp/abcgo-frames-scheduling-red.log`).
 
-Port the source PO-cone DFS followed by reached-RO/RI dependency tents. Publish
-source copy literals and destination original IDs in Value, retaining their
-distinct meanings. The unvisited Value sentinel is all32 bits set, distinct
-from the29-bit no-fanin sentinel. Extend traversal/copying to logical real gate
-inputs, including MUX control after stored data pins. Unreachable nodes remain
-absent. Build sparse reverse-time abstraction directly from these tents.
+Restore PO-cone DFS followed by reached-register RI tents. Publish source copy
+literals and destination original IDs in their respective Value scratch.
+Unvisited Value is all32 bits set, distinct from the29-bit no-fanin sentinel.
+Build sparse reverse-time abstraction from tents, then port ranks, per-edge
+delays and compact rolling histories. Preserve ordinary source layout and
+extend logical fanin handling to real XOR/MUX/buffers. MUX histories use a third
+edge column only when needed. Rank/degree construction arrays remain local.
 
-Order and abstraction match every native object field and packed row on the
-initial graph. The rolling scheduler, cleanup and combinational Frames2 now
-match all five native modes, including save/fixed property truth. Fixed mode
-leaves LastLit0; save mode selects the last encountered PO. The old always-PO0
-expectation and old register-retaining Frames2 test are corrected using these
-native contracts, with an additional red overlay regression against the prior
-implementation (`/tmp/abcgo-frames-fixed-literal-red.log`).
+Source save mode ends on the last encountered PO; fixed mode leaves LastLit0.
+The old implementation always selected PO0. A separate regression against the
+prior implementation is red on fixed mode saving property6
+(`/tmp/abcgo-frames-fixed-literal-red.log`). Correct the older tests that encoded
+the substituted behavior using actual native fixed/save and Frames2 contracts.
 
-Port the compact source history arena, ranks/delays and scheduler in
-`frames_unroll.go`; remove redundant per-frame maps, state and stopped fields.
-Keep lifecycle/huge incremental-bound behavior and correct initialized-save PI
-offsets. Focused native/CCof/independent sequential checks pass13.347s
-(`/tmp/abcgo-frames-scheduler-consumers-repaired.log`), including1536 frame
-configurations and176640 assignments.
+Frames2 now delegates to combinational Unroll and source cleanup. Frames,
+FramesInit and InitSpecial have separate direct implementations. New OR and
+prefix regressions first fail on9 instead of5 COs, nil unbounded prefix, and
+returning properties instead of preceding transition state
+(`/tmp/abcgo-frames-drivers-red.log`). Preserve all PIs, source support pruning,
+nonhashed mode, ORed PO columns, retained register ordering and exact banners.
 
-Distinct Frames/FramesInit/InitSpecial implementations now live in
-`frames_driver.go`; the AIG roundtrip substitute is removed. New OR-output and
-prefix tests were red before this port (`/tmp/abcgo-frames-drivers-red.log`).
-Twenty-four explicit corrected-source driver configurations match all output
-object records. See below for the separate original-C initialization defect.
+Fixed zero-frame bounds must reject positive Add horizons, while incremental
+zero remains unbounded (`/tmp/abcgo-frames-zero-bound-red.log`). The complete
+wrapper must produce its promised per-frame outputs: C asserts on incompatible
+save-only mode; old Go silently returned no outputs
+(`/tmp/abcgo-frames-resource-red.log`). Reject that mode before allocation.
 
-Fixed zero frames now rejects positive Add horizons while incremental zero
-remains unbounded. A red boundary test catches that distinction
-(`/tmp/abcgo-frames-zero-bound-red.log`). Specialized prefix clears preceding
-RI state before an immediate event, instead of returning stale scratch or a
-property. The prior implementation fails the immediate-event regression
-(`/tmp/abcgo-frames-special-scratch-red.log`). The source stale-RI assertion is
-captured separately with core dumps disabled. Latest focused frame/native and
-lifecycle checks pass9.578s (`/tmp/abcgo-frames-drivers-boundaries.log`). This is
-partial coverage, not the final frozen integration gate or family closure.
+Noninitialized Frames keeps the same logical registers but dropped Go's
+explicit initial states. A twelve-case regression is red on `[1,-1]` becoming
+empty (`/tmp/abcgo-frames-resets-red.log`). Preserve the owned reset cube after
+cleanup. Explicit FInit continues to request zero initialization, and the
+combinational variants have no latch state metadata.
 
-The permanent fixture `test_vectors/frames_review.c` includes actual source and
-links original ABC objects through the shared Linux/GCC source-oracle helper.
-It checks exact object fields, limits, sparse rows and all32/128/512 assignments
-of the successive incremental last-property literal. No solver or algorithm
-answers are stubbed. Broader generated/native and independent coverage remains
-required after the rest of the source algorithm is restored.
+## Source defects and reference policy
 
-## Remaining review and coverage plan
+The native fixture includes actual giaFrames.c and links original ABC objects.
+The shared oracle requires Linux/GCC and those built objects and skips when
+unavailable. It supplies no algorithm or solver answers.
 
-All active source entry points now have direct implementations. Continue
-reconciling the full22-routine active inventory, mapping the source static
-history read/write/copy helpers to Go methods. The inactive old Unroll function
-remains excluded.
+Default modes execute unmodified C. Separate required modes characterize:
 
-1. Compare native rank delays, offsets and history rows before/after steps over
-   generated ordinary graphs. Preserve two-column ordinary layouts and test the
-   derived third column for typed MUXs independently.
-2. Expand exact native dependency order, sparse abstraction and frame-driver
-   flag matrices over generated graphs, not just the initial17-object example.
-   Characterize unmodified-source defects separately from explicitly corrected
-   native comparisons.
-3. Add independent full Frames/FramesInit sequential histories for ordinary,
-   real-gate and reordered interfaces; verify final state, OR aggregation,
-   initialized flag interactions, output/input dimensions and returned ownership.
-   Existing1536-case coverage concerns the incremental family, not all drivers.
-4. Expand specialized-prefix cases for immediate/delayed events, finite zero
-   prefixes, multiple properties, typed gates and owned preceding-state outputs.
-   Add exact native prefix and verbose comparisons, normalizing only genuinely
-   nondeterministic clock/memory fields when appropriate.
-5. Audit history lifecycle, zero/large bounds, safe power-of-two packed IDs and
-   resource contracts. Review/remap changed-interface metadata deliberately.
-6. Measure compactness and allocation behavior against the previous full-map
-   implementation. Inspect skipped-tent work and unused helpers, retaining exact
-   source ordering/history/native results through any simplification.
-7. Update source reconciliation/validation, freeze production/tests/fixtures,
-   run uncached full module race tests and GIA vet, and inspect exact terminal
-   results before closing the family. The broader GIA inventory stays open.
+- Initialized save mode indexes PIs after RegNum despite allocating no symbolic
+  initial registers. A child captures its index assertion. Go retains the
+  corrected zero offset, verified by independent initialized histories.
+- FraSupports collects CIs, marking the whole cone, then CollectAnds intentionally
+  shares that epoch and returns no nodes. The128-record --init-defect mode
+  reproduces wrong original outputs and checks independent sequential truth.
+  Only explicitly corrected driver/report modes enable a call-site bridge
+  that advances the epoch before support AND collection. Go makes that same
+  correction without changing the shared DFS epoch contract.
+- InitSpecial can return stale RI Value when a first-frame event precedes any
+  committed transition. --special-stale captures its assertion after FillValue.
+  Go initializes preceding RI state to zero; the old Go substitute is separately
+  red on returning property1 instead of state0
+  (`/tmp/abcgo-frames-special-scratch-red.log`).
+- Abs's mask assertion rejects power-of-two object counts although their IDs
+  fit. A source child captures that assertion; Go independently checks packed
+  IDs at4/8/16/32 objects using the actual maximum ID.
 
-## Source boundary issues to characterize explicitly
+Core dumps are disabled for expected-assertion children. None of these source
+failures are silently replaced by successful oracle answers. Corrected C modes
+change only the explicitly named support-collection epoch, leaving the source
+schedulers, histories and frame builders intact.
 
-C initialized incremental mode indexes PIs after a RegNum offset despite not
-allocating symbolic initial registers. Preserve the already tested valid Go
-initialized mode; characterize the source assertion and apply an explicit
-correction rather than copying the bad index. Source Add expects sequential
-horizons and allocates one PI frame per call; the Go jump wrapper must invoke
-that operation repeatedly when appropriate.
+## Active source reconciliation
 
-C Abs's mask assertion rejects power-of-two object counts although their IDs
-fit. The Go bit width uses the actual maximum ID; test these boundaries
-independently and keep unmodified native fixtures within supported counts.
+| C routines | Go implementation and evidence |
+| --- | --- |
+| UnrollDup_rec, UnrollDup | `giaUnrollDupRec` and public ordered clone: exact native limits/original-ID/object records across generated graphs; logical real fanins and unreachable-node omission. |
+| UnrollAbs | Source sparse packing/sorting: initial exact rows,160 generated native configurations/480 rows, safe power-of-two IDs and zero/empty boundaries. |
+| UnrStart | Local rank/degree construction, edge delays, flat owned arena:64 generated fixed/save managers with exact source tables, plus a twelve-register uneven-rank chain. |
+| ObjUnrWrite, ObjUnrRead | Go `write`/`read`: every native history cell at startup and after three generated steps, and a twelve-cell history through sixteen horizons. |
+| ObjUnrReadCopy0, ObjUnrReadCopy1 | Unified pin-indexed `readCopy`: source phase/delay records, exact resulting object fields and exhaustive Boolean traces. |
+| ObjUnrReadCi | `readCI`: fixed/save PI layouts, symbolic/zero initial state, delayed RI reuse, typed/reordered and buffer matrices, native assertion characterization for initialized save. |
+| UnrollStart, UnrollAdd | Source scheduler and increasing-horizon wrapper: exact fixed/save object/history records, sequential and jumping horizons, large incremental bounds and resource/lifecycle coverage. |
+| UnrollLastLit | Exact native literal and all32/128/512 initial-graph assignments; fixed-mode zero, last saved PO and deeper512 traces. |
+| UnrollStop | Release order/history/config references, idempotent stopped-handle rejection; returned graph survives source reuse and disposal. |
+| Unroll, Frames2 | Complete combinational outputs and cleanup: exact native fields, output contract, zero-frame boundary, source convergence/time reports. |
+| FraSetDefaultParams | Source memset/32-frame default reconciled with the Go zeroed struct literal; option semantics exercised throughout driver matrices. |
+| FraStart, FraStop, FraSupports | Owned frame support sets, corrected call-site epoch, exact source driver order/count/reports and independent initialized traces; source remains caller-owned. |
+| FramesInit | Source support-pruned zero initialization/all-PIs policy; native corrected matrices, buffers, changed layouts and per-frame reporting. |
+| Frames | Source noninitialized temporal network, ORed/plain columns and nonhashed/hash modes, terminal registers and owned reset cube. |
+| FramesInitSpecial | Source first-nonzero-literal rule and preceding-state outputs;96 generated and five directed unmodified-C records,192 mixed prefixes, immediate stale-scratch repair and exact reports. |
 
-Initialized source FraSupports has a second defect: CollectCis marks the cone,
-then CollectAnds intentionally shares that epoch and returns no AND nodes.
-The default C fixture stays unmodified. Its --init-defect mode must reproduce
-wrong source outputs and compare an explicit corrected call-site bridge with
-independent sequential truth over128 records. The --drivers-safe mode enables
-only that epoch correction; source schedulers and frame builders are unchanged.
-Go starts a fresh epoch at the same support-call site, leaving the shared DFS
-API's caller-owned epoch contract intact.
+The22-routine count is checked against active function definitions after
+excluding comments. Combined table rows name every routine, including static
+helpers; the three Go files contain the actual algorithms, not compatibility
+wrappers to another frame implementation.
 
-Specialized source prefix can return stale RI Value when a first-frame event
-breaks before committing any transition state. --special-stale characterizes
-its assertion after FillValue; Go initializes the preceding RI state to zero.
-These repairs preserve valid source intent rather than copying demonstrated
-source errors.
+## Independent and native coverage
 
-Unrolling changes interface dimensions and ordering. Remap metadata explicitly
-where meaningful; do not blindly copy unchanged-interface metadata onto a new
-frame interface or copy node-indexed payloads as if their IDs survived.
+All768 generated corrected-source driver configurations match exact object
+records and53,760 independent sequential assignments.64 generated fixed/save
+managers match limits, every edge delay, offsets and all arena cells at startup
+and after each of three steps, plus ordered and produced object fields.
 
-Read-only preparation and additional native logs are indexed in
-`../../SEQUENTIAL_AUDIT.md` and `/tmp/abcgo-frames-next-review-plan.md`.
-The original sequential audit remains at2/131 completed packages; GIA is open.
+A separate1,536-case ordinary/real-gate/interleaved/reordered/flag matrix checks
+107,520 independent complete-driver assignments. It verifies identity/parameter
+ownership and traverses/evaluates returned graphs after source disposal.
+Additional128 buffer/mixed driver configurations check49,920 histories;
+96 incremental buffer/mixed configurations check50,880 histories. Earlier
+incremental/CCof coverage remains1,536 configurations/176,640 assignments,
+including initialization, huge bounds, reset intersections and solver limits.
+
+For sparse abstraction,32 graphs at one through five frames compare all480
+native rows. This complements exact dependency ordering and packed-ID boundaries.
+For deeper history, a twelve-register pipeline forces a twelve-cell PI row.
+All source storage and object records match through sixteen horizons;512
+independent traces check both symbolic initial-state and later PI feedback.
+
+Specialized prefix tests retain96 generated unmodified-source results and624
+independent input histories, plus192 mixed prefixes/768 histories. The reference
+requires every completed property to be zero and outputs to equal the state
+after that prefix. It allows conservative early stopping on a nonzero hash
+literal, preserving source behavior rather than substituting SAT. Five directed
+native cases verify no PI, no PO, full zero-property bounds and terminating
+unbounded events. The final attempted PI frame remains present even when it
+cannot affect preceding-state outputs, as in C.
+
+Scalar references evaluate original logical gate/port semantics and sequential
+state directly; they use no frame history, dependency ranks or copied Value.
+Native comparisons additionally enforce exact ordering and scratch/storage
+protocols rather than accepting only equivalent Boolean functions.
+
+Reports compare source convergence, per-frame support sizes, cleanup and prefix
+banners exactly. Clock values are normalized after asserting timing-column width.
+The empty-prefix level average is IEEE NaN; only its C(-nan)/Go(NaN) spelling is
+normalized. Other numeric/report fields remain part of the comparison.
+
+## Compactness, ownership and measured cost
+
+The restored scheduler removes full per-frame copy maps, redundant state arrays,
+stopped flags and dead remapping helpers. Keep the source flat arena and row
+headers rather than adding per-node heap slices or persistent rank/degree
+copies. Offset indices use Go int. Skip earlier frame iterations with no tent;
+exact native history/results remain unchanged. No new solver or alternate
+unrolling algorithm is introduced.
+
+Go retains a small initial reserve so huge requested incremental bounds can
+converge cheaply. A load regression found3067 gates stuck in17 buckets because
+CI insertions occupied every periodic object-ID resize checkpoint. Check hash
+load at completed horizons, preserving source node/history/literal order and
+avoiding a large unconditional reserve
+(`/tmp/abcgo-frames-stream-hash-red.log`). This is a Go allocation-policy
+adaptation; the source C constructor reserves10000 objects initially.
+
+Single-run8/64/512-horizon benchmarks on the same small graph:
+
+| Implementation | Time (us) | Bytes | Allocations |
+| --- | --- | --- | --- |
+| Previous full-map code | 13.869 /103.176 /866.198 | 9120 /63008 /548128 | 101 /671 /5164 |
+| Restored source scheduler before growth repair | 16.946 /146.192 /3973.950 | 11268 /54660 /437381 | 109 /566 /4161 |
+| Scheduler after growth repair | 18.960 /113.593 /997.118 | 11588 /56388 /469844 | 110 /568 /4165 |
+
+Logs: `/tmp/abcgo-frames-benchmark-before.log`,
+`/tmp/abcgo-frames-benchmark-after.log`,
+`/tmp/abcgo-frames-benchmark-growth.log`. Skipping empty tents alone did not
+materially improve the slowdown. The growth repair improves the new512-horizon
+case from about3.97ms to1.00ms. Longer histories allocate less than the old
+full-map substitute; the source constructor has fixed costs and this benchmark
+does not show uniform speedup. Its fidelity repairs cannot be replaced by the
+old algorithm to improve a timing number.
+
+Input order is explicit: fixed mode precreates all frame PIs followed by symbolic
+initial registers; save mode creates symbolic state first, then each PI frame.
+The original graph's Value is borrowed mapping scratch and remains reusable by
+other passes after stopping. The returned graph owns all its nodes and survives
+the scheduler and source. Changed frame interfaces retain source name/spec and
+source PO-order/role conventions; original I/O names and node-indexed payloads
+are not copied as if their old indices survived. Noninitialized retained
+registers keep owned Go reset states; explicit zero initialization overrides
+that state cube, as requested by the source parameter.
+
+## Validation
+
+Final complete focused rerun, frozen full module race tests and GIA vet are
+pending. These gates must terminate successfully before family closure. This
+family does not complete the remaining GIA inventory or the original131-package
+sequential audit, which remains at2 completed packages.
