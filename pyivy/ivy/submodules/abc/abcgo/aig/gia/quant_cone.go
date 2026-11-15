@@ -21,7 +21,8 @@ func Gia_ManQuantDupConeSupp_rec(q, p *Gia_Man_t, obj *Gia_Obj_t, cis, objs *Vec
 	}
 	// Keep the source's ordinary-AND product algorithm. Real gates are
 	// lowered here, and every logical input (including MUX control) is copied.
-	for _, fanin := range giaObjectFanins(p, obj) {
+	fans, nfans := giaQuantFanins(p, obj)
+	for _, fanin := range fans[:nfans] {
 		Gia_ManQuantDupConeSupp_rec(q, p, p.pObjs[fanin], cis, objs, keep, data)
 	}
 	read := func(lit int32) int32 { return Gia_ObjCopyArray(p, lit>>1) ^ (lit & 1) }
@@ -113,7 +114,8 @@ func Gia_ManQuantCollect_rec(p *Gia_Man_t, id int32, cis, side, ands *Vec_Int_t)
 		vec.Vec_IntPush(cis, id)
 		return
 	}
-	for _, fanin := range giaObjectFanins(p, obj) {
+	fans, nfans := giaQuantFanins(p, obj)
+	for _, fanin := range fans[:nfans] {
 		Gia_ManQuantCollect_rec(p, fanin, cis, side, ands)
 	}
 	vec.Vec_IntPush(ands, id)

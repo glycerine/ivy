@@ -7955,3 +7955,27 @@ allocations/80,327 bytes and 281,377 ns per call from the new general logical
 fanin slices (/tmp/abcgo-exist-collect-before.log). Remove those temporary
 allocations without changing source traversal order before the final gates.
 Family/final integration remains open; original completion stays 2/131.
+
+### Quantifier allocation and final focused checkpoint
+
+Replace per-recursion temporary logical-fanin slices with a fixed three-input
+tuple, preserving stored input order. The 5,001-node collection benchmark changes
+from 281,377 ns/op, 80,327 B/op, 10,002 allocs/op to 239,527 ns/op, 204 amortized
+B/op and zero allocs/op (/tmp/abcgo-exist-collect-{before,after}.log). Native exact
+matrices and the complete focused set still pass. Keep packed support/cache
+state: word width is needed during row growth, and the selected-bit field has a
+different role from the registration count.
+
+Add 192 queries with CIs interleaved among internal nodes, all keep masks/both
+phases/both algorithms, to distinguish logical CI IDs from physical object IDs.
+A final red accessor regression detects reading spare vector capacity as an
+initialized support row (/tmp/abcgo-exist-row-length-red.log). Restrict the
+vector view to stored length before returning its bounded writable row, matching
+C's checked-vector precondition; use Go-sized row offsets. Final focused checks
+pass in 5.908s (/tmp/abcgo-exist-final-focused.log).
+
+REVIEW_incremental_quantification.md reconciles all 25 original routines,
+precise native exceptions, independent correctness evidence, compactness and
+construction/query preconditions. Commit this checkpoint and freeze all source,
+tests and fixtures for uncached full module race plus GIA vet. Original package
+completion remains 2/131; final family integration is still pending.

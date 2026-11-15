@@ -347,3 +347,56 @@ func TestQuantConeCopyMappingAndOwnership(t *testing.T) {
 		}
 	}
 }
+
+func TestQuantInterleavedInputObjects(t *testing.T) {
+	for mode := 0; mode < 2; mode++ {
+		for phase := int32(0); phase < 2; phase++ {
+			for mask := 0; mask < 16; mask++ {
+				g := Gia_ManStart(64)
+				g.EnableMuxes()
+				Gia_ManQuantSetSuppStart(g)
+				Gia_ManHashAlloc(g)
+				input := func() int32 {
+					lit := Gia_ManAppendCi(g)
+					Gia_ManQuantSetSuppZero(g)
+					Gia_ManQuantSetSuppCi(g, Gia_ManObj(g, lit>>1))
+					return lit
+				}
+				a, b := input(), input()
+				x := Gia_ManAppendAnd(g, a, b)
+				c := input()
+				y := Gia_ManAppendAnd(g, x, c^1)
+				d := input()
+				z := Gia_ManAppendMuxReal(g, d, x, c)
+				keep := func(_ any, ci int32) int32 {
+					if ci < 0 || ci >= 4 {
+						t.Fatalf("invalid logical CI%d", ci)
+					}
+					return int32(mask>>ci) & 1
+				}
+				for _, root := range []int32{x ^ phase, y ^ phase, z ^ phase} {
+					truth := make([]bool, 16)
+					for bits := range truth {
+						values := cofReviewValues(g, bits)
+						truth[bits] = values[root>>1] != (root&1 != 0)
+					}
+					var result int32
+					if mode == 0 {
+						result = Gia_ManQuantExist(g, root, keep, nil)
+					} else {
+						result = Gia_ManQuantExist2(g, root, keep, nil)
+					}
+					for bits := range truth {
+						values := cofReviewValues(g, bits)
+						got := values[result>>1] != (result&1 != 0)
+						want := quantReviewExpected(truth, mask, bits)
+						if got != want {
+							t.Fatalf("mode%d phase%d keep%x root%d input%d got%t want%t", mode, phase, mask, root, bits, got, want)
+						}
+					}
+				}
+				Gia_ManStop(g)
+			}
+		}
+	}
+}

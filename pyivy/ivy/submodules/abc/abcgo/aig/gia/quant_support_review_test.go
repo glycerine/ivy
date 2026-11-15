@@ -243,3 +243,18 @@ func BenchmarkQuantCollectSharedCone(b *testing.B) {
 		Gia_ManQuantCollect(g, root>>1, keepC, nil, cis, side, ands)
 	}
 }
+
+func TestQuantSupportRejectsUnallocatedRow(t *testing.T) {
+	g := Gia_ManStart(16)
+	defer Gia_ManStop(g)
+	Gia_ManQuantSetSuppStart(g)
+	id := Gia_ManAppendCi(g) >> 1
+	// The row has not been appended with SetSuppZero yet. Like C's checked
+	// vector access, this must reject spare capacity beyond stored data.
+	defer func() {
+		if recover() == nil {
+			t.Fatal("read a support row that has not been allocated")
+		}
+	}()
+	Gia_ManQuantInfoId(g, id)
+}

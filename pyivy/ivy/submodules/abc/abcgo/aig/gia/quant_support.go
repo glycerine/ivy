@@ -2,12 +2,33 @@ package gia
 
 import (
 	"fmt"
+
 	"github.com/glycerine/abcgo/misc/vec"
 )
 
+// giaQuantFanins returns logical inputs in stored-fanin order without
+// allocating a slice at each node of a recursive quantification walk.
+func giaQuantFanins(p *Gia_Man_t, obj *Gia_Obj_t) ([3]int32, int) {
+	a, b, c, kind := p.Gate(obj.id)
+	switch kind {
+	case 2, 3:
+		return [3]int32{a >> 1, b >> 1}, 2
+	case 4:
+		return [3]int32{c >> 1, b >> 1, a >> 1}, 3 // stored data inputs, then control
+	case 5, 6:
+		return [3]int32{a >> 1}, 1
+	default:
+		return [3]int32{}, 0
+	}
+}
+
 func Gia_ManQuantInfoId(p *Gia_Man_t, id int32) []word {
-	start := id * p.nSuppWords
-	return vec.Vec_WrdArray(p.vSuppWords)[start : start+p.nSuppWords : start+p.nSuppWords]
+	data := vec.Vec_WrdArray(p.vSuppWords)
+	// Spare vector capacity is not an initialized support row.
+	data = data[:len(data):len(data)]
+	start := int(id) * int(p.nSuppWords)
+	end := start + int(p.nSuppWords)
+	return data[start:end:end]
 }
 func Gia_ManQuantInfo(p *Gia_Man_t, obj *Gia_Obj_t) []word { return Gia_ManQuantInfoId(p, obj.id) }
 func Gia_ObjCopyGetTwoArray(p *Gia_Man_t, id int32, out []int32) {
@@ -30,7 +51,8 @@ func Gia_ManQuantVerify_rec(p *Gia_Man_t, id, ci int32) int32 {
 	if id == 0 {
 		return 0
 	}
-	for _, fanin := range giaObjectFanins(p, obj) {
+	fans, nfans := giaQuantFanins(p, obj)
+	for _, fanin := range fans[:nfans] {
 		if Gia_ManQuantVerify_rec(p, fanin, ci) != 0 {
 			return 1
 		}
@@ -128,7 +150,8 @@ func Gia_ManQuantCountUsed_rec(p *Gia_Man_t, id int32) int32 {
 		return 0
 	}
 	count := int32(1)
-	for _, fanin := range giaObjectFanins(p, obj) {
+	fans, nfans := giaQuantFanins(p, obj)
+	for _, fanin := range fans[:nfans] {
 		if Gia_ManQuantCheckSupp(p, fanin, p.iSuppPi) != 0 {
 			count += Gia_ManQuantCountUsed_rec(p, fanin)
 		}
