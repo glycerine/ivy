@@ -35,7 +35,7 @@ func Cof_ObjIsCo(obj *Cof_Obj_t) int32                  { return giaBool(obj.fTe
 func Cof_ObjIsNode(obj *Cof_Obj_t) int32                { return giaBool(obj.fTerm == 0 && len(obj.fanins) > 0) }
 func Cof_ObjIsConst0(obj *Cof_Obj_t) int32              { return giaBool(obj.fTerm == 0 && len(obj.fanins) == 0) }
 func Cof_ObjFaninNum(obj *Cof_Obj_t) int32              { return int32(len(obj.fanins)) }
-func Cof_ObjFanoutNum(obj *Cof_Obj_t) int32             { return int32(len(obj.fanouts)) }
+func Cof_ObjFanoutNum(obj *Cof_Obj_t) int32             { return obj.refs }
 func Cof_ObjSize(obj *Cof_Obj_t) int32                  { return 1 }
 func Cof_ManObj(p *Cof_Man_t, id uint32) *Cof_Obj_t     { return p.objects[id] }
 func Cof_ObjFanin(obj *Cof_Obj_t, i int32) *Cof_Obj_t   { return obj.fanins[i] }
@@ -88,7 +88,7 @@ func Cof_ManCreateLogicSimple(g *Gia_Man_t) *Cof_Man_t {
 		default:
 			panic("gia: invalid cofactor graph object")
 		}
-		for i, lit := range lits {
+		for _, lit := range lits {
 			fanin := p.objects[lit>>1]
 			if fanin == nil {
 				panic("gia: cofactor graph is not topological")
@@ -96,13 +96,12 @@ func Cof_ManCreateLogicSimple(g *Gia_Man_t) *Cof_Man_t {
 			obj.fanins = append(obj.fanins, fanin)
 			obj.complements = append(obj.complements, lit&1 != 0)
 			fanin.fanouts = append(fanin.fanouts, obj)
-			if kind == 4 && i == 0 {
-				fanin.nFanoutsM++
-			}
 		}
 	}
+	muxRefs := Gia_ManCreateMuxRefs(g)
 	for _, obj := range p.objects {
 		obj.refs = int32(len(obj.fanouts))
+		obj.nFanoutsM = uint32(muxRefs[obj.Id])
 	}
 	return p
 }

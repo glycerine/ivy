@@ -5,18 +5,6 @@ import (
 	"github.com/glycerine/abcgo/misc/vec"
 )
 
-// Structural enable patterns require Boolean ANDs, not just their shared
-// object encoding. Real XOR/MUX nodes must remain atomic in these patterns.
-func giaEnableIsAnd(p *Gia_Man_t, obj *Gia_Obj_t) bool {
-	return Gia_ObjIsAnd(obj) != 0 && Gia_ObjIsXor(obj) == 0 && Gia_ObjIsMux(p, obj) == 0
-}
-
-func giaEnableIsMux(p *Gia_Man_t, obj *Gia_Obj_t) bool {
-	return giaEnableIsAnd(p, obj) &&
-		giaEnableIsAnd(p, Gia_ObjFanin0(obj)) &&
-		giaEnableIsAnd(p, Gia_ObjFanin1(obj)) && Gia_ObjIsMuxType(obj) != 0
-}
-
 func Gia_CollectSuper_rec(p *Gia_Man_t, obj *Gia_Obj_t, super *Vec_Int_t) {
 	collected, visited := map[int32]bool{}, map[int32]bool{}
 	for _, id := range vec.Vec_IntArray(super) {
@@ -50,7 +38,7 @@ func Gia_CollectSuper(p *Gia_Man_t, obj *Gia_Obj_t, super *Vec_Int_t) {
 		panic("gia: complemented supergate root")
 	}
 	vec.Vec_IntClear(super)
-	if giaEnableIsAnd(p, obj) {
+	if giaIsBooleanAnd(p, obj) {
 		vec.Vec_IntPushUnique(super, Gia_ObjId(p, Gia_ObjFanin0(obj)))
 		vec.Vec_IntPushUnique(super, Gia_ObjId(p, Gia_ObjFanin1(obj)))
 	} else {
@@ -91,7 +79,7 @@ func giaDetectSeqSignals(p *Gia_Man_t) giaSeqSignals {
 	for i := int32(0); i < p.nRegs; i++ {
 		flop := Gia_ManRi(p, i)
 		node := Gia_ObjFanin0(flop)
-		if !giaEnableIsAnd(p, node) {
+		if !giaIsBooleanAnd(p, node) {
 			continue
 		}
 		Gia_CollectSuper(p, node, super)
@@ -102,7 +90,7 @@ func giaDetectSeqSignals(p *Gia_Man_t) giaSeqSignals {
 		for _, id := range vec.Vec_IntArray(super) {
 			target[id]++
 		}
-		if !giaEnableIsMux(p, node) {
+		if !giaIsStructuralMux(p, node) {
 			continue
 		}
 		var a, b *Gia_Obj_t
@@ -116,7 +104,7 @@ func giaDetectSeqSignals(p *Gia_Man_t) giaSeqSignals {
 	}
 	for i := int32(0); i < p.nRegs; i++ {
 		node := Gia_ObjFanin0(Gia_ManRi(p, i))
-		if !giaEnableIsAnd(p, node) {
+		if !giaIsBooleanAnd(p, node) {
 			continue
 		}
 		Gia_CollectSuper(p, node, super)

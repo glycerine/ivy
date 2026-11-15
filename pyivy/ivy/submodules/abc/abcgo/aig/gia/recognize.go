@@ -1,5 +1,17 @@
 package gia
 
+// Structural AND patterns require Boolean ANDs, not just their shared
+// object encoding. Real XOR/MUX nodes must remain atomic in these patterns.
+func giaIsBooleanAnd(p *Gia_Man_t, obj *Gia_Obj_t) bool {
+	return Gia_ObjIsAnd(obj) != 0 && Gia_ObjIsXor(obj) == 0 && Gia_ObjIsMux(p, obj) == 0
+}
+
+func giaIsStructuralMux(p *Gia_Man_t, obj *Gia_Obj_t) bool {
+	return giaIsBooleanAnd(p, obj) &&
+		giaIsBooleanAnd(p, Gia_ObjFanin0(obj)) &&
+		giaIsBooleanAnd(p, Gia_ObjFanin1(obj)) && Gia_ObjIsMuxType(obj) != 0
+}
+
 func Gia_ObjIsMuxType(obj *Gia_Obj_t) int32 {
 	if Gia_IsComplement(obj) != 0 {
 		panic("gia: MUX recognition requires a regular node")
@@ -79,7 +91,7 @@ func Gia_ManCreateMuxRefs(p *Gia_Man_t) []int32 {
 			result[Gia_ObjFaninId2(p, obj.id)]++
 			continue
 		}
-		if Gia_ObjRecognizeExor(obj, nil, nil) != 0 || Gia_ObjIsMuxType(obj) == 0 {
+		if !giaIsStructuralMux(p, obj) || Gia_ObjRecognizeExor(obj, nil, nil) != 0 {
 			continue
 		}
 		var a, b *Gia_Obj_t

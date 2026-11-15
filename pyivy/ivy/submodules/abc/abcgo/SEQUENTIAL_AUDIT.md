@@ -7626,3 +7626,29 @@ connectivity/cone/reference/score oracles, inspect high-fanout ordering and
 count-removed propagation, and verify Boolean cofactor reconstruction against
 C and independent truth tables. Keep packed C offsets vs Go logical handles an
 explicit representation distinction; don't require raw arena-address equality.
+
+### Cofactor reference repair checkpoint
+
+Add minimal red regressions before production edits. An ordinary structural MUX
+loses its control reference (zero instead of C's one); during a three-node MFFC
+dereference, the fanout accessor still reports one on the root/children instead
+of zero (/tmp/abcgo-cof-refs-red.log). Use the existing mux-reference builder and
+read the mutable refs counter from Cof_ObjFanoutNum. Keep the fanout slice as
+physical adjacency; its length cannot represent a temporary reference session.
+Counts and adjacency restore after the matching reference pass.
+
+The first repair passes existing cofactor checks in 0.198s
+(/tmp/abcgo-cof-refs-repaired.log), but typed cross-talk tests then expose a shared
+builder defect: a real-XOR root or XOR branch is falsely recognized as a
+structural MUX (/tmp/abcgo-cof-mux-typed-red.log). Generalize the already reviewed
+enable Boolean-AND/structural-MUX predicates into recognize.go and reuse them in
+Gia_ManCreateMuxRefs. Keep legacy raw recognition APIs unchanged. Real MUX
+controls still count; typed XOR/data patterns remain atomic. Cofactor, enable,
+recognition/mux focused checks pass in 2.229s
+(/tmp/abcgo-cof-refs-typed-repaired.log).
+
+These are focused repairs, not a completed giaCof.c review or full integration
+checkpoint. Next track native normalized connectivity/cone/reference/score
+matrices, inspect source insertion order/count-removed propagation, cofactor
+reconstruction, ownership and compactness, then run final frozen integration.
+Original package completion remains 2/131; GIA is still in progress.
