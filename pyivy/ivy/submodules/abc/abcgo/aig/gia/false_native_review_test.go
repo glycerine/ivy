@@ -70,3 +70,43 @@ func TestFalsePathNativeSingleRebuild(t *testing.T) {
 	}
 	esopReviewCompare(t, native, records.String())
 }
+
+func TestFalsePathNativeBatchHooksAndScratch(t *testing.T) {
+	exe := compileGiaSourceOracle(t, "false_review.c")
+	native, err := exec.Command(exe, "--batch").CombinedOutput()
+	if err != nil {
+		t.Fatalf("C batch hooks: %v\n%s", err, native)
+	}
+	var records strings.Builder
+	for seed := uint32(0); seed < 64; seed++ {
+		g, _ := falseReviewGraph(seed)
+		Gia_ManLevelNum(g)
+		hooks := Vec_WecStart(int(g.nObjs))
+		for i, obj := range g.pObjs {
+			obj.Value = uint32(71 + 17*i)
+		}
+		for i := int32(0); i < Gia_ManCoNum(g); i++ {
+			Gia_ManCheckFalseOne(g, i, 0, hooks, 0, 0)
+		}
+		fmt.Fprintf(&records, "batch %d", seed)
+		for i := 0; i < Vec_WecSize(hooks); i++ {
+			path := Vec_WecEntry(hooks, i)
+			if Vec_IntSize(path) == 0 {
+				continue
+			}
+			fmt.Fprintf(&records, " [%d", i)
+			for _, id := range Vec_IntArray(path) {
+				fmt.Fprintf(&records, " %d", id)
+			}
+			records.WriteByte(']')
+		}
+		records.WriteByte('\n')
+		records.WriteString("scratch")
+		for _, obj := range g.pObjs {
+			fmt.Fprintf(&records, " %d", obj.Value)
+		}
+		records.WriteByte('\n')
+		Gia_ManStop(g)
+	}
+	esopReviewCompare(t, native, records.String())
+}

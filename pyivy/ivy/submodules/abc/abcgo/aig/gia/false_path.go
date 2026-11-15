@@ -111,10 +111,10 @@ func giaFalsePathSolve(p *Gia_Man_t, root int32, timeout int32, includeInput boo
 	objects := vec.Vec_IntArray(Gia_ManCollectNodesCis(p, []int32{root}, 1))
 	n := len(ids)
 	shift := [2]int{3 * n, 3*n + len(objects)}
-	vars := make(map[int32]int, len(objects))
 	for i, id := range objects {
-		vars[id] = len(objects) - 1 - i
+		p.pObjs[id].Value = uint32(len(objects) - 1 - i)
 	}
+	satVar := func(id int32) int { return int(p.pObjs[id].Value) }
 	solver := bsat.NewSolver()
 	defer solver.Close()
 	solver.SetNumVars(int32(3*n + 2*len(objects)))
@@ -135,7 +135,7 @@ func giaFalsePathSolve(p *Gia_Man_t, root int32, timeout int32, includeInput boo
 		}
 		a, b := Gia_ObjFaninId0(obj, id), Gia_ObjFaninId1(obj, id)
 		for k := 0; k < 2; k++ {
-			addAnd((vars[id]+shift[k])*2, (vars[a]+shift[k])*2+int(Gia_ObjFaninC0(obj)), (vars[b]+shift[k])*2+int(Gia_ObjFaninC1(obj)))
+			addAnd((satVar(id)+shift[k])*2, (satVar(a)+shift[k])*2+int(Gia_ObjFaninC0(obj)), (satVar(b)+shift[k])*2+int(Gia_ObjFaninC1(obj)))
 		}
 	}
 	assumptions := make([]bsat.Literal, 0, n)
@@ -150,9 +150,9 @@ func giaFalsePathSolve(p *Gia_Man_t, root int32, timeout int32, includeInput boo
 				var a, b int
 				if Gia_ObjFaninId0(obj, id) == previous {
 					a = (i-1+(k+1)*n)*2 + int(Gia_ObjFaninC0(obj))
-					b = (vars[Gia_ObjFaninId1(obj, id)]+shift[k])*2 + int(Gia_ObjFaninC1(obj))
+					b = (satVar(Gia_ObjFaninId1(obj, id))+shift[k])*2 + int(Gia_ObjFaninC1(obj))
 				} else if Gia_ObjFaninId1(obj, id) == previous {
-					a = (vars[Gia_ObjFaninId0(obj, id)]+shift[k])*2 + int(Gia_ObjFaninC0(obj))
+					a = (satVar(Gia_ObjFaninId0(obj, id))+shift[k])*2 + int(Gia_ObjFaninC0(obj))
 					b = (i-1+(k+1)*n)*2 + int(Gia_ObjFaninC1(obj))
 				} else {
 					panic("gia: disconnected false path")
@@ -162,7 +162,7 @@ func giaFalsePathSolve(p *Gia_Man_t, root int32, timeout int32, includeInput boo
 			addXor(i*2, (i+n)*2, (i+2*n)*2)
 			assumptions = append(assumptions, int32(i*2))
 		} else if includeInput && Gia_ObjIsCi(obj) != 0 {
-			addXor(i*2, (vars[id]+shift[0])*2, (vars[id]+shift[1])*2)
+			addXor(i*2, (satVar(id)+shift[0])*2, (satVar(id)+shift[1])*2)
 			assumptions = append(assumptions, int32(i*2))
 		}
 	}

@@ -8023,3 +8023,18 @@ and iterative/batch tests pass too (2.054s,
 source scratch numbering, typed/metadata behavior and all driver coverage remain
 open. No full integration or family closure claimed; original completion stays
 2/131 with GIA under sequential review.
+
+### False-path source scratch and batch hooks
+
+Extend the native fixture with both PO queries per graph, exact collected hook
+lists and all object Value fields seeded with distinct sentinels. The new test
+fails immediately because Go's private SAT-numbering map leaves Value untouched
+(/tmp/abcgo-false-scratch-red.log). Publish source reverse-cone variable numbers
+in Value and read them directly for CNF construction. This restores the source
+scratch contract while eliminating the redundant map.
+
+All 128 single-rebuild and 128 batch-hook/scratch records match original C;
+existing false-path tests also pass (5.488s,
+/tmp/abcgo-false-scratch-repaired.log). Separate typed/metadata rebuild regressions
+are being established before further changes. Full gates and the rest of the
+family source reconciliation remain pending; package completion stays 2/131.
