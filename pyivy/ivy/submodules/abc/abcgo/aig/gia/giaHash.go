@@ -456,26 +456,26 @@ func Gia_ManAddStrash(p *Gia_Man_t, p0 *Gia_Obj_t, p1 *Gia_Obj_t) *Gia_Obj_t {
 	return nil
 }
 
+// Gia_ManRehash builds a hashed ordinary AIG with the same logical interface.
+// Source Value fields record copy literals before the final cleanup.
 func Gia_ManRehash(src *Gia_Man_t, additional int32) *Gia_Man_t {
+	Gia_ManFillValue(src)
 	dst := Gia_ManStart(src.nObjs)
 	dst.CopyIdentityFrom(src)
 	dst.fAddStrash = additional
 	Gia_ManHashAlloc(dst)
 	src.pObjs[0].Value = 0
-	for _, obj := range src.pObjs[1:] {
-		switch {
-		case Gia_ObjIsAnd(obj) != 0:
-			obj.Value = uint32(Gia_ManHashAnd(dst, Gia_ObjFanin0Copy(obj), Gia_ObjFanin1Copy(obj)))
-		case Gia_ObjIsCi(obj) != 0:
-			obj.Value = uint32(Gia_ManAppendCi(dst))
-		case Gia_ObjIsCo(obj) != 0:
-			obj.Value = uint32(Gia_ManAppendCo(dst, Gia_ObjFanin0Copy(obj)))
-		}
+	for i := int32(0); i < Gia_ManCiNum(src); i++ {
+		Gia_ManCi(src, i).Value = uint32(Gia_ManAppendCi(dst))
+	}
+	giaComposeNodes(dst, src, true)
+	for i := int32(0); i < Gia_ManCoNum(src); i++ {
+		giaDupMappedOutput(dst, src, Gia_ManCo(src, i))
 	}
 	Gia_ManHashStop(dst)
 	dst.fAddStrash = 0
 	Gia_ManSetRegNum(dst, src.nRegs)
-	dst.nConstrs = src.nConstrs
+	giaCopyOutputRoles(dst, src)
 	result := Gia_ManCleanup(dst)
 	Gia_ManStop(dst)
 	return result

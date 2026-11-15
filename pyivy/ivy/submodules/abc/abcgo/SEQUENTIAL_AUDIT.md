@@ -4960,3 +4960,21 @@ remain intact, including C's auxiliary-output universal behavior. Continue
 with rehashing, balancing and box-order role paths and the remaining GIA
 algorithm inventory. Original completion stays 2/131; the sequential audit
 remains active.
+
+Rehash checkpoint: three separate red regressions expose loss of bad-output
+roles, reordered logical ports on DFS sources and real XOR/MUX nodes treated
+as ordinary ANDs (`/tmp/abcgo-rehash-review-red.log`). Both additional-strash
+settings fail; the buffer control already works. The original C routine
+covers ordinary AIG objects and likewise copies physical port order. Keep
+its ordinary hash/additional-strash path, precreate CIs in logical order,
+reuse giaComposeNodes for existing typed hashing/lowering and append COs in
+logical order. Preserve paired role counters before cleanup. Source Value
+scratch still records pre-cleanup copy literals; final CI slots remain stable.
+
+Focused repairs pass (`/tmp/abcgo-rehash-repairs-focused.log`, 0.005s).
+This reuses existing Boolean constructors rather than introducing a new
+optimizer, and removes the incomplete gate switch without growing the
+function body. Normalized ordinary-AIG source comparison, broader typed/
+layout/role tests and integration verification are pending. Save this
+checkpoint with a red prefix. Original completion remains 2/131; GIA review
+continues.
