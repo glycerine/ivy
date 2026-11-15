@@ -237,6 +237,20 @@ func giaFalseSolveQuery(p *Gia_Man_t, root int32, timeout int32, includeInput bo
 	// separate minimization pass. Core choice determines the rewritten interval.
 	status := solver.Solve(assumptions...)
 	core := solver.UnsatCore()
+	// A transition of the original PI is not a Boolean cut certificate: side
+	// cones may reconverge on that PI. CheckOne deliberately omits this condition.
+	// If the batch core uses it, prove the cut again without that assumption.
+	if includeInput && status == bsat.Unsatisfiable {
+		for _, lit := range core {
+			if lit>>1 != 0 {
+				continue
+			}
+			status = solver.SolveWithResourceLimits(assumptions[1:], int64(timeout), 0, int64(timeout), 0)
+			core = solver.UnsatCore()
+			break
+		}
+	}
+
 	return giaFalseQuery{ids: ids, core: core, status: status}
 }
 
@@ -267,6 +281,11 @@ func Gia_ManCheckFalseOne(p *Gia_Man_t, out, timeout int32, hooks *Vec_Wec_t, ve
 	}
 }
 func Gia_ManCheckFalse2(p *Gia_Man_t, slack, timeout, verbose, veryVerbose int32) *Gia_Man_t {
+	if giaFalseNeedsLowering(p) {
+		ordinary, _ := giaFalseLower(p, 0)
+		defer Gia_ManStop(ordinary)
+		return Gia_ManCheckFalse2(ordinary, slack, timeout, verbose, veryVerbose)
+	}
 	Gia_ManLevelNum(p)
 	weights := make([]float32, Gia_ManCoNum(p))
 	priority := vec.Vec_QueAlloc(len(weights))
@@ -286,6 +305,11 @@ func Gia_ManCheckFalse2(p *Gia_Man_t, slack, timeout, verbose, veryVerbose int32
 	return Gia_ManFalseRebuild(p, hooks, verbose, veryVerbose)
 }
 func Gia_ManCheckOne(p *Gia_Man_t, out, id, timeout, verbose, veryVerbose int32) *Gia_Man_t {
+	if giaFalseNeedsLowering(p) {
+		ordinary, mapped := giaFalseLower(p, id)
+		defer Gia_ManStop(ordinary)
+		return Gia_ManCheckOne(ordinary, out, mapped, timeout, verbose, veryVerbose)
+	}
 	started := time.Now()
 	query := giaFalseSolveQuery(p, id, timeout, false)
 	path := query.hook()
@@ -315,7 +339,7 @@ func Gia_ManCheckOne(p *Gia_Man_t, out, id, timeout, verbose, veryVerbose int32)
 	return Gia_ManFalseRebuildPath(p, path, verbose, veryVerbose)
 }
 func Gia_ManCheckFalseAll(p *Gia_Man_t, slack, timeout, verbose, veryVerbose int32) *Gia_Man_t {
-	p = Gia_ManDup(p)
+	p = giaFalseDupOrdinary(p)
 	tried, changed := 0, 0
 	for {
 		before := changed
@@ -343,7 +367,7 @@ func Gia_ManCheckFalseAll(p *Gia_Man_t, slack, timeout, verbose, veryVerbose int
 	return p
 }
 func Gia_ManCheckFalse(p *Gia_Man_t, slack, timeout, verbose, veryVerbose int32) *Gia_Man_t {
-	p = Gia_ManDup(p)
+	p = giaFalseDupOrdinary(p)
 	tried := make([]bool, Gia_ManCoNum(p))
 	attempts, changed := 0, 0
 	for {

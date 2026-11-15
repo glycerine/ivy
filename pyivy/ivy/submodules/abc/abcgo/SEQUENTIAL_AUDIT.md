@@ -8094,3 +8094,36 @@ All false-path/native/rebuild/interval/report tests pass in 8.059s
 (/tmp/abcgo-false-interval-reports-repaired.log). Typed solver boundaries, expanded
 full-driver/resource/compactness checks and final frozen integration remain
 pending; original completion stays 2/131, no family closure claimed.
+
+### Typed false-path boundaries and source batch correctness defect
+
+Add 128 typed mixed-gate sequential driver cases before changing solver input
+representation (/tmp/abcgo-false-typed-driver-red.log). Several batch/output/all
+results change truth. Lower typed/simple graphs into an ordinary hashed graph
+before the source path algorithm; retain selected-root mapping without cleanup,
+logical ports and interface metadata. Outer iterative drivers normalize once;
+ordinary graphs keep their native source path. Direct single queries and batch
+use owned temporary ordinary graphs.
+
+Lowering fixes single and iterative paths, but eight batch cases still fail.
+Investigate rather than accepting source drift or weakening equivalence checks.
+A temporary capture test (removed after use) exports seed10's ordinary lowered
+graph and shows its one selected hook alone changes three output-bit assignments.
+The actual C giaFalse.c batch driver on that same graph produces the same wrong
+result (/tmp/abcgo-false-review-probe/seed10-native-batch.out). Independent scalar
+comparison shows packed outputs6->0 at input13 and0->4 at input15.
+
+Reduce to ordinary three-input F = d ? (a XOR c) : !c. The batch rewrite changes
+F(1,1,1) fromfalse totrue (/tmp/abcgo-false-batch-reconvergence-red.log). Its core
+uses the original PI's transition assumption, which can reject a timing
+transition while not certifying a Boolean cut with reconvergent side inputs.
+The source single-query driver deliberately omits that condition.
+
+When a batch core uses assumption0, prove again without it using the same BSAT
+solver, deadline and absolute conflict cap. Keep the ordinary single-query
+certificate criterion instead of adding a new solver or approximation. All 128
+typed driver cases and the reduced ordinary regression now pass in1.737s
+(/tmp/abcgo-false-batch-safety-repaired.log). Native reference handling for this
+explicit C correctness defect, wider batch/driver/resource coverage and final
+gates remain open. This red checkpoint does not claim full package green or
+family closure; original completion stays2/131.
