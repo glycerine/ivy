@@ -34,7 +34,18 @@ static int wide(void){
  return 0;
 }
 
-int main(int argc,char **argv){if(argc>1)return wide();int seed,mode,two,limit;for(seed=1;seed<=32;++seed)for(mode=0;mode<2;++mode){
+
+static int reports(void){
+ int limit;
+ for(limit=0;limit<3;++limit){
+  Gia_Man_t *g=graph(1);int result;
+  printf("reports %d\n",limit);result=Edg_ManAssignEdgeNew(g,limit,1);
+  printf("result %d\n",result);snapshot(g);Gia_ManStop(g);
+ }
+ return 0;
+}
+
+int main(int argc,char **argv){if(argc>1){if(!strcmp(argv[1],"reports"))return reports();return wide();}int seed,mode,two,limit;for(seed=1;seed<=32;++seed)for(mode=0;mode<2;++mode){
  Gia_Man_t *g=graph(seed);if(mode){Edg_ManToMapping(g);Vec_IntFreeP(&g->vMapping);}
  printf("case %d %d\n",seed,mode);
  for(two=0;two<2;++two){printf("forward %d %d\n",two,Gia_ManComputeEdgeDelay(g,two));snapshot(g);printf("eval %d count %d\n",Gia_ManEvalEdgeDelay(g),Gia_ManEvalEdgeCount(g));emit("evaluated",g->vEdgeDelay);}

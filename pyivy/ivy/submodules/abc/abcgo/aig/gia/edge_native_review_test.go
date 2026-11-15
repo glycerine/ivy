@@ -70,18 +70,29 @@ func edgeReviewSnapshot(p *Gia_Man_t) {
 
 func TestEdgeAssignmentMatchesOriginalABC(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "edge_assignment_review.c")
-	for _, wide := range []bool{false, true} {
-		t.Run(fmt.Sprintf("wide%t", wide), func(t *testing.T) {
+	for _, mode := range []string{"ordinary", "wide", "reports"} {
+		t.Run(mode, func(t *testing.T) {
 			var args []string
-			if wide {
-				args = []string{"wide"}
+			if mode != "ordinary" {
+				args = []string{mode}
 			}
 			source, err := exec.Command(exe, args...).CombinedOutput()
 			if err != nil {
 				t.Fatalf("original edge routines: %v\n%s", err, source)
 			}
 			observed := hashReviewStdout(t, func() {
-				if wide {
+				if mode == "reports" {
+					for limit := int32(0); limit < 3; limit++ {
+						p := edgeReviewMappedGraph(1)
+						fmt.Printf("reports %d\n", limit)
+						result := Edg_ManAssignEdgeNew(p, limit, 1)
+						fmt.Printf("result %d\n", result)
+						edgeReviewSnapshot(p)
+						Gia_ManStop(p)
+					}
+					return
+				}
+				if mode == "wide" {
 					for _, n := range []int{5, 8, 16} {
 						for mode := 0; mode < 2; mode++ {
 							p := edgeReviewWideLut(n, mode != 0)

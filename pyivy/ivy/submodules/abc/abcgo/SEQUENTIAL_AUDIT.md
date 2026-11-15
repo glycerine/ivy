@@ -6920,3 +6920,37 @@ measure and consider restoring that ownership/allocation behavior. Keep source
 repairs explicit and add red regressions before fixes of any further bugs. The
 last full module race/vet validation remains the DFS checkpoint; original package
 completion remains 2/131 with GIA in progress.
+
+### Edge storage, reports and repeated timing checkpoint
+
+Track a native storage oracle: all 1,024 undirected edge subsets over five
+nonzero nodes, 81 mixed singleton/pair/triple packings and 28 slot-helper cases.
+Compare both slots, serialized edge pairs, all adjacency queries, counts and
+capacity-violation diagnostics. Source's partial assignment on overflow is
+preserved rather than replaced with an invented all-or-nothing policy. Native
+storage and baseline benchmarks pass (/tmp/abcgo-edge-storage-baseline.log).
+
+An expanded actual-source optimizer report comparison fails on field padding
+(/tmp/abcgo-edge-reports-red.log). Separate direct-helper red tests expose lost
+count/direction messages. Restore original spacing and distinct Fixed N critical
+fanins/fanouts reports. A further red window test finds a nil dereference in
+incremental evaluation of secondary-only mappings
+(/tmp/abcgo-edge-window-reports-red.log). Use the existing mapping-selection
+predicate so incremental and full evaluators accept the same mapping forms.
+C itself contains this primary-only predicate defect; this is an explicit Go
+repair on an unsupported/crashing source path, not a claimed native match.
+Primary-mapping precedence remains unchanged. Both window and caller records
+are checked after successful evaluation.
+
+Restore source's reuse/fill behavior for Edg unit forward/reverse timing vectors,
+using a small reset helper instead of allocating replacements per query. Tests
+poison old timing and alternate assignments to verify clearing of CI/CO/unmapped
+slots. Baseline two allocations/224 bytes per query become zero allocations/bytes;
+100ms samples change forward 841.3 to 446.8 ns and reverse 678.4 to 343.2 ns.
+All existing/new edge tests and native traces, including complete optimizer
+reports, pass in 4.300s (/tmp/abcgo-edge-compact-repaired.log).
+
+The broader edge family is still in progress. Next: actual-source mapping-window
+and timing-box matrices, panic restoration, independent delay/capacity/critical
+invariants, direct assignment boundaries and final source-entry inventory, then
+module race/vet integration. Original completion remains 2/131.

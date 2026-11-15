@@ -21,7 +21,7 @@ func Gia_ManEvalWindowInc(p *Gia_Man_t, leaves, nodes *Vec_Int_t, window *Vec_We
 	vec.Vec_IntReverseOrder(temp)
 	var result int32
 	for _, id := range vec.Vec_IntArray(temp) {
-		if Gia_ObjIsLut(p, id) != 0 {
+		if giaIsEdgeLut(p, id) {
 			result = max(result, Gia_ObjComputeEdgeDelay(p, id, p.vEdgeDelay, p.VEdge1, p.VEdge2, useTwo))
 		}
 	}
@@ -62,11 +62,20 @@ func Edg_ObjEvalEdgeDelay(p *Gia_Man_t, id int32, delays *Vec_Int_t) int32 {
 	}
 	return result
 }
+
+func edgResetDelays(delays *Vec_Int_t, size int) *Vec_Int_t {
+	if delays == nil {
+		return vec.Vec_IntStart(size)
+	}
+	vec.Vec_IntFill(delays, size, 0)
+	return delays
+}
+
 func Edg_ManEvalEdgeDelay(p *Gia_Man_t) int32 {
 	if p.VEdge1 == nil || p.VEdge2 == nil {
 		panic("gia: missing assigned edges")
 	}
-	p.vEdgeDelay = vec.Vec_IntStart(int(p.nObjs))
+	p.vEdgeDelay = edgResetDelays(p.vEdgeDelay, int(p.nObjs))
 	var result int32
 	for id := int32(1); id < p.nObjs; id++ {
 		if Gia_ObjIsLut2(p, id) == 0 {
@@ -93,7 +102,7 @@ func Edg_ManEvalEdgeDelayR(p *Gia_Man_t) int32 {
 	if p.VEdge1 == nil || p.VEdge2 == nil {
 		panic("gia: missing assigned edges")
 	}
-	p.vEdgeDelayR = vec.Vec_IntStart(int(p.nObjs))
+	p.vEdgeDelayR = edgResetDelays(p.vEdgeDelayR, int(p.nObjs))
 	var result int32
 	for id := p.nObjs - 1; id > 0; id-- {
 		if Gia_ObjIsLut2(p, id) == 0 {
@@ -184,7 +193,7 @@ func Edg_ObjImprove(p *Gia_Man_t, id, limit, delayMax, verbose int32) int32 {
 		}
 	}
 	if verbose != 0 {
-		fmt.Printf("%8d : Edges = %d  Fanins (all %d EC %d ENC %d C %d)  Fanouts (all %d EC %d ENC %d C %d)  ", id, edges, Gia_ObjLutSize2(p, id), edgeIn, noncriticalIn, len(criticalIn), Gia_ObjLutFanoutNum2(p, id), edgeOut, noncriticalOut, len(criticalOut))
+		fmt.Printf("%8d : Edges = %d  Fanins (all %d  EC %d  ENC %d  C %d)  Fanouts (all %d  EC %d  ENC %d  C %d)  ", id, edges, Gia_ObjLutSize2(p, id), edgeIn, noncriticalIn, len(criticalIn), Gia_ObjLutFanoutNum2(p, id), edgeOut, noncriticalOut, len(criticalOut))
 	}
 	if edges > limit {
 		panic("gia: edge limit exceeded")
@@ -211,9 +220,15 @@ func Edg_ObjImprove(p *Gia_Man_t, id, limit, delayMax, verbose int32) int32 {
 		}
 		return true
 	}
-	if assign(criticalIn, edgeIn) || assign(criticalOut, edgeOut) {
+	if assign(criticalIn, edgeIn) {
 		if verbose != 0 {
-			fmt.Println("Fixed critical edges")
+			fmt.Printf("Fixed %d critical fanins\n", len(criticalIn))
+		}
+		return 1
+	}
+	if assign(criticalOut, edgeOut) {
+		if verbose != 0 {
+			fmt.Printf("Fixed %d critical fanouts\n", len(criticalOut))
 		}
 		return 1
 	}
