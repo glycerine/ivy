@@ -4437,14 +4437,64 @@ sequential audit remains active.
 
 Top-AND/class review checkpoint: separate red regressions expose discarded
 false output conjuncts (UNSAT becomes SAT), exponential shared-frontier
-expansion, lost constraint roles during class duplication and a printer that
-reads new representatives despite selecting entries from the old table.
+expansion and lost constraint roles during class duplication. An initial
+printer-table hypothesis was also tested, then withdrawn after checking C's
+filtered-new-table behavior (see the follow-up below).
 `/tmp/abcgo-topand-review-red.log` records all failures, including the bounded
 two-second shared-cone child and both printer-table cases. Repairs preserve
 false conjuncts by returning a normalized copy, expand each positive node
-once using a temporary state in the existing phase array, preserve class-copy
-constraint roles, and print old entries without requiring a new table.
+once using a temporary state in the existing phase array and preserve
+class-copy constraint roles. The provisional printer change in the checkpoint
+was subsequently reverted to preserve C behavior.
 Minimal regressions pass in 0.016s
 (`/tmp/abcgo-topand-repairs-focused.log`). Save these repairs at the requested
 commit interval while expanded native/semantic verification remains pending;
 original package completion stays 2/131 and the broader GIA audit is active.
+
+Top-AND expanded verification: 640 one-step/full-copy cases and 20,480 complete
+input assignments check conjunction satisfiability across ten graph families,
+all sixteen input-edge polarities and original/reverse-DFS layouts. Cases
+include shared cones, duplicate leaves, direct-CI assignments, complemented
+clauses, contradictions, identity constants, false COs, internal false fanins
+and real XOR/MUX/buffer leaves. For one-step output models, use copied/forced
+CI Values to lift assignments back to the original conjunction and verify every
+original output. Original satisfying assignments must also satisfy the reduced
+conjunction. This is existential SAT preservation with forced variables, not a
+claim that output vectors or model counts remain pointwise identical.
+
+The working ordinary-AND top-AND paths match compiled C exactly across 192
+cases/6,144 rows, including complete source Value mappings, output truth,
+object/interface counts and the original wrapper's count-based stopping rule.
+Original C's false-conjunct witness has zero original models and four reduced
+models (`0 4`); Go now keeps that conjunction UNSAT. Cases that would hit C's
+constant-frontier assertion are checked independently, not launched natively.
+
+Class duplication additionally covers 96 cases/1,536 rows with phase-correct
+representative chains, constant equivalents, zero/two/four registers, hashing,
+cleanup and retained constraint roles. The original C Classes entry incorrectly
+passes COs to an AND-only DFS helper. Do not claim to run that broken entry:
+compare logical results with the actual representative-aware C DFS helper plus
+original cleanup, explicitly composed in the fixture. Go already uses that
+working helper; this review's production repair is constraint preservation.
+Empty/constant-only classes and missing old tables cover boundaries.
+
+Printer hypothesis correction: the C routine filters with pReprsOld and prints
+pReprs. Without a stronger specification, changing it to print only old heads
+was not justified. Restore the original behavior and table requirements. Tests
+now distinguish old head 1 from new head 2 and confirm C/Go print `3->2`, with
+missing new storage rejected in Go. The provisional mismatch is recorded in
+`/tmp/abcgo-topand-printer-fidelity-red.log`. No printer semantic change remains
+relative to the pre-review code.
+
+The fixture is `aig/gia/test_vectors/top_and.c`. Final expanded tests pass in
+1.848s (`/tmp/abcgo-topand-final-focused.log`). The 48-level shared-cone test
+which previously hit its two-second watchdog now completes. In the 100-call,
+12-level benchmark, old frontier expansion used 40,472 bytes/34 allocations
+and measured 56,630 ns per call; reusing the phase table's expanded state uses
+2,936 bytes/19 allocations and measured 2,498 ns. Logs are
+`/tmp/abcgo-topand-frontier-before.log` and
+`/tmp/abcgo-topand-frontier-after.log`. These timings describe this benchmark;
+the structural improvement is processing positive objects once rather than
+unfolding every path. No extra per-object visited array is allocated. Distinct
+CI leaves are counted once in verbose diagnostics; the logical leaf set is
+unchanged. The full race gate is pending at this write.
