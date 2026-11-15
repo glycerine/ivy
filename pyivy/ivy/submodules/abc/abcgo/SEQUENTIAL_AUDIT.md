@@ -5005,3 +5005,16 @@ repeated/opposite fanins preserve truth and serialize correctly; hashed output
 uses canonical ordinary nodes. Full uncached module race tests and GIA vet
 are running. Save expanded verification with a red prefix pending integration.
 Original completion stays 2/131; GIA remains active.
+
+Final rehash integration is green: all 130 tested module packages pass the
+uncached race run; three command packages have no tests and no extra
+failure/race diagnostic lines appear (`/tmp/abcgo-rehash-module-race.log`).
+GIA passes in 208.906s, ABCI in 29.068s, IF in 5.329s and BMC in 23.787s.
+GIA vet passes (`/tmp/abcgo-rehash-review-vet.log`). Production code is
+unchanged since 4c726df8e; expanded coverage is saved in cde83008b.
+This completes Gia_ManRehash's review, not the entire giaHash.go file. Its
+normalized ordinary path matches C exactly in the tested families; real-gate
+composition and logical interfaces retain the Go graph contract. Output
+roles survive cleanup and serialization. Continue with balancing/box-order
+metadata paths and the remaining GIA algorithm inventory. Original completion
+remains 2/131; the sequential audit is active.
