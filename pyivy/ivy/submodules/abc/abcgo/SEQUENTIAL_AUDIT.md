@@ -5454,3 +5454,26 @@ calls. Save a red checkpoint while building intermediate-state/native tests
 for divisor lists, priorities, queue updates and reconstruction. The whole
 area-balancing algorithm is not yet reviewed; full integration is pending.
 Original completion remains 2/131; GIA and the sequential audit remain active.
+
+New balance_area_native_review_test.go / test_vectors/balance_area_states.c
+compare original DAM state after collection and every extraction, not just
+final AIG sizes. All 480 cases/500 updates agree exactly on node-set handles
+and live literals, divisor keys/payloads/occurrence lists, float32 score bits,
+queue membership/winner, level bounds, gain counters, source marks/visited
+MUXes and object levels. Reconstruction also matches exact structure, source
+copy literals and 30,720 truth rows. Six overlapping AND/XOR/mixed/MUX/buffer/
+wide families vary phases, arrival levels and limits 0/1/2/4/8. Source snapshots
+compare meaningful vector prefixes, not unrelated backing-capacity padding.
+Native coverage passes in 2.015s (`/tmp/abcgo-area-intermediate-native.log`).
+
+Remove redundant temporary copies using the C storage lifetime rules:
+collection appends leaf literals once to vSetStore, then reacquires entries
+by index across recursive growth; candidate filtering reuses one local slice;
+Update borrows its node occurrence list, which is not extended until the
+node-update loop finishes. Exact native states/truth stay unchanged. A 100-call
+whole construction/collection/extraction benchmark improves from 23,304B /
+223 allocations / 43,653ns per run to 23,024B / 209 allocations / 41,265ns
+(`/tmp/abcgo-area-extract-before.log`, `/tmp/abcgo-area-optimized.log`).
+Focused ownership/native checks pass in 2.042s after the allocation changes.
+Save a red checkpoint while completing wrapper/diagnostic and boundary checks;
+full integration is pending. Original completion remains 2/131, GIA active.

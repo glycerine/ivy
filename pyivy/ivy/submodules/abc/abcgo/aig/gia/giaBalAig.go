@@ -287,13 +287,16 @@ func Dam_ManCollectSets_rec(p *Dam_Man_t, id int32) {
 		return
 	}
 	Gia_ManSuperCollect(p.pGia, obj, 0)
-	literals := append([]int32(nil), Vec_IntArray(p.pGia.vSuper)...)
+	count := Vec_IntSize(p.pGia.vSuper)
 	p.vNod2Set[id] = int32(len(p.vSetStore))
-	p.vSetStore = append(p.vSetStore, int32(len(literals)))
-	p.vSetStore = append(p.vSetStore, literals...)
-	p.nAnds += (1 + 2*Gia_ObjIsXor(obj)) * int32(len(literals)-1)
-	for _, lit := range literals {
-		Dam_ManCollectSets_rec(p, lit>>1)
+	p.vSetStore = append(p.vSetStore, int32(count))
+	begin := len(p.vSetStore)
+	p.vSetStore = append(p.vSetStore, Vec_IntArray(p.pGia.vSuper)...)
+	end := len(p.vSetStore)
+	p.nAnds += (1 + 2*Gia_ObjIsXor(obj)) * int32(count-1)
+	// Reacquire each entry by index: recursive collection can grow the store.
+	for i := begin; i < end; i++ {
+		Dam_ManCollectSets_rec(p, p.vSetStore[i]>>1)
 	}
 }
 func Dam_ManCollectSets(p *Dam_Man_t) {
@@ -353,13 +356,14 @@ func Dam_ManCreatePairs(p *Dam_Man_t, verbose int32) {
 	reverse := make([]int32, 1)
 	type occurrence struct{ divisor, node int32 }
 	var occurrences []occurrence
+	var candidates []int32
 	for _, obj := range p.pGia.pObjs {
 		set := Dam_ObjSet(p, obj.id)
 		if set == nil {
 			continue
 		}
 		xor := Gia_ObjIsXor(obj) != 0
-		var candidates []int32
+		candidates = candidates[:0]
 		for _, lit := range set[1 : 1+set[0]] {
 			if xor && Vec_IntEntry(xorRefs, int(lit>>1)) > 1 || !xor && Vec_IntEntry(andRefs, int(lit)) > 1 {
 				candidates = append(candidates, lit)
@@ -532,9 +536,9 @@ func Dam_ManUpdate(p *Dam_Man_t, divisor int32) {
 		replacement = Gia_ManAppendAnd(p.pGia, a, b)
 	}
 	Gia_ObjSetGateLevel(p.pGia, p.pGia.pObjs[replacement>>1])
-	// Appending node lists below may reallocate storage; snapshot the current list.
+	// Node-list storage is not extended until all listed nodes are updated.
 	set := Dam_DivSet(p, divisor)
-	nodes := append([]int32(nil), set[1:1+set[0]]...)
+	nodes := set[1 : 1+set[0]]
 	first := vec.Hash_IntManEntryNum(p.vHash) + 1
 	divisors := p.pGia.vSuper
 	Vec_IntClear(divisors)

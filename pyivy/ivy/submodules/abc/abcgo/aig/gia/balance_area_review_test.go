@@ -1,6 +1,9 @@
 package gia
 
-import "testing"
+import (
+	"github.com/glycerine/abcgo/misc/vec"
+	"testing"
+)
 
 func TestAreaCollectorPreservesUnrelatedMark0(t *testing.T) {
 	g := Gia_ManStart(1)
@@ -43,6 +46,20 @@ func TestAreaCollectorClearsOnlyItsVisitedMuxMarks(t *testing.T) {
 			if Gia_ManObj(g, lit>>1).fMark0 != 1 {
 				t.Fatalf("caller mark erased on node%d", lit>>1)
 			}
+		}
+	}
+}
+
+func BenchmarkAreaCollectionAndExtraction(b *testing.B) {
+	b.ReportAllocs()
+	for run := 0; run < b.N; run++ {
+		g := areaReviewGraph(5, 0)
+		p := Dam_ManAlloc(g)
+		p.nLevelMax = Gia_ManSetLevels(g, nil)
+		p.vNodLevR = append([]int32(nil), Vec_IntArray(Gia_ManReverseLevel(g))...)
+		Dam_ManCreatePairs(p, 0)
+		if vec.Vec_QueTopPriority(p.vQue) >= 2 {
+			Dam_ManUpdate(p, int32(vec.Vec_QuePop(p.vQue)))
 		}
 	}
 }
