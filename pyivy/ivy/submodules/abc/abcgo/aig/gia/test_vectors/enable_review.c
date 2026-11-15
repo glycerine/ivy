@@ -50,7 +50,10 @@ static int high(void){
  Gia_ManStop(q);Gia_ManStop(g);return 0;
 }
 
-int main(int argc,char **argv){if(argc>1)return high();int kind,phase,nf,limit,limits[]={0,1,3};for(kind=0;kind<2;++kind)for(phase=0;phase<8;++phase){
+int main(int argc,char **argv){if(argc>1){
+ if(!strcmp(argv[1],"verbose")){Gia_Man_t *g=graph(1,0),*q=Gia_ManUnrollAndCofactor(g,2,1,1);Gia_ManStop(q);Gia_ManStop(g);return 0;}
+ return high();
+}int kind,phase,nf,limit,limits[]={0,1,3};for(kind=0;kind<2;++kind)for(phase=0;phase<8;++phase){
  Gia_Man_t *g=graph(kind,phase),*q;Vec_Int_t *s;int i;
  printf("case %d %d\n",kind,phase);Gia_ManDetectSeqSignals(g,1,1);supers(g);
  for(limit=0;limit<3;++limit){s=Gia_ManDetectSeqSignalsWithFanout(g,limits[limit],1);printf("signals %d",limits[limit]);for(i=0;i<Vec_IntSize(s);++i)printf(" %d",Vec_IntEntry(s,i));puts("");Vec_IntFree(s);}

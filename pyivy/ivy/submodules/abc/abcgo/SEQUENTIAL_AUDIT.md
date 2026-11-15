@@ -7124,3 +7124,15 @@ omits the source's verbose banner and statistics. Add a native verbose pipeline
 regression before restoring this small dependency behavior; do not mark all of
 giaCof.c reviewed from that narrow fix. Then complete family documentation and
 module race/vet checks. Original completion remains 2/131.
+
+### Cofactoring progress-report dependency repair
+
+The new native verbose unroll/cofactor pipeline fails because Go omits
+Gia_ManDupCofAllInt's banner and initial/per-variable statistics
+(/tmp/abcgo-enable-cofactor-report-red.log). Restore those five reporting lines
+in cof_duplicate.go. Compare all text and logical statistics with actual C,
+normalizing only representation-dependent memory size. All current focused
+sequential/enable tests then pass in 1.976s
+(/tmp/abcgo-enable-final-focused.log). This narrow dependency repair does not
+close the broader giaCof.c review. Save it separately before final state checks,
+family documentation and module race/vet integration.

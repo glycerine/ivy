@@ -3,6 +3,7 @@ package gia
 import (
 	"fmt"
 	"os/exec"
+	"regexp"
 	"strings"
 	"testing"
 )
@@ -193,6 +194,27 @@ func TestEnableOrdinaryTransformsMatchOriginalABC(t *testing.T) {
 		})
 		if observed != string(source) {
 			t.Fatalf("high-frequency report: Go %q; C %q", observed, source)
+		}
+	})
+	t.Run("cofactor verbose", func(t *testing.T) {
+		source, err := exec.Command(exe, "verbose").CombinedOutput()
+		if err != nil {
+			t.Fatalf("original cofactor reporting: %v\n%s", err, source)
+		}
+		observed := hashReviewStdout(t, func() {
+			p := enableReviewGraph(1, 0)
+			defer Gia_ManStop(p)
+			q := Gia_ManUnrollAndCofactor(p, 2, 1, 1)
+			defer Gia_ManStop(q)
+			if q == nil {
+				t.Error("verbose pipeline returned no graph")
+			}
+		})
+		// Actual memory size differs between the Go and C representations.
+		memory := regexp.MustCompile(`mem =\s*[0-9]+\.[0-9]{2} MB`)
+		got, want := memory.ReplaceAllString(observed, "mem =<layout> MB"), memory.ReplaceAllString(string(source), "mem =<layout> MB")
+		if got != want {
+			t.Fatalf("verbose pipeline: Go %q; C %q", got, want)
 		}
 	})
 }

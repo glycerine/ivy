@@ -126,6 +126,10 @@ func Gia_ManTransfer(original, cofactored, newGraph *Gia_Man_t, signals *Vec_Int
 	return result
 }
 func Gia_ManDupCofAllInt(p *Gia_Man_t, signals *Vec_Int_t, verbose int32) *Gia_Man_t {
+	if verbose != 0 {
+		fmt.Printf("Cofactoring %d signals.\n", vec.Vec_IntSize(signals))
+		Gia_ManPrintStats(p, nil)
+	}
 	if vec.Vec_IntSize(signals) > 200 {
 		fmt.Println("Too many signals to cofactor.")
 		return nil
@@ -147,6 +151,7 @@ func Gia_ManDupCofAllInt(p *Gia_Man_t, signals *Vec_Int_t, verbose int32) *Gia_M
 		current = next
 		if verbose != 0 {
 			fmt.Printf("Cofactored variable %d.\n", pivot)
+			Gia_ManPrintStats(current, nil)
 		}
 	}
 	return current
