@@ -14,6 +14,13 @@ func giaEdgeFanins(p *Gia_Man_t, id int32) []int32 {
 	} else {
 		panic("gia: edge delay requires a mapped LUT")
 	}
+	return fanins
+}
+
+// Only forward timing/assignment and the Edg mapping conversion have this
+// source restriction. Reverse assignment supports an arbitrary fanin list.
+func giaEdgeForwardFanins(p *Gia_Man_t, id int32) []int32 {
+	fanins := giaEdgeFanins(p, id)
 	if len(fanins) > 4 {
 		panic("gia: edge delay supports at most four LUT fanins")
 	}
@@ -24,7 +31,7 @@ func giaIsEdgeLut(p *Gia_Man_t, id int32) bool {
 }
 func Gia_ObjEvalEdgeDelay(p *Gia_Man_t, id int32, delays *Vec_Int_t) int32 {
 	var result int32
-	for _, fanin := range giaEdgeFanins(p, id) {
+	for _, fanin := range giaEdgeForwardFanins(p, id) {
 		increment := int32(10)
 		if Gia_ObjHaveEdge(p, id, fanin) != 0 {
 			increment = 2
@@ -38,7 +45,7 @@ func Gia_ObjComputeEdgeDelay(p *Gia_Man_t, id int32, delays, first, second *Vec_
 	vec.Vec_IntWriteEntry(second, int(id), 0)
 	var highest, runner, count int32
 	max1, max2 := int32(-1), int32(-1)
-	for _, fanin := range giaEdgeFanins(p, id) {
+	for _, fanin := range giaEdgeForwardFanins(p, id) {
 		delay := vec.Vec_IntEntry(delays, int(fanin)) + 10
 		if delay > highest {
 			runner, highest, max1, count = highest, delay, fanin, 1

@@ -45,7 +45,7 @@ func Edg_ManToMapping(p *Gia_Man_t) {
 		if Gia_ObjIsLut(p, id) == 0 {
 			continue
 		}
-		for _, fanin := range giaEdgeFanins(p, id) {
+		for _, fanin := range giaEdgeForwardFanins(p, id) {
 			vec.Vec_WecPush(p.vMapping2, int(id), fanin)
 			vec.Vec_WecPush(p.vFanouts2, int(fanin), id)
 		}

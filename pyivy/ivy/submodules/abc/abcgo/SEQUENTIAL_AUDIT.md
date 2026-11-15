@@ -6892,3 +6892,31 @@ directory. No production/test edits were made during DFS integration. Next add
 a red unit test for this restriction before repairing it, track full native
 state/timing/assignment matrices, inspect all edge/window/optimizer entry points
 and their callers, and add independent invariants and compactness checks.
+
+### Edge timing wide-LUT repair and native checkpoint
+
+Add TestEdgeReverseAssignmentSupportsWideLuts before changing production code.
+It panics on the first five-input primary-mapping case, confirming the inherited
+forward-only restriction (/tmp/abcgo-edge-wide-red.log). Keep the generic fanin
+view unbounded, and scope the four-input guard to forward evaluation/assignment
+and Edg mapping conversion, matching actual C. Cross-talk tests explicitly retain
+those forward guards. Reverse tests cover five/eight/sixteen inputs in both
+mapping representations. All focused edge tests pass after repair
+(/tmp/abcgo-edge-wide-repaired.log).
+
+Track an actual giaEdge.c fixture and compare complete private delay vectors as
+well as results and both edge-slot arrays. The ordinary matrix covers 64 graph/
+mapping cases: 128 forward assignments and reevaluations, 64 reverse assignments
+and 96 optimizer runs with limits zero/one/two. Six additional native wide-LUT
+cases verify reverse delay and full slot/vector state. All 1,592 trace lines agree;
+existing and new edge tests pass in 1.957s (/tmp/abcgo-edge-native.log).
+
+This is an integration-pending checkpoint, not closure of giaEdge.c. Still inspect
+and cover storage/packing primitives, incremental/full mapping windows, timing
+boxes, direct critical-edge improvement and diagnostics, independent assignment
+invariants and repeated-call compactness. Existing Edg forward/reverse unit-delay
+evaluators allocate replacement vectors on every call while C reuses/fills them;
+measure and consider restoring that ownership/allocation behavior. Keep source
+repairs explicit and add red regressions before fixes of any further bugs. The
+last full module race/vet validation remains the DFS checkpoint; original package
+completion remains 2/131 with GIA in progress.
