@@ -5032,3 +5032,24 @@ including the existing original-ABC balancing oracle, pass. Expanded
 parameter/partition/serialization verification is running; full integration
 is still pending. This does not finish the balancing algorithm review or
 GIA package review. Original completion remains 2/131.
+
+Expanded balancing/coarsening verification passes: 6,384 transformations and
+204,288 input/state rows, with direct truth and serialized AIGER truth/role
+checks. The matrix covers all 21 valid bad/constraint partitions of five POs,
+four phase patterns, ordinary and DFS/interleaved layouts, every supported
+LUT size 2..6/cut count 2..8, and coarsening limits 0/2/8. The existing
+48-case original-ABC oracle also passes, comparing AND count, structural
+level and all 64 truth rows for each result. Focused/expanded tests pass in
+1.849s (`/tmp/abcgo-balance-expanded.log`). The matrix graphs are ordinary
+AND sources; existing random/native balancing tests exercise recognition
+of expanded XOR/MUX patterns. Raw XOR input is deliberately rejected by
+the ordinary-AIG coarsener, not claimed as a newly supported operation.
+
+Full uncached module race integration is green: 130 tested packages pass,
+three command packages have no tests, and no failure/race diagnostics appear
+(`/tmp/abcgo-balance-module-race.log`). GIA passes in 214.597s, ABCI in
+29.493s and BMC in 24.065s. GIA vet passes
+(`/tmp/abcgo-balance-vet.log`). Production fixes and regression tests are
+saved in 6d185e2f1. This completes the identified role/port/precondition
+repairs, not the entire low-level LUT balancing review. Original completion
+remains 2/131; GIA and the sequential audit remain active.
