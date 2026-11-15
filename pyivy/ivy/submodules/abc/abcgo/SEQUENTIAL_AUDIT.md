@@ -4978,3 +4978,30 @@ function body. Normalized ordinary-AIG source comparison, broader typed/
 layout/role tests and integration verification are pending. Save this
 checkpoint with a red prefix. Original completion remains 2/131; GIA review
 continues.
+
+Expanded rehash checks pass in 1.523s (`/tmp/abcgo-rehash-expanded.log`).
+The matrix covers 9,216 cases/589,824 input-state rows: all 64 literal-phase
+patterns, six shared/absorbing/contradictory/complemented cone families,
+zero/two/four registers, both additional-strash settings, two physical
+layouts and ordinary/real-XOR/MUX/buffer forms. Independent Boolean formulas
+check every output and next-state bit in the result and its AIGER round trip.
+Checks also cover source identity/roles, stable logical CI copy slots,
+normalized ordinary-AIG output, cleared destination hash/additional modes,
+unchanged source marks/reference cache, and removal of all dangling logic.
+Source dangling nodes are deliberately copied before final cleanup, as in C.
+
+The native fixture `aig/gia/test_vectors/rehash.c` agrees on 2,304 normalized
+ordinary-AND cases/147,456 input-state rows, retained structure, register count
+and every pre-cleanup source Value literal, including dangling objects and
+COs (`/tmp/abcgo-rehash-native.log`, 2.238s). Typed/interleaved cases and the
+Go bad-output partition are independently checked; they are not claimed as
+supported original-C behavior. Native counts intentionally exclude C's lost
+constraint metadata. No hash/additional-strash primitive was replaced.
+
+Separate tests retain an already active source hash table and its mode,
+including canonical lookup without allocation of another source node. Empty
+interfaces, constant-only outputs, state-only interfaces and simple-mode
+repeated/opposite fanins preserve truth and serialize correctly; hashed output
+uses canonical ordinary nodes. Full uncached module race tests and GIA vet
+are running. Save expanded verification with a red prefix pending integration.
+Original completion stays 2/131; GIA remains active.
