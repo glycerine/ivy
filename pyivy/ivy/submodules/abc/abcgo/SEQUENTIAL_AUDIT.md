@@ -8504,3 +8504,31 @@ function is excluded. No whole-package or goal closure is claimed.
 Save this red checkpoint and freeze production/tests/fixtures for uncached full
 module race tests and GIA vet. Inspect terminal results before closing the
 family. Original completion2/131; remaining GIA source inventory stays open.
+
+### Timeframe family frozen integration closure
+
+Exact full-module race handle11914 terminates exit0 after code/tests/fixtures
+remained frozen:130 tested packages pass, three command packages have no tests,
+zero FAIL/DATA RACE records. GIA545.769s, ABCI29.688s, BMC24.058s
+(/tmp/abcgo-frames-final-module-race.log). Exact vet handle63357 terminates exit0
+with an empty log (/tmp/abcgo-frames-final-vet.log). All54 final focused tests
+passed without skips in34.608s
+(/tmp/abcgo-frames-final-complete-focused.log).
+
+REVIEW_timeframes.md reconciles all22 active giaFrames.c routines and records
+original-C defects, explicit Go extensions, restored algorithms, all independent
+and native matrices, resource/metadata ownership and measured compactness.
+Close the timeframe family. GIA's remaining source inventory is open, and
+original package audit completion stays2/131.
+
+Next source family giaFx.c. Read-only preparation during this gate locates the
+real Go implementations in fx_sop/retrieve/order/insert/driver.go. An actual-C
+root-leaf graph with only its selected leaf bound returns literals2/3 for both
+phases; equivalent Go panics while reading unused leaf signals
+(/tmp/abcgo-fx-leaf-native.log, /tmp/abcgo-fx-leaf-go.log). Source/Go probes are
+/tmp/abcgo-fx-leaf-probe.c and .go; add a red unit regression before repair.
+The driver's documented recomputed-catalog substitute also needs native
+fidelity investigation. Original Fx_FastExtract lives in
+src/base/abci/abcFx.c:1163, not a src/opt/fx directory. The detailed next plan
+is /tmp/abcgo-fx-next-review-plan.md. No next-family tested files were edited
+while timeframe integration was running; no agents/branches were used.

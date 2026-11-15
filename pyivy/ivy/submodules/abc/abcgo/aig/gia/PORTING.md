@@ -384,3 +384,14 @@ full module race tests pass130 tested packages plus three command packages
 without tests, GIA517.512s (/tmp/abcgo-front-final-module-race.log). GIA vet is
 clean (/tmp/abcgo-front-final-vet.log). The complete Sim/Switch/Tsim source
 reviews and other GIA families remain open; next review is timeframe unrolling.
+
+Timeframe sequential review is complete for all22 active giaFrames.c routines.
+The full-map/common AIG-frame substitutes are replaced with the original tent,
+rolling-history, sparse abstraction and distinct frame/prefix algorithms. See
+REVIEW_timeframes.md for red evidence, explicit original-C defects/Go extensions,
+large native/independent matrices and metadata/resource/compactness contracts.
+All54 focused tests pass34.608s; frozen full module race tests pass130 tested
+packages plus three command packages without tests, GIA545.769s
+(/tmp/abcgo-frames-final-module-race.log). GIA vet is clean
+(/tmp/abcgo-frames-final-vet.log). This closes the source family only; the wider
+GIA audit remains open, with fast extraction next.

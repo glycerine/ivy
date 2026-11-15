@@ -192,7 +192,15 @@ that state cube, as requested by the source parameter.
 
 ## Validation
 
-Final complete focused rerun, frozen full module race tests and GIA vet are
-pending. These gates must terminate successfully before family closure. This
-family does not complete the remaining GIA inventory or the original131-package
-sequential audit, which remains at2 completed packages.
+All54 focused timeframe/unroller/CCof tests pass without skips in34.608s
+(`/tmp/abcgo-frames-final-complete-focused.log`). Freeze production code, tests
+and fixtures, then run uncached full module race tests with a30-minute package
+timeout. All130 tested packages pass; three command packages have no tests.
+GIA passes in545.769s (`/tmp/abcgo-frames-final-module-race.log`). GIA vet passes
+with empty output (`/tmp/abcgo-frames-final-vet.log`). Exact handles11914 and
+63357 terminated exit0 before results were recorded in
+`../../SEQUENTIAL_AUDIT.md`.
+
+All22 active source routines in this family are reconciled. This family does
+not complete the remaining GIA inventory or the original131-package sequential
+audit, which remains at2 completed packages.
