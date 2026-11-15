@@ -265,3 +265,48 @@ func TestCircuitSATStatisticsMatchOriginalABC(t *testing.T) {
 		t.Fatalf("CBS statistics differ\nGo:%s\nC:%s", got, native)
 	}
 }
+
+func TestCircuitSATReasonSnapshotMatchesOriginalABC(t *testing.T) {
+	exe := compileGiaSourceOracle(t, "circuit_sat_review.c")
+	native, err := exec.Command(exe, "reason").CombinedOutput()
+	if err != nil {
+		t.Fatalf("native CBS reasons: %v\n%s", err, native)
+	}
+	g := Gia_ManStart(16)
+	a, b, c := Gia_ManAppendCi(g), Gia_ManAppendCi(g), Gia_ManAppendCi(g)
+	ab, bc := Gia_ManAppendAnd(g, a, b), Gia_ManAppendAnd(g, b, c)
+	p := Cbs_ManAlloc(g)
+	Cbs_ManAssign(p, Gia_ObjFromLit(g, ab^1), 0, nil, nil)
+	Cbs_ManAssign(p, Gia_ObjFromLit(g, bc), 0, nil, nil)
+	Cbs_ManAssign(p, Gia_ObjFromLit(g, a), 1, nil, nil)
+	Cbs_ManAssign(p, Gia_ObjFromLit(g, b^1), 1, Gia_ObjFromLit(g, ab), Gia_ObjFromLit(g, a))
+	clause := Cbs_ManPropagateOne(p, Gia_ObjFromLit(g, bc), 1)
+	if clause == 0 {
+		t.Fatal("reason fixture did not conflict")
+	}
+	got := hashReviewStdout(t, func() {
+		fmt.Printf("reason h%d head%d size%d level%d reasons%d:%d levels", clause, p.pClauses.pData[clause].id, Cbs_ManClauseSize(p, clause), Cbs_ClauseDecLevel(p, clause), Cbs_VarReason0(p, Gia_ObjFromLit(g, b)).id, Cbs_VarReason1(p, Gia_ObjFromLit(g, b)).id)
+		for _, value := range Vec_IntArray(p.vLevReas) {
+			fmt.Printf(" %d", value)
+		}
+		fmt.Print(" marks")
+		for _, obj := range g.pObjs {
+			fmt.Printf("%d%d", obj.fMark0, obj.fMark1)
+		}
+		fmt.Println()
+		Cbs_ManPrintClause(p, 1, clause)
+		Cbs_ManPrintClauseNew(p, 1, clause)
+	})
+	if got != string(native) {
+		t.Fatalf("reason snapshot differs\nGo:%s\nC:%s", got, native)
+	}
+	Cbs_ManStop(p)
+	for _, obj := range g.pObjs {
+		if obj.fMark0 != 0 || obj.fMark1 != 0 || obj.Value != ^uint32(0) {
+			t.Fatal("reason snapshot cleanup")
+		}
+	}
+	if p.vTemp != nil {
+		t.Fatal("reason scratch retained after stop")
+	}
+}

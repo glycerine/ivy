@@ -6375,3 +6375,18 @@ Use a separate root local instead of mutating the range variable.
 Save a red checkpoint before direct native reason-clause snapshots, atomic
 invalid-pair/lifecycle checks, final source/benchmark reruns and integration.
 Original completion remains 2/131; GIA and the full sequential audit stay active.
+
+Direct reason-clause snapshots now match actual C: relative reason offsets,
+decision pivot, clause literal order, restored marks, level/reason storage and
+both report formats (/tmp/abcgo-cbs-reason-native.log). Add atomic invalid-pair
+rejection, rejection after typed graph mutation, nested saved queue frontiers
+across backing growth, partial trail cancellation, CI/all-object model formats,
+strict conflict limits and active/repeated stop cleanup coverage.
+
+The combined CBS/CBS0 focused suite passes in 15.604s
+(/tmp/abcgo-cbs-final-focused.log), including the native matrices after the
+constant-fanin repair. Final hard-conflict benchmarks remain allocation-free:
+single 8,279ns/0B/0 allocations, paired 4,982ns/0B/0 allocations
+(/tmp/abcgo-cbs-scratch-final.log). Save these checks before freezing all source,
+tests and fixtures for uncached module race tests and GIA vet. Integration is
+pending; original completion remains 2/131 and GIA is still in progress.

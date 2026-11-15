@@ -251,3 +251,116 @@ func TestCircuitSATRawAndExtensions(t *testing.T) {
 	}
 	t.Logf("%d exhaustive raw-AND/constant/buffer/shared-fanin queries with validated witnesses", queries)
 }
+
+func TestCircuitSATRejectedPairLeavesBothGraphsUntouched(t *testing.T) {
+	g := Gia_ManStart(16)
+	a, b := Gia_ManAppendCi(g), Gia_ManAppendCi(g)
+	root := Gia_ManAppendAnd(g, a, b)
+	p := Cbs_ManAlloc(g)
+	other := Gia_ManStart(8)
+	foreign := Gia_ManAppendCi(other)
+	other.pObjs[foreign>>1].Value = 1234
+	cexReviewMustPanic(t, func() { Cbs_ManSolve2(p, Gia_ObjFromLit(g, root), Gia_ObjFromLit(other, foreign)) })
+	for _, obj := range g.pObjs {
+		if obj.fMark0 != 0 || obj.fMark1 != 0 || obj.Value != ^uint32(0) {
+			t.Fatal("rejected pair changed first graph")
+		}
+	}
+	obj := other.pObjs[foreign>>1]
+	if obj.fMark0 != 0 || obj.fMark1 != 0 || obj.Value != 1234 {
+		t.Fatal("rejected pair changed foreign graph")
+	}
+	if Vec_IntSize(p.vLevReas) != 0 || p.pProp.iTail != 0 || p.pClauses.iHead != 1 || p.pClauses.iTail != 1 {
+		t.Fatal("rejected pair changed solver")
+	}
+	if Cbs_ManSolve(p, Gia_ObjFromLit(g, root)) != 0 {
+		t.Fatal("rejected pair poisoned reuse")
+	}
+	Cbs_ManStop(p)
+	cexReviewMustPanic(t, func() { Cbs_ManSolve(p, Gia_ObjFromLit(g, root)) })
+	for _, obj := range g.pObjs {
+		if obj.fMark0 != 0 || obj.Value != ^uint32(0) {
+			t.Fatal("stopped solver changed graph")
+		}
+	}
+}
+
+func TestCircuitSATTypedGraphMutationRejected(t *testing.T) {
+	for _, mux := range []bool{false, true} {
+		g := Gia_ManStart(16)
+		a, b, c := Gia_ManAppendCi(g), Gia_ManAppendCi(g), Gia_ManAppendCi(g)
+		p := Cbs_ManAlloc(g)
+		if mux {
+			g.EnableMuxes()
+			Gia_ManAppendMuxReal(g, a, b, c)
+		} else {
+			Gia_ManAppendXorReal(g, a, b)
+		}
+		cexReviewMustPanic(t, func() { Cbs_ManSolve(p, Gia_ObjFromLit(g, a)) })
+		Cbs_ManStop(p)
+	}
+}
+
+func TestCircuitSATNestedQueuesAndPartialCancellation(t *testing.T) {
+	g := Gia_ManStart(16)
+	a, b := Gia_ManAppendCi(g), Gia_ManAppendCi(g)
+	q := Cbs_Que_t{}
+	Cbs_QuePush(&q, Gia_ObjFromLit(g, a))
+	Cbs_QuePush(&q, Gia_ObjFromLit(g, b))
+	var h0, t0, h1, t1 int32
+	Cbs_QueStore(&q, &h0, &t0)
+	for i := 0; i < 3000; i++ {
+		Cbs_QuePush(&q, Gia_ObjFromLit(g, a))
+	}
+	Cbs_QueStore(&q, &h1, &t1)
+	q.pData[q.iHead] = nil
+	Cbs_QueRestore(&q, h1, t1)
+	if Cbs_QueHasNode(&q, Gia_ObjFromLit(g, b)) != 1 {
+		t.Fatal("inner saved frontier lost")
+	}
+	Cbs_QueRestore(&q, h0, t0)
+	if q.iHead != 0 || q.iTail != 2 || q.pData[0] != Gia_ObjFromLit(g, a) || q.pData[1] != Gia_ObjFromLit(g, b) {
+		t.Fatal("outer saved frontier lost")
+	}
+	cexReviewMustPanic(t, func() { Cbs_QuePush(&q, Gia_ObjFromLit(g, a^1)) })
+	p := Cbs_ManAlloc(g)
+	Cbs_ManAssign(p, Gia_ObjFromLit(g, a), 0, nil, nil)
+	Cbs_ManAssign(p, Gia_ObjFromLit(g, b^1), 1, nil, nil)
+	model := Vec_IntAlloc(0)
+	Cbs_ManSaveModel(p, model)
+	if values := Vec_IntArray(model); len(values) != 2 || values[0] != 0 || values[1] != 3 {
+		t.Fatal("CI witness convention")
+	}
+	Cbs_ManSaveModelAll(p, model)
+	if values := Vec_IntArray(model); len(values) != 2 || values[0] != 2 || values[1] != 5 {
+		t.Fatal("all-object witness convention")
+	}
+	if Cbs_VarDecLevel(p, Gia_ObjFromLit(g, b)) != 1 || Cbs_VarReason0(p, Gia_ObjFromLit(g, b)) != Gia_ObjFromLit(g, b) || Cbs_VarReason1(p, Gia_ObjFromLit(g, b)) != Gia_ObjFromLit(g, b) {
+		t.Fatal("decision/reason sentinel")
+	}
+	Cbs_ManCancelUntil(p, 1)
+	if Vec_IntSize(p.vLevReas) != 3 || Cbs_VarIsAssigned(Gia_ObjFromLit(g, a)) != 1 || Cbs_VarIsAssigned(Gia_ObjFromLit(g, b)) != 0 {
+		t.Fatal("partial trail/reason cancellation")
+	}
+	cexReviewMustPanic(t, func() { Cbs_ManCancelUntil(p, 2) })
+	Cbs_ManSetConflictNum(p, 7)
+	p.Pars.nBTThis = 7
+	if Cbs_ManCheckLimits(p) != 0 {
+		t.Fatal("conflict limit must be strict")
+	}
+	p.Pars.nBTThis++
+	if Cbs_ManCheckLimits(p) != 1 {
+		t.Fatal("conflict limit ignored")
+	}
+	Cbs_ManStop(p)
+	Cbs_ManStop(p)
+	Cbs_ManStop(nil)
+	for _, obj := range g.pObjs {
+		if obj.fMark0 != 0 || obj.fMark1 != 0 || obj.Value != ^uint32(0) {
+			t.Fatal("active stop retained assignment/reason")
+		}
+	}
+	if p.pAig != nil || p.vTemp != nil || p.vModel != nil || p.vLevReas != nil || p.pProp.pData != nil || p.pClauses.pData != nil {
+		t.Fatal("stopped manager retained storage")
+	}
+}

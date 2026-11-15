@@ -53,8 +53,22 @@ static void stats(void) {
  p->timeTotal=4*CLOCKS_PER_SEC;p->timeSatUnsat=2*CLOCKS_PER_SEC;p->timeSatSat=CLOCKS_PER_SEC;p->timeSatUndec=CLOCKS_PER_SEC/2;
  Cbs_ManSatPrintStats(p);Cbs_ManStop(p);p=Cbs_ManAlloc(g);Cbs_ManSatPrintStats(p);Cbs_ManStop(p);Gia_ManStop(g);
 }
+static void reason(void) {
+ Gia_Man_t *g=Gia_ManStart(16);Cbs_Man_t *p;int a,b,c,ab,bc,h,i;Gia_Obj_t *obj;
+ a=Gia_ManAppendCi(g);b=Gia_ManAppendCi(g);c=Gia_ManAppendCi(g);ab=Gia_ManAppendAnd(g,a,b);bc=Gia_ManAppendAnd(g,b,c);
+ Gia_ManCreateRefs(g);Gia_ManFillValue(g);p=Cbs_ManAlloc(g);
+ Cbs_ManAssign(p,Gia_Not(Gia_ManObj(g,ab>>1)),0,NULL,NULL);
+ Cbs_ManAssign(p,Gia_ManObj(g,bc>>1),0,NULL,NULL);
+ Cbs_ManAssign(p,Gia_ManObj(g,a>>1),1,NULL,NULL);
+ Cbs_ManAssign(p,Gia_Not(Gia_ManObj(g,b>>1)),1,Gia_ManObj(g,ab>>1),Gia_ManObj(g,a>>1));
+ h=Cbs_ManPropagateOne(p,Gia_ManObj(g,bc>>1),1);
+ printf("reason h%d head%d size%d level%d reasons%d:%d levels",h,Gia_ObjId(g,p->pClauses.pData[h]),Cbs_ManClauseSize(p,h),Cbs_ClauseDecLevel(p,h),Gia_ObjId(g,Cbs_VarReason0(p,Gia_ManObj(g,b>>1))),Gia_ObjId(g,Cbs_VarReason1(p,Gia_ManObj(g,b>>1))));
+ Vec_IntForEachEntry(p->vLevReas,a,i)printf(" %d",a);printf(" marks");Gia_ManForEachObj(g,obj,i)printf("%d%d",obj->fMark0,obj->fMark1);printf("\n");
+ Cbs_ManPrintClause(p,1,h);Cbs_ManPrintClauseNew(p,1,h);
+ Cbs_ManCancelUntil(p,0);Cbs_ManStop(p);Gia_ManStop(g);
+}
 int main(int argc,char **argv) {
- if(argc>1){if(argv[1][0]=='m')miters();else stats();return 0;}
+ if(argc>1){if(argv[1][0]=='m')miters();else if(argv[1][0]=='r')reason();else stats();return 0;}
  int seed,heuristic,bi,ji,query,phase,mode,other,status,k,value,lits[29];
  int budgets[]={0,1,3,1000},frontiers[]={0,1,3,100};Gia_Man_t *g;Cbs_Man_t *p;
  for(seed=0;seed<12;++seed){
