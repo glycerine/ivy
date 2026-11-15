@@ -6604,3 +6604,21 @@ fields and preservation of already modified records. The combined expanded Tas
 suite passes in 12.387s (/tmp/abcgo-tas-expanded-focused.log). Save an integration-
 pending checkpoint before final all-pair/lifecycle checks and module race/vet.
 Original completion remains 2/131; GIA is still in progress.
+
+CTAS final independent root-pair checks pass 115,664 five-input queries across
+all four heuristics, including true/false constants, repeated/opposite roots and
+hard reconvergence/parity functions (/tmp/abcgo-tas-all-pairs.log). All returned
+CI cubes have nonempty consistency and imply both roots for every completion.
+Nested saved queues across growth, invalid restores, partial cancellation,
+reason sentinels, strict limits, active/repeated Stop and stopped-manager rejection
+also pass. Document source's low-level graph preparation contract explicitly.
+
+The final focused Tas suite passes in 12.512s
+(/tmp/abcgo-tas-final-focused.log). Final allocation measurements after raw-gate
+repairs remain 448B/28 allocations single and 256B/16 paired, with measured times
+14,659ns and 8,028ns (/tmp/abcgo-tas-scratch-final.log). Timing varies; retain the
+more compact source scratch/phase-mark design without adding a facade cache.
+REVIEW_circuit_tas.md records the complete family scope and distinctions for the
+unfinished C allocator experiment. Save a checkpoint and freeze source/tests/
+fixtures for full module race and GIA vet. Original completion remains 2/131;
+GIA is still in progress.

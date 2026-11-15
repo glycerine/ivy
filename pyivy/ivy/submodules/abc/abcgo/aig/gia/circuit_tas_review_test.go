@@ -347,3 +347,155 @@ func TestTas2AllocationZeroesRecordsAndKeepsFlags(t *testing.T) {
 	}
 	t.Logf("Go variable record: %d bytes", reflect.TypeOf(*first).Size())
 }
+
+func TestTasAllRootPairs(t *testing.T) {
+	queries := 0
+	ciTruth := [...]uint32{0xaaaaaaaa, 0xcccccccc, 0xf0f0f0f0, 0xff00ff00, 0xffff0000}
+	for seed := 0; seed < 12; seed++ {
+		g, lits := cbs0ReviewGraph(seed)
+		Gia_ManFillValue(g)
+		Gia_ManCleanPhase(g)
+		truth := make([]uint32, g.nObjs)
+		for mask := 0; mask < 32; mask++ {
+			values, _, err := g.evaluateObjects([]bool{mask&1 != 0, mask&2 != 0, mask&4 != 0, mask&8 != 0, mask&16 != 0})
+			if err != nil {
+				t.Fatal(err)
+			}
+			for id, value := range values {
+				if value {
+					truth[id] |= 1 << uint(mask)
+				}
+			}
+		}
+		bits := func(lit int32) uint32 {
+			v := truth[lit>>1]
+			if lit&1 != 0 {
+				v = ^v
+			}
+			return v
+		}
+		roots := []int32{0, 1}
+		seen := make([]bool, 2*g.nObjs)
+		seen[0], seen[1] = true, true
+		for _, lit := range lits {
+			for phase := int32(0); phase < 2; phase++ {
+				root := lit ^ phase
+				if !seen[root] {
+					roots = append(roots, root)
+					seen[root] = true
+				}
+			}
+		}
+		p := Tas_ManAlloc(g, 1000)
+		for mode := int32(0); mode < 4; mode++ {
+			p.Pars.fUseHighest, p.Pars.fUseLowest, p.Pars.fUseMaxFF, p.Pars.fUseActive = giaBool(mode == 0), giaBool(mode == 1), giaBool(mode == 2), giaBool(mode == 3)
+			for _, first := range roots {
+				for _, second := range roots {
+					expected := bits(first) & bits(second)
+					status := Tas_ManSolve(p, Gia_ObjFromLit(g, first), Gia_ObjFromLit(g, second))
+					if status != giaBool(expected == 0) {
+						t.Fatalf("graph%d mode%d pair%d,%d verdict%d expected%x", seed, mode, first, second, status, expected)
+					}
+					if status == 0 {
+						completions := ^uint32(0)
+						used := make([]bool, 5)
+						for _, lit := range Vec_IntArray(p.vModel) {
+							id := lit >> 1
+							if lit < 0 || id >= 5 || used[id] {
+								t.Fatal("invalid paired witness literal")
+							}
+							used[id] = true
+							v := ciTruth[id]
+							if lit&1 != 0 {
+								v = ^v
+							}
+							completions &= v
+						}
+						if completions == 0 || completions & ^expected != 0 {
+							t.Fatalf("graph%d mode%d pair%d,%d invalid witness%v", seed, mode, first, second, Vec_IntArray(p.vModel))
+						}
+					} else if Vec_IntSize(p.vModel) != 0 {
+						t.Fatal("failed query retained model")
+					}
+					for _, obj := range g.pObjs {
+						if obj.fMark0 != 0 || obj.fMark1 != 0 || obj.fPhase != 0 || obj.Value != ^uint32(0) {
+							t.Fatal("paired query retained graph scratch")
+						}
+					}
+					if p.pProp.iHead != 0 || p.pProp.iTail != 0 || p.pJust.iHead != 0 || p.pJust.iTail != 0 || p.pClauses.iHead != 1 || p.pClauses.iTail != 1 || Vec_IntSize(p.vLevReas) != 0 || Vec_IntSize(p.vWatchLits) != 0 || p.nClauses != 0 || len(p.pStore.words) != 16 {
+						t.Fatal("paired query retained solver scratch")
+					}
+					for _, v := range p.pWatches {
+						if v != 0 {
+							t.Fatal("paired query retained watch")
+						}
+					}
+					queries++
+				}
+			}
+		}
+		Tas_ManStop(p)
+	}
+	t.Logf("%d complete five-input root-pair queries with exhaustive verdict and witness checks", queries)
+}
+
+func TestTasNestedQueuesAndLifecycle(t *testing.T) {
+	g := Gia_ManStart(16)
+	a, b := Gia_ManAppendCi(g), Gia_ManAppendCi(g)
+	Gia_ManFillValue(g)
+	p := Tas_ManAlloc(g, 100)
+	defer Tas_ManStop(p)
+	q := Tas_Que_t{}
+	Tas_QuePush(&q, Gia_ObjFromLit(g, a))
+	Tas_QuePush(&q, Gia_ObjFromLit(g, b))
+	var h0, t0, h1, t1 int32
+	Tas_QueStore(&q, &h0, &t0)
+	for i := 0; i < 3000; i++ {
+		Tas_QuePush(&q, Gia_ObjFromLit(g, a))
+	}
+	Tas_QueStore(&q, &h1, &t1)
+	q.pData[q.iHead] = nil
+	Tas_QueRestore(&q, h1, t1)
+	if Tas_QueHasNode(&q, Gia_ObjFromLit(g, b)) != 1 {
+		t.Fatal("inner frontier lost")
+	}
+	Tas_QueRestore(&q, h0, t0)
+	if q.iHead != 0 || q.iTail != 2 || q.pData[0] != Gia_ObjFromLit(g, a) || q.pData[1] != Gia_ObjFromLit(g, b) {
+		t.Fatal("outer frontier lost")
+	}
+	cexReviewMustPanic(t, func() { Tas_QueRestore(&q, -1, 2) })
+	Tas_ManAssign(p, Gia_ObjFromLit(g, a), 0, nil, nil)
+	Tas_ManAssign(p, Gia_ObjFromLit(g, b^1), 1, nil, nil)
+	Tas_ManSaveModel(p, p.vModel)
+	if !slices.Equal(Vec_IntArray(p.vModel), []int32{0, 3}) {
+		t.Fatal("CI witness convention")
+	}
+	if Tas_VarReason0(p, g.pObjs[a>>1]) != g.pObjs[a>>1] || Tas_VarReason1(p, g.pObjs[a>>1]) != g.pObjs[a>>1] {
+		t.Fatal("decision reason sentinel")
+	}
+	Tas_ManCancelUntil(p, 1)
+	if Vec_IntSize(p.vLevReas) != 3 || Tas_VarIsAssigned(g.pObjs[a>>1]) != 1 || Tas_VarIsAssigned(g.pObjs[b>>1]) != 0 {
+		t.Fatal("partial trail cancellation")
+	}
+	cexReviewMustPanic(t, func() { Tas_ManCancelUntil(p, 2) })
+	p.Pars.nBTLimit, p.Pars.nBTThis, p.Pars.nJustLimit, p.Pars.nJustThis = 7, 7, 1, 1
+	if Tas_ManCheckLimits(p) != 0 {
+		t.Fatal("limits must be strict")
+	}
+	p.Pars.nBTThis++
+	if Tas_ManCheckLimits(p) != 1 {
+		t.Fatal("conflict limit ignored")
+	}
+	Tas_ManStop(p)
+	Tas_ManStop(p)
+	Tas_ManStop(nil)
+	cexReviewMustPanic(t, func() { Tas_ManSolve(p, Gia_ObjFromLit(g, a), nil) })
+	if p.pAig != nil || p.vModel != nil || p.vLevReas != nil || p.vTemp != nil || p.pStore.words != nil || p.pWatches != nil {
+		t.Fatal("stopped manager retained graph/storage")
+	}
+	for _, obj := range g.pObjs {
+		if obj.fMark0 != 0 || obj.fMark1 != 0 || obj.Value != ^uint32(0) {
+			t.Fatal("active Stop retained scratch")
+		}
+	}
+}

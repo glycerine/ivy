@@ -38,6 +38,9 @@ func tasCheckGraph(aig *Gia_Man_t) {
 	}
 }
 
+// Tas_ManAlloc borrows an ordinary AND graph. As in C, low-level callers prepare
+// clean assignment/phase marks and Value trail sentinels; the miter entry points
+// perform that preparation themselves.
 func Tas_ManAlloc(aig *Gia_Man_t, limit int32) *Tas_Man_t {
 	tasCheckGraph(aig)
 	p := &Tas_Man_t{pAig: aig, vLevReas: vec.Vec_IntAlloc(1000), vModel: vec.Vec_IntAlloc(1000), vWatchLits: vec.Vec_IntAlloc(100), vActiveVars: vec.Vec_IntAlloc(100), pWatches: make([]int32, 2*int(aig.nObjs)), pActivity: make([]float32, aig.nObjs)}
