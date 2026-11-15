@@ -6839,3 +6839,28 @@ and 2,065 per sequential query, largely from per-node fanin slices. Next inspect
 bounded direct stack push and shared counting walk, preserving exact source order
 and marks, then rerun native/independent/deep tests and benchmarks before module
 race/vet gates. Original completion remains 2/131; this family is not yet closed.
+
+### DFS/support compactness and final focused checks
+
+The repaired reports and full native trace pass before compactness changes
+(/tmp/abcgo-dfs-precompact-focused.log, 8.570s). Replace temporary per-node fanin
+slices with bounded pushes onto the existing stack, preserving fanin-0-first
+order and real MUX controls. Reuse the collector for support counts, removing
+the duplicate traversal loop; CI-only walks no longer schedule unused postorder
+frames. No persistent scratch/cache state is added.
+
+Native, independent and existing tests remain green after the change
+(/tmp/abcgo-dfs-support-compact.log). The same 1,024-AND benchmark changes
+support/CI allocation counts from 2,059 to one, cone from 2,059 to 11 and sequential
+from 2,065 to 16; measured bytes/time are recorded in REVIEW_dfs_support.md.
+Direct helper tests verify caller vector prefixes, premarked boundaries, shared
+epochs and repeated-count behavior (/tmp/abcgo-dfs-recursive.log).
+
+Final focused tests pass in 8.536s (/tmp/abcgo-dfs-final-focused.log), including
+threshold-16 dangling-node scans, empty/constant level buckets, ignored CO level
+values, traversal allocation growth and rollover, and every walker on a
+20,000-node cone. The family reconciles all 24 source entry points. The native
+matrix now additionally covers 544 single-node support queries and all forward/
+reverse buckets/orderings; independent tests distinguish typed/constant Go
+extensions from unsupported original-C inputs. Next freeze source/tests/fixtures
+for full module race tests and GIA vet. Original completion remains 2/131.

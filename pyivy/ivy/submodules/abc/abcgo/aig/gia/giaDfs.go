@@ -4,8 +4,9 @@ package gia
 // call-stack depth limits and include real MUX controls in graph dependencies.
 import (
 	"fmt"
-	"github.com/glycerine/abcgo/misc/vec"
 	"time"
+
+	"github.com/glycerine/abcgo/misc/vec"
 )
 
 type giaDfsFrame struct {
@@ -13,6 +14,21 @@ type giaDfsFrame struct {
 	expanded bool
 }
 
+// Push dependencies backwards so the walk visits fanin 0 first. The bounded
+// fanin set goes straight onto the existing stack, without a slice per node.
+func giaDfsPushFanins(stack []giaDfsFrame, p *Gia_Man_t, obj *Gia_Obj_t) []giaDfsFrame {
+	if Gia_ObjIsCo(obj) == 0 {
+		if Gia_ObjIsMuxId(p, obj.id) != 0 {
+			stack = append(stack, giaDfsFrame{id: int32(p.PMuxes[obj.id] >> 1)})
+		}
+		if Gia_ObjIsBuf(obj) == 0 {
+			stack = append(stack, giaDfsFrame{id: Gia_ObjFaninId1(obj, obj.id)})
+		}
+	}
+	return append(stack, giaDfsFrame{id: Gia_ObjFaninId0(obj, obj.id)})
+}
+
+// Return the number of requested CIs/nodes, optionally collecting their IDs.
 func giaDfsCollect(p *Gia_Man_t, root int32, result *Vec_Int_t, inputs, nodes bool) int32 {
 	stack := []giaDfsFrame{{id: root}}
 	var count int32
@@ -41,19 +57,21 @@ func giaDfsCollect(p *Gia_Man_t, root int32, result *Vec_Int_t, inputs, nodes bo
 			continue
 		}
 		if Gia_ObjIsCi(obj) != 0 {
-			if inputs && result != nil {
-				Vec_IntPush(result, frame.id)
+			if inputs {
+				if result != nil {
+					Vec_IntPush(result, frame.id)
+				}
+				count++
 			}
 			continue
 		}
 		if Gia_ObjIsAnd(obj) == 0 {
 			panic("gia: unsupported DFS object")
 		}
-		stack = append(stack, giaDfsFrame{id: frame.id, expanded: true})
-		fanins := giaObjectFanins(p, obj)
-		for i := len(fanins) - 1; i >= 0; i-- {
-			stack = append(stack, giaDfsFrame{id: fanins[i]})
+		if nodes {
+			stack = append(stack, giaDfsFrame{id: frame.id, expanded: true})
 		}
+		stack = giaDfsPushFanins(stack, p, obj)
 	}
 	return count
 }
@@ -212,10 +230,7 @@ func Gia_ManCollectSeq_rec(p *Gia_Man_t, id int32, roots, objects *Vec_Int_t) {
 			panic("gia: invalid sequential cone object")
 		}
 		stack = append(stack, giaDfsFrame{id: frame.id, expanded: true})
-		fanins := giaObjectFanins(p, obj)
-		for i := len(fanins) - 1; i >= 0; i-- {
-			stack = append(stack, giaDfsFrame{id: fanins[i]})
-		}
+		stack = giaDfsPushFanins(stack, p, obj)
 	}
 }
 func Gia_ManCollectSeq(p *Gia_Man_t, outputs []int32, count int32) *Vec_Int_t {

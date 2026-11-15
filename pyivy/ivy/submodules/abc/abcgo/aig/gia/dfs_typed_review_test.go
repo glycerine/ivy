@@ -12,7 +12,7 @@ func TestDfsTypedDependencyClosure(t *testing.T) {
 	defer Gia_ManStop(p)
 	p.EnableMuxes()
 	deps := map[int32][]int32{}
-	internal, cis, cos := map[int32]bool{}, map[int32]bool{}, map[int32]bool{}
+	internal, cis := map[int32]bool{}, map[int32]bool{}
 	add := func(lit int32, inputs ...int32) int32 {
 		id := lit >> 1
 		internal[id] = true
@@ -36,7 +36,7 @@ func TestDfsTypedDependencyClosure(t *testing.T) {
 	for _, lit := range []int32{y, 0, 1, r1, z, m} {
 		Gia_ManAppendCo(p, lit)
 		id := p.nObjs - 1
-		cos[id], deps[id] = true, []int32{lit >> 1}
+		deps[id] = []int32{lit >> 1}
 		outputs = append(outputs, id)
 	}
 	Gia_ManSetRegNum(p, 2)

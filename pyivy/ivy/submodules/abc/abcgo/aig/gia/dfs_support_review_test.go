@@ -190,3 +190,60 @@ func TestDfsSupportPreservesSourceTraversalMarks(t *testing.T) {
 		})
 	}
 }
+
+func TestDfsRecursiveHelpersShareCallerState(t *testing.T) {
+	p := Gia_ManStart(8)
+	defer Gia_ManStop(p)
+	a, b, c := Gia_ManAppendCi(p), Gia_ManAppendCi(p), Gia_ManAppendCi(p)
+	x := Gia_ManAppendAnd(p, a, b)
+	y := Gia_ManAppendAnd(p, x, c)
+	Gia_ManAppendCo(p, y)
+	Gia_ManStaticFanoutStart(p)
+	for _, tc := range []struct {
+		name string
+		call func(*Vec_Int_t)
+		want []int32
+	}{
+		{"CIs", func(v *Vec_Int_t) { Gia_ManCollectCis_rec(p, Gia_ObjFromLit(p, y), v) }, []int32{c >> 1}},
+		{"nodes/CIs", func(v *Vec_Int_t) { Gia_ManCollectNodesCis_rec(p, Gia_ObjFromLit(p, y), v) }, []int32{c >> 1, y >> 1}},
+		{"ANDs", func(v *Vec_Int_t) { Gia_ManCollectAnds_rec(p, y>>1, v) }, []int32{y >> 1}},
+		{"TFI", func(v *Vec_Int_t) { Gia_ManCollectTfi_rec(p, y>>1, v) }, []int32{y >> 1}},
+		{"TFO", func(v *Vec_Int_t) { Gia_ManCollectTfo_rec(p, y>>1, v) }, []int32{y >> 1}},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			Gia_ManIncrementTravId(p)
+			Gia_ObjSetTravIdCurrentId(p, 0)
+			Gia_ObjSetTravIdCurrentId(p, x>>1)
+			epoch := p.nTravIds
+			v := Vec_IntAlloc(8)
+			Vec_IntPush(v, -7)
+			tc.call(v)
+			tc.call(v)
+			want := append([]int32{-7}, tc.want...)
+			assertIDs(t, v, want...)
+			if p.nTravIds != epoch {
+				t.Fatal("recursive helper changed the caller's epoch")
+			}
+		})
+	}
+	for _, tc := range []struct {
+		name string
+		call func() int32
+	}{
+		{"support", func() int32 { return Gia_ManSuppSize_rec(p, Gia_ObjFromLit(p, y)) }},
+		{"cone", func() int32 { return Gia_ManConeSize_rec(p, Gia_ObjFromLit(p, y)) }},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			Gia_ManIncrementTravId(p)
+			Gia_ObjSetTravIdCurrentId(p, 0)
+			Gia_ObjSetTravIdCurrentId(p, x>>1)
+			epoch := p.nTravIds
+			if first, second := tc.call(), tc.call(); first != 1 || second != 0 {
+				t.Fatalf("shared counts = %d/%d, want 1/0", first, second)
+			}
+			if p.nTravIds != epoch {
+				t.Fatal("recursive counter changed the caller's epoch")
+			}
+		})
+	}
+}
