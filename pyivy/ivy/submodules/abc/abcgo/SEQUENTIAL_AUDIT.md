@@ -18,7 +18,7 @@ source workflows and tests are covered by that audit. Current review: `aig/gia`.
 | --- | --- | --- | --- |
 | 1 | `.` | reviewed | Root review below; race tests and vet pass. |
 | 2 | `aig/aig` | reviewed | All 52 files reconciled; native source matrices, final race suite, vet and module integration gates pass. |
-| 3 | `aig/gia` | in progress | Inventory and graph/manager representation review begun; first adapter regression below. |
+| 3 | `aig/gia` | in progress | Graph/manager, copies, hashing, balancing, windows, bi-decomposition and circuit-cofactoring reviewed; remaining families and final inventory pending. |
 | 4 | `aig/gia/mf` | pending | |
 | 5 | `aig/gia/satcost` | pending | |
 | 6 | `aig/hop` | pending | |
@@ -5854,3 +5854,30 @@ not a claimed small-case timing improvement.
 Save the final red checkpoint and freeze files for another full uncached
 module race suite plus GIA vet, since the constructor changed after the prior
 integration snapshot. Original completion remains 2/131; GIA and audit active.
+
+Final circuit-cofactoring integration is green after the incremental allocation
+repair. All 130 tested module packages pass the full uncached race suite, with
+three command packages without tests and no failure/race diagnostic lines
+(/tmp/abcgo-ccof-final-module-race.log). GIA passes in 290.209s, ABCI in 29.185s
+and BMC in 24.182s. GIA vet passes with an empty log
+(/tmp/abcgo-ccof-final-vet.log). Source/tests/native fixtures remained frozen
+through the run; only unrelated untracked parent files remain in the worktree.
+
+This closes the reviewed giaCCof.go CNF/model/image/reset/verdict/lifecycle/
+resource/reporting family, including the regression-backed shared unroller
+gate and incremental-allocation repairs. False-proof fixes are in 924ad6dfe
+and 9fa3e9dde; exact initial-state-query reuse, source diagnostic wiring and
+compact bookkeeping in f611ab776; large-bound repair and expanded multi-register
+coverage in d6e7a387a. It does not finish GiaFrames scheduling/abstraction or
+the entire GIA package. Go extensions for typed gates, constant/full images
+and nonzero/unknown resets have independent exact checks; native cases respect
+C's supported source preconditions rather than disabling its assertions.
+
+Next review giaClp.go BDD collapse and disjoint-support rebuilding. Inspection
+finds an explicit Shannon-construction substitute for source ISOP cube-polarity
+selection and SOP factoring; restore the actual source workflow rather than
+accept Boolean-only equivalence as proof of faithful porting. Audit BDD variable
+order, limits/reference ownership and rebuilt interface metadata with red tests,
+native comparisons and independent truth checks. No BDD-collapse production
+change was made during integration. Original completion remains 2/131; GIA and
+the full sequential audit remain active.
