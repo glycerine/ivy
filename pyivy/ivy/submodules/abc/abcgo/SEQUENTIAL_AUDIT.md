@@ -5418,3 +5418,23 @@ checkpoint pending full uncached module race tests and GIA vet. This review
 covers the depth-balancing portion and shared collectors, not the remaining
 area-divisor and window algorithms. Original completion stays 2/131; GIA
 and the full sequential audit remain active.
+
+Depth-balancing integration is green: full uncached module race tests pass
+all 130 tested packages, with three command packages without tests and no
+failure/race diagnostic lines (`/tmp/abcgo-balance-depth-module-race.log`).
+GIA passes in 252.379s, ABCI in 29.472s and BMC in 23.332s. GIA vet passes
+(`/tmp/abcgo-balance-depth-vet.log`). Source/tests/native fixtures stayed
+unchanged during integration. Classifier repair is in 0cd17b660; scratch
+copy reduction and expanded depth coverage in fc9279339; source verbose
+stage wiring and native helper coverage in 67bde4adc.
+
+This closes the reviewed AIG depth-balancing portion of giaBalAig.go and
+shared supergate/selection helpers, including the intentional Go correction
+for simple-mode contradictions. Ordinary/canonical native cases agree on
+structure, source copy literals and truth; borrowed spans retain their Go
+API behavior with fewer allocations. It does not finish the DAM area-balancing
+half of giaBalAig.go or giaBalMap.go. Next compare DAM candidate occurrence
+lists, scores, queue extraction, node/divisor updates and reconstruction with
+C after each extraction, using overlapping AND/XOR supergates and different
+arrival/limit settings before moving to mapped windows. Original completion
+remains 2/131; GIA and the full sequential audit remain active.
