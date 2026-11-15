@@ -18,7 +18,7 @@ source workflows and tests are covered by that audit. Current review: `aig/gia`.
 | --- | --- | --- | --- |
 | 1 | `.` | reviewed | Root review below; race tests and vet pass. |
 | 2 | `aig/aig` | reviewed | All 52 files reconciled; native source matrices, final race suite, vet and module integration gates pass. |
-| 3 | `aig/gia` | in progress | Graph/manager, copies, hashing, balancing, windows, bi-decomposition, circuit-cofactoring, BDD collapse, counterexample replay/minimization and chronological circuit SAT reviewed; remaining families and final inventory pending. |
+| 3 | `aig/gia` | in progress | Graph/manager, copies, hashing, balancing, windows, bi-decomposition, circuit-cofactoring, BDD collapse, counterexample replay/minimization and chronological/conflict-analysis circuit SAT reviewed; remaining families and final inventory pending. |
 | 4 | `aig/gia/mf` | pending | |
 | 5 | `aig/gia/satcost` | pending | |
 | 6 | `aig/hop` | pending | |
@@ -6390,3 +6390,24 @@ single 8,279ns/0B/0 allocations, paired 4,982ns/0B/0 allocations
 (/tmp/abcgo-cbs-scratch-final.log). Save these checks before freezing all source,
 tests and fixtures for uncached module race tests and GIA vet. Integration is
 pending; original completion remains 2/131 and GIA is still in progress.
+
+CBS conflict-analysis integration is green: uncached full module race tests pass
+all 130 tested packages, with three command packages having no tests
+(/tmp/abcgo-cbs-final-module-race.log). GIA vet exits successfully with empty
+output (/tmp/abcgo-cbs-final-vet.log). Source, tests and native fixtures stayed
+frozen throughout integration. REVIEW_circuit_sat.md records this family's
+source fidelity, regression coverage, constant-fanin extension and compactness
+results. Original completion remains 2/131: GIA's remaining families and final
+inventory are still pending.
+
+Next is CBS2 (giaCSat2.c / giaCSat2.go). Read-only inspection and a temporary
+/tmp native probe complete 24,384 single-root/all-object source queries across
+both propagation modes and resource limits (17,006 SAT, 6,666 undecided, 712
+UNSAT; maximum 23 backtracks and frontier eight). These are C-only baseline
+results, not yet evidence of Go agreement. Source paired-root queries can assert
+when conflict analysis encounters multiple same-level decision pivots; the
+probe identifies seed0, fanout0, budget0, frontier0, query16, phase0 as one case.
+Preserve that distinction when constructing native comparisons and independently
+check Go's supported paired-root extension. Add red tests for any confirmed Go
+bugs before repairing them; review source diagnostics, miter constants, watched
+clause growth/cleanup and fanout ownership as well as verdicts and cube validity.
