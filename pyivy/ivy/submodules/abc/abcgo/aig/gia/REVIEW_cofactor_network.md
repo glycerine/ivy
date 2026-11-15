@@ -90,7 +90,12 @@ unchanged Go interface semantics that the old C routine does not copy.
 
 ## Validation
 
-Final focused, module race and vet evidence is recorded in
-`../../SEQUENTIAL_AUDIT.md`. Full integration is pending for this checkpoint.
+Final focused checks pass in 9.745s (`/tmp/abcgo-cof-final-focused.log`). The
+frozen uncached module race run passes all 130 packages with tests, including
+GIA in 481.225s; three command packages have no tests
+(`/tmp/abcgo-cof-final-module-race.log`). GIA vet passes with empty output
+(`/tmp/abcgo-cof-final-vet.log`). Both exact process handles terminated
+successfully before these results were recorded. All 49 source routines in this
+family are reconciled; see `../../SEQUENTIAL_AUDIT.md`.
 The overall GIA package audit remains incomplete until its remaining families
 and final source inventory are reconciled.

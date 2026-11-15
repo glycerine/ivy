@@ -18,7 +18,7 @@ source workflows and tests are covered by that audit. Current review: `aig/gia`.
 | --- | --- | --- | --- |
 | 1 | `.` | reviewed | Root review below; race tests and vet pass. |
 | 2 | `aig/aig` | reviewed | All 52 files reconciled; native source matrices, final race suite, vet and module integration gates pass. |
-| 3 | `aig/gia` | in progress | Graph/manager, copies, hashing, balancing, windows, bi-decomposition, circuit-cofactoring, BDD collapse, counterexample replay/minimization and chronological/conflict-analysis/watched-clause circuit SAT, CTAS, stand-alone priority cuts, deep synthesis, DFS/support, mapped-edge assignment and sequential enable/frame transforms reviewed; remaining families and final inventory pending. |
+| 3 | `aig/gia` | in progress | Graph/manager, copies, hashing, balancing, windows, bi-decomposition, circuit-cofactoring, BDD collapse, counterexample replay/minimization and chronological/conflict-analysis/watched-clause circuit SAT, CTAS, stand-alone priority cuts, deep synthesis, DFS/support, mapped-edge assignment sequential enable/frame transforms, explicit/cube reachability and cofactor network analysis/reconstruction reviewed; remaining families and final inventory pending. |
 | 4 | `aig/gia/mf` | pending | |
 | 5 | `aig/gia/satcost` | pending | |
 | 6 | `aig/hop` | pending | |
@@ -7751,3 +7751,26 @@ count from its slice. REVIEW_cofactor_network.md reconciles all 49 source
 routines, evidence and boundaries, including why scratch literals must not be
 misinterpreted as complete replacement maps. Focused and frozen full gates are
 next; this checkpoint does not claim family or package closure.
+
+
+### Cofactor family full integration and next review
+
+Focused cofactor/cone/enable/recognition/MUX tests pass in 9.745s
+(/tmp/abcgo-cof-final-focused.log). Freeze all production, tests and fixtures,
+then consume full module race handle63015 and GIA vet handle79225 to terminal
+success. All 130 packages with tests pass; three command packages have no tests.
+GIA passes in 481.225s, ABCI in 29.501s and BMC in 23.725s
+(/tmp/abcgo-cof-final-module-race.log). Vet output is empty
+(/tmp/abcgo-cof-final-vet.log). No race warnings or failures are present. Close
+this 49-routine source family review and update GIA's current evidence links.
+Overall package completion stays 2/131; GIA still has remaining families and
+final inventory work. All coherent changes were committed in small checkpoints.
+
+Read-only preparation for the next family identifies giaEsop.c / esop.go.
+Temporary original-C and public-Go probes under /tmp/abcgo-esop-review-probe
+produce the same 364 cover records on 64 ordinary graphs, also checked against
+independent scalar truth tables. Separate temporary probes find real XOR wrong
+on 6/8 assignments, real MUX wrong on 2/8, and a one-register source returning
+zero registers. No source/test/fixture edits were made during the frozen gate.
+Add permanent red unit tests before repairing these issues. The next source
+inventory and test plan are saved in /tmp/abcgo-esop-next-review-plan.md.
