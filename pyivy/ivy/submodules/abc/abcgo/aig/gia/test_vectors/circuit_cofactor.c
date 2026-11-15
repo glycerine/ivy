@@ -15,7 +15,14 @@ static Gia_Man_t *frames(int regs,int pis,int mode,int phase,int *property){
  if(mode!=2){lit=ci[regs]^(phase&1);if(mode==3 && pis>1)lit=Gia_ManHashXor(g,lit,ci[regs+1]);state=Gia_ManHashAnd(g,state,lit);}
  *property=state;return g;
 }
-int main(void){int regs,pis,mode,phase,property,status,again,i,assignment,*values,any;unsigned image;Gia_Obj_t *o;Ccf_Man_t p;
+static int diagnostic(void){
+ Ccf_Man_t p;int property,status;memset(&p,0,sizeof(p));
+ p.pGia=source(2);p.pFrames=frames(2,1,0,0,&property);p.vCopies=Vec_IntAlloc(128);p.pSat=sat_solver_new();p.fVerbose=1;
+ Gia_ManCofExtendSolver(&p);status=Gia_ManCofGetReachable(&p,property);printf("status %d\n",status);
+ sat_solver_delete(p.pSat);Vec_IntFree(p.vCopies);Gia_ManStop(p.pFrames);Gia_ManStop(p.pGia);return 0;
+}
+int main(int argc,char **argv){
+ if(argc>1 && !strcmp(argv[1],"diagnostic"))return diagnostic();int regs,pis,mode,phase,property,status,again,i,assignment,*values,any;unsigned image;Gia_Obj_t *o;Ccf_Man_t p;
  for(regs=1;regs<=3;regs++)for(pis=1;pis<=2;pis++)for(mode=0;mode<4;mode++)for(phase=0;phase<8;phase++){
   memset(&p,0,sizeof(p));p.pGia=source(regs);p.pFrames=frames(regs,pis,mode,phase,&property);p.vCopies=Vec_IntAlloc(128);p.pSat=sat_solver_new();
   Gia_ManCofExtendSolver(&p);status=Gia_ManCofGetReachable(&p,property);again=Gia_ManCofGetReachable(&p,property);

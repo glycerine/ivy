@@ -3,6 +3,7 @@ package gia
 import (
 	"fmt"
 	"os/exec"
+	"regexp"
 	"strings"
 	"testing"
 
@@ -66,7 +67,7 @@ func TestCircuitCofactoringImagesMatchOriginalABC(t *testing.T) {
 					func() {
 						g, property := ccofReviewFrames(regs, pis, mode, phase)
 						p := &Ccf_Man_t{pGia: ccofReviewStateSource(regs), pFrames: g, vCopies: Vec_IntAlloc(0), pSat: bsat.NewSolver()}
-						defer p.pSat.Close()
+						defer Ccf_ManStop(p)
 						Gia_ManCofExtendSolver(p)
 						status := Gia_ManCofGetReachable(p, property)
 						again := Gia_ManCofGetReachable(p, property)
@@ -117,4 +118,23 @@ func TestCircuitCofactoringImagesMatchOriginalABC(t *testing.T) {
 		t.Fatalf("source circuit-cofactoring status/image differs\nGo:\n%s\nC:\n%s", got.String(), native)
 	}
 	t.Logf("%d proper-image enumeration/convergence cases agree with original ABC and independent existential evaluation", cases)
+}
+
+func TestCircuitCofactoringVerboseMatchesOriginalABC(t *testing.T) {
+	exe := compileGiaSourceOracle(t, "circuit_cofactor.c")
+	native, err := exec.Command(exe, "diagnostic").CombinedOutput()
+	if err != nil {
+		t.Fatalf("native diagnostic: %v\n%s", err, native)
+	}
+	got := hashReviewStdout(t, func() {
+		g, property := ccofReviewFrames(2, 1, 0, 0)
+		p := &Ccf_Man_t{pGia: ccofReviewStateSource(2), pFrames: g, vCopies: Vec_IntAlloc(0), pSat: bsat.NewSolver(), fVerbose: 1}
+		defer Ccf_ManStop(p)
+		Gia_ManCofExtendSolver(p)
+		fmt.Printf("status %d\n", Gia_ManCofGetReachable(p, property))
+	})
+	elapsed := regexp.MustCompile(`Time\s*=\s*[0-9.]+ sec`)
+	if a, b := elapsed.ReplaceAllString(got, "Time=<elapsed>"), elapsed.ReplaceAllString(string(native), "Time=<elapsed>"); a != b {
+		t.Fatalf("verbose cofactoring differs\nGo:%s\nC: %s", a, b)
+	}
 }

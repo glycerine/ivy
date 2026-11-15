@@ -5774,3 +5774,40 @@ stop releases owned frame/unroller state and leaves the source alive
 (/tmp/abcgo-ccof-resources.log). Save a red checkpoint before final cross-frame,
 diagnostic and integration checks. Original completion remains 2/131; GIA and
 the sequential audit remain active.
+
+Cross-frame coverage passes 1,536 ordinary/typed/layout/phase/save/init/hash
+configurations and 176,640 assignments against independent sequential
+simulation (/tmp/abcgo-ccof-frame-matrix.log). This verifies the unroller gate
+repair across fixed and incremental PI layouts, initialization and non-hashed
+construction without claiming review of the separate abstraction scheduler.
+
+New red reporting tests show negative attempted-frame counts on immediate
+convergence/limits and a verbose image count/format mismatch against C
+(/tmp/abcgo-ccof-diagnostics-red.log). Count attempted iterations/frames as
+frame+1, restore the source verbose labels and first cumulative AIG/conflict
+counts, and report elapsed seconds using Go time. The native selected proper-
+image diagnostic now agrees exactly except nondeterministic time. Keep the
+existing Go correction that a zero-second budget means unlimited; do not copy
+the source wrapper's erroneous nonzero absolute-stop check for nTimeMax==0.
+
+Compactness: remove unused stored frame/time limits and the redundant encoded
+object counter; recover the CNF frontier from NumVars before growing the solver,
+as C does. Reserve copy scratch on demand rather than 1,000 entries and avoid
+clock/statistic work on quiet image iterations. The small-image benchmark uses
+5,918,192B/89 allocations versus 5,922,278B/89 before; timing varies from
+1,332,761ns before to 1,385,826ns after, so no speedup is claimed there.
+
+Unknown-reset intersection now reuses a distinct owned solver and extends its
+CNF as image gates grow, rather than reconstructing a fresh solver each call.
+It still receives current absolute deadlines/per-call budgets and never the
+enumerator's blocking clauses. Growing-image checks pass. In 100 warmed queries,
+a fresh checker uses 5,915,041B/50 allocations/1,325,799ns each; reuse uses
+40B/3 allocations/596.8ns (/tmp/abcgo-ccof-after.log). Both owned solvers are
+closed at stop. An end-to-end 21-register test verifies that enumeration can
+finish while the reset query hits its own conflict budget and yields undecided,
+not a safety claim (/tmp/abcgo-ccof-checker-limit.log). The initial budget1
+fixture stopped enumeration too early; budget4 reaches the intended reset-query
+path, verified by a returned image plus the limit verdict.
+
+Save a red checkpoint pending final focused rerun, full uncached module race
+suite and GIA vet. Original completion remains 2/131; GIA and the audit active.

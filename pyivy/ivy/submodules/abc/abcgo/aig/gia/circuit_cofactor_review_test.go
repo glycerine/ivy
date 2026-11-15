@@ -44,7 +44,7 @@ func TestCircuitCofactoringEncodingMatchesAllGateValues(t *testing.T) {
 				func() {
 					g := windowReviewGraph(signs, typed, layout)
 					p := &Ccf_Man_t{pFrames: g, pSat: bsat.NewSolver()}
-					defer p.pSat.Close()
+					defer Ccf_ManStop(p)
 					Gia_ManCofExtendSolver(p)
 					clauses := p.pSat.Statistics().Clauses
 					Gia_ManCofExtendSolver(p)
@@ -80,7 +80,7 @@ func TestCircuitCofactoringEncodingMatchesAllGateValues(t *testing.T) {
 					g.EnableMuxes()
 					fresh := Gia_ManAppendXorReal(g, Gia_ObjToLit(g, Gia_ManCi(g, 0)), Gia_ObjToLit(g, Gia_ManCi(g, 3))^1)
 					Gia_ManCofExtendSolver(p)
-					if p.encoded != g.nObjs || p.encoded <= old {
+					if p.pSat.NumVars() != g.nObjs || p.pSat.NumVars() <= old {
 						t.Fatal("new gates were not incrementally encoded")
 					}
 					for mask := 0; mask < 16; mask++ {
@@ -223,7 +223,7 @@ func TestCircuitCofactoringModelSubstitution(t *testing.T) {
 					}
 					Gia_ManSetRegNum(source, 2)
 					p := &Ccf_Man_t{pGia: source, pFrames: g, pSat: bsat.NewSolver(), vCopies: Vec_IntAlloc(0)}
-					defer p.pSat.Close()
+					defer Ccf_ManStop(p)
 					Gia_ManCofExtendSolver(p)
 					var roots []int32
 					for _, id := range Vec_IntArray(g.vCos) {
@@ -328,7 +328,7 @@ func TestCircuitCofactoringInitialIntersectionIgnoresImageBlocks(t *testing.T) {
 						t.Fatal(err)
 					}
 					p := &Ccf_Man_t{pGia: src, pFrames: g, pSat: bsat.NewSolver()}
-					defer p.pSat.Close()
+					defer Ccf_ManStop(p)
 					Gia_ManCofExtendSolver(p)
 					// The real enumerator can exclude every image state. Its clauses must
 					// never constrain the separate question about admissible initial states.
@@ -431,7 +431,7 @@ func TestCircuitCofactoringResetQueryHonorsResources(t *testing.T) {
 	a, b := Gia_ManAppendCi(g), Gia_ManAppendCi(g)
 	Gia_ManAppendCo(g, Gia_ManAppendAnd(g, a, b))
 	p := &Ccf_Man_t{pGia: src, pFrames: g, pSat: bsat.NewSolver()}
-	defer p.pSat.Close()
+	defer Ccf_ManStop(p)
 	p.pSat.SetRuntimeDeadline(func() int64 { return 10 }, 1)
 	if status := giaCofInitialFailure(p); status != bsat.Unknown {
 		t.Fatalf("expired reset intersection returned%v, expected unknown", status)
@@ -449,6 +449,10 @@ func TestCircuitCofactoringResetQueryHonorsResources(t *testing.T) {
 	if err := source.SetAigerLatchInitialStates(resets); err != nil {
 		t.Fatal(err)
 	}
+	if p.initialSolver != nil {
+		p.initialSolver.Close()
+		p.initialSolver = nil
+	}
 	p.pGia, p.pFrames, p.nConfMax = source, hard, 1
 	if status := giaCofInitialFailure(p); status != bsat.Unknown {
 		t.Fatalf("reset query ignored conflict limit: %v", status)
@@ -456,5 +460,118 @@ func TestCircuitCofactoringResetQueryHonorsResources(t *testing.T) {
 	p.nConfMax = 0
 	if status := giaCofInitialFailure(p); status != bsat.Unsatisfiable {
 		t.Fatalf("unlimited impossible reset intersection returned%v", status)
+	}
+}
+
+func TestCircuitCofactoringReportsAttemptedFrames(t *testing.T) {
+	for _, test := range []struct {
+		src               *Gia_Man_t
+		frames, conflicts int32
+		expected          string
+	}{
+		{ccofReviewMachine(0, 0), 3, 0, "Backward reachability converged after 1 iterations."},
+		{ccofReviewMachine(12, 12), 3, 0, "Backward reachability converged after 2 iterations."},
+		{ccofReviewPigeonhole(), 1, 1, "Conflict limit or timeout is reached after 1 frames."},
+	} {
+		text := hashReviewStdout(t, func() { Gia_ManCofTest(test.src, test.frames, test.conflicts, 0, 0) })
+		if !strings.Contains(text, test.expected) || strings.Contains(text, "after -") || strings.Contains(text, "Runtime limit (0") {
+			t.Errorf("expected %q, got%q", test.expected, text)
+		}
+	}
+}
+func BenchmarkCircuitCofactoringImage(b *testing.B) {
+	src := ccofReviewMachine(8, 12)
+	b.ReportAllocs()
+	for i := 0; i < b.N; i++ {
+		p := Ccf_ManStart(src, 3, 0, 0, 0)
+		p.pFrames = Gia_ManUnrollAdd(p.pUnr, 1).(*Gia_Man_t)
+		Gia_ManCofExtendSolver(p)
+		Gia_ManCofGetReachable(p, Gia_ManUnrollLastLit(p.pUnr))
+		Ccf_ManStop(p)
+	}
+}
+
+func TestCircuitCofactoringResetCheckerExtendsImages(t *testing.T) {
+	src := ccofReviewStateSource(2)
+	if err := src.SetAigerLatchInitialStates([]int32{0, -1}); err != nil {
+		t.Fatal(err)
+	}
+	g := Gia_ManStart(16)
+	a, b := Gia_ManAppendCi(g), Gia_ManAppendCi(g)
+	Gia_ManHashStart(g)
+	Gia_ManAppendCo(g, Gia_ManHashAnd(g, a, b))
+	p := &Ccf_Man_t{pGia: src, pFrames: g, pSat: bsat.NewSolver()}
+	defer Ccf_ManStop(p)
+	if status := giaCofInitialFailure(p); status != bsat.Unsatisfiable {
+		t.Fatalf("first image intersection: %v", status)
+	}
+	Gia_ManAppendCo(g, Gia_ManHashAnd(g, a^1, b))
+	for i := 0; i < 2; i++ {
+		if status := giaCofInitialFailure(p); status != bsat.Satisfiable {
+			t.Fatalf("extended image intersection: %v", status)
+		}
+	}
+}
+func TestCircuitCofactoringIncompleteResetQueryIsUndecided(t *testing.T) {
+	hard := ccofReviewPigeonhole()
+	src := Gia_ManStart(hard.nObjs + 32)
+	control := Gia_ManAppendCi(src)
+	hard.pObjs[0].Value = 0
+	for _, id := range Vec_IntArray(hard.vCis) {
+		hard.pObjs[id].Value = uint32(Gia_ManAppendCi(src))
+	}
+	Gia_ManHashStart(src)
+	giaComposeNodes(src, hard, true)
+	property := Gia_ManHashOr(src, control^1, Gia_ObjFanin0Copy(Gia_ManCo(hard, 0)))
+	Gia_ManAppendCo(src, property)
+	for _, id := range Vec_IntArray(src.vCis) {
+		Gia_ManAppendCo(src, id<<1)
+	}
+	Gia_ManHashStop(src)
+	Gia_ManSetRegNum(src, Gia_ManCiNum(src))
+	resets := make([]int32, Gia_ManRegNum(src))
+	for i := range resets {
+		resets[i] = -1
+	}
+	resets[0] = 1
+	if err := src.SetAigerLatchInitialStates(resets); err != nil {
+		t.Fatal(err)
+	}
+	var out *Gia_Man_t
+	text := hashReviewStdout(t, func() { out = Gia_ManCofTest(src, 1, 4, 0, 0) })
+	if Gia_ManCoNum(out) == 0 {
+		t.Fatalf("did not reach reset intersection after image enumeration: %q", text)
+	}
+	if !strings.Contains(text, "Property is undecided.") || !strings.Contains(text, "Conflict limit or timeout") || strings.Contains(text, "Property holds.") || strings.Contains(text, "Property failed") {
+		t.Fatalf("incomplete initial-state intersection must remain undecided: %q", text)
+	}
+}
+func BenchmarkCircuitCofactoringResetQueries(b *testing.B) {
+	for _, reuse := range []bool{false, true} {
+		name := "fresh"
+		if reuse {
+			name = "reused"
+		}
+		b.Run(name, func(b *testing.B) {
+			src := ccofReviewStateSource(2)
+			if err := src.SetAigerLatchInitialStates([]int32{-1, -1}); err != nil {
+				b.Fatal(err)
+			}
+			g := Gia_ManStart(8)
+			a, c := Gia_ManAppendCi(g), Gia_ManAppendCi(g)
+			Gia_ManAppendCo(g, Gia_ManAppendAnd(g, a, c))
+			p := &Ccf_Man_t{pGia: src, pFrames: g, pSat: bsat.NewSolver()}
+			defer Ccf_ManStop(p)
+			giaCofInitialFailure(p)
+			b.ReportAllocs()
+			b.ResetTimer()
+			for i := 0; i < b.N; i++ {
+				if !reuse {
+					p.initialSolver.Close()
+					p.initialSolver = nil
+				}
+				giaCofInitialFailure(p)
+			}
+		})
 	}
 }

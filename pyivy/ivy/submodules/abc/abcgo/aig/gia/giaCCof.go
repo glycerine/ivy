@@ -10,13 +10,13 @@ import (
 // Ccf_Man_t incrementally enumerates backward images by fixing frame PIs to
 // a satisfying assignment while keeping the initial register CIs symbolic.
 type Ccf_Man_t struct {
-	pGia                                    *Gia_Man_t
-	nFrameMax, nConfMax, nTimeMax, fVerbose int32
-	pUnr                                    any
-	pFrames                                 *Gia_Man_t
-	vCopies                                 *Vec_Int_t
-	pSat                                    *bsat.Solver
-	encoded                                 int32
+	pGia               *Gia_Man_t
+	nConfMax, fVerbose int32
+	pUnr               any
+	pFrames            *Gia_Man_t
+	vCopies            *Vec_Int_t
+	pSat               *bsat.Solver
+	initialSolver      *bsat.Solver
 }
 
 func Ccf_ManStart(src *Gia_Man_t, frames, conflicts, seconds, verbose int32) *Ccf_Man_t {
@@ -24,7 +24,12 @@ func Ccf_ManStart(src *Gia_Man_t, frames, conflicts, seconds, verbose int32) *Cc
 		panic("gia: invalid circuit-cofactoring limits")
 	}
 	parameters := &Gia_ParFra_t{NFrames: frames, fSaveLastLit: 1, FVerbose: verbose}
-	p := &Ccf_Man_t{pGia: src, nFrameMax: frames, nConfMax: conflicts, nTimeMax: seconds, fVerbose: verbose, pUnr: Gia_ManUnrollStart(src, parameters), vCopies: Vec_IntAlloc(1000), pSat: bsat.NewSolver()}
+	p := &Ccf_Man_t{
+		pGia: src, nConfMax: conflicts, fVerbose: verbose,
+		pUnr:    Gia_ManUnrollStart(src, parameters),
+		vCopies: Vec_IntAlloc(0),
+		pSat:    bsat.NewSolver(),
+	}
 	p.pSat.SetLimits(int64(conflicts), 0)
 	if seconds > 0 {
 		p.pSat.SetDeadline(time.Now().Add(time.Duration(seconds) * time.Second))
@@ -39,21 +44,28 @@ func Ccf_ManStop(p *Ccf_Man_t) {
 	if p.pFrames != nil {
 		Gia_ManStop(p.pFrames)
 	}
+	if p.pSat != nil {
+		p.pSat.Close()
+	}
+	if p.initialSolver != nil {
+		p.initialSolver.Close()
+	}
 	*p = Ccf_Man_t{}
 }
 func Gia_ManCofExtendSolver(p *Ccf_Man_t) {
 	if p.pFrames == nil {
 		panic("gia: circuit cofactoring has no frames")
 	}
-	for p.pSat.NumVars() < p.pFrames.nObjs {
-		p.pSat.NewVariable()
+	first := p.pSat.NumVars()
+	if first < p.pFrames.nObjs {
+		p.pSat.SetNumVars(p.pFrames.nObjs)
 	}
 	add := func(literals ...int32) { p.pSat.AddClause(literals...) }
-	if p.encoded == 0 {
+	if first == 0 {
 		add(1)
-		p.encoded = 1
+		first = 1
 	} // Object zero is the false constant.
-	for id := p.encoded; id < p.pFrames.nObjs; id++ {
+	for id := first; id < p.pFrames.nObjs; id++ {
 		a, b, c, kind := p.pFrames.Gate(id)
 		out := id << 1
 		switch kind {
@@ -76,7 +88,6 @@ func Gia_ManCofExtendSolver(p *Ccf_Man_t) {
 			add(out, a^1)
 		}
 	}
-	p.encoded = p.pFrames.nObjs
 }
 func Gia_Obj0Copy(copies *Vec_Int_t, fanin, phase int32) int32 {
 	return Vec_IntEntry(copies, int(fanin)) ^ phase
@@ -139,17 +150,22 @@ func Gia_ManCofGetReachable(p *Ccf_Man_t, property int32) int32 {
 	if status == bsat.Unsatisfiable {
 		return 1
 	}
+	var previous int32
+	var conflicts int64
 	for count := 0; status == bsat.Satisfiable; count++ {
-		previous := p.pFrames.nObjs
-		conflicts := p.pSat.Statistics().Conflicts
-		started := time.Now()
+		var started time.Time
+		if p.fVerbose != 0 {
+			started = time.Now()
+		}
 		blocked := Gia_ManCofOneDerive(p, property)
 		// A false blocking literal makes the whole solver inconsistent. This is a
 		// completed image, not the source's debug-only add-clause assertion failure.
 		p.pSat.AddClause(blocked)
 		status = p.pSat.Solve(property)
 		if p.fVerbose != 0 {
-			fmt.Printf("%3d: AIG=%7d Conf=%7d Time=%s\n", count, p.pFrames.nObjs-previous, p.pSat.Statistics().Conflicts-conflicts, time.Since(started))
+			currentConflicts := p.pSat.Statistics().Conflicts
+			fmt.Printf("%3d : AIG =%7d  Conf =%7d.  Time = %8.2f sec\n", count, p.pFrames.nObjs-previous, currentConflicts-conflicts, time.Since(started).Seconds())
+			previous, conflicts = p.pFrames.nObjs, currentConflicts
 		}
 	}
 	if status == bsat.Unknown {
@@ -186,8 +202,10 @@ func giaCofInitialFailure(p *Ccf_Man_t) bsat.Status {
 	}
 	// The image-enumeration solver contains blocking clauses. Use the same
 	// gate encoding without those clauses to test intersection with reset states.
-	check := &Ccf_Man_t{pFrames: p.pFrames, pSat: bsat.NewSolver()}
-	defer check.pSat.Close()
+	if p.initialSolver == nil {
+		p.initialSolver = bsat.NewSolver()
+	}
+	check := &Ccf_Man_t{pFrames: p.pFrames, pSat: p.initialSolver}
 	check.pSat.SetLimits(int64(p.nConfMax), 0)
 	clock, deadline := p.pSat.RuntimeDeadline()
 	check.pSat.SetRuntimeDeadline(clock, deadline)
@@ -218,7 +236,7 @@ func Gia_ManCofTest(src *Gia_Man_t, frames, conflicts, seconds, verbose int32) *
 	failed := false
 	for frame = 0; frame < frames; frame++ {
 		if verbose != 0 {
-			fmt.Printf("ITER %3d:\n", frame)
+			fmt.Printf("ITER %3d :\n", frame)
 		}
 		p.pFrames = Gia_ManUnrollAdd(p.pUnr, frame+1).(*Gia_Man_t)
 		Gia_ManCofExtendSolver(p)
@@ -239,15 +257,15 @@ func Gia_ManCofTest(src *Gia_Man_t, frames, conflicts, seconds, verbose int32) *
 	}
 	switch {
 	case seconds > 0 && time.Since(started) >= time.Duration(seconds)*time.Second:
-		fmt.Printf("Runtime limit (%d sec) reached after %d frames. ", seconds, frame)
+		fmt.Printf("Runtime limit (%d sec) is reached after %d frames.  ", seconds, min(frame+1, frames))
 	case frame == frames:
-		fmt.Printf("Completed %d frames without converging. ", frame)
+		fmt.Printf("Completed %d frames without converging.  ", frame)
 	case status == 1:
-		fmt.Printf("Backward reachability converged after %d iterations. ", frame-1)
+		fmt.Printf("Backward reachability converged after %d iterations.  ", frame+1)
 	case status == -1:
-		fmt.Printf("Conflict limit or timeout reached after %d frames. ", frame-1)
+		fmt.Printf("Conflict limit or timeout is reached after %d frames.  ", frame+1)
 	}
-	fmt.Printf("Runtime=%s. ", time.Since(started))
+	fmt.Printf("Runtime = %8.2f sec\n", time.Since(started).Seconds())
 	if !failed && status == 1 {
 		fmt.Println("Property holds.")
 	} else if !failed {
