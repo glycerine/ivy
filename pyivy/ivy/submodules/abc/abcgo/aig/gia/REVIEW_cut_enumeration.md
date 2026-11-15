@@ -42,6 +42,8 @@ timings are approximately unchanged. Logical limits, private reference counts,
 serialized cut lengths and fixed candidate pools serve separate source roles.
 
 The combined cut-focused suite passes in 10.806s, including the earlier cut-
-replacement regressions. Full race/vet integration is recorded in
-SEQUENTIAL_AUDIT.md. This note covers stand-alone enumeration; the remaining GIA
+replacement regressions. Full uncached module race tests pass all 130 tested packages
+(three command packages have no tests), and GIA vet passes. Logs are
+/tmp/abcgo-cut-enumeration-final-module-race.log and
+/tmp/abcgo-cut-enumeration-final-vet.log. SEQUENTIAL_AUDIT.md records checkpoints. This note covers stand-alone enumeration; the remaining GIA
 families and the 131-package sequential audit stay open.

@@ -18,7 +18,7 @@ source workflows and tests are covered by that audit. Current review: `aig/gia`.
 | --- | --- | --- | --- |
 | 1 | `.` | reviewed | Root review below; race tests and vet pass. |
 | 2 | `aig/aig` | reviewed | All 52 files reconciled; native source matrices, final race suite, vet and module integration gates pass. |
-| 3 | `aig/gia` | in progress | Graph/manager, copies, hashing, balancing, windows, bi-decomposition, circuit-cofactoring, BDD collapse, counterexample replay/minimization and chronological/conflict-analysis/watched-clause circuit SAT and CTAS reviewed; remaining families and final inventory pending. |
+| 3 | `aig/gia` | in progress | Graph/manager, copies, hashing, balancing, windows, bi-decomposition, circuit-cofactoring, BDD collapse, counterexample replay/minimization and chronological/conflict-analysis/watched-clause circuit SAT, CTAS and stand-alone priority cuts reviewed; remaining families and final inventory pending. |
 | 4 | `aig/gia/mf` | pending | |
 | 5 | `aig/gia/satcost` | pending | |
 | 6 | `aig/hop` | pending | |
@@ -6717,3 +6717,27 @@ coverage. REVIEW_cut_enumeration.md records the reviewed algorithms, source
 exceptions and remaining shared-utility allocation. Save a checkpoint and freeze
 source/tests/fixtures for full module race and GIA vet. Original completion
 remains 2/131; GIA is still in progress.
+
+Stand-alone cut enumeration integration is green: full uncached module race
+tests pass all 130 tested packages, with three command packages having no tests
+(/tmp/abcgo-cut-enumeration-final-module-race.log). GIA vet passes with empty
+output (/tmp/abcgo-cut-enumeration-final-vet.log). Source, tests and fixtures
+stayed frozen throughout integration. Mark giaCut.c / giaCut.go reviewed. GIA's
+remaining families and final inventory are still pending; original completion
+stays 2/131. A fresh inventory finds 105 original C files and 549 production Go
+files; literal filename mentions alone are only triage, not completion evidence.
+
+Read-only preparation identifies giaDeep.c / giaDeep.go as the next family.
+/tmp/abcgo-deep-probe-build.py builds the actual C driver with scripted frame/
+command boundaries, using real Gia allocation/duplication. Normal and positive-
+goal probes each cover 96 configurations in /tmp/abcgo-deep-review-probe; normal
+traces contain 1,968 commands. /tmp/abcgo-deep-probe-verify.py independently
+checks stop counts, best/current frame selection, LUT-size cycles and batch mode.
+These are native baseline results, not yet Go agreement. CLI help describes a
+quality-goal stop, but C's nAndsMin remains -1 and the original driver ignores the
+goal; Go already implements that advertised behavior. Likewise C fails to
+restore batch mode on command failure while Go restores it. Treat these known
+source defects explicitly rather than blindly requiring identical failure/goal
+traces. Next: tracked normal-control native tests, deterministic stopping and
+error/ownership/outer-loop coverage, then fixes backed by red regressions if
+inspection or tests expose additional Go bugs.
