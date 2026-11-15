@@ -5,7 +5,7 @@ func (p *Gia_Man_t) Const1() int32                  { return 1 }
 func (p *Gia_Man_t) InputLiteral(index int32) int32 { return Gia_ObjId(p, Gia_ManCi(p, index)) << 1 }
 func (p *Gia_Man_t) AndLiteral(a, b int32, hash bool) int32 {
 	if !hash {
-		return Gia_ManAppendAnd(p, a, b)
+		return Gia_ManAppendAnd2(p, a, b)
 	}
 	if Vec_IntSize(&p.vHTable) != 0 {
 		return Gia_ManHashAnd(p, a, b)

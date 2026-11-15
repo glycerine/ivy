@@ -35,7 +35,7 @@ func gigRef(s string) (int32, error) {
 		return 0, fmt.Errorf("invalid wire %q", s)
 	}
 	n, err := strconv.ParseInt(s[1:], 10, 32)
-	if err != nil || n < 2 {
+	if err != nil || n < 0 {
 		return 0, fmt.Errorf("invalid wire %q", s)
 	}
 	return int32(n), nil

@@ -92,3 +92,36 @@ Before descriptor/index changes, short150ms runs show:
 claim. Planned candidates: ID->index instead of copying a full gigNode in byID;
 compact kind tags instead of strings retaining RHS text. Keep safe sparse-ID
 maps rather than C's count+100 allocation assumption.
+
+## Full native construction evidence and adjacent adapter fix
+
+A new Kit repeated-leaf regression fails before repair because the GIA adapter
+uses raw AppendAnd with hash=false. Source kitHop.c uses AppendAnd2. Change the
+adapter to that existing source operation; preserve local simplification,
+nonhashed distinct nodes and simple-mode raw append. This is not global hashing
+or a substitute synthesis algorithm.
+
+A separate new red regression catches w0/w1 references: source parses them as
+reserved constant references, while Go rejected them. Accept nonnegative wire
+references, leaving declaration IDs0/1 prohibited by the existing caller guard.
+
+The native matrix now passes1,160 cases, comparing parsed records, category
+vectors, exact graph objects/fanins, CI/CO order, identities, registers, full
+truth and public reports; independent Boolean checks also pass. It covers
+abbreviated/full/0x/upper/lower hex forms, missing/constant/repeated/permuted LUT
+pins, dependent LUTs, barriers/selections, Box4/5 fields, delays with zero through
+multiple selectors, Seq outputs and mixed cut interfaces. Source CI grouping
+and delay/PO/Seq CO grouping are retained, with zero registers/timing manager.
+
+There are840 original-format comparisons (including explicitly corrected
+six-input arity) and320 existing Go oversized-LUT4 cases. The latter retain
+Go's low16-bit behavior; compare them with explicitly equivalent four-digit C
+input, because unnormalized larger LUT4 tables can assert in the source ISOP
+engine. The original oversized failure is independently characterized alongside
+original LUT6 and selection failures. No production C source is changed.
+Source headers are included before installing the fixture's narrow assertion
+hook; preprocessed output confirms system assert.h does not overwrite it.
+
+Logs: `/tmp/abcgo-gig-native-correct-assert.log` (5.212s),
+`/tmp/abcgo-gig-kit-unhashed-red.log`,
+`/tmp/abcgo-gig-constant-refs-red.log`.

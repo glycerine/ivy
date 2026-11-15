@@ -8809,3 +8809,35 @@ Source correct six-input construction is not regressed to the C parser's
 erroneous four-input assertion. All other native assertions remain active.
 Save coherent red checkpoints while broader review/integration is pending;
 original completion2/131 and GIA remain open. No agents/branches.
+
+### GIG native state/construction matrix and Kit bridge repair
+
+The first complete native matrix exposes a valid repeated-pin synthesis panic:
+source kitHop.c uses Gia_ManAppendAnd2 for nonhashed construction, while Go's
+Kit manager adapter called raw AppendAnd. A new minimal repeated-leaf Kit
+regression fails before repair (/tmp/abcgo-gig-kit-unhashed-red.log,
+handle89613 terminal1). Route only the nonhashed interface to the existing
+source AppendAnd2. New checks preserve local same/opposite/constant
+simplification, distinct nonhashed gates and simple-mode raw behavior.
+
+Another new red test catches valid w0/w1 constant references being rejected
+(/tmp/abcgo-gig-constant-refs-red.log, handle81998 terminal1). C's reference
+parser accepts them; allow nonnegative wire references while retaining the
+separate reserved-ID declaration guard. The read-only original-C constant
+probe succeeds (/tmp/abcgo-gig-constant-wire-refs-native.log).
+
+Exact parser/group-order/object-kind/fanin/port/identity/truth comparison now
+passes1,160 cases with independent Boolean expectations
+(/tmp/abcgo-gig-native-correct-assert.log,5.212s). This includes840 original-
+format cases and320 existing Go wide-LUT4 extensions compared to explicitly
+normalized four-digit C input. Unnormalized oversized LUT4 can assert in C's
+ISOP engine; preserve that original failure separately, not a silent source
+patch or dropped test. Original valid6-LUT failure and invalid selection failure
+also remain characterized. Corrected mode bypasses only the precise line311
+LUT6 arity typo and validates six stored fanins/correction counts. Pre-include
+source headers before the narrow assert wrapper so system assert.h does not
+silently replace the test hook; preprocessed output confirms both arity sites
+still dispatch through the wrapper. All other source assertions stay active.
+
+Remaining parser/ownership/compactness checks and full integration are pending.
+Save a coherent red GIA checkpoint; original completion remains2/131.

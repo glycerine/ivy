@@ -1,4 +1,6 @@
 #include "aig/gia/gia.h"
+#include "misc/extra/extra.h"
+#include "misc/util/utilTruth.h"
 #include <assert.h>
 #include <sys/resource.h>
 

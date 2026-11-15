@@ -73,3 +73,15 @@ func TestGigRejectsInvalidSelectionParent(t *testing.T) {
 		})
 	}
 }
+
+func TestGigConstantWireReferences(t *testing.T) {
+	file := gigReviewWrite(t, "w2 = PO(w0)\nw3 = PO(w1)\n")
+	p, report := gigReviewRead(t, file)
+	if p == nil {
+		t.Fatalf("source-valid constant wire references rejected: %s", report)
+	}
+	defer Gia_ManStop(p)
+	if Gia_ManCiNum(p) != 0 || Gia_ManCoNum(p) != 2 || gigReviewMask(t, p, 0) != 0 || gigReviewMask(t, p, 1) != 1 {
+		t.Fatal("constant reference functions changed")
+	}
+}
