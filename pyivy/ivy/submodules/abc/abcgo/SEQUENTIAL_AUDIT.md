@@ -7725,3 +7725,29 @@ bounded insertion using one in-place shift. The 4,096-candidate/top-100 benchmar
 Remove three source-declared-only mark/phase words and derive object count from
 the objects slice. Keep mutable references separate from physical adjacency and
 retain level queue links needed by the faithful worklist. Full gates pending.
+
+### Cofactor native reconstruction and reporting coverage
+
+The original-C fixture now compares all 2,330 reconstruction cases for exact
+object counts/interfaces/register counts and all output assignments
+(/tmp/abcgo-cof-native-rebuild.log, 3.826s together with network analysis).
+An additional 704 typed/reordered rebuilds pass independent exhaustive truth
+checks. Direct transfer tests cover positive/complemented duplicate aliases,
+zero/unmapped literals and input-order ownership; invalid pivots and >200
+signals are explicit boundary cases. Traversal rollover and per-query reference
+restoration are also checked.
+
+Add native histogram and composed-driver regressions before repair. The former
+fails on changed exact-count bins/columns instead of source decimal ranges
+(/tmp/abcgo-cof-fanio-red.log); restore ranges and source formatting, including
+blank columns. Nineteen native histograms now match exactly across decade
+boundaries, 10,000 fanouts and MFFC ranges. The latter exposes omitted memory and
+changed elapsed fields (/tmp/abcgo-cof-driver-red.log); restore source formatting,
+report Go payload storage and wall time, and normalize only those numeric fields.
+Retain finite averages for empty/CI-only Go graphs where C divides by zero.
+
+Remove never-read CI/CO vectors (unused in original C too) and derive queue level
+count from its slice. REVIEW_cofactor_network.md reconciles all 49 source
+routines, evidence and boundaries, including why scratch literals must not be
+misinterpreted as complete replacement maps. Focused and frozen full gates are
+next; this checkpoint does not claim family or package closure.

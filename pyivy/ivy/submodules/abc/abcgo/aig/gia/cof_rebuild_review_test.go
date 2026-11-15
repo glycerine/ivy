@@ -124,3 +124,91 @@ func TestCofactorRebuildInterfaceMetadata(t *testing.T) {
 		}
 	}
 }
+
+func TestCofactorTypedPivotMatrix(t *testing.T) {
+	rebuilds := 0
+	for signs := int32(0); signs < 8; signs++ {
+		for _, layout := range []bool{false, true} {
+			for _, regs := range []bool{false, true} {
+				src := quantificationReviewGraph(signs, regs, false)
+				if layout {
+					src = Gia_ManDupOrderDfsReverse(src)
+				}
+				for _, obj := range src.pObjs {
+					if Gia_ObjIsCand(obj) == 0 {
+						continue
+					}
+					raw := Gia_ManDupCofInt(src, obj.id)
+					cofReviewCheckRebuild(t, src, raw)
+					clean := Gia_ManDupCof(src, obj.id)
+					cofReviewCheckRebuild(t, src, clean)
+					Gia_ManStop(raw)
+					Gia_ManStop(clean)
+					rebuilds += 2
+				}
+				for _, limit := range []int32{0, 1, 2, 100} {
+					out := Gia_ManDupCofAll(src, limit, 0)
+					cofReviewCheckRebuild(t, src, out)
+					Gia_ManStop(out)
+					rebuilds++
+				}
+				Gia_ManStop(src)
+			}
+		}
+	}
+	t.Logf("%d typed/reordered rebuilds checked exhaustively", rebuilds)
+}
+
+func TestCofactorTransferDropsMissingAndDeduplicates(t *testing.T) {
+	original, cofactored, next := Gia_ManStart(16), Gia_ManStart(16), Gia_ManStart(16)
+	for i := 0; i < 5; i++ {
+		Gia_ManAppendCi(original)
+		Gia_ManAppendCi(cofactored)
+		Gia_ManAppendCi(next)
+	}
+	for i, lit := range []uint32{2, 4, 6, 8, 10} {
+		original.pObjs[i+1].Value = lit
+	}
+	// Polarity is irrelevant to transferring a signal ID; preserve first order.
+	cofactored.pObjs[1].Value = 7
+	cofactored.pObjs[2].Value = 6
+	cofactored.pObjs[3].Value = 0
+	cofactored.pObjs[4].Value = ^uint32(0)
+	cofactored.pObjs[5].Value = 2
+	signals := Vec_IntAlloc(5)
+	for i := int32(1); i <= 5; i++ {
+		Vec_IntPush(signals, i)
+	}
+	got := Gia_ManTransfer(original, cofactored, next, signals)
+	if !slices.Equal(Vec_IntArray(got), []int32{3, 1}) {
+		t.Fatalf("transferred %v", Vec_IntArray(got))
+	}
+	if !slices.Equal(Vec_IntArray(signals), []int32{1, 2, 3, 4, 5}) {
+		t.Fatal("mutated input signals")
+	}
+	Gia_ManStop(original)
+	Gia_ManStop(cofactored)
+	Gia_ManStop(next)
+}
+
+func TestCofactorInvalidPivotsAndLimit(t *testing.T) {
+	g := cofReviewGraph(7)
+	for _, id := range []int32{-1, 0, g.nObjs, g.nObjs + 1, Gia_ManCo(g, 0).id} {
+		if Gia_ManDupCofInt(g, id) != nil || Gia_ManDupCof(g, id) != nil {
+			t.Fatalf("invalid pivot%d accepted", id)
+		}
+	}
+	signals := Vec_IntAlloc(201)
+	for i := 0; i < 201; i++ {
+		Vec_IntPush(signals, Gia_ManCi(g, 0).id)
+	}
+	text := hashReviewStdout(t, func() {
+		if Gia_ManDupCofAllInt(g, signals, 0) != nil {
+			t.Fatal("accepted more than 200 signals")
+		}
+	})
+	if text != "Too many signals to cofactor.\n" {
+		t.Fatalf("diagnostic %q", text)
+	}
+	Gia_ManStop(g)
+}

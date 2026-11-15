@@ -1,7 +1,5 @@
 package gia
 
-import "github.com/glycerine/abcgo/misc/vec"
-
 // Cof_Obj_t stores explicit links instead of offsets into C's packed arena.
 type Cof_Obj_t struct {
 	Id              int32
@@ -16,11 +14,9 @@ type Cof_Obj_t struct {
 type Cof_Fan_t struct{ iFan, fCompl uint32 }
 type Cof_Man_t struct {
 	pGia             *Gia_Man_t
-	vCis, vCos       *Vec_Int_t
 	objects          []*Cof_Obj_t
 	nNodes, nTravIds int32
 	pLevels          []int32
-	nLevels          int32
 }
 
 func Gia_ObjHandle(obj *Gia_Obj_t) uint32 { return obj.Value }
@@ -60,7 +56,7 @@ func Cof_ObjIsTravIdPrevious(p *Cof_Man_t, obj *Cof_Obj_t) int32 {
 }
 
 func Cof_ManCreateLogicSimple(g *Gia_Man_t) *Cof_Man_t {
-	p := &Cof_Man_t{pGia: g, vCis: vec.Vec_IntAlloc(int(Gia_ManCiNum(g))), vCos: vec.Vec_IntAlloc(int(Gia_ManCoNum(g))), objects: make([]*Cof_Obj_t, g.nObjs)}
+	p := &Cof_Man_t{pGia: g, objects: make([]*Cof_Obj_t, g.nObjs)}
 	for id := int32(0); id < g.nObjs; id++ {
 		a, b, c, kind := g.Gate(id)
 		obj := &Cof_Obj_t{Id: id}
@@ -71,7 +67,6 @@ func Cof_ManCreateLogicSimple(g *Gia_Man_t) *Cof_Man_t {
 		case 0:
 		case 1:
 			obj.fTerm = 1
-			vec.Vec_IntPush(p.vCis, id)
 		case 2, 3:
 			lits = []int32{a, b}
 			p.nNodes++
@@ -84,7 +79,6 @@ func Cof_ManCreateLogicSimple(g *Gia_Man_t) *Cof_Man_t {
 		case 6:
 			obj.fTerm = 1
 			lits = []int32{a}
-			vec.Vec_IntPush(p.vCos, id)
 		default:
 			panic("gia: invalid cofactor graph object")
 		}

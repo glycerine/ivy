@@ -2,9 +2,11 @@ package gia
 
 import (
 	"fmt"
-	"github.com/glycerine/abcgo/misc/vec"
 	"sort"
 	"time"
+	"unsafe"
+
+	"github.com/glycerine/abcgo/misc/vec"
 )
 
 func Cof_ManInsertEntry_rec(nodes *Vec_Ptr_t, node *Cof_Obj_t, limit int32) {
@@ -52,8 +54,7 @@ func Cof_ManCountRemoved(p *Cof_Man_t, root *Cof_Obj_t, one int32) int32 {
 	}
 	// Source callers prepare these once. Initialize here too for direct callers.
 	if len(p.pLevels) == 0 {
-		p.nLevels = Gia_ManLevelNum(p.pGia) + 1
-		p.pLevels = make([]int32, p.nLevels)
+		p.pLevels = make([]int32, Gia_ManLevelNum(p.pGia)+1)
 	}
 	Cof_ManIncrementTravId(p)
 	Cof_ObjSetTravIdCurrent(p, root)
@@ -62,7 +63,7 @@ func Cof_ManCountRemoved(p *Cof_Man_t, root *Cof_Obj_t, one int32) int32 {
 	p.pLevels[start] = root.Id
 	root.iLit = one
 	var count int32
-	for level := start; level < p.nLevels; level++ {
+	for level := start; level < int32(len(p.pLevels)); level++ {
 		for id := p.pLevels[level]; id != 0; {
 			node := p.objects[id]
 			for _, next := range node.fanouts {
@@ -150,6 +151,17 @@ func Cof_ObjMffcSize(node *Cof_Obj_t) int32 {
 	}
 	return count
 }
+
+// cofFanioBucket encodes C's decimal histogram bins: exact below ten,
+// then ranges 10..19, 20..29, ..., 100..199, and so on.
+func cofFanioBucket(value int32) int32 {
+	var decade int32
+	for value >= 10 {
+		value /= 10
+		decade += 10
+	}
+	return decade + value
+}
 func Cof_ManPrintFanio(p *Cof_Man_t) {
 	type row struct{ fanins, fanouts, mffc int32 }
 	histogram := map[int32]*row{}
@@ -174,10 +186,11 @@ func Cof_ManPrintFanio(p *Cof_Man_t) {
 			if i == 2 && value == 0 {
 				continue
 			}
-			r := histogram[value]
+			bucket := cofFanioBucket(value)
+			r := histogram[bucket]
 			if r == nil {
 				r = &row{}
-				histogram[value] = r
+				histogram[bucket] = r
 			}
 			switch i {
 			case 0:
@@ -194,11 +207,38 @@ func Cof_ManPrintFanio(p *Cof_Man_t) {
 		keys = append(keys, int(k))
 	}
 	sort.Ints(keys)
-	fmt.Println("The distribution of fanins, fanouts, and MFFCs in the network:")
+	fmt.Println("The distribution of fanins, fanouts. and MFFCs in the network:")
 	fmt.Println("         Number    Nodes with fanin   Nodes with fanout   Nodes with MFFC")
 	for _, key := range keys {
 		r := histogram[int32(key)]
-		fmt.Printf("%15d : %11d       %12d    %12d\n", key, r.fanins, r.fanouts, r.mffc)
+		label := fmt.Sprint(key)
+		if key >= 10 {
+			scale := int64(1)
+			for i := 0; i < key/10; i++ {
+				scale *= 10
+			}
+			lower := scale * int64(key%10)
+			label = fmt.Sprintf("%d - %d", lower, lower+scale-1)
+		}
+		fmt.Printf("%15s : ", label)
+		if r.fanins == 0 {
+			fmt.Print("              ")
+		} else {
+			fmt.Printf("%11d   ", r.fanins)
+		}
+		fmt.Print("    ")
+		if r.fanouts == 0 {
+			fmt.Print("              ")
+		} else {
+			fmt.Printf("%12d  ", r.fanouts)
+		}
+		fmt.Print("    ")
+		if r.mffc == 0 {
+			fmt.Print("               ")
+		} else {
+			fmt.Printf("  %12d  ", r.mffc)
+		}
+		fmt.Println()
 	}
 	average := func(a, b int32) float64 {
 		if b == 0 {
@@ -206,7 +246,7 @@ func Cof_ManPrintFanio(p *Cof_Man_t) {
 		}
 		return float64(a) / float64(b)
 	}
-	fmt.Printf("Fanins: Max = %d. Ave = %.2f.  Fanouts: Max = %d. Ave = %.2f.  MFFCs: Max = %d. Ave = %.2f.\n", maxIn, average(totalIn, p.nNodes), maxOut, average(totalOut, p.nNodes), maxMffc, average(totalMffc, mffcNodes))
+	fmt.Printf("Fanins: Max = %d. Ave = %.2f.  Fanouts: Max = %d. Ave =  %.2f.  MFFCs: Max = %d. Ave =  %.2f.\n", maxIn, average(totalIn, p.nNodes), maxOut, average(totalOut, p.nNodes), maxMffc, average(totalMffc, mffcNodes))
 }
 func Gia_ManPrintFanio(g *Gia_Man_t, n int32) {
 	started := time.Now()
@@ -219,6 +259,13 @@ func Gia_ManPrintFanio(g *Gia_Man_t, n int32) {
 		Gia_ManHashStart(g)
 		Cof_ManPrintHighFanout(p, n)
 		Gia_ManHashStop(g)
-		fmt.Printf("Time: %s\n", time.Since(started))
+		// Report Go payload storage rather than C's unrelated packed arena.
+		bytes := uintptr(cap(p.objects)) * unsafe.Sizeof((*Cof_Obj_t)(nil))
+		for _, obj := range p.objects {
+			bytes += unsafe.Sizeof(*obj)
+			bytes += uintptr(cap(obj.fanins)+cap(obj.fanouts)) * unsafe.Sizeof((*Cof_Obj_t)(nil))
+			bytes += uintptr(cap(obj.complements)) * unsafe.Sizeof(false)
+		}
+		fmt.Printf("Memory for logic network =%10.3f MB  Time =%9.2f sec\n", float64(bytes)/(1<<20), time.Since(started).Seconds())
 	}
 }

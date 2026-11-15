@@ -43,4 +43,47 @@ static void inspect(unsigned seed) {
  for(i=1;i<=ncand+1;++i){top=Cof_ManCollectHighFanout(p,i);printf("top %d",i);for(j=0;j<Vec_PtrSize(top);++j)printf(" %d",((Cof_Obj_t*)Vec_PtrEntry(top,j))->Id);puts("");Vec_PtrFree(top);}
  Cof_ManStop(p);Gia_ManHashStop(g);Gia_ManStop(g);
 }
-int main(void){unsigned seed;for(seed=0;seed<32;++seed)inspect(seed);return 0;}
+static void emit_rebuild(Gia_Man_t *src,Gia_Man_t *out,unsigned seed,int pivot,int clean) {
+ int values[2048],bits,i,packed;Gia_Obj_t *o;
+ assert(out && Gia_ManObjNum(out)<2048);
+ printf("dup %u %d %d ci%d co%d regs%d objs%d",seed,pivot,clean,Gia_ManCiNum(out),Gia_ManCoNum(out),Gia_ManRegNum(out),Gia_ManObjNum(out));
+ for(bits=0;bits<16;++bits){
+  memset(values,0,sizeof(values));
+  Gia_ManForEachCi(out,o,i)values[Gia_ObjId(out,o)]=(bits>>i)&1;
+  Gia_ManForEachAnd(out,o,i)values[i]=(values[Gia_ObjFaninId0(o,i)]^Gia_ObjFaninC0(o))&(values[Gia_ObjFaninId1(o,i)]^Gia_ObjFaninC1(o));
+  packed=0;Gia_ManForEachCo(out,o,i)packed|=(values[Gia_ObjFaninId0p(out,o)]^Gia_ObjFaninC0(o))<<i;
+  printf(" %d",packed);
+ }
+ puts("");Gia_ManStop(out);
+}
+static void inspect_rebuild(unsigned seed) {
+ Gia_Man_t *g=graph(seed),*out;Gia_Obj_t *o;int i,clean;
+ Gia_ManHashStop(g);Gia_ManSetRegNum(g,seed%3);
+ Gia_ManForEachObj(g,o,i)if(Gia_ObjIsCand(o))for(clean=0;clean<2;++clean){
+  out=clean?Gia_ManDupCof(g,i):Gia_ManDupCofInt(g,i);emit_rebuild(g,out,seed,i,clean);
+ }
+ for(i=0;i<5;++i){int limits[]={0,1,2,4,1000};out=Gia_ManDupCofAll(g,limits[i],0);emit_rebuild(g,out,seed,limits[i],2);}
+ Gia_ManStop(g);
+}
+static void inspect_report(int count,int chain) {
+ Gia_Man_t *g=Gia_ManStart(count+32);Cof_Man_t *p;
+ int a=Gia_ManAppendCi(g),b=Gia_ManAppendCi(g),c=Gia_ManAppendCi(g),root=Gia_ManAppendAnd(g,a,b),i;
+ if(chain)for(i=0;i<count;++i)root=Gia_ManAppendAnd(g,root,(i&1)?a:c);
+ else for(i=0;i<count;++i)Gia_ManAppendAnd(g,root,(i&1)?a:c);
+ Gia_ManAppendCo(g,root);Gia_ManAppendCo(g,root^1);
+ p=Cof_ManCreateLogicSimple(g);printf("report %d %d\n",count,chain);Cof_ManPrintFanio(p);
+ Cof_ManStop(p);Gia_ManStop(g);
+}
+int main(int argc,char **argv){unsigned seed;
+ if(argc>1 && !strcmp(argv[1],"--rebuild")){for(seed=0;seed<64;++seed)inspect_rebuild(seed);}
+ else if(argc>1 && !strcmp(argv[1],"--driver")){
+  Gia_Man_t *g=graph(3);Gia_ManHashStop(g);Gia_ManPrintFanio(g,3);Gia_ManStop(g);
+ }
+ else if(argc>1 && !strcmp(argv[1],"--report")){
+  int counts[]={2,9,10,11,19,20,99,100,101,999,1000,10000},i;
+  for(i=0;i<12;++i)inspect_report(counts[i],0);
+  for(i=0;i<7;++i)inspect_report(counts[i],1);
+ }
+ else for(seed=0;seed<32;++seed)inspect(seed);
+ return 0;
+}

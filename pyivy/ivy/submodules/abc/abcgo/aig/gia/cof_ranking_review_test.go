@@ -4,6 +4,7 @@ import (
 	"math/rand"
 	"slices"
 	"sort"
+	"strings"
 	"testing"
 
 	"github.com/glycerine/abcgo/misc/vec"
@@ -48,5 +49,56 @@ func BenchmarkCofactorRanking(b *testing.B) {
 		for j := range nodes {
 			Cof_ManInsertEntry_rec(ranked, &nodes[j], 100)
 		}
+	}
+}
+
+func TestCofactorTraversalWrapAndReferenceRestoration(t *testing.T) {
+	g := cofReviewGraph(19)
+	defer Gia_ManStop(g)
+	p := Cof_ManCreateLogicSimple(g)
+	defer Cof_ManStop(p)
+	for _, obj := range p.objects {
+		obj.Value = 1
+	}
+	p.nTravIds = 1<<31 - 1
+	roots := []*Cof_Obj_t{p.objects[Gia_ManCo(g, 0).id]}
+	support := Cof_ManSuppSize(p, roots, 1)
+	if p.nTravIds != 1 {
+		t.Fatalf("traversal ID did not restart: %d", p.nTravIds)
+	}
+	if support == 0 || Cof_ManSuppSize(p, roots, 1) != support {
+		t.Fatal("stale traversal values contaminated support")
+	}
+	before := make([]int32, len(p.objects))
+	for i, obj := range p.objects {
+		before[i] = Cof_ObjFanoutNum(obj)
+	}
+	for _, obj := range p.objects {
+		if Cof_ObjIsNode(obj) == 0 {
+			continue
+		}
+		Cof_ObjMffcSize(obj)
+		for i, other := range p.objects {
+			if Cof_ObjFanoutNum(other) != before[i] {
+				t.Fatalf("root%d damaged references at node%d", obj.Id, i)
+			}
+		}
+	}
+}
+
+func TestCofactorEmptyFanioReportsFiniteAverages(t *testing.T) {
+	inputOnly := Gia_ManStart(4)
+	Gia_ManAppendCo(inputOnly, Gia_ManAppendCi(inputOnly))
+	for _, g := range []*Gia_Man_t{Gia_ManStart(1), inputOnly} {
+		p := Cof_ManCreateLogicSimple(g)
+		text := hashReviewStdout(t, func() { Cof_ManPrintFanio(p) })
+		if strings.Contains(text, "NaN") || strings.Contains(text, "Inf") {
+			t.Fatalf("non-finite empty report: %s", text)
+		}
+		if !strings.Contains(text, "MFFCs: Max = 0. Ave =  0.00.") {
+			t.Fatalf("empty MFFC statistic: %s", text)
+		}
+		Cof_ManStop(p)
+		Gia_ManStop(g)
 	}
 }
