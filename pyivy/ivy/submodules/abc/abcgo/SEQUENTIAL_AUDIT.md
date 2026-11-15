@@ -5083,3 +5083,20 @@ Expanded native coverage passes with the race detector in 4.962s
 (`/tmp/abcgo-lut-internal-expanded-race.log`). Full GIA race integration is
 still running; vet passes. Save a red checkpoint pending integration.
 GIA review remains active; original completion stays 2/131.
+
+Final LUT-internal integration passes: full uncached GIA race tests finish
+in 217.048s (`/tmp/abcgo-lut-internal-final-race.log`) and GIA vet passes
+(`/tmp/abcgo-lut-internal-final-vet.log`). The first full run used a test
+binary built before the three-cut merge expansion while its C fixture had
+already been expanded; its sole failure was the resulting extra native
+`muxmerge` row, not a production mismatch. The final run held both test and
+fixture files unchanged. Do not change native fixture protocols while a
+compiled test snapshot is running.
+
+No production changes were needed for this helper review; tests/fixture are
+saved in 8cfa09719. Together with the preceding wrapper regressions and
+original-ABC structural/truth comparisons, this covers the LUT-balancing
+implementation reviewed here. It does not finish GIA or other balancing
+families. Continue with `timing_box_order.go`, comparing boxed traversal and
+unnormalization with giaTim.c, including output-role retention. Original
+completion remains 2/131 and the sequential audit remains active.
