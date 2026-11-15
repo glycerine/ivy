@@ -6954,3 +6954,31 @@ The broader edge family is still in progress. Next: actual-source mapping-window
 and timing-box matrices, panic restoration, independent delay/capacity/critical
 invariants, direct assignment boundaries and final source-entry inventory, then
 module race/vet integration. Original completion remains 2/131.
+
+### Edge context and independent correctness checks
+
+Actual-source context tests agree across eight full windows, four primary-form
+incremental windows and 36 timing-box configurations. Compare restored mapping/
+window records, temporary order, both slots, complete delay vectors and CI/CO
+arrival state. The fixture initially called a Go-only CO-arrival getter; use
+original timInt.h fields instead. This was a fixture compilation error, not a
+production defect. Context/panic-restoration tests pass in 1.862s
+(/tmp/abcgo-edge-context.log).
+
+Independent complete-path enumeration agrees on 32 additional mapped graphs:
+10/2 forward assignment/evaluation, 1/0 reverse/unit timing, every relevant node
+and output maximum, critical-node membership and endpoint symmetry/capacity/
+legality. These tests do not call the timing recurrence as their reference
+(/tmp/abcgo-edge-independent.log). Nine numerical primitive cases separately
+cover first-level skipping, unique/tied maxima, runner domination, disabled
+use-two, remaining capacity and saturated endpoints. Each uses legitimate mapped
+buffer consumers for preoccupied slots and checks resulting edge invariants.
+
+Final focused tests pass in 5.802s (/tmp/abcgo-edge-final-focused.log). Reconcile
+all 27 source entry points in REVIEW_edge_assignment.md, including source
+boundaries: zero edge sentinel, primary-mapping precedence, window timing side
+effects, C's defective secondary-only incremental predicate and Go panic
+restoration. Boxed native cases use integer arrivals/delays; the separate timing
+package's fractional semantics are outside this family. Next freeze source,
+tests and fixtures for full uncached module race tests and GIA vet. Original
+completion remains 2/131; edge-family closure awaits these checks.
