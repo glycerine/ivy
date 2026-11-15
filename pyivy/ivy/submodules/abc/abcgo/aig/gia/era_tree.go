@@ -41,11 +41,11 @@ func Gia_ManAreCubeAddToTree_rec(p *Gia_ManAre_t, o *Gia_ObjAre_t, s *Gia_StaAre
 		return
 	}
 	Gia_ManAreCubeAddToList(p, &o.F[branch], s)
-	counts := [3]*uint32{&o.nStas0, &o.nStas1, &o.nStas2}
+	counts := [3]*uint8{&o.nStas0, &o.nStas1, &o.nStas2}
 	count := counts[branch]
 	*count++
 	if *count == MAX_CUBE_NUM {
-		*count = uint32(Gia_ManAreListCountListUsed(p, o.F[branch]))
+		*count = uint8(Gia_ManAreListCountListUsed(p, o.F[branch]))
 		if *count < MAX_CUBE_NUM/2 {
 			Gia_ManAreCompress(p, &o.F[branch])
 		} else {

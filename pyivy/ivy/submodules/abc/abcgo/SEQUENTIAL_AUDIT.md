@@ -7367,3 +7367,35 @@ tests pass in 0.014s (/tmp/abcgo-era2-sat-scalar.log).
 Full integration, native trace comparisons, cube union/list/tree coverage and
 remaining source/compactness review are still pending; the last full module
 race/vet checkpoint predates these cube changes. Original completion stays 2/131.
+
+### Cube native evidence and compact storage checkpoint
+
+Track the ordinary actual-C matrix and primitive oracle as
+TestCubeReachabilityNativeDriverTrace / TestCubeReachabilityNativeRelations with
+test_vectors/era_cube_review.c. All 160 drivers match results, failing PO/frame
+and every trace bit; all 2,187 cube pairs match six relation operators. Both
+native tests pass in 4.223s (/tmp/abcgo-era2-native-tracked.log).
+
+The compactness pass finds a 12-byte Go struct for each C 32-bit handle. Before
+refactoring, run 65,536 randomized plus boundary handle/mark checks; they pass
+and record handle/cube/tree sizes 12/48/52 bytes
+(/tmp/abcgo-era2-handle-before.log). Pack page/item/mark in uint32 without changing
+ID masking or predecessor/next semantics. Narrow the supported 14-bit tree
+variable to uint16 and 63-entry counters to uint8. Final 64-bit host sizes are
+4/32/20 bytes. No alternate allocator, tree algorithm or redundant metadata is
+introduced.
+
+A 256-full-minterm nested-tree/union/duplicate regression passes before narrowing
+(/tmp/abcgo-era2-tree-width-before.log) and afterward. A highest-variable 16,383
+rebalance/lookup test passes in 0.008s (/tmp/abcgo-era2-highest-variable.log).
+Expanded cube/enable focused checks pass in 6.120s
+(/tmp/abcgo-era2-compact-focused.log), followed by focused cube/enable/native-export
+race checks in 11.244s and empty GIA vet output
+(/tmp/abcgo-era2-checkpoint-{race,vet}.log). Source/tests/fixtures stay frozen
+through these focused race/vet checks; both exact handles are consumed terminal.
+
+REVIEW_cube_reachability.md records the 74-entry scope, repairs, native and
+independent evidence, source boundaries and remaining work. Mixed-cube union
+invariants, resource stops, diagnostics/reporting, remaining function inspection
+and final full integration are still pending. The cube family and overall GIA
+inventory are not closed; original package completion stays 2/131.

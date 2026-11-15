@@ -2,17 +2,16 @@ package gia
 
 import "math/bits"
 
-// Gia_PtrAre_t preserves the 20-bit item, 11-bit page and mark fields.
-type Gia_PtrAre_t struct{ nItem, nPage, fMark uint32 }
+// Gia_PtrAre_t packs the source 20-bit item, 11-bit page and unused mark.
+// The low 31 bits index the Go storage slices; the high bit marks a cube.
+type Gia_PtrAre_t uint32
 type Gia_StaAre_t struct {
 	iPrev, iNext Gia_PtrAre_t
 	pData        []uint32
 }
 
-func Gia_Int2Ptr(n uint32) Gia_PtrAre_t {
-	return Gia_PtrAre_t{nItem: n & ((1 << 20) - 1), nPage: (n >> 20) & ((1 << 11) - 1), fMark: n >> 31}
-}
-func Gia_Ptr2Int(p Gia_PtrAre_t) uint32 { return p.nItem&((1<<20)-1) | (p.nPage&((1<<11)-1))<<20 }
+func Gia_Int2Ptr(n uint32) Gia_PtrAre_t { return Gia_PtrAre_t(n) }
+func Gia_Ptr2Int(p Gia_PtrAre_t) uint32 { return uint32(p) & 0x7fffffff }
 func Gia_StaHasValue0(s *Gia_StaAre_t, reg int32) int32 {
 	return giaBool(s.pData[(reg*2)>>5]&(1<<uint((reg*2)&31)) != 0)
 }
@@ -28,9 +27,9 @@ func Gia_StaSetValue1(s *Gia_StaAre_t, reg int32) {
 	bit := reg*2 + 1
 	s.pData[bit>>5] |= 1 << uint(bit&31)
 }
-func Gia_StaSetUnused(s *Gia_StaAre_t)      { s.iPrev.fMark = 1 }
-func Gia_StaIsUnused(s *Gia_StaAre_t) int32 { return int32(s.iPrev.fMark) }
-func Gia_StaIsUsed(s *Gia_StaAre_t) int32   { return giaBool(s.iPrev.fMark == 0) }
+func Gia_StaSetUnused(s *Gia_StaAre_t)      { s.iPrev |= 1 << 31 }
+func Gia_StaIsUnused(s *Gia_StaAre_t) int32 { return int32(s.iPrev >> 31) }
+func Gia_StaIsUsed(s *Gia_StaAre_t) int32   { return giaBool(s.iPrev&(1<<31) == 0) }
 func Gia_StaAreEqual(a, b *Gia_StaAre_t, nWords int32) int32 {
 	for i := int32(0); i < nWords; i++ {
 		if a.pData[i] != b.pData[i] {

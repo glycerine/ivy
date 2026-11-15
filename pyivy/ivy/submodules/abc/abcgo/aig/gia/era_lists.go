@@ -87,7 +87,7 @@ func Gia_ManAreRebalance(p *Gia_ManAre_t, root *Gia_PtrAre_t) {
 		panic("gia: cannot rebalance empty list")
 	}
 	obj := Gia_ManAreCreateObj(p)
-	obj.iVar = uint32(Gia_ManAreFindBestVar(p, *root))
+	obj.iVar = uint16(Gia_ManAreFindBestVar(p, *root))
 	for id := *root; Gia_Ptr2Int(id) != 0; {
 		s := Gia_ManAreSta(p, id)
 		next := s.iNext
@@ -119,7 +119,7 @@ func Gia_ManAreCompress(p *Gia_ManAre_t, root *Gia_PtrAre_t) {
 		panic("gia: cannot compress empty list")
 	}
 	current := *root
-	*root = Gia_PtrAre_t{}
+	*root = 0
 	for Gia_Ptr2Int(current) != 0 {
 		s := Gia_ManAreSta(p, current)
 		next := s.iNext

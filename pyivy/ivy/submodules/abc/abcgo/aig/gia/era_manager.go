@@ -16,8 +16,9 @@ const (
 )
 
 type Gia_ObjAre_t struct {
-	iVar, nStas0, nStas1, nStas2 uint32
-	F                            [3]Gia_PtrAre_t
+	iVar                   uint16 // at most MAX_VARS_NUM-1
+	nStas0, nStas1, nStas2 uint8  // split at MAX_CUBE_NUM (63)
+	F                      [3]Gia_PtrAre_t
 }
 type Gia_ManAre_t struct {
 	pAig, pNew                                                       *Gia_Man_t
@@ -103,8 +104,8 @@ func Gia_ManAreCreateSta(p *Gia_ManAre_t) *Gia_StaAre_t {
 }
 func Gia_ManAreRycycleSta(p *Gia_ManAre_t, s *Gia_StaAre_t) {
 	clear(s.pData)
-	s.iPrev = Gia_PtrAre_t{}
-	s.iNext = Gia_PtrAre_t{}
+	s.iPrev = 0
+	s.iNext = 0
 	if p.nStas > 1 && s == Gia_ManAreStaLast(p) {
 		p.states = p.states[:p.nStas-1]
 		p.nStas--

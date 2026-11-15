@@ -26,7 +26,7 @@ func TestReachabilityCubeMinterms(t *testing.T) {
 		t.Fatalf("minterms %08b", store[0])
 	}
 	ptr := Gia_Int2Ptr(0x92345678)
-	if Gia_Ptr2Int(ptr) != 0x12345678 || ptr.fMark != 1 {
+	if Gia_Ptr2Int(ptr) != 0x12345678 || Gia_StaIsUnused(&Gia_StaAre_t{iPrev: ptr}) != 1 {
 		t.Fatalf("pointer conversion %#v", ptr)
 	}
 }
