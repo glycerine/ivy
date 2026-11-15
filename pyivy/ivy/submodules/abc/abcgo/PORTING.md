@@ -1895,3 +1895,16 @@ simplifications. Frozen uncached full-module race tests pass130 tested packages
 plus three commands without tests: GIA601.497s, ABCI29.709s, BMC24.450s; GIA
 vet is clean. See `aig/gia/REVIEW_simulation_datasets.md` and the audit record.
 The wider GIA review remains open; original package audit completion stays2/131.
+
+Sequential GIG reader review closes all seven active giaGig.c routines. New red
+regressions precede abbreviated-truth, selection, constant-reference, report
+and adjacent nonhashed Kit adapter repairs. Compact descriptor/index storage
+and reused scratch preserve actual source synthesis. Focused checks pass9.189s
+without skips; bool/kit passes0.326s;1,162 native comparisons plus validation,
+independent truth and ownership checks pass. Explicit original C defects/input
+normalizations are documented in aig/gia/REVIEW_gig_reader.md (relative to the
+module). Frozen uncached full-module race tests pass130 tested packages plus
+three commands without tests, GIA604.963s; GIA vet is clean. See
+/tmp/abcgo-gig-final-module-race.log and /tmp/abcgo-gig-final-vet.log.
+The wider GIA review remains open; original package audit completion is2/131.
+Next source family: giaGlitch.c glitch simulation.

@@ -422,3 +422,16 @@ tested packages plus three commands without tests, GIA601.497s; vet is clean
 (/tmp/abcgo-gen-final-module-race.log, /tmp/abcgo-gen-final-vet.log).
 GIA's broader review remains open. Next is the GIG reader, including a native-
 confirmed shortened-truth Boolean defect to address regression-first.
+
+Sequential GIG reader review closes all seven active giaGig.c routines. New red
+regressions precede abbreviated-truth, selection, constant-reference, report
+and adjacent nonhashed Kit adapter repairs. Compact descriptor/index storage
+and reused scratch preserve actual source synthesis. Focused checks pass9.189s
+without skips; bool/kit passes0.326s;1,162 native comparisons plus validation,
+independent truth and ownership checks pass. Explicit original C defects/input
+normalizations are documented in aig/gia/REVIEW_gig_reader.md (relative to the
+module). Frozen uncached full-module race tests pass130 tested packages plus
+three commands without tests, GIA604.963s; GIA vet is clean. See
+/tmp/abcgo-gig-final-module-race.log and /tmp/abcgo-gig-final-vet.log.
+The wider GIA review remains open; original package audit completion is2/131.
+Next source family: giaGlitch.c glitch simulation.

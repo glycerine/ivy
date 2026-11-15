@@ -1,4 +1,4 @@
-# Gate-Inverter Graph reader review (in progress)
+# Gate-Inverter Graph reader review (complete)
 
 Scope: all seven active routines in `src/aig/gia/giaGig.c`. Work is sequential,
 without agents or branches. The wider GIA audit and 131-package goal remain
@@ -23,7 +23,7 @@ module race/vet and closed at555ed782b.
    metadata ownership checks. Distinguish original C defects/preconditions.
 6. [x] Measure compactness and remove duplicated node descriptors/string
    retention while preserving sparse IDs, source order and synthesis.
-7. [ ] Reconcile all seven routines, freeze code/tests/fixtures, run uncached
+7. [x] Reconcile all seven routines, freeze code/tests/fixtures, run uncached
    full-module race and GIA vet, inspect terminal results and update progress.
 
 ## Regressions and current evidence
@@ -43,8 +43,8 @@ fails before repair because Go emits nothing where C prints counts/time
 (`/tmp/abcgo-gig-report-red.log`, handle52436 exit1).
 
 The repaired minimal suite passes1.850s, including the existing LUT/delay test
-(`/tmp/abcgo-gig-minimal-repaired.log`). Full native/parser/constructor and
-integration coverage remain pending.
+(`/tmp/abcgo-gig-minimal-repaired.log`). Native/parser/constructor coverage subsequently passed; frozen full-module
+integration is the remaining gate.
 
 ## Native oracle design
 
@@ -57,7 +57,7 @@ check makes a changed upstream assertion fail the fixture setup explicitly.
 
 The fixture exposes canonical parsed records and category order vectors, then
 prints exact object kinds/fanin literals, CI/CO vectors, identity, register
-count and truth. The Go comparator will use these source outputs plus an
+count and truth. The Go comparator uses these source outputs plus an
 independent record-level truth oracle. Raw failure cases remain separate from
 corrected valid-input comparisons. No production C source is changed.
 
@@ -65,13 +65,13 @@ corrected valid-input comparisons. No production C source is changed.
 
 | Original C | Go implementation | Review status |
 | --- | --- | --- |
-| Gls_ManAlloc | gigParse/gigConstruct private records | Native state/lifetime checks pending |
-| Gls_ManStop | Go-owned records and file defer | Resource checks pending |
-| Gls_ManCount | gigParse and reader count report | Native report repaired; broader counts pending |
-| Gls_ManParseOne | gigRef | Literal/ID edge tests pending |
-| Gls_ManParse | gigParse | Short-truth and selection regressions repaired |
-| Gls_ManConstruct | gigConstruct | Existing sample passes; full graph matrix pending |
-| Gia_ManReadGig | Gia_ManReadGig | Native success report passes; complete matrix pending |
+| Gls_ManAlloc | gigParse/gigConstruct private records | Native state and independent lifetimes checked |
+| Gls_ManStop | Go-owned records and file defer | Read errors and owned-state lifetimes checked |
+| Gls_ManCount | gigParse and reader count report | Native category/count/report matrix passes |
+| Gls_ManParseOne | gigRef | Constant, malformed and sparse reference tests pass |
+| Gls_ManParse | gigParse | Native state, validation and red regressions pass |
+| Gls_ManConstruct | gigConstruct | 1,162 native graph/truth cases pass |
+| Gia_ManReadGig | Gia_ManReadGig | Public/private native matrix and report pass |
 
 Private representation can be idiomatic Go because these Gls routines are not
 publicly declared in gia.h. Their parsing/construction algorithms and interface
@@ -158,3 +158,18 @@ allocation/throughput measurement, not a universal speed claim. Corrected
 benchmark logs: `/tmp/abcgo-gig-before-compact-bench.log` and
 `/tmp/abcgo-gig-after-compact-bench.log`. Full frozen integration remains pending;
 earlier pending notes above describe checkpoints, not missing focused coverage.
+
+## Frozen integration and conclusion
+
+The tested production, tests and native fixture remained frozen at93bc5ee9d.
+The uncached full-module race command completed successfully (handle12730,
+exit0):130 tested packages and three command packages without tests, zero
+failures/race diagnostics. GIA604.963s, ABCI29.069s, BMC23.681s. GIA vet completed
+successfully (handle12790, exit0), with an empty log. Evidence:
+`/tmp/abcgo-gig-final-module-race.log`, `/tmp/abcgo-gig-final-vet.log`.
+
+All seven source routines are now reviewed, covered and reconciled; earlier
+pending notes record intermediate checkpoints. Keep actual Kit synthesis and
+source interface orders, with the explicitly documented source defects and
+safe Go extensions. This closes this source family only. GIA and the broader
+package audit remain open (original completion2/131); giaGlitch.c is next.

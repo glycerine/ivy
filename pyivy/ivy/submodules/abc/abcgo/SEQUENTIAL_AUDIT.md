@@ -8856,3 +8856,27 @@ construction allocation falls23,975,088 to4,214,296B/op; parsing falls27,210,922
 to23,009,248B/op. Small parsing is slightly slower; see REVIEW_gig_reader.md for
 full evidence and explicit native-input normalization. Save this coherent red
 checkpoint before frozen full-module race/vet. GIA and2/131 audit remain open.
+
+### GIG reader sequential review closure
+
+All seven active giaGig.c routines are reconciled with the actual source.
+Regression-first repairs restore abbreviated hex truth expansion, enforce
+selection-parent validity, restore source reporting, accept constant wire
+references, and route nonhashed Kit synthesis through source AppendAnd2.
+Compact descriptors/kind index and reused synthesis scratch reduce allocation
+without changing sparse-ID support or graph/interface order.
+
+Final focused tests pass9.189s without skips; bool/kit passes0.326s. Native
+comparison covers1,162 cases (842original-format,320explicitly normalized wide
+LUT4 inputs), all parsed records/category vectors, exact graph literals/ports,
+truth and public reports; independent predicates and validation/lifetime tests
+pass. Original C LUT6 assertion, oversized LUT4 and invalid selection failures
+remain explicit. The only fixture correction is the exact checked LUT6 arity
+assertion; Go's existing safe extensions remain separately documented.
+
+Frozen integration at93bc5ee9d: 130 tested packages and three commands without tests
+pass, zero failures/races; GIA604.963s, ABCI29.069s, BMC23.681s.
+Race handle12730 and vet handle12790 both terminate exit0; vet log is empty.
+Full log /tmp/abcgo-gig-final-module-race.log; vet /tmp/abcgo-gig-final-vet.log.
+No agents/branches. This closes only the source family; GIA remains open and
+original package audit remains2/131. Read-only next preparation: giaGlitch.c.
