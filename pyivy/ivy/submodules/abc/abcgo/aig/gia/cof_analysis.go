@@ -11,18 +11,22 @@ func Cof_ManInsertEntry_rec(nodes *Vec_Ptr_t, node *Cof_Obj_t, limit int32) {
 	if limit <= 0 {
 		return
 	}
-	all := append([]any(nil), vec.Vec_PtrArray(nodes)...)
-	all = append(all, node)
-	sort.SliceStable(all, func(i, j int) bool {
-		return Cof_ObjFanoutNum(all[i].(*Cof_Obj_t)) > Cof_ObjFanoutNum(all[j].(*Cof_Obj_t))
-	})
-	if len(all) > int(limit) {
-		all = all[:limit]
+	// Keep descending order and insert after equal counts, as in C's recursive
+	// insertion. Shift the bounded vector once instead of copying and sorting it.
+	entries := vec.Vec_PtrArray(nodes)
+	at := len(entries)
+	for at > 0 && Cof_ObjFanoutNum(entries[at-1].(*Cof_Obj_t)) < Cof_ObjFanoutNum(node) {
+		at--
 	}
-	vec.Vec_PtrClear(nodes)
-	for _, entry := range all {
-		vec.Vec_PtrPush(nodes, entry)
+	if at >= int(limit) {
+		return
 	}
+	if len(entries) < int(limit) {
+		vec.Vec_PtrPush(nodes, node)
+		entries = vec.Vec_PtrArray(nodes)
+	}
+	copy(entries[at+1:], entries[at:len(entries)-1])
+	entries[at] = node
 }
 func Cof_ManCollectHighFanout(p *Cof_Man_t, limit int32) *Vec_Ptr_t {
 	result := vec.Vec_PtrAlloc(int(max(limit, 0)))

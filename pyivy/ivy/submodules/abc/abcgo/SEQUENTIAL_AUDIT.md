@@ -7713,3 +7713,15 @@ rebuild boundary using the existing reviewed helper. The regressions now pass,
 including independent slice ownership (/tmp/abcgo-cof-rebuild-repaired.log,
 0.061s). This intentionally preserves interface semantics beyond the original
 C routine's name/spec/register-only copying. Full integration remains pending.
+
+### Cofactor ranking compactness
+
+Preserve descending fanout rank and stable ties at every prefix across 256
+candidates and six limits, including zero and a limit beyond the full sequence.
+Replace per-candidate clone/append/stable-sort/truncate/rebuild with C-equivalent
+bounded insertion using one in-place shift. The 4,096-candidate/top-100 benchmark
+(three passes) changes from 9,649,997 ns/op, 7,637,333 B/op, 16,416 allocs/op to
+36,982 ns/op, zero B/op, zero allocs/op; see /tmp/abcgo-cof-ranking-{before,after}.log.
+Remove three source-declared-only mark/phase words and derive object count from
+the objects slice. Keep mutable references separate from physical adjacency and
+retain level queue links needed by the faithful worklist. Full gates pending.

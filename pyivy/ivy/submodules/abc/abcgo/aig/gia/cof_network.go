@@ -4,23 +4,23 @@ import "github.com/glycerine/abcgo/misc/vec"
 
 // Cof_Obj_t stores explicit links instead of offsets into C's packed arena.
 type Cof_Obj_t struct {
-	Id                            int32
-	fTerm, fPhase, fMark0, fMark1 uint32
-	nFanoutsM                     uint32
-	Value                         uint32
-	refs                          int32
-	iNext, iLit                   int32
-	fanins, fanouts               []*Cof_Obj_t
-	complements                   []bool
+	Id              int32
+	fTerm           uint32
+	nFanoutsM       uint32
+	Value           uint32
+	refs            int32
+	iNext, iLit     int32
+	fanins, fanouts []*Cof_Obj_t
+	complements     []bool
 }
 type Cof_Fan_t struct{ iFan, fCompl uint32 }
 type Cof_Man_t struct {
-	pGia                    *Gia_Man_t
-	vCis, vCos              *Vec_Int_t
-	objects                 []*Cof_Obj_t
-	nObjs, nNodes, nTravIds int32
-	pLevels                 []int32
-	nLevels                 int32
+	pGia             *Gia_Man_t
+	vCis, vCos       *Vec_Int_t
+	objects          []*Cof_Obj_t
+	nNodes, nTravIds int32
+	pLevels          []int32
+	nLevels          int32
 }
 
 func Gia_ObjHandle(obj *Gia_Obj_t) uint32 { return obj.Value }
@@ -40,7 +40,7 @@ func Cof_ObjSize(obj *Cof_Obj_t) int32                  { return 1 }
 func Cof_ManObj(p *Cof_Man_t, id uint32) *Cof_Obj_t     { return p.objects[id] }
 func Cof_ObjFanin(obj *Cof_Obj_t, i int32) *Cof_Obj_t   { return obj.fanins[i] }
 func Cof_ObjFanout(obj *Cof_Obj_t, i int32) *Cof_Obj_t  { return obj.fanouts[i] }
-func Cof_ManObjNum(p *Cof_Man_t) int32                  { return p.nObjs }
+func Cof_ManObjNum(p *Cof_Man_t) int32                  { return int32(len(p.objects)) }
 func Cof_ManNodeNum(p *Cof_Man_t) int32                 { return p.nNodes }
 func Cof_ManResetTravId(p *Cof_Man_t)                   { Cof_ManCleanValue(p); p.nTravIds = 1 }
 func Cof_ManIncrementTravId(p *Cof_Man_t) {
@@ -60,7 +60,7 @@ func Cof_ObjIsTravIdPrevious(p *Cof_Man_t, obj *Cof_Obj_t) int32 {
 }
 
 func Cof_ManCreateLogicSimple(g *Gia_Man_t) *Cof_Man_t {
-	p := &Cof_Man_t{pGia: g, nObjs: g.nObjs, vCis: vec.Vec_IntAlloc(int(Gia_ManCiNum(g))), vCos: vec.Vec_IntAlloc(int(Gia_ManCoNum(g))), objects: make([]*Cof_Obj_t, g.nObjs)}
+	p := &Cof_Man_t{pGia: g, vCis: vec.Vec_IntAlloc(int(Gia_ManCiNum(g))), vCos: vec.Vec_IntAlloc(int(Gia_ManCoNum(g))), objects: make([]*Cof_Obj_t, g.nObjs)}
 	for id := int32(0); id < g.nObjs; id++ {
 		a, b, c, kind := g.Gate(id)
 		obj := &Cof_Obj_t{Id: id}
