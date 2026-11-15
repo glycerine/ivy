@@ -6411,3 +6411,42 @@ Preserve that distinction when constructing native comparisons and independently
 check Go's supported paired-root extension. Add red tests for any confirmed Go
 bugs before repairing them; review source diagnostics, miter constants, watched
 clause growth/cleanup and fanout ownership as well as verdicts and cube validity.
+
+### CBS2 native comparisons and first repair checkpoint
+
+The 24,384-query native matrix now agrees with Go on verdicts, search counters
+and ordered CI/all-object witnesses across both propagation modes, backtrack/
+frontier budgets and hard reconvergent/parity graphs. Independently enumerate
+all completing assignments for every cube; verify queue, watch, mark, reason and
+fanout cleanup after each query. The matrix includes all three outcomes, up to
+23 backtracks and frontier eight (/tmp/abcgo-cbs2-native.log).
+
+Extending the native snapshots to propagation/failure/clause-conflict counters
+exposes a real port discrepancy: PropagateOne delegated to PropagateTwo and
+incremented its counter, unlike C's inline implication branch. Both the counter
+comparison and native fake-clock statistics fail before repair
+(/tmp/abcgo-cbs2-counters-red.log). Restore the original inline implication and
+use the shared source statistics formatter. Separate red tests find constant
+miter outputs incorrectly subject to negative budgets, missing six idle queue
+sentinels, invalid second roots changing solver state, and conflated cube/clause
+reports (/tmp/abcgo-cbs2-guards-red.log). Restore constant handling before budget
+checks, distinct signed reports and source idle checks; validate both root IDs,
+types and static graph size before assignment or clearing the old model. Use
+maintained typed-gate counts for ordinary-AND validation.
+
+Restore source reusable vTemp mark scratch; read older clause entries by index
+while appending instead of copying their slices at every analysis/resolution.
+Use a fixed two-root array. The hard UNSAT benchmark drops from 1,400B/61
+allocations/11,868ns to 0B/0 allocations/5,163ns for top-down propagation and
+from 752B/25 allocations/8,310ns to 0B/0 allocations/4,079ns for fanout propagation
+(/tmp/abcgo-cbs2-scratch-before.log, /tmp/abcgo-cbs2-scratch-after.log).
+
+The expanded native miter matrix compares another 3,600 properties, stores,
+drivers and unchanged phase vectors across logical CI/CO permutations and five
+budgets. Source CBS2 comments out phase initialization, unlike CBS; retain that
+distinction. All CBS2 tests pass in 5.836s before a cosmetic fixture cleanup
+(/tmp/abcgo-cbs2-miter-native.log). Save an integration-pending red checkpoint.
+Next checks: watched clause growth/ownership and reports, lifecycle/nested
+queues, raw constant/repeated-fanin inputs and exhaustive paired witnesses;
+then focused and full module race/vet integration. CBS2 and GIA remain open;
+original completion remains 2/131.

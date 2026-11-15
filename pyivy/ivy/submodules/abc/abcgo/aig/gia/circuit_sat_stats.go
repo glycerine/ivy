@@ -11,7 +11,7 @@ type cbsStatisticsRow struct {
 	elapsed          time.Duration
 }
 
-// Both source CBS engines use the same statistics format and denominators.
+// The source CBS engines use the same statistics format and denominators.
 func cbsPrintStatistics(graph *Gia_Man_t, budget, frontier, total int32, elapsed time.Duration, rows [3]cbsStatisticsRow) {
 	fmt.Printf("CO = %8d  AND = %8d  Conf = %6d  JustMax = %5d  \n", Gia_ManCoNum(graph), Gia_ManAndNum(graph), budget, frontier)
 	ratio := func(n, d float64) float64 {

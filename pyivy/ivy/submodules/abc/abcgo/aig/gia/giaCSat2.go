@@ -18,6 +18,7 @@ type Cbs2_Man_t struct {
 	pAig                                                                                *Gia_Man_t
 	pProp, pJust, pClauses                                                              Cbs2_Que_t
 	vModel                                                                              *Vec_Int_t
+	vTemp                                                                               []int32 // reusable conflict-analysis marks
 	vAssign, vMark                                                                      []byte
 	vLevReason, vWatches, vWatchUpds, vFanoutN, vFanout0, vActivity, vActStore, vJStore []int32
 	nSatUnsat, nSatSat, nSatUndec, nSatTotal, nConfUnsat, nConfSat, nConfUndec          int32
@@ -80,11 +81,7 @@ func Cbs2_SetDefaultParams(pars *Cbs2_Par_t) {
 }
 func Cbs2_ManSetConflictNum(p *Cbs2_Man_t, limit int32) { p.Pars.nBTLimit = limit }
 func Cbs2_ManAlloc(graph *Gia_Man_t) *Cbs2_Man_t {
-	for _, obj := range graph.pObjs {
-		if Gia_ObjIsXor(obj) != 0 || Gia_ObjIsMux(graph, obj) != 0 {
-			panic("gia: CBS2 expects ordinary AND graph")
-		}
-	}
+	cbsCheckGraph(graph)
 	if graph.Refs == nil {
 		Gia_ManCreateRefs(graph)
 	}
@@ -203,9 +200,27 @@ func Cbs2_ManAssign(p *Cbs2_Man_t, lit, level, a, b int32) {
 	p.vLevReason[3*id], p.vLevReason[3*id+1], p.vLevReason[3*id+2] = level, a, b
 }
 func Cbs2_ManPrintClause(p *Cbs2_Man_t, level, clause int32) {
-	fmt.Printf("Level %d clause: %v\n", level, Cbs2_ClauseLits(p, clause)[:Cbs2_ClauseSize(p, clause)])
+	fmt.Printf("Level %2d : ", level)
+	for _, lit := range Cbs2_ClauseLits(p, clause)[:Cbs2_ClauseSize(p, clause)] {
+		sign := '+'
+		if lit&1 != 0 {
+			sign = '-'
+		}
+		fmt.Printf("%c%d ", sign, lit>>1)
+	}
+	fmt.Println()
 }
-func Cbs2_ManPrintCube(p *Cbs2_Man_t, level, clause int32) { Cbs2_ManPrintClause(p, level, clause) }
+func Cbs2_ManPrintCube(p *Cbs2_Man_t, level, clause int32) {
+	fmt.Printf("Level %2d : ", level)
+	for _, id := range Cbs2_ClauseLits(p, clause)[:Cbs2_ClauseSize(p, clause)] {
+		sign := '-'
+		if Cbs2_VarValue(p, id) != 0 {
+			sign = '+'
+		}
+		fmt.Printf("%c%d ", sign, id)
+	}
+	fmt.Println()
+}
 
 // The source activity bump loop is intentionally disabled; retain its API.
 func Cbs2_ManBumpClause(p *Cbs2_Man_t, clause int32) {}
@@ -260,14 +275,14 @@ func Cbs2_QueFinish(p *Cbs2_Man_t, level int32) int32 {
 func Cbs2_ManDeriveReason(p *Cbs2_Man_t, level int32) int32 {
 	q := &p.pClauses
 	write := q.iHead + 2
-	var visited []int32
+	p.vTemp = p.vTemp[:0]
 	for read := write; read < q.iTail; read++ {
 		id := q.pData[read]
 		if p.vMark[id] != 0 {
 			continue
 		}
 		p.vMark[id] = 1
-		visited = append(visited, id)
+		p.vTemp = append(p.vTemp, id)
 		nodeLevel := Cbs2_VarDecLevel(p, id)
 		if nodeLevel < level {
 			q.pData[write] = id
@@ -287,9 +302,8 @@ func Cbs2_ManDeriveReason(p *Cbs2_Man_t, level int32) int32 {
 				Cbs2_QuePush(q, b)
 			}
 		default:
-			lits := append([]int32(nil), Cbs2_ClauseLits(p, b)[:Cbs2_ClauseSize(p, b)]...)
-			for _, lit := range lits[1:] {
-				Cbs2_QuePush(q, lit>>1)
+			for i, size := int32(1), Cbs2_ClauseSize(p, b); i < size; i++ {
+				Cbs2_QuePush(q, Cbs2_ClauseLit(p, b, i)>>1)
 			}
 		}
 	}
@@ -297,7 +311,7 @@ func Cbs2_ManDeriveReason(p *Cbs2_Man_t, level int32) int32 {
 		panic("gia: CBS2 reason has no decision")
 	}
 	q.iTail = write
-	for _, id := range visited {
+	for _, id := range p.vTemp {
 		p.vMark[id] = 0
 	}
 	return Cbs2_QueFinish(p, level)
@@ -313,9 +327,8 @@ func Cbs2_ManAnalyze(p *Cbs2_Man_t, level, id, a, b int32) int32 {
 			Cbs2_QuePush(q, b)
 		}
 	} else {
-		lits := append([]int32(nil), Cbs2_ClauseLits(p, b)[:Cbs2_ClauseSize(p, b)]...)
-		for _, lit := range lits {
-			Cbs2_QuePush(q, lit>>1)
+		for i, size := int32(0), Cbs2_ClauseSize(p, b); i < size; i++ {
+			Cbs2_QuePush(q, Cbs2_ClauseLit(p, b, i)>>1)
 		}
 	}
 	return Cbs2_ManDeriveReason(p, level)
@@ -385,9 +398,9 @@ func Cbs2_ManResolve(p *Cbs2_Man_t, level, a, b int32) int32 {
 	Cbs2_QuePush(q, 0)
 	Cbs2_QuePush(q, 0)
 	maximum := int32(-1)
-	for _, clause := range []int32{a, b} {
-		lits := append([]int32(nil), Cbs2_ClauseLits(p, clause)[:Cbs2_ClauseSize(p, clause)]...)
-		for _, id := range lits[1:] {
+	for _, clause := range [2]int32{a, b} {
+		for i, size := int32(1), Cbs2_ClauseSize(p, clause); i < size; i++ {
+			id := Cbs2_ClauseLit(p, clause, i)
 			if p.vMark[id] != 0 {
 				continue
 			}
@@ -435,7 +448,13 @@ func Cbs2_ManPropagateOne(p *Cbs2_Man_t, id, level int32) int32 {
 		return Cbs2_ManAnalyze(p, level, id, fa, fb)
 	}
 	if a == 1 || b == 1 {
-		return Cbs2_ManPropagateTwo(p, id, level)
+		if a >= 2 {
+			Cbs2_ManAssign(p, Gia_ObjFaninLit0(obj, id)^1, level, id, fb)
+		}
+		if b >= 2 {
+			Cbs2_ManAssign(p, Gia_ObjFaninLit1(obj, id)^1, level, id, fa)
+		}
+		return 0
 	}
 	if p.Pars.fUseFanout == 0 {
 		Cbs2_QuePush(&p.pJust, id)
@@ -625,21 +644,42 @@ func Cbs2_ManSolve_rec(p *Cbs2_Man_t, level int32) int32 {
 	return cbs2SolveRecursive(p, level, p.Pars.fUseFanout != 0)
 }
 func cbs2Solve(p *Cbs2_Man_t, first, second int32, pair bool) int32 {
+	if p == nil {
+		panic("gia: nil CBS2 solver")
+	}
+	cbsCheckGraph(p.pAig)
+	if len(p.vAssign) != int(p.pAig.nObjs) {
+		panic("gia: CBS2 graph changed after allocation")
+	}
+	if p.pProp.iHead != 0 || p.pProp.iTail != 0 || p.pJust.iHead != 0 || p.pJust.iTail != 0 || p.pClauses.iHead != 1 || p.pClauses.iTail != 1 {
+		panic("gia: CBS2 solver is not idle")
+	}
+	roots := [2]int32{first, second}
+	count := 1
+	if pair && second != 0 {
+		count = 2
+	}
+	for _, lit := range roots[:count] {
+		id := lit >> 1
+		if lit < 0 || id >= p.pAig.nObjs {
+			panic("gia: invalid CBS2 root")
+		}
+		obj := p.pAig.pObjs[id]
+		if id != 0 && Gia_ObjIsCi(obj) == 0 && Gia_ObjIsAnd(obj) == 0 {
+			panic("gia: invalid CBS2 root")
+		}
+	}
 	Vec_IntClear(p.vModel)
 	p.Pars.nBTThis, p.Pars.nJustThis, p.Pars.nBTThisNc = 0, 0, 0
-	roots := []int32{first}
-	if pair && second != 0 {
-		roots = append(roots, second)
-	}
 	status := int32(0)
 	created := p.Pars.fUseFanout != 0 && !p.fanoutsReady
 	if created {
 		Gia_ManIncrementTravId(p.pAig)
-		for _, lit := range roots {
+		for _, lit := range roots[:count] {
 			Cbs2_ManCreateFanout_rec(p, lit>>1)
 		}
 	}
-	for _, lit := range roots {
+	for _, lit := range roots[:count] {
 		id := lit >> 1
 		if id == 0 {
 			if lit == 0 {
@@ -672,7 +712,7 @@ func cbs2Solve(p *Cbs2_Man_t, first, second int32, pair bool) int32 {
 	p.pJust.iHead, p.pJust.iTail = 0, 0
 	p.pClauses.iHead, p.pClauses.iTail = 1, 1
 	if created {
-		for _, lit := range roots {
+		for _, lit := range roots[:count] {
 			Cbs2_ManDeleteFanout_rec(p, lit>>1)
 		}
 	}
@@ -688,7 +728,11 @@ func Cbs2_ManSolve2(p *Cbs2_Man_t, first, second int32) int32 {
 	return cbs2Solve(p, first, second, true)
 }
 func Cbs2_ManSatPrintStats(p *Cbs2_Man_t) {
-	fmt.Printf("CO=%d AND=%d Conf=%d JustMax=%d Unsat=%d Sat=%d Undef=%d TotalTime=%s\n", Gia_ManCoNum(p.pAig), Gia_ManAndNum(p.pAig), p.Pars.nBTLimit, p.Pars.nJustLimit, p.nSatUnsat, p.nSatSat, p.nSatUndec, p.timeTotal)
+	cbsPrintStatistics(p.pAig, p.Pars.nBTLimit, p.Pars.nJustLimit, p.nSatTotal, p.timeTotal, [3]cbsStatisticsRow{
+		{"Unsat", p.nSatUnsat, p.nConfUnsat, p.timeSatUnsat},
+		{"Sat  ", p.nSatSat, p.nConfSat, p.timeSatSat},
+		{"Undef", p.nSatUndec, p.nConfUndec, p.timeSatUndec},
+	})
 }
 func Cbs2_ObjPrintFanouts(p *Cbs2_Man_t, id int32) {
 	fmt.Printf("Fanouts of node %d:", id)
@@ -762,8 +806,17 @@ func Cbs2_ManSolveMiterNc(graph *Gia_Man_t, conflicts int32, statusOut **Vec_Str
 	statuses := Vec_StrAlloc(int(Gia_ManPoNum(graph)))
 	store := Vec_IntAlloc(10000)
 	for index, id := range Vec_IntArray(graph.vCos) {
-		start := time.Now()
 		lit := Gia_ObjFaninLit0p(graph, graph.pObjs[id])
+		Vec_IntClear(p.vModel)
+		if lit < 2 {
+			Vec_StrPush(statuses, byte(lit^1))
+			if lit == 1 {
+				Vec_IntPush(store, int32(index))
+				Vec_IntPush(store, 0)
+			}
+			continue
+		}
+		start := time.Now()
 		status := Cbs2_ManSolve(p, lit)
 		Vec_StrPush(statuses, byte(status))
 		if status == 1 {
