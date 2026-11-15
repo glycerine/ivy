@@ -4204,3 +4204,55 @@ Final focused uncached race tests pass in 3.835s
 (`/tmp/abcgo-remap-final-race.log`); final GIA vet passes
 (`/tmp/abcgo-remap-final-vet.log`). No further broad rerun is needed for this
 test-only addition after the immediately preceding full caller race gate.
+
+DFS/full-representative-copy review: six new red subtests reproduce rejection
+of a valid simple-mode opposite-phase AND in Dfs, Dfs2, OnePo, Skip, Node and
+LitArray wrappers. A separate red regression shows Dfs2 drops constraint
+classification (`/tmp/abcgo-dfs-metadata-red.log`). Use giaDupMappedStart for
+those six constructors and retain nConstrs in the full Dfs2 copy. This removes
+35 net production lines while restoring construction metadata. The existing
+Dfs constraint and counterexample policies remain unchanged. Original C's
+source/Dfs/Dfs2 constraint witness is `1 1 0`, confirming the Dfs2 omission is
+inherited; the Go repair retains the roles of the unchanged primary outputs.
+
+Compiled C matches 192 full-copy cases and 6,144 input/state rows: both Dfs
+and Dfs2, 32 edge polarities, zero/two/four registers and an unused CI appended
+after the COs. Compare complete source Value mappings, interface/object
+counts and independent Boolean formulas. Dfs puts CIs first and is normalized;
+Dfs2 discovers CIs through DFS and restores their interface order afterward.
+Repeat with typed XOR/MUX/buffer graphs, original/reverse-DFS layouts and
+constraint counts zero/one: 1,536 cases and 49,152 assignment rows. Unreachable
+internal logic is dropped, while every CI and all original CO ordering remain.
+
+Another 192 native cases (3,072 rows) check trusted old-representative
+substitution, with and without hashing, across all 32 polarities and three
+register counts. Fixtures contain an inverted equivalent, a representative
+chain, constant-zero and constant-one representatives, and logic bypassed by
+substitution. Real source phases are computed before copying. All cases reduce
+to exactly one internal AND, preserve output truth and match every source
+Value literal. Repeated recursion must return the memoized literal without
+allocating. Existing malformed-table checks reject short arrays, self cycles
+and out-of-range representatives; these native invalid-input paths are not run.
+
+Counterexample tests cover 37-frame traces crossing word boundaries with
+one/three/five PIs, preserved dimensions/frame/output IDs, independent struct
+and data ownership, and the distinguished sentinel. Dfs delegates trace copying
+to Abc_CexDup as in C; Dfs2 deliberately leaves the optional counterexample
+absent, also as in C. Eight boundary copies cover empty/constant-only graphs,
+unused inputs and a register-only graph.
+
+The fixture is `aig/gia/test_vectors/dfs_representatives.c`. An initial fixture
+omitted the Dfs2 declaration (it is absent from gia.h), so implicit-int pointer
+truncation crashed the oracle. Add the explicit declaration and make implicit
+function declarations compile errors in this fixture. Corrected final expanded
+checks pass in 1.893s (`/tmp/abcgo-dfs-final-focused.log`); the earlier harness
+failure log is `/tmp/abcgo-dfs-native.log`, not evidence of a Go solver defect.
+This closes Dfs/Dfs2 full-copy and representative-recursion review. General
+OnePo/Skip/Node/LitArray/CiMap behavior remains open beyond the repaired simple
+construction mode, and other GIA families remain open. Original package
+completion stays 2/131 and the sequential audit remains active.
+
+Full uncached race tests pass for GIA (125.693s), BMC (25.033s), SSC (7.746s)
+and ABCI (28.744s), recorded in `/tmp/abcgo-dfs-review-race.log`; final GIA
+vet passes (`/tmp/abcgo-dfs-review-vet.log`). No production changes followed
+these checks. The remaining DFS variants are the next sequential review target.

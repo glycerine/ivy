@@ -61,13 +61,7 @@ func Gia_ManDupDfs2_rec(dst, src *Gia_Man_t, obj *Gia_Obj_t) int32 {
 	return lit
 }
 func Gia_ManDupDfs2(src *Gia_Man_t) *Gia_Man_t {
-	Gia_ManFillValue(src)
-	out := Gia_ManStart(src.nObjs)
-	out.CopyIdentityFrom(src)
-	if src.PMuxes != nil {
-		out.EnableMuxes()
-	}
-	src.pObjs[0].Value = 0
+	out := giaDupMappedStart(src)
 	for i := int32(0); i < Gia_ManCoNum(src); i++ {
 		Gia_ManDupDfs2_rec(out, src, Gia_ManCo(src, i))
 	}
@@ -79,16 +73,11 @@ func Gia_ManDupDfs2(src *Gia_Man_t) *Gia_Man_t {
 	}
 	Gia_ManDupRemapCis(out, src)
 	Gia_ManSetRegNum(out, Gia_ManRegNum(src))
+	out.nConstrs = src.nConstrs
 	return out
 }
 func Gia_ManDupDfs(src *Gia_Man_t) *Gia_Man_t {
-	Gia_ManFillValue(src)
-	out := Gia_ManStart(src.nObjs)
-	out.CopyIdentityFrom(src)
-	if src.PMuxes != nil {
-		out.EnableMuxes()
-	}
-	src.pObjs[0].Value = 0
+	out := giaDupMappedStart(src)
 	for i := int32(0); i < Gia_ManCiNum(src); i++ {
 		Gia_ManCi(src, i).Value = uint32(Gia_ManAppendCi(out))
 	}
@@ -109,13 +98,7 @@ func Gia_ManDupDfsOnePo(src *Gia_Man_t, po int32) *Gia_Man_t {
 	if po < 0 || po >= Gia_ManPoNum(src) {
 		panic("gia: output index out of range")
 	}
-	Gia_ManFillValue(src)
-	out := Gia_ManStart(src.nObjs)
-	out.CopyIdentityFrom(src)
-	if src.PMuxes != nil {
-		out.EnableMuxes()
-	}
-	src.pObjs[0].Value = 0
+	out := giaDupMappedStart(src)
 	for i := int32(0); i < Gia_ManCiNum(src); i++ {
 		Gia_ManCi(src, i).Value = uint32(Gia_ManAppendCi(out))
 	}
@@ -133,13 +116,7 @@ func Gia_ManDupDfsOnePo(src *Gia_Man_t, po int32) *Gia_Man_t {
 	return giaCleanComposed(out)
 }
 func Gia_ManDupDfsSkip(src *Gia_Man_t) *Gia_Man_t {
-	Gia_ManFillValue(src)
-	out := Gia_ManStart(src.nObjs)
-	out.CopyIdentityFrom(src)
-	if src.PMuxes != nil {
-		out.EnableMuxes()
-	}
-	src.pObjs[0].Value = 0
+	out := giaDupMappedStart(src)
 	for i := int32(0); i < Gia_ManCiNum(src); i++ {
 		Gia_ManCi(src, i).Value = uint32(Gia_ManAppendCi(out))
 	}
@@ -157,25 +134,13 @@ func Gia_ManDupDfsNode(src *Gia_Man_t, root *Gia_Obj_t) *Gia_Man_t {
 	if Gia_ObjIsAnd(root) == 0 {
 		panic("gia: expected internal cone root")
 	}
-	Gia_ManFillValue(src)
-	out := Gia_ManStart(src.nObjs)
-	out.CopyIdentityFrom(src)
-	if src.PMuxes != nil {
-		out.EnableMuxes()
-	}
-	src.pObjs[0].Value = 0
+	out := giaDupMappedStart(src)
 	Gia_ManDupDfs3_rec(out, src, root)
 	Gia_ManAppendCo(out, int32(root.Value))
 	return out
 }
 func Gia_ManDupDfsLitArray(src *Gia_Man_t, lits *Vec_Int_t) *Gia_Man_t {
-	Gia_ManFillValue(src)
-	out := Gia_ManStart(src.nObjs)
-	out.CopyIdentityFrom(src)
-	if src.PMuxes != nil {
-		out.EnableMuxes()
-	}
-	src.pObjs[0].Value = 0
+	out := giaDupMappedStart(src)
 	for i := int32(0); i < Gia_ManCiNum(src); i++ {
 		Gia_ManCi(src, i).Value = uint32(Gia_ManAppendCi(out))
 	}
