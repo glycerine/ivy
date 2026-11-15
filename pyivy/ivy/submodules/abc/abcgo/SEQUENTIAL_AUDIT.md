@@ -7099,3 +7099,28 @@ source's Value-one handling. These pass in 0.007s
 Save this checkpoint before final high-frequency report/class tests, compactness
 review and module race/vet integration. The broader GIA audit is still in progress;
 original completion remains 2/131.
+
+### Sequential final coverage and compactness checkpoint
+
+The complete ordinary native trace now agrees on 4,256 lines, including 512
+prefixed/public/complemented supergate calls, 48 frame-copy/transfer/cofactor
+pipelines and 3,072 exhaustive output truth rows. A separate nine-line native
+high-frequency case checks thirteen shared enables, actual reference counts,
+fanout-threshold reports and repeated class IDs. Preserve direct-recursive result
+prefixes even when they already contain an internal node ID. All tests pass
+before compactness in 2.029s (/tmp/abcgo-enable-precompact.log).
+
+A signed/mixed-failure class test establishes first-seen class labels and class-zero
+counting before replacing the explicit control-pointer scan with a map. No map
+iteration is used; labels retain encounter order. This removes the quadratic
+search and shortens the code. Keep analysis itself intact in quiet detection but
+avoid building reference counts that are used only by verbose printing. Ownership
+tests distinguish the fanout query's borrowed reference table from the reporting
+detector's cleared final state. Final current focused tests pass in 1.962s
+(/tmp/abcgo-enable-final-focused.log).
+
+One delegated reporting issue remains before integration: Gia_ManDupCofAllInt
+omits the source's verbose banner and statistics. Add a native verbose pipeline
+regression before restoring this small dependency behavior; do not mark all of
+giaCof.c reviewed from that narrow fix. Then complete family documentation and
+module race/vet checks. Original completion remains 2/131.

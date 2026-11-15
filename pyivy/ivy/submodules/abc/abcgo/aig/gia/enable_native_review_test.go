@@ -63,11 +63,15 @@ func enableReviewSupers(p *Gia_Man_t) {
 		if Gia_ObjIsCand(obj) == 0 {
 			continue
 		}
-		for mode := 0; mode < 3; mode++ {
+		for mode := 0; mode < 4; mode++ {
 			v := Vec_IntAlloc(8)
-			Vec_IntPush(v, 1)
+			prefix := int32(1)
+			if mode == 3 {
+				prefix = id
+			}
+			Vec_IntPush(v, prefix)
 			switch mode {
-			case 0:
+			case 0, 3:
 				Gia_CollectSuper_rec(p, obj, v)
 			case 1:
 				Gia_CollectSuper(p, obj, v)
@@ -155,4 +159,40 @@ func TestEnableOrdinaryTransformsMatchOriginalABC(t *testing.T) {
 			t.Fatalf("trace line %d: Go %q; C %q", i+1, got[i], want[i])
 		}
 	}
+	t.Run("high frequency", func(t *testing.T) {
+		source, err := exec.Command(exe, "high").CombinedOutput()
+		if err != nil {
+			t.Fatalf("original high-frequency reports: %v\n%s", err, source)
+		}
+		observed := hashReviewStdout(t, func() {
+			p := Gia_ManStart(128)
+			defer Gia_ManStop(p)
+			c, d := Gia_ManAppendCi(p), Gia_ManAppendCi(p)
+			var registers [13]int32
+			for i := range registers {
+				registers[i] = Gia_ManAppendCi(p)
+			}
+			for _, r := range registers {
+				Gia_ManAppendCo(p, Gia_ManAppendMux(p, c, d, r))
+			}
+			Gia_ManSetRegNum(p, 13)
+			Gia_ManDetectSeqSignals(p, 1, 1)
+			signals := Gia_ManDetectSeqSignalsWithFanout(p, 10, 1)
+			fmt.Print("signals")
+			for _, value := range Vec_IntArray(signals) {
+				fmt.Printf(" %d", value)
+			}
+			fmt.Println()
+			q := Gia_ManRemoveEnables(p)
+			defer Gia_ManStop(q)
+			fmt.Print("classes")
+			for _, value := range Vec_IntArray(q.VFlopClasses) {
+				fmt.Printf(" %d", value)
+			}
+			fmt.Println()
+		})
+		if observed != string(source) {
+			t.Fatalf("high-frequency report: Go %q; C %q", observed, source)
+		}
+	})
 }

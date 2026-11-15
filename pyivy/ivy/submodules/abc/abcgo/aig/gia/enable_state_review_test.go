@@ -2,8 +2,85 @@ package gia
 
 import (
 	"fmt"
+	"strings"
 	"testing"
 )
+
+func TestEnableDetectionReferenceOwnership(t *testing.T) {
+	for _, verbose := range []int32{0, 1} {
+		p := enableReviewGraph(1, 0)
+		p.Refs = make([]int32, p.nObjs)
+		for i := range p.Refs {
+			p.Refs[i] = 999
+		}
+		borrowed := p.Refs
+		Gia_ManDetectSeqSignalsWithFanout(p, 1, 0)
+		if len(p.Refs) != len(borrowed) || &p.Refs[0] != &borrowed[0] || p.Refs[0] != 999 {
+			t.Fatal("fanout query replaced caller reference storage")
+		}
+		text := hashReviewStdout(t, func() { Gia_ManDetectSeqSignals(p, 1, verbose) })
+		if p.Refs != nil {
+			t.Fatal("reporting detector retained temporary/caller reference counts")
+		}
+		if verbose == 0 && text != "" {
+			t.Fatalf("quiet detector printed %q", text)
+		}
+		Gia_ManStop(p)
+	}
+}
+
+func TestEnableControlClassesKeepFirstSeenSignedOrder(t *testing.T) {
+	for _, mixed := range []bool{false, true} {
+		t.Run(fmt.Sprint(mixed), func(t *testing.T) {
+			p := Gia_ManStart(64)
+			defer Gia_ManStop(p)
+			c0, c1, data := Gia_ManAppendCi(p), Gia_ManAppendCi(p), Gia_ManAppendCi(p)
+			controls := []int32{c1, c0, c1 ^ 1, c1, c0 ^ 1, c0}
+			registers := make([]int32, len(controls))
+			for i := range registers {
+				registers[i] = Gia_ManAppendCi(p)
+			}
+			for i, control := range controls {
+				next := registers[i]
+				if !mixed || i != 3 {
+					next = Gia_ManAppendMux(p, control, data, registers[i])
+				}
+				Gia_ManAppendCo(p, next)
+			}
+			Gia_ManSetRegNum(p, int32(len(registers)))
+			var q *Gia_Man_t
+			text := hashReviewStdout(t, func() { q = Gia_ManRemoveEnables(p) })
+			defer Gia_ManStop(q)
+			want, classes := []int32{1, 2, 3, 1, 4, 2}, 4
+			if mixed {
+				want[3], classes = 0, 5
+			}
+			assertIDs(t, q.VFlopClasses, want...)
+			if !strings.Contains(text, fmt.Sprintf("Detected %d classes.\n", classes)) {
+				t.Fatalf("class count report: %q", text)
+			}
+			for mask := 0; mask < 512; mask++ {
+				in := make([]bool, 9)
+				for i := range in {
+					in[i] = mask&(1<<i) != 0
+				}
+				got, err := q.Evaluate(in)
+				if err != nil || len(got) != 6 {
+					t.Fatalf("outputs %v (%v)", got, err)
+				}
+				for i, value := range got {
+					expected := in[2]
+					if mixed && i == 3 {
+						expected = in[6]
+					}
+					if value != expected {
+						t.Fatalf("mask%d/RI%d: %t, want %t", mask, i, value, expected)
+					}
+				}
+			}
+		})
+	}
+}
 
 func TestEnableTypedSequentialFrameSemantics(t *testing.T) {
 	for _, cofactor := range []bool{false, true} {

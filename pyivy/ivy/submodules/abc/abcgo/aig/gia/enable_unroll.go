@@ -157,7 +157,7 @@ func Gia_ManRemoveEnables2(p *Gia_Man_t) *Gia_Man_t {
 }
 
 func Gia_ManRemoveEnables(p *Gia_Man_t) *Gia_Man_t {
-	controls := []*Gia_Obj_t{nil}
+	controls := make(map[*Gia_Obj_t]int32)
 	data := make([]*Gia_Obj_t, p.nRegs)
 	classes := vec.Vec_IntAlloc(int(p.nRegs))
 	failures := 0
@@ -208,23 +208,17 @@ func Gia_ManRemoveEnables(p *Gia_Man_t) *Gia_Man_t {
 			failures++
 			continue
 		}
-		class := 0
-		for j := 1; j < len(controls); j++ {
-			if controls[j] == control {
-				class = j
-				break
-			}
-		}
+		class := controls[control]
 		if class == 0 {
-			controls = append(controls, control)
-			class = len(controls) - 1
+			class = int32(len(controls) + 1)
+			controls[control] = class
 		}
 		data[i] = Gia_NotCond(value, 1-complement)
-		vec.Vec_IntPush(classes, int32(class))
+		vec.Vec_IntPush(classes, class)
 	}
 	count := len(controls)
-	if failures == 0 {
-		count--
+	if failures != 0 {
+		count++
 	}
 	fmt.Printf("Detected %d classes.\n", count)
 	q := Gia_ManStart(p.nObjs)

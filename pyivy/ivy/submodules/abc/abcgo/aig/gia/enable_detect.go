@@ -132,8 +132,8 @@ func giaDetectSeqSignals(p *Gia_Man_t) giaSeqSignals {
 func Gia_ManDetectSeqSignals(p *Gia_Man_t, setReset, verbose int32) {
 	r := giaDetectSeqSignals(p)
 	p.Refs = nil
-	Gia_ManCreateRefs(p)
 	if verbose != 0 {
+		Gia_ManCreateRefs(p)
 		fmt.Printf("Flops with set/reset = %6d. Flops with enable = %6d.\n", r.haveSetReset, r.haveEnable)
 		if setReset != 0 {
 			Gia_ManPrintSignals(p, r.sets, "Set signals")
