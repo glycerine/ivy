@@ -18,7 +18,7 @@ source workflows and tests are covered by that audit. Current review: `aig/gia`.
 | --- | --- | --- | --- |
 | 1 | `.` | reviewed | Root review below; race tests and vet pass. |
 | 2 | `aig/aig` | reviewed | All 52 files reconciled; native source matrices, final race suite, vet and module integration gates pass. |
-| 3 | `aig/gia` | in progress | Graph/manager, copies, hashing, balancing, windows, bi-decomposition, circuit-cofactoring and BDD collapse reviewed; remaining families and final inventory pending. |
+| 3 | `aig/gia` | in progress | Graph/manager, copies, hashing, balancing, windows, bi-decomposition, circuit-cofactoring, BDD collapse and counterexample replay/minimization reviewed; remaining families and final inventory pending. |
 | 4 | `aig/gia/mf` | pending | |
 | 5 | `aig/gia/satcost` | pending | |
 | 6 | `aig/hop` | pending | |
@@ -6186,3 +6186,38 @@ selected prefixes, empty masks, dimensions and invalid counts/ranges
 (/tmp/abcgo-cex-literal-mask.log). Freeze source/tests/native fixtures after the
 next checkpoint for full uncached module race tests plus GIA/BMC vet. Original
 completion remains 2/131; the GIA package and sequential audit remain active.
+
+Final counterexample integration is green for frozen checkpoint 07beb1d9f.
+All 130 tested module packages pass uncached race tests; three command packages
+have no tests, with no failure or race diagnostic lines
+(/tmp/abcgo-cex-final-module-race.log). GIA passes in 324.020s, ABCI in 29.174s
+and BMC in 23.709s. GIA/BMC vet passes with an empty log
+(/tmp/abcgo-cex-final-vet.log). Source/tests/native fixtures remained frozen
+throughout; only unrelated existing parent files remain untracked.
+
+This closes the giaCex.c replay/value/extension/unrolling/minimization family
+review, with the checked Go counterexample interface ownership/dimension/reset
+methods also inspected against their existing tests. Source algorithms now use
+packed probe ownership, original priority justification, MF CNF/BSAT setup,
+final-core analysis in both orders and optional LEXUNSAT; the distinct original
+MinCex diagnostic workflow is restored too. BMC delegates to the shared source
+priority/ternary routines rather than carrying duplicate bodies. This dependency
+consolidation is not completion of the later BMC package audit.
+
+Explicit source exceptions remain documented and tested: Go's all-object trace
+records actual current-frame values, while C's routine snapshots stale gate
+marks before evaluation; Go returns a proven zero-care mask for forced-true
+unrollings where C asserts. Typed gates, reordered interfaces and checked/owned
+Go witness storage retain their existing supported extensions. No source SAT or
+justification algorithm is replaced by a compatible alternative.
+
+Next review the chronological circuit-SAT engine in giaCSatOld.c/giaCSatOld.go,
+then the subsequent CBS/CTAS families. Existing exhaustive tests and the old
+REVIEW_circuit_sat_old.md are useful evidence but predate this sequential audit.
+Compare actual source decisions, strict backtrack/frontier limits, counters,
+partial-CI model order, queue restoration and miter storage/statistics. A first
+read-only suspicion of a missing retry was incorrect: that second solve is
+inside a commented-out C block. The active source and Go both try once; no retry
+repair is warranted. No circuit-SAT production or test edit has been made during
+this integration turn. Original completion remains 2/131; remaining GIA families,
+final inventory and the full sequential audit remain active.
