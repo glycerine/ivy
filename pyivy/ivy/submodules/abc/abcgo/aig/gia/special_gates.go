@@ -15,6 +15,9 @@ func Gia_ManAppendXorReal(p *Gia_Man_t, a, b int32) int32 {
 	obj.iDiff1 = uint32(obj.id - (b >> 1))
 	obj.fCompl1 = uint32(b & 1)
 	p.nXors++
+	if p.vSuppWords != nil {
+		Gia_ManQuantSetSuppAnd(p, obj)
+	}
 	return obj.id << 1
 }
 func Gia_ManAppendMuxReal(p *Gia_Man_t, control, then, otherwise int32) int32 {
@@ -45,6 +48,9 @@ func Gia_ManAppendMuxReal(p *Gia_Man_t, control, then, otherwise int32) int32 {
 	obj.fCompl1 = uint32(then & 1)
 	p.PMuxes[obj.id] = uint32(control)
 	p.nMuxes++
+	if p.vSuppWords != nil {
+		Gia_ManQuantSetSuppAnd(p, obj)
+	}
 	return obj.id << 1
 }
 func Gia_ManAppendBuf(p *Gia_Man_t, lit int32) int32 {
@@ -55,6 +61,9 @@ func Gia_ManAppendBuf(p *Gia_Man_t, lit int32) int32 {
 	obj.fCompl0 = uint32(lit & 1)
 	obj.fCompl1 = obj.fCompl0
 	p.nBufs++
+	if p.vSuppWords != nil {
+		Gia_ManQuantSetSuppAnd(p, obj)
+	}
 	return obj.id << 1
 }
 

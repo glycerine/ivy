@@ -7906,3 +7906,26 @@ The separate incremental path still needs its typed construction/support hooks
 and cone collection checked. Independent wide-support, deep/shared-cone,
 ownership/compactness and final frozen gates remain pending. Original package
 completion remains 2/131; no family closure claimed.
+
+### Incremental typed support hooks and independent matrices
+
+Add red tests before repairing typed constructors/support handling. All three
+primitive constructors omit support rows; 3-input cases read zero bits and
+65-input cases panic when the missing row crosses allocated storage
+(/tmp/abcgo-exist-typed-support-red.log). Hook XOR/MUX/buffer construction into
+the existing support update after gate metadata is established. Retain the
+ordinary two-fanin fast path and include actual MUX control support. Recursive
+verification/counting and cone collection visit all logical inputs. Rebuild
+collected typed nodes through the existing Boolean lowering helper, keeping the
+source ordinary quantification algorithm unchanged. All 192 typed/mask/phase/
+algorithm/word-boundary cases pass in 0.011s
+(/tmp/abcgo-exist-typed-support-repaired.log).
+
+Independent set-union checks validate all support rows, unused high bits,
+marker words, structural verification and affected-node counts on a 193-input,
+256-gate mixed typed DAG, with full and subset tracking. Both algorithms handle
+a 21,001-internal-gate deeply shared cone and leave copy slots free. Expanded
+support/typed/generated/native checks pass in 3.864s
+(/tmp/abcgo-exist-support-expanded.log). Raw constant fanins, direct cone-copy
+ownership/compactness and final frozen integration remain under review. No
+family closure claimed; original completion remains 2/131.

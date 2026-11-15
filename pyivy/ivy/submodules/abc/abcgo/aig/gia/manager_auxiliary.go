@@ -72,7 +72,15 @@ func Gia_ManQuantSetSuppAnd(p *Gia_Man_t, obj *Gia_Obj_t) {
 	}
 	id := obj.id
 	a, b := Gia_ObjFaninId0(obj, id), Gia_ObjFaninId1(obj, id)
+	var control int32 = -1
+	if Gia_ObjIsMux(p, obj) != 0 {
+		control = int32(p.PMuxes[id] >> 1)
+	}
 	for w := int32(0); w < p.nSuppWords; w++ {
-		data[id*p.nSuppWords+w] = data[a*p.nSuppWords+w] | data[b*p.nSuppWords+w]
+		value := data[a*p.nSuppWords+w] | data[b*p.nSuppWords+w]
+		if control >= 0 {
+			value |= data[control*p.nSuppWords+w]
+		}
+		data[id*p.nSuppWords+w] = value
 	}
 }

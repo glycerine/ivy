@@ -111,8 +111,9 @@ func Gia_ManQuantCollect_rec(p *Gia_Man_t, id int32, cis, side, ands *Vec_Int_t)
 		vec.Vec_IntPush(cis, id)
 		return
 	}
-	Gia_ManQuantCollect_rec(p, Gia_ObjFaninId0(obj, id), cis, side, ands)
-	Gia_ManQuantCollect_rec(p, Gia_ObjFaninId1(obj, id), cis, side, ands)
+	for _, fanin := range giaObjectFanins(p, obj) {
+		Gia_ManQuantCollect_rec(p, fanin, cis, side, ands)
+	}
 	vec.Vec_IntPush(ands, id)
 }
 func Gia_ManQuantCollect(p *Gia_Man_t, id int32, keep func(any, int32) int32, data any, cis, side, ands *Vec_Int_t) {
@@ -137,9 +138,8 @@ func Gia_ManQuantExist2Dup(p *Gia_Man_t, lit int32, cis, side, ands *Vec_Int_t, 
 	}
 	for _, id := range vec.Vec_IntArray(ands) {
 		obj := Gia_ManObj(p, id)
-		a := Gia_ObjCopyArray(p, Gia_ObjFaninId0(obj, id)) ^ Gia_ObjFaninC0(obj)
-		b := Gia_ObjCopyArray(p, Gia_ObjFaninId1(obj, id)) ^ Gia_ObjFaninC1(obj)
-		Gia_ObjSetCopyArray(p, id, Gia_ManHashAnd(q, a, b))
+		read := func(lit int32) int32 { return Gia_ObjCopyArray(p, lit>>1) ^ (lit & 1) }
+		Gia_ObjSetCopyArray(p, id, giaHashMappedGate(q, p, obj, read))
 	}
 	if outLit != nil {
 		*outLit = Gia_ObjCopyArray(p, lit>>1) ^ (lit & 1)

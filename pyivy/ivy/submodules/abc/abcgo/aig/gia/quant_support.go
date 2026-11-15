@@ -30,7 +30,12 @@ func Gia_ManQuantVerify_rec(p *Gia_Man_t, id, ci int32) int32 {
 	if id == 0 {
 		return 0
 	}
-	return giaBool(Gia_ManQuantVerify_rec(p, Gia_ObjFaninId0(obj, id), ci) != 0 || Gia_ManQuantVerify_rec(p, Gia_ObjFaninId1(obj, id), ci) != 0)
+	for _, fanin := range giaObjectFanins(p, obj) {
+		if Gia_ManQuantVerify_rec(p, fanin, ci) != 0 {
+			return 1
+		}
+	}
+	return 0
 }
 func Gia_ManQuantVerify(p *Gia_Man_t, id int32) {
 	for i, ci := range vec.Vec_IntArray(&p.vSuppVars) {
@@ -123,7 +128,7 @@ func Gia_ManQuantCountUsed_rec(p *Gia_Man_t, id int32) int32 {
 		return 0
 	}
 	count := int32(1)
-	for _, fanin := range []int32{Gia_ObjFaninId0(obj, id), Gia_ObjFaninId1(obj, id)} {
+	for _, fanin := range giaObjectFanins(p, obj) {
 		if Gia_ManQuantCheckSupp(p, fanin, p.iSuppPi) != 0 {
 			count += Gia_ManQuantCountUsed_rec(p, fanin)
 		}
