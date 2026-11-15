@@ -82,31 +82,32 @@ func Gia_ManDupFromVecs(src *Gia_Man_t, cis, ands, cos *Vec_Int_t, regs int32) *
 }
 func Gia_ManDupSliced(src *Gia_Man_t, limit int32) *Gia_Man_t {
 	out := giaDupMappedStart(src)
+	out.PSpec = ""
 	for i := int32(0); i < Gia_ManCiNum(src); i++ {
 		Gia_ManCi(src, i).Value = uint32(Gia_ManAppendCi(out))
 	}
-	copied, exposed := make([]bool, src.nObjs), make([]bool, src.nObjs)
+	Gia_ManCleanMark01(src)
+	defer Gia_ManCleanMark01(src)
 	for _, obj := range src.pObjs {
 		if Gia_ObjIsAnd(obj) == 0 {
 			continue
 		}
 		if Gia_ManSuppSize(src, []int32{obj.id}, 1) <= limit {
 			giaAppendMappedNode(out, src, obj)
-			copied[obj.id] = true
+			obj.fMark0 = 1
 		} else {
 			for _, id := range giaObjectFanins(src, obj) {
-				exposed[id] = true
+				src.pObjs[id].fMark1 = 1
 			}
 		}
 	}
 	for i := int32(0); i < Gia_ManCoNum(src); i++ {
-		for _, id := range giaObjectFanins(src, Gia_ManCo(src, i)) {
-			exposed[id] = true
-		}
+		Gia_ObjFanin0(Gia_ManCo(src, i)).fMark1 = 1
 	}
 	for id := int32(1); id < src.nObjs; id++ {
-		if copied[id] && exposed[id] {
-			Gia_ManAppendCo(out, int32(src.pObjs[id].Value))
+		obj := src.pObjs[id]
+		if obj.fMark0 != 0 && obj.fMark1 != 0 {
+			Gia_ManAppendCo(out, int32(obj.Value))
 		}
 	}
 	return out

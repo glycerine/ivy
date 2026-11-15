@@ -3881,3 +3881,49 @@ that subsequently added check, pass the focused race run in 2.869s
 unchanged after the full-module run. This closes the core follow-up flagged
 in the previous checkpoint. Other GIA families remain open; original package
 completion stays 2/131 and the sequential audit remains active.
+
+Support-sliced duplication review: two new red regressions expose deviations
+from giaDup.c. The Go result retained the original specification string where
+C returns name only, and preexisting source fMark0/fMark1 bits remained set
+where C clears both scratch marks before/after slicing
+(`/tmp/abcgo-sliced-contract-red.log`). Clear the result specification and
+restore the source scratch-mark algorithm with deferred cleanup. This also
+removes two per-object Boolean arrays; no new selection algorithm is added.
+
+Independent Boolean checks and compiled original C agree across 336 cases
+and 5,376 input/state rows: sixteen edge polarities, zero/two/four source
+registers and support limits -1 through 5. They compare copied/exposed node
+counts, complete positive-cut output ordering, name/spec conventions and
+source mark cleanup. Cases include complemented original COs (cut outputs
+are regular nodes, following C), CI/constant original outputs, unexposed
+copied dangling logic, and excluded parents exposing eligible child cones.
+The result remains combinational over every original CI, as in C.
+
+Additional independent Go coverage checks 56 typed XOR/MUX/buffer cases
+(3,584 rows), the otherwise easy-to-miss control cone of an excluded real MUX
+(eight cases/128 rows), empty graphs, a zero-support constant buffer and a
+simple-mode opposite-phase AND. Native comparisons use actual ordinary-AND
+source graphs, without asserting C's AND-only slicer supports real gates or
+physical buffers. Initial expanded tests pass in 1.824s; final boundary
+coverage passes in 1.802s (`/tmp/abcgo-sliced-expanded-focused.log` and
+`/tmp/abcgo-sliced-final-focused.log`). Minimal repairs pass in
+`/tmp/abcgo-sliced-contract-focused.log`.
+
+Compactness measurements: in the 100-call/256-node benchmark, restoring the
+existing mark fields changes 1,038 allocations and 27,408 bytes per call to
+1,036 allocations and 26,832 bytes. A final source-style direct CO-fanin
+mark replaces the generic allocated fanin-list loop, reducing allocation
+calls to 1,035 with the same measured 26,832 bytes. Logs are
+`/tmp/abcgo-sliced-storage-before.log`,
+`/tmp/abcgo-sliced-storage-after.log` and
+`/tmp/abcgo-sliced-storage-final.log`. These are storage/allocation findings;
+one short timing sample is not a general runtime claim.
+
+Full uncached race tests pass for GIA (93.854s) and its base/abci caller
+(28.607s), in `/tmp/abcgo-sliced-review-race.log`. After the final equivalent
+single-fanin shortcut, all new sliced cases pass focused race verification
+in 2.996s (`/tmp/abcgo-sliced-final-focused-race.log`), and final GIA vet passes
+(`/tmp/abcgo-sliced-final-vet.log`). Levelized, explicit-vector and all-node-
+output duplication still need expanded review; the remaining GIA families
+are also open. Original package completion remains 2/131 and the sequential
+audit remains active.
