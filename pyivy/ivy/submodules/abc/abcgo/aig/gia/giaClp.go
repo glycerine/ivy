@@ -23,41 +23,95 @@ func Gia_GetFakeNames(n int32) *Vec_Ptr_t {
 	return names
 }
 
-// Gia_ManRebuildIsop builds the local BDD using Shannon decomposition. Unlike
-// the original SOP factoring, shared BDD nodes become shared AIG subgraphs.
+// Gia_ManRebuildIsop follows C's two-polarity ISOP selection and SOP factoring.
 func Gia_ManRebuildIsop(dd *cudd.DdManager, local *cudd.DdNode, p *Gia_Man_t, fanins *Vec_Int_t, sop, cube *Vec_Str_t) int32 {
 	if dd == nil || local == nil {
 		return -1
 	}
-	literals := vec.Vec_IntArray(fanins)
-	memo := make(map[*cudd.DdNode]int32)
-	var build func(*cudd.DdNode) int32
-	build = func(node *cudd.DdNode) int32 {
-		if node == dd.One {
-			return 1
-		}
-		if node == dd.LogicZero {
-			return 0
-		}
-		if lit, ok := memo[node]; ok {
-			return lit
-		}
-		regular := cudd.Cudd_Regular(node)
-		level := dd.Perm[regular.Index]
-		if level < 0 || level >= len(literals) {
-			return -1
-		}
-		inv := cudd.Cudd_IsComplement(node)
-		lo := build(cudd.Cudd_NotCond(regular.E, inv))
-		hi := build(cudd.Cudd_NotCond(regular.T, inv))
-		if lo < 0 || hi < 0 {
-			return -1
-		}
-		lit := Gia_ManHashMux(p, literals[level], hi, lo)
-		memo[node] = lit
-		return lit
+	// Constants are a Go extension; the source calls this only for prime nodes.
+	if local == dd.LogicZero {
+		return 0
 	}
-	return build(local)
+	if local == dd.One {
+		return 1
+	}
+	var covers [2]*cudd.DdNode
+	var counts [2]float64
+	for phase := 0; phase < 2; phase++ {
+		function := local
+		if phase == 0 {
+			function = cudd.Cudd_Not(local)
+		}
+		bdd := cudd.Cudd_zddIsop(dd, function, function, &covers[phase])
+		if bdd == nil {
+			if phase != 0 {
+				cudd.Cudd_RecursiveDeref(dd, covers[0])
+			}
+			return -1
+		}
+		cudd.Cudd_Ref(covers[phase])
+		cudd.Cudd_Ref(bdd)
+		cudd.Cudd_RecursiveDeref(dd, bdd)
+		counts[phase] = cudd.Cudd_zddCountDouble(dd, covers[phase])
+	}
+	phase := 1
+	if counts[0] < counts[1] {
+		phase = 0
+	}
+	cudd.Cudd_RecursiveDeref(dd, covers[phase^1])
+	defer cudd.Cudd_RecursiveDeref(dd, covers[phase])
+	// Counts at most 1000 are exact floats; larger counts are only rejected.
+	if counts[phase] < 0 || counts[phase] > 1000 {
+		return -1
+	}
+	n := Vec_IntSize(fanins)
+	if sop == nil {
+		sop = vec.Vec_StrAlloc(0)
+	}
+	if cube == nil {
+		cube = vec.Vec_StrAlloc(0)
+	}
+	vec.Vec_StrFill(sop, (n+3)*int(counts[phase])+1, 0)
+	vec.Vec_StrFill(cube, n, '-')
+	vec.Vec_StrPush(cube, 0)
+	offset := 0
+	if !giaClpWriteCover(dd, covers[phase], vec.Vec_StrArray(sop), vec.Vec_StrArray(cube)[:n], byte('0'+phase), &offset) {
+		return -1
+	}
+	return Gia_ManFactorNode(p, string(vec.Vec_StrArray(sop)[:offset]), fanins)
+}
+
+// Keep ABC's negative, positive, absent traversal order when serializing cubes.
+// These small cover helpers live here because importing base/abc would cycle.
+func giaClpWriteCover(dd *cudd.DdManager, cover *cudd.DdNode, sop, cube []byte, phase byte, offset *int) bool {
+	if cover == dd.Zero {
+		return true
+	}
+	if cover == dd.One {
+		if *offset+len(cube)+3 >= len(sop) {
+			return false
+		}
+		copy(sop[*offset:], cube)
+		*offset += len(cube)
+		copy(sop[*offset:], []byte{' ', phase, '\n'})
+		*offset += 3
+		return true
+	}
+	positive, negative, absent, ok := cudd.ZDDCoverCofactors(dd, cover, int(cover.Index&^1))
+	index := int(cover.Index / 2)
+	if !ok || index >= len(cube) {
+		return false
+	}
+	cube[index] = '0'
+	if !giaClpWriteCover(dd, negative, sop, cube, phase, offset) {
+		return false
+	}
+	cube[index] = '1'
+	if !giaClpWriteCover(dd, positive, sop, cube, phase, offset) {
+		return false
+	}
+	cube[index] = '-'
+	return giaClpWriteCover(dd, absent, sop, cube, phase, offset)
 }
 
 func Gia_ManRebuildNode(manager *dsd.Dsd_Manager_t, node *dsd.Dsd_Node_t, p *Gia_Man_t, dd *cudd.DdManager, fanins *Vec_Int_t, sop, cube *Vec_Str_t) int32 {
@@ -103,9 +157,10 @@ func Gia_ManRebuild(p *Gia_Man_t, manager *dsd.Dsd_Manager_t, dd *cudd.DdManager
 		dsd.Dsd_NodeSetMark(dsd.Dsd_ManagerReadInput(manager, int(i)), int(Gia_ManAppendCi(out)))
 	}
 	fanins := vec.Vec_IntAlloc(16)
+	sop, cube := vec.Vec_StrAlloc(0), vec.Vec_StrAlloc(0)
 	var count int
 	for _, node := range dsd.Dsd_TreeCollectNodesDfs(manager, &count) {
-		if Gia_ManRebuildNode(manager, node, out, dd, fanins, nil, nil) < 0 {
+		if Gia_ManRebuildNode(manager, node, out, dd, fanins, sop, cube) < 0 {
 			Gia_ManStop(out)
 			return Gia_ManDup(p)
 		}

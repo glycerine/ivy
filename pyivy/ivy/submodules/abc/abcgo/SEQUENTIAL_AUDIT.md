@@ -5881,3 +5881,27 @@ order, limits/reference ownership and rebuilt interface metadata with red tests,
 native comparisons and independent truth checks. No BDD-collapse production
 change was made during integration. Original completion remains 2/131; GIA and
 the full sequential audit remain active.
+
+BDD-collapse review confirms the explicit Gia_ManRebuildIsop substitute: it
+builds Shannon MUXes and ignores the source's positive/negative ISOP covers,
+phase selection, 1,000-cube rejection and SOP factorer. A new majority regression
+fails because no selected SOP cover is produced
+(/tmp/abcgo-collapse-isop-red.log). Restore the source workflow using the
+existing CUDD ISOP implementation, exact small cover counts, positive polarity
+on ties, source-order negative/positive/absent cube serialization and the
+existing Gia_ManFactorNode. Counts above 1,000 are rejected before factoring;
+large counts need no lossy integer conversion. Constants retain the supported
+Go fast path; source calls this routine only for prime nodes.
+
+The small cube serializer is local because importing base/abc's corresponding
+helpers would create a package cycle. It follows their source traversal using
+CUDD's paired-cover cofactors. Rebuild now owns reusable SOP/cube scratch.
+The first factoring invocation exposed a boundary mistake in this new adapter:
+passing the scratch buffer's terminating NUL into Dec_Factor causes its Go SOP
+parser to reject a mixed constant/cube row. Pass only the meaningful SOP bytes;
+no DEC change is needed. The regression and existing collapse/rebuild and all
+256 three-input-function tests pass (/tmp/abcgo-collapse-isop-green.log).
+
+Save a red checkpoint pending exact native cover/AIG comparisons, variable-order
+and resource/ownership checks and full integration. Original completion remains
+2/131; GIA and the sequential audit stay active.
