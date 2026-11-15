@@ -5811,3 +5811,21 @@ path, verified by a returned image plus the limit verdict.
 
 Save a red checkpoint pending final focused rerun, full uncached module race
 suite and GIA vet. Original completion remains 2/131; GIA and the audit active.
+
+Circuit-cofactoring false-proof/reset/reporting integration is green: all 130
+tested packages pass the uncached module race suite, with three command packages
+without tests and no failure/race diagnostic lines
+(/tmp/abcgo-ccof-module-race.log). GIA passes in 286.324s, ABCI in 29.241s and
+BMC in 24.545s. GIA vet passes with an empty log (/tmp/abcgo-ccof-vet.log).
+The final focused suite passes in 7.141s (/tmp/abcgo-ccof-final-focused.log).
+Source/tests/fixtures stayed frozen through this run.
+
+The review is not closed yet. Read-only inspection during integration found
+that incremental unrolling sizes storage as source objects times the maximum
+frame bound. A separate /tmp harness (no tested files changed) proves a tiny
+safe circuit with bound1<<30 panics on a nil unroller before it can converge
+(/tmp/abcgo-ccof-large-bound-harness.log). C starts incremental storage at a
+fixed size rather than reserving every possible frame. Next add a red unit
+regression and reserve only the current frame in incremental mode while
+retaining the requested bound and fixed-mode checks. Original completion
+remains 2/131; GIA and the full sequential audit remain active.
