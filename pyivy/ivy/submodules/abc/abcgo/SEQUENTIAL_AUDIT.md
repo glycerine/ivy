@@ -7516,3 +7516,34 @@ family or running final integration. Source-only structural helpers retain their
 may-fail API; the actual driver now validates those candidates. No alternative
 solver or replacement reachability algorithm is introduced. Completion stays
 2/131; both cube family and GIA remain open.
+
+### Cube feasibility independent and lifecycle coverage checkpoint
+
+Add 128 generated ordinary/real-gate sequential machines with three PIs and
+three registers, including reconvergent semantic-zero identities. Compare both
+miter modes against an independent scalar BFS and validate every returned trace.
+Use the simplified/hash constructors required for repeated/complementary fanins;
+raw append precondition failures in the first generator were invalid test inputs,
+not engine bugs. All valid generated machines agree.
+
+Add deterministic proof interruption through BSAT's clock/deadline API. An
+expired proof must propagate its stop through a shared-PI recursive parent,
+recycle the pending successor, leave no target and cache no unproved fact. The
+solver stop callback is consulted after a search boundary and can accompany an
+already decisive SAT result; use the actual pre-search deadline for this test.
+The deadline stop test passes, with no fabricated witness.
+
+Verify cached zero/one facts independently and ensure a warm cache requires no
+new solver call even after a deadline expires. Cross the actual one-million-node
+pNew replacement threshold using harmless dangling buffers; old namespace facts
+must not poison the replacement, including reused literal numbers. Online typed
+SAT initialization preserves every source Value scratch field. All semantic,
+BFS, interruption, cache polarity/lifetime and scratch tests pass in 0.504s
+(/tmp/abcgo-era2-semantic-expanded.log). Source algorithms remain cube/cofactor
+reachability plus the existing BSAT backend; no substitute solver is added.
+
+The final domain pass is checking whether the Go nRegs<=0 early rejection is
+stricter than the C entry point, which only explicitly rejects excess registers.
+No conclusion or domain repair is claimed yet. Resolve that boundary, finish
+review notes and run frozen full integration before closing the family. The
+last full-module gate still predates cube changes. Completion remains 2/131.
