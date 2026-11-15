@@ -1,9 +1,6 @@
 package gia
 
-import (
-	"github.com/glycerine/abcgo/misc/vec"
-	"sort"
-)
+import "github.com/glycerine/abcgo/misc/vec"
 
 func giaAppendMappedNode(dst, src *Gia_Man_t, obj *Gia_Obj_t) {
 	a, b, c, kind := src.Gate(obj.id)
@@ -30,14 +27,27 @@ func giaAppendMappedNode(dst, src *Gia_Man_t, obj *Gia_Obj_t) {
 	obj.Value = uint32(lit)
 }
 func Gia_ManDupLevelized(src *Gia_Man_t) *Gia_Man_t {
-	Gia_ManLevelNum(src)
-	nodes := make([]int32, 0, Gia_ManAndNum(src))
+	levels := Gia_ManLevelNum(src)
+	counts := make([]int32, int(levels)+1)
 	for _, obj := range src.pObjs {
 		if Gia_ObjIsAnd(obj) != 0 {
-			nodes = append(nodes, obj.id)
+			counts[Gia_ObjLevel(src, obj)]++
 		}
 	}
-	sort.SliceStable(nodes, func(i, j int) bool { return Gia_ObjLevelId(src, nodes[i]) < Gia_ObjLevelId(src, nodes[j]) })
+	// Starting offsets include level zero, where buffer chains may live.
+	start := int32(0)
+	for level, count := range counts {
+		counts[level] = start
+		start += count
+	}
+	nodes := make([]int32, Gia_ManAndNum(src))
+	for _, obj := range src.pObjs {
+		if Gia_ObjIsAnd(obj) != 0 {
+			level := Gia_ObjLevel(src, obj)
+			nodes[counts[level]] = obj.id
+			counts[level]++
+		}
+	}
 	out := giaDupMappedStart(src)
 	for i := int32(0); i < Gia_ManCiNum(src); i++ {
 		Gia_ManCi(src, i).Value = uint32(Gia_ManAppendCi(out))
@@ -49,6 +59,7 @@ func Gia_ManDupLevelized(src *Gia_Man_t) *Gia_Man_t {
 		giaDupMappedOutput(out, src, Gia_ManCo(src, i))
 	}
 	Gia_ManSetRegNum(out, Gia_ManRegNum(src))
+	out.nConstrs = src.nConstrs
 	return out
 }
 func Gia_ManDupFromVecs(src *Gia_Man_t, cis, ands, cos *Vec_Int_t, regs int32) *Gia_Man_t {

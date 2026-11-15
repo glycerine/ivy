@@ -3927,3 +3927,47 @@ in 2.996s (`/tmp/abcgo-sliced-final-focused-race.log`), and final GIA vet passes
 output duplication still need expanded review; the remaining GIA families
 are also open. Original package completion remains 2/131 and the sequential
 audit remains active.
+
+Levelized duplication and DFS-copy follow-up: three separately red regressions
+show lost constraint classification in both full-copy APIs and rejection of a
+valid simple-mode opposite-phase AND in DFS copying. Preserve nConstrs in
+both results and fGiaSimple in the DFS result. Red logs are
+`/tmp/abcgo-levelized-constraints-red.log`,
+`/tmp/abcgo-dfs-constraints-red.log` and
+`/tmp/abcgo-dfs-simple-red.log`. The compiled original C witness reports
+source/levelized/DFS constraint counts `1 0 0`: constraint loss is an inherited
+C omission deliberately repaired here because unchanged output ordering must
+retain property/constraint roles. This does not change the metadata policy
+for filtered/derived-output copy APIs.
+
+Restore the original C stable level-counting algorithm in place of comparison
+sorting, using starting offsets that also support level-zero buffers. Ordinary
+AND copies exactly match compiled C across 96 cases and 1,536 assignment
+rows, including source-to-destination internal literal maps, CI/CO/register
+counts and complete output truth tables. Independent Boolean expectations,
+exact expected internal ordering and mapped logical pin checks cover real
+XOR/MUX/buffer nodes as well. Across ordinary/typed graphs, original/DFS
+layout, constraint counts zero/one, 32 edge polarities and zero/two/four
+registers, the expanded checks cover 768 cases and 12,288 assignment rows.
+Same-level buffer chains, interleaved COs, unused internal gates, identity,
+empty/wire-only graphs, constant buffer chains and simple-mode AND storage
+are included. Typed cases do not claim native AND-only levelization supports
+real gates. The fixture is `aig/gia/test_vectors/levelized.c`.
+
+In the 4,096-node/16-level benchmark (100 calls), comparison sorting measured
+1,692,672 ns, 343,296 bytes and 4,396 allocations per call; level counting
+measured 820,847 ns, 343,372 bytes and 4,395 allocations. Logs are
+`/tmp/abcgo-levelized-before.log` and `/tmp/abcgo-levelized-after.log`.
+The algorithm is O(nodes + levels), with a counter per level; this particular
+run uses slightly more memory, and neither timing nor footprint is a general
+claim for deep graphs. New tests pass focused race verification in 3.119s
+(`/tmp/abcgo-levelized-final-focused-race.log`), and GIA vet passes
+(`/tmp/abcgo-ordered-copy-review-vet.log`).
+
+Full uncached race tests pass for GIA (95.074s), SSC (7.675s) and ABCI
+(28.674s), recorded in `/tmp/abcgo-ordered-copy-review-race.log`. The final
+focused race run additionally checks both graph representations against
+independent Boolean formulas. This closes levelized ordering and the named
+DFS metadata follow-ups; explicit-vector/all-node-output duplication and
+other GIA families remain open. Original package completion stays 2/131;
+the sequential audit remains active.

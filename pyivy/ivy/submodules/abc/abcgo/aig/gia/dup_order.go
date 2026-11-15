@@ -114,6 +114,7 @@ func Gia_ManDupOrderDfs(src *Gia_Man_t) *Gia_Man_t {
 	Gia_ManFillValue(src)
 	dst := Gia_ManStart(src.nObjs)
 	dst.CopyIdentityFrom(src)
+	dst.fGiaSimple = src.fGiaSimple
 	if src.PMuxes != nil {
 		dst.EnableMuxes()
 	}
@@ -130,6 +131,7 @@ func Gia_ManDupOrderDfs(src *Gia_Man_t) *Gia_Man_t {
 	Gia_ManDupRemapCis(dst, src)
 	Gia_ManDupRemapEquiv(dst, src)
 	Gia_ManSetRegNum(dst, Gia_ManRegNum(src))
+	dst.nConstrs = src.nConstrs
 	return dst
 }
 func Gia_ManDupAbs(src *Gia_Man_t, ppiToFlop, flopToPpi *Vec_Int_t) *Gia_Man_t {
