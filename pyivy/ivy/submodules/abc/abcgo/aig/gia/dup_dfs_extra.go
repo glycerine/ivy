@@ -73,7 +73,7 @@ func Gia_ManDupDfs2(src *Gia_Man_t) *Gia_Man_t {
 	}
 	Gia_ManDupRemapCis(out, src)
 	Gia_ManSetRegNum(out, Gia_ManRegNum(src))
-	out.nConstrs = src.nConstrs
+	giaCopyOutputRoles(out, src)
 	return out
 }
 func Gia_ManDupDfs(src *Gia_Man_t) *Gia_Man_t {
@@ -88,7 +88,7 @@ func Gia_ManDupDfs(src *Gia_Man_t) *Gia_Man_t {
 		giaDupMappedOutput(out, src, Gia_ManCo(src, i))
 	}
 	Gia_ManSetRegNum(out, Gia_ManRegNum(src))
-	out.nConstrs = src.nConstrs
+	giaCopyOutputRoles(out, src)
 	if src.pCexSeq != nil {
 		out.pCexSeq = util.Abc_CexDup(src.pCexSeq, Gia_ManRegNum(src))
 	}
@@ -206,8 +206,7 @@ func Gia_ManDupDfsCiMap(src *Gia_Man_t, ciMap []int32, lits *Vec_Int_t) *Gia_Man
 	Gia_ManHashStop(out)
 	Gia_ManSetRegNum(out, Gia_ManRegNum(src))
 	if lits == nil {
-		out.nConstrs = src.nConstrs
-		out.aigerBadOutputs = src.aigerBadOutputs
+		giaCopyOutputRoles(out, src)
 	}
 	return out
 }

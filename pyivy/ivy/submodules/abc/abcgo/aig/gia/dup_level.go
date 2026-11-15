@@ -59,7 +59,7 @@ func Gia_ManDupLevelized(src *Gia_Man_t) *Gia_Man_t {
 		giaDupMappedOutput(out, src, Gia_ManCo(src, i))
 	}
 	Gia_ManSetRegNum(out, Gia_ManRegNum(src))
-	out.nConstrs = src.nConstrs
+	giaCopyOutputRoles(out, src)
 	return out
 }
 func Gia_ManDupFromVecs(src *Gia_Man_t, cis, ands, cos *Vec_Int_t, regs int32) *Gia_Man_t {

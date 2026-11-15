@@ -4850,3 +4850,24 @@ zero-reset reachability for swept state; deliberate output deletion is not
 claimed to preserve the original property set. Other GIA families, the
 bad-partition follow-up above and final inventory reconciliation remain
 open. Original completion stays 2/131; the sequential audit remains active.
+
+Full-output bad-partition checkpoint: red regressions show 14 invocation
+variants losing two bad-output labels while retaining two constraints
+(`/tmp/abcgo-copy-partition-red.log`). AIGER makes the loss observable: the
+header changes from one ordinary/two bad/two constraints to three ordinary/
+zero bad/two constraints. The affected functions are Normalize (raw/hashed),
+Levelized, OrderDfs, OrderDfsReverse, OrderAiger, Dfs, Dfs2, DfsClasses,
+Abs (none/each/both promoted registers) and ReplaceCut. These variants keep
+the complete source PO list in order, including abstraction/cut variants
+whose inputs or remaining state change.
+
+Use one narrow helper to copy both role counters at those explicit sites.
+Basic copying and the recently repaired unchanged-output CI-map path use the
+same helper without changing their behavior. The shared draft initializer
+still starts with no roles, preserving explicit derived-output policies.
+Focused regressions, AIGER round trips and the existing CI-map derived-role
+control pass (`/tmp/abcgo-copy-partition-focused.log`, 0.005s). No copying,
+hashing, abstraction or cone-selection algorithm changed. Expanded partition/
+behavior/serialization coverage and full integration verification are pending.
+Save this checkpoint with a red prefix. Original completion remains 2/131;
+the GIA audit continues.

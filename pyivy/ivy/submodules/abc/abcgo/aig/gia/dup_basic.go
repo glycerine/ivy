@@ -41,13 +41,12 @@ func Gia_ManDup(src *Gia_Man_t) *Gia_Man_t {
 		dst.pSibls = append([]int32(nil), src.pSibls...)
 	}
 	Gia_ManSetRegNum(dst, src.nRegs)
-	dst.nConstrs = src.nConstrs
+	giaCopyOutputRoles(dst, src)
 	if src.pCexSeq != nil {
 		dst.pCexSeq = util.Abc_CexDup(src.pCexSeq, src.nRegs)
 	}
 	// Object IDs are unchanged, so serialized node-indexed I/O metadata remains
 	// valid and can be independently owned by the duplicate.
-	dst.aigerBadOutputs = src.aigerBadOutputs
 	dst.aigerComment = append([]byte(nil), src.aigerComment...)
 	dst.aigerLatchInits = append([]int32(nil), src.aigerLatchInits...)
 	if src.aigerExtensions != nil {
@@ -63,4 +62,9 @@ func Gia_ManDup(src *Gia_Man_t) *Gia_Man_t {
 		}
 	}
 	return dst
+}
+
+// giaCopyOutputRoles applies when the complete PO list keeps its source order.
+func giaCopyOutputRoles(dst, src *Gia_Man_t) {
+	dst.nConstrs, dst.aigerBadOutputs = src.nConstrs, src.aigerBadOutputs
 }

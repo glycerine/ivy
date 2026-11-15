@@ -89,7 +89,7 @@ func Gia_ManDupNormalize(src *Gia_Man_t, hash int32) *Gia_Man_t {
 		src.pObjs[id].Value = uint32(Gia_ManAppendCo(dst, Gia_ObjFanin0Copy(src.pObjs[id])))
 	}
 	Gia_ManSetRegNum(dst, src.nRegs)
-	dst.nConstrs = src.nConstrs
+	giaCopyOutputRoles(dst, src)
 	if src.PReprs != nil {
 		mapping := make([]int32, src.nObjs)
 		for id, obj := range src.pObjs {

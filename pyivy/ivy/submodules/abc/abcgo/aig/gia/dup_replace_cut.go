@@ -53,6 +53,6 @@ func Gia_ManDupReplaceCut(src *Gia_Man_t) *Gia_Man_t {
 		Gia_ManDupOrderDfs_rec(out, src, Gia_ManCo(src, i))
 	}
 	Gia_ManSetRegNum(out, Gia_ManRegNum(src))
-	out.nConstrs = src.nConstrs
+	giaCopyOutputRoles(out, src)
 	return out
 }

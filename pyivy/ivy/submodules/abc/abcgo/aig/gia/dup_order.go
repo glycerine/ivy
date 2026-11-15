@@ -124,7 +124,7 @@ func Gia_ManDupOrderDfs(src *Gia_Man_t) *Gia_Man_t {
 	Gia_ManDupRemapCis(dst, src)
 	Gia_ManDupRemapEquiv(dst, src)
 	Gia_ManSetRegNum(dst, Gia_ManRegNum(src))
-	dst.nConstrs = src.nConstrs
+	giaCopyOutputRoles(dst, src)
 	return dst
 }
 func Gia_ManDupAbs(src *Gia_Man_t, ppiToFlop, flopToPpi *Vec_Int_t) *Gia_Man_t {
@@ -174,7 +174,7 @@ func Gia_ManDupAbs(src *Gia_Man_t, ppiToFlop, flopToPpi *Vec_Int_t) *Gia_Man_t {
 		obj.Value = uint32(Gia_ManAppendCo(dst, Gia_ObjFanin0Copy(obj)))
 	}
 	Gia_ManSetRegNum(dst, Gia_ManRegNum(src)-int32(vec.Vec_IntSize(ppiToFlop)))
-	dst.nConstrs = src.nConstrs
+	giaCopyOutputRoles(dst, src)
 	return dst
 }
 func Gia_ManDupOutputGroup(src *Gia_Man_t, start, stop int32) *Gia_Man_t {
@@ -240,7 +240,7 @@ func Gia_ManDupOrderDfsReverse(src *Gia_Man_t) *Gia_Man_t {
 	Gia_ManDupRemapCos(dst, src)
 	Gia_ManDupRemapEquiv(dst, src)
 	Gia_ManSetRegNum(dst, Gia_ManRegNum(src))
-	dst.nConstrs = src.nConstrs
+	giaCopyOutputRoles(dst, src)
 	return dst
 }
 func Gia_ManDupOrderAiger(src *Gia_Man_t) *Gia_Man_t {
@@ -255,6 +255,6 @@ func Gia_ManDupOrderAiger(src *Gia_Man_t) *Gia_Man_t {
 	}
 	Gia_ManDupRemapEquiv(dst, src)
 	Gia_ManSetRegNum(dst, Gia_ManRegNum(src))
-	dst.nConstrs = src.nConstrs
+	giaCopyOutputRoles(dst, src)
 	return dst
 }

@@ -33,7 +33,7 @@ func Gia_ManDupDfsClasses(src *Gia_Man_t) *Gia_Man_t {
 	}
 	Gia_ManHashStop(out)
 	Gia_ManSetRegNum(out, Gia_ManRegNum(src))
-	out.nConstrs = src.nConstrs
+	giaCopyOutputRoles(out, src)
 	return giaCleanComposed(out)
 }
 func Gia_ManDupTopAnd_iter(src *Gia_Man_t, verbose int32) *Gia_Man_t {
