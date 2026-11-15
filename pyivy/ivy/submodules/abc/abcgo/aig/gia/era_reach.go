@@ -27,7 +27,7 @@ type Gia_ManEra_t struct {
 
 func Gia_ManEraData(p *Gia_ManEra_t, id int32) []uint32 {
 	start := id * p.nWordsSim
-	return p.pDataSim[start : start+p.nWordsSim]
+	return p.pDataSim[start : start+p.nWordsSim : start+p.nWordsSim]
 }
 func Gia_ManEraState(p *Gia_ManEra_t, id int32) *Gia_ObjEra_t { return p.vStates[id] }
 func Gia_ManEraCreate(g *Gia_Man_t) *Gia_ManEra_t {

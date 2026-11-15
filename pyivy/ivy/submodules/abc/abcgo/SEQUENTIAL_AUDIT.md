@@ -7216,3 +7216,31 @@ independently enumerate small machines, and cover word phases, hash resizing,
 limits, diagnostics and STG output before closing this family. The last full
 module race/vet result remains the sequential-enable checkpoint; the new repair
 has focused coverage only. Original completion remains 2/131; GIA is in progress.
+
+### Explicit reachability state-table and storage checkpoint
+
+Track the temporary native matrix as era_native_review_test.go and the actual-C
+fixture test_vectors/era_review.c. All 480 configurations now compare 3,453
+algorithmic records: public results plus private discovered states, packed words,
+predecessor/condition fields, scratch identity, depth, hash lookup, failing traces
+and every transition row. Force three initial buckets to exercise automatic hash
+resizing. Initialize the native initial record exactly as its driver does; omit
+only the unspecified condition field of a pending native scratch record. Native
+reports/time formatting are deliberately outside this comparison. Focused native
+run passes (/tmp/abcgo-era-native-state.log).
+
+An append regression proves Gia_ManEraData exposes the next object's storage:
+appending deadbeef to one borrowed row overwrites its neighbor's first simulation
+word (/tmp/abcgo-era-storage-red.log). Bound the borrowed slice capacity to its
+object row; edits still alias that object's words. This matches the package's
+other bounded simulation accessors and prevents cross-object corruption.
+
+Add independent scalar evaluation of every CO over zero/one/five/six/twelve PIs,
+eight real XOR/MUX/complement configurations, 65 registers and three packed
+register states, including bits 32 and 64. Check all minterms, including all 4,096
+at the input ceiling. Add repeated hash resizing with 40 distinct multiword states
+and an uninserted pending scratch record. All explicit-reachability focused tests
+pass in 2.473s (/tmp/abcgo-era-scalar-green.log). No full integration gate has run
+since these ERA repairs; retain red checkpoint status pending that gate. Reports,
+STG boundary behavior, independent traversal/trace enumeration and final family
+review remain pending. Original completion stays 2/131.
