@@ -34,46 +34,65 @@ func Cof_ManCollectHighFanout(p *Cof_Man_t, limit int32) *Vec_Ptr_t {
 	return result
 }
 
-// Cof_ManCountRemoved propagates substitutions that simplify to an existing
-// AND node or literal. Object IDs are topological, so one forward pass suffices.
+// Cof_ManCountRemoved estimates structural savings using C's levelized
+// worklist. Scratch iLit values describe hash hits at discovery time; they are
+// not a complete cofactor replacement map. In particular, do not resolve them
+// transitively or replace this traversal with a topological sweep: both change
+// which fanins have been visited when a candidate is first discovered.
 func Cof_ManCountRemoved(p *Cof_Man_t, root *Cof_Obj_t, one int32) int32 {
 	if one != 0 && one != 1 {
 		panic("gia: invalid cofactor constant")
 	}
+	if root.Id == 0 {
+		panic("gia: constant cofactor root")
+	}
+	// Source callers prepare these once. Initialize here too for direct callers.
+	if len(p.pLevels) == 0 {
+		p.nLevels = Gia_ManLevelNum(p.pGia) + 1
+		p.pLevels = make([]int32, p.nLevels)
+	}
 	Cof_ManIncrementTravId(p)
 	Cof_ObjSetTravIdCurrent(p, root)
+	start := Cof_ObjLevel(p, root)
+	root.iNext = 0
+	p.pLevels[start] = root.Id
 	root.iLit = one
 	var count int32
-	for _, node := range p.objects[root.Id+1:] {
-		if Cof_ObjIsNode(node) == 0 || len(node.fanins) != 2 {
-			continue
-		}
-		_, _, _, kind := p.pGia.Gate(node.Id)
-		if kind != 2 {
-			continue
-		}
-		changed := false
-		lits := [2]int32{}
-		for i, fanin := range node.fanins {
-			lits[i] = fanin.Id << 1
-			if Cof_ObjIsTravIdCurrent(p, fanin) != 0 {
-				lits[i] = fanin.iLit
-				changed = true
+	for level := start; level < p.nLevels; level++ {
+		for id := p.pLevels[level]; id != 0; {
+			node := p.objects[id]
+			for _, next := range node.fanouts {
+				if Cof_ObjIsCo(next) != 0 || Cof_ObjIsTravIdCurrent(p, next) != 0 {
+					continue
+				}
+				_, _, _, kind := p.pGia.Gate(next.Id)
+				if kind != 2 {
+					continue
+				} // The source estimator operates on ordinary ANDs.
+				lits := [2]int32{}
+				for i, fanin := range next.fanins {
+					lits[i] = fanin.Id << 1
+					if Cof_ObjIsTravIdCurrent(p, fanin) != 0 {
+						lits[i] = fanin.iLit
+					}
+					if next.complements[i] {
+						lits[i] ^= 1
+					}
+				}
+				lit := Gia_ManHashAndTry(p.pGia, lits[0], lits[1])
+				if lit < 0 {
+					continue
+				}
+				Cof_ObjSetTravIdCurrent(p, next)
+				next.iLit = lit
+				nextLevel := Cof_ObjLevel(p, next)
+				next.iNext = p.pLevels[nextLevel]
+				p.pLevels[nextLevel] = next.Id
+				count++
 			}
-			if node.complements[i] {
-				lits[i] ^= 1
-			}
+			id = node.iNext
 		}
-		if !changed {
-			continue
-		}
-		lit := Gia_ManHashAndTry(p.pGia, lits[0], lits[1])
-		if lit < 0 {
-			continue
-		}
-		node.iLit = lit
-		Cof_ObjSetTravIdCurrent(p, node)
-		count++
+		p.pLevels[level] = 0
 	}
 	return count
 }

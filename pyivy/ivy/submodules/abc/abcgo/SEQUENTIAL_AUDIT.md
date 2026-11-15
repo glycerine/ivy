@@ -7676,3 +7676,27 @@ scratch representation differences before changing expectations or production.
 The current native-analysis test intentionally remains red at this checkpoint;
 the preceding reference repairs retain their focused green evidence. No full
 integration or giaCof.c closure is claimed. Completion stays 2/131.
+
+### Cofactor worklist fidelity repair
+
+Reproduce the native scratch/count mismatch as a red regression in
+/tmp/abcgo-cof-worklist-red.log, then restore the original C levelized LIFO
+worklist in Cof_ManCountRemoved. Reuse pLevels/iNext as source queue heads and
+links; prepare levels lazily for existing direct callers. A topological sweep
+was an algorithm change: it changes which fanins have scratch replacements at
+first discovery. All 6,834 connectivity, cone, support, MFFC, ranking and raw
+scratch/count records now match unmodified C exactly across 32 graphs. Focused
+cofactor/cone regressions pass in 2.156s
+(/tmp/abcgo-cof-worklist-repaired.log).
+
+Correct the preceding investigation's interpretation: CountRemoved is a
+structural estimate, not an exact cofactor replacement map. Its hash-hit scratch
+literals are discovery-time estimates; neither transitive alias normalization
+nor an assumed Boolean substitution invariant justifies changing the source
+algorithm. A temporary C canonical-alias hook made the two algorithms agree,
+but did not prove the hook correct; remove it and retain the unmodified source
+oracle. Likewise remove the experimental scratch-as-replacement truth check;
+Boolean equivalence belongs on actual reconstructed cofactor graphs. Preserve a
+separate RNG state in the Go generator so output phases explicitly use the
+original seed (previously an even number of RNG calls happened to preserve it).
+The family and package reviews remain in progress; no full gate claimed.

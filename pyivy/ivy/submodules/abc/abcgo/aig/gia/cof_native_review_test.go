@@ -10,7 +10,8 @@ import (
 func cofReviewGraph(seed uint32) *Gia_Man_t {
 	g := Gia_ManStart(256)
 	pool := []int32{0, 1}
-	random := func() uint32 { seed = seed*1664525 + 1013904223; return seed >> 8 }
+	rng := seed
+	random := func() uint32 { rng = rng*1664525 + 1013904223; return rng >> 8 }
 	edge := func() int32 { lit := pool[int(random())%len(pool)]; return lit ^ int32(random()&1) }
 	for i := 0; i < 4; i++ {
 		pool = append(pool, Gia_ManAppendCi(g))
