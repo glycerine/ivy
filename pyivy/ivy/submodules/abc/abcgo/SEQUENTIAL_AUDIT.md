@@ -8347,3 +8347,34 @@ cofactoring checks pass13.347s
 (/tmp/abcgo-frames-scheduler-consumers-repaired.log). This is a focused gate;
 remaining Frames/Init/Special source implementations, expanded history/native
 coverage, compactness and frozen full integration are still open. Completion2/131.
+
+### Distinct frame drivers and initialized source defect
+
+New OR-output and specialized-prefix tests fail before porting these remaining
+entry points (/tmp/abcgo-frames-drivers-red.log): OR mode has9 COs instead of5;
+unbounded prefix returns nil, bounded prefix returns properties rather than
+preceding transition state. A24-configuration actual-C flag/ordering matrix also
+fails. Replace the common AIG conversion wrapper with source Frames,
+FramesInit/FraSupports and InitSpecial algorithms, including OR aggregation,
+nonhashed construction, support pruning and first-nonzero-literal termination.
+
+Inspecting the source support collector finds a genuine C epoch bug: CollectCis
+marks the whole cone, then CollectAnds intentionally shares that epoch and
+collects no ANDs. Default fixture source remains unmodified. A separate128-row
+source/corrected counterexample checks independent sequential truth and must
+reproduce a wrong original result. An explicit optional call-site bridge starts
+a new epoch only before the source Frames support-AND collection. Go applies
+that correction at the same call site; the shared DFS API remains unchanged.
+All24 corrected-source driver configurations match exact objects/flags/ports.
+The source/typed consumer focused suite passes17.060s
+(/tmp/abcgo-frames-drivers-first.log).
+
+Special prefix now initializes preceding RI state to zero, avoiding stale
+scratch if the first property is nonzero. New regression against the previous
+implementation fails on returning property1 instead of state0
+(/tmp/abcgo-frames-special-scratch-red.log). Capture the original C stale-RI
+assertion separately, with core dumps disabled. A new fixed-zero-bound test is
+red (/tmp/abcgo-frames-zero-bound-red.log); distinguish its zero bound from
+incremental zero meaning unbounded, which remains supported. The corrected
+bound and expanded boundary/native rerun are pending. This red checkpoint is
+not full integration or family closure; package completion2/131.

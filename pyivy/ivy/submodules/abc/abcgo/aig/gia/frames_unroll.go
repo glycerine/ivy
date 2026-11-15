@@ -213,7 +213,7 @@ func (p *Gia_ManUnr_t) addStep(horizon int32) {
 // Gia_ManUnrollAdd executes missing source scheduler steps in increasing order.
 func Gia_ManUnrollAdd(raw any, horizon int32) any {
 	p, ok := raw.(*Gia_ManUnr_t)
-	if !ok || p == nil || p.pAig == nil || p.pNew == nil || horizon < p.frame || (p.pPars.NFrames > 0 && horizon > p.pPars.NFrames) {
+	if !ok || p == nil || p.pAig == nil || p.pNew == nil || horizon < p.frame || (horizon > p.pPars.NFrames && (p.pPars.fSaveLastLit == 0 || p.pPars.NFrames > 0)) {
 		return nil
 	}
 	for p.frame < horizon {

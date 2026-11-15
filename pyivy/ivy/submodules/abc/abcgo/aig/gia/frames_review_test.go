@@ -161,3 +161,25 @@ func TestFramesOriginalInitializedSaveIndexFailure(t *testing.T) {
 		t.Fatal("initialized first property should be zero with only two PI inputs")
 	}
 }
+
+func TestFramesFixedZeroBoundRejectsAdd(t *testing.T) {
+	g := frameTestGraph()
+	defer Gia_ManStop(g)
+	raw := Gia_ManUnrollStart(g, &Gia_ParFra_t{NFrames: 0})
+	defer Gia_ManStop(raw.(*Gia_ManUnr_t).pNew)
+	defer Gia_ManUnrollStop(raw)
+	if Gia_ManUnrollAdd(raw, 1) != nil {
+		t.Fatal("fixed zero-frame bound accepted a positive horizon")
+	}
+}
+
+func TestFramesIncrementalZeroBoundStillExtends(t *testing.T) {
+	g := frameTestGraph()
+	defer Gia_ManStop(g)
+	raw := Gia_ManUnrollStart(g, &Gia_ParFra_t{NFrames: 0, fSaveLastLit: 1})
+	defer Gia_ManStop(raw.(*Gia_ManUnr_t).pNew)
+	defer Gia_ManUnrollStop(raw)
+	if q, ok := Gia_ManUnrollAdd(raw, 3).(*Gia_Man_t); !ok || q == nil || Gia_ManCiNum(q) != 4 {
+		t.Fatal("zero-bound incremental mode did not extend through three frames")
+	}
+}

@@ -1,10 +1,8 @@
 package gia
 
 import (
-	"fmt"
 	"math/bits"
 
-	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/misc/vec"
 )
 
@@ -123,45 +121,6 @@ func Gia_ManFraSetDefaultParams(params *Gia_ParFra_t) {
 		return
 	}
 	*params = Gia_ParFra_t{NFrames: 32}
-}
-
-func Gia_ManFrames(src *Gia_Man_t, params *Gia_ParFra_t) *Gia_Man_t {
-	if src == nil || params == nil || params.NFrames <= 0 {
-		return nil
-	}
-	return buildGiaFrames(src, params)
-}
-
-func Gia_ManFramesInit(src *Gia_Man_t, params *Gia_ParFra_t) *Gia_Man_t {
-	if src == nil || params == nil || params.NFrames <= 0 {
-		return nil
-	}
-	copyParams := *params
-	copyParams.FInit = 1
-	return buildGiaFrames(src, &copyParams)
-}
-
-func buildGiaFrames(src *Gia_Man_t, params *Gia_ParFra_t) *Gia_Man_t {
-	graph := Gia_ManToAigSimple(src)
-	withRegisters := int32(0)
-	if params.FInit == 0 {
-		withRegisters = 1
-	}
-	unrolled := aig.Aig_ManFrames(graph, params.NFrames, params.FInit, 1, withRegisters, 0, nil)
-	result := Gia_ManFromAigSimple(unrolled)
-	result.pName, result.PSpec = src.pName, src.PSpec
-	if params.FVerbose != 0 {
-		fmt.Printf("Unrolled %d frames: %d PIs, %d POs, %d registers.\n", params.NFrames, Gia_ManPiNum(result), Gia_ManPoNum(result), Gia_ManRegNum(result))
-	}
-	return result
-}
-
-func Gia_ManFramesInitSpecial(src *Gia_Man_t, frames, verbose int32) *Gia_Man_t {
-	if src == nil {
-		return nil
-	}
-	params := Gia_ParFra_t{NFrames: frames, FInit: 1, FVerbose: verbose}
-	return Gia_ManFramesInit(src, &params)
 }
 
 func remapGiaLiteral(mapping []int32, literal int32) int32 {
