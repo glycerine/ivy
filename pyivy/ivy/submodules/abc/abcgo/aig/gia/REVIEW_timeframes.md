@@ -23,10 +23,36 @@ from the29-bit no-fanin sentinel. Extend traversal/copying to logical real gate
 inputs, including MUX control after stored data pins. Unreachable nodes remain
 absent. Build sparse reverse-time abstraction directly from these tents.
 
-Order and abstraction now match every native object field and packed row on the
-initial graph. Both minimal tests and the corresponding native modes pass
-(`/tmp/abcgo-frames-order-abs-progress.log`). Frames2 and incremental modes
-remain red. This is partial evidence, not family closure or a full green gate.
+Order and abstraction match every native object field and packed row on the
+initial graph. The rolling scheduler, cleanup and combinational Frames2 now
+match all five native modes, including save/fixed property truth. Fixed mode
+leaves LastLit0; save mode selects the last encountered PO. The old always-PO0
+expectation and old register-retaining Frames2 test are corrected using these
+native contracts, with an additional red overlay regression against the prior
+implementation (`/tmp/abcgo-frames-fixed-literal-red.log`).
+
+Port the compact source history arena, ranks/delays and scheduler in
+`frames_unroll.go`; remove redundant per-frame maps, state and stopped fields.
+Keep lifecycle/huge incremental-bound behavior and correct initialized-save PI
+offsets. Focused native/CCof/independent sequential checks pass13.347s
+(`/tmp/abcgo-frames-scheduler-consumers-repaired.log`), including1536 frame
+configurations and176640 assignments.
+
+Distinct Frames/FramesInit/InitSpecial implementations now live in
+`frames_driver.go`; the AIG roundtrip substitute is removed. New OR-output and
+prefix tests were red before this port (`/tmp/abcgo-frames-drivers-red.log`).
+Twenty-four explicit corrected-source driver configurations match all output
+object records. See below for the separate original-C initialization defect.
+
+Fixed zero frames now rejects positive Add horizons while incremental zero
+remains unbounded. A red boundary test catches that distinction
+(`/tmp/abcgo-frames-zero-bound-red.log`). Specialized prefix clears preceding
+RI state before an immediate event, instead of returning stale scratch or a
+property. The prior implementation fails the immediate-event regression
+(`/tmp/abcgo-frames-special-scratch-red.log`). The source stale-RI assertion is
+captured separately with core dumps disabled. Latest focused frame/native and
+lifecycle checks pass9.578s (`/tmp/abcgo-frames-drivers-boundaries.log`). This is
+partial coverage, not the final frozen integration gate or family closure.
 
 The permanent fixture `test_vectors/frames_review.c` includes actual source and
 links original ABC objects through the shared Linux/GCC source-oracle helper.
@@ -35,34 +61,36 @@ of the successive incremental last-property literal. No solver or algorithm
 answers are stubbed. Broader generated/native and independent coverage remains
 required after the rest of the source algorithm is restored.
 
-## Remaining implementation and review plan
+## Remaining review and coverage plan
 
-1. Port UnrStart's ranks, per-edge rank delays, maximum required history and
-   compact rolling storage; retain ordinary native array layouts. For real MUXs,
-   derive a third edge column only when needed. Temporary construction rank and
-   degree arrays need not become redundant persistent Go fields.
-2. Port source history read/write helpers and sequential Add tent processing.
-   Preserve valid Go horizon jumps by executing missing mechanical steps, not
-   by replacing the scheduler with whole-network maps. Preserve stopped-manager
-   checks, caller ownership of returned graphs and huge incremental bound
-   support established by the earlier CCof review.
-3. Reconcile LastLit: source save mode ends at the last encountered PO; fixed
-   mode does not update it. Current Go explicitly chooses PO0 in both modes.
-4. Make Frames2 delegate to the combinational Unroll routine, then reconcile
-   source cleanup and ordering. The old KeepsStateInterface test asserts the
-   substituted wrapper's behavior; correct it using the native contract.
-5. Port Frames/FramesInit separately, including support-pruned initialized
-   construction, FOrPos, FDisableSt, register/terminal dimensions and reports.
-   The incremental source family always hashes; these flags are not generic
-   wrapper options to apply to every entry point.
-6. Port InitSpecial's first-nonzero-property prefix termination and preceding
-   transition-state output. Zero bound means event-driven unbounded mode. Use
-   terminating toggle/event cases; never launch a permanently-zero C loop.
-7. Add native scheduling/history/order and diagnostic matrices, independent
-   exhaustive sequential traces, typed/reordered/reset/boundary/resource tests,
-   ownership and measured compactness checks. Then freeze code/tests/fixtures,
-   run full uncached module race tests and GIA vet, and reconcile the complete
-   active source inventory before closing this family.
+All active source entry points now have direct implementations. Continue
+reconciling the full22-routine active inventory, mapping the source static
+history read/write/copy helpers to Go methods. The inactive old Unroll function
+remains excluded.
+
+1. Compare native rank delays, offsets and history rows before/after steps over
+   generated ordinary graphs. Preserve two-column ordinary layouts and test the
+   derived third column for typed MUXs independently.
+2. Expand exact native dependency order, sparse abstraction and frame-driver
+   flag matrices over generated graphs, not just the initial17-object example.
+   Characterize unmodified-source defects separately from explicitly corrected
+   native comparisons.
+3. Add independent full Frames/FramesInit sequential histories for ordinary,
+   real-gate and reordered interfaces; verify final state, OR aggregation,
+   initialized flag interactions, output/input dimensions and returned ownership.
+   Existing1536-case coverage concerns the incremental family, not all drivers.
+4. Expand specialized-prefix cases for immediate/delayed events, finite zero
+   prefixes, multiple properties, typed gates and owned preceding-state outputs.
+   Add exact native prefix and verbose comparisons, normalizing only genuinely
+   nondeterministic clock/memory fields when appropriate.
+5. Audit history lifecycle, zero/large bounds, safe power-of-two packed IDs and
+   resource contracts. Review/remap changed-interface metadata deliberately.
+6. Measure compactness and allocation behavior against the previous full-map
+   implementation. Inspect skipped-tent work and unused helpers, retaining exact
+   source ordering/history/native results through any simplification.
+7. Update source reconciliation/validation, freeze production/tests/fixtures,
+   run uncached full module race tests and GIA vet, and inspect exact terminal
+   results before closing the family. The broader GIA inventory stays open.
 
 ## Source boundary issues to characterize explicitly
 
@@ -76,6 +104,21 @@ that operation repeatedly when appropriate.
 C Abs's mask assertion rejects power-of-two object counts although their IDs
 fit. The Go bit width uses the actual maximum ID; test these boundaries
 independently and keep unmodified native fixtures within supported counts.
+
+Initialized source FraSupports has a second defect: CollectCis marks the cone,
+then CollectAnds intentionally shares that epoch and returns no AND nodes.
+The default C fixture stays unmodified. Its --init-defect mode must reproduce
+wrong source outputs and compare an explicit corrected call-site bridge with
+independent sequential truth over128 records. The --drivers-safe mode enables
+only that epoch correction; source schedulers and frame builders are unchanged.
+Go starts a fresh epoch at the same support-call site, leaving the shared DFS
+API's caller-owned epoch contract intact.
+
+Specialized source prefix can return stale RI Value when a first-frame event
+breaks before committing any transition state. --special-stale characterizes
+its assertion after FillValue; Go initializes the preceding RI state to zero.
+These repairs preserve valid source intent rather than copying demonstrated
+source errors.
 
 Unrolling changes interface dimensions and ordering. Remap metadata explicitly
 where meaningful; do not blindly copy unchanged-interface metadata onto a new

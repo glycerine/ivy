@@ -8378,3 +8378,20 @@ red (/tmp/abcgo-frames-zero-bound-red.log); distinguish its zero bound from
 incremental zero meaning unbounded, which remains supported. The corrected
 bound and expanded boundary/native rerun are pending. This red checkpoint is
 not full integration or family closure; package completion2/131.
+
+### Frame driver boundary checkpoint verified
+
+Exact boundary test handle42443 terminates exit0. All focused frame/native and
+lifecycle tests pass9.578s (/tmp/abcgo-frames-drivers-boundaries.log), including
+original-C initialized-save/stale-RI assertion characterization, corrected
+initialized-support comparisons, fixed-zero-bound rejection and unbounded
+incremental zero. The new source frame implementations and OR/prefix behavior
+are no longer pending code; broader coverage/reconciliation is still required.
+
+REVIEW_timeframes.md now records the actual implementations, three explicit
+source boundary defects, red evidence and the remaining review plan. Next add
+generated native histories/order/driver matrices and independent full-driver
+sequential truth; existing176640-assignment coverage is incremental only. Then
+review resource/ownership/compactness, exact reports and all22 active source
+routines before frozen module race/vet. No full-package/family closure claimed;
+original audit completion2/131 and GIA remain open.
