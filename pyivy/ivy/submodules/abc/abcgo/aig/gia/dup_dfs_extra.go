@@ -166,11 +166,17 @@ func Gia_ManDupDfsCiMap(src *Gia_Man_t, ciMap []int32, lits *Vec_Int_t) *Gia_Man
 	if len(ciMap) != int(Gia_ManCiNum(src)) {
 		panic("gia: invalid CI mapping")
 	}
+	if lits != nil && vec.Vec_IntSize(lits) < int(Gia_ManRegNum(src)) {
+		panic("gia: selected output count is smaller than register count")
+	}
 	Gia_ManFillValue(src)
 	out := Gia_ManStart(src.nObjs)
 	out.CopyIdentityFrom(src)
 	src.pObjs[0].Value = 0
 	for i, mapping := range ciMap {
+		if mapping < -1 {
+			panic("gia: invalid CI-map marker")
+		}
 		obj := Gia_ManCi(src, int32(i))
 		obj.Value = uint32(Gia_ManAppendCi(out))
 		if mapping >= 0 {
@@ -199,5 +205,8 @@ func Gia_ManDupDfsCiMap(src *Gia_Man_t, ciMap []int32, lits *Vec_Int_t) *Gia_Man
 	}
 	Gia_ManHashStop(out)
 	Gia_ManSetRegNum(out, Gia_ManRegNum(src))
+	if lits == nil {
+		out.nConstrs = src.nConstrs
+	}
 	return out
 }

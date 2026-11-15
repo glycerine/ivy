@@ -4361,3 +4361,16 @@ Full uncached GIA race tests pass in 138.368s
 (`/tmp/abcgo-literal-cone-review-vet.log`). No production changes followed
 these checks. Node and literal-array extraction review is complete; CI-map
 substitution is the next sequential target.
+
+CI-map substitution review checkpoint: three separate red regressions exposed
+lost constraint classification on the nil-literal/full-output path, acceptance
+of negative markers other than -1, and an explicit selected list too short
+for the preserved register count (yielding a negative PO count). Logs are
+`/tmp/abcgo-ci-map-red.log` and `/tmp/abcgo-ci-map-short-output-red.log`.
+Preserve full-output constraints; reject bad markers and too-short selected
+lists. All focused cases now pass in 4.147s
+(`/tmp/abcgo-ci-map-final-focused.log`), including 9,432 compiled-C comparisons.
+The full GIA/CEC/ABCI race gate is still running. Save this checkpoint with a
+red-prefix commit to honor the requested commit interval before that full
+package gate is verified. This is not a completed package audit; 2/131 original
+packages remain reviewed and GIA remains in progress.
