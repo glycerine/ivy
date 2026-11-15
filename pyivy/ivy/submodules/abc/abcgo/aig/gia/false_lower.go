@@ -6,7 +6,8 @@ func giaFalseNeedsLowering(p *Gia_Man_t) bool {
 }
 
 // giaFalseLower builds the ordinary representation without cleanup so the
-// selected internal root keeps a known literal. All logical ports stay ordered.
+// selected internal root can be mapped to its corresponding node. Output
+// polarity stays in the CO literals; path sensitivity is unchanged by it.
 func giaFalseLower(p *Gia_Man_t, root int32) (*Gia_Man_t, int32) {
 	q := Gia_ManStart(p.nObjs)
 	q.CopyIdentityFrom(p)

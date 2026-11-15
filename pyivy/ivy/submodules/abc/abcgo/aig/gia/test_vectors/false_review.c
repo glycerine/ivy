@@ -74,11 +74,26 @@ static void inspect_reconvergence(void){
  Gia_Man_t *g,*out;int mode,bits;
  for(mode=0;mode<2;++mode){safe_batch=mode;g=reconvergent_graph();out=Gia_ManCheckFalse2(g,32,0,0,0);printf("safety %d",mode);for(bits=0;bits<8;++bits)printf(" %d/%d",output_bits(g,bits),output_bits(out,bits));puts("");Gia_ManStop(out);Gia_ManStop(g);}
 }
+static void inspect_drivers(void){
+ int seed,driver,which,budget,root,bits,slacks[]={0,2,32};Gia_Man_t *g,*out;
+ safe_batch=1;
+ for(seed=0;seed<32;++seed)for(driver=0;driver<3;++driver)for(which=0;which<3;++which)for(budget=0;budget<2;++budget){
+  g=graph(seed,&root);Gia_ManSetRegNum(g,seed&1);printf("driver %d %d %d %d\n",seed,driver,slacks[which],budget);
+  out=driver==0?Gia_ManCheckFalse2(g,slacks[which],budget,0,0):driver==1?Gia_ManCheckFalse(g,slacks[which],budget,0,0):Gia_ManCheckFalseAll(g,slacks[which],budget,0,0);
+  printf("result ci%d co%d regs%d objs%d",Gia_ManCiNum(out),Gia_ManCoNum(out),Gia_ManRegNum(out),Gia_ManObjNum(out));for(bits=0;bits<16;++bits)printf(" %d",output_bits(out,bits));puts("");
+  Gia_ManStop(out);Gia_ManStop(g);
+ }
+}
+static void inspect_budget(void){
+ Gia_Man_t *g;Vec_Wec_t *hooks;int root;safe_batch=1;g=graph(12,&root);Gia_ManLevelNum(g);hooks=Vec_WecStart(Gia_ManObjNum(g));Gia_ManCheckFalseOne(g,0,1,hooks,1,1);printf("hooks %d\n",Vec_WecSizeUsed(hooks));Vec_WecFree(hooks);Gia_ManStop(g);
+}
 int main(int argc,char **argv){
  if(argc>1 && !strcmp(argv[1],"--batch"))inspect_batch();
  else if(argc>1 && !strcmp(argv[1],"--safe-batch")){safe_batch=1;inspect_batch();}
  else if(argc>1 && !strcmp(argv[1],"--priority"))inspect_priority();
  else if(argc>1 && !strcmp(argv[1],"--verbose"))inspect_verbose();
  else if(argc>1 && !strcmp(argv[1],"--reconvergence"))inspect_reconvergence();
+ else if(argc>1 && !strcmp(argv[1],"--drivers"))inspect_drivers();
+ else if(argc>1 && !strcmp(argv[1],"--budget"))inspect_budget();
  else inspect_single();return 0;
 }

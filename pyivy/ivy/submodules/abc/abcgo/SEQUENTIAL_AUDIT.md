@@ -8148,3 +8148,26 @@ Unmodified single-query, priority and complete diagnostic comparisons still
 match. All native checks pass in9.794s
 (/tmp/abcgo-false-safety-native-repaired.log). Remaining full-driver, ownership,
 resource/compactness and final frozen gates are still open; completion2/131.
+
+### False-path driver, ownership and resource boundary coverage
+
+Expand the actual-C fixture to all three full drivers over 32 deterministic
+ordinary graphs, three slack limits and budgets0/1: all576 exact records match
+corrected-source attempts, changes, dimensions, object counts and scalar output
+truth (/tmp/abcgo-false-drivers-native-first.log,6.106s). Independently compare
+all assignments before/after each Go result. The native batch correction remains
+explicit and its original-C counterexample remains a separate required test.
+
+Exercise every driver with reordered ports, typed lowering where applicable,
+register/reset/property roles and independently owned interface names/comments
+(/tmp/abcgo-false-driver-ownership.log,0.088s). Check128 individual batch queries;
+35 produce certificates and each is separately rebuilt and exhaustively checked.
+Add a6003-node critical path and empty/constant-output driver cases
+(/tmp/abcgo-false-boundaries-first.log,0.272s).
+
+Seed12 with conflict budget1 deterministically exhausts the safety recheck.
+Require Unknown to produce no hook; unlimited mode decides the same query.
+Actual corrected C and Go match the timeout diagnostic and zero collected hooks
+(/tmp/abcgo-false-budget-native.log,1.871s). This checks budget handling without
+wall-clock sleeps or weakened expectations. Full focused rerun and frozen module
+race/vet gates remain pending; original package completion stays2/131.

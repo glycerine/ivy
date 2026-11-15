@@ -243,3 +243,70 @@ func TestFalsePathNativeSourceBatchCounterexample(t *testing.T) {
 		t.Fatal("fixture no longer reproduces the documented original-C bug")
 	}
 }
+
+func TestFalsePathNativeFullDrivers(t *testing.T) {
+	exe := compileGiaSourceOracle(t, "false_review.c")
+	native, err := exec.Command(exe, "--drivers").CombinedOutput()
+	if err != nil {
+		t.Fatalf("C drivers: %v\n%s", err, native)
+	}
+	got := hashReviewStdout(t, func() {
+		for seed := uint32(0); seed < 32; seed++ {
+			for driver := 0; driver < 3; driver++ {
+				for _, slack := range []int32{0, 2, 32} {
+					for budget := int32(0); budget < 2; budget++ {
+						g, _ := falseReviewGraph(seed)
+						Gia_ManSetRegNum(g, int32(seed&1))
+						fmt.Printf("driver %d %d %d %d\n", seed, driver, slack, budget)
+						var out *Gia_Man_t
+						switch driver {
+						case 0:
+							out = Gia_ManCheckFalse2(g, slack, budget, 0, 0)
+						case 1:
+							out = Gia_ManCheckFalse(g, slack, budget, 0, 0)
+						case 2:
+							out = Gia_ManCheckFalseAll(g, slack, budget, 0, 0)
+						}
+						cofReviewCheckRebuild(t, g, out)
+						fmt.Printf("result ci%d co%d regs%d objs%d", Gia_ManCiNum(out), Gia_ManCoNum(out), out.nRegs, out.nObjs)
+						for bits := 0; bits < 16; bits++ {
+							values := cofReviewValues(out, bits)
+							packed := 0
+							for i := int32(0); i < Gia_ManCoNum(out); i++ {
+								if values[Gia_ManCo(out, i).id] {
+									packed |= 1 << i
+								}
+							}
+							fmt.Printf(" %d", packed)
+						}
+						fmt.Println()
+						Gia_ManStop(out)
+						Gia_ManStop(g)
+					}
+				}
+			}
+		}
+	})
+	esopReviewCompare(t, native, got)
+	t.Log("576 full-driver configurations match corrected C and independent truth")
+}
+
+func TestFalsePathNativeSafetyRecheckBudget(t *testing.T) {
+	exe := compileGiaSourceOracle(t, "false_review.c")
+	native, err := exec.Command(exe, "--budget").CombinedOutput()
+	if err != nil {
+		t.Fatalf("C budget: %v\n%s", err, native)
+	}
+	g, _ := falseReviewGraph(12)
+	defer Gia_ManStop(g)
+	Gia_ManLevelNum(g)
+	hooks := Vec_WecStart(int(g.nObjs))
+	got := hashReviewStdout(t, func() { Gia_ManCheckFalseOne(g, 0, 1, hooks, 1, 1); fmt.Printf("hooks %d\n", Vec_WecSizeUsed(hooks)) })
+	if !strings.Contains(got, "Timeout reached after 1 seconds.") || Vec_WecSizeUsed(hooks) != 0 {
+		t.Fatalf("unknown query yielded a hook or wrong report: %s", got)
+	}
+	clock := regexp.MustCompile(`Time =[ ]*[0-9]+\.[0-9]{2} sec`)
+	if a, b := clock.ReplaceAllString(got, "<time>"), clock.ReplaceAllString(string(native), "<time>"); a != b {
+		t.Fatalf("resource report differs\nGo %s\n C %s", a, b)
+	}
+}
