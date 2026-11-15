@@ -7547,3 +7547,29 @@ stricter than the C entry point, which only explicitly rejects excess registers.
 No conclusion or domain repair is claimed yet. Resolve that boundary, finish
 review notes and run frozen full integration before closing the family. The
 last full-module gate still predates cube changes. Completion remains 2/131.
+
+### Cube domain and profiling-boundary repair checkpoint
+
+An actual-C fixture confirms zero-register circuits are supported: twelve
+one/two-PI, constant/variable-PO and miter-mode cases return safe/unsafe, while
+the Go <=0 guard returns unknown for all (/tmp/abcgo-era2-combinational-red.log).
+Reject only negative register counts. The native domain comparison now passes,
+including frame/output and valid witnesses. Independently verify four pure
+constant/no-input cases and their empty-bit witness; retain Go's existing nil-CI
+guard instead of C's degenerate MostUsedPi NULL dereference.
+
+The source-style 32-bit microsecond profiling accumulators wrap after about
+35 minutes. Factor the existing verbose timing formatter unchanged, then use a
+simulated fifty-minute profiling interval to reproduce negative cofactoring time
+(/tmp/abcgo-era2-profiling-red.log). Widen only the two profiling counters to
+int64 microseconds; the reachability algorithm and source-format labels stay
+unchanged. Native private/driver reports, combinational domain and long-duration
+timing checks pass in 5.720s (/tmp/abcgo-era2-domain-timers-green.log).
+
+The last resource pass is adding a regression for an expired deadline during
+counterexample reconstruction. The current non-SAT branch panics for both UNSAT
+and Unknown; an interrupted reconstruction should yield no witness/unknown,
+while an impossible transition must still expose a correctness error. This is
+pending and separate from the verified domain/profiling checkpoint. Finish it,
+review notes and frozen full integration before closing the cube family. The
+normal domain is now zero through 16,384 registers. Completion remains 2/131.

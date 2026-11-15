@@ -48,7 +48,20 @@ static int driver_reports(void) {
  }
  return 0;
 }
-int main(int argc,char **argv){setvbuf(stdout,NULL,_IONBF,0);if(argc>1){if(!strcmp(argv[1],"--driver-reports"))return driver_reports();return !strcmp(argv[1],"--reports")?reports():relations();}int pis[]={0,1,3,5,6},rs[]={1,3,33,65},caps[]={100};int ip,ir,seed,limit,miter;
+
+static int combinational(void) {
+ int ni,kind,miter,i,result,lit;Gia_Man_t *g;
+ for(ni=1;ni<=2;++ni)for(kind=0;kind<3;++kind)for(miter=0;miter<2;++miter){
+  g=Gia_ManStart(16);lit=0;for(i=0;i<ni;++i)lit=Gia_ManAppendCi(g);
+  Gia_ManAppendCo(g,kind<2?kind:lit);
+  printf("combinational %d %d %d\n",ni,kind,miter);
+  result=Gia_ManArePerform(g,100,miter,0);printf("result %d\n",result);
+  if(g->pCexSeq)printf("witness %d %d\n",g->pCexSeq->iPo,g->pCexSeq->iFrame);
+  Gia_ManStop(g);
+ }
+ return 0;
+}
+int main(int argc,char **argv){setvbuf(stdout,NULL,_IONBF,0);if(argc>1){if(!strcmp(argv[1],"--combinational"))return combinational();if(!strcmp(argv[1],"--driver-reports"))return driver_reports();return !strcmp(argv[1],"--reports")?reports():relations();}int pis[]={0,1,3,5,6},rs[]={1,3,33,65},caps[]={100};int ip,ir,seed,limit,miter;
  for(ip=0;ip<5;++ip)for(ir=0;ir<4;++ir)for(seed=0;seed<4;++seed)for(limit=0;limit<1;++limit)for(miter=0;miter<2;++miter){
   Gia_Man_t *g=graph(pis[ip],rs[ir],seed);int dump=0,result;
   printf("case %d %d %d %d %d %d\n",pis[ip],rs[ir],seed,caps[limit],miter,dump);result=Gia_ManArePerform(g,caps[limit],miter,0);printf("result %d\n",result);printf("cex");if(g->pCexSeq){int bi;printf(" %d %d",g->pCexSeq->iPo,g->pCexSeq->iFrame);for(bi=0;bi<g->pCexSeq->nBits;++bi)printf("%s%d",bi?"":" ",Abc_InfoHasBit(g->pCexSeq->pData,bi));}puts("");

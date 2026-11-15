@@ -41,7 +41,7 @@ func Gia_ManAreDeriveNexts_rec(p *Gia_ManAre_t, state Gia_PtrAre_t) int32 {
 			return 1
 		}
 		Gia_ManAreCubeProcess(p, next)
-		p.timeCube += int32(time.Since(start).Microseconds())
+		p.timeCube += time.Since(start).Microseconds()
 		return p.fStopped
 	}
 	index := int(Gia_ObjCioId(pivot))
@@ -134,7 +134,7 @@ func Gia_ManAreDeriveNexts(p *Gia_ManAre_t, state Gia_PtrAre_t) int32 {
 		fmt.Printf("Exceeded the limit on the number of transitions from a state cube (%d).\n", MAX_CALL_NUM)
 		p.fStopped = 1
 	}
-	p.timeAig += int32(time.Since(start).Microseconds())
+	p.timeAig += time.Since(start).Microseconds()
 	return result
 }
 
@@ -157,13 +157,33 @@ func Gia_ManArePrintReport(p *Gia_ManAre_t, start time.Time, final int32) {
 		fmt.Print("\r")
 	}
 }
+func giaArePrintTiming(p *Gia_ManAre_t, start time.Time) {
+	total := time.Since(start).Seconds()
+	aigSeconds, cubeSeconds := float64(p.timeAig)/1e6, float64(p.timeCube)/1e6
+	for _, part := range []struct {
+		name    string
+		seconds float64
+	}{
+		{"Cofactoring", aigSeconds - cubeSeconds},
+		{"Containment", cubeSeconds},
+		{"Other      ", total - aigSeconds},
+		{"TOTAL      ", total},
+	} {
+		percent := float64(0)
+		if total > 0 {
+			percent = 100 * part.seconds / total
+		}
+		fmt.Printf("%s =%9.2f sec (%6.2f %%)\n", part.name, part.seconds, percent)
+	}
+}
+
 func Gia_ManArePerform(g *Gia_Man_t, maxStates, miter, verbose int32) int32 {
 	if g.nRegs > MAX_VARS_NUM {
 		fmt.Printf("Currently can only handle circuit with up to %d registers.\n", MAX_VARS_NUM)
 		return -1
 	}
 	g.pCexSeq = nil
-	if g.nRegs <= 0 || maxStates < 1 {
+	if g.nRegs < 0 || maxStates < 1 {
 		return -1
 	}
 	start := time.Now()
@@ -205,23 +225,7 @@ func Gia_ManArePerform(g *Gia_Man_t, maxStates, miter, verbose int32) int32 {
 		fmt.Printf("Output %d of miter %q was asserted in frame %d.\n", cex.IPo, g.pName, cex.IFrame)
 	}
 	if verbose != 0 {
-		total := time.Since(start).Seconds()
-		aigSeconds, cubeSeconds := float64(p.timeAig)/1e6, float64(p.timeCube)/1e6
-		for _, part := range []struct {
-			name    string
-			seconds float64
-		}{
-			{"Cofactoring", aigSeconds - cubeSeconds},
-			{"Containment", cubeSeconds},
-			{"Other      ", total - aigSeconds},
-			{"TOTAL      ", total},
-		} {
-			percent := float64(0)
-			if total > 0 {
-				percent = 100 * part.seconds / total
-			}
-			fmt.Printf("%s =%9.2f sec (%6.2f %%)\n", part.name, part.seconds, percent)
-		}
+		giaArePrintTiming(p, start)
 	}
 	if g.nRegs <= 30 {
 		countStart := time.Now()

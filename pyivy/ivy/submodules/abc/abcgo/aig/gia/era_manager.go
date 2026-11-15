@@ -35,7 +35,7 @@ type Gia_ManAre_t struct {
 	pTarget                                                          *Gia_StaAre_t
 	iOutFail                                                         int32
 	nChecks, nEquals, nCompares, nRecCalls, nDisjs, nDisjs2, nDisjs3 int32
-	timeAig, timeCube                                                int32
+	timeAig, timeCube                                                int64 // accumulated microseconds
 }
 
 func Gia_ObjHasBranch0(q *Gia_ObjAre_t) int32 {

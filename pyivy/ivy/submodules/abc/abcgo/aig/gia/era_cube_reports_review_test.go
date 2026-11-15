@@ -3,6 +3,7 @@ package gia
 import (
 	"fmt"
 	"os/exec"
+	"reflect"
 	"regexp"
 	"strings"
 	"testing"
@@ -117,5 +118,17 @@ func TestCubeReachabilityFailureMessageUsesWitness(t *testing.T) {
 	}
 	if !strings.Contains(text, "Generated counter-example verified correctly.") {
 		t.Fatal("missing verified-witness diagnostic")
+	}
+}
+
+func TestCubeReachabilityLongProfilingInterval(t *testing.T) {
+	p := &Gia_ManAre_t{}
+	// Simulate accumulated counters after fifty minutes without waiting for a
+	// long run. SetInt reproduces the old field-width truncation at runtime.
+	reflect.ValueOf(&p.timeAig).Elem().SetInt(3000000000)
+	reflect.ValueOf(&p.timeCube).Elem().SetInt(100000000)
+	text := hashReviewStdout(t, func() { giaArePrintTiming(p, time.Now().Add(-4000*time.Second)) })
+	if !strings.Contains(text, "Cofactoring =  2900.00 sec") || !strings.Contains(text, "Containment =   100.00 sec") {
+		t.Fatalf("profiling counters overflowed: %q", text)
 	}
 }
