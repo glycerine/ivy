@@ -42,7 +42,12 @@ namespace qe {
         if (a.is_mod(e2, t1, t2) && 
             a.is_numeral(e1, k) && 
             k.is_zero() &&
-            a.is_numeral(t2, k)) {
+            // FORK FIX #35 (g3 audit, see FORK_BUGFIXES.md): divisibility needs a positive modulus (AUDIT qe_01-F3)
+            a.is_numeral(t2, k) &&
+            !k.is_zero()) {
+            // (mod t k) = (mod t |k|), and (mod t 0) is not a divisibility
+            // constraint.
+            k = abs(k);
             p = t1;
             return true;
         }
@@ -1321,6 +1326,8 @@ namespace qe {
                 a = to_app(e);
                 if (m_util.m_arith.is_mod(e) && 
                     m_util.m_arith.is_numeral(to_app(e)->get_arg(1), k1) &&
+                    // FORK FIX #35 (g3 audit, see FORK_BUGFIXES.md): divisibility needs a positive modulus (AUDIT qe_01-F3)
+                    k1.is_pos() &&
                     m_util.get_coeff(contains_x, to_app(e)->get_arg(0), k2, rest)) {
                     app_ref z(m), z_bv(m);
                     m_util.mk_bounded_var(k1, z_bv, z);
@@ -1921,7 +1928,11 @@ public:
             SASSERT(m_util.m_arith.is_real(x.x()));
             model_evaluator model_eval(*model);
             bounds_proc& bounds = get_bounds(x.x(), fml);
-            bool is_lower   = bounds.le_size() + bounds.lt_size() < bounds.ge_size() + bounds.gt_size();
+            // FORK FIX #34 (g3 audit, see FORK_BUGFIXES.md): project_real chooses the bound family via get_bound_sizes (AUDIT qe_01-F2)
+            // assign and subst read the branch in the family get_bound_sizes
+            // selects, which doubles the non-strict counts of a real.
+            unsigned t_size1, e_size1;
+            bool is_lower   = get_bound_sizes(bounds, x.x(), t_size1, e_size1);
             unsigned e_size = bounds.e_size(is_lower);
             numeral bound1, bound2, vl, x_val;
             unsigned idx1, idx2;

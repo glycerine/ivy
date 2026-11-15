@@ -27,6 +27,70 @@ Abstract:
                                   recognizer table and is turned into a
                                   conflict (pkg/AUDIT.md smtcore_10-F3,
                                   upstream issue #4623).
+    z3_4_7_1_dom_simplify_oscillation dom-simplify's simplify_goal loops
+                                  forever when its forward and backward
+                                  passes keep changing the goal.
+    z3_4_7_1_update_field_constructor ((_ update-field fst) (mkp i red) j)
+                                  is rewritten to (mkp i red): the rewriter
+                                  looks up the update-field declaration as
+                                  if it were the accessor.
+    z3_4_7_1_pb2bv_numeral_lhs    pb2bv encodes (= 3 x) and (<= 3 x) as the
+                                  unit x when the numeral is on the left
+                                  (pkg/AUDIT.md tactic_arith_03-F1).
+    z3_4_7_1_eq2bv_stale_cache    eq2bv reuses its rewriter cache across the
+                                  goals of one run (pkg/AUDIT.md
+                                  tactic_arith_01-F3).
+    z3_4_7_1_purify_trig_unsafe   purify-arith decides which sin/cos
+                                  arguments are safe to replace after the
+                                  formulas that mention them were already
+                                  purified (pkg/AUDIT.md tactic_arith_02-F2).
+    z3_4_7_1_ufbv_demod_unbound_var the UFBV demodulator leaves a variable
+                                  of an identical non-ground subterm unbound
+                                  and later binds it to a ground term
+                                  (pkg/AUDIT.md tactic_sls_ufbv_01-F1).
+    z3_4_7_1_recover01_inconsistent recover-01 keeps indexing the goal after
+                                  an update collapsed it to false
+                                  (pkg/AUDIT.md tactic_arith_03-F9).
+    z3_4_7_1_distribute_forall_proof distribute-forall gives no proof for
+                                  its rewrite when proofs are on
+                                  (pkg/AUDIT.md tactic_core_01-F5).
+    z3_4_7_1_pb2bv_fractional     the pb2bv rewriter accepts fractional
+                                  coefficients and bounds and builds a wrong
+                                  circuit (pkg/AUDIT.md ast_rewriter_04-F3).
+    z3_4_7_1_lia2card_empty_eq    lia2card loops forever on an equation
+                                  between numerals such as (= 2 3)
+                                  (pkg/AUDIT.md tactic_arith_02, Needs
+                                  verification).
+    z3_4_7_1_pdr_nullary_cache    PDR's model_search cache keys nodes by
+                                  state only, so two nullary predicates
+                                  (state `true`) share an entry and an
+                                  unreachable query is answered sat
+                                  (pkg/AUDIT.md muz_pdr_01).
+    z3_4_7_1_duality_unhoist_repeated_child Duality's UnhoistLoop
+                                  rewrites an edge once per occurrence of
+                                  the unhoisted predicate and fails with a
+                                  wrong number of arguments
+                                  (pkg/AUDIT.md duality_03-F2).
+    z3_4_7_1_lazy_sparse_nullary_union a union into an empty nullary
+                                  register creates a 0-column sparse table
+                                  through the lazy_sparse plugin and crashes
+                                  (pkg/AUDIT.md muz_rel_04-F2).
+    z3_4_7_1_qbmc_eval_level      QBMC proof reconstruction reads rule
+                                  variables at the rule ordinal and expects
+                                  facts only at level 0; it aborts in
+                                  VERIFY(unify_rules) (pkg/AUDIT.md
+                                  muz_small_01-F8, upstream 784b613b5).
+    z3_4_7_1_ddnf_extract_width   DDNF compile_eq looks an extract equality
+                                  up by the constant's width and segfaults
+                                  (pkg/AUDIT.md muz_small_01-F9).
+    z3_4_7_1_min_cut_shared_node  min_cut::augment_path adds the residual
+                                  reverse arc to the sink and never
+                                  terminates when augmenting paths share a
+                                  node (pkg/AUDIT.md util_misc_01-F1).
+    z3_4_7_1_qi_weakening_proof   quantifier instantiation builds its
+                                  weakening proof with the modus-ponens
+                                  premises swapped (pkg/AUDIT.md
+                                  muz_transforms_01-F6).
 
     Run: ./test-z3 z3_4_7_1_dom_simplify_root   (etc.)
 --*/
@@ -42,7 +106,38 @@ Abstract:
 #include "tactic/goal.h"
 #include "tactic/core/dom_simplify_tactic.h"
 #include "tactic/core/pb_preprocess_tactic.h"
+#include "api/z3.h"
+#include "cmd_context/cmd_context.h"
+#include "parsers/smt2/smt2parser.h"
+#include "tactic/portfolio/smt_strategic_solver.h"
+#include "smt/smt_solver.h"
+#include <sstream>
+#include "cmd_context/cmd_context.h"
+#include "muz/fp/dl_cmds.h"
+#include "parsers/smt2/smt2parser.h"
+#include "tactic/portfolio/smt_strategic_solver.h"
+#include "util/min_cut.h"
+#include "ast/array_decl_plugin.h"
+#include "muz/base/dl_context.h"
+#include "muz/fp/dl_register_engine.h"
+#include "muz/transforms/dl_mk_quantifier_instantiation.h"
+#include "ast/scoped_proof.h"
+#include <sstream>
+#include "nlsat/nlsat_assignment.h"
+#include "nlsat/nlsat_solver.h"
+#include "nlsat/nlsat_explain.h"
+#include "util/rlimit.h"
+#include "opt/opt_context.h"
+#include "opt/opt_parse.h"
+#include <fstream>
+#include <cstdio>
+#include "api/z3_replayer.h"
+void register_z3_replayer_cmds(z3_replayer & in);
 #include <iostream>
+#ifndef _WINDOWS
+#include <csignal>
+#include <unistd.h>
+#endif
 
 namespace {
 
@@ -272,4 +367,1044 @@ void tst_z3_4_7_1_dt_recognizer() {
         std::string what = "check with relevancy " + std::to_string(relevancy);
         expect("dt_recognizer", what.c_str(), l_true, k.check());
     }
+}
+
+#ifndef _WINDOWS
+namespace {
+    void dom_simplify_oscillation_timeout(int) {
+        static char const msg[] =
+            "dom_simplify_oscillation: dom-simplify did not terminate within 20 seconds\n";
+        ssize_t n = write(2, msg, sizeof(msg) - 1);
+        (void)n;
+        _exit(1);
+    }
+}
+#endif
+
+// (not p3), (not (and p1 p1 p3)), (not true): simplify_goal's forward and
+// backward passes keep rewriting the goal, and 4.7.1 loops while anything
+// changed. Upstream 0ef8ebe89f caps the loop at 10 rounds. A watchdog turns
+// the hang into a failure.
+void tst_z3_4_7_1_dom_simplify_oscillation() {
+#ifndef _WINDOWS
+    signal(SIGALRM, dom_simplify_oscillation_timeout);
+    alarm(20);
+#endif
+    ast_manager m;
+    reg_decl_plugins(m);
+    expr_ref p1(bool_const(m, "p1"), m), p3(bool_const(m, "p3"), m);
+    expr_ref_vector fmls(m);
+    fmls.push_back(m.mk_not(p3));
+    expr* and_args[3] = { p1, p1, p3 };
+    fmls.push_back(m.mk_not(m.mk_and(3, and_args)));
+    fmls.push_back(m.mk_not(m.mk_true()));
+    expect("dom_simplify_oscillation", "plain check", l_false, check_plain(m, fmls));
+    std::cout.flush(); // the watchdog leaves with _exit
+    expect("dom_simplify_oscillation", "after dom-simplify", l_false,
+           check_after_tactic(m, mk_dom_simplify_tactic(m), fmls));
+#ifndef _WINDOWS
+    alarm(0);
+#endif
+}
+
+// ((_ update-field fst) (mkp i red) j) must rewrite to (mkp j red).
+// datatype_rewriter::mk_app_core passes the update-field declaration to
+// get_accessor_constructor, gets no matching constructor and returns
+// (mkp i red) unchanged, so the script below is answered sat (fixed
+// upstream in f989e4eb38, "fix #2276").
+void tst_z3_4_7_1_update_field_constructor() {
+    char const* script =
+        "(declare-datatypes () ((C red green blue)))\n"
+        "(declare-datatypes () ((P (mkp (fst Int) (snd C)))))\n"
+        "(declare-const p0 P)\n"
+        "(declare-const i Int)\n"
+        "(declare-const j Int)\n"
+        "(assert (= ((_ update-field fst) (mkp i red) j) p0))\n"
+        "(assert (not (= (fst p0) j)))\n"
+        "(check-sat)\n"
+        "(simplify ((_ update-field fst) (mkp i red) j))\n";
+    Z3_config cfg = Z3_mk_config();
+    Z3_context ctx = Z3_mk_context(cfg);
+    Z3_del_config(cfg);
+    std::string out = Z3_eval_smtlib2_string(ctx, script);
+    Z3_del_context(ctx);
+    std::string expected = "unsat\n(mkp j red)\n";
+    std::cout << "update_field_constructor: expected\n" << expected << "got\n" << out;
+    ENSURE(out == expected);
+}
+
+namespace {
+    // Run an SMT-LIB2 script as the z3 shell does (with the Datalog/Horn
+    // commands installed) and compare its whole output, errors included.
+    void expect_script_output(char const* test, char const* script, char const* expected) {
+        std::ostringstream out;
+        {
+            cmd_context ctx;
+            ctx.set_solver_factory(mk_smt_strategic_solver_factory());
+            install_dl_cmds(ctx);
+            ctx.set_regular_stream(out);
+            ctx.set_diagnostic_stream(out);
+            std::istringstream in(script);
+            parse_smt2_commands(ctx, in);
+        }
+        std::cout << test << ": expected\n" << expected << "got\n" << out.str();
+        ENSURE(out.str() == expected);
+    }
+}
+
+// PDR with two nullary body predicates: G :- B, A. A is reachable, B is not
+// (D only takes even values, so D(3) never holds), so the answer is unsat.
+// model_search keyed its node cache by state alone, and the state of every
+// nullary predicate is `true`, so B's obligation was pre-closed as a
+// duplicate of A's and the query was answered sat (with :print-answer the
+// trace extraction then crashes). pkg/AUDIT.md muz_pdr_01.
+void tst_z3_4_7_1_pdr_nullary_cache() {
+    char const* script =
+        "(set-option :fixedpoint.engine pdr)\n"
+        "(set-option :fixedpoint.xform.slice false)\n"
+        "(set-option :fixedpoint.xform.inline_linear false)\n"
+        "(set-option :fixedpoint.xform.inline_eager false)\n"
+        "(declare-rel A ())\n"
+        "(declare-rel B ())\n"
+        "(declare-rel C (Int))\n"
+        "(declare-rel D (Int))\n"
+        "(declare-rel G ())\n"
+        "(declare-var x Int)\n"
+        "(rule (C 0))\n"
+        "(rule (=> (and (C x) (< x 3)) (C (+ x 1))))\n"
+        "(rule (=> (C 3) A))\n"
+        "(rule (D 0))\n"
+        "(rule (=> (and (D x) (< x 3)) (D (+ x 2))))\n"
+        "(rule (=> (D 3) B))\n"
+        "(rule (=> (and B A) G))\n"
+        "(query G)\n";
+    expect_script_output("pdr_nullary_cache", script, "unsat\n");
+}
+
+// Duality unhoists the loop predicate inv, which occurs twice in the body
+// of the err rule. Parent->Incoming lists that edge once per child
+// position, so RPFP::UnhoistLoop rewrote it twice; the second pass added
+// the new parameters to the already extended literal again and the query
+// failed with "Wrong number of arguments (4) passed to function inv!2".
+// err is reachable (k = -1 gives inv(0, -2) and 0 > -1), so the answer is
+// sat. pkg/AUDIT.md duality_03-F2.
+void tst_z3_4_7_1_duality_unhoist_repeated_child() {
+    char const* script =
+        "(set-option :fixedpoint.engine duality)\n"
+        "(declare-rel inv (Int Int))\n"
+        "(declare-rel err ())\n"
+        "(declare-var x Int)\n"
+        "(declare-var n Int)\n"
+        "(declare-var k Int)\n"
+        "(declare-var y Int)\n"
+        "(declare-var m Int)\n"
+        "(rule (=> (and (= x 0) (= n (* 2 k))) (inv x n)))\n"
+        "(rule (=> (and (inv x n) (< x n)) (inv (+ x 1) n)))\n"
+        "(rule (=> (and (inv x n) (inv y m) (> x (+ n 1))) err))\n"
+        "(query err)\n";
+    expect_script_output("duality_unhoist_repeated_child", script, "sat\n");
+}
+
+// With the lazy_sparse table, s(x) and p(x, y) are joined into the nullary
+// z. The union into z's still-empty register creates the target with the
+// source's plugin: lazy_table_plugin::mk_empty passes the 0-column
+// signature to sparse_table_plugin::mk_empty, which cannot handle it and
+// crashes in column_layout::make_byte_aligned_end. p(3, 5) and s(3) hold, so
+// z is derivable. pkg/AUDIT.md muz_rel_04-F2.
+void tst_z3_4_7_1_lazy_sparse_nullary_union() {
+    char const* script =
+        "(set-option :fixedpoint.engine datalog)\n"
+        "(set-option :fixedpoint.datalog.default_table lazy_sparse)\n"
+        "(define-sort D () (_ BitVec 3))\n"
+        "(declare-rel q (D D D))\n"
+        "(declare-rel p (D D))\n"
+        "(declare-rel s (D))\n"
+        "(declare-rel z ())\n"
+        "(declare-var x D)\n"
+        "(declare-var y D)\n"
+        "(declare-var w D)\n"
+        "(rule (q #b010 #b001 #b100))\n"
+        "(rule (q #b011 #b001 #b101))\n"
+        "(rule (q #b011 #b011 #b101))\n"
+        "(rule (=> (and (q x #b001 y) (bvult x y)) (p x y)))\n"
+        "(rule (=> (and (q x w y) (q w x y)) (s x)))\n"
+        "(rule (=> (and (p x y) (s x)) z))\n"
+        "(query z :print-answer true)\n";
+    expect_script_output("lazy_sparse_nullary_union", script, "sat\ntrue\n");
+}
+
+// QBMC proof reconstruction (qlinear::get_model) read the rule variables at
+// the rule ordinal instead of the trace level, and assumed that a fact is
+// only selected at level 0. On this recursive program the step it builds
+// does not unify with the previous one and z3 aborts in
+// VERIFY(unifier.unify_rules(...)). Fixed upstream in 784b613b5 (#11540),
+// which also puts the hyper-resolution positions in the (1, 0) order.
+// pkg/AUDIT.md muz_small_01-F8.
+void tst_z3_4_7_1_qbmc_eval_level() {
+    char const* script =
+        "(set-option :fixedpoint.engine qbmc)\n"
+        "(set-option :fixedpoint.xform.inline_linear false)\n"
+        "(set-option :fixedpoint.xform.inline_eager false)\n"
+        "(set-option :fixedpoint.xform.slice false)\n"
+        "(set-option :fixedpoint.print_answer true)\n"
+        "(declare-rel p (Int))\n"
+        "(declare-rel q ())\n"
+        "(declare-var x Int)\n"
+        "(declare-var y Int)\n"
+        "(rule (p 0))\n"
+        "(rule (=> (and (p x) (= y (+ x 1))) (p y)))\n"
+        "(rule (=> (and (p x) (> x 2)) q))\n"
+        "(query q)\n";
+    std::ostringstream out;
+    {
+        cmd_context ctx;
+        ctx.set_solver_factory(mk_smt_strategic_solver_factory());
+        install_dl_cmds(ctx);
+        ctx.set_regular_stream(out);
+        ctx.set_diagnostic_stream(out);
+        std::istringstream in(script);
+        parse_smt2_commands(ctx, in);
+    }
+    // The derivation depends on the model, so check its shape only: sat,
+    // and a proof that ends in the fact (p 0).
+    std::cout << "qbmc_eval_level: got\n" << out.str();
+    ENSURE(out.str().compare(0, 4, "sat\n") == 0);
+    ENSURE(out.str().find("(asserted (p 0))") != std::string::npos);
+}
+
+// DDNF compile_eq looked the tbv of (= ((_ extract 0 0) x) #b1) up in the
+// DDNF of the constant's width (1). process_eq stored it in the DDNF of x's
+// width (4); no 1-bit DDNF exists and z3 segfaulted. pkg/AUDIT.md
+// muz_small_01-F9. Still present upstream.
+void tst_z3_4_7_1_ddnf_extract_width() {
+    char const* script =
+        "(set-option :fixedpoint.engine ddnf)\n"
+        "(declare-rel p ((_ BitVec 4)))\n"
+        "(declare-rel q ())\n"
+        "(declare-var x (_ BitVec 4))\n"
+        "(rule (=> (= x #x5) (p x)))\n"
+        "(rule (=> (and (p x) (= ((_ extract 0 0) x) #b1)) q))\n"
+        "(query q)\n";
+    // The ddnf engine dumps the compiled rules to std::cout.
+    std::ostringstream out;
+    std::streambuf* saved = std::cout.rdbuf(out.rdbuf());
+    {
+        cmd_context ctx;
+        ctx.set_solver_factory(mk_smt_strategic_solver_factory());
+        install_dl_cmds(ctx);
+        ctx.set_regular_stream(out);
+        ctx.set_diagnostic_stream(out);
+        std::istringstream in(script);
+        parse_smt2_commands(ctx, in);
+    }
+    std::cout.rdbuf(saved);
+    std::string expected =
+        "(declare-rel q ())\n"
+        "(declare-rel p ((_ BitVec 2)))\n"
+        "(declare-var A (_ BitVec 2))\n"
+        "(rule (=> (= A #b01) (p A)))\n"
+        "(rule (=> (and (p A) (or (= A #b01) (= A #b10))) q))\n"
+        "(query q)\n"
+        "unknown\n";
+    std::cout << "ddnf_extract_width: expected\n" << expected << "got\n" << out.str();
+    ENSURE(out.str() == expected);
+}
+
+#ifndef _WINDOWS
+namespace {
+    void min_cut_shared_node_timeout(int) {
+        static char const msg[] =
+            "min_cut_shared_node: compute_min_cut did not terminate within 20 seconds\n";
+        ssize_t n = write(2, msg, sizeof(msg) - 1);
+        (void)n;
+        _exit(1);
+    }
+}
+#endif
+
+// Source 0, sink 1, and the diamond 0->2, 0->3, 2->4, 3->4, 4->1: both
+// augmenting paths share node 4. min_cut::augment_path added the missing
+// residual reverse arc as k -> 1 (the sink) instead of k -> l, which keeps
+// refilling capacity into the sink, so compute_min_cut never terminated.
+// The cut is the single edge 4->1, reported as node 1. Used by spacer with
+// fixedpoint.spacer.minimize_unsat_core=true. Fixed upstream in 8150cd6e8
+// (#11401). pkg/AUDIT.md util_misc_01-F1.
+void tst_z3_4_7_1_min_cut_shared_node() {
+#ifndef _WINDOWS
+    signal(SIGALRM, min_cut_shared_node_timeout);
+    alarm(20);
+#endif
+    min_cut mc;
+    unsigned a = mc.new_node(), b = mc.new_node(), c = mc.new_node();
+    mc.add_edge(0, a);
+    mc.add_edge(0, b);
+    mc.add_edge(a, c);
+    mc.add_edge(b, c);
+    mc.add_edge(c, 1);
+    unsigned_vector cut;
+    mc.compute_min_cut(cut);
+#ifndef _WINDOWS
+    alarm(0);
+#endif
+    std::cout << "min_cut_shared_node: cut:";
+    for (unsigned n : cut) std::cout << " " << n;
+    std::cout << "\n";
+    ENSURE(cut.size() == 1 && cut[0] == 1);
+}
+
+// With proof traces on, mk_quantifier_instantiation::instantiate_rule proves
+// the instantiated rule from the original rule's proof p1 as a weakening. It
+// built that proof without enabling proof mode, so when the manager's proof
+// mode is off (as in a fixedpoint query) the rule got no proof and the rule
+// inliner later dereferenced it. With proof mode on it passed the premises
+// in the wrong order: mk_modus_ponens(def-axiom(fact(p1) => fml), p1) takes
+// its conclusion from fact(p1), here a forall, through to_app(...)->get_arg(1).
+// The proof must be mk_modus_ponens(p1, def-axiom(fact(p1) => fml)),
+// concluding the new rule. pkg/AUDIT.md muz_transforms_01-F6. Still present
+// upstream.
+void tst_z3_4_7_1_qi_weakening_proof() {
+    for (unsigned proofs_on = 0; proofs_on < 2; ++proofs_on) {
+        ast_manager m;
+        reg_decl_plugins(m);
+        array_util au(m);
+        datalog::register_engine re;
+        smt_params fp;
+        params_ref p;
+        p.set_bool("generate_proof_trace", true);
+        p.set_bool("xform.instantiate_quantifiers", true);
+        datalog::context ctx(m, re, fp, p);
+        sort* b = m.mk_bool_sort();
+        sort* arr = au.mk_array_sort(b, b);
+        func_decl_ref pd(m.mk_func_decl(symbol("p"), 0, static_cast<sort* const*>(nullptr), b), m);
+        ctx.register_predicate(pd, false);
+        // p :- (select a true) = false, forall y. (select a y) = false
+        expr_ref a(m.mk_var(0, arr), m);
+        expr_ref y(m.mk_var(0, b), m);
+        expr_ref a1(m.mk_var(1, arr), m);
+        expr* sel_y_args[2] = { a1, y };
+        expr_ref body(m.mk_eq(au.mk_select(2, sel_y_args), m.mk_false()), m);
+        symbol yn("y");
+        expr_ref all(m.mk_forall(1, &b, &yn, body), m);
+        expr* sel_t_args[2] = { a, m.mk_true() };
+        expr_ref tail(m.mk_and(m.mk_eq(au.mk_select(2, sel_t_args), m.mk_false()), all), m);
+        expr_ref rule_fml(m.mk_implies(tail, m.mk_const(pd)), m);
+        ctx.add_rule(rule_fml, symbol::null);
+        datalog::rule_set& rules = ctx.get_rules();
+        ENSURE(rules.get_num_rules() == 1 && rules.get_rule(0)->get_proof());
+        proof* p1 = rules.get_rule(0)->get_proof();
+        std::cout << "qi_weakening_proof: proof mode " << (proofs_on ? "on" : "off")
+                  << ", source proof fact " << mk_pp(m.get_fact(p1), m) << "\n";
+        scoped_proof_mode _spm(m, proofs_on ? PGM_ENABLED : PGM_DISABLED);
+        datalog::mk_quantifier_instantiation qi(ctx, 0);
+        scoped_ptr<datalog::rule_set> result = qi(rules);
+        ENSURE(result && result->get_num_rules() > 0);
+        for (unsigned i = 0; i < result->get_num_rules(); ++i) {
+            datalog::rule* r = result->get_rule(i);
+            proof* pr = r->get_proof();
+            std::cout << "  instantiated rule has a proof: " << (pr != nullptr) << "\n";
+            ENSURE(pr);
+            expr_ref fml(m);
+            ctx.get_rule_manager().to_formula(*r, fml);
+            ENSURE(m.get_num_parents(pr) == 2);
+            bool p1_first = m.get_parent(pr, 0) == p1;
+            std::cout << "  first premise is the source proof: " << p1_first << "\n";
+            ENSURE(p1_first);
+            bool concludes_rule = m.get_fact(pr) == fml.get();
+            std::cout << "  proof concludes the rule " << mk_pp(fml, m) << ": " << concludes_rule << "\n";
+            ENSURE(concludes_rule);
+        }
+    }
+}
+
+namespace {
+    // Run an SMT-LIB2 script through the API and compare its output.
+    void expect_script(char const* test, char const* script, char const* expected) {
+        Z3_config cfg = Z3_mk_config();
+        Z3_context ctx = Z3_mk_context(cfg);
+        Z3_del_config(cfg);
+        std::string out = Z3_eval_smtlib2_string(ctx, script);
+        Z3_del_context(ctx);
+        std::cout << test << ": expected\n" << expected << "got\n" << out;
+        ENSURE(out == expected);
+    }
+}
+
+// x in [0,1], so (= 3 x) and (<= 3 x) are false and both checks are unsat.
+// pb2bv_tactic::imp::convert handles a numeral on the left in its own
+// branch, which turns (= 3 x) into the unit x and, with SASSERT compiled
+// out, (<= 3 x) into x as well.
+void tst_z3_4_7_1_pb2bv_numeral_lhs() {
+    char const* script =
+        "(declare-const x Int)\n"
+        "(declare-const b Bool)\n"
+        "(assert (<= 0 x))\n"
+        "(assert (<= x 1))\n"
+        "(assert (not b))\n"
+        "(push)\n"
+        "(assert (or b (= 3 x)))\n"
+        "(check-sat-using (then pb2bv smt))\n"
+        "(pop)\n"
+        "(push)\n"
+        "(assert (or b (<= 3 x)))\n"
+        "(check-sat-using (then pb2bv smt))\n"
+        "(pop)\n";
+    expect_script("pb2bv_numeral_lhs", script, "unsat\nunsat\n");
+}
+
+// split-clause makes two goals that share (= x 3). eq2bv rewrites it to
+// (= z!0 #b11) in the first goal; its member rewriter m_rw keeps the cache,
+// so the second goal gets the stale z!0 next to its own z!1 bounds and the
+// unsat problem is answered sat.
+void tst_z3_4_7_1_eq2bv_stale_cache() {
+    char const* script =
+        "(declare-const x Int)\n"
+        "(declare-const p Bool)\n"
+        "(declare-const b Bool)\n"
+        "(declare-const c Bool)\n"
+        "(assert (or p (not p)))\n"
+        "(assert (<= x 2))\n"
+        "(assert (or (= x 3) b))\n"
+        "(assert (or (= x 3) c))\n"
+        "(assert (not b))\n"
+        "(check-sat-using (then split-clause eq2bv smt))\n";
+    expect_script("eq2bv_stale_cache", script, "unsat\n");
+}
+
+// x/y = 1, y = 10, sin x = 1/2 is unsat (sin 10 != 1/2). purify-arith runs
+// find_unsafe lazily, on the goal whose first formula was already purified
+// to (= k!0 1.0) etc., so it no longer sees x under the division, replaces
+// (sin x) by a fresh basis and z3 4.7.1 answers sat with an x that violates
+// x/y = 1. Any answer but sat is acceptable; after (apply purify-arith) the
+// (sin x) must stay.
+void tst_z3_4_7_1_purify_trig_unsafe() {
+    char const* script =
+        "(declare-const x Real)\n"
+        "(declare-const y Real)\n"
+        "(assert (= (/ x y) 1.0))\n"
+        "(assert (= y 10.0))\n"
+        "(assert (= (sin x) 0.5))\n"
+        "(check-sat-using qfufnra)\n";
+    Z3_config cfg = Z3_mk_config();
+    Z3_context ctx = Z3_mk_context(cfg);
+    Z3_del_config(cfg);
+    std::string out = Z3_eval_smtlib2_string(ctx, script);
+    std::cout << "purify_trig_unsafe: check-sat-using qfufnra: " << out;
+    ENSURE(out != "sat\n");
+    std::string goal = Z3_eval_smtlib2_string(ctx, "(apply purify-arith)\n");
+    Z3_del_context(ctx);
+    std::cout << "purify_trig_unsafe: purify-arith:\n" << goal;
+    ENSURE(goal.find("(sin x)") != std::string::npos);
+}
+
+// The demodulator f(x, g(x)) = x + 1 must not rewrite f(c, g(y)) under
+// forall y: g(x) and g(y) are the same AST, match_args_aux_proc leaves x
+// unbound, and the pair (x, c) then binds x := c, which drops the
+// quantifier. With y := d the second assertion contradicts the third, so
+// the problem is unsat; z3 4.7.1 answers sat (fixed upstream in b76ed6a47,
+// "proper fix to #6476").
+void tst_z3_4_7_1_ufbv_demod_unbound_var() {
+    char const* script =
+        "(set-logic UFBV)\n"
+        "(declare-fun f ((_ BitVec 8) (_ BitVec 8)) (_ BitVec 8))\n"
+        "(declare-fun g ((_ BitVec 8)) (_ BitVec 8))\n"
+        "(declare-const c (_ BitVec 8))\n"
+        "(declare-const d (_ BitVec 8))\n"
+        "(assert (forall ((x (_ BitVec 8))) (= (f x (g x)) (bvadd x #x01))))\n"
+        "(assert (forall ((y (_ BitVec 8))) (bvule (f c (g y)) #x05)))\n"
+        "(assert (= (f c (g d)) #x07))\n"
+        "(assert (= (f d (g c)) #x09))\n"
+        "(check-sat)\n";
+    // Run it as the z3 shell does (its own cmd_context and ast_manager): the
+    // demodulator's choices depend on AST ids, and the API context's
+    // manager does not reproduce the bad match.
+    std::stringstream out;
+    {
+        cmd_context ctx;
+        ctx.set_solver_factory(mk_smt_strategic_solver_factory());
+        ctx.set_interpolating_solver_factory(mk_smt_solver_factory());
+        ctx.set_regular_stream(out);
+        ctx.set_diagnostic_stream(out);
+        std::istringstream in(script);
+        VERIFY(parse_smt2_commands(ctx, in));
+    }
+    std::cout << "ufbv_demod_unbound_var: expected\nunsat\ngot\n" << out.str();
+    ENSURE(out.str() == "unsat\n");
+}
+
+// recover-01 rewrites (or p (= x 0)) to false; goal::update then shrinks the
+// goal to the single formula false, but the rewrite loop keeps reading
+// form(idx) up to the old size and z3 4.7.1 crashes (fixed upstream in
+// c230d89a3, "fix #5294").
+void tst_z3_4_7_1_recover01_inconsistent() {
+    char const* script =
+        "(declare-const x Int)\n"
+        "(declare-const p Bool)\n"
+        "(declare-const b Bool)\n"
+        "(assert (= p (not p)))\n"
+        "(assert b)\n"
+        "(assert (> x 0))\n"
+        "(assert (or p (= x 0)))\n"
+        "(assert (or (not p) (= x 3)))\n"
+        "(apply recover-01)\n";
+    std::cout << "recover01_inconsistent: running (apply recover-01)\n";
+    std::cout.flush(); // z3 4.7.1 dies here
+    expect_script("recover01_inconsistent", script,
+                  "(goals\n(goal\n  false\n  :precision precise :depth 1)\n)\n");
+}
+
+namespace {
+    // Run an SMT-LIB2 script as the z3 shell does, with its own cmd_context
+    // and ast_manager, so options such as :produce-proofs can still be set.
+    void expect_shell_script(char const* test, char const* script, char const* expected) {
+        std::stringstream out;
+        {
+            cmd_context ctx;
+            ctx.set_solver_factory(mk_smt_strategic_solver_factory());
+            ctx.set_interpolating_solver_factory(mk_smt_solver_factory());
+            ctx.set_regular_stream(out);
+            ctx.set_diagnostic_stream(out);
+            std::istringstream in(script);
+            parse_smt2_commands(ctx, in);
+        }
+        std::cout << test << ": expected\n" << expected << "got\n" << out.str();
+        ENSURE(out.str() == expected);
+    }
+}
+
+// With proofs on, distribute_forall_tactic::rw_cfg::reduce_quantifier sets
+// result but not result_pr, and z3 4.7.1 crashes building the goal's
+// proof (fixed upstream in d530d1314, "fix #3276").
+void tst_z3_4_7_1_distribute_forall_proof() {
+    char const* script =
+        "(set-option :produce-proofs true)\n"
+        "(declare-fun p (Int) Bool)\n"
+        "(declare-fun q (Int) Bool)\n"
+        "(assert (forall ((x Int) (y Int)) (and (p x) (q y))))\n"
+        "(apply distribute-forall)\n";
+    std::cout << "distribute_forall_proof: running (apply distribute-forall)\n";
+    std::cout.flush(); // z3 4.7.1 dies here
+    expect_shell_script("distribute_forall_proof", script,
+                  "(goals\n(goal\n  (forall ((x Int)) (p x))\n  (forall ((y Int)) (q y))\n"
+                  "  :precision precise :depth 1)\n)\n");
+}
+
+// 0.5a + 0.5b <= 0.7 forbids a = b = true. pb2bv_rewriter::imp's is_pb
+// accepts the fractional coefficients and bound, and mk_le_ge builds a
+// bit-vector circuit from them that is always true, so card2bv turns the
+// unsat problem into a sat one (fixed upstream in 10768bd00, "fix #3727",
+// and f7a7b9e1f, "fix #4108").
+void tst_z3_4_7_1_pb2bv_fractional() {
+    char const* script =
+        "(declare-const a Bool)\n"
+        "(declare-const b Bool)\n"
+        "(assert (<= (+ (ite a 0.5 0.0) (ite b 0.5 0.0)) 0.7))\n"
+        "(assert a)\n"
+        "(assert b)\n"
+        "(check-sat-using (then card2bv smt))\n";
+    expect_script("pb2bv_fractional", script, "unsat\n");
+}
+
+#ifndef _WINDOWS
+namespace {
+    void lia2card_empty_eq_timeout(int) {
+        static char const msg[] =
+            "lia2card_empty_eq: lia2card did not terminate within 20 seconds\n";
+        ssize_t n = write(2, msg, sizeof(msg) - 1);
+        (void)n;
+        _exit(1);
+    }
+}
+#endif
+
+// lia2card rewrites (= 2 3) to (and false true). goal::update flattens that
+// to false but then pushes the unflattened (and false true) as a new
+// formula, so the goal stays consistent and grows by one formula that the
+// rewrite loop visits, rewrites and pushes again, forever. A watchdog turns
+// the hang into a failure.
+void tst_z3_4_7_1_lia2card_empty_eq() {
+#ifndef _WINDOWS
+    signal(SIGALRM, lia2card_empty_eq_timeout);
+    alarm(20);
+#endif
+    std::cout << "lia2card_empty_eq: running (apply lia2card)\n";
+    std::cout.flush(); // the watchdog leaves with _exit
+    expect_script("lia2card_empty_eq", "(assert (= 2 3))\n(apply lia2card)\n",
+                  "(goals\n(goal\n  false\n  :precision precise :depth 1)\n)\n");
+#ifndef _WINDOWS
+    alarm(0);
+#endif
+}
+
+namespace {
+    void nlsat_set_value(nlsat::solver& s, nlsat::assignment& as, nlsat::var x, int num, int den = 1) {
+        anum_manager& am = s.am();
+        unsynch_mpq_manager& qm = s.qm();
+        scoped_mpq q(qm);
+        qm.set(q, num, den);
+        scoped_anum v(am);
+        am.set(v, q);
+        as.set(x, v);
+    }
+
+    nlsat::literal nlsat_lit(nlsat::solver& s, nlsat::atom::kind k, polynomial_ref const& p) {
+        nlsat::poly* ps[1] = { p.get() };
+        bool is_even[1] = { false };
+        return s.mk_ineq_literal(k, 1, ps, is_even);
+    }
+
+    // Number of literals in ls that are not true in the solver's current
+    // assignment.
+    unsigned nlsat_num_not_true(nlsat::solver& s, unsigned n, nlsat::literal const* ls) {
+        unsigned r = 0;
+        for (unsigned i = 0; i < n; ++i)
+            if (s.value(ls[i]) != l_true)
+                ++r;
+        return r;
+    }
+
+    // Signed projection of lits onto x. Every literal of the projection must
+    // hold in the current model, which lits satisfy.
+    void nlsat_signed_project_check(char const* test, nlsat::solver& s, nlsat::var x,
+                                    nlsat::scoped_literal_vector const& lits,
+                                    nlsat::scoped_literal_vector& result) {
+        ENSURE(nlsat_num_not_true(s, lits.size(), lits.c_ptr()) == 0);
+        nlsat::explain& ex = s.get_explain();
+        ex.set_signed_project(true);
+        ex.project(x, lits.size(), lits.c_ptr(), result);
+        s.display(std::cout << test << ": ", lits.size(), lits.c_ptr());
+        s.display(std::cout << "\n  ==> ", result.size(), result.c_ptr());
+        unsigned bad = nlsat_num_not_true(s, result.size(), result.c_ptr());
+        std::cout << "\n  projection literals false in the model: " << bad << "\n";
+        ENSURE(bad == 0);
+    }
+}
+
+// x0 = 2 and x1 above (plus infinity) or below (minus infinity) every root
+// of p = (x0 - 5)*x1 + 1 and q = (x0 - 5)*x1 + 3 (resp. x0*x1 - 9 and
+// x0*x1 - 10), all of them negative in the model.
+// explain::project_plus_infinity and project_minus_infinity store sign(p)
+// in an unsigned, so s > 0 always holds and they add x0 - 5 > 0 for the
+// plus case and x0 < 0 for the minus case, both false at x0 = 2 (fixed upstream in 363d7aad2, "fix bug reported in
+// #1637"). In nlqsat this makes
+// (forall a. exists x. a*x < -1 and (a - 2)*x > 3) loop forever.
+void tst_z3_4_7_1_nlsat_signed_infinity() {
+    params_ref ps;
+    reslimit rlim;
+    nlsat::solver s(rlim, ps, false);
+    nlsat::pmanager& pm = s.pm();
+    nlsat::var x0 = s.mk_var(false);
+    nlsat::var x1 = s.mk_var(false);
+    polynomial_ref _x0(pm), _x1(pm), p(pm), q(pm);
+    _x0 = pm.mk_polynomial(x0);
+    _x1 = pm.mk_polynomial(x1);
+    {
+        nlsat::assignment as(s.am());
+        nlsat_set_value(s, as, x0, 2);
+        nlsat_set_value(s, as, x1, 6);
+        s.set_rvalues(as);
+        p = ((_x0 + (-5)) * _x1) + 1;
+        q = ((_x0 + (-5)) * _x1) + 3;
+        nlsat::scoped_literal_vector lits(s), result(s);
+        lits.push_back(nlsat_lit(s, nlsat::atom::LT, p));
+        lits.push_back(nlsat_lit(s, nlsat::atom::LT, q));
+        nlsat_signed_project_check("nlsat_signed_infinity plus", s, x1, lits, result);
+    }
+    {
+        nlsat::assignment as(s.am());
+        nlsat_set_value(s, as, x0, 2);
+        nlsat_set_value(s, as, x1, 4);
+        s.set_rvalues(as);
+        p = (_x0 * _x1) + (-9);
+        q = (_x0 * _x1) + (-10);
+        nlsat::scoped_literal_vector lits(s), result(s);
+        lits.push_back(nlsat_lit(s, nlsat::atom::LT, p));
+        lits.push_back(nlsat_lit(s, nlsat::atom::LT, q));
+        nlsat_signed_project_check("nlsat_signed_infinity minus", s, x1, lits, result);
+    }
+}
+
+// (x0)(x1) > 0 at x0 = x1 = 50000. evaluator::eval_ineq multiplies the
+// values eval_sign returns, which are the raw numerators of the factor
+// values, in a 32-bit int: 50000 * 50000 wraps to a negative number and the
+// atom evaluates to false (fixed upstream in f79dccccf and 6071797ba, "fix
+// #2238", which normalize eval_sign to -1, 0, 1).
+void tst_z3_4_7_1_nlsat_eval_sign_overflow() {
+    params_ref ps;
+    reslimit rlim;
+    nlsat::solver s(rlim, ps, false);
+    nlsat::pmanager& pm = s.pm();
+    nlsat::var x0 = s.mk_var(false);
+    nlsat::var x1 = s.mk_var(false);
+    polynomial_ref _x0(pm), _x1(pm);
+    _x0 = pm.mk_polynomial(x0);
+    _x1 = pm.mk_polynomial(x1);
+    nlsat::poly* factors[2] = { _x0.get(), _x1.get() };
+    bool is_even[2] = { false, false };
+    nlsat::scoped_literal_vector lits(s);
+    lits.push_back(s.mk_ineq_literal(nlsat::atom::GT, 2, factors, is_even));
+    lits.push_back(s.mk_ineq_literal(nlsat::atom::LT, 2, factors, is_even));
+    nlsat::assignment as(s.am());
+    nlsat_set_value(s, as, x0, 50000);
+    nlsat_set_value(s, as, x1, 50000);
+    s.set_rvalues(as);
+    lbool gt = s.value(lits[0]);
+    lbool lt = s.value(lits[1]);
+    s.display(std::cout << "nlsat_eval_sign_overflow: ", lits[0]);
+    std::cout << " := " << gt << ", ";
+    s.display(std::cout, lits[1]);
+    std::cout << " := " << lt << " at x0 = x1 = 50000\n";
+    ENSURE(gt == l_true);
+    ENSURE(lt == l_false);
+}
+
+// x0 = 2, x1 = 1/2: eq = x0*x1 - 1 = 0, q1 = x1 + x0 > 0, q2 = x1^2 - 3 < 0.
+// Signed projection onto x1 substitutes x1 = 1/x0 into q1 and q2.
+// explain::solve_eq never resets its table qs of powers of A = x0, so for
+// q2 (degree 2, after q1 of degree 1) it reads the powers 1, x0 of q1's
+// block: it computes the constant -2 instead of 1 - 3*x0^2 and drops the
+// condition 3*x0^2 - 1 > 0. The projection then holds at x0 = 1/5, where
+// x1 = 5 is forced and q2 = 22 > 0 (fixed upstream in 19e2f8c9d, "fix
+// #1694").
+void tst_z3_4_7_1_nlsat_solve_eq_powers() {
+    params_ref ps;
+    reslimit rlim;
+    nlsat::solver s(rlim, ps, false);
+    nlsat::pmanager& pm = s.pm();
+    nlsat::var x0 = s.mk_var(false);
+    nlsat::var x1 = s.mk_var(false);
+    polynomial_ref _x0(pm), _x1(pm), eq(pm), q1(pm), q2(pm);
+    _x0 = pm.mk_polynomial(x0);
+    _x1 = pm.mk_polynomial(x1);
+    eq = (_x0 * _x1) + (-1);
+    q1 = _x1 + _x0;
+    q2 = (_x1 * _x1) + (-3);
+    nlsat::assignment as(s.am());
+    nlsat_set_value(s, as, x0, 2);
+    nlsat_set_value(s, as, x1, 1, 2);
+    s.set_rvalues(as);
+    nlsat::scoped_literal_vector lits(s), result(s);
+    lits.push_back(nlsat_lit(s, nlsat::atom::EQ, eq));
+    lits.push_back(nlsat_lit(s, nlsat::atom::GT, q1));
+    lits.push_back(nlsat_lit(s, nlsat::atom::LT, q2));
+    nlsat_signed_project_check("nlsat_solve_eq_powers", s, x1, lits, result);
+    // At x0 = 1/5 the literals have no solution in x1, so some literal of
+    // the projection must be false there.
+    nlsat::assignment as2(s.am());
+    nlsat_set_value(s, as2, x0, 1, 5);
+    s.set_rvalues(as2);
+    unsigned bad = nlsat_num_not_true(s, result.size(), result.c_ptr());
+    std::cout << "  projection literals false at x0 = 1/5: " << bad << "\n";
+    ENSURE(bad > 0);
+}
+
+// Core {x1 < 0, 3*x1 + 2 = 0, x1 - x0 > 0} at x0 = 0. simplify rewrites
+// x1 < 0 with the equation to the constant -2 < 0, but tests s == -1
+// where sign(-2) returns -2: it builds -2 > 0, which is false, and drops
+// the rest of the core as if the assumptions alone implied the conflict
+// (normalize has the same s == -1 test). The lemma
+// not(x1 < 0) or not(3*x1 + 2 = 0) or not(x1 - x0 > 0) or <explanation>
+// is then false at x0 = -1, x1 = -2/3 (fixed upstream in 0f20175bd, "fix
+// #2556, sign of of inequality is not restricted to -1, 0, 1").
+void tst_z3_4_7_1_nlsat_simplify_core_sign() {
+    params_ref ps;
+    reslimit rlim;
+    nlsat::solver s(rlim, ps, false);
+    nlsat::pmanager& pm = s.pm();
+    nlsat::var x0 = s.mk_var(false);
+    nlsat::var x1 = s.mk_var(false);
+    polynomial_ref _x0(pm), _x1(pm), eq(pm), d(pm);
+    _x0 = pm.mk_polynomial(x0);
+    _x1 = pm.mk_polynomial(x1);
+    eq = (3 * _x1) + 2;
+    d = _x1 - _x0;
+    nlsat::scoped_literal_vector core(s), result(s);
+    core.push_back(nlsat_lit(s, nlsat::atom::LT, _x1));
+    core.push_back(nlsat_lit(s, nlsat::atom::EQ, eq));
+    core.push_back(nlsat_lit(s, nlsat::atom::GT, d));
+    nlsat::assignment as(s.am());
+    nlsat_set_value(s, as, x0, 0);
+    s.set_rvalues(as);
+    nlsat::explain& ex = s.get_explain();
+    ex.set_simplify_cores(true);
+    ex(core.size(), core.c_ptr(), result);
+    s.display(std::cout << "nlsat_simplify_core_sign: core ", core.size(), core.c_ptr());
+    s.display(std::cout << "\n  explanation ", result.size(), result.c_ptr());
+    // The lemma is (not core) or result; it must hold everywhere.
+    nlsat::assignment as2(s.am());
+    nlsat_set_value(s, as2, x0, -1);
+    nlsat_set_value(s, as2, x1, -2, 3);
+    s.set_rvalues(as2);
+    ENSURE(nlsat_num_not_true(s, core.size(), core.c_ptr()) == 0);
+    unsigned true_lits = result.size() - nlsat_num_not_true(s, result.size(), result.c_ptr());
+    std::cout << "\n  explanation literals true at x0 = -1, x1 = -2/3: " << true_lits << "\n";
+    ENSURE(true_lits > 0);
+}
+
+namespace {
+    // Run an SMT-LIB script and return its output.
+    std::string eval_smtlib2(char const* script) {
+        Z3_config cfg = Z3_mk_config();
+        Z3_context ctx = Z3_mk_context(cfg);
+        Z3_del_config(cfg);
+        std::string out = Z3_eval_smtlib2_string(ctx, script);
+        Z3_del_context(ctx);
+        return out;
+    }
+
+    // out must start with expected and, after that, contain no "false":
+    // the scripts end with get-value of their assertions.
+    void expect_valid_answer(char const* test, std::string const& out, char const* expected) {
+        std::cout << test << ":\n" << out;
+        ENSURE(out.compare(0, strlen(expected), expected) == 0);
+        ENSURE(out.find("false") == std::string::npos);
+    }
+}
+
+// x := y^2 is inlined. In x - y^2 > 0 the factor vanishes; substitute_var
+// treats it as an empty product, mk_ineq_literal makes 1 > 0 or 1 < 0 of
+// it, and update_clauses then calls mk_clause with no literals, which
+// segfaults. In (or (> (- x (* y y)) 1) (> (* z z y) 1)) the first factor
+// becomes the constant -1: the atom -1 > 0 over a constant polynomial is
+// kept, and the model violates (> (* z z y) 1). Both are fixed upstream by
+// the 2024 rewrite of the inline_vars simplifier (29e724f78, 8fe357f1f).
+void tst_z3_4_7_1_nlsat_inline_vars() {
+    expect_valid_answer("nlsat_inline_vars zero factor", eval_smtlib2(
+        "(declare-const x Real)\n"
+        "(declare-const y Real)\n"
+        "(assert (= x (* y y)))\n"
+        "(assert (> (- x (* y y)) 0))\n"
+        "(check-sat-using (then simplify purify-arith (using-params nlsat :inline_vars true :reorder false)))\n"),
+        "unsat\n");
+    expect_valid_answer("nlsat_inline_vars constant atom", eval_smtlib2(
+        "(declare-const x Real)\n"
+        "(declare-const y Real)\n"
+        "(declare-const z Real)\n"
+        "(assert (= x (* y y)))\n"
+        "(assert (or (> (- x (* y y)) 1) (> (* z z y) 1)))\n"
+        "(check-sat-using (then simplify purify-arith (using-params nlsat :inline_vars true :reorder false)))\n"
+        "(get-value ((= x (* y y)) (or (> (- x (* y y)) 1) (> (* z z y) 1))))\n"),
+        "sat\n");
+}
+
+// With inline_vars the equation x*y + z^3 = 1 is solved for x, then check()
+// still reorders the variables; search_check calls fix_patch, which writes
+// x's value through the pre-reorder index into the reordered assignment, so
+// the model violates both remaining assertions.
+void tst_z3_4_7_1_nlsat_inline_reorder() {
+    expect_valid_answer("nlsat_inline_reorder", eval_smtlib2(
+        "(declare-const x Real)\n"
+        "(declare-const y Real)\n"
+        "(declare-const z Real)\n"
+        "(assert (> y 0.0))\n"
+        "(assert (= (+ (* x y) (* z z z)) 1.0))\n"
+        "(assert (> (* x z) 2.0))\n"
+        "(check-sat-using (using-params qfnra-nlsat :inline_vars true))\n"
+        "(get-value ((> y 0.0) (= (+ (* x y) (* z z z)) 1.0) (> (* x z) 2.0)))\n"),
+        "sat\n");
+}
+
+#ifndef _WINDOWS
+namespace {
+    void qe_project_real_timeout(int) {
+        static char const msg[] =
+            "qe_project_real_direction: qe-sat did not terminate within 20 seconds\n";
+        ssize_t n = write(2, msg, sizeof(msg) - 1);
+        (void)n;
+        _exit(1);
+    }
+}
+#endif
+
+// x >= a + y, x < b + y, x < c + y: one non-strict lower bound and two
+// strict upper bounds. arith_plugin::project_real chooses the lower family
+// (1 + 0 < 0 + 2) from raw counts and encodes the branch for it, but
+// assign and subst choose the family with get_bound_sizes, which doubles
+// the non-strict counts of a real (2 + 0 < 0 + 2 is false), and read the
+// branch as an upper bound. qe-sat with projection_mode false then never
+// terminates. A watchdog turns the hang into a failure.
+void tst_z3_4_7_1_qe_project_real_direction() {
+#ifndef _WINDOWS
+    signal(SIGALRM, qe_project_real_timeout);
+    alarm(20);
+#endif
+    std::string out = eval_smtlib2(
+        "(declare-const a Real)\n"
+        "(declare-const b Real)\n"
+        "(declare-const c Real)\n"
+        "(assert (forall ((y Real)) (exists ((x Real)) (and (>= x (+ a y)) (< x (+ b y)) (< x (+ c y))))))\n"
+        "(check-sat-using (using-params qe-sat :projection_mode false))\n");
+#ifndef _WINDOWS
+    alarm(0);
+#endif
+    std::cout << "qe_project_real_direction: " << out;
+    ENSURE(out == "sat\n");
+}
+
+// exists x. (mod (+ x a) k) = r and bounds, with a = 0 and b = 10, is
+// satisfiable for k = 0 (mod by 0 is uninterpreted), for k = -3, r = 0
+// (x = 3) and for k = -3, r = 1 (x = 1). bounds_proc takes (mod t 0) and
+// (mod t -3) as divisibility constraints with divisors 0 and -3, div_z
+// folds them into an lcm of 0 or -3, and qe returns false.
+void tst_z3_4_7_1_qe_mod_divisor() {
+    char const* bodies[3] = {
+        "(and (= (mod (+ x a) 0) 0) (< x b))",
+        "(and (= (mod (+ x a) (- 3)) 0) (< x b) (> x a))",
+        "(and (= (mod (+ x a) (- 3)) 1) (< x b) (> x a))"
+    };
+    for (char const* body : bodies) {
+        std::string script =
+            std::string("(declare-const a Int)\n(declare-const b Int)\n(assert (exists ((x Int)) ") + body + "))\n"
+            "(assert (= a 0))\n(assert (= b 10))\n(check-sat-using (then qe smt))\n";
+        std::string out = eval_smtlib2(script.c_str());
+        std::cout << "qe_mod_divisor " << body << ": " << out;
+        ENSURE(out == "sat\n");
+    }
+}
+
+// exists x. is-nil(x) and (x = y or x = z), with y and z both cons, is
+// unsat. datatype_plugin::subst_rec replaces is-nil(x) by true and x by y
+// (resp. z) in the equality branches but drops is-nil(y), so qe returns
+// true and z3 answers sat.
+void tst_z3_4_7_1_qe_dt_eq_recognizer() {
+    std::string out = eval_smtlib2(
+        "(declare-datatypes ((Lst 0)) (((cons (hd Int) (tl Lst)) (nil))))\n"
+        "(declare-const y Lst)\n"
+        "(declare-const z Lst)\n"
+        "(assert (exists ((x Lst)) (and ((_ is nil) x) (or (= x y) (= x z)))))\n"
+        "(assert ((_ is cons) y))\n"
+        "(assert ((_ is cons) z))\n"
+        "(check-sat-using (then qe smt))\n");
+    std::cout << "qe_dt_eq_recognizer: " << out;
+    ENSURE(out == "unsat\n");
+}
+
+// Two quantified formulas in one goal for qe-light. fm::init resets
+// m_bvar2expr but not m_expr2bvar (it resets m_expr2var twice), so in the
+// second formula the literal a maps to the stale bvar of the first run,
+// which now names c: the clause (or b a) becomes (or b c). With a true and
+// b, c false the goal is satisfiable (z <= -2, x >= 5, g z), but z3
+// answers unsat.
+void tst_z3_4_7_1_qe_lite_fm_bvar() {
+    std::string out = eval_smtlib2(
+        "(declare-const a Bool)\n"
+        "(declare-const b Bool)\n"
+        "(declare-const c Bool)\n"
+        "(declare-fun g (Int) Bool)\n"
+        "(assert (exists ((x Int) (z Int)) (and (or a (<= (+ x z) 3)) (or b (>= (+ x z) 5)) (g z))))\n"
+        "(assert (exists ((x Int) (z Int)) (and (or c (<= (+ x z) 3)) (or b (>= x 5)) (or a (<= x 1)) (g z))))\n"
+        "(assert a)\n"
+        "(assert (not b))\n"
+        "(assert (not c))\n"
+        "(check-sat-using (then qe-light smt))\n");
+    std::cout << "qe_lite_fm_bvar: " << out;
+    ENSURE(out == "sat\n");
+}
+
+// pb_util::mk_lt normalizes into m_coeffs and calls mk_ge(n, m_coeffs, ...),
+// whose normalize resets m_coeffs before it reads the coefficients. So
+// 2*p0 + 3*p1 < 3, satisfied by p0 = true, p1 = false, becomes a pbge with
+// zero coefficients and a positive bound, which is false. maxres with
+// opt.maxres.add_upper_bound_block uses mk_lt to block the upper bound and
+// stops at a non-optimal cost (19 instead of 3 on the AUDIT.md input).
+void tst_z3_4_7_1_pb_mk_lt_coeffs() {
+    ast_manager m;
+    reg_decl_plugins(m);
+    pb_util pb(m);
+    expr_ref p0(bool_const(m, "p0"), m), p1(bool_const(m, "p1"), m);
+    rational cs[2] = { rational(2), rational(3) };
+    expr* args[2] = { p0, p1 };
+    expr_ref lt(pb.mk_lt(2, cs, args, rational(3)), m);
+    std::cout << "pb_mk_lt_coeffs: " << mk_pp(lt, m) << "\n";
+    expr_ref_vector fmls(m);
+    fmls.push_back(lt);
+    fmls.push_back(p0);
+    fmls.push_back(m.mk_not(p1));
+    expect("pb_mk_lt_coeffs", "2*p0 + 3*p1 < 3 with p0, not p1", l_true, check_plain(m, fmls));
+}
+
+// opb::parse tries parse_token("min:") before parse_token("max:"), and
+// parse_token consumes the matching prefix "m" even when the token does not
+// match, so "max:" is read as "ax:" and parse_id exits with
+// (error line 1 "unexpected char: a" expected "x") and code 3.
+void tst_z3_4_7_1_opb_max_objective() {
+    ast_manager m;
+    reg_decl_plugins(m);
+    opt::context opt(m);
+    unsigned_vector handles;
+    std::istringstream in("* test\nmax: +2 x1 +3 x2 ;\n+1 x1 +1 x2 <= 1 ;\n");
+    parse_opb(opt, in, handles);
+    ENSURE(handles.size() == 1);
+    lbool r = opt.optimize();
+    expr_ref lo = opt.get_lower(handles[0]);
+    expr_ref hi = opt.get_upper(handles[0]);
+    std::cout << "opb_max_objective: " << lbool_name(r) << " " << lo << " " << hi << "\n";
+    ENSURE(r == l_true);
+    ENSURE(lo == hi);
+}
+
+// MK_NARY_PROBE starts with r = child(1) and then folds from child 1 again,
+// so (+ 1 2) is 4 and (* 2 3) is 12.
+void tst_z3_4_7_1_probe_nary_fold() {
+    std::string out = eval_smtlib2(
+        "(check-sat-using (if (= (+ 1 2) 4) (fail-if 1) smt))\n"
+        "(check-sat-using (if (= (* 2 3) 12) (fail-if 1) smt))\n"
+        "(check-sat-using (if (= (+ 1 2) 3) (fail-if 1) smt))\n"
+        "(check-sat-using (if (= (+ 1 2 4) 7) (fail-if 1) smt))\n");
+    std::cout << "probe_nary_fold:\n" << out;
+    ENSURE(out == "sat\nsat\nunknown\nunknown\n");
+}
+
+// Log Z3_mk_pble, Z3_mk_pbge and Z3_mk_pbeq and replay the log. The
+// generated log_Z3_mk_pble writes the int coefficients with U and Au, but
+// exec_Z3_mk_pble reads them with get_int_array, so every replay prints
+// "[z3 exception]: expecting int_array at position 3 but got uint_array"
+// (fixed upstream in fed977b49, "fix #1782", which logs I and Ai and
+// replays 'i' arrays).
+void tst_z3_4_7_1_pb_log_replay() {
+    char const* log_name = "z3_4_7_1_pb_log_replay.log";
+    ENSURE(Z3_open_log(log_name));
+    {
+        Z3_config cfg = Z3_mk_config();
+        Z3_context ctx = Z3_mk_context(cfg);
+        Z3_del_config(cfg);
+        Z3_ast args[2] = {
+            Z3_mk_const(ctx, Z3_mk_string_symbol(ctx, "a"), Z3_mk_bool_sort(ctx)),
+            Z3_mk_const(ctx, Z3_mk_string_symbol(ctx, "b"), Z3_mk_bool_sort(ctx))
+        };
+        int coeffs[2] = { 1, -2 };
+        Z3_mk_pble(ctx, 2, args, coeffs, 1);
+        Z3_mk_pbge(ctx, 2, args, coeffs, -1);
+        Z3_mk_pbeq(ctx, 2, args, coeffs, 1);
+        Z3_del_context(ctx);
+    }
+    Z3_close_log();
+    std::ostringstream out;
+    {
+        std::ifstream in(log_name);
+        z3_replayer r(in);
+        register_z3_replayer_cmds(r);
+        std::streambuf* saved = std::cout.rdbuf(out.rdbuf());
+        try {
+            r.parse();
+        }
+        catch (z3_exception & ex) {
+            out << "replay error: " << ex.msg() << "\n";
+        }
+        std::cout.rdbuf(saved);
+    }
+    std::remove(log_name);
+    std::cout << "pb_log_replay: replay output:\n" << out.str();
+    ENSURE(out.str().empty());
+}
+
+// sexpr::display prints an atom with display_atom and then, missing a
+// return, walks the atom as a composite. (get-user-tactics) displays each
+// declared tactic's sexpr, so it segfaults whenever a tactic is a plain
+// symbol (fixed upstream in 202ed79a2, "#5445").
+void tst_z3_4_7_1_sexpr_display_atom() {
+    std::string out = eval_smtlib2(
+        "(declare-tactic t1 simplify)\n"
+        "(get-user-tactics)\n");
+    std::cout << "sexpr_display_atom: " << out;
+    ENSURE(out == "((declare-tactic t1 simplify))\n");
 }

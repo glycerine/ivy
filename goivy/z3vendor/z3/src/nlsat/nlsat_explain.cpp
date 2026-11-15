@@ -429,7 +429,8 @@ namespace nlsat {
                             bool lit_val  = l.sign() ? !atom_val : atom_val;
                             return lit_val ? true_literal : false_literal;
                         }
-                        else if (s == -1 && a->is_odd(i)) {
+                        // FORK FIX #31 (g3 audit, see FORK_BUGFIXES.md): backport of upstream 0f20175bd: test s < 0 (AUDIT nlsat_01-F4)
+                        else if (s < 0 && a->is_odd(i)) {
                             atom_sign = -atom_sign;
                         }
                         normalized = true;
@@ -1134,7 +1135,8 @@ namespace nlsat {
                                 info.add_lc_ineq();
                             }
                         }
-                        if (s == -1 && !is_even) {
+                        // FORK FIX #31 (g3 audit, see FORK_BUGFIXES.md): backport of upstream 0f20175bd: test s < 0 (AUDIT nlsat_01-F4)
+                        if (s < 0 && !is_even) {
                             atom_sign = -atom_sign;
                         }
                     }
@@ -1668,7 +1670,8 @@ namespace nlsat {
                 unsigned d = degree(p, x);
                 lc = m_pm.coeff(p, x, d);
                 if (!is_const(lc)) {                    
-                    unsigned s = sign(p);
+                    // FORK FIX #28 (g3 audit, see FORK_BUGFIXES.md): backport of upstream 363d7aad2: signed infinity uses an int sign (AUDIT nlsat_01-F1)
+                    int s = sign(p);
                     SASSERT(s != 0);
                     atom::kind k = (s > 0)?(atom::GT):(atom::LT);
                     add_simple_assumption(k, lc);
@@ -1683,7 +1686,8 @@ namespace nlsat {
                 unsigned d = degree(p, x);
                 lc = m_pm.coeff(p, x, d);
                 if (!is_const(lc)) {
-                    unsigned s = sign(p);
+                    // FORK FIX #28 (g3 audit, see FORK_BUGFIXES.md): backport of upstream 363d7aad2: signed infinity uses an int sign (AUDIT nlsat_01-F1)
+                    int s = sign(p);
                     SASSERT(s != 0);
                     atom::kind k;
                     if (s > 0) {
@@ -1722,11 +1726,14 @@ namespace nlsat {
 
         void solve_eq(var x, unsigned idx, polynomial_ref_vector const& ps) {
             polynomial_ref p(m_pm), A(m_pm), B(m_pm), C(m_pm), D(m_pm), E(m_pm), q(m_pm), r(m_pm);
-            polynomial_ref_vector qs(m_pm);
+            // FORK FIX #30 (g3 audit, see FORK_BUGFIXES.md): backport of upstream 19e2f8c9d: solve_eq indexes its own powers (AUDIT nlsat_01-F3)
+            polynomial_ref_vector As(m_pm), Bs(m_pm);
             p = ps.get(idx);
             SASSERT(degree(p, x) == 1);
             A = m_pm.coeff(p, x, 1);
             B = m_pm.coeff(p, x, 0);
+            As.push_back(m_pm.mk_const(rational(1)));
+            Bs.push_back(m_pm.mk_const(rational(1)));
             B = neg(B);
             TRACE("nlsat_explain", tout << "p: " << p << " A: " << A << " B: " << B << "\n";);
             // x = B/A
@@ -1737,18 +1744,19 @@ namespace nlsat {
                     D = m_pm.mk_const(rational(1));
                     E = D;
                     r = m_pm.mk_zero();
-                    for (unsigned j = 0; j <= d; ++j) {                       
-                        qs.push_back(D);
-                        D = D*A;
+                    // FORK FIX #30 (g3 audit, see FORK_BUGFIXES.md): backport of upstream 19e2f8c9d: solve_eq indexes its own powers (AUDIT nlsat_01-F3)
+                    for (unsigned j = As.size(); j <= d; ++j) {
+                        D = As.back(); As.push_back(A * D);
+                        D = Bs.back(); Bs.push_back(B * D);
                     }
                     for (unsigned j = 0; j <= d; ++j) {
                         // A^d*p0 + A^{d-1}*B*p1 + ... + B^j*A^{d-j}*pj + ... + B^d*p_d
                         C = m_pm.coeff(q, x, j);
                         if (!is_zero(C)) {
-                            D = qs.get(d-j);
+                            D = As.get(d - j);
+                            E = Bs.get(j);
                             r = r + D*E*C;
                         }
-                        E = E*B;
                     }
                     TRACE("nlsat_explain", tout << "q: " << q << " r: " << r << "\n";);
                     ensure_sign(r);

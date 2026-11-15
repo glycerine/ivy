@@ -760,7 +760,8 @@ static probe * NAME ## _probe(cmd_context & ctx, sexpr * n) {                   
     if (num_children == 2)                                                                                      \
         return r;                                                                                               \
     ref<probe> prev = r;                                                                                        \
-    unsigned i = 1;                                                                                             \
+    // FORK FIX #40 (g3 audit, see FORK_BUGFIXES.md): n-ary probes fold each argument once (AUDIT parsers_shell_01-F10)
+    unsigned i = 2;                                                                                             \
     while (true) {                                                                                              \
         r = NAME(prev.get(), sexpr2probe(ctx, n->get_child(i)));                                                \
         if (i == num_children - 1)                                                                              \

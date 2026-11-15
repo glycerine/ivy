@@ -384,7 +384,9 @@ namespace nlsat {
         int eval_sign(poly * p) {
             // TODO: check if it is useful to cache results
             SASSERT(m_assignment.is_assigned(max_var(p)));
-            return m_am.eval_sign_at(polynomial_ref(p, m_pm), m_assignment);
+            // FORK FIX #29 (g3 audit, see FORK_BUGFIXES.md): backport of upstream f79dccccf/6071797ba: eval_sign returns -1,0,1 (AUDIT nlsat_01-F2)
+            int r = m_am.eval_sign_at(polynomial_ref(p, m_pm), m_assignment);
+            return r > 0 ? +1 : (r < 0 ? -1 : 0);
         }
         
         bool satisfied(int sign, atom::kind k) {

@@ -163,7 +163,8 @@ void min_cut::augment_path() {
             }
         }
         if (!already_exists) {
-            m_edges[k].push_back(edge(1, max));
+            // FORK FIX #18 (g3 audit, see FORK_BUGFIXES.md): min_cut reverse arc; backport of upstream 8150cd6e8 (AUDIT util_misc_01-F1)
+            m_edges[k].push_back(edge(l, max));
         }
         k = l;
     }
