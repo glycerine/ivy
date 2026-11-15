@@ -18,11 +18,32 @@ static void dump(const char *name,Gia_Man_t *g){
  }
  printf("classes");if(g->vFlopClasses)for(i=0;i<Vec_IntSize(g->vFlopClasses);++i)printf(" %d",Vec_IntEntry(g->vFlopClasses,i));puts("");
 }
+
+static void supers(Gia_Man_t *g){
+ int id,mode,i;Gia_Obj_t *obj;
+ Gia_ManForEachObj1(g,obj,id){
+  if(!Gia_ObjIsCand(obj))continue;
+  for(mode=0;mode<3;++mode){
+   Vec_Int_t *v=Vec_IntAlloc(8);Vec_IntPush(v,1);
+   if(mode==1)Gia_CollectSuper(g,obj,v);else Gia_CollectSuper_rec(g,mode==2?Gia_Not(obj):obj,v);
+   printf("super %d %d",id,mode);for(i=0;i<Vec_IntSize(v);++i)printf(" %d",Vec_IntEntry(v,i));puts("");Vec_IntFree(v);
+  }
+ }
+}
+static void compose(Gia_Man_t *g,Gia_Man_t *frames,int nf){
+ Gia_Man_t *clean=Gia_ManCleanup(frames),*out;int i;
+ Vec_Int_t *signals=Gia_ManDetectSeqSignalsWithFanout(g,1,0),*mapped=Gia_ManTransferFrames(g,frames,nf,clean,signals);
+ printf("transfer");for(i=0;i<Vec_IntSize(mapped);++i)printf(" %d",Vec_IntEntry(mapped,i));puts("");
+ Vec_IntFree(signals);Vec_IntFree(mapped);Gia_ManStop(clean);
+ out=Gia_ManUnrollAndCofactor(g,nf,1,0);dump("cofactored",out);Gia_ManStop(out);
+ printf("copies_after_cofactor %d\n",Vec_IntSize(&g->vCopies));
+}
+
 int main(void){int kind,phase,nf,limit,limits[]={0,1,3};for(kind=0;kind<2;++kind)for(phase=0;phase<8;++phase){
  Gia_Man_t *g=graph(kind,phase),*q;Vec_Int_t *s;int i;
- printf("case %d %d\n",kind,phase);Gia_ManDetectSeqSignals(g,1,1);
+ printf("case %d %d\n",kind,phase);Gia_ManDetectSeqSignals(g,1,1);supers(g);
  for(limit=0;limit<3;++limit){s=Gia_ManDetectSeqSignalsWithFanout(g,limits[limit],1);printf("signals %d",limits[limit]);for(i=0;i<Vec_IntSize(s);++i)printf(" %d",Vec_IntEntry(s,i));puts("");Vec_IntFree(s);}
- for(nf=1;nf<=3;++nf){printf("frames %d\n",nf);q=Gia_ManUnrollInit(g,nf);dump("unrolled",q);printf("copies");for(i=0;i<nf*Gia_ManObjNum(g);++i)printf(" %d",Vec_IntEntry(&g->vCopies,i));puts("");Gia_ManStop(q);}
+ for(nf=1;nf<=3;++nf){printf("frames %d\n",nf);q=Gia_ManUnrollInit(g,nf);dump("unrolled",q);printf("copies");for(i=0;i<nf*Gia_ManObjNum(g);++i)printf(" %d",Vec_IntEntry(&g->vCopies,i));puts("");compose(g,q,nf);Gia_ManStop(q);}
  q=Gia_ManRemoveEnables(g);dump("removed",q);Gia_ManStop(q);if(kind){q=Gia_ManRemoveEnables2(g);dump("removed2",q);Gia_ManStop(q);}
  Gia_ManStop(g);
  }return 0;}

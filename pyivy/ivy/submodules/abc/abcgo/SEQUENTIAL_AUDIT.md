@@ -7076,3 +7076,26 @@ pass in 1.974s (/tmp/abcgo-enable-phase2-focused.log). Save this checkpoint befo
 adding direct native supergate-order and transfer/cofactoring composition coverage,
 broader state/phase/ownership checks and compactness measurements. Module race/vet
 integration and family closure remain pending; original completion stays 2/131.
+
+### Sequential frame composition checkpoint
+
+Extend the actual-source matrix through direct supergate calls, signal transfer
+into cleanup mappings and the complete unroll/cofactor driver. Compare resulting
+shapes, copy tables, output truth and post-cofactor frame-table erasure. Native
+composition passes in 1.875s (/tmp/abcgo-enable-composition.log), exercising all
+ten source entry points through their real callers rather than isolated clones.
+
+Independent state tests cover typed XOR/MUX feedback over one-to-four frames,
+both XOR polarities and ordinary/cofactoring unroll paths. They verify zero
+initial state, exact frame input/output order, source Value preservation, expected
+frame-table retention/erasure, identity and owned results after stopping the
+source. Both removal methods preserve direct-input/state/constant/AND and
+unrecognized structural-MUX transitions in both output phases, including source
+failure paths repaired earlier in Go. Direct transfer tests cover duplicate
+signals/targets, absent frame copies, zero/unreachable Value mappings and the
+source's Value-one handling. These pass in 0.007s
+(/tmp/abcgo-enable-state.log).
+
+Save this checkpoint before final high-frequency report/class tests, compactness
+review and module race/vet integration. The broader GIA audit is still in progress;
+original completion remains 2/131.

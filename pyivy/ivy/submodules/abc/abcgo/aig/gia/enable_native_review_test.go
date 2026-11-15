@@ -57,6 +57,48 @@ func enableReviewDump(name string, p *Gia_Man_t) {
 	fmt.Println()
 }
 
+func enableReviewSupers(p *Gia_Man_t) {
+	for id := int32(1); id < p.nObjs; id++ {
+		obj := p.pObjs[id]
+		if Gia_ObjIsCand(obj) == 0 {
+			continue
+		}
+		for mode := 0; mode < 3; mode++ {
+			v := Vec_IntAlloc(8)
+			Vec_IntPush(v, 1)
+			switch mode {
+			case 0:
+				Gia_CollectSuper_rec(p, obj, v)
+			case 1:
+				Gia_CollectSuper(p, obj, v)
+			case 2:
+				Gia_CollectSuper_rec(p, Gia_Not(obj), v)
+			}
+			fmt.Printf("super %d %d", id, mode)
+			for _, value := range Vec_IntArray(v) {
+				fmt.Printf(" %d", value)
+			}
+			fmt.Println()
+		}
+	}
+}
+
+func enableReviewCompose(p, frames *Gia_Man_t, nf int32) {
+	clean := Gia_ManCleanup(frames)
+	signals := Gia_ManDetectSeqSignalsWithFanout(p, 1, 0)
+	mapped := Gia_ManTransferFrames(p, frames, nf, clean, signals)
+	fmt.Print("transfer")
+	for _, value := range Vec_IntArray(mapped) {
+		fmt.Printf(" %d", value)
+	}
+	fmt.Println()
+	Gia_ManStop(clean)
+	q := Gia_ManUnrollAndCofactor(p, nf, 1, 0)
+	enableReviewDump("cofactored", q)
+	Gia_ManStop(q)
+	fmt.Printf("copies_after_cofactor %d\n", Vec_IntSize(&p.vCopies))
+}
+
 func TestEnableOrdinaryTransformsMatchOriginalABC(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "enable_review.c")
 	source, err := exec.Command(exe).CombinedOutput()
@@ -69,6 +111,7 @@ func TestEnableOrdinaryTransformsMatchOriginalABC(t *testing.T) {
 				p := enableReviewGraph(kind, phase)
 				fmt.Printf("case %d %d\n", kind, phase)
 				Gia_ManDetectSeqSignals(p, 1, 1)
+				enableReviewSupers(p)
 				for _, limit := range []int32{0, 1, 3} {
 					s := Gia_ManDetectSeqSignalsWithFanout(p, limit, 1)
 					fmt.Printf("signals %d", limit)
@@ -88,6 +131,7 @@ func TestEnableOrdinaryTransformsMatchOriginalABC(t *testing.T) {
 						}
 					}
 					fmt.Println()
+					enableReviewCompose(p, q, nf)
 					Gia_ManStop(q)
 				}
 				q := Gia_ManRemoveEnables(p)
