@@ -126,6 +126,9 @@ type gigReviewCase struct {
 func gigReviewTruthCase(n, digits, seed, binding int) gigReviewCase {
 	state := uint64(seed+1) * 0x9e3779b97f4a7c15
 	value := state ^ (state >> 29) ^ 0xd1b54a32d192ed03
+	if digits == 1 {
+		value = uint64(seed)
+	} // Exhaust every one-digit truth table.
 	if digits < 16 {
 		value &= (uint64(1) << uint(4*digits)) - 1
 	}
@@ -188,6 +191,7 @@ func gigReviewCases() []gigReviewCase {
 	cases := []gigReviewCase{
 		{"empty", "", 0, func(int) []bool { return nil }},
 		{"constants", "w2 = PO(0)\nw3 = PO(1)\n", 0, func(int) []bool { return []bool{false, true} }},
+		{"constant-wires", "w2 = PO(w0)\nw3 = PO(w1)\n", 0, func(int) []bool { return []bool{false, true} }},
 		{"dependent", "w2 = PI\nw3 = PI\nw4 = PI\nw5 = PI\nw6 = Lut4(w2,w3,w4,w5) [6996]\nw7 = Lut4(w6,1,-,-) [A]\nw8 = Lut4(w6,w2,w3,-) [80]\nw9 = PO(w7)\nw10 = PO(w8)\n", 4, func(in int) []bool {
 			parity := bits.OnesCount(uint(in))%2 != 0
 			return []bool{parity, parity && in&3 == 3}
@@ -198,6 +202,12 @@ func gigReviewCases() []gigReviewCase {
 			return []bool{b(0), b(1), b(2), b(4), b(5), b(3), parity, b(5), true, b(3)}
 		}},
 	}
+	cases = append(cases, gigReviewCase{
+		name:   "scratch-LUT6-LUT4-LUT6-LUT4",
+		text:   "w2 = PI\nw3 = PI\nw4 = PI\nw5 = PI\nw6 = PI\nw7 = PI\nw8 = Lut6(w2,w3,w4,w5,w6,w7) [8000000000000000]\nw9 = Lut4(w8,w2,-,-) [8000]\nw10 = Lut6(w9,w3,w4,w5,w6,w7) [FFFFFFFFFFFFFFFF]\nw11 = Lut4(w10,w8,-,-) [6666]\nw12 = PO(w8)\nw13 = PO(w9)\nw14 = PO(w10)\nw15 = PO(w11)\n",
+		inputs: 6, want: func(in int) []bool { return []bool{in == 63, false, true, in != 63} },
+	})
+
 	for selections := 0; selections < 4; selections++ {
 		var text strings.Builder
 		text.WriteString("w2 = PI\nw3 = PI\nw4 = Del(w2,w3) [7]\n")
@@ -251,7 +261,8 @@ func TestGigNativeParserConstructionAndTruth(t *testing.T) {
 	}
 	normalized := 0
 	clock := regexp.MustCompile(`Time =([ ]*[0-9]+\.[0-9]{2}) sec`)
-	for _, tc := range gigReviewCases() {
+	cases := gigReviewCases()
+	for _, tc := range cases {
 		sourceText := tc.text
 		// Existing Go LUT4 construction masks to16 bits. C's constructor
 		// asserts for inconsistent wider tables, so compare those extensions
@@ -319,5 +330,5 @@ func TestGigNativeParserConstructionAndTruth(t *testing.T) {
 		Gia_ManStop(p)
 		Gia_ManStop(q)
 	}
-	t.Logf("compared %d cases, including %d explicitly normalized wide-LUT4 inputs", len(gigReviewCases()), normalized)
+	t.Logf("compared %d cases, including %d explicitly normalized wide-LUT4 inputs", len(cases), normalized)
 }

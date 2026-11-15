@@ -8841,3 +8841,18 @@ still dispatch through the wrapper. All other source assertions stay active.
 
 Remaining parser/ownership/compactness checks and full integration are pending.
 Save a coherent red GIA checkpoint; original completion remains2/131.
+
+### GIG complete focused coverage and storage checkpoint
+
+All expanded focused tests pass without skips in9.189s; bool/kit passes0.326s.
+Native coverage now includes1,162 cases, exhaustive one-digit truths, constant
+wire references and alternating LUT widths/missing-pin scratch reuse. New
+validation and lifetime tests cover malformed records, sparse IDs, whitespace,
+read errors, immutable parsed state and independent constructed managers.
+
+Compact enum descriptors shrink64 to48bytes; the constructor stores only kind
+metadata and reuses source-shaped pin/cover scratch. At65,536records measured
+construction allocation falls23,975,088 to4,214,296B/op; parsing falls27,210,922
+to23,009,248B/op. Small parsing is slightly slower; see REVIEW_gig_reader.md for
+full evidence and explicit native-input normalization. Save this coherent red
+checkpoint before frozen full-module race/vet. GIA and2/131 audit remain open.

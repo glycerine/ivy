@@ -11,10 +11,37 @@ import (
 	"github.com/glycerine/abcgo/misc/util"
 )
 
+// The compact tags retain the original GLS_* order used by C reports.
+type gigKind uint8
+
+const (
+	gigZero gigKind = iota
+	gigOne
+	gigPI
+	gigPO
+	gigBar
+	gigSeq
+	gigSel
+	gigLut4
+	gigLut6
+	gigBox
+	gigDel
+)
+
+var gigKindNames = [...]string{"0", "1", "PI", "PO", "Bar", "Seq", "Sel", "Lut4", "Lut6", "Box", "Del"}
+var gigKinds = map[string]gigKind{"PI": gigPI, "PO": gigPO, "Bar": gigBar, "Seq": gigSeq, "Sel": gigSel, "Lut4": gigLut4, "Lut6": gigLut6, "Box": gigBox, "Del": gigDel}
+
+func (kind gigKind) String() string {
+	if int(kind) < len(gigKindNames) {
+		return gigKindNames[kind]
+	}
+	return fmt.Sprintf("gigKind(%d)", kind)
+}
+
 // gigNode represents one record in the Gate-Inverter Graph text format.
 type gigNode struct {
 	id    int32
-	kind  string
+	kind  gigKind
 	args  []int32
 	truth uint64
 	delay int32
@@ -66,11 +93,11 @@ func gigParse(path string) ([]gigNode, error) {
 		}
 		seen[id] = true
 		rhs = strings.TrimSpace(rhs)
-		kind := rhs
+		kindName := rhs
 		argsText := ""
 		suffix := ""
 		if pos := strings.IndexByte(rhs, '('); pos >= 0 {
-			kind = strings.TrimSpace(rhs[:pos])
+			kindName = strings.TrimSpace(rhs[:pos])
 			end := strings.IndexByte(rhs[pos+1:], ')')
 			if end < 0 {
 				return nil, fmt.Errorf("line %d: missing )", line)
@@ -78,6 +105,10 @@ func gigParse(path string) ([]gigNode, error) {
 			end += pos + 1
 			argsText = rhs[pos+1 : end]
 			suffix = strings.TrimSpace(rhs[end+1:])
+		}
+		kind, ok := gigKinds[kindName]
+		if !ok {
+			return nil, fmt.Errorf("line %d: unknown gate type %q", line, kindName)
 		}
 		node := gigNode{id: id, kind: kind}
 		if argsText != "" {
@@ -90,17 +121,17 @@ func gigParse(path string) ([]gigNode, error) {
 			}
 		}
 		switch kind {
-		case "PI":
+		case gigPI:
 			if len(node.args) != 0 {
 				return nil, fmt.Errorf("line %d: invalid PI", line)
 			}
-		case "PO", "Bar", "Seq", "Sel":
+		case gigPO, gigBar, gigSeq, gigSel:
 			if len(node.args) != 1 {
 				return nil, fmt.Errorf("line %d: expected one fanin", line)
 			}
-		case "Lut4", "Lut6":
+		case gigLut4, gigLut6:
 			count := 4
-			if kind == "Lut6" {
+			if kind == gigLut6 {
 				count = 6
 			}
 			if len(node.args) != count {
@@ -120,11 +151,11 @@ func gigParse(path string) ([]gigNode, error) {
 			var truth [1]uint64
 			util.Abc_TtReadHex(truth[:], hex)
 			node.truth = truth[0]
-		case "Box":
+		case gigBox:
 			if len(node.args) < 4 || len(node.args) > 5 {
 				return nil, fmt.Errorf("line %d: invalid box", line)
 			}
-		case "Del":
+		case gigDel:
 			if len(node.args) == 0 {
 				return nil, fmt.Errorf("line %d: empty delay", line)
 			}
@@ -151,34 +182,34 @@ func gigConstruct(nodes []gigNode, name string) (*Gia_Man_t, error) {
 	p := Gia_ManStart(int32(len(nodes) + 2))
 	p.pName, p.PSpec = name, name
 	mapped := map[int32]int32{0: 0, 1: 1}
-	byID := map[int32]gigNode{}
+	kinds := make(map[int32]gigKind, len(nodes))
 	outputs := map[int32][]int32{}
 	for _, n := range nodes {
-		byID[n.id] = n
+		kinds[n.id] = n.kind
 	}
 	for _, n := range nodes {
-		if n.kind == "PI" {
+		if n.kind == gigPI {
 			mapped[n.id] = Gia_ManAppendCi(p)
 		}
 	}
 	for _, n := range nodes {
-		if n.kind == "Box" {
+		if n.kind == gigBox {
 			mapped[n.id] = Gia_ManAppendCi(p)
 		}
-		if n.kind == "Sel" {
-			parent, ok := byID[n.args[0]]
+		if n.kind == gigSel {
+			parentKind, ok := kinds[n.args[0]]
 			if !ok {
 				return nil, fmt.Errorf("undefined select parent %d", n.args[0])
 			}
-			if parent.kind == "Del" {
-				outputs[parent.id] = append(outputs[parent.id], n.id)
-			} else if parent.kind != "Bar" {
-				return nil, fmt.Errorf("select %d has invalid parent %d of type %s", n.id, parent.id, parent.kind)
+			if parentKind == gigDel {
+				outputs[n.args[0]] = append(outputs[n.args[0]], n.id)
+			} else if parentKind != gigBar {
+				return nil, fmt.Errorf("select %d has invalid parent %d of type %s", n.id, n.args[0], parentKind)
 			}
 		}
 	}
 	for _, n := range nodes {
-		if n.kind == "Del" {
+		if n.kind == gigDel {
 			ids := outputs[n.id]
 			if len(ids) == 0 {
 				mapped[n.id] = Gia_ManAppendCi(p)
@@ -196,11 +227,14 @@ func gigConstruct(nodes []gigNode, name string) (*Gia_Man_t, error) {
 		}
 		return v, nil
 	}
+	var memory []uint32
+	var pins [6]int32
 	for _, n := range nodes {
 		switch n.kind {
-		case "Lut4", "Lut6":
-			leaves := make([]int32, len(n.args))
+		case gigLut4, gigLut6:
+			leaves := pins[:len(n.args)]
 			for i, id := range n.args {
+				leaves[i] = 0
 				if id < 0 {
 					continue
 				}
@@ -210,20 +244,19 @@ func gigConstruct(nodes []gigNode, name string) (*Gia_Man_t, error) {
 				}
 				leaves[i] = v
 			}
-			truth := []uint32{uint32(n.truth), uint32(n.truth >> 32)}
-			if n.kind == "Lut4" {
+			truth := [2]uint32{uint32(n.truth), uint32(n.truth >> 32)}
+			if n.kind == gigLut4 {
 				truth[0] = uint32(n.truth&0xffff) * 0x10001
 			}
-			var memory []uint32
-			mapped[n.id] = kit.Kit_TruthToGia(p, truth, int32(len(leaves)), &memory, leaves, 0)
-		case "Bar":
+			mapped[n.id] = kit.Kit_TruthToGia(p, truth[:], int32(len(leaves)), &memory, leaves, 0)
+		case gigBar:
 			v, e := lookup(n.args[0])
 			if e != nil {
 				return nil, e
 			}
 			mapped[n.id] = v
-		case "Sel":
-			if byID[n.args[0]].kind == "Bar" {
+		case gigSel:
+			if kinds[n.args[0]] == gigBar {
 				v, e := lookup(n.args[0])
 				if e != nil {
 					return nil, e
@@ -232,13 +265,13 @@ func gigConstruct(nodes []gigNode, name string) (*Gia_Man_t, error) {
 			}
 		}
 	}
-	for _, kind := range []string{"Del", "PO", "Seq"} {
+	for _, kind := range []gigKind{gigDel, gigPO, gigSeq} {
 		for _, n := range nodes {
 			if n.kind != kind {
 				continue
 			}
 			args := n.args
-			if kind != "Del" {
+			if kind != gigDel {
 				args = args[:1]
 			}
 			for _, id := range args {
@@ -258,11 +291,11 @@ func Gia_ManReadGig(path string) *Gia_Man_t {
 	started := util.Abc_Clock()
 	nodes, err := gigParse(path)
 	if err == nil {
-		counts := make(map[string]int)
+		var counts [len(gigKindNames)]int
 		for _, node := range nodes {
 			counts[node.kind]++
 		}
-		for _, kind := range []string{"PI", "PO", "Bar", "Seq", "Sel", "Lut4", "Lut6", "Box", "Del"} {
+		for kind := gigPI; kind <= gigDel; kind++ {
 			if count := counts[kind]; count != 0 {
 				fmt.Printf("%s=%d  ", kind, count)
 			}

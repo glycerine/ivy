@@ -14,14 +14,14 @@ module race/vet and closed at555ed782b.
    unused selection parents, and missing native success reports before fixes.
    Reuse util.Abc_TtReadHex, reject non-Bar/Del selection parents, and restore
    source count order plus the nine-wide elapsed-time field.
-3. [ ] Compare parsed records, category orders, complete constructed graph,
+3. [x] Compare parsed records, category orders, complete constructed graph,
    Boolean truth and public reader reports against actual C. Cover all record
    types, constants/missing pins, dependent LUTs, and shortened/full hex forms.
-4. [ ] Preserve original C LUT6 assertion failure, and test six-input behavior
+4. [x] Preserve original C LUT6 assertion failure, and test six-input behavior
    only with an explicit narrowly checked correction of its k==4 typo.
-5. [ ] Expand validation, sparse-ID/whitespace compatibility, resources and
+5. [x] Expand validation, sparse-ID/whitespace compatibility, resources and
    metadata ownership checks. Distinguish original C defects/preconditions.
-6. [ ] Measure compactness and remove duplicated node descriptors/string
+6. [x] Measure compactness and remove duplicated node descriptors/string
    retention while preserving sparse IDs, source order and synthesis.
 7. [ ] Reconcile all seven routines, freeze code/tests/fixtures, run uncached
    full-module race and GIA vet, inspect terminal results and update progress.
@@ -125,3 +125,36 @@ hook; preprocessed output confirms system assert.h does not overwrite it.
 Logs: `/tmp/abcgo-gig-native-correct-assert.log` (5.212s),
 `/tmp/abcgo-gig-kit-unhashed-red.log`,
 `/tmp/abcgo-gig-constant-refs-red.log`.
+
+## Completed coverage and compactness checkpoint
+
+The expanded focused suite passes without skips in 9.189s, including existing
+Kit hashing/bridge tests, 1,162 native comparisons, malformed inputs, sparse
+IDs, whitespace compatibility, independent manager lifetimes and unchanged
+parsed records. The bool/kit dependency suite passes in 0.326s. Logs:
+`/tmp/abcgo-gig-final-complete-focused.log` and
+`/tmp/abcgo-gig-kit-dependency.log`.
+
+The final native matrix has 842 original-format cases and 320 explicitly
+normalized wide-LUT4 inputs. It now includes w0/w1 references and alternating
+LUT6/LUT4 construction with missing pins, checking scratch reset across widths.
+All sixteen one-digit truth tables are exhausted for both LUT kinds and each
+pin binding. Private allocation/count/parse/construct/stop and public reader
+paths are covered by canonical state, exact graph, truth and lifetime checks.
+
+Compact kind tags reduce each descriptor from 64 to 48 bytes. The construction
+index stores only kinds, retaining sparse IDs; pin and Kit-cover scratch are
+reused as in C, with missing pins explicitly cleared. Short local benchmarks:
+
+| Operation (65,536 records) | Before | After |
+| --- | --- | --- |
+| Parsing time | 64.274 ms | 53.123 ms |
+| Parsing B/op | 27,210,922 | 23,009,248 |
+| Construction time | 30.197 ms | 13.066 ms |
+| Construction B/op | 23,975,088 | 4,214,296 |
+
+The 64-record parse was slightly slower (49.125 to 51.768 us); this is a local
+allocation/throughput measurement, not a universal speed claim. Corrected
+benchmark logs: `/tmp/abcgo-gig-before-compact-bench.log` and
+`/tmp/abcgo-gig-after-compact-bench.log`. Full frozen integration remains pending;
+earlier pending notes above describe checkpoints, not missing focused coverage.

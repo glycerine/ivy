@@ -25,9 +25,9 @@ func BenchmarkGigParsing(b *testing.B) {
 			if err := os.WriteFile(path, []byte(gigReviewChain(n)), 0600); err != nil {
 				b.Fatal(err)
 			}
-			b.ReportMetric(float64(unsafe.Sizeof(gigNode{})), "B/node")
 			b.ReportAllocs()
 			b.ResetTimer()
+			b.ReportMetric(float64(unsafe.Sizeof(gigNode{})), "B/node")
 			for i := 0; i < b.N; i++ {
 				nodes, err := gigParse(path)
 				if err != nil || len(nodes) != n+2 {
