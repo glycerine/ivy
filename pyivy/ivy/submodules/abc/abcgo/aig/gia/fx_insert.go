@@ -1,9 +1,10 @@
 package gia
 
 import (
+	"strings"
+
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/opt/dau"
-	"strings"
 )
 
 // Gia_ManFxInsert rebuilds a network from extracted cube covers. Small
@@ -12,7 +13,9 @@ func Gia_ManFxInsert(p *Gia_Man_t, cubes *Vec_Wec_t, phases *Vec_Str_t) *Gia_Man
 	var first, count *Vec_Int_t
 	order := Gia_ManFxTopoOrder(cubes, Gia_ManCiNum(p), int32(Vec_StrSize(phases)), &first, &count)
 	if order == nil {
-		return Gia_ManDup(p)
+		result := Gia_ManDup(p)
+		giaCopyInterfaceMetadata(result, p)
+		return result
 	}
 	result := Gia_ManStart(p.nObjs)
 	result.pName, result.PSpec = p.pName, p.PSpec
@@ -113,7 +116,9 @@ func Gia_ManFxInsert(p *Gia_Man_t, cubes *Vec_Wec_t, phases *Vec_Str_t) *Gia_Man
 		Gia_ManAppendCo(result, lit^int32(obj.fCompl0))
 	}
 	Gia_ManSetRegNum(result, Gia_ManRegNum(p))
-	return Gia_ManCleanup(result)
+	result = Gia_ManCleanup(result)
+	giaCopyInterfaceMetadata(result, p)
+	return result
 }
 
 // giaFxDsdToGia imports the decomposer's AND graph into the destination's

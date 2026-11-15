@@ -7,8 +7,7 @@ import (
 )
 
 // Gia_ManPerformFx extracts shared divisors from a mapped network and rebuilds
-// its logic. The extractor currently recalculates its candidate catalog after
-// every step; its selection may differ from ABC's incremental priority queue.
+// its logic using the incremental fast-extract engine from abcFx.c.
 func Gia_ManPerformFx(p *Gia_Man_t, nNewNodesMax, litCountMax, reverse, verbose, veryVerbose int32) *Gia_Man_t {
 	if Gia_ManAndNum(p) == 0 {
 		result := Gia_ManDup(p)
@@ -24,12 +23,9 @@ func Gia_ManPerformFx(p *Gia_Man_t, nNewNodesMax, litCountMax, reverse, verbose,
 	for i := range cubes {
 		cubes[i] = append([]int32(nil), Vec_IntArray(Vec_WecEntry(input, i))...)
 	}
-	output, count, err := fx.Extract(cubes, int32(Vec_StrSize(phases)), fx.Options{MaxNewNodes: nNewNodesMax, LiteralLimit: litCountMax})
+	output, _, err := fx.Extract(cubes, int32(Vec_StrSize(phases)), fx.Options{MaxNewNodes: nNewNodesMax, LiteralLimit: litCountMax, Verbose: verbose != 0, VeryVerbose: veryVerbose != 0})
 	if err != nil {
 		panic(fmt.Sprintf("gia: fast extraction: %v", err))
-	}
-	if verbose != 0 || veryVerbose != 0 {
-		fmt.Printf("Fast extraction introduced %d nodes.\n", count)
 	}
 	converted := Vec_WecAlloc(len(output))
 	for _, cube := range output {

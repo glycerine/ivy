@@ -8560,3 +8560,57 @@ The real extraction engine is src/base/abci/abcFx.c, not src/opt/fx. Go opt/fx
 explicitly documents a recomputed catalog substitute with different selection
 semantics. Native divisor/cover checks and a faithful engine reconciliation are
 required before this family can be closed. No parallel agents or branches.
+
+### Incremental fast-extraction dependency restored
+
+The actual-C selection test fails on seed5/limit3: the substitute creates two
+new divisors and different cubes; C creates one. Add a minimal opt/fx red
+regression before replacing the driver. Port abcFx.c's stable mutable cube
+matrix, literal incidence lists, insertion-ordered divisor IDs, levels,
+float32 weights and indexed priority queue with the original subtract/update/
+add sequence. Save the coherent dependency checkpoint d1f8c78ec separately
+from GIA. No branches/agents.
+
+All7,680 generated extraction records match actual C across three support
+modes,64 seeds,five selection limits,four literal limits,both canonical modes.
+All491,520 independent six-input assignment cases pass. Native test handle
+72545 terminates exit0 (/tmp/abcgo-fx-extract-wide.log,3.674s). opt/fx's1,000
+random-cover cases pass; focused race handle85502 terminates exit0,1.473s,
+and vet is empty. Original C aborts on a captured general-containment input;
+new red tests precede broad containment recognition, stale contained-row guard
+and restoration of the existing Go input-normalization compatibility step.
+This step does not replace the incremental engine. Irredundant inputs are
+unchanged. Full integration remains pending.
+
+A new GIA interface regression fails before repair on both unchanged and
+rebuilt FxInsert paths: missing names and, after rebuilding, missing properties
+and reset metadata. Copy valid interface metadata into owned storage on both
+paths; both cases now pass independent logic and ownership checks.
+REVIEW_fast_extraction.md records the plan, evidence, source inventory and
+remaining native/report/compactness/integration work. Package completion2/131;
+GIA and this family remain open.
+
+### Fast-extraction reports restored
+
+A new actual-C driver report regression fails before repair (C24 rows versus
+Go11, /tmp/abcgo-fx-reports-red.log). Port the source divisor-array, selected-
+divisor and queue statistics reports, preserve float32 weights and source
+counter update sites, and pass the two independent verbosity flags into the
+engine. The four-mode driver test now matches C exactly after normalizing only
+clock values; timing field width remains9 (/tmp/abcgo-fx-reports-first.log,
+1.882s, exact handle93118 terminal0). opt/fx focused tests remain green.
+Save this coherent dependency change separately as572937416;
+GIA caller/native tests and final integration remain pending.
+
+### Mapped extraction native matrix and original duplication fault
+
+The new mapped retrieval/driver matrix initially fails on a deliberately
+reordered interface with no extraction: C's Gia_ManDup copies ports in physical
+order without restoring logical vectors. This is an original-C defect already
+corrected by Go's reviewed Gia_ManDup, not a reason to regress Go. Retain an
+unmodified native execution which characterizes the concrete wrong truth mask
+8080 versus logical c000. An explicitly selected --correct-ports fixture mode
+calls the existing original remap helpers only on the duplicate return path,
+identified by CO Value scratch; rebuilt results are untouched. Compare this
+mode to Go while independently checking Go's source/result truth for every
+assignment. Full mapped matrix rerun remains pending. No source files changed.
