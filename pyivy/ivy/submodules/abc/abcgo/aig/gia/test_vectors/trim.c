@@ -3,6 +3,7 @@
 extern Gia_Man_t *Gia_ManDupTrimmed(Gia_Man_t *,int,int,int,int);
 extern Gia_Man_t *Gia_ManDupTrimmed2(Gia_Man_t *);
 extern Vec_Int_t *Gia_ManDupTrimmedNonZero(Gia_Man_t *);
+static void workingDual(void);
 static Gia_Man_t *graph(int signs)
 {
     Gia_Man_t *g=Gia_ManStart(1);int inputs[6],i,a,b,c,r0,r1,x,y,w;
@@ -18,6 +19,7 @@ static Gia_Man_t *graph(int signs)
 int main(int argc,char **argv)
 {
     int signs,mode,i,mask,packed,*values;Gia_Obj_t *obj;
+    if(argc>1 && !strcmp(argv[1],"dual")){workingDual();return 0;}
     if(argc>1 && !strcmp(argv[1],"mismatch")) {
         Gia_Man_t *p=Gia_ManStart(1),*out;Vec_Int_t *nonzero;
         Gia_ManAppendCi(p);Gia_ManAppendCo(p,0);Gia_ManAppendCo(p,1);
@@ -42,4 +44,32 @@ int main(int argc,char **argv)
         puts("");ABC_FREE(values);Gia_ManStop(out);Gia_ManStop(g);
     }
     return 0;
+}
+
+static void workingDual(void)
+{
+    int signs,constant,trimCis,i,mask,packed,*values;
+    Gia_Obj_t *obj;
+    for(signs=0;signs<4;signs++)for(constant=0;constant<2;constant++)for(trimCis=0;trimCis<2;trimCis++) {
+        Gia_Man_t *src=Gia_ManStart(1),*out;Vec_Int_t *kept;
+        int a=Gia_ManAppendCi(src),b=Gia_ManAppendCi(src),r,x,twin;
+        Gia_ManAppendCi(src);r=Gia_ManAppendCi(src);
+        x=Gia_ManAppendAnd(src,a,b);twin=Gia_ManAppendAnd(src,b,a);
+        Gia_ManAppendCo(src,a);Gia_ManAppendCo(src,a);Gia_ManAppendCo(src,r^(signs&1));Gia_ManAppendCo(src,a^((signs>>1)&1));
+        Gia_ManAppendCo(src,x);Gia_ManAppendCo(src,twin);Gia_ManAppendCo(src,r);Gia_ManAppendCo(src,0);
+        Gia_ManAppendCo(src,constant?0:a);Gia_ManSetRegNum(src,1);
+        kept=Gia_ManDupTrimmedNonZero(src);out=Gia_ManDupTrimmed(src,trimCis,1,1,-1);
+        printf("%d %d %d pairs",signs,constant,trimCis);Vec_IntForEachEntry(kept,packed,i)printf(" %d",packed);
+        printf(" result %d %d %d %d truth",out->nObjs,Gia_ManCiNum(out),Gia_ManCoNum(out),out->nRegs);
+        values=ABC_CALLOC(int,out->nObjs);
+        for(mask=0;mask<(1<<Gia_ManCiNum(out));mask++) {
+            Gia_ManForEachCi(out,obj,i)values[Gia_ObjId(out,obj)]=(mask>>i)&1;
+            Gia_ManForEachAnd(out,obj,i)
+                values[i]=(values[Gia_ObjFaninId0(obj,i)]^Gia_ObjFaninC0(obj))&(values[Gia_ObjFaninId1(obj,i)]^Gia_ObjFaninC1(obj));
+            packed=0;
+            Gia_ManForEachCo(out,obj,i)packed|=(values[Gia_ObjFaninId0p(out,obj)]^Gia_ObjFaninC0(obj))<<i;
+            printf(" %d",packed);
+        }
+        puts("");ABC_FREE(values);Vec_IntFree(kept);Gia_ManStop(out);Gia_ManStop(src);
+    }
 }

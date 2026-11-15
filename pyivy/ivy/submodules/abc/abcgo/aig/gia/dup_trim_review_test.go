@@ -306,6 +306,13 @@ func TestTrimmingMatchesOriginalC(t *testing.T) {
 			t.Fatalf("case%d\nGo %s\nC %s", i, got[i], want[i])
 		}
 	}
+	dual, err := exec.Command(exe, "dual").CombinedOutput()
+	if err != nil {
+		t.Fatalf("C working dual trim: %v: %s", err, dual)
+	}
+	if expected := trimReviewWorkingDualRecords(t); expected != string(dual) {
+		t.Fatalf("working dual trim:\nGo %s\nC %s", expected, dual)
+	}
 	witness, err := exec.Command(exe, "mismatch").CombinedOutput()
 	if err != nil || string(witness) != "0 0 0\n" {
 		t.Fatalf("inherited C constant-mismatch witness: %v: %s", err, witness)
@@ -522,4 +529,68 @@ func TestCiMapExplicitOutputsKeepDerivedRoles(t *testing.T) {
 	if out.nConstrs != 0 || out.aigerBadOutputs != 0 {
 		t.Fatal("explicit outputs inherited original role labels")
 	}
+}
+
+func trimReviewWorkingDualRecords(t *testing.T) string {
+	t.Helper()
+	var records strings.Builder
+	for signs := 0; signs < 4; signs++ {
+		for constant := 0; constant < 2; constant++ {
+			for trimCis := int32(0); trimCis < 2; trimCis++ {
+				src := Gia_ManStart(1)
+				a, b := Gia_ManAppendCi(src), Gia_ManAppendCi(src)
+				Gia_ManAppendCi(src)
+				r := Gia_ManAppendCi(src)
+				p, q := int32(signs&1), int32((signs>>1)&1)
+				x, twin := Gia_ManAppendAnd(src, a, b), Gia_ManAppendAnd(src, b, a)
+				for _, lit := range []int32{a, a, r ^ p, a ^ q, x, twin, r, 0} {
+					Gia_ManAppendCo(src, lit)
+				}
+				next := a
+				if constant != 0 {
+					next = 0
+				}
+				Gia_ManAppendCo(src, next)
+				Gia_ManSetRegNum(src, 1)
+				kept := Gia_ManDupTrimmedNonZero(src)
+				out := Gia_ManDupTrimmed(src, trimCis, 1, 1, -1)
+				expectedPairs := []int32{1}
+				if constant == 0 {
+					expectedPairs = append(expectedPairs, 3)
+				}
+				if !slices.Equal(Vec_IntArray(kept), expectedPairs) || out.nRegs != int32(1-constant) || Gia_ManPiNum(out) != 3-trimCis {
+					t.Fatal("working dual selection/state")
+				}
+				fmt.Fprintf(&records, "%d %d %d pairs", signs, constant, trimCis)
+				for _, id := range Vec_IntArray(kept) {
+					fmt.Fprintf(&records, " %d", id)
+				}
+				fmt.Fprintf(&records, " result %d %d %d %d truth", out.nObjs, Gia_ManCiNum(out), Gia_ManCoNum(out), out.nRegs)
+				for mask := 0; mask < 1<<uint(Gia_ManCiNum(out)); mask++ {
+					inputs := make([]bool, Gia_ManCiNum(out))
+					for i := range inputs {
+						inputs[i] = mask&(1<<uint(i)) != 0
+					}
+					a, r := inputs[0], false
+					if out.nRegs > 0 {
+						r = inputs[len(inputs)-1]
+					}
+					want := []bool{r != (p != 0), a != (q != 0)}
+					if constant == 0 {
+						want = append(want, r, false, a)
+					}
+					checkQuantificationOutputs(t, out, inputs, want)
+					packed := 0
+					for i, v := range want {
+						if v {
+							packed |= 1 << uint(i)
+						}
+					}
+					fmt.Fprintf(&records, " %d", packed)
+				}
+				records.WriteByte('\n')
+			}
+		}
+	}
+	return records.String()
 }

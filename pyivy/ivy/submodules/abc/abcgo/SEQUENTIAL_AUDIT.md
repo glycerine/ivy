@@ -4819,3 +4819,34 @@ trimming `(0,1)`, confirming the inherited constant-mismatch defect. This
 initial native run passes (`/tmp/abcgo-trim-native.log`, 1.893s). Additional
 working-domain native dual comparison and the full integration gate remain
 pending. Original completion stays 2/131; GIA remains active.
+
+The final focused trim suite passes in 2.226s
+(`/tmp/abcgo-trim-final-focused.log`). The native fixture additionally covers
+16 working-domain dual cases/144 input-state rows, including structural equal
+pairs, dynamic/constant state, both PI-trim settings and mixed phases. These
+compare exact nonzero-pair indices, swept structure, surviving register count
+and output/next-state truth. They contain no always-unequal constant pair;
+that inherited C defect remains an explicit separate witness. Total native
+coverage here is 848 cases/38,032 rows. GIA vet passes
+(`/tmp/abcgo-trim-review-vet.log`); full uncached module race tests are running.
+
+Follow-up review focus: check the distinct Go bad-output partition in other
+full-output copy paths. Earlier duplication reviews established constraint
+preservation but did not, by themselves, prove preservation of that separate
+partition. This turn repairs the unchanged-output CI-map path exercised by
+trimming's sweep; it does not claim all other duplication/metadata paths have
+been reconciled. Package completion remains 2/131 and GIA stays in progress.
+
+Final trimming integration is green: all 130 tested module packages pass
+the uncached race run; three command packages have no tests and no extra
+failure/race diagnostic lines appear (`/tmp/abcgo-trim-module-race.log`). GIA
+passes in 187.584s, ABCI in 29.789s, ABS in 17.895s and BMC in 23.829s. GIA
+vet passes (`/tmp/abcgo-trim-review-vet.log`). Production code is unchanged
+since 0eac0f4ab; expanded coverage is saved in 3b81760e6 and the final working
+native-dual additions. This completes the four original functions in
+dup_trim.go and the exercised CI-map bad-output follow-up. The contracts
+checked are exact selected outputs/next state and surviving roles, with
+zero-reset reachability for swept state; deliberate output deletion is not
+claimed to preserve the original property set. Other GIA families, the
+bad-partition follow-up above and final inventory reconciliation remain
+open. Original completion stays 2/131; the sequential audit remains active.
