@@ -5,6 +5,7 @@
 static Gia_Man_t *make_graph(int typed,int signs,int reorder)
 {
     Gia_Man_t *p=Gia_ManStart(64);
+    if(typed==2) {Gia_ManAppendCo(p,0);Gia_ManAppendCo(p,1);return p;}
     int a=Gia_ManAppendCi(p),b=Gia_ManAppendCi(p),c,d,x,z,root,buf,tmp,i;
     Gia_Obj_t *obj;
     x=typed?Gia_ManAppendXor(p,a^(signs&1),b^((signs>>1)&1)):Gia_ManAppendAnd(p,a^(signs&1),b^((signs>>1)&1));

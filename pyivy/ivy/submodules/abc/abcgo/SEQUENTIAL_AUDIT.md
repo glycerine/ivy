@@ -8716,3 +8716,31 @@ dump2.028ms,413,957B,48allocs. The reader retains binary rows unnecessarily for
 parameter detection; PLA output buffers the whole file before writing. Further
 validation/compatibility tests precede storage simplification. Family/GIA remain
 open and completion stays2/131.
+
+### Dataset streaming and compatibility coverage checkpoint
+
+Replace parameter-only whole-dataset materialization with a shared scanner
+that counts rows/width using one input buffer. File packing validates before
+mutating caller buffers, then streams through a reusable decoded row; keep the
+private materializing helper only for callers explicitly requesting rows.
+Preserve OR-ing input bits and appending labels. Stream PLA directly through a
+buffered file, retaining close-error handling; binary headers/payload share a
+single allocation. Do not change source binary64x simulation/RNG consumption.
+
+Native reader/error/append checks remain green after streaming
+(/tmp/abcgo-gen-stream-reader-first.log,9.572s, exact handle86088 terminal0).
+Native dumps and existing format checks remain green
+(/tmp/abcgo-gen-stream-dumps-first.log,2.305s, handle50752 terminal0).
+The baseline/after benchmark logs show65,536-row parameter reading40.651ms,
+19,069,152B,327,709allocs versus4.943ms,4,280B,4allocs; large PLA413,957B
+versus32,216B. Tiny PLA is slightly slower and has three additional allocations;
+these are short local runs, not general speed guarantees.
+
+Add native constant/no-CI dumps, safe Go empty dumps, missing-parent/negative
+count failures, label-only reading, unchanged simulation on input-count
+rejection, typed classifier/escaped JSON, repeated word widths and invalid
+operation guards. A new typed statistics test initially assumed XOR depth1;
+source gia.h explicitly sets XOR/MUX cost2. Correct the test expectation, not
+the already-correct implementation. Final combined focused rerun is pending;
+freeze and run full module integration only after its terminal result. No full
+family/GIA closure yet; original completion2/131.

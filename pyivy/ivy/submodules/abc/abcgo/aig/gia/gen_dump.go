@@ -2,7 +2,6 @@ package gia
 
 import (
 	"bufio"
-	"bytes"
 	"encoding/binary"
 	"fmt"
 	"os"
@@ -48,13 +47,13 @@ func Gia_ManDumpFiles(p *Gia_Man_t, train, test, seed int32, name string) {
 			if kind == 1 {
 				width = Gia_ManCoNum(p)
 			}
-			var buf bytes.Buffer
-			for _, value := range []int32{2, patterns, width} {
-				if err := binary.Write(&buf, binary.NativeEndian, value); err != nil {
-					panic(err)
-				}
-			}
-			bits := make([]byte, int(patterns)*int(width)/8)
+			// Keep header and payload in one allocation; source stores native
+			// int32 header fields followed by row-major packed bits.
+			data := make([]byte, 12+int(patterns)*int(width)/8)
+			binary.NativeEndian.PutUint32(data[0:4], 2)
+			binary.NativeEndian.PutUint32(data[4:8], uint32(patterns))
+			binary.NativeEndian.PutUint32(data[8:12], uint32(width))
+			bits := data[12:]
 			var bit int
 			for k := int32(0); k < patterns; k++ {
 				for i := int32(0); i < width; i++ {
@@ -68,8 +67,7 @@ func Gia_ManDumpFiles(p *Gia_Man_t, train, test, seed int32, name string) {
 					bit++
 				}
 			}
-			buf.Write(bits)
-			giaWriteDump(files[2*partition+kind], buf.Bytes())
+			giaWriteDump(files[2*partition+kind], data)
 		}
 	}
 	giaWriteDump(base+".flist", []byte(strings.Join(files, "\n")+"\n"))
@@ -87,24 +85,38 @@ func Gia_ManDumpPlaFiles(p *Gia_Man_t, train, valid, seed int32, name string) {
 	giaSeedSimulation(seed)
 	for i, units := range []int32{train, valid, valid} {
 		Gia_ManSimulateWords(p, units)
-		var buf bytes.Buffer
-		writer := bufio.NewWriter(&buf)
-		fmt.Fprintf(writer, ".i %d\n.o %d\n.p %d\n.type fr\n", Gia_ManCiNum(p), Gia_ManCoNum(p), units*64)
-		for k := int32(0); k < units*64; k++ {
-			for n := int32(0); n < Gia_ManCiNum(p); n++ {
-				writer.WriteByte('0' + giaSimulationBit(p, Gia_ManCi(p, n), k))
-			}
-			writer.WriteByte(' ')
-			for n := int32(0); n < Gia_ManCoNum(p); n++ {
-				writer.WriteByte('0' + giaSimulationBit(p, Gia_ManCo(p, n), k))
-			}
-			writer.WriteByte('\n')
+		path := fmt.Sprintf("%s.%s.pla", base, []string{"train", "valid", "test"}[i])
+		if err := giaWritePlaPartition(p, path, units); err != nil {
+			panic(fmt.Sprintf("gia: write %q: %v", path, err))
 		}
-		fmt.Fprintln(writer, ".e")
-		if err := writer.Flush(); err != nil {
-			panic(err)
-		}
-		giaWriteDump(base+[]string{".train.pla", ".valid.pla", ".test.pla"}[i], buf.Bytes())
 	}
 	fmt.Printf("Finished dumping files: %q.\n", base+".{train, valid, test}.pla")
+}
+
+// Stream each partition through one buffered file rather than retaining a
+// second copy of all rows. Explicit close preserves WriteFile's close errors.
+func giaWritePlaPartition(p *Gia_Man_t, path string, units int32) error {
+	file, err := os.Create(path)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+	writer := bufio.NewWriter(file)
+	fmt.Fprintf(writer, ".i %d\n.o %d\n.p %d\n.type fr\n", Gia_ManCiNum(p), Gia_ManCoNum(p), units*64)
+	for k := int32(0); k < units*64; k++ {
+		for n := int32(0); n < Gia_ManCiNum(p); n++ {
+			writer.WriteByte('0' + giaSimulationBit(p, Gia_ManCi(p, n), k))
+		}
+		writer.WriteByte(' ')
+		for n := int32(0); n < Gia_ManCoNum(p); n++ {
+			writer.WriteByte('0' + giaSimulationBit(p, Gia_ManCo(p, n), k))
+		}
+		writer.WriteByte('\n')
+	}
+	fmt.Fprintln(writer, ".e")
+
+	if err := writer.Flush(); err != nil {
+		return err
+	}
+	return file.Close()
 }

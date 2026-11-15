@@ -2,78 +2,103 @@ package gia
 
 import (
 	"bufio"
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"os"
-	"strings"
 )
 
-// giaReadPatterns reads binary input/output rows and ignores PLA directives.
-func giaReadPatterns(path string) ([][]byte, error) {
+// giaScanPatterns validates binary input/output rows while reusing one row
+// buffer. Parameter-only scans do not retain or decode the dataset. A visit
+// receives a temporary row view; callers retaining it must copy it.
+func giaScanPatterns(path string, visit func(int, []byte)) (width, count int, err error) {
 	f, err := os.Open(path)
 	if err != nil {
-		return nil, err
+		return 0, 0, err
 	}
 	defer f.Close()
-	var rows [][]byte
 	scan := bufio.NewScanner(f)
 	scan.Buffer(make([]byte, 4096), 16<<20)
-	width := -1
+	width = -1
+	var bits []byte
 	for scan.Scan() {
-		line := scan.Text()
-		if strings.ContainsRune(line, '.') {
+		line := scan.Bytes()
+		if bytes.IndexByte(line, '.') >= 0 {
 			continue
 		}
-		var bits []byte
-		for i := 0; i < len(line); i++ {
-			if line[i] == '0' || line[i] == '1' {
-				bits = append(bits, line[i]-'0')
+		columns := 0
+		bits = bits[:0]
+		for _, c := range line {
+			if c == '0' || c == '1' {
+				columns++
+				if visit != nil {
+					bits = append(bits, c-'0')
+				}
 			}
 		}
 		if width < 0 {
-			width = len(bits)
+			width = columns
 		}
-		if len(bits) != width {
-			return nil, fmt.Errorf("inconsistent row width %d, expected %d", len(bits), width)
+		if columns != width {
+			return 0, 0, fmt.Errorf("inconsistent row width %d, expected %d", columns, width)
 		}
-		rows = append(rows, bits)
+		if visit != nil {
+			visit(count, bits)
+		}
+		count++
 	}
-	if err := scan.Err(); err != nil {
+	if err = scan.Err(); err != nil {
+		return 0, 0, err
+	}
+	if count == 0 || width < 1 || count%64 != 0 {
+		return 0, 0, fmt.Errorf("expected nonempty rows in groups of 64 with one output")
+	}
+	return width, count, nil
+}
+
+// giaReadPatterns retains rows for callers that explicitly request them.
+func giaReadPatterns(path string) ([][]byte, error) {
+	var rows [][]byte
+	_, _, err := giaScanPatterns(path, func(_ int, row []byte) { rows = append(rows, append([]byte(nil), row...)) })
+	if err != nil {
 		return nil, err
-	}
-	if len(rows) == 0 || width < 1 || len(rows)%64 != 0 {
-		return nil, fmt.Errorf("expected nonempty rows in groups of 64 with one output")
 	}
 	return rows, nil
 }
 
 func Gia_ManSimParamRead(path string, nIns, nWords *int32) int32 {
-	rows, err := giaReadPatterns(path)
+	width, count, err := giaScanPatterns(path, nil)
 	if err != nil {
 		fmt.Printf("Cannot read simulation file %q: %v.\n", path, err)
 		return 0
 	}
-	*nIns, *nWords = int32(len(rows[0])-1), int32(len(rows)/64)
+	*nIns, *nWords = int32(width-1), int32(count/64)
 	return 1
 }
 
 func Gia_ManSimFileRead(path string, nIns, nWords int32, sims *Vec_Wrd_t, values *Vec_Int_t) {
-	rows, err := giaReadPatterns(path)
+	// Validate before changing caller storage, preserving the existing Go error
+	// contract without retaining every decoded byte row. The second pass packs
+	// directly into the destination, as in the C reader.
+	width, count, err := giaScanPatterns(path, nil)
 	if err != nil {
 		panic(fmt.Sprintf("gia: cannot read simulation file: %v", err))
 	}
-	if nIns < 0 || nWords < 0 || len(rows) != int(nWords)*64 || len(rows[0]) != int(nIns)+1 || Vec_WrdSize(sims) != int(nIns*nWords) {
+	if nIns < 0 || nWords < 0 || count != int(nWords)*64 || width != int(nIns)+1 || Vec_WrdSize(sims) != int(nIns*nWords) {
 		panic("gia: simulation file dimensions do not match")
 	}
-	for pattern, row := range rows {
+	_, _, err = giaScanPatterns(path, func(pattern int, row []byte) {
 		for i := int32(0); i < nIns; i++ {
 			if row[i] != 0 {
 				Vec_WrdArray(sims)[int(i*nWords)+pattern/64] |= uint64(1) << uint(pattern%64)
 			}
 		}
 		Vec_IntPush(values, int32(row[nIns]))
+	})
+	if err != nil {
+		panic(fmt.Sprintf("gia: cannot read simulation file: %v", err))
 	}
-	fmt.Printf("Finished reading %d simulation patterns for %d inputs. Probability of 1 at the output is %6.2f %%.\n", len(rows), nIns, 100*float64(Vec_IntSum(values))/float64(len(rows)))
+	fmt.Printf("Finished reading %d simulation patterns for %d inputs. Probability of 1 at the output is %6.2f %%.\n", count, nIns, 100*float64(Vec_IntSum(values))/float64(count))
 }
 
 func Gia_ManSimLogStats(p *Gia_Man_t, path string, total, correct, guess int32) {

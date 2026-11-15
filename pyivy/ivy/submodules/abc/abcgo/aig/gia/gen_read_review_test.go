@@ -202,3 +202,55 @@ func TestGenNativeFileReaderAndClassifier(t *testing.T) {
 		}
 	}
 }
+
+func TestGenTypedClassifierAndEscapedJsonName(t *testing.T) {
+	for kind := 0; kind < 3; kind++ {
+		p := Gia_ManStart(32)
+		p.EnableMuxes()
+		a, b, c := Gia_ManAppendCi(p), Gia_ManAppendCi(p), Gia_ManAppendCi(p)
+		var root int32
+		switch kind {
+		case 0:
+			root = Gia_ManAppendAnd(p, a, b)
+		case 1:
+			root = Gia_ManAppendXorReal(p, a, b)
+		case 2:
+			root = Gia_ManAppendMuxReal(p, c, a, b)
+		}
+		Gia_ManAppendCo(p, root)
+		Gia_ManAppendCo(p, 0)
+		name := "quoted \"network\"\n"
+		p.SetIdentity(name, "")
+		data, labels := genReviewReaderData(kind, 0, false, 1, "\n")
+		dir := t.TempDir()
+		file, stats := filepath.Join(dir, "patterns.pla"), filepath.Join(dir, "stats.json")
+		if err := os.WriteFile(file, []byte(data), 0600); err != nil {
+			t.Fatal(err)
+		}
+		report := hashReviewStdout(t, func() { Gia_ManTestOneFile(p, file, stats) })
+		if !strings.Contains(report, "Total =     64.  Errors =      6.  Correct =     58.") {
+			t.Fatalf("kind%d report%s", kind, report)
+		}
+		raw, err := os.ReadFile(stats)
+		if err != nil {
+			t.Fatal(err)
+		}
+		var got map[string]any
+		if err = json.Unmarshal(raw, &got); err != nil {
+			t.Fatal(err)
+		}
+		ones := 0
+		for _, v := range labels {
+			ones += int(v)
+		}
+		level := float64(1)
+		if kind != 0 {
+			level = 2
+		} // ABC counts XOR/MUX depth as two AND levels.
+		want := map[string]any{"name": name, "input": float64(3), "output": float64(2), "and": float64(1), "level": level, "total": float64(64), "correct": float64(58), "guess": float64(max(ones, 64-ones))}
+		if !reflect.DeepEqual(got, want) {
+			t.Fatalf("kind%d JSON%v want%v", kind, got, want)
+		}
+		Gia_ManStop(p)
+	}
+}

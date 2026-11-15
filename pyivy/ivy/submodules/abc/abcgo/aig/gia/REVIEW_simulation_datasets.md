@@ -15,12 +15,12 @@ and vet at fffb6aa97.
    including physical random CI order versus logical explicit input order,
    all node values for ordinary graphs, typed gates via C AND expansion,
    interleaved/reordered ports, constants, registers, word widths and RNG state.
-4. [ ] Compare every binary/PLA dump byte and report against C for positive
+4. [x] Compare every binary/PLA dump byte and report against C for positive
    partitions and multiple seeds; independently decode rows and headers.
    Preserve source's unusual binary 64x word consumption and retained state.
-5. [ ] Review parsing, parameter detection, label comparison and JSON stats
+5. [x] Review parsing, parameter detection, label comparison and JSON stats
    against C. Test malformed files and safe existing Go extensions separately.
-6. [ ] Measure and simplify redundant buffering/whole-dataset copies while
+6. [x] Measure and simplify redundant buffering/whole-dataset copies while
    retaining file content, RNG behavior and valid-input contracts.
 7. [ ] Reconcile the complete source inventory, freeze code/tests/fixtures,
    run uncached full-module race and GIA vet, inspect terminal results and
@@ -60,13 +60,13 @@ invalid C precondition, not another implementation bug.
 | Gia_ManObjSimAnd | gen_sim.go | Red XOR/MUX repairs; native/scalar matrix |
 | Gia_ManSimulateWords | gen_sim.go | Native packed/random matrix |
 | Gia_ManSimulateWordsInit | gen_sim.go | Native explicit/logical-order/ownership matrix |
-| Gia_ManDumpFiles | gen_dump.go | Pending native binary matrix |
-| Gia_ManDumpPlaFiles | gen_dump.go | Pending native PLA matrix |
-| Gia_ManSimLogStats | gen_read.go | Pending JSON/field checks |
-| Gia_ManSimParamRead | gen_read.go | Pending parser/error matrix |
-| Gia_ManSimFileRead | gen_read.go | Pending packed file/label matrix |
-| Gia_ManCompareValues | gen_read.go | Pending report/statistics matrix |
-| Gia_ManTestOneFile | gen_read.go | Pending complete driver matrix |
+| Gia_ManDumpFiles | gen_dump.go | Exact native files/reports/RNG, scalar decoded rows |
+| Gia_ManDumpPlaFiles | gen_dump.go | Native three-partition bytes and streamed output |
+| Gia_ManSimLogStats | gen_read.go | Native semantic JSON, independent counts, escaped names |
+| Gia_ManSimParamRead | gen_read.go | Native dimensions, LF/CRLF/directives, malformed/EOF tests |
+| Gia_ManSimFileRead | gen_read.go | Native packing/labels, OR/append, validation before mutation |
+| Gia_ManCompareValues | gen_read.go | Native first-logical-CO reports, typed scalar/JSON checks |
+| Gia_ManTestOneFile | gen_read.go | Complete native drivers, dimension rejection, typed classification |
 
 ## Compatibility and compactness constraints
 
@@ -85,3 +85,65 @@ last line and fprintf does not escape JSON names. Characterize these differences
 rather than regress existing safe behavior. Comparison requires at least one
 CI in C (division by CI count); Go explicitly rejects the undefined zero-CI
 case. Empty Go filename selects the manager name, representing C's NULL option.
+
+## Dataset and classification evidence
+
+All 128 positive-partition dump configurations match every native file byte,
+file-list entry, stdout report, retained word count and next RNG word. Both
+formats cover multiple seeds/sizes/phases, explicit and manager-name fallback,
+logical reordering, registers, and typed gates via C expansions. Independently
+decode binary headers/row-major bits and PLA directives/rows against scalar
+truth (`/tmp/abcgo-gen-native-dumps-first.log`, 2.225s). Two more native cases
+cover no-CI constant outputs. Go's safe empty-dataset extension and negative
+count/missing-parent failures are separate from C's undefined zero-width path.
+
+All 1,536 direct/complete classifier configurations match C reports, packed
+words, labels and semantic JSON fields. Independent expected label/error/
+majority counts and graph statistics cover ordinary AND/XOR/MUX expansions,
+phases, reordered logical ports, LF/CRLF, directive lines, multiple word counts
+and optional stats (`/tmp/abcgo-gen-native-reader-first.log`, 5.789s).
+
+Additional checks retain source OR/append behavior, support label-only files,
+reject mismatched input counts without changing simulation, and preserve caller
+outputs/buffers on invalid parameter/file dimensions. EOF without newline and
+proper rejection of empty/nonbinary datasets are existing safe Go extensions;
+C's differing parameter results are characterized separately. Typed classifier
+checks exercise the repaired simulator through file reading and JSON stats,
+including quoted/newline names. ABC's actual XOR/MUX depth cost is two AND
+levels, as defined in gia.h; the initial test's unit-depth assumption was a
+fixture expectation error. Repeated widths exercise grow/shrink/zero/grow and
+invalid-operation guards; bounded object views cannot append into a neighbor.
+
+## Compactness results
+
+Parameter scans no longer store every byte row. File packing validates first,
+then streams into existing caller storage using one reusable row buffer. This
+retains the previous Go validation-before-mutation contract, at the cost of a
+second sequential scan for packing. The materializing private helper remains
+for callers explicitly requesting rows. PLA writes directly through one file
+buffer; binary header and payload use one allocation. Preserve source random
+consumption, partition order and retained simulation, including its binary64x
+word behavior. File-close errors remain observable.
+
+One 150ms local before/after benchmark run:
+
+| Operation | Before time | After time | Before B/op | After B/op | Before allocs | After allocs |
+| --- | --- | --- | --- | --- | --- | --- |
+| Parameter 64 rows | 40.313us | 19.759us | 18,424 | 4,264 | 330 | 4 |
+| Parameter 4,096 rows | 1,913.712us | 308.799us | 1,046,668 | 4,280 | 20,498 | 4 |
+| Parameter 65,536 rows | 40,651.379us | 4,943.472us | 19,069,152 | 4,280 | 327,709 | 4 |
+| PLA one word | 237.644us | 257.923us | 16,093 | 14,078 | 33 | 36 |
+| PLA 64 words | 2,028.093us | 1,466.545us | 413,957 | 32,216 | 48 | 39 |
+
+Logs: `/tmp/abcgo-gen-before-bench.log` and `...-after-bench.log`.
+Tiny PLA output is slightly slower and allocates three more objects. Do not
+claim a uniform speedup from short local observations. The native/scalar format
+and reader matrices pass after storage simplification. Final combined focused
+and full frozen integration gates remain pending.
+
+## Checkpoints
+
+- d73a89c7c: packed actual-gate repair and regressions.
+- 7fd447184: native dataset/classifier matrices and baseline benchmarks.
+
+These are red checkpoints until full-family integration is verified.

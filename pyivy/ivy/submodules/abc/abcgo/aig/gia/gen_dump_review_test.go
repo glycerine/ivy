@@ -155,3 +155,111 @@ func TestGenNativeDatasetDumps(t *testing.T) {
 		}
 	}
 }
+
+func TestGenNativeConstantDatasetDumps(t *testing.T) {
+	exe := compileGiaSourceOracle(t, "gen_dump_review.c")
+	root := t.TempDir()
+	nativeDir, goDir := filepath.Join(root, "native"), filepath.Join(root, "go")
+	for _, dir := range []string{nativeDir, goDir} {
+		if err := os.Mkdir(dir, 0700); err != nil {
+			t.Fatal(err)
+		}
+	}
+	t.Chdir(goDir)
+	for _, method := range []string{"binary", "pla"} {
+		cmd := exec.Command(exe, method, "constant", "1", "1", "7", "2", "0", "0", "1")
+		cmd.Dir = nativeDir
+		native, err := cmd.CombinedOutput()
+		if err != nil {
+			t.Fatalf("C constant dump: %v %s", err, native)
+		}
+		p := Gia_ManStart(8)
+		Gia_ManAppendCo(p, 0)
+		Gia_ManAppendCo(p, 1)
+		p.SetIdentity("constant", "")
+		got := hashReviewStdout(t, func() {
+			if method == "binary" {
+				Gia_ManDumpFiles(p, 1, 1, 7, "")
+			} else {
+				Gia_ManDumpPlaFiles(p, 1, 1, 7, "")
+			}
+			fmt.Printf("state words%d next%016x\n", p.NSimWords, Gia_ManRandomW(0))
+		})
+		if got != string(native) {
+			t.Fatalf("constant reports differ Go%s C%s", got, native)
+		}
+		var files []string
+		if method == "binary" {
+			files = []string{"constant_x.train.data", "constant_y.train.data", "constant_x.test.data", "constant_y.test.data", "constant.flist"}
+		} else {
+			files = []string{"constant.train.pla", "constant.valid.pla", "constant.test.pla"}
+		}
+		for _, file := range files {
+			a, err := os.ReadFile(filepath.Join(nativeDir, file))
+			if err != nil {
+				t.Fatal(err)
+			}
+			b, err := os.ReadFile(filepath.Join(goDir, file))
+			if err != nil {
+				t.Fatal(err)
+			}
+			if string(a) != string(b) {
+				t.Fatalf("constant file %s differs", file)
+			}
+			if strings.Contains(file, "_x.") {
+				if len(b) != 12 || binary.NativeEndian.Uint32(b[8:]) != 0 {
+					t.Fatal("zero-input binary dimensions changed")
+				}
+			}
+			if strings.Contains(file, "_y.") {
+				for _, v := range b[12:] {
+					if v != 0xaa {
+						t.Fatal("constant binary outputs changed")
+					}
+				}
+			}
+			if strings.HasSuffix(file, ".pla") {
+				if strings.Count(string(b), " 01\n") != 64 {
+					t.Fatal("constant PLA outputs changed")
+				}
+			}
+		}
+		Gia_ManStop(p)
+	}
+}
+
+func TestGenEmptyDumpGoExtensionAndFailures(t *testing.T) {
+	p := genReviewGraph(true, 91, true)
+	defer Gia_ManStop(p)
+	base := filepath.Join(t.TempDir(), "empty")
+	hashReviewStdout(t, func() { Gia_ManDumpFiles(p, 0, 0, 7, base); Gia_ManDumpPlaFiles(p, 0, 0, 7, base) })
+	genReviewCheckBinary(t, p, filepath.Dir(base), filepath.Base(base), "train", 0)
+	genReviewCheckBinary(t, p, filepath.Dir(base), filepath.Base(base), "test", 0)
+	for _, part := range []string{"train", "valid", "test"} {
+		genReviewCheckPla(t, p, base+"."+part+".pla", 0)
+	}
+	if p.NSimWords != 0 || Vec_WrdSize(p.vSims) != 0 {
+		t.Fatal("empty dump retained nonempty simulation")
+	}
+	emptyNext := Gia_ManRandomW(0)
+	Gia_ManRandomW(1)
+	for i := 0; i < 7; i++ {
+		Gia_ManRandomW(0)
+	}
+	want := Gia_ManRandomW(0)
+	if emptyNext != want {
+		t.Fatal("empty dumps consumed random data")
+	}
+	Gia_ManRandomW(1)
+	for i := 0; i < 7; i++ {
+		Gia_ManRandomW(0)
+	}
+	cexReviewMustPanic(t, func() { Gia_ManDumpFiles(p, -1, 1, 0, base) })
+	if got := Gia_ManRandomW(0); got != want {
+		t.Fatal("rejected negative count changed RNG")
+	}
+	cexReviewMustPanic(t, func() { Gia_ManDumpPlaFiles(p, 1, -1, 0, base) })
+	missing := filepath.Join(t.TempDir(), "absent", "sample")
+	cexReviewMustPanic(t, func() { Gia_ManDumpFiles(p, 1, 1, 0, missing) })
+	cexReviewMustPanic(t, func() { Gia_ManDumpPlaFiles(p, 1, 1, 0, missing) })
+}

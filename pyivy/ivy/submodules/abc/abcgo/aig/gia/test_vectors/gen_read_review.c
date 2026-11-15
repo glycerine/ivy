@@ -28,6 +28,6 @@ int main(int argc,char **argv)
     Gia_ManSimFileRead(argv[2],ins,words,inputs,labels);
     printf("data");for(i=0;i<Vec_WrdSize(inputs);i++)printf(" %016llx",(unsigned long long)Vec_WrdEntry(inputs,i));
     printf(" labels");for(i=0;i<Vec_IntSize(labels);i++)printf("%d",Vec_IntEntry(labels,i));puts("");
-    if(!atoi(argv[7]))Gia_ManCompareValues(p,inputs,labels,stats?"stats.json":NULL);
+    if(!atoi(argv[7]) && argv[1][0]!='l')Gia_ManCompareValues(p,inputs,labels,stats?"stats.json":NULL);
     Vec_WrdFree(inputs);Vec_IntFree(labels);Gia_ManStop(p);return 0;
 }
