@@ -36,7 +36,33 @@ static void inspect(Gia_Man_t *g, int limit, int miter) {
  printf("transitions");for(i=0;i<Vec_IntSize(p->vStgDump);++i)printf(" %d",Vec_IntEntry(p->vStgDump,i));puts("");
  Gia_ManEraFree(p);
 }
-int main(void){int pis[]={0,1,3,5,6},rs[]={1,3,33,65},caps[]={2,4,100};int ip,ir,seed,limit,miter;
+
+static int dump_cases(void) {
+ int ni,no,toggle,i,ro;Gia_Man_t *g;FILE *f;int c;
+ for(ni=0;ni<2;++ni)for(no=0;no<2;++no)for(toggle=0;toggle<2;++toggle){
+  g=Gia_ManStart(8);if(ni)Gia_ManAppendCi(g);ro=Gia_ManAppendCi(g);
+  if(no)Gia_ManAppendCo(g,ro);Gia_ManAppendCo(g,ro^toggle);Gia_ManSetRegNum(g,1);
+  printf("dump %d %d %d\n",ni,no,toggle);
+  Gia_ManCollectReachable(g,100,0,1,0);
+  puts("stg begin");f=fopen("test.stg","r");if(!f)return 2;
+  while((c=fgetc(f))!=EOF)putchar(c);fclose(f);puts("stg end");Gia_ManStop(g);
+ }
+ return 0;
+}
+
+
+static int verbose_case(void) {
+ Gia_Man_t *g=Gia_ManStart(256);int r[13],next[13],carry=1,i;
+ for(i=0;i<13;++i)r[i]=Gia_ManAppendCi(g);
+ Gia_ManHashAlloc(g);
+ for(i=0;i<13;++i){next[i]=Gia_ManHashXor(g,r[i],carry);carry=Gia_ManHashAnd(g,carry,r[i]);}
+ Gia_ManAppendCo(g,r[12]);for(i=0;i<13;++i)Gia_ManAppendCo(g,next[i]);
+ Gia_ManHashStop(g);Gia_ManSetRegNum(g,13);
+ Gia_ManCollectReachable(g,20000,0,0,1);Gia_ManStop(g);return 0;
+}
+
+int main(int argc,char **argv){int pis[]={0,1,3,5,6},rs[]={1,3,33,65},caps[]={2,4,100};int ip,ir,seed,limit,miter;
+ if(argc>1)return !strcmp(argv[1],"--verbose")?verbose_case():dump_cases();
  for(ip=0;ip<5;++ip)for(ir=0;ir<4;++ir)for(seed=0;seed<4;++seed)for(limit=0;limit<3;++limit)for(miter=0;miter<2;++miter){
   Gia_Man_t *g=graph(pis[ip],rs[ir],seed);int result;
   printf("case %d %d %d %d %d\n",pis[ip],rs[ir],seed,caps[limit],miter);

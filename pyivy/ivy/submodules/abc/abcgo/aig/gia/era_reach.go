@@ -7,6 +7,7 @@ import (
 	"math/bits"
 	"os"
 	"time"
+	"unsafe"
 )
 
 type Gia_ObjEra_t struct {
@@ -273,10 +274,15 @@ func Gia_ManCollectReachable(g *Gia_Man_t, maxStates, miter, dump, verbose int32
 			break
 		}
 		if verbose != 0 && p.iCurState%5000 == 0 {
-			fmt.Printf("States =%d. Reached =%d. Depth =%d. Time = %.2f sec  ", p.iCurState, len(p.vStates), Gia_ManCountDepth(p), time.Since(start).Seconds())
+			// Estimate the same state/table storage as C, using Go record sizes
+			// and actual slice capacity rather than the C allocator's capacity.
+			memory := float64(len(p.vStates))*(float64(unsafe.Sizeof(Gia_ObjEra_t{}))+4*float64(p.nWordsDat)) +
+				4*float64(p.nBins) + float64(cap(p.vStates))*float64(unsafe.Sizeof((*Gia_ObjEra_t)(nil)))
+			fmt.Printf("States =%10d. Reached =%10d. R = %5.3f. Depth =%6d. Mem =%9.2f MB.  Time =%9.2f sec\n",
+				p.iCurState, len(p.vStates), float64(p.iCurState)/float64(len(p.vStates)), Gia_ManCountDepth(p), memory/(1<<20), time.Since(start).Seconds())
 		}
 	}
-	fmt.Printf("Reachability analysis traversed %d states with depth %d.  Time = %.2f sec\n", p.iCurState-1, Gia_ManCountDepth(p), time.Since(start).Seconds())
+	fmt.Printf("Reachability analysis traversed %d states with depth %d.  Time =%9.2f sec\n", p.iCurState-1, Gia_ManCountDepth(p), time.Since(start).Seconds())
 	if dump != 0 {
 		f, err := os.Create("test.stg")
 		if err != nil {
@@ -285,7 +291,14 @@ func Gia_ManCollectReachable(g *Gia_Man_t, maxStates, miter, dump, verbose int32
 			lines := vec.Vec_IntArray(p.vStgDump)
 			width := len(fmt.Sprint(p.iCurState - 1))
 			for i := 0; i < len(lines); i += 4 {
-				fmt.Fprintf(f, "%0*b %*d %*d %0*b\n", Gia_ManPiNum(g), uint32(lines[i]), width, lines[i+1], width, lines[i+2], Gia_ManPoNum(g), uint32(lines[i+3]))
+				if inputs := Gia_ManPiNum(g); inputs > 0 {
+					fmt.Fprintf(f, "%0*b", inputs, uint32(lines[i]))
+				}
+				fmt.Fprintf(f, " %*d %*d ", width, lines[i+1], width, lines[i+2])
+				if outputs := Gia_ManPoNum(g); outputs > 0 {
+					fmt.Fprintf(f, "%0*b", outputs, uint32(lines[i+3]))
+				}
+				fmt.Fprintln(f)
 			}
 			f.Close()
 			fmt.Println("Extracted STG was written into file \"test.stg\".")

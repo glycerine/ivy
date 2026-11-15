@@ -7244,3 +7244,34 @@ pass in 2.473s (/tmp/abcgo-era-scalar-green.log). No full integration gate has r
 since these ERA repairs; retain red checkpoint status pending that gate. Reports,
 STG boundary behavior, independent traversal/trace enumeration and final family
 review remain pending. Original completion stays 2/131.
+
+### Explicit reachability independent traversal and output checkpoint
+
+Add a scalar BFS with its own Boolean state queue, visited map and predecessor
+conditions. Sixteen typed-machine/miter configurations agree on discovery order,
+every transition/output mask, packed state bits 0/32/64, first failure traces and
+public results (/tmp/abcgo-era-bfs-green.log). A separate regression confirms PO
+index takes priority over earliest minterm and stops successor collection.
+
+A red STG export test exposes spurious zeros for zero-width PI/PO columns in six
+of eight hold/toggle configurations (/tmp/abcgo-era-stg-red.log). Omit those digits;
+all eight files now match actual C byte for byte (/tmp/abcgo-era-stg-green.log).
+The earlier native assertion is explained by *partial* traversal exports: the C
+driver passes iCurState-1 as a bound despite edges to unprocessed states. Preserve
+the existing Go safety behavior rather than introducing that assertion. Native
+file comparisons use complete tables. General STG reader/encoder review remains
+separate from this driver.
+
+An actual-C 13-register binary counter traverses 8,192 states and exercises the
+5,000-state progress branch. The red comparison shows missing R/memory fields,
+line break and numeric padding (/tmp/abcgo-era-reports-red.log). Restore source
+fields/layout; normalize only elapsed time and representation-dependent memory
+amounts. Memory estimates use Go record size and actual pointer-slice capacity.
+
+Separate source/compactness inspection is recorded in REVIEW_explicit_reachability.md.
+Keep the compact Go state slices, existing hash/queue semantics and source dummy
+trace condition; reuse typed word simulation and bounded borrowed storage. All
+explicit-reachability focused tests pass in 6.174s
+(/tmp/abcgo-era-final-focused.log). Freeze production/tests/fixtures for full
+module race and GIA vet gates before marking this family reviewed. The overall
+GIA inventory remains incomplete; original package completion stays 2/131.
