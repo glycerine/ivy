@@ -137,6 +137,15 @@ func Gia_ManSimulateCo(p *Gia_ManEra_t, obj *Gia_Obj_t) {
 	}
 }
 func Gia_ManSimulateNode(p *Gia_ManEra_t, obj *Gia_Obj_t) {
+	if Gia_ObjIsXor(obj) != 0 || Gia_ObjIsMux(p.pAig, obj) != 0 {
+		dst := Gia_ManEraData(p, obj.id)
+		for i := range dst {
+			dst[i] = giarfSimulateGate(p.pAig, obj, func(id int32) uint32 {
+				return Gia_ManEraData(p, id)[i]
+			})
+		}
+		return
+	}
 	dst, a, b := Gia_ManEraData(p, obj.id), Gia_ManEraData(p, Gia_ObjFaninId0(obj, obj.id)), Gia_ManEraData(p, Gia_ObjFaninId1(obj, obj.id))
 	for i := range dst {
 		x, y := a[i], b[i]

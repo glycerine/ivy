@@ -7191,3 +7191,28 @@ a red regression before repairing typed simulation, track the ordinary native
 baseline and internal state/word/hash/trace oracles, independently enumerate small
 machines, and cover limits, resizing, reports and STG output. Keep giaEra2.c's
 separate cube-reachability algorithm distinct during this first family review.
+
+### Explicit reachability typed-simulation repair checkpoint
+
+Add a minimal red driver regression before modifying era_reach.go. Both real
+XOR and real MUX initial violations incorrectly return safe (1), while their
+expected result is unsafe (0) (/tmp/abcgo-era-typed-red.log). Keep the ordinary
+AND/buffer word loop and evaluate real gates with the existing 32-bit typed-gate
+helper. This is a Boolean simulation repair, not a new reachability algorithm.
+
+Expand the regression over one/six inputs and one/33/65 registers, retaining
+buffer and simple opposite-fanin cross-talk cases. Check both public return codes
+and the internal earliest failing input, including condition 32 in the second
+simulation word. Initialize the direct-manager state hash as the real driver
+does. Existing and expanded explicit-reachability tests pass in 0.018s
+(/tmp/abcgo-era-typed-repaired.log).
+
+The temporary Go driver now agrees with actual C on all 480 ordinary-case result
+codes (/tmp/abcgo-era-review-probe/{probe.go,go.out,native.out}). Only case metadata
+and return codes were compared; timing/report text, private states, hashes and
+traces are not yet native-verified. The source STG dump assertion still needs a
+separate writer/state-ID investigation. Track these matrices as unit fixtures,
+independently enumerate small machines, and cover word phases, hash resizing,
+limits, diagnostics and STG output before closing this family. The last full
+module race/vet result remains the sequential-enable checkpoint; the new repair
+has focused coverage only. Original completion remains 2/131; GIA is in progress.
