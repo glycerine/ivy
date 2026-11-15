@@ -4902,3 +4902,18 @@ the lowering path; it does not declare all other balancing, quantification,
 box-order or rewrite metadata paths reviewed. Save the expanded coverage and
 lowering repair with a red prefix until integration verification finishes.
 Original completion stays 2/131; GIA remains active.
+
+Final complete-copy partition integration is green: all 130 tested module
+packages pass the uncached race run; three command packages have no tests
+and no extra failure/race diagnostic lines appear
+(`/tmp/abcgo-copy-partition-module-race.log`). GIA passes in 192.397s,
+ABCI in 28.991s, CEC in 44.944s and BMC in 23.875s. GIA vet passes
+(`/tmp/abcgo-copy-partition-vet.log`). No code changed after 6bfd1f498.
+The confirmed repairs are complete-PO role preservation at the explicit
+listed sites and logical CI/CO retention during real-gate lowering. The
+shared initializer still creates derived interfaces without inherited roles.
+This closes this partition/export follow-up; it does not declare every
+algorithm in the lowering family reviewed. Continue the separate role audit
+in cofactor/quantification, balancing, rehashing and box-order rewrites,
+then reconcile the remaining GIA algorithm inventory. Original completion
+remains 2/131; the sequential audit stays active.
