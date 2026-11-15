@@ -13,6 +13,11 @@ func Gia_ManDeriveCiTfo_rec(p *Gia_Man_t, obj *Gia_Obj_t, result *Vec_Int_t) int
 	Gia_ManDeriveCiTfo_rec(p, Gia_ObjFanin0(obj), result)
 	Gia_ManDeriveCiTfo_rec(p, Gia_ObjFanin1(obj), result)
 	obj.fMark0 = Gia_ObjFanin0(obj).fMark0 | Gia_ObjFanin1(obj).fMark0
+	if Gia_ObjIsMux(p, obj) != 0 {
+		control := Gia_ManObj(p, int32(p.PMuxes[obj.id]>>1))
+		Gia_ManDeriveCiTfo_rec(p, control, result)
+		obj.fMark0 |= control.fMark0
+	}
 	if obj.fMark0 != 0 {
 		vec.Vec_IntPush(result, obj.id)
 	}

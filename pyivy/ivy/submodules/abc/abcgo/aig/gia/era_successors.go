@@ -6,6 +6,13 @@ import (
 	"time"
 )
 
+// Cofactors are ordinary hashed AIGs even when the source has real gates.
+func giaAreCopyGate(p *Gia_ManAre_t, obj *Gia_Obj_t) int32 {
+	return giaHashMappedGate(p.pNew, p.pAig, obj, func(lit int32) int32 {
+		return Gia_ObjLitCopy(p.pAig, lit)
+	})
+}
+
 func Gia_ManAreDeriveNexts_rec(p *Gia_ManAre_t, state Gia_PtrAre_t) int32 {
 	p.nRecCalls++
 	if p.nRecCalls >= MAX_CALL_NUM {
@@ -44,7 +51,7 @@ func Gia_ManAreDeriveNexts_rec(p *Gia_ManAre_t, state Gia_PtrAre_t) int32 {
 		vec.Vec_IntWriteEntry(saved, i, Gia_ObjValue(obj))
 		switch {
 		case Gia_ObjIsAnd(obj) != 0:
-			Gia_ObjSetValue(obj, Gia_ManHashAnd(p.pNew, Gia_ObjFanin0Copy(obj), Gia_ObjFanin1Copy(obj)))
+			Gia_ObjSetValue(obj, giaAreCopyGate(p, obj))
 		case Gia_ObjIsCo(obj) != 0:
 			Gia_ObjSetValue(obj, Gia_ObjFanin0Copy(obj))
 		default:
@@ -61,7 +68,7 @@ func Gia_ManAreDeriveNexts_rec(p *Gia_ManAre_t, state Gia_PtrAre_t) int32 {
 		obj := Gia_ManObj(p.pAig, id)
 		switch {
 		case Gia_ObjIsAnd(obj) != 0:
-			Gia_ObjSetValue(obj, Gia_ManHashAnd(p.pNew, Gia_ObjFanin0Copy(obj), Gia_ObjFanin1Copy(obj)))
+			Gia_ObjSetValue(obj, giaAreCopyGate(p, obj))
 		case Gia_ObjIsCo(obj) != 0:
 			Gia_ObjSetValue(obj, Gia_ObjFanin0Copy(obj))
 		default:
@@ -108,7 +115,7 @@ func Gia_ManAreDeriveNexts(p *Gia_ManAre_t, state Gia_PtrAre_t) int32 {
 	}
 	for _, obj := range p.pAig.pObjs {
 		if Gia_ObjIsAnd(obj) != 0 {
-			Gia_ObjSetValue(obj, Gia_ManHashAnd(p.pNew, Gia_ObjFanin0Copy(obj), Gia_ObjFanin1Copy(obj)))
+			Gia_ObjSetValue(obj, giaAreCopyGate(p, obj))
 		}
 	}
 	for i := int32(0); i < Gia_ManCoNum(p.pAig); i++ {

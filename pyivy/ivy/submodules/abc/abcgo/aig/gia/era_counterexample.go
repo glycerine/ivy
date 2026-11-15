@@ -39,7 +39,7 @@ func Gia_ManAreDeriveCexSat(p *Gia_ManAre_t, current, next *Gia_StaAre_t, output
 	edge := func(obj *Gia_Obj_t) int32 { return copies[Gia_ObjFaninId0(obj, obj.id)] ^ Gia_ObjFaninC0(obj) }
 	for _, obj := range g.pObjs {
 		if Gia_ObjIsAnd(obj) != 0 {
-			copies[obj.id] = Gia_ManHashAnd(q, edge(obj), copies[Gia_ObjFaninId1(obj, obj.id)]^Gia_ObjFaninC1(obj))
+			copies[obj.id] = giaHashMappedGate(q, g, obj, func(lit int32) int32 { return copies[lit>>1] ^ (lit & 1) })
 		}
 	}
 	condition := int32(1)

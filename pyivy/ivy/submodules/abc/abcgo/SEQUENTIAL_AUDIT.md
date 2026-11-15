@@ -7313,3 +7313,27 @@ all typed fanins when cofactoring/deriving traces, track ordinary/cube primitive
 oracles, independently cover list/tree/cube union invariants, compare remaining
 source functions and review compactness before another integration freeze.
 No cube-source, tests or fixtures changed during the completed ERA gate.
+
+### Cube reachability typed-gate repair checkpoint
+
+Before production edits, add red public-driver XOR/MUX initial-violation cases
+and a real-MUX control fanout case. Both drivers falsely report safe; the fanout
+contains only the CI instead of CI/mux/CO (/tmp/abcgo-era2-typed-red.log).
+Generalize the existing enable-transform Boolean hash helper into
+hash_mapped_gate.go and reuse it for cube cofactoring and counterexample copies.
+Include real-MUX controls in CI TFO dependencies. No new reachability algorithm
+is introduced; real gates lower through the existing ordinary AIG operations.
+
+The minimal red cases and existing cube/enable tests pass in 1.849s
+(/tmp/abcgo-era2-typed-repair.log). Expand to eight typed phase configurations,
+safe/unsafe output variants, both miter modes and typed/ordinary expansions with
+65 registers. Verify every returned counterexample and safe-run trace cleanup.
+All cube-focused tests pass in 0.031s (/tmp/abcgo-era2-typed-expanded.log).
+
+The source counterexample API initializes one persistent BSAT solver and maps
+all CI/CO variables, then reuses assumptions across frames. The current Go
+adapter instead stores a sentinel and rebuilds a fresh CEC SAT graph for every
+query. A source-interface binding regression is being added before restoring
+that source solver lifecycle. Its pending test is separate from this typed-gate
+checkpoint. Full integration and the remainder of the cube-family review remain
+pending; original package completion stays 2/131.
