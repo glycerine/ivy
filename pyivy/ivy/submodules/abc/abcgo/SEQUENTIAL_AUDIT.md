@@ -18,7 +18,7 @@ source workflows and tests are covered by that audit. Current review: `aig/gia`.
 | --- | --- | --- | --- |
 | 1 | `.` | reviewed | Root review below; race tests and vet pass. |
 | 2 | `aig/aig` | reviewed | All 52 files reconciled; native source matrices, final race suite, vet and module integration gates pass. |
-| 3 | `aig/gia` | in progress | Graph/manager, copies, hashing, balancing, windows, bi-decomposition, circuit-cofactoring, BDD collapse, counterexample replay/minimization and chronological/conflict-analysis circuit SAT reviewed; remaining families and final inventory pending. |
+| 3 | `aig/gia` | in progress | Graph/manager, copies, hashing, balancing, windows, bi-decomposition, circuit-cofactoring, BDD collapse, counterexample replay/minimization and chronological/conflict-analysis/watched-clause circuit SAT reviewed; remaining families and final inventory pending. |
 | 4 | `aig/gia/mf` | pending | |
 | 5 | `aig/gia/satcost` | pending | |
 | 6 | `aig/hop` | pending | |
@@ -6505,3 +6505,26 @@ inactive-prefix cases. The complete CBS2 focused suite passes in 13.577s
 source-versus-Go raw-representation distinction. Save a checkpoint and freeze
 source/tests/fixtures for full module race and GIA vet integration. Original
 completion remains 2/131; GIA is still active.
+
+CBS2 integration is green: the uncached full module race run passes all 130
+tested packages, with three command packages having no tests
+(/tmp/abcgo-cbs2-final-module-race.log). GIA vet exits successfully with empty
+output (/tmp/abcgo-cbs2-final-vet.log). Source, tests and fixtures stayed frozen
+throughout integration. Mark the CBS2 family reviewed; the GIA final inventory
+and remaining families are still pending, so original completion stays 2/131.
+
+Read-only next-family work during integration prepares an actual-C CTAS baseline
+in /tmp/abcgo-tas-review-probe/probe.c and native.out, built by
+/tmp/abcgo-tas-probe-build.py. It completes 84,864 single/paired/array entry-point
+queries across four decision heuristics, backtrack/frontier budgets and the
+shared random/hard five-input graph corpus: 51,641 SAT, 29,142 undecided, 4,081
+UNSAT, maximum 21 backtracks and frontier ten. Independent Python truth-table
+verification checks all verdicts and every completion of every native SAT cube
+(/tmp/abcgo-tas-probe-verify.py). These are native baseline results, not yet Go
+comparisons. Next: turn the fixture into tracked tests, compare the Go tas_*
+implementation and source giaCTas.c, cover learned-clause growth and patterns,
+and inspect lifecycle/invalid roots/raw gates. Add red regressions before fixes.
+Read-only inspection also identifies reusable source mark scratch as a possible
+compactness improvement; currently Go allocates a local marked slice and a
+resolution map. The small giaCTas2.c experiment is separate and contains only an
+attempted variable allocator; its Go Tas2_* representation still needs review.

@@ -54,6 +54,8 @@ in both modes, versus 61/25 allocations previously. Final measurements after the
 raw-gate fixes are approximately 5.7/4.3 microseconds; timings are not guarantees.
 Logical queue heads/tails remain necessary for suspended frontier storage.
 
-The final focused suite passes in 13.577s. Full race/vet integration is recorded
-in SEQUENTIAL_AUDIT.md. This note covers CBS2; GIA's other families and the full
+The final focused suite passes in 13.577s. Full uncached module race tests pass
+all 130 tested packages (three command packages have no tests), and GIA vet
+passes. Logs are /tmp/abcgo-cbs2-final-module-race.log and
+/tmp/abcgo-cbs2-final-vet.log; SEQUENTIAL_AUDIT.md records the checkpoints. This note covers CBS2; GIA's other families and the full
 131-package sequential audit remain open.
