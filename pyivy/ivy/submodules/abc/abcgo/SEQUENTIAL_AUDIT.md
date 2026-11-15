@@ -8247,3 +8247,23 @@ repeated-fanin phase pairs in simple mode with/without XORs, empty/direct/consta
 outputs and exact success diagnostics. Add owned MUX metadata mutation coverage
 and benchmark the shared loop against the previous ordinary loop before final
 frozen gates. This remains an intermediate checkpoint; completion2/131.
+
+### Frontier compactness measurement and final focused gate
+
+Benchmark the shared word loop against the previous source-style ordinary loop
+using a Go overlay, without mutating the worktree. Per-round one/eight/64-word
+baseline165.6/343.1/1536ns; initial shared dispatch222.9/455.5/2361ns
+(/tmp/abcgo-front-word-benchmark-before.log,
+/tmp/abcgo-front-word-benchmark-after.log). Hoist operation selection and use
+phase masks, measuring190.3/304.5/1209ns
+(/tmp/abcgo-front-word-benchmark-hoisted.log). All allocate0B/0objects. Retain the
+shared readable implementation and document the one-word overhead; avoid
+inventing duplicate graph/kind state or a cache for this dispatch.
+
+After this production change and owned-MUX mutation coverage, final focused
+frontier plus neighboring word/equivalence/switching/ternary tests pass3.612s
+without skips (/tmp/abcgo-front-final-focused.log). REVIEW_frontier.md records
+all five source routines, red evidence, original-C buffer defect, exact native
+ordinary records, typed boundary contracts and independent tests. Freeze code,
+tests and fixtures for the pending uncached module race/GIA vet gates. Package
+completion2/131; no family closure until the exact handles terminate.

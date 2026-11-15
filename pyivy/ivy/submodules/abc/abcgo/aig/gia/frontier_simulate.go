@@ -9,33 +9,25 @@ func giaFrontSimulateWords(g *Gia_Man_t, obj *Gia_Obj_t, data []uint32, words in
 		return data[start : start+int(words)]
 	}
 	dst, a, b := slot(obj.Value), slot(obj.iDiff0), slot(obj.iDiff1)
-	var control []uint32
-	var controlPhase uint32
-	if Gia_ObjIsMux(g, obj) != 0 {
+	// A complemented pin XORs every bit with all ones. Select the operation
+	// once per node, keeping gate-kind and phase branches out of word loops.
+	mask0, mask1 := uint32(0)-obj.fCompl0, uint32(0)-obj.fCompl1
+	switch {
+	case g.nMuxes != 0 && Gia_ObjIsMux(g, obj) != 0:
 		lit := g.PMuxes[obj.id]
-		control = slot(g.pObjs[lit>>1].Value)
-		controlPhase = lit & 1
-	}
-	xor := g.nXors != 0 && Gia_ObjIsXor(obj) != 0
-	for i := range dst {
-		x, y := a[i], b[i]
-		if obj.fCompl0 != 0 {
-			x = ^x
+		control := slot(g.pObjs[lit>>1].Value)
+		controlMask := uint32(0) - (lit & 1)
+		for i := range dst {
+			c := control[i] ^ controlMask
+			dst[i] = (a[i]^mask0)&^c | (b[i]^mask1)&c
 		}
-		if obj.fCompl1 != 0 {
-			y = ^y
+	case g.nXors != 0 && Gia_ObjIsXor(obj) != 0:
+		for i := range dst {
+			dst[i] = a[i] ^ mask0 ^ b[i] ^ mask1
 		}
-		switch {
-		case control != nil:
-			c := control[i]
-			if controlPhase != 0 {
-				c = ^c
-			}
-			dst[i] = x&^c | y&c // stored data pins are else, then
-		case xor:
-			dst[i] = x ^ y
-		default:
-			dst[i] = x & y
+	default:
+		for i := range dst {
+			dst[i] = (a[i] ^ mask0) & (b[i] ^ mask1)
 		}
 	}
 }
