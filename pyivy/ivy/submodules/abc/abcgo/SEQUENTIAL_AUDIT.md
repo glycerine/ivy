@@ -3971,3 +3971,46 @@ independent Boolean formulas. This closes levelized ordering and the named
 DFS metadata follow-ups; explicit-vector/all-node-output duplication and
 other GIA families remain open. Original package completion stays 2/131;
 the sequential audit remains active.
+
+Explicit-vector and all-node-output duplication review: inspect giaDup.c's
+requested-order contract and the iso_canonical.go caller. Unlike a full copy,
+Gia_ManDupFromVecs defines a new interface with the caller's register count;
+Gia_ManDupOuts inserts positive internal-node outputs between original POs
+and RIs. Both intentionally produce nConstrs zero in C. Do not apply the
+previous full-copy metadata repair to these derived-output APIs.
+
+New tests compare 3,936 cases and 62,976 assignment rows with compiled C
+(`aig/gia/test_vectors/copy_vectors_outputs.c`): 32 polarities, six CI
+permutations, original/level gate orders, complete/reversed/repeated/empty CO
+selections and all feasible zero/two/four requested registers, followed by
+all-node-output copies with those source register counts. Tests independently
+check Boolean formulas, requested CI/gate mappings, normalized layout, exact
+object/interface counts, name/spec and reset constraint classification.
+The complete matrix is also exercised on real XOR/MUX/buffer graphs and on
+DFS layouts: 15,744 cases and 251,904 assignment rows across four variants.
+DFS cases account for changed physical order and removal of dangling gates;
+non-DFS all-node copies explicitly retain and expose dangling logic.
+
+Additional coverage verifies a two-CI subset with omitted gates, repeated
+outputs and requested registers zero/one/two; stale scratch mappings are
+cleared. Eighteen malformed selection/register cases must panic, including
+missing dependencies, non-topological or repeated gates, duplicate CIs,
+wrong object kinds and invalid IDs. Empty graphs, constants, direct wires
+and simple-mode opposite-phase ANDs cover boundary storage/semantics.
+Native malformed-input behavior is not invoked or asserted. All expanded
+checks pass in 2.348s (`/tmp/abcgo-selection-expanded.log`). The broad focused
+regex also ran existing explicit-reachability tests; their deliberately
+reported counterexample/limit diagnostics do not indicate a test failure.
+
+No new behavior defect was found in these two APIs. For compactness,
+giaDupMappedNodes now delegates to the existing giaAppendMappedNode instead
+of repeating its typed gate dispatch and mapping validation. This removes
+21 net lines while keeping mapped AND/XOR/MUX/buffer handling in one place.
+GIA vet passes (`/tmp/abcgo-selection-review-vet.log`).
+
+After consolidating the helper, full uncached race tests pass for GIA
+(101.785s) and ABCI (28.961s), recorded in
+`/tmp/abcgo-selection-review-race.log`. This closes the explicit-vector and
+all-node-output review and completes the reviewed functions in dup_level.go.
+Other GIA families remain open; original package completion remains 2/131
+and the sequential audit remains active.

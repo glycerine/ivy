@@ -8,28 +8,7 @@ func giaDupMappedNodes(dst, src *Gia_Man_t) {
 		if Gia_ObjIsAnd(obj) == 0 {
 			continue
 		}
-		a, b, c, kind := src.Gate(obj.id)
-		copyLit := func(lit int32) int32 {
-			value := src.pObjs[lit>>1].Value
-			if value == ^uint32(0) {
-				panic("gia: removed input is still used")
-			}
-			return int32(value) ^ (lit & 1)
-		}
-		var result int32
-		switch kind {
-		case 2:
-			result = Gia_ManAppendAnd(dst, copyLit(a), copyLit(b))
-		case 3:
-			result = Gia_ManAppendXorReal(dst, copyLit(a), copyLit(b))
-		case 4:
-			result = Gia_ManAppendMuxReal(dst, copyLit(a), copyLit(b), copyLit(c))
-		case 5:
-			result = Gia_ManAppendBuf(dst, copyLit(a))
-		default:
-			panic("gia: invalid gate in mapped duplication")
-		}
-		obj.Value = uint32(result)
+		giaAppendMappedNode(dst, src, obj)
 	}
 }
 func giaDupMappedStart(src *Gia_Man_t) *Gia_Man_t {
