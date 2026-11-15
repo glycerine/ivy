@@ -4374,3 +4374,63 @@ The full GIA/CEC/ABCI race gate is still running. Save this checkpoint with a
 red-prefix commit to honor the requested commit interval before that full
 package gate is verified. This is not a completed package audit; 2/131 original
 packages remain reviewed and GIA remains in progress.
+
+CI-map review evidence: inspect giaDup.c and its ternary/structural-sweep and
+top-AND callers. CI maps compose in original CI-vector order: each slot is
+allocated even when unused; constants and earlier/self CI literals then replace
+its mapped Value. Forward/internal references are unavailable until copying and
+must reject. All-output substitution preserves original CO order and register
+roles, so it must retain the constraint suffix. Compiled C reports source/result
+constraint counts `1 0`, an inherited omission deliberately repaired in Go.
+Explicit literal lists define derived outputs and retain nConstrs zero. Both
+branches retain the original register count in C; reject lists shorter than
+that count rather than inventing register removal or a combinational result.
+Gia_ManSetRegNum in both languages merely assigns the count and does not
+validate the resulting negative-PO possibility.
+
+Native C agrees across 9,432 cases/301,824 assignment rows: 131 mapping
+patterns, eight source polarities, zero/two/four registers and three output
+modes. Patterns enumerate the first two CI options, all five-slot chain phases,
+all constant assignments and two-variable alias clusters. Modes cover nil/all
+COs, repeated/complemented requested properties plus RIs, and RI-only/explicit
+empty lists. Compare every source Value mapping and exact hashed graph/object
+counts as well as full Boolean output rows. Every original CI slot remains in
+order, including an unused late-created one; source CO Values remain unset
+because the API copies their drivers. Mapping arrays and selected literal
+vectors remain unchanged, and hashing is stopped before return.
+
+Independent formulas repeat the matrix on real XOR/MUX/buffer graphs and
+reverse-DFS source layouts: 37,728 cases/1,207,296 rows. The eight polarity
+patterns are 0/1/2/4/8/16/21/31, not an asserted exhaustive 32-pattern matrix.
+Another 144 cases/2,304 rows check old representative substitution after
+identity, inversion/aliasing and constant maps, with nil and explicit output
+lists. These checks cover phase-correct representative chains and constant
+collapse without claiming arbitrary substitutions preserve the original
+sequential behavior: they verify the exact substituted transition relation.
+
+Boundary checks include empty graphs/maps, constant-only constraints, nil
+versus nonnil-empty literal lists, and hashing a simple-mode a&!a to false.
+The target deliberately starts in ordinary/hash-normalized mode and does not
+copy the source raw/simple/MUX construction settings. Reusing the raw-copy
+initializer here would obscure that policy. Keep all CI slots rather than
+pruning unused state/interface entries. There is no additional compactness
+rewrite warranted in this short routine.
+
+Invalid-input checks cover mapping-vector lengths, future/internal/out-of-range
+references, invalid markers, bad selected literals, COs used as logic, and both
+empty and nonempty selected lists too short for the retained state count.
+These invalid C paths are not executed. Final focused verification passes in
+4.147s (`/tmp/abcgo-ci-map-final-focused.log`); the native-only run passes in
+2.301s (`/tmp/abcgo-ci-map-native.log`). The fixture is
+`aig/gia/test_vectors/ci_map.c`, with implicit declarations treated as errors.
+The full race gate remains pending at this evidence write.
+
+The pending gate is now green: full uncached race tests pass for GIA
+(157.756s), CEC (41.535s) and ABCI (29.327s), recorded in
+`/tmp/abcgo-ci-map-review-race.log`; GIA vet passes
+(`/tmp/abcgo-ci-map-review-vet.log`). No code changes followed checkpoint
+997b88dc8, whose red prefix recorded the then-unverified full gate. That code
+is now verified green. CI-map substitution and the reviewed functions in
+dup_dfs_extra.go are complete. Representative-class/top-AND duplication and
+other GIA families remain open; original completion remains 2/131 and the
+sequential audit remains active.
