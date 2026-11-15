@@ -7039,3 +7039,40 @@ heuristic; distinguish unsupported typed pattern recognition from faithfully
 copying typed logic. Transfer/cofactoring, broader phase/state/ownership checks,
 compactness and module race/vet gates are still pending. Original completion
 remains 2/131; GIA is in progress.
+
+### Sequential structural boundaries and supergate repair
+
+The new boundary tests fail on false structural-MUX matches involving real gate
+roots/branches and on input/output vector permutations
+(/tmp/abcgo-enable-boundaries-red.log). Restrict these structural recognition
+paths to Boolean ANDs, keeping typed roots/branches atomic rather than interpreting
+their shared bit-field layout as NAND products. Unrecognized typed RI logic is
+preserved. Raw removal uses the established CI/CO remapping helpers to retain
+logical interface identity. Existing/native and boundary tests then pass in
+1.911s (/tmp/abcgo-enable-boundaries-repaired.log). Ordinary normalized C inputs
+retain their original behavior; these are explicit representation/interface
+repairs for Go's broader graph model.
+
+A red oversized-frequency-buffer test exposes PrintSignals reading past the
+manager's object domain and panicking; source loops only to object count. Bound
+both loops accordingly. Extending native removal coverage to ordinary unrecognized
+drivers also catches changed diagnostic word order
+(/tmp/abcgo-enable-reports-red.log). Restore driver/driver-fanin source reports;
+a first rerun exposed a second fanin-word placement difference, corrected before
+the final green run.
+
+Further red regressions expose typed supergate flattening, a false typed enable
+classification, and exponential expansion of a 60-buffer shared cone
+(/tmp/abcgo-enable-super-red.log). The subprocess regression times out after five
+seconds before repair. Use an ordered explicit stack with visited ANDs and a
+leaf-membership set; preserve existing result prefixes and first-discovery order.
+Typed primitives and constants remain atomic. Keep the public one-level collector
+one-level, and restrict the detector's structural logic to ordinary Boolean AND
+patterns. This fixes interpretation and repeated-subgraph work without adding
+new enable heuristics or persistent manager scratch.
+
+All current sequential/enable tests and the expanded ordinary native baseline
+pass in 1.974s (/tmp/abcgo-enable-phase2-focused.log). Save this checkpoint before
+adding direct native supergate-order and transfer/cofactoring composition coverage,
+broader state/phase/ownership checks and compactness measurements. Module race/vet
+integration and family closure remain pending; original completion stays 2/131.

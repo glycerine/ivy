@@ -5,23 +5,52 @@ import (
 	"github.com/glycerine/abcgo/misc/vec"
 )
 
+// Structural enable patterns require Boolean ANDs, not just their shared
+// object encoding. Real XOR/MUX nodes must remain atomic in these patterns.
+func giaEnableIsAnd(p *Gia_Man_t, obj *Gia_Obj_t) bool {
+	return Gia_ObjIsAnd(obj) != 0 && Gia_ObjIsXor(obj) == 0 && Gia_ObjIsMux(p, obj) == 0
+}
+
+func giaEnableIsMux(p *Gia_Man_t, obj *Gia_Obj_t) bool {
+	return giaEnableIsAnd(p, obj) &&
+		giaEnableIsAnd(p, Gia_ObjFanin0(obj)) &&
+		giaEnableIsAnd(p, Gia_ObjFanin1(obj)) && Gia_ObjIsMuxType(obj) != 0
+}
+
 func Gia_CollectSuper_rec(p *Gia_Man_t, obj *Gia_Obj_t, super *Vec_Int_t) {
-	if Gia_IsComplement(obj) != 0 || Gia_ObjIsCi(obj) != 0 {
-		vec.Vec_IntPushUnique(super, Gia_ObjId(p, Gia_Regular(obj)))
-		return
+	collected, visited := map[int32]bool{}, map[int32]bool{}
+	for _, id := range vec.Vec_IntArray(super) {
+		collected[id] = true
 	}
-	if Gia_ObjIsAnd(obj) == 0 {
-		panic("gia: invalid supergate")
+	stack := []*Gia_Obj_t{obj}
+	for len(stack) != 0 {
+		node := stack[len(stack)-1]
+		stack = stack[:len(stack)-1]
+		regular := Gia_Regular(node)
+		id := Gia_ObjId(p, regular)
+		if Gia_IsComplement(node) != 0 || Gia_ObjIsCi(regular) != 0 || id == 0 || Gia_ObjIsXor(regular) != 0 || Gia_ObjIsMux(p, regular) != 0 {
+			if !collected[id] {
+				vec.Vec_IntPush(super, id)
+				collected[id] = true
+			}
+			continue
+		}
+		if Gia_ObjIsAnd(regular) == 0 {
+			panic("gia: invalid supergate")
+		}
+		if visited[id] {
+			continue
+		}
+		visited[id] = true
+		stack = append(stack, Gia_ObjChild1(regular), Gia_ObjChild0(regular))
 	}
-	Gia_CollectSuper_rec(p, Gia_ObjChild0(obj), super)
-	Gia_CollectSuper_rec(p, Gia_ObjChild1(obj), super)
 }
 func Gia_CollectSuper(p *Gia_Man_t, obj *Gia_Obj_t, super *Vec_Int_t) {
 	if Gia_IsComplement(obj) != 0 {
 		panic("gia: complemented supergate root")
 	}
 	vec.Vec_IntClear(super)
-	if Gia_ObjIsAnd(obj) != 0 {
+	if giaEnableIsAnd(p, obj) {
 		vec.Vec_IntPushUnique(super, Gia_ObjId(p, Gia_ObjFanin0(obj)))
 		vec.Vec_IntPushUnique(super, Gia_ObjId(p, Gia_ObjFanin1(obj)))
 	} else {
@@ -30,7 +59,8 @@ func Gia_CollectSuper(p *Gia_Man_t, obj *Gia_Obj_t, super *Vec_Int_t) {
 }
 func Gia_ManPrintSignals(p *Gia_Man_t, freq []int32, label string) {
 	count, total := 0, int32(0)
-	for _, v := range freq {
+	for i := int32(0); i < p.nObjs; i++ {
+		v := freq[i]
 		if v > 1 {
 			count++
 			total += v
@@ -38,7 +68,8 @@ func Gia_ManPrintSignals(p *Gia_Man_t, freq []int32, label string) {
 	}
 	fmt.Printf("%s (total = %d  driven = %d)\n", label, count, total)
 	count = 0
-	for i, v := range freq {
+	for i := int32(0); i < p.nObjs; i++ {
+		v := freq[i]
 		if v > 10 {
 			count++
 			fmt.Printf("%3d :   Obj = %6d   Refs = %6d   Freq = %6d\n", count, i, p.Refs[i], v)
@@ -60,7 +91,7 @@ func giaDetectSeqSignals(p *Gia_Man_t) giaSeqSignals {
 	for i := int32(0); i < p.nRegs; i++ {
 		flop := Gia_ManRi(p, i)
 		node := Gia_ObjFanin0(flop)
-		if Gia_ObjIsAnd(node) == 0 {
+		if !giaEnableIsAnd(p, node) {
 			continue
 		}
 		Gia_CollectSuper(p, node, super)
@@ -71,7 +102,7 @@ func giaDetectSeqSignals(p *Gia_Man_t) giaSeqSignals {
 		for _, id := range vec.Vec_IntArray(super) {
 			target[id]++
 		}
-		if Gia_ObjIsMuxType(node) == 0 {
+		if !giaEnableIsMux(p, node) {
 			continue
 		}
 		var a, b *Gia_Obj_t
@@ -85,7 +116,7 @@ func giaDetectSeqSignals(p *Gia_Man_t) giaSeqSignals {
 	}
 	for i := int32(0); i < p.nRegs; i++ {
 		node := Gia_ObjFanin0(Gia_ManRi(p, i))
-		if Gia_ObjIsAnd(node) == 0 {
+		if !giaEnableIsAnd(p, node) {
 			continue
 		}
 		Gia_CollectSuper(p, node, super)

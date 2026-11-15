@@ -1,6 +1,81 @@
 package gia
 
-import "testing"
+import (
+	"context"
+	"os"
+	"os/exec"
+	"strings"
+	"testing"
+	"time"
+)
+
+func TestEnableSupergateKeepsTypedNodesAtomic(t *testing.T) {
+	p := Gia_ManStart(16)
+	defer Gia_ManStop(p)
+	a, b, c := Gia_ManAppendCi(p), Gia_ManAppendCi(p), Gia_ManAppendCi(p)
+	x := Gia_ManAppendXorReal(p, a, b)
+	y := Gia_ManAppendAnd(p, x, c)
+	super := Vec_IntAlloc(8)
+	Gia_CollectSuper_rec(p, Gia_ObjFromLit(p, y), super)
+	assertIDs(t, super, c>>1, x>>1)
+	Gia_CollectSuper(p, Gia_ObjFromLit(p, x), super)
+	assertIDs(t, super, x>>1)
+}
+
+func TestEnableDetectionRejectsFalseTypedMux(t *testing.T) {
+	p := Gia_ManStart(16)
+	defer Gia_ManStop(p)
+	p.EnableMuxes()
+	c, d, r := Gia_ManAppendCi(p), Gia_ManAppendCi(p), Gia_ManAppendCi(p)
+	a, b := Gia_ManAppendAnd(p, c, r), Gia_ManAppendAnd(p, c^1, d)
+	root := Gia_ManAppendMuxReal(p, d, a^1, b^1)
+	Gia_ManAppendCo(p, root)
+	Gia_ManSetRegNum(p, 1)
+	if got := giaDetectSeqSignals(p); got.haveEnable != 0 {
+		t.Fatalf("typed MUX has no hold-state branch but was classified as an enable: %d", got.haveEnable)
+	}
+}
+
+func TestEnableRecursiveSupergateSharedCone(t *testing.T) {
+	const marker = "ABCGO_ENABLE_SUPER_SHARED_CHILD"
+	if os.Getenv(marker) == "1" {
+		p := Gia_ManStart(128)
+		defer Gia_ManStop(p)
+		root := Gia_ManAppendCi(p)
+		for i := 0; i < 60; i++ {
+			root = Gia_ManAppendBuf(p, root)
+		}
+		v := Vec_IntAlloc(1)
+		Gia_CollectSuper_rec(p, Gia_ObjFromLit(p, root), v)
+		assertIDs(t, v, 1)
+		return
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	cmd := exec.CommandContext(ctx, os.Args[0], "-test.run=^TestEnableRecursiveSupergateSharedCone$")
+	cmd.Env = append(os.Environ(), marker+"=1")
+	if out, err := cmd.CombinedOutput(); err != nil {
+		t.Fatalf("shared DAG must not be expanded as an exponential tree: %v (context %v)\n%s", err, ctx.Err(), out)
+	}
+}
+
+func TestEnableSignalReportUsesObjectCount(t *testing.T) {
+	defer func() {
+		if r := recover(); r != nil {
+			t.Errorf("oversized frequency buffer panicked: %v", r)
+		}
+	}()
+	p := Gia_ManStart(8)
+	defer Gia_ManStop(p)
+	Gia_ManAppendCi(p)
+	Gia_ManCreateRefs(p)
+	freq := make([]int32, p.nObjs+2)
+	freq[1], freq[p.nObjs], freq[p.nObjs+1] = 2, 99, 99
+	got := hashReviewStdout(t, func() { Gia_ManPrintSignals(p, freq, "test") })
+	if !strings.HasPrefix(got, "test (total = 1  driven = 2)\n") {
+		t.Fatalf("frequency buffer tail leaked into the report: %q", got)
+	}
+}
 
 func TestEnableRemovalRejectsFalseTypedMuxPatterns(t *testing.T) {
 	for _, operation := range []struct {

@@ -90,10 +90,10 @@ func TestEnableOrdinaryTransformsMatchOriginalABC(t *testing.T) {
 					fmt.Println()
 					Gia_ManStop(q)
 				}
+				q := Gia_ManRemoveEnables(p)
+				enableReviewDump("removed", q)
+				Gia_ManStop(q)
 				if kind != 0 {
-					q := Gia_ManRemoveEnables(p)
-					enableReviewDump("removed", q)
-					Gia_ManStop(q)
 					q = Gia_ManRemoveEnables2(p)
 					enableReviewDump("removed2", q)
 					Gia_ManStop(q)

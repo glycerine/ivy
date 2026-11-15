@@ -120,7 +120,7 @@ func Gia_ManRemoveEnables2(p *Gia_Man_t) *Gia_Man_t {
 	for i := int32(0); i < p.nRegs; i++ {
 		ri := Gia_ManRi(p, i)
 		node := Gia_ObjFanin0(ri)
-		if Gia_ObjIsMuxType(node) == 0 {
+		if !giaEnableIsMux(p, node) {
 			fmt.Printf("Cannot recognize enable of flop %d.\n", i)
 			Gia_ObjSetValue(ri, Gia_ObjFanin0Copy(ri))
 			continue
@@ -166,12 +166,17 @@ func Gia_ManRemoveEnables(p *Gia_Man_t) *Gia_Man_t {
 		driver := Gia_ObjFanin0(ri)
 		complement := Gia_ObjFaninC0(ri)
 		failure := ""
+		subject := "driver"
 		if Gia_ObjIsAnd(driver) == 0 {
-			failure = "driver is not a node"
+			failure = "is not a node"
+		} else if !giaEnableIsAnd(p, driver) {
+			failure = "is not an ordinary AND node"
 		} else if Gia_ObjFaninC0(driver) == 0 || Gia_ObjFaninC1(driver) == 0 {
-			failure = "driver is not an OR gate"
+			failure = "is not an OR gate"
 		} else if Gia_ObjIsAnd(Gia_ObjFanin0(driver)) == 0 || Gia_ObjIsAnd(Gia_ObjFanin1(driver)) == 0 {
-			failure = "driver fanin is not a node"
+			subject, failure = "driver fanin", "is not a node"
+		} else if !giaEnableIsAnd(p, Gia_ObjFanin0(driver)) || !giaEnableIsAnd(p, Gia_ObjFanin1(driver)) {
+			subject, failure = "driver fanin", "is not an ordinary AND node"
 		}
 		var control, value *Gia_Obj_t
 		if failure == "" {
@@ -198,7 +203,7 @@ func Gia_ManRemoveEnables(p *Gia_Man_t) *Gia_Man_t {
 			}
 		}
 		if failure != "" {
-			fmt.Printf("The flop %d %s.\n", i, failure)
+			fmt.Printf("The flop %s %d %s.\n", subject, i, failure)
 			vec.Vec_IntPush(classes, 0)
 			failures++
 			continue
@@ -248,6 +253,8 @@ func Gia_ManRemoveEnables(p *Gia_Man_t) *Gia_Man_t {
 		}
 		Gia_ObjSetValue(ri, Gia_ManAppendCo(q, lit))
 	}
+	Gia_ManDupRemapCis(q, p)
+	Gia_ManDupRemapCos(q, p)
 	Gia_ManSetRegNum(q, p.nRegs)
 	result := Gia_ManCleanup(q)
 	Gia_ManStop(q)

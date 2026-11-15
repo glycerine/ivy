@@ -23,6 +23,6 @@ int main(void){int kind,phase,nf,limit,limits[]={0,1,3};for(kind=0;kind<2;++kind
  printf("case %d %d\n",kind,phase);Gia_ManDetectSeqSignals(g,1,1);
  for(limit=0;limit<3;++limit){s=Gia_ManDetectSeqSignalsWithFanout(g,limits[limit],1);printf("signals %d",limits[limit]);for(i=0;i<Vec_IntSize(s);++i)printf(" %d",Vec_IntEntry(s,i));puts("");Vec_IntFree(s);}
  for(nf=1;nf<=3;++nf){printf("frames %d\n",nf);q=Gia_ManUnrollInit(g,nf);dump("unrolled",q);printf("copies");for(i=0;i<nf*Gia_ManObjNum(g);++i)printf(" %d",Vec_IntEntry(&g->vCopies,i));puts("");Gia_ManStop(q);}
- if(kind){q=Gia_ManRemoveEnables(g);dump("removed",q);Gia_ManStop(q);q=Gia_ManRemoveEnables2(g);dump("removed2",q);Gia_ManStop(q);}
+ q=Gia_ManRemoveEnables(g);dump("removed",q);Gia_ManStop(q);if(kind){q=Gia_ManRemoveEnables2(g);dump("removed2",q);Gia_ManStop(q);}
  Gia_ManStop(g);
  }return 0;}
