@@ -2,23 +2,29 @@ package gia
 
 import (
 	"fmt"
+
 	"github.com/glycerine/abcgo/misc/vec"
 )
 
 func Gia_ManDupWithConstrCollectAnd_rec(p *Gia_Man_t, obj *Gia_Obj_t, super *Vec_Int_t, first int32) {
-	lit := Gia_ObjToLit(p, obj)
-	regular := Gia_Regular(obj)
-	if first == 0 && (lit&1 != 0 || Gia_ObjIsAnd(regular) == 0) {
-		vec.Vec_IntPushUnique(super, lit)
-		return
+	// A shared positive AND contributes the same ordered leaves on every
+	// visit. Expand it once without changing source marks or Value scratch.
+	expanded := make([]bool, p.nObjs)
+	var collect func(int32, bool)
+	collect = func(lit int32, root bool) {
+		a, b, _, kind := p.Gate(lit >> 1)
+		if kind != 2 || !root && lit&1 != 0 {
+			vec.Vec_IntPushUnique(super, lit)
+			return
+		}
+		if expanded[lit>>1] {
+			return
+		}
+		expanded[lit>>1] = true
+		collect(a, false)
+		collect(b, false)
 	}
-	a, b, _, kind := p.Gate(regular.id)
-	if kind != 2 {
-		vec.Vec_IntPushUnique(super, lit)
-		return
-	}
-	Gia_ManDupWithConstrCollectAnd_rec(p, Gia_ObjFromLit(p, a), super, 0)
-	Gia_ManDupWithConstrCollectAnd_rec(p, Gia_ObjFromLit(p, b), super, 0)
+	collect(Gia_ObjToLit(p, obj), first != 0)
 }
 func Gia_ManDupWithConstr(p *Gia_Man_t) *Gia_Man_t {
 	if Gia_ManPoNum(p) != 1 || Gia_ManRegNum(p) != 0 {

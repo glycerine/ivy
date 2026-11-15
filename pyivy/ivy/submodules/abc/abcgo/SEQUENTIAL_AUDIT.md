@@ -4592,3 +4592,45 @@ starting that gate. This completes dup_support.go's correctness and
 compactness review; no support semantics were changed. Further duplication
 routines and the GIA inventory still need review. Original completion is
 2/131; the sequential audit remains active.
+
+Constraint-extraction checkpoint: inspection found that the shared AND
+collector unfolds every path through a positive conjunction DAG. A new
+48-level/three-input regression hit its two-second child watchdog before the
+fix (`/tmp/abcgo-constraint-shared-red.log`). Keep a private expanded-node
+array and visit each positive AND once. Complemented boundaries are still
+recorded before checking expansion, root override is retained, and unique
+leaves retain first-encounter order. Source marks and Value scratch remain
+unchanged by collection. This removes exponential repeated expansion; leaf
+uniqueness still uses the original vector operation, so no claim of linear
+total complexity is made. Both extraction and demiter callers now complete
+the shared-cone regression. The 100-call/12-level benchmark measures 51,292 ns
+before and 331.4 ns after; both use zero heap allocations with this compiler.
+These are bounded benchmark results (`/tmp/abcgo-constraint-shared-before.log`
+and `/tmp/abcgo-constraint-shared-after.log`).
+
+Expanded checks pass in 1.894s (`/tmp/abcgo-constraint-final-focused.log`).
+The extraction matrix covers 896 graphs/28,672 assignments across 32 phase
+patterns, seven conjunction families, normal/reverse-DFS layouts and
+ordinary-AND/real-XOR/MUX forms. It checks exact ordered leaves, source scratch,
+all signed roots and root flags, prepopulated vectors, highest-level/first-tie
+selection, identities, hash shutdown and the two-output constraint contract:
+`property && !constraint` equals the original output for every assignment.
+False/true conjuncts, contradictions, shared subgraphs and signed internal
+boundaries are included. Invalid interfaces and nondecomposable boundaries
+are tested separately. Demiter compatibility covers AND/OR output polarity,
+register interface and next-state preservation; this is not yet a complete
+review of the other demiter routines.
+
+The original-C fixture `aig/gia/test_vectors/constraint_extract.c` compares
+448 ordinary-AND cases/14,336 input assignments, ordered leaves and result
+sizes/roles. The first direct comparison exposed an existing C assumption:
+its extraction copier appends CIs in physical object order, which can differ
+from CI-vector order after reverse DFS. The first mismatch is preserved in
+`/tmp/abcgo-constraint-native.log`. The fixture now reports that explicit
+permutation and evaluates C outputs with inputs aligned to original source
+ports; the Go path already preserves those ports. This aligned comparison
+passes (`/tmp/abcgo-constraint-native-aligned.log`), and normalized cases need
+no permutation. Typed nodes and safe rejection of non-AND root domains are
+checked independently, not attributed to the C routine. Full race tests and
+vet are running. Save this checkpoint with a red prefix until those gates
+finish. Original completion stays 2/131; GIA remains active.
