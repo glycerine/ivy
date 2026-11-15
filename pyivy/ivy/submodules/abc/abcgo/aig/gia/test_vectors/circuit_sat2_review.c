@@ -105,8 +105,24 @@ static void verbose(void) {
  store=Cbs2_ManSolveMiterNc(g,0,&status,1);Vec_IntFree(store);Vec_StrFree(status);Gia_ManStop(g);
 }
 
+static void decisions(void) {
+ Gia_Man_t *g=Gia_ManStart(16);Cbs2_Man_t *p;int a,b,c,d,ab,bc,cd,top,order,i,j,r,r2,r3;
+ a=Gia_ManAppendCi(g);b=Gia_ManAppendCi(g);c=Gia_ManAppendCi(g);d=Gia_ManAppendCi(g);
+ ab=Gia_ManAppendAnd(g,a,b);bc=Gia_ManAppendAnd(g,b,c);cd=Gia_ManAppendAnd(g,c,d);top=Gia_ManAppendAnd(g,ab,bc);
+ Gia_ManCreateRefs(g);Gia_ManLevelNum(g);p=Cbs2_ManAlloc(g);
+ for(i=0;i<Gia_ManObjNum(g);++i)Vec_IntWriteEntry(&p->vActivity,i,i%3);
+ for(order=0;order<2;++order){
+  p->pJust.iHead=p->pJust.iTail=0;Cbs2_QuePush(&p->pJust,top>>1);p->pJust.iHead=1;
+  Cbs2_QuePush(&p->pJust,(order?ab:cd)>>1);Cbs2_QuePush(&p->pJust,(order?cd:ab)>>1);Cbs2_QuePush(&p->pJust,top>>1);
+  r=r2=r3=-1;
+  for(j=p->pJust.iHead;j<p->pJust.iTail;++j){i=p->pJust.pData[j];r=Cbs2_ManUpdateDecVar(p,i,r);r2=Cbs2_ManUpdateDecVar2(p,i,r2);r3=Cbs2_ManUpdateDecVar3(p,i,r3);}
+  printf("decisions %d highest%d lowest%d maxff%d refs%d levels%d activity%d\n",order,Cbs2_ManDecideHighest(p),Gia_ObjId(g,Cbs2_ManDecideLowest(p)),Gia_ObjId(g,Cbs2_ManDecideMaxFF(p)),r,r2,r3);
+ }
+ Cbs2_ManStop(p);Gia_ManStop(g);
+}
+
 int main(int argc,char **argv) {
- if(argc>1){if(argv[1][0]=='m')miters();else if(argv[1][0]=='w')watch();else if(argv[1][0]=='f')fanouts();else if(argv[1][0]=='v')verbose();else stats();return 0;}
+ if(argc>1){if(argv[1][0]=='m')miters();else if(argv[1][0]=='w')watch();else if(argv[1][0]=='f')fanouts();else if(argv[1][0]=='v')verbose();else if(argv[1][0]=='d')decisions();else stats();return 0;}
  setvbuf(stdout,NULL,_IONBF,0);
  int seed,fanout,bi,ji,q,phase,mode,status,k,value,lits[29];
  int budgets[]={0,1,3,1000},frontiers[]={0,1,3,100};Gia_Man_t *g;Cbs2_Man_t *p;

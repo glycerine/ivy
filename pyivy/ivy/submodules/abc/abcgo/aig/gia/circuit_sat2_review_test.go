@@ -393,3 +393,92 @@ func TestCircuitSAT2NestedQueuesAndLifecycle(t *testing.T) {
 		}
 	}
 }
+
+func TestCircuitSAT2AllRootPairs(t *testing.T) {
+	queries := 0
+	for seed := 0; seed < 12; seed++ {
+		g, lits := cbs0ReviewGraph(seed)
+		truth := make([]uint32, g.nObjs)
+		for mask := 0; mask < 32; mask++ {
+			values, _, err := g.evaluateObjects([]bool{mask&1 != 0, mask&2 != 0, mask&4 != 0, mask&8 != 0, mask&16 != 0})
+			if err != nil {
+				t.Fatal(err)
+			}
+			for id, value := range values {
+				if value {
+					truth[id] |= 1 << uint(mask)
+				}
+			}
+		}
+		bits := func(lit int32) uint32 {
+			v := truth[lit>>1]
+			if lit&1 != 0 {
+				v = ^v
+			}
+			return v
+		}
+		roots := []int32{0, 1}
+		seen := make([]bool, 2*g.nObjs)
+		seen[0], seen[1] = true, true
+		for _, lit := range lits {
+			for phase := int32(0); phase < 2; phase++ {
+				root := lit ^ phase
+				if !seen[root] {
+					roots = append(roots, root)
+					seen[root] = true
+				}
+			}
+		}
+		p := Cbs2_ManAlloc(g)
+		for mode := int32(0); mode < 2; mode++ {
+			p.Pars.fUseFanout = mode
+			for _, first := range roots {
+				for _, second := range roots {
+					expected := bits(first)
+					// Zero is the source API's absent-second-root sentinel, not a false root.
+					if second != 0 {
+						expected &= bits(second)
+					}
+					status := Cbs2_ManSolve2(p, first, second)
+					if status != giaBool(expected == 0) {
+						t.Fatalf("graph%d mode%d pair%d,%d verdict%d expected%x", seed, mode, first, second, status, expected)
+					}
+					if status == 0 {
+						completions := ^uint32(0)
+						used := make([]bool, g.nObjs)
+						for _, lit := range Vec_IntArray(p.vModel) {
+							id := lit >> 1
+							if lit < 0 || id >= g.nObjs || used[id] {
+								t.Fatal("invalid paired witness literal")
+							}
+							used[id] = true
+							completions &= bits(lit)
+						}
+						if completions == 0 || completions & ^expected != 0 {
+							t.Fatalf("graph%d mode%d pair%d,%d invalid witness%v", seed, mode, first, second, Vec_IntArray(p.vModel))
+						}
+					} else if Vec_IntSize(p.vModel) != 0 {
+						t.Fatal("failed query retained model")
+					}
+					for id, v := range p.vAssign {
+						if v < 2 || p.vMark[id] != 0 || p.vLevReason[3*id] != -1 {
+							t.Fatal("paired query retained assignment/reason")
+						}
+					}
+					if p.pProp.iHead != 0 || p.pProp.iTail != 0 || p.pJust.iHead != 0 || p.pJust.iTail != 0 || p.pClauses.iHead != 1 || p.pClauses.iTail != 1 || len(p.vWatchUpds) != 0 {
+						t.Fatal("paired query retained queues/watches")
+					}
+					for _, v := range p.vWatches {
+						if v != 0 {
+							t.Fatal("paired query retained watch")
+						}
+					}
+					Cbs2_ManCheckFanouts(p)
+					queries++
+				}
+			}
+		}
+		Cbs2_ManStop(p)
+	}
+	t.Logf("%d complete five-input root-pair queries with exhaustive verdict and witness checks", queries)
+}

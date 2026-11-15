@@ -425,3 +425,43 @@ func TestCircuitSAT2VerbosePropagationStatistics(t *testing.T) {
 		t.Fatalf("propagation report differs\nGo:%s\nC:%s", tail(got), want)
 	}
 }
+
+func TestCircuitSAT2DecisionHelpersMatchOriginalABC(t *testing.T) {
+	exe := compileGiaSourceOracle(t, "circuit_sat2_review.c")
+	native, err := exec.Command(exe, "decisions").CombinedOutput()
+	if err != nil {
+		t.Fatalf("native CBS2 decision helpers: %v\n%s", err, native)
+	}
+	g := Gia_ManStart(16)
+	a, b, c, d := Gia_ManAppendCi(g), Gia_ManAppendCi(g), Gia_ManAppendCi(g), Gia_ManAppendCi(g)
+	ab, bc, cd := Gia_ManAppendAnd(g, a, b), Gia_ManAppendAnd(g, b, c), Gia_ManAppendAnd(g, c, d)
+	top := Gia_ManAppendAnd(g, ab, bc)
+	Gia_ManLevelNum(g)
+	p := Cbs2_ManAlloc(g)
+	defer Cbs2_ManStop(p)
+	for id := range p.vActivity {
+		p.vActivity[id] = int32(id % 3)
+	}
+	got := hashReviewStdout(t, func() {
+		for order := 0; order < 2; order++ {
+			p.pJust.iHead, p.pJust.iTail = 0, 0
+			Cbs2_QuePush(&p.pJust, top>>1)
+			p.pJust.iHead = 1
+			candidates := []int32{cd, ab, top}
+			if order != 0 {
+				candidates[0], candidates[1] = candidates[1], candidates[0]
+			}
+			r, r2, r3 := int32(-1), int32(-1), int32(-1)
+			for _, lit := range candidates {
+				Cbs2_QuePush(&p.pJust, lit>>1)
+				r = Cbs2_ManUpdateDecVar(p, lit>>1, r)
+				r2 = Cbs2_ManUpdateDecVar2(p, lit>>1, r2)
+				r3 = Cbs2_ManUpdateDecVar3(p, lit>>1, r3)
+			}
+			fmt.Printf("decisions %d highest%d lowest%d maxff%d refs%d levels%d activity%d\n", order, Cbs2_ManDecideHighest(p), Gia_ObjId(g, Cbs2_ManDecideLowest(p)), Gia_ObjId(g, Cbs2_ManDecideMaxFF(p)), r, r2, r3)
+		}
+	})
+	if got != string(native) {
+		t.Fatalf("decision helpers differ\nGo:%s\nC:%s", got, native)
+	}
+}

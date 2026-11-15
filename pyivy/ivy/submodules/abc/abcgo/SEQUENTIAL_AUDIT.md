@@ -6493,3 +6493,15 @@ top-down 5,653ns and fanout 4,260ns, both 0B/0 allocations
 (/tmp/abcgo-cbs2-scratch-final.log). Save an integration-pending checkpoint before
 all-root-pair checks on the harder five-input graphs and full race/vet gates.
 Original completion remains 2/131; CBS2 and the GIA audit remain in progress.
+
+CBS2's all-root-pair sweep passes 57,832 five-input queries across both
+propagation modes, including repeated/contradictory roots, the zero second-root
+sentinel and hard reconvergence/parity functions (/tmp/abcgo-cbs2-all-pairs.log).
+All verdicts, nonempty all-object cube completions and scratch cleanup are checked
+independently. Native helper tests additionally compare highest/lowest/max-fanin-
+fanout selection and reference/level/activity decision updates with order/tie and
+inactive-prefix cases. The complete CBS2 focused suite passes in 13.577s
+(/tmp/abcgo-cbs2-final-focused.log). REVIEW_circuit_sat2.md records scope and the
+source-versus-Go raw-representation distinction. Save a checkpoint and freeze
+source/tests/fixtures for full module race and GIA vet integration. Original
+completion remains 2/131; GIA is still active.
