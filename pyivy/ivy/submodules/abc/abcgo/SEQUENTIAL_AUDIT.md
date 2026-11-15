@@ -4947,3 +4947,16 @@ the two explicit complete-output role sites from shared constructor behavior.
 Full uncached module race tests and GIA vet are running. Save this checkpoint
 with a red prefix until integration finishes. Original completion remains
 2/131; the GIA audit continues.
+
+Final cofactor/quantifier partition integration is green: all 130 tested
+module packages pass the uncached race run; three command packages have no
+tests and no extra failure/race diagnostic lines appear
+(`/tmp/abcgo-quant-partition-module-race.log`). GIA passes in 195.849s,
+ABCI in 29.888s, PDR in 14.769s and BMC in 24.267s. GIA vet passes
+(`/tmp/abcgo-quant-partition-vet.log`). No code changed after b8f937c88.
+This closes the bad-output role follow-up at the two explicit cofactor/
+quantifier sites. Source Boolean rules and derived-operation role policies
+remain intact, including C's auxiliary-output universal behavior. Continue
+with rehashing, balancing and box-order role paths and the remaining GIA
+algorithm inventory. Original completion stays 2/131; the sequential audit
+remains active.
