@@ -139,8 +139,12 @@ func Gia_ManRebuildNode(manager *dsd.Dsd_Manager_t, node *dsd.Dsd_Node_t, p *Gia
 	case dsd.DSD_NODE_PRIME:
 		src := dsd.Dsd_ManagerReadDd(manager)
 		local := dsd.Dsd_TreeGetPrimeFunction(src, node)
-		local = extrab.Extra_TransferLevelByLevel(src, dd, local)
-		lit = Gia_ManRebuildIsop(dd, local, p, fanins, sop, cube)
+		cudd.Cudd_Ref(local)
+		transferred := extrab.Extra_TransferLevelByLevel(src, dd, local)
+		cudd.Cudd_Ref(transferred)
+		cudd.Cudd_RecursiveDeref(src, local)
+		lit = Gia_ManRebuildIsop(dd, transferred, p, fanins, sop, cube)
+		cudd.Cudd_RecursiveDeref(dd, transferred)
 	default:
 		return -1
 	}
@@ -295,7 +299,9 @@ func Gia_ManCollapse(p *Gia_Man_t, dd *cudd.DdManager, limit, verbose int32) *Ve
 func Gia_ManCollapseTest(p *Gia_Man_t, verbose int32) *Gia_Man_t {
 	dd := cudd.Cudd_Init(uint32(Gia_ManCiNum(p)), 0, 0, 0, 0)
 	defer cudd.Cudd_Quit(dd)
+	cudd.Cudd_AutodynEnable(dd, cudd.CUDD_REORDER_SYMM_SIFT)
 	funcs := Gia_ManCollapse(p, dd, 10000, 0)
+	cudd.Cudd_AutodynDisable(dd)
 	if funcs == nil {
 		return Gia_ManDup(p)
 	}
@@ -306,26 +312,54 @@ func Gia_ManCollapseTest(p *Gia_Man_t, verbose int32) *Gia_Man_t {
 	}
 	manager := dsd.Dsd_ManagerStart(dd, int(Gia_ManCiNum(p)), 0)
 	defer dsd.Dsd_ManagerStop(manager)
+	if verbose != 0 {
+		fmt.Printf("Ins = %d. Outs = %d.  Shared BDD nodes = %d.  Peak live nodes = %d. Peak nodes = %d.\n",
+			Gia_ManCiNum(p), Gia_ManCoNum(p), giaClpSharingSize(roots), cudd.Cudd_ReadPeakLiveNodeCount(dd), cudd.Cudd_ReadNodeCount(dd))
+	}
 	dsd.Dsd_Decompose(manager, roots, len(roots))
 	if verbose != 0 {
 		inputs := make([]string, Gia_ManCiNum(p))
 		outputs := make([]string, Gia_ManCoNum(p))
+		inputNames, outputNames := Gia_GetFakeNames(Gia_ManCiNum(p)), Gia_GetFakeNames(Gia_ManCoNum(p))
 		for i := range inputs {
-			inputs[i] = fmt.Sprintf("i%d", i)
+			inputs[i] = Vec_PtrEntry(inputNames, i).(string)
 		}
 		for i := range outputs {
-			outputs[i] = fmt.Sprintf("o%d", i)
+			outputs[i] = Vec_PtrEntry(outputNames, i).(string)
 		}
-		fmt.Printf("Ins = %d. Outs = %d. BDD nodes = %d.\n", len(inputs), len(outputs), cudd.Cudd_ReadNodeCount(dd))
 		dsd.Dsd_TreePrint(os.Stdout, manager, inputs, outputs, 0, -1)
 	}
 	local := cudd.Cudd_Init(uint32(Gia_ManCiNum(p)), 0, 0, 0, 0)
 	defer cudd.Cudd_Quit(local)
+	cudd.Cudd_zddVarsFromBddVars(local, 2)
 	return Gia_ManRebuild(p, manager, local)
+}
+
+// Cudd_SharingSize is not exposed by the Go core. Count each regular node
+// once across all roots, including the shared constant, as the source does.
+func giaClpSharingSize(roots []*cudd.DdNode) int {
+	seen := make(map[*cudd.DdNode]bool)
+	var visit func(*cudd.DdNode)
+	visit = func(node *cudd.DdNode) {
+		node = cudd.Cudd_Regular(node)
+		if node == nil || seen[node] {
+			return
+		}
+		seen[node] = true
+		if !cudd.Cudd_IsConstant(node) {
+			visit(node.T)
+			visit(node.E)
+		}
+	}
+	for _, node := range roots {
+		visit(node)
+	}
+	return len(seen)
 }
 
 func Gia_ManCollapseTestTest(p *Gia_Man_t) {
 	out := Gia_ManCollapseTest(p, 0)
-	fmt.Printf("GIA collapse: %d nodes -> %d nodes\n", Gia_ManObjNum(p), Gia_ManObjNum(out))
+	Gia_ManPrintStats(p, nil)
+	Gia_ManPrintStats(out, nil)
 	Gia_ManStop(out)
 }

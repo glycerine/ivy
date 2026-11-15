@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	cudd "github.com/glycerine/abcgo/bdd/cudd/core"
+	"github.com/glycerine/abcgo/bdd/dsd"
 )
 
 func TestCollapseRebuildProducesFactoredIsopCover(t *testing.T) {
@@ -179,4 +180,77 @@ func TestCollapseInterfaceLayoutsAndAiger(t *testing.T) {
 		}
 	}
 	t.Logf("%d typed/layout/reset cases and %d independently checked output rows", cases, cases*16*2)
+}
+
+func TestCollapsePrimeTransferOwnership(t *testing.T) {
+	for _, table := range []int{0xe8, 0xca} {
+		for _, order := range [][]int{{0, 1, 2}, {1, 2, 0}} {
+			for _, width := range []uint32{0, 3} {
+				source := cudd.Cudd_Init(3, 0, 0, 0, 0)
+				if cudd.Cudd_ShuffleHeap(source, order) == 0 {
+					t.Fatal("source reorder failed")
+				}
+				f := collapseReviewBDD(source, 3, table)
+				cudd.Cudd_Ref(f)
+				manager := dsd.Dsd_ManagerStart(source, 3, 0)
+				dsd.Dsd_Decompose(manager, []*cudd.DdNode{f}, 1)
+				node := dsd.Dsd_ManagerReadRoot(manager, 0)
+				if dsd.Dsd_NodeReadType(node) != dsd.DSD_NODE_PRIME {
+					t.Fatal("fixture is not prime")
+				}
+				before := cudd.Cudd_ExternalRefCount(source, f)
+				target := cudd.Cudd_Init(width, 0, 0, 0, 0)
+				g := Gia_ManStart(16)
+				Gia_ManHashStart(g)
+				for i := 0; i < 3; i++ {
+					dsd.Dsd_NodeSetMark(dsd.Dsd_ManagerReadInput(manager, i), int(Gia_ManAppendCi(g)))
+				}
+				root := Gia_ManRebuildNode(manager, node, g, target, Vec_IntAlloc(3), Vec_StrAlloc(0), Vec_StrAlloc(0))
+				if width == 0 {
+					if root != -1 {
+						t.Fatal("unsupported transfer succeeded")
+					}
+				} else {
+					if root < 0 {
+						t.Fatal("prime transfer failed")
+					}
+					Gia_ManAppendCo(g, root)
+					for mask := 0; mask < 8; mask++ {
+						checkQuantificationOutputs(t, g, []bool{mask&1 != 0, mask&2 != 0, mask&4 != 0}, []bool{table>>mask&1 != 0})
+					}
+				}
+				if count := cudd.Cudd_ExternalRefCount(source, f); count != before {
+					t.Fatalf("source root references %d want%d", count, before)
+				}
+				if count := cudd.Cudd_CheckZeroRef(target); count != 0 {
+					t.Fatalf("prime transfer leaked %d target roots", count)
+				}
+				cudd.Cudd_Quit(target)
+				dsd.Dsd_ManagerStop(manager)
+				cudd.Cudd_RecursiveDeref(source, f)
+				if count := cudd.Cudd_CheckZeroRef(source); count != 0 {
+					t.Fatalf("prime transfer leaked %d source roots", count)
+				}
+				cudd.Cudd_Quit(source)
+			}
+		}
+	}
+}
+
+func TestCollapseReportingFollowsSource(t *testing.T) {
+	p := Gia_ManStart(16)
+	a, b := Gia_ManAppendCi(p), Gia_ManAppendCi(p)
+	Gia_ManAppendCi(p)
+	Gia_ManAppendCo(p, Gia_ManAppendAnd(p, a, b))
+	if out := hashReviewStdout(t, func() { Gia_ManCollapseTest(p, 0) }); out != "" {
+		t.Fatalf("quiet collapse printed %q", out)
+	}
+	text := hashReviewStdout(t, func() { Gia_ManCollapseTest(p, 1) })
+	if !strings.Contains(text, "Shared BDD nodes = 3.") || !strings.Contains(text, "Peak live nodes = ") || strings.Contains(text, "i0") || strings.Contains(text, "o0") {
+		t.Fatalf("source collapse report lost shared-node statistics or generated names: %q", text)
+	}
+	text = hashReviewStdout(t, func() { Gia_ManCollapseTestTest(p) })
+	if strings.Count(text, "i/o =") != 2 {
+		t.Fatalf("source test wrapper should print both graph statistics: %q", text)
+	}
 }

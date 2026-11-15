@@ -170,3 +170,96 @@ func TestCollapseRebuildMatchesOriginalABC(t *testing.T) {
 	}
 	t.Log("all 256 three-input functions match exact native rebuilt graph and output literals")
 }
+
+func TestCollapseWideIsopMatchesOriginalABC(t *testing.T) {
+	exe := compileGiaSourceOracle(t, "collapse_isop_wide.c")
+	native, err := exec.Command(exe).CombinedOutput()
+	if err != nil {
+		t.Fatalf("native wide ISOP: %v\n%s", err, native)
+	}
+	var got strings.Builder
+	cases := 0
+	for _, n := range []int{4, 17, 33, 65} {
+		for _, table := range []int{6, 0x81, 0xe8, 0xca, 0x96, 0x7e} {
+			for order := 0; order < 2; order++ {
+				dd := cudd.Cudd_Init(uint32(n), 0, 0, 0, 0)
+				sequence := make([]int, n)
+				for i := range sequence {
+					sequence[i] = i
+					if order != 0 {
+						sequence[i] = n - 1 - i
+					}
+				}
+				if cudd.Cudd_ShuffleHeap(dd, sequence) == 0 || cudd.Cudd_zddVarsFromBddVars(dd, 2) == 0 {
+					t.Fatal("wide order failed")
+				}
+				positions := []int{0, n / 2, n - 1}
+				f := dd.LogicZero
+				for mask := 0; mask < 8; mask++ {
+					if table>>mask&1 != 0 {
+						cube := dd.One
+						for i, index := range positions {
+							cube = cudd.Cudd_bddAnd(dd, cube, cudd.Cudd_NotCond(dd.Vars[index], mask>>i&1 == 0))
+						}
+						f = cudd.Cudd_bddOr(dd, f, cube)
+					}
+				}
+				cudd.Cudd_Ref(f)
+				for phase := 0; phase < 8; phase++ {
+					g := Gia_ManStart(int32(2*n + 64))
+					Gia_ManHashStart(g)
+					leaves := Vec_IntAlloc(n)
+					for i := 0; i < n; i++ {
+						lit := Gia_ManAppendCi(g)
+						for j, index := range positions {
+							if i == index {
+								lit ^= int32(phase >> j & 1)
+							}
+						}
+						Vec_IntPush(leaves, lit)
+					}
+					sop := Vec_StrAlloc(0)
+					root := Gia_ManRebuildIsop(dd, f, g, leaves, sop, Vec_StrAlloc(0))
+					if root < 0 {
+						t.Fatalf("wide ISOP failed n%d table%x", n, table)
+					}
+					cover := Vec_StrArray(sop)
+					fmt.Fprintf(&got, "case %d %x %d %d %d sop%s nodes", n, table, order, phase, root, hex.EncodeToString(cover[:len(cover)-1]))
+					for _, obj := range g.pObjs {
+						if Gia_ObjIsAnd(obj) != 0 {
+							a, b, _, _ := g.Gate(obj.id)
+							fmt.Fprintf(&got, " %d:%d", a, b)
+						}
+					}
+					Gia_ManAppendCo(g, root)
+					packed := 0
+					for mask := 0; mask < 8; mask++ {
+						inputs := make([]bool, n)
+						for i, index := range positions {
+							inputs[index] = mask>>i&1 != 0
+						}
+						want := table>>(mask^phase)&1 != 0
+						checkQuantificationOutputs(t, g, inputs, []bool{want})
+						if want {
+							packed |= 1 << mask
+						}
+					}
+					fmt.Fprintf(&got, " truth %x\n", packed)
+					cases++
+				}
+				cudd.Cudd_RecursiveDeref(dd, f)
+				cudd.Cudd_Quit(dd)
+			}
+		}
+	}
+	if got.String() != string(native) {
+		a, b := strings.Split(got.String(), "\n"), strings.Split(string(native), "\n")
+		for i := 0; i < min(len(a), len(b)); i++ {
+			if a[i] != b[i] {
+				t.Fatalf("wide ISOP source line%d differs\nGo:%s\nC: %s", i+1, a[i], b[i])
+			}
+		}
+		t.Fatalf("native output length Go%d C%d", got.Len(), len(native))
+	}
+	t.Logf("%d exact native wide ISOP/factoring cases across 32/64-bit literal boundaries", cases)
+}

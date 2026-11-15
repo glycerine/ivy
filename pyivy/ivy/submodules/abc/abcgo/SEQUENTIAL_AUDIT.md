@@ -5992,3 +5992,40 @@ with independent exhaustive truth checks
 (/tmp/abcgo-collapse-rebuild-native.log). The earlier 6,264 ISOP-specific native
 cases also still pass. Save a red checkpoint pending prime-transfer lifecycle,
 source reporting review and full integration. Original completion remains 2/131.
+
+Shared/complemented output, buffer and caller-owned-root tests pass after an
+actual BDD reorder, including exact external-reference ownership and final
+cleanup. Cached typed gates succeed with budget zero after an allocating run;
+zero budget means no new nodes, not automatic failure. Prime transfer coverage
+passes before the ownership-bracket adjustment, so that adjustment is explicitly
+source-fidelity/lifecycle protection, not a newly demonstrated leak fix. Restore
+C's reference brackets around both extracted and transferred local functions;
+reordered-source success and undersized-target failure paths remain balanced.
+
+The reporting regression fails because Go reports total manager nodes instead
+of reachable shared output nodes and uses i0/o0 names instead of source fake
+names (/tmp/abcgo-collapse-reporting-red.log). Restore source report labels,
+actual shared regular-node counting (including the common constant), fake-name
+use, and both graph-statistics calls in Gia_ManCollapseTestTest. The Go CUDD core
+has no exposed Cudd_SharingSize, so use a small local source-equivalent traversal;
+its peak-count API remains the existing core's approximation, not a new exact
+peak tracker. Restore source automatic-reordering enable/disable calls and paired
+ZDD-variable setup. The current core enables a policy flag; this does not claim
+that its allocation engine now performs source-equivalent automatic reordering.
+
+Add empty/constant interfaces, standalone final-fanout cleanup, generated-name
+boundaries, complemented/shared regular-node counts and large-name uniqueness
+coverage. Keep the existing readable decimal fake-name suffix past 259 rather
+than C's punctuation-producing single-character overflow; this is a documented
+Go diagnostic extension, not an algorithm substitution.
+
+An additional native oracle matches 384 exact wide ISOP/SOP/factoring graphs for
+4/17/33/65 fanins, signed leaves and forward/reverse variable orders, with all
+selected-variable assignments checked independently
+(/tmp/abcgo-collapse-wide-native.log). These exercise multiword MVC cubes past
+32- and 64-bit literal boundaries. The final focused suite passes in 7.091s
+(/tmp/abcgo-collapse-final-focused.log), including 6,264 small ISOP comparisons,
+256 complete native collapse/DSD/rebuild graphs, the wide cases and the interface/
+resource/reference/reporting checks. Freeze source/tests/fixtures after the next
+checkpoint for full uncached module race tests and GIA vet. Original completion
+remains 2/131; GIA and the full sequential audit remain active.
