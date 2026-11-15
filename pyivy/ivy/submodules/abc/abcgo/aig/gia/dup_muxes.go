@@ -3,7 +3,7 @@ package gia
 // Gia_ManDupMuxes recognizes the original AND decomposition in source order.
 // Sibling barriers and fanout limits prevent absorbing shared choice structure.
 func Gia_ManDupMuxes(src *Gia_Man_t, limit int32) *Gia_Man_t {
-	if src.PMuxes != nil || limit < 0 {
+	if src.PMuxes != nil || src.nXors != 0 || limit < 0 {
 		panic("gia: coarsening expects ordinary AIG and nonnegative limit")
 	}
 	src.Refs = nil
@@ -52,6 +52,8 @@ func Gia_ManDupMuxes(src *Gia_Man_t, limit int32) *Gia_Man_t {
 			}
 		}
 	}
+	Gia_ManDupRemapCis(dst, src)
+	Gia_ManDupRemapCos(dst, src)
 	Gia_ManHashStop(dst)
 	Gia_ManSetRegNum(dst, src.nRegs)
 	giaCopyInterfaceMetadata(dst, src)

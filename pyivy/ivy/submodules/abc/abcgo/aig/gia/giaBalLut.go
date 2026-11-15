@@ -487,7 +487,7 @@ func giaLutBalanceInt(src *Gia_Man_t, lutSize, cutNum, verbose int32) *Gia_Man_t
 	fmt.Printf("Best delay = %d\n", delay)
 	Gia_ManHashStop(dst)
 	Gia_ManSetRegNum(dst, src.nRegs)
-	dst.nConstrs = src.nConstrs
+	giaCopyOutputRoles(dst, src)
 	if err := dst.CopyIONamesFrom(src, nil, nil); err != nil {
 		panic(err)
 	}
@@ -501,7 +501,7 @@ func Gia_ManBalanceLut(src *Gia_Man_t, lutSize, cutNum, verbose int32) *Gia_Man_
 	coarse := Gia_ManDupMuxes(src, 2)
 	balanced := giaLutBalanceInt(coarse, lutSize, cutNum, verbose)
 	result := Gia_ManDupNoMuxes(balanced, 0)
-	result.nConstrs = src.nConstrs
+	giaCopyOutputRoles(result, src)
 	if err := result.CopyIONamesFrom(src, nil, nil); err != nil {
 		panic(err)
 	}

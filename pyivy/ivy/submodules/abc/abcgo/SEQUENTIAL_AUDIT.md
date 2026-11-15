@@ -5018,3 +5018,17 @@ composition and logical interfaces retain the Go graph contract. Output
 roles survive cleanup and serialization. Continue with balancing/box-order
 metadata paths and the remaining GIA algorithm inventory. Original completion
 remains 2/131; the sequential audit is active.
+
+LUT balancing/coarsening follow-up: three new regressions failed before
+production edits (`/tmp/abcgo-balance-review-red.log`): balancing discarded
+the bad-output count, DFS/interleaved source layouts changed logical port
+identity in both coarsening and public balancing, and an unsupported raw XOR
+was silently interpreted as an AND by the ordinary-AIG coarsener.
+
+Gia_ManDupMuxes now remaps CI/CO vectors from source logical order before
+cleanup and rejects raw XOR alongside its existing raw-MUX precondition.
+Both balancing copy stages preserve complete output roles. Focused tests,
+including the existing original-ABC balancing oracle, pass. Expanded
+parameter/partition/serialization verification is running; full integration
+is still pending. This does not finish the balancing algorithm review or
+GIA package review. Original completion remains 2/131.
