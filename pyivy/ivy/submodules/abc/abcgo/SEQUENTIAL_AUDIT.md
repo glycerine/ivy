@@ -4156,3 +4156,51 @@ Full uncached race tests pass for GIA (120.622s), CEC (41.515s) and ABCI
 explicit-list and presence-vector output-selection review. Literal/terminal
 remapping helpers and other GIA families remain open; original package
 completion stays 2/131 and the sequential audit remains active.
+
+Literal/terminal/equivalence remapping review: inspect Gia_ManDupRemapLiterals,
+Gia_ManDupRemapCis/Cos and Gia_ManDupRemapEquiv against giaDup.c and their
+WLC/CBA, ordered-copy, sweep-domain and input-unshuffle callers. No production
+defect was found. Literal remapping correctly preserves negative placeholders,
+emits -1 for either polarity of a dropped object and XORs source/copied edge
+phases. Terminal remapping restores vectors and CIO ordinals without changing
+the actual edges, source Values or destination identity/register metadata.
+Keep the two short terminal loops explicit: their diagnostics distinguish
+input and output contract failures, and another generic helper would add
+indirection without a useful reduction.
+
+Compiled C agrees across 343 literal-map combinations (3,773 scalar entries),
+1,728 independent input/output terminal permutations (27,648 complete
+assignment rows) and 128 representative mappings. Literal cases include
+constant collapse, complemented copied edges, aliasing destinations, dropped
+objects and negative markers -1/-7/MinInt32. Source Value storage is checked
+against the original map after remapping. Terminal cases cover all 24x24
+permutations with zero/two/four registers and check vector IDs, CIO ordinals,
+output truth, unchanged source mappings and unrelated destination metadata.
+Repeat the terminal matrix on source DFS layouts for another 27,648 rows.
+
+Representative cases cover two disjoint classes, multiple constant candidates,
+rotated/reversed destination IDs, four mapped-literal phase patterns and an
+unmapped unclassified object. Expected groups and sorted next chains are
+computed independently; destination representative storage must not alias the
+source. Five independent Go checks additionally exercise the existing
+TransferRepresentativesFrom support for dropped class heads, surviving
+singletons, collapsed members/classes and constant collapse. Those robustness
+cases do not claim C's class walk supports every dropped/collapsed mapping;
+its assertion/invalid indexing is not deliberately invoked.
+
+Boundary/rejection checks cover empty graphs/vectors, bad literal indices,
+terminal count mismatch, absent/complemented/out-of-range/nonterminal target
+mappings, absent source metadata preserving existing destination classes,
+preallocated destination class storage, malformed source representatives and
+invalid mapped IDs. The fixture is
+`aig/gia/test_vectors/duplication_remapping.c`. Initial native and independent
+checks pass in 1.960s (`/tmp/abcgo-remap-native-expanded.log`). This is a
+test-only checkpoint; production code is unchanged from the preceding full
+GIA/CEC/ABCI race gate. It closes the remaining reviewed helpers and completes
+dup_order.go. Other DFS duplication variants and GIA families remain open;
+original package completion remains 2/131 and the sequential audit is active.
+
+Final focused uncached race tests pass in 3.835s
+(`/tmp/abcgo-remap-final-race.log`); final GIA vet passes
+(`/tmp/abcgo-remap-final-vet.log`). No further broad rerun is needed for this
+test-only addition after the immediately preceding full caller race gate.
