@@ -5196,3 +5196,20 @@ Source informational unshuffle warnings are expected. All focused timing
 checks pass in 5.054s (`/tmp/abcgo-unshuffle-expanded.log`). Full module race
 and GIA vet integration follow; save a red checkpoint until verified.
 Original completion remains 2/131; GIA and the sequential audit stay active.
+
+Buffer traversal and unshuffle integration is green. Full uncached module
+race tests pass all 130 tested packages; three command packages have no tests
+and no failure/race diagnostic lines appear
+(`/tmp/abcgo-unshuffle-module-race.log`). GIA passes in 236.165s, ABCI in
+28.999s and BMC in 23.888s. GIA vet passes
+(`/tmp/abcgo-unshuffle-vet.log`). Source/tests/native fixtures stayed unchanged
+during the integration run. Buffer repair and tests are in bf6ff6f59;
+unshuffle repair and expanded tests are in 3a1edbf8e.
+
+This closes the buffer-specific source discrepancy and the unshuffle role/
+gate-kind repairs while retaining exact native ordinary-AIG behavior. The
+remaining state-coordinate duplication/simulation family in dup_seq.go is
+next: inspect physical versus logical port order in Gia_ManDupFlip, preserve
+its complemented CI copy-map semantics, and check Cycle/DupCycled against
+source and transition-table oracles. Original completion remains 2/131;
+GIA and the sequential audit remain active.
