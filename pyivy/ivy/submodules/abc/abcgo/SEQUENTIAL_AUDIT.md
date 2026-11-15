@@ -8691,3 +8691,28 @@ REVIEW_simulation_datasets.md records the full13-routine plan and remaining
 native dump/read/statistics, compactness and integration work. Package audit
 completion remains2/131; GIA and this family remain open. Save coherent red
 checkpoints while full validation is pending. No agents/branches.
+
+### Dataset native dump and reader/classifier matrices
+
+All128 positive-partition binary/PLA dump configurations match every native
+byte, file list, exact report, retained simulation word count and next RNG word.
+Rows and headers are independently decoded against scalar gate truth. Cases
+cover both naming options, seeds, sizes, phases, typed gates via explicit C
+expansions, logical reordering and RO/RI. Exact handle31364 terminates exit0,
+2.225s (/tmp/abcgo-gen-native-dumps-first.log).
+
+All1,536 complete reader/classifier configurations match original C reports,
+packed input words, labels and semantic JSON fields. Independently check
+correct/error/majority counts and fixed graph statistics. Both direct calls and
+TestOneFile cover AND/XOR/MUX ordinary expansions, every selected phase,
+reordered logical inputs/first output, LF/CRLF, directives, word widths and
+optional statistics. /tmp/abcgo-gen-native-reader-first.log,5.789s (exact
+handle24448 still to consume). Share only native graph construction in a C
+fixture header; production source remains original.
+
+Baseline compactness measurements are /tmp/abcgo-gen-before-bench.log:
+65,536-row parameter reading40.651ms,19,069,152B,327,709allocs; 64-word PLA
+dump2.028ms,413,957B,48allocs. The reader retains binary rows unnecessarily for
+parameter detection; PLA output buffers the whole file before writing. Further
+validation/compatibility tests precede storage simplification. Family/GIA remain
+open and completion stays2/131.
