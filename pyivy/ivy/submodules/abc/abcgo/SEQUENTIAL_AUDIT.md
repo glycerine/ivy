@@ -4765,3 +4765,26 @@ physical interleaving; the original object-copy, class and immediate-choice
 rules remain. Other duplication/GIA families and final package inventory
 reconciliation are still open. Original package completion remains 2/131;
 the sequential audit is active.
+
+Trimming checkpoint: red tests expose removal of an always-different `(0,1)`
+dual pair and loss of retained constraint/bad-output roles in both trimming
+entry points (`/tmp/abcgo-trim-review-red.log`). The nonzero-pair helper tested
+the driver's object ID, discarding constant one as well as constant zero.
+Test the full literal so only false is discarded. Count retained output roles
+when appending original POs; dummy outputs stay ordinary. Stateful dual tests
+also expose a missing bad-output count in the unchanged-output CI-map path
+(`/tmp/abcgo-trim-cimap-roles-red.log`). Preserve it alongside nConstrs only
+when no explicit output list is supplied. This is a follow-up to the earlier
+CI-map audit, which covered constraints but missed the separate Go bad-output
+partition. Explicit output selections retain their derived-interface policy.
+
+Focused regressions pass (`/tmp/abcgo-trim-repairs-focused.log`). Reference
+counting shared by both trimming routines now reads logical fanins directly,
+without temporary per-node lists; skip counting when PI trimming is disabled.
+The 100-call/256-buffer benchmark changes 22,944 bytes/528 allocations per
+call to 21,904 bytes/269 allocations (20,145 ns to 18,537 ns in this sample).
+Logs are `/tmp/abcgo-trim-before.log` and the focused log above. The result is
+specific to this benchmark; the retained-node/reference rules are unchanged.
+Expanded ordinary/dual/metadata and original-C checks, plus the full
+integration gate, are pending. Save this checkpoint with a red prefix.
+Original completion remains 2/131; GIA review continues.

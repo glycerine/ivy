@@ -24,22 +24,50 @@ func Gia_ManDupTrimmedNonZero(src *Gia_Man_t) *Vec_Int_t {
 	result := vec.Vec_IntAlloc(int(Gia_ManPoNum(swept)))
 	for i := int32(0); i < Gia_ManPoNum(swept); i++ {
 		obj := Gia_ManPo(swept, i)
-		if Gia_ObjFaninId0(obj, obj.id) != 0 {
+		if Gia_ObjFaninLit0(obj, obj.id) != 0 {
 			vec.Vec_IntPush(result, i)
 		}
 	}
 	return result
 }
+
+// Keep output roles attached to the selected original POs, excluding dummies.
+func giaTrimAppendPo(dst, src *Gia_Man_t, index int32) {
+	pos := Gia_ManPoNum(src)
+	if index >= pos-src.nConstrs {
+		dst.nConstrs++
+	} else if index >= pos-src.nConstrs-src.aigerBadOutputs {
+		dst.aigerBadOutputs++
+	}
+	giaDupMappedOutput(dst, src, Gia_ManPo(src, index))
+}
+
+func giaTrimReferences(src *Gia_Man_t) []int32 {
+	refs := make([]int32, src.nObjs)
+	for _, obj := range src.pObjs {
+		a, b, c, kind := src.Gate(obj.id)
+		if kind == 0 || kind == 1 {
+			continue
+		}
+		refs[a>>1]++
+		if kind == 2 || kind == 3 || kind == 4 {
+			refs[b>>1]++
+		}
+		if kind == 4 {
+			refs[c>>1]++
+		}
+	}
+	return refs
+}
+
 func Gia_ManDupTrimmed(src *Gia_Man_t, trimCis, trimCos, dual, value int32) *Gia_Man_t {
 	var nonzero *Vec_Int_t
 	if dual != 0 && trimCos != 0 {
 		nonzero = Gia_ManDupTrimmedNonZero(src)
 	}
-	refs := make([]int32, src.nObjs)
-	for _, obj := range src.pObjs {
-		for _, id := range giaObjectFanins(src, obj) {
-			refs[id]++
-		}
+	var refs []int32
+	if trimCis != 0 {
+		refs = giaTrimReferences(src)
 	}
 	out := giaDupMappedStart(src)
 	retained := int32(0)
@@ -64,8 +92,8 @@ func Gia_ManDupTrimmed(src *Gia_Man_t, trimCis, trimCos, dual, value int32) *Gia
 			Gia_ManAppendCo(out, 0)
 		} else {
 			for _, index := range vec.Vec_IntArray(nonzero) {
-				giaDupMappedOutput(out, src, Gia_ManPo(src, 2*index))
-				giaDupMappedOutput(out, src, Gia_ManPo(src, 2*index+1))
+				giaTrimAppendPo(out, src, 2*index)
+				giaTrimAppendPo(out, src, 2*index+1)
 			}
 		}
 	} else {
@@ -82,7 +110,7 @@ func Gia_ManDupTrimmed(src *Gia_Man_t, trimCis, trimCos, dual, value int32) *Gia
 		for i := int32(0); i < Gia_ManPoNum(src); i++ {
 			obj := Gia_ManPo(src, i)
 			if trimCos == 0 || Gia_ManPoIsToRemove(src, obj, value) == 0 {
-				giaDupMappedOutput(out, src, obj)
+				giaTrimAppendPo(out, src, i)
 			}
 		}
 	}
@@ -98,12 +126,7 @@ func Gia_ManDupTrimmed(src *Gia_Man_t, trimCis, trimCos, dual, value int32) *Gia
 	return out
 }
 func Gia_ManDupTrimmed2(src *Gia_Man_t) *Gia_Man_t {
-	refs := make([]int32, src.nObjs)
-	for _, obj := range src.pObjs {
-		for _, id := range giaObjectFanins(src, obj) {
-			refs[id]++
-		}
-	}
+	refs := giaTrimReferences(src)
 	for i := int32(0); i < Gia_ManPoNum(src); i++ {
 		obj := Gia_ManPo(src, i)
 		refs[Gia_ObjFaninId0(obj, obj.id)]--
@@ -141,7 +164,7 @@ func Gia_ManDupTrimmed2(src *Gia_Man_t) *Gia_Man_t {
 	for i := int32(0); i < Gia_ManPoNum(src); i++ {
 		obj := Gia_ManPo(src, i)
 		if keep(obj) {
-			giaDupMappedOutput(out, src, obj)
+			giaTrimAppendPo(out, src, i)
 		}
 	}
 	for i := int32(0); i < Gia_ManRegNum(src); i++ {

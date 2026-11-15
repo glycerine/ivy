@@ -207,6 +207,7 @@ func Gia_ManDupDfsCiMap(src *Gia_Man_t, ciMap []int32, lits *Vec_Int_t) *Gia_Man
 	Gia_ManSetRegNum(out, Gia_ManRegNum(src))
 	if lits == nil {
 		out.nConstrs = src.nConstrs
+		out.aigerBadOutputs = src.aigerBadOutputs
 	}
 	return out
 }
