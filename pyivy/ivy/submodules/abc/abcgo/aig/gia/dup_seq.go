@@ -7,45 +7,28 @@ func Gia_ManDupFlip(src *Gia_Man_t, initial []int32) *Gia_Man_t {
 	if len(initial) < int((src.nRegs+31)/32) {
 		panic("gia: short packed register initialization")
 	}
-	dst := Gia_ManStart(src.nObjs)
-	dst.CopyIdentityFrom(src)
-	dst.fGiaSimple = src.fGiaSimple
-	if src.PMuxes != nil {
-		dst.EnableMuxes()
-	}
+	dst := giaDupMappedStart(src)
 	bit := func(index int32) int32 { return int32(uint32(initial[index>>5]) >> uint(index&31) & 1) }
-	src.pObjs[0].Value = 0
-	for _, obj := range src.pObjs[1:] {
-		a, b, c, kind := src.Gate(obj.id)
-		var literal int32
-		switch kind {
-		case 1:
-			literal = Gia_ManAppendCi(dst)
-			if Gia_ObjIsRo(src, obj) != 0 {
-				literal ^= bit(Gia_ObjCioId(obj) - Gia_ManPiNum(src))
-			}
-		case 2:
-			literal = Gia_ManAppendAnd(dst, Gia_ObjLitCopy(src, a), Gia_ObjLitCopy(src, b))
-		case 3:
-			literal = Gia_ManAppendXorReal(dst, Gia_ObjLitCopy(src, a), Gia_ObjLitCopy(src, b))
-		case 4:
-			literal = Gia_ManAppendMuxReal(dst, Gia_ObjLitCopy(src, a), Gia_ObjLitCopy(src, b), Gia_ObjLitCopy(src, c))
-		case 5:
-			literal = Gia_ManAppendBuf(dst, Gia_ObjLitCopy(src, a))
-		case 6:
-			literal = Gia_ObjLitCopy(src, a)
-			if Gia_ObjIsRi(src, obj) != 0 {
-				literal ^= bit(Gia_ObjCioId(obj) - Gia_ManPoNum(src))
-			}
-			literal = Gia_ManAppendCo(dst, literal)
-		default:
-			panic("gia: unsupported state-flip object")
+	for i := int32(0); i < Gia_ManCiNum(src); i++ {
+		literal := Gia_ManAppendCi(dst)
+		if i >= Gia_ManPiNum(src) {
+			literal ^= bit(i - Gia_ManPiNum(src))
 		}
-		obj.Value = uint32(literal)
+		Gia_ManCi(src, i).Value = uint32(literal)
+	}
+	// CI copy literals retain their state-coordinate polarity; they cannot
+	// use the regular-literal CI remapper after a physical-order copy.
+	giaDupMappedNodes(dst, src)
+	for i := int32(0); i < Gia_ManCoNum(src); i++ {
+		obj := Gia_ManCo(src, i)
+		literal := Gia_ObjFanin0Copy(obj)
+		if i >= Gia_ManPoNum(src) {
+			literal ^= bit(i - Gia_ManPoNum(src))
+		}
+		obj.Value = uint32(Gia_ManAppendCo(dst, literal))
 	}
 	Gia_ManSetRegNum(dst, src.nRegs)
-	dst.nConstrs = src.nConstrs
-	dst.aigerBadOutputs = src.aigerBadOutputs
+	giaCopyOutputRoles(dst, src)
 	return dst
 }
 func Gia_ManCycle(p *Gia_Man_t, cex *Abc_Cex_t, frames int32) {

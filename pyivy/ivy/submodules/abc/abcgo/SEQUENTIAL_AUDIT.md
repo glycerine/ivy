@@ -5213,3 +5213,46 @@ next: inspect physical versus logical port order in Gia_ManDupFlip, preserve
 its complemented CI copy-map semantics, and check Cycle/DupCycled against
 source and transition-table oracles. Original completion remains 2/131;
 GIA and the sequential audit remain active.
+
+State-coordinate duplication/simulation review finds a logical-port defect
+in Gia_ManDupFlip. Its physical object loop assigns CI/CO ordinals in DFS
+object order instead of source logical vector order. Four new red cases
+(mask 0..3) fail, including the zero-flip identity case
+(`/tmp/abcgo-state-flip-red.log`). Complemented RO source Value literals are
+intentional; the regular-literal CI remapper cannot repair this copy safely.
+
+Create all CIs in logical order, preserving each selected RO's complemented
+copy literal; copy internal gates via giaDupMappedNodes; append COs in
+logical order, complementing each selected RI. Reuse giaDupMappedStart and
+giaCopyOutputRoles. This shortens the local implementation while retaining
+raw XOR/MUX/buffers, simple mode and the complete output partition. Ordinary
+normalized input retains the original C structure/copy-map behavior.
+
+New tests in dup_seq_review_test.go cover 2,016 phase/type/layout/register/
+flip-mask combinations and 64,512 input/state rows, checking the state
+coordinate relation, complemented CI copy maps, normalized result, output
+roles, AIGER serialization and double-flip restoration. Another 48 cases /
+6,144 rows cover 31/32/33/63/64/65 registers, zero/all/alternating/boundary
+flip masks, and ordinary/DFS wire graphs across packed-word boundaries.
+
+seq_cycle_review_test.go checks Cycle against a frame-by-frame Boolean
+transition evaluator for 20,160 cases, including every object mark, mark1
+preservation and the next deterministic random word. It checks DupCycled's
+zero-state simulation, dirty-mark cleanup, derived flip semantics and roles
+for 1,920 copies/61,440 rows. Another 300 counterexample cases vary register
+and PI counts across word boundaries, zero through five frames and DFS
+layouts. Their reference retains unpacked PI frames to avoid repeating a
+packed-offset bug. Cycle uses existing RO marks and ignores the CEX register
+prefix; DupCycled deliberately resets to zero before simulation, as in C.
+
+seq_native_review_test.go and test_vectors/state_cycle.c execute original
+C routines on 504 flips, 10,080 simulations and 960 cycled copies. Exact
+structure/source Value maps, scratch marks, deterministic random words and
+46,848 output truth rows agree (`/tmp/abcgo-state-native.log`, 1.947s).
+Typed/DFS behavior and Go-specific output roles are independently checked,
+not claimed as supported native behavior. The transition matrix passes in
+0.626s (`/tmp/abcgo-seq-transition.log`); wide CEX checks pass in 0.011s
+(`/tmp/abcgo-cycle-word-boundaries.log`). No additional Cycle/DupCycled
+production bug or useful simplification was found. Save a red checkpoint
+pending full module race tests and GIA vet. Original completion stays 2/131;
+GIA and the sequential audit remain active.
