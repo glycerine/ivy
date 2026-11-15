@@ -1,4 +1,4 @@
-# Cube reachability review — in progress
+# Cube reachability review — final integration pending
 
 Scope: the 74 functions/accessors in `src/aig/gia/giaEra2.c` (1,963 lines),
 implemented in `era_{cube,manager,lists,tree,tfo,support,successors,counterexample}.go`.
@@ -62,25 +62,107 @@ these checks. The most recent full-module race checkpoint remains the earlier
 explicit-reachability review. Native tests require Linux/compiler/original ABC
 objects and skip without those prerequisites; independent tests remain runnable.
 
-## Remaining work before closing the family
+## Completed final source and correctness pass
 
-- Complete the source-by-source pass for all 74 entries, including storage
-  exhaustion, list/tree union invariants, compression/sharping/containment,
-  recursion/resource stops, cofactor scratch lifecycle and reporting.
-- Add independent exhaustive/random cube-set union checks beyond full-minterm
-  tree membership, including mixed don't-care cubes, unused cubes and retries.
-- Verify recursive stopping and driver limits independently. The original C
-  driver can call CEX reconstruction on a state-limit stop without a failing
-  output/target and assert. Preserve the existing Go distinction between a
-  resource stop and a genuine witness; do not reproduce that source defect.
-- Reports omit source fields/layout and need red native comparisons. Inspect
-  diagnostic-only traversals and statistics without changing cube semantics.
-- Finish a separate correctness/compactness pass and rerun full uncached module
-  race tests plus GIA vet on a frozen final family checkpoint.
+Read all 74 original definitions and their Go implementations in a separate
+inspection pass, including ownership, state-word padding, unused marks, source
+sentinels, pointer/ID access, predecessor depth, list/tree counters and split
+thresholds, sharp/containment retries, processed/unprocessed collections,
+cofactor support/dependencies, scratch restoration, stopping and SAT models.
 
-Source boundaries: normal driver circuits have 1..16,384 registers. Counterexample
-models can differ in general SAT tie cases, so independently validate witnesses;
-the tracked ordinary matrix happens to match every native bit exactly. Existing
-Go errors for impossible/unknown trace queries remain explicit instead of C's
-print-and-continue path, which can leave stale model data. No cube-family closure
-or package completion is claimed yet.
+| Original entries | Inspection and evidence |
+| --- | --- |
+| 24 handle, bit, object/state and branch accessors | Packed-word/mark properties; ordinary native traces; manager/tree/maximum-variable tests. |
+| 2 minterm and 6 relation functions | Native 2,187-pair matrix; all 1,093 zero-to-six-variable ternary minterm patterns; Boolean union oracles. |
+| 3 TFO, 2 usage, 2 PO-support and 1 may-fail helper | Native transitions, CI cone tests, typed MUX control repair, correlated successor and interrupted cofactor tests. The source may-fail helper stays structural; the driver proves candidates. |
+| 7 manager/create/recycle functions | Normal/wide state cases; packed handles; capacity rejection before access/allocation; full-range page arithmetic. |
+| 11 list/tree processing functions | Native relation/driver tests; exhaustive ordered cube triples; mixed-cube rooted-union checks; nested split/duplicate/maximum-variable tests. |
+| 8 print/count/depth helpers | Native valid-state reports/cube printing, unused filtering, source traversal read-through, independent union counts and predecessor traces. |
+| 2 successor routines, report and driver | Native 160-case baseline; semantic proof/scalar BFS; counter limits; real million-call stop/unwind; native diagnostic/domain tests. |
+| 4 counterexample routines | Persistent source BSAT lifecycle, variable binding, 270 scalar transition queries, exact native witnesses, valid independent traces and deadline cleanup. |
+
+The independent union tests enumerate all 19,683 ordered triples of
+three-variable ternary cubes, checking every insertion. Sixteen further sequences
+seed 192 eight-variable minterms, then add 100 mixed cubes each after nested
+splits. Inspect rooted storage independently and compare the exact Boolean set;
+there are no lost live records, invalid links, contradictory bits or changed
+unions. No union algorithm substitution is needed.
+
+A six-bit counter independently verifies thirteen limits in both miter modes,
+post-successor/reserved-entry accounting, first failure at frame 32, and witness
+priority at the boundary. A real shared twenty-PI parity example reaches the
+million-call limit with only two successor states; verify stopped/no-target
+status and restored cofactor functions after unwinding. A red zero-budget
+regression repairs stale trace retention before an early return.
+
+Page metadata used a signed overflowing ceil expression at the top of the
+supported counter range. A red arithmetic test gives negative pages where 2,048
+are needed. Use zero for empty storage and `1+(count-1)/MAX_ITEM_NUM` otherwise.
+The minterm slice already benchmarks at zero allocations, so retain it rather
+than making an unmeasured representation rewrite.
+
+Native private and driver report tests restore memory, numeric padding, source
+completion wording, verbose timing and unique-minterm diagnostics. Report actual
+witness output/frame, rather than C's incorrect queue-index labels. A simulated
+fifty-minute interval reproduces negative timings with 32-bit accumulators;
+64-bit microsecond counters fix that while retaining the source report format.
+
+## Semantic feasibility correction
+
+The source's structural nonconstancy heuristic is insufficient for proof.
+`((a&b)|(a&c)) XOR (a&(b|c))` is Boolean zero but survives strashing. As a PO it
+causes impossible CEX reconstruction; as an RI it fabricates a don't-care state.
+Eight red ordinary/real-gate cases demonstrate false candidates and imprecise
+zero/one successors before the repair.
+
+Retain cube/cofactor reachability and use the existing BSAT single-frame CNF for
+exact feasibility checks. Bind source CIs fixed by the current cube/recursive
+branch. A PO needs a satisfying assignment; an RI can vary only when both
+polarities are feasible. Literals that are constants or unresolved CIs need no
+SAT call. Checked polarity facts belong to the current pNew literal namespace
+and are discarded on graph replacement. Unknown queries stop with no fabricated
+target. Reuse the same source solver for CEX reconstruction, preserve Value
+scratch during online typed normalization, and release online SAT on all exits.
+This repairs the source heuristic using its existing solver; no alternate SAT
+or reachability algorithm is introduced.
+
+Additional evidence: 128 generated ordinary/real-gate sequential machines agree
+with independent scalar BFS in both miter modes. Validate every witness. Tests
+cover separate cached polarity facts, a real million-node graph replacement,
+old-cache isolation on reused object numbers, scratch ownership and an expired
+proof deadline through a recursive parent. No unproved fact may enter the cache.
+
+An expired deadline during CEX reconstruction previously panicked as if UNSAT.
+A red regression separates resource exhaustion: the SAT frame helper returns
+false for Unknown, the trace routine returns nil with deferred session cleanup,
+and the driver returns -1 with no witness. UNSAT transition reconstruction
+remains a correctness error. Successful query callers may ignore the added bool
+result; callers handling interruption must check it.
+
+## Domain and deliberate source differences
+
+The supported driver domain is **0..16,384 registers**. Twelve actual-C
+zero-register cases prove the old Go <=0 guard was too restrictive; reject only
+negative counts. Independently verify pure constant/no-input circuits and
+empty-bit witnesses, retaining the Go nil-CI guard where C dereferences NULL.
+
+Keep safe unknown outcomes for C's state-limit/CEX assertion defect. Preserve
+source queue/count conventions, split thresholds and parent trace structure.
+The completed C report reads a record just past nStas and prints a spurious depth
+one; Go retains its bounded zero for no current state. Native comparisons
+normalize only that explicitly invalid source lookup, addresses and measured
+storage/time quantities. Valid-state report depths/formatting match C.
+
+The original raw-fanin AIG export compatibility API remains unchanged. Real gates
+are normalized only at the counterexample CNF boundary. Native tests skip when
+Linux/compiler/original object prerequisites are absent; independent tests do not.
+Profiling is wall-clock time in Go rather than C CPU time, and memory reports use
+actual Go record sizes/capacities instead of allocated C pages.
+
+## Final verification status
+
+All focused cube, enable and native-export regressions pass in 15.683s
+(`/tmp/abcgo-era2-final-focused.log`). The source/compactness pass is complete,
+but final full-module race tests and GIA vet are still pending. Keep this family
+open until those exact gates finish on frozen production/tests/fixtures. GIA and
+the 131-package audit remain incomplete; original package completion is 2/131.

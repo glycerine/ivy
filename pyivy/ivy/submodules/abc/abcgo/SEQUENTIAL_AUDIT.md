@@ -7573,3 +7573,23 @@ while an impossible transition must still expose a correctness error. This is
 pending and separate from the verified domain/profiling checkpoint. Finish it,
 review notes and frozen full integration before closing the cube family. The
 normal domain is now zero through 16,384 registers. Completion remains 2/131.
+
+### Cube trace-deadline repair and final integration freeze
+
+A red deterministic BSAT deadline test shows trace reconstruction panics on
+Unknown (/tmp/abcgo-era2-cex-deadline-red.log). Return false for interrupted SAT
+frame queries, clear stale PI-model output, return nil from reconstruction with
+deferred solver/target cleanup, and map nil to driver unknown (-1). Keep UNSAT
+transition reconstruction as an invariant error. Successful statement callers can
+ignore the added bool; interrupted-model consumers must check it.
+
+All focused cube/enable/native-export regressions now pass in 15.683s
+(/tmp/abcgo-era2-final-focused.log). REVIEW_cube_reachability.md contains the final
+74-entry source inspection inventory, separate correctness/compactness pass,
+independent/native evidence, semantic-feasibility correction, domain fixes and
+intentional source-safety differences. The legacy structural may-fail helper's
+comment explicitly distinguishes it from the driver's proven candidate check.
+
+Freeze production, tests and fixtures for full uncached module race tests and
+GIA vet. The family is not closed until both exact handles are terminal and
+successful. GIA and the overall audit remain incomplete; completion stays 2/131.

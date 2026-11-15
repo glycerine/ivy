@@ -191,3 +191,34 @@ func TestCubeReachabilityOnlineSATPreservesSourceScratch(t *testing.T) {
 		}
 	}
 }
+
+func TestCubeReachabilityCounterexampleDeadlineReturnsUnknown(t *testing.T) {
+	g := Gia_ManStart(8)
+	Gia_ManAppendCi(g)
+	ro := Gia_ManAppendCi(g)
+	Gia_ManAppendCo(g, 1)
+	Gia_ManAppendCo(g, ro)
+	Gia_ManSetRegNum(g, 1)
+	p := Gia_ManAreCreate(g)
+	defer Gia_ManAreFree(p)
+	p.fMiter = 1
+	Gia_ManAreCubeProcess(p, Gia_ManAreCreateStaInit(p))
+	Gia_ManAreDeriveNexts(p, Gia_Int2Ptr(1))
+	if p.pTarget == nil {
+		t.Fatal("missing setup target")
+	}
+	Gia_ManAreDeriveCexSatStart(p)
+	p.pSat.SetRuntimeDeadline(func() int64 { return 2 }, 1)
+	var failure any
+	var cex *Abc_Cex_t
+	func() { defer func() { failure = recover() }(); cex = Gia_ManAreDeriveCex(p, p.pTarget) }()
+	if failure != nil {
+		t.Fatalf("counterexample resource stop panicked instead of returning no witness: %v", failure)
+	}
+	if cex != nil {
+		t.Fatal("interrupted reconstruction returned a witness")
+	}
+	if p.pSat != nil || p.pTarget != nil {
+		t.Fatal("interrupted reconstruction retained solver/target")
+	}
+}

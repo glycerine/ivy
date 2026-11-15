@@ -65,6 +65,9 @@ func Gia_ManCheckPOs(p *Gia_ManAre_t) int32 {
 	}
 	return result
 }
+
+// Gia_ManCheckPOstatus retains C's structural may-fail test. The driver
+// separately proves feasibility before producing a counterexample.
 func Gia_ManCheckPOstatus(p *Gia_ManAre_t) int32 {
 	for i := int32(0); i < Gia_ManPoNum(p.pAig); i++ {
 		lit := Gia_ObjValue(Gia_ManPo(p.pAig, i))

@@ -60,7 +60,10 @@ func Gia_ManAreDeriveCexSatStop(p *Gia_ManAre_t) {
 	p.pTarget = nil
 	p.vSatNumCis, p.vSatNumCos, p.vCofVars, p.vAssumps = nil, nil, nil, nil
 }
-func Gia_ManAreDeriveCexSat(p *Gia_ManAre_t, current, next *Gia_StaAre_t, output int32) {
+
+// Gia_ManAreDeriveCexSat returns false when a resource stop prevents a model.
+// An UNSAT transition is an invariant failure, rather than a valid trace step.
+func Gia_ManAreDeriveCexSat(p *Gia_ManAre_t, current, next *Gia_StaAre_t, output int32) bool {
 	if p.pSat == nil {
 		panic("gia: counterexample solver is not active")
 	}
@@ -87,6 +90,10 @@ func Gia_ManAreDeriveCexSat(p *Gia_ManAre_t, current, next *Gia_StaAre_t, output
 		vec.Vec_IntPush(p.vAssumps, bsat.Positive(vec.Vec_IntEntry(p.vSatNumCos, int(output))))
 	}
 	status := p.pSat.SolveWithResourceLimits(vec.Vec_IntArray(p.vAssumps), 1000000, 0, 0, 0)
+	if status == bsat.Unknown {
+		vec.Vec_IntClear(p.vCofVars)
+		return false
+	}
 	if status != bsat.Satisfiable {
 		panic(fmt.Sprintf("gia: could not reconstruct reachability transition (status %d)", status))
 	}
@@ -110,6 +117,7 @@ func Gia_ManAreDeriveCexSat(p *Gia_ManAre_t, current, next *Gia_StaAre_t, output
 			Gia_StaSetValue0(current, i)
 		}
 	}
+	return true
 }
 func Gia_ManAreDeriveCex(p *Gia_ManAre_t, last *Gia_StaAre_t) *Abc_Cex_t {
 	if p.iOutFail < 0 || last == nil {
@@ -118,6 +126,7 @@ func Gia_ManAreDeriveCex(p *Gia_ManAre_t, last *Gia_StaAre_t) *Abc_Cex_t {
 	if p.pSat == nil {
 		Gia_ManAreDeriveCexSatStart(p)
 	}
+	defer Gia_ManAreDeriveCexSatStop(p)
 	var states []*Gia_StaAre_t
 	for s := last; Gia_StaIsGood(p, s) != 0; s = Gia_StaPrev(p, s) {
 		if s != last {
@@ -136,12 +145,13 @@ func Gia_ManAreDeriveCex(p *Gia_ManAre_t, last *Gia_StaAre_t) *Abc_Cex_t {
 		if i == 0 {
 			output = p.iOutFail
 		}
-		Gia_ManAreDeriveCexSat(p, s, previous, output)
+		if !Gia_ManAreDeriveCexSat(p, s, previous, output) {
+			return nil
+		}
 		previous = s
 		for _, v := range vec.Vec_IntArray(p.vCofVars) {
 			util.Abc_InfoSetBit(cex.PData, p.pAig.nRegs+int32(len(states)-1-i)*Gia_ManPiNum(p.pAig)+v)
 		}
 	}
-	Gia_ManAreDeriveCexSatStop(p)
 	return cex
 }

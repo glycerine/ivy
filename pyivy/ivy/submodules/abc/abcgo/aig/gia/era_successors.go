@@ -201,6 +201,9 @@ func Gia_ManArePerform(g *Gia_Man_t, maxStates, miter, verbose int32) int32 {
 		if p.pTarget != nil {
 			g.pCexSeq = Gia_ManAreDeriveCex(p, p.pTarget)
 			result = 0
+			if g.pCexSeq == nil {
+				result = -1
+			}
 			break
 		}
 		if p.fStopped != 0 || p.nStas > maxStates {
