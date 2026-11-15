@@ -7593,3 +7593,36 @@ comment explicitly distinguishes it from the driver's proven candidate check.
 Freeze production, tests and fixtures for full uncached module race tests and
 GIA vet. The family is not closed until both exact handles are terminal and
 successful. GIA and the overall audit remain incomplete; completion stays 2/131.
+
+### Cube reachability full integration and next family
+
+Full uncached module race tests pass all 130 tested packages; three command
+packages have no tests (/tmp/abcgo-era2-final-module-race.log). GIA passes in
+469.967s; ABCI in 29.217s and BMC in 23.807s. GIA vet passes with empty output
+(/tmp/abcgo-era2-final-vet.log). Consume both exact handles terminal/successful;
+production/tests/fixtures stayed frozen throughout the gates. Mark giaEra2.c's
+74 definitions reviewed, including the added exact semantic-feasibility helpers,
+SAT/cache ownership, interruption paths, native/scalar evidence, source boundaries
+and compactness decisions recorded in REVIEW_cube_reachability.md. The rest of
+GIA and its final inventory remain incomplete. Original completion stays 2/131.
+
+Read-only preparation identifies giaCof.c next (1,002 C lines), implemented by
+cof_network.go, cof_analysis.go and cof_duplicate.go. Its earlier enable-driver
+report fix did not close this family. Temporary actual-C/Go probes under
+/tmp/abcgo-cof-review-probe confirm two concrete differences on an ordinary
+three-PI structural MUX:
+
+- The control's nFanoutsM is one in C but zero in Go. The Go constructor counts
+  real-MUX controls only, losing the source structural-MUX reference metadata.
+  network.{c,go}, native-network.out and go-network.out preserve the comparison.
+- Dereference/reference recursion both report three affected internal nodes,
+  but Cof_ObjFanoutNum returns zero during the native dereferenced session and
+  still one in Go. references.{c,go}, native-references.out and go-references.out
+  preserve this getter/live-counter distinction; counts restore to one afterward.
+
+No cofactor production/test/fixture changes were made during the cube freeze.
+Next add minimal red regressions before any repairs, track normalized native
+connectivity/cone/reference/score oracles, inspect high-fanout ordering and
+count-removed propagation, and verify Boolean cofactor reconstruction against
+C and independent truth tables. Keep packed C offsets vs Go logical handles an
+explicit representation distinction; don't require raw arena-address equality.

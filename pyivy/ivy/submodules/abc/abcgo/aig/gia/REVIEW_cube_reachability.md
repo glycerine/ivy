@@ -1,4 +1,4 @@
-# Cube reachability review — final integration pending
+# Cube reachability review
 
 Scope: the 74 functions/accessors in `src/aig/gia/giaEra2.c` (1,963 lines),
 implemented in `era_{cube,manager,lists,tree,tfo,support,successors,counterexample}.go`.
@@ -162,7 +162,11 @@ actual Go record sizes/capacities instead of allocated C pages.
 ## Final verification status
 
 All focused cube, enable and native-export regressions pass in 15.683s
-(`/tmp/abcgo-era2-final-focused.log`). The source/compactness pass is complete,
-but final full-module race tests and GIA vet are still pending. Keep this family
-open until those exact gates finish on frozen production/tests/fixtures. GIA and
-the 131-package audit remain incomplete; original package completion is 2/131.
+(`/tmp/abcgo-era2-final-focused.log`). Full uncached module race tests pass all
+130 tested packages, with three no-test command packages; GIA passes in 469.967s
+(`/tmp/abcgo-era2-final-module-race.log`). GIA vet passes with empty output
+(`/tmp/abcgo-era2-final-vet.log`). Both exact handles finished successfully and
+production/tests/fixtures stayed frozen throughout the gates. Mark this source
+family reviewed, including the added exact-feasibility helpers and their session,
+cache and interruption lifecycles. GIA and the 131-package audit remain incomplete;
+original package completion is 2/131.
