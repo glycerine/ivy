@@ -5601,3 +5601,26 @@ Freeze source/tests/fixtures now for the full uncached module race suite plus
 GIA/IF vet. Save an integration checkpoint; the entire IF package is not claimed
 reviewed merely because its DSD dependency bug was repaired. Original completion
 stays 2/131, GIA and the sequential audit active.
+
+Window and DSD-cache integration is green. All 130 tested packages pass the full
+uncached module race suite, with three command packages without tests and no
+failure/race diagnostic lines (/tmp/abcgo-window-module-race.log). GIA passes in
+267.184s, IF in 8.595s, ABCI in 29.477s and BMC in 23.707s. Both GIA and IF vet
+pass with an empty log (/tmp/abcgo-window-vet.log). Source/tests/fixtures remained
+unchanged throughout the run, and the working tree contains only unrelated
+untracked parent files after the review commits.
+
+This closes the reviewed giaBalMap.go window helper/wrapper family and
+balance_window_drivers.go wiring: native ordinary-AIG comparison, typed and
+zero-depth extensions, physical/logical layout changes, mapped selection,
+property/reset preservation, empty/invalid wrapper paths and actual SOP/DSD
+engine integration. The discovered IF DSD-cache bug is repaired by restoring
+the source raw-truth convention, with direct red evidence and exhaustive small
+function coverage. It does not mark the whole IF package reviewed.
+
+Next review giaBidec.go: reconcile cut-truth conversion and mapped resynthesis
+with source, extend width/support and scratch-ownership tests, check logical
+CI/CO remapping and property boundaries, and measure any avoidable table copies
+before changing storage. No bi-decomposition production change has been made
+while integration ran. Original completion remains 2/131; GIA and the full
+sequential audit stay active.
