@@ -6345,3 +6345,33 @@ and the chronological statistics test pass in 7.791s
 of allocating a local visited slice on every conflict; benchmark follow-up and
 broader lifecycle coverage are pending. Save a red checkpoint before further
 work. Original completion remains 2/131; GIA and the full audit remain active.
+
+Source reusable conflict scratch and a fixed two-root array remove all steady-
+state allocations in the hard-query benchmark: single UNSAT goes from
+2,208B/37 allocations/16,162ns to 0B/0 allocations/8,336ns; paired UNSAT from
+1,168B/21 allocations/9,732ns to 0B/0 allocations/4,454ns
+(/tmp/abcgo-cbs-scratch-before.log and /tmp/abcgo-cbs-scratch-after.log).
+These figures precede the subsequent constant-fanin predicate repair, which
+will receive a final benchmark and native rerun.
+
+A new Go raw-gate regression finds an actual false-SAT bug: the accepted ordinary
+AND (constant0 AND a) is reported SAT because propagation assigns the constant
+node as an unknown variable (/tmp/abcgo-cbs-constant-fanin-red.log). Source's
+usual hashed inputs simplify such fanins before this engine; Go accepts raw GIA
+gates too. Treat constant fanins as their fixed literal values, and use those
+values in justification classification. The regression passes after repair
+(/tmp/abcgo-cbs-constant-fanin-green.log). Keep one local fanin pointer per
+predicate instead of repeating object lookup.
+
+An expanded deterministic sweep passes 52,992 single/paired/contradictory-root
+queries over raw ANDs with constants, buffers, identical/opposite fanins and
+all three heuristics. Every verdict, nonempty model consistency, cube implication
+and scratch cleanup is independently checked over all three-input assignments
+(/tmp/abcgo-cbs-raw-extensions.log). The first generator's repeated-fanin branch
+only produced identical fanins because i was always divisible by four; correct
+the generator to alternate same/opposite fanins and add random edge phases.
+Use a separate root local instead of mutating the range variable.
+
+Save a red checkpoint before direct native reason-clause snapshots, atomic
+invalid-pair/lifecycle checks, final source/benchmark reruns and integration.
+Original completion remains 2/131; GIA and the full sequential audit stay active.

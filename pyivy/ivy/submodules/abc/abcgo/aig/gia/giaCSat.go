@@ -54,19 +54,27 @@ func Cbs_VarSetValue(obj *Gia_Obj_t, value int32) {
 	obj.fMark1 = uint32(value)
 }
 func Cbs_VarIsJust(obj *Gia_Obj_t) int32 {
-	return giaBool(Gia_ObjIsAnd(obj) != 0 && Cbs_VarIsAssigned(Gia_ObjFanin0(obj)) == 0 && Cbs_VarIsAssigned(Gia_ObjFanin1(obj)) == 0)
+	return giaBool(Gia_ObjIsAnd(obj) != 0 && Cbs_VarFanin0Value(obj) == 2 && Cbs_VarFanin1Value(obj) == 2)
 }
 func Cbs_VarFanin0Value(obj *Gia_Obj_t) int32 {
-	if Cbs_VarIsAssigned(Gia_ObjFanin0(obj)) == 0 {
+	fanin := Gia_ObjFanin0(obj)
+	if fanin.id == 0 {
+		return Gia_ObjFaninC0(obj)
+	}
+	if Cbs_VarIsAssigned(fanin) == 0 {
 		return 2
 	}
-	return Cbs_VarValue(Gia_ObjFanin0(obj)) ^ Gia_ObjFaninC0(obj)
+	return Cbs_VarValue(fanin) ^ Gia_ObjFaninC0(obj)
 }
 func Cbs_VarFanin1Value(obj *Gia_Obj_t) int32 {
-	if Cbs_VarIsAssigned(Gia_ObjFanin1(obj)) == 0 {
+	fanin := Gia_ObjFanin1(obj)
+	if fanin.id == 0 {
+		return Gia_ObjFaninC1(obj)
+	}
+	if Cbs_VarIsAssigned(fanin) == 0 {
 		return 2
 	}
-	return Cbs_VarValue(Gia_ObjFanin1(obj)) ^ Gia_ObjFaninC1(obj)
+	return Cbs_VarValue(fanin) ^ Gia_ObjFaninC1(obj)
 }
 func Cbs_VarDecLevel(p *Cbs_Man_t, obj *Gia_Obj_t) int32 {
 	return Vec_IntEntry(p.vLevReas, 3*int(obj.Value))
