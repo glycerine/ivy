@@ -58,7 +58,12 @@ func Gia_ManCrossCutSimple(p *Gia_Man_t) int32 {
 			maximum = current
 		}
 		if Gia_ObjIsAnd(obj) != 0 {
-			for _, fanin := range []*Gia_Obj_t{Gia_ObjFanin0(obj), Gia_ObjFanin1(obj)} {
+			fanins := [2]*Gia_Obj_t{Gia_ObjFanin0(obj), Gia_ObjFanin1(obj)}
+			count := 2
+			if Gia_ObjIsBuf(obj) != 0 {
+				count = 1
+			}
+			for _, fanin := range fanins[:count] {
 				fanin.Value--
 				if fanin.Value == 0 {
 					current--
@@ -125,15 +130,27 @@ func Gia_ManFront(p *Gia_Man_t) *Gia_Man_t {
 		if fanin0.Value == 0 {
 			front[slot0] = 0
 		}
-		fanin1.Value--
-		if fanin1.Value == 0 {
-			front[slot1] = 0
+		// A buffer has one reference, even though both stored pins match.
+		if Gia_ObjIsBuf(obj) == 0 {
+			fanin1.Value--
+			if fanin1.Value == 0 {
+				front[slot1] = 0
+			}
 		}
 		if obj.Value == 0 {
 			front[position] = 0
 		}
 	}
+	// Physical object IDs survive frontier encoding; logical port order can
+	// differ from their append order. Do not use Value, which stores slots.
+	for _, ports := range [][2]*Vec_Int_t{{result.vCis, p.vCis}, {result.vCos, p.vCos}} {
+		copy(Vec_IntArray(ports[0]), Vec_IntArray(ports[1]))
+		for i, id := range Vec_IntArray(ports[0]) {
+			Gia_ObjSetCioId(result.pObjs[id], int32(i))
+		}
+	}
 	Gia_ManSetRegNum(result, Gia_ManRegNum(p))
+	giaCopyInterfaceMetadata(result, p)
 	return result
 }
 

@@ -8190,3 +8190,29 @@ Next inspect giaFront.c's five frontier routines sequentially. Read-only native
 and public-API probes prepared during the gate show buffer slot-reuse corruption
 in both C and Go and lost real-MUX roundtrip behavior; add red regressions before
 any repair. Preparation notes /tmp/abcgo-front-next-review-plan.md.
+
+### Frontier review: red buffer and interface regressions
+
+Read giaFront.c's five routines against giaFront.go. Minimal red tests show a
+buffer slot-reuse roundtrip changes input3 output1, CrossCutSimple reports3
+instead of4 live nodes, and reference scratch wraps to uint32 maxima
+(/tmp/abcgo-front-buffer-red.log). Buffer references are counted once by the
+existing reference builder but decremented twice by both frontier loops.
+Decrement once for buffers. The original C has the same mismatch; the new
+native --buffer fixture mode must reproduce its wrong output against the
+independent a / (a AND b) formula before checking corrected Go truth.
+
+All192 exact native ordinary graph cut/slot/restored-field records match over
+64 generated graphs. Each cross-cut separately matches independent last-use
+intervals, and every roundtrip passes exhaustive scalar truth. Exhaust small
+allocator occupancy/start-position combinations and full/invalid rejection.
+Initial focused tests pass1.771s (/tmp/abcgo-front-native-first.log).
+
+A new logical-port/interface ownership regression is red on changed output
+(/tmp/abcgo-front-interface-red.log). Physical object IDs survive, so copy the
+logical port ID vectors directly, restore terminal indices and copy owned
+interface metadata. Do not reuse Value, which holds frontier slots. The first
+focused rerun passes1.835s (/tmp/abcgo-front-interface-repaired.log).
+Typed representation/caller boundaries, additional compactness review and final
+frozen gates remain open. This is an intermediate checkpoint, not family or
+package closure; original package completion2/131.
