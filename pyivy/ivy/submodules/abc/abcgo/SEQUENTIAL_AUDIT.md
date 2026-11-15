@@ -4644,3 +4644,51 @@ review. The repair preserves the decomposition and leaf order while bounding
 repeated expansion of shared ANDs; the existing Go source-port ordering is
 retained. Other duplication routines and GIA families remain open. Original
 package completion stays 2/131; the sequential audit remains active.
+
+Basic/attribute duplication checkpoint: a new red regression shows that the
+source-order basic copier reorders logical CIs and COs on an interleaved DFS
+graph. Both basic and attribute copies return `[true true false]` for input
+`[true false false]`, where the original returns `[false false false]`
+(`/tmp/abcgo-dup-ports-red.log`). Reuse Gia_ManDupRemapCis/Cos after object
+copying, before assigning register count. This retains physical object IDs,
+logical port identity and the RO/RI tails with four added lines, without a new
+copying algorithm. The same repair reaches auxiliary graphs copied by the
+attribute wrapper. Focused regressions pass (`/tmp/abcgo-dup-ports-focused.log`).
+
+Expanded basic-copy checks cover 768 graph/API cases and 24,576 input rows:
+32 phase patterns, ordinary AND/real XOR/MUX representations, two physical
+layouts, zero/two/four registers, basic/attribute entry points. The no-property
+four-register cases have zero constraints. Independent Boolean expressions
+check all outputs and next-state bits; source Value remains the identity map.
+Attribute coverage additionally spans all 384 valid presence combinations
+among mapping, packing, timing, auxiliary graph, register classes/inits,
+configuration, cell string and AND delay, in four typed/layout variants:
+1,536 cases/49,152 main input rows, with auxiliary-graph truth checks too.
+Packing is only supplied with mapping. Mutation and stop checks verify owned
+vectors, CEX trace, timing terminals/boxes/delays, graph storage and serialized
+metadata. Counterexamples obey ABC's existing zero-register-init duplication
+policy. Source timing traversal IDs survive while duplicate IDs reset. The
+auxiliary graph intentionally receives a basic copy, matching C; its own
+attribute vectors are not recursively copied.
+
+The original-C fixture `aig/gia/test_vectors/duplicate_attributes.c` compares
+384 normalized ordinary-AND cases/12,288 input rows, mapping/packing/vector
+records, delay/cell data, timing boxes and actual PI arrival/PO required times,
+and auxiliary-graph shape. It excludes inherited C basic-copy port/constraint
+metadata defects: interleaved order and Go's retained constraint/reset/name
+metadata are checked independently. The fixture initially used C's bulk
+required-time getter, which returned NULL incorrectly for this box layout
+and reads arrival rather than required times; the failed run is preserved in
+`/tmp/abcgo-attributes-focused.log`. Read actual terminal times directly and
+omit irrelevant bulk-array holes. Use an explicit valid indexed delay table.
+No TIM implementation changed in this review; its own package audit remains
+pending. Native comparisons and the expanded Go checks now pass in 1.954s
+(`/tmp/abcgo-attributes-focused-final.log`).
+
+The attribute wrapper's direct mapping/packing copies remain valid because
+all object IDs are retained; rebuilding the records is unnecessary here.
+Strings are immutable Go values; the timing manager, vectors and auxiliary
+graph retain explicit owned copies. Full uncached module race tests and GIA
+vet are running because the basic copier is a shared graph boundary. Save
+this checkpoint with a red prefix until the integration gate finishes.
+Original package completion remains 2/131; GIA review continues.

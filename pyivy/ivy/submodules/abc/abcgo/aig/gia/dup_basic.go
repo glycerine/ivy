@@ -33,6 +33,10 @@ func Gia_ManDup(src *Gia_Man_t) *Gia_Man_t {
 		}
 		obj.Value = uint32(literal)
 	}
+	// DFS graphs can interleave ports whose logical vector order differs from
+	// physical object order. Keep port identity, including the RO/RI tails.
+	Gia_ManDupRemapCis(dst, src)
+	Gia_ManDupRemapCos(dst, src)
 	if src.pSibls != nil {
 		dst.pSibls = append([]int32(nil), src.pSibls...)
 	}
