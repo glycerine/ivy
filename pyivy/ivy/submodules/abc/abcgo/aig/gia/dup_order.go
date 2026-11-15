@@ -197,11 +197,16 @@ func Gia_ManDupOutputVec(src *Gia_Man_t, present *Vec_Int_t) *Gia_Man_t {
 			vec.Vec_IntPush(selected, int32(i))
 		}
 	}
-	return Gia_ManDupSelectedOutputs(src, selected)
+	dst := Gia_ManDupSelectedOutputs(src, selected)
+	// Unlike explicit selection, the C presence-vector API maps source COs.
+	for i, output := range vec.Vec_IntArray(selected) {
+		Gia_ManPo(src, output).Value = uint32(Gia_ManCo(dst, int32(i)).id << 1)
+	}
+	return dst
 }
 func Gia_ManDupSelectedOutputs(src *Gia_Man_t, selected *Vec_Int_t) *Gia_Man_t {
-	if Gia_ManRegNum(src) != 0 {
-		panic("gia: selected outputs require a combinational graph")
+	if Gia_ManRegNum(src) != 0 || vec.Vec_IntSize(selected) > int(Gia_ManPoNum(src)) {
+		panic("gia: invalid selected-output interface")
 	}
 	dst := giaDupMappedStart(src)
 	for i := int32(0); i < Gia_ManPiNum(src); i++ {
@@ -215,7 +220,7 @@ func Gia_ManDupSelectedOutputs(src *Gia_Man_t, selected *Vec_Int_t) *Gia_Man_t {
 	}
 	for _, i := range vec.Vec_IntArray(selected) {
 		obj := Gia_ManPo(src, i)
-		obj.Value = uint32(Gia_ManAppendCo(dst, Gia_ObjFanin0Copy(obj)))
+		Gia_ManAppendCo(dst, Gia_ObjFanin0Copy(obj))
 	}
 	return dst
 }

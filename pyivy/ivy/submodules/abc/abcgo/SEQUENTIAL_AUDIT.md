@@ -4108,3 +4108,51 @@ in `/tmp/abcgo-abs-review-race.log`; GIA vet passes
 (`/tmp/abcgo-abs-review-vet.log`). This closes register-abstraction mapping
 review. General output selection and other GIA families remain open.
 Original package completion stays 2/131; the sequential audit remains active.
+
+Output-selection review: a new red test shows Gia_ManDupSelectedOutputs was
+writing source CO Value mappings even though C intentionally leaves all of
+them unset (`/tmp/abcgo-output-selection-red.log`). Gia_ManDupOutputVec has
+the opposite C postcondition: chosen source COs must map to their copied COs.
+Keep the shared selected-cone implementation, leave explicit-list source COs
+unset, and perform the small CO-map pass only for the presence-vector API.
+This repairs source scratch bookkeeping; no valid-output truth discrepancy
+was found. A separate red test exposes the missing C precondition that an
+explicit selection cannot contain more entries than the source has outputs
+(`/tmp/abcgo-output-selection-count-red.log`). Restore that check while
+retaining duplicate/reordered selections within the original bound.
+
+Compiled original C and independent Boolean/dependency expectations agree
+across 8,928 cases and 226,368 assignment rows. Coverage includes all 28
+contiguous ranges of six COs with zero/two/four source registers, every one
+of 64 output masks in forward/reverse explicit order and as a presence
+vector, plus repeated and reordered lists. Presence flags alternate positive
+and negative nonzero values. Compare exact source CI and CO mappings,
+first-discovery input order for ranges, original input order for list/mask
+selection, complete output truth and exact copied gate/interface counts.
+
+Range copying keeps only reachable CIs and returns a combinational graph,
+even when its selected source COs include RIs. Explicit/presence selection
+retains all original CIs, including the unused one created after source COs.
+Empty ranges therefore have zero CIs, while empty list/mask selections keep
+all five. All derived interfaces reset constraints, following C. Static
+logical dependency masks verify shared-cone copying and unused gate pruning
+without using the copying algorithm as the expected result.
+
+Repeat the matrix for real XOR/MUX/buffer graphs and DFS layouts: 28,224
+cases and 688,512 rows across the four variants. A separate control-only
+AND cone driving a real MUX is preserved through every API (24 cases/384
+rows). Eighteen empty/unused-input/constant-only selection cases and nine
+additional invalid range, ID, mask-size and sequential-interface cases pass.
+The fixture is `aig/gia/test_vectors/output_selection.c`. Native-only tests
+pass in 2.155s (`/tmp/abcgo-output-selection-native.log`); the final expanded
+checks pass in 3.216s (`/tmp/abcgo-output-selection-expanded.log`). No native
+assertion is deliberately triggered for invalid arguments. There is no
+additional compactness change: sharing cone construction remains appropriate,
+but sharing source-CO side effects had caused the regression above.
+
+Full uncached race tests pass for GIA (120.622s), CEC (41.515s) and ABCI
+(28.817s), in `/tmp/abcgo-output-selection-review-race.log`; GIA vet passes
+(`/tmp/abcgo-output-selection-review-vet.log`). This closes the range,
+explicit-list and presence-vector output-selection review. Literal/terminal
+remapping helpers and other GIA families remain open; original package
+completion stays 2/131 and the sequential audit remains active.
