@@ -11,8 +11,9 @@ func Gia_ManObjSim(p *Gia_Man_t, id int32) []word {
 }
 
 func Gia_ManObjSimPi(p *Gia_Man_t, id int32) {
-	for i := range Gia_ManObjSim(p, id) {
-		Gia_ManObjSim(p, id)[i] = Gia_ManRandomW(0)
+	data := Gia_ManObjSim(p, id)
+	for i := range data {
+		data[i] = Gia_ManRandomW(0)
 	}
 }
 
@@ -20,11 +21,10 @@ func Gia_ManObjSimPo(p *Gia_Man_t, id int32) {
 	obj := Gia_ManObj(p, id)
 	out := Gia_ManObjSim(p, id)
 	input := Gia_ManObjSim(p, Gia_ObjFaninId0(obj, id))
+	// XOR with all ones applies a complemented edge to every packed bit.
+	mask := word(0) - word(obj.fCompl0)
 	for i, v := range input {
-		if obj.fCompl0 != 0 {
-			v = ^v
-		}
-		out[i] = v
+		out[i] = v ^ mask
 	}
 }
 
@@ -33,15 +33,26 @@ func Gia_ManObjSimAnd(p *Gia_Man_t, id int32) {
 	out := Gia_ManObjSim(p, id)
 	a := Gia_ManObjSim(p, Gia_ObjFaninId0(obj, id))
 	b := Gia_ManObjSim(p, Gia_ObjFaninId1(obj, id))
-	for i := range out {
-		x, y := a[i], b[i]
-		if obj.fCompl0 != 0 {
-			x = ^x
+	// Select the real gate before entering the word loop. Ordinary source
+	// ANDs and buffers retain their original packed evaluation.
+	mask0, mask1 := word(0)-word(obj.fCompl0), word(0)-word(obj.fCompl1)
+	switch {
+	case int(id) < len(p.PMuxes) && p.PMuxes[id] != 0:
+		lit := p.PMuxes[id]
+		control := Gia_ManObjSim(p, int32(lit>>1))
+		controlMask := word(0) - word(lit&1)
+		for i := range out {
+			c := control[i] ^ controlMask
+			out[i] = (a[i]^mask0)&^c | (b[i]^mask1)&c
 		}
-		if obj.fCompl1 != 0 {
-			y = ^y
+	case Gia_ObjIsXor(obj) != 0:
+		for i := range out {
+			out[i] = a[i] ^ mask0 ^ b[i] ^ mask1
 		}
-		out[i] = x & y
+	default:
+		for i := range out {
+			out[i] = (a[i] ^ mask0) & (b[i] ^ mask1)
+		}
 	}
 }
 

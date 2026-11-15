@@ -8667,3 +8667,27 @@ the correct6666... (/tmp/abcgo-gen-typed-native.log). The probes are .go/.c in
 /tmp, not changes to tested files. Add a new red regression before repair;
 review all13 routines and retain explicit random/file-format contracts.
 Detailed preparation is /tmp/abcgo-gen-next-review-plan.md. No agents/branches.
+
+### Simulation/dataset family: packed gate regressions and repair
+
+Start all13 active giaGen.c routines after the Fx gate terminated and its green
+closure was committed. New XOR (direct helper and driver) and MUX-control tests
+fail before repair (/tmp/abcgo-gen-gates-red.log): both operations were silently
+ANDing their data. Select the actual operation before the packed word loop,
+apply edge masks, retain source AND/buffer evaluation, and cache the PI view.
+The minimal regressions pass.
+
+Actual-C word matrix matches4,608 records, including ordinary all-object data,
+logical CI/CO words and next RNG state. Real Go XOR/MUX are compared to explicit
+C AND expansions at the common interface. All786,432 independent packed input
+assignments pass at every Go object. Input words/Value scratch remain unchanged
+and do not alias results; both drivers cover1/2/5 words, phases, interleaved/
+reordered ports, constants and RO/RI. Exact handle10292 terminates exit0,
+2.386s (/tmp/abcgo-gen-native-words-positive.log). Both zero-word source drivers
+assert in Vec_WrdEntryP; retain the existing Go safe empty/no-RNG extension and
+characterize C failures in core-disabled children.
+
+REVIEW_simulation_datasets.md records the full13-routine plan and remaining
+native dump/read/statistics, compactness and integration work. Package audit
+completion remains2/131; GIA and this family remain open. Save coherent red
+checkpoints while full validation is pending. No agents/branches.
