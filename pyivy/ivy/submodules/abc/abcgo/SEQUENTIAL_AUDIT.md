@@ -5905,3 +5905,27 @@ no DEC change is needed. The regression and existing collapse/rebuild and all
 Save a red checkpoint pending exact native cover/AIG comparisons, variable-order
 and resource/ownership checks and full integration. Original completion remains
 2/131; GIA and the sequential audit stay active.
+
+The exact native ISOP sweep exposed a shared MVC division omission: source
+Mvc_CoverDivideInternal sorts both operands in place, whereas Go grouped them
+without sorting. Factoring reuses the dividend after division, so this changed
+AIG construction order. A minimal operand-order regression fails before the
+repair and passes after restoring the two source sorts. MVC and DEC tests pass;
+the dependency repair is committed separately as 6e7b7158f. This is a dependency
+fix required by the current GIA review, not completion of the MVC package audit.
+
+The new native fixture initially omitted Abc_Start, which initializes the source
+DEC/MVC manager; adding source startup/shutdown fixes that fixture crash. A later
+rotated-variable discrepancy came from incorrectly inverting Cudd_ShuffleHeap's
+input in the fixture. Both source and Go accept the index at each level. Correct
+the fixture, not production code. All 6,264 comparisons now match exact selected
+SOP bytes, phase, root literal and every AIG node, with an independent truth check
+under all small input assignments (/tmp/abcgo-collapse-isop-native.log).
+
+A new sequential-interface regression then demonstrates rebuild discarding
+constraints, bad-output roles, reset states and comments
+(/tmp/abcgo-collapse-metadata-red.log). Copy unchanged interface metadata using
+the existing helper, including independent owned metadata buffers. Add parity
+cover boundary checks: 512 cubes accepted with every assignment verified; 1,024
+and 2,048 cubes rejected before graph/scratch mutation. Focused verification and
+full integration remain pending. Original completion remains 2/131.

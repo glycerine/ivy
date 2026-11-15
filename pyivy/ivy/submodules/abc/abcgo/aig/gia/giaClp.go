@@ -174,6 +174,7 @@ func Gia_ManRebuild(p *Gia_Man_t, manager *dsd.Dsd_Manager_t, dd *cudd.DdManager
 		Gia_ManAppendCo(out, lit)
 	}
 	Gia_ManSetRegNum(out, Gia_ManRegNum(p))
+	giaCopyInterfaceMetadata(out, p)
 	return out
 }
 
