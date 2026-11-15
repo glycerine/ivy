@@ -7774,3 +7774,25 @@ on 6/8 assignments, real MUX wrong on 2/8, and a one-register source returning
 zero registers. No source/test/fixture edits were made during the frozen gate.
 Add permanent red unit tests before repairing these issues. The next source
 inventory and test plan are saved in /tmp/abcgo-esop-next-review-plan.md.
+
+### ESOP typed-logic and interface repair checkpoint
+
+Add permanent red tests for typed XOR/MUX/buffer phases, rebuilt graph outputs,
+extracted-cover truth and sequential/reordered interfaces before editing esop.go
+(/tmp/abcgo-esop-typed-interface-red.log). XOR/MUX fail both paths and sequential
+rebuilds lose dimensions. At the source AND-only algorithm boundary, lower real
+XOR/MUX through the existing ordinary-AIG conversion; do not replace the ESOP
+algorithm. Restore source Value scratch after temporary lowering, publish CI
+copy literals on rebuilding, and leave extraction scratch unchanged. Preserve
+register count and unchanged roles/resets/comments/names through the existing
+interface-copy helper. Focused tests now pass in 0.009s
+(/tmp/abcgo-esop-typed-interface-repaired.log).
+
+Add original giaEsop.c fixture comparisons: 64 graphs/364 exact cover records and
+6,561 ordered four-variable cube pairs, including distance predicates, hash
+products and exact minimization output order. Both pass (3.723s,
+/tmp/abcgo-esop-native-first.log). Independent scalar checks cover 66,430 ordered
+cube pairs across 0..5 variables and 24,576 recursive minimization prefixes,
+plus complement transforms and typed scratch/result lifetime ownership. Expanded
+ESOP tests pass in 3.838s (/tmp/abcgo-esop-expanded.log). Further boundary,
+compactness and final frozen integration checks remain; no family closure yet.

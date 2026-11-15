@@ -3,8 +3,9 @@ package gia
 import (
 	"encoding/binary"
 	"fmt"
-	"github.com/glycerine/abcgo/misc/vec"
 	"time"
+
+	"github.com/glycerine/abcgo/misc/vec"
 )
 
 type Eso_Man_t struct {
@@ -110,6 +111,8 @@ func Eso_ManCoverConvert(p *Eso_Man_t, cover *Vec_Ptr_t) *Gia_Man_t {
 		Gia_ManAppendCo(q, root)
 	}
 	Gia_ManHashStop(q)
+	Gia_ManSetRegNum(q, g.nRegs)
+	giaCopyInterfaceMetadata(q, g)
 	result := Gia_ManCleanup(q)
 	Gia_ManStop(q)
 	return result
@@ -291,6 +294,24 @@ func Eso_ManTransformOne(p *Eso_Man_t, esop *Vec_Int_t, complement int32, out *V
 }
 func Eso_ManCompute(g *Gia_Man_t, verbose int32, coverOut **Vec_Wec_t) *Gia_Man_t {
 	start := time.Now()
+	original := g
+	for _, obj := range g.pObjs {
+		if Gia_ObjIsXor(obj) == 0 && Gia_ObjIsMux(g, obj) == 0 {
+			continue
+		}
+		// The source ESOP product pass consumes ordinary ANDs. Use the existing
+		// Boolean lowering rather than treating typed gate fanins as an AND.
+		saved := make([]uint32, len(g.pObjs))
+		for i, obj := range g.pObjs {
+			saved[i] = obj.Value
+		}
+		g = Gia_ManDupNoMuxes(original, 1)
+		for i, obj := range original.pObjs {
+			obj.Value = saved[i]
+		}
+		defer Gia_ManStop(g)
+		break
+	}
 	p := Eso_ManAlloc(g)
 	var total, used int
 	for _, obj := range g.pObjs {
@@ -321,6 +342,14 @@ func Eso_ManCompute(g *Gia_Man_t, verbose int32, coverOut **Vec_Wec_t) *Gia_Man_
 		*coverOut = Eso_ManCoverDerive(p, cover)
 	} else {
 		result = Eso_ManCoverConvert(p, cover)
+		if original != g {
+			// Publish the same CI copy literals as ordinary CoverConvert. Lowering is
+			// temporary; cover extraction itself leaves the caller's scratch intact.
+			original.pObjs[0].Value = 0
+			for i := int32(0); i < Gia_ManCiNum(original); i++ {
+				Gia_ManCi(original, i).Value = uint32(Gia_ManCi(result, i).id << 1)
+			}
+		}
 	}
 	Eso_ManStop(p)
 	return result
