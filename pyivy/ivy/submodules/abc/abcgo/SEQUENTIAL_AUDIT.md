@@ -6250,3 +6250,31 @@ managers already maintain typed-gate counts; preserve typed rejection while
 avoiding quadratic validation cost across many small-cone queries. Save a red
 checkpoint pending that compactness review, broader guards/queue/miter tests and
 full integration. Original completion remains 2/131; GIA and audit stay active.
+
+Avoid the per-query full graph scan in cbs0CheckGraph: valid GIA construction
+maintains XOR/MUX counts, so those counters reject unsupported typed graphs in
+constant time. Rejection remains checked after construction, including newly
+appended typed gates. A leaf-query benchmark changes from 61.97ns (10 gates) /
+21,604ns (10,000 gates) to 31.54ns /30.44ns, all with zero allocations
+(/tmp/abcgo-cbs0-validation-before.log and /tmp/abcgo-cbs0-validation-after.log).
+These measurements precede the final extra queue-head guard comparisons; the
+important result is removal of graph-size-dependent validation, not a guaranteed
+nanosecond figure. Native core comparisons remain green after this change.
+
+Another 3,600 native public-miter property statuses/stores match exactly across
+CI/CO permutations, random and hard parity/reconvergence graphs and five budgets.
+Decode every store record and independently exhaust all completions of each
+partial cube; require timeout markers, proof validity and assignment cleanup
+(/tmp/abcgo-cbs0-hard-miter.log). Native fake-clock statistics match byte-for-byte,
+including percentages/averages/time fractions and all zero-denominator cases.
+Additional tests cover nested saved frontiers through backing-slice growth,
+partial cancellation, active/invalid-heuristic Stop, foreign/nil/CO roots,
+buffers/repeated/constant fanins, original allocate-then-attach setup and guarded
+restoration/reuse. Go-only fanin extensions have independently checked witnesses.
+
+Final source-precondition comparison finds Go checking queue tails but omitting
+heads. A red regression confirms nonzero empty queue heads are accepted instead
+of rejected (/tmp/abcgo-cbs0-head-guard-red.log). Restore all four source idle
+queue checks. The prior focused suite passes in 7.459s; final focused rerun and
+full integration are pending this last guard repair. Save a red checkpoint.
+Original completion remains 2/131; GIA and the sequential audit remain active.

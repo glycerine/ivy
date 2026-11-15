@@ -3,8 +3,10 @@ package gia
 import (
 	"fmt"
 	"os/exec"
+	"slices"
 	"strings"
 	"testing"
+	"time"
 )
 
 func cbs0ReviewGraph(seed int) (*Gia_Man_t, []int32) {
@@ -202,5 +204,158 @@ func TestChronologicalMiterMatchesOriginalABC(t *testing.T) {
 	})
 	if got != string(native) {
 		t.Fatalf("miter source differs\nGo:%s\nC:%s", got, native)
+	}
+}
+
+func TestChronologicalHardMitersMatchOriginalABC(t *testing.T) {
+	exe := compileGiaSourceOracle(t, "circuit_sat_old_review.c")
+	native, err := exec.Command(exe, "hard-miters").CombinedOutput()
+	if err != nil {
+		t.Fatalf("native hard miters: %v\n%s", err, native)
+	}
+	queries := 0
+	got := hashReviewStdout(t, func() {
+		for seed := 0; seed < 12; seed++ {
+			for _, budget := range []int32{-1, 0, 1, 3, 1000} {
+				g, lits := cbs0ReviewGraph(seed)
+				Gia_ManAppendCo(g, 0)
+				Gia_ManAppendCo(g, 1)
+				for _, root := range lits {
+					Gia_ManAppendCo(g, root)
+					Gia_ManAppendCo(g, root^1)
+				}
+				for _, ports := range []struct {
+					v       *Vec_Int_t
+					reverse bool
+				}{{g.vCos, seed&1 != 0}, {g.vCis, seed&2 != 0}} {
+					if ports.reverse {
+						slices.Reverse(Vec_IntArray(ports.v))
+						for i, id := range Vec_IntArray(ports.v) {
+							Gia_ObjSetCioId(g.pObjs[id], int32(i))
+						}
+					}
+				}
+				truth := make([]uint32, g.nObjs)
+				for mask := 0; mask < 32; mask++ {
+					values, _, err := g.evaluateObjects([]bool{mask&1 != 0, mask&2 != 0, mask&4 != 0, mask&8 != 0, mask&16 != 0})
+					if err != nil {
+						t.Fatal(err)
+					}
+					for id, v := range values {
+						if v {
+							truth[id] |= 1 << uint(mask)
+						}
+					}
+				}
+				var statuses *Vec_Str_t
+				store := Cbs_ManSolveMiter(g, budget, &statuses, 0)
+				cbs0ReviewStore(t, g, statuses, store, truth)
+				fmt.Printf("miter %d %d statuses", seed, budget)
+				for _, status := range Vec_StrArray(statuses) {
+					fmt.Printf(" %d", status)
+				}
+				fmt.Print(" store")
+				for _, value := range Vec_IntArray(store) {
+					fmt.Printf(" %d", value)
+				}
+				fmt.Println()
+				queries += Vec_StrSize(statuses)
+				for _, obj := range g.pObjs {
+					if obj.fMark0 != 0 || obj.fMark1 != 0 {
+						t.Fatal("miter retained assignments")
+					}
+				}
+			}
+		}
+	})
+	if got != string(native) {
+		a, b := strings.Split(got, "\n"), strings.Split(string(native), "\n")
+		for i := 0; i < min(len(a), len(b)); i++ {
+			if a[i] != b[i] {
+				t.Fatalf("miter source line%d differs\nGo:%s\nC: %s", i+1, a[i], b[i])
+			}
+		}
+		t.Fatalf("miter source lengths Go%d C%d", len(got), len(native))
+	}
+	t.Logf("%d exact source miter property statuses and stores, independently checked across interface permutations", queries)
+}
+
+func cbs0ReviewStore(t *testing.T, g *Gia_Man_t, statuses *Vec_Str_t, store *Vec_Int_t, truth []uint32) {
+	t.Helper()
+	seen := make([]bool, Vec_StrSize(statuses))
+	data := Vec_IntArray(store)
+	for pos := 0; pos < len(data); {
+		if pos+2 > len(data) {
+			t.Fatal("short miter store")
+		}
+		output, count := data[pos], data[pos+1]
+		pos += 2
+		if output < 0 || int(output) >= len(seen) || seen[output] {
+			t.Fatal("invalid/duplicate store output")
+		}
+		seen[output] = true
+		status := Vec_StrEntry(statuses, int(output))
+		if status == 255 {
+			if count != -1 {
+				t.Fatal("timeout store marker")
+			}
+			continue
+		}
+		if status != 0 || count < 0 || count > 5 || pos+int(count) > len(data) {
+			t.Fatal("invalid model record")
+		}
+		mask, values := 0, 0
+		for _, lit := range data[pos : pos+int(count)] {
+			if lit < 0 || lit>>1 >= 5 || mask&(1<<uint(lit>>1)) != 0 {
+				t.Fatal("invalid CI model literal")
+			}
+			mask |= 1 << uint(lit>>1)
+			if lit&1 == 0 {
+				values |= 1 << uint(lit>>1)
+			}
+		}
+		pos += int(count)
+		bits := truth[Gia_ObjId(g, Gia_ManCo(g, output))]
+		for assignment := 0; assignment < 32; assignment++ {
+			if assignment&mask == values && bits>>uint(assignment)&1 == 0 {
+				t.Fatal("miter cube does not imply its property")
+			}
+		}
+	}
+	for i, status := range Vec_StrArray(statuses) {
+		if status != 0 && status != 1 && status != 255 {
+			t.Fatal("invalid miter status")
+		}
+		if seen[i] != (status != 1) {
+			t.Fatal("missing/extraneous miter record")
+		}
+		if status == 1 && truth[Gia_ObjId(g, Gia_ManCo(g, int32(i)))] != 0 {
+			t.Fatal("false miter proof")
+		}
+	}
+}
+
+func TestChronologicalStatisticsMatchOriginalABC(t *testing.T) {
+	exe := compileGiaSourceOracle(t, "circuit_sat_old_review.c")
+	native, err := exec.Command(exe, "stats").CombinedOutput()
+	if err != nil {
+		t.Fatalf("native CBS0 statistics: %v\n%s", err, native)
+	}
+	g := Gia_ManStart(16)
+	a := Gia_ManAppendCi(g)
+	Gia_ManAppendCo(g, a)
+	got := hashReviewStdout(t, func() {
+		p := Cbs0_ManAlloc(g)
+		p.nSatTotal, p.nSatUnsat, p.nSatSat, p.nSatUndec = 4, 2, 1, 1
+		p.nConfUnsat, p.nConfSat, p.nConfUndec = 5, 3, 7
+		p.timeTotal, p.timeSatUnsat, p.timeSatSat, p.timeSatUndec = 4*time.Second, 2*time.Second, time.Second, time.Second/2
+		Cbs0_ManSatPrintStats(p)
+		Cbs0_ManStop(p)
+		p = Cbs0_ManAlloc(g)
+		Cbs0_ManSatPrintStats(p)
+		Cbs0_ManStop(p)
+	})
+	if got != string(native) {
+		t.Fatalf("source statistics differ\nGo:%s\nC:%s", got, native)
 	}
 }

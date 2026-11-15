@@ -96,10 +96,10 @@ func cbs0CheckGraph(g *Gia_Man_t) {
 	if g == nil {
 		panic("gia: nil CBS0 graph")
 	}
-	for _, o := range g.pObjs {
-		if Gia_ObjIsXor(o) != 0 || Gia_ObjIsMux(g, o) != 0 {
-			panic("gia: CBS0 requires an ordinary AND graph")
-		}
+	// Valid GIA constructors maintain these counts. Checking them keeps small
+	// cone queries independent of the size of the rest of the graph.
+	if Gia_ManXorNum(g) != 0 || Gia_ManMuxNum(g) != 0 {
+		panic("gia: CBS0 requires an ordinary AND graph")
 	}
 }
 func Cbs0_ManStop(p *Cbs0_Man_t) {
@@ -344,7 +344,7 @@ func Cbs0_ManSolve(p *Cbs0_Man_t, root *Gia_Obj_t) int32 {
 		panic("gia: CBS0 graph not set")
 	}
 	cbs0CheckGraph(p.pAig)
-	if p.pProp.iTail != 0 || p.pJust.iTail != 0 {
+	if p.pProp.iHead != 0 || p.pProp.iTail != 0 || p.pJust.iHead != 0 || p.pJust.iTail != 0 {
 		panic("gia: CBS0 solver already active")
 	}
 	Vec_IntClear(p.vModel)
