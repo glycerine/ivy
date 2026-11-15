@@ -18,7 +18,7 @@ source workflows and tests are covered by that audit. Current review: `aig/gia`.
 | --- | --- | --- | --- |
 | 1 | `.` | reviewed | Root review below; race tests and vet pass. |
 | 2 | `aig/aig` | reviewed | All 52 files reconciled; native source matrices, final race suite, vet and module integration gates pass. |
-| 3 | `aig/gia` | in progress | Graph/manager, copies, hashing, balancing, windows, bi-decomposition, circuit-cofactoring, BDD collapse, counterexample replay/minimization and chronological/conflict-analysis/watched-clause circuit SAT, CTAS, stand-alone priority cuts and deep synthesis driver reviewed; remaining families and final inventory pending. |
+| 3 | `aig/gia` | in progress | Graph/manager, copies, hashing, balancing, windows, bi-decomposition, circuit-cofactoring, BDD collapse, counterexample replay/minimization and chronological/conflict-analysis/watched-clause circuit SAT, CTAS, stand-alone priority cuts, deep synthesis and DFS/support reviewed; remaining families and final inventory pending. |
 | 4 | `aig/gia/mf` | pending | |
 | 5 | `aig/gia/satcost` | pending | |
 | 6 | `aig/hop` | pending | |
@@ -6864,3 +6864,31 @@ matrix now additionally covers 544 single-node support queries and all forward/
 reverse buckets/orderings; independent tests distinguish typed/constant Go
 extensions from unsupported original-C inputs. Next freeze source/tests/fixtures
 for full module race tests and GIA vet. Original completion remains 2/131.
+
+### DFS/support integration green
+
+Full uncached module race tests pass all 130 tested packages; three command
+packages have no tests (/tmp/abcgo-dfs-final-module-race.log). GIA vet passes
+with empty output (/tmp/abcgo-dfs-final-vet.log). Source, tests and fixtures
+stayed frozen throughout both checks. Mark giaDfs.c's 24 entry points reviewed,
+with source-state/report repairs, direct-stack/shared-walker compactness and
+native/independent/deep tests documented in REVIEW_dfs_support.md. GIA's remaining
+families and final inventory are still pending; original completion stays 2/131.
+
+Read-only preparation identifies giaEdge.c next: edge_storage.go, edge_delay.go
+and edge_mapping.go. A temporary fixture compiles actual source over 32 mapped
+AND-cone graphs with two-to-four-input LUTs. Its Go probe matches all 1,152 public
+result/edge-slot trace lines across both mapping forms, one/two-edge forward
+assignment, reverse assignment and optimizer limits zero/one/two. Private delay
+vectors are emitted by the C fixture but not yet compared by the external Go
+probe. Artifacts: /tmp/abcgo-edge-review-probe/{probe.c,probe.go,native.out,go.out}.
+This is preliminary evidence, not a completed review or tracked coverage.
+
+A separate valid five-input LUT probe exposes a Go-specific restriction: actual
+Gia_ManComputeEdgeDelay2 returns delay 1, while Go panics because its shared
+fanin helper imposes the forward routine's four-input limit. C's reverse routine
+has no such bound. Reproductions are wide.c/wide.go and wide-go.log in that probe
+directory. No production/test edits were made during DFS integration. Next add
+a red unit test for this restriction before repairing it, track full native
+state/timing/assignment matrices, inspect all edge/window/optimizer entry points
+and their callers, and add independent invariants and compactness checks.
