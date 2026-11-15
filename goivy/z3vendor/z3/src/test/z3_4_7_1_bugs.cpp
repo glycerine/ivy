@@ -91,6 +91,13 @@ Abstract:
                                   weakening proof with the modus-ponens
                                   premises swapped (pkg/AUDIT.md
                                   muz_transforms_01-F6).
+    z3_4_7_1_duality_quantify_arrays_requery with xform.quantify_arrays
+                                  a Duality query leaves the transformed
+                                  rules in the context, so later queries
+                                  answer wrongly (pkg/AUDIT.md muz_fp_03).
+    z3_4_7_1_duality_failed_query_requery a Duality query after one that
+                                  threw dereferences the null old solver
+                                  and segfaults.
 
     Run: ./test-z3 z3_4_7_1_dom_simplify_root   (etc.)
 --*/
@@ -1407,4 +1414,58 @@ void tst_z3_4_7_1_sexpr_display_atom() {
         "(get-user-tactics)\n");
     std::cout << "sexpr_display_atom: " << out;
     ENSURE(out == "((declare-tactic t1 simplify))\n");
+}
+
+// With fixedpoint.xform.quantify_arrays the Duality query applies the
+// default transformation to the context's own rule set and never restores
+// it (pdr and spacer save old_rules and call replace_rules). The query
+// rule for q1 and the coi filter for it stay behind, so the rule for q2 is
+// gone and the third query no longer sees the rule for q1: z3 answers
+// "sat unsat unsat" where q1 is reachable. With xform.scale the stale
+// query!0 output is chosen for the q2 query, which then answers sat.
+// pkg/AUDIT.md muz_fp_03 (duality_preprocess.go quantify_arrays note).
+void tst_z3_4_7_1_duality_quantify_arrays_requery() {
+    char const* script =
+        "(set-option :fixedpoint.engine duality)\n"
+        "(set-option :fixedpoint.xform.inline_eager false)\n"
+        "(set-option :fixedpoint.xform.inline_linear false)\n"
+        "(set-option :fixedpoint.xform.slice false)\n"
+        "(set-option :fixedpoint.xform.subsumption_checker false)\n"
+        "(set-option :fixedpoint.xform.coalesce_rules false)\n"
+        "(set-option :fixedpoint.xform.quantify_arrays true)\n"
+        "(declare-rel p (Real))\n"
+        "(declare-rel q1 ())\n"
+        "(declare-rel q2 ())\n"
+        "(rule (p 1.0))\n"
+        "(rule (=> (p 1.0) q1))\n"
+        "(rule (=> (p 2.0) q2))\n"
+        "(query q1)\n"
+        "(query q2)\n"
+        "(query q1)\n";
+    expect_script_output("duality_quantify_arrays_requery", script, "sat\nunsat\nsat\n");
+}
+
+// A Duality query that throws (here iZ3 refuses the arithmetic rewrite
+// proof of the err query) has already replaced the saved duality_data with
+// a fresh one whose old_rs is null. The next query dereferences that null
+// solver to swap back its counterexample and segfaults. ok is reachable
+// (s = 1 gives p(1, 1)), so the second query must answer sat.
+// pkg/AUDIT.md duality_01-F3 (follow-up: the Duality scale pipeline test).
+void tst_z3_4_7_1_duality_failed_query_requery() {
+    char const* script =
+        "(set-option :fixedpoint.engine duality)\n"
+        "(declare-rel p (Real Real))\n"
+        "(declare-rel q2 (Real))\n"
+        "(declare-rel err ())\n"
+        "(declare-rel ok ())\n"
+        "(declare-var s Real)\n"
+        "(declare-var v Real)\n"
+        "(rule (=> (not (<= s 0.0)) (p s s)))\n"
+        "(rule (=> (and (p v s) (not (<= s 0.0)) (= v (* 2.0 s))) (q2 s)))\n"
+        "(rule (=> (and (q2 s) (not (<= s 0.0))) err))\n"
+        "(rule (=> (and (p s s) (not (<= s 0.0))) ok))\n"
+        "(query err)\n"
+        "(query ok)\n";
+    expect_script_output("duality_failed_query_requery", script,
+                         "(error \"query failed: theory not supported by interpolation or bad proof\")\nunknown\nsat\n");
 }

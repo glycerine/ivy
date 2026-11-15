@@ -27,6 +27,9 @@ the g3 fork's `src/` tree:
   e0791ea54, b55867e91, 24c640b35, 69e363adc, 8b1260507, ac01db9c1,
   e1eec76ed, 25230dcf7, 6e1bb5c0a and 9f4457c59, and the `FORK FIX #N` site
   comments are in g3 commit 2f26a23d9
+* g3 commits 018d8d387 and 1b4ae811e: fixes 43-44 below (red tests in g3
+  commits 3f6706dec and c2b07b691); d3d15a7b4 repairs the `FORK FIX #40`
+  comment, which had been placed inside a macro
 
 They are copied here unchanged.
 
@@ -74,6 +77,8 @@ They are copied here unchanged.
 | 40 | probe `+` and `*` use the first argument twice | local fix (still present upstream) | `cmd_context/tactic_cmds.cpp` |
 | 41 | z3 cannot replay its own `Z3_mk_pble`/`pbge`/`pbeq` logs | backport of upstream fed977b49 (#1782) | `scripts/update_api.py`, `api/z3_logger.h`, `api/z3_replayer.cpp` |
 | 42 | `(get-user-tactics)` segfaults | backport of upstream 202ed79a2 (#5445) | `util/sexpr.cpp` |
+| 43 | Duality with `xform.quantify_arrays`: later queries answer wrongly (lost or stale rules) | local fix (Duality was removed upstream) | `muz/duality/duality_dl_interface.cpp` |
+| 44 | Duality segfaults on the query after a failed one | local fix (Duality was removed upstream) | `muz/duality/duality_dl_interface.cpp` |
 
 Every changed site has a comment that starts with "backport of upstream",
 "BACKPORT upstream", or "FORK FIX".
@@ -326,7 +331,7 @@ root is simplified again under the assumption made from its own value.
 **Fix.** `src/tactic/core/dom_simplify_tactic.cpp:290`: recurse only
 `if (child != e)` (in `simplify_rec`, `src/tactic/core/dom_simplify_tactic.cpp:263`).
 
-**Test.** `TST(z3_4_7_1_dom_simplify_root)`, `src/test/z3_4_7_1_bugs.cpp:201`
+**Test.** `TST(z3_4_7_1_dom_simplify_root)`, `src/test/z3_4_7_1_bugs.cpp:208`
 (registered at `src/test/main.cpp:212`).
 
 ---
@@ -350,7 +355,7 @@ definition had been popped.
 (a comment marks the place), so `rewriter_tpl::reset()` clears both the new
 definitions and the cache after each pass.
 
-**Test.** `TST(z3_4_7_1_elim_term_ite_pop)`, `src/test/z3_4_7_1_bugs.cpp:215`
+**Test.** `TST(z3_4_7_1_elim_term_ite_pop)`, `src/test/z3_4_7_1_bugs.cpp:222`
 (registered at `src/test/main.cpp:213`).
 
 ---
@@ -387,7 +392,7 @@ definition of `asserted_formulas::expand_macros()` is at
 `src/smt/asserted_formulas.cpp:344`. With the finder on, the path is
 unchanged.
 
-**Test.** `TST(z3_4_7_1_macro_finder_off)`, `src/test/z3_4_7_1_bugs.cpp:248`
+**Test.** `TST(z3_4_7_1_macro_finder_off)`, `src/test/z3_4_7_1_bugs.cpp:255`
 (registered at `src/test/main.cpp:214`).
 
 ---
@@ -419,8 +424,8 @@ for example `p1`, `(> x 0)`, `p0`, `(not p1)`, or `(or (not p0) (not p1))`,
 * `:643` stop the `replace` loop once `g->inconsistent()`.
 
 **Tests.** `TST(z3_4_7_1_pb_preprocess_index)`,
-`src/test/z3_4_7_1_bugs.cpp:283`, and `TST(z3_4_7_1_pb_preprocess_resolve)`,
-`src/test/z3_4_7_1_bugs.cpp:299` (registered at `src/test/main.cpp:215-216`).
+`src/test/z3_4_7_1_bugs.cpp:290`, and `TST(z3_4_7_1_pb_preprocess_resolve)`,
+`src/test/z3_4_7_1_bugs.cpp:306` (registered at `src/test/main.cpp:215-216`).
 
 ---
 
@@ -440,7 +445,7 @@ missing entry as a conflict.
 `src/smt/theory_datatype.cpp:740`): if the class has no recognizers yet,
 register the triggering one with `add_recognizer(w, recognizer)` first.
 
-**Test.** `TST(z3_4_7_1_dt_recognizer)`, `src/test/z3_4_7_1_bugs.cpp:338`
+**Test.** `TST(z3_4_7_1_dt_recognizer)`, `src/test/z3_4_7_1_bugs.cpp:345`
 (registered at `src/test/main.cpp:217`).
 
 **Note on fixes 6-12.** Their tests live in `src/test/z3_4_7_1_bugs.cpp`
@@ -471,7 +476,7 @@ no bound.
 incremented at `:378` (in `simplify_goal`, `src/tactic/core/dom_simplify_tactic.cpp:368`).
 
 **Test.** `TST(z3_4_7_1_dom_simplify_oscillation)`,
-`src/test/z3_4_7_1_bugs.cpp:388` (registered at `src/test/main.cpp:218`). A
+`src/test/z3_4_7_1_bugs.cpp:395` (registered at `src/test/main.cpp:218`). A
 20-second SIGALRM watchdog turns the hang into a test failure (POSIX only).
 
 ---
@@ -502,7 +507,7 @@ the term was returned unchanged.
   `:84`).
 
 **Test.** `TST(z3_4_7_1_update_field_constructor)`,
-`src/test/z3_4_7_1_bugs.cpp:415` (registered at `src/test/main.cpp:219`).
+`src/test/z3_4_7_1_bugs.cpp:422` (registered at `src/test/main.cpp:219`).
 
 ---
 
@@ -524,7 +529,7 @@ crashes in the destructor). `FORK FIX #13` comments at
 `src/muz/pdr/pdr_context.h:264` and `src/muz/pdr/pdr_context.cpp:52`,
 `:1004`, `:1155`, `:1175` and `:1487`.
 
-**Test.** `TST(z3_4_7_1_pdr_nullary_cache)`, `src/test/z3_4_7_1_bugs.cpp:461`
+**Test.** `TST(z3_4_7_1_pdr_nullary_cache)`, `src/test/z3_4_7_1_bugs.cpp:468`
 (registered at `src/test/main.cpp:228`).
 
 ---
@@ -544,7 +549,7 @@ so an edge with two positions is rewritten twice.
 that has already been rewritten.
 
 **Test.** `TST(z3_4_7_1_duality_unhoist_repeated_child)`,
-`src/test/z3_4_7_1_bugs.cpp:491` (registered at `src/test/main.cpp:229`).
+`src/test/z3_4_7_1_bugs.cpp:498` (registered at `src/test/main.cpp:229`).
 
 ---
 
@@ -564,7 +569,7 @@ wrapped plugin cannot handle the signature, fall back to
 `get_manager().mk_empty_table(s)`.
 
 **Test.** `TST(z3_4_7_1_lazy_sparse_nullary_union)`,
-`src/test/z3_4_7_1_bugs.cpp:514` (registered at `src/test/main.cpp:230`).
+`src/test/z3_4_7_1_bugs.cpp:521` (registered at `src/test/main.cpp:230`).
 
 ---
 
@@ -583,7 +588,7 @@ rule set instead of at the trace level, and does not stop at a fact.
 **Fix.** `src/muz/bmc/dl_bmc_engine.cpp:290` and `:348` (`FORK FIX #16`):
 evaluate at `level`, stop at any fact, `VERIFY(level > 0)`.
 
-**Test.** `TST(z3_4_7_1_qbmc_eval_level)`, `src/test/z3_4_7_1_bugs.cpp:543`
+**Test.** `TST(z3_4_7_1_qbmc_eval_level)`, `src/test/z3_4_7_1_bugs.cpp:550`
 (registered at `src/test/main.cpp:231`). It checks that the output starts
 with `sat` and that the proof contains `(asserted (p 0))`; the exact proof
 depends on the model.
@@ -603,7 +608,7 @@ instead of the width of the variable.
 **Fix.** `src/muz/ddnf/ddnf.cpp:855` (`FORK FIX #17`): use
 `bv.get_bv_size(v)`.
 
-**Test.** `TST(z3_4_7_1_ddnf_extract_width)`, `src/test/z3_4_7_1_bugs.cpp:579`
+**Test.** `TST(z3_4_7_1_ddnf_extract_width)`, `src/test/z3_4_7_1_bugs.cpp:586`
 (registered at `src/test/main.cpp:232`).
 
 ---
@@ -621,7 +626,7 @@ predecessor.
 **Fix.** `src/util/min_cut.cpp:166` (`FORK FIX #18`): add the reverse arc
 to `edge(l, max)`.
 
-**Test.** `TST(z3_4_7_1_min_cut_shared_node)`, `src/test/z3_4_7_1_bugs.cpp:632`
+**Test.** `TST(z3_4_7_1_min_cut_shared_node)`, `src/test/z3_4_7_1_bugs.cpp:639`
 (registered at `src/test/main.cpp:233`), with a 20-second watchdog.
 
 ---
@@ -642,7 +647,7 @@ modus-ponens premises in the wrong order, which is undefined behaviour.
 and `:242` (`FORK FIX #19`): build the proof under `scoped_proof` and call
 `mk_modus_ponens(p1, mk_def_axiom(...))`.
 
-**Test.** `TST(z3_4_7_1_qi_weakening_proof)`, `src/test/z3_4_7_1_bugs.cpp:665`
+**Test.** `TST(z3_4_7_1_qi_weakening_proof)`, `src/test/z3_4_7_1_bugs.cpp:672`
 (registered at `src/test/main.cpp:234`), with proof mode both off and on.
 
 ---
@@ -661,7 +666,7 @@ branch without the checks of the numeral-on-the-right branch.
 **Fix.** `src/tactic/arith/pb2bv_tactic.cpp:636` (`FORK FIX #20`): swap the
 operands, flip `<=`/`>=`, and use the checked branch.
 
-**Test.** `TST(z3_4_7_1_pb2bv_numeral_lhs)`, `src/test/z3_4_7_1_bugs.cpp:736`
+**Test.** `TST(z3_4_7_1_pb2bv_numeral_lhs)`, `src/test/z3_4_7_1_bugs.cpp:743`
 (registered at `src/test/main.cpp:220`).
 
 ---
@@ -679,7 +684,7 @@ unsat problem.
 **Fix.** `src/tactic/arith/eq2bv_tactic.cpp:158` (`FORK FIX #21`):
 `m_rw.reset()` per goal.
 
-**Test.** `TST(z3_4_7_1_eq2bv_stale_cache)`, `src/test/z3_4_7_1_bugs.cpp:758`
+**Test.** `TST(z3_4_7_1_eq2bv_stale_cache)`, `src/test/z3_4_7_1_bugs.cpp:765`
 (registered at `src/test/main.cpp:221`).
 
 ---
@@ -697,7 +702,7 @@ formulas that mention them have already been replaced by purified ones.
 **Fix.** `src/tactic/arith/purify_arith_tactic.cpp:746` (`FORK FIX #22`):
 call `find_unsafe()` at the start of `operator()`.
 
-**Test.** `TST(z3_4_7_1_purify_trig_unsafe)`, `src/test/z3_4_7_1_bugs.cpp:779`
+**Test.** `TST(z3_4_7_1_purify_trig_unsafe)`, `src/test/z3_4_7_1_bugs.cpp:786`
 (registered at `src/test/main.cpp:222`).
 
 ---
@@ -716,7 +721,7 @@ they contain.
 unbound variables of identical subterms.
 
 **Test.** `TST(z3_4_7_1_ufbv_demod_unbound_var)`,
-`src/test/z3_4_7_1_bugs.cpp:805` (registered at `src/test/main.cpp:223`).
+`src/test/z3_4_7_1_bugs.cpp:812` (registered at `src/test/main.cpp:223`).
 The bug depends on AST ids, so the test runs the script through a shell-like
 `cmd_context` rather than `Z3_eval_smtlib2_string`.
 
@@ -735,7 +740,7 @@ last formula.
 re-read the size each round.
 
 **Test.** `TST(z3_4_7_1_recover01_inconsistent)`,
-`src/test/z3_4_7_1_bugs.cpp:838` (registered at `src/test/main.cpp:224`).
+`src/test/z3_4_7_1_bugs.cpp:845` (registered at `src/test/main.cpp:224`).
 
 ---
 
@@ -751,7 +756,7 @@ re-read the size each round.
 (`FORK FIX #25`): prove the split with `mk_push_quant`.
 
 **Test.** `TST(z3_4_7_1_distribute_forall_proof)`,
-`src/test/z3_4_7_1_bugs.cpp:877` (registered at `src/test/main.cpp:225`).
+`src/test/z3_4_7_1_bugs.cpp:884` (registered at `src/test/main.cpp:225`).
 
 ---
 
@@ -769,7 +774,7 @@ integral.
 (`FORK FIX #26`): leave the sum unchanged unless the bound and every
 coefficient are integral.
 
-**Test.** `TST(z3_4_7_1_pb2bv_fractional)`, `src/test/z3_4_7_1_bugs.cpp:896`
+**Test.** `TST(z3_4_7_1_pb2bv_fractional)`, `src/test/z3_4_7_1_bugs.cpp:903`
 (registered at `src/test/main.cpp:226`).
 
 ---
@@ -790,7 +795,7 @@ becomes inconsistent and the rewrite loop keeps appending.
 sum with no terms in `mk_eq` when `compile_equality` is off. The underlying
 `goal::update` defect is listed below.
 
-**Test.** `TST(z3_4_7_1_lia2card_empty_eq)`, `src/test/z3_4_7_1_bugs.cpp:924`
+**Test.** `TST(z3_4_7_1_lia2card_empty_eq)`, `src/test/z3_4_7_1_bugs.cpp:931`
 (registered at `src/test/main.cpp:227`), with a 20-second watchdog.
 
 ---
@@ -805,7 +810,7 @@ sum with no terms in `mk_eq` when `compile_equality` is off. The underlying
 
 **Fix.** `src/nlsat/nlsat_explain.cpp:1673` and `:1689` (`FORK FIX #28`): the sign is an `int`.
 
-**Test.** `TST(z3_4_7_1_nlsat_signed_infinity)`, `src/test/z3_4_7_1_bugs.cpp:990`
+**Test.** `TST(z3_4_7_1_nlsat_signed_infinity)`, `src/test/z3_4_7_1_bugs.cpp:997`
 (registered at `src/test/main.cpp:235`).
 
 ---
@@ -820,7 +825,7 @@ sum with no terms in `mk_eq` when `compile_equality` is off. The underlying
 
 **Fix.** `src/nlsat/nlsat_evaluator.cpp:387` (`FORK FIX #29`): normalize each sign to -1, 0 or 1 before multiplying.
 
-**Test.** `TST(z3_4_7_1_nlsat_eval_sign_overflow)`, `src/test/z3_4_7_1_bugs.cpp:1031`
+**Test.** `TST(z3_4_7_1_nlsat_eval_sign_overflow)`, `src/test/z3_4_7_1_bugs.cpp:1038`
 (registered at `src/test/main.cpp:236`).
 
 ---
@@ -835,7 +840,7 @@ sum with no terms in `mk_eq` when `compile_equality` is off. The underlying
 
 **Fix.** `src/nlsat/nlsat_explain.cpp:1729` and `:1747` (`FORK FIX #30`): each polynomial indexes its own power tables (upstream's As/Bs).
 
-**Test.** `TST(z3_4_7_1_nlsat_solve_eq_powers)`, `src/test/z3_4_7_1_bugs.cpp:1068`
+**Test.** `TST(z3_4_7_1_nlsat_solve_eq_powers)`, `src/test/z3_4_7_1_bugs.cpp:1075`
 (registered at `src/test/main.cpp:237`).
 
 ---
@@ -850,7 +855,7 @@ sum with no terms in `mk_eq` when `compile_equality` is off. The underlying
 
 **Fix.** `src/nlsat/nlsat_explain.cpp:432` and `:1138` (`FORK FIX #31`): test `s < 0`.
 
-**Test.** `TST(z3_4_7_1_nlsat_simplify_core_sign)`, `src/test/z3_4_7_1_bugs.cpp:1108`
+**Test.** `TST(z3_4_7_1_nlsat_simplify_core_sign)`, `src/test/z3_4_7_1_bugs.cpp:1115`
 (registered at `src/test/main.cpp:238`).
 
 ---
@@ -865,7 +870,7 @@ sum with no terms in `mk_eq` when `compile_equality` is off. The underlying
 
 **Fix.** `src/nlsat/nlsat_solver.cpp:2373`, `:2385`, `:2409` and `:2451` (`FORK FIX #32`).
 
-**Test.** `TST(z3_4_7_1_nlsat_inline_vars)`, `src/test/z3_4_7_1_bugs.cpp:1170`
+**Test.** `TST(z3_4_7_1_nlsat_inline_vars)`, `src/test/z3_4_7_1_bugs.cpp:1177`
 (registered at `src/test/main.cpp:239`).
 
 ---
@@ -880,7 +885,7 @@ sum with no terms in `mk_eq` when `compile_equality` is off. The underlying
 
 **Fix.** `src/nlsat/nlsat_solver.cpp:2019` (`FORK FIX #33`): `can_reorder()` returns false while patches exist.
 
-**Test.** `TST(z3_4_7_1_nlsat_inline_reorder)`, `src/test/z3_4_7_1_bugs.cpp:1193`
+**Test.** `TST(z3_4_7_1_nlsat_inline_reorder)`, `src/test/z3_4_7_1_bugs.cpp:1200`
 (registered at `src/test/main.cpp:240`).
 
 ---
@@ -895,7 +900,7 @@ sum with no terms in `mk_eq` when `compile_equality` is off. The underlying
 
 **Fix.** `src/qe/qe_arith_plugin.cpp:1931` (`FORK FIX #34`): choose the bound family with `get_bound_sizes`.
 
-**Test.** `TST(z3_4_7_1_qe_project_real_direction)`, `src/test/z3_4_7_1_bugs.cpp:1225`
+**Test.** `TST(z3_4_7_1_qe_project_real_direction)`, `src/test/z3_4_7_1_bugs.cpp:1232`
 (registered at `src/test/main.cpp:241`).
 
 ---
@@ -910,7 +915,7 @@ sum with no terms in `mk_eq` when `compile_equality` is off. The underlying
 
 **Fix.** `src/qe/qe_arith_plugin.cpp:45` and `:1329` (`FORK FIX #35`): a divisibility atom needs a positive modulus; others are left alone, so the quantifier is kept.
 
-**Test.** `TST(z3_4_7_1_qe_mod_divisor)`, `src/test/z3_4_7_1_bugs.cpp:1248`
+**Test.** `TST(z3_4_7_1_qe_mod_divisor)`, `src/test/z3_4_7_1_bugs.cpp:1255`
 (registered at `src/test/main.cpp:242`).
 
 ---
@@ -925,7 +930,7 @@ sum with no terms in `mk_eq` when `compile_equality` is off. The underlying
 
 **Fix.** `src/qe/qe_datatype_plugin.cpp:725` (`FORK FIX #36`): conjoin `r(t)`.
 
-**Test.** `TST(z3_4_7_1_qe_dt_eq_recognizer)`, `src/test/z3_4_7_1_bugs.cpp:1268`
+**Test.** `TST(z3_4_7_1_qe_dt_eq_recognizer)`, `src/test/z3_4_7_1_bugs.cpp:1275`
 (registered at `src/test/main.cpp:243`).
 
 ---
@@ -940,7 +945,7 @@ sum with no terms in `mk_eq` when `compile_equality` is off. The underlying
 
 **Fix.** `src/qe/qe_lite.cpp:1544` (`FORK FIX #37`): reset `m_expr2bvar`.
 
-**Test.** `TST(z3_4_7_1_qe_lite_fm_bvar)`, `src/test/z3_4_7_1_bugs.cpp:1287`
+**Test.** `TST(z3_4_7_1_qe_lite_fm_bvar)`, `src/test/z3_4_7_1_bugs.cpp:1294`
 (registered at `src/test/main.cpp:244`).
 
 ---
@@ -955,7 +960,7 @@ sum with no terms in `mk_eq` when `compile_equality` is off. The underlying
 
 **Fix.** `src/ast/pb_decl_plugin.cpp:177` (`FORK FIX #38`): pass copies of the coefficients.
 
-**Test.** `TST(z3_4_7_1_pb_mk_lt_coeffs)`, `src/test/z3_4_7_1_bugs.cpp:1309`
+**Test.** `TST(z3_4_7_1_pb_mk_lt_coeffs)`, `src/test/z3_4_7_1_bugs.cpp:1316`
 (registered at `src/test/main.cpp:245`).
 
 ---
@@ -970,7 +975,7 @@ sum with no terms in `mk_eq` when `compile_equality` is off. The underlying
 
 **Fix.** `src/opt/opt_parse.cpp:292` (`FORK FIX #39`): consume the shared `m` once, then test `in:` / `ax:`. The meaning kept for `max:` (minimize the negated sum) is unchanged and itself questionable.
 
-**Test.** `TST(z3_4_7_1_opb_max_objective)`, `src/test/z3_4_7_1_bugs.cpp:1329`
+**Test.** `TST(z3_4_7_1_opb_max_objective)`, `src/test/z3_4_7_1_bugs.cpp:1336`
 (registered at `src/test/main.cpp:246`).
 
 ---
@@ -985,7 +990,7 @@ sum with no terms in `mk_eq` when `compile_equality` is off. The underlying
 
 **Fix.** `src/cmd_context/tactic_cmds.cpp:763` (`FORK FIX #40`): fold from child 2.
 
-**Test.** `TST(z3_4_7_1_probe_nary_fold)`, `src/test/z3_4_7_1_bugs.cpp:1347`
+**Test.** `TST(z3_4_7_1_probe_nary_fold)`, `src/test/z3_4_7_1_bugs.cpp:1354`
 (registered at `src/test/main.cpp:247`).
 
 ---
@@ -1000,7 +1005,7 @@ sum with no terms in `mk_eq` when `compile_equality` is off. The underlying
 
 **Fix.** `scripts/update_api.py:958` (`FORK FIX #41`, generates `api_log_macros.cpp`), `src/api/z3_logger.h:45` and `src/api/z3_replayer.cpp:500` and `:509`: log and replay `int` arrays as `int` arrays.
 
-**Test.** `TST(z3_4_7_1_pb_log_replay)`, `src/test/z3_4_7_1_bugs.cpp:1363`
+**Test.** `TST(z3_4_7_1_pb_log_replay)`, `src/test/z3_4_7_1_bugs.cpp:1370`
 (registered at `src/test/main.cpp:248`).
 
 ---
@@ -1015,8 +1020,53 @@ sum with no terms in `mk_eq` when `compile_equality` is off. The underlying
 
 **Fix.** `src/util/sexpr.cpp:188` (`FORK FIX #42`): return after `display_atom`.
 
-**Test.** `TST(z3_4_7_1_sexpr_display_atom)`, `src/test/z3_4_7_1_bugs.cpp:1404`
+**Test.** `TST(z3_4_7_1_sexpr_display_atom)`, `src/test/z3_4_7_1_bugs.cpp:1411`
 (registered at `src/test/main.cpp:249`).
+
+---
+
+## 43. Duality with `xform.quantify_arrays` does not restore the rules
+
+**Upstream:** none. Duality was removed upstream.
+
+**Symptom.** With `fixedpoint.xform.quantify_arrays=true`, queries after the
+first one are answered against the transformed rules of an earlier query.
+With rules `p(1.0)`, `q1 <- p(1.0)`, `q2 <- p(2.0)` and the queries `q1, q2,
+q1`, z3 prints `sat unsat unsat`, and with `xform.scale=true` it prints `sat
+sat sat`. The correct answers are `sat unsat sat`.
+
+**Cause.** The quantify_arrays branch of `dl_interface::query` runs
+`apply_default_transformation(m_ctx)` on the context's own rules and never
+restores them, unlike PDR and Spacer, which save `old_rules` and call
+`replace_rules`. The first query's cone-of-influence filter removes the other
+queries' rules, and its `query!0` output predicate stays in the context.
+
+**Fix.** `src/muz/duality/duality_dl_interface.cpp:169-170` and `:195-196` (`FORK FIX #43`): save
+`old_rules` before `mk_query`, and call `m_ctx.reopen();
+m_ctx.replace_rules(old_rules);` after the transformed formulas are read.
+
+**Test.** `TST(z3_4_7_1_duality_quantify_arrays_requery)`, `src/test/z3_4_7_1_bugs.cpp:1427`
+(registered at `src/test/main.cpp:250`).
+
+---
+
+## 44. Duality segfaults on the query after a failed one
+
+**Upstream:** none. Duality was removed upstream.
+
+**Symptom.** After a query that fails (for example "theory not supported by
+interpolation or bad proof"), the next query segfaults.
+
+**Cause.** `dl_interface::query` replaces `_d` with a fresh `duality_data`
+before the query can fail, so after the exception `old_rs` is null, and the
+next query calls `old_rs->GetCounterexample()`.
+
+**Fix.** `src/muz/duality/duality_dl_interface.cpp:144` (`FORK FIX #44`): skip
+the counterexample swap when `old_rs` is null, as the existing guard on
+`LearnFrom` already does.
+
+**Test.** `TST(z3_4_7_1_duality_failed_query_requery)`, `src/test/z3_4_7_1_bugs.cpp:1454`
+(registered at `src/test/main.cpp:251`).
 
 ---
 
