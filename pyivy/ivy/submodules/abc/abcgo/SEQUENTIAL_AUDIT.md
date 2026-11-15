@@ -5438,3 +5438,19 @@ lists, scores, queue extraction, node/divisor updates and reconstruction with
 C after each extraction, using overlapping AND/XOR supergates and different
 arrival/limit settings before moving to mapped windows. Original completion
 remains 2/131; GIA and the full sequential audit remain active.
+
+DAM area-balancing review finds a scratch-ownership bug in collection. C
+records only the MUXes it marks and clears those entries after traversal;
+Go erased mark0 on every graph object. The new red regression loses a
+caller's CI mark immediately (`/tmp/abcgo-area-marks-red.log`). Restore the
+source vVisit list, reset it before collection, append only newly marked
+MUXes, and clear only those recorded marks. Ordinary/CI/CO/unrelated-MUX
+marks are preserved; temporary visited-MUX marks are released.
+
+The first regression passes after repair (`/tmp/abcgo-area-marks-green.log`).
+Additional checks include a reachable MUX and pre-marked unrelated MUX,
+ordinary-node/terminal marks and reuse of the visited list across collection
+calls. Save a red checkpoint while building intermediate-state/native tests
+for divisor lists, priorities, queue updates and reconstruction. The whole
+area-balancing algorithm is not yet reviewed; full integration is pending.
+Original completion remains 2/131; GIA and the sequential audit remain active.

@@ -225,6 +225,7 @@ type Dam_Man_t struct {
 	vNod2Set, vDiv2Nod, vSetStore, vNodStore []int32
 	vCounts                                  []float32
 	vNodLevR, vDivLevR                       []int32
+	vVisit                                   []int32
 	vQue                                     *vec.Vec_Que_t
 	vHash                                    *vec.Hash_IntMan_t
 	clkStart                                 time.Time
@@ -278,6 +279,7 @@ func Dam_ManCollectSets_rec(p *Dam_Man_t, id int32) {
 			return
 		}
 		obj.fMark0 = 1
+		p.vVisit = append(p.vVisit, id)
 		Dam_ManCollectSets_rec(p, Gia_ObjFaninId0(obj, id))
 		Dam_ManCollectSets_rec(p, Gia_ObjFaninId1(obj, id))
 		Dam_ManCollectSets_rec(p, Gia_ObjFaninId2(p.pGia, id))
@@ -299,12 +301,13 @@ func Dam_ManCollectSets(p *Dam_Man_t) {
 	Gia_ManCreateRefs(p.pGia)
 	p.vNod2Set = make([]int32, p.pGia.nObjs)
 	p.vSetStore = []int32{-1}
+	p.vVisit = p.vVisit[:0]
 	for _, id := range Vec_IntArray(p.pGia.vCos) {
 		Dam_ManCollectSets_rec(p, Gia_ObjFaninId0(p.pGia.pObjs[id], id))
 	}
 	p.pGia.Refs = nil
-	for _, obj := range p.pGia.pObjs {
-		obj.fMark0 = 0
+	for _, id := range p.vVisit {
+		p.pGia.pObjs[id].fMark0 = 0
 	}
 }
 func Dam_ManDivSlack(p *Dam_Man_t, a, b, reverse int32) int32 {
