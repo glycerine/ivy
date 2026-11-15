@@ -7860,3 +7860,26 @@ Existing/new quantification checks pass in 2.032s
 (/tmp/abcgo-exist-constant-row-repaired.log). This is an initial family repair;
 expanded truth, native/support, compactness and full integration gates remain.
 Original completion stays 2/131.
+
+### Incremental quantification retained-input repair
+
+The generated independent matrix turns red at seed18/modeExist2/phase0/keep4:
+a true result is returned where retained input2=false must force false
+(/tmp/abcgo-exist-generated-first.log). A temporary capture test distinguishes
+fresh from repeated state; both fail identically and both match unmodified C.
+Remove that temporary test after preserving logs under
+/tmp/abcgo-exist-review-probe/debug-go.log and seed18.out.
+
+Reduce to a permanent red test: exists a,b: c AND (a OR b) must equal c, but
+Exist2 returns literal1 (/tmp/abcgo-exist-retained-ci-red.log). An intermediate
+cofactor list contains retained CI c; the recursive CI base case returns [0,1]
+for every CI even when it does not carry the currently eliminated support bit.
+Preserve that CI as [lit,lit] unless its current support bit is set. Keep the
+source traversal, products, cofactor list and reconstruction algorithm intact.
+
+The reduced test, prior constant/row regressions and 4,608 repeated generated
+queries now pass (0.058s, /tmp/abcgo-exist-retained-ci-repaired.log). Every query
+checks all sixteen assignments against independent existential enumeration,
+including all retained-input masks, both phases, both source algorithms and
+repeated masks on one growing graph. Native/support/type/depth/compactness and
+full integration review remain open; original completion stays 2/131.

@@ -72,7 +72,12 @@ func Gia_ManQuantExist_rec(p *Gia_Man_t, id int32, result []int32) {
 	}
 	obj := Gia_ManObj(p, id)
 	if Gia_ObjIsCi(obj) != 0 {
-		result[0], result[1] = 0, 1
+		// A cofactor list can contain a retained or already-unaffected CI.
+		// Only the CI carrying the current support bit is being eliminated.
+		result[0], result[1] = id<<1, id<<1
+		if Gia_ManQuantCheckSupp(p, id, p.iSuppPi) != 0 {
+			result[0], result[1] = 0, 1
+		}
 		Gia_ObjCopySetTwoArray(p, id, result)
 		return
 	}
