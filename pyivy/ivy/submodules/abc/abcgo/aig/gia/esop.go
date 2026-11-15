@@ -335,7 +335,7 @@ func Eso_ManCompute(g *Gia_Man_t, verbose int32, coverOut **Vec_Wec_t) *Gia_Man_
 		vec.Vec_PtrPush(cover, vec.Vec_IntDup(v))
 	}
 	if verbose != 0 {
-		fmt.Printf("Outs = %d.  Cubes = %d.  Used = %d.  Hashed = %d. Time = %.2f sec\n", Gia_ManCoNum(g), total, used, len(p.cubes), time.Since(start).Seconds())
+		fmt.Printf("Outs = %d.  Cubes = %d.  Used = %d.  Hashed = %d. Time =%9.2f sec\n", Gia_ManCoNum(g), total, used, len(p.cubes), time.Since(start).Seconds())
 	}
 	var result *Gia_Man_t
 	if coverOut != nil {

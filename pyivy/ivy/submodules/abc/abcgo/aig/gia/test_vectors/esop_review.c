@@ -40,4 +40,19 @@ static void inspect_cubes(void) {
  }
  for(a=0;a<81;++a)Vec_IntFree(cubes[a]);Vec_IntFree(esop);Vec_IntFree(out);Eso_ManStop(p);Gia_ManStop(g);
 }
-int main(int argc,char **argv){if(argc>1 && !strcmp(argv[1],"--cubes"))inspect_cubes();else inspect_covers();return 0;}
+static void inspect_verbose(void) {
+ Gia_Man_t *g=make_graph(3),*out=Eso_ManCompute(g,1,NULL);Gia_ManStop(out);Gia_ManStop(g);
+}
+static void inspect_print(void) {
+ Gia_Man_t *g=Gia_ManStart(8);Eso_Man_t *p;Vec_Int_t *cover=Vec_IntAlloc(4);int i;
+ for(i=0;i<4;++i)Gia_ManAppendCi(g);p=Eso_ManAlloc(g);
+ Eso_ManCoverPrint(p,cover);Vec_IntPush(cover,p->Cube1);Vec_IntPush(cover,0);Vec_IntPush(cover,3);Eso_ManCoverPrint(p,cover);
+ Vec_IntFree(cover);Eso_ManStop(p);Gia_ManStop(g);
+}
+int main(int argc,char **argv){
+ if(argc>1 && !strcmp(argv[1],"--cubes"))inspect_cubes();
+ else if(argc>1 && !strcmp(argv[1],"--verbose"))inspect_verbose();
+ else if(argc>1 && !strcmp(argv[1],"--print"))inspect_print();
+ else inspect_covers();
+ return 0;
+}

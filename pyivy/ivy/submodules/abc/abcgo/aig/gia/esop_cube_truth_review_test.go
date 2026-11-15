@@ -149,3 +149,21 @@ func TestEsopTypedScratchAndResultOwnership(t *testing.T) {
 		Gia_ManStop(out)
 	}
 }
+
+func BenchmarkEsopCubeProduct(b *testing.B) {
+	g := Gia_ManStart(16)
+	for i := 0; i < 6; i++ {
+		Gia_ManAppendCi(g)
+	}
+	p := Eso_ManAlloc(g)
+	defer Eso_ManStop(p)
+	defer Gia_ManStop(g)
+	a, bits := p.intern([]int32{0, 2, 4, 8}), p.intern([]int32{2, 6, 10})
+	out := Vec_IntAlloc(6)
+	Eso_ManComputeAnd(p, Eso_ManCube(p, a), Eso_ManCube(p, bits), out)
+	b.ReportAllocs()
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		Eso_ManComputeAnd(p, Eso_ManCube(p, a), Eso_ManCube(p, bits), out)
+	}
+}

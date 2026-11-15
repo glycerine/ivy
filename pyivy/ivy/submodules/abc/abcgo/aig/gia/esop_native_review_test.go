@@ -3,6 +3,7 @@ package gia
 import (
 	"fmt"
 	"os/exec"
+	"regexp"
 	"strings"
 	"testing"
 
@@ -117,4 +118,51 @@ func TestEsopNativeCubeOperations(t *testing.T) {
 		}
 	}
 	esopReviewCompare(t, native, records.String())
+}
+
+func TestEsopNativeReports(t *testing.T) {
+	exe := compileGiaSourceOracle(t, "esop_review.c")
+	for _, mode := range []string{"--verbose", "--print"} {
+		t.Run(mode, func(t *testing.T) {
+			native, err := exec.Command(exe, mode).CombinedOutput()
+			if err != nil {
+				t.Fatalf("C ESOP report: %v\n%s", err, native)
+			}
+			got := hashReviewStdout(t, func() {
+				if mode == "--verbose" {
+					g := cofReviewGraph(3)
+					Gia_ManHashStop(g)
+					out := Eso_ManCompute(g, 1, nil)
+					Gia_ManStop(out)
+					Gia_ManStop(g)
+					return
+				}
+				g := Gia_ManStart(8)
+				for i := 0; i < 4; i++ {
+					Gia_ManAppendCi(g)
+				}
+				p := Eso_ManAlloc(g)
+				cover := Vec_IntAlloc(4)
+				Eso_ManCoverPrint(p, cover)
+				for _, id := range []int32{p.Cube1, 0, 3} {
+					Vec_IntPush(cover, id)
+				}
+				Eso_ManCoverPrint(p, cover)
+				Eso_ManStop(p)
+				Gia_ManStop(g)
+			})
+			// Clock values differ; retain the source field and its column width.
+			clock := regexp.MustCompile(`Time = {5}[0-9]+\.[0-9]{2} sec`)
+			if mode == "--verbose" {
+				if !clock.MatchString(got) || !clock.Match(native) {
+					t.Fatalf("missing source time field\nGo %s\n C %s", got, native)
+				}
+				got = clock.ReplaceAllString(got, "<time>")
+				native = clock.ReplaceAll(native, []byte("<time>"))
+			}
+			if got != string(native) {
+				t.Fatalf("report differs\nGo %s\n C %s", got, native)
+			}
+		})
+	}
 }

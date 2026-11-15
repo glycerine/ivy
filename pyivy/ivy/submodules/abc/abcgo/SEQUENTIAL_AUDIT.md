@@ -7796,3 +7796,25 @@ cube pairs across 0..5 variables and 24,576 recursive minimization prefixes,
 plus complement transforms and typed scratch/result lifetime ownership. Expanded
 ESOP tests pass in 3.838s (/tmp/abcgo-esop-expanded.log). Further boundary,
 compactness and final frozen integration checks remain; no family closure yet.
+
+### ESOP boundary, compactness and final focused checkpoint
+
+Add 32 mixed typed XOR/buffer/MUX/AND interface cases spanning all phase masks,
+sequential/combinational graphs and reversed port construction. Both extracted
+covers and rebuilt outputs match independent truth; roles/resets and separately
+owned input/output names remain intact. Zero-variable/constants/CI-only/no-output
+boundaries also pass. The native report regression fails only changed time-field
+width (/tmp/abcgo-esop-reports-red.log); repair source padding. Empty/constant/
+signed-singleton cover printing already matches native and remains unchanged.
+
+Measure the existing cube-product path before a speculative rewrite: 71.75 ns/op,
+24 B/op and one allocation at 100,000 iterations
+(/tmp/abcgo-esop-product-before.log). Retain the readable merge/interner and source
+minimization order; no demonstrated algorithm bug or meaningful compactness gain
+justifies aliasing complexity or unsafe keys. REVIEW_esop.md reconciles all 14
+source routines, exact native order checks and independent truth/ownership tests.
+
+Final focused ESOP tests pass in 5.617s
+(/tmp/abcgo-esop-final-focused.log). Commit the coherent checkpoint, then freeze
+production/tests/fixtures for full module race and GIA vet. Package completion
+remains 2/131; this is not yet a completed family integration checkpoint.

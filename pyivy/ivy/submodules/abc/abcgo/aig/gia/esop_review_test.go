@@ -121,3 +121,75 @@ func TestEsopSequentialInterfaceMetadata(t *testing.T) {
 		})
 	}
 }
+
+func TestEsopMixedTypedInterfacesAndNames(t *testing.T) {
+	for signs := int32(0); signs < 8; signs++ {
+		for _, regs := range []bool{false, true} {
+			for _, layout := range []bool{false, true} {
+				src := quantificationReviewGraph(signs, regs, false)
+				if layout {
+					src = Gia_ManDupOrderDfsReverse(src)
+				}
+				if err := src.SetAigerProperties(1, 1); err != nil {
+					t.Fatal(err)
+				}
+				src.VNamesIn = Vec_PtrAlloc(int(Gia_ManCiNum(src)))
+				src.VNamesOut = Vec_PtrAlloc(int(Gia_ManCoNum(src)))
+				for i := int32(0); i < Gia_ManCiNum(src); i++ {
+					Vec_PtrPush(src.VNamesIn, fmt.Sprintf("input%d", i))
+				}
+				for i := int32(0); i < Gia_ManCoNum(src); i++ {
+					Vec_PtrPush(src.VNamesOut, fmt.Sprintf("output%d", i))
+				}
+				if regs {
+					src.aigerLatchInits = []int32{1}
+				}
+				var cover *Vec_Wec_t
+				Eso_ManCompute(src, 0, &cover)
+				esopReviewCheckCover(t, src, cover)
+				out := Eso_ManCompute(src, 0, nil)
+				cofReviewCheckRebuild(t, src, out)
+				if out.nConstrs != 1 || out.aigerBadOutputs != 1 || !slices.Equal(out.aigerLatchInits, src.aigerLatchInits) || !slices.Equal(out.InputNames(), src.InputNames()) || !slices.Equal(out.OutputNames(), src.OutputNames()) {
+					t.Fatalf("signs%d regs%t reverse%t: lost interface", signs, regs, layout)
+				}
+				Vec_PtrWriteEntry(out.VNamesIn, 0, "changed input")
+				Vec_PtrWriteEntry(out.VNamesOut, 0, "changed output")
+				if src.InputNames()[0] != "input0" || src.OutputNames()[0] != "output0" {
+					t.Fatal("aliased IO names")
+				}
+				Gia_ManStop(src)
+				Gia_ManStop(out)
+			}
+		}
+	}
+}
+
+func TestEsopConstantsInputsAndEmptyNetworks(t *testing.T) {
+	for nvars := 0; nvars <= 4; nvars++ {
+		for _, outputs := range []bool{false, true} {
+			src := Gia_ManStart(16)
+			for i := 0; i < nvars; i++ {
+				Gia_ManAppendCi(src)
+			}
+			if outputs {
+				Gia_ManAppendCo(src, 0)
+				Gia_ManAppendCo(src, 1)
+				for i := int32(0); i < Gia_ManCiNum(src); i++ {
+					lit := Gia_ManCi(src, i).id << 1
+					Gia_ManAppendCo(src, lit)
+					Gia_ManAppendCo(src, lit^1)
+				}
+			}
+			var cover *Vec_Wec_t
+			Eso_ManCompute(src, 0, &cover)
+			esopReviewCheckCover(t, src, cover)
+			out := Eso_ManCompute(src, 0, nil)
+			cofReviewCheckRebuild(t, src, out)
+			if Gia_ManAndNum(out) != 0 {
+				t.Fatal("introduced gates for constants or inputs")
+			}
+			Gia_ManStop(src)
+			Gia_ManStop(out)
+		}
+	}
+}
