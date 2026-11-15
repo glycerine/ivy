@@ -363,3 +363,153 @@ func TestMarkedDuplicationMatchesWorkingCRegion(t *testing.T) {
 		}
 	}
 }
+
+func TestMarkedDuplicationClassAndChoiceSubsets(t *testing.T) {
+	for removed := 0; removed < 8; removed++ {
+		src := Gia_ManStart(1)
+		a, b := Gia_ManAppendCi(src), Gia_ManAppendCi(src)
+		nodes := []int32{Gia_ManAppendAnd(src, a, b) >> 1, Gia_ManAppendAnd(src, b, a) >> 1, Gia_ManAppendAnd(src, a, b) >> 1}
+		co := Gia_ManAppendCo(src, nodes[2]<<1) >> 1
+		src.StartRepresentatives()
+		Gia_ObjSetRepr(src, nodes[1], nodes[0])
+		Gia_ObjSetRepr(src, nodes[2], nodes[0])
+		src.PNexts = Gia_ManDeriveNexts(src)
+		src.pSibls = make([]int32, src.nObjs)
+		src.pSibls[nodes[1]] = nodes[0]
+		src.pSibls[nodes[2]] = nodes[1]
+		beforeReprs, beforeNexts, beforeSibls := slices.Clone(src.PReprs), slices.Clone(src.PNexts), slices.Clone(src.pSibls)
+		for i, id := range nodes {
+			if removed&(1<<uint(i)) != 0 {
+				src.pObjs[id].fMark0 = 1
+			}
+		}
+		if removed&4 != 0 {
+			src.pObjs[co].fMark0 = 1
+		}
+		out := Gia_ManDupMarked(src)
+		var survivors []int32
+		for i, id := range nodes {
+			if removed&(1<<uint(i)) == 0 {
+				survivors = append(survivors, int32(src.pObjs[id].Value>>1))
+			}
+		}
+		for i, id := range survivors {
+			want := int32(GIA_VOID)
+			next := int32(0)
+			if i > 0 {
+				want = survivors[0]
+			}
+			if i+1 < len(survivors) {
+				next = survivors[i+1]
+			}
+			if Gia_ObjRepr(out, id) != want || Gia_ObjNext(out, id) != next {
+				t.Fatal("retained equivalence class was not reheaded/linked")
+			}
+		}
+		for i, id := range nodes {
+			if removed&(1<<uint(i)) != 0 {
+				continue
+			}
+			want := int32(0)
+			if sibling := beforeSibls[id]; sibling != 0 && src.pObjs[sibling].Value != ^uint32(0) {
+				want = int32(src.pObjs[sibling].Value >> 1)
+			}
+			if Gia_ObjSibl(out, int32(src.pObjs[id].Value>>1)) != want {
+				t.Fatal("choice did not retain the source's immediate-sibling rule")
+			}
+		}
+		if !slices.Equal(src.PReprs, beforeReprs) || !slices.Equal(src.PNexts, beforeNexts) || !slices.Equal(src.pSibls, beforeSibls) {
+			t.Fatal("marked copy changed source class/choice metadata")
+		}
+		for mask := 0; mask < 4; mask++ {
+			a, b := mask&1 != 0, mask&2 != 0
+			want := []bool{}
+			if removed&4 == 0 {
+				want = append(want, a && b)
+			}
+			checkQuantificationOutputs(t, out, []bool{a, b}, want)
+		}
+		if len(survivors) > 0 {
+			out.PReprs[survivors[0]].iRepr = 0
+			out.PNexts[survivors[0]] = 0
+			out.pSibls[survivors[0]] = 0
+		}
+		if !slices.Equal(src.PReprs, beforeReprs) || !slices.Equal(src.PNexts, beforeNexts) || !slices.Equal(src.pSibls, beforeSibls) {
+			t.Fatal("class/choice storage aliases source")
+		}
+	}
+}
+
+func TestMarkedDuplicationRejectsIncompletePairs(t *testing.T) {
+	for _, layout := range []bool{false, true} {
+		for _, kind := range []string{"missing_ro", "missing_ri", "mismatched"} {
+			t.Run(fmt.Sprintf("%v_%s", layout, kind), func(t *testing.T) {
+				src := Gia_ManStart(1)
+				a, b := Gia_ManAppendCi(src), Gia_ManAppendCi(src)
+				Gia_ManAppendCi(src)
+				Gia_ManAppendCi(src)
+				Gia_ManAppendCo(src, a)
+				Gia_ManAppendCo(src, b)
+				Gia_ManAppendCo(src, a)
+				Gia_ManSetRegNum(src, 2)
+				if layout {
+					src = Gia_ManDupOrderDfsReverse(src)
+				}
+				if kind != "missing_ri" {
+					Gia_ManRo(src, 1).fMark0 = 1
+				}
+				if kind != "missing_ro" {
+					Gia_ManRi(src, 0).fMark0 = 1
+				}
+				defer func() {
+					if recover() == nil {
+						t.Fatal("incomplete/mismatched RO/RI pairs accepted")
+					}
+				}()
+				Gia_ManDupMarked(src)
+			})
+		}
+	}
+}
+
+func TestMarkedDuplicationRejectsRetainedRemovedDependencies(t *testing.T) {
+	for _, kind := range []string{"and", "mux", "constant"} {
+		t.Run(kind, func(t *testing.T) {
+			src := Gia_ManStart(1)
+			a, b, c := Gia_ManAppendCi(src), Gia_ManAppendCi(src), Gia_ManAppendCi(src)
+			root := int32(0)
+			switch kind {
+			case "and":
+				root = Gia_ManAppendAnd(src, a, b)
+				Gia_ManObj(src, a>>1).fMark0 = 1
+			case "mux":
+				src.EnableMuxes()
+				root = Gia_ManAppendMuxReal(src, a, b, c)
+				Gia_ManObj(src, a>>1).fMark0 = 1
+			case "constant":
+				src.pObjs[0].fMark0 = 1
+			}
+			Gia_ManAppendCo(src, root)
+			defer func() {
+				if recover() == nil {
+					t.Fatal("invalid retained dependency accepted")
+				}
+			}()
+			Gia_ManDupMarked(src)
+		})
+	}
+}
+
+func TestMarkedDuplicationPreservesSimpleMode(t *testing.T) {
+	src := Gia_ManStart(1)
+	src.fGiaSimple = 1
+	a := Gia_ManAppendCi(src)
+	Gia_ManAppendCo(src, Gia_ManAppendAnd(src, a, a^1))
+	out := Gia_ManDupMarked(src)
+	if out.fGiaSimple != 1 {
+		t.Fatal("simple construction mode lost")
+	}
+	for _, a := range []bool{false, true} {
+		checkQuantificationOutputs(t, out, []bool{a}, []bool{false})
+	}
+}

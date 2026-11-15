@@ -4728,3 +4728,40 @@ interfaces and surplus unused PIs are included. Additional class/choice,
 invalid-input and native-C checks are pending, as is the full integration
 gate. Save this checkpoint with a red prefix. Original completion stays
 2/131; GIA remains in progress.
+
+Expanded marked checks pass in 2.215s
+(`/tmp/abcgo-marked-final-focused.log`). The native fixture
+`aig/gia/test_vectors/marked_duplicate.c` agrees on 512 normalized
+ordinary-AND cases and 23,232 input rows, complete source Value maps, retained
+shape/ports and register/constraint counts. It retains the constraint PO:
+original C otherwise leaves a stale constraint count. Typed/interleaved cases
+and deleted buffers are tested independently; C's marked routine explicitly
+forbids deleting buffers. The Go path's existing more general acceptance of a
+valid retained subgraph is preserved, rather than treating that C assertion
+as an algorithmic requirement.
+
+Eight class/choice removal masks verify retained equivalence-class reheading
+and next links, source-table immutability, independent destination storage
+and C's immediate-sibling retention rule. This deliberately does not invent
+transitive choice-link repairs when the immediate sibling is removed. Tests
+also reject missing RO/RI halves, equally sized but mismatched register sets,
+retained AND/MUX dependencies on removed inputs and removal of constant zero.
+Raw simple-mode contradictory fanins remain supported. These checks found no
+further production bug beyond logical port/pair ordering. Full uncached
+module race verification and GIA vet are running; marked duplication also
+implements combinational/sequential cleanup and representative rebuilding.
+Original completion stays 2/131 and the audit remains active.
+
+Final marked-copy integration is green: all 130 tested module packages pass
+the uncached race run; three command packages have no tests and no extra
+failure/race diagnostic lines appear
+(`/tmp/abcgo-marked-module-race.log`). GIA passes in 181.819s, ABCI in
+29.396s, CEC in 45.056s and BMC in 24.064s. GIA vet passes
+(`/tmp/abcgo-marked-review-vet.log`). Production code is unchanged since
+35c418d6c; subsequent changes add the class/choice/invalid-input checks and
+native fixture. This completes dup_marked.go's review. Retained logical
+interfaces, complete state pairs and their selected metadata now survive
+physical interleaving; the original object-copy, class and immediate-choice
+rules remain. Other duplication/GIA families and final package inventory
+reconciliation are still open. Original package completion remains 2/131;
+the sequential audit is active.
