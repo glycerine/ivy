@@ -5477,3 +5477,18 @@ whole construction/collection/extraction benchmark improves from 23,304B /
 Focused ownership/native checks pass in 2.042s after the allocation changes.
 Save a red checkpoint while completing wrapper/diagnostic and boundary checks;
 full integration is pending. Original completion remains 2/131, GIA active.
+
+Public area-boundary regressions find two metadata losses. Mapped derivation
+preserves port counts but loses bad/constraint counts and reset values; restore
+the complete unchanged interface immediately after converting the derived graph.
+Role regression fails in /tmp/abcgo-area-mapped-roles.log, reset regression in
+/tmp/abcgo-area-mapped-resets-red.log, both then pass together in
+/tmp/abcgo-area-mapped-green.log. This is a Go metadata correctness extension;
+the C mapping converter also does not propagate every Go property field.
+
+A larger public interface matrix exposes reset/comment loss in final normalization
+on the first unmapped/coarsened case (/tmp/abcgo-area-public-interface.log).
+Restore interface metadata at that area-wrapper boundary too; global normalization
+is not changed because other callers may reorder state/interface coordinates.
+Save a red checkpoint pending focused rerun and full integration. Original
+completion remains 2/131, with GIA and the sequential audit active.

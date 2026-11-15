@@ -619,6 +619,7 @@ func Gia_ManAreaBalance(src *Gia_Man_t, simple, limit, verbose, veryVerbose int3
 	if Gia_ManHasMapping(src) != 0 {
 		graph := dau.Dsm_ManDeriveGia(src, 0)
 		initial = Gia_ManFromAig(graph)
+		giaCopyInterfaceMetadata(initial, src)
 	} else {
 		initial = Gia_ManDup(src)
 	}
@@ -640,6 +641,7 @@ func Gia_ManAreaBalance(src *Gia_Man_t, simple, limit, verbose, veryVerbose int3
 	if Gia_ManIsNormalized(result) == 0 {
 		old := result
 		result = Gia_ManDupNormalize(old, 0)
+		giaCopyInterfaceMetadata(result, old)
 		Gia_ManTransferTiming(result, old)
 		Gia_ManStop(old)
 	}
