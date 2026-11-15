@@ -5359,3 +5359,35 @@ regressions and existing balancing/supergate/ABC comparisons pass in 1.098s
 adding broader classifier, depth-helper, arrival-level and source comparisons;
 area-divisor and window families remain unfinished. Full integration is
 pending. Original completion remains 2/131; GIA and the audit remain active.
+
+Expanded depth-balancing coverage passes. balance_depth_native_review_test.go
+and test_vectors/balance_depth.c compare the actual Gia_ManBalanceInt on
+2,304 cases/147,456 truth rows: six chain/shared/XOR/MUX/buffer/NOR families,
+16 phases, both strict settings, integer/float/both arrival vectors and
+And2Delay values 0/2/3. Exact returned structure/type counts and pre-cleanup
+source Value mappings agree. Integer arrivals take precedence when both
+formats exist, matching C; raw XOR inputs are source-canonical.
+
+A 16-case classifier matrix checks ordinary AND versus constant/CI/CO,
+buffer, real XOR/MUX and simple equal/opposite phases. A 512-case public
+simple-mode depth/area matrix checks 4,096 rows directly and after AIGER
+serialization, including DFS layouts, strict flags, coarsening settings and
+zero/nonzero area iteration limits. These simple-mode cases independently
+check Boolean correctness beyond the known original C buffer-classification
+error, rather than claiming native equivalence for that upstream defect.
+
+BalanceGate's unconditional literal clone is redundant. Resolve the sorted
+permutation into its own existing storage before clearing the destination
+scratch vector; forward copying is safe for borrowed one/two-literal spans.
+The source sorting/pair-selection algorithm is unchanged. Borrowed-span
+regressions cover both AND/XOR, 1..12 literals, offsets 0..2 and four phase
+patterns on all 256 assignments. In 100-call reuse benchmarks, 2 literals
+improve 8B/1 allocation/218ns to 0B/0 allocations/150.3ns; 8 literals improve
+96B/2 allocations/1843ns to 64B/1 allocation/1759ns; 12 literals improve
+240B/4 allocations/3757ns to 192B/3 allocations/4205ns. Allocation reductions
+are consistent; timing does not improve in every case
+(`/tmp/abcgo-balance-gate-before.log`, `/tmp/abcgo-balance-depth-optimized.log`).
+Focused checks including the native oracle pass in 2.288s. Save a red
+checkpoint before the remaining helper/normalization-consumer checks and full
+integration. Area-divisor and window reviews remain unfinished; original
+completion stays 2/131 and GIA remains active.

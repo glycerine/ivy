@@ -82,22 +82,24 @@ func Gia_ManBalanceGate(p *Gia_Man_t, obj *Gia_Obj_t, super *Vec_Int_t, literals
 	if n < 1 || int(n) > len(literals) || Gia_ObjIsBuf(obj) != 0 {
 		panic("gia: invalid balance supergate")
 	}
-	// Copy before clearing: callers may hand us a borrowed vector span.
-	literals = append([]int32(nil), literals[:n]...)
-	Vec_IntClear(super)
+	literals = literals[:n]
 	if n > 2 {
 		costs, order := make([]int32, n), make([]int32, n)
 		for i, lit := range literals {
 			costs[i] = Gia_ObjLevelId(p, lit>>1)
 		}
 		util.Abc_QuickSortCostData(costs, n, 1, make([]uint64, n), order)
-		for _, i := range order {
-			Vec_IntPush(super, literals[i])
+		// Resolve the permutation before writing super: literals may borrow
+		// its backing array. Reuse the permutation storage for the sorted literals.
+		for i, index := range order {
+			order[i] = literals[index]
 		}
-	} else {
-		for _, lit := range literals {
-			Vec_IntPush(super, lit)
-		}
+		literals = order
+	}
+	Vec_IntClear(super)
+	// Forward copying also handles borrowed spans of one or two literals.
+	for _, lit := range literals {
+		Vec_IntPush(super, lit)
 	}
 	for Vec_IntSize(super) > 1 {
 		if Gia_ObjIsXor(obj) == 0 {
