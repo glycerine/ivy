@@ -5572,3 +5572,32 @@ native tests pass, so investigate the registered IF-owned DSD path rather than
 substitute another synthesis algorithm. Save a red checkpoint while tracing
 this dependency bug; comprehensive integration is pending. Original completion
 remains 2/131, with GIA and the sequential audit active.
+
+The dependency bug is in IF's DSD-cache population, not window wiring. C's
+If_ObjPerformMappingAnd calls If_DsdManCompute with If_CutTruthWR (raw cached
+truth); Go used ifMapTruth64, which calls If_CutTruthW and applies the cut phase.
+The DSD cache key is the regular truth ID and If_CutDsdLit applies the phase on
+lookup, so storing the phased truth applies it twice and corrupts Boolean logic.
+A minimal two-input direct DSD test fails independently of windows (phase0,
+assignment0: got true/false/false/true instead of false/true/false/false) in
+/tmp/abcgo-dsd-phase-red.log. Restore raw cached truth via the existing
+ifTruthRead helper, with a comment naming the C source convention. No synthesis
+engine is replaced. The fix and direct tests are checkpointed in the IF-only
+commit cffefb8e5.
+
+The direct regression and all 288 small-function cases pass: all 16 two-input
+and 256 three-input Boolean functions plus 16 four-input patterns, with 2,368
+assignments checked independently against truth bits and source evaluation.
+Existing DSD compact-AIG/pin/manager regressions also pass; focused IF takes
+0.691s (/tmp/abcgo-dsd-expanded.log). All window checks, including 48 runs through
+the actual registered SOP/DSD algorithms and AIGER round trips, pass in 2.181s
+(/tmp/abcgo-window-final-focused.log). IF progress is captured in temporary test
+files rather than flooding successful verbose test output.
+
+Public wrapper checks also cover mutually exclusive target/percentage arguments,
+no-selection fallback without calling a synthesis engine, source warning/count
+messages, independent full-interface duplication and selected-output extraction.
+Freeze source/tests/fixtures now for the full uncached module race suite plus
+GIA/IF vet. Save an integration checkpoint; the entire IF package is not claimed
+reviewed merely because its DSD dependency bug was repaired. Original completion
+stays 2/131, GIA and the sequential audit active.
