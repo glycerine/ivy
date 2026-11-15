@@ -5929,3 +5929,30 @@ the existing helper, including independent owned metadata buffers. Add parity
 cover boundary checks: 512 cubes accepted with every assignment verified; 1,024
 and 2,048 cubes rejected before graph/scratch mutation. Focused verification and
 full integration remain pending. Original completion remains 2/131.
+
+The expanded focused collapse suite passes, including exact native factoring,
+metadata independence and both cube-limit sides
+(/tmp/abcgo-collapse-expanded.log). Save 4c532e6d4 and freeze source/tests/native
+fixtures for integration. Full uncached module race tests then pass all 130
+tested packages; three command packages have no tests. GIA takes 295.273s, ABCI
+28.831s and BMC 24.027s (/tmp/abcgo-collapse-module-race.log). GIA vet passes
+with an empty log (/tmp/abcgo-collapse-vet.log). No repository changes occurred
+during that run beyond unrelated existing parent files.
+
+This verifies the ISOP-source-workflow restoration, MVC sorting dependency fix,
+and interface metadata repair; it does not close the entire collapse family.
+Read-only follow-up confirms source prime rebuilding explicitly references and
+releases both original and transferred local BDDs, while Go omits that lifecycle.
+Review it together with collapse fanout/reference ownership before enabling
+source automatic reordering. Source's verbose statistics are conditional, so an
+earlier suspicion of unconditional normal-call printing is not a defect.
+
+A separate /tmp probe confirms a resource-limit inconsistency: with limit zero,
+a fresh ordinary AND is rejected but native XOR and MUX are accepted, because
+they call unlimited BDD operations. All three small probe cases return to zero
+external references after releasing outputs. Add a failing regression for typed
+allocation limits before repairing that path; this probe is evidence for the
+next step, not a completed fix or a substitute for reference-lifecycle coverage.
+Also inspect trivial-DSD fallback semantics and extend metadata checks across
+logical-interface permutations, names and AIGER round trips. Original completion
+remains 2/131; GIA and the sequential audit remain active.
