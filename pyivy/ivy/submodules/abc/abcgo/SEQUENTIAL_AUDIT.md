@@ -18,7 +18,7 @@ source workflows and tests are covered by that audit. Current review: `aig/gia`.
 | --- | --- | --- | --- |
 | 1 | `.` | reviewed | Root review below; race tests and vet pass. |
 | 2 | `aig/aig` | reviewed | All 52 files reconciled; native source matrices, final race suite, vet and module integration gates pass. |
-| 3 | `aig/gia` | in progress | Graph/manager, copies, hashing, balancing, windows, bi-decomposition, circuit-cofactoring, BDD collapse, counterexample replay/minimization and chronological/conflict-analysis/watched-clause circuit SAT, CTAS, stand-alone priority cuts, deep synthesis and DFS/support reviewed; remaining families and final inventory pending. |
+| 3 | `aig/gia` | in progress | Graph/manager, copies, hashing, balancing, windows, bi-decomposition, circuit-cofactoring, BDD collapse, counterexample replay/minimization and chronological/conflict-analysis/watched-clause circuit SAT, CTAS, stand-alone priority cuts, deep synthesis, DFS/support and mapped-edge assignment reviewed; remaining families and final inventory pending. |
 | 4 | `aig/gia/mf` | pending | |
 | 5 | `aig/gia/satcost` | pending | |
 | 6 | `aig/hop` | pending | |
@@ -6982,3 +6982,33 @@ restoration. Boxed native cases use integer arrivals/delays; the separate timing
 package's fractional semantics are outside this family. Next freeze source,
 tests and fixtures for full uncached module race tests and GIA vet. Original
 completion remains 2/131; edge-family closure awaits these checks.
+
+### Mapped-edge integration green
+
+Full uncached module race tests pass all 130 tested packages; three command
+packages have no tests (/tmp/abcgo-edge-final-module-race.log). GIA vet passes
+with empty output (/tmp/abcgo-edge-final-vet.log). Source, tests and fixtures
+stayed frozen through both checks. Mark giaEdge.c's 27 entry points reviewed,
+with explicit source exceptions, native matrices, independent path/capacity
+checks and zero-allocation repeated unit timing documented in
+REVIEW_edge_assignment.md. Remaining GIA families and final inventory are still
+pending; original package completion remains 2/131.
+
+Read-only preparation identifies giaEnable.c's ten routines next, primarily
+implemented by enable_detect.go and enable_unroll.go. No prior audit closure was
+found for these functions. A temporary actual-C oracle and Go probe agree on all
+2,040 lines across ordinary AND/structural-MUX detection, signal order, eight
+phase patterns, one-to-three-frame graph shapes/copy tables and complete output
+truth tables, plus both recognized-enable removal variants. Artifacts:
+/tmp/abcgo-enable-review-probe/{probe.c,probe.go,native.out,go.out}. This is
+preliminary agreement, not tracked coverage or family completion.
+
+A separate typed probe confirms a Go correctness problem: one-frame unrolling
+of a real XOR returns AND truth instead (typed.go and typed.log in that probe
+directory). The existing copy loop hashes every internal node as AND. Keep edge
+integration frozen; no fix/test edits were made for this next-family finding.
+Next add a red regression, inspect every copy path in unrolling/removal for this
+ordinary-AIG assumption, use established typed-copy helpers or explicit supported
+handling, track the ordinary native baseline and independently test typed/state/
+phase/ownership boundaries. Also cover transfer/cofactoring driver composition
+and preserve/document existing repairs of C's unrecognized-enable failure paths.
