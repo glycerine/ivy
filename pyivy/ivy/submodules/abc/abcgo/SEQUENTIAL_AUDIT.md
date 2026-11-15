@@ -5688,3 +5688,29 @@ cleanup preserves truth. All focused Bidec checks pass in 3.856s
 (/tmp/abcgo-bidec-final-focused.log). Save a red integration checkpoint and
 freeze source/tests/native fixtures for full uncached module race tests and
 GIA vet. Original completion stays 2/131; GIA and the audit remain active.
+
+Bi-decomposition integration is green. The full uncached module race suite
+passes all 130 tested packages, with three command packages without tests and
+no failure/race diagnostic lines (/tmp/abcgo-bidec-module-race.log). GIA passes
+in 273.560s, ABCI in 29.646s and BMC in 23.512s. GIA vet also passes with an
+empty log (/tmp/abcgo-bidec-vet.log). Source/tests/native fixtures stayed frozen
+throughout integration. No unrelated parent files were staged.
+
+This closes the reviewed giaBidec.go conversion/resynthesis boundary family:
+regression-backed logical-port and growing-cache repairs (ed1d6fca7), safe
+scratch offsets and single-copy public results, variable-pattern generation,
+source diagnostics, native truth/interface checks and expanded typed/ownership/
+width/maximum-support tests (d75e73805). Go deliberately supports raw typed
+and constant-fanin cases beyond the ordinary-AND source converter and retains
+owned return slices; those extensions are checked against independent Boolean
+expectations. Complete BDC backend review and exact native topology remain
+outside this GIA-boundary result and pending in the sequential package order.
+
+Next review giaCCof.go circuit cofactoring. A source/test inventory finds no
+direct Ccf_Man/Gia_ManCofTest tests. Reconcile incremental CNF, satisfying-model
+cofactors, blocking/image enumeration, return conventions, deadlines/conflict
+budgets, frame ownership and zero-state property decisions with C, using small
+independent exhaustive transition systems and native checks where source
+preconditions permit. No circuit-cofactoring production change has been made
+during integration. Original completion remains 2/131; GIA and the full
+sequential audit remain active.
