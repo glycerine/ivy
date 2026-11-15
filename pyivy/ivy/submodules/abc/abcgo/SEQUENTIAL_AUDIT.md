@@ -8395,3 +8395,30 @@ sequential truth; existing176640-assignment coverage is incremental only. Then
 review resource/ownership/compactness, exact reports and all22 active source
 routines before frozen module race/vet. No full-package/family closure claimed;
 original audit completion2/131 and GIA remain open.
+
+### Generated native histories and full frame-driver truth
+
+Expand the actual-source fixture to32 deterministic ordinary sequential graphs,
+including raw constant fanins, complementary edges and varied state feedback.
+All768 corrected-source driver configurations match exact object records and
+53,760 independent sequential assignments. The only optional C correction is
+the already characterized initialized support epoch reset. All64 fixed/save
+unrollers match native dependency limits, per-edge delays, offsets and every
+history cell at startup and after three steps, plus ordered/result object
+fields (/tmp/abcgo-frames-generated-native-first.log,3.736s).
+
+A separate1,536-case ordinary/real-gate/interleaved/reordered/flag matrix passes
+107,520 independent sequential assignments, checks parameter/identity ownership
+and remains usable for levels/full scalar evaluation after disposing of the
+source (/tmp/abcgo-frames-mixed-drivers-first.log,0.107s). This covers complete
+Frames/FramesInit drivers rather than relying on the earlier incremental-only
+matrix.
+
+All96 generated specialized prefixes match unmodified C's exact object records
+and banners, with624 independent histories. Another192 mixed-gate/layout
+prefixes pass768 histories. Reference checks require all completed properties
+to be zero and every returned state output to match that completed prefix,
+allowing the source's conservative nonzero-literal stopping rule
+(/tmp/abcgo-frames-prefix-expanded-first.log,1.903s). Add directed no-input,
+no-property and forced-full-bound cases next; history lifecycle/resource,
+reports/compactness and frozen integration remain open. Completion2/131.
