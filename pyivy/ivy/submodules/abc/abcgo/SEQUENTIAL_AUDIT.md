@@ -5522,3 +5522,22 @@ intermediate states, passes in 4.265s (/tmp/abcgo-area-final-focused.log).
 Save a red integration checkpoint and freeze source/tests/fixtures for full
 uncached module race tests plus GIA vet. Original completion remains 2/131,
 with GIA and the sequential audit active; mapped-window review remains ahead.
+
+Area-balancing integration is green: all 130 tested module packages pass the
+uncached race suite, with three command packages without tests and no failure
+or data-race diagnostics (/tmp/abcgo-area-module-race.log). GIA passes in
+261.030s, ABCI in 28.860s and BMC in 24.308s. GIA vet also passes with an empty
+log (/tmp/abcgo-area-vet.log). Source/tests/native fixtures remained frozen
+throughout integration; no unrelated parent files were staged.
+
+This closes the reviewed DAM area-divisor collection/extraction/update and
+reconstruction portion of giaBalAig.go, plus the tested ordinary/mapped public
+interfaces and source diagnostic wiring. Regression-backed mark ownership is
+in df4a7fa54; allocation reductions/native intermediate checks in 4b5e175d3;
+interface repair in 8ea123291; diagnostics and expanded coverage in a7e857971.
+Public interface coverage here is unboxed; do not infer comprehensive boxed
+area integration coverage from it. The whole GIA package remains incomplete.
+Next review giaBalMap.go window selection/extraction/insertion, comparing
+ordinary-AIG native boundary lists and graph copies, then typed/zero-depth
+extensions, logical port permutations, property metadata and mapped-level
+selection. Original completion remains 2/131; the sequential audit is active.
