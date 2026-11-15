@@ -8003,3 +8003,23 @@ exactly. No repo edits were made during the frozen gate. Add permanent red
 native equality coverage before repairing this fidelity gap. Detailed next
 source/test plan: /tmp/abcgo-false-next-review-plan.md. Also verify hook limits,
 priority ties, reports, typed boundaries, interface metadata and all drivers.
+
+### False-path solver/core fidelity repair
+
+Add permanent test_vectors/false_review.c including actual giaFalse.c and a
+64-graph native comparison before editing production. All critical paths and
+truth tables agree, but source final-core versus Go deletion-minimized-core
+selection gives different rewritten sizes (first seed15 C15/Go14)
+(/tmp/abcgo-false-core-red.log). Restore the existing Go BSAT backend, exact
+source XOR clause helper, one Solve call and final conflict core. Preserve the
+source's seconds deadline and nTimeOut conflict-budget policy; remove the
+substitute repeated-assumption minimization rather than inventing another
+algorithm. Close the solver after each query.
+
+All 128 path/result records now match original C exactly; each returned graph
+also passes independent exhaustive output-equivalence checks. Existing detection
+and iterative/batch tests pass too (2.054s,
+/tmp/abcgo-false-core-repaired.log). Batch hook boundaries/ties, reports,
+source scratch numbering, typed/metadata behavior and all driver coverage remain
+open. No full integration or family closure claimed; original completion stays
+2/131 with GIA under sequential review.

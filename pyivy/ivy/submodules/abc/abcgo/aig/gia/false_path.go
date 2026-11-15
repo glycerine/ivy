@@ -2,10 +2,11 @@ package gia
 
 import (
 	"fmt"
-	"github.com/glycerine/abcgo/misc/vec"
-	"github.com/glycerine/abcgo/sat/satoko"
 	"sort"
 	"time"
+
+	"github.com/glycerine/abcgo/misc/vec"
+	"github.com/glycerine/abcgo/sat/bsat"
 )
 
 func Gia_ManFalseRebuildOne(q, p *Gia_Man_t, hook *Vec_Int_t, verbose, veryVerbose int32) {
@@ -104,7 +105,7 @@ func Gia_ManCollectPath(p *Gia_Man_t, obj *Gia_Obj_t) *Vec_Int_t {
 	Gia_ManCollectPath_rec(p, obj, path)
 	return path
 }
-func giaFalsePathSolve(p *Gia_Man_t, root int32, timeout int32, includeInput bool) (*Vec_Int_t, int) {
+func giaFalsePathSolve(p *Gia_Man_t, root int32, timeout int32, includeInput bool) (*Vec_Int_t, bsat.Status) {
 	path := Gia_ManCollectPath(p, Gia_ManObj(p, root))
 	ids := vec.Vec_IntArray(path)
 	objects := vec.Vec_IntArray(Gia_ManCollectNodesCis(p, []int32{root}, 1))
@@ -114,22 +115,19 @@ func giaFalsePathSolve(p *Gia_Man_t, root int32, timeout int32, includeInput boo
 	for i, id := range objects {
 		vars[id] = len(objects) - 1 - i
 	}
-	solver := satoko.New()
-	solver.SetVariables(3*n + 2*len(objects))
+	solver := bsat.NewSolver()
+	defer solver.Close()
+	solver.SetNumVars(int32(3*n + 2*len(objects)))
+	solver.SetLimits(int64(timeout), 0)
 	if timeout > 0 {
 		solver.SetDeadline(time.Now().Add(time.Duration(timeout) * time.Second))
 	}
 	addAnd := func(out, a, b int) {
-		solver.AddClause([]int{out ^ 1, a})
-		solver.AddClause([]int{out ^ 1, b})
-		solver.AddClause([]int{out, a ^ 1, b ^ 1})
+		solver.AddClause(int32(out^1), int32(a))
+		solver.AddClause(int32(out^1), int32(b))
+		solver.AddClause(int32(out), int32(a^1), int32(b^1))
 	}
-	addXor := func(out, a, b int) {
-		solver.AddClause([]int{a, b, out ^ 1})
-		solver.AddClause([]int{a ^ 1, b ^ 1, out ^ 1})
-		solver.AddClause([]int{a, b ^ 1, out})
-		solver.AddClause([]int{a ^ 1, b, out})
-	}
+	addXor := func(out, a, b int) { solver.AddXor(int32(out>>1), int32(a>>1), int32(b>>1), false) }
 	for _, id := range objects {
 		obj := Gia_ManObj(p, id)
 		if Gia_ObjIsAnd(obj) == 0 {
@@ -140,7 +138,7 @@ func giaFalsePathSolve(p *Gia_Man_t, root int32, timeout int32, includeInput boo
 			addAnd((vars[id]+shift[k])*2, (vars[a]+shift[k])*2+int(Gia_ObjFaninC0(obj)), (vars[b]+shift[k])*2+int(Gia_ObjFaninC1(obj)))
 		}
 	}
-	assumptions := make([]int, 0, n)
+	assumptions := make([]bsat.Literal, 0, n)
 	for i, id := range ids {
 		obj := Gia_ManObj(p, id)
 		if Gia_ObjIsAnd(obj) != 0 {
@@ -162,21 +160,20 @@ func giaFalsePathSolve(p *Gia_Man_t, root int32, timeout int32, includeInput boo
 				addAnd((i+(k+1)*n)*2, a, b)
 			}
 			addXor(i*2, (i+n)*2, (i+2*n)*2)
-			assumptions = append(assumptions, i*2)
+			assumptions = append(assumptions, int32(i*2))
 		} else if includeInput && Gia_ObjIsCi(obj) != 0 {
 			addXor(i*2, (vars[id]+shift[0])*2, (vars[id]+shift[1])*2)
-			assumptions = append(assumptions, i*2)
+			assumptions = append(assumptions, int32(i*2))
 		}
 	}
-	core, status := solver.MinimizeAssumptions(assumptions, int64(timeout))
-	if status != satoko.SATOKO_UNSAT || len(core) == 0 {
+	// C uses one BSAT solve and its final assumption conflict, without a
+	// separate minimization pass. Core choice determines the rewritten interval.
+	status := solver.Solve(assumptions...)
+	core := solver.UnsatCore()
+	if status != bsat.Unsatisfiable || len(core) == 0 {
 		return nil, status
 	}
-	begin, end := n, 0
-	for _, lit := range core {
-		begin = min(begin, lit>>1)
-		end = max(end, lit>>1)
-	}
+	begin, end := int(core[len(core)-1]>>1), int(core[0]>>1)
 	out := vec.Vec_IntAlloc(end - begin + 2)
 	for i := max(begin-1, 0); i <= end; i++ {
 		vec.Vec_IntPush(out, ids[i])
@@ -206,9 +203,9 @@ func Gia_ManCheckFalseOne(p *Gia_Man_t, out, timeout int32, hooks *Vec_Wec_t, ve
 	if verbose != 0 {
 		fmt.Printf("PO %6d : Level = %3d  ", out, Gia_ObjLevel(p, pivot))
 		switch status {
-		case satoko.SATOKO_UNDEC:
+		case bsat.Unknown:
 			fmt.Printf("Timeout reached after %d seconds. ", timeout)
-		case satoko.SATOKO_SAT:
+		case bsat.Satisfiable:
 			fmt.Print("There is no false path. ")
 		default:
 			if path != nil {
@@ -248,9 +245,9 @@ func Gia_ManCheckOne(p *Gia_Man_t, out, id, timeout, verbose, veryVerbose int32)
 	if verbose != 0 {
 		fmt.Printf("PO %6d : Level = %3d  ", out, Gia_ObjLevelId(p, id))
 		switch status {
-		case satoko.SATOKO_UNDEC:
+		case bsat.Unknown:
 			fmt.Printf("Timeout reached after %d seconds. ", timeout)
-		case satoko.SATOKO_SAT:
+		case bsat.Satisfiable:
 			fmt.Print("There is no false path. ")
 		default:
 			if path != nil {
