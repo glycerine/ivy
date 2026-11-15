@@ -4692,3 +4692,15 @@ graph retain explicit owned copies. Full uncached module race tests and GIA
 vet are running because the basic copier is a shared graph boundary. Save
 this checkpoint with a red prefix until the integration gate finishes.
 Original package completion remains 2/131; GIA review continues.
+
+Final basic/attribute integration is green: the full uncached module race run
+passes for all 130 tested packages; three command packages have no tests
+(`/tmp/abcgo-attributes-module-race.log`). This includes GIA 176.384s,
+ABCI 29.167s and BMC 23.848s. No failure, race warning or extra diagnostic
+lines appear in that log. GIA vet passes
+(`/tmp/abcgo-attributes-review-vet.log`). No code changed after checkpoint
+5adb50cd5. This completes the reviewed functions in dup_basic.go and
+dup_attributes.go: logical ports now survive interleaving, and the listed
+attribute payloads retain independent ownership. Other duplication/GIA
+families and final package inventory reconciliation remain open. Original
+completion stays 2/131; the sequential audit remains active.
