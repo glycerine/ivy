@@ -98,7 +98,11 @@ not copied as though IDs survived a rewrite.
 
 ## Validation
 
-All focused false-path tests pass in19.197s
-(`/tmp/abcgo-false-final-focused.log`). Final frozen module race and GIA vet
-checks are pending. This family does not complete the remaining GIA inventory
-or the sequential review of the original131 packages.
+All20 focused false-path tests pass without skips in19.197s
+(`/tmp/abcgo-false-final-focused.log`). Frozen uncached module race tests pass
+all130 packages with tests; three command packages have none. GIA passes in
+514.101s (`/tmp/abcgo-false-final-module-race.log`). GIA vet passes with empty
+output (`/tmp/abcgo-false-final-vet.log`). Both exact process handles terminated
+successfully before recording these results. All ten source routines are
+reconciled. This family does not complete the remaining GIA inventory or the
+sequential review of the original131 packages.

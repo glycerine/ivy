@@ -366,3 +366,12 @@ its object-state accessors are placeholders, and its path helpers are
 undefined. No other source calls these functions. The generated `giaProp.go`
 draft was removed; the original C remains in `src/aig/gia/giaProp.c` for any
 future design work. This does not port or enable the experimental algorithm.
+
+Sequential audit update: all ten giaFalse.c routines are reviewed with red
+regressions, native C comparisons and exhaustive scalar checks. See
+REVIEW_false_paths.md for the explicit original-C batch certificate defect and
+its correction. Focused tests pass19.197s; frozen full module race tests pass
+130 tested packages plus three command packages without tests, GIA514.101s
+(/tmp/abcgo-false-final-module-race.log). GIA vet is clean
+(/tmp/abcgo-false-final-vet.log). Earlier draft-parser limitations above are
+historical, superseded by this gate. The remaining GIA family audit is open.

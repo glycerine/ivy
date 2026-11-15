@@ -8171,3 +8171,22 @@ Actual corrected C and Go match the timeout diagnostic and zero collected hooks
 (/tmp/abcgo-false-budget-native.log,1.871s). This checks budget handling without
 wall-clock sleeps or weakened expectations. Full focused rerun and frozen module
 race/vet gates remain pending; original package completion stays2/131.
+
+### False-path family frozen integration closure
+
+All20 focused tests pass without skips in19.197s
+(/tmp/abcgo-false-final-focused.log). Freeze production/tests/fixtures, then
+run uncached full module race tests with a30-minute per-package timeout. Exact
+handle86773 terminates exit0:130 tested packages pass, three command packages
+have no tests, zero FAIL/DATA RACE records. GIA514.101s, ABCI29.505s, BMC23.314s
+(/tmp/abcgo-false-final-module-race.log). Exact vet handle24330 terminates exit0
+with empty output (/tmp/abcgo-false-final-vet.log).
+
+REVIEW_false_paths.md reconciles all ten giaFalse.c routines, native reference
+modes, deliberate source correctness repair, compactness and representation
+contracts. This closes the false-path source family. The original package
+completion remains2/131; GIA's remaining families/final inventory stay open.
+Next inspect giaFront.c's five frontier routines sequentially. Read-only native
+and public-API probes prepared during the gate show buffer slot-reuse corruption
+in both C and Go and lost real-MUX roundtrip behavior; add red regressions before
+any repair. Preparation notes /tmp/abcgo-front-next-review-plan.md.
