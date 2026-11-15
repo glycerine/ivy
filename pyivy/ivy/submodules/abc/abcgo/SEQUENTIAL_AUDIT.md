@@ -18,7 +18,7 @@ source workflows and tests are covered by that audit. Current review: `aig/gia`.
 | --- | --- | --- | --- |
 | 1 | `.` | reviewed | Root review below; race tests and vet pass. |
 | 2 | `aig/aig` | reviewed | All 52 files reconciled; native source matrices, final race suite, vet and module integration gates pass. |
-| 3 | `aig/gia` | in progress | Graph/manager, copies, hashing, balancing, windows, bi-decomposition, circuit-cofactoring, BDD collapse and counterexample replay/minimization reviewed; remaining families and final inventory pending. |
+| 3 | `aig/gia` | in progress | Graph/manager, copies, hashing, balancing, windows, bi-decomposition, circuit-cofactoring, BDD collapse, counterexample replay/minimization and chronological circuit SAT reviewed; remaining families and final inventory pending. |
 | 4 | `aig/gia/mf` | pending | |
 | 5 | `aig/gia/satcost` | pending | |
 | 6 | `aig/hop` | pending | |
@@ -6278,3 +6278,33 @@ of rejected (/tmp/abcgo-cbs0-head-guard-red.log). Restore all four source idle
 queue checks. The prior focused suite passes in 7.459s; final focused rerun and
 full integration are pending this last guard repair. Save a red checkpoint.
 Original completion remains 2/131; GIA and the sequential audit remain active.
+
+The final chronological focused suite passes in 7.486s after restoring the
+queue-head guards (/tmp/abcgo-cbs0-final-focused.log). Freeze e40ae07ee for
+integration. All 130 tested module packages then pass uncached race tests, with
+three command packages without tests and no failure/race diagnostics
+(/tmp/abcgo-cbs0-final-module-race.log). GIA passes in 329.803s, ABCI in 29.343s
+and BMC in 23.675s. GIA vet passes with an empty log
+(/tmp/abcgo-cbs0-final-vet.log). Source/tests/native fixtures remained unchanged
+during integration; unrelated existing parent files remain untracked.
+
+This closes the giaCSatOld.c chronological Cbs0 family: parameter/default and
+assignment predicates, frontier/trail lifecycle, heuristic choices, propagation,
+chronological branching/backtracking, strict limits/counters, ordered partial-CI
+models, standalone solves, miter status/store encoding and statistics. Source
+private/public native matrices and independent full completions back that review;
+Go root/typed/constant/buffer/lifecycle guards have dedicated tests. Source retry
+and alternative phase decisions inside C comments are not active algorithms.
+Update REVIEW_circuit_sat_old.md to replace its obsolete isolated-build caveat
+with this actual full-module evidence. Repairs are in 241da684f/e40ae07ee.
+
+Next review giaCSat.c's CBS conflict-analysis/resolution engine and paired-root
+all-object witnesses, then CBS2/CTAS. Read-only comparison finds its miter wrapper
+also routing constants through the solver and using reduced custom statistics;
+verify those with new red regressions rather than assuming the old-engine fix
+covers it. Compare all source idle queue/clause guards and supported-root handling,
+conflict reasons/resolution, limits/counters, witness forms and proof-zero output
+patching. Source nBTThisNc increments and phase-based decisions are commented out;
+Go leaving that counter zero is not itself a defect. No subsequent-engine source
+or test edits have been made. Original completion remains 2/131; remaining GIA
+families, final inventory and the full sequential audit remain active.

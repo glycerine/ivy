@@ -26,12 +26,31 @@ are independently evaluated and every solve must restore marks. Additional tests
 exercise limits, reuse, queue store/restore, constant/simplified fanins, and exact
 miter status/store layout.
 
-Focused actual-source race gate passed (7.976s):
+The 2026-11-15 sequential audit adds direct actual-C comparisons: 30,432
+verdict/counter/ordered-model cases across all decision heuristics and strict
+backtrack/frontier limits, including hard reconvergent/parity graphs. The sweep
+includes SAT, UNSAT and undecided outcomes, up to 54 backtracks and frontier size
+eight. Every partial cube is checked against every completing input assignment.
+Another 3,600 public-miter properties compare exact statuses and store records
+across CI/CO permutations; fake-clock statistics match C byte-for-byte.
 
-    bash abcgo/aig/gia/test_aig_bridge.sh -race \
-      aig/gia/giaCTas2.go aig/gia/giaCSatOld.go \
-      aig/gia/circuit_sat_old_test.go
+Regression-backed repairs restore source constant-output handling before miter
+budget checks, exclusion of constants from solver-call statistics, the original
+statistics/constant-one diagnostic, and all four idle queue-head/tail checks.
+Lifecycle/guard tests cover active Stop, nested saved queues through growth,
+invalid roots/restoration, original allocation/setup, and the Go buffer/constant-
+fanin extensions. Stop now clears the complete manager after cancelling its trail.
 
-The additional Tas2 file is required by a concurrently expanded shared test.
-No product sources were hidden. Ordinary NWK still stops in other GIA/SAIG
-files; see its REVIEW.md for the integration gate distinction.
+Valid GIA managers maintain typed-gate counts, so unsupported XOR/MUX checks use
+those counts rather than rescanning every object on every query. A 10,000-gate
+leaf-query benchmark drops from approximately 21.6 microseconds to 30 nanoseconds
+with zero allocations; those figures precede the final queue-head guard checks.
+The important improvement is constant-time validation, not a timing guarantee.
+
+The final focused suite passes in 7.486s. Full uncached module race tests pass all
+130 tested packages (three command packages have no tests), including GIA in
+329.803s; GIA vet passes. Logs are /tmp/abcgo-cbs0-final-focused.log,
+/tmp/abcgo-cbs0-final-module-race.log and /tmp/abcgo-cbs0-final-vet.log. No product
+sources were hidden. The former isolated bridge-build limitation no longer
+represents the current module build. The rest of the GIA sequential audit remains
+open; this note covers the chronological Cbs0 engine only.
