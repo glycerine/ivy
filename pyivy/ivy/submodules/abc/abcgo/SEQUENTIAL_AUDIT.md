@@ -18,7 +18,7 @@ source workflows and tests are covered by that audit. Current review: `aig/gia`.
 | --- | --- | --- | --- |
 | 1 | `.` | reviewed | Root review below; race tests and vet pass. |
 | 2 | `aig/aig` | reviewed | All 52 files reconciled; native source matrices, final race suite, vet and module integration gates pass. |
-| 3 | `aig/gia` | in progress | Graph/manager, copies, hashing, balancing, windows, bi-decomposition, circuit-cofactoring, BDD collapse, counterexample replay/minimization and chronological/conflict-analysis/watched-clause circuit SAT, CTAS, stand-alone priority cuts, deep synthesis, DFS/support, mapped-edge assignment sequential enable/frame transforms, explicit/cube reachability cofactor network analysis/reconstruction and ESOP computation reviewed; remaining families and final inventory pending. |
+| 3 | `aig/gia` | in progress | Graph/manager, copies, hashing, balancing, windows, bi-decomposition, circuit-cofactoring, BDD collapse, counterexample replay/minimization and chronological/conflict-analysis/watched-clause circuit SAT, CTAS, stand-alone priority cuts, deep synthesis, DFS/support, mapped-edge assignment sequential enable/frame transforms, explicit/cube reachability cofactor network analysis/reconstruction ESOP computation and incremental support-guided quantification reviewed; remaining families and final inventory pending. |
 | 4 | `aig/gia/mf` | pending | |
 | 5 | `aig/gia/satcost` | pending | |
 | 6 | `aig/hop` | pending | |
@@ -7979,3 +7979,27 @@ precise native exceptions, independent correctness evidence, compactness and
 construction/query preconditions. Commit this checkpoint and freeze all source,
 tests and fixtures for uncached full module race plus GIA vet. Original package
 completion remains 2/131; final family integration is still pending.
+
+
+### Incremental quantification full integration and next family
+
+Consume frozen module race handle80142 and vet handle72087 to terminal success.
+All 130 packages with tests pass; three commands have no tests. GIA passes in
+508.862s, ABCI in 32.067s and BMC in 31.765s
+(/tmp/abcgo-exist-final-module-race.log). Vet output is empty
+(/tmp/abcgo-exist-final-vet.log); no failure or race-warning records are present.
+Code, tests and fixtures remained frozen throughout the full gates. Close this
+25-routine giaExist.c source-family review and update GIA validation links.
+Original package completion stays 2/131; remaining GIA families and final source
+inventory are still pending.
+
+Next source family is giaFalse.c / false_path.go (ten source routines).
+Read-only native/current-Go probes under /tmp/abcgo-false-review-probe compare
+128 records on 64 generated ordinary graphs. Path IDs and truth match, but five
+rebuilt sizes differ because Go substitutes Satoko plus deletion-minimization
+for C's single BSAT solve and final core. A standalone Go probe using the
+existing BSAT port and unchanged source CNF/core flow matches all 128 records
+exactly. No repo edits were made during the frozen gate. Add permanent red
+native equality coverage before repairing this fidelity gap. Detailed next
+source/test plan: /tmp/abcgo-false-next-review-plan.md. Also verify hook limits,
+priority ties, reports, typed boundaries, interface metadata and all drivers.

@@ -113,6 +113,10 @@ implementation shortcuts.
 ## Validation
 
 Focused quantification tests, including original quantifier tests, pass in
-5.908s (`/tmp/abcgo-exist-final-focused.log`). Frozen module race and GIA vet
-checks are pending. Final evidence will be recorded in
-`../../SEQUENTIAL_AUDIT.md`; the overall GIA package review remains in progress.
+5.908s (`/tmp/abcgo-exist-final-focused.log`). Frozen uncached module race tests pass all 130 packages with tests, including
+GIA in 508.862s; three commands have no tests
+(`/tmp/abcgo-exist-final-module-race.log`). GIA vet passes with empty output
+(`/tmp/abcgo-exist-final-vet.log`). Both exact handles terminated successfully
+before recording final evidence in `../../SEQUENTIAL_AUDIT.md`. All 25 source
+routines in this family are reconciled; the overall GIA package review remains
+in progress.
