@@ -5322,3 +5322,21 @@ HashStart routine does not accept buffer nodes. All focused hashing tests
 pass in 2.020s (`/tmp/abcgo-hash-final-focused.log`). Save another red
 checkpoint pending full module race tests and GIA vet. Original completion
 remains 2/131; GIA and the sequential audit remain active.
+
+Structural-hash integration is green: full uncached module race tests pass
+all 130 tested packages, with three command packages without tests and no
+failure/race diagnostic lines (`/tmp/abcgo-hash-review-module-race.log`).
+GIA passes in 248.426s, ABCI in 29.784s and BMC in 23.891s. GIA vet passes
+(`/tmp/abcgo-hash-review-vet.log`). Occupancy reporting and the initial oracle
+are saved in ed6c2aebe; resize/compactness and expanded coverage in 9773c2234.
+Source/tests/native fixture stayed unchanged during integration.
+
+This closes giaHash.go's remaining hashing/reduction/helper review alongside
+the earlier Gia_ManRehash repair. The summary keeps Go's existing full-width
+counters rather than C's signed-int diagnostic truncation; the restored
+bucket report follows the original bounds/order. Source scalar construction,
+additional strashing, vector reducers and MUX-recognition decisions agree
+on the native matrices; typed buffer handling has independent Go coverage.
+Continue with the other balancing families in giaBalAig.go/giaBalMap.go,
+including their shared helpers, timing/arrival interfaces and area divisors.
+Original completion remains 2/131; GIA and the full sequential audit stay active.
