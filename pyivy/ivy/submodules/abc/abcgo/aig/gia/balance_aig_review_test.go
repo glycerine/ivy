@@ -3,6 +3,7 @@ package gia
 import (
 	"slices"
 	"strconv"
+	"strings"
 	"testing"
 )
 
@@ -204,5 +205,39 @@ func BenchmarkBalanceGateReuse(b *testing.B) {
 				Gia_ManBalanceGate(g, template, super, literals, int32(n))
 			}
 		})
+	}
+}
+
+func TestOppositeSimpleAndStructuralSupergateConsumer(t *testing.T) {
+	g := balanceSimpleOppositeReviewGraph()
+	Gia_ManCreateRefs(g)
+	strSuperCollect(g, Gia_ObjFanin0(Gia_ManPo(g, 0)))
+	if !slices.Equal(Vec_IntArray(g.vSuper), []int32{0}) {
+		t.Fatalf("structural collector did not simplify false: %v", Vec_IntArray(g.vSuper))
+	}
+}
+
+func TestVerboseDepthBalanceReportsAllSourceStages(t *testing.T) {
+	src := balanceDepthReviewGraph(1, 5)
+	var quiet, verbose *Gia_Man_t
+	quietText := hashReviewStdout(t, func() { quiet = Gia_ManBalance(src, 1, 1, 0) })
+	if quietText != "" {
+		t.Fatalf("quiet balance printed %q", quietText)
+	}
+	output := hashReviewStdout(t, func() { verbose = Gia_ManBalance(src, 1, 1, 1) })
+	if count := strings.Count(output, "i/o ="); count != 4 {
+		t.Fatalf("got %d stage statistics reports, want four source reports: %q", count, output)
+	}
+	if quiet.nObjs != verbose.nObjs {
+		t.Fatal("verbose reporting changed balanced structure")
+	}
+	for mask := 0; mask < 64; mask++ {
+		inputs := []bool{mask&1 != 0, mask&2 != 0, mask&4 != 0, mask&8 != 0, mask&16 != 0, mask&32 != 0}
+		want, err := src.Evaluate(inputs)
+		if err != nil {
+			t.Fatal(err)
+		}
+		checkQuantificationOutputs(t, quiet, inputs, want)
+		checkQuantificationOutputs(t, verbose, inputs, want)
 	}
 }

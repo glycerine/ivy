@@ -2,10 +2,11 @@ package gia
 
 import (
 	"fmt"
+	"time"
+
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/opt/dau"
-	"time"
 )
 
 // Balance ordered supergates by level, preferring already hashed pairs.
@@ -189,6 +190,9 @@ func Gia_ManBalanceInt(src *Gia_Man_t, strict int32) *Gia_Man_t {
 	return giaBalanceFinish(dst, src)
 }
 func Gia_ManBalance(src *Gia_Man_t, simple, strict, verbose int32) *Gia_Man_t {
+	if verbose != 0 {
+		Gia_ManPrintStats(src, nil)
+	}
 	var first *Gia_Man_t
 	if simple != 0 {
 		first = Gia_ManDup(src)
@@ -196,15 +200,21 @@ func Gia_ManBalance(src *Gia_Man_t, simple, strict, verbose int32) *Gia_Man_t {
 		first = Gia_ManDupMuxes(src, 2)
 	}
 	Gia_ManTransferTiming(first, src)
+	if verbose != 0 {
+		Gia_ManPrintStats(first, nil)
+	}
 	middle := Gia_ManBalanceInt(first, strict)
 	Gia_ManTransferTiming(middle, first)
+	if verbose != 0 {
+		Gia_ManPrintStats(middle, nil)
+	}
 	Gia_ManStop(first)
 	result := Gia_ManDupNoMuxes(middle, 0)
 	Gia_ManTransferTiming(result, middle)
-	Gia_ManStop(middle)
 	if verbose != 0 {
-		fmt.Printf("Balanced AIG: %d objects, %d levels\n", result.nObjs, Gia_ManLevelNum(result))
+		Gia_ManPrintStats(result, nil)
 	}
+	Gia_ManStop(middle)
 	return result
 }
 

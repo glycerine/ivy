@@ -5391,3 +5391,30 @@ Focused checks including the native oracle pass in 2.288s. Save a red
 checkpoint before the remaining helper/normalization-consumer checks and full
 integration. Area-divisor and window reviews remain unfinished; original
 completion stays 2/131 and GIA remains active.
+
+Depth-helper native coverage also passes: 528 last-pair preparations and
+1,056 shared-node selections exercise four level distributions, 2..12 operands
+(including the last-eight-node search bound), rotated inputs and both first
+operand phases against the actual giaBalAig.c helpers. Another 48 AND/XOR
+collector cases vary 8/64 leaves, strict flags, one/two/three uses and leaf
+reference counts, with exact native leaf vectors plus 6,144 independent
+Boolean samples (`/tmp/abcgo-balance-pair-native.log`, 1.796s). The other
+classifier consumer, structural supergate collection, now correctly reduces
+the simple-mode contradiction to a singleton false literal too. Its broader
+normalization family is not declared reviewed by this check.
+
+Inspection found another incomplete port: verbose Gia_ManBalance replaced
+C's four stage-statistics calls with one invented summary. A new red test
+finds zero stage reports (`/tmp/abcgo-balance-verbose-red.log`). Restore
+Gia_ManPrintStats before copying and after coarsening, balancing and lowering,
+at the same ownership-transfer points as C. The regression checks all four
+reports, quiet-mode silence and identical Boolean results/structure. This
+restores wrapper wiring; the statistics implementation itself still requires
+its own remaining review.
+
+All focused classifier/borrowed-span/depth/helper/verbose/original-ABC checks
+pass in 5.141s (`/tmp/abcgo-balance-depth-final-focused.log`). Save a red
+checkpoint pending full uncached module race tests and GIA vet. This review
+covers the depth-balancing portion and shared collectors, not the remaining
+area-divisor and window algorithms. Original completion stays 2/131; GIA
+and the full sequential audit remain active.
