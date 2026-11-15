@@ -4065,3 +4065,46 @@ Abstraction mapping validation and general output-selection behavior still
 need expanded review beyond the repaired construction/constraint metadata;
 other GIA families remain open. Original package completion stays 2/131 and
 the sequential audit remains active.
+
+Register-abstraction mapping review: the Go inverse-map walk accepted any
+negative integer as a retained-register marker, while the C precondition and
+PDR's producers require exactly -1. New red tests reproduce acceptance of -2
+and MinInt32 (`/tmp/abcgo-abs-inverse-red.log`). Reject values below -1 in the
+existing inverse-map pass; valid mapping behavior is unchanged. This is a
+malformed-input validation repair, not a discovered valid-circuit truth bug.
+The existing forward/inverse consistency checks remain in place.
+
+Enumerate all sixteen ordered subsets of three registers (empty, three
+singletons, six pairs and six triples). For every subset, check original PIs,
+promoted ROs in caller-specified order, retained ROs in original order, all
+original POs and exactly the retained RIs. Thirty-two polarity combinations
+and all 32 PI/state assignments give 512 native cases and 16,384 assignment
+rows exactly matching compiled C. Independent Boolean formulas check every
+property and next-state output, including input permutation after promotion.
+An RI-only cone is removed iff its register is promoted, and unrelated
+dangling logic is always removed. Exact copied gate counts verify pruning;
+source CI/RI Value mappings verify retained and discarded interface objects.
+
+Repeat that matrix on real XOR/MUX/buffer representations, original/DFS
+layouts and constraint counts zero/one: 4,096 cases and 131,072 rows, checking
+name/spec, normalized layout and PI/RO/PO/RI classification. These exhaustive
+one-step checks verify the transition relation for every state/input value;
+no replacement abstraction algorithm is introduced. The native fixture is
+`aig/gia/test_vectors/register_abstraction.c` and uses original AND-only C.
+
+Twelve more malformed mapping cases reject wrong vector lengths, bad or
+repeated register IDs, mismatched inverse ordinals and missing entries.
+Boundary checks include empty and constant-only graphs, an unused PI and all
+sixteen promotions of a three-register graph with no primary inputs or
+outputs. Constant-only constraints retain their role. Native assertion
+failures are not deliberately launched for malformed input. Expanded checks
+pass in 1.964s (`/tmp/abcgo-abs-final-focused.log`); native-only verification
+passes in 1.829s (`/tmp/abcgo-abs-native.log`). The implementation already
+shares the selected root list between cone copying and output construction,
+so no further compactness rewrite is warranted in this routine.
+
+Full uncached race tests pass for GIA (108.369s) and PDR (15.103s), recorded
+in `/tmp/abcgo-abs-review-race.log`; GIA vet passes
+(`/tmp/abcgo-abs-review-vet.log`). This closes register-abstraction mapping
+review. General output selection and other GIA families remain open.
+Original package completion stays 2/131; the sequential audit remains active.

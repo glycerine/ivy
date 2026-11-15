@@ -146,6 +146,9 @@ func Gia_ManDupAbs(src *Gia_Man_t, ppiToFlop, flopToPpi *Vec_Int_t) *Gia_Man_t {
 		obj.Value = uint32(Gia_ManAppendCi(dst))
 	}
 	for flop, ppi := range vec.Vec_IntArray(flopToPpi) {
+		if ppi < -1 {
+			panic("gia: invalid retained-register marker")
+		}
 		obj := Gia_ManRo(src, int32(flop))
 		if ppi >= 0 {
 			if obj.Value == ^uint32(0) {
