@@ -7700,3 +7700,16 @@ Boolean equivalence belongs on actual reconstructed cofactor graphs. Preserve a
 separate RNG state in the Go generator so output phases explicitly use the
 original seed (previously an even number of RNG calls happened to preserve it).
 The family and package reviews remain in progress; no full gate claimed.
+
+### Cofactor rebuild metadata repair
+
+Add independent scalar exhaustive evaluation for 2,330 raw, cleaned and repeated
+cofactor reconstructions (64 generated graphs; every CI/internal pivot; fanout
+thresholds 0/1/2/4/1000; 0/1/2 registers). All output truth tables and dimensions
+pass. New typed-gate/reordered-port metadata tests fail in all six variants:
+property/constraint roles, latch resets and comments vanish
+(/tmp/abcgo-cof-rebuild-red.log). Copy unchanged interface metadata at the raw
+rebuild boundary using the existing reviewed helper. The regressions now pass,
+including independent slice ownership (/tmp/abcgo-cof-rebuild-repaired.log,
+0.061s). This intentionally preserves interface semantics beyond the original
+C routine's name/spec/register-only copying. Full integration remains pending.

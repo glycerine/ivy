@@ -76,6 +76,7 @@ func Gia_ManDupCofInt(p *Gia_Man_t, pivot int32) *Gia_Man_t {
 	}
 	Gia_ManHashStop(out)
 	Gia_ManSetRegNum(out, Gia_ManRegNum(p))
+	giaCopyInterfaceMetadata(out, p)
 	return out
 }
 func Gia_ManDupCof(p *Gia_Man_t, pivot int32) *Gia_Man_t {
