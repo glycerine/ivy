@@ -11,7 +11,8 @@ func Gia_ObjIsMuxId(p *Gia_Man_t, id int32) int32 {
 }
 func Gia_ObjIsMux(p *Gia_Man_t, obj *Gia_Obj_t) int32 { return Gia_ObjIsMuxId(p, Gia_ObjId(p, obj)) }
 func Gia_ObjIsAndReal(p *Gia_Man_t, obj *Gia_Obj_t) int32 {
-	return giaBool(Gia_ObjIsAnd(obj) != 0 && obj.iDiff0 > obj.iDiff1 && Gia_ObjIsMux(p, obj) == 0)
+	// Equal fanin objects with opposite phases are simple-mode ANDs, not buffers.
+	return giaBool(Gia_ObjIsAnd(obj) != 0 && obj.iDiff0 >= obj.iDiff1 && Gia_ObjIsBuf(obj) == 0 && Gia_ObjIsMux(p, obj) == 0)
 }
 func Gia_Obj2Lit(p *Gia_Man_t, obj *Gia_Obj_t) int32 {
 	return Gia_ObjId(p, Gia_Regular(obj))<<1 | Gia_IsComplement(obj)

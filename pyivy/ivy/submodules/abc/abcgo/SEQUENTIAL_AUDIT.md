@@ -5340,3 +5340,22 @@ on the native matrices; typed buffer handling has independent Go coverage.
 Continue with the other balancing families in giaBalAig.go/giaBalMap.go,
 including their shared helpers, timing/arrival interfaces and area divisors.
 Original completion remains 2/131; GIA and the full sequential audit stay active.
+
+AIG balancing review exposes a remaining simple-mode classifier gap.
+Gia_ObjIsBuf already correctly excludes opposite-phase repeated-fanin ANDs,
+but Gia_ObjIsAndReal also excluded them, leaving valid x & !x nodes outside
+the ordinary AND category. New classification and depth/area balancing
+regressions fail before repair: both public balancing paths panic in supergate
+collection (`/tmp/abcgo-balance-simple-class-red.log`). Recognize non-buffer
+ANDs with equal fanin object IDs as ordinary ANDs too; real XOR/MUX and true
+buffers remain excluded. The shared collector can then simplify x & !x to
+false without a new balancing algorithm.
+
+This continues the earlier intentional Go correction of C's simple-mode
+buffer misclassification; it does not claim these cases as valid native
+balancing inputs. Ordinary source representations are unchanged. New red
+regressions and existing balancing/supergate/ABC comparisons pass in 1.098s
+(`/tmp/abcgo-balance-simple-class-green.log`). Save a red checkpoint while
+adding broader classifier, depth-helper, arrival-level and source comparisons;
+area-divisor and window families remain unfinished. Full integration is
+pending. Original completion remains 2/131; GIA and the audit remain active.
