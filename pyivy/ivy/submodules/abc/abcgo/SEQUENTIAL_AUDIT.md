@@ -7652,3 +7652,27 @@ checkpoint. Next track native normalized connectivity/cone/reference/score
 matrices, inspect source insertion order/count-removed propagation, cofactor
 reconstruction, ownership and compactness, then run final frozen integration.
 Original package completion remains 2/131; GIA is still in progress.
+
+### Cofactor native analysis investigation checkpoint
+
+Add test_vectors/cof_review.c, including actual giaCof.c, and a 32-graph Go
+comparison. Normalize opaque packed C handles to original object IDs and compare
+connectivity/complements, mux refs, single/pair cones, support, MFFC restoration,
+ranked candidates and simplification state. A temporary capture test was removed
+after saving native-analysis.out/go-analysis.out under
+/tmp/abcgo-cof-review-probe; it is not part of the permanent suite.
+
+The first permanent test is red on raw iLit scratch records
+(/tmp/abcgo-cof-native-first.log). Inspect all 6,834 records before interpreting
+this: 38 raw records differ, 30 become identical after following equivalent alias
+chains. Eight simplification queries still have larger Go removal counts; their
+native mappings retain stale alias chains, potentially missing downstream
+simplifications. All other normalized connectivity/cone/reference/ranking records
+agree. This is an investigation, not permission to ignore differing algorithms.
+
+Next verify alias propagation against the original levelized implementation,
+check actual Boolean substitutions, and distinguish source defects from opaque
+scratch representation differences before changing expectations or production.
+The current native-analysis test intentionally remains red at this checkpoint;
+the preceding reference repairs retain their focused green evidence. No full
+integration or giaCof.c closure is claimed. Completion stays 2/131.
