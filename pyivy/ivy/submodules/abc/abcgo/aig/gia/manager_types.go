@@ -108,8 +108,8 @@ type Gia_Man_t struct {
 	nHashHit        word         // hash table hit
 	nHashMiss       word         // hash table miss
 	pData           any          // various user data
-	cexValues       [][]bool     // per-frame values while probing a counterexample
-	pData2          *uint32      // various user data
+	cexLastFrame    int32        // final frame in the active packed counterexample probe
+	pData2          []uint32     // various user data; packed counterexample probe bits
 	iData           int32        // various user data
 	iData2          int32        // various user data
 	nAnd2Delay      int32        // AND2 delay scaled to match delay numbers used

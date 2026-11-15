@@ -7,7 +7,7 @@ import (
 
 // Gia_ManCounterExampleValueStart records the value of every object in each frame.
 func Gia_ManCounterExampleValueStart(p *Gia_Man_t, cex *util.Abc_Cex_t) {
-	if Gia_ManRegNum(p) <= 0 || p.cexValues != nil || p.pData2 != nil {
+	if Gia_ManRegNum(p) <= 0 || p.pData2 != nil {
 		panic("gia: invalid counterexample probing state")
 	}
 	for i := int32(0); i < cex.NRegs; i++ {
@@ -15,29 +15,35 @@ func Gia_ManCounterExampleValueStart(p *Gia_Man_t, cex *util.Abc_Cex_t) {
 			panic("gia: counterexample initial state is not zero")
 		}
 	}
-	var frames [][]bool
-	replayCounterexample(p, cex, false, func(_ int32, _, values, _ []bool) bool { frames = append(frames, values); return true })
-	if cex.IPo < 0 || cex.IPo >= Gia_ManPoNum(p) || !frames[cex.IFrame][Gia_ObjId(p, Gia_ManPo(p, cex.IPo))] {
-		panic("gia: counterexample does not assert its output")
-	}
-	p.cexValues = frames
+	words := make([]uint32, ((int64(cex.IFrame)+1)*int64(p.nObjs)+31)/32)
+	replayCounterexample(p, cex, false, func(frame int32, _, values, outputs []bool) bool {
+		for id, value := range values {
+			if value {
+				bit := int64(frame)*int64(p.nObjs) + int64(id)
+				words[bit>>5] |= 1 << uint(bit&31)
+			}
+		}
+		if frame == cex.IFrame && (cex.IPo < 0 || cex.IPo >= Gia_ManPoNum(p) || !outputs[cex.IPo]) {
+			panic("gia: counterexample does not assert its output")
+		}
+		return true
+	})
+	p.pData2, p.cexLastFrame = words, cex.IFrame
 }
 
 func Gia_ManCounterExampleValueStop(p *Gia_Man_t) {
-	if p.cexValues == nil {
+	if p.pData2 == nil {
 		panic("gia: counterexample probing not started")
 	}
-	p.cexValues = nil
+	p.pData2, p.cexLastFrame = nil, 0
 }
 
 func Gia_ManCounterExampleValueLookup(p *Gia_Man_t, id, frame int32) int32 {
-	if frame < 0 || int(frame) >= len(p.cexValues) || id < 0 || id >= Gia_ManObjNum(p) {
+	if p.pData2 == nil || frame < 0 || frame > p.cexLastFrame || id < 0 || id >= Gia_ManObjNum(p) {
 		panic("gia: counterexample probe out of range")
 	}
-	if p.cexValues[frame][id] {
-		return 1
-	}
-	return 0
+	bit := int64(frame)*int64(p.nObjs) + int64(id)
+	return int32(p.pData2[bit>>5] >> uint(bit&31) & 1)
 }
 
 func Gia_ManCounterExampleValueTest(p *Gia_Man_t, cex *util.Abc_Cex_t) {

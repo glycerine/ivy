@@ -6064,3 +6064,33 @@ state simulation, adding red regressions before demonstrated bug repairs. No
 counterexample production or test change has been made yet. This closes neither
 the remaining GIA families nor the whole package. Original completion remains
 2/131; GIA and the full sequential audit remain active.
+
+Begin giaCex.c review with cex_replay.go/cex_values.go and minimization inventory.
+The probe keeps [][]bool and leaves source's pData2 scratch unoccupied. A new
+37-frame state/word-boundary regression fails on that ownership discrepancy
+(/tmp/abcgo-cex-probe-red.log). Store packed []uint32 in pData2, remove the
+separate Boolean-slice storage, and retain a final-frame bound for checked Go
+lookups. Commit scratch only after validating the complete witness; stop clears
+it. The regression and existing replay/value/minimization tests pass
+(/tmp/abcgo-cex-probe-green.log). Retained probe payload is one bit per object
+per frame, rather than one Boolean byte plus each frame's slice header.
+
+A new native replay/extension/probe matrix initially differs at the all-object
+extension (/tmp/abcgo-cex-native.log from its first red run). Source
+Gia_ManCexExtendToIncludeAllObjects copies every object's mark BEFORE current
+frame gate evaluation, retaining stale internal values. Go correctly records
+current-frame values. Do not introduce that C bug into Go. The oracle now
+explicitly labels and models the source legacy-all snapshot; independently
+scalar-simulate and verify the Go current-frame extension. Other native checks
+remain exact. A first scalar fixture accidentally reused the saved current-frame
+slice as next-frame scratch; copy it before reseeding, fixing the test fixture.
+
+All 2,048 one-register native cases now match replay verdicts, dual outputs,
+first/final failure selection, state extension, source legacy-all timing and
+zero-initialized packed probing, across all sixteen transitions, four property
+pairs, varied initial states/input traces and 1/2/5/37 frames
+(/tmp/abcgo-cex-native.log). Go all-object extension is checked separately against
+the independent current-frame simulator, including nonzero initial states. This
+is an explicit source bug exception, not normalization hiding a failed port.
+Save a red checkpoint pending broader state/layout/guard coverage, minimizer
+workflow repair and full integration. Original completion remains 2/131.
