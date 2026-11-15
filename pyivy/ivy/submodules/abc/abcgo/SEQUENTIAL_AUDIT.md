@@ -8532,3 +8532,31 @@ fidelity investigation. Original Fx_FastExtract lives in
 src/base/abci/abcFx.c:1163, not a src/opt/fx directory. The detailed next plan
 is /tmp/abcgo-fx-next-review-plan.md. No next-family tested files were edited
 while timeframe integration was running; no agents/branches were used.
+
+### Fast-extraction family: graph and SOP conversion regressions
+
+Continue sequential giaFx.c review (11 active routines); original package
+completion remains2/131 and GIA remains open. Two new regressions fail before
+repair because GraphToAig reads every leaf payload, including unused nil leaves
+(/tmp/abcgo-fx-leaf-red.log, /tmp/abcgo-fx-unused-leaf-red.log). Actual C returns
+the selected root-leaf signal without reading other leaves or requiring hashing.
+Restore that fast path and read internal inputs directly from existing graph
+payloads, removing the redundant copied signal array. Both regressions pass.
+All148 graph records match actual giaFx.c, including constants, every selected
+leaf/phase, constant or variable leaf signals, dangling unused internal nodes,
+and internal AND edge/output phases; scalar truth is independently checked
+(/tmp/abcgo-fx-graph-native-repaired.log,1.807s).
+
+A third new regression fails before repair when SopToAig receives an unused
+trailing leaf (/tmp/abcgo-fx-sop-extra-red.log). Actual C accepts this and returns
+literal8 with5 objects (/tmp/abcgo-fx-sop-extra.c). Relax only direct SopToAig's
+check to require sufficient leaves, preserving FactorNode's source exact-count
+contract. Expand permanent native/scalar SOP coverage for zero-variable
+constants, output phases, complemented leaves, multiple cubes, don't-cares,
+unused trailing leaves and NUL-terminated input. Focused combined rerun is in
+progress; full family/native backend review and integration are pending.
+
+The real extraction engine is src/base/abci/abcFx.c, not src/opt/fx. Go opt/fx
+explicitly documents a recomputed catalog substitute with different selection
+semantics. Native divisor/cover checks and a faithful engine reconciliation are
+required before this family can be closed. No parallel agents or branches.

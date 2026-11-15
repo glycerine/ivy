@@ -12,29 +12,30 @@ func Gia_ManGraphToAig(p *Gia_Man_t, graph *dec.Dec_Graph_t) int32 {
 	if dec.Dec_GraphIsConst(graph) != 0 {
 		return 1 ^ dec.Dec_GraphIsComplement(graph)
 	}
-	leaves := dec.Dec_GraphLeaveNum(graph)
-	values := make([]int32, leaves+dec.Dec_GraphNodeNum(graph))
-	for i := int32(0); i < leaves; i++ {
-		value, ok := dec.Dec_GraphLeafFunc(graph, i).(int32)
+	read := func(index uint32) int32 {
+		value, ok := dec.Dec_GraphNodeFunc(graph, int32(index)).(int32)
 		if !ok || value < 0 {
-			panic("gia: missing decomposition leaf signal")
+			panic("gia: missing decomposition node signal")
 		}
-		values[i] = value
+		return value
 	}
-	for i := leaves; i < int32(len(values)); i++ {
+	root := dec.Dec_GraphRootEdge(graph)
+	if dec.Dec_GraphIsVar(graph) != 0 {
+		return read(root.Node) ^ dec.Dec_GraphIsComplement(graph)
+	}
+	leaves := dec.Dec_GraphLeaveNum(graph)
+	for i := leaves; i < leaves+dec.Dec_GraphNodeNum(graph); i++ {
 		a, b := dec.Dec_GraphNode(graph, i).Edges()
-		la, lb := values[a.Node], values[b.Node]
+		la, lb := read(a.Node), read(b.Node)
 		if a.Complemented() {
 			la ^= 1
 		}
 		if b.Complemented() {
 			lb ^= 1
 		}
-		values[i] = Gia_ManHashAnd(p, la, lb)
-		dec.Dec_GraphSetNodeFunc(graph, i, values[i])
+		dec.Dec_GraphSetNodeFunc(graph, i, Gia_ManHashAnd(p, la, lb))
 	}
-	root := dec.Dec_GraphRootEdge(graph)
-	value := values[root.Node]
+	value := read(root.Node)
 	if root.Complemented() {
 		value ^= 1
 	}
@@ -44,7 +45,7 @@ func Gia_ManGraphToAig(p *Gia_Man_t, graph *dec.Dec_Graph_t) int32 {
 // Gia_ManSopToAig builds a hashed AIG directly from a PLA-format cover.
 func Gia_ManSopToAig(p *Gia_Man_t, sop string, leaves *Vec_Int_t) int32 {
 	n := kit.Kit_PlaGetVarNum(sop)
-	if n < 0 || int(n) != Vec_IntSize(leaves) {
+	if n < 0 || int(n) > Vec_IntSize(leaves) {
 		panic("gia: invalid SOP leaf count")
 	}
 	if end := strings.IndexByte(sop, 0); end >= 0 {
