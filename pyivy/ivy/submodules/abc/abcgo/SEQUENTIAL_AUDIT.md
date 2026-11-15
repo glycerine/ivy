@@ -6094,3 +6094,24 @@ the independent current-frame simulator, including nonzero initial states. This
 is an explicit source bug exception, not normalization hiding a failed port.
 Save a red checkpoint pending broader state/layout/guard coverage, minimizer
 workflow repair and full integration. Original completion remains 2/131.
+
+The minimization native regression fails at table 0x07, assignment zero,
+low-effort mode: Go selects mask 0xc, source selects 0xa
+(/tmp/abcgo-cex-care-red.log). The existing port always used Satoko assumption
+minimization, omitting the source priority mask and final-core workflow. Restore
+source priority justification, MF CNF and BSAT final-conflict analysis in both
+assumption orders; apply LEXUNSAT only for high effort and retain the earlier
+mask on ties. Preserve constant-true Go support when negating the output already
+contradicts CNF and the priority mask is empty.
+
+Make the existing BMC priority and ternary-verification implementation available
+inside GIA so GIA's original caller need not reverse-import sat/bmc. Source
+algorithm bodies are initially copied for a buildable checkpoint; the following
+BMC commit will delegate to these shared implementations and remove the duplicate
+bodies. Preserve its raw typed-gate lowering and diagnostics. The restored main
+minimizer matches all 2,032 native three-input care masks in both effort modes,
+with every mask independently checked against all possible input completions
+(/tmp/abcgo-cex-care-restored.log). Existing multiframe SAT care tests also pass.
+This is source workflow restoration, not acceptance of an alternative minimal
+implicant implementation. Full integration and the remaining wrapper/trace/
+storage checks are still pending; original completion remains 2/131.

@@ -3,7 +3,9 @@ package gia
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/misc/util"
-	"github.com/glycerine/abcgo/sat/satoko"
+	"github.com/glycerine/abcgo/sat/bsat"
+	"slices"
+	"time"
 )
 
 // Gia_ManFramesForCexMin unrolls a zero-initialized transition system.
@@ -70,116 +72,101 @@ func Bmc_CexCareDeriveCex(cex *util.Abc_Cex_t, first int32, lits []int32, count 
 	return out
 }
 
-// Bmc_CexCareSatBasedMinimizeAig finds input bits sufficient to force the
-// failed output. The returned counterexample holds a care mask, not values.
+// Bmc_CexCareSatBasedMinimizeAig follows the source priority prepass, MF
+// CNF, final conflict analysis in both orders, and optional LEXUNSAT passes.
 func Bmc_CexCareSatBasedMinimizeAig(p *Gia_Man_t, cex *util.Abc_Cex_t, highEffort, verbose int32) *util.Abc_Cex_t {
 	if Gia_ManVerifyCex(p, cex, 0) == 0 || cex.IPo != 0 || Gia_ManPoNum(p) != 1 {
 		panic("gia: expected a valid single-output counterexample")
 	}
 	for i := int32(0); i < cex.NRegs; i++ {
-		if cex.PData[i>>5]&(1<<uint(i&31)) != 0 {
+		if util.Abc_InfoHasBit(cex.PData, i) {
 			panic("gia: expected zero initial state")
 		}
 	}
+	started := time.Now()
+	best := Gia_ManCexCareMinimize(p, Gia_ManPiNum(p), cex, 1, 1, verbose)
+	countBest := util.Abc_CexCountOnes(best)
+	if verbose != 0 {
+		fmt.Printf("Care bits = %d. Non-SAT-based CEX minimization = %.2f sec\n", countBest, time.Since(started).Seconds())
+	}
 	graph := Gia_ManFramesForCexMin(p, cex.IFrame+1)
 	defer Gia_ManStop(graph)
-	solver := satoko.New()
-	solver.SetVariables(int(graph.nObjs))
-	solver.AddClause([]int{1}) // constant-zero variable
-	for id := int32(1); id < graph.nObjs; id++ {
-		a, b, c, kind := graph.Gate(id)
-		if kind == 1 {
-			continue
+	cnf := Mf_ManGenerateCnf(graph, 8, 0, 0, 0, 0)
+	if cnf == nil {
+		panic("gia: counterexample CNF generation failed")
+	}
+	solver := bsat.NewSolver()
+	defer solver.Close()
+	solver.SetNumVars(int32(cnf.Variables))
+	for _, row := range cnf.Clauses {
+		clause := make([]bsat.Literal, len(row))
+		for i, lit := range row {
+			clause[i] = bsat.Literal(lit)
 		}
-		args := []int32{a}
-		if kind == 2 || kind == 3 {
-			args = append(args, b)
-		} else if kind == 4 {
-			args = append(args, b, c)
-		}
-		for pattern := 0; pattern < (1 << len(args)); pattern++ {
-			x := pattern&1 != 0
-			y, z := false, false
-			if len(args) > 1 {
-				y = pattern&2 != 0
-			}
-			if len(args) > 2 {
-				z = pattern&4 != 0
-			}
-			value := x
-			switch kind {
-			case 2:
-				value = x && y
-			case 3:
-				value = x != y
-			case 4:
-				if x {
-					value = y
-				} else {
-					value = z
-				}
-			case 5, 6:
-			default:
-				panic("gia: invalid gate in care SAT")
-			}
-			clause := make([]int, 0, len(args)+1)
-			for i, arg := range args {
-				lit := int(arg)
-				if pattern&(1<<i) != 0 {
-					lit ^= 1
-				}
-				clause = append(clause, lit)
-			}
-			out := int(id << 1)
-			if !value {
-				out ^= 1
-			}
-			clause = append(clause, out)
-			solver.AddClause(clause)
+		if !solver.AddClause(clause...) {
+			panic("gia: inconsistent counterexample CNF")
 		}
 	}
-	// Ask whether the failed output could be false with the selected bits fixed.
-	output := Gia_ObjId(graph, Gia_ManCo(graph, 0))
-	solver.AddClause([]int{int(output<<1) | 1})
-	inputs := graph.InputLiterals()
-	assumptions := make([]int, len(inputs))
-	for i, lit := range inputs {
-		assumptions[i] = int(lit)
-		bit := int64(cex.NRegs) + int64(i)
-		if cex.PData[bit>>5]&(1<<uint(bit&31)) == 0 {
+	if !solver.AddClause(bsat.Negative(1)) {
+		// A constant-true output is a supported Go extension. The priority proof
+		// already establishes that no input assignments need to be retained.
+		if countBest == 0 {
+			return best
+		}
+		panic("gia: counterexample output cannot be negated")
+	}
+	first := int32(cnf.Variables) - (cex.IFrame+1)*cex.NPis
+	assumptions := make([]bsat.Literal, cex.NBits-cex.NRegs)
+	for i := range assumptions {
+		assumptions[i] = bsat.Positive(first + int32(i))
+		if !util.Abc_InfoHasBit(cex.PData, cex.NRegs+int32(i)) {
 			assumptions[i] ^= 1
 		}
 	}
-	best, status := solver.MinimizeAssumptions(assumptions, 0)
-	if status != satoko.SATOKO_UNSAT {
-		panic("gia: counterexample does not force output")
+	if verbose != 0 {
+		fmt.Printf("Constructing SAT solver = %.2f sec\n", time.Since(started).Seconds())
 	}
-	if highEffort != 0 {
-		reversed := append([]int(nil), assumptions...)
-		for i, j := 0, len(reversed)-1; i < j; i, j = i+1, j-1 {
-			reversed[i], reversed[j] = reversed[j], reversed[i]
+	update := func(lits []bsat.Literal) {
+		if int32(len(lits)) >= countBest {
+			return
 		}
-		other, status := solver.MinimizeAssumptions(reversed, 0)
-		if status == satoko.SATOKO_UNSAT && len(other) < len(best) {
-			best = other
+		plain := make([]int32, len(lits))
+		for i, lit := range lits {
+			plain[i] = int32(lit)
 		}
+		countBest = int32(len(lits))
+		best = Bmc_CexCareDeriveCex(cex, first, plain, int32(len(plain)))
 	}
-	selected := make(map[int]bool, len(best))
-	for _, lit := range best {
-		selected[lit>>1] = true
-	}
-	result := util.Abc_CexAlloc(cex.NRegs, cex.NPis, cex.IFrame+1)
-	result.IPo, result.IFrame = cex.IPo, cex.IFrame
-	for i, lit := range inputs {
-		if selected[int(lit>>1)] {
-			bit := int64(cex.NRegs) + int64(i)
-			result.PData[bit>>5] |= 1 << uint(bit&31)
+	for pass := 0; pass < 2; pass++ {
+		lits := append([]bsat.Literal(nil), assumptions...)
+		if pass != 0 {
+			slices.Reverse(lits)
 		}
+		started = time.Now()
+		status := solver.Solve(lits...)
+		core := solver.UnsatCore()
+		if status != bsat.Unsatisfiable {
+			panic("gia: counterexample does not force output")
+		}
+		if verbose != 0 {
+			fmt.Printf("Status OK    Selected %5d assumptions out of %5d.  Analyze_final = %.2f sec\n", len(core), len(lits), time.Since(started).Seconds())
+		}
+		update(core)
+		if highEffort == 0 {
+			continue
+		}
+		started = time.Now()
+		count := solver.MinimizeAssumptions(lits, 0)
+		if verbose != 0 {
+			fmt.Printf("Status OK    Selected %5d assumptions out of %5d.  LEXUNSAT = %.2f sec\n", count, len(lits), time.Since(started).Seconds())
+		}
+		update(lits[:count])
 	}
 	if verbose != 0 {
-		fmt.Printf("SAT care bits = %d of %d.\n", len(best), len(inputs))
+		fmt.Print("Final    :    ")
+		util.Abc_CexPrintStatsInputs(best, best.NPis)
 	}
-	return result
+	return best
 }
 
 func Gia_ManMinCex(p *Gia_Man_t, cex *util.Abc_Cex_t) {
