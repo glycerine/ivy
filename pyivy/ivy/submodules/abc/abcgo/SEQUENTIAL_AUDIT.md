@@ -4871,3 +4871,34 @@ hashing, abstraction or cone-selection algorithm changed. Expanded partition/
 behavior/serialization coverage and full integration verification are pending.
 Save this checkpoint with a red prefix. Original completion remains 2/131;
 the GIA audit continues.
+
+Expanded partition checks pass in 0.592s
+(`/tmp/abcgo-copy-partition-final-focused.log`). The matrix covers all 21
+valid ordinary/bad/constraint partitions of five POs, four mixed/literal
+phase patterns, ordinary/real-XOR/MUX/buffer forms, two physical layouts and
+18 invocation/control variants: 6,048 cases and 193,536 original PI/state
+assignments checked against both the copy and its AIGER round trip. Identity
+copies must retain the original input vector directly; register promotion
+uses its explicit expected permutation, and cut copies use one-way lifted
+boundary inputs. The latter is not a joint-range equivalence claim. All
+surviving RI values are checked. Raw AIGER header counts are checked separately
+from the reader's recovered roles. Empty property lists and six explicit
+selection/vector/literal APIs also retain their existing derived-role policy.
+
+AIGER intentionally requires real gates to be lowered first. Connecting that
+public lowering path exposed another physical-order assumption: DupNoMuxes
+reorders ports on DFS sources. A separate red regression passes for normalized
+inputs but fails on the same interleaved circuit
+(`/tmp/abcgo-copy-lowering-ports-red.log`). Restore CI/CO vectors through the
+existing remapping helpers before metadata copying and cleanup. The direct
+regression and expanded original-order matrix now pass. Typed round trips use
+that public lowering path; the exporter acceptance rules did not change.
+The original failed expanded log (`/tmp/abcgo-copy-partition-expanded.log`)
+records the deliberate exporter rejection, not a production exporter defect.
+
+Full uncached module race tests and GIA vet are running. This review covers
+output roles in the listed complete-PO copies and logical port retention in
+the lowering path; it does not declare all other balancing, quantification,
+box-order or rewrite metadata paths reviewed. Save the expanded coverage and
+lowering repair with a red prefix until integration verification finishes.
+Original completion stays 2/131; GIA remains active.

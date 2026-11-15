@@ -47,6 +47,9 @@ func Gia_ManDupNoMuxes(src *Gia_Man_t, skipBuffers int32) *Gia_Man_t {
 		}
 		obj.Value = uint32(lit)
 	}
+	// Source object order may interleave CIs/COs with a different logical order.
+	Gia_ManDupRemapCis(dst, src)
+	Gia_ManDupRemapCos(dst, src)
 	Gia_ManHashStop(dst)
 	Gia_ManSetRegNum(dst, src.nRegs)
 	giaCopyInterfaceMetadata(dst, src)
