@@ -6,12 +6,12 @@ import (
 )
 
 func Gia_ManPrintRepr(p *Gia_Man_t) {
-	if len(p.pReprsOld) != int(p.nObjs) || len(p.PReprs) != int(p.nObjs) {
+	if len(p.pReprsOld) != int(p.nObjs) {
 		panic("gia: invalid representatives")
 	}
 	for i, repr := range p.pReprsOld {
 		if repr >= 0 {
-			fmt.Printf("%d->%d ", i, p.PReprs[i].iRepr)
+			fmt.Printf("%d->%d ", i, repr)
 		}
 	}
 	fmt.Println()
@@ -33,6 +33,7 @@ func Gia_ManDupDfsClasses(src *Gia_Man_t) *Gia_Man_t {
 	}
 	Gia_ManHashStop(out)
 	Gia_ManSetRegNum(out, Gia_ManRegNum(src))
+	out.nConstrs = src.nConstrs
 	return giaCleanComposed(out)
 }
 func Gia_ManDupTopAnd_iter(src *Gia_Man_t, verbose int32) *Gia_Man_t {
@@ -41,7 +42,11 @@ func Gia_ManDupTopAnd_iter(src *Gia_Man_t, verbose int32) *Gia_Man_t {
 	for i := int32(0); i < Gia_ManCoNum(src); i++ {
 		obj := Gia_ManCo(src, i)
 		lit := Gia_ObjFaninLit0(obj, obj.id)
-		if lit>>1 == 0 {
+		if lit == 0 {
+			// A false conjunct cannot be discarded during decomposition.
+			return Gia_ManDupNormalize(src, 0)
+		}
+		if lit == 1 {
 			continue
 		}
 		if lit&1 != 0 {
@@ -56,8 +61,19 @@ func Gia_ManDupTopAnd_iter(src *Gia_Man_t, verbose int32) *Gia_Man_t {
 		}
 		return Gia_ManDupNormalize(src, 0)
 	}
+	// Reuse the phase table to mark expanded positive-frontier objects.
+	// Leaf phases (0/1) are recorded only after the frontier is complete.
+	const expanded int8 = 2
+	phases := make([]int8, src.nObjs)
+	for i := range phases {
+		phases[i] = -1
+	}
 	for i := 0; i < len(front); i++ {
 		id := front[i]
+		if phases[id] == expanded {
+			continue
+		}
+		phases[id] = expanded
 		obj := src.pObjs[id]
 		if Gia_ObjIsCi(obj) != 0 || id == 0 {
 			leaves = append(leaves, id<<1)
@@ -80,28 +96,26 @@ func Gia_ManDupTopAnd_iter(src *Gia_Man_t, verbose int32) *Gia_Man_t {
 	for i := range ciMap {
 		ciMap[i] = -1
 	}
-	phases := make([]int8, src.nObjs)
-	for i := range phases {
-		phases[i] = -1
-	}
 	ciLeaves := 0
 	for _, lit := range leaves {
 		id := lit >> 1
 		phase := int8(lit & 1)
-		obj := src.pObjs[id]
-		if Gia_ObjIsCi(obj) != 0 {
-			ciMap[Gia_ObjCioId(obj)] = int32(phase ^ 1)
-			ciLeaves++
+		if phases[id] == phase {
+			continue
 		}
-		if phases[id] >= 0 && phases[id] != phase {
+		if phases[id] == 0 || phases[id] == 1 {
 			fmt.Println("Problem is trivially UNSAT.")
 			return Gia_ManDupNormalize(src, 0)
 		}
 		phases[id] = phase
+		if Gia_ObjIsCi(src.pObjs[id]) != 0 {
+			ciMap[Gia_ObjCioId(src.pObjs[id])] = int32(phase ^ 1)
+			ciLeaves++
+		}
 	}
 	selected := vec.Vec_IntAlloc(len(leaves))
 	for id, phase := range phases {
-		if phase >= 0 && Gia_ObjIsCi(src.pObjs[id]) == 0 {
+		if (phase == 0 || phase == 1) && Gia_ObjIsCi(src.pObjs[id]) == 0 {
 			vec.Vec_IntPush(selected, int32(id<<1)|int32(phase))
 		}
 	}

@@ -4434,3 +4434,17 @@ is now verified green. CI-map substitution and the reviewed functions in
 dup_dfs_extra.go are complete. Representative-class/top-AND duplication and
 other GIA families remain open; original completion remains 2/131 and the
 sequential audit remains active.
+
+Top-AND/class review checkpoint: separate red regressions expose discarded
+false output conjuncts (UNSAT becomes SAT), exponential shared-frontier
+expansion, lost constraint roles during class duplication and a printer that
+reads new representatives despite selecting entries from the old table.
+`/tmp/abcgo-topand-review-red.log` records all failures, including the bounded
+two-second shared-cone child and both printer-table cases. Repairs preserve
+false conjuncts by returning a normalized copy, expand each positive node
+once using a temporary state in the existing phase array, preserve class-copy
+constraint roles, and print old entries without requiring a new table.
+Minimal regressions pass in 0.016s
+(`/tmp/abcgo-topand-repairs-focused.log`). Save these repairs at the requested
+commit interval while expanded native/semantic verification remains pending;
+original package completion stays 2/131 and the broader GIA audit is active.
