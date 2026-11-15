@@ -8452,3 +8452,34 @@ allocation policy without changing source node order, history or Boolean
 operations. Exact native/resource reruns and remeasurement are pending.
 Remove unused full-map helper/remapping code; use builtin max for abstraction.
 Full source reconciliation/reports and frozen integration remain open2/131.
+
+### Long history, exact reports and retained-register resets
+
+Add a twelve-register dependency chain with a twelve-cell PI history row.
+All source tables and objects match C through sixteen horizons;512 independently
+generated traces verify streamed properties beyond initial-state pipeline
+latency. Exact source convergence/frame/cleanup/prefix reports match after
+normalizing only clock values and the platform spelling of the same undefined
+NaN level average (/tmp/abcgo-frames-long-history-and-reports.log,3.656s).
+The initial strict report test was red solely on C(-nan) vs Go(NaN); preserve
+the numeric undefined value and normalize its spelling, not other report fields.
+
+Streaming growth repair passes all exact generated history/driver/prefix and
+resource checks7.720s (/tmp/abcgo-frames-streaming-repaired.log). At8/64/512
+horizons, original full-map benchmark measures13.869/103.176/866.198us,
+9120/63008/548128B and101/671/5164 allocations. Source scheduler after the hash
+repair measures18.960/113.593/997.118us,11588/56388/469844B and110/568/4165
+allocations (/tmp/abcgo-frames-benchmark-growth.log). These are single-run
+measurements on one graph; retain source fidelity and document constructor
+cost rather than claiming uniform speedup. Fixing the starvation improves the
+new512-horizon implementation from~3.97ms to~1.00ms. No persistent duplicate
+map/state or large unconditional hash reserve is added.
+
+A final metadata inspection finds that retained noninitialized registers lose
+their explicit Go reset cube. New twelve-case regression is red on [1,-1]
+becoming empty (/tmp/abcgo-frames-resets-red.log). Copy the unchanged ordered
+register initial states into owned storage after structural cleanup. This Go
+metadata extension does not alter C's default-zero cases or frame node order;
+explicit FInit still selects zero initialization, and combinational outputs have
+no latch state metadata. Final focused rerun and frozen full integration remain
+pending. Package completion2/131, GIA and timeframe review remain open.

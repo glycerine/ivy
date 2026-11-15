@@ -196,7 +196,11 @@ func Gia_ManFrames(src *Gia_Man_t, params *Gia_ParFra_t) *Gia_Man_t {
 		Gia_ManHashStop(q)
 	}
 	Gia_ManSetRegNum(q, src.nRegs)
-	return giaFramesCleanup(q, params.FVerbose)
+	out := giaFramesCleanup(q, params.FVerbose)
+	// These are the same logical registers, with a multi-frame transition.
+	// Preserve Go's explicit reset cube after any structural cleanup.
+	out.aigerLatchInits = append([]int32(nil), src.aigerLatchInits...)
+	return out
 }
 
 // Gia_ManFramesInitSpecial returns state after the longest completed prefix

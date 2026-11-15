@@ -40,8 +40,13 @@ static Gia_Man_t *directed_prefix_graph(int kind){Gia_Man_t *g=Gia_ManStart(8);i
 static void directed_prefixes(void){int kind,bound;Gia_Man_t *g,*q;for(kind=0;kind<5;++kind){bound=kind==0?0:kind==1?4:3;g=directed_prefix_graph(kind);q=Gia_ManFramesInitSpecial(g,bound,0);printf("directed %d bound%d\n",kind,bound);dump(q,"result");Gia_ManStop(q);Gia_ManStop(g);}}
 static void abs_power(void){Gia_Man_t *g=Gia_ManStart(8);int r=Gia_ManAppendCi(g);Vec_Ptr_t *out;struct rlimit limit={0,0};setrlimit(RLIMIT_CORE,&limit);Gia_ManAppendCo(g,r);Gia_ManAppendCo(g,r^1);Gia_ManSetRegNum(g,1);out=Gia_ManUnrollAbs(g,3);Vec_VecFree((Vec_Vec_t *)out);Gia_ManStop(g);}
 static void complete_save(void){Gia_Man_t *g=graph(),*q;Gia_ParFra_t p;struct rlimit limit={0,0};setrlimit(RLIMIT_CORE,&limit);Gia_ManFraSetDefaultParams(&p);p.nFrames=1;p.fSaveLastLit=1;q=Gia_ManUnroll(g,&p);Gia_ManStop(q);Gia_ManStop(g);}
+static void reports(void){int mode;Gia_ParFra_t p;Gia_Man_t *g,*q;repair_support=1;for(mode=0;mode<5;++mode){printf("report %d\n",mode);g=mode==4?directed_prefix_graph(1):live_init_graph();Gia_ManFraSetDefaultParams(&p);p.nFrames=3;p.fVerbose=1;if(mode==0)q=Gia_ManFrames2(g,&p);else if(mode==4){g->pName=Abc_UtilStrsav("prefix");q=Gia_ManFramesInitSpecial(g,4,1);}else{p.fInit=mode==1;p.fDisableSt=mode==2;p.fOrPos=mode==2;q=Gia_ManFrames(g,&p);}Gia_ManStop(q);Gia_ManStop(g);}}
+static Gia_Man_t *long_history_graph(void){Gia_Man_t *g=Gia_ManStart(64);int a=Gia_ManAppendCi(g),b=Gia_ManAppendCi(g),r[12],i;for(i=0;i<12;++i)r[i]=Gia_ManAppendCi(g);Gia_ManAppendCo(g,Gia_ManAppendAnd(g,a,r[0]));for(i=0;i<11;++i)Gia_ManAppendCo(g,Gia_ManAppendAnd(g,a,r[i+1]));Gia_ManAppendCo(g,b);Gia_ManSetRegNum(g,12);return g;}
+static void long_history(void){Gia_Man_t *g=long_history_graph(),*q;Gia_ParFra_t pars;Gia_ManUnr_t *p;int step;Gia_ManFraSetDefaultParams(&pars);pars.nFrames=16;pars.fSaveLastLit=1;p=(Gia_ManUnr_t *)Gia_ManUnrollStart(g,&pars);puts("long step0");history_snapshot(p);dump(p->pOrder,"ordered");for(step=1;step<=16;++step){q=(Gia_Man_t *)Gia_ManUnrollAdd(p,step);printf("long step%d lit%d\n",step,p->LastLit);history_snapshot(p);dump(q,"step");}q=p->pNew;Gia_ManUnrollStop(p);Gia_ManStop(q);Gia_ManStop(g);}
 int main(int argc,char **argv){Gia_Man_t *g=graph(),*q;Gia_ParFra_t p;Vec_Int_t *limits,*row;Vec_Ptr_t *abs;int i,j,id;
- if(argc>1 && !strcmp(argv[1],"--abs-power")){abs_power();}
+ if(argc>1 && !strcmp(argv[1],"--long-history")){long_history();}
+ else if(argc>1 && !strcmp(argv[1],"--reports")){reports();}
+ else if(argc>1 && !strcmp(argv[1],"--abs-power")){abs_power();}
  else if(argc>1 && !strcmp(argv[1],"--complete-save")){complete_save();}
  else if(argc>1 && !strcmp(argv[1],"--directed-special")){directed_prefixes();}
  else if(argc>1 && !strcmp(argv[1],"--generated-special")){generated_special();}
