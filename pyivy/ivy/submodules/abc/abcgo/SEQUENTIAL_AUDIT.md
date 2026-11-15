@@ -6646,3 +6646,37 @@ cut records and truth tables, merging/dominance/tie policies, reporting and
 compact scratch. Add red regressions before any bug fix. Existing giaCut_test.go
 has only a small merge/dominance and three-input truth sample; it does not
 establish completeness of this audit.
+
+### Stand-alone priority cut enumeration checkpoint
+
+Track the actual giaCut.c fixture and compare Go across 504 configurations:
+eight deterministic graphs with a full eight-input cone, sizes 2..8, limits
+2/10/50 and no-truth/unminimized/minimized modes. Exact graph structure,
+serialized cuts/order, counters, overflow counts, canonical function IDs and
+all stored truth words agree. Independently validate sorted/non-dominating cuts,
+74,951 truth functions over all actual eight-input completions and, without
+support minimization, every formal cut assignment
+(/tmp/abcgo-cut-enumeration-native.log, 2.686s). Core enumeration already agrees
+with source and does not need a replacement algorithm.
+
+Native report regressions fail on bracket/field padding and omitted source
+statistics/percentages/timing format (/tmp/abcgo-cut-reports-red.log). Restore
+both cut and public-driver reports. Keep zero-denominator statistics finite for
+empty interfaces rather than introducing C's undefined ratios; targeted boundary
+checks remain pending.
+
+Restore the source single-word truth path and three bounded four-word scratch
+arrays instead of allocating input copies and a result on every composition.
+All Cut-focused tests, including the exact native matrix and old cut-replacement
+regressions, pass in 4.791s (/tmp/abcgo-cut-enumeration-repaired.log). Warm truth
+composition drops from 40B/five allocations to 24B/three at size four, and from
+160B/five allocations to 96B/three at size eight
+(/tmp/abcgo-cut-truth-before.log, /tmp/abcgo-cut-truth-after.log). Timings are
+approximately unchanged (840ns/3,103ns after versus 871ns/3,093ns before).
+Remaining allocation is in the shared truth-variable swaps; do not add a cache
+or duplicate the utility implementation in GIA.
+
+Save an integration-pending checkpoint before primitive merge/dominance/tie
+matrices, larger-ID signature collisions, typed XOR and rejected representation
+boundaries, truth-input ownership, empty statistics, and final race/vet checks.
+Original completion remains 2/131; GIA is still in progress.

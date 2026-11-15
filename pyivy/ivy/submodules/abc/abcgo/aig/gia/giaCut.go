@@ -171,12 +171,43 @@ func Gia_CutSetAddCut(cuts []*Gia_Cut_t, n, limit int32) int32 {
 	return min(n+1, limit-1)
 }
 func Gia_CutComputeTruth6(p *Gia_Sto_t, a, b *Gia_Cut_t, complA, complB int32, out *Gia_Cut_t, xor int32) int32 {
-	return Gia_CutComputeTruth(p, a, b, complA, complB, out, xor)
+	if p.nCutSize > 6 {
+		return Gia_CutComputeTruth(p, a, b, complA, complB, out, xor)
+	}
+	ta, tb := Gia_CutTruth(p, a)[0], Gia_CutTruth(p, b)[0]
+	if (a.iFunc&1)^complA != 0 {
+		ta = ^ta
+	}
+	if (b.iFunc&1)^complB != 0 {
+		tb = ^tb
+	}
+	ta = util.Abc_Tt6Expand(ta, a.pLeaves[:], int32(a.nLeaves), out.pLeaves[:], int32(out.nLeaves))
+	tb = util.Abc_Tt6Expand(tb, b.pLeaves[:], int32(b.nLeaves), out.pLeaves[:], int32(out.nLeaves))
+	result := ta & tb
+	if xor != 0 {
+		result = ta ^ tb
+	}
+	complement := int32(result & 1)
+	if complement != 0 {
+		result = ^result
+	}
+	old := out.nLeaves
+	if p.fTruthMin != 0 {
+		out.nLeaves = uint32(util.Abc_Tt6MinBase(&result, out.pLeaves[:], int32(out.nLeaves)))
+	}
+	id := vec.Vec_MemHashInsert(p.vTtMem, []uint64{result})
+	out.iFunc = int32(id<<1) | complement
+	return giaBool(out.nLeaves < old)
 }
 func Gia_CutComputeTruth(p *Gia_Sto_t, a, b *Gia_Cut_t, complA, complB int32, out *Gia_Cut_t, xor int32) int32 {
-	words := max(1, 1<<uint(max(0, int(p.nCutSize)-6)))
-	ta := append([]uint64(nil), Gia_CutTruth(p, a)...)
-	tb := append([]uint64(nil), Gia_CutTruth(p, b)...)
+	if p.nCutSize <= 6 {
+		return Gia_CutComputeTruth6(p, a, b, complA, complB, out, xor)
+	}
+	words := 1 << uint(p.nCutSize-6)
+	var scratch [3][GIA_MAX_TT_WORDS]uint64
+	ta, tb, result := scratch[0][:words], scratch[1][:words], scratch[2][:words]
+	copy(ta, Gia_CutTruth(p, a))
+	copy(tb, Gia_CutTruth(p, b))
 	if (a.iFunc&1)^complA != 0 {
 		for i := range ta {
 			ta[i] = ^ta[i]
@@ -189,7 +220,6 @@ func Gia_CutComputeTruth(p *Gia_Sto_t, a, b *Gia_Cut_t, complA, complB int32, ou
 	}
 	util.Abc_TtExpand(ta, max(6, p.nCutSize), a.pLeaves[:], int32(a.nLeaves), out.pLeaves[:], int32(out.nLeaves))
 	util.Abc_TtExpand(tb, max(6, p.nCutSize), b.pLeaves[:], int32(b.nLeaves), out.pLeaves[:], int32(out.nLeaves))
-	result := make([]uint64, words)
 	for i := range result {
 		if xor != 0 {
 			result[i] = ta[i] ^ tb[i]
@@ -283,7 +313,15 @@ func Gia_CutPrint(p *Gia_Sto_t, id int32, cut *Gia_Cut_t) {
 		fmt.Println("No cut.")
 		return
 	}
-	fmt.Printf("%d  %v  Cost = %3d  CostL = %3d  Tree = %d\n", cut.nLeaves, cut.pLeaves[:cut.nLeaves], cut.Cost, cut.CostLev, cut.nTreeLeaves)
+	digits := int(util.Abc_Base10Log(uint32(p.pGia.nObjs)))
+	fmt.Printf("%d  {", cut.nLeaves)
+	for _, leaf := range cut.pLeaves[:cut.nLeaves] {
+		fmt.Printf(" %*d", digits, leaf)
+	}
+	for i := int32(cut.nLeaves); i < p.nCutSize; i++ {
+		fmt.Printf(" %*s", digits, "")
+	}
+	fmt.Printf("  }  Cost = %3d  CostL = %3d  Tree = %d  \n", cut.Cost, cut.CostLev, cut.nTreeLeaves)
 }
 
 func Gia_StoMergeCuts(p *Gia_Sto_t, id int32) {
@@ -373,6 +411,25 @@ func Gia_StoComputeCuts(g *Gia_Man_t) {
 		}
 	}
 	if p.fVerbose != 0 {
-		fmt.Printf("Running cut computation with CutSize = %d CutNum = %d\nCutPair = %.0f Merge = %.0f Eval = %.0f Cut = %.0f\nThe number of nodes with cut count over the limit = %d. Time: %s\n", p.nCutSize, p.nCutNum, p.CutCount[0], p.CutCount[1], p.CutCount[2], p.CutCount[3], p.nCutsOver, time.Since(p.clkStart))
+		yesno := func(flag int32) string {
+			if flag != 0 {
+				return "yes"
+			}
+			return "no"
+		}
+		percent := func(count float64) float64 {
+			if p.CutCount[0] == 0 {
+				return 0
+			}
+			return 100 * count / p.CutCount[0]
+		}
+		nodes := Gia_ManAndNum(g)
+		perNode := float64(0)
+		if nodes != 0 {
+			perNode = p.CutCount[3] / float64(nodes)
+		}
+		fmt.Printf("Running cut computation with CutSize = %d  CutNum = %d  CutMin = %s  TruthMin = %s\n", p.nCutSize, p.nCutNum, yesno(p.fCutMin), yesno(p.fTruthMin))
+		fmt.Printf("CutPair = %.0f  Merge = %.0f (%.2f %%)  Eval = %.0f (%.2f %%)  Cut = %.0f (%.2f %%)  Cut/Node = %.2f  \n", p.CutCount[0], p.CutCount[1], percent(p.CutCount[1]), p.CutCount[2], percent(p.CutCount[2]), p.CutCount[3], percent(p.CutCount[3]), perNode)
+		fmt.Printf("The number of nodes with cut count over the limit (%d cuts) = %d nodes (out of %d).  Time =%9.2f sec\n", p.nCutNum, p.nCutsOver, nodes, time.Since(p.clkStart).Seconds())
 	}
 }
