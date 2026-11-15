@@ -359,7 +359,9 @@ func If_ObjPerformMappingAnd(p *If_Man_t, pObj *If_Obj_t, Mode int32, fPreproces
 								Vec_StrPush(p.vTtPerms[pCut.nLeaves], IF_BIG_CHAR)
 							}
 						}
-						iCutDsd = If_DsdManCompute(p.pIfDsdMan, ifMapTruth64(p, pCut), int32(pCut.nLeaves), If_CutDsdPerm(p, pCut), p.pPars.PLutStruct)
+						// The cache is keyed by the regular truth ID. Cut polarity is
+						// applied by If_CutDsdLit, as with C's If_CutTruthWR here.
+						iCutDsd = If_DsdManCompute(p.pIfDsdMan, ifTruthRead(p, pCut, pCut.iCutFunc), int32(pCut.nLeaves), If_CutDsdPerm(p, pCut), p.pPars.PLutStruct)
 						Vec_IntWriteEntry(p.vTtDsds[pCut.nLeaves], int(truthId), iCutDsd)
 					}
 					assert(If_DsdManSuppSize(p.pIfDsdMan, If_CutDsdLit(p, pCut)) == int32(pCut.nLeaves), "If_DsdManSuppSize(p.pIfDsdMan, If_CutDsdLit(p, pCut)) == int32(pCut.nLeaves)")
