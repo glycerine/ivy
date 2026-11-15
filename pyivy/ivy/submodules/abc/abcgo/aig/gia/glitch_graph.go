@@ -1,6 +1,9 @@
 package gia
 
-import "fmt"
+import (
+	"fmt"
+	"unsafe"
+)
 
 // Gli_Obj_t uses stable object handles and Go-owned fanin/fanout slices.
 type Gli_Obj_t struct {
@@ -78,7 +81,7 @@ func Gli_ManStop(p *Gli_Man_t) {
 }
 func Gli_ManPrintObjects(p *Gli_Man_t) {
 	for _, o := range p.objects {
-		fmt.Printf("Node %d\nFanins: ", o.Handle)
+		fmt.Printf("Node %d \nFanins: ", o.Handle)
 		for _, f := range o.fanins {
 			fmt.Printf("%d ", f.Handle)
 		}
@@ -94,7 +97,10 @@ func Gli_ManFinalize(p *Gli_Man_t) {
 		if int32(len(o.fanins)) != o.nFanins || int32(len(o.fanouts)) != o.nFanouts {
 			panic("glitch: incomplete fanin/fanout links")
 		}
+		// C reuses the construction counters as activity counters through unions.
+		// Reset both representations when starting a new simulation.
 		o.iFanin, o.iFanout = 0, 0
+		o.nSwitches, o.nGlitches = 0, 0
 	}
 }
 func Gli_ObjAddFanin(o, fanin *Gli_Obj_t) {
@@ -161,3 +167,13 @@ func Gli_ManCreateNode(p *Gli_Man_t, fanins *Vec_Int_t, fanouts int32, truth []w
 }
 func Gli_ObjNumSwitches(p *Gli_Man_t, id int32) int32 { return Gli_ManObj(p, id).nSwitches }
 func Gli_ObjNumGlitches(p *Gli_Man_t, id int32) int32 { return Gli_ManObj(p, id).nGlitches }
+
+// Match C's scope (graph storage, excluding external truth tables and work
+// vectors) while accounting for Go objects and slice backing arrays.
+func gliMemoryUsage(p *Gli_Man_t) uintptr {
+	bytes := uintptr(len(p.objects))*unsafe.Sizeof(Gli_Obj_t{}) + uintptr(cap(p.objects))*unsafe.Sizeof((*Gli_Obj_t)(nil))
+	for _, o := range p.objects {
+		bytes += uintptr(cap(o.fanins)+cap(o.fanouts)) * unsafe.Sizeof((*Gli_Obj_t)(nil))
+	}
+	return bytes
+}

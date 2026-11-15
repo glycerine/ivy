@@ -8880,3 +8880,19 @@ Race handle12730 and vet handle12790 both terminate exit0; vet log is empty.
 Full log /tmp/abcgo-gig-final-module-race.log; vet /tmp/abcgo-gig-final-vet.log.
 No agents/branches. This closes only the source family; GIA remains open and
 original package audit remains2/131. Read-only next preparation: giaGlitch.c.
+
+### Glitch simulation review begins with activity reset repair
+
+Review all24 active graph/simulation routines plus inline accessors in
+giaGlitch.c. New red tests expose stale switch/glitch counts: Go separated C's
+construction/activity unions but finalize did not reset activity. Repair the
+reset; retain source phases and scheduling. Actual C fixture matches104 full
+state/RNG traces after repair. New red object/verbose report tests precede
+source formatting restoration; Go memory reporting counts Go graph storage.
+
+Expanded focused suite passes9.504s without skips:40 native random-word streams,
+1,046 scalar/packed tables, independent sequential prefixes, existing pulse,
+validation-independent lifetime groundwork and explicit wide-fanin safety
+extension checks. See REVIEW_glitch_simulation.md for exact regression logs and
+source defects. Save a coherent red checkpoint; validation/compactness and full
+integration are still pending. GIA/original2of131 audit remain open.

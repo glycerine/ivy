@@ -2,7 +2,7 @@ package gia
 
 import (
 	"fmt"
-	"time"
+	"github.com/glycerine/abcgo/misc/util"
 )
 
 func gliFlip(p *Gli_Man_t, o *Gli_Obj_t) {
@@ -177,7 +177,7 @@ func Gli_ManSetPiRandomSeq(p *Gli_Man_t, prob float32) {
 	}
 }
 func Gli_ManSwitchesAndGlitches(p *Gli_Man_t, patterns int32, prob float32, verbose int32) {
-	start := time.Now()
+	start := util.Abc_Clock()
 	Gia_ManRandom(1)
 	Gli_ManFinalize(p)
 	if p.nRegs == 0 {
@@ -199,6 +199,7 @@ func Gli_ManSwitchesAndGlitches(p *Gli_Man_t, patterns int32, prob float32, verb
 		}
 	}
 	if verbose != 0 {
-		fmt.Printf("Simulated %d patterns. Input transition probability %.2f. Time %s\n", patterns, prob, time.Since(start))
+		fmt.Printf("Simulated %d patterns.  Input transition probability %.2f.  Memory =%10.3f MB  ", patterns, prob, float64(gliMemoryUsage(p))/(1<<20))
+		util.Abc_PrintTime(1, "Time", util.Abc_Clock()-start)
 	}
 }
