@@ -2,6 +2,7 @@ package gia
 
 import (
 	"fmt"
+
 	"github.com/glycerine/abcgo/bool/bdc"
 )
 
@@ -16,60 +17,73 @@ func giaBidecTruthWords(storage *Vec_Int_t, offset, words int) []uint32 {
 	}
 	return result
 }
+
+// Offsets survive recursive growth of the signed scratch vector. Only the
+// public result is copied to uint32 storage, so callers own it independently.
 func Gia_ManConvertAigToTruth_rec(p *Gia_Man_t, obj *Gia_Obj_t, storage *Vec_Int_t, words int32, visited *Vec_Int_t) []uint32 {
 	if Gia_IsComplement(obj) != 0 {
 		panic("gia: truth recursion expects regular object")
 	}
+	offset := giaBidecTruthOffset(p, obj, storage, int(words), visited)
+	if offset < 0 {
+		return make([]uint32, words)
+	}
+	return giaBidecTruthWords(storage, offset, int(words))
+}
+func giaBidecReadWord(storage []int32, offset, word int, lit int32) uint32 {
+	var value uint32
+	if offset >= 0 {
+		value = uint32(storage[offset+word])
+	}
+	if lit&1 != 0 {
+		return ^value
+	}
+	return value
+}
+func giaBidecTruthOffset(p *Gia_Man_t, obj *Gia_Obj_t, storage *Vec_Int_t, words int, visited *Vec_Int_t) int {
 	if index := Vec_IntGetEntryFull(p.vTruths, int(obj.id)); index != -1 {
-		return giaBidecTruthWords(storage, int(words*index), int(words))
+		return words * int(index)
 	}
 	if obj.id == 0 {
-		return make([]uint32, words)
+		return -1
 	}
 	a, b, c, kind := p.Gate(obj.id)
 	if kind == 1 {
 		panic("gia: truth cut does not cover input")
 	}
-	literal := func(lit int32) []uint32 {
-		truth := Gia_ManConvertAigToTruth_rec(p, p.pObjs[lit>>1], storage, words, visited)
-		if lit&1 != 0 {
-			for i := range truth {
-				truth[i] = ^truth[i]
-			}
-		}
-		return truth
-	}
-	left := literal(a)
-	var right, control []uint32
+	offset0 := giaBidecTruthOffset(p, p.pObjs[a>>1], storage, words, visited)
+	offset1, offset2 := -1, -1
 	if kind == 2 || kind == 3 || kind == 4 {
-		right = literal(b)
+		offset1 = giaBidecTruthOffset(p, p.pObjs[b>>1], storage, words, visited)
 	}
 	if kind == 4 {
-		control = left
-		left, right = right, literal(c)
+		offset2 = giaBidecTruthOffset(p, p.pObjs[c>>1], storage, words, visited)
 	}
-	result := make([]uint32, words)
+	offset := Vec_IntSize(storage)
+	Vec_IntFillExtra(storage, offset+words, 0)
+	// Reacquire the array after all recursion and growth, avoiding stale views.
+	data := Vec_IntArray(storage)
+	result := data[offset : offset+words]
 	for i := range result {
+		x := giaBidecReadWord(data, offset0, i, a)
+		var value uint32
 		switch kind {
 		case 2:
-			result[i] = left[i] & right[i]
+			value = x & giaBidecReadWord(data, offset1, i, b)
 		case 3:
-			result[i] = left[i] ^ right[i]
+			value = x ^ giaBidecReadWord(data, offset1, i, b)
 		case 4:
-			result[i] = control[i]&left[i] | ^control[i]&right[i]
+			value = x&giaBidecReadWord(data, offset1, i, b) | ^x&giaBidecReadWord(data, offset2, i, c)
 		case 5, 6:
-			result[i] = left[i]
+			value = x
 		default:
 			panic("gia: invalid truth gate")
 		}
+		result[i] = int32(value)
 	}
-	index := Vec_IntSize(visited)
-	for _, word := range result {
-		Vec_IntPush(storage, int32(word))
-	}
-	Vec_IntSetEntry(p.vTruths, int(obj.id), int32(index))
+	Vec_IntSetEntry(p.vTruths, int(obj.id), int32(Vec_IntSize(visited)))
 	Vec_IntPush(visited, obj.id)
-	return result
+	return offset
 }
 func Gia_ManConvertAigToTruth(p *Gia_Man_t, root *Gia_Obj_t, leaves, storage, visited *Vec_Int_t) []uint32 {
 	variables := Vec_IntSize(leaves)
@@ -85,6 +99,7 @@ func Gia_ManConvertAigToTruth(p *Gia_Man_t, root *Gia_Obj_t, leaves, storage, vi
 	}
 	Vec_IntClear(storage)
 	Vec_IntClear(visited)
+	elementary := [...]uint32{0xaaaaaaaa, 0xcccccccc, 0xf0f0f0f0, 0xff00ff00, 0xffff0000}
 	for variable, id := range Vec_IntArray(leaves) {
 		if id <= 0 || id >= p.nObjs {
 			panic("gia: invalid cut leaf")
@@ -92,10 +107,10 @@ func Gia_ManConvertAigToTruth(p *Gia_Man_t, root *Gia_Obj_t, leaves, storage, vi
 		index := Vec_IntSize(visited)
 		for word := 0; word < words; word++ {
 			var pattern uint32
-			for bit := 0; bit < 32; bit++ {
-				if (word*32+bit)&(1<<uint(variable)) != 0 {
-					pattern |= 1 << uint(bit)
-				}
+			if variable < 5 {
+				pattern = elementary[variable]
+			} else if word&(1<<uint(variable-5)) != 0 {
+				pattern = ^uint32(0)
 			}
 			Vec_IntPush(storage, int32(pattern))
 		}
@@ -149,8 +164,12 @@ func Gia_ObjPerformBidec(manager *Bdc_Man_t, dst, src *Gia_Man_t, root *Gia_Obj_
 }
 func Gia_ManPerformBidec(src *Gia_Man_t, verbose int32) *Gia_Man_t {
 	maximum := Gia_ManLutSizeMax(src)
-	if maximum < 2 || maximum > 15 {
-		fmt.Printf("Resynthesis requires LUTs with 2 to 15 inputs.\n")
+	if maximum < 2 {
+		fmt.Println("Resynthesis is not performed when nodes have less than 2 inputs.")
+		return nil
+	}
+	if maximum > 15 {
+		fmt.Println("Resynthesis is not performed when nodes have more than 15 inputs.")
 		return nil
 	}
 	manager := bdc.Bdc_ManAlloc(&bdc.Bdc_Par_t{NVarsMax: maximum, FVerbose: verbose})
@@ -178,6 +197,9 @@ func Gia_ManPerformBidec(src *Gia_Man_t, verbose int32) *Gia_Man_t {
 	Gia_ManSetRegNum(dst, src.nRegs)
 	giaCopyInterfaceMetadata(dst, src)
 	result := Gia_ManCleanup(dst)
+	if Gia_ManAndNum(result) != Gia_ManAndNum(dst) {
+		fmt.Printf("Gia_ManPerformBidec() node count before and after: %6d and %6d.\n", Gia_ManAndNum(dst), Gia_ManAndNum(result))
+	}
 	Gia_ManStop(dst)
 	return result
 }

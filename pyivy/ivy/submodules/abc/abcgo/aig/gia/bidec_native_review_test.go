@@ -104,3 +104,53 @@ func TestBidecTruthMatchesOriginalABCThrough15Inputs(t *testing.T) {
 	}
 	t.Logf("%d native cut-truth cases across widths0..15, phases, leaf permutations, variable and constant roots", cases)
 }
+
+func TestBidecMappedResultsMatchOriginalABC(t *testing.T) {
+	exe := compileGiaSourceOracle(t, "bidec_truth.c")
+	native, err := exec.Command(exe, "resynthesis").CombinedOutput()
+	if err != nil {
+		t.Fatalf("native resynthesis: %v\n%s", err, native)
+	}
+	var got strings.Builder
+	cases, rows := 0, 0
+	for n := 2; n <= 8; n++ {
+		for signs := 0; signs < 4; signs++ {
+			g := bidecReviewGraph(n, signs)
+			Gia_ManAppendCo(g, bidecReviewRoot(g, 1))
+			Gia_ManAppendCo(g, Gia_ObjToLit(g, Gia_ManCi(g, 0))^int32(signs&1))
+			Gia_ManSetRegNum(g, 1)
+			bidecReviewInstallMapping(g)
+			out := Gia_ManPerformBidec(g, 0)
+			fmt.Fprintf(&got, "resynthesis %d %d %d %d %d", n, signs, Gia_ManCiNum(out), Gia_ManCoNum(out), out.nRegs)
+			for mask := 0; mask < 1<<n; mask++ {
+				inputs := make([]bool, n)
+				for i := range inputs {
+					inputs[i] = mask>>i&1 != 0
+				}
+				want, err := g.Evaluate(inputs)
+				if err != nil {
+					t.Fatal(err)
+				}
+				checkQuantificationOutputs(t, out, inputs, want)
+				values, err := out.Evaluate(inputs)
+				if err != nil {
+					t.Fatal(err)
+				}
+				packed := 0
+				for i, value := range values {
+					if value {
+						packed |= 1 << i
+					}
+				}
+				fmt.Fprintf(&got, " %d", packed)
+				rows++
+			}
+			got.WriteByte('\n')
+			cases++
+		}
+	}
+	if got.String() != string(native) {
+		t.Fatalf("mapped bidec interface/truth differs\nGo:\n%s\nC:\n%s", got.String(), native)
+	}
+	t.Logf("%d source resynthesis cases with sequential interface, %d truth rows; backend topology is not asserted", cases, rows)
+}

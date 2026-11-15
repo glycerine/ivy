@@ -5652,3 +5652,39 @@ copies dominate allocation; elementary variable generation also loops over each
 truth bit. Save a red checkpoint before reducing copies while preserving
 independently owned public results. Full integration is pending. Original
 completion remains 2/131, GIA and sequential audit active.
+
+Cut truth now uses signed-vector offsets internally instead of allocating and
+copying each fanin table and each intermediate result. Offsets survive recursive
+vector growth; reacquire the backing array only after all recursion/reservation.
+Read edge phases while combining words, retaining uncomplemented cached tables.
+Copy only at the public uint32 return boundary, preserving independent ownership.
+No unsafe alias is added. Elementary variables use five repeated word patterns
+and word-index bits for wider inputs, following the source table construction.
+
+All 768 native width cases still agree. Another 80 typed/phase/permutation/width
+cases check 277,368 assignments, shared opposite-phase fanouts, MUX controls,
+buffers and independently owned results after later queries, result mutation
+and scratch writes. Explicit constant fanins and coincident simple edges also
+pass. Internal gate cuts stop at the supplied boundary; a mapped 15-input AND
+passes all 32,768 assignments. Reversed ports, sequential resets/properties,
+identity/name ownership and source mark preservation pass 64 mapped cases,
+1,024 truth rows directly and after serialization. Native end-to-end C
+resynthesis agrees on sequential interfaces and 2,032 truth rows across 28
+cases; this does not claim exact BDC backend topology or complete BDC review.
+
+Warmed queries now allocate just their public result: width5 4B/1 allocation,
+width10 128B/1, width15 4,096B/1, versus 68B/17, 5,504B/43, 266,293B/65 before.
+The isolated 100-call after benchmark measures 388ns / 3,545ns / 140,932ns
+respectively (/tmp/abcgo-bidec-benchmark-after.log). Timing varies: an earlier
+focused width5 run was 906.5ns versus the 726ns baseline, while wider cases
+improved. Allocation counts are the clear result, not a universal timing claim.
+
+Two additional red diagnostic checks restore the original separate messages
+for fewer than two and more than fifteen LUT inputs, and the before/after AND
+count when cleanup removes dangling mapped nodes. Red evidence is in
+/tmp/abcgo-bidec-limit-red.log and /tmp/abcgo-bidec-cleanup-red.log. Rejections
+return nil without changing copy data or initializing scratch; successful
+cleanup preserves truth. All focused Bidec checks pass in 3.856s
+(/tmp/abcgo-bidec-final-focused.log). Save a red integration checkpoint and
+freeze source/tests/native fixtures for full uncached module race tests and
+GIA vet. Original completion stays 2/131; GIA and the audit remain active.
