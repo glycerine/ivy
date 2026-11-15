@@ -5256,3 +5256,20 @@ not claimed as supported native behavior. The transition matrix passes in
 production bug or useful simplification was found. Save a red checkpoint
 pending full module race tests and GIA vet. Original completion stays 2/131;
 GIA and the sequential audit remain active.
+
+State-flip/cycle integration is green: full uncached module race tests pass
+all 130 tested packages, with three command packages without tests and no
+failure/race diagnostic lines (`/tmp/abcgo-state-cycle-module-race.log`).
+GIA passes in 241.527s, ABCI in 29.428s and BMC in 24.201s. GIA vet passes
+(`/tmp/abcgo-state-cycle-vet.log`). Production repair and expanded regression/
+native/transition coverage are saved in f54e87a44. Source/tests/fixture stayed
+unchanged during integration.
+
+This completes the reviewed dup_seq.go family: Flip preserves the logical
+interface with its intentional signed CI copy map, while Cycle/DupCycled
+retain source replay/random-input and scratch-state behavior. Native ordinary
+normalized cases agree exactly; typed/interleaved extensions satisfy the
+independent coordinate/transition checks. Continue reconciling the remaining
+GIA inventory, including giaHash.go functions outside the previously reviewed
+Gia_ManRehash path. Original completion stays 2/131; GIA and the full
+sequential audit remain active.
