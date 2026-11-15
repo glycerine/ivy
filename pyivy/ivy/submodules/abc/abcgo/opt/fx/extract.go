@@ -3,6 +3,8 @@ package fx
 import (
 	"fmt"
 	"slices"
+
+	"github.com/glycerine/abcgo/misc/vec"
 )
 
 // Options controls the classical cube divisor extraction.
@@ -12,68 +14,77 @@ type Options struct {
 	CanonicalOnly bool
 }
 
-// Extract repeatedly chooses the highest positive-weight divisor and rewrites
-// its occurrences. It returns independently owned cubes and the number of new
-// nodes. This implementation rebuilds the candidate catalog after each step;
-// its priority tie-breaking and levels may differ from ABC's incremental queue.
+// Extract runs abcFx.c's incremental fast-extract matrix and priority queue.
+// It returns independently owned cubes and the number of newly defined nodes.
+// MaxNewNodes bounds selected divisors, including simplifications which do not
+// introduce a node, as in the original C loop. The existing Go API also
+// removes duplicate/absorbed input cubes before starting the C engine; native
+// Fx_FastExtract can assert on such redundant covers. Irredundant inputs pass
+// through unchanged.
 func Extract(cubes [][]int32, nVars int32, options Options) ([][]int32, int32, error) {
-	if options.MaxNewNodes < 0 || options.LiteralLimit < 0 {
-		return nil, 0, fmt.Errorf("fx: negative extraction limit")
+	if options.MaxNewNodes < 0 || options.LiteralLimit < 0 || nVars < 0 {
+		return nil, 0, fmt.Errorf("fx: negative extraction limit or variable count")
 	}
-	current := make([][]int32, len(cubes))
-	for i := range cubes {
-		current[i] = slices.Clone(cubes[i])
+	if len(cubes) == 0 {
+		return nil, 0, nil
 	}
-	current = removeContained(current)
-	var created int32
-	// A simplification can remove pairs without creating a node, so the
-	// source's iteration bound counts selected divisors rather than nodes.
-	for iteration := int32(0); iteration < options.MaxNewNodes; iteration++ {
-		catalog, contained, err := Catalog(current, nVars, options.LiteralLimit, options.CanonicalOnly)
-		if err != nil {
-			return nil, created, err
+	p := &extraction{options: options, ids: make(map[string]int), first: make([]int, nVars), levels: make([]int32, nVars), lits: make([][]int, 2*nVars), marked: make([]bool, len(cubes))}
+	for i := range p.first {
+		p.first[i] = -1
+	}
+	lastOwner := int32(-1)
+	for i, cube := range cubes {
+		if len(cube) == 0 || cube[0] < 0 || cube[0] >= nVars || cube[0] < lastOwner {
+			return nil, 0, fmt.Errorf("fx: invalid cube owner at %d", i)
 		}
-		best := -1
-		for i := range catalog {
-			if catalog[i].Weight > 0 && (best < 0 || catalog[i].Weight > catalog[best].Weight) {
-				best = i
+		for j, lit := range cube[1:] {
+			if lit < 0 || lit>>1 >= nVars || j > 0 && lit <= cube[j] {
+				return nil, 0, fmt.Errorf("fx: invalid literal in cube %d", i)
 			}
 		}
-		if best < 0 {
-			break
+		p.cubes = append(p.cubes, slices.Clone(cube))
+		lastOwner = cube[0]
+	}
+	p.cubes = removeContained(p.cubes)
+	for i, cube := range p.cubes {
+		if p.first[cube[0]] < 0 {
+			p.first[cube[0]] = i
 		}
-		next, added, err := ApplyDivisor(current, catalog[best].Literals, nVars)
-		if err != nil {
-			return nil, created, err
-		}
-		// Containment recorded before a rewrite may refer to removed or moved
-		// cubes. Recompute it on the new covers before deleting redundant cubes.
-		if len(contained) != 0 {
-			_, redundant, problem := Catalog(next, nVars+boolInt(added), options.LiteralLimit, options.CanonicalOnly)
-			if problem != nil {
-				return nil, created, problem
-			}
-			if len(redundant) > 0 {
-				marked := make([]bool, len(next))
-				for _, i := range redundant {
-					marked[i] = true
-				}
-				kept := make([][]int32, 0, len(next))
-				for i, cube := range next {
-					if !marked[i] {
-						kept = append(kept, cube)
-					}
-				}
-				next = kept
-			}
-		}
-		current = next
-		if added {
-			created++
-			nVars++
+		for _, lit := range cube[1:] {
+			p.lits[lit] = append(p.lits[lit], i)
 		}
 	}
-	return current, created, nil
+	owner, first := p.cubes[0][0], 0
+	for i, cube := range p.cubes {
+		if cube[0] != owner {
+			p.levels[owner] += int32(i - first)
+			owner, first = cube[0], i
+		}
+		p.levels[owner] = max(p.levels[owner], p.level(cube))
+	}
+	for i := range p.cubes {
+		p.singles(i, false, false)
+	}
+	for i := range p.cubes {
+		if err := p.doubles(i+1, i, false, false); err != nil {
+			return nil, 0, err
+		}
+	}
+	p.queue = vec.Vec_QueAlloc(len(p.weights))
+	vec.Vec_QueSetPriority(p.queue, &p.weights)
+	defer vec.Vec_QueFree(p.queue)
+	for id, weight := range p.weights {
+		if weight > 0 {
+			vec.Vec_QuePush(p.queue, id)
+		}
+	}
+	for i := int32(0); i < options.MaxNewNodes && vec.Vec_QueTopPriority(p.queue) > 0; i++ {
+		if err := p.update(vec.Vec_QuePop(p.queue)); err != nil {
+			return nil, 0, err
+		}
+	}
+	p.cubes = slices.DeleteFunc(p.cubes, func(cube []int32) bool { return len(cube) == 0 })
+	return p.cubes, int32(len(p.first)) - nVars, nil
 }
 
 // removeContained keeps a single copy of each cube and removes terms that
@@ -122,11 +133,4 @@ func isLiteralSubset(a, b []int32) bool {
 		j++
 	}
 	return i == len(a)
-}
-
-func boolInt(v bool) int32 {
-	if v {
-		return 1
-	}
-	return 0
 }

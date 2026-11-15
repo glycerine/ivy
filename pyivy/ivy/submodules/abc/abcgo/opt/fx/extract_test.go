@@ -137,3 +137,53 @@ func evalFxOwners(cubes [][]int32, inputs int) (map[int32]bool, error) {
 	}
 	return values, nil
 }
+
+func TestExtractIncrementalQueueSourceOrder(t *testing.T) {
+	input := [][]int32{
+		{6, 0, 3, 4}, {6, 1, 3, 5}, {6, 0, 2, 4}, {6, 1, 2, 5},
+		{7, 1, 3, 5}, {7, 0, 3, 4}, {7, 1, 2, 4}, {7, 0, 2, 4},
+	}
+	got, count, err := Extract(input, 8, Options{MaxNewNodes: 3})
+	// Captured from actual Fx_FastExtract in src/base/abci/abcFx.c.
+	want := [][]int32{{6, 16}, {7, 3, 16}, {7, 2, 4}, {8, 0, 4}, {8, 1, 5}}
+	if err != nil || count != 1 || !reflect.DeepEqual(got, want) {
+		t.Fatalf("got%v count%d err%v; want%v count1", got, count, err, want)
+	}
+}
+
+func TestExtractContainedRowsMayAlreadyBeDeleted(t *testing.T) {
+	input := [][]int32{
+		{4, 0, 2, 4, 6}, {4, 0, 2, 7}, {4, 0, 7},
+		{5, 1, 3}, {5, 1, 3, 5}, {5, 1, 3, 4, 7},
+		{6, 1, 3, 5, 6}, {6, 5, 6}, {6, 0, 5},
+		{7, 2, 5}, {7, 3, 4, 7}, {7, 4, 6},
+	}
+	got, _, err := Extract(input, 8, Options{MaxNewNodes: 3})
+	if err != nil {
+		t.Fatal(err)
+	}
+	for inputBits := 0; inputBits < 16; inputBits++ {
+		before, err := evalFxOwners(input, inputBits)
+		if err != nil {
+			t.Fatal(err)
+		}
+		after, err := evalFxOwners(got, inputBits)
+		if err != nil {
+			t.Fatal(err)
+		}
+		for owner := int32(4); owner < 8; owner++ {
+			if before[owner] != after[owner] {
+				t.Fatalf("input%d owner%d", inputBits, owner)
+			}
+		}
+	}
+}
+
+func TestExtractNormalizesRedundantInputWithoutSelections(t *testing.T) {
+	input := [][]int32{{4, 0}, {4, 0, 2, 6}, {4, 0}, {5, 1, 3}}
+	got, count, err := Extract(input, 6, Options{})
+	want := [][]int32{{4, 0}, {5, 1, 3}}
+	if err != nil || count != 0 || !reflect.DeepEqual(got, want) {
+		t.Fatalf("got%v count%d err%v want%v", got, count, err, want)
+	}
+}

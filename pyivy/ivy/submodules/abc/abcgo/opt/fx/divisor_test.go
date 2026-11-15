@@ -95,3 +95,17 @@ func TestDivisorCubeUpdates(t *testing.T) {
 		t.Fatalf("owner was not preserved: removed %d from %v", n, cube)
 	}
 }
+
+func TestCubeFreeGeneralContainment(t *testing.T) {
+	for _, pair := range [][2][]int32{
+		{{5, 0}, {5, 0, 2, 6}},
+		{{5, 0, 2, 6}, {5, 0}},
+		{{5}, {5, 1, 3, 5, 7}},
+		{{5, 1, 3, 5, 7}, {5}},
+	} {
+		_, common, err := CubeFreeDivisor(pair[0], pair[1])
+		if err != nil || common != -1 {
+			t.Fatalf("%v: common%d err%v", pair, common, err)
+		}
+	}
+}

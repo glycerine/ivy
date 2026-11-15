@@ -38,7 +38,17 @@ func CubeFreeDivisor(first, second []int32) (divisor []int32, common int, err er
 	if len(divisor) == 0 {
 		return nil, common, fmt.Errorf("fx: duplicate cubes")
 	}
-	if len(divisor) == 1 {
+	// The C implementation recognizes containment only when one literal
+	// remains, and can assert when a larger contained cube is passed first.
+	// A remainder wholly from either input is containment regardless of size.
+	contained := true
+	for _, lit := range divisor[1:] {
+		if lit&1 != divisor[0]&1 {
+			contained = false
+			break
+		}
+	}
+	if contained {
 		return divisor, -1, nil
 	}
 	if len(divisor) == 3 {
