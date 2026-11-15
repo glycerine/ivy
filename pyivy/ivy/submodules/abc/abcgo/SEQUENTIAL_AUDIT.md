@@ -4014,3 +4014,54 @@ After consolidating the helper, full uncached race tests pass for GIA
 all-node-output review and completes the reviewed functions in dup_level.go.
 Other GIA families remain open; original package completion remains 2/131
 and the sequential audit remains active.
+
+Ordered-copy review follow-up: separate red tests confirm lost constraint
+classification in reverse DFS, AIGER-order copying and register abstraction,
+and valid simple-mode AND rejection in reverse/AIGER/abstraction/group/
+selected/presence-vector copying. Red logs are
+`/tmp/abcgo-ordered-constraints-red.log` and
+`/tmp/abcgo-ordered-simple-red.log`; the latter catches panics per subtest so
+all six failing paths are observed before the repair. Use giaDupMappedStart
+for common initialization, retaining identity, constant mapping, mux support
+and simple construction mode. Preserve nConstrs in reverse/AIGER copies and
+abstraction, whose original primary outputs and their roles are unchanged.
+Selected-output APIs retain their derived-interface constraint policy.
+Compiled original C reports `1 0 0 0 0` for source/DFS/reverse/AIGER/abstraction
+constraint counts: these repairs correct inherited metadata omissions.
+
+AIGER copying now follows C's direct topological loop using the existing
+mapped-node/output helpers, instead of routing every gate through DFS. It
+still retains dangling nodes. The shared initializer and direct loop remove
+38 net production lines without changing the traversal algorithms for DFS
+or abstraction.
+
+The three full ordered-copy methods are compared exactly against C across
+288 cases and 9,216 assignment rows: 32 polarities, zero/two/four registers,
+an unused CI appended after all COs, and interleaved gates/outputs. Compare
+complete object signatures, fanin literals, terminal ordinals, source Value
+mappings, interface counts and output Boolean formulas. The same checks
+run with real XOR/MUX/buffer nodes, original/DFS layouts and constraint
+counts zero/one: 2,304 cases and 73,728 rows. DFS removes dangling internal
+logic while AIGER copying preserves it. CI/CO vectors retain original order,
+and AIGER output is normalized. Typed cases use independent Boolean formulas;
+they do not claim the C AND-only routines support real gates.
+
+Nine further cases (72 rows) compare representative/next arrays with C,
+covering constant candidates, sequential interfaces, reverse traversal that
+changes the lowest-ID class head, and independent destination storage.
+Boundary cases cover empty/constant-only graphs, unused inputs, constant
+buffers and a register-only graph. The fixture is
+`aig/gia/test_vectors/ordered_copies.c`. Expanded native/Boolean/class checks
+pass in 1.952s (`/tmp/abcgo-ordered-final-focused.log`); the fifteen boundary
+cases were added subsequently and receive the final focused race check.
+GIA vet passes (`/tmp/abcgo-ordered-review-vet.log`).
+
+Full uncached race tests pass for GIA (104.973s), PDR (15.475s) and ABCI
+(28.828s), in `/tmp/abcgo-ordered-review-race.log`. The final focused race
+run, including all fifteen subsequently added boundaries, passes in 4.130s
+(`/tmp/abcgo-ordered-final-focused-race.log`); production code was unchanged
+between those checks. This closes the full DFS/reverse/AIGER copy review.
+Abstraction mapping validation and general output-selection behavior still
+need expanded review beyond the repaired construction/constraint metadata;
+other GIA families remain open. Original package completion stays 2/131 and
+the sequential audit remains active.

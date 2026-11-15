@@ -111,14 +111,7 @@ func Gia_ManDupOrderDfs_rec(dst, src *Gia_Man_t, obj *Gia_Obj_t) int32 {
 	return result
 }
 func Gia_ManDupOrderDfs(src *Gia_Man_t) *Gia_Man_t {
-	Gia_ManFillValue(src)
-	dst := Gia_ManStart(src.nObjs)
-	dst.CopyIdentityFrom(src)
-	dst.fGiaSimple = src.fGiaSimple
-	if src.PMuxes != nil {
-		dst.EnableMuxes()
-	}
-	src.pObjs[0].Value = 0
+	dst := giaDupMappedStart(src)
 	for i := int32(0); i < Gia_ManCoNum(src); i++ {
 		Gia_ManDupOrderDfs_rec(dst, src, Gia_ManCo(src, i))
 	}
@@ -138,13 +131,7 @@ func Gia_ManDupAbs(src *Gia_Man_t, ppiToFlop, flopToPpi *Vec_Int_t) *Gia_Man_t {
 	if vec.Vec_IntSize(flopToPpi) != int(Gia_ManRegNum(src)) {
 		panic("gia: invalid abstraction mapping")
 	}
-	Gia_ManFillValue(src)
-	dst := Gia_ManStart(src.nObjs)
-	dst.CopyIdentityFrom(src)
-	if src.PMuxes != nil {
-		dst.EnableMuxes()
-	}
-	src.pObjs[0].Value = 0
+	dst := giaDupMappedStart(src)
 	for i := int32(0); i < Gia_ManPiNum(src); i++ {
 		Gia_ManPi(src, i).Value = uint32(Gia_ManAppendCi(dst))
 	}
@@ -184,19 +171,14 @@ func Gia_ManDupAbs(src *Gia_Man_t, ppiToFlop, flopToPpi *Vec_Int_t) *Gia_Man_t {
 		obj.Value = uint32(Gia_ManAppendCo(dst, Gia_ObjFanin0Copy(obj)))
 	}
 	Gia_ManSetRegNum(dst, Gia_ManRegNum(src)-int32(vec.Vec_IntSize(ppiToFlop)))
+	dst.nConstrs = src.nConstrs
 	return dst
 }
 func Gia_ManDupOutputGroup(src *Gia_Man_t, start, stop int32) *Gia_Man_t {
 	if start < 0 || stop < start || stop > Gia_ManCoNum(src) {
 		panic("gia: invalid output range")
 	}
-	Gia_ManFillValue(src)
-	dst := Gia_ManStart(src.nObjs)
-	dst.CopyIdentityFrom(src)
-	if src.PMuxes != nil {
-		dst.EnableMuxes()
-	}
-	src.pObjs[0].Value = 0
+	dst := giaDupMappedStart(src)
 	for i := start; i < stop; i++ {
 		Gia_ManDupOrderDfs_rec(dst, src, Gia_ManCo(src, i))
 	}
@@ -218,13 +200,7 @@ func Gia_ManDupSelectedOutputs(src *Gia_Man_t, selected *Vec_Int_t) *Gia_Man_t {
 	if Gia_ManRegNum(src) != 0 {
 		panic("gia: selected outputs require a combinational graph")
 	}
-	Gia_ManFillValue(src)
-	dst := Gia_ManStart(src.nObjs)
-	dst.CopyIdentityFrom(src)
-	if src.PMuxes != nil {
-		dst.EnableMuxes()
-	}
-	src.pObjs[0].Value = 0
+	dst := giaDupMappedStart(src)
 	for i := int32(0); i < Gia_ManPiNum(src); i++ {
 		Gia_ManPi(src, i).Value = uint32(Gia_ManAppendCi(dst))
 	}
@@ -242,13 +218,7 @@ func Gia_ManDupSelectedOutputs(src *Gia_Man_t, selected *Vec_Int_t) *Gia_Man_t {
 }
 
 func Gia_ManDupOrderDfsReverse(src *Gia_Man_t) *Gia_Man_t {
-	Gia_ManFillValue(src)
-	dst := Gia_ManStart(src.nObjs)
-	dst.CopyIdentityFrom(src)
-	if src.PMuxes != nil {
-		dst.EnableMuxes()
-	}
-	src.pObjs[0].Value = 0
+	dst := giaDupMappedStart(src)
 	for i := Gia_ManCoNum(src); i > 0; i-- {
 		Gia_ManDupOrderDfs_rec(dst, src, Gia_ManCo(src, i-1))
 	}
@@ -262,29 +232,21 @@ func Gia_ManDupOrderDfsReverse(src *Gia_Man_t) *Gia_Man_t {
 	Gia_ManDupRemapCos(dst, src)
 	Gia_ManDupRemapEquiv(dst, src)
 	Gia_ManSetRegNum(dst, Gia_ManRegNum(src))
+	dst.nConstrs = src.nConstrs
 	return dst
 }
 func Gia_ManDupOrderAiger(src *Gia_Man_t) *Gia_Man_t {
-	Gia_ManFillValue(src)
-	dst := Gia_ManStart(src.nObjs)
-	dst.CopyIdentityFrom(src)
-	if src.PMuxes != nil {
-		dst.EnableMuxes()
-	}
-	src.pObjs[0].Value = 0
+	dst := giaDupMappedStart(src)
 	for i := int32(0); i < Gia_ManCiNum(src); i++ {
 		Gia_ManCi(src, i).Value = uint32(Gia_ManAppendCi(dst))
 	}
 	// Preserve even dangling nodes, as the C topological loop does.
-	for _, obj := range src.pObjs {
-		if Gia_ObjIsAnd(obj) != 0 {
-			Gia_ManDupOrderDfs_rec(dst, src, obj)
-		}
-	}
+	giaDupMappedNodes(dst, src)
 	for i := int32(0); i < Gia_ManCoNum(src); i++ {
-		Gia_ManDupOrderDfs_rec(dst, src, Gia_ManCo(src, i))
+		giaDupMappedOutput(dst, src, Gia_ManCo(src, i))
 	}
 	Gia_ManDupRemapEquiv(dst, src)
 	Gia_ManSetRegNum(dst, Gia_ManRegNum(src))
+	dst.nConstrs = src.nConstrs
 	return dst
 }
