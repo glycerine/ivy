@@ -6115,3 +6115,36 @@ with every mask independently checked against all possible input completions
 This is source workflow restoration, not acceptance of an alternative minimal
 implicant implementation. Full integration and the remaining wrapper/trace/
 storage checks are still pending; original completion remains 2/131.
+
+BMC now delegates to the shared GIA priority and ternary-verification routines;
+its full package tests pass in 8.049s (/tmp/abcgo-cex-bmc-shared.log), and the
+BMC-only consolidation is committed as 70bace4de. No duplicate priority algorithm
+remains there. Restore the distinct source Gia_ManMinCex diagnostic workflow,
+including reused assumption storage, numeric statuses and both final-core and
+LEXUNSAT reports; its report regression fails before repair
+(/tmp/abcgo-cex-wrapper-red.log) and passes afterward.
+
+A 37-frame care boundary test exposes missing final simplification in the new
+CNF adapter. The earlier guess of different output numbering was wrong: source
+Cnf_DataWriteIntoSolver calls sat_solver_simplify before adding the output
+clause. Restore that step. Both care effort modes, original diagnostic wrapper
+and all 2,032 native combinational masks pass (/tmp/abcgo-cex-simplify.log).
+
+Another 1,024 two-register signed/typed/logical-layout/initial-state traces agree
+with 37,888 independent scalar state rows, covering simultaneous register
+updates, failure truncation, dual outputs, complete extensions and packed probe
+word boundaries. Guard/reuse tests pass. A new malformed-witness allocation
+regression fails after allocating 5,113,528 bytes before rejecting inconsistent
+frame/bit dimensions (/tmp/abcgo-cex-probe-allocation-red.log). Extract the
+existing dimension validation and invoke it before probe allocation too; this
+repair is awaiting focused rerun.
+
+The extended sequential native minimizer fixture is currently red at a source
+assertion adding its negated output clause. Diagnostic preflight isolates
+transition table3, property14, two frames, seed0: the source's unrolled output
+literal is 1 even though its conservative priority mask is nonempty. Source
+asserts on that forced-true case. Preserve Go support with an explicit proof-based
+zero-care result and a regression, then compare all supported native cases and
+independently check Go's forced-true cases. Do not silently discard this source
+boundary. The sequential oracle and full integration remain pending; save this
+red checkpoint. Original completion remains 2/131.

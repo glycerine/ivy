@@ -89,25 +89,10 @@ func Bmc_CexCareSatBasedMinimizeAig(p *Gia_Man_t, cex *util.Abc_Cex_t, highEffor
 	if verbose != 0 {
 		fmt.Printf("Care bits = %d. Non-SAT-based CEX minimization = %.2f sec\n", countBest, time.Since(started).Seconds())
 	}
-	graph := Gia_ManFramesForCexMin(p, cex.IFrame+1)
-	defer Gia_ManStop(graph)
-	cnf := Mf_ManGenerateCnf(graph, 8, 0, 0, 0, 0)
-	if cnf == nil {
-		panic("gia: counterexample CNF generation failed")
-	}
-	solver := bsat.NewSolver()
+	started = time.Now()
+	solver, first, assumptions, negated := giaCexCareSATInstance(p, cex)
 	defer solver.Close()
-	solver.SetNumVars(int32(cnf.Variables))
-	for _, row := range cnf.Clauses {
-		clause := make([]bsat.Literal, len(row))
-		for i, lit := range row {
-			clause[i] = bsat.Literal(lit)
-		}
-		if !solver.AddClause(clause...) {
-			panic("gia: inconsistent counterexample CNF")
-		}
-	}
-	if !solver.AddClause(bsat.Negative(1)) {
+	if !negated {
 		// A constant-true output is a supported Go extension. The priority proof
 		// already establishes that no input assignments need to be retained.
 		if countBest == 0 {
@@ -115,14 +100,7 @@ func Bmc_CexCareSatBasedMinimizeAig(p *Gia_Man_t, cex *util.Abc_Cex_t, highEffor
 		}
 		panic("gia: counterexample output cannot be negated")
 	}
-	first := int32(cnf.Variables) - (cex.IFrame+1)*cex.NPis
-	assumptions := make([]bsat.Literal, cex.NBits-cex.NRegs)
-	for i := range assumptions {
-		assumptions[i] = bsat.Positive(first + int32(i))
-		if !util.Abc_InfoHasBit(cex.PData, cex.NRegs+int32(i)) {
-			assumptions[i] ^= 1
-		}
-	}
+
 	if verbose != 0 {
 		fmt.Printf("Constructing SAT solver = %.2f sec\n", time.Since(started).Seconds())
 	}
@@ -169,6 +147,71 @@ func Bmc_CexCareSatBasedMinimizeAig(p *Gia_Man_t, cex *util.Abc_Cex_t, highEffor
 	return best
 }
 
+// giaCexCareSATInstance uses source MF variable ordering: COs first, inputs last.
+func giaCexCareSATInstance(p *Gia_Man_t, cex *util.Abc_Cex_t) (*bsat.Solver, int32, []bsat.Literal, bool) {
+	graph := Gia_ManFramesForCexMin(p, cex.IFrame+1)
+	defer Gia_ManStop(graph)
+	cnf := Mf_ManGenerateCnf(graph, 8, 0, 0, 0, 0)
+	if cnf == nil {
+		panic("gia: counterexample CNF generation failed")
+	}
+	solver := bsat.NewSolver()
+	solver.SetNumVars(int32(cnf.Variables))
+	for _, row := range cnf.Clauses {
+		clause := make([]bsat.Literal, len(row))
+		for i, lit := range row {
+			clause[i] = bsat.Literal(lit)
+		}
+		if !solver.AddClause(clause...) {
+			panic("gia: inconsistent counterexample CNF")
+		}
+	}
+	// Cnf_DataWriteIntoSolver finishes with level-zero simplification before
+	// the caller adds its output assumption.
+	if !solver.Simplify() {
+		panic("gia: inconsistent counterexample CNF")
+	}
+	negated := solver.AddClause(bsat.Negative(1))
+	first := int32(cnf.Variables) - (cex.IFrame+1)*cex.NPis
+	assumptions := make([]bsat.Literal, cex.NBits-cex.NRegs)
+	for i := range assumptions {
+		assumptions[i] = bsat.Positive(first + int32(i))
+		if !util.Abc_InfoHasBit(cex.PData, cex.NRegs+int32(i)) {
+			assumptions[i] ^= 1
+		}
+	}
+	return solver, first, assumptions, negated
+}
+
 func Gia_ManMinCex(p *Gia_Man_t, cex *util.Abc_Cex_t) {
-	Bmc_CexCareSatBasedMinimizeAig(p, cex, 1, 1)
+	if Gia_ManVerifyCex(p, cex, 0) == 0 || cex.IPo != 0 || Gia_ManPoNum(p) != 1 {
+		panic("gia: expected a valid single-output counterexample")
+	}
+	for i := int32(0); i < cex.NRegs; i++ {
+		if util.Abc_InfoHasBit(cex.PData, i) {
+			panic("gia: expected zero initial state")
+		}
+	}
+	started := time.Now()
+	care := Gia_ManCexCareMinimize(p, Gia_ManPiNum(p), cex, 1, 1, 1)
+	fmt.Printf("Care bits = %d. CEX minimization = %.2f sec\n", util.Abc_CexCountOnes(care), time.Since(started).Seconds())
+	started = time.Now()
+	solver, _, lits, _ := giaCexCareSATInstance(p, cex)
+	defer solver.Close()
+	fmt.Printf("SAT solver = %.2f sec\n", time.Since(started).Seconds())
+	for pass := 0; pass < 2; pass++ {
+		if pass != 0 {
+			slices.Reverse(lits)
+		}
+		started = time.Now()
+		status := solver.Solve(lits...)
+		core := solver.UnsatCore()
+		if status != bsat.Unsatisfiable {
+			panic("gia: counterexample does not force output")
+		}
+		fmt.Printf("Status %d.  Selected %d assumptions out of %d.  Analyze_final = %.2f sec\n", status, len(core), len(lits), time.Since(started).Seconds())
+		started = time.Now()
+		count := solver.MinimizeAssumptions(lits, 0)
+		fmt.Printf("Status %d.  Selected %d assumptions out of %d.  LEXUNSAT = %.2f sec\n", status, count, len(lits), time.Since(started).Seconds())
+	}
 }

@@ -73,3 +73,87 @@ func TestCounterexampleCareWorkflowMatchesOriginalABC(t *testing.T) {
 	}
 	t.Logf("%d exact native care masks for both effort modes, independently checked for sufficiency", cases)
 }
+
+func TestCounterexampleSequentialCareMatchesOriginalABC(t *testing.T) {
+	exe := compileGiaSourceOracle(t, "cex_care_sequence.c")
+	native, err := exec.Command(exe).CombinedOutput()
+	if err != nil {
+		t.Fatalf("native sequential care: %v\n%s", err, native)
+	}
+	var expected, got strings.Builder
+	for _, line := range strings.Split(string(native), "\n") {
+		if strings.HasPrefix(line, "case ") {
+			expected.WriteString(line)
+			expected.WriteByte('\n')
+		}
+	}
+	cases := 0
+	for transition := 0; transition < 16; transition++ {
+		for _, property := range []int{8, 6, 14, 2} {
+			for _, frames := range []int{2, 5, 37} {
+				for seed := 0; seed < 4; seed++ {
+					p := Gia_ManStart(32)
+					Gia_ManHashStart(p)
+					x, s := Gia_ManAppendCi(p), Gia_ManAppendCi(p)
+					Gia_ManAppendCo(p, cexReviewFunction(p, property, x, s))
+					Gia_ManAppendCo(p, cexReviewFunction(p, transition, x, s))
+					Gia_ManSetRegNum(p, 1)
+					Gia_ManHashStop(p)
+					p = Gia_ManCleanup(p)
+					c := cexReviewWitness(frames, seed, 0)
+					if Gia_ManVerifyCex(p, c, 0) == 0 {
+						continue
+					}
+					priority := Gia_ManCexCareMinimize(p, 1, c, 1, 0, 0)
+					if util.Abc_CexCountOnes(priority) == 0 {
+						continue
+					} // Separate Go constant-output regression.
+					for effort := int32(0); effort < 2; effort++ {
+						care := Bmc_CexCareSatBasedMinimizeAig(p, c, effort, 0)
+						fmt.Fprintf(&got, "case %d %d %d %d %d mask", transition, property, frames, seed, effort)
+						cexReviewWords(&got, care.PData)
+						got.WriteByte('\n')
+						completions := 32
+						if frames < 5 {
+							completions = 1 << frames
+						}
+						for other := 0; other < completions; other++ {
+							state, failed := 0, false
+							random := uint32(other + 1)
+							for f := 0; f < frames; f++ {
+								bit := 1 + f
+								input := 0
+								if frames <= 5 {
+									input = other >> f & 1
+								} else {
+									random = random*1664525 + 1013904223
+									input = int(random >> 31)
+								}
+								if care.PData[bit>>5]>>uint(bit&31)&1 != 0 {
+									input = int(c.PData[bit>>5] >> uint(bit&31) & 1)
+								}
+								index := input + 2*state
+								failed = property>>index&1 != 0
+								state = transition >> index & 1
+							}
+							if !failed {
+								t.Fatalf("sequential mask does not force failure: transition%d property%d frames%d", transition, property, frames)
+							}
+						}
+						cases++
+					}
+				}
+			}
+		}
+	}
+	if got.String() != expected.String() {
+		a, b := strings.Split(got.String(), "\n"), strings.Split(expected.String(), "\n")
+		for i := 0; i < min(len(a), len(b)); i++ {
+			if a[i] != b[i] {
+				t.Fatalf("sequential care source line%d differs\nGo:%s\nC: %s", i+1, a[i], b[i])
+			}
+		}
+		t.Fatalf("native output length Go%d C%d", got.Len(), expected.Len())
+	}
+	t.Logf("%d exact native sequential care masks, with exhaustive small and sampled 37-frame completions", cases)
+}

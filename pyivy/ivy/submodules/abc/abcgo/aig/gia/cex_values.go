@@ -10,6 +10,7 @@ func Gia_ManCounterExampleValueStart(p *Gia_Man_t, cex *util.Abc_Cex_t) {
 	if Gia_ManRegNum(p) <= 0 || p.pData2 != nil {
 		panic("gia: invalid counterexample probing state")
 	}
+	giaValidateReplayCounterexample(p, cex)
 	for i := int32(0); i < cex.NRegs; i++ {
 		if cex.PData[i>>5]&(1<<uint(i&31)) != 0 {
 			panic("gia: counterexample initial state is not zero")

@@ -2,9 +2,8 @@ package gia
 
 import "github.com/glycerine/abcgo/misc/util"
 
-// replayCounterexample evaluates every frame, starting from either the witness
-// register bits or zero. Register inputs are copied simultaneously between frames.
-func replayCounterexample(p *Gia_Man_t, cex *util.Abc_Cex_t, zeroState bool, visit func(int32, []bool, []bool, []bool) bool) {
+// Validate the witness before allocating simulation or probe storage.
+func giaValidateReplayCounterexample(p *Gia_Man_t, cex *util.Abc_Cex_t) {
 	if p == nil || cex == nil || cex.NRegs != Gia_ManRegNum(p) || cex.NPis != Gia_ManPiNum(p) || cex.IFrame < 0 {
 		panic("gia: invalid counterexample dimensions")
 	}
@@ -12,6 +11,12 @@ func replayCounterexample(p *Gia_Man_t, cex *util.Abc_Cex_t, zeroState bool, vis
 	if required < 0 || required != int64(cex.NBits) || required > int64(len(cex.PData))*32 {
 		panic("gia: inconsistent counterexample bits")
 	}
+}
+
+// replayCounterexample evaluates every frame, starting from either the witness
+// register bits or zero. Register inputs are copied simultaneously between frames.
+func replayCounterexample(p *Gia_Man_t, cex *util.Abc_Cex_t, zeroState bool, visit func(int32, []bool, []bool, []bool) bool) {
+	giaValidateReplayCounterexample(p, cex)
 	bit := func(i int64) bool { return cex.PData[i>>5]&(1<<uint(i&31)) != 0 }
 	inputs := make([]bool, Gia_ManCiNum(p))
 	if !zeroState {
