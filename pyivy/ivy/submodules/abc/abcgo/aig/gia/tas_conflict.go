@@ -16,6 +16,9 @@ func Tas_ManDeriveReason(p *Tas_Man_t, level int32) {
 	k := q.iHead + 1
 	for i := k; i < q.iTail; i++ {
 		node := q.pData[i]
+		if node.id == 0 { // fixed constant fanins are axioms, not decisions
+			continue
+		}
 		if node.fPhase != 0 {
 			continue
 		}
@@ -68,7 +71,7 @@ func Tas_ManDeriveReason(p *Tas_Man_t, level int32) {
 
 func Tas_ManAnalyze(p *Tas_Man_t, level int32, variable, fanin0, fanin1 *Gia_Obj_t) int32 {
 	q := &p.pClauses
-	if Tas_QueIsEmpty(q) == 0 || Tas_VarIsAssigned(variable) == 0 || Tas_VarIsAssigned(fanin0) == 0 || fanin1 != nil && Tas_VarIsAssigned(fanin1) == 0 {
+	if Tas_QueIsEmpty(q) == 0 || Tas_VarIsAssigned(variable) == 0 || fanin0 == nil || fanin0.id != 0 && Tas_VarIsAssigned(fanin0) == 0 || fanin1 != nil && fanin1.id != 0 && Tas_VarIsAssigned(fanin1) == 0 {
 		panic("gia: invalid SAT conflict")
 	}
 	Tas_QuePush(q, nil)
@@ -115,6 +118,7 @@ func Tas_ManAllocCls(p *Tas_Man_t, words int32) *Tas_Cls_t {
 }
 
 func Tas_ManWatchClause(p *Tas_Man_t, clause *Tas_Cls_t, literal int32) {
+	handle := Tas_ClsHandle(p, clause)
 	lits := clause.literals()
 	if len(lits) < 2 || literal < 0 || int(literal>>1) >= int(p.pAig.nObjs) {
 		panic("gia: invalid watched clause")
@@ -131,7 +135,7 @@ func Tas_ManWatchClause(p *Tas_Man_t, clause *Tas_Cls_t, literal int32) {
 	if p.pWatches[watch] == 0 {
 		vec.Vec_IntPush(p.vWatchLits, watch)
 	}
-	p.pWatches[watch] = Tas_ClsHandle(p, clause)
+	p.pWatches[watch] = handle
 }
 
 func Tas_ManCreateCls(p *Tas_Man_t, handle int32) *Tas_Cls_t {
@@ -155,6 +159,7 @@ func Tas_ManCreateCls(p *Tas_Man_t, handle int32) *Tas_Cls_t {
 }
 
 func Tas_ManCreateFromCls(p *Tas_Man_t, clause *Tas_Cls_t, level int32) int32 {
+	Tas_ClsHandle(p, clause)
 	q := &p.pClauses
 	if Tas_QueIsEmpty(q) == 0 {
 		panic("gia: clause queue is not empty")

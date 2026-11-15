@@ -28,7 +28,11 @@ func Tas_ManPropagateOne(p *Tas_Man_t, node *Gia_Obj_t, level int32) int32 {
 			Tas_ManAssign(p, Gia_ObjChild0(node), level, node, nil)
 		}
 		if value1 == 2 {
-			Tas_ManAssign(p, Gia_ObjChild1(node), level, node, nil)
+			if Tas_VarIsAssigned(Gia_ObjFanin1(node)) == 0 {
+				Tas_ManAssign(p, Gia_ObjChild1(node), level, node, nil)
+			} else if Tas_VarFanin1Value(node) == 0 {
+				return Tas_ManAnalyze(p, level, node, Gia_ObjFanin1(node), nil)
+			}
 		}
 		return 0
 	}

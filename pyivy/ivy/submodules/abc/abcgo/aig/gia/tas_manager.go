@@ -89,19 +89,22 @@ func Tas_VarSetValue(node *Gia_Obj_t, value int32) {
 	node.fMark1 = uint32(value)
 }
 func Tas_VarIsJust(node *Gia_Obj_t) int32 {
-	return giaBool(Gia_ObjIsAnd(node) != 0 && Tas_VarIsAssigned(Gia_ObjFanin0(node)) == 0 && Tas_VarIsAssigned(Gia_ObjFanin1(node)) == 0)
+	return giaBool(Gia_ObjIsAnd(node) != 0 && Tas_VarFanin0Value(node) == 2 && Tas_VarFanin1Value(node) == 2)
 }
-func tasFaninValue(node *Gia_Obj_t, fanin *Gia_Obj_t, complement int32) int32 {
+func tasFaninValue(fanin *Gia_Obj_t, complement int32) int32 {
+	if fanin.id == 0 {
+		return complement
+	}
 	if Tas_VarIsAssigned(fanin) == 0 {
 		return 2
 	}
 	return Tas_VarValue(fanin) ^ complement
 }
 func Tas_VarFanin0Value(node *Gia_Obj_t) int32 {
-	return tasFaninValue(node, Gia_ObjFanin0(node), Gia_ObjFaninC0(node))
+	return tasFaninValue(Gia_ObjFanin0(node), Gia_ObjFaninC0(node))
 }
 func Tas_VarFanin1Value(node *Gia_Obj_t) int32 {
-	return tasFaninValue(node, Gia_ObjFanin1(node), Gia_ObjFaninC1(node))
+	return tasFaninValue(Gia_ObjFanin1(node), Gia_ObjFaninC1(node))
 }
 func Tas_VarToLit(p *Tas_Man_t, node *Gia_Obj_t) int32 {
 	return Gia_ObjId(p.pAig, node)<<1 | (1 ^ Tas_VarValue(node))

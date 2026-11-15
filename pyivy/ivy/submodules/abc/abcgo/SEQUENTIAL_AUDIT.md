@@ -6567,3 +6567,40 @@ Next: native public miters, watched-clause growth/reasons, packed simulation
 patterns and word boundaries; raw gates, full paired/array cubes and lifecycle;
 then focused and full race/vet integration. CTAS and GIA remain in progress;
 original completion stays 2/131.
+
+CTAS public miters match another 3,600 actual-C properties, ordered stores,
+logical CI/CO permutations and cleared phases (/tmp/abcgo-tas-raw-red.log).
+The same red run exposes buffers/shared/opposite fanins double-assigning and
+constant fanins producing invalid assignments/incorrect SAT. Treat raw constants
+as fixed values, omit fixed axioms from reason analysis, and recheck a shared
+second fanin after the first assignment. A 94,208-query exhaustive matrix passes
+all four heuristics and single/paired/contradictory/three-assumption queries over
+raw constants, buffers and repeated/opposite fanins; every cube completion is
+validated (/tmp/abcgo-tas-raw-extensions.log).
+
+Foreign-clause tests fail before repair: watch insertion changes the foreign
+store and local watch-index vector before rejecting ownership; conflict creation
+appends to the reason queue before rejecting an unassigned foreign clause
+(/tmp/abcgo-tas-foreign-clause-red.log). Validate ownership first in both entry
+points. Actual-C watch snapshots agree through watch relocation, unit implication,
+cancellation, learned conflict, forced queue/store growth and signed clause
+reports (/tmp/abcgo-tas-watch-native.log).
+
+Packed patterns match 512 native/scalar cross-word merges including bits
+0/1/31/32/33/63/64/95, plus 64 first-word packing and saturation cases. An independent
+scalar bitmap checks every value/presence bit after acceptance or atomic conflict
+rejection (/tmp/abcgo-tas-patterns-native.log). Another 80 native packed-miter
+workflows compare exact simulation words and old-root proof vectors at
+17/1000/1001/2000/2001 outputs, four budgets and logical port permutations;
+independent truth tables reject proofs of satisfiable/skipped roots and verify
+all sampled false properties at the full budget
+(/tmp/abcgo-tas-packed-native.log).
+
+The small giaCTas2.c source is an incomplete allocator experiment, not another
+complete SAT engine. Its Go representation retains stable pointers and zeroed,
+sequentially numbered records. Use bool for the ten one-bit flags instead of
+uint32, reducing records from 76 to 48 bytes; a growth test validates all zero
+fields and preservation of already modified records. The combined expanded Tas
+suite passes in 12.387s (/tmp/abcgo-tas-expanded-focused.log). Save an integration-
+pending checkpoint before final all-pair/lifecycle checks and module race/vet.
+Original completion remains 2/131; GIA is still in progress.

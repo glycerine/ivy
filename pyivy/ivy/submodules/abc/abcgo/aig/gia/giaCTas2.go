@@ -1,12 +1,13 @@
 package gia
 
 // Tas2_Var_t is the byte-store solver's variable record from giaCTas2.c.
-// It is separate from giaCTas.c's solver, which stores assignment state on
+// The C experiment implements variable allocation only. It is separate from
+// giaCTas.c's solver, which stores assignment state on
 // Gia_Obj_t values directly.
 type Tas2_Var_t struct {
-	fTerm, fVal, fValOld, fAssign uint32
-	fJQueue, fCompl0, fCompl1     uint32
-	fMark0, fMark1, fPhase        uint32
+	fTerm, fVal, fValOld, fAssign bool
+	fJQueue, fCompl0, fCompl1     bool
+	fMark0, fMark1, fPhase        bool
 	Level                         uint32
 	Id, IdAig                     int32
 	Reason0, Reason1              int32
