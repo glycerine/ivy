@@ -4256,3 +4256,57 @@ Full uncached race tests pass for GIA (125.693s), BMC (25.033s), SSC (7.746s)
 and ABCI (28.744s), recorded in `/tmp/abcgo-dfs-review-race.log`; final GIA
 vet passes (`/tmp/abcgo-dfs-review-vet.log`). No production changes followed
 these checks. The remaining DFS variants are the next sequential review target.
+
+One-property/marked-property DFS review: a new red test shows DfsSkip accepts
+a marked RI, removes that CO and still sets the original register count. With
+two POs and one RI, this silently reclassifies the second PO as next-state
+logic (`/tmp/abcgo-dfs-skip-ri-red.log`). Reject marked RIs before clearing
+source Value mappings or allocating a copy. This preserves the only coherent
+existing sequential contract: filter properties and retain every register and
+its corresponding RI. A three-register test rejects each RI position and
+verifies failure leaves source Values untouched. This adds a precondition,
+not a guessed register-removal/promotion algorithm.
+
+OnePo exactly matches compiled C across 384 cases and 12,288 assignment
+rows: all selected property indices with zero/two/four registers, 32 edge
+polarities and a trailing unused CI. Compare complete source Value mappings,
+object/interface counts and every output. All RIs remain in order after the
+chosen PO; all CIs remain, including unused ones. Result identity is retained,
+while derived-output constraints and counterexamples remain absent as in C.
+Cleanup keeps the resulting CIs/gates/COs normalized. Repeat independently on
+real XOR/MUX/buffer graphs and reverse-DFS source layouts for a total of 1,344
+OnePo cases/43,008 rows.
+
+DfsSkip independently covers every PO mark mask for those register counts,
+polarities, typed graphs and layouts: 8,064 cases/258,048 assignment rows.
+Verify exact retained properties followed by unchanged RIs, PI/RO ordering,
+cone-node dependency unions, live gate counts and source CI/CO Value mappings.
+Internal-node marks do not control filtering, and neither routine changes any
+source mark. Both APIs intentionally reset derived-output constraint metadata.
+Together the two matrices cover 9,408 cases and 301,056 rows.
+
+The original C DfsSkip passes a CO to Gia_ManDupDfs_rec, whose uncached-node
+precondition requires an AND. Its only C caller is commented out in cecCore.c.
+Do not execute this broken path or claim a native Skip comparison. The existing
+Go implementation uses the CO-aware DFS helper, and the independent complete
+truth/dependency checks verify its intended property-filter behavior. The
+working OnePo source oracle is `aig/gia/test_vectors/dfs_one_output.c`, with
+implicit C function declarations treated as compilation errors.
+
+Boundary checks include constant properties, direct wires with unused inputs,
+a sequential constant property with a live RI, removal of every property,
+empty and register-only graphs, and invalid property indices. Initial expanded
+checks pass in 2.222s (`/tmp/abcgo-dfs-output-focused.log`); final boundary and
+RI-position coverage passes in 2.173s
+(`/tmp/abcgo-dfs-output-final-focused.log`). No compactness rewrite is needed:
+OnePo already shares its root list across cone copying and CO construction,
+and Skip's short mark-filter loop now has an explicit state-preservation guard.
+Node/literal-array/CiMap behavior remains open beyond prior simple-mode fixes;
+other GIA families remain open. Original package completion remains 2/131
+and the sequential audit stays active.
+
+Full uncached race tests pass for GIA (131.711s) and ABCI (29.398s), recorded
+in `/tmp/abcgo-dfs-output-review-race.log`; GIA vet passes
+(`/tmp/abcgo-dfs-output-review-vet.log`). No production changes followed the
+checks. OnePo and Skip output/state behavior are now reviewed; node and
+literal-array cone extraction are the next sequential targets.

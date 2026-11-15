@@ -116,6 +116,12 @@ func Gia_ManDupDfsOnePo(src *Gia_Man_t, po int32) *Gia_Man_t {
 	return giaCleanComposed(out)
 }
 func Gia_ManDupDfsSkip(src *Gia_Man_t) *Gia_Man_t {
+	// Removing RIs while keeping the register count would reclassify POs.
+	for i := int32(0); i < Gia_ManRegNum(src); i++ {
+		if Gia_ManRi(src, i).fMark1 != 0 {
+			panic("gia: cannot skip register-input outputs")
+		}
+	}
 	out := giaDupMappedStart(src)
 	for i := int32(0); i < Gia_ManCiNum(src); i++ {
 		Gia_ManCi(src, i).Value = uint32(Gia_ManAppendCi(out))
