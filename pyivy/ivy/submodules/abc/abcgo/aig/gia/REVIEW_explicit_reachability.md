@@ -95,5 +95,10 @@ valid tables. The Go driver deliberately keeps its own row formatter instead of
 calling the general printer, whose validation rejects zero-width columns and
 partial traversal state bounds.
 
-Focused tests pass. Final module race and GIA vet gates remain pending; this
-family and the full GIA package are not yet marked complete.
+Final validation: focused explicit-reachability tests pass in 6.174s
+(`/tmp/abcgo-era-final-focused.log`). Full uncached module race tests pass all
+130 tested packages, with three no-test command packages; GIA takes 447.395s
+(`/tmp/abcgo-era-final-module-race.log`). GIA vet passes with empty output
+(`/tmp/abcgo-era-final-vet.log`). Production, tests and fixtures stayed frozen
+throughout both integration gates. Mark this source family reviewed. The full
+GIA package and sequential 131-package audit remain incomplete.

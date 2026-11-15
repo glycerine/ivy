@@ -7275,3 +7275,41 @@ explicit-reachability focused tests pass in 6.174s
 (/tmp/abcgo-era-final-focused.log). Freeze production/tests/fixtures for full
 module race and GIA vet gates before marking this family reviewed. The overall
 GIA inventory remains incomplete; original package completion stays 2/131.
+
+### Explicit reachability integration gate and next family
+
+Full uncached module race tests pass all 130 tested packages; three command
+packages have no tests (/tmp/abcgo-era-final-module-race.log). GIA passes in
+447.395s; ABCI in 29.208s and BMC in 24.191s. GIA vet passes with empty output
+(/tmp/abcgo-era-final-vet.log). Production, tests and fixtures stayed frozen
+throughout both gates. Mark giaEra.c's 17 functions/accessors reviewed, with
+native state/file/report evidence, independent scalar word/BFS coverage,
+red-tested repairs and source boundaries recorded in
+REVIEW_explicit_reachability.md. Other GIA families and final inventory remain
+incomplete; original package completion stays 2/131.
+
+Read-only preparation for the separate giaEra2.c cube algorithm is under
+/tmp/abcgo-era2-review-probe. Ordinary actual-C/Go drivers agree on all 160 result
+codes across 0/1/3/5/6 inputs, 1/3/33/65 registers, four transition patterns and
+both miter modes at state limit 100. Lower limits trigger an original C driver
+assertion: it calls counterexample reconstruction on resource exhaustion without
+a failing output/target. That is a source defect, not an expected Go behavior.
+Keep the existing Go safety distinction and independently check limits. The
+native matrix deliberately excludes that source-crashing path.
+
+Additional temporary actual-C/Go primitive probes agree on 2,187 ternary cube
+pairs at register positions {0,1,2}, {0,16,32}, and {15,16,64}. Compare equality,
+disjointness, containment, dash count, sharp-variable and disjoint-variable
+selection. These are preparatory artifacts, not yet tracked tests or a completed
+cube-family review.
+
+A separate typed.go/typed.log reproduction demonstrates a false-safe result in
+Gia_ManArePerform: real XOR or MUX PO with a held-zero register returns 1 (safe),
+while an ordinary equivalent returns 0 (unsafe). Several cofactoring and
+counterexample-copy sites apply HashAnd to every internal gate; CI TFO traversal
+also lacks real-MUX control dependencies. Do not count this as fixed by the
+older explicit word-simulator repair. Next add red cube regressions, preserve
+all typed fanins when cofactoring/deriving traces, track ordinary/cube primitive
+oracles, independently cover list/tree/cube union invariants, compare remaining
+source functions and review compactness before another integration freeze.
+No cube-source, tests or fixtures changed during the completed ERA gate.
